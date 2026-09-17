@@ -13,11 +13,11 @@ import { B, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { P6, XUe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, Ob, I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findCanonicalGitRootUncached as vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateStartToWidth as Ob, formatRelativeTime as I1 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -27,7 +27,7 @@ import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { IE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { readRoster as IE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
 import { JI, f1e, K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { dBn } from "../权限系统/chunk-3kjwvb3e.js";
@@ -1116,8 +1116,8 @@ async function Xn(n) {
       import("./createRoot.pw1402cq.js"),
       import("./getBaseRenderOptions.caxv2veh.js"),
     ]),
-    { AppRoot: k } = await import("../../03-入口与运行时/会话UI(REPL)/AppRoot.n2gx0evt.js"),
-    { getEraseScreenSequence: f } = await import("./getEraseScreenSequence.aw2vt67d.js"),
+    { AppRoot: k } = await import("../后台任务-Shell管理/chunk-c7mzes79.js"),
+    { getEraseScreenSequence: f } = await import("../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js"),
     H = await yt(n);
   process.stdout.write(f());
   let R = await s(i(!1));

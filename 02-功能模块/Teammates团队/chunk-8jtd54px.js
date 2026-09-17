@@ -11,12 +11,12 @@ import { oo, CW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { gbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { pi, lf, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { pi, bytesPerTokenForModel as lf, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { zir } from "./chunk-811z9z0t.js";
@@ -24,9 +24,9 @@ import {
   Rwe,
   SV,
   Mg,
-  c3,
-  HO,
-  fTe,
+  stripWholeToolGrantsForAsk as c3,
+  withoutGrantsForRemoteScope as HO,
+  hasPermissionsToUseToolWithSink as fTe,
   n2t,
   Yue,
   qzn,
@@ -37,7 +37,7 @@ import {
   J2t,
   iLe,
   Q2t,
-  Zo,
+  asSystemPrompt as Zo,
   z2,
   NTe,
   oKe,
@@ -46,50 +46,50 @@ import {
   Cne,
   E6t,
   JLe,
-  dw,
+  runAgent as dw,
   r8n,
   II,
   $3,
   nhn,
   Co,
   Re,
-  bT,
+  isLoggableMessage as bT,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NFe, RD } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Woe } from "../MCP客户端/chunk-3kmsshb6.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { UE, mG, WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
   loe,
   RC,
   RZn,
-  ffe,
-  ag,
-  BGt,
-  pJ,
-  SG,
-  fJ,
-  vXe,
-  coe,
-  __,
-  Pwt,
-  H1e,
-  fCe,
-  I1e,
-  mCe,
-  HXe,
-  IXe,
-  DH,
-  PXe,
-  O1e,
+  readMailbox as ffe,
+  writeToMailbox as ag,
+  markSingleMessageAsRead as BGt,
+  MARK_READ_FAILURE_CAP as pJ,
+  messageIdentityKey as SG,
+  markMessagesAsRead as fJ,
+  formatTeammateMessage as vXe,
+  formatTeammateMessages as coe,
+  UNKNOWN_SENDER as __,
+  sanitizeReceivedStructuredFrame as Pwt,
+  createIdleNotification as H1e,
+  logIdleResultDeliveryOutcome as fCe,
+  isPermissionResponse as I1e,
+  isShutdownRequest as mCe,
+  isPlanApprovalResponse as HXe,
+  isModeSetRequest as IXe,
+  isStructuredProtocolMessage as DH,
+  planApprovalResumeText as PXe,
+  withShutdownReplyInstructions as O1e,
 } from "./chunk-g6nvp9mm.js";
-import { Sd } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { TXe } from "./chunk-6b13bhw1.js";
+import { evictTaskOutput as Sd } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { removeMemberByAgentId as TXe } from "./chunk-6b13bhw1.js";
 import { hbt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Pqe, Uqe, Bqe, eWn, Tbe, Kdt } from "../权限系统/chunk-jsd70b22.js";
-import { vin } from "./chunk-5nnwwahg.js";
+import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM as vin } from "./chunk-5nnwwahg.js";
 import { Xdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-mnvjcy8y.js";
 import { Jdt, jqe, Wqe } from "../权限系统/chunk-n4x6jsp3.js";
 import { L1t } from "./chunk-4ma81w0c.js";

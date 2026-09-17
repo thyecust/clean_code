@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { PUe, $T, Qi, v5, vn, zD, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { RH } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { u6, wme } from "./chunk-9estzwf5.js";
-import { FTe, kfn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { PUe, getClaudeAIOAuthTokenOriginAsync as $T, getClaudeAIOAuthTokensAsync as Qi, readFreshOAuthCredentialSnapshot as v5, getOauthAccountInfo as vn, getAuthenticatedAccountInfo as zD, ERe, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getBridgeTokenOverride as RH } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { isBridgeFirstParty as u6, isBridgeOwnerPinnedEndEnabled as wme } from "./chunk-9estzwf5.js";
+import { getBridgeSession as FTe, updateBridgeSessionTitle as kfn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 async function Wtn(t) {
   let i = zD();
   if (i?.accountUuid)

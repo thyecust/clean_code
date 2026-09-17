@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 242 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
-import { $It, UIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
+import { getProTrialDurationDays as $It, startProTrial as UIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";

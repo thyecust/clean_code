@@ -12,17 +12,17 @@
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Sc } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectsDir as Sc } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
-  _de,
+  laptopDirSyncRegistries as _de,
   CLe,
   yde,
   DLe,

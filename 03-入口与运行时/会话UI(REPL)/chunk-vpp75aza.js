@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Te, ee, es, eu } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { H1 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRootRecheckingNegative as H1 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncatePathMiddle as el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { eN } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -28,41 +28,41 @@ class T {
   autoOpenPending = !1;
 }
 var TWe = new j(() => new T());
-var qZ = 110,
-  uPt = 144,
-  dPt =
+var DIFF_SIDEBAR_MIN_COLS = 110,
+  DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS = 144,
+  DIFF_SIDEBAR_NO_GIT_MESSAGE =
     "The diff panel shows git changes \u2014 the current directory isn\u2019t in a git repository";
-function pPt(o) {
+function markReplDiffPanelAutoOpen(o) {
   TWe.of(o).autoOpenPending = !0;
 }
-function CZt(o) {
+function consumeReplDiffPanelAutoOpen(o) {
   let n = TWe.of(o),
     r = n.autoOpenPending;
   return ((n.autoOpenPending = !1), r);
 }
-function N$n(o) {
+function clearReplDiffPanelAutoOpen(o) {
   TWe.of(o).autoOpenPending = !1;
 }
-function bye() {
+function diffSidebarHasGitRepo() {
   return H1(Q()) !== null;
 }
-function Sit({
+function diffPanelCanMount({
   fullscreen: o,
   columns: n,
   isThinClient: r,
   isMainFocused: i,
   hasGitRepo: s,
 }) {
-  return eN() && o && !r && i && n >= qZ && s;
+  return eN() && o && !r && i && n >= DIFF_SIDEBAR_MIN_COLS && s;
 }
-function fPt(o) {
+function shouldAutoOpenDiffSidebar(o) {
   let n = ee().diffSidebarOpen;
   if (n === !1) return !1;
-  return o >= (n === !0 ? qZ : uPt) && bye();
+  return o >= (n === !0 ? DIFF_SIDEBAR_MIN_COLS : DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS) && diffSidebarHasGitRepo();
 }
-function mPt(o, n, r, i) {
+function toggleReplDiffTab(o, n, r, i) {
   let s = r === "diff" ? "convo" : "diff";
-  (N$n(o),
+  (clearReplDiffPanelAutoOpen(o),
     n((a) =>
       a.replTab === s && a.panelFileView === null
         ? a
@@ -72,25 +72,25 @@ function mPt(o, n, r, i) {
   if (ee().diffSidebarOpen !== l) Te((a) => ({ ...a, diffSidebarOpen: l }), i);
   return (y("repl_tab_switch", { tab: u(s) }), s);
 }
-function j8(o, n) {
-  (N$n(o),
+function resetReplTabToConvo(o, n) {
+  (clearReplDiffPanelAutoOpen(o),
     n((r) =>
       r.replTab === "convo" && r.panelFileView === null
         ? r
         : { ...r, replTab: "convo", panelFileView: null },
     ));
 }
-function gPt(o, n, r) {
-  if ((j8(o, n), ee().diffSidebarOpen !== !1))
+function closeReplDiffTab(o, n, r) {
+  if ((resetReplTabToConvo(o, n), ee().diffSidebarOpen !== !1))
     Te((i) => ({ ...i, diffSidebarOpen: !1 }), r);
   y("repl_tab_switch", { tab: u("convo") });
 }
 var g = ["session", "uncommitted", "branch"];
-function hPt() {
+function getPersistedDiffBaseMode() {
   let o = es().diffSidebarBaseMode;
   return o === "uncommitted" || o === "branch" ? o : "session";
 }
-function _Pt(o, n) {
+function cycleDiffBaseMode(o, n) {
   let r = g[(g.indexOf(o) + 1) % g.length] ?? "session";
   return (
     eu(
@@ -174,20 +174,20 @@ function L(o) {
 }
 export {
   TWe,
-  qZ,
-  uPt,
-  dPt,
-  pPt,
-  CZt,
-  N$n,
-  bye,
-  Sit,
-  fPt,
-  mPt,
-  j8,
-  gPt,
-  hPt,
-  _Pt,
+  DIFF_SIDEBAR_MIN_COLS,
+  DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS,
+  DIFF_SIDEBAR_NO_GIT_MESSAGE,
+  markReplDiffPanelAutoOpen,
+  consumeReplDiffPanelAutoOpen,
+  clearReplDiffPanelAutoOpen,
+  diffSidebarHasGitRepo,
+  diffPanelCanMount,
+  shouldAutoOpenDiffSidebar,
+  toggleReplDiffTab,
+  resetReplTabToConvo,
+  closeReplDiffTab,
+  getPersistedDiffBaseMode,
+  cycleDiffBaseMode,
   bit,
   Pg,
 };

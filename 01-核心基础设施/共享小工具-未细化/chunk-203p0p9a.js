@@ -7,34 +7,34 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { M } from "./chunk-h62vxw7j.js";
-import { Yt, Qi, gt, jse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, isClaudeAISubscriber as gt, isClaudeAISubscriberAsync as jse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyProvider as In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { hostname as n } from "os";
-function RH() {
+function getBridgeTokenOverride() {
   return;
 }
-function oG() {
+function getBridgeBaseUrlOverride() {
   return;
 }
-function m_() {
-  let e = RH();
+function getBridgeAccessToken() {
+  let e = getBridgeTokenOverride();
   if (e !== void 0) return e;
   if (!In() || !gt()) return;
   return Yt()?.accessToken;
 }
-async function wC(e) {
-  if (!(M() && e !== void 0)) return m_();
-  let r = RH();
+async function getBridgeAccessTokenAsync(e) {
+  if (!(M() && e !== void 0)) return getBridgeAccessToken();
+  let r = getBridgeTokenOverride();
   if (r !== void 0) return r;
   if (!In() || !(await jse(e))) return;
   return (await Qi(e))?.accessToken;
 }
-function Ype() {
-  return oG() ?? Vt().BASE_API_URL;
+function getBridgeBaseUrl() {
+  return getBridgeBaseUrlOverride() ?? Vt().BASE_API_URL;
 }
-function qre() {
+function getBridgeSessionNamePrefix() {
   let e = process.env.CLAUDE_REMOTE_CONTROL_SESSION_NAME_PREFIX || n();
   return t(e) || "remote-control";
 }
@@ -44,4 +44,4 @@ function t(e) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
-export { RH, oG, m_, wC, Ype, qre };
+export { getBridgeTokenOverride, getBridgeBaseUrlOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix };

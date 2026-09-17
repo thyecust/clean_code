@@ -16,20 +16,20 @@ class o {
   pidDomain = void 0;
   uidsCollapse = null;
 }
-var zse = new o();
-function UZe() {
-  if (zse.pidSpace === null) {
+var processIdentity = new o();
+function ownPidSpace() {
+  if (processIdentity.pidSpace === null) {
     let n = "";
-    zse.pidSpace = `${e()}${n === "" ? "" : "#" + n}`;
+    processIdentity.pidSpace = `${e()}${n === "" ? "" : "#" + n}`;
   }
-  return zse.pidSpace;
+  return processIdentity.pidSpace;
 }
-function wq() {
+function ownPidDomain() {
   return (
-    (zse.pidDomain ??= (async () => uir(P()))().catch((n) => {
-      throw ((zse.pidDomain = void 0), n);
+    (processIdentity.pidDomain ??= (async () => uir(P()))().catch((n) => {
+      throw ((processIdentity.pidDomain = void 0), n);
     })),
-    zse.pidDomain
+    processIdentity.pidDomain
   );
 }
 import { timingSafeEqual as u } from "crypto";
@@ -55,4 +55,4 @@ function $R(n, t) {
   if (i.length !== r.length) return !1;
   return u(i, r);
 }
-export { zse, UZe, wq, RRe, $R };
+export { processIdentity, ownPidSpace, ownPidDomain, RRe, $R };

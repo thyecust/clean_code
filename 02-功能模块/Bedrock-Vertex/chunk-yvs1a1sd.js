@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Mxe } from "./chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { e0, p5, xQe, HQe, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_3P_SONNET_KEY as e0, DEFAULT_3P_HAIKU_KEY as p5, DEFAULT_VERTEX_OPUS_KEY as xQe, DEFAULT_3P_FABLE_KEY as HQe, GC, Rw } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ho, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource as ho, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -27,7 +27,7 @@ import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { aDe, sX, iX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { buildVertexGoogleAuth as aDe, suppressVertexAuthRejection as sX, vertexResidualCredentialPins as iX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
@@ -395,7 +395,7 @@ async function K(n, s) {
 }
 async function Wr(n) {
   let [{ AnthropicVertex: s }, { getProxyFetchOptions: c }] = await Promise.all(
-      [import("./AnthropicVertex.1thfsdgf.js"), import("../../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js")],
+      [import("./AnthropicVertex.1thfsdgf.js"), import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js")],
     ),
     u = await aDe(Ro(n), n.projectId);
   return sX(

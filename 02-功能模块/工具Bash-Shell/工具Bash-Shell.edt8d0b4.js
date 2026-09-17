@@ -9,25 +9,25 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 180 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ua, l$e } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { unwrapAbortReason as Ua, isUserInitiatedAbortReason as l$e } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Fx } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pi, Ad, DCt, Bt, tt, Mn, co, ro, Ut, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { yS, hL, _L, Rhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { yS, hL, _L, isCurrentDirectoryBareGitRepo as Rhe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { o2e, uL, Op, zU, s2e, Rtt } from "../权限系统/chunk-e4pfvp7x.js";
+import { INLINE_CODE_FLAGS as o2e, isOutsideReadsBlockedAsk as uL, outsideReadsRuntimePathAsk as Op, outsideReadsTooComplexAsk as zU, BASH_COMMAND_CLAMP_DENY_REASON as s2e, BASH_COMMAND_CLAMP_CRASH_REASON as Rtt } from "../权限系统/chunk-e4pfvp7x.js";
 import { hge, Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { i5, Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import {
@@ -38,13 +38,13 @@ import {
   Qj,
   uEt,
   dEt,
-  dr,
-  rb,
-  vi,
+  normalizeCaseForComparison as dr,
+  allWorkingDirectories as rb,
+  matchingRuleForInput as vi,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ys, jE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   Uft,
@@ -78,16 +78,16 @@ import {
   _k,
   $mt,
   Jte,
-  Zte,
-  st,
+  SandboxPolicyRefusalError as Zte,
+  SandboxManager as st,
   dT,
   IDe,
   Gmt,
   fzn,
   jS,
   tTe,
-  Fl,
-  que,
+  createPermissionRequestMessage as Fl,
+  carriesAskRuleIntent as que,
   d2t,
   p2t,
   f2t,
@@ -119,7 +119,7 @@ import {
   _Wt,
   yWt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { VAe, O7e, _l, N7e } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { MAX_PERSISTED_OUTPUT_BYTES as VAe, getTaskOutputRootDir as O7e, getTaskOutputPath as _l, persistTaskOutputSnapshot as N7e } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { ZNe, g7e, Vpe, _7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   Swe,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
@@ -22,14 +22,14 @@ import {
   QH,
   Gve,
   Ese,
-  rt,
-  dh,
-  Ue,
-  wt,
+  getMainLoopModel as rt,
+  getDefaultMainLoopModelSetting as dh,
+  getCanonicalName as Ue,
+  parseUserSpecifiedModel as wt,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { aKe, UO, Jf, Ym, eg, xMe, HMe, wT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _Se } from "../../02-功能模块/上下文压缩-Compact/chunk-525y6trw.js";

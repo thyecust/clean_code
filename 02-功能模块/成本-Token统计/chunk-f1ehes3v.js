@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Aw, ht, _t, hb, qn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { Aw, ht, isBgSession as _t, isExtraUsageAllowed as hb, getSubscriptionType as qn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Km, Xmt, kO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
 async function d(t, r) {

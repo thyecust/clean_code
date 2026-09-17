@@ -22,16 +22,16 @@ import {
   pEe,
   Q_t,
   U8n,
-  VM,
+  resetSentSkillNames as VM,
   L_n,
   EXn,
-  xE,
+  clearCommandsCache as xE,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { MIn, D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { clearResolveGitDirCache as MIn, clearIsGitMemoFor as D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { bIn } from "../Git-Worktree/chunk-bk9696gx.js";
 import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
 import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { k4, wrn } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { globalFileIndexCache as k4, resetFileIndexCache as wrn } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { LPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-16992wzt.js";
 import { lWn } from "../权限系统/chunk-n4x6jsp3.js";
 function brn(t, r = new Set(), i, o, l, m = !1) {
@@ -75,13 +75,13 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
   if ((bIn(), !a)) kVn();
   if ((eMn(r), MIn(), U8n(), Q_t().catch(() => {}), C4n(t), o))
     (o.get(LPe).clear(),
-      import("./getURLMarkdownContent.z7w6vd76.js").then(({ WebFetchCache: e }) =>
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ WebFetchCache: e }) =>
         o.get(e).clear(),
       ),
-      import("./ToolSearchTool.a09241da.js").then(({ ToolSearchDescriptionCache: e }) =>
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ ToolSearchDescriptionCache: e }) =>
         o.get(e).clear(),
       ));
-  import("../MCP客户端/getActiveAgentsFromList.1c2fx7n3.js").then(({ clearAgentDefinitionsCache: e }) =>
+  import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ clearAgentDefinitionsCache: e }) =>
     e(),
   );
 }

@@ -11,14 +11,14 @@ import { Ie, Le, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { f, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureBad as f, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { znt, Fp, eOn, tOn } from "./chunk-z5vtnzjg.js";
+import { BG_EXIT_CAUSE_SESSION_IN_USE as znt, setBgExitCause as Fp, readAndClearBgExitCause as eOn, readAndClearBgExitDetail as tOn } from "./chunk-z5vtnzjg.js";
 import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   $U,
   iL,
@@ -38,32 +38,32 @@ import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Wi, Ms, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Gie, XQ, iz } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { quarantineJobTranscript as Gie, isTranscriptFileResumeArg as XQ, resolveJobTranscript as iz } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { m5t, I5, Tq, Vse, wvt, Ba, Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { readLinuxProcState as m5t, sigtermThenKill as I5, reapDetachedRepl as Tq, getProcessStartTime as Vse, isSameProcess as wvt, getProcessStartTimeAsync as Ba, captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { RRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { i9, nSe, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import {
   nyn,
   yj,
-  ba,
-  y$,
-  mAe,
-  d3t,
-  iyn,
-  Sj,
-  xpe,
-  SNe,
-  p3t,
-  AT,
-  rr,
-  Ti,
-  oK,
-  Zn,
-  xf,
-  wNe,
-  Hf,
-  Hs,
+  BG_PROTO as ba,
+  DAEMON_DETACH_APC as y$,
+  wrapDaemonHint as mAe,
+  interactiveMarkApc as d3t,
+  parseInteractiveMarkRv as iyn,
+  daemonDetachApc as Sj,
+  HOST_DIED_DETAIL as xpe,
+  HOST_DIED_EXEC_DETAIL as SNe,
+  rosterEntryExtras as p3t,
+  bgShort as AT,
+  getJobDir as rr,
+  writeStateAtomic as Ti,
+  buildBridgeReattachEnv as oK,
+  readJobState as Zn,
+  IDLE_NEEDS as xf,
+  ABANDONED_WORKER_MS as wNe,
+  terminalOutcome as Hf,
+  isSettled as Hs,
   Ep,
   al,
 } from "./chunk-7wsy8vxb.js";
@@ -94,7 +94,7 @@ import { vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh2
 import { Pit } from "../../01-核心基础设施/共享小工具-未细化/chunk-k76a6y9v.js";
 import { fI, eue } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { randomBytes as Re } from "crypto";

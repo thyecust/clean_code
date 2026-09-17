@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Kx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ot } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration as Ot } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, see } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { UB } from "./chunk-7f3kwdxn.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";

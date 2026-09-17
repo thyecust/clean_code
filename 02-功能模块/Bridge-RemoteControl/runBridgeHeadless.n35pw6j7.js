@@ -13,42 +13,42 @@ import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g, wn, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tl, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { mf, mkt, Dtt, Ltt } from "../权限系统/chunk-e4pfvp7x.js";
+import { normalizePermissionModeAlias as mf, mkt, Dtt, Ltt } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, dxe, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, dxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { pXt, IPn, $nt, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { te, Xe, Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth as Xe, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { HCn, Wi, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Uie } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { redactGitRemoteCredentials as Uie } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ea, Za, Nr, PBe, rc, ctt, Vge, x8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  y0,
+  drainRegisteredWriteQueues as y0,
   PU,
   Rge,
   S0,
   vet,
   oRt,
-  pRt,
-  ye,
-  Rd,
-  xq,
+  getSettingsParseErrorsForSource as pRt,
+  getSettingsForSource as ye,
+  getAllPolicyTierSettings as Rd,
+  getPolicySettingsLoadErrors as xq,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { fm, zu, yc, pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId as fm, toCompatSessionId as zu, toInfraSessionId as yc, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Eq, Hvt, Pvt, Ovt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import {
   EBt,
@@ -59,15 +59,15 @@ import {
   KLe,
   sj,
   v3,
-  N3,
-  nd,
+  MCP_SETTINGS_SCOPES as N3,
+  getMcpConfigsByScope as nd,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { Dve, $$e } from "./chunk-5ne99rq3.js";
-import { DAn, ise, XG, NAn } from "./chunk-9estzwf5.js";
-import { lVt, G$e, pQe, Yy, fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { vme, uh, M$e } from "./chunk-tyce0p0b.js";
-import { m_, wC, qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { isBridgeEnvReregisterEnabled as DAn, isCcrV2SendEventsEnabled as ise, isCcrV2SessionCrudEnabled as XG, isBridgeServerSessionConfigEnabled as NAn } from "./chunk-9estzwf5.js";
+import { debugTruncate as lVt, debugBody as G$e, describeAxiosError as pQe, parseRetryAfterHeader as Yy, extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { getAttestationFilterPolicy as vme, getTrustedDeviceToken as uh, withUntrustedDeviceRecovery as M$e } from "./chunk-tyce0p0b.js";
+import { getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeSessionNamePrefix as qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { vAe, ANe, Iyn } from "./chunk-ct52ffwb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
@@ -2668,7 +2668,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                   let Ne = Xe(ve.replace(/\s+/g, " ").trim(), os);
                   (r.setSessionTitle(ke, Ne),
                     n(`[bridge:title] derived title for ${ke}: ${Ne}`),
-                    import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js")
+                    import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
                       .then(async ({ getBridgeSession: Ge }) => {
                         k ??= Xat({
                           isOwnTitle: (oe, _e) => De.get(oe)?.has(_e) ?? !1,
@@ -3361,7 +3361,7 @@ Run 'claude remote-control --help' for usage.`);
   }
 }
 async function is() {
-  let { EXTERNAL_PERMISSION_MODES: e } = await import("../权限系统/PERMISSION_MODE_MANUAL_ALIAS.pygwpq4q.js"),
+  let { EXTERNAL_PERMISSION_MODES: e } = await import("../权限系统/chunk-e4pfvp7x.js"),
     o = `
 Remote Control - Control local sessions from claude.ai/code or the Claude mobile app
 
@@ -3421,7 +3421,7 @@ async function as(e) {
   let o = XG(),
     d;
   if (!o) {
-    let { getOrganizationUUID: r } = await import("../../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js");
+    let { getOrganizationUUID: r } = await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
     d = (await r()) ?? void 0;
   }
   let p = await uh().catch(() => {
@@ -3437,7 +3437,7 @@ async function ds(e, t, o) {
     let p = await as(o);
     if (!p) return !1;
     let { accessToken: r, useV2: C, orgUUID: w, trustedDeviceToken: _ } = p,
-      { unarchiveCodeSession: T } = await import("../../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js"),
+      { unarchiveCodeSession: T } = await import("./chunk-mxsfy35q.js"),
       E = await T(t, r, e, 1e4, {
         useV2: C,
         orgUUID: w,
@@ -3484,7 +3484,7 @@ async function ds(e, t, o) {
   }
 }
 async function ls(e, t) {
-  let { getBridgeSession: o } = await import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js");
+  let { getBridgeSession: o } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
   return (await o(e, { baseUrl: t }))?.title || void 0;
 }
 function Ur(e, t, o, d, p, r, C, w, _, T) {
@@ -3529,7 +3529,7 @@ async function da(e, t, o) {
       console.error(
         `Error: ${p} \u2014 Remote Control sessions are not started unwrapped; fix the launcher, then retry`,
       ));
-    let { exitAfterAnalyticsFlush: B } = await import("./exitAfterAnalyticsFlush.x9fzwcgs.js");
+    let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
     return B(1);
   }
   (q4(), Dve(vme));
@@ -3554,7 +3554,7 @@ async function da(e, t, o) {
     ge;
   if (_ !== void 0) {
     let { PERMISSION_MODES: B, PERMISSION_MODE_MANUAL_ALIAS: oe } =
-      await import("../权限系统/PERMISSION_MODE_MANUAL_ALIAS.pygwpq4q.js");
+      await import("../权限系统/chunk-e4pfvp7x.js");
     if (!B.includes(_)) {
       let K = B.map((se) => (se === "default" ? oe : se));
       (console.error(
@@ -3581,12 +3581,12 @@ async function da(e, t, o) {
       process.exit(1));
   }
   let { clearOAuthTokenCache: Se, checkAndRefreshOAuthTokenIfNeeded: $e } =
-      await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
+      await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     {
       getBridgeAccessToken: fe,
       getBridgeAccessTokenAsync: Ae,
       getBridgeBaseUrl: Oe,
-    } = await import("./getBridgeAccessTokenAsync.1g5s5zqm.js"),
+    } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
     xe = M() && o !== void 0;
   if (!(xe ? await Ae(o) : fe())) (console.error(ANe), process.exit(1));
   let {
@@ -3649,8 +3649,8 @@ control. Press Ctrl+C to stop.
       snapshotGitEvidenceForBridge: Fe,
       findGitRoot: ot,
       redactGitRemoteCredentials: ze,
-    } = await import("./snapshotGitEvidenceForBridge.6msfz0pr.js"),
-    { hasWorktreeCreateHook: rt } = await import("./hasWorktreeCreateHook.7g64q2hg.js"),
+    } = await import("../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js"),
+    { hasWorktreeCreateHook: rt } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
     Ye = rt() || ot(D) !== null,
     Ce = J().remoteControlSpawnMode;
   if (Ce === "worktree" && !Ye)
@@ -3716,8 +3716,10 @@ Spawn mode for this project:
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
       K = await B(D, void 0, t);
     if (K) {
-      let { isProcessRunning: se, isSameProcessAsync: Me } =
-        await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js");
+      let { isProcessRunning: se } =
+        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+      { isSameProcessAsync: Me } =
+        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
       if (
         K.pid !== void 0 &&
         K.pid !== process.pid &&
@@ -3754,7 +3756,7 @@ Spawn mode for this project:
       await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
     v = await or(t),
     V = Gt(),
-    { handleOAuth401Error: L } = await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
+    { handleOAuth401Error: L } = await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     O = Xt({
       baseUrl: be,
       getAccessToken: fe,
@@ -3788,8 +3790,10 @@ Spawn mode for this project:
       K = ge ?? D,
       se = await B(K, { noClear: !0 }, t);
     if (se?.pid !== void 0 && se.pid !== process.pid) {
-      let { isProcessRunning: Bt, isSameProcessAsync: Lr } =
-        await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js");
+      let { isProcessRunning: Bt } =
+        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+      { isSameProcessAsync: Lr } =
+        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
       if (Bt(se.pid) && (await Lr(se.pid, se.procStart))) {
         if (CPe(se.sessionId, X))
           (console.error(
@@ -3819,7 +3823,7 @@ Spawn mode for this project:
         process.exit(1));
     }
     (await $e({ credentials: o, storageV5: t }), Se());
-    let { getBridgeSessionOrStatus: Me } = await import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js"),
+    let { getBridgeSessionOrStatus: Me } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       it = xe ? await Ae(o) : void 0,
       { session: tt, notFound: Dt } = await Me(X, {
         baseUrl: be,
@@ -3913,7 +3917,7 @@ Spawn mode for this project:
     } else {
       let { writeBridgePointer: B, readBridgePointer: oe } =
           await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-        { ownProcStartAsync: _e } = await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js");
+        { ownProcStartAsync: _e } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
       if (
         ((ee.preserveOnShutdown = await B(
           D,
@@ -4020,7 +4024,7 @@ Spawn mode for this project:
 The session may still be resumable \u2014 try running the same command again.`,
         );
         let { exitAfterAnalyticsFlush: it } =
-          await import("./exitAfterAnalyticsFlush.x9fzwcgs.js");
+          await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
         await it(1);
       }
     }
@@ -4127,7 +4131,7 @@ The session may still be resumable \u2014 try running the same command again.`,
     bt;
   if (Be && !U && !nt) {
     let B = T ?? `${qre()}-${xU()}`,
-      { createBridgeSession: oe } = await import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js");
+      { createBridgeSession: oe } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     try {
       let _e = xe ? await Ae(o) : void 0;
       if (
@@ -4164,7 +4168,7 @@ The session may still be resumable \u2014 try running the same command again.`,
         PERSISTED_SESSION_RESUME_WINDOW_MS: _e,
         isPersistedStampFresh: K,
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-      { ownProcStartAsync: se } = await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js"),
+      { ownProcStartAsync: se } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
       Me = oe();
     if (
       ((ee.enqueuePointerWrite = Me),
@@ -4284,14 +4288,14 @@ async function la(e, t) {
   await w();
   let { initSinks: T } = await import("./initSinks.6cfazjmq.js");
   T();
-  let { getSettingsWithErrors: E } = await import("../../01-核心基础设施/设置-配置/getSettingsWithErrors.2xnfq00s.js");
+  let { getSettingsWithErrors: E } = await import("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
   if (E().settings.disableRemoteControl === !0) throw new Tt(e5);
   let { composePolicyLimitsClient: W, primePolicyLimitsCache: N } =
     await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   (W({ storageV5: e.storageV5 }), await N(e.storageV5));
   let { loadPolicyLimits: ue } = await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js"),
     { policyDeniedReason: ne, policyDenyKind: Pe } =
-      await import("../策略限制(PolicyLimits)/getLastFetchOutcome.w0e6rc4p.js");
+      await import("../策略限制(PolicyLimits)/chunk-8sw91yn5.js");
   await ue();
   let ae = cs(
     Pe("allow_remote_control"),
@@ -4305,7 +4309,7 @@ async function la(e, t) {
         : `Workspace not trusted: ${o}. Run \`claude\` in that directory first to accept the trust dialog.`,
     );
   if (!e.getAccessToken()) throw Error(ANe);
-  let { getBridgeBaseUrl: ce } = await import("./getBridgeAccessTokenAsync.1g5s5zqm.js"),
+  let { getBridgeBaseUrl: ce } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js"),
     I = ce();
   if (
     I.startsWith("http://") &&
@@ -4317,8 +4321,8 @@ async function la(e, t) {
     );
   let X = I,
     { snapshotGitEvidenceForBridge: ge, findGitRoot: D } =
-      await import("./snapshotGitEvidenceForBridge.6msfz0pr.js"),
-    { hasWorktreeCreateHook: Ke } = await import("./hasWorktreeCreateHook.7g64q2hg.js");
+      await import("../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js"),
+    { hasWorktreeCreateHook: Ke } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
   if (e.spawnMode === "worktree") {
     if (!(Ke() || D(o) !== null))
       throw new Tt(
@@ -4344,8 +4348,10 @@ async function la(e, t) {
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
       le = await pe(o, void 0, e.storageV5);
     if (le) {
-      let { isProcessRunning: Qe, isSameProcessAsync: je } =
-        await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js");
+      let { isProcessRunning: Qe } =
+        await import("../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js"),
+      { isSameProcessAsync: je } =
+        await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js");
       if (
         le.pid !== void 0 &&
         le.pid !== process.pid &&
@@ -4464,7 +4470,7 @@ async function la(e, t) {
   ot.printBanner(k, de);
   let Ce;
   if (e.createSessionOnStart) {
-    let { createBridgeSession: pe } = await import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js");
+    let { createBridgeSession: pe } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     try {
       let Ee = await pe({
         environmentId: de,
@@ -4496,7 +4502,7 @@ async function la(e, t) {
         PERSISTED_SESSION_RESUME_WINDOW_MS: Be,
         isPersistedStampFresh: le,
       } = await import("./PERSISTED_SESSION_RESUME_WINDOW_MS.p4tjt1zq.js"),
-      { ownProcStartAsync: Qe } = await import("../../01-核心基础设施/共享小工具-未细化/isSameProcessAsync.p5qpey0c.js"),
+      { ownProcStartAsync: Qe } = await import("../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js"),
       je = {
         sessionId: Ce ?? "",
         environmentId: de,

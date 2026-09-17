@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 101 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
-import { eo } from "./chunk-1zy5c8mf.js";
+import { registerBundledSkill as eo } from "./chunk-1zy5c8mf.js";
 var n =
   "Author or improve the run-<unit> skill - a per-project skill that tells agents how to build, launch, and drive this project's app. Use when the user asks to set up the project, get it running, write run instructions, or verify build/run steps work from a clean environment.";
 function s() {

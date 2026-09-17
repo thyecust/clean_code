@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ze, ke, YLn, JLn, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { tke, jxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getModelProposedGoalsSettingParsed as tke, getModelProposedGoalsSetting as jxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cve, AJe } from "../Skills技能/chunk-sapykxw7.js";
 import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";

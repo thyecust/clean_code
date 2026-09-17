@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Px, mz, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Px, mz, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po, Bp, vB, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "./chunk-qe04h4c5.js";
@@ -24,8 +24,8 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { hkt } from "../权限系统/chunk-e4pfvp7x.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { iS, ii } from "./chunk-811z9z0t.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getTeammateContext as iS, getTeamName as ii } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
 import { Vr, _Ce } from "../../01-核心基础设施/共享小工具-未细化/chunk-9mfwkyac.js";
 import { cp, fs } from "./chunk-enjekn9t.js";
@@ -1026,18 +1026,18 @@ function Ee(e, t) {
   }
   return { valid: r, droppedCount: o };
 }
-async function uyr() {
+async function flushPendingMailboxPrunes() {
   await Promise.all(Array.from(ds().mailbox.pendingPrunes.values()));
 }
 function Nt(e, t, r) {
   let o = ds().mailbox.pendingPrunes;
   if (o.has(e)) return;
-  let i = ffr(e, t, r).finally(() => {
+  let i = pruneInvalidMailboxEntries(e, t, r).finally(() => {
     o.delete(e);
   });
   o.set(e, i);
 }
-async function ffr(e, t, r) {
+async function pruneInvalidMailboxEntries(e, t, r) {
   if (M() && t !== void 0 && r !== void 0) {
     try {
       let d = await H(
@@ -1076,7 +1076,7 @@ async function ffr(e, t, r) {
     await hf(i, "[TeammateMailbox] pruneInvalidMailboxEntries");
   }
 }
-function x1e(e, t) {
+function getInboxPath(e, t) {
   let r = t || ii() || "default",
     o = VE(r),
     i = VE(e),
@@ -1137,8 +1137,8 @@ async function H(e, t, r, o, i = !0) {
     );
   return d.value.result;
 }
-async function ffe(e, t, r, o) {
-  let i = x1e(e, t);
+async function readMailbox(e, t, r, o) {
+  let i = getInboxPath(e, t);
   n(`[TeammateMailbox] readMailbox: path=${i}`);
   let d = M() && r !== void 0 ? W(e, t) : void 0;
   try {
@@ -1178,8 +1178,8 @@ async function ffe(e, t, r, o) {
     return (n(`Failed to read inbox for ${e}: ${u}`), h(u), []);
   }
 }
-async function mfe(e, t, r) {
-  let o = await ffe(e, t, r),
+async function readUnreadMessages(e, t, r) {
+  let o = await readMailbox(e, t, r),
     i = o.filter((d) => !d.read);
   return (
     n(
@@ -1188,7 +1188,7 @@ async function mfe(e, t, r) {
     i
   );
 }
-async function ag(e, t, r, o) {
+async function writeToMailbox(e, t, r, o) {
   let i = ot().safeParse(t);
   if (!i.success) {
     let T = at(t, i.error.issues);
@@ -1214,7 +1214,7 @@ async function ag(e, t, r, o) {
     let T = { ...t, ...SD(), type: "message", read: !1 };
     try {
       return (
-        await H(o, d, x1e(e, r), (w) => ({
+        await H(o, d, getInboxPath(e, r), (w) => ({
           messages: [...w.messages, T],
           result: !0,
         })),
@@ -1234,7 +1234,7 @@ async function ag(e, t, r, o) {
     });
     return;
   }
-  let u = x1e(e, r),
+  let u = getInboxPath(e, r),
     _ = `${u}.lock`;
   n(
     `[TeammateMailbox] writeToMailbox: recipient=${e}, from=${t.from}, path=${u}`,
@@ -1258,7 +1258,7 @@ async function ag(e, t, r, o) {
   let p;
   try {
     p = await Cs(u, { lockfilePath: _, ...U });
-    let T = await ffe(e, r),
+    let T = await readMailbox(e, r),
       w = { ...t, ...SD(), type: "message", read: !1 };
     return (
       T.push(w),
@@ -1289,8 +1289,8 @@ function jt(e, t) {
     found: r !== -1,
   };
 }
-async function BGt(e, t, r, o) {
-  let i = x1e(e, t);
+async function markSingleMessageAsRead(e, t, r, o) {
+  let i = getInboxPath(e, t);
   n(
     `[TeammateMailbox] markSingleMessageAsRead called: agentName=${e}, teamName=${t}, target=${r.from}@${r.timestamp}, path=${i}`,
   );
@@ -1317,7 +1317,7 @@ async function BGt(e, t, r, o) {
     _;
   try {
     _ = await Cs(i, { lockfilePath: u, ...U });
-    let p = await ffe(e, t),
+    let p = await readMailbox(e, t),
       T = p.findIndex(
         (x) =>
           !x.read &&
@@ -1344,24 +1344,24 @@ async function BGt(e, t, r, o) {
     await hf(_, "[TeammateMailbox] markSingleMessageAsRead");
   }
 }
-var pJ = 5;
-function SG(e) {
+var MARK_READ_FAILURE_CAP = 5;
+function messageIdentityKey(e) {
   return `${e.from}|${e.timestamp}|${e.text}`;
 }
-async function fJ(e, t, r, o) {
-  let i = x1e(e, t);
+async function markMessagesAsRead(e, t, r, o) {
+  let i = getInboxPath(e, t);
   n(
     `[TeammateMailbox] markMessagesAsRead called: agentName=${e}, teamName=${t}, path=${i}`,
   );
   let d = M() && o !== void 0 ? W(e, t) : void 0;
   if (M() && o !== void 0 && d !== void 0) {
-    let p = r === void 0 ? null : new Set(r.map(SG));
+    let p = r === void 0 ? null : new Set(r.map(messageIdentityKey));
     try {
       let T = await H(o, d, i, (w) => {
         if (!w.found || w.messages.length === 0)
           return { skip: !0, result: null };
         let x = w.messages.filter(
-          (E) => !E.read && p !== null && !p.has(SG(E)),
+          (E) => !E.read && p !== null && !p.has(messageIdentityKey(E)),
         );
         return {
           messages: x,
@@ -1390,7 +1390,7 @@ async function fJ(e, t, r, o) {
     (n("[TeammateMailbox] markMessagesAsRead: acquiring lock..."),
       (_ = await Cs(i, { lockfilePath: u, ...U })),
       n("[TeammateMailbox] markMessagesAsRead: lock acquired"));
-    let p = await ffe(e, t, void 0, { throwOnUnknownReadError: !0 });
+    let p = await readMailbox(e, t, void 0, { throwOnUnknownReadError: !0 });
     if (
       (n(
         `[TeammateMailbox] markMessagesAsRead: read ${p.length} messages after lock`,
@@ -1403,8 +1403,8 @@ async function fJ(e, t, r, o) {
       );
     let T = G(p, (E) => !E.read);
     n(`[TeammateMailbox] markMessagesAsRead: ${T} unread of ${p.length} total`);
-    let w = r === void 0 ? null : new Set(r.map(SG)),
-      x = p.filter((E) => !E.read && w !== null && !w.has(SG(E)));
+    let w = r === void 0 ? null : new Set(r.map(messageIdentityKey)),
+      x = p.filter((E) => !E.read && w !== null && !w.has(messageIdentityKey(E)));
     return (
       await qt().atomicWrite(i, b(x, null, 2)),
       n(
@@ -1427,8 +1427,8 @@ async function fJ(e, t, r, o) {
     await hf(_, "[TeammateMailbox] markMessagesAsRead");
   }
 }
-async function kwt(e, t, r) {
-  let o = x1e(e, t),
+async function clearMailbox(e, t, r) {
+  let o = getInboxPath(e, t),
     i = M() && r !== void 0 ? W(e, t) : void 0;
   if (M() && r !== void 0 && i !== void 0) {
     try {
@@ -1456,25 +1456,25 @@ async function kwt(e, t, r) {
     await hf(u, "[TeammateMailbox] clearMailbox");
   }
 }
-function vXe(e) {
+function formatTeammateMessage(e) {
   let t = LH(e.color) ? ` color="${e.color}"` : "",
-    r = x$(e.summary),
+    r = capFrameFieldForDisplay(e.summary),
     o = r ? ` summary="${go(r)}"` : "",
-    i = rp(e.from, sh) || __,
+    i = capIdFrameField(e.from, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER,
     d = HU(Px, e.text);
   return `<${Px} teammate_id="${go(i)}"${t}${o}>
 ${d}
 </${Px}>`;
 }
-function coe(e, t) {
-  let o = _fr(e).map((i) =>
-    vXe(t.recipientIsLead ? i : { ...i, text: O1e(i.text, i.from) }),
+function formatTeammateMessages(e, t) {
+  let o = applyAggregateIdleResultBudget(e).map((i) =>
+    formatTeammateMessage(t.recipientIsLead ? i : { ...i, text: withShutdownReplyInstructions(i.text, i.from) }),
   ).join(`
 
 `);
   return t.recipientIsLead ? R1e(o, { midTurn: !1 }) : o;
 }
-var bG = m(() =>
+var IdleNotificationMessageSchema = m(() =>
     c({
       type: k("idle_notification"),
       from: s(),
@@ -1487,33 +1487,33 @@ var bG = m(() =>
       result: s().optional(),
     }),
   ),
-  Kbn = 200,
-  kZn = 200;
-function x$(e) {
+  FAILURE_REASON_MAX_LENGTH = 200,
+  SUMMARY_DISPLAY_MAX_LENGTH = 200;
+function capFrameFieldForDisplay(e) {
   let t = e ? kr(e).trim() : "";
-  return Pj(t, kZn);
+  return capStrippedFrameField(t, SUMMARY_DISPLAY_MAX_LENGTH);
 }
-function RXe(e) {
+function capFailureReasonForDisplay(e) {
   let t = e ? kr(e).trim() : "";
-  return tP(oe(t, Kbn));
+  return stripFrameControlChars(oe(t, FAILURE_REASON_MAX_LENGTH));
 }
-var xwt = 40000;
-function OH(e, t) {
+var PLAN_CONTENT_DISPLAY_BOUND = 40000;
+function capFrameBodyForDisplay(e, t) {
   if (!e) return "";
-  let r = tP(e),
+  let r = stripFrameControlChars(e),
     o = oe(r, t);
   if (o.length >= r.length) return r;
-  return `${tP(o)}
+  return `${stripFrameControlChars(o)}
 [truncated for display]`;
 }
-var eP = 4000,
-  xZn = 16000;
-function mfr(e, t = !0) {
+var IDLE_RESULT_MAX_LENGTH = 4000,
+  IDLE_RESULT_TOTAL_BUDGET = 16000;
+function capIdleResult(e, t = !0) {
   let r = e ? ft(e) : "";
   if (!r) return "";
-  let o = oe(r, eP);
+  let o = oe(r, IDLE_RESULT_MAX_LENGTH);
   if (o.length >= r.length) return o;
-  let i = tP(o);
+  let i = stripFrameControlChars(o);
   return t
     ? `${i}
 [result truncated \u2014 ask the agent for the rest via ${Vr}]`
@@ -1521,24 +1521,24 @@ function mfr(e, t = !0) {
 [result truncated]`;
 }
 var lt = 200,
-  kC = kZn * 2 + 16,
-  sh = 256,
+  IDLE_SUMMARY_RECEIVE_BOUND = SUMMARY_DISPLAY_MAX_LENGTH * 2 + 16,
+  IDLE_ID_FIELD_RECEIVE_BOUND = 256,
   V = 256,
   Se = 4,
-  pCe = eP + lt + kC + Kbn + 3 * sh + 1024;
+  IDLE_FRAME_TOTAL_RECEIVE_BOUND = IDLE_RESULT_MAX_LENGTH + lt + IDLE_SUMMARY_RECEIVE_BOUND + FAILURE_REASON_MAX_LENGTH + 3 * IDLE_ID_FIELD_RECEIVE_BOUND + 1024;
 function ee(e, t) {
-  if (typeof e === "string") return Pj(e, V);
+  if (typeof e === "string") return capStrippedFrameField(e, V);
   if (e === null || typeof e !== "object") return e;
   if (t <= 0) return null;
   if (Array.isArray(e)) return e.map((o) => ee(o, t - 1));
   let r = [];
-  for (let [o, i] of Object.entries(e)) r.push([Pj(o, V), ee(i, t - 1)]);
+  for (let [o, i] of Object.entries(e)) r.push([capStrippedFrameField(o, V), ee(i, t - 1)]);
   return Object.fromEntries(r);
 }
-function Hwt(e, t) {
-  let r = tP(e);
-  if (oe(r, eP + lt).length >= r.length) return r;
-  let i = tP(oe(r, eP));
+function capReceivedIdleResult(e, t) {
+  let r = stripFrameControlChars(e);
+  if (oe(r, IDLE_RESULT_MAX_LENGTH + lt).length >= r.length) return r;
+  let i = stripFrameControlChars(oe(r, IDLE_RESULT_MAX_LENGTH));
   return t
     ? `${i}
 [result truncated \u2014 ask the agent for the rest via ${Vr}]`
@@ -1547,10 +1547,10 @@ function Hwt(e, t) {
 }
 var dt =
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?(?:Z|[+-]\d{2}:\d{2})$/,
-  Xbn = "[invalid timestamp]",
-  Iwt = "[invalid id]",
-  gfe = "[display sanitized; the agent reads the raw frame]",
-  __ = "[unknown sender]",
+  INVALID_TIMESTAMP_MARKER = "[invalid timestamp]",
+  INVALID_ID_MARKER = "[invalid id]",
+  FRAME_SANITIZED_FOR_DISPLAY_MARKER = "[display sanitized; the agent reads the raw frame]",
+  UNKNOWN_SENDER = "[unknown sender]",
   Lt = /^perm-[0-9]{1,20}-[0-9a-z]{1,12}$/,
   Ut =
     /^(?:shutdown|plan_approval)-[0-9]{1,20}@[^@\n]{1,300}(?:@[^@\n]{1,300})?$/u,
@@ -1559,55 +1559,55 @@ function Gt(e) {
   return !e.includes(`
 `) &&
     !e.includes("\r") &&
-    tP(e) === e &&
+    stripFrameControlChars(e) === e &&
     [...e].length <= Wt &&
     (Lt.test(e) || Ut.test(e))
     ? e
-    : Iwt;
+    : INVALID_ID_MARKER;
 }
 var Kt =
   /^(%[0-9]{1,10}|[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})$/;
 function Ht(e) {
-  return Kt.test(e) ? e : Iwt;
+  return Kt.test(e) ? e : INVALID_ID_MARKER;
 }
 var Yt = { tmux: !0, iterm2: !0, "in-process": !0 };
 function Xt(e) {
-  return Object.hasOwn(Yt, e) ? e : Iwt;
+  return Object.hasOwn(Yt, e) ? e : INVALID_ID_MARKER;
 }
 function ct(e, t, r) {
   let o =
       typeof t.result === "string" && t.result
-        ? Hwt(t.result, t.idleReason !== "failed")
+        ? capReceivedIdleResult(t.result, t.idleReason !== "failed")
         : t.result,
     i =
       typeof t.summary === "string" && t.summary
-        ? Pj(t.summary, kC)
+        ? capStrippedFrameField(t.summary, IDLE_SUMMARY_RECEIVE_BOUND)
         : t.summary,
     d =
       typeof t.failureReason === "string" && t.failureReason
-        ? RXe(t.failureReason)
+        ? capFailureReasonForDisplay(t.failureReason)
         : t.failureReason,
-    u = typeof t.from === "string" && t.from ? rp(t.from, sh) : t.from,
-    _ = typeof r === "string" ? rp(r, sh) || __ : void 0,
+    u = typeof t.from === "string" && t.from ? capIdFrameField(t.from, IDLE_ID_FIELD_RECEIVE_BOUND) : t.from,
+    _ = typeof r === "string" ? capIdFrameField(r, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER : void 0,
     p = _ !== void 0 && typeof u === "string" && u !== _ ? _ : u,
     T =
       typeof t.timestamp === "string" && dt.test(t.timestamp)
         ? t.timestamp
-        : Xbn,
+        : INVALID_TIMESTAMP_MARKER,
     w =
       typeof t.completedTaskId === "string" && t.completedTaskId
-        ? rp(t.completedTaskId, sh)
+        ? capIdFrameField(t.completedTaskId, IDLE_ID_FIELD_RECEIVE_BOUND)
         : t.completedTaskId,
     x = z(e),
     E = x !== null && typeof x === "object" && !Array.isArray(x) ? x : { ...t },
-    P = new Set(Object.keys(bG().shape)),
+    P = new Set(Object.keys(IdleNotificationMessageSchema().shape)),
     C = [];
   for (let [I, D] of Object.entries(E)) {
     if (P.has(I)) {
       C.push([I, D]);
       continue;
     }
-    let te = Pj(I, V);
+    let te = capStrippedFrameField(I, V);
     if (P.has(te)) continue;
     C.push([te, ee(D, Se)]);
   }
@@ -1622,9 +1622,9 @@ function ct(e, t, r) {
     },
     S = { ...t, ...j },
     N = b({ ...de, ...j });
-  if (N.length > pCe) N = b(S);
+  if (N.length > IDLE_FRAME_TOTAL_RECEIVE_BOUND) N = b(S);
   let Me = !1;
-  while (N.length > pCe) {
+  while (N.length > IDLE_FRAME_TOTAL_RECEIVE_BOUND) {
     let I,
       D = 0;
     for (let Ae of ["result", "summary", "failureReason"]) {
@@ -1637,7 +1637,7 @@ function ct(e, t, r) {
     if (!I) break;
     let te = [...I.value].length;
     ((Me ||= I.key === "result"),
-      (S = { ...S, [I.key]: tP(oe(I.value, Math.floor(te / 2))) }),
+      (S = { ...S, [I.key]: stripFrameControlChars(oe(I.value, Math.floor(te / 2))) }),
       (N = b(S)));
   }
   if (Me && S.result) {
@@ -1647,27 +1647,27 @@ function ct(e, t, r) {
 [result truncated]`,
       },
       D = b(I);
-    if (D.length <= pCe) ((S = I), (N = D));
+    if (D.length <= IDLE_FRAME_TOTAL_RECEIVE_BOUND) ((S = I), (N = D));
   }
   return N === e ? { text: e, idle: t } : { text: N, idle: S };
 }
 function pt(e, t) {
-  let r = tP(e),
+  let r = stripFrameControlChars(e),
     o = oe(r, t);
   if (o.length >= r.length) return r;
-  return `${tP(o)}
+  return `${stripFrameControlChars(o)}
 [truncated]`;
 }
 var Qt = 1024,
   Zt = 2048,
-  gfr = new Map([
+  STRUCTURED_FRAME_RECEIVE_SPECS = new Map([
     [
       "plan_approval_request",
       {
         from: { kind: "envelope-pinned-id" },
         timestamp: { kind: "timestamp" },
         planFilePath: { kind: "id" },
-        planContent: { kind: "body", bound: xwt },
+        planContent: { kind: "body", bound: PLAN_CONTENT_DISPLAY_BOUND },
         requestId: { kind: "request-id" },
       },
     ],
@@ -1676,7 +1676,7 @@ var Qt = 1024,
       {
         requestId: { kind: "request-id" },
         approved: { kind: "generic" },
-        feedback: { kind: "body", bound: eP },
+        feedback: { kind: "body", bound: IDLE_RESULT_MAX_LENGTH },
         timestamp: { kind: "timestamp" },
         permissionMode: { kind: "generic" },
       },
@@ -1686,7 +1686,7 @@ var Qt = 1024,
       {
         requestId: { kind: "request-id" },
         from: { kind: "envelope-pinned-id" },
-        reason: { kind: "body", bound: kC },
+        reason: { kind: "body", bound: IDLE_SUMMARY_RECEIVE_BOUND },
         timestamp: { kind: "timestamp" },
       },
     ],
@@ -1705,7 +1705,7 @@ var Qt = 1024,
       {
         requestId: { kind: "request-id" },
         from: { kind: "envelope-pinned-id" },
-        reason: { kind: "body", bound: kC },
+        reason: { kind: "body", bound: IDLE_SUMMARY_RECEIVE_BOUND },
         timestamp: { kind: "timestamp" },
       },
     ],
@@ -1714,7 +1714,7 @@ var Qt = 1024,
       {
         taskId: { kind: "id" },
         subject: { kind: "line" },
-        description: { kind: "body", bound: eP },
+        description: { kind: "body", bound: IDLE_RESULT_MAX_LENGTH },
         assignedBy: { kind: "envelope-pinned-id" },
         timestamp: { kind: "timestamp" },
       },
@@ -1728,7 +1728,7 @@ var Qt = 1024,
         timestamp: { kind: "timestamp" },
       },
     ],
-    ["teammate_terminated", { message: { kind: "body", bound: eP } }],
+    ["teammate_terminated", { message: { kind: "body", bound: IDLE_RESULT_MAX_LENGTH } }],
     [
       "idle_notification",
       {
@@ -1738,12 +1738,12 @@ var Qt = 1024,
         summary: { kind: "line" },
         completedTaskId: { kind: "id" },
         completedStatus: { kind: "generic" },
-        failureReason: { kind: "body", bound: Kbn },
-        result: { kind: "body", bound: eP },
+        failureReason: { kind: "body", bound: FAILURE_REASON_MAX_LENGTH },
+        result: { kind: "body", bound: IDLE_RESULT_MAX_LENGTH },
       },
     ],
   ]);
-function Pwt(e, t) {
+function sanitizeReceivedStructuredFrame(e, t) {
   if (!mt.test(e)) return null;
   let r;
   try {
@@ -1754,7 +1754,7 @@ function Pwt(e, t) {
   if (!me(r)) return null;
   let o = r,
     i = o.type,
-    d = typeof i === "string" ? gfr.get(i) : void 0;
+    d = typeof i === "string" ? STRUCTURED_FRAME_RECEIVE_SPECS.get(i) : void 0;
   if (!d) return null;
   let u = new Set(Object.keys(d)),
     _ = [],
@@ -1768,7 +1768,7 @@ function Pwt(e, t) {
       _.push([w, Jt(d[w], x, t)]);
       continue;
     }
-    let E = Pj(w, V);
+    let E = capStrippedFrameField(w, V);
     if (E === "type" || u.has(E)) continue;
     let P = ee(x, Se),
       C = b(P).length + E.length;
@@ -1780,28 +1780,28 @@ function Pwt(e, t) {
 }
 function Jt(e, t, r) {
   if (e.kind === "generic") {
-    let o = typeof t === "string" ? Pj(t, V) : ee(t, Se);
+    let o = typeof t === "string" ? capStrippedFrameField(t, V) : ee(t, Se);
     if (o !== null && typeof o === "object" && b(o).length > Qt) return null;
     return o;
   }
   if (typeof t !== "string")
     switch (e.kind) {
       case "envelope-pinned-id":
-        return (typeof r === "string" ? rp(r, sh) || __ : void 0) ?? Iwt;
+        return (typeof r === "string" ? capIdFrameField(r, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER : void 0) ?? INVALID_ID_MARKER;
       case "id":
       case "request-id":
       case "pane-id":
       case "backend-type":
-        return Iwt;
+        return INVALID_ID_MARKER;
       case "timestamp":
-        return Xbn;
+        return INVALID_TIMESTAMP_MARKER;
       case "line":
       case "body":
         return "";
     }
   switch (e.kind) {
     case "id":
-      return rp(t, sh);
+      return capIdFrameField(t, IDLE_ID_FIELD_RECEIVE_BOUND);
     case "request-id":
       return Gt(t);
     case "pane-id":
@@ -1809,31 +1809,31 @@ function Jt(e, t, r) {
     case "backend-type":
       return Xt(t);
     case "envelope-pinned-id": {
-      let o = rp(t, sh),
-        i = typeof r === "string" ? rp(r, sh) || __ : void 0;
+      let o = capIdFrameField(t, IDLE_ID_FIELD_RECEIVE_BOUND),
+        i = typeof r === "string" ? capIdFrameField(r, IDLE_ID_FIELD_RECEIVE_BOUND) || UNKNOWN_SENDER : void 0;
       return i !== void 0 && o !== i ? i : o;
     }
     case "timestamp":
-      return dt.test(t) ? t : Xbn;
+      return dt.test(t) ? t : INVALID_TIMESTAMP_MARKER;
     case "line":
-      return rp(t, kC);
+      return capIdFrameField(t, IDLE_SUMMARY_RECEIVE_BOUND);
     case "body":
       return pt(t, e.bound);
   }
 }
-function hfr(e, t) {
+function idleFrameRecency(e, t) {
   let r = Date.parse(e.timestamp);
   return Number.isNaN(r) ? Number.NEGATIVE_INFINITY : Math.min(r, t);
 }
-function _fr(e) {
+function applyAggregateIdleResultBudget(e) {
   if (we.has(e)) return e;
   let t = e.slice(),
     r = [],
     o = Date.now();
   for (let u = 0; u < t.length; u++) {
-    let _ = Owt(t[u].text);
+    let _ = isIdleNotification(t[u].text);
     if (!_) {
-      let w = Pwt(t[u].text, t[u].from);
+      let w = sanitizeReceivedStructuredFrame(t[u].text, t[u].from);
       if (w !== null) t[u] = { ...t[u], text: w };
       continue;
     }
@@ -1841,10 +1841,10 @@ function _fr(e) {
     if (p.text !== t[u].text) t[u] = { ...t[u], text: p.text };
     let T = p.idle;
     if (typeof T.result === "string" && T.result)
-      r.push({ index: u, recency: hfr(T, o), idle: T });
+      r.push({ index: u, recency: idleFrameRecency(T, o), idle: T });
   }
   r.sort((u, _) => _.recency - u.recency || _.index - u.index);
-  let i = xZn,
+  let i = IDLE_RESULT_TOTAL_BUDGET,
     d = 0;
   for (let { index: u, idle: _ } of r) {
     let p = t[u];
@@ -1865,7 +1865,7 @@ function _fr(e) {
       },
       x = b({
         ...w,
-        result: `[result truncated \u2014 this drain's results exceeded ${xZn} characters${T}]`,
+        result: `[result truncated \u2014 this drain's results exceeded ${IDLE_RESULT_TOTAL_BUDGET} characters${T}]`,
       });
     if (x.length > i) x = b({ ...w, result: "[result truncated]" });
     if (x.length >= p.text.length) {
@@ -1882,23 +1882,23 @@ function _fr(e) {
 }
 var rt = new WeakSet(),
   we = new WeakSet();
-function H1e(e, t) {
+function createIdleNotification(e, t) {
   let r =
-    mfr(t?.result, t?.senderReachable ?? t?.idleReason !== "failed") || void 0;
+    capIdleResult(t?.result, t?.senderReachable ?? t?.idleReason !== "failed") || void 0;
   return {
     type: "idle_notification",
     from: e,
     timestamp: new Date().toISOString(),
     idleReason: t?.idleReason,
-    summary: t?.summary ? tP(t.summary) : void 0,
+    summary: t?.summary ? stripFrameControlChars(t.summary) : void 0,
     completedTaskId: t?.completedTaskId,
     completedStatus: t?.completedStatus,
     failureReason:
-      RXe(t?.failureReason ? tP(t.failureReason) : void 0) || void 0,
+      capFailureReasonForDisplay(t?.failureReason ? stripFrameControlChars(t.failureReason) : void 0) || void 0,
     result: r,
   };
 }
-function fCe(e, t, r) {
+function logIdleResultDeliveryOutcome(e, t, r) {
   if (e.result === void 0) return;
   if (r === void 0) f("swarm_idle_result_delivery", "mailbox_write_failed");
   else if (t !== void 0 && e.result === ft(t)) y("swarm_idle_result_delivery");
@@ -1929,42 +1929,42 @@ function on(e) {
     }).join(`
 `);
 }
-function tP(e) {
+function stripFrameControlChars(e) {
   return on(e.replace(en, ""));
 }
-function Pj(e, t) {
-  let r = tP(e),
+function capStrippedFrameField(e, t) {
+  let r = stripFrameControlChars(e),
     o = oe(r, t);
-  return o.length >= r.length ? o : tP(o);
+  return o.length >= r.length ? o : stripFrameControlChars(o);
 }
-function rp(e, t) {
-  return Pj(e, t).replace(/\s+/g, " ").trim();
+function capIdFrameField(e, t) {
+  return capStrippedFrameField(e, t).replace(/\s+/g, " ").trim();
 }
 var mt = /^\s*\{/;
-function wG(e, t) {
-  let r = mt.test(e) ? Owt(e) : null;
+function capRawFrameTextForDisplay(e, t) {
+  let r = mt.test(e) ? isIdleNotification(e) : null;
   if (r) return ct(e, r, t).text;
-  return Pwt(e, t) ?? e;
+  return sanitizeReceivedStructuredFrame(e, t) ?? e;
 }
 function ft(e) {
-  return tP(e.trim());
+  return stripFrameControlChars(e.trim());
 }
-function Owt(e) {
+function isIdleNotification(e) {
   try {
-    let t = bG().safeParse(z(e));
+    let t = IdleNotificationMessageSchema().safeParse(z(e));
     return t.success ? t.data : null;
   } catch {}
   return null;
 }
-var HZn = m(() => c({ tool_use_id: s(), tool_name: s(), input_digest: s() })),
-  yfr = m(() =>
+var ApprovedPermissionRequestSchema = m(() => c({ tool_use_id: s(), tool_name: s(), input_digest: s() })),
+  PermissionResponseMessageSchema = m(() =>
     Ko("subtype", [
       c({
         type: k("permission_response"),
         request_id: s().min(1),
         subtype: k("success"),
         tool_use_id: s().optional(),
-        approved_request: HZn().optional(),
+        approved_request: ApprovedPermissionRequestSchema().optional(),
         response: c({
           updated_input: fe(s(), se()).optional(),
           permission_updates: v(se()).optional(),
@@ -1975,12 +1975,12 @@ var HZn = m(() => c({ tool_use_id: s(), tool_name: s(), input_digest: s() })),
         request_id: s().min(1),
         subtype: k("error"),
         tool_use_id: s().optional(),
-        approved_request: HZn().optional(),
+        approved_request: ApprovedPermissionRequestSchema().optional(),
         error: s(),
       }),
     ]),
   );
-function Ybn(e) {
+function createPermissionRequestMessage(e) {
   return {
     type: "permission_request",
     request_id: e.request_id,
@@ -1992,7 +1992,7 @@ function Ybn(e) {
     permission_suggestions: e.permission_suggestions || [],
   };
 }
-function Jbn(e) {
+function createPermissionResponseMessage(e) {
   if (e.subtype === "error")
     return {
       type: "permission_response",
@@ -2014,14 +2014,14 @@ function Jbn(e) {
     },
   };
 }
-function jGt(e) {
+function isPermissionRequest(e) {
   try {
     let t = z(e);
     if (t && t.type === "permission_request") return t;
   } catch {}
   return null;
 }
-function I1e(e) {
+function isPermissionResponse(e) {
   let t;
   try {
     t = z(e);
@@ -2035,7 +2035,7 @@ function I1e(e) {
     t.type !== "permission_response"
   )
     return null;
-  let r = yfr().safeParse(t);
+  let r = PermissionResponseMessageSchema().safeParse(t);
   if (r.success) return r.data;
   return (
     n(
@@ -2045,7 +2045,7 @@ function I1e(e) {
     null
   );
 }
-function Qbn(e) {
+function createSandboxPermissionRequestMessage(e) {
   return {
     type: "sandbox_permission_request",
     requestId: e.requestId,
@@ -2056,7 +2056,7 @@ function Qbn(e) {
     createdAt: Date.now(),
   };
 }
-function Zbn(e) {
+function createSandboxPermissionResponseMessage(e) {
   return {
     type: "sandbox_permission_response",
     requestId: e.requestId,
@@ -2065,21 +2065,21 @@ function Zbn(e) {
     timestamp: new Date().toISOString(),
   };
 }
-function WGt(e) {
+function isSandboxPermissionRequest(e) {
   try {
     let t = z(e);
     if (t && t.type === "sandbox_permission_request") return t;
   } catch {}
   return null;
 }
-function GGt(e) {
+function isSandboxPermissionResponse(e) {
   try {
     let t = z(e);
     if (t && t.type === "sandbox_permission_response") return t;
   } catch {}
   return null;
 }
-var qGt = m(() =>
+var PlanApprovalRequestMessageSchema = m(() =>
     c({
       type: k("plan_approval_request"),
       from: s(),
@@ -2089,7 +2089,7 @@ var qGt = m(() =>
       requestId: s(),
     }),
   ),
-  zGt = m(() =>
+  PlanApprovalResponseMessageSchema = m(() =>
     c({
       type: k("plan_approval_response"),
       requestId: s(),
@@ -2099,7 +2099,7 @@ var qGt = m(() =>
       permissionMode: hkt().optional(),
     }),
   ),
-  VGt = m(() =>
+  ShutdownRequestMessageSchema = m(() =>
     c({
       type: k("shutdown_request"),
       requestId: s(),
@@ -2108,7 +2108,7 @@ var qGt = m(() =>
       timestamp: s(),
     }),
   ),
-  hfe = m(() =>
+  ShutdownApprovedMessageSchema = m(() =>
     c({
       type: k("shutdown_approved"),
       requestId: s(),
@@ -2118,7 +2118,7 @@ var qGt = m(() =>
       backendType: s().optional(),
     }),
   ),
-  ewn = m(() =>
+  ShutdownRejectedMessageSchema = m(() =>
     c({
       type: k("shutdown_rejected"),
       requestId: s(),
@@ -2127,7 +2127,7 @@ var qGt = m(() =>
       timestamp: s(),
     }),
   );
-function twn(e) {
+function createShutdownRequestMessage(e) {
   return {
     type: "shutdown_request",
     requestId: e.requestId,
@@ -2136,7 +2136,7 @@ function twn(e) {
     timestamp: new Date().toISOString(),
   };
 }
-function nwn(e) {
+function createShutdownApprovedMessage(e) {
   return {
     type: "shutdown_approved",
     requestId: e.requestId,
@@ -2146,7 +2146,7 @@ function nwn(e) {
     backendType: e.backendType,
   };
 }
-function rwn(e) {
+function createShutdownRejectedMessage(e) {
   return {
     type: "shutdown_rejected",
     requestId: e.requestId,
@@ -2155,34 +2155,34 @@ function rwn(e) {
     timestamp: new Date().toISOString(),
   };
 }
-function mCe(e) {
+function isShutdownRequest(e) {
   try {
-    let t = VGt().safeParse(z(e));
+    let t = ShutdownRequestMessageSchema().safeParse(z(e));
     if (t.success) return t.data;
   } catch {}
   return null;
 }
-function Dwt(e) {
+function isPlanApprovalRequest(e) {
   try {
-    let t = qGt().safeParse(z(e));
+    let t = PlanApprovalRequestMessageSchema().safeParse(z(e));
     if (t.success) return t.data;
   } catch {}
   return null;
 }
-function mJ(e) {
+function isShutdownApproved(e) {
   try {
-    let t = hfe().safeParse(z(e));
+    let t = ShutdownApprovedMessageSchema().safeParse(z(e));
     if (t.success) return t.data;
   } catch {}
   return null;
 }
-var Sfr = !0;
-function kXe(e, t) {
-  if (!e) return Sfr ? "unbound" : "mismatch";
+var UNBOUND_PLAN_VERDICT_HONOURED = !0;
+function planVerdictBinding(e, t) {
+  if (!e) return UNBOUND_PLAN_VERDICT_HONOURED ? "unbound" : "mismatch";
   if (e.answered) return "already_answered";
   return e.requestId === t.requestId ? "bound" : "mismatch";
 }
-function xXe(e) {
+function planVerdictMismatchRejection(e) {
   return {
     type: "plan_approval_response",
     requestId: e.requestId,
@@ -2192,9 +2192,9 @@ function xXe(e) {
     timestamp: e.timestamp,
   };
 }
-function HXe(e) {
+function isPlanApprovalResponse(e) {
   try {
-    let t = zGt().safeParse(z(e));
+    let t = PlanApprovalResponseMessageSchema().safeParse(z(e));
     if (t.success) return t.data;
   } catch {}
   return null;
@@ -2209,10 +2209,10 @@ var an = m(() =>
     timestamp: s(),
   }),
 );
-function own(e) {
-  return By(an(), e);
+function isTaskAssignment(e) {
+  return parseFrameForDisplay(an(), e);
 }
-var P1e = m(() =>
+var TaskCompletedMessageSchema = m(() =>
     c({
       type: k("task_completed"),
       from: s().optional(),
@@ -2221,15 +2221,15 @@ var P1e = m(() =>
       timestamp: s().optional(),
     }),
   ),
-  KGt = m(() => c({ type: k("teammate_terminated"), message: s() }));
-function By(e, t) {
+  TeammateTerminatedMessageSchema = m(() => c({ type: k("teammate_terminated"), message: s() }));
+function parseFrameForDisplay(e, t) {
   try {
     let r = e.strict().safeParse(z(t));
     if (r.success) return r.data;
   } catch {}
   return null;
 }
-function swn(e) {
+function isTeamPermissionUpdate(e) {
   try {
     let t = z(e);
     return !!t && t.type === "team_permission_update";
@@ -2237,7 +2237,7 @@ function swn(e) {
     return !1;
   }
 }
-function IXe(e) {
+function isModeSetRequest(e) {
   try {
     let t = z(e);
     return !!t && t.type === "mode_set_request";
@@ -2245,9 +2245,9 @@ function IXe(e) {
     return !1;
   }
 }
-var iwn =
+var PROTOCOL_FRAME_PROMPT_ERROR =
   "Teammate prompt must not be a mailbox protocol frame (permission/mode/plan/shutdown JSON) \u2014 pass plain-text instructions";
-function DH(e) {
+function isStructuredProtocolMessage(e) {
   try {
     let t = z(e);
     if (!t || typeof t !== "object" || !("type" in t)) return !1;
@@ -2269,8 +2269,8 @@ function DH(e) {
     return !1;
   }
 }
-function PXe(e) {
-  let t = e.feedback ? pt(e.feedback, eP) : "";
+function planApprovalResumeText(e) {
+  let t = e.feedback ? pt(e.feedback, IDLE_RESULT_MAX_LENGTH) : "";
   if (e.approved)
     return t
       ? `[Plan Approved] ${t}`
@@ -2279,7 +2279,7 @@ function PXe(e) {
 }
 var un = /^shutdown-[0-9]{1,20}@[\w.-]{1,64}$/,
   ln = "<requestId of the shutdown request>";
-function bfr(e) {
+function shutdownRequestReplyInstructions(e) {
   let t = un.test(e),
     r = b({
       to: fs,
@@ -2291,20 +2291,20 @@ function bfr(e) {
     });
   return `To approve it, call ${Vr} with exactly this input, where "message" is a JSON object rather than a string${t ? "" : " and request_id is the request's requestId value, copied verbatim"}: ${r}. Approving ends your process; a plain-text acknowledgment does not shut you down. To decline, for example because you're mid-task, send the same input with "approve": false and a "reason".`;
 }
-function O1e(e, t) {
+function withShutdownReplyInstructions(e, t) {
   if (t !== fs || !e.includes('"shutdown_request"')) return e;
-  let r = mCe(e);
+  let r = isShutdownRequest(e);
   return r
     ? `${e}
 
-This is a shutdown request. ${bfr(r.requestId)}`
+This is a shutdown request. ${shutdownRequestReplyInstructions(r.requestId)}`
     : e;
 }
-function awn(e) {
-  return !DH(e) || mJ(e) !== null || mCe(e) !== null || Dwt(e) !== null;
+function isHeadlessLeadDisplayableMessage(e) {
+  return !isStructuredProtocolMessage(e) || isShutdownApproved(e) !== null || isShutdownRequest(e) !== null || isPlanApprovalRequest(e) !== null;
 }
-async function OXe(e, t, r, o) {
-  let i = x1e(e, r),
+async function markMessagesAsReadByPredicate(e, t, r, o) {
+  let i = getInboxPath(e, r),
     d = M() && o !== void 0 ? W(e, r) : void 0;
   if (M() && o !== void 0 && d !== void 0)
     try {
@@ -2326,7 +2326,7 @@ async function OXe(e, t, r, o) {
     _;
   try {
     _ = await Cs(i, { lockfilePath: u, ...U });
-    let p = await ffe(e, r, void 0, { throwOnUnknownReadError: !0 });
+    let p = await readMailbox(e, r, void 0, { throwOnUnknownReadError: !0 });
     if (p.length === 0) return !0;
     let T = p.filter((w) => !w.read && !t(w));
     return (await qt().atomicWrite(i, b(T, null, 2)), !0);
@@ -2337,7 +2337,7 @@ async function OXe(e, t, r, o) {
     await hf(_, "[TeammateMailbox] markMessagesAsReadByPredicate");
   }
 }
-function Lwt(e) {
+function isTeammateWakeupPrompt(e) {
   return (
     e.type === "user" &&
     e.isMeta !== !0 &&
@@ -2346,11 +2346,11 @@ function Lwt(e) {
       !e.message.content.some((t) => t.type === "tool_result"))
   );
 }
-function lwn(e) {
+function getLastPeerDmSummary(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
     if (!r) continue;
-    if (Lwt(r)) break;
+    if (isTeammateWakeupPrompt(r)) break;
     if (r.type !== "assistant") continue;
     for (let o of r.message.content)
       if (
@@ -2371,9 +2371,9 @@ function lwn(e) {
               : void 0,
           u = FGt(o.input);
         if (u !== void 0)
-          return `[to ${x$(o.input.to)}] ${x$(u.summary.length > 0 ? u.summary : u.message.trim())}`;
+          return `[to ${capFrameFieldForDisplay(o.input.to)}] ${capFrameFieldForDisplay(u.summary.length > 0 ? u.summary : u.message.trim())}`;
         if (typeof i === "string")
-          return `[to ${x$(o.input.to)}] ${x$(d !== void 0 ? d : oe(i, 80))}`;
+          return `[to ${capFrameFieldForDisplay(o.input.to)}] ${capFrameFieldForDisplay(d !== void 0 ? d : oe(i, 80))}`;
       }
   }
   return;
@@ -2409,86 +2409,86 @@ export {
   Vbn,
   RZn,
   dCe,
-  uyr,
-  ffr,
-  x1e,
-  ffe,
-  mfe,
-  ag,
-  BGt,
-  pJ,
-  SG,
-  fJ,
-  kwt,
-  vXe,
-  coe,
-  bG,
-  Kbn,
-  kZn,
-  x$,
-  RXe,
-  xwt,
-  OH,
-  eP,
-  xZn,
-  mfr,
-  kC,
-  sh,
-  pCe,
-  Hwt,
-  Xbn,
-  Iwt,
-  gfe,
-  __,
-  gfr,
-  Pwt,
-  hfr,
-  _fr,
-  H1e,
-  fCe,
-  tP,
-  Pj,
-  rp,
-  wG,
-  Owt,
-  HZn,
-  yfr,
-  Ybn,
-  Jbn,
-  jGt,
-  I1e,
-  Qbn,
-  Zbn,
-  WGt,
-  GGt,
-  qGt,
-  zGt,
-  VGt,
-  hfe,
-  ewn,
-  twn,
-  nwn,
-  rwn,
-  mCe,
-  Dwt,
-  mJ,
-  Sfr,
-  kXe,
-  xXe,
-  HXe,
-  own,
-  P1e,
-  KGt,
-  By,
-  swn,
-  IXe,
-  iwn,
-  DH,
-  PXe,
-  bfr,
-  O1e,
-  awn,
-  OXe,
-  Lwt,
-  lwn,
+  flushPendingMailboxPrunes,
+  pruneInvalidMailboxEntries,
+  getInboxPath,
+  readMailbox,
+  readUnreadMessages,
+  writeToMailbox,
+  markSingleMessageAsRead,
+  MARK_READ_FAILURE_CAP,
+  messageIdentityKey,
+  markMessagesAsRead,
+  clearMailbox,
+  formatTeammateMessage,
+  formatTeammateMessages,
+  IdleNotificationMessageSchema,
+  FAILURE_REASON_MAX_LENGTH,
+  SUMMARY_DISPLAY_MAX_LENGTH,
+  capFrameFieldForDisplay,
+  capFailureReasonForDisplay,
+  PLAN_CONTENT_DISPLAY_BOUND,
+  capFrameBodyForDisplay,
+  IDLE_RESULT_MAX_LENGTH,
+  IDLE_RESULT_TOTAL_BUDGET,
+  capIdleResult,
+  IDLE_SUMMARY_RECEIVE_BOUND,
+  IDLE_ID_FIELD_RECEIVE_BOUND,
+  IDLE_FRAME_TOTAL_RECEIVE_BOUND,
+  capReceivedIdleResult,
+  INVALID_TIMESTAMP_MARKER,
+  INVALID_ID_MARKER,
+  FRAME_SANITIZED_FOR_DISPLAY_MARKER,
+  UNKNOWN_SENDER,
+  STRUCTURED_FRAME_RECEIVE_SPECS,
+  sanitizeReceivedStructuredFrame,
+  idleFrameRecency,
+  applyAggregateIdleResultBudget,
+  createIdleNotification,
+  logIdleResultDeliveryOutcome,
+  stripFrameControlChars,
+  capStrippedFrameField,
+  capIdFrameField,
+  capRawFrameTextForDisplay,
+  isIdleNotification,
+  ApprovedPermissionRequestSchema,
+  PermissionResponseMessageSchema,
+  createPermissionRequestMessage,
+  createPermissionResponseMessage,
+  isPermissionRequest,
+  isPermissionResponse,
+  createSandboxPermissionRequestMessage,
+  createSandboxPermissionResponseMessage,
+  isSandboxPermissionRequest,
+  isSandboxPermissionResponse,
+  PlanApprovalRequestMessageSchema,
+  PlanApprovalResponseMessageSchema,
+  ShutdownRequestMessageSchema,
+  ShutdownApprovedMessageSchema,
+  ShutdownRejectedMessageSchema,
+  createShutdownRequestMessage,
+  createShutdownApprovedMessage,
+  createShutdownRejectedMessage,
+  isShutdownRequest,
+  isPlanApprovalRequest,
+  isShutdownApproved,
+  UNBOUND_PLAN_VERDICT_HONOURED,
+  planVerdictBinding,
+  planVerdictMismatchRejection,
+  isPlanApprovalResponse,
+  isTaskAssignment,
+  TaskCompletedMessageSchema,
+  TeammateTerminatedMessageSchema,
+  parseFrameForDisplay,
+  isTeamPermissionUpdate,
+  isModeSetRequest,
+  PROTOCOL_FRAME_PROMPT_ERROR,
+  isStructuredProtocolMessage,
+  planApprovalResumeText,
+  shutdownRequestReplyInstructions,
+  withShutdownReplyInstructions,
+  isHeadlessLeadDisplayableMessage,
+  markMessagesAsReadByPredicate,
+  isTeammateWakeupPrompt,
+  getLastPeerDmSummary,
 };

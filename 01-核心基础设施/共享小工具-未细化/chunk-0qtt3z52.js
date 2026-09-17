@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { rt, Ue, H, ql } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getMainLoopModel as rt, getCanonicalName as Ue, H, ql } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function o() {
   let e = ql()?.pewter_owl_model;
   if (typeof e === "string" && e !== "") return e;
@@ -22,12 +22,12 @@ function r(e) {
   if (t !== "" && !Ue(rt()).includes(t)) return !1;
   return H(`tengu_${e}`, !1) || ql()?.[e] === !0;
 }
-function Qpe() {
+function isPewterOwlTool() {
   if (a.CLAUDE_CODE_PEWTER_OWL_TOOL !== void 0)
     return a.CLAUDE_CODE_PEWTER_OWL_TOOL;
   return r("pewter_owl_tool");
 }
-function VSn() {
+function isPewterOwlBrief() {
   return r("pewter_owl_brief");
 }
-export { Qpe, VSn };
+export { isPewterOwlTool, isPewterOwlBrief };

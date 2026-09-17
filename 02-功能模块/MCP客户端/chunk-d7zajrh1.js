@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { S1, Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gVn, Sjt, bjt, _C, tK, cNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { te, Pn, xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getRuntimeMainLoopModel as ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { gVn, Sjt, bjt, attributionSkillName as _C, dropShadowedFallbackSkills as tK, isFallbackStub as cNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { te, formatTokens as Pn, formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { i3e, $Bn } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { Ule } from "../插件系统/chunk-gzfe39h3.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";

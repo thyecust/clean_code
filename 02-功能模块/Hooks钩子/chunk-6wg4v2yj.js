@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Z, Xrt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
@@ -18,10 +18,10 @@ import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱�
 import { iu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { WZ, R$n } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { yW } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Pi, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getGlobalClaudeFile as Pi, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { C_, yi, Ow, Zge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { C_, yi, Ow, parseSettingsFileUncached as Zge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   GOe,
   iT,
@@ -42,8 +42,8 @@ import {
   jun,
   NGn,
   lUt,
-  m3,
-  AV,
+  isRemoteToolServingMuted as m3,
+  onServingMuteRecheck as AV,
   pT,
   $X,
   Sde,
@@ -82,20 +82,20 @@ import {
   zMe,
   pXn,
   H9t,
-  x_n,
+  evaluateHookIfCondition as x_n,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { findGitRootUncached as k0 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { ho, ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource as ho, getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { I6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ri, nVt } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isViolinWoodEnabledCached as ri, isViolinAmatiEnabledCached as nVt } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { hD } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { Rme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { v3e } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
+import { untrustedDeviceHint as Rme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { primeUnattendedServingConsent as v3e } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { p2n, m2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { xC, moe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { kS } from "../Bridge-RemoteControl/chunk-x379yyxb.js";

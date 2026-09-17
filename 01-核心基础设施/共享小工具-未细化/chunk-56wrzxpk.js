@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { or } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate as or } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 function Bdt(r) {
   if (typeof r !== "object" || r === null) return "";
   let n = r;

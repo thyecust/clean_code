@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  qo,
-  zp,
-  Di,
+  getCommandName as qo,
+  isCommandEnabled as zp,
+  findCommand as Di,
   oV,
   WF,
   I2,
   Re,
   em,
-  LI,
-  cAe,
-  uAe,
+  builtInCommandNames as LI,
+  isBridgeSafeCommand as cAe,
+  findBridgeFallback as uAe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { kbe, tH, xbe } from "../用量额度-限额/chunk-1bfn62xh.js";
 import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
-function bgr(l) {
+function resolveBridgeSlashOverride(l) {
   let { inputString: t, context: n, uuid: r, origin: m } = l,
     a = p(t, n.options.commands);
   if (a === void 0) return { kind: "none" };
@@ -103,10 +103,10 @@ function p(l, t) {
         : void 0;
   return { parsed: n, cmd: m, folded: e, effectiveCmd: e ? e.command : m };
 }
-function cen(l, t) {
+function bridgeSlashLineBuildsRequest(l, t) {
   let n = p(l, t);
   if (n === void 0) return !0;
   let { effectiveCmd: r } = n;
   return r.type === "prompt" && cAe(r);
 }
-export { bgr, cen };
+export { resolveBridgeSlashOverride, bridgeSlashLineBuildsRequest };

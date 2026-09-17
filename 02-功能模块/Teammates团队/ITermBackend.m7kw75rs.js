@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 20 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { SN, pwn, L1e } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isInITerm2 as SN, getIt2Command as pwn, isIt2CliAvailable as L1e } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { jk, cCe } from "./chunk-6b13bhw1.js";
 import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 function d(e) {

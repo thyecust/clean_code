@@ -13,7 +13,7 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";

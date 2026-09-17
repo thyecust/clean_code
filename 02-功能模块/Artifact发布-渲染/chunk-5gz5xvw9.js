@@ -8,30 +8,30 @@
 
 // Version: 2.1.263
 import { Xn, Si, K, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fr } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Ja, WD } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { ARTIFACT_SLUG_RE as fr } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isActingAsBgJob as Ja, getBgJobDir as WD } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Kse, gA, kU } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { UZe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { ownProcStartMemo as Kse, ownProcStartAsync as gA, procIdentityFields as kU } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidSpace as UZe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
-  il,
-  Tp,
-  ore,
-  sre,
-  Thn,
-  $yt,
-  VEe,
-  Ehn,
-  kc,
-  Wyt,
-  Ihn,
-  RE,
-  Khn,
-  Xhn,
+  getMaterializedSessionFile as il,
+  getTranscriptPathForSession as Tp,
+  getTranscriptWriteFailureSeq as ore,
+  registerTranscriptExitReStamp as sre,
+  registerTranscriptExitDrain as Thn,
+  registerForeignTranscriptExitReStamp as $yt,
+  currentSessionFileIsFor as VEe,
+  onSessionFileMaterialized as Ehn,
+  flushSessionStorage as kc,
+  appendEntryToCurrentTranscriptNow as Wyt,
+  sealTornTranscriptTail as Ihn,
+  appendEntryToFileAsync as RE,
+  recordArtifactCommentMonitor as Khn,
+  takeResumedArtifactCommentMonitor as Xhn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl } from "../Teammates团队/chunk-thxapyam.js";
 import { ne, RTn } from "./chunk-rr78st95.js";

@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot as zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, mcpNameForAnalytics_GATE_EVALUATED as Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ki, wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOkAsync as ki, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Lq, qge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Iet, ye, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getLocalSettingsValidationErrors as Iet, getSettingsForSource as ye, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { o, t, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
@@ -35,20 +35,20 @@ import {
   qLe,
   zLe,
   ZTe,
-  uj,
-  KM,
-  MWt,
-  Jde,
-  N3,
-  mY,
-  nd,
-  wyt,
-  vE,
-  Zm,
-  Uo,
+  isMcpServerAllowedByPolicy as uj,
+  addMcpConfig as KM,
+  removeMcpConfig as MWt,
+  readRawMcpJsonServersFromCwd as Jde,
+  MCP_SETTINGS_SCOPES as N3,
+  isOrganizationProvidedMcpScope as mY,
+  getMcpConfigsByScope as nd,
+  getSettingsMcpConfigByName as wyt,
+  getAllMcpConfigs as vE,
+  doesEnterpriseMcpConfigExist as Zm,
+  isMcpServerDisabled as Uo,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
-import { Uu } from "../Skills技能/chunk-sapykxw7.js";
+import { isRestrictedToPluginOnly as Uu } from "../Skills技能/chunk-sapykxw7.js";
 import { QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -56,10 +56,10 @@ import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { i9e } from "./chunk-rxp6fm7a.js";
-import { kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { flushAnalyticsSinks as kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Gb, bv } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import { rM, un, di, dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { printCliError as rM, cliError as un, cliErrorAfterAnalyticsFlush as di, cliOkAfterAnalyticsFlush as dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { HUn } from "./chunk-35zjqw7h.js";
 import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -392,7 +392,7 @@ async function Br(
   try {
     let { setup: g } = await import("../../03-入口与运行时/CLI入口-Commander/setup.sbdmcpy2.js");
     await g(y, "default", !1, !1, void 0, !1, void 0, void 0, void 0, m);
-    let { SandboxManager: C } = await import("./SandboxManager.creds2pz.js"),
+    let { SandboxManager: C } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       O = C.getSandboxUnavailableReason();
     if (O) {
       if (C.isSandboxRequired())

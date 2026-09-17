@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { D2, d3, Rk, VM, xE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { clearAgentDefinitionsCache as D2, d3, Rk, resetSentSkillNames as VM, clearCommandsCache as xE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { iM } from "../../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js";
 async function M3e() {
   (d3(), xE(), D2(), VM(), Rk.emit());

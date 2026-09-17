@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { uo, Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var t = {
     claudeMd: !0,
     skills: !0,
@@ -48,15 +48,15 @@ var t = {
     lspServers: !1,
     keybindings: !1,
   };
-function Xr(e, s) {
+function isCustomizationDisabled(e, s) {
   if (Hr() && !l[e]) return !0;
   if (uo() && !s?.explicitlyRequested) return t[e];
   return !1;
 }
-function uR() {
+function isClaudeMdLoadingDisabled() {
   return Boolean(
     a.CLAUDE_CODE_DISABLE_CLAUDE_MDS ||
-    Xr("claudeMd", { explicitlyRequested: mp().length > 0 }),
+    isCustomizationDisabled("claudeMd", { explicitlyRequested: mp().length > 0 }),
   );
 }
-export { Xr, uR };
+export { isCustomizationDisabled, isClaudeMdLoadingDisabled };

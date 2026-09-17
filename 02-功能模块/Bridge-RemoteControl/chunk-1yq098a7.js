@@ -10,16 +10,16 @@
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { ju, ege, dq, RUe, nZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { pQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { describeAxiosError as pQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 function GY(e) {
@@ -280,13 +280,13 @@ var b = new Gt(() => new C());
 async function DAe(e = { refresh: !0 }) {
   {
     let { primePeerIdentityOwner: t } = import.meta.require(
-      "../权限系统/setSupervisedBridgeSession.a6q1nmz6.js",
+      "../权限系统/chunk-1y2g140m.js",
     );
     await t(e);
   }
 }
 function m() {
-  let { getPeerBridgeIdentity: e } = import.meta.require("../权限系统/setSupervisedBridgeSession.a6q1nmz6.js"),
+  let { getPeerBridgeIdentity: e } = import.meta.require("../权限系统/chunk-1y2g140m.js"),
     t = e();
   return t?.live ? t.key : null;
 }
@@ -438,7 +438,7 @@ class w {
   }
 }
 function S() {
-  let { walkCredentialKey: e } = import.meta.require("../权限系统/setSupervisedBridgeSession.a6q1nmz6.js");
+  let { walkCredentialKey: e } = import.meta.require("../权限系统/chunk-1y2g140m.js");
   return e();
 }
 var k = new Gt(() => new w());
@@ -446,7 +446,7 @@ async function jpe(e, t) {
   {
     let { hasCloudPeerAccess: i } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
     if (!i()) return { sessions: [], unavailable: "gate_off" };
-    let { walkCcrSessionList: r } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/CCR_LIST_TARGET_VISIBLE.t4wy28wc.js"),
+    let { walkCcrSessionList: r } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js"),
       s = k.of(e),
       o = S(),
       u = s.warm(o);
@@ -484,7 +484,7 @@ function A(e, t, i, r) {
     o = s ? pr(a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "") : "";
   if (o === "") {
     let { getPeerBridgeIdentity: c } = import.meta.require(
-        "../权限系统/setSupervisedBridgeSession.a6q1nmz6.js",
+        "../权限系统/chunk-1y2g140m.js",
       ),
       g = c()?.bridgeSessionId;
     o = typeof g === "string" ? pr(g) : "";
@@ -512,7 +512,7 @@ function A(e, t, i, r) {
     let f = !1;
     if (s) {
       let { isRemoteControlPeerUnreachableFromHere: d } = import.meta.require(
-        "./getTrustedDeviceToken.xdsmf5rh.js",
+        "./chunk-tyce0p0b.js",
       );
       f = d();
     }
@@ -558,7 +558,7 @@ function qNe(e, t, i) {
   try {
     if (!ibt(e)?.find((o) => pr(o.id) === pr(t))?.unreachableFromHere) return;
     let { formatUnreachableElevatedRefusal: s } = import.meta.require(
-      "./getTrustedDeviceToken.xdsmf5rh.js",
+      "./chunk-tyce0p0b.js",
     );
     return s(i);
   } catch (r) {

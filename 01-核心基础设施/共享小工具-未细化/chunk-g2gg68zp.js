@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { _t, vn, qn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession as _t, getOauthAccountInfo as vn, getSubscriptionType as qn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
 import { tst } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";

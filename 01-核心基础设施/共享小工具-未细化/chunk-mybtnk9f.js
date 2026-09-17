@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { Mb, Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "./chunk-78nzsrc6.js";
-import { ii } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
-import { Pf } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import { getTeamName as ii } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
+import { readTeamFileAsync as Pf } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
 import { fA, yr, b5, jD, bP, aRe, lRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { pWt, lgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

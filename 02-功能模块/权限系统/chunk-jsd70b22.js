@@ -11,15 +11,15 @@ import { rE, Gt, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { z, Ro, ae, qr, Zhe, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, cd } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
-  yg,
+  isAutoClassifierActive as yg,
   Cor,
   rx,
   y5,
@@ -37,7 +37,7 @@ import {
 import {
   Uwe,
   DUt,
-  st,
+  SandboxManager as st,
   dT,
   lzn,
   czn,
@@ -45,13 +45,13 @@ import {
   bzn,
   wzn,
   aH,
-  cgt,
-  c3,
-  HO,
-  BDe,
-  gd,
-  jv,
-  Vue,
+  resetDenialStreakAfterUserApproval as cgt,
+  stripWholeToolGrantsForAsk as c3,
+  withoutGrantsForRemoteScope as HO,
+  guardHookUpdatedInput as BDe,
+  hasPermissionsToUseTool as gd,
+  checkRuleBasedPermissions as jv,
+  executePermissionRequestHooks as Vue,
   zDe,
   t4n,
   ATe,
@@ -68,7 +68,7 @@ import {
   Wv,
   Vpn,
   kX,
-  Em,
+  WebFetchTool as Em,
   yht,
   Y2,
   zS,
@@ -77,7 +77,7 @@ import {
   oMe,
   uEe,
   QX,
-  mH,
+  setPermissionModeWithGuards as mH,
   aj,
   Yne,
   a8n,
@@ -92,14 +92,14 @@ import {
   II,
   $3,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { ot, kQ, Dge } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { ov } from "./chunk-e4pfvp7x.js";
+import { OUTSIDE_READS_BLOCKED_DENY_REASON as ov } from "./chunk-e4pfvp7x.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { FJ } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { turnAbortControllerOf as FJ } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   ps,
   Tme,
@@ -118,13 +118,13 @@ import {
   Jnr,
   Oo,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { dAn, ce } from "./chunk-fjrcf22x.js";
+import { unstripSkillInvocationAllowRules as dAn, getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
 import { FK, bzt, Kk, nme, RD, Wg } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Wh, Cp, Gh, MN } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Lwt, lwn } from "../Teammates团队/chunk-g6nvp9mm.js";
+import { Wh, notePlanFileForgotten as Cp, getPlanFilePath as Gh, getPlan as MN } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { isTeammateWakeupPrompt as Lwt, getLastPeerDmSummary as lwn } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { KYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { BI } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { CFC_TOOL_PREFIX as BI } from "../ClaudeinChrome/chunk-hnp84hf6.js";
 import { Iin, ste } from "../插件系统/chunk-4k4dssd9.js";
 import { I1t } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
 import { rWn, xin, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
@@ -1837,7 +1837,7 @@ var fo = null,
   De = import.meta.require("../Workflow编排/WorkflowTool.b1s7beta.js").WorkflowTool,
   ho = import.meta.require("../../01-核心基础设施/共享小工具-未细化/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
   bo = import.meta.require("../Workflow编排/recordWorkflowUsageConsent.w6jg9g54.js"),
-  Qo = import.meta.require("../工具Monitor/MonitorTool.srts92dh.js").MonitorTool,
+  Qo = import.meta.require("../工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
   ko =
     "The request this approval was for had already been withdrawn; the answer applied to nothing.";
 function J(e) {

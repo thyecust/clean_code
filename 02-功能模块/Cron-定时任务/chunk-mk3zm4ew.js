@@ -8,32 +8,32 @@
 
 // Version: 2.1.263
 import { m0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { mN } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { QI } from "../工具Monitor/chunk-kxk3njnj.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-var nm = "CronCreate",
-  YS = "CronDelete",
-  Jre = "CronList";
+var CRON_CREATE_TOOL_NAME = "CronCreate",
+  CRON_DELETE_TOOL_NAME = "CronDelete",
+  CRON_LIST_TOOL_NAME = "CronList";
 var t = 300000,
-  nJ = mN.recurringMaxAgeMs / 86400000;
-function EC() {
+  DEFAULT_MAX_AGE_DAYS = mN.recurringMaxAgeMs / 86400000;
+function isKairosCronEnabled() {
   return !a.CLAUDE_CODE_DISABLE_CRON && m0("tengu_kairos_cron", !0, t);
 }
-function yK() {
+function isDurableCronEnabled() {
   return m0("tengu_kairos_cron_durable", !0, t);
 }
-function ubn(e) {
+function buildCronCreateDescription(e) {
   return e
     ? "Schedule a prompt to run at a future time \u2014 either recurring on a cron schedule, or once at a specific time. Pass durable: true to persist to .claude/scheduled_tasks.json; otherwise session-only."
     : "Schedule a prompt to run at a future time within this Claude session \u2014 either recurring on a cron schedule, or once at a specific time.";
 }
-function dbn(e) {
+function buildDurableParamDescription(e) {
   return e
     ? "true = persist to .claude/scheduled_tasks.json and survive restarts. false (default) = in-memory only, dies when this Claude session ends. Use true only when the user asks the task to survive across sessions."
     : "Has no effect \u2014 durable persistence is not available. All jobs are session-only (in-memory, gone when this Claude session ends).";
 }
-function pbn(e) {
+function buildCronCreatePrompt(e) {
   let o = e
       ? `## Durability
 
@@ -75,7 +75,7 @@ ${
     ? `
 ## Not for live watching
 
-${nm} re-runs a prompt at fixed wall-clock intervals. To watch a log file, process, or command output and be notified the moment something changes, use the ${ia} tool instead \u2014 ${ia} streams events as they happen; cron polls on a schedule.
+${CRON_CREATE_TOOL_NAME} re-runs a prompt at fixed wall-clock intervals. To watch a log file, process, or command output and be notified the moment something changes, use the ${ia} tool instead \u2014 ${ia} streams events as they happen; cron polls on a schedule.
 `
     : ""
 }
@@ -83,20 +83,20 @@ ${nm} re-runs a prompt at fixed wall-clock intervals. To watch a log file, proce
 
 Jobs only fire while the REPL is idle (not mid-query). ${s}The scheduler adds a small deterministic jitter on top of whatever you pick: recurring tasks fire up to 10% of their period late (max 15 min); one-shot tasks landing on :00 or :30 fire up to 90 s early. Picking an off-minute is still the bigger lever.
 
-Recurring tasks auto-expire after ${nJ} days \u2014 they fire one final time, then are deleted. This bounds session lifetime. Tell the user about the ${nJ}-day limit when scheduling recurring jobs.
+Recurring tasks auto-expire after ${DEFAULT_MAX_AGE_DAYS} days \u2014 they fire one final time, then are deleted. This bounds session lifetime. Tell the user about the ${DEFAULT_MAX_AGE_DAYS}-day limit when scheduling recurring jobs.
 
-Returns a job ID you can pass to ${YS}.`;
+Returns a job ID you can pass to ${CRON_DELETE_TOOL_NAME}.`;
 }
-var fbn = "Cancel a scheduled cron job by ID";
-function mbn(e) {
+var CRON_DELETE_DESCRIPTION = "Cancel a scheduled cron job by ID";
+function buildCronDeletePrompt(e) {
   return e
-    ? `Cancel a cron job previously scheduled with ${nm}. Removes it from .claude/scheduled_tasks.json (durable jobs) or the in-memory session store (session-only jobs).`
-    : `Cancel a cron job previously scheduled with ${nm}. Removes it from the in-memory session store.`;
+    ? `Cancel a cron job previously scheduled with ${CRON_CREATE_TOOL_NAME}. Removes it from .claude/scheduled_tasks.json (durable jobs) or the in-memory session store (session-only jobs).`
+    : `Cancel a cron job previously scheduled with ${CRON_CREATE_TOOL_NAME}. Removes it from the in-memory session store.`;
 }
-var gbn = "List scheduled cron jobs";
-function hbn(e) {
+var CRON_LIST_DESCRIPTION = "List scheduled cron jobs";
+function buildCronListPrompt(e) {
   return e
-    ? `List all cron jobs scheduled via ${nm}, both durable (.claude/scheduled_tasks.json) and session-only.`
-    : `List all cron jobs scheduled via ${nm} in this session.`;
+    ? `List all cron jobs scheduled via ${CRON_CREATE_TOOL_NAME}, both durable (.claude/scheduled_tasks.json) and session-only.`
+    : `List all cron jobs scheduled via ${CRON_CREATE_TOOL_NAME} in this session.`;
 }
-export { nm, YS, Jre, nJ, EC, yK, ubn, dbn, pbn, fbn, mbn, gbn, hbn };
+export { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, CRON_LIST_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt, CRON_DELETE_DESCRIPTION, buildCronDeletePrompt, CRON_LIST_DESCRIPTION, buildCronListPrompt };

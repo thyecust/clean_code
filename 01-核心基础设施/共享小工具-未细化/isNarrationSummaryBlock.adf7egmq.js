@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ol } from "./chunk-7xabjzfw.js";
 import "./chunk-kk3mqttk.js";
 import { _Gn, yGn } from "./chunk-se27pkgx.js";

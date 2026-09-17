@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { lS, Ip, ii, cS } from "./chunk-811z9z0t.js";
-import { ag, Ybn, Jbn, Qbn, Zbn } from "./chunk-g6nvp9mm.js";
-import { Pf } from "./chunk-6b13bhw1.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getAgentId as lS, getAgentName as Ip, getTeamName as ii, getTeammateColor as cS } from "./chunk-811z9z0t.js";
+import { writeToMailbox as ag, createPermissionRequestMessage as Ybn, createPermissionResponseMessage as Jbn, createSandboxPermissionRequestMessage as Qbn, createSandboxPermissionResponseMessage as Zbn } from "./chunk-g6nvp9mm.js";
+import { readTeamFileAsync as Pf } from "./chunk-6b13bhw1.js";
 import { fs } from "./chunk-enjekn9t.js";
 import { createHash as w } from "crypto";
 var x = 32;

@@ -10,38 +10,38 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { zu, yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId as zu, toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { lv, Ri } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Sn, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Mp, Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getProjectDir as Mp, canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Wd, Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { Wd, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import {
   Ds,
   Ct,
-  jO,
+  rootLaptopDirSyncRegistry as jO,
   SKe,
   qVn,
   vht,
-  Af,
-  UX,
-  WO,
-  kht,
-  J2,
-  BX,
-  Rne,
+  builderGit as Af,
+  readGitLayout as UX,
+  layoutStillHolds as WO,
+  parseGitVersion as kht,
+  hardenedSpawnEnv as J2,
+  reachRootsOf as BX,
+  BuilderGitProbes as Rne,
   bde,
   r$,
-  Jm,
+  MAX_WORKING_FILE_BYTES as Jm,
   Xfn,
   GO,
   E3,

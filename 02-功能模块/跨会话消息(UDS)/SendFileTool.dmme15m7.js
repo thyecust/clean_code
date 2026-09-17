@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 187 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Dr } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -21,10 +21,10 @@ import { Xme, uf, GCt, yr, jD, eZe } from "../认证-OAuth登录/认证-OAuth登
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ps, Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { hasIsolatePeerMachines as gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ps, isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
@@ -41,8 +41,8 @@ import {
   EPe,
   SF,
 } from "../Teammates团队/chunk-sr4920wy.js";
-import { ni, sm, Gy, ww } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Ds, i3, gzn, hzn, x3, n8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { ni, sm, READ_PATH_PROBE as Gy, readPermissionDecisionForPath as ww } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { Ds, i3, gzn, hzn, x3, getCurrentSessionPeerNameFor as n8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
 import { $i } from "../Teammates团队/chunk-t899nada.js";
 import { hO, uI, rOe, Lpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
@@ -179,7 +179,7 @@ ${wNt}`
       let {
         isRemoteControlPeerUnreachableFromHere: p,
         formatUnreachableElevatedRefusal: b,
-      } = import.meta.require("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js");
+      } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js");
       if (t.via === "remote-control" && p())
         return {
           kind: "refused",
@@ -529,7 +529,7 @@ var $e = Tt({
       let {
           isRemoteControlPeerUnreachableFromHere: r,
           formatUnreachableElevatedRefusal: y,
-        } = import.meta.require("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js"),
+        } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js"),
         N =
           qNe(o.session, _.sessionId, _.label) ??
           (_.via === "remote-control" && r() ? y(_.label) : void 0);
@@ -625,7 +625,7 @@ var $e = Tt({
       if (h.aborted) throw (E(), new Ve());
       if (N.length === 0)
         return w(`No files could be staged for transfer to ${d.label}.`, r);
-      let { sendToUdsSocket: X } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js");
+      let { sendToUdsSocket: X } = import.meta.require("./chunk-ddtmwhn7.js");
       try {
         let { msgId: g } = await X(
           d.sock,

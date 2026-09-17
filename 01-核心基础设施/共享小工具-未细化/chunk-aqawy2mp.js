@@ -46,7 +46,7 @@ function u(i, r, o, n = "connection", a) {
       ));
   });
 }
-async function Rbe(i, r) {
+async function boundDial(i, r) {
   let o = r.timeoutMs ?? Hl(),
     { signal: n, cleanup: a } = Fa(r.signal, { timeoutMs: o, refTimer: !0 });
   try {
@@ -57,7 +57,7 @@ async function Rbe(i, r) {
 }
 var d = 5000,
   m = 300000;
-function Win(i) {
+function createDialFailureLatch(i) {
   let r = i?.baseHoldMs ?? d,
     o = i?.maxHoldMs ?? m,
     n = new Map(),
@@ -83,4 +83,4 @@ function Win(i) {
     },
   };
 }
-export { Rbe, Win };
+export { boundDial, createDialFailureLatch };

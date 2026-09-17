@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 function jy(t) {
   return (
     a.CLAUDE_CODE_DISABLE_BUNDLED_SKILLS ||

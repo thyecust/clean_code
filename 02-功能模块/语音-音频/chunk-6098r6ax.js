@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St, U1 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ex, cl, Yt, Qi, Ss, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ab, Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getUserAgent as ex, isAnthropicAuthEnabled as cl, getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, checkAndRefreshOAuthTokenIfNeeded as Ss, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import m from "ws";
 var V = '{"type":"KeepAlive"}',
   F = '{"type":"CloseStream"}',
@@ -33,7 +33,7 @@ function D(e) {
   return Jr(e)?.toLowerCase() ?? "unknown";
 }
 var N = 1500;
-async function Fnn() {
+async function probeVoiceConnectivity() {
   if (St() || U1()) return "skipped_privacy";
   try {
     let e = await at.get(`${Vt().BASE_API_URL}/api/hello`, {
@@ -57,7 +57,7 @@ function B() {
   if (a.CLAUDE_CODE_VOICE_FORWARD_INTERIMS_TYPED) return !0;
   return H("tengu_brick_follow", !1);
 }
-function $nn() {
+function isVoiceStreamAvailable() {
   if (!cl()) return !1;
   let e = Yt();
   return e !== null && e.accessToken !== null;
@@ -79,7 +79,7 @@ function W(e) {
   }
   return d.join(",");
 }
-async function Unn(e, s, d) {
+async function connectVoiceStream(e, s, d) {
   let u;
   if (M() && d !== void 0) (await Ss({ credentials: d }), (u = await Qi(d)));
   else (await Ss(), (u = Yt()));
@@ -313,4 +313,4 @@ async function Unn(e, s, d) {
     w
   );
 }
-export { Fnn, $nn, Unn };
+export { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream };

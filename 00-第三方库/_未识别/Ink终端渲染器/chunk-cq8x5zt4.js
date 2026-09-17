@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { zm } from "../../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
-import { a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { AppRoot as zm } from "../../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { e } from "../../react/react.kwtapczy.js";
 import { Dn, kn, E, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -28,7 +28,7 @@ function H(o) {
       G.set(o, t));
   return t;
 }
-function rye(o, t, c = {}) {
+function runSteps(o, t, c = {}) {
   let n = H(o),
     d = ++n.run,
     S = c.marksJobBlocked === !0 && !!a.CLAUDE_JOB_DIR;
@@ -54,7 +54,7 @@ function rye(o, t, c = {}) {
           V = () => {
             if (S && !g && !R && !M)
               g = O(() =>
-                import("../../../02-功能模块/后台任务-Shell管理/clearStartupDialogBlocked.1zrxea5b.js").then((s) =>
+                import("../../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js").then((s) =>
                   s.markStartupDialogBlocked(),
                 ),
               );
@@ -66,7 +66,7 @@ function rye(o, t, c = {}) {
                 let I = await s;
                 if (I)
                   await (
-                    await import("../../../02-功能模块/后台任务-Shell管理/clearStartupDialogBlocked.1zrxea5b.js")
+                    await import("../../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js")
                   ).clearStartupDialogBlocked(I);
               });
           },
@@ -127,7 +127,7 @@ function rye(o, t, c = {}) {
     b(C(0));
   });
 }
-function Gx(o, t, c = {}) {
+function showScreen(o, t, c = {}) {
   let n = H(o);
   n.run++;
   let d = () => {},
@@ -230,4 +230,4 @@ function T(ae) {
   else ee = U[11];
   return ee;
 }
-export { rye, Gx };
+export { runSteps, showScreen };

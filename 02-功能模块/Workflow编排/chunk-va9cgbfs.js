@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { XZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { _l, Sd, GSn, KAe } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { getTaskOutputPath as _l, evictTaskOutput as Sd, writeTaskOutputSnapshot as GSn, initTaskOutput as KAe } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import {
   pUt,
   eh,
@@ -30,7 +30,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xs, Md } from "../Teammates团队/chunk-mrfx53ye.js";
 var I = 500;
-function $in({
+function registerWorkflowTask({
   taskId: e,
   script: r,
   scriptPath: o,
@@ -77,7 +77,7 @@ function $in({
     };
   return (w.register(h), h);
 }
-function Uin(e, r) {
+function registerAdoptedWorkflowTask(e, r) {
   let o = Md(e.taskId, "local_workflow", e.description, void 0),
     t = {
       ...o,
@@ -98,7 +98,7 @@ function Uin(e, r) {
     };
   r.register(t);
 }
-function Bin(e, r, o) {
+function updateWorkflowProgressBatch(e, r, o) {
   if (r.length === 0) return;
   o.update(e, (t) => {
     if (t.status !== "running") return t;
@@ -184,7 +184,7 @@ function A(e, r, o, t) {
     });
   return s;
 }
-function jin(e, r, o, t, s, a) {
+function completeWorkflowTask(e, r, o, t, s, a) {
   let l = A(e, s, "completed", {
     result: r,
     agentCount: o,
@@ -216,21 +216,21 @@ function jin(e, r, o, t, s, a) {
     ),
       y("task_local_workflow"));
 }
-function N1t(e, r, o, t, s, a) {
+function failWorkflowTask(e, r, o, t, s, a) {
   let l = A(e, s, "failed", { error: r, agentCount: o, logs: t, terminal: a });
   if ((Sd(e), l)) f("task_local_workflow", "task_local_workflow_failed");
 }
-function k7(e, r) {
+function pauseWorkflowTask(e, r) {
   let o = A(e, r, "paused", { notified: !0 });
   if (o)
     (o.v2Run?.kill("pause"), bE(o.ownerAgentId, `workflow:${e}`, r), Ote(e));
   return o !== null;
 }
-function F1t(e) {
+function buildResumePrompt(e) {
   let r = e.args !== void 0 ? `, args: ${b(e.args)}` : "";
   return `Resume the paused workflow by calling: Workflow({scriptPath: '${e.scriptPath}', resumeFromRunId: '${e.workflowRunId}'${r}}) \u2014 completed agents return cached results.`;
 }
-function EF(e, r, o) {
+function killWorkflowTask(e, r, o) {
   if (r.get(e)?.status === "running" && eh(e) && !pUt(e))
     g("task_kill_missing_loop_entry", "local_workflow");
   let t = A(e, r, "killed", { notified: !0 });
@@ -261,15 +261,15 @@ function j(e, r, o, t) {
     );
   return s;
 }
-function Cbe(e, r, o) {
+function skipWorkflowAgent(e, r, o) {
   return j(e, r, "user-skip", o);
 }
-function vbe(e, r, o) {
+function retryWorkflowAgent(e, r, o) {
   return j(e, r, "user-retry", o);
 }
 var N = /^(\[\s*\]|\{\s*\}|\{\s*"[^"]+"\s*:\s*\[\s*\]\s*\})$/,
   H = 4 * XZe;
-function $1t({
+function enqueueWorkflowNotification({
   taskId: e,
   summary: r,
   status: o,
@@ -408,4 +408,4 @@ function $1t({
     { turnAttribution: "inherit" },
   );
 }
-export { $in, Uin, Bin, jin, N1t, k7, F1t, EF, Cbe, vbe, $1t };
+export { registerWorkflowTask, registerAdoptedWorkflowTask, updateWorkflowProgressBatch, completeWorkflowTask, failWorkflowTask, pauseWorkflowTask, buildResumePrompt, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent, enqueueWorkflowNotification };

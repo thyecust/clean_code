@@ -11,16 +11,16 @@ import { ns, fv, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   r0,
-  E5,
-  Gl,
-  qg,
-  bg,
-  Yt,
-  gt,
-  lp,
+  describeHowToDisableAuthTokenSource as E5,
+  getAuthTokenSource as Gl,
+  getAnthropicApiKeyWithSource as qg,
+  getConfiguredApiKeyHelper as bg,
+  getClaudeAIOAuthTokens as Yt,
+  isClaudeAISubscriber as gt,
+  hasProfileScope as lp,
   kZe,
   XC,
   CU,
@@ -30,25 +30,25 @@ import {
   Qh,
   ee,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { yXt } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { yA, Eet, Pe, In, GRe, ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { THIRD_PARTY_PROVIDER_LABELS as yA, THIRD_PARTY_PROVIDER_ENV_VARS as Eet, getAPIProvider as Pe, isFirstPartyProvider as In, getSecondaryProvider as GRe, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { D6, MRe, lBe, Qse, cBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { oCn, lA, Mt, Cme, xve, aCn, ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getPolicyCacheRevision as oCn, isPolicyLimitsEligible as lA, isPolicyAllowed as Mt, isPolicyRouteMissing as Cme, hasNameableComplianceTaint as xve, getPolicyDefault as aCn, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { e5, H4t } from "./chunk-eg5a0eq0.js";
-function u6() {
+function isBridgeFirstParty() {
   if (!In()) return !1;
   return !!a.ANTHROPIC_UNIX_SOCKET || ev();
 }
-function R$e() {
-  return u6() && l() && H("tengu_ccr_bridge", !1);
+function hasBridgeEntitlement() {
+  return isBridgeFirstParty() && l() && H("tengu_ccr_bridge", !1);
 }
-function $Je() {
-  if (R$e()) return null;
+function getBridgeEntitlementBlocker() {
+  if (hasBridgeEntitlement()) return null;
   if (!d()) return "not_signed_in";
   if (!l()) return "api_key_auth";
   if (!g()) return "no_profile_scope";
@@ -57,40 +57,40 @@ function $Je() {
 function u() {
   return !1;
 }
-function KG() {
+function isRemoteControlHardDisabled() {
   return Pw()?.settings.disableRemoteControl === !0;
 }
-function lb() {
+function isBridgeEnabled() {
   if (u()) return !0;
-  if (KG()) return !1;
-  return !UC() && R$e();
+  if (isRemoteControlHardDisabled()) return !1;
+  return !isRunningInRemoteEnvironment() && hasBridgeEntitlement();
 }
-function RAn() {
+function isRemoteControlDeploymentAvailable() {
   if (u()) return !0;
-  return !KG() && !UC() && u6();
+  return !isRemoteControlHardDisabled() && !isRunningInRemoteEnvironment() && isBridgeFirstParty();
 }
-async function kAn() {
+async function isBridgeEnabledBlocking() {
   if (u()) return !0;
-  if (KG()) return !1;
-  return u6() && !UC() && l() && (await od("tengu_ccr_bridge"));
+  if (isRemoteControlHardDisabled()) return !1;
+  return isBridgeFirstParty() && !isRunningInRemoteEnvironment() && l() && (await od("tengu_ccr_bridge"));
 }
 var O =
   "Remote Control is disabled by your organization's policy. Contact your organization admin for access.";
 function S() {
-  return C4t();
+  return isPolicyLimitsCacheLoaded();
 }
-function w4t() {
+function describeRemoteControlPolicyDenial() {
   return lBe("Remote Control", "is", mx(), O);
 }
-async function T4t() {
+async function getBridgeDisabledReason() {
   if (u()) return null;
-  if (!u6()) return N();
-  if (UC()) return "Remote Control is not available inside a cloud session.";
-  if (KG()) return e5;
+  if (!isBridgeFirstParty()) return N();
+  if (isRunningInRemoteEnvironment()) return "Remote Control is not available inside a cloud session.";
+  if (isRemoteControlHardDisabled()) return e5;
   if (!d())
     return "Remote Control requires a claude.ai subscription. Run `claude auth login` to sign in with your claude.ai account.";
   if (!l())
-    return A4t({
+    return describeAuthPrecedenceBlocker({
       prefix: "Remote Control requires claude.ai subscription auth.",
       suffix: "to use Remote Control.",
     });
@@ -98,8 +98,8 @@ async function T4t() {
     return "Remote Control requires a full-scope login token. Long-lived tokens (from `claude setup-token` or CLAUDE_CODE_OAUTH_TOKEN) are limited to inference-only for security reasons. Run `claude auth login` to use Remote Control.";
   if (!h()?.organizationUuid)
     return "Unable to determine your organization for Remote Control eligibility. Run `claude auth login` to refresh your account information.";
-  await Eve();
-  let e = k$e();
+  await ensurePolicyLimitsLoadedForDiagnostic();
+  let e = getRemoteControlPolicyVerdict();
   if (e === "unavailable") return H4t;
   if (e === "denied") return T();
   if (!CU()) {
@@ -125,7 +125,7 @@ function T() {
     if (Cme()) return cBe("Remote Control");
     if (!xve()) return O;
     if (!S()) return Qse("Remote Control");
-    return w4t();
+    return describeRemoteControlPolicyDenial();
   } catch {
     return H4t;
   }
@@ -133,9 +133,9 @@ function T() {
 function D(e) {
   return MRe(e).map(D6).join(", ");
 }
-function E4t() {
+function getRemoteControlPolicyLockReason() {
   if (u()) return null;
-  if (KG()) return e5;
+  if (isRemoteControlHardDisabled()) return e5;
   let e = Jo(),
     o = oCn(),
     t = e.remoteControlLockReason;
@@ -147,12 +147,12 @@ function E4t() {
   );
 }
 function P() {
-  let e = k$e();
+  let e = getRemoteControlPolicyVerdict();
   if (e === "allowed") return null;
   if (e === "unavailable") return H4t;
   return T();
 }
-function byr() {
+function getBridgeAuthDebugInfo() {
   if (!pB()) return "";
   let e = (o) => (o ? "set" : "unset");
   try {
@@ -197,19 +197,19 @@ function v() {
     `  tengu_ccr_bridge=${String(o.tengu_ccr_bridge ?? "unset")}`,
   ];
 }
-async function xAn() {
-  if (UC() && !u())
+async function getBridgeDoctorInfo() {
+  if (isRunningInRemoteEnvironment() && !u())
     return { disabledReason: null, inRemoteSession: !0, checks: [] };
-  (_q(), await Eve());
-  let e = await T4t(),
+  (_q(), await ensurePolicyLimitsLoadedForDiagnostic());
+  let e = await getBridgeDisabledReason(),
     o = yXt() ?? (a.DISABLE_GROWTHBOOK ? "DISABLE_GROWTHBOOK" : null),
-    t = u6(),
-    r = !KG(),
+    t = isBridgeFirstParty(),
+    r = !isRemoteControlHardDisabled(),
     i = d(),
     _ = l(),
     f = g(),
     p = !!h()?.organizationUuid,
-    c = k$e(),
+    c = getRemoteControlPolicyVerdict(),
     m = S(),
     I = D(mx()),
     E = CU(),
@@ -302,7 +302,7 @@ function w(e) {
   if (r < 48) return `${r}h`;
   return `${Math.round(r / 24)}d`;
 }
-function A4t({ prefix: e, suffix: o }) {
+function describeAuthPrecedenceBlocker({ prefix: e, suffix: o }) {
   try {
     let { source: t } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
     if (t === "ANTHROPIC_API_KEY")
@@ -371,7 +371,7 @@ function h() {
     return;
   }
 }
-async function Eve() {
+async function ensurePolicyLimitsLoadedForDiagnostic() {
   try {
     await k();
   } catch (e) {
@@ -402,78 +402,78 @@ async function k() {
   }
   await o.diagnosticPolicyKick;
 }
-function k$e() {
+function getRemoteControlPolicyVerdict() {
   try {
     return Mt("allow_remote_control") ? "allowed" : "denied";
   } catch {
     return "unavailable";
   }
 }
-function Ave() {
-  return lb() && k$e() === "allowed";
+function isRemoteControlOfferable() {
+  return isBridgeEnabled() && getRemoteControlPolicyVerdict() === "allowed";
 }
-function C4t() {
+function isPolicyLimitsCacheLoaded() {
   if (!lA()) return !0;
   return ch() !== null;
 }
-function UC() {
+function isRunningInRemoteEnvironment() {
   return Ie(process.env.CLAUDE_CODE_REMOTE) || Nn();
 }
-function HAn() {
+function isCseShimEnabled() {
   return H("tengu_bridge_repl_v2_cse_shim_enabled", !0);
 }
-function ZK() {
+function isBridgeStateFramesEnabled() {
   return H("tengu_luminous_seal", !0);
 }
-function IAn() {
+function isBridgePartialMessagesEnabled() {
   return H("tengu_bridge_partial_messages", !1);
 }
-function iAt() {
+function isSdkBridgeStateAnnounceEnabled() {
   return H("tengu_wobbly_pinwheel", !0);
 }
-function v4t() {
+function isBridgeEffortSyncEnabled() {
   return H("tengu_copper_kestrel", !0);
 }
-function x$e() {
+function isBridgeAuthReviveEnabled() {
   return H("tengu_bridge_auth_revive", !0);
 }
-function R4t() {
+function isBridgeNonOrigin403RetryEnabled() {
   return H("tengu_ethereal_mist", !0);
 }
-function PAn() {
+function isBridgeResumeRespectsLocalOwnerEnabled() {
   return H("tengu_bridge_resume_respects_local_owner", !0);
 }
-function OAn() {
+function isBridgeRestoredMatchMintEnabled() {
   return H("tengu_sequential_puffin", !0);
 }
-function wme() {
+function isBridgeOwnerPinnedEndEnabled() {
   return H("tengu_bridge_owner_pinned_end", !0);
 }
-function DAn() {
+function isBridgeEnvReregisterEnabled() {
   return H("tengu_glimmering_glade", !0);
 }
-function k4t() {
+function isBridgeHostDeclinedEndEnabled() {
   return H("tengu_bridge_host_declined_end", !0);
 }
-function LAn() {
+function isBridgeSignedOutNeutralEnabled() {
   return H("tengu_bridge_signed_out_neutral", !0);
 }
-function ise() {
+function isCcrV2SendEventsEnabled() {
   return H("tengu_ccr_v2_send_events_cli", !0);
 }
-function XG() {
+function isCcrV2SessionCrudEnabled() {
   return H("tengu_ccr_v2_session_crud_cli", !1);
 }
-function wyr() {
+function isCcrV2BridgeCreateEnabled() {
   return H("tengu_ccr_v2_bridge_create_cli", !1);
 }
-function UJe() {
+function isBridgeRateLimitEventEnabled() {
   return H("tengu_composed_quail", !0);
 }
-function MAn() {
+function isQuotaRejectedReemitEnabled() {
   return H("tengu_gravel_chorus", !0);
 }
-function Tyr() {
+function checkBridgeMinVersion() {
   let e = Qh("tengu_bridge_min_version", { minVersion: "0.0.0" });
   if (
     e.minVersion &&
@@ -498,35 +498,35 @@ function Tyr() {
 Version ${e.minVersion} or higher is required. Run \`claude update\` to update.`;
   return null;
 }
-function BJe() {
-  return x4t().value;
+function getCcrAutoConnectDefault() {
+  return resolveCcrAutoConnectDefault().value;
 }
-function x4t() {
-  if (UC()) return { value: !1, source: "remote_env" };
-  if (VJ()) return { value: !0, source: "persistent_remote_session" };
+function resolveCcrAutoConnectDefault() {
+  if (isRunningInRemoteEnvironment()) return { value: !1, source: "remote_env" };
+  if (isPersistentRemoteSessionEnabled()) return { value: !0, source: "persistent_remote_session" };
   let e = aCn("remote_control_at_startup");
   if (e !== void 0) return { value: e, source: "org_policy" };
   return { value: H("tengu_cobalt_harbor", !1), source: "growthbook" };
 }
-function VJ() {
+function isPersistentRemoteSessionEnabled() {
   return !1;
 }
-function Eyr() {
+function isUdsEnableRemoteControlEnabled() {
   return !1;
 }
-function jJe() {
+function isRemoteControlInternalEventsEnabled() {
   return H("tengu_amber_relay", !1);
 }
-function NAn() {
+function isBridgeServerSessionConfigEnabled() {
   return !1;
 }
-function WJe() {
+function getBridgeSubagentFrameGate() {
   return {
     enabled: H("tengu_bridge_subagent_frames", !0),
     forwardText: H("tengu_bridge_subagent_text", !1),
   };
 }
-function FAn(e, o) {
+function applyRemoteControlToAppState(e, o) {
   if (e.replBridgeOutboundOnly && !o)
     return e.replBridgeSessionGroupingId !== void 0
       ? { ...e, replBridgeSessionGroupingId: void 0 }
@@ -543,49 +543,49 @@ function FAn(e, o) {
   };
 }
 export {
-  u6,
-  R$e,
-  $Je,
-  KG,
-  lb,
-  RAn,
-  kAn,
-  w4t,
-  T4t,
-  E4t,
-  byr,
-  xAn,
-  A4t,
-  Eve,
-  k$e,
-  Ave,
-  C4t,
-  UC,
-  HAn,
-  ZK,
-  IAn,
-  iAt,
-  v4t,
-  x$e,
-  R4t,
-  PAn,
-  OAn,
-  wme,
-  DAn,
-  k4t,
-  LAn,
-  ise,
-  XG,
-  wyr,
-  UJe,
-  MAn,
-  Tyr,
-  BJe,
-  x4t,
-  VJ,
-  Eyr,
-  jJe,
-  NAn,
-  WJe,
-  FAn,
+  isBridgeFirstParty,
+  hasBridgeEntitlement,
+  getBridgeEntitlementBlocker,
+  isRemoteControlHardDisabled,
+  isBridgeEnabled,
+  isRemoteControlDeploymentAvailable,
+  isBridgeEnabledBlocking,
+  describeRemoteControlPolicyDenial,
+  getBridgeDisabledReason,
+  getRemoteControlPolicyLockReason,
+  getBridgeAuthDebugInfo,
+  getBridgeDoctorInfo,
+  describeAuthPrecedenceBlocker,
+  ensurePolicyLimitsLoadedForDiagnostic,
+  getRemoteControlPolicyVerdict,
+  isRemoteControlOfferable,
+  isPolicyLimitsCacheLoaded,
+  isRunningInRemoteEnvironment,
+  isCseShimEnabled,
+  isBridgeStateFramesEnabled,
+  isBridgePartialMessagesEnabled,
+  isSdkBridgeStateAnnounceEnabled,
+  isBridgeEffortSyncEnabled,
+  isBridgeAuthReviveEnabled,
+  isBridgeNonOrigin403RetryEnabled,
+  isBridgeResumeRespectsLocalOwnerEnabled,
+  isBridgeRestoredMatchMintEnabled,
+  isBridgeOwnerPinnedEndEnabled,
+  isBridgeEnvReregisterEnabled,
+  isBridgeHostDeclinedEndEnabled,
+  isBridgeSignedOutNeutralEnabled,
+  isCcrV2SendEventsEnabled,
+  isCcrV2SessionCrudEnabled,
+  isCcrV2BridgeCreateEnabled,
+  isBridgeRateLimitEventEnabled,
+  isQuotaRejectedReemitEnabled,
+  checkBridgeMinVersion,
+  getCcrAutoConnectDefault,
+  resolveCcrAutoConnectDefault,
+  isPersistentRemoteSessionEnabled,
+  isUdsEnableRemoteControlEnabled,
+  isRemoteControlInternalEventsEnabled,
+  isBridgeServerSessionConfigEnabled,
+  getBridgeSubagentFrameGate,
+  applyRemoteControlToAppState,
 };

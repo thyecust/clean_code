@@ -17,7 +17,7 @@ import {
   zfn,
   $M,
   r$,
-  Jm,
+  MAX_WORKING_FILE_BYTES as Jm,
   Pht,
   ILe,
   Oht,

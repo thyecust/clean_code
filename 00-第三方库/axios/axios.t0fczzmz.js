@@ -5680,14 +5680,14 @@ I.default = I;
 var at = I;
 var {
   Axios: Sy,
-  AxiosError: Nnt,
+  AxiosError: AxiosError,
   CanceledError: Ay,
-  isCancel: qi,
+  isCancel: isCancel,
   CancelToken: Oy,
   VERSION: Cy,
   all: vy,
   Cancel: Ty,
-  isAxiosError: xd,
+  isAxiosError: isAxiosError,
   spread: Py,
   toFormData: Fy,
   AxiosHeaders: Ly,
@@ -5696,4 +5696,4 @@ var {
   getAdapter: Dy,
   mergeConfig: Uy,
 } = at;
-export { APn, oXt, Mnt, at, Nnt, qi, xd };
+export { APn, oXt, Mnt, at as default, AxiosError, isCancel, isAxiosError };

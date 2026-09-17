@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sQ, k6, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { sQ, isUsing3PServices as k6, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { tWe, Qst, s$n } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import { eo } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill as eo } from "../Skills技能/chunk-1zy5c8mf.js";
 import { SSt } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
 function v() {
   return import("./SKILL_PROMPT.6yeyjf7j.js");

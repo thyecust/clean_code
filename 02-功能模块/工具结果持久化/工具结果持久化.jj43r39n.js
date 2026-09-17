@@ -15,7 +15,7 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { hL, _L, PIn, OIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { u1, Mvt, Oir, Dir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 var Wre = "https://claude.com/claude-code";
 function O(t, e) {
   return t?.includes("_staging_") === !0 || e?.includes("staging") === !0;
@@ -29,7 +29,7 @@ function QNe(t, e) {
   return "https://claude.ai";
 }
 function wa(t, e, r) {
-  let { toCompatSessionId: s } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/setCseShimGate.9kyvz0fg.js"),
+  let { toCompatSessionId: s } = import.meta.require("../权限系统/chunk-ynkf3yy4.js"),
     a = s(t),
     l = `${QNe(a, e)}/code/${a}`;
   return r ? `${l}?${new URLSearchParams(r)}` : l;

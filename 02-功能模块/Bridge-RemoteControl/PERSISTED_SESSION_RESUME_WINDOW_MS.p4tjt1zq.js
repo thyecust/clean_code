@@ -15,8 +15,8 @@ import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chu
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { B2e, Sc, yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { ykt } from "../权限系统/chunk-ynkf3yy4.js";
+import { B2e, getProjectsDir as Sc, getProjectKey as yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isSafeBridgeId as ykt } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { mkdir as h, readFile as B, stat as _, unlink as E } from "fs/promises";
 import { dirname as x, join as I } from "path";

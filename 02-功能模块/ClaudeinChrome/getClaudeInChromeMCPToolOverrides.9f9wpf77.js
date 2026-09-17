@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Vyn } from "./chunk-hnp84hf6.js";
+import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { trackClaudeInChromeTabId as Vyn } from "./chunk-hnp84hf6.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "./chunk-317fgfn3.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";

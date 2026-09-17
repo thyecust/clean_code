@@ -11,7 +11,7 @@ import { j, B, g_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { Nse, ee, ARe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { da } from "./设置-配置.aqbb35ee.js";
-import { rRt, ABe, uRt, CQ, vQ, RBe } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { rRt, ABe, uRt, getBasePolicySettings as CQ, getBasePolicySettingsOrigin as vQ, getPolicyHelperSourceLoadErrors as RBe } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Qxn, Bet } from "../共享小工具-未细化/chunk-1bqqnyc1.js";
 import { goe } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { Q2n } from "../共享小工具-未细化/chunk-01r8gcpb.js";
@@ -40,10 +40,10 @@ async function sPe(t) {
       { primeRemoteManagedSettingsCache: a },
       { primeWorkspaceRoots: r },
     ] = await Promise.all([
-      import("./seedUserSettings.z495qy4c.js"),
-      import("./getSecureStorage.4fsas7z0.js"),
-      import("./HELPER_CONSENT_STATE_ID.v68394d6.js"),
-      import("./primeWorkspaceRoots.9c0hdmnf.js"),
+      import("./chunk-b536v45y.js"),
+      import("../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js"),
+      import("./设置-配置.aqbb35ee.js"),
+      import("../共享小工具-未细化/chunk-bgf8jybv.js"),
     ]);
     (await r(e),
       await Promise.all([ARe(e), o(e, da())]),
@@ -57,8 +57,8 @@ async function sPe(t) {
         { primeStoredLoginCopy: a },
       ] = await Promise.all([
         import("../共享小工具-未细化/credentialsStoreFor.r7prg4pg.js"),
-        import("./primeFileDescriptorCredentials.rs3ert6b.js"),
-        import("./getClaudeAIOAuthTokens.zrcwmb1h.js"),
+        import("../共享小工具-未细化/chunk-fpak7ean.js"),
+        import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
       ]),
       r = o(e);
     if (r !== void 0) (await i(r, { bgAuthSnapshot: "leave" }), await a(r));

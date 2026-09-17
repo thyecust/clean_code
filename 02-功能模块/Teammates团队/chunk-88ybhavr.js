@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
-var Pft = "in-process";
-class wGn {
+var DEFAULT_TEAMMATE_MODE = "in-process";
+class TeammateModeSnapshot {
   captured = null;
   cliOverride = null;
   setCliOverride(e) {
@@ -25,33 +25,33 @@ class wGn {
     ((this.captured = e), (this.cliOverride = null));
   }
 }
-var bpr = new j(() => new wGn());
+var teammateModeSnapshots = new j(() => new TeammateModeSnapshot());
 function t() {
-  return bpr.of(B().host);
+  return teammateModeSnapshots.of(B().host);
 }
-function d_r(e) {
+function setCliTeammateModeOverride(e) {
   t().setCliOverride(e);
 }
-function Iun() {
+function getCliTeammateModeOverride() {
   return t().cliOverride;
 }
-function Pun(e) {
+function clearCliTeammateModeOverride(e) {
   (t().replaceWith(e),
     n(`[TeammateModeSnapshot] CLI override cleared, new mode: ${e}`));
 }
-function Oun() {
+function hasTeammateModeSnapshot() {
   return t().captured !== null;
 }
-function q$t() {
+function captureTeammateModeSnapshot() {
   let e = t();
   if (e.cliOverride)
     (e.capture(e.cliOverride),
       n(`[TeammateModeSnapshot] Captured from CLI override: ${e.captured}`));
   else
-    (e.capture(Eo("teammateMode", Pft).value),
+    (e.capture(Eo("teammateMode", DEFAULT_TEAMMATE_MODE).value),
       n(`[TeammateModeSnapshot] Captured from config: ${e.captured}`));
 }
-function MOe() {
+function getTeammateModeFromSnapshot() {
   let e = t();
   if (e.captured === null)
     (h(
@@ -59,7 +59,7 @@ function MOe() {
         "getTeammateModeFromSnapshot called before capture - this indicates an initialization bug",
       ),
     ),
-      q$t());
-  return e.captured ?? Pft;
+      captureTeammateModeSnapshot());
+  return e.captured ?? DEFAULT_TEAMMATE_MODE;
 }
-export { Pft, wGn, bpr, d_r, Iun, Pun, Oun, q$t, MOe };
+export { DEFAULT_TEAMMATE_MODE, TeammateModeSnapshot, teammateModeSnapshots, setCliTeammateModeOverride, getCliTeammateModeOverride, clearCliTeammateModeOverride, hasTeammateModeSnapshot, captureTeammateModeSnapshot, getTeammateModeFromSnapshot };

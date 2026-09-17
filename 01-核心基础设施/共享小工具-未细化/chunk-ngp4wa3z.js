@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { au, Ae } from "./chunk-2c9tjhwd.js";
 var Ftn = {};
-au(Ftn, { SKILL_MD: () => Ntn, default: () => Ftn });
+au(Ftn, { SKILL_MD: () => SKILL_MD, default: () => Ftn });
 var e = Ae("./SKILL-5m53528d.md");
-var Ntn = e;
-export { Ntn, Ftn };
+var SKILL_MD = e;
+export { SKILL_MD, Ftn as default };

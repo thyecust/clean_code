@@ -16,7 +16,7 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { Nk, Tj } from "./chunk-jz6b76hr.js";
 import { cn, c4, u4 } from "./chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { Xr } from "./chunk-dqyc6kge.js";
+import { isCustomizationDisabled as Xr } from "./chunk-dqyc6kge.js";
 import { twe, D9, Zb, $ze, wln } from "./chunk-q7ekqy5h.js";
 import { zl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { S0n } from "../权限系统/chunk-e4pfvp7x.js";

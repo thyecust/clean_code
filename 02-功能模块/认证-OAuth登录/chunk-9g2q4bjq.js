@@ -11,8 +11,8 @@ import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d
 function c() {
   return "prod";
 }
-var qhe = ["", "-staging-oauth", "-local-oauth", "-custom-oauth"];
-function F1() {
+var OAUTH_GLOBAL_FILE_SUFFIXES = ["", "-staging-oauth", "-local-oauth", "-custom-oauth"];
+function fileSuffixForOauthConfig() {
   if (process.env.CLAUDE_CODE_CUSTOM_OAUTH_URL) return "-custom-oauth";
   switch (c()) {
     case "local":
@@ -23,24 +23,24 @@ function F1() {
       return "";
   }
 }
-var uB = 31536000;
-var OPn = Math.round(uB / 86400),
-  py = "user:inference",
-  dB = "user:profile",
+var LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS = 31536000;
+var SETUP_TOKEN_DEFAULT_EXPIRY_DAYS = Math.round(LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS / 86400),
+  CLAUDE_AI_INFERENCE_SCOPE = "user:inference",
+  CLAUDE_AI_PROFILE_SCOPE = "user:profile",
   s = "org:create_api_key",
-  Bc = "oauth-2025-04-20",
-  r = [s, dB],
-  Z5 = [
-    dB,
-    py,
+  OAUTH_BETA_HEADER = "oauth-2025-04-20",
+  r = [s, CLAUDE_AI_PROFILE_SCOPE],
+  CLAUDE_AI_OAUTH_SCOPES = [
+    CLAUDE_AI_PROFILE_SCOPE,
+    CLAUDE_AI_INFERENCE_SCOPE,
     "user:sessions:claude_code",
     "user:mcp_servers",
     "user:file_upload",
   ],
-  DPn = Y([...r, ...Z5]),
-  eZ = ["user:design:read", "user:design:write"],
+  ALL_OAUTH_SCOPES = Y([...r, ...CLAUDE_AI_OAUTH_SCOPES]),
+  DESIGN_OAUTH_SCOPES = ["user:design:read", "user:design:write"],
   n = ["user:projects:read", "user:projects:write", "user:plugins"];
-function zhe(t) {
+function preservableScopesFrom(t) {
   if (!Array.isArray(t)) return [];
   let o = n;
   return t.filter((e) => o.includes(e));
@@ -65,7 +65,7 @@ var _ = {
     MCP_PROXY_URL: "https://mcp-proxy.anthropic.com",
     MCP_PROXY_PATH: "/v1/mcp/{server_id}",
   },
-  tae = "https://claude.ai/oauth/claude-code-client-metadata",
+  MCP_CLIENT_METADATA_URL = "https://claude.ai/oauth/claude-code-client-metadata",
   E = void 0;
 function u() {
   let t =
@@ -95,12 +95,12 @@ function u() {
     MCP_PROXY_PATH: "/v1/toolbox/shttp/mcp/{server_id}",
   };
 }
-var nae = [
+var ALLOWED_OAUTH_BASE_URLS = [
   "https://beacon.claude-ai.staging.ant.dev",
   "https://claude.fedstart.com",
   "https://claude-staging.fedstart.com",
 ];
-function Vt() {
+function getOauthConfig() {
   let t = (() => {
       switch (c()) {
         case "local":
@@ -114,7 +114,7 @@ function Vt() {
     o = process.env.CLAUDE_CODE_CUSTOM_OAUTH_URL;
   if (o) {
     let a = o.replace(/\/$/, "");
-    if (!nae.includes(a))
+    if (!ALLOWED_OAUTH_BASE_URLS.includes(a))
       throw Error("CLAUDE_CODE_CUSTOM_OAUTH_URL is not an approved endpoint.");
     t = {
       ...t,
@@ -135,4 +135,4 @@ function Vt() {
   if (e) t = { ...t, CLIENT_ID: e };
   return t;
 }
-export { qhe, F1, uB, OPn, py, dB, Bc, Z5, DPn, eZ, zhe, tae, nae, Vt };
+export { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig, LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, SETUP_TOKEN_DEFAULT_EXPIRY_DAYS, CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE, OAUTH_BETA_HEADER, CLAUDE_AI_OAUTH_SCOPES, ALL_OAUTH_SCOPES, DESIGN_OAUTH_SCOPES, preservableScopesFrom, MCP_CLIENT_METADATA_URL, ALLOWED_OAUTH_BASE_URLS, getOauthConfig };

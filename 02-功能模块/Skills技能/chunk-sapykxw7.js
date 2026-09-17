@@ -8,22 +8,22 @@
 
 // Version: 2.1.263
 import { j, bi, K, jc, ke, m_e, V1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Za } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { ye, Ige, bn, xq, mie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { GJe } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import { getSettingsForSource as ye, parentManagedTierParticipates as Ige, getSettings_DEPRECATED as bn, getPolicySettingsLoadErrors as xq, filterFatalPolicyErrors as mie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { resetSettingsCacheWithBackendRead as GJe } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import { Bo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-function Uu(t) {
+function isRestrictedToPluginOnly(t) {
   let o = ye("policySettings")?.strictPluginOnlyCustomization;
   if (o === !0) return !0;
   if (Array.isArray(o)) return o.includes(t);
   return !1;
 }
 var k = new Set(["plugin", "policySettings", "built-in", "builtin", "bundled"]);
-function r6(t) {
+function isSourceAdminTrusted(t) {
   return t !== void 0 && k.has(t);
 }
 var c = "cli";
@@ -56,45 +56,45 @@ function l() {
   let t = ye("policySettings");
   if (t?.disableAllHooks === !0) return {};
   if (t?.allowManagedHooksOnly === !0 || Hr()) return t?.hooks ?? {};
-  if (Uu("hooks")) return t?.hooks ?? {};
+  if (isRestrictedToPluginOnly("hooks")) return t?.hooks ?? {};
   let o = bn();
   if (o.disableAllHooks === !0) return t?.hooks ?? {};
   return o.hooks ?? {};
 }
-function S_() {
-  return Hr() || Yoe();
+function shouldAllowManagedHooksOnly() {
+  return Hr() || shouldAllowManagedHooksOnlyByPolicy();
 }
-function Yoe() {
+function shouldAllowManagedHooksOnlyByPolicy() {
   let t = ye("policySettings");
   if (t?.allowManagedHooksOnly === !0) return !0;
   if (bn().disableAllHooks === !0 && t?.disableAllHooks !== !0) return !0;
   return !1;
 }
-function $Et() {
+function shouldHoldGuardHooksByAdmin() {
   return Hr() || ye("policySettings")?.allowManagedHooksOnly === !0;
 }
-function Afr() {
-  return $Et() || Yzt();
+function shouldHoldDeviceHooksByPolicy() {
+  return shouldHoldGuardHooksByAdmin() || policySettingsUnreadable();
 }
-function Yzt() {
+function policySettingsUnreadable() {
   return mie(xq()).length > 0 || (m_e() && Ige());
 }
-function ZEn() {
-  return Afr() || Uu("hooks");
+function areDeviceHooksStoodDown() {
+  return shouldHoldDeviceHooksByPolicy() || isRestrictedToPluginOnly("hooks");
 }
-function FC() {
+function shouldDisableAllHooksIncludingManaged() {
   return ye("policySettings")?.disableAllHooks === !0;
 }
-function UEt() {
-  return FC() || Yoe();
+function shouldSkipSessionHooksByPolicy() {
+  return shouldDisableAllHooksIncludingManaged() || shouldAllowManagedHooksOnlyByPolicy();
 }
-function eAn() {
+function captureHooksConfigSnapshot() {
   (Za(), a().store(l()), V1());
 }
-function PD(t) {
+function updateHooksConfigSnapshot(t) {
   (Za(t), a().store(l()), V1());
 }
-async function f$e(t) {
+async function updateHooksConfigSnapshotThroughBackend(t) {
   let o = await GJe(t);
   try {
     (a().store(l()), V1());
@@ -102,11 +102,11 @@ async function f$e(t) {
     o?.();
   }
 }
-function* tAn() {
+function* listProcessHooksConfigSnapshots() {
   for (let t of a().snapshotsBySessionId.values())
     if (t.initialHooksConfig !== null) yield t.initialHooksConfig;
 }
-function BJ() {
+function getHooksConfigFromSnapshot() {
   let t = a().current();
   if (t.initialHooksConfig === null) (Za(), (t.initialHooksConfig = l()), V1());
   return t.initialHooksConfig;
@@ -156,7 +156,7 @@ var O =
   C =
     "/goal can't run while hooks are restricted (disableAllHooks or allowManagedHooksOnly is set in settings or by policy).";
 function AJe() {
-  if (UEt()) return { message: C, code: "hooks_gate" };
+  if (shouldSkipSessionHooksByPolicy()) return { message: C, code: "hooks_gate" };
   if (!ke() && !Bo()) return { message: O, code: "trust_gate" };
   return null;
 }
@@ -223,21 +223,21 @@ function Jzt(t, o) {
   };
 }
 export {
-  Uu,
-  r6,
-  S_,
-  Yoe,
-  $Et,
-  Afr,
-  Yzt,
-  ZEn,
-  FC,
-  UEt,
-  eAn,
-  PD,
-  f$e,
-  tAn,
-  BJ,
+  isRestrictedToPluginOnly,
+  isSourceAdminTrusted,
+  shouldAllowManagedHooksOnly,
+  shouldAllowManagedHooksOnlyByPolicy,
+  shouldHoldGuardHooksByAdmin,
+  shouldHoldDeviceHooksByPolicy,
+  policySettingsUnreadable,
+  areDeviceHooksStoodDown,
+  shouldDisableAllHooksIncludingManaged,
+  shouldSkipSessionHooksByPolicy,
+  captureHooksConfigSnapshot,
+  updateHooksConfigSnapshot,
+  updateHooksConfigSnapshotThroughBackend,
+  listProcessHooksConfigSnapshots,
+  getHooksConfigFromSnapshot,
   Q$,
   m$e,
   cve,

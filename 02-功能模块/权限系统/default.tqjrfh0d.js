@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { EO, f$, dj, Rf, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $9e } from "./chunk-2ttypdwq.js";
 async function S(e) {
@@ -29,9 +29,9 @@ async function S(e) {
       { asSystemPrompt: d },
     ] = await Promise.all([
       import("./fetchSystemPromptParts.kqatsmq3.js"),
-      import("./getEffortLayerOverride.23cezctk.js"),
-      import("../Bedrock-Vertex/getMainLoopModel.q5h945se.js"),
-      import("./asSystemPrompt.7ekbgrh0.js"),
+      import("./chunk-fjrcf22x.js"),
+      import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
     ]),
     l = n(e),
     m = o({ permissionMode: l.mode, mainLoopModel: t() }),

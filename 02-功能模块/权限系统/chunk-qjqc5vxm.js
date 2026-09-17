@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { Xl } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { hr, qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { wE, uEe, Vc, Re, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createAbortController as hr, createChildAbortController as qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { runForkedAgent as wE, uEe, Vc, Re, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { of } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 var b = /^\/btw\b/gi;
-function YPt(t) {
+function findBtwTriggerPositions(t) {
   let r = [],
     n = t.matchAll(b);
   for (let e of n)
@@ -20,7 +20,7 @@ function YPt(t) {
       r.push({ word: e[0], start: e.index, end: e.index + e[0].length });
   return r;
 }
-async function l0e({
+async function runSideQuestion({
   question: t,
   cacheSafeParams: r,
   parentController: n,
@@ -130,4 +130,4 @@ function w(t) {
 function m(t) {
   return t.type === "system" && "subtype" in t && t.subtype === "api_error";
 }
-export { YPt, l0e };
+export { findBtwTriggerPositions, runSideQuestion };

@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { j, Gt, B, Rg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
-import { Hx, a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { S, u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { Hx, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, Qu, B0 } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ZS } from "../共享小工具-未细化/chunk-cwtsmfpc.js";
 import { GE, Es } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
-  rt,
+  getMainLoopModel as rt,
   qe,
   Bt,
   tt,
@@ -32,24 +32,24 @@ import {
   qsr,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _1 } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Axt } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { _r } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { ARTIFACT_TOOL_NAME as _r } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { cR } from "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { ltr, Bi, B$, OTt, ZE, Ni } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { ltr, TOOL_SEARCH_TOOL_NAME as Bi, B$, OTt, ZE, Ni } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Dc } from "../共享小工具-未细化/chunk-15vfjgmh.js";
 import { so } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { Kt, J$, Tt, TR } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { _G, CC } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { Yc } from "../共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../共享小工具-未细化/chunk-7fcxwgtq.js";
 import { $i } from "../../02-功能模块/Teammates团队/chunk-t899nada.js";
-import { nm, YS, Jre } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
-import { ab } from "../共享小工具-未细化/chunk-vtgvbed1.js";
-import { Cr, sP } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS, CRON_LIST_TOOL_NAME as Jre } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { END_CONVERSATION_TOOL_NAME as ab } from "../共享小工具-未细化/chunk-vtgvbed1.js";
+import { Cr, isArtifactToolRegistered as sP } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { Jc } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Mo } from "../共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../共享小工具-未细化/chunk-rfb3s38d.js";
 import { Vbt } from "../共享小工具-未细化/chunk-wew8t48z.js";
 import { Xi, kT, sg } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
 import { Ci } from "../共享小工具-未细化/chunk-w8hsca1t.js";
@@ -1029,7 +1029,7 @@ function fe(e) {
   if (typeof t !== "string") return;
   return t.length > pe ? oe(t, pe) + "\u2026" : t;
 }
-var et = import.meta.require("../共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js").BRIEF_TOOL_NAME,
+var et = import.meta.require("../共享小工具-未细化/chunk-q599wyee.js").BRIEF_TOOL_NAME,
   nt = `Fetches full schema definitions for deferred tools so they can be called.
 
 Deferred tools appear by name in <system-reminder> messages.`,
@@ -1044,7 +1044,7 @@ Query forms:
 - "select:Read,Edit,Grep" \u2014 fetch these exact tools by name
 - "notebook jupyter" \u2014 keyword search, up to max_results best matches
 - "+slack send" \u2014 require "slack" in the name, rank by remaining terms`;
-function hK(e) {
+function isDeferredTool(e) {
   if (e.alwaysLoad === !0) return !1;
   if (at(e)) return !1;
   if (e.isMcp === !0) return !tfe();
@@ -1059,7 +1059,7 @@ function _e(e) {
   if (e.name === Bi) return !0;
   if (e.name === ti) return !0;
   if (e.name === mt) {
-    if (import.meta.require("../../02-功能模块/工具Task-Agent调度/FORK_AGENT.3cp5w2m6.js").isForkSubagentEnabled())
+    if (import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").isForkSubagentEnabled())
       return !0;
   }
   if (e.name === et) return !0;
@@ -1070,16 +1070,16 @@ function _e(e) {
 function ut(e) {
   return e.isMcp !== !0 && e.name === lR && a.CLAUDE_CODE_SESSION_KIND === "bg";
 }
-function _K(e, t, r) {
-  if (t === void 0) return hK(e);
+function isDeferredToolInConversation(e, t, r) {
+  if (t === void 0) return isDeferredTool(e);
   if (r !== void 0 && Z(e, r)) return !1;
   if (_e(e)) return !1;
   return !t.has(e.name);
 }
-function ibn(e) {
+function formatDeferredToolLine(e) {
   return e.name;
 }
-function cGt() {
+function getPrompt() {
   return nt + (qsr() ? st : ot) + it;
 }
 var Xre = "ExitWorktree";
@@ -1393,7 +1393,7 @@ function iGt() {
   return !0;
 }
 function yt() {
-  let { isScratchpadEnabled: e } = import.meta.require("../../02-功能模块/权限系统/DANGEROUS_DIRECTORY_PATHS.h65h4gmh.js");
+  let { isScratchpadEnabled: e } = import.meta.require("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js");
   return e();
 }
 var Et = new Set([Vr, ti]);
@@ -1409,17 +1409,17 @@ function Ot(e) {
 var St =
     'Your bare assistant text does NOT reach the user. Your comms tools are the only channel to them: every turn must end in a comms-tool call (reply, react, or an explicit no-reply), and "tell the user" below always means a comms-tool call.',
   wt = 'post a one-line "launched X" via your comms tool';
-function gG() {
+function isCoordinatorMode() {
   return Ci();
 }
-function syr(e) {
+function matchSessionMode(e) {
   if (!e) return;
-  let t = gG(),
+  let t = isCoordinatorMode(),
     r = e === "coordinator";
   if (t === r) return;
   if (r) process.env.CLAUDE_CODE_COORDINATOR_MODE = "1";
   else delete process.env.CLAUDE_CODE_COORDINATOR_MODE;
-  let o = gG();
+  let o = isCoordinatorMode();
   if (o === t) {
     if (r) delete process.env.CLAUDE_CODE_COORDINATOR_MODE;
     return;
@@ -1432,8 +1432,8 @@ function syr(e) {
       : "Exited coordinator mode to match resumed session."
   );
 }
-function iyr(e, t) {
-  if (!gG()) return {};
+function getCoordinatorUserContext(e, t) {
+  if (!isCoordinatorMode()) return {};
   let r = ZS() > 1,
     o = a.CLAUDE_CODE_SIMPLE
       ? [
@@ -1475,7 +1475,7 @@ Scratchpad directory: ${t}
 Workers can generally read and write here without permission prompts. Use this for durable cross-worker knowledge \u2014 prefer plain data and markdown files.`;
   return { workerToolsContext: f };
 }
-function ayr(e) {
+function getCoordinatorSystemPrompt(e) {
   let t = [...(Ys() ? [qe] : []), ...(Bk() ? [Ut] : [])].join("/"),
     r = ZS() > 1,
     o = [t, tt, Bt, ...(r ? [mt] : [])],
@@ -1853,12 +1853,12 @@ export {
   OQn,
   DQn,
   LQn,
-  gG,
-  syr,
-  iyr,
-  ayr,
-  hK,
-  _K,
-  ibn,
-  cGt,
+  isCoordinatorMode,
+  matchSessionMode,
+  getCoordinatorUserContext,
+  getCoordinatorSystemPrompt,
+  isDeferredTool,
+  isDeferredToolInConversation,
+  formatDeferredToolLine,
+  getPrompt,
 };

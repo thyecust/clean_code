@@ -14,11 +14,11 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Y6 } from "./chunk-e4pfvp7x.js";
 import { kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { aS } from "../Teammates团队/chunk-811z9z0t.js";
-import { ce } from "./chunk-fjrcf22x.js";
+import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
 import {
-  xa,
-  pX,
+  isBuiltInAgent as xa,
+  isPluginAgent as pX,
   nh,
   p3,
   c4n,
@@ -26,15 +26,15 @@ import {
   RV,
   cH,
   zne,
-  dw,
+  runAgent as dw,
   EE,
   k3,
   QO,
   Re,
-  zEe,
-  fC,
+  writeAgentMetadata as zEe,
+  readAgentMetadata as fC,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { gNt, pjn } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { og } from "../插件系统/chunk-33bdfgmx.js";
 async function v(e, r, o) {

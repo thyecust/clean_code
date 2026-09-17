@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-function nIe() {
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+function isWebSetupEnabled() {
   return !St() && Mt("allow_remote_sessions") && Mt("allow_quick_web_setup");
 }
 var e = {
@@ -17,10 +17,10 @@ var e = {
     name: "web-setup",
     description: "Set up Claude Code on the web with your GitHub account",
     availability: ["claude-ai"],
-    isEnabled: nIe,
+    isEnabled: isWebSetupEnabled,
     get isHidden() {
       return !Mt("allow_remote_sessions") || !Mt("allow_quick_web_setup");
     },
   },
   Mgr = e;
-export { nIe, Mgr };
+export { isWebSetupEnabled, Mgr as default };

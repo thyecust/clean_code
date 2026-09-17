@@ -12,7 +12,7 @@
 import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ot, Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration as Ot, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";

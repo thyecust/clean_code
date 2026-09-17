@@ -13,7 +13,7 @@ import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { M } from "./chunk-h62vxw7j.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Pm, O6 } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isSameProcessAsync as Pm, ownProcStart as O6 } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { join as u } from "path";
 function Zst() {

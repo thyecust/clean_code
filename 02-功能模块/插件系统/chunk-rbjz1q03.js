@@ -12,18 +12,18 @@ import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { og } from "./chunk-33bdfgmx.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var l = m(() => v(c({ marketplace: s(), plugin: s() })));
-function O1t() {
+function getChannelAllowlist() {
   let e = H("tengu_harbor_ledger", []),
     n = l().safeParse(e);
   return n.success ? n.data : [];
 }
-function R9() {
+function isChannelsEnabled() {
   return H("tengu_harbor", !1);
 }
-function Oin(e) {
+function isChannelAllowlisted(e) {
   if (!e) return !1;
   let { name: n, marketplace: t } = og(e);
   if (!t) return !1;
-  return O1t().some((r) => r.plugin === n && r.marketplace === t);
+  return getChannelAllowlist().some((r) => r.plugin === n && r.marketplace === t);
 }
-export { O1t, R9, Oin };
+export { getChannelAllowlist, isChannelsEnabled, isChannelAllowlisted };

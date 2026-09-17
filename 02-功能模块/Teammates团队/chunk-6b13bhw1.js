@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { bYt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ac } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { y, f, g, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { R0, bS, lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { pointerFileIsSuspect as R0, rawPointerPathIsUnsafe as bS, gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "./chunk-qe04h4c5.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Ip, ii, Zi } from "./chunk-811z9z0t.js";
+import { getAgentName as Ip, getTeamName as ii, isTeammate as Zi } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
 import { jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { fs } from "./chunk-enjekn9t.js";
@@ -51,20 +51,20 @@ function cCe(e) {
 function vwt(e) {
   return e === "tmux" || e === "iterm2";
 }
-function Rwt(e) {
+function sanitizeName(e) {
   return e.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
 }
-function Bbn(e) {
+function sanitizeAgentName(e) {
   return e.replaceAll("@", "-");
 }
 function S(e) {
-  return k(T_e(), Rwt(e));
+  return k(T_e(), sanitizeName(e));
 }
-function ioe(e) {
+function getTeamFilePath(e) {
   return k(S(e), "config.json");
 }
 function C(e) {
-  return Ce.team(Rwt(e));
+  return Ce.team(sanitizeName(e));
 }
 function w(e) {
   let t = "failureClass" in e ? `/${e.failureClass}` : "",
@@ -109,7 +109,7 @@ function U(e) {
     typeof e.name === "string"
   );
 }
-async function Pf(e, t) {
+async function readTeamFileAsync(e, t) {
   if (t) {
     let r = await t.read([C(e)]);
     if (!r.ok)
@@ -129,7 +129,7 @@ async function Pf(e, t) {
     }
   }
   try {
-    let r = await B(ioe(e), "utf-8");
+    let r = await B(getTeamFilePath(e), "utf-8");
     return x(z(r));
   } catch (r) {
     if (A(r) === "ENOENT") return null;
@@ -139,7 +139,7 @@ async function Pf(e, t) {
     );
   }
 }
-function DGt(e, t) {
+function logTeamFileWriteFailure(e, t) {
   if (Po(t))
     n(`[TeammateTool] Failed to write team file for ${e} (${A(t)}): ${l(t)}`, {
       level: "error",
@@ -168,9 +168,9 @@ function M(e) {
     "Team file missing (session team not initialized)",
   );
 }
-async function TK(e, t, r, a) {
+async function updateTeamFile(e, t, r, a) {
   if (a) return K(e, t, r, a);
-  let o = ioe(e),
+  let o = getTeamFilePath(e),
     i;
   try {
     i = await Cs(o, { lockfilePath: `${o}.lock`, ...H });
@@ -179,16 +179,16 @@ async function TK(e, t, r, a) {
     throw s;
   }
   try {
-    let s = await Pf(e);
+    let s = await readTeamFileAsync(e);
     if (!s)
       throw Error("Team config file unreadable (lock acquired, read failed)");
     let c = t(s);
     if (c === !1) return;
     try {
-      await LGt(e, s);
+      await writeTeamFileAsync(e, s);
     } catch (m) {
       if (!r?.bestEffortWrite) throw m;
-      DGt(e, m);
+      logTeamFileWriteFailure(e, m);
     }
     return c;
   } finally {
@@ -199,9 +199,9 @@ async function TK(e, t, r, a) {
     }
   }
 }
-async function jbn(e, t, r) {
+async function removeTeamMember(e, t, r) {
   try {
-    await TK(
+    await updateTeamFile(
       e,
       (a) => {
         let o = a.members.findIndex((i) => i.agentId === t);
@@ -297,7 +297,7 @@ async function K(e, t, r, a) {
   }
   return c;
 }
-async function LGt(e, t, r) {
+async function writeTeamFileAsync(e, t, r) {
   if (r) {
     let o = await r.write(C(e), b(t, null, 2), {
       precondition: { type: "none" },
@@ -312,9 +312,9 @@ async function LGt(e, t, r) {
     return;
   }
   let a = S(e);
-  (await W(a, { recursive: !0 }), await O(ioe(e), b(t, null, 2)));
+  (await W(a, { recursive: !0 }), await O(getTeamFilePath(e), b(t, null, 2)));
 }
-async function pfe(e, t, r) {
+async function removeTeammateFromTeamFile(e, t, r) {
   let a = t.agentId || t.name;
   if (!a)
     return (
@@ -324,7 +324,7 @@ async function pfe(e, t, r) {
   let o = !1;
   try {
     let i =
-      (await TK(
+      (await updateTeamFile(
         e,
         (s) => {
           o = !1;
@@ -351,11 +351,11 @@ async function pfe(e, t, r) {
     );
   }
 }
-async function TXe(e, t, r, a) {
+async function removeMemberByAgentId(e, t, r, a) {
   let o = !1;
   try {
     let i =
-      (await TK(
+      (await updateTeamFile(
         e,
         (s) => {
           let c = s.members.findIndex((d) => d.agentId === t),
@@ -386,11 +386,11 @@ async function TXe(e, t, r, a) {
     );
   }
 }
-async function MGt(e, t, r, a) {
+async function setMemberMode(e, t, r, a) {
   let o = "unchanged";
   try {
     if (
-      (await TK(
+      (await updateTeamFile(
         e,
         (i) => {
           let s = i.members.find((c) => c.name === t);
@@ -412,17 +412,17 @@ async function MGt(e, t, r, a) {
     n(`[TeammateTool] Cannot set member mode: ${l(i)}`);
   }
 }
-async function EXe(e, t, r) {
+async function syncTeammateMode(e, t, r) {
   if (!Zi()) return;
   let a = t ?? ii(),
     o = Ip();
-  if (a && o) await MGt(a, o, e, r);
+  if (a && o) await setMemberMode(a, o, e, r);
 }
-async function AXe(e, t, r, a) {
+async function setMemberActive(e, t, r, a) {
   let o = "unchanged";
   try {
     if (
-      (await TK(
+      (await updateTeamFile(
         e,
         (i) => {
           let s = i.members.find((c) => c.name === t);
@@ -483,10 +483,10 @@ async function q(e) {
     n(`[TeammateTool] Failed to remove worktree ${e}: ${l(a)}`);
   }
 }
-function Wbn(e) {
+function registerTeamForSessionCleanup(e) {
   bYt().add(e);
 }
-async function cyr(e) {
+async function cleanupSessionTeams(e) {
   return Sr("swarm_session_cleanup", async () => {
     let t = bYt();
     if (t.size === 0) return;
@@ -500,7 +500,7 @@ async function cyr(e) {
   });
 }
 async function J(e, t) {
-  let r = await Pf(e, t);
+  let r = await readTeamFileAsync(e, t);
   if (!r) return;
   let a = r.members.filter(
     (m) => m.name !== fs && m.tmuxPaneId && m.backendType && vwt(m.backendType),
@@ -511,7 +511,7 @@ async function J(e, t) {
     { isInsideTmux: s },
   ] = await Promise.all([
     import("./getBackendByType.cq91cmh5.js"),
-    import("./getIt2Command.w8gvbjpr.js"),
+    import("../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js"),
   ]);
   await o();
   let c = !(await s());
@@ -527,7 +527,7 @@ async function J(e, t) {
 }
 async function V(e, t) {
   return Sr("swarm_team_cleanup", async () => {
-    let r = await Pf(e, t),
+    let r = await readTeamFileAsync(e, t),
       a = [];
     if (r) {
       for (let i of r.members) if (i.worktreePath) a.push(i.worktreePath);
@@ -547,19 +547,19 @@ export {
   bZn,
   cCe,
   vwt,
-  Rwt,
-  Bbn,
-  ioe,
-  Pf,
-  DGt,
-  TK,
-  jbn,
-  LGt,
-  pfe,
-  TXe,
-  MGt,
-  EXe,
-  AXe,
-  Wbn,
-  cyr,
+  sanitizeName,
+  sanitizeAgentName,
+  getTeamFilePath,
+  readTeamFileAsync,
+  logTeamFileWriteFailure,
+  updateTeamFile,
+  removeTeamMember,
+  writeTeamFileAsync,
+  removeTeammateFromTeamFile,
+  removeMemberByAgentId,
+  setMemberMode,
+  syncTeammateMode,
+  setMemberActive,
+  registerTeamForSessionCleanup,
+  cleanupSessionTeams,
 };

@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { iS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getTeammateContext as iS } from "../Teammates团队/chunk-811z9z0t.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { rJ, SK, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { YS, EC, yK, fbn, mbn } from "./chunk-mk3zm4ew.js";
+import { CRON_DELETE_TOOL_NAME as YS, isKairosCronEnabled as EC, isDurableCronEnabled as yK, CRON_DELETE_DESCRIPTION as fbn, buildCronDeletePrompt as mbn } from "./chunk-mk3zm4ew.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = m(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
   u = m(() => c({ id: s() })),

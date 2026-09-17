@@ -12,16 +12,16 @@
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import {
   Ds,
   Ct,
   vLe,
-  UX,
+  readGitLayout as UX,
   YVn,
   r$,
-  Jm,
+  MAX_WORKING_FILE_BYTES as Jm,
   T3,
   WTe,
   GTe,

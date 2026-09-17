@@ -7,28 +7,28 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { xN, ne } from "./chunk-rr78st95.js";
-import { O$, vfe, dFe } from "./chunk-01ymf0ar.js";
+import { observationStamp as O$, observedWithoutSource as vfe, compareArtifactVersions as dFe } from "./chunk-01ymf0ar.js";
 import { rDe, j2, y4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createHash as _ } from "crypto";
 import { readFile as z, stat as G, unlink as K } from "fs/promises";
-function Tft(e, r, n) {
+function versionHeldBy(e, r, n) {
   return (
     e.ver === r && (e.observers === void 0 || Object.hasOwn(e.observers, n))
   );
 }
 function L(e, r, n) {
   return (
-    Tft(e.getArtifactReadObservation(r), n, e.agentId ?? "main") &&
+    versionHeldBy(e.getArtifactReadObservation(r), n, e.agentId ?? "main") &&
     !vfe(e.agentId, r, n)
   );
 }
-async function wOe(
+async function registerHandoverRead(
   {
     filepath: e,
     persistId: r,
@@ -114,7 +114,7 @@ async function wOe(
     B ? "held" : k.has(a) ? "unverifiable" : "pending"
   );
 }
-async function TOe(e, r, n) {
+async function handoverPersistTarget(e, r, n) {
   for (let [t, i] of ne().pendingHandoverReads)
     if (i.slug === e && i.ver === r) {
       let d = await bA(t).catch(() => {
@@ -126,7 +126,7 @@ async function TOe(e, r, n) {
     }
   return { persistId: n };
 }
-async function b$t(e, r) {
+async function refreshHandoverCopy(e, r) {
   let n = ot(e),
     t = ne().pendingHandoverReads,
     i = t.get(n);
@@ -152,7 +152,7 @@ function N(e, r, n) {
       return [t, i];
   return;
 }
-function w$t(e, r, n) {
+function readPendingFor(e, r, n) {
   return N(e ?? "main", r, n) !== void 0;
 }
 function O(e, r, n, t = !1) {
@@ -166,7 +166,7 @@ function J(e, r, n, { ignoreHold: t = !1 } = {}) {
   let i = O(e, r, n, t);
   return i === void 0 ? void 0 : S(i[0], i[1], e.agentId);
 }
-async function Pcn(e, r, n) {
+async function checkedHandoverCoverage(e, r, n) {
   let t = O(e, r, n);
   if (t === void 0) return;
   let [i, d] = t,
@@ -188,11 +188,11 @@ function S(e, r, n) {
     unread: U(r.linesReturned.get(n ?? "main") ?? [], r.requiredLines),
   };
 }
-function Ocn(e, r, n) {
+function handoverReadConfirmsResend(e, r, n) {
   let t = O(e, r, n);
   return t !== void 0 && D(t[1], e.agentId, e.agentId ?? "main") === void 0;
 }
-function T$t({ lines: e, unterminated: r, unread: n }) {
+function describeHandoverCoverage({ lines: e, unterminated: r, unread: n }) {
   let t = n.reduce((i, [d, o]) => i + o - d + 1, 0);
   return (
     `${e} ${x(e, "line")}` +
@@ -204,9 +204,9 @@ function T$t({ lines: e, unterminated: r, unread: n }) {
       : "")
   );
 }
-function iue(e, r, n, t) {
+function handoverCoverageNote(e, r, n, t) {
   let i = J(e, r, n, t);
-  return i === void 0 ? "" : ` (${T$t(i)})`;
+  return i === void 0 ? "" : ` (${describeHandoverCoverage(i)})`;
 }
 function U(e, r) {
   let n = [],
@@ -218,7 +218,7 @@ function U(e, r) {
   if (t < r) n.push([t + 1, r]);
   return n;
 }
-async function Dcn(e, r) {
+async function discardHandoverCopy(e, r) {
   (ne().pendingHandoverReads.delete(ot(e)),
     y4n(r, e),
     await K(e).catch(() => {}));
@@ -230,7 +230,7 @@ var w = {
     return;
   },
 };
-async function a_r(e, r, n, t) {
+async function prepareHandoverRead(e, r, n, t) {
   try {
     let i = ne().pendingHandoverReads,
       d = i.get(e),
@@ -335,7 +335,7 @@ function Q(e, r, n, t, i) {
       if (o === void 0) delete d.observedFrom;
       else d.observedFrom = o;
   }
-  if (Tft(n.getArtifactReadObservation(e.slug), e.ver, i))
+  if (versionHeldBy(n.getArtifactReadObservation(e.slug), e.ver, i))
     return (y("artifact_handover_read"), !0);
   return (
     e.unrecordableBy.add(i),
@@ -355,4 +355,4 @@ async function X(e, r, n) {
     return W(t) ? "changed" : "unreadable";
   }
 }
-export { Tft, wOe, TOe, b$t, w$t, Pcn, Ocn, T$t, iue, Dcn, a_r };
+export { versionHeldBy, registerHandoverRead, handoverPersistTarget, refreshHandoverCopy, readPendingFor, checkedHandoverCoverage, handoverReadConfirmsResend, describeHandoverCoverage, handoverCoverageNote, discardHandoverCopy, prepareHandoverRead };

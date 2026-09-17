@@ -10,14 +10,14 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { F1 } from "./chunk-9g2q4bjq.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fileSuffixForOauthConfig as F1 } from "./chunk-9g2q4bjq.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { $5, A_, Sx, tv, Q5t, MU, eHn, wA } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { YQ, Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING as YQ, execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { homedir as Q } from "os";
 import { join as x } from "path";
@@ -532,12 +532,12 @@ function re() {
     configPath: x(process.env.CLAUDE_CONFIG_DIR || Q(), `.claude${F1()}.json`),
   };
 }
-function Jxn(e) {
+function primeWindowsCredManBackendEnabled(e) {
   te().prime(e, re);
 }
 var O;
-function yn() {
+function getSecureStorage() {
   if (O) return O;
   return v(E, _);
 }
-export { hc, Xxn, Uar, Yxn, IQ, Jxn, yn };
+export { hc, Xxn, Uar, Yxn, IQ, primeWindowsCredManBackendEnabled, getSecureStorage };

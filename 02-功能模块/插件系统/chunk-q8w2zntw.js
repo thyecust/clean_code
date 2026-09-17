@@ -10,7 +10,7 @@
 import { he, y_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, my, jf } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xg, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -31,7 +31,7 @@ import {
   Om,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ye, Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, updateSettingsForSourceWithTransform as Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pIn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import {
   afe,
@@ -125,7 +125,7 @@ import {
   ei,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { uD, _j, ASt, v8e } from "../Hooks钩子/chunk-z3433nr6.js";
-import { Fle, pF } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { checkEnabledPlugins as Fle, getPluginEditableScopes as pF } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { dnn, cIe } from "./chunk-bh1q9esj.js";
 import {
   np,

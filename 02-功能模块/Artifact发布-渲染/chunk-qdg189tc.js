@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Vg, mA } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isProcessProvablyGone as Vg, provenSameProcessAsync as mA } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Nu, qI, mD } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { s, T, O, se, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function P7() {

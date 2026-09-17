@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Bc } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER as Bc } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ht, wu, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { ht, hasStoredOAuthToken as wu, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var u = 1e4,
   a = { auth: "teleport-org", timeout: u, headers: { "anthropic-beta": Bc } };
 function zSe() {

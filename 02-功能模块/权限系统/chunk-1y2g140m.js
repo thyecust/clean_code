@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Jo, zu, pr, Ftt } from "./chunk-ynkf3yy4.js";
+import { Jo, toCompatSessionId as zu, sessionIdBody as pr, isSelfAddressableSessionId as Ftt } from "./chunk-ynkf3yy4.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { FT, tRe, KCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { FT, tRe, updateSessionBridgeId as KCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { _c } from "./chunk-e4pfvp7x.js";
 import { SAt, bAt } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 function l(e, o) {
@@ -29,7 +29,7 @@ function l(e, o) {
     SAt(i);
   }
 }
-function RYe(e, o) {
+function setSdkHostedBridgeHandle(e, o) {
   let t = Jo(),
     i = a(e),
     r = t.sdkHostedHandle;
@@ -45,10 +45,10 @@ function RYe(e, o) {
     (t.lastKnownCrossSessionInbound = void 0),
     l(r, i));
 }
-function bw() {
+function getSdkHostedBridgeHandle() {
   return Jo().sdkHostedHandle;
 }
-function STt(e, o) {
+function setReplBridgeHandle(e, o) {
   let t = Jo(),
     i = a(e),
     r = t.replHandle;
@@ -67,15 +67,15 @@ function STt(e, o) {
   else delete process.env.CLAUDE_CODE_BRIDGE_SESSION_ID;
   KCt(s ?? null, o).catch(() => {});
 }
-function Yi() {
+function getReplBridgeHandle() {
   return Jo().replHandle;
 }
-function qqt(e, o) {
+function retireBridgeHandle(e, o) {
   let t = Jo();
-  if ((t.retiredHandles.add(e), t.replHandle === e)) STt(null, o);
-  if (t.sdkHostedHandle === e) RYe(null, o);
+  if ((t.retiredHandles.add(e), t.replHandle === e)) setReplBridgeHandle(null, o);
+  if (t.sdkHostedHandle === e) setSdkHostedBridgeHandle(null, o);
 }
-function Ioe(e, o) {
+function reportBridgePermissionMode(e, o) {
   let t = Jo(),
     i = t.replHandle ?? t.sdkHostedHandle;
   if (!i || i.outboundOnly) return;
@@ -88,15 +88,15 @@ function Ioe(e, o) {
       ...(o !== void 0 && { is_ultraplan_mode: o }),
     }));
 }
-function NTn() {
+function reseedBridgePermissionMode() {
   let e = Jo();
   if (
     ((e.lastReportedPermissionMode = void 0),
     e.lastKnownPermissionMode !== void 0)
   )
-    Ioe(e.lastKnownPermissionMode);
+    reportBridgePermissionMode(e.lastKnownPermissionMode);
 }
-function FTn(e, o, t) {
+function setSupervisedBridgeSession(e, o, t) {
   let i = Ftt(e);
   if (!i)
     n(
@@ -108,24 +108,24 @@ function FTn(e, o, t) {
     : null),
     KCt(i ? zu(e) : null, o).catch(() => {}));
 }
-function $Tn(e) {
+function adoptSelfBridgeTitleFromRoster(e) {
   let o = Jo().supervisedBridgeSession;
-  if (o === null || Yi() !== null || bw() !== null) return;
+  if (o === null || getReplBridgeHandle() !== null || getSdkHostedBridgeHandle() !== null) return;
   o.selfTitle = u(e);
 }
 function u(e) {
   return typeof e === "string" && FT(e) !== "" ? e : void 0;
 }
 function d(e) {
-  let o = Tfr(),
+  let o = walkCredentialKey(),
     t = Jo(),
     i = t.peerIdentityKey;
   if (i !== null && i.host === e && i.credential === o) return i;
   let r = { host: e, credential: o };
   return ((t.peerIdentityKey = r), r);
 }
-function Tfr() {
-  let { sameOwnerAccount: e } = import.meta.require("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
+function walkCredentialKey() {
+  let { sameOwnerAccount: e } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     o = c(),
     t = Jo(),
     i = t.walkCredentialKey;
@@ -135,33 +135,33 @@ function Tfr() {
 }
 function c() {
   let { sessionsApiBearerFingerprint: e } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js",
+      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
     ),
     { getStoredOauthAccountInfo: o } = import.meta.require(
-      "../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js",
+      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
     ),
-    { env: t } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/JETBRAINS_IDES.wmat8rwg.js"),
+    { env: t } = import.meta.require("../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js"),
     i = e();
   return {
     accountUuid: i ? `bearer:${i}` : void 0,
     organizationUuid: t.CLAUDE_CODE_ORGANIZATION_UUID || o()?.organizationUuid,
   };
 }
-async function UTn({ refresh: e, credentials: o }) {
+async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
   let { isCrossSessionMessagingEnabled: t } = import.meta.require(
-    "../../01-核心基础设施/共享小工具-未细化/CROSS_SESSION_MESSAGING_DISABLED_MESSAGE.rx6da86s.js",
+    "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js",
   );
   if (!t()) return;
   if (!(
-    Yi() !== null ||
-    bw() !== null ||
+    getReplBridgeHandle() !== null ||
+    getSdkHostedBridgeHandle() !== null ||
     Jo().supervisedBridgeSession !== null
   )) {
     let { hasCloudPeerAccess: p } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
     if (!p()) return;
   }
   let { primeSessionsApiBearer: r } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js",
+      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
     ),
     s = r({ refresh: e, credentials: o }).catch(() => {});
   if (e) {
@@ -172,8 +172,8 @@ async function UTn({ refresh: e, credentials: o }) {
   await f(s, g);
 }
 var g = 750;
-function OCe() {
-  let e = Yi() ?? bw();
+function getPeerBridgeIdentity() {
+  let e = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
   if (e)
     return {
       key: d(e),
@@ -191,7 +191,7 @@ function OCe() {
       }
     : null;
 }
-function TFe(e) {
+function reportBridgeCrossSessionInbound(e) {
   let o = Jo(),
     t = o.replHandle ?? o.sdkHostedHandle;
   if (!t || t.outboundOnly) return;
@@ -201,68 +201,68 @@ function TFe(e) {
   ((o.lastReportedCrossSessionInbound = i),
     t.reportMetadata({ cross_session_inbound: i }));
 }
-function BTn() {
+function reseedBridgeCrossSessionInbound() {
   let e = Jo();
   if (
     ((e.lastReportedCrossSessionInbound = void 0),
     e.lastKnownCrossSessionInbound !== void 0)
   )
-    TFe(e.lastKnownCrossSessionInbound);
+    reportBridgeCrossSessionInbound(e.lastKnownCrossSessionInbound);
 }
-function xG(e) {
+function reportBridgeModel(e) {
   let o = Jo(),
     t = o.replHandle ?? o.sdkHostedHandle;
   if (!t || t.outboundOnly) return;
   if (((o.lastKnownModel = e), o.lastReportedModel === e)) return;
   ((o.lastReportedModel = e), t.reportMetadata({ model: e }));
 }
-function jTn() {
+function reseedBridgeModel() {
   let e = Jo();
   if (((e.lastReportedModel = void 0), e.lastKnownModel !== void 0))
-    xG(e.lastKnownModel);
+    reportBridgeModel(e.lastKnownModel);
 }
-function bTt() {
-  let e = OCe();
+function getSelfBridgeCompatId() {
+  let e = getPeerBridgeIdentity();
   return e ? zu(e.bridgeSessionId) : void 0;
 }
-function kYe() {
-  let e = bTt();
+function ownBridgePeerAddress() {
+  let e = getSelfBridgeCompatId();
   return e ? tRe(e) : void 0;
 }
-function xYe() {
-  let e = Yi();
+function getRemoteControlSessionCompatId() {
+  let e = getReplBridgeHandle();
   return e && !e.outboundOnly ? zu(e.bridgeSessionId) : void 0;
 }
-function WTn() {
-  return OCe()?.selfTitle;
+function getSelfBridgeTitle() {
+  return getPeerBridgeIdentity()?.selfTitle;
 }
-function Poe(e, o) {
-  let t = Yi() ?? bw();
+function setSelfBridgeTitle(e, o) {
+  let t = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
   if (t && pr(t.bridgeSessionId) === pr(e)) t.selfTitle = u(o);
 }
 function a(e) {
   return e !== null && Jo().retiredHandles.has(e) ? null : e;
 }
 export {
-  RYe,
-  bw,
-  STt,
-  Yi,
-  qqt,
-  Ioe,
-  NTn,
-  FTn,
-  $Tn,
-  Tfr,
-  UTn,
-  OCe,
-  TFe,
-  BTn,
-  xG,
-  jTn,
-  bTt,
-  kYe,
-  xYe,
-  WTn,
-  Poe,
+  setSdkHostedBridgeHandle,
+  getSdkHostedBridgeHandle,
+  setReplBridgeHandle,
+  getReplBridgeHandle,
+  retireBridgeHandle,
+  reportBridgePermissionMode,
+  reseedBridgePermissionMode,
+  setSupervisedBridgeSession,
+  adoptSelfBridgeTitleFromRoster,
+  walkCredentialKey,
+  primePeerIdentityOwner,
+  getPeerBridgeIdentity,
+  reportBridgeCrossSessionInbound,
+  reseedBridgeCrossSessionInbound,
+  reportBridgeModel,
+  reseedBridgeModel,
+  getSelfBridgeCompatId,
+  ownBridgePeerAddress,
+  getRemoteControlSessionCompatId,
+  getSelfBridgeTitle,
+  setSelfBridgeTitle,
 };

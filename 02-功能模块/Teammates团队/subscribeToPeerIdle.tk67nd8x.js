@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { hU, Dse, Uor, Zy, RKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { hU, Dse, Uor, Zy, NOTIFY_IDLE_PEER_FEATURE as RKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { dK, BAe, bbt, mD, t1e, E7e, C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket as t1e, registeredLivePeerForSocket as E7e, ownMessagingSocket as C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { cbe, Wee } from "../权限系统/chunk-4tar9p3n.js";
 import { RPe, pdt, Ssn, nqe, fdt } from "./chunk-nhk351pe.js";

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "./chunk-zqr5ctyf.js";
+import { env as a } from "./chunk-zqr5ctyf.js";
 function SC() {
   return H("tengu_lantern_prism", !1) || a.CLAUDE_CODE_LANTERN_PRISM;
 }

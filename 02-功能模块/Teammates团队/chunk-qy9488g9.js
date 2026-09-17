@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Fe, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { AK, $wt, Oj, foe, SN, L1e } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { AK, isInsideTmuxSync as $wt, isInsideTmux as Oj, isTmuxAvailable as foe, isInITerm2 as SN, isIt2CliAvailable as L1e } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { MOe } from "./chunk-88ybhavr.js";
+import { getTeammateModeFromSnapshot as MOe } from "./chunk-88ybhavr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { homedir as o } from "os";
 async function Hft() {
@@ -121,7 +121,7 @@ function d() {
 }
 async function G$t(e = AK) {
   if (e.backendsRegistered) return;
-  let { TmuxBackend: t } = await import("./respawnPaneWithCommand.5sk18jmg.js"),
+  let { TmuxBackend: t } = await import("./chunk-x0by9eq8.js"),
     { ITermBackend: a } = await import("./ITermBackend.m7kw75rs.js");
   ((e.TmuxBackendClass = t),
     (e.ITermBackendClass = a),

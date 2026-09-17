@@ -9,18 +9,18 @@
 // Version: 2.1.263
 import { mB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ge, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Jn, GI, QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { g0, UR, VZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { _U } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sme } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ka, vM, vX, YF, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { ka, vM, isRemoteToolForwardingEnabled as vX, isSessionChannelDisabled as YF, rj, s$, aY, lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   pE,
   yee,

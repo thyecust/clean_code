@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
@@ -19,22 +19,22 @@ import {
   Hme,
   hse,
   Mve,
-  e0,
-  p5,
-  kQe,
-  HQe,
+  DEFAULT_3P_SONNET_KEY as e0,
+  DEFAULT_3P_HAIKU_KEY as p5,
+  DEFAULT_BEDROCK_OPUS_KEY as kQe,
+  DEFAULT_3P_FABLE_KEY as HQe,
   GC,
   DR,
   Im,
   VC,
   Rw,
   HCt,
-  $se,
+  AWS_CHAIN_RESOLVE_REQUEST_TIMEOUT_MS as $se,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ho, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource as ho, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt, to } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { she, ihe, zq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { resolveStsEndpointForProxyUrl as she, getAWSClientProxyConfig as ihe, getAWSProxyRequestHandler as zq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { fle, vl, wi } from "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
@@ -605,7 +605,7 @@ async function In(n) {
   let [{ AnthropicBedrock: s }, { getProxyFetchOptions: l }] =
       await Promise.all([
         import("./AnthropicBedrockMantle.wb95xgtr.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js"),
+        import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
       ]),
     c = {
       awsRegion: n.region,

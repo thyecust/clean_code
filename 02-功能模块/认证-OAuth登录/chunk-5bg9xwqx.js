@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Vt } from "./chunk-9g2q4bjq.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { DKt, lx, QCt, LKt, uRn, MKt } from "./认证-OAuth登录.419zdfz3.js";
+import { getOauthConfig as Vt } from "./chunk-9g2q4bjq.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { resolveRefreshTokenExpiresAt as DKt, shouldUseClaudeAIAuth as lx, parseScopes as QCt, buildAuthUrl as LKt, exchangeCodeForTokens as uRn, fetchProfileInfo as MKt } from "./认证-OAuth登录.419zdfz3.js";
 import { oBe, PRe, Yse, c1 } from "./chunk-wk0e3dz4.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";

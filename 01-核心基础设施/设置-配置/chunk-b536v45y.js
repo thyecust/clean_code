@@ -10,8 +10,8 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { wc, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { da, Za, uHn, Stt, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { da, Za, uHn, primeRemoteManagedSettingsCache as Stt, ZBe, Ake, Eie, jq } from "./设置-配置.aqbb35ee.js";
 import {
   S0,
   B5t,
@@ -21,11 +21,11 @@ import {
   dRt,
   Exn,
   Axn,
-  Cxn,
-  ho,
-  IP,
-  zT,
-  bb,
+  localSettingsStoreRootAwaitingOwnershipProbe as Cxn,
+  getSettingsFilePathForSource as ho,
+  getLegacyLocalSettingsFilePath as IP,
+  projectSettingsAliasesUserSettings as zT,
+  getSettingsWithErrors as bb,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { basename as _, dirname as z, join as f } from "path";
 var b = 3,
@@ -34,7 +34,7 @@ function v() {
   let t = ho("userSettings");
   return t !== void 0 && _(t) === jq.default ? t : void 0;
 }
-async function $An(t, e) {
+async function seedUserSettings(t, e) {
   if (!M()) return;
   let s = e.epoch;
   (await Promise.all([
@@ -270,7 +270,7 @@ class T {
       ((this.store.primer = void 0), this.store.managedFileReads.clear());
   }
 }
-async function UAn(t, e) {
+async function primeSettings(t, e) {
   if (!M() || t === void 0) return;
   if (e.primer !== void 0) {
     if (!e.primer.primes(t))
@@ -281,7 +281,7 @@ async function UAn(t, e) {
   }
   (Stt(t).catch(h), (e.primer = new T(t, e)), await e.primer.whenIdle());
 }
-async function GJe(t) {
+async function resetSettingsCacheWithBackendRead(t) {
   let e = da(),
     s = e.backendReadResetTail,
     i;
@@ -653,4 +653,4 @@ function w(t) {
 function k(t) {
   return t.code === "Failed" ? (t.telemetryCode ?? t.failureClass) : t.code;
 }
-export { $An, UAn, GJe };
+export { seedUserSettings, primeSettings, resetSettingsCacheWithBackendRead };

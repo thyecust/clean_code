@@ -11,12 +11,12 @@ import { j1, Xn, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, WW } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, Tr, ae, Qhe, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gh, xQ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { $d, bR, dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { $d, bR, normalizeCaseForComparison as dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { Glr } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -560,25 +560,25 @@ function uG(t, e, i) {
 }
 var lt = _.O_NOFOLLOW ?? 0,
   Bt = 8388608,
-  r1e = 5368709120,
-  Z3t = "5GB",
-  VAe = 67108864;
-function O7e() {
+  MAX_TASK_OUTPUT_BYTES = 5368709120,
+  MAX_TASK_OUTPUT_BYTES_DISPLAY = "5GB",
+  MAX_PERSISTED_OUTPUT_BYTES = 67108864;
+function getTaskOutputRootDir() {
   return $d();
 }
-function o1e() {
+function getTaskOutputDir() {
   let t = Jh()?.adoptShellOutputRoot;
   if (t !== void 0) return U(t, K(), "tasks");
   let e = sr();
   if (e.outputDir === void 0) e.outputDir = U(bR(), K(), "tasks");
   return e.outputDir;
 }
-function $Sn(t) {
+function taskOutputDirForSession(t) {
   return U(bR(), t, "tasks");
 }
-function USn() {
+function peekTaskOutputDir() {
   return Jh()?.adoptShellOutputRoot !== void 0
-    ? o1e()
+    ? getTaskOutputDir()
     : (sr().outputDir ?? U(bR(), K(), "tasks"));
 }
 function te() {
@@ -589,13 +589,13 @@ function te() {
   }
   return t.outputDir;
 }
-function D7e(t) {
+function bindTaskOutputPath(t) {
   let e = sr().outputPathBindings.get(t);
   if (e !== void 0) return e;
-  let i = U(o1e(), `${t}.output`);
+  let i = U(getTaskOutputDir(), `${t}.output`);
   return (sr().outputPathBindings.set(t, i), i);
 }
-function _l(t) {
+function getTaskOutputPath(t) {
   let e = sr().outputPathBindings.get(t);
   if (e !== void 0) return e;
   return U(te(), `${t}.output`);
@@ -608,7 +608,7 @@ var ee = 16777216,
   wt = `
 [output omitted: it could not be written to disk]
 `;
-class vbt {
+class DiskTaskOutput {
   #u;
   #n = null;
   #t = [];
@@ -622,14 +622,14 @@ class vbt {
   #r = null;
   #c = null;
   constructor(t, e) {
-    this.#u = e ?? D7e(t);
+    this.#u = e ?? bindTaskOutputPath(t);
   }
   append(t) {
     if (this.#o) return;
-    if (((this.#f += t.length), this.#f > r1e)) this.#o = !0;
+    if (((this.#f += t.length), this.#f > MAX_TASK_OUTPUT_BYTES)) this.#o = !0;
     let e = this.#o
       ? `
-[output truncated: exceeded ${Z3t} disk cap]
+[output truncated: exceeded ${MAX_TASK_OUTPUT_BYTES_DISPLAY} disk cap]
 `
       : t;
     if ((this.#t.push(e), (this.#e += e.length), !this.#r))
@@ -656,7 +656,7 @@ class vbt {
   async #d() {
     while (!0) {
       try {
-        if (!this.#n) this.#n = await i1e(this.#u);
+        if (!this.#n) this.#n = await openTaskOutputForAppend(this.#u);
         while (!0) {
           let t = this.#s;
           try {
@@ -740,13 +740,13 @@ class vbt {
 }
 function ne(t) {
   let e = sr().diskOutputs.get(t);
-  if (!e) ((e = new vbt(t)), sr().diskOutputs.set(t, e));
+  if (!e) ((e = new DiskTaskOutput(t)), sr().diskOutputs.set(t, e));
   return e;
 }
-function s1e(t, e) {
+function appendTaskOutput(t, e) {
   ne(t).append(e);
 }
-function Sd(t) {
+function evictTaskOutput(t) {
   return kt(
     (async () => {
       let e = sr(),
@@ -759,18 +759,18 @@ function Sd(t) {
           );
         e.diskOutputs.delete(t);
       }
-      L7e(t);
+      releaseConvergentTaskOutputBinding(t);
     })(),
   );
 }
-function L7e(t) {
+function releaseConvergentTaskOutputBinding(t) {
   let e = sr().outputPathBindings.get(t);
-  if (e !== void 0 && Jh() === null && e === U(o1e(), `${t}.output`))
+  if (e !== void 0 && Jh() === null && e === U(getTaskOutputDir(), `${t}.output`))
     sr().outputPathBindings.delete(t);
 }
-async function BSn(t, e, i = Bt) {
+async function getTaskOutputDelta(t, e, i = Bt) {
   try {
-    let o = await JY(_l(t));
+    let o = await openTaskOutputForRead(getTaskOutputPath(t));
     if (!o) return { content: "", newOffset: e };
     let r;
     try {
@@ -789,9 +789,9 @@ async function BSn(t, e, i = Bt) {
     return { content: "", newOffset: e };
   }
 }
-async function Rbt(t, e = Bt) {
+async function getTaskOutput(t, e = Bt) {
   try {
-    let i = await JY(_l(t));
+    let i = await openTaskOutputForRead(getTaskOutputPath(t));
     if (!i) return "";
     let o;
     try {
@@ -813,9 +813,9 @@ ${r}`;
     return "";
   }
 }
-async function kbt(t) {
+async function getTaskOutputSize(t) {
   try {
-    let e = await JY(_l(t));
+    let e = await openTaskOutputForRead(getTaskOutputPath(t));
     if (!e) return 0;
     try {
       return (await e.stat()).size;
@@ -823,13 +823,13 @@ async function kbt(t) {
       await e.close();
     }
   } catch (e) {
-    if (Hbt(e)) throw e;
+    if (isTaskOutputSwapRefusal(e)) throw e;
     let i = A(e);
     if (i === "ENOENT") return 0;
     if (i === "EACCES" || i === "EPERM") {
-      let o = await J(_l(t)).catch(() => null);
+      let o = await J(getTaskOutputPath(t)).catch(() => null);
       if (o !== null && o.isFile() && (o.mode & 256) === 0) return o.size;
-      b(_l(t), `output no longer measurable (${i})`);
+      b(getTaskOutputPath(t), `output no longer measurable (${i})`);
     }
     if (i && WW.has(i))
       n(`getTaskOutputSize failed (${i}): ${e}`, { level: "error" });
@@ -837,7 +837,7 @@ async function kbt(t) {
     return 0;
   }
 }
-async function nyr(t, e) {
+async function repointTaskOutputSymlinks(t, e) {
   let i = sr(),
     o = Y([
       ...(i.outputDir !== void 0 ? [i.outputDir] : []),
@@ -938,7 +938,7 @@ async function ct(t, e, i = 0) {
     await o.close();
   }
 }
-async function JY(t, e = 0) {
+async function openTaskOutputForRead(t, e = 0) {
   if (P() === "windows") {
     let o = await Rt(t);
     if (o === null) return null;
@@ -997,7 +997,7 @@ async function Ht(t, e) {
 async function St(t, e) {
   let i = sr().linkedOutputs.get(t);
   if (i === void 0) {
-    if (!M7e(t))
+    if (!isTaskOutputFilePath(t))
       return b(
         t,
         "output is an unregistered symlink outside any tasks directory",
@@ -1010,7 +1010,7 @@ async function St(t, e) {
 async function Ct(t, e, i) {
   if (q(t)) {
     if (e > 0) return b(i, "output links chain");
-    return JY(t, e + 1);
+    return openTaskOutputForRead(t, e + 1);
   }
   let o, r;
   try {
@@ -1019,7 +1019,7 @@ async function Ct(t, e, i) {
     ((r = await J(s)),
       (o = await cG(s, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), P())));
   } catch (s) {
-    if (Hbt(s)) throw s;
+    if (isTaskOutputSwapRefusal(s)) throw s;
     if (A(s) === "ENOENT") return null;
     throw Tt(s, i);
   }
@@ -1119,9 +1119,9 @@ function re(t) {
   return dr(s) === dr(e) ? U(e, i.slice(r.length + 1)) : i;
 }
 function _t() {
-  return x(x(x(at(o1e()))));
+  return x(x(x(at(getTaskOutputDir()))));
 }
-function M7e(t) {
+function isTaskOutputFilePath(t) {
   let e = _t(),
     i = ae(),
     o = new Set([e, Ro(i, e).resolvedPath].map((r) => dr(r)));
@@ -1139,7 +1139,7 @@ function bt() {
 function Yt(t) {
   return ft(t) || t === K();
 }
-function jSn(t) {
+function taskOutputDirExclusions(t) {
   let e = _t(),
     i = ae(),
     o = Y([e, Ro(i, e).resolvedPath]),
@@ -1180,9 +1180,9 @@ function jSn(t) {
   }
   return [...r];
 }
-async function xbt(t) {
+async function bindTaskOutputForRead(t) {
   t = re(t);
-  let e = await JY(t);
+  let e = await openTaskOutputForRead(t);
   if (e === null)
     throw (
       await J(t),
@@ -1208,8 +1208,8 @@ async function xbt(t) {
     close: () => e.close(),
   };
 }
-async function Kre(t, e) {
-  let i = await JY(t);
+async function tailTaskOutput(t, e) {
+  let i = await openTaskOutputForRead(t);
   if (i === null) return { content: "", bytesRead: 0, bytesTotal: 0 };
   try {
     return await k_(i, e);
@@ -1217,7 +1217,7 @@ async function Kre(t, e) {
     await i.close();
   }
 }
-async function WSn(t) {
+async function unlinkTaskOutput(t) {
   let e = sr().linkedOutputs.get(t);
   if ((sr().linkedOutputs.delete(t), e !== void 0)) Ot.delete(e);
   if (P() === "windows") {
@@ -1237,7 +1237,7 @@ async function WSn(t) {
     await i.close();
   }
 }
-async function GSn(t, e) {
+async function writeTaskOutputSnapshot(t, e) {
   let i = await ct(t, { exclusive: !1, windowsFlags: "w" });
   try {
     (await i.truncate(0), await i.writeFile(e));
@@ -1367,13 +1367,13 @@ function se(t) {
   return new Promise((e, i) => Qt(t, (o, r) => (o ? i(o) : e(r))));
 }
 var le = 8;
-function i1e(t, e = "a") {
+function openTaskOutputForAppend(t, e = "a") {
   return ct(t, { exclusive: !1, windowsFlags: e });
 }
-function KAe(t) {
+function initTaskOutput(t) {
   return kt(
     (async () => {
-      let e = D7e(t);
+      let e = bindTaskOutputPath(t);
       return (
         await (await ct(e, { exclusive: !0, windowsFlags: "wx" })).close(),
         e
@@ -1382,7 +1382,7 @@ function KAe(t) {
   );
 }
 var zt = Symbol("taskOutputSwapRefused");
-function Hbt(t) {
+function isTaskOutputSwapRefusal(t) {
   return t instanceof Error && zt in t;
 }
 function b(t, e, i) {
@@ -1400,7 +1400,7 @@ function b(t, e, i) {
 }
 var ht = new Set(),
   ce = 256;
-async function Ibt(t, e) {
+async function openVerifiedTaskOutput(t, e) {
   let i;
   try {
     i = await J(t);
@@ -1446,16 +1446,16 @@ async function Ibt(t, e) {
     throw (await s.close(), c);
   }
 }
-async function qSn(t, e) {
+async function getVerifiedTaskOutputTail(t, e) {
   let i;
   try {
-    i = await Ibt(_l(t), r1e);
+    i = await openVerifiedTaskOutput(getTaskOutputPath(t), MAX_TASK_OUTPUT_BYTES);
   } catch (s) {
     if (A(s) === "ENOENT") return { content: "", omittedBytes: 0 };
     throw s;
   }
   let { handle: o } = i,
-    r = Math.min(i.size, r1e);
+    r = Math.min(i.size, MAX_TASK_OUTPUT_BYTES);
   try {
     let s = Math.max(0, r - e),
       c = Buffer.allocUnsafe(r - s),
@@ -1472,8 +1472,8 @@ async function qSn(t, e) {
     await o.close();
   }
 }
-async function N7e(t, e, i) {
-  let { handle: r, size: s } = await Ibt(t, i);
+async function persistTaskOutputSnapshot(t, e, i) {
+  let { handle: r, size: s } = await openVerifiedTaskOutput(t, i);
   try {
     let c = await yt(e, _.O_WRONLY | _.O_CREAT | _.O_TRUNC | lt);
     try {
@@ -1507,11 +1507,11 @@ async function ue(t, e, i = t) {
     return !1;
   }
 }
-function fK(t, e, i) {
+function initTaskOutputAsSymlink(t, e, i) {
   return kt(
     (async () => {
       try {
-        let o = D7e(t),
+        let o = bindTaskOutputPath(t),
           r = await tt(o, { replaceLeaf: !0 });
         try {
           if (await ue(o, e, r.ioPath)) {
@@ -1538,7 +1538,7 @@ function fK(t, e, i) {
         if ((r && WW.has(r)) || r === "EROFS")
           n(`initTaskOutputAsSymlink failed (${r}): ${o}`, { level: "error" });
         else h(o);
-        return KAe(t);
+        return initTaskOutput(t);
       }
     })(),
   );
@@ -1550,35 +1550,35 @@ export {
   Q3t,
   $k,
   uG,
-  r1e,
-  Z3t,
-  VAe,
-  O7e,
-  o1e,
-  $Sn,
-  USn,
-  D7e,
-  _l,
-  vbt,
-  s1e,
-  Sd,
-  L7e,
-  BSn,
-  Rbt,
-  kbt,
-  nyr,
-  JY,
-  M7e,
-  jSn,
-  xbt,
-  Kre,
-  WSn,
-  GSn,
-  i1e,
-  KAe,
-  Hbt,
-  Ibt,
-  qSn,
-  N7e,
-  fK,
+  MAX_TASK_OUTPUT_BYTES,
+  MAX_TASK_OUTPUT_BYTES_DISPLAY,
+  MAX_PERSISTED_OUTPUT_BYTES,
+  getTaskOutputRootDir,
+  getTaskOutputDir,
+  taskOutputDirForSession,
+  peekTaskOutputDir,
+  bindTaskOutputPath,
+  getTaskOutputPath,
+  DiskTaskOutput,
+  appendTaskOutput,
+  evictTaskOutput,
+  releaseConvergentTaskOutputBinding,
+  getTaskOutputDelta,
+  getTaskOutput,
+  getTaskOutputSize,
+  repointTaskOutputSymlinks,
+  openTaskOutputForRead,
+  isTaskOutputFilePath,
+  taskOutputDirExclusions,
+  bindTaskOutputForRead,
+  tailTaskOutput,
+  unlinkTaskOutput,
+  writeTaskOutputSnapshot,
+  openTaskOutputForAppend,
+  initTaskOutput,
+  isTaskOutputSwapRefusal,
+  openVerifiedTaskOutput,
+  getVerifiedTaskOutputTail,
+  persistTaskOutputSnapshot,
+  initTaskOutputAsSymlink,
 };

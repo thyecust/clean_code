@@ -10,7 +10,7 @@
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-var cL = [
+var EXTERNAL_PERMISSION_MODES = [
     "acceptEdits",
     "auto",
     "bypassPermissions",
@@ -18,17 +18,17 @@ var cL = [
     "dontAsk",
     "plan",
   ],
-  t = [...cL],
-  ly = t,
-  qU = "manual";
-function mf(e) {
+  t = [...EXTERNAL_PERMISSION_MODES],
+  PERMISSION_MODES = t,
+  PERMISSION_MODE_MANUAL_ALIAS = "manual";
+function normalizePermissionModeAlias(e) {
   return e === "manual" ? "default" : e;
 }
-function gf(e) {
-  let o = mf(e);
+function parsePermissionMode(e) {
+  let o = normalizePermissionModeAlias(e);
   return t.find((n) => n === o);
 }
-var Rie = `Cannot set permission mode: must be one of ${cL.join(", ")}`,
+var UNRECOGNIZED_PERMISSION_MODE_ERROR = `Cannot set permission mode: must be one of ${EXTERNAL_PERMISSION_MODES.join(", ")}`,
   i = {
     dangerousRemoval: { bypassImmune: !0, classifierRouted: !0 },
     backgroundOperator: { bypassImmune: !1, classifierRouted: !0 },
@@ -38,23 +38,23 @@ var Rie = `Cannot set permission mode: must be one of ${cL.join(", ")}`,
     outsideReadsBlocked: { bypassImmune: !0, classifierRouted: !1 },
     ...{},
   };
-function n2e(e) {
+function isBypassImmuneCircuitBreaker(e) {
   return (
     e.circuitBreaker !== void 0 && i[e.circuitBreaker]?.bypassImmune === !0
   );
 }
-function s0n(e) {
+function isClassifierRoutedCircuitBreaker(e) {
   return (
     e.circuitBreaker !== void 0 && i[e.circuitBreaker]?.classifierRouted === !0
   );
 }
-function i0n(e) {
+function isPreAskDeny(e) {
   return e.decideLocation === "pre-ask";
 }
-function Att(e, o) {
+function isRecordableDenial(e, o) {
   return e.behavior !== "allow" && e !== o;
 }
-var a0n = [
+var PERMISSION_DECISION_REASON_TYPES = [
   "rule",
   "mode",
   "subcommandResults",
@@ -67,12 +67,12 @@ var a0n = [
   "classifier",
   "other",
 ];
-var r2e = "Auto-allowed with sandbox (autoAllowBashIfSandboxed enabled)",
-  vke = "Read-only command is allowed",
-  Ctt = "--restricted: path outside the working directory",
-  ov =
+var SANDBOX_AUTO_ALLOW_REASON = "Auto-allowed with sandbox (autoAllowBashIfSandboxed enabled)",
+  READ_ONLY_AUTO_ALLOW_REASON = "Read-only command is allowed",
+  RESTRICTED_MODE_DENY_REASON = "--restricted: path outside the working directory",
+  OUTSIDE_READS_BLOCKED_DENY_REASON =
     "Reads outside the working directories are blocked (permissions.blockReadsOutsideWorkingDirectories). Add the directory with /add-dir, or remove that setting.",
-  o2e = new Map([
+  INLINE_CODE_FLAGS = new Map([
     ["python", new Set(["-c"])],
     ["node", new Set(["-e", "--eval", "-p", "--print"])],
     ["nodejs", new Set(["-e", "--eval", "-p", "--print"])],
@@ -93,12 +93,12 @@ var r2e = "Auto-allowed with sandbox (autoAllowBashIfSandboxed enabled)",
     ["julia", new Set(["-e", "-E"])],
     ["osascript", new Set(["-e"])],
   ]);
-function uL(e) {
+function isOutsideReadsBlockedAsk(e) {
   return (
     e?.type === "safetyCheck" && e.circuitBreaker === "outsideReadsBlocked"
   );
 }
-function Op(e) {
+function outsideReadsRuntimePathAsk(e) {
   let o = `${e} names a path that is computed at run time, which cannot be checked against the read block (permissions.blockReadsOutsideWorkingDirectories)`;
   return {
     behavior: "ask",
@@ -111,7 +111,7 @@ function Op(e) {
     },
   };
 }
-function zU(e) {
+function outsideReadsTooComplexAsk(e) {
   let o = `${e}; under the read block (permissions.blockReadsOutsideWorkingDirectories) a command the shell parser cannot analyze asks the person`;
   return {
     behavior: "ask",
@@ -125,7 +125,7 @@ function zU(e) {
     suggestions: [],
   };
 }
-function vtt() {
+function outsideReadsSedScriptAsk() {
   return {
     behavior: "ask",
     message:
@@ -139,37 +139,37 @@ function vtt() {
     },
   };
 }
-var s2e = "bashCommandClamp: no clamp rule matches this command",
-  Rtt = "bashCommandClamp fail-closed: permission check crashed",
-  kie = "Classifier unavailable",
-  F8t =
+var BASH_COMMAND_CLAMP_DENY_REASON = "bashCommandClamp: no clamp rule matches this command",
+  BASH_COMMAND_CLAMP_CRASH_REASON = "bashCommandClamp fail-closed: permission check crashed",
+  CLASSIFIER_UNAVAILABLE_REASON = "Classifier unavailable",
+  CLASSIFIER_PARSE_FAILURE_REASON_STEM =
     "Auto mode could not evaluate this action and is blocking it for safety",
-  lkt =
+  CLASSIFIER_TRANSCRIPT_TOO_LONG_REASON =
     "Auto mode classifier transcript exceeded context window \u2014 falling back to manual approval (try /compact to reduce conversation size)",
-  $8t = "ask rule on hook-rewritten input",
-  ktt = { type: "asyncAgent", reason: $8t },
-  l0n = {
+  HOOK_REWRITTEN_INPUT_ASK_REASON = "ask rule on hook-rewritten input",
+  HOOK_REWRITE_HEADLESS_DENY_REASON = { type: "asyncAgent", reason: HOOK_REWRITTEN_INPUT_ASK_REASON },
+  HOOK_ALLOW_FLAGGED_HEADLESS_DENY_REASON = {
     type: "asyncAgent",
     reason:
       "tool requires user interaction; no prompt available in headless mode",
   },
-  U8t =
+  NO_APPROVAL_SURFACE_REASON =
     "no approval surface in this session; permission request denied automatically",
-  c0n = { type: "asyncAgent", reason: U8t },
-  u0n = {
+  NO_APPROVAL_SURFACE_DENY_REASON = { type: "asyncAgent", reason: NO_APPROVAL_SURFACE_REASON },
+  PROMPT_TOOL_ALLOW_FLAGGED_MCP_DENY_REASON = {
     type: "other",
     reason:
       "MCP tool requires user interaction; not supported via --permission-prompt-tool",
   },
-  i2e = "tool permission stream closed before response received",
-  xie = "canUseTool returned a schema-invalid permission result",
-  Hie = "tool permission request failed",
-  xtt = "tool permission request aborted",
-  d0n = { type: "other", reason: i2e },
-  Htt = { type: "other", reason: xie },
-  p0n = { type: "other", reason: "permission prompt tool no longer connected" },
-  f0n = { type: "other", reason: Hie },
-  Rke = { type: "other", reason: xtt };
+  CAN_USE_TOOL_STREAM_CLOSED_REASON = "tool permission stream closed before response received",
+  CAN_USE_TOOL_INVALID_RESULT_REASON = "canUseTool returned a schema-invalid permission result",
+  CAN_USE_TOOL_REQUEST_FAILED_REASON = "tool permission request failed",
+  CAN_USE_TOOL_ABORTED_REASON = "tool permission request aborted",
+  CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_STREAM_CLOSED_REASON },
+  CAN_USE_TOOL_INVALID_RESULT_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_INVALID_RESULT_REASON },
+  CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON = { type: "other", reason: "permission prompt tool no longer connected" },
+  CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_REQUEST_FAILED_REASON },
+  CAN_USE_TOOL_ABORTED_DENY_REASON = { type: "other", reason: CAN_USE_TOOL_ABORTED_REASON };
 var Ar = P() === "macos" ? "\u23FA" : "\u25CF",
   $Q = "\u2219",
   Olr = "\u2315",
@@ -245,8 +245,8 @@ var Tg = {
     teeDown: "\u252C",
     teeUp: "\u2534",
   };
-var Blr = m(() => ai(mf, X(ly))),
-  hkt = m(() => ai(mf, X(cL))),
+var Blr = m(() => ai(normalizePermissionModeAlias, X(PERMISSION_MODES))),
+  hkt = m(() => ai(normalizePermissionModeAlias, X(EXTERNAL_PERMISSION_MODES))),
   r = {
     plan: 0,
     bubble: 1,
@@ -330,7 +330,7 @@ function jlr(e) {
   return { permission_mode: o, is_ultraplan_mode: l ? !0 : null };
 }
 function Eb(e) {
-  return gf(e) ?? "default";
+  return parsePermissionMode(e) ?? "default";
 }
 function VU(e) {
   return s(e).title;
@@ -354,46 +354,46 @@ function TA(e) {
   return s(e).color;
 }
 export {
-  cL,
-  ly,
-  qU,
-  mf,
-  gf,
-  Rie,
-  n2e,
-  s0n,
-  i0n,
-  Att,
-  a0n,
-  r2e,
-  vke,
-  Ctt,
-  ov,
-  o2e,
-  uL,
-  Op,
-  zU,
-  vtt,
-  s2e,
-  Rtt,
-  kie,
-  F8t,
-  lkt,
-  $8t,
-  ktt,
-  l0n,
-  U8t,
-  c0n,
-  u0n,
-  i2e,
-  xie,
-  Hie,
-  xtt,
-  d0n,
-  Htt,
-  p0n,
-  f0n,
-  Rke,
+  EXTERNAL_PERMISSION_MODES,
+  PERMISSION_MODES,
+  PERMISSION_MODE_MANUAL_ALIAS,
+  normalizePermissionModeAlias,
+  parsePermissionMode,
+  UNRECOGNIZED_PERMISSION_MODE_ERROR,
+  isBypassImmuneCircuitBreaker,
+  isClassifierRoutedCircuitBreaker,
+  isPreAskDeny,
+  isRecordableDenial,
+  PERMISSION_DECISION_REASON_TYPES,
+  SANDBOX_AUTO_ALLOW_REASON,
+  READ_ONLY_AUTO_ALLOW_REASON,
+  RESTRICTED_MODE_DENY_REASON,
+  OUTSIDE_READS_BLOCKED_DENY_REASON,
+  INLINE_CODE_FLAGS,
+  isOutsideReadsBlockedAsk,
+  outsideReadsRuntimePathAsk,
+  outsideReadsTooComplexAsk,
+  outsideReadsSedScriptAsk,
+  BASH_COMMAND_CLAMP_DENY_REASON,
+  BASH_COMMAND_CLAMP_CRASH_REASON,
+  CLASSIFIER_UNAVAILABLE_REASON,
+  CLASSIFIER_PARSE_FAILURE_REASON_STEM,
+  CLASSIFIER_TRANSCRIPT_TOO_LONG_REASON,
+  HOOK_REWRITTEN_INPUT_ASK_REASON,
+  HOOK_REWRITE_HEADLESS_DENY_REASON,
+  HOOK_ALLOW_FLAGGED_HEADLESS_DENY_REASON,
+  NO_APPROVAL_SURFACE_REASON,
+  NO_APPROVAL_SURFACE_DENY_REASON,
+  PROMPT_TOOL_ALLOW_FLAGGED_MCP_DENY_REASON,
+  CAN_USE_TOOL_STREAM_CLOSED_REASON,
+  CAN_USE_TOOL_INVALID_RESULT_REASON,
+  CAN_USE_TOOL_REQUEST_FAILED_REASON,
+  CAN_USE_TOOL_ABORTED_REASON,
+  CAN_USE_TOOL_STREAM_CLOSED_DENY_REASON,
+  CAN_USE_TOOL_INVALID_RESULT_DENY_REASON,
+  CAN_USE_TOOL_PROMPT_TOOL_GONE_DENY_REASON,
+  CAN_USE_TOOL_REQUEST_FAILED_DENY_REASON,
+  CAN_USE_TOOL_ABORTED_DENY_REASON,
   Ar,
   $Q,
   Olr,

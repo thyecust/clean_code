@@ -12,22 +12,22 @@
 import { SB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g, ki, wn, ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Jlr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { wr, ff, sd } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ui, mXe } from "./chunk-ajtn749s.js";
 import { bK, gXe, hXe } from "./chunk-hh8f1qrw.js";
 import { V$, Aa, vm, K$ } from "./chunk-7s6mt1vg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { _se, brr, rt, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { _se, brr, getMainLoopModel as rt, Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
   Xf,
@@ -83,7 +83,7 @@ import {
   u0e,
 } from "./chunk-akd9b588.js";
 import { Gb, bv } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import { un, Kb, xle, ys, di } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { cliError as un, writeStdoutAndDrain as Kb, flushAnalyticsBeforeExit as xle, exitAfterAnalyticsFlush as ys, cliErrorAfterAnalyticsFlush as di } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import {
   Dae,
   Lae,
@@ -410,7 +410,7 @@ async function ra(a, o, s, d) {
   (Rot(), i("tengu_plugin_list_command", {}));
   let c = await tD(s),
     { getPluginEditableScopes: p, editableScopeOf: k } =
-      await import("./getPluginEditableScopes.ccxx4mv7.js"),
+      await import("../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js"),
     w = p(),
     v = Object.keys(c.plugins);
   await qwe();
@@ -1174,8 +1174,8 @@ async function fa(a, o, s, d, c) {
       getPluginInventory: p,
       computePluginTokenCost: k,
       scaleCharsToTokens: w,
-    } = await import("./getPluginInventory.fnes377h.js"),
-    { formatTokenEstimate: v } = await import("./formatTokenEstimate.t191sxdq.js");
+    } = await import("../MCP客户端/chunk-4xr0rjb4.js"),
+    { formatTokenEstimate: v } = await import("../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js");
   await qwe();
   let { enabled: P, disabled: R } = await Ph(M() ? d : void 0, c),
     C = J3(o),

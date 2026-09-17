@@ -14,7 +14,7 @@ import { s4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ob } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateStartToWidth as Ob } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { jJt, IB, $ae } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";

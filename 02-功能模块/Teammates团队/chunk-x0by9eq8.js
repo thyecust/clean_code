@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Oj, YGt, JGt, foe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isInsideTmux as Oj, getLeaderPaneId as YGt, getUserTmuxSocket as JGt, isTmuxAvailable as foe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { jk, cCe } from "./chunk-6b13bhw1.js";
 import { M6, wet, N6, Tge, Tet } from "./chunk-enjekn9t.js";
 import { Ike } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
@@ -43,7 +43,7 @@ function d(e) {
 function l(e, t) {
   return Fe(N6, ["-L", Tet(), ...e], t);
 }
-async function W$t(e, t, a) {
+async function respawnPaneWithCommand(e, t, a) {
   await Fe(N6, [...e, "set-option", "-p", "-t", t, "remain-on-exit", "failed"]);
   let r = await Fe(N6, [
     ...e,
@@ -57,7 +57,7 @@ async function W$t(e, t, a) {
   if (r.code !== 0)
     throw new jk(`Failed to send command to pane ${t}: ${r.stderr}`);
 }
-class Spr {
+class TmuxBackend {
   type = "tmux";
   displayName = "tmux";
   cachedLeaderWindowTarget = null;
@@ -87,7 +87,7 @@ class Spr {
     }
     let r = JGt(),
       s = a ? ["-L", Tet()] : r ? ["-S", r] : [];
-    await W$t(s, e, t);
+    await respawnPaneWithCommand(s, e, t);
   }
   async setPaneBorderColor(e, t, a = !1) {
     let r = T(t),
@@ -403,4 +403,4 @@ class Spr {
       ));
   }
 }
-export { W$t, Spr };
+export { respawnPaneWithCommand, TmuxBackend };

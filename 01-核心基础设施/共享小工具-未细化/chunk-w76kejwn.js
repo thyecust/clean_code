@@ -10,43 +10,43 @@
 function r(n) {
   return n;
 }
-function S(n) {
+function lit(n) {
   return r(n);
 }
-function u(n) {
+function fromEnum(n) {
   return r(n);
 }
-function we(n) {
+function fromEnumOpt(n) {
   return n == null ? void 0 : r(n);
 }
-function Yr(n) {
+function fromNumber(n) {
   return r(String(n));
 }
-function KP(n) {
+function fromNumberOpt(n) {
   return n == null ? void 0 : r(String(n));
 }
-function _y(...n) {
+function concatSafe(...n) {
   return r(n.join(""));
 }
-function jHt(n) {
+function fromNumberArr(n) {
   return r(n.join(","));
 }
-function Ga(n) {
+function fromEnumArr(n) {
   return r([...n].sort().join(","));
 }
-function W0(n, t) {
+function joinSafe(n, t) {
   return r(n.join(t ?? ","));
 }
-function Ln(n) {
+function fromSanitizer_SANITIZER_OUTPUT_ONLY(n) {
   return r(n);
 }
-function Gf(n, t) {
-  return t ? Ln(n) : void 0;
+function mcpNameForAnalytics_GATE_EVALUATED(n, t) {
+  return t ? fromSanitizer_SANITIZER_OUTPUT_ONLY(n) : void 0;
 }
-function Mz(n, t) {
-  return t ? Ln(n) : S("custom");
+function agentTypeForAnalytics_GATE_EVALUATED(n, t) {
+  return t ? fromSanitizer_SANITIZER_OUTPUT_ONLY(n) : lit("custom");
 }
-function WYt(n, t) {
-  return t ? Ln(n) : S("third-party");
+function pluginIdForAnalytics_GATE_EVALUATED(n, t) {
+  return t ? fromSanitizer_SANITIZER_OUTPUT_ONLY(n) : lit("third-party");
 }
-export { S, u, we, Yr, KP, _y, jHt, Ga, W0, Ln, Gf, Mz, WYt };
+export { lit, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, concatSafe, fromNumberArr, fromEnumArr, joinSafe, fromSanitizer_SANITIZER_OUTPUT_ONLY, mcpNameForAnalytics_GATE_EVALUATED, agentTypeForAnalytics_GATE_EVALUATED, pluginIdForAnalytics_GATE_EVALUATED };

@@ -10,11 +10,11 @@
 import { _m, $p, irt, cOn, uLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { lU, CRn, qUe, LZe, Gse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Vu } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { lU, resetEnvDerivedAuthCaches as CRn, qUe, LZe, Gse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { canonicalizePath as Vu } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Za, MRt, NRt, uke } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { M1 } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { vb, Vq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { configureGlobalAgents as vb, clearProxyCache as Vq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Avt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { $R } from "./chunk-035vf5et.js";
 import { gwn } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";

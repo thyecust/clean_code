@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { zP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ve, R, q0, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import {
   p_,
@@ -29,7 +29,7 @@ import {
   pfn,
   Cjt,
   ya,
-  kY,
+  executePreCompactHooks as kY,
   ET,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";

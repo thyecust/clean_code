@@ -10,7 +10,7 @@
 import { M, ldr } from "./chunk-h62vxw7j.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, w_e } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function K0n(e = n7t) {
   let o = a.CLAUDE_CODE_HOVER_REST;
   if (o === void 0) return;

@@ -11,20 +11,20 @@ import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Mr, Tn, wu, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { CIe } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { Mr, Tn, hasStoredOAuthToken as wu, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { readUnattendedServingConsent as CIe } from "../AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { YEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import { rf } from "../权限系统/chunk-qdy0h5k2.js";
 import { uT, ATe, e$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { Eve } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { ensurePolicyLimitsLoadedForDiagnostic as Eve } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { hG } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { yYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isArtifactConfigToggleable as yYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { sLt, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Olt, AIe, w2n, gSe } from "../../01-核心基础设施/设置-配置/chunk-bznmdnc2.js";
 import { dAe } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -298,7 +298,7 @@ function c(n, o) {
     r = !dAe(),
     u = Blt(),
     h = yYe(),
-    C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js").isBriefEntitled();
+    C = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled();
   return {
     globalConfig: s,
     settingsData: e,

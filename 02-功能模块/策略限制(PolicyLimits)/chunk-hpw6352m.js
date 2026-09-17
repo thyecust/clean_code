@@ -7,33 +7,33 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B, hB, u8, Nm } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { Bc, Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qPn, We, Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  tx,
-  Zc,
-  d0,
-  Gl,
-  _Rn,
-  qg,
-  bg,
-  Yt,
-  jUe,
-  gt,
-  mh,
+  getAuthHeadersAsync as tx,
+  shouldUseWIFAuth as Zc,
+  effectiveAuthTokenEnv as d0,
+  getAuthTokenSource as Gl,
+  getApiKeyPrefixBucket as _Rn,
+  getAnthropicApiKeyWithSource as qg,
+  getConfiguredApiKeyHelper as bg,
+  getClaudeAIOAuthTokens as Yt,
+  checkAndRefreshOAuthTokenIfNeededWithOutcome as jUe,
+  isClaudeAISubscriber as gt,
+  getStoredOauthAccountInfo as mh,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Pe, ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   aAt,
@@ -53,24 +53,24 @@ import {
   L$e,
   Znr,
   err,
-  use,
-  F4t,
-  kve,
-  rCn,
-  sU,
-  $4t,
-  tQe,
-  U4t,
-  B4t,
-  iU,
-  lA,
-  KJ,
-  nQe,
-  j4t,
-  pAt,
-  rQe,
-  W4t,
-  ch,
+  setSessionCache as use,
+  setLastFetchOutcome as F4t,
+  getLastFetchOutcome as kve,
+  detachPolicyLimitsBackend as rCn,
+  getSessionCache as sU,
+  suppressDiskAdoption as $4t,
+  getDiskAdoptionEpoch as tQe,
+  liftDiskAdoptionSuppression as U4t,
+  isDiskAdoptionSuppressed as B4t,
+  getCachePath as iU,
+  isPolicyLimitsEligible as lA,
+  getPolicyLimitsIneligibleReason as KJ,
+  loadCachedResponse as nQe,
+  parseCachedResponse as j4t,
+  projectPolicyLimitsBody as pAt,
+  serverBodyOf as rQe,
+  seedSessionCacheFromPrime as W4t,
+  getResponseFromCache as ch,
 } from "./chunk-8sw91yn5.js";
 import { QAn } from "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";

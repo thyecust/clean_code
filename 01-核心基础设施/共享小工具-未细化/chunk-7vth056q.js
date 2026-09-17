@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _o } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
+import { McpError as _o } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 import { XA } from "../../02-功能模块/认证-OAuth登录/chunk-j990pwax.js";
 function nce(r) {
   return (

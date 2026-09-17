@@ -9,38 +9,38 @@
 // Version: 2.1.263
 import { B, l_e, N0, kW, p8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { py, dB } from "./chunk-9g2q4bjq.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py, CLAUDE_AI_PROFILE_SCOPE as dB } from "./chunk-9g2q4bjq.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   uVt,
   Or,
   lU,
   Grr,
   gU,
-  _t,
-  eS,
+  isBgSession as _t,
+  revokeOAuthToken as eS,
   T5,
-  UKt,
-  ERn,
-  Use,
-  QKt,
+  isProfileAuthShadowed as UKt,
+  removeApiKey as ERn,
+  clearOAuthTokenMemos as Use,
+  getAnthropicApiKeyWithSourceAsyncSafe as QKt,
   _q,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Iae, _dr, lot, R, l, A, Rt, Bp } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { yA, Pe, GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe, isFirstPartyAnthropicHost as GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ORe, KD } from "./chunk-wk0e3dz4.js";
-import { hc, Xxn, Uar, IQ, yn } from "./chunk-y7b7kf5n.js";
-import { Pve } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { hc, Xxn, Uar, IQ, getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
+import { clearTrustedDeviceTokenCache as Pve } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { tqn, yk, xzn, Izn, Pzn, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { M$ } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { clearOrgMemoryCredential as M$ } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Der, Ler } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { q8t, z8t } from "./chunk-x3rm9w4b.js";
+import { q8t, resetWIFCredentialState as z8t } from "./chunk-x3rm9w4b.js";
 import { ZB, l7, b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { cGn } from "../Artifact发布-渲染/chunk-y8j05azr.js";
 import { Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -381,7 +381,7 @@ async function Z(e, o) {
     throw t;
   }
 }
-async function c9({
+async function performLogout({
   clearOnboarding: e = !1,
   preserveInProcessTokens: o = !1,
   preserveNonAnthropicAuth: t = !1,
@@ -393,7 +393,7 @@ async function c9({
 }) {
   let { flushTelemetry: E } = await import("../../01-核心基础设施/遥测-OpenTelemetry/flushTelemetry.jwarnhac.js");
   if ((await E(), await Ler(c), _t())) {
-    await mlt(i, {
+    await clearAuthRelatedCaches(i, {
       preserveQuotaAutoResume: f,
       artifactAccount: c,
       incomingIdentity: g,
@@ -460,7 +460,7 @@ async function c9({
   }
   (kW(null),
     p8(null),
-    await mlt(i, {
+    await clearAuthRelatedCaches(i, {
       preserveQuotaAutoResume: f,
       artifactAccount: c,
       incomingIdentity: g,
@@ -505,7 +505,7 @@ async function c9({
     l_e(void 0),
     y("oauth_logout"));
 }
-async function mlt(
+async function clearAuthRelatedCaches(
   e,
   {
     preserveQuotaAutoResume: o = !1,
@@ -542,7 +542,7 @@ async function mlt(
     (Jx("account_switch"), yk("account_switch"), tqn());
   xzn();
 }
-async function qgr({
+async function fleetHostLogout({
   exit: e,
   setError: o,
   setInfo: t,
@@ -552,7 +552,7 @@ async function qgr({
   (t("Signing out\u2026"),
     zY({ action: "logout", success: !0, authMethod: "oauth" }));
   try {
-    (await c9({ clearOnboarding: !0, storageV5: i, credentials: f }), e());
+    (await performLogout({ clearOnboarding: !0, storageV5: i, credentials: f }), e());
   } catch (c) {
     (h(c),
       o(
@@ -590,4 +590,4 @@ async function J(e, o) {
   );
   return;
 }
-export { uIe, UBn, BBn, jBn, ODt, WBn, GBn, c9, mlt, qgr };
+export { uIe, UBn, BBn, jBn, ODt, WBn, GBn, performLogout, clearAuthRelatedCaches, fleetHostLogout };

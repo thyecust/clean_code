@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { J7, G9, wO, Q7, Kft, zOe, PF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { VYe, KYe, QTt, ZTt, eEt, XYe, GFe, lEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";

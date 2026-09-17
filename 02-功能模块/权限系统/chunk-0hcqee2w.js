@@ -12,7 +12,7 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
@@ -20,14 +20,14 @@ import { y5, tt, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { te, dp, Xe, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, dp, truncateToWidth as Xe, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { iv } from "./chunk-e4pfvp7x.js";
 import { Tx, akt, Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { o, t, jr, tn, ko, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oN, oYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { WS, an, jM, mH, iMe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findSafetyCheckReason as WS, an, jM, setPermissionModeWithGuards as mH, getAutoModeUnavailableText as iMe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YJe,
   ps,

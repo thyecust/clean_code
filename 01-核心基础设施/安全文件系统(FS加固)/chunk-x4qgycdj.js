@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { $M, Ine, T3, Pht, o$, ej, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { $M, SYNCED_FILE_WRITE_MODE as Ine, T3, Pht, o$, ej, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Jbe } from "../共享小工具-未细化/chunk-37w8v4sh.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Ae } from "../共享小工具-未细化/chunk-2c9tjhwd.js";

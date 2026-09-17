@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ge, l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
 import { vc, Ute, uDe, qte, dgn, Jv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { zo, q$ } from "./chunk-3kmsshb6.js";
@@ -17,7 +17,7 @@ import { Ul, aN, Bn } from "../插件系统/chunk-33bdfgmx.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as p from "fs/promises";
 import * as m from "path";
-async function JPt(t, e) {
+async function getPluginInventory(t, e) {
   if (e === "builtin") {
     let d = ASt(t.name);
     if (!d) throw Error(`Built-in plugin ${t.name} not found`);
@@ -55,7 +55,7 @@ async function JPt(t, e) {
     lspServers: k,
   };
 }
-async function wgr(t, e, s) {
+async function computePluginTokenCost(t, e, s) {
   let [o, r, a] = await Promise.all([
       Promise.all(
         t.skills.map((c) =>
@@ -86,7 +86,7 @@ async function wgr(t, e, s) {
     },
   };
 }
-function Tgr(t, e, s, o = 4) {
+function scaleCharsToTokens(t, e, s, o = 4) {
   if (s !== void 0 && e > 0) return Math.round((t / e) * s);
   return vc(" ".repeat(t), o);
 }
@@ -244,4 +244,4 @@ function v(t, e) {
     return;
   h(ge(e));
 }
-export { JPt, wgr, Tgr };
+export { getPluginInventory, computePluginTokenCost, scaleCharsToTokens };

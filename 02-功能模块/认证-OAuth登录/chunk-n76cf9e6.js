@@ -14,15 +14,15 @@ import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { cL, mf } from "../权限系统/chunk-e4pfvp7x.js";
+import { EXTERNAL_PERMISSION_MODES as cL, normalizePermissionModeAlias as mf } from "../权限系统/chunk-e4pfvp7x.js";
 import { JK } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { Tw } from "./chunk-s51acx6w.js";
-import { RH } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeTokenOverride as RH } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { ANe } from "../Bridge-RemoteControl/chunk-ct52ffwb.js";
 import { M9e, $tn, Utn, pBn } from "../权限系统/chunk-3kjwvb3e.js";
 import { NSt, j8e } from "../../01-核心基础设施/共享小工具-未细化/chunk-h14anec2.js";
@@ -62,7 +62,7 @@ function uBn(e, t, y = () => !0, d, p) {
     w = null,
     v = null;
   function g() {
-    return (v ??= import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"));
+    return (v ??= import("./认证-OAuth登录.419zdfz3.js"));
   }
   function S(r) {
     let i = { type: "token_update", accessToken: r };
@@ -244,7 +244,7 @@ function uBn(e, t, y = () => !0, d, p) {
       t(`auth: cooldown write error: ${o}`);
     }
     try {
-      let { execFileNoThrow: o } = await import("./execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING.w7pcw6fs.js");
+      let { execFileNoThrow: o } = await import("../Git-Worktree/chunk-9ys1bnqr.js");
       o("osascript", [
         "-e",
         'display notification "Your Claude assistant needs re-authentication" with title "Claude"',
@@ -419,7 +419,7 @@ function re(e, t, y) {
   }
   let d = null;
   async function p() {
-    return (d ??= await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"));
+    return (d ??= await import("./认证-OAuth登录.419zdfz3.js"));
   }
   return (
     p(),
@@ -475,8 +475,8 @@ var V = m(() =>
       { populateOAuthAccountInfoIfNeeded: N },
     ] = await Promise.all([
       import("../../01-核心基础设施/共享小工具-未细化/ATIS_REQUEST_HEADER.9bwp2jqb.js"),
-      import("./registerPreFlushTask.748m7jpz.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js"),
+      import("../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js"),
+      import("./认证-OAuth登录.419zdfz3.js"),
     ]);
     if (
       (await N(u, p).catch((a) => {

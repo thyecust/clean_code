@@ -14,7 +14,7 @@ import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Qcr, Bs, exe, SPn, Zcr, SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { kRe, sir } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
-import { Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { fN } from "../../01-核心基础设施/共享小工具-未细化/chunk-k1vb7vky.js";
 import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
 import { pe, w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

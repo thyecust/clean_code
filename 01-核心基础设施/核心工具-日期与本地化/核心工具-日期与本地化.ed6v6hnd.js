@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Mge } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { oe, ft, B0, Lz } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { VQ, sz } from "../共享小工具-未细化/chunk-xcc43dkx.js";

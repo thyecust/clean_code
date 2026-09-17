@@ -15,7 +15,7 @@ import { x } from "../../01-核心基础设施/核心工具-字符串与文本/c
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { xce, C7, Hce, _6n, pbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { wun, Tun, Eun } from "../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js";
+import { SUGGEST_CONNECTORS_TOOL_NAME as wun, DESCRIPTION as Tun, PROMPT as Eun } from "../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js";
 import { G7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0m264jc.js";
 import { s, v, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = m(() =>

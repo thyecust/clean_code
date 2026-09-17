@@ -11,9 +11,9 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be, uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -24,19 +24,19 @@ import {
   DR,
   Aor,
   KC,
-  Zc,
-  cl,
-  d0,
-  kp,
-  qg,
-  bg,
-  Yt,
-  qD,
+  shouldUseWIFAuth as Zc,
+  isAnthropicAuthEnabled as cl,
+  effectiveAuthTokenEnv as d0,
+  getAnthropicApiKeyWithSourceSafe as kp,
+  getAnthropicApiKeyWithSource as qg,
+  getConfiguredApiKeyHelper as bg,
+  getClaudeAIOAuthTokens as Yt,
+  getClaudeAIOAuthTokenOrigin as qD,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, Xe, or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth as Xe, truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ZU, up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Pe, fo, ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { nar, mx, rar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
@@ -833,7 +833,7 @@ var ue = m(() =>
     "oauth_not_allowed_for_organization",
   ];
 var Ve = "policy-limits.json";
-class trr {
+class PolicyState {
   sessionCache = null;
   lastFetchOutcome = null;
   diskAdoptionSuppressed = !1;
@@ -853,49 +853,49 @@ class trr {
       gU();
   }
 }
-var kfr = new j(() => new trr());
+var policyStates = new j(() => new PolicyState());
 function g() {
-  return kfr.of(B().host);
+  return policyStates.of(B().host);
 }
-function use(e) {
+function setSessionCache(e) {
   g().replaceSessionCache(e);
 }
-function F4t(e) {
+function setLastFetchOutcome(e) {
   let t = g();
   ((t.lastFetchOutcome = e), t.cacheRevision++);
 }
-function kve() {
+function getLastFetchOutcome() {
   return g().lastFetchOutcome;
 }
-function rCn() {
+function detachPolicyLimitsBackend() {
   g().storageV5 = void 0;
 }
-function sU() {
+function getSessionCache() {
   return g().sessionCache;
 }
-function $4t() {
+function suppressDiskAdoption() {
   let e = g();
   ((e.diskAdoptionSuppressed = !0), e.diskAdoptionEpoch++);
 }
-function tQe() {
+function getDiskAdoptionEpoch() {
   return g().diskAdoptionEpoch;
 }
-function U4t() {
+function liftDiskAdoptionSuppression() {
   g().diskAdoptionSuppressed = !1;
 }
-function B4t() {
+function isDiskAdoptionSuppressed() {
   return g().diskAdoptionSuppressed;
 }
-function oCn() {
+function getPolicyCacheRevision() {
   return g().cacheRevision;
 }
-function iU() {
+function getCachePath() {
   return We(be(), Ve);
 }
-function lA() {
-  return KJ() === void 0;
+function isPolicyLimitsEligible() {
+  return getPolicyLimitsIneligibleReason() === void 0;
 }
-function KJ(e = {}) {
+function getPolicyLimitsIneligibleReason(e = {}) {
   if (Pe() !== "firstParty") return "third_party_provider";
   if (!e.skipBaseUrlCheck && !fo()) return "custom_base_url";
   try {
@@ -911,30 +911,30 @@ function KJ(e = {}) {
     return "prosumer_oauth";
   return;
 }
-function nQe() {
+function loadCachedResponse() {
   let e = g();
   if (M() && e.storageV5 !== void 0 && e.sessionCache) return e.sessionCache;
   try {
-    let t = Ke(iU(), "utf-8");
-    return j4t(t);
+    let t = Ke(getCachePath(), "utf-8");
+    return parseCachedResponse(t);
   } catch {
     return null;
   }
 }
-function j4t(e) {
-  let t = pAt(xt(e, !1));
+function parseCachedResponse(e) {
+  let t = projectPolicyLimitsBody(xt(e, !1));
   return t.success ? t.data : null;
 }
 var de = new WeakMap();
-function pAt(e) {
+function projectPolicyLimitsBody(e) {
   let t = ue().safeParse(e);
   if (t.success) de.set(t.data, e);
   return t;
 }
-function rQe(e) {
+function serverBodyOf(e) {
   return de.get(e) ?? e;
 }
-function W4t(e, t) {
+function seedSessionCacheFromPrime(e, t) {
   let r = g();
   if (
     ((r.storageV5 = e),
@@ -992,22 +992,22 @@ var Ge = [
     "allow_skill_doctor_transcript_scan",
   ]),
   qe = new Set(["allow_product_feedback"]);
-function Mt(e) {
+function isPolicyAllowed(e) {
   let t = ge();
   if (!t) {
     if (Ye.has(e)) {
-      if (lA()) return !1;
+      if (isPolicyLimitsEligible()) return !1;
       if (qe.has(e) && St() && !(e === "allow_product_feedback" && cU()))
         return !1;
     }
     return !0;
   }
-  return G4t(
-    { restrictions: t, compliance_taints: ch()?.compliance_taints ?? [] },
+  return isPolicyAllowedInResponse(
+    { restrictions: t, compliance_taints: getResponseFromCache()?.compliance_taints ?? [] },
     e,
   );
 }
-function G4t(e, t) {
+function isPolicyAllowedInResponse(e, t) {
   let r = e.restrictions[t];
   if (r) return r.allowed;
   for (let [o, i] of Ge)
@@ -1015,39 +1015,39 @@ function G4t(e, t) {
   return !0;
 }
 rar({
-  isPolicyAllowed: (e) => Mt(e),
-  policyDenyKind: (e) => DD(e),
-  policyDeniedReason: (e, t, r) => op(e, t, r),
-  complianceTaintsSettled: () => q4t(),
+  isPolicyAllowed: (e) => isPolicyAllowed(e),
+  policyDenyKind: (e) => policyDenyKind(e),
+  policyDeniedReason: (e, t, r) => policyDeniedReason(e, t, r),
+  complianceTaintsSettled: () => areComplianceTaintsSettled(),
 });
-function Cme() {
-  if (!lA() || ch() !== null) return !1;
+function isPolicyRouteMissing() {
+  if (!isPolicyLimitsEligible() || getResponseFromCache() !== null) return !1;
   let e = g().lastFetchOutcome;
   return e !== null && !e.success && e.httpStatus === 404;
 }
-function op(e, t, r, o) {
-  if (Mt(e)) return null;
-  if (Cme()) return cBe(t);
-  if (o !== void 0 && !xve()) return o;
-  if (ch() === null) return Qse(t);
+function policyDeniedReason(e, t, r, o) {
+  if (isPolicyAllowed(e)) return null;
+  if (isPolicyRouteMissing()) return cBe(t);
+  if (o !== void 0 && !hasNameableComplianceTaint()) return o;
+  if (getResponseFromCache() === null) return Qse(t);
   return lBe(t, r, mx());
 }
-function xve() {
+function hasNameableComplianceTaint() {
   return MRe(mx()).length > 0;
 }
-function DD(e) {
-  if (Mt(e)) return null;
-  if (ch() !== null) return "org_denied";
-  return Cme() ? "route_missing" : "cache_miss";
+function policyDenyKind(e) {
+  if (isPolicyAllowed(e)) return null;
+  if (getResponseFromCache() !== null) return "org_denied";
+  return isPolicyRouteMissing() ? "route_missing" : "cache_miss";
 }
-function sCn(e, t) {
-  let r = DD(e);
+function policyDeniedHint(e, t) {
+  let r = policyDenyKind(e);
   if (r === null) return null;
   if (r === "route_missing") return Iir();
-  if (t !== void 0 && !xve()) return t;
+  if (t !== void 0 && !hasNameableComplianceTaint()) return t;
   return r === "cache_miss" ? Hir() : xir(mx());
 }
-function q4t() {
+function areComplianceTaintsSettled() {
   if (
     DR() ||
     Aor() ||
@@ -1059,7 +1059,7 @@ function q4t() {
       !L4t({ anthropicAuthEnabled: cl(), oauthScopes: Yt()?.scopes }))
   )
     return !1;
-  if (ch() !== null) return !0;
+  if (getResponseFromCache() !== null) return !0;
   let e = Yt();
   return (
     (e?.subscriptionType === "pro" || e?.subscriptionType === "max") &&
@@ -1070,24 +1070,24 @@ function q4t() {
     !Zc()
   );
 }
-function iCn(e) {
+function isPolicyEnforced(e) {
   return ge()?.[e]?.allowed === !0;
 }
-function aCn(e) {
-  let t = ch()?.defaults[e];
+function getPolicyDefault(e) {
+  let t = getResponseFromCache()?.defaults[e];
   return typeof t === "boolean" ? t : void 0;
 }
-function ch() {
-  if (!lA()) return null;
+function getResponseFromCache() {
+  if (!isPolicyLimitsEligible()) return null;
   let e = g();
   if (e.sessionCache) return e.sessionCache;
   if (e.diskAdoptionSuppressed) return null;
-  let t = nQe();
+  let t = loadCachedResponse();
   if (t) return (e.replaceSessionCache(t), t);
   return null;
 }
 function ge() {
-  return ch()?.restrictions ?? null;
+  return getResponseFromCache()?.restrictions ?? null;
 }
 export {
   D4t,
@@ -1144,35 +1144,35 @@ export {
   L$e,
   Znr,
   err,
-  trr,
-  kfr,
-  use,
-  F4t,
-  kve,
-  rCn,
-  sU,
-  $4t,
-  tQe,
-  U4t,
-  B4t,
-  oCn,
-  iU,
-  lA,
-  KJ,
-  nQe,
-  j4t,
-  pAt,
-  rQe,
-  W4t,
-  Mt,
-  G4t,
-  Cme,
-  op,
-  xve,
-  DD,
-  sCn,
-  q4t,
-  iCn,
-  aCn,
-  ch,
+  PolicyState,
+  policyStates,
+  setSessionCache,
+  setLastFetchOutcome,
+  getLastFetchOutcome,
+  detachPolicyLimitsBackend,
+  getSessionCache,
+  suppressDiskAdoption,
+  getDiskAdoptionEpoch,
+  liftDiskAdoptionSuppression,
+  isDiskAdoptionSuppressed,
+  getPolicyCacheRevision,
+  getCachePath,
+  isPolicyLimitsEligible,
+  getPolicyLimitsIneligibleReason,
+  loadCachedResponse,
+  parseCachedResponse,
+  projectPolicyLimitsBody,
+  serverBodyOf,
+  seedSessionCacheFromPrime,
+  isPolicyAllowed,
+  isPolicyAllowedInResponse,
+  isPolicyRouteMissing,
+  policyDeniedReason,
+  hasNameableComplianceTaint,
+  policyDenyKind,
+  policyDeniedHint,
+  areComplianceTaintsSettled,
+  isPolicyEnforced,
+  getPolicyDefault,
+  getResponseFromCache,
 };

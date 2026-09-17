@@ -11,14 +11,14 @@
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ki, wn, ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { i0, pA, Yt, Qi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jV, fY, vE, Uo } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { i0, pA, getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { jV, fY, getAllMcpConfigs as vE, isMcpServerDisabled as Uo } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { ys, di, dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { exitAfterAnalyticsFlush as ys, cliErrorAfterAnalyticsFlush as di, cliOkAfterAnalyticsFlush as dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { V0 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
 import { zat } from "../../01-核心基础设施/共享小工具-未细化/chunk-k4m00mjj.js";

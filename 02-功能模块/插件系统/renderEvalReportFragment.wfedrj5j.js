@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x, zxe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { AG } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";

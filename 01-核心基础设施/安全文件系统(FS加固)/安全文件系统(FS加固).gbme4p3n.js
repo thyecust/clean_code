@@ -16,17 +16,17 @@ import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
 import { hs, Wnt, Gnt, Dur, CL, Cg, wc, Et, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { qR } from "../设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { fn, Fe, Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Sc, yh, Mp, W2e } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { fn, execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProjectsDir as Sc, getProjectKey as yh, getProjectDir as Mp, BACKUP_FILE_NAME_PATTERN_WITH_LEGACY as W2e } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Uw, Pnt, O1, Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
 import { fi, Do } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Qo } from "../共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { Ft } from "../共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../共享小工具-未细化/chunk-7axvc6rn.js";
 import {
   closeSync as Qr,
   constants as eo,
@@ -1920,10 +1920,10 @@ function Rt(e, t) {
   try {
     let r = _t(e);
     if (r.isSymbolicLink()) {
-      let o = NIn(e);
+      let o = readLinkTextSafe(e);
       if (o === null) return !1;
       if (ac(o, t)) return !1;
-      if (bS(o, t)) return !1;
+      if (rawPointerPathIsUnsafe(o, t)) return !1;
       let s = It(e);
       return s.isDirectory() || s.isFile();
     }
@@ -1971,15 +1971,15 @@ function kt(e) {
     k1
   );
 }
-function tr(e) {
+function findGitRoot(e) {
   let t = Qq(Eu().rootByPath, e, kt);
   return t === k1 ? null : t;
 }
-function k0(e) {
+function findGitRootUncached(e) {
   let t = kt(e);
   return t === k1 ? null : t;
 }
-async function M7t(e, t) {
+async function findGitRootThroughBackendUncached(e, t) {
   let r = N(t),
     o = r.substring(0, r.indexOf(k) + 1) || k;
   for (;;) {
@@ -1992,20 +1992,20 @@ async function M7t(e, t) {
     r = i === r ? o : i;
   }
 }
-function H1(e) {
+function findGitRootRecheckingNegative(e) {
   let t = Eu().rootByPath;
   if (t.peek(e) === k1) t.delete(e);
-  return tr(e);
+  return findGitRoot(e);
 }
-async function Snt(e) {
-  let t = H1(e);
+async function findGitRootVerifyingPositive(e) {
+  let t = findGitRootRecheckingNegative(e);
   if (t === null) return null;
   try {
     return (await Fr(P(t, ".git")), t);
   } catch (r) {
     let o = r?.code;
     if (o !== "ENOENT" && o !== "ENOTDIR") return t;
-    return (Eu().rootByPath.delete(e), H1(e));
+    return (Eu().rootByPath.delete(e), findGitRootRecheckingNegative(e));
   }
 }
 function Ee(e) {
@@ -2021,18 +2021,18 @@ function xt(e, t) {
     if (!r.startsWith("gitdir:")) return e;
     let o = r.slice(7).trim();
     if (ac(o, e)) return e;
-    if (bS(o, e)) return e;
+    if (rawPointerPathIsUnsafe(o, e)) return e;
     let s = N(e, o);
-    if (R0(P(s, "commondir"), s)) return e;
+    if (pointerFileIsSuspect(P(s, "commondir"), s)) return e;
     let i = L(P(s, "commondir"), "utf-8").trim();
     if (ac(i, s)) return e;
-    if (bS(i, s)) return e;
+    if (rawPointerPathIsUnsafe(i, s)) return e;
     let a = N(s, i);
     if (N(G(s)) !== P(a, "worktrees")) return e;
-    if (R0(P(s, "gitdir"), s)) return e;
+    if (pointerFileIsSuspect(P(s, "gitdir"), s)) return e;
     let u = L(P(s, "gitdir"), "utf-8").trim();
     if (ac(u, e)) return e;
-    if (bS(u, s, e)) return e;
+    if (rawPointerPathIsUnsafe(u, s, e)) return e;
     if (se(N(s, u)) !== P(se(e), ".git")) return e;
     if (oe(a) !== ".git") return zn(a);
     return zn(G(a));
@@ -2045,17 +2045,17 @@ async function Lr(e, t) {
   if (!r.ok || !r.value.found) return;
   return xt(t, r.value.value);
 }
-function $r(e) {
-  let t = tr(e);
+function findCanonicalGitRoot(e) {
+  let t = findGitRoot(e);
   if (!t) return null;
   return Qq(Eu().canonicalRootByRoot, t, Ee);
 }
-function vA(e) {
-  let t = k0(e);
+function findCanonicalGitRootUncached(e) {
+  let t = findGitRootUncached(e);
   if (!t) return null;
   return Ee(t);
 }
-async function qIn(e, t) {
+async function primeGitRootMemo(e, t) {
   if (e.hostFiles.serving("workspace") !== "host") return;
   let r = Eu(),
     o = r.rootByPath.peek(t);
@@ -2066,7 +2066,7 @@ async function qIn(e, t) {
       canonicalRoot: a === null ? null : r.canonicalRootByRoot.peek(a),
     };
   }
-  let s = await M7t(e.hostFiles, t);
+  let s = await findGitRootThroughBackendUncached(e.hostFiles, t);
   if (s === void 0) return;
   let i =
     s.gitRoot === null
@@ -2078,9 +2078,9 @@ async function qIn(e, t) {
               ? s.gitRoot
               : await Lr(e.hostFiles, s.gitRoot),
         };
-  return (N7t(t, i.gitRoot, i.canonicalRoot), i);
+  return (seedGitRootMemo(t, i.gitRoot, i.canonicalRoot), i);
 }
-function N7t(e, t, r) {
+function seedGitRootMemo(e, t, r) {
   let o = Eu(),
     s = t ?? k1,
     i = o.rootByPath.peek(e);
@@ -2101,22 +2101,22 @@ function N7t(e, t, r) {
       { level: "warn" },
     );
 }
-function kx(e) {
-  let t = tr(e);
-  return t !== null && $r(e) !== t;
+function isLinkedWorktree(e) {
+  let t = findGitRoot(e);
+  return t !== null && findCanonicalGitRoot(e) !== t;
 }
-function zIn(e) {
-  let t = k0(e);
+function isLinkedWorktreeUncached(e) {
+  let t = findGitRootUncached(e);
   return t !== null && Ee(t) !== t;
 }
-async function VIn(e) {
+async function getGitWorktreeName(e) {
   if (Pt()) return null;
-  let t = await Nw(e);
+  let t = await resolveGitDir(e);
   if (!t || oe(t) === ".git" || oe(G(t)) !== "worktrees") return null;
   return oe(t);
 }
-var F7t = ["--no-ext-diff", "--no-textconv"];
-function lt() {
+var RAW_BLOB_DIFF_FLAGS = ["--no-ext-diff", "--no-textconv"];
+function gitExe() {
   let e = Eu();
   return ((e.gitExecutable ??= qR("git") || "git"), e.gitExecutable);
 }
@@ -2124,7 +2124,7 @@ var Ct = new Gt(() => new Map());
 async function Or() {
   let e = Date.now();
   q("info", "is_git_check_started");
-  let t = tr(Q()) !== null;
+  let t = findGitRoot(Q()) !== null;
   return (
     q("info", "is_git_check_completed", {
       duration_ms: Date.now() - e,
@@ -2136,7 +2136,7 @@ async function Or() {
 function vt() {
   return B();
 }
-function hh() {
+function getIsGit() {
   let e = Ct.of(vt()),
     t = K(),
     r = e.get(t);
@@ -2144,46 +2144,46 @@ function hh() {
   let o = Or();
   return (e.set(t, o), o);
 }
-function D2e(e) {
+function clearIsGitMemoFor(e) {
   Ct.of(e).clear();
 }
-function Che() {
-  D2e(vt());
+function clearIsGitMemo() {
+  clearIsGitMemoFor(vt());
 }
-function Zq(e) {
-  return Nw(e);
+function getGitDir(e) {
+  return resolveGitDir(e);
 }
-var KIn = async (e) => tr(e) !== null,
-  L2e = async () => ixt(),
-  Da = async (e) => {
-    if (e === void 0) return wcr();
+var dirIsInGitRepo = async (e) => findGitRoot(e) !== null,
+  getHead = async () => getCachedHead(),
+  getBranch = async (e) => {
+    if (e === void 0) return getCachedBranch();
     let { stdout: t, code: r } = await Be(
-      lt(),
+      gitExe(),
       [...fn, "rev-parse", "--abbrev-ref", "HEAD"],
       { cwd: e, preserveOutputOnError: !1 },
     );
     return r === 0 ? t.trim() || "HEAD" : "HEAD";
   };
-async function bnt(e, t) {
+async function isBranchOnOrigin(e, t) {
   return (
     (
       await Be(
-        lt(),
+        gitExe(),
         [...fn, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${e}`],
         { cwd: t ?? Q(), preserveOutputOnError: !1 },
       )
     ).code === 0
   );
 }
-var Fw = async (e) => {
-    if (e === void 0) return Tcr();
-    let t = await $7t(e);
+var getDefaultBranch = async (e) => {
+    if (e === void 0) return getCachedDefaultBranch();
+    let t = await getDefaultBranchIfKnown(e);
     if (t) return t;
-    for (let r of O2e)
+    for (let r of CONVENTIONAL_DEFAULT_BRANCH_NAMES)
       if (
         (
           await Be(
-            lt(),
+            gitExe(),
             [
               ...fn,
               "show-ref",
@@ -2198,9 +2198,9 @@ var Fw = async (e) => {
         return r;
     return "main";
   },
-  $7t = async (e) => {
+  getDefaultBranchIfKnown = async (e) => {
     let { stdout: t, code: r } = await Be(
-      lt(),
+      gitExe(),
       [...fn, "symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
       { cwd: e ?? Q(), preserveOutputOnError: !1 },
     );
@@ -2209,7 +2209,7 @@ var Fw = async (e) => {
     if (!o) return null;
     return (
       await Be(
-        lt(),
+        gitExe(),
         [...fn, "show-ref", "--verify", "--quiet", `refs/remotes/origin/${o}`],
         { cwd: e ?? Q(), preserveOutputOnError: !1 },
       )
@@ -2218,8 +2218,8 @@ var Fw = async (e) => {
       : null;
   },
   Tr = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
-async function axt(e) {
-  let { stdout: t, code: r } = await Fe(lt(), [...fn, "config", "--get", e], {
+async function readGitConfigValue(e) {
+  let { stdout: t, code: r } = await Fe(gitExe(), [...fn, "config", "--get", e], {
     preserveOutputOnError: !1,
     useCwd: !0,
   });
@@ -2228,7 +2228,7 @@ async function axt(e) {
   return o.length > 0 ? o : null;
 }
 async function Mr() {
-  let { stdout: e, code: t } = await Fe(lt(), [...fn, "remote"], {
+  let { stdout: e, code: t } = await Fe(gitExe(), [...fn, "remote"], {
     preserveOutputOnError: !1,
     useCwd: !0,
   });
@@ -2240,35 +2240,35 @@ async function Mr() {
       )
       .map((s) => s.trim())
       .filter(Boolean),
-    o = await axt("remote.pushDefault");
+    o = await readGitConfigValue("remote.pushDefault");
   if (o && r.includes(o)) return o;
   if (r.length === 1) return r[0] ?? null;
   return null;
 }
-async function wnt() {
+async function getGitPushShellPatterns() {
   let e = new Set(["origin"]),
     t = await Mr();
   if (t && Tr.test(t)) e.add(t);
   return [...e].flatMap((r) => [`git push ${r} *`, `git push -u ${r} *`]);
 }
-var ez = async () => FIn(),
+var getRemoteUrl = async () => getCachedRemoteUrl(),
   Nr = async () => {
-    let e = tr(Q());
+    let e = findGitRoot(Q());
     if (e === null) return null;
     try {
       let t = jr();
       if (t && e === zn(N(t))) return null;
     } catch {}
-    return FIn();
+    return getCachedRemoteUrl();
   },
-  XIn = async () => {
-    let [e, t, r] = await Promise.all([Da(), Nr(), Ecr()]);
+  snapshotGitEvidenceForBridge = async () => {
+    let [e, t, r] = await Promise.all([getBranch(), Nr(), getCachedDefaultBranchIfKnown()]);
     return { branch: e, gitRepoUrl: t, defaultBranch: r };
   };
-function Uie(e) {
+function redactGitRemoteCredentials(e) {
   return e == null ? e : e.replace(/:\/\/[^/]*@/, "://***@");
 }
-function tz(e) {
+function normalizeGitRemoteUrl(e) {
   let t = e.trim();
   if (!t) return null;
   let r = t.match(/^git@([^:/@]+):(.+?)(?:\.git)?$/);
@@ -2279,7 +2279,7 @@ function tz(e) {
   if (o && o[1] && o[2]) {
     let s = o[1],
       i = o[2];
-    if (W7t(s) && i.startsWith("git/")) {
+    if (isLocalHost(s) && i.startsWith("git/")) {
       let a = i.slice(4),
         u = a.split("/");
       if (u.length >= 3 && u[0].includes(".")) return a.toLowerCase();
@@ -2305,10 +2305,10 @@ function Kr(e) {
     return "azure";
   return "other";
 }
-async function YIn() {
+async function getGitPresenceForAnalytics() {
   if (Pt()) return null;
-  let [e, t] = await Promise.all([hh(), ez()]).catch(() => [!1, null]),
-    r = t ? tz(t) : null;
+  let [e, t] = await Promise.all([getIsGit(), getRemoteUrl()]).catch(() => [!1, null]),
+    r = t ? normalizeGitRemoteUrl(t) : null;
   return {
     is_git: e,
     has_remote: r !== null,
@@ -2318,7 +2318,7 @@ async function YIn() {
 function Br(e) {
   for (let t of [P(e, ".git", "config"), P(e, "config")])
     try {
-      if (x1(t, e)) continue;
+      if (readPositionIsUnsafe(t, e)) continue;
       return L(t, "utf-8");
     } catch {}
   return null;
@@ -2328,16 +2328,16 @@ function Gr(e) {
   if (!t) return k1;
   let r = (o) => {
     let s = U(t, "remote", "origin", o);
-    return s ? tz(s) : null;
+    return s ? normalizeGitRemoteUrl(s) : null;
   };
   return r("pushurl") ?? r("url") ?? k1;
 }
-function Bke(e) {
+function findRepoRemoteSlug(e) {
   let t = Qq(Eu().remoteSlugByRoot, e, Gr);
   return t === k1 ? null : t;
 }
 var Hr = 128000;
-function JIn(e) {
+function readRepoConfigText(e) {
   try {
     let t = !0;
     try {
@@ -2347,7 +2347,7 @@ function JIn(e) {
       t = !1;
     }
     let r = t ? P(e, ".git", "config") : P(e, "config");
-    if (x1(r, e)) return null;
+    if (readPositionIsUnsafe(r, e)) return null;
     let o = It(r);
     if (!o.isFile() || o.size > Hr) return null;
     return L(r, "utf-8");
@@ -2355,39 +2355,39 @@ function JIn(e) {
     return null;
   }
 }
-async function QIn() {
-  let e = await ez();
+async function getRepoRemoteHash() {
+  let e = await getRemoteUrl();
   if (!e) return null;
-  let t = tz(e);
+  let t = normalizeGitRemoteUrl(e);
   if (!t) return null;
   return Cr("sha256").update(t).digest("hex").substring(0, 16);
 }
-var U7t = async () => {
-    let { code: e } = await Fe(lt(), [...fn, "rev-parse", "@{u}"], {
+var getIsHeadOnRemote = async () => {
+    let { code: e } = await Fe(gitExe(), [...fn, "rev-parse", "@{u}"], {
       preserveOutputOnError: !1,
     });
     return e === 0;
   },
-  Tnt = async (e) => {
+  hasUnpushedCommits = async (e) => {
     let { stdout: t, code: r } = await Be(
-      lt(),
+      gitExe(),
       [...fn, "rev-list", "--count", "@{u}..HEAD"],
       { cwd: e, preserveOutputOnError: !1 },
     );
     return r === 0 && parseInt(t.trim(), 10) > 0;
   },
-  vhe = async (e) => {
+  getIsClean = async (e) => {
     let t = [...fn, "--no-optional-locks", "status", "--porcelain"];
     if (e?.ignoreUntracked) t.push("-uno");
-    let { stdout: r } = await Fe(lt(), t, { preserveOutputOnError: !1 });
+    let { stdout: r } = await Fe(gitExe(), t, { preserveOutputOnError: !1 });
     return r.trim().length === 0;
   },
-  B7t = async (e) => {
+  getFileStatus = async (e) => {
     let t = [...fn, "--no-optional-locks", "status", "--porcelain"],
       { stdout: r } =
         e === void 0
-          ? await Fe(lt(), t, { preserveOutputOnError: !1 })
-          : await Be(lt(), t, { cwd: e, preserveOutputOnError: !1 }),
+          ? await Fe(gitExe(), t, { preserveOutputOnError: !1 })
+          : await Be(gitExe(), t, { cwd: e, preserveOutputOnError: !1 }),
       o = [],
       s = [];
     return (
@@ -2407,19 +2407,19 @@ var U7t = async () => {
       { tracked: o, untracked: s }
     );
   },
-  M2e = async () => Acr(),
-  ZIn = async (e) => {
+  getWorktreeCount = async () => getWorktreeCountFromFs(),
+  stashToCleanState = async (e) => {
     try {
       let t = e || `Claude Code auto-stash - ${new Date().toISOString()}`,
-        { untracked: r } = await B7t();
+        { untracked: r } = await getFileStatus();
       if (r.length > 0) {
-        let { code: s } = await Fe(lt(), [...fn, "add", "--", ...r], {
+        let { code: s } = await Fe(gitExe(), [...fn, "add", "--", ...r], {
           preserveOutputOnError: !1,
         });
         if (s !== 0) return !1;
       }
       let { code: o } = await Fe(
-        lt(),
+        gitExe(),
         [...fn, "stash", "push", "--message", t],
         { preserveOutputOnError: !1 },
       );
@@ -2428,15 +2428,15 @@ var U7t = async () => {
       return !1;
     }
   };
-async function j7t() {
+async function getGitState() {
   try {
     let [e, t, r, o, s, i] = await Promise.all([
-      L2e(),
-      Da(),
-      ez(),
-      U7t(),
-      vhe(),
-      M2e(),
+      getHead(),
+      getBranch(),
+      getRemoteUrl(),
+      getIsHeadOnRemote(),
+      getIsClean(),
+      getWorktreeCount(),
     ]);
     return (
       y("git_status_fetch"),
@@ -2453,9 +2453,9 @@ async function j7t() {
     return (f("git_status_fetch", "git_status_fetch_failed"), null);
   }
 }
-async function N2e() {
+async function getGithubRepo() {
   let { parseGitRemote: e } = await import("../共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
-    t = await ez();
+    t = await getRemoteUrl();
   if (!t) return (n("Local GitHub repo: unknown"), null);
   let r = e(t);
   if (r && Do(r.host)) {
@@ -2464,7 +2464,7 @@ async function N2e() {
   }
   return (n("Local GitHub repo: unknown"), null);
 }
-function W7t(e) {
+function isLocalHost(e) {
   let t = e.indexOf(":"),
     r = t === -1 ? e : e.slice(0, t),
     o = t === -1 ? "" : e.slice(t + 1);
@@ -2512,7 +2512,7 @@ function wt(e, t, r) {
   }
   return i;
 }
-function Rhe() {
+function isCurrentDirectoryBareGitRepo() {
   let e = ae(),
     t = Q(),
     r = wt(e, t, t) ?? t;
@@ -2756,15 +2756,15 @@ async function Lt(e, t) {
     await i?.close();
   }
 }
-function MIn() {
+function clearResolveGitDirCache() {
   Eu().gitDirByCwd.clear();
 }
-async function Nw(e) {
+async function resolveGitDir(e) {
   let t = D(e ?? Q()),
     r = Eu().gitDirByCwd,
     o = r.get(t);
   if (o !== void 0) return o;
-  let s = tr(t);
+  let s = findGitRoot(t);
   if (!s) return (r.set(t, null), null);
   let i = _(s, ".git");
   try {
@@ -2795,7 +2795,7 @@ function Nt(e) {
     return r === "ENOENT" || r === "ENOTDIR" ? "absent" : "other";
   }
 }
-function NIn(e) {
+function readLinkTextSafe(e) {
   try {
     let t = oo(e, { encoding: "buffer" }),
       r = t.toString("utf-8");
@@ -2805,12 +2805,12 @@ function NIn(e) {
     return null;
   }
 }
-function R0(e, t) {
+function pointerFileIsSuspect(e, t) {
   if (!J(e, t)) return !0;
   let r = Nt(e);
   return r === "symlink" || r === "other";
 }
-function x1(e, t) {
+function readPositionIsUnsafe(e, t) {
   let r = lo(t, e);
   if (r === "" || r.startsWith("..") || co(r)) return !0;
   return !J(e, t);
@@ -2838,7 +2838,7 @@ function J(e, t, r = 40, o = t) {
     let b = Nt(i);
     if (b === "other") return !1;
     if (b === "symlink") {
-      let S = NIn(i);
+      let S = readLinkTextSafe(i);
       if (S === null) return !1;
       if (uo(S, Re(i))) return !1;
       let p = Kt.test(S) ? S : Re(i) + ie + S,
@@ -2853,15 +2853,15 @@ function V(e, t, r = t) {
   if (!J(Kt.test(e) ? e : t + ie + e, t, void 0, r)) return !0;
   return !J(D(t, e), t, void 0, r);
 }
-function bS(e, t, r = t) {
+function rawPointerPathIsUnsafe(e, t, r = t) {
   return V(e, t, r);
 }
-function qQ(e) {
+function isValidGitSha(e) {
   return /^[0-9a-f]{40}$/.test(e) || /^[0-9a-f]{64}$/.test(e);
 }
 async function z(e) {
   try {
-    if (x1(_(e, "HEAD"), e)) return null;
+    if (readPositionIsUnsafe(_(e, "HEAD"), e)) return null;
     let t = (await le(_(e, "HEAD"), "utf-8")).trim();
     if (t.startsWith("ref:")) {
       let r = t.slice(4).trim();
@@ -2871,42 +2871,42 @@ async function z(e) {
         return { type: "branch", name: s };
       }
       if (!CS(r)) return null;
-      let o = await pW(e, r);
+      let o = await resolveRef(e, r);
       return o ? { type: "detached", sha: o } : { type: "detached", sha: "" };
     }
-    if (!qQ(t)) return null;
+    if (!isValidGitSha(t)) return null;
     return { type: "detached", sha: t };
   } catch {
     return null;
   }
 }
-async function pW(e, t, r = 5) {
+async function resolveRef(e, t, r = 5) {
   if (r <= 0) return null;
   let o = await Dt(e, t, r);
   if (o) return o;
-  let s = await yL(e);
+  let s = await getCommonDir(e);
   if (s && s !== e) return Dt(s, t, r);
   return null;
 }
 async function Dt(e, t, r) {
   try {
-    if (x1(_(e, t), e)) return null;
+    if (readPositionIsUnsafe(_(e, t), e)) return null;
     let o = (await le(_(e, t), "utf-8")).trim();
     if (o.startsWith("ref:")) {
       let s = o.slice(4).trim();
       if (!CS(s)) return null;
-      return pW(e, s, r - 1);
+      return resolveRef(e, s, r - 1);
     }
-    if (!qQ(o)) return null;
+    if (!isValidGitSha(o)) return null;
     return o;
   } catch {}
-  if (x1(_(e, "packed-refs"), e)) return null;
+  if (readPositionIsUnsafe(_(e, "packed-refs"), e)) return null;
   return Lt(e, t);
 }
 var ue = 65536;
-async function yL(e) {
+async function getCommonDir(e) {
   try {
-    if (R0(_(e, "commondir"), e)) return null;
+    if (pointerFileIsSuspect(_(e, "commondir"), e)) return null;
     let t = await NP(_(e, "commondir"), ue, {
       sniffEncoding: !0,
       withBytes: !0,
@@ -2922,7 +2922,7 @@ async function yL(e) {
 }
 async function Bt(e, t, r) {
   try {
-    if (x1(_(e, t), e)) return null;
+    if (readPositionIsUnsafe(_(e, t), e)) return null;
     let o = (await le(_(e, t), "utf-8")).trim();
     if (o.startsWith("ref:")) {
       let s = o.slice(4).trim();
@@ -2961,14 +2961,14 @@ class Ht {
       ((this.gitDir = null), (this.initialized = !0));
       return;
     }
-    let t = await Nw();
+    let t = await resolveGitDir();
     if (e !== this.generation) return;
     if (((this.gitDir = t), (this.initialized = !0), !this.cleanupHandle))
       this.cleanupHandle = Et(async () => {
         this.stopWatching();
       });
     if (!this.gitDir) return;
-    let r = await yL(this.gitDir);
+    let r = await getCommonDir(this.gitDir);
     if (e !== this.generation) return;
     ((this.commonDir = r),
       this.watchPath(_(this.gitDir, "HEAD"), this.gitDir, () => {
@@ -2991,7 +2991,7 @@ class Ht {
       await this.watchCurrentBranchRef());
   }
   watchPath(e, t, r) {
-    if (x1(e, t)) return;
+    if (readPositionIsUnsafe(e, t)) return;
     let o = sxt(e, { interval: Ot }, r);
     this.watchedFiles.push({ path: e, listener: o });
   }
@@ -3053,7 +3053,7 @@ class Ht {
     );
     if (e === null) return e;
     let t = this.commonDir ?? this.gitDir;
-    if (t && (await pW(t, `refs/remotes/origin/${e}`))) return e;
+    if (t && (await resolveRef(t, `refs/remotes/origin/${e}`))) return e;
     let r = this.cache.get("defaultBranchIfKnown");
     if (r) r.dirty = !0;
     return this.get(
@@ -3066,16 +3066,16 @@ class Ht {
     if (!e) return null;
     let t = this.commonDir ?? e,
       r = await Bt(t, "refs/remotes/origin/HEAD", "refs/remotes/origin/");
-    if (r && (await pW(t, `refs/remotes/origin/${r}`))) return r;
+    if (r && (await resolveRef(t, `refs/remotes/origin/${r}`))) return r;
     return null;
   };
   async addRepo(e) {
     if (this.repoWatchers.has(e)) return;
-    let t = await Nw(e);
+    let t = await resolveGitDir(e);
     if (!t) return;
     if (this.repoWatchers.has(e)) return;
     let r = _(t, "HEAD");
-    if (x1(r, t)) return;
+    if (readPositionIsUnsafe(r, t)) return;
     let o = sxt(r, { interval: Ot }, () => {
       this.repoBranches.delete(e);
       for (let s of this.repoBranchListeners) s();
@@ -3138,95 +3138,95 @@ function v() {
   return mo.of(B().host);
 }
 async function ho() {
-  let e = await Nw();
+  let e = await resolveGitDir();
   if (!e) return "HEAD";
   let t = await z(e);
   if (!t) return "HEAD";
   return t.type === "branch" ? t.name : "HEAD";
 }
 async function yo() {
-  let e = await Nw();
+  let e = await resolveGitDir();
   if (!e) return "";
   let t = await z(e);
   if (!t) return "";
-  if (t.type === "branch") return (await pW(e, `refs/heads/${t.name}`)) ?? "";
+  if (t.type === "branch") return (await resolveRef(e, `refs/heads/${t.name}`)) ?? "";
   return t.sha;
 }
 async function ce(e) {
-  if (x1(_(e, "config"), e)) return null;
+  if (readPositionIsUnsafe(_(e, "config"), e)) return null;
   return (
     (await gnt(e, "remote", "origin", "pushurl")) ||
     (await gnt(e, "remote", "origin", "url"))
   );
 }
 async function bo() {
-  let e = await Nw();
+  let e = await resolveGitDir();
   if (!e) return null;
   let t = await ce(e);
   if (t) return t;
-  let r = await yL(e);
+  let r = await getCommonDir(e);
   if (r && r !== e) return ce(r);
   return null;
 }
-var O2e = ["main", "master"];
+var CONVENTIONAL_DEFAULT_BRANCH_NAMES = ["main", "master"];
 async function So() {
-  let e = await Nw();
+  let e = await resolveGitDir();
   if (!e) return "main";
-  let t = (await yL(e)) ?? e,
+  let t = (await getCommonDir(e)) ?? e,
     r = await Bt(t, "refs/remotes/origin/HEAD", "refs/remotes/origin/");
-  if (r && (await pW(t, `refs/remotes/origin/${r}`))) return r;
-  for (let o of O2e) if (await pW(t, `refs/remotes/origin/${o}`)) return o;
+  if (r && (await resolveRef(t, `refs/remotes/origin/${r}`))) return r;
+  for (let o of CONVENTIONAL_DEFAULT_BRANCH_NAMES) if (await resolveRef(t, `refs/remotes/origin/${o}`)) return o;
   return "main";
 }
-function wcr() {
+function getCachedBranch() {
   return v().get("branch", ho);
 }
-function ixt() {
+function getCachedHead() {
   return v().get("head", yo);
 }
-function FIn() {
+function getCachedRemoteUrl() {
   return v().get("remoteUrl", bo);
 }
-function Tcr() {
+function getCachedDefaultBranch() {
   return v().get("defaultBranch", So);
 }
-function Ecr() {
+function getCachedDefaultBranchIfKnown() {
   return v().getDefaultBranchIfKnownAnchored();
 }
-function $In(e) {
+function addWatchedRepo(e) {
   return v().addRepo(e);
 }
-function _br(e) {
+function removeWatchedRepo(e) {
   v().removeRepo(e);
 }
-function UIn(e) {
+function onRepoBranchChange(e) {
   return v().onRepoBranchChange(e);
 }
-function BIn(e) {
+function onWatchedGitStateChange(e) {
   let t = v();
   return (t.ensureStarted(), t.onStateChange(e));
 }
-function jIn(e) {
+function getCachedBranchForRepo(e) {
   return v().getBranchForRepo(e);
 }
-function WIn() {
+function resetGitFileWatcher() {
   v().reset();
 }
-function nB() {
+function reanchorGitFileWatcher() {
   v().reanchor();
 }
-async function GIn(e) {
-  let t = await Nw(e);
+async function getHeadForDir(e) {
+  let t = await resolveGitDir(e);
   if (!t) return null;
   let r = await z(t);
   if (!r) return null;
-  if (r.type === "branch") return pW(t, `refs/heads/${r.name}`);
+  if (r.type === "branch") return resolveRef(t, `refs/heads/${r.name}`);
   return r.sha;
 }
-async function L7t(e) {
+async function readWorktreeHeadSha(e) {
   let t;
   try {
-    if (R0(_(e, ".git"), e)) return null;
+    if (pointerFileIsSuspect(_(e, ".git"), e)) return null;
     let o = (await le(_(e, ".git"), "utf-8")).trim();
     if (!o.startsWith("gitdir:")) return null;
     let s = o.slice(7).trim();
@@ -3238,19 +3238,19 @@ async function L7t(e) {
   }
   let r = await z(t);
   if (!r) return null;
-  if (r.type === "branch") return pW(t, `refs/heads/${r.name}`);
+  if (r.type === "branch") return resolveRef(t, `refs/heads/${r.name}`);
   return r.sha;
 }
-async function Uke(e) {
-  let t = await Nw(e);
+async function getRemoteUrlForDir(e) {
+  let t = await resolveGitDir(e);
   if (!t) return null;
   let r = await ce(t);
   if (r) return r;
-  let o = await yL(t);
+  let o = await getCommonDir(t);
   if (o && o !== t) return ce(o);
   return null;
 }
-function ybr(e) {
+function getRemoteUrlForDirSync(e) {
   let t = Eo(e);
   if (!t) return null;
   let r = Tt(t);
@@ -3262,7 +3262,7 @@ function Eo(e) {
   let t = D(e),
     r = Eu().gitDirByCwd.get(t);
   if (r !== void 0) return r;
-  let o = tr(t);
+  let o = findGitRoot(t);
   if (!o) return null;
   let s = _(o, ".git");
   try {
@@ -3278,7 +3278,7 @@ function Eo(e) {
 }
 function Ro(e) {
   try {
-    if (R0(_(e, "commondir"), e)) return null;
+    if (pointerFileIsSuspect(_(e, "commondir"), e)) return null;
     let t = we(_(e, "commondir"), ue)?.trim();
     return t === void 0 || ac(t, e) || V(t, e) ? null : D(e, t);
   } catch {
@@ -3288,7 +3288,7 @@ function Ro(e) {
 var wo = 1e6;
 function Tt(e) {
   let t = _(e, "config");
-  if (x1(t, e)) return null;
+  if (readPositionIsUnsafe(t, e)) return null;
   let r = we(t, wo, { keepWholeLines: !0 });
   if (r === void 0) return null;
   return U(r, "remote", "origin", "pushurl") || U(r, "remote", "origin", "url");
@@ -3323,23 +3323,23 @@ function we(e, t, { keepWholeLines: r = !1 } = {}) {
     if (o !== void 0) Qr(o);
   }
 }
-async function Tmr() {
-  let e = await Nw();
+async function isShallowClone() {
+  let e = await resolveGitDir();
   if (!e) return !1;
-  let t = (await yL(e)) ?? e;
+  let t = (await getCommonDir(e)) ?? e;
   try {
-    if (x1(_(t, "shallow"), t)) return !1;
+    if (readPositionIsUnsafe(_(t, "shallow"), t)) return !1;
     return (await Mt(_(t, "shallow")), !0);
   } catch {
     return !1;
   }
 }
-async function Acr() {
+async function getWorktreeCountFromFs() {
   try {
-    let e = await Nw();
+    let e = await resolveGitDir();
     if (!e) return 0;
-    let t = (await yL(e)) ?? e;
-    if (x1(_(t, "worktrees"), t)) return 1;
+    let t = (await getCommonDir(e)) ?? e;
+    if (readPositionIsUnsafe(_(t, "worktrees"), t)) return 1;
     return (await ao(_(t, "worktrees"))).length + 1;
   } catch {
     return 1;
@@ -3409,76 +3409,76 @@ export {
   k1,
   Qq,
   Eu,
-  MIn,
-  Nw,
-  NIn,
-  R0,
-  x1,
-  bS,
-  qQ,
-  pW,
-  yL,
-  O2e,
-  wcr,
-  ixt,
-  FIn,
-  Tcr,
-  Ecr,
-  $In,
-  _br,
-  UIn,
-  BIn,
-  jIn,
-  WIn,
-  nB,
-  GIn,
-  L7t,
-  Uke,
-  ybr,
-  Tmr,
-  Acr,
-  tr,
-  k0,
-  M7t,
-  H1,
-  Snt,
-  $r,
-  vA,
-  qIn,
-  N7t,
-  kx,
-  zIn,
-  VIn,
-  F7t,
-  lt,
-  hh,
-  D2e,
-  Che,
-  Zq,
-  KIn,
-  L2e,
-  Da,
-  bnt,
-  Fw,
-  $7t,
-  axt,
-  wnt,
-  ez,
-  XIn,
-  Uie,
-  tz,
-  YIn,
-  Bke,
-  JIn,
-  QIn,
-  U7t,
-  Tnt,
-  vhe,
-  B7t,
-  M2e,
-  ZIn,
-  j7t,
-  N2e,
-  W7t,
-  Rhe,
+  clearResolveGitDirCache,
+  resolveGitDir,
+  readLinkTextSafe,
+  pointerFileIsSuspect,
+  readPositionIsUnsafe,
+  rawPointerPathIsUnsafe,
+  isValidGitSha,
+  resolveRef,
+  getCommonDir,
+  CONVENTIONAL_DEFAULT_BRANCH_NAMES,
+  getCachedBranch,
+  getCachedHead,
+  getCachedRemoteUrl,
+  getCachedDefaultBranch,
+  getCachedDefaultBranchIfKnown,
+  addWatchedRepo,
+  removeWatchedRepo,
+  onRepoBranchChange,
+  onWatchedGitStateChange,
+  getCachedBranchForRepo,
+  resetGitFileWatcher,
+  reanchorGitFileWatcher,
+  getHeadForDir,
+  readWorktreeHeadSha,
+  getRemoteUrlForDir,
+  getRemoteUrlForDirSync,
+  isShallowClone,
+  getWorktreeCountFromFs,
+  findGitRoot,
+  findGitRootUncached,
+  findGitRootThroughBackendUncached,
+  findGitRootRecheckingNegative,
+  findGitRootVerifyingPositive,
+  findCanonicalGitRoot,
+  findCanonicalGitRootUncached,
+  primeGitRootMemo,
+  seedGitRootMemo,
+  isLinkedWorktree,
+  isLinkedWorktreeUncached,
+  getGitWorktreeName,
+  RAW_BLOB_DIFF_FLAGS,
+  gitExe,
+  getIsGit,
+  clearIsGitMemoFor,
+  clearIsGitMemo,
+  getGitDir,
+  dirIsInGitRepo,
+  getHead,
+  getBranch,
+  isBranchOnOrigin,
+  getDefaultBranch,
+  getDefaultBranchIfKnown,
+  readGitConfigValue,
+  getGitPushShellPatterns,
+  getRemoteUrl,
+  snapshotGitEvidenceForBridge,
+  redactGitRemoteCredentials,
+  normalizeGitRemoteUrl,
+  getGitPresenceForAnalytics,
+  findRepoRemoteSlug,
+  readRepoConfigText,
+  getRepoRemoteHash,
+  getIsHeadOnRemote,
+  hasUnpushedCommits,
+  getIsClean,
+  getFileStatus,
+  getWorktreeCount,
+  stashToCleanState,
+  getGitState,
+  getGithubRepo,
+  isLocalHost,
+  isCurrentDirectoryBareGitRepo,
 };

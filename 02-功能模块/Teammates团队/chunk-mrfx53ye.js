@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
-import { _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath as _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
 function xs(e) {
   return e === "completed" || e === "failed" || e === "killed";
 }

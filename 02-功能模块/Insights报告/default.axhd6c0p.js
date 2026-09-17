@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 197 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { vTe, Zo, U3, LEe, xr, Kc, jMe, l8e, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { vTe, asSystemPrompt as Zo, U3, LEe, xr, getSessionIdFromLog as Kc, getSessionFilesWithMtime as jMe, loadAllLogsFromSessionFile as l8e, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -17,8 +17,8 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ixe, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Ll, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { ixe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getDefaultOpusModel as Ll, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";

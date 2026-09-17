@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Cz, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { DA, Hur, St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { DA, Hur, St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   CAt,
   vAt,
@@ -30,20 +30,20 @@ import {
   QH,
   UAt,
   mU,
-  Rr,
-  zN,
-  XAt,
-  t0,
-  oq,
-  dh,
-  Hm,
-  wt,
+  isModelAllowed as Rr,
+  isFableModelValue as zN,
+  bootstrapHasAnswered as XAt,
+  getModelUnavailabilityReason as t0,
+  getDefaultFableModel as oq,
+  getDefaultMainLoopModelSetting as dh,
+  renderFableModelName as Hm,
+  parseUserSpecifiedModel as wt,
   Tn,
-  MR,
+  getAdditionalModelOptionsCache as MR,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, Ks, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xt, Pe, fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Xt, getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   gdn,
   QF,

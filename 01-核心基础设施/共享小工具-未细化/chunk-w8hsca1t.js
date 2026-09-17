@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ld, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 function Ci() {
   if (!Ie(process.env.CLAUDE_CODE_COORDINATOR_MODE)) return !1;
   if (ld() && !Nn() && !a.CLAUDE_CODE_REMOTE) return !1;

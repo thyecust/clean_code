@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Rzt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getBundledSkillsRoot as Rzt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
 import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
 import { join as P } from "path";
@@ -83,10 +83,10 @@ async function Nwt(e, o, r) {
     }),
   );
 }
-function uwn(e) {
+function registerBundledSkillSessionReset(e) {
   wo().bundledSkillSessionResetHooks.push(e);
 }
-function _fe() {
+function runBundledSkillSessionResets() {
   for (let e of wo().bundledSkillSessionResetHooks)
     try {
       e();
@@ -96,7 +96,7 @@ function _fe() {
       );
     }
 }
-function wfr(e) {
+function wireSkillFilesExtraction(e) {
   let { files: o } = e,
     r = typeof o === "function";
   if (!o || (!r && Object.keys(o).length === 0))
@@ -124,10 +124,10 @@ function wfr(e) {
         return [{ type: "text", text: p + s[0].text }, ...s.slice(1)];
       return [{ type: "text", text: p }, ...s];
     };
-  return { skillRoot: yfe(e.name), getPromptForCommand: a };
+  return { skillRoot: getBundledSkillExtractDir(e.name), getPromptForCommand: a };
 }
-function eo(e) {
-  let { skillRoot: o, getPromptForCommand: r } = wfr(e),
+function registerBundledSkill(e) {
+  let { skillRoot: o, getPromptForCommand: r } = wireSkillFilesExtraction(e),
     t = {
       type: "prompt",
       name: e.name,
@@ -180,7 +180,7 @@ function eo(e) {
   if (e.survivesBundledKillSwitch) l.bundledSkillKillSwitchSurvivors.add(t);
   l.bundledSkills.push(t);
 }
-function poe() {
+function getBundledSkills() {
   let e = wo();
   if (jy())
     return e.bundledSkills.filter((o) =>
@@ -188,15 +188,15 @@ function poe() {
     );
   return [...e.bundledSkills];
 }
-function dwn() {
+function getRegisteredBundledSkillsIgnoringKillSwitch() {
   return [...wo().bundledSkills];
 }
-function yfe(e) {
+function getBundledSkillExtractDir(e) {
   return P(Rzt(), e);
 }
 async function R(e, o) {
   if (Object.keys(o).length === 0) return null;
-  let r = yfe(e);
+  let r = getBundledSkillExtractDir(e);
   try {
     return (
       await Nwt(r, o, { tolerateExisting: "verify-content" }),
@@ -213,9 +213,9 @@ async function R(e, o) {
     );
   }
 }
-async function XGt(e, o) {
+async function extractAdditionalSkillFiles(e, o) {
   if (Object.keys(o).length === 0) return null;
-  let r = yfe(e);
+  let r = getBundledSkillExtractDir(e);
   try {
     return (await Nwt(r, o, { tolerateExisting: !0 }), r);
   } catch (t) {
@@ -227,4 +227,4 @@ async function XGt(e, o) {
     );
   }
 }
-export { Nwt, uwn, _fe, wfr, eo, poe, dwn, yfe, XGt };
+export { Nwt, registerBundledSkillSessionReset, runBundledSkillSessionResets, wireSkillFilesExtraction, registerBundledSkill, getBundledSkills, getRegisteredBundledSkillsIgnoringKillSwitch, getBundledSkillExtractDir, extractAdditionalSkillFiles };

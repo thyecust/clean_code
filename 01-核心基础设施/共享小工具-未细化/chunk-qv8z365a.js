@@ -9,31 +9,31 @@
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { q } from "./chunk-7beprh8k.js";
-import { g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-class fGn {
+import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+class TeleportLatch {
   state = { status: "inactive" };
   fallbackSadEmitted = new Set();
   toolsBaseline = { captured: !1 };
 }
-var ypr = new Gt(() => new fGn());
+var teleportLatches = new Gt(() => new TeleportLatch());
 function o() {
-  return ypr.of(B());
+  return teleportLatches.of(B());
 }
-function HOe() {
+function getTeleportCacheState() {
   return o().state;
 }
-function Wcn(e) {
+function activateTeleportCache(e) {
   let t = o();
   if (t.state.status !== "inactive") return;
   t.state = e;
 }
-function Cte(e, t) {
+function revertTeleportCache(e, t) {
   let r = o();
   if (r.state.status === "reverted") return;
   if (r.state.status === "active") (g("upgrade_teleport_cache", e), l(e));
   r.state = { status: "reverted", reason: e, detail: t };
 }
-function _we(e) {
+function logTeleportFallbackOnce(e) {
   let t = o();
   if (t.fallbackSadEmitted.has(e)) return;
   (t.fallbackSadEmitted.add(e), g("upgrade_teleport_cache", e), l(e));
@@ -41,13 +41,13 @@ function _we(e) {
 function l(e) {
   q("warn", "cli_teleport_relay_fallback", { reason: e });
 }
-function Gcn(e) {
-  let t = HOe();
+function verifyPreAnchorIntact(e) {
+  let t = getTeleportCacheState();
   if (t.status !== "active") return !1;
   let r = t.preAnchorLineUuids;
   if (e.length < r.length)
     return (
-      Cte(
+      revertTeleportCache(
         "context_reduced",
         `live view has ${e.length} lines before its tail; the arm snapshot guarded ${r.length}`,
       ),
@@ -56,21 +56,21 @@ function Gcn(e) {
   for (let a = 0; a < r.length; a++)
     if (e[a] !== r[a])
       return (
-        Cte("context_reduced", `pre-anchor line ${a} changed since arm`),
+        revertTeleportCache("context_reduced", `pre-anchor line ${a} changed since arm`),
         !1
       );
   return !0;
 }
-function qcn(e, t) {
+function verifyToolsBaselineIntact(e, t) {
   let r = o();
   if (r.state.status !== "active") return !1;
   let a = r.toolsBaseline;
   if (!a.captured)
     return ((r.toolsBaseline = { captured: !0, model: e, fingerprint: t }), !0);
-  if (e !== a.model) return (_we("model_mismatch"), !1);
+  if (e !== a.model) return (logTeleportFallbackOnce("model_mismatch"), !1);
   if (a.fingerprint === t) return !0;
   return (
-    Cte(
+    revertTeleportCache(
       "tools_changed",
       a.fingerprint === null
         ? "session gained a toolset after a toolless first relay-attempted dispatch"
@@ -81,4 +81,4 @@ function qcn(e, t) {
     !1
   );
 }
-export { fGn, ypr, HOe, Wcn, Cte, _we, Gcn, qcn };
+export { TeleportLatch, teleportLatches, getTeleportCacheState, activateTeleportCache, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact };

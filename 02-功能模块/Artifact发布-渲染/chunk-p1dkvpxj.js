@@ -9,72 +9,72 @@
 // Version: 2.1.263
 import { oo, Xn, bh, LA, Gt, B, K, _B, fae, ke, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { Nxt, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Nxt, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Et, b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, us, oe, Qu, Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
   Vo,
   tie,
-  _r,
-  Zh,
-  CP,
-  XD,
-  fr,
-  Wt,
-  _ge,
-  Fi,
-  br,
-  sie,
-  d1,
-  O5,
-  QC,
-  Ml,
-  yb,
-  Sb,
+  ARTIFACT_TOOL_NAME as _r,
+  ARTIFACT_COMMENTS_TOOL_NAME as Zh,
+  ARTIFACT_DATA_TOOL_NAME as CP,
+  ARTIFACT_CHECK_TOOL_NAME as XD,
+  ARTIFACT_SLUG_RE as fr,
+  parseArtifactUrl as Wt,
+  parseArtifactUrlAnyCase as _ge,
+  uuidSlugFromUrl as Fi,
+  artifactViewerUrlFor as br,
+  artifactContentOriginUrlFor as sie,
+  QUOTE_HOMOGLYPHS as d1,
+  SINGLE_QUOTE_RUNS as O5,
+  INVISIBLE_BLANKS as QC,
+  scrubArtifactEnvelopeTags as Ml,
+  sweepProvenanceMarker as yb,
+  DECISION_SURFACE_BRACKETS_RE as Sb,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { ne, L$, cg } from "./chunk-rr78st95.js";
 import {
-  xm,
-  rt,
-  fb,
+  getSmallFastModel as xm,
+  getMainLoopModel as rt,
+  isAutoModeActive as fb,
   _5,
   kw,
   aa,
   mc,
   sx,
   si,
-  Sg,
-  HKt,
-  $T,
+  isUnattendedInteractiveSession as Sg,
+  TMUX_LOCATION_RE as HKt,
+  getClaudeAIOAuthTokenOriginAsync as $T,
   XC,
   H,
   xZe,
   JRn,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { el, Xe, Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { truncatePathMiddle as el, truncateToWidth as Xe, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { bx } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Hd, Bhe, PA, AL } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { kie } from "../权限系统/chunk-e4pfvp7x.js";
+import { CLASSIFIER_UNAVAILABLE_REASON as kie } from "../权限系统/chunk-e4pfvp7x.js";
 import { Cie } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   Bmt,
   Uue,
-  ane,
-  ugt,
-  gd,
-  mTe,
-  jv,
+  isChainOnAllowActive as ane,
+  hasAutoModeClassifierDenyRules as ugt,
+  hasPermissionsToUseTool as gd,
+  PERMISSION_CHECK_CRASHED_REASON as mTe,
+  checkRuleBasedPermissions as jv,
   S2t,
-  Zo,
+  asSystemPrompt as Zo,
   FO,
   Gne,
   KO,
@@ -104,44 +104,44 @@ import {
   Vc,
   Re,
   xr,
-  ore,
-  sre,
-  khn,
-  kc,
-  Yhn,
-  Jhn,
+  getTranscriptWriteFailureSeq as ore,
+  registerTranscriptExitReStamp as sre,
+  recordArtifactAutoReactLedger as khn,
+  flushSessionStorage as kc,
+  takeResumedArtifactAutoReactLedger as Yhn,
+  peekResumedArtifactAutoReactLedger as Jhn,
   E8e,
   nN,
   rN,
   FY,
   uNe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Bi, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { TOOL_SEARCH_TOOL_NAME as Bi, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { rf, ar } from "../权限系统/chunk-qdy0h5k2.js";
-import { qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createChildAbortController as qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Bwt,
   N1e,
   bCe,
   Cr,
   yw,
-  CG,
-  Gwn,
-  rYe,
-  zwn,
-  vqt,
-  kqt,
-  iTt,
-  xqt,
-  Fj,
-  hR,
+  isFrameLiveTokenLeaseEnabled as CG,
+  servedPageLooksNested as Gwn,
+  startsWithSkeletonOpen as rYe,
+  mintRoundTripPublishSignal as zwn,
+  PUBLISH_CAP_FRAME as vqt,
+  PUBLISH_CONFLICT_LEAD as kqt,
+  PUBLISH_DENIED_FRAME as iTt,
+  PUBLISH_OUTCOME_UNKNOWN_FRAME as xqt,
+  unlinkPath as Fj,
+  markAutoReactNoticePending as hR,
   ED,
   wer,
-  $H,
+  isWorkshopEnabled as $H,
 } from "./chunk-01ymf0ar.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { sR } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { syncRespawnFlag as sR } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import {
   gI,
   lwe,
@@ -178,7 +178,7 @@ import {
   FS,
 } from "./chunk-qpgskeea.js";
 import { P7, h9n } from "./chunk-qdg189tc.js";
-import { vte, Xcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
+import { artifactUrlRule as vte, artifactUrlInputRule as Xcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
 import { i9n } from "./chunk-5gz5xvw9.js";
 import { j4, dan } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
@@ -2163,7 +2163,7 @@ async function qo(e) {
   let i = bh("comment-thread-analyst"),
     d = mc(t.agentContext) + 1,
     [{ runAgent: l }, { COMMENT_ANALYST_AGENT: p }] = await Promise.all([
-      import("./runAgent.fdkxkbay.js"),
+      import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
       import("./COMMENT_ANALYST_AGENT.bnd7s557.js"),
     ]),
     S = {
@@ -2628,7 +2628,7 @@ function fpt(e) {
   let t = ne();
   ((t.autoReact.userDisarmed = !0), ro(e?.storageV5), i9n(e));
   for (let n of [...t.wakes.takenFrom.keys()])
-    import("./requestReplyTakeover.7rwzdb24.js").then((o) => o.notifyTakenOverSlugStopped(n));
+    import("./chunk-54kz7amv.js").then((o) => o.notifyTakenOverSlugStopped(n));
   (Vn(),
     x7({ flush: !0, storageV5: e?.storageV5 }),
     (t.autoReact.enabledMemo = !1),

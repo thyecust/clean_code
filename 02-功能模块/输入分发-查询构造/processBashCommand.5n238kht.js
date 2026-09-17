@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { G0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { shutdownInterruptStamp as ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { U5e, Lo, Re, m$, PI, GV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Bk } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Gre, Kpe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";

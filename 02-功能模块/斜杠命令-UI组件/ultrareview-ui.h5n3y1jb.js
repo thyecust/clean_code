@@ -10,13 +10,13 @@
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { hb, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isExtraUsageAllowed as hb, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { CDt, vDt, Z9e, RDt, e3e, kDt, xDt, t3e } from "../CodeReview/CodeReview.ddrd6y06.js";
-import { q7, HF, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { POST_IGNORED_NOTE as CDt, POST_DISABLED_NOTE as vDt, parseUltrareviewArgs as Z9e, precheckLaunchScope as RDt, previewInstructions as e3e, checkOverageGate as kDt, launchRemoteReview as xDt, ultrareviewLaunchAcknowledgementNudge as t3e } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { getReviewCostNote as q7, getReviewDurationNote as HF, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";

@@ -25,9 +25,9 @@ var o = 60000,
       cacheLeadMs: T().int().min(0).max(60000).default(mN.cacheLeadMs),
     }).refine((n) => n.oneShotFloorMs <= n.oneShotMaxMs),
   );
-function wre() {
+function getCronJitterConfig() {
   let n = m0("tengu_kairos_cron_config", mN, o),
     e = i().safeParse(n);
   return e.success ? e.data : mN;
 }
-export { wre };
+export { getCronJitterConfig };

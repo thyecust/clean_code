@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createHash as a } from "crypto";
 import { homedir as o, userInfo as u } from "os";
 import { join as l } from "path";

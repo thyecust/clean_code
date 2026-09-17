@@ -13,22 +13,22 @@ import {
   Kxe,
   Iae,
   Ra,
-  qje,
+  TokenCache as qje,
   ydr,
   GYt,
-  zje,
+  resolveCredentialsFromConfig as zje,
   dt,
   ge,
   l,
   Po,
   Rt,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { gge, iBe, nS, Avt } from "./chunk-wk0e3dz4.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { ahe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v2wxtqf7.js";
@@ -111,10 +111,10 @@ function w() {
   return D.of(B().host);
 }
 var x = 20;
-function Pke() {
+function getResolvedWIFBaseUrlSnapshot() {
   return w().resolvedBaseUrlSnapshot;
 }
-function m2e() {
+function getWIFCredentials() {
   return A(w());
 }
 function A(e) {
@@ -134,8 +134,8 @@ function A(e) {
             : { authentication: { ...t.authentication, credentials_path: c } }),
         },
         [{ getUserAgent: m }, { getProxyFetchOptions: p }] = await Promise.all([
-          import("../工具WebFetch-WebSearch/getMCPUserAgent.bp69tv0t.js"),
-          import("../../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js"),
+          import("./认证-OAuth登录.419zdfz3.js"),
+          import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
         ]),
         _ = zje(d, {
           baseURL: s,
@@ -170,7 +170,7 @@ function A(e) {
     });
   return e.credentialsPromise;
 }
-async function L0n(e) {
+async function invalidateWIFToken(e) {
   let t = w(),
     r = await R(t).catch(() => null);
   if (r === null) return;
@@ -183,7 +183,7 @@ async function L0n(e) {
   }
   r.invalidate();
 }
-function BQ() {
+function getWIFTokenCache() {
   return R(w());
 }
 function R(e) {
@@ -225,7 +225,7 @@ function C(e, t, r, s) {
           (typeof p !== "number" || Date.now() / 1000 < p - Kxe)
         ) {
           let { logEvent: _ } = await import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-            { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/fromEnum.xq2rym85.js");
+            { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js");
           return (
             _("tengu_wif_user_oauth_refresh_race_resolved", { mode: g(r) }),
             n(
@@ -279,7 +279,7 @@ function W(e, t) {
     }
   };
 }
-function fbr(e) {
+function isWIFTransientExchangeError(e) {
   if (e instanceof Ra && typeof e.statusCode === "number")
     return e.statusCode >= 500 || e.statusCode === 429 || e.statusCode === 408;
   let t = e;
@@ -326,7 +326,7 @@ function H(e) {
   if (t.includes("parse") || t.includes("json")) return "parse_failed";
   return "network_error";
 }
-function z8t() {
+function resetWIFCredentialState() {
   (w().reset(), Avt());
 }
 var k = (e) => process.env[e]?.trim() || void 0;
@@ -416,4 +416,4 @@ async function K(e, t) {
   );
   return b(o, `${c}.json`);
 }
-export { q8t, Pke, m2e, L0n, BQ, fbr, z8t };
+export { q8t, getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache, isWIFTransientExchangeError, resetWIFCredentialState };

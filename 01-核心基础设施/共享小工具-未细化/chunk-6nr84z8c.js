@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { YOt } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { S } from "./chunk-w76kejwn.js";
+import { lit as S } from "./chunk-w76kejwn.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -48,7 +48,7 @@ class i {
     return this.#t;
   }
 }
-function Z_e() {
+function createFleetViewHost() {
   return {
     roster: null,
     selection: null,
@@ -68,7 +68,7 @@ function Z_e() {
     killRing: YOt(),
   };
 }
-function KQt(
+function useAttachFleetOwners(
   { selection: e, view: t, attach: r, editor: o, deleteConfirm: l },
   { clock: s, groupsEnabled: a },
 ) {
@@ -83,4 +83,4 @@ function KQt(
     };
   }, [e, t, r, o, l, s]);
 }
-export { Z_e, KQt };
+export { createFleetViewHost, useAttachFleetOwners };

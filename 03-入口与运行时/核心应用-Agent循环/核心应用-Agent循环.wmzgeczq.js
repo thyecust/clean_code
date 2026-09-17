@@ -61,19 +61,19 @@ import {
   Ps,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import {
-  S,
-  u,
-  we,
-  Yr,
-  KP,
-  _y,
-  jHt,
-  Ga,
-  W0,
-  Ln,
-  Gf,
-  Mz,
-  WYt,
+  lit as S,
+  fromEnum as u,
+  fromEnumOpt as we,
+  fromNumber as Yr,
+  fromNumberOpt as KP,
+  concatSafe as _y,
+  fromNumberArr as jHt,
+  fromEnumArr as Ga,
+  joinSafe as W0,
+  fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln,
+  mcpNameForAnalytics_GATE_EVALUATED as Gf,
+  agentTypeForAnalytics_GATE_EVALUATED as Mz,
+  pluginIdForAnalytics_GATE_EVALUATED as WYt,
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import {
   _m,
@@ -397,7 +397,7 @@ import {
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, Dt, kt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { z2e, Nhe, y, f, g, Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { toolFeature as z2e, hookFeature as Nhe, logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Wnt,
   Gnt,
@@ -474,7 +474,7 @@ import {
   NL,
   mZ,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Fp, nOn, sje, fB, wXt, _z } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { setBgExitCause as Fp, nOn, sje, fB, wXt, _z } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import {
   os,
   iu,
@@ -532,13 +532,13 @@ import {
   Rxt,
   uXt,
   dXt,
-  Pi,
-  wW,
-  xxt,
-  a,
-  Wn,
+  getGlobalClaudeFile as Pi,
+  JETBRAINS_IDES as wW,
+  normalizeShellNameForAnalytics as xxt,
+  env as a,
+  antEnv as Wn,
 } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { qhe, Bc, Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_GLOBAL_FILE_SUFFIXES as qhe, OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import {
   Id,
   pp,
@@ -585,11 +585,11 @@ import {
   St,
   U1,
   dxe,
-  h,
-  hz,
-  Wr,
-  J,
-  Bxt,
+  logError as h,
+  getInMemoryErrors as hz,
+  logMCPError as Wr,
+  logMCPDebug as J,
+  captureAPIRequest as Bxt,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   Bfe,
@@ -608,21 +608,21 @@ import {
   zk,
   ETt,
   wd,
-  CTt,
+  getOrgMemoryAuthorization as CTt,
   N$,
   Vk,
   LCe,
-  zTn,
-  nf,
-  MCe,
-  RFe,
-  XTn,
-  xTt,
-  YTn,
-  JTn,
-  NCe,
-  eEn,
-  oEn,
+  waitForOrgMemoryDecisionSettledOnce as zTn,
+  getOrgMemoryDecision as nf,
+  getDecisionStores as MCe,
+  FIRST_STORE_PULL_WAIT_DEADLINE_MS as RFe,
+  settleFirstStorePull as XTn,
+  isFirstStorePullPending as xTt,
+  waitForFirstStorePull as YTn,
+  firstStorePullPending as JTn,
+  hasOrgMemoryDecisionRunStarted as NCe,
+  discoverOrgMemoryStoresForDecision as eEn,
+  isSelectionMounted as oEn,
   Ooe,
   IK,
   ntr,
@@ -664,12 +664,12 @@ import {
   ih,
   Ed,
   $a,
-  Bi,
+  TOOL_SEARCH_TOOL_NAME as Bi,
   qfe,
   Zqt,
   HG,
   tzt,
-  IJ,
+  isMultiStoreSyncAvailable as IJ,
   U$,
   utr,
   NYe,
@@ -756,11 +756,11 @@ import {
   UTt,
   czt,
   nb,
-  uzt,
-  Yj,
-  jFe,
-  NK,
-  jCe,
+  parseCommand as uzt,
+  PARSE_ABORTED as Yj,
+  parseCommandRaw as jFe,
+  findCommandNode as NK,
+  extractCommandArguments as jCe,
   hi,
   Ltr,
   bEn,
@@ -848,7 +848,7 @@ import {
   Ezt,
   cEt,
   zCe,
-  VCe,
+  isDangerousClassifierPermission as VCe,
   qFe,
   nJe,
   ON,
@@ -872,50 +872,50 @@ import {
   uEt,
   dEt,
   pEt,
-  YCe,
-  WH,
-  VFe,
-  oJe,
-  dr,
-  MG,
-  fEt,
-  eA,
-  GH,
-  LJ,
-  QCe,
-  DN,
-  joe,
-  rb,
-  QFe,
-  mEt,
-  kzt,
-  ZCe,
-  Bh,
-  xzt,
-  HEn,
-  Ap,
-  Hzt,
-  sJe,
-  ZFe,
-  IEn,
-  iJe,
-  gEt,
-  PEn,
-  vi,
-  OEn,
-  ame,
-  aJe,
-  Izt,
-  n$e,
-  Gy,
-  MJ,
-  LC,
-  OT,
-  Pzt,
-  Ozt,
-  cJe,
-  uJe,
-  BK,
+  DANGEROUS_FILES as YCe,
+  DANGEROUS_FILES_LC as WH,
+  DANGEROUS_DIRECTORIES as VFe,
+  DANGEROUS_DIRECTORY_PATHS as oJe,
+  normalizeCaseForComparison as dr,
+  toPosixPath as MG,
+  isClaudeSettingsPath as fEt,
+  isScratchpadEnabled as eA,
+  getScratchpadDir as GH,
+  isUntrustedUncPath as LJ,
+  isUntrustedAutomountPath as QCe,
+  hasSuspiciousWindowsPathPattern as DN,
+  checkPathSafetyForAutoEdit as joe,
+  allWorkingDirectories as rb,
+  getResolvedWorkingDirPaths as QFe,
+  blockReadsWorkingDirectories as mEt,
+  isAutoMemPathFromRepoSettings as kzt,
+  outsideReadBlocked as ZCe,
+  pathInAllowedWorkingPath as Bh,
+  isLinkedWorktreeFastPathEnabled as xzt,
+  verifiedLinkedWorktreeDirectories as HEn,
+  pathInWorkingPath as Ap,
+  rootPathForSource as Hzt,
+  normalizePatternsToPath as sJe,
+  getFileReadIgnorePatterns as ZFe,
+  compiledPathRulePattern as IEn,
+  NON_ASCII_PATH as iJe,
+  denyFoldVariantPaths as gEt,
+  denyRuleMatchingAnywhere as PEn,
+  matchingRuleForInput as vi,
+  matchingDenyRuleForDirectoryContents as OEn,
+  matchesPathRule as ame,
+  matchingAllowRuleForAllPaths as aJe,
+  checkReadNetworkPathSafety as Izt,
+  hasReadDenyRuleForPath as n$e,
+  READ_PATH_PROBE as Gy,
+  readAutoAllowedForMutation as MJ,
+  checkReadPermissionForTool as LC,
+  checkWritePermissionForTool as OT,
+  normalizeInternalPathRoot as Pzt,
+  untypeDenyReasonForAskPropagation as Ozt,
+  internalPathDecisionStands as cJe,
+  checkEditableInternalPath as uJe,
+  checkReadableInternalPath as BK,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   tA,
@@ -947,47 +947,47 @@ import {
   te,
   FP,
   $w,
-  Xe,
-  or,
-  Ot,
-  zQ,
-  No,
-  Pn,
-  Au,
-  jie,
+  truncateToWidth as Xe,
+  truncate as or,
+  formatDuration as Ot,
+  formatDurationCoarse as zQ,
+  formatNumber as No,
+  formatTokens as Pn,
+  formatResetTime as Au,
+  formatOverflowHint as jie,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { mxt, _n, Uw, Ce, qcr, zcr, Kcr } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import {
-  Mm,
-  Cnt,
-  KQ,
-  wL,
-  vnt,
-  qke,
-  Wie,
-  iPn,
-  Rnt,
-  K7t,
-  Y5,
-  X7t,
-  az,
-  RA,
-  j2e,
-  Y7t,
-  J7t,
-  knt,
-  Sc,
-  yh,
-  xnt,
-  Vu,
-  Hnt,
-  J5,
-  cPn,
-  qie,
-  uPn,
-  W2e,
-  zke,
-  Phe,
+  LITE_READ_BUF_SIZE as Mm,
+  PROGRAMMATIC_ENTRYPOINTS as Cnt,
+  extractJsonStringField as KQ,
+  extractLastJsonStringField as wL,
+  extractFieldFromLastEntryOfTypeStrict as vnt,
+  extractFieldFromFirstEntryStrict as qke,
+  writeEntriesToJsonlFile as Wie,
+  appendEntriesToJsonlFile as iPn,
+  readHeadAndTail as Rnt,
+  MAX_LISTING_PAGES as K7t,
+  listedProjectKey as Y5,
+  findSoleTranscriptWithMessagesById as X7t,
+  MAX_SANITIZED_LENGTH as az,
+  sanitizePath as RA,
+  normalizePathForCwdCompare as j2e,
+  recordedCwdCollidesWithProjectResolved as Y7t,
+  recordedCwdIsWithinOwnWorktrees as J7t,
+  slugCollisionGuardFoldsCase as knt,
+  getProjectsDir as Sc,
+  getProjectKey as yh,
+  legacyDerivedProjectKey as xnt,
+  canonicalizePath as Vu,
+  dirBelongsToProject as Hnt,
+  findProjectDirs as J5,
+  findProjectDir as cPn,
+  SKIP_PRECOMPACT_THRESHOLD as qie,
+  readTranscriptForLoad as uPn,
+  BACKUP_FILE_NAME_PATTERN_WITH_LEGACY as W2e,
+  isUuidShaped as zke,
+  buildHistorySuppressionEntry as Phe,
 } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import {
   v0,
@@ -1035,44 +1035,44 @@ import {
   k1,
   Qq,
   Eu,
-  Nw,
-  R0,
-  bS,
-  qQ,
-  pW,
-  yL,
-  $In,
-  UIn,
-  jIn,
-  nB,
-  GIn,
-  L7t,
-  Uke,
-  tr,
-  k0,
-  H1,
-  Snt,
-  $r,
-  vA,
-  kx,
-  zIn,
-  F7t,
-  lt,
-  hh,
-  Zq,
-  Da,
-  bnt,
-  Fw,
-  $7t,
-  wnt,
-  ez,
-  Uie,
-  tz,
-  Bke,
-  vhe,
-  N2e,
-  W7t,
-  Rhe,
+  resolveGitDir as Nw,
+  pointerFileIsSuspect as R0,
+  rawPointerPathIsUnsafe as bS,
+  isValidGitSha as qQ,
+  resolveRef as pW,
+  getCommonDir as yL,
+  addWatchedRepo as $In,
+  onRepoBranchChange as UIn,
+  getCachedBranchForRepo as jIn,
+  reanchorGitFileWatcher as nB,
+  getHeadForDir as GIn,
+  readWorktreeHeadSha as L7t,
+  getRemoteUrlForDir as Uke,
+  findGitRoot as tr,
+  findGitRootUncached as k0,
+  findGitRootRecheckingNegative as H1,
+  findGitRootVerifyingPositive as Snt,
+  findCanonicalGitRoot as $r,
+  findCanonicalGitRootUncached as vA,
+  isLinkedWorktree as kx,
+  isLinkedWorktreeUncached as zIn,
+  RAW_BLOB_DIFF_FLAGS as F7t,
+  gitExe as lt,
+  getIsGit as hh,
+  getGitDir as Zq,
+  getBranch as Da,
+  isBranchOnOrigin as bnt,
+  getDefaultBranch as Fw,
+  getDefaultBranchIfKnown as $7t,
+  getGitPushShellPatterns as wnt,
+  getRemoteUrl as ez,
+  redactGitRemoteCredentials as Uie,
+  normalizeGitRemoteUrl as tz,
+  findRepoRemoteSlug as Bke,
+  getIsClean as vhe,
+  getGithubRepo as N2e,
+  isLocalHost as W7t,
+  isCurrentDirectoryBareGitRepo as Rhe,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   q$e,
@@ -1098,10 +1098,10 @@ import {
   Mc,
   _se,
   mg,
-  ex,
-  CCn,
-  tx,
-  T_,
+  getUserAgent as ex,
+  getWebFetchUserAgent as CCn,
+  getAuthHeadersAsync as tx,
+  withOAuth401Retry as T_,
   PAt,
   wrr,
   gVt,
@@ -1202,95 +1202,95 @@ import {
   zrr,
   gP,
   nQ,
-  hP,
-  _P,
-  nUe,
+  isModelDenied as hP,
+  getModelEntitlementDenySet as _P,
+  isEntitlementOverlayUnavailable as nUe,
   qAt,
-  Rr,
+  isModelAllowed as Rr,
   ZH,
   UD,
   rUe,
   PVt,
   oUe,
   vQe,
-  RQe,
-  xm,
-  Ase,
-  sUe,
-  iUe,
-  DVt,
-  rq,
-  Mf,
-  aUe,
-  rt,
-  zN,
-  IQe,
-  Cse,
-  KAt,
-  MVt,
-  BD,
-  hg,
-  QCn,
-  ZCn,
-  evn,
-  t0,
-  YAt,
-  oq,
-  Ll,
-  nvn,
-  Nf,
-  f5,
-  xR,
-  Xh,
-  FVt,
-  ip,
-  dh,
-  ZAt,
-  _6,
-  vse,
-  Rse,
-  sq,
-  dA,
-  BVt,
-  am,
-  svn,
-  ol,
-  iq,
-  eCt,
-  tCt,
-  m5,
-  yP,
-  Ue,
-  cUe,
-  HR,
-  Gme,
-  uUe,
-  lf,
-  jVt,
-  y6,
-  PQe,
-  nCt,
-  vw,
-  IR,
-  WVt,
-  g5,
-  oi,
-  GVt,
-  Hm,
-  oCt,
-  wt,
-  rQ,
-  OQe,
-  pUe,
-  bu,
-  PR,
-  n0,
+  hasDedicatedSmallFastModel as RQe,
+  getSmallFastModel as xm,
+  isNonCustomFableModel as Ase,
+  isNonCustomMythosModel as sUe,
+  swapShrinksContextWindow as iUe,
+  preserve1mContextForRefusalFallback as DVt,
+  isNonCustomOpusModel as rq,
+  getUserSpecifiedModelSetting as Mf,
+  isUnservedFamilySpelling as aUe,
+  getMainLoopModel as rt,
+  isFableModelValue as zN,
+  isMythosModelValue as IQe,
+  isFableAvailable as Cse,
+  serverProbeAcceptedFable as KAt,
+  isMythosAvailable as MVt,
+  isPinnedFableModel as BD,
+  isFableFamilyOrPinnedModel as hg,
+  getPermissionClassifierExternalDefault as QCn,
+  getPermissionClassifierFlagshipRerouteTarget as ZCn,
+  getActiveOpusLineupIds as evn,
+  getModelUnavailabilityReason as t0,
+  antGrants1MContext as YAt,
+  getDefaultFableModel as oq,
+  getDefaultOpusModel as Ll,
+  enforcementDefaultOpusModel as nvn,
+  getDefaultSonnetModel as Nf,
+  getDefaultHaikuModel as f5,
+  isModeDependentModelSetting as xR,
+  stepDownRestrictedFamilyAliasPick as Xh,
+  planModeConstituentModel as FVt,
+  getRuntimeMainLoopModel as ip,
+  getDefaultMainLoopModelSetting as dh,
+  defaultModelAttributionSuffix as ZAt,
+  resolveDefaultMainLoopModelSetting as _6,
+  getEnvDefaultModel as vse,
+  isEnvDefaultModelGoverning as Rse,
+  eligible1mSuffixTarget as sq,
+  isModelAllowedUnderActiveEnforcement as dA,
+  isPermittedByOrgModelPolicy as BVt,
+  isExemptDefaultResolvingPick as am,
+  isDefaultModelEnforced as svn,
+  getDefaultMainLoopModel as ol,
+  isNoModelFallbackEnabled as iq,
+  noModelFallbackTripwire as eCt,
+  buildAvailabilityFallbackChain as tCt,
+  getFableDeclineFallbackModel as m5,
+  isRecognizedModel as yP,
+  getCanonicalName as Ue,
+  mainModelOverrideKeys as cUe,
+  strippedCanonicalName as HR,
+  hookModelMatchKey as Gme,
+  isRecognizedModelKey as uUe,
+  bytesPerTokenForModel as lf,
+  getClaudeAiUserDefaultModelDescription as jVt,
+  renderDefaultModelSetting as y6,
+  getModelPricingSuffix as PQe,
+  isOpusDefaultSubscriber as nCt,
+  isOpus1mMergeEnabled as vw,
+  getPublicModelDisplayName as IR,
+  maskModelCodename as WVt,
+  getCuratedModelPicker as g5,
+  renderModelName as oi,
+  isFableModelName as GVt,
+  renderFableModelName as Hm,
+  getPublicModelName as oCt,
+  parseUserSpecifiedModel as wt,
+  inlineSkillModelOverride as rQ,
+  resolveSkillModelOverride as OQe,
+  nameForUnnamedModelId as pUe,
+  getMarketingNameForModel as bu,
+  toProviderWireModelId as PR,
+  strip1mTag as n0,
   zme,
   KN,
   XN,
   tc,
   sCt,
-  _g,
+  modelHasNative1MContext as _g,
   kse,
   GC,
   vp,
@@ -1301,18 +1301,18 @@ import {
   iCt,
   h5,
   ior,
-  qC,
-  fb,
-  cvn,
-  yg,
-  dvn,
-  aCt,
-  DQe,
-  pvn,
-  fvn,
-  VVt,
-  fUe,
-  mvn,
+  setAutoModeActive as qC,
+  isAutoModeActive as fb,
+  isAutoModePermissionSurface as cvn,
+  isAutoClassifierActive as yg,
+  getAutoModeFlagCli as dvn,
+  setAutoModeCircuitBroken as aCt,
+  isAutoModeCircuitBroken as DQe,
+  setAutoModeFastModeBreakerReason as pvn,
+  getAutoModeFastModeBreakerReason as fvn,
+  setAutoModeFromFallback as VVt,
+  setProvisionalStartupMode as fUe,
+  getProvisionalStartupMode as mvn,
   cCt,
   cor,
   S6,
@@ -1383,18 +1383,18 @@ import {
   WQe,
   o0,
   Fvn,
-  pKt,
-  $vn,
-  SUe,
-  xw,
-  w6,
-  fKt,
-  wUe,
-  Bvn,
-  jvn,
-  Ose,
-  S5,
-  LR,
+  CCR_BYOC_BETA as pKt,
+  sessionsApiWire as $vn,
+  isTransientNetworkError as SUe,
+  getOAuthHeaders as xw,
+  fetchSession as w6,
+  getBranchFromSession as fKt,
+  trustedDeviceHeaders as wUe,
+  sendControlRequestToRemoteSession as Bvn,
+  sendControlResponseToRemoteSession as jvn,
+  getAccessTokenWithCcrFallback as Ose,
+  pollRemoteSessionEvents as S5,
+  archiveRemoteSession as LR,
   VQe,
   ht,
   Rp,
@@ -1457,13 +1457,13 @@ import {
   Jor,
   Zor,
   esr,
-  mb,
-  rZe,
-  E6,
-  _t,
-  Sg,
-  Ja,
-  t1,
+  getRegisteredSessionName as mb,
+  whenSessionRegistered as rZe,
+  envSessionKind as E6,
+  isBgSession as _t,
+  isUnattendedInteractiveSession as Sg,
+  isActingAsBgJob as Ja,
+  updateSessionName as t1,
   wl,
   aZe,
   Hn,
@@ -1490,7 +1490,7 @@ import {
   cZe,
   TP,
   lm,
-  GD,
+  getOrganizationUUID as GD,
   C6,
   tvt,
   oge,
@@ -1498,61 +1498,61 @@ import {
   Ofr,
   Dfr,
   MUe,
-  Fc,
-  nvt,
-  v6,
-  Zc,
-  mq,
-  cl,
-  E5,
-  d0,
-  Gl,
-  A5,
-  kp,
-  Fse,
-  MR,
-  BKt,
-  rvt,
-  qg,
-  C5,
-  sge,
-  ige,
-  ovt,
-  hRe,
-  AU,
-  p0,
-  FUe,
-  R6,
-  bRn,
-  bZe,
-  ivt,
-  $Ue,
-  TRn,
-  yRe,
-  bRe,
-  f0,
-  Yt,
-  $T,
-  cm,
-  uvt,
-  Ss,
-  jUe,
-  gt,
-  lp,
-  wu,
-  KKt,
-  cge,
-  vn,
-  zD,
-  mh,
-  hb,
-  qn,
-  uge,
-  AZe,
-  UT,
-  k6,
-  x6,
-  jse,
+  isHostManagedProviderAuth as Fc,
+  hostManagedNoCredsError as nvt,
+  hostManagedAwsSdkCredentials as v6,
+  shouldUseWIFAuth as Zc,
+  isWIFDispatchAuth as mq,
+  isAnthropicAuthEnabled as cl,
+  describeHowToDisableAuthTokenSource as E5,
+  effectiveAuthTokenEnv as d0,
+  getAuthTokenSource as Gl,
+  getAnthropicApiKey as A5,
+  getAnthropicApiKeyWithSourceSafe as kp,
+  isApiKeyHelperTheActiveCredential as Fse,
+  getAdditionalModelOptionsCache as MR,
+  hasAnthropicApiKeyAuth as BKt,
+  hasAnthropicApiKey as rvt,
+  getAnthropicApiKeyWithSource as qg,
+  getConfiguredAwsAuthRefresh as C5,
+  isAwsAuthRefreshFromProjectSettings as sge,
+  getApiKeyFromApiKeyHelper as ige,
+  getApiKeyHelperLastFailure as ovt,
+  clearApiKeyHelperCache as hRe,
+  refreshAndGetAwsCredentials as AU,
+  getDefaultAwsProviderChain as p0,
+  invalidateDefaultAwsProviderChainDebounced as FUe,
+  clearAwsCredentialsCache as R6,
+  clearAwsHelperCredentialsCache as bRn,
+  getConfiguredGcpAuthRefresh as bZe,
+  isGcpAuthRefreshFromProjectSettings as ivt,
+  getConfiguredVertexProjectId as $Ue,
+  markGcpCredentialsRejected as TRn,
+  refreshGcpCredentialsIfNeeded as yRe,
+  getOAuthAccountOnHold as bRe,
+  isOAuthRefreshKnownDeadAsync as f0,
+  getClaudeAIOAuthTokens as Yt,
+  getClaudeAIOAuthTokenOriginAsync as $T,
+  handleOAuth401Error as cm,
+  resetAuthFailureTracking as uvt,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  checkAndRefreshOAuthTokenIfNeededWithOutcome as jUe,
+  isClaudeAISubscriber as gt,
+  hasProfileScope as lp,
+  hasStoredOAuthToken as wu,
+  canAuthenticateChromeBridge as KKt,
+  is1PApiCustomer as cge,
+  getOauthAccountInfo as vn,
+  getAuthenticatedAccountInfo as zD,
+  getStoredOauthAccountInfo as mh,
+  isExtraUsageAllowed as hb,
+  getSubscriptionType as qn,
+  isEnterpriseSubscriber as uge,
+  isEnterprisePAYGSubscriber as AZe,
+  getRateLimitTier as UT,
+  isUsing3PServices as k6,
+  isConsumerSubscriber as x6,
+  isClaudeAISubscriberAsync as jse,
   Lsr,
   Msr,
   ux,
@@ -1579,19 +1579,19 @@ import {
   IZe,
   nc,
   RU,
-  ua,
-  VUe,
-  o1,
-  OZe,
-  s1,
-  fQ,
-  i1,
-  Ns,
-  jRn,
-  mQ,
-  a1,
-  DZe,
-  gQ,
+  isAutoMemoryEnabled as ua,
+  isIndexRecallEnabled as VUe,
+  isMemoryRecallEnabled as o1,
+  isExtractModeActive as OZe,
+  getMemoryBaseDir as s1,
+  hasAutoMemPathOverride as fQ,
+  getAutoMemPathState as i1,
+  getAutoMemPath as Ns,
+  activeSessionLogExcluder as jRn,
+  getAutoMemEntrypoint as mQ,
+  isAutoMemPath as a1,
+  AUTO_MEM_WRITE_ALLOW_REASON as DZe,
+  isAutoMemPathSafeForCarveout as gQ,
   WRn,
   Wsr,
   Gsr,
@@ -1600,9 +1600,9 @@ import {
   zsr,
   Bo,
   I6,
-  Cd,
+  isWorkspacePersistedTrusted as Cd,
   MZe,
-  tS,
+  getWorkspacePersistedTrustKey as tS,
   KUe,
   zRn,
   YC,
@@ -1620,7 +1620,7 @@ import {
   fge,
   ql,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Jo, fm, zu, yc, pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { Jo, validateBridgeId as fm, toCompatSessionId as zu, toInfraSessionId as yc, sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import {
   pt,
   up,
@@ -1656,19 +1656,19 @@ import {
   SA,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  iS,
-  f1,
-  aS,
-  L5,
-  lS,
-  Ip,
-  ii,
-  Zi,
-  vP,
-  BRe,
-  cS,
-  _et,
-  ZC,
+  getTeammateContext as iS,
+  isInProcessTeammate as f1,
+  getParentSessionId as aS,
+  getDynamicTeamContext as L5,
+  getAgentId as lS,
+  getAgentName as Ip,
+  getTeamName as ii,
+  isTeammate as Zi,
+  isModelDrivenSession as vP,
+  isNestedInteractiveClaudeSession as BRe,
+  getTeammateColor as cS,
+  isPlanModeRequired as _et,
+  isTeamLead as ZC,
 } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
 import {
   Vd,
@@ -1706,17 +1706,17 @@ import {
   F6,
   x5t,
   H5t,
-  yA,
-  Pe,
-  xP,
-  In,
-  Tl,
-  Ca,
-  HP,
-  Wu,
-  fo,
-  GT,
-  Ege,
+  THIRD_PARTY_PROVIDER_LABELS as yA,
+  getAPIProvider as Pe,
+  getAPIProviderForAnalytics as xP,
+  isFirstPartyProvider as In,
+  getProviderForModel as Tl,
+  usesFirstPartyModelIds as Ca,
+  isClaudePlatformProvider as HP,
+  isFirstPartyApiBackend as Wu,
+  isFirstPartyAnthropicBaseUrl as fo,
+  isFirstPartyAnthropicHost as GT,
+  shouldPropagateTraceContext as Ege,
 } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import {
@@ -1838,18 +1838,18 @@ import {
   ftt,
   VRt,
   KRt,
-  jR,
-  Jge,
-  K6,
-  ytt,
+  isRemoteManagedSettingsVerified as jR,
+  isEvalPolicySnapshotOnly as Jge,
+  getSettingsPath as K6,
+  getMockRemoteSettingsFixturePath as ytt,
   qHn,
   Tie,
   zHn,
   X6,
   jq,
-  T0,
+  getRelativeSettingsFilePathForSource as T0,
   P8t,
-  T1,
+  isAdminPolicyOrigin as T1,
   Ttt,
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -1941,8 +1941,8 @@ import {
   zie,
   Vie,
   fxt,
-  Fe,
-  Be,
+  execFileNoThrow as Fe,
+  execFileNoThrowWithCwd as Be,
 } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { z7t, qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { D1, mn, fi, hPn, Do, _W, hxt, Xcr, Jie } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
@@ -1951,8 +1951,8 @@ import { Ee, bW, QQ, iXt, Db, Fnt } from "../CLI入口-Commander/chunk-6rfqqsva.
 import {
   L5t,
   M5t,
-  cie,
-  y0,
+  registerWriteQueueDrain as cie,
+  drainRegisteredWriteQueues as y0,
   Cet,
   nRt,
   uar,
@@ -1983,65 +1983,65 @@ import {
   Aar,
   Car,
   j5t,
-  qT,
-  ho,
-  CBe,
-  IP,
-  zT,
-  ye,
-  F5,
-  kxn,
-  Ige,
-  Pet,
-  Rd,
-  Ixn,
-  Ge,
-  bn,
-  VT,
-  bb,
-  CQ,
-  vQ,
-  dS,
-  xq,
-  mie,
-  Jt,
-  Ii,
-  hx,
-  Det,
-  RQ,
-  Bxn,
-  Let,
-  tL,
+  parseSettingsFile as qT,
+  getSettingsFilePathForSource as ho,
+  getRuleAnchorRootForSource as CBe,
+  getLegacyLocalSettingsFilePath as IP,
+  projectSettingsAliasesUserSettings as zT,
+  getSettingsForSource as ye,
+  getSettingsForSourceWriteSeed as F5,
+  readRepoDirSettingsFresh as kxn,
+  parentManagedTierParticipates as Ige,
+  getMergedPolicySources as Pet,
+  getAllPolicyTierSettings as Rd,
+  getMachineAdminTierSettings as Ixn,
+  getInitialSettings as Ge,
+  getSettings_DEPRECATED as bn,
+  getEffectiveSettingSource as VT,
+  getSettingsWithErrors as bb,
+  getBasePolicySettings as CQ,
+  getBasePolicySettingsOrigin as vQ,
+  getPolicySettingsOrigin as dS,
+  getPolicySettingsLoadErrors as xq,
+  filterFatalPolicyErrors as mie,
+  updateSettingsForSource as Jt,
+  updateSettingsForSourceWithTransform as Ii,
+  getSecuritySensitiveSetting as hx,
+  hasVouchedSkipDangerousModePermissionPrompt as Det,
+  hasDisableClaudeAiConnectors as RQ,
+  getUseAutoModeDuringPlan as Bxn,
+  getDialogExpiry as Let,
+  getAutoModeConfig as tL,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
-  ly,
-  mf,
-  gf,
-  Rie,
-  n2e,
-  s0n,
-  r2e,
-  vke,
-  Ctt,
-  ov,
-  o2e,
-  uL,
-  Op,
-  zU,
-  vtt,
-  s2e,
-  Rtt,
-  kie,
-  F8t,
-  lkt,
-  $8t,
-  ktt,
-  l0n,
-  U8t,
-  i2e,
-  xie,
-  Hie,
-  xtt,
+  PERMISSION_MODES as ly,
+  normalizePermissionModeAlias as mf,
+  parsePermissionMode as gf,
+  UNRECOGNIZED_PERMISSION_MODE_ERROR as Rie,
+  isBypassImmuneCircuitBreaker as n2e,
+  isClassifierRoutedCircuitBreaker as s0n,
+  SANDBOX_AUTO_ALLOW_REASON as r2e,
+  READ_ONLY_AUTO_ALLOW_REASON as vke,
+  RESTRICTED_MODE_DENY_REASON as Ctt,
+  OUTSIDE_READS_BLOCKED_DENY_REASON as ov,
+  INLINE_CODE_FLAGS as o2e,
+  isOutsideReadsBlockedAsk as uL,
+  outsideReadsRuntimePathAsk as Op,
+  outsideReadsTooComplexAsk as zU,
+  outsideReadsSedScriptAsk as vtt,
+  BASH_COMMAND_CLAMP_DENY_REASON as s2e,
+  BASH_COMMAND_CLAMP_CRASH_REASON as Rtt,
+  CLASSIFIER_UNAVAILABLE_REASON as kie,
+  CLASSIFIER_PARSE_FAILURE_REASON_STEM as F8t,
+  CLASSIFIER_TRANSCRIPT_TOO_LONG_REASON as lkt,
+  HOOK_REWRITTEN_INPUT_ASK_REASON as $8t,
+  HOOK_REWRITE_HEADLESS_DENY_REASON as ktt,
+  HOOK_ALLOW_FLAGGED_HEADLESS_DENY_REASON as l0n,
+  NO_APPROVAL_SURFACE_REASON as U8t,
+  CAN_USE_TOOL_STREAM_CLOSED_REASON as i2e,
+  CAN_USE_TOOL_INVALID_RESULT_REASON as xie,
+  CAN_USE_TOOL_REQUEST_FAILED_REASON as Hie,
+  CAN_USE_TOOL_ABORTED_REASON as xtt,
   Lw,
   Dp,
   r_,
@@ -2072,28 +2072,28 @@ import {
   qu,
 } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
 import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
-import { at, qi, xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at, isCancel as qi, isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import {
   id,
   v0n,
   R0n,
   $tt,
-  qq,
-  JT,
-  I0n,
-  Die,
-  o_,
-  d2e,
-  QT,
-  p2e,
-  f2e,
-  O0n,
-  As,
-  vb,
-  Vq,
+  loadMTLSClientMaterial as qq,
+  getMTLSConfig as JT,
+  disableKeepAlive as I0n,
+  getProxyUrl as Die,
+  getUsableProxyUrl as o_,
+  getNoProxy as d2e,
+  shouldBypassProxy as QT,
+  getConfiguredProxyAuthHelper as p2e,
+  getProxyAuthFromHelper as f2e,
+  clearProxyAuthHelperCache as O0n,
+  getProxyFetchOptions as As,
+  configureGlobalAgents as vb,
+  clearProxyCache as Vq,
 } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wPn, TPn, EPn, $he } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { Fhe, L1, ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { Fhe, L1, externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import {
   rBe,
   SQ,
@@ -2118,7 +2118,7 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Gi, ZD } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { A_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
-import { yn } from "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage as yn } from "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import {
   R1,
@@ -2139,7 +2139,7 @@ import {
   vIn,
   whe,
 } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
-import { t_, yet, Xkn, Ykn, Jkn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME as t_, LEGACY_BRIEF_TOOL_NAME as yet, DESCRIPTION as Xkn, BRIEF_TOOL_PROMPT as Ykn, PEWTER_OWL_TOOL_PROMPT as Jkn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import {
   Qse,
   u1,
@@ -2169,19 +2169,19 @@ import {
   tet,
   net,
   Bir,
-  _r,
-  Zh,
-  CP,
-  XD,
-  nie,
-  fr,
-  Gd,
-  JD,
-  br,
-  Wkn,
+  ARTIFACT_TOOL_NAME as _r,
+  ARTIFACT_COMMENTS_TOOL_NAME as Zh,
+  ARTIFACT_DATA_TOOL_NAME as CP,
+  ARTIFACT_CHECK_TOOL_NAME as XD,
+  ARTIFACT_FAMILY_TOOL_NAMES as nie,
+  ARTIFACT_SLUG_RE as fr,
+  getArtifactPublishStubDir as Gd,
+  parseArtifactUrlInput as JD,
+  artifactViewerUrlFor as br,
+  artifactLeadScrubPattern as Wkn,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { BT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import { Wd, Vg, _kn, Pm, gA, jT, kU, Ba, HRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { SEND_USER_FILE_TOOL_NAME as BT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { Wd, isProcessProvablyGone as Vg, getAncestorPidsAsync as _kn, isSameProcessAsync as Pm, ownProcStartAsync as gA, procIdentityOf as jT, procIdentityFields as kU, getProcessStartTimeAsync as Ba, getProcessCreationTimeMsAsync as HRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Ei } from "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
 import {
   D4t,
@@ -2194,11 +2194,11 @@ import {
   Oo,
   QG,
   Ame,
-  Mt,
-  op,
-  xve,
-  iCn,
-  ch,
+  isPolicyAllowed as Mt,
+  policyDeniedReason as op,
+  hasNameableComplianceTaint as xve,
+  isPolicyEnforced as iCn,
+  getResponseFromCache as ch,
 } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Ore } from "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
 import { Ta, h_ } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
@@ -2272,19 +2272,19 @@ import {
   anr,
 } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import {
-  Uu,
-  r6,
-  S_,
-  Yoe,
-  $Et,
-  Yzt,
-  ZEn,
-  FC,
-  UEt,
-  PD,
-  f$e,
-  tAn,
-  BJ,
+  isRestrictedToPluginOnly as Uu,
+  isSourceAdminTrusted as r6,
+  shouldAllowManagedHooksOnly as S_,
+  shouldAllowManagedHooksOnlyByPolicy as Yoe,
+  shouldHoldGuardHooksByAdmin as $Et,
+  policySettingsUnreadable as Yzt,
+  areDeviceHooksStoodDown as ZEn,
+  shouldDisableAllHooksIncludingManaged as FC,
+  shouldSkipSessionHooksByPolicy as UEt,
+  updateHooksConfigSnapshot as PD,
+  updateHooksConfigSnapshotThroughBackend as f$e,
+  listProcessHooksConfigSnapshots as tAn,
+  getHooksConfigFromSnapshot as BJ,
   Q$,
   Joe,
   Jzt,
@@ -2323,14 +2323,14 @@ import {
   uP,
   mme,
   fnr,
-  lAn,
-  ce,
-  r4t,
-  Qc,
-  Bd,
-  g$e,
-  kJe,
-  hme,
+  stripWideningPermissionLayers as lAn,
+  getToolPermissionContext as ce,
+  getEffortLayerOverride as r4t,
+  getEffortValue as Qc,
+  getMainLoopModel as Bd,
+  getThinkingConfig as g$e,
+  getUltracodeRequested as kJe,
+  applyContextLayers as hme,
 } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import {
   rf,
@@ -2348,106 +2348,106 @@ import {
   TR,
 } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
-  hr,
-  qh,
-  FJ,
-  _Je,
-  yu,
-  Ua,
-  l$e,
-  qK,
-  ob,
-  UG,
-  yJe,
-  c$e,
-  qEn,
-  zEn,
-  VEn,
+  createAbortController as hr,
+  createChildAbortController as qh,
+  turnAbortControllerOf as FJ,
+  attachDetachableAbortRelay as _Je,
+  userAbortReason as yu,
+  unwrapAbortReason as Ua,
+  isUserInitiatedAbortReason as l$e,
+  isSilentAbortReason as qK,
+  shutdownInterruptStamp as ob,
+  isServerFallbackDiscard as UG,
+  serverFallbackTombstoneAbortReason as yJe,
+  classifyAbortReasonForTelemetry as c$e,
+  isUserAttributableAbortKind as qEn,
+  recoveryTimeoutForContextTokens as zEn,
+  createRecoveryAbortController as VEn,
 } from "./chunk-h3cty6gp.js";
 import {
   Wh,
   Jc,
-  Goe,
-  i$e,
+  getStageFileRoot as Goe,
+  getOutputsRoot as i$e,
   mJe,
   AEt,
-  Lf,
-  WK,
-  Cp,
-  gJe,
-  NEn,
-  lh,
-  LN,
-  GK,
-  Ea,
-  lme,
-  $En,
-  Gh,
-  qoe,
-  UEn,
-  CEt,
-  BEn,
-  MN,
-  tve,
-  jEn,
-  WEn,
-  a$e,
-  hJe,
-  Uzt,
+  planFiles as Lf,
+  notePlanFileWritten as WK,
+  notePlanFileForgotten as Cp,
+  resetPlanFileCacheToUnknown as gJe,
+  settlePlanFileCachePrime as NEn,
+  primePlanSlugCollisions as lh,
+  getPlanSlug as LN,
+  peekPlanSlug as GK,
+  getPlansDirectory as Ea,
+  saveRejectedUltraplan as lme,
+  persistPlanEdit as $En,
+  getPlanFilePath as Gh,
+  getPlanWorkshopDocPath as qoe,
+  getPlanWorkshopDoc as UEn,
+  planWorkshopDocExists as CEt,
+  planWorkshopDocExistsAsync as BEn,
+  getPlan as MN,
+  getPlanAsync as tve,
+  planExistsAsync as jEn,
+  readPlanFileFresh as WEn,
+  copyPlanForResume as a$e,
+  WORKSHOP_DOC_SNAPSHOT_MAX_CHARS as hJe,
+  PLAN_SNAPSHOT_MAX_CHARS as Uzt,
 } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { zy, aAn, jJ, bl, Qoe, WJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import {
   jEt,
   pnr,
-  Bu,
-  Qzt,
-  s6,
-  sAn,
-  t4t,
-  vJe,
-  n4t,
-  Hi,
-  iAn,
+  isScrubEnabled as Bu,
+  shouldScrubSubprocessEnv as Qzt,
+  isScrubSandboxAvailable as s6,
+  enforceScriptCaps as sAn,
+  armedRunnerShedsName as t4t,
+  isChildScrubbedCredentialFamily as vJe,
+  childScrubbedCredentialKeys as n4t,
+  subprocessEnv as Hi,
+  scrubSandboxConfig as iAn,
 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
   Cbt,
   Q3t,
   $k,
   uG,
-  r1e,
-  Z3t,
-  VAe,
-  O7e,
-  o1e,
-  USn,
-  D7e,
-  _l,
-  vbt,
-  s1e,
-  Sd,
-  L7e,
-  BSn,
-  Rbt,
-  kbt,
-  JY,
-  M7e,
-  jSn,
-  xbt,
-  Kre,
-  WSn,
-  i1e,
-  KAe,
-  Hbt,
-  Ibt,
-  qSn,
-  N7e,
-  fK,
+  MAX_TASK_OUTPUT_BYTES as r1e,
+  MAX_TASK_OUTPUT_BYTES_DISPLAY as Z3t,
+  MAX_PERSISTED_OUTPUT_BYTES as VAe,
+  getTaskOutputRootDir as O7e,
+  getTaskOutputDir as o1e,
+  peekTaskOutputDir as USn,
+  bindTaskOutputPath as D7e,
+  getTaskOutputPath as _l,
+  DiskTaskOutput as vbt,
+  appendTaskOutput as s1e,
+  evictTaskOutput as Sd,
+  releaseConvergentTaskOutputBinding as L7e,
+  getTaskOutputDelta as BSn,
+  getTaskOutput as Rbt,
+  getTaskOutputSize as kbt,
+  openTaskOutputForRead as JY,
+  isTaskOutputFilePath as M7e,
+  taskOutputDirExclusions as jSn,
+  bindTaskOutputForRead as xbt,
+  tailTaskOutput as Kre,
+  unlinkTaskOutput as WSn,
+  openTaskOutputForAppend as i1e,
+  initTaskOutput as KAe,
+  isTaskOutputSwapRefusal as Hbt,
+  openVerifiedTaskOutput as Ibt,
+  getVerifiedTaskOutputTail as qSn,
+  persistTaskOutputSnapshot as N7e,
+  initTaskOutputAsSymlink as fK,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
 import { no, a5, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { ASn, RSn, kSn, w7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { rh, c7e, Wpe, lbt, L3t, fSn } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { getSessionNamingState as rh, claimUniqueSessionName as c7e, settledYieldFor as Wpe, scheduleSettledRecheck as lbt, renameSupersededDuringScan as L3t, notifyCorrespondentsOfRename as fSn } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
 import {
   GE,
   Es,
@@ -2476,11 +2476,11 @@ import {
   ner,
   YXe,
   EN,
-  vN,
-  yR,
-  yTn,
+  clearAutoReactNoticePending as vN,
+  isArtifactToolEnabled as yR,
+  isPlanPrototypeOfferEnabled as yTn,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Xr, uR } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled as Xr, isClaudeMdLoadingDisabled as uR } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { CK, xC, moe, Dj } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import {
   MAe,
@@ -2546,10 +2546,10 @@ import {
   MHt,
   Dz,
 } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
-import { Su, ri, LD, aU, cQe, uQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri, isSettingsToCloudEnabled as LD, isSettingsToCloudEnabledCached as aU, isViolinWoodServedOff as cQe, isCloudPluginForwardingEnabledCached as uQe } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Bnr, jnr, ase, H$e, I$e, nU, P$e, VJe } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { i5, Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import { RT } from "../../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js";
+import { default as RT } from "../../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js";
 import {
   eGt,
   Zpe,
@@ -2648,11 +2648,11 @@ import {
   OQn,
   DQn,
   LQn,
-  gG,
-  hK,
-  _K,
-  ibn,
-  cGt,
+  isCoordinatorMode as gG,
+  isDeferredTool as hK,
+  isDeferredToolInConversation as _K,
+  formatDeferredToolLine as ibn,
+  getPrompt as cGt,
 } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { NNe, rd, Mre, Upe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { CT, Nk } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
@@ -2724,17 +2724,17 @@ import {
   RC,
   Vbn,
   dCe,
-  mfe,
-  ag,
-  SG,
-  Owt,
-  mJ,
-  kXe,
-  xXe,
-  DH,
-  OXe,
+  readUnreadMessages as mfe,
+  writeToMailbox as ag,
+  messageIdentityKey as SG,
+  isIdleNotification as Owt,
+  isShutdownApproved as mJ,
+  planVerdictBinding as kXe,
+  planVerdictMismatchRejection as xXe,
+  isStructuredProtocolMessage as DH,
+  markMessagesAsReadByPredicate as OXe,
 } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
-import { u6, R$e, $Je, A4t, UC, ise, VJ } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isBridgeFirstParty as u6, hasBridgeEntitlement as R$e, getBridgeEntitlementBlocker as $Je, describeAuthPrecedenceBlocker as A4t, isRunningInRemoteEnvironment as UC, isCcrV2SendEventsEnabled as ise, isPersistentRemoteSessionEnabled as VJ } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { H$, wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import {
   ESt,
@@ -2886,16 +2886,16 @@ import {
   ver,
 } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { zs, $I } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { Pke, m2e, L0n, BQ } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
-import { Nwt, poe, dwn } from "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
-import { Pf, pfe, TXe, MGt } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import { getResolvedWIFBaseUrlSnapshot as Pke, getWIFCredentials as m2e, invalidateWIFToken as L0n, getWIFTokenCache as BQ } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import { Nwt, getBundledSkills as poe, getRegisteredBundledSkillsIgnoringKillSwitch as dwn } from "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
+import { readTeamFileAsync as Pf, removeTeammateFromTeamFile as pfe, removeMemberByAgentId as TXe, setMemberMode as MGt } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
 import { $i } from "../../02-功能模块/Teammates团队/chunk-t899nada.js";
-import { ab } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import { END_CONVERSATION_TOOL_NAME as ab } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { Yy, fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { parseRetryAfterHeader as Yy, extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { cR, oJ } from "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { nm, YS } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { CRON_CREATE_TOOL_NAME as nm, CRON_DELETE_TOOL_NAME as YS } from "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import {
   Wre,
   G3t,
@@ -2917,21 +2917,21 @@ import {
   Xpe,
 } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
-import { kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import { uh, o5 } from "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { getTrustedDeviceToken as uh, recoverFromUntrustedDevice as o5 } from "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { Ts, _St, GXn, KXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import { m6 } from "../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js";
-import { SN } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
-import { yd, qyn, zyn, WY } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import { classifyElevatedAuthError as m6 } from "../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js";
+import { isInITerm2 as SN } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { yd, getAllNativeMessagingHostsDirs as qyn, getAllWindowsRegistryKeys as zyn, openInChrome as WY } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
 import { xT } from "../../01-核心基础设施/共享小工具-未细化/chunk-21sqz10e.js";
-import { bw, Yi, xYe, Poe } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
+import { getSdkHostedBridgeHandle as bw, getReplBridgeHandle as Yi, getRemoteControlSessionCompatId as xYe, setSelfBridgeTitle as Poe } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import { tm, JYn, QYn, ZYn, cN, WNe, tbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { Fy, LSt, Cyn, vyn, Ryn, kyn, SYn, bYn } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
-import { Qpe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
-import { YAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
-import { RH, oG } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { SCn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
-import { rr, gu, Ti, Mi, xc, Zn, b$, sR, Ep, al } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { isPewterOwlTool as Qpe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
+import { isBriefEnabled as YAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import { getBridgeTokenOverride as RH, getBridgeBaseUrlOverride as oG } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { buildGitSessionContext as SCn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js";
+import { getJobDir as rr, getOwnJobShortId as gu, writeStateAtomic as Ti, logJobWriteError as Mi, invalidateJobStateCache as xc, readJobState as Zn, syncJobName as b$, syncRespawnFlag as sR, Ep, al } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { JXn, ZXn } from "../../02-功能模块/语音-音频/chunk-cfhndstm.js";
 import { iN, hw, zSt, Fpe, IAe, rg } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _$, Ere, o3t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
@@ -3044,7 +3044,7 @@ import { jh } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { pJe, s$e, MEn, fJe, Zj, e6, Z_, TEt } from "../../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js";
 import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
 import { dg, jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { ey } from "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled as ey } from "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
 import {
   mt,
   knr,
@@ -3060,9 +3060,9 @@ import {
 } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { mse } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
-import { vd, f5t, JC, akn } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd, f5t, isClaudeInChromeMCPServer as JC, isClaudeInChromeMcpLaunch as akn } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { Kr } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { px } from "../../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js";
 import { cp, fs, Kir } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
@@ -3097,10 +3097,10 @@ import { Fke, av, $ke } from "../../01-核心基础设施/共享小工具-未细
 import { oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ku, cB, xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { $x } from "../../01-核心基础设施/共享小工具-未细化/chunk-9v3x5my2.js";
-import { va, Um, PMn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform as Um, PMn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { gy } from "../../01-核心基础设施/共享小工具-未细化/chunk-1adkzsnc.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y, lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -36431,7 +36431,7 @@ function zxt(e) {
   };
 }
 var nbr = 200;
-function $ft() {
+function loadedIndexExclusions() {
   let e;
   try {
     e = Bj();
@@ -36452,7 +36452,7 @@ function $ft() {
   }
   return { excluded: t, excludedPrefixes: r };
 }
-function Twe(e) {
+function recallVisibleTeamMounts(e) {
   if (qxt(e) !== qxt(Ns())) return null;
   let t = new Set();
   try {
@@ -36460,7 +36460,7 @@ function Twe(e) {
   } catch {}
   return t;
 }
-function h4e(e, t) {
+function isRecallVisiblePath(e, t) {
   if (t === null) return !0;
   let r = e.split(/[\\/]/);
   if (JI(r[0]) === "team") return r.length < 3 || t.has(r[1]);
@@ -36472,14 +36472,14 @@ function Gje(e, t, r) {
     (t
       ? !t.excluded.has(e) && !t.excludedPrefixes.some((o) => e.startsWith(o))
       : u_r(e) !== "MEMORY.md") &&
-    h4e(e, r)
+    isRecallVisiblePath(e, r)
   );
 }
-function DGn(e) {
+function isRecallCorpusFile(e) {
   let t = Ns(),
     r = ebr(t, e);
   return (
-    r.endsWith(".md") && !r.startsWith("..") && !d_r(r) && Gje(r, $ft(), Twe(t))
+    r.endsWith(".md") && !r.startsWith("..") && !d_r(r) && Gje(r, loadedIndexExclusions(), recallVisibleTeamMounts(t))
   );
 }
 var rbr = 120;
@@ -36491,14 +36491,14 @@ function Yxt(e) {
   }
   return null;
 }
-async function $un(e, t, r = {}, o) {
+async function scanMemoryHeaders(e, t, r = {}, o) {
   if (o) {
     let I = U$(e);
     if (I !== void 0 && (await UCe(e)))
       return await ubr(o, I, e, t, r.regularFilesOnly ?? !1);
   }
-  let d = $ft(),
-    p = Twe(e),
+  let d = loadedIndexExclusions(),
+    p = recallVisibleTeamMounts(e),
     E = (await obr(e, r.regularFilesOnly ?? !1)).filter((I) => Gje(I, d, p));
   return (
     await Promise.allSettled(
@@ -36526,9 +36526,9 @@ async function $un(e, t, r = {}, o) {
     .map((I) => I.value)
     .sort((I, D) => D.mtimeMs - I.mtimeMs);
 }
-async function tUt(e, t, r) {
+async function scanMemoryFiles(e, t, r) {
   try {
-    let o = (await $un(e, t, {}, r)).slice(0, nbr);
+    let o = (await scanMemoryHeaders(e, t, {}, r)).slice(0, nbr);
     return (y("memory_scan"), o);
   } catch (o) {
     return (
@@ -36646,8 +36646,8 @@ function cbr(e, t) {
 `);
 }
 async function ubr(e, t, r, o, d) {
-  let p = $ft(),
-    _ = Twe(r),
+  let p = loadedIndexExclusions(),
+    _ = recallVisibleTeamMounts(r),
     C = (await lbr(e, t, d)).filter((D) => Gje(D.relativePath, p, _));
   return (
     await Promise.allSettled(
@@ -36684,7 +36684,7 @@ async function ubr(e, t, r, o, d) {
     .map((D) => D.value)
     .sort((D, N) => N.mtimeMs - D.mtimeMs);
 }
-function nUt(e) {
+function formatMemoryManifest(e) {
   return e.map((t) => {
     let r = t.type ? `[${t.type}] ` : "",
       o = new Date(t.mtimeMs).toISOString(),
@@ -50185,7 +50185,7 @@ import * as NS from "path";
 import { spawn as dPr, spawnSync as fPr } from "child_process";
 import { once as pPr } from "events";
 import { fileURLToPath as mPr } from "url";
-class fd extends Error {
+class WindowsSandboxError extends Error {
   constructor(e, t, r) {
     super(t);
     ((this.name = "WindowsSandboxError"),
@@ -50204,12 +50204,12 @@ function Dze(e) {
   if (e === void 0 || e === null) return r;
   if (typeof e === "object") {
     if (!NS.win32.isAbsolute(e.exe))
-      throw new fd(
+      throw new WindowsSandboxError(
         "bin_shell_invalid",
         `binShell.exe must be an absolute path (got ${JSON.stringify(e.exe)})`,
       );
     if (!Array.isArray(e.args))
-      throw new fd(
+      throw new WindowsSandboxError(
         "bin_shell_invalid",
         `binShell.args must be an array (got ${JSON.stringify(e.args)})`,
       );
@@ -50219,7 +50219,7 @@ function Dze(e) {
     d = o.toLowerCase(),
     p = NS.win32.isAbsolute(e);
   if (!p && e !== o)
-    throw new fd(
+    throw new WindowsSandboxError(
       "bin_shell_invalid",
       `binShell string must be a bare token or an absolute path (got ${JSON.stringify(e)})`,
     );
@@ -50229,7 +50229,7 @@ function Dze(e) {
     case "sh":
     case "sh.exe":
       if (!p)
-        throw new fd(
+        throw new WindowsSandboxError(
           "bin_shell_invalid",
           `binShell bash path must be absolute (got ${JSON.stringify(e)}); pass the resolved Git Bash install path`,
         );
@@ -50255,7 +50255,7 @@ function Dze(e) {
     case "cmd.exe":
       return p ? { exe: e, args: r.args } : r;
     default:
-      throw new fd(
+      throw new WindowsSandboxError(
         "bin_shell_invalid",
         `unrecognised binShell ${JSON.stringify(e)}: expected 'cmd' | 'powershell' | 'pwsh' or an absolute path to bash.exe/sh.exe/pwsh.exe/powershell.exe`,
       );
@@ -50276,12 +50276,12 @@ var hPr = { x64: "x64", arm64: "arm64" },
 var Nze = "--srt-win";
 function dP(e) {
   if (e?.path === void 0)
-    throw new fd(
+    throw new WindowsSandboxError(
       "srt_win_not_found",
       "no srt-win path configured; set windows.srtWin.path (e.g. to the exported VENDORED_SRT_WIN_EXE constant for the packaged binary)",
     );
   if (!mS.existsSync(e.path))
-    throw new fd(
+    throw new WindowsSandboxError(
       "srt_win_not_found",
       `windows.srtWin.path is set to '${e.path}' but the file does not exist`,
     );
@@ -50297,13 +50297,13 @@ function ste(e, t = {}) {
     });
   if (d.error) {
     if (d.error.code === "ETIMEDOUT")
-      throw new fd(
+      throw new WindowsSandboxError(
         "srt_win_timeout",
         `srt-win ${e.join(" ")} timed out after ${t.timeoutMs ?? 15000}ms` +
           (d.signal ? ` (killed by ${d.signal})` : ""),
         e[0],
       );
-    throw new fd(
+    throw new WindowsSandboxError(
       "spawn_failed",
       `srt-win ${e[0]}: spawn failed: ${d.error.message}`,
       e[0],
@@ -50336,7 +50336,7 @@ function Lze(e, t = {}) {
       E.once("error", (F) => {
         (clearTimeout(I),
           _(
-            new fd(
+            new WindowsSandboxError(
               "spawn_failed",
               `srt-win ${e[0]}: spawn failed: ${F.message}`,
               e[0],
@@ -50346,7 +50346,7 @@ function Lze(e, t = {}) {
       E.once("close", (F, U) => {
         if ((clearTimeout(I), C)) {
           _(
-            new fd(
+            new WindowsSandboxError(
               "srt_win_timeout",
               `srt-win ${e.join(" ")} timed out after ${d}ms` +
                 (U ? ` (killed by ${U})` : ""),
@@ -50361,7 +50361,7 @@ function Lze(e, t = {}) {
 }
 function jNt(e, t) {
   if (t.status !== 0)
-    throw new fd(
+    throw new WindowsSandboxError(
       "srt_win_nonzero",
       `srt-win ${e.join(" ")} exited ${t.status}: ${t.stderr || t.stdout}`,
       e[0],
@@ -50369,7 +50369,7 @@ function jNt(e, t) {
   try {
     return JSON.parse(t.stdout);
   } catch (r) {
-    throw new fd(
+    throw new WindowsSandboxError(
       "srt_win_bad_json",
       `srt-win ${e.join(" ")}: unparseable JSON output ${JSON.stringify(t.stdout)}: ${r.message}`,
       e[0],
@@ -50388,7 +50388,7 @@ function GNt(e, t) {
   try {
     o = JSON.parse(r.stdout);
   } catch (d) {
-    throw new fd(
+    throw new WindowsSandboxError(
       "srt_win_bad_json",
       `srt-win ${e.join(" ")}: unparseable JSON output ${JSON.stringify(r.stdout)}: ${d.message}`,
       e[0],
@@ -50428,7 +50428,7 @@ function Bze(e) {
     ...(e.ca_cert_pem && { caCertPem: e.ca_cert_pem }),
   };
 }
-async function Y4e(e = {}) {
+async function checkWindowsSandboxStatusAsync(e = {}) {
   let t = ["status"];
   if (e.sublayerGuid) t.push("--sublayer-guid", e.sublayerGuid);
   let r = await Fze(t, { srtWin: e.srtWin });
@@ -50456,7 +50456,7 @@ async function VNt(e = {}) {
       _.close();
     }
     if (!t)
-      throw new fd(
+      throw new WindowsSandboxError(
         "wfp_verify_bind_failed",
         `verifyWindowsWfpEgress: could not bind a loopback listener outside the WFP permit range [${o},${d}] in 5 attempts`,
       );
@@ -50473,7 +50473,7 @@ async function VNt(e = {}) {
     try {
       d = JSON.parse(o.stdout);
     } catch {
-      throw new fd(
+      throw new WindowsSandboxError(
         "wfp_verify_unparseable",
         "WFP egress fence could not be verified \u2014 `srt-win wfp " +
           `verify\` exited ${o.status}` +
@@ -50482,13 +50482,13 @@ async function VNt(e = {}) {
       );
     }
     if (o.status === 3)
-      throw new fd(
+      throw new WindowsSandboxError(
         "wfp_fence_inactive",
         "WFP egress fence is not active \u2014 direct outbound from the " +
           `sandbox user to ${d.target} succeeded. Re-run \`srt-win install\` (one UAC prompt). (${o.stderr})`,
       );
     if (o.status !== 0)
-      throw new fd(
+      throw new WindowsSandboxError(
         "wfp_verify_inconclusive",
         "WFP egress fence could not be verified \u2014 probe to " +
           `${d.target} was '${d.egress_probe}' (exit ${o.status}). The fence may be absent. Re-run \`srt-win install\`. (${o.stderr})`,
@@ -50523,7 +50523,7 @@ function bPr(e, t) {
     ),
     t.status !== 0)
   )
-    throw new fd(
+    throw new WindowsSandboxError(
       "trust_ca_failed",
       `srt-win user trust-ca '${e}' failed (exit ${t.status}): ${t.stderr || t.stdout}`,
     );
@@ -50533,7 +50533,7 @@ function Hze() {
   if (!e) throw Error("ProgramData is not set");
   return NS.win32.join(e, "sandbox-runtime");
 }
-async function J4e(e = {}) {
+async function ensurePersistentWindowsCa(e = {}) {
   let t = e.status ?? (await W_e({ srtWin: e.srtWin }));
   if (!t.provisioned || !t.credPresent)
     throw Error(
@@ -50656,8 +50656,8 @@ function kPr(e) {
   return t;
 }
 function wPr(e) {
-  if (e instanceof fd && e.code === "srt_win_timeout")
-    throw new fd(
+  if (e instanceof WindowsSandboxError && e.code === "srt_win_timeout")
+    throw new WindowsSandboxError(
       "install_timeout",
       "srt-win install timed out \u2014 the UAC prompt may still be open. " +
         `Re-run when ready to grant elevation. (${e.message})`,
@@ -50673,33 +50673,33 @@ function EPr(e) {
   let t = e.stderr || e.stdout;
   switch (e.status) {
     case 12:
-      throw new fd(
+      throw new WindowsSandboxError(
         "install_wfp_failed",
         `srt-win install: WFP filter install failed: ${t}`,
       );
     case 14:
-      throw new fd(
+      throw new WindowsSandboxError(
         "install_user_failed",
         `srt-win install: sandbox user provisioning failed: ${t}`,
       );
     case 13:
-      throw new fd(
+      throw new WindowsSandboxError(
         "install_config_conflict",
         `srt-win install: filters already exist under this sublayer with a different port range or sandbox-user name. Pass {force: true} to replace, or pick a different sublayerGuid. Output: ${t}`,
       );
     case 17:
-      throw new fd(
+      throw new WindowsSandboxError(
         "install_ambient_failed",
         `srt-win install: ambient write-deny stamping failed (stock world-writable system dirs could not be deny-stamped for the sandbox user): ${t}`,
       );
     default:
-      throw new fd(
+      throw new WindowsSandboxError(
         "install_failed",
         `srt-win install failed (exit ${e.status}): ${t}`,
       );
   }
 }
-async function TBt(e = {}) {
+async function installWindowsSandboxAsync(e = {}) {
   let t = e.srtWin ?? dP(),
     r;
   try {
@@ -50708,7 +50708,7 @@ async function TBt(e = {}) {
     wPr(d);
   }
   EPr(r);
-  let o = await Y4e({ sublayerGuid: e.sublayerGuid, srtWin: t });
+  let o = await checkWindowsSandboxStatusAsync({ sublayerGuid: e.sublayerGuid, srtWin: t });
   return r.status === 10 ? { ...o, cancelled: !0 } : o;
 }
 function jze(e, t) {
@@ -50740,7 +50740,7 @@ function YNt(e) {
       let o = JSON.parse(r);
       if (o.code === "mapped_drive_cwd")
         return Object.assign(
-          new fd(
+          new WindowsSandboxError(
             "mapped_drive_cwd",
             o.message ?? "mapped/network-drive working directory",
             "exec",
@@ -50771,7 +50771,7 @@ function XNt(e) {
     ),
     o.status !== 0)
   )
-    throw new fd(
+    throw new WindowsSandboxError(
       "acl_stamp_failed",
       `srt-win acl stamp exited ${o.status} ` +
         (o.status === 2 ? "(partial \u2014 some inputs skipped)" : "(failed)") +
@@ -50826,7 +50826,7 @@ function QNt(e) {
     ),
     o.status !== 0)
   )
-    throw new fd(
+    throw new WindowsSandboxError(
       "acl_grant_failed",
       `srt-win acl grant exited ${o.status}: ${o.stderr || o.stdout}`,
     );
@@ -50896,7 +50896,7 @@ function JNt(e) {
   p.push(E.exe, ...E.args, e.command);
   let C = p.reduce((D, N) => D + N.length + 3, 0);
   if (C > 30000)
-    throw new fd(
+    throw new WindowsSandboxError(
       "argv_too_long",
       `Windows sandbox argv is ~${C} chars (CreateProcessW limit is 32 767).`,
     );
@@ -51306,7 +51306,7 @@ async function FPr(e, t, r = !1) {
     if (!E.provisioned || !E.credPresent)
       throw (
         (ma = void 0),
-        new fd(
+        new WindowsSandboxError(
           "not_provisioned",
           `Windows sandbox user is not provisioned (user=${E.provisioned}, cred=${E.credPresent}). Run \`npx sandbox-runtime windows-install\` (one UAC prompt) to provision it.`,
         )
@@ -51321,7 +51321,7 @@ async function FPr(e, t, r = !1) {
     }
     if (d && o)
       try {
-        let C = await J4e({ status: E, srtWin: _ });
+        let C = await ensurePersistentWindowsCa({ status: E, srtWin: _ });
         Vb = eze({
           caCertPem: C.certPem,
           caKeyPem: C.keyPem,
@@ -51338,7 +51338,7 @@ async function FPr(e, t, r = !1) {
       if (!C)
         throw (
           (ma = void 0),
-          new fd(
+          new WindowsSandboxError(
             "trust_ca_not_installed",
             `tlsTerminate on Windows requires the sandbox to be installed with this CA (thumb=${I}): run \`srt-win user trust-ca ${Vb.certPath}\`. Per-exec installs into the sandbox user's Root store are not supported.`,
           )
@@ -51346,7 +51346,7 @@ async function FPr(e, t, r = !1) {
       if (C.thumb !== I)
         throw (
           (ma = void 0),
-          new fd(
+          new WindowsSandboxError(
             "trust_ca_thumbprint_mismatch",
             `tlsTerminate on Windows: the sandbox's installed CA (thumb=${C.thumb}) doesn't match this session's CA (thumb=${I}). Run \`srt-win user trust-ca ${Vb.certPath}\` to update it.`,
           )
@@ -53765,7 +53765,7 @@ class _3t extends Error {
     this.name = "SandboxBridgeUnavailableError";
   }
 }
-class Jdn extends Error {
+class SandboxUnavailableForShellError extends Error {
   constructor(e) {
     super(e);
     this.name = "SandboxUnavailableForShellError";
@@ -53777,7 +53777,7 @@ class b3t extends Error {
     this.name = "SandboxCommandTooLongError";
   }
 }
-class Zte extends Error {
+class SandboxPolicyRefusalError extends Error {
   reason;
   constructor(e, t) {
     super(e);
@@ -53785,7 +53785,7 @@ class Zte extends Error {
     this.name = "SandboxPolicyRefusalError";
   }
 }
-function Zwe(e, t) {
+function posixCovers(e, t) {
   return t === e || (e === "/" ? t.startsWith("/") : t.startsWith(`${e}/`));
 }
 function S3t(e, t, r) {
@@ -53800,8 +53800,8 @@ function S3t(e, t, r) {
   }
   return o(e);
 }
-function eVe(e, t, r) {
-  if (!Of(e)) return Zwe(e, t);
+function denyEntryCovers(e, t, r) {
+  if (!Of(e)) return posixCovers(e, t);
   let o = t;
   for (;;) {
     if (S3t(o, e, r)) return !0;
@@ -53810,7 +53810,7 @@ function eVe(e, t, r) {
     o = d;
   }
 }
-function _V(e) {
+function parseRuleForSandbox(e) {
   let t = Ett(e);
   if (t.kind !== "call" || !t.toolName || t.rawContent === "")
     return { toolName: Tu(e) };
@@ -53841,7 +53841,7 @@ function xSe(e) {
   }
   return o;
 }
-function CBt(e, t) {
+function resolvePathPatternForSandboxAt(e, t) {
   if (e.startsWith("//")) return O6(xSe(e.slice(1)));
   if (e.startsWith("/")) {
     let d = e.slice(1),
@@ -53852,10 +53852,10 @@ function CBt(e, t) {
     o = /^(?:[\\/]|~[\\/]|~$|[A-Za-z]:)/.exec(r)?.[0] ?? "";
   return O6(e.startsWith(o) ? r : `./${r}`);
 }
-function jmt(e, t) {
-  return CBt(e, CBe(t));
+function resolvePathPatternForSandbox(e, t) {
+  return resolvePathPatternForSandboxAt(e, CBe(t));
 }
-function vBt(e, t) {
+function resolveSandboxFilesystemPathAt(e, t) {
   if (e.startsWith("//")) return O6(e.slice(1));
   return O6(ot(e, t));
 }
@@ -53882,11 +53882,11 @@ function lVr(e) {
     return !1;
   }
 }
-function mX(e, t) {
-  return vBt(e, CBe(t));
+function resolveSandboxFilesystemPath(e, t) {
+  return resolveSandboxFilesystemPathAt(e, CBe(t));
 }
-function RBt(e, t) {
-  return E3t(e, mX(e, t));
+function resolveSandboxDenyReadEntry(e, t) {
+  return E3t(e, resolveSandboxFilesystemPath(e, t));
 }
 function E3t(e, t) {
   return M6(e, S2(t));
@@ -53905,7 +53905,7 @@ function cVr() {
 function boe() {
   return Hp().tenguSandboxGbConfig();
 }
-function Qdn() {
+function relatchTenguSandboxGbConfig() {
   let e = Hp();
   if (
     (e.tenguSandboxGbConfig.cache.clear?.(),
@@ -53919,7 +53919,7 @@ function y3e() {
     .map((e) => e?.sandbox?.network?.tlsTerminate)
     .find((e) => e !== void 0);
 }
-function gX() {
+function resolveWindowsTlsTerminateCaSource() {
   let e = y3e();
   if (e?.caCertPath || e?.caKeyPath)
     return {
@@ -53942,13 +53942,13 @@ function uVr(e) {
       return;
   }
 }
-function Fue() {
+function willSandboxTlsTerminate() {
   if (y3e() === void 0) return !1;
   if (P() !== "windows") return !0;
-  return gX().source !== "unavailable";
+  return resolveWindowsTlsTerminateCaSource().source !== "unavailable";
 }
-function kBt(e) {
-  let t = gX();
+function isInstalledWindowsTlsCaCurrent(e) {
+  let t = resolveWindowsTlsTerminateCaSource();
   try {
     let r =
       t.source === "trustedPair"
@@ -53992,17 +53992,17 @@ function fVr() {
 function T3t(e) {
   return typeof e === "boolean" ? e : void 0;
 }
-function Wmt() {
+function sandboxReadBlockApplies() {
   return (
-    st.isSandboxingEnabled() &&
-    AM() !== "relaxed" &&
+    SandboxManager.isSandboxingEnabled() &&
+    getEffectiveFilesystemPolicy() !== "relaxed" &&
     !Rd().some(
       (e) => e.sandbox?.filesystem?.allowManagedReadPathsOnly === !0,
     ) &&
     !Of(he())
   );
 }
-function AM() {
+function getEffectiveFilesystemPolicy() {
   if (Bu()) return "strict";
   if (P() === "windows") return "strict";
   let e = fVr();
@@ -54011,8 +54011,8 @@ function AM() {
   if (t === "relaxedIfForced") return pVr() ? "strict" : "relaxed";
   return t;
 }
-function xBt() {
-  return P() === "windows" || AM() !== "relaxed";
+function sandboxExportsChildTmpDir() {
+  return P() === "windows" || getEffectiveFilesystemPolicy() !== "relaxed";
 }
 function pVr() {
   return [
@@ -54023,7 +54023,7 @@ function pVr() {
     Nr("localSettings") ? ye("localSettings") : null,
   ].some((e) => e?.sandbox?.enabled === !0);
 }
-function ene() {
+function shouldAllowManagedSandboxDomainsOnly() {
   return Rd().some((e) => e.sandbox?.network?.allowManagedDomainsOnly === !0);
 }
 var _3e = /^[1-9][0-9]{0,4}$/;
@@ -54063,7 +54063,7 @@ function _Vr(e) {
   if (yVr(t)) return !0;
   return yoe(t.replace(/\.$/, ""));
 }
-function CM(e) {
+function isMisleadingConsentHost(e) {
   return e.includes("*") || _Vr(e);
 }
 function b3e(e) {
@@ -54124,7 +54124,7 @@ function SVr(e) {
 function kVr(e) {
   return BN(e) === 6 ? `[${e}]` : e;
 }
-function tne(e) {
+function consentHostEntry(e) {
   let t = e.replace(/\.$/, "");
   return kVr(t === e || Lb(e) !== void 0 ? t : e);
 }
@@ -54152,7 +54152,7 @@ function d3e(e, t) {
   for (let d of e) {
     for (let p of d.sandbox?.network?.[r] ?? []) o.push(p);
     for (let p of d.permissions?.[t] ?? []) {
-      let _ = _V(p);
+      let _ = parseRuleForSandbox(p);
       if (_.toolName === Cr && _.ruleContent?.startsWith("domain:"))
         o.push(_.ruleContent.substring(7));
     }
@@ -54165,7 +54165,7 @@ function f3t(e, t, r, o) {
   if (p === void 0) return !0;
   return r === void 0 ? o === "match" : p === r;
 }
-function Zdn(e, t) {
+function isHostAllowedBySandboxNetworkPolicy(e, t) {
   let r = Rd();
   if (
     x3t(C3t([...d3e([bn(), ...r], "deny"), ...[]])).some((p) =>
@@ -54173,7 +54173,7 @@ function Zdn(e, t) {
     )
   )
     return { allowed: !1, reason: `${e} is in sandbox.network.deniedDomains` };
-  if (!ene()) return { allowed: !0 };
+  if (!shouldAllowManagedSandboxDomainsOnly()) return { allowed: !0 };
   if (A3t(d3e(r, "allow")).some((p) => f3t(p, e, t, "no-match")))
     return { allowed: !0 };
   return {
@@ -54182,7 +54182,7 @@ function Zdn(e, t) {
   };
 }
 function wVr(e) {
-  if (CM(e)) {
+  if (isMisleadingConsentHost(e)) {
     n(
       `[SandboxManager] Refusing a session grant for a host srt would re-spell as ${Lb(e) ?? "(uncanonicalizable)"}`,
       { level: "warn" },
@@ -54190,7 +54190,7 @@ function wVr(e) {
     return;
   }
   let { sessionAllowedHosts: t } = Hp(),
-    r = tne(e);
+    r = consentHostEntry(e);
   if (t.has(r)) return;
   (t.add(r), woe());
 }
@@ -54404,7 +54404,7 @@ function R3t(e) {
     }
 }
 var p3t = 8388608;
-function $ue(e) {
+function canonicalizePathForMaskSweep(e) {
   let t = [],
     r = e;
   for (;;) {
@@ -54610,7 +54610,7 @@ function _oe(e) {
     for (let Rn of o) {
       for (let Ar of Rn.sandbox?.network?.allowedDomains || []) C.push(Ar);
       for (let Ar of Rn.permissions?.allow || []) {
-        let _o = _V(Ar);
+        let _o = parseRuleForSandbox(Ar);
         if (_o.toolName === Cr && _o.ruleContent?.startsWith("domain:"))
           C.push(_o.ruleContent.substring(7));
       }
@@ -54618,7 +54618,7 @@ function _oe(e) {
   else {
     for (let Rn of e.sandbox?.network?.allowedDomains || []) C.push(Rn);
     for (let Rn of r.allow || []) {
-      let Ar = _V(Rn);
+      let Ar = parseRuleForSandbox(Rn);
       if (Ar.toolName === Cr && Ar.ruleContent?.startsWith("domain:"))
         C.push(Ar.ruleContent.substring(7));
     }
@@ -54626,7 +54626,7 @@ function _oe(e) {
   }
   for (let Rn of e.sandbox?.network?.deniedDomains || []) I.push(Rn);
   for (let Rn of r.deny || []) {
-    let Ar = _V(Rn);
+    let Ar = parseRuleForSandbox(Rn);
     if (Ar.toolName === Cr && Ar.ruleContent?.startsWith("domain:"))
       I.push(Ar.ruleContent.substring(7));
   }
@@ -55007,7 +55007,7 @@ function _oe(e) {
   }
   let Kn = new Map(),
     hn = (Rn) => {
-      let Ar = epn(Rn);
+      let Ar = detectWorktreeGitCommonDir(Rn);
       if (Ar && Ar !== Me && !N.includes(Ar))
         (N.push(Ar), Kn.set(Rn, Ar), ur(Ar));
     };
@@ -55084,16 +55084,16 @@ function _oe(e) {
         for (let ws of Ar.permissions.additionalDirectories || [])
           for (let _s of Dn(ws)) ss.add(_s);
       for (let ws of d ? [] : Ar.permissions.allow || []) {
-        let _s = _V(ws);
+        let _s = parseRuleForSandbox(ws);
         if (_s.toolName === Bt && _s.ruleContent)
-          (Hs ? xo : N).push(jmt(_s.ruleContent, Rn));
+          (Hs ? xo : N).push(resolvePathPatternForSandbox(_s.ruleContent, Rn));
       }
       for (let ws of Ar.permissions.deny || []) {
-        let _s = _V(ws);
+        let _s = parseRuleForSandbox(ws);
         if (_s.toolName === Bt && _s.ruleContent)
-          U.push(M6(_s.ruleContent, S2(jmt(_s.ruleContent, Rn))));
+          U.push(M6(_s.ruleContent, S2(resolvePathPatternForSandbox(_s.ruleContent, Rn))));
         if (_s.toolName === tt && _s.ruleContent) {
-          let _u = M6(_s.ruleContent, S2(jmt(_s.ruleContent, Rn)));
+          let _u = M6(_s.ruleContent, S2(resolvePathPatternForSandbox(_s.ruleContent, Rn)));
           if ((de.push(_u), !_o)) Fn.add(_u);
         }
       }
@@ -55101,20 +55101,20 @@ function _oe(e) {
     let ys = Ar?.sandbox?.filesystem;
     if (ys) {
       for (let ws of p(Rn) ? ys.allowWrite || [] : [])
-        (Hs ? xo : N).push(mX(ws, Rn));
-      for (let ws of ys.denyWrite || []) U.push(M6(ws, S2(mX(ws, Rn))));
+        (Hs ? xo : N).push(resolveSandboxFilesystemPath(ws, Rn));
+      for (let ws of ys.denyWrite || []) U.push(M6(ws, S2(resolveSandboxFilesystemPath(ws, Rn))));
       for (let ws of ys.denyRead || []) {
-        let _s = RBt(ws, Rn);
+        let _s = resolveSandboxDenyReadEntry(ws, Rn);
         if ((de.push(_s), !_o)) Fn.add(_s);
       }
       if (!E && p(Rn))
-        for (let ws of ys.allowRead || []) (Hs ? Br : _e).push(mX(ws, Rn));
+        for (let ws of ys.allowRead || []) (Hs ? Br : _e).push(resolveSandboxFilesystemPath(ws, Rn));
     }
   }
   if (E && !d)
     for (let Rn of o)
       for (let Ar of Rn.sandbox?.filesystem?.allowRead || [])
-        _e.push(mX(Ar, "policySettings"));
+        _e.push(resolveSandboxFilesystemPath(Ar, "policySettings"));
   let ko = [],
     Ur = E
       ? "allowManagedReadPathsOnly is set"
@@ -55173,7 +55173,7 @@ function _oe(e) {
       "/Volumes/",
       "/srv/",
     ]) {
-      let Fs = mX(nl, "userSettings");
+      let Fs = resolveSandboxFilesystemPath(nl, "userSettings");
       if (Hs.some((Ef) => wh(Ef, Fs)) || (P() === "windows" && !w3t(Fs)))
         continue;
       let _f = M6(nl, S2(Fs));
@@ -55213,7 +55213,7 @@ function _oe(e) {
       }
       _e.push(nl);
     }
-    if (AM() === "relaxed")
+    if (getEffectiveFilesystemPolicy() === "relaxed")
       n(
         "Sandbox: blockReadsOutsideWorkingDirectories: the relaxed filesystem policy drops every denyRead at wrap time, so the sandbox half of the block does not apply",
       );
@@ -55248,7 +55248,7 @@ function _oe(e) {
       }
   }
   let Ir = new Map(),
-    as = AM() === "relaxed",
+    as = getEffectiveFilesystemPolicy() === "relaxed",
     eo =
       (P() === "linux" || P() === "wsl" || (P() === "macos" && as)) &&
       yi.some(
@@ -55273,17 +55273,17 @@ function _oe(e) {
           ),
           []
         );
-      return ND(Rn).map((Hs) => ({ lexical: Hs, canonical: $ue(Hs) }));
+      return ND(Rn).map((Hs) => ({ lexical: Hs, canonical: canonicalizePathForMaskSweep(Hs) }));
     },
     Rs = eo
       ? _e.flatMap((Rn) => {
           let Ar = Lg(Rn).replace(bs, "");
           return Of(Ar)
-            ? [$ue(Ar), ...Xs(Ar).map((_o) => _o.canonical)]
-            : [$ue(Ar)];
+            ? [canonicalizePathForMaskSweep(Ar), ...Xs(Ar).map((_o) => _o.canonical)]
+            : [canonicalizePathForMaskSweep(Ar)];
         })
       : [],
-    di = Zwe,
+    di = posixCovers,
     ga = new Map(),
     rl = (Rn, Ar) => S3t(Rn, Ar, ga),
     gs = (Rn, Ar, _o) => {
@@ -55297,7 +55297,7 @@ function _oe(e) {
     },
     vl = (Rn, Ar) =>
       Rs.some((_o) => (Of(_o) ? gs(_o, Rn, Ar) : $o(Rn, _o) && di(_o, Ar))),
-    $o = (Rn, Ar) => eVe(Rn, Ar, ga),
+    $o = (Rn, Ar) => denyEntryCovers(Rn, Ar, ga),
     Wo = new Set(),
     hs = new Set(),
     Ai = new Map(),
@@ -55362,11 +55362,11 @@ function _oe(e) {
       ws = Hs || ys;
     for (let _s of Ar.files ?? []) {
       if (_s.mode === "mask" && _o) continue;
-      let _u = mX(_s.path, Rn),
+      let _u = resolveSandboxFilesystemPath(_s.path, Rn),
         ff = E3t(_s.path, _u),
         Nl = _s.mode === "deny" ? ff : _u,
         nl = Lg(ff).replace(bs, ""),
-        Fs = eo ? $ue(nl) : nl;
+        Fs = eo ? canonicalizePathForMaskSweep(nl) : nl;
       if (_s.mode === "deny") ls(Fs, nl, !_o);
       let _f = Ir.get(Fs);
       if (_f?.mode === "deny") {
@@ -55593,7 +55593,7 @@ function _oe(e) {
         let c_ = [Bw(), ...N].find((zg) => {
           let bm = Lg(el(Bw(), zg)).replace(bs, "");
           if (Of(bm)) return !1;
-          let kh = $ue(bm);
+          let kh = canonicalizePathForMaskSweep(bm);
           return di(bm, Fs) || di(bm, nl) || di(kh, Fs) || di(kh, nl);
         });
         if (c_ !== void 0)
@@ -55939,10 +55939,10 @@ function _oe(e) {
         let Ar = Lg(Rn).replace(bs, ""),
           _o = Fn.has(Rn);
         if (Of(Ar)) {
-          let ys = $ue(Ar);
+          let ys = canonicalizePathForMaskSweep(Ar);
           return (ls(ys, ys, _o), ci(ys, _o));
         }
-        let Hs = $ue(Ar);
+        let Hs = canonicalizePathForMaskSweep(Ar);
         return (ls(Hs, Ar, _o), [Hs]);
       })
     : [];
@@ -56010,7 +56010,7 @@ function _oe(e) {
     jp = y2()
       .map((Rn) => Rn?.sandbox?.ripgrep)
       .find((Rn) => Rn !== void 0) ?? { command: Lc, args: ud, argv0: uu },
-    Wm = HBt(),
+    Wm = isScrubOnlySandboxMode(),
     oh = Wm
       ? { allowedDomains: void 0, deniedDomains: [], allowAllUnixSockets: !0 }
       : {
@@ -56035,7 +56035,7 @@ function _oe(e) {
     gm = !1;
   if (!Wm && oh.tlsTerminate === void 0 && Gm !== void 0)
     if (P() === "windows") {
-      let Rn = uVr(gX());
+      let Rn = uVr(resolveWindowsTlsTerminateCaSource());
       if (Rn !== void 0) oh.tlsTerminate = Rn;
       else
         n(
@@ -56048,7 +56048,7 @@ function _oe(e) {
       allowRead: Y(_e),
       allowWrite: Y(N),
       denyWrite: Y(U),
-      ...(AM() === "relaxed" && { disabled: !0 }),
+      ...(getEffectiveFilesystemPolicy() === "relaxed" && { disabled: !0 }),
     },
     Zb = new Set();
   for (let Rn of new Set([xe, Me]))
@@ -56120,12 +56120,12 @@ function F3t() {
     stagingDirGitignoreFired: !1,
   });
 }
-function szn(e, t) {
+function addSandboxAllowWriteDirectory(e, t) {
   let { runtimeAllowWriteDirectories: r } = Hp();
   if (r.get(t) === e) return;
   (r.set(t, e), woe());
 }
-function izn(e) {
+function removeSandboxAllowWriteDirectory(e) {
   if (Hp().runtimeAllowWriteDirectories.delete(e)) woe();
 }
 function MVr() {
@@ -56396,7 +56396,7 @@ function BVr() {
   ),
     D6(o));
 }
-function epn(e) {
+function detectWorktreeGitCommonDir(e) {
   let t = I_(e, ".git");
   try {
     if (R0(t, e)) return null;
@@ -56476,19 +56476,19 @@ function HVr() {
     o = Am.checkDependencies({ command: t, args: r });
   return q3t(o);
 }
-function eTe() {
+function shouldForceSandboxOn() {
   if (!boe().disableNoSandbox) return !1;
   return !Bu() && !Ie(a.IS_SANDBOX) && !ry.getIsBubblewrapSandbox();
 }
 function sG() {
   try {
-    if (eTe()) return !0;
+    if (shouldForceSandboxOn()) return !0;
     return bn()?.sandbox?.enabled ?? !1;
   } catch (e) {
     return (n(`Failed to get settings for sandbox check: ${e}`), !1);
   }
 }
-function HBt() {
+function isScrubOnlySandboxMode() {
   return Bu() && s6() && !sG();
 }
 function K3t() {
@@ -56651,7 +56651,7 @@ function KVr() {
       ...(r.allow || []).map((E) => [E, !1]),
       ...(r.deny || []).map((E) => [E, !0]),
     ]) {
-      let E = _V(p);
+      let E = parseRuleForSandbox(p);
       if (
         (E.toolName === Bt || E.toolName === tt) &&
         E.ruleContent &&
@@ -56717,16 +56717,16 @@ function XVr() {
     return (n(`Failed to get injectHosts entry warnings: ${e}`), []);
   }
 }
-function HDe(e) {
+function isSandboxSettingOverriddenByPolicy(e) {
   return ["flagSettings", "policySettings"].some(
     (t) => ye(t)?.sandbox?.[e] !== void 0,
   );
 }
 function eYt() {
   return (
-    HDe("enabled") ||
-    HDe("autoAllowBashIfSandboxed") ||
-    HDe("allowUnsandboxedCommands")
+    isSandboxSettingOverriddenByPolicy("enabled") ||
+    isSandboxSettingOverriddenByPolicy("autoAllowBashIfSandboxed") ||
+    isSandboxSettingOverriddenByPolicy("allowUnsandboxedCommands")
   );
 }
 async function QVr(e) {
@@ -56788,7 +56788,7 @@ function ZVr(e) {
     );
   return e;
 }
-function azn(e, t) {
+function classifyWindowsSandboxLaunchExit(e, t) {
   if (e !== 16) return;
   let r = YNt(t);
   if (r?.code !== "mapped_drive_cwd") return;
@@ -56850,7 +56850,7 @@ async function oYt(e) {
   if (!LSe()) return;
   let r = e
       ? async (d) => {
-          if (ene())
+          if (shouldAllowManagedSandboxDomainsOnly())
             return (
               n(
                 `[sandbox] Blocked network request to ${d.host} (allowManagedDomainsOnly)`,
@@ -56923,7 +56923,7 @@ function woe() {
 async function rKr() {
   return (p3e?.settingsSubscriptionCleanup?.(), (p3e = void 0), Am.reset());
 }
-function tpn(e, t) {
+function addToExcludedCommands(e, t) {
   let r = e;
   if (t) {
     let d = t.filter(
@@ -56936,7 +56936,7 @@ function tpn(e, t) {
   }
   let o =
     P() === "windows" &&
-    st.isStrictSandboxModeConfigured() &&
+    SandboxManager.isStrictSandboxModeConfigured() &&
     Nr("userSettings")
       ? "userSettings"
       : "localSettings";
@@ -56950,7 +56950,7 @@ function tpn(e, t) {
     { commandPattern: r, settingsSource: o }
   );
 }
-var st = {
+var SandboxManager = {
   initialize: oYt,
   isSandboxingEnabled: LSe,
   isSandboxEnabledInSettings: sG,
@@ -57173,12 +57173,12 @@ function $X(e, t, r) {
   let d = [];
   for (let p of o?.permissions?.allow ?? [])
     try {
-      let _ = _V(p);
-      if (_.toolName === Bt && _.ruleContent) d.push(jmt(_.ruleContent, e));
+      let _ = parseRuleForSandbox(p);
+      if (_.toolName === Bt && _.ruleContent) d.push(resolvePathPatternForSandbox(_.ruleContent, e));
     } catch {}
   for (let p of o?.sandbox?.filesystem?.allowWrite ?? [])
     try {
-      d.push(mX(p, e));
+      d.push(resolveSandboxFilesystemPath(p, e));
     } catch {}
   for (let p of o?.permissions?.additionalDirectories ?? [])
     try {
@@ -57192,7 +57192,7 @@ function Sde(e) {
     t.push(...gx());
   } catch {}
   try {
-    let r = epn(e);
+    let r = detectWorktreeGitCommonDir(e);
     if (r) t.push(r);
   } catch {}
   for (let r of mp())
@@ -58099,7 +58099,7 @@ var HKr = [
   "RES_OPTIONS",
 ];
 async function jKr() {
-  let { SandboxManager: e } = await import("../../02-功能模块/MCP客户端/SandboxManager.creds2pz.js");
+  let { SandboxManager: e } = await Promise.resolve({ SandboxManager });
   if (!e.isSandboxingEnabled()) return;
   await e.waitForNetworkInitialization();
   let t = e.getProxyPort();
@@ -58231,7 +58231,7 @@ async function Toe(e, t, r, o, d = Jd, p) {
     );
   }
 }
-var J7n = { execCommand: gXn, execHttp: Toe },
+var J7n = { execCommand: execCommandHookForDevice, execHttp: Toe },
   qKr = [
     ["safe.bareRepository", "explicit"],
     ["core.hooksPath", "/dev/null"],
@@ -58381,7 +58381,7 @@ function VKr(
         blocked: ng(re),
       };
     }
-    let { json: N, validationError: F } = D9t(e.body);
+    let { json: N, validationError: F } = parseHttpHookOutput(e.body);
     if (F !== void 0 || N === void 0)
       return {
         answer: {},
@@ -58405,9 +58405,9 @@ function VKr(
   }
   let _ =
       e.status === 2 &&
-      k_n({ hookEvent: t, stdout: e.stdout, stderr: e.stderr }),
+      exitTwoMeansMissingScript({ hookEvent: t, stdout: e.stdout, stderr: e.stderr }),
     E = t !== "Stop" && t !== "SubagentStop" && t !== "StopFailure";
-  if (R_n(e.stdout)) {
+  if (announcedAsync(e.stdout)) {
     if (e.status === 2 && !_ && E)
       return {
         answer: L6(t, `[${r}]: ${e.stderr || "No stderr output"}`),
@@ -58423,12 +58423,12 @@ function VKr(
           blocked: !1,
         };
   }
-  let { json: C, plainText: I, validationError: D } = d8e(e.stdout);
+  let { json: C, plainText: I, validationError: D } = parseHookOutput(e.stdout);
   if (D !== void 0 && e.status !== 2)
     return {
       answer: {},
       exitClass: e.status === 0 ? "0" : "other",
-      localWarning: `[${r}]: ${XB(O9t(D, e.status, e.stderr), "hook JSON output failed validation")}`,
+      localWarning: `[${r}]: ${XB(withHookStderr(D, e.status, e.stderr), "hook JSON output failed validation")}`,
       blocked: !1,
     };
   if (C !== void 0) {
@@ -59005,7 +59005,7 @@ function gre(e) {
   return b(e).replace(T4r, (t) => (t === "\u2028" ? "\\u2028" : "\\u2029"));
 }
 var x4r = 1044480,
-  u_n = {
+  DEVICE_HOOK_DEFAULT_S = {
     PreToolUse: 15,
     PostToolUse: 15,
     PostToolUseFailure: 15,
@@ -59021,12 +59021,12 @@ var x4r = 1044480,
   A4r = 5000,
   R4r = 30;
 function f8t(e) {
-  return (e.timeoutS ?? u_n[e.event]) * 1000 + A4r;
+  return (e.timeoutS ?? DEVICE_HOOK_DEFAULT_S[e.event]) * 1000 + A4r;
 }
 function P4r(e) {
   return Math.ceil(f8t(e) / 1000) + R4r;
 }
-function eyr(e) {
+function createDeviceHookForwarder(e) {
   let t = e.install ?? v9t,
     r = e.remove ?? R9t,
     o = new Set(),
@@ -59197,7 +59197,7 @@ function eyr(e) {
     },
   };
 }
-function tyr(e, t) {
+function productionForwarderTimer(e, t) {
   let r = setTimeout(e, t);
   return (r.unref(), { clear: () => clearTimeout(r) });
 }
@@ -59896,7 +59896,7 @@ function lXn(e) {
         };
       }
       let en = e.toolAliases?.();
-      if (!hXn(Wt.data, xe.local.matcher, en))
+      if (!hookMatcherMatches(Wt.data, xe.local.matcher, en))
         return { answer: {}, telemetry: { ...je, outcome: "event_mismatch" } };
       let tn = d8t(
           Wt.data,
@@ -60616,7 +60616,7 @@ function n5r(e) {
   );
 }
 function cXn(e) {
-  return u_n[e] * 1000;
+  return DEVICE_HOOK_DEFAULT_S[e] * 1000;
 }
 var r5r =
     /^(?:PATH|CDPATH|PYTHONPATH|PYTHONHOME|NODE_PATH|RUBYLIB|PERL5LIB|PERLLIB|GEM_PATH|GEM_HOME|CLASSPATH|LD_LIBRARY_PATH|DYLD_\w+)$/,
@@ -62252,7 +62252,7 @@ function w5r() {
     servedSettingsChanged: Le(),
   };
 }
-var aD = new j(w5r);
+var deviceHooksProcessMemories = new j(w5r);
 function q8t(e, t, r) {
   let o = e.get(t);
   if (o !== void 0) return o;
@@ -63149,10 +63149,10 @@ function IF(e) {
 function due(e) {
   return (e.getIsResponseStreaming?.() ?? e.isMidTurn) === !0;
 }
-function qo(e) {
+function getCommandName(e) {
   return e.userFacingName?.() ?? e.name;
 }
-function zp(e) {
+function isCommandEnabled(e) {
   return e.isEnabled?.() ?? !0;
 }
 function wwe(e, t) {
@@ -63177,9 +63177,9 @@ function mue(e) {
   return { name: t.slice(0, r), args: t.slice(r + 1).trim() };
 }
 function V5r(e, t) {
-  return e.name === t || qo(e) === t || (e.aliases?.includes(t) ?? !1);
+  return e.name === t || getCommandName(e) === t || (e.aliases?.includes(t) ?? !1);
 }
-function Di(e, t) {
+function findCommand(e, t) {
   let r;
   return (
     t.find((d) => {
@@ -63189,8 +63189,8 @@ function Di(e, t) {
     }) ?? r
   );
 }
-function B9(e, t) {
-  return Di(e, t) !== void 0;
+function hasCommand(e, t) {
+  return findCommand(e, t) !== void 0;
 }
 function oV(e, t) {
   if (t.trim() === "") return !1;
@@ -63210,11 +63210,11 @@ function CXt(e, t, { pastedTexts: r = [] } = {}) {
   }
   if (!o.startsWith("/")) return !1;
   let { name: d, args: p } = mue(o.replace(Y5r, "$1 [")),
-    _ = Di(d, t);
+    _ = findCommand(d, t);
   if (!_?.isSensitive) return rYe(o.slice(1));
   return oV(_, p) || (r.length > 0 && K5r.test(p));
 }
-function V7(e, t) {
+function filterSkillCommandsByAllowlist(e, t) {
   if (t === void 0) return e;
   return e.filter((r) =>
     t.some(
@@ -63228,13 +63228,13 @@ function V7(e, t) {
     ),
   );
 }
-function gue(e, t) {
-  let r = Di(e, t);
+function getCommand(e, t) {
+  let r = findCommand(e, t);
   if (!r)
     throw ReferenceError(
       `Command ${e} not found. Available commands: ${t
         .map((o) => {
-          let d = qo(o);
+          let d = getCommandName(o);
           return o.aliases ? `${d} (aliases: ${o.aliases.join(", ")})` : d;
         })
         .sort((o, d) => o.localeCompare(d))
@@ -64279,7 +64279,7 @@ function qdn() {
 }
 import { randomUUID as S6r } from "crypto";
 var k6r = (e) => {
-    jyt(e);
+    recordQueueOperation(e);
   },
   ike = { now: 0, next: 1, later: 2 };
 function lYe(e) {
@@ -65160,14 +65160,14 @@ function z7(e, t) {
   return (lke(r, t), Boe(e, r));
 }
 function u0(e, t) {
-  (e.add(Kj(t.name)), e.add(Kj(qo(t))));
+  (e.add(Kj(t.name)), e.add(Kj(getCommandName(t))));
   for (let r of t.aliases ?? []) e.add(Kj(r));
 }
 function lke(e, t) {
   for (let r of t) if (r.loadedFrom !== "syncedSkills") u0(e, r);
 }
 function dYe(e, t) {
-  return [e.name, qo(e), ...(e.aliases ?? [])]
+  return [e.name, getCommandName(e), ...(e.aliases ?? [])]
     .map(Kj)
     .some(
       (o) => o === "" || o.includes(":") || o.startsWith("mcp__") || t.has(o),
@@ -65759,11 +65759,11 @@ var j7t = "tengu_review_bughunter_config";
 function kte() {
   return H(j7t, null);
 }
-function q7() {
+function getReviewCostNote() {
   let e = kte()?.cost_note;
   return typeof e === "string" && e.length > 0 ? e : "$10-$20";
 }
-function HF() {
+function getReviewDurationNote() {
   let e = kte()?.duration_note;
   return typeof e === "string" && e.length > 0 ? e : "~10\u201320 min";
 }
@@ -74370,7 +74370,7 @@ var MXr = new j(() => new IZt());
 function f8() {
   return MXr.of(B().host).isEnabled();
 }
-function zte() {
+function getBuiltInAgents() {
   let e = Ave();
   if (e === "none") return [];
   if (e === "coordinator") {
@@ -74382,7 +74382,7 @@ function zte() {
   let t = [O2];
   if (!Hr()) t.push(xZt);
   if (!A$e()) {
-    let { CLAUDE_AGENT: o } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/CLAUDE_AGENT.xajrmb62.js");
+    let { CLAUDE_AGENT: o } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js");
     t.push(o);
   }
   if (f8()) t.push(b0, vve);
@@ -74396,10 +74396,10 @@ function zte() {
   return t;
 }
 var OZt = m(() => $e([s(), fe(s(), Lq())]));
-function Fdn(e) {
+function agentMcpSource(e) {
   return e.fromAdditionalDirectory ? "additionalDirectory" : e.source;
 }
-function $dn(e) {
+function agentMcpSpecsToScopedConfigs(e) {
   if (!e.mcpServers?.length) return {};
   if (Eve(e)) return (bDe(e, "mainThread", "mcpServers"), {});
   if (Uu("mcp") && !r6(e.source))
@@ -74435,7 +74435,7 @@ function $dn(e) {
       );
       continue;
     }
-    t[d] = { ...p, scope: "agent", agentSource: Fdn(e) };
+    t[d] = { ...p, scope: "agent", agentSource: agentMcpSource(e) };
   }
   return t;
 }
@@ -74473,23 +74473,23 @@ var DZt = m(() =>
     }),
   ),
   NZt = m(() => fe(s(), DZt()));
-function V4e(e) {
+function toAgentInfos(e) {
   return e.map((t) => ({
     name: t.agentType,
     description: t.whenToUse,
     model: t.model,
   }));
 }
-function xa(e) {
+function isBuiltInAgent(e) {
   return e.source === "built-in";
 }
-function K4e(e) {
+function isCustomAgent(e) {
   return e.source !== "built-in" && e.source !== "plugin";
 }
-function pX(e) {
+function isPluginAgent(e) {
   return e.source === "plugin";
 }
-function qF(e) {
+function getActiveAgentsFromList(e) {
   let t = e.filter((D) => D.source === "built-in"),
     r = e.filter((D) => D.source === "plugin"),
     o = e.filter((D) => D.source === "userSettings"),
@@ -74521,7 +74521,7 @@ function Hv(e) {
 }
 function NXr(e) {
   if (e.filePath) return e.filePath;
-  if (pX(e)) return `plugin '${e.plugin}'`;
+  if (isPluginAgent(e)) return `plugin '${e.plugin}'`;
   if (e.baseDir && e.filename) return `${e.baseDir}/${e.filename}.md`;
   return e.source;
 }
@@ -74548,19 +74548,19 @@ function LXr(e, t) {
   }
   return d.sort((p, _) => p.agentType.localeCompare(_.agentType));
 }
-function Lue(e, t) {
-  return { ...e, allAgents: t, activeAgents: qF(t) };
+function rebuildAgentDefinitions(e, t) {
+  return { ...e, allAgents: t, activeAgents: getActiveAgentsFromList(t) };
 }
-function Udn(e, t) {
+function hasRequiredMcpServers(e, t) {
   if (!e.requiredMcpServers || e.requiredMcpServers.length === 0) return !0;
   return e.requiredMcpServers.every((r) =>
     t.some((o) => o.toLowerCase().includes(r.toLowerCase())),
   );
 }
-function Zqn(e, t) {
-  return e.filter((r) => Udn(r, t));
+function filterAgentsByMcpRequirements(e, t) {
+  return e.filter((r) => hasRequiredMcpServers(r, t));
 }
-function SE(e, t) {
+function getAgentDefinitionsWithOverrides(e, t) {
   let r = wo().agentDefinitions,
     o = r.get(e);
   if (o !== void 0) return o;
@@ -74569,7 +74569,7 @@ function SE(e, t) {
 }
 async function FXr(e, t) {
   if (Xr("agents")) {
-    let r = zte();
+    let r = getBuiltInAgents();
     return { activeAgents: r, allAgents: r };
   }
   try {
@@ -74597,8 +74597,8 @@ async function FXr(e, t) {
         })
         .filter((I) => I !== null),
       p = await fBt(t).catch((I) => (h(I), [])),
-      E = [...zte(), ...p, ...o],
-      C = qF(E);
+      E = [...getBuiltInAgents(), ...p, ...o],
+      C = getActiveAgentsFromList(E);
     for (let I of LXr(E, C))
       n(
         `[agents] Duplicate agent name '${I.agentType}' (${I.source}): ${I.locations.join(", ")}${I.oneIsActive ? ` \u2014 active: ${I.locations[0]}` : ""}`,
@@ -74613,11 +74613,11 @@ async function FXr(e, t) {
   } catch (r) {
     let o = r instanceof Error ? r.message : String(r);
     (n(`Error loading agent definitions: ${o}`), h(r));
-    let d = zte();
+    let d = getBuiltInAgents();
     return { activeAgents: d, allAgents: d };
   }
 }
-function D2() {
+function clearAgentDefinitionsCache() {
   (wo().agentDefinitions.clear(), wo().markdownFiles.clear(), Tve());
 }
 function $Xr(e) {
@@ -74721,7 +74721,7 @@ function UXr(e, t, r = "flagSettings") {
     );
   }
 }
-function X4e(e, t = "flagSettings") {
+function parseAgentsFromJson(e, t = "flagSettings") {
   try {
     let r = NZt().parse(e);
     return Object.entries(r)
@@ -74740,7 +74740,7 @@ function MZt(e) {
   return [...e.slice(0, R9e), `\u2026and ${e.length - R9e} more`].join(`
 `);
 }
-function Bdn(e) {
+function validateAgentsJson(e) {
   let t;
   try {
     t = z(cs(e));
@@ -76397,23 +76397,23 @@ function len(e) {
 import { lstatSync as N7r, realpathSync as L7r } from "fs";
 import { homedir as F7r } from "os";
 import { isAbsolute as W9e, join as $7r } from "path";
-async function vX() {
-  return Iy() && (await Su());
+async function isRemoteToolForwardingEnabled() {
+  return isRemoteToolForwardingSwitchOn() && (await Su());
 }
-function xTe() {
-  return Iy() && ri();
+function isRemoteToolForwardingEnabledCached() {
+  return isRemoteToolForwardingSwitchOn() && ri();
 }
-function Iy() {
+function isRemoteToolForwardingSwitchOn() {
   return !1;
 }
-function YF() {
+function isSessionChannelDisabled() {
   return Wn.CLAUDE_CODE_REMOTE_TOOLS_SESSION_CHANNEL === !1;
 }
-function Upn() {
-  return eLe() === void 0;
+function isRemoteToolServingSwitchOn() {
+  return remoteToolServingOffReason() === void 0;
 }
 var B7r = "tengu_violin_mute";
-function m3() {
+function isRemoteToolServingMuted() {
   try {
     return H(B7r, !1) === !0;
   } catch {
@@ -76428,7 +76428,7 @@ function H7r(e) {
     h(ge(t));
   }
 }
-function AV(e) {
+function onServingMuteRecheck(e) {
   let t = Ff(e),
     r = setInterval(H7r, Math.round(U7r * (0.8 + Math.random() * 0.4)), e);
   return (
@@ -76438,20 +76438,20 @@ function AV(e) {
     }
   );
 }
-function eLe(e = he(), t = {}) {
+function remoteToolServingOffReason(e = he(), t = {}) {
   return "external_build";
 }
 function j7r() {
   let e = Wn.CLAUDE_CODE_REMOTE_TOOLS_SERVE;
   return e === void 0 || Ie(e);
 }
-function I2t(e = he()) {
+function launchedFromHome(e = he()) {
   let t = Kf,
     r = F7r(),
     o = be(),
     d = A_();
   if (!W9e(r) || !W9e(o) || !W9e(d)) return !0;
-  let p = Bpn(e),
+  let p = realpathOrSpelling(e),
     _ = e === p ? [e] : [e, p],
     E = _.map((V) => k0(V)).filter((V) => V !== null);
   if (
@@ -76466,10 +76466,10 @@ function I2t(e = he()) {
     return !0;
   let C = E.flatMap((V) => [V, vA(V)])
       .filter((V) => V !== null)
-      .flatMap((V) => [V, Bpn(V)]),
+      .flatMap((V) => [V, realpathOrSpelling(V)]),
     I = [..._, ...C],
     D = I.map(t),
-    N = [r, Bpn(r)],
+    N = [r, realpathOrSpelling(r)],
     F = N.map(t),
     U = ZN(g8()).map(t);
   return (
@@ -76478,14 +76478,14 @@ function I2t(e = he()) {
     I.some((V) => czt(V, N))
   );
 }
-function Bpn(e) {
+function realpathOrSpelling(e) {
   try {
     return L7r(e);
   } catch {
     return e;
   }
 }
-function P2t() {
+function remoteToolServingPolicyName() {
   let e = Wn.CLAUDE_CODE_REMOTE_TOOLS_POLICY;
   return e === void 0 || e === "parity" ? "parity" : "interim";
 }
@@ -79679,10 +79679,10 @@ function mCe(e, t, r) {
     return ` (this path differs from the registered spelling only by letter case \u2014 respell it to match ${r} exactly)`;
   return "";
 }
-function EX() {
+function hasWorktreeCreateHook() {
   return D$("WorktreeCreate").length > 0;
 }
-function k4n() {
+function hasWorktreeRemoveHook() {
   return D$("WorktreeRemove").length > 0;
 }
 function sde(e) {
@@ -79790,7 +79790,7 @@ function XF(e, t) {
       d = ok(e),
       p = ok(o);
     if (!oL(d, p)) return null;
-    if (!tr(o) && (!EX() || Zor(o))) return null;
+    if (!tr(o) && (!hasWorktreeCreateHook() || Zor(o))) return null;
     if (kx(o)) return null;
     if (d.canonical !== null && zIn(d.canonical)) return null;
     let _ = utn(d, p);
@@ -81394,7 +81394,7 @@ import {
   relative as $Xe,
 } from "path";
 import { inspect as lZr } from "util";
-function EV(e, t, r) {
+function reduceFileHistoryState(e, t, r) {
   switch (t.kind) {
     case "track":
       try {
@@ -81424,7 +81424,7 @@ function EV(e, t, r) {
           };
         return (
           Wtn(E),
-          M7n(t.messageId, o.messageId, t.trackingPath, t.backup, r).catch(
+          recordFileHistoryDelta(t.messageId, o.messageId, t.trackingPath, t.backup, r).catch(
             (C) => {
               h(Error(`FileHistory: Failed to record delta: ${C}`));
             },
@@ -81477,7 +81477,7 @@ function EV(e, t, r) {
         return (
           Wtn(D),
           SZr(e, D).catch(h),
-          Hhn(t.messageId, _, !1, r).catch((N) => {
+          recordFileHistorySnapshot(t.messageId, _, !1, r).catch((N) => {
             h(Error(`FileHistory: Failed to record snapshot: ${N}`));
           }),
           n(
@@ -81529,7 +81529,7 @@ async function cZr(e, t, r) {
         });
     }
 }
-function iw() {
+function fileHistoryEnabled() {
   if (Pt()) return !1;
   if (ke()) return uZr();
   return (
@@ -81543,8 +81543,8 @@ function uZr() {
     !a.CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING
   );
 }
-async function kTe(e, t, r, o) {
-  if (!iw()) {
+async function fileHistoryTrackEdit(e, t, r, o) {
+  if (!fileHistoryEnabled()) {
     t({ kind: "touch" });
     return;
   }
@@ -81592,8 +81592,8 @@ async function kTe(e, t, r, o) {
     isAddingFile: C,
   });
 }
-async function AX(e, t, r, o) {
-  if (!iw()) return;
+async function fileHistoryMakeSnapshot(e, t, r, o) {
+  if (!fileHistoryEnabled()) return;
   let d = e();
   if (!d) return;
   if (
@@ -81675,9 +81675,9 @@ async function AX(e, t, r, o) {
     ...(o?.preCheckpoint && { preCheckpoint: !0 }),
   });
 }
-class Pgt extends R {}
-async function kVe(e, t) {
-  if (!iw()) return;
+class RewindNoFilesRestoredError extends R {}
+async function fileHistoryRewind(e, t) {
+  if (!fileHistoryEnabled()) return;
   let r = e();
   if (!r) return;
   let o = r.snapshots.findLast((E) => E.messageId === t);
@@ -81712,7 +81712,7 @@ async function kVe(e, t) {
         filesFailedCount: p.length,
         skippedLinksCount: _,
       }),
-      new Pgt(
+      new RewindNoFilesRestoredError(
         `No files were restored: ${p.length} ${x(p.length, "file")} failed (backup missing, or the file could not be updated)${_ > 0 ? `, and ${_} ${x(_, "path was", "paths were")} skipped for link safety` : ""}`,
         "No files were restored: all differing files failed",
       )
@@ -81728,12 +81728,12 @@ async function kVe(e, t) {
     { skippedLinks: _ }
   );
 }
-function xVe(e, t) {
-  if (!iw()) return !1;
+function fileHistoryCanRestore(e, t) {
+  if (!fileHistoryEnabled()) return !1;
   return e.snapshots.some((r) => r.messageId === t);
 }
-async function QDe(e, t) {
-  if (!iw()) return;
+async function fileHistoryGetDiffStats(e, t) {
+  if (!fileHistoryEnabled()) return;
   let r = e.snapshots.findLast((E) => E.messageId === t);
   if (!r) return;
   let o = await Promise.all(
@@ -82217,8 +82217,8 @@ function RCe(e) {
   if (Gtn(e)) return e;
   return P8(he(), e);
 }
-function HVe(e, t) {
-  if (!iw()) return;
+function fileHistoryRestoreStateFromLog(e, t) {
+  if (!fileHistoryEnabled()) return;
   let r = [],
     o = new Set();
   for (let d of e) {
@@ -82279,8 +82279,8 @@ async function bZr(e, t, r, o) {
   }
   n(`FileHistory: Copied backup ${e} from session ${t} to ${o}`);
 }
-async function Ogt(e, t, r) {
-  if (!iw()) return;
+async function copyFileHistoryForResume(e, t, r) {
+  if (!fileHistoryEnabled()) return;
   let o = e.fileHistorySnapshots;
   if (!o || e.messages.length === 0) return;
   let p = e.messages.at(-1)?.sessionId;
@@ -82323,7 +82323,7 @@ async function Ogt(e, t, r) {
               )
             ).some((U) => U.status === "rejected")
           )
-            Hhn(I.messageId, I, !1, r).catch((U) => {
+            recordFileHistorySnapshot(I.messageId, I, !1, r).catch((U) => {
               h(Error("FileHistory: Failed to record copy backup snapshot"));
             });
           else C++;
@@ -83090,7 +83090,7 @@ function jpn(e, t, r) {
 }
 async function DCe(e, t, r, o) {
   let d = await XZr(e, t, r);
-  if (d.where === "elsewhere" || o === void 0 || !Iy()) return d;
+  if (d.where === "elsewhere" || o === void 0 || !isRemoteToolForwardingSwitchOn()) return d;
   let p = r.toolState.get(RX),
     _ = p.adopted(o);
   if (_ === void 0) return d;
@@ -83108,7 +83108,7 @@ async function XZr(e, t, r) {
   let o = I8().remote;
   if (o === void 0 || !o.applies(e))
     return Eie(e) && Wg(t)
-      ? { where: "refused", message: xTe() ? Gtr() : aEt() }
+      ? { where: "refused", message: isRemoteToolForwardingEnabledCached() ? Gtr() : aEt() }
       : { where: "here", input: t };
   let d = await o.route(e, t, r);
   return d.kind === "local"
@@ -84149,7 +84149,7 @@ async function geo(e, t, r) {
   )
     await M8(t.session.host, V, I, t.storageV5);
   if (t.remoteCall === void 0) await une.of(t.session).beforeFileEdited(V);
-  await kTe(E, C, V, r.uuid);
+  await fileHistoryTrackEdit(E, C, V, r.uuid);
   let {
       originalFileContents: ue,
       actualOldString: de,
@@ -87183,7 +87183,7 @@ function mQe(e) {
 }
 wrr(gAe);
 var sno = ["https://www.googleapis.com/auth/cloud-platform"];
-async function aDe(e, t) {
+async function buildVertexGoogleAuth(e, t) {
   if (e.kind === "skip")
     return {
       getClient: () => ({ getRequestHeaders: async () => new Headers() }),
@@ -87205,12 +87205,12 @@ async function ino(e, t) {
   let o = { cert: r.cert, key: r.key, ...(r.ca && { ca: r.ca }) };
   return fetch(e, { ...t, tls: o });
 }
-function sX(e) {
+function suppressVertexAuthRejection(e) {
   let t = e._authClientPromise;
   if (t && typeof t.catch === "function") t.catch(() => {});
   return e;
 }
-function iX(e = !1) {
+function vertexResidualCredentialPins(e = !1) {
   if (e) return { ...VC(), Authorization: e.wireAuthorization ?? null };
   return {
     ...Im(),
@@ -87509,7 +87509,7 @@ async function $F({
     let [{ AnthropicVertex: Ke }, { buildVertexGoogleAuth: ct }] =
         await Promise.all([
           import("../../02-功能模块/Bedrock-Vertex/AnthropicVertex.1thfsdgf.js"),
-          import("../../01-核心基础设施/共享小工具-未细化/buildVertexGoogleAuth.xn8dzdym.js"),
+          Promise.resolve({ buildVertexGoogleAuth }),
         ]),
       vt = await ct(He ? { kind: "skip" } : { kind: "default" }, $Ue()),
       ut = K0(Oe.defaultHeaders),
@@ -87518,13 +87518,13 @@ async function $F({
         ...Oe,
         defaultHeaders: {
           ...ut.rest,
-          ...iX(He ? { wireAuthorization: Wt } : !1),
+          ...vertexResidualCredentialPins(He ? { wireAuthorization: Wt } : !1),
         },
         region: mZ(r),
         googleAuth: vt,
         ...(vL() && { logger: fL() }),
       };
-    return sX(new Ke(en));
+    return suppressVertexAuthRejection(new Ke(en));
   }
   let Ne = e || A5();
   if (!Ne && Zc()) {
@@ -88737,13 +88737,13 @@ function Hno(e) {
   return;
 }
 function Eon() {
-  let e = st.isSandboxingEnabled(),
-    t = st.getConfig();
+  let e = SandboxManager.isSandboxingEnabled(),
+    t = SandboxManager.getConfig();
   return {
     sandboxingEnabled: e,
-    enabledInSettings: st.isSandboxEnabledInSettings(),
-    supportedHere: st.passesCheapSandboxGates(),
-    filesystemPolicy: AM(),
+    enabledInSettings: SandboxManager.isSandboxEnabledInSettings(),
+    supportedHere: SandboxManager.passesCheapSandboxGates(),
+    filesystemPolicy: getEffectiveFilesystemPolicy(),
     scrubMode: Bu(),
     ...(t !== void 0 && {
       config: {
@@ -88769,8 +88769,8 @@ function Eon() {
 async function EAe() {
   let e = Ton(Eon());
   if (e !== void 0) return { confined: !1, reason: e };
-  await st.initialize();
-  let t = await st.waitForNetworkInitialization();
+  await SandboxManager.initialize();
+  let t = await SandboxManager.waitForNetworkInitialization();
   return Uno({ ...Eon(), started: t }, { requireStarted: !0 });
 }
 import { spawn as Uoo } from "child_process";
@@ -92308,7 +92308,7 @@ function ooo() {
   }
   function V(Se, ve) {
     (n(`FileChanged: ${ve} ${Se}`),
-      S_n(
+      executeFileChangedHooks(
         { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
         Se,
         ve,
@@ -92349,7 +92349,7 @@ function ooo() {
     ))
       return;
     ((t = ve), await jPt(p));
-    let Ne = await y_n(
+    let Ne = await executeCwdChangedHooks(
       { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
       Se,
       ve,
@@ -93341,7 +93341,7 @@ async function vV(e, t, r, o) {
   if (z1())
     throw (
       g("sandbox_exec", "diskless_no_shell"),
-      new Zte(
+      new SandboxPolicyRefusalError(
         "Shell commands are unavailable in this session; the command was not run.",
         "diskless_no_shell",
       )
@@ -93381,7 +93381,7 @@ async function vV(e, t, r, o) {
     Wt = r === "bash" ? Con(N, D) : void 0,
     en = Wt !== void 0 ? `${ut}-${Wt}` : ut,
     tn = (I ?? !1) && P() === "windows",
-    dn = I && xBt() ? Qoe() : void 0;
+    dn = I && sandboxExportsChildTmpDir() ? Qoe() : void 0;
   if (dn !== void 0 && !ct.warnedShortTmpDir) {
     let So = bl();
     if (dn !== So)
@@ -93511,13 +93511,13 @@ async function vV(e, t, r, o) {
     Kn,
     hn = async (So) => {
       let eo =
-        !I || AM() !== "strict" || Bu()
+        !I || getEffectiveFilesystemPolicy() !== "strict" || Bu()
           ? { confined: !1, reason: "sandbox_unconfined" }
           : await EAe();
       if (eo.confined) return;
       throw (
         g("sandbox_exec", So),
-        new Zte(
+        new SandboxPolicyRefusalError(
           "This call must run inside a fully confining sandbox and none is available here; the command was not run.",
           eo.reason,
         )
@@ -93528,18 +93528,18 @@ async function vV(e, t, r, o) {
     Fn = Bu() && s6();
   if (!I && At) g("sandbox_exec", "per_command_deny_unsandboxed");
   if (I) {
-    if (Fn || At) await st.ensureInitializedForWrap();
+    if (Fn || At) await SandboxManager.ensureInitializedForWrap();
     let So = { commandId: D ?? e, commandText: e };
     if (Fn) {
       let bs = iAn(),
         Xs = bs.filesystem.denyWrite,
-        Rs = st.getConfig()?.filesystem;
+        Rs = SandboxManager.getConfig()?.filesystem;
       $n = {
         ...bs,
         filesystem: uin(
           {
             allowWrite: Rs?.allowWrite ?? [],
-            denyWrite: st.getFsWriteConfig().denyWithinAllow,
+            denyWrite: SandboxManager.getFsWriteConfig().denyWithinAllow,
             denyRead: Rs?.denyRead ?? [],
             ...(Rs?.allowRead && { allowRead: Rs.allowRead }),
           },
@@ -93548,13 +93548,13 @@ async function vV(e, t, r, o) {
             addDenyWrite: Xs,
             addDenyRead: bs.filesystem.denyRead,
             keepBaseDenyWrite: (di, ga) =>
-              ga.some((rl) => Zwe(rl, di)) && !Xs.some((rl) => Zwe(rl, di)),
+              ga.some((rl) => posixCovers(rl, di)) && !Xs.some((rl) => posixCovers(rl, di)),
           },
         ),
       };
     }
-    let eo = At ? ($n?.filesystem ?? st.getConfig()?.filesystem) : void 0,
-      vr = eo !== void 0 && eo.disabled !== !0 && AM() === "strict";
+    let eo = At ? ($n?.filesystem ?? SandboxManager.getConfig()?.filesystem) : void 0,
+      vr = eo !== void 0 && eo.disabled !== !0 && getEffectiveFilesystemPolicy() === "strict";
     if (At && !vr) sso(p, eo === void 0 ? "no_config" : "relaxed_filesystem");
     if (At && vr) {
       await nso([...xe, ...Oe]);
@@ -93566,13 +93566,13 @@ async function vV(e, t, r, o) {
           {
             ...eo,
             allowRead:
-              eo.allowRead ?? st.getConfig()?.filesystem?.allowRead ?? [],
+              eo.allowRead ?? SandboxManager.getConfig()?.filesystem?.allowRead ?? [],
           },
           {
             addDenyRead: bs,
             addDenyWrite: Xs,
             dropAllowRead: (rl) =>
-              Of(rl) || Tr(rl).some((gs) => Rs.some((vl) => eVe(vl, gs, di))),
+              Of(rl) || Tr(rl).some((gs) => Rs.some((vl) => denyEntryCovers(vl, gs, di))),
           },
         );
       $n = {
@@ -93593,15 +93593,15 @@ async function vV(e, t, r, o) {
         else {
           let ga = _1();
           if (ga === null)
-            throw new Jdn(
+            throw new SandboxUnavailableForShellError(
               "Sandboxed bash on Windows requires Git Bash, which is not installed. Install Git Bash, or run this command unsandboxed (dangerouslyDisableSandbox).",
             );
           bs = ga;
         }
       }
-      let Rs = await st.wrapWithSandboxArgv(Xs, bs, $n, t, So);
+      let Rs = await SandboxManager.wrapWithSandboxArgv(Xs, bs, $n, t, So);
       ((ur = Rs.argv), (Cn = Rs.env), (Kn = Rs.unsetEnv));
-    } else Dn = await st.wrapWithSandbox(Dn, En, $n, t, So);
+    } else Dn = await SandboxManager.wrapWithSandbox(Dn, En, $n, t, So);
   }
   if (Me) await hn("remote_floor_refusal_at_wrap");
   let Yn = ur?.[0];
@@ -93708,7 +93708,7 @@ async function vV(e, t, r, o) {
       (bs.result = bs.result.then(async (di) => {
         if (I)
           try {
-            st.cleanupAfterCommand();
+            SandboxManager.cleanupAfterCommand();
           } catch (ga) {
             n(`sandbox cleanupAfterCommand failed: ${ga}`, { level: "warn" });
           }
@@ -93734,7 +93734,7 @@ async function vV(e, t, r, o) {
           });
         else await lin(Rs);
         if ((L7e(Zr.taskId), I && P() === "windows")) {
-          let ga = azn(
+          let ga = classifyWindowsSandboxLaunchExit(
             di.code,
             `${di.stderr}
 ${di.stdout}`,
@@ -93756,9 +93756,9 @@ ${di.stdout}`,
       } catch {}
     if ((Zr.clear(), n(`Shell exec error: ${l(So)}`), pNn(So))) {
       let eo =
-          I && AM() !== "relaxed"
+          I && getEffectiveFilesystemPolicy() !== "relaxed"
             ? ($n?.filesystem?.denyWrite ??
-              st.getFsWriteConfig().denyWithinAllow)
+              SandboxManager.getFsWriteConfig().denyWithinAllow)
             : [],
         vr = Nsn({
           binary: Qr,
@@ -93809,10 +93809,10 @@ function gin(e, t) {
   } catch (r) {}
 }
 function Nae(e, t) {
-  szn(e, t);
+  addSandboxAllowWriteDirectory(e, t);
 }
 function hin(e) {
-  izn(e);
+  removeSandboxAllowWriteDirectory(e);
 }
 async function lin(e) {
   try {
@@ -93846,7 +93846,7 @@ function tso(e, t, r, o) {
   return d;
 }
 function cin() {
-  let e = st.getConfig()?.credentials?.envVars ?? [];
+  let e = SandboxManager.getConfig()?.credentials?.envVars ?? [];
   return {
     denied: e.filter((t) => t.mode === "deny").map((t) => t.name),
     masked: e.filter((t) => t.mode !== "deny").map((t) => t.name),
@@ -93907,7 +93907,7 @@ function sso(e, t) {
     ));
 }
 function iso(e) {
-  return (g("sandbox_exec", e), new Zte(rso[e], e));
+  return (g("sandbox_exec", e), new SandboxPolicyRefusalError(rso[e], e));
 }
 var L2t = 25;
 function M2t(e) {
@@ -94499,7 +94499,7 @@ function Cin(e) {
   };
 }
 function Q8(e, t, r) {
-  if (!xTe() || r.remoteCall !== void 0 || O2t(r.session) !== null) return "";
+  if (!isRemoteToolForwardingEnabledCached() || r.remoteCall !== void 0 || O2t(r.session) !== null) return "";
   let o = vso(he(), t);
   if (o === "" || o.startsWith("..") || Tso(o)) return "";
   let d = r.toolState
@@ -95507,7 +95507,7 @@ async function jso(e) {
   let en, tn, dn;
   if (D.remoteCall === void 0 && ne().pendingHandoverReads.has(r)) {
     let { prepareHandoverRead: gn, describeHandoverCoverage: Qt } =
-        await import("../../02-功能模块/Artifact发布-渲染/describeHandoverCoverage.smfy0y9v.js"),
+        await import("../../02-功能模块/Artifact发布-渲染/chunk-x29r16ke.js"),
       wn = await gn(r, D, N, {
         firstLine: ue,
         lineCount: vt ? je - 1 : je,
@@ -96039,7 +96039,7 @@ async function Jso({ file_path: e, content: t }, r, o) {
   if (n$e(N, ce(r))) throw new lQ(Vvn);
   if (r.remoteCall === void 0) await M8(r.session.host, N, D, r.storageV5);
   if (r.remoteCall === void 0) await une.of(r.session).beforeFileEdited(N);
-  await kTe(C, I, N, o.uuid);
+  await fileHistoryTrackEdit(C, I, N, o.uuid);
   let U = await j6(N, async () => {
       let ve = await $k(N, F, { createParents: !0 });
       try {
@@ -97562,7 +97562,7 @@ var kX = Tt({
         },
       }),
       U = DU(p, N);
-    await kTe(I, D, N, E.uuid);
+    await fileHistoryTrackEdit(I, D, N, E.uuid);
     try {
       return await j6(N, async () => {
         let V = await $k(N, U);
@@ -99140,7 +99140,7 @@ async function zao(e) {
 async function xZe(e, t) {
   if (!bVe(e.prUrl)) return "url_rejected";
   let [{ linkSessionToPR: r }, { getSessionId: o }] = await Promise.all([
-      import("../../02-功能模块/会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js"),
+      Promise.resolve({ linkSessionToPR }),
       import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
     ]),
     d = o();
@@ -99410,15 +99410,15 @@ function fne(e) {
 function n9(e) {
   return typeof e === "string" && !e.includes("\x00");
 }
-var rlo = import.meta.require("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js").ARTIFACT_TOOL_NAME,
+var rlo = import.meta.require("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
   Fan = import.meta.require("../../01-核心基础设施/共享小工具-未细化/isNarrationSummaryBlock.adf7egmq.js").isNarrationSummaryBlock,
   olo = import.meta.require(
-    "../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js",
+    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
   ).isPublishShapedArtifactAction,
   slo = () =>
-    import.meta.require("../../02-功能模块/权限系统/DANGEROUS_DIRECTORY_PATHS.h65h4gmh.js").isScratchpadDisplayPath,
-  ilo = () => import.meta.require("../../02-功能模块/权限系统/DANGEROUS_DIRECTORY_PATHS.h65h4gmh.js").isWorkshopDisplayPath,
-  alo = () => import.meta.require("../../01-核心基础设施/共享小工具-未细化/getPlanFilePath.t2ddc0h6.js").getPlansDirectory;
+    import.meta.require("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js").isScratchpadDisplayPath,
+  ilo = () => import.meta.require("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js").isWorkshopDisplayPath,
+  alo = () => import.meta.require("../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js").getPlansDirectory;
 function r9(e) {
   return e.file_path ?? e.path;
 }
@@ -102424,7 +102424,7 @@ function mln(e, t) {
 import { randomBytes as cZo } from "crypto";
 var ORe = (e, t) => t && e.mode === "prompt";
 var NRe = (e) =>
-  ryt(e) &&
+  isInlineNotificationCommand(e) &&
   e.promptSubmitted === void 0 &&
   e.shouldQuery !== !1 &&
   e.skipSubmissionHooks !== !0;
@@ -102530,7 +102530,7 @@ var kln = (e, t) =>
     : { text: e };
 import { randomUUID as fco } from "crypto";
 var ujt = (e, t = "UserPromptSubmit") =>
-  pn({
+  createAttachmentMessage({
     type: "hook_additional_context",
     content: [...e],
     hookName: t,
@@ -102693,13 +102693,13 @@ async function djt({
   let _,
     E = t.abortController.signal.aborted;
   try {
-    for await (let C of cMe(e, ce(t).mode, t, Hln(o, d), p)) {
+    for await (let C of executeUserPromptSubmitHooks(e, ce(t).mode, t, Hln(o, d), p)) {
       if (C.message?.type === "progress") continue;
       if (jln(C, t.abortController.signal)) E = !0;
       if (C.blockingError) {
         let U = WRe(E, t.abortController.signal);
         return {
-          blocked: zae(wln(IY(C.blockingError), e, C.suppressOriginalPrompt)),
+          blocked: zae(wln(getUserPromptSubmitHookBlockingMessage(C.blockingError), e, C.suppressOriginalPrompt)),
           ...(U && { wasCancelled: !0 }),
         };
       }
@@ -102732,12 +102732,12 @@ var Wln = (e) => ({
   messages: [...e.messages],
   allowedTools: e.allowedTools && [...e.allowedTools],
 });
-var iVn = (e) => L9t(e) !== "" || qRe() !== "";
+var iVn = (e) => userPromptSubmitHooksKey(e) !== "" || qRe() !== "";
 var MTe = (e) => ({
   permissionMode: ce(e).mode,
-  hooks: L9t(e),
+  hooks: userPromptSubmitHooksKey(e),
   plugins: qRe(),
-  hooksSkippedByTrust: HY(),
+  hooksSkippedByTrust: shouldSkipHookDueToTrust(),
 });
 function Gln(e, { latch: t }) {
   let r,
@@ -102789,7 +102789,7 @@ function duo({ result: e, context: t, promptSource: r, wakeupSource: o }) {
     return (_.set(D, V), V);
   }
   async function C(D) {
-    let N = await E(D, p8e);
+    let N = await E(D, MANAGED_HOOKS_TIER);
     return ((p = N), (d = N.sessionTitle ?? d), N);
   }
   function I(D) {
@@ -103226,7 +103226,7 @@ async function fcn(e, t, r) {
       additionalContexts: ue,
       ...de
     } = N;
-    if (V) o = { kind: "deny", reason: M9t(`PreToolUse:${t}`, V) };
+    if (V) o = { kind: "deny", reason: getPreToolHookBlockingMessage(`PreToolUse:${t}`, V) };
     let _e = iPe[o.kind];
     switch (F) {
       case "deny":
@@ -103462,7 +103462,7 @@ async function Gdn(e, t) {
     : [{ type: "text", text: o.text }, ...t.filter((p) => p.type !== "text")];
 }
 var bcn = (e, t) => ({
-  message: pn({
+  message: createAttachmentMessage({
     type: "hook_additional_context",
     content: [...e],
     hookName: "tool.call",
@@ -104160,8 +104160,8 @@ function vfo(e) {
   return r.substring(0, o) || "/";
 }
 function npn(e, t) {
-  if (!st.isSandboxingEnabled()) return !1;
-  let { allowOnly: r, denyWithinAllow: o } = st.getFsWriteConfig(),
+  if (!SandboxManager.isSandboxingEnabled()) return !1;
+  let { allowOnly: r, denyWithinAllow: o } = SandboxManager.getFsWriteConfig(),
     d = t ?? Tr(e),
     p = r.flatMap(Ncn),
     _ = o.flatMap(Ncn);
@@ -104444,7 +104444,7 @@ async function czn(e) {
       { error: t, sandboxRefreshed: !1 }
     );
   try {
-    st.refreshConfig();
+    SandboxManager.refreshConfig();
   } catch (r) {
     return (
       h(ge(r)),
@@ -104773,7 +104773,7 @@ function Wet(e, t) {
 async function Ufo(e) {
   if (!e) return null;
   try {
-    let { parseCommand: t } = await import("../../01-核心基础设施/共享小工具-未细化/parseCommand.n06fvw6z.js"),
+    let { parseCommand: t } = await import("../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js"),
       r = await t(e);
     if (r) return Wet(e, r.rootNode);
   } catch {}
@@ -109038,7 +109038,7 @@ function bun(e, t) {
       message:
         "Compound commands that create git internal files and run git require permission checks for enhanced security",
     };
-  if (E && st.isSandboxingEnabled() && Q() !== he())
+  if (E && SandboxManager.isSandboxingEnabled() && Q() !== he())
     return {
       behavior: "passthrough",
       message:
@@ -109135,14 +109135,14 @@ async function Ypo(e, t, r, o, d, p, _) {
     }).length > 1
   ) {
     for (let [, V] of E)
-      if (V.behavior === "ask" && WS(V.decisionReason, n2e)) return V;
+      if (V.behavior === "ask" && findSafetyCheckReason(V.decisionReason, n2e)) return V;
     let U = {
       type: "other",
       reason:
         "Multiple directory changes in one command require approval for clarity",
       bashMissKind: "multi-cd",
     };
-    return { behavior: "ask", decisionReason: U, message: Fl(Lo.name, U) };
+    return { behavior: "ask", decisionReason: U, message: createPermissionRequestMessage(Lo.name, U) };
   }
   {
     let U, V;
@@ -109165,7 +109165,7 @@ async function Ypo(e, t, r, o, d, p, _) {
           "This command creates git repository structure files (HEAD/objects/refs/hooks) and then runs git, which can execute hooks/fsmonitor from the created files.",
         bashMissKind: "cd-git-compound",
       };
-      return { behavior: "ask", decisionReason: ue, message: Fl(Lo.name, ue) };
+      return { behavior: "ask", decisionReason: ue, message: createPermissionRequestMessage(Lo.name, ue) };
     }
     if (U && V) {
       let ue = [];
@@ -109180,7 +109180,7 @@ async function Ypo(e, t, r, o, d, p, _) {
         return {
           behavior: "ask",
           decisionReason: _e,
-          message: Fl(Lo.name, _e),
+          message: createPermissionRequestMessage(Lo.name, _e),
         };
       }
     }
@@ -109198,7 +109198,7 @@ async function Ypo(e, t, r, o, d, p, _) {
   let F = { type: "subcommandResults", reasons: E };
   return {
     behavior: "ask",
-    message: Fl(Lo.name, F),
+    message: createPermissionRequestMessage(Lo.name, F),
     decisionReason: F,
     suggestions: N.length > 0 ? N : void 0,
   };
@@ -109222,7 +109222,7 @@ async function Qpo(e, t, r, o, d, p) {
         "This command uses shell operators that require approval for safety",
       bashMissKind: "shell-operators",
     };
-    return { behavior: "ask", message: Fl(Lo.name, D), decisionReason: D };
+    return { behavior: "ask", message: createPermissionRequestMessage(Lo.name, D), decisionReason: D };
   }
   let C = o.getPipeSegments();
   if (C.length <= 1)
@@ -109995,7 +109995,7 @@ var CPe = (e, t) => {
   if (d[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Lo.name),
+      message: createPermissionRequestMessage(Lo.name),
       decisionReason: { type: "rule", rule: d[0] },
     };
   if (p[0] !== void 0)
@@ -110011,7 +110011,7 @@ var CPe = (e, t) => {
   };
   return {
     behavior: "passthrough",
-    message: Fl(Lo.name, _),
+    message: createPermissionRequestMessage(Lo.name, _),
     decisionReason: _,
     suggestions: nVe(r),
   };
@@ -110188,7 +110188,7 @@ function ymo(e, t, r, o, d) {
   return;
 }
 function Nz() {
-  return Wmt() && tVe();
+  return sandboxReadBlockApplies() && tVe();
 }
 var Oun = (e, t, r, o, d = Q(), p = []) => {
   let _ = e.command.trim(),
@@ -110208,7 +110208,7 @@ var Oun = (e, t, r, o, d = Q(), p = []) => {
   if (I[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Lo.name),
+      message: createPermissionRequestMessage(Lo.name),
       decisionReason: { type: "rule", rule: I[0] },
     };
   let N = ele(e, d, t, r, o?.redirects, o ? [o] : void 0);
@@ -110260,7 +110260,7 @@ var Oun = (e, t, r, o, d = Q(), p = []) => {
   };
   return {
     behavior: "passthrough",
-    message: Fl(Lo.name, ue),
+    message: createPermissionRequestMessage(Lo.name, ue),
     decisionReason: ue,
     suggestions: nVe(_),
   };
@@ -110276,8 +110276,8 @@ async function vun(e, t, r, o, d, p, _ = []) {
 }
 function Cun(e, t, r, o) {
   if (
-    !st.isSandboxingEnabled() ||
-    !st.isAutoAllowBashIfSandboxedEnabled() ||
+    !SandboxManager.isSandboxingEnabled() ||
+    !SandboxManager.isAutoAllowBashIfSandboxedEnabled() ||
     !jS(e) ||
     YQe(t) ||
     (t.blockReadsOutsideWorkingDirectories === !0 && !Nz())
@@ -110319,8 +110319,8 @@ function Cun(e, t, r, o) {
 }
 function _mo(e, t, r) {
   if (
-    !st.isSandboxingEnabled() ||
-    !st.isAutoAllowBashIfSandboxedEnabled() ||
+    !SandboxManager.isSandboxingEnabled() ||
+    !SandboxManager.isAutoAllowBashIfSandboxedEnabled() ||
     !jS(e) ||
     YQe(t) ||
     (t.blockReadsOutsideWorkingDirectories === !0 && !Nz())
@@ -110455,7 +110455,7 @@ function _mo(e, t, r) {
   if (d)
     return {
       behavior: "ask",
-      message: Fl(Lo.name),
+      message: createPermissionRequestMessage(Lo.name),
       decisionReason: { type: "rule", rule: d },
     };
   return {
@@ -110513,14 +110513,14 @@ function kmo(e, t, r) {
     if (_)
       return {
         behavior: "ask",
-        message: Fl(Lo.name),
+        message: createPermissionRequestMessage(Lo.name),
         decisionReason: { type: "rule", rule: _ },
       };
   }
   if (p[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Lo.name),
+      message: createPermissionRequestMessage(Lo.name),
       decisionReason: { type: "rule", rule: p[0] },
     };
   return {
@@ -110806,7 +110806,7 @@ function ryn(e, t) {
   if (o[0] !== void 0)
     return {
       behavior: "ask",
-      message: Fl(Lo.name),
+      message: createPermissionRequestMessage(Lo.name),
       decisionReason: { type: "rule", rule: o[0] },
     };
   if (d.behavior !== "passthrough") return d;
@@ -110968,7 +110968,7 @@ function oyn(e) {
   return !1;
 }
 function Pun(e, t, r) {
-  if (e.behavior !== "ask" || que(e)) return e;
+  if (e.behavior !== "ask" || carriesAskRuleIntent(e)) return e;
   if (LG(r, Lo, "ask").size === 0 && LG(r, Lo, "deny").size === 0) return e;
   let o = new Set([
       t.command,
@@ -111030,7 +111030,7 @@ async function qmt(e, t, r) {
     circuitBreaker: "backgroundOperator",
   };
   return Pun(
-    { behavior: "ask", decisionReason: _, message: Fl(Lo.name, _) },
+    { behavior: "ask", decisionReason: _, message: createPermissionRequestMessage(Lo.name, _) },
     e,
     ce(t),
   );
@@ -111056,7 +111056,7 @@ async function Pmo(e, t, r) {
     return {
       behavior: "ask",
       decisionReason: wn,
-      message: Fl(Lo.name, wn),
+      message: createPermissionRequestMessage(Lo.name, wn),
       suggestions: [],
     };
   }
@@ -111087,7 +111087,7 @@ async function Pmo(e, t, r) {
     return {
       behavior: "ask",
       decisionReason: Qt,
-      message: Fl(Lo.name, Qt),
+      message: createPermissionRequestMessage(Lo.name, Qt),
       suggestions: [],
     };
   }
@@ -111195,7 +111195,7 @@ async function Pmo(e, t, r) {
         "Multiple directory changes in one command require approval for clarity",
       bashMissKind: "multi-cd",
     };
-    return { behavior: "ask", decisionReason: Cn, message: Fl(Lo.name, Cn) };
+    return { behavior: "ask", decisionReason: Cn, message: createPermissionRequestMessage(Lo.name, Cn) };
   }
   let _e = de.length > 0,
     Se = U,
@@ -111225,7 +111225,7 @@ async function Pmo(e, t, r) {
           "This command changes directory before running git, which can execute untrusted hooks from the target directory. Approve only if you trust it.",
         bashMissKind: "cd-git-compound",
       };
-      xe = { behavior: "ask", decisionReason: Qt, message: Fl(Lo.name, Qt) };
+      xe = { behavior: "ask", decisionReason: Qt, message: createPermissionRequestMessage(Lo.name, Qt) };
     }
   }
   let Oe;
@@ -111236,7 +111236,7 @@ async function Pmo(e, t, r) {
         "This command creates git repository structure files (HEAD/objects/refs/hooks) and then runs git, which can execute hooks/fsmonitor from the created files.",
       bashMissKind: "cd-git-compound",
     };
-    Oe = { behavior: "ask", decisionReason: Qt, message: Fl(Lo.name, Qt) };
+    Oe = { behavior: "ask", decisionReason: Qt, message: createPermissionRequestMessage(Lo.name, Qt) };
   }
   o = ce(t);
   let Ne = re.map((gn, Qt) =>
@@ -111360,8 +111360,8 @@ async function Pmo(e, t, r) {
       !un ||
       kn > on ||
       (kn === on &&
-        WS(wn.decisionReason) !== void 0 &&
-        WS(un.decisionReason) === void 0)
+        findSafetyCheckReason(wn.decisionReason) !== void 0 &&
+        findSafetyCheckReason(un.decisionReason) === void 0)
     )
       tn.set(Qt, wn);
   }
@@ -111408,7 +111408,7 @@ async function Pmo(e, t, r) {
         : void 0;
   return {
     behavior: ct !== void 0 ? "ask" : "passthrough",
-    message: Fl(Lo.name, cn),
+    message: createPermissionRequestMessage(Lo.name, cn),
     decisionReason: cn,
     suggestions: Dn,
   };
@@ -111479,7 +111479,7 @@ function syn(e, t) {
 }
 function jS(e, t) {
   if (Bu() && s6()) return !0;
-  if (!st.isSandboxingEnabled()) return !1;
+  if (!SandboxManager.isSandboxingEnabled()) return !1;
   if ((e.shellType ?? "bash") === "bash" && P() === "windows" && _1() === null)
     return !1;
   let r =
@@ -111489,7 +111489,7 @@ function jS(e, t) {
   if (
     e.dangerouslyDisableSandbox &&
     !r &&
-    (t?.userTypedShellDispatch === !0 || st.areUnsandboxedCommandsAllowed())
+    (t?.userTypedShellDispatch === !0 || SandboxManager.areUnsandboxedCommandsAllowed())
   )
     return !1;
   if (!e.command) return Boolean(r);
@@ -111589,7 +111589,7 @@ function mzn(e) {
 function tTe(e) {
   return iyn(e)?.category ?? null;
 }
-function rpn() {
+function antBuiltinDenyRules() {
   return [];
 }
 var ayn = new Map([[Jc, new Set(["plan", "planFilePath"])]]);
@@ -111805,12 +111805,12 @@ function nTe(e, t) {
 }
 var _yn = null,
   byn = import.meta.require(
-    "../../01-核心基础设施/共享小工具-未细化/SEARCH_MCP_REGISTRY_TOOL_NAME.7mvtq5sb.js",
+    "../../01-核心基础设施/共享小工具-未细化/chunk-p2wzfbaj.js",
   ).SEARCH_MCP_REGISTRY_TOOL_NAME,
-  Syn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/SUGGEST_CONNECTORS_TOOL_NAME.cfv2aq4k.js").SUGGEST_CONNECTORS_TOOL_NAME,
-  wyn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/LIST_CONNECTORS_TOOL_NAME.ndgm0vy5.js").LIST_CONNECTORS_TOOL_NAME,
+  Syn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js").SUGGEST_CONNECTORS_TOOL_NAME,
+  wyn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js").LIST_CONNECTORS_TOOL_NAME,
   zmo = import.meta.require("../../02-功能模块/插件系统/PLUGIN_SKILL_TOOLS.zpne7vfm.js").PLUGIN_SKILL_SAFE_TOOL_NAMES,
-  Htt = import.meta.require("../../01-核心基础设施/共享小工具-未细化/LIST_RUNNERS_DESCRIPTION.qvv5bxbe.js"),
+  Htt = import.meta.require("../../02-功能模块/自托管Runner/chunk-01gj9cjk.js"),
   Eyn = null,
   Tyn = null,
   qmo = new Set([
@@ -112683,7 +112683,7 @@ function Pbn(e, t) {
   };
 }
 var Pgo = import.meta.require("../../02-功能模块/Workflow编排/recordWorkflowUsageConsent.w6jg9g54.js");
-function uVe(e) {
+function isAutoModeConsentFlowEnabled(e) {
   return !vP(e.agentId) && int();
 }
 function Igo() {
@@ -112712,11 +112712,11 @@ function T9(e, t) {
     r ?? t(e.getAppState().denialTracking ?? Uue())
   );
 }
-function cgt(e) {
+function resetDenialStreakAfterUserApproval(e) {
   T9(e, $z);
 }
 var Ubn = "Your organization requires approval for this tool";
-function ine(e) {
+function permissionRuleSourceDisplayString(e) {
   return Yet(e);
 }
 function OPe(e, t) {
@@ -112787,14 +112787,14 @@ function Lgo(e, t) {
     t.canAutoClassifierRun === !0
   );
 }
-function ane() {
+function isChainOnAllowActive() {
   return !1;
 }
-function ugt() {
+function hasAutoModeClassifierDenyRules() {
   let e = tL();
   return (e?.soft_deny?.length ?? 0) > 0 || (e?.hard_deny?.length ?? 0) > 0;
 }
-function Fl(e, t) {
+function createPermissionRequestMessage(e, t) {
   if (t) {
     if (t.type === "classifier")
       return `Classifier '${t.classifier}' requires approval for this ${e} command: ${t.reason}`;
@@ -112805,7 +112805,7 @@ function Fl(e, t) {
           : `Hook '${t.hookName}' requires approval for this ${e} command`;
       case "rule": {
         let o = Er(t.rule.ruleValue),
-          d = ine(t.rule.source);
+          d = permissionRuleSourceDisplayString(t.rule.source);
         return `Permission rule '${o}' from ${d} requires approval for this ${e} command`;
       }
       case "subcommandResults": {
@@ -112851,12 +112851,12 @@ function $go(e, t) {
 function ont(e, t) {
   if (
     e.decisionReason !== void 0 &&
-    WS(e.decisionReason, (r) => r.circuitBreaker !== void 0) !== void 0
+    findSafetyCheckReason(e.decisionReason, (r) => r.circuitBreaker !== void 0) !== void 0
   )
     return e.decisionReason;
   return e.localDisplayOnly === !0 && e.decisionReason ? e.decisionReason : t;
 }
-function c3(e, t, r) {
+function stripWholeToolGrantsForAsk(e, t, r) {
   return Btr(
     e,
     jtr(t, r),
@@ -112864,7 +112864,7 @@ function c3(e, t, r) {
     (o) => $go(t, o),
   );
 }
-function HO(e) {
+function withoutGrantsForRemoteScope(e) {
   return e.filter((t) => {
     switch (t.type) {
       case "addRules":
@@ -112896,16 +112896,16 @@ function Wbn(e, t) {
     });
   });
 }
-function dTe(e, t) {
+function isAgentToolPoolDenied(e, t) {
   return Wbn([e], t).length === 0;
 }
-function pTe(e) {
+function agentToolPoolDeniedMessage(e) {
   return `Agent type '${e}' is unavailable because every tool it may use is denied by the current permission settings.`;
 }
 function Bgo(e) {
   return e !== Cr || Mt(wCe);
 }
-function GBt(e, t, r, o) {
+function filterDispatchableAgents(e, t, r, o) {
   return Wdn(
     Wbn(
       ztr(
@@ -112917,10 +112917,10 @@ function GBt(e, t, r, o) {
     ),
   );
 }
-function dVe(e, t, r, o) {
-  return GBt(t ? e.filter((d) => t.includes(d.agentType)) : e, r, mt, o);
+function getDispatchableAgents(e, t, r, o) {
+  return filterDispatchableAgents(t ? e.filter((d) => t.includes(d.agentType)) : e, r, mt, o);
 }
-function BDe(e, t) {
+function guardHookUpdatedInput(e, t) {
   if (e?.behavior === "deny" || e?.behavior === "ask")
     return (
       n(
@@ -112932,14 +112932,14 @@ function BDe(e, t) {
 }
 async function Ugo(e, t, r, o, d, p) {
   try {
-    for await (let _ of Vue(e.name, r, t, o, d, p, o.abortController.signal)) {
+    for await (let _ of executePermissionRequestHooks(e.name, r, t, o, d, p, o.abortController.signal)) {
       if (!_.permissionRequestResult) continue;
       let E = _.permissionRequestResult;
       if (E.behavior === "allow") {
         let C = E.updatedInput ?? t;
         if (E.updatedInput || e.requiresUserInteraction?.()) {
-          let D = BDe(
-            await jv(
+          let D = guardHookUpdatedInput(
+            await checkRuleBasedPermissions(
               e,
               C,
               { ...o, toolUseId: r },
@@ -112959,7 +112959,7 @@ async function Ugo(e, t, r, o, d, p) {
         }
         let I =
           e.suppressesAllPermissionUpdates?.(t) === !0
-            ? HO(E.updatedPermissions ?? [])
+            ? withoutGrantsForRemoteScope(E.updatedPermissions ?? [])
             : (E.updatedPermissions ?? []);
         if (I.length > 0)
           (o.setSessionToolPermissionContext((D) => Kk(D, I)),
@@ -112992,7 +112992,7 @@ async function Ugo(e, t, r, o, d, p) {
   }
   return null;
 }
-async function qBt(e, t, r, o, d) {
+async function consultPermissionRequestHooksForUnpromptableAsk(e, t, r, o, d) {
   if (d.forRemoteExecution === !0) return null;
   return Ugo(e, r.updatedInput ?? t, o, d, sx(e, ce(d)), r.suggestions);
 }
@@ -113007,11 +113007,11 @@ function E9(e) {
     },
   };
 }
-var gd = async (e, t, r, o, d, p) => {
+var hasPermissionsToUseTool = async (e, t, r, o, d, p) => {
     if (p) return p;
-    return fTe(e, t, r, o, d, void 0);
+    return hasPermissionsToUseToolWithSink(e, t, r, o, d, void 0);
   },
-  fTe = async (e, t, r, o, d, p, _) => {
+  hasPermissionsToUseToolWithSink = async (e, t, r, o, d, p, _) => {
     let E = await Hgo(e, t, r, o, d, p, _);
     return E.behavior === "deny"
       ? { ...E, decideLocation: "pre-ask", ...!1 }
@@ -113053,7 +113053,7 @@ var gd = async (e, t, r, o, d, p) => {
           return C;
         }
         let de = { mode: N, autoActive: fb() },
-          _e = ane(),
+          _e = isChainOnAllowActive(),
           Se = E.hookAskFloor === !0;
         if (Se && !_e && D.shouldAvoidPermissionPrompts) return E9(C.message);
         let ve = (hn) => {
@@ -113083,15 +113083,15 @@ var gd = async (e, t, r, o, d, p) => {
               return E9(C.message);
             return C;
           },
-          xe = WS(
+          xe = findSafetyCheckReason(
             C.decisionReason,
             (hn) => !hn.classifierApprovable && !(s0n(hn) && cvn(D)),
           ),
           Oe = C.decisionReason?.type === "sandboxOverride",
-          Ne = $zn(C.decisionReason, D),
-          De = que(C),
+          Ne = isSandboxOverrideUnderReadBlock(C.decisionReason, D),
+          De = carriesAskRuleIntent(C),
           He =
-            Epr(C.decisionReason) ||
+            isServerPolicyAskReason(C.decisionReason) ||
             C.matchedAskRule?.source === "mcpServerPolicy",
           je = Ogo(He, e, t, N),
           Ke = De && !_e && !(He && (!(e.isDestructive?.(t) ?? !1) || je)),
@@ -113337,7 +113337,7 @@ var gd = async (e, t, r, o, d, p) => {
         let En, $n;
         try {
           let hn = kn.length > 0 ? [...E.messages, ...kn] : E.messages,
-            At = Li(K()),
+            At = pinSessionId(K()),
             Yn = en
               ? async () => Pbn(await dn(), d)
               : () =>
@@ -113636,7 +113636,7 @@ var gd = async (e, t, r, o, d, p) => {
         });
       }
       if (ce(E).shouldAvoidPermissionPrompts) {
-        let de = await qBt(e, t, C, d, E);
+        let de = await consultPermissionRequestHooksForUnpromptableAsk(e, t, C, d, E);
         if (de) return de;
         return {
           behavior: "deny",
@@ -113650,11 +113650,11 @@ var gd = async (e, t, r, o, d, p) => {
     }
     return C;
   };
-function zBt(e) {
+function recordAutoModeDenial(e) {
   let t = Vtt(Gbn(e));
   return (dle(e, t), t);
 }
-function VBt(e, t, r, o) {
+function enforceAutoModeDenialLimits(e, t, r, o) {
   if (!Ktt(t)) return !1;
   let d = t.totalDenials >= w9.maxTotal,
     p = ce(e).shouldAvoidPermissionPrompts;
@@ -113680,7 +113680,7 @@ function VBt(e, t, r, o) {
     });
   return !0;
 }
-function bpn(e) {
+function recordAutoModeSuccess(e) {
   let t = Gbn(e);
   if (t.consecutiveDenials > 0) dle(e, $z(t));
 }
@@ -113707,7 +113707,7 @@ function Nbn(e, t) {
     },
     message: r
       ? B5e(e.reason, { refused: !1 })
-      : KWt(e.reason, { autoModeConsentFlow: uVe(t) }),
+      : KWt(e.reason, { autoModeConsentFlow: isAutoModeConsentFlowEnabled(t) }),
   };
 }
 function jgo(e, t, r, o, d, p, _, E) {
@@ -113781,25 +113781,25 @@ Latest blocked action: ${t}`,
     decisionReason: _e,
   };
 }
-function Gue(e) {
+function isAskRuleDrivenReason(e) {
   if (e?.type === "rule" && e.rule.ruleBehavior === "ask") return !0;
   if (e?.type === "subcommandResults") {
     for (let t of e.reasons.values())
-      if (t.behavior === "ask" && Gue(t.decisionReason)) return !0;
+      if (t.behavior === "ask" && isAskRuleDrivenReason(t.decisionReason)) return !0;
   }
   return !1;
 }
-function que(e) {
-  return Gue(e.decisionReason) || e.matchedAskRule?.ruleBehavior === "ask";
+function carriesAskRuleIntent(e) {
+  return isAskRuleDrivenReason(e.decisionReason) || e.matchedAskRule?.ruleBehavior === "ask";
 }
-function Epr(e) {
+function isServerPolicyAskReason(e) {
   return (
     e?.type === "rule" &&
     e.rule.ruleBehavior === "ask" &&
     e.rule.source === "mcpServerPolicy"
   );
 }
-function $zn(e, t) {
+function isSandboxOverrideUnderReadBlock(e, t) {
   return (
     e?.type === "sandboxOverride" &&
     t.blockReadsOutsideWorkingDirectories === !0
@@ -113808,7 +113808,7 @@ function $zn(e, t) {
 function zbn(e) {
   return e?.type === "mode" && e.mode === "plan";
 }
-function KBt(e, t) {
+function hookUpdatedInputSatisfiesInteraction(e, t) {
   return t !== void 0 && !nh(e);
 }
 function Wgo(e, t, r) {
@@ -113837,7 +113837,7 @@ async function Kbn(e, t, r, o, d) {
   let p = {
     behavior: "ask",
     decisionReason: { type: "rule", rule: o },
-    message: Fl(e.name),
+    message: createPermissionRequestMessage(e.name),
   };
   try {
     let _ = e.inputSchema.parse(t),
@@ -113851,14 +113851,14 @@ async function Kbn(e, t, r, o, d) {
     let E = ant(_, e, t, r);
     if (E !== void 0 && E.behavior === "deny") return E;
     if (E === void 0 && d?.crashIsObjection === !0) {
-      let C = { type: "other", reason: mTe };
-      return { behavior: "ask", message: Fl(e.name, C), decisionReason: C };
+      let C = { type: "other", reason: PERMISSION_CHECK_CRASHED_REASON };
+      return { behavior: "ask", message: createPermissionRequestMessage(e.name, C), decisionReason: C };
     }
   }
   return p;
 }
-var mTe = "permission_check_crashed";
-async function jv(e, t, r, o) {
+var PERMISSION_CHECK_CRASHED_REASON = "permission_check_crashed";
+async function checkRuleBasedPermissions(e, t, r, o) {
   let d = ce(r),
     p = ni(d, e);
   if (p)
@@ -113879,13 +113879,13 @@ async function jv(e, t, r, o) {
     let D =
         e.name === qe &&
         r.forRemoteExecution !== !0 &&
-        st.isSandboxingEnabled() &&
-        st.isAutoAllowBashIfSandboxedEnabled() &&
+        SandboxManager.isSandboxingEnabled() &&
+        SandboxManager.isAutoAllowBashIfSandboxedEnabled() &&
         jS(t),
       N = D && YQe(d);
     if (!(D && !N)) return Kbn(e, t, r, E, o);
   }
-  let C = { behavior: "passthrough", message: Fl(e.name) };
+  let C = { behavior: "passthrough", message: createPermissionRequestMessage(e.name) };
   try {
     let D = e.inputSchema.parse(t);
     C = await e.checkPermissions(D, r);
@@ -113893,8 +113893,8 @@ async function jv(e, t, r, o) {
     let N = ant(D, e, t, r);
     if (N !== void 0) C = N;
     else if (o?.crashIsObjection === !0) {
-      let F = { type: "other", reason: mTe };
-      return { behavior: "ask", message: Fl(e.name, F), decisionReason: F };
+      let F = { type: "other", reason: PERMISSION_CHECK_CRASHED_REASON };
+      return { behavior: "ask", message: createPermissionRequestMessage(e.name, F), decisionReason: F };
     }
   }
   if (C?.behavior === "deny") return C;
@@ -113905,24 +113905,24 @@ async function jv(e, t, r, o) {
       : {
           behavior: "ask",
           decisionReason: { type: "rule", rule: I },
-          message: Fl(e.name),
+          message: createPermissionRequestMessage(e.name),
         };
-  if (!KBt(e, o?.hookUpdatedInput) && e.requiresUserInteraction?.())
+  if (!hookUpdatedInputSatisfiesInteraction(e, o?.hookUpdatedInput) && e.requiresUserInteraction?.())
     return C?.behavior === "ask"
       ? C
       : {
           behavior: "ask",
-          message: Fl(e.name),
+          message: createPermissionRequestMessage(e.name),
           decisionReason: { type: "other", reason: "requiresUserInteraction" },
         };
-  if (C?.behavior === "ask" && que(C)) return C;
+  if (C?.behavior === "ask" && carriesAskRuleIntent(C)) return C;
   if (e.mcpInfo?.effectiveMaxPermission === "ask") {
     let D = { type: "other", reason: Ubn };
-    return { behavior: "ask", message: Fl(e.name, D), decisionReason: D };
+    return { behavior: "ask", message: createPermissionRequestMessage(e.name, D), decisionReason: D };
   }
   if (
     C?.behavior === "ask" &&
-    (WS(C.decisionReason) || C.decisionReason?.type === "sandboxOverride")
+    (findSafetyCheckReason(C.decisionReason) || C.decisionReason?.type === "sandboxOverride")
   )
     return C;
   return null;
@@ -113949,8 +113949,8 @@ async function Ggo(e, t, r, o) {
     let de =
         e.name === qe &&
         r.forRemoteExecution !== !0 &&
-        st.isSandboxingEnabled() &&
-        st.isAutoAllowBashIfSandboxedEnabled() &&
+        SandboxManager.isSandboxingEnabled() &&
+        SandboxManager.isAutoAllowBashIfSandboxedEnabled() &&
         jS(t),
       _e = de && YQe(d),
       Se = de && !_e,
@@ -113961,7 +113961,7 @@ async function Ggo(e, t, r, o) {
         H("tengu_mcp_server_policy_bypass_exempt", !0);
     if (!Se && !ve) return Kbn(e, t, r, E);
   }
-  let C = { behavior: "passthrough", message: Fl(e.name) };
+  let C = { behavior: "passthrough", message: createPermissionRequestMessage(e.name) };
   try {
     let de = e.inputSchema.parse(t);
     if (
@@ -113989,20 +113989,20 @@ async function Ggo(e, t, r, o) {
       : {
           behavior: "ask",
           decisionReason: { type: "rule", rule: I },
-          message: Fl(e.name),
+          message: createPermissionRequestMessage(e.name),
         };
   if (e.requiresUserInteraction?.())
     return C?.behavior === "ask"
       ? C
       : {
           behavior: "ask",
-          message: Fl(e.name),
+          message: createPermissionRequestMessage(e.name),
           decisionReason: { type: "other", reason: "requiresUserInteraction" },
         };
-  if (C?.behavior === "ask" && que(C)) return C;
+  if (C?.behavior === "ask" && carriesAskRuleIntent(C)) return C;
   if (e.mcpInfo?.effectiveMaxPermission === "ask") {
     let de = { type: "other", reason: Ubn };
-    return { behavior: "ask", message: Fl(e.name, de), decisionReason: de };
+    return { behavior: "ask", message: createPermissionRequestMessage(e.name, de), decisionReason: de };
   }
   let D = ce(r),
     N = sx(e, D),
@@ -114011,14 +114011,14 @@ async function Ggo(e, t, r, o) {
       (N === "plan" &&
         D.isBypassPermissionsModeAvailable &&
         r.forRemoteExecution !== !0),
-    U = F && C?.behavior === "ask" ? WS(C.decisionReason, n2e) : void 0,
-    V = C?.behavior === "ask" && $zn(C.decisionReason, d);
+    U = F && C?.behavior === "ask" ? findSafetyCheckReason(C.decisionReason, n2e) : void 0,
+    V = C?.behavior === "ask" && isSandboxOverrideUnderReadBlock(C.decisionReason, d);
   if (
     C?.behavior === "ask" &&
     (U ||
       V ||
       (!F &&
-        (WS(C.decisionReason) ||
+        (findSafetyCheckReason(C.decisionReason) ||
           C.decisionReason?.type === "sandboxOverride" ||
           zbn(C.decisionReason))))
   )
@@ -114043,13 +114043,13 @@ async function Ggo(e, t, r, o) {
     };
   let ue =
     C.behavior === "passthrough"
-      ? { ...C, behavior: "ask", message: Fl(e.name, C.decisionReason) }
+      ? { ...C, behavior: "ask", message: createPermissionRequestMessage(e.name, C.decisionReason) }
       : C;
   if (ue.behavior === "ask" && ue.suggestions)
     n(`Permission suggestions for ${e.name}: ${b(ue.suggestions, null, 2)}`);
   return ue;
 }
-async function XBt({
+async function deletePermissionRule({
   rule: e,
   initialContext: t,
   setToolPermissionContext: r,
@@ -114094,11 +114094,11 @@ function Ybn(e, t) {
   }
   return o;
 }
-function gTe(e, t) {
+function applyPermissionRulesToPermissionContext(e, t) {
   let r = Ybn(t, "addRules");
   return Kk(e, r);
 }
-function pVe(e, t) {
+function syncPermissionRulesFromDisk(e, t) {
   let r = e;
   if (iP()) {
     let d = [...w0, "cliArg", "session"],
@@ -114128,12 +114128,12 @@ function pVe(e, t) {
 function $bn(e, t) {
   return ("updatedInput" in e ? e.updatedInput : void 0) ?? t;
 }
-function WS(e, t = () => !0) {
+function findSafetyCheckReason(e, t = () => !0) {
   if (!e) return;
   if (e.type === "safetyCheck") return t(e) ? e : void 0;
   if (e.type === "subcommandResults")
     for (let r of e.reasons.values()) {
-      let o = WS(r.decisionReason, t);
+      let o = findSafetyCheckReason(r.decisionReason, t);
       if (o) return o;
     }
   return;
@@ -114232,7 +114232,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
   let N = Date.now();
   try {
     let F = ce(e).mode;
-    for await (let U of dgt(
+    for await (let U of executePostToolHooks(
       t.name,
       r,
       d,
@@ -114255,7 +114255,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
             queryDepth: e.queryTracking?.depth,
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_cancelled",
                 hookName: `PostToolUse:${t.name}`,
                 toolUseID: r,
@@ -114274,7 +114274,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
           yield { message: U.message };
         if (U.blockingError)
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_blocking_error",
               hookName: `PostToolUse:${t.name}`,
               toolUseID: r,
@@ -114288,7 +114288,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
           yield { updatedToolOutput: U.updatedMCPToolOutput };
         if (U.preventContinuation) {
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_stopped_continuation",
               message: U.stopReason || cnt,
               hookName: `PostToolUse:${t.name}`,
@@ -114300,7 +114300,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
         }
         if (U.additionalContexts && U.additionalContexts.length > 0)
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_additional_context",
               content: U.additionalContexts,
               hookName: `PostToolUse:${t.name}`,
@@ -114332,7 +114332,7 @@ async function* v9(e, t, r, o, d, p, _, E, C, I, D) {
           ...(_ && { requestId: Ee(_) }),
         }),
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_error_during_execution",
               content: qL(V),
               hookName: `PostToolUse:${t.name}`,
@@ -114363,7 +114363,7 @@ async function* DPe(e, t, r, o, d, p, _, E, C, I, D) {
   let N = Date.now();
   try {
     let F = ce(e).mode;
-    for await (let U of Tpn(
+    for await (let U of executePostToolUseFailureHooks(
       t.name,
       r,
       d,
@@ -114386,7 +114386,7 @@ async function* DPe(e, t, r, o, d, p, _, E, C, I, D) {
             queryDepth: e.queryTracking?.depth,
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_cancelled",
                 hookName: `PostToolUseFailure:${t.name}`,
                 toolUseID: r,
@@ -114405,7 +114405,7 @@ async function* DPe(e, t, r, o, d, p, _, E, C, I, D) {
           yield { message: U.message };
         if (U.blockingError)
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_blocking_error",
               hookName: `PostToolUseFailure:${t.name}`,
               toolUseID: r,
@@ -114415,7 +114415,7 @@ async function* DPe(e, t, r, o, d, p, _, E, C, I, D) {
           };
         if (U.additionalContexts && U.additionalContexts.length > 0)
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_additional_context",
               content: U.additionalContexts,
               hookName: `PostToolUseFailure:${t.name}`,
@@ -114436,7 +114436,7 @@ async function* DPe(e, t, r, o, d, p, _, E, C, I, D) {
           ...(E && { requestId: Ee(E) }),
         }),
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_error_during_execution",
               content: qL(V),
               hookName: `PostToolUseFailure:${t.name}`,
@@ -114475,7 +114475,7 @@ async function qgo(e, t, r, o, d, p, _) {
     return { decision: await d(t, r, o, p, _), input: r };
   let C = e.behavior,
     I = e.updatedInput ?? r,
-    D = await jv(
+    D = await checkRuleBasedPermissions(
       t,
       I,
       { ...o, toolUseId: _ },
@@ -114562,7 +114562,7 @@ async function* LPe(e, t, r, o, d, p, _, E) {
     F,
     U;
   try {
-    for await (let V of jDe(
+    for await (let V of executePreToolHooks(
       t.name,
       o,
       r,
@@ -114580,7 +114580,7 @@ async function* LPe(e, t, r, o, d, p, _, E) {
         )
           yield { type: "message", message: { message: V.message } };
         if (V.blockingError) {
-          let re = M9t(`PreToolUse:${t.name}`, V.blockingError);
+          let re = getPreToolHookBlockingMessage(`PreToolUse:${t.name}`, V.blockingError);
           ((D = {
             behavior: "deny",
             message: re,
@@ -114684,7 +114684,7 @@ async function* LPe(e, t, r, o, d, p, _, E) {
           yield {
             type: "additionalContext",
             message: {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_additional_context",
                 content: V.additionalContexts,
                 hookName: `PreToolUse:${t.name}`,
@@ -114702,7 +114702,7 @@ async function* LPe(e, t, r, o, d, p, _, E) {
             yield {
               type: "message",
               message: {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_cancelled",
                   hookName: `PreToolUse:${t.name}`,
                   toolUseID: o,
@@ -114730,7 +114730,7 @@ async function* LPe(e, t, r, o, d, p, _, E) {
           yield {
             type: "message",
             message: {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_error_during_execution",
                 content: qL(re),
                 hookName: `PreToolUse:${t.name}`,
@@ -114844,7 +114844,7 @@ function nO(e, t, r) {
     d = e?.agentContext;
   return d !== void 0 && qG(d) && Xgo.has(t) ? [o, d.parentAgentId ?? r] : [o];
 }
-async function* jDe(e, t, r, o, d, p, _ = Jd, E) {
+async function* executePreToolHooks(e, t, r, o, d, p, _ = Jd, E) {
   let C = o.managedPass,
     I =
       !E?.managedHooksOnly && C?.toolUseId === t && Cl(C.input) === Cl(r)
@@ -114857,19 +114857,19 @@ async function* jDe(e, t, r, o, d, p, _ = Jd, E) {
   if (
     D === void 0 &&
     !E?.managedHooksOnly &&
-    !TT("PreToolUse", o.sessionHooksRegistry, nO(o, "PreToolUse", o.session.id))
+    !hasHookForEvent("PreToolUse", o.sessionHooksRegistry, nO(o, "PreToolUse", o.session.id))
   )
     return;
   n(`executePreToolHooks called for tool: ${e}`, { level: "verbose" });
   let N = {
-    ...Sa(o.session, Q(), d, o),
+    ...createBaseHookInput(o.session, Q(), d, o),
     hook_event_name: "PreToolUse",
     tool_name: e,
     tool_input: r,
     tool_use_id: t,
   };
   function F(U, V) {
-    return My({
+    return executeHooks({
       session: o.session,
       hookInput: U === void 0 ? N : { ...N, tool_input: U },
       toolUseID: t,
@@ -114890,14 +114890,14 @@ async function* jDe(e, t, r, o, d, p, _ = Jd, E) {
       origin: o.hookOrigin,
       managedPass: I,
     }))
-      yield H_n(U, "PreToolUse function-hook chain");
+      yield stripConfinedHookApproval(U, "PreToolUse function-hook chain");
     return;
   }
   yield* F();
 }
-async function* dgt(e, t, r, o, d, p, _, E = Jd, C, I) {
+async function* executePostToolHooks(e, t, r, o, d, p, _, E = Jd, C, I) {
   let D = {
-    ...Sa(d.session, Q(), p, d),
+    ...createBaseHookInput(d.session, Q(), p, d),
     hook_event_name: "PostToolUse",
     tool_name: e,
     tool_input: r,
@@ -114905,7 +114905,7 @@ async function* dgt(e, t, r, o, d, p, _, E = Jd, C, I) {
     tool_use_id: t,
     duration_ms: C,
   };
-  yield* My({
+  yield* executeHooks({
     session: d.session,
     hookInput: D,
     toolUseID: t,
@@ -114917,9 +114917,9 @@ async function* dgt(e, t, r, o, d, p, _, E = Jd, C, I) {
     managedHooksExcluded: I?.managedHooksExcluded,
   });
 }
-async function* Tpn(e, t, r, o, d, p, _, E, C = Jd, I) {
+async function* executePostToolUseFailureHooks(e, t, r, o, d, p, _, E, C = Jd, I) {
   if (
-    !TT(
+    !hasHookForEvent(
       "PostToolUseFailure",
       d.sessionHooksRegistry,
       nO(d, "PostToolUseFailure", d.session.id),
@@ -114927,7 +114927,7 @@ async function* Tpn(e, t, r, o, d, p, _, E, C = Jd, I) {
   )
     return;
   let D = {
-    ...Sa(d.session, Q(), _, d),
+    ...createBaseHookInput(d.session, Q(), _, d),
     hook_event_name: "PostToolUseFailure",
     tool_name: e,
     tool_input: r,
@@ -114936,7 +114936,7 @@ async function* Tpn(e, t, r, o, d, p, _, E, C = Jd, I) {
     is_interrupt: p,
     duration_ms: I,
   };
-  yield* My({
+  yield* executeHooks({
     session: d.session,
     hookInput: D,
     toolUseID: t,
@@ -114946,9 +114946,9 @@ async function* Tpn(e, t, r, o, d, p, _, E, C = Jd, I) {
     toolUseContext: d,
   });
 }
-async function* YBt(e, t, r, o, d, p = Jd) {
+async function* executePostToolBatchHooks(e, t, r, o, d, p = Jd) {
   if (
-    !TT(
+    !hasHookForEvent(
       "PostToolBatch",
       r.sessionHooksRegistry,
       nO(r, "PostToolBatch", r.session.id),
@@ -114956,11 +114956,11 @@ async function* YBt(e, t, r, o, d, p = Jd) {
   )
     return;
   let _ = {
-    ...Sa(r.session, Q(), o, r),
+    ...createBaseHookInput(r.session, Q(), o, r),
     hook_event_name: "PostToolBatch",
     tool_calls: e,
   };
-  yield* My({
+  yield* executeHooks({
     session: r.session,
     hookInput: _,
     toolUseID: t,
@@ -114969,9 +114969,9 @@ async function* YBt(e, t, r, o, d, p = Jd) {
     toolUseContext: r,
   });
 }
-async function* Epn(e, t, r, o, d, p, _, E = Jd) {
+async function* executePermissionDeniedHooks(e, t, r, o, d, p, _, E = Jd) {
   if (
-    !TT(
+    !hasHookForEvent(
       "PermissionDenied",
       d.sessionHooksRegistry,
       nO(d, "PermissionDenied", d.session.id),
@@ -114979,14 +114979,14 @@ async function* Epn(e, t, r, o, d, p, _, E = Jd) {
   )
     return;
   let C = {
-    ...Sa(d.session, Q(), p, d),
+    ...createBaseHookInput(d.session, Q(), p, d),
     hook_event_name: "PermissionDenied",
     tool_name: e,
     tool_input: r,
     tool_use_id: t,
     reason: o,
   };
-  yield* My({
+  yield* executeHooks({
     session: d.session,
     hookInput: C,
     toolUseID: t,
@@ -114996,16 +114996,16 @@ async function* Epn(e, t, r, o, d, p, _, E = Jd) {
     toolUseContext: d,
   });
 }
-async function* Vue(e, t, r, o, d, p, _, E = Jd) {
+async function* executePermissionRequestHooks(e, t, r, o, d, p, _, E = Jd) {
   n(`executePermissionRequestHooks called for tool: ${e}`);
   let C = {
-    ...Sa(o.session, Q(), d, o),
+    ...createBaseHookInput(o.session, Q(), d, o),
     hook_event_name: "PermissionRequest",
     tool_name: e,
     tool_input: r,
     permission_suggestions: p,
   };
-  yield* My({
+  yield* executeHooks({
     session: o.session,
     hookInput: C,
     toolUseID: t,
@@ -115022,7 +115022,7 @@ var nSn = (e, t, r) => ({
   async run(o, d) {
     if (!Uz(e, t)) return d(o);
     let p = await Vae(
-      jDe(o.tool, o.tool_use_id, v_e(o), t, ce(t).mode, d.signal, void 0, {
+      executePreToolHooks(o.tool, o.tool_use_id, v_e(o), t, ce(t).mode, d.signal, void 0, {
         managedHooksOnly: !0,
       }),
       o.tool,
@@ -115060,7 +115060,7 @@ async function FPe({
     _ = [],
     E = o,
     C = !1;
-  for await (let I of dgt(
+  for await (let I of executePostToolHooks(
     e.name,
     t,
     r,
@@ -115075,7 +115075,7 @@ async function FPe({
     if (I.updatedToolOutput !== void 0) ((E = I.updatedToolOutput), (C = !0));
     if (I.blockingError)
       _.push({
-        message: pn({
+        message: createAttachmentMessage({
           type: "hook_blocking_error",
           blockingError: I.blockingError,
           hookName: p,
@@ -115085,7 +115085,7 @@ async function FPe({
       });
     if (I.preventContinuation) {
       _.push({
-        message: pn({
+        message: createAttachmentMessage({
           type: "hook_stopped_continuation",
           message: I.stopReason || cnt,
           hookName: p,
@@ -115098,7 +115098,7 @@ async function FPe({
     let { additionalContexts: D } = I;
     if (D !== void 0 && D.length > 0)
       _.push({
-        message: pn({
+        message: createAttachmentMessage({
           type: "hook_additional_context",
           content: D,
           hookName: p,
@@ -117147,7 +117147,7 @@ async function mot({ pairing: e, toolUseContext: t }) {
     };
     if (
       (
-        await gd(
+        await hasPermissionsToUseTool(
           d,
           _,
           r,
@@ -117158,7 +117158,7 @@ async function mot({ pairing: e, toolUseContext: t }) {
       ).behavior !== "allow"
     )
       return "deny";
-    for await (let C of jDe(
+    for await (let C of executePreToolHooks(
       mt,
       `observer-gate-${e.observerTaskId}`,
       _,
@@ -117199,7 +117199,7 @@ function EVe(e, t, r, o) {
   let _ = d?.[1].observerAgentType ?? r?.agentType;
   if (
     (aIe(
-      _Y(oo(t), { observerStopped: !0, ...(_ && { agentType: _ }) }, o),
+      updateAgentMetadata(oo(t), { observerStopped: !0, ...(_ && { agentType: _ }) }, o),
       "observer tombstone",
     ),
     p && !r?.fromSweep)
@@ -117303,7 +117303,7 @@ async function Okn({
         observedIsObserver: !1,
       });
       if (!p) return;
-      let _ = await L7n(void 0, r.storageV5).catch(() => null),
+      let _ = await readLastObserverRef(void 0, r.storageV5).catch(() => null),
         E = await Dkn({
           priorObserverTaskId: _?.observerTaskId,
           declaredObserverType: p.observerDefinition.agentType,
@@ -117396,7 +117396,7 @@ async function Dkn({
   if (!o) return { mode: "fresh" };
   let d;
   try {
-    d = await fC(o, r);
+    d = await readAgentMetadata(o, r);
   } catch (_) {
     return (
       n(
@@ -117407,7 +117407,7 @@ async function Dkn({
   }
   if (d?.observerStopped) return { mode: "blocked" };
   if (d?.agentType !== t) return { mode: "fresh" };
-  return qyt() || (await O7n(o, r))
+  return canFetchAgentTranscriptsOnDemand() || (await agentTranscriptExists(o, r))
     ? { mode: "reattach", observerTaskId: o }
     : { mode: "fresh" };
 }
@@ -117474,7 +117474,7 @@ async function kle({
     if (F()) return;
     if ((N.observers.pairings.set(e, re), t))
       aIe(
-        _Y(
+        updateAgentMetadata(
           oo(t),
           {
             observerTaskId: re.observerTaskId,
@@ -117534,7 +117534,7 @@ async function pbo(e, t) {
         if (
           (await gbo(e, t, d),
           aIe(
-            P7n(
+            recordObserverRef(
               {
                 ...(t.observedTaskId && { agentId: oo(t.observedTaskId) }),
                 observerTaskId: t.observerTaskId,
@@ -123071,18 +123071,18 @@ function zIe(e, t) {
   return [...r, ...o, $Ct, Oor, ...d];
 }
 var Vko = ["default"];
-function Hpn(e) {
+function parseToolPreset(e) {
   let t = e.toLowerCase();
   if (!Vko.includes(t)) return null;
   return t;
 }
-function PO(e, t) {
+function filterToolsByDenyRules(e, t) {
   let r = [...Df(t), ...Kko(e)];
   return e.filter(
-    (o) => !Egt(t, o, r) && o.mcpInfo?.effectiveMaxPermission !== "blocked",
+    (o) => !isToolDroppedByDenyRules(t, o, r) && o.mcpInfo?.effectiveMaxPermission !== "blocked",
   );
 }
-function Egt(e, t, r = Df(e)) {
+function isToolDroppedByDenyRules(e, t, r = Df(e)) {
   if (ni(e, t, r)) return !0;
   if (t.underlyingV1ToolName && ni(e, { name: t.underlyingV1ToolName }, r))
     return !0;
@@ -123134,7 +123134,7 @@ function iO(e, t, r, o) {
   let d = ni(r, { name: e });
   if (Js(e) === null) {
     let I = o?.mcpInfo !== void 0;
-    return Egt(r, {
+    return isToolDroppedByDenyRules(r, {
       name: e,
       underlyingV1ToolName: I ? void 0 : VY(e),
       aliasSkillToolNames: o?.aliasSkillToolNames,
@@ -123317,7 +123317,7 @@ function Tvn(e, t, r, o) {
       if (
         !(nh(N)
           ? o !== void 0 && wvn(I, N.mcpInfo?.serverName, o, r)
-          : gst(N, E) && !Egt(r, N, C))
+          : gst(N, E) && !isToolDroppedByDenyRules(r, N, C))
       )
         return;
       let U = -1;
@@ -123940,7 +123940,7 @@ var rwo = m(() =>
     }),
   ),
   swo = 5000;
-class mVn {
+class ToolSearchDescriptionCache {
   #e = new Map();
   #t = null;
   clear() {
@@ -124090,7 +124090,7 @@ async function qvn(e, t, r, o, d) {
     .slice(0, o)
     .map((V) => V.name);
 }
-var hjt = Tt({
+var ToolSearchTool = Tt({
   isEnabled() {
     return Z_();
   },
@@ -124137,7 +124137,7 @@ var hjt = Tt({
     function re() {
       return IH(U) ? [] : _e();
     }
-    let ue = _.get(mVn);
+    let ue = _.get(ToolSearchDescriptionCache);
     ue.maybeInvalidate(V);
     let de = () => d?.() ?? o;
     function _e() {
@@ -125520,7 +125520,7 @@ function qle() {
   if (e !== void 0) return !e;
   return Ge().includeGitInstructions ?? !0;
 }
-var Cwo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getProjectContextBlock.84tx6v6z.js").getProjectContextBlock,
+var Cwo = import.meta.require("../../02-功能模块/GoogleDrive集成/GoogleDrive集成.f0ersdj8.js").getProjectContextBlock,
   vst = [],
   aq = new Gt(() => ({ byId: new Map(), builds: Le() }));
 function e0e(e) {
@@ -126840,11 +126840,11 @@ async function nEo(e) {
     }
   return t;
 }
-async function p_r(e, t, r) {
+async function prepareChromeFileUploadInput(e, t, r) {
   let o = { remaining: Cxn };
   return xxn(e, t, (d) => oEo(d, r, o));
 }
-async function f_r(e, t, r) {
+async function passThroughChromeFileUploadInput(e, t, r) {
   return xxn(e, t, async (o) => {
     let d = o.paths;
     if (!Array.isArray(d) || d.length === 0)
@@ -127137,7 +127137,7 @@ async function lEo(e, t) {
   if (d > t) return "grew";
   return { buf: o.subarray(0, d) };
 }
-async function vpn(e, t, r) {
+async function verifyHandleBinding(e, t, r) {
   let d =
     (await Yle(t).catch(() => null)) === t
       ? await Txn(t).catch(() => null)
@@ -127165,7 +127165,7 @@ async function cEo(e, t, r) {
       };
     if (!p.isFile())
       return { error: `Cannot upload "${e}": path moved during validation.` };
-    if ((await vpn(d, t, p)) === "moved")
+    if ((await verifyHandleBinding(d, t, p)) === "moved")
       return { error: `Cannot upload "${e}": path moved during validation.` };
     if (p.size > r.remaining)
       return {
@@ -130169,7 +130169,7 @@ async function uTo(e, t, r, o, d) {
         let Se = await iTo(N, rit.O_RDONLY | rit.O_NOFOLLOW | rit.O_NONBLOCK);
         try {
           let ve = await Se.stat();
-          if ((await vpn(Se, _e, ve)) === "moved") {
+          if ((await verifyHandleBinding(Se, _e, ve)) === "moved") {
             t(r.mount, `${N} moved during open`);
             continue;
           }
@@ -130282,7 +130282,7 @@ function iit(e) {
   return r;
 }
 var mTo = new Set(["auto-mode-setup"]);
-function Jue(e) {
+function getSkillOverride(e) {
   if ((e.type === "local-jsx" || e.type === "local") && mTo.has(e.name))
     return Ge().skillOverrides?.[e.name] === "off" ? "off" : "on";
   if (e.type !== "prompt" || e.source === "plugin") return "on";
@@ -130291,12 +130291,12 @@ function Jue(e) {
   if (zqt(e, t)) return r === "off" ? "off" : "user-invocable-only";
   return r;
 }
-function HM(e) {
-  let t = Jue(e);
+function isSkillExcludedFromModel(e) {
+  let t = getSkillOverride(e);
   return t === "user-invocable-only" || t === "off";
 }
-function Tk(e) {
-  return Jue(e) === "off";
+function isSkillOff(e) {
+  return getSkillOverride(e) === "off";
 }
 function sce(e) {
   return [...J$t(e), ...lne()];
@@ -130389,7 +130389,7 @@ Add task-specific tools to the same call when the task obviously needs them: rea
 function k0e() {
   return tKe;
 }
-function Zo(e) {
+function asSystemPrompt(e) {
   return e;
 }
 var hTo = m(() =>
@@ -130414,7 +130414,7 @@ function _To(e) {
   if (!t) return;
   let r = t.tools ?? [];
   return {
-    systemPrompt: Zo(t.systemPrompt),
+    systemPrompt: asSystemPrompt(t.systemPrompt),
     toolDescriptions: new Map(r.map((o) => [o.name, o.description])),
     toolEntries: new Map(
       r.flatMap((o) =>
@@ -130654,7 +130654,7 @@ function fLe(e) {
 function Sjt(e, t, r) {
   let o = lf(r),
     d = lf(t),
-    p = new Set(e.filter((D) => Jue(D) === "name-only").map((D) => D.name)),
+    p = new Set(e.filter((D) => getSkillOverride(D) === "name-only").map((D) => D.name)),
     _ = MAn(e, (D) => fLe(D.name), vp(r, Up()), p, o),
     E = new Set(_.budgetTruncatedSkills),
     C = TDe(),
@@ -130669,16 +130669,16 @@ function Sjt(e, t, r) {
   return I;
 }
 async function bjt(e, t, r) {
-  let o = await HE(sn(), r),
-    d = mSt(e),
-    p = lne().filter((I) => !I.disableModelInvocation && !HM(I)),
+  let o = await getSkillToolCommands(sn(), r),
+    d = getMcpSkillCommands(e),
+    p = lne().filter((I) => !I.disableModelInvocation && !isSkillExcludedFromModel(I)),
     _ = IM(o, e),
-    E = lNe(
+    E = dropShadowedBundledSkills(
       d.length > 0
-        ? tK(pc([..._, ...p, ...d], "name"))
+        ? dropShadowedFallbackSkills(pc([..._, ...p, ...d], "name"))
         : pc([..._, ...p], "name"),
     ),
-    C = t === void 0 ? V7(E, K1()) : E;
+    C = t === void 0 ? filterSkillCommandsByAllowlist(E, K1()) : E;
   return { merged: E, included: C };
 }
 function MO(e) {
@@ -130696,18 +130696,18 @@ function ITo({
   skillsPersistencePrompt: _,
   analysisOnly: E,
 }) {
-  if (p) return { prompt: Zo([p]), servesDefault: !1 };
+  if (p) return { prompt: asSystemPrompt([p]), servesDefault: !1 };
   if (Ci() && !e) {
     let { getCoordinatorSystemPrompt: N } = import.meta.require(
-        "../../02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js",
+        "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js",
       ),
-      { hasCommsRoledServer: F } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/isCoordinatorCommsMcpTool.9dhv4n4y.js"),
-      U = Zo([N(F(t.options.mcpClients)), ...(d ? [d] : [])]);
+      { hasCommsRoledServer: F } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js"),
+      U = asSystemPrompt([N(F(t.options.mcpClients)), ...(d ? [d] : [])]);
     if (!E) y("coordinator_mode_start");
     return { prompt: U, servesDefault: !1 };
   }
   let C = e
-      ? xa(e)
+      ? isBuiltInAgent(e)
         ? e.getSystemPrompt({ toolUseContext: { options: t.options } })
         : e.getSystemPrompt()
       : void 0,
@@ -130721,11 +130721,11 @@ function ITo({
     });
   if (C && e?.appendSystemPrompt)
     return {
-      prompt: Zo([...I, C, ...(_ ? [_] : []), ...(d ? [d] : [])]),
+      prompt: asSystemPrompt([...I, C, ...(_ ? [_] : []), ...(d ? [d] : [])]),
       servesDefault: D,
     };
   return {
-    prompt: Zo([...(C ? [C] : I), ...(_ ? [_] : []), ...(d ? [d] : [])]),
+    prompt: asSystemPrompt([...(C ? [C] : I), ...(_ ? [_] : []), ...(d ? [d] : [])]),
     servesDefault: !C && D,
   };
 }
@@ -130934,8 +130934,8 @@ async function BTo(e, t, r, o, d, p, _, E, C, I, D) {
       deferredBuiltinTokens: 0,
       systemToolDetails: [],
     };
-  let { isToolSearchEnabled: F } = await import("../../02-功能模块/工具ToolSearch/isToolSearchEnabled.vw6ce7xh.js"),
-    { isDeferredToolInConversation: U } = await import("../../01-核心基础设施/共享小工具-未细化/isDeferredToolInConversation.mpxybvjg.js"),
+  let { isToolSearchEnabled: F } = await Promise.resolve({ isToolSearchEnabled }),
+    { isDeferredToolInConversation: U } = await import("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
     V = await F(o ?? "", e, t, r?.activeAgents ?? [], "analyzeBuiltIn", p),
     re = (De) => U(De, _, e),
     ue = N.filter((De) => !re(De)),
@@ -131032,7 +131032,7 @@ async function HTo(e, t, r, o, d, p, _, E, C, I, D) {
                 ? "built-in"
                 : Se;
         return {
-          name: qo(_e),
+          name: getCommandName(_e),
           source: ve,
           pluginName:
             _e.type === "prompt" ? _e.pluginInfo?.pluginManifest.name : void 0,
@@ -131091,8 +131091,8 @@ async function jTo(
     ),
     re = V.reduce((He, je) => He + je, 0) || 1,
     ue = V.map((He) => Math.round((He / re) * U)),
-    { isToolSearchEnabled: de } = await import("../../02-功能模块/工具ToolSearch/isToolSearchEnabled.vw6ce7xh.js"),
-    { isDeferredToolInConversation: _e } = await import("../../01-核心基础设施/共享小工具-未细化/isDeferredToolInConversation.mpxybvjg.js"),
+    { isToolSearchEnabled: de } = await Promise.resolve({ isToolSearchEnabled }),
+    { isDeferredToolInConversation: _e } = await import("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
     Se = await de(o, e, t, r?.activeAgents ?? [], "analyzeMcp", p),
     ve = gK(e),
     Me =
@@ -131604,7 +131604,7 @@ async function JTo(e, t, r, o, d) {
     return null;
   }
 }
-function mLe(e) {
+function isToolSearchToolAvailable(e) {
   return e.some((t) => Kt(t, Bi));
 }
 async function ZTo(e, t, r, o) {
@@ -131629,7 +131629,7 @@ async function ZTo(e, t, r, o) {
     )
   ).reduce((_, E) => _ + E, 0);
 }
-async function wjt(e, t, r, o, d, p) {
+async function isToolSearchEnabled(e, t, r, o, d, p) {
   let _ = G(t, (I) => I.isMcp);
   function E(I, D, N, F) {
     i("tengu_tool_search_mode_decision", {
@@ -131667,7 +131667,7 @@ async function wjt(e, t, r, o, d, p) {
       E(!1, "standard", "foundry_deployment_unsupported"),
       !1
     );
-  if (!mLe(t)) {
+  if (!isToolSearchToolAvailable(t)) {
     let I = fJe();
     if (t.length === 0) E(!1, I, "no_tools_in_request");
     else if (!Z_()) E(!1, I, "not_registered");
@@ -131704,7 +131704,7 @@ async function wjt(e, t, r, o, d, p) {
       return (E(!1, C, "standard_mode"), !1);
   }
 }
-function NX(e, t) {
+function extractDiscoveredToolNames(e, t) {
   let r = new Set(),
     o = 0;
   for (let d of e) {
@@ -131749,7 +131749,7 @@ function NX(e, t) {
     );
   return r;
 }
-function _Vn(e, t, r, o, d, p, _, E) {
+function getDeferredToolsDelta(e, t, r, o, d, p, _, E) {
   let C = new Set(),
     I = new Set(),
     D = new Set(),
@@ -133100,7 +133100,7 @@ async function M0e(e) {
             event: { type: "hooks_start", hookType: "pre_compact" },
           }),
             V.onCompactEvent?.({ type: "sdk_status", status: "compacting" }));
-          let Ne = await kY(
+          let Ne = await executePreCompactHooks(
             V.session,
             { trigger: "auto", customInstructions: null },
             V,
@@ -133289,13 +133289,13 @@ async function Cjt(e) {
     for (let vt of Object.keys(F.loadedNestedMemoryPaths))
       delete F.loadedNestedMemoryPaths[vt];
   if ((V2(F.memorySelector), ace(F.agentId), U && !BH(p, F.agentContext)))
-    (await Yyt(F.storageV5),
+    (await reAppendSessionMetadataAfterCompaction(F.storageV5),
       crt(Dg([...t.summaryMessages, ...e.messagesToPreserve])));
   let ue = r.at(-1)?.uuid,
     de = lce(_, V, ue);
   if (((de.compactMetadata.durationMs = Math.round(performance.now() - o)), C))
     de.compactMetadata.precomputed = !0;
-  let _e = NX(r, {
+  let _e = extractDiscoveredToolNames(r, {
     surfaced: (d.toolUseContext.stickyBetas ?? pa()).surfacedOnWire,
   });
   if (_e.size > 0)
@@ -133314,7 +133314,7 @@ async function Cjt(e) {
     type: "compact_progress",
     event: { type: "hooks_start", hookType: "post_compact" },
   });
-  let xe = await c8e(
+  let xe = await executePostCompactHooks(
       F.session,
       { trigger: _, compactSummary: t.summaryText },
       F,
@@ -134068,7 +134068,7 @@ class MRn extends Error {
     this.name = "TooManyRedirectsError";
   }
 }
-class Ojt extends Error {
+class WebFetchTransportError extends Error {
   code;
   constructor(e, t) {
     super(e);
@@ -134076,7 +134076,7 @@ class Ojt extends Error {
   }
 }
 var oCo = 52428800;
-class bfn {
+class WebFetchCache {
   urls = new Ku({ maxSize: oCo, ttl: tbn() });
   domainChecks = new Ku({ max: 128, ttl: 300000 });
   setUrl(e, t, r) {
@@ -134104,7 +134104,7 @@ var aCo = 2000,
   uCo = 1e4,
   ARn = 10,
   RRn = 1048576;
-async function uKe(e) {
+async function convertHtmlToMarkdown(e) {
   try {
     let t = (await iCo()).turndown(e.slice(0, RRn));
     if (e.length > RRn)
@@ -134122,7 +134122,7 @@ async function uKe(e) {
     );
   }
 }
-function wfn(e) {
+function isPreapprovedUrl(e) {
   try {
     let t = new URL(e);
     return O0e(t.hostname, t.pathname);
@@ -134206,7 +134206,7 @@ async function ORn(e, t, r, o = 0) {
       .catch((C) => {
         if (F1e(C)) throw new Ait(new URL(e).hostname);
         if (at.isAxiosError(C) && !at.isCancel(C))
-          throw new Ojt(C.message, C.code);
+          throw new WebFetchTransportError(C.message, C.code);
         throw C;
       }),
     { status: p, headers: _ } = d;
@@ -134235,7 +134235,7 @@ function mCo(e) {
 function gCo(e) {
   return "type" in e && e.type === "http_error";
 }
-async function Tfn(e, t, r, o, d, p) {
+async function getURLMarkdownContent(e, t, r, o, d, p) {
   if (!dCo(t)) throw new R("Invalid URL", "web-fetch-invalid-url");
   let _ = o.urls.get(t);
   if (_) {
@@ -134334,7 +134334,7 @@ async function Tfn(e, t, r, o, d, p) {
     ue,
     de;
   if (N.includes("text/html"))
-    ((ue = await uKe(re)), (de = Buffer.byteLength(ue)));
+    ((ue = await convertHtmlToMarkdown(re)), (de = Buffer.byteLength(ue)));
   else ((ue = re), (de = V));
   let _e = {
     bytes: V,
@@ -134347,7 +134347,7 @@ async function Tfn(e, t, r, o, d, p) {
   };
   return (o.setUrl(t, _e, de), _e);
 }
-async function yLe(e, t, r) {
+async function applyPromptToMarkdown(e, t, r) {
   let {
       signal: o,
       isNonInteractiveSession: d,
@@ -134364,7 +134364,7 @@ async function yLe(e, t, r) {
         : t,
     I = dQn(C, e, p),
     D = await yC({
-      systemPrompt: Zo([]),
+      systemPrompt: asSystemPrompt([]),
       userPrompt: I,
       signal: o,
       options: {
@@ -134491,7 +134491,7 @@ var _Co = m(() =>
   );
 function Iit(e) {
   try {
-    let t = Em.inputSchema.safeParse(e);
+    let t = WebFetchTool.inputSchema.safeParse(e);
     if (!t.success) return `input:${e.toString()}`;
     let { url: r } = t.data;
     return `domain:${new URL(r).hostname}`;
@@ -134500,7 +134500,7 @@ function Iit(e) {
   }
 }
 function Mit(e, t, r) {
-  let o = LG(e, Em, t);
+  let o = LG(e, WebFetchTool, t);
   for (let d of r) {
     let p = Bmt(o, d);
     if (p) return p;
@@ -134519,7 +134519,7 @@ function LRn(e) {
   if (!e?.url) return null;
   return or(e.url, Iw);
 }
-var Em = Tt({
+var WebFetchTool = Tt({
   name: Cr,
   ruleContentField: "url",
   searchHint: "fetch and extract content from a URL",
@@ -134575,8 +134575,8 @@ var Em = Tt({
           },
           { artifactUrlRule: Se },
         ] = await Promise.all([
-          import("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js"),
-          import("../../01-核心基础设施/共享小工具-未细化/artifactUrlRule.xt2fzktx.js"),
+          import("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
+          import("../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js"),
         ]),
         ve = _e(e.url);
       if (ve !== null) {
@@ -134597,13 +134597,13 @@ var Em = Tt({
           }),
           He = Oe("deny", xe);
         if (He !== null) return Ne(He);
-        if (await dKe(t.options.tools, xe)) {
+        if (await isArtifactFetchEnabled(t.options.tools, xe)) {
           d = Me;
           let je = Oe("ask", ce(t));
           if (je !== null) r = De(je);
           else if (
             (
-              await import("../../02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js")
+              await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js")
             ).othersArtifactReadConsentSurface()
           )
             o = async () => {
@@ -134618,10 +134618,10 @@ var Em = Tt({
                 },
                 { OTHER_ORG_DECISION_REASON: dn, OTHER_ORG_DENY: cn },
               ] = await Promise.all([
-                import("../../01-核心基础设施/共享小工具-未细化/probeArtifactHostEgress.jhg0ez0c.js"),
-                import("../../01-核心基础设施/共享小工具-未细化/warmShareEntry.h77r8dj4.js"),
-                import("../../01-核心基础设施/共享小工具-未细化/BOOT_ORG_MISMATCH_CODE.je808sx3.js"),
-                import("../../02-功能模块/Artifact发布-渲染/ASSET_UPLOAD_COVERS_SESSION_COPIES_NOTE.5q9rg7y1.js"),
+                import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+                import("../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js"),
+                import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
+                import("../../02-功能模块/Artifact发布-渲染/chunk-pdd7kz7p.js"),
               ]);
               await ct(ve, t.abortController.signal);
               let It = Ke(ve);
@@ -134669,7 +134669,7 @@ var Em = Tt({
         return ue
           ? {
               behavior: "deny",
-              message: `${Em.name} denied access to ${E}.`,
+              message: `${WebFetchTool.name} denied access to ${E}.`,
               decisionReason: { type: "rule", rule: ue },
             }
           : null;
@@ -134684,7 +134684,7 @@ var Em = Tt({
         return ue
           ? {
               behavior: "ask",
-              message: `Claude requested permissions to use ${Em.name}, but you haven't granted it yet.`,
+              message: `Claude requested permissions to use ${WebFetchTool.name}, but you haven't granted it yet.`,
               decisionReason: { type: "rule", rule: ue },
               ...N,
             }
@@ -134699,14 +134699,14 @@ var Em = Tt({
       let ue = I(_) ?? F(_);
       if (ue !== null) return ue;
     }
-    let V = Bmt(LG(_, Em, "allow"), E);
+    let V = Bmt(LG(_, WebFetchTool, "allow"), E);
     if (V)
       return {
         behavior: "allow",
         updatedInput: e,
         decisionReason: { type: "rule", rule: V },
       };
-    if (!a.CLAUDE_CODE_EVAL_CONFINED && wfn(e.url))
+    if (!a.CLAUDE_CODE_EVAL_CONFINED && isPreapprovedUrl(e.url))
       return {
         behavior: "allow",
         updatedInput: e,
@@ -134714,7 +134714,7 @@ var Em = Tt({
       };
     return {
       behavior: "ask",
-      message: `Claude requested permissions to use ${Em.name}, but you haven't granted it yet.`,
+      message: `Claude requested permissions to use ${WebFetchTool.name}, but you haven't granted it yet.`,
       ...N,
     };
   },
@@ -134738,7 +134738,7 @@ var Em = Tt({
     return { result: !0 };
   },
   async prompt({ model: e, tools: t, leanPrompt: r }) {
-    return uQn(e, await dKe(t, null), r);
+    return uQn(e, await isArtifactFetchEnabled(t, null), r);
   },
   async call(e, t, r, o) {
     let { url: d, prompt: p } = e,
@@ -134751,8 +134751,8 @@ var Em = Tt({
       let Oe = await kCo(d, p, t, C, o?.message.id);
       if (Oe) return Oe;
     }
-    let I = t.toolState.get(bfn),
-      D = await Tfn(
+    let I = t.toolState.get(WebFetchCache),
+      D = await getURLMarkdownContent(
         t.session,
         d,
         _,
@@ -134766,13 +134766,13 @@ var Em = Tt({
       D = await kRn({
         denial: D,
         prompt: p,
-        tool: Em,
+        tool: WebFetchTool,
         context: t,
         canUseTool: r,
         parentMessage: o,
         suggestions: BRn(Iit({ url: Oe, prompt: p })),
         refetch: (Ne) =>
-          Tfn(t.session, Ne, _, I, t.persistedToolResultFiles, t.storageV5),
+          getURLMarkdownContent(t.session, Ne, _, I, t.persistedToolResultFiles, t.storageV5),
         onOutcome: (Ne) => {
           i("tengu_web_fetch_provenance_prompt", { outcome: u(Ne) });
         },
@@ -134844,7 +134844,7 @@ ${ut}${Wt}`;
         persistedPath: de,
         persistedSize: _e,
       } = D,
-      Se = wfn(d),
+      Se = isPreapprovedUrl(d),
       ve = de
         ? N
           ? `
@@ -134863,7 +134863,7 @@ ${ut}${Wt}`;
         content: F,
         isPreapproved: Se,
         summarizeRemainder: (Oe) =>
-          yLe(p, Oe, {
+          applyPromptToMarkdown(p, Oe, {
             signal: _.signal,
             isNonInteractiveSession: E,
             isPreapprovedDomain: Se,
@@ -134873,7 +134873,7 @@ ${ut}${Wt}`;
       });
     else if (Se && ue.includes("text/markdown") && F.length < h7) Me = F;
     else
-      Me = await yLe(p, F, {
+      Me = await applyPromptToMarkdown(p, F, {
         signal: _.signal,
         isNonInteractiveSession: E,
         isPreapprovedDomain: Se,
@@ -134905,7 +134905,7 @@ function BRn(e) {
     },
   ];
 }
-async function dKe(e, t, r) {
+async function isArtifactFetchEnabled(e, t, r) {
   {
     let [
         { ARTIFACT_TOOL_NAME: o, getArtifactPublishStubDir: d },
@@ -134915,8 +134915,8 @@ async function dKe(e, t, r) {
           isArtifactReadOnlySurface: E,
         },
       ] = await Promise.all([
-        import("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js"),
-        import("../../02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js"),
+        import("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
+        import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
       ]),
       C = () => {
         if (t === null) return !1;
@@ -134931,8 +134931,8 @@ async function dKe(e, t, r) {
   return !1;
 }
 async function SCo(e, t) {
-  if (await dKe(t.options.tools, ce(t))) {
-    let { parseArtifactUrl: r } = await import("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js");
+  if (await isArtifactFetchEnabled(t.options.tools, ce(t))) {
+    let { parseArtifactUrl: r } = await import("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js");
     return r(e);
   }
   return null;
@@ -134946,13 +134946,13 @@ async function kCo(e, t, r, o, d) {
         artifactViewerUrlFor: C,
         ARTIFACT_TOOL_NAME: I,
         scrubArtifactEnvelopeTags: D,
-      } = await import("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js"),
+      } = await import("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
       N = p(e),
       F = await SCo(N, r);
     if (!F) {
       if (qG(r.agentContext)) {
         let { isArtifactToolRegistered: De } =
-            await import("../../02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js"),
+            await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
           He = _(N);
         if (He !== null && De()) {
           let je = ni(ce(r), { name: I, mcpInfo: void 0 }) !== null,
@@ -134971,10 +134971,10 @@ async function kCo(e, t, r, o, d) {
       }
       return null;
     }
-    let { artifactUrlRule: U } = await import("../../01-核心基础设施/共享小工具-未细化/artifactUrlRule.xt2fzktx.js"),
+    let { artifactUrlRule: U } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js"),
       V = ce(r),
       re = (De) =>
-        (De === "deny" ? ni(V, Em) : sm(V, Em)) ??
+        (De === "deny" ? ni(V, WebFetchTool) : sm(V, WebFetchTool)) ??
         U(ah(V, I, De), F, e) ??
         Mit(V, De, HRn(Iit({ url: e, prompt: t }), [C(F), E(F)])) ??
         null,
@@ -134997,10 +134997,10 @@ async function kCo(e, t, r, o, d) {
       { othersArtifactReadConsentSurface: Se },
     ] = await Promise.all([
       import("../../02-功能模块/工具WebFetch-WebSearch/DEFAULT_ARTIFACT_READ_PROMPT.hsn2594d.js"),
-      import("../../02-功能模块/插件系统/isArtifactToolEnabled.n685fs4m.js"),
+      import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js"),
     ]);
     if (Se()) {
-      let { probeArtifactHostEgress: De } = await import("../../01-核心基础设施/共享小工具-未细化/probeArtifactHostEgress.jhg0ez0c.js");
+      let { probeArtifactHostEgress: De } = await import("../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js");
       await De(F, r.abortController.signal);
     }
     let ve = _e(N, F, r),
@@ -135027,7 +135027,7 @@ async function kCo(e, t, r, o, d) {
       start: o,
       messageId: d,
       feature: "artifact_webfetch_read",
-      summarizer: { convertHtmlToMarkdown: uKe, applyPromptToMarkdown: yLe },
+      summarizer: { convertHtmlToMarkdown: convertHtmlToMarkdown, applyPromptToMarkdown: applyPromptToMarkdown },
       filesListed: Oe,
       ...(ve.filesOn && {
         filesRoute: Me
@@ -135036,7 +135036,7 @@ async function kCo(e, t, r, o, d) {
       }),
       ...(xe !== void 0 && { filePath: xe.path, filesConsented: xe.consented }),
     });
-    if (!Ne.ok) throw new Ojt(Ne.transportError);
+    if (!Ne.ok) throw new WebFetchTransportError(Ne.transportError);
     return {
       data: Ne.output,
       ...(Ne.afterResultCommitted && {
@@ -135124,15 +135124,15 @@ function X2(e, t, r, o = {}) {
     ) ||
     t.some((I) => I.name === Cr) ||
     !pq(t, r, { activeAgents: o.activeAgents }) ||
-    ni(r, Em) ||
-    !Em.isEnabled()
+    ni(r, WebFetchTool) ||
+    !WebFetchTool.isEnabled()
   )
     return t;
   let C = t.findIndex(
-    (I) => I.isMcp || I.name.startsWith(uP) || Xoe(I, Em) > 0,
+    (I) => I.isMcp || I.name.startsWith(uP) || Xoe(I, WebFetchTool) > 0,
   );
   if (C === -1) C = t.length;
-  return t.toSpliced(C, 0, Em);
+  return t.toSpliced(C, 0, WebFetchTool);
 }
 var Dit = ["compact_progress", "sdk_status", "stream_mode"];
 var wCo = new Set(Dit);
@@ -135252,7 +135252,7 @@ function L0e() {
   let e = B();
   return { last: xCo.of(e), rootId: e.id };
 }
-function Ifn(e) {
+function saveCacheSafeParams(e) {
   let { last: t, rootId: r } = L0e();
   ((t.params = e),
     (t.savedAt = e ? Date.now() : null),
@@ -135263,7 +135263,7 @@ function Ifn(e) {
       ? e.toolUseContext.options.mainLoopModel === t.sessionModel && !tPn()
       : !1));
 }
-function Pfn() {
+function getLastCacheSafeParamsForSameModel() {
   let { last: e, rootId: t } = L0e();
   return e.params &&
     e.sessionId === t &&
@@ -135273,7 +135273,7 @@ function Pfn() {
     ? e.params
     : null;
 }
-function BO() {
+function getLastCacheSafeParams() {
   let { last: e, rootId: t } = L0e();
   if (!e.params || e.sessionId !== t) return null;
   let r = rt();
@@ -135286,7 +135286,7 @@ function BO() {
     },
   };
 }
-function Ofn(e = Date.now()) {
+function isMainThreadCacheWarm(e = Date.now()) {
   let { last: t, rootId: r } = L0e();
   if (t.params === null || t.savedAt === null || t.sessionId !== r) return !1;
   if (t.sessionModel !== rt()) return !1;
@@ -135298,7 +135298,7 @@ function Ofn(e = Date.now()) {
   if (d === null) return !1;
   return e - t.savedAt < d * 0.9;
 }
-function FX(e) {
+function createCacheSafeParams(e) {
   return {
     systemPrompt: e.systemPrompt,
     userContext: e.userContext,
@@ -135309,7 +135309,7 @@ function FX(e) {
     stickyBetas: e.stickyBetas,
   };
 }
-async function wht(e, t, r, o, d) {
+async function prepareForkedCommandContext(e, t, r, o, d) {
   if (e.loadedFrom === "syncedSkills" && wV())
     throw new R(
       `Unknown skill: ${e.name}`,
@@ -135426,7 +135426,7 @@ function ACo(e) {
   let d = o.tools;
   return fq(o.disallowedTools, Cr) || (Yte(d) === null && !fq(d, Cr));
 }
-function Tht(e, t = "Execution completed") {
+function extractResultText(e, t = "Execution completed") {
   let r = tg(e);
   if (!r) return t;
   return (
@@ -135443,7 +135443,7 @@ var RCo = [
   "sidecarHistorySlugs",
   "prReviewSlugs",
 ];
-function Dfn(e, t) {
+function createSubagentContext(e, t) {
   let r =
       t?.abortController ??
       (t?.shareAbortController ? e.abortController : qh(e.abortController)),
@@ -135584,7 +135584,7 @@ function Dfn(e, t) {
     onPermissionDenial: e.onPermissionDenial,
   };
 }
-function Lfn(e) {
+function forkPointUuidOf(e) {
   let t = e.length - 1,
     r = e[t];
   if (r?.type === "assistant") {
@@ -135597,7 +135597,7 @@ function Lfn(e) {
   }
   return e[t]?.uuid;
 }
-async function wE({
+async function runForkedAgent({
   promptMessages: e,
   cacheSafeParams: t,
   canUseTool: r,
@@ -135626,7 +135626,7 @@ async function wE({
       forkContextMessages: Oe,
       advisorModel: Ne,
     } = t,
-    De = Dfn(xe, {
+    De = createSubagentContext(xe, {
       ...p,
       isBackgroundAgent: p?.isBackgroundAgent ?? !0,
       options: N
@@ -135655,11 +135655,11 @@ async function wE({
   )
     e = [...e, Re({ content: CCo, isMeta: !0 })];
   let je = [...Oe, ...e],
-    Ke = Lfn(Oe),
+    Ke = forkPointUuidOf(Oe),
     ct = I ? void 0 : bh(d),
     vt = null;
   if (ct)
-    (await ire(e, ct, void 0, xe.storageV5).catch((cn) =>
+    (await recordSidechainTranscript(e, ct, void 0, xe.storageV5).catch((cn) =>
       n(`Forked agent [${d}] failed to record initial transcript: ${cn}`),
     ),
       (vt = e.at(-1)?.uuid ?? null));
@@ -135709,10 +135709,10 @@ async function wE({
           (cn.type === "assistant" ||
             cn.type === "user" ||
             cn.type === "progress" ||
-            (cn.type === "attachment" && bT(cn))))
+            (cn.type === "attachment" && isLoggableMessage(cn))))
       ) {
         if (
-          (await ire([cn], ct, vt, xe.storageV5).catch((It) =>
+          (await recordSidechainTranscript([cn], ct, vt, xe.storageV5).catch((It) =>
             n(`Forked agent [${d}] failed to record transcript: ${It}`),
           ),
           cn.type !== "progress")
@@ -136158,7 +136158,7 @@ async function NCo(e, t, r, o, d, p) {
     E = Re({ content: _ }),
     C;
   try {
-    C = await wE({
+    C = await runForkedAgent({
       promptMessages: [E],
       cacheSafeParams: { ...t, forkContextMessages: o ? Nit(e) : e },
       canUseTool: Lit(),
@@ -136535,10 +136535,10 @@ var Fit = 2,
   _7 = 8000000,
   $it = "precompact.json";
 function b7(e) {
-  return mPn(ape(e), $it);
+  return mPn(getSessionSidecarDir(e), $it);
 }
 function gPn(e) {
-  return SPn(ape(e));
+  return SPn(getSessionSidecarDir(e));
 }
 function SPn(e) {
   return e + "." + $it;
@@ -136558,7 +136558,7 @@ async function kPn(e, t = b7(e.sessionId), r) {
       return { ok: !1, reason: "write_error", bytes: d, detail: l(_) };
     }
   try {
-    return (await MMe(t), await On(t, o, 384), { ok: !0, bytes: d });
+    return (await ensureSidecarDirFor(t), await On(t, o, 384), { ok: !0, bytes: d });
   } catch (_) {
     return { ok: !1, reason: "write_error", bytes: d, detail: l(_) };
   }
@@ -136625,7 +136625,7 @@ async function HCo(e) {
   }
 }
 async function CPn(e, t, r) {
-  let o = t ?? ape(e),
+  let o = t ?? getSessionSidecarDir(e),
     d = mPn(o, $it),
     p = tE(d);
   for (let _ of [d, SPn(o)]) {
@@ -136735,7 +136735,7 @@ function gce(e) {
   return t7(e);
 }
 function z0e() {
-  return H("tengu_amber_packet", !1) && !hl();
+  return H("tengu_amber_packet", !1) && !isTranscriptPersistenceDisabled();
 }
 var MPn =
     typeof {
@@ -136994,7 +136994,7 @@ function jit(e) {
       `precomputed compact: started (${C}, ${r.length} msgs, ~${ue} tok, attempt ${ve}, trigger ${d})`,
     ));
   let xe = (async () => {
-      let Ne = await kY(
+      let Ne = await executePreCompactHooks(
         _.session,
         { trigger: "auto", customInstructions: null },
         _,
@@ -137351,7 +137351,7 @@ function fde(e, t, r, o, d) {
   if (r === "subagent_exit") e.forgetSubagentTelemetry(p);
 }
 function dfn() {
-  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/getTeleportCacheState.g3em9jqw.js");
+  return import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js");
 }
 function $H(e, t, r) {
   return r === void 0 && Uve(e) && !BH(e, t);
@@ -137393,7 +137393,7 @@ function HV(e, t, r, o, d, p, _) {
       return { ...D, cacheMissAckedAtOutputTokens: I };
     });
   }
-  if (!h_()) B7n();
+  if (!h_()) clearSessionMessagesCache();
 }
 var V0e = ["User", "Project", "Local", "Managed", "AutoMem"];
 import { randomUUID as oxo } from "crypto";
@@ -137430,7 +137430,7 @@ async function sxo(e) {
       snapshotFiles: t,
     };
     if (
-      (await ST([_], void 0, void 0, void 0, e),
+      (await recordTranscript([_], void 0, void 0, void 0, e),
       t.some((E) => E.key === "workshop") && d)
     )
       Lf().noteWorkshopDocSnapshotted(o, d);
@@ -140400,7 +140400,7 @@ function bq(e, t, r) {
     messageID: Ee(t),
     toolName: Hn(e.name),
     isMcp: e.isMcp ?? !1,
-    sandboxEnabled: st.isSandboxingEnabled(),
+    sandboxEnabled: SandboxManager.isSandboxingEnabled(),
     ...(r !== void 0 && { waiting_for_user_permission_ms: r }),
   };
 }
@@ -142219,7 +142219,7 @@ function UOo(e) {
 }
 async function HOo(e, t) {
   try {
-    await k7n(e.taskId, e, t);
+    await writeRemoteAgentMetadata(e.taskId, e, t);
   } catch (r) {
     n(`persistRemoteAgentMetadata failed: ${String(r)}`);
   }
@@ -142546,7 +142546,7 @@ async function GVe(e) {
   }
 }
 async function qOo(e) {
-  let t = await x7n(e.storageV5);
+  let t = await listRemoteAgentMetadata(e.storageV5);
   if (t.length === 0) return;
   for (let r of t) {
     let o;
@@ -142555,7 +142555,7 @@ async function qOo(e) {
     } catch (p) {
       if (p instanceof Error && p.message.startsWith("Session not found:"))
         (n(`restoreRemoteAgentTasks: dropping ${r.taskId} (404: ${String(p)})`),
-          j3(r.taskId, e.storageV5));
+          removeRemoteAgentMetadata(r.taskId, e.storageV5));
       else
         n(
           `restoreRemoteAgentTasks: skipping ${r.taskId} (recoverable: ${String(p)})`,
@@ -142563,7 +142563,7 @@ async function qOo(e) {
       continue;
     }
     if (o === "archived") {
-      j3(r.taskId, e.storageV5);
+      removeRemoteAgentMetadata(r.taskId, e.storageV5);
       continue;
     }
     let d = {
@@ -142865,7 +142865,7 @@ function CDn(e, t, r) {
             ),
             rlt(e, "session_start_failed", t.taskRegistry, Dn.startupFailure),
             Sd(e),
-            j3(e, t.storageV5),
+            removeRemoteAgentMetadata(e, t.storageV5),
             !1
           );
         if (
@@ -142885,7 +142885,7 @@ function CDn(e, t, r) {
             ),
             IOe(e, It.title, "completed", t.taskRegistry, It.toolUseId),
             Sd(e),
-            j3(e, t.storageV5),
+            removeRemoteAgentMetadata(e, t.storageV5),
             !1
           );
         let wn =
@@ -142924,7 +142924,7 @@ function CDn(e, t, r) {
               Nt(`${Dxt}${It.title}" is blocked: ${xo}`),
             ),
             Sd(e),
-            j3(e, t.storageV5),
+            removeRemoteAgentMetadata(e, t.storageV5),
             !1
           );
         }
@@ -142955,7 +142955,7 @@ function CDn(e, t, r) {
                 `Remote workflow completed: ${Br}`,
               ),
               Sd(e),
-              j3(e, t.storageV5),
+              removeRemoteAgentMetadata(e, t.storageV5),
               !1
             );
         }
@@ -143047,7 +143047,7 @@ function CDn(e, t, r) {
                   ),
                 ),
                 Sd(e),
-                j3(e, t.storageV5),
+                removeRemoteAgentMetadata(e, t.storageV5),
                 !1
               );
             let qs =
@@ -143066,14 +143066,14 @@ function CDn(e, t, r) {
               })),
               rlt(e, qs, t.taskRegistry, ss ?? void 0, _()),
               Sd(e),
-              j3(e, t.storageV5),
+              removeRemoteAgentMetadata(e, t.storageV5),
               !1
             );
           }
           return (
             IOe(e, It.title, Br, t.taskRegistry, It.toolUseId),
             Sd(e),
-            j3(e, t.storageV5),
+            removeRemoteAgentMetadata(e, t.storageV5),
             !1
           );
         }
@@ -143107,7 +143107,7 @@ function CDn(e, t, r) {
                 _(),
               ),
               Sd(e),
-              j3(e, t.storageV5),
+              removeRemoteAgentMetadata(e, t.storageV5),
               !1
             );
         } catch {}
@@ -143598,7 +143598,7 @@ function Ace() {
   return H("tengu_neapolitan", !1);
 }
 function OOe() {
-  return !a.CLAUDE_CODE_EVAL_CONFINED && (EX() || $r(Q()) !== null);
+  return !a.CLAUDE_CODE_EVAL_CONFINED && (hasWorktreeCreateHook() || $r(Q()) !== null);
 }
 async function UDn() {
   let e = Q(),
@@ -143684,9 +143684,9 @@ import { isDeepStrictEqual as vDo } from "util";
 async function CDo(e) {
   let { tool: t, raised: r, rewritten: o, context: d } = e;
   if (vDo(r, o)) return null;
-  let p = await jv(t, o, d);
+  let p = await checkRuleBasedPermissions(t, o, d);
   if (p === null || p.behavior === "deny") return p;
-  return qDn(await jv(t, r, d), p) ? null : p;
+  return qDn(await checkRuleBasedPermissions(t, r, d), p) ? null : p;
 }
 var ADo = { deny: "denies", ask: "asks about" };
 import { randomUUID as aF } from "crypto";
@@ -144052,9 +144052,9 @@ function aNn(e) {
   }
   return !1;
 }
-var KDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js").BRIEF_TOOL_NAME,
-  YDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js").LEGACY_BRIEF_TOOL_NAME,
-  XDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/SEND_USER_FILE_TOOL_PROMPT.9jawnj92.js").SEND_USER_FILE_TOOL_NAME,
+var KDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js").BRIEF_TOOL_NAME,
+  YDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js").LEGACY_BRIEF_TOOL_NAME,
+  XDo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js").SEND_USER_FILE_TOOL_NAME,
   QDo = new Set([
     "compaction_reminder",
     "companion_intro",
@@ -144104,7 +144104,7 @@ function JDo(e) {
 }
 var ZDo = 4096,
   eNo = 512;
-function Eht(e) {
+function dropMalformedAttachments(e) {
   let t = 0,
     r = e.filter((o) => {
       if (o.type === "attachment" && !JDo(o.attachment)) return ((t += 1), !1);
@@ -144145,7 +144145,7 @@ function nNo(e) {
   return { ...e, message: { ...e.message, content: r } };
 }
 var TNn = "Continue from where you left off.";
-function Aht() {
+function getResumePrompt() {
   return a.CLAUDE_CODE_RESUME_PROMPT || TNn;
 }
 function lNn(e, t) {
@@ -144172,7 +144172,7 @@ function uNn(e) {
   }
   return !0;
 }
-function _Ke(e, t, r, o) {
+function logResumeInterruptedTurn(e, t, r, o) {
   i("tengu_resume_interrupted_turn", {
     surface: e === "print" ? S("print") : S("repl_restore"),
     kind: t.isMeta ? S("synthetic_continue") : S("resubmit"),
@@ -144180,7 +144180,7 @@ function _Ke(e, t, r, o) {
     ...(o !== void 0 && { pending_action_class: o }),
   });
 }
-function ELe(e, t) {
+function removeInterruptedMessage(e, t) {
   let r = e.findIndex((o) => o.uuid === t.uuid);
   if (r !== -1) e.splice(r, 2);
 }
@@ -144210,7 +144210,7 @@ function sNo(e) {
   if (e.type !== "user" || e.isMeta !== !0 || e.promptSource !== void 0)
     return !1;
   let t = NOe(e.message.content);
-  return t === Aht() || t === TNn;
+  return t === getResumePrompt() || t === TNn;
 }
 function NOe(e) {
   return typeof e === "string"
@@ -144219,14 +144219,14 @@ function NOe(e) {
       ? e[0].text
       : void 0;
 }
-function Cht(e) {
+function deserializeMessages(e) {
   return vNn(e).messages;
 }
 function vNn(e, t, r, o) {
   try {
     sne(e);
-    let d = yKe(e),
-      p = rNo(Eht(d), o),
+    let d = dropRetractedMessages(e),
+      p = rNo(dropMalformedAttachments(d), o),
       _ = 0,
       E = p.map((Ke) => {
         if (
@@ -144303,7 +144303,7 @@ function vNn(e, t, r, o) {
     let He;
     if (Ne || De) He = { kind: "none" };
     else if (Oe.kind === "interrupted_turn") {
-      let [Ke] = wp([Re({ content: Aht(), isMeta: !0 })]);
+      let [Ke] = wp([Re({ content: getResumePrompt(), isMeta: !0 })]);
       (ve.push(Ke), (He = { kind: "interrupted_prompt", message: Ke }));
     } else He = Oe;
     let je = ve.findLastIndex(
@@ -144451,11 +144451,11 @@ function lNo(e) {
         if (r.name && r.path && r.content) TB(r.name, r.path, r.content, null);
     }
     if (t.attachment.type === "skill_listing")
-      if (t.attachment.names) Q8n(t.attachment.names);
-      else J8n();
+      if (t.attachment.names) seedSentSkillNames(t.attachment.names);
+      else suppressNextSkillListing();
   }
 }
-function ALe(e, t) {
+function dedupeSessionStartHookMessages(e, t) {
   if (t.length === 0) return [];
   let r = new Set();
   for (let p of e) for (let _ of kNn(p)) r.add(_);
@@ -144498,7 +144498,7 @@ function flt(e) {
   if (!e.startsWith(Gre)) return e;
   return e.replace(/(Full output saved to: ).*$/m, "$1<persisted>");
 }
-function yKe(e) {
+function dropRetractedMessages(e) {
   let t = new Set(
     e.flatMap((o) =>
       o.type === "system" &&
@@ -144517,7 +144517,7 @@ function yKe(e) {
     });
   return r;
 }
-async function PV(e, t, r) {
+async function loadConversationForResume(e, t, r) {
   let o,
     d = (_, E) => {
       let C = r.onSessionResolved;
@@ -144537,12 +144537,12 @@ async function PV(e, t, r) {
       D,
       N = !1;
     if (e === void 0) {
-      let Me = Mhn(void 0, r.storageV5),
+      let Me = fetchLogs(void 0, r.storageV5),
         xe,
         Oe = new Set();
       try {
-        let { listAllLiveSessions: Ne } = await import("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
-          { ownPidDomain: De } = await import("../../01-核心基础设施/共享小工具-未细化/ownPidDomain.3ttwm0ag.js"),
+        let { listAllLiveSessions: Ne } = await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js"),
+          { ownPidDomain: De } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js"),
           [He, je] = await Promise.all([
             Ne(r.storageV5, { rejectUnreadable: !0 }),
             De(),
@@ -144563,7 +144563,7 @@ async function PV(e, t, r) {
           }
         }
       } catch {}
-      _ = await j7n(
+      _ = await findFirstMessageLog(
         await Me,
         (Ne) => {
           if (Ne.bookkeepingOnly) return !1;
@@ -144582,7 +144582,7 @@ async function PV(e, t, r) {
             );
           if (Ne.superseded) return !1;
           if (r.forkSession) return !0;
-          let De = Kc(Ne);
+          let De = getSessionIdFromLog(Ne);
           if (De !== void 0 && xe?.has(De)) return !1;
           if (
             xe === void 0 &&
@@ -144594,11 +144594,11 @@ async function PV(e, t, r) {
         r.storageV5,
       );
     } else if (t && typeof e === "string")
-      ((_ = await CY(e, t, r.storageV5)),
+      ((_ = await getLastSessionLog(e, t, r.storageV5)),
         (I = _?.messages.at(-1)?.sessionId ?? _?.sessionId ?? e));
     else if (typeof e === "string")
       ((_ =
-        (await CY(e, void 0, r.storageV5)) ??
+        (await getLastSessionLog(e, void 0, r.storageV5)) ??
         (await cNo(e, r.storageV5)) ??
         (await uNo(e, r.storageV5))),
         (I = e));
@@ -144609,14 +144609,14 @@ async function PV(e, t, r) {
         null
       );
     if (_) {
-      if (gj(_))
-        _ = await AY(_, {
+      if (isLiteLog(_))
+        _ = await loadFullLog(_, {
           onTranscriptUnreadable: (De) => {
             D = De;
           },
           storageV5: r.storageV5,
         });
-      if (!I) I = Kc(_);
+      if (!I) I = getSessionIdFromLog(_);
       let Me = Cbt(I, r) ? I : void 0,
         xe = r.forkSession ? void 0 : Me;
       if (I)
@@ -144632,13 +144632,13 @@ async function PV(e, t, r) {
             Oe.parentSessionId === Ne)),
         !C)
       )
-        Ogt(_, xe, r.storageV5);
-      ((E = _.messages), $7n(E));
+        copyFileHistoryForResume(_, xe, r.storageV5);
+      ((E = _.messages), checkResumeConsistency(E));
     }
     let F = E?.length ?? 0;
-    ((E = yKe(E)), (E = Eht(E)), lNo(E));
+    ((E = dropRetractedMessages(E)), (E = dropMalformedAttachments(E)), lNo(E));
     let U = _?.fullPath ?? t,
-      V = U ? ((await G7n(U, r.storageV5)) ?? void 0) : void 0,
+      V = U ? ((await findDeferredToolMarkerInTranscript(U, r.storageV5)) ?? void 0) : void 0,
       re = E.length,
       ue = vNn(
         E,
@@ -144654,7 +144654,7 @@ async function PV(e, t, r) {
         _e,
         {
           sessionId: !r.forkSession && Cbt(I, r) ? I : K(),
-          sessionTitle: mu(K()) ?? _?.customTitle,
+          sessionTitle: getCurrentSessionTitle(K()) ?? _?.customTitle,
           resumedMessages: E,
           storageV5: r.storageV5,
           credentials: r.credentials,
@@ -144662,10 +144662,10 @@ async function PV(e, t, r) {
       );
     Ts("hooks_init_ms", performance.now() - de, de);
     let ve = TLe();
-    if (ve) eAe(ve);
+    if (ve) cacheHookSessionTitle(ve);
     if (
       (tNn({ msgsLoaded: re, msgsInJsonl: F }),
-      E.push(...ALe(E, Se)),
+      E.push(...dedupeSessionStartHookMessages(E, Se)),
       D !== void 0)
     )
       g("session_resume", "transcript_unreadable", { errno: D });
@@ -144726,7 +144726,7 @@ async function cNo(e, t) {
   let r = Mh(sN(t));
   for (let o of await q9(he()))
     for (let d of await J5(o, r)) {
-      let p = await CY(e, qDo(d, `${e}.jsonl`), t);
+      let p = await getLastSessionLog(e, qDo(d, `${e}.jsonl`), t);
       if (p) return (i("tengu_resume_worktree_fallback", {}), p);
     }
   return null;
@@ -144734,7 +144734,7 @@ async function cNo(e, t) {
 async function uNo(e, t) {
   let r = await X7t(e, void 0, Mh(sN(t)));
   if (r === null) return null;
-  let o = await CY(e, r, t);
+  let o = await getLastSessionLog(e, r, t);
   if (o) i("tengu_transcript_id_scan_fallback", {});
   return o;
 }
@@ -144855,7 +144855,7 @@ function glt(e, t) {
 import { resolve as Ict } from "path";
 import { realpath as vBo } from "fs/promises";
 var mNo = 8,
-  Bfn =
+  NO_SYNC_HANDLE_MESSAGE =
     "File sync is not running for this session here: this process did not seed it from this checkout, so it has nothing to keep in sync",
   gNo = 2000;
 class ONn {
@@ -144982,12 +144982,12 @@ class ONn {
 function hNo() {
   return new ONn();
 }
-var _de = new j(hNo);
-function jO() {
-  return _de.of(B().host);
+var laptopDirSyncRegistries = new j(hNo);
+function rootLaptopDirSyncRegistry() {
+  return laptopDirSyncRegistries.of(B().host);
 }
-function jfn(e) {
-  return jO().take(e);
+function takeLaptopDirSyncSession(e) {
+  return rootLaptopDirSyncRegistry().take(e);
 }
 function MNn(e) {
   switch (e?.state) {
@@ -145011,7 +145011,7 @@ function LNn() {
       .map((r) => r.trim().toLowerCase())
       .filter((r) => r !== ""),
     t = e.filter((r) => !NNn.has(r));
-  if (t.length > 0 && jO().tellUnknownEngineWord())
+  if (t.length > 0 && rootLaptopDirSyncRegistry().tellUnknownEngineWord())
     n(
       `dir-sync: CLAUDE_CODE_DIR_SYNC_ENGINE has unrecognised word(s) ${t.join(", ")}; known: git, always-git (defaults), none/off/0/false/no (no directory sync)`,
       { level: "warn" },
@@ -145028,7 +145028,7 @@ function CLe() {
   return FNn();
 }
 function vLe() {
-  return jO().linkedWorktreesServed();
+  return rootLaptopDirSyncRegistry().linkedWorktreesServed();
 }
 function SKe(e) {
   return e !== "linked" || vLe();
@@ -145121,7 +145121,7 @@ function fNe(e, t, r, o = process.env) {
       `${_ || `${N}${NR}.config`}${NR}git${NR}config`,
       `${N}${NR}.gitconfig`,
     ]),
-  ].map((N) => n$(t, N));
+  ].map((N) => spelledFrom(t, N));
 }
 function vNo(e) {
   let t = e?.trim().toLowerCase();
@@ -145224,8 +145224,8 @@ function HNn(e) {
 }
 var RNo = 40;
 async function wq(e, t, r = RNo, o = { secondNames: !0 }) {
-  let d = (V) => t.roots.some((re) => aC(re, V)),
-    p = (V) => t.roots.some((re) => aC(re, V) && aC(V, re)),
+  let d = (V) => t.roots.some((re) => isWithin(re, V)),
+    p = (V) => t.roots.some((re) => isWithin(re, V) && isWithin(V, re)),
     _ = (V) => t.fixed.includes(V),
     E = (V) => d(V) && !p(V) && !_(V),
     C = (V) => V === "ENOENT" || V === "ENOTDIR";
@@ -145291,7 +145291,7 @@ async function wq(e, t, r = RNo, o = { secondNames: !0 }) {
         let Me =
           ve !== void 0 && /^[\\/](?![\\/])/.test(Se) ? `${ve}${Se}` : Se;
         if (Me.includes("\uFFFD")) return !0;
-        let xe = [n$(F, Me), ...N.slice(V + 1)];
+        let xe = [spelledFrom(F, Me), ...N.slice(V + 1)];
         return wq(xe.join(NR), t, r - 1, o);
       }
       case "entry":
@@ -145336,7 +145336,7 @@ async function jNn(e, t) {
       }
     },
     o = async (D) => {
-      if (Nce(D) || aC(e, D)) return "refuse";
+      if (Nce(D) || isWithin(e, D)) return "refuse";
       let N = await wq(D, t);
       return N === null ? "unread" : N ? "refuse" : !0;
     },
@@ -145357,7 +145357,7 @@ async function jNn(e, t) {
     let N = /^gitdir:\s*(.*?)\s*$/m.exec(D.text)?.[1];
     if (N === void 0 || N === "" || !D.text.startsWith("gitdir:"))
       return "refuse";
-    _ = n$(e, N);
+    _ = spelledFrom(e, N);
     let F = await o(_);
     if (F !== !0) return F;
   }
@@ -145365,14 +145365,14 @@ async function jNn(e, t) {
   if (E === "refuse" || E === "unread") return E;
   if (E === "absent") return { GIT_DIR: _, GIT_COMMON_DIR: _ };
   if (p.isDirectory()) return "refuse_common";
-  let C = n$(_, E.text.replace(/\r?\n$/, "")),
+  let C = spelledFrom(_, E.text.replace(/\r?\n$/, "")),
     I = await o(C);
   return I === !0 ? { GIT_DIR: _, GIT_COMMON_DIR: C } : I;
 }
-function n$(e, t) {
+function spelledFrom(e, t) {
   return HOe(t) ? t : `${e}${NR}${t}`;
 }
-function aC(e, t) {
+function isWithin(e, t) {
   if (!HOe(t)) return !1;
   let r = P(),
     o = r === "macos" || r === "windows",
@@ -145491,7 +145491,7 @@ function zNn(e) {
 function qNn(e) {
   return e !== void 0 && e.length > 1 ? e.replace(/[\\/]+$/, "") : e;
 }
-function Af(e, t, r) {
+function builderGit(e, t, r) {
   let o = r.input === void 0 ? {} : { input: r.input };
   if (!r.hardened)
     return Be(lt(), [...fn, ...t], {
@@ -145508,14 +145508,14 @@ function Af(e, t, r) {
         ? void 0
         : uLo(r.layout));
   if (d === kNe) return Promise.resolve({ stdout: "", stderr: iLn, code: 126 });
-  let p = r.probes ?? kne(),
+  let p = r.probes ?? defaultBuilderGitProbes(),
     _ = r.screenMemo ?? p.screenMemo,
     E = aLn(d, _),
-    C = d === void 0 && xC() === void 0 ? lt() : Wjt(E, p);
+    C = d === void 0 && xC() === void 0 ? lt() : gitExeOnPath(E, p);
   if (C === null)
     return Promise.resolve({
       stdout: "",
-      stderr: d === void 0 || Wjt(J2(void 0), p) === null ? _Ne : yLo,
+      stderr: d === void 0 || gitExeOnPath(hardenedSpawnEnv(void 0), p) === null ? _Ne : yLo,
       code: 127,
     });
   return Be(C, [...fn, ...$Lo, ...t], {
@@ -145548,15 +145548,15 @@ function jNo(e) {
     GIT_ATTR_SOURCE: void 0,
   };
 }
-async function UX(
+async function readGitLayout(
   e,
   t,
-  { linkedTrees: r = !1, bound: o = r, probes: d = kne() } = {},
+  { linkedTrees: r = !1, bound: o = r, probes: d = defaultBuilderGitProbes() } = {},
 ) {
-  let p = d.screenMemo === void 0 ? new Rne("operation") : d,
+  let p = d.screenMemo === void 0 ? new BuilderGitProbes("operation") : d,
     _ = await Rq(e).catch(() => e);
   if (o) {
-    if ((await kLn()).some((_e) => aC(_e, _) || aC(_e, e)))
+    if ((await kLn()).some((_e) => isWithin(_e, _) || isWithin(_e, e)))
       return {
         kind: "tampered",
         misplaced: "temp_root",
@@ -145579,7 +145579,7 @@ async function UX(
       ? mLo(_, [...fLn(_), ...(E.kind === "chain" ? [uLn(E.commonDir)] : [])])
       : void 0,
     I = (de) =>
-      Af(e, ["rev-parse", ...de], {
+      builderGit(e, ["rev-parse", ...de], {
         hardened: !0,
         signal: t,
         probes: p,
@@ -145749,10 +145749,10 @@ async function WNo(e, t, r, o) {
       kind: "unlistable",
       detail: "could not list the configuration in force",
     },
-    p = BX(t),
-    _ = o.screenMemo ?? jjt(),
+    p = reachRootsOf(t),
+    _ = o.screenMemo ?? newScreenMemo(),
     E = (xe) =>
-      Af(e, xe, {
+      builderGit(e, xe, {
         hardened: !0,
         layout: t,
         signal: r,
@@ -145813,7 +145813,7 @@ async function WNo(e, t, r, o) {
         ),
         t.workTree,
         null,
-        J2(void 0),
+        hardenedSpawnEnv(void 0),
       ),
     ],
     V = U.find((xe) => xe?.includes("\uFFFD"));
@@ -145839,7 +145839,7 @@ async function WNo(e, t, r, o) {
     Se = _e(/^filter\.(.*)\.(?:clean|smudge|process|required)$/s),
     ve = _e(/^hook\.(.*)\.(?:command|event|enabled)$/s);
   if ([...Se, ...ve].some((xe) => xe.includes("\uFFFD")))
-    return { kind: "unlistable", detail: Gfn };
+    return { kind: "unlistable", detail: NAME_NOT_TEXT };
   let Me = [
     ...Se.flatMap((xe) => [
       [`filter.${xe}.clean`, ""],
@@ -145867,7 +145867,7 @@ async function WNo(e, t, r, o) {
   };
 }
 var GNo = 8,
-  Bjt = 32,
+  MAX_INCLUDED_FILES = 32,
   zNo = 4096;
 async function qNo(e, t, r) {
   let o = (C) => C !== null,
@@ -145886,7 +145886,7 @@ async function qNo(e, t, r) {
         !Nce(U) && (await FNo(U).catch(() => null))?.isFile() ? U : null,
       ),
     );
-    if (((E += G(N, o)), E > Bjt)) return { tooMany: !0 };
+    if (((E += G(N, o)), E > MAX_INCLUDED_FILES)) return { tooMany: !0 };
     let F = await Promise.all(N.filter(o).map(t));
     if (F.some((U) => U === null)) return null;
     (p.push(...F.flatMap((U) => U?.keys ?? [])),
@@ -145915,25 +145915,25 @@ function YNn(e, t, r) {
   let o = r.workTree,
     d = /^~[^/]*\//.exec(e);
   if (d !== null)
-    return Oce(J2(void 0)).map((_) =>
-      n$(o, `${_}${Cq}${e.slice(d[0].length)}`),
+    return Oce(hardenedSpawnEnv(void 0)).map((_) =>
+      spelledFrom(o, `${_}${Cq}${e.slice(d[0].length)}`),
     );
-  let p = Wfn(e, t, o);
+  let p = resolveIncludePath(e, t, o);
   return pI(p) ? [p] : [];
 }
 function VNo(e, t) {
-  return e.startsWith("file:") ? n$(t, e.slice(5)) : null;
+  return e.startsWith("file:") ? spelledFrom(t, e.slice(5)) : null;
 }
-function Wfn(e, t, r) {
+function resolveIncludePath(e, t, r) {
   let o = /^~([^/]*)\//.exec(e);
   if (o !== null)
     return o[1] === "" || o[1] === KNo()
       ? `${tLn()}${Cq}${e.slice(o[0].length)}`
       : e;
   if (pI(e) || e.startsWith("%(prefix)/")) return e;
-  return `${t.startsWith("file:") ? Qk(n$(r, t.slice(5))) : r}${Cq}${e}`;
+  return `${t.startsWith("file:") ? Qk(spelledFrom(r, t.slice(5))) : r}${Cq}${e}`;
 }
-var Gfn =
+var NAME_NOT_TEXT =
   "a configured filter driver or hook has a name that is not valid UTF-8";
 function KNo() {
   try {
@@ -145942,7 +145942,7 @@ function KNo() {
     return null;
   }
 }
-async function WO(e, t) {
+async function layoutStillHolds(e, t) {
   let { gitDir: r, commonDir: o } = e,
     [d, p, _, E, ...C] = await Promise.all([
       Rlt(r),
@@ -145978,7 +145978,7 @@ async function WO(e, t) {
     C.every((D) => D === "absent" || D === "file")
   );
 }
-function kht(e) {
+function parseGitVersion(e) {
   let t = /^git version (\d+)\.(\d+)\.(\d+)/.exec(e.trim());
   return t === null
     ? null
@@ -146116,8 +146116,8 @@ var JNo = new Set([
   oLn = 268435456,
   eLo = 64,
   XNn = 1073741824;
-async function zVn(e, t, r, o = kne()) {
-  let d = (Ne) => Af(e, Ne, { hardened: !0, layout: t, signal: r, probes: o }),
+async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
+  let d = (Ne) => builderGit(e, Ne, { hardened: !0, layout: t, signal: r, probes: o }),
     [p, _, E] = await Promise.all([
       d(["rev-parse", "--show-object-format"]),
       d([
@@ -146190,7 +146190,7 @@ async function zVn(e, t, r, o = kne()) {
       }))
       .filter(({ key: Ne, value: De }) => JNo.has(Ne) && ZNo.test(De)),
     V = Alt(
-      await bKe(Pu(t.gitDir, "HEAD")).catch(() => {
+      await readSmallFile(Pu(t.gitDir, "HEAD")).catch(() => {
         return;
       }),
     );
@@ -146237,7 +146237,7 @@ async function zVn(e, t, r, o = kne()) {
   let Me = Pu(await Rq(ve).catch(() => ve), "seed-admin");
   if (
     [Me, Pu(ve, "seed-admin")].some(
-      (Ne) => aC(t.workTree, Ne) || aC(Se, Ne) || aC(t.gitDir, Ne),
+      (Ne) => isWithin(t.workTree, Ne) || isWithin(Se, Ne) || isWithin(t.gitDir, Ne),
     )
   )
     return bv(
@@ -146254,7 +146254,7 @@ async function zVn(e, t, r, o = kne()) {
       (Ne.mode & 18) !== 0
     )
       return bv("~/.claude/seed-admin is not a plain directory of this user");
-    let De = BX(t),
+    let De = reachRootsOf(t),
       He = () => aLn(De === void 0 ? void 0 : wNe(De), o.screenMemo);
     (await nLo(Me, He),
       (Oe = await LNo(
@@ -146402,9 +146402,9 @@ function wNe(e) {
   return t === "unreadable" ? kNe : pLo([...e.roots, ...t]);
 }
 function aLn(e, t) {
-  return J2(e === void 0 || e === kNe || t === void 0 ? e : dLo(t, e), t);
+  return hardenedSpawnEnv(e === void 0 || e === kNe || t === void 0 ? e : dLo(t, e), t);
 }
-function J2(e, t) {
+function hardenedSpawnEnv(e, t) {
   let r = lLn();
   if (e === void 0) return r;
   let o = Object.keys(r).filter((V) =>
@@ -146491,7 +146491,7 @@ function lLo(e, t) {
   );
 }
 var cLo = ["LD_PRELOAD", "LD_LIBRARY_PATH", "LD_AUDIT"];
-function VVn() {
+function pinnedTempRoot() {
   let e = lLn(),
     t = Wd(e, "CLAUDE_CODE_TMPDIR");
   if (t !== void 0 && t !== "") return t;
@@ -146517,13 +146517,13 @@ function lLn() {
   return { ...ea(e, (o, d) => !r.has(d.toUpperCase())), ...t };
 }
 function uLo(e) {
-  let t = BX(e);
+  let t = reachRootsOf(e);
   return t === void 0 ? void 0 : wNe(t);
 }
-function BX(e) {
+function reachRootsOf(e) {
   return e.bound === !0 ? fLo(e.workTree, e) : void 0;
 }
-function jjt() {
+function newScreenMemo() {
   return { roots: new Set(), paths: new Map(), loaders: new Map() };
 }
 function dLo(e, t) {
@@ -146553,7 +146553,7 @@ function fLn(e) {
   let t = tLn(),
     r = (o) => {
       let d = Qk(o);
-      return d === o || aC(d, t) ? [] : [d, ...r(d)];
+      return d === o || isWithin(d, t) ? [] : [d, ...r(d)];
     };
   return r(e).filter((o) => gLo(Pu(o, ".git")));
 }
@@ -146610,8 +146610,8 @@ function Fce(e, t, r, o = new Map()) {
   });
 }
 function pLn(e) {
-  return Object.assign((t) => e.some((r) => aC(r, t)), {
-    beneath: (t) => e.some((r) => aC(t, r) && !aC(r, t)),
+  return Object.assign((t) => e.some((r) => isWithin(r, t)), {
+    beneath: (t) => e.some((r) => isWithin(t, r) && !isWithin(r, t)),
   });
 }
 function Dq(e, t, r, o = SLo) {
@@ -146735,11 +146735,11 @@ function CLo(e) {
   }
 }
 var bLn = 1024;
-class Rne {
+class BuilderGitProbes {
   #e = new Map();
   screenMemo;
   constructor(e = "host") {
-    this.screenMemo = e === "operation" ? jjt() : void 0;
+    this.screenMemo = e === "operation" ? newScreenMemo() : void 0;
   }
   gitExeOnPath(e) {
     let t = Wd(e, "PATH") ?? "",
@@ -146750,11 +146750,11 @@ class Rne {
     return o;
   }
 }
-var xLo = new j(() => new Rne());
-function kne() {
+var xLo = new j(() => new BuilderGitProbes());
+function defaultBuilderGitProbes() {
   return xLo.of(B().host);
 }
-function Wjt(e, t = kne()) {
+function gitExeOnPath(e, t = defaultBuilderGitProbes()) {
   return t.gitExeOnPath(e);
 }
 function bv(e, t = "setup") {
@@ -146776,13 +146776,13 @@ async function ALo(e) {
   if (r === null || r.isDirectory()) return { kind: "not_file" };
   if (!r.isFile() || r.nlink !== 1) return { kind: "refuse", why: "git_file" };
   let o = Alt(
-      await bKe(t).catch(() => {
+      await readSmallFile(t).catch(() => {
         return;
       }),
     ),
     d = o === null ? void 0 : /^gitdir: (.+)$/s.exec(o)?.[1];
   if (d === void 0 || bNe(d, e)) return { kind: "refuse", why: "git_file" };
-  let p = await Rq(n$(e, d)).catch(() => null);
+  let p = await Rq(spelledFrom(e, d)).catch(() => null);
   if (p === null) return { kind: "refuse", why: "admin_dir" };
   if (SNe(Qk(p)) !== "worktrees")
     return { kind: "refuse", why: "git_file", adminDir: p };
@@ -146790,14 +146790,14 @@ async function ALo(e) {
   if (Plt(await Rlt(p), p) !== _)
     return { kind: "refuse", why: "common_dir", adminDir: p };
   let E = Alt(
-    await bKe(Pu(p, "gitdir")).catch(() => {
+    await readSmallFile(Pu(p, "gitdir")).catch(() => {
       return;
     }),
   );
   if (
     (E === null || bNe(E, p, e)
       ? null
-      : await Rq(n$(p, E)).catch(() => null)) !== t
+      : await Rq(spelledFrom(p, E)).catch(() => null)) !== t
   )
     return { kind: "refuse", why: "back_link", adminDir: p };
   if (!(await wLn(_, e)))
@@ -146845,11 +146845,11 @@ async function wLn(e, t) {
     o = r.at(-1) ?? "",
     d = (_) => _.toLowerCase() === ".git" || _.toLowerCase().endsWith(".git");
   if (!d(o) || r.slice(0, -1).some(d)) return !1;
-  if (aC(t, e) || aC(e, t)) return !1;
-  return !(await kLn()).some((_) => aC(_, e));
+  if (isWithin(t, e) || isWithin(e, t)) return !1;
+  return !(await kLn()).some((_) => isWithin(_, e));
 }
 async function PLo(e, t, r, o) {
-  let d = await Af(
+  let d = await builderGit(
     e,
     [
       "config",
@@ -146865,7 +146865,7 @@ async function PLo(e, t, r, o) {
 }
 async function ILo(e, t, r, o) {
   let [d, p] = await Promise.all([
-    Af(
+    builderGit(
       e,
       [
         "config",
@@ -146915,13 +146915,13 @@ async function Lce(e, t) {
 var DLo = 4096;
 async function Rlt(e) {
   try {
-    let t = await bKe(Pu(e, "commondir"));
+    let t = await readSmallFile(Pu(e, "commondir"));
     return t === void 0 ? void 0 : t.replace(/\r?\n$/, "");
   } catch (t) {
     return A(t) === "ENOENT" ? null : void 0;
   }
 }
-async function bKe(e) {
+async function readSmallFile(e) {
   if (P() === "windows" && !(await Wx(e)).isFile()) return;
   let t = await Clt(e, Ha());
   try {
@@ -147150,9 +147150,9 @@ var {
     relative: F7,
     sep: RNe,
   } = ZLo,
-  EKe = "/mnt/user-data/working",
-  jX = "/working",
-  Jm = 26214400,
+  SYNCED_FILE_ROOT = "/mnt/user-data/working",
+  WORKING_FILESTORE_PREFIX = "/working",
+  MAX_WORKING_FILE_BYTES = 26214400,
   OLn = 4096,
   tFo = 4,
   DLn = 30000,
@@ -147256,7 +147256,7 @@ class LLn {
   async flush() {
     if (this.syncer === null) {
       if (this.lateStartRoot !== null && this.startInFlight === null) {
-        let e = Lpr(this.lateStartRoot);
+        let e = startSyncedFileSyncer(this.lateStartRoot);
         ((this.startInFlight = e),
           e
             .finally(() => {
@@ -147290,19 +147290,19 @@ function Dlt(e) {
 function Nlt(e, t) {
   return gI().inFlight.run(e, t);
 }
-function Tde(e, t) {
+function relUnderSyncDir(e, t) {
   if (!Olt(e)) throw Error("syncDir must be absolute");
   if (t.includes("\x00")) throw Error("path contains null bytes");
   if (!Olt(t)) throw Error("path must be absolute");
   let r = F7(e, eFo(t));
-  if (r === "" || r === "." || xLe(r))
+  if (r === "" || r === "." || escapesSyncRoot(r))
     throw Error("path must be under the working sync dir");
   return r;
 }
-function xLe(e) {
+function escapesSyncRoot(e) {
   return Olt(e) || e.split(RNe).includes("..");
 }
-function kk(e) {
+function shouldIgnore(e) {
   for (let t of e.split(RNe))
     if (
       t.startsWith(".") ||
@@ -147313,8 +147313,8 @@ function kk(e) {
       return !0;
   return !1;
 }
-var Hht = "synced_file_limit_exceeded",
-  Iht = "synced_file_lane_denied",
+var LANE_FULL_REASON = "synced_file_limit_exceeded",
+  LANE_DENIED_REASON = "synced_file_lane_denied",
   cFo = m(() => c({ error: c({ reason: s().optional() }) }));
 function uFo(e, t) {
   if (e === "timeout" || e === "network") return !0;
@@ -147350,13 +147350,13 @@ function fFo(e) {
     ? `put_rejected_${e.status}`
     : `put_rejected_${e.errorKind}`;
 }
-async function Hne(e, t, r) {
+async function putSyncedFile(e, t, r) {
   let o = gI();
   try {
     let d = await ht.put(
       "/worker/synced_file",
       {
-        path: `${jX}/${e}`,
+        path: `${WORKING_FILESTORE_PREFIX}/${e}`,
         content: t.toString("base64"),
         ...(r && { if_match_sha256: r }),
         worker_epoch: a.CLAUDE_CODE_WORKER_EPOCH ?? 0,
@@ -147367,7 +147367,7 @@ async function Hne(e, t, r) {
         headers: { "anthropic-version": "2023-06-01" },
         timeout: DLn,
         validateStatus: (p) => (p >= 200 && p < 300) || p === 409,
-        maxBodyLength: Math.ceil((Jm * 4) / 3) + 1024,
+        maxBodyLength: Math.ceil((MAX_WORKING_FILE_BYTES * 4) / 3) + 1024,
       },
     );
     if (!d.ok)
@@ -147388,17 +147388,17 @@ async function Hne(e, t, r) {
     return $Ln("put", d);
   }
 }
-async function Q2(e) {
+async function getSyncedFile(e) {
   let t = gI();
   try {
     let r = await ht.get(
-      `/worker/synced_file?path=${encodeURIComponent(`${jX}/${e}`)}`,
+      `/worker/synced_file?path=${encodeURIComponent(`${WORKING_FILESTORE_PREFIX}/${e}`)}`,
       {
         auth: "session-jwt",
         host: "ccr-session",
         headers: { "anthropic-version": "2023-06-01" },
         timeout: DLn,
-        maxContentLength: Math.ceil((Jm * 4) / 3) + 1024,
+        maxContentLength: Math.ceil((MAX_WORKING_FILE_BYTES * 4) / 3) + 1024,
         validateStatus: (o) => (o >= 200 && o < 300) || o === 404,
       },
     );
@@ -147428,12 +147428,12 @@ async function Llt(e, t, r) {
   let o = await L7(e),
     d = await L7(CNe(t)),
     p = F7(o, d);
-  if (xLe(p)) {
+  if (escapesSyncRoot(p)) {
     let E = Error("dest parent escaped working sync dir");
     throw ((E.code = "WORKING_PARENT_ESCAPE"), E);
   }
   let _ = p === "" ? ALn(t) : l1(p, ALn(t));
-  if (kk(_)) {
+  if (shouldIgnore(_)) {
     let E = Error("dest resolves into an ignored path");
     throw ((E.code = "WORKING_DEST_IGNORED"), E);
   }
@@ -147450,8 +147450,8 @@ async function Llt(e, t, r) {
     if (!W(E)) throw E;
   }
 }
-var Ine = 384;
-async function HLe(e, t, r, o = "replace", d) {
+var SYNCED_FILE_WRITE_MODE = 384;
+async function writeUnderSyncDir(e, t, r, o = "replace", d) {
   await Mlt(e).catch((C) => {
     if (A(C) !== "EEXIST") throw C;
   });
@@ -147461,11 +147461,11 @@ async function HLe(e, t, r, o = "replace", d) {
     try {
       let C = await L7(_),
         I = F7(p, C);
-      if (xLe(I)) {
+      if (escapesSyncRoot(I)) {
         let D = Error("dest ancestor escaped working sync dir");
         throw ((D.code = "WORKING_PARENT_ESCAPE"), D);
       }
-      if (kk(I)) {
+      if (shouldIgnore(I)) {
         let D = Error("dest ancestor resolves into an ignored path");
         throw ((D.code = "WORKING_DEST_IGNORED"), D);
       }
@@ -147488,7 +147488,7 @@ async function HLe(e, t, r, o = "replace", d) {
     throw (PLn(C), C);
   }
   try {
-    await JLo(E, r, { mode: Ine, flag: "wx" });
+    await JLo(E, r, { mode: SYNCED_FILE_WRITE_MODE, flag: "wx" });
   } catch (C) {
     throw (PLn(C), await Ilt(E).catch(() => {}), C);
   }
@@ -147504,10 +147504,10 @@ function PLn(e) {
   let t = Error("sibling tempfile name already taken", { cause: e });
   throw ((t.code = "WORKING_TMP_TAKEN"), t);
 }
-async function b_r(e, t, r) {
+async function stageSyncedFile(e, t, r) {
   let o;
   try {
-    o = Tde(r, e.mount_path);
+    o = relUnderSyncDir(r, e.mount_path);
   } catch (p) {
     return (
       f("ccr_synced_file_stage", "bad_mount_path"),
@@ -147516,7 +147516,7 @@ async function b_r(e, t, r) {
   }
   if (o === ME || o.startsWith(`${ME}/`))
     return (kLe.emit(o), { ok: !0, noop: "dir_sync_lane_row" });
-  if (kk(o))
+  if (shouldIgnore(o))
     return (
       f("ccr_synced_file_stage", "ignored_path"),
       { ok: !1, error: "mount_path is an ignored path" }
@@ -147543,7 +147543,7 @@ async function b_r(e, t, r) {
         try {
           let V = await U.stat();
           if (V.isFile()) {
-            if (V.size > Jm)
+            if (V.size > MAX_WORKING_FILE_BYTES)
               return (
                 f("ccr_synced_file_stage", "too_large"),
                 { ok: !1, error: "local file too large to reconcile" }
@@ -147573,13 +147573,13 @@ async function b_r(e, t, r) {
       let D = e.expected_local_sha256 || void 0,
         N = I && I.localHash === C && (D === void 0 || I.etag === D);
       if (E && !N) {
-        let U = await Hne(o, E, D);
+        let U = await putSyncedFile(o, E, D);
         if (U.kind === "error")
           return (
             f("ccr_synced_file_stage", "push_failed"),
             { ok: !1, error: U.message }
           );
-        let V = await Q2(o);
+        let V = await getSyncedFile(o);
         if (V.kind !== "ok")
           return (
             f("ccr_synced_file_stage", "reget_failed"),
@@ -147600,7 +147600,7 @@ async function b_r(e, t, r) {
             f("ccr_synced_file_stage", "fetch_failed"),
             { ok: !1, error: U.error }
           );
-        if (U.buf.length > Jm)
+        if (U.buf.length > MAX_WORKING_FILE_BYTES)
           return (
             f("ccr_synced_file_stage", "too_large"),
             { ok: !1, error: "staged content too large" }
@@ -147613,7 +147613,7 @@ async function b_r(e, t, r) {
         try {
           let V = await U.stat();
           if (V.isFile()) {
-            if (V.size > Jm)
+            if (V.size > MAX_WORKING_FILE_BYTES)
               return (
                 f("ccr_synced_file_stage", "too_large"),
                 { ok: !1, error: "local file too large to reconcile" }
@@ -147628,13 +147628,13 @@ async function b_r(e, t, r) {
         if (V !== "ENOENT" && V !== "ELOOP" && V !== "EMLINK") throw U;
       }
       if (F && mn(F) !== C) {
-        let U = await Hne(o, F, _);
+        let U = await putSyncedFile(o, F, _);
         if (U.kind === "error")
           return (
             f("ccr_synced_file_stage", "push_failed"),
             { ok: !1, error: U.message }
           );
-        let V = await Q2(o);
+        let V = await getSyncedFile(o);
         if (V.kind !== "ok")
           return (
             f("ccr_synced_file_stage", "reget_failed"),
@@ -147657,7 +147657,7 @@ async function b_r(e, t, r) {
       );
     }
     try {
-      await HLe(r, d, p);
+      await writeUnderSyncDir(r, d, p);
     } catch (E) {
       return (
         f("ccr_synced_file_stage", "write_failed"),
@@ -147694,7 +147694,7 @@ async function pFo(e, t) {
     return !1;
   }
   let E = F7(_, p);
-  if (E !== t && (E === "" || xLe(E)))
+  if (E !== t && (E === "" || escapesSyncRoot(E)))
     return (g("ccr_synced_file_push", "symlink_escape"), !0);
   let C;
   try {
@@ -147702,7 +147702,7 @@ async function pFo(e, t) {
     try {
       let re = await V.stat();
       if (!re.isFile()) return !0;
-      if (re.size > Jm) return (g("ccr_synced_file_push", "too_large"), !0);
+      if (re.size > MAX_WORKING_FILE_BYTES) return (g("ccr_synced_file_push", "too_large"), !0);
       C = await V.readFile();
     } finally {
       await V.close();
@@ -147718,7 +147718,7 @@ async function pFo(e, t) {
   if (I === D?.localHash) return !0;
   let N = D === void 0 ? r.evictedEtag.get(d) : void 0;
   if (D === void 0 && N === void 0) {
-    let V = await Q2(t);
+    let V = await getSyncedFile(t);
     if (V.kind === "error") {
       if ((f("ccr_synced_file_push", "seed_get_failed"), !V.retryable))
         r.recordTerminalReject(t);
@@ -147729,7 +147729,7 @@ async function pFo(e, t) {
       let re = mn(V.buf);
       if (re === I) return (N7(d, V.content_sha256, I), !0);
       try {
-        await HLe(e, d, V.buf);
+        await writeUnderSyncDir(e, d, V.buf);
       } catch {
         return (f("ccr_synced_file_push", "write_failed"), !1);
       }
@@ -147740,7 +147740,7 @@ async function pFo(e, t) {
       );
     }
   }
-  let F = await Hne(t, C, D?.etag ?? N);
+  let F = await putSyncedFile(t, C, D?.etag ?? N);
   if (F.kind === "ok")
     return (
       r.resetTerminalRejectStreak(t),
@@ -147761,7 +147761,7 @@ async function pFo(e, t) {
     );
   }
   r.resetTerminalRejectStreak(t);
-  let U = await Q2(t);
+  let U = await getSyncedFile(t);
   if (U.kind === "error") {
     if ((f("ccr_synced_file_push", "reget_failed"), !U.retryable))
       r.recordTerminalReject(t);
@@ -147770,7 +147770,7 @@ async function pFo(e, t) {
   if (U.kind === "not_found")
     return (r.forgetSeen(d), f("ccr_synced_file_push", "reget_failed"), !1);
   try {
-    await HLe(e, d, U.buf);
+    await writeUnderSyncDir(e, d, U.buf);
   } catch {
     return (f("ccr_synced_file_push", "write_failed"), !1);
   }
@@ -147780,19 +147780,19 @@ async function pFo(e, t) {
     !0
   );
 }
-function Dpr() {
+function flushSyncedFiles() {
   return gI().flush();
 }
-async function w_r() {
+async function drainSyncedFiles() {
   let e = gI();
-  await Dpr();
+  await flushSyncedFiles();
   for (;;) {
     if (e.inFlight.size === 0 && (e.activeSyncer?.pendingCount() ?? 0) === 0)
       return;
     (await e.inFlight.settle(), await new Promise((t) => setImmediate(t)));
   }
 }
-async function Lpr(e) {
+async function startSyncedFileSyncer(e) {
   let t = gI();
   t.armLateStart(null);
   for (let de = 1; ; de++)
@@ -147861,7 +147861,7 @@ async function Lpr(e) {
             break e;
           }
           let ct = He ? l1(He, Ke.name) : Ke.name;
-          if ((Se.add(ct), kk(ct))) continue;
+          if ((Se.add(ct), shouldIgnore(ct))) continue;
           if (Ke.isDirectory()) {
             _e.push(ct);
             continue;
@@ -147942,9 +147942,9 @@ async function Lpr(e) {
   };
   return (t.syncerStarted(ue), ue);
 }
-async function Kfn(e, t, r, o) {
+async function writeLaneRowFromWorker(e, t, r, o) {
   let d = gI();
-  if (r.length > Jm)
+  if (r.length > MAX_WORKING_FILE_BYTES)
     return { ok: !1, reason: "too_large", error: "content too large" };
   if (o !== void 0 && o.length === 0)
     return {
@@ -147954,7 +147954,7 @@ async function Kfn(e, t, r, o) {
       retryable: !1,
     };
   return Nlt(t, async () => {
-    let p = await Hne(t, r, o);
+    let p = await putSyncedFile(t, r, o);
     if (p.kind === "conflict") {
       if (o !== void 0)
         return {
@@ -147977,7 +147977,7 @@ async function Kfn(e, t, r, o) {
         error: p.message,
         retryable: p.retryable,
       };
-    if (!kk(t)) {
+    if (!shouldIgnore(t)) {
       let _ = l1(e, t),
         E = Dlt(_),
         C = !1;
@@ -147986,7 +147986,7 @@ async function Kfn(e, t, r, o) {
         let I = await ANe(_, FR.O_RDONLY | FR.O_NOFOLLOW | FR.O_NONBLOCK);
         try {
           let D = await I.stat();
-          if (D.isFile() && D.size <= Jm && E !== void 0) {
+          if (D.isFile() && D.size <= MAX_WORKING_FILE_BYTES && E !== void 0) {
             let N = Number(D.size),
               F = Buffer.allocUnsafe(N + 1),
               U = 0;
@@ -148010,7 +148010,7 @@ async function Kfn(e, t, r, o) {
           { ok: !0, etag: p.content_sha256 }
         );
       try {
-        await HLe(e, _, r);
+        await writeUnderSyncDir(e, _, r);
       } catch (I) {
         return (
           d.recordEvictedEtag(_, p.content_sha256),
@@ -148323,7 +148323,7 @@ function jTe(e) {
 var GFo =
   "GIT_CONFIG_GLOBAL GIT_CONFIG_SYSTEM GIT_CONFIG_NOSYSTEM HOME XDG_CONFIG_HOME HOMEDRIVE HOMEPATH USERPROFILE PROGRAMDATA PATH";
 function oFn() {
-  let e = J2(void 0);
+  let e = hardenedSpawnEnv(void 0);
   return GFo.split(" ").map((t) => Wd(e, t) ?? null);
 }
 function zjt(e, { filterDriversOff: t }) {
@@ -148354,7 +148354,7 @@ async function zFo(e) {
       ),
       { pins: { kind: "refused", why: "unread" }, settled: !1 }
     );
-  let r = n$(e, dH()),
+  let r = spelledFrom(e, dH()),
     o = await UNn(e, t),
     d = o === null ? "unread" : await jNn(t, o);
   if (d === "unread")
@@ -148388,7 +148388,7 @@ async function zFo(e) {
       ),
       { pins: { kind: "refused", why: "unread" }, settled: !1 }
     );
-  if (_ || [r, E].some((N) => N !== null && (aC(e, N) || aC(t, N))))
+  if (_ || [r, E].some((N) => N !== null && (isWithin(e, N) || isWithin(t, N))))
     return (
       n(
         `[dirSync] refusing to run git in ${e}: the git executable (${r}) lies inside the checkout or is reached through it`,
@@ -148396,7 +148396,7 @@ async function zFo(e) {
       ),
       { pins: { kind: "refused", why: "included_config" }, settled: !0 }
     );
-  let C = await UX(e, AbortSignal.timeout(Hlt), { linkedTrees: !0 }),
+  let C = await readGitLayout(e, AbortSignal.timeout(Hlt), { linkedTrees: !0 }),
     I = async (N) => {
       let F = await KFo(e, N, t);
       if (F?.kind === "contributes")
@@ -148461,7 +148461,7 @@ async function zFo(e) {
         n(
           `[dirSync] git layout of ${e} unread (${C.detail}); not running git there`,
         ),
-        C.detail === Gfn
+        C.detail === NAME_NOT_TEXT
           ? { pins: { kind: "refused", why: "not_text" }, settled: !0 }
           : { pins: { kind: "refused", why: "unread" }, settled: !1 }
       );
@@ -148534,7 +148534,7 @@ var cFn = String.raw`^(include|includeif\..*)\.path$`,
   uFn = 8,
   dFn = 128;
 async function KFo(e, t, r) {
-  let o = J2(void 0),
+  let o = hardenedSpawnEnv(void 0),
     d = (xe, Oe = !1) =>
       Be(dH(), [...fn, ...xe], {
         cwd: e,
@@ -148635,13 +148635,13 @@ async function KFo(e, t, r) {
     re = (xe) => xe?.includes("\uFFFD") ?? !1;
   if (V.some(re)) return { kind: "not_text" };
   if (F !== null) {
-    let xe = n$(e, dH()),
+    let xe = spelledFrom(e, dH()),
       Oe = await wq(xe, F, void 0, { secondNames: !1 });
     if (Oe !== !1)
       return Oe === null ? null : { kind: "contributes", file: xe };
     let Ne = await Ult(xe).catch(() => null);
     if (Ne === null) return null;
-    let De = [xe, Ne].find((He) => F.roots.some((je) => aC(je, He)));
+    let De = [xe, Ne].find((He) => F.roots.some((je) => isWithin(je, He)));
     if (De !== void 0) return { kind: "contributes", file: De };
   }
   let ue = await U(V);
@@ -148738,11 +148738,11 @@ function aFn(e, t, r, o, d) {
         ? [...(o === null ? [] : [`${o}${Blt}${e.slice(10)}`]), `.${Blt}${e}`]
         : [e]
   )
-    .map((E) => Wfn(E, t, r))
+    .map((E) => resolveIncludePath(E, t, r))
     .filter((E) => lFn(E));
 }
 function XFo(e, t) {
-  return e.startsWith("file:") ? n$(t, e.slice(5)) : null;
+  return e.startsWith("file:") ? spelledFrom(t, e.slice(5)) : null;
 }
 function QFo(e, t) {
   let r = Wd(t, "GIT_CONFIG_GLOBAL"),
@@ -148760,9 +148760,9 @@ function QFo(e, t) {
   };
 }
 function dH() {
-  let e = Wjt(J2(void 0));
+  let e = gitExeOnPath(hardenedSpawnEnv(void 0));
   if (e === null) {
-    if (jO().sayGitNotOnStartPath())
+    if (rootLaptopDirSyncRegistry().sayGitNotOnStartPath())
       (n(
         "[dirSync] git is not on the absolute entries of the PATH this process was started with; no sync git runs",
         { level: "warn" },
@@ -148860,7 +148860,7 @@ var Pne = [
   "submodule.recurse=false",
 ];
 function One(e = {}) {
-  let t = J2(void 0),
+  let t = hardenedSpawnEnv(void 0),
     r = Wd(t, "GIT_CONFIG_GLOBAL"),
     o = Wd(t, "GIT_CONFIG_SYSTEM");
   return {
@@ -148887,14 +148887,14 @@ function PLe(e) {
 }
 function Oht(e, t = !1) {
   let r = PLe(e);
-  return r.some((o) => kk(o) || ((!t || r.length > 1) && OLe(o)));
+  return r.some((o) => shouldIgnore(o) || ((!t || r.length > 1) && OLe(o)));
 }
 function OV(e, t, r = () => null, o = () => !1) {
   return e.reduce(
     (d, p) => {
       let _ = t(p),
         E = PLe(_);
-      if (E.some(kk)) d.filtered.push(p);
+      if (E.some(shouldIgnore)) d.filtered.push(p);
       else if ((!o(p) || E.length > 1) && E.some(OLe)) d.dependency.push(p);
       else {
         let C = r(p);
@@ -148926,7 +148926,7 @@ function qTe(e) {
   if (e.isSymbolicLink()) return "symlink";
   if (!e.isFile()) return "not_regular_file";
   if (e.nlink > 1) return "hard_link";
-  if (e.size > Jm) return "too_large";
+  if (e.size > MAX_WORKING_FILE_BYTES) return "too_large";
   return null;
 }
 async function d$o(e, t) {
@@ -148978,7 +148978,7 @@ async function o$(e, t, r, o = null) {
       let C = await E.stat({ bigint: !0 });
       if (C.dev !== p.dev || C.ino !== p.ino)
         return { kind: "skip", skipped: { path: r, reason: "changed" } };
-      if (C.size > Jm)
+      if (C.size > MAX_WORKING_FILE_BYTES)
         return { kind: "skip", skipped: { path: r, reason: "too_large" } };
       return {
         kind: "read",
@@ -149715,7 +149715,7 @@ var Ede = xht,
     hashMismatch: "synced_file_hash_mismatch",
     uploadUnavailable: "synced_file_direct_upload_unavailable",
     downloadUnavailable: "synced_file_direct_download_unavailable",
-    laneDenied: Iht,
+    laneDenied: LANE_DENIED_REASON,
   };
 function Qjt(e, t, r, o) {
   let d = r?.reason;
@@ -150286,7 +150286,7 @@ function LFn(e) {
   return Math.min(oBo, Math.max(U7, Math.ceil((e / t) * 1000)));
 }
 var sBo = 67108864,
-  iBo = Math.ceil((Jm * 4) / 3) + 1024,
+  iBo = Math.ceil((MAX_WORKING_FILE_BYTES * 4) / 3) + 1024,
   HFn = 64,
   jFn = "synced_file_limit_exceeded",
   WFn = m(() => c({ content_sha256: s().length(HFn) })),
@@ -150324,12 +150324,12 @@ function Gce() {
   return { status409: 0, status429: 0, status501: 0, retries: 0 };
 }
 function Uq(e) {
-  return `${jX}/${e}`;
+  return `${WORKING_FILESTORE_PREFIX}/${e}`;
 }
 function $Fn(e, t) {
   if (zce(e)) return "failed";
   if (Array.from(Uq(e)).length > TNe) return "path_too_long";
-  if (t.length > Jm) return "too_large";
+  if (t.length > MAX_WORKING_FILE_BYTES) return "too_large";
   return null;
 }
 function jht({ sessionId: e, credentials: t }) {
@@ -150770,7 +150770,7 @@ function hBo(e) {
   }
 }
 function zFn(e, t, r) {
-  return Zwe(e, t) || eVe(e, t, r);
+  return posixCovers(e, t) || denyEntryCovers(e, t, r);
 }
 function qFn({ denies: e, credentials: t, reopens: r }, o) {
   let d = new Map(),
@@ -150780,7 +150780,7 @@ function qFn({ denies: e, credentials: t, reopens: r }, o) {
     C = r.filter((I) => !Of(I)).map((I) => o(tct(I)));
   return (I) =>
     _.some((D) => zFn(D, I, d)) ||
-    E.some((D) => zFn(D, I, d) && !C.some((N) => eVe(D, N, d) && Zwe(N, I)));
+    E.some((D) => zFn(D, I, d) && !C.some((N) => denyEntryCovers(D, N, d) && posixCovers(N, I)));
 }
 function KFn(e, t) {
   if (t.denies.length === 0 && t.credentials.length === 0) return () => !1;
@@ -150817,11 +150817,11 @@ var bBo = ["deny", "ask"],
 function SBo(e, { rules: t, complete: r }) {
   if (!r) return () => "rules_unreadable";
   if (t.length === 0) return () => null;
-  let o = gTe(rf(), [...t]);
+  let o = applyPermissionRulesToPermissionContext(rf(), [...t]);
   if (ni(o, Gy) !== null || sm(o, Gy) !== null) return () => "read_denied";
   let d = bBo.filter((V) => ah(o, tt, V).size > 0);
   if (d.length === 0) return () => null;
-  let p = gTe(
+  let p = applyPermissionRulesToPermissionContext(
       rf(),
       t.map((V) => ({
         ...V,
@@ -150957,10 +150957,10 @@ function EBo(e, t) {
         ? (p?.filesystem?.allowRead ?? []).filter((I) => I.trim() !== "")
         : [];
   return [
-    ..._.map((I) => nct("deny_read", e, () => XFn(RBt(I, e)))),
-    ...E.map((I) => nct("credential_file", e, () => XFn(RBt(I, e)))),
+    ..._.map((I) => nct("deny_read", e, () => XFn(resolveSandboxDenyReadEntry(I, e)))),
+    ...E.map((I) => nct("credential_file", e, () => XFn(resolveSandboxDenyReadEntry(I, e)))),
     ...C.flatMap((I) => {
-      let D = nct("reopen", e, () => [mX(I, e)]);
+      let D = nct("reopen", e, () => [resolveSandboxFilesystemPath(I, e)]);
       return D.kind === "reopen" ? [D] : [];
     }),
   ];
@@ -150992,7 +150992,7 @@ function XFn(e) {
         ? e.length
         : Math.max(e.lastIndexOf("/", r), t ? e.lastIndexOf("\\", r) : -1);
   if (o <= 0) return [e];
-  let d = $ue(e.slice(0, o)) + e.slice(o);
+  let d = canonicalizePathForMaskSweep(e.slice(0, o)) + e.slice(o);
   return d === e ? [e] : [e, d];
 }
 class e$n {
@@ -151033,7 +151033,7 @@ function IKn() {
   return act().take();
 }
 function lct(e, t, r, o, d, p, _, E) {
-  let C = jO(),
+  let C = rootLaptopDirSyncRegistry(),
     I = Promise.all([import("../../02-功能模块/文件同步-Sync/createLaptopDirSyncSession.ga37sg6g.js"), _]).then(
       ([{ createLaptopDirSyncSession: D }, N]) =>
         D({
@@ -151128,7 +151128,7 @@ async function r$n({
     let Se = await _e;
     U = "started";
     let ve = hlt();
-    if (ve.length > 0 && jO().sayUnknownEngineWord())
+    if (ve.length > 0 && rootLaptopDirSyncRegistry().sayUnknownEngineWord())
       Se.status.publish(t$n(ve), "info");
     let Me = D ?? Zlt;
     re = await o$n(Se.sync, Me, I);
@@ -151276,7 +151276,7 @@ async function i$n({
       de(d, "debug");
     if (Oe.kind === "git" || (Oe.optedIn && Oe.line !== null)) {
       let Ne = hlt();
-      if (Ne.length > 0 && jO().sayUnknownEngineWord()) de(t$n(Ne));
+      if (Ne.length > 0 && rootLaptopDirSyncRegistry().sayUnknownEngineWord()) de(t$n(Ne));
     }
     if (Oe.kind === "git") {
       V = "started";
@@ -151374,7 +151374,7 @@ async function MBo({
     C = AbortSignal.timeout(E),
     I = d === void 0 ? C : AbortSignal.any([d, C]),
     N = (async () => {
-      let { readGitLayout: F } = await import("../../02-功能模块/目录同步(dir-sync)/MAX_INCLUDED_FILES.wb0rcq25.js"),
+      let { readGitLayout: F } = await Promise.resolve({ readGitLayout }),
         U = await F(t, I, { linkedTrees: !0 });
       if (U.kind === "failed") {
         if (U.why === "settings_unreadable")
@@ -152827,7 +152827,7 @@ var sHo = 1048576,
     GIT_COMMITTER_EMAIL: "git@stash",
   };
 async function B$n(e, t, r = {}) {
-  let o = r.probes ?? kne(),
+  let o = r.probes ?? defaultBuilderGitProbes(),
     d = qX(e, t, r.signal, void 0, o),
     p = (De) => GO(De) || (r.alsoLeaveOut?.(De) ?? !1),
     _ = await lHo(d);
@@ -152925,7 +152925,7 @@ async function B$n(e, t, r = {}) {
       );
       if (Qt !== void 0)
         return jg("stage", `${Qt.path} changed while it was being read`);
-      let wn = qX(e, { ...t, workTree: Oe }, r.signal, BX(t), o),
+      let wn = qX(e, { ...t, workTree: Oe }, r.signal, reachRootsOf(t), o),
         un = gn.entries.flatMap((Yn) => (Yn.kind === "file" ? [Yn.path] : [])),
         kn = await OKe(t.commonDir);
       if (kn.kind !== "none")
@@ -153071,7 +153071,7 @@ async function B$n(e, t, r = {}) {
   }
 }
 async function U$n(e, t, r) {
-  let o = await Af(e, ["stash", "create"], { hardened: !1, signal: r });
+  let o = await builderGit(e, ["stash", "create"], { hardened: !1, signal: r });
   if (o.code === 0) {
     let d = o.stdout.trim();
     return d === ""
@@ -153119,11 +153119,11 @@ function IKe(e) {
     { slices: [], bytes: 0 },
   ).slices;
 }
-function qX(e, t, r, o, d = kne()) {
-  let p = o ?? BX(t),
-    _ = d.screenMemo ?? jjt();
+function qX(e, t, r, o, d = defaultBuilderGitProbes()) {
+  let p = o ?? reachRootsOf(t),
+    _ = d.screenMemo ?? newScreenMemo();
   return (E, C, I) =>
-    Af(e, E, {
+    builderGit(e, E, {
       hardened: !0,
       layout: t,
       signal: r,
@@ -153641,16 +153641,16 @@ var DHo = (e) =>
     unborn_cut:
       "HEAD is unborn and a local branch or tag is cut \u2014 nothing can be bundled",
   };
-async function LHo(e, t, r = null, o = kne()) {
+async function LHo(e, t, r = null, o = defaultBuilderGitProbes()) {
   let d = ["rev-parse", "--is-shallow-repository", "--git-path", "shallow"],
     p = r
-      ? await Af(e, d, { hardened: !0, layout: r.layout, signal: t, probes: o })
+      ? await builderGit(e, d, { hardened: !0, layout: r.layout, signal: t, probes: o })
       : await Be(lt(), [...fn, ...d], { cwd: e, abortSignal: t }),
     [_, E] = p.stdout.split(/\r?\n/);
   if (p.code !== 0 || _ !== "true") return "not_shallow";
   let C = (U) =>
       r
-        ? Af(e, U, {
+        ? builderGit(e, U, {
             hardened: !0,
             layout: r.layout,
             signal: t,
@@ -153694,7 +153694,7 @@ var G$n = 5000,
   vct = 100,
   Cct = 5000000;
 async function oBn(e, t, r, o, d, p) {
-  let _ = await Af(e, ["count-objects", "-v"], {
+  let _ = await builderGit(e, ["count-objects", "-v"], {
     hardened: t,
     layout: r,
     signal: o,
@@ -153713,7 +153713,7 @@ async function oBn(e, t, r, o, d, p) {
     (D !== null && D > Cct)
   )
     return { sizeBytes: I, inPackCount: D };
-  let N = await Af(e, ["config", "-z", "--list"], {
+  let N = await builderGit(e, ["config", "-z", "--list"], {
     hardened: t,
     layout: r,
     signal: o,
@@ -153724,7 +153724,7 @@ async function oBn(e, t, r, o, d, p) {
       o === void 0
         ? AbortSignal.timeout(G$n)
         : AbortSignal.any([o, AbortSignal.timeout(G$n)]),
-    U = await Af(
+    U = await builderGit(
       e,
       ["rev-list", "--disk-usage", "--objects", "--missing=allow-any", "--all"],
       {
@@ -153754,7 +153754,7 @@ async function FLe() {
     void 0,
     void 0,
     null,
-    kne(),
+    defaultBuilderGitProbes(),
   );
   if (t === null) return { tooLarge: !1, sizeBytes: null, inPackCount: r };
   let o = Kht();
@@ -153776,14 +153776,14 @@ async function FHo(e, t, r) {
     D = async (Ke, ct) => {
       let vt = d === void 0 ? void 0 : await GHo(e, d, E, p, _);
       if (vt === null) return { ok: !1, ...c1() };
-      let ut = await Af(e, ["bundle", "create", t, ...ct, ...C, "--"], {
+      let ut = await builderGit(e, ["bundle", "create", t, ...ct, ...C, "--"], {
         hardened: o,
         layout: d,
         signal: p,
         probes: _,
         ...(!o && { env: oQ }),
       });
-      if (d && !(await WO(d, E))) return { ok: !1, ...c1() };
+      if (d && !(await layoutStillHolds(d, E))) return { ok: !1, ...c1() };
       if (ut.code !== 0)
         return {
           ok: !1,
@@ -153813,7 +153813,7 @@ async function FHo(e, t, r) {
                 shown: vt,
               })
             : Y$n;
-        if (d && !(await WO(d, E))) return { ok: !1, ...c1() };
+        if (d && !(await layoutStillHolds(d, E))) return { ok: !1, ...c1() };
         return (
           Q$n(dn, o) ?? {
             ok: !0,
@@ -153856,7 +153856,7 @@ async function FHo(e, t, r) {
         : `[gitBundle] size-pack ${(N / 1024 / 1024).toFixed(0)}MB > ${(r.maxBytes / 1024 / 1024).toFixed(0)}MB cap; skipping all-branches${de ? " and HEAD" : ""}${_e ? " and squashed" : ""}`,
     );
   if (r.currentBranchOnly) {
-    let Ke = await Af(
+    let Ke = await builderGit(
       e,
       ["rev-parse", "--verify", "--quiet", "--symbolic-full-name", "HEAD"],
       { hardened: o, layout: d, signal: p, probes: _ },
@@ -153914,7 +153914,7 @@ async function FHo(e, t, r) {
   if (r.baseRef) {
     let [Ke, ct] = await Promise.all(
       [Me, `${r.baseRef}^{tree}`].map((ut) =>
-        Af(e, ["rev-parse", ut], {
+        builderGit(e, ["rev-parse", ut], {
           hardened: o,
           layout: d,
           signal: p,
@@ -153932,7 +153932,7 @@ async function FHo(e, t, r) {
             : "It doesn't look like you have any new commits or changes to review. Stage or commit them first?",
         failReason: "no_changes",
       };
-    let vt = await Af(
+    let vt = await builderGit(
       e,
       ["commit-tree", `${r.baseRef}^{tree}`, "-m", "seed-base"],
       { hardened: o, layout: d, signal: p, probes: _, env: ve },
@@ -153943,7 +153943,7 @@ async function FHo(e, t, r) {
         `[gitBundle] baseRef commit-tree failed (${vt.code}), squashing without parent: ${uO(vt.stderr, o)}`,
       );
   }
-  let Oe = await Af(e, ["commit-tree", Me, ...xe, "-m", "seed"], {
+  let Oe = await builderGit(e, ["commit-tree", Me, ...xe, "-m", "seed"], {
     hardened: o,
     layout: d,
     signal: p,
@@ -153957,7 +153957,7 @@ async function FHo(e, t, r) {
       failReason: "git_error",
     };
   let Ne = Oe.stdout.trim();
-  if (d && !(await WO(d, E))) return { ok: !1, ...c1() };
+  if (d && !(await layoutStillHolds(d, E))) return { ok: !1, ...c1() };
   let De = await HNe(e, [r.seedRefs.root, Ne], {
     hardened: o,
     layout: d,
@@ -153968,14 +153968,14 @@ async function FHo(e, t, r) {
     return { ok: !1, error: "Bundle upload aborted", failReason: "git_error" };
   if (De.code !== 0)
     return { ok: !1, ...lBn(De.stderr), heldSeedRef: { exitCode: De.code } };
-  let He = await Af(e, ["bundle", "create", t, r.seedRefs.root, "--"], {
+  let He = await builderGit(e, ["bundle", "create", t, r.seedRefs.root, "--"], {
     hardened: o,
     layout: d,
     signal: p,
     probes: _,
     ...(!o && { env: oQ }),
   });
-  if (d && !(await WO(d, E))) return { ok: !1, ...c1() };
+  if (d && !(await layoutStillHolds(d, E))) return { ok: !1, ...c1() };
   if (He.code !== 0)
     return {
       ok: !1,
@@ -154003,7 +154003,7 @@ async function FHo(e, t, r) {
           shown: new Map(),
         })
       : Y$n;
-    if (d && !(await WO(d, E))) return { ok: !1, ...c1() };
+    if (d && !(await layoutStillHolds(d, E))) return { ok: !1, ...c1() };
     return (
       Q$n(ct, o) ?? {
         ok: !0,
@@ -154024,7 +154024,7 @@ async function FHo(e, t, r) {
 async function z$n(e, t, r, o, d) {
   let p = await C$n(t, r, o, d.signal);
   if (!p.ok) return p;
-  let _ = await Af(e, ["bundle", "list-heads", r], d);
+  let _ = await builderGit(e, ["bundle", "list-heads", r], d);
   return _.code === 0
     ? p
     : {
@@ -154108,7 +154108,7 @@ async function sBn(e, t) {
       [
         ["diff", "--name-only", "-z", "--no-renames", "HEAD", "--"],
         ["diff", "--cached", "--name-only", "-z", "--no-renames", "HEAD", "--"],
-      ].map((_) => Af(r, _, { hardened: !1, signal: t })),
+      ].map((_) => builderGit(r, _, { hardened: !1, signal: t })),
     ),
     p = [o, d].flatMap((_) => (_?.code === 0 ? _.stdout.split("\x00") : []));
   return Y(p)
@@ -154120,7 +154120,7 @@ async function HHo(e) {
     r = await eBn(t).catch(() => null);
   if (r?.isSymbolicLink()) return "symlink";
   if (!r?.isFile()) return "other";
-  let o = await bKe(t).catch(() => {
+  let o = await readSmallFile(t).catch(() => {
       return;
     }),
     d = /^gitdir: (.+?)\r?\n?$/s.exec(o ?? "")?.[1]?.replaceAll("\\", "/");
@@ -154132,7 +154132,7 @@ async function HHo(e) {
       : "separate_git_dir";
 }
 function iBn(e, t = []) {
-  let o = `This checkout ${{ git_file: "is a linked working tree, a submodule or a checkout with a separate git directory", linked_worktree: "is a linked working tree whose pointer files could not be verified (try git worktree repair), which uses per-worktree configuration, or whose repository sits somewhere this upload does not trust", work_tree: "has core.worktree set", included_config: "reads git configuration from a file inside the working tree", many_includes: `is used with a git configuration that includes more files, or a longer chain of nested includes, than the new upload path follows (over ${Bjt} include files or 8 levels deep)`, old_git: "is used with a git older than 2.31", borrowed_objects: "borrows objects from another repository", reftable: "keeps its refs in the reftable format", partial_clone_old_git: "is a partial clone and the installed git is too old to keep from fetching" }[e]}; the new upload path does not support that yet, so the working tree is being uploaded the previous way for this session.`;
+  let o = `This checkout ${{ git_file: "is a linked working tree, a submodule or a checkout with a separate git directory", linked_worktree: "is a linked working tree whose pointer files could not be verified (try git worktree repair), which uses per-worktree configuration, or whose repository sits somewhere this upload does not trust", work_tree: "has core.worktree set", included_config: "reads git configuration from a file inside the working tree", many_includes: `is used with a git configuration that includes more files, or a longer chain of nested includes, than the new upload path follows (over ${MAX_INCLUDED_FILES} include files or 8 levels deep)`, old_git: "is used with a git older than 2.31", borrowed_objects: "borrows objects from another repository", reftable: "keeps its refs in the reftable format", partial_clone_old_git: "is a partial clone and the installed git is too old to keep from fetching" }[e]}; the new upload path does not support that yet, so the working tree is being uploaded the previous way for this session.`;
   return t.length === 0
     ? o
     : `${o} Unlike the new path, the previous way also uploads uncommitted changes to files named like credentials or keys, and this checkout has some: ${$R(t)}. To keep such changes on this machine, stash them (git stash) before starting a session here \u2014 committing them would upload them as history.`;
@@ -154143,7 +154143,7 @@ function jHo() {
 var Y$n = { missing: [], foreign: [] };
 async function X$n(e, t, r, o) {
   let d = r.filter((N) => !N.startsWith("-")),
-    p = await Af(e, ["bundle", "list-heads", t], {
+    p = await builderGit(e, ["bundle", "list-heads", t], {
       hardened: !0,
       layout: o.layout,
       signal: o.signal,
@@ -154179,7 +154179,7 @@ async function X$n(e, t, r, o) {
           );
   if (o.shown === void 0 || E.length > 0 || C.length > 0)
     return { missing: E, foreign: C };
-  let I = await Af(e, ["cat-file", "--batch-check"], {
+  let I = await builderGit(e, ["cat-file", "--batch-check"], {
       hardened: !0,
       layout: o.layout,
       signal: o.signal,
@@ -154200,21 +154200,21 @@ async function X$n(e, t, r, o) {
   return { missing: E, foreign: C, notHeld: D };
 }
 async function WHo(e, t, r, o, d) {
-  if (t === void 0 || !(await WO(t, r))) return null;
-  let p = await Af(e, ["rev-parse", "-q", "--verify", "HEAD^{tree}"], {
+  if (t === void 0 || !(await layoutStillHolds(t, r))) return null;
+  let p = await builderGit(e, ["rev-parse", "-q", "--verify", "HEAD^{tree}"], {
       hardened: !0,
       layout: t,
       signal: o,
       probes: d,
     }),
     _ = p.stdout.trim();
-  if (!(await WO(t, r))) return null;
+  if (!(await layoutStillHolds(t, r))) return null;
   return p.code === 0 && /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/.test(_) ? _ : void 0;
 }
 async function GHo(e, t, r, o, d) {
-  if (!(await WO(t, r))) return null;
+  if (!(await layoutStillHolds(t, r))) return null;
   let [p, _] = await Promise.all([
-    Af(
+    builderGit(
       e,
       [
         "for-each-ref",
@@ -154224,14 +154224,14 @@ async function GHo(e, t, r, o, d) {
       ],
       { hardened: !0, layout: t, signal: o, probes: d },
     ),
-    Af(e, ["rev-parse", "-q", "--verify", "HEAD"], {
+    builderGit(e, ["rev-parse", "-q", "--verify", "HEAD"], {
       hardened: !0,
       layout: t,
       signal: o,
       probes: d,
     }),
   ]);
-  if (p.code !== 0 || (_.code !== 0 && _.exitCode !== 1) || !(await WO(t, r)))
+  if (p.code !== 0 || (_.code !== 0 && _.exitCode !== 1) || !(await layoutStillHolds(t, r)))
     return null;
   let E = _.code === 0 ? [["HEAD", _.stdout.trim()]] : [];
   return new Map([
@@ -154313,7 +154313,7 @@ function Z$n(e) {
     case "included_config":
       return `Not uploading this working tree: git reads configuration for this checkout from ${e.file === void 0 ? "a file" : t(e.file)}, which this working tree or a cloud session in it could change \u2014 it lies inside the checkout (by some spelling or link), shares an inode with a file that does, or is named by an include that leads there; a checkout that is itself your home directory reads that way too \u2014 which this upload does not support. Keep that configuration outside the working tree (or remove the include), then retry.`;
     case "many_includes":
-      return `Not uploading this working tree: the git configuration in force for this checkout (~/.gitconfig, .git/config and the files they include) pulls in more include files, or a longer chain of nested includes, than this upload follows (over ${Bjt} files or 8 levels deep), so the programs that configuration names cannot all be switched off while the upload is prepared. Trim the include chain (directives naming files that do not exist do not count), then retry.`;
+      return `Not uploading this working tree: the git configuration in force for this checkout (~/.gitconfig, .git/config and the files they include) pulls in more include files, or a longer chain of nested includes, than this upload follows (over ${MAX_INCLUDED_FILES} files or 8 levels deep), so the programs that configuration names cannot all be switched off while the upload is prepared. Trim the include chain (directives naming files that do not exist do not count), then retry.`;
     case "old_git":
       return "Not uploading this working tree: the installed git is older than 2.31, which cannot be kept from running programs this checkout\u2019s configuration names while the upload is prepared. Update git (2.31 or newer), then retry.";
     case "borrowed_objects":
@@ -154407,7 +154407,7 @@ async function Rct(e, t) {
     F = _ ? AbortSignal.timeout(AHo) : void 0,
     U = Date.now(),
     V = F === void 0 ? N : N === void 0 ? F : AbortSignal.any([N, F]),
-    re = new Rne("operation"),
+    re = new BuilderGitProbes("operation"),
     ue = (dn) => {
       let cn = { phase: u(dn), elapsed_ms: Date.now() - U };
       if (N?.aborted === !0 || F?.aborted !== !0)
@@ -154436,7 +154436,7 @@ async function Rct(e, t) {
         }
       );
     },
-    de = _ ? await UX(d, V, { linkedTrees: p, probes: re }) : void 0;
+    de = _ ? await readGitLayout(d, V, { linkedTrees: p, probes: re }) : void 0;
   if (_ && V?.aborted) return ue("layout_read");
   if (de?.kind === "tampered") {
     n(`[gitBundle] Refusing to bundle: misplaced ${de.misplaced}`);
@@ -154512,7 +154512,7 @@ async function Rct(e, t) {
     );
   }
   let _e = de?.layout;
-  if (_e && !(await WO(_e, D))) return Ect();
+  if (_e && !(await layoutStillHolds(_e, D))) return Ect();
   let Se = _e !== void 0 && (await KHo(d, _e, V, re));
   if (_ && V?.aborted) return ue("promisor_probe");
   if (Se && _e !== void 0 && !(await XHo(d, _e, V, re))) {
@@ -154553,8 +154553,8 @@ async function Rct(e, t) {
       f("teleport_git_bundle_upload", "admin_dir_failed"),
       { success: !1, error: V$n(Me), failReason: "refused" }
     );
-  let xe = _ ? VVn() : zy();
-  await using Oe = _e !== void 0 && ve ? await zVn(d, _e, V, re) : void 0;
+  let xe = _ ? pinnedTempRoot() : zy();
+  await using Oe = _e !== void 0 && ve ? await privateAdminDir(d, _e, V, re) : void 0;
   if (Oe?.kind === "failed") {
     if (V?.aborted) return ue("admin_dir");
     (n(
@@ -154573,7 +154573,7 @@ async function Rct(e, t) {
     };
   }
   if (_e !== void 0 && Oe?.kind === "made") _e = { ..._e, adminDir: Oe.path };
-  let Ne = await Af(d, ["for-each-ref", "--format=%(refname)", "refs/seed/"], {
+  let Ne = await builderGit(d, ["for-each-ref", "--format=%(refname)", "refs/seed/"], {
     hardened: _,
     layout: _e,
     probes: re,
@@ -154598,7 +154598,7 @@ async function Rct(e, t) {
         )
       : []),
   ]);
-  if (_e && !(await WO(_e, [...D, ...De]))) return Ect();
+  if (_e && !(await layoutStillHolds(_e, [...D, ...De]))) return Ect();
   for (let dn of De) {
     let cn = await HNe(d, ["-d", dn], {
       hardened: _,
@@ -154614,14 +154614,14 @@ async function Rct(e, t) {
   }
   let He =
       (
-        await Af(d, ["rev-parse", "--verify", "--quiet", "HEAD"], {
+        await builderGit(d, ["rev-parse", "--verify", "--quiet", "HEAD"], {
           hardened: _,
           layout: _e,
           probes: re,
           ...(_ && { signal: V }),
         })
       ).code === 0,
-    je = await Af(
+    je = await builderGit(
       d,
       ["for-each-ref", "--count=1", "refs/heads/", "refs/tags/"],
       { hardened: _, layout: _e, probes: re, ...(_ && { signal: V }) },
@@ -154742,7 +154742,7 @@ async function Rct(e, t) {
   if (ct) {
     if (
       (n(`[gitBundle] Captured WIP as stash ${Ke.commit}`),
-      _e && !(await WO(_e, D)))
+      _e && !(await layoutStillHolds(_e, D)))
     )
       return Ect();
     let dn = await HNe(d, [I.stash, Ke.commit], {
@@ -154966,13 +154966,13 @@ async function Rct(e, t) {
       (await kct(`${tn}.lock`).catch(() => {}),
         await kct(`${tn}.relabelled`).catch(() => {}));
     }
-    if ((await en?.dispose(), !_e || (await WO(_e, D))))
+    if ((await en?.dispose(), !_e || (await layoutStillHolds(_e, D))))
       for (let dn of D)
         await HNe(d, ["-d", dn], { hardened: _, layout: _e, probes: re });
   }
 }
 async function KHo(e, t, r, o) {
-  let d = await Af(e, ["config", "-z", "--list"], {
+  let d = await builderGit(e, ["config", "-z", "--list"], {
     hardened: !0,
     layout: t,
     signal: r,
@@ -155004,13 +155004,13 @@ var YHo = new Map([
   [44, 1],
 ]);
 async function XHo(e, t, r, o) {
-  let d = await Af(e, ["version"], {
+  let d = await builderGit(e, ["version"], {
       hardened: !0,
       layout: t,
       signal: r,
       probes: o,
     }),
-    p = d.code === 0 ? kht(d.stdout) : null;
+    p = d.code === 0 ? parseGitVersion(d.stdout) : null;
   if (p === null) return !1;
   let { major: _, minor: E, patch: C } = p;
   if (_ !== 2) return _ > 2;
@@ -155019,7 +155019,7 @@ async function XHo(e, t, r, o) {
   return I !== void 0 && C >= I;
 }
 function HNe(e, t, r) {
-  return Af(e, ["update-ref", "--no-deref", ...t], r);
+  return builderGit(e, ["update-ref", "--no-deref", ...t], r);
 }
 function Ect() {
   let e = c1();
@@ -155214,7 +155214,7 @@ Please generate a title and branch name for this session \u2014 the title in the
 async function i1o(e, t, r, o) {
   let p = (
     await yC({
-      systemPrompt: Zo([]),
+      systemPrompt: asSystemPrompt([]),
       userPrompt: e.replace("{description}", () => t),
       outputFormat: {
         type: "json_schema",
@@ -155256,7 +155256,7 @@ async function a1o(e, t, r) {
     );
   }
 }
-async function E_r() {
+async function validateGitState() {
   if (!(await vhe({ ignoreUntracked: !0 })))
     throw (
       i("tengu_teleport_error_git_not_clean", {}),
@@ -155346,8 +155346,8 @@ async function jNe() {
   let { stdout: e } = await Fe(lt(), [...fn, "branch", "--show-current"]);
   return e.trim();
 }
-function $Ke(e, t, r) {
-  let d = [...Cht(e), o1o(), r1o(t)];
+function processMessagesForTeleportResume(e, t, r) {
+  let d = [...deserializeMessages(e), o1o(), r1o(t)];
   if (r === "bridge")
     d.push(
       Ht(
@@ -155357,7 +155357,7 @@ function $Ke(e, t, r) {
     );
   return d;
 }
-async function UKe(e) {
+async function checkOutTeleportedSessionBranch(e) {
   try {
     let t = await jNe();
     if ((n(`Current branch before teleport: '${t}'`), e)) {
@@ -155378,7 +155378,7 @@ async function UKe(e) {
     return { branchName: r, branchError: o };
   }
 }
-async function g6t(e) {
+async function validateSessionRepository(e) {
   let t = await Pb(),
     r = t ? `${t.owner}/${t.name}` : null,
     o = e.session_context.sources.find((C) => C.type === "git_repository");
@@ -155464,7 +155464,7 @@ async function g6t(e) {
     currentHost: t?.host,
   };
 }
-function h6t(e) {
+function formatRepoMismatchDisplay(e) {
   let t =
     e.sessionHost &&
     e.currentHost &&
@@ -155474,7 +155474,7 @@ function h6t(e) {
     currentDisplay: t ? `${e.currentHost}/${e.currentRepo}` : e.currentRepo,
   };
 }
-async function Wne(e, t) {
+async function teleportResumeCodeSession(e, t) {
   if (!In())
     throw Error(
       "Cloud sessions are only available on the first-party Anthropic API provider.",
@@ -155501,7 +155501,7 @@ async function Wne(e, t) {
       );
     t?.("validating");
     let p = await w6(e),
-      _ = await g6t(p);
+      _ = await validateSessionRepository(p);
     switch (_.status) {
       case "match":
       case "no_repo_required":
@@ -155533,7 +155533,7 @@ Couldn't parse your git remote: ${_.rawRemoteUrl}`
           sessionId: Ee(e),
           stage: S("resume_validate"),
         });
-        let { sessionDisplay: E, currentDisplay: C } = h6t(_);
+        let { sessionDisplay: E, currentDisplay: C } = formatRepoMismatchDisplay(_);
         throw new Iu(
           `You must run claude --teleport ${e} from a checkout of ${E}.
 This repo is ${C}.`,
@@ -155553,7 +155553,7 @@ This repo is ${ie.bold(C)}.
         throw Error(`Unhandled repo validation status: ${E}`);
       }
     }
-    return await Mpr(e, d, o, t, p);
+    return await teleportFromSessionsAPI(e, d, o, t, p);
   } catch (o) {
     if (o instanceof Iu) throw o;
     let d = ge(o);
@@ -155572,7 +155572,7 @@ This repo is ${ie.bold(C)}.
     );
   }
 }
-async function _6t(e, t, r) {
+async function handleTeleportPrerequisites(e, t, r) {
   let o = g2(await Kgt(), t);
   if (o.size > 0)
     (i("tengu_teleport_errors_detected", {
@@ -155603,7 +155603,7 @@ function fBn(e, t, r, o, d) {
       d,
     );
 }
-var y6t =
+var RESTRICTED_SESSION_CLOUD_REFUSAL =
   "Cloud sessions cannot be created from a --restricted session: they would not enforce it.";
 function pBn(e) {
   if (typeof e !== "string" || e === "") return;
@@ -155643,13 +155643,13 @@ function mBn(e) {
       return "other";
   }
 }
-async function Amn(e, t) {
-  await _6t(e, new Set(["needsGitStash"]), t.showTeleportErrors);
+async function teleportToRemoteWithErrorHandling(e, t) {
+  await handleTeleportPrerequisites(e, new Set(["needsGitStash"]), t.showTeleportErrors);
   let o,
     d,
     p = [],
     _,
-    E = await Kv({
+    E = await teleportToRemote({
       initialMessage: t.description,
       initialMessageUuid: t.descriptionUuid,
       signal: t.signal,
@@ -155719,7 +155719,7 @@ ${C}
     failDetail: _,
   };
 }
-async function Mpr(e, t, r, o, d) {
+async function teleportFromSessionsAPI(e, t, r, o, d) {
   let p = Date.now();
   try {
     (n(`[teleport] Starting fetch for session: ${e}`), o?.("fetching_logs"));
@@ -155727,7 +155727,7 @@ async function Mpr(e, t, r, o, d) {
       E;
     if (VJ()) {
       let { readStoredTrustedDeviceToken: F } =
-        await import("../../02-功能模块/Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js");
+        await import("../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js");
       E = await F();
     } else E = (await wUe())["X-Trusted-Device-Token"];
     let C = await UAt(e, r, t, E);
@@ -155739,7 +155739,7 @@ async function Mpr(e, t, r, o, d) {
     )
       throw Error("Failed to fetch session logs");
     let I = Date.now(),
-      D = C.filter((F) => TH(F) && !F.isSidechain);
+      D = C.filter((F) => isTranscriptMessage(F) && !F.isSidechain);
     (n(
       `[teleport] Filtered ${C.length} entries to ${D.length} messages in ${Date.now() - I}ms`,
     ),
@@ -155769,7 +155769,7 @@ ${ie.dim("Run /status in Claude Code to check your account.")}`,
     );
   }
 }
-async function Cmn(e, t, r) {
+async function awaitRemoteSessionResult(e, t, r) {
   if (!In())
     throw Error(
       "Cloud sessions are only available on the first-party Anthropic API provider.",
@@ -155933,7 +155933,7 @@ function TBn(e) {
   };
 }
 async function d1o({ sessionId: e, v2: t, orgUUID: r }) {
-  let { updateCodeSession: o } = await import("../../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js"),
+  let { updateCodeSession: o } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js"),
     d = Ose(),
     p =
       d === void 0
@@ -155992,7 +155992,7 @@ function SBn(e, t, r, o) {
   if (!e || !t) return;
   if (t.ok) e.onBound?.(t.value);
   else if ((e.onUnbound?.(t.error), uBn(t.error)))
-    import("../../01-核心基础设施/共享小工具-未细化/rememberUnboundCreate.xa4c8fex.js").then(
+    import("../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js").then(
       ({ rememberUnboundCreate: d, productionUnboundCreatesDeps: p }) =>
         d(r, t.error, p(o)),
       () => {
@@ -156135,14 +156135,14 @@ async function EBn(e, t, r) {
     Rct(e, { ...t, hardenForDeviceSessions: !1 })
   );
 }
-async function Kv(e) {
+async function teleportToRemote(e) {
   let { initialMessage: t, signal: r } = e,
     o = e.cwd ?? Q(),
     d,
     p = () => (d ??= Su().catch(() => !1)),
     _ = op("allow_remote_sessions", "Cloud sessions", "are");
   if (_) return (e.onCreateFail?.(_, "policy_denied"), null);
-  if (pv()) return (e.onCreateFail?.(y6t, "restricted_session"), null);
+  if (pv()) return (e.onCreateFail?.(RESTRICTED_SESSION_CLOUD_REFUSAL, "restricted_session"), null);
   if (a.CLAUDE_CODE_EVAL_CONFINED)
     return (e.onCreateFail?.(vce, "eval_confined"), null);
   if (!In())
@@ -157440,7 +157440,7 @@ Response data: ${b(hs.data, null, 2)}`,
     );
   }
 }
-async function A_r(e, t = 1e4) {
+async function interruptRemoteSession(e, t = 1e4) {
   if (!In())
     return (
       n(`[interruptRemoteSession] ${e} skipped: non-first-party provider`),
@@ -157490,7 +157490,7 @@ async function A_r(e, t = 1e4) {
     );
   }
 }
-function vmn(e, t, r) {
+function subscribeRemoteSessionToPR(e, t, r) {
   return wgt("subscribe", {
     sessionId: e,
     repo: t,
@@ -159327,8 +159327,8 @@ async function n_t(e, t, r, o) {
   let d = o.fromCwd ?? Q(),
     p = he(),
     _;
-  if (EX()) {
-    let C = await aSt(
+  if (hasWorktreeCreateHook()) {
+    let C = await executeWorktreeCreateHook(
       { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
       t,
       { storageV5: o.storageV5, credentials: o.credentials },
@@ -159762,7 +159762,7 @@ async function tEe(e, t) {
     let C = !1;
     if (_)
       if (
-        ((C = await P9t(
+        ((C = await executeWorktreeRemoveHook(
           { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
           o,
           { storageV5: e, credentials: t },
@@ -159770,7 +159770,7 @@ async function tEe(e, t) {
         C)
       )
         n(`Removed hook-based worktree at: ${o}`);
-      else if (k4n())
+      else if (hasWorktreeRemoveHook())
         return (
           n(`WorktreeRemove hook did not remove worktree, kept at: ${o}`, {
             level: "warn",
@@ -159888,8 +159888,8 @@ async function ZBn(e, t) {
     );
 }
 async function nEe(e, t) {
-  if ((eEe(e), Zht("agent worktree"), EX())) {
-    let I = await aSt(
+  if ((eEe(e), Zht("agent worktree"), hasWorktreeCreateHook())) {
+    let I = await executeWorktreeCreateHook(
       { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
       e,
       { storageV5: t?.storageV5, credentials: t?.credentials },
@@ -160202,7 +160202,7 @@ async function v3(
       de = p;
     }
     if (
-      await P9t(
+      await executeWorktreeRemoveHook(
         { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
         de,
         { storageV5: E, credentials: C },
@@ -160757,9 +160757,9 @@ async function T_r(e, t, r) {
     return { handled: !1, error: `Error: ${l(Ke)}` };
   }
   let E, C;
-  if (EX()) {
+  if (hasWorktreeCreateHook()) {
     try {
-      let Ke = await aSt(
+      let Ke = await executeWorktreeCreateHook(
         { id: K(), project: { originalCwd: he(), projectRoot: sn() } },
         d,
         { storageV5: t, credentials: r },
@@ -162173,7 +162173,7 @@ async function* r5n(e, t, r, o) {
       if (gH(F)) continue;
       if (F.message) {
         if ((r.push(F.message), d))
-          await ST(r, void 0, void 0, void 0, o.storageV5);
+          await recordTranscript(r, void 0, void 0, void 0, o.storageV5);
         if (F.message.type === "progress") {
           yield* XLe(
             F.message,
@@ -162278,9 +162278,9 @@ async function* o5n(e, t, r, o) {
       try {
         let Oe =
           F.suppressesAllPermissionUpdates?.(I.input) === !0 ||
-          (F.mcpInfo?.serverName === Rp && Iy())
-            ? HO(xe)
-            : c3(xe, F, ce(o));
+          (F.mcpInfo?.serverName === Rp && isRemoteToolForwardingSwitchOn())
+            ? withoutGrantsForRemoteScope(xe)
+            : stripWholeToolGrantsForAsk(xe, F, ce(o));
         (o.setSessionToolPermissionContext((Ne) => Kk(Ne, Oe)),
           await RD(Oe, o.storageV5));
       } catch (Oe) {
@@ -162334,7 +162334,7 @@ async function* o5n(e, t, r, o) {
           ),
       )
     ) {
-      if ((r.push(Me), d)) await ST(r, void 0, void 0, void 0, o.storageV5);
+      if ((r.push(Me), d)) await recordTranscript(r, void 0, void 0, void 0, o.storageV5);
     }
     let Ne = bQ(Me.message.content, N);
     yield {
@@ -162354,7 +162354,7 @@ async function* o5n(e, t, r, o) {
     if (gH(Me)) continue;
     if (Me.message) {
       if ((r.push(Me.message), d))
-        await ST(r, void 0, void 0, void 0, o.storageV5);
+        await recordTranscript(r, void 0, void 0, void 0, o.storageV5);
       if (Me.message.type === "progress") {
         yield* XLe(
           Me.message,
@@ -163739,7 +163739,7 @@ function cw(e) {
     case "dynamic":
       return "Dynamically configured";
     case "enterprise":
-      return OWt();
+      return getEnterpriseMcpFilePath();
     case "managed":
       return "managed settings (managedMcpServers)";
     case "claudeai":
@@ -163845,7 +163845,7 @@ function fWo(e) {
   if (!nh({ name: e })) return null;
   let t = Js(e);
   if (!t) return null;
-  let r = F3(t.serverName);
+  let r = getMcpConfigByName(t.serverName);
   if (!r && t.serverName.startsWith("claude_ai_")) return "claudeai";
   return r?.scope ?? null;
 }
@@ -163941,14 +163941,14 @@ function DE(e) {
 function Fg(e) {
   return DE(DRe(e));
 }
-function OWt() {
+function getEnterpriseMcpFilePath() {
   return sue(Tb(), "managed-mcp.json");
 }
-function eR() {
+function emptyServerMap() {
   return Object.create(null);
 }
 function nue(e, t, r) {
-  let o = eR();
+  let o = emptyServerMap();
   if (e)
     for (let [d, p] of Object.entries(e))
       o[d] =
@@ -164173,7 +164173,7 @@ function rut(e, t, r, o, { asConfigured: d = !1 } = {}) {
 function lFe(e) {
   return "url" in e ? e.url : null;
 }
-function DWt(e) {
+function unwrapCcrProxyUrl(e) {
   if (!g5t.some((t) => e.includes(t))) return e;
   try {
     return new URL(e).searchParams.get("mcp_url") || e;
@@ -164182,7 +164182,7 @@ function DWt(e) {
   }
 }
 var RWo = new Set(Qct);
-function cj(e, t) {
+function getMcpServerSignature(e, t) {
   if ("configError" in e && e.configError) return null;
   let r = aFe(e);
   if (r) {
@@ -164194,25 +164194,25 @@ function cj(e, t) {
     return `stdio:${b(r)}${_}`;
   }
   let o = lFe(e);
-  if (o) return `url:${DWt(o)}`;
+  if (o) return `url:${unwrapCcrProxyUrl(o)}`;
   return null;
 }
 function PWo(e, t) {
   let r = new Map();
   for (let [_, E] of Object.entries(t)) {
-    let C = cj(E, { includeEnv: !1 });
+    let C = getMcpServerSignature(E, { includeEnv: !1 });
     if (C && !r.has(C)) r.set(C, _);
   }
   let o = {},
     d = [],
     p = new Map();
   for (let [_, E] of Object.entries(e)) {
-    let C = cj(E);
+    let C = getMcpServerSignature(E);
     if (C === null) {
       o[_] = E;
       continue;
     }
-    let I = cj(E, { includeEnv: !1 }),
+    let I = getMcpServerSignature(E, { includeEnv: !1 }),
       D = I !== null ? r.get(I) : void 0;
     if (D !== void 0) {
       (n(
@@ -164240,11 +164240,11 @@ function IWo(e) {
   if (r) return r.join(" ");
   return e.type ?? "unknown";
 }
-function LWt(e) {
+function getMcpScopeConflicts(e) {
   let t = new Map();
   for (let { scope: o, servers: d, displayServers: p } of e)
     for (let [_, E] of Object.entries(d)) {
-      let C = cj(E, { includeEnv: !1 });
+      let C = getMcpServerSignature(E, { includeEnv: !1 });
       if (!C) continue;
       let I = t.get(_);
       if (!I) t.set(_, (I = []));
@@ -164279,7 +164279,7 @@ function LWt(e) {
   }
   return r;
 }
-function D5e(e, t) {
+function suppressedConnectorsEqual(e, t) {
   return (
     e.length === t.length &&
     e.every(
@@ -164290,23 +164290,23 @@ function D5e(e, t) {
     )
   );
 }
-async function CMe(e, t) {
+async function dedupClaudeAiMcpServers(e, t) {
   let r = await oRe(),
     o = new Map();
   for (let [_, E] of Object.entries(t)) {
-    if (Uo(_)) continue;
+    if (isMcpServerDisabled(_)) continue;
     if (
       (E.type === "sse" || E.type === "http") &&
       (sRe(_, E, r) || Nor(_, E, r))
     )
       continue;
-    let C = cj(E);
+    let C = getMcpServerSignature(E);
     if (C && !o.has(C)) o.set(C, { name: _, scope: E.scope });
   }
   let d = {},
     p = [];
   for (let [_, E] of Object.entries(e)) {
-    let C = cj(E),
+    let C = getMcpServerSignature(E),
       I = C !== null ? o.get(C) : void 0;
     if (I !== void 0) {
       (n(
@@ -164336,7 +164336,7 @@ function jUn(e, t) {
   if (e) sFe("missing_policy_var");
   if (t) sFe("unsafe_expansion");
 }
-function Wgn(e) {
+function expandMcpPolicyPredicates(e) {
   if (!e.deniedMcpServers && !e.allowedMcpServers) return e;
   let t = new Set(kge.map((D) => D.toUpperCase())),
     r = (D, N) => kq(D) || t.has(D.toUpperCase()) || (N !== void 0 && uS(N)),
@@ -164387,7 +164387,7 @@ function Wgn(e) {
     }),
   };
 }
-function Yde(e, t) {
+function isMcpServerDenied(e, t) {
   let r = OWo();
   if (!r.deniedMcpServers) return !1;
   for (let o of r.deniedMcpServers) if (ftt(o) && o.serverName === e) return !0;
@@ -164421,11 +164421,11 @@ function Yde(e, t) {
   }
   return !1;
 }
-function uj(e, t) {
-  if (Yde(e, t)) return !1;
+function isMcpServerAllowedByPolicy(e, t) {
+  if (isMcpServerDenied(e, t)) return !1;
   if (
     t?.scope !== void 0 &&
-    mY(t.scope) &&
+    isOrganizationProvidedMcpScope(t.scope) &&
     !t.expandedFromEnv &&
     !t.pluginSource
   )
@@ -164490,21 +164490,21 @@ function uj(e, t) {
     if (ftt(p) && p.serverName === e) return !0;
   return !1;
 }
-function yyt(e) {
+function isBuiltinInProcessMcpServer(e) {
   return JC(e) || lq(e);
 }
-function yH(e) {
+function filterMcpServersByPolicy(e) {
   let t = Object.create(null),
     r = [];
   for (let [o, d] of Object.entries(e)) {
     let p = d;
-    if (p.type === "sdk" || uj(o, p)) t[o] = d;
+    if (p.type === "sdk" || isMcpServerAllowedByPolicy(o, p)) t[o] = d;
     else r.push(o);
   }
   return { allowed: t, blocked: r };
 }
 var DWo = new Set(["dynamic", "agent", "claudeai"]);
-function Oh(e, t) {
+function isMcpServerBlockedAtConnectTime(e, t) {
   if (
     t.type !== "sdk" &&
     (JC(e) || akn(t)) &&
@@ -164514,25 +164514,25 @@ function Oh(e, t) {
   if (!DWo.has(t.scope)) return !1;
   if (t.scope === "claudeai" && RQ()) return !0;
   if (t.type === "sdk") return !1;
-  if (yyt(e) || rS(t) || t.type === "sse-ide" || t.type === "ws-ide")
-    return Yde(e, t);
-  return !uj(e, t);
+  if (isBuiltinInProcessMcpServer(e) || rS(t) || t.type === "sse-ide" || t.type === "ws-ide")
+    return isMcpServerDenied(e, t);
+  return !isMcpServerAllowedByPolicy(e, t);
 }
-function d$(e, t) {
-  return Yp(e, t) !== null;
+function isMcpDialBlockedByPolicy(e, t) {
+  return mcpDialBlockCause(e, t) !== null;
 }
-function Yp(e, t) {
-  if (Oh(e, t)) return "managed-policy";
-  if (!byt.has(t.scope)) return null;
-  if (!uj(e, t)) return "managed-policy";
+function mcpDialBlockCause(e, t) {
+  if (isMcpServerBlockedAtConnectTime(e, t)) return "managed-policy";
+  if (!MCP_SETTINGS_SCOPE_SET.has(t.scope)) return null;
+  if (!isMcpServerAllowedByPolicy(e, t)) return "managed-policy";
   return eHn(e, t);
 }
-function vEe(e) {
+function filterDynamicMcpServersByPolicy(e) {
   if (!e) return { configs: {}, blocked: [] };
   let t = {},
     r = [];
   for (let [o, d] of Object.entries(e))
-    if (Oh(o, d)) r.push(o);
+    if (isMcpServerBlockedAtConnectTime(o, d)) r.push(o);
     else t[o] = d;
   return { configs: t, blocked: r };
 }
@@ -164611,7 +164611,7 @@ function LWo(e) {
 var FWo =
     "Invalid name <redacted>. Names can only contain letters, numbers, hyphens, and underscores.",
   $Wo = "Cannot add MCP server <redacted>: this name is reserved.";
-async function KM(e, t, r, o) {
+async function addMcpConfig(e, t, r, o) {
   if (e.match(/[^a-zA-Z0-9_-]/))
     throw dt(
       Error(
@@ -164624,7 +164624,7 @@ async function KM(e, t, r, o) {
       Error(`Cannot add MCP server "${e}": this name is reserved.`),
       $Wo,
     );
-  if (Zm())
+  if (doesEnterpriseMcpConfigExist())
     throw Error(
       "Cannot add MCP server: enterprise MCP configuration is active and has exclusive control over MCP servers",
     );
@@ -164639,21 +164639,21 @@ async function KM(e, t, r, o) {
     );
   }
   let p = d.data;
-  if (Yde(e, p))
+  if (isMcpServerDenied(e, p))
     throw dt(
       Error(
         `Cannot add MCP server "${e}": server is explicitly blocked by enterprise policy`,
       ),
       "Cannot add MCP server: server is explicitly blocked by enterprise policy",
     );
-  if (!uj(e, p))
+  if (!isMcpServerAllowedByPolicy(e, p))
     throw dt(
       Error(`Cannot add MCP server "${e}": not allowed by enterprise policy`),
       "Cannot add MCP server: not allowed by enterprise policy",
     );
   switch (r) {
     case "project": {
-      let _ = await Jde();
+      let _ = await readRawMcpJsonServersFromCwd();
       if (Object.hasOwn(_, e))
         throw dt(
           Error(`MCP server ${e} already exists in .mcp.json`),
@@ -164688,7 +164688,7 @@ async function KM(e, t, r, o) {
   }
   switch (r) {
     case "project": {
-      let _ = await Jde();
+      let _ = await readRawMcpJsonServersFromCwd();
       _[e] = p;
       try {
         await zUn({ mcpServers: _ });
@@ -164713,10 +164713,10 @@ async function KM(e, t, r, o) {
   }
   y("mcp_config_add");
 }
-async function MWt(e, t, r) {
+async function removeMcpConfig(e, t, r) {
   switch (t) {
     case "project": {
-      let o = await Jde();
+      let o = await readRawMcpJsonServersFromCwd();
       if (!Object.hasOwn(o, e))
         throw Error(`No MCP server named "${e}" in .mcp.json`);
       delete o[e];
@@ -164753,10 +164753,10 @@ async function MWt(e, t, r) {
   }
   y("mcp_config_remove");
 }
-function Syt(e) {
+function userScopeMcpServerExists(e) {
   return ee().mcpServers?.[e] !== void 0;
 }
-async function Jde() {
+async function readRawMcpJsonServersFromCwd() {
   let e = sue(Q(), ".mcp.json"),
     t;
   try {
@@ -164779,15 +164779,15 @@ async function Jde() {
     );
   return r.data.mcpServers;
 }
-var N3 = ["enterprise", "managed", "local", "user", "project"],
-  byt = new Set(N3),
+var MCP_SETTINGS_SCOPES = ["enterprise", "managed", "local", "user", "project"],
+  MCP_SETTINGS_SCOPE_SET = new Set(MCP_SETTINGS_SCOPES),
   QUn = ["enterprise", "managed"],
   JUn = [...QUn, "local", "project", "user"];
-function mY(e) {
+function isOrganizationProvidedMcpScope(e) {
   return QUn.includes(e);
 }
-function nd(e, { expandVars: t = !0 } = {}) {
-  if (Nn()) return { servers: eR(), errors: [] };
+function getMcpConfigsByScope(e, { expandVars: t = !0 } = {}) {
+  if (Nn()) return { servers: emptyServerMap(), errors: [] };
   return ZUn(e, { expandVars: t });
 }
 function ZUn(e, { expandVars: t = !0 } = {}) {
@@ -164797,10 +164797,10 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
     local: "localSettings",
   };
   if (e in r && !(e === "local" ? lMn() : Nr(r[e])))
-    return { servers: eR(), errors: [] };
+    return { servers: emptyServerMap(), errors: [] };
   switch (e) {
     case "project": {
-      let o = eR(),
+      let o = emptyServerMap(),
         d = [],
         p = [],
         _ = he(),
@@ -164808,7 +164808,7 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
       while (E !== SWo(E).root) (p.push(E), (E = bWo(E)));
       for (let C of p.reverse()) {
         let I = sue(C, ".mcp.json"),
-          { config: D, errors: N } = L5e({
+          { config: D, errors: N } = parseMcpConfigFromFilePath({
             filePath: I,
             expandVars: t,
             scope: "project",
@@ -164831,8 +164831,8 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
     }
     case "user": {
       let o = ee().mcpServers;
-      if (!o) return { servers: eR(), errors: [] };
-      let { config: d, errors: p } = vMe({
+      if (!o) return { servers: emptyServerMap(), errors: [] };
+      let { config: d, errors: p } = parseMcpConfig({
         configObject: { mcpServers: o },
         expandVars: t,
         scope: "user",
@@ -164841,8 +164841,8 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
     }
     case "local": {
       let o = es().mcpServers;
-      if (!o) return { servers: eR(), errors: [] };
-      let { config: d, errors: p } = vMe({
+      if (!o) return { servers: emptyServerMap(), errors: [] };
+      let { config: d, errors: p } = parseMcpConfig({
         configObject: { mcpServers: o },
         expandVars: t,
         scope: "local",
@@ -164851,8 +164851,8 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
     }
     case "managed": {
       let o = LUn();
-      if (!o) return { servers: eR(), errors: FUn() };
-      let { config: d, errors: p } = vMe({
+      if (!o) return { servers: emptyServerMap(), errors: FUn() };
+      let { config: d, errors: p } = parseMcpConfig({
         configObject: { mcpServers: o },
         expandVars: !1,
         scope: "managed",
@@ -164860,8 +164860,8 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
       return { servers: nue(d?.mcpServers, e), errors: p };
     }
     case "enterprise": {
-      let o = OWt(),
-        { config: d, errors: p } = L5e({
+      let o = getEnterpriseMcpFilePath(),
+        { config: d, errors: p } = parseMcpConfigFromFilePath({
           filePath: o,
           expandVars: t,
           scope: "enterprise",
@@ -164876,9 +164876,9 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
               `Enterprise MCP config errors for ${o}: ${b(_.map((E) => E.message))}`,
               { level: "error" },
             ),
-            { servers: eR(), errors: _ }
+            { servers: emptyServerMap(), errors: _ }
           );
-        return { servers: eR(), errors: [] };
+        return { servers: emptyServerMap(), errors: [] };
       }
       return { servers: nue(d.mcpServers, e), errors: p };
     }
@@ -164888,46 +164888,46 @@ function BWo(e, t) {
   return eHn(e, t) === null;
 }
 function eHn(e, t) {
-  if (!byt.has(t.scope)) return null;
+  if (!MCP_SETTINGS_SCOPE_SET.has(t.scope)) return null;
   if (Xr("mcpAutoDiscovered")) return "managed-policy";
-  if (Zm() || Uu("mcp")) return mY(t.scope) ? null : "managed-policy";
+  if (doesEnterpriseMcpConfigExist() || Uu("mcp")) return isOrganizationProvidedMcpScope(t.scope) ? null : "managed-policy";
   if (t.scope === "project")
     return Bne(e) === "approved" ? null : "project-approval";
   return null;
 }
-function wyt(e) {
+function getSettingsMcpConfigByName(e) {
   for (let t of JUn) {
     if (t === "project" && Bne(e) !== "approved") continue;
-    let r = nd(t).servers[e];
+    let r = getMcpConfigsByScope(t).servers[e];
     if (r) return r;
   }
   return null;
 }
-function F3(e) {
+function getMcpConfigByName(e) {
   if (Xr("mcpAutoDiscovered")) return null;
   for (let t of JUn) {
-    if (!mY(t) && (Zm() || Uu("mcp"))) return null;
-    let r = nd(t).servers[e];
+    if (!isOrganizationProvidedMcpScope(t) && (doesEnterpriseMcpConfigExist() || Uu("mcp"))) return null;
+    let r = getMcpConfigsByScope(t).servers[e];
     if (r && BWo(e, r)) return r;
   }
   return null;
 }
-async function SH(e = {}, t = {}) {
+async function getClaudeCodeMcpConfigs(e = {}, t = {}) {
   if (Xr("mcpAutoDiscovered"))
     return {
-      servers: eR(),
+      servers: emptyServerMap(),
       pendingProjectServers: new Set(),
       rejectedProjectServers: new Set(),
       errors: [],
       warnings: [],
     };
-  let r = t.purpose === "deviceBridge" ? ZUn : nd,
+  let r = t.purpose === "deviceBridge" ? ZUn : getMcpConfigsByScope,
     { servers: o } = r("enterprise"),
     { servers: d } = r("managed");
-  if (Zm()) {
-    let je = eR();
+  if (doesEnterpriseMcpConfigExist()) {
+    let je = emptyServerMap();
     for (let [Ke, ct] of Object.entries({ ...d, ...o })) {
-      if (!uj(Ke, ct)) continue;
+      if (!isMcpServerAllowedByPolicy(Ke, ct)) continue;
       je[Ke] = ct;
     }
     return {
@@ -164939,11 +164939,11 @@ async function SH(e = {}, t = {}) {
     };
   }
   let p = Uu("mcp"),
-    _ = { servers: eR() },
+    _ = { servers: emptyServerMap() },
     { servers: E } = p ? _ : r("user"),
     { servers: C } = p ? _ : r("project"),
     { servers: I } = p ? _ : r("local"),
-    D = eR(),
+    D = emptyServerMap(),
     N = t.pluginLoadResult ?? (await ei(t.storageV5, t.credentials)),
     F = [],
     U = [];
@@ -165000,7 +165000,7 @@ async function SH(e = {}, t = {}) {
       let Ke = `Plugin MCP server error - ${je.type}: ${vm(je)}`;
       n(Ke, { level: "error" });
     }
-  let Se = eR();
+  let Se = emptyServerMap();
   for (let [je, Ke] of Object.entries(C)) {
     let ct = ue(je);
     if (ct === "approved") {
@@ -165015,11 +165015,11 @@ async function SH(e = {}, t = {}) {
   }
   let ve = {};
   for (let [je, Ke] of Object.entries({ ...E, ...Se, ...I, ...d, ...e }))
-    if (!Uo(je) && !V.has(je) && !re.has(je) && uj(je, Ke)) ve[je] = Ke;
+    if (!isMcpServerDisabled(je) && !V.has(je) && !re.has(je) && isMcpServerAllowedByPolicy(je, Ke)) ve[je] = Ke;
   let Me = {},
     xe = {};
   for (let [je, Ke] of Object.entries(D))
-    if (Uo(je) || V.has(je) || re.has(je) || !uj(je, Ke)) xe[je] = Ke;
+    if (isMcpServerDisabled(je) || V.has(je) || re.has(je) || !isMcpServerAllowedByPolicy(je, Ke)) xe[je] = Ke;
     else Me[je] = Ke;
   let { servers: Oe, suppressed: Ne } = PWo(Me, ve);
   Object.assign(Oe, xe);
@@ -165035,10 +165035,10 @@ async function SH(e = {}, t = {}) {
     });
   }
   let De = Object.assign({}, Oe, E, Se, I, d),
-    He = eR();
+    He = emptyServerMap();
   for (let [je, Ke] of Object.entries(De)) {
     let ct = Ke;
-    if (!uj(je, ct)) continue;
+    if (!isMcpServerAllowedByPolicy(je, ct)) continue;
     He[je] = ct;
   }
   for (let je of [V, re])
@@ -165054,8 +165054,8 @@ async function SH(e = {}, t = {}) {
     warnings: U,
   };
 }
-async function vE(e = {}) {
-  if (REe()) return SH({}, e);
+async function getAllMcpConfigs(e = {}) {
+  if (shouldSkipClaudeAiFetchForEnterpriseLockdown()) return getClaudeCodeMcpConfigs({}, e);
   let t = Xde(),
     {
       servers: r,
@@ -165063,15 +165063,15 @@ async function vE(e = {}) {
       rejectedProjectServers: d,
       errors: p,
       warnings: _,
-    } = await SH({}, e),
-    { allowed: E } = yH((await t) ?? {});
+    } = await getClaudeCodeMcpConfigs({}, e),
+    { allowed: E } = filterMcpServersByPolicy((await t) ?? {});
   I5e();
   let C =
       e.includePendingProjectServers || e.includeRejectedProjectServers
         ? ea(r, (N, F) => !o.has(F) && !d.has(F))
         : r,
-    { servers: I } = await CMe(E, C),
-    D = Object.assign(eR(), I, r);
+    { servers: I } = await dedupClaudeAiMcpServers(E, C),
+    D = Object.assign(emptyServerMap(), I, r);
   for (let N of [o, d])
     for (let F of N) if (Object.hasOwn(I, F)) ((D[F] = I[F]), N.delete(F));
   return {
@@ -165082,10 +165082,10 @@ async function vE(e = {}) {
     warnings: _,
   };
 }
-async function Ggn(e = {}, t, r = () => myt(t)) {
+async function getConnectablePluginMcpServerNames(e = {}, t, r = () => myt(t)) {
   if (M0()) return new Set();
   let o = await r(),
-    { servers: d } = await SH(e, { pluginLoadResult: o, storageV5: t }),
+    { servers: d } = await getClaudeCodeMcpConfigs(e, { pluginLoadResult: o, storageV5: t }),
     p = new Set();
   for (let [_, E] of Object.entries(d)) if (E.pluginSource !== void 0) p.add(_);
   return p;
@@ -165119,10 +165119,10 @@ function UWo(e) {
     }
   return t;
 }
-function qgn() {
+function consumeBridgeMcpCarrierMarker() {
   if (g0.isBridgeCarrierChild) a.set("CLAUDE_CODE_BRIDGE_MCP_CARRIER", Sir);
 }
-function zgn(e) {
+function verifyBridgeCarrierPrompt(e) {
   let t = a.CLAUDE_CODE_BRIDGE_PROMPT_SHA256;
   if (
     (a.unset("CLAUDE_CODE_BRIDGE_PROMPT_SHA256"),
@@ -165159,7 +165159,7 @@ function jWo(e, t, r) {
   if (!d) return { drop: "bridge_carrier_url_mismatch" };
   return { url: d, sessionId: r };
 }
-function vMe(e) {
+function parseMcpConfig(e) {
   let {
       configObject: t,
       expandVars: r,
@@ -165327,7 +165327,7 @@ function vMe(e) {
   return { config: { mcpServers: C }, errors: E };
 }
 var oue = 2097152;
-function L5e(e) {
+function parseMcpConfigFromFilePath(e) {
   let { filePath: t, expandVars: r, scope: o, bridgeSessionId: d } = e,
     p = ae(),
     _;
@@ -165414,7 +165414,7 @@ function L5e(e) {
     );
   return (
     y("mcp_config_parse"),
-    vMe({
+    parseMcpConfig({
       configObject: E,
       expandVars: r,
       scope: o,
@@ -165428,7 +165428,7 @@ class tHn {
   check() {
     return (
       (this.exists ??=
-        L5e({ filePath: OWt(), expandVars: !0, scope: "enterprise" }).config !==
+        parseMcpConfigFromFilePath({ filePath: getEnterpriseMcpFilePath(), expandVars: !0, scope: "enterprise" }).config !==
         null),
       this.exists
     );
@@ -165438,24 +165438,24 @@ class tHn {
   }
 }
 var WWo = new j(() => new tHn());
-function Zm() {
+function doesEnterpriseMcpConfigExist() {
   return WWo.of(B().host).check();
 }
-function REe() {
-  if (!Zm()) return !1;
+function shouldSkipClaudeAiFetchForEnterpriseLockdown() {
+  if (!doesEnterpriseMcpConfigExist()) return !1;
   if (Rd().some((e) => e.allowAllClaudeAiMcps === !0)) return !1;
   return !0;
 }
-function M5e() {
-  return !M0() && !REe() && !uo();
+function headlessSyncsClaudeAiConnectors() {
+  return !M0() && !shouldSkipClaudeAiFetchForEnterpriseLockdown() && !uo();
 }
 function GWo() {
   return ye("policySettings")?.allowManagedMcpServersOnly === !0;
 }
-function Vgn(e) {
+function areMcpConfigsAllSdkType(e) {
   return Object.values(e).every((t) => t.type === "sdk");
 }
-function NWt(e) {
+function areMcpConfigsAllowedWithEnterpriseMcpConfig(e) {
   return Object.values(e).every(
     (t) => t.type === "sdk" && t.name === "claude-vscode",
   );
@@ -165466,7 +165466,7 @@ function oFe(e) {
 function iFe(e) {
   return Array.isArray(e) ? e : [];
 }
-function Uo(e) {
+function isMcpServerDisabled(e) {
   let t = es();
   if (oFe(e)) return !iFe(t.enabledMcpServers).includes(e);
   return iFe(t.disabledMcpServers).includes(e);
@@ -165475,8 +165475,8 @@ function GUn(e, t, r) {
   if (e.includes(t) === r) return e;
   return r ? [...e, t] : e.filter((d) => d !== t);
 }
-function kEe(e, t, r) {
-  let o = oFe(e) && Uo(e) === t;
+function setMcpServerEnabled(e, t, r) {
+  let o = oFe(e) && isMcpServerDisabled(e) === t;
   if (
     (eu((d) => {
       if (oFe(e)) {
@@ -166607,7 +166607,7 @@ function u2o(e, t, r) {
         ),
         { skipped: "strict", name: r }
       );
-    let _ = F3(r);
+    let _ = getMcpConfigByName(r);
     if (!_)
       return (
         n(`[Agent: ${e}] MCP server not found: ${r}`, { level: "warn" }),
@@ -166656,7 +166656,7 @@ async function d2o(e, t, r, o, d) {
   else if (M0() && e.source !== "flagSettings") _ = "--strict-mcp-config";
   else if (Xr("mcpAgentFrontmatter")) _ = Hr() ? "--safe-mode" : "--bare";
   else if (Nn()) _ = "remote mode";
-  else if (Zm()) _ = "enterprise MCP config";
+  else if (doesEnterpriseMcpConfigExist()) _ = "enterprise MCP config";
   if (_)
     return (
       n(
@@ -166678,11 +166678,11 @@ async function d2o(e, t, r, o, d) {
     D = await Promise.all(
       e.mcpServers.map(async (re) => {
         if (typeof re !== "string" && !E) return null;
-        let ue = u2o(e.agentType, Fdn(e), re);
+        let ue = u2o(e.agentType, agentMcpSource(e), re);
         if (ue === null) return null;
         if ("skipped" in ue) return (I.push(ue.name), null);
         let { name: de, config: _e, isNewlyCreated: Se } = ue,
-          { blocked: ve } = yH({ [de]: _e });
+          { blocked: ve } = filterMcpServersByPolicy({ [de]: _e });
         if (ve.length > 0)
           return (
             n(
@@ -166695,7 +166695,7 @@ async function d2o(e, t, r, o, d) {
         let { connectToServer: Me, fetchToolsForClient: xe } = import.meta
             .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
             .mcpClientModule(),
-          { boundDial: Oe } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/createDialFailureLatch.r0zpwhgp.js"),
+          { boundDial: Oe } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js"),
           Ne = Me(de, _e, void 0, o, d),
           De;
         try {
@@ -166776,7 +166776,7 @@ function m2o(e) {
 }
 async function g2o(e, t, r, o) {
   if (t) {
-    let d = await fC(e, o).catch(TTe("persistAgentMetadata"));
+    let d = await readAgentMetadata(e, o).catch(TTe("persistAgentMetadata"));
     if (d) {
       if (((r.parentAgentId = d.parentAgentId), d.worktreePath === void 0))
         (delete r.worktreePath, delete r.worktreeBranch);
@@ -166787,7 +166787,7 @@ async function g2o(e, t, r, o) {
       if (d.pluginSteered === !0) r.pluginSteered = !0;
     }
   }
-  await zEe(e, r, o);
+  await writeAgentMetadata(e, r, o);
 }
 function h2o(e, t) {
   let r = `${EQ}.claude${EQ}worktrees${EQ}`,
@@ -166807,7 +166807,7 @@ function h2o(e, t) {
   return C;
 }
 var y2o = 500;
-async function* dw({
+async function* runAgent({
   agentDefinition: e,
   promptMessages: t,
   toolUseContext: r,
@@ -166871,9 +166871,9 @@ async function* dw({
     cUt(Cn, e.agentType, Rn);
   }
   let Kn,
-    hn = _ ? Wmn(_) : [],
+    hn = _ ? filterIncompleteToolCalls(_) : [],
     At = [...hn, ...t],
-    Fn = _ !== void 0 ? Lfn(hn) : void 0,
+    Fn = _ !== void 0 ? forkPointUuidOf(hn) : void 0,
     Yn =
       N?.readFileState ??
       (_ !== void 0
@@ -166980,14 +166980,14 @@ async function* dw({
     rl = ga?.resolvedTools ?? ue,
     gs = !xe && BHn(It) ? rl.filter((Rn) => !$Hn.has(Rn.name)) : rl,
     vl = Array.from(kn.additionalWorkingDirectories.keys()),
-    $o = N?.systemPrompt ? N.systemPrompt : Zo(await b2o(e, r, $n, vl)),
+    $o = N?.systemPrompt ? N.systemPrompt : asSystemPrompt(await b2o(e, r, $n, vl)),
     Wo = k2o($o, xe ?? !1, (N?.suppressScratchpad || N?.isolatedContext) ?? !1),
     hs =
       !xe &&
       !N?.isolatedContext &&
       Ie(process.env.CLAUDE_CODE_ENABLE_APPEND_SUBAGENT_PROMPT) &&
       r.options.appendSubagentSystemPrompt
-        ? Zo([...Wo, r.options.appendSubagentSystemPrompt])
+        ? asSystemPrompt([...Wo, r.options.appendSubagentSystemPrompt])
         : Wo,
     Ai = N?.abortController
       ? N.abortController
@@ -166999,7 +166999,7 @@ async function* dw({
     let Rn = N?.agentContext ?? r.agentContext,
       Ar = Ji(Rn)
         ? []
-        : T_n(
+        : executeSubagentStartHooks(
             r,
             Cn,
             e.agentType,
@@ -167012,7 +167012,7 @@ async function* dw({
     for await (let _o of Ar) {
       if (
         _o.message &&
-        bT(_o.message) &&
+        isLoggableMessage(_o.message) &&
         !(
           _o.message.type === "attachment" &&
           _o.message.attachment.type === "hook_blocking_error"
@@ -167022,7 +167022,7 @@ async function* dw({
       }
       if (_o.blockingError && !N?.isolatedContext)
         At.push(
-          JMe(
+          getNonBlockableHookErrorMessage(
             "SubagentStart",
             _o.blockingError,
             `SubagentStart:${e.agentType}`,
@@ -167036,7 +167036,7 @@ async function* dw({
     n("SubagentStart hooks cancelled (control stream closed)");
   }
   if (ls.length > 0 && !N?.isolatedContext) {
-    let Rn = pn({
+    let Rn = createAttachmentMessage({
       type: "hook_additional_context",
       content: ls,
       hookName: "SubagentStart",
@@ -167104,7 +167104,7 @@ async function* dw({
   try {
     let Rn = e.skills ?? [];
     if (Rn.length > 0) {
-      let Ar = IM(await HE(sn(), r.storageV5), r.getAppState().mcp.commands),
+      let Ar = IM(await getSkillToolCommands(sn(), r.storageV5), r.getAppState().mcp.commands),
         _o = [],
         Hs;
       for (let _s of Rn) {
@@ -167116,7 +167116,7 @@ async function* dw({
           );
           continue;
         }
-        let ff = gue(_u, Ar);
+        let ff = getCommand(_u, Ar);
         if (ff.type !== "prompt") {
           n(
             `[Agent: ${e.agentType}] Warning: Skill '${_s}' is not a prompt-based skill`,
@@ -167124,7 +167124,7 @@ async function* dw({
           );
           continue;
         }
-        if (!zp(ff)) {
+        if (!isCommandEnabled(ff)) {
           n(
             `[Agent: ${e.agentType}] Warning: Skill '${_s}' is disabled by policy`,
             { level: "warn" },
@@ -167141,7 +167141,7 @@ async function* dw({
         _o.push({ skillName: _s, skill: ff });
       }
       let { formatSkillLoadingMetadata: ys } =
-          await import("../../02-功能模块/斜杠命令-框架/processPromptSlashCommand.psenh9re.js"),
+          await import("../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js"),
         ws = await Promise.all(
           _o.map(async ({ skillName: _s, skill: _u }) => ({
             skillName: _s,
@@ -167158,7 +167158,7 @@ async function* dw({
         );
       for (let { skillName: _s, skill: _u, content: ff } of ws) {
         if ((n(`[Agent: ${e.agentType}] Preloaded skill '${_s}'`), !ba))
-          MHn(_u, Cn, LI().has(_u.name));
+          MHn(_u, Cn, builtInCommandNames().has(_u.name));
         let Nl = ys(_s, _u.progressMessage);
         At.push(
           Re({ content: [{ type: "text", text: Nl }, ...ff], isMeta: !0 }),
@@ -167170,7 +167170,7 @@ async function* dw({
   }
   let za = [];
   if (!xe)
-    for (let Rn of oyt(
+    for (let Rn of getDeferredToolsDeltaAttachment(
       ui,
       $n,
       At,
@@ -167181,11 +167181,11 @@ async function* dw({
       void 0,
       (Me && qIe(Me)) ?? E2o(Me, ui),
     )) {
-      let Ar = pn(Rn);
+      let Ar = createAttachmentMessage(Rn);
       (At.push(Ar), za.push(Ar));
     }
-  for (let Rn of S5e(ui, At)) {
-    let Ar = pn(Rn);
+  for (let Rn of getSandboxInstructionsAttachments(ui, At)) {
+    let Ar = createAttachmentMessage(Rn);
     (At.push(Ar), za.push(Ar));
   }
   if (
@@ -167250,7 +167250,7 @@ async function* dw({
       messageClientPlatform: r.options.messageClientPlatform,
       toolAliases: r.options.toolAliases,
       autoCompactWindow:
-        e.agentType === a6 && xa(e)
+        e.agentType === a6 && isBuiltInAgent(e)
           ? r.options.autoCompactWindow
           : E6t(r.options.autoCompactWindow),
       maxBudgetUsd: r.options.maxBudgetUsd,
@@ -167261,7 +167261,7 @@ async function* dw({
       ...(xe && { querySource: E }),
       requiresStructuredOutput: wn,
     },
-    Ou = Dfn(r, {
+    Ou = createSubagentContext(r, {
       options: ed,
       session: un,
       agentId: Cn,
@@ -167286,8 +167286,8 @@ async function* dw({
   if (N?.onRetryStatus) Ou.onRetryStatus = N.onRetryStatus;
   if (N?.subscribeRetryWake) Ou.subscribeRetryWake = N.subscribeRetryWake;
   if (Oe) Ou.agentWorktree = Oe;
-  for (let Rn of await ygn(Ou, At)) {
-    let Ar = pn(Rn);
+  for (let Rn of await getPromptAnnouncementAttachments(Ou, At)) {
+    let Ar = createAttachmentMessage(Rn);
     (At.push(Ar), za.push(Ar));
   }
   {
@@ -167295,7 +167295,7 @@ async function* dw({
         (_o) =>
           _o.type === "attachment" && _o.attachment.type === "skill_listing",
       ),
-      Ar = await Agn(Ou).catch(
+      Ar = await getSkillListingAttachments(Ou).catch(
         (_o) => (
           n(
             `[Agent: ${e.agentType}] Failed to compute skill listing attachment: ${_o}`,
@@ -167306,7 +167306,7 @@ async function* dw({
       );
     if (!Rn)
       for (let _o of Ar) {
-        let Hs = pn(_o);
+        let Hs = createAttachmentMessage(_o);
         (At.push(Hs), za.push(Hs));
       }
   }
@@ -167354,7 +167354,7 @@ async function* dw({
     let Rn = hn.at(-1)?.uuid;
     if (Rn !== void 0)
       ((qa = At.slice(hn.length)),
-        I7n(
+        recordForkContextRef(
           {
             agentId: Cn,
             parentSessionId: K(),
@@ -167364,7 +167364,7 @@ async function* dw({
           r.storageV5,
         ).catch(p2o));
   }
-  ire(qa, Cn, is, r.storageV5).catch(iut);
+  recordSidechainTranscript(qa, Cn, is, r.storageV5).catch(iut);
   let ci = gn !== void 0 || Qt !== void 0;
   if (!ci && !Oe && r.agentWorktree) AKt(Cn);
   if (!ci) ajo(Cn, r);
@@ -167373,8 +167373,8 @@ async function* dw({
     ci,
     {
       agentType: e.agentType,
-      ...(e.agentType === a6 && { isFork: xa(e) }),
-      ...(e.agentType === Ty && { isBuiltIn: xa(e) }),
+      ...(e.agentType === a6 && { isFork: isBuiltInAgent(e) }),
+      ...(e.agentType === Ty && { isBuiltIn: isBuiltInAgent(e) }),
       ...(Oe && { worktreePath: Oe }),
       ...(!ci &&
         !Oe &&
@@ -167535,7 +167535,7 @@ async function* dw({
           )
             (i("tengu_agent_max_turns_reached", {
               query_source: ca(E),
-              is_built_in_agent: xa(e),
+              is_built_in_agent: isBuiltInAgent(e),
               max_turns: Rn.attachment.maxTurns,
               turn_count: Rn.attachment.turnCount,
               is_async: d,
@@ -167543,8 +167543,8 @@ async function* dw({
               yield Rn);
           break;
         }
-        if (bT(Rn))
-          (await ire([Rn], Cn, wi, r.storageV5).catch(iut),
+        if (isLoggableMessage(Rn))
+          (await recordSidechainTranscript([Rn], Cn, wi, r.storageV5).catch(iut),
             (wi = Rn.uuid),
             gn?.add(Rn.uuid));
         yield Rn;
@@ -167555,7 +167555,7 @@ async function* dw({
           if (Zu) (Zu.push(Rn), (Wa = Cne(Zu, Rn, Wa)));
         }
         if (
-          (await ire([Rn], Cn, wi, r.storageV5).catch(iut),
+          (await recordSidechainTranscript([Rn], Cn, wi, r.storageV5).catch(iut),
           Rn.type !== "progress")
         )
           ((wi = Rn.uuid), gn?.add(Rn.uuid));
@@ -167572,7 +167572,7 @@ async function* dw({
                   prompt: "",
                   agentId: Cn,
                   agentType: e.agentType,
-                  isBuiltIn: xa(e),
+                  isBuiltIn: isBuiltInAgent(e),
                   resolvedModel: ur,
                   ...(Ke && { description: Ke }),
                 },
@@ -167601,7 +167601,7 @@ async function* dw({
       }
     }
     if (((fl = !0), Ai.signal.aborted)) throw new Ve();
-    if (xa(e) && e.callback) e.callback();
+    if (isBuiltInAgent(e) && e.callback) e.callback();
   } catch (Rn) {
     throw ((Os = Rn), Rn);
   } finally {
@@ -167618,7 +167618,7 @@ async function* dw({
           run: async () => {
             if (fl) return;
             try {
-              for await (let _o of xY(
+              for await (let _o of executeStopHooks(
                 void 0,
                 void 0,
                 5000,
@@ -167670,7 +167670,7 @@ async function* dw({
           },
         },
         { name: "readFileState", run: () => Ou.readFileState.clear() },
-        { name: "sentSkillNames", run: () => Y8n(Cn) },
+        { name: "sentSkillNames", run: () => clearSentSkillNamesForAgent(Cn) },
         {
           name: "initialMessages",
           run: () => {
@@ -167741,7 +167741,7 @@ function FHn(e, t) {
 function _2o({ stickyBetas: e, useExactTools: t, name: r, recordedUuids: o }) {
   return e === void 0 && !t && r === void 0 && o === void 0;
 }
-function Wmn(e) {
+function filterIncompleteToolCalls(e) {
   let t = new Set();
   for (let r of e)
     if (r?.type === "user") {
@@ -167774,30 +167774,30 @@ function k2o(e, t, r = !1) {
   if (t || r) return e;
   let o = uFe();
   if (o === null || e.some((d) => d.includes(S2o))) return e;
-  return Zo([...e, o]);
+  return asSystemPrompt([...e, o]);
 }
 function w2o(e, t, r) {
-  if (B9(e, t)) return e;
+  if (hasCommand(e, t)) return e;
   let o = ft(r.agentType, ":");
   if (o) {
     let _ = `${o}:${e}`;
-    if (B9(_, t)) return _;
+    if (hasCommand(_, t)) return _;
   }
   let d = `:${e}`,
     p = t.find((_) => _.name.endsWith(d));
   if (p) return p.name;
   return null;
 }
-async function Y5n({
+async function clearWorktreeFromAgentMetadata({
   agentId: e,
   removedWorktreePath: t,
   spawnMetadata: r,
   storageV5: o,
 }) {
   Jor(e);
-  let d = await fC(e, o).catch(TTe("clearWorktreeFromAgentMetadata")),
+  let d = await readAgentMetadata(e, o).catch(TTe("clearWorktreeFromAgentMetadata")),
     p = d?.cwd && d.cwd !== t ? d.cwd : void 0;
-  await zEe(
+  await writeAgentMetadata(
     e,
     {
       ...r,
@@ -167812,7 +167812,7 @@ async function Y5n({
 }
 function E2o(e, t) {
   try {
-    return Sgn(e ?? CW(), t);
+    return inlineSetBeforeLatch(e ?? CW(), t);
   } catch (r) {
     h(ge(r));
     return;
@@ -167858,7 +167858,7 @@ function HHn(e, t, r, o, d, p = {}) {
         );
         return;
       }
-      let Se = Wmn(_e),
+      let Se = filterIncompleteToolCalls(_e),
         ve = `${Se.length}:${Se.at(-1)?.uuid ?? ""}`;
       if (ve === U) {
         if (
@@ -167882,7 +167882,7 @@ function HHn(e, t, r, o, d, p = {}) {
           message: "No tools needed for summary",
           decisionReason: { type: "other", reason: "summary only" },
         }),
-        Oe = await wE({
+        Oe = await runForkedAgent({
           promptMessages: [Re({ content: v2o(F) })],
           cacheSafeParams: Me,
           canUseTool: xe,
@@ -168100,7 +168100,7 @@ function fFe(e) {
   }
   return e;
 }
-function Q5n(e, t) {
+function findDangerousClassifierPermissions(e, t) {
   let r = [];
   for (let o of e)
     if (
@@ -168143,26 +168143,26 @@ function D2o(e) {
   if (cEt(t, Tzt)) return "network";
   return "ace";
 }
-function Z5n(e, t = !1) {
+function isOverlyBroadBashAllowRule(e, t = !1) {
   if (e.toolName !== qe) return !1;
   let r = e.ruleContent;
   if (r === void 0 || lut(r)) return !0;
   return t && cEt(r, O2o);
 }
-function e8n(e) {
+function isOverlyBroadPowerShellAllowRule(e) {
   return e.toolName === Ut && lut(e.ruleContent);
 }
-function Npr() {
+function isYoloEquivStripEnabledForEntrypoint() {
   let e = H("tengu_ant_yolo_equiv_strip_config", {});
   if (!e.enabled) return !1;
   let t = a.CLAUDE_CODE_ENTRYPOINT ?? "cli";
   if (e.includeEntrypoints) return e.includeEntrypoints.includes(t);
   return !(e.excludeEntrypoints ?? []).includes(t);
 }
-function t8n(e, t, r = !1) {
+function findOverlyBroadBashPermissions(e, t, r = !1) {
   let o = [];
   for (let d of e)
-    if (d.ruleBehavior === "allow" && Z5n(d.ruleValue, r))
+    if (d.ruleBehavior === "allow" && isOverlyBroadBashAllowRule(d.ruleValue, r))
       o.push({
         ruleValue: d.ruleValue,
         source: d.source,
@@ -168173,7 +168173,7 @@ function t8n(e, t, r = !1) {
       });
   for (let d of t) {
     let p = Fr(d);
-    if (Z5n(p, r))
+    if (isOverlyBroadBashAllowRule(p, r))
       o.push({
         ruleValue: p,
         source: "cliArg",
@@ -168185,10 +168185,10 @@ function t8n(e, t, r = !1) {
   }
   return o;
 }
-function n8n(e, t) {
+function findOverlyBroadPowerShellPermissions(e, t) {
   let r = [];
   for (let o of e)
-    if (o.ruleBehavior === "allow" && e8n(o.ruleValue))
+    if (o.ruleBehavior === "allow" && isOverlyBroadPowerShellAllowRule(o.ruleValue))
       r.push({
         ruleValue: o.ruleValue,
         source: o.source,
@@ -168197,7 +168197,7 @@ function n8n(e, t) {
       });
   for (let o of t) {
     let d = Fr(o);
-    if (e8n(d))
+    if (isOverlyBroadPowerShellAllowRule(d))
       r.push({
         ruleValue: d,
         source: "cliArg",
@@ -168207,13 +168207,13 @@ function n8n(e, t) {
   }
   return r;
 }
-function C_r(e) {
+function overlyBroadShellAllowsStrippedByEverySession(e) {
   return [];
 }
 function N2o(e) {
   return w0.includes(e) || e === "session" || e === "cliArg";
 }
-function Fpr(e, t, r = !1) {
+function removeDangerousPermissions(e, t, r = !1) {
   let o = new Map();
   for (let p of t) {
     if (!r && !N2o(p.source)) continue;
@@ -168231,9 +168231,9 @@ function Fpr(e, t, r = !1) {
     });
   return d;
 }
-function qM(e) {
+function stripDangerousPermissionsForAutoMode(e) {
   let t = rJe(e.alwaysAllowRules, "allow"),
-    r = Q5n(t, []);
+    r = findDangerousClassifierPermissions(t, []);
   if (r.length === 0)
     return e.strippedDangerousRules !== void 0
       ? e
@@ -168250,9 +168250,9 @@ function qM(e) {
       _ = (o[d.source] ??= []);
     if (!_.includes(p)) _.push(p);
   }
-  return { ...Fpr(e, r, !0), strippedDangerousRules: o };
+  return { ...removeDangerousPermissions(e, r, !0), strippedDangerousRules: o };
 }
-function ZX(e) {
+function restoreDangerousPermissions(e) {
   let t = e.strippedDangerousRules;
   if (!t) return e;
   let r = e;
@@ -168267,7 +168267,7 @@ function ZX(e) {
   }
   return { ...r, strippedDangerousRules: void 0 };
 }
-function Ik(e, t, r, o) {
+function transitionPermissionMode(e, t, r, o) {
   if (e === t) return r;
   if (
     (fUe(void 0),
@@ -168277,19 +168277,19 @@ function Ik(e, t, r, o) {
     e === "plan" && t !== "plan")
   )
     PL(!0);
-  if (t === "plan" && e !== "plan") return JKe(r);
+  if (t === "plan" && e !== "plan") return prepareContextForPlanMode(r);
   let d = e === "auto" || (e === "plan" && fb()),
     p = t === "auto";
   if (p && !d) {
-    if (!cC())
+    if (!isAutoModeGateEnabled())
       throw Error("Cannot transition to auto mode: gate is not enabled");
-    (qC(!0), (r = qM(r)));
-  } else if (d && !p) (qC(!1), OL(!0), (r = ZX(r)));
+    (qC(!0), (r = stripDangerousPermissionsForAutoMode(r)));
+  } else if (d && !p) (qC(!1), OL(!0), (r = restoreDangerousPermissions(r)));
   if (e === "plan" && t !== "plan" && r.prePlanMode)
     return { ...r, prePlanMode: void 0 };
   return r;
 }
-function sMe(e, t) {
+function guardPermissionModeChange(e, t) {
   let r = gf(e);
   if (r === void 0) return { ok: !1, error: Rie };
   if (r === "bypassPermissions") {
@@ -168307,25 +168307,25 @@ function sMe(e, t) {
           "Cannot set permission mode to bypassPermissions because the session was not launched with --dangerously-skip-permissions",
       };
   }
-  if (r === "auto" && !cC()) {
-    let o = eY();
+  if (r === "auto" && !isAutoModeGateEnabled()) {
+    let o = getAutoModeUnavailableReason();
     return {
       ok: !1,
       error: o
-        ? `Cannot set permission mode to auto: ${ij(o)}`
+        ? `Cannot set permission mode to auto: ${getAutoModeUnavailableNotification(o)}`
         : "Cannot set permission mode to auto",
     };
   }
   return { ok: !0, mode: r };
 }
-function mH(e, t, r, o) {
-  let d = sMe(e, t);
+function setPermissionModeWithGuards(e, t, r, o) {
+  let d = guardPermissionModeChange(e, t);
   if (!d.ok) return d;
   let p = d.mode;
   return (
     r((_) => {
       if (_.mode === p) return _;
-      return { ...Ik(_.mode, p, _, o), mode: p };
+      return { ...transitionPermissionMode(_.mode, p, _, o), mode: p };
     }),
     setImmediate(() => {
       QX.emit();
@@ -168333,9 +168333,9 @@ function mH(e, t, r, o) {
     { ok: !0, mode: p }
   );
 }
-function $pr(e) {
+function parseBaseToolsFromCLI(e) {
   let t = e.join(" ").trim();
-  if (Hpn(t)) return cut();
+  if (parseToolPreset(t)) return cut();
   let o = qu(e);
   if (o.includes("preset:default"))
     return Pk()
@@ -168347,7 +168347,7 @@ function L2o({ processPwd: e, originalCwd: t }) {
   let { resolvedPath: r, isSymlink: o } = Ro(ae(), e);
   return o ? r === GHn(t) : !1;
 }
-function qmn({
+function initialPermissionModeFromCLI({
   permissionModeCli: e,
   inheritPermissionModeCli: t,
   dangerouslySkipPermissions: r,
@@ -168408,13 +168408,13 @@ function qmn({
     modeSuppliedOnInvocation: F.modeSuppliedOnInvocation,
   };
 }
-function M6t() {
+function addDirsAreLauncherNamed() {
   return a.CLAUDE_CODE_SESSION_KIND !== "bg";
 }
-function Upr(e) {
-  return e === "cliArg" && M6t();
+function cliArgMayMintTrustedRoots(e) {
+  return e === "cliArg" && addDirsAreLauncherNamed();
 }
-async function zmn({
+async function initializeToolPermissionContext({
   allowedToolsCli: e,
   disallowedToolsCli: t,
   baseToolsCli: r,
@@ -168441,14 +168441,14 @@ async function zmn({
           );
         return !0;
       }),
-    U = Y([...qu(t), ...rpn()]),
-    V = !!r && r.length > 0 && Hpn(r.join(" ").trim()) !== null,
+    U = Y([...qu(t), ...antBuiltinDenyRules()]),
+    V = !!r && r.length > 0 && parseToolPreset(r.join(" ").trim()) !== null,
     re = r && !V ? qu(r).map(Tu) : [],
     ue = (un) => re.includes(un) || F.some((kn) => Fr(kn).toolName === un);
   (JDn([co, ro].some(ue)), ZDn(ERe.some(ue)));
   let _e = [];
   if (r && r.length > 0) {
-    let un = $pr(r),
+    let un = parseBaseToolsFromCLI(r),
       kn = new Set(un.map(Tu)),
       on = V ? null : Pk(),
       En = on === null ? cut() : on.map((ur) => ur.name);
@@ -168493,7 +168493,7 @@ async function zmn({
   if (P() === "windows" && Ys() && ct && !vt) U = [...U, Ut];
   let ut = [];
   if (!a.CLAUDE_CODE_REMOTE && a.CLAUDE_CODE_ENTRYPOINT !== "local-agent") {
-    let un = [...t8n(De, F, !0), ...n8n(De, F)];
+    let un = [...findOverlyBroadBashPermissions(De, F, !0), ...findOverlyBroadPowerShellPermissions(De, F)];
     if (un.length > 0) {
       let kn = un.map(($n) => D2o($n.ruleValue)),
         on = !1,
@@ -168509,13 +168509,13 @@ async function zmn({
     }
   }
   let Wt = [];
-  if (d === "auto") Wt = Q5n(De, F);
+  if (d === "auto") Wt = findDangerousClassifierPermissions(De, F);
   let en = iP();
   if (en && F.length > 0)
     I.push(
       `Ignoring --allowedTools ${F.join(", ")}: permission rules are restricted to managed settings (allowManagedPermissionRulesOnly).`,
     );
-  let tn = gTe(
+  let tn = applyPermissionRulesToPermissionContext(
       {
         mode: d,
         additionalWorkingDirectories: Se,
@@ -168541,7 +168541,7 @@ async function zmn({
             H("tengu_cowork_chrome_automode_default", !1),
           chromeNavigationClassifierEnabled:
             H("tengu_auto_mode_config", {})?.chromeNavigation === !0,
-        }))(cC()),
+        }))(isAutoModeGateEnabled()),
         isRemoteMode: a.CLAUDE_CODE_REMOTE || Nn(),
       },
       De,
@@ -168645,7 +168645,7 @@ async function zmn({
               ? "projectSettings"
               : kn,
         })),
-        Upr(kn))
+        cliArgMayMintTrustedRoots(kn))
       ) {
         let on = L6t(un.absolutePath);
         if (on.length > 0) {
@@ -168672,7 +168672,7 @@ async function zmn({
     overlyBroadBashPermissions: ut,
   };
 }
-function ij(e) {
+function getAutoModeUnavailableNotification(e) {
   let t;
   switch (e) {
     case "settings":
@@ -168690,11 +168690,11 @@ function ij(e) {
   }
   return t;
 }
-function iMe() {
-  let e = eY();
-  return e !== null ? ij(e) : "auto mode is unavailable right now";
+function getAutoModeUnavailableText() {
+  let e = getAutoModeUnavailableReason();
+  return e !== null ? getAutoModeUnavailableNotification(e) : "auto mode is unavailable right now";
 }
-function N6t(e) {
+function settleProvisionalStartupMode(e) {
   let t = mvn();
   if (!t || TRe()) return e;
   if ((fUe(void 0), e.mode !== t.mode)) return e;
@@ -168702,7 +168702,7 @@ function N6t(e) {
   if (
     r.mode === e.mode ||
     (r.mode === "bypassPermissions" && !e.isBypassPermissionsModeAvailable) ||
-    (r.mode === "auto" && !cC())
+    (r.mode === "auto" && !isAutoModeGateEnabled())
   )
     return e;
   return (
@@ -168710,10 +168710,10 @@ function N6t(e) {
       `[permission-mode] startup resolved ${e.mode} against an empty GrowthBook cache; re-resolved to ${r.mode}`,
     ),
     VVt(r.fromAutoFallback),
-    { ...Ik(e.mode, r.mode, e, "startup_reresolve"), mode: r.mode }
+    { ...transitionPermissionMode(e.mode, r.mode, e, "startup_reresolve"), mode: r.mode }
   );
 }
-async function YKe(e, t) {
+async function verifyAutoModeGateAccess(e, t) {
   let r = await r1("tengu_auto_mode_config", {}),
     o = KHn(r?.enabled),
     d = pFe();
@@ -168745,9 +168745,9 @@ async function YKe(e, t) {
     return {
       updateContext: (ue) => {
         if (
-          ((ue = N6t(ue)), fUe(void 0), ue.mode === "plan" && !ue.prePlanMode)
+          ((ue = settleProvisionalStartupMode(ue)), fUe(void 0), ue.mode === "plan" && !ue.prePlanMode)
         ) {
-          let de = k_t(ue);
+          let de = activatePlanAutoMode(ue);
           if (de) return N({ ...de, prePlanMode: "default" }, I);
         }
         return N(ue, I);
@@ -168774,23 +168774,23 @@ async function YKe(e, t) {
       n(`auto mode disabled: model ${rt()} does not support auto mode`, {
         level: "warn",
       }));
-  let U = ij(F),
+  let U = getAutoModeUnavailableNotification(F),
     V = (ue) => {
       if (
         (n(
           `[auto-mode] kickOutOfAutoIfNeeded applying: ctx.mode=${ue.mode} ctx.prePlanMode=${ue.prePlanMode} reason=${F}`,
         ),
-        !R_t(ue))
+        !isAutoModeInUse(ue))
       )
         return N(ue, !1);
-      return F6t(ue);
+      return createDisabledAutoModeContext(ue);
     },
-    re = R_t(e);
+    re = isAutoModeInUse(e);
   if (!re && !D) return { updateContext: V };
   if (re) return { updateContext: V, notification: U };
   return { updateContext: V, notification: e.isAutoModeAvailable ? U : void 0 };
 }
-function v_r() {
+function autoModeRefusedHere() {
   return DQe() || pFe();
 }
 function VHn(e) {
@@ -168802,17 +168802,17 @@ function VHn(e) {
 function pFe() {
   return VHn(bn() || {});
 }
-function Vmn() {
+function isAutoModeDisabledByPolicySettings() {
   let e = dS();
   return (T1(e) || (e === "remote" && jR())) && VHn(ye("policySettings") || {});
 }
-function cC() {
+function isAutoModeGateEnabled() {
   if (DQe()) return !1;
   if (pFe()) return !1;
   if (!xse(rt())) return !1;
   return !0;
 }
-function eY() {
+function getAutoModeUnavailableReason() {
   if (pFe()) return "settings";
   if (DQe()) return "circuit-breaker";
   if (!xse(rt())) return "model";
@@ -168823,64 +168823,64 @@ function KHn(e) {
   if (e === "enabled" || e === "disabled" || e === "opt-in") return e;
   return F2o;
 }
-function Kmn() {
-  return Bpr().value;
+function getAutoModeEnabledState() {
+  return getAutoModeEnabledStateWithSource().value;
 }
-function Bpr() {
+function getAutoModeEnabledStateWithSource() {
   let t = H("tengu_auto_mode_config", {})?.enabled,
     r = KHn(t);
   return { value: r, src: t === r ? "gb" : "default" };
 }
-function Xmn(e) {
+function createDisabledBypassPermissionsContext(e) {
   let t = e;
   if (e.mode === "bypassPermissions")
     t = Oc(e, { type: "setMode", mode: "default", destination: "session" });
   return { ...t, isBypassPermissionsModeAvailable: !1 };
 }
-function R_t(e) {
+function isAutoModeInUse(e) {
   return (
     e.mode === "auto" ||
     (e.mode === "plan" &&
       (e.prePlanMode === "auto" || !!e.strippedDangerousRules))
   );
 }
-function F6t(e) {
+function createDisabledAutoModeContext(e) {
   let t = "default";
   if ((qC(!1), OL(!0), e.mode === "auto"))
     return (
       eG({ from: "auto", to: t, trigger: "auto_gate_denied" }),
       {
-        ...Oc(ZX(e), { type: "setMode", mode: t, destination: "session" }),
+        ...Oc(restoreDangerousPermissions(e), { type: "setMode", mode: t, destination: "session" }),
         isAutoModeAvailable: !1,
         canAutoClassifierRun: !1,
       }
     );
   return {
-    ...ZX(e),
+    ...restoreDangerousPermissions(e),
     prePlanMode: e.prePlanMode === "auto" ? t : e.prePlanMode,
     isAutoModeAvailable: !1,
     canAutoClassifierRun: !1,
   };
 }
-function Ymn() {
+function isDefaultPermissionModeAuto() {
   return (bn() || {}).permissions?.defaultMode === "auto";
 }
-function Jmn() {
-  return cC() && Bxn();
+function shouldPlanUseAutoMode() {
+  return isAutoModeGateEnabled() && Bxn();
 }
-function k_t(e) {
-  if (!Jmn()) return null;
-  return (qC(!0), qM(e));
+function activatePlanAutoMode(e) {
+  if (!shouldPlanUseAutoMode()) return null;
+  return (qC(!0), stripDangerousPermissionsForAutoMode(e));
 }
-function JKe(e) {
+function prepareContextForPlanMode(e) {
   let t = e.mode;
   if (t === "plan") return e;
   if (t === "auto") {
-    if (Jmn()) return { ...e, prePlanMode: "auto" };
-    return (qC(!1), OL(!0), { ...ZX(e), prePlanMode: "auto" });
+    if (shouldPlanUseAutoMode()) return { ...e, prePlanMode: "auto" };
+    return (qC(!1), OL(!0), { ...restoreDangerousPermissions(e), prePlanMode: "auto" });
   }
   if (t !== "bypassPermissions") {
-    let r = k_t(e);
+    let r = activatePlanAutoMode(e);
     if (r) return { ...r, prePlanMode: t };
   }
   return (
@@ -168890,16 +168890,16 @@ function JKe(e) {
     { ...e, prePlanMode: t }
   );
 }
-function QKe(e) {
-  if (e.mode === "auto") return qM(e);
+function transitionPlanAutoMode(e) {
+  if (e.mode === "auto") return stripDangerousPermissionsForAutoMode(e);
   if (e.mode !== "plan") return e;
   if (!e.prePlanMode || e.prePlanMode === "bypassPermissions") return e;
-  let t = Jmn(),
+  let t = shouldPlanUseAutoMode(),
     r = fb();
-  if (t && r) return qM(e);
+  if (t && r) return stripDangerousPermissionsForAutoMode(e);
   if (!t && !r) return e;
-  if (t) return (qC(!0), OL(!1), qM(e));
-  return (qC(!1), OL(!0), ZX(e));
+  if (t) return (qC(!0), OL(!1), stripDangerousPermissionsForAutoMode(e));
+  return (qC(!1), OL(!0), restoreDangerousPermissions(e));
 }
 function XHn(e, t) {
   for (let r of Object.values(t.tasks))
@@ -168952,7 +168952,7 @@ function r8n(e, t, r, o) {
 function $2o(e) {
   let t = _c(Eb(e ?? "default"));
   if (t === "bypassPermissions" && ey()) return "default";
-  if (t === "auto" && !cC()) return "default";
+  if (t === "auto" && !isAutoModeGateEnabled()) return "default";
   return t;
 }
 class gFe extends Error {
@@ -169108,8 +169108,8 @@ var B2o = m(() =>
       let p = null,
         _ = null;
       [p, _] = await Promise.all([
-        import("../../02-功能模块/Git-Worktree/setProvisionalStartupMode.7jr1mv9x.js"),
-        import("../../02-功能模块/权限系统/overlyBroadShellAllowsStrippedByEverySession.dr9tct78.js"),
+        import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+        Promise.resolve({ getAutoModeUnavailableNotification, getAutoModeUnavailableReason, isAutoModeGateEnabled, restoreDangerousPermissions, stripDangerousPermissionsForAutoMode }),
       ]);
       let E = !!t.agentId,
         C = Gh(t.agentId),
@@ -169536,9 +169536,9 @@ function s1n(e, t) {
     match_count: r.reduce((o, d) => o + d.count, 0),
   });
 }
-var G2o = import.meta.require("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js").ARTIFACT_TOOL_NAME,
+var G2o = import.meta.require("../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
   z2o = import.meta.require(
-    "../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js",
+    "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js",
   ).isPublishShapedArtifactAction,
   $Hn = new Set([XS, UE, WE, mG, kT]);
 function BHn(e) {
@@ -170470,7 +170470,7 @@ function dGo() {
   return Math.min(nae() + lGo, cGo);
 }
 function Lde(e, t) {
-  import("../../02-功能模块/Artifact发布-渲染/adoptSubagentPublishArms.0w8936e8.js")
+  import("../../02-功能模块/Teammates团队/chunk-weg7y2ya.js")
     .then((r) => r.adoptSubagentPublishArms({ agentId: e, context: t }))
     .catch(h);
 }
@@ -171034,18 +171034,18 @@ async function m1n({ prompt: e, subagent_type: t }, r) {
     Y6(yFe, o) !== yFe ||
     !t$(t, r.options.agentDefinitions.activeAgents) ||
     typeof e !== "string" ||
-    ugt() ||
-    ane()
+    hasAutoModeClassifierDenyRules() ||
+    isChainOnAllowActive()
   )
     return !1;
   let d = new Set([...e.matchAll(pGo)].map((p) => SQ(p[0])));
   if (d.size === 0 || d.size > fGo) return !1;
   for (let p of d) {
-    let _ = Em.inputSchema.safeParse({ url: p, prompt: "" });
+    let _ = WebFetchTool.inputSchema.safeParse({ url: p, prompt: "" });
     if (
       !_.success ||
-      (await jv(Em, _.data, r)) !== null ||
-      (await Em.checkPermissions(_.data, r)).behavior !== "allow"
+      (await checkRuleBasedPermissions(WebFetchTool, _.data, r)) !== null ||
+      (await WebFetchTool.checkPermissions(_.data, r)).behavior !== "allow"
     )
       return !1;
   }
@@ -171076,10 +171076,10 @@ function _Go() {
     ((e.forkSubagentEnabledSource = t), i(hGo, { source: u(t) }));
   return t;
 }
-function yV() {
+function isForkSubagentEnabled() {
   return _Go() !== "disabled";
 }
-var EI = {
+var FORK_AGENT = {
   agentType: a6,
   whenToUse:
     'Fork \u2014 inherits full conversation context. Selected explicitly via subagent_type: "fork" when the fork gate is on; never the default.',
@@ -171091,11 +171091,11 @@ var EI = {
   baseDir: "built-in",
   getSystemPrompt: () => "",
 };
-function _zn(e) {
+function isInForkChild(e) {
   return e.some(jnt);
 }
 var bGo = "Fork started \u2014 processing in background";
-function yzn(e, t) {
+function buildForkedMessages(e, t) {
   let r = {
       ...t,
       uuid: gGo(),
@@ -171108,17 +171108,17 @@ function yzn(e, t) {
         `No tool_use blocks found in assistant message for fork directive: ${e.slice(0, 50)}...`,
         { level: "error" },
       ),
-      [Re({ content: [{ type: "text", text: Vmt(e) }] })]
+      [Re({ content: [{ type: "text", text: buildChildMessage(e) }] })]
     );
   let d = o.map((_) => ({
       type: "tool_result",
       tool_use_id: _.id,
       content: [{ type: "text", text: bGo }],
     })),
-    p = Re({ content: [...d, { type: "text", text: Vmt(e) }] });
+    p = Re({ content: [...d, { type: "text", text: buildChildMessage(e) }] });
   return [r, p];
 }
-function Vmt(e) {
+function buildChildMessage(e) {
   return `<${nZ}>
 You are a worker fork. The transcript above is the parent's history \u2014 inherited reference, not your situation. You are NOT a continuation of that agent. Execute ONE directive, then stop.
 
@@ -171135,7 +171135,7 @@ Guidelines (your directive may override any of these):
 
 ${cxe}${e}`;
 }
-function Szn(e, t) {
+function buildWorktreeNotice(e, t) {
   return `You've inherited the conversation context above from a parent agent working in ${e}. You are operating in an isolated git worktree at ${t} \u2014 same repository, same relative file structure, separate working copy. Paths in the inherited context refer to the parent's working directory; translate them to your worktree root. Re-read files before editing if the parent may have modified them since they appear in the context. Your changes stay in this worktree and will not affect the parent's files.`;
 }
 function SGo(e) {
@@ -171163,7 +171163,7 @@ async function y1n({
   generalPurposeAvailable: o,
   leanPrompt: d,
 }) {
-  let p = yV(),
+  let p = isForkSubagentEnabled(),
     _ = p && r,
     E = `${u4t}, so choose ${_ ? '`"fork"` or ' : ""}one of the listed agent types.`,
     C = _
@@ -171596,7 +171596,7 @@ var EGo = m(() =>
   }),
   egn = m(() => {
     let e = TGo().omit({ cwd: !0 }),
-      t = Dl() || yV() ? e.omit({ run_in_background: !0 }) : e;
+      t = Dl() || isForkSubagentEnabled() ? e.omit({ run_in_background: !0 }) : e;
     return a.CLAUDE_CODE_SUBAGENT_MODEL_FORCE ? t.omit({ model: !0 }) : t;
   }),
   vGo = m(() =>
@@ -171753,7 +171753,7 @@ var EGo = m(() =>
           );
         if (Ke && !Ke.includes(p)) {
           f("subagent_launch", "subagent_type_not_found");
-          let ci = (await dVe(je, Ke, Me, t)).map((wi) => wi.agentType);
+          let ci = (await getDispatchableAgents(je, Ke, Me, t)).map((wi) => wi.agentType);
           throw new NI(
             `Agent type '${p}' not found. Available agents: ${_Fe(ci)}`,
           );
@@ -171794,7 +171794,7 @@ var EGo = m(() =>
           return t.taskRegistry.takeConcurrencySlot();
         };
       if (Ne && E && !Wt && !t$(p, je) && !C && !de) {
-        let is = p ? AGo(je, await dVe(je, Ke, Me, t), p) : void 0;
+        let is = p ? AGo(je, await getDispatchableAgents(je, Ke, Me, t), p) : void 0;
         if (is && is.agentType !== p) {
           let na = UK(Me, mt, is.agentType);
           if (na)
@@ -171840,9 +171840,9 @@ var EGo = m(() =>
       if (Wt) {
         let is = T1n(cn);
         if (is) throw (f("subagent_launch", is.code), new FE(is.message));
-        It = EI;
+        It = FORK_AGENT;
       } else {
-        let is = await dVe(je, Ke, Me, t);
+        let is = await getDispatchableAgents(je, Ke, Me, t);
         Dn = is;
         let ci = is.map((oc) => oc.agentType);
         if (p === void 0 && !E1n(je, Ke)) {
@@ -171891,10 +171891,10 @@ var EGo = m(() =>
                     `Agent type '${jp}' has been denied by permission rule '${mt}(${jp})' from ${Wm.source}.`,
                   )
                 );
-              if (dTe(uu, Me))
+              if (isAgentToolPoolDenied(uu, Me))
                 throw (
                   f("subagent_launch", "subagent_type_tools_denied"),
-                  new NI(pTe(jp))
+                  new NI(agentToolPoolDeniedMessage(jp))
                 );
             }
           }
@@ -171923,7 +171923,7 @@ var EGo = m(() =>
         if ((Zht("agent worktree"), !OOe())) hmn();
       }
       let gn = Ci(),
-        Qt = yV() && !De,
+        Qt = isForkSubagentEnabled() && !De,
         wn = Dl(),
         un = (is, ci) =>
           SDo({
@@ -171975,7 +171975,7 @@ var EGo = m(() =>
           let Lc = GU(na);
           if (Lc && !oc.includes(Lc)) oc.push(Lc);
         }
-        if (!Udn(It, oc)) {
+        if (!hasRequiredMcpServers(It, oc)) {
           let na = $n.filter(
             (Lc) =>
               !oc.some((ud) => ud.toLowerCase().includes(Lc.toLowerCase())),
@@ -172086,14 +172086,14 @@ var EGo = m(() =>
       if (as) D1e(It.agentType, as);
       let So = Wt ? "inherit" : V,
         eo = cH(nX(It, Cn), Cn, So, xe),
-        vr = Mz(It.agentType, xa(It));
+        vr = Mz(It.agentType, isBuiltInAgent(It));
       t.agentLifecycle.markTypeInvoked(It.agentType);
       let bs = await NFe(It, t.storageV5),
         Xs = It.getSystemPrompt({ toolUseContext: t, primedAgentMemory: bs }),
-        Rs = pX(It) ? og(It.plugin) : void 0;
-      if (pX(It)) cT(It.plugin);
+        Rs = isPluginAgent(It) ? og(It.plugin) : void 0;
+      if (isPluginAgent(It)) cT(It.plugin);
       let di = mc(t.agentContext) + 1;
-      if (pX(It))
+      if (isPluginAgent(It))
         Ck(It.plugin, "subagent", { kind: "agent", name: It.filename });
       let ga = () => (
         i("tengu_agent_tool_selected", {
@@ -172101,7 +172101,7 @@ var EGo = m(() =>
           model: bt(eo),
           source: u(It.source),
           color: we(It.color),
-          is_built_in_agent: xa(It),
+          is_built_in_agent: isBuiltInAgent(It),
           is_resume: !1,
           is_async: En,
           is_fork: Wt,
@@ -172133,7 +172133,7 @@ ${Lc}`)
           );
         }
         let ci,
-          wi = await Kv({
+          wi = await teleportToRemote({
             initialMessage: re,
             source: "remote_agent",
             tags: [_2t],
@@ -172209,7 +172209,7 @@ ${Lc}`)
             skillsPersistencePrompt: yne(t.options.tools),
           });
         }
-        vl = yzn(re, o);
+        vl = buildForkedMessages(re, o);
       } else {
         try {
           let is = Array.from(Me.additionalWorkingDirectories.keys());
@@ -172228,7 +172228,7 @@ ${Lc}`)
       let $o = {
           prompt: re,
           resolvedAgentModel: eo,
-          isBuiltInAgent: xa(It),
+          isBuiltInAgent: isBuiltInAgent(It),
           startTime: U,
           agentType: It.agentType,
           isAsync: En,
@@ -172280,7 +172280,7 @@ ${Lc}`)
           credentials: t.credentials,
         })),
           AKt(gi));
-      if (Wt && ba) vl.push(Re({ content: Szn(Q(), ba.worktreePath) }));
+      if (Wt && ba) vl.push(Re({ content: buildWorktreeNotice(Q(), ba.worktreePath) }));
       let za = {
           agentDefinition: It,
           promptMessages: vl,
@@ -172289,7 +172289,7 @@ ${Lc}`)
           name: E,
           isAsync: En,
           persistedToolResultFiles: $o.persistedToolResultFiles,
-          querySource: t.options.querySource ?? p3(It.agentType, xa(It)),
+          querySource: t.options.querySource ?? p3(It.agentType, isBuiltInAgent(It)),
           spawnedBySkill: t.options.spawnedBySkill ?? t.options.activeSkill,
           spawnedByForkedSkill: t.options.spawnedByForkedSkill,
           model: So,
@@ -172306,7 +172306,7 @@ ${Lc}`)
                 },
               }
             : rl && !ba && !de
-              ? { systemPrompt: Zo(rl) }
+              ? { systemPrompt: asSystemPrompt(rl) }
               : void 0,
           availableTools: Wt ? t.options.tools : Ai,
           forkContextMessages: Wt ? t.messages : void 0,
@@ -172369,13 +172369,13 @@ ${Lc}`)
               (await v3(is, ci, fl, !1, "agent_tool")).outcome === "removed"
             )
               return (
-                Y5n({
+                clearWorktreeFromAgentMetadata({
                   agentId: oo(gi),
                   removedWorktreePath: is,
                   spawnMetadata: {
                     agentType: It.agentType,
-                    ...(It.agentType === a6 && { isFork: xa(It) }),
-                    ...(It.agentType === Ty && { isBuiltIn: xa(It) }),
+                    ...(It.agentType === a6 && { isFork: isBuiltInAgent(It) }),
+                    ...(It.agentType === Ty && { isBuiltIn: isBuiltInAgent(It) }),
                     ...(de && { cwd: de }),
                     description: ue,
                     ...(E && { name: E }),
@@ -172460,7 +172460,7 @@ ${Lc}`)
           isAsync: !0,
           isBackgroundAgent: !0,
           ...(yo && { delegatedObservation: !0 }),
-          isBuiltIn: xa(It),
+          isBuiltIn: isBuiltInAgent(It),
           invokingRequestId: o?.requestId,
           invocationKind: "spawn",
           invocationEmitted: !1,
@@ -172473,7 +172473,7 @@ ${Lc}`)
               taskId: ci.agentId,
               abortController: ci.abortController,
               makeStream: (oc, na, Lc) =>
-                dw({
+                runAgent({
                   ...za,
                   session: Ou,
                   override: {
@@ -172527,7 +172527,7 @@ ${Lc}`)
             isAsync: !1,
             isBackgroundAgent: ml,
             ...(yo && { delegatedObservation: !0 }),
-            isBuiltIn: xa(It),
+            isBuiltIn: isBuiltInAgent(It),
             invokingRequestId: o?.requestId,
             invocationKind: "spawn",
             invocationEmitted: !1,
@@ -172551,7 +172551,7 @@ ${Lc}`)
                       prompt: re,
                       agentId: is,
                       agentType: It.agentType,
-                      isBuiltIn: xa(It),
+                      isBuiltIn: isBuiltInAgent(It),
                       description: ue,
                       resolvedModel: oc,
                       modelsUsed: na,
@@ -172698,7 +172698,7 @@ ${Lc}`)
                         prompt: "",
                         agentId: is,
                         agentType: It.agentType,
-                        isBuiltIn: xa(It),
+                        isBuiltIn: isBuiltInAgent(It),
                         description: ue,
                         resolvedModel: oc,
                         modelsUsed: na,
@@ -172725,7 +172725,7 @@ ${Lc}`)
                   taskId: ud,
                   abortController: jp,
                   makeStream: (ys, ws, _s) =>
-                    dw({
+                    runAgent({
                       ...za,
                       session: Ou,
                       override: {
@@ -173065,7 +173065,7 @@ duration_ms: ${e.totalDurationMs}</usage>`;
   });
 function w1n(e, t, { toolPermissionContext: r }) {
   if (
-    !yV() ||
+    !isForkSubagentEnabled() ||
     e.some((d) => VA(d.agentType) === a6) ||
     !(t?.includes(a6) ?? !0)
   )
@@ -173088,7 +173088,7 @@ function T1n({ isolation: e, querySource: t, messages: r }) {
       message:
         'Fork cannot use isolation: "remote" \u2014 a remote session cannot inherit the conversation context. Omit isolation (or use "worktree"), or spawn a named agent type for remote work.',
     };
-  if (t === `agent:builtin:${EI.agentType}` || _zn(r))
+  if (t === `agent:builtin:${FORK_AGENT.agentType}` || isInForkChild(r))
     return {
       code: "subagent_recursive_fork",
       message:
@@ -173807,9 +173807,9 @@ function kut(e, t, r) {
     (o) =>
       o.type === "prompt" &&
       o.unqualifiedName === t &&
-      Spe(o) &&
+      isSkillToolCommand(o) &&
       wXe(o.name) &&
-      !(o.context === "fork" && r !== void 0 && _C(o) === r),
+      !(o.context === "fork" && r !== void 0 && attributionSkillName(o) === r),
   );
 }
 async function C_t(e, t, r) {
@@ -173817,7 +173817,7 @@ async function C_t(e, t, r) {
   if (tfe().length === 0) return null;
   if (ZY()) return null;
   if (!r.options.tools.some((p) => Kt(p, so))) return null;
-  let o = kut(await kf(t, r.storageV5), e.name, r.options.spawnedBySkill);
+  let o = kut(await getCommands(t, r.storageV5), e.name, r.options.spawnedBySkill);
   if (o.length === 0) return null;
   let d = o.map((p) => {
     let _ = p.name.slice(0, p.name.length - e.name.length - 1);
@@ -174174,7 +174174,7 @@ async function D6t({
       parentSessionId: aS(),
       agentType: "subagent",
       subagentName: t.agentType,
-      isBuiltIn: xa(t),
+      isBuiltIn: isBuiltInAgent(t),
       displayName: He,
       isAsync: !0,
       isBackgroundAgent: !0,
@@ -174185,7 +174185,7 @@ async function D6t({
     Ke = {
       prompt: d,
       resolvedAgentModel: ve,
-      isBuiltInAgent: xa(t),
+      isBuiltInAgent: isBuiltInAgent(t),
       startTime: de,
       agentType: t.agentType,
       isAsync: !0,
@@ -174198,7 +174198,7 @@ async function D6t({
         taskId: Ne.agentId,
         abortController: De,
         makeStream: (ct, vt, ut) =>
-          dw({
+          runAgent({
             agentDefinition: t,
             promptMessages: p,
             toolUseContext: { ..._, getAppState: C, permissionLayers: I },
@@ -174254,7 +174254,7 @@ function Aut(e, t, r) {
   if (r === void 0) return !1;
   return (
     zq(e, r.name) ||
-    zq(e, qo(r)) ||
+    zq(e, getCommandName(r)) ||
     (r.aliases?.some((o) => zq(e, o)) ?? !1) ||
     (r.type === "prompt" &&
       r.unqualifiedName != null &&
@@ -174286,14 +174286,14 @@ function M_t(e, t) {
     };
   if (d) {
     let E = K1();
-    if (E !== void 0 && V7([e], E).length === 0)
+    if (E !== void 0 && filterSkillCommandsByAllowlist([e], E).length === 0)
       return {
         reason: "not_allowlisted",
         message: `Skill ${r} is not in this session's skills allowlist`,
         errorCode: 8,
       };
   }
-  let _ = Jue(e);
+  let _ = getSkillOverride(e);
   if (_ === "off" || (_ === "user-invocable-only" && !o)) {
     let E = Ge(),
       C = zqt(e, E),
@@ -174356,7 +174356,7 @@ function sjn({ skill: e }, { commands: t, teammateAuthorOf: r }) {
 }
 function ezo(e) {
   let t = new Map(),
-    r = (o) => Boolean(o.disableModelInvocation) || HM(o);
+    r = (o) => Boolean(o.disableModelInvocation) || isSkillExcludedFromModel(o);
   for (let o of e) {
     let d = t.get(o.name);
     if (d === void 0 || (r(d) && !r(o) && o.type === "prompt"))
@@ -174365,12 +174365,12 @@ function ezo(e) {
   return [...t.values()];
 }
 async function KFe(e) {
-  let t = await kf(sn(), e.storageV5),
+  let t = await getCommands(sn(), e.storageV5),
     r = e.getAppState().mcp.commands,
     o = r.filter((_) => _.type === "prompt" && _.loadedFrom === "mcp"),
     d = lne(),
     p = IM(t, r);
-  return tK(ezo([...p, ...d, ...o]));
+  return dropShadowedFallbackSkills(ezo([...p, ...d, ...o]));
 }
 function tzo(e, t) {
   if (t.agentId !== void 0) return !1;
@@ -174389,7 +174389,7 @@ function tzo(e, t) {
 async function nzo(e, t, r, o, d, p, _, E) {
   let C = Date.now(),
     I = bh(),
-    D = LI().has(t),
+    D = builtInCommandNames().has(t),
     N = I2(e),
     F = e.source === "bundled",
     { sanitizedName: U, skillNameHash: V } = WF({
@@ -174417,7 +174417,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
     invocation_trigger: u(ue),
     query_depth: re,
     ...(o.queryTracking && { query_chain_id: Ee(o.queryTracking.chainId) }),
-    ...w2e(_, _ !== void 0 && LY().has(_)),
+    ...w2e(_, _ !== void 0 && shippedCommandNames().has(_)),
     ...(de && { parent_agent_id: Ee(de) }),
     ...lX(e.source, e.loadedFrom, e.kind, e.createdBy),
     ...VKe(e.source, t),
@@ -174452,7 +174452,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
       availableTools: je,
       webFetchReadmissionAllowed: Ke,
       frozenCommandDenies: ct,
-    } = await wht(e, r || "", o, _e, {
+    } = await prepareForkedCommandContext(e, r || "", o, _e, {
       replaceCommandRules: Se,
       freezeCommandDenies: Se,
       deferInvocationRecording: Se,
@@ -174468,7 +174468,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
             : je,
           Se,
         ).resolvedTools,
-        spawnedBySkill: _C(e),
+        spawnedBySkill: attributionSkillName(e),
       },
       storageV5: o.storageV5,
     });
@@ -174486,7 +174486,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
       agentId: I,
       agentDefinition: Wt,
       command: e,
-      description: `/${qo(e)} ${r ?? ""}`.trim(),
+      description: `/${getCommandName(e)} ${r ?? ""}`.trim(),
       prompt: De,
       promptMessages: Ne,
       context: o,
@@ -174499,7 +174499,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
       readFileState: He,
       availableTools: je,
       webFetchReadmissionAllowed: Ke,
-      spawnedBySkill: _C(e),
+      spawnedBySkill: attributionSkillName(e),
       recordInvocationOnSuccess: xe,
       frozenCommandDenies: ct,
     });
@@ -174519,12 +174519,12 @@ async function nzo(e, t, r, o, d, p, _, E) {
       );
     xe();
   }
-  let tn = { ..._e, subagentName: Wt.agentType, isBuiltIn: xa(Wt) };
+  let tn = { ..._e, subagentName: Wt.agentType, isBuiltIn: isBuiltInAgent(Wt) };
   try {
-    for await (let It of dw({
+    for await (let It of runAgent({
       agentDefinition: Wt,
       promptMessages: Ne,
-      onModelRestricted: I6t(_C(e), E),
+      onModelRestricted: I6t(attributionSkillName(e), E),
       toolUseContext: {
         ...o,
         getAppState: ve,
@@ -174536,7 +174536,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
       canUseTool: d,
       isAsync: !1,
       querySource: "agent:custom",
-      spawnedBySkill: _C(e),
+      spawnedBySkill: attributionSkillName(e),
       spawnedByForkedSkill: !0,
       model: e.model,
       availableTools: je,
@@ -174581,7 +174581,7 @@ async function nzo(e, t, r, o, d, p, _, E) {
       }
     }
     if (!dEe(tg(en))) Lde(I, o);
-    let dn = Tht(en, "Skill execution completed");
+    let dn = extractResultText(en, "Skill execution completed");
     en.length = 0;
     let cn = Date.now() - C;
     return (
@@ -174670,11 +174670,11 @@ var rzo = m(() =>
       let d = o ? r.substring(1) : r,
         p,
         _ = await KFe(t),
-        E = Di(d, _);
+        E = findCommand(d, _);
       if (Nde(t.session) && (!E || L_t(E)) && (E !== void 0 || W1n(d))) {
         let I = await X6t(d);
         if (!I.ok) p = I.reason;
-        else ((_ = await KFe(t)), (E = Di(d, _)));
+        else ((_ = await KFe(t)), (E = findCommand(d, _)));
       }
       if (p !== void 0 && (!E || L_t(E)))
         return (
@@ -174703,7 +174703,7 @@ var rzo = m(() =>
           );
         let D = Vne(
           d,
-          _.map((N) => ({ name: qo(N), aliases: N.aliases })),
+          _.map((N) => ({ name: getCommandName(N), aliases: N.aliases })),
           { maxEditDistance: 2 },
         );
         return (
@@ -174721,7 +174721,7 @@ var rzo = m(() =>
         E.type === "prompt" &&
         (E.context === "fork" ||
           (E.getContext !== void 0 && t.options.spawnedByForkedSkill === !0)) &&
-        t.options.spawnedBySkill === _C(E)
+        t.options.spawnedBySkill === attributionSkillName(E)
       )
         return (
           f("skill_invoke", "skill_invoke_fork_recursion"),
@@ -174745,7 +174745,7 @@ var rzo = m(() =>
               rawName: d,
               canonicalName: E.name,
               isMcp: E.loadedFrom === "mcp",
-              isBuiltIn: LI().has(d),
+              isBuiltIn: builtInCommandNames().has(d),
               isBundled: E.type === "prompt" && E.source === "bundled",
               isOfficial: E.type === "prompt" && I2(E),
             });
@@ -174783,7 +174783,7 @@ var rzo = m(() =>
         d = o.startsWith("/") ? o.substring(1) : o,
         p = ce(r),
         _ = await KFe(r),
-        E = Di(d, _),
+        E = findCommand(d, _),
         C = LG(p, n5e, "deny");
       for (let [N, F] of C.entries())
         if (Aut(N, d, E))
@@ -174846,8 +174846,8 @@ var rzo = m(() =>
         N = !1;
       try {
         let F = await KFe(r),
-          U = Di(E, F);
-        if (U) r.options.activeSkill = _C(U);
+          U = findCommand(E, F);
+        if (U) r.options.activeSkill = attributionSkillName(U);
         if (!D) {
           if (
             (nht(r.session, E, r.storageV5),
@@ -174864,7 +174864,7 @@ var rzo = m(() =>
         let V = `${r.agentId ?? ""}:${U?.name ?? E}`,
           re = EB().get(V),
           { processPromptSlashCommand: ue } =
-            await import("../../02-功能模块/斜杠命令-框架/processPromptSlashCommand.psenh9re.js"),
+            await import("../../02-功能模块/斜杠命令-框架/chunk-s195n5de.js"),
           de = await ue(E, t || "", F, r, D);
         if (!de.shouldQuery)
           throw (
@@ -174874,7 +174874,7 @@ var rzo = m(() =>
         let _e = D ? [] : de.allowedTools || [],
           Se = D ? void 0 : rQ(de.model),
           ve = D ? void 0 : de.effort,
-          Me = LI().has(E),
+          Me = builtInCommandNames().has(E),
           xe = U?.type === "prompt" && U.source === "bundled",
           Oe = U?.type === "prompt" && I2(U),
           { sanitizedName: Ne, skillNameHash: De } = WF({
@@ -174907,7 +174907,7 @@ var rzo = m(() =>
           ...(r.queryTracking && {
             query_chain_id: Ee(r.queryTracking.chainId),
           }),
-          ...w2e(I, I !== void 0 && LY().has(I)),
+          ...w2e(I, I !== void 0 && shippedCommandNames().has(I)),
           ...(Ke && { parent_agent_id: Ee(Ke) }),
           ...lX(
             ct,
@@ -175443,7 +175443,7 @@ var Fde = {
           ));
     }
     (Sd(e),
-      j3(e, d),
+      removeRemoteAgentMetadata(e, d),
       n(`RemoteAgentTask ${e} killed, archiving session ${E ?? "unknown"}`));
   },
 };
@@ -175804,7 +175804,7 @@ async function $de(e, t) {
     if (r instanceof fO) {
       if (r.code === "not_found") {
         if (t.source === "user" && Mb(e) !== null)
-          _Y(oo(e), { stoppedByUser: !0 }, t.storageV5).catch((o) => {
+          updateAgentMetadata(oo(e), { stoppedByUser: !0 }, t.storageV5).catch((o) => {
             if (Rt(o) || FA(CB(o))) {
               n(`failed to persist stop marker for ${e}: ${f3(o)}`, {
                 level: "warn",
@@ -175876,9 +175876,9 @@ function Out(e, t) {
 }
 async function Ezo(e, t, r) {
   try {
-    let o = await fC(oo(e), r);
+    let o = await readAgentMetadata(oo(e), r);
     if (o?.stoppedByUser) return;
-    await zEe(oo(e), { ...(o ?? { agentType: t }), stoppedByUser: !0 }, r);
+    await writeAgentMetadata(oo(e), { ...(o ?? { agentType: t }), stoppedByUser: !0 }, r);
   } catch (o) {
     if (Rt(o) || FA(CB(o))) {
       n(`failed to persist stop marker for ${e}: ${f3(o)}`, { level: "warn" });
@@ -176157,7 +176157,7 @@ Tell the user the ${x(o.length, "attachment was", "attachments were")} not deliv
 import { inspect as bqo } from "util";
 import * as pWn from "vm";
 import { randomUUID as Mjn } from "crypto";
-function IVn(e) {
+function reportGitSessionContext(e) {
   if (e.branchDropped && e.warnMessage) {
     if (
       (i("tengu_bridge_outcome_branch_dropped", { reason: u(e.branchDropped) }),
@@ -176168,7 +176168,7 @@ function IVn(e) {
   }
   if (e.revisionGuessUsed) i("tengu_bridge_revision_guess_used", {});
 }
-async function h_r({
+async function createBridgeSession({
   environmentId: e,
   title: t,
   events: r,
@@ -176183,17 +176183,17 @@ async function h_r({
   tags: N,
 }) {
   let { getClaudeAIOAuthTokens: F, getClaudeAIOAuthTokensAsync: U } =
-      await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
-    { getOrganizationUUID: V } = await import("../../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js"),
-    { getOauthConfig: re } = await import("../../02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js"),
-    { sessionsApiWire: ue } = await import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js"),
-    { getMainLoopModel: de } = await import("../../02-功能模块/Bedrock-Vertex/getMainLoopModel.q5h945se.js"),
+      await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOrganizationUUID: V } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOauthConfig: re } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
+    { sessionsApiWire: ue } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getMainLoopModel: de } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     { getOriginalCwd: _e } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
-    { default: Se } = await import("../../01-核心基础设施/共享小工具-未细化/default.mc2xnh09.js"),
-    { isCcrV2BridgeCreateEnabled: ve } = await import("../../02-功能模块/Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js"),
+    { default: Se } = await import("../../00-第三方库/axios/axios.t0fczzmz.js"),
+    { isCcrV2BridgeCreateEnabled: ve } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
     Me = ve() ? "v1alpha2" : "v1",
     xe = { create_endpoint: u(Me) },
-    { isFirstPartyProvider: Oe } = await import("../../01-核心基础设施/共享小工具-未细化/isFirstPartyProvider.dged0wfq.js");
+    { isFirstPartyProvider: Oe } = await import("../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js");
   if (!Oe())
     return (
       n("[bridge] Session create skipped on non-firstParty provider"),
@@ -176275,17 +176275,17 @@ async function h_r({
       n("[bridge] No session ID in response"),
       IQ("bridge_session_create_bad_response", xe)
     );
-  return (IVn(Ke), y("bridge_session_create", xe), zu(It));
+  return (reportGitSessionContext(Ke), y("bridge_session_create", xe), zu(It));
 }
-async function FTe(e, t) {
-  return (await Mjt(e, t)).session;
+async function getBridgeSession(e, t) {
+  return (await getBridgeSessionOrStatus(e, t)).session;
 }
-async function Mjt(e, t) {
+async function getBridgeSessionOrStatus(e, t) {
   let { getClaudeAIOAuthTokens: r, getClaudeAIOAuthTokensAsync: o } =
-      await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
-    { getOauthConfig: d } = await import("../../02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js"),
-    { getCodeSession: p } = await import("../../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js"),
-    { isCcrV2SessionCrudEnabled: _ } = await import("../../02-功能模块/Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js"),
+      await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOauthConfig: d } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
+    { getCodeSession: p } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js"),
+    { isCcrV2SessionCrudEnabled: _ } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
     E =
       t?.getAccessToken?.() ??
       (M() && t?.credentials !== void 0
@@ -176300,7 +176300,7 @@ async function Mjt(e, t) {
   let C = _(),
     I;
   if (!C) {
-    let { getOrganizationUUID: N } = await import("../../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js");
+    let { getOrganizationUUID: N } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
     if (((I = (await N()) ?? void 0), !I))
       return (
         n("[bridge] No org UUID for session fetch"),
@@ -176341,10 +176341,10 @@ async function Mjt(e, t) {
 }
 async function Cjn(e, t, r, o) {
   let { getClaudeAIOAuthTokens: d, getClaudeAIOAuthTokensAsync: p } =
-      await import("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js"),
-    { getOauthConfig: _ } = await import("../../02-功能模块/Bridge-RemoteControl/getOauthConfig.94gbqg2e.js"),
-    { updateCodeSession: E } = await import("../../01-核心基础设施/共享小工具-未细化/getCodeSession.7vm8hzrd.js"),
-    { isCcrV2SessionCrudEnabled: C } = await import("../../02-功能模块/Bridge-RemoteControl/isCcrV2BridgeCreateEnabled.dv2d0ycr.js"),
+      await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { getOauthConfig: _ } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js"),
+    { updateCodeSession: E } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js"),
+    { isCcrV2SessionCrudEnabled: C } = await import("../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js"),
     I =
       o?.getAccessToken?.() ??
       (M() && o?.credentials !== void 0
@@ -176355,7 +176355,7 @@ async function Cjn(e, t, r, o) {
   let D = C(),
     N;
   if (!D) {
-    let { getOrganizationUUID: U } = await import("../../01-核心基础设施/共享小工具-未细化/getOrganizationUUID.51w9savd.js");
+    let { getOrganizationUUID: U } = await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
     if (((N = (await U()) ?? void 0), !N))
       return (n(`[bridge] No org UUID for session ${r} update`), "failed");
   }
@@ -176386,11 +176386,11 @@ async function Cjn(e, t, r, o) {
       "failed"
     );
 }
-async function kfn(e, t, r) {
+async function updateBridgeSessionTitle(e, t, r) {
   return Cjn(e, { title: t }, "title", r);
 }
 var vjn = "color:";
-async function xfn(e, t, r, o) {
+async function updateBridgeSessionColorTag(e, t, r, o) {
   let d = t === "default",
     p = r.filter((E) => d || E !== t).map((E) => vjn + E),
     _ = d ? void 0 : [vjn + t];
@@ -176526,10 +176526,10 @@ async function gKe(e, t, r, o = !1, d = !1, p) {
     return { name: I, outcome: "unchanged", registryUpdated: !0 };
   }
   let D = K(),
-    N = il() ?? yl();
-  if (t === "auto") pj(D, I, r);
-  else await DI(D, I, N, Ajn(t), r);
-  if (wY(Li(D))) {
+    N = getMaterializedSessionFile() ?? yl();
+  if (t === "auto") saveAiGeneratedTitle(D, I, r);
+  else await saveCustomTitle(D, I, N, Ajn(t), r);
+  if (isRemoteEgressSuppressedFor(pinSessionId(D))) {
     let ue = { registryUpdated: !0 };
     return (
       await SLe(I, t, r, C, o, E, p, ue),
@@ -176541,12 +176541,12 @@ async function gKe(e, t, r, o = !1, d = !1, p) {
   if (F && U) {
     Poe(U, I);
     let ue = RH(),
-      de = Li(D),
+      de = pinSessionId(D),
       _e = {
         baseUrl: oG(),
         getAccessToken: ue ? () => ue : void 0,
         shouldSend: () => {
-          if (wY(de) || Yi()?.bridgeSessionId !== U) return !1;
+          if (isRemoteEgressSuppressedFor(de) || Yi()?.bridgeSessionId !== U) return !1;
           return !Ly(U);
         },
         userInitiated: d,
@@ -176559,7 +176559,7 @@ async function gKe(e, t, r, o = !1, d = !1, p) {
   let re = jn();
   if (re?.kind === "ccr" && re.sessionId) {
     let ue = re.sessionId;
-    import("../../01-核心基础设施/共享小工具-未细化/CCR_BYOC_BETA.422dq0ss.js").then(({ updateSessionTitle: de }) =>
+    import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js").then(({ updateSessionTitle: de }) =>
       de(ue, I),
     );
   }
@@ -176574,8 +176574,8 @@ async function SLe(e, t, r, o, d = !1, p, _, E) {
   if (D.settle === "superseded") return N;
   if (o === void 0 && t !== "auto" && Ijn(N, !1)) return N;
   let F = K(),
-    U = il() ?? yl();
-  if ((await EY(F, N, U, Ajn(t), r), d)) rh().userTypedName = N;
+    U = getMaterializedSessionFile() ?? yl();
+  if ((await saveAgentName(F, N, U, Ajn(t), r), d)) rh().userTypedName = N;
   let V = await t1(N, r, D.recordSource);
   if (E) E.registryUpdated = V;
   if (D.settle === "kept" || D.settle === "yielded")
@@ -176599,32 +176599,32 @@ async function SLe(e, t, r, o, d = !1, p, _, E) {
   return N;
 }
 function Pjn() {
-  return mb()?.name ?? QV();
+  return mb()?.name ?? getCurrentSessionAgentName();
 }
 function Ijn(e, t) {
   if (t) return !1;
-  return mb()?.name === e && mu(K()) === e && QV() === e;
+  return mb()?.name === e && getCurrentSessionTitle(K()) === e && getCurrentSessionAgentName() === e;
 }
-async function i5e(e, t, r, o) {
+async function applyHookSessionTitle(e, t, r, o) {
   if (Zi()) return;
   let d = si(t);
   if (!d) return;
-  let p = mu(e),
+  let p = getCurrentSessionTitle(e),
     _ = p && si(p);
   if (d === _ || Wpe(d, _ || void 0) !== void 0) return;
   (n(`Hook sessionTitle applied (${[...d].length} chars)`),
     await $Te(d, "hook", r, !1, !1, o));
 }
 async function* a5e(e, t, r, o, d, p) {
-  if (!TT("UserPromptSubmit", t, e.id)) return;
+  if (!hasHookForEvent("UserPromptSubmit", t, e.id)) return;
   let _ = {
-    ...Sa(e, Q(), o),
+    ...createBaseHookInput(e, Q(), o),
     hook_event_name: "UserPromptSubmit",
     prompt: r,
     ...!1,
-    session_title: mu(e.id),
+    session_title: getCurrentSessionTitle(e.id),
   };
-  yield* My({
+  yield* executeHooks({
     session: e,
     hookInput: _,
     toolUseID: Mjn(),
@@ -176634,18 +176634,18 @@ async function* a5e(e, t, r, o, d, p) {
     credentials: p,
   });
 }
-async function* cMe(e, t, r, o, d = {}) {
+async function* executeUserPromptSubmitHooks(e, t, r, o, d = {}) {
   let p = r.agentId ?? r.session.id;
-  if (!d.managedHooksOnly && !TT("UserPromptSubmit", r.sessionHooksRegistry, p))
+  if (!d.managedHooksOnly && !hasHookForEvent("UserPromptSubmit", r.sessionHooksRegistry, p))
     return;
   let _ = {
-    ...Sa(r.session, Q(), t),
+    ...createBaseHookInput(r.session, Q(), t),
     hook_event_name: "UserPromptSubmit",
     prompt: e,
     ...!1,
-    session_title: mu(r.session.id),
+    session_title: getCurrentSessionTitle(r.session.id),
   };
-  yield* My({
+  yield* executeHooks({
     session: r.session,
     hookInput: _,
     toolUseID: Mjn(),
@@ -176698,7 +176698,7 @@ ${Djn(t, Ojn)}`,
   try {
     for await (let F of a5e(d, p, I, _().toolPermissionContext.mode))
       if (F.blockingError) {
-        N = IY(F.blockingError);
+        N = getUserPromptSubmitHookBlockingMessage(F.blockingError);
         break;
       }
   } catch (F) {
@@ -177087,7 +177087,7 @@ function Lut(e, t, r) {
           N = Nut(re);
         }
         let F = await UY({
-            systemPrompt: Zo([]),
+            systemPrompt: asSystemPrompt([]),
             userPrompt: E,
             outputFormat: N ? { type: "json_schema", schema: N } : void 0,
             signal: t.abortController.signal,
@@ -177191,7 +177191,7 @@ function y$e(e, t, r, o) {
         `PostToolUse hook modified ${d} after ${e} \u2014 re-synced readFileState`,
         { level: "info" },
       ),
-      pn({
+      createAttachmentMessage({
         type: "hook_additional_context",
         content: [
           `PostToolUse hook modified ${d} after your edit (likely a formatter). Your next Edit will not fail with a stale-file error, but if its old_string targets a region the hook reformatted, Read the file first.`,
@@ -177724,8 +177724,8 @@ ${en}`;
           de instanceof G0 &&
           de.hadSandboxViolation &&
           I?.dangerouslyDisableSandbox !== !0 &&
-          st.isSandboxingEnabled() &&
-          st.areUnsandboxedCommandsAllowed())
+          SandboxManager.isSandboxingEnabled() &&
+          SandboxManager.areUnsandboxedCommandsAllowed())
       )
         return (
           n("REPL Bash sandbox violation \u2014 auto-retrying unsandboxed"),
@@ -178859,7 +178859,7 @@ function aWn(e) {
   return { ok: t, drifted: r, threw: o, summary: d };
 }
 function Sqo(e, t) {
-  let r = PO(nLe(), t),
+  let r = filterToolsByDenyRules(nLe(), t),
     o = new Set(e.map((p) => p.name)),
     d = e.filter((p) => !Kt(p, mt) && !Kt(p, Ni) && !oA(p));
   for (let p of r) if (!o.has(p.name)) d.push(p);
@@ -180486,7 +180486,7 @@ var vWn = Tt({
       throw Error("Web search is not available on this Foundry deployment.");
     let U = $Q({
         messages: [I],
-        systemPrompt: Zo([
+        systemPrompt: asSystemPrompt([
           "You are an assistant for performing a web search tool use",
         ]),
         thinkingConfig: { type: "disabled", mechanical: !0 },
@@ -183489,11 +183489,11 @@ async function ngn(e) {
   let { getSessionId: t } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js");
   if (e.source_session_id === t()) {
     let { getTranscriptPathForSession: p } =
-      await import("../../02-功能模块/会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js");
+      await Promise.resolve({ getTranscriptPathForSession });
     return p(e.source_session_id);
   }
   let { getProjectDir: r, getProjectsDir: o } =
-      await import("../../02-功能模块/Hooks钩子/getProjectDir.bkxzmr4h.js"),
+      await import("../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js"),
     d = e.transcript_ref.project_dir_key;
   if (d !== void 0 && gdt.test(d))
     return vfe(o(), d, `${e.source_session_id}.jsonl`);
@@ -183706,7 +183706,7 @@ async function CKo(e, t) {
   let { getSessionId: o } = await import("../../02-功能模块/AppState-状态管理/getOriginalCwd.mg2gq0d6.js"),
     d = e.source_session_id === o();
   if (t) {
-    let { getProjectsDir: p } = await import("../../02-功能模块/Hooks钩子/getProjectDir.bkxzmr4h.js"),
+    let { getProjectsDir: p } = await import("../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js"),
       _ = vKo(r, p());
     if (_ !== void 0)
       try {
@@ -183990,7 +183990,7 @@ var IKo = m(() =>
       }
       let r = K(),
         { getTranscriptPathForSession: o } =
-          await import("../../02-功能模块/会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js"),
+          await Promise.resolve({ getTranscriptPathForSession }),
         d = zP(),
         p = t.messages ?? [],
         _ = [];
@@ -185575,7 +185575,7 @@ var JKo = m(() =>
         } = t,
         { server: p } = e,
         _ = p ? Xq(o, p) : o,
-        { filterToolsByDenyRules: E } = await import("../../01-核心基础设施/共享小工具-未细化/filterToolsByDenyRules.1r7g5aqp.js"),
+        { filterToolsByDenyRules: E } = await Promise.resolve({ filterToolsByDenyRules }),
         C = ce(t);
       if (p && _.length === 0)
         throw new R(
@@ -186312,7 +186312,7 @@ var g4o = m(() => Qe({})),
           return (
             h8(e.permissions().mode, "plan"),
             e.setToolPermissionContext((r) =>
-              Oc(JKe(r), {
+              Oc(prepareContextForPlanMode(r), {
                 type: "setMode",
                 mode: "plan",
                 destination: "session",
@@ -186518,7 +186518,7 @@ var b4o =
               e.agentId)
             )
               try {
-                await _Y(e.agentId, { cwd: _.worktreePath }, e.storageV5);
+                await updateAgentMetadata(e.agentId, { cwd: _.worktreePath }, e.storageV5);
               } catch (C) {
                 n(
                   `Failed to update agent metadata cwd after worktree switch: ${f3(C)}`,
@@ -186579,12 +186579,12 @@ var b4o =
             !r.hookBased && !r.nestedRepoRoot)
           )
             try {
-              await LMe(e.storageV5);
+              await relocateSessionTranscript(e.storageV5);
             } catch (_) {
-              s9t(_, "EnterWorktree");
+              reportRelocateSessionTranscriptFailure(_, "EnterWorktree");
             }
           (Nae(r.worktreePath, K()),
-            mC(r, M() ? e.storageV5 : void 0),
+            saveWorktreeState(r, M() ? e.storageV5 : void 0),
             rV("worktree"),
             nR(e.session),
             Ea.cache.clear?.(),
@@ -186806,9 +186806,9 @@ async function cGn(e, t, r, o, d, p, _) {
   if ((!C || D) && !F) {
     ES(N);
     try {
-      await LMe(_);
+      await relocateSessionTranscript(_);
     } catch (V) {
-      s9t(V, "ExitWorktree");
+      reportRelocateSessionTranscriptFailure(V, "ExitWorktree");
     }
     let U = !C && r !== void 0 && p === void 0;
     if (o) {
@@ -186822,7 +186822,7 @@ async function cGn(e, t, r, o, d, p, _) {
     }
   }
   return (
-    mC(null, M() ? _ : void 0),
+    saveWorktreeState(null, M() ? _ : void 0),
     rV("worktree"),
     nR(e),
     Ea.cache.clear?.(),
@@ -187117,7 +187117,7 @@ var x4o = m(() =>
           d.storageV5,
         ),
         I = [],
-        D = A_n(
+        D = executeTaskCreatedHooks(
           C,
           e,
           t,
@@ -187130,7 +187130,7 @@ var x4o = m(() =>
         );
       try {
         for await (let N of D)
-          if (N.blockingError) I.push(yXn(N.blockingError));
+          if (N.blockingError) I.push(getTaskCreatedHookMessage(N.blockingError));
       } catch (N) {
         if (!(N instanceof zi)) throw N;
         n("TaskCreated hooks cancelled (control stream closed)");
@@ -187486,7 +187486,7 @@ var I4o = m(() => {
         if (d !== re.status) {
           if (d === "completed") {
             let _e = [],
-              Se = iSt(
+              Se = executeTaskCompletedHooks(
                 e,
                 re.subject,
                 re.description,
@@ -187499,7 +187499,7 @@ var I4o = m(() => {
               );
             try {
               for await (let ve of Se)
-                if (ve.blockingError) _e.push(N9t(ve.blockingError));
+                if (ve.blockingError) _e.push(getTaskCompletedHookMessage(ve.blockingError));
             } catch (ve) {
               if (!(ve instanceof zi)) throw ve;
               n("TaskCompleted hooks cancelled (control stream closed)");
@@ -187738,7 +187738,7 @@ function n6n(e) {
 }
 function dWt(e, t = e) {
   let r =
-    xTe() &&
+    isRemoteToolForwardingEnabledCached() &&
     t.some((o) => o.mcpInfo?.serverName === aY && o.mcpInfo.toolName === qe);
   return n6n(t6n(e)).filter(
     (o) => !r || o.mcpInfo?.serverName !== aY || o.mcpInfo.toolName !== e6n,
@@ -187761,7 +187761,7 @@ var N4o = [
   i6n = import.meta.require("../../02-功能模块/MCP连接器(Connector)/SuggestConnectorsTool.kxmaf32p.js").SuggestConnectorsTool,
   a6n = import.meta.require("../../02-功能模块/MCP连接器(Connector)/ListConnectorsTool.xbgcrjmm.js").ListConnectorsTool,
   F4o = import.meta.require("../../02-功能模块/插件系统/PLUGIN_SKILL_TOOLS.zpne7vfm.js").PLUGIN_SKILL_TOOLS,
-  l6n = import.meta.require("../../02-功能模块/工具Monitor/MonitorTool.srts92dh.js").MonitorTool,
+  l6n = import.meta.require("../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
   $4o = import.meta.require("../../02-功能模块/图表-Mermaid/SendUserFileTool.g6fxeqj3.js").SendUserFileTool,
   B4o = import.meta.require("../../02-功能模块/Skills技能/ProposeSkillsTool.sy5sraqa.js").ProposeSkillsTool,
   U4o = import.meta.require("../../02-功能模块/Goal-目标模式/Goal-目标模式.gs6mjdq6.js").ProposeGoalTool,
@@ -187786,7 +187786,7 @@ function V4o() {
 }
 var m6n = null,
   g6n = null,
-  h6n = import.meta.require("../../02-功能模块/Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js"),
+  h6n = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
   y6n = null,
   K4o = null,
   _6n = null,
@@ -187827,7 +187827,7 @@ function Pk() {
     ...(K4o?.() ?? []).filter((t) => !Nte().has(t.underlyingV1ToolName)),
     kX,
     ...d2n,
-    Em,
+    WebFetchTool,
     PWn,
     xWn,
     vWn,
@@ -187882,7 +187882,7 @@ function Pk() {
     uC,
     JO,
     ...(a.CLAUDE_CODE_ENABLE_REFRESH_MCP_TOOLS ? [Edt] : []),
-    ...(Z_() ? [hjt] : []),
+    ...(Z_() ? [ToolSearchTool] : []),
     xdt,
     ...(d6n ? [d6n] : []),
   ];
@@ -187906,17 +187906,17 @@ var dC = (e, t) => {
       if (rK !== null && Rj()) F.push(rK);
       if (h6n?.isCoordinatorMode())
         F.push(uue, e$e, Rdt(), ...(nJ && Dc() ? [nJ] : []));
-      return PO(F, e);
+      return filterToolsByDenyRules(F, e);
     }
     let I = Pdt(),
       D = [...(Ys() ? [Lo] : []), ...(I ? [I] : []), Qm, Py];
     if (h6n?.isCoordinatorMode())
       D.push(uue, e$e, Rdt(), ...(nJ && Dc() ? [nJ] : []));
-    return PO(D, e);
+    return filterToolsByDenyRules(D, e);
   }
   let r = new Set([eC.name, uC.name, JO.name, ti]),
     o = Pk().filter((I) => !r.has(I.name)),
-    d = PO(o, e),
+    d = filterToolsByDenyRules(o, e),
     p = d.some((I) => Kt(I, qe)) && Lo.isEnabled(),
     _ = !1;
   if (V_() && !t?.skipReplFilter) {
@@ -187928,21 +187928,21 @@ var dC = (e, t) => {
   let E = d.map((I) => I.isEnabled()),
     C = d.filter((I, D) => E[D]);
   if (ky() && !p && !_) {
-    let I = PO(
+    let I = filterToolsByDenyRules(
       [Ek, Ak, ...mbt([Ak.name, Ek.name])].filter((D) => !C.includes(D)),
       e,
     );
     C = [...C, ...I];
   }
   if (tGn() && !IH(C) && !C.some((I) => Kt(I, Bi)) && !C.some((I) => Kt(I, fG)))
-    C = [...C, ...PO([xdt], e)];
+    C = [...C, ...filterToolsByDenyRules([xdt], e)];
   return C;
 };
 function QO(e, t, r) {
   let o = dC(e, r),
-    d = dWt(PO(t, e), t),
+    d = dWt(filterToolsByDenyRules(t, e), t),
     p = r?.skillTools ?? [],
-    _ = p.length > 0 ? d.concat(PO(p, e)).sort(Xoe) : d.sort(Xoe);
+    _ = p.length > 0 ? d.concat(filterToolsByDenyRules(p, e)).sort(Xoe) : d.sort(Xoe);
   return pc(o.toSorted(Xoe).concat(_), "name");
 }
 function _Ee(e) {
@@ -188244,7 +188244,7 @@ function P6n(e, t) {
     return null;
   }
 }
-var t5o = import.meta.require("../../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_TOOL_NAME.1xjr3136.js").END_CONVERSATION_TOOL_NAME;
+var t5o = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js").END_CONVERSATION_TOOL_NAME;
 function Afe(e, t, r) {
   if (!e.aborted) return null;
   let o = Ua(e.reason);
@@ -188901,12 +188901,12 @@ function c5o(e, t, r, o, d, p, _, E, C, I, D, N) {
   );
 }
 function B6n(e) {
-  return Z_() && mLe(e);
+  return Z_() && isToolSearchToolAvailable(e);
 }
 function u5o(e, t, r, o, d) {
   if (!B6n(r)) return null;
   if (!_K(e, o, r)) return null;
-  if (NX(t, { surfaced: d }).has(e.name)) return null;
+  if (extractDiscoveredToolNames(t, { surfaced: d }).has(e.name)) return null;
   let _ = "";
   try {
     _ = ` For reference, this tool's input schema is: ${b(yhe(e.inputSchema))}`;
@@ -188969,7 +188969,7 @@ function d5o(e, t) {
 }
 function Rfe(e, { toolName: t, toolUseID: r, message: o }) {
   e.push({
-    message: pn({
+    message: createAttachmentMessage({
       type: "hook_stopped_continuation",
       message: o,
       hookName: `PreToolUse:${t}`,
@@ -189308,7 +189308,7 @@ ${ur}`;
         let ur = wue();
         return (
           ve.push({
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_deferred_tool",
               toolUseID: t,
               toolName: e.name,
@@ -189449,7 +189449,7 @@ ${ur}`;
     dn.behavior !== "ask"
   )
     ve.push({
-      message: pn({
+      message: createAttachmentMessage({
         type: "hook_permission_decision",
         decision: dn.behavior,
         toolUseID: t,
@@ -189524,7 +189524,7 @@ ${ur}`;
     ) {
       let hn = !1;
       try {
-        for await (let At of Epn(
+        for await (let At of executePermissionDeniedHooks(
           e.name,
           t,
           Me,
@@ -189729,7 +189729,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       Cn.data.eventCount > 0
     )
       ve.push({
-        message: pn({
+        message: createAttachmentMessage({
           type: "poll_events",
           deliveredVia: "poll_tool",
           envelopes: [],
@@ -189743,7 +189743,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       });
     if (typeof Cn === "object" && "structured_output" in Cn)
       ve.push({
-        message: pn({
+        message: createAttachmentMessage({
           type: "structured_output",
           data: Cn.structured_output,
           toolUseID: t,
@@ -190013,7 +190013,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       await di(Ir);
       let Wo = qOn(e, o.getAppState().mcp.clients) ? VOn(Cn.data) : null;
       if (Wo !== null)
-        import("../../02-功能模块/Artifact发布-渲染/AUTO_REPLIES_DECLINED_ROW.9w1bnw47.js")
+        import("../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js")
           .then((hs) =>
             hs.touchFrameLiveForMcpWrite(
               Wo,
@@ -190044,7 +190044,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
               (eo = !0));
             let ta = G(vr, (Pa) => Pa.pairedRewriteSeq === So);
             as.push({
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_error_during_execution",
                 content: `PostToolUse hook returned updatedToolOutput that does not match ${e.name}'s output shape; using original output.${ta > 0 ? " A host-asserted classifier context attached by the same hook was discarded with the rejected rewrite." : ""} ${ls}`,
                 hookName: `PostToolUse:${e.name}`,
@@ -190076,7 +190076,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
       let Wo = fnn(Cn.data);
       if (Wo !== void 0)
         ve.push({
-          message: pn({
+          message: createAttachmentMessage({
             type: "read_truncation_notice",
             banner: Wo,
             toolUseID: t,
@@ -190085,7 +190085,7 @@ This is a configuration issue in your canUseTool callback, PermissionRequest hoo
     }
     if (E6n(e.name, Cn.data, Bd(o)))
       ve.push({
-        message: pn({ type: "bash_output_audience_note", toolUseID: t }),
+        message: createAttachmentMessage({ type: "bash_output_audience_note", toolUseID: t }),
       });
     for (let Wo of as) ve.push(Wo);
     if (Cn.newMessages && Cn.newMessages.length > 0)
@@ -191030,7 +191030,7 @@ function r3n(e) {
     (t.agentContext === void 0 || fh(t.agentContext)) &&
     !t.abortController.signal.aborted
   )
-    x1.set(FX(e), String(K()));
+    x1.set(createCacheSafeParams(e), String(K()));
 }
 function Ipr(e) {
   if (x1.once()) e(r3n);
@@ -191051,7 +191051,7 @@ function s3n(e) {
   return r ? [...e.slice(0, t), ...o] : e;
 }
 async function i3n(e, { plugin: t, budget: r }, o) {
-  let p = (ljt() !== void 0 ? p6o() : void 0) ?? BO();
+  let p = (ljt() !== void 0 ? p6o() : void 0) ?? getLastCacheSafeParams();
   if (!p)
     return (
       n(`$.model.fork (${t}): no warm main-thread transcript to fork`),
@@ -191063,7 +191063,7 @@ async function i3n(e, { plugin: t, budget: r }, o) {
   o?.aborted ? _.abort() : o?.addEventListener("abort", E, { once: !0 });
   let C = Date.now();
   try {
-    let { messages: I, totalUsage: D } = await wE({
+    let { messages: I, totalUsage: D } = await runForkedAgent({
         promptMessages: [Re({ content: e.prompt })],
         cacheSafeParams: {
           ...p,
@@ -193750,7 +193750,7 @@ async function n9n(e, t) {
   let [{ Server: r }, { CallToolRequestSchema: o, ListToolsRequestSchema: d }] =
       await Promise.all([
         import("../../01-核心基础设施/共享小工具-未细化/Server.dedan5va.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/JSONRPCMessageSchema.rez8j2m7.js"),
+        import("../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js"),
       ]),
     p = new r(
       { name: e, version: `plugin-tools-${t}` },
@@ -193957,7 +193957,7 @@ function oXo() {
     !0
   );
 }
-async function w3(e, t) {
+async function loadPluginHooks(e, t) {
   if (Hr()) {
     n("Safe mode: skipping plugin hook registration");
     return;
@@ -194232,7 +194232,7 @@ async function w3(e, t) {
   }
   await r.hookRegistration;
 }
-async function Nfn(e) {
+async function pluginHooksUnknownCause(e) {
   let t = $t();
   if (
     (await t.hookRegistrationInFlight?.catch(() => {}),
@@ -194242,15 +194242,15 @@ async function Nfn(e) {
   if (e) {
     ((t.hookRegistration = void 0), Zf("plugin hook registration retry"));
     let r = t.hookRegistrationArgs;
-    (await w3(r?.storageV5, r?.credentials).catch(() => {}),
+    (await loadPluginHooks(r?.storageV5, r?.credentials).catch(() => {}),
       await t.hookRegistrationInFlight?.catch(() => {}));
   }
   return t.hooksUnknownCause;
 }
-function Ffn() {
+function pendingPluginHookRegistration() {
   return $t().hookRegistrationInFlight?.catch(() => {});
 }
-async function UVn() {
+async function failedPluginHookRegistration() {
   return $t().hookRegistration?.then(
     () => {
       return;
@@ -194258,17 +194258,17 @@ async function UVn() {
     (e) => l(e),
   );
 }
-function BVn() {
+function pluginHooksMayBeUnregistered() {
   let e = $t();
   return (
     g2e() &&
     (e.hookRegistrationInFlight !== void 0 || e.hooksUnknownCause !== void 0)
   );
 }
-function $fn() {
+function clearPluginHookCache() {
   $t().hookRegistration = void 0;
 }
-async function jVn(e, t) {
+async function pruneRemovedPluginHooks(e, t) {
   let r = $t();
   if (!LL() && r.loadedModules.length === 0) return;
   let { enabled: o } = await ei(e, t);
@@ -194309,7 +194309,7 @@ function l9n() {
     allDisabled: FC(),
   });
 }
-function S_r(e, t) {
+function setupPluginHookHotReload(e, t) {
   let r = $t();
   if (r.hookHotReloadUnsubscribe) return;
   ((r.hookHotReloadSettingsSnapshot = l9n()),
@@ -194325,8 +194325,8 @@ function S_r(e, t) {
         ((r.hookHotReloadSettingsSnapshot = d),
           n("Plugin hooks: reloading due to plugin-affecting settings change"),
           Zf("loadPluginHooks: plugin-affecting settings changed"),
-          $fn(),
-          w3(e, t).catch((p) => {
+          clearPluginHookCache(),
+          loadPluginHooks(e, t).catch((p) => {
             n(`Plugin hooks: reload failed: ${l(p)}`, { level: "error" });
           }));
       }
@@ -194427,7 +194427,7 @@ async function IV(
     );
   else
     try {
-      await U2e("load_plugin_hooks", () => w3(C));
+      await U2e("load_plugin_hooks", () => loadPluginHooks(C));
     } catch (_e) {
       let Se = _e instanceof Error ? _e.message : String(_e),
         ve = "";
@@ -194464,7 +194464,7 @@ async function IV(
     }
   let de = d ?? H_();
   try {
-    for await (let _e of b_n(e, t, r, o, de, p, void 0, void 0, _, D, C, I)) {
+    for await (let _e of executeSessionStartHooks(e, t, r, o, de, p, void 0, void 0, _, D, C, I)) {
       if (
         _e.message &&
         !(
@@ -194474,7 +194474,7 @@ async function IV(
       )
         F.push(_e.message);
       if (_e.blockingError)
-        F.push(JMe("SessionStart", _e.blockingError, `SessionStart:${t}`));
+        F.push(getNonBlockableHookErrorMessage("SessionStart", _e.blockingError, `SessionStart:${t}`));
       if (_e.additionalContexts && _e.additionalContexts.length > 0)
         U.push(..._e.additionalContexts);
       if (_e.initialUserMessage)
@@ -194487,7 +194487,7 @@ async function IV(
     if (!(_e instanceof zi)) throw _e;
     n("SessionStart hooks cancelled (control stream closed)");
   }
-  if (ue) (xE(), VM(), Rk.emit(), y("hook_session_start_reload_skills"));
+  if (ue) (clearCommandsCache(), resetSentSkillNames(), Rk.emit(), y("hook_session_start_reload_skills"));
   if (
     ((N.pendingHookSessionTitle =
       t === "startup" || t === "resume" || t === "fork" ? re : void 0),
@@ -194495,7 +194495,7 @@ async function IV(
   )
     Lsn(V);
   if (U.length > 0) {
-    let _e = pn({
+    let _e = createAttachmentMessage({
       type: "hook_additional_context",
       content: U,
       hookName: "SessionStart",
@@ -194522,7 +194522,7 @@ async function GVn(
     );
   else
     try {
-      await w3(o);
+      await loadPluginHooks(o);
     } catch (E) {
       let C = E instanceof Error ? E.message : String(E);
       n(
@@ -194531,7 +194531,7 @@ async function GVn(
       );
     }
   try {
-    for await (let E of w_n(e, t, void 0, void 0, r, o, d)) {
+    for await (let E of executeSetupHooks(e, t, void 0, void 0, r, o, d)) {
       if (
         E.message &&
         !(
@@ -194540,7 +194540,7 @@ async function GVn(
         )
       )
         p.push(E.message);
-      if (E.blockingError) p.push(JMe("Setup", E.blockingError, `Setup:${t}`));
+      if (E.blockingError) p.push(getNonBlockableHookErrorMessage("Setup", E.blockingError, `Setup:${t}`));
       if (E.additionalContexts && E.additionalContexts.length > 0)
         _.push(...E.additionalContexts);
     }
@@ -194549,7 +194549,7 @@ async function GVn(
     n("Setup hooks cancelled (control stream closed)");
   }
   if (_.length > 0) {
-    let E = pn({
+    let E = createAttachmentMessage({
       type: "hook_additional_context",
       content: _,
       hookName: "Setup",
@@ -195102,7 +195102,7 @@ function Aft(e) {
 }
 function bit(e, t, r, o = r) {
   let d = r.map((_) => _.uuid),
-    p = BMe([...r], o).map((_) => _.uuid);
+    p = cleanMessagesForLogging([...r], o).map((_) => _.uuid);
   if (d.length === 0) return e;
   return {
     ...e,
@@ -195135,7 +195135,7 @@ function Sit(e, t) {
     ),
     {
       marker: _.strip
-        ? pn({ type: "thinking_stripped", scope: "all" })
+        ? createAttachmentMessage({ type: "thinking_stripped", scope: "all" })
         : void 0,
       thinkingBlockCount: r,
       decidedBy: _.source,
@@ -195179,7 +195179,7 @@ async function Ajt(e, t, r, o, d) {
         event: { type: "hooks_start", hookType: "pre_compact" },
       }),
       t.onCompactEvent?.({ type: "sdk_status", status: "compacting" }));
-    let ve = await kY(
+    let ve = await executePreCompactHooks(
       t.session,
       { trigger: _ ? "auto" : "manual", customInstructions: p ?? null },
       t,
@@ -195281,7 +195281,7 @@ async function Ajt(e, t, r, o, d) {
       ),
       en = Math.round(performance.now() - de),
       tn = lce(_ ? "auto" : "manual", re ?? 0, e.at(-1)?.uuid),
-      dn = NX(e, { surfaced: (t.stickyBetas ?? pa()).surfacedOnWire });
+      dn = extractDiscoveredToolNames(e, { surfaced: (t.stickyBetas ?? pa()).surfacedOnWire });
     if (dn.size > 0)
       tn.compactMetadata.preCompactDiscoveredTools = [...dn].sort();
     let cn = yl(),
@@ -195343,12 +195343,12 @@ async function Ajt(e, t, r, o, d) {
       ace(t.agentId),
       Uve(E?.querySource) && !BH(E?.querySource, t.agentContext))
     )
-      (await Yyt(t.storageV5), crt(ue ?? 0));
+      (await reAppendSessionMetadataAfterCompaction(t.storageV5), crt(ue ?? 0));
     t.onCompactEvent?.({
       type: "compact_progress",
       event: { type: "hooks_start", hookType: "post_compact" },
     });
-    let on = await c8e(
+    let on = await executePostCompactHooks(
         t.session,
         { trigger: _ ? "auto" : "manual", compactSummary: Ke },
         t,
@@ -195452,7 +195452,7 @@ async function SVn(e, t, r, o, d) {
       if (de?.marker) (re.push(de.marker), (ue = !0));
     } else {
       let on = re.some((En) => En.type === "assistant") ? R9n(re, V) : void 0;
-      if (on) (re.push(pn(on)), (ue = !0));
+      if (on) (re.push(createAttachmentMessage(on)), (ue = !0));
     }
     let _e = ue ? re.slice(0, -1) : re,
       Se = Mg(e);
@@ -195462,7 +195462,7 @@ async function SVn(e, t, r, o, d) {
         event: { type: "hooks_start", hookType: "pre_compact" },
       }),
       r.onCompactEvent?.({ type: "sdk_status", status: "compacting" }));
-    let ve = await kY(
+    let ve = await executePreCompactHooks(
       r.session,
       { trigger: "manual", customInstructions: null },
       r,
@@ -195585,7 +195585,7 @@ async function SVn(e, t, r, o, d) {
           ? e.slice(0, t).findLast((on) => on.type !== "progress")?.uuid
           : _e.at(-1)?.uuid,
       It = lce("manual", Se ?? 0, cn, p, V.length),
-      Dn = NX(e, { surfaced: (r.stickyBetas ?? pa()).surfacedOnWire });
+      Dn = extractDiscoveredToolNames(e, { surfaced: (r.stickyBetas ?? pa()).surfacedOnWire });
     if (Dn.size > 0)
       It.compactMetadata.preCompactDiscoveredTools = [...Dn].sort();
     It.compactMetadata.durationMs = Math.round(performance.now() - U);
@@ -195611,13 +195611,13 @@ async function SVn(e, t, r, o, d) {
         }),
       ];
     (ace(r.agentId),
-      await Yyt(r.storageV5),
+      await reAppendSessionMetadataAfterCompaction(r.storageV5),
       crt(Dg([...wn, ...re]), { keepsCachedPrefix: _ === "from" }),
       r.onCompactEvent?.({
         type: "compact_progress",
         event: { type: "hooks_start", hookType: "post_compact" },
       }));
-    let un = await c8e(
+    let un = await executePostCompactHooks(
       r.session,
       { trigger: "manual", compactSummary: Ke },
       r,
@@ -195725,7 +195725,7 @@ async function x9n({
   try {
     if (D)
       try {
-        let De = await wE({
+        let De = await runForkedAgent({
             promptMessages: [t],
             cacheSafeParams: p,
             canUseTool: Lit(),
@@ -195798,7 +195798,7 @@ async function x9n({
       }
     let U =
         !_ &&
-        (await wjt(
+        (await isToolSearchEnabled(
           o.options.mainLoopModel,
           o.options.tools,
           async () => r.toolPermissionContext,
@@ -195806,7 +195806,7 @@ async function x9n({
           "compact",
           o.credentials,
         ))
-          ? pc([Qm, hjt, ...o.options.tools.filter((De) => De.isMcp)], "name")
+          ? pc([Qm, ToolSearchTool, ...o.options.tools.filter((De) => De.isMcp)], "name")
           : [Qm],
       V = [...ya(e), t],
       re = Nit(_ ? bXo(V) : V),
@@ -195873,7 +195873,7 @@ async function x9n({
               echoApiBlockOrder: fR(),
               thinkingStripPlan: C,
             }),
-            systemPrompt: Zo([
+            systemPrompt: asSystemPrompt([
               "You are a helpful AI assistant tasked with summarizing conversations.",
             ]),
             thinkingConfig: g$e(o),
@@ -196093,7 +196093,7 @@ async function P0e(e, t, r, o, d, p = !1) {
     F = TXo(I, r),
     U = uI(t),
     V = [
-      ...oyt(
+      ...getDeferredToolsDeltaAttachment(
         t.options.tools,
         t.options.mainLoopModel,
         r,
@@ -196104,23 +196104,23 @@ async function P0e(e, t, r, o, d, p = !1) {
         void 0,
         U,
       ),
-      ...(await AWt(t, r)),
-      ...bgn(
+      ...(await getAgentListingDeltaAttachment(t, r)),
+      ...getMcpInstructionsDeltaAttachment(
         t.options.mcpClients,
         t.options.tools,
         t.options.mainLoopModel,
         r,
         U,
       ),
-      ...wgn(t, r),
-      ...S5e(t.options.tools, r),
-      ...q8n(d, r),
-      ...z8n(d, r),
+      ...getMcpDroppedToolsDeltaAttachment(t, r),
+      ...getSandboxInstructionsAttachments(t.options.tools, r),
+      ...restateEnvironmentAfterCompact(d, r),
+      ...restateModelIdentityAfterCompact(d, r),
       ...PRt(d, r),
-      ...(Iy() && !_
+      ...(isRemoteToolForwardingSwitchOn() && !_
         ? ((await I8().remote?.noticeAttachment(t, r, "post_compact")) ?? [])
         : []),
-    ].map((ue) => pn(ue)),
+    ].map((ue) => createAttachmentMessage(ue)),
     re = [];
   if (!_)
     (t.onCompactEvent?.({
@@ -196157,14 +196157,14 @@ async function wXo(e, t, r, o = [], d = !1) {
       .slice(0, r),
     I = await Promise.all(
       C.map(async (N) => {
-        let F = await b5e(
+        let F = await generateFileAttachment(
           N.filename,
           { ...t, fileReadingLimits: { maxTokens: gXo } },
           "tengu_post_compact_file_restore_success",
           "tengu_post_compact_file_restore_error",
           "compact",
         );
-        return F ? pn(F) : null;
+        return F ? createAttachmentMessage(F) : null;
       }),
     ),
     D = 0;
@@ -196180,7 +196180,7 @@ async function EXo(e, t) {
   let r = await tve(e, t);
   if (!r) return null;
   let o = Gh(e);
-  return pn({ type: "plan_file_reference", planFilePath: o, planContent: r });
+  return createAttachmentMessage({ type: "plan_file_reference", planFilePath: o, planContent: r });
 }
 function TXo(e, t = []) {
   let r = ZLn(e);
@@ -196205,7 +196205,7 @@ function TXo(e, t = []) {
     d.push({ name: E.skillName, path: E.skillPath, content: D });
   }
   if (d.length === 0) return null;
-  return pn({ type: "invoked_skills", skills: d });
+  return createAttachmentMessage({ type: "invoked_skills", skills: d });
 }
 async function kit(e, t) {
   if (ce(e).mode !== "plan") return null;
@@ -196213,18 +196213,18 @@ async function kit(e, t) {
     o = await jEn(e.agentId, e.storageV5),
     d = !e.agentId && BFe() && (await BEn(e.storageV5));
   if (d) {
-    if (!_gn(t)) y("plan_workshop_active");
+    if (!hasWorkshopActiveAttachment(t)) y("plan_workshop_active");
     zH(e.storageV5);
   }
   let p = e.options?.planModeInstructions;
-  return pn({
+  return createAttachmentMessage({
     type: "plan_mode",
     reminderType: "full",
     isSubAgent: !!e.agentId,
     planFilePath: r,
     planExists: o,
     ...(p !== void 0 && { customInstructions: p }),
-    ...hgn(e),
+    ...getWorkshopPlanPins(e),
     ...(d && { workshopActiveDocPath: qoe() }),
   });
 }
@@ -196236,7 +196236,7 @@ async function vXo(e) {
       if (o.retrieved || o.status === "pending" || o.agentId === e.agentId)
         return [];
       return [
-        pn({
+        createAttachmentMessage({
           type: "task_status",
           taskId: o.agentId,
           taskType: "local_agent",
@@ -196576,13 +196576,13 @@ function O9n(e) {
   return e !== null && xR(Xt(e.trim().toLowerCase()));
 }
 function UO(e) {
-  if (BVn()) return !0;
-  return TT("PreModelSwitch", gde.of(e).registry, e.id);
+  if (pluginHooksMayBeUnregistered()) return !0;
+  return hasHookForEvent("PreModelSwitch", gde.of(e).registry, e.id);
 }
 async function ffn(e, t, r = {}) {
   let o = [];
-  await Ffn();
-  let d = await Nfn(!0);
+  await pendingPluginHookRegistration();
+  let d = await pluginHooksUnknownCause(!0);
   if (d !== void 0)
     return {
       decision: "block",
@@ -196592,7 +196592,7 @@ async function ffn(e, t, r = {}) {
   if (!UO(e)) return { decision: "proceed", skipConfirm: !1, messages: o };
   if (gse(t.toModel)) await XJ(t.toModel);
   let p = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "PreModelSwitch",
       from_model: t.fromModel,
       to_model: t.toModel,
@@ -196606,7 +196606,7 @@ async function ffn(e, t, r = {}) {
     I = !1,
     D = !1;
   try {
-    for await (let N of My({
+    for await (let N of executeHooks({
       session: e,
       hookInput: p,
       toolUseID: D9n(),
@@ -196667,8 +196667,8 @@ function mfn(e, t, r = {}) {
     d = e.id;
   o.landedOn = { sessionId: d, toModel: t.toModel };
   let _ = (async () => {
-    await Ffn();
-    let E = (await Nfn(!1)) ?? (await UVn());
+    await pendingPluginHookRegistration();
+    let E = (await pluginHooksUnknownCause(!1)) ?? (await failedPluginHookRegistration());
     if (E !== void 0)
       n(
         `PostModelSwitch: plugin-delivered hooks are missing from this run: ${E}`,
@@ -196676,7 +196676,7 @@ function mfn(e, t, r = {}) {
       );
     if (gse(t.toModel)) await XJ(t.toModel);
     let C = {
-        ...Sa(e, Q()),
+        ...createBaseHookInput(e, Q()),
         hook_event_name: "PostModelSwitch",
         from_model: t.fromModel,
         to_model: t.toModel,
@@ -196687,7 +196687,7 @@ function mfn(e, t, r = {}) {
       I = [],
       D = [];
     try {
-      for await (let N of My({
+      for await (let N of executeHooks({
         session: e,
         hookInput: C,
         toolUseID: D9n(),
@@ -196703,7 +196703,7 @@ function mfn(e, t, r = {}) {
         }
         if (N.blockingError)
           D.push(
-            JMe(
+            getNonBlockableHookErrorMessage(
               "PostModelSwitch",
               N.blockingError,
               `PostModelSwitch:${Gme(t.toModel)}`,
@@ -197271,7 +197271,7 @@ Output: ${F}`;
 `
         : "",
       C = await yC({
-        systemPrompt: Zo([a7o]),
+        systemPrompt: asSystemPrompt([a7o]),
         userPrompt: `${E}Tools completed:
 
 ${_}
@@ -197379,7 +197379,7 @@ function qXn(e, t, { querySource: r, resumeActive: o, stamp: d }) {
       let F = WXn(t.instructions, E);
       if (F)
         _.push(
-          pn(
+          createAttachmentMessage(
             {
               type: "instructions",
               ...F,
@@ -197393,7 +197393,7 @@ function qXn(e, t, { querySource: r, resumeActive: o, stamp: d }) {
       I = Object.keys(t.announced).length > 0;
     if (p ? !C && I : C ? (I || t.carriesContext) && !DRt(C, t.announced) : I)
       _.push(
-        pn(
+        createAttachmentMessage(
           C
             ? {
                 type: "session_context",
@@ -197409,7 +197409,7 @@ function qXn(e, t, { querySource: r, resumeActive: o, stamp: d }) {
       N = LRt(e);
     if (p ? N === void 0 : N !== D)
       _.push(
-        pn(
+        createAttachmentMessage(
           N === void 0
             ? { type: "date", date: D }
             : { type: "date", date: D, changed: !0 },
@@ -198760,8 +198760,8 @@ function W7o(e, t) {
   if (!r) return e.some(SJn);
   return !1;
 }
-var Afn = "rm|remove-item|ri|del|erase",
-  G7o = new RegExp(`^(?:${Afn})$`, "i");
+var DELETE_COMMAND_NAMES = "rm|remove-item|ri|del|erase",
+  G7o = new RegExp(`^(?:${DELETE_COMMAND_NAMES})$`, "i");
 function Cpe(e, t) {
   return (
     n(`[autoMem] denied ${e.name}: ${t}`),
@@ -198788,7 +198788,7 @@ function z7o(e, t) {
         ? p.slice(1, -1)
         : p;
     if (/[*?[\]$`(){}|;&<>"',]/.test(_)) return !1;
-    if (!mKe(_, t)) return !1;
+    if (!isAllowedAutoMemWritePath(_, t)) return !1;
     o++;
   }
   return o > 0;
@@ -198818,15 +198818,15 @@ async function q7o(e, t) {
       }
     }
     if (/[*?[]/.test(E)) return !1;
-    if (!E.startsWith("/") || !mKe(E, t)) return !1;
+    if (!E.startsWith("/") || !isAllowedAutoMemWritePath(E, t)) return !1;
     d++;
   }
   return d > 0;
 }
-function mKe(e, t) {
+function isAllowedAutoMemWritePath(e, t) {
   return e.endsWith(".md") && gQ(e, t);
 }
-function Cfn(e) {
+function createAutoMemCanUseTool(e) {
   return async (t, r, o) => {
     if (AS()) return Cpe(t, Jqt);
     if (t.name === Ni) return { behavior: "allow", updatedInput: r };
@@ -198871,7 +198871,7 @@ function Cfn(e) {
     }
     if ((t.name === Bt || t.name === Mn) && "file_path" in r) {
       let p = r.file_path;
-      if (typeof p === "string" && mKe(p, e))
+      if (typeof p === "string" && isAllowedAutoMemWritePath(p, e))
         return { behavior: "allow", updatedInput: r };
     }
     let d = Ys() ? qe : Ut;
@@ -198898,12 +198898,12 @@ function V7o(e, t) {
     if (!Array.isArray(d)) continue;
     for (let p of d) {
       let _ = TJn(p);
-      if (_ !== void 0 && mKe(_, t)) r.push(_);
+      if (_ !== void 0 && isAllowedAutoMemWritePath(_, t)) r.push(_);
     }
   }
   return Y(r);
 }
-function vfn(e) {
+function initExtractMemories(e) {
   let t = new Set(),
     r,
     o = !1,
@@ -198935,8 +198935,8 @@ function vfn(e) {
     let ue = tzt(),
       de = OC() || ue,
       _e = H("tengu_bramble_lintel", null) ?? 1,
-      Se = Cfn(V),
-      ve = FX(D);
+      Se = createAutoMemCanUseTool(V),
+      ve = createCacheSafeParams(D);
     if (!F) {
       if ((p++, p < _e)) return;
     }
@@ -198944,9 +198944,9 @@ function vfn(e) {
     let Me = Date.now();
     try {
       n(`[extractMemories] starting \u2014 ${re} new messages, memoryDir=${V}`);
-      let xe = nUt(await tUt(V, hr().signal, D.toolUseContext.storageV5)),
+      let xe = formatMemoryManifest(await scanMemoryFiles(V, hr().signal, D.toolUseContext.storageV5)),
         Oe = pJn(re, xe, de, ue),
-        Ne = await wE({
+        Ne = await runForkedAgent({
           promptMessages: [Re({ content: Oe })],
           cacheSafeParams: ve,
           canUseTool: Se,
@@ -199050,10 +199050,10 @@ function vfn(e) {
       ]);
     }));
 }
-async function m_r(e, t) {
+async function executeExtractMemories(e, t) {
   await lUe.of(e.toolUseContext.session.host).extractor?.(e, t);
 }
-async function g_r(e, t) {
+async function drainPendingExtraction(e, t) {
   await lUe.of(e).drainer(t);
 }
 class vJn {
@@ -199206,7 +199206,7 @@ function IJn(e, t) {
     pi(e, "failed", { skipTranscript: !0, ambient: !0 }));
 }
 var Z7o = 600000,
-  eQo = new RegExp(`^\\s*(?:${Afn})\\b`, "i"),
+  eQo = new RegExp(`^\\s*(?:${DELETE_COMMAND_NAMES})\\b`, "i"),
   OJn = { minHours: 24, minSessions: 5 };
 function tQo() {
   let e = H("tengu_onyx_plover", null);
@@ -199328,10 +199328,10 @@ ${D.map((He) => `- ${He}`).join(`
           DK() && !a.CLAUDE_CODE_REMOTE && !IA(),
           tzt(),
         ),
-        Oe = await wE({
+        Oe = await runForkedAgent({
           promptMessages: [Re({ content: xe })],
-          cacheSafeParams: FX(o),
-          canUseTool: Cfn(_e),
+          cacheSafeParams: createCacheSafeParams(o),
+          canUseTool: createAutoMemCanUseTool(_e),
           querySource: "auto_dream",
           forkLabel: "auto_dream",
           skipTranscript: !0,
@@ -199405,7 +199405,7 @@ function oQo(e, t, r) {
     RJn(
       e,
       { text: d.trim(), toolUseCount: p },
-      _.filter((E) => mKe(E, r)),
+      _.filter((E) => isAllowedAutoMemWritePath(E, r)),
       t,
     );
   };
@@ -199550,7 +199550,7 @@ async function NJn(e, t) {
   let p = e.toolUseContext.session.promptSuggestion,
     _ = new AbortController();
   p.abortController = _;
-  let E = FX(e);
+  let E = createCacheSafeParams(e);
   try {
     let C = await Rfn(_, e.messages, e.toolUseContext.getAppState, E, "cli");
     if (!C) return;
@@ -199634,7 +199634,7 @@ async function fQo(e, t) {
       message: "No tools needed for suggestion",
       decisionReason: { type: "other", reason: "suggestion only" },
     }),
-    o = await wE({
+    o = await runForkedAgent({
       promptMessages: [Re({ content: dQo })],
       cacheSafeParams: t,
       canUseTool: r,
@@ -199776,11 +199776,11 @@ function RI(e, t, r) {
     ...!1,
   });
 }
-var mQo = import.meta.require("../../02-功能模块/权限系统/createAutoMemCanUseTool.nph0m6gc.js"),
+var mQo = ({ executeExtractMemories }),
   fpt = import.meta.require("../../02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
-  gQo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/sinksFor.zc38gf61.js");
-var LJn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js"),
-  xpe = import.meta.require("../../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js");
+  gQo = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js");
+var LJn = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js"),
+  xpe = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js");
 function FJn(e) {
   return e.findLastIndex((t) => t.type === "user" && !t.isMeta && !Dk(t));
 }
@@ -199791,8 +199791,8 @@ async function* mpt(e, t, r, o, d, p, _, E, C, I, D, N) {
   let F = N === "tool",
     U = [...e, ...t, ...r];
   if (fh(_.agentContext) && (E.startsWith("repl_main_thread") || E === "sdk"))
-    Ifn(
-      FX({
+    saveCacheSafeParams(
+      createCacheSafeParams({
         messages: U,
         systemPrompt: o,
         userContext: d,
@@ -199811,7 +199811,7 @@ async function* mpt(e, t, r, o, d, p, _, E, C, I, D, N) {
     re = _.agentId ? void 0 : _.getAppState().activeGoal,
     ue = !1;
   try {
-    let de = xY(
+    let de = executeStopHooks(
         ce(_).mode,
         _.abortController.signal,
         void 0,
@@ -199973,7 +199973,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
       stickyBetas: C,
     };
   if (fh(p.agentContext) && (_.startsWith("repl_main_thread") || _ === "sdk"))
-    Ifn(FX(F));
+    saveCacheSafeParams(createCacheSafeParams(F));
   if ((yield* BJn(D, F.messages, t, p, _), !uo())) {
     if (!po(process.env.CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION))
       NJn(F, D?.lastResult);
@@ -200113,7 +200113,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
           ? Qt
           : void 0;
       },
-      Wt = xY(
+      Wt = executeStopHooks(
         Ke,
         p.abortController.signal,
         void 0,
@@ -200176,7 +200176,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
                     (De = Qt.impossible ? "impossible" : "met"),
                     Qt.impossible)
                   )
-                    (yield pn({
+                    (yield createAttachmentMessage({
                       type: "goal_status",
                       met: !1,
                       failed: !0,
@@ -200196,7 +200196,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
                       }),
                       f("goal_met", "impossible"));
                   else
-                    (yield pn({
+                    (yield createAttachmentMessage({
                       type: "goal_status",
                       met: !0,
                       condition: un.prompt,
@@ -200240,7 +200240,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
         continue;
       }
       if (Qt.blockingError) {
-        let wn = Re({ content: f8e(Qt.blockingError), isMeta: !0 });
+        let wn = Re({ content: getStopHookMessage(Qt.blockingError), isMeta: !0 });
         (ve.push(wn), yield wn, (cn = !0));
         let un = ut(Qt.hook),
           kn = p.getAppState().activeGoal;
@@ -200254,7 +200254,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
                 lastReason: Qt.stopReason,
               },
             },
-            yield pn({
+            yield createAttachmentMessage({
               type: "goal_status",
               met: !1,
               condition: un.prompt,
@@ -200264,7 +200264,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
       }
       if (Qt.additionalContexts && Qt.additionalContexts.length > 0) {
         let wn = p.agentId ? "SubagentStop" : "Stop",
-          un = pn({
+          un = createAttachmentMessage({
             type: "hook_additional_context",
             content: Qt.additionalContexts,
             hookName: wn,
@@ -200276,7 +200276,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
       if (Qt.preventContinuation)
         ((Me = !0),
           (dn = Qt.stopReason || "Stop hook prevented continuation"),
-          yield pn({
+          yield createAttachmentMessage({
             type: "hook_stopped_continuation",
             message: dn,
             hookName: "Stop",
@@ -200343,7 +200343,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
           (Cn) => Cn.status === "in_progress" && Cn.owner === Qt,
         );
       for (let Cn of $n) {
-        let Kn = iSt(
+        let Kn = executeTaskCompletedHooks(
           Cn.id,
           Cn.subject,
           Cn.description,
@@ -200362,14 +200362,14 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
               xe.push(hn.message);
           }
           if (hn.blockingError) {
-            let At = Re({ content: N9t(hn.blockingError), isMeta: !0 });
+            let At = Re({ content: getTaskCompletedHookMessage(hn.blockingError), isMeta: !0 });
             (xe.push(At), yield At);
           }
           if (hn.preventContinuation)
             ((Oe = !0),
               (un =
                 hn.stopReason || "TaskCompleted hook prevented continuation"),
-              yield pn({
+              yield createAttachmentMessage({
                 type: "hook_stopped_continuation",
                 message: un,
                 hookName: "TaskCompleted",
@@ -200380,7 +200380,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
             return { blockingErrors: [], preventContinuation: !0 };
         }
       }
-      let ur = E_n(Qt, wn, Ke, p.abortController.signal, void 0, p);
+      let ur = executeTeammateIdleHooks(Qt, wn, Ke, p.abortController.signal, void 0, p);
       for await (let Cn of ur) {
         if (Cn.message) {
           if (Cn.message.type === "progress" && Cn.message.toolUseID)
@@ -200388,13 +200388,13 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
           if ((yield Cn.message, ppt(Cn.message) && eUe())) xe.push(Cn.message);
         }
         if (Cn.blockingError) {
-          let Kn = Re({ content: _Xn(Cn.blockingError), isMeta: !0 });
+          let Kn = Re({ content: getTeammateIdleHookMessage(Cn.blockingError), isMeta: !0 });
           (xe.push(Kn), yield Kn);
         }
         if (Cn.preventContinuation)
           ((Oe = !0),
             (un = Cn.stopReason || "TeammateIdle hook prevented continuation"),
-            yield pn({
+            yield createAttachmentMessage({
               type: "hook_stopped_continuation",
               message: un,
               hookName: "TeammateIdle",
@@ -200490,7 +200490,7 @@ async function* UJn(e, t, r, o, d, p, _, E, C, I, D) {
 }
 async function* HC(e, t, { stopHookActive: r }) {
   try {
-    let o = xY(
+    let o = executeStopHooks(
       ce(e).mode,
       e.abortController.signal,
       void 0,
@@ -201531,7 +201531,7 @@ import {
 var nJo = /^(.*\D)-(\d{1,2})\.md$/,
   AZn = 300;
 async function RZn(e, t) {
-  if (!o1() || !DGn(e)) return null;
+  if (!o1() || !isRecallCorpusFile(e)) return null;
   let r = eJo(Ns(), e).replaceAll(tJo, "/"),
     o;
   try {
@@ -202420,15 +202420,15 @@ class FZn {
     }
   }
 }
-var bLe = new j(() => new FZn());
-async function __r(e, t) {
+var memoryWatchers = new j(() => new FZn());
+async function startMemoryWatcher(e, t) {
   if (e !== void 0)
     n(
       `memory-watcher: started with the storage interface (credentials store: ${t === void 0 ? "none" : "handed"})`,
     );
   await i1().warmCanonicalWcRoot();
   try {
-    await bLe.of(B().host).start(e, t);
+    await memoryWatchers.of(B().host).start(e, t);
   } finally {
     XTn();
   }
@@ -202491,7 +202491,7 @@ function SJo(e, t) {
       return null;
   }
 }
-function DVn(e, t) {
+function isMemoryFileAccess(e, t) {
   let r = UZn(e, t);
   if (r && (eI(r) || IG(r))) return !0;
   return !1;
@@ -202524,7 +202524,7 @@ async function $Zn(e, t, r, o) {
 }
 async function wJo(e, t, r, o, d) {
   if (e.hook_event_name !== "PostToolUse" || d === void 0) return {};
-  let p = bLe.of(d.session.host),
+  let p = memoryWatchers.of(d.session.host),
     _ = SJo(e.tool_name, e.tool_input),
     E = OCt.getStore(),
     C = E ? Nvn(E) : void 0,
@@ -202661,7 +202661,7 @@ function vpt(e, t, r) {
     }
   );
 }
-function y_r() {
+function registerSessionFileAccessHooks() {
   let e = { type: "callback", callback: wJo, timeout: 1, internal: !0 };
   wB({
     PostToolUse: [
@@ -202846,7 +202846,7 @@ function MJo(e) {
     for (let d of o) {
       if (!d || typeof d !== "object" || !("type" in d)) continue;
       if (d.type !== "tool_use" || !IJo.has(d.name)) continue;
-      if (DVn(d.name, d.input)) t++;
+      if (isMemoryFileAccess(d.name, d.input)) t++;
     }
   }
   return t;
@@ -202968,7 +202968,7 @@ async function JZn(e, t, { querySource: r, resumeActive: o, stamp: d }) {
   if (o || ji(r) === "auxiliary") return [];
   try {
     let p = await LJo(e, t.options.tools);
-    return p ? [pn(p, d)] : [];
+    return p ? [createAttachmentMessage(p, d)] : [];
   } catch (p) {
     return (h(p), []);
   }
@@ -203036,7 +203036,7 @@ function eer(e, t, { resumeActive: r, stamp: o, ...d }) {
     let E = ait(d.options);
     return {
       ...p,
-      record: pn(
+      record: createAttachmentMessage(
         {
           type: "prompt_snapshot",
           systemPrompt: [...t],
@@ -203058,7 +203058,7 @@ function Ppt(e, t, { stamp: r, ...o }) {
     if (!d) return;
     let p = t.filter((_) => !d.toolDescriptions.has(_.name));
     if (p.length === 0) return;
-    return pn(
+    return createAttachmentMessage(
       {
         type: "prompt_snapshot",
         systemPrompt: [...d.systemPrompt],
@@ -203100,7 +203100,7 @@ function Ipt(e, t, { stamp: r, ...o }) {
       (E) => !d.nameOnlyAnnouncements.has(E),
     );
     if (p.size === 0 && _.length === 0) return;
-    return pn(
+    return createAttachmentMessage(
       {
         type: "deferred_tools_record",
         entries: [...p.values()],
@@ -203522,7 +203522,7 @@ function bht() {
 }
 var ker = null,
   WC = () => import.meta.require("../../02-功能模块/AutoMode-自动模式/LINK_SCAN_MAX_BYTES.mjs9q59k.js"),
-  Ppe = () => import.meta.require("../../01-核心基础设施/共享小工具-未细化/sinksFor.zc38gf61.js");
+  Ppe = () => import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js");
 var Opt;
 function fF(e) {
   if (Opt === void 0) Opt = WC?.().createClassifierJobState(e) ?? null;
@@ -203608,7 +203608,7 @@ async function* eZo({
           if (_e.type === "tool_result") ue.set(_e.tool_use_id, _e.content);
       }
     try {
-      for await (let de of YBt(
+      for await (let de of executePostToolBatchHooks(
         d.map((_e) => ({
           tool_name: _e.name,
           tool_input: _e.input,
@@ -203870,21 +203870,21 @@ async function* Oer(e, t, r) {
     Ne = null,
     De = void 0,
     He = oer();
-  using je = V8n(Oe.messages, Oe.toolUseContext, C);
+  using je = startRelevantMemoryPrefetch(Oe.messages, Oe.toolUseContext, C);
   let Ke = X9n(Me, Oe.toolUseContext, C);
-  if (je && K8n()) {
+  if (je && isMemoryRecallBlockingEnabled()) {
     let At = [];
     try {
-      let Fn = await X8n(je, Oe.toolUseContext.abortController.signal);
+      let Fn = await awaitMemoryPrefetchBlocking(je, Oe.toolUseContext.abortController.signal);
       if (Fn !== void 0) {
-        let Yn = Tgn(
+        let Yn = filterDuplicateMemoryAttachments(
           Fn,
           Oe.toolUseContext.readFileState,
           Oe.toolUseContext.session,
         );
         ((je.consumedOnIteration = 0),
           (je.consumedBlocking = !0),
-          (At = Yn.map((Qr) => pn(Qr, _e))));
+          (At = Yn.map((Qr) => createAttachmentMessage(Qr, _e))));
       }
     } catch (Fn) {
       (h(Fn), (At = []));
@@ -203893,7 +203893,7 @@ async function* Oer(e, t, r) {
     for (let Fn of At) yield Fn;
   }
   if (Ke) {
-    let At = (await Ke).map((Fn) => pn(Fn, _e));
+    let At = (await Ke).map((Fn) => createAttachmentMessage(Fn, _e));
     if (At.length > 0) Oe = { ...Oe, messages: [...Oe.messages, ...At] };
     for (let Fn of At) yield Fn;
   }
@@ -203912,7 +203912,7 @@ async function* Oer(e, t, r) {
         let Yn = Fn.countRemainingWakePollEventsAfter(At),
           Qr = [];
         try {
-          Qr = await SEe(At, Ka(Oe.toolUseContext.options.mainLoopModel), Yn);
+          Qr = await getQueuedCommandAttachments(At, Ka(Oe.toolUseContext.options.mainLoopModel), Yn);
         } catch (Br) {
           if (yt(Br))
             n(
@@ -203922,7 +203922,7 @@ async function* Oer(e, t, r) {
         }
         if (Qr.some((Br) => Br.type === "poll_events")) {
           Oe.toolUseContext.setToolPermissionContext(Ebn);
-          let Br = Qr.map((xo) => pn(xo, _e));
+          let Br = Qr.map((xo) => createAttachmentMessage(xo, _e));
           Oe = { ...Oe, messages: [...Oe.messages, ...Br] };
           for (let xo of Br) yield xo;
           yield* xer({
@@ -203945,13 +203945,13 @@ async function* Oer(e, t, r) {
         ? []
         : At.getCommandQueue().filter(n3);
       if (Fn.length > 0) {
-        let Yn = await SEe(Fn, Ka(Oe.toolUseContext.options.mainLoopModel));
+        let Yn = await getQueuedCommandAttachments(Fn, Ka(Oe.toolUseContext.options.mainLoopModel));
         if (
           Yn.length === Fn.length &&
           !Oe.toolUseContext.abortController.signal.aborted
         ) {
           WNe(Fn);
-          let Qr = Yn.map((Br) => pn(Br, _e));
+          let Qr = Yn.map((Br) => createAttachmentMessage(Br, _e));
           Oe = { ...Oe, messages: [...Oe.messages, ...Qr] };
           for (let Br of Qr) yield Br;
           At.consume(Fn, { reason: "absorbed_mid_turn" });
@@ -204085,7 +204085,7 @@ async function* Oer(e, t, r) {
       vr,
       At.contentReplacementState,
       yS(At.session),
-      di ? (jr) => void KV(jr, At.agentId, At.storageV5).catch(h) : void 0,
+      di ? (jr) => void recordContentReplacement(jr, At.agentId, At.storageV5).catch(h) : void 0,
       EJn(At.options.tools),
       At.storageV5,
     );
@@ -204223,7 +204223,7 @@ async function* Oer(e, t, r) {
       (a.CLAUDE_CODE_DIR_SYNC_GIT || eZe(At.session))
     )
       for (let jr of CV.of(At.session).take()) {
-        let oa = pn({ type: "dir_sync_notice", content: jr }, _e);
+        let oa = createAttachmentMessage({ type: "dir_sync_notice", content: jr }, _e);
         (yield oa, (vr = [...vr, oa]));
       }
     if (ji(C) === "main" && !At.agentId && !as)
@@ -204231,7 +204231,7 @@ async function* Oer(e, t, r) {
         for (let jr of await B9n(At.session)) {
           for (let oa of jr.messages) (yield oa, (vr = [...vr, oa]));
           if (jr.contexts.length > 0) {
-            let oa = pn(
+            let oa = createAttachmentMessage(
               {
                 type: "hook_additional_context",
                 content: jr.contexts,
@@ -204271,7 +204271,7 @@ async function* Oer(e, t, r) {
       stamp: _e,
     });
     if (vl.record) (yield vl.record, (vr = [...vr, vl.record]));
-    let $o = Zo(Ler(vl.systemPrompt, de.systemContext)),
+    let $o = asSystemPrompt(Ler(vl.systemPrompt, de.systemContext)),
       Wo,
       hs;
     At = { ...At, messages: vr, turnStartIndex: Der(vr) };
@@ -204754,7 +204754,7 @@ async function* Oer(e, t, r) {
             )
               continue;
             hn.set(vs, { afterUuid: lx.afterUuid, text: dp, model: Oj });
-            let tw = pn({ type: vs, text: dp, model: Oj }, _e);
+            let tw = createAttachmentMessage({ type: vs, text: dp, model: Oj }, _e);
             (yield tw, (vr = [...vr, tw]));
           }
           let Nj = await EZn(Gr);
@@ -205991,7 +205991,7 @@ async function* Oer(e, t, r) {
                   _e,
                 )
               : jr;
-          return (yield JE, u8e(JE, At), jI(At, C, JE), { reason: Ay });
+          return (yield JE, executeStopFailureHooks(JE, At), jI(At, C, JE), { reason: Ay });
         }
         let dc = performance.now(),
           Ah = oa && jr ? F9(jr) : void 0,
@@ -206088,7 +206088,7 @@ async function* Oer(e, t, r) {
           });
         let nE = oa ? wit(Pc) : void 0,
           ty = nE !== void 0 ? Oot(jr, nE, _e) : jr;
-        return (yield ty, u8e(ty, At), jI(At, C, ty), { reason: Ab });
+        return (yield ty, executeStopFailureHooks(ty, At), jI(At, C, ty), { reason: Ab });
       }
       if ((Ser(js, Wa), Ter(jr))) {
         if (Qr < Eer) {
@@ -206223,7 +206223,7 @@ async function* Oer(e, t, r) {
         });
         return (
           yield Yd,
-          u8e(Yd, At),
+          executeStopFailureHooks(Yd, At),
           jI(At, C, Yd),
           { reason: "malformed_tool_use_exhausted" }
         );
@@ -206282,7 +206282,7 @@ async function* Oer(e, t, r) {
           await WC().markApiFailure(fF(At), gu(), jr.error, Cc, jr.apiError);
         }
         return (
-          u8e(jr, At),
+          executeStopFailureHooks(jr, At),
           { reason: "api_error", errorKind: jr.error, isTransient: Lpt(jr) }
         );
       }
@@ -206311,7 +206311,7 @@ async function* Oer(e, t, r) {
               hit_cap: !1,
               goal_active: cf,
             }),
-            yield pn(
+            yield createAttachmentMessage(
               { type: "max_turns_reached", maxTurns: D, turnCount: Cc },
               _e,
             ),
@@ -206514,7 +206514,7 @@ async function* Oer(e, t, r) {
         });
       let jr = Ir + 1;
       if (D && jr > D)
-        yield pn({ type: "max_turns_reached", maxTurns: D, turnCount: jr }, _e);
+        yield createAttachmentMessage({ type: "max_turns_reached", maxTurns: D, turnCount: jr }, _e);
       return (hO(At, C), { reason: "aborted_tools" });
     }
     if (gi.toolWasDeferred) return (hO(At, C), { reason: "tool_deferred" });
@@ -206579,7 +206579,7 @@ async function* Oer(e, t, r) {
         queryChainId: eo,
         queryDepth: So.depth,
       }),
-      TT(
+      hasHookForEvent(
         "PostToolBatch",
         ws.sessionHooksRegistry,
         nO(ws, "PostToolBatch", ws.session.id),
@@ -206595,7 +206595,7 @@ async function* Oer(e, t, r) {
       let Tf = !1,
         Sf;
       try {
-        for await (let hc of YBt(
+        for await (let hc of executePostToolBatchHooks(
           yo.map((Yl) => ({
             tool_name: Yl.name,
             tool_input: Yl.input,
@@ -206616,7 +206616,7 @@ async function* Oer(e, t, r) {
           )
             yield hc.message;
           if (hc.additionalContexts && hc.additionalContexts.length > 0) {
-            let Yl = pn(
+            let Yl = createAttachmentMessage(
               {
                 type: "hook_additional_context",
                 content: hc.additionalContexts,
@@ -206653,7 +206653,7 @@ async function* Oer(e, t, r) {
       }
       if (Tf)
         return (
-          yield pn(
+          yield createAttachmentMessage(
             {
               type: "hook_stopped_continuation",
               message: Sf || "Execution stopped by PostToolBatch hook",
@@ -206713,9 +206713,9 @@ async function* Oer(e, t, r) {
         oa = 0,
         Tf = Mer(Gln(() => ws, { latch: !1 })),
         Sf = new Set(),
-        hc = kh.filter(ryt),
+        hc = kh.filter(isInlineNotificationCommand),
         Yl = 0;
-      for await (let uc of Jne(
+      for await (let uc of getAttachmentMessages(
         null,
         ws,
         null,
@@ -206807,9 +206807,9 @@ async function* Oer(e, t, r) {
       At.messageQueue.unregisterFoldInFlight(kh);
     }
     if (je && je.settledAt !== null && je.consumedOnIteration === -1) {
-      let jr = Tgn(await je.promise, At.readFileState, At.session);
+      let jr = filterDuplicateMemoryAttachments(await je.promise, At.readFileState, At.session);
       for (let oa of jr) {
-        let Tf = pn(oa, _e);
+        let Tf = createAttachmentMessage(oa, _e);
         (yield Tf, ml.push(Tf));
       }
       je.consumedOnIteration = Ir - 1;
@@ -206828,7 +206828,7 @@ async function* Oer(e, t, r) {
     let Jw = { ...ws, queryTracking: So };
     if (c_ !== void 0)
       return (
-        yield pn(
+        yield createAttachmentMessage(
           { type: "max_turns_reached", maxTurns: c_, turnCount: Sh },
           _e,
         ),
@@ -206881,7 +206881,7 @@ async function aZo(e, t) {
   if (e === void 0) return [];
   if (e.sessionTitle !== void 0)
     try {
-      await i5e(t.session.id, e.sessionTitle, t.storageV5, t.credentials);
+      await applyHookSessionTitle(t.session.id, e.sessionTitle, t.storageV5, t.credentials);
     } catch (d) {
       if (!yt(d))
         n(`Failed to apply a folded prompt.submit session title: ${l(d)}`, {
@@ -207021,7 +207021,7 @@ function o8n({
   let { taskId: _, abortSignal: E } = fZo(r, o, d);
   Zxt();
   let C = t.toolUseContext.storageV5;
-  ire(e, _, void 0, C).catch((N) =>
+  recordSidechainTranscript(e, _, void 0, C).catch((N) =>
     n(`bg-session initial transcript write failed: ${N}`),
   );
   let I = t.toolUseContext.agentContext,
@@ -207107,7 +207107,7 @@ function o8n({
           if (
             (N.push(de),
             (F = Cne(N, de, F)),
-            ire([de], _, ue, C).catch((_e) =>
+            recordSidechainTranscript([de], _, ue, C).catch((_e) =>
               n(`bg-session transcript write failed: ${_e}`),
             ),
             (ue = de.uuid),
@@ -209275,7 +209275,7 @@ async function Ues(e, t, r) {
         if (p !== void 0 && mn(F.content) !== p)
           throw new gh(`${_}: file changed since the edit was previewed`);
         if (r)
-          await kTe(t.getFileHistoryState, t.applyFileHistoryOp, _, r.uuid);
+          await fileHistoryTrackEdit(t.getFileHistoryState, t.applyFileHistoryOp, _, r.uuid);
         ((C = F.content), (I = F.encoding), (D = F.lineEndings));
         let U = t.readFileState.get(_),
           V = await bA(N.ioPath),
@@ -209663,8 +209663,8 @@ ${I}`;
           disableUnsandboxedCommands: Oe,
           userTypedShellDispatch: De,
         }),
-        je = st.isSandboxingEnabled(),
-        Ke = AM();
+        je = SandboxManager.isSandboxingEnabled(),
+        Ke = getEffectiveFilesystemPolicy();
       if (Oe) {
         let Cn =
           !He || Ke !== "strict" || Bu()
@@ -209673,7 +209673,7 @@ ${I}`;
         if (!Cn.confined)
           throw (
             g("sandbox_exec", "remote_floor_refusal"),
-            new Zte(
+            new SandboxPolicyRefusalError(
               "This call must run inside a fully confining sandbox and none is available here. The command was not run.",
               Cn.reason,
             )
@@ -209756,7 +209756,7 @@ ${I}`;
         }
         let Yn = Se.stdout || "",
           Qr = ct
-            ? st.annotateStderrWithSandboxFailures(t.toolUseId ?? e.command, Yn)
+            ? SandboxManager.annotateStderrWithSandboxFailures(t.toolUseId ?? e.command, Yn)
             : Yn;
         if (((_e = Qr !== Yn), _e)) U = Qr.slice(Yn.length).trim();
         if (Se.preSpawnError) {
@@ -210276,7 +210276,7 @@ async function FV(e, t, r, o) {
       l2t(e).map(async ({ raw: E, command: C }, I) => {
         let D = { ...t, innerCall: !0, toolUseId: `${_}${Zgn}${I}` };
         try {
-          let N = await gd(p, { command: C }, t, Vc({ content: [] }), "");
+          let N = await hasPermissionsToUseTool(p, { command: C }, t, Vc({ content: [] }), "");
           if (N.behavior !== "allow") {
             if (
               (n(
@@ -212266,15 +212266,15 @@ function mts(e, t) {
   (Zf(),
     JUe(),
     Tve(),
-    $fn(),
-    jVn(e, t).catch((r) => h(r)),
+    clearPluginHookCache(),
+    pruneRemovedPluginHooks(e, t).catch((r) => h(r)),
     P4(),
     ZUe(),
     yDe(),
     MEt());
 }
 function fu(e, t) {
-  (mts(e, t), xE(), D2(), VM());
+  (mts(e, t), clearCommandsCache(), clearAgentDefinitionsCache(), resetSentSkillNames());
 }
 function gts() {
   let e = $t(),
@@ -224491,8 +224491,8 @@ function rir(e, t) {
 }
 var nkt =
   "IMPORTANT: Assist with authorized security testing, defensive security, CTF challenges, and educational contexts. Refuse requests for destructive techniques, DoS attacks, mass targeting, supply chain compromise, or detection evasion for malicious purposes. Dual-use security tools (C2 frameworks, credential testing, exploit development) require clear authorization context: pentesting engagements, CTF competitions, security research, or defensive use cases.";
-var qos = import.meta.require("../../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js").BRIEF_PROACTIVE_SECTION,
-  okt = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js");
+var qos = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js").BRIEF_PROACTIVE_SECTION,
+  okt = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js");
 function Vos() {
   let e = kP().latest_per_family;
   return `The most recent Claude models are the Claude 5 family and Haiku 4.5. Model IDs \u2014 ${Object.values(
@@ -224774,7 +224774,7 @@ function kss(e) {
 }
 function wss(e) {
   if (e) return null;
-  if (yV())
+  if (isForkSubagentEnabled())
     return `Calling ${mt} with subagent_type: "fork" creates a fork \u2014 it inherits your full conversation context, runs in the background, and keeps its tool output out of your context \u2014 so you can keep chatting with the user while it works. Reach for it when research or multi-step implementation work would otherwise fill your context with raw output you won't need again. Other subagent_type values start fresh agents with no context. **If you ARE the fork** \u2014 execute directly; do not re-delegate.`;
   return ux() === "default"
     ? `Use the ${mt} tool with specialized agents when the task at hand matches the agent's description. Subagents are valuable for parallelizing independent queries or for protecting the main context window from excessive results, but they should not be used excessively when not needed. Importantly, avoid duplicating work that subagents are already doing - if you delegate research to a subagent, do not also perform the same searches yourself.`
@@ -224794,7 +224794,7 @@ function Ess(e, t, r, o) {
         ? null
         : "If you need the user to run a shell command themselves (e.g., an interactive login like `gcloud auth login`), suggest they type `! <command>` in the prompt \u2014 the `!` prefix runs the command in this session so its output lands directly in the conversation.",
       E ? wss(r) : null,
-      ...(!r && E && f8() && ux() === "default" && !yV()
+      ...(!r && E && f8() && ux() === "default" && !isForkSubagentEnabled()
         ? [
             `For broad codebase exploration or research that'll take more than ${vZt} queries, spawn ${mt} with subagent_type=${b0.agentType}. Otherwise use ${C} directly.`,
           ]
@@ -224868,7 +224868,7 @@ Date: ${ZJn()}`,
   (Lsr((_e) => (ozt(_e) ? "no_nudges" : void 0)), Msr(d));
   let E = p ? ":L" : "",
     C = Q(),
-    [I, D] = await Promise.all([HE(C), Cme()]),
+    [I, D] = await Promise.all([getSkillToolCommands(C), Cme()]),
     N = Ge(),
     F = new Set(e.map((_e) => _e.name)),
     U = o?.excludeDynamicSections === !0,
@@ -224924,10 +224924,11 @@ Date: ${ZJn()}`,
       Nh("willow_tern", () => uss(d)),
       Nh("autonomy_append", () => pss(_, d)),
       Nh("endconv_deferred_hint", () => {
-        let _e = import.meta.require("../../01-核心基础设施/共享小工具-未细化/END_CONVERSATION_FORK_REFLECTION_PROMPT.4h5sjdsd.js"),
+        let _e = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js"),
+          _eDh = import.meta.require("../../02-功能模块/工具EndConversation/工具EndConversation.409rx3vp.js"),
           Se = J$e();
         return F.has(_e.END_CONVERSATION_TOOL_NAME) && Se !== void 0
-          ? _e.getDeferredHintSection(Se)
+          ? _eDh.getDeferredHintSection(Se)
           : null;
       }),
     ],
@@ -225256,7 +225257,7 @@ async function C0e(e, t) {
     Me = "",
     xe = Kt(e, _r)
       ? import.meta
-          .require("../../02-功能模块/Artifact发布-渲染/respell.53kmaca9.js")
+          .require("../../02-功能模块/Teammates团队/chunk-y89mhs4a.js")
           .artifactCorePromptCacheKeyBit(t.tools)
       : "",
     Oe =
@@ -225282,7 +225283,7 @@ async function C0e(e, t) {
           ? e.inputJSONSchema
           : MX(e.inputSchema);
     if (!zr()) vt = qss(e.name, vt);
-    if (ID(e).supported && !(await vX())) {
+    if (ID(e).supported && !(await isRemoteToolForwardingEnabled())) {
       if (((vt = skt(vt, [vo])), oA(e))) vt = zss(vt, e.entryFieldName, [vo]);
     }
     if (
@@ -226320,7 +226321,7 @@ async function aar(e, t, r) {
       D = Math.random() * I;
     _.nextFetchAt = E + D + C;
     let { bootstrapFetchCanConvergeSlot: N, refreshBootstrapData: F } =
-      await import("../../01-核心基础设施/共享小工具-未细化/refreshBootstrapData.0091ys3y.js");
+      await import("../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js");
     if (!N()) return;
     (n(
       "[Bootstrap] Server ATIS pin differs from cached clientData; refetching",
@@ -227330,7 +227331,7 @@ async function* Har(e, t, r, o, d, p) {
         : void 0,
     ve =
       !Mme(p.querySource) &&
-      (await wjt(
+      (await isToolSearchEnabled(
         _e,
         o,
         p.getToolPermissionContext,
@@ -227416,7 +227417,7 @@ async function* Har(e, t, r, o, d, p) {
       (ve = !1));
   let vt;
   if (ve) {
-    let et = NX(e, {
+    let et = extractDiscoveredToolNames(e, {
       surfaced: dZ(Me)
         ? { exceptAnnouncements: Me.nameOnlyAnnouncements }
         : Me.surfacedOnWire,
@@ -227706,7 +227707,7 @@ async function* Har(e, t, r, o, d, p) {
   });
   let $o = Q6n(Qr),
     Wo = D4t($o, p.agentContext, I, D);
-  ((t = Zo(
+  ((t = asSystemPrompt(
     [
       Wo,
       tGt({
@@ -227768,7 +227769,7 @@ async function* Har(e, t, r, o, d, p) {
       },
     );
   if (Fi !== void 0) {
-    let et = pn({ type: "prefix_delta", text: Fi });
+    let et = createAttachmentMessage({ type: "prefix_delta", text: Fi });
     yield et;
     let Ye = _(() => kar([...e, et], { ...Yn, traceSources: !1 }));
     ((Ur = Ye.messagesForAPI),
@@ -228739,7 +228740,7 @@ async function* Har(e, t, r, o, d, p) {
     if (!Ir || Yge) return;
     return (
       (Yge = !0),
-      pn(
+      createAttachmentMessage(
         GR === "all"
           ? { type: "thinking_stripped", scope: "all" }
           : {
@@ -231623,7 +231624,7 @@ function Yis(e, t, r) {
   }));
 }
 async function yC({
-  systemPrompt: e = Zo([]),
+  systemPrompt: e = asSystemPrompt([]),
   userPrompt: t,
   outputFormat: r,
   signal: o,
@@ -231662,7 +231663,7 @@ async function yC({
   )[0];
 }
 async function UY({
-  systemPrompt: e = Zo([]),
+  systemPrompt: e = asSystemPrompt([]),
   userPrompt: t,
   outputFormat: r,
   signal: o,
@@ -232533,9 +232534,9 @@ function Mzn() {
   ).replace("<cross_session_messages_rule>", () => "");
 }
 function Xkt(e) {
-  if (hl()) return null;
+  if (isTranscriptPersistenceDisabled()) return null;
   let t = K(),
-    r = ape(t);
+    r = getSessionSidecarDir(t);
   return Pas(r) !== t || lP(Ias(r)) === void 0 ? null : Mas(r, e);
 }
 async function plr(e, t, r, o, d, p, _) {
@@ -232592,7 +232593,7 @@ ${t}
       }
     }
     return (
-      await MMe(p),
+      await ensureSidecarDirFor(p),
       await On(p, _, 384),
       n(`Dumped auto mode classifier error prompts to ${p}`),
       { outcome: "written", path: p }
@@ -232637,7 +232638,7 @@ function Mkt(e) {
 }
 var els = new Set([tt, ro, co, M2, Bi, cV, $2, F2]);
 function tls() {
-  return import.meta.require("../../02-功能模块/Teammates团队/IDLE_SUMMARY_RECEIVE_BOUND.07vn1321.js");
+  return import.meta.require("../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js");
 }
 var nls = /[\u2028\u2029\u0085]/g;
 function yZ(e) {
@@ -234723,7 +234724,7 @@ var l3 = "SandboxNetworkAccess",
     ...!1,
   };
 async function UDe(e, t, r, o, d, p, _) {
-  if (CM(e))
+  if (isMisleadingConsentHost(e))
     return (
       n(
         "Sandbox network classifier refusing a host srt would re-spell; failing closed (deny)",
@@ -235204,7 +235205,7 @@ var tcr = {
       return ke() || Nn();
     },
     argumentHint: "[auto|<tokens>]",
-    load: () => import("../../02-功能模块/上下文压缩-Compact/autocompact-cmd.hsr15zmr.js"),
+    load: () => import("../../02-功能模块/上下文压缩-Compact/chunk-5ed8c210.js"),
     userFacingName() {
       return "autocompact";
     },
@@ -235271,7 +235272,7 @@ var Mwt = {
     isEnabled() {
       return ke();
     },
-    load: () => import("../../02-功能模块/斜杠命令-框架/context-cmd.8wygjw52.js"),
+    load: () => import("../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js"),
   };
 function eN() {
   return !H("tengu_jazzy_ripple", !1);
@@ -235739,7 +235740,7 @@ var Acr = {
   description: "Sign out from your Anthropic account",
   isEnabled: () => !a.DISABLE_LOGOUT_COMMAND,
   fleetHostCall: async (e) => {
-    let { fleetHostLogout: t } = await import("../../02-功能模块/认证-OAuth登录/fleetHostCall.5dfayp1g.js");
+    let { fleetHostLogout: t } = await import("../../02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js");
     return t(e);
   },
 };
@@ -235891,7 +235892,7 @@ var Lcr = {
 };
 var Ncs = "https://code.claude.com/docs/en/claude-code-on-the-web";
 function Fcr() {
-  return `Start a cloud agent that finds and verifies bugs in your branch (${HF()}, ${q7()} USD) \xB7 Runs in Claude Code on the web. See ${Ncs}`;
+  return `Start a cloud agent that finds and verifies bugs in your branch (${getReviewDurationNote()}, ${getReviewCostNote()} USD) \xB7 Runs in Claude Code on the web. See ${Ncs}`;
 }
 var $cr = {
     type: "local-jsx",
@@ -236438,7 +236439,7 @@ function eur(e) {
 `);
 }
 async function Kcs(e, t) {
-  return qcs(Tp(e)).then(
+  return qcs(getTranscriptPathForSession(e)).then(
     () => !0,
     () => !1,
   );
@@ -236846,7 +236847,7 @@ function ius({
         ue === "remote")
       ) {
         if (D.get(e)?.status !== "running") return;
-        (Shn(e, E).catch((_e) =>
+        (deleteRemoteAgentMetadata(e, E).catch((_e) =>
           n(`ultraplan meta delete failed: ${String(_e)}`),
         ),
           D.update(e, (_e) =>
@@ -237068,7 +237069,7 @@ ${xe}`,
       ue,
       de,
       _e,
-      Se = await Kv({
+      Se = await teleportToRemote({
         initialMessage: re,
         source: "ultraplan",
         description: t || "Refine local plan",
@@ -237790,7 +237791,7 @@ var Wus = {
     supportsNonInteractive: !0,
     fleetHostCall: async ({ setInfo: e, setError: t }) => {
       e("Writing heap dump\u2026");
-      let { performHeapDump: r } = await import("../../01-核心基础设施/共享小工具-未细化/performHeapDump.eg4vwgzd.js"),
+      let { performHeapDump: r } = await import("../../02-功能模块/诊断-HeapDump/诊断-HeapDump.a3sn2876.js"),
         o = await r();
       if (o.success) e(`Heap dump written to ${o.heapPath}`);
       else t(`Couldn't write heap dump \u2014 ${o.error}`);
@@ -237856,14 +237857,14 @@ var Qur = { isEnabled: () => !1, isHidden: !0, name: "stub" };
 var Kus = {
     name: "sandbox",
     get description() {
-      let e = st.isSandboxingEnabled(),
-        t = st.isAutoAllowBashIfSandboxedEnabled(),
-        r = st.areUnsandboxedCommandsAllowed(),
+      let e = SandboxManager.isSandboxingEnabled(),
+        t = SandboxManager.isAutoAllowBashIfSandboxedEnabled(),
+        r = SandboxManager.areUnsandboxedCommandsAllowed(),
         o =
-          st.areSandboxSettingsLockedByPolicy() ||
-          st.areUnsandboxedCommandsForbiddenByPolicy(),
-        d = st.passesCheapSandboxGates()
-          ? st.checkDependencies().errors.length === 0
+          SandboxManager.areSandboxSettingsLockedByPolicy() ||
+          SandboxManager.areUnsandboxedCommandsForbiddenByPolicy(),
+        d = SandboxManager.passesCheapSandboxGates()
+          ? SandboxManager.checkDependencies().errors.length === 0
           : !0,
         p;
       if (!d) p = L.warning;
@@ -237881,7 +237882,7 @@ var Kus = {
         : 'exclude "command pattern"';
     },
     get isHidden() {
-      return !st.isSupportedPlatform() || !st.isPlatformInEnabledList();
+      return !SandboxManager.isSupportedPlatform() || !SandboxManager.isPlatformInEnabledList();
     },
     immediate: (e) => ft(e.trim(), " ") !== "install",
     type: "local-jsx",
@@ -238046,14 +238047,14 @@ async function ids(e, t) {
 async function fdr(e, t) {
   return (await ids(e, t)).isInstalled;
 }
-var xEe = "https://clau.de/chrome/reconnect",
+var CHROME_EXTENSION_RECONNECT_URL = "https://clau.de/chrome/reconnect",
   nTt = "com.anthropic.claude_code_browser_extension",
   mdr = `${nTt}.json`;
-function rD() {
+function isClaudeInChromeAllowed() {
   return Mt("allow_claude_browser_extension");
 }
-function N5e(e) {
-  if (!rD()) return !1;
+function shouldEnableClaudeInChrome(e) {
+  if (!isClaudeInChromeAllowed()) return !1;
   if (!KKt())
     return (
       n(
@@ -238071,7 +238072,7 @@ function N5e(e) {
     return t.claudeInChromeDefaultEnabled;
   return !1;
 }
-function FWt() {
+function hasBaseChromeOfferEligibility() {
   return (
     S_e() !== !1 &&
     a.CLAUDE_CODE_ENABLE_CFC !== !1 &&
@@ -238081,33 +238082,33 @@ function FWt() {
     KKt()
   );
 }
-function $Wt() {
+function hasChromeExtensionEvidence() {
   let e = ee();
   return (
     e.cachedChromeExtensionInstalled === !0 ||
     Boolean(e.chromeExtension?.pairedDeviceId)
   );
 }
-function Kgn(e) {
-  if (!rD()) return !1;
+function shouldAutoEnableClaudeInChrome(e) {
+  if (!isClaudeInChromeAllowed()) return !1;
   let t = yd();
   if (t.shouldAutoEnable !== void 0) return t.shouldAutoEnable;
   return (
     (t.shouldAutoEnable =
-      FWt() && (fds(e) || $Wt()) && H("tengu_chrome_auto_enable", !1)),
+      hasBaseChromeOfferEligibility() && (fds(e) || hasChromeExtensionEvidence()) && H("tengu_chrome_auto_enable", !1)),
     t.shouldAutoEnable
   );
 }
-function F5e() {
+function isClaudeInChromeWiredThisSession() {
   return yd().wiredThisSession;
 }
-function RMe() {
+function markClaudeInChromeUnwired() {
   yd().wiredThisSession = !1;
 }
-function Qde(e) {
-  if (e === vd) RMe();
+function markClaudeInChromeUnwiredIfChrome(e) {
+  if (e === vd) markClaudeInChromeUnwired();
 }
-function Xgn({
+function shouldSuppressChromeOffer({
   isSSHPending: e,
   isRemoteMode: t,
   hasTeleport: r,
@@ -238126,7 +238127,7 @@ function Xgn({
     _ !== void 0
   );
 }
-function kMe() {
+function getClaudeInChromeMcpServerConfig() {
   return {
     type: "stdio",
     command: process.execPath,
@@ -238134,7 +238135,7 @@ function kMe() {
     scope: "dynamic",
   };
 }
-function Zde(e) {
+function setupClaudeInChrome(e) {
   let t = [],
     r = {};
   if (Rz()) r.CLAUDE_CHROME_PERMISSION_MODE = "skip_all_permission_checks";
@@ -238152,7 +238153,7 @@ function Zde(e) {
     ),
     (yd().wiredThisSession = !0),
     {
-      mcpConfig: { [vd]: { ...kMe(), ...(o && { env: r }) } },
+      mcpConfig: { [vd]: { ...getClaudeInChromeMcpServerConfig(), ...(o && { env: r }) } },
       allowedTools: t,
       systemPrompt: a.CLAUDE_CODE_DISABLE_CFC_PROMPT === !0 ? "" : k0e(),
     }
@@ -238209,13 +238210,13 @@ async function cds(e, t) {
       uds(E);
     }
     if (_ && !p && !t?.skipReconnectAutoOpen)
-      bH()
+      isChromeExtensionInstalled()
         .then((E) => {
           if (E)
             (n(
               "[Claude in Chrome] First-time install detected, opening reconnect page in browser",
             ),
-              WY(xEe).catch(h));
+              WY(CHROME_EXTENSION_RECONNECT_URL).catch(h));
           else
             n(
               "[Claude in Chrome] First-time install detected, but extension not installed, skipping reconnect",
@@ -238282,7 +238283,7 @@ exec ${jo(e)}
 }
 function fds(e) {
   return (
-    bH()
+    isChromeExtensionInstalled()
       .then((r) => {
         if (!r) return;
         if (ee().cachedChromeExtensionInstalled !== r)
@@ -238297,7 +238298,7 @@ function fds(e) {
     ee().cachedChromeExtensionInstalled ?? !1
   );
 }
-async function bH() {
+async function isChromeExtensionInstalled() {
   let e = ldr();
   if (e.length === 0)
     return (
@@ -238312,7 +238313,7 @@ var pds = {
     name: "chrome",
     description: "Open Claude in Chrome settings",
     availability: ["claude-ai"],
-    isEnabled: () => !ke() && rD(),
+    isEnabled: () => !ke() && isClaudeInChromeAllowed(),
     policyGate: {
       policy: "allow_claude_browser_extension",
       featureLabel: "Claude in Chrome",
@@ -238576,7 +238577,7 @@ var tN = {
     description: "Renamed to /usage-credits",
     isHidden: !0,
     isEnabled: () => hb() && ke(),
-    load: () => import("../../01-核心基础设施/共享小工具-未细化/extra-usage-cmd.tyypgamh.js"),
+    load: () => import("../../01-核心基础设施/共享小工具-未细化/chunk-57d41trc.js"),
   };
 var Eds = {
     type: "local-jsx",
@@ -238834,7 +238835,7 @@ var vTt = null,
   Kdr = import.meta.require("../../02-功能模块/斜杠命令-框架/goalNonInteractive.zn0jn7dv.js"),
   { default: Nds, goalNonInteractive: $Tt } = Kdr,
   Udr = import.meta.require("../../02-功能模块/斜杠命令-框架/default.9n0xs4ps.js").default,
-  Lds = import.meta.require("../../01-核心基础设施/共享小工具-未细化/isWebSetupEnabled.yena1gz1.js").default,
+  Lds = import.meta.require("../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js").default,
   Fds = [],
   Hdr = import.meta.require("../../02-功能模块/Skills技能/default.rjsfd0pf.js").default,
   l1e = import.meta.require("../../02-功能模块/Teammates团队/default.cg5shkdd.js").default,
@@ -239071,7 +239072,7 @@ function Wds() {
     ...[],
   ];
 }
-function LI() {
+function builtInCommandNames() {
   let e = wo();
   return (
     (e.builtinCommandNames ??= new Set(
@@ -239080,21 +239081,21 @@ function LI() {
     e.builtinCommandNames
   );
 }
-function LY() {
+function shippedCommandNames() {
   let e = wo();
   return (
     (e.shippedCommandNames ??= new Set([
-      ...LI(),
+      ...builtInCommandNames(),
       ...poe().flatMap((t) => [t.name, ...(t.aliases ?? [])]),
       ...eyn(),
     ])),
     e.shippedCommandNames
   );
 }
-function aNe(e) {
-  return E2e(e, LY().has(e));
+function shippedCommandNameForAnalytics(e) {
+  return E2e(e, shippedCommandNames().has(e));
 }
-function lAe() {
+function getBuiltinCommands() {
   return x1e();
 }
 async function Gds(e, t) {
@@ -239161,7 +239162,7 @@ async function Gds(e, t) {
 var Gdr = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").getWorkflowCommands,
   zds = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").invalidateWorkflowCache,
   zdr = import.meta.require("../../02-功能模块/Workflow编排/getWorkflowCommands.nd3hcr54.js").warmWorkflows;
-function ype(e) {
+function meetsAvailabilityRequirement(e) {
   if (!e.availability) return !0;
   for (let t of e.availability)
     switch (t) {
@@ -239178,13 +239179,13 @@ function ype(e) {
     }
   return !1;
 }
-function B_n(e) {
+function commandsMemoKey(e) {
   return `${Onr()}:${jy()}:${ke()}:${Nb()}:${K3()}:${Gse()}:${e}`;
 }
 function qds(e, t) {
-  return H$(wo().loadedCommands, B_n(e), () => Vds(e, t));
+  return H$(wo().loadedCommands, commandsMemoKey(e), () => Vds(e, t));
 }
-async function T8e(e, t) {
+async function warmCommandSourceCaches(e, t) {
   try {
     let r = performance.now();
     await Promise.allSettled([
@@ -239235,10 +239236,10 @@ async function Vds(e, t) {
         n(
           E
             ? `[skills] dropping synced skill '${de.name}': local or plugin skills failed to load, so its name cannot be checked against them`
-            : `[skills] dropping synced skill '${de.name}' (display '${qo(de)}'): a non-synced command or an earlier synced skill owns that name`,
+            : `[skills] dropping synced skill '${de.name}' (display '${getCommandName(de)}'): a non-synced command or an earlier synced skill owns that name`,
         );
   }
-  let re = Xds(tK([...N, ...V]));
+  let re = Xds(dropShadowedFallbackSkills([...N, ...V]));
   if (E) wo().markLoadedResultMissingTrustedNames(re);
   return (
     L$(
@@ -239254,15 +239255,15 @@ async function Vds(e, t) {
     re
   );
 }
-async function kf(e, t) {
-  e7t(lAe);
+async function getCommands(e, t) {
+  e7t(getBuiltinCommands);
   let r = await qds(e, t),
     o = !Nb() && !wo().loadedResultIsMissingTrustedNames(r),
     d = o ? tfe() : tfe().filter((xe) => xe.loadedFrom !== "syncedSkills"),
     p = o ? G1n() : [],
-    _ = r.filter((xe) => ype(xe) && zp(xe));
+    _ = r.filter((xe) => meetsAvailabilityRequirement(xe) && isCommandEnabled(xe));
   if (d.length === 0 && p.length === 0) return _;
-  let E = d.filter((xe) => ype(xe) && zp(xe)),
+  let E = d.filter((xe) => meetsAvailabilityRequirement(xe) && isCommandEnabled(xe)),
     C = new Map(),
     I = (xe) => {
       let Oe = C.get(xe);
@@ -239277,7 +239278,7 @@ async function kf(e, t) {
   if (D) {
     lke(N, E);
     for (let xe of E) {
-      if (xe.loadedFrom === "syncedSkills" || cNe(xe)) continue;
+      if (xe.loadedFrom === "syncedSkills" || isFallbackStub(xe)) continue;
       let Oe = I(xe);
       if (Oe) N.add(Kj(NTt(Oe, xe.name)));
     }
@@ -239292,7 +239293,7 @@ async function kf(e, t) {
   }
   let re = new Map();
   for (let xe of E) {
-    if (cNe(xe) || xe.loadedFrom === "syncedSkills") continue;
+    if (isFallbackStub(xe) || xe.loadedFrom === "syncedSkills") continue;
     re.set(xe.name, (re.get(xe.name) ?? 0) + 1);
   }
   let ue = [],
@@ -239306,7 +239307,7 @@ async function kf(e, t) {
     }
     let Oe = I(xe),
       Ne = U.has(xe.name);
-    if (cNe(xe)) {
+    if (isFallbackStub(xe)) {
       if (Ne || (re.get(xe.name) ?? 0) > 0 || de.has(xe.name)) continue;
       (ue.push(Oe ? qdr(xe, Oe) : xe), de.add(xe.name));
       continue;
@@ -239325,13 +239326,13 @@ async function kf(e, t) {
     (ue.push(Yds(xe, Oe, Ne || de.has(xe.name))), de.add(He));
   }
   if (p.length > 0) for (let xe of de) N.add(Kj(xe));
-  let _e = Boe(p, N).filter((xe) => ype(xe) && zp(xe)),
+  let _e = Boe(p, N).filter((xe) => meetsAvailabilityRequirement(xe) && isCommandEnabled(xe)),
     Se = [...ue, ..._e];
   if (Se.length === 0) return F;
   let ve = new Set(x1e().map((xe) => xe.name)),
     Me = F.findIndex((xe) => ve.has(xe.name));
-  if (Me === -1) return tK([...F, ...Se]);
-  return tK([...F.slice(0, Me), ...Se, ...F.slice(Me)]);
+  if (Me === -1) return dropShadowedFallbackSkills([...F, ...Se]);
+  return dropShadowedFallbackSkills([...F.slice(0, Me), ...Se, ...F.slice(Me)]);
 }
 function Kds(e, t) {
   if (e.type !== "prompt" || !e.skillRoot) return null;
@@ -239346,7 +239347,7 @@ function Kds(e, t) {
 function NTt(e, t) {
   return `${e}:${t}`;
 }
-function _C(e) {
+function attributionSkillName(e) {
   return e.type === "prompt" && e.unqualifiedName != null
     ? e.unqualifiedName
     : e.name;
@@ -239373,11 +239374,11 @@ function Yds(e, t, r) {
     description: `${e.description} (${d})`,
   };
 }
-function rR() {
+function clearCommandMemoizationCaches() {
   (wo().invalidateCommands(), zds?.());
 }
-function xE() {
-  (rR(), JUe(), Lnr(), $V());
+function clearCommandsCache() {
+  (clearCommandMemoizationCaches(), JUe(), Lnr(), $V());
 }
 var Vdr = new Set(["help", "feedback"]);
 function Xds(e) {
@@ -239398,7 +239399,7 @@ function Xds(e) {
     return { ...d, aliases: p.length ? p : void 0 };
   });
 }
-function tK(e) {
+function dropShadowedFallbackSkills(e) {
   let t = new Set(),
     r = !1;
   for (let d of e) {
@@ -239409,7 +239410,7 @@ function tK(e) {
         d.loadedFrom !== "mcp")
     )
       continue;
-    if (d.disableModelInvocation || HM(d)) continue;
+    if (d.disableModelInvocation || isSkillExcludedFromModel(d)) continue;
     if (d.loadedFrom === "mcp") r = !0;
     let p = d.name.lastIndexOf(":");
     if (p > 0) t.add(d.name.slice(p + 1));
@@ -239417,7 +239418,7 @@ function tK(e) {
   if (t.size === 0) return e;
   let o = wo().fallbackShadowTelemetryLogged;
   return e.filter((d) => {
-    if (!cNe(d)) return !0;
+    if (!isFallbackStub(d)) return !0;
     if (!t.has(d.name)) return !0;
     return (
       n(
@@ -239427,7 +239428,7 @@ function tK(e) {
     );
   });
 }
-function lNe(e) {
+function dropShadowedBundledSkills(e) {
   let t = wo();
   if (t.shadowedBundledSkills?.input === e)
     return t.shadowedBundledSkills.output;
@@ -239441,7 +239442,7 @@ function lNe(e) {
     p = o ? d : e;
   return ((t.shadowedBundledSkills = { input: e, output: p }), p);
 }
-function mSt(e) {
+function getMcpSkillCommands(e) {
   if (Rg()) return [];
   if (Mu())
     return e.filter(
@@ -239449,15 +239450,15 @@ function mSt(e) {
         t.type === "prompt" &&
         t.loadedFrom === "mcp" &&
         !t.disableModelInvocation &&
-        !HM(t),
+        !isSkillExcludedFromModel(t),
     );
   return [];
 }
-function Spe(e) {
+function isSkillToolCommand(e) {
   return (
     e.type === "prompt" &&
     !e.disableModelInvocation &&
-    !HM(e) &&
+    !isSkillExcludedFromModel(e) &&
     (e.source === "builtin" ||
       e.loadedFrom === "bundled" ||
       e.loadedFrom === "skills" ||
@@ -239467,24 +239468,24 @@ function Spe(e) {
       !!e.whenToUse)
   );
 }
-function HE(e, t) {
-  return H$(wo().skillToolCommands, B_n(e), () => Qds(e, t));
+function getSkillToolCommands(e, t) {
+  return H$(wo().skillToolCommands, commandsMemoKey(e), () => Qds(e, t));
 }
 async function Qds(e, t) {
   if (Rg()) return [];
-  return (await kf(e, t)).filter(Spe);
+  return (await getCommands(e, t)).filter(isSkillToolCommand);
 }
-function bpe(e, t) {
-  return H$(wo().slashCommandToolSkills, B_n(e), () => Jds(e, t));
+function getSlashCommandToolSkills(e, t) {
+  return H$(wo().slashCommandToolSkills, commandsMemoKey(e), () => Jds(e, t));
 }
 async function Jds(e, t) {
   if (Rg()) return [];
   try {
-    let o = (await kf(e, t)).filter(
+    let o = (await getCommands(e, t)).filter(
       (d) =>
         d.type === "prompt" &&
         d.source !== "builtin" &&
-        !Tk(d) &&
+        !isSkillOff(d) &&
         (d.hasUserSpecifiedDescription || d.whenToUse) &&
         (d.loadedFrom === "skills" ||
           d.loadedFrom === "syncedSkills" ||
@@ -239502,7 +239503,7 @@ async function Jds(e, t) {
     );
   }
 }
-var Q9t = new Set([
+var REMOTE_SAFE_COMMANDS = new Set([
     Kwt,
     iTt,
     Bwt,
@@ -239603,20 +239604,20 @@ var Q9t = new Set([
     t1e,
     aTt,
   ]);
-function cAe(e) {
+function isBridgeSafeCommand(e) {
   if (e.type === "local-jsx") return !1;
   if (e.type === "prompt") return e.disableBridgeInvocation !== !0;
   return Zdr.has(e);
 }
-function uAe(e) {
+function findBridgeFallback(e) {
   if (e.type !== "local-jsx") return;
   for (let t of Zdr) if (t.name === e.name && t.type === "local") return t;
   return;
 }
 function Zds(e) {
-  return cAe(e) || uAe(e) !== void 0;
+  return isBridgeSafeCommand(e) || findBridgeFallback(e) !== void 0;
 }
-function gSt(e) {
+function deriveRequires(e) {
   if (e.requires)
     return { workspace: e.requires.workspace ?? !1, ink: e.requires.ink ?? !1 };
   switch (e.type) {
@@ -239629,9 +239630,9 @@ function gSt(e) {
   }
 }
 function efs(e) {
-  return !gSt(e).workspace || e.thinClientDispatch !== void 0;
+  return !deriveRequires(e).workspace || e.thinClientDispatch !== void 0;
 }
-function j_n(e, t) {
+function routeThinClientCommand(e, t) {
   if (e.type === "prompt") return "post-text";
   switch (e.thinClientDispatch) {
     case "post-text":
@@ -239642,21 +239643,21 @@ function j_n(e, t) {
     case "twin":
       return "post-text";
     case void 0:
-      return e.type === "local-jsx" || !gSt(e).workspace
+      return e.type === "local-jsx" || !deriveRequires(e).workspace
         ? "local"
         : "post-text";
   }
 }
-function W_n(e) {
+function filterCommandsForRemoteMode(e) {
   return e.filter(
     (t) =>
       (t.type === "prompt" &&
         (t.source === "builtin" || t.source === "bundled") &&
         efs(t)) ||
-      Q9t.has(t),
+      REMOTE_SAFE_COMMANDS.has(t),
   );
 }
-function wpe(e) {
+function filterCommandsForHeadless(e) {
   if (Rg()) return [];
   return e.filter(ffr);
 }
@@ -239666,7 +239667,7 @@ function ffr(e) {
     (e.type === "local" && e.supportsNonInteractive)
   );
 }
-function MY(e) {
+function formatDescriptionWithSource(e) {
   if (e.type !== "prompt") return e.description;
   if (e.kind === "workflow") return `${e.description} (dynamic workflow)`;
   if (e.source === "plugin") {
@@ -239685,51 +239686,51 @@ function MY(e) {
   return `${e.description} (${ay(e.source)})`;
 }
 function tfs(e) {
-  return e.userInvocable !== !1 && !Tk(e);
+  return e.userInvocable !== !1 && !isSkillOff(e);
 }
-function hSt(e) {
+function advertisedSlashCommands(e) {
   return pc(e, "name").filter(tfs);
 }
-function NY(e) {
-  return hSt(e).map(pfr);
+function toSlashCommands(e) {
+  return advertisedSlashCommands(e).map(pfr);
 }
 function pfr(e) {
-  let t = qo(e),
+  let t = getCommandName(e),
     r = e.name !== t && e.name.includes(":") ? e.name : void 0,
     o = r && !e.aliases?.includes(r) ? [...(e.aliases ?? []), r] : e.aliases;
   return {
     name: t,
-    description: MY(e),
+    description: formatDescriptionWithSource(e),
     argumentHint: e.argumentHint || "",
     aliases: o?.length ? o : void 0,
   };
 }
-function Z9t(e) {
-  return hSt(e).filter(Zds);
+function bridgeAdvertisedCommands(e) {
+  return advertisedSlashCommands(e).filter(Zds);
 }
-function G_n(e) {
+function toBridgeSlashCommands(e) {
   let t = [];
-  for (let r of Z9t(e)) {
+  for (let r of bridgeAdvertisedCommands(e)) {
     if (r.isHidden) continue;
-    let o = qo(r),
+    let o = getCommandName(r),
       d;
-    if (Di(o, e) === r) d = o;
-    else if (r.name !== o && Di(r.name, e) === r) d = r.name;
+    if (findCommand(o, e) === r) d = o;
+    else if (r.name !== o && findCommand(r.name, e) === r) d = r.name;
     else continue;
-    let p = r.type === "local-jsx" ? (uAe(r) ?? r) : r,
+    let p = r.type === "local-jsx" ? (findBridgeFallback(r) ?? r) : r,
       _ =
         p.menuDescription != null && p.menuDescription !== ""
           ? { ...p, description: p.menuDescription }
           : p,
       E = pfr({ ..._, userFacingName: () => d }),
       I = (p !== r ? (r.aliases ?? []) : (E.aliases ?? [])).filter(
-        (D) => D !== d && Di(D, e) === r,
+        (D) => D !== d && findCommand(D, e) === r,
       );
     ((E.aliases = I.length ? I : void 0), t.push(E));
   }
   return t;
 }
-function cNe(e) {
+function isFallbackStub(e) {
   return (
     e.type === "prompt" && e.fallback === !0 && e.loadedFrom !== "syncedSkills"
   );
@@ -239740,7 +239741,7 @@ function nfs(e) {
   return t.length > r ? t.slice(0, r - 1) + "\u2026" : t;
 }
 function rfs(e) {
-  let t = qo(e);
+  let t = getCommandName(e);
   if (e.name !== t && e.type === "prompt" && e.source === "plugin")
     n(`Skill prompt: showing "${e.name}" (userFacingName="${t}")`);
   return `- ${e.name}: ${nfs(e)}`;
@@ -239750,7 +239751,7 @@ function gfr(e, t, r, o) {
   let d = Ywe(r, o),
     p = new Set(),
     _ = e.map((re, ue) => {
-      if (Jue(re) === "name-only")
+      if (getSkillOverride(re) === "name-only")
         return (p.add(ue), { cmd: re, full: `- ${re.name}` });
       return { cmd: re, full: rfs(re) };
     }),
@@ -239804,12 +239805,12 @@ async function ijn(e) {
   return Ci() ? mfr + ofs : mfr;
 }
 async function NAn(e, t, r) {
-  let o = z7(await HE(e, r), t),
-    d = V7(o, K1());
+  let o = z7(await getSkillToolCommands(e, r), t),
+    d = filterSkillCommandsByAllowlist(o, K1());
   return { totalCommands: o.length, includedCommands: d.length };
 }
 async function Jwe(e, t) {
-  return V7(await HE(e, t), K1());
+  return filterSkillCommandsByAllowlist(await getSkillToolCommands(e, t), K1());
 }
 async function pWt() {
   return (await fWt()).sessions;
@@ -239817,7 +239818,7 @@ async function pWt() {
 async function fWt() {
   if (Mo()) {
     let { listLivePeerSessions: e, SessionRecordsUnreadableError: t } =
-      import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js");
+      import.meta.require("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js");
     try {
       return { sessions: await e(), unavailable: !1 };
     } catch (r) {
@@ -240029,15 +240030,15 @@ function vZ(e) {
   return [...e.slice(0, evt), `... and ${t} more (truncated for prompt size)`];
 }
 function xfr() {
-  if (!st.isSandboxingEnabled()) return "";
-  let e = st.getFsReadConfig(),
-    t = st.getFsWriteConfig(),
-    r = st.getNetworkRestrictionConfig(),
-    o = st.getAllowUnixSockets(),
-    d = st.getIgnoreViolations(),
-    p = st.areUnsandboxedCommandsAllowed(),
+  if (!SandboxManager.isSandboxingEnabled()) return "";
+  let e = SandboxManager.getFsReadConfig(),
+    t = SandboxManager.getFsWriteConfig(),
+    r = SandboxManager.getNetworkRestrictionConfig(),
+    o = SandboxManager.getAllowUnixSockets(),
+    d = SandboxManager.getIgnoreViolations(),
+    p = SandboxManager.areUnsandboxedCommandsAllowed(),
     _ = new Set([$d(), ome()]),
-    E = xBt(),
+    E = sandboxExportsChildTmpDir(),
     C = (ue) =>
       Y(
         E
@@ -240502,7 +240503,7 @@ async function Gfr(
       if (d.aborted) return [];
       let { searchMemoryFilesWithIndex: je } =
           await import("../../02-功能模块/Memory-CLAUDE.md/searchMemoryFilesWithIndex.5h247hbm.js"),
-        Ke = Twe(r),
+        Ke = recallVisibleTeamMounts(r),
         ct = 5 + Math.min(p.size + 10, 20),
         { ranked: vt, stats: ut } = await je(
           e,
@@ -240510,17 +240511,17 @@ async function Gfr(
           r,
           d,
           ct,
-          $ft(),
+          loadedIndexExclusions(),
           E,
           C,
-          (dn) => h4e(dn, Ke),
+          (dn) => isRecallVisiblePath(dn, Ke),
         ),
-        Wt = Twe(r),
+        Wt = recallVisibleTeamMounts(r),
         en = F(),
         tn = vt
           .filter(
             (dn) =>
-              h4e(Sfs(r, dn.path), Wt) &&
+              isRecallVisiblePath(Sfs(r, dn.path), Wt) &&
               !en.has(dn.path) &&
               !p.has(dn.path) &&
               !I?.(dn.path),
@@ -240574,15 +240575,15 @@ async function Gfr(
     de = Lvn(o, r),
     Se =
       (de?.hydrated || ue ? de : void 0) ??
-      (await tUt(r, d, N).then((je) => {
+      (await scanMemoryFiles(r, d, N).then((je) => {
         let Ke = F(),
           ct = je.filter((vt) => !Ke.has(vt.filePath));
         return ct.length > 0 && !d.aborted
-          ? Uvn(o, r, ct, nUt(ct), re, !ue)
+          ? Uvn(o, r, ct, formatMemoryManifest(ct), re, !ue)
           : void 0;
       })),
-    ve = Twe(r),
-    Me = (je) => !p.has(je.filePath) && h4e(je.filename, ve);
+    ve = recallVisibleTeamMounts(r),
+    Me = (je) => !p.has(je.filePath) && isRecallVisiblePath(je.filename, ve);
   if (!Se || !Se.memories.some(Me)) {
     if (!d.aborted)
       g(
@@ -240608,10 +240609,10 @@ async function Gfr(
       credentials: U,
       selectorTurnReverts: V,
     }),
-    De = Twe(r);
+    De = recallVisibleTeamMounts(r);
   return Ne.map((je) => Oe.get(je))
     .filter(
-      (je) => je !== void 0 && !p.has(je.filePath) && h4e(je.filename, De),
+      (je) => je !== void 0 && !p.has(je.filePath) && isRecallVisiblePath(je.filename, De),
     )
     .map((je) => ({ path: je.filePath, mtimeMs: je.mtimeMs }));
 }
@@ -240703,7 +240704,7 @@ ${t}`,
   }
 }
 var dvt = null;
-var Jfr = import.meta.require("../../01-核心基础设施/共享小工具-未细化/BRIEF_PROACTIVE_SECTION.c389azz5.js"),
+var Jfr = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js"),
   { BRIEF_TOOL_NAME: nge, LEGACY_BRIEF_TOOL_NAME: Cfs } = Jfr,
   O1e = { TURNS_SINCE_WRITE: 10, TURNS_BETWEEN_REMINDERS: 10 };
 function Zfr() {
@@ -240756,7 +240757,7 @@ async function Pfs(e, t, r, o, d, p, _) {
             )),
       Oe !== void 0 && E === void 0)
     )
-      E = Sgn(Oe, t.options.tools);
+      E = inlineSetBeforeLatch(Oe, t.options.tools);
   } catch (Oe) {
     (h(Oe), (E = void 0));
   }
@@ -240784,10 +240785,10 @@ async function Pfs(e, t, r, o, d, p, _) {
   ) {
     if (_?.inputMentionsOnly) return [];
     return [
-      ...(await SEe(o, C, I)),
-      ...(await AWt(t, d)),
-      ...S5e(t.options.tools, d),
-      ...(await ygn(t, d)),
+      ...(await getQueuedCommandAttachments(o, C, I)),
+      ...(await getAgentListingDeltaAttachment(t, d)),
+      ...getSandboxInstructionsAttachments(t.options.tools, d),
+      ...(await getPromptAnnouncementAttachments(t, d)),
     ];
   }
   let D = hr(),
@@ -240824,12 +240825,12 @@ async function Pfs(e, t, r, o, d, p, _) {
       return () =>
         (Oe ??= OO() ? (X_() ? xps(d, t) : vps(d, t)) : Promise.resolve([]));
     })(),
-    _e = Iy() ? I8().remote?.noticeAttachment : void 0,
+    _e = isRemoteToolForwardingSwitchOn() ? I8().remote?.noticeAttachment : void 0,
     Se = [
-      wf("queued_commands", () => SEe(o, C, I)),
+      wf("queued_commands", () => getQueuedCommandAttachments(o, C, I)),
       wf("date_change", () => Promise.resolve(qfs(d, t.session))),
       wf("sandbox_instructions", () =>
-        Promise.resolve(S5e(t.options.tools, d)),
+        Promise.resolve(getSandboxInstructionsAttachments(t.options.tools, d)),
       ),
       wf("environment", () => npr(t, d)),
       wf("model", () => rpr(t, d)),
@@ -240837,7 +240838,7 @@ async function Pfs(e, t, r, o, d, p, _) {
       wf("ultrathink_effort", () => Promise.resolve(Vfs(e))),
       wf("deferred_tools_delta", () =>
         Promise.resolve(
-          oyt(
+          getDeferredToolsDeltaAttachment(
             t.options.tools,
             t.options.mainLoopModel,
             d,
@@ -240870,10 +240871,10 @@ async function Pfs(e, t, r, o, d, p, _) {
           ),
         ),
       ),
-      wf("agent_listing_delta", () => AWt(t, d)),
+      wf("agent_listing_delta", () => getAgentListingDeltaAttachment(t, d)),
       wf("mcp_instructions_delta", () =>
         Promise.resolve(
-          bgn(
+          getMcpInstructionsDeltaAttachment(
             t.options.mcpClients,
             t.options.tools,
             t.options.mainLoopModel,
@@ -240882,14 +240883,14 @@ async function Pfs(e, t, r, o, d, p, _) {
           ),
         ),
       ),
-      wf("mcp_dropped_tools_delta", () => Promise.resolve(wgn(t, d))),
+      wf("mcp_dropped_tools_delta", () => Promise.resolve(getMcpDroppedToolsDeltaAttachment(t, d))),
       ...(_e
         ? [wf("tool_hosts_notice", () => _e(F, d ?? [], "attachment_scan"))]
         : []),
       wf("changed_files", () => lps(F)),
       wf("nested_memory", () => Kfr(F)),
       wf("dynamic_skill", () => gps(F)),
-      wf("skill_listing", () => Agn(F)),
+      wf("skill_listing", () => getSkillListingAttachments(F)),
       wf("plan_mode", () => jfs(e, d, t, _)),
       wf("plan_mode_exit", () => Wfs(d, t)),
       ...[],
@@ -241018,13 +241019,13 @@ async function wf(e, t) {
   }
 }
 var Ifs = new Set(["prompt", "task-notification"]);
-function ryt(e) {
+function isInlineNotificationCommand(e) {
   return Ifs.has(e.mode);
 }
-async function SEe(e, t, r = 0) {
+async function getQueuedCommandAttachments(e, t, r = 0) {
   if (!e) return [];
   let o = Mfs(e, r),
-    d = e.filter(ryt);
+    d = e.filter(isInlineNotificationCommand);
   return Promise.all(
     d.map(async (p) => {
       let _ = [],
@@ -241259,11 +241260,11 @@ function Hfs(e) {
   }
   return null;
 }
-function hgn(e) {
+function getWorkshopPlanPins(e) {
   let t;
   return { workshopDocPath: t };
 }
-function _gn(e) {
+function hasWorkshopActiveAttachment(e) {
   return e.some(
     (t) =>
       t?.type === "attachment" &&
@@ -241281,7 +241282,7 @@ async function jfs(e, t, r, o) {
   LN(K(), o?.planSlugSeed ?? e ?? void 0);
   let p = Gh(r.agentId),
     _ = MN(r.agentId),
-    { workshopDocPath: E } = hgn(r),
+    { workshopDocPath: E } = getWorkshopPlanPins(r),
     C = [];
   if (hHt() && _ !== null)
     (C.push({ type: "plan_mode_reentry", planFilePath: p, workshopDocPath: E }),
@@ -241308,7 +241309,7 @@ async function jfs(e, t, r, o) {
     ue = U && yTn() && !V && !re && E === void 0;
   if (V) y("plan_workshop_offer");
   if (ue) y("plan_prototype_offer");
-  if (re && !_gn(t ?? [])) y("plan_workshop_active");
+  if (re && !hasWorkshopActiveAttachment(t ?? [])) y("plan_workshop_active");
   if (re) zH(r.storageV5);
   return (
     C.push({
@@ -241361,7 +241362,7 @@ async function Gfs(e, t) {
   return [
     {
       type: "auto_mode",
-      autoModeConsentFlow: !o && uVe(t),
+      autoModeConsentFlow: !o && isAutoModeConsentFlowEnabled(t),
       bashFirst: _,
       ...(_ && { bashFirstSteer: htr() }),
       steerOnly: d,
@@ -241391,7 +241392,7 @@ function qfs(e, t) {
   }
   return [{ type: "date_change", newDate: r }];
 }
-function S5e(e, t) {
+function getSandboxInstructionsAttachments(e, t) {
   if (!e.some((d) => Kt(d, qe))) return [];
   let r = xfr(),
     o =
@@ -241430,7 +241431,7 @@ async function npr(e, t) {
     ? []
     : [{ type: "environment", snapshot: r, changes: p }];
 }
-function q8n(e, t) {
+function restateEnvironmentAfterCompact(e, t) {
   if (khe(t).hasFullCopy) return [];
   let { latest: r } = khe(e);
   return r ? [{ type: "environment", snapshot: r }] : [];
@@ -241449,7 +241450,7 @@ async function rpr(e, t) {
     p = fWe(r);
   return p && vRt(p, d) ? [] : [await SRt(d)];
 }
-function z8n(e, t) {
+function restateModelIdentityAfterCompact(e, t) {
   if (fWe(t)) return [];
   let r = dWe(e);
   return r ? [r] : [];
@@ -241470,7 +241471,7 @@ async function opr(e, t) {
     ...(E ? [{ type: "language", language: E.value }] : []),
   ];
 }
-async function ygn(e, t) {
+async function getPromptAnnouncementAttachments(e, t) {
   return (await Promise.all([npr(e, t), rpr(e, t), opr(e, t), []])).flat();
 }
 function Vfs(e) {
@@ -241523,15 +241524,15 @@ function Yfs(e, t) {
     );
   return [];
 }
-function Sgn(e, t) {
+function inlineSetBeforeLatch(e, t) {
   return NHe(e, t, hK);
 }
-function oyt(e, t, r, o, d, p, _, E, C) {
+function getDeferredToolsDeltaAttachment(e, t, r, o, d, p, _, E, C) {
   if (!Z_()) return [];
   if (!e6(t)) return [];
   if (Zj(Ue(t))) return [];
-  if (!mLe(e)) return [];
-  let I = _Vn(e, r ?? [], o, d, p, _, E?.(), C);
+  if (!isToolSearchToolAvailable(e)) return [];
+  let I = getDeferredToolsDelta(e, r ?? [], o, d, p, _, E?.(), C);
   if (!I) return [];
   return [{ type: "deferred_tools_delta", ...I }];
 }
@@ -241556,7 +241557,7 @@ function Xfs(e, t, r, o) {
     return;
   }
 }
-async function AWt(e, t) {
+async function getAgentListingDeltaAttachment(e, t) {
   if (!e.options.tools.some((N) => Kt(N, mt))) return [];
   let { activeAgents: r, allowedAgentTypes: o } = e.options.agentDefinitions,
     d = new Set();
@@ -241564,7 +241565,7 @@ async function AWt(e, t) {
     let F = GU(N);
     if (F) d.add(F);
   }
-  let p = await dVe(Zqn(r, [...d]), o, ce(e), e),
+  let p = await getDispatchableAgents(filterAgentsByMcpRequirements(r, [...d]), o, ce(e), e),
     _ = new Set();
   for (let N of t ?? []) {
     if (N.type !== "attachment") continue;
@@ -241591,13 +241592,13 @@ async function AWt(e, t) {
     },
   ];
 }
-function bgn(e, t, r, o, d) {
+function getMcpInstructionsDeltaAttachment(e, t, r, o, d) {
   let p = [];
   if (
     Z_() &&
     e6(r) &&
     !Zj(Ue(r)) &&
-    mLe(t) &&
+    isToolSearchToolAvailable(t) &&
     t.some((E) => E.mcpInfo?.serverName === vd && _K(E, d, t))
   )
     p.push({ serverName: vd, block: CAn });
@@ -241606,7 +241607,7 @@ function bgn(e, t, r, o, d) {
   if (!_) return [];
   return [{ type: "mcp_instructions_delta", ..._ }];
 }
-function wgn(e, t) {
+function getMcpDroppedToolsDeltaAttachment(e, t) {
   let r = Lfr(e.options.mcpClients, t ?? [], ce(e));
   if (!r) return [];
   return [{ type: "mcp_dropped_tools_delta", ...r }];
@@ -241651,7 +241652,7 @@ async function Zfs(e, t) {
     ];
   let r = v2t(t.options.mcpClients);
   if (!r || e?.lineStart === void 0 || !e.text || !e.filePath) return [];
-  if (ZO(e.filePath, ce(t))) return [];
+  if (isFileReadDenied(e.filePath, ce(t))) return [];
   return [
     {
       type: "selected_lines_in_ide",
@@ -241690,7 +241691,7 @@ function tps(e) {
 }
 async function lvt(e, t, r) {
   let o = [],
-    d = F9t();
+    d = hasInstructionsLoadedHook();
   for (let p of e) {
     if (t.loadedNestedMemoryPaths?.[p.path]) continue;
     if (!t.readFileState.has(p.path)) {
@@ -241724,7 +241725,7 @@ async function lvt(e, t, r) {
           : p.parent
             ? "include"
             : "nested_traversal";
-        sSt(t.session, p.path, p.type, E, {
+        executeInstructionsLoadedHooks(t.session, p.path, p.type, E, {
           globs: p.globs,
           triggerFilePath: r,
           parentFilePath: p.parent,
@@ -241767,7 +241768,7 @@ async function spr(e, t, r) {
 async function nps(e, t) {
   if (!e?.filePath || e.text) return [];
   let r = ce(t);
-  if (ZO(e.filePath, r)) return [];
+  if (isFileReadDenied(e.filePath, r)) return [];
   return [
     ...(await spr(e.filePath, t, { toolPermissionContext: r })),
     { type: "opened_file_in_ide", filename: e.filePath },
@@ -241785,7 +241786,7 @@ async function rps(e, t) {
           if (LJ(_, o.trustedNetworkDirectories))
             return (f("input_file_at_mention", "denied"), null);
           let I = ot(_);
-          if (ZO(I, o)) {
+          if (isFileReadDenied(I, o)) {
             if (vfs(_) || _.startsWith("~") || /(^|[\\/])\.\.([\\/]|$)/.test(_))
               f("input_file_at_mention", "denied");
             return null;
@@ -241819,7 +241820,7 @@ async function rps(e, t) {
                 );
               }
           } catch {}
-          let D = await b5e(
+          let D = await generateFileAttachment(
             I,
             t,
             "tengu_at_mention_extracting_filename_success",
@@ -241980,7 +241981,7 @@ async function lps(e) {
           if (!E) return null;
           if (E.offset !== void 0 || E.limit !== void 0) return null;
           let C = ot(_);
-          if (ZO(C, r)) return null;
+          if (isFileReadDenied(C, r)) return null;
           try {
             if ((await bA(C)) <= E.timestamp) return null;
             let D = { file_path: C };
@@ -242132,7 +242133,7 @@ var fps = new Set([
   "prompt_suggestion",
   "compact",
 ]);
-function V8n(e, t, r) {
+function startRelevantMemoryPrefetch(e, t, r) {
   let o = t.memorySelector;
   if (!o || t.agentId || !ua() || !o1() || fps.has(r)) return;
   let d = e.findLast((F) => F.type === "user" && !F.isMeta);
@@ -242203,10 +242204,10 @@ function V8n(e, t, r) {
   );
 }
 var pps = 2000;
-function K8n() {
+function isMemoryRecallBlockingEnabled() {
   return VUe() && !JTn() && !(IJ() && nf().state === "undecided");
 }
-async function X8n(e, t) {
+async function awaitMemoryPrefetchBlocking(e, t) {
   let r = Date.now(),
     o,
     d = new Promise((E) => {
@@ -242247,7 +242248,7 @@ function mps(e) {
 function pvt(e) {
   return Array.isArray(e) && e.some(mps);
 }
-function Tgn(e, t, r) {
+function filterDuplicateMemoryAttachments(e, t, r) {
   let o = sV.of(r);
   return e
     .map((d) => {
@@ -242277,8 +242278,8 @@ async function gps(e) {
   await y5e(r).catch(() => {});
   let o = sn(),
     d = o.endsWith(zfr) ? o : o + zfr,
-    p = await HE(sn(), e.storageV5);
-  if (e.agentId === void 0) p = V7(p, K1());
+    p = await getSkillToolCommands(sn(), e.storageV5);
+  if (e.agentId === void 0) p = filterSkillCommandsByAllowlist(p, K1());
   let _ = new Map();
   for (let I of p)
     if (I.type === "prompt" && I.skillRoot) _.set(I.skillRoot, I.name);
@@ -242330,11 +242331,11 @@ var apr = new Gt(() => new ipr());
 function CZ() {
   return apr.of(B());
 }
-function VM() {
+function resetSentSkillNames() {
   let e = CZ();
   (e.sentSkillNames.clear(), (e.suppressNext = !1), (e.resumeSeedNames = null));
 }
-function Egn(e) {
+function evictSentSkillNames(e) {
   let t = CZ();
   for (let r of t.sentSkillNames.values()) for (let o of e) r.delete(o);
   if (t.resumeSeedNames !== null) for (let r of e) t.resumeSeedNames.delete(r);
@@ -242362,13 +242363,13 @@ function hps(e, t, r) {
     for (let N of D) if (I(N)) D.delete(N);
   for (let D of e.resumeSeedNames ?? []) if (I(D)) e.resumeSeedNames?.delete(D);
 }
-function Y8n(e) {
+function clearSentSkillNamesForAgent(e) {
   CZ().sentSkillNames.delete(e);
 }
-function J8n() {
+function suppressNextSkillListing() {
   CZ().suppressNext = !0;
 }
-function Q8n(e) {
+function seedSentSkillNames(e) {
   let t = CZ();
   if (t.resumeSeedNames === null) t.resumeSeedNames = new Set();
   for (let r of e) t.resumeSeedNames.add(r);
@@ -242392,24 +242393,24 @@ function yps(e, t, r) {
   for (let E of p) d.add(E.name);
   return { newSkills: p, isInitial: _ };
 }
-async function Agn(e) {
+async function getSkillListingAttachments(e) {
   if (Rg()) return [];
   if (dvt?.isSkillsAsToolsEnabled()) return [];
   if (!e.options.tools.some((V) => Kt(V, so))) return [];
   let t = sn(),
-    r = await HE(t, e.storageV5),
-    o = mSt(e.getMcp().commands),
-    d = lne().filter((V) => !V.disableModelInvocation && !HM(V)),
+    r = await getSkillToolCommands(t, e.storageV5),
+    o = getMcpSkillCommands(e.getMcp().commands),
+    d = lne().filter((V) => !V.disableModelInvocation && !isSkillExcludedFromModel(V)),
     p = sce(e.getMcp().commands),
     _ = apr.of(e.session);
   hps(_, p, r);
   let E = z7(r, p),
-    C = lNe(
+    C = dropShadowedBundledSkills(
       o.length > 0
-        ? tK(pc([...E, ...d, ...o], "name"))
+        ? dropShadowedFallbackSkills(pc([...E, ...d, ...o], "name"))
         : pc([...E, ...d], "name"),
     );
-  if (e.agentId === void 0) C = V7(C, K1());
+  if (e.agentId === void 0) C = filterSkillCommandsByAllowlist(C, K1());
   let I = yps(_, e.agentId, C);
   if (I === null) return [];
   let { newSkills: D, isInitial: N } = I;
@@ -242508,11 +242509,11 @@ async function wps(e) {
     );
   }
 }
-async function* Jne(e, t, r, o, d, p, _, E) {
+async function* getAttachmentMessages(e, t, r, o, d, p, _, E) {
   let C = await Pfs(e, t, r, o, p, _, E);
   if (C.length === 0) return;
   i("tengu_attachments", { attachment_types: C.map((I) => I.type) });
-  for (let I of C) yield pn(I, d);
+  for (let I of C) yield createAttachmentMessage(I, d);
 }
 async function Eps(e) {
   let t = M1e(e).ext.toLowerCase();
@@ -242538,9 +242539,9 @@ async function Eps(e) {
   } catch {}
   return null;
 }
-async function b5e(e, t, r, o, d, p) {
+async function generateFileAttachment(e, t, r, o, d, p) {
   let { offset: _, limit: E } = p ?? {};
-  if (ZO(e, ce(t))) return null;
+  if (isFileReadDenied(e, ce(t))) return null;
   if (d === "at-mention" && !(await X5t(e, j2().maxSizeBytes))) {
     let I = M1e(e).ext.toLowerCase();
     if (!q7e(I))
@@ -242603,7 +242604,7 @@ async function b5e(e, t, r, o, d, p) {
           filename: e,
           displayPath: SD(Q(), e),
         };
-      if (ZO(e, ce(t))) return null;
+      if (isFileReadDenied(e, ce(t))) return null;
       try {
         let F = { file_path: e, offset: _ ?? 1, limit: z7e },
           U = await Qm.call(F, t);
@@ -242656,7 +242657,7 @@ async function b5e(e, t, r, o, d, p) {
     return null;
   }
 }
-function pn(e, t = { now: () => new Date().toISOString(), uuid: () => Qfr() }) {
+function createAttachmentMessage(e, t = { now: () => new Date().toISOString(), uuid: () => Qfr() }) {
   let r = gvt(e);
   return {
     attachment: e,
@@ -242802,8 +242803,8 @@ async function Rps(e, t, r, o) {
   if (fJe() !== "tst") return E("mode_not_tst");
   if (!e6(t.options.mainLoopModel)) return E("model_unsupported");
   if (Zj(Ue(t.options.mainLoopModel))) return E("vertex_model_unsupported");
-  if (!mLe(t.options.tools)) return E("toolsearch_unavailable");
-  let C = NX(e, { surfaced: (t.stickyBetas ?? pa()).surfacedOnWire }),
+  if (!isToolSearchToolAvailable(t.options.tools)) return E("toolsearch_unavailable");
+  let C = extractDiscoveredToolNames(e, { surfaced: (t.stickyBetas ?? pa()).surfacedOnWire }),
     I = t.options.tools
       .filter((N) => _K(N, o, t.options.tools) && !C.has(N.name))
       .map((N) => N.name)
@@ -242910,7 +242911,7 @@ async function Mps() {
       exitCode: D,
     }) => (
       n(`Hooks: Creating attachment for ${r} (${d}): ${b(o)}`),
-      mpe(o.metrics, E, p),
+      emitHookMetrics(o.metrics, E, p),
       {
         type: "async_hook_response",
         processId: r,
@@ -242999,7 +243000,7 @@ function $ps(e) {
   return [{ type: "budget_usd", used: t, total: e, remaining: r }];
 }
 var Bps = 1000;
-function ZO(e, t) {
+function isFileReadDenied(e, t) {
   if (LJ(e, t.trustedNetworkDirectories)) {
     let { reportedUncBlockedPaths: o } = CZ();
     if (!o.has(e) && o.size < Bps)
@@ -243020,7 +243021,7 @@ function QK(e, t) {
   return {
     hook: e,
     outcome: "non_blocking_error",
-    message: pn({ type: "hook_non_blocking_error", ...t, exitCode: 1 }),
+    message: createAttachmentMessage({ type: "hook_non_blocking_error", ...t, exitCode: 1 }),
   };
 }
 var rge = m(() =>
@@ -243079,7 +243080,7 @@ Condition: ${e.prompt}`
       let Oe = (ct) =>
           FY({
             messages: ct,
-            systemPrompt: Zo([
+            systemPrompt: asSystemPrompt([
               D
                 ? `You are evaluating a stop-condition hook in Claude Code. Read the conversation transcript carefully, then judge whether the user-provided condition is satisfied.
 
@@ -243196,7 +243197,7 @@ Always include a "reason" field.`,
               outcome: "success",
               impossible: !0,
               stopReason: Ke.data.reason,
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_success",
                 hookName: t,
                 toolUseID: I,
@@ -243225,7 +243226,7 @@ Always include a "reason" field.`,
           hook: e,
           outcome: "success",
           stopReason: Ke.data.reason,
-          message: pn({
+          message: createAttachmentMessage({
             type: "hook_success",
             hookName: t,
             toolUseID: I,
@@ -243589,7 +243590,7 @@ async function nmr(e, t, r, o, d, p, _, E) {
           r === "Stop" || r === "SubagentStop"
             ? "You are verifying a stop condition in Claude Code. Your task is to verify that the agent completed the given plan."
             : `You are evaluating a ${r} hook in Claude Code. Your task is to evaluate the condition described in the user message.`,
-        je = Zo([
+        je = asSystemPrompt([
           `${He} ${
             N !== void 0
               ? `The conversation transcript is available at: ${N}
@@ -243645,7 +243646,7 @@ When done, return your result using the ${ti} tool with:
         en = null,
         tn = 0,
         dn = !1,
-        cn = I ? tms(gd) : gd;
+        cn = I ? tms(hasPermissionsToUseTool) : hasPermissionsToUseTool;
       for await (let It of FM({
         messages: ue,
         systemPrompt: je,
@@ -243740,7 +243741,7 @@ When done, return your result using the ${ti} tool with:
         {
           hook: e,
           outcome: "success",
-          message: pn({
+          message: createAttachmentMessage({
             type: "hook_success",
             hookName: t,
             toolUseID: C,
@@ -244125,15 +244126,15 @@ var oms = [
       },
     };
   })();
-async function kY(e, t, r, o, d = Jd) {
+async function executePreCompactHooks(e, t, r, o, d = Jd) {
   let p = Ji(r.agentContext),
     _ = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "PreCompact",
       trigger: t.trigger,
       custom_instructions: t.customInstructions,
     },
-    E = await kE({
+    E = await executeHooksOutsideREPL({
       session: e,
       hookInput: _,
       matchQuery: t.trigger,
@@ -244184,15 +244185,15 @@ async function kY(e, t, r, o, d = Jd) {
     ...(N !== void 0 && { blockedBy: N }),
   };
 }
-async function c8e(e, t, r, o, d = Jd) {
+async function executePostCompactHooks(e, t, r, o, d = Jd) {
   if (Ji(r.agentContext)) return {};
   let p = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "PostCompact",
       trigger: t.trigger,
       compact_summary: t.compactSummary,
     },
-    _ = await kE({
+    _ = await executeHooksOutsideREPL({
       session: e,
       hookInput: p,
       matchQuery: t.trigger,
@@ -244230,12 +244231,12 @@ async function __n(
   { timeoutMs: o = Jd, storageV5: d, credentials: p } = {},
 ) {
   let _ = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "ConfigChange",
       source: t,
       file_path: r,
     },
-    E = await kE({
+    E = await executeHooksOutsideREPL({
       session: e,
       hookInput: _,
       timeoutMs: o,
@@ -244246,19 +244247,19 @@ async function __n(
   if (t === "policy_settings") return E.map((C) => ({ ...C, blocked: !1 }));
   return E;
 }
-async function VMe(
+async function executeDirectoryAddedHooks(
   e,
   t,
   r,
   { timeoutMs: o = Jd, storageV5: d, credentials: p } = {},
 ) {
   let _ = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "DirectoryAdded",
       directory: t,
       source: r,
     },
-    E = await kE({
+    E = await executeHooksOutsideREPL({
       session: e,
       hookInput: _,
       matchQuery: r,
@@ -244269,7 +244270,7 @@ async function VMe(
     C = E.map((I) => I.systemMessage).filter((I) => !!I);
   return { results: E, systemMessages: C };
 }
-async function KMe({
+async function executeElicitationHooks({
   session: e,
   serverName: t,
   message: r,
@@ -244282,7 +244283,7 @@ async function KMe({
   elicitationId: I,
 }) {
   let D = {
-      ...Sa(e, Q(), d),
+      ...createBaseHookInput(e, Q(), d),
       hook_event_name: "Elicitation",
       mcp_server_name: t,
       message: r,
@@ -244291,7 +244292,7 @@ async function KMe({
       elicitation_id: I,
       requested_schema: o,
     },
-    N = await kE({
+    N = await executeHooksOutsideREPL({
       session: e,
       hookInput: D,
       matchQuery: t,
@@ -244301,13 +244302,13 @@ async function KMe({
     F,
     U;
   for (let V of N) {
-    let re = O_n(V, "Elicitation");
+    let re = parseElicitationHookOutput(V, "Elicitation");
     if (re.blockingError) U = re.blockingError;
     if (re.response) F = re.response;
   }
   return { elicitationResponse: F, blockingError: U };
 }
-async function XMe({
+async function executeElicitationResultHooks({
   session: e,
   serverName: t,
   action: r,
@@ -244319,7 +244320,7 @@ async function XMe({
   elicitationId: C,
 }) {
   let I = {
-      ...Sa(e, Q(), d),
+      ...createBaseHookInput(e, Q(), d),
       hook_event_name: "ElicitationResult",
       mcp_server_name: t,
       elicitation_id: C,
@@ -244327,7 +244328,7 @@ async function XMe({
       action: r,
       content: o,
     },
-    D = await kE({
+    D = await executeHooksOutsideREPL({
       session: e,
       hookInput: I,
       matchQuery: t,
@@ -244337,14 +244338,14 @@ async function XMe({
     N,
     F;
   for (let U of D) {
-    let V = O_n(U, "ElicitationResult");
+    let V = parseElicitationHookOutput(U, "ElicitationResult");
     if (V.blockingError) F = V.blockingError;
     if (V.response) N = V.response;
   }
   return { elicitationResultResponse: N, blockingError: F };
 }
 async function cmr(e, t, { timeoutMs: r = Jd, storageV5: o, credentials: d }) {
-  let p = await kE({
+  let p = await executeHooksOutsideREPL({
     session: e,
     hookInput: t,
     timeoutMs: r,
@@ -244356,25 +244357,25 @@ async function cmr(e, t, { timeoutMs: r = Jd, storageV5: o, credentials: d }) {
     E = p.map((C) => C.systemMessage).filter((C) => !!C);
   return { results: p, watchPaths: _, systemMessages: E };
 }
-function y_n(e, t, r, o = {}) {
+function executeCwdChangedHooks(e, t, r, o = {}) {
   let d = {
-    ...Sa(e, Q()),
+    ...createBaseHookInput(e, Q()),
     hook_event_name: "CwdChanged",
     old_cwd: t,
     new_cwd: r,
   };
   return cmr(e, d, o);
 }
-function S_n(e, t, r, o = {}) {
+function executeFileChangedHooks(e, t, r, o = {}) {
   let d = {
-    ...Sa(e, Q()),
+    ...createBaseHookInput(e, Q()),
     hook_event_name: "FileChanged",
     file_path: t,
     event: r,
   };
   return cmr(e, d, o);
 }
-async function sSt(e, t, r, o, d) {
+async function executeInstructionsLoadedHooks(e, t, r, o, d) {
   let {
       globs: p,
       triggerFilePath: _,
@@ -244384,7 +244385,7 @@ async function sSt(e, t, r, o, d) {
       credentials: D,
     } = d ?? {},
     N = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "InstructionsLoaded",
       file_path: t,
       memory_type: r,
@@ -244393,7 +244394,7 @@ async function sSt(e, t, r, o, d) {
       trigger_file_path: _,
       parent_file_path: E,
     };
-  await kE({
+  await executeHooksOutsideREPL({
     session: e,
     hookInput: N,
     timeoutMs: C,
@@ -244404,7 +244405,7 @@ async function sSt(e, t, r, o, d) {
 }
 async function* I9t(e, t, r, o, d = Jd, p, _) {
   let E = {
-    ...Sa(e, Q()),
+    ...createBaseHookInput(e, Q()),
     hook_event_name: "MessageDisplay",
     turn_id: t.turnId,
     message_id: t.messageId,
@@ -244412,7 +244413,7 @@ async function* I9t(e, t, r, o, d = Jd, p, _) {
     final: t.final,
     delta: t.delta,
   };
-  yield* My({
+  yield* executeHooks({
     session: e,
     hookInput: E,
     toolUseID: `${t.messageId}-${t.index}`,
@@ -244425,20 +244426,20 @@ async function* I9t(e, t, r, o, d = Jd, p, _) {
     credentials: _,
   });
 }
-async function gC(
+async function executeNotificationHooks(
   e,
   t,
   { timeoutMs: r = Jd, storageV5: o, credentials: d } = {},
 ) {
   let { message: p, title: _, notificationType: E } = t,
     C = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "Notification",
       message: p,
       title: _,
       notification_type: E,
     };
-  await kE({
+  await executeHooksOutsideREPL({
     session: e,
     hookInput: C,
     timeoutMs: r,
@@ -244449,20 +244450,20 @@ async function gC(
 }
 import { randomUUID as Tvt } from "crypto";
 var U1e = "startup-hook-hold";
-async function* b_n(e, t, r, o, d, p, _, E = Jd, C, I, D, N) {
+async function* executeSessionStartHooks(e, t, r, o, d, p, _, E = Jd, C, I, D, N) {
   let F = r !== void 0 ? { id: _m(r), project: e.project } : e,
     U = {
-      ...Sa(F, Q()),
+      ...createBaseHookInput(F, Q()),
       hook_event_name: "SessionStart",
       source: t,
       agent_type: d,
       model: p,
-      session_title: o ?? mu(F.id),
+      session_title: o ?? getCurrentSessionTitle(F.id),
       ...I,
     };
   H$e("hook_exec", U1e);
   try {
-    yield* My({
+    yield* executeHooks({
       session: e,
       hookInput: U,
       toolUseID: Tvt(),
@@ -244477,11 +244478,11 @@ async function* b_n(e, t, r, o, d, p, _, E = Jd, C, I, D, N) {
     I$e("hook_exec", U1e);
   }
 }
-async function* w_n(e, t, r, o = Jd, d, p, _) {
-  let E = { ...Sa(e, Q()), hook_event_name: "Setup", trigger: t };
+async function* executeSetupHooks(e, t, r, o = Jd, d, p, _) {
+  let E = { ...createBaseHookInput(e, Q()), hook_event_name: "Setup", trigger: t };
   H$e("hook_exec", U1e);
   try {
-    yield* My({
+    yield* executeHooks({
       session: e,
       hookInput: E,
       toolUseID: Tvt(),
@@ -244496,14 +244497,14 @@ async function* w_n(e, t, r, o = Jd, d, p, _) {
     I$e("hook_exec", U1e);
   }
 }
-async function* T_n(e, t, r, o, d = Jd, p, _, E) {
+async function* executeSubagentStartHooks(e, t, r, o, d = Jd, p, _, E) {
   let C = {
-    ...Sa(e.session, Q()),
+    ...createBaseHookInput(e.session, Q()),
     hook_event_name: "SubagentStart",
     agent_id: t,
     agent_type: r,
   };
-  yield* My({
+  yield* executeHooks({
     session: e.session,
     hookInput: C,
     toolUseID: Tvt(),
@@ -244517,7 +244518,7 @@ async function* T_n(e, t, r, o, d = Jd, p, _, E) {
     credentials: e.credentials,
   });
 }
-async function YMe(e, t, r) {
+async function executeSessionEndHooks(e, t, r) {
   let {
       sessionHooks: o,
       getAppState: d,
@@ -244525,15 +244526,15 @@ async function YMe(e, t, r) {
       storageV5: _,
       credentials: E,
     } = r || {},
-    C = { ...Sa(e, Q()), hook_event_name: "SessionEnd", reason: t },
-    I = await kE({
+    C = { ...createBaseHookInput(e, Q()), hook_event_name: "SessionEnd", reason: t },
+    I = await executeHooksOutsideREPL({
       session: e,
       sessionHooks: o,
       getAppState: d,
       hookInput: C,
       matchQuery: t,
       signal: p,
-      timeoutMs: C_n,
+      timeoutMs: SESSION_END_HOOK_TIMEOUT_MS_DEFAULT,
       storageV5: _,
       credentials: E,
     });
@@ -244591,9 +244592,9 @@ function dmr(e = kg()) {
     prompt: cd(t.prompt, vvt),
   }));
 }
-async function u8e(e, t, r = Jd) {
+async function executeStopFailureHooks(e, t, r = Jd) {
   if (Ji(t.agentContext)) return;
-  if (!TT("StopFailure", t.sessionHooksRegistry, t.session.id)) return;
+  if (!hasHookForEvent("StopFailure", t.sessionHooksRegistry, t.session.id)) return;
   let o =
       xr(
         e.message.content,
@@ -244602,13 +244603,13 @@ async function u8e(e, t, r = Jd) {
       ).trim() || void 0,
     d = e.error ?? "unknown",
     p = {
-      ...Sa(t.session, Q(), void 0, t),
+      ...createBaseHookInput(t.session, Q(), void 0, t),
       hook_event_name: "StopFailure",
       error: d,
       error_details: e.errorDetails,
       last_assistant_message: o,
     };
-  await kE({
+  await executeHooksOutsideREPL({
     session: t.session,
     sessionHooks: t.sessionHooksRegistry,
     getAppState: t.getAppState,
@@ -244619,12 +244620,12 @@ async function u8e(e, t, r = Jd) {
     credentials: t.credentials,
   });
 }
-async function* xY(e, t, r = Jd, o = !1, d, p, _, E, C = "turn_end") {
+async function* executeStopHooks(e, t, r = Jd, o = !1, d, p, _, E, C = "turn_end") {
   let I = d ? "SubagentStop" : "Stop";
   if (Ji(p.agentContext)) return;
   let D = qG(p.agentContext),
     N = p.agentId ?? p.session.id;
-  if (!D && !TT(I, p.sessionHooksRegistry, N)) return;
+  if (!D && !hasHookForEvent(I, p.sessionHooksRegistry, N)) return;
   if (
     C === "turn_end_reactions" &&
     !p.sessionHooksRegistry.getFunctionHooks(N, I).get(I)?.length
@@ -244639,7 +244640,7 @@ async function* xY(e, t, r = Jd, o = !1, d, p, _, E, C = "turn_end") {
         ).trim() || void 0
       : void 0,
     V = { background_tasks: umr(p.taskRegistry.all()), session_crons: dmr() },
-    re = Sa(p.session, Q(), e, p),
+    re = createBaseHookInput(p.session, Q(), e, p),
     ue = d
       ? {
           ...re,
@@ -244659,7 +244660,7 @@ async function* xY(e, t, r = Jd, o = !1, d, p, _, E, C = "turn_end") {
           ...V,
         },
     de;
-  yield* My({
+  yield* executeHooks({
     session: p.session,
     hookInput: ue,
     extendedHookInput: de,
@@ -244674,14 +244675,14 @@ async function* xY(e, t, r = Jd, o = !1, d, p, _, E, C = "turn_end") {
   });
 }
 import { randomUUID as Cvt } from "crypto";
-async function* E_n(e, t, r, o, d = Jd, p) {
+async function* executeTeammateIdleHooks(e, t, r, o, d = Jd, p) {
   let _ = {
-    ...Sa(p.session, Q(), r),
+    ...createBaseHookInput(p.session, Q(), r),
     hook_event_name: "TeammateIdle",
     teammate_name: e,
     team_name: t,
   };
-  yield* My({
+  yield* executeHooks({
     session: p.session,
     hookInput: _,
     toolUseID: Cvt(),
@@ -244690,9 +244691,9 @@ async function* E_n(e, t, r, o, d = Jd, p) {
     toolUseContext: p,
   });
 }
-async function* A_n(e, t, r, o, d, p, _, E = Jd, C) {
+async function* executeTaskCreatedHooks(e, t, r, o, d, p, _, E = Jd, C) {
   let I = {
-    ...Sa(C.session, Q(), p),
+    ...createBaseHookInput(C.session, Q(), p),
     hook_event_name: "TaskCreated",
     task_id: e,
     task_subject: t,
@@ -244700,7 +244701,7 @@ async function* A_n(e, t, r, o, d, p, _, E = Jd, C) {
     teammate_name: o,
     team_name: d,
   };
-  yield* My({
+  yield* executeHooks({
     session: C.session,
     hookInput: I,
     toolUseID: Cvt(),
@@ -244709,9 +244710,9 @@ async function* A_n(e, t, r, o, d, p, _, E = Jd, C) {
     toolUseContext: C,
   });
 }
-async function* iSt(e, t, r, o, d, p, _, E = Jd, C) {
+async function* executeTaskCompletedHooks(e, t, r, o, d, p, _, E = Jd, C) {
   let I = {
-    ...Sa(C.session, Q(), p),
+    ...createBaseHookInput(C.session, Q(), p),
     hook_event_name: "TaskCompleted",
     task_id: e,
     task_subject: t,
@@ -244719,7 +244720,7 @@ async function* iSt(e, t, r, o, d, p, _, E = Jd, C) {
     teammate_name: o,
     team_name: d,
   };
-  yield* My({
+  yield* executeHooks({
     session: C.session,
     hookInput: I,
     toolUseID: Cvt(),
@@ -244731,9 +244732,9 @@ async function* iSt(e, t, r, o, d, p, _, E = Jd, C) {
 import { randomUUID as ims } from "crypto";
 async function* jmn(e, t, r, o, d, p, _) {
   let E = _.agentId ?? _.session.id;
-  if (!TT("UserPromptExpansion", _.sessionHooksRegistry, E)) return;
+  if (!hasHookForEvent("UserPromptExpansion", _.sessionHooksRegistry, E)) return;
   let C = {
-    ...Sa(_.session, Q(), p),
+    ...createBaseHookInput(_.session, Q(), p),
     hook_event_name: "UserPromptExpansion",
     expansion_type: e,
     command_name: t,
@@ -244741,7 +244742,7 @@ async function* jmn(e, t, r, o, d, p, _) {
     command_source: o,
     prompt: d,
   };
-  yield* My({
+  yield* executeHooks({
     session: _.session,
     hookInput: C,
     toolUseID: ims(),
@@ -244751,9 +244752,9 @@ async function* jmn(e, t, r, o, d, p, _) {
   });
 }
 import { isAbsolute as ams, resolve as lms } from "path";
-async function aSt(e, t, { storageV5: r, credentials: o } = {}) {
-  let d = { ...Sa(e, Q()), hook_event_name: "WorktreeCreate", name: t },
-    p = await kE({
+async function executeWorktreeCreateHook(e, t, { storageV5: r, credentials: o } = {}) {
+  let d = { ...createBaseHookInput(e, Q()), hook_event_name: "WorktreeCreate", name: t },
+    p = await executeHooksOutsideREPL({
       session: e,
       hookInput: d,
       timeoutMs: Jd,
@@ -244782,7 +244783,7 @@ async function aSt(e, t, { storageV5: r, credentials: o } = {}) {
     );
   }
   if (ams(_)) return { worktreePath: _ };
-  return { worktreePath: lms(await I_n(d.cwd, e.project), _) };
+  return { worktreePath: lms(await safeHookCwd(d.cwd, e.project), _) };
 }
 function cms(e) {
   return (
@@ -244796,14 +244797,14 @@ function cms(e) {
       .at(-1) ?? ""
   );
 }
-async function P9t(e, t, { storageV5: r, credentials: o } = {}) {
+async function executeWorktreeRemoveHook(e, t, { storageV5: r, credentials: o } = {}) {
   if (D$("WorktreeRemove").length === 0) return !1;
   let d = {
-      ...Sa(e, Q()),
+      ...createBaseHookInput(e, Q()),
       hook_event_name: "WorktreeRemove",
       worktree_path: t,
     },
-    p = await kE({
+    p = await executeHooksOutsideREPL({
       session: e,
       hookInput: d,
       timeoutMs: Jd,
@@ -244819,7 +244820,7 @@ async function P9t(e, t, { storageV5: r, credentials: o } = {}) {
       });
   return _;
 }
-var C_n = 1500,
+var SESSION_END_HOOK_TIMEOUT_MS_DEFAULT = 1500,
   mms = 60000,
   gms = new Gt(() => new Set());
 function bmr() {
@@ -244827,13 +244828,13 @@ function bmr() {
 }
 var hms = 30000,
   yms = 300;
-async function v_n() {
+async function flushPendingAsyncRewakeHooks() {
   let e = bmr();
   if (e.size === 0) return;
   let t = Promise.allSettled([...e]);
   await Promise.race([t, Z(hms, void 0, { unref: !0 })]);
 }
-function ppe() {
+function getSessionEndHookTimeoutMs() {
   let e = a.CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS;
   if (e !== void 0 && e > 0) return e;
   let t = 0,
@@ -244842,7 +244843,7 @@ function ppe() {
   for (let d of o)
     for (let p of d.hooks)
       if (p.timeout && p.timeout * 1000 > t) t = p.timeout * 1000;
-  return Math.max(C_n, Math.min(t, mms));
+  return Math.max(SESSION_END_HOOK_TIMEOUT_MS_DEFAULT, Math.min(t, mms));
 }
 function fmr({
   processId: e,
@@ -244884,7 +244885,7 @@ function fmr({
               if ("async" in Se) continue;
               if (qb(Se)) {
                 if (
-                  (mpe(Se.metrics, D, d),
+                  (emitHookMetrics(Se.metrics, D, d),
                   typeof Se.rewakeSummary === "string" &&
                     Se.rewakeSummary.trim() &&
                     z1e(D))
@@ -244930,11 +244931,11 @@ function fmr({
     !0
   );
 }
-function HY() {
+function shouldSkipHookDueToTrust() {
   return !I6();
 }
 var _ms = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,255}$/;
-function Sa(e, t, r, o) {
+function createBaseHookInput(e, t, r, o) {
   let d = o?.agentType ?? H_(),
     p = o?.options?.mainLoopModel,
     _ = Ya(o?.getAppState?.() ?? {}, p);
@@ -244953,7 +244954,7 @@ function Sa(e, t, r, o) {
     };
   return {
     session_id: e.id,
-    transcript_path: Tp(e.id),
+    transcript_path: getTranscriptPathForSession(e.id),
     cwd: t,
     scratchpad_dir: eA() ? (GH(e.id) ?? void 0) : void 0,
     prompt_id: fZ() ?? void 0,
@@ -244974,7 +244975,7 @@ function Smr(e) {
     );
   return { validationError: imr(t, r.error) };
 }
-async function fpe(e, t, r, { threshold: o = Lir, storageV5: d } = {}) {
+async function persistHookOutput(e, t, r, { threshold: o = Lir, storageV5: d } = {}) {
   if (e.length <= o) return e;
   let p = await tG(e, `hook-${t}-${r}`, SS(), d);
   if (nG(p))
@@ -245000,14 +245001,14 @@ async function fpe(e, t, r, { threshold: o = Lir, storageV5: d } = {}) {
     _
   );
 }
-function d8e(e) {
+function parseHookOutput(e) {
   let t = e.trim();
   if (!t.startsWith("{"))
     return (
       n("Hook output does not start with {, treating as plain text"),
       { plainText: e }
     );
-  if (R_n(e)) return { json: { async: !0 } };
+  if (announcedAsync(e)) return { json: { async: !0 } };
   try {
     let r = Smr(t);
     if ("json" in r) return r;
@@ -245051,7 +245052,7 @@ function bms(e) {
     }
   });
 }
-function R_n(e) {
+function announcedAsync(e) {
   let t = kr(e).trim();
   if (!t.startsWith("{")) return !1;
   try {
@@ -245063,7 +245064,7 @@ function R_n(e) {
     return !1;
   }
 }
-function O9t(e, t, r) {
+function withHookStderr(e, t, r) {
   let o = r.trim();
   return t !== 0 && o
     ? `${e}
@@ -245072,7 +245073,7 @@ Hook exited ${t} with stderr:
 ${o}`
     : e;
 }
-function D9t(e) {
+function parseHttpHookOutput(e) {
   let t = e.trim();
   if (t === "") {
     let r = O3().safeParse({});
@@ -245348,14 +245349,14 @@ function lge({
   return {
     ...D,
     message: D.blockingError
-      ? pn({
+      ? createAttachmentMessage({
           type: "hook_blocking_error",
           hookName: r,
           toolUseID: o,
           hookEvent: d,
           blockingError: D.blockingError,
         })
-      : pn({
+      : createAttachmentMessage({
           type: "hook_success",
           hookName: r,
           toolUseID: o,
@@ -245565,7 +245566,7 @@ async function dge(e, t, r, o, d, p, _, E, C, I, D, N, F, U, V, re, ue, de) {
     I !== void 0
   )
     cn.CLAUDE_ENV_FILE = await HPt(t, I);
-  let gn = await I_n(_, p),
+  let gn = await safeHookCwd(_, p),
     Qt = !xe,
     wn = V?.[Y8t],
     un = hpr(),
@@ -245844,7 +245845,7 @@ async function dge(e, t, r, o, d, p, _, E, C, I, D, N, F, U, V, re, ue, de) {
     if ((ss(), !$n)) En.cleanup();
   }
 }
-async function gXn({
+async function execCommandHookForDevice({
   hook: e,
   hookEvent: t,
   jsonInput: r,
@@ -245889,7 +245890,7 @@ async function gXn({
     ...(re && { spawnFailed: re }),
   };
 }
-function k_n({ hookEvent: e, stdout: t, stderr: r, pluginId: o }) {
+function exitTwoMeansMissingScript({ hookEvent: e, stdout: t, stderr: r, pluginId: o }) {
   return (
     (e === "Stop" ||
       e === "SubagentStop" ||
@@ -245900,7 +245901,7 @@ function k_n({ hookEvent: e, stdout: t, stderr: r, pluginId: o }) {
     /no such file|can't open/i.test(r)
   );
 }
-async function x_n(e, t, r, o) {
+async function evaluateHookIfCondition(e, t, r, o) {
   return yW(o, async () => {
     let d = await Lmr(t, r);
     if (d === void 0) return !1;
@@ -245919,7 +245920,7 @@ function Tms(e, t, r) {
     .filter(Boolean)
     .flatMap((d) => nhe(Tu(d), r));
 }
-function hXn(e, t, r) {
+function hookMatcherMatches(e, t, r) {
   let o = vmr(e);
   return (
     !o ||
@@ -246630,7 +246631,7 @@ function Gms(e) {
   }
 }
 var zms = 20;
-function mpe(e, t, r) {
+function emitHookMetrics(e, t, r) {
   if (!e || !t) return;
   let o = z1e(t);
   if (!o) return;
@@ -246656,7 +246657,7 @@ function jmr(e) {
   }
   return t;
 }
-var p8e = { managedHooksOnly: !0 };
+var MANAGED_HOOKS_TIER = { managedHooksOnly: !0 };
 function qms(e, t) {
   let r = new Set((ye("policySettings")?.hooks?.[t] ?? []).map((o) => Cl(o)));
   return e.filter((o) => !r.has(Cl(o)));
@@ -246682,7 +246683,7 @@ function W1e(e, t, r, o) {
   return d;
 }
 var Vms = new j(() => ({ tokens: new WeakMap(), next: 0, host: bF() }));
-function L9t(e) {
+function userPromptSubmitHooksKey(e) {
   let t = Vms.of(e.session.host);
   function r(_) {
     let E = t.tokens.get(_);
@@ -246690,7 +246691,7 @@ function L9t(e) {
     return E;
   }
   let o = nO(e, "UserPromptSubmit", e.session.id),
-    d = W1e(e.sessionHooksRegistry, o, "UserPromptSubmit", p8e),
+    d = W1e(e.sessionHooksRegistry, o, "UserPromptSubmit", MANAGED_HOOKS_TIER),
     p = W1e(e.sessionHooksRegistry, o, "UserPromptSubmit");
   return d.length + p.length === 0
     ? ""
@@ -246698,7 +246699,7 @@ function L9t(e) {
         typeof E === "function" ? `function#${t.host}:${r(E)}` : E,
       );
 }
-function TT(e, t, r) {
+function hasHookForEvent(e, t, r) {
   let o = BJ()?.[e];
   if (o && o.length > 0) return !0;
   if (!S_()) {
@@ -246915,23 +246916,23 @@ async function Wmr(e, t, r, o, d, p) {
     return [];
   }
 }
-function M9t(e, t) {
+function getPreToolHookBlockingMessage(e, t) {
   return `${e} hook error: ${t.blockingError}`;
 }
-function f8e(e) {
+function getStopHookMessage(e) {
   return Fvt("Stop", e.blockingError);
 }
-function _Xn(e) {
+function getTeammateIdleHookMessage(e) {
   return Fvt("TeammateIdle", e.blockingError);
 }
-function yXn(e) {
+function getTaskCreatedHookMessage(e) {
   return Fvt("TaskCreated", e.blockingError);
 }
-function N9t(e) {
+function getTaskCompletedHookMessage(e) {
   return Fvt("TaskCompleted", e.blockingError);
 }
-function JMe(e, t, r = e) {
-  return pn({
+function getNonBlockableHookErrorMessage(e, t, r = e) {
+  return createAttachmentMessage({
     type: "hook_non_blocking_error",
     hookName: r,
     toolUseID: bF(),
@@ -246942,7 +246943,7 @@ function JMe(e, t, r = e) {
     command: t.command,
   });
 }
-function IY(e) {
+function getUserPromptSubmitHookBlockingMessage(e) {
   return `UserPromptSubmit operation blocked by hook:
 ${e.blockingError}`;
 }
@@ -246966,7 +246967,7 @@ var Kms = new Set([
 function gmr(e, t) {
   return e !== "SessionEnd" && no() && !t?.aborted;
 }
-async function* My(e) {
+async function* executeHooks(e) {
   let t = () => no() && !e.signal?.aborted;
   if (!Kms.has(e.hookInput.hook_event_name)) {
     if (t()) return;
@@ -247019,7 +247020,7 @@ async function* hmr(e) {
     if (Object.keys(o).length > 0) yield o;
   }
 }
-function H_n(e, t) {
+function stripConfinedHookApproval(e, t) {
   if (!YYe()) return e;
   if (e.permissionBehavior === "allow")
     (n(
@@ -247057,7 +247058,7 @@ async function* ymr({
     Se = d ? `${_e}:${d}` : _e,
     ve = E?.storageV5 ?? ue,
     Me = E?.credentials ?? de;
-  if (HY()) {
+  if (shouldSkipHookDueToTrust()) {
     n(`Skipping ${Se} hook execution - workspace trust not accepted`);
     return;
   }
@@ -247149,16 +247150,16 @@ async function* ymr({
       if (qs.additionalContext)
         yield {
           additionalContexts: [
-            await fpe(qs.additionalContext, `${o}-${Qr}`, "additionalContext", {
+            await persistHookOutput(qs.additionalContext, `${o}-${Qr}`, "additionalContext", {
               storageV5: ve,
             }),
           ],
         };
       if (qs.systemMessage)
         yield {
-          message: pn({
+          message: createAttachmentMessage({
             type: "hook_system_message",
-            content: await fpe(
+            content: await persistHookOutput(
               qs.systemMessage,
               `${o}-${Qr}`,
               "systemMessage",
@@ -247330,7 +247331,7 @@ async function* ymr({
       if (hn.type === "function") {
         if (!I) {
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_error_during_execution",
               hookName: Se,
               toolUseID: o,
@@ -247384,7 +247385,7 @@ async function* ymr({
               ? "hook input could not be prepared"
               : `hook input: ${l(Xs.error)}`,
           ) ?? {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_error_during_execution",
               hookName: Se,
               toolUseID: o,
@@ -247408,7 +247409,7 @@ async function* ymr({
           if (E.agentId?.startsWith($1e)) {
             (ko(),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_cancelled",
                   hookName: Se,
                   toolUseID: o,
@@ -247439,7 +247440,7 @@ async function* ymr({
           if (E.agentId?.startsWith($1e)) {
             (ko(),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_cancelled",
                   hookName: Se,
                   toolUseID: o,
@@ -247486,7 +247487,7 @@ async function* ymr({
               outcome: "cancelled",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_cancelled",
                   hookName: Se,
                   toolUseID: o,
@@ -247512,7 +247513,7 @@ async function* ymr({
               outcome: "error",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_non_blocking_error",
                   hookName: Se,
                   toolUseID: o,
@@ -247526,7 +247527,7 @@ async function* ymr({
               });
             return;
           }
-          let { json: ta, validationError: Pa } = D9t(ls.body);
+          let { json: ta, validationError: Pa } = parseHttpHookOutput(ls.body);
           if (Pa) {
             (uy({
               hookId: Ur,
@@ -247539,7 +247540,7 @@ async function* ymr({
               outcome: "error",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_non_blocking_error",
                   hookName: Se,
                   toolUseID: o,
@@ -247579,7 +247580,7 @@ async function* ymr({
               stderr: "",
               exitCode: ls.statusCode,
             });
-            (mpe(ta.metrics, Fn, _e),
+            (emitHookMetrics(ta.metrics, Fn, _e),
               uy({
                 hookId: Ur,
                 hookName: Se,
@@ -247653,7 +247654,7 @@ async function* ymr({
               outcome: "cancelled",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_cancelled",
                   hookName: Se,
                   toolUseID: o,
@@ -247679,7 +247680,7 @@ async function* ymr({
               outcome: "error",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_non_blocking_error",
                   hookName: Se,
                   toolUseID: o,
@@ -247693,7 +247694,7 @@ async function* ymr({
               });
             return;
           }
-          let { json: Pa, validationError: gi } = d8e(ls.body);
+          let { json: Pa, validationError: gi } = parseHookOutput(ls.body);
           if (gi) {
             (uy({
               hookId: Ur,
@@ -247706,7 +247707,7 @@ async function* ymr({
               outcome: "error",
             }),
               yield {
-                message: pn({
+                message: createAttachmentMessage({
                   type: "hook_non_blocking_error",
                   hookName: Se,
                   toolUseID: o,
@@ -247744,12 +247745,12 @@ async function* ymr({
               stderr: "",
               exitCode: 0,
             });
-            (mpe(Pa.metrics, Fn, _e),
+            (emitHookMetrics(Pa.metrics, Fn, _e),
               yield { ...js, outcome: "success", hook: hn });
             return;
           }
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_success",
               hookName: Se,
               toolUseID: o,
@@ -247839,7 +247840,7 @@ async function* ymr({
             outcome: "error",
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_non_blocking_error",
                 hookName: Se,
                 toolUseID: o,
@@ -247871,7 +247872,7 @@ async function* ymr({
             outcome: "cancelled",
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_cancelled",
                 hookName: Se,
                 toolUseID: o,
@@ -247886,9 +247887,9 @@ async function* ymr({
             });
           return;
         }
-        let { json: Wo, plainText: hs, validationError: Ai } = d8e(wmr(gs));
+        let { json: Wo, plainText: hs, validationError: Ai } = parseHookOutput(wmr(gs));
         if (Ai && gs.status !== 2) {
-          let ls = O9t(Ai, gs.status, gs.stderr);
+          let ls = withHookStderr(Ai, gs.status, gs.stderr);
           (uy({
             hookId: Ur,
             hookName: Se,
@@ -247900,7 +247901,7 @@ async function* ymr({
             outcome: "error",
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_non_blocking_error",
                 hookName: Se,
                 toolUseID: o,
@@ -247951,7 +247952,7 @@ async function* ymr({
                 outcome: "error",
               }),
                 yield {
-                  message: pn({
+                  message: createAttachmentMessage({
                     type: "hook_non_blocking_error",
                     hookName: Se,
                     toolUseID: o,
@@ -247994,7 +247995,7 @@ async function* ymr({
             durationMs: vl,
           });
           if (
-            (mpe(Wo.metrics, Fn, _e),
+            (emitHookMetrics(Wo.metrics, Fn, _e),
             qb(Wo) && !Wo.suppressOutput && hs && gs.status === 0)
           ) {
             let ta = `${ie.bold(Se)} completed`;
@@ -248012,7 +248013,7 @@ async function* ymr({
                 ...ls,
                 message:
                   ls.message ||
-                  pn({
+                  createAttachmentMessage({
                     type: "hook_success",
                     hookName: Se,
                     toolUseID: o,
@@ -248062,9 +248063,9 @@ async function* ymr({
             exitCode: gs.status,
             outcome: "success",
           });
-          let ls = await fpe(gs.stdout.trim(), Ur, "stdout", { storageV5: ve });
+          let ls = await persistHookOutput(gs.stdout.trim(), Ur, "stdout", { storageV5: ve });
           yield {
-            message: pn({
+            message: createAttachmentMessage({
               type: "hook_success",
               hookName: Se,
               toolUseID: o,
@@ -248084,7 +248085,7 @@ async function* ymr({
         if (
           gs.status === 2 &&
           hn.type !== "script" &&
-          k_n({
+          exitTwoMeansMissingScript({
             hookEvent: _e,
             stdout: gs.stdout,
             stderr: gs.stderr,
@@ -248102,7 +248103,7 @@ async function* ymr({
             outcome: "error",
           }),
             yield {
-              message: pn({
+              message: createAttachmentMessage({
                 type: "hook_non_blocking_error",
                 hookName: Se,
                 toolUseID: o,
@@ -248160,7 +248161,7 @@ async function* ymr({
           return;
         }
         yield {
-          message: pn({
+          message: createAttachmentMessage({
             type: "hook_non_blocking_error",
             hookName: Se,
             toolUseID: o,
@@ -248215,7 +248216,7 @@ async function* ymr({
           return;
         }
         yield {
-          message: pn({
+          message: createAttachmentMessage({
             type: "hook_non_blocking_error",
             hookName: Se,
             toolUseID: o,
@@ -248354,11 +248355,11 @@ async function* ymr({
     if ((ur++, At.systemMessage)) {
       ((un.systemMessageChars += At.systemMessage.length),
         $n(At.hook, "systemMessageChars", At.systemMessage.length));
-      let Yn = await fpe(At.systemMessage, `${o}-${ur}`, "systemMessage", {
+      let Yn = await persistHookOutput(At.systemMessage, `${o}-${ur}`, "systemMessage", {
         storageV5: ve,
       });
       yield {
-        message: pn({
+        message: createAttachmentMessage({
           type: "hook_system_message",
           content: Yn,
           hookName: Se,
@@ -248377,7 +248378,7 @@ async function* ymr({
         ),
         yield {
           additionalContexts: [
-            await fpe(At.additionalContext, `${o}-${ur}`, "additionalContext", {
+            await persistHookOutput(At.additionalContext, `${o}-${ur}`, "additionalContext", {
               storageV5: ve,
             }),
           ],
@@ -248389,7 +248390,7 @@ async function* ymr({
           `Hook ${_e} (${Lk(At.hook)}) provided initialUserMessage (${At.initialUserMessage.length} chars)`,
         ),
         yield {
-          initialUserMessage: await fpe(
+          initialUserMessage: await persistHookOutput(
             At.initialUserMessage,
             `${o}-${ur}`,
             "initialUserMessage",
@@ -248409,7 +248410,7 @@ async function* ymr({
         `Hook ${_e} (${Lk(At.hook)}) provided sessionTitle (${[...At.sessionTitle].length} chars)`,
       ),
         yield { sessionTitle: At.sessionTitle });
-    if ((H_n(At, `Hook ${_e} (${Lk(At.hook)})`), At.permissionBehavior))
+    if ((stripConfinedHookApproval(At, `Hook ${_e} (${Lk(At.hook)})`), At.permissionBehavior))
       switch (
         (n(
           `Hook ${_e} (${Lk(At.hook)}) returned permissionDecision: ${At.permissionBehavior}${At.hookPermissionDecisionReason ? ` (reason: ${At.hookPermissionDecisionReason})` : ""}`,
@@ -248517,7 +248518,7 @@ async function* ymr({
   }
   if (gn) throw gn;
 }
-async function I_n(e, t) {
+async function safeHookCwd(e, t) {
   if (await El(e)) return e;
   let r = fms();
   for (let d of [t.originalCwd, t.projectRoot, dms()])
@@ -248544,10 +248545,10 @@ function H1e(e, t) {
       `Hook ${t} returned a terminalSequence that was rejected by the allowlist (only OSC 0/1/2/9/99/777 and BEL are permitted, and OSC 9 bodies may not begin with a digit unless in the 9;4 progress form)`,
     );
 }
-function P_n(e) {
+function hasBlockingResult(e) {
   return e.some((t) => t.blocked);
 }
-async function kE({
+async function executeHooksOutsideREPL({
   session: e,
   sessionHooks: t,
   getAppState: r,
@@ -248565,7 +248566,7 @@ async function kE({
     n(
       `Policy disableAllHooks: skipping configured hooks for ${D} (SDK callback hooks still run)`,
     );
-  if (HY())
+  if (shouldSkipHookDueToTrust())
     return (
       n(`Skipping ${D} hook execution - workspace trust not accepted`),
       []
@@ -248689,11 +248690,11 @@ async function kE({
                   blocked: !1,
                 }
               );
-            let { json: Wt, validationError: en } = d8e(ut.body);
+            let { json: Wt, validationError: en } = parseHookOutput(ut.body);
             if (en) throw Error(en);
             let tn = Wt && qb(Wt) ? Wt : void 0,
               dn = tn?.decision === "block";
-            if (tn) mpe(tn.metrics, Me, I);
+            if (tn) emitHookMetrics(tn.metrics, Me, I);
             return (
               H1e(Wt, D),
               {
@@ -248767,13 +248768,13 @@ async function kE({
                 { command: Se.url, succeeded: !1, output: dn, blocked: !1 }
               );
             }
-            let { json: ut, validationError: Wt } = D9t(vt.body);
+            let { json: ut, validationError: Wt } = parseHttpHookOutput(vt.body);
             if (Wt) throw Error(Wt);
             if (ut && !JR(ut))
               n(`Parsed JSON output from HTTP hook: ${b(ut)}`, {
                 level: "verbose",
               });
-            if (ut && qb(ut)) mpe(ut.metrics, Me, I);
+            if (ut && qb(ut)) emitHookMetrics(ut.metrics, Me, I);
             H1e(ut, D);
             let en = ut && qb(ut) && ut.decision === "block",
               tn = en
@@ -248856,11 +248857,11 @@ async function kE({
                 blocked: Wt,
               }
             );
-          let { json: en, validationError: tn } = d8e(wmr(ut));
-          if (tn && ut.status !== 2) throw Error(O9t(tn, ut.status, ut.stderr));
+          let { json: en, validationError: tn } = parseHookOutput(wmr(ut));
+          if (tn && ut.status !== 2) throw Error(withHookStderr(tn, ut.status, ut.stderr));
           if (en && !JR(en))
             n(`Parsed JSON output from hook: ${b(en)}`, { level: "verbose" });
-          if (en && qb(en)) mpe(en.metrics, Me, I);
+          if (en && qb(en)) emitHookMetrics(en.metrics, Me, I);
           H1e(en, D);
           let dn = en && qb(en) && en.decision === "block",
             cn = ut.status === 2 || !!dn || Wt,
@@ -248910,7 +248911,7 @@ async function kE({
   for (let Se of new Set(F.map((ve) => ve.pluginId))) if (Se) cT(Se);
   return _e;
 }
-function F9t() {
+function hasInstructionsLoadedHook() {
   let e = BJ()?.InstructionsLoaded;
   if (e && e.length > 0) return !0;
   if (!S_()) {
@@ -248921,7 +248922,7 @@ function F9t() {
   if (t && t.length > 0) return !0;
   return !1;
 }
-function O_n(e, t) {
+function parseElicitationHookOutput(e, t) {
   if (e.blocked && !e.succeeded)
     return {
       blockingError: {
@@ -248966,11 +248967,11 @@ class zmr {
   badLogged = !1;
 }
 var Xms = new j(() => new zmr());
-async function $9t(e, t, r, o = !1) {
+async function executeStatusLineCommand(e, t, r, o = !1) {
   if (FC()) return;
   let d = Xms.of(e.host);
   if (Xr("statusLine")) return;
-  if (HY()) {
+  if (shouldSkipHookDueToTrust()) {
     n("Skipping StatusLine command execution - workspace trust not accepted");
     return;
   }
@@ -249028,10 +249029,10 @@ async function $9t(e, t, r, o = !1) {
     return;
   }
 }
-async function D_n(e, t, r, o = 5000) {
+async function executeFileSuggestionCommand(e, t, r, o = 5000) {
   if (FC()) return [];
   if (Xr("fileSuggestion")) return [];
-  if (HY())
+  if (shouldSkipHookDueToTrust())
     return (
       n(
         "Skipping FileSuggestion command execution - workspace trust not accepted",
@@ -249107,7 +249108,7 @@ async function Qms({
     return (
       h(D),
       {
-        message: pn({
+        message: createAttachmentMessage({
           type: "hook_error_during_execution",
           hookName: r,
           toolUseID: o,
@@ -249463,7 +249464,7 @@ function ygs(e, t) {
   let r = e.pinnedHeaderScans.get(t);
   if (r) return r;
   let o = xTt(),
-    d = $un(t, hr().signal, { regularFilesOnly: !0 })
+    d = scanMemoryHeaders(t, hr().signal, { regularFilesOnly: !0 })
       .catch((p) => {
         if (W(p)) return [];
         throw (e.pinnedHeaderScans.delete(t), p);
@@ -250093,12 +250094,12 @@ async function Cgs(e, t, r, o, d, p) {
       }));
   if (!o) {
     let Me = xgs(t);
-    if (Me !== void 0 && F9t())
+    if (Me !== void 0 && hasInstructionsLoadedHook())
       for (let xe of E) {
         if (!igr(xe.type)) continue;
         if (QMe(xe.path)) continue;
         let Oe = xe.parent ? "include" : Me;
-        sSt(e, xe.path, xe.type, Oe, {
+        executeInstructionsLoadedHooks(e, xe.path, xe.type, Oe, {
           globs: xe.globs,
           parentFilePath: xe.parent,
           storageV5: d,
@@ -251086,7 +251087,7 @@ function vgr() {
   return 3;
 }
 function _hs() {
-  return import.meta.require("../../02-功能模块/Teammates团队/IDLE_SUMMARY_RECEIVE_BOUND.07vn1321.js");
+  return import.meta.require("../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js");
 }
 var xgr = "Tool loaded.";
 function p$(e) {
@@ -257512,23 +257513,23 @@ var r_s =
   Chr = 1048576,
   o_s = 4194304,
   ryr = /^(?:\s*<[a-z][\w-]*[\s>]|\[Request interrupted by user[^\]]*\])/;
-function TH(e) {
+function isTranscriptMessage(e) {
   return fhe(e);
 }
-function z5e(e) {
+function isSyncedTranscriptEntry(e) {
   return (
     typeof e === "object" &&
     e !== null &&
     "type" in e &&
     "uuid" in e &&
     typeof e.uuid === "string" &&
-    TH(e)
+    isTranscriptMessage(e)
   );
 }
 function s_s(e) {
   return me(e);
 }
-var jpr = {
+var ENTRY_APPEND_POLICY = {
     user: "dedup-transcript",
     assistant: "dedup-transcript",
     attachment: "dedup-transcript",
@@ -257572,13 +257573,13 @@ var jpr = {
   e4 = 20971520,
   Ahr = 8 * e4,
   Rhr = 0.1;
-function hhn(e) {
+function setTranscriptLocalGcEnabled(e) {
   Xd().setLocalGcEnabled(e);
 }
-function spe(e) {
+function isChainParticipant(e) {
   return e.type !== "progress";
 }
-function V5e(e, t, r) {
+function transcriptCursorEnd(e, t, r) {
   if (!r) return e.length;
   for (let o = t; o < e.length; o++) {
     let d = e[o];
@@ -257610,25 +257611,25 @@ var a_s = new Set([
   "agent_api_retry",
   "artifact_publish_retry",
 ]);
-function _hn(e) {
+function isEphemeralToolProgress(e) {
   return typeof e === "string" && a_s.has(e);
 }
-function il() {
+function getMaterializedSessionFile() {
   return Xd().project?.sessionFile ?? null;
 }
-function yhn() {
+function hasRecordedUserPrompt() {
   return Xd().project?.currentSessionLastPrompt !== void 0;
 }
-function Tp(e) {
-  if (e === K()) return il() ?? yl();
+function getTranscriptPathForSession(e) {
+  if (e === K()) return getMaterializedSessionFile() ?? yl();
   let t = ll(he());
   return Wp(t, `${e}.jsonl`);
 }
-var R_r = 52428800,
-  Wpr = 256,
-  Gpr = 4096,
-  qpr = 1024,
-  zpr = 64;
+var MAX_TRANSCRIPT_READ_BYTES = 52428800,
+  INDEX_HEAD_SCAN_BYTES = 256,
+  INDEX_BOUNDARY_SCAN_BYTES = 4096,
+  INDEX_LAST_PROMPT_SCAN_BYTES = 1024,
+  LAST_PROMPT_PREFIX_SCAN_BYTES = 64;
 function txt(e) {
   return Ud(e).replace(/\.jsonl$/, ".meta.json");
 }
@@ -257709,11 +257710,11 @@ async function oyr(e, t, r) {
     },
   ]);
 }
-async function zEe(e, t, r) {
+async function writeAgentMetadata(e, t, r) {
   let o = txt(e);
   await j6(o, () => oyr(o, t, r));
 }
-async function _Y(e, t, r) {
+async function updateAgentMetadata(e, t, r) {
   let o = txt(e);
   await j6(o, async () => {
     let d = await nxt(o, r);
@@ -257727,7 +257728,7 @@ async function _Y(e, t, r) {
     await oyr(o, p, r);
   });
 }
-async function fC(e, t) {
+async function readAgentMetadata(e, t) {
   return nxt(txt(e), t);
 }
 var l_s = /^r[0-9a-z]{8}$/,
@@ -257756,7 +257757,7 @@ function iyr() {
 function ayr(e) {
   return Wp(iyr(), `remote-agent-${e}.meta.json`);
 }
-async function k7n(e, t, r) {
+async function writeRemoteAgentMetadata(e, t, r) {
   let o = ayr(e);
   if ((await Ij(kv(o), { recursive: !0 }), M() && r !== void 0)) {
     let d = _nt(o);
@@ -257771,7 +257772,7 @@ async function k7n(e, t, r) {
   }
   await Zhr(o, b(t));
 }
-async function Shn(e, t) {
+async function deleteRemoteAgentMetadata(e, t) {
   let r = ayr(e);
   if (M() && t !== void 0) {
     let o = _nt(r);
@@ -257791,14 +257792,14 @@ async function Shn(e, t) {
     throw o;
   }
 }
-async function j3(e, t) {
+async function removeRemoteAgentMetadata(e, t) {
   try {
-    await Shn(e, t);
+    await deleteRemoteAgentMetadata(e, t);
   } catch (r) {
     n(`removeRemoteAgentMetadata failed: ${String(r)}`);
   }
 }
-async function x7n(e) {
+async function listRemoteAgentMetadata(e) {
   let t = iyr();
   if (M() && e !== void 0) {
     let d = _nt(Wp(t, "probe.meta.json"));
@@ -257889,7 +257890,7 @@ async function u_s(e, t) {
     p
   );
 }
-function Nyt(e) {
+function sessionIdExists(e) {
   let t = fy() ?? ll(he()),
     r = Wp(t, `${e}.jsonl`),
     o = ae();
@@ -257899,30 +257900,30 @@ function Nyt(e) {
     return !1;
   }
 }
-function Vpr() {
+function getNodeEnv() {
   return "production";
 }
-function hl() {
-  return Fyt() !== null;
+function isTranscriptPersistenceDisabled() {
+  return getPersistenceSuppressionCause() !== null;
 }
-function Fyt() {
-  if (Vpr() === "test" && !a.TEST_ENABLE_SESSION_PERSISTENCE) return "test_env";
+function getPersistenceSuppressionCause() {
+  if (getNodeEnv() === "test" && !a.TEST_ENABLE_SESSION_PERSISTENCE) return "test_env";
   if (IL()) return "explicit_disable";
   if (a.CLAUDE_CODE_SKIP_PROMPT_HISTORY) return "skip_prompt_history";
   if (BRe()) return "nested_marker";
   return null;
 }
-function e9t(e) {
+function transcriptStamp(e) {
   return {
     sessionKind: E6(),
-    userType: bhn(),
+    userType: getUserType(),
     entrypoint: sxt(),
     cwd: Q(),
     sessionId: e,
     version: r_s,
   };
 }
-function bhn() {
+function getUserType() {
   return "external";
 }
 function sxt() {
@@ -257938,7 +257939,7 @@ async function lyr() {
     entrypoint: e !== void 0 && Cnt.has(e) ? void 0 : e,
   };
 }
-function ipe() {
+function isCustomTitleEnabled() {
   return !0;
 }
 var ixt = ".session-aliases";
@@ -257992,8 +257993,8 @@ async function d_s(e, t, r) {
       level: "error",
     });
 }
-async function t9t(e, t) {
-  if (hl()) return;
+async function recordSessionAlias(e, t) {
+  if (isTranscriptPersistenceDisabled()) return;
   let r = e;
   try {
     if (M() && t !== void 0) {
@@ -258195,9 +258196,9 @@ class axt {
       this.primeSessionMessagesCache(e, r));
   }
 }
-var H7n = new Gt(() => ({ current: new axt(() => K()) }));
+var transcriptStores = new Gt(() => ({ current: new axt(() => K()) }));
 function Xd() {
-  return H7n.of(B()).current;
+  return transcriptStores.of(B()).current;
 }
 class dyr {
   installed = !1;
@@ -258206,17 +258207,17 @@ class dyr {
     return ((this.installed = !0), !0);
   }
 }
-var Kpr = new j(() => new dyr());
-function n9t() {
+var transcriptExitHooksLatches = new j(() => new dyr());
+function getTranscriptWriterHealth() {
   return Xd().writerHealth;
 }
-function ore() {
+function getTranscriptWriteFailureSeq() {
   return Xd().writerHealth.failureSeq;
 }
-function Xpr() {
+function getTranscriptWriterDegraded() {
   return Xd().writerHealth.degradedStore.getState();
 }
-function whn() {
+function reAppendSessionMetadataAtExit() {
   if (MWe() && !OWe()) return;
   let e = Xd();
   if (!e.claimExitReStamp()) return;
@@ -258250,7 +258251,7 @@ function whn() {
       if (d !== void 0) e.project?.appendOwedEntryAtExit(d);
     } catch {}
 }
-function sre(e) {
+function registerTranscriptExitReStamp(e) {
   return (
     Xd().exitReStampProviders.add(e),
     () => {
@@ -258258,7 +258259,7 @@ function sre(e) {
     }
   );
 }
-function Thn(e) {
+function registerTranscriptExitDrain(e) {
   return (
     Xd().exitDrains.add(e),
     () => {
@@ -258266,7 +258267,7 @@ function Thn(e) {
     }
   );
 }
-function $yt(e) {
+function registerForeignTranscriptExitReStamp(e) {
   return (
     Xd().foreignExitReStampProviders.add(e),
     () => {
@@ -258276,7 +258277,7 @@ function $yt(e) {
 }
 var Ihr = 500,
   f_s = 3;
-async function Ypr() {
+async function flushSessionStorageAtExit() {
   if (MWe() && !OWe()) return;
   let e = Xd();
   try {
@@ -258287,7 +258288,7 @@ async function Ypr() {
       500,
     ),
       await e.project?.flush(),
-      await Vyt());
+      await flushAppendEntryQueues());
     let t = e.project,
       r = t?.exitReStampSource();
     if (M() && t !== null && r !== void 0) {
@@ -258304,8 +258305,8 @@ async function Ypr() {
     }
   } catch {
   } finally {
-    whn();
-    let t = Xpr();
+    reAppendSessionMetadataAtExit();
+    let t = getTranscriptWriterDegraded();
     if (t !== null)
       n(
         `flushSessionStorageAtExit: transcript writer degraded (${t.code} at ${t.source}) \u2014 entries since the failure window may be missing from the transcript`,
@@ -258316,67 +258317,67 @@ async function Ypr() {
 function Ki() {
   let e = Xd();
   if (!e.project) {
-    if (((e.project = new fyr(e)), Kpr.of(B().host).claim())) {
-      if ((Et(Ypr), !process.listeners("exit").includes(whn)))
-        process.on("exit", whn);
+    if (((e.project = new fyr(e)), transcriptExitHooksLatches.of(B().host).claim())) {
+      if ((Et(flushSessionStorageAtExit), !process.listeners("exit").includes(reAppendSessionMetadataAtExit)))
+        process.on("exit", reAppendSessionMetadataAtExit);
     }
   }
   return e.project;
 }
-function k_r() {
+function resetProjectFlushStateForTesting() {
   Xd().project?._resetFlushState();
 }
-function x_r() {
-  H7n.of(B()).current = new axt(() => K());
+function resetProjectForTesting() {
+  transcriptStores.of(B()).current = new axt(() => K());
 }
-function H_r(e, t, r, o) {
+function compactTranscriptForTesting(e, t, r, o) {
   return Ki().performCompactTranscript(e, t, r, o);
 }
-function I_r(e) {
+function setSessionFileForTesting(e) {
   Ki().setSessionFile(e);
 }
-function P_r(e, t, r) {
+function transcriptTailForHydrateForTesting(e, t, r) {
   return _yr(e, t, r);
 }
-async function O_r(e = !0, t) {
+async function reAppendSessionMetadataAsyncForTesting(e = !0, t) {
   await Ki().reAppendSessionMetadataAsync(!1, e, t);
 }
-async function D_r(e, t, r) {
+async function appendEntryToSessionForTesting(e, t, r) {
   await Ki().appendEntry(e, t, void 0, r);
 }
-function r9t() {
+function getCurrentSessionFile() {
   return Ki().sessionFile;
 }
-function VEe(e) {
-  return SY(e, Ki().sessionFile);
+function currentSessionFileIsFor(e) {
+  return isOwnTranscriptFile(e, Ki().sessionFile);
 }
-function Ehn(e) {
+function onSessionFileMaterialized(e) {
   return Xd().sessionFileMaterialized.subscribe(e);
 }
-function L_r() {
+function emitSessionFileMaterializedForTesting() {
   Xd().sessionFileMaterialized.emit();
 }
-function K5e(e, t) {
+function setInternalEventWriter(e, t) {
   Ki().setInternalEventWriter(e, t);
 }
-function Ahn() {
+function clearInternalEventWriter() {
   Ki().clearInternalEventWriter();
 }
-function Chn() {
+function sealTranscriptAppendsForShutdown() {
   Ki().sealAppendsForShutdown();
 }
-function vhn(e) {
+function addSessionMirror(e) {
   Ki().addMirror(e);
 }
-function M_r(e, t) {
+function fireSessionMirror(e, t) {
   Ki().fireMirror(e, t);
 }
-function X5e(e, t, r, o = !1) {
+function setInternalEventReader(e, t, r, o = !1) {
   (Ki().setInternalEventReader(e),
     Ki().setInternalSubagentEventReader(t),
     Ki().setInternalAgentEventReader(r ?? null, o));
 }
-function N_r(e) {
+function setRemoteIngressUrlForTesting(e) {
   Ki().setRemoteIngressUrl(e);
 }
 var Mhr = 10;
@@ -258545,7 +258546,7 @@ class fyr {
   }
   sealTornTailSync(e) {
     if (this.tornTailToSeal !== e) return;
-    if (hl()) return;
+    if (isTranscriptPersistenceDisabled()) return;
     let t;
     try {
       t = Uge(e, n4.O_WRONLY | n4.O_APPEND);
@@ -258729,7 +258730,7 @@ class fyr {
   async reStampAtExitAsync(e) {
     let t = this.sessionFile;
     if (!t || this.store.exitReStampDone()) return;
-    if (hl()) {
+    if (isTranscriptPersistenceDisabled()) {
       this.store.claimExitReStamp();
       return;
     }
@@ -258752,7 +258753,7 @@ class fyr {
       for (let E of p) {
         if (this.store.exitReStampDone()) return;
         try {
-          (await RE(E.path, E.entry, e, {
+          (await appendEntryToFileAsync(E.path, E.entry, e, {
             onlyIfExists: !0,
             tornTailEntry: E.tornTailEntry,
           }),
@@ -258827,7 +258828,7 @@ class fyr {
     let d = this.sessionFile;
     if (!d || this.storeFence !== void 0) return;
     let p = this.store.getSessionId();
-    ((this.bytesSinceMetadataReAppend = 0), await Vyt());
+    ((this.bytesSinceMetadataReAppend = 0), await flushAppendEntryQueues());
     let _ = await Y_s(d, r);
     if (
       o &&
@@ -259563,7 +259564,7 @@ ${D}`));
     }
   }
   shouldSkipPersistence() {
-    return hl() || this.appendsSealedForShutdown;
+    return isTranscriptPersistenceDisabled() || this.appendsSealedForShutdown;
   }
   appendsSealedForShutdown = !1;
   sealAppendsForShutdown() {
@@ -259605,8 +259606,8 @@ ${D}`));
   }
   async insertMessageChain(e, t = !1, r, o, d, p, _, E, C, I) {
     let D = p ?? K(),
-      N = _ ?? Kyt(Li(D)),
-      F = C === void 0 ? (m9t(Li(D)) ?? null) : C,
+      N = _ ?? isForeignToBinding(pinSessionId(D)),
+      F = C === void 0 ? (bridgeSessionForPulledWindow(pinSessionId(D)) ?? null) : C,
       U = I ?? bje();
     return this.trackWrite(async () => {
       let V = o ?? null,
@@ -259673,7 +259674,7 @@ ${ve}`),
           promptId: ve.type === "user" ? (fZ() ?? void 0) : void 0,
           agentId: r,
           ...ve,
-          ...e9t(de),
+          ...transcriptStamp(de),
           gitBranch: ue,
           slug: _e,
         };
@@ -259685,7 +259686,7 @@ ${ve}`),
         )
           ((this.backstopThresholdBytes = e4),
             this.requestCompact(this.sessionFile, E));
-        if (spe(ve)) ((V = ve.uuid), (re = ve.timestamp));
+        if (isChainParticipant(ve)) ((V = ve.uuid), (re = ve.timestamp));
       }
       if (!t && D === K()) {
         if (
@@ -259694,7 +259695,7 @@ ${ve}`),
           (!this.currentSessionLeafTs || re >= this.currentSessionLeafTs)
         )
           ((this.currentSessionLeafUuid = V), (this.currentSessionLeafTs = re));
-        let ve = zyt(e);
+        let ve = getFirstMeaningfulUserMessageTextContent(e);
         if (ve) this.currentSessionLastPrompt = this.normalizeLastPrompt(ve);
       }
     });
@@ -259739,12 +259740,12 @@ ${ve}`),
   async appendEntry(e, t = this.store.getSessionId(), r, o, d, p) {
     if ("agentId" in e && e.agentId) this.noteAgentWrittenLocally(e.agentId);
     if (this.shouldSkipPersistence()) return;
-    if (TH(e) && tpe(e) && (r === !0 || Kyt(Li(t))))
+    if (isTranscriptMessage(e) && tpe(e) && (r === !0 || isForeignToBinding(pinSessionId(t))))
       this.foreignWithheldEntryUuids.add(e.uuid);
-    if (TH(e) && !e.isSidechain) {
+    if (isTranscriptMessage(e) && !e.isSidechain) {
       let I =
         X_s((p ?? bje())?.get(e.uuid)) ??
-        (tpe(e) ? (d === void 0 ? m9t(Li(t)) : d) : void 0);
+        (tpe(e) ? (d === void 0 ? bridgeSessionForPulledWindow(pinSessionId(t)) : d) : void 0);
       if (I !== void 0 && I !== null) e.foreignToBridgeSession = I;
     }
     if (this.relocationBuffer) {
@@ -259775,7 +259776,7 @@ ${ve}`),
       }
       C = I;
     }
-    switch (jpr[e.type]) {
+    switch (ENTRY_APPEND_POLICY[e.type]) {
       case "always": {
         this.enqueueWrite(C, e, o);
         return;
@@ -259792,7 +259793,7 @@ ${ve}`),
         return;
       }
       case "dedup-transcript": {
-        if (e.type !== "progress" && !TH(e)) {
+        if (e.type !== "progress" && !isTranscriptMessage(e)) {
           h(
             Error(
               `appendEntry invariant: dedup-transcript policy on non-transcript type '${e.type}'`,
@@ -259806,10 +259807,10 @@ ${ve}`),
           F = !I.has(e.uuid);
         if (D || F) {
           if ((this.enqueueWrite(N, e, o), !D)) {
-            if ((I.add(e.uuid), TH(e)))
+            if ((I.add(e.uuid), isTranscriptMessage(e)))
               if (this.internalEventWriter && $s()) this.persistToRemote(t, e);
               else await this.persistToRemote(t, e);
-          } else if (this.internalEventWriter && TH(e))
+          } else if (this.internalEventWriter && isTranscriptMessage(e))
             this.persistToRemote(t, e);
         }
         return;
@@ -259847,7 +259848,7 @@ ${ve}`),
   async getExistingSessionFile(e, t) {
     let r = this.existingSessionFiles.get(e);
     if (r) return r;
-    let o = Tp(e),
+    let o = getTranscriptPathForSession(e),
       d = t !== void 0 ? ox(o) : void 0;
     if (M() && t !== void 0 && d !== void 0)
       try {
@@ -259865,7 +259866,7 @@ ${ve}`),
   async persistToRemote(e, t) {
     if (this.appendsSealedForShutdown) return;
     if ($s() && !this.internalEventWriter) return;
-    if (f9t(t, this.internalEventWriterSessionId)) {
+    if (isRowForeignToBridgeSession(t, this.internalEventWriterSessionId)) {
       n(
         "[persist-remote] Skipping upload: the row is the /teleport-pulled conversation's",
       );
@@ -259873,7 +259874,7 @@ ${ve}`),
     }
     if (
       tpe(t) &&
-      (this.foreignWithheldEntryUuids.delete(t.uuid) || wY(Li(e)))
+      (this.foreignWithheldEntryUuids.delete(t.uuid) || isRemoteEgressSuppressedFor(pinSessionId(e)))
     ) {
       n(
         "[persist-remote] Skipping compact-pair upload: conversation carries a history-suppression taint",
@@ -259900,7 +259901,7 @@ ${ve}`),
       (i("tengu_session_persistence_failed", {}), Pr(1, "other"));
   }
   async mirrorInternalEntry(e) {
-    if (wY(Li(this.store.getSessionId()))) {
+    if (isRemoteEgressSuppressedFor(pinSessionId(this.store.getSessionId()))) {
       let t = e;
       if (t.type !== "last-prompt" || t.explicit !== !0) return;
       let { lastPrompt: r, ...o } = e;
@@ -259921,7 +259922,7 @@ ${ve}`),
     return this.internalEventWriter !== null;
   }
   async mirrorWorkerEvent(e, t, { sessionId: r, agentId: o }) {
-    if (this.shouldSkipPersistence() || wY(r)) return !1;
+    if (this.shouldSkipPersistence() || isRemoteEgressSuppressedFor(r)) return !1;
     if (!this.internalEventWriter || $s()) return !1;
     return (await this.internalEventWriter(e, t, { agentId: o }), !0);
   }
@@ -260016,7 +260017,7 @@ ${ve}`),
       let I = await e(t, o).catch((F) => (h(F), null));
       if (I === null) {
         if (o?.aborted) throw ((_ = "aborted"), new Ve());
-        throw new XEe("read_fail");
+        throw new AgentTranscriptFetchError("read_fail");
       }
       E = I.stats?.pageCount;
       let D = await lyr(),
@@ -260024,14 +260025,14 @@ ${ve}`),
           .filter((F) => F.session_agent_id === t)
           .map((F) => aee(F.payload, D));
       if (((C = N.length), N.length === 0 && I.events.length > 0))
-        throw ((_ = "unfiltered"), new XEe("unfiltered"));
+        throw ((_ = "unfiltered"), new AgentTranscriptFetchError("unfiltered"));
       if (!d && this.agentIdsWrittenLocally.has(t))
         return ((_ = "superseded"), _);
       if (N.some(BZ))
         ((_ = "write_fail"),
           (_ =
-            (await F7n(t, N, r, { createOnly: d }).catch((U) => {
-              throw new XEe("write_fail", { cause: U });
+            (await writeHydratedAgentTranscript(t, N, r, { createOnly: d }).catch((U) => {
+              throw new AgentTranscriptFetchError("write_fail", { cause: U });
             })) === "exists"
               ? "superseded"
               : "hit"));
@@ -260052,26 +260053,26 @@ ${ve}`),
     }
   }
 }
-async function ST(e, t, r, o, d) {
-  let p = BMe(e, o),
+async function recordTranscript(e, t, r, o, d) {
+  let p = cleanMessagesForLogging(e, o),
     _ = K(),
-    E = Kyt(Li(_)),
-    C = m9t(Li(_)) ?? null,
+    E = isForeignToBinding(pinSessionId(_)),
+    C = bridgeSessionForPulledWindow(pinSessionId(_)) ?? null,
     I = bje(),
     D = await Xd().sessionMessages(_, d),
     N = [],
     F = r;
-  if (F && !hl() && !D.has(F)) i("tengu_phantom_parent_hint", {});
+  if (F && !isTranscriptPersistenceDisabled() && !D.has(F)) i("tengu_phantom_parent_hint", {});
   let U = !1;
   for (let re of p)
     if (D.has(re.uuid)) {
-      if (!U && spe(re)) F = re.uuid;
+      if (!U && isChainParticipant(re)) F = re.uuid;
     } else (N.push(re), (U = !0));
   if (N.length > 0)
     await Ki().insertMessageChain(N, !1, void 0, F, t, _, E, d, C, I);
-  return N.findLast(spe)?.uuid ?? F ?? null;
+  return N.findLast(isChainParticipant)?.uuid ?? F ?? null;
 }
-async function KEe(e, t, r) {
+async function persistLeafCheckpoint(e, t, r) {
   let o = Ki();
   ((o.currentSessionLeafUuid = e ?? void 0),
     (o.currentSessionLeafTs = new Date().toISOString()),
@@ -260091,7 +260092,7 @@ async function KEe(e, t, r) {
       r,
     ));
 }
-async function Uyt(e, t) {
+async function mirrorLeafCheckpointToRemote(e, t) {
   let r = Ki();
   await r.mirrorInternalEntry({
     type: "last-prompt",
@@ -260104,31 +260105,31 @@ async function Uyt(e, t) {
     sessionId: K(),
   });
 }
-function F_r() {
+function hasRemoteWorkerEventLog() {
   return Ki().hasInternalEventWriter();
 }
-function Rhn(e, t, r) {
+function mirrorWorkerEventToRemote(e, t, r) {
   return Ki().mirrorWorkerEvent(e, t, r);
 }
-async function ire(e, t, r, o) {
+async function recordSidechainTranscript(e, t, r, o) {
   let d = K(),
-    p = Kyt(Li(d)),
-    _ = m9t(Li(d)) ?? null;
-  await Ki().insertMessageChain(BMe(e), !0, t, r, void 0, d, p, o, _);
+    p = isForeignToBinding(pinSessionId(d)),
+    _ = bridgeSessionForPulledWindow(pinSessionId(d)) ?? null;
+  await Ki().insertMessageChain(cleanMessagesForLogging(e), !0, t, r, void 0, d, p, o, _);
 }
-async function I7n(e, t) {
+async function recordForkContextRef(e, t) {
   await Ki().appendEntry({ type: "fork-context-ref", ...e }, void 0, void 0, t);
 }
-async function khn(e, t) {
+async function recordArtifactAutoReactLedger(e, t) {
   await Ki().appendEntry(e, e.sessionId, void 0, t);
 }
-function Jpr(e, t) {
+function recordCostState(e, t) {
   Ki()
     .appendEntry(e, e.sessionId, void 0, t)
     .catch(h);
 }
-lDn(Jpr);
-async function P7n(e, t) {
+lDn(recordCostState);
+async function recordObserverRef(e, t) {
   await Ki().appendEntry(
     { type: "observer-ref", ...e, timestamp: new Date().toISOString() },
     void 0,
@@ -260136,7 +260137,7 @@ async function P7n(e, t) {
     t,
   );
 }
-async function O7n(e, t) {
+async function agentTranscriptExists(e, t) {
   if (M() && t !== void 0)
     try {
       let r = ox(Ud(e));
@@ -260408,16 +260409,16 @@ async function __s(e, t, r) {
     await o.close();
   }
 }
-var D7n = 1048576;
+var OBSERVER_REF_TAIL_SCAN_BYTES = 1048576;
 async function Eje(e, t, r) {
   let o = ox(e);
   if (o === void 0) return;
-  let d = await Byt(o, t, r);
+  let d = await readTranscriptTailV5(o, t, r);
   if (d === null) return null;
   if (!d.ok) return;
   return { content: d.content, cut: d.cut };
 }
-function Byt(e, t, r) {
+function readTranscriptTailV5(e, t, r) {
   return r.read([{ key: e, tail: t }]).then((o) => {
     if (!o.ok) return tje(o.error) ? k_s(e, t, r) : { ok: !1, error: o.error };
     let [d] = o.value.items;
@@ -260515,19 +260516,19 @@ async function k_s(e, t, r) {
     cut: !1,
   };
 }
-async function L7n(e, t) {
+async function readLastObserverRef(e, t) {
   let r = e ? Ud(e) : yl(),
     o =
       !M() || t === void 0
         ? void 0
-        : await Eje(r, D7n, t).catch(() => {
+        : await Eje(r, OBSERVER_REF_TAIL_SCAN_BYTES, t).catch(() => {
             return;
           });
   if (o === null) return null;
   let d =
     o !== void 0
       ? o
-      : await k_(r, D7n).catch((_) => {
+      : await k_(r, OBSERVER_REF_TAIL_SCAN_BYTES).catch((_) => {
           if (Rt(_)) return null;
           throw _;
         });
@@ -260546,7 +260547,7 @@ async function L7n(e, t) {
 }
 var w_s = 4,
   E_s = 16777216;
-async function Qpr(e, t = E_s, r) {
+async function hydrateForkContext(e, t = E_s, r) {
   let { forkContextHydrationCache: o, forkContextHydrationsInFlight: d } = Xd(),
     p = o.get(e.parentLastUuid);
   if (p)
@@ -260558,9 +260559,9 @@ async function Qpr(e, t = E_s, r) {
 }
 async function T_s(e, t, r) {
   let { forkContextHydrationCache: o } = Xd(),
-    d = Tp(e.parentSessionId),
+    d = getTranscriptPathForSession(e.parentSessionId),
     p = hu(d, r),
-    { messages: _ } = await dre(d, p && { storageV5: p }),
+    { messages: _ } = await loadTranscriptFile(d, p && { storageV5: p }),
     E = _.get(e.parentLastUuid);
   if (!E)
     return (
@@ -260570,7 +260571,7 @@ async function T_s(e, t, r) {
       ),
       []
     );
-  let C = NMe(_, E)
+  let C = buildConversationChain(_, E)
       .filter((N) => !N.isSidechain)
       .map(({ isSidechain: N, parentUuid: F, promptId: U, ...V }) => V),
     I = C.reduce((N, F) => N + t8(F).length, 0);
@@ -260583,22 +260584,22 @@ async function T_s(e, t, r) {
   }
   return C;
 }
-async function jyt(e, t) {
+async function recordQueueOperation(e, t) {
   await Ki().insertQueueOperation(e, t);
 }
-async function Y5e(e, t) {
+async function removeTranscriptMessage(e, t) {
   let r = M() && t !== void 0 ? t : void 0;
   await Ki().removeMessageByUuid(e, r);
 }
-async function xhn(e, t) {
+async function removeTranscriptMessageIfPersisted(e, t) {
   let r = M() && t !== void 0 ? t : void 0;
   if (!(await Xd().sessionMessages(K(), r)).has(e)) return;
   await Ki().removeMessageByUuid(e, r);
 }
-async function Hhn(e, t, r, o) {
+async function recordFileHistorySnapshot(e, t, r, o) {
   await Ki().insertFileHistorySnapshot(e, t, r, o);
 }
-async function M7n(e, t, r, o, d) {
+async function recordFileHistoryDelta(e, t, r, o, d) {
   await Ki().insertFileHistoryDelta(
     {
       type: "file-history-delta",
@@ -260611,16 +260612,16 @@ async function M7n(e, t, r, o, d) {
     d,
   );
 }
-async function $_r(e, t) {
+async function recordAttributionSnapshot(e, t) {
   await Ki().insertAttributionSnapshot(e, t);
 }
-async function KV(e, t, r) {
+async function recordContentReplacement(e, t, r) {
   await Ki().insertContentReplacement(e, t, r);
 }
-async function XM() {
+async function resetSessionFilePointer() {
   Ki().resetSessionFile();
 }
-function XV() {
+function adoptResumedSessionFile() {
   let e = Ki(),
     t = yl();
   e.setSessionFile(t);
@@ -260635,10 +260636,10 @@ function XV() {
     SF(Xd().writerHealth, "adopt", o, e.sessionFile);
   }
 }
-async function YV(e) {
+async function adoptResumedSessionFileAsync(e) {
   let t = Ki(),
     r = yl();
-  if ((t.setSessionFile(r), t.adoptAppendSource(e), hyr(r, e), hl())) return;
+  if ((t.setSessionFile(r), t.adoptAppendSource(e), hyr(r, e), isTranscriptPersistenceDisabled())) return;
   try {
     await t.reAppendSessionMetadataAsync(!0, !1, e, !0);
   } catch (o) {
@@ -260648,7 +260649,7 @@ async function YV(e) {
     SF(Xd().writerHealth, "adopt", o, r);
   }
 }
-function o9t(e) {
+function touchSessionTranscript(e) {
   let t = Ki().sessionFile;
   if (t === null) return;
   hyr(t, e);
@@ -260666,13 +260667,13 @@ function hyr(e, t) {
   let r = new Date();
   Jhr(e, r, r).catch(() => {});
 }
-async function LMe(e) {
+async function relocateSessionTranscript(e) {
   let t = M() && e !== void 0 ? e : void 0,
     r = K(),
     o = ll(he()),
     d = Ki(),
     p = d.sessionFile;
-  if (p === null || hl()) {
+  if (p === null || isTranscriptPersistenceDisabled()) {
     ((d.currentSessionRelocatedCwd = he()), $p(r, "cd", o));
     return;
   }
@@ -260687,7 +260688,7 @@ async function LMe(e) {
       try {
         if (
           (await d.flush(),
-          await Vyt(),
+          await flushAppendEntryQueues(),
           await bYn(
             p,
             b(C) +
@@ -260709,7 +260710,7 @@ async function LMe(e) {
   }
   (d.beginTranscriptRelocation(), Uhr(p));
   try {
-    (await d.flush(), await Vyt(), await Ij(o, { recursive: !0, mode: 448 }));
+    (await d.flush(), await flushAppendEntryQueues(), await Ij(o, { recursive: !0, mode: 448 }));
     let E = If(e),
       C = (await Vu(kv(p), E)) === (await Vu(o, E));
     if (!C)
@@ -260769,7 +260770,7 @@ async function LMe(e) {
       U)
     )
       try {
-        await RE(
+        await appendEntryToFileAsync(
           _,
           {
             type: "relocated",
@@ -260784,7 +260785,7 @@ async function LMe(e) {
     if (ue)
       try {
         await import.meta
-          .require("../../02-功能模块/后台任务-Shell管理/MAX_PERSISTED_OUTPUT_BYTES.keeejwek.js")
+          .require("../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js")
           .repointTaskOutputSymlinks(V, re);
       } catch (de) {
         h(de);
@@ -260793,7 +260794,7 @@ async function LMe(e) {
     (Hhr(d.sessionFile ?? p), await d.endTranscriptRelocation());
   }
 }
-function s9t(e, t) {
+function reportRelocateSessionTranscriptFailure(e, t) {
   if (Kd(e) || Bp(e))
     n(`${t}: transcript relocation failed (${A(e)}): ${l(e)}`, {
       level: "error",
@@ -260801,10 +260802,10 @@ function s9t(e, t) {
   else h(e);
   SF(Xd().writerHealth, "relocate", e);
 }
-function U_r() {
+function beginTranscriptRelocationForTesting() {
   Ki().beginTranscriptRelocation();
 }
-async function B_r() {
+async function endTranscriptRelocationForTesting() {
   await Ki().endTranscriptRelocation();
 }
 async function qCt(e) {
@@ -260946,7 +260947,7 @@ async function $hr(e, t, r, o) {
     throw p;
   }
 }
-async function j_r(e, t) {
+async function recordContextCollapseCommit(e, t) {
   let r = K();
   if (!r) return;
   await Ki().appendEntry(
@@ -260956,7 +260957,7 @@ async function j_r(e, t) {
     t,
   );
 }
-async function W_r(e, t) {
+async function recordContextCollapseSnapshot(e, t) {
   let r = K();
   if (!r) return;
   await Ki().appendEntry(
@@ -260966,7 +260967,7 @@ async function W_r(e, t) {
     t,
   );
 }
-async function G_r(e, t) {
+async function recordContextCollapseReset(e, t) {
   let r = K();
   if (!r) return;
   await Ki().appendEntry(
@@ -260976,13 +260977,13 @@ async function G_r(e, t) {
     t,
   );
 }
-async function kc() {
+async function flushSessionStorage() {
   await Ki().flush();
 }
-function Wyt(e, t, r) {
+function appendEntryToCurrentTranscriptNow(e, t, r) {
   let o = Ki(),
     d = t ?? o.sessionFile;
-  if (!d || hl()) return;
+  if (!d || isTranscriptPersistenceDisabled()) return;
   try {
     (o.sealTornTailSync(d), KCt(d, e, r));
   } catch (p) {
@@ -260997,8 +260998,8 @@ function C_s(e, t) {
   else h(e);
   SF(Xd().writerHealth, "stop_now", e, t);
 }
-function Ihn(e) {
-  Ki().sealTornTailOnNextAppend(e ?? Tp(K()));
+function sealTornTranscriptTail(e) {
+  Ki().sealTornTailOnNextAppend(e ?? getTranscriptPathForSession(K()));
 }
 function BZ(e) {
   if (typeof e !== "object" || e === null) return !1;
@@ -261014,7 +261015,7 @@ async function yyr(e) {
   }
   return (await t.close().catch(() => {}), null);
 }
-async function Gyt(e, t) {
+async function transcriptFileHasContentEntry(e, t) {
   if (M() && t !== void 0) return A_s(e, t);
   let r = 65536,
     o = null;
@@ -261044,7 +261045,7 @@ async function Gyt(e, t) {
 var x_s = 65536;
 async function A_s(e, t) {
   let r = ox(e);
-  if (r === void 0) return Gyt(e);
+  if (r === void 0) return transcriptFileHasContentEntry(e);
   try {
     let o = await t.readRecords(r, { order: "forward", maxBytes: x_s });
     if (o.ok) {
@@ -261062,7 +261063,7 @@ async function A_s(e, t) {
       if (_) return await R_s(e, p);
     }
   } catch {}
-  return Gyt(e);
+  return transcriptFileHasContentEntry(e);
 }
 async function R_s(e, t) {
   let o = null;
@@ -261105,15 +261106,15 @@ function Fge(e) {
     return !1;
   }
 }
-async function Phn(e, t, r) {
+async function hydrateRemoteSession(e, t, r) {
   $p(_m(e), "hydrate");
   let o = Ki();
   try {
     let d = (await $At(e, t)) || [],
       p = ll(he());
     await lxt(p, r);
-    let _ = Tp(e);
-    if (!d.some(BZ) && (await Gyt(_, r)))
+    let _ = getTranscriptPathForSession(e);
+    if (!d.some(BZ) && (await transcriptFileHasContentEntry(_, r)))
       return (
         n(
           `Skipping remote hydration: server set of ${d.length} entries has no content-bearing entries but the local transcript does`,
@@ -261164,7 +261165,7 @@ async function _yr(e, t, r) {
 async function P_s(e, t, r) {
   let o = ox(e);
   if (o === void 0) return;
-  let [d, p] = await Promise.all([Byt(o, t, r), r.stat(o)]);
+  let [d, p] = await Promise.all([readTranscriptTailV5(o, t, r), r.stat(o)]);
   if (d === null) return null;
   if (!d.ok) {
     n(
@@ -261213,19 +261214,19 @@ function r4(e, t) {
   let r = ox(e);
   return r === void 0 ? void 0 : { backend: t, key: r };
 }
-function ape(e) {
-  return Wp(kv(Tp(e)), e);
+function getSessionSidecarDir(e) {
+  return Wp(kv(getTranscriptPathForSession(e)), e);
 }
-async function MMe(e) {
+async function ensureSidecarDirFor(e) {
   await Ij(kv(e), { recursive: !0, mode: 448 });
 }
 function byr(e) {
-  return Wp(ape(e), "ccr-tip.json");
+  return Wp(getSessionSidecarDir(e), "ccr-tip.json");
 }
 function I_s(e) {
-  return ape(e) + ".ccr-tip.json";
+  return getSessionSidecarDir(e) + ".ccr-tip.json";
 }
-async function Zpr(e, t) {
+async function readCCRTip(e, t) {
   for (let r of [byr(e), I_s(e)]) {
     let o = await M_s(r, t);
     if (o !== "absent") return o;
@@ -261275,22 +261276,22 @@ async function Syr(e, t, r) {
       if (!_.ok) n(`Failed to write CCR tip sidecar: ${We(_.error)}`);
       return;
     }
-    (await MMe(d), await On(d, b(o), 384));
+    (await ensureSidecarDirFor(d), await On(d, b(o), 384));
   } catch (d) {
     n(`Failed to write CCR tip sidecar: ${d}`);
   }
 }
-async function Ohn(e, t) {
+async function updateCCRTipFromAckedBatch(e, t) {
   for (let r = e.length - 1; r >= 0; r--) {
     let o = e[r];
     if (!o || o.session_agent_id) continue;
-    if (z5e(o.payload)) {
+    if (isSyncedTranscriptEntry(o.payload)) {
       await Syr(K(), o.payload.uuid, t);
       return;
     }
   }
 }
-function N7n(e) {
+function collectTailUuids(e) {
   let t = new Set();
   for (let r of Nge(e)) {
     if (typeof r !== "object" || r === null) continue;
@@ -261299,15 +261300,15 @@ function N7n(e) {
   }
   return t;
 }
-async function i9t(e, t, r) {
-  let [o, d] = await Promise.all([Zpr(e, r), t !== void 0 ? t : a9t(e, r)]);
+async function getValidatedCCRTip(e, t, r) {
+  let [o, d] = await Promise.all([readCCRTip(e, r), t !== void 0 ? t : readTranscriptTailForTip(e, r)]);
   if (!o) return { fallbackReason: "no-sidecar" };
-  if (!d || !N7n(d.content).has(o.eventId))
+  if (!d || !collectTailUuids(d.content).has(o.eventId))
     return { fallbackReason: "tip-not-in-tail" };
   return { eventId: o.eventId };
 }
-async function a9t(e, t) {
-  let r = Tp(e);
+async function readTranscriptTailForTip(e, t) {
+  let r = getTranscriptPathForSession(e);
   if (M() && t !== void 0) {
     let o = await Eje(r, 65536, t).catch(() => {
       return;
@@ -261316,7 +261317,7 @@ async function a9t(e, t) {
   }
   return k_(r, 65536).catch(() => null);
 }
-function efr(e) {
+function extractLastSyncedEventUuid(e) {
   for (let t of kyr(e)) return t;
   return;
 }
@@ -261332,10 +261333,10 @@ function* kyr(e) {
     } catch {
       continue;
     }
-    if (z5e(d)) yield d.uuid;
+    if (isSyncedTranscriptEntry(d)) yield d.uuid;
   }
 }
-function tfr(e, t) {
+function extractLatestIntersectingSyncedUuid(e, t) {
   let r = 0;
   for (let o of kyr(e)) {
     if (t.has(o)) return { uuid: o, walkback: r };
@@ -261343,7 +261344,7 @@ function tfr(e, t) {
   }
   return;
 }
-async function F7n(e, t, r, o) {
+async function writeHydratedAgentTranscript(e, t, r, o) {
   if (!TXt(e))
     return (
       q("warn", "subagent_transcript_write_rejected", {
@@ -261399,10 +261400,10 @@ async function F7n(e, t, r, o) {
     );
   }
 }
-function qyt() {
+function canFetchAgentTranscriptsOnDemand() {
   return Ki().hasInternalAgentEventReader();
 }
-class XEe extends Error {
+class AgentTranscriptFetchError extends Error {
   outcome;
   constructor(e = "read_fail", t) {
     super("could not load this agent's earlier transcript; try again", t);
@@ -261410,7 +261411,7 @@ class XEe extends Error {
     this.name = "AgentTranscriptFetchError";
   }
 }
-async function Dhn(e, t, r = !1, o) {
+async function hydrateFromCCRv2InternalEvents(e, t, r = !1, o) {
   let d = Date.now();
   $p(_m(e), "hydrate");
   let p = Ki(),
@@ -261418,14 +261419,14 @@ async function Dhn(e, t, r = !1, o) {
   if (!_)
     return (n("No internal event reader registered for CCR v2 resume"), !1);
   try {
-    let E = Tp(e),
+    let E = getTranscriptPathForSession(e),
       C = _yr(E, 65536, o),
       I,
       D,
       N;
     if (t) ((I = t[0]), (D = t[2]?.eventId), (N = t[2]?.fallbackReason));
     else {
-      let cn = await i9t(e, await C, o);
+      let cn = await getValidatedCCRTip(e, await C, o);
       ((D = cn.eventId), (N = cn.fallbackReason));
       let It = performance.now();
       ((I = await _(D)),
@@ -261446,13 +261447,13 @@ async function Dhn(e, t, r = !1, o) {
       _e,
       Se;
     if (re) {
-      if (((de = efr(re.content)), D === void 0)) {
+      if (((de = extractLastSyncedEventUuid(re.content)), D === void 0)) {
         let cn = new Map();
         for (let It = 0; It < F.length; It++) {
           let Dn = F[It]?.payload.uuid;
           if (typeof Dn === "string") cn.set(Dn, It);
         }
-        ((_e = tfr(re.content, cn)),
+        ((_e = extractLatestIntersectingSyncedUuid(re.content, cn)),
           (Se = _e === void 0 ? void 0 : cn.get(_e.uuid)));
       }
     }
@@ -261466,7 +261467,7 @@ async function Dhn(e, t, r = !1, o) {
         F.some((cn) =>
           cn.event_id !== void 0 ? cn.event_id === D : cn.payload.uuid === D,
         ),
-      Ne = D !== void 0 && re ? N7n(re.content) : null,
+      Ne = D !== void 0 && re ? collectTailUuids(re.content) : null,
       De =
         D !== void 0 &&
         re !== null &&
@@ -261511,7 +261512,7 @@ async function Dhn(e, t, r = !1, o) {
             : I.anchorFallback === "not-found"
               ? "anchor-not-found"
               : "anchor-in-response";
-      if (!He.some((It) => BZ(It.payload)) && (await Gyt(E, o)))
+      if (!He.some((It) => BZ(It.payload)) && (await transcriptFileHasContentEntry(E, o)))
         (n(
           `Skipping CCR v2 foreground hydration: fetched set of ${He.length} events has no content-bearing entries but the local transcript does`,
         ),
@@ -261534,7 +261535,7 @@ async function Dhn(e, t, r = !1, o) {
     if (Ke)
       for (let cn = ct.length - 1; cn >= 0; cn--) {
         let It = ct[cn];
-        if (It && z5e(It.payload)) {
+        if (It && isSyncedTranscriptEntry(It.payload)) {
           await Syr(e, It.event_id ?? It.payload.uuid, o);
           break;
         }
@@ -261566,7 +261567,7 @@ async function Dhn(e, t, r = !1, o) {
           un.push(aee(Qt.payload, je));
         }
         for (let [Qt, wn] of gn)
-          await F7n(Qt, wn, o).catch(() => {
+          await writeHydratedAgentTranscript(Qt, wn, o).catch(() => {
             It = !1;
           });
         n(`Hydrated ${Dn.length} subagent entries across ${gn.size} agents`);
@@ -261612,7 +261613,7 @@ async function Dhn(e, t, r = !1, o) {
   }
 }
 function cxt(e) {
-  let t = zyt(e);
+  let t = getFirstMeaningfulUserMessageTextContent(e);
   if (t) {
     let r = t
       .replaceAll(
@@ -261626,7 +261627,7 @@ function cxt(e) {
   }
   return "No prompt";
 }
-function zyt(e) {
+function getFirstMeaningfulUserMessageTextContent(e) {
   for (let t of e) {
     if (t.type !== "user" || t.isMeta) continue;
     if ("isCompactSummary" in t && t.isCompactSummary) continue;
@@ -261643,8 +261644,7 @@ function zyt(e) {
       if (p) {
         let E = p.replace(/^\//, "");
         if (
-          import.meta
-            .require("../../02-功能模块/斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js")
+          ({ builtInCommandNames })
             .builtInCommandNames()
             .has(E)
         )
@@ -261663,7 +261663,7 @@ function zyt(e) {
   }
   return;
 }
-function l9t(e) {
+function removeExtraFields(e) {
   return e.map((t) => {
     let { isSidechain: r, parentUuid: o, promptId: d, ...p } = t;
     return p;
@@ -261783,7 +261783,7 @@ function o4(e, t) {
   }
   return r;
 }
-function NMe(e, t, r) {
+function buildConversationChain(e, t, r) {
   let o = [],
     d = new Set(),
     p = t;
@@ -261810,7 +261810,7 @@ function NMe(e, t, r) {
   let _ = G_s(e, o, d);
   return (N_s(t, _, d, r ?? wyr(e)), _);
 }
-function Lhn(e, t, r) {
+function warnIfTranscriptUnchained(e, t, r) {
   let o = 0;
   for (let E of e.values()) {
     if (E.type !== "user" && E.type !== "assistant") continue;
@@ -262042,7 +262042,7 @@ function G_s(e, t, r) {
   }
   return (V.push(...t.slice(re)), V);
 }
-function $7n(e) {
+function checkResumeConsistency(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
     if (r.type !== "system" || r.subtype !== "turn_duration") continue;
@@ -262101,7 +262101,7 @@ function Tje(e, t, r) {
 function Cje(e, t) {
   return Array.from(e.values());
 }
-class yY extends Error {
+class TranscriptFileFormatError extends Error {
   code;
   constructor(e, t) {
     super(e);
@@ -262156,11 +262156,11 @@ function uxt(e, t, r) {
     rewindAnchorUuid: e.rewindAnchorUuid,
   };
 }
-async function J5e(e, t) {
+async function loadTranscriptFromFile(e, t) {
   let r = M() && t !== void 0 ? hu(e, t) : void 0;
   if (e.endsWith(".jsonl")) {
     let E = r ? void 0 : await Vx(e),
-      C = await dre(e, r && { storageV5: r });
+      C = await loadTranscriptFile(e, r && { storageV5: r });
     if (C.servedBy === "absent")
       throw Object.assign(
         new R(
@@ -262201,7 +262201,7 @@ async function J5e(e, t) {
       clearedToEmpty: It,
     } = C;
     if (I.size === 0)
-      throw new yY("No messages found in JSONL file", "no_messages");
+      throw new TranscriptFileFormatError("No messages found in JSONL file", "no_messages");
     let Dn =
       o4(I.values(), (on) => Me.has(on.uuid)) ??
       (Me.size === 0 && !It ? o4(I.values(), (on) => !on.isSidechain) : void 0);
@@ -262215,13 +262215,13 @@ async function J5e(e, t) {
           modified: on,
         });
       }
-      throw new yY(
+      throw new TranscriptFileFormatError(
         "No valid conversation chain found in JSONL file",
         "no_chain",
       );
     }
-    let gn = NMe(I, Dn);
-    Lhn(I, gn, Dn.sessionId);
+    let gn = buildConversationChain(I, Dn);
+    warnIfTranscriptUnchained(I, gn, Dn.sessionId);
     let Qt = D.get(Dn.uuid),
       wn = N.get(Dn.sessionId),
       un = V.get(Dn.sessionId),
@@ -262263,7 +262263,7 @@ async function J5e(e, t) {
   }
   let o = await Vx(e);
   if (o.size > 268435456)
-    throw new yY(
+    throw new TranscriptFileFormatError(
       `Transcript file too large to load as JSON (${o.size} bytes)`,
       "too_large",
     );
@@ -262272,21 +262272,21 @@ async function J5e(e, t) {
   try {
     p = z(d);
   } catch (E) {
-    throw new yY(`Invalid JSON in transcript file: ${E}`, "invalid_json");
+    throw new TranscriptFileFormatError(`Invalid JSON in transcript file: ${E}`, "invalid_json");
   }
   let _;
   if (Array.isArray(p)) _ = p;
   else if (p && typeof p === "object" && "messages" in p) {
     if (!Array.isArray(p.messages))
-      throw new yY("Transcript messages must be an array", "bad_shape");
+      throw new TranscriptFileFormatError("Transcript messages must be an array", "bad_shape");
     _ = p.messages;
   } else
-    throw new yY(
+    throw new TranscriptFileFormatError(
       "Transcript must be an array of messages or an object with a messages array",
       "bad_shape",
     );
   if (_.length === 0)
-    throw new yY("No messages found in JSON file", "no_messages");
+    throw new TranscriptFileFormatError("No messages found in JSON file", "no_messages");
   return VCt(_, 0, void 0, void 0, void 0, void 0, e);
 }
 function z_s(e) {
@@ -262337,7 +262337,7 @@ function VCt(e, t = 0, r, o, d, p, _, E, C, I) {
     V = new Date(D.timestamp);
   return {
     date: D.timestamp,
-    messages: l9t(e),
+    messages: removeExtraFields(e),
     fullPath: _,
     value: t,
     created: U,
@@ -262364,7 +262364,7 @@ async function V_s(e) {
   let t = new Map(),
     r = 0;
   for (let _ of e) {
-    let E = Kc(_);
+    let E = getSessionIdFromLog(_);
     if (E) {
       let C = (t.get(E) || 0) + 1;
       (t.set(E, C), (r = Math.max(C, r)));
@@ -262382,13 +262382,13 @@ async function V_s(e) {
     total_transcript_count: e.length,
   });
 }
-async function Mhn(e, t) {
+async function fetchLogs(e, t) {
   let r = he(),
     o = (await cPn(r, Mh(sN(t)))) ?? ll(r),
-    [d, p] = await Promise.all([fre(o, e, r, t), uyr(r, t)]),
+    [d, p] = await Promise.all([getSessionFilesLite(o, e, r, t), uyr(r, t)]),
     _ = d;
   if (e !== void 0 && d.length === e && (await Sje(d, r, t))) {
-    let E = await fre(o, void 0, r, t),
+    let E = await getSessionFilesLite(o, void 0, r, t),
       C = Buffer.alloc(Mm),
       I = [];
     for (let D of E)
@@ -262400,7 +262400,7 @@ async function Mhn(e, t) {
   if (YCt.test(r) && (await Sje(_, r, t)))
     _ = await XCt(r, o, e, !1, void 0, t);
   if (p.length > 0) {
-    let E = (await Promise.all(p.map((C) => fre(C, e, void 0, t))))
+    let E = (await Promise.all(p.map((C) => getSessionFilesLite(C, e, void 0, t))))
       .flat()
       .map((C) => ({ ...C, isAlias: !0 }));
     if (((_ = Lge(_.concat(E))), e !== void 0)) _ = _.slice(0, e);
@@ -262408,7 +262408,7 @@ async function Mhn(e, t) {
   return (await V_s(_), _);
 }
 function Bhr(e, t) {
-  if (hl()) return;
+  if (isTranscriptPersistenceDisabled()) return;
   let r = ae(),
     o =
       b(t) +
@@ -262422,7 +262422,7 @@ function Bhr(e, t) {
   Ki().fireMirror(e, [t]);
 }
 function KCt(e, t, r) {
-  if (hl()) return;
+  if (isTranscriptPersistenceDisabled()) return;
   let o =
       b(t) +
       `
@@ -262488,10 +262488,10 @@ function Hhr(e) {
   let t = Xd().closeAppendRelocationBracket();
   if (!t) return;
   for (let { entry: r, storageV5: o, opts: d, resolve: p, reject: _ } of t)
-    RE(e, r, o, d).then(p, _);
+    appendEntryToFileAsync(e, r, o, d).then(p, _);
 }
-function RE(e, t, r, o) {
-  if (hl()) return Promise.resolve();
+function appendEntryToFileAsync(e, t, r, o) {
+  if (isTranscriptPersistenceDisabled()) return Promise.resolve();
   let { relocationParkedAppends: d, relocationParkedPath: p } = Xd();
   if (d !== null && e === p)
     return new Promise((I, D) => {
@@ -262527,7 +262527,7 @@ function RE(e, t, r, o) {
     C
   );
 }
-async function Vyt() {
+async function flushAppendEntryQueues() {
   await Eyr.settle();
 }
 async function Y_s(e, t) {
@@ -262558,10 +262558,10 @@ async function Y_s(e, t) {
       } catch {}
   }
 }
-async function Nhn(e, t) {
-  if (hl()) return;
-  await RE(
-    Tp(e),
+async function markSessionEndedByModel(e, t) {
+  if (isTranscriptPersistenceDisabled()) return;
+  await appendEntryToFileAsync(
+    getTranscriptPathForSession(e),
     {
       type: "ended-by-model",
       timestamp: new Date().toISOString(),
@@ -262572,14 +262572,14 @@ async function Nhn(e, t) {
     n(`markSessionEndedByModel: transcript append failed: ${l(r)}`);
   });
 }
-function Q5e(e, t) {
+function applyEndedByModelOnResume(e, t) {
   let r = Boolean(e);
   t((o) => (o.endedByModel === r ? o : { ...o, endedByModel: r }));
 }
-async function DI(e, t, r, o = "user", d) {
-  let p = r ?? Tp(e);
+async function saveCustomTitle(e, t, r, o = "user", d) {
+  let p = r ?? getTranscriptPathForSession(e);
   try {
-    await RE(p, { type: "custom-title", customTitle: t, sessionId: e }, d);
+    await appendEntryToFileAsync(p, { type: "custom-title", customTitle: t, sessionId: e }, d);
   } catch (_) {
     if (Po(_))
       n(`saveCustomTitle: transcript append failed (${A(_)}): ${l(_)}`, {
@@ -262587,27 +262587,27 @@ async function DI(e, t, r, o = "user", d) {
       });
     else throw _;
   }
-  if (!hl()) {
-    let _ = e === K() ? Tp(e) : p;
+  if (!isTranscriptPersistenceDisabled()) {
+    let _ = e === K() ? getTranscriptPathForSession(e) : p;
     await hhr(_, e, t, d);
   }
   if (e === K())
     ((Ki().currentSessionTitle = t), Xd().sessionTitleChanged.emit());
   i("tengu_session_renamed", { source: u(o) });
 }
-function pj(e, t, r) {
+function saveAiGeneratedTitle(e, t, r) {
   if (
-    (RE(Tp(e), { type: "ai-title", aiTitle: t, sessionId: e }, r).catch((o) => {
+    (appendEntryToFileAsync(getTranscriptPathForSession(e), { type: "ai-title", aiTitle: t, sessionId: e }, r).catch((o) => {
       n(`saveAiGeneratedTitle: transcript append failed: ${l(o)}`);
     }),
     e === K())
   )
     ((Ki().currentSessionAiTitle = t), Xd().sessionTitleChanged.emit());
 }
-async function q_r(e, t, r, o, d, p) {
-  let _ = d ?? Tp(e);
+async function linkSessionToPR(e, t, r, o, d, p) {
+  let _ = d ?? getTranscriptPathForSession(e);
   try {
-    (await RE(
+    (await appendEntryToFileAsync(
       _,
       {
         type: "pr-link",
@@ -262640,11 +262640,11 @@ async function q_r(e, t, r, o, d, p) {
 function Tyr(e, t, r) {
   return Boolean(e.sessionFile) || (r?.targetExists === !0 && t !== void 0);
 }
-function YEe(e, t, r, o, d, p, _, E, C, I) {
+function saveBridgeSession(e, t, r, o, d, p, _, E, C, I) {
   let D = Ki();
   if (Tyr(D, o, C))
-    RE(
-      o ?? Tp(e),
+    appendEntryToFileAsync(
+      o ?? getTranscriptPathForSession(e),
       {
         type: "bridge-session",
         sessionId: e,
@@ -262671,60 +262671,60 @@ function YEe(e, t, r, o, d, p, _, E, C, I) {
       (D.currentSessionBridgeOwnerAccountUuid = E?.accountUuid),
       (D.currentSessionBridgeOwnerOrganizationUuid = E?.organizationUuid));
 }
-function JEe(e, t, r, o, d) {
+function writeHistorySuppression(e, t, r, o, d) {
   let p = e ?? K();
   if (!p) return;
   let _;
-  if (!hl())
-    _ = RE(t ?? Tp(p), Phe(p, r, o), d).catch((E) => {
+  if (!isTranscriptPersistenceDisabled())
+    _ = appendEntryToFileAsync(t ?? getTranscriptPathForSession(p), Phe(p, r, o), d).catch((E) => {
       n(`writeHistorySuppression: transcript append failed: ${l(E)}`);
     });
-  if ((Uhn(p), p === K())) Ki().currentSessionHistorySuppressed = !0;
+  if ((markSessionHistorySuppressedFor(p), p === K())) Ki().currentSessionHistorySuppressed = !0;
   return _;
 }
-function YM() {
+function isSessionHistorySuppressed() {
   return Ki().currentSessionHistorySuppressed === !0;
 }
-async function Fhn(e) {
+async function readHistorySuppressionFromDisk(e) {
   let t = K(),
-    r = il(),
-    o = Boolean(t) && r !== null && !SY(t, r);
+    r = getMaterializedSessionFile(),
+    o = Boolean(t) && r !== null && !isOwnTranscriptFile(t, r);
   try {
-    let d = o ? Z5e(t) : (r ?? yl()),
-      p = await U7n(d, { sid: t || void 0 }, e);
+    let d = o ? getDerivedTranscriptPathForSession(t) : (r ?? yl()),
+      p = await scanTranscriptForSuppression(d, { sid: t || void 0 }, e);
     return o && p === "clean" ? "torn" : p;
   } catch (d) {
     if (W(d)) {
       if (o) return "torn";
-      return nfr() ? "read-error" : "clean";
+      return isTranscriptRelocationInProgress() ? "read-error" : "clean";
     }
     return "read-error";
   }
 }
-function nfr() {
+function isTranscriptRelocationInProgress() {
   return Ki().isTranscriptRelocationInProgress();
 }
-function z_r(e) {
+function mirrorInternalEntryForTesting(e) {
   return Ki().mirrorInternalEntry(e);
 }
-var c9t = 1e5;
-async function U7n(e, t, r) {
+var SUPPRESSION_SCAN_MAX_LINES = 1e5;
+async function scanTranscriptForSuppression(e, t, r) {
   let o = M() && r !== void 0 ? hu(e, r) : void 0,
     d = o !== void 0 ? ZWt(o.backend, o.key) : nje(e),
     p = 0;
   for await (let _ of d) {
-    if (u9t(_, t)) return "found";
-    if (++p >= c9t) return "budget-exhausted";
+    if (matchesHistorySuppressionLine(_, t)) return "found";
+    if (++p >= SUPPRESSION_SCAN_MAX_LINES) return "budget-exhausted";
   }
   return "clean";
 }
-function SY(e, t) {
+function isOwnTranscriptFile(e, t) {
   return e !== void 0 && t != null && $Z(t) === `${e}.jsonl`;
 }
-function Z5e(e) {
+function getDerivedTranscriptPathForSession(e) {
   return Wp(ll(he()), `${e}.jsonl`);
 }
-function u9t(e, t = {}) {
+function matchesHistorySuppressionLine(e, t = {}) {
   if (!e.includes('"history-suppression"')) return !1;
   try {
     let r = z(e);
@@ -262736,7 +262736,7 @@ function u9t(e, t = {}) {
     return !1;
   }
 }
-function FMe(e, t = {}) {
+function buildForkAdoptionMeta(e, t = {}) {
   return {
     ...e,
     ...(t.stripWorktreeSession && { worktreeSession: void 0 }),
@@ -262752,12 +262752,12 @@ function FMe(e, t = {}) {
     bridgeOwnerOrganizationUuid: void 0,
   };
 }
-async function are(e, t) {
-  let r = t.destSid ?? Li(K()),
-    o = e.sessionHistorySuppressed === !0 || JV(Li(e.sessionId));
-  if (o) await JEe(r, void 0, "fork_inherit", void 0, t.storageV5);
-  (EH(
-    FMe(
+async function adoptForkSessionMetadata(e, t) {
+  let r = t.destSid ?? pinSessionId(K()),
+    o = e.sessionHistorySuppressed === !0 || isSessionHistorySuppressedFor(pinSessionId(e.sessionId));
+  if (o) await writeHistorySuppression(r, void 0, "fork_inherit", void 0, t.storageV5);
+  (restoreSessionMetadata(
+    buildForkAdoptionMeta(
       o && !e.sessionHistorySuppressed
         ? { ...e, sessionHistorySuppressed: !0 }
         : e,
@@ -262765,64 +262765,64 @@ async function are(e, t) {
     ),
     { taintSid: r, storageV5: t.storageV5 },
   ),
-    d9t(r, Li(e.sessionId)));
+    copyPrecautionarySuppressionTo(r, pinSessionId(e.sessionId)));
 }
-function $hn() {
+function holdSessionHistorySuppression() {
   Ki().currentSessionHistorySuppressed = !0;
 }
-function e8e(e) {
-  if ((Uhn(e), e !== void 0 && e === K()))
+function holdSessionHistorySuppressionFor(e) {
+  if ((markSessionHistorySuppressedFor(e), e !== void 0 && e === K()))
     Ki().currentSessionHistorySuppressed = !0;
 }
-function Uhn(e) {
+function markSessionHistorySuppressedFor(e) {
   if (e === void 0) return;
   let t = Ki();
   ((t.knownTaintedSessionIds ??= new Set()), t.knownTaintedSessionIds.add(e));
 }
-function JV(e) {
+function isSessionHistorySuppressedFor(e) {
   return e !== void 0 && Ki().knownTaintedSessionIds?.has(e) === !0;
 }
-function Bhn() {
+function dropSessionHistorySuppression() {
   Ki().currentSessionHistorySuppressed = void 0;
 }
-function Li(e) {
+function pinSessionId(e) {
   return e;
 }
-function JM(e) {
+function holdPrecautionarySuppressionFor(e) {
   if (!e) return;
   let t = Ki();
   ((t.currentSessionPrecautionarySuppression ??= new Set()),
     t.currentSessionPrecautionarySuppression.add(e));
 }
-function V_r() {
+function dropPrecautionarySuppressionForTesting() {
   ((Ki().currentSessionPrecautionarySuppression = void 0),
     (Ki().clearResilientPrecautionSids = void 0),
     (Ki().scanUncertaintyHoldSids = void 0));
 }
-function jhn(e) {
+function releasePrecautionarySuppressionFor(e) {
   let t = Ki();
   if (e && !t.clearResilientPrecautionSids?.has(e))
     t.currentSessionPrecautionarySuppression?.delete(e);
 }
-function W3(e) {
+function markPrecautionClearResilientFor(e) {
   if (e === void 0) return;
   let t = Ki();
   ((t.clearResilientPrecautionSids ??= new Set()),
     t.clearResilientPrecautionSids.add(e));
 }
-function t8e(e) {
+function markScanUncertaintyHoldFor(e) {
   if (e === void 0) return;
   let t = Ki();
   ((t.scanUncertaintyHoldSids ??= new Set()), t.scanUncertaintyHoldSids.add(e));
 }
-function Whn(e) {
+function isScanUncertaintyHoldFor(e) {
   return e !== void 0 && Ki().scanUncertaintyHoldSids?.has(e) === !0;
 }
-function lre(e) {
+function claimPrecautionHoldForObservedCause(e) {
   if (e === void 0) return;
   Ki().scanUncertaintyHoldSids?.delete(e);
 }
-function Ghn(e) {
+function releaseScanUncertaintyHoldFor(e) {
   if (e === void 0) return;
   let t = Ki();
   if (!t.scanUncertaintyHoldSids?.has(e)) return;
@@ -262830,15 +262830,15 @@ function Ghn(e) {
     t.clearResilientPrecautionSids?.delete(e),
     t.currentSessionPrecautionarySuppression?.delete(e));
 }
-function rfr() {
-  return fj(Li(K()));
+function isPrecautionarySuppressionHeld() {
+  return isPrecautionarySuppressionHeldFor(pinSessionId(K()));
 }
-function fj(e) {
+function isPrecautionarySuppressionHeldFor(e) {
   return (
     e !== void 0 && Ki().currentSessionPrecautionarySuppression?.has(e) === !0
   );
 }
-function d9t(e, t) {
+function copyPrecautionarySuppressionTo(e, t) {
   if (!e || !t) return;
   let r = Ki(),
     o = r.currentSessionPrecautionarySuppression;
@@ -262847,63 +262847,63 @@ function d9t(e, t) {
       r.clearResilientPrecautionSids.add(e);
   }
 }
-function lpe(e) {
+function registerLiveSuppressionProbe(e) {
   Xd().setLiveSuppressionProbe(e);
 }
-function ofr() {
+function isLiveBridgeSuppressed() {
   return Xd().liveSuppressionProbe?.() === !0;
 }
-var cre = "pending",
+var PENDING_BRIDGE_SESSION = "pending",
   UZ;
-function p9t(e) {
+function registerForeignConversationProbe(e) {
   UZ = e;
 }
-function sfr(e) {
+function bridgeSessionsForPulledRow(e) {
   return bje()?.get(e);
 }
 function X_s(e) {
   if (e === void 0) return;
-  for (let t of e) if (t !== cre) return t;
-  return cre;
+  for (let t of e) if (t !== PENDING_BRIDGE_SESSION) return t;
+  return PENDING_BRIDGE_SESSION;
 }
 function bje() {
   return UZ?.().pulledRows;
 }
-function f9t(e, t) {
+function isRowForeignToBridgeSession(e, t) {
   if (t === void 0) return !1;
-  if (e.foreignToBridgeSession === t || e.foreignToBridgeSession === cre)
+  if (e.foreignToBridgeSession === t || e.foreignToBridgeSession === PENDING_BRIDGE_SESSION)
     return !0;
-  let r = sfr(e.uuid);
-  return r !== void 0 && (r.has(t) || r.has(cre));
+  let r = bridgeSessionsForPulledRow(e.uuid);
+  return r !== void 0 && (r.has(t) || r.has(PENDING_BRIDGE_SESSION));
 }
-function cpe() {
+function isBridgeBindingForeign() {
   return UZ?.().foreign === !0;
 }
-function Kyt(e) {
+function isForeignToBinding(e) {
   let t = UZ?.();
   if (t?.foreign !== !0) return !1;
   if (!e || !t.boundSid) return !0;
   return e !== t.boundSid;
 }
-function m9t(e) {
+function bridgeSessionForPulledWindow(e) {
   let t = UZ?.().pulledWindow;
   return t !== void 0 && e !== void 0 && t.sids.has(e)
     ? t.bridgeSessionId
     : void 0;
 }
-function qhn() {
+function getBridgeBoundConversationSid() {
   return UZ?.().boundSid;
 }
-function bY() {
-  return YM() || sD()?.noHistoryBackfill === !0 || ofr() || rfr();
+function isCompactPairWithheldFromRemote() {
+  return isSessionHistorySuppressed() || getCurrentSessionBridge()?.noHistoryBackfill === !0 || isLiveBridgeSuppressed() || isPrecautionarySuppressionHeld();
 }
-function wY(e) {
-  return Kyt(e) || bY() || fj(e) || JV(e);
+function isRemoteEgressSuppressedFor(e) {
+  return isForeignToBinding(e) || isCompactPairWithheldFromRemote() || isPrecautionarySuppressionHeldFor(e) || isSessionHistorySuppressedFor(e);
 }
-function g9t(e) {
-  return bY() || fj(e) || JV(e);
+function isConversationEgressTainted(e) {
+  return isCompactPairWithheldFromRemote() || isPrecautionarySuppressionHeldFor(e) || isSessionHistorySuppressedFor(e);
 }
-function Xyt() {
+function clearBridgeSessionCache() {
   pxt(Ki());
 }
 function pxt(e) {
@@ -262915,12 +262915,12 @@ function pxt(e) {
     (e.currentSessionBridgeOwnerAccountUuid = void 0),
     (e.currentSessionBridgeOwnerOrganizationUuid = void 0));
 }
-function mj(e, t, r, o) {
+function clearBridgeSession(e, t, r, o) {
   let d = e ?? K(),
     p = Ki();
   if (Tyr(p, t, r))
-    RE(
-      t ?? Tp(d),
+    appendEntryToFileAsync(
+      t ?? getTranscriptPathForSession(d),
       {
         type: "bridge-session",
         sessionId: d,
@@ -262933,7 +262933,7 @@ function mj(e, t, r, o) {
     });
   if (d === K()) pxt(p);
 }
-function sD() {
+function getCurrentSessionBridge() {
   let e = Ki();
   return e.currentSessionBridgeId
     ? {
@@ -262947,34 +262947,34 @@ function sD() {
       }
     : void 0;
 }
-function mu(e) {
+function getCurrentSessionTitle(e) {
   if (e === K()) return Ki().currentSessionTitle;
   return;
 }
-function G3(e) {
+function getCurrentSessionAiTitle(e) {
   if (e === K()) return Ki().currentSessionAiTitle;
   return;
 }
-function TY(e) {
-  return mu(e) ?? G3(e);
+function getCurrentSessionDisplayTitle(e) {
+  return getCurrentSessionTitle(e) ?? getCurrentSessionAiTitle(e);
 }
-function h9t() {
-  return mb()?.name ?? TY(K());
+function getCurrentSessionPeerName() {
+  return mb()?.name ?? getCurrentSessionDisplayTitle(K());
 }
-function _9t() {
+function getCurrentSessionOffBoxPeerName() {
   let e = mb();
-  return (e !== void 0 && e.source !== "derived" ? e.name : void 0) ?? TY(K());
+  return (e !== void 0 && e.source !== "derived" ? e.name : void 0) ?? getCurrentSessionDisplayTitle(K());
 }
-function n8e(e) {
-  return e === "bridge" ? _9t() : h9t();
+function getCurrentSessionPeerNameFor(e) {
+  return e === "bridge" ? getCurrentSessionOffBoxPeerName() : getCurrentSessionPeerName();
 }
-function upe() {
+function getCurrentSessionAgentColor() {
   return Ki().currentSessionAgentColor;
 }
-function QV() {
+function getCurrentSessionAgentName() {
   return Ki().currentSessionAgentName;
 }
-function EH(e, t) {
+function restoreSessionMetadata(e, t) {
   let r = Ki();
   if (e.customTitle) r.currentSessionTitle ??= e.customTitle;
   if (e.aiTitle) r.currentSessionAiTitle ??= e.aiTitle;
@@ -263013,18 +263013,18 @@ function EH(e, t) {
       (r.currentSessionBridgeOwnerOrganizationUuid =
         e.bridgeOwnerOrganizationUuid));
   if (e.sessionHistorySuppressed) {
-    let o = t?.taintSid ?? Li(K()),
+    let o = t?.taintSid ?? pinSessionId(K()),
       d = o !== void 0 && o === K(),
       p = d && !r.currentSessionHistorySuppressed;
     if (d) r.currentSessionHistorySuppressed = !0;
-    if ((Uhn(o), p && o !== void 0)) {
-      let _ = il();
-      if (!(_ !== null && !SY(o, _))) {
-        let C = _ ?? Tp(o),
+    if ((markSessionHistorySuppressedFor(o), p && o !== void 0)) {
+      let _ = getMaterializedSessionFile();
+      if (!(_ !== null && !isOwnTranscriptFile(o, _))) {
+        let C = _ ?? getTranscriptPathForSession(o),
           I = t?.storageV5;
         (async () => {
-          if ((await U7n(C, { sid: o }, I)) === "clean")
-            await JEe(o, C, "meta_seed", void 0, I);
+          if ((await scanTranscriptForSuppression(C, { sid: o }, I)) === "clean")
+            await writeHistorySuppression(o, C, "meta_seed", void 0, I);
         })().catch((D) => {
           n(`restoreSessionMetadata meta_seed failed: ${l(D)}`);
         });
@@ -263035,7 +263035,7 @@ function EH(e, t) {
   if (e.leafUuid !== void 0) r.currentSessionLeafUuid = e.leafUuid;
   if (e.leafTs !== void 0) r.currentSessionLeafTs = e.leafTs;
 }
-function K_r() {
+function snapshotSessionMetadata() {
   let e = Ki();
   return {
     customTitle: e.currentSessionTitle,
@@ -263069,7 +263069,7 @@ function K_r() {
     leafTs: e.currentSessionLeafTs,
   };
 }
-function r8e() {
+function clearSessionMetadata() {
   let e = Ki(),
     t = e.currentSessionTitle !== void 0 || e.currentSessionAiTitle !== void 0;
   if (
@@ -263100,24 +263100,24 @@ function r8e() {
   )
     Xd().sessionTitleChanged.emit();
 }
-function ifr() {
+function reAppendSessionMetadata() {
   Ki().reAppendSessionMetadata(!1, !0);
 }
-async function Yyt(e) {
+async function reAppendSessionMetadataAfterCompaction(e) {
   if (M() && e !== void 0) {
-    if (hl()) return;
+    if (isTranscriptPersistenceDisabled()) return;
     await Ki().reAppendSessionMetadataAsync(!1, !0, e, !0);
     return;
   }
-  (await Vyt(), ifr());
+  (await flushAppendEntryQueues(), reAppendSessionMetadata());
 }
-function zhn(e) {
+function subscribeSessionAgentNameChanged(e) {
   return Xd().sessionAgentNameChanged.subscribe(e);
 }
-async function EY(e, t, r, o = "user", d) {
-  let p = r ?? Tp(e);
+async function saveAgentName(e, t, r, o = "user", d) {
+  let p = r ?? getTranscriptPathForSession(e);
   try {
-    await RE(p, { type: "agent-name", agentName: t, sessionId: e }, d);
+    await appendEntryToFileAsync(p, { type: "agent-name", agentName: t, sessionId: e }, d);
   } catch (_) {
     if (Po(_))
       n(`saveAgentName: transcript append failed (${A(_)}): ${l(_)}`, {
@@ -263129,10 +263129,10 @@ async function EY(e, t, r, o = "user", d) {
     ((Ki().currentSessionAgentName = t), Xd().sessionAgentNameChanged.emit());
   i("tengu_agent_name_set", { source: u(o) });
 }
-async function o8e(e, t, r, o) {
-  let d = r ?? Tp(e);
+async function saveAgentColor(e, t, r, o) {
+  let d = r ?? getTranscriptPathForSession(e);
   try {
-    await RE(d, { type: "agent-color", agentColor: t, sessionId: e }, o);
+    await appendEntryToFileAsync(d, { type: "agent-color", agentColor: t, sessionId: e }, o);
   } catch (p) {
     if (Po(p))
       n(`saveAgentColor: transcript append failed (${A(p)}): ${l(p)}`, {
@@ -263143,49 +263143,49 @@ async function o8e(e, t, r, o) {
   if (e === K()) Ki().currentSessionAgentColor = t;
   i("tengu_agent_color_set", {});
 }
-function QEe(e) {
+function saveAgentSetting(e) {
   Ki().currentSessionAgentSetting = e;
 }
-function Vhn(e) {
+function subscribeSessionTitleChanged(e) {
   return Xd().sessionTitleChanged.subscribe(e);
 }
-function h$(e) {
+function cacheSessionTitle(e) {
   ((Ki().currentSessionTitle = e), Xd().sessionTitleChanged.emit());
 }
-function X_r(e) {
+function cacheAiTitle(e) {
   ((Ki().currentSessionAiTitle = e), Xd().sessionTitleChanged.emit());
 }
-function ZEe(e) {
+function cacheAgentName(e) {
   ((Ki().currentSessionAgentName = e), Xd().sessionAgentNameChanged.emit());
 }
-function $Me(e, t, r) {
-  let o = mu(e),
+function titleCacheStillOn(e, t, r) {
+  let o = getCurrentSessionTitle(e),
     d = o && si(o);
   if (!d) return !0;
   let p = yr(d);
   return p === yr(t) || (r !== void 0 && p === yr(r));
 }
-function eAe(e) {
+function cacheHookSessionTitle(e) {
   if (Zi()) return;
   let t = si(e);
   if (!t) return;
-  let r = mu(K()),
+  let r = getCurrentSessionTitle(K()),
     o = r && si(r);
   if (t === o || Wpe(t, o || void 0) !== void 0) return;
-  (n(`Hook sessionTitle cached (${[...t].length} chars)`), h$(t), ZEe(t));
+  (n(`Hook sessionTitle cached (${[...t].length} chars)`), cacheSessionTitle(t), cacheAgentName(t));
 }
-function ure(e) {
+function saveMode(e) {
   Ki().currentSessionMode = e;
 }
-function y9t(e) {
+function savePermissionMode(e) {
   Ki().currentSessionPermissionMode = e;
 }
-function ZV(e, t) {
+function saveIsolationLatch(e, t) {
   let r = Ki();
   if (r.currentSessionIsolationLatch === e) return;
   if (((r.currentSessionIsolationLatch = e), r.sessionFile)) {
     let o = r.sessionFile;
-    RE(o, { type: "isolation-latch", side: e, sessionId: K() }, t).catch(
+    appendEntryToFileAsync(o, { type: "isolation-latch", side: e, sessionId: K() }, t).catch(
       (d) => {
         let p = A(d);
         if (Po(d))
@@ -263199,31 +263199,31 @@ function ZV(e, t) {
     );
   }
 }
-function s8e() {
+function getCurrentSessionIsolationLatch() {
   return Ki().currentSessionIsolationLatch;
 }
-async function Khn(e, t) {
+async function recordArtifactCommentMonitor(e, t) {
   await Ki().appendEntry(e, void 0, void 0, t);
 }
-function Xhn() {
+function takeResumedArtifactCommentMonitor() {
   let e = Ki(),
     t = e.resumedArtifactCommentMonitor;
   return ((e.resumedArtifactCommentMonitor = void 0), t);
 }
-function Yhn() {
+function takeResumedArtifactAutoReactLedger() {
   let e = Ki(),
     t = e.resumedArtifactAutoReactLedger;
   return ((e.resumedArtifactAutoReactLedger = void 0), t);
 }
-function Jhn() {
+function peekResumedArtifactAutoReactLedger() {
   return Ki().resumedArtifactAutoReactLedger;
 }
-var afr = "";
+var UNLATCHED_RESUMED_ATIS = "";
 function xje(e, t) {
-  return e.get(t) ?? afr;
+  return e.get(t) ?? UNLATCHED_RESUMED_ATIS;
 }
-var S9t = new j(() => Le());
-function mC(e, t) {
+var worktreeStateSignals = new j(() => Le());
+function saveWorktreeState(e, t) {
   let r = e
       ? {
           originalCwd: e.originalCwd,
@@ -263241,10 +263241,10 @@ function mC(e, t) {
       : null,
     o = Ki();
   if (
-    ((o.currentSessionWorktree = r), S9t.of(B().host).emit(r), o.sessionFile)
+    ((o.currentSessionWorktree = r), worktreeStateSignals.of(B().host).emit(r), o.sessionFile)
   ) {
     let d = o.sessionFile;
-    RE(
+    appendEntryToFileAsync(
       d,
       { type: "worktree-state", worktreeSession: r, sessionId: K() },
       t,
@@ -263253,20 +263253,20 @@ function mC(e, t) {
     });
   }
 }
-function Kc(e) {
+function getSessionIdFromLog(e) {
   if (e.sessionId) return e.sessionId;
   return e.messages[0]?.sessionId;
 }
-function gj(e) {
+function isLiteLog(e) {
   return e.messages.length === 0 && e.sessionId !== void 0;
 }
-async function AY(e, t) {
-  if (!gj(e)) return e;
+async function loadFullLog(e, t) {
+  if (!isLiteLog(e)) return e;
   let r = e.fullPath;
   if (!r) return e;
   try {
     let o = hu(r, t?.storageV5),
-      d = await dre(r, o && { storageV5: o }),
+      d = await loadTranscriptFile(r, o && { storageV5: o }),
       {
         messages: p,
         summaries: _,
@@ -263316,13 +263316,13 @@ async function AY(e, t) {
       if (wn) return uxt(d, e, e.sessionId);
       return e;
     }
-    let kn = NMe(p, un);
-    Lhn(p, kn, un.sessionId);
+    let kn = buildConversationChain(p, un);
+    warnIfTranscriptUnchained(p, kn, un.sessionId);
     let on = un.sessionId;
     return {
       ...e,
       rewindAnchorUuid: d.rewindAnchorUuid,
-      messages: l9t(kn),
+      messages: removeExtraFields(kn),
       firstPrompt: cxt(kn),
       messageCount: dxt(kn),
       summary: un ? _.get(un.uuid) : e.summary,
@@ -263382,11 +263382,11 @@ async function AY(e, t) {
     return e;
   }
 }
-async function QM(e, t, r) {
+async function searchSessionsByCustomTitle(e, t, r) {
   let { limit: o, exact: d } = t || {},
     p = await q9(he()),
     _ = await Iyr(p, void 0, r),
-    { logs: E } = await mre(_, 0, _.length, r),
+    { logs: E } = await enrichLogs(_, 0, _.length, r),
     C = e.toLowerCase().trim(),
     I = E.filter((F) => {
       let U = (F.customTitle ?? F.aiTitle)?.toLowerCase().trim();
@@ -263395,7 +263395,7 @@ async function QM(e, t, r) {
     }),
     D = new Map();
   for (let F of I) {
-    let U = Kc(F);
+    let U = getSessionIdFromLog(F);
     if (U) {
       let V = D.get(U);
       if (!V || F.modified > V.modified) D.set(U, F);
@@ -263604,9 +263604,9 @@ function Cyr(e, t, r, o) {
     He = [],
     je = { offset: -1, length: 0 },
     Ke,
-    ct = Wpr,
-    vt = Gpr,
-    ut = qpr;
+    ct = INDEX_HEAD_SCAN_BYTES,
+    vt = INDEX_BOUNDARY_SCAN_BYTES,
+    ut = INDEX_LAST_PROMPT_SCAN_BYTES;
   function Wt(tn, dn) {
     let cn = -1,
       It = -1,
@@ -263638,7 +263638,7 @@ function Cyr(e, t, r, o) {
       He.push({ offset: It, length: cn });
       return;
     }
-    if (cn < ut && Dn.subarray(0, Math.min(cn, zpr)).includes(F)) {
+    if (cn < ut && Dn.subarray(0, Math.min(cn, LAST_PROMPT_PREFIX_SCAN_BYTES)).includes(F)) {
       let $n;
       try {
         $n = z(Dn.toString("utf8", 0, cn));
@@ -263876,7 +263876,7 @@ function xge(e) {
     ? e.writtenAtMs
     : Number.NEGATIVE_INFINITY;
 }
-function b9t(e, t) {
+function mergeArtifactCommentMonitorEntries(e, t) {
   let r = t.artifacts,
     o = e.artifacts;
   if (typeof r !== "object" || r === null)
@@ -264006,7 +264006,7 @@ function Ryr(e) {
         ur.set(Fn.uuid, Yn && ur.has(Yn) ? (ur.get(Yn) ?? null) : Yn);
         return;
       }
-      if (TH(Fn)) {
+      if (isTranscriptMessage(Fn)) {
         if (Fn.parentUuid && ur.has(Fn.parentUuid))
           (Phr("rewrote"), (Fn.parentUuid = ur.get(Fn.parentUuid) ?? null));
         if ((wZ(Fn), Fn.type === "assistant" && Fn.wireToolInputs !== void 0)) {
@@ -264062,7 +264062,7 @@ function Ryr(e) {
         He.set(Fn.sessionId, Fn.worktreeSession);
       else if (Fn.type === "artifact-comment-monitor" && Fn.sessionId) {
         let Yn = je.get(Fn.sessionId);
-        je.set(Fn.sessionId, Yn === void 0 ? Fn : b9t(Yn, Fn));
+        je.set(Fn.sessionId, Yn === void 0 ? Fn : mergeArtifactCommentMonitorEntries(Yn, Fn));
       } else if (Fn.type === "artifact-autoreact-ledger" && Fn.sessionId)
         Ke.set(Fn.sessionId, Fn);
       else if (Fn.type === "cost-state" && Fn.sessionId) {
@@ -264294,12 +264294,12 @@ function Ryr(e) {
     };
   }
 }
-function Y_r(e, t) {
+function loadTranscriptFromEntries(e, t) {
   let r = Ryr(t?.keepAllLeaves ?? !1);
   for (let o of e) r.processEntry(o);
   return r.finish();
 }
-async function dre(e, t) {
+async function loadTranscriptFile(e, t) {
   let r = Ryr(t?.keepAllLeaves ?? !1),
     {
       processEntry: o,
@@ -264435,18 +264435,18 @@ async function gxt(e, t, r) {
     if (t === void 0) {
       let p = await abs(e, r);
       if (p !== void 0) {
-        let _ = await dre(p.path, { storageV5: { backend: r, key: p.key } });
+        let _ = await loadTranscriptFile(p.path, { storageV5: { backend: r, key: p.key } });
         return Object.assign(_, { sessionFile: p.path });
       }
     } else {
       let p = hu(t, r);
       if (p !== void 0) {
-        let _ = await dre(t, { storageV5: p });
+        let _ = await loadTranscriptFile(t, { storageV5: p });
         return Object.assign(_, { sessionFile: t });
       }
     }
   let o = t ?? (await lbs(e)),
-    d = await dre(o);
+    d = await loadTranscriptFile(o);
   return Object.assign(d, { sessionFile: o });
 }
 async function abs(e, t) {
@@ -264524,19 +264524,19 @@ async function lbs(e) {
   }
   return d;
 }
-function B7n() {
+function clearSessionMessagesCache() {
   Xd().clearSessionMessagesCache();
 }
-function w9t(e, t) {
+function primeSessionMessagesCache(e, t) {
   Xd().primeSessionMessagesCache(e, t);
 }
-async function Jyt(e, t, r) {
+async function doesMessageExistInSession(e, t, r) {
   return (await Xd().sessionMessages(e, r)).has(t);
 }
-async function i8e(e, t, r) {
+async function isMessageTurnUnanswered(e, t, r) {
   try {
     let { messages: o } = await gxt(e, void 0, r);
-    return lfr([...o.values()], t);
+    return isTurnUnanswered([...o.values()], t);
   } catch (o) {
     return (
       n(
@@ -264547,7 +264547,7 @@ async function i8e(e, t, r) {
     );
   }
 }
-function lfr(e, t) {
+function isTurnUnanswered(e, t) {
   let r = e.findIndex((p) => p.uuid === t);
   if (r === -1) return !1;
   let o = [];
@@ -264573,16 +264573,16 @@ function lfr(e, t) {
   }
   return !0;
 }
-async function CY(e, t, r) {
+async function getLastSessionLog(e, t, r) {
   let o = await gxt(e, t, r),
     { sessionFile: d, v5Read: p } = o;
-  return cfr(e, o, {
+  return sessionLogFromTranscriptLoad(e, o, {
     path: d,
     modifiedAt: async () =>
       p !== void 0 ? new Date(p.mtimeMs) : (await Vx(d)).mtime,
   });
 }
-async function cfr(e, t, r) {
+async function sessionLogFromTranscriptLoad(e, t, r) {
   let {
     messages: o,
     summaries: d,
@@ -264624,7 +264624,7 @@ async function cfr(e, t, r) {
   } = t;
   if (o.size === 0) return null;
   if (r === void 0) Xd().primeFilelessResume(e, o.keys());
-  else w9t(e, o.keys());
+  else primeSessionMessagesCache(e, o.keys());
   let Qt =
     o4(
       o.values(),
@@ -264645,8 +264645,8 @@ async function cfr(e, t, r) {
     }
     return null;
   }
-  let wn = NMe(o, Qt);
-  Lhn(o, wn, Qt.sessionId);
+  let wn = buildConversationChain(o, Qt);
+  warnIfTranscriptUnchained(o, wn, Qt.sessionId);
   let un = Qt.sessionId,
     kn = d.get(Qt.uuid),
     on = p.get(un),
@@ -264698,9 +264698,9 @@ async function cfr(e, t, r) {
     contextCollapseSnapshot: It?.sessionId === un ? It : void 0,
   };
 }
-async function ufr(e, t) {
-  let r = await Mhn(e, t),
-    { logs: o } = await mre(r, 0, r.length, t),
+async function loadMessageLogs(e, t) {
+  let r = await fetchLogs(e, t),
+    { logs: o } = await enrichLogs(r, 0, r.length, t),
     d = $1(o);
   return (
     d.forEach((p, _) => {
@@ -264709,7 +264709,7 @@ async function ufr(e, t) {
     d
   );
 }
-async function j7n(e, t, r) {
+async function findFirstMessageLog(e, t, r) {
   let o = Buffer.alloc(Mm);
   for (let d of e) {
     let p = await Lyr(d, o, r);
@@ -264720,9 +264720,9 @@ async function j7n(e, t, r) {
   }
   return null;
 }
-async function J_r(e, t) {
+async function loadAllProjectsMessageLogs(e, t) {
   if (t?.skipIndex) return cbs(e, t.storageV5);
-  return (await UMe(e, t?.initialEnrichCount ?? Rje, t?.storageV5)).logs;
+  return (await loadAllProjectsMessageLogsProgressive(e, t?.initialEnrichCount ?? Rje, t?.storageV5)).logs;
 }
 var Pyr = 64;
 async function Aje(e) {
@@ -264791,7 +264791,7 @@ async function cbs(e, t) {
     I
   );
 }
-async function UMe(e, t = Rje, r) {
+async function loadAllProjectsMessageLogsProgressive(e, t = Rje, r) {
   let o = Pl(),
     d = M() && r ? await Aje(r) : void 0,
     p;
@@ -264805,9 +264805,9 @@ async function UMe(e, t = Rje, r) {
     }
     p = D.filter((N) => N.isDirectory()).map((N) => Wp(o, N.name));
   }
-  let _ = await Promise.all(p.map((D) => fre(D, e, void 0, r))),
+  let _ = await Promise.all(p.map((D) => getSessionFilesLite(D, e, void 0, r))),
     E = Lge(_.flat()),
-    { logs: C, nextIndex: I } = await mre(E, 0, t, r);
+    { logs: C, nextIndex: I } = await enrichLogs(E, 0, t, r);
   return (
     $1(C).forEach((D, N) => {
       D.value = N;
@@ -264815,14 +264815,14 @@ async function UMe(e, t = Rje, r) {
     { logs: C, allStatLogs: E, nextIndex: I }
   );
 }
-async function a8e(e, t, r = Rje, o) {
-  return (await tAe(e, t, r, o)).logs;
+async function loadSameRepoMessageLogs(e, t, r = Rje, o) {
+  return (await loadSameRepoMessageLogsProgressive(e, t, r, o)).logs;
 }
-async function tAe(e, t, r = Rje, o) {
+async function loadSameRepoMessageLogsProgressive(e, t, r = Rje, o) {
   n(`/resume: loading sessions for cwd=${he()}, worktrees=[${e.join(", ")}]`);
   let d = await Iyr(e, t, o);
   n(`/resume: found ${d.length} session files on disk`);
-  let { logs: p, nextIndex: _ } = await mre(d, 0, r, o);
+  let { logs: p, nextIndex: _ } = await enrichLogs(d, 0, r, o);
   return (
     $1(p).forEach((E, C) => {
       E.value = C;
@@ -264850,13 +264850,13 @@ async function Iyr(e, t, r) {
     ),
     F =
       N.length > 0
-        ? (await Promise.all(N.map((De) => fre(De, t, void 0, r))))
+        ? (await Promise.all(N.map((De) => getSessionFilesLite(De, t, void 0, r))))
             .flat()
             .map((De) => ({ ...De, isAlias: !0 }))
         : [];
   if (e.length <= 1) {
     let De = ll(d),
-      He = await fre(De, void 0, d, r),
+      He = await getSessionFilesLite(De, void 0, d, r),
       je =
         YCt.test(d) && (await Sje(He, d, r))
           ? await XCt(d, De, t, !1, void 0, r, _)
@@ -264871,7 +264871,7 @@ async function Iyr(e, t, r) {
         await Promise.all(
           en
             .filter((tn) => tn.startsWith(ut))
-            .map((tn) => fre(Wp(o, tn), t, void 0, r)),
+            .map((tn) => getSessionFilesLite(Wp(o, tn), t, void 0, r)),
         )
       ).flat();
     else
@@ -264881,7 +264881,7 @@ async function Iyr(e, t, r) {
           await Promise.all(
             tn
               .filter((dn) => dn.isDirectory() && dn.name.startsWith(ut))
-              .map((dn) => fre(Wp(o, dn.name), t, void 0, r)),
+              .map((dn) => getSessionFilesLite(Wp(o, dn.name), t, void 0, r)),
           )
         ).flat();
       } catch (tn) {
@@ -264915,7 +264915,7 @@ async function Iyr(e, t, r) {
         `Failed to read projects dir ${o}, falling back to current project: ${He}`,
       );
       let je = ll(he()),
-        Ke = await fre(je, t, he(), r);
+        Ke = await getSessionFilesLite(je, t, he(), r);
       return F.length > 0 ? Lge(Ke.concat(F)) : Ke;
     }
     ue = De.filter((He) => He.isDirectory()).map((He) => He.name);
@@ -264942,7 +264942,7 @@ async function Iyr(e, t, r) {
       }
   }
   let ve = await Promise.all(
-      Se.map(({ projectDir: De, wtPath: He }) => fre(De, void 0, He, r, _e)),
+      Se.map(({ projectDir: De, wtPath: He }) => getSessionFilesLite(De, void 0, He, r, _e)),
     ),
     Me = new Map();
   for (let De = 0; De < Se.length; De++) {
@@ -265006,7 +265006,7 @@ async function Oyr(e, t) {
   }
   let p = Ds(ubs, async (E) => {
     let C = Wp(r, E),
-      D = [...(await jMe(C, e)).values()].sort((F, U) => U.mtime - F.mtime)[0];
+      D = [...(await getSessionFilesWithMtime(C, e)).values()].sort((F, U) => U.mtime - F.mtime)[0];
     if (!D) return null;
     let N = Buffer.allocUnsafe(Mm);
     try {
@@ -265025,7 +265025,7 @@ async function XCt(e, t, r, o = !1, d, p, _) {
   for (let { projectDir: N, recordedCwd: F } of E) {
     if (N === t) continue;
     if (F !== C && !(o && F.startsWith(C + "/"))) continue;
-    let V = [...(await jMe(N, p)).entries()].sort(
+    let V = [...(await getSessionFilesWithMtime(N, p)).entries()].sort(
       (re, ue) => ue[1].mtime - re[1].mtime,
     );
     if (r && V.length > r) V = V.slice(0, r);
@@ -265054,7 +265054,7 @@ async function XCt(e, t, r, o = !1, d, p, _) {
     D
   );
 }
-async function pre(e, t, r) {
+async function getAgentTranscript(e, t, r) {
   let o = await Vhr(e, t);
   if (o.transcript) return o.transcript;
   let d = Ki();
@@ -265062,14 +265062,14 @@ async function pre(e, t, r) {
   let p =
       o.miss === "absent" ||
       o.miss === "inaccessible" ||
-      (o.miss !== "load_threw" && !o.hasContent && !(await Gyt(Ud(e), t))),
+      (o.miss !== "load_threw" && !o.hasContent && !(await transcriptFileHasContentEntry(Ud(e), t))),
     _ = "skipped",
     E = o.miss;
   if (p) {
     try {
       _ = await d.hydrateAgentTranscriptOnDemand(e, t, r?.signal);
     } catch (C) {
-      if (!(C instanceof XEe) || !d.hasWrittenAgentLocally(e)) throw C;
+      if (!(C instanceof AgentTranscriptFetchError) || !d.hasWrittenAgentLocally(e)) throw C;
       _ = C.outcome;
     }
     if (_ !== "unsafe_id") {
@@ -265101,7 +265101,7 @@ async function Vhr(e, t) {
       "getAgentTranscript: agent transcript path is outside the storage keyspace; reading it raw",
     );
   try {
-    let E = await dre(d, _);
+    let E = await loadTranscriptFile(d, _);
     if (E.servedBy === "absent")
       return (
         n(
@@ -265141,13 +265141,13 @@ async function Vhr(e, t) {
           ),
       );
     if (!U) return o("no_leaf");
-    let ue = NMe(C, U)
+    let ue = buildConversationChain(C, U)
         .filter((Se) => Se.agentId === e)
         .map(({ isSidechain: Se, parentUuid: ve, promptId: Me, ...xe }) => xe),
       de = D.get(e);
     return {
       transcript: {
-        messages: de === void 0 ? ue : (await Qpr(de, void 0, t)).concat(ue),
+        messages: de === void 0 ? ue : (await hydrateForkContext(de, void 0, t)).concat(ue),
         contentReplacements: I.get(e) ?? [],
       },
     };
@@ -265166,7 +265166,7 @@ async function Vhr(e, t) {
     return o("load_threw");
   }
 }
-function Qhn(e) {
+function extractAgentIdsFromMessages(e) {
   let t = [];
   for (let r of e)
     if (
@@ -265181,11 +265181,11 @@ function Qhn(e) {
       t.push(r.data.agentId);
   return Y(t);
 }
-async function T9t(e, t) {
+async function loadSubagentTranscripts(e, t) {
   let r = await Promise.all(
     e.filter(TXt).map(async (o) => {
       try {
-        let d = await pre(oo(o), t);
+        let d = await getAgentTranscript(oo(o), t);
         if (d && d.messages.length > 0)
           return { agentId: o, transcript: d.messages };
         return null;
@@ -265198,14 +265198,14 @@ async function T9t(e, t) {
     r.filter((o) => o !== null).map((o) => [o.agentId, o.transcript]),
   );
 }
-async function Zhn(e) {
-  return T9t(await wEt(M() && e !== void 0 ? e : void 0), e);
+async function loadAllSubagentTranscriptsFromDisk(e) {
+  return loadSubagentTranscripts(await wEt(M() && e !== void 0 ? e : void 0), e);
 }
 var dbs = new Set([]);
 function fbs(e) {
   return e.type === "attachment" && e.attachment?.type === "fork_briefing";
 }
-function bT(e) {
+function isLoggableMessage(e) {
   if (e.type === "progress") return !1;
   if (
     e.type === "attachment" &&
@@ -265215,11 +265215,11 @@ function bT(e) {
     !e.attachment.stderr?.trim()
   )
     return !1;
-  if (e.type === "attachment" && bhn() !== "ant" && dbs.has(e.attachment.type))
+  if (e.type === "attachment" && getUserType() !== "ant" && dbs.has(e.attachment.type))
     return !1;
   return !0;
 }
-function E9t(e, t = new Set()) {
+function collectReplIds(e, t = new Set()) {
   for (let r of e)
     if (r.type === "assistant" && Array.isArray(r.message.content)) {
       for (let o of r.message.content)
@@ -265275,19 +265275,19 @@ function pbs(e, t) {
     return [o];
   });
 }
-function BMe(e, t = e) {
-  let r = e.filter(bT);
-  if (bhn() === "ant") return r;
-  let o = t instanceof Set ? t : E9t(t);
+function cleanMessagesForLogging(e, t = e) {
+  let r = e.filter(isLoggableMessage);
+  if (getUserType() === "ant") return r;
+  let o = t instanceof Set ? t : collectReplIds(t);
   return pbs(r, o);
 }
-async function Q_r(e, t) {
-  return (await ufr(void 0, t))[e] || null;
+async function getLogByIndex(e, t) {
+  return (await loadMessageLogs(void 0, t))[e] || null;
 }
-function Z_r(e, t) {
-  return W7n(e, [t]).get(t) ?? null;
+function findUnresolvedToolUseInTranscript(e, t) {
+  return findUnresolvedToolUsesInTranscript(e, [t]).get(t) ?? null;
 }
-function W7n(e, t) {
+function findUnresolvedToolUsesInTranscript(e, t) {
   let r = new Set(t),
     o = new Map();
   for (let d of e)
@@ -265308,17 +265308,17 @@ function W7n(e, t) {
     }
   return o;
 }
-async function Qyt(e, t) {
-  return (await A9t([e], t)).get(e) ?? null;
+async function findUnresolvedToolUse(e, t) {
+  return (await findUnresolvedToolUses([e], t)).get(e) ?? null;
 }
-async function A9t(e, t) {
+async function findUnresolvedToolUses(e, t) {
   if (e.length === 0) return new Map();
   let r;
   try {
     r = yl();
     let o = hu(r, t),
-      { messages: d } = await dre(r, o && { storageV5: o }),
-      p = W7n(d.values(), e),
+      { messages: d } = await loadTranscriptFile(r, o && { storageV5: o }),
+      p = findUnresolvedToolUsesInTranscript(d.values(), e),
       _ = e.filter((E) => !p.has(E));
     if (_.length > 0)
       n(
@@ -265336,7 +265336,7 @@ async function A9t(e, t) {
     );
   }
 }
-async function G7n(e, t) {
+async function findDeferredToolMarkerInTranscript(e, t) {
   try {
     let r =
       !M() || t === void 0
@@ -265441,7 +265441,7 @@ async function mbs(e, t) {
     });
   return d;
 }
-async function jMe(e, t) {
+async function getSessionFilesWithMtime(e, t) {
   let r = M() && t ? await mbs(e, t) : void 0;
   if (r !== void 0) return r;
   let o = new Map(),
@@ -265478,7 +265478,7 @@ async function jMe(e, t) {
   );
 }
 var Rje = 50;
-async function l8e(e, t, r) {
+async function loadAllLogsFromSessionFile(e, t, r) {
   let {
     messages: o,
     summaries: d,
@@ -265502,7 +265502,7 @@ async function l8e(e, t, r) {
     attributionSnapshots: xe,
     contentReplacements: Oe,
     leafUuids: Ne,
-  } = await dre(
+  } = await loadTranscriptFile(
     e,
     M() && r ? { keepAllLeaves: !0, storageV5: r } : { keepAllLeaves: !0 },
   );
@@ -265512,13 +265512,13 @@ async function l8e(e, t, r) {
   let He = wyr(o),
     je = [];
   for (let Ke of De) {
-    let ct = NMe(o, Ke, He);
+    let ct = buildConversationChain(o, Ke, He);
     if (ct.length === 0) continue;
     let vt = ct[0],
       ut = Ke.sessionId;
     je.push({
       date: Ke.timestamp,
-      messages: l9t(ct),
+      messages: removeExtraFields(ct),
       fullPath: e,
       value: 0,
       created: new Date(vt.timestamp),
@@ -265576,7 +265576,7 @@ async function Khr(e, t, r) {
         D = [];
       for (let N of I)
         try {
-          let F = await l8e(N.path, void 0, { backend: _, key: N.key });
+          let F = await loadAllLogsFromSessionFile(N.path, void 0, { backend: _, key: N.key });
           D.push(...F);
         } catch {
           n(`Failed to load session file: ${N.path}`);
@@ -265584,7 +265584,7 @@ async function Khr(e, t, r) {
       return D;
     }
   }
-  let o = await jMe(e);
+  let o = await getSessionFilesWithMtime(e);
   if (o.size === 0) return [];
   let d;
   if (t && o.size > t)
@@ -265593,7 +265593,7 @@ async function Khr(e, t, r) {
   let p = [];
   for (let _ of d)
     try {
-      let E = await l8e(_.path);
+      let E = await loadAllLogsFromSessionFile(_.path);
       p.push(...E);
     } catch {
       n(`Failed to load session file: ${_.path}`);
@@ -265799,8 +265799,7 @@ function _bs(e) {
           let V = F.replace(/^\//, ""),
             re = Lr(N, "command-args")?.trim() || "";
           if (
-            import.meta
-              .require("../../02-功能模块/斜杠命令-框架/getBuiltinCommands.8nr5y4mb.js")
+            ({ builtInCommandNames })
               .builtInCommandNames()
               .has(V) ||
             !re
@@ -265876,8 +265875,8 @@ function Lge(e) {
   }
   return $1([...t.values()]).map((r, o) => ({ ...r, value: o }));
 }
-async function fre(e, t, r, o, d) {
-  let _ = [...(await jMe(e, o)).entries()].sort(
+async function getSessionFilesLite(e, t, r, o, d) {
+  let _ = [...(await getSessionFilesWithMtime(e, o)).entries()].sort(
     (I, D) => D[1].mtime - I[1].mtime,
   );
   if (t && _.length > t) _ = _.slice(0, t);
@@ -266005,7 +266004,7 @@ async function Lyr(e, t, r) {
     );
   return D;
 }
-async function mre(e, t, r, o) {
+async function enrichLogs(e, t, r, o) {
   let d = [],
     p = Buffer.alloc(Mm),
     _ = t;
@@ -266071,8 +266070,8 @@ class Byr {
     if (process.stdout.isTTY && ld() && !IL())
       try {
         let e = K();
-        if (!Nyt(e)) return;
-        let t = mu(e),
+        if (!sessionIdExists(e)) return;
+        let t = getCurrentSessionTitle(e),
           r;
         if (t) r = `"${t.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"`;
         else r = e;
@@ -266417,7 +266416,7 @@ claude ${d}--resume ${r}
         executeSessionEndHooks: o,
         getSessionEndHookTimeoutMs: d,
         SESSION_END_HOOK_TIMEOUT_MS_DEFAULT: p,
-      } = await import("../../02-功能模块/Hooks钩子/SESSION_END_HOOK_TIMEOUT_MS_DEFAULT.zv5htpet.js"),
+      } = await Promise.resolve({ SESSION_END_HOOK_TIMEOUT_MS_DEFAULT, executeSessionEndHooks, getSessionEndHookTimeoutMs }),
       _;
     try {
       _ = d();
@@ -266595,7 +266594,7 @@ function yUt() {
 }
 async function Eue() {
   try {
-    let { flushAnalyticsSinks: e } = await import("../../02-功能模块/认证-OAuth登录/registerPreFlushTask.748m7jpz.js");
+    let { flushAnalyticsSinks: e } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js");
     await e();
   } catch {}
 }
@@ -266655,8 +266654,8 @@ export {
   Mft,
   Rte,
   kte,
-  q7,
-  HF,
+  getReviewCostNote,
+  getReviewDurationNote,
   EGn,
   $Oe,
   X$t,
@@ -266670,8 +266669,8 @@ export {
   xte,
   IF,
   due,
-  qo,
-  zp,
+  getCommandName,
+  isCommandEnabled,
   wwe,
   Y$t,
   pue,
@@ -266682,11 +266681,11 @@ export {
   jOe,
   Mun,
   mue,
-  Di,
-  B9,
+  findCommand,
+  hasCommand,
   oV,
-  V7,
-  gue,
+  filterSkillCommandsByAllowlist,
+  getCommand,
   RGn,
   K7,
   hue,
@@ -266714,13 +266713,13 @@ export {
   $v,
   w2,
   bO,
-  $ft,
-  Twe,
-  h4e,
-  DGn,
-  $un,
-  tUt,
-  nUt,
+  loadedIndexExclusions,
+  recallVisibleTeamMounts,
+  isRecallVisiblePath,
+  isRecallCorpusFile,
+  scanMemoryHeaders,
+  scanMemoryFiles,
+  formatMemoryManifest,
   sV,
   Uft,
   LGn,
@@ -266988,9 +266987,9 @@ export {
   pmt,
   NUt,
   fmt,
-  aDe,
-  sX,
-  iX,
+  buildVertexGoogleAuth,
+  suppressVertexAuthRejection,
+  vertexResidualCredentialPins,
   $F,
   FUt,
   lDe,
@@ -267208,21 +267207,21 @@ export {
   Xwe,
   wDe,
   hBt,
-  zte,
-  Fdn,
-  $dn,
-  V4e,
-  xa,
-  K4e,
-  pX,
-  qF,
-  Lue,
-  Udn,
-  Zqn,
-  SE,
-  D2,
-  X4e,
-  Bdn,
+  getBuiltInAgents,
+  agentMcpSource,
+  agentMcpSpecsToScopedConfigs,
+  toAgentInfos,
+  isBuiltInAgent,
+  isCustomAgent,
+  isPluginAgent,
+  getActiveAgentsFromList,
+  rebuildAgentDefinitions,
+  hasRequiredMcpServers,
+  filterAgentsByMcpRequirements,
+  getAgentDefinitionsWithOverrides,
+  clearAgentDefinitionsCache,
+  parseAgentsFromJson,
+  validateAgentsJson,
   TDe,
   Ywe,
   EDe,
@@ -267276,10 +267275,10 @@ export {
   Jte,
   Qte,
   Lg,
-  fd,
-  Y4e,
-  J4e,
-  TBt,
+  WindowsSandboxError,
+  checkWindowsSandboxStatusAsync,
+  ensurePersistentWindowsCa,
+  installWindowsSandboxAsync,
   Q4e,
   Umt,
   EBt,
@@ -267291,37 +267290,37 @@ export {
   ABt,
   xDe,
   L2,
-  Jdn,
-  Zte,
-  Zwe,
-  eVe,
-  _V,
-  CBt,
-  jmt,
-  vBt,
-  mX,
-  RBt,
-  Qdn,
-  gX,
-  Fue,
-  kBt,
-  Wmt,
-  AM,
-  xBt,
-  ene,
-  CM,
-  tne,
-  Zdn,
-  $ue,
-  szn,
-  izn,
-  epn,
-  eTe,
-  HBt,
-  HDe,
-  azn,
-  tpn,
-  st,
+  SandboxUnavailableForShellError,
+  SandboxPolicyRefusalError,
+  posixCovers,
+  denyEntryCovers,
+  parseRuleForSandbox,
+  resolvePathPatternForSandboxAt,
+  resolvePathPatternForSandbox,
+  resolveSandboxFilesystemPathAt,
+  resolveSandboxFilesystemPath,
+  resolveSandboxDenyReadEntry,
+  relatchTenguSandboxGbConfig,
+  resolveWindowsTlsTerminateCaSource,
+  willSandboxTlsTerminate,
+  isInstalledWindowsTlsCaCurrent,
+  sandboxReadBlockApplies,
+  getEffectiveFilesystemPolicy,
+  sandboxExportsChildTmpDir,
+  shouldAllowManagedSandboxDomainsOnly,
+  isMisleadingConsentHost,
+  consentHostEntry,
+  isHostAllowedBySandboxNetworkPolicy,
+  canonicalizePathForMaskSweep,
+  addSandboxAllowWriteDirectory,
+  removeSandboxAllowWriteDirectory,
+  detectWorktreeGitCommonDir,
+  shouldForceSandboxOn,
+  isScrubOnlySandboxMode,
+  isSandboxSettingOverriddenByPolicy,
+  classifyWindowsSandboxLaunchExit,
+  addToExcludedCommands,
+  SandboxManager,
   npn,
   dT,
   IDe,
@@ -267340,7 +267339,7 @@ export {
   jS,
   mzn,
   tTe,
-  rpn,
+  antBuiltinDenyRules,
   o3,
   M2,
   OBt,
@@ -267359,12 +267358,12 @@ export {
   gzn,
   hzn,
   rVe,
-  yV,
-  EI,
-  _zn,
-  yzn,
-  Vmt,
-  Szn,
+  isForkSubagentEnabled,
+  FORK_AGENT,
+  isInForkChild,
+  buildForkedMessages,
+  buildChildMessage,
+  buildWorktreeNotice,
   nTe,
   ep,
   SV,
@@ -267476,45 +267475,45 @@ export {
   $De,
   l3,
   UDe,
-  uVe,
-  cgt,
-  ine,
-  ane,
-  ugt,
-  Fl,
-  c3,
-  HO,
-  dTe,
-  pTe,
-  GBt,
-  dVe,
-  BDe,
-  qBt,
-  gd,
-  fTe,
-  zBt,
-  VBt,
-  bpn,
-  Gue,
-  que,
-  Epr,
-  $zn,
-  KBt,
-  mTe,
-  jv,
-  XBt,
-  gTe,
-  pVe,
-  WS,
+  isAutoModeConsentFlowEnabled,
+  resetDenialStreakAfterUserApproval,
+  permissionRuleSourceDisplayString,
+  isChainOnAllowActive,
+  hasAutoModeClassifierDenyRules,
+  createPermissionRequestMessage,
+  stripWholeToolGrantsForAsk,
+  withoutGrantsForRemoteScope,
+  isAgentToolPoolDenied,
+  agentToolPoolDeniedMessage,
+  filterDispatchableAgents,
+  getDispatchableAgents,
+  guardHookUpdatedInput,
+  consultPermissionRequestHooksForUnpromptableAsk,
+  hasPermissionsToUseTool,
+  hasPermissionsToUseToolWithSink,
+  recordAutoModeDenial,
+  enforceAutoModeDenialLimits,
+  recordAutoModeSuccess,
+  isAskRuleDrivenReason,
+  carriesAskRuleIntent,
+  isServerPolicyAskReason,
+  isSandboxOverrideUnderReadBlock,
+  hookUpdatedInputSatisfiesInteraction,
+  PERMISSION_CHECK_CRASHED_REASON,
+  checkRuleBasedPermissions,
+  deletePermissionRule,
+  applyPermissionRulesToPermissionContext,
+  syncPermissionRulesFromDisk,
+  findSafetyCheckReason,
   wpn,
   zue,
   fVe,
-  jDe,
-  dgt,
-  Tpn,
-  YBt,
-  Epn,
-  Vue,
+  executePreToolHooks,
+  executePostToolHooks,
+  executePostToolUseFailureHooks,
+  executePostToolBatchHooks,
+  executePermissionDeniedHooks,
+  executePermissionRequestHooks,
   JBt,
   hTe,
   Uzn,
@@ -267564,15 +267563,15 @@ export {
   bTe,
   Vzn,
   Kzn,
-  p_r,
-  f_r,
-  vpn,
+  prepareChromeFileUploadInput,
+  passThroughChromeFileUploadInput,
+  verifyHandleBinding,
   lne,
   Xzn,
   s2t,
-  Jue,
-  HM,
-  Tk,
+  getSkillOverride,
+  isSkillExcludedFromModel,
+  isSkillOff,
   IM,
   Yzn,
   ggt,
@@ -267625,9 +267624,9 @@ export {
   TVe,
   a4n,
   l4n,
-  Hpn,
-  PO,
-  Egt,
+  parseToolPreset,
+  filterToolsByDenyRules,
+  isToolDroppedByDenyRules,
   g2t,
   tde,
   h2t,
@@ -267700,8 +267699,8 @@ export {
   Hgt,
   R4n,
   Lpn,
-  EX,
-  k4n,
+  hasWorktreeCreateHook,
+  hasWorktreeRemoveHook,
   sde,
   XF,
   Mpn,
@@ -267712,16 +267711,16 @@ export {
   Igt,
   RTe,
   OM,
-  EV,
-  iw,
-  kTe,
-  AX,
-  Pgt,
-  kVe,
-  xVe,
-  QDe,
-  HVe,
-  Ogt,
+  reduceFileHistoryState,
+  fileHistoryEnabled,
+  fileHistoryTrackEdit,
+  fileHistoryMakeSnapshot,
+  RewindNoFilesRestoredError,
+  fileHistoryRewind,
+  fileHistoryCanRestore,
+  fileHistoryGetDiffStats,
+  fileHistoryRestoreStateFromLog,
+  copyFileHistoryForResume,
   CX,
   H2t,
   Fpn,
@@ -267731,17 +267730,17 @@ export {
   $pn,
   ZDe,
   Lgt,
-  vX,
-  xTe,
-  Iy,
-  YF,
-  Upn,
-  m3,
-  AV,
-  eLe,
-  I2t,
-  Bpn,
-  P2t,
+  isRemoteToolForwardingEnabled,
+  isRemoteToolForwardingEnabledCached,
+  isRemoteToolForwardingSwitchOn,
+  isSessionChannelDisabled,
+  isRemoteToolServingSwitchOn,
+  isRemoteToolServingMuted,
+  onServingMuteRecheck,
+  remoteToolServingOffReason,
+  launchedFromHome,
+  realpathOrSpelling,
+  remoteToolServingPolicyName,
   H4n,
   RX,
   I4n,
@@ -267903,7 +267902,7 @@ export {
   Ck,
   eVn,
   efn,
-  Zo,
+  asSystemPrompt,
   MO,
   cLe,
   tVn,
@@ -267974,8 +267973,8 @@ export {
   gjt,
   afn,
   ZVe,
-  mVn,
-  hjt,
+  ToolSearchDescriptionCache,
+  ToolSearchTool,
   lfn,
   vI,
   pde,
@@ -268000,10 +267999,10 @@ export {
   hVn,
   rht,
   MX,
-  mLe,
-  wjt,
-  NX,
-  _Vn,
+  isToolSearchToolAvailable,
+  isToolSearchEnabled,
+  extractDiscoveredToolNames,
+  getDeferredToolsDelta,
   K2,
   oht,
   yVn,
@@ -268070,14 +268069,14 @@ export {
   cKe,
   _Le,
   cht,
-  Ojt,
-  bfn,
-  uKe,
-  wfn,
-  Tfn,
-  yLe,
-  Em,
-  dKe,
+  WebFetchTransportError,
+  WebFetchCache,
+  convertHtmlToMarkdown,
+  isPreapprovedUrl,
+  getURLMarkdownContent,
+  applyPromptToMarkdown,
+  WebFetchTool,
+  isArtifactFetchEnabled,
   t$,
   pKe,
   uht,
@@ -268089,12 +268088,12 @@ export {
   fht,
   Efn,
   Djt,
-  Afn,
-  mKe,
-  Cfn,
-  vfn,
-  m_r,
-  g_r,
+  DELETE_COMMAND_NAMES,
+  isAllowedAutoMemWritePath,
+  createAutoMemCanUseTool,
+  initExtractMemories,
+  executeExtractMemories,
+  drainPendingExtraction,
   Ljt,
   xVn,
   Ane,
@@ -268104,12 +268103,12 @@ export {
   Rfn,
   HVn,
   RI,
-  IVn,
-  h_r,
-  FTe,
-  Mjt,
-  kfn,
-  xfn,
+  reportGitSessionContext,
+  createBridgeSession,
+  getBridgeSession,
+  getBridgeSessionOrStatus,
+  updateBridgeSessionTitle,
+  updateBridgeSessionColorTag,
   _ht,
   Ly,
   PVn,
@@ -268121,12 +268120,12 @@ export {
   Y2,
   zS,
   OVn,
-  bLe,
-  __r,
+  memoryWatchers,
+  startMemoryWatcher,
   Sht,
   Fjt,
-  DVn,
-  y_r,
+  isMemoryFileAccess,
+  registerSessionFileAccessHooks,
   hKe,
   $jt,
   LVn,
@@ -268142,46 +268141,46 @@ export {
   UTe,
   Hfn,
   wLe,
-  Ifn,
-  Pfn,
-  BO,
-  Ofn,
-  FX,
-  wht,
-  Tht,
-  Dfn,
-  Lfn,
-  wE,
+  saveCacheSafeParams,
+  getLastCacheSafeParamsForSameModel,
+  getLastCacheSafeParams,
+  isMainThreadCacheWarm,
+  createCacheSafeParams,
+  prepareForkedCommandContext,
+  extractResultText,
+  createSubagentContext,
+  forkPointUuidOf,
+  runForkedAgent,
   Ipr,
   Ppr,
   Mfn,
   Opr,
-  w3,
-  Nfn,
-  Ffn,
-  UVn,
-  BVn,
-  $fn,
-  jVn,
-  S_r,
+  loadPluginHooks,
+  pluginHooksUnknownCause,
+  pendingPluginHookRegistration,
+  failedPluginHookRegistration,
+  pluginHooksMayBeUnregistered,
+  clearPluginHookCache,
+  pruneRemovedPluginHooks,
+  setupPluginHookHotReload,
   Rk,
   WVn,
   TLe,
   IV,
   GVn,
   Ufn,
-  Eht,
-  Aht,
-  _Ke,
-  ELe,
-  Cht,
-  ALe,
-  yKe,
-  PV,
-  Bfn,
-  _de,
-  jO,
-  jfn,
+  dropMalformedAttachments,
+  getResumePrompt,
+  logResumeInterruptedTurn,
+  removeInterruptedMessage,
+  deserializeMessages,
+  dedupeSessionStartHookMessages,
+  dropRetractedMessages,
+  loadConversationForResume,
+  NO_SYNC_HANDLE_MESSAGE,
+  laptopDirSyncRegistries,
+  rootLaptopDirSyncRegistry,
+  takeLaptopDirSyncSession,
   CLe,
   vLe,
   SKe,
@@ -268192,24 +268191,24 @@ export {
   Sde,
   vne,
   Rht,
-  n$,
-  aC,
-  Af,
-  UX,
-  Bjt,
-  Wfn,
-  Gfn,
-  WO,
-  kht,
-  zVn,
-  J2,
-  VVn,
-  BX,
-  jjt,
-  Rne,
-  kne,
-  Wjt,
-  bKe,
+  spelledFrom,
+  isWithin,
+  builderGit,
+  readGitLayout,
+  MAX_INCLUDED_FILES,
+  resolveIncludePath,
+  NAME_NOT_TEXT,
+  layoutStillHolds,
+  parseGitVersion,
+  privateAdminDir,
+  hardenedSpawnEnv,
+  pinnedTempRoot,
+  reachRootsOf,
+  newScreenMemo,
+  BuilderGitProbes,
+  defaultBuilderGitProbes,
+  gitExeOnPath,
+  readSmallFile,
   KVn,
   BTe,
   xne,
@@ -268231,23 +268230,23 @@ export {
   wde,
   QVn,
   ZVn,
-  EKe,
-  jX,
-  Jm,
-  Tde,
-  xLe,
-  kk,
-  Hht,
-  Iht,
-  Hne,
-  Q2,
-  Ine,
-  HLe,
-  b_r,
-  Dpr,
-  w_r,
-  Lpr,
-  Kfn,
+  SYNCED_FILE_ROOT,
+  WORKING_FILESTORE_PREFIX,
+  MAX_WORKING_FILE_BYTES,
+  relUnderSyncDir,
+  escapesSyncRoot,
+  shouldIgnore,
+  LANE_FULL_REASON,
+  LANE_DENIED_REASON,
+  putSyncedFile,
+  getSyncedFile,
+  SYNCED_FILE_WRITE_MODE,
+  writeUnderSyncDir,
+  stageSyncedFile,
+  flushSyncedFiles,
+  drainSyncedFiles,
+  startSyncedFileSyncer,
+  writeLaneRowFromWorker,
   Xfn,
   GO,
   T3,
@@ -268491,20 +268490,20 @@ export {
   Emn,
   o_t,
   T_r,
-  E_r,
-  $Ke,
-  UKe,
-  g6t,
-  h6t,
-  Wne,
-  _6t,
-  y6t,
-  Amn,
-  Mpr,
-  Cmn,
-  Kv,
-  A_r,
-  vmn,
+  validateGitState,
+  processMessagesForTeleportResume,
+  checkOutTeleportedSessionBranch,
+  validateSessionRepository,
+  formatRepoMismatchDisplay,
+  teleportResumeCodeSession,
+  handleTeleportPrerequisites,
+  RESTRICTED_SESSION_CLOUD_REFUSAL,
+  teleportToRemoteWithErrorHandling,
+  teleportFromSessionsAPI,
+  awaitRemoteSessionResult,
+  teleportToRemote,
+  interruptRemoteSession,
+  subscribeRemoteSessionToPR,
   S6t,
   VKn,
   jM,
@@ -268662,9 +268661,9 @@ export {
   Kne,
   jmn,
   C_t,
-  dw,
-  Wmn,
-  Y5n,
+  runAgent,
+  filterIncompleteToolCalls,
+  clearWorktreeFromAgentMetadata,
   v_t,
   Gmn,
   oMe,
@@ -268674,42 +268673,42 @@ export {
   QX,
   J5n,
   L6t,
-  Q5n,
-  Z5n,
-  e8n,
-  Npr,
-  t8n,
-  n8n,
-  C_r,
-  Fpr,
-  qM,
-  ZX,
-  Ik,
-  sMe,
-  mH,
-  $pr,
-  qmn,
-  M6t,
-  Upr,
-  zmn,
-  ij,
-  iMe,
-  N6t,
-  YKe,
-  v_r,
-  Vmn,
-  cC,
-  eY,
-  Kmn,
-  Bpr,
-  Xmn,
-  R_t,
-  F6t,
-  Ymn,
-  Jmn,
-  k_t,
-  JKe,
-  QKe,
+  findDangerousClassifierPermissions,
+  isOverlyBroadBashAllowRule,
+  isOverlyBroadPowerShellAllowRule,
+  isYoloEquivStripEnabledForEntrypoint,
+  findOverlyBroadBashPermissions,
+  findOverlyBroadPowerShellPermissions,
+  overlyBroadShellAllowsStrippedByEverySession,
+  removeDangerousPermissions,
+  stripDangerousPermissionsForAutoMode,
+  restoreDangerousPermissions,
+  transitionPermissionMode,
+  guardPermissionModeChange,
+  setPermissionModeWithGuards,
+  parseBaseToolsFromCLI,
+  initialPermissionModeFromCLI,
+  addDirsAreLauncherNamed,
+  cliArgMayMintTrustedRoots,
+  initializeToolPermissionContext,
+  getAutoModeUnavailableNotification,
+  getAutoModeUnavailableText,
+  settleProvisionalStartupMode,
+  verifyAutoModeGateAccess,
+  autoModeRefusedHere,
+  isAutoModeDisabledByPolicySettings,
+  isAutoModeGateEnabled,
+  getAutoModeUnavailableReason,
+  getAutoModeEnabledState,
+  getAutoModeEnabledStateWithSource,
+  createDisabledBypassPermissionsContext,
+  isAutoModeInUse,
+  createDisabledAutoModeContext,
+  isDefaultPermissionModeAuto,
+  shouldPlanUseAutoMode,
+  activatePlanAutoMode,
+  prepareContextForPlanMode,
+  transitionPlanAutoMode,
   r8n,
   x_t,
   aj,
@@ -268788,9 +268787,9 @@ export {
   oY,
   s5e,
   LV,
-  i5e,
+  applyHookSessionTitle,
   a5e,
-  cMe,
+  executeUserPromptSubmitHooks,
   Ude,
   _8n,
   l5e,
@@ -268922,33 +268921,33 @@ export {
   yEe,
   nyt,
   EWt,
-  ryt,
-  SEe,
-  hgn,
-  _gn,
-  S5e,
-  q8n,
-  z8n,
-  ygn,
-  Sgn,
-  oyt,
-  AWt,
-  bgn,
-  wgn,
-  V8n,
-  K8n,
-  X8n,
-  Tgn,
-  VM,
-  Egn,
-  Y8n,
-  J8n,
-  Q8n,
-  Agn,
-  Jne,
-  b5e,
-  pn,
-  ZO,
+  isInlineNotificationCommand,
+  getQueuedCommandAttachments,
+  getWorkshopPlanPins,
+  hasWorkshopActiveAttachment,
+  getSandboxInstructionsAttachments,
+  restateEnvironmentAfterCompact,
+  restateModelIdentityAfterCompact,
+  getPromptAnnouncementAttachments,
+  inlineSetBeforeLatch,
+  getDeferredToolsDeltaAttachment,
+  getAgentListingDeltaAttachment,
+  getMcpInstructionsDeltaAttachment,
+  getMcpDroppedToolsDeltaAttachment,
+  startRelevantMemoryPrefetch,
+  isMemoryRecallBlockingEnabled,
+  awaitMemoryPrefetchBlocking,
+  filterDuplicateMemoryAttachments,
+  resetSentSkillNames,
+  evictSentSkillNames,
+  clearSentSkillNamesForAgent,
+  suppressNextSkillListing,
+  seedSentSkillNames,
+  getSkillListingAttachments,
+  getAttachmentMessages,
+  generateFileAttachment,
+  createAttachmentMessage,
+  isFileReadDenied,
   bEe,
   syt,
   fu,
@@ -269074,61 +269073,61 @@ export {
   jV,
   jgn,
   fY,
-  OWt,
-  eR,
-  DWt,
-  cj,
-  LWt,
-  D5e,
-  CMe,
-  Wgn,
-  Yde,
-  uj,
-  yyt,
-  yH,
-  Oh,
-  d$,
-  Yp,
-  vEe,
-  KM,
-  MWt,
-  Syt,
-  Jde,
-  N3,
-  byt,
-  mY,
-  nd,
-  wyt,
-  F3,
-  SH,
-  vE,
-  Ggn,
-  qgn,
-  zgn,
-  vMe,
-  L5e,
-  Zm,
-  REe,
-  M5e,
-  Vgn,
-  NWt,
-  Uo,
-  kEe,
+  getEnterpriseMcpFilePath,
+  emptyServerMap,
+  unwrapCcrProxyUrl,
+  getMcpServerSignature,
+  getMcpScopeConflicts,
+  suppressedConnectorsEqual,
+  dedupClaudeAiMcpServers,
+  expandMcpPolicyPredicates,
+  isMcpServerDenied,
+  isMcpServerAllowedByPolicy,
+  isBuiltinInProcessMcpServer,
+  filterMcpServersByPolicy,
+  isMcpServerBlockedAtConnectTime,
+  isMcpDialBlockedByPolicy,
+  mcpDialBlockCause,
+  filterDynamicMcpServersByPolicy,
+  addMcpConfig,
+  removeMcpConfig,
+  userScopeMcpServerExists,
+  readRawMcpJsonServersFromCwd,
+  MCP_SETTINGS_SCOPES,
+  MCP_SETTINGS_SCOPE_SET,
+  isOrganizationProvidedMcpScope,
+  getMcpConfigsByScope,
+  getSettingsMcpConfigByName,
+  getMcpConfigByName,
+  getClaudeCodeMcpConfigs,
+  getAllMcpConfigs,
+  getConnectablePluginMcpServerNames,
+  consumeBridgeMcpCarrierMarker,
+  verifyBridgeCarrierPrompt,
+  parseMcpConfig,
+  parseMcpConfigFromFilePath,
+  doesEnterpriseMcpConfigExist,
+  shouldSkipClaudeAiFetchForEnterpriseLockdown,
+  headlessSyncsClaudeAiConnectors,
+  areMcpConfigsAllSdkType,
+  areMcpConfigsAllowedWithEnterpriseMcpConfig,
+  isMcpServerDisabled,
+  setMcpServerEnabled,
   Tyt,
   HI,
-  xEe,
-  rD,
-  N5e,
-  FWt,
-  $Wt,
-  Kgn,
-  F5e,
-  RMe,
-  Qde,
-  Xgn,
-  kMe,
-  Zde,
-  bH,
+  CHROME_EXTENSION_RECONNECT_URL,
+  isClaudeInChromeAllowed,
+  shouldEnableClaudeInChrome,
+  hasBaseChromeOfferEligibility,
+  hasChromeExtensionEvidence,
+  shouldAutoEnableClaudeInChrome,
+  isClaudeInChromeWiredThisSession,
+  markClaudeInChromeUnwired,
+  markClaudeInChromeUnwiredIfChrome,
+  shouldSuppressChromeOffer,
+  getClaudeInChromeMcpServerConfig,
+  setupClaudeInChrome,
+  isChromeExtensionInstalled,
   HEe,
   Ygn,
   Jgn,
@@ -269270,247 +269269,247 @@ export {
   Lyt,
   Myt,
   ZWt,
-  TH,
-  z5e,
-  jpr,
-  hhn,
-  spe,
-  V5e,
-  _hn,
-  il,
-  yhn,
-  Tp,
-  R_r,
-  Wpr,
-  Gpr,
-  qpr,
-  zpr,
-  zEe,
-  _Y,
-  fC,
-  k7n,
-  Shn,
-  j3,
-  x7n,
-  Nyt,
-  Vpr,
-  hl,
-  Fyt,
-  e9t,
-  bhn,
-  ipe,
-  t9t,
-  H7n,
-  Kpr,
-  n9t,
-  ore,
-  Xpr,
-  whn,
-  sre,
-  Thn,
-  $yt,
-  Ypr,
-  k_r,
-  x_r,
-  H_r,
-  I_r,
-  P_r,
-  O_r,
-  D_r,
-  r9t,
-  VEe,
-  Ehn,
-  L_r,
-  K5e,
-  Ahn,
-  Chn,
-  vhn,
-  M_r,
-  X5e,
-  N_r,
-  ST,
-  KEe,
-  Uyt,
-  F_r,
-  Rhn,
-  ire,
-  I7n,
-  khn,
-  Jpr,
-  P7n,
-  O7n,
-  D7n,
-  Byt,
-  L7n,
-  Qpr,
-  jyt,
-  Y5e,
-  xhn,
-  Hhn,
-  M7n,
-  $_r,
-  KV,
-  XM,
-  XV,
-  YV,
-  o9t,
-  LMe,
-  s9t,
-  U_r,
-  B_r,
-  j_r,
-  W_r,
-  G_r,
-  kc,
-  Wyt,
-  Ihn,
-  Gyt,
-  Phn,
-  ape,
-  MMe,
-  Zpr,
-  Ohn,
-  N7n,
-  i9t,
-  a9t,
-  efr,
-  tfr,
-  F7n,
-  qyt,
-  XEe,
-  Dhn,
-  zyt,
-  l9t,
-  NMe,
-  Lhn,
-  $7n,
-  yY,
-  J5e,
-  Mhn,
-  RE,
-  Vyt,
-  Nhn,
-  Q5e,
-  DI,
-  pj,
-  q_r,
-  YEe,
-  JEe,
-  YM,
-  Fhn,
-  nfr,
-  z_r,
-  c9t,
-  U7n,
-  SY,
-  Z5e,
-  u9t,
-  FMe,
-  are,
-  $hn,
-  e8e,
-  Uhn,
-  JV,
-  Bhn,
-  Li,
-  JM,
-  V_r,
-  jhn,
-  W3,
-  t8e,
-  Whn,
-  lre,
-  Ghn,
-  rfr,
-  fj,
-  d9t,
-  lpe,
-  ofr,
-  cre,
-  p9t,
-  sfr,
-  f9t,
-  cpe,
-  Kyt,
-  m9t,
-  qhn,
-  bY,
-  wY,
-  g9t,
-  Xyt,
-  mj,
-  sD,
-  mu,
-  G3,
-  TY,
-  h9t,
-  _9t,
-  n8e,
-  upe,
-  QV,
-  EH,
-  K_r,
-  r8e,
-  ifr,
-  Yyt,
-  zhn,
-  EY,
-  o8e,
-  QEe,
-  Vhn,
-  h$,
-  X_r,
-  ZEe,
-  $Me,
-  eAe,
-  ure,
-  y9t,
-  ZV,
-  s8e,
-  Khn,
-  Xhn,
-  Yhn,
-  Jhn,
-  afr,
-  S9t,
-  mC,
-  Kc,
-  gj,
-  AY,
-  QM,
-  b9t,
-  Y_r,
-  dre,
-  B7n,
-  w9t,
-  Jyt,
-  i8e,
-  lfr,
-  CY,
-  cfr,
-  ufr,
-  j7n,
-  J_r,
-  UMe,
-  a8e,
-  tAe,
-  pre,
-  Qhn,
-  T9t,
-  Zhn,
-  bT,
-  E9t,
-  BMe,
-  Q_r,
-  Z_r,
-  W7n,
-  Qyt,
-  A9t,
-  G7n,
-  jMe,
-  l8e,
-  fre,
-  mre,
+  isTranscriptMessage,
+  isSyncedTranscriptEntry,
+  ENTRY_APPEND_POLICY,
+  setTranscriptLocalGcEnabled,
+  isChainParticipant,
+  transcriptCursorEnd,
+  isEphemeralToolProgress,
+  getMaterializedSessionFile,
+  hasRecordedUserPrompt,
+  getTranscriptPathForSession,
+  MAX_TRANSCRIPT_READ_BYTES,
+  INDEX_HEAD_SCAN_BYTES,
+  INDEX_BOUNDARY_SCAN_BYTES,
+  INDEX_LAST_PROMPT_SCAN_BYTES,
+  LAST_PROMPT_PREFIX_SCAN_BYTES,
+  writeAgentMetadata,
+  updateAgentMetadata,
+  readAgentMetadata,
+  writeRemoteAgentMetadata,
+  deleteRemoteAgentMetadata,
+  removeRemoteAgentMetadata,
+  listRemoteAgentMetadata,
+  sessionIdExists,
+  getNodeEnv,
+  isTranscriptPersistenceDisabled,
+  getPersistenceSuppressionCause,
+  transcriptStamp,
+  getUserType,
+  isCustomTitleEnabled,
+  recordSessionAlias,
+  transcriptStores,
+  transcriptExitHooksLatches,
+  getTranscriptWriterHealth,
+  getTranscriptWriteFailureSeq,
+  getTranscriptWriterDegraded,
+  reAppendSessionMetadataAtExit,
+  registerTranscriptExitReStamp,
+  registerTranscriptExitDrain,
+  registerForeignTranscriptExitReStamp,
+  flushSessionStorageAtExit,
+  resetProjectFlushStateForTesting,
+  resetProjectForTesting,
+  compactTranscriptForTesting,
+  setSessionFileForTesting,
+  transcriptTailForHydrateForTesting,
+  reAppendSessionMetadataAsyncForTesting,
+  appendEntryToSessionForTesting,
+  getCurrentSessionFile,
+  currentSessionFileIsFor,
+  onSessionFileMaterialized,
+  emitSessionFileMaterializedForTesting,
+  setInternalEventWriter,
+  clearInternalEventWriter,
+  sealTranscriptAppendsForShutdown,
+  addSessionMirror,
+  fireSessionMirror,
+  setInternalEventReader,
+  setRemoteIngressUrlForTesting,
+  recordTranscript,
+  persistLeafCheckpoint,
+  mirrorLeafCheckpointToRemote,
+  hasRemoteWorkerEventLog,
+  mirrorWorkerEventToRemote,
+  recordSidechainTranscript,
+  recordForkContextRef,
+  recordArtifactAutoReactLedger,
+  recordCostState,
+  recordObserverRef,
+  agentTranscriptExists,
+  OBSERVER_REF_TAIL_SCAN_BYTES,
+  readTranscriptTailV5,
+  readLastObserverRef,
+  hydrateForkContext,
+  recordQueueOperation,
+  removeTranscriptMessage,
+  removeTranscriptMessageIfPersisted,
+  recordFileHistorySnapshot,
+  recordFileHistoryDelta,
+  recordAttributionSnapshot,
+  recordContentReplacement,
+  resetSessionFilePointer,
+  adoptResumedSessionFile,
+  adoptResumedSessionFileAsync,
+  touchSessionTranscript,
+  relocateSessionTranscript,
+  reportRelocateSessionTranscriptFailure,
+  beginTranscriptRelocationForTesting,
+  endTranscriptRelocationForTesting,
+  recordContextCollapseCommit,
+  recordContextCollapseSnapshot,
+  recordContextCollapseReset,
+  flushSessionStorage,
+  appendEntryToCurrentTranscriptNow,
+  sealTornTranscriptTail,
+  transcriptFileHasContentEntry,
+  hydrateRemoteSession,
+  getSessionSidecarDir,
+  ensureSidecarDirFor,
+  readCCRTip,
+  updateCCRTipFromAckedBatch,
+  collectTailUuids,
+  getValidatedCCRTip,
+  readTranscriptTailForTip,
+  extractLastSyncedEventUuid,
+  extractLatestIntersectingSyncedUuid,
+  writeHydratedAgentTranscript,
+  canFetchAgentTranscriptsOnDemand,
+  AgentTranscriptFetchError,
+  hydrateFromCCRv2InternalEvents,
+  getFirstMeaningfulUserMessageTextContent,
+  removeExtraFields,
+  buildConversationChain,
+  warnIfTranscriptUnchained,
+  checkResumeConsistency,
+  TranscriptFileFormatError,
+  loadTranscriptFromFile,
+  fetchLogs,
+  appendEntryToFileAsync,
+  flushAppendEntryQueues,
+  markSessionEndedByModel,
+  applyEndedByModelOnResume,
+  saveCustomTitle,
+  saveAiGeneratedTitle,
+  linkSessionToPR,
+  saveBridgeSession,
+  writeHistorySuppression,
+  isSessionHistorySuppressed,
+  readHistorySuppressionFromDisk,
+  isTranscriptRelocationInProgress,
+  mirrorInternalEntryForTesting,
+  SUPPRESSION_SCAN_MAX_LINES,
+  scanTranscriptForSuppression,
+  isOwnTranscriptFile,
+  getDerivedTranscriptPathForSession,
+  matchesHistorySuppressionLine,
+  buildForkAdoptionMeta,
+  adoptForkSessionMetadata,
+  holdSessionHistorySuppression,
+  holdSessionHistorySuppressionFor,
+  markSessionHistorySuppressedFor,
+  isSessionHistorySuppressedFor,
+  dropSessionHistorySuppression,
+  pinSessionId,
+  holdPrecautionarySuppressionFor,
+  dropPrecautionarySuppressionForTesting,
+  releasePrecautionarySuppressionFor,
+  markPrecautionClearResilientFor,
+  markScanUncertaintyHoldFor,
+  isScanUncertaintyHoldFor,
+  claimPrecautionHoldForObservedCause,
+  releaseScanUncertaintyHoldFor,
+  isPrecautionarySuppressionHeld,
+  isPrecautionarySuppressionHeldFor,
+  copyPrecautionarySuppressionTo,
+  registerLiveSuppressionProbe,
+  isLiveBridgeSuppressed,
+  PENDING_BRIDGE_SESSION,
+  registerForeignConversationProbe,
+  bridgeSessionsForPulledRow,
+  isRowForeignToBridgeSession,
+  isBridgeBindingForeign,
+  isForeignToBinding,
+  bridgeSessionForPulledWindow,
+  getBridgeBoundConversationSid,
+  isCompactPairWithheldFromRemote,
+  isRemoteEgressSuppressedFor,
+  isConversationEgressTainted,
+  clearBridgeSessionCache,
+  clearBridgeSession,
+  getCurrentSessionBridge,
+  getCurrentSessionTitle,
+  getCurrentSessionAiTitle,
+  getCurrentSessionDisplayTitle,
+  getCurrentSessionPeerName,
+  getCurrentSessionOffBoxPeerName,
+  getCurrentSessionPeerNameFor,
+  getCurrentSessionAgentColor,
+  getCurrentSessionAgentName,
+  restoreSessionMetadata,
+  snapshotSessionMetadata,
+  clearSessionMetadata,
+  reAppendSessionMetadata,
+  reAppendSessionMetadataAfterCompaction,
+  subscribeSessionAgentNameChanged,
+  saveAgentName,
+  saveAgentColor,
+  saveAgentSetting,
+  subscribeSessionTitleChanged,
+  cacheSessionTitle,
+  cacheAiTitle,
+  cacheAgentName,
+  titleCacheStillOn,
+  cacheHookSessionTitle,
+  saveMode,
+  savePermissionMode,
+  saveIsolationLatch,
+  getCurrentSessionIsolationLatch,
+  recordArtifactCommentMonitor,
+  takeResumedArtifactCommentMonitor,
+  takeResumedArtifactAutoReactLedger,
+  peekResumedArtifactAutoReactLedger,
+  UNLATCHED_RESUMED_ATIS,
+  worktreeStateSignals,
+  saveWorktreeState,
+  getSessionIdFromLog,
+  isLiteLog,
+  loadFullLog,
+  searchSessionsByCustomTitle,
+  mergeArtifactCommentMonitorEntries,
+  loadTranscriptFromEntries,
+  loadTranscriptFile,
+  clearSessionMessagesCache,
+  primeSessionMessagesCache,
+  doesMessageExistInSession,
+  isMessageTurnUnanswered,
+  isTurnUnanswered,
+  getLastSessionLog,
+  sessionLogFromTranscriptLoad,
+  loadMessageLogs,
+  findFirstMessageLog,
+  loadAllProjectsMessageLogs,
+  loadAllProjectsMessageLogsProgressive,
+  loadSameRepoMessageLogs,
+  loadSameRepoMessageLogsProgressive,
+  getAgentTranscript,
+  extractAgentIdsFromMessages,
+  loadSubagentTranscripts,
+  loadAllSubagentTranscriptsFromDisk,
+  isLoggableMessage,
+  collectReplIds,
+  cleanMessagesForLogging,
+  getLogByIndex,
+  findUnresolvedToolUseInTranscript,
+  findUnresolvedToolUsesInTranscript,
+  findUnresolvedToolUse,
+  findUnresolvedToolUses,
+  findDeferredToolMarkerInTranscript,
+  getSessionFilesWithMtime,
+  loadAllLogsFromSessionFile,
+  getSessionFilesLite,
+  enrichLogs,
   ZM,
   q7n,
   dpe,
@@ -269557,9 +269556,9 @@ export {
   aXn,
   eK,
   gre,
-  u_n,
-  eyr,
-  tyr,
+  DEVICE_HOOK_DEFAULT_S,
+  createDeviceHookForwarder,
+  productionForwarderTimer,
   d_n,
   lXn,
   cXn,
@@ -269575,7 +269574,7 @@ export {
   p_n,
   oAe,
   pXn,
-  aD,
+  deviceHooksProcessMemories,
   H9t,
   hj,
   Lk,
@@ -269586,62 +269585,62 @@ export {
   mXn,
   g_n,
   h_n,
-  kY,
-  c8e,
+  executePreCompactHooks,
+  executePostCompactHooks,
   __n,
-  VMe,
-  KMe,
-  XMe,
-  y_n,
-  S_n,
-  sSt,
+  executeDirectoryAddedHooks,
+  executeElicitationHooks,
+  executeElicitationResultHooks,
+  executeCwdChangedHooks,
+  executeFileChangedHooks,
+  executeInstructionsLoadedHooks,
   I9t,
-  gC,
-  b_n,
-  w_n,
-  T_n,
-  YMe,
-  u8e,
-  xY,
-  E_n,
-  A_n,
-  iSt,
-  aSt,
-  P9t,
-  C_n,
-  v_n,
-  ppe,
-  HY,
-  Sa,
-  fpe,
-  d8e,
-  R_n,
-  O9t,
-  D9t,
-  gXn,
-  k_n,
-  x_n,
-  hXn,
-  mpe,
-  p8e,
-  L9t,
-  TT,
-  M9t,
-  f8e,
-  _Xn,
-  yXn,
-  N9t,
-  JMe,
-  IY,
-  My,
-  H_n,
-  I_n,
-  P_n,
-  kE,
-  F9t,
-  O_n,
-  $9t,
-  D_n,
+  executeNotificationHooks,
+  executeSessionStartHooks,
+  executeSetupHooks,
+  executeSubagentStartHooks,
+  executeSessionEndHooks,
+  executeStopFailureHooks,
+  executeStopHooks,
+  executeTeammateIdleHooks,
+  executeTaskCreatedHooks,
+  executeTaskCompletedHooks,
+  executeWorktreeCreateHook,
+  executeWorktreeRemoveHook,
+  SESSION_END_HOOK_TIMEOUT_MS_DEFAULT,
+  flushPendingAsyncRewakeHooks,
+  getSessionEndHookTimeoutMs,
+  shouldSkipHookDueToTrust,
+  createBaseHookInput,
+  persistHookOutput,
+  parseHookOutput,
+  announcedAsync,
+  withHookStderr,
+  parseHttpHookOutput,
+  execCommandHookForDevice,
+  exitTwoMeansMissingScript,
+  evaluateHookIfCondition,
+  hookMatcherMatches,
+  emitHookMetrics,
+  MANAGED_HOOKS_TIER,
+  userPromptSubmitHooksKey,
+  hasHookForEvent,
+  getPreToolHookBlockingMessage,
+  getStopHookMessage,
+  getTeammateIdleHookMessage,
+  getTaskCreatedHookMessage,
+  getTaskCompletedHookMessage,
+  getNonBlockableHookErrorMessage,
+  getUserPromptSubmitHookBlockingMessage,
+  executeHooks,
+  stripConfinedHookApproval,
+  safeHookCwd,
+  hasBlockingResult,
+  executeHooksOutsideREPL,
+  hasInstructionsLoadedHook,
+  parseElicitationHookOutput,
+  executeStatusLineCommand,
+  executeFileSuggestionCommand,
   QMe,
   m8e,
   SXn,
@@ -269723,36 +269722,36 @@ export {
   OXn,
   z3,
   J9t,
-  LI,
-  LY,
-  aNe,
-  lAe,
-  ype,
-  B_n,
-  T8e,
-  kf,
-  _C,
-  rR,
-  xE,
-  tK,
-  lNe,
-  mSt,
-  Spe,
-  HE,
-  bpe,
-  Q9t,
-  cAe,
-  uAe,
-  gSt,
-  j_n,
-  W_n,
-  wpe,
-  MY,
-  hSt,
-  NY,
-  Z9t,
-  G_n,
-  cNe,
+  builtInCommandNames,
+  shippedCommandNames,
+  shippedCommandNameForAnalytics,
+  getBuiltinCommands,
+  meetsAvailabilityRequirement,
+  commandsMemoKey,
+  warmCommandSourceCaches,
+  getCommands,
+  attributionSkillName,
+  clearCommandMemoizationCaches,
+  clearCommandsCache,
+  dropShadowedFallbackSkills,
+  dropShadowedBundledSkills,
+  getMcpSkillCommands,
+  isSkillToolCommand,
+  getSkillToolCommands,
+  getSlashCommandToolSkills,
+  REMOTE_SAFE_COMMANDS,
+  isBridgeSafeCommand,
+  findBridgeFallback,
+  deriveRequires,
+  routeThinClientCommand,
+  filterCommandsForRemoteMode,
+  filterCommandsForHeadless,
+  formatDescriptionWithSource,
+  advertisedSlashCommands,
+  toSlashCommands,
+  bridgeAdvertisedCommands,
+  toBridgeSlashCommands,
+  isFallbackStub,
   Tpe,
   VS,
   e3t,

@@ -9,29 +9,29 @@
 // Version: 2.1.263
 import { oo, bh, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
 import {
-  EI,
-  Vmt,
+  FORK_AGENT as EI,
+  buildChildMessage as Vmt,
   p3,
   RV,
   yne,
   cH,
   MO,
   zne,
-  dw,
+  runAgent as dw,
   k3,
   Q6t,
   Re,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ce } from "./chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
 import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
-async function l3e(t, e, a, m, p) {
+async function spawnForkFromDirective(t, e, a, m, p) {
   if (e.getAppState().endedByModel)
     return (f("subagent_launch", "subagent_fork_ended_by_model"), null);
   if (Ci())
@@ -186,4 +186,4 @@ function h(t) {
       .slice(0, 24) || "fork"
   );
 }
-export { l3e };
+export { spawnForkFromDirective };

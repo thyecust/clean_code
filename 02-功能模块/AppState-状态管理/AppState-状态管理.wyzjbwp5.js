@@ -9,27 +9,27 @@
 // Version: 2.1.263
 import { j, B, ze, sc, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   g6,
-  rq,
-  KCn,
-  Mf,
-  rt,
-  jme,
-  Ue,
-  IR,
-  wt,
-  _t,
-  Sg,
-  gt,
-  vn,
+  isNonCustomOpusModel as rq,
+  isNonCustomSonnetModel as KCn,
+  getUserSpecifiedModelSetting as Mf,
+  getMainLoopModel as rt,
+  planModeConstituentFamily as jme,
+  getCanonicalName as Ue,
+  getPublicModelDisplayName as IR,
+  parseUserSpecifiedModel as wt,
+  isBgSession as _t,
+  isUnattendedInteractiveSession as Sg,
+  isClaudeAISubscriber as gt,
+  getOauthAccountInfo as vn,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { hx, Hq, kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSecuritySensitiveSetting as hx, getSecuritySensitiveSettingWithSources as Hq, rawSettingsKeyPresence as kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
   Mue,
   Kte,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-function Arn() {
+function getDefaultWebBrowserState() {
   return {
     view: void 0,
     logs: [],
@@ -16,7 +16,7 @@ function Arn() {
     cleanupRegistered: !1,
   };
 }
-function tce(n) {
+function makeSetWebBrowserSlice(n) {
   return (o) =>
     n((e) => {
       let r = {
@@ -30,4 +30,4 @@ function tce(n) {
       return { ...e, ...t };
     });
 }
-export { Arn, tce };
+export { getDefaultWebBrowserState, makeSetWebBrowserSlice };

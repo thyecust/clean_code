@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { NP } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
-import { ZO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { isFileReadDenied as ZO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ece, bSe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { PIe, lLt } from "./chunk-z0qj8awf.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";

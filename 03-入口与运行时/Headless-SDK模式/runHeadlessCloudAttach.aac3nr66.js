@@ -12,62 +12,62 @@
 import { _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { zu, yc, pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId as zu, toInfraSessionId as yc, sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rM } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { St, logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { printCliError as rM } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g, wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  rt,
-  Ll,
+  getMainLoopModel as rt,
+  getDefaultOpusModel as Ll,
   Tn,
   SCt,
   $Qe,
-  ox,
-  w6,
-  qQe,
-  zQe,
-  Ose,
-  LR,
-  mZe,
-  cm,
-  mh,
-  pQ,
-  cx,
-  Cd,
+  prepareApiRequest as ox,
+  fetchSession as w6,
+  updateSessionTitle as qQe,
+  markSessionRead as zQe,
+  getAccessTokenWithCcrFallback as Ose,
+  archiveRemoteSession as LR,
+  SDK_OAUTH_REFRESH_ENTRYPOINTS as mZe,
+  handleOAuth401Error as cm,
+  getStoredOauthAccountInfo as mh,
+  getAccountInformation as pQ,
+  validateForceLoginOrg as cx,
+  isWorkspacePersistedTrusted as Cd,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { tr, Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRoot as tr, getBranch as Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ee } from "../CLI入口-Commander/chunk-6rfqqsva.js";
-import { ye, Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { qU, gf, xie, Hie, _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { PERMISSION_MODE_MANUAL_ALIAS as qU, parsePermissionMode as gf, CAN_USE_TOOL_INVALID_RESULT_REASON as xie, CAN_USE_TOOL_REQUEST_FAILED_REASON as Hie, _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { Boe, sme, Wg } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled as Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
   xn,
   kl,
   o3,
-  YF,
-  Upn,
-  m3,
-  AV,
-  eLe,
-  P2t,
+  isSessionChannelDisabled as YF,
+  isRemoteToolServingSwitchOn as Upn,
+  isRemoteToolServingMuted as m3,
+  onServingMuteRecheck as AV,
+  remoteToolServingOffReason as eLe,
+  remoteToolServingPolicyName as P2t,
   pT,
-  Bfn,
-  jO,
-  jfn,
+  NO_SYNC_HANDLE_MESSAGE as Bfn,
+  rootLaptopDirSyncRegistry as jO,
+  takeLaptopDirSyncSession as jfn,
   lKn,
   zTe,
   Dht,
@@ -79,15 +79,15 @@ import {
   Xht,
   $Le,
   Jht,
-  Kv,
+  teleportToRemote as Kv,
   e_n,
   RY,
   wT,
   iD,
   rSt,
-  aD,
+  deviceHooksProcessMemories as aD,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Su, ri, LD, j$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri, isSettingsToCloudEnabled as LD, isCloudPluginForwardingFlagOn as j$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
   X9n,
   Y9n,
@@ -102,7 +102,7 @@ import {
   wFt,
   TFt,
 } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
-import { A2n, Mlt, Nlt, Knn, CIe, C3e, hSe, v3e } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
+import { A2n, UNATTENDED_SERVING_CONSENT_VERSION as Mlt, UNATTENDED_SERVING_CONSENT_TERMS as Nlt, unattendedServingMachineName as Knn, readUnattendedServingConsent as CIe, writeUnattendedServingConsent as C3e, managedSettingsForbidUnattendedServing as hSe, primeUnattendedServingConsent as v3e } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
 import {
   z_e,
   sIt,

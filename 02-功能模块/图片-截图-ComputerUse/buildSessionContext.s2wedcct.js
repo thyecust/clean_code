@@ -17,7 +17,7 @@ import { oPe } from "./chunk-1c6fx285.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { UYn, BYn, VSt, jYn, J8e } from "./chunk-b8jsase9.js";
 import { Zp, JJn } from "./chunk-bvxymt09.js";
-import { Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import "./chunk-w5bhde2m.js";
 import { con, put } from "./chunk-v76f8dbx.js";
 import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";

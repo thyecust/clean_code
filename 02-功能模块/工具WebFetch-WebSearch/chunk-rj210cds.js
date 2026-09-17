@@ -20,11 +20,11 @@ import {
   bae,
   ic,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ju, Ia } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   Mft,
   Rte,
@@ -43,36 +43,36 @@ import {
   V2,
   K2,
   IV,
-  il,
-  XM,
-  DI,
-  YM,
-  $hn,
-  Bhn,
-  Li,
-  jhn,
-  g9t,
-  mu,
-  QV,
-  r8e,
-  EY,
-  h$,
-  ZV,
-  mC,
-  YMe,
-  ppe,
+  getMaterializedSessionFile as il,
+  resetSessionFilePointer as XM,
+  saveCustomTitle as DI,
+  isSessionHistorySuppressed as YM,
+  holdSessionHistorySuppression as $hn,
+  dropSessionHistorySuppression as Bhn,
+  pinSessionId as Li,
+  releasePrecautionarySuppressionFor as jhn,
+  isConversationEgressTainted as g9t,
+  getCurrentSessionTitle as mu,
+  getCurrentSessionAgentName as QV,
+  clearSessionMetadata as r8e,
+  saveAgentName as EY,
+  cacheSessionTitle as h$,
+  saveIsolationLatch as ZV,
+  saveWorktreeState as mC,
+  executeSessionEndHooks as YMe,
+  getSessionEndHookTimeoutMs as ppe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl, Ud } from "../Teammates团队/chunk-thxapyam.js";
 import { Q$ } from "../Skills技能/chunk-sapykxw7.js";
-import { FEn } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Sd, fK } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { uYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { ZK } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { clearAllPlanSlugs as FEn } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { evictTaskOutput as Sd, initTaskOutputAsSymlink as fK } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { retainPathLinks as uYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isBridgeStateFramesEnabled as ZK } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { cfe } from "../插件系统/chunk-ajtn749s.js";
 import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { vJ, HCe, xoe, ICe, PCe } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { _fe } from "../Skills技能/chunk-1zy5c8mf.js";
-import { hyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { runBundledSkillSessionResets as _fe } from "../Skills技能/chunk-1zy5c8mf.js";
+import { syncJobResumeSessionId as hyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
 import { Qlt, Zlt } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { Ern } from "../../01-核心基础设施/共享小工具-未细化/chunk-c9wxfdax.js";
@@ -242,8 +242,8 @@ async function* yrn({
     fK(e.id, Ud(oo(e.agentId)));
   }
   {
-    let { saveMode: e } = import.meta.require("../会话-历史-恢复/getTranscriptPathForSession.yb7s8f31.js"),
-      { isCoordinatorMode: r } = import.meta.require("../Teammates团队/getCoordinatorSystemPrompt.geqa52wg.js");
+    let { saveMode: e } = import.meta.require("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
+      { isCoordinatorMode: r } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
     e(r() ? "coordinator" : "normal");
   }
   let R = Ia();

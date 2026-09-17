@@ -7,26 +7,26 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
 import { _U, uf, ZQe, qCt, yr, jD, tZe, eRn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { OCe } from "../权限系统/chunk-1y2g140m.js";
+import { getPeerBridgeIdentity as OCe } from "../权限系统/chunk-1y2g140m.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
 import { cp } from "./chunk-enjekn9t.js";
 var tdt =
     "target is this session itself \u2014 there is no one else to send to",
   u = `address the main conversation as "${cp}"`;
 function bPe(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
+  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
     n = s();
   return n !== void 0 && ZQe(e, n);
 }
 function Uee(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
+  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
     n = s();
   return n !== void 0 && qCt(e, n);
 }
 function d(e) {
-  let { ownMessagingSocket: s } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
+  let { ownMessagingSocket: s } = import.meta.require("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
     n = s(),
     t = jD(e);
   return n !== void 0 && t !== null && eRn(t.ref, "session", n);
@@ -60,7 +60,7 @@ function obe(e) {
 }
 function wPe(e, s, n = u) {
   let { getRegisteredSessionName: t } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js",
+      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
     ),
     o = tZe(t()?.name),
     i = o === null ? "this session" : `this session ("${o}")`;
@@ -81,8 +81,8 @@ function TPe(e) {
 }
 function EPe(e) {
   let { getRegisteredSessionName: s, getHeldSessionNames: n } =
-      import.meta.require("../../01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js"),
-    { ownMessagingSocket: t } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js"),
+      import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
+    { ownMessagingSocket: t } = import.meta.require("../跨会话消息(UDS)/chunk-ddtmwhn7.js"),
     o = s(),
     i = t();
   if (o === void 0 || i === void 0 || uf(e).scheme !== "other") return "no";
@@ -96,7 +96,7 @@ function EPe(e) {
       return c === "derived" ? "categorical" : "note";
     }
   } else if (yr(e) !== yr(o.name)) return "no";
-  let { getSessionNamingState: l } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getSessionNamingState.twsxkr9c.js");
+  let { getSessionNamingState: l } = import.meta.require("../跨会话消息(UDS)/chunk-9kzxq41e.js");
   return o.source === "derived" ||
     ((o.source === "user" || o.source === "collision") &&
       l().userTypedName === o.name)
@@ -105,7 +105,7 @@ function EPe(e) {
 }
 function SF(e, s, n = u) {
   let { getRegisteredSessionName: t } = import.meta.require(
-      "../../01-核心基础设施/共享小工具-未细化/updateSessionMessagingSocketPath.af9ag5c5.js",
+      "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js",
     ),
     o = tZe(t()?.name);
   if (s) {

@@ -11,7 +11,7 @@ import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { be, Kur } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { tje } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { gz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
 import { randomUUID as ce } from "crypto";
@@ -60,11 +60,11 @@ async function B2e(e) {
     return [];
   }
 }
-var Mm = 65536,
-  Cnt = new Set(["sdk-cli", "sdk-ts", "sdk-py"]);
-function Sbr(e, n) {
-  let r = KQ(e, "entrypoint") ?? wL(n, "entrypoint");
-  if (r && Cnt.has(r)) return !0;
+var LITE_READ_BUF_SIZE = 65536,
+  PROGRAMMATIC_ENTRYPOINTS = new Set(["sdk-cli", "sdk-ts", "sdk-py"]);
+function isHiddenFromSessionPicker(e, n) {
+  let r = extractJsonStringField(e, "entrypoint") ?? extractLastJsonStringField(n, "entrypoint");
+  if (r && PROGRAMMATIC_ENTRYPOINTS.has(r)) return !0;
   let t =
       e
         .split(
@@ -72,11 +72,11 @@ function Sbr(e, n) {
 `,
         )
         .find((i) => i.includes('"parentUuid":')) ?? e,
-    a = KQ(t, "sessionKind");
+    a = extractJsonStringField(t, "sessionKind");
   return a === "daemon" || a === "daemon-worker";
 }
 var ye = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-function bL(e) {
+function validateUuid(e) {
   if (typeof e !== "string") return null;
   return ye.test(e) ? e : null;
 }
@@ -88,7 +88,7 @@ function Y(e) {
     return e;
   }
 }
-function KQ(e, n) {
+function extractJsonStringField(e, n) {
   let r = [`"${n}":"`, `"${n}": "`];
   for (let t of r) {
     let a = e.indexOf(t);
@@ -106,7 +106,7 @@ function KQ(e, n) {
   }
   return;
 }
-function wL(e, n) {
+function extractLastJsonStringField(e, n) {
   let r = [`"${n}":"`, `"${n}": "`],
     t,
     a = -1;
@@ -133,7 +133,7 @@ function wL(e, n) {
   }
   return t;
 }
-function vnt(e, n, r) {
+function extractFieldFromLastEntryOfTypeStrict(e, n, r) {
   return G(e, r, n);
 }
 function G(e, n, r) {
@@ -163,7 +163,7 @@ function G(e, n, r) {
   }
   return;
 }
-function qke(e, n) {
+function extractFieldFromFirstEntryStrict(e, n) {
   let r = `"${n}":`,
     t = 0;
   while (t < e.length) {
@@ -184,18 +184,18 @@ function qke(e, n) {
   }
   return;
 }
-function V7t(e, n) {
+function extractFieldFromLastEntryStrict(e, n) {
   return G(e, n);
 }
-function Fcr(e, n) {
+function workspaceV5Of(e, n) {
   return e?.realWorkspacePath === void 0
     ? void 0
     : { hoverRestOn: n, realPath: e.realWorkspacePath };
 }
-async function Wie(e, n, r) {
+async function writeEntriesToJsonlFile(e, n, r) {
   return q(e, n, "w", r);
 }
-async function iPn(e, n, r) {
+async function appendEntriesToJsonlFile(e, n, r) {
   return q(e, n, "a", r);
 }
 async function q(e, n, r, t) {
@@ -237,7 +237,7 @@ async function me(e, n, r) {
   let o = await t.append(a, i);
   if (!o.ok) throw Error("transcript stream append failed", { cause: o.error });
 }
-function bbr(e) {
+function extractFirstPromptFromHead(e) {
   let n = 0,
     r = { commandFallback: "" };
   while (n < e.length) {
@@ -269,7 +269,7 @@ function bbr(e) {
   }
   return r.commandFallback;
 }
-function wbr(e) {
+function extractFirstPromptFromEntries(e) {
   let n = { commandFallback: "" };
   for (let r of e) {
     if (typeof r !== "object" || r === null) continue;
@@ -279,7 +279,7 @@ function wbr(e) {
   return n.commandFallback;
 }
 var T = P.O_RDONLY | P.O_NOFOLLOW | P.O_NONBLOCK;
-async function Rnt(e, n, r, t) {
+async function readHeadAndTail(e, n, r, t) {
   if (t !== void 0 && t.hoverRestOn) return ge(t.source);
   try {
     if (T === P.O_RDONLY) {
@@ -288,13 +288,13 @@ async function Rnt(e, n, r, t) {
     let a = await B(e, T);
     try {
       if (!(await a.stat()).isFile()) return { head: "", tail: "" };
-      let i = await a.read(r, 0, Mm, 0);
+      let i = await a.read(r, 0, LITE_READ_BUF_SIZE, 0);
       if (i.bytesRead === 0) return { head: "", tail: "" };
       let o = r.toString("utf8", 0, i.bytesRead),
-        c = Math.max(0, n - Mm),
+        c = Math.max(0, n - LITE_READ_BUF_SIZE),
         u = o;
       if (c > 0) {
-        let s = await a.read(r, 0, Mm, c);
+        let s = await a.read(r, 0, LITE_READ_BUF_SIZE, c);
         u = r.toString("utf8", 0, s.bytesRead);
       }
       return { head: o, tail: u };
@@ -309,7 +309,7 @@ async function ge(e) {
   let n = await Z(e);
   return n === null ? { head: "", tail: "" } : { head: n.head, tail: n.tail };
 }
-function aPn(e) {
+function anchorOffsetTail(e) {
   let n = e.indexOf(`
 `);
   return n >= 0 ? e.slice(n + 1) : "";
@@ -318,8 +318,8 @@ async function Z(e) {
   let { backend: n, key: r } = e;
   try {
     let t = await n.read([
-      { key: r, offset: 0, length: Mm },
-      { key: r, tail: Mm },
+      { key: r, offset: 0, length: LITE_READ_BUF_SIZE },
+      { key: r, tail: LITE_READ_BUF_SIZE },
     ]);
     if (!t.ok) return null;
     let [a, i] = t.value.items;
@@ -366,8 +366,8 @@ var Se = 65536,
   he = 4194304,
   we = Buffer.from('"type":"user"'),
   ke = Buffer.from('"type":"assistant"'),
-  K7t = 1e4;
-function Y5(e, n) {
+  MAX_LISTING_PAGES = 1e4;
+function listedProjectKey(e, n) {
   if (
     e.kind !== "scope" ||
     e.scope.namespace !== "transcript" ||
@@ -386,7 +386,7 @@ async function K(e) {
     o = 0;
   try {
     for (;;) {
-      if (++o > K7t) return "unknown";
+      if (++o > MAX_LISTING_PAGES) return "unknown";
       let c = await n.readRecords(r, {
         order: "forward",
         maxBytes: t === void 0 ? Se : he,
@@ -418,7 +418,7 @@ async function K(e) {
     return "unknown";
   }
 }
-async function Gie(e, n) {
+async function quarantineJobTranscript(e, n) {
   let r = `orphaned-${Date.now()}-${ce().slice(0, 8)}`,
     t = n !== void 0 && n.hoverRestOn ? n.source : void 0,
     a = t !== void 0 && e.endsWith(".jsonl") ? X(e, E(e, ".jsonl"), t) : void 0;
@@ -443,18 +443,18 @@ async function Gie(e, n) {
     return !1;
   }
 }
-function XQ(e) {
+function isTranscriptFileResumeArg(e) {
   return le(e) && e.endsWith(".jsonl");
 }
-async function iz(e, n, r, t, a) {
-  let i = await Vu(n, Fcr(a?.source, a?.hoverRestOn === !0));
-  if (bL(e) === null)
+async function resolveJobTranscript(e, n, r, t, a) {
+  let i = await canonicalizePath(n, workspaceV5Of(a?.source, a?.hoverRestOn === !0));
+  if (validateUuid(e) === null)
     return {
-      path: S(Mp(i), "invalid-resume-id.jsonl"),
+      path: S(getProjectDir(i), "invalid-resume-id.jsonl"),
       hasMessages: !1,
       via: "computed",
     };
-  let o = S(Mp(i), `${e}.jsonl`),
+  let o = S(getProjectDir(i), `${e}.jsonl`),
     c = [];
   if (r !== void 0)
     c.push(
@@ -464,7 +464,7 @@ async function iz(e, n, r, t, a) {
     );
   let u =
     a !== void 0 && a.hoverRestOn ? { ...a, source: Q(a.source) } : void 0;
-  for (let f of await J5(i, u))
+  for (let f of await findProjectDirs(i, u))
     c.push({ path: S(f, `${e}.jsonl`), via: "projectDir" });
   c.push({ path: o, via: "computed" });
   let s = new Set(),
@@ -491,14 +491,14 @@ async function iz(e, n, r, t, a) {
         l = { path: d, via: "worktreeProjectDir" };
     }
   if (t?.crossWorktree !== !1) {
-    let f = await X7t(e, s, u);
+    let f = await findSoleTranscriptWithMessagesById(e, s, u);
     if (f !== null) return { path: f, via: "projectsScan", hasMessages: !0 };
   }
   if (l !== void 0) return { ...l, hasMessages: !0, unverifiable: !0 };
   return { ...c[0], hasMessages: !1 };
 }
 function X(e, n, r) {
-  let t = lPn(F(e), r.isKeySegment);
+  let t = addressableProjectKey(F(e), r.isKeySegment);
   if (t === void 0 || E(e) !== `${n}.jsonl` || !r.isKeySegment(n)) return;
   return { backend: r.backend, key: r.transcriptKey(t, n) };
 }
@@ -564,11 +564,11 @@ function Q(e) {
     });
   return { ...e, backend: r };
 }
-async function X7t(e, n = new Set(), r) {
-  if (bL(e) === null) return null;
+async function findSoleTranscriptWithMessagesById(e, n = new Set(), r) {
+  if (validateUuid(e) === null) return null;
   if (r !== void 0 && r.hoverRestOn && r.source.isKeySegment(e))
     return ve(e, n, r.source);
-  let t = Sc(),
+  let t = getProjectsDir(),
     a = null;
   try {
     for (let i of await b(t, { withFileTypes: !0 })) {
@@ -586,7 +586,7 @@ async function X7t(e, n = new Set(), r) {
 }
 async function ve(e, n, r) {
   let { backend: t, transcriptKey: a, isKeySegment: i } = r,
-    o = Sc(),
+    o = getProjectsDir(),
     c = null,
     u = !1,
     s = new Set();
@@ -595,7 +595,7 @@ async function ve(e, n, r) {
       (l) => t.listEntries({ namespace: "transcript" }, M(l)),
       async (l) => {
         for (let f of l) {
-          let d = Y5(f, i);
+          let d = listedProjectKey(f, i);
           if (d === void 0) continue;
           let y = S(o, d, `${e}.jsonl`);
           if (s.has(y) || n.has(y)) continue;
@@ -621,7 +621,7 @@ async function ve(e, n, r) {
   }
   return c;
 }
-async function dxt(e, n) {
+async function readSessionLite(e, n) {
   if (n !== void 0 && n.hoverRestOn) return ee(n.source);
   try {
     if (T === P.O_RDONLY) {
@@ -631,14 +631,14 @@ async function dxt(e, n) {
     try {
       let t = await r.stat();
       if (!t.isFile()) return null;
-      let a = Buffer.allocUnsafe(Mm),
-        i = await r.read(a, 0, Mm, 0);
+      let a = Buffer.allocUnsafe(LITE_READ_BUF_SIZE),
+        i = await r.read(a, 0, LITE_READ_BUF_SIZE, 0);
       if (i.bytesRead === 0) return null;
       let o = a.toString("utf8", 0, i.bytesRead),
-        c = Math.max(0, t.size - Mm),
+        c = Math.max(0, t.size - LITE_READ_BUF_SIZE),
         u = o;
       if (c > 0) {
-        let s = await r.read(a, 0, Mm, c);
+        let s = await r.read(a, 0, LITE_READ_BUF_SIZE, c);
         u = a.toString("utf8", 0, s.bytesRead);
       }
       return { mtime: t.mtime.getTime(), size: t.size, head: o, tail: u };
@@ -659,19 +659,19 @@ async function ee(e) {
     tail: n.tail,
   };
 }
-var az = 200;
+var MAX_SANITIZED_LENGTH = 200;
 function Te(e) {
   return Math.abs(gz(e)).toString(36);
 }
 function k(e) {
   return e.replace(/[^a-zA-Z0-9]/g, "-");
 }
-function RA(e) {
+function sanitizePath(e) {
   let n = k(e);
-  if (n.length <= az) return n;
-  return `${n.slice(0, az)}-${Te(e)}`;
+  if (n.length <= MAX_SANITIZED_LENGTH) return n;
+  return `${n.slice(0, MAX_SANITIZED_LENGTH)}-${Te(e)}`;
 }
-function j2e(e, n) {
+function normalizePathForCwdCompare(e, n) {
   let r = e.replaceAll("\\", "/");
   return n ? r.toLowerCase() : r;
 }
@@ -680,9 +680,9 @@ function N(e, n, r) {
     a = zn(n),
     i = (o) => (r ? o.toLowerCase() : o);
   if (i(k(t)) !== i(k(a))) return !1;
-  return j2e(t, r) !== j2e(a, r);
+  return normalizePathForCwdCompare(t, r) !== normalizePathForCwdCompare(a, r);
 }
-async function Y7t(e, n, r, t, a) {
+async function recordedCwdCollidesWithProjectResolved(e, n, r, t, a) {
   if (!N(e, n, r)) return !1;
   if (_Z(e) || _Z(n)) return !1;
   if ((await t(e)) || (await t(n))) return !1;
@@ -696,38 +696,38 @@ async function Y7t(e, n, r, t, a) {
   } catch {
     return !1;
   }
-  let o = await Vu(n, a);
+  let o = await canonicalizePath(n, a);
   return N(i, o, r);
 }
-function J7t(e, n, r) {
+function recordedCwdIsWithinOwnWorktrees(e, n, r) {
   if (n === void 0) return !1;
-  let t = j2e(zn(e), r);
+  let t = normalizePathForCwdCompare(zn(e), r);
   return n.some((a) => {
-    let i = j2e(zn(a), r);
+    let i = normalizePathForCwdCompare(zn(a), r);
     return t === i || t.startsWith(i.endsWith("/") ? i : i + "/");
   });
 }
-function knt() {
+function slugCollisionGuardFoldsCase() {
   return !0;
 }
-function Sc() {
+function getProjectsDir() {
   return S(be(), "projects");
 }
-function yh(e) {
-  return Kur() ?? RA(e);
+function getProjectKey(e) {
+  return Kur() ?? sanitizePath(e);
 }
-function xnt(e) {
-  let n = RA(e);
-  return n === yh(e) ? void 0 : n;
+function legacyDerivedProjectKey(e) {
+  let n = sanitizePath(e);
+  return n === getProjectKey(e) ? void 0 : n;
 }
-function Mp(e) {
-  return S(Sc(), yh(e));
+function getProjectDir(e) {
+  return S(getProjectsDir(), getProjectKey(e));
 }
-function lPn(e, n) {
+function addressableProjectKey(e, n) {
   let r = E(e);
-  return F(e) === Sc() && n(r) ? r : void 0;
+  return F(e) === getProjectsDir() && n(r) ? r : void 0;
 }
-async function Vu(e, n) {
+async function canonicalizePath(e, n) {
   try {
     if (n !== void 0 && n.hoverRestOn) {
       let r = await n.realPath(e);
@@ -738,9 +738,9 @@ async function Vu(e, n) {
     return zn(e);
   }
 }
-async function Hnt(e, n, r, t) {
+async function dirBelongsToProject(e, n, r, t) {
   let a = t !== void 0 && t.hoverRestOn ? t.source : void 0,
-    i = a === void 0 ? void 0 : lPn(e, a.isKeySegment);
+    i = a === void 0 ? void 0 : addressableProjectKey(e, a.isKeySegment);
   if (a !== void 0 && i !== void 0) {
     let u = await Le(i, n, r, a);
     if (u !== void 0) return u;
@@ -754,14 +754,14 @@ async function Hnt(e, n, r, t) {
   }
   for (let u of c) {
     if (!u.isFile() || !u.name.endsWith(".jsonl")) continue;
-    let s = await dxt(S(e, u.name));
+    let s = await readSessionLite(S(e, u.name));
     if (s === null) continue;
     if (ne(s, o, r)) return !0;
   }
   return !1;
 }
 function ne(e, n, r) {
-  let t = vnt(e.tail, "relocated", "relocatedCwd") ?? qke(e.head, "cwd");
+  let t = extractFieldFromLastEntryOfTypeStrict(e.tail, "relocated", "relocatedCwd") ?? extractFieldFromFirstEntryStrict(e.head, "cwd");
   if (t === void 0) return !1;
   let a = k(zn(t));
   return r ? a.toLowerCase() === n.toLowerCase() : a === n;
@@ -803,46 +803,46 @@ async function Le(e, n, r, t) {
   }
   return !1;
 }
-async function J5(e, n) {
+async function findProjectDirs(e, n) {
   if (n !== void 0 && n.hoverRestOn) return Oe(e, n);
-  let r = Mp(e),
+  let r = getProjectDir(e),
     t = [];
   try {
     (await b(r), t.push(r));
   } catch {}
-  let a = xnt(e);
+  let a = legacyDerivedProjectKey(e);
   if (a !== void 0) {
-    let l = S(Sc(), a);
+    let l = S(getProjectsDir(), a);
     try {
       (await b(l), t.push(l));
     } catch {}
     return t;
   }
-  let i = RA(e);
-  if (i.length <= az) return t;
-  let o = Sc(),
+  let i = sanitizePath(e);
+  if (i.length <= MAX_SANITIZED_LENGTH) return t;
+  let o = getProjectsDir(),
     c = !1,
     u = (l) => (c ? l.toLowerCase() : l),
-    s = u(i.slice(0, az) + "-"),
+    s = u(i.slice(0, MAX_SANITIZED_LENGTH) + "-"),
     p = u(r);
   try {
     for (let l of await b(o, { withFileTypes: !0 })) {
       if (!l.isDirectory() || !u(l.name).startsWith(s)) continue;
       let f = S(o, l.name);
-      if (u(f) !== p && (await Hnt(f, e, c))) t.push(f);
+      if (u(f) !== p && (await dirBelongsToProject(f, e, c))) t.push(f);
     }
   } catch {}
   return t;
 }
 async function Oe(e, n) {
-  let r = await Emr(n.source);
+  let r = await listProjectDirNamesV5(n.source);
   if (r === null) {
-    let t = xnt(e);
-    return [Mp(e), ...(t !== void 0 ? [S(Sc(), t)] : [])];
+    let t = legacyDerivedProjectKey(e);
+    return [getProjectDir(e), ...(t !== void 0 ? [S(getProjectsDir(), t)] : [])];
   }
-  return Amr(e, r, !1, n);
+  return projectDirsFromListedNames(e, r, !1, n);
 }
-async function Emr(e) {
+async function listProjectDirNamesV5(e) {
   let { backend: n, isKeySegment: r } = e,
     t = [],
     a = new Set(),
@@ -854,7 +854,7 @@ async function Emr(e) {
           (c) => n.listEntries({ namespace: "transcript" }, M(c)),
           (c) => {
             for (let u of c) {
-              let s = Y5(u, r);
+              let s = listedProjectKey(u, r);
               if (s !== void 0 && !a.has(s)) (a.add(s), t.push(s));
             }
             i++;
@@ -868,12 +868,12 @@ async function Emr(e) {
   }
   return t;
 }
-async function Amr(e, n, r, t) {
-  let a = yh(e),
-    i = Mp(e),
-    o = xnt(e),
-    c = o === void 0 && a.length > az ? a.slice(0, az) + "-" : void 0,
-    u = Sc(),
+async function projectDirsFromListedNames(e, n, r, t) {
+  let a = getProjectKey(e),
+    i = getProjectDir(e),
+    o = legacyDerivedProjectKey(e),
+    c = o === void 0 && a.length > MAX_SANITIZED_LENGTH ? a.slice(0, MAX_SANITIZED_LENGTH) + "-" : void 0,
+    u = getProjectsDir(),
     s = (g) => (r ? g.toLowerCase() : g),
     p = c !== void 0 ? s(c) : void 0,
     l = s(a),
@@ -890,34 +890,34 @@ async function Amr(e, n, r, t) {
   let h = [];
   for (let g of y) {
     let I = S(u, g);
-    if (await Hnt(I, e, r, t)) h.push(I);
+    if (await dirBelongsToProject(I, e, r, t)) h.push(I);
   }
   return [...(f ? [i] : []), ...(d !== void 0 ? [d] : []), ...h];
 }
-async function cPn(e, n) {
-  return (await J5(e, n))[0];
+async function findProjectDir(e, n) {
+  return (await findProjectDirs(e, n))[0];
 }
 async function te(e, n) {
   let r = [];
   for (let t of await B2e(e)) {
     if (t === e) continue;
-    let a = await J5(t, n);
+    let a = await findProjectDirs(t, n);
     if (n !== void 0 && n.hoverRestOn) {
-      let i = Mp(t);
+      let i = getProjectDir(t);
       if (!a.includes(i)) a.push(i);
     }
     for (let i of a) r.push({ worktreePath: t, projectDir: i });
   }
   return r;
 }
-async function Tbr(e, n, r, t) {
+async function resolveSessionFilePath(e, n, r, t) {
   let a = `${e}.jsonl`,
     i = t && r !== void 0 && r.isKeySegment(e) ? Q(r) : void 0,
     o = i === void 0 ? void 0 : { source: i, hoverRestOn: t };
   async function c(p, l) {
     let f = S(p, a);
     if (i) {
-      let d = lPn(p, i.isKeySegment);
+      let d = addressableProjectKey(p, i.isKeySegment);
       if (d !== void 0) {
         try {
           let y = await i.backend.stat(i.transcriptKey(d, e));
@@ -936,8 +936,8 @@ async function Tbr(e, n, r, t) {
     return;
   }
   if (n) {
-    let p = await Vu(n, Fcr(r, t));
-    for (let l of await J5(p, o)) {
+    let p = await canonicalizePath(n, workspaceV5Of(r, t));
+    for (let l of await findProjectDirs(p, o)) {
       let f = await c(l, p);
       if (f) return f;
     }
@@ -947,7 +947,7 @@ async function Tbr(e, n, r, t) {
     }
     return;
   }
-  let u = Sc();
+  let u = getProjectsDir();
   if (i) {
     let p = new Map();
     try {
@@ -961,7 +961,7 @@ async function Tbr(e, n, r, t) {
               ),
             (d) => {
               for (let y of d) {
-                let m = Y5(y, i.isKeySegment);
+                let m = listedProjectKey(y, i.isKeySegment);
                 if (m === void 0) continue;
                 let h =
                     y.kind === "scope" && y.mtimeMs !== void 0
@@ -1008,7 +1008,7 @@ async function Tbr(e, n, r, t) {
   return;
 }
 var re = 1048576,
-  qie = 5242880,
+  SKIP_PRECOMPACT_THRESHOLD = 5242880,
   Be = Buffer.from('"compact_boundary"');
 function ie(e) {
   try {
@@ -1171,7 +1171,7 @@ async function Fe(e, n, r, t) {
     i = s;
   }
 }
-async function uPn(e, n, r) {
+async function readTranscriptForLoad(e, n, r) {
   let t = Be,
     a = re,
     i = {
@@ -1264,11 +1264,11 @@ async function uPn(e, n, r) {
     hasPreservedSegment: i.hasPreservedSegment,
   };
 }
-var W2e = /^[0-9a-f]{16}(?:[0-9a-f]{48})?@v\d+$/;
-function zke(e) {
-  return bL(e) !== null;
+var BACKUP_FILE_NAME_PATTERN_WITH_LEGACY = /^[0-9a-f]{16}(?:[0-9a-f]{48})?@v\d+$/;
+function isUuidShaped(e) {
+  return validateUuid(e) !== null;
 }
-function Phe(e, n, r) {
+function buildHistorySuppressionEntry(e, n, r) {
   return {
     type: "history-suppression",
     sessionId: e,
@@ -1279,50 +1279,50 @@ function Phe(e, n, r) {
 }
 export {
   B2e,
-  Mm,
-  Cnt,
-  Sbr,
-  bL,
-  KQ,
-  wL,
-  vnt,
-  qke,
-  V7t,
-  Fcr,
-  Wie,
-  iPn,
-  bbr,
-  wbr,
-  Rnt,
-  aPn,
-  K7t,
-  Y5,
-  Gie,
-  XQ,
-  iz,
-  X7t,
-  dxt,
-  az,
-  RA,
-  j2e,
-  Y7t,
-  J7t,
-  knt,
-  Sc,
-  yh,
-  xnt,
-  Mp,
-  lPn,
-  Vu,
-  Hnt,
-  J5,
-  Emr,
-  Amr,
-  cPn,
-  Tbr,
-  qie,
-  uPn,
-  W2e,
-  zke,
-  Phe,
+  LITE_READ_BUF_SIZE,
+  PROGRAMMATIC_ENTRYPOINTS,
+  isHiddenFromSessionPicker,
+  validateUuid,
+  extractJsonStringField,
+  extractLastJsonStringField,
+  extractFieldFromLastEntryOfTypeStrict,
+  extractFieldFromFirstEntryStrict,
+  extractFieldFromLastEntryStrict,
+  workspaceV5Of,
+  writeEntriesToJsonlFile,
+  appendEntriesToJsonlFile,
+  extractFirstPromptFromHead,
+  extractFirstPromptFromEntries,
+  readHeadAndTail,
+  anchorOffsetTail,
+  MAX_LISTING_PAGES,
+  listedProjectKey,
+  quarantineJobTranscript,
+  isTranscriptFileResumeArg,
+  resolveJobTranscript,
+  findSoleTranscriptWithMessagesById,
+  readSessionLite,
+  MAX_SANITIZED_LENGTH,
+  sanitizePath,
+  normalizePathForCwdCompare,
+  recordedCwdCollidesWithProjectResolved,
+  recordedCwdIsWithinOwnWorktrees,
+  slugCollisionGuardFoldsCase,
+  getProjectsDir,
+  getProjectKey,
+  legacyDerivedProjectKey,
+  getProjectDir,
+  addressableProjectKey,
+  canonicalizePath,
+  dirBelongsToProject,
+  findProjectDirs,
+  listProjectDirNamesV5,
+  projectDirsFromListedNames,
+  findProjectDir,
+  resolveSessionFilePath,
+  SKIP_PRECOMPACT_THRESHOLD,
+  readTranscriptForLoad,
+  BACKUP_FILE_NAME_PATTERN_WITH_LEGACY,
+  isUuidShaped,
+  buildHistorySuppressionEntry,
 };

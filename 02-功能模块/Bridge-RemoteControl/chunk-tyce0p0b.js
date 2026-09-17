@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { eVt, mrr } from "./chunk-5ne99rq3.js";
 import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { hostname as R } from "os";
@@ -31,18 +31,18 @@ class C {
   lastEnrollAttemptAtMs = 0;
 }
 var g = new j(() => new C()),
-  Ive =
+  PROACTIVE_ENROLLMENT_DISABLED_MESSAGE =
     "Your organization requires Trusted Devices for Remote Control, but enrollment is temporarily disabled. Please try again later, or contact your administrator.";
-function r5() {
+function isProactiveEnrollmentDisabled() {
   return H(h, !1);
 }
 function L() {
   return import.meta.require("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
 }
 function T() {
-  return import.meta.require("../策略限制(PolicyLimits)/getLastFetchOutcome.w0e6rc4p.js");
+  return import.meta.require("../策略限制(PolicyLimits)/chunk-8sw91yn5.js");
 }
-function ZG() {
+function isTrustedDeviceGateEnabled() {
   if (!H(m, !1)) return !1;
   return T().isPolicyAllowed(c);
 }
@@ -50,21 +50,21 @@ function p() {
   if (!H(m, !1)) return !1;
   return T().isPolicyEnforced(c);
 }
-function xyr() {
+function isRemoteControlPeerUnreachableFromHere() {
   return a.CLAUDE_CODE_REMOTE === !0 && !a.CLAUDE_TRUSTED_DEVICE_TOKEN && p();
 }
-var z4t =
+var CLOUD_CANNOT_REACH_ELEVATED_HINT =
   "not reachable from a cloud session \u2014 that session requires a trusted device, which a cloud session never has; message it from one of your own machines instead";
-function Hyr(e) {
-  return `Nothing was sent: Remote Control session '${e}' is ${z4t}.`;
+function formatUnreachableElevatedRefusal(e) {
+  return `Nothing was sent: Remote Control session '${e}' is ${CLOUD_CANNOT_REACH_ELEVATED_HINT}.`;
 }
-function vme() {
+function getAttestationFilterPolicy() {
   if (!H("tengu_bridge_attestation_enforce", !1)) return eVt;
   if (!p()) return eVt;
   let t = H("tengu_bridge_attestation_enforce_config", {});
   return mrr(t);
 }
-function oQe() {
+function readStoredTrustedDeviceToken() {
   let e = g.of(B().host);
   if (e.storedTokenRead !== void 0) return e.storedTokenRead;
   let t = x();
@@ -75,36 +75,36 @@ async function x() {
   if (e) return e;
   return (await yn().readAsync())?.trustedDeviceToken;
 }
-async function uh() {
-  if (!ZG()) return;
-  return oQe();
+async function getTrustedDeviceToken() {
+  if (!isTrustedDeviceGateEnabled()) return;
+  return readStoredTrustedDeviceToken();
 }
-async function fAt() {
+async function isTrustedDeviceUnenrolled() {
   if (!p()) return !1;
-  if (await oQe()) return !1;
+  if (await readStoredTrustedDeviceToken()) return !1;
   return !0;
 }
 async function I() {
-  if (!(await fAt())) return null;
-  if (r5()) return Ive;
+  if (!(await isTrustedDeviceUnenrolled())) return null;
+  if (isProactiveEnrollmentDisabled()) return PROACTIVE_ENROLLMENT_DISABLED_MESSAGE;
   return "Your organization requires Trusted Devices for Remote Control, but this device is not enrolled. Please run `/login` in Claude Code to enroll this device.";
 }
-async function lCn(e) {
-  return (await od(m), await V4t(e), I());
+async function preflightTrustedDeviceBlocking(e) {
+  return (await od(m), await enrollTrustedDeviceIfNeeded(e), I());
 }
-function Pve() {
+function clearTrustedDeviceTokenCache() {
   g.of(B().host).storedTokenRead = void 0;
 }
-async function o5(e, t) {
-  if (!ZG()) return;
-  Pve();
-  let r = await uh();
+async function recoverFromUntrustedDevice(e, t) {
+  if (!isTrustedDeviceGateEnabled()) return;
+  clearTrustedDeviceTokenCache();
+  let r = await getTrustedDeviceToken();
   if (!r || r === e) {
     let o = g.of(B().host);
     if (Date.now() - o.lastEnrollAttemptAtMs >= O)
       ((o.lastEnrollAttemptAtMs = Date.now()),
-        await sQe({ trigger: "server_denied", credentials: t }),
-        (r = await uh()));
+        await enrollTrustedDevice({ trigger: "server_denied", credentials: t }),
+        (r = await getTrustedDeviceToken()));
   }
   if (!r || r === e) return;
   return (
@@ -114,59 +114,59 @@ async function o5(e, t) {
     r
   );
 }
-async function M$e(e, t, r) {
-  let o = await o5(e, r);
+async function withUntrustedDeviceRecovery(e, t, r) {
+  let o = await recoverFromUntrustedDevice(e, r);
   if (!o) return;
   return t(o);
 }
-function Rme() {
-  if (r5()) return Ive;
+function untrustedDeviceHint() {
+  if (isProactiveEnrollmentDisabled()) return PROACTIVE_ENROLLMENT_DISABLED_MESSAGE;
   return "this device is not enrolled as a trusted device; run /login to enroll";
 }
-async function V4t(e) {
+async function enrollTrustedDeviceIfNeeded(e) {
   if (!p()) return;
-  if ((Pve(), !(await fAt()))) return;
-  if (r5()) return;
+  if ((clearTrustedDeviceTokenCache(), !(await isTrustedDeviceUnenrolled()))) return;
+  if (isProactiveEnrollmentDisabled()) return;
   (n(
     "[trusted-device] Not enrolled, attempting lazy enrollment with OAuth token",
   ),
-    await sQe({ credentials: e }));
+    await enrollTrustedDevice({ credentials: e }));
 }
-async function Iyr(e) {
-  if (!ZG()) return !1;
-  if ((Pve(), await oQe())) return !0;
-  if (r5()) return !1;
+async function ensureTrustedDeviceTokenForBind(e) {
+  if (!isTrustedDeviceGateEnabled()) return !1;
+  if ((clearTrustedDeviceTokenCache(), await readStoredTrustedDeviceToken())) return !0;
+  if (isProactiveEnrollmentDisabled()) return !1;
   return (
     n("[trusted-device] Not enrolled, enrolling for a device-bound session"),
-    await sQe({ trigger: "device_bind", credentials: e }),
-    Boolean(await uh())
+    await enrollTrustedDevice({ trigger: "device_bind", credentials: e }),
+    Boolean(await getTrustedDeviceToken())
   );
 }
-function cCn() {
-  let { isClaudeAISubscriber: e } = import.meta.require("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js");
+function clearTrustedDeviceToken() {
+  let { isClaudeAISubscriber: e } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
   if (!In() || !e()) return;
-  if (r5()) return;
-  (Pve(),
+  if (isProactiveEnrollmentDisabled()) return;
+  (clearTrustedDeviceTokenCache(),
     yn()
       .mutate((t) =>
         t.trustedDeviceToken ? { ...t, trustedDeviceToken: void 0 } : t,
       )
       .catch(() => {}));
 }
-async function sQe({ trigger: e = "proactive", credentials: t }) {
+async function enrollTrustedDevice({ trigger: e = "proactive", credentials: t }) {
   let {
     isClaudeAISubscriber: r,
     isConsumerSubscriber: o,
     getClaudeAIOAuthTokens: A,
     checkAndRefreshOAuthTokenIfNeeded: k,
-  } = import.meta.require("../../01-核心基础设施/设置-配置/getClaudeAIOAuthTokens.zrcwmb1h.js");
+  } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
   if (!In() || !r()) return;
   try {
     if (!(await od(m))) {
       n(`[trusted-device] Gate ${m} is off, skipping enrollment`);
       return;
     }
-    if (r5()) {
+    if (isProactiveEnrollmentDisabled()) {
       n(`[trusted-device] Proactive enrollment disabled via ${h}, skipping`);
       return;
     }
@@ -237,7 +237,7 @@ async function sQe({ trigger: e = "proactive", credentials: t }) {
           f("bridge_trusted_device_enroll", "storage_failed", d));
         return;
       }
-      (Pve(),
+      (clearTrustedDeviceTokenCache(),
         n(
           `[trusted-device] Enrolled device_id=${s.data.device_id ?? "unknown"}`,
         ),
@@ -252,23 +252,23 @@ async function sQe({ trigger: e = "proactive", credentials: t }) {
   }
 }
 export {
-  Ive,
-  r5,
-  ZG,
-  xyr,
-  z4t,
-  Hyr,
-  vme,
-  oQe,
-  uh,
-  fAt,
-  lCn,
-  Pve,
-  o5,
-  M$e,
-  Rme,
-  V4t,
-  Iyr,
-  cCn,
-  sQe,
+  PROACTIVE_ENROLLMENT_DISABLED_MESSAGE,
+  isProactiveEnrollmentDisabled,
+  isTrustedDeviceGateEnabled,
+  isRemoteControlPeerUnreachableFromHere,
+  CLOUD_CANNOT_REACH_ELEVATED_HINT,
+  formatUnreachableElevatedRefusal,
+  getAttestationFilterPolicy,
+  readStoredTrustedDeviceToken,
+  getTrustedDeviceToken,
+  isTrustedDeviceUnenrolled,
+  preflightTrustedDeviceBlocking,
+  clearTrustedDeviceTokenCache,
+  recoverFromUntrustedDevice,
+  withUntrustedDeviceRecovery,
+  untrustedDeviceHint,
+  enrollTrustedDeviceIfNeeded,
+  ensureTrustedDeviceTokenForBind,
+  clearTrustedDeviceToken,
+  enrollTrustedDevice,
 };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ya } from "./chunk-t3b7pg2x.js";
-import { ey } from "./chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled as ey } from "./chunk-pcxn6gwz.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function d(e, o) {
   if (o.length === 0) return e;
@@ -96,32 +96,32 @@ var y = {
   max_thinking_tokens: "keep",
   flag_settings: "keep",
 };
-function lAn(e) {
+function stripWideningPermissionLayers(e) {
   if (!e) return e;
   return e.filter((o) => y[o.kind] === "keep");
 }
-function cAn(e) {
+function getSuppressedClaudeAiConnectors(e) {
   return e.getAppState?.().mcp?.suppressedClaudeAiConnectors ?? [];
 }
-function Vy(e) {
-  let o = ce(e);
+function consentAskCanReachUser(e) {
+  let o = getToolPermissionContext(e);
   return (
     o.mode !== "bypassPermissions" &&
     !(o.mode === "plan" && o.isBypassPermissionsModeAvailable)
   );
 }
-function Ky(e) {
-  if (ce(e).mode !== "plan") return !1;
-  return dP(e);
+function planConsentMustDeny(e) {
+  if (getToolPermissionContext(e).mode !== "plan") return !1;
+  return consentMustDeny(e);
 }
-function uAn(e, o, s) {
+function artifactFilesConsentMarked(e, o, s) {
   let t = e.getAppState();
-  return ce(e).mode === "plan" || s
+  return getToolPermissionContext(e).mode === "plan" || s
     ? t.artifactAssetReadHumanConsentSlugs?.[o] === !0
     : t.artifactAssetReadConsentSlugs?.[o] === !0;
 }
-function dP(e) {
-  return !Vy(e) || ce(e).shouldAvoidPermissionPrompts === !0;
+function consentMustDeny(e) {
+  return !consentAskCanReachUser(e) || getToolPermissionContext(e).shouldAvoidPermissionPrompts === !0;
 }
 function p(e) {
   return e === so || e.startsWith(`${so}(`) || e.startsWith(uP);
@@ -149,7 +149,7 @@ function C(e) {
   if (!s) return e;
   return { ...e, alwaysAllowRules: t, strippedDangerousRules: i };
 }
-function dAn(e) {
+function unstripSkillInvocationAllowRules(e) {
   let o = e.strippedDangerousRules;
   if (o === void 0) return e;
   let s = !1,
@@ -167,7 +167,7 @@ function dAn(e) {
   if (!s) return e;
   return { ...e, alwaysAllowRules: t };
 }
-function ce(e) {
+function getToolPermissionContext(e) {
   let o = e.getAppState().toolPermissionContext,
     s = o !== void 0 && o.pollEventDeliveryGuard === !0;
   if (s) o = C(o);
@@ -230,14 +230,14 @@ function m(e, o) {
     ? { ...t, mode: "default" }
     : t;
 }
-function r4t(e) {
+function getEffortLayerOverride(e) {
   let o;
   if (!e) return o;
   for (let s of e) if (s.kind === "effort") o = s.effort;
   return o;
 }
-function Qc(e) {
-  return r4t(e.permissionLayers) ?? Ya(e.getAppState(), c(e));
+function getEffortValue(e) {
+  return getEffortLayerOverride(e.permissionLayers) ?? Ya(e.getAppState(), c(e));
 }
 function c(e) {
   let o = e.options?.mainLoopModel;
@@ -245,13 +245,13 @@ function c(e) {
     if (s.kind === "model") o = s.mainLoopModel;
   return o;
 }
-function gme(e) {
+function getSessionEffort(e) {
   return e.getAppState().sessionEffort;
 }
-function Bd(e) {
+function getMainLoopModel(e) {
   return c(e) ?? e.options.mainLoopModel;
 }
-function g$e(e) {
+function getThinkingConfig(e) {
   let o = e.options.thinkingConfig;
   for (let s of e.permissionLayers ?? [])
     if (s.kind === "max_thinking_tokens") o = g(s.maxThinkingTokens);
@@ -260,10 +260,10 @@ function g$e(e) {
 function g(e) {
   return e === 0 ? { type: "disabled" } : { type: "enabled", budgetTokens: e };
 }
-function kJe(e) {
+function getUltracodeRequested(e) {
   return e.getAppState().ultracode === !0;
 }
-function hme(e, o) {
+function applyContextLayers(e, o) {
   if (o.length === 0) return e;
   let s = e.permissionLayers ? [...e.permissionLayers, ...o] : [...o],
     t;
@@ -300,19 +300,19 @@ export {
   uP,
   mme,
   fnr,
-  lAn,
-  cAn,
-  Vy,
-  Ky,
-  uAn,
-  dP,
-  dAn,
-  ce,
-  r4t,
-  Qc,
-  gme,
-  Bd,
-  g$e,
-  kJe,
-  hme,
+  stripWideningPermissionLayers,
+  getSuppressedClaudeAiConnectors,
+  consentAskCanReachUser,
+  planConsentMustDeny,
+  artifactFilesConsentMarked,
+  consentMustDeny,
+  unstripSkillInvocationAllowRules,
+  getToolPermissionContext,
+  getEffortLayerOverride,
+  getEffortValue,
+  getSessionEffort,
+  getMainLoopModel,
+  getThinkingConfig,
+  getUltracodeRequested,
+  applyContextLayers,
 };

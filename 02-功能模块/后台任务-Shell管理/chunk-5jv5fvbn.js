@@ -16,7 +16,7 @@ import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js
 import { hW, Xke } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { mA, jT, Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { provenSameProcessAsync as mA, procIdentityOf as jT, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   lstat as l,

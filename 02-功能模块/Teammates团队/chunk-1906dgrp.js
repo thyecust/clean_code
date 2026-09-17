@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Zi } from "./chunk-811z9z0t.js";
-import { RH, oG } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { Yi } from "../权限系统/chunk-1y2g140m.js";
-import { gu, $8e } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { isTeammate as Zi } from "./chunk-811z9z0t.js";
+import { getBridgeTokenOverride as RH, getBridgeBaseUrlOverride as oG } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { getOwnJobShortId as gu, syncJobColor as $8e } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { ef, uoe } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
 import { yl } from "./chunk-thxapyam.js";
-import { o8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { saveAgentColor as o8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Vle } from "../../01-核心基础设施/共享小工具-未细化/chunk-tc59qdh4.js";
 var g = ["default", "reset", "none", "gray", "grey"];
 async function Xgr(n, e, t) {
@@ -53,7 +53,7 @@ function f(n, e) {
   let t = Yi()?.bridgeSessionId;
   if (!t) return;
   let o = RH();
-  import("../../01-核心基础设施/共享小工具-未细化/createBridgeSession.92e0rxc9.js").then(({ updateBridgeSessionColorTag: r }) =>
+  import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ updateBridgeSessionColorTag: r }) =>
     r(t, n, ef, {
       baseUrl: oG(),
       getAccessToken: o ? () => o : void 0,

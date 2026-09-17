@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { MO, Pfn, j_, hC, VS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ce } from "./chunk-fjrcf22x.js";
+import { getRuntimeMainLoopModel as ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { MO, getLastCacheSafeParamsForSameModel as Pfn, j_, hC, VS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
 async function Plt({
   toolUseContext: e,
   forkContextMessages: t,

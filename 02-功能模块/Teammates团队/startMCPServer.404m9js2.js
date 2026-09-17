@@ -9,26 +9,26 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { C0, Cx } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { ListToolsRequestSchema as C0, CallToolRequestSchema as Cx } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
-import { P$ } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { artifactReadObservationIn as P$ } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-wm4s322b.js";
-import { rt, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel as rt, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { tA, DT } from "../MCP客户端/chunk-3kmsshb6.js";
 import { rf, ar, LT, ID, oA } from "../权限系统/chunk-qdy0h5k2.js";
-import { hr, qh, yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr, createChildAbortController as qh, userAbortReason as yu } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { i5 } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
 import {
   wmt,
   Xm,
-  gd,
+  hasPermissionsToUseTool as gd,
   wpn,
   d3,
   pu,

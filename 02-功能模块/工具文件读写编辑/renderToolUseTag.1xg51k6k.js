@@ -18,7 +18,7 @@ import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { basename as g } from "path";
 function b({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
   if (!o) return null;

@@ -12,18 +12,18 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Yg, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { clearIsGitMemo as Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { D1, mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
@@ -39,11 +39,11 @@ import {
   wKe,
   TKe,
   kLe,
-  jX,
-  Hht,
-  Iht,
-  Hne,
-  Q2,
+  WORKING_FILESTORE_PREFIX as jX,
+  LANE_FULL_REASON as Hht,
+  LANE_DENIED_REASON as Iht,
+  putSyncedFile as Hne,
+  getSyncedFile as Q2,
   GO,
   ILe,
   Z2,
@@ -76,7 +76,7 @@ import {
   nj,
   lmn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Goe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { getStageFileRoot as Goe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
   Aze,
   on,

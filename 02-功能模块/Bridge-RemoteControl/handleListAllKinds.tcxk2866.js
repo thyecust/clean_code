@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { qU, mf } from "../权限系统/chunk-e4pfvp7x.js";
+import { PERMISSION_MODE_MANUAL_ALIAS as qU, normalizePermissionModeAlias as mf } from "../权限系统/chunk-e4pfvp7x.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
 import { Qre } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Zye, eSe, tSe, J0e } from "../权限系统/chunk-3kjwvb3e.js";

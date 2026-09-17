@@ -70,14 +70,14 @@ import {
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { CA, SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Wre, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { r2, rce, DIe, oce, LIe, ak, x4 } from "./chunk-z2a573sr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u, we, Yr, Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromNumber as Yr, mcpNameForAnalytics_GATE_EVALUATED as Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  pP,
+  getMCPUserAgent as pP,
   Tn,
   lq,
   oRe,
@@ -94,32 +94,32 @@ import {
   uQ,
   Ms,
   dRe,
-  Yt,
-  cm,
-  Qi,
-  dQ,
-  Ss,
+  getClaudeAIOAuthTokens as Yt,
+  handleOAuth401Error as cm,
+  getClaudeAIOAuthTokensAsync as Qi,
+  readFreshOAuthAccessToken as dQ,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, R, ge, l, pot } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, fp, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Wr, J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logMCPError as Wr, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pS, rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Yq, _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Ab, Cb, As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { In, Ege } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb, getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { isFirstPartyProvider as In, shouldPropagateTraceContext as Ege } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { h1, VRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { kRe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
 import { jt, rS, Jse, xvt, UR, Ivt, zZe, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { wA } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { uBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   $v,
@@ -176,14 +176,14 @@ import {
   H5e,
   Ugn,
   AMe,
-  Oh,
-  vE,
-  Uo,
+  isMcpServerBlockedAtConnectTime as Oh,
+  getAllMcpConfigs as vE,
+  isMcpServerDisabled as Uo,
   Tyt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { pve } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { fme, Hi, RJe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { agentProxyEnv as fme, subprocessEnv as Hi, shouldUseMcpAllowlistEnv as RJe } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { e7e, lN, Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { mTt } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
@@ -208,7 +208,7 @@ import {
   pct,
   fct,
 } from "../../00-第三方库/_未识别/第三方库-其他/chunk-7bsbdzwc.js";
-import { Rbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
+import { boundDial as Rbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
 import { vSe, O4, _7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
 import {
   y7,
@@ -257,7 +257,7 @@ import { n7e, Yo } from "../../01-核心基础设施/共享小工具-未细化/c
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { rG } from "./chunk-tznd4407.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
-import { JC } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { isClaudeInChromeMCPServer as JC } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
 import { AA, s, T, v, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -2289,7 +2289,7 @@ var tt = lct(
           J(e, "claude.ai proxy transport created successfully"));
       } else if (ZN(t) && JC(e)) {
         let { isClaudeInChromeAllowed: D } =
-          await import("../../01-核心基础设施/共享小工具-未细化/isClaudeInChromeAllowed.dv56r851.js");
+          await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
         if (!D())
           return (
             J(
@@ -4421,7 +4421,7 @@ ${E.description}`
           let {
               passThroughChromeFileUploadInput: je,
               prepareChromeFileUploadInput: Ye,
-            } = await import("../../01-核心基础设施/共享小工具-未细化/prepareChromeFileUploadInput.m8268v86.js"),
+            } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
             ze = X
               ? await je(E.name, V ?? {}, ce(Pe))
               : await Ye(E.name, V ?? {}, ce(Pe));

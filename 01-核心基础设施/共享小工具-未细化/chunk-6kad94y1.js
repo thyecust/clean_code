@@ -10,10 +10,10 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { u5t, d5t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { ra } from "./chunk-yz7dtpc3.js";
+import { isAxiosError as xd } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { externalHttp as ra } from "./chunk-yz7dtpc3.js";
 import { ZAn } from "./chunk-1945b2ak.js";
 import { randomUUID as d } from "crypto";
 var c = "https://browser-intake-us5-datadoghq.com/api/v2/logs",
@@ -73,11 +73,11 @@ class i {
   sender = u5t({ maxBatchSize: g, getFlushIntervalMs: m, post: f });
 }
 var E = new j(() => new i());
-function DXe() {
+function errorTrackingClient() {
   return E.of(B().host);
 }
-function fwn() {
-  return DXe().reportsEnqueued >= o;
+function isErrorTrackingCapReached() {
+  return errorTrackingClient().reportsEnqueued >= o;
 }
 function h(e) {
   return {
@@ -94,8 +94,8 @@ function h(e) {
     error_frames: void 0,
   };
 }
-function mwn(e) {
-  let r = DXe();
+function enqueueErrorLog(e) {
+  let r = errorTrackingClient();
   if (r.reportsEnqueued >= o) return;
   if ((r.reportsEnqueued++, r.reportsEnqueued === o && !r.capSentinelSent))
     ((r.capSentinelSent = !0),
@@ -106,7 +106,7 @@ function mwn(e) {
       r.sender.enqueue(h(e)));
   else r.sender.enqueue(e);
 }
-async function dyr() {
-  await DXe().sender.shutdown();
+async function shutdownErrorTracking() {
+  await errorTrackingClient().sender.shutdown();
 }
-export { DXe, fwn, mwn, dyr };
+export { errorTrackingClient, isErrorTrackingCapReached, enqueueErrorLog, shutdownErrorTracking };

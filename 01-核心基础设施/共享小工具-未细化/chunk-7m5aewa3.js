@@ -13,8 +13,8 @@ var r = null,
   s = null,
   n = null,
   e = {
-    name: import.meta.require("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js").ARTIFACT_TOOL_NAME,
-    names: import.meta.require("../../02-功能模块/Artifact发布-渲染/ARTIFACT_TOOL_NAME.97rnv74z.js"),
+    name: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js").ARTIFACT_TOOL_NAME,
+    names: import.meta.require("../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js"),
     ui: import.meta.require("../../02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   M = [

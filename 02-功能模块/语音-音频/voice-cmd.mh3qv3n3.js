@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ije } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { cl, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ge, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isAnthropicAuthEnabled as cl, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { p_, _8e, rNe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var V = 2;
 function L(s) {
@@ -63,7 +63,7 @@ var I = async (s, e) => {
       { type: "text", value: "Voice mode disabled." }
     );
   }
-  let { isVoiceStreamAvailable: y } = await import("./isVoiceStreamAvailable.0q1zrfge.js"),
+  let { isVoiceStreamAvailable: y } = await import("./chunk-6098r6ax.js"),
     { checkRecordingAvailability: h } = await import("./checkRecordingAvailability.sby0acpc.js"),
     r = await h(e.session.host, { probeForwarded: !0 });
   if (!r.available)

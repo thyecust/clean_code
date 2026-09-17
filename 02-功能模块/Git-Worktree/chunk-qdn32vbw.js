@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { dT, dne, CX, H2t, Fpn, Dgt, IVe, $pn, ZDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { fn, Be } from "./chunk-9ys1bnqr.js";
-import { lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { vi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { R8, $z, i0t, l0t, Oot, c0t } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { fn, execFileNoThrowWithCwd as Be } from "./chunk-9ys1bnqr.js";
+import { gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { matchingRuleForInput as vi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { R8, $z, REMOTE_READ_OPEN_FLAGS as i0t, bindCanonicalPathToHandle as l0t, isCanonicalPathContained as Oot, readHandleBounded as c0t } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants as j } from "fs";
 import { open as U, realpath as O } from "fs/promises";
@@ -293,7 +293,7 @@ function at(t) {
   }
   return i;
 }
-async function bQt(t, n, i = q) {
+async function buildWorkspaceDiffResponse(t, n, i = q) {
   let r = await $pn();
   if (r === null) return { diff: null };
   let e = await Dgt(t);
@@ -434,4 +434,4 @@ async function bQt(t, n, i = q) {
   }
   return l({ hunks: A, skippedLarge: g, restricted: S });
 }
-export { bQt };
+export { buildWorkspaceDiffResponse };

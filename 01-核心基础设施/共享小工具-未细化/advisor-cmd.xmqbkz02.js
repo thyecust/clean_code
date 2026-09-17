@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { DA, EW } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y6 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { renderDefaultModelSetting as y6 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { pt } from "./chunk-jjr7hzzf.js";
 import { lT, X9 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { cSe } from "./chunk-xkt71qzj.js";

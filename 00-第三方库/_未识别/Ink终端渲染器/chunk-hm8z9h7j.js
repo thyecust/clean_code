@@ -26,7 +26,7 @@ import {
   Hhe,
 } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { j, B, dl } from "../../lodash/lodash.2x3q7cfh.js";
-import { wW, a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { JETBRAINS_IDES as wW, env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   P9e,
@@ -51,13 +51,13 @@ import { Qt, re, De, V, F } from "../React运行时-JSX/React运行时-JSX.j03jp
 import { pg } from "../第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var le = _f(0, "f");
-function eBn() {
+function getClearTerminalSequence() {
   return i_ + F2e + gm;
 }
-function Otn() {
+function getEraseScreenSequence() {
   return i_ + gm;
 }
-function Mat(t) {
+function eraseViewportInPlace(t) {
   return gm + (mW + tPn(1)).repeat(t) + gm;
 }
 class cee {
@@ -309,7 +309,7 @@ function Ltn(t, r, o = !1, u) {
         if (l.count > 0) i += lxt(l.count);
         break;
       case "clearTerminal":
-        i += l.altScreen ? eBn() : Mat(l.viewportRows);
+        i += l.altScreen ? getClearTerminalSequence() : eraseViewportInPlace(l.viewportRows);
         break;
       case "cursorHide":
         i += vv;
@@ -733,9 +733,9 @@ export {
   ZUn,
   m4,
   dE,
-  eBn,
-  Otn,
-  Mat,
+  getClearTerminalSequence,
+  getEraseScreenSequence,
+  eraseViewportInPlace,
   tBn,
   nBn,
   lO,

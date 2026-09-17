@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { setMaxListeners as c } from "events";
 var l = 50;
-function hr(e = l) {
+function createAbortController(e = l) {
   let r = new AbortController();
   return (c(e, r.signal), r);
 }
@@ -39,11 +39,11 @@ function s(e, r, t) {
       once: !0,
     }));
 }
-function qh(e, r) {
-  let t = hr(r);
+function createChildAbortController(e, r) {
+  let t = createAbortController(r);
   return (s(e, t, b), t);
 }
-class vEt extends AbortController {
+class PromptScopedAbortController extends AbortController {
   turnController;
   constructor(e) {
     super();
@@ -51,10 +51,10 @@ class vEt extends AbortController {
     (c(l, this.signal), s(e, this, b));
   }
 }
-function FJ(e) {
-  return e instanceof vEt ? e.turnController : e;
+function turnAbortControllerOf(e) {
+  return e instanceof PromptScopedAbortController ? e.turnController : e;
 }
-function _Je(e, r) {
+function attachDetachableAbortRelay(e, r) {
   if (e.signal.aborted) return (r.abort(e.signal.reason), () => {});
   let t = () => r.abort(e.signal.reason);
   return (
@@ -75,10 +75,10 @@ var p = {
   ),
   "recovery-timeout": new DOMException("recovery-timeout", "AbortError"),
 };
-function yu(e) {
+function userAbortReason(e) {
   return p[e];
 }
-function Ua(e) {
+function unwrapAbortReason(e) {
   return e instanceof DOMException && e.name === "AbortError" ? e.message : e;
 }
 var R = new Set([
@@ -88,28 +88,28 @@ var R = new Set([
   "interrupt",
   "turn-abort",
 ]);
-function l$e(e) {
-  return R.has(Ua(e));
+function isUserInitiatedAbortReason(e) {
+  return R.has(unwrapAbortReason(e));
 }
 var E = new Set(["interrupt", "turn-abort", "refusal-fallback-edit"]);
-function qK(e) {
-  return E.has(Ua(e));
+function isSilentAbortReason(e) {
+  return E.has(unwrapAbortReason(e));
 }
-function ob(e) {
-  return Ua(e.reason) === "shutdown" ? !0 : void 0;
+function shutdownInterruptStamp(e) {
+  return unwrapAbortReason(e.reason) === "shutdown" ? !0 : void 0;
 }
 var i = "server-fallback-tombstone";
-function UG(e) {
-  return e.aborted && Ua(e.reason) === i;
+function isServerFallbackDiscard(e) {
+  return e.aborted && unwrapAbortReason(e.reason) === i;
 }
 var k = new DOMException(i, "AbortError");
-function yJe() {
+function serverFallbackTombstoneAbortReason() {
   return k;
 }
 var A = "subagent-park",
   x = new DOMException(A, "AbortError");
-function c$e(e) {
-  switch (Ua(e)) {
+function classifyAbortReasonForTelemetry(e) {
+  switch (unwrapAbortReason(e)) {
     case "user-cancel":
       return "user_cancel";
     case "remote-cancel":
@@ -132,7 +132,7 @@ function c$e(e) {
       return "turn_teardown";
   }
 }
-function qEn(e) {
+function isUserAttributableAbortKind(e) {
   switch (e) {
     case "user_cancel":
     case "remote_cancel":
@@ -149,19 +149,19 @@ function qEn(e) {
 }
 function w(e) {
   let r = this.deref();
-  if (!r || !l$e(r.signal.reason)) return;
+  if (!r || !isUserInitiatedAbortReason(r.signal.reason)) return;
   e.deref()?.abort(r.signal.reason);
 }
 var u = 600000;
-function zEn(e) {
+function recoveryTimeoutForContextTokens(e) {
   if (Number.isNaN(e)) return u;
   return Math.min(3600000, Math.max(u, Math.round(e * 1.5)));
 }
 function _(e) {
-  e.deref()?.abort(yu("recovery-timeout"));
+  e.deref()?.abort(userAbortReason("recovery-timeout"));
 }
-function VEn(e, r) {
-  let t = hr();
+function createRecoveryAbortController(e, r) {
+  let t = createAbortController();
   if ((s(e, t, w), t.signal.aborted)) return t;
   let o = setTimeout(_, r, new WeakRef(t));
   return (
@@ -173,20 +173,20 @@ function VEn(e, r) {
   );
 }
 export {
-  hr,
-  qh,
-  vEt,
-  FJ,
-  _Je,
-  yu,
-  Ua,
-  l$e,
-  qK,
-  ob,
-  UG,
-  yJe,
-  c$e,
-  qEn,
-  zEn,
-  VEn,
+  createAbortController,
+  createChildAbortController,
+  PromptScopedAbortController,
+  turnAbortControllerOf,
+  attachDetachableAbortRelay,
+  userAbortReason,
+  unwrapAbortReason,
+  isUserInitiatedAbortReason,
+  isSilentAbortReason,
+  shutdownInterruptStamp,
+  isServerFallbackDiscard,
+  serverFallbackTombstoneAbortReason,
+  classifyAbortReasonForTelemetry,
+  isUserAttributableAbortKind,
+  recoveryTimeoutForContextTokens,
+  createRecoveryAbortController,
 };

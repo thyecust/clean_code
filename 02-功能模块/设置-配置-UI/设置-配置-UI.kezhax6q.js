@@ -10,32 +10,32 @@
 import { AS, ML, mv, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, yf, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x, ln, Ux } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { a, Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { gi, o, t, ct, jr, tn, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Mr,
   Jy,
   af,
-  lf,
-  oi,
+  bytesPerTokenForModel as lf,
+  renderModelName as oi,
   Tn,
-  _t,
-  ap,
+  isBgSession as _t,
+  isUnattendedBgSession as ap,
   fq,
-  gt,
-  wu,
-  qn,
-  x6,
+  isClaudeAISubscriber as gt,
+  hasStoredOAuthToken as wu,
+  getSubscriptionType as qn,
+  isConsumerSubscriber as x6,
   VD,
   Te,
   ee,
@@ -44,22 +44,22 @@ import {
   hQ,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, Ot, No, Pn, uy, $2e } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Y5 } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { te, formatDuration as Ot, formatNumber as No, formatTokens as Pn, formatRelativeTimeAgo as uy, formatResetText as $2e } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { listedProjectKey as Y5 } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { ye, Ge, Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { DP, iv, VU } from "../权限系统/chunk-e4pfvp7x.js";
 import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { D6, Lvt, KZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { jY, T3t } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { cn, c4 } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -74,8 +74,8 @@ import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { R9 } from "../插件系统/chunk-rbjz1q03.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isChannelsEnabled as R9 } from "../插件系统/chunk-rbjz1q03.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Ebe } from "../插件系统/chunk-4k4dssd9.js";
 import { d_, U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { q8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
@@ -93,8 +93,8 @@ import {
   MDe,
   ATe,
   f5e,
-  TH,
-  TY,
+  isTranscriptMessage as TH,
+  getCurrentSessionDisplayTitle as TY,
   Ny,
   h8e,
   M_n,
@@ -106,14 +106,14 @@ import {
 import { YEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { yYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Eve } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isArtifactConfigToggleable as yYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { ensurePolicyLimitsLoadedForDiagnostic as Eve } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { hG, Qbt } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
 import { K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
 import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
-import { nIe } from "../斜杠命令-框架/chunk-a4vej95c.js";
+import { isWebSetupEnabled as nIe } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -123,7 +123,7 @@ import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { zZt } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
+import { RemoteHomeSettingsDialog as zZt } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
 import { Lit, PPt } from "../Memory-CLAUDE.md/chunk-hg0ww0g3.js";
 import { Ult, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Dlt, Llt, T2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
@@ -1435,7 +1435,7 @@ function ga({
     Mu = U((k) => (Mr() ? k.fastMode : !1)),
     Up = U((k) => k.promptSuggestionEnabled),
     Wp = U((k) => k.awaySummaryEnabled),
-    Hp = import.meta.require("../../01-核心基础设施/共享小工具-未细化/getBriefEnforceText.y2btb2kt.js").isBriefEntitled(),
+    Hp = import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js").isBriefEntitled(),
     Vp = It(),
     [Eu, Gp] = d({}),
     Kp = C(xu);

@@ -11,11 +11,11 @@
 // [preload stripped] 原本在此预载 83 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Jt, G5t } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { updateSettingsForSource as Jt, hasSkipWorkflowUsageWarning as G5t } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sA } from "../权限系统/chunk-t3b7pg2x.js";
-import { ce, Qc, kJe } from "../权限系统/chunk-fjrcf22x.js";
-import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { getToolPermissionContext as ce, getEffortValue as Qc, getUltracodeRequested as kJe } from "../权限系统/chunk-fjrcf22x.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { soe } from "../Teammates团队/chunk-eey53z5b.js";
 function u(e, o) {
   if (e !== Yc) return !1;

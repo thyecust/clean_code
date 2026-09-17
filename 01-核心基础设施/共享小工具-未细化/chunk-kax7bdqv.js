@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { M } from "./chunk-h62vxw7j.js";
 import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Yt, Qi, Ss } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi, checkAndRefreshOAuthTokenIfNeeded as Ss } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ml } from "./chunk-vdg9aytt.js";
 var p =
@@ -26,7 +26,7 @@ class i extends Error {
 }
 var Oce = 8080;
 function c() {
-  let { getAPIProvider: t } = import.meta.require("./isFirstPartyProvider.dged0wfq.js");
+  let { getAPIProvider: t } = import.meta.require("../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js");
   if (t() !== "firstParty")
     throw new i(
       403,

@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Tn, ht, Fc, Gl, Yt, cm, Qi, e5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Tn, ht, isHostManagedProviderAuth as Fc, getAuthTokenSource as Gl, getClaudeAIOAuthTokens as Yt, handleOAuth401Error as cm, getClaudeAIOAuthTokensAsync as Qi, getAuthTokenSourceAsync as e5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyAnthropicHost as GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { NV, lj, agn, TT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { NV, lj, agn, hasHookForEvent as TT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YA,
   mbe,
@@ -59,7 +59,7 @@ import "../DesignSync/chunk-aycc6z76.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { mWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
 import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 function N(e) {
   return Buffer.byteLength(e, "utf8");
 }

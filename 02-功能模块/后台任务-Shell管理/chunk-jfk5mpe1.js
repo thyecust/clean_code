@@ -9,32 +9,32 @@
 // Version: 2.1.263
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { bc, a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { S, u, we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, z, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Qu, jW, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Uwt, Il, Pc, YE, _wn, ywn, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { i9, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import { $U, iL, UU, Qet, NBe, dke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { rd, Mre, Upe, pD, FNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { Wi, Ms, H, ee, c5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, gm, mW, i_, dp, Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Gie, iz } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { te, gm, mW, i_, dp, truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { quarantineJobTranscript as Gie, resolveJobTranscript as iz } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { Ar, a2e } from "../权限系统/chunk-e4pfvp7x.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { jT } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { procIdentityOf as jT } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { Tve, Sme, Lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { Eye, MWe, Cye } from "./chunk-gnmy62vg.js";
@@ -43,23 +43,23 @@ import { X3t, g_, LJn, R7e, NSn, VI } from "./chunk-djserjj5.js";
 import {
   k8e,
   oyn,
-  ba,
-  x8e,
-  mAe,
-  Sj,
-  hAe,
-  yNe,
-  kpe,
-  P8e,
-  _Ae,
-  yAe,
-  lyn,
-  cyn,
-  S$,
-  rr,
-  Zn,
+  BG_PROTO as ba,
+  BG_PROTO_MIN as x8e,
+  wrapDaemonHint as mAe,
+  daemonDetachApc as Sj,
+  RESPAWNING_ATTACH_CODE as hAe,
+  RESPAWN_REASON_UPGRADE as yNe,
+  RESPAWN_REASON_STALL as kpe,
+  RESPAWN_REASON_LEGACY as P8e,
+  HOST_DIED_ATTACH_MESSAGE as _Ae,
+  HOST_DIED_EXEC_ATTACH_MESSAGE as yAe,
+  ControlRequestSchema as lyn,
+  DAEMON_LEASE_LABELS as cyn,
+  updateRoster as S$,
+  getJobDir as rr,
+  readJobState as Zn,
 } from "./chunk-7wsy8vxb.js";
-import { Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { controlRequest as Wp } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { cO, vv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { Uv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

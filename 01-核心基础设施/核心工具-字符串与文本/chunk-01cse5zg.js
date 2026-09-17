@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { x } from "./chunk-1wezmyx2.js";
 import { Xs, oPn, sPn, Ncr } from "../共享小工具-未细化/chunk-xcc43dkx.js";
-import { Ft } from "../共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../共享小工具-未细化/chunk-7axvc6rn.js";
 var O = { ambiguousIsNarrow: !0 };
 function te(t) {
   return Bun.stringWidth(t, O);
@@ -408,20 +408,20 @@ function _(t, e, n) {
     }
   return ((r += t.slice(o)), r);
 }
-function el(t, e) {
+function truncatePathMiddle(t, e) {
   if (te(t) <= e) return t;
   if (e <= 0) return "\u2026";
-  if (e < 5) return Xe(t, e);
+  if (e < 5) return truncateToWidth(t, e);
   let n = t.lastIndexOf("/"),
     r = n >= 0 ? n : t.lastIndexOf("\\"),
     o = r >= 0 ? t.slice(r) : t,
     i = r >= 0 ? t.slice(0, r) : "",
     u = te(o);
-  if (u >= e - 1) return Ob(t, e);
+  if (u >= e - 1) return truncateStartToWidth(t, e);
   let c = e - 1 - u;
-  return SL(i, c) + "\u2026" + o;
+  return truncateToWidthNoEllipsis(i, c) + "\u2026" + o;
 }
-function Xe(t, e) {
+function truncateToWidth(t, e) {
   if (te(t) <= e) return t;
   if (e <= 1) return "\u2026";
   let n = 0,
@@ -433,7 +433,7 @@ function Xe(t, e) {
   }
   return r + "\u2026";
 }
-function Ob(t, e) {
+function truncateStartToWidth(t, e) {
   if (te(t) <= e) return t;
   if (e <= 1) return "\u2026";
   let n = e - 1,
@@ -450,7 +450,7 @@ function Ob(t, e) {
     .map((u) => u.segment)
     .join("")}`;
 }
-function SL(t, e) {
+function truncateToWidthNoEllipsis(t, e) {
   if (te(t) <= e) return t;
   if (e <= 0) return "";
   let n = 0,
@@ -462,18 +462,18 @@ function SL(t, e) {
   }
   return r;
 }
-function or(t, e, n = !1) {
+function truncate(t, e, n = !1) {
   let r = t;
   if (n) {
     let o = t.indexOf(`
 `);
     if (o !== -1) {
-      if (((r = t.substring(0, o)), te(r) + 1 > e)) return Xe(`${r}\u2026`, e);
+      if (((r = t.substring(0, o)), te(r) + 1 > e)) return truncateToWidth(`${r}\u2026`, e);
       return `${r}\u2026`;
     }
   }
   if (te(r) <= e) return r;
-  return Xe(r, e);
+  return truncateToWidth(r, e);
 }
 function cxt(t, e) {
   let n = [],
@@ -499,15 +499,15 @@ function uxt(t, e, n) {
 `);
   let o = r.slice(0, n);
   return (
-    (o[n - 1] = Xe((o[n - 1] ?? "") + "\u2026", e)),
+    (o[n - 1] = truncateToWidth((o[n - 1] ?? "") + "\u2026", e)),
     o.join(`
 `)
   );
 }
-function gW(t) {
+function formatSecondsShort(t) {
   return `${(t / 1000).toFixed(1)}s`;
 }
-function Ot(t, e) {
+function formatDuration(t, e) {
   if (t < 60000) {
     if (t === 0) return "0s";
     if (t < 1) return `${(t / 1000).toFixed(1)}s`;
@@ -543,11 +543,11 @@ function Ot(t, e) {
   }
   return `${i}s`;
 }
-function zQ(t) {
+function formatDurationCoarse(t) {
   let e = t >= 60000 ? Math.round(t / 60000) * 60000 : t;
-  return Ot(e, { hideTrailingZeros: !0 });
+  return formatDuration(e, { hideTrailingZeros: !0 });
 }
-function Ihe(t) {
+function formatBarElapsed(t) {
   let e = Math.max(0, Math.floor(t / 1000));
   if (e < 60) return `${e}s`;
   let n = Math.floor(e / 60);
@@ -566,20 +566,20 @@ var H = {
     maximumFractionDigits: 1,
     minimumFractionDigits: 0,
   };
-function No(t) {
+function formatNumber(t) {
   let e = t >= 1000;
   return Ncr("en-US", e ? H : Y)
     .format(t)
     .toLowerCase();
 }
-function Pn(t) {
-  return No(t).replace(".0", "");
+function formatTokens(t) {
+  return formatNumber(t).replace(".0", "");
 }
-function xx(t) {
+function formatTokenEstimate(t) {
   if (t < 20) return "< 20";
-  return `~${Pn(Math.round(t / 10) * 10)}`;
+  return `~${formatTokens(Math.round(t / 10) * 10)}`;
 }
-function I1(t, e = {}) {
+function formatRelativeTime(t, e = {}) {
   let {
       style: n = "narrow",
       numeric: r = "always",
@@ -608,15 +608,15 @@ function I1(t, e = {}) {
   if (n === "narrow") return c <= 0 ? "0s ago" : "in 0s";
   return oPn(n, "auto").format(0, "second");
 }
-function uy(t, e = {}) {
+function formatRelativeTimeAgo(t, e = {}) {
   let { now: n = new Date(), ...r } = e;
-  if (t > n) return I1(t, { ...r, now: n });
-  return I1(t, { ...r, numeric: "always", now: n });
+  if (t > n) return formatRelativeTime(t, { ...r, now: n });
+  return formatRelativeTime(t, { ...r, numeric: "always", now: n });
 }
-function Ent(t) {
+function formatLogMetadata(t) {
   let e = t.fileSize !== void 0 ? Ft(t.fileSize) : `${t.messageCount} messages`,
     n = [
-      uy(t.modified, { style: "short" }),
+      formatRelativeTimeAgo(t.modified, { style: "short" }),
       ...(t.sessionKind === "bg" ? ["bg"] : []),
       ...(t.gitBranch ? [t.gitBranch] : []),
       e,
@@ -629,7 +629,7 @@ function Ent(t) {
     );
   return n.join(" \xB7 ");
 }
-function Au(t, e = !1, n = !0, r = !1) {
+function formatResetTime(t, e = !1, n = !0, r = !1) {
   if (!t) return;
   let o = new Date(t * 1000),
     i = new Date(),
@@ -662,11 +662,11 @@ function Au(t, e = !1, n = !0, r = !1) {
     (e ? ` (${sPn()})` : "")
   );
 }
-function $2e(t, e = !1, n = !0, r = !1) {
+function formatResetText(t, e = !1, n = !0, r = !1) {
   let o = new Date(t);
-  return `${Au(Math.floor(o.getTime() / 1000), e, n, r)}`;
+  return `${formatResetTime(Math.floor(o.getTime() / 1000), e, n, r)}`;
 }
-function jie(t, e = "line") {
+function formatOverflowHint(t, e = "line") {
   if (t <= 0) return "";
   return `\u2026 +${t} ${x(t, e)}`;
 }
@@ -709,24 +709,24 @@ export {
   Hhe,
   sB,
   dp,
-  el,
-  Xe,
-  Ob,
-  SL,
-  or,
+  truncatePathMiddle,
+  truncateToWidth,
+  truncateStartToWidth,
+  truncateToWidthNoEllipsis,
+  truncate,
   cxt,
   uxt,
-  gW,
-  Ot,
-  zQ,
-  Ihe,
-  No,
-  Pn,
-  xx,
-  I1,
-  uy,
-  Ent,
-  Au,
-  $2e,
-  jie,
+  formatSecondsShort,
+  formatDuration,
+  formatDurationCoarse,
+  formatBarElapsed,
+  formatNumber,
+  formatTokens,
+  formatTokenEstimate,
+  formatRelativeTime,
+  formatRelativeTimeAgo,
+  formatLogMetadata,
+  formatResetTime,
+  formatResetText,
+  formatOverflowHint,
 };

@@ -11,7 +11,7 @@ import { j, B, K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { _n } from "./chunk-qe04h4c5.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectKey as yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { readdir as d } from "fs/promises";
 import { basename as p, dirname as u, join as o } from "path";

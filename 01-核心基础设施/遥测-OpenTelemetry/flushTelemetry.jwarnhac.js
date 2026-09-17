@@ -19,28 +19,28 @@ import {
   Pme,
   ND,
   HAt,
-  tx,
-  T_,
+  getAuthHeadersAsync as tx,
+  withOAuth401Retry as T_,
   mVt,
   YJ,
   ht,
   C6,
-  Fc,
-  Zc,
-  gb,
-  Yt,
-  cm,
-  gt,
-  lp,
-  cge,
-  qn,
-  ORn,
+  isHostManagedProviderAuth as Fc,
+  shouldUseWIFAuth as Zc,
+  getAnthropicApiKeySafe as gb,
+  getClaudeAIOAuthTokens as Yt,
+  handleOAuth401Error as cm,
+  isClaudeAISubscriber as gt,
+  hasProfileScope as lp,
+  is1PApiCustomer as cge,
+  getSubscriptionType as qn,
+  getOtelHeadersFromHelper as ORn,
   H,
   Bo,
   Te,
   ee,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { MP, JT, Hke, o_, QT } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getCACertificates as MP, getMTLSConfig as JT, Hke, getUsableProxyUrl as o_, shouldBypassProxy as QT } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   j,
   B,
@@ -60,20 +60,20 @@ import {
   fv,
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, Et, b, QPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { U1, h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { U1, logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tu } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { bn } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getSettings_DEPRECATED as bn } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { F3t, qY } from "./chunk-5qbcynds.js";
 import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Pke } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getResolvedWIFBaseUrlSnapshot as Pke } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
 import { Snn } from "../共享小工具-未细化/chunk-274ae0qv.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { AP } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";

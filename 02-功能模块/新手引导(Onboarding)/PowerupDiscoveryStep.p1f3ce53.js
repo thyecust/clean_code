@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { jZ } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
+import { POWERUP_DISCOVERY_COPY as jZ } from "../../01-核心基础设施/共享小工具-未细化/chunk-aeg1pn1f.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-979tv7jj.js";

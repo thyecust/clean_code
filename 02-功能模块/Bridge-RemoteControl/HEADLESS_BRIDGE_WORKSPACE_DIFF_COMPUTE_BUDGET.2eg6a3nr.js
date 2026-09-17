@@ -12,45 +12,45 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eje, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   si,
-  GD,
-  bRe,
-  wZe,
-  qD,
-  cm,
-  dQ,
-  wg,
-  v5,
-  Ss,
-  XKt,
-  xRn,
-  mh,
+  getOrganizationUUID as GD,
+  getOAuthAccountOnHold as bRe,
+  isOAuthRefreshKnownDead as wZe,
+  getClaudeAIOAuthTokenOrigin as qD,
+  handleOAuth401Error as cm,
+  readFreshOAuthAccessToken as dQ,
+  sameOwnerAccount as wg,
+  readFreshOAuthCredentialSnapshot as v5,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  getStoredOAuthTokenExpiresAt as XKt,
+  hasStoredOAuthRefreshToken as xRn,
+  getStoredOauthAccountInfo as mh,
   Te,
   ee,
   sy,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Sc, qie } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { kd, XIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectsDir as Sc, SKIP_PRECOMPACT_THRESHOLD as qie } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { kd, snapshotGitEvidenceForBridge as XIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { _n, Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { hc, yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
-import { T0n, yc, pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { Zi } from "../Teammates团队/chunk-811z9z0t.js";
+import { hc, getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { setCseShimGate as T0n, toInfraSessionId as yc, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { isTeammate as Zi } from "../Teammates团队/chunk-811z9z0t.js";
 import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { RH, m_, wC, Ype, qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getBridgeTokenOverride as RH, getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeBaseUrl as Ype, getBridgeSessionNamePrefix as qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { p6, F$e, lrr, Dve } from "./chunk-5ne99rq3.js";
-import { qqt, Poe } from "../权限系统/chunk-1y2g140m.js";
+import { retireBridgeHandle as qqt, setSelfBridgeTitle as Poe } from "../权限系统/chunk-1y2g140m.js";
 import {
-  FTe,
-  xfn,
+  getBridgeSession as FTe,
+  updateBridgeSessionColorTag as xfn,
   Ly,
   SLe,
   XKn,
@@ -59,55 +59,55 @@ import {
   $l,
   ya,
   ZWt,
-  z5e,
-  il,
-  K5e,
-  Ahn,
-  X5e,
-  DI,
-  JEe,
-  YM,
-  Fhn,
-  c9t,
-  SY,
-  Z5e,
-  u9t,
-  e8e,
-  JV,
-  Li,
-  JM,
-  W3,
-  t8e,
-  Whn,
-  lre,
-  Ghn,
-  fj,
-  f9t,
-  cpe,
-  qhn,
-  wY,
-  mj,
-  sD,
-  mu,
-  G3,
-  upe,
+  isSyncedTranscriptEntry as z5e,
+  getMaterializedSessionFile as il,
+  setInternalEventWriter as K5e,
+  clearInternalEventWriter as Ahn,
+  setInternalEventReader as X5e,
+  saveCustomTitle as DI,
+  writeHistorySuppression as JEe,
+  isSessionHistorySuppressed as YM,
+  readHistorySuppressionFromDisk as Fhn,
+  SUPPRESSION_SCAN_MAX_LINES as c9t,
+  isOwnTranscriptFile as SY,
+  getDerivedTranscriptPathForSession as Z5e,
+  matchesHistorySuppressionLine as u9t,
+  holdSessionHistorySuppressionFor as e8e,
+  isSessionHistorySuppressedFor as JV,
+  pinSessionId as Li,
+  holdPrecautionarySuppressionFor as JM,
+  markPrecautionClearResilientFor as W3,
+  markScanUncertaintyHoldFor as t8e,
+  isScanUncertaintyHoldFor as Whn,
+  claimPrecautionHoldForObservedCause as lre,
+  releaseScanUncertaintyHoldFor as Ghn,
+  isPrecautionarySuppressionHeldFor as fj,
+  isRowForeignToBridgeSession as f9t,
+  isBridgeBindingForeign as cpe,
+  getBridgeBoundConversationSid as qhn,
+  isRemoteEgressSuppressedFor as wY,
+  clearBridgeSession as mj,
+  getCurrentSessionBridge as sD,
+  getCurrentSessionTitle as mu,
+  getCurrentSessionAiTitle as G3,
+  getCurrentSessionAgentColor as upe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { C7e } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { Mt, DD, sCn } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { listRegisteredSessionRecords as C7e } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { isPolicyAllowed as Mt, policyDenyKind as DD, policyDeniedHint as sCn } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Ud, wEt } from "../Teammates团队/chunk-thxapyam.js";
 import { rf } from "../权限系统/chunk-qdy0h5k2.js";
-import { kAn, w4t, HAn, ZK, PAn, OAn } from "./chunk-9estzwf5.js";
+import { isBridgeEnabledBlocking as kAn, describeRemoteControlPolicyDenial as w4t, isCseShimEnabled as HAn, isBridgeStateFramesEnabled as ZK, isBridgeResumeRespectsLocalOwnerEnabled as PAn, isBridgeRestoredMatchMintEnabled as OAn } from "./chunk-9estzwf5.js";
 import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import { cb } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { logBridgeSkip as cb } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { hG } from "./chunk-3j7ezsr7.js";
-import { Ive, vme, lCn } from "./chunk-tyce0p0b.js";
+import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE as Ive, getAttestationFilterPolicy as vme, preflightTrustedDeviceBlocking as lCn } from "./chunk-tyce0p0b.js";
 import { RAe, W8e } from "./chunk-ct52ffwb.js";
-import { k4, U3e } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { globalFileIndexCache as k4, generateFileSuggestions as U3e } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { Ust } from "./chunk-2mm1aqzx.js";
 import { E2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { Dot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { bQt } from "../Git-Worktree/chunk-qdn32vbw.js";
+import { readFileForRemote as Dot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { buildWorkspaceDiffResponse as bQt } from "../Git-Worktree/chunk-qdn32vbw.js";
 import { ult, S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
 import { ndt, Yjn } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
@@ -117,7 +117,7 @@ import { APe, ldt, CPe, Bee, abe } from "../../01-核心基础设施/共享小�
 import { Gtn, _Bn, Xat } from "./chunk-1g5kqtqx.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Jsr, FR } from "./chunk-4zd60pbm.js";
-import { Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Qo, pxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 var gn = 3000;
 async function gt(d, c) {

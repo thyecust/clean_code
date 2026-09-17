@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { y, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { vG, Uwn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { derivePublishContextFrom as vG, makeMainObservedVersionReader as Uwn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { tte, hM } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
+import { maybeSubscribeFrameLive as tte, isSocketHoldingPublishContext as hM } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 var l = 32;
-function qsn(n) {
+function subagentPublishAdopter(n) {
   if (
     n.publishContext !== "subagent" ||
     n.context.agentId === void 0 ||
@@ -28,7 +28,7 @@ function qsn(n) {
   });
   return hM(t) ? t : null;
 }
-function u1t(n, t) {
+function stageSubagentPublishArm(n, t) {
   let e = ne().live.pendingSubagentArms,
     s = e.get(n) ?? [],
     i = s.findIndex((o) => o.slug === t.slug);
@@ -54,7 +54,7 @@ function b(n) {
   (t.delete(n), t.add(n));
   while (t.size > c) t.delete(t.values().next().value);
 }
-function Nhr(n) {
+function adoptSubagentPublishArms(n) {
   let { agentId: t, context: e } = n;
   b(t);
   let s = d(t);
@@ -69,7 +69,7 @@ function Nhr(n) {
       _3(e.agentId, e.taskRegistry) === e.agentId ||
       !ne().live.finishedSubagentAdopters.has(e.agentId);
     for (let a of s)
-      if (o) u1t(e.agentId, a);
+      if (o) stageSubagentPublishArm(e.agentId, a);
       else g("artifact_live_subscribe", "subagent_arm_orphaned");
     return;
   }
@@ -90,4 +90,4 @@ function Nhr(n) {
     publish_context: u(i),
   });
 }
-export { qsn, u1t, Nhr };
+export { subagentPublishAdopter, stageSubagentPublishArm, adoptSubagentPublishArms };

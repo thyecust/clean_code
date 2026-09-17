@@ -12,9 +12,9 @@
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { spawn as R } from "child_process";
 import { homedir as m } from "os";

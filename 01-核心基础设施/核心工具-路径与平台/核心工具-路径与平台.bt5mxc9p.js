@@ -25,7 +25,7 @@ import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   b0,
@@ -55,11 +55,11 @@ import {
   XRt,
   mtt,
   MHn,
-  jR,
-  Yge,
-  $Hn,
-  wie,
-  rv,
+  isRemoteManagedSettingsVerified as jR,
+  isRemoteManagedSettingsVerifiedAndConsented as Yge,
+  registerSyncCacheResetListener as $Hn,
+  getEligibilityMemo as wie,
+  getRemoteManagedSettingsSyncFromCache as rv,
   v8t,
   R8t,
   wke,
@@ -86,7 +86,7 @@ import {
   blr,
   jq,
   ehe,
-  T0,
+  getRelativeSettingsFilePathForSource as T0,
   Aie,
   QHn,
   wlr,
@@ -107,21 +107,21 @@ import {
   D8t,
   Ilr,
   Ttt,
-  GU,
+  settingsMergeCustomizer as GU,
   Plr,
   E0,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rL, wb } from "./chunk-fx8qr1md.js";
 import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
-import { Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { $r, KIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { findCanonicalGitRoot as $r, dirIsInGitRepo as KIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { mn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -145,10 +145,10 @@ class at {
   }
 }
 var lt = new at();
-function cie(e) {
+function registerWriteQueueDrain(e) {
   lt.register(e);
 }
-function y0() {
+function drainRegisteredWriteQueues() {
   return lt.drainAll();
 }
 import { basename as Vi, dirname as pe, join as fe, resolve as wn } from "path";
@@ -3084,8 +3084,8 @@ class $n {
     this.firedSites.clear();
   }
 }
-var umr = new j(() => new $n());
-function qT(e, t, r) {
+var legacyLocalSettingsProbes = new j(() => new $n());
+function parseSettingsFile(e, t, r) {
   return WU(e, da(), t, r);
 }
 function D() {
@@ -3093,7 +3093,7 @@ function D() {
     store: da(),
     cwd: he(),
     allowedSources: gae(),
-    onLegacyLocalSettingsRead: (t) => umr.of(B().host).fire(t),
+    onLegacyLocalSettingsRead: (t) => legacyLocalSettingsProbes.of(B().host).fire(t),
     parentManaged: sLn(),
     hostManagedProvider: a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST,
     flagInline: RL(),
@@ -3111,65 +3111,65 @@ function D() {
   };
   return ((e.file = () => QBe(e)), e);
 }
-function obr(e) {
+function getSettingsRootPathForSource(e) {
   return skt(e, D());
 }
-function Cxn() {
+function localSettingsStoreRootAwaitingOwnershipProbe() {
   let e = D(),
     t = JHn(e.cwd, e.canonicalGitRoot);
   return t.decided === void 0 ? t.root : void 0;
 }
-function ho(e) {
+function getSettingsFilePathForSource(e) {
   return ehe(e, D());
 }
-function pRt(e) {
+function getSettingsParseErrorsForSource(e) {
   return Ilr(e, D());
 }
-function CBe(e) {
+function getRuleAnchorRootForSource(e) {
   return blr(e, D());
 }
-function IP() {
+function getLegacyLocalSettingsFilePath() {
   return Aie(D());
 }
-function zT() {
-  let e = ho("projectSettings"),
-    t = ho("userSettings");
+function projectSettingsAliasesUserSettings() {
+  let e = getSettingsFilePathForSource("projectSettings"),
+    t = getSettingsFilePathForSource("userSettings");
   return !!e && !!t && wn(e) === wn(t);
 }
-function Iet() {
-  let e = ho("localSettings");
+function getLocalSettingsValidationErrors() {
+  let e = getSettingsFilePathForSource("localSettings");
   if (!e) return [];
-  return qT(e).errors;
+  return parseSettingsFile(e).errors;
 }
-function sbr() {
+function parseRemoteManagedSettings() {
   return Bq(D());
 }
-function fRt() {
+function loadManagedFileSettings() {
   return QBe(D());
 }
-function ye(e) {
+function getSettingsForSource(e) {
   if (G1() && Ow.has(e)) return null;
   return QHn(e, D());
 }
-function N5() {
+function getPairedPolicyModelOverrides() {
   return wlr(D());
 }
-function vxn() {
+function getHostManagedModelPricing() {
   return Tlr(D());
 }
-function Rxn() {
+function getHostManagedToolSearchEnv() {
   return Elr(D());
 }
-function F5(e) {
+function getSettingsForSourceWriteSeed(e) {
   return D8t(e, D(), { includeLegacyLocalSettings: !1 });
 }
-var dmr = new j(() => new Map());
-function kxn(e) {
+var repoDirSettingsParses = new j(() => new Map());
+function readRepoDirSettingsFresh(e) {
   let t = D(),
     r = [ehe(e, t), ...(e === "localSettings" ? [Aie(t)] : [])].filter(
       (E) => E !== void 0,
     ),
-    o = dmr.of(B().host),
+    o = repoDirSettingsParses.of(B().host),
     d = r.map((E) => Slr(E, o));
   if (
     d.some(
@@ -3183,24 +3183,24 @@ function kxn(e) {
     settings: p === null || p === void 0 ? (_ ?? null) : b0({}, p, _ ?? {}, GU),
   };
 }
-function ibr() {
+function flagInlineConsentDropped() {
   let e = D();
   if (!me(e.flagInline)) return !1;
   if (!we(e.flagInline)) return !1;
   return wtt(e).settings === null;
 }
-function xxn(e) {
+function flagInlineSettingDropped(e) {
   let t = D();
   if (!me(t.flagInline) || !(e in t.flagInline)) return !1;
   return wtt(t).settings === null;
 }
-function Ige() {
+function parentManagedTierParticipates() {
   return Rlr(D());
 }
-function Hxn() {
+function getArmedHelperOutput() {
   return Wq(D());
 }
-function Pet() {
+function getMergedPolicySources() {
   return e0n(D());
 }
 function we(e) {
@@ -3211,7 +3211,7 @@ function we(e) {
     (me(t) && ("commitTrailers" in t || "commit" in t || "pr" in t))
   );
 }
-function abr() {
+function flagFileConsentDropped() {
   let e = D(),
     t = ehe("flagSettings", e);
   if (!t) return !1;
@@ -3235,7 +3235,7 @@ function ot(e) {
   if (!me(t)) return !0;
   return we(t);
 }
-async function lbr(e, t) {
+async function sourceFileConsentDropped(e, t) {
   let r = D(),
     o = ehe(e, r);
   if (!o) return !1;
@@ -3275,7 +3275,7 @@ async function Un(e) {
   if (!me(d)) return { kind: "non-object" };
   return { kind: "object", raw: d };
 }
-function cbr() {
+function legacyLocalConsentDropped() {
   let e = D(),
     t = Aie(e);
   if (!t) return !1;
@@ -3284,49 +3284,49 @@ function cbr() {
   if (r.errors.length === 0) return !1;
   return ot(t);
 }
-function W5t() {
+function getLegacyLocalSettingsOverlay() {
   let e = D(),
     t = Aie(e);
   if (!t) return null;
   return WU(t, e.store).settings ?? null;
 }
-function Rd() {
+function getAllPolicyTierSettings() {
   return O8t(D());
 }
-function Ixn() {
+function getMachineAdminTierSettings() {
   return vlr(D());
 }
-function vBe(e) {
+function getAdminTierEnvValue(e) {
   return Hlr(D(), e);
 }
-function Pxn() {
+function getPolicyEnvCompositionForLogging() {
   return da().lastPolicyEnvComposition;
 }
-function pie() {
+function getDurablePolicyTierSettings() {
   return xlr(D());
 }
-function Ge() {
-  return bb().settings || {};
+function getInitialSettings() {
+  return getSettingsWithErrors().settings || {};
 }
-var bn = Ge;
-function Oxn() {
+var getSettings_DEPRECATED = getInitialSettings;
+function getSettingsWithSources() {
   Za();
   let e = [];
   for (let t of ms()) {
-    let r = ye(t);
+    let r = getSettingsForSource(t);
     if (r && Object.keys(r).length > 0) e.push({ source: t, settings: r });
   }
-  return { effective: Ge(), sources: e };
+  return { effective: getInitialSettings(), sources: e };
 }
-function VT(e) {
+function getEffectiveSettingSource(e) {
   let t = ms();
   for (let r = t.length - 1; r >= 0; r--) {
     let o = t[r];
-    if (ye(o)?.[e] !== void 0) return o;
+    if (getSettingsForSource(o)?.[e] !== void 0) return o;
   }
   return null;
 }
-function bb() {
+function getSettingsWithErrors() {
   let e = da(),
     t = e.mergedSettings;
   if (t !== null) return t;
@@ -3334,15 +3334,15 @@ function bb() {
   let r = Plr(D());
   return (Br("loadSettingsFromDisk_end"), (e.mergedSettings = r), r);
 }
-function Dxn() {
+function getManagedFileSettingsPresence() {
   for (let e of ZBe(S0())) {
-    let { settings: t } = qT(fe(e, "managed-settings.json"), void 0, !0),
+    let { settings: t } = parseSettingsFile(fe(e, "managed-settings.json"), void 0, !0),
       r = t !== null && lL(t),
       o = !1;
     try {
       let d = fe(e, "managed-settings.d"),
         _ = (E) => {
-          let { settings: O } = qT(fe(d, E), void 0, !0);
+          let { settings: O } = parseSettingsFile(fe(d, E), void 0, !0);
           return O !== null && lL(O);
         },
         p = da().primedFolderListing(d);
@@ -3366,44 +3366,44 @@ function Yi() {
     errors: e.errors,
   };
 }
-function CQ() {
+function getBasePolicySettings() {
   let e = D(),
     { settings: t } = Bq(e);
   if (t && lL(t)) return t;
   let { settings: r } = Yi();
   if (r && lL(r)) return r;
-  let { settings: o } = fRt();
+  let { settings: o } = loadManagedFileSettings();
   if (o && lL(o)) return o;
   let { settings: d } = btt(e);
   if (d) return d;
   let _ = Rge();
   return Object.keys(_.settings).length > 0 ? _.settings : null;
 }
-function vQ() {
+function getBasePolicySettingsOrigin() {
   let e = ZHn({ ...D(), helper: void 0 });
   return e === "helper" ? null : e;
 }
-function mRt() {
+function isForceRemoteSettingsRefreshConfigured() {
   return klr(D());
 }
-function dS() {
+function getPolicySettingsOrigin() {
   let e = da(),
     t = e.policy.origin;
   if (t !== void 0) return t.value;
   let r = ZHn(D());
   return ((e.policy.origin = { value: r }), r);
 }
-function Lxn() {
+function getHostPolicyForceLoginMethod() {
   let e = da(),
     t = e.policy.hostForceLoginMethod;
   if (t !== void 0) return t.value;
   let r = Alr(D());
   return ((e.policy.hostForceLoginMethod = { value: r }), r);
 }
-function Mxn() {
+function getShadowedManagedSources() {
   return Clr(D());
 }
-function Nxn() {
+function anyAdminPolicyTierGovernsRetention() {
   let e = da(),
     t = e.policy.adminRetentionGoverned;
   if (t !== void 0) return t;
@@ -3412,7 +3412,7 @@ function Nxn() {
   );
   return ((e.policy.adminRetentionGoverned = o), o);
 }
-function xq() {
+function getPolicySettingsLoadErrors() {
   let e = da(),
     t = e.policy.loadErrors;
   if (t !== void 0) return t;
@@ -3420,15 +3420,15 @@ function xq() {
   return (
     r.push(...Bq(D()).errors),
     r.push(...PU().errors),
-    r.push(...fRt().errors),
+    r.push(...loadManagedFileSettings().errors),
     r.push(...btt(D()).errors),
     r.push(...Rge().errors),
     (e.policy.loadErrors = r),
     r
   );
 }
-function RBe() {
-  return [...PU().errors, ...fRt().errors];
+function getPolicyHelperSourceLoadErrors() {
+  return [...PU().errors, ...loadManagedFileSettings().errors];
 }
 function Ji() {
   let e = da(),
@@ -3438,18 +3438,18 @@ function Ji() {
   return (
     r.push(...Bq(D()).errors),
     r.push(...PU().errors),
-    r.push(...fRt().errors),
+    r.push(...loadManagedFileSettings().errors),
     (e.policy.adminLoadErrors = r),
     r
   );
 }
-function fie() {
-  return mie(Ji());
+function getFatalAdminPolicyLoadErrors() {
+  return filterFatalPolicyErrors(Ji());
 }
-function mie(e) {
+function filterFatalPolicyErrors(e) {
   return e.filter((t) => t.severity !== "warning");
 }
-function pmr() {
+function hasSurvivingAdminPolicySource() {
   let e = da(),
     t = e.policy.adminSurvivor;
   if (t !== void 0) return t;
@@ -3461,14 +3461,14 @@ function pmr() {
       (d.composes === "tier" && !$5t() && !_.userWritable) ||
       r(Bq(o).settings) ||
       (!_.userWritable && r(_.settings)) ||
-      r(fRt().settings);
+      r(loadManagedFileSettings().settings);
   return ((e.policy.adminSurvivor = p), p);
 }
-function B6() {
-  return !pmr() && fie().length > 0;
+function isAdminPolicyUnreadable() {
+  return !hasSurvivingAdminPolicySource() && getFatalAdminPolicyLoadErrors().length > 0;
 }
-function Fxn() {
-  let e = xq();
+function surfaceManagedSettingsErrorsHeadless() {
+  let e = getPolicySettingsLoadErrors();
   if (e.length === 0) return;
   let t = e.some((d) => d.severity !== "warning"),
     r = t
@@ -3488,21 +3488,21 @@ ${o.join(`
       fatal: t,
     }));
 }
-function Jt(e, t, r, o) {
-  return Ii(e, () => t, r, o);
+function updateSettingsForSource(e, t, r, o) {
+  return updateSettingsForSourceWithTransform(e, () => t, r, o);
 }
-function Ii(e, t, r, o) {
+function updateSettingsForSourceWithTransform(e, t, r, o) {
   if (e === "policySettings" || e === "flagSettings")
     return Promise.resolve({ error: null });
-  let d = ho(e);
+  let d = getSettingsFilePathForSource(e);
   if (!d) return Promise.resolve({ error: null });
   return xn.run(d, () => Xi(e, t, d, r, o));
 }
 var xn = Dm();
-function fmr() {
+function drainSettingsWrites() {
   return xn.drain();
 }
-cie(fmr);
+registerWriteQueueDrain(drainSettingsWrites);
 async function Xi(e, t, r, o, d) {
   let _ = M() && d !== void 0 && ve(e, r),
     p = o?.legacyRevocation === "skip",
@@ -3550,7 +3550,7 @@ async function Xi(e, t, r, o, d) {
         if (C.changed) {
           if (M() && d !== void 0) O = await vn(d, r);
           try {
-            bb();
+            getSettingsWithErrors();
           } catch (F) {
             h(F);
           }
@@ -3617,14 +3617,14 @@ async function Xi(e, t, r, o, d) {
   }
   if (M() && d !== void 0 && !_) O = await vn(d, r);
   try {
-    bb();
+    getSettingsWithErrors();
   } catch (N) {
     h(N);
   }
   return (Fn(e), { error: E });
 }
 async function vn(e, t) {
-  let r = ho("userSettings");
+  let r = getSettingsFilePathForSource("userSettings");
   if (r === void 0 || r === t || !ve("userSettings", r)) return;
   return j5t(e, da(), r);
 }
@@ -3697,7 +3697,7 @@ async function Mn(e) {
       if (Array.isArray(N)) return N;
       return;
     }),
-    O = Har(_, E);
+    O = projectRemovalsOnly(_, E);
   if (b(O) === b(_)) return { changed: !1, error: null };
   try {
     tRt(t);
@@ -3726,7 +3726,7 @@ async function Mn(e) {
     return (n(N.message, { level: "error" }), { changed: !1, error: N });
   }
 }
-function Har(e, t) {
+function projectRemovalsOnly(e, t) {
   if (Array.isArray(e) && Array.isArray(t)) {
     let r = new Set(t.map((o) => b(o)));
     return e.filter((o) => r.has(b(o)));
@@ -3735,13 +3735,13 @@ function Har(e, t) {
     let r = {};
     for (let o of Object.keys(e)) {
       if (!(o in t) || t[o] === void 0) continue;
-      r[o] = Har(e[o], t[o]);
+      r[o] = projectRemovalsOnly(e[o], t[o]);
     }
     return r;
   }
   return e;
 }
-function $xn(e) {
+function getManagedSettingsKeysForLogging(e) {
   let t = XT().strip().parse(e),
     r = ["permissions", "sandbox", "hooks"],
     o = [],
@@ -3760,85 +3760,85 @@ function $xn(e) {
     } else o.push(_);
   return o.sort();
 }
-function Oet(e) {
+function getSettingsAfterPluginLoad(e) {
   if (!da().pluginBaseLoaded)
     i("tengu_plugin_settings_premature_read", { key: u(e) });
-  let { settings: t } = bb();
+  let { settings: t } = getSettingsWithErrors();
   return (t || {})[e];
 }
-function hx(e) {
-  return Hq(e).map((t) => t.value);
+function getSecuritySensitiveSetting(e) {
+  return getSecuritySensitiveSettingWithSources(e).map((t) => t.value);
 }
-var mmr = ["policySettings", "flagSettings", "userSettings"];
-function Hq(e) {
+var SECURITY_SENSITIVE_SETTING_SOURCES = ["policySettings", "flagSettings", "userSettings"];
+function getSecuritySensitiveSettingWithSources(e) {
   let t = [];
-  for (let r of mmr) {
-    let o = ye(r)?.[e];
+  for (let r of SECURITY_SENSITIVE_SETTING_SOURCES) {
+    let o = getSettingsForSource(r)?.[e];
     if (o !== void 0) t.push({ source: r, value: o });
   }
   return t;
 }
-function eL() {
+function hasSkipDangerousModePermissionPrompt() {
   return !!(
-    ye("userSettings")?.skipDangerousModePermissionPrompt ||
-    ye("localSettings")?.skipDangerousModePermissionPrompt ||
-    ye("flagSettings")?.skipDangerousModePermissionPrompt ||
-    ye("policySettings")?.skipDangerousModePermissionPrompt
+    getSettingsForSource("userSettings")?.skipDangerousModePermissionPrompt ||
+    getSettingsForSource("localSettings")?.skipDangerousModePermissionPrompt ||
+    getSettingsForSource("flagSettings")?.skipDangerousModePermissionPrompt ||
+    getSettingsForSource("policySettings")?.skipDangerousModePermissionPrompt
   );
 }
-function Det() {
+function hasVouchedSkipDangerousModePermissionPrompt() {
   return !!(
-    ye("policySettings")?.skipDangerousModePermissionPrompt ||
-    ye("userSettings")?.skipDangerousModePermissionPrompt
+    getSettingsForSource("policySettings")?.skipDangerousModePermissionPrompt ||
+    getSettingsForSource("userSettings")?.skipDangerousModePermissionPrompt
   );
 }
-function G5t() {
+function hasSkipWorkflowUsageWarning() {
   return !!(
-    ye("userSettings")?.skipWorkflowUsageWarning ||
-    ye("localSettings")?.skipWorkflowUsageWarning ||
-    ye("flagSettings")?.skipWorkflowUsageWarning ||
-    ye("policySettings")?.skipWorkflowUsageWarning
+    getSettingsForSource("userSettings")?.skipWorkflowUsageWarning ||
+    getSettingsForSource("localSettings")?.skipWorkflowUsageWarning ||
+    getSettingsForSource("flagSettings")?.skipWorkflowUsageWarning ||
+    getSettingsForSource("policySettings")?.skipWorkflowUsageWarning
   );
 }
-function gie() {
-  return ms().some((e) => ye(e)?.isolatePeerMachines === !0);
+function hasIsolatePeerMachines() {
+  return ms().some((e) => getSettingsForSource(e)?.isolatePeerMachines === !0);
 }
-function RQ() {
-  return ms().some((e) => ye(e)?.disableClaudeAiConnectors === !0);
+function hasDisableClaudeAiConnectors() {
+  return ms().some((e) => getSettingsForSource(e)?.disableClaudeAiConnectors === !0);
 }
-function Uxn() {
+function hasAutoModeOptIn() {
   return !0;
 }
-function gRt(e) {
+function isNotDisabledInTrustedSources(e) {
   return ![
-    ...Rd(),
-    ...pie(),
-    ye("policySettings"),
-    ye("flagSettings"),
-    ye("userSettings"),
-    ye("localSettings"),
-    W5t(),
+    ...getAllPolicyTierSettings(),
+    ...getDurablePolicyTierSettings(),
+    getSettingsForSource("policySettings"),
+    getSettingsForSource("flagSettings"),
+    getSettingsForSource("userSettings"),
+    getSettingsForSource("localSettings"),
+    getLegacyLocalSettingsOverlay(),
   ].some((t) => t?.[e] === !1);
 }
-function Bxn() {
-  return gRt("useAutoModeDuringPlan");
+function getUseAutoModeDuringPlan() {
+  return isNotDisabledInTrustedSources("useAutoModeDuringPlan");
 }
-function eke() {
-  return hx("askUserQuestionTimeout")[0];
+function getAskUserQuestionTimeout() {
+  return getSecuritySensitiveSetting("askUserQuestionTimeout")[0];
 }
-function Let() {
-  return hx("dialogExpiry")[0];
+function getDialogExpiry() {
+  return getSecuritySensitiveSetting("dialogExpiry")[0];
 }
-function tke() {
-  return hx("modelProposedGoals")[0] ?? "auto";
+function getModelProposedGoalsSettingParsed() {
+  return getSecuritySensitiveSetting("modelProposedGoals")[0] ?? "auto";
 }
-async function jxn(e) {
-  let t = hx("modelProposedGoals")[0];
+async function getModelProposedGoalsSetting(e) {
+  let t = getSecuritySensitiveSetting("modelProposedGoals")[0];
   if (t !== void 0) return t;
-  if ((await kBe("modelProposedGoals", e)) !== "absent") return "alwaysAsk";
+  if ((await rawSettingsKeyPresence("modelProposedGoals", e)) !== "absent") return "alwaysAsk";
   return "auto";
 }
-var OU = m(() =>
+var autoModeConfigSchema = m(() =>
     c({
       allow: v(s()).optional(),
       soft_deny: v(s()).optional(),
@@ -3847,14 +3847,14 @@ var OU = m(() =>
       environment: v(s()).optional(),
     }),
   ),
-  hie = ["userSettings", "flagSettings", "policySettings"];
-function tL() {
-  let e = OU(),
+  AUTO_MODE_TRUSTED_SOURCES = ["userSettings", "flagSettings", "policySettings"];
+function getAutoModeConfig() {
+  let e = autoModeConfigSchema(),
     t = da();
   if (!t.autoModeUntrustedSourceWarned)
     for (let E of ["projectSettings", "localSettings"]) {
-      if (E === "projectSettings" && zT()) continue;
-      let O = ye(E)?.autoMode;
+      if (E === "projectSettings" && projectSettingsAliasesUserSettings()) continue;
+      let O = getSettingsForSource(E)?.autoMode;
       if (O && e.safeParse(O).success)
         ((t.autoModeUntrustedSourceWarned = !0),
           n(
@@ -3870,8 +3870,8 @@ function tL() {
     d = [],
     _ = [],
     p = !1;
-  for (let E of hie) {
-    let O = ye(E);
+  for (let E of AUTO_MODE_TRUSTED_SOURCES) {
+    let O = getSettingsForSource(E);
     if (!O) continue;
     let I = e.safeParse(O.autoMode);
     if (I.success) {
@@ -3891,11 +3891,11 @@ function tL() {
     };
   return;
 }
-function Wxn() {
-  for (let e of hie) if (ye(e)?.autoMode?.classifyAllShell === !0) return !0;
+function isAutoModeClassifyAllShellEnabled() {
+  for (let e of AUTO_MODE_TRUSTED_SOURCES) if (getSettingsForSource(e)?.autoMode?.classifyAllShell === !0) return !0;
   return !1;
 }
-async function kBe(e, t, r) {
+async function rawSettingsKeyPresence(e, t, r) {
   let o = D(),
     d = XHn(o),
     _ = !1,
@@ -3933,7 +3933,7 @@ async function kBe(e, t, r) {
       t !== void 0 &&
       E === "projectSettings" &&
       d.includes("userSettings") &&
-      zT()
+      projectSettingsAliasesUserSettings()
     )
       continue;
     let N = E === "localSettings" ? Aie(o) : void 0,
@@ -3990,8 +3990,8 @@ async function kBe(e, t, r) {
 export {
   L5t,
   M5t,
-  cie,
-  y0,
+  registerWriteQueueDrain,
+  drainRegisteredWriteQueues,
   Cet,
   tRt,
   nRt,
@@ -4066,83 +4066,83 @@ export {
   Exn,
   Axn,
   j5t,
-  umr,
-  qT,
-  obr,
-  Cxn,
-  ho,
-  pRt,
-  CBe,
-  IP,
-  zT,
-  Iet,
-  sbr,
-  fRt,
-  ye,
-  N5,
-  vxn,
-  Rxn,
-  F5,
-  dmr,
-  kxn,
-  ibr,
-  xxn,
-  Ige,
-  Hxn,
-  Pet,
-  abr,
-  lbr,
-  cbr,
-  W5t,
-  Rd,
-  Ixn,
-  vBe,
-  Pxn,
-  pie,
-  Ge,
-  bn,
-  Oxn,
-  VT,
-  bb,
-  Dxn,
-  CQ,
-  vQ,
-  mRt,
-  dS,
-  Lxn,
-  Mxn,
-  Nxn,
-  xq,
-  RBe,
-  fie,
-  mie,
-  pmr,
-  B6,
-  Fxn,
-  Jt,
-  Ii,
-  fmr,
-  Har,
-  $xn,
-  Oet,
-  hx,
-  mmr,
-  Hq,
-  eL,
-  Det,
-  G5t,
-  gie,
-  RQ,
-  Uxn,
-  gRt,
-  Bxn,
-  eke,
-  Let,
-  tke,
-  jxn,
-  OU,
-  hie,
-  tL,
-  Wxn,
-  kBe,
+  legacyLocalSettingsProbes,
+  parseSettingsFile,
+  getSettingsRootPathForSource,
+  localSettingsStoreRootAwaitingOwnershipProbe,
+  getSettingsFilePathForSource,
+  getSettingsParseErrorsForSource,
+  getRuleAnchorRootForSource,
+  getLegacyLocalSettingsFilePath,
+  projectSettingsAliasesUserSettings,
+  getLocalSettingsValidationErrors,
+  parseRemoteManagedSettings,
+  loadManagedFileSettings,
+  getSettingsForSource,
+  getPairedPolicyModelOverrides,
+  getHostManagedModelPricing,
+  getHostManagedToolSearchEnv,
+  getSettingsForSourceWriteSeed,
+  repoDirSettingsParses,
+  readRepoDirSettingsFresh,
+  flagInlineConsentDropped,
+  flagInlineSettingDropped,
+  parentManagedTierParticipates,
+  getArmedHelperOutput,
+  getMergedPolicySources,
+  flagFileConsentDropped,
+  sourceFileConsentDropped,
+  legacyLocalConsentDropped,
+  getLegacyLocalSettingsOverlay,
+  getAllPolicyTierSettings,
+  getMachineAdminTierSettings,
+  getAdminTierEnvValue,
+  getPolicyEnvCompositionForLogging,
+  getDurablePolicyTierSettings,
+  getInitialSettings,
+  getSettings_DEPRECATED,
+  getSettingsWithSources,
+  getEffectiveSettingSource,
+  getSettingsWithErrors,
+  getManagedFileSettingsPresence,
+  getBasePolicySettings,
+  getBasePolicySettingsOrigin,
+  isForceRemoteSettingsRefreshConfigured,
+  getPolicySettingsOrigin,
+  getHostPolicyForceLoginMethod,
+  getShadowedManagedSources,
+  anyAdminPolicyTierGovernsRetention,
+  getPolicySettingsLoadErrors,
+  getPolicyHelperSourceLoadErrors,
+  getFatalAdminPolicyLoadErrors,
+  filterFatalPolicyErrors,
+  hasSurvivingAdminPolicySource,
+  isAdminPolicyUnreadable,
+  surfaceManagedSettingsErrorsHeadless,
+  updateSettingsForSource,
+  updateSettingsForSourceWithTransform,
+  drainSettingsWrites,
+  projectRemovalsOnly,
+  getManagedSettingsKeysForLogging,
+  getSettingsAfterPluginLoad,
+  getSecuritySensitiveSetting,
+  SECURITY_SENSITIVE_SETTING_SOURCES,
+  getSecuritySensitiveSettingWithSources,
+  hasSkipDangerousModePermissionPrompt,
+  hasVouchedSkipDangerousModePermissionPrompt,
+  hasSkipWorkflowUsageWarning,
+  hasIsolatePeerMachines,
+  hasDisableClaudeAiConnectors,
+  hasAutoModeOptIn,
+  isNotDisabledInTrustedSources,
+  getUseAutoModeDuringPlan,
+  getAskUserQuestionTimeout,
+  getDialogExpiry,
+  getModelProposedGoalsSettingParsed,
+  getModelProposedGoalsSetting,
+  autoModeConfigSchema,
+  AUTO_MODE_TRUSTED_SOURCES,
+  getAutoModeConfig,
+  isAutoModeClassifyAllShellEnabled,
+  rawSettingsKeyPresence,
 };

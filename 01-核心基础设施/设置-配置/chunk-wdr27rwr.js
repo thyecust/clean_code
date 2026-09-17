@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { H, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { S, we } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnumOpt as we } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { ye, Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { gf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { getSettingsForSource as ye, updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { parsePermissionMode as gf } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { zL } from "../../02-功能模块/权限系统/chunk-hv6z01db.js";
-function AQt(u, { requireOnboarding: r = !0 } = {}) {
+function shouldShowAutoDefaultNudge(u, { requireOnboarding: r = !0 } = {}) {
   let o = ee();
   if (
     (r && !o.hasCompletedOnboarding) ||
@@ -31,7 +31,7 @@ function AQt(u, { requireOnboarding: r = !0 } = {}) {
   if (e && e !== "auto" && !t && zL(u)) return e;
   return null;
 }
-function CQt(u, r, o) {
+function handleAutoDefaultNudgeEventFromHost(u, r, o) {
   if (ee().hasSeenAutoDefaultNudge) return;
   let e = gf(r.current_mode);
   if (u === "shown") {
@@ -56,4 +56,4 @@ function CQt(u, r, o) {
       surface: S("ide"),
     }));
 }
-export { AQt, CQt };
+export { shouldShowAutoDefaultNudge, handleAutoDefaultNudgeEventFromHost };

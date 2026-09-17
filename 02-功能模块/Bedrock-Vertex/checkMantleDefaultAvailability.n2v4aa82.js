@@ -10,27 +10,27 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   cA,
-  Mf,
-  Yve,
-  bu,
-  PR,
+  getUserSpecifiedModelSetting as Mf,
+  DEFAULT_MANTLE_OPUS_KEY as Yve,
+  getMarketingNameForModel as bu,
+  toProviderWireModelId as PR,
   DR,
   Im,
   VC,
   Rw,
   nRe,
-  Fc,
-  v6,
-  AU,
-  p0,
+  isHostManagedProviderAuth as Fc,
+  hostManagedAwsSdkCredentials as v6,
+  refreshAndGetAwsCredentials as AU,
+  getDefaultAwsProviderChain as p0,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { d7 } from "./chunk-bnft4099.js";
 var M = Object.keys(to).filter((e) => to[e].mantle !== null);
 async function B(e = Yve, s) {
@@ -168,7 +168,7 @@ async function O(e) {
   let [{ AnthropicBedrockMantle: s }, { getProxyFetchOptions: r }] =
       await Promise.all([
         import("./AnthropicBedrockMantle.wb95xgtr.js"),
-        import("../../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js"),
+        import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
       ]),
     c = await cA(),
     m = {

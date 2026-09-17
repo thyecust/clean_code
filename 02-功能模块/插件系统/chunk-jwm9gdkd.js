@@ -11,31 +11,31 @@ import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, ft, cd, j0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h, J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  rt,
-  Ue,
-  lf,
+  getMainLoopModel as rt,
+  getCanonicalName as Ue,
+  bytesPerTokenForModel as lf,
   Tn,
   ht,
   i0,
   Qme,
-  ap,
-  Yt,
+  isUnattendedBgSession as ap,
+  getClaudeAIOAuthTokens as Yt,
   H,
   Te,
   ee,
   bq,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { el, Xe, xx, uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle as el, truncateToWidth as Xe, formatTokenEstimate as xx, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   S1,
@@ -62,7 +62,7 @@ import {
   dtt,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ye, bn, Jt, Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource as ye, getSettings_DEPRECATED as bn, updateSettingsForSource as Jt, updateSettingsForSourceWithTransform as Ii } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
@@ -95,7 +95,7 @@ import {
   qzt,
 } from "./chunk-7s6mt1vg.js";
 import {
-  qo,
+  getCommandName as qo,
   SM,
   Hwe,
   Jft,
@@ -169,17 +169,17 @@ import {
   _yt,
   jV,
   fY,
-  d$,
-  Yp,
-  F3,
-  Uo,
+  isMcpDialBlockedByPolicy as d$,
+  mcpDialBlockCause as Yp,
+  getMcpConfigByName as F3,
+  isMcpServerDisabled as Uo,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { nA, zH, aP } from "../MCP客户端/chunk-3kmsshb6.js";
 import { ig, y1e, vC, aXe, Ui } from "./chunk-ajtn749s.js";
 import { bd, JS, yN, xGt, _Xe, yXe } from "./chunk-hh8f1qrw.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { pF, J9e } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
+import { getPluginEditableScopes as pF, editableScopeOf as J9e } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
@@ -221,7 +221,7 @@ import { BJt, Vi, jm, jx, Sf, Bae, P8 } from "../../03-入口与运行时/会话
 import { ir, xh, i2 } from "../MCP客户端/chunk-g4gdwpa0.js";
 import { e9, YL, JL } from "../../01-核心基础设施/共享小工具-未细化/chunk-r2ab1bp6.js";
 import { gHe, rFn, oFn } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
-import { JPt } from "../MCP客户端/chunk-4xr0rjb4.js";
+import { getPluginInventory as JPt } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { wle } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 import { cQt, lIt } from "./chunk-d0tph3ay.js";

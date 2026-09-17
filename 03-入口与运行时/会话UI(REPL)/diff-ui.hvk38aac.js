@@ -28,7 +28,7 @@ var N = async (t, o) => {
     o.presentation === "fullscreen" &&
     (eN() || o.dispatchedAsImmediate)
   ) {
-    let i = await import("../../01-核心基础设施/共享小工具-未细化/DIFF_SIDEBAR_MIN_COLS.5db5g0jw.js");
+    let i = await import("./chunk-vpp75aza.js");
     return e(y, { onDone: t, sidebar: i });
   }
   let { DiffDialog: a } = await import("../../02-功能模块/Diff引擎/DiffDialog.85kzjn95.js");

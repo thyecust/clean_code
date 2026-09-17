@@ -16,7 +16,7 @@ import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { yy, JW } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var M = 5,
   U = 5;

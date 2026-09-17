@@ -10,25 +10,25 @@
 import { ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "./chunk-h62vxw7j.js";
-import { Jh, _t, oZe, sZe, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { Jh, isBgSession as _t, isBeingWatched as oZe, isBeingWatchedV5 as sZe, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { KI } from "./chunk-mvw7xg6n.js";
 var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
-function mpr(e) {
+function detectSurfaces(e) {
   if (_t()) return new Set(["bg"]);
   let t = new Set();
   if ((e ?? oZe()) || Jh() !== null) t.add("watched");
-  if (UFt()) t.add("ccr");
+  if (hasCcrSurface()) t.add("ccr");
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "bridge" || ic()) t.add("bridge");
   if (a.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") t.add("desktop");
-  if (_pr()) t.add("cli");
+  if (isPostTurnSummaryVisibleInCli()) t.add("cli");
   if (!ke() && Ta()) t.add("repl");
   return t;
 }
-function UFt() {
+function hasCcrSurface() {
   if (eE("fanout")) return !0;
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "byoc") return !0;
   if (a.CLAUDE_CODE_REMOTE)
@@ -37,7 +37,7 @@ function UFt() {
     );
   return !1;
 }
-async function r_r(e) {
+async function watchedForSurfaces(e) {
   return M() && e !== void 0 ? sZe(e) : void 0;
 }
 var i = {
@@ -49,7 +49,7 @@ var i = {
   cli: ["summary"],
   repl: ["headline"],
 };
-function gpr(e) {
+function sinksFor(e) {
   let t = new Set(),
     s = c(H("tengu_classifier_disabled_surfaces", ""));
   for (let r of e) {
@@ -74,7 +74,7 @@ function c(e) {
   }
   return t;
 }
-function hpr(e) {
+function engineFor(e) {
   if (e.size === 0) return null;
   let t = e.has("state")
     ? "llm"
@@ -91,7 +91,7 @@ function l() {
   if (H("tengu_classifier_summary_llm_emit", !1)) return "llm";
   return "heuristic";
 }
-function _pr() {
+function isPostTurnSummaryVisibleInCli() {
   return !1;
 }
 var f = new Map([
@@ -99,7 +99,7 @@ var f = new Map([
   ["done", "completed"],
   ["working", "review_ready"],
 ]);
-function o_r(e) {
+function classifiedToPostTurnSummary(e) {
   return {
     status_category: f.get(e.state) ?? "review_ready",
     status_detail: e.detail,
@@ -107,9 +107,9 @@ function o_r(e) {
     recent_action: e.output.result ?? "",
   };
 }
-function s_r(e, t) {
-  let s = gpr(mpr(!1));
-  if (!s.has("summary") || hpr(s) === null) return;
+function runClassifierSummaryForBlocked(e, t) {
+  let s = sinksFor(detectSurfaces(!1));
+  if (!s.has("summary") || engineFor(s) === null) return;
   let r = e.tool_name.startsWith("dialog:")
     ? {
         status_category: "blocked",
@@ -123,4 +123,4 @@ function s_r(e, t) {
       };
   t?.notifyMetadataChanged({ post_turn_summary: r });
 }
-export { mpr, UFt, r_r, gpr, hpr, _pr, o_r, s_r };
+export { detectSurfaces, hasCcrSurface, watchedForSurfaces, sinksFor, engineFor, isPostTurnSummaryVisibleInCli, classifiedToPostTurnSummary, runClassifierSummaryForBlocked };

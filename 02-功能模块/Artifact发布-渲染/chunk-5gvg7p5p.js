@@ -20,33 +20,33 @@ import {
   wur,
   Tur,
 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { u1, _r, aet, uet, Ml, pet } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { u1, ARTIFACT_TOOL_NAME as _r, artifactUrlSubPath as aet, faviconClause as uet, scrubArtifactEnvelopeTags as Ml, scrubbedHead as pet } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
-  AN,
-  HT,
-  fR,
-  Lwn,
-  O$,
-  vfe,
-  SJ,
+  isFrameBaseVersionEnabled as AN,
+  isArtifactConflictLegacy as HT,
+  isFrameMultiFileEnabled as fR,
+  isFrameSameChannelRawReadEnabled as Lwn,
+  observationStamp as O$,
+  observedWithoutSource as vfe,
+  MANIFEST_TEXT_TYPES as SJ,
   HC,
   wJ,
   rTn,
-  Oqt,
-  mR,
+  audienceViewNote as Oqt,
+  shareAudience as mR,
   ED,
   ber,
   Aoe,
-  FH,
-  kN,
+  isCoworkFramePublishSession as FH,
+  othersArtifactReadIsUserOnly as kN,
 } from "./chunk-01ymf0ar.js";
-import { Vy, Ky, uAn, dP, ce } from "../权限系统/chunk-fjrcf22x.js";
+import { consentAskCanReachUser as Vy, planConsentMustDeny as Ky, artifactFilesConsentMarked as uAn, consentMustDeny as dP, getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { gcn, G3n } from "./chunk-01jnk0v2.js";
-import { wOe, TOe, b$t, iue } from "./chunk-x29r16ke.js";
+import { registerHandoverRead as wOe, handoverPersistTarget as TOe, refreshHandoverCopy as b$t, handoverCoverageNote as iue } from "./chunk-x29r16ke.js";
 import { Nv } from "./chunk-stvynqrz.js";
 import { lht, Ene, Dy, hLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { createHash as Fe } from "crypto";
 function ye() {
   return ne().frozenMultiFile ?? fR();

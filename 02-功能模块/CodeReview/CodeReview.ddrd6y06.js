@@ -9,33 +9,33 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { tUe, ht, Ss } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { tUe, ht, checkAndRefreshOAuthTokenIfNeeded as Ss } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { S, u, we, Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { lit as S, fromEnum as u, fromEnumOpt as we, fromEnumArr as Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { fn, Kke, zie, Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { lt, Da, Fw } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { fn, Kke, zie, execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { gitExe as lt, getBranch as Da, getDefaultBranch as Fw } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Do, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { ERt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Mw, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
-import { Mt, op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { $Je } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isPolicyAllowed as Mt, policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getBridgeEntitlementBlocker as $Je } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import {
   kte,
-  q7,
-  HF,
+  getReviewCostNote as q7,
+  getReviewDurationNote as HF,
   EGn,
   $Oe,
   X$t,
@@ -56,7 +56,7 @@ import {
   cde,
   S3,
   FLe,
-  Kv,
+  teleportToRemote as Kv,
   Kne,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -132,11 +132,11 @@ async function fe(r) {
   }
 }
 var _e = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
-var CDt = `
+var POST_IGNORED_NOTE = `
 Note: --post was ignored \u2014 posting applies only to GitHub.com pull request reviews.`,
-  vDt = `
+  POST_DISABLED_NOTE = `
 Note: --post was ignored \u2014 posting findings to the PR is currently turned off.`;
-function Z9e(r) {
+function parseUltrareviewArgs(r) {
   let t = /^(--fix|--comment|--post|--no-post)(?:\s+|$)/,
     d = /(?:^|\s+)(--fix|--comment|--post|--no-post)$/,
     e = new Set(),
@@ -157,7 +157,7 @@ function Z9e(r) {
     postReview: e.has("--no-post") ? !1 : e.has("--post") ? !0 : void 0,
   };
 }
-async function RDt(r, t = "/code-review ultra", d) {
+async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   if (!(await WVe()))
     return (
       i("tengu_review_remote_precondition_failed", {
@@ -715,7 +715,7 @@ function be(r, t = 3) {
     .map((_) => `${_.path} (${_.lines.toLocaleString()} ${x(_.lines, "line")})`)
     .join(", ")}.`;
 }
-function e3e(r, t = 80) {
+function previewInstructions(r, t = 80) {
   return Xe(r.replace(/\s+/g, " ").trim(), t);
 }
 async function ve(r) {
@@ -811,7 +811,7 @@ async function ye(r) {
   }
   return _;
 }
-async function kDt({ overageConfirmed: r, credentials: t }) {
+async function checkOverageGate({ overageConfirmed: r, credentials: t }) {
   let d = await fe(t);
   if (!d) return { kind: "proceed", billingNote: "", preflightUnavailable: !0 };
   let e = d.billing_note ?? "",
@@ -840,7 +840,7 @@ async function kDt({ overageConfirmed: r, credentials: t }) {
   }
 }
 var Re = 3;
-async function xDt(r, t, d, e) {
+async function launchRemoteReview(r, t, d, e) {
   let o = e?.invocation ?? "/code-review ultra",
     _ = (k) => ({ launched: !1, blocks: [{ type: "text", text: k }] }),
     E = await _ne({
@@ -1111,10 +1111,10 @@ ${k}`,
     ],
   };
 }
-function t3e(r, t) {
+function ultrareviewLaunchAcknowledgementNudge(r, t) {
   return `The output above is already visible to the user. Briefly acknowledge it without repeating the target, URL, or billing note. Findings will arrive via task-notification.${r ? " The user passed --fix: when the findings arrive, apply them to the local working tree." : ""}${t ? ` The user's argument was interpreted as a review note, not a base branch: "${oe(t, njt)}". The cloud review runs its standard pass over the branch diff and does not see the note; when the findings arrive, prioritize and relate them to the user's request.` : ""}`;
 }
-async function $le(r, t) {
+async function runUltrareviewHeadless(r, t) {
   if (!ZA()) {
     let T = vGn();
     return (
@@ -1128,12 +1128,12 @@ async function $le(r, t) {
   await b_();
   let d = op("allow_remote_sessions", "Cloud sessions", "are");
   if (d) return { status: "error", message: d };
-  let e = await RDt(r, t.invocation, {
+  let e = await precheckLaunchScope(r, t.invocation, {
     suppressSucceededRecoveryEvent: !t.confirm,
     suppressOfferedRecoveryEvent: t.confirm && !t.singlePass,
   });
   if (!e.ok) return { status: "error", message: e.error, reason: e.reason };
-  let o = await kDt({
+  let o = await checkOverageGate({
     overageConfirmed: t.overageConfirmed,
     credentials: t.context.credentials,
   });
@@ -1151,7 +1151,7 @@ async function $le(r, t) {
             : `Reviewing current branch against ${e.scope.baseBranch}.`,
       A =
         e.scope.mode === "branch" && e.scope.instructions
-          ? ` Note for findings (not a base branch): "${e3e(e.scope.instructions)}"`
+          ? ` Note for findings (not a base branch): "${previewInstructions(e.scope.instructions)}"`
           : "";
     return `
 ${T}${A}`;
@@ -1203,7 +1203,7 @@ Scope: ${e.scope.diffStat}`,
       A =
         e.scope.mode === "branch" && e.scope.instructions
           ? `
-Note for findings (not a base branch): "${e3e(e.scope.instructions)}"`
+Note for findings (not a base branch): "${previewInstructions(e.scope.instructions)}"`
           : "";
     return {
       status: "needs-confirm",
@@ -1214,7 +1214,7 @@ ${HF()} \xB7 Est. cost ${q7()} USD`,
   }
   let E = t.postReview === !0 && !BOe(),
     w = t.postReview === !0 && !E && e.scope.mode === "pr" && Do(e.scope.host),
-    p = await xDt(e.scope, t.context, o.billingNote, {
+    p = await launchRemoteReview(e.scope, t.context, o.billingNote, {
       skipTaskRegistration: t.skipTaskRegistration,
       invocation: t.invocation,
       applyFixesOnComplete: t.applyFixes,
@@ -1240,7 +1240,7 @@ ${HF()} \xB7 Est. cost ${q7()} USD`,
     sessionUrl: p.sessionUrl,
     taskId: p.taskId,
     title: p.title,
-    message: E ? `${O}${vDt}` : N ? `${O}${CDt}` : O,
+    message: E ? `${O}${POST_DISABLED_NOTE}` : N ? `${O}${POST_IGNORED_NOTE}` : O,
     billingNote: o.billingNote,
     postReviewTo:
       w && e.scope.mode === "pr"
@@ -1287,4 +1287,4 @@ async function $e(r, t, d) {
     );
   return Promise.race([E, _]);
 }
-export { CDt, vDt, Z9e, RDt, e3e, kDt, xDt, t3e, $le };
+export { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge, runUltrareviewHeadless };

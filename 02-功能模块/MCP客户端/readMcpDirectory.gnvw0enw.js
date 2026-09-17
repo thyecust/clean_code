@@ -12,7 +12,7 @@
 import { Hee } from "./chunk-5wa92x7d.js";
 import { Go, Ki } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";
-import { J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { t7e } from "./chunk-0mwqsv0r.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";

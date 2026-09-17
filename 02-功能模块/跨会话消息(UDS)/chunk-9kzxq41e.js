@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { y, f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { fA, uf, qCt, yr, si, mb, rZe, t1, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fA, uf, qCt, yr, si, getRegisteredSessionName as mb, whenSessionRegistered as rZe, updateSessionName as t1, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { xU, qir } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Nu, T7e, A$, C$ } from "./chunk-ddtmwhn7.js";
+import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { Nu, sendToUdsSocket as T7e, listAllLiveSessions as A$, ownMessagingSocket as C$ } from "./chunk-ddtmwhn7.js";
 var T = 16,
   Y = 64;
 function P(e, i) {
@@ -102,14 +102,14 @@ class N {
   }
 }
 var F = new j(() => new N());
-function rh() {
+function getSessionNamingState() {
   return F.of(B().host);
 }
-function dSn(e, i, s) {
-  rh().noteCorrespondent(e, i, s);
+function noteVettedCorrespondent(e, i, s) {
+  getSessionNamingState().noteCorrespondent(e, i, s);
 }
-function D3t() {
-  let e = rh(),
+function takePendingYield() {
+  let e = getSessionNamingState(),
     i = e.pendingYield;
   return ((e.pendingYield = void 0), i);
 }
@@ -117,7 +117,7 @@ var w = { whenRegistered: rZe, listLive: A$ };
 function v() {
   return H("tengu_session_name_uniqueness", !0);
 }
-async function c7e(e, i, s = w, t = e) {
+async function claimUniqueSessionName(e, i, s = w, t = e) {
   if (!v()) return { name: e, yielded: !1 };
   if (((t = x(t) ?? t), !(await s.whenRegistered())))
     return { name: e, yielded: !1 };
@@ -142,7 +142,7 @@ async function c7e(e, i, s = w, t = e) {
         { level: "info" },
       ),
       y("session_name_collision"),
-      (rh().lastYield = { base: yr(t), name: d }),
+      (getSessionNamingState().lastYield = { base: yr(t), name: d }),
       { name: d, yielded: !0 }
     );
   } catch (r) {
@@ -156,7 +156,7 @@ async function c7e(e, i, s = w, t = e) {
   }
 }
 function U(e, i) {
-  let s = Wpe(e, i.name);
+  let s = settledYieldFor(e, i.name);
   if (s !== void 0) return s;
   let t = i.name,
     r = t === void 0 ? void 0 : b(t);
@@ -171,9 +171,9 @@ function b(e) {
   let s = e.slice(0, e.length - i[0].length);
   return s.length > 0 ? { base: s, suffix: i[0].slice(1) } : void 0;
 }
-function Wpe(e, i) {
+function settledYieldFor(e, i) {
   if (!v()) return;
-  let s = rh().lastYield,
+  let s = getSessionNamingState().lastYield,
     t = x(e) ?? e;
   return s !== void 0 &&
     i !== void 0 &&
@@ -193,7 +193,7 @@ var z = 3000;
 function R(e) {
   setTimeout(e, z).unref();
 }
-async function pSn(e) {
+async function claimSessionNameAtStartup(e) {
   let {
       sessionNameArg: i,
       interactive: s,
@@ -205,44 +205,44 @@ async function pSn(e) {
   if (i) await t(i, e.sessionNameArgSource ?? "user");
   let c = mb();
   if (!s || !c || c.source === "derived") return;
-  if (i) rh().userTypedName = i;
+  if (i) getSessionNamingState().userTypedName = i;
   let d = async (u, p, g = u) => {
     if (p && !h(u)) return;
-    let m = await c7e(u, p ? "recheck" : "startup", o, g);
+    let m = await claimUniqueSessionName(u, p ? "recheck" : "startup", o, g);
     if (!h(u)) return;
     if (!m.yielded) {
       if (!p) a(() => void d(u, !0));
       return;
     }
-    if ((await t(m.name, "collision"), rh().userTypedName === u))
-      rh().userTypedName = m.name;
-    if ((r?.(m.name, u), rh().announceYield(m.name, u), !p))
+    if ((await t(m.name, "collision"), getSessionNamingState().userTypedName === u))
+      getSessionNamingState().userTypedName = m.name;
+    if ((r?.(m.name, u), getSessionNamingState().announceYield(m.name, u), !p))
       a(() => void d(m.name, !0, u));
   };
   await d(c.name, !1);
 }
-function lbt(e) {
+function scheduleSettledRecheck(e) {
   let { name: i, onYield: s, deps: t } = e,
     r = e.suffixBase ?? i;
   (e.scheduleRecheck ?? R)(() => {
     (async () => {
       if (!h(i)) return;
-      let a = await c7e(i, "recheck", t, r);
+      let a = await claimUniqueSessionName(i, "recheck", t, r);
       if (!a.yielded || !h(i)) return;
-      if (rh().userTypedName === i) rh().userTypedName = a.name;
+      if (getSessionNamingState().userTypedName === i) getSessionNamingState().userTypedName = a.name;
       await s(a.name, i);
     })();
   });
 }
-function L3t(e, i, s) {
+function renameSupersededDuringScan(e, i, s) {
   let t = mb();
   if (t === void 0 || t.source === "derived") return;
-  if (t.source === "collision" && Wpe(e?.name ?? i, t.name) !== void 0) return;
+  if (t.source === "collision" && settledYieldFor(e?.name ?? i, t.name) !== void 0) return;
   let r = yr(t.name);
   if ((e !== void 0 && r === yr(e.name)) || r === yr(i) || r === yr(s)) return;
   return t;
 }
-async function Gpe(e, i, s = {}) {
+async function reclaimSessionNameOnResume(e, i, s = {}) {
   let t = s.deps ?? w,
     r = e ? si(e) : "";
   if (!r || !(await t.whenRegistered())) return;
@@ -258,25 +258,25 @@ async function Gpe(e, i, s = {}) {
     yr(o.name) === yr(r)
   )
     return;
-  let a = await c7e(r, "rename", t);
-  if (L3t(o, r, a.name)) return;
+  let a = await claimUniqueSessionName(r, "rename", t);
+  if (renameSupersededDuringScan(o, r, a.name)) return;
   let c = async (d, u) => {
-    (await t1(d, i, "collision"), rh().announceYield(d, u));
+    (await t1(d, i, "collision"), getSessionNamingState().announceYield(d, u));
   };
   if (!a.yielded) {
-    (await t1(r, i), lbt({ name: r, deps: t, onYield: c }));
+    (await t1(r, i), scheduleSettledRecheck({ name: r, deps: t, onYield: c }));
     return;
   }
   if (
     (await t1(a.name, i, "collision"),
-    lbt({ name: a.name, suffixBase: r, deps: t, onYield: c }),
+    scheduleSettledRecheck({ name: a.name, suffixBase: r, deps: t, onYield: c }),
     a.name === o?.name)
   )
     return;
-  rh().announceYield(a.name, r);
+  getSessionNamingState().announceYield(a.name, r);
 }
-async function fSn(e, i, s, t, r = T7e, o = w.listLive) {
-  if (!v() || !Mo() || rh().correspondents.size === 0) return;
+async function notifyCorrespondentsOfRename(e, i, s, t, r = T7e, o = w.listLive) {
+  if (!v() || !Mo() || getSessionNamingState().correspondents.size === 0) return;
   let a = C$(),
     [c, d, u] = [e, i, s].map(si),
     p = `This session was renamed from "${c}" to "${d}" ("${u}" is held by another live session on this machine). Address this one as "${d}" from now on.`,
@@ -290,12 +290,12 @@ async function fSn(e, i, s, t, r = T7e, o = w.listLive) {
     return;
   }
   await Promise.all(
-    [...rh().correspondents].map(async ([m, { pid: C, procStart: k }]) => {
+    [...getSessionNamingState().correspondents].map(async ([m, { pid: C, procStart: k }]) => {
       let { scheme: _, target: S } = uf(m);
       if (_ !== "uds" || !S || (a !== void 0 && qCt(S, a)) || g.get(C) !== S)
         return;
       try {
-        await r(S, p, t, d, void 0, void 0, rh().senderMode?.(), {
+        await r(S, p, t, d, void 0, void 0, getSessionNamingState().senderMode?.(), {
           trackReceipts: !1,
           expectPeerPid: C,
           ...(k !== void 0 && { expectPeerProcStart: k }),
@@ -308,4 +308,4 @@ async function fSn(e, i, s, t, r = T7e, o = w.listLive) {
     }),
   );
 }
-export { rh, dSn, D3t, c7e, Wpe, pSn, lbt, L3t, Gpe, fSn };
+export { getSessionNamingState, noteVettedCorrespondent, takePendingYield, claimUniqueSessionName, settledYieldFor, claimSessionNameAtStartup, scheduleSettledRecheck, renameSupersededDuringScan, reclaimSessionNameOnResume, notifyCorrespondentsOfRename };

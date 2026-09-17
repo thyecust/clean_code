@@ -11,30 +11,30 @@ import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { RYt } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
-import { uR } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isClaudeMdLoadingDisabled as uR } from "../状态栏-主题/chunk-dqyc6kge.js";
 import {
   Lve,
   cA,
   wCn,
-  WC,
-  Zc,
-  cl,
-  kp,
-  wZe,
-  f0,
-  gt,
-  vn,
-  pQ,
+  modelDisplayString as WC,
+  shouldUseWIFAuth as Zc,
+  isAnthropicAuthEnabled as cl,
+  getAnthropicApiKeyWithSourceSafe as kp,
+  isOAuthRefreshKnownDead as wZe,
+  isOAuthRefreshKnownDeadAsync as f0,
+  isClaudeAISubscriber as gt,
+  getOauthAccountInfo as vn,
+  getAccountInformation as pQ,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Zar, ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { No } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Rar, ye, Hxn, Pet, Dxn, dS, Mxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { formatNumber as No } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { Rar, getSettingsForSource as ye, getArmedHelperOutput as Hxn, getMergedPolicySources as Pet, getManagedFileSettingsPresence as Dxn, getPolicySettingsOrigin as dS, getShadowedManagedSources as Mxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { JT, Die, Lie } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { yA, Pe, GRe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getMTLSConfig as JT, getProxyUrl as Die, parseProxyUrl as Lie } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe, getSecondaryProvider as GRe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -280,8 +280,8 @@ async function lUn(s) {
   let n = await Rh(1, s).catch(() => null);
   if (!n) return i;
   let [{ controlRequest: u }, { BG_PROTO: p }] = await Promise.all([
-      import("./openDaemonLease.tz89gp3g.js"),
-      import("./HOST_DIED_ATTACH_MESSAGE.qcgc4k5d.js"),
+      import("../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js"),
+      import("../后台任务-Shell管理/chunk-7wsy8vxb.js"),
     ]),
     c = await u({ proto: p, op: "nudge" }).catch(() => null),
     d =

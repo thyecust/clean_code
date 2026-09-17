@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Cie } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
-import { Wt, Cq, JD, cet, sie } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { parseArtifactUrl as Wt, canonicalizeArtifactUrlInput as Cq, parseArtifactUrlInput as JD, artifactViewerUrlSpellings as cet, artifactContentOriginUrlFor as sie } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 var y = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)(.*)$/;
 function _(e) {
   let n = e.match(y);
@@ -21,7 +21,7 @@ function _(e) {
     .replace(/\.(?=$|:\d+$)/, "");
   return `${r}://${i}${n[3] ?? ""}`;
 }
-function vte(e, n, r, i = "url") {
+function artifactUrlRule(e, n, r, i = "url") {
   if (e.size === 0) return null;
   let s = sie(n),
     o = new Set([...cet(n), s, `${s}/`]);
@@ -49,7 +49,7 @@ function d(e) {
       : []),
   ];
 }
-function Xcn(e, n) {
+function artifactUrlInputRule(e, n) {
   if (e.size === 0 || typeof n !== "object" || n === null) return null;
   let { url: r, type_url: i, from_url: s, files: o } = n,
     u =
@@ -68,10 +68,10 @@ function Xcn(e, n) {
     if (typeof t !== "string") continue;
     for (let l of d(t))
       for (let f of p) {
-        let a = vte(e, l, t, f);
+        let a = artifactUrlRule(e, l, t, f);
         if (a !== null) return a;
       }
   }
   return null;
 }
-export { vte, Xcn };
+export { artifactUrlRule, artifactUrlInputRule };

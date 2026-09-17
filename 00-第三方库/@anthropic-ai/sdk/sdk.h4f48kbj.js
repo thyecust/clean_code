@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { S, Ln } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { pe, w } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var xo = w(function (wo) {
   Object.defineProperty(wo, "__esModule", { value: !0 });
@@ -1480,7 +1480,7 @@ class Ra extends gn {
 function ce() {
   return Math.floor(Date.now() / 1000);
 }
-class qje {
+class TokenCache {
   constructor(e, t) {
     ((this.cached = null),
       (this.pendingRefresh = null),
@@ -1919,7 +1919,7 @@ function no(e) {
     );
   };
 }
-function zje(e, t) {
+function resolveCredentialsFromConfig(e, t) {
   let r = e.authentication.credentials_path ?? null,
     n = (e.base_url || t.baseURL).replace(/\/+$/, ""),
     s = $i(e, r, n, t),
@@ -1942,7 +1942,7 @@ async function so(e, t) {
               credentials_path: (await GYt(n, t)) ?? void 0,
             },
           };
-  return zje(o, e);
+  return resolveCredentialsFromConfig(o, e);
 }
 function $i(e, t, r, n) {
   switch (e.authentication.type) {
@@ -8013,7 +8013,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
         ((this._authState.provider = d),
           (this._authState.tokenCache = this._makeTokenCache(d)));
       else if (o.config != null) {
-        let p = zje(o.config, this._credentialResolverOptions());
+        let p = resolveCredentialsFromConfig(o.config, this._credentialResolverOptions());
         ((this._authState.provider = p.provider),
           (this._authState.tokenCache = this._makeTokenCache(p.provider)),
           (this._authState.extraHeaders = p.extraHeaders),
@@ -8046,7 +8046,7 @@ new Anthropic({ apiKey, dangerouslyAllowBrowser: true });
     return Un(this.fetch, this.middleware, void 0, this);
   }
   _makeTokenCache(e) {
-    return new qje(e, (t) => {
+    return new TokenCache(e, (t) => {
       Bm(this).debug("advisory token refresh failed; serving cached token", t);
     });
   }
@@ -8966,13 +8966,13 @@ export {
   Kxe,
   Iae,
   Ra,
-  qje,
+  TokenCache,
   Bm,
   _dr,
   lot,
   ydr,
   GYt,
-  zje,
+  resolveCredentialsFromConfig,
   Hu,
   cot,
   Th,

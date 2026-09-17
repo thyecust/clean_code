@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
@@ -22,7 +22,7 @@ import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r
 import "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
 import { qa } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
 import { tp, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { T3e } from "./chunk-5ed8c210.js";
+import { applyAutoCompactWindow as T3e } from "./chunk-5ed8c210.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";

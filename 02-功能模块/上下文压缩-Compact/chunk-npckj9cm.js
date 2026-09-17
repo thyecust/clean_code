@@ -7,32 +7,32 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Qs, ns, p8, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, Xu, cr, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Bc, Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  T_,
+  withOAuth401Retry as T_,
   Orr,
-  Ase,
-  rt,
-  Yh,
-  bu,
+  isNonCustomFableModel as Ase,
+  getMainLoopModel as rt,
+  firstPartyNameToCanonical as Yh,
+  getMarketingNameForModel as bu,
   gU,
   C6,
   T5,
-  Zc,
-  gb,
-  Yt,
-  gt,
-  lp,
+  shouldUseWIFAuth as Zc,
+  getAnthropicApiKeySafe as gb,
+  getClaudeAIOAuthTokens as Yt,
+  isClaudeAISubscriber as gt,
+  hasProfileScope as lp,
   s5t,
   Bsr,
   _vt,
@@ -46,8 +46,8 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { xb, eB } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { er, BR, Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { m2e, BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { er, BR, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getWIFCredentials as m2e, getWIFTokenCache as BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { lDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 var X = m(() =>
@@ -168,7 +168,7 @@ function E() {
     (t === "anthropicAws" && a.ANTHROPIC_AWS_BASE_URL === void 0)
   );
 }
-function oLt() {
+function registerClientDataGetters() {
   try {
     (ekn(() => {
       try {
@@ -334,15 +334,15 @@ async function tt(t, e) {
     );
   }
 }
-function trn() {
+function bootstrapFetchCanConvergeSlot() {
   if (a.ANTHROPIC_UNIX_SOCKET) return !1;
   return Boolean(gb()) || (Boolean(Yt()?.accessToken) && lp());
 }
-async function f7(t, e) {
-  await opr(t, e);
+async function fetchBootstrapData(t, e) {
+  await refreshBootstrapData(t, e);
 }
-async function opr(t, e, { keepRenderCaches: u = !1 } = {}) {
-  oLt();
+async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
+  registerClientDataGetters();
   try {
     let l = Pe() === "firstParty";
     if (!l) (gU(), T5());
@@ -526,4 +526,4 @@ async function ot(t) {
     );
   }
 }
-export { oLt, trn, f7, opr };
+export { registerClientDataGetters, bootstrapFetchCanConvergeSlot, fetchBootstrapData, refreshBootstrapData };

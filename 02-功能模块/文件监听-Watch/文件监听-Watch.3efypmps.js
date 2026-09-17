@@ -1360,4 +1360,4 @@ function is(t, s = {}) {
   return (e.add(t), e);
 }
 var RT = { watch: is, FSWatcher: z };
-export { RT };
+export { RT as default };

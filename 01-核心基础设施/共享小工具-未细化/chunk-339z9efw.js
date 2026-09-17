@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { ZQ } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Sn } from "./chunk-jjr7hzzf.js";
 var r = /[\x00-\x1f\x7f-\x9f\u2028\u2029]/g,

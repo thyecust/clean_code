@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { fm, zu, yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { validateBridgeId as fm, toCompatSessionId as zu, toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
 import { mse } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
-import { va, Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 var k = /cloudflare/i;
 function dQe(e) {
   let r = e("request-id");
@@ -40,7 +40,7 @@ function rVt(e) {
   }
 }
 var E = "2023-06-01";
-function W$e(e) {
+function oauthHeaders(e) {
   return {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
@@ -49,7 +49,7 @@ function W$e(e) {
     "User-Agent": va(),
   };
 }
-function oVt(e) {
+function isCreateSessionFailure(e) {
   return (
     e !== null && typeof e === "object" && "terminal" in e && e.terminal === !0
   );
@@ -78,11 +78,11 @@ function w(e) {
   if (e === 408 || e === 429 || e >= 500) return "transient";
   return "rejected";
 }
-async function sVt(e, r, i, c, a, f, m, p, o, t, g) {
+async function createCodeSession(e, r, i, c, a, f, m, p, o, t, g) {
   let d = `${e}/v1/code/sessions`,
     s = { cwd: m ?? Q(), ...(p && { model: p }) };
   if (f) {
-    let { buildGitSessionContext: _ } = await import("../../01-核心基础设施/共享小工具-未细化/buildGitSessionContext.z3r1365y.js"),
+    let { buildGitSessionContext: _ } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-ve2h3qad.js"),
       {
         sources: S,
         outcomes: C,
@@ -109,7 +109,7 @@ async function sVt(e, r, i, c, a, f, m, p, o, t, g) {
         ...(o && { session_grouping_id: o }),
         config: s,
       },
-      { headers: W$e(r), timeout: c, validateStatus: (_) => _ < 500 },
+      { headers: oauthHeaders(r), timeout: c, validateStatus: (_) => _ < 500 },
     );
   } catch (_) {
     return (n(`[code-session] Session create request failed: ${l(_)}`), null);
@@ -168,15 +168,15 @@ async function sVt(e, r, i, c, a, f, m, p, o, t, g) {
     );
   return h.session.id;
 }
-function eq(e) {
+function isCredentialsFailure(e) {
   return e !== null && "terminal" in e && e.terminal === !0;
 }
-function MD(e) {
+function isCredentialsRejection(e) {
   return (
     typeof e === "object" && e !== null && "terminal" in e && e.terminal === !1
   );
 }
-function m6(e, r) {
+function classifyElevatedAuthError(e, r) {
   if (
     e !== null &&
     typeof e === "object" &&
@@ -192,10 +192,10 @@ function m6(e, r) {
   if (r?.includes("trusted device")) return "untrusted_device";
   return;
 }
-async function iVt(e, r, i, c, a, f) {
+async function fetchRemoteCredentials(e, r, i, c, a, f) {
   if (!v(e, "/bridge")) return { terminal: !0, reason: "invalid_session_id" };
   let m = `${r}/v1/code/sessions/${e}/bridge`,
-    p = W$e(i);
+    p = oauthHeaders(i);
   if (a) p["X-Trusted-Device-Token"] = a;
   let o;
   try {
@@ -216,7 +216,7 @@ async function iVt(e, r, i, c, a, f) {
       f?.();
     let u;
     if (o.status === 403) {
-      let h = m6(o.data, s);
+      let h = classifyElevatedAuthError(o.data, s);
       if (h) return { terminal: !0, reason: h };
       ((u = dQe((_) => o.headers?.[_])),
         n(`[code-session] /bridge 403 source=${u}`));
@@ -284,7 +284,7 @@ function R(e, r, i, c, a, f = "") {
     let o = yc(c);
     return {
       url: `${r}/v1/code/sessions/${o}${f}`,
-      headers: { ...W$e(i), ...m },
+      headers: { ...oauthHeaders(i), ...m },
       id: o,
     };
   }
@@ -297,7 +297,7 @@ function R(e, r, i, c, a, f = "") {
   return {
     url: `${r}/v1/sessions/${p}${f}`,
     headers: {
-      ...W$e(i),
+      ...oauthHeaders(i),
       "anthropic-beta": "ccr-byoc-2025-07-29",
       "x-organization-uuid": a.orgUUID,
       ...m,
@@ -305,7 +305,7 @@ function R(e, r, i, c, a, f = "") {
     id: p,
   };
 }
-async function Oyr(e, r, i, c, a) {
+async function getCodeSession(e, r, i, c, a) {
   if (!v(i, "Get")) return "invalid";
   let f = R("Get", e, r, i, a);
   if (!f) return "invalid";
@@ -345,7 +345,7 @@ async function Oyr(e, r, i, c, a) {
     );
   }
 }
-async function Dyr(e, r, i, c, a, f) {
+async function updateCodeSession(e, r, i, c, a, f) {
   if (!v(i, "Update")) return "invalid";
   let m = R("Update", e, r, i, f);
   if (!m) return "invalid";
@@ -365,10 +365,10 @@ async function Dyr(e, r, i, c, a, f) {
     );
   }
 }
-async function bCn(e, r, i, c, a) {
+async function archiveCodeSession(e, r, i, c, a) {
   return x("Archive", "/archive", e, r, i, c, a, "untrusted_device");
 }
-async function aVt(e, r, i, c, a) {
+async function unarchiveCodeSession(e, r, i, c, a) {
   return x("Unarchive", "/unarchive", e, r, i, c, a, "elevated_auth");
 }
 async function x(e, r, i, c, a, f, m, p) {
@@ -383,7 +383,7 @@ async function x(e, r, i, c, a, f, m, p) {
       { headers: g, timeout: f, validateStatus: () => !0 },
     );
     if ((n(`[code-session] ${e} ${d} status=${s.status}`), s.status === 403)) {
-      let u = m6(s.data, fg(s.data));
+      let u = classifyElevatedAuthError(s.data, fg(s.data));
       if (u === "untrusted_device") return u;
       if (p === "elevated_auth" && u === "session_stale_relogin") return u;
     }
@@ -408,4 +408,4 @@ function U(e) {
     return { content: r.content };
   return;
 }
-export { dQe, fse, rVt, W$e, oVt, sVt, eq, MD, m6, iVt, Oyr, Dyr, bCn, aVt };
+export { dQe, fse, rVt, oauthHeaders, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, classifyElevatedAuthError, fetchRemoteCredentials, getCodeSession, updateCodeSession, archiveCodeSession, unarchiveCodeSession };

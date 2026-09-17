@@ -12,11 +12,11 @@ import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱�
 import { Q } from "./chunk-rsr7cnyv.js";
 import { Lc, zJ } from "./chunk-6smvq03f.js";
 import { g_, VI } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
-import { ba } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { BG_PROTO as ba } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { Pit } from "./chunk-k76a6y9v.js";
 import { connect as m } from "net";
 import { StringDecoder as N } from "string_decoder";
-async function Wp(f, a) {
+async function controlRequest(f, a) {
   let r;
   try {
     r = m(VI());
@@ -87,7 +87,7 @@ async function Wp(f, a) {
     s
   );
 }
-function UWe(f) {
+function openDaemonLease(f) {
   let a = { label: f, cwd: Q(), pid: process.pid },
     r = !1,
     o = null,
@@ -123,7 +123,7 @@ function UWe(f) {
     }
   );
 }
-function qZt(f, a, r, o) {
+function subscribeControl(f, a, r, o) {
   let e;
   try {
     e = m(VI());
@@ -162,4 +162,4 @@ function qZt(f, a, r, o) {
     ((s = !0), d(), e.destroy());
   };
 }
-export { Wp, UWe, qZt };
+export { controlRequest, openDaemonLease, subscribeControl };

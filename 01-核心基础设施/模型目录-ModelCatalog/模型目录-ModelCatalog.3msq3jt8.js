@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ns, fLn, h_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
-import { TW, a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { TW, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { s, T, O, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var R5t = [
@@ -1178,7 +1178,7 @@ function U(e) {
   }
   return null;
 }
-var yA = {
+var THIRD_PARTY_PROVIDER_LABELS = {
     bedrock: "Amazon Bedrock",
     vertex: "Google Vertex AI",
     foundry: "Microsoft Foundry",
@@ -1187,7 +1187,7 @@ var yA = {
     mantle: "Amazon Bedrock (Mantle)",
     gateway: "Cloud gateway",
   },
-  Eet = {
+  THIRD_PARTY_PROVIDER_ENV_VARS = {
     bedrock: "CLAUDE_CODE_USE_BEDROCK",
     foundry: "CLAUDE_CODE_USE_FOUNDRY",
     anthropicAws: "CLAUDE_CODE_USE_ANTHROPIC_AWS",
@@ -1195,7 +1195,7 @@ var yA = {
     mantle: "CLAUDE_CODE_USE_MANTLE",
     vertex: "CLAUDE_CODE_USE_VERTEX",
   };
-function Pe() {
+function getAPIProvider() {
   if (ns() || fLn() || h_e()) return "gateway";
   return a.CLAUDE_CODE_USE_BEDROCK
     ? "bedrock"
@@ -1211,56 +1211,56 @@ function Pe() {
               ? "vertex"
               : "firstParty";
 }
-function xP() {
-  return u(Pe());
+function getAPIProviderForAnalytics() {
+  return u(getAPIProvider());
 }
-function In() {
-  return Pe() === "firstParty";
+function isFirstPartyProvider() {
+  return getAPIProvider() === "firstParty";
 }
-function GRe() {
-  if (Pe() === "bedrock" && a.CLAUDE_CODE_USE_MANTLE) return "mantle";
+function getSecondaryProvider() {
+  if (getAPIProvider() === "bedrock" && a.CLAUDE_CODE_USE_MANTLE) return "mantle";
   return null;
 }
 function G(e) {
   return e.startsWith("anthropic.") && !b(Xt(e));
 }
-function Tl(e) {
+function getProviderForModel(e) {
   if (e) {
-    let t = GRe();
+    let t = getSecondaryProvider();
     if (t) {
       if (t === "mantle" && G(e)) return t;
-      let o = Pe(),
+      let o = getAPIProvider(),
         n = BR(e);
       if (n && n[o] === null && n[t] !== null) return t;
     }
   }
-  return Pe();
+  return getAPIProvider();
 }
-function Ca(e = Pe()) {
-  return e === "firstParty" || HP(e) || e === "gateway";
+function usesFirstPartyModelIds(e = getAPIProvider()) {
+  return e === "firstParty" || isClaudePlatformProvider(e) || e === "gateway";
 }
-function HP(e = Pe()) {
+function isClaudePlatformProvider(e = getAPIProvider()) {
   return e === "anthropicAws" || e === "anthropicGoogleCloud";
 }
-function nxn() {
-  return In();
+function usesFirstPartyPricing() {
+  return isFirstPartyProvider();
 }
-function fx(e = Pe()) {
-  return e === "firstParty" || HP(e) || e === "foundry" || e === "mantle";
+function hasFirstPartyCapabilities(e = getAPIProvider()) {
+  return e === "firstParty" || isClaudePlatformProvider(e) || e === "foundry" || e === "mantle";
 }
-function Wu() {
-  return Pe() === "firstParty" && fo();
+function isFirstPartyApiBackend() {
+  return getAPIProvider() === "firstParty" && isFirstPartyAnthropicBaseUrl();
 }
-function fo() {
+function isFirstPartyAnthropicBaseUrl() {
   if (a._CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL) return !0;
-  return ev();
+  return isActualFirstPartyAnthropicBaseUrl();
 }
-function ev() {
+function isActualFirstPartyAnthropicBaseUrl() {
   let e = process.env.ANTHROPIC_BASE_URL;
   if (!e) return !0;
-  return GT(e);
+  return isFirstPartyAnthropicHost(e);
 }
-function GT(e) {
+function isFirstPartyAnthropicHost(e) {
   try {
     let t = new URL(e).host;
     return ["api.anthropic.com"].includes(t);
@@ -1268,8 +1268,8 @@ function GT(e) {
     return !1;
   }
 }
-function Ege() {
-  return fo() || a.CLAUDE_CODE_PROPAGATE_TRACEPARENT;
+function shouldPropagateTraceContext() {
+  return isFirstPartyAnthropicBaseUrl() || a.CLAUDE_CODE_PROPAGATE_TRACEPARENT;
 }
 export {
   R5t,
@@ -1307,20 +1307,20 @@ export {
   x5t,
   zvt,
   H5t,
-  yA,
-  Eet,
-  Pe,
-  xP,
-  In,
-  GRe,
-  Tl,
-  Ca,
-  HP,
-  nxn,
-  fx,
-  Wu,
-  fo,
-  ev,
-  GT,
-  Ege,
+  THIRD_PARTY_PROVIDER_LABELS,
+  THIRD_PARTY_PROVIDER_ENV_VARS,
+  getAPIProvider,
+  getAPIProviderForAnalytics,
+  isFirstPartyProvider,
+  getSecondaryProvider,
+  getProviderForModel,
+  usesFirstPartyModelIds,
+  isClaudePlatformProvider,
+  usesFirstPartyPricing,
+  hasFirstPartyCapabilities,
+  isFirstPartyApiBackend,
+  isFirstPartyAnthropicBaseUrl,
+  isActualFirstPartyAnthropicBaseUrl,
+  isFirstPartyAnthropicHost,
+  shouldPropagateTraceContext,
 };

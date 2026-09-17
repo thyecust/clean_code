@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { u, Yr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u, fromNumber as Yr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Mxe, mZ } from "./chunk-5ndhfaq9.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { bt, e0, xQe, bu, Rw, nRe, Fc, $Ue, yRe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { g3e, h3e, _3e, y3e, S3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
-import { aDe, sX, iX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { bt, DEFAULT_3P_SONNET_KEY as e0, DEFAULT_VERTEX_OPUS_KEY as xQe, getMarketingNameForModel as bu, Rw, nRe, isHostManagedProviderAuth as Fc, getConfiguredVertexProjectId as $Ue, refreshGcpCredentialsIfNeeded as yRe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { tierConfig as g3e, collectStalePins as h3e, seedEnvDefaultForUserPin as _3e, collectUnpinnedTiers as y3e, predecessorsInTier as S3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
+import { buildVertexGoogleAuth as aDe, suppressVertexAuthRejection as sX, vertexResidualCredentialPins as iX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var g = g3e(xQe);
 async function M() {
   if (Pe() !== "vertex") return [];
@@ -124,7 +124,7 @@ async function d(o) {
     let [{ AnthropicVertex: s }, { getProxyFetchOptions: c }] =
         await Promise.all([
           import("./AnthropicVertex.1thfsdgf.js"),
-          import("../../01-核心基础设施/共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js"),
+          import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
         ]),
       e = a.CLAUDE_CODE_SKIP_VERTEX_AUTH,
       r = Fc();

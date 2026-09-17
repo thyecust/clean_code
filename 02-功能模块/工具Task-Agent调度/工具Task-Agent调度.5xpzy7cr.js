@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { oo, ze, he, sn, ke, p_e, TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { my, li, $m, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, kw, mc, o0, Ia, nRn, Qor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Y6 } from "../权限系统/chunk-e4pfvp7x.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { aS } from "../Teammates团队/chunk-811z9z0t.js";
-import { WEt, ce, Bd } from "../权限系统/chunk-fjrcf22x.js";
+import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { WEt, getToolPermissionContext as ce, getMainLoopModel as Bd } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
@@ -29,16 +29,16 @@ import {
   Nmt,
   sw,
   wDe,
-  xa,
-  pX,
+  isBuiltInAgent as xa,
+  isPluginAgent as pX,
   Wdn,
   BS,
   nh,
-  yV,
-  EI,
+  isForkSubagentEnabled as yV,
+  FORK_AGENT as EI,
   sne,
-  dTe,
-  pTe,
+  isAgentToolPoolDenied as dTe,
+  agentToolPoolDeniedMessage as pTe,
   IM,
   wV,
   p3,
@@ -75,7 +75,7 @@ import {
   KKe,
   K5n,
   X5n,
-  dw,
+  runAgent as dw,
   EE,
   k3,
   iY,
@@ -86,22 +86,22 @@ import {
   npe,
   rpe,
   ope,
-  _Y,
-  fC,
-  XEe,
-  pre,
-  kf,
-  _C,
+  updateAgentMetadata as _Y,
+  readAgentMetadata as fC,
+  AgentTranscriptFetchError as XEe,
+  getAgentTranscript as pre,
+  getCommands as kf,
+  attributionSkillName as _C,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath as _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import { gG } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isCoordinatorMode as gG } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { CRON_CREATE_TOOL_NAME as nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { cPe, Eut } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
 import { og } from "../插件系统/chunk-33bdfgmx.js";

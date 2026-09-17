@@ -15,11 +15,11 @@ import { ws } from "../共享小工具-未细化/chunk-0a6nmdka.js";
 import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
-import { Bc, Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { S } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { lit as S } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import {
   pRe,
@@ -31,17 +31,17 @@ import {
   DUe,
   gRe,
   C6,
-  NUe,
-  kp,
-  qg,
-  Yt,
-  $T,
-  cm,
-  Ss,
-  gt,
-  mh,
+  isProfileRemoteSettingsCredential as NUe,
+  getAnthropicApiKeyWithSourceSafe as kp,
+  getAnthropicApiKeyWithSource as qg,
+  getClaudeAIOAuthTokens as Yt,
+  getClaudeAIOAuthTokenOriginAsync as $T,
+  handleOAuth401Error as cm,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  isClaudeAISubscriber as gt,
+  getStoredOauthAccountInfo as mh,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dy } from "../共享小工具-未细化/chunk-862jyk0r.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -52,34 +52,34 @@ import {
   j5,
   YRt,
   _lr,
-  gtt,
-  JRt,
-  FHn,
-  E8t,
-  FQ,
-  QRt,
-  A8t,
-  JBe,
-  jR,
-  BHn,
-  htt,
-  ZRt,
-  YT,
-  Jge,
-  K6,
-  C8t,
-  ytt,
-  Qge,
-  ekt,
-  tkt,
-  rv,
+  HELPER_CONSENT_STATE_ID as gtt,
+  getHelperConsentPath as JRt,
+  helperConsentDigest as FHn,
+  stripReservedKeys as E8t,
+  getSyncCacheResetEpoch as FQ,
+  getRemoteManagedSettingsConsentedBaseline as QRt,
+  markRemoteManagedSettingsConsented as A8t,
+  setSessionCache as JBe,
+  isRemoteManagedSettingsVerified as jR,
+  markPolicySettingsNotified as BHn,
+  getIneligibleReason as htt,
+  setLastLoadStatus as ZRt,
+  getRemoteSettingsPathOverride as YT,
+  isEvalPolicySnapshotOnly as Jge,
+  getSettingsPath as K6,
+  getMockRemoteSettingsValue as C8t,
+  getMockRemoteSettingsFixturePath as ytt,
+  remoteSettingsFileWritten as Qge,
+  unverifiedRemoteCacheWithholdsProvisions as ekt,
+  getRemoteManagedSettingsRawCache as tkt,
+  getRemoteManagedSettingsSyncFromCache as rv,
   Tke,
   Bq,
   t2e,
 } from "./设置-配置.aqbb35ee.js";
 import { Uhe } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { U5t, Tar } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { vvt, mir, gir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { a5 } from "../共享小工具-未细化/chunk-6ffbt6s0.js";
 import { mJn } from "../遥测-OpenTelemetry/chunk-5qbcynds.js";
@@ -670,7 +670,7 @@ async function ot(e) {
       );
     try {
       let { getWIFCredentials: r, getWIFTokenCache: a } =
-          await import("../共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js"),
+          await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js"),
         [u, p] = await Promise.all([a(), r()]);
       if (u !== null) {
         if (!QGt(p?.baseURL)) {
@@ -689,7 +689,7 @@ async function ot(e) {
       let a = `Remote settings: profile credential unavailable: ${l(r)}`;
       n(a, { level: "error" });
       let { isWIFTransientExchangeError: u } =
-        await import("../共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js");
+        await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js");
       return { headers: {}, error: a, profileError: !0, retryable: u(r) };
     }
   }
@@ -944,7 +944,7 @@ async function Pe(e, t = !1, o) {
           let E;
           if (a) {
             let { getWIFTokenCache: C, invalidateWIFToken: U } =
-              await import("../共享小工具-未细化/getWIFTokenCache.zrnj7q4r.js");
+              await import("../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js");
             (await U(r),
               (E = await C()
                 .then((Me) => Me?.getToken())
@@ -1398,7 +1398,7 @@ async function q() {
     ] = await Promise.all([
       import("./getAppliedGlobalConfigEnv.zewdj9m8.js"),
       import("./getCurrentProjectConfig.s8843fs9.js"),
-      import("../共享小工具-未细化/TIER_LABELS.mfc616v6.js"),
+      import("../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js"),
     ]);
     if (o()) e();
     else {
@@ -1408,9 +1408,9 @@ async function q() {
         { clearCACertsCache: p, loadExtraCACerts: d },
         { clearMTLSCache: R, loadMTLSClientMaterial: w },
       ] = await Promise.all([
-        import("../共享小工具-未细化/getAWSProxyRequestHandler.e8dr34fc.js"),
-        import("./loadExtraCACerts.xgzv5vtx.js"),
-        import("./PEM_CERT_BLOCK_RE.8wanhh79.js"),
+        import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
+        import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
+        import("../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js"),
       ]);
       (a(), p(), R(), await Promise.all([d(), w()]), u());
     }

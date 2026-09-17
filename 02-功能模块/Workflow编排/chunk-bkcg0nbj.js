@@ -12,28 +12,28 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { S, u, Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Js, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { a, Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { kd, Da, bnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { env as a, antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { kd, getBranch as Da, isBranchOnOrigin as bnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { A0 } from "../权限系统/chunk-e4pfvp7x.js";
 import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { kw, fh, mc, LR, qe, tt, Ut, wl, H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { kw, fh, mc, archiveRemoteSession as LR, qe, tt, Ut, wl, H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { aS, vP } from "../Teammates团队/chunk-811z9z0t.js";
+import { BRIEF_TOOL_NAME as t_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
+import { getParentSessionId as aS, isModelDrivenSession as vP } from "../Teammates团队/chunk-811z9z0t.js";
 import { Xk } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, ce, Qc } from "../权限系统/chunk-fjrcf22x.js";
-import { Uh, Rtr, gEn, Ni, UK, MJ } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { so, getToolPermissionContext as ce, getEffortValue as Qc } from "../权限系统/chunk-fjrcf22x.js";
+import { Uh, Rtr, gEn, Ni, UK, readAutoAllowedForMutation as MJ } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { Ua } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { unwrapAbortReason as Ua } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
   Ds,
   fUt,
@@ -49,17 +49,17 @@ import {
   J9,
   sw,
   Xwe,
-  xa,
+  isBuiltInAgent as xa,
   Jl,
   RDe,
   nh,
   Yte,
   U2,
   a3,
-  dTe,
-  pTe,
-  GBt,
-  PO,
+  isAgentToolPoolDenied as dTe,
+  agentToolPoolDeniedMessage as pTe,
+  filterDispatchableAgents as GBt,
+  filterToolsByDenyRules as PO,
   p3,
   _2t,
   TX,
@@ -78,9 +78,9 @@ import {
   sj,
   v3,
   o_t,
-  Cmn,
-  Kv,
-  dw,
+  awaitRemoteSessionResult as Cmn,
+  teleportToRemote as Kv,
+  runAgent as dw,
   Dde,
   P_t,
   Qmn,
@@ -120,8 +120,8 @@ import {
   not,
 } from "./chunk-0t0sve49.js";
 import { mbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
-import { $in, Bin, jin, N1t, $1t } from "./chunk-va9cgbfs.js";
+import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { registerWorkflowTask as $in, updateWorkflowProgressBatch as Bin, completeWorkflowTask as jin, failWorkflowTask as N1t, enqueueWorkflowNotification as $1t } from "./chunk-va9cgbfs.js";
 import { Vf } from "./chunk-cd542wve.js";
 import { Udt, win } from "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
 import { Bdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-56wrzxpk.js";

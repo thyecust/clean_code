@@ -12,18 +12,18 @@
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { BT, dkn, pkn } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { SEND_USER_FILE_TOOL_NAME as BT, DESCRIPTION as dkn, SEND_USER_FILE_TOOL_PROMPT as pkn } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { Ei } from "../Hooks钩子/chunk-9em0d4k5.js";
-import { Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { YAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
+import { isBriefEnabled as YAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
 import { ubt, dbt, pbt, fbt } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, O, v, c, Qe, X, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var g = m(() =>

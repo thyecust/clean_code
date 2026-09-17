@@ -14,9 +14,9 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Mp, Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectDir as Mp, canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ds, Ct, Dne, o$, nn, Mne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { O9 } from "../文件同步-Sync/chunk-ht8ydg1v.js";
 import { JA, iln } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";

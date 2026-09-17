@@ -24,8 +24,8 @@ import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   qN,
-  xm,
-  wt,
+  getSmallFastModel as xm,
+  parseUserSpecifiedModel as wt,
   aa,
   qe,
   Bt,
@@ -36,12 +36,12 @@ import {
   Wl,
   Ut,
   C6,
-  Zc,
-  d0,
-  bg,
-  Hw,
-  Qi,
-  Ss,
+  shouldUseWIFAuth as Zc,
+  effectiveAuthTokenEnv as d0,
+  getConfiguredApiKeyHelper as bg,
+  clearOAuthTokenCache as Hw,
+  getClaudeAIOAuthTokensAsync as Qi,
+  checkAndRefreshOAuthTokenIfNeeded as Ss,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -56,10 +56,10 @@ import {
   Pue,
   Oue,
   Jl,
-  st,
+  SandboxManager as st,
   M2,
   Que,
-  Zo,
+  asSystemPrompt as Zo,
   Ka,
   TE,
   pC,
@@ -74,9 +74,9 @@ import {
   pyt,
   Ngn,
   PWt,
-  Wgn,
-  Oh,
-  Zm,
+  expandMcpPolicyPredicates as Wgn,
+  isMcpServerBlockedAtConnectTime as Oh,
+  doesEnterpriseMcpConfigExist as Zm,
   WV,
   xr,
   yC,
@@ -98,11 +98,11 @@ import {
   Cu,
   ru,
 } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, kxt, a, Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { y, f, g, ki, wn, ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { bc, kxt, env as a, antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { jo, Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Int, dPn, aB, Fe, Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { Int, dPn, aB, execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
   o8t,
   OQ,
@@ -114,8 +114,8 @@ import {
   rc,
   zRt,
   KBe,
-  T8t,
-  rv,
+  SETTINGS_FILENAME as T8t,
+  getRemoteManagedSettingsSyncFromCache as rv,
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
@@ -138,25 +138,25 @@ import {
   yxn,
   uS,
   Sxn,
-  ye,
-  Rd,
+  getSettingsForSource as ye,
+  getAllPolicyTierSettings as Rd,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Fr, qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { XRe, rxn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { um, Pe, In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { um, getAPIProvider as Pe, isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { nS, qZe, KD } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { IU, U6 } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { _r, fr, fBe, Wt, yge } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_SLUG_RE as fr, ARTIFACT_STUB_URL_PREFIX as fBe, parseArtifactUrl as Wt, parseStubArtifactUrl as yge } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { YCe, VFe, dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES as YCe, DANGEROUS_DIRECTORIES as VFe, normalizeCaseForComparison as dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { nA, zH, aP } from "../MCP客户端/chunk-3kmsshb6.js";
 import { vm, lve, NC } from "./chunk-7s6mt1vg.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
-import { o6, CJe, rAn, pme, e4t, Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS as pme, isArtifactDevBaseUrlVar as e4t, subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gJ, Cr, XXe, rFe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { lR, Xre } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
-import { BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getWIFTokenCache as BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { Ile } from "../Workflow编排/chunk-qjm604e8.js";
 import { i9, nSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
@@ -181,7 +181,7 @@ import {
 } from "./chunk-ka6sg2f0.js";
 import { vUn, hen, RUn, Vit, kUn, xUn } from "../成本-Token统计/chunk-rnndxh1m.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { Kb, ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { writeStdoutAndDrain as Kb, exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { QWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js";
 import { jdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js";
 import { vy } from "../../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js";
@@ -195,7 +195,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
 import { s, T, O, se, v, c, $e, fe, X, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -11500,7 +11500,7 @@ async function Xl(e) {
         let { waitForPolicyLimitsToLoad: J } =
           await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
         await Dt(J(), 3000, "policy limits load timed out").catch(() => {});
-        let { isArtifactToolEnabled: K } = await import("./isArtifactToolEnabled.n685fs4m.js");
+        let { isArtifactToolEnabled: K } = await import("../Artifact发布-渲染/chunk-01ymf0ar.js");
         if (((U = K()), !U && E))
           (process.stderr.write(
             F
@@ -11540,9 +11540,9 @@ async function Xl(e) {
 `),
               (N ??= "publish_interrupted"));
         } else {
-          let { publishArtifact: re } = await import("./MAX_ECHO_MANIFEST_ENTRIES.pqmwj915.js"),
+          let { publishArtifact: re } = await import("../Artifact发布-渲染/chunk-01ymf0ar.js"),
             { makeLocalOwnPublishesStore: V } =
-              await import("./makeLocalOwnPublishesStore.x78ee7nz.js");
+              await import("../Artifact发布-渲染/chunk-01ymf0ar.js");
           process.stderr
             .write(`Publishing report to claude.ai (private to you)\u2026
 `);

@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { jc, Cz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { nae } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { ALLOWED_OAUTH_BASE_URLS as nae } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Lt, xu, xae, Hae, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Or,
   Zl,
@@ -22,34 +22,34 @@ import {
   pb,
   QH,
   VCn,
-  hP,
-  _P,
-  Rr,
+  isModelDenied as hP,
+  getModelEntitlementDenySet as _P,
+  isModelAllowed as Rr,
   ZH,
   UD,
   zAt,
-  BD,
-  hg,
-  t0,
-  Ll,
-  xR,
-  Xh,
-  dh,
-  lUe,
-  ol,
-  Ue,
-  y6,
-  vw,
-  VN,
-  g5,
-  wt,
+  isPinnedFableModel as BD,
+  isFableFamilyOrPinnedModel as hg,
+  getModelUnavailabilityReason as t0,
+  getDefaultOpusModel as Ll,
+  isModeDependentModelSetting as xR,
+  stepDownRestrictedFamilyAliasPick as Xh,
+  getDefaultMainLoopModelSetting as dh,
+  getOrgLockedDefaultModel as lUe,
+  getDefaultMainLoopModel as ol,
+  getCanonicalName as Ue,
+  renderDefaultModelSetting as y6,
+  isOpus1mMergeEnabled as vw,
+  renderModelSetting as VN,
+  getCuratedModelPicker as g5,
+  parseUserSpecifiedModel as wt,
   tc,
-  _g,
-  gt,
+  modelHasNative1MContext as _g,
+  isClaudeAISubscriber as gt,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { T0 } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { ye, VT, Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { RP, um, er, kP, Qa, QD, Pe, Ca, fo } from "./模型目录-ModelCatalog.3msq3jt8.js";
+import { getRelativeSettingsFilePathForSource as T0 } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getSettingsForSource as ye, getEffectiveSettingSource as VT, updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { RP, um, er, kP, Qa, QD, getAPIProvider as Pe, usesFirstPartyModelIds as Ca, isFirstPartyAnthropicBaseUrl as fo } from "./模型目录-ModelCatalog.3msq3jt8.js";
 import {
   Aue,
   OF,
@@ -73,7 +73,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _i, tCn, Oo } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ib, mve, Ya } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { f7 } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
+import { fetchBootstrapData as f7 } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
 function b(e, t, n) {
   if (!gt()) return !1;
   let o = e !== null ? wt(e) : ol(),

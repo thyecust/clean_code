@@ -10,25 +10,25 @@
 
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, Mb, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { lxe, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { y, f, g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { ly } from "../权限系统/chunk-e4pfvp7x.js";
+import { hasIsolatePeerMachines as gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { PERMISSION_MODES as ly } from "../权限系统/chunk-e4pfvp7x.js";
 import { HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  yg,
+  isAutoClassifierActive as yg,
   FT,
   Ovn,
   Xme,
@@ -49,17 +49,17 @@ import {
   zCt,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { lS, Ip, ii, Zi, cS, ZC } from "./chunk-811z9z0t.js";
+import { getAgentId as lS, getAgentName as Ip, getTeamName as ii, isTeammate as Zi, getTeammateColor as cS, isTeamLead as ZC } from "./chunk-811z9z0t.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { ps, t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, ar, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { $i } from "./chunk-t899nada.js";
 import {
   nH,
   xn,
-  K4e,
+  isCustomAgent as K4e,
   BS,
   sne,
   hd,
@@ -76,20 +76,20 @@ import {
   UEe,
   npe,
   rpe,
-  fC,
-  h9t,
-  _9t,
-  n8e,
-  pre,
+  readAgentMetadata as fC,
+  getCurrentSessionPeerName as h9t,
+  getCurrentSessionOffBoxPeerName as _9t,
+  getCurrentSessionPeerNameFor as n8e,
+  getAgentTranscript as pre,
   Epe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Mo, NJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled as Mo, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE as NJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { FGt, $Gt, ag, twn, nwn, rwn, DH, OXe } from "./chunk-g6nvp9mm.js";
+import { FGt, $Gt, writeToMailbox as ag, createShutdownRequestMessage as twn, createShutdownApprovedMessage as nwn, createShutdownRejectedMessage as rwn, isStructuredProtocolMessage as DH, markMessagesAsReadByPredicate as OXe } from "./chunk-g6nvp9mm.js";
 import { zr } from "./chunk-3k2smxfn.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { UTn, OCe } from "../权限系统/chunk-1y2g140m.js";
-import { Pf, TK } from "./chunk-6b13bhw1.js";
+import { primePeerIdentityOwner as UTn, getPeerBridgeIdentity as OCe } from "../权限系统/chunk-1y2g140m.js";
+import { readTeamFileAsync as Pf, updateTeamFile as TK } from "./chunk-6b13bhw1.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   tdt,
@@ -316,7 +316,7 @@ async function Xe({
       { level: "warn" },
     );
   let { spawnInProcessTeammate: X } = import.meta.require(
-      "./spawnInProcessTeammate.g3fc6s9e.js",
+      "./chunk-sjd69zy5.js",
     ),
     { startInProcessTeammate: se } = import.meta.require("./startInProcessTeammate.k24hqy5t.js"),
     U = await X(
@@ -1364,7 +1364,7 @@ var cs = Tt({
           let {
             isRemoteControlPeerUnreachableFromHere: _,
             formatUnreachableElevatedRefusal: i,
-          } = import.meta.require("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js");
+          } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js");
           if (d.via === "remote-control" && _())
             return (
               de({
@@ -1889,7 +1889,7 @@ ${w[0].text}`,
             }
           );
         let { sendToUdsSocket: M, ownMessagingSocket: E } = import.meta.require(
-            "../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js",
+            "../跨会话消息(UDS)/chunk-ddtmwhn7.js",
           ),
           { subscribeToPeerIdle: S, idleSubscriptionLines: B } =
             import.meta.require("./subscribeToPeerIdle.tk67nd8x.js"),
@@ -2582,7 +2582,7 @@ ${M}`,
       }
       case "local-session": {
         let { sendToUdsSocket: h, ownMessagingSocket: I } = import.meta.require(
-            "../../01-核心基础设施/共享小工具-未细化/listAllLiveSessions.wa1da7x1.js",
+            "../跨会话消息(UDS)/chunk-ddtmwhn7.js",
           ),
           D = h9t(),
           { subscribeToPeerIdle: M, idleSubscriptionLines: E } =
@@ -2705,7 +2705,7 @@ ${V.display}`
           {
             isRemoteControlPeerUnreachableFromHere: S,
             formatUnreachableElevatedRefusal: B,
-          } = import.meta.require("../Bridge-RemoteControl/getTrustedDeviceToken.xdsmf5rh.js");
+          } = import.meta.require("../Bridge-RemoteControl/chunk-tyce0p0b.js");
         if (o.via === "remote-control" && S())
           return (
             i("bridge", "bridge_auth", { via: I }),

@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { execFileNoThrow as Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { N6 } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 var c = "it2";
 class u {
@@ -38,23 +38,23 @@ function I() {
 var AK = I();
 var d = a.TMUX,
   T = a.TMUX_PANE;
-function $wt() {
+function isInsideTmuxSync() {
   return !!d;
 }
-async function Oj() {
-  return $wt();
+async function isInsideTmux() {
+  return isInsideTmuxSync();
 }
-function YGt() {
+function getLeaderPaneId() {
   return T || null;
 }
-function JGt() {
+function getUserTmuxSocket() {
   if (!d) return null;
   return ft(d, ",") || null;
 }
-async function foe() {
+async function isTmuxAvailable() {
   return (await Fe(N6, ["-V"])).code === 0;
 }
-function SN(e = AK) {
+function isInITerm2(e = AK) {
   let { terminalProbes: o } = e;
   if (o.inITerm2 !== null) return o.inITerm2;
   let s = a.TERM_PROGRAM,
@@ -63,10 +63,10 @@ function SN(e = AK) {
     t = s === "iTerm.app" || i || l;
   return (o.recordInITerm2(t), t);
 }
-function pwn(e = AK) {
+function getIt2Command(e = AK) {
   return e.terminalProbes.it2Command;
 }
-async function L1e(e = AK) {
+async function isIt2CliAvailable(e = AK) {
   let o = a.SHELL || "/bin/zsh",
     s = await Fe(o, ["-lc", `command -v ${c}`], { useCwd: !1, timeout: 2000 }),
     i =
@@ -98,4 +98,4 @@ async function L1e(e = AK) {
     );
   return (e.terminalProbes.recordIt2Command(t), !0);
 }
-export { AK, $wt, Oj, YGt, JGt, foe, SN, pwn, L1e };
+export { AK, isInsideTmuxSync, isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable, isInITerm2, getIt2Command, isIt2CliAvailable };

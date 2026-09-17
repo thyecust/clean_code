@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { ad, gDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { S, u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Xt, to, Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Mf, VAt, Yve, vse, Rse, Ue } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Xt, to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getUserSpecifiedModelSetting as Mf, vetUserSpecifiedModel as VAt, DEFAULT_MANTLE_OPUS_KEY as Yve, getEnvDefaultModel as vse, isEnvDefaultModelGoverning as Rse, getCanonicalName as Ue } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function _(t, r) {
   if (t === "ANTHROPIC_DEFAULT_SONNET_MODEL")
     a.set("CLAUDE_CODE_3P_PROBE_WROTE_SONNET_DEFAULT", r);
@@ -31,9 +31,9 @@ function d7(t) {
         : a.CLAUDE_CODE_3P_PROBE_WROTE_OPUS_DEFAULT;
   return r !== void 0 && r === f;
 }
-var p9 = { fable: "Fable", sonnet: "Sonnet", opus: "Opus", haiku: "Haiku" },
+var TIER_LABELS = { fable: "Fable", sonnet: "Sonnet", opus: "Opus", haiku: "Haiku" },
   O = 20000;
-async function SIe(t, r) {
+async function withProbeDeadline(t, r) {
   let f;
   try {
     return await Promise.race([
@@ -81,14 +81,14 @@ function T(t, r) {
   }
   _(t, r);
 }
-function qDt() {
+function captureAdmin3PSteeringSnapshot() {
   gDn({
     sonnet: a.ANTHROPIC_DEFAULT_SONNET_MODEL !== void 0 && !d7("sonnet"),
     opus: a.ANTHROPIC_DEFAULT_OPUS_MODEL !== void 0 && !d7("opus"),
   });
 }
-async function Bnn(t) {
-  qDt();
+async function apply3PDefaultFallbacks(t) {
+  captureAdmin3PSteeringSnapshot();
   let r = t?.pendingUserModel?.trim(),
     l = VAt(
       r === "default" || r === "inherit" || r === "" ? void 0 : (r ?? void 0),
@@ -125,7 +125,7 @@ async function m(t) {
       await import("./seedEnvDefaultForUserPin.qgx0v22d.js"),
     l = f(t);
   if (l && !d(l.envVar)) T(l.envVar, l.value);
-  let o = await SIe("bedrock-fallback", r()),
+  let o = await withProbeDeadline("bedrock-fallback", r()),
     s = [];
   for (let e of o) {
     if (d(e.envVar)) continue;
@@ -148,8 +148,8 @@ async function m(t) {
     }),
       s.push(
         e.crossTier
-          ? `${p9[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName}. Enable ${e.defaultName} in the Bedrock console to upgrade.`
-          : `${p9[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
+          ? `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName}. Enable ${e.defaultName} in the Bedrock console to upgrade.`
+          : `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
       ));
   }
   return s;
@@ -159,7 +159,7 @@ async function k(t) {
       await import("./seedEnvDefaultForUserPin.jmem3wk1.js"),
     l = f(t);
   if (l && !d(l.envVar)) T(l.envVar, l.value);
-  let o = await SIe("vertex-fallback", r()),
+  let o = await withProbeDeadline("vertex-fallback", r()),
     s = [];
   for (let e of o) {
     if (d(e.envVar)) continue;
@@ -182,8 +182,8 @@ async function k(t) {
     }),
       s.push(
         e.crossTier
-          ? `${p9[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName}. Enable ${e.defaultName} in Model Garden to upgrade.`
-          : `${p9[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
+          ? `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName}. Enable ${e.defaultName} in Model Garden to upgrade.`
+          : `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
       ));
   }
   return s;
@@ -191,7 +191,7 @@ async function k(t) {
 async function D(t) {
   let { checkMantleDefaultAvailability: r } =
       await import("./checkMantleDefaultAvailability.n2v4aa82.js"),
-    f = await SIe("mantle-fallback", r(void 0, { userPinned: t })),
+    f = await withProbeDeadline("mantle-fallback", r(void 0, { userPinned: t })),
     l = [],
     o = !1,
     s;
@@ -208,7 +208,7 @@ async function D(t) {
             admin_pin_refuted: S("true"),
           }),
           l.push(
-            `${p9[e.tier]}: the admin-configured Opus model is not available on this account \u2014 using ${e.workingName} for this session`,
+            `${TIER_LABELS[e.tier]}: the admin-configured Opus model is not available on this account \u2014 using ${e.workingName} for this session`,
           ));
     } else if (e.kind === "fallback") {
       let c = !1;
@@ -223,14 +223,14 @@ async function D(t) {
           fallback_key: u(e.fallbackKey),
         }),
           l.push(
-            `${p9[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
+            `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,
           ));
     } else
       ((o = !0),
         i("tengu_mantle_default_fallback", { default_key: S("exhausted") }),
         l.push(
-          `${p9[e.tier]}: no accessible model (tried ${e.triedNames.join(", ")}). Enable ${e.defaultName} in Amazon Bedrock (Mantle).`,
+          `${TIER_LABELS[e.tier]}: no accessible model (tried ${e.triedNames.join(", ")}). Enable ${e.defaultName} in Amazon Bedrock (Mantle).`,
         ));
   return { lines: l, hasHardFailure: o, mantleOverride: s };
 }
-export { d7, p9, SIe, qDt, Bnn };
+export { d7, TIER_LABELS, withProbeDeadline, captureAdmin3PSteeringSnapshot, apply3PDefaultFallbacks };

@@ -11,7 +11,7 @@ import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { MTe, pjt, hl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { MTe, pjt, isTranscriptPersistenceDisabled as hl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { OAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 function Lee() {

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ei } from "../../02-功能模块/Hooks钩子/chunk-9em0d4k5.js";
-import { a } from "../设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var o = 3,
   _ = "tengu_hazel_trellis";
 function ZS() {

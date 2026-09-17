@@ -105,35 +105,35 @@ function Jo() {
   return s.of(B().host);
 }
 var d = /^[a-zA-Z0-9_-]+$/;
-function fm(e, n) {
-  if (!ykt(e)) throw Error(`Invalid ${n}: contains unsafe characters`);
+function validateBridgeId(e, n) {
+  if (!isSafeBridgeId(e)) throw Error(`Invalid ${n}: contains unsafe characters`);
   return e;
 }
-function ykt(e) {
+function isSafeBridgeId(e) {
   return e !== "" && d.test(e);
 }
-function T0n(e) {
+function setCseShimGate(e) {
   Jo().cseShimGate = e;
 }
-function zu(e) {
+function toCompatSessionId(e) {
   if (!e.startsWith("cse_")) return e;
   let n = Jo().cseShimGate;
   if (n && !n()) return e;
   return "session_" + e.slice(4);
 }
-function Ntt(e) {
+function remoteRowId(e) {
   return `remote-${e.slice(-8)}`;
 }
-function yc(e) {
+function toInfraSessionId(e) {
   if (!e.startsWith("session_")) return e;
   return "cse_" + e.slice(8);
 }
-function pr(e) {
+function sessionIdBody(e) {
   return e.replace(/^(?:session|cse)_/, "");
 }
-function Ftt(e) {
+function isSelfAddressableSessionId(e) {
   return (
-    (e.startsWith("session_") || e.startsWith("cse_")) && ykt(e) && pr(e) !== ""
+    (e.startsWith("session_") || e.startsWith("cse_")) && isSafeBridgeId(e) && sessionIdBody(e) !== ""
   );
 }
-export { Jo, fm, ykt, T0n, zu, Ntt, yc, pr, Ftt };
+export { Jo, validateBridgeId, isSafeBridgeId, setCseShimGate, toCompatSessionId, remoteRowId, toInfraSessionId, sessionIdBody, isSelfAddressableSessionId };
