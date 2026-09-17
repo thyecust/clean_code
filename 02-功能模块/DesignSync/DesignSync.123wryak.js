@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 82 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { getOAuthHeaders, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, dt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -761,7 +761,7 @@ var DesignSyncTool = buildTool({
         i !== null && h && e.method === "finalize_plan")
       )
         await postDesignConsent(o, i, t.credentials).catch((p) => {
-          n(
+          logForDebugging(
             `Proactive design consent POST for finalize_plan failed (${l(p)}); the next RPC call's 403 intercept will retry.`,
           );
         });
@@ -812,7 +812,7 @@ var DesignSyncTool = buildTool({
     }
   },
   mapToolResultToToolResultBlockParam(e, t) {
-    return { tool_use_id: t, type: "tool_result", content: b(e) };
+    return { tool_use_id: t, type: "tool_result", content: jsonStringify(e) };
   },
 });
 function w(e, t, r) {

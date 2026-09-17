@@ -54,17 +54,17 @@ import {
   getHookSourceInlineLabel,
   sortHookEventsBySource,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { oBe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { isAccountOnHoldEnabled } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { xC } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { peekPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { nIt, rIt, P6e, oIt } from "./chunk-6wg4v2yj.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -281,7 +281,7 @@ async function Fo({
     let to = subprocessEnv(),
       no = mergeChildProcessEnv({
         attached: to,
-        beforeSettings: xC(),
+        beforeSettings: peekPreSettingsEnvSnapshot(),
         ownEnv: oIt(k, P6e(w)),
         childrenSee: (b) => Object.hasOwn(to, b),
       }),
@@ -394,7 +394,7 @@ function So(Mr) {
       onDone: yn,
     } = Mr,
     bs = C(!1),
-    Wo = Un(Sn),
+    Wo = useTimeout(Sn),
     Cs;
   if (J[0] !== Wo || J[1] !== yn)
     ((Cs = function ne(Or) {
@@ -455,7 +455,7 @@ function So(Mr) {
   else Es = J[12];
   let Hs;
   if (J[13] === MEMO_CACHE_SENTINEL)
-    ((Hs = e(t, {
+    ((Hs = e(Text, {
       children:
         "Hooks from your own settings (your user settings.json, this checkout's .claude/settings.local.json, or a --settings file) normally do nothing in a cloud session. If you say yes, a cloud session started from this machine asks this terminal to run the matching hooks on this machine, waits briefly for each answer, and carries on without it if none comes. What a hook returns \u2014 a block reason, added context \u2014 becomes part of the cloud session's transcript.",
     })),
@@ -464,7 +464,7 @@ function So(Mr) {
   let $o;
   if (J[14] !== Bo)
     (($o =
-      Bo !== "" && r(t, { dimColor: !0, children: ["Right now: ", Bo, "."] })),
+      Bo !== "" && r(Text, { dimColor: !0, children: ["Right now: ", Bo, "."] })),
       (J[14] = Bo),
       (J[15] = $o));
   else $o = J[15];
@@ -476,7 +476,7 @@ function So(Mr) {
         : "Not now leaves it undecided (nothing from this machine runs for cloud sessions until you say yes).";
   let Uo;
   if (J[16] !== fn || J[17] !== wn)
-    ((Uo = r(t, {
+    ((Uo = r(Text, {
       dimColor: !0,
       children: [
         "Yes and No are saved for this machine in ",
@@ -492,7 +492,7 @@ function So(Mr) {
   else Uo = J[18];
   let qo;
   if (J[19] !== Uo || J[20] !== $o)
-    ((qo = r(o, { flexDirection: "column", gap: 1, children: [Hs, $o, Uo] })),
+    ((qo = r(Box, { flexDirection: "column", gap: 1, children: [Hs, $o, Uo] })),
       (J[19] = Uo),
       (J[20] = $o),
       (J[21] = qo));
@@ -644,7 +644,7 @@ Other exit codes - show stderr to user only`,
           "overloaded",
           "authentication_failed",
           "oauth_org_not_allowed",
-          ...(oBe() ? ["account_on_hold"] : []),
+          ...(isAccountOnHoldEnabled() ? ["account_on_hold"] : []),
           "billing_error",
           "invalid_request",
           "model_not_found",
@@ -930,10 +930,10 @@ function Xo(n, a, s) {
 }
 F();
 function Ws(Zr, ea) {
-  return e(t, { dimColor: !0, children: Zr }, ea);
+  return e(Text, { dimColor: !0, children: Zr }, ea);
 }
 function Js(oa, ta) {
-  return e(t, { dimColor: !0, children: oa }, `w${ta}`);
+  return e(Text, { dimColor: !0, children: oa }, `w${ta}`);
 }
 var Mn = 40,
   On = 3,
@@ -943,18 +943,18 @@ function Je(Vr) {
     { summaryPromise: Cn, savedLine: Qo } = Vr,
     Is;
   if (Co[0] === MEMO_CACHE_SENTINEL)
-    ((Is = r(t, { color: "suggestion", children: [figures.info, " Cloud session"] })),
+    ((Is = r(Text, { color: "suggestion", children: [figures.info, " Cloud session"] })),
       (Co[0] = Is));
   else Is = Co[0];
   let Zo;
   if (Co[1] !== Qo)
-    ((Zo = Qo !== void 0 && e(t, { color: "success", children: Qo })),
+    ((Zo = Qo !== void 0 && e(Text, { color: "success", children: Qo })),
       (Co[1] = Qo),
       (Co[2] = Zo));
   else Zo = Co[2];
   let Ps;
   if (Co[3] === MEMO_CACHE_SENTINEL)
-    ((Ps = e(t, {
+    ((Ps = e(Text, {
       dimColor: !0,
       children: "Checking this machine's hooks\u2026",
     })),
@@ -968,7 +968,7 @@ function Je(Vr) {
   else ot = Co[5];
   let Ts;
   if (Co[6] !== Zo || Co[7] !== ot)
-    ((Ts = r(o, { flexDirection: "column", children: [Is, Zo, ot] })),
+    ((Ts = r(Box, { flexDirection: "column", children: [Is, Zo, ot] })),
       (Co[6] = Zo),
       (Co[7] = ot),
       (Co[8] = Ts));
@@ -984,7 +984,7 @@ function yt(zr) {
   if (Eo === "off") {
     let Me;
     if (se[0] === MEMO_CACHE_SENTINEL)
-      ((Me = e(t, {
+      ((Me = e(Text, {
         dimColor: !0,
         children:
           "Hooks from this machine's settings are not forwarded to this cloud session (hooks committed to the repository still run from the cloud's own copy).",
@@ -996,7 +996,7 @@ function yt(zr) {
   if (Eo === "remote_host") {
     let Me;
     if (se[1] === MEMO_CACHE_SENTINEL)
-      ((Me = e(t, {
+      ((Me = e(Text, {
         dimColor: !0,
         children:
           "The hooks below are this machine's; this remote session runs the hooks configured on its own host.",
@@ -1007,7 +1007,7 @@ function yt(zr) {
   }
   let Me;
   if (se[2] === MEMO_CACHE_SENTINEL)
-    ((Me = e(t, {
+    ((Me = e(Text, {
       dimColor: !0,
       children:
         "The hooks below are configured on this machine, in your user settings, this checkout's settings.local.json or a --settings file. Each row says where that hook runs for this cloud session \u2014 on this machine when the session asks, as a vetted copy inside the cloud, or not at all; hooks committed to the repository run from the cloud's own copy of it.",
@@ -1023,7 +1023,7 @@ function yt(zr) {
   )
     ((tt =
       H.unavailableReason !== void 0
-        ? r(t, {
+        ? r(Text, {
             dimColor: !0,
             children: [
               "None of this machine's hooks are offered (",
@@ -1032,7 +1032,7 @@ function yt(zr) {
             ],
           })
         : H.rows.length === 0
-          ? e(t, {
+          ? e(Text, {
               dimColor: !0,
               children: "This machine has no hooks a cloud session could use.",
             })
@@ -1042,7 +1042,7 @@ function yt(zr) {
                   .slice(0, xo)
                   .map((Xr, Qr) => e(vt, { row: Xr, consent: Eo }, Qr)),
                 H.rows.length > xo &&
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: ["\u2026and ", H.rows.length - xo, " more."],
                   }),
@@ -1074,7 +1074,7 @@ function yt(zr) {
   if (se[16] !== H.keptFromLaunch)
     ((at =
       H.keptFromLaunch !== void 0 &&
-      e(t, { color: "warning", children: H.keptFromLaunch })),
+      e(Text, { color: "warning", children: H.keptFromLaunch })),
       (se[16] = H.keptFromLaunch),
       (se[17] = at));
   else at = se[17];
@@ -1089,11 +1089,11 @@ function yt(zr) {
     se[23] !== at ||
     se[24] !== dt
   )
-    ((Ns = r(o, {
+    ((Ns = r(Box, {
       flexDirection: "column",
       children: [
         Me,
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           marginTop: 1,
           children: [tt, st, rt, at, dt],
@@ -1121,11 +1121,11 @@ function wt(na) {
     case "accepted": {
       let Oe;
       if (fe[2] === MEMO_CACHE_SENTINEL)
-        ((Oe = e(t, { bold: !0, children: "on" })), (fe[2] = Oe));
+        ((Oe = e(Text, { bold: !0, children: "on" })), (fe[2] = Oe));
       else Oe = fe[2];
       let le;
       if (fe[3] !== so)
-        ((le = r(t, {
+        ((le = r(Text, {
           dimColor: !0,
           children: ["(saved in ", so, "; change it below)"],
         })),
@@ -1137,11 +1137,11 @@ function wt(na) {
         ((lt =
           Q.standing !== void 0 &&
           (Q.standingIsIdle
-            ? r(t, {
+            ? r(Text, {
                 dimColor: !0,
                 children: [" \u2014 for this session: ", Q.standing],
               })
-            : r(t, {
+            : r(Text, {
                 color: "warning",
                 children: [" ", "\u2014 for this session: ", Q.standing],
               }))),
@@ -1151,7 +1151,7 @@ function wt(na) {
       else lt = fe[7];
       let As;
       if (fe[8] !== le || fe[9] !== lt)
-        ((As = r(t, {
+        ((As = r(Text, {
           children: ["Hooks from this machine: ", Oe, " ", le, lt],
         })),
           (fe[8] = le),
@@ -1163,16 +1163,16 @@ function wt(na) {
     case "declined": {
       let Oe;
       if (fe[11] === MEMO_CACHE_SENTINEL)
-        ((Oe = e(t, { bold: !0, children: "off" })), (fe[11] = Oe));
+        ((Oe = e(Text, { bold: !0, children: "off" })), (fe[11] = Oe));
       else Oe = fe[11];
       let le;
       if (fe[12] !== so)
-        ((le = r(t, {
+        ((le = r(Text, {
           children: [
             "Hooks from this machine: ",
             Oe,
             " ",
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: ["(saved in ", so, "; change it below)"],
             }),
@@ -1186,16 +1186,16 @@ function wt(na) {
     case "unset": {
       let Oe;
       if (fe[14] === MEMO_CACHE_SENTINEL)
-        ((Oe = e(t, { bold: !0, children: "not decided" })), (fe[14] = Oe));
+        ((Oe = e(Text, { bold: !0, children: "not decided" })), (fe[14] = Oe));
       else Oe = fe[14];
       let le;
       if (fe[15] === MEMO_CACHE_SENTINEL)
-        ((le = r(t, {
+        ((le = r(Text, {
           children: [
             "Hooks from this machine: ",
             Oe,
             " ",
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "(choose \u201CDecide whether cloud sessions run this machine's hooks\u201D below; nothing from this machine runs for them until you do)",
@@ -1244,14 +1244,14 @@ function vt(sa) {
   else ut = We[1];
   let ht;
   if (We[2] !== P.label)
-    ((ht = e(t, { bold: !0, children: P.label })),
+    ((ht = e(Text, { bold: !0, children: P.label })),
       (We[2] = P.label),
       (We[3] = ht));
   else ht = We[3];
   const Hn = Fe[P.source];
   let pt;
   if (We[4] !== xn || We[5] !== Hn.tag)
-    ((pt = r(t, {
+    ((pt = r(Text, {
       dimColor: !0,
       children: ["\xB7 ", xn, " \xB7 ", Hn.tag, " \xB7"],
     })),
@@ -1267,7 +1267,7 @@ function vt(sa) {
   if (We[10] !== P.why)
     ((gt =
       P.why !== void 0 &&
-      r(t, { dimColor: !0, children: [" \u2014 ", P.why] })),
+      r(Text, { dimColor: !0, children: [" \u2014 ", P.why] })),
       (We[10] = P.why),
       (We[11] = gt));
   else gt = We[11];
@@ -1275,7 +1275,7 @@ function vt(sa) {
   if (We[12] !== P.fromWritableFile)
     ((kt =
       P.fromWritableFile &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           " ",
@@ -1294,7 +1294,7 @@ function vt(sa) {
     We[18] !== gt ||
     We[19] !== kt
   )
-    ((Fs = r(t, { children: [ut, ht, " ", pt, " ", ft, gt, kt] })),
+    ((Fs = r(Text, { children: [ut, ht, " ", pt, " ", ft, gt, kt] })),
       (We[14] = ut),
       (We[15] = ht),
       (We[16] = pt),
@@ -1327,11 +1327,11 @@ function Mo(pa) {
   if (Z[2] !== Ho)
     ((St =
       Ho &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         children: [
-          r(t, { color: "warning", children: [figures.info, " Safe mode"] }),
-          r(t, {
+          r(Text, { color: "warning", children: [figures.info, " Safe mode"] }),
+          r(Text, {
             dimColor: !0,
             children: [
               "Hooks from settings files are suspended and will not run this session",
@@ -1353,14 +1353,14 @@ function Mo(pa) {
   if (Z[4] !== An)
     ((bt =
       An &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         children: [
-          r(t, {
+          r(Text, {
             color: "suggestion",
             children: [figures.info, " Hooks Restricted by Policy"],
           }),
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children:
               "Only hooks from managed settings can run. User-defined hooks from ~/.claude/settings.json, .claude/settings.json, and .claude/settings.local.json are blocked.",
@@ -1372,15 +1372,15 @@ function Mo(pa) {
   else bt = Z[5];
   let Bs;
   if (Z[6] === MEMO_CACHE_SENTINEL)
-    ((Bs = e(o, {
+    ((Bs = e(Box, {
       flexDirection: "column",
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           figures.info,
           " This menu is read-only. To add or modify hooks, edit settings.json directly or ask Claude.",
           " ",
-          e(ct, {
+          e(Link, {
             url: "https://code.claude.com/docs/en/hooks",
             children: "Learn more",
           }),
@@ -1407,7 +1407,7 @@ function Mo(pa) {
     ((xt = ro
       ? [
           {
-            label: e(t, {
+            label: e(Text, {
               color: "suggestion",
               children:
                 "Decide whether cloud sessions run this machine's hooks\u2026",
@@ -1432,11 +1432,11 @@ function Mo(pa) {
       return {
         label:
           $s > 0
-            ? r(t, {
+            ? r(Text, {
                 children: [
                   Rt,
                   " ",
-                  r(t, { color: "suggestion", children: ["(", $s, ")"] }),
+                  r(Text, { color: "suggestion", children: ["(", $s, ")"] }),
                 ],
               })
             : Rt,
@@ -1454,7 +1454,7 @@ function Mo(pa) {
   else co = Z[19];
   let Mt;
   if (Z[20] !== ao || Z[21] !== Ct || Z[22] !== co)
-    ((Mt = e(o, {
+    ((Mt = e(Box, {
       flexDirection: "column",
       children: e(ve, { onChange: Ct, onCancel: ao, options: co }),
     })),
@@ -1465,7 +1465,7 @@ function Mo(pa) {
   else Mt = Z[23];
   let Ot;
   if (Z[24] !== Fn || Z[25] !== Mt || Z[26] !== St || Z[27] !== bt)
-    ((Ot = r(o, {
+    ((Ot = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [Fn, St, bt, Bs, Mt],
@@ -1562,7 +1562,7 @@ function Oo(Ha) {
   else Ue = Le[14];
   let Nt;
   if (Le[15] !== ke || Le[16] !== $e || Le[17] !== Ue)
-    ((Nt = e(o, {
+    ((Nt = e(Box, {
       flexDirection: "column",
       children: e(ve, { options: $e, onChange: Ue, onCancel: ke }),
     })),
@@ -1669,7 +1669,7 @@ function Po(Ua) {
   else ze = Ie[16];
   let Ke;
   if (Ie[17] !== we || Ie[18] !== Ve || Ie[19] !== ze)
-    ((Ke = e(o, {
+    ((Ke = e(Box, {
       flexDirection: "column",
       children: e(ve, { options: Ve, onChange: ze, onCancel: we }),
     })),
@@ -1704,7 +1704,7 @@ function To(rc) {
   else ni = M[2];
   let At;
   if (M[3] !== v.event)
-    ((At = r(Table.Row, { children: [ni, e(t, { children: v.event })] })),
+    ((At = r(Table.Row, { children: [ni, e(Text, { children: v.event })] })),
       (M[3] = v.event),
       (M[4] = At));
   else At = M[4];
@@ -1715,7 +1715,7 @@ function To(rc) {
       r(Table.Row, {
         children: [
           e(N, { children: "Matcher:" }),
-          e(t, { children: v.matcher ? escapeAllControlCharacters(v.matcher) : "(all)" }),
+          e(Text, { children: v.matcher ? escapeAllControlCharacters(v.matcher) : "(all)" }),
         ],
       })),
       (M[5] = $n),
@@ -1727,7 +1727,7 @@ function To(rc) {
   else si = M[8];
   let Wt;
   if (M[9] !== v.config.type)
-    ((Wt = r(Table.Row, { children: [si, e(t, { children: v.config.type })] })),
+    ((Wt = r(Table.Row, { children: [si, e(Text, { children: v.config.type })] })),
       (M[9] = v.config.type),
       (M[10] = Wt));
   else Wt = M[10];
@@ -1740,7 +1740,7 @@ function To(rc) {
   else Jt = M[13];
   let jt;
   if (M[14] !== Jt)
-    ((jt = r(Table.Row, { children: [ii, e(t, { dimColor: !0, children: Jt })] })),
+    ((jt = r(Table.Row, { children: [ii, e(Text, { dimColor: !0, children: Jt })] })),
       (M[14] = Jt),
       (M[15] = jt));
   else jt = M[15];
@@ -1751,7 +1751,7 @@ function To(rc) {
       r(Table.Row, {
         children: [
           e(N, { children: "Plugin:" }),
-          e(t, { dimColor: !0, children: escapeAllControlCharacters(v.pluginName) }),
+          e(Text, { dimColor: !0, children: escapeAllControlCharacters(v.pluginName) }),
         ],
       })),
       (M[16] = v.pluginName),
@@ -1765,7 +1765,7 @@ function To(rc) {
       r(Table.Row, {
         children: [
           e(N, { children: "Status message:" }),
-          e(t, { dimColor: !0, children: escapeAllControlCharacters(v.config.statusMessage) }),
+          e(Text, { dimColor: !0, children: escapeAllControlCharacters(v.config.statusMessage) }),
         ],
       })),
       (M[18] = v.config),
@@ -1795,7 +1795,7 @@ function To(rc) {
   else Ut = M[28];
   let qt;
   if (M[29] !== Ut)
-    ((qt = r(t, { dimColor: !0, children: [Ut, ":"] })),
+    ((qt = r(Text, { dimColor: !0, children: [Ut, ":"] })),
       (M[29] = Ut),
       (M[30] = qt));
   else qt = M[30];
@@ -1813,26 +1813,26 @@ function To(rc) {
   else Yt = M[34];
   let Vt;
   if (M[35] !== Yt)
-    ((Vt = e(o, {
+    ((Vt = e(Box, {
       borderStyle: "round",
       borderDimColor: !0,
       paddingLeft: 1,
       paddingRight: 1,
-      children: e(t, { children: Yt }),
+      children: e(Text, { children: Yt }),
     })),
       (M[35] = Yt),
       (M[36] = Vt));
   else Vt = M[36];
   let zt;
   if (M[37] !== qt || M[38] !== Vt)
-    ((zt = r(o, { flexDirection: "column", children: [qt, Vt] })),
+    ((zt = r(Box, { flexDirection: "column", children: [qt, Vt] })),
       (M[37] = qt),
       (M[38] = Vt),
       (M[39] = zt));
   else zt = M[39];
   let ri;
   if (M[40] === MEMO_CACHE_SENTINEL)
-    ((ri = e(t, {
+    ((ri = e(Text, {
       dimColor: !0,
       children:
         "To modify or remove this hook, edit settings.json directly or ask Claude to help.",
@@ -1841,7 +1841,7 @@ function To(rc) {
   else ri = M[40];
   let Kt;
   if (M[41] !== $t || M[42] !== zt)
-    ((Kt = r(o, { flexDirection: "column", gap: 1, children: [$t, zt, ri] })),
+    ((Kt = r(Box, { flexDirection: "column", gap: 1, children: [$t, zt, ri] })),
       (M[41] = $t),
       (M[42] = zt),
       (M[43] = Kt));
@@ -2144,7 +2144,7 @@ function dn(Bc) {
         e(ve, {
           options: [
             {
-              label: e(t, {
+              label: e(Text, {
                 color: "suggestion",
                 children:
                   "Decide whether cloud sessions run this machine's hooks\u2026",
@@ -2164,12 +2164,12 @@ function dn(Bc) {
     else O = m[51];
     let W;
     if (m[52] === MEMO_CACHE_SENTINEL)
-      ((W = e(t, { bold: !0, children: "disabled" })), (m[52] = W));
+      ((W = e(Text, { bold: !0, children: "disabled" })), (m[52] = W));
     else W = m[52];
     const Pe = Qt && " by a managed settings file";
     let eo;
     if (m[53] !== te)
-      ((eo = e(t, { bold: !0, children: te })), (m[53] = te), (m[54] = eo));
+      ((eo = e(Text, { bold: !0, children: te })), (m[53] = te), (m[54] = eo));
     else eo = m[54];
     let on;
     if (m[55] !== te) ((on = pluralize(te, "hook")), (m[55] = te), (m[56] = on));
@@ -2179,7 +2179,7 @@ function dn(Bc) {
     else tn = m[58];
     let nn;
     if (m[59] !== Pe || m[60] !== eo || m[61] !== on || m[62] !== tn)
-      ((nn = r(t, {
+      ((nn = r(Text, {
         children: [
           "All hooks are currently ",
           W,
@@ -2204,19 +2204,19 @@ function dn(Bc) {
     else nn = m[63];
     let Ni, Di, Ai, Fi;
     if (m[64] === MEMO_CACHE_SENTINEL)
-      ((Ni = e(o, {
+      ((Ni = e(Box, {
         marginTop: 1,
-        children: e(t, { dimColor: !0, children: "When hooks are disabled:" }),
+        children: e(Text, { dimColor: !0, children: "When hooks are disabled:" }),
       })),
-        (Di = e(t, {
+        (Di = e(Text, {
           dimColor: !0,
           children: "\xB7 No hook commands will execute",
         })),
-        (Ai = e(t, {
+        (Ai = e(Text, {
           dimColor: !0,
           children: "\xB7 StatusLine will not be displayed",
         })),
-        (Fi = e(t, {
+        (Fi = e(Text, {
           dimColor: !0,
           children: "\xB7 Tool operations will proceed without hook validation",
         })),
@@ -2227,7 +2227,7 @@ function dn(Bc) {
     else ((Ni = m[64]), (Di = m[65]), (Ai = m[66]), (Fi = m[67]));
     let sn;
     if (m[68] !== nn)
-      ((sn = r(o, { flexDirection: "column", children: [nn, Ni, Di, Ai, Fi] })),
+      ((sn = r(Box, { flexDirection: "column", children: [nn, Ni, Di, Ai, Fi] })),
         (m[68] = nn),
         (m[69] = sn));
     else sn = m[69];
@@ -2235,7 +2235,7 @@ function dn(Bc) {
     if (m[70] !== Qt)
       ((rn =
         !Qt &&
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children:
             'To re-enable hooks, remove "disableAllHooks" from settings.json or ask Claude.',
@@ -2245,7 +2245,7 @@ function dn(Bc) {
     else rn = m[71];
     let cn;
     if (m[72] !== E || m[73] !== O || m[74] !== sn || m[75] !== rn)
-      ((cn = r(o, {
+      ((cn = r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [E, O, sn, rn],

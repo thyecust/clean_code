@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { jur, Et, dv, b, ae, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { createStringBatchWriter, registerCleanup, registerPreExitFlush, jsonStringify, getFsSurface, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachErrorLogSink } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { emitInternalErrorEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
@@ -23,11 +23,11 @@ function g(e) {
   return a(logDirectories.mcpLogs(e), f + ".jsonl");
 }
 function u(e) {
-  let r = jur(e);
+  let r = createStringBatchWriter(e);
   return {
     write(t) {
       r.write(
-        b(t) +
+        jsonStringify(t) +
           `
 `,
       );
@@ -53,7 +53,7 @@ class l {
             } catch (s) {
               if (!i)
                 ((i = !0),
-                  n(
+                  logForDebugging(
                     `Dropping log batch for ${e}: ${s instanceof Error ? s.message : String(s)}`,
                   ));
             }
@@ -63,10 +63,10 @@ class l {
         maxBufferSize: 50,
       })),
         this.writers.set(e, r),
-        Et(async () => {
+        registerCleanup(async () => {
           (r?.dispose(), await this.pendingWrites.settle());
         }),
-        dv(this.flushBeforeExit));
+        registerPreExitFlush(this.flushBeforeExit));
     }
     return r;
   }
@@ -83,7 +83,7 @@ class l {
   }
 }
 async function d(e, r, t) {
-  let i = ae();
+  let i = getFsSurface();
   try {
     await i.appendFile(r, t);
   } catch {
@@ -119,11 +119,11 @@ function v(e, r) {
     if (s) o.push(`body=${s}`);
     i = `[${o.join(",")}] `;
   }
-  (n(`${r.name}: ${i}${t}`, { level: "error" }),
+  (logForDebugging(`${r.name}: ${i}${t}`, { level: "error" }),
     w(e, c(), { error: `${i}${t}` }));
 }
 function h(e, r, t) {
-  n(`MCP server "${r}" ${t}`, { level: "error" });
+  logForDebugging(`MCP server "${r}" ${t}`, { level: "error" });
   let i = g(r),
     o = t instanceof Error ? t.stack || t.message : String(t),
     s = {
@@ -135,7 +135,7 @@ function h(e, r, t) {
   e.writerFor(i).write(s);
 }
 function S(e, r, t) {
-  n(`MCP server "${r}": ${t}`);
+  logForDebugging(`MCP server "${r}": ${t}`);
   let i = g(r),
     o = {
       debug: qr(t),
@@ -146,7 +146,7 @@ function S(e, r, t) {
   e.writerFor(i).write(o);
 }
 function initErrorLogSink() {
-  (attachErrorLogSink(y(new l())), n("Error log sink initialized"));
+  (attachErrorLogSink(y(new l())), logForDebugging("Error log sink initialized"));
 }
 function y(e) {
   return {

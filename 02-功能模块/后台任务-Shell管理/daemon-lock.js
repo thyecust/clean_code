@@ -15,7 +15,7 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeNewFileExclusive, writeNewFileAfterAbsenceCheck } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { provenSameProcessAsync, procIdentityOf, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
@@ -88,7 +88,7 @@ async function y(e) {
           ? "symlink"
           : "other non-regular node";
   if (E().markLogged())
-    n(
+    logForDebugging(
       `[DaemonLock] ${o} at the lock path (${e}) \u2014 removing it as the legacy path does`,
       { level: "warn" },
     );
@@ -98,7 +98,7 @@ var I = 65536;
 async function acquireDaemonLock(e, r) {
   if (isHoverRestEnabled() && r !== void 0) {
     let t = () =>
-        r.write(getDaemonLockStateKey(), b(e, null, 2), {
+        r.write(getDaemonLockStateKey(), jsonStringify(e, null, 2), {
           precondition: { type: "ifAbsent" },
           mode: 438 & ~process.umask(),
         }),
@@ -122,7 +122,7 @@ async function acquireDaemonLock(e, r) {
     );
   }
   try {
-    return (await writeNewFileAfterAbsenceCheck(getDaemonLockPath(), b(e, null, 2)), !0);
+    return (await writeNewFileAfterAbsenceCheck(getDaemonLockPath(), jsonStringify(e, null, 2)), !0);
   } catch (t) {
     if (A(t) === "EEXIST") return !1;
     throw t;
@@ -188,7 +188,7 @@ async function readDaemonLock(e) {
 }
 async function replaceDaemonLock(e, r) {
   if (r) {
-    let i = await r.write(getDaemonLockStateKey(), b(e, null, 2), {
+    let i = await r.write(getDaemonLockStateKey(), jsonStringify(e, null, 2), {
       mode: 438 & ~process.umask(),
     });
     if (!i.ok) {
@@ -196,7 +196,7 @@ async function replaceDaemonLock(e, r) {
       if (s === "LockContended" || s === "LockSuspect") {
         let c = await readDaemonLock(r);
         if (c?.pid !== e.pid || c?.startedAt !== e.startedAt) return !1;
-        i = await r.write(getDaemonLockStateKey(), b(e, null, 2), {
+        i = await r.write(getDaemonLockStateKey(), jsonStringify(e, null, 2), {
           mode: 438 & ~process.umask(),
         });
       }
@@ -209,7 +209,7 @@ async function replaceDaemonLock(e, r) {
     let a = await readDaemonLock(r);
     return a?.pid === e.pid && a?.startedAt === e.startedAt;
   }
-  let t = await writeNewFileExclusive(getDaemonLockPath(), b(e, null, 2));
+  let t = await writeNewFileExclusive(getDaemonLockPath(), jsonStringify(e, null, 2));
   try {
     await rename(t, getDaemonLockPath());
   } catch (i) {

@@ -8,18 +8,18 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, tn } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function TitledBorderBox(g) {
   let y = _(10),
     { children: f, color: d, title: m } = g,
-    s = tn();
+    s = useIsScreenReaderEnabled();
   const i = s ? void 0 : "round",
     R = s ? 0 : 1,
     h = m ? 1 : 0;
   let p;
   if (y[0] !== d || y[1] !== m)
-    ((p = m && e(t, { bold: !0, color: d, children: m })),
+    ((p = m && e(Text, { bold: !0, color: d, children: m })),
       (y[0] = d),
       (y[1] = m),
       (y[2] = p));
@@ -33,7 +33,7 @@ function TitledBorderBox(g) {
     y[7] !== h ||
     y[8] !== p
   )
-    ((T = r(o, {
+    ((T = r(Box, {
       borderStyle: i,
       borderColor: d,
       flexDirection: "column",

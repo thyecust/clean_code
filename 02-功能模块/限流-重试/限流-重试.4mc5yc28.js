@@ -10,7 +10,7 @@
 import { j, B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import {
   LOW_PRIORITY_COMMAND_NAME,
   isLowPriorityModeEnabled,
@@ -26,7 +26,7 @@ import {
   endLowPriorityMode,
   getCurrentLimits,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { C4, v4, Jx, D3e } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { getAutoResumeState, hasArmedQuotaAutoResume, cancelAutoResume, isConversationResetSwitchReason } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { isLowPriorityEligibleClient, isContinuableUsageLimitWall, getSubscriptionTier, sendAutoContinuationPrompt } from "../../01-核心基础设施/共享小工具-未细化/usage-limit-continuation.js";
 var l = new j(() => ({
   notedWallResetsAt: null,
@@ -62,7 +62,7 @@ function a(t, e = Date.now()) {
   );
 }
 function f(t) {
-  let e = C4();
+  let e = getAutoResumeState();
   switch (e.phase) {
     case "idle":
       return !1;
@@ -83,7 +83,7 @@ function trackLowPriorityOffer(t) {
         arm: fromEnum(t.lowPriorityOffer),
         tier: fromEnum(getSubscriptionTier()),
         limit_type: fromEnumOpt(t.rateLimitType) ?? void 0,
-        auto_armed: v4(),
+        auto_armed: hasArmedQuotaAutoResume(),
         client_enabled: isLowPriorityModeEnabled(),
         config_version: getLowPriorityConfigVersion(),
       }));
@@ -115,7 +115,7 @@ function enableLowPriorityMode(t) {
   let e = getCurrentLimits();
   if (shouldOfferLowPriority(e) && e.resetsAt !== void 0) {
     if (
-      (Jx("low_priority"),
+      (cancelAutoResume("low_priority"),
       s(),
       !startLowPriorityMode({
         resetsAtSeconds: e.resetsAt,
@@ -129,8 +129,8 @@ function enableLowPriorityMode(t) {
     return (sendAutoContinuationPrompt(), "accepted");
   }
   if (a(e)) {
-    let o = v4();
-    if (o) Jx("low_priority");
+    let o = hasArmedQuotaAutoResume();
+    if (o) cancelAutoResume("low_priority");
     if ((s(), !resumeLowPriorityMode(t))) return "unavailable";
     if (o) sendAutoContinuationPrompt();
     return "resumed";
@@ -160,7 +160,7 @@ function s() {
   if (t.sessionSwitchSubscribed) return;
   ((t.sessionSwitchSubscribed = !0),
     sc((e, o) => {
-      if (D3e(o)) endLowPriorityMode("conversation_reset");
+      if (isConversationResetSwitchReason(o)) endLowPriorityMode("conversation_reset");
     }));
 }
 export { shouldOfferLowPriority, trackLowPriorityOffer, trackLowPriorityOfferShown, enableLowPriorityMode, formatLowPriorityEnabledMessage, formatLowPriorityUnavailableMessage, formatLowPriorityOffMessage };

@@ -10,7 +10,7 @@
 import { ze, mp, Hz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn, Dr, vS, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { SandboxManager, sanitizeForDisplay, recordSessionAlias, executeDirectoryAddedHooks, persistHookOutput, clearMemoryFilesForSession, invalidateUserContext } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { isSettingsSourceEnabled } from "./设置-配置.aqbb35ee.js";
@@ -57,7 +57,7 @@ async function addWorkingDirectory(e, o, r) {
       .then(async ({ results: t, systemMessages: l }) => {
         for (let i of t)
           if (!i.succeeded && i.output)
-            n(`DirectoryAdded hook failed: ${i.output}`, { level: "error" });
+            logForDebugging(`DirectoryAdded hook failed: ${i.output}`, { level: "error" });
         let a = countMatching(t, (i) => !i.succeeded),
           c = [
             ...(await Promise.all(
@@ -98,9 +98,9 @@ async function addWorkingDirectory(e, o, r) {
 function explainAlreadyAccessibleDirectory(e, o) {
   let r = getToolPermissionContext(e);
   if (o.isExactMatch || !o.isOriginalCwd) return null;
-  let m = ae(),
-    { resolvedPath: s, isCanonical: d } = Ro(m, o.absolutePath),
-    { resolvedPath: g, isCanonical: t } = Ro(m, o.workingDir),
+  let m = getFsSurface(),
+    { resolvedPath: s, isCanonical: d } = resolvePathInfo(m, o.absolutePath),
+    { resolvedPath: g, isCanonical: t } = resolvePathInfo(m, o.workingDir),
     l = chalk.bold(sanitizeForDisplay(o.directoryPath));
   if (!d || !t) {
     if ([o.absolutePath, o.workingDir].some((i) => Xo(i) || Dr(i) || vS(i)))

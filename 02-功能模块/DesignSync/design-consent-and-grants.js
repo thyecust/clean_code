@@ -10,7 +10,7 @@
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { httpClient, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -65,7 +65,7 @@ async function _(e) {
     return s;
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `Design consent pre-flight GET failed (${l(t)}); falling back to 403-seeded cache.`,
       ),
       {}
@@ -201,7 +201,7 @@ async function k(e) {
     return r;
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `Design project-grant probe failed (${l(t)}); falling back to the per-batch plan flow.`,
       ),
       logFeatureSad("design_project_grant", "probe_network"),
@@ -260,7 +260,7 @@ function createDesignGrantWatcher(e, t, s) {
       a = i.data?.grants;
     } catch (i) {
       return (
-        n(`Server-approval watcher poll failed (${l(i)}); will poll again.`),
+        logForDebugging(`Server-approval watcher poll failed (${l(i)}); will poll again.`),
         null
       );
     }

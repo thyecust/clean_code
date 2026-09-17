@@ -24,7 +24,7 @@ import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../../02-功能模块/
 import { selectEffectivePermissionMode, resolveProactivityLevel, isTranscriptPersistenceDisabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { LIST_AGENTS_TOOL_NAME } from "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js";
@@ -34,10 +34,10 @@ import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { COORDINATOR_FORK_REFUSAL, spawnBackgroundFork, deriveBackgroundSeed } from "./会话UI(REPL).qs63rzfp.js";
 import { git, mWe, fZt, ZIt } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -179,7 +179,7 @@ function W(Pe) {
   E(H, V);
   let Z;
   if (G[13] === MEMO_CACHE_SENTINEL)
-    ((Z = e(t, { dimColor: !0, children: "Forking\u2026" })), (G[13] = Z));
+    ((Z = e(Text, { dimColor: !0, children: "Forking\u2026" })), (G[13] = Z));
   else Z = G[13];
   return Z;
 }

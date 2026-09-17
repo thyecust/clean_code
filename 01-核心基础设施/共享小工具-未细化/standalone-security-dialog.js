@@ -10,7 +10,7 @@
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isRecent } from "./recent-window.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getBaseRenderOptions } from "./base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { ManagedSettingsApprovalDialog } from "../设置-配置/managed-settings-approval-dialog.js";
@@ -27,7 +27,7 @@ var showStandaloneSecurityDialog = (p, r, m) =>
         rerender: t,
         unmount: l,
         waitUntilExit: g,
-      } = await J0(
+      } = await render(
         e(
           AppRoot,
           {

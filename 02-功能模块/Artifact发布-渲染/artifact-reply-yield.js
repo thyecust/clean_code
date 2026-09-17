@@ -11,10 +11,10 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isProcessProvablyGone, provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { Nu, qI, mD } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { formatRedactedPreview, formatRedactedErrorDetail, isRetryableSendError } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { s, T, O, se, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function isArtifactReplyYieldEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_thistle", !1);
@@ -315,11 +315,11 @@ function handleYieldRequest(e, i, t, r, l) {
     () => _?.onDelivered?.(),
     (w) => {
       if (
-        (n(`[reply-yield] answer to ${Nu(i)} failed: ${qI(String(w))}`),
+        (logForDebugging(`[reply-yield] answer to ${formatRedactedPreview(i)} failed: ${formatRedactedErrorDetail(String(w))}`),
         _ === null)
       )
         return;
-      if (!mD(w)) {
+      if (!isRetryableSendError(w)) {
         (logFeatureSad("artifact_comments_autoreact", "yield_answer_send_ambiguous"),
           f(i, S, u, o).catch(() => {}),
           _.onDelivered?.());

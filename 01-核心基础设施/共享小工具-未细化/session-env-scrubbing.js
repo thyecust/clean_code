@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { BG_DISPATCHER_ENV_VARS } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 var A = new Set(["claude-vscode", "claude-desktop", "claude-desktop-3p"]);
 function removeGuiHostEntrypoint(E) {
   let _ = E.CLAUDE_CODE_ENTRYPOINT;
@@ -94,7 +94,7 @@ var NON_INHERITED_ENV_VARS = [
 function g4(E) {
   for (let _ of Object.keys(E)) if (S.has(_.toUpperCase())) delete E[_];
 }
-var D = new Set(LRe);
+var D = new Set(BG_DISPATCHER_ENV_VARS);
 function removeBgDispatcherPlanEnvVars(E) {
   for (let _ of Object.keys(E)) if (D.has(_.toUpperCase())) delete E[_];
 }

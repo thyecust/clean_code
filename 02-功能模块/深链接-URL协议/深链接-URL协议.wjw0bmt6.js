@@ -10,7 +10,7 @@
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { ja } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -84,7 +84,7 @@ async function D(e) {
       ["-R", c],
       { useCwd: !1 },
     ),
-    n(`Registered ${WB}:// protocol handler at ${c}`));
+    logForDebugging(`Registered ${WB}:// protocol handler at ${c}`));
 }
 async function _(e) {
   await promises.mkdir(o.dirname(d()), { recursive: !0 });
@@ -107,7 +107,7 @@ MimeType=x-scheme-handler/${WB};
         code: "XDG_MIME_FAILED",
       });
   }
-  n(`Registered ${WB}:// protocol handler at ${d()}`);
+  logForDebugging(`Registered ${WB}:// protocol handler at ${d()}`);
 }
 async function F(e) {
   for (let t of [
@@ -121,7 +121,7 @@ async function F(e) {
         code: "REG_FAILED",
       });
   }
-  n(`Registered ${WB}:// protocol handler in Windows registry`);
+  logForDebugging(`Registered ${WB}:// protocol handler in Windows registry`);
 }
 async function L(e) {
   let t = e ?? (await E());
@@ -185,7 +185,7 @@ async function ensureDeepLinkHandlerRegistered(e) {
     if (
       (await L(t),
       logFeatureOk("deep_link_register"),
-      n("Auto-registered claude-cli:// deep link protocol handler"),
+      logForDebugging("Auto-registered claude-cli:// deep link protocol handler"),
       isHoverRestEnabled() && e !== void 0)
     )
       await e.delete(STORAGE_KEYS.state("deep-link-register-failed"));
@@ -194,7 +194,7 @@ async function ensureDeepLinkHandlerRegistered(e) {
     let s = Jr(i);
     if (
       (logFeatureBad("deep_link_register", s ?? "register_failed"),
-      n(
+      logForDebugging(
         `Failed to auto-register deep link protocol handler: ${i instanceof Error ? i.message : String(i)}`,
         { level: "warn" },
       ),

@@ -16,13 +16,13 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getModelForAnalytics, classifyModelFamily, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, buildAgentId, isReservedRecipientName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getHostManagedEnvVarsToStrip } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getExternalPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
-import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
+import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { detectAndGetBackend, getBackendByType, markInProcessFallback, isInProcessEnabled, resetBackendDetection } from "./backend-registry.js";
@@ -38,7 +38,7 @@ import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "./chunk-5nnwwahg.js";
-import { Cin } from "./chunk-8jtd54px.js";
+import { startInProcessTeammate } from "./in-process-teammate-runner.js";
 import { spawnInProcessTeammate } from "./chunk-sjd69zy5.js";
 import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
@@ -215,7 +215,7 @@ function H(t, e, o = "tool") {
   return i;
 }
 function ie(t, e) {
-  n(
+  logForDebugging(
     `Teammate model "${t}" is not in the availableModels allowlist; using the ${e ? "newest allowed model in its family" : "leader's model"} instead`,
     { level: "warn" },
   );
@@ -251,7 +251,7 @@ function ee(t) {
     let s = Ec();
     if (s) r.push(O("--model", s));
   }
-  let T = m && _ve(m);
+  let T = m && getCarriableEffortLevel(m);
   if (T !== void 0) r.push(`--effort ${T}`);
   let _ = MA() ?? q1();
   if (_) r.push(`--settings ${jo([_])}`);
@@ -324,11 +324,11 @@ async function W(t, e, o, i, c, m) {
         try {
           await _();
         } catch (d) {
-          n(`[spawnTeammate] pane cleanup failed for ${r.teammateId}: ${l(d)}`);
+          logForDebugging(`[spawnTeammate] pane cleanup failed for ${r.teammateId}: ${l(d)}`);
         }
       await removeTeamMember(e, r.teammateId, m);
     } else
-      n(
+      logForDebugging(
         `[spawnTeammate] post-commit failure for ${r.teammateId}; entry kept (agent already running): ${l(p)}`,
       );
     throw p;
@@ -754,7 +754,7 @@ async function z(t, e) {
           (v) => v.agentType === r,
         );
         if (b && isCustomAgent(b)) h = b;
-        n(`[handleSpawnInProcess] agent_type=${r}, found=${!!h}`);
+        logForDebugging(`[handleSpawnInProcess] agent_type=${r}, found=${!!h}`);
       }
       let k = {
         name: s,
@@ -769,11 +769,11 @@ async function z(t, e) {
       if (!D.ok)
         throw (
           logFeatureBad("subagent_launch", "subagent_teammate_inprocess_failed"),
-          n(`[handleSpawnInProcess] spawn failed: ${D.error}`),
+          logForDebugging(`[handleSpawnInProcess] spawn failed: ${D.error}`),
           Error("Failed to spawn in-process teammate")
         );
       (C(),
-        Cin({
+        startInProcessTeammate({
           identity: D.identity,
           taskId: D.taskId,
           prompt: m,
@@ -785,7 +785,7 @@ async function z(t, e) {
           abortController: D.abortController,
           invokingRequestId: t.invokingRequestId,
         }),
-        n(`[handleSpawnInProcess] Started agent execution for ${E}`));
+        logForDebugging(`[handleSpawnInProcess] Started agent execution for ${E}`));
       let I = i().teamContext?.leadAgentId,
         P = !I,
         A = I ?? buildAgentId(TEAM_LEAD_AGENT_NAME, d),
@@ -863,7 +863,7 @@ async function ce(t, e, o) {
     if (getTeammateModeFromSnapshot() !== "auto")
       throw (logFeatureBad("subagent_launch", "subagent_teammate_pane_unavailable"), c);
     return (
-      n(
+      logForDebugging(
         `[handleSpawn] No pane backend available, falling back to in-process: ${l(c)}`,
       ),
       markInProcessFallback(),

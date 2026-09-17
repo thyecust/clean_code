@@ -8,26 +8,26 @@
 
 // Version: 2.1.263
 import {
-  but,
-  dNt,
-  pNt,
-  LS,
-  VSe,
-  Oee,
-  CGe,
-  vGe,
-  u2,
-  fNt,
-  lPe,
-  mon,
-  hon,
-} from "./chunk-j990pwax.js";
+  OAuthMetadataSchema,
+  OAuthTokensSchema,
+  OAuthErrorResponseSchema,
+  OAuthError,
+  InvalidGrantError,
+  ServerError,
+  TemporarilyUnavailableError,
+  TooManyRequestsError,
+  auth,
+  discoverOAuthProtectedResourceMetadata,
+  discoverAuthorizationServerMetadata,
+  discoverOAuthServerInfo,
+  refreshAuthorization,
+} from "./oauth-client.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { MCP_CLIENT_METADATA_URL } from "./chunk-9g2q4bjq.js";
 import { yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromNumberOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -38,11 +38,11 @@ import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/ht
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "./secure-storage.js";
 import { getSecureStorageDir, invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
-import { jt } from "./chunk-wk0e3dz4.js";
+import { getMcpClientState } from "./chunk-wk0e3dz4.js";
 import { authLostEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { isXaaEnabled, getXaaIdpConfig, readSecureStorageResilient, getMcpOAuthCredentialKey } from "./认证-OAuth登录.419zdfz3.js";
-import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
+import { getPresentedCredentialLog, encodeBasicAuth, evictMemoizedDiscoveryCachePaths } from "../MCP客户端/mcp-discovery-cache.js";
 import { McpCredentialStoreUnavailableError, MCP_DOWNSTREAM_UNREACHABLE_CODES, getMcpServerBaseUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactSearchParams, redactParamValue, redactUrl, formatMcpSdkError, rethrowFetchError } from "./url-and-error-redaction.js";
@@ -87,7 +87,7 @@ class W extends Error {
 var Fe =
   /"(access_token|refresh_token|id_token|assertion|subject_token|client_secret)"\s*:\s*"[^"]*"/g;
 function ne(e) {
-  return (typeof e === "string" ? e : b(e)).replace(
+  return (typeof e === "string" ? e : jsonStringify(e)).replace(
     Fe,
     (r, n) => `"${n}":"[REDACTED]"`,
   );
@@ -112,7 +112,7 @@ var Le = createLazyValue(() =>
 async function De(e, t) {
   let r;
   try {
-    r = await fNt(e, void 0, t?.fetchFn ?? oe);
+    r = await discoverOAuthProtectedResourceMetadata(e, void 0, t?.fetchFn ?? oe);
   } catch (n) {
     if (yt(n)) throw n;
     let d = n instanceof Error ? /^HTTP (\d{3}) /.exec(n.message)?.[1] : void 0;
@@ -136,7 +136,7 @@ async function De(e, t) {
 async function Xe(e, t) {
   let r;
   try {
-    r = await lPe(e, { fetchFn: t?.fetchFn ?? oe });
+    r = await discoverAuthorizationServerMetadata(e, { fetchFn: t?.fetchFn ?? oe });
   } catch (n) {
     if (yt(n)) throw n;
     let d = n instanceof Error ? /^HTTP (\d{3}) /.exec(n.message)?.[1] : void 0;
@@ -233,10 +233,10 @@ async function je(e) {
     let h = Buffer.from(
       `${encodeURIComponent(e.clientId)}:${encodeURIComponent(e.clientSecret)}`,
     ).toString("base64");
-    ((d.Authorization = `Basic ${h}`), Pu().record(h));
+    ((d.Authorization = `Basic ${h}`), getPresentedCredentialLog().record(h));
   } else
     (n.set("client_id", e.clientId), n.set("client_secret", e.clientSecret));
-  (Pu().record(e.clientSecret), Pu().record(e.assertion));
+  (getPresentedCredentialLog().record(e.clientSecret), getPresentedCredentialLog().record(e.assertion));
   let p = await t(e.tokenEndpoint, { method: "POST", headers: d, body: n });
   if (!p.ok) {
     let h = ne(await p.text()).slice(0, 200);
@@ -350,7 +350,7 @@ ${t.message}`
       : e;
   if (
     r.includes("dynamic client registration") ||
-    (t instanceof LS && t.errorCode === "invalid_client_metadata")
+    (t instanceof OAuthError && t.errorCode === "invalid_client_metadata")
   )
     return "dcr_failed";
   if (
@@ -358,7 +358,7 @@ ${t.message}`
     r.includes("Incompatible auth server")
   )
     return "discovery_failed";
-  if (t instanceof LS) return "dcr_rejected";
+  if (t instanceof OAuthError) return "dcr_rejected";
   let n = A(t) ?? A(t instanceof Error ? t.cause : void 0);
   if (n && MCP_DOWNSTREAM_UNREACHABLE_CODES.has(n)) return "network_failed";
   return "sdk_auth_failed";
@@ -377,12 +377,12 @@ async function W2n(e) {
   let t = await e.text(),
     r;
   try {
-    r = z(t);
+    r = jsonParse(t);
   } catch {
     return new Response(t, e);
   }
-  if (dNt.safeParse(r).success) return new Response(t, e);
-  let n = pNt.safeParse(r);
+  if (OAuthTokensSchema.safeParse(r).success) return new Response(t, e);
+  let n = OAuthErrorResponseSchema.safeParse(r);
   if (!n.success) return new Response(t, e);
   let d = Qe.has(n.data.error)
     ? {
@@ -392,7 +392,7 @@ async function W2n(e) {
           `Server returned non-standard error code: ${n.data.error}`,
       }
     : n.data;
-  return new Response(b(d), {
+  return new Response(jsonStringify(d), {
     status: 400,
     statusText: "Bad Request",
     headers: e.headers,
@@ -456,14 +456,14 @@ async function ce(e, t, r) {
           `Configured auth server metadata at ${redactUrl(n)} is not valid JSON`,
         );
       }
-      return but.parse(k);
+      return OAuthMetadataSchema.parse(k);
     }
     throw Error(
       `HTTP ${h.status} fetching configured auth server metadata from ${redactUrl(n)}`,
     );
   }
   try {
-    let { authorizationServerMetadata: h } = await mon(t, {
+    let { authorizationServerMetadata: h } = await discoverOAuthServerInfo(t, {
       fetchFn: o,
       ...(p && { resourceMetadataUrl: p }),
     });
@@ -474,7 +474,7 @@ async function ce(e, t, r) {
   let _ = new URL(t);
   if (_.pathname === "/") return;
   try {
-    return await lPe(_, { fetchFn: o });
+    return await discoverAuthorizationServerMetadata(_, { fetchFn: o });
   } catch (h) {
     logMCPDebug(e, `Path-aware auth server discovery failed: ${formatMcpSdkError(h, t)}`);
     return;
@@ -513,10 +513,10 @@ function et(e) {
   return e !== void 0 && (e === MCP_CLIENT_METADATA_URL || e === Re());
 }
 function ghr(e) {
-  return jt().oauthCallbackSubmitters.get(e);
+  return getMcpClientState().oauthCallbackSubmitters.get(e);
 }
 function hhr(e, t) {
-  let r = jt().activeOAuthFlows;
+  let r = getMcpClientState().activeOAuthFlows;
   (r.set(e, t),
     t
       .finally(() => {
@@ -525,7 +525,7 @@ function hhr(e, t) {
       .catch(() => {}));
 }
 function _hr(e) {
-  return jt().activeOAuthFlows.get(e);
+  return getMcpClientState().activeOAuthFlows.get(e);
 }
 async function CLt(e, t) {
   let r = getMcpOAuthCredentialKey(e, t),
@@ -562,7 +562,7 @@ async function Ue({
       let v = Buffer.from(
         `${encodeURIComponent(d)}:${encodeURIComponent(p)}`,
       ).toString("base64");
-      ((k.Authorization = `Basic ${v}`), Pu().record(v));
+      ((k.Authorization = `Basic ${v}`), getPresentedCredentialLog().record(v));
     }
   else if (d) h.set("client_id", d);
   else logMCPDebug(e, `No client_id available for ${n} revocation - server may reject`);
@@ -596,7 +596,7 @@ async function yhr(e, t) {
   };
 }
 async function Ie(e, t, r) {
-  let n = Pu();
+  let n = getPresentedCredentialLog();
   (n.record(r.accessToken), n.record(r.refreshToken), n.record(r.clientSecret));
   let d;
   try {
@@ -755,7 +755,7 @@ async function bhr(e, t, { preserveStepUpState: r = !1 } = {}) {
   } catch (h) {
     (logMCPDebug(e, `clear local tokens failed: ${l(h)}`), (_ ??= "local_clear_failed"));
   }
-  if ((gE(e), _)) logFeatureSad("mcp_oauth_revoke", _);
+  if ((evictMemoizedDiscoveryCachePaths(e), _)) logFeatureSad("mcp_oauth_revoke", _);
   else logFeatureOk("mcp_oauth_revoke");
 }
 async function G2n(e, t, r) {
@@ -820,7 +820,7 @@ async function tt(e, t, r, n, d) {
     throw (
       logMCPDebug(
         e,
-        `XAA: secret lookup miss. wanted=${w} have=[${E.join(", ")}] configHeaders=${b(M)}`,
+        `XAA: secret lookup miss. wanted=${w} have=[${E.join(", ")}] configHeaders=${jsonStringify(M)}`,
       ),
       Error(
         `XAA: AS client secret not found for '${e}'. Re-add with --client-secret.`,
@@ -849,7 +849,7 @@ async function tt(e, t, r, n, d) {
     }
     C = "discovery";
     let E = await discoverOidc(p.issuer);
-    ((C = "token_exchange"), Pu().record(h));
+    ((C = "token_exchange"), getPresentedCredentialLog().record(h));
     let M;
     try {
       M = await he(
@@ -882,7 +882,7 @@ async function tt(e, t, r, n, d) {
       throw U;
     }
     let O = getMcpOAuthCredentialKey(e, t),
-      T = Pu();
+      T = getPresentedCredentialLog();
     (T.record(M.access_token), T.record(M.refresh_token));
     let I, j;
     try {
@@ -992,7 +992,7 @@ async function whr(e, t, r, n, d) {
     } catch (X) {
       logMCPDebug(e, `clear stored credentials failed: ${l(X)}`);
     }
-    let x = jt(),
+    let x = getMcpClientState(),
       G = new AbortController();
     if (!T)
       (x.oauthCallbackListeners.get(I)?.abort(),
@@ -1093,7 +1093,7 @@ async function whr(e, t, r, n, d) {
         let ve = async () => {
           try {
             (logMCPDebug(e, "Starting SDK auth"), logMCPDebug(e, `Server URL: ${redactUrl(t.url)}`));
-            let N = await u2(B, {
+            let N = await auth(B, {
               serverUrl: t.url,
               scope: w.scope,
               resourceMetadataUrl: w.resourceMetadataUrl,
@@ -1208,8 +1208,8 @@ async function whr(e, t, r, n, d) {
       });
     ((M = !0),
       logMCPDebug(e, "Completing auth flow with authorization code"),
-      Pu().record(ge));
-    let de = await u2(B, {
+      getPresentedCredentialLog().record(ge));
+    let de = await auth(B, {
       serverUrl: t.url,
       authorizationCode: ge,
       resourceMetadataUrl: w.resourceMetadataUrl,
@@ -1256,8 +1256,8 @@ async function whr(e, t, r, n, d) {
       x instanceof Error ? x : O instanceof Error ? O : null
     )?.message.match(/^HTTP (\d{3})\b/);
     if (G) j = Number(G[1]);
-    if (x instanceof LS) I = x.errorCode;
-    if (O instanceof LS) {
+    if (x instanceof OAuthError) I = x.errorCode;
+    if (O instanceof OAuthError) {
       if (
         ((I = O.errorCode),
         O.errorCode === "invalid_client" ||
@@ -1356,7 +1356,7 @@ class X3e {
       (this.handleRedirection = n),
       (this.onAuthorizationUrlCallback = d),
       (this.skipBrowserOpen = p ?? !1),
-      (this._presented = Pu()));
+      (this._presented = getPresentedCredentialLog()));
   }
   get redirectUrl() {
     return this.redirectUri;
@@ -1433,7 +1433,7 @@ class X3e {
     let e = await this.resolveClientInformation();
     return (
       this._presented.record(e?.client_secret),
-      this._presented.record(FIe(e?.client_id, e?.client_secret)),
+      this._presented.record(encodeBasicAuth(e?.client_id, e?.client_secret)),
       e
     );
   }
@@ -1538,7 +1538,7 @@ class X3e {
   }
   async saveClientInformation(e) {
     (this._presented.record(e.client_secret),
-      this._presented.record(FIe(e.client_id, e.client_secret)));
+      this._presented.record(encodeBasicAuth(e.client_id, e.client_secret)));
     let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig);
     try {
       if (
@@ -2084,7 +2084,7 @@ class X3e {
   async refreshAuthorization(e) {
     let t = getMcpOAuthCredentialKey(this.serverName, this.serverConfig),
       r = getSecureStorageDir();
-    await ae().mkdir(r);
+    await getFsSurface().mkdir(r);
     let n = t.replace(/[^a-zA-Z0-9]/g, "_"),
       d = Ge(r, `mcp-refresh-${n}.lock`),
       p;
@@ -2210,7 +2210,7 @@ class X3e {
               this.serverName,
               `Re-discovering metadata from persisted auth server URL: ${redactUrl(k.authorizationServerUrl)}`,
             ),
-              (_ = await lPe(k.authorizationServerUrl, { fetchFn: o })));
+              (_ = await discoverAuthorizationServerMetadata(k.authorizationServerUrl, { fetchFn: o })));
         }
         if (!_)
           _ = await ce(this.serverName, this.serverConfig.url, {
@@ -2230,7 +2230,7 @@ class X3e {
             logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_no_client_info"));
           return;
         }
-        let h = await hon(new URL(this.serverConfig.url), {
+        let h = await refreshAuthorization(new URL(this.serverConfig.url), {
           metadata: _,
           clientInformation: p,
           refreshToken: e,
@@ -2250,7 +2250,7 @@ class X3e {
           logFeatureBad("mcp_oauth_refresh", "mcp_oauth_refresh_no_tokens"));
         return;
       } catch (o) {
-        if (o instanceof VSe) {
+        if (o instanceof InvalidGrantError) {
           logMCPDebug(
             this.serverName,
             `Token refresh failed with invalid_grant: ${o.message}`,
@@ -2272,7 +2272,7 @@ class X3e {
           return;
         }
         if (
-          o instanceof LS &&
+          o instanceof OAuthError &&
           (o.errorCode === "invalid_client" ||
             o.errorCode === "unauthorized_client")
         ) {
@@ -2331,7 +2331,7 @@ class X3e {
           h =
             o instanceof Error &&
             /timeout|timed out|etimedout|econnreset/i.test(o.message),
-          k = o instanceof Oee || o instanceof CGe || o instanceof vGe,
+          k = o instanceof ServerError || o instanceof TemporarilyUnavailableError || o instanceof TooManyRequestsError,
           v = h || k || _;
         if (!v || d >= t) {
           (logMCPDebug(

@@ -17,7 +17,7 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { omitObjectKeys, getMcpToolPrefix, buildMcpToolName, getFullToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -25,7 +25,7 @@ import { replaceControlChars } from "../../01-核心基础设施/共享小工具
 import { CAN_USE_TOOL_STREAM_CLOSED_REASON, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { hashForTelemetry, REMOTE_DEVICES_MCP_SERVER_NAME, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gc, _b, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, USER_REFUSED_ACTION_MARKER } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { getToolPermissionContext, getMainLoopModel, applyContextLayers } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, getToolRemoteExecution } from "../权限系统/chunk-qdy0h5k2.js";
@@ -96,28 +96,28 @@ import { isReplModeEnabled } from "../../01-核心基础设施/提示词-SystemP
 import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
-import { h7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { persistToolResultForTool } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
-  blt,
-  wlt,
-  _Ie,
-  w4,
-  jle,
-  yIe,
-  yee,
-  Pnn,
-  Wle,
-  Onn,
-  WDt,
-  Dnn,
-  i2n,
-  a2n,
-  mSe,
-  e2,
-} from "../远程工具执行/chunk-66axrkvh.js";
+  DEFAULT_REMOTE_TOOL_LIMITS,
+  REMOTE_TOOL_LIMIT_BOUNDS,
+  normalizeWithdrawalReason,
+  isSuccessfulDisposition,
+  DISPOSITION_TABLE,
+  isUnverifiedRefusal,
+  REMOTE_TOOL_CALL_FIELD_NAME,
+  CRITERIA_VERSION,
+  MAX_MESSAGE_LENGTH,
+  MAX_NOTES_LENGTH,
+  MAX_RULE_LENGTH,
+  buildCallEnvelope,
+  normalizePermissionMode,
+  buildOutcomeQuery,
+  WITHDRAWN_FEEDBACK,
+  jsonByteLength,
+} from "../远程工具执行/remote-tool-protocol.js";
 import { isNonDeviceToolName } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
-import { JBn, gIe, QBn, ZBn, e2n, Hnn, t2n } from "./chunk-qp3gv3vk.js";
-import "./chunk-bm9p9vh6.js";
+import { forgetRemoteToolListing, refreshRemoteToolHosts, getBridgeListingState, isBridgeReached, isBridgeListingUnavailable, getListingProvisionalReason, awaitRemoteHostAnnounce } from "./device-bridge-remote-tools.js";
+import "./session-event-transport.js";
 import {
   _It,
   vQt,
@@ -254,7 +254,7 @@ async function An(e, o, t) {
   if (!(await isRemoteToolForwardingEnabled())) return [];
   let r = e.toolState.get(ToolHostRegistry),
     s = new AbortController(),
-    a = gIe(e, r, t).finally(() => s.abort());
+    a = refreshRemoteToolHosts(e, r, t).finally(() => s.abort());
   if (t === "attachment_scan")
     await Promise.race([
       a,
@@ -268,7 +268,7 @@ async function An(e, o, t) {
     });
   if (
     !d.some((k) => k.kind === "remote") &&
-    (!s.signal.aborted || QBn(e) === "unlisted")
+    (!s.signal.aborted || getBridgeListingState(e) === "unlisted")
   )
     return [];
   let m = Zo(c, o);
@@ -443,7 +443,7 @@ function Jo(e, o, t, r) {
           : "",
     p =
       e.notes && q(e.notes)
-        ? ` Its Claude Code notes: "${iE(e.notes, Onn)}"`
+        ? ` Its Claude Code notes: "${iE(e.notes, MAX_NOTES_LENGTH)}"`
         : "";
   return `${c}.${k}${p}`;
 }
@@ -560,8 +560,8 @@ var it = "progress_checks",
   at = "standing_approvals",
   dt = 3000;
 function pe(e, o) {
-  let { min: t, max: r } = wlt[o];
-  return $n(e.description?.limits[o] ?? blt[o], t, r);
+  let { min: t, max: r } = REMOTE_TOOL_LIMIT_BOUNDS[o];
+  return $n(e.description?.limits[o] ?? DEFAULT_REMOTE_TOOL_LIMITS[o], t, r);
 }
 function Dn(e) {
   return {
@@ -592,7 +592,7 @@ async function je({
   sleep: k = sleep,
   now: p = Date.now,
 }) {
-  let P = a2n(s),
+  let P = buildOutcomeQuery(s),
     R = 0,
     w = 0,
     _ = 0,
@@ -691,7 +691,7 @@ async function je({
       case "stalled":
       case "approval_unverified":
       case "transport_error":
-        if (yIe(x)) {
+        if (isUnverifiedRefusal(x)) {
           if (((w += 1), (A = void 0), lt(x))) _ += 1;
           break;
         }
@@ -1123,21 +1123,21 @@ function Xn(e, o, t, r, s) {
     tool_use_id: sanitizeAnalyticsId(s.callId),
     host_epoch: sanitizeAnalyticsId(s.sentUnderEpoch),
     handle_hash: o.description === void 0 ? void 0 : hashForTelemetry(o.description.name),
-    criteria_version: S(Pnn),
+    criteria_version: S(CRITERIA_VERSION),
   }),
     Jn(c));
 }
 function Jn(e) {
   switch (
     e === "completed" || e === "completed_error"
-      ? jle.ran.bucket
+      ? DISPOSITION_TABLE.ran.bucket
       : e === "completed_no_envelope"
         ? "sad"
         : e === "not_run_on_host"
-          ? jle.denied_by_rule.bucket
+          ? DISPOSITION_TABLE.denied_by_rule.bucket
           : e === "unreadable_result"
-            ? jle.transport_error.bucket
-            : jle[e].bucket
+            ? DISPOSITION_TABLE.transport_error.bucket
+            : DISPOSITION_TABLE[e].bucket
   ) {
     case "ok":
       logFeatureOk("remote_tool_forward");
@@ -1159,7 +1159,7 @@ function Ge(e, o, t, r) {
     outcome: fromEnum(t),
     call_id: sanitizeAnalyticsId(r),
     tool_use_id: sanitizeAnalyticsId(r),
-    criteria_version: S(Pnn),
+    criteria_version: S(CRITERIA_VERSION),
   }),
     Jn(t));
 }
@@ -1177,7 +1177,7 @@ function Ct(e) {
     .replace(/[<\u2329\u27E8\u27EA\u3008\u300A]/g, "\u2039")
     .replace(/[>\u232A\u27E9\u27EB\u3009\u300B]/g, "\u203A")
     .trim();
-  return truncateToCodeUnits(redactSecrets(o), WDt);
+  return truncateToCodeUnits(redactSecrets(o), MAX_RULE_LENGTH);
 }
 async function so({
   tool: e,
@@ -1355,11 +1355,11 @@ async function It(e, o, t, r, s) {
         .call(
           t,
           e.input,
-          Dnn({
+          buildCallEnvelope({
             callId: m,
             expiresInMs: Math.max(1, P - to),
             ...io(c, a.name),
-            approval: { ask_id: r, decision: "deny", feedback: mSe },
+            approval: { ask_id: r, decision: "deny", feedback: WITHDRAWN_FEEDBACK },
           }),
           {
             signal: new AbortController().signal,
@@ -1457,7 +1457,7 @@ async function $t(e) {
   } finally {
     if (!isExiting()) t.remove(e.call.callId);
   }
-  if (c.outcome.kind !== "completed" || !w4(c.outcome.disposition)) return c;
+  if (c.outcome.kind !== "completed" || !isSuccessfulDisposition(c.outcome.disposition)) return c;
   let m =
       c.outcome.dirSync !== void 0
         ? await FQt({
@@ -1604,7 +1604,7 @@ async function Nt({
     ne = (E) => {
       let C = io(s, e.name);
       if (E === void 0) sn = C.permissionMode;
-      return Dnn({
+      return buildCallEnvelope({
         callId: A,
         expiresInMs: To,
         ...C,
@@ -1614,7 +1614,7 @@ async function Nt({
         ...(E !== void 0 && { approval: E }),
       });
     },
-    Ie = (E) => e2({ name: j.wire, arguments: { ...U, [yee]: E } }),
+    Ie = (E) => jsonByteLength({ name: j.wire, arguments: { ...U, [REMOTE_TOOL_CALL_FIELD_NAME]: E } }),
     an = (E, C = U) => (
       a.sent({ wireName: j.wire, input: C }),
       a.hold(void 0),
@@ -1643,10 +1643,10 @@ async function Nt({
         })
         .catch(() => {});
     },
-    V = (E) => dn({ ask_id: E, decision: "deny", feedback: mSe }),
+    V = (E) => dn({ ask_id: E, decision: "deny", feedback: WITHDRAWN_FEEDBACK }),
     So = (E) =>
       o.transport
-        .call(j.wire, U, ne({ ask_id: E, decision: "deny", feedback: mSe }), {
+        .call(j.wire, U, ne({ ask_id: E, decision: "deny", feedback: WITHDRAWN_FEEDBACK }), {
           signal: new AbortController().signal,
           deadlineMs: Math.min(ye, Xe),
           toolUseId: A,
@@ -1705,7 +1705,7 @@ async function Nt({
           if (G instanceof Ve && !d.aborted) throw G;
           if (!d.aborted)
             ((E = !0),
-              n(
+              logForDebugging(
                 `remote tool call: this session's own permission prompt failed: ${l(G)}`,
                 { level: "error" },
               ));
@@ -1865,7 +1865,7 @@ async function Nt({
         { requestBytes: D, approval: "no_handler", ...X_e(e, o, me) }
       );
     let E =
-      e2(I.input) <= Se(o) ? e.inputSchema.safeParse(I.input) : { success: !1 };
+      jsonByteLength(I.input) <= Se(o) ? e.inputSchema.safeParse(I.input) : { success: !1 };
     if (I.tool !== j.ask || !E.success)
       return (
         V(I.ask_id),
@@ -1938,7 +1938,7 @@ async function Nt({
                 throw (V(I.ask_id), M);
               }
               if (((N = !d.aborted), N))
-                n(
+                logForDebugging(
                   `remote tool call: the session's permission prompt failed: ${l(M)}`,
                   { level: "error" },
                 );
@@ -1975,7 +1975,7 @@ async function Nt({
           },
         }
       );
-    let ie = H.feedback === void 0 ? void 0 : truncateToCodeUnits(H.feedback, Wle),
+    let ie = H.feedback === void 0 ? void 0 : truncateToCodeUnits(H.feedback, MAX_MESSAGE_LENGTH),
       Ne = {
         ask_id: I.ask_id,
         decision: H.decision,
@@ -2035,7 +2035,7 @@ async function Nt({
       );
     let Mo = ne(Ne),
       un = I.input,
-      z = e2({ name: j.wire, arguments: { ...un, [yee]: Mo } }),
+      z = jsonByteLength({ name: j.wire, arguments: { ...un, [REMOTE_TOOL_CALL_FIELD_NAME]: Mo } }),
       mn = Se(o);
     if (z > mn)
       return (
@@ -2226,7 +2226,7 @@ async function Nt({
         !F
       )
         a.endAsk(
-          _Ie(
+          normalizeWithdrawalReason(
             M.envelope.reason ??
               (M.envelope.code === "stale" ? "stale_answer" : ""),
           ),
@@ -2519,7 +2519,7 @@ function oo(e, o, t, r) {
   };
 }
 function xt(e, o) {
-  if (yIe(e))
+  if (isUnverifiedRefusal(e))
     return o?.byClassifier ? "classifier_refused" : "unverified_refusal";
   if (e.kind === "dropped" && e.why === "write_unresolved")
     return o !== void 0 ? "approval_write_unresolved" : "write_unresolved";
@@ -2540,7 +2540,7 @@ function io(e, o) {
     r =
       t.mode === "auto" && rTe(o, e.getProactivityLevel()) ? "default" : t.mode;
   return {
-    permissionMode: i2n(r),
+    permissionMode: normalizePermissionMode(r),
     isBypassAvailable: t.isBypassPermissionsModeAvailable,
   };
 }
@@ -2557,7 +2557,7 @@ function ao(e, o) {
   return t === void 0 || r === void 0 ? void 0 : { wire: t, ask: r.localName };
 }
 function lo(e, o, t) {
-  let r = w4(o.disposition),
+  let r = isSuccessfulDisposition(o.disposition),
     s = r && o.envelope === "present",
     a = o.isError || !r,
     d = Ze(e, o),
@@ -2576,7 +2576,7 @@ function lo(e, o, t) {
   return jt(Ut(c, Ce(o)), Qe(e, o));
 }
 function Qe(e, o) {
-  let t = w4(o.disposition) && o.envelope === "present",
+  let t = isSuccessfulDisposition(o.disposition) && o.envelope === "present",
     r = !t && nn(o);
   return [
     ...DQt(o.notes, o.host.name),
@@ -2591,14 +2591,14 @@ function Qe(e, o) {
           `(this session kept only the first ${Pe.toLocaleString("en-US")} characters of ${o.host.name}'s answer)`,
         ]
       : []),
-    ...(w4(o.disposition) ? Vt(o, e) : []),
+    ...(isSuccessfulDisposition(o.disposition) ? Vt(o, e) : []),
     ...Ht(o),
     ...(o.sessionNotes ?? []).map((s) => `(${s})`),
   ];
 }
 function Ht(e) {
   if (e.delivery === "fresh" || e.disposition === "duplicate_call") return [];
-  let o = w4(e.disposition)
+  let o = isSuccessfulDisposition(e.disposition)
     ? "completed"
     : e.disposition === "unrecognized"
       ? "failed"
@@ -2636,7 +2636,7 @@ function Ce(e) {
   }
 }
 function Oe(e, o) {
-  if (!w4(o.disposition)) return;
+  if (!isSuccessfulDisposition(o.disposition)) return;
   if (o.output !== void 0) return o.output;
   if (o.isError || e.name !== BASH_TOOL_NAME || !Ft(o.content)) return;
   let t = IHe(o.content),
@@ -2742,7 +2742,7 @@ async function qt(e, o, t, r, s) {
     Jt(s.listingProvisional?.(r), a, o)
   ) {
     if (
-      (n(
+      (logForDebugging(
         `[remote-tools] holding ${e.name} for "${sanitizeMachineName(o)}" until its machine announces to this worker (bounded by the call's own deadline)`,
       ),
       (c = await s.awaitAnnounce(
@@ -2754,7 +2754,7 @@ async function qt(e, o, t, r, s) {
           a.resolve(o).kind === "remote"
         ),
       )),
-      n(`[remote-tools] ${e.name} for "${sanitizeMachineName(o)}": ${Qt(c)}`),
+      logForDebugging(`[remote-tools] ${e.name} for "${sanitizeMachineName(o)}": ${Qt(c)}`),
       c.kind !== "aborted")
     )
       (await ue(s, r, a), (d = a.resolve(o)));
@@ -2902,7 +2902,7 @@ function Yt(e) {
     );
 }
 function Xt(e) {
-  let { session_id: o, trigger_id: t, [yee]: r, [DEVICE_FIELD_NAME]: s, [HOST_FIELD_NAME]: a, ...d } = e;
+  let { session_id: o, trigger_id: t, [REMOTE_TOOL_CALL_FIELD_NAME]: r, [DEVICE_FIELD_NAME]: s, [HOST_FIELD_NAME]: a, ...d } = e;
   return typeof a === "string" ? { ...d, [HOST_FIELD_NAME]: a } : d;
 }
 function Jt(e, o, t) {
@@ -2984,7 +2984,7 @@ function po(e) {
     decision: "unanswerable",
     message: REMOTE_APPROVAL_MESSAGES.withdrawn({
       name: e.host.name,
-      reason: _Ie(String(e.ended.reason)),
+      reason: normalizeWithdrawalReason(String(e.ended.reason)),
     }),
   };
 }
@@ -3001,12 +3001,12 @@ function rr(e) {
   let o = e.toolState.get(ToolHostRegistry),
     t = "resolve";
   return {
-    refresh: (r) => gIe(r, o, "resolve"),
-    listingUnavailable: (r) => e2n(r, o),
-    listingProvisional: (r) => Hnn(r),
-    awaitAnnounce: (r, s, a) => t2n(r, s, { routableOtherwise: a }),
-    forget: JBn,
-    bridgeReached: ZBn,
+    refresh: (r) => refreshRemoteToolHosts(r, o, "resolve"),
+    listingUnavailable: (r) => isBridgeListingUnavailable(r, o),
+    listingProvisional: (r) => getListingProvisionalReason(r),
+    awaitAnnounce: (r, s, a) => awaitRemoteHostAnnounce(r, s, { routableOtherwise: a }),
+    forget: forgetRemoteToolListing,
+    bridgeReached: isBridgeReached,
   };
 }
 class Me extends Error {
@@ -3405,7 +3405,7 @@ async function* mr({
     yield {
       message: s.abortController.signal.aborted
         ? ho({
-            outcome: { kind: "error", code: "cancelled", message: oS },
+            outcome: { kind: "error", code: "cancelled", message: USER_REFUSED_ACTION_MARKER },
             toolUseId: o.id,
             assistantMessage: r,
             signal: s.abortController.signal,
@@ -3518,7 +3518,7 @@ async function* mr({
   }
 }
 function _o(e) {
-  return e.kind === "error" && jle[e.code].sessionDenial;
+  return e.kind === "error" && DISPOSITION_TABLE[e.code].sessionDenial;
 }
 async function pr({
   tool: e,
@@ -3528,7 +3528,7 @@ async function pr({
   toolUseContext: s,
   now: a,
 }) {
-  let d = await h7e(lo(e, o, t), e, getToolResultsDirForSession(s.session), s.storageV5),
+  let d = await persistToolResultForTool(lo(e, o, t), e, getToolResultsDirForSession(s.session), s.storageV5),
     c = fr(o.disposition);
   return createUserMessage({
     content: [d],
@@ -3585,7 +3585,7 @@ function ho({
         now: s,
       });
     default: {
-      let { denialKind: a } = jle[e.code];
+      let { denialKind: a } = DISPOSITION_TABLE[e.code];
       return createUserMessage({
         content: [en(e.message, o)],
         toolUseResult: `Error: ${e.message}`,
@@ -3598,7 +3598,7 @@ function ho({
 }
 function fr(e) {
   if (e === void 0 || e === "unrecognized") return;
-  return jle[e].denialKind;
+  return DISPOSITION_TABLE[e].denialKind;
 }
 async function hr({
   tool: e,
@@ -3616,7 +3616,7 @@ async function hr({
   try {
     let m = (await yo(e, o, "repl", t, { ...r, toolUseId: d }, s, a))
       .remoteOrigin;
-    if (m.isError || !w4(m.disposition))
+    if (m.isError || !isSuccessfulDisposition(m.disposition))
       return {
         kind: "error",
         message: `${Ce(m)}
@@ -3649,7 +3649,7 @@ function ko(e) {
 }
 function rn(e) {
   let o = IHe(e.content);
-  return w4(e.disposition) && e.envelope === "present" ? o : iE(o, wo);
+  return isSuccessfulDisposition(e.disposition) && e.envelope === "present" ? o : iE(o, wo);
 }
 var wo = 2000;
 function gr(e, o) {
@@ -3663,7 +3663,7 @@ function gr(e, o) {
   }
 }
 function Ro(e) {
-  return unwrapAbortReason(e.reason) === "turn-abort" ? _b : gc;
+  return unwrapAbortReason(e.reason) === "turn-abort" ? TOOL_CALL_NOT_COMPLETED_MARKER : INTERRUPTED_FOR_TOOL_USE_MARKER;
 }
 function yr(e, o) {
   let { name: t, working_dir: r } = o.host,
@@ -3680,7 +3680,7 @@ function yr(e, o) {
       }),
       ...(o.truncated && { truncated: !0 }),
       ...((o.cutHere === !0 ||
-        (!(w4(o.disposition) && o.envelope === "present") && nn(o))) && {
+        (!(isSuccessfulDisposition(o.disposition) && o.envelope === "present") && nn(o))) && {
         cut_here: !0,
       }),
       ...(s.length > 0 && { host_notes: s }),

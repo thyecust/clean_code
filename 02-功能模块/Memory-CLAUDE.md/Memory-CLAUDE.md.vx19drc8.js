@@ -51,14 +51,14 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve, R, l, A, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { We, b, z, iae, Xg, Ro, Tr, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, hasUnverifiableAncestry, resolveSymlinkAncestrySync, resolvePathInfo, expandPathAliases, fsSurface, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { Rvt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getProfileStoreDenyPaths } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
@@ -118,7 +118,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { SETTINGS_SOURCE_ORDER, getEnabledSettingsSources, USER_PROJECT_LOCAL_SETTINGS_SOURCES, getFullToolName, matchesMcpToolRule } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { KT, Oge, ot, nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { convertWindowsPathToUnix, convertUnixPathToWindows, resolvePath, getContainingDirectory, containsPathTraversal } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectsDir, getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import {
   validateStorageKey,
@@ -166,19 +166,19 @@ import {
   formatPermissionRule,
 } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
-import { Xt, _0, dm, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix, isSameModelName, modelHasCapability, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { JJe, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { stripDefaultIgnorableCharacters, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { stringifyYaml, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
-import { HEt, ave, lnr } from "../插件系统/chunk-7s6mt1vg.js";
+import { getAllPluginRootDirs, ATTRIBUTION_SIDECAR_SUFFIX, isPluginCommandProducerDir } from "../插件系统/plugin-system-core.js";
 import { isWorkshopFile } from "../图表-Mermaid/chunk-743atbtj.js";
-import { WG } from "../权限系统/chunk-t3b7pg2x.js";
+import { hasFable51PromptBundle } from "../权限系统/chunk-t3b7pg2x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { peekPlanSlug, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { getProjectDir as ll } from "../Teammates团队/transcript-paths.js";
 import { getClaudeTempDir, getChildProcessTmpDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
 import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
@@ -664,7 +664,7 @@ function yc(e) {
       !extractGitConfigRemoteUrls(t, { maxLines: 1 / 0 }).some((o) => hc.test(Wi(o.trim()))) &&
       !gc.test(Wi(t));
   if (!r)
-    n(
+    logForDebugging(
       `[git] ${e} is not ruled out as the Anthropic monorepo (a remote names it, or its config could not be read)`,
     );
   return r;
@@ -1013,7 +1013,7 @@ function yn(e, t) {
   try {
     e.emit();
   } catch (r) {
-    n(`org-memory decision ${t}: listener threw: ${l(r)}`, { level: "error" });
+    logForDebugging(`org-memory decision ${t}: listener threw: ${l(r)}`, { level: "error" });
   }
 }
 class Ji {
@@ -1291,7 +1291,7 @@ async function Qn(e, t) {
   let r = await is(e, t);
   if (r.ok && r.status === 401)
     return (
-      n("org-memory-credential: 401 \u2014 retrying once", { level: "debug" }),
+      logForDebugging("org-memory-credential: 401 \u2014 retrying once", { level: "debug" }),
       is(e, t)
     );
   return r;
@@ -1326,7 +1326,7 @@ class ss {
   adoptCredentials(e) {
     if (e === void 0) return;
     if (this.credentials !== void 0 && this.credentials !== e) {
-      n(
+      logForDebugging(
         "org-memory-credential: a credentials store was already handed in; the later one is ignored",
       );
       return;
@@ -1336,7 +1336,7 @@ class ss {
   adoptStorageV5(e) {
     if (e === void 0) return;
     if (this.storageV5 !== void 0 && this.storageV5 !== e) {
-      n(
+      logForDebugging(
         "org-memory-credential: a storage backend was already handed in; the later one is ignored",
       );
       return;
@@ -1360,7 +1360,7 @@ class ss {
       );
     let d = o.data.expires_in_seconds * 1000;
     if (d <= os)
-      n(
+      logForDebugging(
         `org-memory-credential: short token lifetime (${o.data.expires_in_seconds}s) \u2014 clamping the refresh margin`,
         { level: "warn" },
       );
@@ -1734,7 +1734,7 @@ function getMemoryStoresFromEnv() {
   if (!e) return null;
   let t;
   try {
-    t = z(e);
+    t = jsonParse(e);
   } catch (r) {
     throw Error(
       `CLAUDE_MEMORY_STORES is not valid JSON: ${r instanceof Error ? r.message : String(r)}`,
@@ -1771,7 +1771,7 @@ function no(e, t) {
   }
   if (o.length === 0) return null;
   return (
-    n(
+    logForDebugging(
       `memory-stores: parsed ${o.length} store(s): ` +
         o.map((_) => `${_.mount}(${_.mode})`).join(", "),
       { level: "debug" },
@@ -1857,17 +1857,17 @@ async function ws(e) {
       let o = await e.read([_s]);
       if (!o.ok)
         return (
-          n(`org-memory-discovery: cache read failed: ${We(o.error)}`),
+          logForDebugging(`org-memory-discovery: cache read failed: ${describeStorageError(o.error)}`),
           {}
         );
       let d = o.value.items[0];
       if (!d.found) return {};
       t = Buffer.from(d.value).toString("utf8");
     }
-    let r = Gc().safeParse(z(t));
+    let r = Gc().safeParse(jsonParse(t));
     if (r.success) return r.data.entries;
   } catch (t) {
-    if (!W(t)) n(`org-memory-discovery: cache read failed: ${l(t)}`);
+    if (!W(t)) logForDebugging(`org-memory-discovery: cache read failed: ${l(t)}`);
   }
   return {};
 }
@@ -1895,17 +1895,17 @@ async function Ss(e, t, r) {
       if (typeof L === "number" && !Ls(L)) delete o[p];
     }
     if (((o[e] = t), isHoverRestEnabled() && r !== void 0)) {
-      let p = await r.write(_s, b({ entries: o }), {
+      let p = await r.write(_s, jsonStringify({ entries: o }), {
         mode: 438 & ~process.umask(),
       });
-      if (!p.ok) n(`org-memory-discovery: cache write failed: ${We(p.error)}`);
+      if (!p.ok) logForDebugging(`org-memory-discovery: cache write failed: ${describeStorageError(p.error)}`);
       return;
     }
     let d = getFileStorage();
     (await d.mkdir(gs(getClaudeConfigDir(), "cache")),
-      await d.atomicWrite(bs(), b({ entries: o })));
+      await d.atomicWrite(bs(), jsonStringify({ entries: o })));
   } catch (o) {
-    n(`org-memory-discovery: cache write failed: ${l(o)}`);
+    logForDebugging(`org-memory-discovery: cache write failed: ${l(o)}`);
   }
 }
 function Vt(e) {
@@ -1934,14 +1934,14 @@ async function Vc(e) {
     });
     if (!t.ok)
       return (
-        n(`org-memory-discovery: skipped (${t.reason})`),
+        logForDebugging(`org-memory-discovery: skipped (${t.reason})`),
         { kind: "transient" }
       );
     if (t.status === 404) return { kind: "off" };
     let r = Uc().safeParse(t.data);
     if (!r.success)
       return (
-        n(`org-memory-discovery: malformed response: ${r.error.message}`, {
+        logForDebugging(`org-memory-discovery: malformed response: ${r.error.message}`, {
           level: "warn",
         }),
         { kind: "transient" }
@@ -1955,7 +1955,7 @@ async function Vc(e) {
     };
   } catch (t) {
     return (
-      n(`org-memory-discovery: fetch failed: ${l(t)}`),
+      logForDebugging(`org-memory-discovery: fetch failed: ${l(t)}`),
       { kind: "transient" }
     );
   }
@@ -1966,7 +1966,7 @@ function ds(e) {
     t = no(e, "org memory discovery");
   } catch (d) {
     return (
-      n(`org-memory-discovery: invalid stores payload: ${l(d)}`, {
+      logForDebugging(`org-memory-discovery: invalid stores payload: ${l(d)}`, {
         level: "warn",
       }),
       { kind: "invalid" }
@@ -1975,13 +1975,13 @@ function ds(e) {
   if (t === null) return { kind: "empty" };
   let r = t.filter((d) => d.scope === "team");
   if (r.length < t.length)
-    n(
+    logForDebugging(
       `org-memory-discovery: dropped ${t.length - r.length} non-team store(s)`,
       { level: "warn" },
     );
   let o = r.filter((d) => Vt(d.path));
   if (o.length < r.length)
-    n(
+    logForDebugging(
       `org-memory-discovery: dropped ${r.length - o.length} non-code-memory store path(s)`,
       { level: "warn" },
     );
@@ -2002,7 +2002,7 @@ function fs(e, t, r) {
   let o = (d) => d.mount === t && normalizeStorePath(d.path) !== normalizeStorePath(r);
   if (!e.some(o)) return e;
   return (
-    n(
+    logForDebugging(
       `org-memory-discovery: discovered config squatting the derived mount name ${t} \u2014 renamed aside`,
       { level: "warn" },
     ),
@@ -2097,7 +2097,7 @@ class vs {
     if (e !== void 0) this.storageV5 = e;
     if (t === void 0) return;
     if (this.credentials !== void 0 && this.credentials !== t) {
-      n(
+      logForDebugging(
         "org-memory-discovery: a credentials store was already handed in; the later one is ignored",
       );
       return;
@@ -2133,7 +2133,7 @@ class vs {
     }
     if (!Vt(d.path))
       return (
-        n(
+        logForDebugging(
           "org-memory-discovery: granted grouping path failed the partition pin \u2014 not mounting",
           { level: "warn" },
         ),
@@ -2150,7 +2150,7 @@ class vs {
       let C = normalizeStorePath(E.path),
         D = C.slice(C.lastIndexOf("/") + 1);
       if (!D.startsWith("cagt_") || !Vt(E.path)) {
-        n(
+        logForDebugging(
           "org-memory-discovery: granted silo entry failed the tag or partition pin \u2014 not mounting",
           { level: "warn" },
         );
@@ -2200,7 +2200,7 @@ class vs {
     }
     if (!Vt(d.path))
       return (
-        n(
+        logForDebugging(
           "org-memory-discovery: granted grouping-root path failed the partition pin \u2014 not mounting",
           { level: "warn" },
         ),
@@ -2283,7 +2283,7 @@ class vs {
     if (d === null)
       return (
         settleOrgMemoryDecisionOff("identity_unresolved"),
-        n(
+        logForDebugging(
           "org-memory-discovery: identity unresolved at decision time \u2014 org memory off for this session",
         ),
         null
@@ -2293,7 +2293,7 @@ class vs {
       _ = await negotiateOrgMemoryCredential(this.credentials, this.storageV5);
     } catch (D) {
       return (
-        n(`org-memory-discovery: decision-time negotiation failed: ${l(D)}`),
+        logForDebugging(`org-memory-discovery: decision-time negotiation failed: ${l(D)}`),
         settleOrgMemoryDecisionOff(
           this.discoveryGeneration === e ? "negotiation_failed" : "superseded",
         ),
@@ -2348,7 +2348,7 @@ class vs {
     if (d === void 0) return (this.emitGrantMissingOnce(), o);
     if (!Vt(d.path))
       return (
-        n(
+        logForDebugging(
           "org-memory-discovery: granted silo path failed the partition pin \u2014 not mounting",
           { level: "warn" },
         ),
@@ -2428,7 +2428,7 @@ class vs {
         }
         t(null);
       }
-      n(
+      logForDebugging(
         "org-memory-discovery: cached stores payload failed validation \u2014 refetching",
         { level: "warn" },
       );
@@ -2583,7 +2583,7 @@ class vs {
     try {
       await this.discoverForDecision();
     } catch (r) {
-      n(`org-memory-discovery: reconnect run failed: ${l(r)}`, {
+      logForDebugging(`org-memory-discovery: reconnect run failed: ${l(r)}`, {
         level: "warn",
       });
     }
@@ -6978,7 +6978,7 @@ class rn {
       if (L.status === 404) {
         if (d === void 0)
           throw (
-            n(
+            logForDebugging(
               `memory-backend[${this.label}]: list 404 (store not provisioned)`,
               { level: "debug" },
             ),
@@ -7361,7 +7361,7 @@ var MEMORY_DIR_EXISTS_MESSAGE =
     "Both directories already exist \u2014 write to them directly with the Write tool (do not run mkdir or check for their existence).";
 function sanitizeTextContent(e) {
   let t = "";
-  for (let r of JJe(
+  for (let r of stripDefaultIgnorableCharacters(
     stripInvisibleChars(
       e.replace(
         /\r\n?|[\u2028\u2029]/g,
@@ -7907,7 +7907,7 @@ async function fa(e = ca, t = {}) {
     r = getMemoryStoresFromEnv();
   } catch (x) {
     return (
-      n(`memory-prompt-index: parseMemoryStoresEnv failed: ${l(x)}`, {
+      logForDebugging(`memory-prompt-index: parseMemoryStoresEnv failed: ${l(x)}`, {
         level: "debug",
       }),
       []
@@ -7941,7 +7941,7 @@ async function ma(e, t, r) {
     );
     if (p === null)
       return (
-        n(`memory-prompt-index[${e.mount}]: ${o} not found`, {
+        logForDebugging(`memory-prompt-index[${e.mount}]: ${o} not found`, {
           level: "debug",
         }),
         logFeatureOk("memory_prompt_index"),
@@ -7956,7 +7956,7 @@ async function ma(e, t, r) {
       L = _.includes(`promptIndex fetch for ${e.mount}`) ? "timeout" : "error";
     return (
       logFeatureSad("memory_prompt_index", L),
-      n(`memory-prompt-index[${e.mount}]: fetch failed (${L}): ${_}`, {
+      logForDebugging(`memory-prompt-index[${e.mount}]: fetch failed (${L}): ${_}`, {
         level: "debug",
       }),
       null
@@ -8029,7 +8029,7 @@ function ptr(e) {
   return !1;
 }
 function isOpus48Model(e) {
-  return Xt(e) === "claude-opus-4-8";
+  return strip1mSuffix(e) === "claude-opus-4-8";
 }
 function mtr(e) {
   return !1;
@@ -8047,7 +8047,7 @@ var Yd = new Set([
   "claude-3-5-haiku",
 ]);
 function Co(e) {
-  return Yd.has(Xt(e));
+  return Yd.has(strip1mSuffix(e));
 }
 function FYe(e, t) {
   if (t === void 0) return Co(e);
@@ -8066,7 +8066,7 @@ function qd() {
   if (t !== void 0 && t.raw === e) return t.ids;
   let r = Vd().safeParse(e);
   if (!r.success)
-    n(
+    logForDebugging(
       `GrowthBook: ${ha} is not a JSON array of model ids; treating it as empty`,
       { level: "warn" },
     );
@@ -8074,7 +8074,7 @@ function qd() {
   return ((ya = { raw: e, ids: o }), o);
 }
 function isModelInGrowthBookRoster(e) {
-  return qd().some((t) => _0(e, t));
+  return qd().some((t) => isSameModelName(e, t));
 }
 function va(e, t) {
   let r = getCachedClientData()?.[e];
@@ -8097,7 +8097,7 @@ function Zd() {
 function ba() {
   let e = getModelForPrompt(getMainLoopModel()),
     t = getCanonicalName(e);
-  if (WG(t) || getCachedClientData()?.[ka] === !0 || dm(t, "thrifty_sonic", e) === !0)
+  if (hasFable51PromptBundle(t) || getCachedClientData()?.[ka] === !0 || modelHasCapability(t, "thrifty_sonic", e) === !0)
     return "forced";
   return isOpus5FamilyModel(e) ? "cohort" : "none";
 }
@@ -8132,7 +8132,7 @@ var Xd = "tengu_gault_kestrel",
   rf = "tengu_fennel_godwit";
 function isOpus5PromptBundleEnabled(e) {
   if (e === void 0) return !1;
-  if (dm(getCanonicalName(e), "opus_5_prompt_bundle", e) !== !0) return !1;
+  if (modelHasCapability(getCanonicalName(e), "opus_5_prompt_bundle", e) !== !0) return !1;
   return !getFeatureValue_CACHED_MAY_BE_STALE(rf, !1);
 }
 function on(e, t, r) {
@@ -8164,7 +8164,7 @@ function getWillowTernOverride() {
     let t = an();
     if (!t.unusableWritingOverrideTold)
       ((t.unusableWritingOverrideTold = !0),
-        n(
+        logForDebugging(
           `willow_tern: ignoring non-boolean clientData ${Mo} value of type ${typeof e}`,
         ));
   }
@@ -8176,8 +8176,8 @@ function isWillowTernEnabled(e) {
   if (t !== void 0) return t;
   if (e === void 0) return !1;
   let r = getCanonicalName(e);
-  if (WG(r)) return !0;
-  if (dm(r, "opus_5_prompt_bundle", e) !== !0) return !1;
+  if (hasFable51PromptBundle(r)) return !0;
+  if (modelHasCapability(r, "opus_5_prompt_bundle", e) !== !0) return !1;
   return getFeatureValue_CACHED_MAY_BE_STALE(Mo, !1);
 }
 function isSimpleModeEnabled() {
@@ -8198,7 +8198,7 @@ function La(e) {
 function of(e) {
   if (isEapModelId(e)) return !1;
   let t = getCanonicalName(e);
-  if (dm(t, "lean_prompt", e) || t === "claude-mythos-5") return !1;
+  if (modelHasCapability(t, "lean_prompt", e) || t === "claude-mythos-5") return !1;
   if (
     t.includes("claude-3-") ||
     t.includes("haiku") ||
@@ -8247,7 +8247,7 @@ function xa(e) {
   let p = t !== void 0 ? "env" : "client_data";
   if (typeof d !== "string" || !isRecognizedModel(d))
     return (
-      n(
+      logForDebugging(
         `[breezy_horizon] ${p}: ignoring unrecognized model id ${String(d)} for ${r}`,
         { level: "warn" },
       ),
@@ -8859,12 +8859,12 @@ function formatRecalledMemoryBlock(e, t, r) {
 }
 async function Je(e, t) {
   if (t && getMemoryProjectKey(e) !== void 0) return;
-  let r = ae();
+  let r = getFsSurface();
   try {
     await r.mkdir(e);
   } catch (o) {
     let d = A(o);
-    n(`ensureMemoryDirExists failed for ${e}: ${d ?? String(o)}`, {
+    logForDebugging(`ensureMemoryDirExists failed for ${e}: ${d ?? String(o)}`, {
       level: "debug",
     });
   }
@@ -8881,7 +8881,7 @@ function Qe(e, t, r) {
       return;
     }
   }
-  ae()
+  getFsSurface()
     .readdir(e)
     .then(
       (p) => {
@@ -8965,7 +8965,7 @@ function Fo(e, t, r) {
 }
 function Ba(e, t) {
   let { displayName: r, memoryDir: o, extraGuidelines: d } = e,
-    p = ae(),
+    p = getFsSurface(),
     _ = o + MEMORY_INDEX_FILE_NAME,
     L = "";
   if (t !== void 0 && e.primedEntrypoint !== void 0) L = e.primedEntrypoint;
@@ -9398,14 +9398,14 @@ function persistWorkflowScript(e, t, r, o) {
             { publishDiscipline: "inPlace", mode: 384 },
           );
           if (!k.ok)
-            n(`Failed to persist workflow script to ${p}: ${k.error.code}`, {
+            logForDebugging(`Failed to persist workflow script to ${p}: ${k.error.code}`, {
               level: "warn",
             });
           return;
         }
         await writeFile(p, r, { encoding: "utf-8", mode: 384 });
       } catch (k) {
-        n(`Failed to persist workflow script to ${p}: ${k}`, { level: "warn" });
+        logForDebugging(`Failed to persist workflow script to ${p}: ${k}`, { level: "warn" });
       }
     })(),
     p
@@ -9416,7 +9416,7 @@ async function readWorkflowScriptFile(e) {
     r = getWorkflowScriptPathError(e, t);
   if (r !== null) return { error: r };
   try {
-    let o = await ae().readFileBytes(t, MAX_WORKFLOW_SCRIPT_BYTES + 1);
+    let o = await getFsSurface().readFileBytes(t, MAX_WORKFLOW_SCRIPT_BYTES + 1);
     if (o.byteLength > MAX_WORKFLOW_SCRIPT_BYTES)
       return { error: `Workflow script file ${t} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes` };
     return { script: o.toString("utf-8"), path: t };
@@ -9565,7 +9565,7 @@ function validateSyncedItemName(e, t) {
   if (replaceControlChars(r) !== r)
     throw Error("synced item name contains display-hazard characters");
   if (isHiddenPathSegment(r)) throw Error("synced item name resolves to reserved path");
-  if (toCaseFoldedName(r).endsWith(ave))
+  if (toCaseFoldedName(r).endsWith(ATTRIBUTION_SIDECAR_SUFFIX))
     throw Error("synced item name resolves to reserved path");
   if (Ga.test(toCaseFoldedName(r))) throw Error("synced item name resolves to reserved path");
   if (isSkillBucketId(toCaseFoldedName(r))) throw Error("synced item name resolves to reserved path");
@@ -9681,7 +9681,7 @@ var Qa = new Xa(),
   };
 function Go(e, t, r, o = "treating it as matching nothing") {
   if (!Qa.firstWarning(e, t)) return;
-  (n(`[${e}] gitignore-style pattern is unusable (${r}); ${o}: ${t}`, {
+  (logForDebugging(`[${e}] gitignore-style pattern is unusable (${r}); ${o}: ${t}`, {
     level: "warn",
   }),
     logEvent("tengu_uncompilable_ignore_pattern", { site: Gf[e] }));
@@ -9789,7 +9789,7 @@ function Pf() {
 }
 async function Fn(e) {
   try {
-    return zn(await ae().realpath(e));
+    return zn(await getFsSurface().realpath(e));
   } catch (t) {
     if (!Kd(t)) logError(t);
     return null;
@@ -15166,7 +15166,7 @@ function isFirstTimeForKey(e) {
 function Ol(e, t, r) {
   if (!Il.of(B().host).firstTimeFor(e)) return;
   if (
-    (n(
+    (logForDebugging(
       `Dropped ${t} project-scoped ${e} entr${t === 1 ? "y" : "ies"} \u2014 workspace not yet trusted`,
     ),
     !ke() && (!checkHasTrustDialogAccepted() || Gm()))
@@ -15175,7 +15175,7 @@ function Ol(e, t, r) {
   let o = getWorkspacePersistedTrustKey(),
     d = r.length > 0 ? r.join(" and ") : ".claude/ settings";
   console.error(
-    `Ignoring ${t} ${e} ${t === 1 ? "entry" : "entries"} from ${d}: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects[${b(o)}].hasTrustDialogAccepted: true in ${getGlobalClaudeFile()}.`,
+    `Ignoring ${t} ${e} ${t === 1 ? "entry" : "entries"} from ${d}: this workspace has not been trusted. Run Claude Code interactively here once and accept the trust dialog, or set projects[${jsonStringify(o)}].hasTrustDialogAccepted: true in ${getGlobalClaudeFile()}.`,
   );
 }
 function getPermissionRulesForSource(e) {
@@ -15244,7 +15244,7 @@ async function Dl({ ruleValues: e, ruleBehavior: t }, r, o) {
     return !0;
   } catch (p) {
     return (
-      n(
+      logForDebugging(
         `Failed to add permission rules to ${r} settings: ${p instanceof Error ? p.message : String(p)}`,
         { level: "error" },
       ),
@@ -15304,7 +15304,7 @@ function gi(e) {
 function et(e) {
   let t;
   try {
-    t = gi(e) ? formatPermissionRule(e) : String(b(e));
+    t = gi(e) ? formatPermissionRule(e) : String(jsonStringify(e));
   } catch {
     t = "(unprintable value)";
   }
@@ -15487,19 +15487,19 @@ function Zm(e, t) {
     case "setMode":
       if (t.mode === "bypassPermissions" && !e.isBypassPermissionsModeAvailable)
         return (
-          n(
+          logForDebugging(
             "Ignoring permission update: setMode 'bypassPermissions' rejected \u2014 mode is not available (disableBypassPermissionsMode set, or session not launched in bypassPermissions mode)",
           ),
           e
         );
       return (
-        n(`Applying permission update: Setting mode to '${t.mode}'`),
+        logForDebugging(`Applying permission update: Setting mode to '${t.mode}'`),
         { ...e, mode: t.mode }
       );
     case "addRules": {
       let r = t.rules.map((d) => formatPermissionRule(d));
-      n(
-        `Applying permission update: Adding ${t.rules.length} ${t.behavior} rule(s) to destination '${t.destination}': ${b(r)}`,
+      logForDebugging(
+        `Applying permission update: Adding ${t.rules.length} ${t.behavior} rule(s) to destination '${t.destination}': ${jsonStringify(r)}`,
       );
       let o = Wr[t.behavior];
       return {
@@ -15512,23 +15512,23 @@ function Zm(e, t) {
     }
     case "replaceRules": {
       let r = t.rules.map((d) => formatPermissionRule(d));
-      n(
-        `Replacing all ${t.behavior} rules for destination '${t.destination}' with ${t.rules.length} rule(s): ${b(r)}`,
+      logForDebugging(
+        `Replacing all ${t.behavior} rules for destination '${t.destination}' with ${t.rules.length} rule(s): ${jsonStringify(r)}`,
       );
       let o = Wr[t.behavior];
       return { ...e, [o]: { ...e[o], [t.destination]: r } };
     }
     case "addDirectories":
       return (
-        n(
-          `Applying permission update: Adding ${t.directories.length} director${t.directories.length === 1 ? "y" : "ies"} with destination '${t.destination}': ${b(t.directories)}`,
+        logForDebugging(
+          `Applying permission update: Adding ${t.directories.length} director${t.directories.length === 1 ? "y" : "ies"} with destination '${t.destination}': ${jsonStringify(t.directories)}`,
         ),
         addWorkingDirectoriesToContext(e, t.directories, t.destination)
       );
     case "removeRules": {
       let r = t.rules.map((L) => formatPermissionRule(L));
-      n(
-        `Applying permission update: Removing ${t.rules.length} ${t.behavior} rule(s) from source '${t.destination}': ${b(r)}`,
+      logForDebugging(
+        `Applying permission update: Removing ${t.rules.length} ${t.behavior} rule(s) from source '${t.destination}': ${jsonStringify(r)}`,
       );
       let o = Wr[t.behavior],
         d = e[o][t.destination] || [],
@@ -15537,8 +15537,8 @@ function Zm(e, t) {
       return { ...e, [o]: { ...e[o], [t.destination]: _ } };
     }
     case "removeDirectories": {
-      n(
-        `Applying permission update: Removing ${t.directories.length} director${t.directories.length === 1 ? "y" : "ies"}: ${b(t.directories)}`,
+      logForDebugging(
+        `Applying permission update: Removing ${t.directories.length} director${t.directories.length === 1 ? "y" : "ies"}: ${jsonStringify(t.directories)}`,
       );
       let r = new Map(e.additionalWorkingDirectories);
       for (let o of t.directories) r.delete(o);
@@ -15595,17 +15595,17 @@ async function persistPermissionUpdate(e, t) {
 async function Xm(e, t) {
   if (!isPersistableSettingsSource(e.destination)) return;
   if (e.type === "setMode" && e.mode === "bypassPermissions") {
-    n(
+    logForDebugging(
       `setMode:'bypassPermissions' is session-scoped; not persisting as defaultMode to ${e.destination}`,
     );
     return;
   }
   switch (
-    (n(`Persisting permission update: ${e.type} to source '${e.destination}'`),
+    (logForDebugging(`Persisting permission update: ${e.type} to source '${e.destination}'`),
     e.type)
   ) {
     case "addRules": {
-      (n(
+      (logForDebugging(
         `Persisting ${e.rules.length} ${e.behavior} rule(s) to ${e.destination}`,
       ),
         await Dl(
@@ -15616,7 +15616,7 @@ async function Xm(e, t) {
       break;
     }
     case "addDirectories": {
-      n(
+      logForDebugging(
         `Persisting ${e.directories.length} director${e.directories.length === 1 ? "y" : "ies"} to ${e.destination}`,
       );
       let r = [...e.directories];
@@ -15634,7 +15634,7 @@ async function Xm(e, t) {
       break;
     }
     case "removeRules": {
-      n(
+      logForDebugging(
         `Removing ${e.rules.length} ${e.behavior} rule(s) from ${e.destination}`,
       );
       let r = new Set(e.rules.map(formatPermissionRule)),
@@ -15654,7 +15654,7 @@ async function Xm(e, t) {
       break;
     }
     case "removeDirectories": {
-      n(
+      logForDebugging(
         `Removing ${e.directories.length} director${e.directories.length === 1 ? "y" : "ies"} from ${e.destination}`,
       );
       let r = new Set(e.directories);
@@ -15673,7 +15673,7 @@ async function Xm(e, t) {
       break;
     }
     case "setMode": {
-      (n(`Persisting mode '${e.mode}' to ${e.destination}`),
+      (logForDebugging(`Persisting mode '${e.mode}' to ${e.destination}`),
         await updateSettingsForSource(
           e.destination,
           { permissions: { defaultMode: e.mode } },
@@ -15683,7 +15683,7 @@ async function Xm(e, t) {
       break;
     }
     case "replaceRules": {
-      n(
+      logForDebugging(
         `Replacing all ${e.behavior} rules in ${e.destination} with ${e.rules.length} rule(s)`,
       );
       let r = e.rules.map(formatPermissionRule),
@@ -15744,7 +15744,7 @@ function getResolvedClaudeTempDir() {
   let e = getPathCacheStore();
   if (e.claudeTempDir !== void 0) return e.claudeTempDir;
   let t = getClaudeTempDir(),
-    r = ae(),
+    r = getFsSurface(),
     o = t;
   try {
     o = r.realpathSync(t);
@@ -15755,7 +15755,7 @@ function getResolvedChildProcessTmpDir() {
   let e = getPathCacheStore();
   if (e.childProcessTmpDir !== void 0) return e.childProcessTmpDir;
   let t = getChildProcessTmpDir(),
-    r = ae(),
+    r = getFsSurface(),
     o = t;
   try {
     o = r.realpathSync(t);
@@ -15769,8 +15769,8 @@ function getProjectTempDirForPath(e) {
   return Jm(getResolvedClaudeTempDir(), sanitizePath(e)) + _i;
 }
 function realpathIfResolvable(e) {
-  if (Xo(e) || li(e) || Xg(Sh, e) !== void 0) return e;
-  let t = ae();
+  if (Xo(e) || li(e) || resolveSymlinkAncestrySync(fsSurface, e) !== void 0) return e;
+  let t = getFsSurface();
   try {
     return t.realpathSync(e);
   } catch {
@@ -16353,11 +16353,11 @@ function normalizeCaseForComparison(e) {
     .replace(/\u017f/g, "s");
 }
 function bp(e) {
-  let t = ot(e),
+  let t = resolvePath(e),
     r = normalizeCaseForComparison(t),
     o = [
-      { dir: ot(Ne(he(), ".claude", "skills")), prefix: "/.claude/skills/" },
-      { dir: ot(Ne(Yn(), ".claude", "skills")), prefix: "~/.claude/skills/" },
+      { dir: resolvePath(Ne(he(), ".claude", "skills")), prefix: "/.claude/skills/" },
+      { dir: resolvePath(Ne(Yn(), ".claude", "skills")), prefix: "~/.claude/skills/" },
     ];
   for (let { dir: d, prefix: p } of o) {
     let _ = normalizeCaseForComparison(d);
@@ -16384,14 +16384,14 @@ function bp(e) {
 var Oe = st.sep;
 function relativePath(e, t) {
   if (getCurrentPlatform() === "windows") {
-    let r = KT(e),
-      o = KT(t);
+    let r = convertWindowsPathToUnix(e),
+      o = convertWindowsPathToUnix(t);
     return st.relative(r, o);
   }
   return st.relative(e, t);
 }
 function toPosixPath(e) {
-  if (getCurrentPlatform() === "windows") return KT(e);
+  if (getCurrentPlatform() === "windows") return convertWindowsPathToUnix(e);
   return e;
 }
 function _p() {
@@ -16400,7 +16400,7 @@ function _p() {
   return e;
 }
 function isClaudeSettingsPath(e) {
-  let t = ot(e),
+  let t = resolvePath(e),
     r = normalizeCaseForComparison(t);
   if (
     r.endsWith(`${Re}.claude${Re}settings.json`) ||
@@ -16489,7 +16489,7 @@ async function ensureScratchpadDir() {
   if (!isScratchpadEnabled()) return null;
   let e = getScratchpadDir();
   if (e === null) return null;
-  return (await ae().mkdir(e, { mode: 448 }), e);
+  return (await getFsSurface().mkdir(e, { mode: 448 }), e);
 }
 function Jl(e) {
   if (!isScratchpadEnabled()) return null;
@@ -16522,7 +16522,7 @@ function isWorkshopDisplayPath(e) {
 function xp(e) {
   let t = [xi(Ne(e, "seed-admin"))];
   try {
-    let r = ae().realpathSync(e);
+    let r = getFsSurface().realpathSync(e);
     t.push(xi(Ne(r, "seed-admin")));
   } catch {}
   return dedupe(t);
@@ -16546,10 +16546,10 @@ function Ri(e) {
   if (!t) return !1;
   let o = t.replace(getCurrentPlatform() === "windows" ? /[\\/]+$/ : /\/+$/, "") || t,
     d = normalizeCaseForComparison(ze(e));
-  return Tr(o).some((p) => normalizeCaseForComparison(ze(p)) === d);
+  return expandPathAliases(o).some((p) => normalizeCaseForComparison(ze(p)) === d);
 }
 function Ti(e) {
-  let t = Rvt();
+  let t = getProfileStoreDenyPaths();
   if (t === null) return !1;
   let r = normalizeCaseForComparison(ze(e));
   if (
@@ -16559,7 +16559,7 @@ function Ti(e) {
     })
   )
     return !0;
-  return t.files.some((o) => Tr(o).some((d) => normalizeCaseForComparison(ze(d)) === r));
+  return t.files.some((o) => expandPathAliases(o).some((d) => normalizeCaseForComparison(ze(d)) === r));
 }
 var Ai = {
     behavior: "deny",
@@ -16643,7 +16643,7 @@ function isUntrustedAutomountPath(e, t) {
 function oc(e) {
   let t = 0;
   for (let r of getResolvedWorkingDirPaths(he())) {
-    let o = ot(r).split(Re);
+    let o = resolvePath(r).split(Re);
     if (o.length > 1 && o.at(-1) === "") o.pop();
     let d = 0;
     while (
@@ -16668,7 +16668,7 @@ function oc(e) {
   return t;
 }
 function Hl(e) {
-  let t = ot(e).split(Re),
+  let t = resolvePath(e).split(Re),
     r = oc(t),
     o = 0;
   for (let d = r; d < t.length; d++) if (normalizePathSegment(t[d]) === ".claude") o++;
@@ -16681,9 +16681,9 @@ function vp(e, t) {
       ? he()
       : null;
   if (r === null) return !1;
-  let o = ot(Ne(r, ".claude")).split(Re);
+  let o = resolvePath(Ne(r, ".claude")).split(Re);
   if (o.length > 1 && o.at(-1) === "") o.pop();
-  let d = ot(e).split(Re);
+  let d = resolvePath(e).split(Re);
   for (let p = 0; p < o.length; p++)
     if (
       d[p] !== o[p] &&
@@ -16699,7 +16699,7 @@ function vp(e, t) {
   return !1;
 }
 function kp(e, t, r) {
-  let o = ot(e),
+  let o = resolvePath(e),
     d = o.split(Re),
     p = d.at(-1);
   if (
@@ -16707,7 +16707,7 @@ function kp(e, t, r) {
     !vS(o) &&
     !$m(o) &&
     (!$W(o) || Oi(o)) &&
-    lnr(o, HEt(), getClaudeConfigDir(), { maxAgeMs: 5000 })
+    isPluginCommandProducerDir(o, getAllPluginRootDirs(), getClaudeConfigDir(), { maxAgeMs: 5000 })
   )
     return !0;
   if (isUntrustedUncPath(e, r)) return !0;
@@ -16775,7 +16775,7 @@ function hasSuspiciousWindowsPathPattern(e, t) {
 }
 function checkPathSafetyForAutoEdit(e, t, r, o, d) {
   let p = r || o,
-    _ = t ?? Tr(e);
+    _ = t ?? expandPathAliases(e);
   for (let L of _)
     if (hasSuspiciousWindowsPathPattern(L, d))
       return {
@@ -16814,7 +16814,7 @@ function getResolvedWorkingDirPaths(e) {
   let t = getPathCacheStore(),
     r = t.resolvedWorkingDirPaths.get(e);
   if (r !== void 0) return r;
-  let o = a.CLAUDE_CODE_EVAL_CONFINED && e === he() ? [e] : Tr(e);
+  let o = a.CLAUDE_CODE_EVAL_CONFINED && e === he() ? [e] : expandPathAliases(e);
   return (t.resolvedWorkingDirPaths.set(e, o), o);
 }
 function blockReadsWorkingDirectories(e) {
@@ -16831,7 +16831,7 @@ function isAutoMemPathFromRepoSettings() {
 }
 function outsideReadBlocked(e, t, r) {
   if (t.blockReadsOutsideWorkingDirectories !== !0) return !1;
-  let o = r ?? Tr(e);
+  let o = r ?? expandPathAliases(e);
   return (
     !pathInAllowedWorkingPath(e, t, o, blockReadsWorkingDirectories(t)) &&
     checkReadableInternalPath(e, {}, o, {
@@ -16842,7 +16842,7 @@ function outsideReadBlocked(e, t, r) {
   );
 }
 function pathInAllowedWorkingPath(e, t, r, o = allWorkingDirectories(t)) {
-  let d = r ?? Tr(e),
+  let d = r ?? expandPathAliases(e),
     p = Array.from(o).flatMap((_) => getResolvedWorkingDirPaths(_));
   return d.every((_) =>
     p.some((L) => pathInWorkingPath(_, L, { caseFold: !1, uncShapeParity: !0 })),
@@ -16873,14 +16873,14 @@ async function verifiedLinkedWorktreeDirectories(e) {
   let t = new Set(),
     r = new Set();
   for (let o of allWorkingDirectories(e)) {
-    if (await iae(o)) continue;
+    if (await hasUnverifiableAncestry(o)) continue;
     let d = findCanonicalGitRoot(o);
     if (d === null && findGitRootRecheckingNegative(o)) d = findCanonicalGitRoot(o);
     if (d === null || r.has(d)) continue;
     if ((r.add(d), !pathInAllowedWorkingPath(d, e, getResolvedWorkingDirPaths(d)))) continue;
     let p;
     try {
-      p = zn(await ae().realpath(d));
+      p = zn(await getFsSurface().realpath(d));
     } catch {
       continue;
     }
@@ -16890,7 +16890,7 @@ async function verifiedLinkedWorktreeDirectories(e) {
       r.add(p);
     }
     for (let _ of await el(d)) {
-      if (await iae(_)) continue;
+      if (await hasUnverifiableAncestry(_)) continue;
       t.add(_);
     }
   }
@@ -16903,8 +16903,8 @@ function pathInWorkingPath(
     caseFold: !0,
   },
 ) {
-  let p = ot(e),
-    _ = ot(t);
+  let p = resolvePath(e),
+    _ = resolvePath(t);
   if (d && (An(p) !== An(_) || An(e) !== An(t))) return !1;
   let L = r ? /^\/private\/var\//i : /^\/private\/var\//,
     x = r ? /^\/private\/tmp(\/|$)/i : /^\/private\/tmp(\/|$)/,
@@ -16913,7 +16913,7 @@ function pathInWorkingPath(
     C = k(_),
     D = r ? relativePath(normalizeCaseForComparison(C), normalizeCaseForComparison(E)) : relativePath(C, E);
   if (D === "") return !0;
-  if (Iq(D)) return !1;
+  if (containsPathTraversal(D)) return !1;
   return !st.isAbsolute(D);
 }
 function rootPathForSource(e) {
@@ -16924,7 +16924,7 @@ function rootPathForSource(e) {
     case "toolsNarrowing":
     case "mcpServerPolicy":
     case "hostCredential":
-      return ot(he());
+      return resolvePath(he());
     case "userSettings":
     case "policySettings":
     case "projectSettings":
@@ -17031,7 +17031,7 @@ function Vl(e, t, r) {
     x = st.join(e, ...p.slice(0, L)),
     k = r.get(x);
   if (k === void 0)
-    ((k = jr(Ro(ae(), getCurrentPlatform() === "windows" ? Oge(x) : x).resolvedPath)),
+    ((k = jr(resolvePathInfo(getFsSurface(), getCurrentPlatform() === "windows" ? convertUnixPathToWindows(x) : x).resolvedPath)),
       r.set(x, k));
   if (k === x) return [o];
   return [o, { patternRoot: k, pattern: p.slice(L).join(Oe) + d }];
@@ -17187,13 +17187,13 @@ function denyFoldVariantPaths(e, t, r = () => [], o = !1) {
   let d = new Set();
   for (let p of e) {
     if ((!o && !NON_ASCII_PATH.test(p)) || d.has(p)) continue;
-    if ([...Tr(p), ...r(p)].some((_) => matchingRuleForInput(_, t, "read", "deny") !== null))
+    if ([...expandPathAliases(p), ...r(p)].some((_) => matchingRuleForInput(_, t, "read", "deny") !== null))
       d.add(p);
   }
   return d;
 }
 function denyRuleMatchingAnywhere(e, t, r) {
-  let o = ot(e);
+  let o = resolvePath(e);
   if (Zl(e) || e.startsWith("~")) return matchingRuleForInput(o, t, r, "deny");
   let d = e.split(/[\\/]+/).filter((x) => x !== "" && x !== ".");
   while (d[0] === "..") d.shift();
@@ -17218,8 +17218,8 @@ function denyRuleMatchingAnywhere(e, t, r) {
   return null;
 }
 function matchingRuleForInput(e, t, r, o) {
-  let d = ot(e);
-  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = KT(d);
+  let d = resolvePath(e);
+  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = convertWindowsPathToUnix(d);
   let p = Yr(t, r, o),
     _ = getCurrentPlatform() === "windows" && o !== "allow",
     L = d ?? getCwd(),
@@ -17246,8 +17246,8 @@ function matchingRuleForInput(e, t, r, o) {
 function matchingDenyRuleForDirectoryContents(e, t, r) {
   let o = Yr(t, r, "deny");
   if (o.size === 0) return null;
-  let d = ot(e);
-  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = KT(d);
+  let d = resolvePath(e);
+  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = convertWindowsPathToUnix(d);
   let p = getCurrentPlatform() === "windows",
     _ = p ? normalizeCaseForComparison(d) : d;
   for (let [L, { patternMap: x }] of o.entries()) {
@@ -17259,8 +17259,8 @@ function matchingDenyRuleForDirectoryContents(e, t, r) {
   return null;
 }
 function matchesPathRule(e, t) {
-  let r = ot(t);
-  if (getCurrentPlatform() === "windows" && r.includes("\\")) r = KT(r);
+  let r = resolvePath(t);
+  if (getCurrentPlatform() === "windows" && r.includes("\\")) r = convertWindowsPathToUnix(r);
   let { relativePattern: o, root: d } = patternWithRoot(e, "session"),
     p = Di(zr(o), !0),
     _ = p === null ? null : Gr(p, !0),
@@ -17292,7 +17292,7 @@ function Cp() {
       ["/usr/sbin", "/sbin"],
     ],
     r = new Map(),
-    o = ae();
+    o = getFsSurface();
   for (let [d, p] of t)
     try {
       if (o.realpathSync(p) === d) r.set(d, p);
@@ -17339,7 +17339,7 @@ function checkReadNetworkPathSafety(e, t, r, o) {
       `Claude requested permissions to read from ${d}, which is under the /Network automount browse surface and could trigger a directory-service lookup and mount to a remote host.`,
       "Automount browse surface detected (defense-in-depth check)",
     );
-  let _ = o ?? Tr(d);
+  let _ = o ?? expandPathAliases(d);
   for (let L of _) {
     if (An(L) && !Oi(L) && !nt(L, p))
       return Tt(
@@ -17394,7 +17394,7 @@ function hasReadDenyRuleForPath(e, t) {
   )
     return !0;
   if (Yr(t, "read", "deny").size === 0) return !1;
-  return Tr(e).some((o) => matchingRuleForInput(o, t, "read", "deny") !== null);
+  return expandPathAliases(e).some((o) => matchingRuleForInput(o, t, "read", "deny") !== null);
 }
 var READ_PATH_PROBE = new Proxy(
   {
@@ -17465,7 +17465,7 @@ function Kl(e, t, r) {
 }
 function Bp(e) {
   try {
-    let t = ae().statSync(e);
+    let t = getFsSurface().statSync(e);
     return t.isFile() && t.nlink > 1;
   } catch {
     return !1;
@@ -17478,9 +17478,9 @@ function checkReadPermissionForTool(e, t, r, o) {
       message: `Claude requested permissions to use ${e.name}, but you haven't granted it yet.`,
     };
   let d = e.getPath(t),
-    p = o ?? Tr(d),
+    p = o ?? expandPathAliases(d),
     _,
-    L = () => (_ ??= ot(d)),
+    L = () => (_ ??= resolvePath(d)),
     x,
     k = () => {
       if (x === void 0)
@@ -17592,7 +17592,7 @@ function checkWritePermissionForTool(e, t, r, o) {
       message: `Claude requested permissions to use ${e.name}, but you haven't granted it yet.`,
     };
   let d = e.getPath(t),
-    p = o ?? Tr(d);
+    p = o ?? expandPathAliases(d);
   for (let F of p) {
     let V = matchingRuleForInput(F, r, "edit", "deny");
     if (V)
@@ -17602,7 +17602,7 @@ function checkWritePermissionForTool(e, t, r, o) {
         decisionReason: { type: "rule", rule: V },
       };
   }
-  let _ = ot(d);
+  let _ = resolvePath(d);
   if (r.restricted) {
     let F = sc(
       d,
@@ -17723,8 +17723,8 @@ function checkWritePermissionForTool(e, t, r, o) {
 function generateSuggestions(e, t, r, o) {
   let d = !pathInAllowedWorkingPath(e, r, o);
   if (t === "read" && d) {
-    let L = nL(e);
-    return Tr(L)
+    let L = getContainingDirectory(e);
+    return expandPathAliases(L)
       .map((x) => buildDirectoryReadRuleUpdate(x, "session"))
       .filter((x) => x !== void 0);
   }
@@ -17740,8 +17740,8 @@ function generateSuggestions(e, t, r, o) {
       ? [{ type: "setMode", mode: "acceptEdits", destination: "session" }]
       : [];
     if (d) {
-      let x = nL(e),
-        k = Tr(x);
+      let x = getContainingDirectory(e),
+        k = expandPathAliases(x);
       L.push({
         type: "addDirectories",
         directories: k,
@@ -17898,7 +17898,7 @@ function Up() {
   let e = getPathCacheStore();
   if (e.userSkillsBaseSpellingsFolded !== void 0)
     return e.userSkillsBaseSpellingsFolded;
-  let t = ae(),
+  let t = getFsSurface(),
     r = new Set(),
     o = (p) => {
       r.add(normalizeCaseForComparison(p));
@@ -17906,7 +17906,7 @@ function Up() {
         r.add(normalizeCaseForComparison(t.realpathSync(p)));
       } catch {}
     },
-    d = ot(getClaudeConfigDir());
+    d = resolvePath(getClaudeConfigDir());
   o(Ne(d, "skills"));
   try {
     o(Ne(t.realpathSync(d), "skills"));

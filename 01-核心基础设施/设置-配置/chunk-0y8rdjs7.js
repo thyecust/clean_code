@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getSettingsForSource, getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { uD, a3t } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
+import { TRUSTED_PLUGIN_SETTINGS_SOURCES, getPluginEnabledFromTrustedSettings } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import { isTrustedBuiltinPlugin, collectAddDirEnabledPlugins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isInlineOrSyncedPluginId, normalizeLookupKey } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 async function checkEnabledPlugins() {
@@ -23,7 +23,7 @@ async function checkEnabledPlugins() {
   if (o.enabledPlugins)
     for (let [e, i] of Object.entries(o.enabledPlugins)) {
       if (!e.includes("@")) continue;
-      let c = isTrustedBuiltinPlugin(e) ? a3t(e) : i,
+      let c = isTrustedBuiltinPlugin(e) ? getPluginEnabledFromTrustedSettings(e) : i,
         s = t.indexOf(e);
       if (c) {
         if (s === -1) t.push(e);
@@ -53,14 +53,14 @@ function getPluginEditableScopes() {
     for (let [s, u] of Object.entries(c.enabledPlugins)) {
       if (!s.includes("@")) continue;
       if (s in t && t[s] !== u)
-        n(`Plugin ${s} from --add-dir (${t[s]}) overridden by ${i} (${u})`);
-      if (!uD.includes(i) && isTrustedBuiltinPlugin(s)) continue;
+        logForDebugging(`Plugin ${s} from --add-dir (${t[s]}) overridden by ${i} (${u})`);
+      if (!TRUSTED_PLUGIN_SETTINGS_SOURCES.includes(i) && isTrustedBuiltinPlugin(s)) continue;
       if (u === !0) o.set(s, e);
       else if (u === !1) o.delete(s);
     }
   }
   return (
-    n(
+    logForDebugging(
       `Found ${o.size} enabled plugins with scopes: ${Array.from(o.entries())
         .map(([e, i]) => `${e}(${i})`)
         .join(", ")}`,

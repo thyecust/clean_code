@@ -13,7 +13,7 @@ import { An, Dr, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, hv, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -23,14 +23,14 @@ import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exe
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { ot, _ie, W6 } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, findSimilarFile, getSuggestedPathOutsideCwd } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSdkHostedBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { outsideReadBlocked, pathInAllowedWorkingPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var B = null;
-async function aK() {
+async function loadImageProcessor() {
   if (B) return B.default;
   if (bc())
     try {
@@ -57,7 +57,7 @@ function ee(e) {
     );
   return t;
 }
-function iR(e) {
+function detectImageMediaType(e) {
   if (e.length < 4) return null;
   if (e[0] === 137 && e[1] === 80 && e[2] === 78 && e[3] === 71)
     return "image/png";
@@ -86,13 +86,13 @@ function iR(e) {
     return "image/webp";
   return null;
 }
-function mSn(e) {
+function detectBinaryFormat(e) {
   if (e.subarray(0, 4).toString("latin1").toLowerCase() === "%pdf")
     return "pdf";
   if (e[0] === 80 && e[1] === 75 && e[2] === 3 && e[3] === 4) return "zip";
   return null;
 }
-function u7e(e) {
+function describeBufferContent(e) {
   let t = e.subarray(0, 32),
     r = t.toString("latin1").replace(/[^\x20-\x7e]/g, "."),
     o = r.toLowerCase();
@@ -102,24 +102,24 @@ function u7e(e) {
     return `XML/SVG document (starts with "${r.slice(0, 24)}")`;
   if (o.startsWith("{") || o.startsWith("["))
     return `JSON/text (starts with "${r.slice(0, 24)}")`;
-  let s = mSn(t);
+  let s = detectBinaryFormat(t);
   if (s === "pdf") return "PDF document";
   if (s === "zip")
     return "ZIP archive (Office documents such as .pptx/.docx/.xlsx are ZIPs)";
   return `unrecognized bytes (hex: ${t.subarray(0, 8).toString("hex").replace(/(..)/g, "$1 ").trim()})`;
 }
-function KNe(e) {
-  return iR(e) ?? "image/png";
+function getImageMediaTypeOrDefault(e) {
+  return detectImageMediaType(e) ?? "image/png";
 }
-function N3t(e) {
+function detectImageMediaTypeFromBase64(e) {
   try {
     let t = Buffer.from(e, "base64");
-    return KNe(t);
+    return getImageMediaTypeOrDefault(t);
   } catch {
     return "image/png";
   }
 }
-function Ure(e) {
+function readImageDimensions(e) {
   if (e.length < 10) return;
   if (
     e[0] === 137 &&
@@ -191,8 +191,8 @@ function Ure(e) {
   }
   return;
 }
-var M3t = "[Image: ",
-  VNe = "[Image source: ";
+var IMAGE_PLACEHOLDER_PREFIX = "[Image: ",
+  IMAGE_SOURCE_PLACEHOLDER_PREFIX = "[Image source: ";
 var z = 1,
   te = 2,
   U = 3,
@@ -201,7 +201,7 @@ var z = 1,
   ie = 6,
   ne = 7,
   oe = 8;
-class vH extends Error {
+class ImageResizeError extends Error {
   constructor(e) {
     super(e);
     this.name = "ImageResizeError";
@@ -273,17 +273,17 @@ function V(e) {
   for (let r = 0; r < e.length; r++) t = ((t << 5) + t + e.charCodeAt(r)) | 0;
   return t >>> 0;
 }
-async function qpe(e, t, r, o) {
-  if (e.length === 0) throw new vH("Image file is empty (0 bytes)");
+async function resizeImageForApiLimits(e, t, r, o) {
+  if (e.length === 0) throw new ImageResizeError("Image file is empty (0 bytes)");
   try {
-    let s = await aK(),
+    let s = await loadImageProcessor(),
       c = await s(e).metadata(),
       d = c.format ?? r,
       p = d === "jpg" ? "jpeg" : d;
     if (!c.width || !c.height) {
-      let I = Ure(e);
+      let I = readImageDimensions(e);
       if (I === void 0 || I.width > o.maxWidth || I.height > o.maxHeight)
-        throw new vH(
+        throw new ImageResizeError(
           `Unable to resize image \u2014 could not verify image dimensions are within the ${o.maxWidth}x${o.maxHeight}px API limit.`,
         );
       if (t > o.targetRawSize)
@@ -359,7 +359,7 @@ async function qpe(e, t, r, o) {
       ((_ = Math.round((_ * o.maxWidth) / w)), (w = o.maxWidth));
     if (_ > o.maxHeight)
       ((w = Math.round((w * o.maxHeight) / _)), (_ = o.maxHeight));
-    n(`Resizing to ${w}x${_}`);
+    logForDebugging(`Resizing to ${w}x${_}`);
     let k = await s(e)
       .resize(w, _, { fit: "inside", withoutEnlargement: !0 })
       .toBuffer();
@@ -400,13 +400,13 @@ async function qpe(e, t, r, o) {
       }
       let I = Math.min(w, 1000),
         b = Math.round((_ * I) / Math.max(w, 1));
-      n("Still too large, compressing with JPEG");
+      logForDebugging("Still too large, compressing with JPEG");
       let M = await s(e)
         .resize(I, b, { fit: "inside", withoutEnlargement: !0 })
         .jpeg({ quality: 20 })
         .toBuffer();
       return (
-        n(`JPEG compressed buffer size: ${M.length}`),
+        logForDebugging(`JPEG compressed buffer size: ${M.length}`),
         {
           buffer: M,
           mediaType: "jpeg",
@@ -430,22 +430,22 @@ async function qpe(e, t, r, o) {
       },
     };
   } catch (s) {
-    if (s instanceof vH) throw s;
+    if (s instanceof ImageResizeError) throw s;
     let m = j(s),
       c = l(s);
     if (G(m, s)) logError(s);
-    else n(`Image resize failed: ${c}`, { level: "error" });
+    else logForDebugging(`Image resize failed: ${c}`, { level: "error" });
     logEvent("tengu_image_resize_failed", {
       original_size_bytes: t,
       error_type: m,
       error_message_hash: V(c),
       ...q(s),
     });
-    let p = KNe(e).slice(6),
+    let p = getImageMediaTypeOrDefault(e).slice(6),
       g = Math.ceil((t * 4) / 3),
-      x = Ure(e);
+      x = readImageDimensions(e);
     if (x === void 0)
-      throw new vH(
+      throw new ImageResizeError(
         "Unable to resize image \u2014 image processing is unavailable and dimensions could not be read from the file header. " +
           "Please convert the image to PNG, JPEG, GIF, or WebP.",
       );
@@ -459,15 +459,15 @@ async function qpe(e, t, r, o) {
         }),
         { buffer: e, mediaType: p }
       );
-    throw new vH(
+    throw new ImageResizeError(
       w
         ? `Unable to resize image \u2014 dimensions exceed the ${o.maxWidth}x${o.maxHeight}px limit and image processing failed. Please resize the image to reduce its pixel dimensions.`
         : `Unable to resize image (${formatFileSize(t)} raw, ${formatFileSize(g)} base64). The image exceeds the ${formatFileSize(o.maxBase64Size)} API limit and compression failed. Please resize the image manually or use a smaller image.`,
     );
   }
 }
-async function gSn(e, t, r) {
-  let o = await aK(),
+async function compressJpegToByteBudget(e, t, r) {
+  let o = await loadImageProcessor(),
     s = (x) => o(e).jpeg({ quality: x }).toBuffer(),
     m = e,
     c = 90;
@@ -489,14 +489,14 @@ async function gSn(e, t, r) {
   }
   return g ?? m;
 }
-async function Bg({ data: e, mediaType: t, limits: r }) {
+async function buildImageBlock({ data: e, mediaType: t, limits: r }) {
   let o = Buffer.isBuffer(e) ? e : Buffer.from(e, "base64"),
     s = t?.includes("/") ? t.split("/")[1] || "png" : t || "png",
     m;
   try {
-    m = await qpe(o, o.length, s, r);
+    m = await resizeImageForApiLimits(o, o.length, s, r);
   } catch (p) {
-    if (p instanceof vH)
+    if (p instanceof ImageResizeError)
       return (
         logEvent("tengu_image_resize_degraded", {}),
         {
@@ -511,9 +511,9 @@ async function Bg({ data: e, mediaType: t, limits: r }) {
   let c = m.buffer;
   if (c.length > DEFAULT_MAX_IMAGE_RAW_BYTES)
     try {
-      c = await gSn(m.buffer, DEFAULT_MAX_IMAGE_RAW_BYTES, m.mediaType);
+      c = await compressJpegToByteBudget(m.buffer, DEFAULT_MAX_IMAGE_RAW_BYTES, m.mediaType);
     } catch (p) {
-      n(
+      logForDebugging(
         `Image byte-budget compression failed, passing through unbudgeted: ${l(p)}`,
         { level: "error" },
       );
@@ -523,32 +523,32 @@ async function Bg({ data: e, mediaType: t, limits: r }) {
       type: "image",
       source: {
         type: "base64",
-        media_type: KNe(c),
+        media_type: getImageMediaTypeOrDefault(c),
         data: c.toString("base64"),
       },
     },
     dimensions: m.dimensions,
   };
 }
-async function iJn(e, t) {
-  let r = iR(e);
+async function buildImageBlockFromBytes(e, t) {
+  let r = detectImageMediaType(e);
   if (r === null) return null;
   try {
-    let { block: o } = await Bg({ data: e, mediaType: r, limits: t });
+    let { block: o } = await buildImageBlock({ data: e, mediaType: r, limits: t });
     return o.type === "image" ? o : null;
   } catch {
     return null;
   }
 }
-async function aJn(e, t) {
+async function reprocessImageBlock(e, t) {
   if (e.source.type !== "base64") return { block: e };
-  return Bg({ data: e.source.data, mediaType: e.source.media_type, limits: t });
+  return buildImageBlock({ data: e.source.data, mediaType: e.source.media_type, limits: t });
 }
 async function Y(e, t, r) {
   let o = r?.split("/")[1] || "jpeg",
     s = o === "jpg" ? "jpeg" : o;
   try {
-    let m = await aK(),
+    let m = await loadImageProcessor(),
       c = await m(e).metadata(),
       d = c.format || s,
       p = e.length,
@@ -573,7 +573,7 @@ async function Y(e, t, r) {
     let c = j(m),
       d = l(m);
     if (G(c, m)) logError(m);
-    else n(`Image compression failed: ${d}`, { level: "error" });
+    else logForDebugging(`Image compression failed: ${d}`, { level: "error" });
     if (
       (logEvent("tengu_image_compress_failed", {
         original_size_bytes: e.length,
@@ -584,24 +584,24 @@ async function Y(e, t, r) {
       }),
       e.length <= t)
     ) {
-      let p = KNe(e);
+      let p = getImageMediaTypeOrDefault(e);
       return {
         base64: e.toString("base64"),
         mediaType: p,
         originalSize: e.length,
       };
     }
-    throw new vH(
+    throw new ImageResizeError(
       `Unable to compress image (${formatFileSize(e.length)}) to fit within ${formatFileSize(t)}. Please use a smaller image.`,
     );
   }
 }
-async function lJn(e, t, r) {
+async function compressImageToTokenBudget(e, t, r) {
   let o = Math.floor(t / 0.125),
     s = Math.floor(o * 0.75);
   return Y(e, s, r);
 }
-async function cJn(e, t) {
+async function compressImageBlockToFitBytes(e, t) {
   if (e.source.type !== "base64") return e;
   let r = Buffer.from(e.source.data, "base64");
   if (r.length <= t) return e;
@@ -670,7 +670,7 @@ async function de(e, t) {
     .toBuffer();
   return v(r, "jpeg", e.originalSize);
 }
-function XNe(e, t) {
+function formatImageDisplayAnnotation(e, t) {
   let {
     originalWidth: r,
     originalHeight: o,
@@ -678,7 +678,7 @@ function XNe(e, t) {
     displayHeight: m,
   } = e;
   if (!r || !o || !s || !m || s <= 0 || m <= 0) {
-    if (t) return `${VNe}${t}]`;
+    if (t) return `${IMAGE_SOURCE_PLACEHOLDER_PREFIX}${t}]`;
     return null;
   }
   let c = r !== s || o !== m;
@@ -691,7 +691,7 @@ function XNe(e, t) {
       `original ${r}x${o}, displayed at ${s}x${m}. Multiply coordinates by ${p.toFixed(2)} to map to original image.`,
     );
   }
-  return `${M3t}${d.join(", ")}]`;
+  return `${IMAGE_PLACEHOLDER_PREFIX}${d.join(", ")}]`;
 }
 import { randomBytes } from "crypto";
 import {
@@ -700,12 +700,12 @@ import {
   isAbsolute as ye,
   join as D,
 } from "path";
-function cbt(e) {
+function convertWindowsPathToWsl(e) {
   let t = e.match(/^([A-Z]):(.*)$/i);
   if (!t) return null;
   return `/mnt/${t[1].toLowerCase()}${t[2].replaceAll("\\", "/")}`;
 }
-class LAe {
+class WslPathConverter {
   wslDistroName;
   constructor(e) {
     this.wslDistroName = e;
@@ -719,7 +719,7 @@ class LAe {
     let { stdout: t, code: r } = await execFileNoThrow("wslpath", ["-u", e], { useCwd: !1 }),
       o = t.trim();
     if (r === 0 && o) return o;
-    return cbt(e) ?? e.replaceAll("\\", "/");
+    return convertWindowsPathToWsl(e) ?? e.replaceAll("\\", "/");
   }
   async toIDEPath(e) {
     if (!e) return e;
@@ -729,13 +729,13 @@ class LAe {
     return e;
   }
 }
-function uJn(e, t) {
+function isPathInWslDistro(e, t) {
   let r = e.match(/^\\\\wsl(?:\.localhost|\$)\\([^\\]+)(.*)$/);
   if (r) return r[1] === t;
   return !0;
 }
 var ue = /[\u2018-\u201F]/;
-function zNe(e, t = "value") {
+function quotePowerShellLiteral(e, t = "value") {
   let r = ue.exec(e);
   if (r) {
     let o = (r[0].codePointAt(0) ?? 0)
@@ -749,7 +749,7 @@ function zNe(e, t = "value") {
   }
   return `'${e.replaceAll("'", "''")}'`;
 }
-var lK = 800,
+var LARGE_PASTE_CHAR_THRESHOLD = 800,
   C = {
     darwin:
       "osascript -e 'get POSIX path of (the clipboard as \xABclass furl\xBB)'",
@@ -821,7 +821,7 @@ async function F(e) {
   let [t, ...r] = e;
   return Bf(t, r, { reject: !1 });
 }
-async function dJn() {
+async function hasClipboardImage() {
   try {
     let { getNativeModule: t } = await import("./getNativeModule.xtpfwxr8.js"),
       r = t()?.hasClipboardImage;
@@ -834,7 +834,7 @@ async function dJn() {
       .code === 0
   );
 }
-async function Z3(e) {
+async function readClipboardImage(e) {
   try {
     let { getNativeModule: s } = await import("./getNativeModule.xtpfwxr8.js"),
       m = s()?.readClipboardImage;
@@ -843,7 +843,7 @@ async function Z3(e) {
     if (!c) return null;
     let d = c.png;
     if (d.length > e.targetRawSize) {
-      let p = await qpe(d, d.length, "png", e);
+      let p = await resizeImageForApiLimits(d, d.length, "png", e);
       return (
         logFeatureOk("clipboard_read"),
         {
@@ -872,8 +872,8 @@ async function Z3(e) {
       }
     );
   } catch (s) {
-    if (s instanceof vH)
-      n(`Native clipboard resize failed: ${s.message}`, { level: "error" });
+    if (s instanceof ImageResizeError)
+      logForDebugging(`Native clipboard resize failed: ${s.message}`, { level: "error" });
     else logError(s);
   }
   let t;
@@ -886,16 +886,16 @@ async function Z3(e) {
   try {
     if ((await F(r.checkImage)).exitCode !== 0) return null;
     if (
-      (await ae().mkdir(dirname(o), { mode: 448 }),
+      (await getFsSurface().mkdir(dirname(o), { mode: 448 }),
       (await F(r.saveImage)).exitCode !== 0)
     )
       return (logFeatureBad("clipboard_read", "save_failed"), null);
-    let c = await ae().readFileBytes(o);
+    let c = await getFsSurface().readFileBytes(o);
     if (c.length >= 2 && c[0] === 66 && c[1] === 77)
-      c = await (await aK())(c).png().toBuffer();
-    let d = await qpe(c, c.length, "png", e),
+      c = await (await loadImageProcessor())(c).png().toBuffer();
+    let d = await resizeImageForApiLimits(c, c.length, "png", e),
       p = d.buffer.toString("base64"),
-      g = N3t(p);
+      g = detectImageMediaTypeFromBase64(p);
     return (
       F(r.deleteFile),
       logFeatureOk("clipboard_read"),
@@ -913,7 +913,7 @@ async function xe() {
     return r.stdout.trim();
   } catch (e) {
     return (
-      n(
+      logForDebugging(
         `Failed to read image path from clipboard: ${e instanceof Error ? e.message : String(e)}`,
         { level: "error" },
       ),
@@ -921,7 +921,7 @@ async function xe() {
     );
   }
 }
-var d7e = /\.(png|jpe?g|gif|webp)$/i;
+var IMAGE_FILE_EXTENSION_PATTERN = /\.(png|jpe?g|gif|webp)$/i;
 function X(e) {
   if (
     (e.startsWith('"') && e.endsWith('"')) ||
@@ -939,33 +939,33 @@ function Z(e) {
     .replace(/\\(.)/g, "$1")
     .replace(new RegExp(o, "g"), "\\");
 }
-function pJn(e) {
+function isImageFilePath(e) {
   let t = X(e.trim()),
     r = Z(t);
-  return d7e.test(r);
+  return IMAGE_FILE_EXTENSION_PATTERN.test(r);
 }
 function _e(e) {
   let t = X(e.trim()),
     r = Z(t);
-  if (d7e.test(r)) return r;
+  if (IMAGE_FILE_EXTENSION_PATTERN.test(r)) return r;
   return null;
 }
-async function fJn(e, t) {
+async function readPastedImageFile(e, t) {
   let r = _e(e);
   if (!r) return null;
   let o = r;
   if (getCurrentPlatform() === "wsl" && J.test(o))
-    o = await new LAe(a.WSL_DISTRO_NAME).toLocalPath(o);
+    o = await new WslPathConverter(a.WSL_DISTRO_NAME).toLocalPath(o);
   let s;
   try {
-    if (ye(o)) s = await ae().readFileBytes(o);
+    if (ye(o)) s = await getFsSurface().readFileBytes(o);
     else {
       let g = await xe();
-      if (g && o === fe(g)) s = await ae().readFileBytes(g);
+      if (g && o === fe(g)) s = await getFsSurface().readFileBytes(g);
     }
   } catch (g) {
     return (
-      n(
+      logForDebugging(
         `Failed to read pasted image file ${o}: ${g instanceof Error ? g.message : String(g)}`,
         { level: "error" },
       ),
@@ -974,24 +974,24 @@ async function fJn(e, t) {
   }
   if (!s) return null;
   if (s.length === 0)
-    return (n(`Image file is empty: ${o}`, { level: "warn" }), null);
+    return (logForDebugging(`Image file is empty: ${o}`, { level: "warn" }), null);
   if (s.length >= 2 && s[0] === 66 && s[1] === 77)
-    s = await (await aK())(s).png().toBuffer();
-  let m = iR(s);
+    s = await (await loadImageProcessor())(s).png().toBuffer();
+  let m = detectImageMediaType(s);
   if (m === null)
     return (
-      n(
+      logForDebugging(
         `Pasted path has image extension but content is not a supported image: ${o}`,
         { level: "warn" },
       ),
       null
     );
   let c = m.split("/")[1] || "png",
-    d = await qpe(s, s.length, c, t),
+    d = await resizeImageForApiLimits(s, s.length, c, t),
     p = d.buffer.toString("base64");
   return { path: o, base64: p, mediaType: m, dimensions: d.dimensions };
 }
-function hSn(e) {
+function looksLikeBinaryContent(e) {
   if (e.includes("\x00")) return !0;
   let t = e.slice(0, 4096);
   if (t.length < 32) return !1;
@@ -1006,7 +1006,7 @@ import {
   isAbsolute as Ee,
   join as Pe,
 } from "path";
-function ubt(e) {
+function resolveAttachmentUploadLane(e) {
   if (e.replBridgeEnabled) return "repl";
   if (a.CLAUDE_CODE_BRIEF_UPLOAD) return "env_brief_upload";
   if (a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE) return "env_ccr";
@@ -1015,7 +1015,7 @@ function ubt(e) {
     return getFeatureValue_CACHED_MAY_BE_STALE("tengu_async_goblet", !0) ? "sdk_hosted" : "sdk_hosted_disabled";
   return "none";
 }
-function dbt(e) {
+function shouldRenderAttachmentsLocally(e) {
   return e === "sdk_hosted" && isDesktopHostSession();
 }
 var Se = {
@@ -1060,14 +1060,14 @@ var Se = {
     "application/vnd.openxmlformats-officedocument.presentationml.presentation",
   ".zip": "application/zip",
 };
-function YNe(e) {
+function getMediaTypeFromPath(e) {
   return Se[extname(e).toLowerCase()];
 }
 function K(e) {
   return typeof e !== "string";
 }
 async function ve(e, t, r) {
-  let o = await W6(t);
+  let o = await getSuggestedPathOutsideCwd(t);
   if (o) return o;
   if (!Ee(e)) {
     let [s, ...m] = e.split(/[\\/]+/);
@@ -1078,16 +1078,16 @@ async function ve(e, t, r) {
       } catch {}
     }
   }
-  return await _ie(t);
+  return await findSimilarFile(t);
 }
-function _Sn(e) {
+function validateAttachmentPath(e) {
   if (/^[a-z][a-z0-9+.-]+:\/\//i.test(e))
     return {
       result: !1,
       message: `Attachment "${e}" looks like a URL, not a local file path. This tool can only send files that exist on the local filesystem \u2014 download or write the content to a local file first, then pass that path.`,
       errorCode: 1,
     };
-  let t = ot(e);
+  let t = resolvePath(e);
   if (An(t))
     return {
       result: !1,
@@ -1102,13 +1102,13 @@ function _Sn(e) {
     };
   return;
 }
-async function pbt(e, t) {
+async function validateAttachments(e, t) {
   let r = getCwd();
   for (let o of e) {
     if (K(o)) continue;
-    let s = _Sn(o);
+    let s = validateAttachmentPath(o);
     if (s !== void 0) return s;
-    let m = ot(o);
+    let m = resolvePath(o);
     if (t.restricted && !pathInAllowedWorkingPath(m, t))
       return {
         result: !1,
@@ -1151,7 +1151,7 @@ async function pbt(e, t) {
   }
   return { result: !0 };
 }
-async function fbt(e, t) {
+async function resolveAttachmentsForUpload(e, t) {
   let r = [],
     o = [];
   for (let d of e) {
@@ -1161,12 +1161,12 @@ async function fbt(e, t) {
         size: d.size,
         isImage: d.is_image,
         file_uuid: d.file_uuid,
-        media_type: d.media_type ?? YNe(d.file_name),
+        media_type: d.media_type ?? getMediaTypeFromPath(d.file_name),
         pathValidated: !1,
       });
       continue;
     }
-    let p = ot(d);
+    let p = resolvePath(d);
     if (ku(p))
       throw Error(
         `Attachment "${d}" is a network path (UNC or /net autofs), which is not supported.`,
@@ -1176,8 +1176,8 @@ async function fbt(e, t) {
       r.push({
         path: p,
         size: g.size,
-        isImage: d7e.test(p),
-        media_type: YNe(p),
+        isImage: IMAGE_FILE_EXTENSION_PATTERN.test(p),
+        media_type: getMediaTypeFromPath(p),
         pathValidated: !0,
       }));
   }
@@ -1203,39 +1203,39 @@ async function fbt(e, t) {
   );
 }
 export {
-  zNe,
-  M3t,
-  VNe,
-  aK,
-  iR,
-  mSn,
-  u7e,
-  KNe,
-  N3t,
-  Ure,
-  vH,
-  qpe,
-  gSn,
-  Bg,
-  iJn,
-  aJn,
-  lJn,
-  cJn,
-  XNe,
-  cbt,
-  LAe,
-  uJn,
-  lK,
-  dJn,
-  Z3,
-  d7e,
-  pJn,
-  fJn,
-  hSn,
-  ubt,
-  dbt,
-  YNe,
-  _Sn,
-  pbt,
-  fbt,
+  quotePowerShellLiteral,
+  IMAGE_PLACEHOLDER_PREFIX,
+  IMAGE_SOURCE_PLACEHOLDER_PREFIX,
+  loadImageProcessor,
+  detectImageMediaType,
+  detectBinaryFormat,
+  describeBufferContent,
+  getImageMediaTypeOrDefault,
+  detectImageMediaTypeFromBase64,
+  readImageDimensions,
+  ImageResizeError,
+  resizeImageForApiLimits,
+  compressJpegToByteBudget,
+  buildImageBlock,
+  buildImageBlockFromBytes,
+  reprocessImageBlock,
+  compressImageToTokenBudget,
+  compressImageBlockToFitBytes,
+  formatImageDisplayAnnotation,
+  convertWindowsPathToWsl,
+  WslPathConverter,
+  isPathInWslDistro,
+  LARGE_PASTE_CHAR_THRESHOLD,
+  hasClipboardImage,
+  readClipboardImage,
+  IMAGE_FILE_EXTENSION_PATTERN,
+  isImageFilePath,
+  readPastedImageFile,
+  looksLikeBinaryContent,
+  resolveAttachmentUploadLane,
+  shouldRenderAttachmentsLocally,
+  getMediaTypeFromPath,
+  validateAttachmentPath,
+  validateAttachments,
+  resolveAttachmentsForUpload,
 };

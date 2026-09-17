@@ -11,10 +11,10 @@ import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { gc, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { INTERRUPTED_FOR_TOOL_USE_MARKER, USER_REFUSED_ACTION_MARKER } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   sanitizeDisplayText,
   registerSessionVisitor,
@@ -32,7 +32,7 @@ import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME } from 
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { HOST_FIELD_NAME, getDefaultMachineName, isReservedMachineName, sanitizeMachineName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Slt, hIe, yIe, o2n, s2n } from "./chunk-66axrkvh.js";
+import { SUPPORTED_PROTOCOL_VERSIONS, INSTANCE_ID_PATTERN, isUnverifiedRefusal, ALLOWED_TOOL_OUTPUT_FIELDS, PDF_READ_NOTE_PREFIX } from "./remote-tool-protocol.js";
 import { stageDirSyncNotice } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
@@ -60,8 +60,8 @@ function _It({ requested: e, attached: t }) {
   return `No machine named "${r}"${g} is attached to this session. ${f}`;
 }
 function vQt({ name: e, announced: t, runsOnlyThere: r }) {
-  let o = Slt.map((p) => `v${p}`).join("/"),
-    d = Math.max(...Slt),
+  let o = SUPPORTED_PROTOCOL_VERSIONS.map((p) => `v${p}`).join("/"),
+    d = Math.max(...SUPPORTED_PROTOCOL_VERSIONS),
     a =
       t.length > 0
         ? `its remote-tool protocol ${t.map((p) => `v${p}`).join("/")}, ours ${o}`
@@ -365,7 +365,7 @@ function ue(e) {
   return { content: r || t.length !== e.length ? t : e, cut: r };
 }
 function ve(e) {
-  return e?.type === "text" && e.text.startsWith(s2n);
+  return e?.type === "text" && e.text.startsWith(PDF_READ_NOTE_PREFIX);
 }
 function Ce(e) {
   return Buffer.from(e.slice(0, 8), "base64")
@@ -517,7 +517,7 @@ function X_e(e, t, r, { afterReconnect: o = !1, call: d } = {}) {
         outcome: {
           kind: "error",
           code: "dropped",
-          message: yIe(r) ? Q(f) : r.why === "write_unresolved" ? Z(f) : J(f),
+          message: isUnverifiedRefusal(r) ? Q(f) : r.why === "write_unresolved" ? Z(f) : J(f),
           host: a,
         },
       };
@@ -664,7 +664,7 @@ function Pe(e, t, r) {
     ];
   if (d.some((_) => Ae.has(_)) || Reflect.get(o, "isImage") === !0)
     return { output: void 0, hostLocal: a };
-  let f = o2n.get(e.name);
+  let f = ALLOWED_TOOL_OUTPUT_FIELDS.get(e.name);
   if (f === void 0) return { output: void 0, hostLocal: a };
   let g = pickBy(o, (_, w) => f.has(w)),
     p =
@@ -753,10 +753,10 @@ function iE(e, t) {
     );
 }
 function HHe(e) {
-  return { kind: "error", code: "interrupted", message: gc, host: e };
+  return { kind: "error", code: "interrupted", message: INTERRUPTED_FOR_TOOL_USE_MARKER, host: e };
 }
 function V6e(e) {
-  return { kind: "error", code: "cancelled", message: oS, host: e };
+  return { kind: "error", code: "cancelled", message: USER_REFUSED_ACTION_MARKER, host: e };
 }
 function LQt(e, t) {
   if (e.agentId !== void 0)
@@ -843,7 +843,7 @@ var j = 1,
       dirty: O(),
       shipping: z().nullable(),
       takes: O(),
-      instance: s().regex(hIe),
+      instance: s().regex(INSTANCE_ID_PATTERN),
       seq: T().int().min(0).max(INT32_MAX),
     }),
   ),
@@ -866,7 +866,7 @@ var j = 1,
       v: k(j),
       frame: je(),
       outcome: c({ kind: X(Be), reason: Ge().optional() }),
-      ask_id: s().regex(hIe).optional(),
+      ask_id: s().regex(INSTANCE_ID_PATTERN).optional(),
     }),
   );
 function W(e) {
@@ -1182,7 +1182,7 @@ async function un(e, t, r, o) {
             ? `no answer within ${Math.round(y.capMs / 1000)} s`
             : y.detail;
         if (
-          (n(`dir-sync: sync_files call failed (${y.kind}): ${C}`),
+          (logForDebugging(`dir-sync: sync_files call failed (${y.kind}): ${C}`),
           !f && (!t.upload || a !== void 0))
         ) {
           f = !0;
@@ -1196,7 +1196,7 @@ async function un(e, t, r, o) {
     let _ = dn().safeParse(y.structuredContent);
     if (!_.success)
       return (
-        n(`dir-sync: sync_files answered unreadably: ${y.text.slice(0, 200)}`),
+        logForDebugging(`dir-sync: sync_files answered unreadably: ${y.text.slice(0, 200)}`),
         { kind: "unreadable", isError: y.isError }
       );
     let w = _.data;
@@ -1248,7 +1248,7 @@ async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
   } catch (f) {
     return (
       logError(f),
-      n(`dir-sync: pre-forward sync point failed: ${l(f)}`, { level: "error" }),
+      logForDebugging(`dir-sync: pre-forward sync point failed: ${l(f)}`, { level: "error" }),
       logEvent("tengu_dir_sync_mid_turn", {
         point: fromEnum("pre_forward"),
         clearance: fromEnum("threw"),
@@ -1610,7 +1610,7 @@ async function FQt({
   if (p === null) {
     let w = typeof t === "object" && t !== null && t.v === j;
     return (
-      n(
+      logForDebugging(
         `dir-sync: unreadable dir_sync word on a served result (${w ? "malformed" : "other version"})`,
       ),
       logEvent("tengu_dir_sync_mid_turn", {
@@ -1693,7 +1693,7 @@ async function FQt({
     return (C(), _(void 0, null));
   } catch (w) {
     return (
-      n(`dir-sync: after-command sync failed: ${l(w)}`, { level: "error" }),
+      logForDebugging(`dir-sync: after-command sync failed: ${l(w)}`, { level: "error" }),
       logEvent("tengu_dir_sync_mid_turn", {
         point: S("after_forward"),
         duration_ms: Date.now() - a,

@@ -13,7 +13,7 @@ import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { TW, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { s, T, O, v, c, $e, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-var R5t = [
+var CANONICAL_MODEL_IDS = [
     "claude-3-5-haiku",
     "claude-3-5-sonnet",
     "claude-3-7-sonnet",
@@ -34,7 +34,7 @@ var R5t = [
     "claude-sonnet-4-6",
     "claude-sonnet-5",
   ],
-  RP = [
+  MODEL_ALIASES = [
     "sonnet",
     "opus",
     "haiku",
@@ -45,24 +45,24 @@ var R5t = [
     "fable[1m]",
     "opusplan",
   ],
-  Gvt = ["sonnet", "opus", "haiku", "fable"];
-var hBe = "claude-mythos-preview";
-function um(e) {
-  return RP.includes(e);
+  MODEL_FAMILIES = ["sonnet", "opus", "haiku", "fable"];
+var MYTHOS_PREVIEW_MODEL_ID = "claude-mythos-preview";
+function isModelAlias(e) {
+  return MODEL_ALIASES.includes(e);
 }
-function Xt(e) {
+function strip1mSuffix(e) {
   return e.replace(/\[1m\]$/i, "");
 }
-function _0(e, t) {
-  return Xt(e).toLowerCase() === Xt(t).toLowerCase();
+function isSameModelName(e, t) {
+  return strip1mSuffix(e).toLowerCase() === strip1mSuffix(t).toLowerCase();
 }
-function er(e) {
+function stripLongContextTags(e) {
   return e.replace(/\[(1|2)m\]/gi, "");
 }
-function _A(e) {
-  return Gvt.includes(e);
+function isModelFamily(e) {
+  return MODEL_FAMILIES.includes(e);
 }
-var k5t = {
+var BAKED_MODEL_CATALOG = {
   "//": "Hand-maintained baked-in model catalog \u2014 the source of truth for per-model provider IDs and metadata. On model launch add one entry to `models` below; `bun run generate:model-catalog` validates this file against the schema and formats it.",
   schema_version: 1,
   pricing_tiers: {
@@ -768,7 +768,7 @@ function C() {
   };
 }
 var f;
-function m1() {
+function getModelCatalogState() {
   if (f === void 0) f = C();
   return f;
 }
@@ -909,27 +909,27 @@ function M(e) {
   return { catalog: o, entriesById: n, catalogIdByProviderId: r };
 }
 function g() {
-  let e = m1();
-  if (e.bakedCatalog === void 0) e.bakedCatalog = M(k5t);
+  let e = getModelCatalogState();
+  if (e.bakedCatalog === void 0) e.bakedCatalog = M(BAKED_MODEL_CATALOG);
   return e.bakedCatalog;
 }
-function qvt() {
+function getModelCatalog() {
   return g().catalog;
 }
-var kP = qvt;
-function lie(e) {
+var kP = getModelCatalog;
+function getCatalogIdByProviderId(e) {
   return g().catalogIdByProviderId.get(e.toLowerCase());
 }
-function Qa(e) {
+function getCatalogEntryById(e) {
   return g().entriesById.get(e);
 }
-function Qkn(e) {
+function getPricingTierForModel(e) {
   let t = e.pricing;
   if (typeof t !== "string") return t;
   let o = kP().pricing_tiers;
   return Object.hasOwn(o, t) ? o[t] : void 0;
 }
-var Zkn = [
+var MODEL_CAPABILITIES = [
   "effort",
   "max_effort",
   "xhigh_effort",
@@ -953,27 +953,27 @@ var Zkn = [
   "thinking_display_updates",
   "quizzical_shore",
 ];
-function Yir(e) {
-  m1().servedCapabilityLookup = e;
+function setServedCapabilityLookup(e) {
+  getModelCatalogState().servedCapabilityLookup = e;
 }
 var P = { per_turn_effort: "tengu_per_turn_effort" };
-function Jir(e) {
-  m1().featureGateLookup = e;
+function setFeatureGateLookup(e) {
+  getModelCatalogState().featureGateLookup = e;
 }
 function S(e) {
   let t = P[e];
   if (t === void 0) return !0;
-  return m1().featureGateLookup?.(t) === !0;
+  return getModelCatalogState().featureGateLookup?.(t) === !0;
 }
-function dm(e, t, o) {
+function modelHasCapability(e, t, o) {
   let n = e.replace(/\[1m\]/gi, ""),
-    r = m1();
+    r = getModelCatalogState();
   if (r.servedCapabilityLookup?.(t, [o, n]) === !0 && S(t)) return !0;
-  let i = Qa(n);
+  let i = getCatalogEntryById(n);
   if (i !== void 0) return i.capabilities.includes(t) ? !0 : void 0;
   return r.runtimeCapabilityLookup?.(n, t);
 }
-function Qir(e, t) {
+function resolveModelAliasForProvider(e, t) {
   let o = kP().aliases,
     n = Object.hasOwn(o, e) ? o[e] : void 0;
   if (!n) return;
@@ -1017,7 +1017,7 @@ function D(e) {
 function N() {
   let e = {};
   for (let [t, o] of Object.entries(z)) {
-    let n = Qa(t);
+    let n = getCatalogEntryById(t);
     if (!n)
       throw new R(
         `model catalog missing entry for '${t}' (CATALOG_ID_TO_KEY key '${o}')`,
@@ -1027,7 +1027,7 @@ function N() {
   }
   return e;
 }
-var to = N();
+var MODEL_CONFIGS_BY_KEY = N();
 function l(e) {
   for (let t of ["bedrock", "vertex", "foundry", "anthropicAws"])
     if (e[t] === null)
@@ -1037,24 +1037,24 @@ function l(e) {
       );
   return e;
 }
-var ee = l(to.haiku35),
-  te = l(to.haiku45),
-  oe = l(to.sonnet35),
-  ae = l(to.sonnet37),
-  ne = l(to.sonnet40),
-  re = l(to.sonnet45),
-  ie = l(to.sonnet46),
-  ue = l(to.sonnet5),
-  le = l(to.opus40),
-  se = l(to.opus41),
-  de = l(to.opus45),
-  _e = l(to.opus46),
-  ce = l(to.opus47),
-  pe = l(to.opus48),
-  me = l(to.opus5),
-  _Be = l(to.fable5),
-  Zir = l(to.fable51),
-  ear = {
+var ee = l(MODEL_CONFIGS_BY_KEY.haiku35),
+  te = l(MODEL_CONFIGS_BY_KEY.haiku45),
+  oe = l(MODEL_CONFIGS_BY_KEY.sonnet35),
+  ae = l(MODEL_CONFIGS_BY_KEY.sonnet37),
+  ne = l(MODEL_CONFIGS_BY_KEY.sonnet40),
+  re = l(MODEL_CONFIGS_BY_KEY.sonnet45),
+  ie = l(MODEL_CONFIGS_BY_KEY.sonnet46),
+  ue = l(MODEL_CONFIGS_BY_KEY.sonnet5),
+  le = l(MODEL_CONFIGS_BY_KEY.opus40),
+  se = l(MODEL_CONFIGS_BY_KEY.opus41),
+  de = l(MODEL_CONFIGS_BY_KEY.opus45),
+  _e = l(MODEL_CONFIGS_BY_KEY.opus46),
+  ce = l(MODEL_CONFIGS_BY_KEY.opus47),
+  pe = l(MODEL_CONFIGS_BY_KEY.opus48),
+  me = l(MODEL_CONFIGS_BY_KEY.opus5),
+  FABLE_5_MODEL_CONFIG = l(MODEL_CONFIGS_BY_KEY.fable5),
+  FABLE_5_1_MODEL_CONFIG = l(MODEL_CONFIGS_BY_KEY.fable51),
+  MYTHOS_5_MODEL_CONFIG = {
     firstParty: "claude-mythos-5",
     bedrock: "us.anthropic.claude-mythos-5",
     vertex: "claude-mythos-5",
@@ -1065,19 +1065,19 @@ var ee = l(to.haiku35),
     gateway: "claude-mythos-5",
     eagerInputStreaming: { bedrock: !0, vertex: !0 },
   },
-  exn = ["opus5", "opus48", "opus47", "opus46", "opus45"],
-  tar = Object.values(to).map((e) => e.firstParty),
-  QD = Object.fromEntries(
-    Object.entries(to).map(([e, t]) => [t.firstParty, e]),
+  OPUS_LINEUP_KEYS = ["opus5", "opus48", "opus47", "opus46", "opus45"],
+  FIRST_PARTY_MODEL_IDS = Object.values(MODEL_CONFIGS_BY_KEY).map((e) => e.firstParty),
+  MODEL_KEY_BY_FIRST_PARTY_ID = Object.fromEntries(
+    Object.entries(MODEL_CONFIGS_BY_KEY).map(([e, t]) => [t.firstParty, e]),
   );
-function BR(e) {
+function findModelConfigByProviderId(e) {
   let t = e.toLowerCase();
-  for (let o of Object.values(to))
+  for (let o of Object.values(MODEL_CONFIGS_BY_KEY))
     for (let n of Object.values(o))
       if (typeof n === "string" && n.toLowerCase() === t) return o;
   return null;
 }
-function g1(e) {
+function parseModelId(e) {
   let t = e.trim().toLowerCase();
   if (t === "" || /\s/.test(t)) return null;
   t = t.replace(/\[[12]m\]$/, "");
@@ -1100,14 +1100,14 @@ function g1(e) {
     base: r.base,
   };
   if (r.minor !== void 0) d.minor = r.minor;
-  if (!txn(i)) d.trailer = i;
+  if (!isRecognizedModelIdSuffix(i)) d.trailer = i;
   else {
     let _ = /(?:-v\d+@|[-@])(\d{8})/.exec(i)?.[1];
     if (_ !== void 0) d.date = _;
   }
   return d;
 }
-function txn(e) {
+function isRecognizedModelIdSuffix(e) {
   return /^(?:-fast|-latest)?(?:-v\d{1,3}@\d{8}|[-@]\d{8})?(?:-v\d{1,3}(?::\d{1,3})?)?$/.test(
     e,
   );
@@ -1115,17 +1115,17 @@ function txn(e) {
 function b(e) {
   return /-v\d+(?::\d+)?$/.test(e);
 }
-function F6(e) {
+function isFullyRecognizedModelId(e) {
   return e !== null && e.trailer === void 0;
 }
-function x5t(e, t) {
+function compareModelVersions(e, t) {
   return e.major - t.major || (e.minor ?? 0) - (t.minor ?? 0);
 }
-function zvt(e, t) {
+function isSameModelVersion(e, t) {
   return (
     e.family === t.family &&
     e.legacyVersionFirst === t.legacyVersionFirst &&
-    x5t(e, t) === 0
+    compareModelVersions(e, t) === 0
   );
 }
 function y(e) {
@@ -1143,15 +1143,15 @@ function y(e) {
       return;
   }
 }
-function H5t(e, t) {
+function isModelNewerOrEqual(e, t) {
   if (typeof e !== "string") return !1;
-  let o = g1(e),
-    n = g1(t);
-  if (!F6(o) || !F6(n)) return !1;
+  let o = parseModelId(e),
+    n = parseModelId(t);
+  if (!isFullyRecognizedModelId(o) || !isFullyRecognizedModelId(n)) return !1;
   let r = y(o.family),
     i = y(n.family);
   if (r === void 0 || i === void 0) return !1;
-  return i >= r && x5t(n, o) >= 0;
+  return i >= r && compareModelVersions(n, o) >= 0;
 }
 function U(e) {
   let t = /^claude-([a-z]+)-(\d{1,2})(?!\d)(?:-(\d{1,2})(?!\d))?/.exec(e);
@@ -1222,7 +1222,7 @@ function getSecondaryProvider() {
   return null;
 }
 function G(e) {
-  return e.startsWith("anthropic.") && !b(Xt(e));
+  return e.startsWith("anthropic.") && !b(strip1mSuffix(e));
 }
 function getProviderForModel(e) {
   if (e) {
@@ -1230,7 +1230,7 @@ function getProviderForModel(e) {
     if (t) {
       if (t === "mantle" && G(e)) return t;
       let o = getAPIProvider(),
-        n = BR(e);
+        n = findModelConfigByProviderId(e);
       if (n && n[o] === null && n[t] !== null) return t;
     }
   }
@@ -1272,41 +1272,41 @@ function shouldPropagateTraceContext() {
   return isFirstPartyAnthropicBaseUrl() || a.CLAUDE_CODE_PROPAGATE_TRACEPARENT;
 }
 export {
-  R5t,
-  RP,
-  Gvt,
-  hBe,
-  um,
-  Xt,
-  _0,
-  er,
-  _A,
-  k5t,
-  m1,
-  qvt,
+  CANONICAL_MODEL_IDS,
+  MODEL_ALIASES,
+  MODEL_FAMILIES,
+  MYTHOS_PREVIEW_MODEL_ID,
+  isModelAlias,
+  strip1mSuffix,
+  isSameModelName,
+  stripLongContextTags,
+  isModelFamily,
+  BAKED_MODEL_CATALOG,
+  getModelCatalogState,
+  getModelCatalog,
   kP,
-  lie,
-  Qa,
-  Qkn,
-  Zkn,
-  Yir,
-  Jir,
-  dm,
-  Qir,
-  to,
-  _Be,
-  Zir,
-  ear,
-  exn,
-  tar,
-  QD,
-  BR,
-  g1,
-  txn,
-  F6,
-  x5t,
-  zvt,
-  H5t,
+  getCatalogIdByProviderId,
+  getCatalogEntryById,
+  getPricingTierForModel,
+  MODEL_CAPABILITIES,
+  setServedCapabilityLookup,
+  setFeatureGateLookup,
+  modelHasCapability,
+  resolveModelAliasForProvider,
+  MODEL_CONFIGS_BY_KEY,
+  FABLE_5_MODEL_CONFIG,
+  FABLE_5_1_MODEL_CONFIG,
+  MYTHOS_5_MODEL_CONFIG,
+  OPUS_LINEUP_KEYS,
+  FIRST_PARTY_MODEL_IDS,
+  MODEL_KEY_BY_FIRST_PARTY_ID,
+  findModelConfigByProviderId,
+  parseModelId,
+  isRecognizedModelIdSuffix,
+  isFullyRecognizedModelId,
+  compareModelVersions,
+  isSameModelVersion,
+  isModelNewerOrEqual,
   THIRD_PARTY_PROVIDER_LABELS,
   THIRD_PARTY_PROVIDER_ENV_VARS,
   getAPIProvider,

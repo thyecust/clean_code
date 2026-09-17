@@ -10,7 +10,7 @@
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getBundledSkillsRoot } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
@@ -91,7 +91,7 @@ function runBundledSkillSessionResets() {
     try {
       e();
     } catch (o) {
-      n(
+      logForDebugging(
         `[skills] session-reset hook failed: ${o instanceof Error ? o.message : String(o)}`,
       );
     }
@@ -205,7 +205,7 @@ async function R(e, o) {
     );
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `Failed to extract bundled skill '${e}' to ${r}: ${t instanceof Error ? t.message : String(t)}`,
       ),
       logFeatureBad("skill_bundled_extract", "skill_bundled_extract_write_failed"),
@@ -220,7 +220,7 @@ async function extractAdditionalSkillFiles(e, o) {
     return (await materializeFileMap(r, o, { tolerateExisting: !0 }), r);
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `Failed to extract additional skill files for '${e}' to ${r}: ${t instanceof Error ? t.message : String(t)}`,
       ),
       null

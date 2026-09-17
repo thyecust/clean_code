@@ -39,7 +39,7 @@ import "../Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-storage.js";

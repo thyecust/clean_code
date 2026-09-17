@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mayHaveRemoteClient } from "./chunk-dajvcsw3.js";
 function getBashSpawnFailureDetail(e, o) {
   if (!mayHaveRemoteClient(o)) return l(e);
   return (
-    n(`bash spawn failure detail: ${l(e)}`, { level: "error" }),
+    logForDebugging(`bash spawn failure detail: ${l(e)}`, { level: "error" }),
     "shell command failed (detail withheld on this connection)"
   );
 }

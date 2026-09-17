@@ -35,7 +35,7 @@ import { dl, Trt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { redactKnownPaths, sanitizeErrorMessage, getMainLoopModel, getCanonicalName, envSessionKind, getAllGrowthBookFeatures, getNonDefaultFeatureKeys, getOrCreateUserID, getOrCreateMachineID } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint, isSdkEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Xt } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { shouldReportErrors } from "../共享小工具-未细化/error-reporting-eligibility.js";
 import { errorTrackingClient, isErrorTrackingCapReached, enqueueErrorLog } from "../共享小工具-未细化/chunk-6kad94y1.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
@@ -313,7 +313,7 @@ function ae() {
   try {
     let e = getMainLoopModel();
     if (!e) return;
-    let n = getCanonicalName(Xt(e), { identity: !0 });
+    let n = getCanonicalName(strip1mSuffix(e), { identity: !0 });
     return ie.has(n) ? n : "other";
   } catch {
     return;

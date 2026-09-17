@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { su, oE, vW, l8, c8, jw } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasProfileScope, getOauthAccountInfo, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -25,7 +25,7 @@ import {
   getUnifiedRateLimitWindows,
   getRecentRateLimitWindows,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ble, a3e } from "../成本-Token统计/chunk-3nwwgatc.js";
+import { getUsagePatternsAccess, collectRecentUsageSummary } from "../成本-Token统计/usage-transcript-scan.js";
 function seedUtilization(e) {
   let i = getUnifiedRateLimitWindows();
   if (!i.five_hour && !i.seven_day) {
@@ -108,7 +108,7 @@ async function y(e, i) {
       r = isUsageObject(t),
       d = hasUsageUtilizationWindows(t);
     if (!r || (o && !d)) {
-      n("Usage fetch returned a fieldless or non-object body (in-band error)", {
+      logForDebugging("Usage fetch returned a fieldless or non-object body (in-band error)", {
         level: "error",
       });
       let u = r && "error" in t ? t.error : void 0,
@@ -124,13 +124,13 @@ async function y(e, i) {
       return {
         status: "unavailable",
         rateLimitedVia: a,
-        responseBody: f(b(t)),
+        responseBody: f(jsonStringify(t)),
       };
     }
     if (d) cacheUsageUtilization(t, s, e);
     return { status: "ok", utilization: t };
   } catch (t) {
-    if (cc(t)) n(`Failed to load usage data: ${l(t)}`, { level: "error" });
+    if (cc(t)) logForDebugging(`Failed to load usage data: ${l(t)}`, { level: "error" });
     else logError(t);
     let o = t,
       r = o.response?.status === 429 ? "http_429" : null,
@@ -139,7 +139,7 @@ async function y(e, i) {
     return {
       status: "unavailable",
       rateLimitedVia: r,
-      responseBody: o.response?.data ? f(b(o.response.data)) : void 0,
+      responseBody: o.response?.data ? f(jsonStringify(o.response.data)) : void 0,
     };
   }
 }
@@ -170,8 +170,8 @@ async function collectUsageData({ includeBehaviors: e = !0, storageV5: i, creden
             a.status === "ok" || a.status === "seeded" ? a.utilization : null,
           )
         : Promise.resolve(null),
-      e && t && Ble().allowed
-        ? a3e(i).then(
+      e && t && getUsagePatternsAccess().allowed
+        ? collectRecentUsageSummary(i).then(
             (a) => ({ day: _(a.day), week: _(a.week) }),
             (a) => (logError(a), null),
           )
@@ -189,7 +189,7 @@ async function collectUsageData({ includeBehaviors: e = !0, storageV5: i, creden
             : (a.limit.resets_at ?? null),
       }));
     } catch (a) {
-      n(`model_scoped projection failed: ${l(a)}`, { level: "error" });
+      logForDebugging(`model_scoped projection failed: ${l(a)}`, { level: "error" });
     }
   return {
     session: {

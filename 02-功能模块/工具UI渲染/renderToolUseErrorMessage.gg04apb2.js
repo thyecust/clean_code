@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ExpandedTranscriptProvider, OverflowHint, ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { collectToolUseLookupsWithInProgress } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -22,8 +22,8 @@ import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pkw2prc7.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
@@ -32,7 +32,7 @@ import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
@@ -67,7 +67,7 @@ function renderToolResultMessage(s) {
   if ("status" in s && s.status === "forked")
     return e(ToolResultRow, {
       height: 1,
-      children: e(t, {
+      children: e(Text, {
         children: e(DotSeparatedList, {
           children: [s.background ? "Running in the background" : "Done"],
         }),
@@ -81,23 +81,23 @@ function renderToolResultMessage(s) {
   if ("model" in s && s.model) l.push(s.model);
   return e(ToolResultRow, {
     height: 1,
-    children: e(t, { children: e(DotSeparatedList, { children: l }) }),
+    children: e(Text, { children: e(DotSeparatedList, { children: l }) }),
   });
 }
 function renderToolUseProgressMessage(s, { tools: l, verbose: n }) {
   if (!s.length)
-    return e(ToolResultRow, { height: 1, children: e(t, { dimColor: !0, children: f }) });
+    return e(ToolResultRow, { height: 1, children: e(Text, { dimColor: !0, children: f }) });
   let a = n ? s : s.slice(-p),
     g = s.length - a.length,
     { lookups: d, inProgressToolUseIDs: c } = collectToolUseLookupsWithInProgress(s.map((i) => i.data));
   return e(ToolResultRow, {
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       children: [
         e(ExpandedTranscriptProvider, {
           children: a.map((i) =>
             e(
-              o,
+              Box,
               {
                 height: 1,
                 overflow: "hidden",

@@ -14,7 +14,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -22,11 +22,11 @@ import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { PERMISSION_MODES } from "../权限系统/chunk-e4pfvp7x.js";
-import { HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   isAutoClassifierActive,
   sanitizeDisplayName,
@@ -50,11 +50,11 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
-import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
-import { ps, t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
+import { ps, sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { scrubRestoredTranscriptMetadata } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { LIST_AGENTS_TOOL_NAME } from "./list-agents-tool-constants.js";
 import {
   isAgentStopPending,
@@ -84,13 +84,13 @@ import {
   getParentPromptId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { readTeamFileAsync, updateTeamFile } from "./team-file-store.js";
-import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   SELF_TARGET_REASON,
   isOwnMessagingSocket,
@@ -108,26 +108,26 @@ import {
 } from "./peer-target-guard.js";
 import { resolveSendMessagePin } from "../../01-核心基础设施/共享小工具-未细化/send-message-pins.js";
 import { isHarborKiteModeEmitEnabled, classifyPermissionMode } from "../权限系统/cross-session-inbound-gate.js";
-import { Ton, Ou, uM, y9, Dee, Eon } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
+import { isResumedInlineError, ResumeAgentStateError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentReply } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/共享小工具-未细化/plan-approval-permission-mode.js";
 import {
-  IGe,
-  XSe,
-  _ce,
-  PGe,
-  Aut,
-  Aon,
-  uPe,
-  ENt,
-  ANt,
-  Cut,
-  Con,
-  von,
-  dPe,
-  Ron,
-  OGe,
-} from "./chunk-wsyjx2r0.js";
+  checkCrossSessionSendPermission,
+  pinSendMessageRecipient,
+  OTHER_LOCAL_SESSION_LABEL,
+  buildSentUnderSessionAddressNote,
+  describeRemoteSessionVia,
+  buildUnconfirmedDeliveryNote,
+  buildLocalSessionIdentityNotes,
+  buildConfirmedDeliverySwitchHint,
+  buildConfirmedDeliveryNotice,
+  buildRemoteSessionReachabilityNotes,
+  describeUncheckedSessionScope,
+  describePinnedNameClaimedLocally,
+  SESSION_LIST_TRUNCATED_NOTE,
+  SESSION_LIST_TRUNCATED_LABEL,
+  resolveMessageRecipient,
+} from "./message-recipient-resolution.js";
 import { wakeTeammateTask } from "./teammate-task-messages.js";
 import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
@@ -166,7 +166,7 @@ function je(e) {
     r = Dxe();
   if (r !== p.promptIndexSeen)
     ((p.promptIndexSeen = r), (p.forwardsSincePrompt = 0));
-  if ((p.forwardsSincePrompt++, p.forwardsSincePrompt > Sbt.maxSelfHops))
+  if ((p.forwardsSincePrompt++, p.forwardsSincePrompt > DEFAULT_PEER_GUARD_LIMITS.maxSelfHops))
     return { kind: "loop-paused", forwards: p.forwardsSincePrompt - 1 };
   return { tool: t };
 }
@@ -290,10 +290,10 @@ async function Xe({
       },
     );
   if (_.abortController.signal.aborted) throw new Ve();
-  if (N) (degradeRestoredHostContexts(N.messages), ewt(N.messages));
+  if (N) (degradeRestoredHostContexts(N.messages), scrubRestoredTranscriptMetadata(N.messages));
   if (!N || N.messages.length === 0) q = "no_transcript";
   let K = N ? filterWhitespaceOnlyAssistantMessages(filterOrphanedThinkingMessages(dropUnresolvedToolUseMessages(dropApiInvalidAssistantBlocks(N.messages, { site: "agent_resume" })))) : [],
-    Y = _bt(_.contentReplacementState, K, N?.contentReplacements ?? []),
+    Y = restoreContentReplacementState(_.contentReplacementState, K, N?.contentReplacements ?? []),
     W;
   if (r.customAgentType) {
     let F = _.options.agentDefinitions.activeAgents.find(
@@ -311,7 +311,7 @@ async function Xe({
         }));
   }
   if (!(await markMessagesAsReadByPredicate(i, (F) => isStructuredProtocolMessage(F.text), w, _.storageV5)))
-    n(
+    logForDebugging(
       `[resumeInProcessTeammate] stale protocol-frame drop for ${i} did not land; the resumed runner may see stale protocol frames`,
       { level: "warn" },
     );
@@ -341,7 +341,7 @@ async function Xe({
   if (!U.ok)
     throw (
       logFeatureBad("swarm_in_process_resume", "spawn_failed"),
-      n(`[resumeInProcessTeammate] spawn failed: ${U.error}`),
+      logForDebugging(`[resumeInProcessTeammate] spawn failed: ${U.error}`),
       Error("Failed to respawn in-process teammate")
     );
   if (
@@ -369,7 +369,7 @@ async function Xe({
       void 0,
       _.storageV5,
     ).catch((F) =>
-      n(
+      logForDebugging(
         `[resumeInProcessTeammate] team file re-add failed (ad-hoc team?): ${F}`,
       ),
     ),
@@ -396,7 +396,7 @@ async function Xe({
       resumeMessages: K,
       resumeReplacementState: Y,
     }),
-    n(
+    logForDebugging(
       `[resumeInProcessTeammate] Resumed ${U.agentId} with ${K.length} prior messages`,
     ),
     q)
@@ -455,7 +455,7 @@ Your plain text output is NOT visible to other agents \u2014 to communicate, you
 `.trim();
 }
 function ge(e) {
-  switch (dK(e)) {
+  switch (classifySendFailure(e)) {
     case "gone":
       return "stale_socket";
     case "busy":
@@ -463,9 +463,9 @@ function ge(e) {
     case "other":
       break;
   }
-  if ($Ae(e)) return "too_large";
-  if (UAe(e)) return "sender_paced";
-  if (e instanceof uN)
+  if (isMessageTooLargeError(e)) return "too_large";
+  if (isSenderPacedError(e)) return "sender_paced";
+  if (e instanceof UdsSendRefusedError)
     switch (e.refusal) {
       case "wrong-endpoint":
         return "stale_socket";
@@ -928,9 +928,9 @@ async function as(e, t, p, r, d, _) {
   );
 }
 function ns(e) {
-  if (e instanceof uM) return "not_reachable";
-  if (e instanceof Dee) return "still_stopping";
-  if (e instanceof Ou) return "no_transcript";
+  if (e instanceof AgentStoppedByUserError) return "not_reachable";
+  if (e instanceof AgentStillStoppingError) return "still_stopping";
+  if (e instanceof ResumeAgentStateError) return "no_transcript";
   return "resume_failed";
 }
 function Ae(e) {
@@ -957,7 +957,7 @@ async function Ys(e, t, p, r) {
   if (
     (await writeToMailbox(
       e,
-      { from: i, text: b(q), timestamp: new Date().toISOString(), color: getTeammateColor() },
+      { from: i, text: jsonStringify(q), timestamp: new Date().toISOString(), color: getTeammateColor() },
       _,
       r.storageV5,
     )) === void 0
@@ -984,7 +984,7 @@ async function zs(e, t) {
   let p = getTeamName(),
     r = getAgentId(),
     d = getAgentName() || "teammate";
-  n(
+  logForDebugging(
     `[SendMessageTool] handleShutdownApproval: teamName=${p}, agentId=${r}, agentName=${d}`,
   );
   let _, i;
@@ -998,7 +998,7 @@ async function zs(e, t) {
   let w = createShutdownApprovedMessage({ requestId: e, from: d, paneId: _, backendType: i }),
     q = await writeToMailbox(
       TEAM_LEAD_AGENT_NAME,
-      { from: d, text: b(w), timestamp: new Date().toISOString(), color: getTeammateColor() },
+      { from: d, text: jsonStringify(w), timestamp: new Date().toISOString(), color: getTeammateColor() },
       p,
       t.storageV5,
     ),
@@ -1009,7 +1009,7 @@ async function zs(e, t) {
     K = q === void 0 ? { degradedClass: "mailbox_write_failed" } : void 0;
   if (i === "in-process") {
     if (
-      (n(
+      (logForDebugging(
         `[SendMessageTool] In-process teammate ${d} approving shutdown - signaling abort`,
       ),
       r)
@@ -1018,11 +1018,11 @@ async function zs(e, t) {
         W = findTeammateTaskByAgentId(r, Y.tasks);
       if (W?.abortController)
         (W.abortController.abort(),
-          n(
+          logForDebugging(
             `[SendMessageTool] Aborted controller for in-process teammate ${d}`,
           ));
       else
-        n(
+        logForDebugging(
           `[SendMessageTool] Warning: Could not find task/abortController for ${d}`,
         );
     }
@@ -1032,7 +1032,7 @@ async function zs(e, t) {
         W = findTeammateTaskByAgentId(r, Y.tasks);
       if (W?.abortController)
         return (
-          n(
+          logForDebugging(
             `[SendMessageTool] Fallback: Found in-process task for ${d} via AppState, aborting`,
           ),
           W.abortController.abort(),
@@ -1066,7 +1066,7 @@ async function Ks(e, t, p) {
   if (
     (await writeToMailbox(
       TEAM_LEAD_AGENT_NAME,
-      { from: d, text: b(_), timestamp: new Date().toISOString(), color: getTeammateColor() },
+      { from: d, text: jsonStringify(_), timestamp: new Date().toISOString(), color: getTeammateColor() },
       r,
       p.storageV5,
     )) === void 0
@@ -1117,7 +1117,7 @@ async function Js(e, t, p, r, d) {
   if (
     (await writeToMailbox(
       e,
-      { from: TEAM_LEAD_AGENT_NAME, text: b(q), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: jsonStringify(q), timestamp: new Date().toISOString() },
       i,
       d.storageV5,
     )) === void 0
@@ -1154,7 +1154,7 @@ async function Qs(e, t, p, r, d) {
   if (
     (await writeToMailbox(
       e,
-      { from: TEAM_LEAD_AGENT_NAME, text: b(w), timestamp: new Date().toISOString() },
+      { from: TEAM_LEAD_AGENT_NAME, text: jsonStringify(w), timestamp: new Date().toISOString() },
       i,
       d.storageV5,
     )) === void 0
@@ -1266,7 +1266,7 @@ var SendMessageTool = buildTool({
       let p = parsePeerAddress(e.to),
         r = p.scheme;
       if (r === "bridge") {
-        let d = qNe(t.session, p.target, e.to);
+        let d = formatUnreachablePeerRefusal(t.session, p.target, e.to);
         if (d)
           return (
             de({
@@ -1285,7 +1285,7 @@ var SendMessageTool = buildTool({
               },
             }
           );
-        let _ = $re(t.session, p.target, e.to);
+        let _ = formatCannotReceiveRefusal(t.session, p.target, e.to);
         if (_)
           return (
             de({
@@ -1324,7 +1324,7 @@ var SendMessageTool = buildTool({
       if (r === "other") {
         let d;
         try {
-          d = await OGe(
+          d = await resolveMessageRecipient(
             t.session,
             e.to,
             e.message,
@@ -1334,7 +1334,7 @@ var SendMessageTool = buildTool({
           );
         } catch (_) {
           return (
-            n(
+            logForDebugging(
               `[SendMessage] permission-phase resolve failed (${normalizeSingleLineText(l(_))}) \u2014 asking`,
               { level: "warn" },
             ),
@@ -1383,7 +1383,7 @@ var SendMessageTool = buildTool({
                 },
               }
             );
-          let w = $re(t.session, d.sessionId, d.displayName);
+          let w = formatCannotReceiveRefusal(t.session, d.sessionId, d.displayName);
           if (w)
             return (
               de({
@@ -1530,7 +1530,7 @@ var SendMessageTool = buildTool({
           errorCode: 9,
         };
       try {
-        let r = z(e.message);
+        let r = jsonParse(e.message);
         if (
           r !== null &&
           typeof r === "object" &&
@@ -1611,7 +1611,7 @@ var SendMessageTool = buildTool({
         inlineHandback: d,
         ..._
       } = { display: void 0, inlineHandback: void 0, ...e },
-      i = (w) => b({ success: !0, message: w });
+      i = (w) => jsonStringify({ success: !0, message: w });
     if (d) {
       if (isHandbackProvenanceEnabled()) {
         let w = formatSubagentHandbackContent(
@@ -1635,13 +1635,13 @@ ${w[0].text}`,
       return {
         tool_use_id: t,
         type: "tool_result",
-        content: [{ type: "text", text: b({ ..._, message: formatResumedAgentResult(d) }) }],
+        content: [{ type: "text", text: jsonStringify({ ..._, message: formatResumedAgentResult(d) }) }],
       };
     }
     return {
       tool_use_id: t,
       type: "tool_result",
-      content: [{ type: "text", text: b(_) }],
+      content: [{ type: "text", text: jsonStringify(_) }],
     };
   },
   async call(e, t, p, r) {
@@ -1727,7 +1727,7 @@ ${w[0].text}`,
         }
       let D = d ? Ee(t, d).from : void 0,
         M = d !== void 0 && D !== void 0 ? formatAgentMessage(D, e.message) : e.message,
-        E = PGe(d, D, { oneWay: !1 }),
+        E = buildSentUnderSessionAddressNote(d, D, { oneWay: !1 }),
         S = await Fe({
           tool: I.tool,
           sessionId: e.to,
@@ -1794,19 +1794,19 @@ ${w[0].text}`,
             isLikelyStaleBridgeError: E,
             classifyBridgeSendError: S,
           } = import.meta.require("../Bridge-RemoteControl/listBridgePeerSessions.g159fp6a.js"),
-          B = qNe(t.session, h.target, e.to);
+          B = formatUnreachablePeerRefusal(t.session, h.target, e.to);
         if (B)
           return (
             i("bridge", "bridge_auth", { via: "address" }),
             { data: { success: !1, message: B } }
           );
-        let P = $re(t.session, h.target, e.to);
+        let P = formatCannotReceiveRefusal(t.session, h.target, e.to);
         if (P)
           return (
             i("bridge", "recipient_gate_off", { via: "address" }),
             { data: { success: !1, message: P } }
           );
-        let v = await IGe({
+        let v = await checkCrossSessionSendPermission({
           tool: SendMessageTool,
           input: e,
           context: t,
@@ -1831,8 +1831,8 @@ ${w[0].text}`,
         if (V !== void 0) return V;
         let ee = d !== void 0 && N !== void 0 ? formatAgentMessage(N, C) : C,
           j = ds(),
-          L = PGe(d, N, { oneWay: j !== void 0 }),
-          J = Aon(abt(t.session, h.target)),
+          L = buildSentUnderSessionAddressNote(d, N, { oneWay: j !== void 0 }),
+          J = buildUnconfirmedDeliveryNote(isPeerInboundUnconfirmed(t.session, h.target)),
           G = await M(
             h.target,
             ee,
@@ -1907,7 +1907,7 @@ ${w[0].text}`,
         if (C !== void 0) return C;
         if (v) Ce();
         let V = d !== void 0 && N !== void 0 ? formatAgentMessage(N, e.message) : e.message,
-          ee = PGe(d, N, { oneWay: E() === void 0 });
+          ee = buildSentUnderSessionAddressNote(d, N, { oneWay: E() === void 0 });
         try {
           let j = x
               ? await M(h.target, V, t.storageV5, D, void 0, findLastPeerHopChain(t.messages), w)
@@ -1942,8 +1942,8 @@ ${w[0].text}`,
           };
         } catch (j) {
           i("uds", ge(j));
-          let L = dK(j),
-            J = L === "gone" ? BAe(LIST_AGENTS_TOOL_NAME) : L === "busy" ? bbt(j) : "";
+          let L = classifySendFailure(j),
+            J = L === "gone" ? formatStaleSocketHint(LIST_AGENTS_TOOL_NAME) : L === "busy" ? formatBusySocketHint(j) : "";
           return {
             data: {
               success: !1,
@@ -1962,7 +1962,7 @@ ${w[0].text}`,
     }
     let o =
       W ??
-      (await OGe(
+      (await resolveMessageRecipient(
         t.session,
         e.to,
         e.message,
@@ -2082,9 +2082,9 @@ The sessions on this machine could not be listed just now, so they were not sear
         {
           data: {
             success: !1,
-            message: `No agent named '${e.to}' is reachable.${D}${E}${S}${B}${o.searchTruncated ? dPe : ""}${h !== "no" ? formatMainSessionNotice(e.to, isTeammateContext(t)) : ""}
+            message: `No agent named '${e.to}' is reachable.${D}${E}${S}${B}${o.searchTruncated ? SESSION_LIST_TRUNCATED_NOTE : ""}${h !== "no" ? formatMainSessionNotice(e.to, isTeammateContext(t)) : ""}
 ${M}`,
-            display: `Not sent \u2014 no agent named '${e.to}' is reachable.${o.closest.length > 0 ? ` Did you mean: ${o.closest.map((P) => P.name).join(", ")}?` : ""}${o.bridgeUnavailable || o.cloudUnavailable || o.localUnavailable ? ` Note: ${Con(o)} \u2014 it may exist there; a retry searches again.` : ""}${o.searchTruncated ? ` Note: ${Ron} \u2014 it may exist beyond what was searched.` : ""}${o.pinnedIdentityClaimedLocally ? ` ${von(o.pinnedIdentityClaimedLocally)} \u2014 that is suspicious if you did not set it up.` : ""}`,
+            display: `Not sent \u2014 no agent named '${e.to}' is reachable.${o.closest.length > 0 ? ` Did you mean: ${o.closest.map((P) => P.name).join(", ")}?` : ""}${o.bridgeUnavailable || o.cloudUnavailable || o.localUnavailable ? ` Note: ${describeUncheckedSessionScope(o)} \u2014 it may exist there; a retry searches again.` : ""}${o.searchTruncated ? ` Note: ${SESSION_LIST_TRUNCATED_LABEL} \u2014 it may exist beyond what was searched.` : ""}${o.pinnedIdentityClaimedLocally ? ` ${describePinnedNameClaimedLocally(o.pinnedIdentityClaimedLocally)} \u2014 that is suspicious if you did not set it up.` : ""}`,
           },
         }
       );
@@ -2109,8 +2109,8 @@ ${M}`,
         E = Boolean(
           o.bridgeUnavailable || o.cloudUnavailable || o.localUnavailable,
         ),
-        S = o.searchTruncated ? dPe : "",
-        B = o.searchTruncated ? ` (${Ron})` : "",
+        S = o.searchTruncated ? SESSION_LIST_TRUNCATED_NOTE : "",
+        B = o.searchTruncated ? ` (${SESSION_LIST_TRUNCATED_LABEL})` : "",
         P =
           o.total === 1
             ? o.matchedBy === "prefix"
@@ -2161,9 +2161,9 @@ e.g. {"to": "${formatAgentDisplayName(o.candidates[0])}", ...}`
         });
       let V = o.candidates[0],
         ee = o.pinnedIdentityClaimedLocally
-          ? ` ${von(o.pinnedIdentityClaimedLocally)} \u2014 ask before confirming anyone.`
+          ? ` ${describePinnedNameClaimedLocally(o.pinnedIdentityClaimedLocally)} \u2014 ask before confirming anyone.`
           : "",
-        j = Con(o),
+        j = describeUncheckedSessionScope(o),
         L = o.candidates.map((G) => `'${G.name}' ${describeSessionLocation(G.where)}`).join(", "),
         J = `${o.total === 1 ? (o.matchedBy === "prefix" ? `Not sent \u2014 no agent is named '${e.to}' exactly${E ? ` among the sessions that could be checked (${j})` : ""}; asked Claude to confirm it means '${V.name}'.` : o.pinnedIdentityClaimedLocally ? `Not sent \u2014 '${e.to}' needs a confirm before this send.` : E ? `Not sent yet \u2014 '${e.to}' matches '${V.name}', but ${j}; asked Claude to confirm.` : `Not sent \u2014 '${e.to}' needs a one-time confirm before this send; asked Claude to confirm it means '${V.name}'.`) : o.matchedBy === "prefix" ? `Not sent \u2014 '${e.to}' matches ${o.total} agents by prefix (${L}${o.total > o.candidates.length ? ", \u2026" : ""}); asked Claude to pick one.` : `Not sent \u2014 ${o.total} agents are named '${e.to}' (${L}${o.total > o.candidates.length ? ", \u2026" : ""}); asked Claude to pick one.`}${E && o.total !== 1 ? ` Note: ${j}.` : ""}${B}${ee}`;
       return {
@@ -2195,7 +2195,7 @@ ${D}${M}${x}${v}${S}${h !== "no" ? formatMainSessionNotice(e.to, isTeammateConte
         M =
           parseShortId(D) !== null
             ? "If you need the earlier agent and it is still running, address it by its agent ID from its spawn result."
-            : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${LIST_AGENTS_TOOL_NAME} if you still need that session.` : ""}`;
+            : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : OTHER_LOCAL_SESSION_LABEL}; this name now belongs to an agent in this session.${X ? ` Use ${LIST_AGENTS_TOOL_NAME} if you still need that session.` : ""}`;
       if (U.next === void 0) {
         let E = X
           ? `Use ${LIST_AGENTS_TOOL_NAME} to see everyone you can message.`
@@ -2348,7 +2348,7 @@ ${M}`,
               from: N,
               senderTaskId: d,
               ...(ie && { name: ie }),
-              body: HU(AGENT_MESSAGE_TAG, e.message),
+              body: neutralizeOpeningTags(AGENT_MESSAGE_TAG, e.message),
             }
           : { kind: "coordinator" };
     switch (o.kind) {
@@ -2407,7 +2407,7 @@ ${M}`,
         );
       case "agent-stopped":
         try {
-          let h = await Eon({
+          let h = await resumeAgentReply({
               agentId: o.agentId,
               prompt: Z,
               promptOrigin: le,
@@ -2433,7 +2433,7 @@ ${M}`,
             }
           );
         } catch (h) {
-          if (h instanceof y9) {
+          if (h instanceof AgentResumeInProgressError) {
             let I = enqueueTaskPendingMessage(o.agentId, Z, t.taskRegistry, {
               origin: le,
               isMeta: !0,
@@ -2452,14 +2452,14 @@ ${M}`,
             );
           }
           return (
-            i("resume", ns(h), Ton(h) ? { blockedWait: !0 } : void 0),
+            i("resume", ns(h), isResumedInlineError(h) ? { blockedWait: !0 } : void 0),
             {
               data: {
                 success: !1,
                 message:
-                  h instanceof uM
+                  h instanceof AgentStoppedByUserError
                     ? l(h)
-                    : h instanceof Ou
+                    : h instanceof ResumeAgentStateError
                       ? `Agent "${o.agentName}" is stopped (${o.status}) and could not be resumed: ${l(h)}`
                       : `Agent "${o.agentName}" was resumed but ${h instanceof Error && h.name === "AbortError" ? "was interrupted" : "failed while running"}: ${l(h)}`,
               },
@@ -2531,7 +2531,7 @@ ${M}`,
             );
           }
           M.resolve(null);
-          let S = await Eon({
+          let S = await resumeAgentReply({
               agentId: h,
               prompt: Z,
               promptOrigin: le,
@@ -2557,20 +2557,20 @@ ${M}`,
         } catch (S) {
           return (
             M.resolve(null),
-            i("resume", ns(S), Ton(S) ? { blockedWait: !0 } : void 0),
+            i("resume", ns(S), isResumedInlineError(S) ? { blockedWait: !0 } : void 0),
             {
               data: {
                 success: !1,
                 message:
-                  S instanceof uM
+                  S instanceof AgentStoppedByUserError
                     ? l(S)
                     : E
                       ? `Failed to resume teammate "${o.agentName}": ${l(S)}`
-                      : S instanceof Ou &&
+                      : S instanceof ResumeAgentStateError &&
                           S.transcriptMissing &&
                           parseShortId(o.agentName) !== null
                         ? `Agent "${o.agentName}" could not be resumed: ${l(S)}. If you read this id in a message from another Claude Code process (e.g. the lead's subagent, seen from a teammate pane), it never ran in this session \u2014 reply through "${TEAM_LEAD_AGENT_NAME}" or the session that sent it instead of the raw id.`
-                        : S instanceof Ou
+                        : S instanceof ResumeAgentStateError
                           ? `Agent "${o.agentName}" could not be resumed: ${l(S)}`
                           : `Agent "${o.agentName}" was resumed but ${S instanceof Error && S.name === "AbortError" ? "was interrupted" : "failed while running"}: ${l(S)}`,
               },
@@ -2603,14 +2603,14 @@ ${M}`,
           let v = await M(o.sock, o.displayName, t.storageV5, w),
             x = v.ok || v.reason === "send-uncertain";
           if (x)
-            XSe(t.setAppState, o.displayName, { kind: "session", id: o.sock });
+            pinSendMessageRecipient(t.setAppState, o.displayName, { kind: "session", id: o.sock });
           Je(v, i, {
             ...(o.exactUnique && { exactUnique: !0 }),
             ...(o.previouslyPinned && { previouslyPinned: !0 }),
             ...(o.searchTruncated && { searchTruncated: !0 }),
           });
-          let C = x ? ENt(o, se, "live session", "subscription") : "",
-            V = x ? ANt(o, "live session", "subscription") : "",
+          let C = x ? buildConfirmedDeliverySwitchHint(o, se, "live session", "subscription") : "",
+            V = x ? buildConfirmedDeliveryNotice(o, "live session", "subscription") : "",
             { model: ee, display: j } = E(o.displayName, v, LIST_AGENTS_TOOL_NAME),
             L = !v.ok && v.reason === "peer-gone";
           return {
@@ -2618,8 +2618,8 @@ ${M}`,
               success: v.ok,
               message: L
                 ? ee
-                : `${ee} (${o.displayName} is ${_ce}${uPe(o)})${C}`,
-              display: L ? j : `${j} (${_ce}${uPe(o)})${V}`,
+                : `${ee} (${o.displayName} is ${OTHER_LOCAL_SESSION_LABEL}${buildLocalSessionIdentityNotes(o)})${C}`,
+              display: L ? j : `${j} (${OTHER_LOCAL_SESSION_LABEL}${buildLocalSessionIdentityNotes(o)})${V}`,
             },
           };
         }
@@ -2640,7 +2640,7 @@ ${M}`,
               ? `
 ${C.model}`
               : (V?.model ?? "");
-          (XSe(t.setAppState, o.displayName, { kind: "session", id: o.sock }),
+          (pinSendMessageRecipient(t.setAppState, o.displayName, { kind: "session", id: o.sock }),
             i("uds", void 0, {
               ...(o.exactUnique && { exactUnique: !0 }),
               ...(o.previouslyPinned && { previouslyPinned: !0 }),
@@ -2648,14 +2648,14 @@ ${C.model}`
               ...(x && !x.ok && { degradedClass: he(x) }),
             }));
           let j = e.summary || truncate(e.message, 50),
-            L = PGe(d, N, { oneWay: I() === void 0 }),
-            J = uPe(o),
-            G = ENt(o, se);
+            L = buildSentUnderSessionAddressNote(d, N, { oneWay: I() === void 0 }),
+            J = buildLocalSessionIdentityNotes(o),
+            G = buildConfirmedDeliverySwitchHint(o, se);
           return {
             data: {
               success: !0,
-              message: `\u201C${j}\u201D \u2192 ${o.displayName} (${_ce}${J}${L.message})${G}${ee}`,
-              display: `\u201C${j}\u201D \u2192 sent to ${o.displayName} \u2014 ${_ce}${J}${L.display}${ANt(o)}${
+              message: `\u201C${j}\u201D \u2192 ${o.displayName} (${OTHER_LOCAL_SESSION_LABEL}${J}${L.message})${G}${ee}`,
+              display: `\u201C${j}\u201D \u2192 sent to ${o.displayName} \u2014 ${OTHER_LOCAL_SESSION_LABEL}${J}${L.display}${buildConfirmedDeliveryNotice(o)}${
                 C
                   ? `
 ${C.display}`
@@ -2674,15 +2674,15 @@ ${V.display}`
             ...(o.previouslyPinned && { previouslyPinned: !0 }),
             ...(o.searchTruncated && { searchTruncated: !0 }),
           });
-          let C = dK(v),
+          let C = classifySendFailure(v),
             V =
               C === "gone"
                 ? ` \u2014 that session may have just exited.${X ? ` Call ${LIST_AGENTS_TOOL_NAME} to see who is reachable now.` : ""}`
                 : C === "busy"
-                  ? V3t(v)
+                  ? isRegistryUnreadableRefusal(v)
                     ? " \u2014 this machine's session registry could not be read just now (a transient local condition). Retry the same name shortly."
                     : " \u2014 the session is alive but momentarily busy. Retry the same name shortly."
-                  : $Ae(v) || UAe(v)
+                  : isMessageTooLargeError(v) || isSenderPacedError(v)
                     ? `: ${l(v)}`
                     : "";
           return {
@@ -2711,13 +2711,13 @@ ${V.display}`
             i("bridge", "bridge_auth", { via: I }),
             { data: { success: !1, message: B(o.displayName) } }
           );
-        let P = $re(t.session, o.sessionId, o.displayName);
+        let P = formatCannotReceiveRefusal(t.session, o.sessionId, o.displayName);
         if (P)
           return (
             i("bridge", "recipient_gate_off", { via: I }),
             { data: { success: !1, message: P } }
           );
-        let v = await IGe({
+        let v = await checkCrossSessionSendPermission({
           tool: SendMessageTool,
           input: e,
           context: t,
@@ -2772,12 +2772,12 @@ ${V.display}`
             },
           };
         }
-        XSe(t.setAppState, o.displayName, { kind: o.refKind, id: o.sessionId });
-        let G = ENt(o, se, "agent"),
+        pinSendMessageRecipient(t.setAppState, o.displayName, { kind: o.refKind, id: o.sessionId });
+        let G = buildConfirmedDeliverySwitchHint(o, se, "agent"),
           te = ds(),
-          ae = Cut(o),
-          re = PGe(d, N, { oneWay: o.via === "cloud" || te !== void 0 }),
-          Ue = Aon(
+          ae = buildRemoteSessionReachabilityNotes(o),
+          re = buildSentUnderSessionAddressNote(d, N, { oneWay: o.via === "cloud" || te !== void 0 }),
+          Ue = buildUnconfirmedDeliveryNote(
             o.via === "remote-control" &&
               !o.reportsInbound &&
               !o.inboundReportUnavailable,
@@ -2791,8 +2791,8 @@ ${V.display}`
         return {
           data: {
             success: !0,
-            message: `\u201C${J}\u201D \u2192 ${o.displayName} (${Aut(o.via)}${Ue.message}${Ns}${ae}${re.message})${G}`,
-            display: `\u201C${J}\u201D \u2192 sent to ${o.displayName} \u2014 ${o.via === "cloud" ? "a cloud session (can't reply yet)" : `a session on another machine via Remote Control${te ? ` (one-way: ${te === "rc-disconnected" ? "Remote Control is not connected here" : "no reply address here"})` : ""}`}${Ue.display}${ae}${re.display}${ANt(o, "agent")}`,
+            message: `\u201C${J}\u201D \u2192 ${o.displayName} (${describeRemoteSessionVia(o.via)}${Ue.message}${Ns}${ae}${re.message})${G}`,
+            display: `\u201C${J}\u201D \u2192 sent to ${o.displayName} \u2014 ${o.via === "cloud" ? "a cloud session (can't reply yet)" : `a session on another machine via Remote Control${te ? ` (one-way: ${te === "rc-disconnected" ? "Remote Control is not connected here" : "no reply address here"})` : ""}`}${Ue.display}${ae}${re.display}${buildConfirmedDeliveryNotice(o, "agent")}`,
             msg_id: L.msgId,
           },
         };
@@ -2820,7 +2820,7 @@ ${V.display}`
       typeof e.message === "string"
     ) {
       let t = (_) =>
-          t5(_)
+          sanitizePlainText(_)
             .replace(/[\s\u2800]+/g, " ")
             .trim(),
         p = t(e.message),

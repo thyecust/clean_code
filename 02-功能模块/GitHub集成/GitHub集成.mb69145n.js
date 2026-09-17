@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
@@ -26,7 +26,7 @@ import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getGithubRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { GITHUB_HOST, isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { resolveRemoteUrl } from "../Git-Worktree/git-repository-detection.js";
-import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -46,7 +46,7 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
-import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../后台任务-Shell管理/bg-rendezvous-server.js";
 import { parkCommandUntilAttended } from "../../01-核心基础设施/共享小工具-未细化/command-park.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
@@ -129,13 +129,13 @@ function St(ul) {
   let Nr = Br,
     $r;
   if (Ge[4] === MEMO_CACHE_SENTINEL)
-    (($r = e(o, {
-      children: r(t, {
+    (($r = e(Box, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "More workflow examples (issue triage, CI fixes, etc.) at:",
           " ",
-          e(ct, {
+          e(Link, {
             url: "https://github.com/anthropics/claude-code-action/blob/main/examples/",
             children:
               "https://github.com/anthropics/claude-code-action/blob/main/examples/",
@@ -166,8 +166,8 @@ function St(ul) {
   if (Ge[9] !== ms)
     ((Qt =
       ms &&
-      e(o, {
-        children: e(t, {
+      e(Box, {
+        children: e(Text, {
           color: "error",
           children: "You must select at least one workflow to continue",
         }),
@@ -428,7 +428,7 @@ function Pt(Rl) {
   useKeybindings(Xr, jr);
   let Mr;
   if (oe[26] === MEMO_CACHE_SENTINEL)
-    ((Mr = e(o, {
+    ((Mr = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, {
         subtitle: "Choose API key",
@@ -441,9 +441,9 @@ function Pt(Rl) {
   if (oe[27] !== Le || oe[28] !== K || oe[29] !== Ie)
     ((oo =
       Le &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
-        children: r(t, {
+        children: r(Text, {
           children: [
             K === "existing" ? getThemeColor("success", Ie)("> ") : "  ",
             "Use your existing Claude Code API key",
@@ -459,9 +459,9 @@ function Pt(Rl) {
   if (oe[31] !== me || oe[32] !== K || oe[33] !== Ie)
     ((so =
       me &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
-        children: r(t, {
+        children: r(Text, {
           children: [
             K === "oauth" ? getThemeColor("success", Ie)("> ") : "  ",
             "Create a long-lived token with your Claude subscription",
@@ -482,9 +482,9 @@ function Pt(Rl) {
   else ro = oe[37];
   let io;
   if (oe[38] !== ro)
-    ((io = e(o, {
+    ((io = e(Box, {
       marginBottom: 1,
-      children: r(t, { children: [ro, "Enter a new API key"] }),
+      children: r(Text, { children: [ro, "Enter a new API key"] }),
     })),
       (oe[38] = ro),
       (oe[39] = io));
@@ -524,7 +524,7 @@ function Pt(Rl) {
   else no = oe[46];
   let ao;
   if (oe[47] !== oo || oe[48] !== so || oe[49] !== io || oe[50] !== no)
-    ((ao = r(o, {
+    ((ao = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       paddingX: 1,
@@ -538,9 +538,9 @@ function Pt(Rl) {
   else ao = oe[51];
   let Jr;
   if (oe[52] === MEMO_CACHE_SENTINEL)
-    ((Jr = e(o, {
+    ((Jr = e(Box, {
       marginLeft: 3,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, {
           children: [
@@ -611,7 +611,7 @@ function It(Wl) {
   useKeybindings(si, ri);
   let ii;
   if (ee[15] === MEMO_CACHE_SENTINEL)
-    ((ii = e(o, {
+    ((ii = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, {
         subtitle: "Setup API key secret",
@@ -622,9 +622,9 @@ function It(Wl) {
   else ii = ee[15];
   let ni;
   if (ee[16] === MEMO_CACHE_SENTINEL)
-    ((ni = e(o, {
+    ((ni = e(Box, {
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         color: "warning",
         children: "ANTHROPIC_API_KEY already exists in repository secrets!",
       }),
@@ -633,9 +633,9 @@ function It(Wl) {
   else ni = ee[16];
   let ai;
   if (ee[17] === MEMO_CACHE_SENTINEL)
-    ((ai = e(o, {
+    ((ai = e(Box, {
       marginBottom: 1,
-      children: e(t, { children: "Would you like to:" }),
+      children: e(Text, { children: "Would you like to:" }),
     })),
       (ee[17] = ai));
   else ai = ee[17];
@@ -648,9 +648,9 @@ function It(Wl) {
   else lo = ee[20];
   let co;
   if (ee[21] !== lo)
-    ((co = e(o, {
+    ((co = e(Box, {
       marginBottom: 1,
-      children: r(t, { children: [lo, "Use the existing API key"] }),
+      children: r(Text, { children: [lo, "Use the existing API key"] }),
     })),
       (ee[21] = lo),
       (ee[22] = co));
@@ -664,9 +664,9 @@ function It(Wl) {
   else uo = ee[25];
   let po;
   if (ee[26] !== uo)
-    ((po = e(o, {
+    ((po = e(Box, {
       marginBottom: 1,
-      children: r(t, {
+      children: r(Text, {
         children: [uo, "Create a new secret with a different name"],
       }),
     })),
@@ -686,9 +686,9 @@ function It(Wl) {
       !ge &&
       r(N, {
         children: [
-          e(o, {
+          e(Box, {
             marginBottom: 1,
-            children: e(t, {
+            children: e(Text, {
               children:
                 "Enter new secret name (alphanumeric with underscores):",
             }),
@@ -716,7 +716,7 @@ function It(Wl) {
   else mo = ee[34];
   let fo;
   if (ee[35] !== co || ee[36] !== po || ee[37] !== mo)
-    ((fo = r(o, {
+    ((fo = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       paddingX: 1,
@@ -729,9 +729,9 @@ function It(Wl) {
   else fo = ee[38];
   let li;
   if (ee[39] === MEMO_CACHE_SENTINEL)
-    ((li = e(o, {
+    ((li = e(Box, {
       marginLeft: 3,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: r(DotSeparatedList, {
           children: [
@@ -753,7 +753,7 @@ function Ot() {
   let zl = _(1),
     ui;
   if (zl[0] === MEMO_CACHE_SENTINEL)
-    ((ui = e(o, {
+    ((ui = e(Box, {
       paddingX: 2,
       children: e(SpinnerMessageLine, { message: "Checking GitHub CLI installation\u2026" }),
     })),
@@ -842,7 +842,7 @@ function Tt(nc) {
   useKeybindings(wi, _i);
   let bi;
   if (te[20] === MEMO_CACHE_SENTINEL)
-    ((bi = e(o, {
+    ((bi = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, {
         subtitle: "Select GitHub repository",
@@ -855,9 +855,9 @@ function Tt(nc) {
   if (te[21] !== M || te[22] !== ae)
     ((wo =
       M &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
-        children: r(t, {
+        children: r(Text, {
           bold: ae,
           color: ae ? "permission" : void 0,
           children: [ae ? "> " : "  ", "Use current repository: ", M],
@@ -873,9 +873,9 @@ function Tt(nc) {
     Us = M ? "Enter a different repository" : "Enter repository";
   let _o;
   if (te[24] !== Ks || te[25] !== Ws || te[26] !== Ds || te[27] !== Us)
-    ((_o = e(o, {
+    ((_o = e(Box, {
       marginBottom: 1,
-      children: r(t, { bold: Ks, color: Ws, children: [Ds, Us] }),
+      children: r(Text, { bold: Ks, color: Ws, children: [Ds, Us] }),
     })),
       (te[24] = Ks),
       (te[25] = Ws),
@@ -895,7 +895,7 @@ function Tt(nc) {
   )
     ((bo =
       (!ae || !M) &&
-      e(o, {
+      e(Box, {
         marginLeft: 2,
         marginBottom: 1,
         children: e(hn, {
@@ -924,7 +924,7 @@ function Tt(nc) {
   else bo = te[36];
   let yo;
   if (te[37] !== wo || te[38] !== _o || te[39] !== bo)
-    ((yo = r(o, {
+    ((yo = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       paddingX: 1,
@@ -939,10 +939,10 @@ function Tt(nc) {
   if (te[41] !== Gs)
     ((ko =
       Gs &&
-      e(o, {
+      e(Box, {
         marginLeft: 3,
         marginBottom: 1,
-        children: e(t, {
+        children: e(Text, {
           color: "error",
           children: "Please enter a repository name to continue",
         }),
@@ -962,9 +962,9 @@ function Tt(nc) {
   else yi = te[45];
   let xo;
   if (te[46] !== Co)
-    ((xo = e(o, {
+    ((xo = e(Box, {
       marginLeft: 3,
-      children: e(t, { dimColor: !0, children: r(DotSeparatedList, { children: [Co, yi] }) }),
+      children: e(Text, { dimColor: !0, children: r(DotSeparatedList, { children: [Co, yi] }) }),
     })),
       (te[46] = Co),
       (te[47] = xo));
@@ -1024,7 +1024,7 @@ function Et(wc) {
   let Ys = xi,
     Ai;
   if (qs[6] === MEMO_CACHE_SENTINEL)
-    ((Ai = e(o, {
+    ((Ai = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, {
         subtitle: "Create GitHub Actions workflow",
@@ -1044,9 +1044,9 @@ function Et(wc) {
             if (Vs < Ao) ft = "completed";
             else if (Vs === Ao) ft = "in-progress";
             return e(
-              o,
+              Box,
               {
-                children: r(t, {
+                children: r(Text, {
                   color:
                     ft === "completed"
                       ? "success"
@@ -1080,7 +1080,7 @@ function Ht(Pc) {
     { error: zs, errorReason: Po, errorInstructions: Io } = Pc,
     vi;
   if (Ke[0] === MEMO_CACHE_SENTINEL)
-    ((vi = e(o, {
+    ((vi = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, { children: "Install GitHub App" }),
     })),
@@ -1088,7 +1088,7 @@ function Ht(Pc) {
   else vi = Ke[0];
   let Oo;
   if (Ke[1] !== zs)
-    ((Oo = r(t, { color: "error", children: ["Error: ", zs] })),
+    ((Oo = r(Text, { color: "error", children: ["Error: ", zs] })),
       (Ke[1] = zs),
       (Ke[2] = Oo));
   else Oo = Ke[2];
@@ -1096,9 +1096,9 @@ function Ht(Pc) {
   if (Ke[3] !== Po)
     ((To =
       Po &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, { dimColor: !0, children: ["Reason: ", Po] }),
+        children: r(Text, { dimColor: !0, children: ["Reason: ", Po] }),
       })),
       (Ke[3] = Po),
       (Ke[4] = To));
@@ -1107,12 +1107,12 @@ function Ht(Pc) {
   if (Ke[5] !== Io)
     ((Eo =
       Io.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          e(t, { dimColor: !0, children: "How to fix:" }),
-          e(o, {
+          e(Text, { dimColor: !0, children: "How to fix:" }),
+          e(Box, {
             flexDirection: "column",
             marginLeft: 2,
             children: Io.map(Oi),
@@ -1124,14 +1124,14 @@ function Ht(Pc) {
   else Eo = Ke[6];
   let Si;
   if (Ke[7] === MEMO_CACHE_SENTINEL)
-    ((Si = e(o, {
+    ((Si = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "For manual setup instructions, see:",
           " ",
-          e(t, { color: "claude", children: Z }),
+          e(Text, { color: "claude", children: Z }),
         ],
       }),
     })),
@@ -1147,9 +1147,9 @@ function Ht(Pc) {
   else Ho = Ke[11];
   let Pi;
   if (Ke[12] === MEMO_CACHE_SENTINEL)
-    ((Pi = e(o, {
+    ((Pi = e(Box, {
       marginLeft: 3,
-      children: e(t, { dimColor: !0, children: "Press any key to exit" }),
+      children: e(Text, { dimColor: !0, children: "Press any key to exit" }),
     })),
       (Ke[12] = Pi));
   else Pi = Ke[12];
@@ -1193,7 +1193,7 @@ function Bt(Kc) {
   const Ms = `Repository: ${Wc}`;
   let Bo;
   if (We[5] !== Ms)
-    ((Bo = e(o, {
+    ((Bo = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, { subtitle: Ms, children: "Existing Workflow Found" }),
     })),
@@ -1202,25 +1202,25 @@ function Bt(Kc) {
   else Bo = We[6];
   let Bi;
   if (We[7] === MEMO_CACHE_SENTINEL)
-    ((Bi = r(o, {
+    ((Bi = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "A Claude workflow file already exists at",
             " ",
-            e(t, { color: "claude", children: ".github/workflows/claude.yml" }),
+            e(Text, { color: "claude", children: ".github/workflows/claude.yml" }),
           ],
         }),
-        e(t, { dimColor: !0, children: "What would you like to do?" }),
+        e(Text, { dimColor: !0, children: "What would you like to do?" }),
       ],
     })),
       (We[7] = Bi));
   else Bi = We[7];
   let Go;
   if (We[8] !== js || We[9] !== Xs)
-    ((Go = e(o, {
+    ((Go = e(Box, {
       flexDirection: "column",
       children: e(ve, { options: Dc, onChange: Xs, onCancel: js }),
     })),
@@ -1230,14 +1230,14 @@ function Bt(Kc) {
   else Go = We[10];
   let Gi;
   if (We[11] === MEMO_CACHE_SENTINEL)
-    ((Gi = e(o, {
+    ((Gi = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "View the latest workflow template at:",
           " ",
-          e(t, {
+          e(Text, {
             color: "claude",
             children:
               "https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml",
@@ -1249,7 +1249,7 @@ function Bt(Kc) {
   else Gi = We[11];
   let Ni;
   if (We[12] !== Bo || We[13] !== Go)
-    ((Ni = r(o, {
+    ((Ni = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       borderDimColor: !0,
@@ -1271,18 +1271,18 @@ function Gt(Mc) {
   useKeybinding("confirm:yes", Jc, $i);
   let Ki;
   if (xe[1] === MEMO_CACHE_SENTINEL)
-    ((Ki = e(o, {
+    ((Ki = e(Box, {
       flexDirection: "column",
       marginBottom: 1,
-      children: e(t, { bold: !0, children: "Install the Claude GitHub App" }),
+      children: e(Text, { bold: !0, children: "Install the Claude GitHub App" }),
     })),
       (xe[1] = Ki));
   else Ki = xe[1];
   let Wi;
   if (xe[2] === MEMO_CACHE_SENTINEL)
-    ((Wi = e(o, {
+    ((Wi = e(Box, {
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         children: "Opening browser to install the Claude GitHub App\u2026",
       }),
     })),
@@ -1290,9 +1290,9 @@ function Gt(Mc) {
   else Wi = xe[2];
   let Di;
   if (xe[3] === MEMO_CACHE_SENTINEL)
-    ((Di = e(o, {
+    ((Di = e(Box, {
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         children: "If your browser doesn't open automatically, visit:",
       }),
     })),
@@ -1300,9 +1300,9 @@ function Gt(Mc) {
   else Di = xe[3];
   let Ui;
   if (xe[4] === MEMO_CACHE_SENTINEL)
-    ((Ui = e(o, {
+    ((Ui = e(Box, {
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         underline: !0,
         children: "https://github.com/apps/claude",
       }),
@@ -1311,12 +1311,12 @@ function Gt(Mc) {
   else Ui = xe[4];
   let No;
   if (xe[5] !== Js)
-    ((No = e(o, {
+    ((No = e(Box, {
       marginBottom: 1,
-      children: r(t, {
+      children: r(Text, {
         children: [
           "Please install the app for repository: ",
-          e(t, { bold: !0, children: Js }),
+          e(Text, { bold: !0, children: Js }),
         ],
       }),
     })),
@@ -1325,9 +1325,9 @@ function Gt(Mc) {
   else No = xe[6];
   let Li;
   if (xe[7] === MEMO_CACHE_SENTINEL)
-    ((Li = e(o, {
+    ((Li = e(Box, {
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children:
           "Important: Make sure to grant access to this specific repository",
@@ -1337,8 +1337,8 @@ function Gt(Mc) {
   else Li = xe[7];
   let Fi;
   if (xe[8] === MEMO_CACHE_SENTINEL)
-    ((Fi = e(o, {
-      children: r(t, {
+    ((Fi = e(Box, {
+      children: r(Text, {
         bold: !0,
         color: "permission",
         children: ["Press Enter once you've installed the app", figures.ellipsis],
@@ -1348,14 +1348,14 @@ function Gt(Mc) {
   else Fi = xe[8];
   let qi;
   if (xe[9] === MEMO_CACHE_SENTINEL)
-    ((qi = e(o, {
+    ((qi = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "Having trouble? See manual setup instructions at:",
           " ",
-          e(t, { color: "claude", children: Z }),
+          e(Text, { color: "claude", children: Z }),
         ],
       }),
     })),
@@ -1363,7 +1363,7 @@ function Gt(Mc) {
   else qi = xe[9];
   let Yi;
   if (xe[10] !== No)
-    ((Yi = r(o, {
+    ((Yi = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       borderDimColor: !0,
@@ -1492,7 +1492,7 @@ function Ut(yu) {
         let rn = Lo;
         let nn = l(rn);
         (Oe({ state: "error", message: nn, toRetry: { state: "starting" } }),
-          n(`OAuth flow failed in install-github-app: ${nn}`, {
+          logForDebugging(`OAuth flow failed in install-github-app: ${nn}`, {
             level: "error",
           }),
           logEvent("tengu_oauth_error", { ...getErrorTelemetryFields(rn) }));
@@ -1528,7 +1528,7 @@ function Ut(yu) {
       (le[18] = y.state),
       (le[19] = ln));
   else ln = le[19];
-  Un(ln, y.state === "about_to_retry" ? 500 : null);
+  useTimeout(ln, y.state === "about_to_retry" ? 500 : null);
   let un;
   if (
     le[20] !== gt ||
@@ -1576,13 +1576,13 @@ function Ut(yu) {
   if (le[34] !== y.state)
     ((qo =
       y.state === "starting" &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 1,
         paddingBottom: 1,
         children: [
-          e(t, { bold: !0, children: "Create Authentication Token" }),
-          e(t, {
+          e(Text, { bold: !0, children: "Create Authentication Token" }),
+          e(Text, {
             dimColor: !0,
             children: "Creating a long-lived token for GitHub Actions",
           }),
@@ -1598,14 +1598,14 @@ function Ut(yu) {
       y.state !== "starting" &&
       y.state !== "processing" &&
       r(
-        o,
+        Box,
         {
           flexDirection: "column",
           gap: 1,
           paddingBottom: 1,
           children: [
-            e(t, { bold: !0, children: "Create Authentication Token" }),
-            e(t, {
+            e(Text, { bold: !0, children: "Create Authentication Token" }),
+            e(Text, {
               dimColor: !0,
               children: "Creating a long-lived token for GitHub Actions",
             }),
@@ -1622,19 +1622,19 @@ function Ut(yu) {
       y.state === "waiting_for_login" &&
       ye &&
       r(
-        o,
+        Box,
         {
           flexDirection: "column",
           gap: 1,
           paddingBottom: 1,
           children: [
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               paddingX: 1,
               children: [
-                r(o, {
+                r(Box, {
                   children: [
-                    r(t, {
+                    r(Text, {
                       dimColor: !0,
                       children: [
                         "Browser didn't open? Use the url below to sign in",
@@ -1647,10 +1647,10 @@ function Ut(yu) {
                 e(CopyFallbackNotice, { via: Wo }),
               ],
             }),
-            e(ct, {
+            e(Link, {
               url: y.url,
               assumeSupport: !0,
-              children: e(t, { dimColor: !0, children: y.url }),
+              children: e(Text, { dimColor: !0, children: y.url }),
             }),
           ],
         },
@@ -1671,7 +1671,7 @@ function Ut(yu) {
     le[47] !== ye ||
     le[48] !== sr
   )
-    ((zo = e(o, {
+    ((zo = e(Box, {
       paddingLeft: 1,
       flexDirection: "column",
       gap: 1,
@@ -1758,9 +1758,9 @@ function Xo(Ru) {
       )
         ((He =
           _t &&
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { children: Dt }),
+              e(Text, { children: Dt }),
               e(hn, {
                 value: rr,
                 onChange: ir,
@@ -1783,7 +1783,7 @@ function Xo(Ru) {
       else He = Pe[11];
       let Wt;
       if (Pe[12] !== Y || Pe[13] !== He)
-        ((Wt = r(o, { flexDirection: "column", gap: 1, children: [Y, He] })),
+        ((Wt = r(Box, { flexDirection: "column", gap: 1, children: [Y, He] })),
           (Pe[12] = Y),
           (Pe[13] = He),
           (Pe[14] = Wt));
@@ -1801,15 +1801,15 @@ function Xo(Ru) {
     case "success": {
       let Y;
       if (Pe[16] === MEMO_CACHE_SENTINEL)
-        ((Y = r(o, {
+        ((Y = r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [
-            e(t, {
+            e(Text, {
               color: "success",
               children: "\u2713 Authentication token created successfully!",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Using token for GitHub Actions setup\u2026",
             }),
@@ -1822,7 +1822,7 @@ function Xo(Ru) {
     case "error": {
       let Y;
       if (Pe[17] !== Re.message)
-        ((Y = r(t, {
+        ((Y = r(Text, {
           color: "error",
           children: ["OAuth error: ", Re.message],
         })),
@@ -1832,11 +1832,11 @@ function Xo(Ru) {
       let He;
       if (Pe[19] !== Re.toRetry)
         ((He = Re.toRetry
-          ? e(t, {
+          ? e(Text, {
               dimColor: !0,
               children: "Press Enter to try again, or any other key to cancel",
             })
-          : e(t, {
+          : e(Text, {
               dimColor: !0,
               children: "Press any key to return to API key selection",
             })),
@@ -1845,7 +1845,7 @@ function Xo(Ru) {
       else He = Pe[20];
       let Wt;
       if (Pe[21] !== Y || Pe[22] !== He)
-        ((Wt = r(o, { flexDirection: "column", gap: 1, children: [Y, He] })),
+        ((Wt = r(Box, { flexDirection: "column", gap: 1, children: [Y, He] })),
           (Pe[21] = Y),
           (Pe[22] = He),
           (Pe[23] = Wt));
@@ -1855,10 +1855,10 @@ function Xo(Ru) {
     case "about_to_retry": {
       let Y;
       if (Pe[24] === MEMO_CACHE_SENTINEL)
-        ((Y = e(o, {
+        ((Y = e(Box, {
           flexDirection: "column",
           gap: 1,
-          children: e(t, { color: "permission", children: "Retrying\u2026" }),
+          children: e(Text, { color: "permission", children: "Retrying\u2026" }),
         })),
           (Pe[24] = Y));
       else Y = Pe[24];
@@ -1895,7 +1895,7 @@ function Ft(Bu) {
   let dr = kn,
     Cn;
   if (Lt[3] === MEMO_CACHE_SENTINEL)
-    ((Cn = e(o, {
+    ((Cn = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, {
         subtitle: "Set up GitHub Actions",
@@ -1906,10 +1906,10 @@ function Ft(Bu) {
   else Cn = Lt[3];
   let xn;
   if (Lt[4] === MEMO_CACHE_SENTINEL)
-    ((xn = e(o, {
+    ((xn = e(Box, {
       flexDirection: "column",
       marginBottom: 1,
-      children: e(t, {
+      children: e(Text, {
         children:
           "The Claude GitHub App is now installed. You can optionally set up GitHub Actions workflows so Claude responds to @claude mentions in issues and PRs.",
       }),
@@ -1918,7 +1918,7 @@ function Ft(Bu) {
   else xn = Lt[4];
   let An;
   if (Lt[5] !== dr || Lt[6] !== pr)
-    ((An = r(o, {
+    ((An = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       borderDimColor: !0,
@@ -1926,7 +1926,7 @@ function Ft(Bu) {
       children: [
         Cn,
         xn,
-        e(o, {
+        e(Box, {
           flexDirection: "column",
           children: e(ve, { options: Gu, onChange: dr, onCancel: pr }),
         }),
@@ -1951,7 +1951,7 @@ function Yt(Yu) {
   if (vn === void 0 ? !1 : vn) {
     let qt;
     if (we[0] === MEMO_CACHE_SENTINEL)
-      ((qt = e(o, {
+      ((qt = e(Box, {
         marginBottom: 1,
         children: e(TitleWithSubtitle, {
           subtitle: "Success",
@@ -1962,7 +1962,7 @@ function Yt(Yu) {
     else qt = we[0];
     let qe;
     if (we[1] === MEMO_CACHE_SENTINEL)
-      ((qe = r(t, {
+      ((qe = r(Text, {
         color: "success",
         children: [
           e(StatusIndicator, { status: "success", withSpace: !0 }),
@@ -1977,9 +1977,9 @@ function Yt(Yu) {
         children: [
           qt,
           qe,
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, {
+            children: e(Text, {
               children:
                 "Run /install-github-app again anytime to set up GitHub Actions workflows.",
             }),
@@ -1993,9 +1993,9 @@ function Yt(Yu) {
       ((Ve = r(N, {
         children: [
           Ye,
-          e(o, {
+          e(Box, {
             marginLeft: 3,
-            children: e(t, { dimColor: !0, children: "Press any key to exit" }),
+            children: e(Text, { dimColor: !0, children: "Press any key to exit" }),
           }),
         ],
       })),
@@ -2005,7 +2005,7 @@ function Yt(Yu) {
   }
   let qt;
   if (we[4] === MEMO_CACHE_SENTINEL)
-    ((qt = e(o, {
+    ((qt = e(Box, {
       marginBottom: 1,
       children: e(TitleWithSubtitle, { subtitle: "Success", children: "Install GitHub App" }),
     })),
@@ -2015,7 +2015,7 @@ function Yt(Yu) {
   if (we[5] !== kt)
     ((qe =
       !kt &&
-      r(t, {
+      r(Text, {
         color: "success",
         children: [
           e(StatusIndicator, { status: "success", withSpace: !0 }),
@@ -2030,9 +2030,9 @@ function Yt(Yu) {
     ((Ye =
       bt &&
       yt &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           color: "success",
           children: [
             e(StatusIndicator, { status: "success", withSpace: !0 }),
@@ -2048,9 +2048,9 @@ function Yt(Yu) {
   if (we[10] !== bt || we[11] !== fr || we[12] !== yt)
     ((Ve =
       (!bt || !yt) &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           color: "success",
           children: [
             e(StatusIndicator, { status: "success", withSpace: !0 }),
@@ -2067,7 +2067,7 @@ function Yt(Yu) {
   else Ve = we[13];
   let Sn;
   if (we[14] === MEMO_CACHE_SENTINEL)
-    ((Sn = e(o, { marginTop: 1, children: e(t, { children: "Next steps:" }) })),
+    ((Sn = e(Box, { marginTop: 1, children: e(Text, { children: "Next steps:" }) })),
       (we[14] = Sn));
   else Sn = we[14];
   let jo;
@@ -2075,22 +2075,22 @@ function Yt(Yu) {
     ((jo = kt
       ? r(N, {
           children: [
-            e(t, {
+            e(Text, {
               children:
                 "1. Install the Claude GitHub App if you haven't already",
             }),
-            e(t, { children: "2. Your workflow file was kept unchanged" }),
-            e(t, { children: "3. API key is configured and ready to use" }),
+            e(Text, { children: "2. Your workflow file was kept unchanged" }),
+            e(Text, { children: "3. API key is configured and ready to use" }),
           ],
         })
       : r(N, {
           children: [
-            e(t, { children: "1. A pre-filled PR page has been created" }),
-            e(t, {
+            e(Text, { children: "1. A pre-filled PR page has been created" }),
+            e(Text, {
               children:
                 "2. Install the Claude GitHub App if you haven't already",
             }),
-            e(t, {
+            e(Text, {
               children: "3. Merge the PR to enable Claude PR assistance",
             }),
           ],
@@ -2109,9 +2109,9 @@ function Yt(Yu) {
   else Mo = we[21];
   let Pn;
   if (we[22] === MEMO_CACHE_SENTINEL)
-    ((Pn = e(o, {
+    ((Pn = e(Box, {
       marginLeft: 3,
-      children: e(t, { dimColor: !0, children: "Press any key to exit" }),
+      children: e(Text, { dimColor: !0, children: "Press any key to exit" }),
     })),
       (we[22] = Pn));
   else Pn = we[22];
@@ -2329,7 +2329,7 @@ Need help? Common issues:
       ));
   } catch (P) {
     if (P instanceof Error && P.message.includes("Failed to"))
-      n(`GitHub Actions setup failed: ${P.message}`, { level: "error" });
+      logForDebugging(`GitHub Actions setup failed: ${P.message}`, { level: "error" });
     else if (
       (logEvent("tengu_setup_github_actions_failed", {
         reason: S("unexpected_error"),
@@ -2342,19 +2342,19 @@ Need help? Common issues:
   }
 }
 function Wn(hp, gp) {
-  return e(BulletItem, { children: e(t, { dimColor: !0, children: hp }) }, gp);
+  return e(BulletItem, { children: e(Text, { dimColor: !0, children: hp }) }, gp);
 }
 function Kn(Qo, wp) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       marginBottom: 1,
       children: [
-        e(t, { color: "warning", bold: !0, children: Qo.title }),
-        e(t, { children: Qo.message }),
+        e(Text, { color: "warning", bold: !0, children: Qo.title }),
+        e(Text, { children: Qo.message }),
         Qo.instructions.length > 0 &&
-          e(o, {
+          e(Box, {
             flexDirection: "column",
             marginLeft: 2,
             marginTop: 1,
@@ -2374,12 +2374,12 @@ function Vt(dp) {
   useKeybinding("confirm:yes", fp, Tn);
   let En;
   if (ze[1] === MEMO_CACHE_SENTINEL)
-    ((En = r(o, {
+    ((En = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [
-        r(t, { bold: !0, children: [figures.warning, " Setup Warnings"] }),
-        e(t, {
+        r(Text, { bold: !0, children: [figures.warning, " Setup Warnings"] }),
+        e(Text, {
           dimColor: !0,
           children:
             "We found some potential issues, but you can continue anyway",
@@ -2397,9 +2397,9 @@ function Vt(dp) {
   else Hn = ze[4];
   let Bn;
   if (ze[5] === MEMO_CACHE_SENTINEL)
-    ((Bn = e(o, {
+    ((Bn = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         bold: !0,
         color: "permission",
         children: [
@@ -2420,14 +2420,14 @@ function Vt(dp) {
   else Bn = ze[5];
   let Gn;
   if (ze[6] === MEMO_CACHE_SENTINEL)
-    ((Gn = e(o, {
+    ((Gn = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [
           "You can also try the manual setup steps if needed:",
           " ",
-          e(t, { color: "claude", children: Z }),
+          e(Text, { color: "claude", children: Z }),
         ],
       }),
     })),
@@ -3381,7 +3381,7 @@ For manual setup instructions, see: ${Z}`,
       else z = R[107];
       let Ia;
       if (R[108] !== Ue || R[109] !== z)
-        ((Ia = e(o, {
+        ((Ia = e(Box, {
           tabIndex: 0,
           autoFocus: !0,
           onKeyDown: Ue,
@@ -3412,7 +3412,7 @@ For manual setup instructions, see: ${Z}`,
       else k = R[114];
       let z;
       if (R[115] !== Ue || R[116] !== k)
-        ((z = e(o, { tabIndex: 0, autoFocus: !0, onKeyDown: Ue, children: k })),
+        ((z = e(Box, { tabIndex: 0, autoFocus: !0, onKeyDown: Ue, children: k })),
           (R[115] = Ue),
           (R[116] = k),
           (R[117] = z));

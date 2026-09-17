@@ -8,20 +8,20 @@
 
 // Version: 2.1.263
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getFileStatus, stashToCleanState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { gracefulShutdownSync, getCloudSessionBlockers } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { runSteps } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { WA, Vx, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
-import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
+import { OAuthLoginScreen } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -42,7 +42,7 @@ function k({ onStashAndContinue: h, onCancel: m }) {
         S(i);
       } catch (i) {
         let y = i instanceof Error ? i.message : String(i);
-        (n(`Error getting changed files: ${y}`, { level: "error" }),
+        (logForDebugging(`Error getting changed files: ${y}`, { level: "error" }),
           l("Failed to get changed files"));
       } finally {
         b(!1);
@@ -53,40 +53,40 @@ function k({ onStashAndContinue: h, onCancel: m }) {
     T(!0);
     try {
       if (
-        (n("Stashing changes before teleport..."),
+        (logForDebugging("Stashing changes before teleport..."),
         await stashToCleanState("Teleport auto-stash"))
       )
-        (n("Successfully stashed changes"), h());
+        (logForDebugging("Successfully stashed changes"), h());
       else l("Failed to stash changes");
     } catch (s) {
       let i = s instanceof Error ? s.message : String(s);
-      (n(`Error stashing changes: ${i}`, { level: "error" }),
+      (logForDebugging(`Error stashing changes: ${i}`, { level: "error" }),
         l("Failed to stash changes"));
     } finally {
       T(!1);
     }
   };
   if (x)
-    return e(o, {
+    return e(Box, {
       flexDirection: "column",
       padding: 1,
-      children: r(o, {
+      children: r(Box, {
         marginBottom: 1,
         children: [
-          e(yo, {}),
-          r(t, { children: [" Checking git status", figures.ellipsis] }),
+          e(SpinnerGlyph, {}),
+          r(Text, { children: [" Checking git status", figures.ellipsis] }),
         ],
       }),
     });
   if (u)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       padding: 1,
       children: [
-        r(t, { bold: !0, color: "error", children: ["Error: ", u] }),
-        e(o, {
+        r(Text, { bold: !0, color: "error", children: ["Error: ", u] }),
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             children: e(KeybindingHint, { chord: "escape", action: "cancel", bold: !0 }),
           }),
@@ -98,27 +98,27 @@ function k({ onStashAndContinue: h, onCancel: m }) {
     title: "Working directory has changes",
     onCancel: m,
     children: [
-      e(t, {
+      e(Text, {
         children:
           "Teleport will switch git branches. The following changes were found:",
       }),
-      e(o, {
+      e(Box, {
         flexDirection: "column",
         paddingLeft: 2,
         children:
           f.length > 0
             ? R
-              ? r(t, { children: [f.length, " files changed"] })
-              : f.map((s, i) => e(t, { children: s }, i))
+              ? r(Text, { children: [f.length, " files changed"] })
+              : f.map((s, i) => e(Text, { children: s }, i))
             : e(EmptyStateMessage, { children: "No changes detected" }),
       }),
-      e(t, {
+      e(Text, {
         children:
           "Would you like to stash these changes and continue with teleport?",
       }),
       v
-        ? r(o, {
-            children: [e(yo, {}), e(t, { children: " Stashing changes..." })],
+        ? r(Box, {
+            children: [e(SpinnerGlyph, {}), e(Text, { children: " Stashing changes..." })],
           })
         : e(ConfirmPrompt, {
             confirmLabel: "Stash changes and continue",
@@ -224,7 +224,7 @@ function TeleportError(We) {
       let A;
       if (c[16] !== P || c[17] !== z || c[18] !== G)
         ((A = G
-          ? e(V8, {
+          ? e(OAuthLoginScreen, {
               onDone: P,
               mode: "login",
               forceLoginMethod: "claudeai",
@@ -232,14 +232,14 @@ function TeleportError(We) {
             })
           : r(N, {
               children: [
-                r(o, {
+                r(Box, {
                   flexDirection: "column",
                   children: [
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children: "Teleport requires a Claude.ai account.",
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children:
                         "Your Claude Pro/Max subscription will be used by Claude Code.",

@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../后台任务-Shell管理/bg-rendezvous-server.js";
 import { getConversationMessages, gracefulShutdown, flushSessionStorage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { MIN_CLAUDE_DESKTOP_VERSION, getClaudeDesktopStatus, openSessionInClaudeDesktop } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { recordExitTranscript, appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
@@ -163,30 +163,30 @@ Learn more at ${D}`,
     }, []),
     p === "error")
   )
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       paddingX: 2,
       tabIndex: 0,
       autoFocus: !0,
       onKeyDown: S,
       children: [
-        r(t, { color: "error", children: ["Error: ", w] }),
-        e(t, { dimColor: !0, children: "Press any key to continue\u2026" }),
+        r(Text, { color: "error", children: ["Error: ", w] }),
+        e(Text, { dimColor: !0, children: "Press any key to continue\u2026" }),
       ],
     });
   if (p === "prompt-download")
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       paddingX: 2,
       tabIndex: 0,
       autoFocus: !0,
       onKeyDown: S,
       children: [
-        e(t, { children: M }),
-        e(t, { children: "Download now? (y/n)" }),
+        e(Text, { children: M }),
+        e(Text, { children: "Download now? (y/n)" }),
       ],
     });
-  return e(o, {
+  return e(Box, {
     paddingX: 2,
     children: e(SpinnerMessageLine, {
       message: {

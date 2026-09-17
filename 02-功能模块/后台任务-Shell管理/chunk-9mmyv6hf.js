@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { BG_EXIT_CAUSE_SESSION_IN_USE, setBgExitCause, readAndClearBgExitCause, readAndClearBgExitDetail } from "./chunk-z5vtnzjg.js";
 import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -37,7 +37,7 @@ import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLaun
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { FOCUS_IN_SEQUENCE, FOCUS_OUT_SEQUENCE } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
@@ -277,7 +277,7 @@ function ae(e, t, r) {
       .catch(() => "");
     (I.then((x) => {
       let V = x.slice(0, 2000).trim();
-      if (V.length > 0) n(`[bg-pty] host crash: ${V}`, { level: "warn" });
+      if (V.length > 0) logForDebugging(`[bg-pty] host crash: ${V}`, { level: "warn" });
       let Y = [...V.matchAll(/\bE[A-Z]{2,14}\b/g)].find(
         (_e) => !"/\\".includes(V[_e.index - 1] ?? "."),
       )?.[0];
@@ -350,13 +350,13 @@ function ae(e, t, r) {
     else if (E.ctrl.t === "ping") Q(encodeControlFrame({ t: "pong" }));
     else if (E.ctrl.t === "auth-required")
       if (o)
-        (n(
+        (logForDebugging(
           `[bg-pty] ${p ?? e}: host rejected auth token \u2014 roster ptyAuth poisoned; input is dead until the worker is re-keyed`,
           { level: "warn" },
         ),
           c?.());
       else
-        n(
+        logForDebugging(
           `[bg-pty] ${p ?? e}: host dropped input \u2014 DATA auth token missing (version skew; respawn the worker to re-key)`,
           { level: "warn" },
         );
@@ -374,7 +374,7 @@ function ae(e, t, r) {
         if (I && !y) {
           try {
             (process.kill(t, 0),
-              n("[bg-pty] dropped by host; reconnecting", { level: "debug" }),
+              logForDebugging("[bg-pty] dropped by host; reconnecting", { level: "debug" }),
               (B = dt),
               (D = 0),
               me());
@@ -395,7 +395,7 @@ function ae(e, t, r) {
             .then((V) => {
               let Y = (V ?? "").slice(0, 2000).trim();
               if (Y.length > 0)
-                n(
+                logForDebugging(
                   `[bg-pty] pre-connect stderr:
 ${Y}`,
                   { level: "warn" },
@@ -410,7 +410,7 @@ ${Y}`,
         for (let V of Ce.splice(0)) Q(V);
         fe = 0;
         let x = createFrameDecoder(rt, (V) => {
-          (n(`[bg-pty] frame error: ${V}`, { level: "warn" }), E.destroy());
+          (logForDebugging(`[bg-pty] frame error: ${V}`, { level: "warn" }), E.destroy());
         });
         E.on("data", x);
       }),
@@ -435,14 +435,14 @@ ${Y}`,
       return;
     }
     if (s !== void 0 && Te && D >= 3)
-      (n(
+      (logForDebugging(
         `[bg-pty] ${e}: ENOENT on adopt \u2014 sock file externally deleted; respawning`,
         { level: "warn" },
       ),
         logEvent("tengu_bg_adopt_sock_unlinked", {}),
         (D = Ne));
     if (D >= Ne) {
-      n(`[bg-pty] ${e}: ${D} connect attempts failed; treating host as dead`, {
+      logForDebugging(`[bg-pty] ${e}: ${D} connect attempts failed; treating host as dead`, {
         level: "warn",
       });
       let I = q && getProcessStartTime(t);
@@ -619,7 +619,7 @@ function He(e, t, r, s, p) {
           (g = !1),
           (d = _),
           _.write(
-            b({
+            jsonStringify({
               proto: BG_PROTO,
               role: "supervisor",
               supervisorPid: process.pid,
@@ -632,7 +632,7 @@ function He(e, t, r, s, p) {
           readStreamLines(_, (y) => {
             let D;
             try {
-              D = z(y);
+              D = jsonParse(y);
             } catch {
               return;
             }
@@ -645,7 +645,7 @@ function He(e, t, r, s, p) {
     if (o || m || g) return;
     if (c >= Be) {
       ((g = !0),
-        n(
+        logForDebugging(
           `[bg-rv] ${e}: ${c} connect attempts failed \u2014 giving up (pid-poll is liveness backstop)`,
           { level: "warn" },
         ),
@@ -670,14 +670,14 @@ function He(e, t, r, s, p) {
         try {
           return (
             d.write(
-              b(_) +
+              jsonStringify(_) +
                 `
 `,
             ),
             !0
           );
         } catch (w) {
-          return (n(`[bg-rv] send failed: ${String(w)}`), !1);
+          return (logForDebugging(`[bg-rv] send failed: ${String(w)}`), !1);
         }
       },
       close() {
@@ -747,13 +747,13 @@ function JYt() {
       let m = A(g);
       if (m !== "ENOENT" && m !== "ENOSPC" && m !== "EACCES" && m !== "EROFS")
         throw g;
-      n(
+      logForDebugging(
         `bg: ptyHost stderr breadcrumb open failed (${m}) at ${getPtyHostStderrPath(r.ptySock)} \u2014 spawning with stderr discarded (crash diagnostics degraded): ${l(g)}`,
         { level: "warn" },
       );
       let { cgroup: k, ...v } = o;
       if (k !== void 0)
-        n(`bg: retrying ptyHost spawn without tool cgroup placement (${k})`, {
+        logForDebugging(`bg: retrying ptyHost spawn without tool cgroup placement (${k})`, {
           level: "warn",
         });
       c = Bun.spawn(d, { ...v, stdio: ["ignore", "ignore", "ignore"] });
@@ -882,7 +882,7 @@ async function Ee(e, t) {
       r
     );
   } catch (s) {
-    n(`writeAuthSnapshot failed: ${l(s)}`, { level: "warn" });
+    logForDebugging(`writeAuthSnapshot failed: ${l(s)}`, { level: "warn" });
     return;
   }
 }
@@ -896,7 +896,7 @@ async function Ae(e, t) {
       r
     );
   } catch (s) {
-    n(`writeSocketTokensFile failed: ${l(s)}`, { level: "warn" });
+    logForDebugging(`writeSocketTokensFile failed: ${l(s)}`, { level: "warn" });
     return;
   }
 }
@@ -1110,7 +1110,7 @@ class qW {
   transitionTo(e) {
     if (!It(this.phase, e))
       return (
-        n(
+        logForDebugging(
           `[bg] illegal worker-phase transition ${Qe(this.phase)} \u2192 ${Qe(e)} for ${this.record.short}`,
           { level: "warn" },
         ),
@@ -1449,7 +1449,7 @@ class qW {
   onPtyAuthRequired() {
     let e = this.dispatch.launch.mode;
     if ((logEvent("tengu_bg_pty_auth_mismatch", { mode: fromEnum(e) }), e === "exec")) {
-      n(
+      logForDebugging(
         `[bg] exec worker ${this.dispatch.short}: ptyHost rejected auth token \u2014 roster ptyAuth poisoned; input is dead until re-dispatch (exec workers are never auto-respawned)`,
         { level: "warn" },
       );
@@ -1465,7 +1465,7 @@ class qW {
       this.record.outcome ||
       this.dispatch.launch.mode === "exec"
     ) {
-      n(
+      logForDebugging(
         `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 not re-keying ` +
           `(via=${this.via} phase=${this.phase.kind} mode=${this.dispatch.launch.mode} fired=${this.authRekeyFired} count=${this.authRekeyCount})`,
         { level: "warn" },
@@ -1482,7 +1482,7 @@ class qW {
               deferred: !1,
               skipped: S("settled"),
             }),
-            n(
+            logForDebugging(
               `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 worker already settled; leaving to retireIfSettled`,
               { level: "warn" },
             ));
@@ -1494,7 +1494,7 @@ class qW {
             deferred: !0,
             reason: fromEnum(r),
           }),
-            n(
+            logForDebugging(
               `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 ` +
                 (r === "active"
                   ? "worker is mid-turn"
@@ -1506,7 +1506,7 @@ class qW {
           return;
         }
         (logEvent("tengu_bg_adopt_token_lost_respawn", { source: fromEnum(e), deferred: !1 }),
-          n(
+          logForDebugging(
             `[bg] worker ${this.dispatch.short}: auth mismatch (${e}) \u2014 respawning to re-key (--resume preserves the session)`,
             { level: "warn" },
           ),
@@ -1771,7 +1771,7 @@ class qW {
       (t.rvAuth === void 0 || t.ptyAuth === void 0)
     )
       return (
-        n(
+        logForDebugging(
           `[bg] adopt ${c.dispatch.short}: roster rvAuth/ptyAuth missing for token-era worker \u2014 schema-skewed daemon stripped them`,
           { level: "warn" },
         ),
@@ -1867,7 +1867,7 @@ class qW {
   }
   seedFocus(e) {
     if (this.dispatch.launch.mode === "exec") return;
-    this.pty?.write(e ? jke : xhe);
+    this.pty?.write(e ? FOCUS_IN_SEQUENCE : FOCUS_OUT_SEQUENCE);
   }
   resize(e, t) {
     if (
@@ -2385,14 +2385,14 @@ class qW {
         if (s === "settled") {
           ((this.pendingAuthRekey = void 0),
             (this.authRekeyFired = !1),
-            n(
+            logForDebugging(
               `[bg] worker ${this.dispatch.short}: deferred auth-mismatch re-key (${t}) dropped \u2014 worker settled; leaving to retireIfSettled`,
               { level: "warn" },
             ));
           return;
         }
         if (s !== null) return;
-        (n(
+        (logForDebugging(
           `[bg] worker ${this.dispatch.short}: deferred auth-mismatch re-key (${t}) firing on tempo='${e.tempo}'`,
           { level: "warn" },
         ),
@@ -2696,7 +2696,7 @@ class qW {
         else if (e.type === "interactive-mark") {
           let t = parseInteractiveMarkRv(e);
           if (!t) {
-            (n(
+            (logForDebugging(
               `[bg ${this.record.short}] dropped malformed rv interactive-mark frame`,
               { level: "warn" },
             ),
@@ -2757,7 +2757,7 @@ class qW {
     )
       return !1;
     return (
-      n(
+      logForDebugging(
         `bg: ${this.dispatch.short} pty host pid=${t} has exited but is unreaped (state ${r}) via=${e} \u2014 reaping it and marking the session failed`,
         { level: "warn" },
       ),
@@ -2904,7 +2904,7 @@ async function Nt() {
   if ((delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH, !t)) return e;
   let r = await readSocketTokenFile(t);
   if ((await X(t).catch(() => {}), !r?.claimAuth))
-    n("[bg-spare] tokens file unreadable; claim gate degraded", {
+    logForDebugging("[bg-spare] tokens file unreadable; claim gate degraded", {
       level: "warn",
     });
   return r?.claimAuth ?? e;
@@ -2917,7 +2917,7 @@ async function QYt(e) {
     if (!e.launcherNotRunnableEpisode.logged)
       ((e.launcherNotRunnableEpisode.logged = !0),
         logFeatureBad("agent_launcher", "spare_launcher_not_runnable"),
-        n(
+        logForDebugging(
           `bg spare: launcher \`${getLauncherArgv()[0]}\` was deleted or is not executable \u2014 not minting a warm spare until it is restored`,
           { level: "warn" },
         ));
@@ -3015,7 +3015,7 @@ async function QYt(e) {
             else X(o).catch(() => {});
           let N = ((await readBoundedFile(getPtyHostStderrPath(r), 1048576)) ?? "").slice(0, 2000).trim();
           if (N.length > 0)
-            n(
+            logForDebugging(
               `bg spare host pid=${_.pid} exit stderr:
 ${N}`,
               { level: "warn" },
@@ -3029,14 +3029,14 @@ ${N}`,
               getLauncherArgv().length > 0 &&
               (R < xt || (D === 0 && R < FAST_CRASH_WINDOW_MS));
           if (U && !w.claimed && !y)
-            n(
+            logForDebugging(
               `bg spare: host pid=${_.pid} died ${R}ms after spawn while the tool memory cgroup OOM-killed a member \u2014 not attributed to the launcher`,
               { level: "warn" },
             );
           if (C)
             (sigtermThenKill([-_.pid]),
               logFeatureBad("agent_launcher", "spare_fork_or_crash"),
-              n(
+              logForDebugging(
                 `bg spare: launcher \`${getLauncherArgv()[0]}\` exited ${R}ms after spawn \u2014 it either daemonized instead of calling \`exec\` (launcher contract #1) or crashed at startup. Warm spares are disabled until the background service restarts; sessions still start, without the warm-attach shortcut.`,
                 { level: "warn" },
               ));
@@ -3096,7 +3096,7 @@ function ZYt(e, t, r, s, p, d) {
           errno: Jr(c),
           error: l(c).slice(0, 100),
         }),
-          n(`[bg-spare] send-claim failed: ${l(c)}`, { level: "warn" }));
+          logForDebugging(`[bg-spare] send-claim failed: ${l(c)}`, { level: "warn" }));
         let g = connect(t.ptySock);
         (g.on("error", () => {}),
           g.once("connect", () => {
@@ -3132,7 +3132,7 @@ function Ht(e, t) {
     (p.once("error", s),
       p.once("connect", () => {
         p.end(
-          b(t) +
+          jsonStringify(t) +
             `
 `,
           () => r(),

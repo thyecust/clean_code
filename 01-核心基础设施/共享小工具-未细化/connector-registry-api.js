@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "./lazy-value.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -96,7 +96,7 @@ async function listConnectors(e, r) {
   return a;
 }
 function logConnectorSuggestFailure(e, r) {
-  (n(`[connector-suggest] ${e} failed: ${l(r)}`, { level: "error" }),
+  (logForDebugging(`[connector-suggest] ${e} failed: ${l(r)}`, { level: "error" }),
     logFeatureBad(
       e === "search"
         ? "connector_suggest_search"

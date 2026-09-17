@@ -12,17 +12,17 @@ import { ALLOWED_OAUTH_BASE_URLS, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ra, l, Rt, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ou, wc, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, pathSpaces, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getFlagValues } from "../上下文压缩-Compact/cli-args.js";
 import { se, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-var rBe = /https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+/g;
+var URL_PATTERN = /https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+/g;
 function T(e) {
   return /^https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+$/.test(e);
 }
 var re = { ")": "(", "]": "[", "}": "{" };
-function SQ(e) {
+function stripTrailingPunctuation(e) {
   while (e.length > 0) {
     let r = e.at(-1);
     if (".,;:!?".includes(r)) {
@@ -41,8 +41,8 @@ function SQ(e) {
   }
   return e;
 }
-function Skn(e) {
-  for (let r of e.matchAll(rBe)) return SQ(r[0]);
+function extractFirstUrl(e) {
+  for (let r of e.matchAll(URL_PATTERN)) return stripTrailingPunctuation(r[0]);
   return;
 }
 var te = "tengu_lively_beaver";
@@ -57,7 +57,7 @@ var D = new b();
 function dir(e) {
   return D.register(e);
 }
-function oBe() {
+function isAccountOnHoldEnabled() {
   let e = D.reader;
   if (!e) return !1;
   try {
@@ -66,21 +66,21 @@ function oBe() {
     return !1;
   }
 }
-var PRe = "account_on_hold",
-  sBe = "https://claude.ai/restricted",
+var ACCOUNT_ON_HOLD_ERROR_CODE = "account_on_hold",
+  ACCOUNT_ON_HOLD_URL = "https://claude.ai/restricted",
   A =
     "Your account is on hold and can't use Claude Code. View details or appeal: ";
-function bkn(e) {
+function formatAccountOnHoldMessage(e) {
   return `${A}${e}`;
 }
-function Tvt(e) {
+function formatAccountOnHoldSignInMessage(e) {
   return `Your account is on hold and can't sign in to Claude Code. View details or appeal: ${e}`;
 }
-var $p = bkn(sBe);
-function wkn(e) {
-  if (!oBe() || !e.startsWith(A)) return !1;
+var $p = formatAccountOnHoldMessage(ACCOUNT_ON_HOLD_URL);
+function isAccountOnHoldMessage(e) {
+  if (!isAccountOnHoldEnabled() || !e.startsWith(A)) return !1;
   let r = e.slice(A.length);
-  return T(r) && Yse(r) === r;
+  return T(r) && sanitizeAccountOnHoldUrl(r) === r;
 }
 var M = 2048,
   oe =
@@ -92,16 +92,16 @@ function ne(e) {
     return !1;
   }
 }
-function Yse(e) {
-  if (typeof e !== "string" || e.length > M) return sBe;
+function sanitizeAccountOnHoldUrl(e) {
+  if (typeof e !== "string" || e.length > M) return ACCOUNT_ON_HOLD_URL;
   let r;
   try {
     r = new URL(e);
   } catch {
-    return sBe;
+    return ACCOUNT_ON_HOLD_URL;
   }
   if (r.protocol !== "https:" || r.username || r.password || r.port || r.hash)
-    return sBe;
+    return ACCOUNT_ON_HOLD_URL;
   let t = r.hostname;
   return (t === "claude.ai" ||
     t.endsWith(".claude.ai") ||
@@ -111,30 +111,30 @@ function Yse(e) {
     r.href.length <= M &&
     oe.test(r.href)
     ? r.href
-    : sBe;
+    : ACCOUNT_ON_HOLD_URL;
 }
 var ie = createLazyValue(() =>
   c({
     error: X(["invalid_grant", "access_denied"]),
-    error_description: k(PRe),
+    error_description: k(ACCOUNT_ON_HOLD_ERROR_CODE),
     error_uri: se().optional(),
   }),
 );
-function WZe(e) {
-  if (!oBe()) return null;
+function parseAccountOnHoldError(e) {
+  if (!isAccountOnHoldEnabled()) return null;
   let r = e;
   if (typeof r === "string") {
-    if (!r.includes(PRe)) return null;
+    if (!r.includes(ACCOUNT_ON_HOLD_ERROR_CODE)) return null;
     try {
-      r = z(r);
+      r = jsonParse(r);
     } catch {
       return null;
     }
   }
   let t = ie().safeParse(r);
-  return t.success ? { url: Yse(t.data.error_uri) } : null;
+  return t.success ? { url: sanitizeAccountOnHoldUrl(t.data.error_uri) } : null;
 }
-class mge extends Error {
+class OAuthAccountOnHoldError extends Error {
   url;
   constructor(e) {
     super("OAuth account is on hold");
@@ -142,7 +142,7 @@ class mge extends Error {
     this.name = "OAuthAccountOnHoldError";
   }
 }
-class c1 extends Error {
+class OAuthCallbackError extends Error {
   error;
   errorDescription;
   errorUri;
@@ -156,8 +156,8 @@ class c1 extends Error {
       (this.displayMessage = r ? `${e}: ${r}` : e));
   }
 }
-function Evt(e) {
-  return e instanceof c1 && e.errorDescription === PRe;
+function isAccountOnHoldCallbackError(e) {
+  return e instanceof OAuthCallbackError && e.errorDescription === ACCOUNT_ON_HOLD_ERROR_CODE;
 }
 import { lstatSync, readFileSync, realpathSync } from "fs";
 import {
@@ -170,15 +170,15 @@ import {
   resolve,
   sep as H,
 } from "path";
-function gge(e) {
+function parseAccountOnHoldApiError(e) {
   if (
     !(e instanceof Ra) ||
     (e.statusCode !== 400 && e.statusCode !== 401 && e.statusCode !== 403)
   )
     return null;
-  return WZe(e.body);
+  return parseAccountOnHoldError(e.body);
 }
-function iBe(e) {
+function isNoRefreshAvailableError(e) {
   return (
     e instanceof Ra &&
     e.statusCode === null &&
@@ -195,14 +195,14 @@ class W {
   primedFiles = void 0;
 }
 var d = new j(() => new W());
-function nS() {
+function getAuthPrecedenceSource() {
   let e = d.of(B().host);
   if (e.precedenceSource.filled) return e.precedenceSource.value;
   let r = xe();
   return ((e.precedenceSource = { filled: !0, value: r }), r);
 }
 function xe() {
-  let e = KD(),
+  let e = getAnthropicConfigDir(),
     r = V();
   if (r) {
     if (e === null) return null;
@@ -213,63 +213,63 @@ function xe() {
   }
   if (q()) return "env-quad";
   if (e !== null) {
-    let t = O(e, ORe(e));
+    let t = O(e, getActiveProfileName(e));
     if (t === "oidc_federation" || t === "user_oauth")
       return "profile-implicit";
   }
   return null;
 }
-function Avt() {
+function resetProfileAuthCache() {
   let e = d.of(B().host);
   ((e.precedenceSource = { filled: !1 }),
     (e.authType = { filled: !1 }),
     (e.profileStoreDenyPaths = { filled: !1 }),
     (e.settingsBearerRejected = !1),
-    Tkn());
+    clearCachedAccountInfo());
 }
-function Tkn() {
+function clearCachedAccountInfo() {
   d.of(B().host).accountInfo = { filled: !1 };
 }
-function pir() {
-  return nS() !== null;
+function isProfileAuthSelected() {
+  return getAuthPrecedenceSource() !== null;
 }
-function Cvt() {
+function getProfileAuthType() {
   let e = d.of(B().host);
   if (e.authType.filled) return e.authType.value;
   let r = ge();
   return ((e.authType = { filled: !0, value: r }), r);
 }
 function ge() {
-  let e = nS();
+  let e = getAuthPrecedenceSource();
   if (e === null) return null;
   if (e === "env-quad") return "oidc_federation";
-  let r = KD();
+  let r = getAnthropicConfigDir();
   if (r === null) return null;
   let t =
       e === "profile-explicit"
         ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
-        : ORe(r),
+        : getActiveProfileName(r),
     o = O(r, t);
   return o === "oidc_federation" || o === "user_oauth" ? o : null;
 }
-function GZe() {
-  return nS() === "profile-implicit" && Cvt() === "user_oauth";
+function isClaudeAiLoginShadowingProfile() {
+  return getAuthPrecedenceSource() === "profile-implicit" && getProfileAuthType() === "user_oauth";
 }
-function vvt() {
+function getProfileAccountInfo() {
   let e = d.of(B().host);
   if (e.accountInfo.filled) return e.accountInfo.value;
   let r = he();
   return ((e.accountInfo = { filled: !0, value: r }), r);
 }
 function he() {
-  let e = nS();
+  let e = getAuthPrecedenceSource();
   if (e === null || e === "env-quad") return;
-  let r = KD();
+  let r = getAnthropicConfigDir();
   if (r === null) return;
   let t =
       e === "profile-explicit"
         ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
-        : ORe(r),
+        : getActiveProfileName(r),
     o = g(I(r, t));
   if (o === null) return;
   try {
@@ -284,37 +284,37 @@ function he() {
     return;
   }
 }
-function qZe() {
-  let e = nS();
+function describeProfileAuthSource() {
+  let e = getAuthPrecedenceSource();
   if (e === "env-quad") {
     let r = process.env.ANTHROPIC_WORKSPACE_ID?.trim();
     return `env-quad \xB7 org ${v(process.env.ANTHROPIC_ORGANIZATION_ID ?? "")} \xB7 rule ${v(process.env.ANTHROPIC_FEDERATION_RULE_ID ?? "")}${r ? ` \xB7 ws ${r.startsWith("wrkspc_") ? v(r) : r}` : ""}`;
   }
   if (e === "profile-explicit" || e === "profile-implicit") {
-    let r = KD(),
+    let r = getAnthropicConfigDir(),
       t =
         r === null
           ? "default"
           : e === "profile-explicit"
             ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
-            : ORe(r);
-    return `credentials-file \xB7 ${Cvt() ?? "unknown"} \xB7 profile ${t}`;
+            : getActiveProfileName(r);
+    return `credentials-file \xB7 ${getProfileAuthType() ?? "unknown"} \xB7 profile ${t}`;
   }
   return "inactive";
 }
 function v(e) {
   return e.length <= 6 ? e : `\u2026${e.slice(-6)}`;
 }
-function fir() {
-  let e = nS();
+function getProfileBaseUrl() {
+  let e = getAuthPrecedenceSource();
   if (e === null || e === "env-quad") return;
-  let r = KD();
+  let r = getAnthropicConfigDir();
   if (r === null) return;
   try {
     let t =
         e === "profile-explicit"
           ? (process.env.ANTHROPIC_PROFILE?.trim() ?? "default")
-          : ORe(r),
+          : getActiveProfileName(r),
       o = g(u(r, "configs", `${t}.json`));
     if (o === null) return;
     let s = JSON.parse(o);
@@ -325,13 +325,13 @@ function fir() {
     return;
   }
 }
-function mir() {
+function isSettingsBearerRejected() {
   return d.of(B().host).settingsBearerRejected;
 }
-function gir(e) {
+function setSettingsBearerRejected(e) {
   d.of(B().host).settingsBearerRejected = e;
 }
-function Rvt() {
+function getProfileStoreDenyPaths() {
   let e = d.of(B().host);
   if (e.profileStoreDenyPaths.filled) return e.profileStoreDenyPaths.value;
   let { value: r, complete: t } = _e();
@@ -339,7 +339,7 @@ function Rvt() {
   return r;
 }
 function _e() {
-  let e = KD();
+  let e = getAnthropicConfigDir();
   if (e === null) return { value: null, complete: !0 };
   let r = { dirs: [e], files: [] };
   try {
@@ -350,7 +350,7 @@ function _e() {
           files: [u(t, "active_config")],
         }
       : { dirs: [t], files: [] };
-    let s = process.env.ANTHROPIC_PROFILE?.trim() || ORe(e),
+    let s = process.env.ANTHROPIC_PROFILE?.trim() || getActiveProfileName(e),
       i = I(e, s);
     if (typeof i !== "string" || !i.trim()) return { value: r, complete: !0 };
     let f = dedupe(isAbsolute(i) ? [resolve(i)] : [resolve(t, i), resolve(i)]).filter(
@@ -365,7 +365,7 @@ function _e() {
     };
   } catch (t) {
     return (
-      n(
+      logForDebugging(
         `WIF profile store: could not resolve the active profile's credentials path (${l(t)}); denying the store root only`,
         { level: "warn" },
       ),
@@ -373,7 +373,7 @@ function _e() {
     );
   }
 }
-function ORe(e) {
+function getActiveProfileName(e) {
   return g(u(e, "active_config"))?.trim() || "default";
 }
 function O(e, r) {
@@ -403,7 +403,7 @@ function I(e, r, t) {
     t?.authentication?.credentials_path ?? u(e, "credentials", `${r}.json`)
   );
 }
-function KD() {
+function getAnthropicConfigDir() {
   return G()?.dir ?? null;
 }
 function G() {
@@ -424,7 +424,7 @@ function q() {
 function N(e) {
   let r = U(e);
   if (r === parse(r).root) return !0;
-  let t = relative(r, U(ae().cwd())),
+  let t = relative(r, U(getFsSurface().cwd())),
     o = t.split(H)[0];
   return t === "" || (o !== ".." && !isAbsolute(t));
 }
@@ -462,7 +462,7 @@ function g(e) {
     throw t;
   }
 }
-async function hir(e) {
+async function primeProfileReadAhead(e) {
   let r = d.of(B().host),
     t = G();
   if (r.precedenceSource.filled || t === null) return;
@@ -471,10 +471,10 @@ async function hir(e) {
     f = async (x) => {
       let h;
       try {
-        h = await e.hostFiles.readText(wc[s](x));
+        h = await e.hostFiles.readText(pathSpaces[s](x));
       } catch (R) {
         return (
-          n(
+          logForDebugging(
             `WIF profile read-ahead: the storage backend threw reading ${x}: ${l(R)}`,
             { level: "warn" },
           ),
@@ -485,7 +485,7 @@ async function hir(e) {
         let R = h.value.found ? h.value.value : null;
         return (i.set(x, R), R);
       }
-      if (FA(ou(h.error))) i.set(x, null);
+      if (FA(getTelemetryCode(h.error))) i.set(x, null);
       return null;
     },
     p = V();
@@ -493,9 +493,9 @@ async function hir(e) {
   let y = p || (await f(u(o, "active_config")))?.trim() || "default";
   (await f(u(o, "configs", `${y}.json`)), (r.primedFiles = i));
   try {
-    (nS(), Cvt());
+    (getAuthPrecedenceSource(), getProfileAuthType());
   } catch (x) {
-    n(`WIF profile read-ahead: left to the first reader: ${l(x)}`);
+    logForDebugging(`WIF profile read-ahead: left to the first reader: ${l(x)}`);
   } finally {
     r.primedFiles = void 0;
   }
@@ -506,8 +506,8 @@ var Re = new Set([
   "api-staging.anthropic.com",
   ...ALLOWED_OAUTH_BASE_URLS.map((e) => new URL(e).hostname),
 ]);
-function _ir(e) {
-  let r = aBe();
+function validateSdkUrlFlag(e) {
+  let r = scanSdkUrlFlag();
   if (!e) {
     if (r.status === "absent") return null;
     return r.status === "rejected"
@@ -547,7 +547,7 @@ function P(e) {
     reason: `host ${C(r.hostname)} is not an approved Anthropic endpoint`,
   };
 }
-function aBe() {
+function scanSdkUrlFlag() {
   let e = getFlagValues("--sdk-url"),
     r = e.filter(Boolean).at(-1);
   if (!r) return { status: "absent" };
@@ -561,7 +561,7 @@ function aBe() {
   if (t) return { status: "rejected", ...t };
   return { status: "ok", url: r };
 }
-function bQ(e) {
+function normalizeUrlSchemeToHttp(e) {
   if (e.protocol === "wss:") e.protocol = "https:";
   else if (e.protocol === "ws:") e.protocol = "http:";
   return e;
@@ -623,26 +623,26 @@ class K {
   cachedDialFailed = Le();
 }
 var Ce = new j(() => new K());
-function jt() {
+function getMcpClientState() {
   return Ce.of(B().host);
 }
-function kvt(e, r) {
-  let t = jt();
+function markConfigAsCliOwned(e, r) {
+  let t = getMcpClientState();
   if ((t.cliOwnedConfigs.add(e), r?.getBearerToken))
     t.cliOwnedBearerProviders.set(e, r.getBearerToken);
   return e;
 }
-function rS(e) {
-  return typeof e === "object" && e !== null && jt().cliOwnedConfigs.has(e);
+function isCliOwnedMcpConfig(e) {
+  return typeof e === "object" && e !== null && getMcpClientState().cliOwnedConfigs.has(e);
 }
-function Jse(e) {
+function hasCliOwnedBearerProvider(e) {
   return (
-    typeof e === "object" && e !== null && jt().cliOwnedBearerProviders.has(e)
+    typeof e === "object" && e !== null && getMcpClientState().cliOwnedBearerProviders.has(e)
   );
 }
-function xvt(e) {
+function getCliOwnedBearerToken(e) {
   if (typeof e !== "object" || e === null) return null;
-  let r = jt().cliOwnedBearerProviders.get(e);
+  let r = getMcpClientState().cliOwnedBearerProviders.get(e);
   if (!r) return null;
   try {
     return r() || null;
@@ -651,10 +651,10 @@ function xvt(e) {
   }
 }
 var S = "/v2/ccr-sessions/-/meta/mcp",
-  Eq = "claude-code-remote",
-  yir = "Claude Code Remote",
+  CLAUDE_CODE_REMOTE_SERVER_NAME = "claude-code-remote",
+  CLAUDE_CODE_REMOTE_DISPLAY_NAME = "Claude Code Remote",
   E = "bf7c680d-5fdc-5ef4-b4a0-abadb619bf0a";
-function Hvt(e, r) {
+function buildCcrMetaServerConfig(e, r) {
   return {
     type: "http",
     url: e,
@@ -666,14 +666,14 @@ function Hvt(e, r) {
     alwaysLoad: !0,
   };
 }
-var Aq = "hearthbot";
-var g5t = [
+var HEARTHBOT_SERVER_NAME = "hearthbot";
+var CCR_PROXY_PATH_PREFIXES = [
     "/v2/session_ingress/shttp/mcp/",
     "/v2/session_ingress/mcp/ws/",
     "/v2/ccr-sessions/",
     "/v1/code/",
   ],
-  Sir = "spent";
+  BRIDGE_CARRIER_SPENT_MARKER = "spent";
 class Q {
   captured = J();
   carrier = Z();
@@ -690,9 +690,9 @@ class Q {
     ((this.captured = J()), (this.carrier = Z()));
   }
 }
-var g0 = new Q();
-function Ekn() {
-  return g0.bridgeCarrier
+var bridgeCarrierState = new Q();
+function getBridgeCarrierEnvVarsToScrub() {
+  return bridgeCarrierState.bridgeCarrier
     ? [
         "CLAUDE_CODE_SESSION_ACCESS_TOKEN",
         "SESSION_INGRESS_URL",
@@ -700,8 +700,8 @@ function Ekn() {
       ]
     : [];
 }
-function UR(e) {
-  let r = g0.atStartup;
+function isSessionIngressUrl(e) {
+  let r = bridgeCarrierState.atStartup;
   if (!r) return !1;
   let t, o;
   try {
@@ -717,16 +717,16 @@ function UR(e) {
         : t.origin) !== o.origin
   )
     return !1;
-  return g5t.some((i) => t.pathname.includes(i));
+  return CCR_PROXY_PATH_PREFIXES.some((i) => t.pathname.includes(i));
 }
-function Ivt(e, r) {
+function isBridgeCarrierServer(e, r) {
   if (!("url" in r) || typeof r.url !== "string") return !1;
-  if (!UR(r.url)) return !1;
-  switch (g0.bridgeCarrier) {
+  if (!isSessionIngressUrl(r.url)) return !1;
+  switch (bridgeCarrierState.bridgeCarrier) {
     case void 0:
       return !0;
     case "child":
-      return r.scope === "dynamic" && e === Eq;
+      return r.scope === "dynamic" && e === CLAUDE_CODE_REMOTE_SERVER_NAME;
     case "descendant":
       return !1;
   }
@@ -737,11 +737,11 @@ function Se(e, r) {
   if (t.pathname === S) return t.search === "";
   let o = t.searchParams.getAll("toolbox_mcp_server_id");
   return (
-    g5t.some((s) => t.pathname.includes(s)) && o.length === 1 && o[0] === E
+    CCR_PROXY_PATH_PREFIXES.some((s) => t.pathname.includes(s)) && o.length === 1 && o[0] === E
   );
 }
 var Ee = /^\/v2\/ccr-sessions\/([A-Za-z0-9_-]+)\/mcp$/;
-function Pvt(e, r, t) {
+function buildCcrSessionMetaUrl(e, r, t) {
   let o = w(e, r);
   if (!o) return null;
   let s = Ee.exec(o.pathname),
@@ -788,7 +788,7 @@ function w(e, r) {
     : null;
 }
 function Pe() {
-  let e = g0.atStartup;
+  let e = bridgeCarrierState.atStartup;
   if (!e) return null;
   try {
     return new URL(e).origin;
@@ -796,17 +796,17 @@ function Pe() {
     return null;
   }
 }
-function bir(e) {
+function isStartupCcrSessionMetaUrl(e) {
   let r = Pe();
   return r !== null && Se(e, r);
 }
-function Ovt(e) {
+function getTrustedIngressOrigin(e) {
   return e !== void 0 && P(e) === null ? new URL(e).origin : null;
 }
 var we = "/v1/code/mcp/hearthbot",
   Te = /^\/v2\/ccr-sessions\/(?:-|[A-Za-z0-9_-]+)\/hearthbot\/mcp$/;
-function wir(e) {
-  if (!UR(e)) return !1;
+function isHearthbotMcpUrl(e) {
+  if (!isSessionIngressUrl(e)) return !1;
   let r;
   try {
     r = new URL(e);
@@ -825,7 +825,7 @@ var ee = new Set([
   "bridge.claudeusercontent.com",
   "bridge-staging.claudeusercontent.com",
 ]);
-function h5t(e) {
+function isAllowedBridgeWsUrl(e) {
   let r;
   try {
     r = new URL(e);
@@ -839,12 +839,12 @@ function h5t(e) {
     ee.has(r.hostname)
   );
 }
-function zZe(e) {
-  if ("url" in e && typeof e.url === "string" && UR(e.url)) return !0;
-  return rS(e);
+function isCcrProxyConfig(e) {
+  if ("url" in e && typeof e.url === "string" && isSessionIngressUrl(e.url)) return !0;
+  return isCliOwnedMcpConfig(e);
 }
-function VZe(e) {
-  if (!UR(e)) return !1;
+function isRemoteDevicesProxyUrl(e) {
+  if (!isSessionIngressUrl(e)) return !1;
   let r;
   try {
     r = new URL(e);
@@ -860,7 +860,7 @@ function VZe(e) {
     return !1;
   }
 }
-function DRe(e) {
+function normalizeMcpServerUrl(e) {
   if (!("url" in e) || typeof e.url !== "string") return;
   try {
     let r = new URL(e.url);
@@ -875,7 +875,7 @@ function DRe(e) {
     return;
   }
 }
-function wQ(e) {
+function getMcpServerOrigin(e) {
   if (!("url" in e) || typeof e.url !== "string") return;
   try {
     return new URL(e.url).origin;
@@ -883,7 +883,7 @@ function wQ(e) {
     return;
   }
 }
-function Tir(e) {
+function formatUrlForDisplay(e) {
   if (!URL.canParse(e)) return;
   let r = new URL(e);
   if (r.origin === "null") return;
@@ -906,11 +906,11 @@ function Z() {
   }
   return "descendant";
 }
-var LRe = [
+var BG_DISPATCHER_ENV_VARS = [
   "CLAUDE_BG_DISPATCHER_SUBSCRIPTION_TYPE",
   "CLAUDE_BG_DISPATCHER_RATE_LIMIT_TIER",
 ];
-function Eir(e) {
+function buildBgDispatcherEnvVars(e) {
   return {
     ...(e.subscriptionType && {
       CLAUDE_BG_DISPATCHER_SUBSCRIPTION_TYPE: e.subscriptionType,
@@ -920,7 +920,7 @@ function Eir(e) {
     }),
   };
 }
-function Akn() {
+function getBgDispatcherIdentity() {
   if (a.CLAUDE_CODE_SESSION_KIND !== "bg")
     return { subscriptionType: void 0, rateLimitTier: void 0 };
   return {
@@ -929,67 +929,67 @@ function Akn() {
   };
 }
 export {
-  rBe,
-  SQ,
-  Skn,
+  URL_PATTERN,
+  stripTrailingPunctuation,
+  extractFirstUrl,
   dir,
-  oBe,
-  PRe,
-  sBe,
-  bkn,
-  Tvt,
-  wkn,
-  Yse,
-  WZe,
-  mge,
-  c1,
-  Evt,
-  gge,
-  iBe,
-  nS,
-  Avt,
-  Tkn,
-  pir,
-  Cvt,
-  GZe,
-  vvt,
-  qZe,
-  fir,
-  mir,
-  gir,
-  Rvt,
-  ORe,
-  KD,
-  hir,
-  _ir,
-  aBe,
-  bQ,
-  jt,
-  kvt,
-  rS,
-  Jse,
-  xvt,
-  Eq,
-  yir,
-  Hvt,
-  Aq,
-  g5t,
-  Sir,
-  g0,
-  Ekn,
-  UR,
-  Ivt,
-  Pvt,
-  bir,
-  Ovt,
-  wir,
-  h5t,
-  zZe,
-  VZe,
-  DRe,
-  wQ,
-  Tir,
-  LRe,
-  Eir,
-  Akn,
+  isAccountOnHoldEnabled,
+  ACCOUNT_ON_HOLD_ERROR_CODE,
+  ACCOUNT_ON_HOLD_URL,
+  formatAccountOnHoldMessage,
+  formatAccountOnHoldSignInMessage,
+  isAccountOnHoldMessage,
+  sanitizeAccountOnHoldUrl,
+  parseAccountOnHoldError,
+  OAuthAccountOnHoldError,
+  OAuthCallbackError,
+  isAccountOnHoldCallbackError,
+  parseAccountOnHoldApiError,
+  isNoRefreshAvailableError,
+  getAuthPrecedenceSource,
+  resetProfileAuthCache,
+  clearCachedAccountInfo,
+  isProfileAuthSelected,
+  getProfileAuthType,
+  isClaudeAiLoginShadowingProfile,
+  getProfileAccountInfo,
+  describeProfileAuthSource,
+  getProfileBaseUrl,
+  isSettingsBearerRejected,
+  setSettingsBearerRejected,
+  getProfileStoreDenyPaths,
+  getActiveProfileName,
+  getAnthropicConfigDir,
+  primeProfileReadAhead,
+  validateSdkUrlFlag,
+  scanSdkUrlFlag,
+  normalizeUrlSchemeToHttp,
+  getMcpClientState,
+  markConfigAsCliOwned,
+  isCliOwnedMcpConfig,
+  hasCliOwnedBearerProvider,
+  getCliOwnedBearerToken,
+  CLAUDE_CODE_REMOTE_SERVER_NAME,
+  CLAUDE_CODE_REMOTE_DISPLAY_NAME,
+  buildCcrMetaServerConfig,
+  HEARTHBOT_SERVER_NAME,
+  CCR_PROXY_PATH_PREFIXES,
+  BRIDGE_CARRIER_SPENT_MARKER,
+  bridgeCarrierState,
+  getBridgeCarrierEnvVarsToScrub,
+  isSessionIngressUrl,
+  isBridgeCarrierServer,
+  buildCcrSessionMetaUrl,
+  isStartupCcrSessionMetaUrl,
+  getTrustedIngressOrigin,
+  isHearthbotMcpUrl,
+  isAllowedBridgeWsUrl,
+  isCcrProxyConfig,
+  isRemoteDevicesProxyUrl,
+  normalizeMcpServerUrl,
+  getMcpServerOrigin,
+  formatUrlForDisplay,
+  BG_DISPATCHER_ENV_VARS,
+  buildBgDispatcherEnvVars,
+  getBgDispatcherIdentity,
 };

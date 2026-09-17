@@ -14,9 +14,9 @@ import { useScrollViewport } from "../../01-核心基础设施/共享小工具-�
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getWorkspaceDiffData, scrollByLines, DiffFileView } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -32,7 +32,7 @@ import "../../01-核心基础设施/共享小工具-未细化/queued-message-con
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "./structured-diff.js";
 import { DiffStatLabel } from "../GitHub集成/chunk-bfz9rjjm.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -203,12 +203,12 @@ function fe(wn) {
     ge = K < k.length;
     ee = k.length > G;
     let Ee = Math.max(20, Be - 16 - 3 - 4);
-    he = o;
+    he = Box;
     U = "column";
     if (Z[17] !== ze || Z[18] !== ee || Z[19] !== j)
       ((ae =
         ee &&
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: ze ? ` \u2191 ${j} more ${pluralize(j, "file")}` : " ",
         })),
@@ -253,7 +253,7 @@ function fe(wn) {
   if (Z[25] !== K || Z[26] !== k.length || Z[27] !== ge || Z[28] !== ee)
     ((te =
       ee &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children: ge
           ? ` \u2193 ${k.length - K} more ${pluralize(k.length - K, "file")}`
@@ -295,14 +295,14 @@ function xe(Fn) {
   const Le = Q ? "background" : void 0;
   let Te;
   if (ce[3] !== Q || ce[4] !== Ve || ce[5] !== Le)
-    ((Te = e(t, { bold: Q, color: Le, inverse: Q, children: Ve })),
+    ((Te = e(Text, { bold: Q, color: Le, inverse: Q, children: Ve })),
       (ce[3] = Q),
       (ce[4] = Ve),
       (ce[5] = Le),
       (ce[6] = Te));
   else Te = ce[6];
   let wt;
-  if (ce[7] === MEMO_CACHE_SENTINEL) ((wt = e(o, { flexGrow: 1 })), (ce[7] = wt));
+  if (ce[7] === MEMO_CACHE_SENTINEL) ((wt = e(Box, { flexGrow: 1 })), (ce[7] = wt));
   else wt = ce[7];
   let De;
   if (ce[8] !== ie || ce[9] !== Q)
@@ -313,7 +313,7 @@ function xe(Fn) {
   else De = ce[10];
   let vt;
   if (ce[11] !== Te || ce[12] !== De)
-    ((vt = r(o, { flexDirection: "row", children: [Te, wt, De] })),
+    ((vt = r(Box, { flexDirection: "row", children: [Te, wt, De] })),
       (ce[11] = Te),
       (ce[12] = De),
       (ce[13] = vt));
@@ -327,7 +327,7 @@ function Pe(An) {
     const w = !Y;
     let I;
     if (oe[0] !== w)
-      ((I = e(t, { dimColor: w, italic: !0, children: "untracked" })),
+      ((I = e(Text, { dimColor: w, italic: !0, children: "untracked" })),
         (oe[0] = w),
         (oe[1] = I));
     else I = oe[1];
@@ -337,7 +337,7 @@ function Pe(An) {
     const w = !Y;
     let I;
     if (oe[2] !== w)
-      ((I = e(t, { dimColor: w, italic: !0, children: "Binary file" })),
+      ((I = e(Text, { dimColor: w, italic: !0, children: "Binary file" })),
         (oe[2] = w),
         (oe[3] = I));
     else I = oe[3];
@@ -347,7 +347,7 @@ function Pe(An) {
     const w = !Y;
     let I;
     if (oe[4] !== w)
-      ((I = e(t, { dimColor: w, italic: !0, children: "Large file modified" })),
+      ((I = e(Text, { dimColor: w, italic: !0, children: "Large file modified" })),
         (oe[4] = w),
         (oe[5] = I));
     else I = oe[5];
@@ -363,14 +363,14 @@ function Pe(An) {
   else w = oe[9];
   let I;
   if (oe[10] !== H.isTruncated || oe[11] !== Y)
-    ((I = H.isTruncated && e(t, { dimColor: !Y, children: " (truncated)" })),
+    ((I = H.isTruncated && e(Text, { dimColor: !Y, children: " (truncated)" })),
       (oe[10] = H.isTruncated),
       (oe[11] = Y),
       (oe[12] = I));
   else I = oe[12];
   let Rt;
   if (oe[13] !== w || oe[14] !== I)
-    ((Rt = r(t, { children: [w, I] })),
+    ((Rt = r(Text, { children: [w, I] })),
       (oe[13] = w),
       (oe[14] = I),
       (oe[15] = Rt));
@@ -622,7 +622,7 @@ function DiffDialog(tr) {
   let tn;
   if (h[44] !== a.stats)
     ((tn = a.stats
-      ? r(t, {
+      ? r(Text, {
           dimColor: !0,
           children: [
             a.stats.filesCount,
@@ -676,13 +676,13 @@ function DiffDialog(tr) {
   let tt = me,
     ve;
   if (h[46] !== we)
-    ((ve = we && r(t, { dimColor: !0, children: [" ", we] })),
+    ((ve = we && r(Text, { dimColor: !0, children: [" ", we] })),
       (h[46] = we),
       (h[47] = ve));
   else ve = h[47];
   let rn;
   if (h[48] !== et || h[49] !== ve)
-    ((rn = r(t, { children: [et, ve] })),
+    ((rn = r(Text, { children: [et, ve] })),
       (h[48] = et),
       (h[49] = ve),
       (h[50] = rn));
@@ -711,13 +711,13 @@ function DiffDialog(tr) {
       a.files.length === 0
         ? a.loading
           ? e(SpinnerMessageLine, { message: "Loading diff\u2026", dimColor: !0 })
-          : e(t, { dimColor: !0, children: tt })
+          : e(Text, { dimColor: !0, children: tt })
         : c === "list"
-          ? e(o, {
+          ? e(Box, {
               flexDirection: "column",
               children: e(fe, { files: a.files, selectedIndex: be }),
             })
-          : e(o, {
+          : e(Box, {
               flexDirection: "column",
               children: e(DiffFileView, {
                 filePath: g?.path || "",
@@ -745,7 +745,7 @@ function DiffDialog(tr) {
   else Re = h[63];
   let on;
   if (h[64] !== _e || h[65] !== Re)
-    ((on = r(o, { flexDirection: "column", gap: 1, children: [_e, Re] })),
+    ((on = r(Box, { flexDirection: "column", gap: 1, children: [_e, Re] })),
       (h[64] = _e),
       (h[65] = Re),
       (h[66] = on));

@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getMainLoopModel, isScreenReaderArrowNavEnabled } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { te, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t, ct, jr, tn, zye, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text, Link, Ansi, useIsScreenReaderEnabled, useFocus, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { v9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
@@ -35,7 +35,7 @@ import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工�
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { L_, re, E, vr, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -47,7 +47,7 @@ function Gm() {
   return C(Date.now()).current;
 }
 function fa(l, s = DEFAULT_RECENT_WINDOW_MS) {
-  let a = Un(s, l);
+  let a = useTimeout(s, l);
   return { remountKey: a ? "settled" : "held", settled: a };
 }
 function c9e() {
@@ -528,7 +528,7 @@ function X8(wf) {
   else ou = mn[32];
   let Ft = ou,
     zo;
-  if (mn[33] !== Ft) ((zo = te(Ft)), (mn[33] = Ft), (mn[34] = zo));
+  if (mn[33] !== Ft) ((zo = getStringWidth(Ft)), (mn[33] = Ft), (mn[34] = zo));
   else zo = mn[34];
   const Pi = !sn && !Je && Vt === null;
   let ru;
@@ -583,11 +583,11 @@ function X8(wf) {
   } else Ho = mn[46];
   let at;
   if (mn[52] !== _o)
-    ((at = _o && e(t, { children: _o })), (mn[52] = _o), (mn[53] = at));
+    ((at = _o && e(Text, { children: _o })), (mn[52] = _o), (mn[53] = at));
   else at = mn[53];
   let qo;
   if (mn[54] !== Ni || mn[55] !== Je || mn[56] !== Ft)
-    ((qo = !Je && e(o, { ref: Ni, children: e(t, { children: Ft }) })),
+    ((qo = !Je && e(Box, { ref: Ni, children: e(Text, { children: Ft }) })),
       (mn[54] = Ni),
       (mn[55] = Je),
       (mn[56] = Ft),
@@ -595,7 +595,7 @@ function X8(wf) {
   else qo = mn[57];
   let lu;
   if (mn[58] !== Go || mn[59] !== Ho || mn[60] !== at || mn[61] !== qo)
-    ((lu = r(o, {
+    ((lu = r(Box, {
       ref: Gs,
       flexDirection: "column",
       ...Go,
@@ -990,7 +990,7 @@ function fOt(Df) {
   else Pu = ke[57];
   let Nt = Pu,
     sr;
-  if (ke[58] !== Nt) ((sr = te(Nt)), (ke[58] = Nt), (ke[59] = sr));
+  if (ke[58] !== Nt) ((sr = getStringWidth(Nt)), (ke[58] = Nt), (ke[59] = sr));
   else sr = ke[59];
   const Gi = !un && Pt === null;
   let Nu;
@@ -1049,22 +1049,22 @@ function fOt(Df) {
   } else ar = ke[73];
   let xt;
   if (ke[79] !== Yo)
-    ((xt = Yo && e(t, { children: Yo })), (ke[79] = Yo), (ke[80] = xt));
+    ((xt = Yo && e(Text, { children: Yo })), (ke[79] = Yo), (ke[80] = xt));
   else xt = ke[80];
   let cr;
   if (ke[81] !== Nt)
-    ((cr = e(t, { children: Nt })), (ke[81] = Nt), (ke[82] = cr));
+    ((cr = e(Text, { children: Nt })), (ke[81] = Nt), (ke[82] = cr));
   else cr = ke[82];
   let dr;
   if (ke[83] !== Hi || ke[84] !== cr)
-    ((dr = e(o, { ref: Hi, children: cr })),
+    ((dr = e(Box, { ref: Hi, children: cr })),
       (ke[83] = Hi),
       (ke[84] = cr),
       (ke[85] = dr));
   else dr = ke[85];
   let $u;
   if (ke[86] !== ur || ke[87] !== ar || ke[88] !== xt || ke[89] !== dr)
-    (($u = r(o, {
+    (($u = r(Box, {
       ref: xu,
       flexDirection: "column",
       ...ur,
@@ -1109,7 +1109,7 @@ function jt(_f) {
   const rl = Bu ? `${Bu} ` : "";
   let fr;
   if ($t[9] !== el || $t[10] !== Xi || $t[11] !== rl)
-    ((fr = r(t, { children: [Xi, ". ", rl, el] })),
+    ((fr = r(Text, { children: [Xi, ". ", rl, el] })),
       ($t[9] = el),
       ($t[10] = Xi),
       ($t[11] = rl),
@@ -1117,7 +1117,7 @@ function jt(_f) {
   else fr = $t[12];
   let Ku;
   if ($t[13] !== Qi || $t[14] !== fr)
-    ((Ku = e(o, { ref: Qi, children: fr })),
+    ((Ku = e(Box, { ref: Qi, children: fr })),
       ($t[13] = Qi),
       ($t[14] = fr),
       ($t[15] = Ku));
@@ -1224,7 +1224,7 @@ function mOt(zf) {
   let fl = Xu,
     _t = `Enter y/n: ${qf}`,
     mr;
-  if (an[18] !== _t) ((mr = te(_t)), (an[18] = _t), (an[19] = mr));
+  if (an[18] !== _t) ((mr = getStringWidth(_t)), (an[18] = _t), (an[19] = mr));
   else mr = an[19];
   let Yu;
   if (an[20] !== mr)
@@ -1238,26 +1238,26 @@ function mOt(zf) {
   else br = an[23];
   let xr;
   if (an[24] !== br)
-    ((xr = r(t, { children: ["y. ", br] })), (an[24] = br), (an[25] = xr));
+    ((xr = r(Text, { children: ["y. ", br] })), (an[24] = br), (an[25] = xr));
   else xr = an[25];
   let hr;
   if (an[26] !== ll) ((hr = cE(ll)), (an[26] = ll), (an[27] = hr));
   else hr = an[27];
   let gr;
   if (an[28] !== hr)
-    ((gr = r(t, { children: ["n. ", hr] })), (an[28] = hr), (an[29] = gr));
+    ((gr = r(Text, { children: ["n. ", hr] })), (an[28] = hr), (an[29] = gr));
   else gr = an[29];
   let yr;
   if (an[30] !== pr)
-    ((yr = pr && e(t, { children: pr })), (an[30] = pr), (an[31] = yr));
+    ((yr = pr && e(Text, { children: pr })), (an[30] = pr), (an[31] = yr));
   else yr = an[31];
   let Tr;
   if (an[32] !== _t)
-    ((Tr = e(t, { children: _t })), (an[32] = _t), (an[33] = Tr));
+    ((Tr = e(Text, { children: _t })), (an[32] = _t), (an[33] = Tr));
   else Tr = an[33];
   let Or;
   if (an[34] !== pl || an[35] !== Tr)
-    ((Or = e(o, { ref: pl, children: Tr })),
+    ((Or = e(Box, { ref: pl, children: Tr })),
       (an[34] = pl),
       (an[35] = Tr),
       (an[36] = Or));
@@ -1270,7 +1270,7 @@ function mOt(zf) {
     an[40] !== Or ||
     an[41] !== xr
   )
-    ((Qu = r(o, {
+    ((Qu = r(Box, {
       ref: Gu,
       flexDirection: "column",
       tabIndex: 0,
@@ -1371,7 +1371,7 @@ function nl(lp) {
     gn[18] !== bl ||
     gn[19] !== Sl
   )
-    ((Vr = e(o, {
+    ((Vr = e(Box, {
       flexShrink: 0,
       children: e(Pr, {
         disabled: Qe,
@@ -1390,7 +1390,7 @@ function nl(lp) {
   else Vr = gn[20];
   let Ar;
   if (gn[21] !== Ir || gn[22] !== Qe || gn[23] !== Kt || gn[24] !== gl)
-    ((Ar = Kt ? e(t, { color: gl, dimColor: Qe, children: Ir }) : Ir),
+    ((Ar = Kt ? e(Text, { color: gl, dimColor: Qe, children: Ir }) : Ir),
       (gn[21] = Ir),
       (gn[22] = Qe),
       (gn[23] = Kt),
@@ -1402,14 +1402,14 @@ function nl(lp) {
     ((Rr =
       Bt &&
       !Qe &&
-      e(t, { "aria-label": "(selected)", color: "success", children: figures.tick })),
+      e(Text, { "aria-label": "(selected)", color: "success", children: figures.tick })),
       (gn[26] = Qe),
       (gn[27] = Bt),
       (gn[28] = Rr));
   else Rr = gn[28];
   let Fr;
   if (gn[29] !== Vr || gn[30] !== Ar || gn[31] !== Rr)
-    ((Fr = r(o, { flexDirection: "row", gap: 1, children: [Vr, Ar, Rr] })),
+    ((Fr = r(Box, { flexDirection: "row", gap: 1, children: [Vr, Ar, Rr] })),
       (gn[29] = Vr),
       (gn[30] = Ar),
       (gn[31] = Rr),
@@ -1419,9 +1419,9 @@ function nl(lp) {
   if (gn[33] !== Cr)
     ((Er =
       Cr &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: e(t, { color: "inactive", children: Cr }),
+        children: e(Text, { color: "inactive", children: Cr }),
       })),
       (gn[33] = Cr),
       (gn[34] = Er));
@@ -1435,7 +1435,7 @@ function nl(lp) {
     gn[39] !== Ol ||
     gn[40] !== Mr
   )
-    ((tc = r(o, {
+    ((tc = r(Box, {
       ref: Tl,
       flexDirection: "column",
       onClick: Ol,
@@ -1465,14 +1465,14 @@ function Pr(cp) {
   if (dp) {
     let Le;
     if (Ht[0] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, { "aria-hidden": !0, children: " " })), (Ht[0] = Le));
+      ((Le = e(Text, { "aria-hidden": !0, children: " " })), (Ht[0] = Le));
     else Le = Ht[0];
     return Le;
   }
   if (fp) {
     let Le;
     if (Ht[1] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, {
+      ((Le = e(Text, {
         "aria-hidden": !0,
         color: "suggestion",
         children: figures.pointer,
@@ -1484,7 +1484,7 @@ function Pr(cp) {
   if (mp) {
     let Le;
     if (Ht[2] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, {
+      ((Le = e(Text, {
         "aria-label": "(more below)",
         dimColor: !0,
         children: figures.arrowDown,
@@ -1496,7 +1496,7 @@ function Pr(cp) {
   if (pp) {
     let Le;
     if (Ht[3] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, {
+      ((Le = e(Text, {
         "aria-label": "(more above)",
         dimColor: !0,
         children: figures.arrowUp,
@@ -1508,14 +1508,14 @@ function Pr(cp) {
   if (vp) {
     let Le;
     if (Ht[4] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, { "aria-hidden": !0, dimColor: !0, children: figures.pointer })),
+      ((Le = e(Text, { "aria-hidden": !0, dimColor: !0, children: figures.pointer })),
         (Ht[4] = Le));
     else Le = Ht[4];
     return Le;
   }
   let Le;
   if (Ht[5] === MEMO_CACHE_SENTINEL)
-    ((Le = e(t, { "aria-hidden": !0, children: " " })), (Ht[5] = Le));
+    ((Le = e(Text, { "aria-hidden": !0, children: " " })), (Ht[5] = Le));
   else Le = Ht[5];
   return Le;
 }
@@ -1535,8 +1535,8 @@ function vo(Ip) {
   if ($r) {
     let Tt, Lr;
     if (Wr[2] !== gt || Wr[3] !== yt || Wr[4] !== Jn)
-      ((Tt = e(t, { backgroundColor: gt, inverse: Jn, children: yt })),
-        (Lr = e(t, {
+      ((Tt = e(Text, { backgroundColor: gt, inverse: Jn, children: yt })),
+        (Lr = e(Text, {
           backgroundColor: gt,
           inverse: Jn,
           bold: Jn,
@@ -1550,7 +1550,7 @@ function vo(Ip) {
     else ((Tt = Wr[5]), (Lr = Wr[6]));
     let lc;
     if (Wr[7] !== $r || Wr[8] !== Tt || Wr[9] !== Lr)
-      ((lc = e(ct, { url: $r, fallback: Tt, children: Lr })),
+      ((lc = e(Link, { url: $r, fallback: Tt, children: Lr })),
         (Wr[7] = $r),
         (Wr[8] = Tt),
         (Wr[9] = Lr),
@@ -1560,7 +1560,7 @@ function vo(Ip) {
   }
   let Tt;
   if (Wr[11] !== gt || Wr[12] !== yt || Wr[13] !== Jn)
-    ((Tt = e(t, { backgroundColor: gt, inverse: Jn, children: yt })),
+    ((Tt = e(Text, { backgroundColor: gt, inverse: Jn, children: yt })),
       (Wr[11] = gt),
       (Wr[12] = yt),
       (Wr[13] = Jn),
@@ -1712,7 +1712,7 @@ function Y8(Qp) {
       if (Nl?.() === !1) {
         return;
       }
-      Z3(getImageLimitsForModel(getMainLoopModel())).then((Gr) => {
+      readClipboardImage(getImageLimitsForModel(getMainLoopModel())).then((Gr) => {
         if (Gr)
           Wn(Gr.base64, { mediaType: Gr.mediaType, dimensions: Gr.dimensions });
       });
@@ -1830,7 +1830,7 @@ function Y8(Qp) {
     { columns: Kl } = useVirtualScrollViewportSize(useTerminalSize()),
     zl =
       zr && typeof le.label === "string"
-        ? te(le.label) + te(le.labelValueSeparator ?? ", ")
+        ? getStringWidth(le.label) + getStringWidth(le.labelValueSeparator ?? ", ")
         : 0,
     kc;
   if (me[51] !== Kl || me[52] !== Ll || me[53] !== zl || me[54] !== Xn)
@@ -1847,9 +1847,9 @@ function Y8(Qp) {
   if (me[56] !== $l || me[57] !== El || me[58] !== Xn)
     ((Qr =
       !$l &&
-      e(o, {
+      e(Box, {
         flexShrink: 0,
-        children: e(t, { dimColor: !0, children: `${El}.`.padEnd(Xn + 2) }),
+        children: e(Text, { dimColor: !0, children: `${El}.`.padEnd(Xn + 2) }),
       })),
       (me[56] = $l),
       (me[57] = El),
@@ -1874,7 +1874,7 @@ function Y8(Qp) {
       ? se
         ? r(N, {
             children: [
-              r(t, {
+              r(Text, {
                 color: "suggestion",
                 children: [le.label, le.labelValueSeparator ?? ", "],
               }),
@@ -1908,7 +1908,7 @@ function Y8(Qp) {
               }),
             ],
           })
-        : r(t, {
+        : r(Text, {
             children: [
               le.label,
               ge ? (le.labelValueSeparator ?? ", ") : null,
@@ -1946,7 +1946,7 @@ function Y8(Qp) {
               ((Xt.current = !0), Nn(Pc), xo(Ec.length + Fc.length));
             },
           })
-        : e(t, {
+        : e(Text, {
             color: ge ? void 0 : "inactive",
             children: ge || le.placeholder || le.label,
           })),
@@ -1965,7 +1965,7 @@ function Y8(Qp) {
   else Zr = me[71];
   let ei;
   if (me[72] !== Pl || me[73] !== Gl || me[74] !== Qr || me[75] !== Zr)
-    ((ei = r(o, {
+    ((ei = r(Box, {
       flexDirection: "row",
       flexShrink: Gl,
       children: [Qr, Pl, Zr],
@@ -2012,9 +2012,9 @@ function Y8(Qp) {
   )
     ((ti =
       le.description &&
-      e(o, {
+      e(Box, {
         paddingLeft: Yt,
-        children: e(t, {
+        children: e(Text, {
           dimColor: le.dimDescription !== !1,
           color: qt ? "success" : se ? "suggestion" : void 0,
           children: le.description,
@@ -2037,7 +2037,7 @@ function Y8(Qp) {
   )
     ((oi =
       Oe.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "row",
         gap: 1,
         paddingLeft: Yt,
@@ -2045,11 +2045,11 @@ function Y8(Qp) {
           Oe.map((Nc, tm) =>
             e(vo, { imageId: Nc.id, isSelected: !!fn && tm === yn }, Nc.id),
           ),
-          e(o, {
+          e(Box, {
             flexGrow: 1,
             justifyContent: "flex-start",
             flexDirection: "row",
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children: fn
                 ? r(DotSeparatedList, {
@@ -2101,13 +2101,13 @@ function Y8(Qp) {
   else oi = me[95];
   let ri;
   if (me[96] !== bo)
-    ((ri = bo === "expanded" && e(t, { children: " " })),
+    ((ri = bo === "expanded" && e(Text, { children: " " })),
       (me[96] = bo),
       (me[97] = ri));
   else ri = me[97];
   let Wc;
   if (me[98] !== ni || me[99] !== ti || me[100] !== oi || me[101] !== ri)
-    ((Wc = r(o, {
+    ((Wc = r(Box, {
       flexDirection: "column",
       flexShrink: 0,
       children: [ni, ti, oi, ri],
@@ -2136,7 +2136,7 @@ var ii = ({
   onExitImageSelection: W,
   hasInkFocus: ae = !0,
 }) => {
-  let { focusDirection: K } = zye();
+  let { focusDirection: K } = useFocus();
   useActiveOverlay("select", !!a.onCancel);
   let ee = V(
       () => u.find((U) => U.value === a.focusedValue)?.type === "input",
@@ -2628,7 +2628,7 @@ function u9e() {
       if (!Bc(a, s, u)) return !1;
       let c = a.isWindowActivation ? S("window_activation") : S("mount_settle");
       return (
-        n(
+        logForDebugging(
           `Select: dropped stray click (${a.isWindowActivation ? "window-activation click" : `${u - s}ms after mount`})`,
         ),
         logEvent("tengu_select_stray_click_dropped", { reason: c }),
@@ -2672,7 +2672,7 @@ function ef(tb) {
 var vs = Symbol("NO_COMMITTED_ROW");
 function ve(ne) {
   let Kc = _(11);
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     const Qt =
       ne.selectedValue === vs
         ? ne.defaultValue
@@ -2972,7 +2972,7 @@ function Ii(Qm) {
             (Ue[68] = Sn));
         else Sn = Ue[68];
         let iv = Sn;
-        ko = e(o, {
+        ko = e(Box, {
           ...nt.container(),
           children: b.visibleOptions.map((de, lv) => {
             let md = de.index === b.visibleFromIndex;
@@ -3036,7 +3036,7 @@ function Ii(Qm) {
               gd = r(N, {
                 children: [
                   fs.slice(0, yd),
-                  e(t, { ...nt.highlightedText(), children: we }),
+                  e(Text, { ...nt.highlightedText(), children: we }),
                   fs.slice(yd + we.length),
                 ],
               });
@@ -3044,7 +3044,7 @@ function Ii(Qm) {
             let ps = de.disabled === !0;
             let Td = ps ? void 0 : ds ? "success" : cs ? "suggestion" : void 0;
             return r(
-              o,
+              Box,
               {
                 flexDirection: "column",
                 flexShrink: 0,
@@ -3055,18 +3055,18 @@ function Ii(Qm) {
                     shouldShowDownArrow: bd && vd,
                     shouldShowUpArrow: xd && md,
                     onClick: On(de),
-                    children: e(t, { dimColor: ps, color: Td, children: gd }),
+                    children: e(Text, { dimColor: ps, color: Td, children: gd }),
                   }),
                   de.description &&
-                    e(o, {
+                    e(Box, {
                       paddingLeft: 2,
-                      children: e(t, {
+                      children: e(Text, {
                         dimColor: ps || de.dimDescription !== !1,
                         color: Td,
-                        children: e(jr, { children: de.description }),
+                        children: e(Ansi, { children: de.description }),
                       }),
                     }),
-                  e(t, { children: " " }),
+                  e(Text, { children: " " }),
                 ],
               },
               String(de.value),
@@ -3084,7 +3084,7 @@ function Ii(Qm) {
             (Ue[71] = Sn));
         else Sn = Ue[71];
         let ms = Sn;
-        ko = e(o, {
+        ko = e(Box, {
           ...nt.container(),
           children: b.visibleOptions.map((fe, pv) => {
             let Od = fe.index === b.visibleFromIndex;
@@ -3148,14 +3148,14 @@ function Ii(Qm) {
               Md = r(N, {
                 children: [
                   bs.slice(0, Dd),
-                  e(t, { ...nt.highlightedText(), children: we }),
+                  e(Text, { ...nt.highlightedText(), children: we }),
                   bs.slice(Dd + we.length),
                 ],
               });
             }
             let yi = fe.disabled === !0;
             return r(
-              o,
+              Box,
               {
                 flexDirection: "column",
                 flexShrink: 0,
@@ -3169,11 +3169,11 @@ function Ii(Qm) {
                     children: r(N, {
                       children: [
                         !be &&
-                          e(t, {
+                          e(Text, {
                             dimColor: !0,
                             children: `${Cd}.`.padEnd(ms + 1),
                           }),
-                        e(t, {
+                        e(Text, {
                           dimColor: yi,
                           color: yi
                             ? void 0
@@ -3188,9 +3188,9 @@ function Ii(Qm) {
                     }),
                   }),
                   fe.description &&
-                    e(o, {
+                    e(Box, {
                       paddingLeft: be ? 4 : ms + 4,
-                      children: e(t, {
+                      children: e(Text, {
                         dimColor: yi || fe.dimDescription !== !1,
                         color: yi
                           ? void 0
@@ -3199,7 +3199,7 @@ function Ii(Qm) {
                             : hi
                               ? "suggestion"
                               : void 0,
-                        children: e(jr, { children: fe.description }),
+                        children: e(Ansi, { children: fe.description }),
                       }),
                     }),
                 ],
@@ -3239,7 +3239,7 @@ function Ii(Qm) {
                   return 0;
                 }
                 let Tv = b.value === xs.value ? 2 : 0;
-                return 2 + ot + te(cE(xs.label)) + Tv;
+                return 2 + ot + getStringWidth(cE(xs.label)) + Tv;
               }),
                 (Ue[86] = ot),
                 (Ue[87] = b.value),
@@ -3270,14 +3270,14 @@ function Ii(Qm) {
           let Vo = cE(it.label);
           let eo = it.label;
           let Fd = Mo - 2 - ot - Rd;
-          if (te(Vo) > Fd) ((Vo = truncateToWidth(Vo, Fd)), (eo = Vo));
+          if (getStringWidth(Vo) > Fd) ((Vo = truncateToWidth(Vo, Fd)), (eo = Vo));
           if (typeof eo === "string" && we && eo.includes(we)) {
             let hs = eo;
             let Ed = hs.indexOf(we);
             eo = r(N, {
               children: [
                 hs.slice(0, Ed),
-                e(t, { ...nt.highlightedText(), children: we }),
+                e(Text, { ...nt.highlightedText(), children: we }),
                 hs.slice(Ed + we.length),
               ],
             });
@@ -3286,7 +3286,7 @@ function Ii(Qm) {
             option: it,
             index: kv,
             label: eo,
-            labelWidth: 2 + ot + te(Vo) + Rd,
+            labelWidth: 2 + ot + getStringWidth(Vo) + Rd,
             isFocused: Mv,
             isSelected: Ad,
             isOptionDisabled: Dv,
@@ -3309,12 +3309,12 @@ function Ii(Qm) {
                 shouldShowUpArrow: ye.shouldShowUpArrow,
                 onClick: On(ye.option),
                 children: [
-                  r(o, {
+                  r(Box, {
                     flexDirection: "row",
                     flexShrink: 0,
                     children: [
-                      e(t, { children: " " }),
-                      r(t, {
+                      e(Text, { children: " " }),
+                      r(Text, {
                         dimColor: ye.isOptionDisabled,
                         color: ye.isOptionDisabled
                           ? void 0
@@ -3325,7 +3325,7 @@ function Ii(Qm) {
                               : void 0,
                         children: [
                           !be &&
-                            e(t, {
+                            e(Text, {
                               dimColor: !0,
                               children: `${ye.index}.`.padEnd(tt + 2),
                             }),
@@ -3333,14 +3333,14 @@ function Ii(Qm) {
                         ],
                       }),
                       ye.isSelected &&
-                        r(t, { children: [" ", e(StatusIndicator, { status: "success" })] }),
-                      Pd > 0 && e(t, { children: " ".repeat(Pd) }),
+                        r(Text, { children: [" ", e(StatusIndicator, { status: "success" })] }),
+                      Pd > 0 && e(Text, { children: " ".repeat(Pd) }),
                     ],
                   }),
-                  e(o, {
+                  e(Box, {
                     flexGrow: 1,
                     marginLeft: 2,
-                    children: e(t, {
+                    children: e(Text, {
                       wrap: "wrap",
                       dimColor:
                         ye.option.descriptionColor === void 0 &&
@@ -3353,7 +3353,7 @@ function Ii(Qm) {
                           : ye.isFocused
                             ? "suggestion"
                             : ye.option.descriptionColor,
-                      children: e(jr, {
+                      children: e(Ansi, {
                         children: ye.option.description || " ",
                       }),
                     }),
@@ -3369,10 +3369,10 @@ function Ii(Qm) {
             (Ue[92] = Mo),
             (Ue[93] = Do));
         else Do = Ue[93];
-        ko = e(o, { ...nt.container(), children: Vv.map(Do) });
+        ko = e(Box, { ...nt.container(), children: Vv.map(Do) });
         break bb0;
       }
-      vi = o;
+      vi = Box;
       bi = nt.container();
       xi = b.visibleOptions.map((J, Nd) => {
         if (J.type === "input") {
@@ -3434,7 +3434,7 @@ function Ii(Qm) {
           $d = r(N, {
             children: [
               gs.slice(0, Ld),
-              e(t, { ...nt.highlightedText(), children: we }),
+              e(Text, { ...nt.highlightedText(), children: we }),
               gs.slice(Ld + we.length),
             ],
           });
@@ -3456,13 +3456,13 @@ function Ii(Qm) {
             shouldShowUpArrow: Gv && Bv,
             onClick: On(J),
             children: [
-              r(o, {
+              r(Box, {
                 flexDirection: "row",
                 flexShrink: 0,
                 children: [
                   !be &&
-                    e(t, { dimColor: !0, children: `${Hv}.`.padEnd(tt + 2) }),
-                  r(t, {
+                    e(Text, { dimColor: !0, children: `${Hv}.`.padEnd(tt + 2) }),
+                  r(Text, {
                     dimColor: Ao,
                     color: Ao
                       ? void 0
@@ -3475,7 +3475,7 @@ function Ii(Qm) {
                       $d,
                       Ln &&
                         J.description &&
-                        r(t, {
+                        r(Text, {
                           dimColor: Ao || J.dimDescription !== !1,
                           children: [" ", J.description],
                         }),
@@ -3485,10 +3485,10 @@ function Ii(Qm) {
               }),
               !Ln &&
                 J.description &&
-                e(o, {
+                e(Box, {
                   flexShrink: 99,
                   marginLeft: 2,
-                  children: e(t, {
+                  children: e(Text, {
                     wrap: "wrap-trim",
                     dimColor: Ao || J.dimDescription !== !1,
                     color: Ao
@@ -3498,7 +3498,7 @@ function Ii(Qm) {
                         : ys
                           ? "suggestion"
                           : void 0,
-                    children: e(jr, { children: J.description }),
+                    children: e(Ansi, { children: J.description }),
                   }),
                 }),
             ],
@@ -3590,17 +3590,17 @@ function Ci(sb) {
     Ro[9] !== Ss ||
     Ro[10] !== ws
   )
-    ((wi = e(o, {
+    ((wi = e(Box, {
       flexShrink: 0,
       children: no
-        ? e(t, { color: "suggestion", children: figures.pointer })
+        ? e(Text, { color: "suggestion", children: figures.pointer })
         : Ss
-          ? e(t, { dimColor: !0, children: figures.arrowDown })
+          ? e(Text, { dimColor: !0, children: figures.arrowDown })
           : ws
-            ? e(t, { dimColor: !0, children: figures.arrowUp })
+            ? e(Text, { dimColor: !0, children: figures.arrowUp })
             : _n && Cs
-              ? e(t, { dimColor: !0, children: figures.pointer })
-              : e(t, { children: " " }),
+              ? e(Text, { dimColor: !0, children: figures.pointer })
+              : e(Text, { children: " " }),
     })),
       (Ro[6] = _n),
       (Ro[7] = Cs),
@@ -3618,7 +3618,7 @@ function Ci(sb) {
     Ro[16] !== Si ||
     Ro[17] !== wi
   )
-    ((Kd = r(o, {
+    ((Kd = r(Box, {
       ref: Ms,
       flexDirection: "row",
       flexShrink: 0,

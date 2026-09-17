@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { bh, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { buildAgentId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { buildInProcessTeammateContext } from "./teammate-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
@@ -37,7 +37,7 @@ async function spawnInProcessTeammate(t, o) {
     s = buildAgentId(e, p),
     d = generateTaskId("in_process_teammate"),
     c = t.resumableAgentId ?? bh(e);
-  n(`[spawnInProcessTeammate] Spawning ${s} (taskId: ${d})`);
+  logForDebugging(`[spawnInProcessTeammate] Spawning ${s} (taskId: ${d})`);
   try {
     let r = createAbortController(),
       a = K(),
@@ -97,13 +97,13 @@ async function spawnInProcessTeammate(t, o) {
             ? o.agentLifecycle.allocateName(e)
             : e;
       if (u !== e)
-        n(
+        logForDebugging(
           `[spawnInProcessTeammate] name "${e}" already routes to live ${i}; registry entry uses "${u}" instead`,
         );
       o.agentLifecycle.registerName(u, c);
     }
     return (
-      n(`[spawnInProcessTeammate] Registered ${s} in AppState`),
+      logForDebugging(`[spawnInProcessTeammate] Registered ${s} in AppState`),
       logFeatureOk("swarm_in_process_spawn"),
       {
         ok: !0,
@@ -117,7 +117,7 @@ async function spawnInProcessTeammate(t, o) {
   } catch (r) {
     let a = r instanceof Error ? r.message : "Unknown error during spawn";
     return (
-      n(`[spawnInProcessTeammate] Failed to spawn ${s}: ${a}`),
+      logForDebugging(`[spawnInProcessTeammate] Failed to spawn ${s}: ${a}`),
       logFeatureBad("swarm_in_process_spawn", "spawn_failed"),
       { ok: !1, agentId: s, error: a }
     );

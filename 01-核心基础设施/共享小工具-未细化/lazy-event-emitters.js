@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { rE } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { jt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-var authLostEmitter = rE(() => jt().authLost),
-  reauthReconnectEmitter = rE(() => jt().reauthReconnect),
-  cachedRowAdoptEmitter = rE(() => jt().cachedAdopt),
-  cachedRowDialFailedEmitter = rE(() => jt().cachedDialFailed);
+import { getMcpClientState } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+var authLostEmitter = rE(() => getMcpClientState().authLost),
+  reauthReconnectEmitter = rE(() => getMcpClientState().reauthReconnect),
+  cachedRowAdoptEmitter = rE(() => getMcpClientState().cachedAdopt),
+  cachedRowDialFailedEmitter = rE(() => getMcpClientState().cachedDialFailed);
 export { authLostEmitter, reauthReconnectEmitter, cachedRowAdoptEmitter, cachedRowDialFailedEmitter };

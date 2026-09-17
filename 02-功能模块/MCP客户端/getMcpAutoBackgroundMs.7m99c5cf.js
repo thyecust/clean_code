@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -24,7 +24,7 @@ import { attachDetachableAbortRelay } from "../../03-入口与运行时/核心�
 import { enqueuePendingNotification } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./chunk-tv3jbp8f.js";
 import "../认证-OAuth登录/pkce-challenge.js";
-import "../认证-OAuth登录/chunk-j990pwax.js";
+import "../认证-OAuth登录/oauth-client.js";
 import { createMcpTaskRecord } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
 import { StreamableHTTPError } from "../MCP传输(stdio-SSE-HTTP)/streamable-http-client-transport.js";
 var K = new Set([
@@ -172,7 +172,7 @@ async function callMcpToolWithAutoBackground({
           { turnAttribution: "inherit" },
         );
       } catch (q) {
-        n(`degraded MCP task notification enqueue failed: ${String(q)}`, {
+        logForDebugging(`degraded MCP task notification enqueue failed: ${String(q)}`, {
           level: "error",
         });
       }

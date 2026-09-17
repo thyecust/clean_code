@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _f } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { buildCsiSequence } from "../核心工具-字符串与文本/ansi-text-utils.js";
 var TERMINAL_MODE_CODES = {
   CURSOR_VISIBLE: 25,
   ALT_SCREEN: 47,
@@ -23,10 +23,10 @@ var TERMINAL_MODE_CODES = {
   WIN32_INPUT_MODE: 9001,
 };
 function enableTerminalMode(E) {
-  return _f(`?${E}h`);
+  return buildCsiSequence(`?${E}h`);
 }
 function disableTerminalMode(E) {
-  return _f(`?${E}l`);
+  return buildCsiSequence(`?${E}l`);
 }
 var ENABLE_SYNCHRONIZED_UPDATE = enableTerminalMode(TERMINAL_MODE_CODES.SYNCHRONIZED_UPDATE),
   DISABLE_SYNCHRONIZED_UPDATE = disableTerminalMode(TERMINAL_MODE_CODES.SYNCHRONIZED_UPDATE),

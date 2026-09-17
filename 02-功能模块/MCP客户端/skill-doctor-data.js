@@ -11,17 +11,17 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { CLAUDE_AI_SYNC_LABEL, removeInvisibleChars } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSkillUsageStats, getSkillListingCharCounts, collectSkillCommands, attributionSkillName, dropShadowedFallbackSkills, isFallbackStub } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { te, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { i3e, $Bn } from "../成本-Token统计/chunk-3nwwgatc.js";
+import { getSkillTokenCountsAccess, collectSkillTokenUsage } from "../成本-Token统计/usage-transcript-scan.js";
 import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function padEndToWidth(n, t) {
-  return n + " ".repeat(Math.max(0, t - te(n)));
+  return n + " ".repeat(Math.max(0, t - getStringWidth(n)));
 }
 function padStartToWidth(n, t) {
-  return " ".repeat(Math.max(0, t - te(n))) + n;
+  return " ".repeat(Math.max(0, t - getStringWidth(n))) + n;
 }
 function buildSkillTableLayout(n) {
   let t = n.map((o) => ({
@@ -37,11 +37,11 @@ function buildSkillTableLayout(n) {
   return {
     cells: t,
     widths: {
-      name: Math.max(5, ...n.map((o) => te(o.name))),
-      source: Math.max(6, ...n.map((o) => te(o.source))),
-      context: Math.max(7, ...t.map((o) => te(o.context))),
-      week: Math.max(9, ...t.map((o) => te(o.week))),
-      uses: Math.max(4, ...n.map((o) => te(String(o.usageCount)))),
+      name: Math.max(5, ...n.map((o) => getStringWidth(o.name))),
+      source: Math.max(6, ...n.map((o) => getStringWidth(o.source))),
+      context: Math.max(7, ...t.map((o) => getStringWidth(o.context))),
+      week: Math.max(9, ...t.map((o) => getStringWidth(o.week))),
+      uses: Math.max(4, ...n.map((o) => getStringWidth(String(o.usageCount)))),
     },
   };
 }
@@ -66,9 +66,9 @@ function buildSkillDoctorContext(n) {
 async function collectSkillUsageData(n) {
   let t = getDisusedPlugins();
   t.catch(() => {});
-  let o = i3e(),
+  let o = getSkillTokenCountsAccess(),
     c = o.allowed
-      ? $Bn(n.storageV5).catch((e) => {
+      ? collectSkillTokenUsage(n.storageV5).catch((e) => {
           throw new SkillDoctorStageError("scan_failed", e);
         })
       : Promise.resolve(new Map());

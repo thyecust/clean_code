@@ -10,9 +10,9 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ge, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { $ar } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { getDesktopPath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { writeFileSync } from "fs";
 import { readdir, readFile, writeFile } from "fs/promises";
@@ -129,23 +129,23 @@ async function performHeapDump(u = "manual", a = 0) {
     let t = K(),
       e = await T(u, a),
       o = (g) => (g / 1024 / 1024 / 1024).toFixed(3);
-    n(`[HeapDump] Memory state:
+    logForDebugging(`[HeapDump] Memory state:
   heapUsed: ${o(e.memoryUsage.heapUsed)} GB (in snapshot)
   external: ${o(e.memoryUsage.external)} GB (NOT in snapshot)
   rss: ${o(e.memoryUsage.rss)} GB (total process)
   ${e.analysis.recommendation}`);
-    let m = await $ar();
-    await ae().mkdir(m);
+    let m = await getDesktopPath();
+    await getFsSurface().mkdir(m);
     let l = a > 0 ? `-dump${a}` : "",
       d = `${t}${l}.heapsnapshot`,
       f = `${t}${l}-diagnostics.json`,
       s = w(m, d),
       c = w(m, f);
     return (
-      await writeFile(c, b(e, null, 2), { mode: 384 }),
-      n(`[HeapDump] Diagnostics written to ${c}`),
+      await writeFile(c, jsonStringify(e, null, 2), { mode: 384 }),
+      logForDebugging(`[HeapDump] Diagnostics written to ${c}`),
       await j(s),
-      n(`[HeapDump] Heap dump written to ${s}`),
+      logForDebugging(`[HeapDump] Heap dump written to ${s}`),
       logEvent("tengu_heap_dump", {
         triggerManual: !0,
         triggerAuto15GB: !1,
@@ -157,7 +157,7 @@ async function performHeapDump(u = "manual", a = 0) {
   } catch (t) {
     let e = ge(t);
     if (Po(e))
-      n(`[HeapDump] Failed to write dump: ${e.message}`, { level: "error" });
+      logForDebugging(`[HeapDump] Failed to write dump: ${e.message}`, { level: "error" });
     else logError(e);
     return (
       logEvent("tengu_heap_dump", {

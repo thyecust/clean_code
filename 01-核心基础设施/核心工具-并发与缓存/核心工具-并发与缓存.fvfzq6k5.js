@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, RMn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
-import { Et, b, z, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -158,7 +158,7 @@ function beginActivity(e, t) {
   }
   if (i.cleanupHandle === null) {
     let o = r.activityKey();
-    i.cleanupHandle = Et(async () => {
+    i.cleanupHandle = registerCleanup(async () => {
       writeDiagnosticsEvent("info", "session_activity_at_shutdown", {
         owner_key: o,
         refcount: i.refcount,
@@ -359,7 +359,7 @@ function we(e, t) {
 }
 function Y(e) {
   try {
-    return z(Buffer.from(e, "base64url").toString("utf8"));
+    return jsonParse(Buffer.from(e, "base64url").toString("utf8"));
   } catch {
     return;
   }
@@ -449,10 +449,10 @@ async function te(e) {
     return await Cs(e, {
       ...De,
       onCompromised: (t) =>
-        n(`Signed cache: accepted-iat lock compromised - ${l(t)}`),
+        logForDebugging(`Signed cache: accepted-iat lock compromised - ${l(t)}`),
     });
   } catch (t) {
-    n(
+    logForDebugging(
       `Signed cache: accepted-iat lock unavailable, proceeding unlocked - ${l(t)}`,
     );
     return;
@@ -473,9 +473,9 @@ async function recordAcceptedSignatureIat(e, t, r) {
 }
 async function Me(e, t) {
   try {
-    return (await writeFileAtomic(e, b(t), 384), !0);
+    return (await writeFileAtomic(e, jsonStringify(t), 384), !0);
   } catch (r) {
-    return (n(`Signed cache: failed to write ${e} - ${l(r)}`), !1);
+    return (logForDebugging(`Signed cache: failed to write ${e} - ${l(r)}`), !1);
   }
 }
 async function Pe(e, t) {
@@ -483,12 +483,12 @@ async function Pe(e, t) {
     if (O_NOFOLLOW_NONBLOCK_FLAGS === 0 && (await Be(e))) return;
     let r = await Re(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | O_NOFOLLOW_NONBLOCK_FLAGS, 384);
     try {
-      await r.writeFile(b(t), { encoding: "utf-8" });
+      await r.writeFile(jsonStringify(t), { encoding: "utf-8" });
     } finally {
       await r.close();
     }
   } catch (r) {
-    n(`Signed cache: failed to write ${e} - ${l(r)}`);
+    logForDebugging(`Signed cache: failed to write ${e} - ${l(r)}`);
   }
 }
 async function Be(e) {
@@ -502,14 +502,14 @@ async function x(e) {
   try {
     await unlink(e);
   } catch (t) {
-    if (!W(t)) n(`Signed cache: failed to remove ${e} - ${l(t)}`);
+    if (!W(t)) logForDebugging(`Signed cache: failed to remove ${e} - ${l(t)}`);
   }
 }
 async function w(e, t) {
   try {
-    let r = await ae().readFileFdGated(e, Ke);
+    let r = await getFsSurface().readFileFdGated(e, Ke);
     if (r === null) return { kind: "absent" };
-    let i = t.safeParse(z(r.content));
+    let i = t.safeParse(jsonParse(r.content));
     return i.success ? { kind: "ok", value: i.data } : { kind: "unparsable" };
   } catch {
     return { kind: "unparsable" };

@@ -10,7 +10,7 @@
 import { K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import {
   mkdir,
@@ -47,16 +47,16 @@ async function writeWorkflowSnapshot(t, a, s) {
       (await mkdir(dirname(l), { recursive: !0, mode: 448 }),
       isHoverRestEnabled() && s && e !== void 0 && isValidPathSegment(`${t}.json`))
     ) {
-      let o = await s.write(W(e, r, t), b(i), {
+      let o = await s.write(W(e, r, t), jsonStringify(i), {
         publishDiscipline: "inPlace",
         mode: 384,
       });
-      if (!o.ok) n(`Failed to write workflow snapshot ${t}: ${o.error.code}`);
+      if (!o.ok) logForDebugging(`Failed to write workflow snapshot ${t}: ${o.error.code}`);
       return;
     }
-    await writeFile(l, b(i), { encoding: "utf8", mode: 384 });
+    await writeFile(l, jsonStringify(i), { encoding: "utf8", mode: 384 });
   } catch (i) {
-    n(
+    logForDebugging(
       `Failed to write workflow snapshot ${t}: ${i instanceof Error ? i.message : i}`,
     );
   }
@@ -104,11 +104,11 @@ async function loadWorkflowSnapshots(t) {
         .map(async (e) => {
           try {
             let r = await readFile(p(s, e), "utf8"),
-              o = z(r);
+              o = jsonParse(r);
             return d(o, e.replace(/\.json$/, ""));
           } catch (r) {
             return (
-              n(
+              logForDebugging(
                 `Failed to parse workflow snapshot ${e}: ${r instanceof Error ? r.message : r}`,
               ),
               null
@@ -131,7 +131,7 @@ async function j(t, a) {
   do {
     let r = await t.listEntries(s, l === void 0 ? void 0 : { cursor: l });
     if (!r.ok)
-      return (n(`Failed to list workflow snapshots: ${r.error.code}`), []);
+      return (logForDebugging(`Failed to list workflow snapshots: ${r.error.code}`), []);
     for (let o of r.value.items) {
       if (o.kind !== "key" || o.key.namespace !== "sidecar") continue;
       if ((o.key.relPath.at(-1) ?? "").endsWith(".json")) i.push(o.key);
@@ -146,22 +146,22 @@ async function j(t, a) {
           let f = await t.read([r]);
           if (!f.ok)
             return (
-              n(`Failed to parse workflow snapshot ${o}: ${f.error.code}`),
+              logForDebugging(`Failed to parse workflow snapshot ${o}: ${f.error.code}`),
               null
             );
           let c = f.value.items[0];
           if (!c?.found)
             return (
-              n(
+              logForDebugging(
                 `Failed to parse workflow snapshot ${o}: deleted between list and read`,
               ),
               null
             );
-          let w = z(Buffer.from(c.value).toString("utf8"));
+          let w = jsonParse(Buffer.from(c.value).toString("utf8"));
           return d(w, o.replace(/\.json$/, ""));
         } catch (f) {
           return (
-            n(
+            logForDebugging(
               `Failed to parse workflow snapshot ${o}: ${f instanceof Error ? f.message : f}`,
             ),
             null

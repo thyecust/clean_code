@@ -16,7 +16,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { getSanitizedShortCode } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -164,7 +164,7 @@ class L {
     if (this.#E || !t || !this.#O()) return;
     if (this.#i) return;
     if (r && this.#_) {
-      (n("[voice] Re-arming focus recording after silence timeout"),
+      (logForDebugging("[voice] Re-arming focus recording after silence timeout"),
         (this.#_ = !1),
         (this.#i = !0),
         this.#D(),
@@ -175,18 +175,18 @@ class L {
     if (a === "processing") return;
     if (c === "tap") {
       if (a === "idle")
-        (n("[voice] toggle: starting recording"),
+        (logForDebugging("[voice] toggle: starting recording"),
           (this.#p = !0),
           this.#D(),
           this.#K(),
           this.#q());
       else if (a === "recording")
-        (n("[voice] toggle: finishing recording"), this.#g());
+        (logForDebugging("[voice] toggle: finishing recording"), this.#g());
       return;
     }
     if (a === "idle") {
       if (
-        (n(
+        (logForDebugging(
           "[voice] handleKeyEvent: idle, starting recording session immediately",
         ),
         this.#D(),
@@ -195,7 +195,7 @@ class L {
         this.#c();
       this.#c = this.#m.setTimeout(() => {
         if (((this.#c = null), this.#e === "recording" && !this.#b))
-          (n("[voice] No auto-repeat seen, arming release timer via fallback"),
+          (logForDebugging("[voice] No auto-repeat seen, arming release timer via fallback"),
             (this.#b = !0),
             this.#H());
       }, e);
@@ -207,7 +207,7 @@ class L {
   };
   cancelRecording = () => {
     if (this.#E || this.#e === "idle") return;
-    (n("[voice] cancelRecording: discarding without submit"),
+    (logForDebugging("[voice] cancelRecording: discarding without submit"),
       logFeatureOk("voice_cancel"),
       this.#S(),
       this.#r("idle"));
@@ -260,7 +260,7 @@ class L {
     if (this.#v) this.#v();
     this.#v = this.#m.setTimeout(() => {
       if (((this.#v = null), this.#e === "recording" && this.#i))
-        (n("[voice] Focus silence timeout \u2014 tearing down session"),
+        (logForDebugging("[voice] Focus silence timeout \u2014 tearing down session"),
           (this.#_ = !0),
           this.#g());
     }, U);
@@ -269,21 +269,21 @@ class L {
     if (this.#a) this.#a();
     this.#a = this.#m.setTimeout(() => {
       if (((this.#a = null), this.#e === "recording" && this.#p))
-        (n("[voice] Toggle silence timeout \u2014 auto-finishing"), this.#g());
+        (logForDebugging("[voice] Toggle silence timeout \u2014 auto-finishing"), this.#g());
     }, Y);
   }
   #q() {
     if (this.#l) this.#l();
     this.#l = this.#m.setTimeout(() => {
       if (((this.#l = null), this.#e === "recording" && this.#p))
-        (n("[voice] Toggle max-duration cap \u2014 auto-finishing"), this.#g());
+        (logForDebugging("[voice] Toggle max-duration cap \u2014 auto-finishing"), this.#g());
     }, q);
   }
   #W() {
     let { enabled: e, focusMode: t, isFocused: r } = this.#t;
     if (!e || !t) {
       if (this.#i && this.#e === "recording")
-        (n("[voice] Focus mode disabled during recording, finishing"),
+        (logForDebugging("[voice] Focus mode disabled during recording, finishing"),
           this.#g());
       return;
     }
@@ -291,7 +291,7 @@ class L {
       let c = this.#C,
         a = () => {
           if (c !== this.#C || this.#e !== "idle" || this.#_) return;
-          (n("[voice] Focus gained, starting recording session"),
+          (logForDebugging("[voice] Focus gained, starting recording session"),
             (this.#i = !0),
             this.#D(),
             this.#A());
@@ -303,11 +303,11 @@ class L {
         });
     } else if (!r) {
       if (((this.#_ = !1), this.#e === "recording"))
-        (n("[voice] Focus lost, finishing recording"), this.#g());
+        (logForDebugging("[voice] Focus lost, finishing recording"), this.#g());
     }
   }
   #g() {
-    (n(
+    (logForDebugging(
       "[voice] finishRecording: stopping recording, transitioning to processing",
     ),
       this.#T++);
@@ -324,7 +324,7 @@ class L {
       V = this.#x,
       C = this.#u,
       b = () => this.#u !== C;
-    (n("[voice] Recording stopped"),
+    (logForDebugging("[voice] Recording stopped"),
       (this.#s ? this.#s.finalize() : Promise.resolve(void 0))
         .then(async (R) => {
           if (b()) return;
@@ -340,7 +340,7 @@ class L {
           ) {
             if (
               ((this.#R = !0),
-              n(
+              logForDebugging(
                 `[voice] Silent-drop detected (no_data_timeout, ${String(this.#f.length)} chunks); replaying on fresh connection`,
               ),
               logEvent("tengu_voice_silent_drop_replay", {
@@ -404,7 +404,7 @@ class L {
           this.#f = [];
           let v = this.#o.trim();
           if (
-            (n(
+            (logForDebugging(
               `[voice] Final transcript assembled (${String(v.length)} chars)`,
             ),
             logEvent("tengu_voice_recording_completed", {
@@ -420,7 +420,7 @@ class L {
           )
             (this.#s.close(), (this.#s = null));
           if (v)
-            (n(`[voice] Injecting transcript (${String(v.length)} chars)`),
+            (logForDebugging(`[voice] Injecting transcript (${String(v.length)} chars)`),
               logFeatureOk("voice_transcription"),
               this.#t.onTranscript(v));
           else if (a === 0 && t > 2000) {
@@ -471,7 +471,7 @@ class L {
     if (t.recentEarlyFailures.length >= I) {
       if (!t.breakerTrippedLogged)
         ((t.breakerTrippedLogged = !0),
-          n(
+          logForDebugging(
             `[voice] circuit breaker: ${String(t.recentEarlyFailures.length)} early failures in ${String(w)}ms \u2014 suppressing new sessions until one succeeds`,
             { level: "error" },
           ),
@@ -500,7 +500,7 @@ class L {
       a = await e.checkRecordingAvailability(this.#y);
     if (this.#u !== c) return;
     if (!a.available) {
-      (n(`[voice] Recording not available: ${a.reason ?? "unknown"}`),
+      (logForDebugging(`[voice] Recording not available: ${a.reason ?? "unknown"}`),
         logFeatureBad("voice_start", "voice_start_recording_unavailable"),
         this.#t.onError(a.reason ?? "Audio recording is not available."),
         t.recordEarlyFailure(),
@@ -509,13 +509,13 @@ class L {
         this.#r("idle"));
       return;
     }
-    (n("[voice] Starting recording session, connecting voice stream"),
+    (logForDebugging("[voice] Starting recording session, connecting voice stream"),
       this.#n.setState((u) => {
         if (!u.voiceError) return u;
         return { ...u, voiceError: null };
       }));
     let l = [];
-    (n("[voice] startRecording: buffering audio while WebSocket connects"),
+    (logForDebugging("[voice] startRecording: buffering audio while WebSocket connects"),
       (this.#M = []));
     let V = !1,
       C = await e.startRecording(
@@ -549,12 +549,12 @@ class L {
     }
     if (!C.started) {
       if (C.superseded) {
-        n("[voice] start superseded mid-connect; ignoring");
+        logForDebugging("[voice] start superseded mid-connect; ignoring");
         return;
       }
       let u = C.hint;
       (logFeatureBad("voice_start", "voice_start_capture_failed"),
-        n(`[voice] Recording failed \u2014 ${u ?? "no audio tool found"}`, {
+        logForDebugging(`[voice] Recording failed \u2014 ${u ?? "no audio tool found"}`, {
           level: "error",
         }),
         this.#t.onError(
@@ -593,13 +593,13 @@ class L {
               if (
                 ((v = !0),
                 t.clearEarlyFailures(),
-                n(
+                logForDebugging(
                   `[voice] onTranscript: isFinal=${String(m)} (${String(o.length)} chars)`,
                 ),
                 m && o.trim())
               )
                 if (this.#i)
-                  (n(
+                  (logForDebugging(
                     `[voice] Focus mode: flushing final transcript immediately (${String(o.trim().length)} chars)`,
                   ),
                     logFeatureOk("voice_transcription"),
@@ -615,7 +615,7 @@ class L {
                   if (this.#p) this.#K();
                   if (this.#o) this.#o += " ";
                   ((this.#o += o.trim()),
-                    n(
+                    logForDebugging(
                       `[voice] Accumulated final transcript (${String(this.#o.length)} chars)`,
                     ),
                     this.#n.setState((s) => {
@@ -637,11 +637,11 @@ class L {
             },
             onError: (o, m) => {
               if (_()) {
-                n(`[voice] ignoring onError from stale session: ${o}`);
+                logForDebugging(`[voice] ignoring onError from stale session: ${o}`);
                 return;
               }
               if (this.#T !== S) {
-                n(
+                logForDebugging(
                   `[voice] ignoring stale onError from superseded attempt: ${o}`,
                 );
                 return;
@@ -650,7 +650,7 @@ class L {
               if (!m?.fatal && !v && this.#e === "recording") {
                 if (!this.#F) {
                   ((this.#F = !0),
-                    n(
+                    logForDebugging(
                       `[voice] early voice_stream error (pre-transcript), retrying once: ${o}`,
                     ),
                     logEvent("tengu_voice_stream_early_retry", {}),
@@ -664,10 +664,10 @@ class L {
               }
               if ((this.#T++, !v)) t.recordEarlyFailure();
               (logFeatureBad("voice_stream_connect", "voice_stream_connection_error"),
-                n(`[voice] voice_stream error: ${o}`, { level: "error" }));
+                logForDebugging(`[voice] voice_stream error: ${o}`, { level: "error" }));
               let s = this.#o.trim();
               if (s)
-                (n(
+                (logForDebugging(
                   `[voice] mid-stream error: salvaging ${String(s.length)} chars before cleanup`,
                 ),
                   logFeatureSad(
@@ -698,7 +698,7 @@ class L {
                   if (T > 0 && T + A.length > m) (p.push([]), (T = 0));
                   (p.at(-1).push(A), (T += A.length));
                 }
-                n(
+                logForDebugging(
                   `[voice] onReady: flushing ${String(l.length)} buffered chunks (${String(s)} bytes) as ${String(p.length)} coalesced frame(s)`,
                 );
                 for (let A of p) o.send(Buffer.concat(A));
@@ -717,7 +717,7 @@ class L {
             }
             if (!o) {
               if (
-                (n(
+                (logForDebugging(
                   "[voice] Failed to connect to voice_stream (no OAuth token?)",
                 ),
                 logFeatureBad("voice_stream_connect", "voice_stream_no_auth"),

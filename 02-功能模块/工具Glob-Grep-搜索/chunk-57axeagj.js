@@ -11,10 +11,10 @@ import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, findGitRoot, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -118,19 +118,19 @@ async function v(e, r) {
     ],
     a = C(t);
   if (a === e.loadedMergedSignature) {
-    n("[FileIndex] skipped index rebuild \u2014 merged paths unchanged");
+    logForDebugging("[FileIndex] skipped index rebuild \u2014 merged paths unchanged");
     return;
   }
   if (await e.fileIndex.loadFromFileListAsync(t).done)
     ((e.loadedMergedSignature = a),
-      n(
+      logForDebugging(
         `[FileIndex] rebuilt index with ${e.cachedTrackedFiles.length} tracked + ${r.length} untracked files`,
       ));
 }
 async function P(e, r, s) {
   let t = `${r}:${s}`;
   if (e.ignorePatternsCacheKey === t) return e.ignorePatternsCache;
-  let a = ae(),
+  let a = getFsSurface(),
     o = [".ignore", ".rgignore"],
     g = dedupe([r, s]),
     c = w.default(),
@@ -143,7 +143,7 @@ async function P(e, r, s) {
     if (F === null) continue;
     (c.add(filterCompilableIgnorePatterns(splitNonEmptyLines(F), "file_suggestions_ignore")),
       (u = !0),
-      n(`[FileIndex] loaded ignore patterns from ${f[x]}`));
+      logForDebugging(`[FileIndex] loaded ignore patterns from ${f[x]}`));
   }
   let p = u ? c : null;
   return ((e.ignorePatternsCache = p), (e.ignorePatternsCacheKey = t), p);
@@ -162,9 +162,9 @@ async function T(e, r) {
 async function j(e, r, s) {
   let t = Date.now(),
     a = e.cacheGeneration;
-  n("[FileIndex] getFilesUsingGit called");
+  logForDebugging("[FileIndex] getFilesUsingGit called");
   let o = findGitRoot(getCwd());
-  if (!o) return (n("[FileIndex] not a git repo, returning null"), null);
+  if (!o) return (logForDebugging("[FileIndex] not a git repo, returning null"), null);
   try {
     let g = getCwd(),
       c = Date.now(),
@@ -174,11 +174,11 @@ async function j(e, r, s) {
         { timeout: 5000, abortSignal: r, cwd: o },
       );
     if (
-      (n(`[FileIndex] git ls-files (tracked) took ${Date.now() - c}ms`),
+      (logForDebugging(`[FileIndex] git ls-files (tracked) took ${Date.now() - c}ms`),
       u.code !== 0)
     )
       return (
-        n(
+        logForDebugging(
           `[FileIndex] git ls-files failed (code=${u.code}, stderr=${u.stderr}), falling back to ripgrep`,
         ),
         null
@@ -194,7 +194,7 @@ async function j(e, r, s) {
       e.cachedTrackedFiles.length > 0
     )
       ((d = e.cachedTrackedFiles),
-        n(
+        logForDebugging(
           "[FileIndex] skipped path normalization \u2014 raw git paths unchanged",
         ));
     else {
@@ -210,13 +210,13 @@ async function j(e, r, s) {
       if (k) {
         let _ = d.length;
         ((d = await T(k, d)),
-          n(`[FileIndex] applied ignore patterns: ${_} -> ${d.length} files`));
+          logForDebugging(`[FileIndex] applied ignore patterns: ${_} -> ${d.length} files`));
       }
       p = { repoRoot: o, cwd: g, rawStdout: u.stdout };
     }
     if (a !== e.cacheGeneration)
       return (
-        n(
+        logForDebugging(
           "[FileIndex] discarding refresh results \u2014 cache was reset mid-refresh",
         ),
         d
@@ -225,7 +225,7 @@ async function j(e, r, s) {
     e.cachedTrackedFiles = d;
     let x = Date.now() - t;
     return (
-      n(`[FileIndex] git ls-files: ${d.length} tracked files in ${x}ms`),
+      logForDebugging(`[FileIndex] git ls-files: ${d.length} tracked files in ${x}ms`),
       logEvent("tengu_file_suggestions_git_ls_files", {
         file_count: d.length,
         tracked_count: d.length,
@@ -236,7 +236,7 @@ async function j(e, r, s) {
       d
     );
   } catch (g) {
-    return (n(`[FileIndex] git ls-files error: ${l(g)}`), null);
+    return (logForDebugging(`[FileIndex] git ls-files error: ${l(g)}`), null);
   }
 }
 async function b(e) {
@@ -263,11 +263,11 @@ async function A(e, r) {
   );
 }
 async function E(e, r, s) {
-  n(`[FileIndex] getProjectFiles called, respectGitignore=${s}`);
+  logForDebugging(`[FileIndex] getProjectFiles called, respectGitignore=${s}`);
   let t = await j(e, r, s);
   if (t !== null)
-    return (n(`[FileIndex] using git ls-files result (${t.length} files)`), t);
-  n("[FileIndex] git ls-files returned null, falling back to ripgrep");
+    return (logForDebugging(`[FileIndex] using git ls-files result (${t.length} files)`), t);
+  logForDebugging("[FileIndex] git ls-files returned null, falling back to ripgrep");
   let a = Date.now(),
     o = getCwd(),
     g = null,
@@ -296,7 +296,7 @@ async function E(e, r, s) {
   let u = c.map((d) => m.relative(o, d)),
     f = Date.now() - a;
   return (
-    n(`[FileIndex] ripgrep: ${u.length} files in ${f}ms`),
+    logForDebugging(`[FileIndex] ripgrep: ${u.length} files in ${f}ms`),
     logEvent("tengu_file_suggestions_ripgrep", {
       file_count: u.length,
       duration_ms: f,
@@ -323,9 +323,9 @@ async function N(e, r) {
       if (await t.loadFromFileListAsync(x).done)
         ((e.loadedTrackedSignature = F), (e.loadedMergedSignature = null));
     } else
-      n("[FileIndex] skipped index rebuild \u2014 tracked paths unchanged");
+      logForDebugging("[FileIndex] skipped index rebuild \u2014 tracked paths unchanged");
   } catch (a) {
-    n(`[FileIndex] getPathsForSuggestions failed: ${l(a)}`, { level: "error" });
+    logForDebugging(`[FileIndex] getPathsForSuggestions failed: ${l(a)}`, { level: "error" });
   }
   return t;
 }
@@ -385,13 +385,13 @@ function startBackgroundCacheRefresh(e, r) {
         return (
           (e.lastRefreshMs = g),
           (e.lastScanDurationMs = g - a),
-          n(`[FileIndex] cache refresh completed in ${e.lastScanDurationMs}ms`),
+          logForDebugging(`[FileIndex] cache refresh completed in ${e.lastScanDurationMs}ms`),
           o
         );
       })
       .catch((o) => {
         if (
-          (n(`[FileIndex] Cache refresh failed: ${l(o)}`),
+          (logForDebugging(`[FileIndex] Cache refresh failed: ${l(o)}`),
           logError(o),
           t === e.cacheGeneration)
         )
@@ -400,7 +400,7 @@ function startBackgroundCacheRefresh(e, r) {
       })));
 }
 async function O() {
-  let e = ae(),
+  let e = getFsSurface(),
     r = getCwd();
   try {
     return (await e.readdir(r)).map((t) => {
@@ -410,7 +410,7 @@ async function O() {
     });
   } catch (s) {
     return (
-      n(`[FileSuggestions] readdir failed for cwd: ${l(s)}`, {
+      logForDebugging(`[FileSuggestions] readdir failed for cwd: ${l(s)}`, {
         level: "error",
       }),
       []
@@ -439,13 +439,13 @@ async function generateFileSuggestions(e, r, s = !1, t) {
     let c = r,
       u = "." + m.sep;
     if (r.startsWith(u)) c = r.substring(2);
-    if (c.startsWith("~")) c = ot(c);
+    if (c.startsWith("~")) c = resolvePath(c);
     let f = e.fileIndex
         ? e.fileIndex.search(c, S).map((p) => I(p.path, p.score))
         : [],
       d = Date.now() - o;
     return (
-      n(
+      logForDebugging(
         `[FileIndex] generateFileSuggestions: ${f.length} results in ${d}ms (${g ? "partial" : "full"} index)`,
       ),
       logEvent("tengu_file_suggestions_query", {
@@ -468,7 +468,7 @@ async function U(e) {
       await r.sendControlRequest({ subtype: "file_suggestions", query: e })
     ).suggestions.map((t) => I(t.path, t.score));
   } catch (s) {
-    return (n(`[FileIndex] remote file_suggestions RPC failed: ${l(s)}`), []);
+    return (logForDebugging(`[FileIndex] remote file_suggestions RPC failed: ${l(s)}`), []);
   }
 }
 function applyFileSuggestion({
@@ -513,17 +513,17 @@ function H(e, r, s, t) {
       if (f && u.length > 0) {
         let d = u.length;
         ((u = await T(f, u)),
-          n(
+          logForDebugging(
             `[FileIndex] applied ignore patterns to untracked: ${d} -> ${u.length} files`,
           ));
       }
       return (
-        n(`[FileIndex] background untracked fetch: ${u.length} files`),
+        logForDebugging(`[FileIndex] background untracked fetch: ${u.length} files`),
         v(e, u)
       );
     })
     .catch((g) => {
-      n(`[FileIndex] background untracked fetch failed: ${g}`);
+      logForDebugging(`[FileIndex] background untracked fetch failed: ${g}`);
     })
     .finally(() => {
       e.untrackedFetchPromise = null;

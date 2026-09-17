@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 143 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -24,39 +24,39 @@ function ThirdPartyModelUpgradeDialog(k) {
   else s = l[1];
   let d;
   if (l[2] !== x)
-    ((d = r(t, {
-      children: ["Currently pinned: ", e(t, { bold: !0, children: x })],
+    ((d = r(Text, {
+      children: ["Currently pinned: ", e(Text, { bold: !0, children: x })],
     })),
       (l[2] = x),
       (l[3] = d));
   else d = l[3];
   let m;
   if (l[4] !== a)
-    ((m = e(t, { bold: !0, children: a })), (l[4] = a), (l[5] = m));
+    ((m = e(Text, { bold: !0, children: a })), (l[4] = a), (l[5] = m));
   else m = l[5];
   let f;
   if (l[6] !== y)
-    ((f = r(t, { dimColor: !0, children: ["(", y, ")"] })),
+    ((f = r(Text, { dimColor: !0, children: ["(", y, ")"] })),
       (l[6] = y),
       (l[7] = f));
   else f = l[7];
   let c;
   if (l[8] !== m || l[9] !== f)
-    ((c = r(t, { children: ["Latest available: ", m, " ", f] })),
+    ((c = r(Text, { children: ["Latest available: ", m, " ", f] })),
       (l[8] = m),
       (l[9] = f),
       (l[10] = c));
   else c = l[10];
   let C;
   if (l[11] !== d || l[12] !== c)
-    ((C = r(o, { flexDirection: "column", children: [d, c] })),
+    ((C = r(Box, { flexDirection: "column", children: [d, c] })),
       (l[11] = d),
       (l[12] = c),
       (l[13] = C));
   else C = l[13];
   let L;
   if (l[14] === MEMO_CACHE_SENTINEL)
-    ((L = e(t, {
+    ((L = e(Text, {
       dimColor: !0,
       children: "Claude Code will restart to apply.",
     })),
@@ -64,7 +64,7 @@ function ThirdPartyModelUpgradeDialog(k) {
   else L = l[14];
   let g;
   if (l[15] !== a)
-    ((g = r(t, { children: ["Update settings to use ", a, "?", " ", L] })),
+    ((g = r(Text, { children: ["Update settings to use ", a, "?", " ", L] })),
       (l[15] = a),
       (l[16] = g));
   else g = l[16];
@@ -76,7 +76,7 @@ function ThirdPartyModelUpgradeDialog(k) {
   else b = l[18];
   let u;
   if (l[19] !== b || l[20] !== C || l[21] !== g)
-    ((u = r(o, { flexDirection: "column", gap: 1, children: [C, g, b] })),
+    ((u = r(Box, { flexDirection: "column", gap: 1, children: [C, g, b] })),
       (l[19] = b),
       (l[20] = C),
       (l[21] = g),

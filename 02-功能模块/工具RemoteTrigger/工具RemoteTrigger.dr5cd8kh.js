@@ -11,15 +11,15 @@
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { wa, E$, SJn, bJn, m7e, Xpe, CJn } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl, REMOTE_TRIGGER_TOOL_NAME, REMOTE_TRIGGER_TOOL_DESCRIPTION, REMOTE_TRIGGER_TOOL_PROMPT, resolvePersistenceThreshold, CCR_TRIGGERS_BETA_HEADER, parseTriggerTimestamp } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { httpClient, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -111,13 +111,13 @@ function L(e) {
 }
 function ee(e) {
   if (typeof e === "string") return e;
-  if (!Array.isArray(e)) return e === void 0 ? "" : b(e);
+  if (!Array.isArray(e)) return e === void 0 ? "" : jsonStringify(e);
   let r = [];
   for (let n of e) {
     let t = M().safeParse(n);
     if (t.success && typeof t.data.text === "string") r.push(t.data.text);
     else if (t.success && t.data.type === "image") r.push("[image]");
-    else r.push(b(n));
+    else r.push(jsonStringify(n));
   }
   return r.join(`
 `);
@@ -150,7 +150,7 @@ function te(e, r) {
         break;
       case "tool_use":
         o.push(
-          `tool_use ${g.data.name ?? "?"}: ${w(b(g.data.input ?? {}), 300)}`,
+          `tool_use ${g.data.name ?? "?"}: ${w(jsonStringify(g.data.input ?? {}), 300)}`,
         );
         break;
       case "tool_result": {
@@ -190,7 +190,7 @@ function ne(e, r) {
       let t = P(n, "retry_delay_ms"),
         d = t === void 0 ? "?" : `${Math.round(t / 1000)}s`,
         o =
-          n.error === void 0 ? "?" : (p(n, "error", 200) ?? w(b(n.error), 200));
+          n.error === void 0 ? "?" : (p(n, "error", 200) ?? w(jsonStringify(n.error), 200));
       return [
         `api_retry ${P(n, "attempt") ?? "?"}/${P(n, "max_retries") ?? "?"}: status=${P(n, "error_status") ?? "none"} error=${o} retry_in=${d}`,
       ];
@@ -209,7 +209,7 @@ function ne(e, r) {
         d = p(n, "stop_reason", 300);
       return n.prevented_continuation === !0 || t.length > 0
         ? [
-            `stop hooks: prevented_continuation=${n.prevented_continuation === !0}${d ? ` reason=${d}` : ""} errors=${w(b(t), 500)}`,
+            `stop hooks: prevented_continuation=${n.prevented_continuation === !0}${d ? ` reason=${d}` : ""} errors=${w(jsonStringify(t), 500)}`,
           ]
         : [];
     }
@@ -232,7 +232,7 @@ function re(e, r) {
     o = t.permission_denials?.length
       ? ` permission_denials=${t.permission_denials.length}`
       : "",
-    l = t.errors?.length ? ` errors=${w(b(t.errors), 1500)}` : "",
+    l = t.errors?.length ? ` errors=${w(jsonStringify(t.errors), 1500)}` : "",
     f = t.result ? ` \u2014 ${w(t.result, 1000)}` : "";
   return [
     `result: ${e ?? "?"} is_error=${t.is_error ?? "?"} turns=${t.num_turns ?? "?"} duration=${d}${o}${l}${f}`,
@@ -258,7 +258,7 @@ function ie(e, r, n) {
         case "can_use_tool": {
           let d =
             p(t, "decision_reason", 300) ??
-            (t?.input === void 0 ? "?" : w(b(t.input), 300));
+            (t?.input === void 0 ? "?" : w(jsonStringify(t.input), 300));
           return [`permission prompt ${p(t, "tool_name", 100) ?? "?"}: ${d}`];
         }
         case "request_user_dialog":
@@ -413,7 +413,7 @@ var de = createLazyValue(() =>
 function pe(e, r = new Date()) {
   let n = e.enabled ?? !0,
     t = [],
-    d = CJn(e.next_run_at);
+    d = parseTriggerTimestamp(e.next_run_at);
   if (d) {
     let o = formatRelativeTime(d, { now: r }),
       l = d.toISOString().replace(/\.\d{3}Z$/, "Z"),
@@ -464,19 +464,19 @@ var G = 1e5,
 function Z(e, r) {
   return `${N}
 (unexpected ${e} page shape; the start of the body follows)
-${w(b(r ?? null), 2000)}`;
+${w(jsonStringify(r ?? null), 2000)}`;
 }
 function we(e, r, n) {
   let t = q().safeParse(e);
   if (!t.success)
     return {
-      json: b({ trigger_id: r, unreadable_page: !0 }),
+      json: jsonStringify({ trigger_id: r, unreadable_page: !0 }),
       summary: Z("runs", e),
     };
   let d = t.data.data.map((f) => {
       let g = be().safeParse(f);
       if (!g.success) return { unreadable_row: !0 };
-      return { ...g.data, url: wa(g.data.id) };
+      return { ...g.data, url: buildClaudeAiSessionUrl(g.data.id) };
     }),
     o = t.data.next_cursor ?? null,
     l = [];
@@ -486,26 +486,26 @@ function we(e, r, n) {
         ? "\u2192 no run sessions on this page"
         : "\u2192 no run sessions recorded for this routine (a fire skipped, refused or failed before a session existed leaves no run; check the routine with get)",
     );
-  if (o) l.push(`\u2192 older runs exist: pass cursor=${b(o)}`);
+  if (o) l.push(`\u2192 older runs exist: pass cursor=${jsonStringify(o)}`);
   return {
-    json: b({ note: N, trigger_id: r, data: d, next_cursor: o }),
+    json: jsonStringify({ note: N, trigger_id: r, data: d, next_cursor: o }),
     summary:
       l.join(`
 `) || void 0,
   };
 }
 function ke(e, r) {
-  let n = m7e(E$, G) - ye - (r?.length ?? 0),
+  let n = resolvePersistenceThreshold(REMOTE_TRIGGER_TOOL_NAME, G) - ye - (r?.length ?? 0),
     t = q().safeParse(e);
   if (!t.success)
     return {
-      json: b({ session_id: r, events_fetched: 0 }),
+      json: jsonStringify({ session_id: r, events_fetched: 0 }),
       summary: Z("events", e),
     };
   let d = t.data.next_cursor ?? null,
     o = F(t.data, n - (d?.length ?? 0));
   return {
-    json: b({
+    json: jsonStringify({
       session_id: r,
       events_fetched: o.eventsFetched,
       events_shown: o.eventsShown,
@@ -542,7 +542,7 @@ function H(e) {
   return { ...e, job_config: { ...r, ccr: { ...n, events: o } } };
 }
 var RemoteTriggerTool = buildTool({
-  name: E$,
+  name: REMOTE_TRIGGER_TOOL_NAME,
   searchHint:
     "manage scheduled cloud agent routines; inspect their run history and logs",
   enablesCodeExecution: !0,
@@ -578,10 +578,10 @@ var RemoteTriggerTool = buildTool({
     return e;
   },
   async description() {
-    return SJn;
+    return REMOTE_TRIGGER_TOOL_DESCRIPTION;
   },
   async prompt() {
-    return bJn;
+    return REMOTE_TRIGGER_TOOL_PROMPT;
   },
   create({ permissions: e, credentials: r }) {
     return {
@@ -649,7 +649,7 @@ var RemoteTriggerTool = buildTool({
         }
         let I = {
             auth: "teleport-org",
-            headers: { "anthropic-beta": Xpe },
+            headers: { "anthropic-beta": CCR_TRIGGERS_BETA_HEADER },
             timeout: 20000,
             signal: t,
             credentials: r,
@@ -669,7 +669,7 @@ var RemoteTriggerTool = buildTool({
           ({ json: A, summary: E } = we(k.data, l, g));
         if (o === "get_run_log" && S) ({ json: A, summary: E } = ke(k.data, f));
         if (
-          ((A ??= b(k.data)),
+          ((A ??= jsonStringify(k.data)),
           o === "create" ||
             o === "update" ||
             o === "run" ||

@@ -11,7 +11,7 @@ import { bYt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ac } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getTeamsDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -114,38 +114,38 @@ async function readTeamFileAsync(e, t) {
     let r = await t.read([C(e)]);
     if (!r.ok)
       return (
-        n(`[TeammateTool] Failed to read team file for ${e}: ${r.error.code}`),
+        logForDebugging(`[TeammateTool] Failed to read team file for ${e}: ${r.error.code}`),
         null
       );
     let a = r.value.items[0];
     if (!a.found) return null;
     try {
-      return x(z(Buffer.from(a.value).toString("utf8")));
+      return x(jsonParse(Buffer.from(a.value).toString("utf8")));
     } catch (o) {
       return (
-        n(`[TeammateTool] Failed to read team file for ${e}: ${l(o)}`),
+        logForDebugging(`[TeammateTool] Failed to read team file for ${e}: ${l(o)}`),
         null
       );
     }
   }
   try {
     let r = await readFile(getTeamFilePath(e), "utf-8");
-    return x(z(r));
+    return x(jsonParse(r));
   } catch (r) {
     if (A(r) === "ENOENT") return null;
     return (
-      n(`[TeammateTool] Failed to read team file for ${e}: ${l(r)}`),
+      logForDebugging(`[TeammateTool] Failed to read team file for ${e}: ${l(r)}`),
       null
     );
   }
 }
 function logTeamFileWriteFailure(e, t) {
   if (Po(t))
-    n(`[TeammateTool] Failed to write team file for ${e} (${A(t)}): ${l(t)}`, {
+    logForDebugging(`[TeammateTool] Failed to write team file for ${e} (${A(t)}): ${l(t)}`, {
       level: "error",
     });
   else if (L(t))
-    n(`[TeammateTool] Failed to write team file for ${e}: ${l(t)}`, {
+    logForDebugging(`[TeammateTool] Failed to write team file for ${e}: ${l(t)}`, {
       level: "error",
     });
   else logError(t);
@@ -195,7 +195,7 @@ async function updateTeamFile(e, t, r, a) {
     try {
       await i();
     } catch (s) {
-      n(`[TeammateTool] updateTeamFile lock release failed: ${l(s)}`);
+      logForDebugging(`[TeammateTool] updateTeamFile lock release failed: ${l(s)}`);
     }
   }
 }
@@ -212,7 +212,7 @@ async function removeTeamMember(e, t, r) {
       r,
     );
   } catch (a) {
-    n(`[TeammateTool] removeTeamMember(${t}) failed: ${l(a)}`);
+    logForDebugging(`[TeammateTool] removeTeamMember(${t}) failed: ${l(a)}`);
   }
 }
 async function K(e, t, r, a) {
@@ -224,7 +224,7 @@ async function K(e, t, r, a) {
       if (u === void 0) return { skip: !0, result: { kind: "missing" } };
       let p;
       try {
-        p = x(z(Buffer.from(u.value).toString("utf8"))) ?? void 0;
+        p = x(jsonParse(Buffer.from(u.value).toString("utf8"))) ?? void 0;
       } catch (P) {
         return { skip: !0, result: { kind: "unreadable", parseError: l(P) } };
       }
@@ -238,7 +238,7 @@ async function K(e, t, r, a) {
       if (T === !1) return { skip: !0, result: { kind: "declined" } };
       return (
         (c = T),
-        { write: b(p, null, 2), result: { kind: "applied", result: T } }
+        { write: jsonStringify(p, null, 2), result: { kind: "applied", result: T } }
       );
     },
     d;
@@ -257,7 +257,7 @@ async function K(e, t, r, a) {
         throw M(e);
       case "unreadable":
         if (p.parseError !== void 0)
-          n(
+          logForDebugging(
             `[TeammateTool] Failed to read team file for ${e}: ${p.parseError}`,
           );
         if (u < 5) {
@@ -285,7 +285,7 @@ async function K(e, t, r, a) {
     throw u;
   }
   if (!E(d.error) && v(d.error))
-    n(`[TeammateTool] Failed to update team file for ${e} (${w(d.error)})`, {
+    logForDebugging(`[TeammateTool] Failed to update team file for ${e} (${w(d.error)})`, {
       level: "error",
     });
   else {
@@ -299,7 +299,7 @@ async function K(e, t, r, a) {
 }
 async function writeTeamFileAsync(e, t, r) {
   if (r) {
-    let o = await r.write(C(e), b(t, null, 2), {
+    let o = await r.write(C(e), jsonStringify(t, null, 2), {
       precondition: { type: "none" },
     });
     if (!o.ok) {
@@ -312,13 +312,13 @@ async function writeTeamFileAsync(e, t, r) {
     return;
   }
   let a = S(e);
-  (await mkdir(a, { recursive: !0 }), await writeFile(getTeamFilePath(e), b(t, null, 2)));
+  (await mkdir(a, { recursive: !0 }), await writeFile(getTeamFilePath(e), jsonStringify(t, null, 2)));
 }
 async function removeTeammateFromTeamFile(e, t, r) {
   let a = t.agentId || t.name;
   if (!a)
     return (
-      n("[TeammateTool] removeTeammateFromTeamFile called with no identifier"),
+      logForDebugging("[TeammateTool] removeTeammateFromTeamFile called with no identifier"),
       !1
     );
   let o = !1;
@@ -340,13 +340,13 @@ async function removeTeammateFromTeamFile(e, t, r) {
         { bestEffortWrite: !0 },
         r,
       )) ?? !1;
-    if (i) n(`[TeammateTool] Removed teammate from team file: ${a}`);
+    if (i) logForDebugging(`[TeammateTool] Removed teammate from team file: ${a}`);
     else if (o)
-      n(`[TeammateTool] Teammate ${a} not found in team file for "${e}"`);
+      logForDebugging(`[TeammateTool] Teammate ${a} not found in team file for "${e}"`);
     return i;
   } catch (i) {
     return (
-      n(`[TeammateTool] Cannot remove teammate ${a} from "${e}": ${l(i)}`),
+      logForDebugging(`[TeammateTool] Cannot remove teammate ${a} from "${e}": ${l(i)}`),
       !1
     );
   }
@@ -371,15 +371,15 @@ async function removeMemberByAgentId(e, t, r, a) {
         { bestEffortWrite: !0 },
         a,
       )) ?? !1;
-    if (i) n(`[TeammateTool] Removed member ${t} from team ${e}`);
+    if (i) logForDebugging(`[TeammateTool] Removed member ${t} from team ${e}`);
     else if (o)
-      n(
+      logForDebugging(
         `[TeammateTool] Skipped stale removal of ${t} from team ${e} (re-added after removal was initiated)`,
       );
     return i;
   } catch (i) {
     return (
-      n(
+      logForDebugging(
         `[TeammateTool] removeMemberByAgentId(${t}) failed for team ${e}: ${l(i)}`,
       ),
       !1
@@ -403,13 +403,13 @@ async function setMemberMode(e, t, r, a) {
       ),
       o === "absent")
     )
-      n(
+      logForDebugging(
         `[TeammateTool] Cannot set member mode: member ${t} not found in team ${e}`,
       );
     else if (o === "set")
-      n(`[TeammateTool] Set member ${t} in team ${e} to mode: ${r}`);
+      logForDebugging(`[TeammateTool] Set member ${t} in team ${e} to mode: ${r}`);
   } catch (i) {
-    n(`[TeammateTool] Cannot set member mode: ${l(i)}`);
+    logForDebugging(`[TeammateTool] Cannot set member mode: ${l(i)}`);
   }
 }
 async function syncTeammateMode(e, t, r) {
@@ -435,15 +435,15 @@ async function setMemberActive(e, t, r, a) {
       ),
       o === "absent")
     )
-      n(
+      logForDebugging(
         `[TeammateTool] Cannot set member active: member ${t} not found in team ${e}`,
       );
     else if (o === "set")
-      n(
+      logForDebugging(
         `[TeammateTool] Set member ${t} in team ${e} to ${r ? "active" : "idle"}`,
       );
   } catch (i) {
-    n(`[TeammateTool] Cannot set member active: ${l(i)}`);
+    logForDebugging(`[TeammateTool] Cannot set member active: ${l(i)}`);
   }
 }
 async function q(e) {
@@ -459,28 +459,28 @@ async function q(e) {
     }
   } catch {}
   if (!(await isPathSafeToRemove(e))) {
-    n(`[TeammateTool] kept worktree \u2014 unremovable reparse point in ${e}`);
+    logForDebugging(`[TeammateTool] kept worktree \u2014 unremovable reparse point in ${e}`);
     return;
   }
   if (r) {
     let a = await execFileNoThrowWithCwd(gitExe(), ["worktree", "remove", "--force", e], { cwd: r });
     if (a.code === 0) {
-      n(`[TeammateTool] Removed worktree via git: ${e}`);
+      logForDebugging(`[TeammateTool] Removed worktree via git: ${e}`);
       return;
     }
     if (a.stderr?.includes("not a working tree")) {
-      n(`[TeammateTool] Worktree already removed: ${e}`);
+      logForDebugging(`[TeammateTool] Worktree already removed: ${e}`);
       return;
     }
-    n(
+    logForDebugging(
       `[TeammateTool] git worktree remove failed, falling back to rm: ${a.stderr}`,
     );
   }
   try {
     (await _(e, { recursive: !0, force: !0 }),
-      n(`[TeammateTool] Removed worktree directory manually: ${e}`));
+      logForDebugging(`[TeammateTool] Removed worktree directory manually: ${e}`));
   } catch (a) {
-    n(`[TeammateTool] Failed to remove worktree ${e}: ${l(a)}`);
+    logForDebugging(`[TeammateTool] Failed to remove worktree ${e}: ${l(a)}`);
   }
 }
 function registerTeamForSessionCleanup(e) {
@@ -491,7 +491,7 @@ async function cleanupSessionTeams(e) {
     let t = bYt();
     if (t.size === 0) return;
     let r = Array.from(t);
-    (n(
+    (logForDebugging(
       `cleanupSessionTeams: removing ${r.length} orphan team dir(s): ${r.join(", ")}`,
     ),
       await Promise.allSettled(r.map((a) => J(a, e))),
@@ -519,7 +519,7 @@ async function J(e, t) {
     a.map(async (m) => {
       if (!m.tmuxPaneId || !m.backendType || !supportsPaneKill(m.backendType)) return;
       let d = await i(m.backendType).killPane(m.tmuxPaneId, c);
-      n(
+      logForDebugging(
         `cleanupSessionTeams: killPane ${m.name} (${m.backendType} ${m.tmuxPaneId}) \u2192 ${d}`,
       );
     }),
@@ -536,9 +536,9 @@ async function V(e, t) {
     let o = S(e);
     try {
       (await _(o, { recursive: !0, force: !0 }),
-        n(`[TeammateTool] Cleaned up team directory: ${o}`));
+        logForDebugging(`[TeammateTool] Cleaned up team directory: ${o}`));
     } catch (i) {
-      n(`[TeammateTool] Failed to clean up team directory ${o}: ${l(i)}`);
+      logForDebugging(`[TeammateTool] Failed to clean up team directory ${o}: ${l(i)}`);
     }
   });
 }

@@ -17,7 +17,7 @@ import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { rZ, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isAbsentParentFailure, describeStorageError, jsonStringify, jsonParse, qr, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, takeLastCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -51,7 +51,7 @@ import {
   parseStatusClassifierResponse,
   normalizeStatusClassification,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import {
   getSmallFastModel,
   getMainLoopModel,
@@ -86,7 +86,7 @@ import {
 import { getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { tryConjugateVerbPhrase } from "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
-import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/bg-rendezvous-server.js";
 import { fromJobState, ensureJobDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
@@ -256,7 +256,7 @@ function classifyAndPushDebounced(e, r, t, s, o, l, d) {
 }
 function appendTimelineLine(e, r, t) {
   let s =
-    b(t) +
+    jsonStringify(t) +
     `
 `;
   if (e !== void 0 && isValidPathSegment(r)) {
@@ -267,11 +267,11 @@ function appendTimelineLine(e, r, t) {
           logJobWriteError(
             Object.assign(
               new R(
-                `[jobs] v5 timeline append failed: ${We(l)}`,
+                `[jobs] v5 timeline append failed: ${describeStorageError(l)}`,
                 "[jobs] v5 timeline append failed",
               ),
               {
-                code: rZ(l)
+                code: isAbsentParentFailure(l)
                   ? "ENOENT"
                   : "telemetryCode" in l
                     ? l.telemetryCode
@@ -760,7 +760,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
             Ue,
             "midturn classifier timed out",
           ).catch(
-            (De) => (n(`[classifier] midturn upgrade skipped: ${De}`), null),
+            (De) => (logForDebugging(`[classifier] midturn upgrade skipped: ${De}`), null),
           );
           if (T?.source === "llm" && T.detail && e.midturnLlmEpoch === Re)
             ((e.lastMidturnLlmDetail = T.detail),
@@ -805,7 +805,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   let I =
     isHoverRestEnabled() && !isActingAsBgJob() && e.storageV5 !== void 0 ? await isBeingWatchedV5(e.storageV5) : void 0;
   if (f && e.midturnLlmEpoch !== _) {
-    n("[classifier] dropped stale mid-turn result (turn ended)");
+    logForDebugging("[classifier] dropped stale mid-turn result (turn ended)");
     return;
   }
   if (l) {
@@ -978,7 +978,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
       ? `${m.source}/${m.branch}`
       : m.source
     : "?";
-  n(
+  logForDebugging(
     `[classifier] ${m.state} (${Le}) \xB7 ${m.detail}${G ? ` \xB7 needs: ${G}` : ""}`,
   );
 }
@@ -1063,7 +1063,7 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
           ],
         });
       } catch (U) {
-        n(`[classifier] sideQuery failed: ${U}`);
+        logForDebugging(`[classifier] sideQuery failed: ${U}`);
         break;
       }
       k = "llm";
@@ -1077,7 +1077,7 @@ Previous response was not valid JSON. Respond with ONLY the JSON object, nothing
       let J = O.content.find((U) => U.type === "text"),
         L = J?.type === "text" ? J.text.trim() : "";
       if (!L) {
-        n(
+        logForDebugging(
           `[classifier] no text block in response, types=${O.content.map((U) => U.type).join(",")}`,
         );
         continue;
@@ -1155,7 +1155,7 @@ async function scanLinkRecords(e, r, t, s) {
     return { children: k, linkScanOffset: d + _ + 1, worktree: A };
   } catch (c) {
     return (
-      n(`[classifier] scanLinkRecords error: ${c}`),
+      logForDebugging(`[classifier] scanLinkRecords error: ${c}`),
       { children: r, linkScanOffset: d }
     );
   } finally {
@@ -1175,7 +1175,7 @@ function Te(e, r) {
       c = !1;
     if (((c = o.includes('"frame-link"')), !l && !d && !c)) continue;
     try {
-      let f = z(o);
+      let f = jsonParse(o);
       if (f.type === "pr-link" && f.prUrl)
         t.set(f.prUrl, {
           id: String(f.prNumber ?? f.prUrl),
@@ -1222,7 +1222,7 @@ async function nt(e, r, t) {
 async function ye(e, r, t) {
   let s = await e.backend.read([{ key: e.key, offset: r, length: t }]);
   if (!s.ok)
-    return (n(`[classifier] scanLinkRecords v5 read: ${s.error.code}`), null);
+    return (logForDebugging(`[classifier] scanLinkRecords v5 read: ${s.error.code}`), null);
   let o = s.value.items[0];
   return o.found ? { bytes: o.value, totalBytes: o.totalBytes } : null;
 }

@@ -12,9 +12,9 @@
 import { ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME, ArtifactInputError } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH, VERIFY_PROMPT_PARAGRAPH } from "./chunk-pdd7kz7p.js";
-import { gI, lwe, Tte } from "./chunk-qpgskeea.js";
+import { ARTIFACT_ACTION_FAMILIES, toFamilyParentInput, fromFamilyParentInput } from "./chunk-qpgskeea.js";
 import "./chunk-x29r16ke.js";
-import { swe, iwe, Qze } from "./chunk-01jnk0v2.js";
+import { isArtifactVerifyEnabled, isArtifactPreviewEnabled, isArtifactAddonToolEnabled } from "./chunk-01jnk0v2.js";
 import "../../01-核心基础设施/共享小工具-未细化/claude-browser-mcp-server.js";
 import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
@@ -33,8 +33,8 @@ import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
 import "../Bridge-RemoteControl/bridge-inbound-origin.js";
-import { Out, Fon } from "./chunk-yrjr7v83.js";
-import "./chunk-5gvg7p5p.js";
+import { getCommentsUnavailableNote, buildWatchRepublishesParagraph } from "./artifact-prompt-paragraphs.js";
+import "./artifact-read-for-model.js";
 import { respell } from "../Teammates团队/chunk-y89mhs4a.js";
 var l = {
     comments: [
@@ -92,14 +92,14 @@ var d = [
   ["a watch result, `status`, or", "a watch result, that listing, or"],
 ];
 function h(e) {
-  let a = Fon(!0, e);
+  let a = buildWatchRepublishesParagraph(!0, e);
   for (let [r, t] of d) a = a.replaceAll(r, t);
   return a;
 }
 function m(e) {
   let a = [
     `Read and answer the comment threads people leave on a published artifact, and manage this session's artifact watches. Publishing and reading the artifact itself is the \`${ARTIFACT_TOOL_NAME}\` tool's job; every call here names the artifact by its \`url\`.`,
-    respell(commentsPromptParagraphs(e.watchRail === "none" ? Out() : ""), [
+    respell(commentsPromptParagraphs(e.watchRail === "none" ? getCommentsUnavailableNote() : ""), [
       ['`action: "comments"`', '`action: "read"`'],
     ]),
     h(e.watchRail),
@@ -137,7 +137,7 @@ function w(e) {
 `);
 }
 function g(e) {
-  let a = Object.entries(gI)
+  let a = Object.entries(ARTIFACT_ACTION_FAMILIES)
     .filter(([r, t]) => t === e.addon && (e.offersLegacyVerb?.(r) ?? !0))
     .map(([r]) => r);
   return a.length === 0
@@ -145,8 +145,8 @@ function g(e) {
     : `${e.searchHint} (formerly the ${ARTIFACT_TOOL_NAME} tool's ${a.join(", ")})`;
 }
 function i(e) {
-  let a = (t) => lwe(e.addon, t),
-    r = (t) => Tte(e.addon, t);
+  let a = (t) => toFamilyParentInput(e.addon, t),
+    r = (t) => fromFamilyParentInput(e.addon, t);
   return buildTool({
     name: e.name,
     get searchHint() {
@@ -171,7 +171,7 @@ function i(e) {
     get outputSchema() {
       return artifactLegacyHost.outputSchema;
     },
-    isEnabled: () => Qze(e.addon),
+    isEnabled: () => isArtifactAddonToolEnabled(e.addon),
     isConcurrencySafe: (t) => artifactLegacyHost.isConcurrencySafe(a(t)),
     isReadOnly: (t) => artifactLegacyHost.isReadOnly(a(t)),
     isDestructive: (t) => artifactLegacyHost.isDestructive(a(t)),
@@ -254,7 +254,7 @@ var R = i({
     searchHint: "preview a page locally and read viewers' runtime diagnostics",
     inputSchema: artifactCheckInputSchema,
     prompt: w,
-    offersLegacyVerb: (e) => (e === "verify" ? swe() : iwe()),
+    offersLegacyVerb: (e) => (e === "verify" ? isArtifactVerifyEnabled() : isArtifactPreviewEnabled()),
   }),
   ARTIFACT_ADDON_TOOLS = [R, A, y];
 export { ARTIFACT_ADDON_TOOLS };

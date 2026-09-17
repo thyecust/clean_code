@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 8 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 var y = 2;
 function createDeviceHookRegistry(i) {
@@ -40,7 +40,7 @@ function createDeviceHookRegistry(i) {
             try {
               u(t);
             } catch (c) {
-              n(
+              logForDebugging(
                 `[deviceHooks] lease-expiry listener threw: ${ge(c).stack ?? String(c)}`,
                 { level: "error" },
               );

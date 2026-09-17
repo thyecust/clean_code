@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { rS, UR, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isCliOwnedMcpConfig, isSessionIngressUrl, getMcpServerOrigin } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, sanitizeMessageText, unwrapCcrProxyUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 var f = new Set([
@@ -28,11 +28,11 @@ var f = new Set([
   "IDENTITY_CHANGED",
 ]);
 function getMcpClientFailureDetail(e) {
-  let o = wQ(
+  let o = getMcpServerOrigin(
       "url" in e.config &&
         typeof e.config.url === "string" &&
-        (e.config.scope === "dynamic" || rS(e.config)) &&
-        UR(e.config.url)
+        (e.config.scope === "dynamic" || isCliOwnedMcpConfig(e.config)) &&
+        isSessionIngressUrl(e.config.url)
         ? { ...e.config, url: unwrapCcrProxyUrl(e.config.url) }
         : e.config,
     ),
@@ -74,7 +74,7 @@ function buildMcpReconnectResult(e, o, r, t) {
       if (e.client.toolsListError) {
         if (r.persistsOffBox)
           return (
-            n(
+            logForDebugging(
               `mcp reconnect tools/list failed for ${Qn(o)}: ${e.client.toolsListError}`,
               { level: "error" },
             ),
@@ -99,7 +99,7 @@ function buildMcpReconnectResult(e, o, r, t) {
     case "failed": {
       let s = getMcpClientFailureDetail(e.client);
       if (r.persistsOffBox) {
-        if (s) n(`mcp reconnect failed for ${Qn(o)}: ${s}`, { level: "error" });
+        if (s) logForDebugging(`mcp reconnect failed for ${Qn(o)}: ${s}`, { level: "error" });
         return {
           message: `Failed to reconnect to ${sanitizeDisplayTextWithoutRedaction(o)}${s ? " (detail withheld on this connection)" : ""}.`,
           success: !1,
@@ -123,7 +123,7 @@ function formatMcpReconnectError(e, o, r) {
   if (e instanceof mi) return sanitizeDisplayText(l(e), void 0, "none");
   if (r.persistsOffBox)
     return (
-      n(`mcp reconnect error for ${Qn(o)}: ${l(e)}`, { level: "error" }),
+      logForDebugging(`mcp reconnect error for ${Qn(o)}: ${l(e)}`, { level: "error" }),
       `Error reconnecting to ${sanitizeDisplayTextWithoutRedaction(o)} (detail withheld on this connection).`
     );
   return `Error reconnecting to ${sanitizeDisplayTextWithoutRedaction(o)}: ${sanitizeDisplayText(l(e))}`;
@@ -132,7 +132,7 @@ function formatMcpToggleError(e, o, r, t) {
   if (e instanceof mi) return sanitizeDisplayText(l(e), void 0, "none");
   if (t.persistsOffBox)
     return (
-      n(`mcp ${r} failed for ${Qn(o)}: ${l(e)}`, { level: "error" }),
+      logForDebugging(`mcp ${r} failed for ${Qn(o)}: ${l(e)}`, { level: "error" }),
       `Failed to ${r} MCP server "${sanitizeDisplayTextWithoutRedaction(o)}" (detail withheld on this connection).`
     );
   return `Failed to ${r} MCP server "${sanitizeDisplayTextWithoutRedaction(o)}": ${sanitizeDisplayText(l(e))}`;

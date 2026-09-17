@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 196 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { buildBridgeAddress, appendHopToChain, buildCrossSessionEnvelope, isCCREnvironmentKind } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { FAe } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { computeHopToken } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
@@ -24,7 +24,7 @@ import { buildSessionEventsRequest } from "../../03-入口与运行时/核心应
 import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { isTrustedDeviceGateEnabled, CLOUD_CANNOT_REACH_ELEVATED_HINT, getTrustedDeviceToken, recoverFromUntrustedDevice, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
 import { adoptSelfBridgeTitleFromRoster, getSelfBridgeCompatId, getSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
-import { P3t } from "./chunk-1yq098a7.js";
+import { parseInboundAvailability } from "./chunk-1yq098a7.js";
 import { A7 } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
@@ -44,7 +44,7 @@ async function listBridgePeerSessions(t, i) {
   try {
     ({ accessToken: k, orgUUID: x } = await u(i));
   } catch (c) {
-    if ((n(`[bridge:peers] auth prep failed: ${l(c)}`), t)) t.failed = !0;
+    if ((logForDebugging(`[bridge:peers] auth prep failed: ${l(c)}`), t)) t.failed = !0;
     return [];
   }
   let f = isCcrV2SessionCrudEnabled(),
@@ -77,7 +77,7 @@ async function listBridgePeerSessions(t, i) {
         validateStatus: (e) => e < 500,
       });
     } catch (e) {
-      if ((n(`[bridge:peers] list request failed: ${l(e)}`), t)) t.failed = !0;
+      if ((logForDebugging(`[bridge:peers] list request failed: ${l(e)}`), t)) t.failed = !0;
       return o;
     }
     if (
@@ -93,7 +93,7 @@ async function listBridgePeerSessions(t, i) {
       }
     }
     if (s.status !== 200) {
-      if ((n(`[bridge:peers] list failed ${s.status}`), t)) t.failed = !0;
+      if ((logForDebugging(`[bridge:peers] list failed ${s.status}`), t)) t.failed = !0;
       return o;
     }
     if (
@@ -101,7 +101,7 @@ async function listBridgePeerSessions(t, i) {
       typeof s.data !== "object" ||
       !Array.isArray(s.data.data)
     ) {
-      if ((n("[bridge:peers] list body `data` not an array; stopping"), t))
+      if ((logForDebugging("[bridge:peers] list body `data` not an array; stopping"), t))
         t.failed = !0;
       return o;
     }
@@ -139,10 +139,10 @@ async function listBridgePeerSessions(t, i) {
             }),
             ...(d
               ? { inboundReportUnavailable: !0 }
-              : P3t(e.external_metadata)),
+              : parseInboundAvailability(e.external_metadata)),
           }));
       } catch (d) {
-        n(`[bridge:peers] skipping malformed session row: ${l(d)}`);
+        logForDebugging(`[bridge:peers] skipping malformed session row: ${l(d)}`);
       }
     let r = f
       ? (s.data.next_cursor ?? null)
@@ -152,12 +152,12 @@ async function listBridgePeerSessions(t, i) {
     if (!r) break;
     if (((m = r), c === A - 1))
       ((_ = !0),
-        n(
+        logForDebugging(
           `[bridge:peers] page budget exhausted with more sessions remaining (scanned ${A} pages)`,
         ));
   }
   if (
-    (n(
+    (logForDebugging(
       `[bridge:peers] listed ${o.length} peer sessions${_ ? ` \u2014 TRUNCATED at ${A} pages (more sessions exist)` : ""}`,
       _ ? { level: "warn" } : void 0,
     ),
@@ -208,7 +208,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
     return { ok: !1, error: `invalid session ID format: ${t}` };
   let g = getSelfBridgeCompatId() ?? getRemoteSessionCompatId(),
     m = g ? buildBridgeAddress(g) : "unknown",
-    _ = buildCrossSessionEnvelope(m, getSelfBridgeTitle() ?? u, i, void 0, appendHopToChain(P, g ? FAe(m) : void 0), k),
+    _ = buildCrossSessionEnvelope(m, getSelfBridgeTitle() ?? u, i, void 0, appendHopToChain(P, g ? computeHopToken(m) : void 0), k),
     y = createMessageEnvelope(),
     c = {
       ...y,
@@ -271,7 +271,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
     return { ok: !1, error: `HTTP ${r.status}` };
   }
   return (
-    n(`[bridge:peers] posted to ${o}: ${i.slice(0, 60)}`),
+    logForDebugging(`[bridge:peers] posted to ${o}: ${i.slice(0, 60)}`),
     { ok: !0, msgId: y.msg_id }
   );
 }
@@ -283,7 +283,7 @@ function B(t) {
 function U(t, i) {
   if (B(i.status)) return;
   let u = extractErrorDetail(i.data);
-  n(
+  logForDebugging(
     `[bridge:peers] post to ${t} rejected: HTTP ${i.status}${u ? ` \u2014 ${normalizeSingleLineText(u)}` : ""}`,
     { level: "warn" },
   );

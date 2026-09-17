@@ -9,9 +9,9 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 24 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { bQ } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { normalizeUrlSchemeToHttp } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, MAX_CREDENTIAL_BYTES } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { startGuestVitalsEmitter } from "../../02-功能模块/自托管Runner/guest-vitals-emitter.js";
@@ -20,19 +20,19 @@ async function startHostedWorkerVitalsEmitter({ sessionId: o, sdkUrl: i }) {
   try {
     let t = a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ?? SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH;
     if (!(await readBoundedFile(t, MAX_CREDENTIAL_BYTES))?.trim()) {
-      n("[vitals] no session token file on this worker; guest vitals disabled");
+      logForDebugging("[vitals] no session token file on this worker; guest vitals disabled");
       return;
     }
     let r = await startGuestVitalsEmitter({
       sessionId: o,
-      apiBaseUrl: bQ(new URL(i)).origin,
+      apiBaseUrl: normalizeUrlSchemeToHttp(new URL(i)).origin,
       tokenFilePath: t,
       binaryResolution: "search",
-      log: n,
+      log: logForDebugging,
     });
-    if (r) Et(() => r.stop());
+    if (r) registerCleanup(() => r.stop());
   } catch (t) {
-    n(`[vitals] not started: ${l(t)}`);
+    logForDebugging(`[vitals] not started: ${l(t)}`);
   }
 }
 export { startHostedWorkerVitalsEmitter };

@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { KHt, lJt } from "./chunk-54bf3exn.js";
+import { forecastKeyOf as KHt, decideSyncOffer as lJt } from "./sync-offer-probe.js";
 import "../云会话-Teleport/overlay-bundle.js";
 import "../Git-Worktree/local-divergence-probe.js";
-import "../Git-Worktree/chunk-v967hawf.js";
+import "../Git-Worktree/dir-sync-git-repository.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import "./sync-journal.js";
 export { lJt as decideSyncOffer, KHt as forecastKeyOf };

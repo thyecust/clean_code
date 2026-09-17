@@ -19,12 +19,12 @@ import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLa
 import { getReviewCostNote, getReviewDurationNote, isUltrareviewPostEnabled, canSelfManageUsageCredits, CLAUDE_CODE_ON_WEB_DOCS_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useAnimationFrame } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { l9e, o4 } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerMessageText, IntensitySpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { resolveBundleSeedViability, getBundleSeedNotice } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -108,7 +108,7 @@ function me(ho) {
   else Q = O[11];
   let Ee;
   if (O[12] === MEMO_CACHE_SENTINEL)
-    ((Ee = e(t, { dimColor: !0, children: "Loading\u2026" })), (O[12] = Ee));
+    ((Ee = e(Text, { dimColor: !0, children: "Loading\u2026" })), (O[12] = Ee));
   else Ee = O[12];
   let Y;
   if (
@@ -223,47 +223,47 @@ function ce(go) {
     ((re = B
       ? r(N, {
           children: [
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
-                e(t, { dimColor: !0, children: ne }),
-                G && r(t, { dimColor: !0, children: ["Scope: ", G] }),
-                I && e(t, { dimColor: !0, children: I }),
-                e(t, {
+                e(Text, { dimColor: !0, children: ne }),
+                G && r(Text, { dimColor: !0, children: ["Scope: ", G] }),
+                I && e(Text, { dimColor: !0, children: I }),
+                e(Text, {
                   dimColor: !0,
                   children:
                     "Finds and verifies bugs using a multi-agent review fleet.",
                 }),
-                e(t, { dimColor: !0, children: te }),
-                oe && e(t, { dimColor: !0, children: oe }),
-                M && e(t, { dimColor: !0, children: M }),
-                E && e(t, { dimColor: !0, children: E }),
-                r(t, {
+                e(Text, { dimColor: !0, children: te }),
+                oe && e(Text, { dimColor: !0, children: oe }),
+                M && e(Text, { dimColor: !0, children: M }),
+                E && e(Text, { dimColor: !0, children: E }),
+                r(Text, {
                   dimColor: !0,
                   children: [
                     "More information: ",
-                    e(ct, { url: CLAUDE_CODE_ON_WEB_DOCS_URL, children: CLAUDE_CODE_ON_WEB_DOCS_URL }),
+                    e(Link, { url: CLAUDE_CODE_ON_WEB_DOCS_URL, children: CLAUDE_CODE_ON_WEB_DOCS_URL }),
                   ],
                 }),
               ],
             }),
-            e(t, { children: "Proceed?" }),
+            e(Text, { children: "Proceed?" }),
           ],
         })
-      : r(o, {
+      : r(Box, {
           flexDirection: "column",
           children: [
-            e(t, { dimColor: !0, children: ne }),
-            G && r(t, { dimColor: !0, children: ["Scope: ", G] }),
-            I && e(t, { dimColor: !0, children: I }),
-            e(t, {
+            e(Text, { dimColor: !0, children: ne }),
+            G && r(Text, { dimColor: !0, children: ["Scope: ", G] }),
+            I && e(Text, { dimColor: !0, children: I }),
+            e(Text, {
               dimColor: !0,
               children:
                 "Finds and verifies bugs using a multi-agent review fleet.",
             }),
-            e(t, { dimColor: !0, children: te }),
-            M && e(t, { dimColor: !0, children: M }),
-            E && e(t, { dimColor: !0, children: E }),
+            e(Text, { dimColor: !0, children: te }),
+            M && e(Text, { dimColor: !0, children: M }),
+            E && e(Text, { dimColor: !0, children: E }),
           ],
         })),
       (J[5] = M),
@@ -329,7 +329,7 @@ function ce(go) {
   else ie = J[20];
   let Xe;
   if (J[21] !== re || J[22] !== ie)
-    ((Xe = r(o, { flexDirection: "column", gap: 1, children: [re, ie] })),
+    ((Xe = r(Box, { flexDirection: "column", gap: 1, children: [re, ie] })),
       (J[21] = re),
       (J[22] = ie),
       (J[23] = Xe));
@@ -346,12 +346,12 @@ function ue() {
       (ae[1] = Ve));
   else Ve = ae[1];
   let X = Ve,
-    [Oe, V] = bs(X ? null : 50),
+    [Oe, V] = useAnimationFrame(X ? null : 50),
     Ue = X ? -100 : 19 - (Math.floor(V / 200) % 29),
     Be = Math.floor(V / 120),
     se;
   if (ae[2] !== Be || ae[3] !== X || ae[4] !== V)
-    ((se = e(o4, {
+    ((se = e(IntensitySpinnerGlyph, {
       frame: Be,
       messageColor: "inactive",
       reducedMotion: X,
@@ -364,7 +364,7 @@ function ue() {
   else se = ae[5];
   let le;
   if (ae[6] !== Ue)
-    ((le = e(l9e, {
+    ((le = e(SpinnerMessageText, {
       message: "Launching",
       mode: "responding",
       messageColor: "inactive",
@@ -377,7 +377,7 @@ function ue() {
   else le = ae[7];
   let We;
   if (ae[8] !== Oe || ae[9] !== se || ae[10] !== le)
-    ((We = r(o, {
+    ((We = r(Box, {
       ref: Oe,
       flexDirection: "row",
       columnGap: 1,

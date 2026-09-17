@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isBgSession, getOauthAccountInfo, getSubscriptionType } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
+import { withAutoResumeRecheck } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/Bridge-RemoteControl/login-flow.js";
 import { UsageCreditsAdminRequestDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { USAGE_CREDITS_ADMIN_REQUEST_NOTICE, canBuyUsageCreditsInApp, resolveExtraUsageOutcome } from "../../02-功能模块/成本-Token统计/usage-credits-flow.js";
 var s = import.meta.require("../../02-功能模块/用量额度-限额/ExtraUsageDialog.fybj08bs.js").ExtraUsageDialog;
 async function startExtraUsageFlow(u, n) {
-  let t = R4(u);
+  let t = withAutoResumeRecheck(u);
   if (s && canBuyUsageCreditsInApp()) return e(s, { onDone: t });
   let o = await resolveExtraUsageOutcome({ openInBrowser: !0 }, n.credentials);
   if (o.type === "message") return (t(o.value), null);
@@ -45,16 +45,16 @@ async function startExtraUsageFlow(u, n) {
       organizationUuid: r.organizationUuid,
     },
     l = ns();
-  return e(Kz, {
+  return e(Login, {
     startingMessage:
       "Starting new login following /usage-credits. Exit with Ctrl-C to use existing account.",
     onDone: async (a, d, c) => {
-      let g = await N8(n, a, {
+      let g = await runPostLoginHooks(n, a, {
         setAppState: c,
         previousAccount: m,
         previousGatewayAuth: l,
       });
-      t(...MHe(n, a, g));
+      t(...loginCompletion(n, a, g));
     },
   });
 }

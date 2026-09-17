@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
 function BackgroundText(R) {
   let u = _(7),
@@ -24,7 +24,7 @@ function BackgroundText(R) {
     u[4] !== m ||
     u[5] !== s
   )
-    ((h = r(t, {
+    ((h = r(Text, {
       backgroundColor: e,
       color: m,
       bold: l,

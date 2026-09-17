@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { SHELL_CWD_RESET_NOTICE_PATTERN, stripSandboxViolations } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -57,7 +57,7 @@ function BashToolOutputView(Y) {
         if (c[11] === MEMO_CACHE_SENTINEL)
           ((l = e(ToolResultRow, {
             height: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children: "[Image data detected and sent to Claude]",
             }),
@@ -67,7 +67,7 @@ function BashToolOutputView(Y) {
         P = l;
         break bb0;
       }
-      R = o;
+      R = Box;
       b = "column";
       if (c[12] !== i || c[13] !== d)
         ((f = i !== "" ? e(ToolResultContent, { content: i, verbose: d }) : null),
@@ -100,7 +100,7 @@ function BashToolOutputView(Y) {
   if (P !== EARLY_RETURN_SENTINEL) return P;
   let l;
   if (c[15] !== a)
-    ((l = a ? e(ToolResultRow, { children: e(t, { dimColor: !0, children: a }) }) : null),
+    ((l = a ? e(ToolResultRow, { children: e(Text, { dimColor: !0, children: a }) }) : null),
       (c[15] = a),
       (c[16] = l));
   else l = c[16];
@@ -117,7 +117,7 @@ function BashToolOutputView(Y) {
       i === "" && m.trim() === "" && !a
         ? e(ToolResultRow, {
             height: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children: y
                 ? r(N, {

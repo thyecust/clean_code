@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { PERMISSION_MODE_MANUAL_ALIAS, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
+import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import { parseScheduleInput } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { VALID_PERMISSION_MODES, addScheduledTask, removeScheduledTask, readScheduledTasks } from "../权限系统/chunk-3kjwvb3e.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
@@ -137,7 +137,7 @@ async function K(e, i, o) {
   if (e.action === "list") {
     let g = await readScheduledTasks(i, o);
     if (e.json) {
-      u(b(g, null, 2));
+      u(jsonStringify(g, null, 2));
       return;
     }
     let w = g.map((v) => ({
@@ -223,7 +223,7 @@ async function j(e, i, o) {
   if (e.action === "list") {
     let s = (await T(i, o)).remoteControl ?? [];
     if (e.json) {
-      u(b(s, null, 2));
+      u(jsonStringify(s, null, 2));
       return;
     }
     D(
@@ -241,7 +241,7 @@ async function j(e, i, o) {
       c("usage: claude daemon remote-control remove <name-or-dir>");
     await k();
     let f = await q(e.removeTarget, i, o);
-    (await L9e(f, i, o), u(`removed ${f}`));
+    (await removeRemoteControlEntry(f, i, o), u(`removed ${f}`));
     return;
   }
   await k();
@@ -255,7 +255,7 @@ async function j(e, i, o) {
     t = e.flags.get("spawn-mode");
   if (t !== void 0 && t !== "same-dir" && t !== "worktree")
     c(`--spawn-mode must be same-dir or worktree, got '${t}'`);
-  let l = await D9e({ dir: r, name: n, spawnMode: t }, i, o);
+  let l = await addRemoteControlEntry({ dir: r, name: n, spawnMode: t }, i, o);
   u(`${l} remote-control server for ${r}`);
 }
 async function q(e, i, o) {
@@ -276,7 +276,7 @@ async function q(e, i, o) {
 async function handleListAllKinds(e, i = getDaemonJsonPath(), o) {
   let r = await B(i, o);
   if (e) {
-    u(b(r, null, 2));
+    u(jsonStringify(r, null, 2));
     return;
   }
   D(r);

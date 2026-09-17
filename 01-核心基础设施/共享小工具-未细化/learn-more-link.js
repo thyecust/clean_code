@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function LearnMoreLink(n) {
   let s = _(2),
     { url: o } = n,
     a;
   if (s[0] !== o)
-    ((a = r(t, {
+    ((a = r(Text, {
       dimColor: !0,
-      children: ["Learn more: ", e(ct, { url: o })],
+      children: ["Learn more: ", e(Link, { url: o })],
     })),
       (s[0] = o),
       (s[1] = a));

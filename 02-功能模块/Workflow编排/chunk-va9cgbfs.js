@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { XZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { getTaskOutputPath, evictTaskOutput, writeTaskOutputSnapshot, initTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath, evictTaskOutput, writeTaskOutputSnapshot, initTaskOutput } from "../后台任务-Shell管理/task-output.js";
 import {
   hasTaskEverBeenRegistered,
   isTaskLoopSettled,
@@ -194,7 +194,7 @@ function completeWorkflowTask(e, r, o, t, s, a) {
   if (l)
     (writeTaskOutputSnapshot(
       l.outputFile,
-      b(
+      jsonStringify(
         {
           summary: l.summary,
           agentCount: o,
@@ -210,7 +210,7 @@ function completeWorkflowTask(e, r, o, t, s, a) {
         2,
       ),
     ).catch((u) =>
-      n(
+      logForDebugging(
         `Failed to write workflow output for ${e}: ${u instanceof Error ? u.message : u}`,
       ),
     ),
@@ -227,7 +227,7 @@ function pauseWorkflowTask(e, r) {
   return o !== null;
 }
 function buildResumePrompt(e) {
-  let r = e.args !== void 0 ? `, args: ${b(e.args)}` : "";
+  let r = e.args !== void 0 ? `, args: ${jsonStringify(e.args)}` : "";
   return `Resume the paused workflow by calling: Workflow({scriptPath: '${e.scriptPath}', resumeFromRunId: '${e.workflowRunId}'${r}}) \u2014 completed agents return cached results.`;
 }
 function killWorkflowTask(e, r, o) {
@@ -268,7 +268,7 @@ function retryWorkflowAgent(e, r, o) {
   return j(e, r, "user-retry", o);
 }
 var N = /^(\[\s*\]|\{\s*\}|\{\s*"[^"]+"\s*:\s*\[\s*\]\s*\})$/,
-  H = 4 * XZe;
+  H = 4 * DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS;
 function enqueueWorkflowNotification({
   taskId: e,
   summary: r,
@@ -296,21 +296,21 @@ function enqueueWorkflowNotification({
       taskRegistry: i,
     });
   if (!C) return;
-  let P = truncateMiddleWithMarker(Nt(r ?? "Dynamic workflow")),
+  let P = truncateMiddleWithMarker(escapeHtmlText(r ?? "Dynamic workflow")),
     K = truncateMiddleWithMarker(
       o === "completed"
         ? `Dynamic workflow "${P}" completed`
         : o === "failed"
-          ? `Dynamic workflow "${P}" failed: ${a ? truncateMiddleWithMarker(Nt(a)) : "Unknown error"}`
+          ? `Dynamic workflow "${P}" failed: ${a ? truncateMiddleWithMarker(escapeHtmlText(a)) : "Unknown error"}`
           : `Dynamic workflow "${P}" was stopped`,
-      3 * XZe,
+      3 * DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS,
     ),
     E = "",
     W = [];
   if (o === "failed" || o === "killed") {
     let d = [];
     if (c && m) {
-      let S = _ !== void 0 ? `, args: ${b(_)}` : "";
+      let S = _ !== void 0 ? `, args: ${jsonStringify(_)}` : "";
       d.push(
         `To resume after editing the script, call: Workflow({scriptPath: '${c}', resumeFromRunId: '${m}'${S}})`,
       );
@@ -318,7 +318,7 @@ function enqueueWorkflowNotification({
     if (w) d.push(`Agent transcripts: ${w}`);
     if (d.length > 0)
       E = `
-<recovery>${Nt(
+<recovery>${escapeHtmlText(
         d.join(`
 `),
       )}</recovery>`;
@@ -333,7 +333,7 @@ function enqueueWorkflowNotification({
       ),
       c && m)
     ) {
-      let d = _ !== void 0 ? `, args: ${b(_)}` : "";
+      let d = _ !== void 0 ? `, args: ${jsonStringify(_)}` : "";
       W.push(
         `To re-run with edited post-processing: Workflow({scriptPath: '${c}', resumeFromRunId: '${m}'${d}}) \u2014 agents whose (prompt, opts) are unchanged replay from cache.`,
       );
@@ -342,7 +342,7 @@ function enqueueWorkflowNotification({
   let D =
       W.length > 0
         ? `
-<diagnostics>${Nt(
+<diagnostics>${escapeHtmlText(
             W.join(`
 `),
           )}</diagnostics>`
@@ -350,7 +350,7 @@ function enqueueWorkflowNotification({
     x = getTaskOutputPath(e),
     L = "";
   if (o === "completed" && t !== void 0) {
-    let d = Nt(b(t)),
+    let d = escapeHtmlText(jsonStringify(t)),
       S = 8000;
     if (d.length > 8000) {
       let v = truncateToCodeUnits(d, 8000);
@@ -364,7 +364,7 @@ function enqueueWorkflowNotification({
   let X = s?.length
       ? `
 <failures>${truncateMiddleWithMarker(
-          Nt(
+          escapeHtmlText(
             s.join(`
 `),
           ),

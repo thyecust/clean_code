@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { asMcpSdkClient } from "./mcp-client-type-casts.js";
 var MAX_SKILL_FILE_BYTES = 1e6;
 class p {
@@ -62,7 +62,7 @@ function hashMcpServerConfig(e) {
     ((t.type = "stdio"), (t.args = t.args ?? []));
   if (isMcpServerUrlMissing(e)) t.unconfigured = !0;
   if (s !== void 0) t.agentSource = s;
-  let f = b(t, (y, n) => {
+  let f = jsonStringify(t, (y, n) => {
     if (n && typeof n === "object" && !Array.isArray(n)) {
       let l = n,
         c = {};

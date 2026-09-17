@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { USe } from "../MCP客户端/chunk-5wa92x7d.js";
+import { OpenIdProviderDiscoveryMetadataSchema } from "../MCP客户端/mcp-protocol-schemas.js";
 import { startAuthorization, exchangeAuthorization } from "../MCP客户端/chunk-78r8f7dw.js";
 import { R, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { redactUrl, rethrowFetchError } from "./url-and-error-redaction.js";
@@ -119,7 +119,7 @@ async function discoverOidc(n) {
       `XAA IdP: OIDC discovery returned non-JSON at ${redactUrl(e.href)} (captive portal or proxy?)`,
     );
   }
-  let a = USe.safeParse(i);
+  let a = OpenIdProviderDiscoveryMetadataSchema.safeParse(i);
   if (!a.success)
     throw Error(`XAA IdP: invalid OIDC metadata: ${a.error.message}`);
   if (
@@ -135,7 +135,7 @@ function C(n) {
   let t = n.split(".");
   if (t.length !== 3) return;
   try {
-    let e = z(Buffer.from(t[1], "base64url").toString("utf-8"));
+    let e = jsonParse(Buffer.from(t[1], "base64url").toString("utf-8"));
     return typeof e.exp === "number" ? e.exp : void 0;
   } catch {
     return;

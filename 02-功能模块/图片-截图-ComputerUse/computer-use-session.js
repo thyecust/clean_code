@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getComputerUseSwiftNativeModule } from "./computer-use-swift-native.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var p = commonJS(function (S, u) {
@@ -66,7 +66,7 @@ function d() {
   let e = getComputerUseSession();
   if ((e.runLoopPumpRetainCount++, e.runLoopPump === void 0))
     ((e.runLoopPump = setInterval(P, 1, getComputerUseNativeModule())),
-      n("[drainRunLoop] pump started", { level: "verbose" }));
+      logForDebugging("[drainRunLoop] pump started", { level: "verbose" }));
 }
 function m() {
   let e = getComputerUseSession();
@@ -76,7 +76,7 @@ function m() {
   )
     (clearInterval(e.runLoopPump),
       (e.runLoopPump = void 0),
-      n("[drainRunLoop] pump stopped", { level: "verbose" }),
+      logForDebugging("[drainRunLoop] pump stopped", { level: "verbose" }),
       (e.runLoopPumpRetainCount = 0));
 }
 var U = 30000;
@@ -109,14 +109,14 @@ function registerComputerUseEscapeHotkey(e) {
   if (getComputerUseSession().escHotkeyRegistered) return !0;
   if (!getComputerUseNativeModule().hotkey.registerEscape(e))
     return (
-      n("[cu-esc] registerEscape returned false", { level: "warn" }),
+      logForDebugging("[cu-esc] registerEscape returned false", { level: "warn" }),
       logFeatureSad("computeruse_esc_register", "tap_create_failed"),
       !1
     );
   return (
     f(),
     (getComputerUseSession().escHotkeyRegistered = !0),
-    n("[cu-esc] registered"),
+    logForDebugging("[cu-esc] registered"),
     logFeatureOk("computeruse_esc_register"),
     !0
   );
@@ -126,7 +126,7 @@ function unregisterComputerUseEscapeHotkey() {
   try {
     getComputerUseNativeModule().hotkey.unregister();
   } finally {
-    (a(), (getComputerUseSession().escHotkeyRegistered = !1), n("[cu-esc] unregistered"));
+    (a(), (getComputerUseSession().escHotkeyRegistered = !1), logForDebugging("[cu-esc] unregistered"));
   }
 }
 function notifyExpectedEscape() {

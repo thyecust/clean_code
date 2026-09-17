@@ -13,7 +13,7 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -230,27 +230,27 @@ function ge(_t) {
     Me = a === "every" ? figures.radioOn : figures.radioOff;
   let se;
   if (l[43] !== $e || l[44] !== Me)
-    ((se = r(t, { dimColor: $e, children: [Me, " every"] })),
+    ((se = r(Text, { dimColor: $e, children: [Me, " every"] })),
       (l[43] = $e),
       (l[44] = Me),
       (l[45] = se));
   else se = l[45];
   let gt;
   if (l[46] === MEMO_CACHE_SENTINEL)
-    ((gt = e(t, { dimColor: !0, children: "  " })), (l[46] = gt));
+    ((gt = e(Text, { dimColor: !0, children: "  " })), (l[46] = gt));
   else gt = l[46];
   const Ee = a !== "until",
     Te = a === "until" ? figures.radioOn : figures.radioOff;
   let ae;
   if (l[47] !== Ee || l[48] !== Te)
-    ((ae = r(t, { dimColor: Ee, children: [Te, " until"] })),
+    ((ae = r(Text, { dimColor: Ee, children: [Te, " until"] })),
       (l[47] = Ee),
       (l[48] = Te),
       (l[49] = ae));
   else ae = l[49];
   let le;
   if (l[50] !== se || l[51] !== ae)
-    ((le = r(t, { children: [se, gt, ae] })),
+    ((le = r(Text, { children: [se, gt, ae] })),
       (l[50] = se),
       (l[51] = ae),
       (l[52] = le));
@@ -259,12 +259,12 @@ function ge(_t) {
   if (l[53] !== C || l[54] !== w || l[55] !== j || l[56] !== a)
     ((ce =
       a === "every" &&
-      r(o, {
+      r(Box, {
         flexDirection: "row",
         gap: 1,
         marginTop: 1,
         children: [
-          e(t, { dimColor: C !== "interval", children: "Interval >" }),
+          e(Text, { dimColor: C !== "interval", children: "Interval >" }),
           e(hn, {
             value: w,
             onChange: Xt,
@@ -290,7 +290,7 @@ function ge(_t) {
     Oe = a === "every" ? "Prompt   >" : "Condition>";
   let me;
   if (l[58] !== Ie || l[59] !== Oe)
-    ((me = e(t, { dimColor: Ie, children: Oe })),
+    ((me = e(Text, { dimColor: Ie, children: Oe })),
       (l[58] = Ie),
       (l[59] = Oe),
       (l[60] = me));
@@ -334,7 +334,7 @@ function ge(_t) {
   else pe = l[68];
   let fe;
   if (l[69] !== me || l[70] !== pe)
-    ((fe = r(o, {
+    ((fe = r(Box, {
       flexDirection: "row",
       gap: 1,
       marginTop: 1,
@@ -346,7 +346,7 @@ function ge(_t) {
   else fe = l[71];
   let Ct;
   if (l[72] !== le || l[73] !== ce || l[74] !== fe)
-    ((Ct = r(o, { flexDirection: "column", children: [le, ce, fe] })),
+    ((Ct = r(Box, { flexDirection: "column", children: [le, ce, fe] })),
       (l[72] = le),
       (l[73] = ce),
       (l[74] = fe),
@@ -365,7 +365,7 @@ function ge(_t) {
   else ve = l[78];
   let wt;
   if (l[79] !== ve)
-    ((wt = e(o, { flexDirection: "column", children: ve })),
+    ((wt = e(Box, { flexDirection: "column", children: ve })),
       (l[79] = ve),
       (l[80] = wt));
   else wt = l[80];
@@ -411,7 +411,7 @@ function ge(_t) {
   else he = l[89];
   let bt;
   if (l[90] !== Ae || l[91] !== he)
-    ((bt = e(o, {
+    ((bt = e(Box, {
       flexDirection: "column",
       tabIndex: 0,
       autoFocus: !0,
@@ -430,13 +430,13 @@ function ke(io) {
   if (h.kind === "cron") {
     let E;
     if (x[0] !== h.human)
-      ((E = e(t, { bold: !0, children: h.human })),
+      ((E = e(Text, { bold: !0, children: h.human })),
         (x[0] = h.human),
         (x[1] = E));
     else E = x[1];
     let N;
     if (x[2] === MEMO_CACHE_SENTINEL)
-      ((N = e(t, { dimColor: !0, children: " \xB7 " })), (x[2] = N));
+      ((N = e(Text, { dimColor: !0, children: " \xB7 " })), (x[2] = N));
     else N = x[2];
     let A;
     if (x[3] !== h.prompt)
@@ -444,13 +444,13 @@ function ke(io) {
     else A = x[4];
     let T;
     if (x[5] !== h.id)
-      ((T = r(t, { dimColor: !0, children: [" \xB7 ", h.id] })),
+      ((T = r(Text, { dimColor: !0, children: [" \xB7 ", h.id] })),
         (x[5] = h.id),
         (x[6] = T));
     else T = x[6];
     let B;
     if (x[7] !== E || x[8] !== A || x[9] !== T)
-      ((B = r(t, { children: [E, N, A, T] })),
+      ((B = r(Text, { children: [E, N, A, T] })),
         (x[7] = E),
         (x[8] = A),
         (x[9] = T),
@@ -471,15 +471,15 @@ function ke(io) {
   else E = x[15];
   let N;
   if (x[16] !== E)
-    ((N = e(t, { bold: !0, children: E })), (x[16] = E), (x[17] = N));
+    ((N = e(Text, { bold: !0, children: E })), (x[16] = E), (x[17] = N));
   else N = x[17];
   let A;
   if (x[18] === MEMO_CACHE_SENTINEL)
-    ((A = e(t, { dimColor: !0, children: " \xB7 stop-hook" })), (x[18] = A));
+    ((A = e(Text, { dimColor: !0, children: " \xB7 stop-hook" })), (x[18] = A));
   else A = x[18];
   let T;
   if (x[19] !== N)
-    ((T = r(t, { children: ["goal: ", N, A] })), (x[19] = N), (x[20] = T));
+    ((T = r(Text, { children: ["goal: ", N, A] })), (x[19] = N), (x[20] = T));
   else T = x[20];
   let B;
   if (x[21] !== Q || x[22] !== T)

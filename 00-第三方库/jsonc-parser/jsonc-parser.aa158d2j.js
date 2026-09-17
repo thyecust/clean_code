@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { dt } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { xA } from "../lru-cache/lru-cache.8crev50p.js";
 function cs(e) {
@@ -1230,7 +1230,7 @@ function ike(e) {
     return IBe(cs(e));
   } catch (i) {
     return (
-      n(
+      logForDebugging(
         `Failed to parse JSONC: ${i instanceof Error ? i.message : String(i)}`,
         { level: "error" },
       ),
@@ -1324,7 +1324,7 @@ async function ake(e) {
   return Nge(t.subarray(0, l));
 }
 function rHn(e, i, r) {
-  if (!e || e.trim() === "") return b({ [i]: r }, null, 4);
+  if (!e || e.trim() === "") return jsonStringify({ [i]: r }, null, 4);
   let t = cs(e);
   try {
     let l = [],
@@ -1338,7 +1338,7 @@ function rHn(e, i, r) {
     return vRt(t, u);
   } catch (l) {
     return (
-      n(
+      logForDebugging(
         `Failed to set JSONC property "${i}": ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
       ),
@@ -1348,7 +1348,7 @@ function rHn(e, i, r) {
 }
 function qar(e, i) {
   try {
-    if (!e || e.trim() === "") return b([i], null, 4);
+    if (!e || e.trim() === "") return jsonStringify([i], null, 4);
     let r = cs(e),
       t = IBe(r);
     if (Array.isArray(t)) {
@@ -1359,17 +1359,17 @@ function qar(e, i) {
         });
       if (!f || f.length === 0) {
         let o = [...t, i];
-        return b(o, null, 4);
+        return jsonStringify(o, null, 4);
       }
       return vRt(r, f);
-    } else return b([i], null, 4);
+    } else return jsonStringify([i], null, 4);
   } catch (r) {
     return (
-      n(
+      logForDebugging(
         `Failed to insert item into user JSONC array, falling back to overwrite: ${r instanceof Error ? r.message : String(r)}`,
         { level: "error" },
       ),
-      b([i], null, 4)
+      jsonStringify([i], null, 4)
     );
   }
 }

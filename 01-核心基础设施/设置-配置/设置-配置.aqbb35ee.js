@@ -64,7 +64,7 @@ import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.
 import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { STORAGE_KEYS, serializeStorageKey } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ou, We, b, z, Ru, Ro, ae, fp, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getTelemetryCode, describeStorageError, jsonStringify, jsonParse, deepClone, resolvePathInfo, getFsSurface, sanitizeUrl, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, truncateToCodeUnits, isWellFormed, removeLoneSurrogates, beforeFirst, countOccurrences, escapeAllControlCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
@@ -1732,7 +1732,7 @@ var La =
 function sanitizeCommandRequest(e) {
   let { text: t, escaped: o } = Ke(e.command);
   return {
-    destination: fp(e.archiveUrl),
+    destination: sanitizeUrl(e.archiveUrl),
     hiddenCharactersWarning: o ? La : null,
     command: t,
   };
@@ -5441,7 +5441,7 @@ function Tc(e) {
         .map((p) => `${p.path.join(".")}: ${p.message}`)
         .join(", ");
     if (d) {
-      n(`Stubbing unparseable marketplace plugin entry (${d}): ${u}`, {
+      logForDebugging(`Stubbing unparseable marketplace plugin entry (${d}): ${u}`, {
         level: "warn",
       });
       let p = isBarePluginSourceName(isRecord(o) ? o.source : void 0)
@@ -5458,7 +5458,7 @@ function Tc(e) {
       ];
     }
     return (
-      n(`Dropping unparseable marketplace plugin entry (index ${r}): ${u}`, {
+      logForDebugging(`Dropping unparseable marketplace plugin entry (index ${r}): ${u}`, {
         level: "warn",
       }),
       []
@@ -8572,7 +8572,7 @@ function sortObjectKeysDeep(e) {
 }
 function hashCanonicalJson(e) {
   let t = sortObjectKeysDeep(e),
-    o = b(t);
+    o = jsonStringify(t);
   return `sha256:${createHash("sha256").update(o).digest("hex")}`;
 }
 function buildSettingsSummary(e) {
@@ -8619,7 +8619,7 @@ function buildSettingsSummary(e) {
         typeof f.headersHelper === "string" &&
         f.headersHelper.length > 0
       )
-        t[`extraKnownMarketplaces[${b(g)}].source.headersHelper`] = Ws(
+        t[`extraKnownMarketplaces[${jsonStringify(g)}].source.headersHelper`] = Ws(
           f.headersHelper,
           "url",
           f.url,
@@ -8627,7 +8627,7 @@ function buildSettingsSummary(e) {
       if (f.source === "settings" && Array.isArray(f.plugins)) {
         let y = new Map();
         for (let _ of f.plugins) {
-          let w = b(_?.name),
+          let w = jsonStringify(_?.name),
             R = y.get(w) ?? 0;
           y.set(w, R + 1);
           let I = _?.source;
@@ -8641,7 +8641,7 @@ function buildSettingsSummary(e) {
             I.command.length > 0
           )
             t[
-              `extraKnownMarketplaces[${b(g)}].plugins[${b(_.name)}][${R}].source.command`
+              `extraKnownMarketplaces[${jsonStringify(g)}].plugins[${jsonStringify(_.name)}][${R}].source.command`
             ] = I.command;
           if (
             typeof _?.headersHelper === "string" &&
@@ -8650,7 +8650,7 @@ function buildSettingsSummary(e) {
             let L = _.source,
               Q = L !== null && typeof L === "object";
             t[
-              `extraKnownMarketplaces[${b(g)}].plugins[${b(_.name)}][${R}].headersHelper`
+              `extraKnownMarketplaces[${jsonStringify(g)}].plugins[${jsonStringify(_.name)}][${R}].headersHelper`
             ] = Ws(
               _.headersHelper,
               Q && "source" in L ? L.source : void 0,
@@ -8785,7 +8785,7 @@ function er(e) {
   else if (typeof o === "string" && o && Qs(r))
     ((u = { interpreter: r, script: tr(o) }), (p = _d(o)));
   else return;
-  return { command: b([u, i ?? null, d ?? null]), scriptSize: p };
+  return { command: jsonStringify([u, i ?? null, d ?? null]), scriptSize: p };
 }
 function _d(e) {
   return {
@@ -8803,7 +8803,7 @@ function _d(e) {
   };
 }
 function tr(e) {
-  return hashSha256(b(e));
+  return hashSha256(jsonStringify(e));
 }
 function bd(e) {
   if (typeof e === "string") return e || void 0;
@@ -8816,7 +8816,7 @@ function bd(e) {
   )
     return;
   let t = "args" in e && Array.isArray(e.args) ? e.args.map(String) : [];
-  return b([e.command, ...t]);
+  return jsonStringify([e.command, ...t]);
 }
 function hasSettingsSummaryEntries(e) {
   return (
@@ -8839,7 +8839,7 @@ function nr(e) {
   };
 }
 function Ye(e) {
-  return b(sortObjectKeysDeep(e));
+  return jsonStringify(sortObjectKeysDeep(e));
 }
 function hashSettingsSummary(e) {
   return hashSha256(Ln(e));
@@ -8858,7 +8858,7 @@ function Ed(e) {
   return { command: t[0], url: typeof t[2] === "string" ? t[2] : void 0 };
 }
 function Ws(e, t, o) {
-  return b([
+  return jsonStringify([
     e,
     typeof t === "string" ? t : null,
     typeof o === "string" ? o : null,
@@ -8949,7 +8949,7 @@ function wd(e) {
   }
   if ((t.protocol !== "http:" && t.protocol !== "https:") || !t.host) return;
   if (/[@:]|\/\//.test(t.pathname)) return;
-  let o = fp(e);
+  let o = sanitizeUrl(e);
   return o.length <= Cd ? o : void 0;
 }
 var Od = /^[A-Za-z_][A-Za-z0-9_]{0,63}$/,
@@ -9002,10 +9002,10 @@ function Dd(e) {
   let t = replaceNonPrintableAscii(e),
     o = t.length > Id,
     r;
-  if (!o) r = b(t);
+  if (!o) r = jsonStringify(t);
   else {
     let i = t.length - Xs - qs;
-    r = b(`${t.slice(0, Xs)}\u2026(${i} chars omitted)\u2026${t.slice(-qs)}`);
+    r = jsonStringify(`${t.slice(0, Xs)}\u2026(${i} chars omitted)\u2026${t.slice(-qs)}`);
   }
   if (o || t !== e) r = `${r} sha256:${tr(e).slice(0, sr)}`;
   return r;
@@ -9042,7 +9042,7 @@ function Md(e) {
         let g = Ed(u);
         if (g !== void 0) {
           t.push(
-            `${p}: ${Mn(Ke(g.command).text)}${g.url === void 0 ? "" : ` \u2192 ${Mn(Ke(fp(g.url)).text)}`}`,
+            `${p}: ${Mn(Ke(g.command).text)}${g.url === void 0 ? "" : ` \u2192 ${Mn(Ke(sanitizeUrl(g.url)).text)}`}`,
           );
           continue;
         }
@@ -9161,7 +9161,7 @@ class cr {
     try {
       this.lastLoadStatusChanged.emit(e);
     } catch (t) {
-      n(`Remote settings: load-status listener threw: ${l(t)}`, {
+      logForDebugging(`Remote settings: load-status listener threw: ${l(t)}`, {
         level: "error",
       });
     }
@@ -9255,12 +9255,12 @@ function zd() {
   try {
     let e = Kd();
     if (e === null) return null;
-    let t = z(cs(e));
+    let t = jsonParse(cs(e));
     if (!t || typeof t !== "object" || Array.isArray(t)) return null;
     return stripReservedKeys(t);
   } catch (e) {
     if (isFileTooLargeError(e))
-      n(
+      logForDebugging(
         `Remote settings: Disk cache exceeds ${dr} bytes; ignoring it as if absent`,
       );
     return null;
@@ -9302,7 +9302,7 @@ async function primeRemoteManagedSettingsCache(e) {
   let t = ee();
   if (t.backendView !== void 0) return t.backendView.priming;
   if (getRemoteSettingsPathOverride() !== void 0) {
-    n(
+    logForDebugging(
       "Remote settings: storage prime skipped (CLAUDE_CODE_REMOTE_SETTINGS_PATH override); disk probe stays",
     );
     return;
@@ -9319,7 +9319,7 @@ async function Bd(e, t, o) {
         { maxObservationLagMs: Fd },
       );
       if (!i.ok) {
-        e.standDown(`watch refused: ${We(i.error)}`, "warn");
+        e.standDown(`watch refused: ${describeStorageError(i.error)}`, "warn");
         return;
       }
       if (e.stoodDown) {
@@ -9331,7 +9331,7 @@ async function Bd(e, t, o) {
     if (!(await e.settled()) || !(await e.readUnobserved())) return;
     if (e.stoodDown) return;
     ((e.ready = !0),
-      n(
+      logForDebugging(
         `Remote settings: primed from storage (${gr(e.content)}; helper consent ${e.attestation === void 0 ? "not attested" : "attested"}${o.sessionCache !== null ? "; cache already loaded, serving later loads" : ""})`,
       ));
   } catch (r) {
@@ -9358,7 +9358,7 @@ class ur {
   onEvent(e) {
     if (this.stoodDown) return;
     if (!e.ok) {
-      this.standDown(`watch ended: ${We(e.error)}`);
+      this.standDown(`watch ended: ${describeStorageError(e.error)}`);
       return;
     }
     let t = this.heldOf(e.value.key);
@@ -9440,21 +9440,21 @@ class ur {
       ]);
       if (e.generation !== t) {
         if (!o.ok)
-          n(
-            `Remote settings: a superseded read of the ${e.label} failed (${We(o.error)}); ignored`,
+          logForDebugging(
+            `Remote settings: a superseded read of the ${e.label} failed (${describeStorageError(o.error)}); ignored`,
           );
         return !this.stoodDown;
       }
       if (!o.ok) {
-        if (ou(o.error) === "ELOOP")
+        if (getTelemetryCode(o.error) === "ELOOP")
           return (
-            n(
+            logForDebugging(
               `Remote settings: the ${e.label} is a symlink; not read with the storage flag on (strict rule for files only Claude Code writes)`,
               { level: "warn" },
             ),
             this.fill(e, null)
           );
-        return (this.standDown(`read failed: ${We(o.error)}`), !1);
+        return (this.standDown(`read failed: ${describeStorageError(o.error)}`), !1);
       }
       let r = o.value.items[0];
       if (r.found && r.totalBytes > Nt)
@@ -9473,7 +9473,7 @@ class ur {
   install(e, t) {
     if (e === this.cache) {
       if (e.observed && this.ready)
-        n(`Remote settings: storage view refreshed (${gr(t)})`);
+        logForDebugging(`Remote settings: storage view refreshed (${gr(t)})`);
       ((this.content = t), (this.attestation = void 0));
     } else this.attestation = t?.trim() || void 0;
     e.observed = !0;
@@ -9484,7 +9484,7 @@ class ur {
     if (this.stoodDown) return;
     ((this.stoodDown = !0), (this.content = null), (this.attestation = void 0));
     for (let r of this.subscriptions.splice(0)) pr(r);
-    n(`Remote settings: storage view stood down (${e}); disk probe serves`, {
+    logForDebugging(`Remote settings: storage view stood down (${e}); disk probe serves`, {
       level: t,
     });
   }
@@ -9504,7 +9504,7 @@ function pr(e) {
   try {
     e.unsubscribe();
   } catch (t) {
-    n(`Remote settings: storage unsubscribe failed: ${l(t)}`, {
+    logForDebugging(`Remote settings: storage unsubscribe failed: ${l(t)}`, {
       level: "warn",
     });
   }
@@ -10639,7 +10639,7 @@ function cg(e, t) {
 function Kn(e) {
   let t = e ? buildSettingsSchema(e) : getSettingsSchema(),
     o = toJsonSchema(t, { unrepresentable: "any" });
-  return (stripInternalSchemaDescriptions(o, !1), b(o, null, 2));
+  return (stripInternalSchemaDescriptions(o, !1), jsonStringify(o, null, 2));
 }
 var dg = /^@internal(?:\b|$)/;
 function vi(e) {
@@ -10878,7 +10878,7 @@ function qe(e, t) {
 }
 function validateSettingsJson(e) {
   try {
-    let t = z(e),
+    let t = jsonParse(e),
       o = normalizeSettingsAliases(isRecord(t) ? { ...t } : t, "settings").map(Yt),
       r = gg().safeParse(t),
       i = r.success ? [] : qe(r.error, "settings"),
@@ -10914,7 +10914,7 @@ function validateSettingsJson(e) {
   }
 }
 function parseManagedSettingsPayload(e, t) {
-  let o = Ru(e),
+  let o = deepClone(e),
     r = [];
   if (o && typeof o === "object") {
     let u = o;
@@ -11525,7 +11525,7 @@ function Fn(e, t) {
       h;
     if (g !== void 0) h = g;
     else
-      ((h = ae()
+      ((h = getFsSurface()
         .readdirSync(p)
         .filter((f) => (f.isFile() || f.isSymbolicLink()) && isManagedDropInSettingsFile(f.name))
         .map((f) => f.name)
@@ -11539,24 +11539,24 @@ function Fn(e, t) {
   } catch (g) {
     let h = A(g);
     if (h !== "ENOENT" && h !== "ENOTDIR")
-      (n(`managed-settings.d read failed: ${g}`, { level: "error" }),
+      (logForDebugging(`managed-settings.d read failed: ${g}`, { level: "error" }),
         o.push(createSettingsReadError(p, g, "directory")));
   }
   return { settings: i && hasSettingsContent(r) ? r : null, errors: o };
 }
 function reportSettingsReadError(e, t) {
   if (W(e)) logBrokenSettingsSymlink(t);
-  else n(`settings file read failed at ${t}: ${e}`, { level: "error" });
+  else logForDebugging(`settings file read failed at ${t}: ${e}`, { level: "error" });
 }
 function parseSettingsFileCached(e, t, o, r) {
   let i = o !== void 0 ? `${e}\x00pinned` : e,
     d = t.parsedFiles.get(i);
   if (d)
-    return { settings: d.settings ? Ru(d.settings) : null, errors: d.errors };
+    return { settings: d.settings ? deepClone(d.settings) : null, errors: d.errors };
   let u = parseSettingsFileUncached(e, o, r);
   return (
     t.parsedFiles.set(i, u),
-    { settings: u.settings ? Ru(u.settings) : null, errors: u.errors }
+    { settings: u.settings ? deepClone(u.settings) : null, errors: u.errors }
   );
 }
 function Wn(e) {
@@ -11572,20 +11572,20 @@ function parseSettingsContentCached(e, t) {
     r = o?.get(t);
   if (r)
     return {
-      settings: r.settings && Ru(r.settings),
+      settings: r.settings && deepClone(r.settings),
       errors: r.errors.map((d) => ({ ...d })),
     };
   let i = Lg(e, t);
   if (o) o.set(t, i);
   else xi.set(e, new Map([[t, i]]));
   return {
-    settings: i.settings && Ru(i.settings),
+    settings: i.settings && deepClone(i.settings),
     errors: i.errors.map((d) => ({ ...d })),
   };
 }
 var xi = new WeakMap();
 function Lg(e, t) {
-  let o = Ru(e),
+  let o = deepClone(e),
     r = collectSettingsWarnings(o, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
     i = [],
     d = Dn(Li(t, i), t).safeParse(o);
@@ -11631,7 +11631,7 @@ function Li(e, t) {
       }),
       o.statusOnly || o.startupFatal)
     )
-      n(`${e}: ${o.path}: ${o.message}`, {
+      logForDebugging(`${e}: ${o.path}: ${o.message}`, {
         level: o.startupFatal ? "error" : "warn",
       });
   };
@@ -11675,7 +11675,7 @@ function loadParentManagedSettings(e) {
 function loadSdkInlineSettings(e) {
   let t = e.flagInline;
   if (!t) return { settings: null, errors: [] };
-  let o = Ru(t),
+  let o = deepClone(t),
     r = [...Mi(o, "SDK inline settings"), ...collectSettingsWarnings(o, "SDK inline settings")],
     i = getSettingsSchema().safeParse(o);
   if (!i.success)
@@ -11693,7 +11693,7 @@ function parseSettingsFileUncached(e, t, o) {
     let r;
     if (t !== void 0) r = t;
     else {
-      let { resolvedPath: i } = Ro(ae(), e);
+      let { resolvedPath: i } = resolvePathInfo(getFsSurface(), e);
       r = readFileSyncText(i, MAX_SETTINGS_FILE_BYTES);
     }
     return parseSettingsContent(r, e, o);
@@ -11704,7 +11704,7 @@ function parseSettingsFileUncached(e, t, o) {
 function readSettingsFileCached(e, t) {
   let o;
   try {
-    let { resolvedPath: d } = Ro(ae(), e);
+    let { resolvedPath: d } = resolvePathInfo(getFsSurface(), e);
     o = readFileSyncText(d, MAX_SETTINGS_FILE_BYTES);
   } catch (d) {
     return (t.delete(e), Ni(d, e));
@@ -11713,12 +11713,12 @@ function readSettingsFileCached(e, t) {
     i = r !== void 0 && r.content === o ? r.parsed : parseSettingsContent(o, e);
   return (
     t.set(e, { content: o, parsed: i }),
-    { settings: i.settings ? Ru(i.settings) : null, errors: i.errors }
+    { settings: i.settings ? deepClone(i.settings) : null, errors: i.errors }
   );
 }
 function parseSettingsContent(e, t, o) {
   if (e.trim() === "") return { settings: {}, errors: [] };
-  let r = Ru(xt(e, !1));
+  let r = deepClone(xt(e, !1));
   if (o) {
     if (!isRecord(r)) return { settings: null, errors: [createUnparsableSettingsError(t)] };
     let u = collectSettingsWarnings(r, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
@@ -11756,7 +11756,7 @@ function createUnparsableSettingsError(e, { userWritable: t = !1 } = {}) {
       };
 }
 function logBrokenSettingsSymlink(e) {
-  n(
+  logForDebugging(
     `Broken symlink or missing file encountered for settings.json at path: ${e}`,
   );
 }
@@ -11813,7 +11813,7 @@ function Ng(e) {
   return getHostSettingsStore().localStoreProbes.canonicalRootOwnerUids(e, Ug);
 }
 function Ug(e) {
-  let t = ae(),
+  let t = getFsSurface(),
     o = null;
   try {
     o = t.lstatSync(ye(e, ".claude")).uid;
@@ -11832,7 +11832,7 @@ function zg(e) {
     typeof process.geteuid !== "function"
   )
     return (
-      n(
+      logForDebugging(
         `localSettings: not canonicalizing the consent store to ${e} \u2014 this platform has no uid semantics to verify directory ownership with, so the store stays at the session cwd (canonicalization is POSIX-only)`,
         { level: "warn" },
       ),
@@ -11846,7 +11846,7 @@ function zg(e) {
     let { rootUid: o, gitEntryUid: r, claudeEntryUid: i } = Ng(e);
     if (o === t && r === t && (i === null || i === t)) return !0;
     return (
-      n(
+      logForDebugging(
         `localSettings: not canonicalizing the consent store to ${e} \u2014 it (uid ${o}), its .git entry (uid ${r}), or its .claude entry (uid ${i ?? "absent"}) is not owned by the current user (uid ${t}); the store stays at the session cwd (the pre-canonicalization behavior). If you own this repo, chown it (including .git and .claude) or run from a directory you own.`,
         { level: "warn" },
       ),
@@ -11854,7 +11854,7 @@ function zg(e) {
     );
   } catch (o) {
     return (
-      n(
+      logForDebugging(
         `localSettings: not canonicalizing the consent store to ${e} \u2014 its ownership could not be verified (${o instanceof Error ? o.message : String(o)}); the store stays at the session cwd`,
         { level: "warn" },
       ),

@@ -12,24 +12,24 @@
 import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { GIt, iZt, KIt, lZt, pWe, $He } from "./chunk-dyq13fbm.js";
+import { collectWorkflowProgressEvents, WorkflowProgressView, WorkflowStatusBar, lZt, formatCompactPhaseTitle, summarizeWorkflowAgents } from "./workflow-progress-ui.js";
 import "./workflow-script.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSessionStartWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function renderToolUseProgressMessage(a, s) {
-  let i = GIt(a.map((l) => l.data));
+  let i = collectWorkflowProgressEvents(a.map((l) => l.data));
   if (i.agents.length === 0 && i.logs.length === 0) return null;
   let u = Boolean(s?.verbose || s?.isTranscriptMode);
   if (u) {
     let l = s?.terminalSize?.columns ?? 80,
       f = Math.min(80, Math.max(40, l - 10));
-    return e(ToolResultRow, { children: e(iZt, { collected: i, verbose: u, width: f }) });
+    return e(ToolResultRow, { children: e(WorkflowProgressView, { collected: i, verbose: u, width: f }) });
   }
   return e(ToolResultRow, { children: e(E, { collected: i }) });
 }
@@ -37,7 +37,7 @@ function E(Me) {
   let L = _(23),
     { collected: m } = Me,
     q;
-  if (L[0] !== m.agents) ((q = $He(m.agents)), (L[0] = m.agents), (L[1] = q));
+  if (L[0] !== m.agents) ((q = summarizeWorkflowAgents(m.agents)), (L[0] = m.agents), (L[1] = q));
   else q = L[1];
   let { done: P, failedCount: Ce, running: j, total: z, complete: g } = q,
     F = Ce > 0 ? "failed" : g ? "done" : "running",
@@ -57,13 +57,13 @@ function E(Me) {
     L[7] !== z
   ) {
     let A = lZt(m);
-    w = KIt;
+    w = WorkflowStatusBar;
     k = P;
     T = z;
     R = j;
     M = g;
     C = F;
-    h = A ? pWe(A) : void 0;
+    h = A ? formatCompactPhaseTitle(A) : void 0;
     ((L[2] = m),
       (L[3] = g),
       (L[4] = P),
@@ -117,27 +117,27 @@ function E(Me) {
 function renderToolResultMessage(a) {
   if (a.error)
     return e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         color: "error",
         children: [e(StatusIndicator, { status: "error", withSpace: !0 }), firstLine(a.error)],
       }),
     });
   if (a.status === "remote_launched")
     return e(ToolResultRow, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [
-          r(t, {
+          r(Text, {
             children: [
-              e(t, {
+              e(Text, {
                 dimColor: !0,
                 children: "Running in cloud session \xB7 ",
               }),
-              e(t, { color: "suggestion", children: a.sessionUrl }),
+              e(Text, { color: "suggestion", children: a.sessionUrl }),
             ],
           }),
           a.warning
-            ? r(t, {
+            ? r(Text, {
                 color: "warning",
                 children: [
                   e(StatusIndicator, { status: "warning", withSpace: !0 }),
@@ -194,7 +194,7 @@ function K(he) {
     else b = c[10];
     let O;
     if (c[11] !== U || c[12] !== D || c[13] !== S || c[14] !== b)
-      ((O = r(t, { dimColor: !0, children: [U, D, S, b] })),
+      ((O = r(Text, { dimColor: !0, children: [U, D, S, b] })),
         (c[11] = U),
         (c[12] = D),
         (c[13] = S),
@@ -203,7 +203,7 @@ function K(he) {
     else O = c[15];
     let Z;
     if (c[16] !== y || c[17] !== O)
-      ((Z = e(ToolResultRow, { children: r(t, { children: [y, O] }) })),
+      ((Z = e(ToolResultRow, { children: r(Text, { children: [y, O] }) })),
         (c[16] = y),
         (c[17] = O),
         (c[18] = Z));
@@ -214,11 +214,11 @@ function K(he) {
     let d;
     if (c[19] === MEMO_CACHE_SENTINEL)
       ((d = e(ToolResultRow, {
-        children: r(t, {
+        children: r(Text, {
           children: [
-            e(t, { dimColor: !0, children: "Running in background \xB7 " }),
-            e(t, { color: "suggestion", children: "/workflows" }),
-            e(t, { dimColor: !0, children: " to monitor and save" }),
+            e(Text, { dimColor: !0, children: "Running in background \xB7 " }),
+            e(Text, { color: "suggestion", children: "/workflows" }),
+            e(Text, { dimColor: !0, children: " to monitor and save" }),
             e(W, {}),
           ],
         }),
@@ -230,10 +230,10 @@ function K(he) {
   let d;
   if (c[20] === MEMO_CACHE_SENTINEL)
     ((d = e(ToolResultRow, {
-      children: r(t, {
+      children: r(Text, {
         children: [
-          e(t, { color: "suggestion", children: "/workflows" }),
-          e(t, { dimColor: !0, children: " to view dynamic workflow runs" }),
+          e(Text, { color: "suggestion", children: "/workflows" }),
+          e(Text, { dimColor: !0, children: " to view dynamic workflow runs" }),
         ],
       }),
     })),
@@ -254,9 +254,9 @@ function W() {
   if (H[1] === MEMO_CACHE_SENTINEL)
     ((re = r(N, {
       children: [
-        r(t, { dimColor: !0, children: [" \xB7 ", te, " size ("] }),
-        e(t, { color: "suggestion", children: "/config" }),
-        e(t, { dimColor: !0, children: ")" }),
+        r(Text, { dimColor: !0, children: [" \xB7 ", te, " size ("] }),
+        e(Text, { color: "suggestion", children: "/config" }),
+        e(Text, { dimColor: !0, children: ")" }),
       ],
     })),
       (H[1] = re));
@@ -265,7 +265,7 @@ function W() {
 }
 function renderToolUseRejectedMessage() {
   return e(ToolResultRow, {
-    children: e(t, { dimColor: !0, children: "Dynamic workflow cancelled" }),
+    children: e(Text, { dimColor: !0, children: "Dynamic workflow cancelled" }),
   });
 }
 export {

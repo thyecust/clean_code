@@ -10,7 +10,7 @@
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { buildKeyNameLookup } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { le, Zt, Io, Xu, cr, nt, hm, Cu, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var R = [
@@ -38,7 +38,7 @@ function computeScoreAndPassRate(e) {
 function formatEvalReportTable(e) {
   let t = [],
     n = e.cases.map((r) => ({ ...r, name: replaceControlChars(r.name) })),
-    s = Math.max(4, ...n.map((r) => te(r.name))),
+    s = Math.max(4, ...n.map((r) => getStringWidth(r.name))),
     a = e.cases.some((r) => r.runs_without !== void 0);
   if (a)
     t.push(
@@ -134,7 +134,7 @@ function S(e) {
   return t ? replaceControlChars(`${t.name}: ${t.explanation}`) : null;
 }
 function o(e, t) {
-  let n = te(e);
+  let n = getStringWidth(e);
   return n > t ? `${e} ` : e + repeatString(" ", t - n);
 }
 function buildEvalReport(e, t, n, s, a) {

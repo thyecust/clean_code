@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { Kx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { formatDuration } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t, see } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatDuration } from "../核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text, useTerminalViewport } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { De, dn, pk, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -31,7 +31,7 @@ function ElapsedTimeoutText(w) {
     const m = `(timeout ${x})`;
     let p;
     if (a[2] !== m)
-      ((p = e(t, { dimColor: !0, children: m })), (a[2] = m), (a[3] = p));
+      ((p = e(Text, { dimColor: !0, children: m })), (a[2] = m), (a[3] = p));
     else p = a[3];
     return p;
   }
@@ -44,21 +44,21 @@ function ElapsedTimeoutText(w) {
     const u = `(${O} \xB7 timeout ${x})`;
     let d;
     if (a[6] !== u)
-      ((d = e(t, { dimColor: !0, children: u })), (a[6] = u), (a[7] = d));
+      ((d = e(Text, { dimColor: !0, children: u })), (a[6] = u), (a[7] = d));
     else d = a[7];
     return d;
   }
   const u = `(${O})`;
   let d;
   if (a[8] !== u)
-    ((d = e(t, { dimColor: !0, children: u })), (a[8] = u), (a[9] = d));
+    ((d = e(Text, { dimColor: !0, children: u })), (a[8] = u), (a[9] = d));
   else d = a[9];
   return d;
 }
 F();
 function y() {
   let r = De(VirtualScrollViewportContext),
-    [n, i, s, f] = see(),
+    [n, i, s, f] = useTerminalViewport(),
     c = f() ?? i.isVisible;
   return [n, c || r, s];
 }
@@ -75,7 +75,7 @@ function OffscreenFrozenContent({ children: r }) {
     dn(() => {
       if (R && f()) z();
     }, [V, L, R, f]),
-    e(o, { ref: i, children: c.current })
+    e(Box, { ref: i, children: c.current })
   );
 }
 function useOffscreenFrozenValue(r) {

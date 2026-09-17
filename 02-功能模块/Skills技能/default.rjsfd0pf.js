@@ -12,7 +12,7 @@
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -139,7 +139,7 @@ function j(u) {
 async function B(u) {
   try {
     let a = await L(x(u, ".mcp.json"), "utf8"),
-      t = z(a);
+      t = jsonParse(a);
     if (
       t &&
       typeof t === "object" &&
@@ -150,7 +150,7 @@ async function B(u) {
       return t.mcpServers;
   } catch (a) {
     if (!W(a))
-      n(
+      logForDebugging(
         `team-onboarding: failed to read .mcp.json: ${a instanceof Error ? a.message : String(a)}`,
         { level: "error" },
       );
@@ -180,7 +180,7 @@ async function q(u) {
       await execFileNoThrowWithCwd("git", ["remote", "get-url", "origin"], { cwd: a })
     ).stdout.trim();
   return {
-    usageData: b(
+    usageData: jsonStringify(
       {
         generatedBy: r || void 0,
         currentRepo: normalizeGitRemoteUrl(l) ?? basename(a),

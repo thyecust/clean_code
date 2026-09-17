@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
-import { TGe } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
+import { parseTabsContextResult } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
@@ -66,7 +66,7 @@ async function R({
   let r = l ?? getClaudeInChromeState().bridgeBinding?.socketClient;
   if (!r || !r.isConnected())
     return (
-      n("[closeSessionTabGroup] bridge not connected, skipping"),
+      logForDebugging("[closeSessionTabGroup] bridge not connected, skipping"),
       { status: "not_connected" }
     );
   let p = { permissionMode: "ask", sessionScope: { sessionId: e } },
@@ -78,38 +78,38 @@ async function R({
         u,
         "tabs_context_mcp timed out",
       ),
-      { tabGroupId: _, json: S } = TGe(i);
+      { tabGroupId: _, json: S } = parseTabsContextResult(i);
     if (_ === void 0 || S === void 0)
       return (
-        n("[closeSessionTabGroup] no group for session"),
+        logForDebugging("[closeSessionTabGroup] no group for session"),
         { status: "no_group" }
       );
     b = _;
-    let E = F().safeParse(z(S));
+    let E = F().safeParse(jsonParse(S));
     if (!E.success)
       return (
-        n(`[closeSessionTabGroup] group ${b}: unreadable tab list, keeping it`),
+        logForDebugging(`[closeSessionTabGroup] group ${b}: unreadable tab list, keeping it`),
         logFeatureSad("chrome_tab_group_close", "tabs_unreadable"),
         { status: "kept", tabs: 0 }
       );
     t = E.data.availableTabs;
   } catch (i) {
     return (
-      n(`[closeSessionTabGroup] tabs_context_mcp failed: ${String(i)}`),
+      logForDebugging(`[closeSessionTabGroup] tabs_context_mcp failed: ${String(i)}`),
       logFeatureBad("chrome_tab_group_close", "context_failed"),
       { status: "no_group" }
     );
   }
   if (o && t.some((i) => !w.has(i.url)))
     return (
-      n(
+      logForDebugging(
         `[closeSessionTabGroup] group ${b} has content, keeping ${t.length} tabs`,
       ),
       { status: "kept", tabs: t.length }
     );
   if (t.length > I)
     return (
-      n(
+      logForDebugging(
         `[closeSessionTabGroup] group ${b} holds ${t.length} tabs, over the close cap; keeping it`,
       ),
       logFeatureSad("chrome_tab_group_close", "over_cap"),
@@ -140,7 +140,7 @@ async function R({
     }
   }
   if (
-    (n(
+    (logForDebugging(
       `[closeSessionTabGroup] group ${b}: closed ${C}/${t.length} tabs` +
         (d > 0 ? ", stopped at a failed close" : ""),
     ),
@@ -160,7 +160,7 @@ function registerChromeTabGroupCleanup() {
     let r = o;
     ((o = l), closeSessionTabGroup({ sessionId: r, onlyIfEmpty: !0 }).catch(logError));
   })),
-    (e.unregisterExitCleanup = Et(() => {
+    (e.unregisterExitCleanup = registerCleanup(() => {
       if (!isExiting()) return;
       let l = Array.from(e.closesInFlight.values(), (u) => u.promise);
       return withTimeout(

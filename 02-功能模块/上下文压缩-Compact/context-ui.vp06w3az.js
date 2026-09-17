@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 219 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getPublicModelDisplayName, BASH_TOOL_NAME, READ_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CLAUDE_AI_SYNC_LABEL, getSettingsSourceDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getRemoteTransport, REMOTE_WAIT_STOPPED_MESSAGE, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -150,7 +150,7 @@ function jo(d, i) {
     let f = [...d.memoryFiles]
       .sort((C, h) => h.tokens - C.tokens)
       .slice(0, 3)
-      .map((C) => `${Ao(C.path)} (${formatTokens(C.tokens)})`)
+      .map((C) => `${formatPathForDisplay(C.path)} (${formatTokens(C.tokens)})`)
       .join(", ");
     i.push({
       severity: "info",
@@ -176,17 +176,17 @@ function Uo(d, i) {
 }
 function Vo(fe, Yo) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       marginTop: Yo === 0 ? 0 : 1,
       children: [
-        r(o, {
+        r(Box, {
           children: [
             e(StatusIndicator, { status: fe.severity, withSpace: !0 }),
-            e(t, { bold: !0, children: fe.title }),
+            e(Text, { bold: !0, children: fe.title }),
             fe.savingsTokens
-              ? r(t, {
+              ? r(Text, {
                   dimColor: !0,
                   children: [
                     " ",
@@ -198,9 +198,9 @@ function Vo(fe, Yo) {
               : null,
           ],
         }),
-        e(o, {
+        e(Box, {
           marginLeft: 2,
-          children: e(t, { dimColor: !0, children: fe.detail }),
+          children: e(Text, { dimColor: !0, children: fe.detail }),
         }),
       ],
     },
@@ -215,14 +215,14 @@ function Te(Zt) {
   }
   let Wo;
   if (ko[0] === MEMO_CACHE_SENTINEL)
-    ((Wo = e(t, { bold: !0, children: "Suggestions" })), (ko[0] = Wo));
+    ((Wo = e(Text, { bold: !0, children: "Suggestions" })), (ko[0] = Wo));
   else Wo = ko[0];
   let Fe;
   if (ko[1] !== Oe) ((Fe = Oe.map(Vo)), (ko[1] = Oe), (ko[2] = Fe));
   else Fe = ko[2];
   let Io;
   if (ko[3] !== Fe)
-    ((Io = r(o, { flexDirection: "column", marginTop: 1, children: [Wo, Fe] })),
+    ((Io = r(Box, { flexDirection: "column", marginTop: 1, children: [Wo, Fe] })),
       (ko[3] = Fe),
       (ko[4] = Io));
   else Io = ko[4];
@@ -241,13 +241,13 @@ function gt(wn) {
 }
 function Et(Ee, zo) {
   if (Ee.categoryName === "Free space") {
-    return e(t, { dimColor: !0, children: "\u26F6 " }, zo);
+    return e(Text, { dimColor: !0, children: "\u26F6 " }, zo);
   }
   if (Ee.categoryName === X) {
-    return e(t, { color: Ee.color, children: "\u26DD " }, zo);
+    return e(Text, { color: Ee.color, children: "\u26DD " }, zo);
   }
   return e(
-    t,
+    Text,
     {
       color: Ee.color,
       children: Ee.squareFullness >= 0.7 ? "\u26C1 " : "\u26C0 ",
@@ -257,7 +257,7 @@ function Et(Ee, zo) {
 }
 function ft(vn, Nn) {
   return e(
-    o,
+    Box,
     { flexDirection: "row", marginLeft: -1, children: vn.map(Et) },
     Nn,
   );
@@ -284,12 +284,12 @@ function St(st, On) {
   return e(
     fl.Node,
     {
-      children: r(t, {
+      children: r(Text, {
         children: [
           st.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [formatTokens(st.tokens), " tokens"] }),
+          r(Text, { dimColor: !0, children: [formatTokens(st.tokens), " tokens"] }),
         ],
       }),
     },
@@ -309,12 +309,12 @@ function vt(rt, In) {
   return e(
     fl.Node,
     {
-      children: r(t, {
+      children: r(Text, {
         children: [
           rt.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [formatTokens(rt.tokens), " tokens"] }),
+          r(Text, { dimColor: !0, children: [formatTokens(rt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -328,12 +328,12 @@ function _t(at, Gn) {
   return e(
     fl.Node,
     {
-      children: r(t, {
+      children: r(Text, {
         children: [
           at.agentType,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [formatTokens(at.tokens), " tokens"] }),
+          r(Text, { dimColor: !0, children: [formatTokens(at.tokens), " tokens"] }),
         ],
       }),
     },
@@ -343,12 +343,12 @@ function _t(at, Gn) {
 function Dt(xe) {
   let [it, Hn] = xe;
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       marginTop: 1,
       children: [
-        e(t, { dimColor: !0, children: it }),
+        e(Text, { dimColor: !0, children: it }),
         e(fl, { variant: "tree", children: Hn.map(_t) }),
       ],
     },
@@ -362,12 +362,12 @@ function Rt(lt, Kn) {
   return e(
     fl.Node,
     {
-      children: r(t, {
+      children: r(Text, {
         children: [
-          Ao(lt.path),
+          formatPathForDisplay(lt.path),
           ":",
           " ",
-          r(t, { dimColor: !0, children: [formatTokens(lt.tokens), " tokens"] }),
+          r(Text, { dimColor: !0, children: [formatTokens(lt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -378,12 +378,12 @@ function At(mt, qn) {
   return e(
     fl.Node,
     {
-      children: r(t, {
+      children: r(Text, {
         children: [
           mt.name,
           ":",
           " ",
-          r(t, { dimColor: !0, children: [formatTokenEstimate(mt.tokens), " tokens"] }),
+          r(Text, { dimColor: !0, children: [formatTokenEstimate(mt.tokens), " tokens"] }),
         ],
       }),
     },
@@ -393,12 +393,12 @@ function At(mt, qn) {
 function Mt(xe) {
   let [ct, Zn] = xe;
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       marginTop: 1,
       children: [
-        e(t, { dimColor: !0, children: ct }),
+        e(Text, { dimColor: !0, children: ct }),
         e(fl, { variant: "tree", children: Zn.map(At) }),
       ],
     },
@@ -548,37 +548,37 @@ function ne(xe) {
       Y.length > 0 ||
       (P?.tokens ?? 0) > 0 ||
       !1;
-    Ve = o;
+    Ve = Box;
     Ze = "column";
     Qe = 1;
     if (y[45] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, { bold: !0, children: "Context Usage" })), (y[45] = Le));
+      ((Le = e(Text, { bold: !0, children: "Context Usage" })), (y[45] = Le));
     else Le = y[45];
     if (y[46] !== no)
-      ((Re = no && e(t, { color: "error", wrap: "wrap", children: no })),
+      ((Re = no && e(Text, { color: "error", wrap: "wrap", children: no })),
         (y[46] = no),
         (y[47] = Re));
     else Re = y[47];
-    Ye = o;
+    Ye = Box;
     Je = "row";
     Ke = 2;
     let G;
     if (y[48] !== be) ((G = be.map(ft)), (y[48] = be), (y[49] = G));
     else G = y[49];
     if (y[50] !== G)
-      ((De = e(o, { flexDirection: "column", flexShrink: 0, children: G })),
+      ((De = e(Box, { flexDirection: "column", flexShrink: 0, children: G })),
         (y[50] = G),
         (y[51] = De));
     else De = y[51];
-    We = o;
+    We = Box;
     eo = "column";
     oo = 0;
     to = 0;
     if (y[52] !== I)
-      ((Me = getPublicModelDisplayName(I) && e(t, { children: getPublicModelDisplayName(I) })), (y[52] = I), (y[53] = Me));
+      ((Me = getPublicModelDisplayName(I) && e(Text, { children: getPublicModelDisplayName(I) })), (y[52] = I), (y[53] = Me));
     else Me = y[53];
     if (y[54] !== I)
-      ((Se = e(t, { dimColor: !0, children: I })), (y[54] = I), (y[55] = Se));
+      ((Se = e(Text, { dimColor: !0, children: I })), (y[54] = I), (y[55] = Se));
     else Se = y[55];
     let H;
     if (y[56] !== Ce) ((H = formatTokens(Ce)), (y[56] = Ce), (y[57] = H));
@@ -587,7 +587,7 @@ function ne(xe) {
     if (y[58] !== b) ((K = formatTokens(b)), (y[58] = b), (y[59] = K));
     else K = y[59];
     if (y[60] !== he || y[61] !== H || y[62] !== K)
-      ((ze = r(t, {
+      ((ze = r(Text, {
         dimColor: !0,
         children: [H, "/", K, " tokens (", he, "%)"],
       })),
@@ -603,8 +603,8 @@ function ne(xe) {
         (y[66] = Be));
     else Be = y[66];
     if (y[67] === MEMO_CACHE_SENTINEL)
-      ((we = e(t, { children: " " })),
-        (ve = e(t, {
+      ((we = e(Text, { children: " " })),
+        (ve = e(Text, {
           dimColor: !0,
           italic: !0,
           children: "Estimated usage by category",
@@ -623,12 +623,12 @@ function ne(xe) {
         let Sn = te.name;
         let zn = te.isDeferred ? " " : bn ? "\u26DD" : "\u26C1";
         return r(
-          o,
+          Box,
           {
             children: [
-              e(t, { color: te.color, children: zn }),
-              r(t, { children: [" ", Sn, ": "] }),
-              r(t, { dimColor: !0, children: [Cn, " tokens (", hn, ")"] }),
+              e(Text, { color: te.color, children: zn }),
+              r(Text, { children: [" ", Sn, ": "] }),
+              r(Text, { dimColor: !0, children: [Cn, " tokens (", hn, ")"] }),
             ],
           },
           yn,
@@ -641,11 +641,11 @@ function ne(xe) {
     if (y[71] !== M || y[72] !== b)
       ((Ne =
         (M.find(Tt)?.tokens ?? 0) > 0 &&
-        r(o, {
+        r(Box, {
           children: [
-            e(t, { dimColor: !0, children: "\u26F6" }),
-            e(t, { children: " Free space: " }),
-            r(t, {
+            e(Text, { dimColor: !0, children: "\u26F6" }),
+            e(Text, { children: " Free space: " }),
+            r(Text, {
               dimColor: !0,
               children: [
                 formatTokens(M.find(xt)?.tokens || 0),
@@ -664,11 +664,11 @@ function ne(xe) {
     Xe =
       le &&
       le.tokens > 0 &&
-      r(o, {
+      r(Box, {
         children: [
-          e(t, { color: le.color, children: "\u26DD" }),
-          r(t, { dimColor: !0, children: [" ", le.name, ": "] }),
-          r(t, {
+          e(Text, { color: le.color, children: "\u26DD" }),
+          r(Text, { dimColor: !0, children: [" ", le.name, ": "] }),
+          r(Text, {
             dimColor: !0,
             children: [
               formatTokens(le.tokens),
@@ -801,11 +801,11 @@ function ne(xe) {
   if (y[94] !== ie || y[95] !== b)
     ((G =
       ie !== "auto" &&
-      r(o, {
+      r(Box, {
         marginTop: 1,
         children: [
-          e(t, { bold: !0, children: "Auto-compact window: " }),
-          e(t, {
+          e(Text, { bold: !0, children: "Auto-compact window: " }),
+          e(Text, {
             dimColor: !0,
             children:
               ie === "experiment" || ie === "clientdata"
@@ -824,14 +824,14 @@ function ne(xe) {
   if (y[97] !== z || y[98] !== Q || y[99] !== R)
     ((H =
       R.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { bold: !0, children: "MCP tools" }),
-              r(t, {
+              e(Text, { bold: !0, children: "MCP tools" }),
+              r(Text, {
                 dimColor: !0,
                 children: [" ", "\xB7 /mcp", Q ? " (loaded on-demand)" : ""],
               }),
@@ -846,11 +846,11 @@ function ne(xe) {
             : r(N, {
                 children: [
                   R.some(ht) &&
-                    r(o, {
+                    r(Box, {
                       flexDirection: "column",
                       marginTop: 1,
                       children: [
-                        e(t, { dimColor: !0, children: "Loaded" }),
+                        e(Text, { dimColor: !0, children: "Loaded" }),
                         e(fl, {
                           variant: "tree",
                           children: R.filter(bt).map(St),
@@ -859,11 +859,11 @@ function ne(xe) {
                     }),
                   Q &&
                     R.some(zt) &&
-                    r(o, {
+                    r(Box, {
                       flexDirection: "column",
                       marginTop: 1,
                       children: [
-                        e(t, { dimColor: !0, children: "Available" }),
+                        e(Text, { dimColor: !0, children: "Available" }),
                         e(fl, {
                           variant: "tree",
                           children: R.filter(Bt).map(wt),
@@ -886,14 +886,14 @@ function ne(xe) {
   if (y[101] !== V || y[102] !== z)
     ((so =
       V.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { bold: !0, children: "Custom agents" }),
-              e(t, { dimColor: !0, children: " \xB7 .claude/agents/" }),
+              e(Text, { bold: !0, children: "Custom agents" }),
+              e(Text, { dimColor: !0, children: " \xB7 .claude/agents/" }),
             ],
           }),
           z
@@ -909,14 +909,14 @@ function ne(xe) {
   if (y[104] !== z || y[105] !== Y)
     ((ao =
       Y.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { bold: !0, children: "Memory files" }),
-              e(t, { dimColor: !0, children: " \xB7 /memory" }),
+              e(Text, { bold: !0, children: "Memory files" }),
+              e(Text, { dimColor: !0, children: " \xB7 /memory" }),
             ],
           }),
           z
@@ -933,14 +933,14 @@ function ne(xe) {
     ((io =
       P &&
       P.tokens > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { bold: !0, children: "Skills" }),
-              e(t, { dimColor: !0, children: " \xB7 /skills" }),
+              e(Text, { bold: !0, children: "Skills" }),
+              e(Text, { dimColor: !0, children: " \xB7 /skills" }),
             ],
           }),
           z
@@ -962,9 +962,9 @@ function ne(xe) {
     ((mo =
       z &&
       Ge &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, { dimColor: !0, children: "/context all to expand" }),
+        children: e(Text, { dimColor: !0, children: "/context all to expand" }),
       })),
       (y[110] = z),
       (y[111] = Ge),
@@ -982,7 +982,7 @@ function ne(xe) {
     y[120] !== So ||
     y[121] !== mo
   )
-    ((co = r(o, {
+    ((co = r(Box, {
       flexDirection: "column",
       marginLeft: -1,
       children: [G, H, K, me, so, ao, io, So, mo],
@@ -1187,7 +1187,7 @@ async function xs(d, i, g) {
     } catch (S) {
       if (yt(S)) return (d(REMOTE_WAIT_STOPPED_MESSAGE), null);
       let w = mayHaveRemoteClient(i.session);
-      if (w) n(`/context remote fetch failed: ${l(S)}`, { level: "error" });
+      if (w) logForDebugging(`/context remote fetch failed: ${l(S)}`, { level: "error" });
       d(
         w
           ? "Couldn't fetch context from remote"

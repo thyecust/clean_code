@@ -12,12 +12,12 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { resolveRealPath, createPathWithholdClassifier } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import {
   $pt,
   Upt,
@@ -34,9 +34,9 @@ import {
 } from "../目录同步(dir-sync)/chunk-gbhqtdpn.js";
 import "./sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { Cze } from "../Git-Worktree/chunk-v967hawf.js";
+import { formatBundleHeader } from "../Git-Worktree/dir-sync-git-repository.js";
 import "./chunk-tqwnv5vj.js";
-import "./chunk-eg4wmaq4.js";
+import "./sync-folder-scan.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
@@ -55,8 +55,8 @@ async function D({
   try {
     let { store: r } = W9n({ objectFormat: "sha1" }),
       c = $pt({ store: r, identity: jpt });
-    await using f = await SO(uk(), { gitRoot: t, realRoot: s }).catch(
-      (y) => (n(`[folderSeed] tree anchor not opened (${l(y)})`), null),
+    await using f = await openTreeAnchor(createFileSystemHost(), { gitRoot: t, realRoot: s }).catch(
+      (y) => (logForDebugging(`[folderSeed] tree anchor not opened (${l(y)})`), null),
     );
     let e = await Man({
       folder: t,
@@ -127,7 +127,7 @@ async function D({
         detail: "a seed object could not be read back",
       };
     let j = Buffer.concat([
-        Cze({
+        formatBundleHeader({
           version: 2,
           capabilities: [],
           prerequisites: [],
@@ -214,7 +214,7 @@ async function shipFolderSeed({
         now: m,
       });
     if (c.kind === "refused") {
-      n(`[folderSeed] refused (${c.reason}): ${c.detail}`);
+      logForDebugging(`[folderSeed] refused (${c.reason}): ${c.detail}`);
       let o = c.reason;
       return g(
         o !== "internal" && c.detail !== "" ? c.detail : (M[o] ?? R),

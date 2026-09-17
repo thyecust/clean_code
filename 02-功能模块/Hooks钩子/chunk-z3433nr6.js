@@ -35,9 +35,9 @@ import {
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 import { INLINE_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE } from "../插件系统/chunk-33bdfgmx.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
-var ESt = "tengu_plugin_hooks_modules";
+var PLUGIN_HOOKS_MODULES_FLAG = "tengu_plugin_hooks_modules";
 var M = () => !1;
-var s3t = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? getFeatureValue_CACHED_MAY_BE_STALE(ESt, M());
+var isFunctionHooksEnabled = () => a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS ?? getFeatureValue_CACHED_MAY_BE_STALE(PLUGIN_HOOKS_MODULES_FLAG, M());
 var le =
   "overridden by the CLAUDE_CODE_ENABLE_FUNCTION_HOOKS environment variable";
 var ce = {
@@ -48,18 +48,18 @@ var ce = {
     "from the default (GrowthBook is off for this session: a third-party provider, or telemetry opted out)",
   fallback: "from the default (a cold GrowthBook cache, no payload yet)",
 };
-function dfr() {
+function describeFunctionHooksFlagSource() {
   return a.CLAUDE_CODE_ENABLE_FUNCTION_HOOKS !== void 0
     ? le
-    : ce[getFeatureValueWithSource_CACHED_MAY_BE_STALE(ESt, M()).source];
+    : ce[getFeatureValueWithSource_CACHED_MAY_BE_STALE(PLUGIN_HOOKS_MODULES_FLAG, M()).source];
 }
-var uD = ["userSettings", "flagSettings", "policySettings"];
-function i3t(e) {
+var TRUSTED_PLUGIN_SETTINGS_SOURCES = ["userSettings", "flagSettings", "policySettings"];
+function getPluginConfigFromSettings(e) {
   let o = new Set(getEnabledSettingsSources()),
-    r = pAe(e),
+    r = expandPluginConfigKeys(e),
     t,
     n;
-  for (let i of uD) {
+  for (let i of TRUSTED_PLUGIN_SETTINGS_SOURCES) {
     if (!o.has(i)) continue;
     let p = getSettingsForSource(i)?.pluginConfigs;
     for (let s of r) {
@@ -74,15 +74,15 @@ function i3t(e) {
   }
   return { options: t, mcpServers: n };
 }
-function pAe(e) {
+function expandPluginConfigKeys(e) {
   let o = `@${INLINE_PLUGIN_SOURCE}`,
     r = e.endsWith(o) ? e.slice(0, -o.length) : "";
   return r !== "" && !r.includes("@") ? [r, e] : [e];
 }
-function a3t(e) {
+function getPluginEnabledFromTrustedSettings(e) {
   let o = new Set(getEnabledSettingsSources()),
     r;
-  for (let t of uD) {
+  for (let t of TRUSTED_PLUGIN_SETTINGS_SOURCES) {
     if (!o.has(t)) continue;
     let n = getSettingsForSource(t)?.enabledPlugins?.[e];
     if (n !== void 0) r = n;
@@ -137,7 +137,7 @@ var In = {
 var lo = () => fAe();
 var xe = ge();
 var he = 80;
-function l3t() {
+function createMapStore() {
   let e = new Map();
   return {
     get: (o) => e.get(o),
@@ -146,9 +146,9 @@ function l3t() {
     },
   };
 }
-var ke = l3t();
+var ke = createMapStore();
 function ge() {
-  let e = l3t();
+  let e = createMapStore();
   return {
     register: (o, r) => {
       e.set(o, r);
@@ -1130,11 +1130,11 @@ function T(e, o) {
   let n = Zr(e, o);
   return (ke.set(r, n), n);
 }
-async function pfr(e, o, r) {
+async function analyzeHooksModule(e, o, r) {
   let { graph: t } = await ee(e, o, r);
   return { scan: T(t, r), registrations: Qr(t, r), helperCalls: $r(t, r) };
 }
-async function Z_n(e, o, r) {
+async function loadHooksModuleGraph(e, o, r) {
   let { source: t, graph: n } = await ee(e, o, r);
   return {
     source: t,
@@ -1153,27 +1153,27 @@ function dt(e, o) {
     ? { path: o.folder, modulePath: ct(o.folder, D) }
     : { path: BUILTIN_PLUGIN_SOURCE, modulePath: de(e) };
 }
-function aYn(e) {
+function registerBuiltinPlugin(e) {
   if (
     (getHostStateStore().builtinPlugins.set(e.name, e),
     e.hooksModule !== void 0 && "shipped" in e.hooksModule)
   )
     xe.register(de(e.name), e.hooksModule.shipped);
 }
-function _j(e) {
+function isBuiltinPluginId(e) {
   return e.endsWith(`@${BUILTIN_PLUGIN_SOURCE}`);
 }
-function ASt(e) {
+function getBuiltinPlugin(e) {
   return getHostStateStore().builtinPlugins.get(e);
 }
-function v8e() {
+function listBuiltinPlugins() {
   let e = getSettings_DEPRECATED(),
     o = [],
     r = [];
   for (let [t, n] of getHostStateStore().builtinPlugins) {
     if (n.isAvailable && !n.isAvailable()) continue;
     let i = `${t}@${BUILTIN_PLUGIN_SOURCE}`,
-      p = n.enabledFromTrustedSettingsOnly ? a3t(i) : e?.enabledPlugins?.[i],
+      p = n.enabledFromTrustedSettingsOnly ? getPluginEnabledFromTrustedSettings(i) : e?.enabledPlugins?.[i],
       s = p !== void 0 ? p === !0 : (n.defaultEnabled ?? !0),
       f = {
         name: t,
@@ -1200,8 +1200,8 @@ function v8e() {
   }
   return { enabled: o, disabled: r };
 }
-function CSt() {
-  let { enabled: e } = v8e(),
+function getBuiltinPluginSkills() {
+  let { enabled: e } = listBuiltinPlugins(),
     o = [],
     r = getHostStateStore().builtinPlugins;
   for (let t of e) {
@@ -1211,7 +1211,7 @@ function CSt() {
   }
   return o;
 }
-function eyn() {
+function getBuiltinPluginSkillNames() {
   let e = [];
   for (let o of getHostStateStore().builtinPlugins.values())
     for (let r of o.skills ?? []) e.push(r.name, ...(r.aliases ?? []));
@@ -1280,20 +1280,20 @@ function ut(e) {
   );
 }
 export {
-  ESt,
-  s3t,
-  dfr,
-  uD,
-  i3t,
-  pAe,
-  a3t,
-  l3t,
-  pfr,
-  Z_n,
-  aYn,
-  _j,
-  ASt,
-  v8e,
-  CSt,
-  eyn,
+  PLUGIN_HOOKS_MODULES_FLAG,
+  isFunctionHooksEnabled,
+  describeFunctionHooksFlagSource,
+  TRUSTED_PLUGIN_SETTINGS_SOURCES,
+  getPluginConfigFromSettings,
+  expandPluginConfigKeys,
+  getPluginEnabledFromTrustedSettings,
+  createMapStore,
+  analyzeHooksModule,
+  loadHooksModuleGraph,
+  registerBuiltinPlugin,
+  isBuiltinPluginId,
+  getBuiltinPlugin,
+  listBuiltinPlugins,
+  getBuiltinPluginSkills,
+  getBuiltinPluginSkillNames,
 };

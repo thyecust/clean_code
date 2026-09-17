@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { getTerminalFocus, subscribeTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { waitForAttachQuietDrainEnd } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { wrapOscForMultiplexer, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { createOscQuery } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
 import { isTmuxControlMode } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
@@ -51,7 +51,7 @@ function watchSystemTheme(e, d, p) {
       } else [t] = await Promise.all([e.send(l), e.flush()]);
       if (o) return;
       if (!t) {
-        (n(`systemTheme: OSC 11 query (via=${f}) got no response`, {
+        (logForDebugging(`systemTheme: OSC 11 query (via=${f}) got no response`, {
           level: "debug",
         }),
           (sk().osc11Responsive = !1));
@@ -60,7 +60,7 @@ function watchSystemTheme(e, d, p) {
       sk().osc11Responsive = !0;
       let r = detectThemeFromColor(t.data);
       if (
-        (n(`systemTheme: OSC 11 response=${t.data} detected=${r} via=${f}`, {
+        (logForDebugging(`systemTheme: OSC 11 response=${t.data} detected=${r} via=${f}`, {
           level: "debug",
         }),
         r === void 0)

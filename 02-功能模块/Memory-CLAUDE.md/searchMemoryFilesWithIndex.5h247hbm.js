@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 14 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -1273,7 +1273,7 @@ var yt = 10,
     return t;
   },
   bt = async (e, t, n = Oe) => {
-    let o = b(kn(e)),
+    let o = jsonStringify(kn(e)),
       s = Buffer.byteLength(o);
     if (s > n) {
       _("index_persist_skipped_oversized");
@@ -1325,7 +1325,7 @@ var yt = 10,
     if (n === pe) return { owned: t ?? !1, absent: !1 };
     if (n === void 0) return { owned: !0, absent: !0 };
     try {
-      let o = z(n);
+      let o = jsonParse(n);
       return {
         owned:
           typeof o === "object" && o !== null && typeof o.version === "number",
@@ -1343,7 +1343,7 @@ var yt = 10,
     if (n === void 0) return { index: void 0, pathOwned: !0 };
     let o;
     try {
-      o = z(n);
+      o = jsonParse(n);
     } catch {
       let s = n.trim().slice(0, oe.length);
       return { index: void 0, pathOwned: s === "" || oe.startsWith(s) };

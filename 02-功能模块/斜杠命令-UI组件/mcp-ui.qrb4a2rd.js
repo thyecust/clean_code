@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 243 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { H_ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isDebugMode, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { capitalize, pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
@@ -20,13 +20,13 @@ import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, formatNeedsText, getMcpServerTools, formatMcpScopeLocation, collectAgentMcpServers, getClaudeAiMcpEverConnectedSet } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
+import { buildCliCommand } from "../插件系统/plugin-system-core.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { useAppStateSession, useAppStateSelector, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
@@ -47,20 +47,20 @@ import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { oye, MIt, sye, sit, sWe, iWe } from "../插件系统/chunk-jwm9gdkd.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { McpConfigDiagnostics } from "../MCP客户端/mcp-config-diagnostics.js";
-import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../后台任务-Shell管理/bg-rendezvous-server.js";
 import { parkCommandUntilAttended } from "../../01-核心基础设施/共享小工具-未细化/command-park.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import "../插件系统/chunk-akd9b588.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
-import "../成本-Token统计/chunk-3nwwgatc.js";
+import "../成本-Token统计/usage-transcript-scan.js";
 import "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -141,38 +141,38 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
     }, [s, f]),
     v = capitalize(String(s.name));
   if (m)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       padding: 1,
       children: [
-        r(t, {
+        r(Text, {
           color: "claude",
           children: ["Authenticating with ", s.name, "\u2026"],
         }),
-        r(o, {
+        r(Box, {
           children: [
-            e(yo, {}),
-            e(t, {
+            e(SpinnerGlyph, {}),
+            e(Text, {
               children: " A browser window will open for authentication",
             }),
           ],
         }),
         X &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 dimColor: !0,
                 children:
                   "If your browser doesn't open automatically, copy this URL manually:",
               }),
-              e(ct, { url: X, assumeSupport: !0 }),
+              e(Link, { url: X, assumeSupport: !0 }),
             ],
           }),
-        e(o, {
+        e(Box, {
           marginLeft: 3,
-          children: r(t, {
+          children: r(Text, {
             dimColor: !0,
             children: [
               "Return here after authenticating in your browser.",
@@ -215,39 +215,39 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
             r(Table.Row, {
               children: [
                 e(N, { children: "Type:" }),
-                e(t, { dimColor: !0, children: s.transport }),
+                e(Text, { dimColor: !0, children: s.transport }),
               ],
             }),
             s.url &&
               r(Table.Row, {
                 children: [
                   e(N, { children: "URL:" }),
-                  e(t, { dimColor: !0, children: s.url }),
+                  e(Text, { dimColor: !0, children: s.url }),
                 ],
               }),
             s.command &&
               r(Table.Row, {
                 children: [
                   e(N, { children: "Command:" }),
-                  e(t, { dimColor: !0, children: s.command }),
+                  e(Text, { dimColor: !0, children: s.command }),
                 ],
               }),
             r(Table.Row, {
               children: [
                 e(N, { children: "Used by:" }),
-                e(t, { dimColor: !0, children: s.sourceAgents.join(", ") }),
+                e(Text, { dimColor: !0, children: s.sourceAgents.join(", ") }),
               ],
             }),
           ],
         }),
-        e(o, {
+        e(Box, {
           children: r(Table, {
             columns: [{ bold: !0, width: 8 }, {}],
             children: [
               r(Table.Row, {
                 children: [
                   e(N, { children: "Status:" }),
-                  r(t, {
+                  r(Text, {
                     children: [
                       getThemeColor("inactive", u)(figures.radioOff),
                       " not connected (agent-only)",
@@ -259,7 +259,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                 r(Table.Row, {
                   children: [
                     e(N, { children: "Auth:" }),
-                    r(t, {
+                    r(Text, {
                       children: [
                         getThemeColor("warning", u)(figures.triangleUpOutline),
                         " may need authentication",
@@ -270,14 +270,14 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
             ],
           }),
         }),
-        e(o, {
-          children: e(t, {
+        e(Box, {
+          children: e(Text, {
             dimColor: !0,
             children: "This server connects only when running the agent.",
           }),
         }),
-        b && e(o, { children: e(ErrorMessage, { error: b }) }),
-        e(o, {
+        b && e(Box, { children: e(ErrorMessage, { error: b }) }),
+        e(Box, {
           children: e(ve, {
             options: k,
             onChange: async (S) => {
@@ -334,7 +334,7 @@ function Ro(Gr) {
   if (me.duplicateOf.startsWith("plugin:")) {
     let se;
     if (Pe[0] === MEMO_CACHE_SENTINEL)
-      ((se = e(t, {
+      ((se = e(Text, {
         dimColor: !0,
         children:
           "To use this connector instead, disable the plugin server in /plugins",
@@ -349,7 +349,7 @@ function Ro(Gr) {
     case "project": {
       let se;
       if (Pe[1] !== me.duplicateOf)
-        ((se = Aa("mcp remove", me.duplicateOf)),
+        ((se = buildCliCommand("mcp remove", me.duplicateOf)),
           (Pe[1] = me.duplicateOf),
           (Pe[2] = se));
       else se = Pe[2];
@@ -361,7 +361,7 @@ function Ro(Gr) {
         Pe[5] !== me.duplicateOfScope
       )
         ((it = st
-          ? r(N, { children: ["run ", e(t, { bold: !0, children: st })] })
+          ? r(N, { children: ["run ", e(Text, { bold: !0, children: st })] })
           : `remove the ${me.duplicateOfScope}-scope server "${me.duplicateOf}"`),
           (Pe[3] = st),
           (Pe[4] = me.duplicateOf),
@@ -370,7 +370,7 @@ function Ro(Gr) {
       else it = Pe[6];
       let Go;
       if (Pe[7] !== it)
-        ((Go = r(t, {
+        ((Go = r(Text, {
           dimColor: !0,
           children: ["To use this connector instead,", " ", it],
         })),
@@ -382,7 +382,7 @@ function Ro(Gr) {
     case "dynamic": {
       let se;
       if (Pe[9] === MEMO_CACHE_SENTINEL)
-        ((se = e(t, {
+        ((se = e(Text, {
           dimColor: !0,
           children:
             "To use this connector instead, drop it from your --mcp-config flag",
@@ -395,7 +395,7 @@ function Ro(Gr) {
     case "managed": {
       let se;
       if (Pe[10] === MEMO_CACHE_SENTINEL)
-        ((se = e(t, {
+        ((se = e(Text, {
           dimColor: !0,
           children: "An admin-managed server takes precedence here",
         })),
@@ -406,7 +406,7 @@ function Ro(Gr) {
     default: {
       let se;
       if (Pe[11] === MEMO_CACHE_SENTINEL)
-        ((se = e(t, {
+        ((se = e(Text, {
           dimColor: !0,
           children:
             "To use this connector instead, remove the duplicate server from your configuration",
@@ -432,7 +432,7 @@ function Le(Jr) {
     { label: Yt, path: at } = Jr,
     lt;
   if (Qt[0] !== Yt)
-    ((lt = e(t, { bold: !0, children: Yt })), (Qt[0] = Yt), (Qt[1] = lt));
+    ((lt = e(Text, { bold: !0, children: Yt })), (Qt[0] = Yt), (Qt[1] = lt));
   else lt = Qt[1];
   const Zt = at ?? !1;
   let pt;
@@ -444,7 +444,7 @@ function Le(Jr) {
   else pt = Qt[4];
   let Jo;
   if (Qt[5] !== lt || Qt[6] !== pt)
-    ((Jo = r(o, { paddingLeft: 2, children: [lt, pt] })),
+    ((Jo = r(Box, { paddingLeft: 2, children: [lt, pt] })),
       (Qt[5] = lt),
       (Qt[6] = pt),
       (Qt[7] = Jo));
@@ -535,7 +535,7 @@ function wt({
     E(() => {
       j((a) => Math.min(a, Math.max(0, Me.length - 1)));
     }, [Me.length, j]));
-  let tt = pB(),
+  let tt = isDebugMode(),
     Wt = V(() => {
       let a = b ? void 0 : new Set(T.map((M) => M.name));
       return s.some(
@@ -566,7 +566,7 @@ function wt({
           node: e(Le, { label: ae.label, path: ae.path }),
         });
         for (let Re of H) pe(Re, `${g}-${Re.name}`);
-        a.push({ key: `spacer-${g}`, node: e(t, { children: " " }) });
+        a.push({ key: `spacer-${g}`, node: e(Text, { children: " " }) });
       }
       if (S.length > 0 || T.length > 0 || i.length > 0) {
         a.push({
@@ -593,11 +593,11 @@ function wt({
         for (let g of i)
           (a.push({
             key: `suppressed-${g.name}`,
-            node: r(o, {
+            node: r(Box, {
               children: [
-                e(t, { children: "  " }),
-                e(t, { children: g.name }),
-                r(t, {
+                e(Text, { children: "  " }),
+                e(Text, { children: g.name }),
+                r(Text, {
                   dimColor: !0,
                   children: [
                     " ",
@@ -613,9 +613,9 @@ function wt({
           }),
             a.push({
               key: `suppressed-hint-${g.name}`,
-              node: e(o, { paddingLeft: 4, children: e(Ro, { s: g }) }),
+              node: e(Box, { paddingLeft: 4, children: e(Ro, { s: g }) }),
             }));
-        a.push({ key: "spacer-claudeai", node: e(t, { children: " " }) });
+        a.push({ key: "spacer-claudeai", node: e(Text, { children: " " }) });
       }
       if (v.length > 0) {
         a.push({
@@ -624,12 +624,12 @@ function wt({
         });
         let g = M;
         for (let H of dedupe(v.flatMap((ae) => ae.sourceAgents))) {
-          (a.push({ key: `spacer-agent-${H}`, node: e(t, { children: " " }) }),
+          (a.push({ key: `spacer-agent-${H}`, node: e(Text, { children: " " }) }),
             a.push({
               key: `subheading-agent-${H}`,
-              node: e(o, {
+              node: e(Box, {
                 paddingLeft: 2,
-                children: r(t, { dimColor: !0, children: ["@", H] }),
+                children: r(Text, { dimColor: !0, children: ["@", H] }),
               }),
             }));
           for (let ae of v.filter((Re) => Re.sourceAgents.includes(H))) {
@@ -642,7 +642,7 @@ function wt({
           }
         }
         ((M = g + v.length),
-          a.push({ key: "spacer-agent-mcps", node: e(t, { children: " " }) }));
+          a.push({ key: "spacer-agent-mcps", node: e(Text, { children: " " }) }));
       }
       if (te.length > 0) {
         let g = Mo("dynamic");
@@ -651,7 +651,7 @@ function wt({
           node: e(Le, { label: g.label, path: g.path }),
         });
         for (let H of te) pe(H, `dynamic-${H.name}`);
-        a.push({ key: "spacer-dynamic", node: e(t, { children: " " }) });
+        a.push({ key: "spacer-dynamic", node: e(Text, { children: " " }) });
       }
       if (a.at(-1)?.key.startsWith("spacer-")) a.pop();
       return a;
@@ -669,7 +669,7 @@ function wt({
     Jt = Ee.slice(Xe, Xe + nt),
     qt = Xe,
     Kt = Ee.length - (Xe + Jt.length);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     children: [
       e(McpConfigDiagnostics, {}),
@@ -678,41 +678,41 @@ function wt({
         subtitle: `${Xt} ${pluralize(Xt, "server")}`,
         onCancel: We,
         hideInputGuide: !0,
-        children: r(o, {
+        children: r(Box, {
           flexDirection: "column",
           children: [
             qt > 0 &&
-              e(o, {
+              e(Box, {
                 paddingLeft: 2,
-                children: r(t, {
+                children: r(Text, {
                   dimColor: !0,
                   children: [UP_ARROW_GLYPH, " ", qt, " more above"],
                 }),
               }),
             Jt.map((a) => e(Nl, { children: a.node }, a.key)),
             Kt > 0 &&
-              e(o, {
+              e(Box, {
                 paddingLeft: 2,
-                children: r(t, {
+                children: r(Text, {
                   dimColor: !0,
                   children: [DOWN_ARROW_GLYPH, " ", Kt, " more below"],
                 }),
               }),
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               marginTop: Gt ? 0 : 1,
               children: [
                 Wt &&
-                  e(t, {
+                  e(Text, {
                     dimColor: !0,
                     children: tt
                       ? "\u203B Error logs shown inline with --debug"
                       : "\u203B Run claude --debug to see error logs",
                   }),
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
-                    e(ct, {
+                    e(Link, {
                       url: "https://code.claude.com/docs/en/mcp",
                       children: "https://code.claude.com/docs/en/mcp",
                     }),
@@ -725,9 +725,9 @@ function wt({
           ],
         }),
       }),
-      e(o, {
+      e(Box, {
         paddingX: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           italic: !0,
           children: r(DotSeparatedList, {
@@ -760,13 +760,13 @@ function wo(qr) {
     ro = Kr ? figures.arrowDown : figures.arrowRight;
   let dt;
   if (mt[2] !== eo)
-    ((dt = r(t, { dimColor: !0, children: ["(", eo, ")"] })),
+    ((dt = r(Text, { dimColor: !0, children: ["(", eo, ")"] })),
       (mt[2] = eo),
       (mt[3] = dt));
   else dt = mt[3];
   let ft;
   if (mt[4] !== oo || mt[5] !== no || mt[6] !== ro || mt[7] !== dt)
-    ((ft = r(t, {
+    ((ft = r(Text, {
       color: oo,
       children: [no, ro, " Show unused connectors ", dt],
     })),
@@ -778,7 +778,7 @@ function wo(qr) {
   else ft = mt[8];
   let Ko;
   if (mt[9] !== to || mt[10] !== ft)
-    ((Ko = e(o, { ref: to, children: ft })),
+    ((Ko = e(Box, { ref: to, children: ft })),
       (mt[9] = to),
       (mt[10] = ft),
       (mt[11] = Ko));
@@ -893,7 +893,7 @@ function To(Nr) {
     ao = fe ? `${figures.pointer} ` : "  ";
   let gt;
   if (q[38] !== Be || q[39] !== ao)
-    ((gt = e(t, { color: Be, children: ao })),
+    ((gt = e(Text, { color: Be, children: ao })),
       (q[38] = Be),
       (q[39] = ao),
       (q[40] = gt));
@@ -901,7 +901,7 @@ function To(Nr) {
   const co = fe ? "suggestion" : void 0;
   let ht;
   if (q[41] !== A.name || q[42] !== co)
-    ((ht = e(t, { color: co, children: A.name })),
+    ((ht = e(Text, { color: co, children: A.name })),
       (q[41] = A.name),
       (q[42] = co),
       (q[43] = ht));
@@ -909,7 +909,7 @@ function To(Nr) {
   const po = !fe;
   let Ct;
   if (q[44] !== O || q[45] !== po)
-    ((Ct = r(t, { dimColor: po, children: [" \xB7 ", O, " "] })),
+    ((Ct = r(Text, { dimColor: po, children: [" \xB7 ", O, " "] })),
       (q[44] = O),
       (q[45] = po),
       (q[46] = Ct));
@@ -917,7 +917,7 @@ function To(Nr) {
   const mo = !fe;
   let yt;
   if (q[47] !== P || q[48] !== mo)
-    ((yt = e(t, { dimColor: mo, children: P })),
+    ((yt = e(Text, { dimColor: mo, children: P })),
       (q[47] = P),
       (q[48] = mo),
       (q[49] = yt));
@@ -933,7 +933,7 @@ function To(Nr) {
       A.transport === "claudeai-proxy" &&
       A.scope === "claudeai" &&
       A.config.enterpriseManaged &&
-      e(t, { dimColor: !fe, children: " \xB7 managed" })),
+      e(Text, { dimColor: !fe, children: " \xB7 managed" })),
       (q[50] = fe),
       (q[51] = A.config),
       (q[52] = A.scope),
@@ -949,7 +949,7 @@ function To(Nr) {
     q[59] !== ht ||
     q[60] !== Ct
   )
-    ((en = r(o, { ref: so, children: [gt, ht, Ct, yt, vt] })),
+    ((en = r(Box, { ref: so, children: [gt, ht, Ct, yt, vt] })),
       (q[55] = so),
       (q[56] = yt),
       (q[57] = vt),
@@ -984,7 +984,7 @@ function Ao(Yr) {
     Co = we ? `${figures.pointer} ` : "  ";
   let xt;
   if (ke[5] !== ho || ke[6] !== Co)
-    ((xt = e(t, { color: ho, children: Co })),
+    ((xt = e(Text, { color: ho, children: Co })),
       (ke[5] = ho),
       (ke[6] = Co),
       (ke[7] = xt));
@@ -992,7 +992,7 @@ function Ao(Yr) {
   const vo = we ? "suggestion" : void 0;
   let St;
   if (ke[8] !== Ie.name || ke[9] !== vo)
-    ((St = e(t, { color: vo, children: Ie.name })),
+    ((St = e(Text, { color: vo, children: Ie.name })),
       (ke[8] = Ie.name),
       (ke[9] = vo),
       (ke[10] = St));
@@ -1000,7 +1000,7 @@ function Ao(Yr) {
   const bo = !we;
   let Mt;
   if (ke[11] !== fo || ke[12] !== bo)
-    ((Mt = r(t, { dimColor: bo, children: [" \xB7 ", fo, " "] })),
+    ((Mt = r(Text, { dimColor: bo, children: [" \xB7 ", fo, " "] })),
       (ke[11] = fo),
       (ke[12] = bo),
       (ke[13] = Mt));
@@ -1008,7 +1008,7 @@ function Ao(Yr) {
   const xo = !we;
   let Rt;
   if (ke[14] !== go || ke[15] !== xo)
-    ((Rt = e(t, { dimColor: xo, children: go })),
+    ((Rt = e(Text, { dimColor: xo, children: go })),
       (ke[14] = go),
       (ke[15] = xo),
       (ke[16] = Rt));
@@ -1021,7 +1021,7 @@ function Ao(Yr) {
     ke[20] !== St ||
     ke[21] !== Mt
   )
-    ((nn = r(o, { ref: uo, children: [xt, St, Mt, Rt] })),
+    ((nn = r(Box, { ref: uo, children: [xt, St, Mt, Rt] })),
       (ke[17] = uo),
       (ke[18] = Rt),
       (ke[19] = xt),
@@ -1468,7 +1468,7 @@ function Ft(oi) {
           let Ut = Lt instanceof Error ? Lt.message : String(Lt);
           if ((Je(Ut), ze(!1), Lt instanceof mi)) le(sanitizeDisplayText(Ut));
           else if (mayHaveRemoteClient(Et))
-            (n(`mcp reconnect (typed) error for ${Qn(W)}: ${Ut}`, {
+            (logForDebugging(`mcp reconnect (typed) error for ${Qn(W)}: ${Ut}`, {
               level: "error",
             }),
               le(
@@ -1493,9 +1493,9 @@ function Ft(oi) {
   if ((E(It, An), ri)) {
     let he;
     if (ge[11] !== W)
-      ((he = r(t, {
+      ((he = r(Text, {
         color: "text",
-        children: ["Reconnecting to ", e(t, { bold: !0, children: W })],
+        children: ["Reconnecting to ", e(Text, { bold: !0, children: W })],
       })),
         (ge[11] = W),
         (ge[12] = he));
@@ -1507,7 +1507,7 @@ function Ft(oi) {
     else $e = ge[13];
     let De;
     if (ge[14] !== he)
-      ((De = r(o, {
+      ((De = r(Box, {
         flexDirection: "column",
         gap: 1,
         padding: 1,
@@ -1525,11 +1525,11 @@ function Ft(oi) {
     else he = ge[17];
     let $e;
     if (ge[18] !== he)
-      (($e = r(t, { children: [he, " "] })), (ge[18] = he), (ge[19] = $e));
+      (($e = r(Text, { children: [he, " "] })), (ge[18] = he), (ge[19] = $e));
     else $e = ge[19];
     let De;
     if (ge[20] !== W)
-      ((De = r(t, {
+      ((De = r(Text, {
         color: "error",
         children: ["Failed to reconnect to ", W],
       })),
@@ -1538,20 +1538,20 @@ function Ft(oi) {
     else De = ge[21];
     let _t;
     if (ge[22] !== $e || ge[23] !== De)
-      ((_t = r(o, { children: [$e, De] })),
+      ((_t = r(Box, { children: [$e, De] })),
         (ge[22] = $e),
         (ge[23] = De),
         (ge[24] = _t));
     else _t = ge[24];
     let jt;
     if (ge[25] !== Bt)
-      ((jt = r(t, { dimColor: !0, children: ["Error: ", Bt] })),
+      ((jt = r(Text, { dimColor: !0, children: ["Error: ", Bt] })),
         (ge[25] = Bt),
         (ge[26] = jt));
     else jt = ge[26];
     let kn;
     if (ge[27] !== _t || ge[28] !== jt)
-      ((kn = r(o, {
+      ((kn = r(Box, {
         flexDirection: "column",
         gap: 1,
         padding: 1,

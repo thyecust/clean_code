@@ -13,28 +13,28 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonParse, isDebugMode, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { onGrowthBookRefresh, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isHumanTurnEvent } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import {
-  _Cn,
-  yCn,
-  Dve,
-  aQe,
-  SAt,
-  bAt,
-  $$e,
-  U$e,
-  lQe,
-  B$e,
-  EAt,
+  normalizeDeviceAttestationStatus,
+  meetsAttestationLevel,
+  setAttestationFilterPolicy,
+  setAttestationDropNotifier,
+  setAttestationSenderDropWriter,
+  clearAttestationSenderDropWriter,
+  REMOTE_IO_WARNING_PREFIX,
+  formatRemoteActivityDropWarning,
+  formatRemoteActivityDropReply,
+  getControlFrameRequestId,
+  isEventRejectedByAttestation,
 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { bQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { normalizeUrlSchemeToHttp } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import {
@@ -55,8 +55,8 @@ import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { setMainLoopRefcountListener, setNestedChainDropListener, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { recordStartupPhase, markHydratePrefetchSettled } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
-import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
-import { pE, fSe, d9, h2n } from "./chunk-66axrkvh.js";
+import { StructuredIO } from "../../03-入口与运行时/Headless-SDK模式/structured-io.js";
+import { CURRENT_PROTOCOL_VERSION, SENDER_BELOW_FLOOR_FLAG, parseToolCallResult, buildToolCallResult } from "./remote-tool-protocol.js";
 import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
 import { isHermeticModeEnabled } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { TOKEN_FILE_RETRY_DELAYS_MS } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
@@ -67,7 +67,7 @@ import { getClientPlatform } from "../../01-核心基础设施/共享小工具-�
 import { createWriteStream, fstatSync } from "fs";
 import { PassThrough } from "stream";
 import { URL as ie } from "url";
-function I0t() {
+function isSubagentSkipOnDeltaEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_subagent_skip_on_delta", !1);
 }
 function D() {
@@ -76,7 +76,7 @@ function D() {
     getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_subagent_lazy_hydrate", !1)
   );
 }
-function j1n() {
+function isTranscriptLocalGcEnabled() {
   return (
     a.CLAUDE_CODE_TRANSCRIPT_LOCAL_GC ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_transcript_local_gc", !1)
   );
@@ -84,8 +84,8 @@ function j1n() {
 var le = "VERIFIED_BY_GATE",
   ue = "refuse";
 function W(e, { floor: t = le, unstamped: i = ue } = {}) {
-  let s = _Cn(e.device_attestation_status);
-  if (yCn(s, t)) return { verdict: "pass", status: s };
+  let s = normalizeDeviceAttestationStatus(e.device_attestation_status);
+  if (meetsAttestationLevel(s, t)) return { verdict: "pass", status: s };
   if (s === "UNSPECIFIED" && i === "pass")
     return { verdict: "pass", status: s };
   return { verdict: "drop", status: s };
@@ -114,7 +114,7 @@ function j(e) {
 }
 function G(e) {
   let t = e.type === "control_response" ? e.response : void 0;
-  return typeof t === "object" && t !== null ? B$e(t) : void 0;
+  return typeof t === "object" && t !== null ? getControlFrameRequestId(t) : void 0;
 }
 function V(e, t, i = K) {
   let s = j(e);
@@ -149,7 +149,7 @@ function X(e, t, i = K) {
     return C !== void 0
       ? {
           kind: "strip_forwarded_plugins",
-          requestId: B$e(s),
+          requestId: getControlFrameRequestId(s),
           status: w,
           remainder: C,
         }
@@ -161,7 +161,7 @@ function X(e, t, i = K) {
   let { verdict: _, status: v } = W(e);
   if (_ === "pass") {
     let y = b(b(s.response)?.response);
-    if (y !== void 0 && fSe in y) delete y[fSe];
+    if (y !== void 0 && SENDER_BELOW_FLOOR_FLAG in y) delete y[SENDER_BELOW_FLOOR_FLAG];
     return { kind: "pass" };
   }
   let E = m === "served_call" ? me(s) : void 0;
@@ -183,7 +183,7 @@ function ee(e, t, i) {
   e.response = {
     subtype: "success",
     request_id: t,
-    response: { result: i, [fSe]: !0 },
+    response: { result: i, [SENDER_BELOW_FLOOR_FLAG]: !0 },
   };
 }
 function p(e) {
@@ -232,7 +232,7 @@ function me(e) {
   if (t?.subtype !== "success" || i === void 0) return;
   let s;
   try {
-    s = d9(i.result);
+    s = parseToolCallResult(i.result);
   } catch {
     return;
   }
@@ -243,9 +243,9 @@ function me(e) {
     return;
   let d = s.envelope.envelope,
     o = fe[d.code];
-  return h2n({
+  return buildToolCallResult({
     envelope: {
-      v: pE,
+      v: CURRENT_PROTOCOL_VERSION,
       outcome: "refused",
       ...(d.call_id !== void 0 && { call_id: d.call_id }),
       target: { name: he, working_dir: "" },
@@ -258,15 +258,15 @@ function me(e) {
 function b(e) {
   return typeof e === "object" && e !== null && !Array.isArray(e) ? e : void 0;
 }
-var lHe = new Set(["remote", "remote_desktop", "sdk-cli", ""]);
-function W1n(e) {
+var MANAGED_CLOUD_WORKER_ENTRYPOINTS = new Set(["remote", "remote_desktop", "sdk-cli", ""]);
+function getDirSyncWorkerDecision(e) {
   if (e.disabled) return { start: !1, reason: "disabled" };
-  if (e.entrypoint !== void 0 && !lHe.has(e.entrypoint))
+  if (e.entrypoint !== void 0 && !MANAGED_CLOUD_WORKER_ENTRYPOINTS.has(e.entrypoint))
     return { start: !1, reason: "entrypoint" };
   return { start: !0, engines: { git: e.gitSwitch } };
 }
-var _e = lHe;
-function P0t(e) {
+var _e = MANAGED_CLOUD_WORKER_ENTRYPOINTS;
+function getHookForwardingAdmission(e) {
   if (!e.sdkUrl || !e.remoteSessionId || e.environmentKind !== void 0)
     return { admitted: !1, reason: "not_managed_cloud_worker" };
   if (e.entrypoint !== void 0 && !_e.has(e.entrypoint))
@@ -275,10 +275,10 @@ function P0t(e) {
   if (e.hermetic) return { admitted: !1, reason: "hermetic" };
   return { admitted: !0 };
 }
-function O0t(e) {
+function getPluginForwardingAdmission(e) {
   if (!e.sdkUrl || !e.remoteSessionId || e.environmentKind !== void 0)
     return { admitted: !1, reason: "not_managed_cloud_worker" };
-  if (e.entrypoint !== void 0 && !lHe.has(e.entrypoint))
+  if (e.entrypoint !== void 0 && !MANAGED_CLOUD_WORKER_ENTRYPOINTS.has(e.entrypoint))
     return { admitted: !1, reason: "entrypoint" };
   if (e.disabled) return { admitted: !1, reason: "disabled" };
   if (e.hermetic) return { admitted: !1, reason: "hermetic" };
@@ -296,7 +296,7 @@ async function te({
   for (let [o, m] of s.entries()) {
     let _ = o + 1;
     if (
-      (n(
+      (logForDebugging(
         `[remote-io] no auth headers, re-reading in ${m}ms (attempt ${_}/${s.length})`,
         { level: "warn" },
       ),
@@ -314,7 +314,7 @@ async function te({
       );
   }
   return (
-    n(`[remote-io] auth headers still missing after ${s.length} re-reads`, {
+    logForDebugging(`[remote-io] auth headers still missing after ${s.length} re-reads`, {
       level: "error",
     }),
     i?.(`session auth headers still missing after ${s.length} re-reads`),
@@ -327,7 +327,7 @@ async function te({
 }
 import { URL as ye } from "url";
 function re(e, t = {}, i = {}) {
-  let s = bQ(new ye(e.href));
+  let s = normalizeUrlSchemeToHttp(new ye(e.href));
   return (
     (s.pathname = s.pathname.replace(/\/$/, "") + "/worker/events/stream"),
     new VGe(s, t, i)
@@ -342,7 +342,7 @@ function be(e) {
     .filter((s) => {
       let d;
       try {
-        d = z(cs(s));
+        d = jsonParse(cs(s));
       } catch {
         return !0;
       }
@@ -350,7 +350,7 @@ function be(e) {
       if (typeof o === "string" && asn.has(o))
         return (
           writeDiagnosticsEvent("warn", "cli_stdin_server_only_type_dropped", { payload_type: o }),
-          n(
+          logForDebugging(
             `[remote-io] dropped a ${o} frame from the stdin lane (server-authored-only type; SSE is its only ingress)`,
             { level: "warn" },
           ),
@@ -369,7 +369,7 @@ var Ee = {
   upload_device_hook_template: "device_hooks_register",
   apply_flag_settings: "ccr_cloud_plugins_forward",
 };
-class Uz extends Fae {
+class RemoteIO extends StructuredIO {
   isRemoteTransport() {
     return !0;
   }
@@ -389,7 +389,7 @@ class Uz extends Fae {
   unsubscribeGrowthBookRefresh;
   attestationDropSenderWriter = (e) => {
     this.ccrClient.writeEvent(e).catch((t) => {
-      n(`[remote-io] drop sender-notice write failed: ${l(t)}`, {
+      logForDebugging(`[remote-io] drop sender-notice write failed: ${l(t)}`, {
         level: "warn",
       });
     });
@@ -413,11 +413,11 @@ class Uz extends Fae {
   }) {
     let T = new PassThrough({ encoding: "utf8" });
     super(T, i, s);
-    ((this.inputStream = T), (this.url = bQ(new ie(e))));
+    ((this.inputStream = T), (this.url = normalizeUrlSchemeToHttp(new ie(e))));
     let A = o(),
       F = { "anthropic-client-platform": getClientPlatform(), ...A };
     if (Object.keys(A).length === 0)
-      n(
+      logForDebugging(
         m
           ? "[remote-io] No session ingress token available yet, will re-read"
           : "[remote-io] No session ingress token available",
@@ -437,7 +437,7 @@ class Uz extends Fae {
       getAuthHeaders: o,
     })),
       (this.isBridge = E === "bridge"),
-      (this.isDebug = pB()),
+      (this.isDebug = isDebugMode()),
       (this.teeStdout = Ie(process.env.CLAUDE_CODE_TEE_SDK_STDOUT)));
     let L = process.env.CLAUDE_RUNNER_ACTIVITY_FD,
       k = L ? Number.parseInt(L, 10) : NaN;
@@ -447,14 +447,14 @@ class Uz extends Fae {
         if (!r.isFIFO() && !r.isSocket()) throw Error("not a pipe");
         let u = createWriteStream("", { fd: k, autoClose: !1 });
         (u.on("error", (c) => {
-          (n(
+          (logForDebugging(
             `[remote-io] activity fd ${k} write error (${l(c)}); falling back to stdout`,
           ),
             (this.activityFd = void 0));
         }),
           (this.activityFd = u));
       } catch (r) {
-        n(
+        logForDebugging(
           `[remote-io] activity fd ${k} unavailable (${l(r)}); falling back to stdout`,
         );
       }
@@ -534,7 +534,7 @@ class Uz extends Fae {
             reason: r instanceof sbe ? r.reason : "unknown",
           });
           let c = `CCRClient initialization failed: ${l(r)}`;
-          if (Jjn(r)) n(c, { level: "error" });
+          if (Jjn(r)) logForDebugging(c, { level: "error" });
           else logError(Error(c));
           (R?.(`worker registration failed (${u}), exiting`), gracefulShutdown(1, "other"));
         },
@@ -585,13 +585,13 @@ class Uz extends Fae {
       }),
       this.isBridge)
     )
-      (Dve(getAttestationFilterPolicy),
-        SAt(this.attestationDropSenderWriter),
-        aQe((r) => {
+      (setAttestationFilterPolicy(getAttestationFilterPolicy),
+        setAttestationSenderDropWriter(this.attestationDropSenderWriter),
+        setAttestationDropNotifier((r) => {
           if (
             (process.stderr.write(
-              $$e +
-                U$e(r) +
+              REMOTE_IO_WARNING_PREFIX +
+                formatRemoteActivityDropWarning(r) +
                 `
 `,
             ),
@@ -603,17 +603,17 @@ class Uz extends Fae {
                 response: {
                   subtype: "error",
                   request_id: r.requestId,
-                  error: lQe(r),
+                  error: formatRemoteActivityDropReply(r),
                 },
               })
               .catch((u) => {
-                n(`[remote-io] refusal write failed: ${l(u)}`, {
+                logForDebugging(`[remote-io] refusal write failed: ${l(u)}`, {
                   level: "warn",
                 });
               });
         }),
         this.transport.setEventFilter((r) => {
-          let u = EAt(r);
+          let u = isEventRejectedByAttestation(r);
           if (u)
             (this.ccrClient.reportDelivery(r.event_id, "received"),
               this.ccrClient.reportDelivery(r.event_id, "processed"));
@@ -677,13 +677,13 @@ class Uz extends Fae {
     let M = getBridgePollIntervalConfig().session_keepalive_interval_v2_ms;
     if (this.isBridge && M > 0)
       ((this.keepAliveTimer = setInterval(() => {
-        (n("[remote-io] keep_alive sent"),
+        (logForDebugging("[remote-io] keep_alive sent"),
           this.write({ type: "keep_alive" }).catch((r) => {
-            n(`[remote-io] keep_alive write failed: ${l(r)}`);
+            logForDebugging(`[remote-io] keep_alive write failed: ${l(r)}`);
           }));
       }, M)),
         this.keepAliveTimer.unref?.());
-    if ((Et(async () => this.close()), t))
+    if ((registerCleanup(async () => this.close()), t))
       (async () => {
         for await (let r of t) {
           let u = be(String(r).replace(/\n$/, ""));
@@ -706,7 +706,7 @@ class Uz extends Fae {
       return s.kind === "pass" ? !1 : this.applySessionChannelVerdict(e, s);
     } catch (s) {
       return (
-        n(
+        logForDebugging(
           `[remote-io] a guarded session-channel frame could not be judged or handled; dropped: ${l(s)}`,
           { level: "warn" },
         ),
@@ -717,7 +717,7 @@ class Uz extends Fae {
   guardedFamilies() {
     return {
       remoteTools: isRemoteToolForwardingSwitchOn() && !isSessionChannelDisabled(),
-      hooks: P0t({
+      hooks: getHookForwardingAdmission({
         sdkUrl: !0,
         remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
         environmentKind: void 0,
@@ -725,7 +725,7 @@ class Uz extends Fae {
         disabled: a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING,
         hermetic: isHermeticModeEnabled(),
       }).admitted,
-      plugins: O0t({
+      plugins: getPluginForwardingAdmission({
         sdkUrl: !0,
         remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
         environmentKind: void 0,
@@ -741,7 +741,7 @@ class Uz extends Fae {
       case "refuse_request":
         return (
           logFeatureBad(Ee[t.subtype], `unverified_sender_${i}`),
-          n(
+          logForDebugging(
             `[remote-io] dropped a below-floor ${t.subtype} (attestation ${i}) unanswered`,
           ),
           !0
@@ -752,7 +752,7 @@ class Uz extends Fae {
             t.answers === "hook" ? "device_hooks_serve" : "remote_tool_forward",
             `unverified_answer_dropped_${i}`,
           ),
-          n(
+          logForDebugging(
             `[remote-io] dropped a below-floor reply to ${t.answers === "hook" ? "forwarded-hook" : "served-call"} request ${t.requestId} (attestation ${i}); the request keeps waiting for the machine's own answer`,
           ),
           !0
@@ -761,7 +761,7 @@ class Uz extends Fae {
         return (
           J(e.payload, t.remainder),
           logFeatureSad("ccr_cloud_plugins_forward", `unverified_patch_stripped_${i}`),
-          n(
+          logForDebugging(
             `[remote-io] stripped below-floor forwarded plugin choices from an apply_flag_settings (attestation ${i}); its other keys go on`,
           ),
           !1
@@ -770,7 +770,7 @@ class Uz extends Fae {
         return (
           ee(e.payload, t.requestId, t.result),
           logFeatureSad("remote_tool_forward", `unverified_refusal_admitted_${i}`),
-          n(
+          logForDebugging(
             `[remote-io] admitted a below-floor refusal of served-call request ${t.requestId} (attestation ${i}) rebuilt and marked unverified: the machine is asked what became of the call`,
           ),
           !1
@@ -882,7 +882,7 @@ class Uz extends Fae {
     if (
       (setMainLoopRefcountListener(null),
       setNestedChainDropListener(null),
-      bAt(this.attestationDropSenderWriter),
+      clearAttestationSenderDropWriter(this.attestationDropSenderWriter),
       this.keepAliveTimer)
     )
       (clearInterval(this.keepAliveTimer), (this.keepAliveTimer = null));
@@ -984,7 +984,7 @@ function se(e) {
       : [],
   );
 }
-function FJt(e) {
+function hasResumeFlag(e) {
   for (let t of e) {
     if (t === "--") return !1;
     if (t === "--resume" || t === "-r" || t.startsWith("--resume=")) return !0;
@@ -992,7 +992,7 @@ function FJt(e) {
   return !1;
 }
 async function oe(e, t, i, s) {
-  let d = I0t(),
+  let d = isSubagentSkipOnDeltaEnabled(),
     o = qxt(),
     m = i && o ? await readTranscriptTailForTip(o, s) : void 0,
     _ = o ? await getValidatedCCRTip(o, m, s) : void 0,
@@ -1002,12 +1002,12 @@ async function oe(e, t, i, s) {
     ]);
   return [v, E, _];
 }
-function zmr(e, t) {
+function startEarlyHydrateReads(e, t) {
   return (async () => {
     if (Object.keys(getSessionAuthHeaders()).length === 0) return;
     let i = !1,
       s = {
-        ...csn(bQ(new ie(e)), getSessionAuthHeaders),
+        ...csn(normalizeUrlSchemeToHttp(new ie(e)), getSessionAuthHeaders),
         onConflict: () => {
           i = !0;
         },
@@ -1025,4 +1025,4 @@ function zmr(e, t) {
     return;
   });
 }
-export { I0t, j1n, lHe, W1n, P0t, O0t, Uz, FJt, zmr };
+export { isSubagentSkipOnDeltaEnabled, isTranscriptLocalGcEnabled, MANAGED_CLOUD_WORKER_ENTRYPOINTS, getDirSyncWorkerDecision, getHookForwardingAdmission, getPluginForwardingAdmission, RemoteIO, hasResumeFlag, startEarlyHydrateReads };

@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 276 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { b, Jhe } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, Jhe } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, render } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getBaseRenderOptions } from "../共享小工具-未细化/base-render-options.js";
 import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -35,10 +35,10 @@ function C(K) {
   let E = O,
     m;
   if (n[3] !== R)
-    ((m = r(t, {
+    ((m = r(Text, {
       children: [
         "The configuration file at ",
-        e(t, { bold: !0, children: R }),
+        e(Text, { bold: !0, children: R }),
         " contains invalid JSON.",
       ],
     })),
@@ -46,18 +46,18 @@ function C(K) {
       (n[4] = m));
   else m = n[4];
   let d;
-  if (n[5] !== h) ((d = e(t, { children: h })), (n[5] = h), (n[6] = d));
+  if (n[5] !== h) ((d = e(Text, { children: h })), (n[5] = h), (n[6] = d));
   else d = n[6];
   let c;
   if (n[7] !== m || n[8] !== d)
-    ((c = r(o, { flexDirection: "column", gap: 1, children: [m, d] })),
+    ((c = r(Box, { flexDirection: "column", gap: 1, children: [m, d] })),
       (n[7] = m),
       (n[8] = d),
       (n[9] = c));
   else c = n[9];
   let x;
   if (n[10] === MEMO_CACHE_SENTINEL)
-    ((x = e(t, { bold: !0, children: "Choose an option:" })), (n[10] = x));
+    ((x = e(Text, { bold: !0, children: "Choose an option:" })), (n[10] = x));
   else x = n[10];
   let y;
   if (n[11] === MEMO_CACHE_SENTINEL)
@@ -69,7 +69,7 @@ function C(K) {
   else y = n[11];
   let g;
   if (n[12] !== E || n[13] !== i)
-    ((g = r(o, {
+    ((g = r(Box, {
       flexDirection: "column",
       children: [x, e(ve, { options: y, onChange: E, onCancel: i })],
     })),
@@ -96,7 +96,7 @@ var D = "dark";
 async function showInvalidConfigDialog({ error: a }) {
   let f = { ...getBaseRenderOptions(!1), theme: D };
   await new Promise(async (s) => {
-    let { unmount: l } = await J0(
+    let { unmount: l } = await render(
       e(AppRoot, {
         session: B(),
         children: e(C, {
@@ -106,7 +106,7 @@ async function showInvalidConfigDialog({ error: a }) {
             (l(), s(), process.exit(1));
           },
           onReset: () => {
-            (Jhe(a.filePath, b(a.defaultConfig, null, 2), {
+            (Jhe(a.filePath, jsonStringify(a.defaultConfig, null, 2), {
               flush: !1,
               encoding: "utf8",
             }),

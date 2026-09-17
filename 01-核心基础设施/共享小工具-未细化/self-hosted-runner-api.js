@@ -11,7 +11,7 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
-import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { redactSecrets } from "./redact-secrets.js";
@@ -77,7 +77,7 @@ async function requestSelfHostedRunnerApi(t, e, o, s, l) {
         throw r;
       });
   if (n.status >= 400) {
-    let r = n.data?.error?.message ?? b(n.data),
+    let r = n.data?.error?.message ?? jsonStringify(n.data),
       u = `HTTP ${n.status} ${t} ${e}: ${r}`;
     if ([401, 403, 404, 409, 429].includes(n.status)) {
       let f = n.status === 401 || n.status === 403 ? p : "";
@@ -88,14 +88,14 @@ async function requestSelfHostedRunnerApi(t, e, o, s, l) {
   return n.data;
 }
 function makeToolResultBlock(t, e) {
-  return { tool_use_id: t, type: "tool_result", content: redactSecrets(b(e)) };
+  return { tool_use_id: t, type: "tool_result", content: redactSecrets(jsonStringify(e)) };
 }
 function formatToolUseInput(t) {
   let e = oL(t);
   if (e !== null) return e;
   return Object.entries(t)
     .filter(([, o]) => o !== void 0)
-    .map(([o, s]) => `${o}=${typeof s === "string" ? s : b(s)}`)
+    .map(([o, s]) => `${o}=${typeof s === "string" ? s : jsonStringify(s)}`)
     .join(" ");
 }
 export { DEFAULT_HEALTH_PORT, resolveApiBaseUrl, getClaudeAiOrigin, buildUiEquivalentPath, requestSelfHostedRunnerApi, makeToolResultBlock, formatToolUseInput };

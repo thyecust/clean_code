@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { useTerminalSize } from "./use-terminal-size.js";
-import { o, t, pd, see, Od } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, NoSelect, useTerminalViewport, measureElement } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, dn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -17,7 +17,7 @@ function ReserveHeightBox(ee) {
   let p = _(10),
     { children: v, lock: Y } = ee,
     te = Y === void 0 ? "always" : Y,
-    [D, re] = see(),
+    [D, re] = useTerminalViewport(),
     { isVisible: oe } = re,
     { rows: M } = useTerminalSize(),
     k = C(null),
@@ -39,7 +39,7 @@ function ReserveHeightBox(ee) {
       if (!k.current) {
         return;
       }
-      let { height: A } = Od(k.current);
+      let { height: A } = measureElement(k.current);
       if (A > E.current) ((E.current = Math.min(A, M)), ie(E.current));
     }),
       (p[2] = M),
@@ -49,13 +49,13 @@ function ReserveHeightBox(ee) {
   const O = fe ? ne : void 0;
   let R;
   if (p[4] !== v)
-    ((R = e(o, { ref: k, flexDirection: "column", children: v })),
+    ((R = e(Box, { ref: k, flexDirection: "column", children: v })),
       (p[4] = v),
       (p[5] = R));
   else R = p[5];
   let I;
   if (p[6] !== H || p[7] !== O || p[8] !== R)
-    ((I = e(o, { minHeight: O, ref: H, children: R })),
+    ((I = e(Box, { minHeight: O, ref: H, children: R })),
       (p[6] = H),
       (p[7] = O),
       (p[8] = R),
@@ -74,10 +74,10 @@ function ToolResultRow(Re) {
   const S = x === void 0;
   let y;
   if (w[0] !== x || w[1] !== S)
-    ((y = e(pd, {
+    ((y = e(NoSelect, {
       fromLeftEdge: !0,
       flexShrink: 0,
-      children: r(t, {
+      children: r(Text, {
         "aria-hidden": S,
         "aria-label": x,
         dimColor: !0,
@@ -90,14 +90,14 @@ function ToolResultRow(Re) {
   else y = w[2];
   let N;
   if (w[3] !== h)
-    ((N = e(o, { flexShrink: 1, flexGrow: 1, children: h })),
+    ((N = e(Box, { flexShrink: 1, flexGrow: 1, children: h })),
       (w[3] = h),
       (w[4] = N));
   else N = w[4];
   let J;
   if (w[5] !== g || w[6] !== y || w[7] !== N)
     ((J = e(b, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "row",
         height: g,
         overflowY: "hidden",

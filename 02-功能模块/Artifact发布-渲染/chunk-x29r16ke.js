@@ -11,8 +11,8 @@ import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { xN, ne } from "./chunk-rr78st95.js";
+import { resolvePath, getFileMtimeMs } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { xN, getArtifactState } from "./chunk-rr78st95.js";
 import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";
 import { estimateTokensForContent, getDefaultFileReadingLimits, removeWebFetchSavedFile } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createHash } from "crypto";
@@ -61,13 +61,13 @@ async function registerHandoverRead(
   }
   let T = L(l, t, i),
     R = T ? "held" : "unverifiable",
-    H = ot(e),
-    s = await bA(H).catch(() => {
+    H = resolvePath(e),
+    s = await getFileMtimeMs(H).catch(() => {
       return;
     });
   if (s === void 0) return R;
   let C = createHash("sha256").update(n).digest("hex"),
-    p = ne().pendingHandoverReads,
+    p = getArtifactState().pendingHandoverReads,
     v = p.get(H),
     u =
       v !== void 0 && v.slug === t && v.ver === i && v.contentHash === C
@@ -115,9 +115,9 @@ async function registerHandoverRead(
   );
 }
 async function handoverPersistTarget(e, r, n) {
-  for (let [t, i] of ne().pendingHandoverReads)
+  for (let [t, i] of getArtifactState().pendingHandoverReads)
     if (i.slug === e && i.ver === r) {
-      let d = await bA(t).catch(() => {
+      let d = await getFileMtimeMs(t).catch(() => {
         return;
       });
       return d !== void 0 && d !== i.mtimeMs
@@ -127,21 +127,21 @@ async function handoverPersistTarget(e, r, n) {
   return { persistId: n };
 }
 async function refreshHandoverCopy(e, r) {
-  let n = ot(e),
-    t = ne().pendingHandoverReads,
+  let n = resolvePath(e),
+    t = getArtifactState().pendingHandoverReads,
     i = t.get(n);
   if (i === void 0) return;
   if (createHash("sha256").update(r).digest("hex") !== i.contentHash) {
     t.delete(n);
     return;
   }
-  let d = await bA(n).catch(() => {
+  let d = await getFileMtimeMs(n).catch(() => {
     return;
   });
   if (d !== void 0) i.mtimeMs = d;
 }
 function N(e, r, n) {
-  for (let [t, i] of ne().pendingHandoverReads)
+  for (let [t, i] of getArtifactState().pendingHandoverReads)
     if (
       i.slug === r &&
       (n === void 0 || i.ver === n) &&
@@ -172,7 +172,7 @@ async function checkedHandoverCoverage(e, r, n) {
   let [i, d] = t,
     o;
   try {
-    o = (await bA(i)) === d.mtimeMs ? "intact" : "changed";
+    o = (await getFileMtimeMs(i)) === d.mtimeMs ? "intact" : "changed";
   } catch (c) {
     o = W(c) ? "changed" : "unknown";
   }
@@ -219,7 +219,7 @@ function U(e, r) {
   return n;
 }
 async function discardHandoverCopy(e, r) {
-  (ne().pendingHandoverReads.delete(ot(e)),
+  (getArtifactState().pendingHandoverReads.delete(resolvePath(e)),
     removeWebFetchSavedFile(r, e),
     await unlink(e).catch(() => {}));
 }
@@ -232,7 +232,7 @@ var w = {
 };
 async function prepareHandoverRead(e, r, n, t) {
   try {
-    let i = ne().pendingHandoverReads,
+    let i = getArtifactState().pendingHandoverReads,
       d = i.get(e),
       o = r.agentId ?? "main";
     if (
@@ -299,7 +299,7 @@ function q(e, r) {
 function j(e, r, n) {
   if (q(e, n))
     return (
-      ne().pendingHandoverReads.delete(r),
+      getArtifactState().pendingHandoverReads.delete(r),
       logFeatureSad("artifact_handover_read", "superseded"),
       !0
     );
@@ -320,7 +320,7 @@ function E(e, r) {
   return n !== void 0 && n[0] <= 0 && n[1] >= r;
 }
 function D(e, r, n) {
-  let t = ne().refusedPublishBodies.get(xN(r, e.slug)),
+  let t = getArtifactState().refusedPublishBodies.get(xN(r, e.slug)),
     i = e.confirmsResendFor.get(n);
   return i !== void 0 && (t === void 0 || t.batch !== i) ? void 0 : t;
 }

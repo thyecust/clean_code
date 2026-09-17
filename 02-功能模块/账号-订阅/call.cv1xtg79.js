@@ -13,14 +13,14 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { Lwe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import "../认证-OAuth登录/console-profile-auth.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -31,14 +31,14 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
 import "../../01-核心基础设施/设置-配置/managed-settings-approval-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
-import "../Bridge-RemoteControl/chunk-3b6ct3yp.js";
+import "../Bridge-RemoteControl/login-flow.js";
 import { startExtraUsageFlow } from "../../01-核心基础设施/共享小工具-未细化/extra-usage-flow.js";
 import { callUpgradeFromSurface } from "../../01-核心基础设施/共享小工具-未细化/upgrade-flow.js";
 import "../权限系统/permission-dialog.js";
@@ -79,9 +79,9 @@ function x(M) {
   let U = R,
     D;
   if (n[1] === MEMO_CACHE_SENTINEL)
-    ((D = e(o, {
+    ((D = e(Box, {
       paddingX: 2,
-      children: e(t, {
+      children: e(Text, {
         color: "error",
         children: "Your Claude Code trial has ended.",
       }),
@@ -119,7 +119,7 @@ function x(M) {
   else g = n[11];
   let P;
   if (n[12] !== f || n[13] !== g)
-    ((P = r(o, {
+    ((P = r(Box, {
       flexDirection: "column",
       children: [
         D,

@@ -10,7 +10,7 @@
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { WindowsSandboxError, ensurePersistentWindowsCa, installWindowsSandboxAsync, WINDOWS_SANDBOX_USER_NAME, getSrtWinLaunchConfig, formatWindowsSandboxErrorMessage, resolveWindowsTlsTerminateCaSource, willSandboxTlsTerminate, SandboxManager } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 class d {
   inFlight = void 0;
@@ -110,7 +110,7 @@ async function c() {
   } catch (e) {
     SandboxManager.invalidateDependencyCache();
     let t = l(e);
-    n(`/sandbox install failed: ${t}`, { level: "error" });
+    logForDebugging(`/sandbox install failed: ${t}`, { level: "error" });
     let a = formatWindowsSandboxErrorMessage(t, { omitCcRemedy: !0 }).replace(/\.$/, "");
     if (e instanceof WindowsSandboxError && e.code === "install_timeout")
       return (
@@ -151,7 +151,7 @@ async function i(e) {
     await ensurePersistentWindowsCa({ status: e, srtWin: getSrtWinLaunchConfig() });
   } catch (t) {
     let a = l(t);
-    n(`/sandbox install: managed sandbox CA step failed: ${a}`, {
+    logForDebugging(`/sandbox install: managed sandbox CA step failed: ${a}`, {
       level: "error",
     });
     let s = formatWindowsSandboxErrorMessage(a, { omitCcRemedy: !0 }).replace(/\.$/, "");

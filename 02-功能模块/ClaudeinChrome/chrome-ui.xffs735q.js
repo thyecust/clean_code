@@ -13,12 +13,12 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isClaudeAISubscriber, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { CLAUDE_IN_CHROME_URL, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -105,7 +105,7 @@ function ce(jo) {
         })
         .catch((ao) => {
           (logFeatureBad("chrome_browser_picker", "select_failed"),
-            n(`claude-in-chrome select_browser failed: ${ge(ao).message}`, {
+            logForDebugging(`claude-in-chrome select_browser failed: ${ge(ao).message}`, {
               level: "error",
             }),
             u(`Couldn't switch browser: ${ge(ao).message}`));
@@ -122,7 +122,7 @@ function ce(jo) {
     const B = `Couldn't list connected browsers: ${eo}`;
     let g;
     if (x[11] !== B)
-      ((g = e(t, { color: "error", children: B })), (x[11] = B), (x[12] = g));
+      ((g = e(Text, { color: "error", children: B })), (x[11] = B), (x[12] = g));
     else g = x[12];
     let L;
     if (x[13] !== u || x[14] !== g)
@@ -136,7 +136,7 @@ function ce(jo) {
   if (O === null) {
     let B;
     if (x[16] === MEMO_CACHE_SENTINEL)
-      ((B = e(t, {
+      ((B = e(Text, {
         dimColor: !0,
         children: "Looking for connected browsers\u2026",
       })),
@@ -151,7 +151,7 @@ function ce(jo) {
   if (O.length === 0) {
     let B;
     if (x[19] === MEMO_CACHE_SENTINEL)
-      ((B = e(t, {
+      ((B = e(Text, {
         children:
           "No browsers are connected. Open Chrome with the Claude extension and make sure you're signed in to the same claude.ai account.",
       })),
@@ -171,8 +171,8 @@ function ce(jo) {
         value: ye.deviceId,
         label: r(N, {
           children: [
-            e(t, { children: ye.name }),
-            r(t, {
+            e(Text, { children: ye.name }),
+            r(Text, {
               dimColor: !0,
               children: [
                 " ",
@@ -195,7 +195,7 @@ function ce(jo) {
       ? "One browser is connected:"
       : `Choose which browser to use (${O.length} connected):`;
   let L;
-  if (x[25] !== g) ((L = e(t, { children: g })), (x[25] = g), (x[26] = L));
+  if (x[25] !== g) ((L = e(Text, { children: g })), (x[25] = g), (x[26] = L));
   else L = x[26];
   let De;
   if (x[27] !== u) ((De = () => u()), (x[27] = u), (x[28] = De));
@@ -216,7 +216,7 @@ function ce(jo) {
   else Ee = x[32];
   let mo;
   if (x[33] !== Ee || x[34] !== L)
-    ((mo = r(o, { flexDirection: "column", gap: 1, children: [L, Ee] })),
+    ((mo = r(Box, { flexDirection: "column", gap: 1, children: [L, Ee] })),
       (x[33] = Ee),
       (x[34] = L),
       (x[35] = mo));
@@ -243,7 +243,7 @@ function W(en) {
   else Re = Ue[2];
   let po;
   if (Ue[3] !== $e || Ue[4] !== Re)
-    ((po = r(o, { flexDirection: "column", gap: 1, children: [$e, Re] })),
+    ((po = r(Box, { flexDirection: "column", gap: 1, children: [$e, Re] })),
       (Ue[3] = $e),
       (Ue[4] = Re),
       (Ue[5] = po));
@@ -253,7 +253,7 @@ function W(en) {
 async function Ye(b) {
   let R = await Se(b, "list_connected_browsers", {});
   if (!R) return [];
-  let w = v(fo()).safeParse(z(R));
+  let w = v(fo()).safeParse(jsonParse(R));
   return w.success ? w.data : [];
 }
 async function Se(b, R, w) {
@@ -378,12 +378,12 @@ function Je(Sn) {
     }
     let S;
     if (i[13] === MEMO_CACHE_SENTINEL)
-      ((S = e(t, { children: "Manage permissions" })), (i[13] = S));
+      ((S = e(Text, { children: "Manage permissions" })), (i[13] = S));
     else S = i[13];
     let ue;
     if (i[14] !== ne)
       ((ue = {
-        label: r(N, { children: [S, e(t, { dimColor: !0, children: ne })] }),
+        label: r(N, { children: [S, e(Text, { dimColor: !0, children: ne })] }),
         value: "manage-permissions",
       }),
         (i[14] = ne),
@@ -391,12 +391,12 @@ function Je(Sn) {
     else ue = i[15];
     let G;
     if (i[16] === MEMO_CACHE_SENTINEL)
-      ((G = e(t, { children: "Reconnect extension" })), (i[16] = G));
+      ((G = e(Text, { children: "Reconnect extension" })), (i[16] = G));
     else G = i[16];
     let J;
     if (i[17] !== ne)
       ((J = {
-        label: r(N, { children: [G, e(t, { dimColor: !0, children: ne })] }),
+        label: r(N, { children: [G, e(Text, { dimColor: !0, children: ne })] }),
         value: "reconnect",
       }),
         (i[17] = ne),
@@ -416,7 +416,7 @@ function Je(Sn) {
   else S = i[22];
   let ue;
   if (i[23] === MEMO_CACHE_SENTINEL)
-    ((ue = e(t, {
+    ((ue = e(Text, {
       children:
         "Claude in Chrome works with the Chrome extension to let you control your browser directly from Claude Code. Navigate websites, fill forms, capture screenshots, record GIFs, and debug with console logs and network requests.",
     })),
@@ -426,7 +426,7 @@ function Je(Sn) {
   if (i[24] !== ke)
     ((G =
       ke &&
-      e(t, {
+      e(Text, {
         color: "error",
         children: "Claude in Chrome is not supported in WSL at this time.",
       })),
@@ -437,7 +437,7 @@ function Je(Sn) {
   if (i[26] !== Pe)
     ((J =
       !Pe &&
-      e(t, {
+      e(Text, {
         color: "error",
         children: "Claude in Chrome requires a claude.ai subscription.",
       })),
@@ -461,32 +461,32 @@ function Je(Sn) {
       !Ke &&
       r(N, {
         children: [
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(t, {
+              r(Text, {
                 children: [
                   "Status:",
                   " ",
                   j
-                    ? e(t, { color: "success", children: "Enabled" })
-                    : e(t, { color: "inactive", children: "Disabled" }),
+                    ? e(Text, { color: "success", children: "Enabled" })
+                    : e(Text, { color: "inactive", children: "Disabled" }),
                 ],
               }),
-              r(t, {
+              r(Text, {
                 children: [
                   "Extension:",
                   " ",
                   V
-                    ? e(t, { color: "success", children: "Installed" })
-                    : e(t, { color: "warning", children: "Not detected" }),
+                    ? e(Text, { color: "success", children: "Installed" })
+                    : e(Text, { color: "warning", children: "Not detected" }),
                 ],
               }),
               j && wo
-                ? r(t, {
+                ? r(Text, {
                     children: [
                       "Browser: ",
-                      e(t, { color: "success", children: wo }),
+                      e(Text, { color: "success", children: wo }),
                     ],
                   })
                 : null,
@@ -501,7 +501,7 @@ function Je(Sn) {
               })
             : e(ve, { options: K, onChange: me, hideIndexes: !0 }, Ve),
           je &&
-            r(t, {
+            r(Text, {
               color: "warning",
               children: [
                 "Once installed, select ",
@@ -509,15 +509,15 @@ function Je(Sn) {
                 " to connect.",
               ],
             }),
-          r(t, {
+          r(Text, {
             children: [
-              e(t, { dimColor: !0, children: "Usage: " }),
-              e(t, { children: "claude --chrome" }),
-              e(t, { dimColor: !0, children: " or " }),
-              e(t, { children: "claude --no-chrome" }),
+              e(Text, { dimColor: !0, children: "Usage: " }),
+              e(Text, { children: "claude --chrome" }),
+              e(Text, { dimColor: !0, children: " or " }),
+              e(Text, { children: "claude --no-chrome" }),
             ],
           }),
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children:
               "Site-level permissions are inherited from the Chrome extension. Manage permissions in the Chrome extension settings to control which sites Claude can browse, click, and type on.",
@@ -543,7 +543,7 @@ function Je(Sn) {
   else pe = i[39];
   let Me;
   if (i[40] !== G || i[41] !== J || i[42] !== T)
-    ((Me = r(o, {
+    ((Me = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [ue, G, J, T, pe],
@@ -570,7 +570,7 @@ function Je(Sn) {
 var In = async function (b) {
   let R = await isChromeExtensionInstalled().catch(
       (H) => (
-        n(
+        logForDebugging(
           `[Claude in Chrome] Extension detection failed: ${H instanceof Error ? H.message : String(H)}`,
           { level: "error" },
         ),

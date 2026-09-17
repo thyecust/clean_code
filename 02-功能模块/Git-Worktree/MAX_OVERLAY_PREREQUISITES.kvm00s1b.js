@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import {
@@ -45,12 +45,12 @@ import {
   GIT_OBJECT_ID_REGEX,
   parseLsTreeFiles,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { pI, a3n, l3n, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { isSafePortablePath, getPathIdentity, findSameFileDuplicates, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import "../文件同步-Sync/sync-journal.js";
 import { inferHashAlgorithmFromDigestLength, computeGitBlobId, computeContentDigests } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import "./local-divergence-probe.js";
-import { Xbe } from "./chunk-v967hawf.js";
-import { EFt } from "../文件同步-Sync/chunk-tqwnv5vj.js";
+import { createFilterAttributedChecker } from "./dir-sync-git-repository.js";
+import { isGitMetadataSegment } from "../文件同步-Sync/chunk-tqwnv5vj.js";
 import { createOverlayBundle } from "../云会话-Teleport/overlay-bundle.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -451,11 +451,11 @@ async function Ie(e, t, r, i) {
   }
   let s = [...o.values()].filter((c) => c.size > 1);
   if (s.length === 0) return new Set();
-  let u = new Set(s.flatMap((c) => ([...c].some((y) => !pI(y)) ? [...c] : []))),
+  let u = new Set(s.flatMap((c) => ([...c].some((y) => !isSafePortablePath(y)) ? [...c] : []))),
     f = createConcurrencyLimiter(J, (c) =>
-      u.has(c) ? Promise.resolve({ path: c, identity: null }) : a3n(t, c),
+      u.has(c) ? Promise.resolve({ path: c, identity: null }) : getPathIdentity(t, c),
     ),
-    g = l3n(await Promise.all(s.flatMap((c) => [...c]).map(f)));
+    g = findSameFileDuplicates(await Promise.all(s.flatMap((c) => [...c]).map(f)));
   return new Set(
     r.flatMap((c) => (g.has(c.path) || u.has(c.path) ? [c.path] : [])),
   );
@@ -479,7 +479,7 @@ async function Te(e, t) {
   if (r.code !== 0) return null;
   let i = r.stdout.split("\x00").filter((u) => u !== ""),
     o = createConcurrencyLimiter(J, (u) =>
-      pI(u)
+      isSafePortablePath(u)
         ? lstat(K(e, u)).then(
             (f) => f.isFile(),
             () => !1,
@@ -577,9 +577,9 @@ function oe(e) {
   return (
     ["M", "A", "D"].includes(e.status) &&
     t &&
-    pI(e.path) &&
+    isSafePortablePath(e.path) &&
     checkSeedPath(e.path) === null &&
-    !e.path.split("/").some(EFt)
+    !e.path.split("/").some(isGitMetadataSegment)
   );
 }
 async function Fe(e, t, r, i, o, s) {
@@ -588,8 +588,8 @@ async function Fe(e, t, r, i, o, s) {
       p.oldMode === p.newMode &&
       p.newId === null &&
       !oe(p) &&
-      pI(p.path) &&
-      !p.path.split("/").some(EFt),
+      isSafePortablePath(p.path) &&
+      !p.path.split("/").some(isGitMetadataSegment),
     f = De(e),
     g = async (p) => {
       for (let b of te(p)) if (!(await f(b).catch(() => !1))) return !1;
@@ -951,7 +951,7 @@ async function Ge({
   signal: r,
   createUploadFilter: i,
   withheldOf: o,
-  host: s = uk(),
+  host: s = createFileSystemHost(),
   filterAttributed: u,
   purpose: f = "seed",
 }) {
@@ -963,9 +963,9 @@ async function Ge({
   let b = await readGitHeadSha(e, r);
   if (b === null) return reportInventoryFailure(isSignalAborted(r) ? "aborted" : "rev_parse_failed", t, g, f);
   let m = o ?? i(e, { realRoot: p });
-  await using R = await SO(s, { gitRoot: e, realRoot: p }).catch(
+  await using R = await openTreeAnchor(s, { gitRoot: e, realRoot: p }).catch(
     (_) => (
-      n(`dirSync overlay inventory: tree anchor not opened (${A(_) ?? l(_)})`),
+      logForDebugging(`dirSync overlay inventory: tree anchor not opened (${A(_) ?? l(_)})`),
       null
     ),
   );
@@ -1088,7 +1088,7 @@ async function planOverlay({ gitRoot: e, pin: t, head: r, signal: i }) {
         },
         signal: c,
         createUploadFilter: createPathWithholdClassifier,
-        filterAttributed: Xbe(e),
+        filterAttributed: createFilterAttributedChecker(e),
         purpose: "create_check",
       }).catch((w) => (logError(w), { ok: !1, reason: "aborted" })),
       OVERLAY_CHECK_DEADLINE_MS,

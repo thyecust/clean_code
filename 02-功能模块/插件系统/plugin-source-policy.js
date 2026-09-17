@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { removeInvisibleChars, isRemoteManagedSettingsVerifiedAndConsented } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { GITHUB_HOST, normalizeHostname, isGitHubHost, hasBackslashInUrlAuthority, isSuspiciousUrl } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
@@ -172,7 +172,7 @@ function b(e, t, r) {
     return i.some((u) => s.test(u));
   } catch {
     return (
-      n(`Invalid hostPattern regex in policy settings: ${t.hostPattern}`, {
+      logForDebugging(`Invalid hostPattern regex in policy settings: ${t.hostPattern}`, {
         level: "error",
       }),
       !1
@@ -185,7 +185,7 @@ function P(e, t) {
     return new RegExp(t.pathPattern).test(e.path);
   } catch {
     return (
-      n(
+      logForDebugging(
         `Invalid pathPattern regex in policy settings strictKnownMarketplaces: ${t.pathPattern}`,
         { level: "error" },
       ),
@@ -227,7 +227,7 @@ function S(e) {
   let t = g(e);
   if (t !== null && t.includes("*"))
     return (
-      n(
+      logForDebugging(
         `Invalid owner-wildcard url in policy settings blockedMarketplaces: ${e} (wildcards are only supported in github-form entries, as "<owner>/*"); entry does not match github.com sources`,
         { level: "error" },
       ),
@@ -329,7 +329,7 @@ function p(e, t) {
     o = v(e);
   if (o === null) {
     if (e.includes("*"))
-      n(
+      logForDebugging(
         `Invalid owner-wildcard repo in policy settings blockedMarketplaces: ${e} (only "<owner>/*" is supported); entry only matches a literally identical repo string`,
         { level: "error" },
       );
@@ -433,7 +433,7 @@ function H(e, t) {
   if (e.source === "github" && t.source === "github") {
     let r = v(t.repo);
     if (r === null && t.repo.includes("*"))
-      n(
+      logForDebugging(
         `Invalid owner-wildcard repo in policy settings strictKnownMarketplaces: ${t.repo} (only "<owner>/*" is supported); entry only matches a literally identical repo string`,
         { level: "error" },
       );

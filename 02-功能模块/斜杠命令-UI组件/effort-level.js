@@ -15,40 +15,40 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  s4t,
-  wnr,
-  i6,
-  ib,
-  sA,
-  gve,
-  _me,
-  VK,
-  Z$,
-  $N,
-  _$e,
-  KK,
-  VH,
-  UN,
-  XK,
-  qG,
+  XHIGH_CAPABLE_MODELS_LABEL,
+  MAX_CAPABLE_MODELS_LABEL,
+  modelSupportsXHighEffort,
+  modelSupportsUltracode,
+  isUltracodeActive,
+  getOrgDefaultEffortLevelForModel,
+  isEffortAllowedByOrg,
+  getAllowedEffortLevels,
+  clampEffortToOrgLimit,
+  formatEffortLevel,
+  parseEffortLevelAlias,
+  toPersistableEffortLevel,
+  getEnvEffortLevelOverride,
+  isLaunchEffortPinned,
+  createEffortLevelOrDefault,
+  isSameEffortSelection,
   ese,
-  MT,
-  KH,
-  zG,
-  NT,
-  mAn,
+  resolveModelEffortLevel,
+  getDefaultEffortLevelForModel,
+  applyEffortLevelChange,
+  getModelEffortLevelOrDefault,
+  getEffortLevelDescription,
 } from "../权限系统/chunk-t3b7pg2x.js";
 var _ = {
   low: "Quick, straightforward implementation",
   medium: "Balanced approach with standard testing",
   high: "Comprehensive implementation with extensive testing",
-  xhigh: `Extended reasoning with thorough analysis (${s4t})`,
-  max: `Maximum capability with deepest reasoning (${wnr})`,
+  xhigh: `Extended reasoning with thorough analysis (${XHIGH_CAPABLE_MODELS_LABEL})`,
+  max: `Maximum capability with deepest reasoning (${MAX_CAPABLE_MODELS_LABEL})`,
 };
 function formatEffortUsageText() {
   let t = getMainLoopModel(),
-    o = ib(t),
-    n = VK(t);
+    o = modelSupportsUltracode(t),
+    n = getAllowedEffortLevels(t);
   return (
     `Usage: /effort [${n.join("|")}${o ? "|ultracode" : ""}|auto]
 
@@ -68,15 +68,15 @@ Effort levels:
   );
 }
 function E(t) {
-  let o = VK(t),
-    n = ib(t) ? ", ultracode" : "";
+  let o = getAllowedEffortLevels(t),
+    n = modelSupportsUltracode(t) ? ", ultracode" : "";
   return `${o.join(", ")}${n}, auto`;
 }
 function parseEffortArgument(t, o) {
   let n = t.toLowerCase();
   if (n === "auto" || n === "unset") return { value: void 0 };
-  if (n === "ultracode" && ib(o)) return { value: "xhigh" };
-  let r = _$e(t);
+  if (n === "ultracode" && modelSupportsUltracode(o)) return { value: "xhigh" };
+  let r = parseEffortLevelAlias(t);
   return r ? { value: r } : null;
 }
 function g(t, o = !1) {
@@ -95,14 +95,14 @@ function g(t, o = !1) {
 }
 async function x(t, o, n, r) {
   let s = getMainLoopModel(),
-    e = typeof t === "string" ? Z$(t, s) : t,
+    e = typeof t === "string" ? clampEffortToOrgLimit(t, s) : t,
     l = e !== t,
-    f = KK(e);
+    f = toPersistableEffortLevel(e);
   if (hasRemoteControlChannel() && f === void 0)
     return {
       message: `${e} is session-scoped and won't reach the remote process. Use low, medium, high, or xhigh instead.`,
     };
-  let c = zG(e, s, o, r);
+  let c = applyEffortLevelChange(e, s, o, r);
   n?.({ value: e, ultracode: !1 });
   let m = g(f),
     d = await c;
@@ -111,25 +111,25 @@ async function x(t, o, n, r) {
     effort: typeof e === "number" ? e : fromEnum(e),
     is_remote: getRemoteTransport() !== null,
   });
-  let p = getRemoteTransport() ? void 0 : VH();
+  let p = getRemoteTransport() ? void 0 : getEnvEffortLevelOverride();
   if (p !== void 0 && p !== e) {
     let y = a.CLAUDE_CODE_EFFORT_LEVEL;
     if (f === void 0)
       return {
-        message: `Not applied: CLAUDE_CODE_EFFORT_LEVEL=${y} overrides effort this session, and ${$N(e)} is session-only (nothing saved)`,
+        message: `Not applied: CLAUDE_CODE_EFFORT_LEVEL=${y} overrides effort this session, and ${formatEffortLevel(e)} is session-only (nothing saved)`,
         effortUpdate: { value: e, ultracode: !1 },
       };
     return {
-      message: `CLAUDE_CODE_EFFORT_LEVEL=${y} overrides this session \u2014 clear it and ${$N(e)} takes over`,
+      message: `CLAUDE_CODE_EFFORT_LEVEL=${y} overrides this session \u2014 clear it and ${formatEffortLevel(e)} takes over`,
       effortUpdate: { value: e, ultracode: !1 },
     };
   }
-  if (!o && ke() && UN(s))
+  if (!o && ke() && isLaunchEffortPinned(s))
     return {
-      message: `Not applied: the launch-effort pin holds effort at ${KH(s)} this session. Run /effort ${$N(e)} in an interactive terminal to release the pin.`,
+      message: `Not applied: the launch-effort pin holds effort at ${getDefaultEffortLevelForModel(s)} this session. Run /effort ${formatEffortLevel(e)} in an interactive terminal to release the pin.`,
       effortUpdate: { value: e, ultracode: !1 },
     };
-  let v = mAn(e),
+  let v = getEffortLevelDescription(e),
     L =
       f !== void 0 && o && !getRemoteTransport()
         ? " (saved as your default for new sessions)"
@@ -140,38 +140,38 @@ async function x(t, o, n, r) {
       effortUpdate: { value: e, ultracode: !1 },
     };
   return {
-    message: `Set effort level to ${$N(e)}${L}: ${v}${m ?? ""}`,
+    message: `Set effort level to ${formatEffortLevel(e)}${L}: ${v}${m ?? ""}`,
     effortUpdate: { value: e, ultracode: !1 },
   };
 }
 function formatEffortStatus(t, o, n) {
-  if (sA(o, t, n))
+  if (isUltracodeActive(o, t, n))
     return {
       message:
         "Current effort level: ultracode (xhigh + dynamic workflow orchestration; this session only)",
     };
-  let r = getRemoteTransport() ? void 0 : VH(),
-    s = UN(o) ? void 0 : t,
+  let r = getRemoteTransport() ? void 0 : getEnvEffortLevelOverride(),
+    s = isLaunchEffortPinned(o) ? void 0 : t,
     e = r === null ? void 0 : (r ?? s);
   if (e === void 0) {
-    let f = NT(o, t),
+    let f = getModelEffortLevelOrDefault(o, t),
       c =
-        gve(o) !== null && MT(o, t) !== void 0
+        getOrgDefaultEffortLevelForModel(o) !== null && resolveModelEffortLevel(o, t) !== void 0
           ? ", set by your organization"
           : "";
-    return { message: `Effort level: auto (currently ${$N(f)}${c})` };
+    return { message: `Effort level: auto (currently ${formatEffortLevel(f)}${c})` };
   }
-  let l = mAn(e);
-  return { message: `Current effort level: ${$N(e)} (${l})` };
+  let l = getEffortLevelDescription(e);
+  return { message: `Current effort level: ${formatEffortLevel(e)} (${l})` };
 }
 async function C(t, o, n) {
   o?.({ value: void 0, ultracode: !1 });
   let r = g(void 0),
-    s = await zG(void 0, getMainLoopModel(), t, n);
+    s = await applyEffortLevelChange(void 0, getMainLoopModel(), t, n);
   if (s) return { message: `Failed to set effort level: ${s.message}` };
   logEvent("tengu_effort_command", { effort: S("auto"), is_remote: getRemoteTransport() !== null });
   let e = t ? "" : " (this session only)",
-    l = getRemoteTransport() ? void 0 : VH();
+    l = getRemoteTransport() ? void 0 : getEnvEffortLevelOverride();
   if (l !== void 0 && l !== null) {
     let f = a.CLAUDE_CODE_EFFORT_LEVEL;
     return {
@@ -186,21 +186,21 @@ async function C(t, o, n) {
 }
 function U(t, o, n) {
   let r = getMainLoopModel();
-  if (!ib())
+  if (!modelSupportsUltracode())
     return {
       message: `Ultracode needs dynamic workflows enabled (see /config). Valid options are: ${E(r)}`,
     };
-  if (i6(r) && !_me("xhigh", r))
+  if (modelSupportsXHighEffort(r) && !isEffortAllowedByOrg("xhigh", r))
     return {
       message: `Ultracode runs at xhigh effort, which is restricted by your organization for ${r}. Valid options are: ${E(r)}`,
     };
-  if (!ib(r))
+  if (!modelSupportsUltracode(r))
     return {
-      message: `Ultracode runs at xhigh effort, which ${r} doesn't support \u2014 switch to an xhigh-capable model (${s4t}). Valid options are: ${E(r)}`,
+      message: `Ultracode runs at xhigh effort, which ${r} doesn't support \u2014 switch to an xhigh-capable model (${XHIGH_CAPABLE_MODELS_LABEL}). Valid options are: ${E(r)}`,
     };
-  if (!t && ke() && UN(r))
+  if (!t && ke() && isLaunchEffortPinned(r))
     return {
-      message: `Not applied: the launch-effort pin holds effort at ${KH(r)} this session, and ultracode needs xhigh. Run /effort ultracode in an interactive terminal to release the pin.`,
+      message: `Not applied: the launch-effort pin holds effort at ${getDefaultEffortLevelForModel(r)} this session, and ultracode needs xhigh. Run /effort ultracode in an interactive terminal to release the pin.`,
     };
   (ese(t, n), o?.({ value: "xhigh", ultracode: !0 }));
   let s = g("xhigh", !0);
@@ -208,7 +208,7 @@ function U(t, o, n) {
     effort: S("ultracode"),
     is_remote: getRemoteTransport() !== null,
   });
-  let e = getRemoteTransport() ? void 0 : VH();
+  let e = getRemoteTransport() ? void 0 : getEnvEffortLevelOverride();
   if (e !== void 0 && e !== "xhigh")
     return {
       message: `CLAUDE_CODE_EFFORT_LEVEL=${a.CLAUDE_CODE_EFFORT_LEVEL} overrides effort this session \u2014 clear it and ultracode takes over`,
@@ -223,7 +223,7 @@ async function w(t, o = !0, n, r) {
   let s = t.toLowerCase();
   if (s === "auto" || s === "unset") return C(o, n, r);
   if (s === "ultracode") return U(o, n, r);
-  let e = _$e(t);
+  let e = parseEffortLevelAlias(t);
   if (!e)
     return { message: `Invalid argument: ${t}. Valid options are: ${E(getMainLoopModel())}` };
   return x(e, o, n, r);
@@ -236,7 +236,7 @@ async function runEffortCommand(t, o, n = !0, r) {
       n,
       (f) => {
         s = !0;
-        let c = XK(f.value),
+        let c = createEffortLevelOrDefault(f.value),
           m = f.ultracode ?? !1;
         o((d) => {
           if (
@@ -244,7 +244,7 @@ async function runEffortCommand(t, o, n = !0, r) {
               sessionEffort: d.sessionEffort,
               ultracode: d.ultracode ?? !1,
             }),
-            qG(d.sessionEffort, c) && (d.ultracode ?? !1) === m)
+            isSameEffortSelection(d.sessionEffort, c) && (d.ultracode ?? !1) === m)
           )
             return d;
           return { ...d, sessionEffort: c, ultracode: m };
@@ -256,7 +256,7 @@ async function runEffortCommand(t, o, n = !0, r) {
     o((f) => {
       if (e === null) return f;
       if (
-        qG(f.sessionEffort, e.sessionEffort) &&
+        isSameEffortSelection(f.sessionEffort, e.sessionEffort) &&
         (f.ultracode ?? !1) === e.ultracode
       )
         return f;

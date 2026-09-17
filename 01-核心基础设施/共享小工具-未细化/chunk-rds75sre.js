@@ -12,7 +12,7 @@ import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "./file-storage.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "./lazy-value.js";
 import { s, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -37,7 +37,7 @@ async function f(r) {
 }
 function C(r) {
   try {
-    return y().safeParse(z(r));
+    return y().safeParse(jsonParse(r));
   } catch {
     return { success: !1 };
   }
@@ -54,12 +54,12 @@ async function rememberUnboundCreate(r, o, t) {
         { id: e, reason: o, at: t.now().toISOString() },
       ].slice(-D);
     await t.writeText(
-      b({ version: 1, sessions: a }, null, 2) +
+      jsonStringify({ version: 1, sessions: a }, null, 2) +
         `
 `,
     );
   } catch (e) {
-    n(`[deviceBind] unbound create not recorded (${l(e)})`);
+    logForDebugging(`[deviceBind] unbound create not recorded (${l(e)})`);
   }
 }
 async function unboundCreateReason(r, o, t) {
@@ -68,7 +68,7 @@ async function unboundCreateReason(r, o, t) {
       i = (await f(t)).find((a) => sessionIdBody(a.id) === e);
     return i !== void 0 && o(i.reason) ? i.reason : void 0;
   } catch (e) {
-    n(`[deviceBind] unbound-create record unreadable (${l(e)})`);
+    logForDebugging(`[deviceBind] unbound-create record unreadable (${l(e)})`);
     return;
   }
 }

@@ -14,7 +14,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
-import { Et, Yhe, b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, isCleanupDrainStarted, jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { ja, $nt, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -25,7 +25,7 @@ import { setAgentProxyNote, isShuttingDown, MAX_PROXY_FAILURE_HISTORY, setAgentP
 import { isRetryableFsError } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
-import { o6 } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { PLACEHOLDER_CREDENTIAL_VALUE } from "../核心工具-进程与信号/subprocess-env-scrub.js";
 import { AGENT_PROXY_PATH, setAgentProxyEndpoint } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { computeRetryDelayMs } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { BASE_CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_BUNDLE_ENV_VARS, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
@@ -478,11 +478,11 @@ async function Ke(t) {
   if (t.startupProbe)
     (Ft(t.wsUrl, o, r.openTimeoutMs, r.openMaxAttempts)
       .then(() => {
-        n("[agent-proxy] startup reachability probe: ok");
+        logForDebugging("[agent-proxy] startup reachability probe: ok");
       })
       .catch((c) => {
         if (s.upstreamOpened) {
-          n(
+          logForDebugging(
             `[agent-proxy] startup reachability probe failed (${c?.message ?? String(c)}) after a tunnel already opened; ignoring`,
             { level: "warn" },
           );
@@ -493,25 +493,25 @@ async function Ke(t) {
           "one reaches upstream (which clears this) \u2014 inference is " +
           "force-tunneled, so a session without the hosted proxy is non-functional regardless. Check network egress to the CCR base URL."
         ).replace(de, "?")),
-          n(`[agent-proxy] ${s.startupError}`, { level: "error" }),
+          logForDebugging(`[agent-proxy] ${s.startupError}`, { level: "error" }),
           logFeatureSad("agent_proxy_init", "agent_proxy_startup_probe_failed"));
       }),
       Xt(r.openTimeoutMs)
         .then((c) => {
           if (((s.bufferedAmountTrusted = c), !c))
-            (n(
+            (logForDebugging(
               "[agent-proxy] WebSocket.bufferedAmount stays 0 with bytes queued: the upload gate cannot engage on this runtime",
               { level: "warn" },
             ),
               logFeatureSad("agent_proxy_init", "agent_proxy_buffered_amount_untrusted"));
         })
         .catch((c) => {
-          n(
+          logForDebugging(
             `[agent-proxy] bufferedAmount self-check did not run: ${c?.message ?? String(c)}`,
             { level: "warn" },
           );
         }));
-  return (n(`[agent-proxy] relay listening on 127.0.0.1:${p.port}`), p);
+  return (logForDebugging(`[agent-proxy] relay listening on 127.0.0.1:${p.port}`), p);
 }
 function Me(t) {
   if (
@@ -630,7 +630,7 @@ function Kt(t, e, o, r) {
           D(u);
         },
         error(c, u) {
-          n(`[agent-proxy] client socket error: ${u.message}`);
+          logForDebugging(`[agent-proxy] client socket error: ${u.message}`);
           let d = c.data;
           if ((Me(d), d.localClosed && d.finCloseTimer)) return;
           D(d);
@@ -650,7 +650,7 @@ function Vt(t, e, o, r, s) {
       ((e.connectBuf = Buffer.concat([e.connectBuf, o])),
       e.connectBuf[0] === 22)
     ) {
-      (n(
+      (logForDebugging(
         "[agent-proxy] client sent TLS to the relay port (HTTPS_PROXY must be an http:// URL)",
         { level: "warn" },
       ),
@@ -713,7 +713,7 @@ function Vt(t, e, o, r, s) {
           200,
           "OK",
           "application/json",
-          b(v, null, 2) +
+          jsonStringify(v, null, 2) +
             `
 `,
         ),
@@ -789,7 +789,7 @@ function le(t, e, o) {
   )
     e.pendingPeakBytes = e.pendingBytes;
   if (e.pendingBytes > e.limits.pendingBytesCap)
-    (n(
+    (logForDebugging(
       `[agent-proxy] pending buffer cap (${e.limits.pendingBytesCap}) exceeded; aborting request`,
       { level: "warn" },
     ),
@@ -842,7 +842,7 @@ function qt(t) {
   ) {
     F(t);
     let r = Math.round((o - t.sendStallSince) / 1000);
-    (n(
+    (logForDebugging(
       `[agent-proxy] tunnel accepted no request bytes for ${r}s; aborting request`,
       { level: "warn" },
     ),
@@ -907,7 +907,7 @@ function Jt(t, e, o, r) {
         if (
           ((c = !0),
           (e.redialEligible = !1),
-          n(
+          logForDebugging(
             `[agent-proxy] pooled ws failed before response (${d}); falling through to fresh dial`,
           ),
           e.openTimer)
@@ -1199,7 +1199,7 @@ function ze(t, e, o, r) {
   }),
     (o.onerror = (s) => {
       let p = "message" in s ? String(s.message) : "websocket error";
-      if ((n(`[agent-proxy] ws error: ${p}`), e.closed)) return;
+      if ((logForDebugging(`[agent-proxy] ws error: ${p}`), e.closed)) return;
       if (r && e.redialEligible && !e.established) {
         r(`ws error: ${p}`);
         return;
@@ -1293,7 +1293,7 @@ function rn(t, e, o, r) {
         if (e.openTimer) (clearTimeout(e.openTimer), (e.openTimer = void 0));
         e.helloAckDeadline = void 0;
       }
-      n("[agent-proxy] tunnel protocol v2 negotiated");
+      logForDebugging("[agent-proxy] tunnel protocol v2 negotiated");
     }
     return;
   }
@@ -1359,13 +1359,13 @@ function fe(t, e, o, r) {
         m = d ? 1 : e.limits.openMaxAttempts;
       if (e.wsAttempt < m) {
         let _ = e.limits.openBackoffBaseMs * 2 ** (e.wsAttempt - 1);
-        (n(
+        (logForDebugging(
           `[agent-proxy] ws open failed (${u}); retry ${e.wsAttempt}/${m - 1} in ${_}ms`,
         ),
           (e.openTimer = setTimeout(fe, _, t, e, o, r)));
         return;
       }
-      (n(`[agent-proxy] ws open failed (${u}); attempts exhausted`),
+      (logForDebugging(`[agent-proxy] ws open failed (${u}); attempts exhausted`),
         (e.closed = !0),
         logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"));
       let h = `could not open the WebSocket tunnel to the CCR agent-proxy (${u.slice(0, 120)}) after ${e.wsAttempt} ${pluralize(e.wsAttempt, "attempt")}`;
@@ -1402,7 +1402,7 @@ function fe(t, e, o, r) {
     }),
     (s.onerror = (u) => {
       let d = "message" in u ? String(u.message) : "websocket error";
-      (n(`[agent-proxy] ws error: ${d}`), c(d));
+      (logForDebugging(`[agent-proxy] ws error: ${d}`), c(d));
     }),
     (s.onclose = () => c("closed before open")));
 }
@@ -1411,7 +1411,7 @@ function an(t) {
 }
 function sn(t) {
   if (t.ws && t.ws.readyState === WebSocket.CONNECTING)
-    (n("[agent-proxy] ws open timeout"), t.failOrRetry?.("handshake timeout"));
+    (logForDebugging("[agent-proxy] ws open timeout"), t.failOrRetry?.("handshake timeout"));
 }
 function ln(t) {
   t.pooledDeadline?.();
@@ -1422,7 +1422,7 @@ function un(t) {
 function ge(t, e, o) {
   if (e.closed) return;
   ((e.closed = !0),
-    n(`[agent-proxy] tunnel protocol v2 negotiation failed: ${o}`, {
+    logForDebugging(`[agent-proxy] tunnel protocol v2 negotiation failed: ${o}`, {
       level: "warn",
     }),
     logFeatureBad("agent_proxy_request", "agent_proxy_request_v2_not_acked"),
@@ -1521,7 +1521,7 @@ async function st(t) {
     (await _e(t.stateDir, { recursive: !0 }), await ee(r, t.ccrCa, "utf8"));
   } catch (c) {
     return (
-      n(
+      logForDebugging(
         `[agent-proxy] tool trust setup skipped: cannot write CA file: ${l(c)}`,
         { level: "warn" },
       ),
@@ -1535,13 +1535,13 @@ async function st(t) {
     (await Promise.all([
       (async () => {
         if (!s) {
-          n("[agent-proxy] no keytool found; skipping JVM truststore");
+          logForDebugging("[agent-proxy] no keytool found; skipping JVM truststore");
           return;
         }
         let c = await gn(s, r, U(t.stateDir, "java-truststore.p12"), e);
         if (!c) return;
         if (fn.test(c)) {
-          (n(
+          (logForDebugging(
             `[agent-proxy] truststore path contains JVM-unsafe characters; not emitting JAVA_TOOL_OPTIONS: ${c}`,
             { level: "warn" },
           ),
@@ -1553,7 +1553,7 @@ async function st(t) {
       })(),
       (async () => {
         if (!p) {
-          n(
+          logForDebugging(
             "[agent-proxy] certutil not found; skipping NSS trust for browsers",
           );
           return;
@@ -1617,7 +1617,7 @@ async function lt(t) {
 async function gn(t, e, o, r) {
   let s = await lt(t);
   if (!s) {
-    (n(`[agent-proxy] no JDK cacerts found near ${t}; skipping JVM truststore`),
+    (logForDebugging(`[agent-proxy] no JDK cacerts found near ${t}; skipping JVM truststore`),
       r.push("jdk_cacerts_not_found"));
     return;
   }
@@ -1638,7 +1638,7 @@ async function gn(t, e, o, r) {
     J,
   ]);
   if (!c.ok) {
-    (n(`[agent-proxy] keytool importkeystore failed: ${c.detail}`, {
+    (logForDebugging(`[agent-proxy] keytool importkeystore failed: ${c.detail}`, {
       level: "warn",
     }),
       r.push("java_truststore_seed_failed"),
@@ -1661,7 +1661,7 @@ async function gn(t, e, o, r) {
     J,
   ]);
   if (!u.ok) {
-    (n(`[agent-proxy] keytool importcert failed: ${u.detail}`, {
+    (logForDebugging(`[agent-proxy] keytool importcert failed: ${u.detail}`, {
       level: "warn",
     }),
       r.push("java_truststore_import_failed"),
@@ -1673,13 +1673,13 @@ async function gn(t, e, o, r) {
       (await ee(o, await it(p)), await z(p).catch(() => {}));
     });
   } catch (d) {
-    (n(`[agent-proxy] could not move JVM truststore into place: ${l(d)}`, {
+    (logForDebugging(`[agent-proxy] could not move JVM truststore into place: ${l(d)}`, {
       level: "warn",
     }),
       r.push("java_truststore_publish_failed"));
     return;
   }
-  return (n(`[agent-proxy] JVM truststore built at ${o}`), o);
+  return (logForDebugging(`[agent-proxy] JVM truststore built at ${o}`), o);
 }
 async function mn(t, e, o) {
   let r = `${nt}
@@ -1693,7 +1693,7 @@ ${ye}
     s = await it(e, "utf8");
   } catch (h) {
     if (!W(h)) {
-      (n(`[agent-proxy] could not read ${e}: ${l(h)}`),
+      (logForDebugging(`[agent-proxy] could not read ${e}: ${l(h)}`),
         o.push("bazelrc_write_failed"));
       return;
     }
@@ -1714,9 +1714,9 @@ ${r}`
   if (m === s) return;
   try {
     (await ee(e, m, "utf8"),
-      n(`[agent-proxy] wrote Bazel trust block to ${e}`));
+      logForDebugging(`[agent-proxy] wrote Bazel trust block to ${e}`));
   } catch (h) {
-    (n(`[agent-proxy] could not write ${e}: ${l(h)}`),
+    (logForDebugging(`[agent-proxy] could not write ${e}: ${l(h)}`),
       o.push("bazelrc_write_failed"));
   }
 }
@@ -1725,7 +1725,7 @@ async function yn(t, e, o, r) {
     if (
       !(await _e(s, { recursive: !0 }).then(
         () => !0,
-        (m) => (n(`[agent-proxy] could not create NSS dir ${s}: ${l(m)}`), !1),
+        (m) => (logForDebugging(`[agent-proxy] could not create NSS dir ${s}: ${l(m)}`), !1),
       ))
     ) {
       r.push("nss_add_failed");
@@ -1737,9 +1737,9 @@ async function yn(t, e, o, r) {
       d = await V(o, u);
     if (!d.ok)
       (await V(o, ["-N", "--empty-password", "-d", c]), (d = await V(o, u)));
-    if (d.ok) n(`[agent-proxy] MITM CA added to NSS DB at ${s}`);
+    if (d.ok) logForDebugging(`[agent-proxy] MITM CA added to NSS DB at ${s}`);
     else
-      (n(`[agent-proxy] certutil -A failed for ${s}: ${d.detail}`),
+      (logForDebugging(`[agent-proxy] certutil -A failed for ${s}: ${d.detail}`),
         r.push("nss_add_failed"));
   }
 }
@@ -1749,10 +1749,10 @@ ca_certificates_file = ${t}
 `;
   try {
     (await ee(e, r, { flag: "wx", mode: 420 }),
-      n(`[agent-proxy] wrote ${e} for gsutil trust`));
+      logForDebugging(`[agent-proxy] wrote ${e} for gsutil trust`));
   } catch (s) {
     if (A(s) === "EEXIST") return;
-    (n(`[agent-proxy] could not write ${e}: ${l(s)}`),
+    (logForDebugging(`[agent-proxy] could not write ${e}: ${l(s)}`),
       o.push("boto_write_failed"));
   }
 }
@@ -1782,11 +1782,11 @@ async function _n(t, e, o) {
     return (
       await _e(dirname(e), { recursive: !0 }),
       await ee(e, s, { mode: 420 }),
-      n(`[agent-proxy] wrote ${e} for login-shell trust`),
+      logForDebugging(`[agent-proxy] wrote ${e} for login-shell trust`),
       e
     );
   } catch (p) {
-    (n(`[agent-proxy] could not write ${e}: ${l(p)}`),
+    (logForDebugging(`[agent-proxy] could not write ${e}: ${l(p)}`),
       o.push("profile_d_write_failed"));
     return;
   }
@@ -1907,7 +1907,7 @@ async function _gr(t) {
   let d = process.env.CLAUDE_CODE_REMOTE_SESSION_ID;
   if (!d)
     return (
-      n("[agent-proxy] CLAUDE_CODE_REMOTE_SESSION_ID unset; proxy disabled", {
+      logForDebugging("[agent-proxy] CLAUDE_CODE_REMOTE_SESSION_ID unset; proxy disabled", {
         level: "warn",
       }),
       logFeatureBad("agent_proxy_init", "agent_proxy_init_no_session_id"),
@@ -1919,12 +1919,12 @@ async function _gr(t) {
   if (!w) w = getSessionAccessToken();
   if (!w && !r)
     return (
-      n("[agent-proxy] no session token; proxy disabled"),
+      logForDebugging("[agent-proxy] no session token; proxy disabled"),
       logFeatureBad("agent_proxy_init", "agent_proxy_init_no_token"),
       e.state
     );
-  (n(`[agent-proxy] token via ${_ ? m : "sessionIngressAuth"}`),
-    Ne((P) => n(`[agent-proxy] ${P}`, { level: "warn" })));
+  (logForDebugging(`[agent-proxy] token via ${_ ? m : "sessionIngressAuth"}`),
+    Ne((P) => logForDebugging(`[agent-proxy] ${P}`, { level: "warn" })));
   let T =
       o ??
       t?.ccrBaseUrl ??
@@ -1953,11 +1953,11 @@ ${L}`
       .filter((q) => q.length > 0);
     if (P.length > 0)
       ((G = { includeHosts: P }),
-        n(
+        logForDebugging(
           `[agent-proxy] selective relay: ${P.length} include hosts; unlisted use normal networking`,
         ));
     else
-      (n(
+      (logForDebugging(
         "[agent-proxy] CCR_AGENT_PROXY_RELAY_MODE=selective but include-host " +
           "list is empty/unparsable \u2014 FAIL-CLOSED to tunnel-all",
         { level: "warn" },
@@ -1987,7 +1987,7 @@ ${L}`
   if (K.outcome === "retry")
     (logFeatureSad("agent_proxy_init", "agent_proxy_init_ca_exhausted_retrying"),
       $n(X, K).catch((P) => {
-        (n(`[agent-proxy] retry loop crashed: ${l(P)}; proxy stays disabled`, {
+        (logForDebugging(`[agent-proxy] retry loop crashed: ${l(P)}; proxy stays disabled`, {
           level: "warn",
         }),
           logFeatureBad("agent_proxy_init", "agent_proxy_init_retry_loop_crashed"));
@@ -1997,7 +1997,7 @@ ${L}`
 var ct = 300000,
   Rn = 3600000;
 function bt(t, e) {
-  if (t.generation !== e || t.state.enabled || Yhe()) return "exit";
+  if (t.generation !== e || t.state.enabled || isCleanupDrainStarted()) return "exit";
   return isShuttingDown() ? "defer" : null;
 }
 function Bn(t, e) {
@@ -2010,7 +2010,7 @@ async function $n(t, e) {
     u = !1;
   for (let d = 2; ; d++) {
     let m = s?.retryDelayMs?.(d) ?? Bn(d, e.retryAfter);
-    (n(`[agent-proxy] ${e.detail}; attempt ${d} in ${(m / 1000).toFixed(1)}s`, {
+    (logForDebugging(`[agent-proxy] ${e.detail}; attempt ${d} in ${(m / 1000).toFixed(1)}s`, {
       level: "warn",
     }),
       await sleep(m, void 0, { unref: !0 }));
@@ -2021,7 +2021,7 @@ async function $n(t, e) {
     if (_.outcome !== "retry") return;
     if (((e = _), !u && Date.now() - p >= c))
       ((u = !0),
-        n(
+        logForDebugging(
           `[agent-proxy] ${e.detail}; still failing after ${d} attempts over ${Math.round((Date.now() - p) / 60000)} min \u2014 counting as exhausted, retrying anyway`,
           { level: "warn" },
         ),
@@ -2054,7 +2054,7 @@ async function Tt(t, e) {
   if (N.outcome === "retry") return N;
   if (N.outcome === "fatal")
     return (
-      n(`[agent-proxy] ${N.detail}; proxy disabled`, { level: "warn" }),
+      logForDebugging(`[agent-proxy] ${N.detail}; proxy disabled`, { level: "warn" }),
       logFeatureBad("agent_proxy_init", `agent_proxy_init_ca_${N.code}`),
       N
     );
@@ -2086,7 +2086,7 @@ async function Tt(t, e) {
         }),
         onFailure: recordAgentProxyFailure,
       }),
-      q = Et(async () => P.stop()),
+      q = registerCleanup(async () => P.stop()),
       H = {
         enabled: !0,
         port: P.port,
@@ -2119,7 +2119,7 @@ async function Tt(t, e) {
           a.CLAUDE_CODE_AGENT_PROXY_GIT_CONFIG
             ? kn(P.port, m).catch(
                 (se) => (
-                  n(
+                  logForDebugging(
                     `[agent-proxy] governed git config append failed: ${l(se)}`,
                     { level: "warn" },
                   ),
@@ -2131,7 +2131,7 @@ async function Tt(t, e) {
             : !1,
           a.CLAUDE_CODE_AGENT_PROXY_GH_SHIM
             ? In(P.port, m).catch((se) => {
-                (n(`[agent-proxy] gh shim write failed: ${l(se)}`, {
+                (logForDebugging(`[agent-proxy] gh shim write failed: ${l(se)}`, {
                   level: "warn",
                 }),
                   logFeatureSad("agent_proxy_tool_scoped", "gh_shim_write_failed"),
@@ -2145,7 +2145,7 @@ async function Tt(t, e) {
         logFeatureOk("agent_proxy_tool_scoped", { git_config: ie, gh_shim: Boolean(ae) });
     }
     if (
-      (n(`[agent-proxy] enabled on 127.0.0.1:${P.port}`),
+      (logForDebugging(`[agent-proxy] enabled on 127.0.0.1:${P.port}`),
       logFeatureOk("agent_proxy_init", { attempts: e }),
       setAgentProxyNote(xe(m, void 0)),
       Ae(X, Gn(P.port, m), "utf8")
@@ -2155,7 +2155,7 @@ async function Tt(t, e) {
         })
         .catch((C) => {
           if (
-            (n(
+            (logForDebugging(
               `[agent-proxy] README write failed: ${C instanceof Error ? C.message : String(C)}`,
             ),
             o.state !== H)
@@ -2167,7 +2167,7 @@ async function Tt(t, e) {
         .then((C) => {
           if (C.length > 0 && o.state === H)
             ((H.gitConfigConflicts = C),
-              n(
+              logForDebugging(
                 `[agent-proxy] git config may defeat proxy routing: ${C.join(", ")}`,
                 { level: "warn" },
               ));
@@ -2189,13 +2189,13 @@ async function Tt(t, e) {
           if (C.javaTrustStorePath) H.javaTrustStorePath = C.javaTrustStorePath;
           if (C.profileDPath) {
             let ie = C.profileDPath;
-            Et(() => Ce(ie).catch(() => {}));
+            registerCleanup(() => Ce(ie).catch(() => {}));
           }
           if (C.failureCodes.length > 0)
             H.toolTrustFailureCodes = C.failureCodes;
         })
         .catch((C) => {
-          (n(
+          (logForDebugging(
             `[agent-proxy] tool trust setup failed: ${C instanceof Error ? C.message : String(C)}`,
             { level: "warn" },
           ),
@@ -2203,12 +2203,12 @@ async function Tt(t, e) {
         });
     if (u)
       await Ce(u).catch(() => {
-        n("[agent-proxy] token file unlink failed", { level: "warn" });
+        logForDebugging("[agent-proxy] token file unlink failed", { level: "warn" });
       });
     return { outcome: "ok" };
   } catch (G) {
     return (
-      n(
+      logForDebugging(
         `[agent-proxy] relay start failed: ${G instanceof Error ? G.message : String(G)}; proxy disabled`,
         { level: "warn" },
       ),
@@ -2221,7 +2221,7 @@ var Re = [
     {
       clis: ["gh"],
       realCredentialEnv: ["GH_TOKEN", "GITHUB_TOKEN"],
-      placeholders: { GH_TOKEN: o6, GITHUB_TOKEN: o6 },
+      placeholders: { GH_TOKEN: PLACEHOLDER_CREDENTIAL_VALUE, GITHUB_TOKEN: PLACEHOLDER_CREDENTIAL_VALUE },
     },
     {
       clis: ["aws"],
@@ -2237,7 +2237,7 @@ var Re = [
         "AWS_CONTAINER_CREDENTIALS_RELATIVE_URI",
         "AWS_CONTAINER_CREDENTIALS_FULL_URI",
       ],
-      placeholders: { AWS_ACCESS_KEY_ID: o6, AWS_SECRET_ACCESS_KEY: o6 },
+      placeholders: { AWS_ACCESS_KEY_ID: PLACEHOLDER_CREDENTIAL_VALUE, AWS_SECRET_ACCESS_KEY: PLACEHOLDER_CREDENTIAL_VALUE },
     },
     {
       clis: ["gcloud", "bq", "gsutil"],
@@ -2245,7 +2245,7 @@ var Re = [
         "CLOUDSDK_AUTH_ACCESS_TOKEN",
         "GOOGLE_APPLICATION_CREDENTIALS",
       ],
-      placeholders: { CLOUDSDK_AUTH_ACCESS_TOKEN: o6 },
+      placeholders: { CLOUDSDK_AUTH_ACCESS_TOKEN: PLACEHOLDER_CREDENTIAL_VALUE },
     },
   ],
   dt = Re.flatMap((t) => t.clis).sort(),
@@ -2319,7 +2319,7 @@ async function kn(t, e) {
   let o = process.env.GIT_CONFIG_GLOBAL;
   if (!o)
     return (
-      n(
+      logForDebugging(
         "[agent-proxy] governed git config arm set but GIT_CONFIG_GLOBAL is unset; skipping (refusing to write a shared global config)",
         { level: "warn" },
       ),
@@ -2327,7 +2327,7 @@ async function kn(t, e) {
     );
   if (/[\n\r"]/.test(e))
     return (
-      n(
+      logForDebugging(
         "[agent-proxy] governed git: CA bundle path contains a newline or quote; skipping git config arm",
         { level: "warn" },
       ),
@@ -2376,7 +2376,7 @@ async function kn(t, e) {
 `,
       384,
     ),
-    n(`[agent-proxy] governed git: relay routing for ${GITHUB_HOST} appended to ${o}`),
+    logForDebugging(`[agent-proxy] governed git: relay routing for ${GITHUB_HOST} appended to ${o}`),
     !0
   );
 }
@@ -2396,7 +2396,7 @@ async function Dn() {
   try {
     await withTimeout($nt(dt, t), xt, "installed-CLI PATH sweep timed out");
   } catch (e) {
-    (n(`[agent-proxy] ${l(e)}; naming only the CLIs resolved so far`, {
+    (logForDebugging(`[agent-proxy] ${l(e)}; naming only the CLIs resolved so far`, {
       level: "warn",
     }),
       logFeatureSad("agent_proxy_init", "agent_proxy_path_probe_timeout"));
@@ -2407,11 +2407,11 @@ async function In(t, e) {
   let o = I(e, "..", "bin"),
     r = await withTimeout(Nn("gh", o), xt, "gh PATH probe timed out");
   if (!r) {
-    n("[agent-proxy] governed git: gh not found on PATH; skipping gh shim");
+    logForDebugging("[agent-proxy] governed git: gh not found on PATH; skipping gh shim");
     return;
   }
   if (r.includes("'") || e.includes("'")) {
-    n(
+    logForDebugging(
       "[agent-proxy] governed git: path contains a single quote; skipping gh shim",
       { level: "warn" },
     );
@@ -2492,14 +2492,14 @@ fi
 HTTPS_PROXY='${s}' https_proxy='${s}' \\
 NO_PROXY='' no_proxy='' \\
 SSL_CERT_FILE='${e}' \\
-GH_TOKEN='${o6}' GITHUB_TOKEN='${o6}' \\
+GH_TOKEN='${PLACEHOLDER_CREDENTIAL_VALUE}' GITHUB_TOKEN='${PLACEHOLDER_CREDENTIAL_VALUE}' \\
 exec '${r}' "$@"
 `,
     c = I(o, "gh");
   return (
     await writeFileAtomic(c, p, 493),
-    Et(() => Ce(c).catch(() => {})),
-    n(`[agent-proxy] governed git: gh shim at ${c} -> ${r}`),
+    registerCleanup(() => Ce(c).catch(() => {})),
+    logForDebugging(`[agent-proxy] governed git: gh shim at ${c} -> ${r}`),
     o
   );
 }
@@ -2672,7 +2672,7 @@ async function Un(t) {
   } catch (e) {
     if (W(e)) return { existed: !1, token: null };
     return (
-      n(
+      logForDebugging(
         `[agent-proxy] token read failed: ${e instanceof Error ? e.message : String(e)}`,
         { level: "warn" },
       ),
@@ -2703,7 +2703,7 @@ async function Yn(t, e) {
       u = await te(c, "utf8");
     } catch (h) {
       if (!W(h))
-        n(
+        logForDebugging(
           `[agent-proxy] could not read customer CA bundle from ${p}: ${h instanceof Error ? h.message : String(h)}`,
           { level: "warn" },
         );
@@ -2720,7 +2720,7 @@ ${h}`),
         m++);
     }
     if (m > 0)
-      n(
+      logForDebugging(
         `[agent-proxy] folded ${m} customer CA cert(s) from ${p} into the relay bundle`,
       );
   }
@@ -2752,16 +2752,16 @@ async function jn(t, e) {
         );
       });
       if (p === 0) {
-        (n(`[agent-proxy] CA installed to system trust via ${s[0]}`),
+        (logForDebugging(`[agent-proxy] CA installed to system trust via ${s[0]}`),
           logFeatureOk("agent_proxy_system_trust"));
         return;
       }
-      n(`[agent-proxy] ${s[0]} exited ${p}; falling back to env-var trust`, {
+      logForDebugging(`[agent-proxy] ${s[0]} exited ${p}; falling back to env-var trust`, {
         level: "warn",
       });
     } catch (p) {
       if (W(p)) continue;
-      n(
+      logForDebugging(
         `[agent-proxy] system trust install via ${o} failed: ${p instanceof Error ? p.message : String(p)}`,
         { level: "warn" },
       );
@@ -2822,7 +2822,7 @@ s3 =
       ));
   } catch (e) {
     if (A(e) === "EEXIST") return;
-    n(
+    logForDebugging(
       `[agent-proxy] aws config write failed: ${e instanceof Error ? e.message : String(e)}`,
       { level: "warn" },
     );

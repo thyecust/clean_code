@@ -10,8 +10,8 @@
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { fetchOAuthProfileWithToken, getClaudeAIOAuthTokens, isClaudeAISubscriber, getOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
+import { withAutoResumeRecheck } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import { runPostLoginHooks, loginCompletion, Login } from "../../02-功能模块/Bridge-RemoteControl/login-flow.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tryOpenUrlInBrowser } from "../核心工具-路径与平台/open-external-url.js";
 function m(t) {
@@ -21,7 +21,7 @@ async function callUpgradeCommand(t, r) {
   return callUpgradeFromSurface(t, r, "upgrade_command");
 }
 async function callUpgradeFromSurface(t, r, l) {
-  let u = R4(t),
+  let u = withAutoResumeRecheck(t),
     c = m(l);
   try {
     if (isClaudeAISubscriber()) {
@@ -54,16 +54,16 @@ async function callUpgradeFromSurface(t, r, l) {
         organizationUuid: a.organizationUuid,
       },
       p = ns();
-    return e(Kz, {
+    return e(Login, {
       startingMessage:
         "Starting new login following /upgrade. Exit with Ctrl-C to use existing account.",
       onDone: async (o, n, i) => {
-        let d = await N8(r, o, {
+        let d = await runPostLoginHooks(r, o, {
           setAppState: i,
           previousAccount: s,
           previousGatewayAuth: p,
         });
-        u(...MHe(r, o, d));
+        u(...loginCompletion(r, o, d));
       },
     });
   } catch (a) {

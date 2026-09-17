@@ -14,7 +14,7 @@ import { An, Dr, Vrt, jf, wh, $W } from "../../00-第三方库/lodash/lodash.207
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ra, R, l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { markStdoutDrainExternallyClocked } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize, truncateToCodeUnits, takeLastCodeUnits, truncateMiddle, beforeFirst, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
@@ -142,43 +142,43 @@ import {
   getAllPolicyTierSettings,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule, splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { XRe, rxn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { um, getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { nS, qZe, KD } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getInvisibleCharsPattern, escapeControlAndInvisibleChars } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { isModelAlias, getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAuthPrecedenceSource, describeProfileAuthSource, getAnthropicConfigDir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { hasCredentialDescriptor, getApiKey } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, ARTIFACT_STUB_URL_PREFIX, parseArtifactUrl, parseStubArtifactUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { DANGEROUS_FILES, DANGEROUS_DIRECTORIES, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { stripBom, parseYaml, FRONTMATTER_PATTERN } from "../MCP客户端/chunk-3kmsshb6.js";
-import { vm, lve, NC } from "./chunk-7s6mt1vg.js";
+import { formatPluginError, UNTRUSTED_PATH_REASON, classifyPathTrust } from "./plugin-system-core.js";
 import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
-import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { PLACEHOLDER_CREDENTIAL_VALUE, SSH_PLACEHOLDER_VALUE, PROXY_INJECTED_ENV_VAR_NAMES, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { readExactBytesFromHandle, WEB_FETCH_TOOL_NAME, getNoFollowOpenFlags, writeFileExclusive } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ENTER_WORKTREE_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
 import { getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { NON_INHERITED_SESSION_ENV_VARS } from "../Workflow编排/session-env-vars.js";
 import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
-import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
+import { awaitRemoteSettingsLoaded } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
 import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
 import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
 import { qit } from "../../01-核心基础设施/HTTP-网络层/HTTP-网络层.pfw3b51q.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
 import {
-  oc,
-  Y0n,
-  mm,
-  A2e,
-  J0n,
-  r7t,
-  ztt,
-  jQ,
-  o7t,
-  Q0n,
+  formatForDisplay,
+  formatValueForDisplay,
+  assertPathIsLocal,
+  findExpectViolation,
+  lintExpectSpec,
+  renderPromptTemplate,
+  EVAL_ABORTED_BY_MOCK_MESSAGE,
+  MOCK_AGENT_RESPONDER_FAILED_MESSAGE,
+  readMockFixtureFile,
+  MAX_INTERPOLATED_TEXT_CHARS,
   Rkt,
-} from "./chunk-ka6sg2f0.js";
+} from "./eval-mock-stand-in.js";
 import { computeWeightedScore, computeScoreAndPassRate, formatEvalReportTable, buildEvalReport, getEvalReportSchema, buildEvalReportJson } from "../成本-Token统计/eval-report.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -186,7 +186,7 @@ import { SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE } from "../../01-核心基础设�
 import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
 import { getFileEntryKind } from "../../01-核心基础设施/共享小工具-未细化/file-entry-kind.js";
 import { INLINE_PLUGIN_SOURCE, SKILLS_DIR_PLUGIN_SOURCE } from "./chunk-33bdfgmx.js";
-import { iR, mSn, u7e, Ure, Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { detectImageMediaType, detectBinaryFormat, describeBufferContent, readImageDimensions, buildImageBlock } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
@@ -210,7 +210,7 @@ import {
 } from "fs/promises";
 import { createHash as Fm } from "crypto";
 function Bn(e) {
-  return b(fo(e, 0)) ?? "null";
+  return jsonStringify(fo(e, 0)) ?? "null";
 }
 var cc = 64;
 function fo(e, t) {
@@ -274,10 +274,10 @@ async function $i({
 }
 function Ni(e, t, r) {
   return (
-    n(`plugin eval: agent mock responder ${e}: ${t}`, { level: "warn" }),
+    logForDebugging(`plugin eval: agent mock responder ${e}: ${t}`, { level: "warn" }),
     {
       verdict: "tool_error",
-      text: `${jQ} (${e}) \u2014 see the eval debug log`,
+      text: `${MOCK_AGENT_RESPONDER_FAILED_MESSAGE} (${e}) \u2014 see the eval debug log`,
       costUsd: r,
     }
   );
@@ -311,7 +311,7 @@ function mc(e, t, r) {
     u = 0;
   for (let h = i.length - 1; h >= 0; h--) {
     let w = i[h],
-      E = typeof w.input === "string" ? w.input : b(w.input),
+      E = typeof w.input === "string" ? w.input : jsonStringify(w.input),
       _ = `- ${w.tool}(${E}) \u2192 ${w.verdict === "ok" ? "" : `[${w.verdict}] `}${w.output}`;
     if (u + _.length > fc) break;
     (o.unshift(_), (u += _.length));
@@ -325,7 +325,7 @@ ${o.join(`
   return (
     p.push(`Current call: ${e}
 Arguments:
-${Li(b(t, null, 2) ?? "null", dc)}`),
+${Li(jsonStringify(t, null, 2) ?? "null", dc)}`),
     p.join(`
 
 `)
@@ -373,7 +373,7 @@ function Mi({
 }) {
   let d = zn("sha256")
       .update(
-        u.map((h) => b([h.tool, Bn(h.input), h.verdict, h.output])).join(`
+        u.map((h) => jsonStringify([h.tool, Bn(h.input), h.verdict, h.output])).join(`
 `),
       )
       .digest("hex"),
@@ -411,7 +411,7 @@ async function Fi(e, t = []) {
   let r = Object.create(null),
     i = Tt.dirname(Tt.dirname(e));
   try {
-    await mm(i, Tt.relative(i, e), "mock replay recordings");
+    await assertPathIsLocal(i, Tt.relative(i, e), "mock replay recordings");
   } catch {
     return r;
   }
@@ -435,7 +435,7 @@ async function Fi(e, t = []) {
 async function Ui(e, t) {
   try {
     let r = Tt.dirname(Tt.dirname(e));
-    await mm(r, Tt.relative(r, Tt.join(e, t)), "mock replay recording");
+    await assertPathIsLocal(r, Tt.relative(r, Tt.join(e, t)), "mock replay recording");
     let i = await openFileReadOnlyHardened(Tt.join(e, t));
     if (!i.ok) return null;
     let o = i.value;
@@ -788,7 +788,7 @@ async function Pt(e, t, r) {
   return (await Oc(e, t, r))?.toString("utf8") ?? null;
 }
 async function Oc(e, t, r) {
-  await mm(Ve.dirname(e), Ve.basename(e), r);
+  await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), r);
   let i;
   try {
     i = await kc(e, Xi.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : Xi.O_NONBLOCK));
@@ -852,7 +852,7 @@ async function Zi(e) {
 async function Ac(e) {
   let t;
   try {
-    (await mm(Ve.dirname(e), Ve.basename(e), "graders/"),
+    (await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), "graders/"),
       (t = await Rc(e, { withFileTypes: !0 })));
   } catch (o) {
     if (W(o)) {
@@ -990,7 +990,7 @@ async function xc(e, t) {
   let r = new Map(),
     i;
   try {
-    (await mm(Je.dirname(e), Je.basename(e), "mocks/"),
+    (await assertPathIsLocal(Je.dirname(e), Je.basename(e), "mocks/"),
       (i = fs(await as(e, { withFileTypes: !0 }))));
   } catch (o) {
     if (W(o)) {
@@ -1047,24 +1047,24 @@ async function Eo(e) {
 async function Mc(e, t, r) {
   let i;
   try {
-    (await mm(Je.dirname(e), t, `mocks/${oc(t)}/`),
+    (await assertPathIsLocal(Je.dirname(e), t, `mocks/${formatForDisplay(t)}/`),
       (i = fs(await as(e, { withFileTypes: !0 }))));
   } catch (p) {
     if (W(p) || (A(p) === "ENOTDIR" && (await Eo(e))))
       throw new R(
-        `mocks/${oc(t)} is a symbolic link whose target does not exist`,
+        `mocks/${formatForDisplay(t)} is a symbolic link whose target does not exist`,
         "mocks/<server>/: dangling symbolic link",
       );
     if (A(p) === "ENOTDIR") return null;
     if (p instanceof R) throw p;
     throw new R(
-      `mocks/${oc(t)}/ is unreadable (${A(p) ?? "unknown error"})`,
+      `mocks/${formatForDisplay(t)}/ is unreadable (${A(p) ?? "unknown error"})`,
       "mocks/<server>/: unreadable",
     );
   }
   if (!vo.test(t))
     throw new R(
-      `mocks/${oc(t)}/: name the directory after the server segment of the tool name (letters, digits, "_" and "-" only)`,
+      `mocks/${formatForDisplay(t)}/: name the directory after the server segment of the tool name (letters, digits, "_" and "-" only)`,
       "mocks: directory name not a tool-name segment",
     );
   if (i.length > Ir)
@@ -1086,7 +1086,7 @@ async function Mc(e, t, r) {
     let w = Je.basename(p.name, ".md");
     if (p.name !== nn && !vo.test(w))
       throw new R(
-        `mocks/${t}/${oc(p.name)}: name responder files after the tool (letters, digits, "_" and "-" only), e.g. list_issues.md`,
+        `mocks/${t}/${formatForDisplay(p.name)}: name responder files after the tool (letters, digits, "_" and "-" only), e.g. list_issues.md`,
         "mocks: tool file name not a tool-name segment",
       );
     let { responder: E, tools: _ } = await jc(h, e, t);
@@ -1144,7 +1144,7 @@ async function jc(e, t, r) {
   let w = h.data,
     E = w.expect ?? null;
   if (E !== null) {
-    let C = J0n(E);
+    let C = lintExpectSpec(E);
     if (C.length > 0) throw new R(`${i}: ${C[0]}`, "mocks: invalid expect");
   }
   if (w.tools !== void 0 && Je.basename(e) !== nn)
@@ -1227,7 +1227,7 @@ async function Fc(e, t) {
   if (i === null) return o;
   let u;
   try {
-    u = z(i);
+    u = jsonParse(i);
   } catch (h) {
     throw new R(
       `${r}: not valid JSON (${h instanceof Error ? h.message : String(h)})`,
@@ -1350,14 +1350,14 @@ function Nr(e) {
   if (u !== void 0)
     return {
       ok: !1,
-      error: `must use plain directory names (a letter or digit first, then letters, digits, . _ - @ +); ${oc(u)} is not`,
+      error: `must use plain directory names (a letter or digit first, then letters, digits, . _ - @ +); ${formatForDisplay(u)} is not`,
     };
   let d = o.at(-1);
   if (/\.(md|ya?ml|json)$/i.test(d))
-    return { ok: !1, error: `must name a directory, not a file (${oc(d)})` };
+    return { ok: !1, error: `must name a directory, not a file (${formatForDisplay(d)})` };
   for (let h of o) {
     let w = Mr(h);
-    if (w !== void 0) return { ok: !1, error: `${oc(h)} ${w}` };
+    if (w !== void 0) return { ok: !1, error: `${formatForDisplay(h)} ${w}` };
   }
   if (bs.has(o[0].toLowerCase()))
     return {
@@ -1368,7 +1368,7 @@ function Nr(e) {
   if (p !== void 0)
     return {
       ok: !1,
-      error: `must not pass through ${oc(p)}, which case discovery always skips`,
+      error: `must not pass through ${formatForDisplay(p)}, which case discovery always skips`,
     };
   return { ok: !0, dir: o.join(Ue.sep), segments: o };
 }
@@ -1551,8 +1551,8 @@ function Kc(e, t) {
       ok: !0,
       value: on(),
       warning: o.ok
-        ? `ignoring the top-level "evals" key in ${escapeUntrustedText(r.manifestPath)} \u2014 set it as "experimental": {"evals": ${oc(r.value)}} (or pass --eval-dir); using ${rt}/`
-        : `ignoring the top-level "evals" key in ${escapeUntrustedText(r.manifestPath)} \u2014 it belongs under "experimental", and its value ${oc(r.value)} ${o.error}; using ${rt}/ (fix the manifest or pass --eval-dir)`,
+        ? `ignoring the top-level "evals" key in ${escapeUntrustedText(r.manifestPath)} \u2014 set it as "experimental": {"evals": ${formatForDisplay(r.value)}} (or pass --eval-dir); using ${rt}/`
+        : `ignoring the top-level "evals" key in ${escapeUntrustedText(r.manifestPath)} \u2014 it belongs under "experimental", and its value ${formatForDisplay(r.value)} ${o.error}; using ${rt}/ (fix the manifest or pass --eval-dir)`,
     };
   }
   let i = Nr(r.value);
@@ -1560,7 +1560,7 @@ function Kc(e, t) {
     return {
       ok: !0,
       value: on(),
-      warning: `ignoring experimental.evals ${oc(r.value)} in ${escapeUntrustedText(r.manifestPath)} \u2014 it ${i.error}; using ${rt}/ (fix the manifest or pass --eval-dir)`,
+      warning: `ignoring experimental.evals ${formatForDisplay(r.value)} in ${escapeUntrustedText(r.manifestPath)} \u2014 it ${i.error}; using ${rt}/ (fix the manifest or pass --eval-dir)`,
     };
   return {
     ok: !0,
@@ -1617,7 +1617,7 @@ function Yc(e) {
     [r, i] = t(vs);
   if (r !== void 0) {
     let h = getEvalsSchema().safeParse(r);
-    if (!h.success) return { kind: "wrongType", raw: Y0n(r), manifestPath: i };
+    if (!h.success) return { kind: "wrongType", raw: formatValueForDisplay(r), manifestPath: i };
     let w = ws(h.data, i, !0);
     return w === void 0
       ? { kind: "wrongType", raw: "[]", manifestPath: i }
@@ -1628,12 +1628,12 @@ function Yc(e) {
   let d = getEvalsSchema().safeParse(o),
     p = d.success ? ws(d.data, u, !1) : void 0;
   return p === void 0
-    ? { kind: "wrongType", raw: Y0n(o), manifestPath: u, misplaced: !0 }
+    ? { kind: "wrongType", raw: formatValueForDisplay(o), manifestPath: u, misplaced: !0 }
     : { kind: "misplaced", value: p, manifestPath: u };
 }
 async function ks(e, t, r) {
   try {
-    await mm(e, Ue.relative(e, t), r);
+    await assertPathIsLocal(e, Ue.relative(e, t), r);
     let i = await Pt(t, Lr, r);
     return i === null ? { kind: "fellThrough" } : { kind: "text", text: i };
   } catch (i) {
@@ -1671,7 +1671,7 @@ async function $r(e) {
       };
     let d;
     try {
-      d = z(cs(u.text));
+      d = jsonParse(cs(u.text));
     } catch (h) {
       return { kind: "broken", manifestPath: o, reason: l(h) };
     }
@@ -1764,7 +1764,7 @@ function Co(e, t, r = t, i = []) {
   );
   if (o === void 0) return;
   let u = i.length > 0 ? ` (under ${i.join("/")}/ of that plugin)` : "";
-  return `${r.join("/")}/${u} overlaps ${o.describe ?? `the plugin's declared ${o.key} path ${oc(o.raw)}`}`;
+  return `${r.join("/")}/${u} overlaps ${o.describe ?? `the plugin's declared ${o.key} path ${formatForDisplay(o.raw)}`}`;
 }
 async function hs(e, t) {
   let r;
@@ -1778,7 +1778,7 @@ async function hs(e, t) {
     let u,
       d = Ue.join(t, ...o.relative.split("/"));
     try {
-      await mm(t, o.relative, "declared component path");
+      await assertPathIsLocal(t, o.relative, "declared component path");
     } catch {
       continue;
     }
@@ -1865,8 +1865,8 @@ async function Os(e, t) {
 function ws(e, t, r) {
   if (typeof e === "string") return e;
   if (r && e.length > 1)
-    n(
-      `plugin eval: ${escapeUntrustedText(t)} "evals" lists ${e.length} entries; using the first (${oc(e[0])}) as the case directory`,
+    logForDebugging(
+      `plugin eval: ${escapeUntrustedText(t)} "evals" lists ${e.length} entries; using the first (${formatForDisplay(e[0])}) as the case directory`,
     );
   return e[0];
 }
@@ -2286,7 +2286,7 @@ function _u(e, t = "is not owned by you") {
     a.SUDO_USER !== void 0 &&
     Hr(e) === null &&
     !xo(e)
-    ? `is not owned by root, and the sudo invoker ${oc(a.SUDO_USER)} could not be confirmed on this system (run it as yourself, without sudo)`
+    ? `is not owned by root, and the sudo invoker ${formatForDisplay(a.SUDO_USER)} could not be confirmed on this system (run it as yourself, without sudo)`
     : t;
 }
 function bu(e, t) {
@@ -2310,7 +2310,7 @@ function bn(e, t) {
 function Gr(e, t, r) {
   if (!t.reasons.has(e)) t.reasons.set(e, r);
   return (
-    n(`plugin eval: not consulting the plugin manifest in ${escapeUntrustedText(e)}: ${r}`, {
+    logForDebugging(`plugin eval: not consulting the plugin manifest in ${escapeUntrustedText(e)}: ${r}`, {
       level: "warn",
     }),
     !1
@@ -2524,7 +2524,7 @@ async function Au(e, t, r) {
     (_ === E || we(E, _)) && at.relative(E, _).split(at.sep).some(Qn);
   if (i(t, e)) return "is a symlink inside repository metadata";
   try {
-    await mm(t, at.relative(t, e), "in-tree link");
+    await assertPathIsLocal(t, at.relative(t, e), "in-tree link");
   } catch (E) {
     return `is a symlink that is refused: ${l(E)}`;
   }
@@ -2688,7 +2688,7 @@ var Uu = 1048576,
   Hs = 16,
   zs = 1e5;
 async function Ys(e, t = {}, r = {}) {
-  if (r.targetScreened !== !0) await mm(getCwd(), e, "target");
+  if (r.targetScreened !== !0) await assertPathIsLocal(getCwd(), e, "target");
   let i = r.trust ?? er(),
     {
       evalDirSegments: o = [rt],
@@ -2836,7 +2836,7 @@ async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
     _ = [];
     for (let S of e.plugins) {
       let C = ne.isAbsolute(S) ? S : ne.resolve(w, S);
-      await mm(w, S, `case ${oc(e.name)}: plugins entry`);
+      await assertPathIsLocal(w, S, `case ${formatForDisplay(e.name)}: plugins entry`);
       let L;
       try {
         L = await Ct(C);
@@ -2849,21 +2849,21 @@ async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
               .catch(() => !1));
         throw new R(
           F
-            ? `case ${oc(e.name)}: plugins entry ${oc(S)} is a symbolic link whose target does not exist`
+            ? `case ${formatForDisplay(e.name)}: plugins entry ${formatForDisplay(S)} is a symbolic link whose target does not exist`
             : N === "ENOENT" || N === "ENOTDIR"
-              ? `case ${oc(e.name)}: plugins entry ${oc(S)} does not exist`
-              : `case ${oc(e.name)}: plugins entry ${oc(S)} is unreadable (${N ?? "unknown error"})`,
+              ? `case ${formatForDisplay(e.name)}: plugins entry ${formatForDisplay(S)} does not exist`
+              : `case ${formatForDisplay(e.name)}: plugins entry ${formatForDisplay(S)} is unreadable (${N ?? "unknown error"})`,
           "plugin eval: plugins entry absent or unreadable",
         );
       }
       let D = d !== null && (L === d || Xe(L, d));
       if (!Xe(L, r) && !D)
         throw Error(
-          `case ${oc(e.name)}: plugins entry ${oc(S)} resolves to ${escapeUntrustedText(L)}, outside the containment root ${escapeUntrustedText(r)} (the enclosing plugin for a target inside one you control, else the directory you ran 'claude plugin eval' against). Only plugins under it can be loaded from case.yaml.`,
+          `case ${formatForDisplay(e.name)}: plugins entry ${formatForDisplay(S)} resolves to ${escapeUntrustedText(L)}, outside the containment root ${escapeUntrustedText(r)} (the enclosing plugin for a target inside one you control, else the directory you ran 'claude plugin eval' against). Only plugins under it can be loaded from case.yaml.`,
         );
       if (!(u && L === r) && !(d !== null && L === d) && !(await h(L)))
         throw new R(
-          `case ${oc(e.name)}: plugins entry ${oc(S)} resolves to ${escapeUntrustedText(L)}, which is not loaded: ${bn(L, o)}.`,
+          `case ${formatForDisplay(e.name)}: plugins entry ${formatForDisplay(S)} resolves to ${escapeUntrustedText(L)}, which is not loaded: ${bn(L, o)}.`,
           "plugin eval: untrusted plugins entry refused",
         );
       _.push(L);
@@ -2888,7 +2888,7 @@ async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
   };
 }
 function Ws(e, t, r) {
-  return `case ${oc(e)}: the nearest plugin, ${escapeUntrustedText(t)}, is not loaded: ${bn(t, r)} (fix its ownership/modes, or name that plugin directory itself as the target).`;
+  return `case ${formatForDisplay(e)}: the nearest plugin, ${escapeUntrustedText(t)}, is not loaded: ${bn(t, r)} (fix its ownership/modes, or name that plugin directory itself as the target).`;
 }
 function Xe(e, t) {
   return e === t || we(t, e);
@@ -3144,7 +3144,7 @@ async function Wr(e, t, r = "tree", i) {
 async function zu(e, t) {
   try {
     return (
-      await mm(e, t.join(ne.sep), "eval directory"),
+      await assertPathIsLocal(e, t.join(ne.sep), "eval directory"),
       await Ct(ne.join(e, ...t))
     );
   } catch {
@@ -3172,7 +3172,7 @@ async function ea(e, t, r) {
     if (u.toLowerCase() !== d.toLowerCase()) break;
     let p = ne.join(e, ...i.slice(0, o));
     try {
-      await mm(p, d, "eval directory");
+      await assertPathIsLocal(p, d, "eval directory");
     } catch {
       break;
     }
@@ -3249,14 +3249,14 @@ async function ta(e, t, r, i, o, u) {
     p = o || !u.routeIndependent || i === 0,
     h = (S) => {
       if (p) d(t, e, S);
-      else n(`plugin eval: ${escapeUntrustedText(e)}: ${S}`);
+      else logForDebugging(`plugin eval: ${escapeUntrustedText(e)}: ${S}`);
     };
   if (i > Hs) {
     let S = `nested more than ${Hs} directories below the target by this route \u2014 not scanned from here (move the suite higher, or target it directly)`;
     if (p) {
       let C = `${o ? "suite" : "tree"}:${t}`;
       if (!u.deferredCuts.has(C)) u.deferredCuts.set(C, { file: e, error: S });
-    } else n(`plugin eval: ${escapeUntrustedText(e)}: ${S}`);
+    } else logForDebugging(`plugin eval: ${escapeUntrustedText(e)}: ${S}`);
     return;
   }
   let w;
@@ -3282,7 +3282,7 @@ async function ta(e, t, r, i, o, u) {
   if (_ === void 0 || i < _) u.listedAt.set(E, i);
   if (o && w.some((S) => !S.isDirectory() && Nt(S.name))) {
     if (u.foundReal.has(t)) {
-      n(
+      logForDebugging(
         `plugin eval: ${escapeUntrustedText(e)} is the same case directory as one already found \u2014 counted once`,
       );
       return;
@@ -3291,7 +3291,7 @@ async function ta(e, t, r, i, o, u) {
     return;
   }
   if (o && i > 0 && !u.opensEvalDir(e))
-    n(
+    logForDebugging(
       `plugin eval: ${escapeUntrustedText(e)} has no prompt.md or case.yaml \u2014 not a case; scanning its subdirectories`,
     );
   u.onRoute.add(E);
@@ -3321,7 +3321,7 @@ async function ta(e, t, r, i, o, u) {
           (!u.routeIndependent && u.mayLeadToEvalDir(C))
         )
           d(`${t}${ne.sep}${S.name}`, C, N);
-        else n(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
+        else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
         continue;
       }
       let D = ne.join(t, S.name),
@@ -3333,10 +3333,10 @@ async function ta(e, t, r, i, o, u) {
             (!u.routeIndependent && u.mayLeadToEvalDir(C)),
           F = (K) => {
             if (N) d(`${t}${ne.sep}${S.name}`, C, K);
-            else n(`plugin eval: ${escapeUntrustedText(C)}: ${K}`);
+            else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${K}`);
           };
         try {
-          await mm(e, S.name, "plugin eval");
+          await assertPathIsLocal(e, S.name, "plugin eval");
         } catch (K) {
           F(l(K));
           continue;
@@ -3378,7 +3378,7 @@ async function ta(e, t, r, i, o, u) {
             (U || u.routeIndependent) &&
             u.onRoute.has(`${U ? "suite" : "tree"}:${D}`)
           ) {
-            n(
+            logForDebugging(
               `plugin eval: ${escapeUntrustedText(C)} links back into a directory on the current route \u2014 not followed again`,
             );
             continue;
@@ -3390,13 +3390,13 @@ async function ta(e, t, r, i, o, u) {
       if (Vrt(D) || Vrt(C)) {
         let N = `${S.name} is an automounter map directory \u2014 not scanned (listing it would reach network hosts)`;
         if (U || !u.routeIndependent) d(`${t}${ne.sep}${S.name}`, C, N);
-        else n(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
+        else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
         continue;
       }
       if (U || u.routeIndependent) {
         let N = u.listedAt.get(`${U ? "suite" : "tree"}:${D}`);
         if (N !== void 0 && N <= i + 1) {
-          n(
+          logForDebugging(
             `plugin eval: ${escapeUntrustedText(C)} was already listed by another route at this depth or shallower \u2014 not walked again`,
           );
           continue;
@@ -3436,7 +3436,7 @@ async function ra() {
     await cn(p, { recursive: !0, mode: 448 }),
     await tr(
       ne.join(i, ".claude.json"),
-      b({
+      jsonStringify({
         hasCompletedOnboarding: !0,
         autoUpdates: !1,
         bypassPermissionsModeAccepted: !1,
@@ -3522,7 +3522,7 @@ function Ks(e) {
 }
 async function ed(e, t) {
   try {
-    await mm(e, t, "plugin eval");
+    await assertPathIsLocal(e, t, "plugin eval");
   } catch {
     return !1;
   }
@@ -3563,7 +3563,7 @@ async function ca(e) {
       p = (await discoverPluginMcpServers(o, d)) ?? {};
     if (d.length > 0)
       throw new R(
-        `mocks: could not enumerate the MCP servers ${o.name} declares \u2014 ${d.map(vm).join("; ")}`,
+        `mocks: could not enumerate the MCP servers ${o.name} declares \u2014 ${d.map(formatPluginError).join("; ")}`,
         "mocks: plugin MCP servers unreadable",
       );
     for (let h of Object.keys(prefixPluginMcpServerNames(p, o.name, o.source, r))) {
@@ -3710,7 +3710,7 @@ function fa(e) {
         ),
         agent: e.agent,
       },
-      E = b({
+      E = jsonStringify({
         ...w,
         responders: Si(w.responders, (_) => {
           if (_.kind !== "agent") return _;
@@ -3728,7 +3728,7 @@ function fa(e) {
   }
   return {
     configPath: En.join(e.outDir, Vo),
-    configJson: b({ mcpServers: i }),
+    configJson: jsonStringify({ mcpServers: i }),
     stdioConfigs: i,
     specs: o,
     callLogPath: r,
@@ -3791,7 +3791,7 @@ function la(e, t) {
 import ud from "path";
 function ma(e) {
   let t = getCwd();
-  return mm(t, ud.resolve(t, e), "target", [getClaudeConfigDir()]);
+  return assertPathIsLocal(t, ud.resolve(t, e), "target", [getClaudeConfigDir()]);
 }
 import { constants as Kr } from "fs";
 import {
@@ -3942,7 +3942,7 @@ async function wa() {
 }
 function md() {
   return (
-    nS() === "env-quad" &&
+    getAuthPrecedenceSource() === "env-quad" &&
     !a.ANTHROPIC_API_KEY &&
     !a.ANTHROPIC_AUTH_TOKEN &&
     !a.ANTHROPIC_UNIX_SOCKET
@@ -3955,7 +3955,7 @@ async function gd() {
   } catch (t) {
     return {
       ok: !1,
-      message: `workload identity federation is configured (${qZe()}) but could not be set up: ${l(t)}`,
+      message: `workload identity federation is configured (${describeProfileAuthSource()}) but could not be set up: ${l(t)}`,
     };
   }
   if (e === null) return { ok: !0 };
@@ -3970,7 +3970,7 @@ async function gd() {
     );
   } catch (t) {
     let r = t instanceof Ra ? t.statusCode : null,
-      i = `workload identity federation could not obtain an access token (${qZe()})${r === null ? "" : ` [HTTP ${r}]`}: ${l(t)}`;
+      i = `workload identity federation could not obtain an access token (${describeProfileAuthSource()})${r === null ? "" : ` [HTTP ${r}]`}: ${l(t)}`;
     if (
       (r !== null && (r >= 500 || r === 429 || r === 408)) ||
       (r === null && hd.test(l(t)))
@@ -4007,7 +4007,7 @@ async function _a(e, t) {
         w;
       if (h.expiresAt < p)
         ((w = `gateway session expires in ~${Math.max(0, Math.floor((h.expiresAt - Date.now()) / 60000))} min, before this run's ${t}s timeout; a long run may lose auth part-way${h.idpRefreshToken ? "" : " (run /login to renew)"}`),
-          n(`[eval] ${w}`, { level: "warn" }));
+          logForDebugging(`[eval] ${w}`, { level: "warn" }));
       return {
         kind: "gateway",
         url: h.url,
@@ -4044,7 +4044,7 @@ async function _a(e, t) {
       return null;
     if (i.expiresAt !== null && i.expiresAt < o)
       ((u = `login token expires in ~${Math.max(0, Math.floor((i.expiresAt - Date.now()) / 60000))} min, before this run's ${t}s timeout; a long run may lose auth part-way (run /login to renew)`),
-        n(`[eval] ${u}`, { level: "warn" }));
+        logForDebugging(`[eval] ${u}`, { level: "warn" }));
   }
   return {
     kind: "oauth",
@@ -4199,7 +4199,7 @@ async function Sa(e, t) {
 `)) {
     if (!u.trim()) continue;
     try {
-      let d = vd().safeParse(z(u));
+      let d = vd().safeParse(jsonParse(u));
       if (d.success && d.data.nonce === t) o.push(d.data);
     } catch {}
   }
@@ -4212,7 +4212,7 @@ async function Ta(e, t) {
 `)) {
     if (!o.includes('"ready"')) continue;
     try {
-      let u = Ed().safeParse(z(o));
+      let u = Ed().safeParse(jsonParse(o));
       if (u.success && u.data.ready === t) r.add(u.data.server);
     } catch {}
   }
@@ -4330,7 +4330,7 @@ async function Pd(e, t) {
           "eval: stub publish staging dir missing",
         );
       throw (
-        n(`eval: cannot examine ${r}: ${l(o)}`, { level: "warn" }),
+        logForDebugging(`eval: cannot examine ${r}: ${l(o)}`, { level: "warn" }),
         new R(
           `the run's artifact-publish staging directory could not be examined (${A(o) ?? "unknown error"})`,
           "eval: stub publish staging dir unreadable",
@@ -4370,7 +4370,7 @@ async function Pd(e, t) {
     throw (
       await ln(r, { harnessOwned: !0 }),
       await Gt(r, { recursive: !0, force: !0 }),
-      n(`eval: stub publish index failed: ${l(o)}`, { level: "warn" }),
+      logForDebugging(`eval: stub publish index failed: ${l(o)}`, { level: "warn" }),
       new R(
         `the run's artifact publishes could not be indexed (${o instanceof R ? o.message : (A(o) ?? "unexpected error")}), so they were discarded and the run is an error`,
         "eval: stub publish index failed",
@@ -4515,8 +4515,8 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
           let Ke = re.slice(0, ve).trim();
           if (((re = re.slice(ve + 1)), !Ke)) continue;
           try {
-            let ot = z(Ke);
-            if ((de.push(ot), S)) n(`eval trace: ${ot.type}`);
+            let ot = jsonParse(Ke);
+            if ((de.push(ot), S)) logForDebugging(`eval trace: ${ot.type}`);
             if (Ie !== null && Te === null)
               ue.push(
                 Promise.resolve(Ie(ot)).then(
@@ -4524,7 +4524,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
                     if (Re !== null && Te === null) ((Te = Re), lt());
                   },
                   (Re) => {
-                    n(`eval: mock watch failed: ${Re}`, { level: "error" });
+                    logForDebugging(`eval: mock watch failed: ${Re}`, { level: "error" });
                   },
                 ),
               );
@@ -4545,7 +4545,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
       ((ve.killedInFlight = _e || Ye || He),
         Zr(
           i,
-          de.map((Ke) => b(Ke)).join(`
+          de.map((Ke) => jsonStringify(Ke)).join(`
 `),
         )
           .catch(() => {})
@@ -4589,14 +4589,14 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
                     (ve.error = null));
                 ve.mockTally = sf(ve.toolCalls, C);
               } catch (Ke) {
-                n(`eval: reading mock call log failed: ${Ke}`, {
+                logForDebugging(`eval: reading mock call log failed: ${Ke}`, {
                   level: "error",
                 });
               }
             try {
               if (_) ve.artifactPublishes.push(...(await Pd(h, Bf(de))));
             } catch (Ke) {
-              (n(`eval: folding stub publishes failed: ${Ke}`, {
+              (logForDebugging(`eval: folding stub publishes failed: ${Ke}`, {
                 level: "error",
               }),
                 K(Ke));
@@ -4856,7 +4856,7 @@ async function $d(e, t, r, i, o, u, d) {
   let Te =
       _("ANTHROPIC_CONFIG_DIR")?.trim() ||
       process.env.ANTHROPIC_CONFIG_DIR?.trim() ||
-      KD() ||
+      getAnthropicConfigDir() ||
       "",
     ue = k.join(ja(), "anthropic"),
     Ie = dedupe([ue, Te].filter((I) => I && k.isAbsolute(I))),
@@ -5384,7 +5384,7 @@ async function $d(e, t, r, i, o, u, d) {
       credentials: {
         envVars: dedupe([...collectCredentialEnvVarNames(o), ...Vd, ...Cp(o)])
           .filter((I) => !(Object.hasOwn(S, I) && o[I] === S[I]))
-          .filter((I) => !(qit.includes(I) && o[I] === o6))
+          .filter((I) => !(qit.includes(I) && o[I] === PLACEHOLDER_CREDENTIAL_VALUE))
           .map((I) => ({ name: I, mode: "deny" })),
         files: pe.map((I) => ({ path: sr(I), mode: "deny" })),
       },
@@ -5401,7 +5401,7 @@ async function $d(e, t, r, i, o, u, d) {
       mode: "deny",
     }));
   }
-  await Zr(k.join(e.configDir, "settings.json"), b(Se, null, 2), {
+  await Zr(k.join(e.configDir, "settings.json"), jsonStringify(Se, null, 2), {
     flag: "wx",
   });
 }
@@ -5520,12 +5520,12 @@ function ht(e, t) {
   );
 }
 async function nl(e, t) {
-  let r = `case "${oc(e.name)}"`,
+  let r = `case "${formatForDisplay(e.name)}"`,
     i = e.evalDirSegments ?? [rt],
     o = (j, B) => we(j, B),
     u = (j, B) => j === B || o(j, B),
     d = async (j) => (
-      await mm(k.dirname(j), k.basename(j), r),
+      await assertPathIsLocal(k.dirname(j), k.basename(j), r),
       mt(j).catch((B) => {
         let Z = A(B);
         if (Z === "ENOENT") return j;
@@ -5570,14 +5570,14 @@ async function nl(e, t) {
       for (let ae of Z)
         if (ae.name.includes("\uFFFD"))
           throw new R(
-            `${r}: "${oc(ae.name)}" under a plugin or eval directory is not a valid UTF-8 name (or imitates one that is not) \u2014 rename or remove it`,
+            `${r}: "${formatForDisplay(ae.name)}" under a plugin or eval directory is not a valid UTF-8 name (or imitates one that is not) \u2014 rename or remove it`,
             "eval tree has undecodable name",
           );
       return Z;
     },
     D = (j, B) => {
       throw new R(
-        `${r}: cannot list "${oc(k.relative(B, j) || ".")}" under a plugin or eval directory \u2014 make it readable or remove it`,
+        `${r}: cannot list "${formatForDisplay(k.relative(B, j) || ".")}" under a plugin or eval directory \u2014 make it readable or remove it`,
         "eval directory unlistable",
       );
     },
@@ -5800,7 +5800,7 @@ async function nl(e, t) {
           let Se = await getFileEntryKind(je, pe, "unknown");
           if (Se === "unknown")
             throw new R(
-              `${r}: cannot tell what "${oc(je.name)}" under the eval directory is \u2014 make it readable or remove it`,
+              `${r}: cannot tell what "${formatForDisplay(je.name)}" under the eval directory is \u2014 make it readable or remove it`,
               "eval case tree entry unclassifiable",
             );
           let I = Z ? Te.some((q) => u(q, pe)) : ve(pe);
@@ -5809,7 +5809,7 @@ async function nl(e, t) {
             let q = await d(pe);
             if (q === pe)
               throw new R(
-                `${r}: "${oc(je.name)}" under the eval directory is a symbolic link whose target cannot be resolved \u2014 remove it or point it at an existing file`,
+                `${r}: "${formatForDisplay(je.name)}" under the eval directory is a symbolic link whose target cannot be resolved \u2014 remove it or point it at an existing file`,
                 "eval suite link unresolvable",
               );
             if (Te.includes(q)) continue;
@@ -5819,14 +5819,14 @@ async function nl(e, t) {
             if (!ke.isDirectory()) {
               if ((jt(pe), ke.nlink > 1))
                 throw new R(
-                  `${r}: "${oc(k.relative(j, pe))}" under the eval directory links to a file with ${ke.nlink} names \u2014 case definitions must not be reachable by another name`,
+                  `${r}: "${formatForDisplay(k.relative(j, pe))}" under the eval directory links to a file with ${ke.nlink} names \u2014 case definitions must not be reachable by another name`,
                   "eval suite links to hard-linked file",
                 );
               jt(q);
               continue;
             }
             throw new R(
-              `${r}: "${oc(je.name)}" under the eval directory is a symbolic link to a directory \u2014 case definitions must be plain files and directories`,
+              `${r}: "${formatForDisplay(je.name)}" under the eval directory is a symbolic link to a directory \u2014 case definitions must be plain files and directories`,
               "eval case tree contains a symlink",
             );
           }
@@ -5834,8 +5834,8 @@ async function nl(e, t) {
           else if (Se === "file" && (await p(pe)) > 1)
             throw new R(
               I
-                ? `${r}: "${oc(k.relative(j, pe))}" inside an add_dir has more than one hard link \u2014 fixtures must be plain copies`
-                : `${r}: "${oc(je.name)}" under the eval directory has more than one hard link \u2014 case definitions must not be reachable by another name`,
+                ? `${r}: "${formatForDisplay(k.relative(j, pe))}" inside an add_dir has more than one hard link \u2014 fixtures must be plain copies`
+                : `${r}: "${formatForDisplay(je.name)}" under the eval directory has more than one hard link \u2014 case definitions must not be reachable by another name`,
               I
                 ? "eval add_dir file hard-linked"
                 : "eval case file hard-linked",
@@ -5878,7 +5878,7 @@ async function nl(e, t) {
               Se = await d(pe);
             if (Se !== pe && !F.some((q) => u(q, Se)) && B === "plugin")
               throw new R(
-                `${r}: ${oc(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
+                `${r}: ${formatForDisplay(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
                 "eval nested suite link escapes plugin",
               );
             let I = (q) => !u(ge, q) || Ze.some((ke) => u(ke, q));
@@ -5936,7 +5936,7 @@ async function nl(e, t) {
             let I = await d(pe);
             if (B === "plugin" && !F.some((q) => u(q, I)))
               throw new R(
-                `${r}: ${oc(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
+                `${r}: ${formatForDisplay(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
                 "eval suite link leaves the plugin",
               );
             if (!F.some((q) => u(q, I))) Me(I);
@@ -6126,10 +6126,10 @@ async function Da(e, t = "plugin eval", r = [], i) {
         "eval vcs metadata unresolvable",
       );
     },
-    u = async (D) => (await mm(k.dirname(D), k.basename(D), t), mt(D).catch(o)),
+    u = async (D) => (await assertPathIsLocal(k.dirname(D), k.basename(D), t), mt(D).catch(o)),
     d = (await u(e)) ?? e,
     p = [k.join(d, ".git")],
-    h = async (D, U) => (await mm(D, U, t), mt(k.resolve(D, U)).catch(o)),
+    h = async (D, U) => (await assertPathIsLocal(D, U, t), mt(k.resolve(D, U)).catch(o)),
     w = (D) => {
       if ([d, ...r].every((U) => D !== U && !we(U, D) && !we(D, U))) p.push(D);
       else if (D !== d && !we(D, d)) i?.(D);
@@ -6345,7 +6345,7 @@ function fn(e, t) {
   for (let i of e.split(/[\\/]/))
     if (i !== i.trim())
       throw new R(
-        `${t} directory name "${oc(i)}" starts or ends with whitespace, which cannot be scoped safely in a permission rule \u2014 rename it`,
+        `${t} directory name "${formatForDisplay(i)}" starts or ends with whitespace, which cannot be scoped safely in a permission rule \u2014 rename it`,
         "eval path segment has edge whitespace",
       );
   let r = getCurrentPlatform() === "windows" ? e.replaceAll("\\", "/") : e;
@@ -6357,7 +6357,7 @@ function fn(e, t) {
   if (Pa.test(r)) {
     let i = r.split("/").find((o) => Pa.test(o)) ?? "";
     throw new R(
-      `${t} directory name "${oc(i)}" contains a character that cannot be scoped safely in a permission rule (one of ( ) [ ] { } * ? ! # or a backslash) \u2014 rename it`,
+      `${t} directory name "${formatForDisplay(i)}" contains a character that cannot be scoped safely in a permission rule (one of ( ) [ ] { } * ? ! # or a backslash) \u2014 rename it`,
       "eval path unsafe for permission rule",
     );
   }
@@ -6451,7 +6451,7 @@ var Wd = ["hooks", "config", "commondir"],
     "NPM_CONFIG_HTTPS_PROXY",
     "NPM_CONFIG_HTTP_PROXY",
     "YARN_PROXY",
-    ...rAn.filter((e) => e !== "JAVA_TOOL_OPTIONS"),
+    ...PROXY_INJECTED_ENV_VAR_NAMES.filter((e) => e !== "JAVA_TOOL_OPTIONS"),
   ]),
   Ma = new Set([
     "drvfs",
@@ -6588,7 +6588,7 @@ function Qd(e) {
     o = new Set(),
     u = new Set(),
     d = 0,
-    p = `${ztt} ${e.nonce}:`;
+    p = `${EVAL_ABORTED_BY_MOCK_MESSAGE} ${e.nonce}:`;
   return (h) => {
     if (h.type === "system" && h.subtype === "init") return ef(h, e);
     for (let w of eo(h)) {
@@ -6602,7 +6602,7 @@ function Qd(e) {
           if ((o.add(E.id), i.has(E.name))) u.add(E.id);
           let _ = r.get(E.name);
           if (_) {
-            let S = A2e(E.input, _.expect);
+            let S = findExpectViolation(E.input, _.expect);
             if (S !== null)
               return {
                 kind: "abort",
@@ -6695,7 +6695,7 @@ function tf(e) {
     : { server: "?", tool: "?", reason: e };
 }
 function nf(e, t) {
-  let r = `${ztt} ${t.nonce}:`,
+  let r = `${EVAL_ABORTED_BY_MOCK_MESSAGE} ${t.nonce}:`,
     i = new Map();
   for (let o of t.servers)
     for (let u of o.tools) {
@@ -6819,7 +6819,7 @@ async function Qr(e, t) {
   return ci(e.caseDir, t, `case "${e.name}"`, "case directory");
 }
 async function ci(e, t, r, i) {
-  await mm(e, t, r);
+  await assertPathIsLocal(e, t, r);
   let o = k.resolve(e, t),
     u = await mt(e).catch(() => k.resolve(e)),
     d = k.resolve(u, t);
@@ -6922,7 +6922,7 @@ var cf = [
     "GIT_SSL_CAPATH",
     "_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL",
     ...Object.keys(NONINTERACTIVE_GIT_ENV),
-    ...rAn.map((e) => e.toUpperCase()),
+    ...PROXY_INJECTED_ENV_VAR_NAMES.map((e) => e.toUpperCase()),
     ...CA_BUNDLE_ENV_VARS,
     ...Object.keys(SYSTEM_CA_TRUST_ENV_DEFAULTS),
     "GOOGLE_APPLICATION_CREDENTIALS",
@@ -7204,7 +7204,7 @@ async function If(e, t) {
     try {
       await symlink(o, u, "junction");
     } catch (d) {
-      n(
+      logForDebugging(
         `[eval] could not link ${i} into the sandbox home (${A(d) ?? "unknown"}); an SSO-cached login will not reach the child`,
         { level: A(d) === "EEXIST" ? "debug" : "warn" },
       );
@@ -7215,17 +7215,17 @@ var Pf = 3,
   sl = "claude-eval-auth-",
   Df = 7200000;
 async function Nf(e) {
-  await _ee();
+  await awaitRemoteSettingsLoaded();
   let t = getRemoteManagedSettingsSyncFromCache();
   if (!t && isRemoteSettingsEligible())
-    n(
+    logForDebugging(
       "[eval] no cached organization policy to hand the child (the managed-settings fetch has not produced one); a child that cannot fetch runs without the remote-managed tier",
       { level: "warn" },
     );
   let r = (t && extractManagedSettings(t)) ?? {},
     i = { ...expandMcpPolicyPredicates(r), managedSourcesBehavior: "merge" },
     o = k.join(e.configDir, fi),
-    u = b(i);
+    u = jsonStringify(i);
   try {
     await Zr(o, u, { mode: 384, flag: "wx" });
   } catch (d) {
@@ -7273,7 +7273,7 @@ async function $f(e) {
   try {
     await Zr(
       i,
-      b(
+      jsonStringify(
         e.kind === "gateway"
           ? { gatewayToken: e.jwt }
           : {
@@ -7341,7 +7341,7 @@ function Mf(e, t, r, i, o = !1) {
     w = h.size > 0;
   for (let D of Object.keys(p)) {
     let U = D.toUpperCase();
-    if (qit.includes(D) && p[D] === o6) continue;
+    if (qit.includes(D) && p[D] === PLACEHOLDER_CREDENTIAL_VALUE) continue;
     if (
       !bf(D) ||
       h.has(U) ||
@@ -7354,7 +7354,7 @@ function Mf(e, t, r, i, o = !1) {
       delete p[D];
   }
   for (let D of ["CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_API_KEY"])
-    if (p.ANTHROPIC_UNIX_SOCKET && process.env[D] === CJe) p[D] = CJe;
+    if (p.ANTHROPIC_UNIX_SOCKET && process.env[D] === SSH_PLACEHOLDER_VALUE) p[D] = SSH_PLACEHOLDER_VALUE;
   let E = { ...p, ...e.execution.env, ...u };
   (lf(E),
     (E.GIT_CONFIG_NOSYSTEM = "1"),
@@ -7379,7 +7379,7 @@ function Mf(e, t, r, i, o = !1) {
       }),
     };
   for (let [D, U] of Object.entries(C)) if (!S.has(D)) E[D] = U;
-  if (nS() === "env-quad") {
+  if (getAuthPrecedenceSource() === "env-quad") {
     let D = getFederationCacheDir();
     if (D !== null) E.CLAUDE_CODE_FEDERATION_CACHE_DIR = D;
   }
@@ -7404,7 +7404,7 @@ function Mf(e, t, r, i, o = !1) {
       ((E.CLAUDE_CODE_EVAL_ARTIFACT_STUB_DIR = gr(t)),
       i && Object.keys(i).length > 0)
     )
-      E.CLAUDE_INTERNAL_FC_OVERRIDES = b(i);
+      E.CLAUDE_INTERNAL_FC_OVERRIDES = jsonStringify(i);
   }
   return E;
 }
@@ -7494,7 +7494,7 @@ async function Kf(e, t) {
   } catch (o) {
     if (o instanceof R) throw o;
     throw (
-      n(`eval: cannot read stub publish dir ${e}: ${l(o)}`, { level: "warn" }),
+      logForDebugging(`eval: cannot read stub publish dir ${e}: ${l(o)}`, { level: "warn" }),
       new R(
         `the stub publish directory could not be read (${A(o) ?? "unknown error"})`,
         "eval: stub publish dir unreadable",
@@ -7534,7 +7534,7 @@ async function Kf(e, t) {
       ),
       S;
     try {
-      S = z(E);
+      S = jsonParse(E);
     } catch {
       throw _;
     }
@@ -7586,7 +7586,7 @@ async function Yf(e, t) {
     await Gt(i, { recursive: !0, force: !0 });
     return;
   }
-  await writeFileExclusive(i, b(t, null, 2));
+  await writeFileExclusive(i, jsonStringify(t, null, 2));
   let u = t.at(-1);
   if (u && u.env === "stub") {
     await ti(o);
@@ -7729,7 +7729,7 @@ var Jf = "(no stderr)",
     "A shell tool (Bash or PowerShell) was granted but this machine cannot confine it (no sandbox backend on this platform, or it is not installed), so the run was refused rather than run unconfined \u2014 drop the shell grant, or on Linux/macOS install the backend.";
 function qf(e) {
   try {
-    return b(e) ?? "";
+    return jsonStringify(e) ?? "";
   } catch {
     return "";
   }
@@ -7831,7 +7831,7 @@ async function ep(e, t) {
       E = void 0;
     if (w !== null)
       try {
-        E = z(w);
+        E = jsonParse(w);
       } catch {
         throw ce("a profile config is not valid JSON");
       }
@@ -8707,7 +8707,7 @@ async function za(e) {
   if (t === null) return [];
   let r;
   try {
-    r = z(t);
+    r = jsonParse(t);
   } catch {
     throw ce("not valid JSON");
   }
@@ -8736,7 +8736,7 @@ async function Ep(e) {
   if (t === null) return [];
   let r;
   try {
-    r = z(t);
+    r = jsonParse(t);
   } catch {
     throw ce("the Azure service principal store is not valid JSON");
   }
@@ -9135,7 +9135,7 @@ async function El(
     d.throwIfAborted();
     let E = await Zp(h, w, e.path);
     d.throwIfAborted();
-    let _ = iR(E);
+    let _ = detectImageMediaType(E);
     if (_ !== null)
       return { kind: "image", bytes: E, path: e.path, mediaType: _ };
     return { kind: "text", text: cs(E.toString("utf8")), binaryHead: Vp(E) };
@@ -9154,7 +9154,7 @@ async function El(
       text: t.toolCalls
         .filter((p) => p.mock !== void 0)
         .map((p) =>
-          b({
+          jsonStringify({
             tool: p.name,
             input: p.input,
             ...(p.output !== void 0 && { output: p.output }),
@@ -9167,15 +9167,15 @@ async function El(
   }
   return {
     kind: "text",
-    text: t.trace.map((p) => b(p)).join(`
+    text: t.trace.map((p) => jsonStringify(p)).join(`
 `),
   };
 }
 function Vp(e) {
-  if (mSn(e) !== null) return `it is a ${u7e(e)}`;
+  if (detectBinaryFormat(e) !== null) return `it is a ${describeBufferContent(e)}`;
   let t = e.indexOf(0);
   if (t !== -1)
-    return `it contains a NUL byte at offset ${t} (binary data, UTF-16 text \u2014 save such artifacts as UTF-8 \u2014 or NUL-separated output; leading bytes: ${u7e(e)})`;
+    return `it contains a NUL byte at offset ${t} (binary data, UTF-16 text \u2014 save such artifacts as UTF-8 \u2014 or NUL-separated output; leading bytes: ${describeBufferContent(e)})`;
   return;
 }
 function no(e) {
@@ -9204,7 +9204,7 @@ ${e.criteria}`,
       `${no(e.focus)} cannot be shown to the judge as text \u2014 ${r.binaryHead}. It is not a supported image either (PNG/JPEG/GIF/WebP), so have the case render it to an image or write its content as a UTF-8 text file, and grade that.`,
     );
   if (r.kind === "image") {
-    let { block: E, dimensions: _ } = await Bg({
+    let { block: E, dimensions: _ } = await buildImageBlock({
       data: r.bytes,
       mediaType: r.mediaType,
       limits: getImageLimitsForModel(hr(t.judgeModel) ?? getSmallFastModel()),
@@ -9225,7 +9225,7 @@ Agent output (${no(e.focus)}) is the attached image:`,
       { type: "text", text: o },
     ];
     let S = _?.displayWidth ? `, ${_.displayWidth}x${_.displayHeight}px` : "",
-      C = Ure(r.bytes),
+      C = readImageDimensions(r.bytes),
       L = C ? `, ${C.width}x${C.height}px` : "";
     ((d = `[image shown to the judge: ${r.path} \u2014 sent as ${E.source.media_type}, ${formatFileSize(Buffer.byteLength(E.source.data, "base64"))}${S}; file on disk: ${r.mediaType}, ${formatFileSize(r.bytes.length)}${L}]`),
       (p = " (image)"));
@@ -9292,7 +9292,7 @@ async function Jp(e, t) {
 `,
       )
       .filter((E) => E.trim())
-      .map((E) => z(E));
+      .map((E) => jsonParse(E));
   } catch (h) {
     return Lt(
       e,
@@ -9382,14 +9382,14 @@ class wi extends Error {
   }
 }
 function hr(e) {
-  return e && um(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e;
+  return e && isModelAlias(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e;
 }
 function hi(e) {
   if (e.length <= 24)
-    return e.map((u) => b(u)).join(`
+    return e.map((u) => jsonStringify(u)).join(`
 `);
-  let i = e.slice(0, 12).map((u) => b(u)),
-    o = e.slice(-12).map((u) => b(u));
+  let i = e.slice(0, 12).map((u) => jsonStringify(u)),
+    o = e.slice(-12).map((u) => jsonStringify(u));
   return [...i, `[\u2026${e.length - 12 - 12} messages elided\u2026]`, ...o]
     .join(`
 `);
@@ -9662,7 +9662,7 @@ async function jl({ credentials: e }) {
   }
   return (
     u.on("error", (d) =>
-      n(`plugin eval: agent service error: ${l(d)}`, { level: "warn" }),
+      logForDebugging(`plugin eval: agent service error: ${l(d)}`, { level: "warn" }),
     ),
     u.unref(),
     {
@@ -9740,7 +9740,7 @@ async function jl({ credentials: e }) {
           if ((await xl(u), r !== null))
             await Nl(r, { recursive: !0, force: !0 });
         } catch (d) {
-          n(`eval mocks: agent service teardown: ${l(d)}`, { level: "error" });
+          logForDebugging(`eval mocks: agent service teardown: ${l(d)}`, { level: "error" });
         }
       },
     }
@@ -9755,7 +9755,7 @@ function dm(e, t) {
     o = (d) => {
       if (i) return;
       ((i = !0),
-        e.end(`${b(d)}
+        e.end(`${jsonStringify(d)}
 `));
     };
   (e.on("error", () => e.destroy()), e.setTimeout(cm, () => e.destroy()));
@@ -9776,10 +9776,10 @@ function dm(e, t) {
     let h = r.subarray(0, p).toString("utf8");
     (e.setTimeout(0),
       fm(h, t).then(o, (w) => {
-        (n(`plugin eval: mock relay failed: ${l(w)}`, { level: "warn" }),
+        (logForDebugging(`plugin eval: mock relay failed: ${l(w)}`, { level: "warn" }),
           o({
             verdict: "abort",
-            text: `${jQ} (relay_internal) \u2014 see the eval debug log`,
+            text: `${MOCK_AGENT_RESPONDER_FAILED_MESSAGE} (relay_internal) \u2014 see the eval debug log`,
           }));
       }));
   });
@@ -9787,7 +9787,7 @@ function dm(e, t) {
 async function fm(e, t) {
   let r;
   try {
-    r = am().parse(z(e));
+    r = am().parse(jsonParse(e));
   } catch {
     return { verdict: "tool_error", text: "malformed mock relay request" };
   }
@@ -9810,7 +9810,7 @@ async function fm(e, t) {
         i.aborted = {
           server: o?.server ?? "(no mocked server)",
           tool: truncateToCodeUnits(r.tool, Fl),
-          reason: `${jQ} (relay_internal) \u2014 see the eval debug log`,
+          reason: `${MOCK_AGENT_RESPONDER_FAILED_MESSAGE} (relay_internal) \u2014 see the eval debug log`,
         };
       throw p;
     })
@@ -9875,11 +9875,11 @@ async function gm(e, t) {
 }
 async function wm(e, t, r, i) {
   if (r.expect !== null) {
-    let E = A2e(i.input, r.expect);
+    let E = findExpectViolation(i.input, r.expect);
     if (E !== null)
       return { verdict: "abort", text: `input violates expect: ${E}` };
   }
-  let o = await r7t(r.prompt, i.input, r.baseDir, o7t, Q0n);
+  let o = await renderPromptTemplate(r.prompt, i.input, r.baseDir, readMockFixtureFile, MAX_INTERPOLATED_TEXT_CHARS);
   if (!o.ok)
     return (
       e.unreplayableServers.add(t.server),
@@ -9911,7 +9911,7 @@ async function wm(e, t, r, i) {
   if (Number.isFinite(h.costUsd) && h.costUsd > 0) e.costUsd += h.costUsd;
   let w = !1;
   if (
-    !h.text.startsWith(jQ) &&
+    !h.text.startsWith(MOCK_AGENT_RESPONDER_FAILED_MESSAGE) &&
     !e.unreplayableServers.has(t.server) &&
     h.text.length <= Kn &&
     e.recordings.length < ym
@@ -9923,7 +9923,7 @@ async function wm(e, t, r, i) {
         recordedAt: new Date().toISOString(),
         model: e.model,
       },
-      _ = `${b(E, null, 2)}
+      _ = `${jsonStringify(E, null, 2)}
 `;
     if (Buffer.byteLength(_) <= ho)
       (e.recordings.push({
@@ -9955,7 +9955,7 @@ function Ul(e) {
   return e.length > _i ? `${truncateToCodeUnits(e, _i)}\u2026` : e;
 }
 function bm(e) {
-  let t = b(e) ?? "null";
+  let t = jsonStringify(e) ?? "null";
   return t.length > _i ? Ul(t) : e;
 }
 function bi(e, t) {
@@ -10074,7 +10074,7 @@ async function zl(e) {
     let He =
         V.problemDetail === void 0
           ? void 0
-          : formatDisplayText(V.problemDetail.replace(XRe(), " "), 300),
+          : formatDisplayText(V.problemDetail.replace(getInvisibleCharsPattern(), " "), 300),
       ge = He === void 0 ? "" : ` (${He})`;
     switch (V.problem) {
       case void 0:
@@ -10200,7 +10200,7 @@ async function zl(e) {
                 "mocks: preparation failed",
               ),
         ),
-          n(`eval mocks: ${l(_e)}`, { level: "error" }));
+          logForDebugging(`eval mocks: ${l(_e)}`, { level: "error" }));
       }
   }
   let U = (V) => {
@@ -10310,10 +10310,10 @@ async function zl(e) {
         );
       else {
         if (Object.keys(Ne.seeded).length > 0)
-          t.onLine(`  ${V.name}: seeding growthbook_overrides ${b(Ne.seeded)}`);
+          t.onLine(`  ${V.name}: seeding growthbook_overrides ${jsonStringify(Ne.seeded)}`);
         if (Ne.dropped.length > 0)
           t.onLine(
-            `  ${V.name}: growthbook_overrides dropped (operator allowlist required \u2014 CLAUDE_CODE_EVAL_ALLOW_FLAG_OVERRIDES): ${b(Ne.dropped)}`,
+            `  ${V.name}: growthbook_overrides dropped (operator allowlist required \u2014 CLAUDE_CODE_EVAL_ALLOW_FLAG_OVERRIDES): ${jsonStringify(Ne.dropped)}`,
           );
       }
     let We = new Map(),
@@ -10536,7 +10536,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
     } catch (ue) {
       if (ue instanceof ao || ue instanceof io) throw ue;
       throw (
-        n(`eval mocks: ${l(ue)}`, { level: "error" }),
+        logForDebugging(`eval mocks: ${l(ue)}`, { level: "error" }),
         new R(
           `mocks: could not set up this run's stand-ins (${A(ue) ?? "unknown error"}) \u2014 see the debug log`,
           "mocks: run setup failed",
@@ -10629,7 +10629,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
       : void 0;
     if (N.aborted !== null || N.mockSetupFailure !== null) {
       if (N.mockSetupFailure !== null) S = !0;
-      if (N.aborted?.reason.startsWith(jQ)) S = !0;
+      if (N.aborted?.reason.startsWith(MOCK_AGENT_RESPONDER_FAILED_MESSAGE)) S = !0;
       return {
         score: 0,
         turns: N.numTurns,
@@ -10662,7 +10662,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
         (await yr(ue).catch((Ne) => {
           if (W(Ne)) return null;
           throw (
-            n(`eval: cannot examine ${ue}: ${l(Ne)}`, { level: "warn" }),
+            logForDebugging(`eval: cannot examine ${ue}: ${l(Ne)}`, { level: "warn" }),
             new R(
               `the run's artifact-publish staging directory could not be examined (${A(Ne) ?? "unknown error"}), so its file evidence cannot be trusted`,
               "eval stub publish staging dir unreadable",
@@ -10812,7 +10812,7 @@ async function Bl(e, t, r) {
       (u) => {
         if (W(u)) return "absent";
         throw (
-          n(`eval: cannot examine the reserved publish name in ${e}: ${l(u)}`, {
+          logForDebugging(`eval: cannot examine the reserved publish name in ${e}: ${l(u)}`, {
             level: "warn",
           }),
           new R(
@@ -10867,8 +10867,8 @@ function Im(e, t) {
 `);
 }
 function Ti(e, t) {
-  let r = replaceControlChars(e.replace(XRe(), " "));
-  return b(r.length > t ? `${truncateToCodeUnits(r, t)}\u2026` : r);
+  let r = replaceControlChars(e.replace(getInvisibleCharsPattern(), " "));
+  return jsonStringify(r.length > t ? `${truncateToCodeUnits(r, t)}\u2026` : r);
 }
 function Pm(e, t, r) {
   if (!e.granted || t === "without") return;
@@ -10912,7 +10912,7 @@ function Nm(e) {
     logFeatureBad("cli_plugin_eval_mocks", "standin_tools_missing");
   else if (e.mockSetupFailure === "integrity")
     logFeatureBad("cli_plugin_eval_mocks", "standin_integrity");
-  else if (e.aborted !== null && e.aborted.reason.startsWith(jQ))
+  else if (e.aborted !== null && e.aborted.reason.startsWith(MOCK_AGENT_RESPONDER_FAILED_MESSAGE))
     logFeatureSad("cli_plugin_eval_mocks", "agent_relay_failed");
   else if (e.aborted !== null) logFeatureSad("cli_plugin_eval_mocks", "aborted_by_mock");
   else logFeatureOk("cli_plugin_eval_mocks");
@@ -10932,7 +10932,7 @@ function Mm(e, t, r) {
       if (_.responderKinds[S] === "agent")
         i.set(_.toolFullNames[S] ?? "", { server: _.dirName, tool: S });
   let o = new Map(),
-    u = (_) => b([_.tool, _.verdict, _.outputKey]);
+    u = (_) => jsonStringify([_.tool, _.verdict, _.outputKey]);
   for (let _ of e) {
     let S = o.get(_.server) ?? new Map(),
       C = u(_),
@@ -11008,7 +11008,7 @@ async function ic(e, t) {
       w = h.length > 0 ? h : p,
       E = getMarketplaceTrustedRoots(e, await getKnownMarketplacesOrEmpty(t), getOperatorDeclaredMarketplaces());
     for (let _ of w) {
-      let { absolute: S, suspect: C } = NC(_.installPath, { trustedRoots: E });
+      let { absolute: S, suspect: C } = classifyPathTrust(_.installPath, { trustedRoots: E });
       if (!C) return { kind: "plugin", root: S, pluginId: e };
     }
     return { kind: "refused", pluginId: e };
@@ -11043,7 +11043,7 @@ async function pluginEvalHandler(e, t, r, i) {
         process.exit(1));
     if (ue.kind === "refused")
       (process.stderr
-        .write(`Error: ${replaceControlChars(ue.pluginId)} has a recorded install path that ${lve}; reinstall it, or pass ./<dir> to evaluate a directory.
+        .write(`Error: ${replaceControlChars(ue.pluginId)} has a recorded install path that ${UNTRUSTED_PATH_REASON}; reinstall it, or pass ./<dir> to evaluate a directory.
 `),
         process.exit(1));
     if (((o = ue.root), ue.kind === "plugin")) u = ue.pluginId;
@@ -11330,7 +11330,7 @@ Terminated \u2014 finishing up\u2026
           `Warning: results are written under ${Ee.join(Ce, ot)}: ${xe} \u2014 files written there may be loaded as plugin components; pass --output-dir to write elsewhere`,
         );
     }
-    let Qe = rxn(b(Le.result, void 0, 2)),
+    let Qe = escapeControlAndInvisibleChars(jsonStringify(Le.result, void 0, 2)),
       gt = !1,
       et = ue.cases.length > 0 || Ne.length === 0,
       Mt = !0;
@@ -11613,7 +11613,7 @@ async function Zl(e, { result: t, valid: r }, i) {
       !1
     );
   try {
-    let o = `${i ?? rxn(b(t, void 0, 2))}
+    let o = `${i ?? escapeControlAndInvisibleChars(jsonStringify(t, void 0, 2))}
 `;
     if (e === !0)
       await new Promise((u, d) => {
@@ -11828,12 +11828,12 @@ async function ec(e) {
 }
 async function Wm(e, t, r) {
   let i = Ee.resolve(getCwd(), e);
-  await (t === void 0 ? mm(getCwd(), e, "target") : ma(e));
+  await (t === void 0 ? assertPathIsLocal(getCwd(), e, "target") : ma(e));
   try {
     i = await Wo(i);
   } catch (_) {
     if (!Rt(_))
-      n(`plugin eval: could not resolve ${escapeUntrustedText(i)} to find its plugin: ${l(_)}`, {
+      logForDebugging(`plugin eval: could not resolve ${escapeUntrustedText(i)} to find its plugin: ${l(_)}`, {
         level: "warn",
       });
     return {
@@ -11979,7 +11979,7 @@ async function sc(e, t) {
   if (t.source === "default") return t;
   let r;
   try {
-    (await mm(
+    (await assertPathIsLocal(
       e,
       t.segments.join(Ee.sep),
       t.source === "flag" ? "--eval-dir" : "the manifest's experimental.evals",
@@ -12060,7 +12060,7 @@ function qm(e) {
 async function Qm(e, t, r) {
   let i = Ee.join(e, Rn);
   if (
-    (await mm(e, Rn, "mock recordings"),
+    (await assertPathIsLocal(e, Rn, "mock recordings"),
     !t.cases.some((p) =>
       [...p.runs, ...(p.runs_without ?? [])].some((h) => h.mocks !== void 0),
     ))

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { z, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, Is, readTailBytes, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -39,7 +39,7 @@ function R(e) {
     return { ok: !1, reason: `marker exceeds the ${S}-byte cap` };
   let a;
   try {
-    a = z(e);
+    a = jsonParse(e);
   } catch {
     return { ok: !1, reason: "marker is not valid JSON" };
   }
@@ -147,7 +147,7 @@ function A({
       ingressOrigin: t,
       remoteSessionId: i,
     }),
-    n(
+    logForDebugging(
       `teleport relay armed (server-driven): marker line ${r}, anchor ${u.marker.anchor_line_uuid}, ${h.length} guarded pre-anchor lines`,
     ),
     { armed: !0 }
@@ -160,7 +160,7 @@ function noteTeleportBootUnreached(e) {
   }
   (logFeatureSad("upgrade_teleport_cache", `boot_unreached_${e}`),
     d({ outcome: "refused", error_code: `boot_unreached_${e}` }),
-    n(
+    logForDebugging(
       `teleport relay carriers present but the resume lane exited before boot (${e}) \u2014 standard path`,
       { level: "warn" },
     ));
@@ -170,7 +170,7 @@ async function B(e, a) {
     i = resolveTranscriptLocator(t, a);
   if (i !== void 0) {
     let r = await readTranscriptTailV5(i.key, w, i.backend).catch((l) => {
-      n(
+      logForDebugging(
         `teleport relay seed read through storage threw; falling back to the file: ${String(l)}`,
         { level: "warn" },
       );
@@ -182,7 +182,7 @@ async function B(e, a) {
       let l = "telemetryCode" in r.error ? r.error.telemetryCode : void 0;
       if (l === "ELOOP" || l === "ENXIO")
         throw (
-          n(
+          logForDebugging(
             `teleport relay seed read refused by storage (${l}); the file is not re-read directly`,
             { level: "warn" },
           ),
@@ -190,13 +190,13 @@ async function B(e, a) {
             "seed transcript refused by storage: a linked or indirect transcript file is not read",
           )
         );
-      n(
+      logForDebugging(
         `teleport relay seed read through storage failed (${r.error.code}); falling back to the file`,
         { level: "warn" },
       );
     }
   }
-  let { content: o } = await k_(t, w);
+  let { content: o } = await readTailBytes(t, w);
   return o;
 }
 async function bootTeleportFromTranscript(e, a, t) {
@@ -206,7 +206,7 @@ async function bootTeleportFromTranscript(e, a, t) {
     if (o !== null)
       (logFeatureSad("upgrade_teleport_cache", "env_config_refused"),
         d({ outcome: "refused", error_code: "env_config_refused", cause: o }),
-        n(
+        logForDebugging(
           `teleport relay carriers present but env config refused (${o}) \u2014 standard path`,
           { level: "warn" },
         ));
@@ -225,12 +225,12 @@ async function bootTeleportFromTranscript(e, a, t) {
     if (!r.armed)
       (logFeatureSad("upgrade_teleport_cache", r.code),
         d({ outcome: "refused", error_code: r.code }),
-        n(`teleport relay not armed: ${r.reason}`));
+        logForDebugging(`teleport relay not armed: ${r.reason}`));
     else (logFeatureOk("upgrade_teleport_cache"), d({ outcome: "armed" }));
   } catch (o) {
     (logFeatureSad("upgrade_teleport_cache", "boot_failed"),
       d({ outcome: "refused", error_code: "boot_failed" }),
-      n(`teleport relay boot failed: ${String(o)}`, { level: "warn" }));
+      logForDebugging(`teleport relay boot failed: ${String(o)}`, { level: "warn" }));
   }
 }
 export { bootTeleportFromTranscript, noteTeleportBootUnreached };

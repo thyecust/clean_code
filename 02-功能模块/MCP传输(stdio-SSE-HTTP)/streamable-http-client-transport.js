@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { isJSONRPCRequest, isJSONRPCResultResponse, JSONRPCMessageSchema as GR, isInitializedNotification } from "../MCP客户端/chunk-tv3jbp8f.js";
-import { XA, u2, aPe } from "../认证-OAuth登录/chunk-j990pwax.js";
+import { UnauthorizedError, auth, extractWWWAuthenticateParams } from "../认证-OAuth登录/oauth-client.js";
 import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
 function headersToRecord(e) {
   if (!e) return {};
@@ -55,10 +55,10 @@ class StreamableHTTPClientTransport {
       (this._reconnectionOptions = t?.reconnectionOptions ?? m));
   }
   async _authThenStart() {
-    if (!this._authProvider) throw new XA("No auth provider");
+    if (!this._authProvider) throw new UnauthorizedError("No auth provider");
     let e;
     try {
-      e = await u2(this._authProvider, {
+      e = await auth(this._authProvider, {
         serverUrl: this._url,
         resourceMetadataUrl: this._resourceMetadataUrl,
         scope: this._scope,
@@ -67,7 +67,7 @@ class StreamableHTTPClientTransport {
     } catch (t) {
       throw (this.onerror?.(t), t);
     }
-    if (e !== "AUTHORIZED") throw new XA();
+    if (e !== "AUTHORIZED") throw new UnauthorizedError();
     return await this._startOrAuthSse({ resumptionToken: void 0 });
   }
   async _commonHeaders() {
@@ -203,9 +203,9 @@ class StreamableHTTPClientTransport {
     this._abortController = new AbortController();
   }
   async finishAuth(e) {
-    if (!this._authProvider) throw new XA("No auth provider");
+    if (!this._authProvider) throw new UnauthorizedError("No auth provider");
     if (
-      (await u2(this._authProvider, {
+      (await auth(this._authProvider, {
         serverUrl: this._url,
         authorizationCode: e,
         resourceMetadataUrl: this._resourceMetadataUrl,
@@ -213,7 +213,7 @@ class StreamableHTTPClientTransport {
         fetchFn: this._fetchWithInit,
       })) !== "AUTHORIZED"
     )
-      throw new XA("Failed to authorize");
+      throw new UnauthorizedError("Failed to authorize");
   }
   async close() {
     if (this._reconnectionTimeout)
@@ -252,22 +252,22 @@ class StreamableHTTPClientTransport {
               401,
               "Server returned 401 after successful authentication",
             );
-          let { resourceMetadataUrl: o, scope: c } = aPe(n);
+          let { resourceMetadataUrl: o, scope: c } = extractWWWAuthenticateParams(n);
           if (
             ((this._resourceMetadataUrl = o),
             (this._scope = c),
-            (await u2(this._authProvider, {
+            (await auth(this._authProvider, {
               serverUrl: this._url,
               resourceMetadataUrl: this._resourceMetadataUrl,
               scope: this._scope,
               fetchFn: this._fetchWithInit,
             })) !== "AUTHORIZED")
           )
-            throw new XA();
+            throw new UnauthorizedError();
           return ((this._hasCompletedAuthFlow = !0), this.send(e));
         }
         if (n.status === 403 && this._authProvider) {
-          let { resourceMetadataUrl: o, scope: c, error: h } = aPe(n);
+          let { resourceMetadataUrl: o, scope: c, error: h } = extractWWWAuthenticateParams(n);
           if (h === "insufficient_scope") {
             let f = n.headers.get("WWW-Authenticate");
             if (this._lastUpscopingHeader === f)
@@ -276,14 +276,14 @@ class StreamableHTTPClientTransport {
             if (o) this._resourceMetadataUrl = o;
             if (
               ((this._lastUpscopingHeader = f ?? void 0),
-              (await u2(this._authProvider, {
+              (await auth(this._authProvider, {
                 serverUrl: this._url,
                 resourceMetadataUrl: this._resourceMetadataUrl,
                 scope: this._scope,
                 fetchFn: this._fetch,
               })) !== "AUTHORIZED")
             )
-              throw new XA();
+              throw new UnauthorizedError();
             return this.send(e);
           }
         }

@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 49 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Qcr, Bs, exe, SPn, Zcr, SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { registerChildProcess, markChildProcessExited } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
-import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
 import { toESM, commonJS, importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -3312,11 +3312,11 @@ class kt extends Qe.AbstractMessageReader {
     try {
       t = Is(e.toString("utf8"));
     } catch (r) {
-      n(`LSP: dropped unparseable message body: ${r}`, { level: "warn" });
+      logForDebugging(`LSP: dropped unparseable message body: ${r}`, { level: "warn" });
       return;
     }
     if (!Ds(t)) {
-      n("LSP: dropped message body that is not an object", { level: "warn" });
+      logForDebugging("LSP: dropped message body that is not an object", { level: "warn" });
       return;
     }
     try {
@@ -3398,7 +3398,7 @@ function createLSPClient(e, t) {
     try {
       m.dispose();
     } catch (g) {
-      n(`Connection disposal failed for ${e}: ${l(g)}`);
+      logForDebugging(`Connection disposal failed for ${e}: ${l(g)}`);
     }
   }
   function Y(m, g, { force: p }) {
@@ -3416,7 +3416,7 @@ function createLSPClient(e, t) {
         killProcessTree(m.pid);
       else m.kill();
     } catch (x) {
-      n(`Process kill failed for ${e} (may already be dead): ${l(x)}`);
+      logForDebugging(`Process kill failed for ${e} (may already be dead): ${l(x)}`);
     }
   }
   return {
@@ -3468,7 +3468,7 @@ function createLSPClient(e, t) {
         if (r.stderr)
           ((U = (_) => {
             let z = _.toString().trim();
-            if (z) n(`[LSP SERVER ${e}] ${z}`);
+            if (z) logForDebugging(`[LSP SERVER ${e}] ${z}`);
           }),
             r.stderr.on("data", U));
         ((N = (_) => {
@@ -3476,7 +3476,7 @@ function createLSPClient(e, t) {
           if (!b)
             ((f = !0),
               (S = _),
-              n(`LSP server ${e} failed to start: ${_.message}`, {
+              logForDebugging(`LSP server ${e} failed to start: ${_.message}`, {
                 level: "error",
               }));
         }),
@@ -3496,7 +3496,7 @@ function createLSPClient(e, t) {
                       ? " \u2014 likely killed at the tool memory limit (CLAUDE_CODE_TOOL_MEMORY_LIMIT)"
                       : ""),
                 Pe = new Nn(`LSP server ${e} crashed with ${je}`, de);
-              (n(`LSP server ${e} crashed with ${je}`, { level: "error" }),
+              (logForDebugging(`LSP server ${e} crashed with ${je}`, { level: "error" }),
                 (f = !0),
                 (S = Pe),
                 Y(v, s, { force: !1 }),
@@ -3507,7 +3507,7 @@ function createLSPClient(e, t) {
           }),
           r.on("exit", M),
           (G = (_) => {
-            if (!b) n(`LSP server ${e} stdin error: ${_.message}`);
+            if (!b) logForDebugging(`LSP server ${e} stdin error: ${_.message}`);
           }),
           r.stdin.on("error", G));
         let Re = new kt(r.stdout, (_) => {
@@ -3526,7 +3526,7 @@ function createLSPClient(e, t) {
             ((f = !0),
               (S = _),
               (a = !1),
-              n(
+              logForDebugging(
                 `LSP server ${e} protocol violation, stopping process: ${_.message}`,
                 { level: "error" },
               ),
@@ -3542,33 +3542,33 @@ function createLSPClient(e, t) {
             if (!b && r === v)
               ((f = !0),
                 (S = _),
-                n(`LSP server ${e} connection error: ${_.message}`, {
+                logForDebugging(`LSP server ${e} connection error: ${_.message}`, {
                   level: "error",
                 }));
           }),
           s.onClose(() => {
             if (!b && r === v)
-              ((a = !1), n(`LSP server ${e} connection closed`));
+              ((a = !1), logForDebugging(`LSP server ${e} connection closed`));
           }),
           s.listen(),
           s
             .trace(Se.Trace.Verbose, {
               log: (_) => {
-                n(`[LSP PROTOCOL ${e}] ${_}`);
+                logForDebugging(`[LSP PROTOCOL ${e}] ${_}`);
               },
             })
             .catch((_) => {
-              n(`Failed to enable tracing for ${e}: ${_.message}`);
+              logForDebugging(`Failed to enable tracing for ${e}: ${_.message}`);
             }));
         for (let [_, z] of te)
           (s.onNotification(_, z),
-            n(`Applied notification handler for ${e}.${_}`));
+            logForDebugging(`Applied notification handler for ${e}.${_}`));
         for (let [_, z] of se)
-          (s.onRequest(_, z), n(`Applied request handler for ${e}.${_}`));
-        n(`LSP client started for ${e}`);
+          (s.onRequest(_, z), logForDebugging(`Applied request handler for ${e}.${_}`));
+        logForDebugging(`LSP client started for ${e}`);
       } catch (x) {
         if (Rt(x))
-          n(`LSP server ${e} failed to start: ${l(x)}`, { level: "error" });
+          logForDebugging(`LSP server ${e} failed to start: ${l(x)}`, { level: "error" });
         else
           logErrorWithTelemetryMessage(
             Error(`LSP server ${e} failed to start: ${l(x)}`),
@@ -3584,10 +3584,10 @@ function createLSPClient(e, t) {
         let g = await s.sendRequest("initialize", m);
         if ((await s.sendNotification("initialized", {}), Z(), !s))
           throw Error("LSP server stopped during initialize");
-        return ((a = !0), n(`LSP server ${e} initialized`), g);
+        return ((a = !0), logForDebugging(`LSP server ${e} initialized`), g);
       } catch (g) {
         throw (
-          n(`LSP server ${e} initialize failed: ${g.message}`, {
+          logForDebugging(`LSP server ${e} initialize failed: ${g.message}`, {
             level: "error",
           }),
           (f && S) || g
@@ -3601,7 +3601,7 @@ function createLSPClient(e, t) {
         return await s.sendRequest(m, g);
       } catch (p) {
         throw (
-          n(`LSP server ${e} request ${m} failed: ${p.message}`, {
+          logForDebugging(`LSP server ${e} request ${m} failed: ${p.message}`, {
             level: "error",
           }),
           p
@@ -3614,7 +3614,7 @@ function createLSPClient(e, t) {
       try {
         await s.sendNotification(m, g);
       } catch (p) {
-        n(
+        logForDebugging(
           `LSP server ${e} notification ${m} failed (continuing): ${p.message}`,
           { level: "error" },
         );
@@ -3622,7 +3622,7 @@ function createLSPClient(e, t) {
     },
     onNotification(m, g) {
       if ((te.set(m, g), !s)) {
-        n(
+        logForDebugging(
           `Registered notification handler for ${e}.${m} (connection not ready)`,
         );
         return;
@@ -3631,7 +3631,7 @@ function createLSPClient(e, t) {
     },
     onRequest(m, g) {
       if ((se.set(m, g), !s)) {
-        n(`Registered request handler for ${e}.${m} (connection not ready)`);
+        logForDebugging(`Registered request handler for ${e}.${m} (connection not ready)`);
         return;
       }
       (Z(), s.onRequest(m, g));
@@ -3658,7 +3658,7 @@ function createLSPClient(e, t) {
         }
       } catch (E) {
         let v = E;
-        (n(`LSP server ${e} stop failed: ${v.message}`, { level: "error" }),
+        (logForDebugging(`LSP server ${e} stop failed: ${v.message}`, { level: "error" }),
           (g = v));
       } finally {
         let E = r === p;
@@ -3669,7 +3669,7 @@ function createLSPClient(e, t) {
         if (E) {
           if (((a = !1), (b = !1), g)) ((f = !0), (S = g));
         }
-        n(`LSP client stopped for ${e}`);
+        logForDebugging(`LSP client stopped for ${e}`);
       }
       if (g) throw g;
     },

@@ -23,7 +23,7 @@ import {
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { ud, YR, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSameAsConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pur, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -51,15 +51,15 @@ import {
   recordFirstStartTime,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getHostSettingsStore, primeRemoteManagedSettingsCache } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { SRt } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
+import { setupGitBashShellEnv } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadExtraCACerts, loadMTLSClientMaterial, configureGlobalMTLS, getProxyUrlWithSource, parseProxyUrl, describeInvalidProxyUrl, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Jir, getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { hir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { setFeatureGateLookup, getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { primeProfileReadAhead } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { detectCurrentRepository, setRepoDetectionGuards } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import { primeWindowsCredManBackendEnabled } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
-import { assertScrubSandboxAvailable } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { assertScrubSandboxAvailable } from "../核心工具-进程与信号/subprocess-env-scrub.js";
 import {
   isDetailedTracingEnabled,
   getPowerShellPath,
@@ -78,12 +78,12 @@ import { isPolicyLimitsEligible } from "../../02-功能模块/策略限制(Polic
 import { isPowerShellToolEnabled, isBashToolAvailable } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { seedUserSettings, primeSettings } from "../设置-配置/chunk-b536v45y.js";
 import { primePlanSlugCollisions } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { goe, dR } from "./chunk-x7kby92q.js";
+import { applySafeConfigEnvironmentVariables, applyConfigEnvironmentVariables } from "./settings-env-application.js";
 import { pinStorageV5FromEnv } from "../共享小工具-未细化/storage-v5-env-pin.js";
 import { pinStorageV5 } from "../共享小工具-未细化/pin-storage-v5.js";
 import { primeWorkspaceRoots } from "../共享小工具-未细化/chunk-bgf8jybv.js";
-import { WAn, qAn, zAn } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { vnn, Rnn, c3e } from "../设置-配置/chunk-1pbaa558.js";
+import { primePolicyLimitsCache, composePolicyLimitsClient, initializePolicyLimitsLoadingPromise } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+import { startRemoteSettingsLoadBarrier, isRemoteSettingsLoadEligible, awaitRemoteSettingsFetchSettled } from "../设置-配置/remote-managed-settings.js";
 import { primeFileDescriptorCredentials } from "../共享小工具-未细化/chunk-fpak7ean.js";
 import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
 import { applyNodeExtraCaCertsFromConfig } from "../共享小工具-未细化/apply-node-extra-ca-certs.js";
@@ -126,7 +126,7 @@ async function T(t = {}) {
   (writeDiagnosticsEvent("info", "init_started"), profileCheckpoint("init_function_start"));
   let e = t.storageV5EnvPin;
   if (e?.backend !== void 0 && !isSameAsConfigDir(e.configHome))
-    (n(
+    (logForDebugging(
       `CLAUDE_CONFIG_DIR no longer names ${e.configHome}, where the v5 storage backend was built at start-up; init() loads its config without it`,
       { level: "warn" },
     ),
@@ -155,7 +155,7 @@ async function T(t = {}) {
     g_e(shouldForceGatewayLogin);
     let p = Date.now();
     if (
-      (goe(),
+      (applySafeConfigEnvironmentVariables(),
       await assertScrubSandboxAvailable(),
       applyNodeExtraCaCertsFromConfig(),
       await Promise.all([loadExtraCACerts(), loadMTLSClientMaterial(), primePlatformDetection(), pur()]),
@@ -169,9 +169,9 @@ async function T(t = {}) {
     let o = pinStorageV5(e),
       m = credentialsStoreFor(o);
     if (isHoverRestEnabled() && o !== void 0) await primeWorkspaceRoots(o);
-    if ((await primeSettings(o, getHostSettingsStore()), isHoverRestEnabled() && o !== void 0)) await hir(o);
+    if ((await primeSettings(o, getHostSettingsStore()), isHoverRestEnabled() && o !== void 0)) await primeProfileReadAhead(o);
     if (
-      (qAn({ storageV5: o, credentials: m }),
+      (composePolicyLimitsClient({ storageV5: o, credentials: m }),
       setGrowthBookCredentials(m),
       setGrowthBookStorageBackend(o),
       isHoverRestEnabled() && m !== void 0)
@@ -179,7 +179,7 @@ async function T(t = {}) {
       if ((await primeFileDescriptorCredentials(m), startupReadsStoredLogin())) await primeStoredLogin(m);
     }
     if (
-      (await WAn(o),
+      (await primePolicyLimitsCache(o),
       watchGlobalConfigThroughStorage(o),
       registerStorageFlushHandlers(o),
       setupGracefulShutdown({ storageV5: o, credentials: m }),
@@ -188,7 +188,7 @@ async function T(t = {}) {
         d.onGrowthBookRefresh(() => {});
       }),
       profileCheckpoint("init_after_1p_event_logging"),
-      Jir((i) => getFeatureValue_CACHED_MAY_BE_STALE(i, !1)),
+      setFeatureGateLookup((i) => getFeatureValue_CACHED_MAY_BE_STALE(i, !1)),
       populateOAuthAccountInfoIfNeeded(m, o).catch(logError),
       profileCheckpoint("init_after_oauth_populate"),
       primePlanSlugCollisions(o),
@@ -197,10 +197,10 @@ async function T(t = {}) {
         .catch(() => {}),
       setRepoDetectionGuards({ trustProbe: checkHasTrustDialogAccepted }),
       detectCurrentRepository(),
-      Rnn())
+      isRemoteSettingsLoadEligible())
     )
-      vnn();
-    if (isPolicyLimitsEligible()) zAn();
+      startRemoteSettingsLoadBarrier();
+    if (isPolicyLimitsEligible()) initializePolicyLimitsLoadingPromise();
     if (
       (profileCheckpoint("init_after_remote_settings_check"),
       recordFirstStartTime(o),
@@ -209,18 +209,18 @@ async function T(t = {}) {
     )
       getOrCreateUserID(o);
     let g = Date.now();
-    (n("[init] configureGlobalMTLS starting"),
+    (logForDebugging("[init] configureGlobalMTLS starting"),
       configureGlobalMTLS(),
       writeDiagnosticsEvent("info", "init_mtls_configured", { duration_ms: Date.now() - g }),
-      n("[init] configureGlobalMTLS complete"));
+      logForDebugging("[init] configureGlobalMTLS complete"));
     let f = getProxyUrlWithSource();
     if (f && !parseProxyUrl(f.value)) throw new ud(describeInvalidProxyUrl(f.source, f.value));
     let S = Date.now();
     if (
-      (n("[init] configureGlobalAgents starting"),
+      (logForDebugging("[init] configureGlobalAgents starting"),
       configureGlobalAgents(),
       writeDiagnosticsEvent("info", "init_proxy_configured", { duration_ms: Date.now() - S }),
-      n("[init] configureGlobalAgents complete"),
+      logForDebugging("[init] configureGlobalAgents complete"),
       profileCheckpoint("init_network_configured"),
       w(),
       Ie(process.env.CLAUDE_CODE_REMOTE))
@@ -231,15 +231,15 @@ async function T(t = {}) {
         // PLACEHOLDER_CREDENTIAL_KEYS，这里直接用实现模块的原始名。
         let { _gr: i, ygr: d } =
             await import("../HTTP-网络层/HTTP-网络层.pfw3b51q.js"),
-          { registerAgentProxyEnvFn: b } = await import("../核心工具-进程与信号/chunk-ckrdhhqd.js");
+          { registerAgentProxyEnvFn: b } = await import("../核心工具-进程与信号/subprocess-env-scrub.js");
         (b(d), await i());
       } catch (i) {
-        n(
+        logForDebugging(
           `[init] agent proxy init failed: ${i instanceof Error ? i.message : String(i)}; continuing without proxy`,
           { level: "warn" },
         );
       }
-    if ((SRt(), getCurrentPlatform() === "windows" && !isBashToolAvailable())) {
+    if ((setupGitBashShellEnv(), getCurrentPlatform() === "windows" && !isBashToolAvailable())) {
       if (!isPowerShellToolEnabled())
         (console.error(`Claude Code on Windows requires a shell tool. Git Bash was not found and the PowerShell tool is disabled (CLAUDE_CODE_USE_POWERSHELL_TOOL=0).
   - Install Git for Windows: https://git-scm.com/downloads/win, or
@@ -253,8 +253,8 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
           process.exit(1));
     }
     if (
-      (Et(shutdownLspServerManager),
-      Et(async () => {
+      (registerCleanup(shutdownLspServerManager),
+      registerCleanup(async () => {
         let { cleanupSessionTeams: i } = await import("../../02-功能模块/Teammates团队/team-file-store.js");
         await i(o);
       }),
@@ -271,14 +271,14 @@ Or set CLAUDE_CODE_GIT_BASH_PATH to your bash.exe location.`),
           { duration_ms: Date.now() - i },
         );
       } catch (d) {
-        n(`init: ensureScratchpadDir failed: ${d}`, { level: "error" });
+        logForDebugging(`init: ensureScratchpadDir failed: ${d}`, { level: "error" });
       }
     }
     return (
       sc(() => {
         if (isScratchpadEnabled())
           ensureScratchpadDir().catch((i) =>
-            n(`onSessionSwitch: ensureScratchpadDir failed: ${i}`, {
+            logForDebugging(`onSessionSwitch: ensureScratchpadDir failed: ${i}`, {
               level: "error",
             }),
           );
@@ -314,25 +314,25 @@ function initializeApp(t) {
 }
 function initializeTelemetryAfterTrust(t) {
   let r = y();
-  if (Rnn()) {
+  if (isRemoteSettingsLoadEligible()) {
     if (ke() && isDetailedTracingEnabled())
       _(r, t).catch((e) => {
         try {
-          n(
+          logForDebugging(
             `[3P telemetry] Eager telemetry init failed (beta tracing): ${l(e)}`,
             { level: "error" },
           );
         } catch {}
       });
-    (n(
+    (logForDebugging(
       "[3P telemetry] Waiting for remote managed settings fetch before telemetry init",
     ),
-      c3e()
+      awaitRemoteSettingsFetchSettled()
         .then(async () => {
-          (n(
+          (logForDebugging(
             "[3P telemetry] Remote managed settings fetch settled, initializing telemetry",
           ),
-            dR());
+            applyConfigEnvironmentVariables());
           let { captureAdmin3PSteeringSnapshot: e } =
             await import("../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js");
           e();
@@ -344,7 +344,7 @@ function initializeTelemetryAfterTrust(t) {
           if (_rt() && !r.telemetryInitialized)
             QXt(v() || O() ? "init_failed" : "not_configured");
           try {
-            n(
+            logForDebugging(
               `[3P telemetry] Telemetry init failed (remote settings path): ${l(e)}`,
               { level: "error" },
             );
@@ -353,7 +353,7 @@ function initializeTelemetryAfterTrust(t) {
   } else
     _(r, t).catch((e) => {
       try {
-        n(`[3P telemetry] Telemetry init failed: ${l(e)}`, { level: "error" });
+        logForDebugging(`[3P telemetry] Telemetry init failed: ${l(e)}`, { level: "error" });
       } catch {}
     });
 }

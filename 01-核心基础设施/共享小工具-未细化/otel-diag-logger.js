@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 var OTEL_DIAG_ERROR_LOG_PREFIX = "[3P telemetry] OTEL diag error:";
 class OtelDiagLogger {
@@ -15,10 +15,10 @@ class OtelDiagLogger {
     if (a.CLAUDE_CODE_OTEL_DIAG_STDERR)
       process.stderr.write(`${OTEL_DIAG_ERROR_LOG_PREFIX} ${r}
 `);
-    n(`${OTEL_DIAG_ERROR_LOG_PREFIX} ${r}`, { level: "error" });
+    logForDebugging(`${OTEL_DIAG_ERROR_LOG_PREFIX} ${r}`, { level: "error" });
   }
   warn(r, ...e) {
-    n(`[3P telemetry] OTEL diag warn: ${r}`, { level: "warn" });
+    logForDebugging(`[3P telemetry] OTEL diag warn: ${r}`, { level: "warn" });
   }
   info(r, ...e) {
     return;

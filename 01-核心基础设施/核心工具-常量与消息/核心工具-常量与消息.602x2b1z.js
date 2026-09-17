@@ -21,29 +21,29 @@ import {
   HARNESS_ENVELOPE_TAGS,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, truncateToCodePoints, truncateToCodeUnits, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getComplianceTaints } from "../共享小工具-未细化/compliance-taints-store.js";
 import { BRIEF_ENFORCE_SENTINEL } from "../共享小工具-未细化/chunk-q599wyee.js";
-import { KRe, Cge, Xvt, Yvt, P5t, vq, iar } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { DASH_CHARS_CLASS, buildConfusableTagScrubPattern, buildChannelSourceTagPattern, buildModelLayerTagPattern, LEAD_HEX_ID_SYMBOL, LEAD_SPAN_SYMBOL, buildBracketedLeadScrubPattern } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isLoopbackHostname } from "../共享小工具-未细化/is-loopback-hostname.js";
 import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-var u1 = 50000,
-  Pir = 4000,
-  hge = 128000,
+var DEFAULT_MAX_RESULT_SIZE_CHARS = 50000,
+  OUTPUT_MAX_CHARS_FLOOR = 4000,
+  OUTPUT_MAX_CHARS_CEILING = 128000,
   uBe = 500000;
-var Mvt = 4,
-  Oir = 400000,
-  Dir = 200000,
-  Iw = 50,
-  Lir = 1e4,
-  XZe = 1e4,
-  Mir = 1e5;
-function Vo() {
+var BYTES_PER_TOKEN = 4,
+  DEFAULT_TOOL_RESULT_PERSIST_THRESHOLD = 400000,
+  DEFAULT_AGGREGATE_TOOL_RESULT_BUDGET = 200000,
+  TOOL_USE_SUMMARY_MAX_CHARS = 50,
+  DEFAULT_HOOK_OUTPUT_PERSIST_THRESHOLD = 1e4,
+  DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS = 1e4,
+  MAX_TASK_NOTIFICATION_CHARS = 1e5;
+function getArtifactEnvironment() {
   return getOauthConfig().CLAUDE_AI_ORIGIN.includes("staging") ? "staging" : "prod";
 }
-function Nir() {
+function getClaudeAiOrigin() {
   return Q() ?? getOauthConfig().CLAUDE_AI_ORIGIN;
 }
 function Q() {
@@ -84,7 +84,7 @@ function b(t) {
 function Fir() {
   return !1;
 }
-function $ir() {
+function getBaseApiUrl() {
   return tt() ?? getOauthConfig().BASE_API_URL;
 }
 function tt() {
@@ -96,7 +96,7 @@ function Uir() {
 function YZe() {
   return;
 }
-function D6(t) {
+function formatComplianceTaintLabel(t) {
   switch (t) {
     case "hipaa":
       return "HIPAA";
@@ -104,7 +104,7 @@ function D6(t) {
       return "ZDR (Zero Data Retention)";
     default:
       return (
-        n(`Unknown compliance_taint '${t}' from policyLimits`, {
+        logForDebugging(`Unknown compliance_taint '${t}' from policyLimits`, {
           level: "warn",
         }),
         x
@@ -113,15 +113,15 @@ function D6(t) {
 }
 var x = "Organization policy",
   L = new Set(["hipaa", "zdr"]);
-function Lvt(t) {
+function isKnownComplianceTaint(t) {
   return L.has(t);
 }
-function KZe(t) {
+function normalizeComplianceTaints(t) {
   let e = dedupe(t),
     r = e.filter((o) => L.has(o));
   if (r.length === e.length) return r;
   return (
-    n(
+    logForDebugging(
       `Unknown compliance_taint values from policyLimits (${e.length - r.length})`,
       { level: "warn" },
     ),
@@ -129,65 +129,65 @@ function KZe(t) {
   );
 }
 var et = new Set(["hipaa"]);
-function MRe(t) {
+function getNameableComplianceTaints(t) {
   return dedupe(t).filter((e) => et.has(e));
 }
-var NRe = "/api/claude_code/policy_limits";
-function lBe(t, e, r, o) {
-  let i = MRe(r);
+var POLICY_LIMITS_API_PATH = "/api/claude_code/policy_limits";
+function formatPolicyDeniedMessage(t, e, r, o) {
+  let i = getNameableComplianceTaints(r);
   if (i.length > 0)
-    return `${t} ${e === "are" ? "aren't" : "isn't"} available for your organization due to its compliance policy (${i.map(D6).join(", ")}).`;
+    return `${t} ${e === "are" ? "aren't" : "isn't"} available for your organization due to its compliance policy (${i.map(formatComplianceTaintLabel).join(", ")}).`;
   if (o !== void 0) return o;
   return `${t} ${e} disabled by your organization's policy. Contact your organization admin to enable ${e === "are" ? "them" : "it"}.`;
 }
-function Qse(t) {
+function policyCacheMissMessage(t) {
   return `Couldn't verify your organization's policy for ${t.toLowerCase()}. Check your network connection and try again.`;
 }
-function cBe(t) {
-  return `Couldn't load your organization's policy, which governs ${t.toLowerCase()}. The request for ${NRe} got a 404, which usually means a proxy or gateway between you and the API isn't forwarding that path. Ask your network admin to allow it; \`claude doctor\` (or /status in a session) shows which host was asked.`;
+function policyRouteMissingMessage(t) {
+  return `Couldn't load your organization's policy, which governs ${t.toLowerCase()}. The request for ${POLICY_LIMITS_API_PATH} got a 404, which usually means a proxy or gateway between you and the API isn't forwarding that path. Ask your network admin to allow it; \`claude doctor\` (or /status in a session) shows which host was asked.`;
 }
-function Rir(t) {
+function policyCacheMissRestartMessage(t) {
   return `Couldn't verify your organization's policy for ${t.toLowerCase()}. Check your network connection, then restart Claude Code and try again.`;
 }
-function kir(t) {
+function staleCommandReason(t) {
   return `/${t} is available for your organization but wasn't when this session started. Restart Claude Code to use it.`;
 }
-function xir(t, e) {
-  let r = MRe(t);
+function formatPolicyBlockedReason(t, e) {
+  let r = getNameableComplianceTaints(t);
   if (r.length > 0)
-    return `not available for your organization due to its compliance policy (${r.map(D6).join(", ")})`;
+    return `not available for your organization due to its compliance policy (${r.map(formatComplianceTaintLabel).join(", ")})`;
   return e ?? "disabled by your organization's policy";
 }
-function Hir() {
+function policyCacheMissReason() {
   return "couldn't verify your organization's policy \u2014 check your network connection and try again";
 }
-function Iir() {
-  return `your organization's policy couldn't be loaded: the request for ${NRe} got a 404, which usually means a proxy or gateway isn't forwarding that path. Ask your network admin to allow it`;
+function policyRouteMissingReason() {
+  return `your organization's policy couldn't be loaded: the request for ${POLICY_LIMITS_API_PATH} got a 404, which usually means a proxy or gateway isn't forwarding that path. Ask your network admin to allow it`;
 }
-var Zse =
+var DECISION_SURFACE_BRACKET_RANGES =
   "\u02F9-\u02FC\u230C-\u230F\u231C-\u231F\u239B-\u23CC\u23DC-\u23E1\u2E00-\u2E0D\u2E1C\u2E1D\u2500-\u257F";
-var iy = "[Request interrupted by user]",
-  gc = "[Request interrupted by user for tool use]",
-  _b =
+var INTERRUPTED_BY_USER_MARKER = "[Request interrupted by user]",
+  INTERRUPTED_FOR_TOOL_USE_MARKER = "[Request interrupted by user for tool use]",
+  TOOL_CALL_NOT_COMPLETED_MARKER =
     "[Tool call did not complete: the turn was ended to deliver the message that follows. Nothing refused it; re-run it if still needed.]",
-  oS =
+  USER_REFUSED_ACTION_MARKER =
     "The user doesn't want to take this action right now. STOP what you are doing and wait for the user to tell you how to proceed.",
-  eie =
+  TOOL_CALL_SKIPPED_MARKER =
     "[Tool call skipped: the turn ended to deliver the message that follows before this call ran. Nothing refused it; re-run it if still needed.]",
-  Nvt = "User rejected tool use",
-  hA = "API Error: Request was aborted.",
-  TQ = "Operation stopped by hook",
-  FRe = [iy, gc, _b, oS, eie];
-function JZe(t) {
-  return t.startsWith(oS) || t.startsWith(eie);
+  USER_REJECTED_TOOL_USE_MARKER = "User rejected tool use",
+  API_REQUEST_ABORTED_MESSAGE = "API Error: Request was aborted.",
+  OPERATION_STOPPED_BY_HOOK_MESSAGE = "Operation stopped by hook",
+  INTERRUPT_MESSAGE_PREFIXES = [INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, USER_REFUSED_ACTION_MARKER, TOOL_CALL_SKIPPED_MARKER];
+function isUserRefusalOrSkipMessage(t) {
+  return t.startsWith(USER_REFUSED_ACTION_MARKER) || t.startsWith(TOOL_CALL_SKIPPED_MARKER);
 }
-var dBe = `
+var AUTO_MEMORY_REMINDER_SUFFIX = `
 
 Note: The user's next message may contain a correction or preference. Pay close attention \u2014 if they explain what went wrong or how they'd prefer you to work, consider saving that to memory for future sessions.`;
-function WT(t) {
+function isInterruptLikeUserMessage(t) {
   if (t.type !== "user") return !1;
   let e = t.message?.content;
-  if (typeof e === "string") return FRe.some((r) => e.startsWith(r));
+  if (typeof e === "string") return INTERRUPT_MESSAGE_PREFIXES.some((r) => e.startsWith(r));
   if (!Array.isArray(e)) return !1;
   return (
     e.length > 0 &&
@@ -198,33 +198,33 @@ function WT(t) {
           : r.type === "tool_result" && r.is_error === !0
             ? r.content
             : void 0;
-      return typeof o === "string" && FRe.some((i) => o.startsWith(i));
+      return typeof o === "string" && INTERRUPT_MESSAGE_PREFIXES.some((i) => o.startsWith(i));
     })
   );
 }
-function QZe(t) {
+function isShutdownInterruptedToolResultMessage(t) {
   if (t.type !== "user" || t.interruptedByShutdown !== !0) return !1;
   let e = t.message?.content;
   return Array.isArray(e) && e.some((r) => r.type === "tool_result");
 }
-var S5t = ` hook feedback:
+var HOOK_FEEDBACK_SUFFIX = ` hook feedback:
 `,
-  vkn = ["Stop", "TeammateIdle", "TaskCreated", "TaskCompleted"];
-function Fvt(t, e) {
-  return `${t}${S5t}${e}`;
+  HOOK_FEEDBACK_EVENT_NAMES = ["Stop", "TeammateIdle", "TaskCreated", "TaskCompleted"];
+function formatHookFeedbackMessage(t, e) {
+  return `${t}${HOOK_FEEDBACK_SUFFIX}${e}`;
 }
-var pBe = "[structured-output-enforce]",
+var STRUCTURED_OUTPUT_ENFORCE_TAG = "[structured-output-enforce]",
   Rkn = "",
-  ZZe =
+  INVALID_TOOL_CALL_RETRY_MESSAGE =
     "The previous response failed to produce a valid tool call. Please retry the tool call now.",
-  kkn = "Your tool call was malformed and could not be parsed. Please retry.",
-  eet =
+  MALFORMED_TOOL_CALL_RETRY_MESSAGE = "Your tool call was malformed and could not be parsed. Please retry.",
+  NO_VISIBLE_OUTPUT_MESSAGE =
     "[Your previous response had no visible output. Please continue and produce a user-visible response.]",
-  tet = "The PermissionDenied hook indicated you may retry this tool call.",
-  net = "Goal check-in: \xAB",
-  nt = [pBe, Rkn, BRIEF_ENFORCE_SENTINEL].filter((t) => t.length > 0),
-  rt = [ZZe, kkn, eet, tet];
-function Bir(t) {
+  PERMISSION_DENIED_RETRY_MESSAGE = "The PermissionDenied hook indicated you may retry this tool call.",
+  GOAL_CHECK_IN_PREFIX = "Goal check-in: \xAB",
+  nt = [STRUCTURED_OUTPUT_ENFORCE_TAG, Rkn, BRIEF_ENFORCE_SENTINEL].filter((t) => t.length > 0),
+  rt = [INVALID_TOOL_CALL_RETRY_MESSAGE, MALFORMED_TOOL_CALL_RETRY_MESSAGE, NO_VISIBLE_OUTPUT_MESSAGE, PERMISSION_DENIED_RETRY_MESSAGE];
+function isSyntheticMetaUserMessage(t) {
   if (t.type !== "user" || t.isMeta !== !0) return !1;
   let e = t.message?.content,
     r = Array.isArray(e) ? e[0] : void 0,
@@ -237,12 +237,12 @@ function Bir(t) {
   if (typeof o !== "string") return !1;
   if (nt.some((i) => o.startsWith(i))) return !0;
   if (rt.includes(o)) return !0;
-  return vkn.some((i) => o.startsWith(`${i}${S5t}`));
+  return HOOK_FEEDBACK_EVENT_NAMES.some((i) => o.startsWith(`${i}${HOOK_FEEDBACK_SUFFIX}`));
 }
 var E = 58n,
   ot = (1n << 128n) - 1n,
   y = 22,
-  b5t = "[1-9A-HJ-NP-Za-km-z]{22}",
+  BASE58_SLUG_PATTERN = "[1-9A-HJ-NP-Za-km-z]{22}",
   it = new RegExp("^[1-9A-HJ-NP-Za-km-z]{22}$"),
   st = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 function A(t) {
@@ -257,7 +257,7 @@ function A(t) {
       (e /= E));
   return r;
 }
-function tie(t) {
+function slugToUuid(t) {
   if (!it.test(t)) return null;
   let e = 0n;
   for (let o of t)
@@ -321,16 +321,16 @@ function artifactPolicyBlockedMessage(t) {
     case "plan_unreadable":
       return "The signed-in Claude account's plan couldn't be read from this session. Run /login again to refresh the signed-in account, then retry.";
     case "org_denied":
-      return lBe(
+      return formatPolicyDeniedMessage(
         "Artifacts",
         "are",
         getComplianceTaints(),
         "Artifacts are disabled by your organization's policy. Contact your organization admin to enable them, then retry.",
       );
     case "cache_miss":
-      return Qse("Artifacts");
+      return policyCacheMissMessage("Artifacts");
     case "policy_route_missing":
-      return cBe("Artifacts");
+      return policyRouteMissingMessage("Artifacts");
     case "policy_unavailable":
       return "Artifacts can't check the organization settings that apply to this session: the session's configuration (such as a custom ANTHROPIC_BASE_URL) prevents the policy lookup. Remove that configuration, then retry.";
   }
@@ -350,18 +350,18 @@ class ArtifactInputError extends Error {
 }
 var g = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
   I = "/(?:artifact|code/(?:artifact|frame))/",
-  C = `${g}|${b5t}`,
+  C = `${g}|${BASE58_SLUG_PATTERN}`,
   O = `${I}(?:([A-Za-z0-9_-]*)-)?(${C})(?:[/?#]|$)`,
   w = `${I}(?:[A-Za-z0-9_-]*-)?(?:${C})/([^?#]+)`;
 function S(t, e = !1) {
   if (t === void 0) return null;
   if (t.length !== y) return t;
-  return e ? null : tie(t);
+  return e ? null : slugToUuid(t);
 }
 var ARTIFACT_SLUG_RE = new RegExp(`^${g}$`),
   ARTIFACT_VERSION_SAFE_RE = /^[\w-]{1,64}$/,
   ARTIFACT_MAX_RESULT_SIZE_CHARS = 16000,
-  ARTIFACT_PAGE_INLINE_RESULT_CAP = u1,
+  ARTIFACT_PAGE_INLINE_RESULT_CAP = DEFAULT_MAX_RESULT_SIZE_CHARS,
   ARTIFACT_DB_READ_MAX_RESULT_SIZE_CHARS = 300000,
   ARTIFACT_STUB_URL_PREFIX = "eval-stub://artifact/";
 function getArtifactPublishStubDir() {
@@ -386,7 +386,7 @@ function M(t, e) {
     let s = t.match(new RegExp(`^https?://([^/?#]+)${O}`)),
       l = S(s?.[3], e);
     if (s !== null && l !== null && s[1] === new URL(u).host)
-      return R(t, { slug: l, env: Vo() }, s[2]);
+      return R(t, { slug: l, env: getArtifactEnvironment() }, s[2]);
   }
   return null;
 }
@@ -453,7 +453,7 @@ function artifactViewerPath(t) {
 }
 function H(t) {
   let e = YZe();
-  if (e && t === Vo()) return e;
+  if (e && t === getArtifactEnvironment()) return e;
   return "https://claude.ai";
 }
 function artifactViewerUrlFor(t) {
@@ -796,32 +796,32 @@ class W {
   #n;
   get lead() {
     return (
-      (this.#t ??= iar([
-        ["artifact", P5t],
-        ["artifact", vq, "owned", "by", "you"],
-        ["artifact", vq, "raw", "html", "follows"],
-        ["artifact", vq, "summary", "below"],
-        ["artifact", vq, "shared", "with", "you"],
-        ["artifact", vq, "published", "from", "your"],
-        ["artifact", vq, "live", "version"],
-        ["artifact", vq, "published", "by", "a", "writer"],
-        ["this", "version", "has", vq, "published", "files"],
+      (this.#t ??= buildBracketedLeadScrubPattern([
+        ["artifact", LEAD_HEX_ID_SYMBOL],
+        ["artifact", LEAD_SPAN_SYMBOL, "owned", "by", "you"],
+        ["artifact", LEAD_SPAN_SYMBOL, "raw", "html", "follows"],
+        ["artifact", LEAD_SPAN_SYMBOL, "summary", "below"],
+        ["artifact", LEAD_SPAN_SYMBOL, "shared", "with", "you"],
+        ["artifact", LEAD_SPAN_SYMBOL, "published", "from", "your"],
+        ["artifact", LEAD_SPAN_SYMBOL, "live", "version"],
+        ["artifact", LEAD_SPAN_SYMBOL, "published", "by", "a", "writer"],
+        ["this", "version", "has", LEAD_SPAN_SYMBOL, "published", "files"],
         ["origin", "of", "this", "version"],
         ["created", "from", "the", "artifact", "type"],
         ["end", "of", "live", "content"],
-        ["this", "artifact", vq, "ships", "an", "instructions", "file"],
+        ["this", "artifact", LEAD_SPAN_SYMBOL, "ships", "an", "instructions", "file"],
         ["could", "not", "check", "whether", "this", "artifact"],
       ])),
       this.#t
     );
   }
   get page() {
-    return ((this.#e ??= [Cge(D), this.lead]), this.#e);
+    return ((this.#e ??= [buildConfusableTagScrubPattern(D), this.lead]), this.#e);
   }
   get envelopes() {
     return (
       (this.#n ??= [
-        Cge(
+        buildConfusableTagScrubPattern(
           dedupe([
             ...D,
             "system-reminder",
@@ -836,8 +836,8 @@ class W {
             COMMAND_ARGS_TAG,
           ]),
         ),
-        Xvt(),
-        Yvt(),
+        buildChannelSourceTagPattern(),
+        buildModelLayerTagPattern(),
         this.lead,
       ]),
       this.#n
@@ -851,7 +851,7 @@ function q() {
 function artifactLeadScrubPattern() {
   return q().lead;
 }
-var Z = [gc, _b];
+var Z = [INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER];
 function containsInterruptLiteral(t) {
   return Z.some((e) => t.includes(e));
 }
@@ -898,7 +898,7 @@ function sweepAskCopy(t) {
   );
 }
 var ARROW_SHAFT_SYMBOLS = String.raw`\u002b\u003d\u005e\u007c\u007e\u00a2-\u00a5\u00a8\u00ac\u00af\u00b1\u00b4\u00b8\u00d7\u00f7\u02c2-\u02c5\u02d2-\u02df\u02e5-\u02eb\u02ed\u02ef-\u02ff\u0375\u0384\u0385\u03f6\u058f\u0606-\u0608\u060b\u07fe\u07ff\u0888\u09f2\u09f3\u09fb\u0af1\u0bf9\u0e3f\u17db\u1fbd\u1fbf-\u1fc1\u1fcd-\u1fcf\u1fdd-\u1fdf\u1fed-\u1fef\u1ffd\u1ffe\u2044\u2052\u207a-\u207c\u208a-\u208c\u20a0-\u20c1\u2118\u2140-\u2144\u214b\u2190-\u2194\u219a\u219b\u21a0\u21a3\u21a6\u21ae\u21ce\u21cf\u21d2\u21d4\u21f4-\u22ff\u2320\u2321\u237c\u239b-\u23b3\u23dc-\u23e1\u25b7\u25c1\u25f8-\u25ff\u266f\u27c0-\u27c4\u27c7-\u27e5\u27f0-\u27ff\u2900-\u2982\u2999-\u29d7\u29dc-\u29fb\u29fe-\u2aff\u2b30-\u2b44\u2b47-\u2b4c\u309b\u309c\ua700-\ua716\ua720\ua721\ua789\ua78a\ua838\uab5b\uab6a\uab6b\ufb29\ufbb2-\ufbc2\ufdfc\ufe62\ufe64-\ufe66\ufe69\uff04\uff0b\uff1c-\uff1e\uff3e\uff40\uff5c\uff5e\uffe0-\uffe3\uffe5\uffe6\uffe9-\uffec\u{10d8e}\u{10d8f}\u{11fdd}-\u{11fe0}\u{1cef0}\u{1d6c1}\u{1d6db}\u{1d6fb}\u{1d715}\u{1d735}\u{1d74f}\u{1d76f}\u{1d789}\u{1d7a9}\u{1d7c3}\u{1e2ff}\u{1ecb0}\u{1eef0}\u{1eef1}\u{1f3fb}-\u{1f3ff}\u{1f8d0}-\u{1f8d8}`,
-  v = `[\\p{So}${ARROW_SHAFT_SYMBOLS}\\p{Pd}\\p{Pc}\\p{Mn}\\p{Me}${KRe}\\u02c9\\u02cd\\u2017\\u2053\\u203e\\ufe49-\\ufe4c\\u0640\\u07fa\\u1173\\u1428\\u180a\\u2e0f\\u2f00\\u3127\\u3161\\u3192\\u31d0\\u4e00\\ua4ff\\ua7f7\\ua8fb\\uffda]`,
+  v = `[\\p{So}${ARROW_SHAFT_SYMBOLS}\\p{Pd}\\p{Pc}\\p{Mn}\\p{Me}${DASH_CHARS_CLASS}\\u02c9\\u02cd\\u2017\\u2053\\u203e\\ufe49-\\ufe4c\\u0640\\u07fa\\u1173\\u1428\\u180a\\u2e0f\\u2f00\\u3127\\u3161\\u3192\\u31d0\\u4e00\\ua4ff\\ua7f7\\ua8fb\\uffda]`,
   Nt = new RegExp(`(?<!${v})${v}+>`, "gu");
 function sweepProvenanceMarker(t) {
   return t
@@ -908,7 +908,7 @@ function sweepProvenanceMarker(t) {
     )
     .replace(Nt, "?");
 }
-var P = `(?![(){}])[\\p{Ps}\\p{Pe}${Zse}]`,
+var P = `(?![(){}])[\\p{Ps}\\p{Pe}${DECISION_SURFACE_BRACKET_RANGES}]`,
   DECISION_SURFACE_BRACKETS_RE = new RegExp(`(?<!\\s)\\s*${P}(?:\\s|${P})*`, "gu"),
   J =
     /[:\u02D0\u02D1\u05C3\u2D42\u2D53\u2D57\uA4FD\uA789\u{10781}\u{10782}]|(?![\p{L}\p{N}\p{Zs}])[^\x00-\x7F]/gu,
@@ -952,63 +952,63 @@ function splitWatchRows(t) {
   return { watching: t.length - e, stopped: e };
 }
 export {
-  D6,
-  Lvt,
-  KZe,
-  MRe,
-  NRe,
-  lBe,
-  Qse,
-  cBe,
-  Rir,
-  kir,
-  xir,
-  Hir,
-  Iir,
-  u1,
-  Pir,
-  hge,
+  formatComplianceTaintLabel,
+  isKnownComplianceTaint,
+  normalizeComplianceTaints,
+  getNameableComplianceTaints,
+  POLICY_LIMITS_API_PATH,
+  formatPolicyDeniedMessage,
+  policyCacheMissMessage,
+  policyRouteMissingMessage,
+  policyCacheMissRestartMessage,
+  staleCommandReason,
+  formatPolicyBlockedReason,
+  policyCacheMissReason,
+  policyRouteMissingReason,
+  DEFAULT_MAX_RESULT_SIZE_CHARS,
+  OUTPUT_MAX_CHARS_FLOOR,
+  OUTPUT_MAX_CHARS_CEILING,
   uBe,
-  Mvt,
-  Oir,
-  Dir,
-  Iw,
-  Lir,
-  XZe,
-  Mir,
-  Vo,
-  Nir,
+  BYTES_PER_TOKEN,
+  DEFAULT_TOOL_RESULT_PERSIST_THRESHOLD,
+  DEFAULT_AGGREGATE_TOOL_RESULT_BUDGET,
+  TOOL_USE_SUMMARY_MAX_CHARS,
+  DEFAULT_HOOK_OUTPUT_PERSIST_THRESHOLD,
+  DEFAULT_MIDDLE_TRUNCATE_MAX_CHARS,
+  MAX_TASK_NOTIFICATION_CHARS,
+  getArtifactEnvironment,
+  getClaudeAiOrigin,
   Fir,
-  $ir,
+  getBaseApiUrl,
   Uir,
   YZe,
-  Zse,
-  iy,
-  gc,
-  _b,
-  oS,
-  eie,
-  Nvt,
-  hA,
-  TQ,
-  FRe,
-  JZe,
-  dBe,
-  WT,
-  QZe,
-  S5t,
-  vkn,
-  Fvt,
-  pBe,
+  DECISION_SURFACE_BRACKET_RANGES,
+  INTERRUPTED_BY_USER_MARKER,
+  INTERRUPTED_FOR_TOOL_USE_MARKER,
+  TOOL_CALL_NOT_COMPLETED_MARKER,
+  USER_REFUSED_ACTION_MARKER,
+  TOOL_CALL_SKIPPED_MARKER,
+  USER_REJECTED_TOOL_USE_MARKER,
+  API_REQUEST_ABORTED_MESSAGE,
+  OPERATION_STOPPED_BY_HOOK_MESSAGE,
+  INTERRUPT_MESSAGE_PREFIXES,
+  isUserRefusalOrSkipMessage,
+  AUTO_MEMORY_REMINDER_SUFFIX,
+  isInterruptLikeUserMessage,
+  isShutdownInterruptedToolResultMessage,
+  HOOK_FEEDBACK_SUFFIX,
+  HOOK_FEEDBACK_EVENT_NAMES,
+  formatHookFeedbackMessage,
+  STRUCTURED_OUTPUT_ENFORCE_TAG,
   Rkn,
-  ZZe,
-  kkn,
-  eet,
-  tet,
-  net,
-  Bir,
-  b5t,
-  tie,
+  INVALID_TOOL_CALL_RETRY_MESSAGE,
+  MALFORMED_TOOL_CALL_RETRY_MESSAGE,
+  NO_VISIBLE_OUTPUT_MESSAGE,
+  PERMISSION_DENIED_RETRY_MESSAGE,
+  GOAL_CHECK_IN_PREFIX,
+  isSyntheticMetaUserMessage,
+  BASE58_SLUG_PATTERN,
+  slugToUuid,
   jir,
   ARTIFACT_TOOL_NAME,
   ARTIFACT_COMMENTS_TOOL_NAME,

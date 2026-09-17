@@ -10,14 +10,14 @@
 import { he, VR, u_e, ke } from "../../lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getGlobalClaudeFile } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeToStderr } from "../../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logMCPError, logMCPDebug } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getMcpClientState } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, getFeatureValue_CACHED_MAY_BE_STALE, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { assignValue } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -814,7 +814,7 @@ class ASe {
   onBunMessage = (e) => {
     try {
       let t = typeof e.data === "string" ? e.data : String(e.data),
-        r = z(t),
+        r = jsonParse(t),
         a = this.parseMessage(r);
       this.onmessage?.(a);
     } catch (t) {
@@ -857,7 +857,7 @@ class ASe {
         writeDiagnosticsEvent("error", "mcp_websocket_send_not_opened"),
         Error("WebSocket is not open. Cannot send message.")
       );
-    let t = b(e);
+    let t = jsonStringify(e);
     try {
       this.ws.send(t);
     } catch (r) {
@@ -878,7 +878,7 @@ class K {
   liveClients = new Set();
 }
 function ur() {
-  let e = jt();
+  let e = getMcpClientState();
   if (e.connectionCache === null)
     ((e.connectionCache = new K()),
       lz(e.connectionCache.connections),
@@ -1034,7 +1034,7 @@ function Tr() {
       M = null;
     }
     if (M === null)
-      (n(
+      (logForDebugging(
         "MCP: draft 2020-12 meta-validator unavailable \u2014 tool schema checks fail open",
         { level: "warn" },
       ),
@@ -1059,7 +1059,7 @@ function Nr(e, t, r) {
     return {
       valid: !1,
       check: "propertyKey",
-      detail: `property key ${b(a.slice(0, 80))} does not match ${E}`,
+      detail: `property key ${jsonStringify(a.slice(0, 80))} does not match ${E}`,
     };
   if (e === null) return { valid: !0 };
   let s = t;
@@ -1218,7 +1218,7 @@ async function zr(e, t) {
   } catch (a) {
     return (
       logMCPError(e, `Error getting headers from headersHelper: ${l(a)}`),
-      n(
+      logForDebugging(
         `Error getting MCP headers from headersHelper for server '${e}': ${l(a)}`,
         { level: "error" },
       ),

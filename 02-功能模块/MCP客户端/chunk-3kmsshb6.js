@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { truncateToCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { normalizeKeyName, buildKeyNameLookup } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
@@ -370,7 +370,7 @@ function parseFrontmatter(e, t, r) {
       } catch {
         h = `quoting [${p.quotedKeys.join(", ")}] broke the document; a rewrite from the plain parse would drop their inline '#' content`;
         let m = t ? ` in ${t}` : "";
-        n(`quoteLossyValues: ${h}${m}`, { level: "warn" });
+        logForDebugging(`quoteLossyValues: ${h}${m}`, { level: "warn" });
       }
   }
   let g = parseFrontmatterYaml(a);
@@ -378,7 +378,7 @@ function parseFrontmatter(e, t, r) {
   else {
     f = g.error;
     let p = t ? ` in ${t}` : "";
-    n(`Failed to parse YAML frontmatter${p}: ${f}`, { level: "warn" });
+    logForDebugging(`Failed to parse YAML frontmatter${p}: ${f}`, { level: "warn" });
   }
   let S = !r?.quoteLossyValues
     ? void 0
@@ -456,7 +456,7 @@ function N(e, t) {
     let d = r.length + o.length + f.length;
     if (t.bytes < 0 || d > t.results || d * e.length > t.bytes)
       return (
-        n(
+        logForDebugging(
           `Brace pattern expansion exceeds the budget; using it unexpanded: ${truncateToCodeUnits(e, 256)}`,
           { level: "warn" },
         ),
@@ -484,7 +484,7 @@ function parseOptionalString(e, t, r) {
   if (typeof e === "number" || typeof e === "boolean") return String(e);
   let o = r ? `${r}:${t}` : (t ?? "unknown");
   return (
-    n(`Description invalid for ${o} - omitting`, { level: "warn" }),
+    logForDebugging(`Description invalid for ${o} - omitting`, { level: "warn" }),
     null
   );
 }
@@ -512,7 +512,7 @@ function normalizeShellOption(e, t) {
   let r = String(e).trim().toLowerCase();
   if (r === "") return;
   if (C.includes(r)) return r;
-  n(
+  logForDebugging(
     `Frontmatter 'shell: ${e}' in ${t} is not recognized. Valid values: ${C.join(", ")}. Falling back to bash.`,
     { level: "warn" },
   );

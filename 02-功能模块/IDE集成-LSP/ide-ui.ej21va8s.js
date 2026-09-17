@@ -17,7 +17,7 @@ import { getCurrentWorktreeSession, saveGlobalConfig, getGlobalConfig } from "..
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
@@ -133,7 +133,7 @@ function ne(_o) {
   else he = O[15];
   let yt;
   if (O[16] === MEMO_CACHE_SENTINEL)
-    ((yt = e(t, {
+    ((yt = e(Text, {
       dimColor: !0,
       children: "You can also configure this in /config or with the --ide flag",
     })),
@@ -226,7 +226,7 @@ function ao(Ft, Dn) {
   return e(
     BulletItem,
     {
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: [Ft.name, ": ", formatWorkspaceFolders(Ft.workspaceFolders)],
       }),
@@ -368,18 +368,18 @@ https://code.claude.com/docs/en/jetbrains`
                 },
               }),
               V.some(so) &&
-                e(o, {
+                e(Box, {
                   marginTop: 1,
-                  children: e(t, {
+                  children: e(Text, {
                     color: "warning",
                     children:
                       "Note: Only one Claude Code instance can be connected to VS Code at a time.",
                   }),
                 }),
               !isSupportedIdeTerminal() &&
-                e(o, {
+                e(Box, {
                   marginTop: 1,
-                  children: e(t, {
+                  children: e(Text, {
                     dimColor: !0,
                     children:
                       "Tip: You can enable auto-connect to IDE in /config or with the --ide flag",
@@ -397,11 +397,11 @@ https://code.claude.com/docs/en/jetbrains`
   if (A[22] !== B)
     ((ye =
       B.length > 0 &&
-      r(o, {
+      r(Box, {
         marginTop: 1,
         flexDirection: "column",
         children: [
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               "Found ",
@@ -409,7 +409,7 @@ https://code.claude.com/docs/en/jetbrains`
               " other running IDE(s). However, their workspace/project directories do not match the current cwd.",
             ],
           }),
-          r(o, {
+          r(Box, {
             marginTop: 1,
             paddingLeft: 3,
             flexDirection: "column",
@@ -425,7 +425,7 @@ https://code.claude.com/docs/en/jetbrains`
   else ye = A[23];
   let we;
   if (A[24] !== k || A[25] !== ye)
-    ((we = r(o, { flexDirection: "column", children: [k, ye] })),
+    ((we = r(Box, { flexDirection: "column", children: [k, ye] })),
       (A[24] = k),
       (A[25] = ye),
       (A[26] = we));
@@ -726,7 +726,7 @@ function ft(_n) {
   if (J[8] !== S || J[9] !== v)
     ((Gt = [S, v]), (J[8] = S), (J[9] = v), (J[10] = Gt));
   else Gt = J[10];
-  Un(Zt, S ? IDE_CONNECTION_TIMEOUT_MS : null, Gt);
+  useTimeout(Zt, S ? IDE_CONNECTION_TIMEOUT_MS : null, Gt);
   let eo;
   if (J[11] !== L || J[12] !== P || J[13] !== ue || J[14] !== v || J[15] !== at)
     ((eo = (oe) => {
@@ -768,7 +768,7 @@ function ft(_n) {
   if (S) {
     let z;
     if (J[17] !== S.name)
-      ((z = r(t, {
+      ((z = r(Text, {
         dimColor: !0,
         children: ["Connecting to ", S.name, "\u2026"],
       })),

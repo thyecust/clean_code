@@ -12,7 +12,7 @@ import { JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -25,10 +25,10 @@ import { getMainLoopModel, isScreenReaderModeEnabled, queueScreenReaderAnnouncem
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
-import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { gi, bs, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth, wrapAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { isFullscreen, useAnimationFrame, useDebouncedCallback } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { getAttachStampMs, isAttachQuietDrainActive } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
@@ -43,7 +43,7 @@ import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { buildDraftText, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
 import { re, De, E, vr, dn, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { lK, Z3, pJn, fJn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage, isImageFilePath, readPastedImageFile } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { getGraphemeSegmenter, getFirstGrapheme, getWordSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getCurrentPlatform, getMacOSMajorVersion } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -112,7 +112,7 @@ async function ht(e) {
     );
   } catch (s) {
     if (Rt(s))
-      return (n(`backupTerminalPreferences: fs inaccessible: ${s}`), null);
+      return (logForDebugging(`backupTerminalPreferences: fs inaccessible: ${s}`), null);
     return (logError(s), null);
   }
 }
@@ -136,7 +136,7 @@ async function checkAndRestoreTerminalBackup(e) {
       { status: "restored" }
     );
   } catch (o) {
-    if (Rt(o)) n(`checkAndRestoreTerminalBackup: fs inaccessible: ${o}`);
+    if (Rt(o)) logForDebugging(`checkAndRestoreTerminalBackup: fs inaccessible: ${o}`);
     else logError(o);
     return (
       await $e(e),
@@ -416,7 +416,7 @@ class xt {
       if (e === "VSCode") return t("Code");
       if (e === "Devin Desktop") {
         let r = t("Devin");
-        return (await El(r)) ? r : t("Windsurf");
+        return (await pathExists(r)) ? r : t("Windsurf");
       }
       return t(e);
     },
@@ -460,7 +460,7 @@ async function Ze(e, t, r) {
     );
   } catch (l) {
     return (
-      n(
+      logForDebugging(
         `Couldn't update ${t} settings.json at ${o}: ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
       ),
@@ -518,7 +518,7 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
   } catch (l) {
     return (
       logFeatureSad("terminal_setup_gpu_accel", "write_failed"),
-      n(
+      logForDebugging(
         `Couldn't update ${t} settings.json at ${o}: ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
       ),
@@ -579,7 +579,7 @@ async function Qe(e, t = "VSCode", r) {
     );
   } catch (l) {
     throw (
-      n(
+      logForDebugging(
         `Failed to install ${t} terminal Shift+Enter keybinding: ${l instanceof Error ? l.message : String(l)}`,
         { level: "error" },
       ),
@@ -601,7 +601,7 @@ async function pt(e) {
     ]);
     if (r !== 0)
       return (
-        n(
+        logForDebugging(
           `Failed to enable Option as Meta key for Terminal.app profile: ${e}`,
           { level: "error" },
         ),
@@ -624,7 +624,7 @@ async function gt(e) {
     ]);
     if (r !== 0)
       return (
-        n(`Failed to disable audio bell for Terminal.app profile: ${e}`, {
+        logForDebugging(`Failed to disable audio bell for Terminal.app profile: ${e}`, {
           level: "error",
         }),
         !1
@@ -695,7 +695,7 @@ async function dr(e, t) {
       : chalk.dim("Option+Enter will now enter a newline.");
     return `${J.join(p)}${p}${K}${p}${chalk.dim("You must restart Terminal.app for changes to take effect.")}${p}`;
   } catch (o) {
-    n(
+    logForDebugging(
       `Terminal.app setup failed: ${o instanceof Error ? o.message : String(o)}`,
       { level: "error" },
     );
@@ -765,7 +765,7 @@ chars = "\\u001B\\r"
     );
   } catch (c) {
     throw (
-      n(
+      logForDebugging(
         `Failed to install Alacritty keybinding: ${c instanceof Error ? c.message : String(c)}`,
         { level: "error" },
       ),
@@ -806,7 +806,7 @@ async function mr(e) {
       return (
         await writeFileAtomic(
           s,
-          b(
+          jsonStringify(
             [{ context: "Terminal", bindings: { "shift-enter": et } }],
             null,
             2,
@@ -831,7 +831,7 @@ async function mr(e) {
       await copyFile(s, J);
     } catch (O) {
       return (
-        n(
+        logForDebugging(
           `Failed to back up Zed keymap: ${O instanceof Error ? O.message : String(O)}`,
           { level: "error" },
         ),
@@ -858,7 +858,7 @@ async function mr(e) {
             );
       _ = O.length > 0 ? vRt(L, O) : null;
     } catch (O) {
-      n(
+      logForDebugging(
         `Failed to edit Zed keymap: ${O instanceof Error ? O.message : String(O)}`,
         { level: "error" },
       );
@@ -873,7 +873,7 @@ async function mr(e) {
     return (await writeFileAtomic(s, _), { message: m, installed: !0 });
   } catch (T) {
     throw (
-      n(
+      logForDebugging(
         `Failed to install Zed Shift+Enter key binding: ${T instanceof Error ? T.message : String(T)}`,
         { level: "error" },
       ),
@@ -951,7 +951,7 @@ function logLeftArrowBlocked(e, t) {
         reason: S("attach-quiet-hint"),
         ms_since_stamp: r,
       }),
-        n(`leftArrowGesture: attach-quiet hint armed (ms_since_stamp=${r})`, {
+        logForDebugging(`leftArrowGesture: attach-quiet hint armed (ms_since_stamp=${r})`, {
           level: "debug",
         }));
       return;
@@ -960,7 +960,7 @@ function logLeftArrowBlocked(e, t) {
         reason: S("attach-quiet"),
         ms_since_stamp: r,
       }),
-        n(
+        logForDebugging(
           `leftArrowGesture: attach-quiet silent absorb (ms_since_stamp=${r})`,
           { level: "debug" },
         ));
@@ -1131,7 +1131,7 @@ class TextCursor {
           G += v;
           continue;
         }
-        let X = A + te(v);
+        let X = A + getStringWidth(v);
         if (X > I) ((de = v), (Z = !0));
         else ((A = X), (O += v));
       }
@@ -1191,7 +1191,7 @@ class TextCursor {
     if (e === 0) return this;
     let r = this.measuredText.getWrappedText()[e - 1];
     if (r === void 0) return this;
-    let s = te(r);
+    let s = getStringWidth(r);
     if (t > s) {
       let l = this.getOffset({ line: e - 1, column: s });
       return new TextCursor(this.measuredText, l, 0);
@@ -1204,7 +1204,7 @@ class TextCursor {
     if (e >= this.measuredText.lineCount - 1) return this;
     let r = this.measuredText.getWrappedText()[e + 1];
     if (r === void 0) return this;
-    let s = te(r);
+    let s = getStringWidth(r);
     if (t > s) {
       let l = this.getOffset({ line: e + 1, column: s });
       return new TextCursor(this.measuredText, l, 0);
@@ -1709,8 +1709,8 @@ class $t {
   }
   stringIndexToDisplayWidth(e, t) {
     if (t <= 0) return 0;
-    if (t >= e.length) return te(e);
-    return te(e.substring(0, t));
+    if (t >= e.length) return getStringWidth(e);
+    return getStringWidth(e.substring(0, t));
   }
   displayWidthToStringIndex(e, t) {
     if (t <= 0) return 0;
@@ -1719,7 +1719,7 @@ class $t {
     let r = 0,
       s = 0;
     for (let { segment: o, index: l } of getGraphemeSegmenter().segment(e)) {
-      let m = te(o);
+      let m = getStringWidth(o);
       if (r + m > t) break;
       ((r += m), (s = l + o.length));
     }
@@ -1734,14 +1734,14 @@ class $t {
         l = r[s + 1];
       if (o === void 0 || l === void 0) continue;
       let m = this.text.substring(o, l),
-        c = te(m);
+        c = getStringWidth(m);
       if (t + c > e) return o;
       t += c;
     }
     return this.text.length;
   }
   measureWrappedText() {
-    let e = dp(this.text, this.columns, { hard: !0, trim: !1 }),
+    let e = wrapAnsi(this.text, this.columns, { hard: !0, trim: !1 }),
       t = [],
       r = 0,
       s = -1,
@@ -1806,13 +1806,13 @@ class $t {
       l = t.startOffset + o,
       m = t.startOffset + t.text.length,
       c = m,
-      x = te(t.text);
+      x = getStringWidth(t.text);
     if (t.endsWithNewline && e.column > x) c = m + 1;
     return this.snapToGraphemeBoundary(Math.min(l, c));
   }
   getLineLength(e) {
     let t = this.getLine(e);
-    return te(t.text);
+    return getStringWidth(t.text);
   }
   getPositionFromOffset(e) {
     let t = this.wrappedLines;
@@ -1838,7 +1838,7 @@ class $t {
     }
     let r = t.length - 1,
       s = this.wrappedLines[r];
-    return { line: r, column: te(s.text) };
+    return { line: r, column: getStringWidth(s.text) };
   }
   get lineCount() {
     return this.wrappedLines.length;
@@ -1990,7 +1990,7 @@ function useTextInput({
   selectionAnchor: ae,
   selectionLinewise: Me = !1,
 }) {
-  let ue = gi(),
+  let ue = isFullscreen(),
     le = useKillRing();
   if (a.terminal === "Apple_Terminal") Et();
   let he = oe,
@@ -2422,7 +2422,7 @@ function useVoiceLevelMeter() {
     r = useVoiceSelector((M) => M.voiceState) === "recording",
     s = useVoiceSelector((M) => M.voiceAudioLevels),
     o = r && !e,
-    [l, m] = bs(o ? 50 : null);
+    [l, m] = useAnimationFrame(o ? 50 : null);
   if (!o) return [l, null];
   let c = s.at(-1) ?? 0,
     x = Math.min(c * Or, 1),
@@ -2489,7 +2489,7 @@ function usePasteHandler({
   }, [R, o]);
   let K = re(() => {
       if (!r || !c.current) return;
-      Z3(Pt())
+      readClipboardImage(Pt())
         .then((A) => {
           if (A && c.current)
             r(A.base64, { mediaType: A.mediaType, dimensions: A.dimensions });
@@ -2502,7 +2502,7 @@ function usePasteHandler({
           M();
         });
     }, [r]),
-    Y = nk(K, _r);
+    Y = useDebouncedCallback(K, _r);
   function _(A) {
     if (e) {
       e(A);
@@ -2553,7 +2553,7 @@ function usePasteHandler({
       fe = [],
       be = [];
     for (let ae of v) {
-      if (r && pJn(ae)) {
+      if (r && isImageFilePath(ae)) {
         se.push(ae);
         continue;
       }
@@ -2562,7 +2562,7 @@ function usePasteHandler({
     if (se.length > 0 || fe.length > 0) {
       let ae = /\/TemporaryItems\/.*screencaptureui.*\/Screenshot/i.test(q),
         Me = Pt();
-      Promise.all(se.map((ue) => fJn(ue, Me)))
+      Promise.all(se.map((ue) => readPastedImageFile(ue, Me)))
         .then((ue) => {
           if (!c.current) return;
           let le = ue.filter((he) => he !== null);
@@ -2591,7 +2591,7 @@ function usePasteHandler({
         .catch((ue) => {
           if (!c.current) return;
           (logFeatureBad("input_image_drag", "read_threw"),
-            n(
+            logForDebugging(
               `Image paste read failed: ${ue instanceof Error ? ue.message : String(ue)}`,
               { level: "error" },
             ),
@@ -2614,7 +2614,7 @@ function usePasteHandler({
       (e || r) &&
       !A.ctrl &&
       !A.meta &&
-      A.key.length > lK &&
+      A.key.length > LARGE_PASTE_CHAR_THRESHOLD &&
       !A.defaultPrevented
     ) {
       (A.preventDefault(), m(!0), O(A.key));

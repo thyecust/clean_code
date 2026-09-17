@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 241 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { VR, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getFsSurface } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -313,21 +313,21 @@ function TrustDialog(wo) {
     _o = "warning",
     To = "warning",
     jo = "Accessing workspace:",
-    Fe = o,
+    Fe = Box,
     Ao = "column",
     Po = 1,
     Ro = 1;
   let ce, le, pe;
   if (s[40] === MEMO_CACHE_SENTINEL)
-    ((ce = e(t, { bold: !0, children: sanitizeForDisplay(ae().cwd()) })),
-      (le = r(t, {
+    ((ce = e(Text, { bold: !0, children: sanitizeForDisplay(getFsSurface().cwd()) })),
+      (le = r(Text, {
         children: [
           "Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project, or work from your team). If not, take a moment to review what",
           "'",
           "s in this folder first.",
         ],
       })),
-      (pe = r(t, {
+      (pe = r(Text, {
         children: [
           "Claude Code",
           "'",
@@ -340,13 +340,13 @@ function TrustDialog(wo) {
   else ((ce = s[40]), (le = s[41]), (pe = s[42]));
   const Me =
     (B || M || G) &&
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       children: [
         B &&
           r(N, {
             children: [
-              r(t, {
+              r(Text, {
                 bold: !0,
                 color: "warning",
                 children: [
@@ -361,7 +361,7 @@ function TrustDialog(wo) {
                   ":",
                 ],
               }),
-              r(t, {
+              r(Text, {
                 children: [
                   "  ",
                   j.rules.length > 0
@@ -374,7 +374,7 @@ function TrustDialog(wo) {
         M &&
           r(N, {
             children: [
-              r(t, {
+              r(Text, {
                 bold: !0,
                 color: "warning",
                 children: [
@@ -390,7 +390,7 @@ function TrustDialog(wo) {
                   ":",
                 ],
               }),
-              r(t, {
+              r(Text, {
                 children: [
                   "  ",
                   A.dirs.length > 0
@@ -401,7 +401,7 @@ function TrustDialog(wo) {
             ],
           }),
         G &&
-          r(t, {
+          r(Text, {
             bold: !0,
             color: "warning",
             children: [
@@ -410,7 +410,7 @@ function TrustDialog(wo) {
               formatListWithAnd(kt),
             ],
           }),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children:
             "These will apply without asking. Only proceed if you trust this configuration.",
@@ -419,9 +419,9 @@ function TrustDialog(wo) {
     });
   let Bt;
   if (s[43] === MEMO_CACHE_SENTINEL)
-    ((Bt = e(t, {
+    ((Bt = e(Text, {
       dimColor: !0,
-      children: e(ct, {
+      children: e(Link, {
         url: "https://code.claude.com/docs/en/security",
         children: "Security guide",
       }),
@@ -468,7 +468,7 @@ function TrustDialog(wo) {
   else fe = s[52];
   let me;
   if (s[53] !== P.keyName || s[54] !== P.pending)
-    ((me = e(t, {
+    ((me = e(Text, {
       dimColor: !0,
       children: P.pending
         ? r(N, { children: ["Press ", P.keyName, " again to exit"] })

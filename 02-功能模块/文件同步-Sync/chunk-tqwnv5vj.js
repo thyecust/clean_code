@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { RESERVED_DIRECTORY_NAMES_LC, normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -30,8 +30,8 @@ import {
   hasWindowsReservedPathComponent,
   looksLikeWindowsShortName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { P9, Zan, eln, u3n, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import { o3n } from "../Git-Worktree/chunk-v967hawf.js";
+import { readFileWithDigests, READ_ONLY_NONBLOCK_FLAGS, openVerifiedFile, writeFileAtomically, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
+import { isBlobIdUnchanged } from "../Git-Worktree/dir-sync-git-repository.js";
 import { normalizeFileMode } from "./sync-journal.js";
 import { stripSentField, computeGitBlobId, computeContentDigests, matchesAgreedDigest } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -46,8 +46,8 @@ import {
   sep as D,
 } from "path";
 import { posix as x } from "path";
-var Ban = "Claude's conflicted copy",
-  jan = 100,
+var CONFLICTED_COPY_MARKER = "Claude's conflicted copy",
+  MAX_CONFLICTED_COPY_ATTEMPTS = 100,
   Ee = 255,
   Se = Ee - 32;
 function ie(e, t) {
@@ -71,13 +71,13 @@ function _e(e) {
     a = String(e.getDate()).padStart(2, "0");
   return `${t}-${r}-${a}`;
 }
-function Wan(e, t, r) {
+function buildConflictedCopyPath(e, t, r) {
   let a = x.dirname(e),
     i = x.basename(e),
     o = x.extname(i),
     c = Array.from(i.slice(0, i.length - o.length)),
     s = r > 0 ? ` (${r})` : "",
-    d = ` (${Ban} ${_e(t)})${s}${o}`,
+    d = ` (${CONFLICTED_COPY_MARKER} ${_e(t)})${s}${o}`,
     u = (l) => {
       let p = `${c.slice(0, l).join("")}${d}`;
       return a === "." ? p : x.join(a, p);
@@ -92,15 +92,15 @@ function Wan(e, t, r) {
     });
   return f === void 0 ? null : u(f);
 }
-async function se({ path: e, now: t, tryCandidate: r, maxAttempts: a = jan }) {
+async function se({ path: e, now: t, tryCandidate: r, maxAttempts: a = MAX_CONFLICTED_COPY_ATTEMPTS }) {
   for (let i = 0; i < a; i++) {
-    let o = Wan(e, t, i);
+    let o = buildConflictedCopyPath(e, t, i);
     if (o === null) return null;
     if (await r(o)) return o;
   }
   return null;
 }
-function Eze(e) {
+function getAncestorPaths(e) {
   let t = e.split("/");
   return t.slice(0, -1).map((r, a) => t.slice(0, a + 1).join("/"));
 }
@@ -108,7 +108,7 @@ function j(e, t) {
   let r = toCaseFoldKey(t);
   if (!e.has(r)) e.set(r, t);
 }
-function Q9n(e, t) {
+function partitionCaseCollisions(e, t) {
   let r = new Set(t),
     a = new Map(),
     i = new Map(),
@@ -129,7 +129,7 @@ function Q9n(e, t) {
       let u = toCaseFoldKey(d),
         f = a.get(u),
         l = i.get(u),
-        p = Eze(d)
+        p = getAncestorPaths(d)
           .filter((m) => !o.has(m))
           .map((m) => {
             let L = toCaseFoldKey(m);
@@ -161,7 +161,7 @@ function de(e, t) {
 }
 async function fe(e, t, r) {
   try {
-    let { handle: a } = await eln(e, t, r);
+    let { handle: a } = await openVerifiedFile(e, t, r);
     try {
       let i = Date.now();
       return de(await a.stat(), i);
@@ -174,7 +174,7 @@ async function fe(e, t, r) {
 }
 async function G(e, t, r, a) {
   await z(e, t);
-  let { handle: i } = await eln(e, t, r);
+  let { handle: i } = await openVerifiedFile(e, t, r);
   try {
     await i.chmod(a);
     let o = Date.now();
@@ -188,7 +188,7 @@ async function pe(e, t, r, a) {
     return await G(e, t, r, a);
   } catch (i) {
     return (
-      n(`dirSync pull: mode not applied (${A(i) ?? "not an errno"})`),
+      logForDebugging(`dirSync pull: mode not applied (${A(i) ?? "not an errno"})`),
       null
     );
   }
@@ -234,13 +234,13 @@ async function V(e) {
   }
 }
 var Ce = /[\u200c-\u200f\u202a-\u202e\u206a-\u206f\ufeff]/g;
-function EFt(e) {
+function isGitMetadataSegment(e) {
   let t = normalizePathSegment(e);
   return t === ".git" || /^git~\d+$/.test(t);
 }
 var Oe = ".claude",
   Ie = new Set([".mcp.json", ".claude.json"]);
-function aOe(e, t) {
+function isProtectedClaudePath(e, t) {
   let r = e.map(normalizePathSegment);
   return r.includes(Oe) || (t === "file" && Ie.has(r.at(-1) ?? ""));
 }
@@ -255,20 +255,20 @@ var Pe = new Set(
     )
     .filter((e) => e.length > 0),
 );
-function Gan(e) {
+function isReservedDirShortName(e) {
   let t = ge(e);
   return t !== null && Pe.has(t);
 }
 function ge(e) {
   return /^(.{1,6})~\d+$/.exec(normalizePathSegment(e))?.[1] ?? null;
 }
-function Vpt(e, t = !1) {
-  return lOe(e, "/", "file", t);
+function isRefusedFilePath(e, t = !1) {
+  return isRefusedSyncPath(e, "/", "file", t);
 }
-function Z9n(e) {
-  return lOe(e, "/", "directory");
+function isRefusedDirectoryPath(e) {
+  return isRefusedSyncPath(e, "/", "directory");
 }
-function lOe(e, t, r, a = !1) {
+function isRefusedSyncPath(e, t, r, a = !1) {
   let i = t === "/" ? e : e.split(t).join("/"),
     o = dedupe([i.replace(Ce, ""), normalizeUnicodeForm(i)]);
   return (
@@ -278,7 +278,7 @@ function lOe(e, t, r, a = !1) {
       let s = c.split("/");
       return (
         shouldIgnore(c) ||
-        aOe(s, r) ||
+        isProtectedClaudePath(s, r) ||
         (!(
           a &&
           o.length === 1 &&
@@ -289,33 +289,33 @@ function lOe(e, t, r, a = !1) {
           })
         ) &&
           isUnderDependencyDir(s.map(normalizePathSegment).join("/"))) ||
-        s.some(EFt) ||
+        s.some(isGitMetadataSegment) ||
         (r === "file" && normalizePathSegment(s.at(-1) ?? "") === "head") ||
         (r === "file" ? s.slice(0, -1) : s).some((d) => ge(d) !== null) ||
-        (r === "file" && s.slice(-1).some(Gan)) ||
+        (r === "file" && s.slice(-1).some(isReservedDirShortName)) ||
         (getCurrentPlatform() === "wsl" && looksLikeWindowsShortName(c))
       );
     })
   );
 }
 var De = /[\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]/;
-async function qan(e, t, r, a = !1) {
-  return !(await Be(e, t, r, a)) && !Xce(r);
+async function isDestinationAllowed(e, t, r, a = !1) {
+  return !(await Be(e, t, r, a)) && !isDangerousFileName(r);
 }
 async function Be(e, t, r, a = !1) {
-  return (await Kpt(e, t, r, a)) !== null;
+  return (await getDestinationRefusalReason(e, t, r, a)) !== null;
 }
-async function Kpt(e, t, r, a = !1) {
+async function getDestinationRefusalReason(e, t, r, a = !1) {
   let i = C(e, r);
   try {
     if (relUnderSyncDir(e, i).split(D).join("/") !== r) return "place";
   } catch {
     return "place";
   }
-  if (lOe(r, "/", "file", a) || isSensitivePathAnySpelling(r)) return "name";
+  if (isRefusedSyncPath(r, "/", "file", a) || isSensitivePathAnySpelling(r)) return "name";
   return (await he(i, e, t, a ? r : null)) ? "place" : null;
 }
-function Xce(e) {
+function isDangerousFileName(e) {
   return dedupe([e, normalizeUnicodeForm(e)]).some((t) => {
     let r = normalizePathSegment(t.split("/").at(-1) ?? "");
     return DANGEROUS_FILES_LC.has(r) || Fe.has(xe(r) ?? "");
@@ -343,7 +343,7 @@ async function he(e, t, r, a = null) {
       } catch (l) {
         return A(l) === "ENOENT" ? "absent" : "plain";
       }
-      return (await zan(f)) ? "repository" : "plain";
+      return (await isGitRepositoryRoot(f)) ? "repository" : "plain";
     },
     s = async (f, l) => {
       let [p, ...S] = f;
@@ -368,11 +368,11 @@ async function he(e, t, r, a = null) {
 function q(e, t, r = null) {
   return (
     escapesSyncRoot(e) ||
-    lOe(e, D, t, r !== null && e.split(D).join("/") === r) ||
+    isRefusedSyncPath(e, D, t, r !== null && e.split(D).join("/") === r) ||
     (t === "file" && isSensitivePathAnySpelling(e))
   );
 }
-async function zan(e) {
+async function isGitRepositoryRoot(e) {
   try {
     return !(await lstat(C(e, "HEAD"))).isDirectory();
   } catch (t) {
@@ -410,7 +410,7 @@ async function K(e, t, r, a = null) {
 async function Re(e, t, r) {
   try {
     if (!(await e.lstat(t)).isFile()) return !1;
-    let a = await e.open(t, Zan);
+    let a = await e.open(t, READ_ONLY_NONBLOCK_FLAGS);
     try {
       let i = await a.stat({ bigint: !0 });
       if (!i.isFile() || i.size !== BigInt(r.length)) return !1;
@@ -489,7 +489,7 @@ function $e(e) {
       };
   }
 }
-async function e3n({
+async function applyPulledEntry({
   entry: e,
   gitRoot: t,
   realRoot: r,
@@ -501,9 +501,9 @@ async function e3n({
   signal: d,
   kept: u,
 }) {
-  let f = s.host ?? uk(),
+  let f = s.host ?? createFileSystemHost(),
     l = i,
-    p = Ye(f, s.writeFile ?? ((y, _, N, E, we) => u3n(f, E, y, _, N, isSensitivePathAnySpelling, we))),
+    p = Ye(f, s.writeFile ?? ((y, _, N, E, we) => writeFileAtomically(f, E, y, _, N, isSensitivePathAnySpelling, we))),
     S = 0,
     m = !1,
     L = !1,
@@ -527,7 +527,7 @@ async function e3n({
   } catch {
     return h("failed");
   }
-  if (lOe(e.path, "/", "file", o)) return h("failed");
+  if (isRefusedSyncPath(e.path, "/", "file", o)) return h("failed");
   let O = o ? e.path : null;
   if (e.size > MAX_WORKING_FILE_BYTES) return h("failed");
   if (a.rootOnly) return h("failed", null, { refused: !0 });
@@ -560,7 +560,7 @@ async function e3n({
         g.content.length > e.size &&
         !(l !== void 0 && matchesAgreedDigest(l.agreed, computeContentDigests(g.content))),
     });
-  let I = s.digestFile ?? ((y, _, N) => P9(y, _, N, a)),
+  let I = s.digestFile ?? ((y, _, N) => readFileWithDigests(y, _, N, a)),
     k = await Le(t, r, e.path, I);
   if (k.kind === "unreadable") return h("failed");
   let b = k.kind === "present" ? k.digest : null;
@@ -580,13 +580,13 @@ async function e3n({
     b !== null &&
     l !== void 0 &&
     s.cleanFilterBlobIds !== void 0 &&
-    (await o3n(l.agreed, e.path, s.cleanFilterBlobIds, d));
+    (await isBlobIdUnchanged(l.agreed, e.path, s.cleanFilterBlobIds, d));
   let be = m ? "unchanged" : Z,
     U = async (y) => (await z(f, a), y),
     ee = (y) => {
       let _ = A(y);
       return (
-        n(`dirSync pull: row not applied (${_ ?? "not an errno"})`),
+        logForDebugging(`dirSync pull: row not applied (${_ ?? "not an errno"})`),
         h("failed", null, { refused: ze.has(_ ?? "") })
       );
     };
@@ -617,7 +617,7 @@ async function e3n({
       incomingSha256: e.sha256,
       incomingMode: e.mode,
     }),
-    ne = Xce(e.path),
+    ne = isDangerousFileName(e.path),
     re = te === "apply" && ne ? "conflict" : te;
   if (re === "conflict" && !ne && s.bothChanged === "skip")
     return h("skipped_local_change");
@@ -871,20 +871,20 @@ function Ve(e) {
   );
 }
 export {
-  Ban,
-  jan,
-  Wan,
-  Eze,
-  Q9n,
-  EFt,
-  aOe,
-  Gan,
-  Vpt,
-  Z9n,
-  lOe,
-  qan,
-  Kpt,
-  Xce,
-  zan,
-  e3n,
+  CONFLICTED_COPY_MARKER,
+  MAX_CONFLICTED_COPY_ATTEMPTS,
+  buildConflictedCopyPath,
+  getAncestorPaths,
+  partitionCaseCollisions,
+  isGitMetadataSegment,
+  isProtectedClaudePath,
+  isReservedDirShortName,
+  isRefusedFilePath,
+  isRefusedDirectoryPath,
+  isRefusedSyncPath,
+  isDestinationAllowed,
+  getDestinationRefusalReason,
+  isDangerousFileName,
+  isGitRepositoryRoot,
+  applyPulledEntry,
 };

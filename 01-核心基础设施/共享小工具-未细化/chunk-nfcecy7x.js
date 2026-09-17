@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import {
   readdir,
@@ -33,14 +33,14 @@ async function c(e, t) {
   try {
     return (
       await unlink(e),
-      n(`[worktree] unlinked reparse point before removal: ${e}`),
+      logForDebugging(`[worktree] unlinked reparse point before removal: ${e}`),
       !1
     );
   } catch {}
   try {
     return (
       await rmdir(e),
-      n(
+      logForDebugging(
         `[worktree] removed reparse point or empty directory before removal: ${e}`,
       ),
       !1
@@ -59,7 +59,7 @@ async function c(e, t) {
               .catch(() => null);
       if (i == null || (i !== t && !i.startsWith(t + b)))
         return (
-          n(
+          logForDebugging(
             `[worktree] refusing to enumerate unremovable entry before removal: ${e}`,
             { level: "warn" },
           ),
@@ -70,7 +70,7 @@ async function c(e, t) {
   let l = await readdir(e, { withFileTypes: !0 }).catch((r) => (W(r) ? [] : null));
   if (l == null)
     return (
-      n(`[worktree] could not enumerate ${e} before removal; not certifying`, {
+      logForDebugging(`[worktree] could not enumerate ${e} before removal; not certifying`, {
         level: "warn",
       }),
       !0

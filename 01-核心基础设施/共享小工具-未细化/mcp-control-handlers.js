@@ -7,28 +7,28 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { jt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getMcpClientState } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 function getReconnectMcpServer() {
-  return jt().reconnect;
+  return getMcpClientState().reconnect;
 }
 function getToggleMcpServer() {
-  return jt().toggle;
+  return getMcpClientState().toggle;
 }
 function getIsMcpServerDisabled() {
-  return jt().isDisabled;
+  return getMcpClientState().isDisabled;
 }
 function getMcpDialBlockCause() {
-  return jt().dialBlockCause;
+  return getMcpClientState().dialBlockCause;
 }
 function registerMcpControlHandlers(e, n, r, c) {
-  let o = jt();
+  let o = getMcpClientState();
   ((o.reconnect = e),
     (o.toggle = n),
     (o.isDisabled = r),
     (o.dialBlockCause = c));
 }
 function clearMcpControlHandlers() {
-  let e = jt();
+  let e = getMcpClientState();
   ((e.reconnect = null),
     (e.toggle = null),
     (e.isDisabled = null),

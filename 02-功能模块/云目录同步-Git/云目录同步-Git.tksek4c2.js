@@ -14,7 +14,7 @@ import { toCompatSessionId, toInfraSessionId } from "../权限系统/chunk-ynkf3
 import { Ve, yt, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { RENAME_FALLBACK_ERRNOS, renameWithRetry } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, truncateToCodePoints, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { replaceControlChars, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -109,71 +109,71 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { JOURNAL_VERSION_WITH_NOTE, MAX_USER_EVENT_UUIDS, parseSyncJournal, normalizeFileMode, encodeSyncJournal } from "../文件同步-Sync/sync-journal.js";
 import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
-import { Rze, pI, c3n, P9, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { MAX_SYNC_UPLOAD_BYTES, isSafePortablePath, parseTaggedPathListing, readFileWithDigests, openTreeAnchor, createFileSystemHost } from "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import {
-  Aze,
-  on,
-  t3n,
-  vFt,
-  Kan,
-  Kbe,
-  K4,
-  cOe,
-  Xbe,
-  Yan,
-  n3n,
-  r3n,
-  I9,
-  Xpt,
-  Yce,
-  uOe,
-  Jce,
-  s3n,
-} from "../Git-Worktree/chunk-v967hawf.js";
+  DEFAULT_GIT_TIMEOUT_MS,
+  runDirSyncGit,
+  openBlobReader,
+  mergeGitConfigEnv,
+  readAlternatesLender,
+  readBoundedTextFile,
+  writeSessionRefs,
+  deleteSessionRefs,
+  createFilterAttributedChecker,
+  createFilterFreeBlobIdHasher,
+  getFilterFreePaths,
+  createCleanFilterBlobIds,
+  DEFAULT_MAX_BUNDLE_BYTES,
+  INCOMING_PACK_PREFIX,
+  DELIVERED_IDS_SUFFIX,
+  createBundle,
+  receiveBundle,
+  readDeliveredObjectIds,
+} from "../Git-Worktree/dir-sync-git-repository.js";
 import {
-  Ban,
-  jan,
-  Wan,
-  Eze,
-  Q9n,
-  aOe,
-  Gan,
-  Vpt,
-  lOe,
-  qan,
-  Kpt,
-  Xce,
-  zan,
-  e3n,
+  CONFLICTED_COPY_MARKER,
+  MAX_CONFLICTED_COPY_ATTEMPTS,
+  buildConflictedCopyPath,
+  getAncestorPaths,
+  partitionCaseCollisions,
+  isProtectedClaudePath,
+  isReservedDirShortName,
+  isRefusedFilePath,
+  isRefusedSyncPath,
+  isDestinationAllowed,
+  getDestinationRefusalReason,
+  isDangerousFileName,
+  isGitRepositoryRoot,
+  applyPulledEntry,
 } from "../文件同步-Sync/chunk-tqwnv5vj.js";
 import {
-  Jpt,
-  d3n,
-  Qpt,
-  kze,
-  kFt,
-  xFt,
-  f3n,
-  Zpt,
-  mte,
-  eft,
-  Ybe,
-  m3n,
-  gte,
-  X4,
-  tft,
-  g3n,
-  HFt,
-  h3n,
-  _3n,
-  y3n,
-  S3n,
-  b3n,
-  w3n,
-  tln,
+  createDirChangeFeed,
+  createDirSyncStreamer,
+  MAX_SENT_UPLOADS,
+  MAX_INSTALLED_SINCE_UPLOAD,
+  requiresAnnouncement,
+  getStartBasisCommits,
+  getHistoryRoots,
+  createGitSessionRecord,
+  readGitSessionRecord,
+  GitSessionRecordInvalidError,
+  writeGitSessionRecord,
+  writeGitSessionRecordStreamed,
+  getLatestSentUpload,
+  getNextGeneration,
+  recordSpentGeneration,
+  hasDownApplyCapacity,
+  getMergedDownApplied,
+  getMergedFastForwardHeads,
+  getLastHeadForBranch,
+  recordFastForward,
+  applyPeerNote,
+  recordReceivedUpload,
+  recordAppliedTurn,
+  recordSentUpload,
 } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
 import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { qbe } from "../文件同步-Sync/chunk-eg4wmaq4.js";
+import { segmentScopeSkip } from "../文件同步-Sync/sync-folder-scan.js";
 import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
@@ -1594,7 +1594,7 @@ async function mFt({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
       if (a) return;
       ((a = !0),
         clearInterval(y),
-        n(
+        logForDebugging(
           `git sync writer lock ${E.kind === "taken_over" ? "taken over" : "lost"}: ${E.reason}`,
           { level: "warn" },
         ),
@@ -1624,7 +1624,7 @@ async function mFt({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
         let O = await k();
         if (
           ((s = O),
-          n(
+          logForDebugging(
             `git sync writer lock re-taken (${E}${C === "retake_stale" ? "; after a stall" : ""})`,
             { level: "warn" },
           ),
@@ -1760,7 +1760,7 @@ async function _s({
   recheck: p,
 }) {
   let y = (K, ee = {}) =>
-    runPinnedGit(e, ["-c", "submodule.recurse=false", ...K], void 0, void 0, vFt(f, ee));
+    runPinnedGit(e, ["-c", "submodule.recurse=false", ...K], void 0, void 0, mergeGitConfigEnv(f, ee));
   if (
     !GIT_OBJECT_ID_REGEX.test(o) ||
     !GIT_OBJECT_ID_REGEX.test(s) ||
@@ -1829,7 +1829,7 @@ async function _s({
     ge = new Promise((K) => {
       te = K;
     }),
-    le = Et(async () => {
+    le = registerCleanup(async () => {
       if ((await ge, re)) {
         let K = await lr(k, { bigint: !0 }).catch(() => null);
         if (K !== null && K.isFile() && K.nlink === 1n && so(ys(N), K))
@@ -2233,7 +2233,7 @@ async function Os({
         return null;
       let pe = await Ps(O, o);
       if (pe !== !0) return pe === !1 ? null : void 0;
-      let re = await Kbe(yn(O, "gitdir"));
+      let re = await readBoundedTextFile(yn(O, "gitdir"));
       return re.kind === "text" && re.text.trim().endsWith(".git")
         ? No(re.text.trim())
         : O;
@@ -2255,7 +2255,7 @@ async function Ps(e, t) {
     ],
     s = await Promise.all(
       o.map(async ([a, d]) => {
-        let f = await Kbe(yn(e, a));
+        let f = await readBoundedTextFile(yn(e, a));
         return f.kind === "absent"
           ? !1
           : f.kind === "text"
@@ -2274,7 +2274,7 @@ async function Rs(e) {
   }
 }
 async function xs(e, t, r) {
-  let o = await on(e, ["diff-tree", "-r", "-z", "--no-renames", t, r]);
+  let o = await runDirSyncGit(e, ["diff-tree", "-r", "-z", "--no-renames", t, r]);
   if (o.exitCode !== 0) return null;
   let s = o.stdout.split("\x00").filter((a) => a !== "");
   if (s.length % 2 !== 0) return null;
@@ -2298,7 +2298,7 @@ async function xs(e, t, r) {
   });
 }
 async function Do(e, t, r, o) {
-  let s = countMatching(t, (J) => !pI(J.path) || J.path.includes("\uFFFD"));
+  let s = countMatching(t, (J) => !isSafePortablePath(J.path) || J.path.includes("\uFFFD"));
   if (s > 0) return s;
   let a = t.filter((J) => J.kind === "file"),
     f = (
@@ -2347,7 +2347,7 @@ async function Do(e, t, r, o) {
   if (E > 0 || a.length === 0) return E;
   let R = await Xd(e).catch(() => null);
   if (R === null) return null;
-  await using N = await SO(uk(), { gitRoot: e, realRoot: R });
+  await using N = await openTreeAnchor(createFileSystemHost(), { gitRoot: e, realRoot: R });
   if (N.rootOnly) return null;
   let C = AbortSignal.any([
       ...(r === void 0 ? [] : [r]),
@@ -2370,10 +2370,10 @@ async function Do(e, t, r, o) {
     te =
       o ??
       (re.length === 0
-        ? Yan(e)
-        : Yan(
+        ? createFilterFreeBlobIdHasher(e)
+        : createFilterFreeBlobIdHasher(
             e,
-            await n3n(
+            await getFilterFreePaths(
               e,
               re.map((J) => J.path),
               C,
@@ -2505,7 +2505,7 @@ async function Ns(e, t, r) {
   if (r === null) return t.length;
   if (
     (
-      await on(e, [
+      await runDirSyncGit(e, [
         "rev-parse",
         "-q",
         "--verify",
@@ -2521,7 +2521,7 @@ async function Ns(e, t, r) {
     Jd,
     Zd,
   )) {
-    let d = await on(e, ["ls-tree", "-z", "--full-tree", r, "--", ...a], {
+    let d = await runDirSyncGit(e, ["ls-tree", "-z", "--full-tree", r, "--", ...a], {
       env: Lo,
     });
     if (d.exitCode !== 0) return null;
@@ -2578,7 +2578,7 @@ async function Bs({
   head: s,
   incomingHead: a,
 }) {
-  let d = await on(t, [
+  let d = await runDirSyncGit(t, [
     "rev-parse",
     "-q",
     "--verify",
@@ -2587,9 +2587,9 @@ async function Bs({
   ]);
   if (d.exitCode === 0 && d.stdout.trim() === a)
     return (await $s(t.gitDir), "present");
-  if (!(await K4(e, [{ name: r, id: a }])))
+  if (!(await writeSessionRefs(e, [{ name: r, id: a }])))
     return V("git_error", "the side ref could not be written");
-  let f = await uOe({
+  let f = await createBundle({
     repository: e,
     tips: [r],
     prerequisites: [s],
@@ -2604,7 +2604,7 @@ async function Bs({
             "more history than one transfer carries separates the two HEADs",
           )
         : V("objects_unavailable", f.reason);
-  let p = await Jce({
+  let p = await receiveBundle({
     repository: t,
     content: f.content,
     targets: new Map([[r, o]]),
@@ -2627,15 +2627,15 @@ async function $s(e) {
   let t = Ls(e, "objects", "pack"),
     r = await iu(t).catch((o) => {
       if (!W(o))
-        n(`dir-sync: could not list ${t} for delivery records: ${l(o)}`);
+        logForDebugging(`dir-sync: could not list ${t} for delivery records: ${l(o)}`);
       return [];
     });
   await Promise.all(
     r
-      .filter((o) => o.startsWith(Xpt) && o.endsWith(Yce))
+      .filter((o) => o.startsWith(INCOMING_PACK_PREFIX) && o.endsWith(DELIVERED_IDS_SUFFIX))
       .map((o) =>
         su(Ls(t, o)).catch((s) => {
-          if (!W(s)) n(`dir-sync: could not remove a delivery record: ${l(s)}`);
+          if (!W(s)) logForDebugging(`dir-sync: could not remove a delivery record: ${l(s)}`);
         }),
       ),
   );
@@ -2723,7 +2723,7 @@ async function fu({
   let te = (q) => (C?.aborted === !0 ? { kind: "aborted" } : q);
   if (!isClaudeSessionRef(o) || !o.startsWith(re) || o === pe)
     return V("bad_arguments", "the received ref is not one of this session");
-  let ge = await on(t, [
+  let ge = await runDirSyncGit(t, [
       "rev-parse",
       "-q",
       "--verify",
@@ -2762,7 +2762,7 @@ async function fu({
     );
   if (Ge === le)
     return (
-      await on(
+      await runDirSyncGit(
         { gitDir: at, commonDir: at, timeoutMs: t.timeoutMs },
         ["update-ref", "--no-deref", "-d", D, le],
         { env: { ...N } },
@@ -2806,7 +2806,7 @@ async function fu({
     Xe = await vt();
   if (Xe !== null) return Xe;
   let wt = { gitDir: at, commonDir: at, signal: C, timeoutMs: t.timeoutMs },
-    Wt = await on(t, ["merge-base", "--is-ancestor", Ge, le]);
+    Wt = await runDirSyncGit(t, ["merge-base", "--is-ancestor", Ge, le]);
   if (Wt.exitCode === 1)
     return V(
       "not_descendant",
@@ -2828,7 +2828,7 @@ async function fu({
       "unsupported_entry",
       "a touched path is a symbolic link or submodule in the incoming commit",
     );
-  if (!tt.every((q) => pI(q.path) && !q.path.includes("\uFFFD")))
+  if (!tt.every((q) => isSafePortablePath(q.path) && !q.path.includes("\uFFFD")))
     return V(
       "unsupported_entry",
       "a touched path is not a name this machine can safely hold",
@@ -3009,7 +3009,7 @@ async function fu({
     },
   });
   if (ve.kind === "fast_forwarded")
-    await on(
+    await runDirSyncGit(
       { ...wt, signal: void 0 },
       ["update-ref", "--no-deref", "-d", D, le],
       { env: { ...N } },
@@ -3033,7 +3033,7 @@ async function hu(e, t, r, o = () => !1) {
       "--no-renames",
       "-z",
     ],
-    d = await on(
+    d = await runDirSyncGit(
       e,
       [
         ...s,
@@ -3047,7 +3047,7 @@ async function hu(e, t, r, o = () => !1) {
       { maxBuffer: Bo },
     );
   if (d.exitCode !== 0) return null;
-  let f = await on(e, [...s, "rev-list", "--merges", `${t}..${r}`]);
+  let f = await runDirSyncGit(e, [...s, "rev-list", "--merges", `${t}..${r}`]);
   if (f.exitCode !== 0) return null;
   let p = f.stdout
     .split(
@@ -3065,7 +3065,7 @@ async function hu(e, t, r, o = () => !1) {
   let w = [];
   for (let _ of p) {
     let [E, R] = await Promise.all([
-      on(
+      runDirSyncGit(
         e,
         [
           ...s,
@@ -3079,7 +3079,7 @@ async function hu(e, t, r, o = () => !1) {
         ],
         { maxBuffer: Bo },
       ),
-      on(
+      runDirSyncGit(
         e,
         [...s, "diff-tree", "-r", "--no-renames", "--name-only", "-z", t, _],
         { maxBuffer: Bo },
@@ -3186,12 +3186,12 @@ function qs(e, t, r, o = new Map(), s = async () => new Map(), a) {
       let w = await yu(d, t, f, p, y).catch((k) => {
         let _ = A(k);
         if (_ === void 0 || !gu.has(_)) throw k;
-        return (n(`dirSync pull: no copy kept of ${replaceControlChars(f)} (${_})`), null);
+        return (logForDebugging(`dirSync pull: no copy kept of ${replaceControlChars(f)} (${_})`), null);
       });
       if (w === null) return null;
       if (t.startsWith(dr)) await bu(d);
       return (
-        n(`dirSync pull: kept the replaced copy of ${replaceControlChars(f)} at ${replaceControlChars(w)}`),
+        logForDebugging(`dirSync pull: kept the replaced copy of ${replaceControlChars(f)} at ${replaceControlChars(w)}`),
         w
       );
     },
@@ -3298,7 +3298,7 @@ function Mo(e, t) {
 }
 var Au = 4;
 async function Go(e, t, r) {
-  let o = Q9n(t, r),
+  let o = partitionCaseCollisions(t, r),
     s = dedupe(o.colliding.map((w) => w.collidesWith)),
     a = Tu(e),
     d = createConcurrencyLimiter(Au, async (w) => ({ spelling: w, present: await a(w) })),
@@ -3446,9 +3446,9 @@ function gFt({
         heldBases: dedupe([
           ...y.sent.map((O) => O.worktreeCommit),
           ...y.received.map((O) => O.worktreeCommit),
-          ...xFt(y.start),
+          ...getStartBasisCommits(y.start),
         ]),
-        historyRoots: f3n(y.start),
+        historyRoots: getHistoryRoots(y.start),
         agentHeadContainsBasis: f.agentHeadContainsBasis,
         installedHere: d,
         receivedHistory: _.map((O) => O.worktreeCommit),
@@ -3535,9 +3535,9 @@ function ua(e, t = Lr) {
       blobIdsOfTrees: (d) => fc(a, d),
       heldInOwnRight: (d) => hc(a, d),
       firstCommitCarrying: (d, f) => uc(a, d, f),
-      receiveBundle: (d) => Jce({ ...d, repository: a }),
-      deleteRefs: (d) => cOe(a, d),
-      openBlobReader: (d) => t3n(a, d),
+      receiveBundle: (d) => receiveBundle({ ...d, repository: a }),
+      deleteRefs: (d) => deleteSessionRefs(a, d),
+      openBlobReader: (d) => openBlobReader(a, d),
     });
   return s(e);
 }
@@ -3546,8 +3546,8 @@ function ca(e, t = {}) {
     ignoredHere: (r, o) => mc(e, r, o),
     trackedHere: (r, o) => zo(e, r, o),
     modesTrusted: (r) => Zu(e, r),
-    filterAttributed: Xbe(e),
-    cleanFilterBlobIds: r3n(e),
+    filterAttributed: createFilterAttributedChecker(e),
+    cleanFilterBlobIds: createCleanFilterBlobIds(e),
     ...t,
   };
 }
@@ -3626,7 +3626,7 @@ async function Qu({
     ),
     wt = Xe.size === 0 ? pe : new Map([...pe].filter(([m]) => !Xe.has(m)));
   if (Xe.size > 0)
-    n(
+    logForDebugging(
       `dirSync apply-down: turn ${a.generation}${je > 0 ? `, container recreated after turn ${je}` : ""}: ${Xe.size} installs from turns outside (${je}, ${a.generation}] not counted as shared this round`,
     );
   let Wt = await e.diffTrees(f.worktreeCommit, J);
@@ -3709,7 +3709,7 @@ async function Qu({
     Ot = await t.trackedHere([...xe, ...Ke], te);
   if (Ot === null) return ur(a.report);
   let De = (m) => Ot.get(m) === "present",
-    qe = createConcurrencyLimiter(Ho, async (m) => ia(m, await Kpt(o, s, m, De(m)))),
+    qe = createConcurrencyLimiter(Ho, async (m) => ia(m, await getDestinationRefusalReason(o, s, m, De(m)))),
     _n = await Promise.all(xe.map(qe)),
     An = new Map(
       xe.flatMap((m, U) => {
@@ -3721,7 +3721,7 @@ async function Qu({
     Cn = createConcurrencyLimiter(
       Ho,
       async (m) =>
-        ia(m, await Kpt(o, s, m, De(m))) ?? (Xce(m) ? "name_refused" : null),
+        ia(m, await getDestinationRefusalReason(o, s, m, De(m))) ?? (isDangerousFileName(m) ? "name_refused" : null),
     ),
     [kn, Dt, Ce] = await Promise.all([
       Kt.length === 0
@@ -3751,7 +3751,7 @@ async function Qu({
         ? new Set()
         : await t.filterAttributed([...Kt, ...Ke], te);
   if (Pn === null) return ur(a.report);
-  let pt = re.digestFile ?? P9,
+  let pt = re.digestFile ?? readFileWithDigests,
     Rn = await t.modesTrusted(te),
     I = (m, U) => !Rn || normalizeFileMode(m) === normalizeFileMode(U),
     he = t.cleanFilterBlobIds,
@@ -3785,9 +3785,9 @@ async function Qu({
       !Pn.has(m) &&
       dt(m, Ot.has(m)) === null,
   );
-  await using Le = await SO(re.host ?? uk(), { gitRoot: o, realRoot: s }).catch(
+  await using Le = await openTreeAnchor(re.host ?? createFileSystemHost(), { gitRoot: o, realRoot: s }).catch(
     (m) => (
-      n(`dirSync apply-down: tree anchor not opened (${A(m) ?? l(m)})`),
+      logForDebugging(`dirSync apply-down: tree anchor not opened (${A(m) ?? l(m)})`),
       null
     ),
   );
@@ -3884,7 +3884,7 @@ async function Qu({
   }
   for (let m of kc(an)) await Le.rmdir(m).catch(() => {});
   let On = (m) =>
-      Eze(m).some((U) => {
+      getAncestorPaths(m).some((U) => {
         let _e = ht(U);
         return _e?.from === "sent" && _e.entry !== null && !lo(_e.entry.mode);
       }),
@@ -3982,7 +3982,7 @@ async function Qu({
         ne.installed.push({ path: m, blobId: U.blobId, mode: normalizeFileMode(U.mode) }));
       continue;
     }
-    if (Pe !== $e && Pe !== U.blobId && !(Xce(m) && U.blobId !== $e)) {
+    if (Pe !== $e && Pe !== U.blobId && !(isDangerousFileName(m) && U.blobId !== $e)) {
       (ne.skippedDown.push(m), ae.push(m));
       continue;
     }
@@ -4000,7 +4000,7 @@ async function Qu({
       continue;
     }
     if (
-      Xce(m) &&
+      isDangerousFileName(m) &&
       (await gc(o, s, m, U.blobId, (pn, Qt, br) => pt(pn, Qt, br, Le)))
     ) {
       ae.push(m);
@@ -4032,7 +4032,7 @@ async function Qu({
       Pe !== null &&
       Pe !== U.blobId &&
       _.get(m) !== Pe &&
-      !Xce(m) &&
+      !isDangerousFileName(m) &&
       (xn.get(m)?.blobId ?? null) !== Pe;
     if (Jt && Ue !== $e && (await Ze(m)) !== $e) {
       (ne.skippedDown.push(m), ae.push(m));
@@ -4165,7 +4165,7 @@ async function Qs({
             origin: "pulled",
           },
     E = { kind: "ok", content: t, etag: r.blobId },
-    R = await e3n({
+    R = await applyPulledEntry({
       entry: k,
       gitRoot: a,
       realRoot: d,
@@ -4193,7 +4193,7 @@ async function Qs({
 }
 async function Zs(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t) || !GIT_OBJECT_ID_REGEX.test(r)) return null;
-  let o = await on(
+  let o = await runDirSyncGit(
     e,
     [
       "diff-tree",
@@ -4246,7 +4246,7 @@ async function ec(e, t, r, o = {}) {
     y = rootLaptopDirSyncRegistry(),
     w = `tree:${a}:${e.gitDir}`;
   if (p.length > s && !y.wholeListingOutgrew(w)) {
-    let k = await on(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
+    let k = await runDirSyncGit(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
       maxBuffer: a,
     });
     if (k.maxBufferExceeded) y.noteWholeListingOutgrew(w);
@@ -4256,7 +4256,7 @@ async function ec(e, t, r, o = {}) {
     }
   }
   for (let k of p) {
-    let _ = await on(
+    let _ = await runDirSyncGit(
       e,
       [
         "-c",
@@ -4277,7 +4277,7 @@ async function ec(e, t, r, o = {}) {
 }
 async function tc(e, t) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return "none";
-  let r = await on(e, ["rev-parse", `${t}^{commit}`, `${t}^@`]);
+  let r = await runDirSyncGit(e, ["rev-parse", `${t}^{commit}`, `${t}^@`]);
   if (r.exitCode === void 0) return "unknown";
   if (r.exitCode !== 0) return "none";
   let [o = "", ...s] = r.stdout
@@ -4290,7 +4290,7 @@ async function tc(e, t) {
 }
 async function rc(e, t) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return !1;
-  let r = await on(e, ["cat-file", "-e", `${t}^{commit}`]);
+  let r = await runDirSyncGit(e, ["cat-file", "-e", `${t}^{commit}`]);
   return r.exitCode === void 0 ? "unknown" : r.exitCode === 0;
 }
 async function oc(e, t) {
@@ -4301,7 +4301,7 @@ async function oc(e, t) {
 }
 async function fa(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return null;
-  let o = await on(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
+  let o = await runDirSyncGit(e, ["ls-tree", "-r", "-z", "--full-tree", `${t}^{tree}`], {
     maxBuffer: r,
   });
   if (o.maxBufferExceeded) return "too_large";
@@ -4368,7 +4368,7 @@ function ic(e, t, r) {
 }
 async function sc(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t) || !GIT_OBJECT_ID_REGEX.test(r)) return "unknown";
-  let o = await on(e, ["merge-base", "--is-ancestor", t, r]);
+  let o = await runDirSyncGit(e, ["merge-base", "--is-ancestor", t, r]);
   return o.exitCode === 0 ? !0 : o.exitCode === 1 ? !1 : "unknown";
 }
 async function ac(e, t, r, o, s = null) {
@@ -4476,7 +4476,7 @@ async function dc(e, t, r, o, s) {
 async function uc(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t) || r.length === 0 || !r.every((a) => GIT_OBJECT_ID_REGEX.test(a)))
     return "unknown";
-  let o = await on(
+  let o = await runDirSyncGit(
       { ...e, timeoutMs: $u },
       [
         "-c",
@@ -4519,7 +4519,7 @@ async function cc(e, t, r) {
 }
 async function fc(e, t) {
   if (t.length === 0) return new Set();
-  let r = await on(e, ["rev-parse", ...t.map((a) => `${a}^{tree}`)]);
+  let r = await runDirSyncGit(e, ["rev-parse", ...t.map((a) => `${a}^{tree}`)]);
   if (r.exitCode !== 0) return null;
   let o = dedupe(
       r.stdout
@@ -4554,7 +4554,7 @@ async function hc(e, t) {
     ),
     a = new Set(r.filter((f, p) => s[p] === !0));
   if (a.size === r.length) return a;
-  let d = await s3n(e);
+  let d = await readDeliveredObjectIds(e);
   if (d === null) return null;
   for (let f of r) if (d.has(f)) a.add(f);
   return r.some((f, p) => s[p] === "unknown" && !a.has(f)) ? null : a;
@@ -4619,7 +4619,7 @@ async function pc(e, t) {
       }
     },
     o = new Map(),
-    s = dedupe(t.flatMap(Eze)),
+    s = dedupe(t.flatMap(getAncestorPaths)),
     a = (p) => countOccurrences(p, "/"),
     d = s.reduce((p, y) => Math.max(p, a(y)), -1);
   for (let p = 0; p <= d; p++) {
@@ -4632,7 +4632,7 @@ async function pc(e, t) {
       );
     for (let [k, _] of w) o.set(k, _);
   }
-  let f = (p) => Eze(p).map((y) => o.get(y));
+  let f = (p) => getAncestorPaths(p).map((y) => o.get(y));
   return {
     beyond: t.filter((p) => f(p).includes("beyond")),
     unexamined: t.filter(
@@ -4649,7 +4649,7 @@ async function zo(
   let a = new Map(),
     d = new Set(t),
     f = (k) => {
-      for (let { tag: _, path: E } of c3n(k))
+      for (let { tag: _, path: E } of parseTaggedPathListing(k))
         if (d.has(E)) a.set(E, _ === "S" ? "absent_here" : "present");
     },
     p = ha(t),
@@ -4703,7 +4703,7 @@ async function gc(e, t, r, o, s) {
     d = posix.basename(r).normalize("NFC"),
     f = posix.extname(d),
     p = d.slice(0, d.length - f.length),
-    y = ` (${Ban} `,
+    y = ` (${CONFLICTED_COPY_MARKER} `,
     w;
   try {
     w = await Ou(Tn(e, a === "." ? "" : a));
@@ -4712,11 +4712,11 @@ async function gc(e, t, r, o, s) {
   }
   let k = (O) => O.slice(0, Math.max(0, O.lastIndexOf(y))),
     _ = (O) => {
-      let D = Wan(r, new Date(0), O);
+      let D = buildConflictedCopyPath(r, new Date(0), O);
       return D === null ? null : k(posix.basename(D).normalize("NFC"));
     },
     E = _(0),
-    R = _(jan - 1) ?? E,
+    R = _(MAX_CONFLICTED_COPY_ATTEMPTS - 1) ?? E,
     N = (O) => {
       let D = k(O);
       return (
@@ -4743,7 +4743,7 @@ async function gc(e, t, r, o, s) {
   return !1;
 }
 async function wc(e, t, r, o, s, a, d) {
-  if ((await Kpt(e, t, o, d)) !== null) return !1;
+  if ((await getDestinationRefusalReason(e, t, o, d)) !== null) return !1;
   let f = posix.dirname(o);
   return (f === "." ? Promise.resolve() : r.mkdirp(f))
     .then(() => r.create(o, s, a))
@@ -4768,7 +4768,7 @@ function ia(e, t) {
   if (t === null) return null;
   if (t === "place") return "outside_checkout";
   let r = dedupe([e, normalizeUnicodeForm(e)]).map((o) => o.split("/"));
-  return r.some((o) => aOe(o, "file"))
+  return r.some((o) => isProtectedClaudePath(o, "file"))
     ? "protected_name"
     : r.some((o) => o.some((s) => s.startsWith(".")))
       ? "dot_path"
@@ -4778,7 +4778,7 @@ function sa(e) {
   return `withheld_${e}`;
 }
 function kc(e) {
-  return dedupe(e.flatMap(Eze)).toSorted(
+  return dedupe(e.flatMap(getAncestorPaths)).toSorted(
     (t, r) => countOccurrences(r, "/") - countOccurrences(t, "/") || (t < r ? -1 : 1),
   );
 }
@@ -4897,7 +4897,7 @@ async function Ko(e) {
     await r.close();
   }
 }
-var Xo = I9,
+var Xo = DEFAULT_MAX_BUNDLE_BYTES,
   qo = "out",
   Cc = 600000,
   Oc = 4,
@@ -4922,11 +4922,11 @@ function Ic(e, t) {
 }
 function ba(e, t) {
   return (
-    t !== null && HFt(e).length < MAX_LISTED_APPLIED_TURNS - 1 && e.installedSinceUpload.length < kze
+    t !== null && getMergedDownApplied(e).length < MAX_LISTED_APPLIED_TURNS - 1 && e.installedSinceUpload.length < MAX_INSTALLED_SINCE_UPLOAD
   );
 }
 function _a(e, t, r, o, s = null) {
-  let a = gte(e);
+  let a = getLatestSentUpload(e);
   return (
     a !== null &&
     a.generation > e.generationSpent &&
@@ -5082,7 +5082,7 @@ async function Nc(e, t) {
       snapshot: E,
       ...(ba(C, t.installedTree?.() ?? null) && { installedBaseline: !0 }),
     };
-  let te = X4(C),
+  let te = getNextGeneration(C),
     ge = buildSessionRefName(o, `${qo}/${te}`);
   if (ge === null)
     return bn(C, "refs", "git_error", "the session id cannot name a ref");
@@ -5142,7 +5142,7 @@ async function Nc(e, t) {
     sentAtMs: t.now(),
   });
   if (!le.ok) {
-    let ee = tln(C, J(null), null);
+    let ee = recordSentUpload(C, J(null), null);
     return (
       await ya(r, o, ee),
       {
@@ -5168,7 +5168,7 @@ async function Nc(e, t) {
       );
     if (ee.kind === "ours" && ee.lostGeneration !== null)
       return bn(
-        tft(C, ee.lostGeneration),
+        recordSpentGeneration(C, ee.lostGeneration),
         "put",
         "conflict",
         `generation ${ee.lostGeneration} already published by this machine before a restart`,
@@ -5185,7 +5185,7 @@ async function Nc(e, t) {
     if (ee.kind === "foreign") return { kind: "other_writer", record: C };
     if (ee.kind === "ours" && ee.lostGeneration !== null)
       return bn(
-        tft(C, ee.lostGeneration),
+        recordSpentGeneration(C, ee.lostGeneration),
         "put",
         "conflict",
         `generation ${ee.lostGeneration} already published by this machine before a restart`,
@@ -5198,7 +5198,7 @@ async function Nc(e, t) {
   }
   switch (K.kind) {
     case "ok": {
-      let ee = tln(
+      let ee = recordSentUpload(
         C,
         J({ ...K.carried, tipRef: ge, prerequisites: le.prerequisites }),
         K.etag,
@@ -5259,7 +5259,7 @@ async function Ea(e, t, r = t.now()) {
     return e;
   try {
     let s = await t.transport.publishJournal(
-      t.announceUpload({ generation: X4(e), startedAtMs: r, writer: o }),
+      t.announceUpload({ generation: getNextGeneration(e), startedAtMs: r, writer: o }),
       { ifMatchEtag: null, createOnly: !0, signal: t.repository.signal },
     );
     return s.kind === "ok" ? { ...e, announcementEtag: s.etag } : e;
@@ -5275,7 +5275,7 @@ async function Qn(e, t, r, o = null, s = !1) {
     let d = await t.transport.publishJournal(
       t.announceUpload(
         {
-          generation: e.sent[0]?.generation ?? X4(e),
+          generation: e.sent[0]?.generation ?? getNextGeneration(e),
           startedAtMs: t.now(),
           abandoned: !0,
           ...(e.announcementToken != null && { writer: e.announcementToken }),
@@ -5312,7 +5312,7 @@ async function Qn(e, t, r, o = null, s = !1) {
 async function Pa(e, t, r) {
   let o = e.announcementToken ?? null;
   if (
-    !kFt(e.start) ||
+    !requiresAnnouncement(e.start) ||
     o === null ||
     e.journalEtag !== null ||
     (e.announcementEtag ?? null) !== null ||
@@ -5322,7 +5322,7 @@ async function Pa(e, t, r) {
   try {
     let s = await t.transport.publishJournal(
       t.announceUpload(
-        { generation: X4(e), startedAtMs: t.now(), abandoned: !0, writer: o },
+        { generation: getNextGeneration(e), startedAtMs: t.now(), abandoned: !0, writer: o },
         r,
       ),
       { ifMatchEtag: null, createOnly: !0, signal: t.repository.signal },
@@ -5363,7 +5363,7 @@ async function hr({
   ended: s,
 }) {
   try {
-    let a = gte(e);
+    let a = getLatestSentUpload(e);
     if (a === null) return { kind: "nothing_to_publish", record: e };
     let d = r.encodeJournal({
         sessionId: r.sessionId,
@@ -5381,7 +5381,7 @@ async function hr({
       if (_.kind === "ours" && _.lostGeneration !== null)
         return {
           kind: "not_delivered",
-          record: tft(e, _.lostGeneration),
+          record: recordSpentGeneration(e, _.lostGeneration),
           reason: "conflict",
           detail: `generation ${_.lostGeneration} already published by this machine before a restart`,
         };
@@ -5401,7 +5401,7 @@ async function hr({
       if (_.kind === "ours" && _.lostGeneration !== null)
         return {
           kind: "not_delivered",
-          record: tft(e, _.lostGeneration),
+          record: recordSpentGeneration(e, _.lostGeneration),
           reason: "conflict",
           detail: `generation ${_.lostGeneration} already published by this machine before a restart`,
         };
@@ -5462,14 +5462,14 @@ function Lc(e, t) {
     worktreeCommit: t.worktreeCommit,
     bundle: t.bundle,
     holds: e.received.map((r) => r.worktreeCommit).slice(0, MAX_LISTED_COMMITS),
-    downApplied: HFt(e)
+    downApplied: getMergedDownApplied(e)
       .slice(-MAX_LISTED_APPLIED_TURNS)
       .map((r) => ({
         turn: r.turn,
         notInstalled: r.notInstalled.slice(0, MAX_LISTED_SKIPPED_FILES),
         truncated: r.truncated || r.notInstalled.length > MAX_LISTED_SKIPPED_FILES,
       })),
-    fastForwardedTo: h3n(e),
+    fastForwardedTo: getMergedFastForwardHeads(e),
     withheldCounts: t.withheldCounts,
     ...(t.conflicted !== void 0 && { conflicted: t.conflicted }),
     ...(e.start.kind === "folder" && { origin: "folder" }),
@@ -5481,7 +5481,7 @@ function Lc(e, t) {
 }
 async function co(e, t) {
   let { start: r, peerNeed: o } = t,
-    s = xFt(r),
+    s = getStartBasisCommits(r),
     a = t.acked.slice(0, Oc).filter((R) => R !== o),
     d = t.received.map((R) => R.worktreeCommit),
     f = t.sent[0]?.worktreeCommit ?? null,
@@ -5507,7 +5507,7 @@ async function co(e, t) {
         s.includes(o) ||
         t.sent.some((R) => R.head === o || R.worktreeCommit === o));
   if (o !== null && !E)
-    n(
+    logForDebugging(
       "git sync: the container reports lacking a commit no bundle from here can supply (a fork point below its history); bases unchanged",
     );
   return {
@@ -5552,7 +5552,7 @@ function Ra({ gitDir: e, timeoutMs: t, checkoutShallowFile: r }) {
           detail: `the checkout's git layout could not be read (${a.unreadable})`,
         };
       }
-      let d = await Kan(s.gitDir),
+      let d = await readAlternatesLender(s.gitDir),
         f = a ?? (d.kind === "lender" ? d.shallowFile : null);
       if (f === null) return { kind: "nothing_to_pin" };
       let p = await ga(f, Ac(s.gitDir));
@@ -5570,16 +5570,16 @@ function Ra({ gitDir: e, timeoutMs: t, checkoutShallowFile: r }) {
     },
     presentCommits: (a) => Dc(s, a),
     readTrees: (a) => $c(s, a),
-    writeRefs: (a) => K4(s, a),
-    createBundle: (a) => uOe({ ...a, repository: s }),
+    writeRefs: (a) => writeSessionRefs(s, a),
+    createBundle: (a) => createBundle({ ...a, repository: s }),
     listSessionRefs: (a) => listSessionRefs(s, a),
-    deleteRefs: (a) => cOe(s, a),
+    deleteRefs: (a) => deleteSessionRefs(s, a),
   });
   return o({ gitDir: e, timeoutMs: t });
 }
 async function Dc(e, t) {
   if (t.length === 0) return new Set();
-  let r = await on(e, ["cat-file", "--batch-check=%(objecttype)"], {
+  let r = await runDirSyncGit(e, ["cat-file", "--batch-check=%(objecttype)"], {
       input: t
         .map(
           (s) => `${s}
@@ -5619,7 +5619,7 @@ async function Fr(e, t, r) {
   let d = await t.repository.presentCommits([a.worktreeCommit]);
   if (d === null) return { kind: "unknown" };
   if (!d.has(a.worktreeCommit)) return { kind: "foreign" };
-  let f = r === "publish" ? (e.sent[0]?.generation ?? X4(e)) : X4(e),
+  let f = r === "publish" ? (e.sent[0]?.generation ?? getNextGeneration(e)) : getNextGeneration(e),
     p =
       a.generation >= f &&
       (a.generation > e.generationSpent ||
@@ -5641,7 +5641,7 @@ async function ya(e, t, r) {
   if (d.length > 0) await e.deleteRefs(d);
 }
 async function $c(e, t) {
-  let r = await on(e, ["rev-parse", ...t.map((s) => `${s}^{tree}`)]),
+  let r = await runDirSyncGit(e, ["rev-parse", ...t.map((s) => `${s}^{tree}`)]),
     o = r.stdout
       .split(
         `
@@ -5847,13 +5847,13 @@ function ri(e, { covered: t, outcome: r, counts: o }, s, a) {
 function $a(e, t, r) {
   let o =
     r.received.kind === "ok"
-      ? b3n(e, {
+      ? recordReceivedUpload(e, {
           generation: t.generation,
           worktreeCommit: r.received.worktreeCommit,
         })
       : e;
   if (r.received.kind === "refused") return o;
-  let s = w3n(o, {
+  let s = recordAppliedTurn(o, {
     turn: t.generation,
     installed: r.installed,
     ...(r.contentWritten !== void 0 && { written: r.contentWritten }),
@@ -6085,7 +6085,7 @@ var Qc = new Set([
   "withheld_sensitive_tracked",
 ]);
 function Zc(e) {
-  return Qc.has(e.reason) || Xa(e.path).some((t) => aOe(t, "file"));
+  return Qc.has(e.reason) || Xa(e.path).some((t) => isProtectedClaudePath(t, "file"));
 }
 function ef(e, t, r) {
   let o = e.sent.findIndex((s) => e.acked.includes(s.worktreeCommit));
@@ -6535,7 +6535,7 @@ function hFt({
         },
         (T) => {
           if (
-            (n(
+            (logForDebugging(
               `dir-sync: the offline dialog failed (${l(T)}); the cloud session is not told that file sync ended`,
             ),
             !ve)
@@ -6572,7 +6572,7 @@ function hFt({
             }),
       )
       .catch((be) => {
-        n(
+        logForDebugging(
           `dir-sync: the offline dialog failed (${l(be)}); continuing without file sync`,
         );
         return;
@@ -6693,10 +6693,10 @@ function hFt({
     let T = me ?? (await vn("push"));
     if (T === null) return !1;
     let v = { ...Nn(b), beforeUpload: void 0 };
-    if (gte(T) === null) {
+    if (getLatestSentUpload(T) === null) {
       if ((T.announcementEtag ?? null) === null) {
         let Se =
-          kFt(T.start) && (T.announcementToken ?? null) === null
+          requiresAnnouncement(T.start) && (T.announcementToken ?? null) === null
             ? { ...T, announcementToken: oi() }
             : T;
         if (Se !== T) await Ee(Se);
@@ -6874,7 +6874,7 @@ function hFt({
         ? ut.standing
         : await fe().catch(
             (b) => (
-              n(
+              logForDebugging(
                 `dir-sync: consent unknown just now (${l(b)}); this pass is skipped`,
               ),
               null
@@ -6895,13 +6895,13 @@ function hFt({
       (Ze =
         "this directory no longer reads as set to sync \u2014 checking once more"),
       (Ce = Ze),
-      n(`dir-sync: consent read ${c}; confirmed by a later pass`),
+      logForDebugging(`dir-sync: consent read ${c}; confirmed by a later pass`),
       !1
     );
   }
   async function vn(c) {
     if (me !== null) return me;
-    let b = await mte(o, e);
+    let b = await readGitSessionRecord(o, e);
     if (b.kind === "git") {
       if (((me = b.record), (Ne[c] = 0), (Lt = ft), xe === null)) {
         if (b.record.ended?.published === !0) Eo();
@@ -6922,17 +6922,17 @@ function hFt({
   async function Ee(c) {
     if (c === me) return;
     if (ir() || Lt !== ft || Po) {
-      n(
+      logForDebugging(
         "git sync: record write skipped \u2014 the writer lock is no longer (or was not continuously) held here",
       );
       return;
     }
     me = c;
     try {
-      (await Ybe(o, c), (Ke = 0));
+      (await writeGitSessionRecord(o, c), (Ke = 0));
     } catch (b) {
       if (!yt(b)) logError(b);
-      if (b instanceof eft) return;
+      if (b instanceof GitSessionRecordInvalidError) return;
       if (((Ke += 1), Ke === Qo))
         Ie(
           "File sync cannot save its local record of this session just now (is the disk full or the folder read-only?); sync carries on and keeps trying to save it",
@@ -7143,7 +7143,7 @@ function hFt({
         Bt !== null ||
         ir() ||
         U !== null ||
-        (gte(Se)?.generation ?? 0) >= L.generation
+        (getLatestSentUpload(Se)?.generation ?? 0) >= L.generation
       )
         return !0;
       let H = await hr({
@@ -7267,7 +7267,7 @@ function hFt({
       }
     }
     let ue = T !== null && be.userEventUuids.includes(T),
-      z = S3n(L, H);
+      z = applyPeerNote(L, H);
     if (L.acked.length > 0 && z.acked.length === 0) yr();
     let ot =
         (z.start.kind === "seed" &&
@@ -7343,7 +7343,7 @@ function hFt({
           "info",
         );
     }
-    if (!g3n(z))
+    if (!hasDownApplyCapacity(z))
       return (
         await Ee(z),
         Fe(
@@ -7552,7 +7552,7 @@ function hFt({
           : { kind: "built", worktreeCommit: X.snapshot.worktreeCommit };
       };
     try {
-      let We = F ?? (me === null ? null : _3n(me, be)) ?? b.head;
+      let We = F ?? (me === null ? null : getLastHeadForBranch(me, be)) ?? b.head;
       if (
         ((ue = await ye({
           worktreeCommit: c.worktreeCommit,
@@ -7630,7 +7630,7 @@ function hFt({
   }
   async function $i(c, b) {
     let T = me ?? (await vn("pull"));
-    if (T !== null) await Ee(y3n(T, c, b));
+    if (T !== null) await Ee(recordFastForward(T, c, b));
   }
   function Bi(c, b, T, v, L, ie) {
     ct = ie
@@ -7820,9 +7820,9 @@ function hFt({
       !Kt
     ) {
       if (Q() - kn >= R)
-        (await Ni({ generation: X4(H), startedAtMs: Q() }).catch(Te),
+        (await Ni({ generation: getNextGeneration(H), startedAtMs: Q() }).catch(Te),
           (H = me ?? H));
-      El(X4(H), Q());
+      El(getNextGeneration(H), Q());
     }
     gr = !0;
     let F = await Sa({ record: H, deps: Se });
@@ -7976,7 +7976,7 @@ function hFt({
           }
           break;
         }
-        (n(`dir-sync: snapshot refused (${F.reason}): ${F.detail}`),
+        (logForDebugging(`dir-sync: snapshot refused (${F.reason}): ${F.detail}`),
           await Ee(z));
         let ke = F.reason === "too_many_paths";
         await qr(
@@ -8022,7 +8022,7 @@ function hFt({
         return;
       case "not_delivered":
         if (
-          (n(
+          (logForDebugging(
             `dir-sync: upload not delivered (${F.step}, ${F.reason}): ${F.detail}`,
           ),
           await Ee(z),
@@ -8066,7 +8066,7 @@ function hFt({
             ((Ot = tn),
             (ot = !0),
             (Rr = !1),
-            (_o = gte(z)?.generation ?? _o),
+            (_o = getLatestSentUpload(z)?.generation ?? _o),
             (In = ii(In, z)),
             F.kind === "sent" || F.kind === "unchanged")
           ) {
@@ -8088,7 +8088,7 @@ function hFt({
             U !== null && _e === null)
           )
             Xr(U);
-          (n(`dir-sync: note not published (${X.reason}): ${X.detail}`),
+          (logForDebugging(`dir-sync: note not published (${X.reason}): ${X.detail}`),
             (Ce = "the cloud session could not be told about them"),
             Mi(
               F.kind === "sent"
@@ -8124,7 +8124,7 @@ function hFt({
     if (F.kind === "sent") {
       let X = F.record.sent[0]?.worktreeCommit ?? "";
       (Jt.delete(X), Jt.set(X, Rt));
-      for (let ke of [...Jt.keys()].slice(0, Math.max(0, Jt.size - Qpt)))
+      for (let ke of [...Jt.keys()].slice(0, Math.max(0, Jt.size - MAX_SENT_UPLOADS)))
         Jt.delete(ke);
       if (Me === 0) Ie(xa, "debug");
       else
@@ -8514,7 +8514,7 @@ function hFt({
       heldBy: null,
     };
   }
-  let et = d3n({
+  let et = createDirSyncStreamer({
     notRunning: () =>
       xe?.reason ?? (ve ? "shut_down" : dt ? "other_writer_here" : null),
     send: (c) => Fn(c),
@@ -8939,7 +8939,7 @@ function hFt({
       try {
         if (Be()) return;
         if (((wo ??= Q()), (Rt += 1), ($n = 0), et.peerAlive(), et.held()))
-          (n(
+          (logForDebugging(
             "dir-sync: a turn ended with installs still held for a command on this machine; dropping the hold",
             { level: "warn" },
           ),
@@ -8994,7 +8994,7 @@ function hFt({
           });
         if (Be()) return { kind: "not_running" };
         if (be) {
-          let We = gte(me ?? b);
+          let We = getLatestSentUpload(me ?? b);
           return {
             kind: "failed",
             reason: "interrupted",
@@ -9004,7 +9004,7 @@ function hFt({
           };
         }
         let Se = me ?? b,
-          H = gte(Se),
+          H = getLatestSentUpload(Se),
           F = {
             generation: H?.generation ?? 0,
             taken: Er?.generation ?? 0,
@@ -9016,7 +9016,7 @@ function hFt({
         if (ue === null || ue === void 0)
           z = { kind: "failed", reason: "snapshot_refused", ...F };
         else if (!ue.unchanged)
-          z = { kind: "shipping", shipping: X4(Se), ...F };
+          z = { kind: "shipping", shipping: getNextGeneration(Se), ...F };
         else if (H !== null && H.generation !== _o)
           ((ot = "note_owed"),
             (z = { kind: "shipping", shipping: H.generation, ...F }));
@@ -9035,7 +9035,7 @@ function hFt({
         );
       } catch (b) {
         Te(b, "push");
-        let T = me === null ? null : gte(me);
+        let T = me === null ? null : getLatestSentUpload(me);
         return {
           kind: "failed",
           reason: "crashed",
@@ -9146,7 +9146,7 @@ function Za(e, t = !1) {
   let r = e.split("/");
   return (
     r.every((o, s) => {
-      let a = qbe(o, s < r.length - 1);
+      let a = segmentScopeSkip(o, s < r.length - 1);
       return (
         o.length > 0 &&
         o !== "." &&
@@ -9154,7 +9154,7 @@ function Za(e, t = !1) {
         (a === null || (t && a === "dependency_dir"))
       );
     }) &&
-    !Vpt(e, t) &&
+    !isRefusedFilePath(e, t) &&
     !isSensitivePathAnySpelling(e)
   );
 }
@@ -9169,7 +9169,7 @@ async function el(e, t) {
       a === void 0 ||
       a.isSymbolicLink() ||
       !a.isDirectory() ||
-      (await zan(o))
+      (await isGitRepositoryRoot(o))
     )
       return !0;
   }
@@ -9207,7 +9207,7 @@ function pi(e, t) {
   if (r === "" || !mo(r)) return !1;
   let o = Zn(e, t);
   if (mo(o)) return !0;
-  return o.split(Kn).some((s) => qbe(s, !0) !== null);
+  return o.split(Kn).some((s) => segmentScopeSkip(s, !0) !== null);
 }
 function mo(e) {
   return e === ".." || e.startsWith(".." + Kn) || mi(e);
@@ -9263,7 +9263,7 @@ async function Jf(e, t, r, o, s, a) {
   let d = jn(o, s);
   if (d === null) return "refused";
   if (e.realRoot !== r) return "stayed";
-  if (!(await qan(t, r, a.path, a.trackedHere))) return "refused";
+  if (!(await isDestinationAllowed(t, r, a.path, a.trackedHere))) return "refused";
   let f = d.split(Kn).join("/");
   try {
     if ((await e.mkdirp(f, Br), f === dr || f.startsWith(dr + "/")))
@@ -9275,7 +9275,7 @@ async function Jf(e, t, r, o, s, a) {
           384,
         )
         .catch(() => {});
-    let p = await P9(t, r, a.path, e);
+    let p = await readFileWithDigests(t, r, a.path, e);
     if (p === null)
       return e.lstat(a.path).then(
         () => "stayed",
@@ -9287,7 +9287,7 @@ async function Jf(e, t, r, o, s, a) {
     if (w === null) return "stayed";
     if (!(await e.lstat(a.path)).isFile()) return "stayed";
     await e.rename(a.path, w);
-    let k = await P9(t, r, w, e);
+    let k = await readFileWithDigests(t, r, w, e);
     if (k !== null && k.sha256 === a.sha256) return "moved";
     if ((await e.lstat(w)).isDirectory())
       return (
@@ -9346,9 +9346,9 @@ async function th(e, t, r, o, s, a) {
   if (e.rootOnly || e.backend === "by_name") return "unavailable";
   if (jn(o, s) !== null) return "unreachable";
   if (e.realRoot !== r) return "stayed";
-  if (!(await qan(t, r, a.path, a.trackedHere))) return "refused";
+  if (!(await isDestinationAllowed(t, r, a.path, a.trackedHere))) return "refused";
   try {
-    let d = await P9(t, r, a.path, e);
+    let d = await readFileWithDigests(t, r, a.path, e);
     if (d === null)
       return e.lstat(a.path).then(
         () => "stayed",
@@ -9462,7 +9462,7 @@ async function ih(e, t, r, o, s) {
   );
   if (f === null || !pi(t, f) || !Yf(d, t, f)) return "stayed";
   try {
-    let p = await P9(e, t, s.path);
+    let p = await readFileWithDigests(e, t, s.path);
     if (p === null)
       return zn(a).then(
         () => "stayed",
@@ -9478,7 +9478,7 @@ async function ih(e, t, r, o, s) {
       return "stayed";
     if (!(await zn(a)).isFile()) return "stayed";
     await Qa(a, w);
-    let k = await P9(o, f, Zn(o, w));
+    let k = await readFileWithDigests(o, f, Zn(o, w));
     if (k !== null && k.sha256 === s.sha256) return "moved";
     if (!(await Kf(e, t, s.path))) return "stayed";
     if ((await zn(w)).isDirectory())
@@ -9532,16 +9532,16 @@ async function Yhr({
 }) {
   let f = toInfraSessionId(e),
     { path: p, v5: y } = await resolveDirSyncRecordLocation(t, f, d),
-    w = Zpt({ sessionId: f, armedAtMs: a(), start: r, uploadOnly: o });
+    w = createGitSessionRecord({ sessionId: f, armedAtMs: a(), start: r, uploadOnly: o });
   if (isHoverRestEnabled() && d !== void 0 && y !== void 0) {
-    if (s === void 0) await Ybe(p, w, y);
-    else await m3n(w, s, y);
+    if (s === void 0) await writeGitSessionRecord(p, w, y);
+    else await writeGitSessionRecordStreamed(w, s, y);
     return { recordPath: p, record: w };
   }
   let k = s === void 0 ? p : `${p}.tmp.arming-${process.pid}`;
   for (;;) {
     if (k === p && s?.aborted) throw new Ve();
-    if ((await Ybe(k, w), k === p)) return { recordPath: p, record: w };
+    if ((await writeGitSessionRecord(k, w), k === p)) return { recordPath: p, record: w };
     if (s?.aborted) throw (await rl(k).catch(() => {}), new Ve());
     try {
       return (await renameWithRetry(k, p), { recordPath: p, record: w });
@@ -9579,7 +9579,7 @@ async function Jhr({
   logEvent("tengu_dir_sync_git_open", { branch_rule: w, upload_at_open: f });
   let k = await canonicalizePath(t, createHoverRestOptions(y)),
     _ = getSideGitDirPath(getProjectDir(k)),
-    E = { gitDir: _, timeoutMs: Aze },
+    E = { gitDir: _, timeoutMs: DEFAULT_GIT_TIMEOUT_MS },
     R = await getDirSyncRecordPath(t, e, y),
     N = await lh(t),
     C = createSyncedFileLaneClient({ sessionId: e, credentials: a });
@@ -9614,7 +9614,7 @@ async function Jhr({
     initialPass: f ? "send" : "none",
     ...(p !== void 0 && { endedEarlier: p }),
     writerLock: (O) => mFt({ recordPath: R, lockPath: fs(_, e), onLost: O }),
-    ...(isDirSyncStreamingEnabled() && { changeFeed: () => Jpt({ root: t }), streamingScope: bh(t) }),
+    ...(isDirSyncStreamingEnabled() && { changeFeed: () => createDirChangeFeed({ root: t }), streamingScope: bh(t) }),
     ...(!w
       ? {}
       : {
@@ -9711,7 +9711,7 @@ function _h(e) {
   return {
     neverByName: ol,
     refusedInHistory: (t, r) =>
-      lOe(t, "/", "file", r) || ol(t) || !pI(t) || jo(t),
+      isRefusedSyncPath(t, "/", "file", r) || ol(t) || !isSafePortablePath(t) || jo(t),
     trackedInIndex: async (t, r) => {
       let o = await zo(e, t, r);
       return o === null
@@ -9725,7 +9725,7 @@ function _h(e) {
 function ol(e) {
   return [e, normalizeUnicodeForm(e)].some((t) => {
     let r = t.split("/");
-    return aOe(r, "file") || r.some(Gan) || Xce(t) || isSensitivePathVariant(t);
+    return isProtectedClaudePath(r, "file") || r.some(isReservedDirShortName) || isDangerousFileName(t) || isSensitivePathVariant(t);
   });
 }
 function kh(e, t) {
@@ -9738,7 +9738,7 @@ function kh(e, t) {
 async function Sh(e, t, r) {
   let o = buildSessionRefName(t, "in/0")?.replace(/0$/, "") ?? null;
   if (o === null || !GIT_OBJECT_ID_REGEX.test(r)) return { kind: "none" };
-  let s = await on(e, [
+  let s = await runDirSyncGit(e, [
     "for-each-ref",
     "--format=%(refname)",
     `--points-at=${r}`,
@@ -9812,7 +9812,7 @@ function _Ft(e, t, r, o = () => {}) {
       w = await r();
     } catch (E) {
       return (
-        n(`dir-sync: session trash unavailable, move refused (${l(E)})`),
+        logForDebugging(`dir-sync: session trash unavailable, move refused (${l(E)})`),
         "refused"
       );
     }
@@ -9827,7 +9827,7 @@ function _Ft(e, t, r, o = () => {}) {
       return "trashed";
     }
     if (k === "unavailable") return "refused";
-    return (await P9(e, t, d, p))?.sha256 === f ? "refused" : "kept_changed";
+    return (await readFileWithDigests(e, t, d, p))?.sha256 === f ? "refused" : "kept_changed";
   };
 }
 function Ah({
@@ -9950,7 +9950,7 @@ function Ah({
         basis: d,
         alsoParents: f ?? [],
         scopePaths: [...O.paths, ...O.nestedRepositories.map((Ae) => `${Ae}/`)],
-        byteCap: Rze,
+        byteCap: MAX_SYNC_UPLOAD_BYTES,
         signal: p,
         probes: k,
       });
@@ -10056,7 +10056,7 @@ async function xh(e, t) {
     a = s(o.stdout),
     d = a.filter((_) => _.endsWith("/")).map((_) => _.slice(0, -1));
   if (d.length > 0)
-    n(
+    logForDebugging(
       `dir-sync: ${d.length} untracked nested repositories left out of the snapshot`,
     );
   let f = partitionSeedPaths(

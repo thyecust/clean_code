@@ -13,7 +13,7 @@ import { Cz, xW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { HELP_FLAGS, isInfoSubcommandAlias, isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -43,7 +43,7 @@ import {
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Xt, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   toModelPickerOption,
   isPromptCacheWarm,
@@ -58,9 +58,9 @@ import {
   CLOUD_SWITCH_FAILED_PREFIX,
   ControlRequestTimeoutError,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { VH, Yk, Ya, ese, tse, zG } from "../权限系统/chunk-t3b7pg2x.js";
+import { getEnvEffortLevelOverride, createEffortLevel, getSessionEffortLevel, ese, shouldConfirmEffortChangeOnWarmCache, applyEffortLevelChange } from "../权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { ModelPicker, CancellableStatusMessage, ExtraUsageDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
@@ -91,23 +91,23 @@ import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../成本-Token统计/usage-credits-flow.js";
 import {
-  p7,
-  Yle,
-  ySe,
-  P_,
-  Rl,
-  rI,
-  I3e,
-  kIe,
-  Qnn,
-  Zg,
-  t2,
-  nLt,
-  P3e,
-  rLt,
-  n2,
-  Qle,
-} from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+  formatFastModeChangeNote,
+  validateModelAvailability,
+  resolveModelSwitchTarget,
+  resolvePreModelSwitchDecision,
+  toSingleLineDisplayText,
+  formatModelSwitchBlockedError,
+  applyModelSwitch,
+  saveModelAsUserDefault,
+  formatPinnedModelSettingNote,
+  formatModelDisplayName,
+  parseModelOrDefault,
+  shouldConfirmModelChangeForPromptCache,
+  formatCurrentModelStatus,
+  isFableModelBlockedByCreditsOrOverage,
+  isFableModelBlockedByUsageCredits,
+  resolveEffortLevelForModel,
+} from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -167,7 +167,7 @@ function nt({ credentials: r }) {
 async function Tt(r, t, o, O) {
   let T = r.fableEntitlementProbeGeneration;
   try {
-    let c = await Yle(t, { forceServerProbe: !0, credentials: O }),
+    let c = await validateModelAvailability(t, { forceServerProbe: !0, credentials: O }),
       M = getAuthenticatedAccountKey(),
       q = getProviderState().providerCache;
     if (
@@ -178,7 +178,7 @@ async function Tt(r, t, o, O) {
       return (
         q.validatedModels.delete(t),
         r.validatedModels.delete(t),
-        n(
+        logForDebugging(
           "[model picker] Fable entitlement probe answered under a superseded credential; discarded",
         ),
         logFeatureSad("model_picker_fable_probe", "superseded_credential"),
@@ -197,13 +197,13 @@ async function Tt(r, t, o, O) {
         "refused"
       );
     return (
-      n(`[model picker] Fable entitlement probe failed: ${c.error}`),
+      logForDebugging(`[model picker] Fable entitlement probe failed: ${c.error}`),
       logFeatureSad("model_picker_fable_probe", "failed"),
       "failed"
     );
   } catch (c) {
     return (
-      n(`[model picker] Fable entitlement probe threw: ${c}`),
+      logForDebugging(`[model picker] Fable entitlement probe threw: ${c}`),
       logFeatureSad("model_picker_fable_probe", "failed"),
       "failed"
     );
@@ -240,7 +240,7 @@ var Qe =
   Ct =
     "Stopped waiting for the cloud session\u2019s model list \u2014 run /model again, or pass a model name, e.g. /model sonnet",
   Et = 15000,
-  je = (r) => Xt(r) !== r,
+  je = (r) => strip1mSuffix(r) !== r,
   vt = (r) =>
     r.reduce(
       (t, o) =>
@@ -271,7 +271,7 @@ function io({
     Ee = C(null),
     [Me, ke] = d(() => Ue()),
     [P] = d(() => Ye());
-  (Un(() => ke(!1), Me ? P : null),
+  (useTimeout(() => ke(!1), Me ? P : null),
     E(() => {
       if (!Me) return;
       if (!Ue()) {
@@ -290,26 +290,26 @@ function io({
     }, [Me, O]));
   function A() {
     logEvent("tengu_model_command_menu", { action: S("cancel") });
-    let s = Zg(x);
+    let s = formatModelDisplayName(x);
     t(`${KEPT_MODEL_PREFIX}${formatInlineCode(s)}`, { display: "system" });
   }
   function v(s, w, ne = !1) {
-    if (!ne && rLt(s)) {
+    if (!ne && isFableModelBlockedByCreditsOrOverage(s)) {
       ((ce.current = !1), (_e.current += 1), fe({ model: s, effort: w }));
       return;
     }
-    let Y = Qle(s, w),
+    let Y = resolveEffortLevelForModel(s, w),
       N = oe.current;
     oe.current = !1;
     let se = new AbortController();
     ((Ee.current = se),
       Z(!0),
-      enqueueSessionTask(T, () => P_(T, c.getState, s, "picker", { signal: se.signal }))
+      enqueueSessionTask(T, () => resolvePreModelSwitchDecision(T, c.getState, s, "picker", { signal: se.signal }))
         .then((L) => {
           if ((Z(!1), se.signal.aborted)) return;
           if (((Q.current = L.messages), L.decision === "block")) {
             (logFeatureSad("model_switch", "blocked_by_hook"),
-              t(rI(s, L.reason, L.messages), { display: "system" }));
+              t(formatModelSwitchBlockedError(s, L.reason, L.messages), { display: "system" }));
             return;
           }
           if (L.decision === "ask") {
@@ -328,14 +328,14 @@ function io({
         .catch((L) => {
           if ((Z(!1), se.signal.aborted)) return;
           (logError(ge(L)),
-            t(`Model switch failed: ${Rl(l(L))}`, { display: "system" }));
+            t(`Model switch failed: ${toSingleLineDisplayText(l(L))}`, { display: "system" }));
         }));
   }
   function m(s, w, ne, Y) {
     let N = c.getState();
     if (
       !ne &&
-      nLt(
+      shouldConfirmModelChangeForPromptCache(
         s,
         N.mainLoopModel,
         N.mainLoopModelForSession,
@@ -354,7 +354,7 @@ function io({
     }
     if (
       w !== void 0 &&
-      tse(w.level, Ya(N), t2(s), N.cacheMissAckedAtOutputTokens, isPromptCacheWarm(r()))
+      shouldConfirmEffortChangeOnWarmCache(w.level, getSessionEffortLevel(N), parseModelOrDefault(s), N.cacheMissAckedAtOutputTokens, isPromptCacheWarm(r()))
     ) {
       k({
         model: s,
@@ -377,7 +377,7 @@ function io({
       w?.fromUltracode)
     )
       ese(ne, o);
-    else if (w !== void 0) zG(w.level, t2(s), ne, o);
+    else if (w !== void 0) applyEffortLevelChange(w.level, parseModelOrDefault(s), ne, o);
     Cz();
     let Y = !1,
       N = !1;
@@ -392,7 +392,7 @@ function io({
             mainLoopModel: s,
             mainLoopModelForSession: null,
             ...(w !== void 0 && {
-              sessionEffort: Yk(w.level),
+              sessionEffort: createEffortLevel(w.level),
               ultracode: w.ultracode,
             }),
             ...(N !== Y && { fastMode: N }),
@@ -401,26 +401,26 @@ function io({
       ),
       logFastModeToggled(Y, N));
     let se = ne;
-    if (se) kIe(s, o);
+    if (se) saveModelAsUserDefault(s, o);
     (logFeatureOk("model_switch"), Ze(s, de));
-    let L = `${SET_MODEL_PREFIX}${formatInlineCode(Zg(s))}${se ? " and saved as your default for new sessions" : " for this session only"}`;
+    let L = `${SET_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(s))}${se ? " and saved as your default for new sessions" : " for this session only"}`;
     if (w !== void 0) {
       let ve = w.ultracode ? "ultracode" : w.level;
       if (((L += ` with ${formatInlineCode(ve)} effort`), w.fromUltracode && se))
         L += w.ultracode
           ? " (ultracode applies to this session only)"
           : " (the effort applies to this session only)";
-      let Ne = w.fromUltracode ? VH() : void 0;
+      let Ne = w.fromUltracode ? getEnvEffortLevelOverride() : void 0;
       if (Ne !== void 0 && Ne !== "xhigh") {
         let Lt =
           Ne === null ? a.CLAUDE_CODE_EFFORT_LEVEL?.toLowerCase() : String(Ne);
         L += ` \u2014 CLAUDE_CODE_EFFORT_LEVEL=${Lt} overrides effort this session; clear it and ${ve} takes over`;
       }
     }
-    if (((L += p7(Y, N, s, { announceKeptOn: !0 })), se)) L += Qnn(s);
+    if (((L += formatFastModeChangeNote(Y, N, s, { announceKeptOn: !0 })), se)) L += formatPinnedModelSettingNote(s);
     if (Q.current.length > 0)
       ((L += `
-${Q.current.map(Rl).join(`
+${Q.current.map(toSingleLineDisplayText).join(`
 `)}`),
         (Q.current = []));
     t(L);
@@ -441,7 +441,7 @@ ${Q.current.map(Rl).join(`
           return;
         }
         ((oe.current = !1),
-          t(N ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(x))}`, { display: "system" }));
+          t(N ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(x))}`, { display: "system" }));
       },
     });
   }
@@ -612,7 +612,7 @@ function Rt(yn) {
             : ie.filter(
                 (dt) =>
                   dt.value !== null &&
-                  Xt(G).includes(Xt(dt.value)) &&
+                  strip1mSuffix(G).includes(strip1mSuffix(dt.value)) &&
                   je(G) === je(dt.value),
               ),
         )),
@@ -632,7 +632,7 @@ function Rt(yn) {
         V(
           G === null
             ? "Kept the workspace\u2019s current model"
-            : `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(G))}`,
+            : `${KEPT_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(G))}`,
           { display: "system" },
         ));
     }),
@@ -696,7 +696,7 @@ function De(wn) {
   )
     ((xt = (Be, gt) => {
       let Rn = !isRemoteActive();
-      let Jt = I3e(ae, Be, () => R.getState(), be, Rn, "command", gt, le);
+      let Jt = applyModelSwitch(ae, Be, () => R.getState(), be, Rn, "command", gt, le);
       if (gt !== void 0 && Be !== null)
         Fe({
           key: `model-restricted-${Be}`,
@@ -710,7 +710,7 @@ function De(wn) {
         b(
           qt.length > 0
             ? `${Jt}
-${qt.map(Rl).join(`
+${qt.map(toSingleLineDisplayText).join(`
 `)}`
             : Jt,
         ));
@@ -730,7 +730,7 @@ ${qt.map(Rl).join(`
       let yt = R.getState();
       if (
         !$n &&
-        nLt(
+        shouldConfirmModelChangeForPromptCache(
           ht,
           yt.mainLoopModel,
           yt.mainLoopModelForSession,
@@ -755,14 +755,14 @@ ${qt.map(Rl).join(`
       let Je = new AbortController();
       ((Vt.current = Je),
         Ge(!0),
-        enqueueSessionTask(ae, () => P_(ae, R.getState, xe, "command", { signal: Je.signal }))
+        enqueueSessionTask(ae, () => resolvePreModelSwitchDecision(ae, R.getState, xe, "command", { signal: Je.signal }))
           .then((Se) => {
             if ((Ge(!1), Je.signal.aborted)) {
               return;
             }
             if (((mt.current = Se.messages), Se.decision === "block")) {
               (logFeatureSad("model_switch", "blocked_by_hook"),
-                b(rI(xe, Se.reason, Se.messages), { display: "system" }));
+                b(formatModelSwitchBlockedError(xe, Se.reason, Se.messages), { display: "system" }));
               return;
             }
             if (Se.decision === "ask") {
@@ -781,7 +781,7 @@ ${qt.map(Rl).join(`
               return;
             }
             (logError(ge(to)),
-              b(`Model switch failed: ${Rl(l(to))}`, { display: "system" }));
+              b(`Model switch failed: ${toSingleLineDisplayText(l(to))}`, { display: "system" }));
           }));
     }),
       (W[12] = _t),
@@ -805,7 +805,7 @@ ${qt.map(Rl).join(`
     ((oo = () => {
       let no = getRemoteTransport();
       if (no && hasRemoteControlChannel()) {
-        ySe(J, le, we).then((ye) => {
+        resolveModelSwitchTarget(J, le, we).then((ye) => {
           if (Ke.current) {
             return;
           }
@@ -813,7 +813,7 @@ ${qt.map(Rl).join(`
             ((Le.current = !0), b(ye.message, { display: "system" }));
             return;
           }
-          if (ye.model !== null && n2(ye.model)) {
+          if (ye.model !== null && isFableModelBlockedByUsageCredits(ye.model)) {
             (logFeatureSad("model_fable_consent", "remote_thin_client_blocked"),
               (Le.current = !0),
               b(
@@ -850,7 +850,7 @@ ${qt.map(Rl).join(`
                   text:
                     z === null
                       ? "The cloud session reset its model to the workspace default"
-                      : `The cloud session switched to ${Zg(z)}`,
+                      : `The cloud session switched to ${formatModelDisplayName(z)}`,
                   priority: "high",
                 });
                 return;
@@ -869,11 +869,11 @@ ${qt.map(Rl).join(`
                 b(
                   z === null
                     ? "Reset model to the workspace default"
-                    : `${SET_MODEL_PREFIX}${formatInlineCode(Zg(z))}`,
+                    : `${SET_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(z))}`,
                 ));
             })
             .catch((kt) => {
-              if ((n(`[remote] set_model rejected: ${l(kt)}`), Ke.current)) {
+              if ((logForDebugging(`[remote] set_model rejected: ${l(kt)}`), Ke.current)) {
                 return;
               }
               let ro = kt instanceof ControlRequestTimeoutError;
@@ -882,19 +882,19 @@ ${qt.map(Rl).join(`
                 b(
                   ro
                     ? `${CLOUD_SWITCH_NO_RESPONSE_PREFIX}${formatInlineCode(J)} may still have been applied`
-                    : `${CLOUD_SWITCH_FAILED_PREFIX}${formatInlineCode(J)}: ${Rl(l(kt))}`,
+                    : `${CLOUD_SWITCH_FAILED_PREFIX}${formatInlineCode(J)}: ${toSingleLineDisplayText(l(kt))}`,
                   { display: "system" },
                 ));
             });
         });
         return;
       }
-      ySe(J, le, we).then((Re) => {
+      resolveModelSwitchTarget(J, le, we).then((Re) => {
         if (!Re.ok) {
           b(Re.message, { display: "system" });
           return;
         }
-        if (rLt(Re.model)) {
+        if (isFableModelBlockedByCreditsOrOverage(Re.model)) {
           ((ut.current = !1),
             (pt.current = pt.current + 1),
             Kt({ model: Re.model, substitutedFrom: Re.substitutedFrom }));
@@ -985,7 +985,7 @@ ${qt.map(Rl).join(`
           he(Te, At);
           return;
         }
-        b(Nn ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(getEffectiveSessionModel(R.getState())))}`, { display: "system" });
+        b(Nn ?? `${KEPT_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(getEffectiveSessionModel(R.getState())))}`, { display: "system" });
       }),
         (W[41] = Te),
         (W[42] = b),
@@ -1033,7 +1033,7 @@ ${qt.map(Rl).join(`
     let K;
     if (W[57] !== b || W[58] !== R)
       ((K = () =>
-        b(`${KEPT_MODEL_PREFIX}${formatInlineCode(Zg(getEffectiveSessionModel(R.getState())))}`, { display: "system" })),
+        b(`${KEPT_MODEL_PREFIX}${formatInlineCode(formatModelDisplayName(getEffectiveSessionModel(R.getState())))}`, { display: "system" })),
         (W[57] = b),
         (W[58] = R),
         (W[59] = K));
@@ -1099,7 +1099,7 @@ function $t(In) {
     Vn = useAppStateSelector(bo);
   return (
     Bn(
-      P3e({
+      formatCurrentModelStatus({
         mainLoopModel: Dn,
         mainLoopModelForSession: Wn,
         sessionEffort: Hn,

@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { L$e, getLastFetchOutcome, getPolicyLimitsIneligibleReason, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { POLICY_LIMITS_API_PATH } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { EMPTY_POLICY_LIMITS_RESPONSE, getLastFetchOutcome, getPolicyLimitsIneligibleReason, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function s() {
   let e = getResponseFromCache();
   if (e === null) return "nothing";
-  return e === L$e ? "unrestricted" : "stale_cache";
+  return e === EMPTY_POLICY_LIMITS_RESPONSE ? "unrestricted" : "stale_cache";
 }
 function getPolicyLimitsStatus() {
   let e = getPolicyLimitsIneligibleReason();
@@ -56,9 +56,9 @@ function c(e, t, r, i) {
       return `${r} confirmed a cached copy from a previous sign-in, which this session can't use${o}`;
     case "request_failed":
       if (t === 404)
-        return `The request for ${NRe} on ${r} got a 404, which usually means a proxy or gateway between you and the API isn't forwarding that path \xB7 Fix: ask your network admin to allow it${o}`;
+        return `The request for ${POLICY_LIMITS_API_PATH} on ${r} got a 404, which usually means a proxy or gateway between you and the API isn't forwarding that path \xB7 Fix: ask your network admin to allow it${o}`;
       if (t === 304)
-        return `A caching proxy between you and ${r} answered in place of the API (HTTP 304) \xB7 Fix: ask your network admin to stop caching ${NRe}${o}`;
+        return `A caching proxy between you and ${r} answered in place of the API (HTTP 304) \xB7 Fix: ask your network admin to stop caching ${POLICY_LIMITS_API_PATH}${o}`;
       if (t === 407)
         return `Your proxy asked for authentication before it would forward the request to ${r} (HTTP 407) \xB7 Fix: check your proxy credentials${o}`;
       return t

@@ -12,7 +12,7 @@ import { my, li, $m, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js"
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getSessionStateStore, runWithAgentContext, getAgentDepth, getWorkflowRunMetadata, getCurrentWorktreeSession, wasAgentSpawnedInWorktree, wasAgentWorktreeRemovedCleanly } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { hasNetworkPathSpelling, resolveSymlinkAncestrySync, fsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
@@ -94,13 +94,13 @@ import {
   attributionSkillName,
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath } from "../后台任务-Shell管理/task-output.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { scrubRestoredTranscriptMetadata } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { stripAbortedTurnMessages, hasPendingUserTurn } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { isTerminalTaskStatus } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -235,11 +235,11 @@ ${p.report}`,
     },
   });
 var At = [SEND_MESSAGE_TOOL_NAME, re, AGENT_TOOL_NAME, WORKFLOW_TOOL_NAME, SCHEDULE_WAKEUP_TOOL_NAME, MONITOR_TOOL_NAME, CRON_CREATE_TOOL_NAME];
-function gNt(e) {
+function buildObserverAgentTools(e) {
   return [...e.filter((p) => At.every((c) => !matchesToolName(p, c))), qe];
 }
 import { promises } from "fs";
-function won(e) {
+function isWebFetchAgentToolUse(e) {
   return (
     (e.name === AGENT_TOOL_NAME || e.name === TASK_TOOL_NAME) &&
     typeof e.input === "object" &&
@@ -254,7 +254,7 @@ function Ke(e, p) {
     if (w.type === "assistant") {
       let k = w.message.content;
       if (!Array.isArray(k)) continue;
-      for (let r of k) if (r.type === "tool_use" && won(r)) c.add(r.id);
+      for (let r of k) if (r.type === "tool_use" && isWebFetchAgentToolUse(r)) c.add(r.id);
     } else if (w.type === "user" && c.size > 0) {
       let k = w.toolUseResult,
         r = w.message.content;
@@ -272,10 +272,10 @@ function Ke(e, p) {
   return !1;
 }
 var ge = "resumedInline";
-function Ton(e) {
+function isResumedInlineError(e) {
   return e instanceof Error && ge in e && e[ge] === !0;
 }
-class Ou extends Error {
+class ResumeAgentStateError extends Error {
   transcriptMissing;
   constructor(e, p) {
     super(e);
@@ -284,61 +284,61 @@ class Ou extends Error {
   }
 }
 var fe = "git_worktree_create";
-class d2 extends Ou {
+class AgentResumeTransientError extends ResumeAgentStateError {
   constructor(e) {
     super(e);
     this.name = "AgentResumeTransientError";
   }
 }
-class KSe extends Ou {
+class AgentResumePermanentlyRefusedError extends ResumeAgentStateError {
   constructor(e) {
     super(e);
     this.name = "AgentResumePermanentlyRefusedError";
   }
 }
-class uM extends Ou {
+class AgentStoppedByUserError extends ResumeAgentStateError {
   constructor(e) {
     super(e);
     this.name = "AgentStoppedByUserError";
   }
 }
-class y9 extends Ou {
+class AgentResumeInProgressError extends ResumeAgentStateError {
   constructor(e) {
     super(e);
     this.name = "AgentResumeInProgressError";
   }
 }
-class Dee extends Ou {
+class AgentStillStoppingError extends ResumeAgentStateError {
   constructor(e) {
     super(e);
     this.name = "AgentStillStoppingError";
   }
 }
-function S9(e) {
+function resumeAgentWithNotification(e) {
   return ye(e, "notification");
 }
-function pjn(e) {
+function resumeAgentInline(e) {
   return ye(e, "inline");
 }
-function Ye(e, p = Sh) {
+function Ye(e, p = fsSurface) {
   return typeof e === "string" &&
     e !== "" &&
     !my(e) &&
     !Xo(e) &&
     !li(e) &&
     !$m(e) &&
-    Xg(p, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) ===
+    resolveSymlinkAncestrySync(p, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) ===
       void 0
     ? e
     : void 0;
 }
-function Eon(e) {
+function resumeAgentReply(e) {
   return ye(e, "reply");
 }
 async function ye(e, p) {
   let { agentId: c } = e,
     { resumesInFlight: w } = getSessionStateStore();
-  if (w.has(c)) throw new y9(`Agent ${c} is already running or being resumed`);
+  if (w.has(c)) throw new AgentResumeInProgressError(`Agent ${c} is already running or being resumed`);
   w.add(c);
   let k = !0,
     r = () => {
@@ -377,11 +377,11 @@ async function _t(
     z = x.mode,
     be = r.agentId;
   if (be !== void 0 && isAgentStopPending(be))
-    throw new Dee(
+    throw new AgentStillStoppingError(
       "This agent has been stopped and its stop is still completing; it cannot resume other agents.",
     );
   if (isAgentStopPending(e) || (!isTaskLoopSettled(e) && isTerminalTaskStatus(d.get(e)?.status ?? "running")))
-    throw new Dee(
+    throw new AgentStillStoppingError(
       `Agent ${e} is still stopping \u2014 its previous run was stopped but has not exited. Re-run ${TASK_STOP_TOOL_NAME} on it or wait for it to exit before resuming.`,
     );
   let O = d.get(e),
@@ -395,7 +395,7 @@ async function _t(
       }),
       !t)
     )
-      throw new y9(`Agent ${e} is already running or being resumed`);
+      throw new AgentResumeInProgressError(`Agent ${e} is already running or being resumed`);
   }
   let u = () => {
       (d.update(e, (t) => (t.resuming ? { ...t, resuming: !1 } : t)), releaseSettledKeepalives(e, d));
@@ -408,25 +408,25 @@ async function _t(
       if (
         (logFeatureBad("subagent_launch", "subagent_resume_setup_read_failed"),
         u(),
-        t instanceof Ou)
+        t instanceof ResumeAgentStateError)
       )
         throw t;
       throw t instanceof AgentTranscriptFetchError || isTransientFileSystemErrorCode(A(t) ?? CB(t))
-        ? new d2(l(t))
-        : new Ou(l(t));
+        ? new AgentResumeTransientError(l(t))
+        : new ResumeAgentStateError(l(t));
     });
   if (r.abortController.signal.aborted) throw (u(), new Ve());
   if (o?.stoppedByUser && c?.kind !== "observer-activity") {
     if (!F)
       throw (
         u(),
-        new uM(
+        new AgentStoppedByUserError(
           `Agent ${e} was stopped by the user and won't be resumed. Treat its work as cancelled; only launch a new agent if the user explicitly asks.`,
         )
       );
   }
   let S = await readAgentForkedSkillScoping(oo(e), r.storageV5),
-    ae = "transientRead" in S && S.transientRead ? d2 : Ou;
+    ae = "transientRead" in S && S.transientRead ? AgentResumeTransientError : ResumeAgentStateError;
   if (S.status === "malformed")
     throw (
       logFeatureBad("subagent_launch", "forked_skill_resume_scoping_invalid"),
@@ -460,7 +460,7 @@ async function _t(
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_scoping_mismatch"),
         u(),
-        new Ou(
+        new ResumeAgentStateError(
           `Agent ${e} has a forked-skill scoping record that does not match its task record; refusing to resume it.`,
         )
       );
@@ -469,7 +469,7 @@ async function _t(
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_cold_witness_mismatch"),
         u(),
-        new Ou(
+        new ResumeAgentStateError(
           `Agent ${e} has a forked-skill scoping record with no matching provenance-marker witness; refusing to resume it on a cold path without a corroborated fork identity.`,
         )
       );
@@ -495,7 +495,7 @@ async function _t(
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_skill_unresolved"),
         u(),
-        new Ou(
+        new ResumeAgentStateError(
           `Agent ${e} ran as forked skill ${T.skillName}, which no longer resolves to a fork-capable skill; refusing to resume it without its permission scoping.`,
         )
       );
@@ -503,7 +503,7 @@ async function _t(
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_sync_vetoed"),
         u(),
-        new Ou(
+        new ResumeAgentStateError(
           `Agent ${e} ran as forked skill ${T.skillName}, an account-synced skill that is currently disabled (skills sync turned off or denied by policy); refusing to resume it.`,
         )
       );
@@ -512,7 +512,7 @@ async function _t(
         throw (
           logFeatureBad("subagent_launch", "forked_skill_resume_allowed_tools_failed"),
           u(),
-          _ instanceof Ou ? _ : new Ou(l(_))
+          _ instanceof ResumeAgentStateError ? _ : new ResumeAgentStateError(l(_))
         );
       })) ??
         a.allowedTools ??
@@ -565,7 +565,7 @@ async function _t(
   if (!P) {
     let t = d.getTranscript(e)?.messages;
     if (t && t.length > 0)
-      (n(
+      (logForDebugging(
         `[resumeAgentBackground ${e}] disk transcript missing; using ${t.length} in-memory messages mirrored during the run`,
       ),
         (P = { messages: t, contentReplacements: [] }));
@@ -574,11 +574,11 @@ async function _t(
     throw (
       logFeatureBad("subagent_launch", "subagent_resume_transcript_missing"),
       u(),
-      new Ou(`No transcript found for agent ID: ${e}`, {
+      new ResumeAgentStateError(`No transcript found for agent ID: ${e}`, {
         transcriptMissing: !0,
       })
     );
-  (degradeRestoredHostContexts(P.messages), ewt(P.messages));
+  (degradeRestoredHostContexts(P.messages), scrubRestoredTranscriptMetadata(P.messages));
   let st = k ? [...stripAbortedTurnMessages(P.messages)] : P.messages,
     I = filterWhitespaceOnlyAssistantMessages(filterOrphanedThinkingMessages(dropUnresolvedToolUseMessages(dropApiInvalidAssistantBlocks(st, { site: "agent_resume" }))));
   if (k && I.length > 0 && !hasPendingUserTurn(I))
@@ -597,7 +597,7 @@ async function _t(
         alreadyCompleted: !0,
       }
     );
-  let nt = _bt(r.contentReplacementState, I, P.contentReplacements),
+  let nt = restoreContentReplacementState(r.contentReplacementState, I, P.contentReplacements),
     ot =
       !o &&
       ((isLocalAgentTask(v) &&
@@ -630,18 +630,18 @@ async function _t(
     throw (
       logFeatureBad("subagent_launch", "subagent_resume_tools_denied"),
       u(),
-      new Ou(agentToolPoolDeniedMessage(D.agentType))
+      new ResumeAgentStateError(agentToolPoolDeniedMessage(D.agentType))
     );
   if ((await filterOfferedAgents([D])).length !== 1)
     throw (
       logFeatureBad("subagent_launch", "subagent_resume_not_offered"),
       u(),
-      new Ou(`Agent type '${D.agentType}' is not offered in this session.`)
+      new ResumeAgentStateError(`Agent type '${D.agentType}' is not offered in this session.`)
     );
   let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || isBuiltInWebFetchAgent(D))),
     U = (t, i) => {
       let a = getCurrentWorktreeSession(),
-        _ = o?.cwd && !WP(o.cwd) ? o.cwd : getCwd(),
+        _ = o?.cwd && !hasNetworkPathSpelling(o.cwd) ? o.cwd : getCwd(),
         je = resolveGitRootCandidates(_),
         ft =
           a !== null &&
@@ -662,7 +662,7 @@ async function _t(
         gt = o?.worktreePath ?? `agent ${e}`;
       if (ft) {
         (logFeatureSad(fe, He),
-          n(
+          logForDebugging(
             `Resumed worktree ${gt} ${t}; falling back to ${_} under the session worktree's fences`,
             { level: "error" },
           ));
@@ -671,14 +671,14 @@ async function _t(
       if (i?.terminalOnUncovered === !1)
         throw (
           u(),
-          new d2(
+          new AgentResumeTransientError(
             `Cannot resume this agent right now: its worktree ${t}, and the fallback directory is not covered by the session's isolation fences. Re-run from a session whose fences cover the agent's directory.`,
           )
         );
       throw (
         logFeatureBad(fe, He),
         u(),
-        new KSe(
+        new AgentResumePermanentlyRefusedError(
           `This agent cannot be resumed: its worktree ${t}, and the fallback directory is not covered by the session's isolation fences.`,
         )
       );
@@ -694,7 +694,7 @@ async function _t(
             if (i === "ENOENT" || i === "ENOTDIR") return U("no longer exists");
             throw (
               u(),
-              new d2(
+              new AgentResumeTransientError(
                 `Cannot resume this agent: its worktree could not be examined (${String(i ?? "unknown error")}). Re-run once the directory is accessible.`,
               )
             );
@@ -737,19 +737,19 @@ async function _t(
       )
         throw (
           logFeatureBad(fe, "git_worktree_create_root_rejected"),
-          n(
+          logForDebugging(
             `[worktree] refusing to resume parked agent into ${B} (${a.reason}): ${a.message}`,
             { level: "error" },
           ),
-          new KSe(
+          new AgentResumePermanentlyRefusedError(
             `This agent cannot be resumed: its worktree was refused (${a.reason}). ${a.message}`,
           )
         );
       throw (
-        n(
+        logForDebugging(
           `[worktree] could not verify parked agent worktree ${B} this attempt; the resume will retry: ${a.message}`,
         ),
-        new d2(
+        new AgentResumeTransientError(
           `Cannot resume this agent right now: its worktree could not be verified (${a.reason}). Re-run once git can answer.`,
         )
       );
@@ -766,13 +766,13 @@ async function _t(
       else
         throw (
           u(),
-          new d2(
+          new AgentResumeTransientError(
             `Cannot resume this agent: its worktree could not be touched (${String(a ?? "unknown error")}). Re-run once the directory is accessible.`,
           )
         );
     }
   }
-  let ve = o?.cwd && !WP(o.cwd) ? o.cwd : L,
+  let ve = o?.cwd && !hasNetworkPathSpelling(o.cwd) ? o.cwd : L,
     Se = r.session.withProject({ cwd: ve ?? getCwd() }),
     b = T?.effort !== void 0 ? { ...D, effort: T.effort } : D,
     j = o?.description ?? "(resumed)",
@@ -803,14 +803,14 @@ async function _t(
             "subagent_resume_fork_prompt_reconstruct_failed",
           ),
           u(),
-          t instanceof Ou ? t : new Ou(l(t))
+          t instanceof ResumeAgentStateError ? t : new ResumeAgentStateError(l(t))
         );
       }
     if (!te)
       throw (
         logFeatureBad("subagent_launch", "subagent_resume_fork_prompt_missing"),
         u(),
-        new Ou(
+        new ResumeAgentStateError(
           "Cannot resume fork agent: unable to reconstruct parent system prompt",
         )
       );
@@ -826,7 +826,7 @@ async function _t(
     throw (
       logFeatureBad("subagent_launch", "observer_resume_sidecar_unconfirmed"),
       u(),
-      new Ou(
+      new ResumeAgentStateError(
         `Observer sidecar for ${e} missing or did not confirm isObserver; refusing delivery`,
       )
     );
@@ -841,7 +841,7 @@ async function _t(
           skillTools: Ee.skillTools,
         }),
     lt = o?.isObserver
-      ? gNt(
+      ? buildObserverAgentTools(
           resolveAgentTools(b, buildSessionTools(Ne, excludeCoordinatorCommsMcpTools(Fe), { skipReplFilter: !0 }), !0, !1, !1, X)
             .resolvedTools,
         )
@@ -891,7 +891,7 @@ async function _t(
   if (isLocalAgentTask(W) && W.stoppedByUser && (!F || (W.userStopCount ?? 0) !== q))
     throw (
       u(),
-      new uM(
+      new AgentStoppedByUserError(
         `Agent ${e} was stopped by the user and won't be resumed. Treat its work as cancelled; only launch a new agent if the user explicitly asks.`,
       )
     );
@@ -969,7 +969,7 @@ async function _t(
       }
     } catch (t) {
       if (Rt(t) || FA(CB(t)))
-        n(`failed to clear stop marker for ${e}: ${formatErrorWithCode(t)}`, { level: "warn" });
+        logForDebugging(`failed to clear stop marker for ${e}: ${formatErrorWithCode(t)}`, { level: "warn" });
       else logError(t);
     }
   if (G) markTaskNotified(V.agentId, d);
@@ -1102,4 +1102,4 @@ async function _t(
     }
   return { agentId: e, description: j, outputFile: getTaskOutputPath(e) };
 }
-export { gNt, won, Ton, Ou, d2, KSe, uM, y9, Dee, S9, pjn, Eon };
+export { buildObserverAgentTools, isWebFetchAgentToolUse, isResumedInlineError, ResumeAgentStateError, AgentResumeTransientError, AgentResumePermanentlyRefusedError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentWithNotification, resumeAgentInline, resumeAgentReply };

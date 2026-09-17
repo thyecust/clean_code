@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
@@ -87,7 +87,7 @@ async function isIt2CliAvailable(e = terminalBackendRegistry) {
     ((t = c), (r = await l(t)));
   if (r.code !== 0)
     return (
-      n(
+      logForDebugging(
         `[isIt2CliAvailable] '${t} session list' failed (code=${r.code}): ${r.stderr || r.error || "no stderr"}. ` +
           (i
             ? "it2 was found on PATH \u2014 check that the iTerm2 Python API is enabled " +

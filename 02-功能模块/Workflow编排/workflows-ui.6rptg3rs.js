@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 246 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { slugifyWorkflowName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -19,12 +19,12 @@ import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../..
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { mit } from "./chunk-dyq13fbm.js";
+import { PROMPT_RESERVED_ROWS } from "./workflow-progress-ui.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -36,7 +36,7 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { computeListWindow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { DHe, eye } from "./chunk-6gjsfh7a.js";
+import { SaveWorkflowDialog, WorkflowDetailDialog } from "./workflow-dialogs.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -352,7 +352,7 @@ function Xt(We) {
       a[62] !== j
     )
       ((X = e(
-        eye,
+        WorkflowDetailDialog,
         {
           workflow: f.task,
           onDone: w,
@@ -415,7 +415,7 @@ function Xt(We) {
     else y = a[72];
     let R;
     if (a[73] !== Ht || a[74] !== A.task.script || a[75] !== y)
-      ((R = e(DHe, { script: A.task.script, defaultName: Ht, onDone: y })),
+      ((R = e(SaveWorkflowDialog, { script: A.task.script, defaultName: Ht, onDone: y })),
         (a[73] = Ht),
         (a[74] = A.task.script),
         (a[75] = y),
@@ -425,7 +425,7 @@ function Xt(We) {
   }
   let H = countMatching(s, ee),
     at = s.length - H,
-    to = gt && !je && !isFullscreenActive() ? mit : 0,
+    to = gt && !je && !isFullscreenActive() ? PROMPT_RESERVED_ROWS : 0,
     Tt,
     vt,
     J,
@@ -467,7 +467,7 @@ function Xt(We) {
       ((w =
         s.length === 0
           ? void 0
-          : e(t, {
+          : e(Text, {
               dimColor: !0,
               children: r(DotSeparatedList, {
                 children: [
@@ -523,11 +523,11 @@ function Xt(We) {
     W =
       s.length === 0
         ? e(EmptyStateMessage, { children: "No dynamic workflows in this session." })
-        : r(o, {
+        : r(Box, {
             flexDirection: "column",
             children: [
               Wo > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["  ", figures.arrowUp, " ", Wo, " more above"],
                 }),
@@ -535,7 +535,7 @@ function Xt(We) {
                 e(Wt, { item: $o, isSelected: Oo + He === ct }, $o.task.id),
               ),
               Vo > 0 &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: ["  ", figures.arrowDown, " ", Vo, " more below"],
                 }),
@@ -660,12 +660,12 @@ function Wt(ls) {
     so = eo.length > 50 ? eo.slice(0, 49) + "\u2026" : eo;
   const no = Uo ? figures.pointer + " " : "  ";
   let Pt;
-  if (O[12] !== no) ((Pt = e(t, { children: no })), (O[12] = no), (O[13] = Pt));
+  if (O[12] !== no) ((Pt = e(Text, { children: no })), (O[12] = no), (O[13] = Pt));
   else Pt = O[13];
   const ro = Uo ? "suggestion" : void 0;
   let Bt;
   if (O[14] !== it || O[15] !== mt)
-    ((Bt = e(t, { color: mt, children: it })),
+    ((Bt = e(Text, { color: mt, children: it })),
       (O[14] = it),
       (O[15] = mt),
       (O[16] = Bt));
@@ -673,13 +673,13 @@ function Wt(ls) {
   const ao = cs.join(" \xB7 ");
   let Jt;
   if (O[17] !== ao)
-    ((Jt = r(t, { dimColor: !0, children: ["  ", ao] })),
+    ((Jt = r(Text, { dimColor: !0, children: ["  ", ao] })),
       (O[17] = ao),
       (O[18] = Jt));
   else Jt = O[18];
   let Nt;
   if (O[19] !== so || O[20] !== Jt || O[21] !== ro || O[22] !== Bt)
-    ((Nt = r(t, { color: ro, children: [Bt, " ", so, Jt] })),
+    ((Nt = r(Text, { color: ro, children: [Bt, " ", so, Jt] })),
       (O[19] = so),
       (O[20] = Jt),
       (O[21] = ro),
@@ -688,7 +688,7 @@ function Wt(ls) {
   else Nt = O[23];
   let _o;
   if (O[24] !== Nt || O[25] !== Pt)
-    ((_o = r(o, { children: [Pt, Nt] })),
+    ((_o = r(Box, { children: [Pt, Nt] })),
       (O[24] = Nt),
       (O[25] = Pt),
       (O[26] = _o));

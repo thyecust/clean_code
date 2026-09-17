@@ -12,7 +12,7 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { COMMAND_NAME_TAG, COMMAND_MESSAGE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -20,15 +20,15 @@ import { redactSecretsInText, inlineSkillModelOverride, getAgentDepth, getWorkfl
 import { HOOK_EVENT_NAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { REMOTE_WAIT_STOPPED_MESSAGE, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { policyCacheMissRestartMessage, staleCommandReason, OPERATION_STOPPED_BY_HOOK_MESSAGE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { CSt } from "../Hooks钩子/chunk-z3433nr6.js";
+import { getBuiltinPluginSkills } from "../Hooks钩子/chunk-z3433nr6.js";
 import { getBundledSkills } from "../Skills技能/bundled-skills.js";
-import { iA, Xy } from "../权限系统/chunk-t3b7pg2x.js";
+import { unpinLaunchEffortLevels, getModelEffortLevelIfSupported } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { isSilentAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
@@ -100,9 +100,9 @@ import {
   attributionSkillName,
   deriveRequires,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { sp, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { NO_CONTENT_PLACEHOLDER, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { redactPromptUnlessEnabled, emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   resolvePromptCommandFromUri,
   setAlwaysDenyCommands,
@@ -131,7 +131,7 @@ function Me(e, o, t, m, l) {
       for (let U of T.hooks) {
         let P = U.once
           ? () => {
-              (n(`Removing one-shot hook for event ${_} in skill '${m}'`),
+              (logForDebugging(`Removing one-shot hook for event ${_} in skill '${m}'`),
                 e.remove(o, _, U));
             }
           : void 0;
@@ -139,7 +139,7 @@ function Me(e, o, t, m, l) {
           c++);
       }
   }
-  if (c > 0) n(`Registered ${c} hooks from skill '${m}'`);
+  if (c > 0) logForDebugging(`Registered ${c} hooks from skill '${m}'`);
 }
 function _e({
   commandName: e,
@@ -218,7 +218,7 @@ var xe = {
     `Remote Control connects a terminal session to claude.ai, and this session is already running in Claude Code on the web: ${$e(e)}.`,
 };
 function $e(e) {
-  return wa(e, a.SESSION_INGRESS_URL);
+  return buildClaudeAiSessionUrl(e, a.SESSION_INGRESS_URL);
 }
 function je() {
   let e = a.CLAUDE_CODE_REMOTE_SESSION_ID;
@@ -289,7 +289,7 @@ async function Pe(e, o, t) {
     }
     if (v.length > 0) m.push(createSystemInfoMessage(`Stop hook error: ${v.join("; ")}`, "warning"));
   } catch (_) {
-    n(`Forked command Stop hooks failed: ${String(_)}`, { level: "error" });
+    logForDebugging(`Forked command Stop hooks failed: ${String(_)}`, { level: "error" });
   }
   if (!l)
     try {
@@ -306,7 +306,7 @@ async function Pe(e, o, t) {
       );
       for await (let v of _);
     } catch (_) {
-      n(`Forked command turn-end reactions failed: ${String(_)}`, {
+      logForDebugging(`Forked command turn-end reactions failed: ${String(_)}`, {
         level: "error",
       });
     }
@@ -397,7 +397,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     });
   if (
     (await t.makeFileHistorySnapshot?.(R.uuid),
-    n(`Executing forked slash command /${e.name} with agent ${O.agentType}`),
+    logForDebugging(`Executing forked slash command /${e.name} with agent ${O.agentType}`),
     Z)
   ) {
     P?.markTurnActive(T ? void 0 : `/${getCommandName(e)} ${o}`.trim());
@@ -434,7 +434,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         messages: [
           R,
           createUserMessage({
-            content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(J, e.name, t.session))}</local-command-stderr>`,
+            content: `<local-command-stderr>${escapeHtmlText(commandThrowTextForTranscript(J, e.name, t.session))}</local-command-stderr>`,
           }),
         ],
         shouldQuery: !1,
@@ -554,7 +554,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       messages: [
         R,
         createUserMessage({
-          content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(Q, e.name, t.session))}</local-command-stderr>`,
+          content: `<local-command-stderr>${escapeHtmlText(commandThrowTextForTranscript(Q, e.name, t.session))}</local-command-stderr>`,
         }),
         ...J.messages,
       ],
@@ -567,7 +567,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     (Oxe(x), t.emitToolProgress?.({ kind: "clear", toolUseId: G }));
   }
   let pe = extractResultText(N, "Command completed");
-  (n(`Forked slash command /${e.name} completed with agent ${x}`),
+  (logForDebugging(`Forked slash command /${e.name} completed with agent ${x}`),
     await P?.settleTurnEnd(N));
   let F = await Pe(t, N, _);
   return {
@@ -583,7 +583,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   };
 }
 function qe(e, o, { interactive: t }) {
-  let m = [o, getBuiltinCommands(), getBundledSkills(), CSt()],
+  let m = [o, getBuiltinCommands(), getBundledSkills(), getBuiltinPluginSkills()],
     l;
   for (let T of m) {
     let U = findCommand(e, T);
@@ -597,13 +597,13 @@ function qe(e, o, { interactive: t }) {
   if (!meetsAvailabilityRequirement(l)) return;
   if (isPolicyAllowed(c.policy)) {
     if (t && !Rg() && isCommandEnabled(l) && findCommand(e, o) === void 0)
-      return { command: l, reason: kir(l.name), kind: "stale_list" };
+      return { command: l, reason: staleCommandReason(l.name), kind: "stale_list" };
     return;
   }
   let _ = policyDenyKind(c.policy),
     v =
       _ === "cache_miss"
-        ? Rir(c.featureLabel)
+        ? policyCacheMissRestartMessage(c.featureLabel)
         : policyDeniedReason(c.policy, c.featureLabel, c.verb ?? "is");
   if (v === null || _ === null) return;
   return { command: l, reason: v, kind: _ };
@@ -615,13 +615,13 @@ function commandThrowTextForTranscript(e, o, t) {
   let m = sanitizeDisplayTextWithoutRedaction(o, 200),
     l = Qn(o);
   if (yt(e)) {
-    if (mayHaveRemoteClient(t)) return (n(`${l} aborted: ${String(e)}`), "Interrupted");
+    if (mayHaveRemoteClient(t)) return (logForDebugging(`${l} aborted: ${String(e)}`), "Interrupted");
     return escapeForkedSkillLaunchTag(e instanceof Error ? e.message || "Interrupted" : "Interrupted");
   }
   if (e instanceof YP) return escapeForkedSkillLaunchTag(e.message);
   if (mayHaveRemoteClient(t))
     return (
-      n(`${l} threw: ${String(e)}`, { level: "error" }),
+      logForDebugging(`${l} threw: ${String(e)}`, { level: "error" }),
       `${m} failed (detail withheld on this connection)`
     );
   return escapeForkedSkillLaunchTag(String(e));
@@ -631,7 +631,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     let w = randomUUID(),
       L = contentHasToolResult(o) ? void 0 : w;
     if (L !== void 0) Rje(L);
-    let z = Xy(l.options.mainLoopModel, getEffortValue(l));
+    let z = getModelEffortLevelIfSupported(l.options.mainLoopModel, getEffortValue(l));
     logEvent("tengu_input_prompt", {
       ...(T && { prompt_source: fromEnum(T) }),
       ...(z && { effort_level: fromEnum(z) }),
@@ -729,7 +729,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   if (!b) {
     let w = !1;
     try {
-      (await ae().stat(`/${d}`), (w = !0));
+      (await getFsSurface().stat(`/${d}`), (w = !0));
     } catch {}
     if ((looksLikeCommand(d) || I) && !w) {
       let L = qe(d, l.options.commands, {
@@ -1114,7 +1114,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                               content: `<local-command-stdout>${r}</local-command-stdout>`,
                             })
                           : createUserMessage({
-                              content: `<local-command-stdout>${sp}</local-command-stdout>`,
+                              content: `<local-command-stdout>${NO_CONTENT_PLACEHOLDER}</local-command-stdout>`,
                             }),
                         ...C,
                       ],
@@ -1167,7 +1167,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             .catch((r) => {
               let k = yt(r);
               if (k)
-                n(
+                logForDebugging(
                   `local-jsx command aborted: ${r instanceof Error ? r.message : String(r)}`,
                 );
               else logError(dt(ge(r), "local-jsx slash command threw"));
@@ -1189,7 +1189,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                     uuid: v,
                   }),
                   createLocalCommandMessage(
-                    `<local-command-stderr>${Nt(escapeForkedSkillLaunchTag(commandThrowTextForTranscript(r, s.name, t.session)))}</local-command-stderr>`,
+                    `<local-command-stderr>${escapeHtmlText(escapeForkedSkillLaunchTag(commandThrowTextForTranscript(r, s.name, t.session)))}</local-command-stderr>`,
                   ),
                 ],
                 shouldQuery: !1,
@@ -1291,7 +1291,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           };
         } catch (M) {
           if (yt(M))
-            n(
+            logForDebugging(
               `local command aborted: ${M instanceof Error ? M.message : String(M)}`,
             );
           else logError(dt(ge(M), "local slash command threw"));
@@ -1307,7 +1307,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                   ? M.message || r
                   : r
               : commandThrowTextForTranscript(M, s.name, t.session),
-            C = createLocalCommandMessage(`<${b}>${Nt(escapeForkedSkillLaunchTag(k))}</${b}>`);
+            C = createLocalCommandMessage(`<${b}>${escapeHtmlText(escapeForkedSkillLaunchTag(k))}</${b}>`);
           if (A)
             return Ne(t, p, { messages: [C], shouldQuery: !1, command: s });
           return { messages: [p, C], shouldQuery: !1, command: s };
@@ -1333,7 +1333,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           if ("blocked" in r) return (logFeatureBad(d, "cmd_hook_blocked"), r.blocked);
           if (!t.options.isNonInteractiveSession && !T)
             if ((s.onUserTypedArgs?.(I, t), s.getEffort?.(I, t) !== void 0))
-              iA(t.storageV5);
+              unpinLaunchEffortLevels(t.storageV5);
             else {
               let C = s.getDefaultEffort?.(I, t)?.notice;
               if (C) b = createSystemInfoMessage(C, "notice");
@@ -1452,7 +1452,7 @@ Original prompt: ${E}`;
               }
               if (!t.options.isNonInteractiveSession && !T)
                 if ((C.onUserTypedArgs?.(A, t), C.getEffort?.(A, t) !== void 0))
-                  iA(t.storageV5);
+                  unpinLaunchEffortLevels(t.storageV5);
                 else {
                   let O = C.getDefaultEffort?.(A, t)?.notice;
                   if (O) k.messages.push(createSystemInfoMessage(O, "notice"));
@@ -1541,7 +1541,7 @@ Original prompt: ${E}`;
                   uuid: v,
                 }),
                 createUserMessage({
-                  content: `<local-command-stderr>${Nt(commandThrowTextForTranscript(r, s.name, t.session))}</local-command-stderr>`,
+                  content: `<local-command-stderr>${escapeHtmlText(commandThrowTextForTranscript(r, s.name, t.session))}</local-command-stderr>`,
                 }),
               ],
               shouldQuery: !1,
@@ -1675,7 +1675,7 @@ Original prompt: ${l}`;
         };
       }
       if (c.preventContinuation) {
-        let _ = c.stopReason ? `${TQ}: ${c.stopReason}` : TQ;
+        let _ = c.stopReason ? `${OPERATION_STOPPED_BY_HOOK_MESSAGE}: ${c.stopReason}` : OPERATION_STOPPED_BY_HOOK_MESSAGE;
         return {
           blocked: {
             messages: [
@@ -1710,7 +1710,7 @@ Original prompt: ${l}`;
     }
   } catch (c) {
     if (!(c instanceof zi)) throw c;
-    n("UserPromptExpansion hooks cancelled (control stream closed)");
+    logForDebugging("UserPromptExpansion hooks cancelled (control stream closed)");
   }
   return { hookMessages: m };
 }

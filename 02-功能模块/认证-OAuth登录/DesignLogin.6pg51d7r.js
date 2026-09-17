@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { revokeOAuthToken } from "./认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
@@ -114,7 +114,7 @@ function DesignLogin(Re) {
           message: "Invalid code. Please make sure the full code was copied",
           toRetry: { state: "waiting_for_login", url: jt },
         }),
-          n(`Design login: invalid pasted code for ${jt}`));
+          logForDebugging(`Design login: invalid pasted code for ${jt}`));
         return;
       }
       (logEvent("tengu_design_oauth_manual_entry", {}),
@@ -227,7 +227,7 @@ function DesignLogin(Re) {
       (g[18] = s.state),
       (g[19] = Gt));
   else Gt = g[19];
-  Un(Gt, s.state === "about_to_retry" ? 500 : null);
+  useTimeout(Gt, s.state === "about_to_retry" ? 500 : null);
   let Ht;
   if (
     g[20] !== j ||
@@ -275,19 +275,19 @@ function DesignLogin(Re) {
   if (g[34] !== pt || g[35] !== s.state)
     ((nt =
       s.state !== "success" &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 1,
         paddingBottom: 1,
         children: [
-          e(t, { bold: !0, children: "Design login" }),
-          e(t, {
+          e(Text, { bold: !0, children: "Design login" }),
+          e(Text, {
             dimColor: !0,
             children:
               "Authorize design-system access (read and write your organization's claude.ai/design projects) with your claude.ai account. This is separate from this session's authentication and changes nothing else.",
           }),
           pt &&
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "A design credential is already stored \u2014 completing this flow replaces it.",
@@ -303,18 +303,18 @@ function DesignLogin(Re) {
     ((it =
       s.state === "waiting_for_login" &&
       y &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 1,
         paddingBottom: 1,
         children: [
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             paddingX: 1,
             children: [
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: [
                       "Browser didn't open? Use the url below to sign in",
@@ -327,10 +327,10 @@ function DesignLogin(Re) {
               e(CopyFallbackNotice, { via: tt }),
             ],
           }),
-          e(ct, {
+          e(Link, {
             url: s.url,
             assumeSupport: !0,
-            children: e(t, { dimColor: !0, children: s.url }),
+            children: e(Text, { dimColor: !0, children: s.url }),
           }),
         ],
       })),
@@ -349,7 +349,7 @@ function DesignLogin(Re) {
     g[46] !== y ||
     g[47] !== _t
   )
-    ((at = e(o, {
+    ((at = e(Box, {
       paddingLeft: 1,
       flexDirection: "column",
       gap: 1,
@@ -422,9 +422,9 @@ function ut(ze) {
       )
         ((A =
           Dt &&
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { children: G }),
+              e(Text, { children: G }),
               e(hn, {
                 value: xt,
                 onChange: Ot,
@@ -447,7 +447,7 @@ function ut(ze) {
       else A = v[10];
       let U;
       if (v[11] !== A)
-        ((U = r(o, { flexDirection: "column", gap: 1, children: [u, A] })),
+        ((U = r(Box, { flexDirection: "column", gap: 1, children: [u, A] })),
           (v[11] = A),
           (v[12] = U));
       else U = v[12];
@@ -464,7 +464,7 @@ function ut(ze) {
     case "success": {
       let u;
       if (v[14] === MEMO_CACHE_SENTINEL)
-        ((u = e(t, {
+        ((u = e(Text, {
           color: "success",
           children:
             "Design-system access authorized. /design-sync can now reach your claude.ai/design projects.",
@@ -476,7 +476,7 @@ function ut(ze) {
     case "error": {
       let u;
       if (v[15] !== P.message)
-        ((u = e(t, { color: "error", children: P.message })),
+        ((u = e(Text, { color: "error", children: P.message })),
           (v[15] = P.message),
           (v[16] = u));
       else u = v[16];
@@ -485,11 +485,11 @@ function ut(ze) {
         : "Press any key to close.";
       let U;
       if (v[17] !== A)
-        ((U = e(t, { dimColor: !0, children: A })), (v[17] = A), (v[18] = U));
+        ((U = e(Text, { dimColor: !0, children: A })), (v[17] = A), (v[18] = U));
       else U = v[18];
       let se;
       if (v[19] !== u || v[20] !== U)
-        ((se = r(o, { flexDirection: "column", gap: 1, children: [u, U] })),
+        ((se = r(Box, { flexDirection: "column", gap: 1, children: [u, U] })),
           (v[19] = u),
           (v[20] = U),
           (v[21] = se));
@@ -499,7 +499,7 @@ function ut(ze) {
     case "about_to_retry": {
       let u;
       if (v[22] === MEMO_CACHE_SENTINEL)
-        ((u = e(t, { color: "permission", children: "Retrying\u2026" })),
+        ((u = e(Text, { color: "permission", children: "Retrying\u2026" })),
           (v[22] = u));
       else u = v[22];
       return u;

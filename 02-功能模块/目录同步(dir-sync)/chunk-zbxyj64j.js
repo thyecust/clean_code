@@ -11,7 +11,7 @@ import { Ve, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kb
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
@@ -73,7 +73,7 @@ function en(e) {
       : { kind: "path", path: a.join("/") };
   return { kind: "path", path: e };
 }
-function Jpt({
+function createDirChangeFeed({
   root: e,
   watch: t = Ke,
   separator: r = getCurrentPlatform() === "windows" ? "\\" : "/",
@@ -100,14 +100,14 @@ function Jpt({
           try {
             x(C);
           } catch (R) {
-            n(`dir-sync: change hint handler threw: ${l(R)}`);
+            logForDebugging(`dir-sync: change hint handler threw: ${l(R)}`);
           }
         },
         h = (C) => {
           if (!d) return;
           (S(),
             (w = !0),
-            n(
+            logForDebugging(
               `dir-sync: directory watch lost (${C}); sync points carry on without it`,
             ),
             I({ kind: "overflow", at: p() }));
@@ -115,7 +115,7 @@ function Jpt({
         L = (C, R) => {
           if (!d) return;
           if (((g += 1), g === 1))
-            n(
+            logForDebugging(
               `dir-sync: directory watch delivering events (first: ${C} ${R === null ? "<unnamed>" : "named"})`,
             );
           let B = Je(R, r),
@@ -123,7 +123,7 @@ function Jpt({
           switch (H.kind) {
             case "drop":
               if (((_ += 1), _ === 1))
-                n(
+                logForDebugging(
                   "dir-sync: directory watch dropping events for .git, dependency directories, the session trash or .DS_Store (first such event; counted from here)",
                 );
               return;
@@ -141,7 +141,7 @@ function Jpt({
       } catch (C) {
         d = !1;
         let R = `watch unavailable: ${l(C)} (${A(C) ?? "no code"})`;
-        return (n(`dir-sync: ${R}`), { stop() {}, started: !1, startError: R });
+        return (logForDebugging(`dir-sync: ${R}`), { stop() {}, started: !1, startError: R });
       }
       if (!d) {
         try {
@@ -150,7 +150,7 @@ function Jpt({
         return { stop() {}, started: !1, startError: "watcher error at start" };
       }
       return (
-        n("dir-sync: directory watch started on the synced root"),
+        logForDebugging("dir-sync: directory watch started on the synced root"),
         (f = N),
         {
           stop() {
@@ -229,7 +229,7 @@ function ne(e) {
 var fe = "\x00",
   rn = 3,
   on = 5;
-function d3n(e, { timers: t = pe } = {}) {
+function createDirSyncStreamer(e, { timers: t = pe } = {}) {
   let r = null,
     a = null,
     p = STREAMING_TIMING_DEFAULTS,
@@ -315,7 +315,7 @@ function d3n(e, { timers: t = pe } = {}) {
   function Q(o) {
     if (J !== o)
       ((J = o),
-        n(
+        logForDebugging(
           `dir-sync: change hints are not streamed just now (${o}); the tree is marked changed for the next sync point`,
         ));
   }
@@ -344,7 +344,7 @@ function d3n(e, { timers: t = pe } = {}) {
       Q("no turn this machine sent is open");
       return;
     }
-    if (J !== null) ((J = null), n("dir-sync: change hints stream again"));
+    if (J !== null) ((J = null), logForDebugging("dir-sync: change hints stream again"));
     switch (o.kind) {
       case "paths":
         o.paths.forEach((y) => f?.touch(y));
@@ -361,14 +361,14 @@ function d3n(e, { timers: t = pe } = {}) {
     Ue(o).then(
       (E) => {
         if (y !== U) {
-          n(
+          logForDebugging(
             `dir-sync: burst of ${ne(o)} left to the sync point that ran meanwhile`,
           );
           return;
         }
         if (!E) {
           ((z.ignoredBursts += 1),
-            n(
+            logForDebugging(
               `dir-sync: burst of ${ne(o)} touched only ignored paths; nothing to upload`,
             ));
           return;
@@ -400,21 +400,21 @@ function d3n(e, { timers: t = pe } = {}) {
     if (d || h || R.size > 0 || !e.turnOpen() || e.notRunning() !== null) {
       ((D ||= R.size > 0),
         (S ||= h),
-        n(
+        logForDebugging(
           `dir-sync: burst of ${o} not uploaded now (${d ? "stopped" : h ? "paused until a sync point ships" : R.size > 0 ? "a command runs here" : !e.turnOpen() ? "no open turn" : "sync not running"})`,
         ));
       return;
     }
     if (!g) {
       ((S = !1),
-        n(
+        logForDebugging(
           `dir-sync: burst of ${o} already carried by a pass that began after it; nothing to upload`,
         ));
       return;
     }
     if (w !== null || I !== null) {
       ((S = !0),
-        n(
+        logForDebugging(
           `dir-sync: burst of ${o} rides the next upload (one in flight or the gap not yet passed)`,
         ));
       return;
@@ -429,19 +429,19 @@ function d3n(e, { timers: t = pe } = {}) {
     }
     if (e.mayShip?.(e.facts().gen + 1) === !1) {
       ((S = !0),
-        n(
+        logForDebugging(
           `dir-sync: burst of ${o} held back by the barrier ledger (the peer has not taken the last generation)`,
         ));
       return;
     }
     ((z.watchPasses += 1),
-      n(`dir-sync: burst of ${o} \u2192 upload pass queued (watch)`),
+      logForDebugging(`dir-sync: burst of ${o} \u2192 upload pass queued (watch)`),
       (w = e
         .send("watch")
         .then(
           (E) => {
             if (
-              (n(
+              (logForDebugging(
                 `dir-sync: watch-triggered pass ended: ${E.landed ? E.outcome : `not landed (${E.reason ?? E.outcome})`}, generation ${E.generation}`,
               ),
               E.landed && E.outcome === "sent" && E.trigger === "watch")
@@ -453,7 +453,7 @@ function d3n(e, { timers: t = pe } = {}) {
             }
             if (!E.landed) {
               ((h = !0),
-                n(
+                logForDebugging(
                   `dir-sync: a watcher-triggered upload did not land (${E.reason ?? E.outcome}); the next sync point uploads instead`,
                 ));
               return;
@@ -467,21 +467,21 @@ function d3n(e, { timers: t = pe } = {}) {
               L >= rn)
             )
               ((h = !0),
-                n(
+                logForDebugging(
                   "dir-sync: the watcher keeps firing with nothing to upload; pausing it until the next sync point ships",
                 ));
             if (E.trigger === "watch" && E.outcome === "sent") {
               if (((N += 1), N >= on))
                 ((C = !h),
                   (h = !0),
-                  n(
+                  logForDebugging(
                     "dir-sync: several uploads went up with no sign of life from the cloud session; pausing the watcher until the next message or sync point lands",
                   ));
             }
           },
           (E) => {
             ((h = !0),
-              n(`dir-sync: a watcher-triggered upload failed: ${l(E)}`));
+              logForDebugging(`dir-sync: a watcher-triggered upload failed: ${l(E)}`));
           },
         )
         .finally(() => {
@@ -501,7 +501,7 @@ function d3n(e, { timers: t = pe } = {}) {
     if (((B = null), te)) {
       if (
         ((te = !1),
-        n(
+        logForDebugging(
           `dir-sync: install deferred while serving a command on this machine, running now (held for ${o} ms)`,
         ),
         !d && e.notRunning() === null)
@@ -570,7 +570,7 @@ function d3n(e, { timers: t = pe } = {}) {
           return;
         }
         (ie("start_failed", r.startError),
-          n(
+          logForDebugging(
             `dir-sync: no directory watch (${r.startError ?? "unknown"}); changes upload at sync points only`,
           ),
           (r = null),
@@ -584,7 +584,7 @@ function d3n(e, { timers: t = pe } = {}) {
         let E = e.nowMs();
         if (a !== null)
           await a.flush().catch((de) => {
-            n(`dir-sync: change feed flush failed: ${l(de)}`);
+            logForDebugging(`dir-sync: change feed flush failed: ${l(de)}`);
           });
         (f?.cancel(), (U += 1), (S = !1), (D = !1));
         let ve = e.notRunning(),
@@ -604,7 +604,7 @@ function d3n(e, { timers: t = pe } = {}) {
                         .send("settle")
                         .catch(
                           (ue) => (
-                            n(`dir-sync: a barrier's upload failed: ${l(ue)}`),
+                            logForDebugging(`dir-sync: a barrier's upload failed: ${l(ue)}`),
                             Ee("unexpected", E)
                           ),
                         ),
@@ -665,7 +665,7 @@ function d3n(e, { timers: t = pe } = {}) {
       if (((N = 0), C))
         ((C = !1),
           (h = !1),
-          n(
+          logForDebugging(
             "dir-sync: the cloud session showed a sign of life; the watcher streams again",
           ),
           ee());
@@ -683,7 +683,7 @@ function d3n(e, { timers: t = pe } = {}) {
   };
 }
 var sn = "opening";
-function p3n(e, t) {
+function createLazyDirSyncStreamer(e, t) {
   let r = null,
     a = 0,
     p = new Set(),
@@ -815,11 +815,11 @@ async function Ie(e, t, r) {
 }
 var ze = 1,
   Ce = 2,
-  Qpt = 16,
-  kze = 4096,
+  MAX_SENT_UPLOADS = 16,
+  MAX_INSTALLED_SINCE_UPLOAD = 4096,
   Ne = 4096,
   Be = 4096;
-function kFt(e) {
+function requiresAnnouncement(e) {
   switch (e.kind) {
     case "clone":
       return e.origin !== "remote";
@@ -829,7 +829,7 @@ function kFt(e) {
       return e.seeded !== !1;
   }
 }
-function xFt(e) {
+function getStartBasisCommits(e) {
   switch (e.kind) {
     case "clone":
       return [e.pin];
@@ -839,7 +839,7 @@ function xFt(e) {
       return [e.worktreeCommit, e.head];
   }
 }
-function f3n(e) {
+function getHistoryRoots(e) {
   switch (e.kind) {
     case "clone":
       return [e.pin];
@@ -927,7 +927,7 @@ var F = createLazyValue(() => s().regex(GIT_OBJECT_ID_REGEX).refine(isNonZeroObj
       ]),
       uploadOnly: k(!0).optional(),
       sent: v(pn())
-        .max(Qpt)
+        .max(MAX_SENT_UPLOADS)
         .refine((e) =>
           e.every((t, r) => r === 0 || t.generation < e[r - 1].generation),
         ),
@@ -947,7 +947,7 @@ var F = createLazyValue(() => s().regex(GIT_OBJECT_ID_REGEX).refine(isNonZeroObj
           mode: T().int().nonnegative(),
           turn: T().int().positive().optional(),
         }),
-      ).max(kze),
+      ).max(MAX_INSTALLED_SINCE_UPLOAD),
       installedEarlier: v(c({ path: V(), blobId: F() }))
         .max(Ne)
         .optional()
@@ -983,7 +983,7 @@ var F = createLazyValue(() => s().regex(GIT_OBJECT_ID_REGEX).refine(isNonZeroObj
 function mn(e) {
   return e.kind === "folder" && e.seeded === !1 ? Ce : ze;
 }
-function Zpt({ sessionId: e, armedAtMs: t, start: r, uploadOnly: a = !1 }) {
+function createGitSessionRecord({ sessionId: e, armedAtMs: t, start: r, uploadOnly: a = !1 }) {
   return {
     version: mn(r),
     engine: "git",
@@ -1034,14 +1034,14 @@ function Me(e) {
 }
 function Le(e) {
   return Buffer.from(
-    b({
+    jsonStringify({
       ...e,
       ...Me(e.fastForwardedTo),
       sent: e.sent.map((t) => ({ ...t, ...Me(t.fastForwardedTo) })),
     }),
   );
 }
-async function mte(e, t, r) {
+async function readGitSessionRecord(e, t, r) {
   let a = await Oe(e, r);
   if (a.kind !== "ok") return a;
   let p = xt(a.content.toString("utf8"), !1),
@@ -1060,36 +1060,36 @@ async function mte(e, t, r) {
       return { kind: "unsupported", engine: f.data.engine };
   }
 }
-class eft extends Error {
+class GitSessionRecordInvalidError extends Error {
   constructor() {
     super("git session record is not one its reader would accept");
     this.name = "GitSessionRecordInvalidError";
   }
 }
-async function Ybe(e, t, r) {
-  if (!he().safeParse(t).success) throw new eft();
+async function writeGitSessionRecord(e, t, r) {
+  if (!he().safeParse(t).success) throw new GitSessionRecordInvalidError();
   await Fe(e, Le(t), r);
 }
-async function m3n(e, t, r) {
-  if (!he().safeParse(e).success) throw new eft();
+async function writeGitSessionRecordStreamed(e, t, r) {
+  if (!he().safeParse(e).success) throw new GitSessionRecordInvalidError();
   await Ie(Le(e), t, r);
 }
 function ge(e) {
   return Number.isSafeInteger(e) && e > 0;
 }
-function gte(e) {
+function getLatestSentUpload(e) {
   return e.sent[0] ?? null;
 }
-function X4(e) {
+function getNextGeneration(e) {
   return Math.max(e.sent[0]?.generation ?? 0, e.generationSpent) + 1;
 }
-function tft(e, t) {
+function recordSpentGeneration(e, t) {
   return ge(t) && t > e.generationSpent ? { ...e, generationSpent: t } : e;
 }
-function g3n(e) {
-  return HFt(e).length < MAX_LISTED_APPLIED_TURNS && e.installedSinceUpload.length < kze;
+function hasDownApplyCapacity(e) {
+  return getMergedDownApplied(e).length < MAX_LISTED_APPLIED_TURNS && e.installedSinceUpload.length < MAX_INSTALLED_SINCE_UPLOAD;
 }
-function HFt(e) {
+function getMergedDownApplied(e) {
   let t = new Map();
   for (let r of [
     ...[...e.sent].reverse().flatMap((a) => a.downApplied),
@@ -1098,7 +1098,7 @@ function HFt(e) {
     t.set(r.turn, r);
   return [...t.values()];
 }
-function h3n(e) {
+function getMergedFastForwardHeads(e) {
   let t = gn(e).map((r) => r.head);
   return dedupe(t.reverse()).reverse().slice(-MAX_LISTED_FAST_FORWARDS);
 }
@@ -1108,7 +1108,7 @@ function gn(e) {
     ...e.fastForwardedTo,
   ];
 }
-function _3n(e, t) {
+function getLastHeadForBranch(e, t) {
   let r = (p) => p.filter((f) => f.branch === t).at(-1)?.head ?? null,
     a = r(e.fastForwardedTo);
   if (a !== null) return a;
@@ -1119,7 +1119,7 @@ function _3n(e, t) {
   }
   return null;
 }
-function y3n(e, t, r = null) {
+function recordFastForward(e, t, r = null) {
   let a = e.fastForwardedTo.at(-1);
   if (!GIT_OBJECT_ID_REGEX.test(t) || !isNonZeroObjectId(t) || (a?.head === t && a.branch === r)) return e;
   let p = r !== null && isValidGitBranchName(r) ? r : null,
@@ -1135,7 +1135,7 @@ function wn(e, t) {
     d = e.filter((g, _) => !f.has(_));
   return d.length <= t ? d : d.slice(-t);
 }
-function S3n(e, t) {
+function applyPeerNote(e, t) {
   let r = dedupe(t.holds.filter((w) => GIT_OBJECT_ID_REGEX.test(w))).slice(0, MAX_LISTED_COMMITS),
     a = t.need !== null && GIT_OBJECT_ID_REGEX.test(t.need) ? t.need : null,
     p = t.basedOn != null && GIT_OBJECT_ID_REGEX.test(t.basedOn) ? t.basedOn : null,
@@ -1169,7 +1169,7 @@ function S3n(e, t) {
     downApplied: g ? e.downApplied.filter(d) : e.downApplied,
   };
 }
-function b3n(e, t) {
+function recordReceivedUpload(e, t) {
   if (!ge(t.generation) || !GIT_OBJECT_ID_REGEX.test(t.worktreeCommit)) return e;
   let r = e.received.find((a) => a.worktreeCommit === t.worktreeCommit);
   if (r !== void 0 && r.generation >= t.generation) return e;
@@ -1181,7 +1181,7 @@ function b3n(e, t) {
     ].slice(0, MAX_LISTED_COMMITS),
   };
 }
-function w3n(e, t) {
+function recordAppliedTurn(e, t) {
   let r = e.downApplied.find((h) => h.turn === t.turn);
   if (!ge(t.turn) || (r === void 0 && e.downApplied.length >= MAX_LISTED_APPLIED_TURNS)) return e;
   let a = t.installed.filter(
@@ -1210,7 +1210,7 @@ function w3n(e, t) {
         a.length !== t.installed.length ||
         d.length !== t.notInstalled.length ||
         w.length > MAX_LISTED_SKIPPED_FILES ||
-        f.size > kze,
+        f.size > MAX_INSTALLED_SINCE_UPLOAD,
     },
     x = new Map(e.installedEarlier.map((h) => [h.path, h])),
     I = t.written === void 0 ? null : new Set(t.written);
@@ -1221,7 +1221,7 @@ function w3n(e, t) {
   return {
     ...e,
     appliedGeneration: Math.max(e.appliedGeneration, t.turn),
-    installedSinceUpload: [...f.values()].slice(-kze),
+    installedSinceUpload: [...f.values()].slice(-MAX_INSTALLED_SINCE_UPLOAD),
     installedEarlier: [...x.values()].slice(-Ne),
     ...(t.parked !== void 0 && Sn(t.parked)),
     downApplied:
@@ -1234,8 +1234,8 @@ function Sn(e) {
   let t = e.filter(isSyncableRelativePath).slice(0, Be);
   return { parkedRemovals: t, parkedRemovalsOverflow: t.length !== e.length };
 }
-function tln(e, t, r) {
-  if (t.generation !== X4(e)) return e;
+function recordSentUpload(e, t, r) {
+  if (t.generation !== getNextGeneration(e)) return e;
   let a = t.branch !== null && isValidGitBranchName(t.branch) ? t.branch : null;
   return {
     ...e,
@@ -1262,9 +1262,9 @@ function tln(e, t, r) {
 function He(e, t, r = null) {
   let a = e.findIndex((d) => t.includes(d.worktreeCommit)),
     p = r === null ? -1 : e.findIndex((d) => d.worktreeCommit === r),
-    f = a === -1 ? Qpt : Math.max(a, p, 1) + 1;
+    f = a === -1 ? MAX_SENT_UPLOADS : Math.max(a, p, 1) + 1;
   return e
-    .slice(0, Math.min(f, Qpt))
+    .slice(0, Math.min(f, MAX_SENT_UPLOADS))
     .map((d, g) =>
       a === -1 ||
       g < a ||
@@ -1274,29 +1274,29 @@ function He(e, t, r = null) {
     );
 }
 export {
-  Jpt,
-  d3n,
-  p3n,
-  Qpt,
-  kze,
-  kFt,
-  xFt,
-  f3n,
-  Zpt,
-  mte,
-  eft,
-  Ybe,
-  m3n,
-  gte,
-  X4,
-  tft,
-  g3n,
-  HFt,
-  h3n,
-  _3n,
-  y3n,
-  S3n,
-  b3n,
-  w3n,
-  tln,
+  createDirChangeFeed,
+  createDirSyncStreamer,
+  createLazyDirSyncStreamer,
+  MAX_SENT_UPLOADS,
+  MAX_INSTALLED_SINCE_UPLOAD,
+  requiresAnnouncement,
+  getStartBasisCommits,
+  getHistoryRoots,
+  createGitSessionRecord,
+  readGitSessionRecord,
+  GitSessionRecordInvalidError,
+  writeGitSessionRecord,
+  writeGitSessionRecordStreamed,
+  getLatestSentUpload,
+  getNextGeneration,
+  recordSpentGeneration,
+  hasDownApplyCapacity,
+  getMergedDownApplied,
+  getMergedFastForwardHeads,
+  getLastHeadForBranch,
+  recordFastForward,
+  applyPeerNote,
+  recordReceivedUpload,
+  recordAppliedTurn,
+  recordSentUpload,
 };

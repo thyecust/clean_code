@@ -12,7 +12,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
@@ -77,15 +77,15 @@ async function writeMcpTaskMetadata(t, e, r) {
     c = K(),
     s = S(t, c);
   if ((await getFileStorage().mkdir(dirname(s)), r && o !== void 0)) {
-    let a = await r.write(h(o, t, c), b(e), { publishDiscipline: "inPlace" });
+    let a = await r.write(h(o, t, c), jsonStringify(e), { publishDiscipline: "inPlace" });
     if (!a.ok)
       throw (
-        n(`writeMcpTaskMetadata: ${a.error.code}`),
+        logForDebugging(`writeMcpTaskMetadata: ${a.error.code}`),
         Error("mcp task metadata write failed")
       );
     return;
   }
-  await getFileStorage().write(s, b(e));
+  await getFileStorage().write(s, jsonStringify(e));
 }
 async function deleteMcpTaskMetadata(t, e, r, o) {
   let c = isHoverRestEnabled() && e !== void 0 ? k(o) : void 0;
@@ -93,7 +93,7 @@ async function deleteMcpTaskMetadata(t, e, r, o) {
     let a = await e.delete(h(c, t, r));
     if (!a.ok)
       throw (
-        n(`deleteMcpTaskMetadata: ${a.error.code}`),
+        logForDebugging(`deleteMcpTaskMetadata: ${a.error.code}`),
         Error("mcp task metadata delete failed")
       );
     return;
@@ -122,14 +122,14 @@ async function listMcpTaskMetadata(t) {
     if (!s.endsWith(".meta.json")) continue;
     try {
       let a = await getFileStorage().read(f(r, s)),
-        i = T().safeParse(z(a));
+        i = T().safeParse(jsonParse(a));
       if (!i.success) {
-        n(`listMcpTaskMetadata: skipping ${s}: ${String(i.error)}`);
+        logForDebugging(`listMcpTaskMetadata: skipping ${s}: ${String(i.error)}`);
         continue;
       }
       c.push(i.data);
     } catch (a) {
-      n(`listMcpTaskMetadata: skipping ${s}: ${String(a)}`);
+      logForDebugging(`listMcpTaskMetadata: skipping ${s}: ${String(a)}`);
     }
   }
   return c;
@@ -158,12 +158,12 @@ async function I(t, e) {
       break;
     case "error":
       throw (
-        n(`listMcpTaskMetadata: ${c.error.code}`),
+        logForDebugging(`listMcpTaskMetadata: ${c.error.code}`),
         Error("mcp task metadata list failed")
       );
     case "capped":
       throw (
-        n(`listMcpTaskMetadata: list exceeded ${DEFAULT_MAX_PAGES} pages`),
+        logForDebugging(`listMcpTaskMetadata: list exceeded ${DEFAULT_MAX_PAGES} pages`),
         Error("mcp task metadata list exceeded the page cap")
       );
   }
@@ -172,20 +172,20 @@ async function I(t, e) {
     let i = a.relPath.at(-1) ?? "",
       u = await t.read([a]);
     if (!u.ok) {
-      n(`listMcpTaskMetadata: skipping ${i}: ${u.error.code}`);
+      logForDebugging(`listMcpTaskMetadata: skipping ${i}: ${u.error.code}`);
       continue;
     }
     let l = u.value.items[0];
     if (!l.found) continue;
     try {
-      let p = T().safeParse(z(Buffer.from(l.value).toString("utf8")));
+      let p = T().safeParse(jsonParse(Buffer.from(l.value).toString("utf8")));
       if (!p.success) {
-        n(`listMcpTaskMetadata: skipping ${i}: ${String(p.error)}`);
+        logForDebugging(`listMcpTaskMetadata: skipping ${i}: ${String(p.error)}`);
         continue;
       }
       s.push(p.data);
     } catch (p) {
-      n(`listMcpTaskMetadata: skipping ${i}: ${String(p)}`);
+      logForDebugging(`listMcpTaskMetadata: skipping ${i}: ${String(p)}`);
     }
   }
   return s;

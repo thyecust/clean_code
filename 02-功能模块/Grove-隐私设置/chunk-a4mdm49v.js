@@ -13,7 +13,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStderr } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -48,7 +48,7 @@ var v = 86400000,
           !(e instanceof Error) ||
           !/data-residency|essential-traffic-only|no-auth/.test(e.message)
         )
-          n(`Failed to fetch Grove settings: ${e}`, { level: "error" });
+          logForDebugging(`Failed to fetch Grove settings: ${e}`, { level: "error" });
         return (getAccountSettings.cache.clear?.(), { success: !1 });
       }
     },
@@ -72,7 +72,7 @@ async function markGroveNoticeViewed(t) {
       getAccountSettings.cache.clear?.(),
       logFeatureOk("api_grove_notice_mark_viewed"));
   } catch (e) {
-    (n(
+    (logForDebugging(
       `Failed to mark Grove notice viewed: ${e instanceof Error ? e.message : String(e)}`,
       { level: "error" },
     ),
@@ -96,7 +96,7 @@ async function updateGroveSettings(t, e) {
       getAccountSettings.cache.clear?.(),
       logFeatureOk("api_grove_settings_update"));
   } catch (o) {
-    (n(`updateGroveSettings failed: ${String(o)}`, { level: "error" }),
+    (logForDebugging(`updateGroveSettings failed: ${String(o)}`, { level: "error" }),
       logFeatureBad("api_grove_settings_update", "request_failed"));
   }
 }
@@ -108,7 +108,7 @@ async function shouldShowGroveNotice(t, e) {
     l = Date.now();
   if (!u)
     return (
-      n(
+      logForDebugging(
         "Grove: No cache, fetching config in background (dialog skipped this session)",
       ),
       _(o, t, e),
@@ -116,13 +116,13 @@ async function shouldShowGroveNotice(t, e) {
     );
   if (l - u.timestamp > v)
     return (
-      n(
+      logForDebugging(
         "Grove: Cache stale, returning cached data and refreshing in background",
       ),
       _(o, t, e),
       u.grove_enabled
     );
-  return (n("Grove: Using fresh cached config"), u.grove_enabled);
+  return (logForDebugging("Grove: Using fresh cached config"), u.grove_enabled);
 }
 async function _(t, e, o) {
   try {
@@ -142,7 +142,7 @@ async function _(t, e, o) {
       e,
     );
   } catch (r) {
-    n(`Grove: Failed to fetch and store config: ${r}`);
+    logForDebugging(`Grove: Failed to fetch and store config: ${r}`);
   }
 }
 var getGroveConfig = rs(
@@ -176,7 +176,7 @@ var getGroveConfig = rs(
         },
       };
     } catch (e) {
-      return (n(`Failed to fetch Grove notice config: ${e}`), { success: !1 });
+      return (logForDebugging(`Failed to fetch Grove notice config: ${e}`), { success: !1 });
     }
   },
   () => "config",
@@ -264,7 +264,7 @@ async function importGitHubToken(t, e) {
   } catch (r) {
     if (isAxiosError(r))
       return (
-        n(`import-token network error: ${r.code ?? "unknown"}`, {
+        logForDebugging(`import-token network error: ${r.code ?? "unknown"}`, {
           level: "error",
         }),
         { ok: !1, error: { kind: "network" } }
@@ -276,7 +276,7 @@ async function importGitHubToken(t, e) {
   if (o.status === 400) return { ok: !1, error: { kind: "invalid_token" } };
   if (o.status === 401) return { ok: !1, error: { kind: "not_signed_in" } };
   return (
-    n(`import-token returned ${o.status}`, { level: "error" }),
+    logForDebugging(`import-token returned ${o.status}`, { level: "error" }),
     { ok: !1, error: { kind: "server", status: o.status } }
   );
 }

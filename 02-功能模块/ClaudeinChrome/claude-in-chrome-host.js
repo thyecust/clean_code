@@ -12,7 +12,7 @@ import { withDeadline } from "../../01-核心基础设施/共享小工具-未细
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
@@ -62,21 +62,21 @@ async function x(e, s = L) {
     });
     if (c.code !== 0) {
       if (c.exitCode === void 0)
-        n(
+        logForDebugging(
           `[Claude in Chrome] ${t} App Paths query for ${e} did not run to completion: ${c.error ?? `killed at the ${v}ms bound, or reg.exe failed to spawn`}`,
         );
       continue;
     }
     let i = F(c.stdout);
     if (!i) {
-      n(
+      logForDebugging(
         `[Claude in Chrome] ${t} App Paths value for ${e} had no parseable string default; skipping`,
       );
       continue;
     }
     let p = W(i);
     if (!/^(?:[a-zA-Z]:[\\/]|\\\\)/.test(p)) {
-      n(
+      logForDebugging(
         `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: not a fully qualified path`,
       );
       continue;
@@ -86,14 +86,14 @@ async function x(e, s = L) {
       m.catch(() => {});
       let d = await withDeadline(m, s);
       if (d === void 0) {
-        n(
+        logForDebugging(
           `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: existence check exceeded ${s}ms`,
         );
         continue;
       }
       if (!d.isDirectory())
-        return (n(`[Claude in Chrome] Resolved ${e} via ${t} App Paths`), p);
-      n(
+        return (logForDebugging(`[Claude in Chrome] Resolved ${e} via ${t} App Paths`), p);
+      logForDebugging(
         `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: resolves to a directory`,
       );
     } catch (m) {
@@ -106,12 +106,12 @@ async function x(e, s = L) {
         d !== "ENOTDIR"
       )
         return (
-          n(
+          logForDebugging(
             `[Claude in Chrome] Resolved ${e} via ${t} App Paths (stat-odd: ${d ?? String(m)})`,
           ),
           p
         );
-      n(
+      logForDebugging(
         `[Claude in Chrome] Skipping ${t} App Paths candidate for ${e}: ${d ?? String(m)}`,
       );
     }
@@ -129,7 +129,7 @@ function M(e, s) {
         windowsHide: !1,
       });
     } catch (t) {
-      (n(
+      (logForDebugging(
         `[Claude in Chrome] Detached launch of ${e} failed: ${A(t) ?? String(t)}`,
         { level: "error" },
       ),
@@ -138,7 +138,7 @@ function M(e, s) {
     }
     (o.once("spawn", () => r(!0)),
       o.once("error", (t) => {
-        (n(
+        (logForDebugging(
           `[Claude in Chrome] Detached launch of ${e} failed: ${A(t) ?? t.message}`,
           { level: "error" },
         ),
@@ -389,7 +389,7 @@ async function detectAvailableBrowser() {
         let o = `/Applications/${r.macos.appName}.app`;
         try {
           if ((await R(o)).isDirectory())
-            return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+            return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
         } catch (t) {
           if (!Rt(t)) throw t;
         }
@@ -399,7 +399,7 @@ async function detectAvailableBrowser() {
       case "linux": {
         for (let o of r.linux.binaries)
           if (await ja(o).catch(() => null))
-            return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+            return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
         break;
       }
       case "windows": {
@@ -411,7 +411,7 @@ async function detectAvailableBrowser() {
             c = l(t, ...r.windows.dataPath);
           try {
             if ((await R(c)).isDirectory())
-              return (n(`[Claude in Chrome] Detected browser: ${r.name}`), s);
+              return (logForDebugging(`[Claude in Chrome] Detected browser: ${r.name}`), s);
           } catch (i) {
             if (!Rt(i)) throw i;
           }
@@ -449,7 +449,7 @@ async function openInChrome(e) {
     r = await detectAvailableBrowser();
   if (!r)
     return (
-      n("[Claude in Chrome] No compatible browser found"),
+      logForDebugging("[Claude in Chrome] No compatible browser found"),
       logFeatureBad("chrome_open_url", "no_browser"),
       !1
     );

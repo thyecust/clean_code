@@ -14,7 +14,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { getMainLoopCanonical } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { markSessionEndedByModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -121,7 +121,7 @@ var f = createLazyValue(() => Qe({})),
           try {
             await markSessionEndedByModel(K(), e.storageV5);
           } catch (t) {
-            n(`[EndConversation] marker write failed: ${l(t)}`);
+            logForDebugging(`[EndConversation] marker write failed: ${l(t)}`);
           }
           if ((e.endTurn("end_conversation"), r)) {
             let { gracefulShutdown: t } = await import("../../01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js");

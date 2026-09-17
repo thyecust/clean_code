@@ -17,7 +17,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, setHasFormattedOutput, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -44,16 +44,16 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { sanitizeAnalyticsId } from "../CLI入口-Commander/startup-profiler.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON, getExternalPermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
-import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
+import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
+import { isAutoModeSeedable, isTrustedPlanModeDisplaced, buildPermissionModeSeed } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { DEVICE_FIELD_NAME, isValidMachineName, hasRequestedMachine } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 import {
   gracefulShutdown,
   settingsChangeDetector,
@@ -118,8 +118,8 @@ import {
   Hst,
   Ist,
 } from "../../02-功能模块/Hooks钩子/chunk-6wg4v2yj.js";
-import { blt, mSe, d9 } from "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
-import { p6 } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { DEFAULT_REMOTE_TOOL_LIMITS, WITHDRAWN_FEEDBACK, parseToolCallResult } from "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
+import { normalizeDeclaredDialogKinds } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
   Pst,
   qae,
@@ -134,23 +134,23 @@ import {
   Lst,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rds75sre.js";
-import { c6e } from "../../02-功能模块/Bridge-RemoteControl/chunk-2m80582f.js";
+import { startDeviceRegistration } from "../../02-功能模块/Bridge-RemoteControl/device-bridge-registration.js";
 import "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { resolveAttachDeviceBinding, pullsBackToThisMachine, registerAttachedDevice } from "../../02-功能模块/认证-OAuth登录/attach-device-binding.js";
 import {
-  WHe,
-  _ye,
-  SZt,
-  oPt,
-  bZt,
-  _it,
-  wZt,
-  k$n,
-  I$n,
-  yit,
-  L$n,
+  createCloudPluginsConsentStorage,
+  resolveCloudPluginsConsent,
+  CLOUD_PLUGINS_READ_TIMEOUT_MS,
+  getForwardingNoticeReason,
+  SYSTEM_CLOCK,
+  createCloudPluginsForwarder,
+  createConsentStoreTrustProbe,
+  formatCloudSessionSyncLine,
+  isProjectFilesSyncPending,
+  getUploadOriginFacts,
+  describeCloudSessionSync,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
-import { b_ } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { waitForPolicyLimitsToLoad } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
 import {
   getCloudSessionsUnavailableReason,
   isStaleBootstrapFrame,
@@ -177,13 +177,13 @@ import {
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { localBindIdentity } from "../../02-功能模块/Bridge-RemoteControl/device-bind.js";
 import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/device-event-signer.js";
-import { B_e, Fae } from "./chunk-e4xwwtsb.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
+import { permissionResultSchema, StructuredIO } from "./structured-io.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/hardened-fs-primitives.js";
 import "../../02-功能模块/文件同步-Sync/sync-journal.js";
 import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { runProbeGit } from "../../02-功能模块/Git-Worktree/local-divergence-probe.js";
-import "../../02-功能模块/Git-Worktree/chunk-v967hawf.js";
-import { KHt, lJt } from "../../02-功能模块/文件同步-Sync/chunk-54bf3exn.js";
+import "../../02-功能模块/Git-Worktree/dir-sync-git-repository.js";
+import { forecastKeyOf, decideSyncOffer } from "../../02-功能模块/文件同步-Sync/sync-offer-probe.js";
 import { buildControlSuccessResponse, buildControlErrorResponse, buildErrorResultMessage } from "./headless-sdk-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
@@ -202,7 +202,7 @@ import { AA, s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function J(e) {
   if (yt(e)) {
-    n("[headlessFeatures] a feature hook was aborted");
+    logForDebugging("[headlessFeatures] a feature hook was aborted");
     return;
   }
   logError(e);
@@ -215,7 +215,7 @@ async function Ce(e, t) {
         Promise.resolve()
           .then(() => r(t))
           .catch((d) => {
-            (n(
+            (logForDebugging(
               `[headlessFeatures] a feature did not attach (${t.trigger}): ${l(d)}`,
             ),
               J(d));
@@ -384,7 +384,7 @@ function st(e) {
         state: "asked",
         since: D,
         ask_id: k,
-        lapses_at: D + (e.maxAskMs() ?? blt.max_ask_ms),
+        lapses_at: D + (e.maxAskMs() ?? DEFAULT_REMOTE_TOOL_LIMITS.max_ask_ms),
       };
     };
   return {
@@ -414,7 +414,7 @@ function st(e) {
       let D = C.tool_use_id,
         E = t.get(D),
         I = o.delete(C),
-        O = k === void 0 ? void 0 : d9(k).envelope,
+        O = k === void 0 ? void 0 : parseToolCallResult(k).envelope,
         A = O?.status === "present" ? O.envelope : void 0,
         R = C.request.kind === "call" ? C.request.value.approval : void 0,
         F = C.request.kind === "outcome_query" || (R === void 0 && !I);
@@ -443,7 +443,7 @@ function st(e) {
           );
           break;
         case "acknowledged":
-          _(D, H, R?.feedback === mSe ? "withdrawn" : "denied");
+          _(D, H, R?.feedback === WITHDRAWN_FEEDBACK ? "withdrawn" : "denied");
           break;
         case "completed":
           _(
@@ -632,7 +632,7 @@ function an(e) {
   return (r > 0 ? t.slice(0, r) : t).trimEnd();
 }
 function it(e) {
-  n(`[servedTools] not served over the session channel: ${e ?? "not_served"}`);
+  logForDebugging(`[servedTools] not served over the session channel: ${e ?? "not_served"}`);
   let t = {
     state: "off",
     reason: e === "not_bound" ? "not_bound" : "not_served",
@@ -696,7 +696,7 @@ function dt(e) {
           if (((E = H), M === "warning")) I = H;
           D.publish(H, M);
         },
-        registerCleanup: e.attach?.registerCleanup ?? Et,
+        registerCleanup: e.attach?.registerCleanup ?? registerCleanup,
         subscribeSettingsChanges:
           e.attach?.subscribeSettingsChanges ?? ((H) => settingsChangeDetector.subscribe(H)),
         trustAccepted: e.attach?.trustAccepted ?? (() => isWorkspacePersistedTrusted(k)),
@@ -858,7 +858,7 @@ class be {
       ask: (r, d) =>
         this.ports.io.passControlRequestToHost(t, {
           requestId: d,
-          schema: B_e(),
+          schema: permissionResultSchema(),
           signal: r,
         }),
       answer: (r) => e.respondToPermissionRequest(o, gn(r, t)),
@@ -910,7 +910,7 @@ class be {
       return;
     }
     if (this.retiredIds.has(t) || this.derivedIds.has(t)) {
-      (n(
+      (logForDebugging(
         `[headlessCloudClient] agent ${e} reuses finished request_id ${lt(t)}; not passed to the host again`,
         { level: "warn" },
       ),
@@ -963,7 +963,7 @@ class be {
             }
             let A = !(I instanceof Error) || I instanceof AA,
               R = A ? truncateToCodeUnits(l(I), 2000) : truncateToCodeUnits(firstLine(l(I)), 200);
-            (n(
+            (logForDebugging(
               `[headlessCloudClient] host could not answer ${e} ${lt(t)}: ${R}`,
               { level: "error" },
             ),
@@ -990,7 +990,7 @@ function gn(e, t) {
   let o = e.updatedInput !== void 0 && Object.keys(e.updatedInput).length > 0;
   if (o && e.toolUseID !== void 0) return e;
   return (
-    n(
+    logForDebugging(
       `[headlessCloudClient] completing a served call's allow from the request: ${o ? "" : "updatedInput "}${e.toolUseID === void 0 ? "toolUseID" : ""}`.trimEnd(),
     ),
     {
@@ -1092,7 +1092,7 @@ function ct({ io: e, declaredKinds: t, clock: o }) {
     try {
       E = await e.requestUserDialog(d.kind, D.data, { signal: _?.signal });
     } catch (O) {
-      (n(`[headlessCloudClient] host dialog ${d.kind} failed: ${l(O)}`),
+      (logForDebugging(`[headlessCloudClient] host dialog ${d.kind} failed: ${l(O)}`),
         (E = { behavior: "cancelled" }));
     }
     if (E.behavior === "cancelled") return (C("cancelled"), k);
@@ -1235,7 +1235,7 @@ class Ae {
     let o = qn(e);
     if (o !== e)
       (this.cloudSessionKeysDroppedCount++,
-        n(
+        logForDebugging(
           `[headlessCloudClient] dropped a cloud_session key on a ${sanitizeAndTruncateText(truncateToCodeUnits(o.type, 40))} frame from source=${sanitizeAndTruncateText(truncateToCodeUnits(t.source ?? "unknown", 40))}`,
           { level: "warn" },
         ));
@@ -1315,7 +1315,7 @@ class Ae {
     let o = Dn.has(e);
     if (o) this.serviceEventsDroppedCount++;
     else this.unknownFramesDroppedCount++;
-    n(
+    logForDebugging(
       `[headlessCloudClient] dropped a ${sanitizeAndTruncateText(truncateToCodeUnits(e, 40))} ${o ? "service event" : "frame this build does not write"}, from source=${sanitizeAndTruncateText(truncateToCodeUnits(t ?? "unknown", 40))}`,
       o ? void 0 : { level: "warn" },
     );
@@ -1336,7 +1336,7 @@ class Ae {
         return;
       case "consume":
         (this.emittedUuids.add(e.uuid.toLowerCase()),
-          n(
+          logForDebugging(
             `[headlessCloudClient] consumed our own echo of ${String(e.uuid)}`,
           ));
         return;
@@ -1678,7 +1678,7 @@ function qn(e) {
 }
 function gt(e) {
   return new Map(
-    Object.entries(e).flatMap(([t, o]) => (o === void 0 ? [] : [[t, b(o)]])),
+    Object.entries(e).flatMap(([t, o]) => (o === void 0 ? [] : [[t, jsonStringify(o)]])),
   );
 }
 function Me(e) {
@@ -1841,7 +1841,7 @@ class Te {
       switch (d) {
         case "debug":
         case "progress":
-          n(`[headlessCloudClient] ${d}: ${r}`);
+          logForDebugging(`[headlessCloudClient] ${d}: ${r}`);
           return;
         case "info":
           this.line("notice", r);
@@ -1932,7 +1932,7 @@ class Te {
         logEvent("tengu_remote_headless_client_watchdog_fired", {
           timeout: fromEnum(this.compacting ? "compacting" : "response"),
         }),
-        n("[headlessCloudClient] response timeout; reconnecting"),
+        logForDebugging("[headlessCloudClient] response timeout; reconnecting"),
         this.line("warning", Hst),
         this.ports.reconnect());
     }, e);
@@ -2026,7 +2026,7 @@ class He {
       o = "request" in e ? e.request : void 0;
     if (typeof t !== "string" || typeof o !== "object" || o === null)
       return (
-        n(
+        logForDebugging(
           "[headlessCloudClient] dropping control_request without request_id or request",
         ),
         "dropped"
@@ -2131,7 +2131,7 @@ class He {
       ),
       !w.success)
     )
-      n(
+      logForDebugging(
         "[headlessCloudClient] initialize did not match its schema; opening the session without host options",
       );
     (this.ports.requestOpen(w.success ? w.data : null),
@@ -2208,7 +2208,7 @@ class He {
           );
         },
         (d) => {
-          (n(`[headlessCloudClient] interrupt not dispatched: ${l(d)}`),
+          (logForDebugging(`[headlessCloudClient] interrupt not dispatched: ${l(d)}`),
             this.logInterruptReceipt("not_sent", o));
         },
       ),
@@ -2239,7 +2239,7 @@ class He {
             session_id: this.ports.stampedSessionId(),
           });
         } catch (d) {
-          n(
+          logForDebugging(
             `[headlessCloudClient] could not announce a swept command: ${l(d)}`,
           );
         }
@@ -2832,7 +2832,7 @@ class Ne {
           ? this.ledger.postFail(e.uuid, r)
           : { ...this.ledger.giveUp(e.uuid), error: !0 };
         if (!k) {
-          n(
+          logForDebugging(
             `[headlessCloudClient] POST for ${e.uuid} failed after its echo; treating it as delivered`,
           );
           return;
@@ -3035,7 +3035,7 @@ function ns(e) {
   let t = l(e);
   if (t.startsWith("[RemoteSessionManager]"))
     return (
-      n(`[headlessCloudClient] forward failed: ${t}`),
+      logForDebugging(`[headlessCloudClient] forward failed: ${t}`),
       "the cloud session is not connected"
     );
   return sanitizeAndTruncateText(t);
@@ -3128,9 +3128,9 @@ class It {
     });
     ((this.io = e.createIO
       ? e.createIO(t, e.replayUserMessages)
-      : new Fae(t, e.replayUserMessages)),
+      : new StructuredIO(t, e.replayUserMessages)),
       this.io.setUnexpectedResponseCallback(async (p) => {
-        n(
+        logForDebugging(
           `[headlessCloudClient] dropped control_response for unknown request ${sanitizeAndTruncateText(truncateToCodeUnits(String(p.response?.request_id), 64))}`,
         );
       }));
@@ -3223,7 +3223,7 @@ class It {
       this.installOAuthBridge(),
       (this.drained = this.drainOutbound()),
       this.readInput(),
-      (this.unregisterCleanup = Et(() => this.closeFromSignal())));
+      (this.unregisterCleanup = registerCleanup(() => this.closeFromSignal())));
   }
   async closeFromSignal() {
     ((this.signalled = !0),
@@ -3246,7 +3246,7 @@ class It {
           this.emit(buildInformationalSystemMessage(this.stampedSessionId, o.level, truncateSanitizedTextLong(o.text))));
       },
       (o) => {
-        n(`[headlessCloudClient] settling the opener's work failed: ${l(o)}`);
+        logForDebugging(`[headlessCloudClient] settling the opener's work failed: ${l(o)}`);
       },
     );
   }
@@ -3279,11 +3279,11 @@ class It {
           });
         D.response.then(
           () =>
-            n(
+            logForDebugging(
               `[headlessCloudClient] the worker took this client's initialize (${r})`,
             ),
           (O) =>
-            n(
+            logForDebugging(
               `[headlessCloudClient] this client's initialize (${r}) was not answered: ${sanitizeAndTruncateText(truncateToCodeUnits(l(O), 200))}`,
             ),
         );
@@ -3311,7 +3311,7 @@ class It {
           }));
       } catch (p) {
         if (
-          (n(
+          (logForDebugging(
             `[headlessCloudClient] opening request ${o.subtype} failed: ${sanitizeAndTruncateText(truncateToCodeUnits(l(p), 200))}`,
           ),
           logEvent("tengu_remote_headless_client_opening_request", {
@@ -3351,7 +3351,7 @@ class It {
   }
   emit(e) {
     if (!this.outputOpen) {
-      n(`[headlessCloudClient] dropped ${e.type} frame after stdout closed`);
+      logForDebugging(`[headlessCloudClient] dropped ${e.type} frame after stdout closed`);
       return;
     }
     this.io.outbound.enqueue(e);
@@ -3375,11 +3375,11 @@ class It {
           this.handleHostFrame(e);
         } catch (t) {
           if (t instanceof Ve)
-            n("[headlessCloudClient] host frame handling aborted");
+            logForDebugging("[headlessCloudClient] host frame handling aborted");
           else logError(t);
         }
     } catch (e) {
-      if (e instanceof Ve) n("[headlessCloudClient] stdin reading aborted");
+      if (e instanceof Ve) logForDebugging("[headlessCloudClient] stdin reading aborted");
       else logError(e);
       this.inputFailed = !0;
     }
@@ -3387,7 +3387,7 @@ class It {
     if (
       ((this.inputClosed = !0),
       (this.inputClosedAt = this.clock.now()),
-      n("[headlessCloudClient] stdin closed"),
+      logForDebugging("[headlessCloudClient] stdin closed"),
       !this.openRequested && this.phase === "pre_session")
     ) {
       this.end(
@@ -3424,7 +3424,7 @@ class It {
         this.hostRequests.handleCancelRequest(e);
         return;
       default:
-        n(`[headlessCloudClient] ignoring host ${e.type} frame`);
+        logForDebugging(`[headlessCloudClient] ignoring host ${e.type} frame`);
     }
   }
   refuseWhileClosing(e) {
@@ -3441,7 +3441,7 @@ class It {
         return;
       }
       default:
-        n(`[headlessCloudClient] ignoring ${e.type} frame while closing`);
+        logForDebugging(`[headlessCloudClient] ignoring ${e.type} frame while closing`);
     }
   }
   hostFrameUuid(e) {
@@ -3541,7 +3541,7 @@ class It {
     if (this.openRequested || this.phase !== "pre_session" || this.signalled)
       return;
     ((this.openRequested = !0),
-      (this.hostDialogKinds = new Set(p6(e?.supportedDialogKinds))),
+      (this.hostDialogKinds = new Set(normalizeDeclaredDialogKinds(e?.supportedDialogKinds))),
       this.track(this.openSession(e)));
   }
   async openSession(e) {
@@ -3564,7 +3564,7 @@ class It {
     }
     if (this.phase !== "pre_session" || this.signalled) {
       if (
-        (n(
+        (logForDebugging(
           "[headlessCloudClient] session opened after the client ended; not attaching",
         ),
         t.kind === "opened")
@@ -3577,7 +3577,7 @@ class It {
         )
           t.session.preflightCheck?.catch(() => {});
         await t.session.dispose?.().catch((o) => {
-          n(`[headlessCloudClient] discarded session not released: ${l(o)}`);
+          logForDebugging(`[headlessCloudClient] discarded session not released: ${l(o)}`);
         });
       }
       return;
@@ -3609,7 +3609,7 @@ class It {
       e.initialPrompt !== void 0 &&
       e.initialPrompt.uuid !== e.initialPrompt.uuid.toLowerCase()
     )
-      n(
+      logForDebugging(
         "[headlessCloudClient] the seeded prompt uuid is not canonical lowercase; host redeliveries of it will not be recognised and will be sent again",
         { level: "warn" },
       );
@@ -3622,12 +3622,12 @@ class It {
         outbound: this.outbound,
         cloudSession: () => this.readCloudSession(),
         summaryLine: (R) => {
-          let F = L$n(R);
+          let F = describeCloudSessionSync(R);
           return F.projectFiles.mark === "pending" ||
-            I$n(R) ||
+            isProjectFilesSyncPending(R) ||
             Object.values(this.features?.reports() ?? {}).some((H) => H.pending)
             ? ""
-            : k$n(F);
+            : formatCloudSessionSyncLine(F);
         },
         onWorkerReady: (R) => this.markWorkerReady(R),
         onWorkerInit: (R) => this.features?.noteWorkerInit(R),
@@ -3700,7 +3700,7 @@ class It {
             if (this.session === null || this.phase === "ending") return;
             if (Ie(R.dialog_kind)) {
               (this.dialogsReservedCount++,
-                n(
+                logForDebugging(
                   `[headlessCloudClient] not passing a ${sanitizeAndTruncateText(truncateToCodeUnits(String(R.dialog_kind), 64))} dialog to the host: that kind is this client's own question, never the cloud session's`,
                 ));
               return;
@@ -3708,7 +3708,7 @@ class It {
             if (!this.hostDialogKinds.has(R.dialog_kind)) {
               this.dialogsNotDeclaredCount++;
               let M = sanitizeAndTruncateText(truncateToCodeUnits(String(R.dialog_kind), 64));
-              (n(
+              (logForDebugging(
                 `[headlessCloudClient] not passing a ${M} dialog to the host: its initialize did not declare the kind`,
               ),
                 this.emit(
@@ -3792,7 +3792,7 @@ class It {
             (this.undeliveredKindsTold.add(F),
               this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", Dst(F, H))));
           }),
-        onError: (R) => n(`[headlessCloudClient] stream error: ${R.message}`),
+        onError: (R) => logForDebugging(`[headlessCloudClient] stream error: ${R.message}`),
       }),
       p = r.homeSeed(),
       _ = {
@@ -3872,7 +3872,7 @@ class It {
     I?.then(
       () => this.markWorkerReady("preflight"),
       (R) => {
-        (n(
+        (logForDebugging(
           `[headlessCloudClient] attach preflight failed: ${sanitizeAndTruncateText(truncateToCodeUnits(l(R), 200))}`,
         ),
           this.end(
@@ -3922,7 +3922,7 @@ class It {
       e();
     } catch (t) {
       if (t instanceof Ve)
-        n("[headlessCloudClient] session frame handling aborted");
+        logForDebugging("[headlessCloudClient] session frame handling aborted");
       else logError(t);
     }
   }
@@ -3961,7 +3961,7 @@ class It {
       actual: fromEnumOpt(r),
     });
     let d = `The cloud session did not apply the ${t} permission mode requested when it was created; it is in ${r ?? sanitizeAndTruncateText(truncateToCodeUnits(e, 24))} mode.`;
-    (n(`[headlessCloudClient] ${d}`, { level: "warn" }),
+    (logForDebugging(`[headlessCloudClient] ${d}`, { level: "warn" }),
       this.emit(buildInformationalSystemMessage(this.stampedSessionId, "warning", d)));
   }
   readCloudSession() {
@@ -3979,7 +3979,7 @@ class It {
           );
     } catch (e) {
       if (e instanceof Ve)
-        n("[headlessCloudClient] cloud_session snapshot aborted");
+        logForDebugging("[headlessCloudClient] cloud_session snapshot aborted");
       else logError(e);
       return;
     }
@@ -4075,7 +4075,7 @@ class It {
       this.agentRequests.cancelAll(),
       await W(this.clock, this.features?.dispose() ?? Promise.resolve(), ds),
       await this.closeTransport().catch((o) => {
-        n(`[headlessCloudClient] transport close failed: ${l(o)}`);
+        logForDebugging(`[headlessCloudClient] transport close failed: ${l(o)}`);
       }),
       this.oauthBridgeInstalled)
     )
@@ -4150,7 +4150,7 @@ class It {
         this.outbound.abandonPostsInFlight(xe),
         this.outbound.settleOwedEchoes());
     } catch (w) {
-      if (w instanceof Ve) n("[headlessCloudClient] teardown aborted");
+      if (w instanceof Ve) logForDebugging("[headlessCloudClient] teardown aborted");
       else logError(w);
       await this.closeTransport().catch(() => {});
     }
@@ -4261,7 +4261,7 @@ async function Dt(e, { folder: t, attempts: o, lastError: r, signal: d }) {
     return (p(C ? "dialog" : "dialog_unanswered"), { acknowledged: C });
   } catch (_) {
     return (
-      n(
+      logForDebugging(
         `[headlessCloud] could not ask the host about file sync going offline: ${l(_)}`,
         { level: "warn" },
       ),
@@ -4338,7 +4338,7 @@ async function Pt({
         }),
         []
       );
-    let C = await (d.syncOffer ?? lJt)({
+    let C = await (d.syncOffer ?? decideSyncOffer)({
       explicitRef: t,
       poolId: void 0,
       signal: r,
@@ -4349,7 +4349,7 @@ async function Pt({
           reason: fromEnum(C.reason),
           surface: p,
         }),
-        C.line !== null && KHt(C) === "not_offered"
+        C.line !== null && forecastKeyOf(C) === "not_offered"
           ? [{ level: "notice", text: C.line }]
           : []
       );
@@ -4374,7 +4374,7 @@ async function Pt({
     else logFeatureSad("ccr_dir_sync_mode_prompt", "declined");
     return [];
   } catch (_) {
-    if (yt(_)) n(`[headlessCloud] sync question abandoned: ${l(_)}`);
+    if (yt(_)) logForDebugging(`[headlessCloud] sync question abandoned: ${l(_)}`);
     else logError(_);
     return [];
   }
@@ -4411,20 +4411,20 @@ async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
     }
     let C = _ === "accept" ? "accepted" : "declined";
     if ((p(C), !(await (r.writeConsent ?? writeUnattendedServingConsent)(C))))
-      n(
+      logForDebugging(
         "[headlessCloud] unattended-serving answer not saved; asked again next launch",
         { level: "warn" },
       );
   } catch (_) {
     if (yt(_))
-      n(`[headlessCloud] unattended-serving question abandoned: ${l(_)}`);
+      logForDebugging(`[headlessCloud] unattended-serving question abandoned: ${l(_)}`);
     else logError(_);
   }
 }
 function Ft(e) {
   let t = e.flagsOn ?? isCloudPluginForwardingFlagOn,
     o = e.optedOut ?? (() => Boolean(a.CLAUDE_CODE_DISABLE_PLUGIN_FORWARDING)),
-    r = e.clock ?? bZt,
+    r = e.clock ?? SYSTEM_CLOCK,
     d = e.muted ?? isRemoteToolServingMuted,
     p = e.onMuteRecheck ?? onServingMuteRecheck;
   return async (_) => {
@@ -4432,7 +4432,7 @@ function Ft(e) {
     let w = _.trigger === "attach";
     if (!_.bound) return le("not_bound", "no_consent", "not_bound", w);
     let C = e.memory,
-      k = e.consentDeps ?? WHe(_.storageV5),
+      k = e.consentDeps ?? createCloudPluginsConsentStorage(_.storageV5),
       D = (e.launchDir ?? he)(),
       E = {
         launchDir: D,
@@ -4440,7 +4440,7 @@ function Ft(e) {
         syncElsewhere: w ? (_.dirSyncElsewhere ?? "unknown") : !1,
       },
       I = e.reach?.(E) ?? Ast({ ...E, memory: e.reachMemory.reachFor(D) }),
-      O = wZt(I),
+      O = createConsentStoreTrustProbe(I),
       A = await Es(C.consentPin, k, O, _.signal, r);
     if (A === "declined")
       return le("declined", "opted_out", "stored", w, "stored");
@@ -4486,7 +4486,7 @@ function Ft(e) {
       },
       onSession({ sessionId: P, manager: B }) {
         if (
-          ((F = _it({
+          ((F = createCloudPluginsForwarder({
             sessionId: P,
             reattach: w,
             manager: B,
@@ -4535,7 +4535,7 @@ function Ft(e) {
           return { state: "off", source: "stored", reason: "muted" };
         let B =
           P !== void 0 && P.settled && P.admission === "admitted"
-            ? oPt(P.notice)
+            ? getForwardingNoticeReason(P.notice)
             : void 0;
         if (B !== void 0) return { state: "off", source: "stored", reason: B };
         if (P?.gaveUp !== void 0 && P.notice === void 0)
@@ -4575,9 +4575,9 @@ function Es(e, t, o, r, d) {
   return new Promise((p) => {
     let _ = () => p("unreadable"),
       w = () => p("aborted"),
-      C = d.setTimeout(_, SZt);
+      C = d.setTimeout(_, CLOUD_PLUGINS_READ_TIMEOUT_MS);
     (r.addEventListener("abort", w, { once: !0 }),
-      _ye(e, t, o)
+      resolveCloudPluginsConsent(e, t, o)
         .then(p, _)
         .finally(() => {
           (C(), r.removeEventListener("abort", w));
@@ -4704,7 +4704,7 @@ function Ht(e, t = {}) {
   return o === void 0
     ? Promise.resolve(void 0)
     : o.catch((r) => {
-        n(`[headlessCloud] directory-sync handle unavailable: ${l(r)}`);
+        logForDebugging(`[headlessCloud] directory-sync handle unavailable: ${l(r)}`);
         return;
       });
 }
@@ -4714,7 +4714,7 @@ async function qt(e, t = {}) {
     if (o === void 0) return;
     await (t.releaseDirSync ?? As)(o.sessionId);
   } catch (o) {
-    n(`[headlessCloud] directory-sync handle not released: ${l(o)}`);
+    logForDebugging(`[headlessCloud] directory-sync handle not released: ${l(o)}`);
   }
 }
 async function As(e) {
@@ -4735,7 +4735,7 @@ function Ut(
   },
   w = {},
 ) {
-  return (w.startRegistration ?? c6e)({
+  return (w.startRegistration ?? startDeviceRegistration)({
     sessionId: e,
     orgUuid: t,
     getAccessToken: r,
@@ -4743,7 +4743,7 @@ function Ut(
     storageV5: d,
     dirSync: p,
     ...(_ && { servedSettingsChanged: _ }),
-    onNotice: (C, k) => n(`[remote-tools] ${C}: ${k}`, { level: "warn" }),
+    onNotice: (C, k) => logForDebugging(`[remote-tools] ${C}: ${k}`, { level: "warn" }),
   });
 }
 var Tt = { level: "warning", text: SEED_INTERRUPTED_MESSAGE };
@@ -4759,7 +4759,7 @@ async function xt(e, t, o = {}) {
   switch (r.state()) {
     case "started":
       if (!p)
-        n(
+        logForDebugging(
           `[headlessCloud] the directory-sync seed was still uploading after ${t}ms; cancelling it`,
         );
       return (
@@ -4793,7 +4793,7 @@ function Nt({ dirSync: e, fileMode: t }) {
     ...("reason" in o && o.reason !== void 0 && { reason: o.reason }),
     ...("message" in o && o.message !== void 0 && { message: o.message }),
     ...je(o),
-    ...(yit(e?.createFacts?.origin).fromUpload && { started_from_upload: !0 }),
+    ...(getUploadOriginFacts(e?.createFacts?.origin).fromUpload && { started_from_upload: !0 }),
     file_mode: t,
     file_mode_source: "stored",
   };
@@ -4884,7 +4884,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
     return;
   }
   let { input: _, policy: w } = p;
-  (w.notices.forEach(Ye), rje(!0), kz(!0));
+  (w.notices.forEach(Ye), setHasFormattedOutput(!0), kz(!0));
   let k = await Rt({
     input: _,
     replayUserMessages: e.effectiveReplayUserMessages,
@@ -5011,14 +5011,14 @@ function Ws(e, t) {
   };
 }
 function Ye(e) {
-  if ((n(`[headlessCloud] ${e}`), process.stderr.isTTY))
+  if ((logForDebugging(`[headlessCloud] ${e}`), process.stderr.isTTY))
     process.stderr.write(`${e}
 `);
 }
 async function js(e, t, o) {
   let r = await validateForceLoginOrg();
   if (!r.valid) return { kind: "refused", code: "org_pin", message: r.message };
-  await b_();
+  await waitForPolicyLimitsToLoad();
   let d = getCloudSessionsUnavailableReason();
   if (d)
     return { kind: "refused", code: "unavailable", message: `Error: ${d}` };
@@ -5086,7 +5086,7 @@ async function zs(
       { kind: "failed", message: formatSessionNotCreatedMessage(E) }
     );
   let I = new AbortController(),
-    O = Et(() => I.abort()),
+    O = registerCleanup(() => I.abort()),
     A = createLinkedAbortSignal(I.signal, { signalB: r.signal }),
     R = await Pt({
       dialogs: r.dialogs,
@@ -5111,7 +5111,7 @@ async function zs(
       H &&
       e.forwardHomeSettings !== !1 &&
       (e.homeSettingsConsent ?? getStoredRemoteHomeSettingsMode()) === "forward",
-    Q = zEt({
+    Q = buildPermissionModeSeed({
       gateOn: U,
       permissionModeTyped: e.permissionModeCli !== void 0,
       dangerouslySkipPermissions: !1,
@@ -5130,7 +5130,7 @@ async function zs(
       pinnedDefault: e.permissionModeCli !== PERMISSION_MODE_MANUAL_ALIAS,
       settingsMode: Q.settingsDefault,
       settingsModeForwardable: U,
-      autoSeedable: xJe(M) && !isScrubEnabled(),
+      autoSeedable: isAutoModeSeedable(M) && !isScrubEnabled(),
       publicModel: getDefaultOpusModel(),
       repositoryModel: N
         ? (C.repositoryModel ?? getRepositoryModelSource)({
@@ -5144,7 +5144,7 @@ async function zs(
             restrictedModel: e.restrictedModel,
           })
         : void 0,
-      trustedPlanDisplaced: qEt(M),
+      trustedPlanDisplaced: isTrustedPlanModeDisplaced(M),
     });
   if (P.notice !== void 0) Ye(P.notice.text);
   if (P.action !== "none")
@@ -5269,7 +5269,7 @@ async function zs(
       home_settings_host_consent: fromEnum(e.homeSettingsConsent),
     }),
   });
-  let Se = wa(x.id, void 0, { from: "cli", m: "0" }),
+  let Se = buildClaudeAiSessionUrl(x.id, void 0, { from: "cli", m: "0" }),
     Je = () => (C.archiveSession ?? archiveRemoteSession)(x.id, Ts).catch(() => !1);
   if (j.status === "unbound") {
     let q = await Je();
@@ -5380,7 +5380,7 @@ async function Ks({
   return (
     D.started.then((E) => {
       if (!E)
-        n(
+        logForDebugging(
           "[headlessCloud] the device bridge did not start (gate off or account not fully configured); the session stays bound without laptop tools",
         );
     }),
@@ -5437,7 +5437,7 @@ async function Qs(
     session_id: sanitizeAnalyticsId(k),
     entry_point: fromEnum("cloud_headless"),
   });
-  let D = wa(k, void 0, { from: "cli", m: "0" }),
+  let D = buildClaudeAiSessionUrl(k, void 0, { from: "cli", m: "0" }),
     E = Wt(e, k),
     I = (C.fetchSession ?? fetchSession)(k, e),
     O = await I.then(
@@ -5449,7 +5449,7 @@ async function Qs(
       (P) => {
         if (P instanceof Iu) return { refused: P.formattedMessage || l(P) };
         return (
-          n(
+          logForDebugging(
             `[headlessCloud] attach preflight failed (continuing via the stream): ${l(P)}`,
           ),
           { archived: !1, awaitsAnswer: !1, unreadable: !0 }
@@ -5503,7 +5503,7 @@ async function Qs(
       ),
       servedSettingsChanged: Vt(p),
     });
-  Et(() => H.stop());
+  registerCleanup(() => H.stop());
   let [M, U, Q] = await Promise.all([
       R,
       F,
@@ -5655,7 +5655,7 @@ async function eo(e, t, o, r, d) {
     )
     .catch(
       (p) => (
-        n(`[headlessCloud] directory-sync lookup failed: ${l(p)}`, {
+        logForDebugging(`[headlessCloud] directory-sync lookup failed: ${l(p)}`, {
           level: "warn",
         }),
         { handle: void 0, why: "lookup_failed" }
@@ -5667,7 +5667,7 @@ async function to(e, t) {
     r = o === void 0 ? await V_e(e, void 0).then((d) => () => no(d)) : o;
   return r().catch(
     async (d) => (
-      n(`[headlessCloud] stream position unreadable, retrying once: ${l(d)}`),
+      logForDebugging(`[headlessCloud] stream position unreadable, retrying once: ${l(d)}`),
       await sleep(t.positionRetryMs ?? so),
       r()
     ),

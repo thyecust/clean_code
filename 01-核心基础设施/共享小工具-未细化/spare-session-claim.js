@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { identity as _m, $p, irt, cOn, uLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, changeWorkingDirectory, resetDebugCaches } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { resetUserData, resetEnvDerivedAuthCaches, resetGrowthBook, resetTrustDialogAcceptedCache, clearProjectPathForConfigCache } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { invalidateAllSettings, isManagedOnlyEnvVar, isProxyEnvVar, isTlsClientCertEnvVar } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Avt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { resetProfileAuthCache } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { timingSafeStringEqual } from "./chunk-035vf5et.js";
-import { gwn } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { dropPreSettingsEnvSnapshot } from "../遥测-OpenTelemetry/settings-env-application.js";
 import { markWarmSpareClaimed } from "../遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { waitForSessionIngressToken } from "./session-ingress-token.js";
 import { resetRemoteSettingsSyncCache } from "./remote-settings-eligibility.js";
@@ -41,7 +41,7 @@ function receiveSpareClaim(e, m, o) {
             if (o) {
               let s;
               try {
-                s = z(a.slice(0, p));
+                s = jsonParse(a.slice(0, p));
               } catch {
                 s = void 0;
               }
@@ -54,7 +54,7 @@ function receiveSpareClaim(e, m, o) {
             }
             i.close();
             try {
-              n(z(a.slice(0, p)));
+              n(jsonParse(a.slice(0, p)));
             } catch (s) {
               c(s);
             }
@@ -74,7 +74,7 @@ function receiveSpareClaim(e, m, o) {
 }
 async function bootClaimedSpare(e, m) {
   let o = await canonicalizePath(e.cwd, void 0);
-  Yu(o);
+  changeWorkingDirectory(o);
   let n = { originalCwd: o, projectRoot: o, cwd: o };
   if (e.sessionId) $p(_m(e.sessionId), "spare_claim", null, n);
   else irt(n);
@@ -96,15 +96,15 @@ async function bootClaimedSpare(e, m) {
     delete process.env.CLAUDE_CODE_OAUTH_TOKEN,
     Object.assign(process.env, e.env),
     (process.argv = [process.argv[0], process.argv[1], ...e.argv]),
-    JPn(),
+    resetDebugCaches(),
     await waitForSessionIngressToken(e.argv),
     uLn(),
     resetEnvDerivedAuthCaches(),
-    Avt(),
+    resetProfileAuthCache(),
     resetRemoteSettingsSyncCache(),
     resetGrowthBook({ preservePendingExposures: !0, preserveLoggedExposures: !0 }),
     resetUserData(),
-    gwn(),
+    dropPreSettingsEnvSnapshot(),
     clearProxyCache(),
     configureGlobalAgents());
   let { main: c } = await m;

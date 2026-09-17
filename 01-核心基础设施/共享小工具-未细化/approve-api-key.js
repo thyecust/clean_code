@@ -10,7 +10,7 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "./storage-v5-context.js";
 import { saveGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -63,22 +63,22 @@ function ApproveApiKey(T) {
   else f = n[5];
   let b;
   if (n[6] === MEMO_CACHE_SENTINEL)
-    ((b = e(t, { bold: !0, children: "ANTHROPIC_API_KEY" })), (n[6] = b));
+    ((b = e(Text, { bold: !0, children: "ANTHROPIC_API_KEY" })), (n[6] = b));
   else b = n[6];
   let l;
   if (n[7] !== a)
-    ((l = r(t, { children: [b, r(t, { children: [": sk-ant-...", a] })] })),
+    ((l = r(Text, { children: [b, r(Text, { children: [": sk-ant-...", a] })] })),
       (n[7] = a),
       (n[8] = l));
   else l = n[8];
   let P;
   if (n[9] === MEMO_CACHE_SENTINEL)
-    ((P = e(t, { children: "Do you want to use this API key?" })), (n[9] = P));
+    ((P = e(Text, { children: "Do you want to use this API key?" })), (n[9] = P));
   else P = n[9];
   let I;
   if (n[10] === MEMO_CACHE_SENTINEL)
-    ((I = r(t, {
-      children: ["No (", e(t, { bold: !0, children: "recommended" }), ")"],
+    ((I = r(Text, {
+      children: ["No (", e(Text, { bold: !0, children: "recommended" }), ")"],
     })),
       (n[10] = I));
   else I = n[10];

@@ -104,7 +104,7 @@ import {
   Bp,
   Kd,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, z, aae, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, jsonParse, hasUnverifiableAncestryWithAnchor, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeToStdout, markStdoutDrainExternallyClocked, outstandingStdoutBytes } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { truncateToCodeUnits, firstLine, formatTruncatedText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { COMMAND_NAME_TAG, BASH_INPUT_TAG, BASH_STDERR_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, logError, getInMemoryErrors, logMCPDebug } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -570,7 +570,7 @@ import {
   isSameMcpServerName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent, runTimedDiagnosticStep } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { DEFAULT_IMAGE_LIMITS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -592,30 +592,30 @@ import {
 } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { registerMemoryAttributor } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
-import { c1, jt, g0 } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { OAuthCallbackError, getMcpClientState, bridgeCarrierState } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isReviewOriginSession, OAUTH_TOKEN_WELL_KNOWN_PATH, SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, MAX_CREDENTIAL_BYTES, getSessionAccessToken, getSessionAuthHeaders, setSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { isCachedGitHubRepo } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
-import { iy, gc, _b, oS, eie, dBe, WT, canonicalizeArtifactUrlInput, uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, USER_REFUSED_ACTION_MARKER, TOOL_CALL_SKIPPED_MARKER, AUTO_MEMORY_REMINDER_SUFFIX, isInterruptLikeUserMessage, canonicalizeArtifactUrlInput, uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { isModelDrivenSession, hasNonLeadTeammate, isTeamLead, hasActiveInProcessTeammates, hasWorkingInProcessTeammates, waitForTeammatesToBecomeIdle } from "../../02-功能模块/Teammates团队/teammate-context.js";
 import { isPolicyAllowed, getResponseFromCache } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
-  GEt,
-  im,
-  zh,
-  FN,
-  i6,
-  sA,
-  hve,
-  h$e,
-  Xk,
-  Yk,
-  XK,
-  qG,
-  Ya,
-  iA,
-  MT,
+  isAutoDefaultLaunchEnabled,
+  EFFORT_LEVELS,
+  modelSupportsEffort,
+  modelSupportsMaxEffort,
+  modelSupportsXHighEffort,
+  isUltracodeActive,
+  normalizeUltracodeAlias,
+  resolveUltracodeEffortLevel,
+  coerceEffortLevelValue,
+  createEffortLevel,
+  createEffortLevelOrDefault,
+  isSameEffortSelection,
+  getSessionEffortLevel,
+  unpinLaunchEffortLevels,
+  resolveModelEffortLevel,
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, SKILL_TOOL_NAME_PREFIX, getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, findToolByName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
@@ -634,67 +634,67 @@ import {
   matchingRuleForInput,
 } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, normalizeFileContent, createFileStateCache } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
-import { ive, vm, K$, $t } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
+import { isDependencyError, formatPluginError, formatPluginWarning, getPluginRegistryState } from "../../02-功能模块/插件系统/plugin-system-core.js";
 import { createAbortController, createChildAbortController, userAbortReason, shutdownInterruptStamp, isServerFallbackDiscard } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
-import { Jc } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isCloudPluginForwardingFlagOn } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
-  tXe,
-  pGt,
-  XQn,
-  YQn,
-  JQn,
-  gN,
-  rfe,
-  mGt,
-  oXe,
-  eZn,
-  Zre,
-  tZn,
-  g1e,
-  twt,
-  AC,
-  Rj,
-  nZn,
-  gGt,
-  rZn,
-  rCe,
-  sXe,
-  ofe,
-  oCe,
-  sfe,
-  CC,
+  pickHearthRelayFields,
+  parseHearthRelayMessageIds,
+  validateHearthRelayRows,
+  parseHearthRelayThreadTs,
+  applyHearthRelayDelivery,
+  MAX_EVENT_ENVELOPE_BYTES,
+  MAX_QUEUED_POLL_EVENTS,
+  SESSION_NOTICE_EVENT_KIND,
+  looksLikeReservedEventKind,
+  isValidEventAuthority,
+  escapeHtmlEntities,
+  sanitizeEventText,
+  buildEventEnvelope,
+  validateEventEnvelope,
+  isPollEventCommand,
+  isPollEventChannelEnabled,
+  resetSkillPermissionsForTurn,
+  hasDeliveredPollEventsFrom,
+  isPollToolResultMessage,
+  getPollEventEnvelope,
+  isPollEventCommandForCurrentAgent,
+  formatEventDelivery,
+  settleDeliveredPollEvents,
+  settleDroppedPollEvents,
+  AsyncEvalDispatcher,
 } from "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { ENTER_PLAN_MODE_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { isArtifactConflictLegacy, artifactReadObservationIn, makeSetArtifactReadVersion, makeSetArtifactContractTarget, makeGetArtifactContractTarget, isResumeFrameSeedEligible } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
-import { Vre } from "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
-import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { resolveSessionAdoption } from "../../02-功能模块/后台任务-Shell管理/task-output.js";
+import { getPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Nu, b7e } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { formatRedactedPreview, setOwnBridgePeerAddressResolver } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { AsyncQueue, formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { recordStartupPhase, getRecordedStartupPhase, markResumeHydratePrefetch, recordFirstMessageReadFromSpawn, recordInputReadyFromSpawn, consumeApiRequestSentFromSpawn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isAsyncReplRequested, formatUnsatisfiableSchemaReason, STRUCTURED_OUTPUT_TOOL_NAME, buildStructuredOutputToolFromSchema } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
-  ER,
-  fc,
-  mAt,
-  of,
-  K4t,
-  X4t,
-  p6,
+  NO_RESPONSE_REQUESTED_TEXT,
+  SYNTHETIC_MODEL_NAME,
+  SKIPPED_TRACKED_PATHS_REASON,
+  ZERO_USAGE_TOTALS,
+  parseBackgroundTasksToolUseId,
+  BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR,
+  normalizeDeclaredDialogKinds,
   Qn,
-  Y4t,
-  rrr,
-  Ew,
-  f6,
-  w_,
-  fCn,
-  iQe,
-  xme,
-  yAt,
+  sanitizeRelayableText,
+  formatElicitationUrls,
+  isHumanOrUnstampedOrigin,
+  isProjectsRelayOrigin,
+  isUserDrivenOrUnstampedOrigin,
+  toHumanOrigin,
+  lacksHumanOrigin,
+  shouldRelayMessageToBridge,
+  isSdkStreamEvent,
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { unassignAgentTasks, readUnreadMessages, MARK_READ_FAILURE_CAP, markMessagesAsRead, formatTeammateMessages, isShutdownApproved, isHeadlessLeadDisplayableMessage } from "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import { isRemoteControlDeploymentAvailable, isRunningInRemoteEnvironment, isBridgeStateFramesEnabled, isSdkBridgeStateAnnounceEnabled, isQuotaRejectedReemitEnabled, getCcrAutoConnectDefault, isPersistentRemoteSessionEnabled, isRemoteControlInternalEventsEnabled, getBridgeSubagentFrameGate } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
@@ -703,10 +703,10 @@ import { ComputerUseMcpStateStore, ComputerUseLockOwnerContext } from "../../02-
 import { sessionTransportRegistry, isRemoteTransportPersistent, summarizeMcpServersIfRemote, hidePluginsIfRemote, keepPrimaryIfRemote, withholdDetailIfRemote } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { getMcpServerConfigCacheKey, registerMcpNotificationHandler, setMcpClientOnClose, addMcpClientOnCloseHandler, isMcpClientTransportClosed, deliverMcpTransportMessage } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
-import { ne } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import { removeTeammateFromTeamFile } from "../../02-功能模块/Teammates团队/team-file-store.js";
-import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { setSdkHostedBridgeHandle, getSdkHostedBridgeHandle, reportBridgePermissionMode, setSupervisedBridgeSession, reportBridgeCrossSessionInbound, reportBridgeModel, ownBridgePeerAddress } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import {
   isPollEventWakeItem,
@@ -720,7 +720,7 @@ import {
   parseRelayTurnId,
   getCommonCcrTurnId,
 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { GY, oJn } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
+import { getPendingActionRequestId, formatContainerRestartReminder } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
   awaitMcpPolicyColdStart,
   redactManagedMcpConfig,
@@ -767,9 +767,9 @@ import {
   retryFailedMcpConnections,
   remountClaudeAiConnectors,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { b_ } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
-import { B_e, D0t, L0t, Fae } from "./chunk-e4xwwtsb.js";
+import { waitForPolicyLimitsToLoad } from "../../02-功能模块/策略限制(PolicyLimits)/policy-limits-client.js";
+import { awaitRemoteSettingsLoaded } from "../../01-核心基础设施/设置-配置/remote-managed-settings.js";
+import { permissionResultSchema, PERMISSION_RESULT_SHAPE_HINT, finalizePermissionPromptToolResult, StructuredIO } from "./structured-io.js";
 import {
   parseFileAttachments,
   isClaudeAiClientPlatform,
@@ -796,8 +796,8 @@ import {
   hasPeerEnvelope,
 } from "../../02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js";
 import "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
-import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
-import { I0t, j1n, lHe, W1n, P0t, O0t, Uz, FJt } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
+import "../../02-功能模块/远程工具执行/remote-tool-protocol.js";
+import { isSubagentSkipOnDeltaEnabled, isTranscriptLocalGcEnabled, MANAGED_CLOUD_WORKER_ENTRYPOINTS, getDirSyncWorkerDecision, getHookForwardingAdmission, getPluginForwardingAdmission, RemoteIO, hasResumeFlag } from "../../02-功能模块/远程工具执行/chunk-31b8kd0f.js";
 import { lsn } from "../../02-功能模块/Bridge-RemoteControl/chunk-znhfst8k.js";
 import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
 import { withoutStaticMcpShadows, mergeAndFilterTools, stripSoleNonDeniableTool } from "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
@@ -850,7 +850,7 @@ import {
   consumeRecentTimestamp,
   applyMessageOp,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
-import { Ou, d2, KSe, uM, y9, S9 } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
+import { ResumeAgentStateError, AgentResumeTransientError, AgentResumePermanentlyRefusedError, AgentStoppedByUserError, AgentResumeInProgressError, resumeAgentWithNotification } from "../../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
 import { isChannelsEnabled, isChannelAllowlisted } from "../../02-功能模块/插件系统/chunk-rbjz1q03.js";
 import { ChannelMessageNotificationSchema, wrapChannelMessage, findChannelEntry, gateChannelServer } from "../../02-功能模块/插件系统/channel-gate.js";
 import { MCP_URL_ELICITATION_DIALOG, clearMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "../../02-功能模块/MCP客户端/mcp-auth-cache.js";
@@ -882,42 +882,42 @@ import {
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { shouldShowAutoDefaultNudge, handleAutoDefaultNudgeEventFromHost } from "../../01-核心基础设施/设置-配置/chunk-wdr27rwr.js";
 import { shouldShowGroveNotice, printGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
-import { performLogout } from "../../02-功能模块/认证-OAuth登录/chunk-9g86t9bp.js";
+import { performLogout } from "../../02-功能模块/认证-OAuth登录/console-profile-auth.js";
 import {
-  Act,
-  Cct,
-  y7,
-  ir,
-  z2n,
-  xh,
-  $Ie,
-  kLt,
-  xct,
-  gE,
-  Qx,
-  i2,
-  Oct,
-} from "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
+  setIdentityChangeHandler,
+  consumeUnownedIdentityTrip,
+  resolveAccountTokenAndRecord,
+  getIdentityEpoch,
+  rearmDiscoveryCacheBaseline,
+  isRemoteTransport,
+  isRemoteTransportWithStaleIdentity,
+  buildIdentityChangedServer,
+  hasRemoteTransport,
+  evictMemoizedDiscoveryCachePaths,
+  getDiscoveryCacheLegToken,
+  awaitDiscoveryCacheFlush,
+  recordLazyDialFailureStrike,
+} from "../../02-功能模块/MCP客户端/mcp-discovery-cache.js";
 import { cachedRowAdoptEmitter, cachedRowDialFailedEmitter } from "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
-import "../../02-功能模块/成本-Token统计/chunk-3nwwgatc.js";
+import "../../02-功能模块/成本-Token统计/usage-transcript-scan.js";
 import { collectUsageData } from "../../02-功能模块/MCP客户端/usage-rate-limits.js";
 import { activeTimeTracker } from "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
-  Vae,
-  EHe,
-  Gz,
-  HZ,
-  hQt,
-  IZ,
-  vHe,
-  PZ,
-  OZ,
-  O8,
-  Fst,
-  yQt,
-  DZ,
-} from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
+  applyAgentFrontmatterHooks,
+  restoreTranscriptDerivedState,
+  resolveResumedAgentDefinition,
+  loadSessionHomeAgentDefinitions,
+  resolveResumedAgentSettingRestore,
+  resolveResumedSessionModel,
+  neutralizeRefusalFallbackOnFork,
+  restoreRefusalFallbackLatch,
+  rearmCyberRefusalHeaderOnResume,
+  rebuildAgentDefinitionsWithCliAgents,
+  formatWorktreeResumeError,
+  formatWorktreeResumeNotice,
+  applyResumedWorktreeState,
+} from "../../02-功能模块/Git-Worktree/resume-session-state.js";
 import { skillChangeDetector } from "../../02-功能模块/文件监听-Watch/skill-change-detector.js";
 import {
   setInboundModeGetter,
@@ -959,7 +959,7 @@ import { refreshActivePlugins } from "../../02-功能模块/MCP客户端/plugin-
 import { PluginStateStore } from "../../02-功能模块/插件系统/plugin-state-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
-import { P_, Jle, Rl } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import { resolvePreModelSwitchDecision, formatModelSwitchBlockedNotice, toSingleLineDisplayText } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { reloadSkills } from "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
 import { createAgentLifecycle } from "../../02-功能模块/Teammates团队/agent-lifecycle.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
@@ -1113,7 +1113,7 @@ function fl(e) {
 }
 function Mc(e) {
   let t = e.message.content;
-  if (typeof t === "string") return t === iy || t === gc;
+  if (typeof t === "string") return t === INTERRUPTED_BY_USER_MARKER || t === INTERRUPTED_FOR_TOOL_USE_MARKER;
   if (!Array.isArray(t) || t.length !== 1) return !1;
   let o = t[0];
   return (
@@ -1122,7 +1122,7 @@ function Mc(e) {
     "type" in o &&
     o.type === "text" &&
     "text" in o &&
-    (o.text === iy || o.text === gc)
+    (o.text === INTERRUPTED_BY_USER_MARKER || o.text === INTERRUPTED_FOR_TOOL_USE_MARKER)
   );
 }
 function wp(e) {
@@ -1143,9 +1143,9 @@ function wp(e) {
     return Cp.has(o.content);
   });
 }
-var Cp = new Set([iy, gc, _b, oS, oS + dBe, eie, eie + dBe, USER_REJECTED_TOOL_USE_MESSAGE, USER_REJECTED_TOOL_USE_MESSAGE + dBe]);
+var Cp = new Set([INTERRUPTED_BY_USER_MARKER, INTERRUPTED_FOR_TOOL_USE_MARKER, TOOL_CALL_NOT_COMPLETED_MARKER, USER_REFUSED_ACTION_MARKER, USER_REFUSED_ACTION_MARKER + AUTO_MEMORY_REMINDER_SUFFIX, TOOL_CALL_SKIPPED_MARKER, TOOL_CALL_SKIPPED_MARKER + AUTO_MEMORY_REMINDER_SUFFIX, USER_REJECTED_TOOL_USE_MESSAGE, USER_REJECTED_TOOL_USE_MESSAGE + AUTO_MEMORY_REMINDER_SUFFIX]);
 function Mp(e) {
-  if (e.message.model !== fc) return !1;
+  if (e.message.model !== SYNTHETIC_MODEL_NAME) return !1;
   let t = e.message.content;
   return (
     Array.isArray(t) &&
@@ -1155,7 +1155,7 @@ function Mp(e) {
     "type" in t[0] &&
     t[0].type === "text" &&
     "text" in t[0] &&
-    t[0].text === ER
+    t[0].text === NO_RESPONSE_REQUESTED_TEXT
   );
 }
 function wc(e) {
@@ -1189,7 +1189,7 @@ function Pc(e, t) {
     d.isMeta === !0 ||
     d.isCompactSummary === !0 ||
     d.stackedExpansion === !0 ||
-    WT(d) ||
+    isInterruptLikeUserMessage(d) ||
     wc(d)
   )
     return {
@@ -1201,7 +1201,7 @@ function Pc(e, t) {
       ok: !1,
       reason: `declared turn id names an externally-sourced entry; ${Po(d, o)}`,
     };
-  if (gGt(e, o))
+  if (hasDeliveredPollEventsFrom(e, o))
     return { ok: !1, reason: "range contains a delivered poll-event record" };
   for (let _ = o + 1; _ < e.length; _++) {
     let E = e[_];
@@ -1302,15 +1302,15 @@ var xc = "tengu_polished_lagoon",
     }),
   );
 function Lc() {
-  return a.CLAUDE_CODE_REMOTE === !0 && ke() && getFeatureValue_CACHED_MAY_BE_STALE(xc, Uc) && Rj();
+  return a.CLAUDE_CODE_REMOTE === !0 && ke() && getFeatureValue_CACHED_MAY_BE_STALE(xc, Uc) && isPollEventChannelEnabled();
 }
 function Nc(e, t) {
   let o = sessionTransportRegistry.of(e).active?.isRemoteTransport() === !0,
     d = t === "auto" && Lc() && o,
     { value: _, source: E } = getFeatureValueWithSource_CACHED_MAY_BE_STALE(xc, Uc);
   return (
-    n(
-      `[session-notices] advertise=${d} mode=${t} flag=${_}(${E}) pollChannel=${Rj()} remote=${o} remoteEnv=${a.CLAUDE_CODE_REMOTE === !0} nonInteractive=${ke()}`,
+    logForDebugging(
+      `[session-notices] advertise=${d} mode=${t} flag=${_}(${E}) pollChannel=${isPollEventChannelEnabled()} remote=${o} remoteEnv=${a.CLAUDE_CODE_REMOTE === !0} nonInteractive=${ke()}`,
     ),
     d
   );
@@ -1333,7 +1333,7 @@ function Bc(
   },
 ) {
   if (!E()) {
-    (n(
+    (logForDebugging(
       "[session-notices] session_notice on a non-RemoteIO transport \u2014 dropping without ack",
       { level: "warn" },
     ),
@@ -1343,7 +1343,7 @@ function Bc(
   let C = Xn(e.uuid) ?? void 0,
     re = Tp().safeParse(e);
   if (!re.success) {
-    (n("[session-notices] dropping malformed session_notice payload", {
+    (logForDebugging("[session-notices] dropping malformed session_notice payload", {
       level: "error",
     }),
       logFeatureBad("ccr_session_notices", "malformed_payload"),
@@ -1364,22 +1364,22 @@ function Bc(
     return;
   }
   if (t().sessionNoticesPoll.pendingDeliveryUuids.includes(B.uuid)) {
-    n(
+    logForDebugging(
       "[session-notices] duplicate redelivery while delivery in flight \u2014 suppressed",
     );
     return;
   }
-  let te = tZn(B.content),
+  let te = sanitizeEventText(B.content),
     ye = !1,
-    N = gN - 1024,
-    fe = Zre(te);
+    N = MAX_EVENT_ENVELOPE_BYTES - 1024,
+    fe = escapeHtmlEntities(te);
   if (Buffer.byteLength(fe, "utf8") > N) {
     let ve = 0,
       je = te.length;
     while (ve < je) {
       let en = ve + Math.ceil((je - ve) / 2),
         Ne = truncateToCodeUnits(te, en);
-      if (Buffer.byteLength(Zre(Ne), "utf8") <= N - 128) ve = en;
+      if (Buffer.byteLength(escapeHtmlEntities(Ne), "utf8") <= N - 128) ve = en;
       else je = en - 1;
     }
     let ut = te.length,
@@ -1390,8 +1390,8 @@ function Bc(
 \u2026[session_notice content truncated by the CLI: ${ut - Tt.length} characters dropped]`),
       (ye = !0));
   }
-  let le = g1e({
-    kind: mGt,
+  let le = buildEventEnvelope({
+    kind: SESSION_NOTICE_EVENT_KIND,
     at: new Date().toISOString(),
     content: te,
     attributes: {
@@ -1410,7 +1410,7 @@ function Bc(
       },
     }));
   } catch (U) {
-    n(`[session-notices] pending-add subscriber threw (contained): ${l(U)}`, {
+    logForDebugging(`[session-notices] pending-add subscriber threw (contained): ${l(U)}`, {
       level: "error",
     });
   }
@@ -1426,7 +1426,7 @@ function Bc(
   };
   I.current = I.current
     .then(async () => {
-      if (countMatching(getCommandQueueSnapshot(), AC) >= rfe) {
+      if (countMatching(getCommandQueueSnapshot(), isPollEventCommand) >= MAX_QUEUED_POLL_EVENTS) {
         (xe(), logFeatureSad("ccr_session_notices", "queue_cap_will_retry"));
         return;
       }
@@ -1445,9 +1445,9 @@ function Bc(
             break;
           }
       } catch (ve) {
-        if (yt(ve)) n("[session-notices] enqueue hook pass aborted");
+        if (yt(ve)) logForDebugging("[session-notices] enqueue hook pass aborted");
         else
-          n(
+          logForDebugging(
             `[session-notices] enqueue hook pass failed (failing open): ${l(ve)}`,
             { level: "error" },
           );
@@ -1457,7 +1457,7 @@ function Bc(
         return;
       }
       enqueuePollEvent({
-        kind: mGt,
+        kind: SESSION_NOTICE_EVENT_KIND,
         element: le,
         wake: !0,
         allowReservedKind: !0,
@@ -1484,7 +1484,7 @@ function Bc(
                 return;
               }
             } catch (ve) {
-              (n(
+              (logForDebugging(
                 `[session-notices] persistence flush failed (ack skipped, will redeliver): ${l(ve)}`,
                 { level: "error" },
               ),
@@ -1497,7 +1497,7 @@ function Bc(
             else logFeatureOk("ccr_session_notices");
           },
           (ve) => {
-            (n(
+            (logForDebugging(
               `[session-notices] delivery rejected (will redeliver): ${l(ve)}`,
               { level: "error" },
             ),
@@ -1506,14 +1506,14 @@ function Bc(
           },
         )
         .catch((ve) => {
-          (n(`[session-notices] settle handler failed: ${l(ve)}`, {
+          (logForDebugging(`[session-notices] settle handler failed: ${l(ve)}`, {
             level: "error",
           }),
             logFeatureBad("ccr_session_notices", "settle_handler_failed"));
         });
     })
     .catch((U) => {
-      (n(`[session-notices] ingress-tail link failed: ${l(U)}`, {
+      (logForDebugging(`[session-notices] ingress-tail link failed: ${l(U)}`, {
         level: "error",
       }),
         logFeatureBad("ccr_session_notices", "ingress_tail_link_failed"));
@@ -1556,7 +1556,7 @@ async function Rp(e = qc) {
     _ = o?.trim() ?? "";
   if (!d || !_)
     return (
-      n(
+      logForDebugging(
         "CCR auth refresh: token-file pair unreadable or incomplete, keeping current credentials",
         { level: "warn" },
       ),
@@ -1574,7 +1574,7 @@ async function Ip(e, t = qc) {
   let d = getTokenExpiry(o.sessionIngressToken);
   if (d === null)
     return (
-      n(
+      logForDebugging(
         "CCR auth refresh: delivered session token is not a decodable JWT, keeping current credentials",
         { level: "warn" },
       ),
@@ -1585,7 +1585,7 @@ async function Ip(e, t = qc) {
   let E = Date.now() / 1000 + e;
   if (Math.abs(d - E) > Dp)
     return (
-      n(
+      logForDebugging(
         "CCR auth refresh: delivered token expiry does not match the advertised lifetime, keeping current credentials",
         { level: "warn" },
       ),
@@ -1594,7 +1594,7 @@ async function Ip(e, t = qc) {
   let I = _ ? getTokenExpiry(_) : null;
   if (I !== null && d <= I)
     return (
-      n(
+      logForDebugging(
         "CCR auth refresh: delivered token does not extend expiry, keeping current credentials",
         { level: "warn" },
       ),
@@ -1618,7 +1618,7 @@ var Wc = "[stdout-guard]";
 function Vc(e) {
   if (e.length === 0) return !0;
   try {
-    return (z(e), !0);
+    return (jsonParse(e), !0);
   } catch {
     return !1;
   }
@@ -1650,7 +1650,7 @@ class Gc {
         else
           (process.stderr.write(`${Wc} ${re}
 `),
-            n(
+            logForDebugging(
               `streamJsonStdoutGuard diverted non-JSON stdout line: ${re.slice(0, 200)}`,
             ));
       }
@@ -1659,7 +1659,7 @@ class Gc {
       if (C) queueMicrotask(() => C());
       return !0;
     }),
-      Et(async () => {
+      registerCleanup(async () => {
         if (((this.buffer += e.decode()), this.buffer.length > 0)) {
           if (this.originalWrite && Vc(this.buffer))
             this.originalWrite(
@@ -1700,29 +1700,29 @@ function Qc(e, t, o) {
     E = new Set(),
     I = new Set();
   for (let O of d) {
-    let v = GY(O);
+    let v = getPendingActionRequestId(O);
     if (!O || !v || E.has(v)) continue;
     if (v === o?.exceptRequestId) {
-      n(
+      logForDebugging(
         `[resumeStalePromptCancel] pending_action ${v} is owned by the deferred rescue \u2014 skipping cancel`,
       );
       continue;
     }
     if (o?.keepRequestIds?.has(v)) {
-      n(
+      logForDebugging(
         `[resumeStalePromptCancel] pending_action ${v} is a live prompt nothing will re-ask \u2014 keeping it answerable`,
       );
       continue;
     }
     if (_.has(v)) {
-      n(
+      logForDebugging(
         `[resumeStalePromptCancel] pending_action ${v} is owned by this worker \u2014 redelivery handles it, skipping cancel`,
       );
       continue;
     }
     if ((E.add(v), typeof O.tool_use_id === "string" && O.tool_use_id !== ""))
       I.add(O.tool_use_id);
-    (n(
+    (logForDebugging(
       `[resumeStalePromptCancel] cancelling stale parked prompt ${v} from a prior worker`,
     ),
       e.write({ type: "control_cancel_request", request_id: v }),
@@ -1785,7 +1785,7 @@ function Yc(
   let C = v
     .map(
       (re) =>
-        `"${Nt(re.description || "(no description)")}" (task ${Nt(re.task_id)})`,
+        `"${escapeHtmlText(re.description || "(no description)")}" (task ${escapeHtmlText(re.task_id)})`,
     )
     .join(", ");
   return {
@@ -1831,7 +1831,7 @@ function Xc(e) {
 }
 function yl(e, t, { forkSession: o, transcript: d } = {}) {
   if (((t.recordedMode = Fp(e)), t.recordedMode === "invalid"))
-    n(
+    logForDebugging(
       "[planModeResume] ignoring unrecognized internal_metadata.worker_permission_mode",
       { level: "warn" },
     );
@@ -1849,7 +1849,7 @@ function yl(e, t, { forkSession: o, transcript: d } = {}) {
       return _;
     return (
       (t.source = "internal"),
-      n(
+      logForDebugging(
         `[planModeResume] re-entering plan mode from the prior worker's record (was ${_.toolPermissionContext.mode})`,
       ),
       Xc(_)
@@ -1880,7 +1880,7 @@ function Sl(e, t, o, d) {
       return E;
     return (
       (t.source = "transcript"),
-      n(
+      logForDebugging(
         `[planModeResume] re-entering plan mode from the transcript's open plan segment (was ${E.toolPermissionContext.mode})`,
       ),
       Xc(E)
@@ -1905,7 +1905,7 @@ function eu(e) {
       for (let re = C.length - 1; re >= 0; re--) {
         let B = C[re];
         if (B.type !== "tool_use") continue;
-        if (B.name === Jc && d.has(B.id) && !o.has(B.id) && !_.has(B.id))
+        if (B.name === EXIT_PLAN_MODE_TOOL_NAME && d.has(B.id) && !o.has(B.id) && !_.has(B.id))
           return "exited";
         if (B.name === ENTER_PLAN_MODE_TOOL_NAME && d.has(B.id) && (!o.has(B.id) || _.has(B.id)))
           return I();
@@ -1920,7 +1920,7 @@ function eu(e) {
     } else if (v.type === "user") {
       if (getUserMessageText(v)?.trimStart().startsWith(t)) return I();
       if (v.permissionMode === "plan") return I();
-      if (v.permissionMode !== void 0 && !v.isMeta && w_(v.origin)) E = !0;
+      if (v.permissionMode !== void 0 && !v.isMeta && isUserDrivenOrUnstampedOrigin(v.origin)) E = !0;
     }
   }
   return "none";
@@ -2004,7 +2004,7 @@ function ou(e) {
     let U = getOauthAccountInfo();
     if (d?.accountUuid && U?.accountUuid && !sameOwnerAccount(U, d))
       return (
-        n(
+        logForDebugging(
           "[bridge:sdk] The login changed since this bridge was enabled \u2014 its transcript record is left as last written",
           { level: "warn" },
         ),
@@ -2038,7 +2038,7 @@ function ou(e) {
   function X(U, ve, je) {
     if (U)
       return (
-        n(
+        logForDebugging(
           `[bridge:sdk] ${je} carries a history suppression \u2014 record left in place rather than tombstoned`,
         ),
         "final"
@@ -2046,7 +2046,7 @@ function ou(e) {
     if (ve && !sameOwnerAccount(d, ve)) {
       let ut = !d?.accountUuid;
       return (
-        n(
+        logForDebugging(
           `[bridge:sdk] ${je} is recorded under an identity that is not ${ut ? "verifiable with this enable\u2019s unreadable login" : "this login\u2019s"} \u2014 record left in place`,
         ),
         ut ? "retry" : "final"
@@ -2171,7 +2171,7 @@ function ou(e) {
     attached(U) {
       if (((_ = U), (O = void 0), U.ownerVetoed)) {
         ((E = !0),
-          n(
+          logForDebugging(
             "[bridge:sdk] Reattach was vetoed on owner identity \u2014 the transcript record is left in place; this bridge is not persisted",
             { level: "warn" },
           ));
@@ -2704,14 +2704,14 @@ async function* ku({
       let X = { reason: fromEnum(B.reason), ...w };
       if (e.resumesInterruptedTurn && !e.siblings?.length && Wp(_))
         return (
-          n(
+          logForDebugging(
             "Orphaned permission could not be applied; it stood in for the interrupted turn it was parked on, so the turn proceeds to the model on the interrupted prompt",
           ),
           logEvent("tengu_orphaned_permission_unapplied_turn_resumed", X),
           !1
         );
       return (
-        n(
+        logForDebugging(
           "Orphaned permission could not be applied and the turn has no prompt: ending the turn without a model call",
         ),
         logEvent("tengu_orphaned_permission_unapplied_turn_end", X),
@@ -2772,7 +2772,7 @@ async function* ku({
     });
   if (!findToolByName(d, t.toolName, E.options.toolAliases))
     return (
-      n(
+      logForDebugging(
         `Deferred tool resume: tool '${t.toolName}' is no longer available (MCP server disconnected or tool removed)`,
         { level: "warn" },
       ),
@@ -2803,7 +2803,7 @@ function bu({ shouldQuery: e, fromUserInput: t, fromOptions: o }) {
     }));
 }
 function Cu(e) {
-  return ive(e) || hasNonMarketplacePluginSource(e.source);
+  return isDependencyError(e) || hasNonMarketplacePluginSource(e.source);
 }
 function ia({ proactivityLevel: e, toolPermissionContext: t }) {
   return;
@@ -2903,7 +2903,7 @@ async function Pu({
             .map((ye) => ({
               plugin: ye.source,
               type: ye.type,
-              message: vm(ye),
+              message: formatPluginError(ye),
             })),
       mcpServerErrors: X ? [] : getSkippedDynamicMcpServers(),
       pluginWarnings: X
@@ -2913,7 +2913,7 @@ async function Pu({
             .map((ye) => ({
               plugin: ye.source,
               type: ye.type,
-              message: K$(ye),
+              message: formatPluginWarning(ye),
             })),
       fastModeState: getFastModeStatus(d, C),
       fastModeDisabledReason: getFastModeUnavailableReason() ?? void 0,
@@ -3317,7 +3317,7 @@ function Lu(e) {
       return Qe();
     } catch (mn) {
       return (
-        n(
+        logForDebugging(
           `headless session: ${_t} failed, the turn goes on without it: ` +
             l(mn),
           { level: "error" },
@@ -3338,12 +3338,12 @@ function Lu(e) {
         )) === void 0
       )
         (en.sever(),
-          n(
+          logForDebugging(
             `headless session: turn events still running after ${gt}ms; the turn ends without them and their late notes are dropped`,
             { level: "warn" },
           ));
     } catch (_t) {
-      n(`headless session: settling the turn events failed: ${l(_t)}`, {
+      logForDebugging(`headless session: settling the turn events failed: ${l(_t)}`, {
         level: "warn",
       });
     }
@@ -3370,7 +3370,7 @@ function Lu(e) {
     }
   }
   async function* Bn(_t, Qe, Wt) {
-    let mn = of,
+    let mn = ZERO_USAGE_TOTALS,
       Xt = e.refreshTools?.() ?? wn(e.tools),
       Gn = wn(e.commands),
       Vn = e.refreshMcpClients?.() ?? wn(e.mcpClients),
@@ -3559,7 +3559,7 @@ function Lu(e) {
     if (Qe?.taskDelivery) attachTaskDeliveryToUserMessage(Rn, Qe.taskDelivery, lr);
     if (Qe?.verifiedSlackHumanTurn && lr) markVerifiedSlackHumanTurn(Rn, lr);
     if (Zt && lr)
-      JQn(Rn, lr, {
+      applyHearthRelayDelivery(Rn, lr, {
         messageIds: Qe?.hearthRelayMessageIds,
         rows: Qe?.hearthRelayRows,
         threadTs: Qe?.hearthRelayThreadTs,
@@ -3582,10 +3582,10 @@ function Lu(e) {
     }
     let os = e.replayUserMessages ? cu(Rn) : [],
       ss = e.includePartialMessages ?? !1;
-    nZn(makeToolPermissionContextSetters(o), dr, Qe);
+    resetSkillPermissionsForTurn(makeToolPermissionContextSetters(o), dr, Qe);
     let go = Oe != null && (isExemptDefaultResolvingPick(Oe) || isModelAllowed(Oe));
     if (Oe && !go)
-      n(
+      logForDebugging(
         `Skill/command model "${Oe}" is not in the availableModels allowlist; keeping the session model`,
         { level: "warn" },
       );
@@ -3726,7 +3726,7 @@ function Lu(e) {
       ct = [],
       Ko = 0,
       ao = new Set(),
-      ho = of,
+      ho = ZERO_USAGE_TOTALS,
       vs = null,
       Fr = 0,
       Do = 0,
@@ -3789,7 +3789,7 @@ function Lu(e) {
           }
           case "user": {
             let $e = ca(De);
-            if (WT($e)) ko.push(...yo("interrupted"));
+            if (isInterruptLikeUserMessage($e)) ko.push(...yo("interrupted"));
             if ((mr.push($e), nn)) await hn.record();
             (d.push($e),
               pn("turn.step", () => en.note($e), void 0),
@@ -3863,7 +3863,7 @@ function Lu(e) {
                 Go = De.requestSentAtMs;
               if (!ls && "requestSentWallMs" in De && De.requestSentWallMs)
                 ls = De.requestSentWallMs;
-              ho = mergeStreamingUsage(of, De.event.message.usage);
+              ho = mergeStreamingUsage(ZERO_USAGE_TOTALS, De.event.message.usage);
             } else if (De.event.type === "message_delta") {
               if (De.event.delta.stop_reason != null) {
                 if (
@@ -4126,7 +4126,7 @@ function Lu(e) {
             if ((await hn.record(!0), yr)) await flushSessionStorage();
           }
         } catch (De) {
-          n("headless session: recording the turn's notes failed: " + l(De), {
+          logForDebugging("headless session: recording the turn's notes failed: " + l(De), {
             level: "error",
           });
         }
@@ -4144,7 +4144,7 @@ function Lu(e) {
         }
       }
     } catch (Wt) {
-      n(
+      logForDebugging(
         `headless session: draining an abandoned turn failed: ${Wt instanceof Error ? Wt.message : String(Wt)}`,
         { level: "warn" },
       );
@@ -4356,7 +4356,7 @@ function Hu(e) {
             } catch (C) {
               ((d = null),
                 logError(C),
-                n(
+                logForDebugging(
                   "[idleTimeout] idle check failed; chain stopped (error in error log when reporting is enabled)",
                   { level: "error" },
                 ));
@@ -4366,7 +4366,7 @@ function Hu(e) {
             let C = Date.now();
             if (!e()) ((_ = null), (d = setTimeout(O, t)));
             else if (_ !== null && C - _ >= t)
-              (n(`Exiting after ${t}ms of idle time`), gracefulShutdownSync());
+              (logForDebugging(`Exiting after ${t}ms of idle time`), gracefulShutdownSync());
             else ((_ ??= C), (d = setTimeout(O, Math.max(1, t - (C - _)))));
           };
         d = setTimeout(O, t);
@@ -4581,7 +4581,7 @@ function Mg({
   if (!v || v.length > sg || isSlashCommandInput(t) || v.startsWith("!")) return null;
   let C,
     re = 0;
-  for (let [te, ye] of ne().coordinatorEditors)
+  for (let [te, ye] of getArtifactState().coordinatorEditors)
     if (O - ye.publishedAt <= Vu) (re++, (C = { slug: te, editor: ye }));
   if (C === void 0) return null;
   if (re !== 1)
@@ -4738,7 +4738,7 @@ function Qu({ agentId: e, pendingEntry: t, taskRegistry: o }) {
 function Rg(e, t, o) {
   let { agentId: d, prompt: _, workerName: E, excerpt: I, priority: O } = e;
   (zu(e),
-    S9({
+    resumeAgentWithNotification({
       agentId: d,
       prompt: _,
       promptOrigin: xl,
@@ -4746,12 +4746,12 @@ function Rg(e, t, o) {
       canUseTool: o,
     }).catch((v) => {
       try {
-        if ((Bl(e), (e.reach = "undelivered"), v instanceof y9))
+        if ((Bl(e), (e.reach = "undelivered"), v instanceof AgentResumeInProgressError))
           logFeatureSad("artifact_editor_codelivery", "resume_in_progress");
-        else if (v instanceof d2)
+        else if (v instanceof AgentResumeTransientError)
           logFeatureSad("artifact_editor_codelivery", "resume_transient");
-        else if (v instanceof Ou)
-          (n(`[artifactEditorCodelivery] resume state error for ${d}: ${l(v)}`),
+        else if (v instanceof ResumeAgentStateError)
+          (logForDebugging(`[artifactEditorCodelivery] resume state error for ${d}: ${l(v)}`),
             ma(e),
             logFeatureSad("artifact_editor_codelivery", "resume_state"));
         else {
@@ -4766,7 +4766,7 @@ function Rg(e, t, o) {
     }));
 }
 function ma({ slug: e, agentId: t }) {
-  let o = ne().coordinatorEditors;
+  let o = getArtifactState().coordinatorEditors;
   if (o.get(e)?.agentId === t) o.delete(e);
 }
 function Ul(e, t, o) {
@@ -4790,7 +4790,7 @@ function Xu(e, t, o) {
     }));
 }
 function Dg(e, t, o) {
-  let d = ne().codeliveredFollowups;
+  let d = getArtifactState().codeliveredFollowups;
   for (let [_, E] of d) {
     if (d.size < Cg && t - E.deliveredAt <= Vu) break;
     (d.delete(_), E.revoke("evict"));
@@ -4837,7 +4837,7 @@ function ki(e) {
     let t = new Set();
     for (let { uuid: d } of e) if (d !== void 0) t.add(d);
     if (t.size === 0) return;
-    let o = ne().codeliveredFollowups;
+    let o = getArtifactState().codeliveredFollowups;
     for (let [d, _] of o)
       if (t.has(d) || t.has(_.noteUuid())) (o.delete(d), _.revoke("cancel"));
   } catch (t) {
@@ -4954,15 +4954,15 @@ function ha(e, t, o) {
     B = (N) => N !== void 0 && getMcpServerConfigCacheKey(t, N.config) !== re;
   if (B(v) || B(C))
     return (
-      n(
+      logForDebugging(
         `[MCP] ${t}: dropping a settlement whose slot config changed mid-flight`,
       ),
       O(),
       "dropped"
     );
-  if ($Ie(o.client.config, o.attemptEpoch))
+  if (isRemoteTransportWithStaleIdentity(o.client.config, o.attemptEpoch))
     return (
-      n(
+      logForDebugging(
         `[MCP] ${t}: settlement superseded by an account switch \u2014 closed, not installed (the identity boundary owns the row)`,
       ),
       O(),
@@ -5033,10 +5033,10 @@ function wi(e) {
   } = e;
   clearMcpNeedsAuthCache(E);
   let C = ga(),
-    re = jt();
+    re = getMcpClientState();
   if (!C.mcpIdentityChangedSinceLastCheck() && !O)
     return re.headlessConnectorMountInFlight;
-  let B = !O || !isAccountTokenUnresolved(y7()),
+  let B = !O || !isAccountTokenUnresolved(resolveAccountTokenAndRecord()),
     w = d(),
     X = [...t().mcp.clients, ...w.clients],
     te = new Set(),
@@ -5049,7 +5049,7 @@ function wi(e) {
       if (!v.has(Ne) || Ne.type === "pending") fe.delete(Ne.name);
   }
   for (let Ne of X) {
-    if (!xh(Ne.config) || fe.has(Ne.name)) {
+    if (!isRemoteTransport(Ne.config) || fe.has(Ne.name)) {
       N.add(getMcpServerConfigCacheKey(Ne.name, Ne.config));
       continue;
     }
@@ -5062,7 +5062,7 @@ function wi(e) {
     }
     if (Ne.type !== "disabled") te.add(Ne.name);
   }
-  (C.evictAllMcpMemosOnIdentityChange(N, xct(X)), getDeferredToolLedger().clear());
+  (C.evictAllMcpMemosOnIdentityChange(N, hasRemoteTransport(X)), getDeferredToolLedger().clear());
   let le = Object.create(null),
     xe = new Set(),
     U = e.getHostOwnedConfigs?.() ?? w.configs;
@@ -5075,7 +5075,7 @@ function wi(e) {
     }
     let pn = (le[Ne.name] ??= gt);
     if (pn !== Ne.config && getMcpServerConfigCacheKey(Ne.name, pn) !== getMcpServerConfigCacheKey(Ne.name, Ne.config))
-      n(
+      logForDebugging(
         `[MCP] ${Ne.name}: appState and dynamic-store rows disagree on config at the identity boundary \u2014 converging both under the ${Object.hasOwn(U, Ne.name) ? "host's" : "appState row's"} config and re-dialing it`,
         { level: "warn" },
       );
@@ -5095,7 +5095,7 @@ function wi(e) {
           : te.has(nt.name)
             ? [
                 !B || xe.has(nt.name)
-                  ? kLt(nt.name, nt.config)
+                  ? buildIdentityChangedServer(nt.name, nt.config)
                   : (ve.get(nt.name) ?? {
                       name: nt.name,
                       type: "pending",
@@ -5165,7 +5165,7 @@ function wi(e) {
       .then(
         () => {},
         (nt) =>
-          n(`MCP connector refetch after account switch failed: ${l(nt)}`, {
+          logForDebugging(`MCP connector refetch after account switch failed: ${l(nt)}`, {
             level: "warn",
           }),
       )
@@ -5188,13 +5188,13 @@ function wi(e) {
   return (
     C.getMcpToolsCommandsAndResources(Tt, le, E, I)
       .catch((Ne) =>
-        n(`MCP re-dial after account switch failed: ${l(Ne)}`, {
+        logForDebugging(`MCP re-dial after account switch failed: ${l(Ne)}`, {
           level: "warn",
         }),
       )
       .finally(() => {
         retryFailedMcpConnections(le, en, E, Tt).catch((Ne) =>
-          n(`MCP re-dial retry after account switch failed: ${l(Ne)}`, {
+          logForDebugging(`MCP re-dial retry after account switch failed: ${l(Ne)}`, {
             level: "warn",
           }),
         );
@@ -5211,7 +5211,7 @@ function nm(e) {
       let _ = (E) => {
         if (isShuttingDown() || e.isRunEnding()) return;
         Lg(e, d, E).catch((I) =>
-          n(`MCP reconnect after close failed for ${d.name}: ${l(I)}`, {
+          logForDebugging(`MCP reconnect after close failed for ${d.name}: ${l(I)}`, {
             level: "warn",
           }),
         );
@@ -5238,8 +5238,8 @@ async function Lg(e, t, o) {
       sleep: re = Ug,
     } = e,
     { name: B, config: w } = t,
-    X = ir(),
-    te = () => isShuttingDown() || v() || (ir() !== X && xh(w)),
+    X = getIdentityEpoch(),
+    te = () => isShuttingDown() || v() || (getIdentityEpoch() !== X && isRemoteTransport(w)),
     ye = () =>
       d().mcp.clients.find((U) => U.name === B) ??
       _().clients.find((U) => U.name === B),
@@ -5252,7 +5252,7 @@ async function Lg(e, t, o) {
   for (let U = 1; U <= MAX_MCP_RECONNECT_ATTEMPTS; U++) {
     if (U > 1) await re(getMcpReconnectDelayMs(U - 1));
     if (te() || !fe()) return;
-    let ve = ir(),
+    let ve = getIdentityEpoch(),
       je = getMcpToolPrefix(B),
       ut = d().mcp,
       Tt = {
@@ -5502,7 +5502,7 @@ function gm(e, t, o, d) {
 async function _m(e) {
   return Promise.all(
     [...e.values()].map(async (t) => {
-      if (await aae(t.path, wz()))
+      if (await hasUnverifiableAncestryWithAnchor(t.path, wz()))
         return { source: t.source, resolved: t.path };
       let o = await zg(t.path).catch(() => t.path);
       return { source: t.source, resolved: Uxe(t.path, o, wz()) ? t.path : o };
@@ -5559,7 +5559,7 @@ function Sm({
     v.previousOverride === parseUserSpecifiedModel(O.model)
   )
     qOn(Ci(e, t).laterOverride);
-  if ((Gz(_, void 0, { activeAgents: t, allAgents: t }), E)) saveAgentSetting(E.agentType);
+  if ((resolveResumedAgentDefinition(_, void 0, { activeAgents: t, allAgents: t }), E)) saveAgentSetting(E.agentType);
   let C = O !== void 0 && !isBuiltInAgent(O) && o === O.getSystemPrompt(),
     re = d !== void 0 || C,
     B = E && !isBuiltInAgent(E) ? E.getSystemPrompt() : void 0;
@@ -5589,10 +5589,10 @@ import { join as Gl } from "path";
 async function Yg() {
   try {
     let e = await readFile(getPluginZipCacheMarketplacesFile(), "utf-8"),
-      t = getKnownMarketplacesSchema().safeParse(z(e));
+      t = getKnownMarketplacesSchema().safeParse(jsonParse(e));
     if (!t.success)
       return (
-        n(`Invalid known_marketplaces.json in zip cache: ${t.error.message}`, {
+        logForDebugging(`Invalid known_marketplaces.json in zip cache: ${t.error.message}`, {
           level: "error",
         }),
         {}
@@ -5603,7 +5603,7 @@ async function Yg() {
   }
 }
 async function Xg(e) {
-  await writeFileAtomicWithMkdir(getPluginZipCacheMarketplacesFile(), b(e, null, 2));
+  await writeFileAtomicWithMkdir(getPluginZipCacheMarketplacesFile(), jsonStringify(e, null, 2));
 }
 async function Jg(e, t) {
   let o = getPluginZipCacheDir();
@@ -5634,14 +5634,14 @@ async function wm(e) {
     try {
       await Jg(E, I.installLocation);
     } catch (O) {
-      n(`Failed to save marketplace JSON for ${E}: ${O}`);
+      logForDebugging(`Failed to save marketplace JSON for ${E}: ${O}`);
     }
   }
   let _ = { ...(await Yg()), ...Object.fromEntries(o) };
   await Xg(_);
 }
 function Sa(e, t, o) {
-  let d = $t(),
+  let d = getPluginRegistryState(),
     _ = (d.headlessInstallPass ?? Promise.resolve()).then(() => e_(e, t, o));
   return (
     (d.headlessInstallPass = _.then(
@@ -5657,20 +5657,20 @@ function Sa(e, t, o) {
 }
 async function e_(e, t, o) {
   let d = isPluginZipCacheEnabled();
-  n(`installPluginsForHeadless: starting${d ? " (zip cache mode)" : ""}`);
+  logForDebugging(`installPluginsForHeadless: starting${d ? " (zip cache mode)" : ""}`);
   let _ = await syncSeedMarketplaces(),
     E,
-    I = () => E !== void 0 && $t().pluginLoadCacheOnly === E;
+    I = () => E !== void 0 && getPluginRegistryState().pluginLoadCacheOnly === E;
   if (_)
     (clearMarketplaceCaches(),
       clearPluginCache("headlessPluginInstall: seed marketplaces registered"),
       (E = refillPluginLoadCacheOnly(t, "headlessPluginInstall")));
-  if (d) (await ae().mkdir(getPluginZipCacheMarketplacesDir()), await ae().mkdir(getPluginZipCachePluginsDir()));
+  if (d) (await getFsSurface().mkdir(getPluginZipCacheMarketplacesDir()), await getFsSurface().mkdir(getPluginZipCachePluginsDir()));
   let O = Object.keys(getDeclaredMarketplaces()).length,
     v = { marketplaces_installed: 0, delisted_count: 0 },
     C = _;
   try {
-    if (O === 0) n("installPluginsForHeadless: no marketplaces declared");
+    if (O === 0) logForDebugging("installPluginsForHeadless: no marketplaces declared");
     else {
       let B = await runTimedDiagnosticStep(
         "headless_marketplace_reconcile",
@@ -5680,12 +5680,12 @@ async function e_(e, t, o) {
             onProgress: (X) => {
               if (X.type === "installed")
                 (e?.({ status: "installed", name: X.name }),
-                  n(
+                  logForDebugging(
                     `installPluginsForHeadless: installed marketplace ${X.name}`,
                   ));
               else if (X.type === "failed")
                 (e?.({ status: "failed", name: X.name, error: X.error }),
-                  n(
+                  logForDebugging(
                     `installPluginsForHeadless: failed to install marketplace ${X.name}: ${X.error}`,
                   ));
             },
@@ -5699,7 +5699,7 @@ async function e_(e, t, o) {
         }),
       );
       if (B.skipped.length > 0)
-        n(
+        logForDebugging(
           `installPluginsForHeadless: skipped ${B.skipped.length} marketplace(s) unsupported by zip cache: ${B.skipped.join(", ")}`,
         );
       let w = B.installed.length + B.updated.length;
@@ -5720,7 +5720,7 @@ async function e_(e, t, o) {
     return (bm(t, o), C);
   } catch (re) {
     if (
-      (n(`installPluginsForHeadless: failed: ${l(re)}`, { level: "error" }),
+      (logForDebugging(`installPluginsForHeadless: failed: ${l(re)}`, { level: "error" }),
       C && !I())
     ) {
       if (isHoverRestEnabled() && t !== void 0)
@@ -5791,7 +5791,7 @@ function Mi({ tasks: e, waits: t, now: o }) {
     if (I.expired) continue;
     if (o - I.firstSeen >= TERMINAL_NOTIFICATION_GRACE_MS) {
       ((I.expired = !0),
-        n(
+        logForDebugging(
           `[print] task ${E.id} is terminal but its completion notification did not enqueue within ${TERMINAL_NOTIFICATION_GRACE_MS}ms \u2014 exiting without it (enqueue dropped, or post-completion work still in flight)`,
           { level: "warn" },
         ));
@@ -6035,17 +6035,17 @@ function Lm({
 function Nm(e, t, o, d) {
   for (let _ of e)
     if (isLocalBashTask(_))
-      (n(
+      (logForDebugging(
         `print wind-down: killing background shell ${_.id} ("${_.description}") after ${ed}ms grace`,
       ),
         killLocalShellTask(_.id, t));
     else if (isObserverAgent(_))
-      (n(
+      (logForDebugging(
         `print wind-down: killing mid-delivery observer ${_.id} after ${ed}ms grace`,
       ),
         killLocalAgentTask(_.id, t));
     else if (d && isLocalAgentOrWorkflow(_) && _.status === "running") {
-      n(
+      logForDebugging(
         `print wind-down: killing background ${_.type} task ${_.id} ("${_.description}") at the wait ceiling`,
       );
       try {
@@ -6060,7 +6060,7 @@ function Nm(e, t, o, d) {
       }
     } else {
       if (
-        (n(
+        (logForDebugging(
           `print wind-down: no longer waiting on background ${_.type} task ${_.id}`,
         ),
         isLocalAgentTask(_))
@@ -6084,7 +6084,7 @@ function rd(e) {
       let o = e.get(t.agentId);
       if (o === void 0 || !isTerminalTaskStatus(o.status)) continue;
     }
-    n(
+    logForDebugging(
       `print teardown: killing shell ${t.id} ("${t.description}") still running at stream close`,
     );
     try {
@@ -6122,7 +6122,7 @@ function od({
   let I = Object.values(d().tasks ?? {});
   if (!s_(e, I)) return !1;
   return (
-    n(
+    logForDebugging(
       `print budget halt: total cost ${su()} reached --max-budget-usd ${e}; stopping background agents`,
     ),
     process.stderr
@@ -6205,13 +6205,13 @@ function $m(e, t) {
         if (((I = jm(X, t)), te && I !== "idle" && I !== "idle_background"))
           re("idle_end");
       } catch (te) {
-        n(
+        logForDebugging(
           `tengu_tool_cpu_by_phase: could not record a session state change; telemetry continues from the next one: ${l(te)}`,
           { level: "error" },
         );
       }
     }),
-    w = Et(() => {
+    w = registerCleanup(() => {
       (C(), re("exit"));
     });
   qm = () => {
@@ -6264,7 +6264,7 @@ function ld(e, t) {
       total_cost_usd: t.total_cost_usd,
       duration_api_ms: t.duration_api_ms,
       modelUsage: t.modelUsage,
-      usage: o.reduce((_, E) => addUsageTotals(_, E.usage), of),
+      usage: o.reduce((_, E) => addUsageTotals(_, E.usage), ZERO_USAGE_TOTALS),
       num_turns: o.reduce((_, E) => _ + E.num_turns, 0),
       duration_ms: o.reduce((_, E) => _ + E.duration_ms, 0),
       permission_denials: o.flatMap((_) => _.permission_denials),
@@ -6373,7 +6373,7 @@ async function Jm(e) {
   };
 }
 function ef(e) {
-  (n(
+  (logForDebugging(
     `reload_plugins: the install pass the reload stopped waiting for ended ${e.outcome} after ${e.durationMs}ms (installed=${e.installedCount} failed=${e.failedCount})`,
   ),
     logEvent("tengu_cloud_plugins_late_install", {
@@ -6386,12 +6386,12 @@ function ef(e) {
 function tf(e) {
   if (!e.ran) {
     if (e.reason !== "not_admitted")
-      n(
+      logForDebugging(
         `reload_plugins: marketplace reconcile skipped (${e.reason} after ${e.flagWaitMs}ms)`,
       );
     return;
   }
-  n(
+  logForDebugging(
     `reload_plugins: marketplace reconcile ${e.outcome} in ${e.durationMs}ms (installed=${e.installedCount} failed=${e.failedCount})`,
   );
   let t = {
@@ -6412,7 +6412,7 @@ function tf(e) {
 function nf(e) {
   if (!e.sdkUrl || !e.remoteSessionId || e.environmentKind !== void 0)
     return { admitted: !1, reason: "not_managed_cloud_worker" };
-  if (e.entrypoint !== void 0 && !lHe.has(e.entrypoint))
+  if (e.entrypoint !== void 0 && !MANAGED_CLOUD_WORKER_ENTRYPOINTS.has(e.entrypoint))
     return { admitted: !1, reason: "entrypoint" };
   if (e.channelOff) return { admitted: !1, reason: "session_channel_off" };
   if (e.hermetic) return { admitted: !1, reason: "hermetic" };
@@ -6639,7 +6639,7 @@ function x_(e, t) {
   );
 }
 function hf(e) {
-  return isFromCurrentAgent(e) && !AC(e) && !isPassiveCommand(e);
+  return isFromCurrentAgent(e) && !isPollEventCommand(e) && !isPassiveCommand(e);
 }
 function U_(e, t) {
   return parseInt(t ?? "1", 10) > 1 && e === "archived";
@@ -6650,11 +6650,11 @@ function Uf(e) {
 function F_(e, t) {
   if (t.status === "needs-confirm") return [];
   let o = createUserMessage({
-    content: `<${COMMAND_NAME_TAG}>/ultrareview${e ? " " + Nt(e) : ""}</${COMMAND_NAME_TAG}>`,
+    content: `<${COMMAND_NAME_TAG}>/ultrareview${e ? " " + escapeHtmlText(e) : ""}</${COMMAND_NAME_TAG}>`,
     isMeta: !0,
   });
   if (t.status === "launched")
-    return [o, createUserMessage({ content: `<${LOCAL_COMMAND_STDOUT_TAG}>${Nt(t.message)}</${LOCAL_COMMAND_STDOUT_TAG}>`, isMeta: !0 })];
+    return [o, createUserMessage({ content: `<${LOCAL_COMMAND_STDOUT_TAG}>${escapeHtmlText(t.message)}</${LOCAL_COMMAND_STDOUT_TAG}>`, isMeta: !0 })];
   let d =
     t.status === "blocked" && t.actionUrl
       ? `${t.message}
@@ -6663,7 +6663,7 @@ More: ${t.actionUrl}`
   return [
     o,
     createUserMessage({
-      content: `<${LOCAL_COMMAND_STDERR_TAG}>Ultrareview did not launch: ${Nt(d)}</${LOCAL_COMMAND_STDERR_TAG}>`,
+      content: `<${LOCAL_COMMAND_STDERR_TAG}>Ultrareview did not launch: ${escapeHtmlText(d)}</${LOCAL_COMMAND_STDERR_TAG}>`,
       isMeta: !0,
     }),
   ];
@@ -6671,10 +6671,10 @@ More: ${t.actionUrl}`
 function L_(e) {
   let t = e?.internal?.declared_dialog_kinds;
   if (!Array.isArray(t) || Rxe() !== void 0) return;
-  let o = p6(t);
+  let o = normalizeDeclaredDialogKinds(t);
   (zXt(o, "restored"),
     logEvent("tengu_supported_dialog_kinds_restored", { n_kinds: fromNumber(o.length) }),
-    n(
+    logForDebugging(
       `[print.ts] restored ${o.length} declared dialog kind(s) from prior worker epoch`,
     ));
 }
@@ -6682,7 +6682,7 @@ function N_(e) {
   if (e?.internal?.memory_toggled_off !== !0) return;
   (f_e(!0),
     logEvent("tengu_memory_toggle_restored", {}),
-    n("[print.ts] restored /pause-memory toggle from prior worker epoch"));
+    logForDebugging("[print.ts] restored /pause-memory toggle from prior worker epoch"));
 }
 function q_(e, t) {
   e.notifyInternalMetadataChanged({ exclude_dynamic_sections: t ? !0 : null });
@@ -6700,11 +6700,11 @@ async function j_(e, t) {
     ),
     getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_exclude_dynamic_restore_killswitch", !1))
   ) {
-    n("[print.ts] excludeDynamicSections restore skipped: kill switch set");
+    logForDebugging("[print.ts] excludeDynamicSections restore skipped: kill switch set");
     return;
   }
   ((t.excludeDynamicSections = !0),
-    n("[print.ts] restored excludeDynamicSections from prior worker epoch"));
+    logForDebugging("[print.ts] restored excludeDynamicSections from prior worker epoch"));
 }
 function $_(e, { getAppState: t, sessionState: o }) {}
 function W_(e, t) {
@@ -6758,7 +6758,7 @@ function V_(e, t) {
   };
 }
 function K_(e, t) {
-  if (!(e instanceof Uz)) V_(e, t);
+  if (!(e instanceof RemoteIO)) V_(e, t);
 }
 function G_(e, t, o) {
   let d = e.message.content;
@@ -6770,19 +6770,19 @@ function z_(e, t, o) {
   return e;
 }
 function Q_(e, t) {
-  if (!f6(t)) return {};
-  let o = pGt(e);
+  if (!isProjectsRelayOrigin(t)) return {};
+  let o = parseHearthRelayMessageIds(e);
   if (o === void 0) return {};
-  let d = XQn(e, o),
-    _ = YQn(e);
+  let d = validateHearthRelayRows(e, o),
+    _ = parseHearthRelayThreadTs(e);
   return { messageIds: o, ...(d && { rows: d }), ...(_ && { threadTs: _ }) };
 }
 function Y_(e, t, o) {
-  if (!f6(t)) {
+  if (!isProjectsRelayOrigin(t)) {
     logFeatureSad("bridge_projects_relay", getHearthResolvedRowsMode() === "off" ? "flag_off" : "no_relay_ids");
     return;
   }
-  let d = pGt(e);
+  let d = parseHearthRelayMessageIds(e);
   if (o === void 0 && e.relay_rows !== void 0) {
     logFeatureBad("bridge_projects_relay", "rows_rejected", { id_count: d?.length ?? 0 });
     return;
@@ -6802,13 +6802,13 @@ function X_(e, t, o, d) {
       getActivityObservation(e),
       isProjectsHumanOriginEnabled(),
       getHearthResolvedRowsMode() !== "off" &&
-        n6n({ relayMessageIds: pGt(e), isSynthetic: e.isSynthetic }),
+        n6n({ relayMessageIds: parseHearthRelayMessageIds(e), isSynthetic: e.isSynthetic }),
     );
   return;
 }
 function J_(e, t, o) {
   let d = getInboundOriginOverride(e, t.client_platform, t.inbound_origin);
-  if (!o && d?.kind === "human" && iQe(t.origin, !1)) return;
+  if (!o && d?.kind === "human" && lacksHumanOrigin(t.origin, !1)) return;
   return d;
 }
 function ey({
@@ -6821,11 +6821,11 @@ function ey({
   let E =
       e.client_composed === !0 ||
       e.seeded_summon === !0 ||
-      (d !== void 0 && !w_(d)) ||
-      (e.isSynthetic === !0 && _ !== void 0 && !w_(_)),
+      (d !== void 0 && !isUserDrivenOrUnstampedOrigin(d)) ||
+      (e.isSynthetic === !0 && _ !== void 0 && !isUserDrivenOrUnstampedOrigin(_)),
     I =
       !t &&
-      !iQe(e.origin, e.isSynthetic) &&
+      !lacksHumanOrigin(e.origin, e.isSynthetic) &&
       e.is_meta !== !0 &&
       !o &&
       e.inbound_origin === void 0 &&
@@ -6841,7 +6841,7 @@ function ey({
 async function Sf(e, t) {
   await settleHeldPeerMessagesOnShutdown();
   let o = t.dequeueAllMatching(isFromCurrentAgent);
-  sfe(o.filter(AC), "session teardown");
+  settleDroppedPollEvents(o.filter(isPollEventCommand), "session teardown");
   for (let d of o)
     if (d.uuid !== void 0) e.onCommandLifecycle?.(d.uuid, "discarded");
 }
@@ -7002,7 +7002,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   }
   fe("connecting_transport");
   let le = Oy(t, C);
-  if ((b7e(ownBridgePeerAddress), C.sdkUrl || C.outputFormat === "stream-json"))
+  if ((setOwnBridgePeerAddressResolver(ownBridgePeerAddress), C.sdkUrl || C.outputFormat === "stream-json"))
     sessionTransportRegistry.of(e).setActive(le);
   else sessionTransportRegistry.of(e).markLocalTransport();
   let xe =
@@ -7020,7 +7020,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       .then((fn) => fn.startHostedWorkerVitalsEmitter(Oe))
       .catch(() => writeDiagnosticsEvent("warn", "vitals_emitter_import_failed", {}));
   }
-  let U = W1n({
+  let U = getDirSyncWorkerDecision({
     entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
     disabled: a.CLAUDE_CODE_DISABLE_DIR_SYNC,
     gitSwitch: a.CLAUDE_CODE_DIR_SYNC_GIT,
@@ -7039,7 +7039,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
       managedCloudWorker: xe,
       dirSyncStarts: U.start,
       hermetic: isHermeticModeEnabled(),
-      spawnEnv: CK,
+      spawnEnv: getPreSettingsEnvSnapshot,
       accountHome: rf,
       currentConfigHome: lf,
     });
@@ -7063,7 +7063,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
           writeDiagnosticsEvent("warn", "dir_sync_mid_turn_import_failed", {});
         }));
   if (ut !== void 0) Tt.register(Ty(ut.handle));
-  let en = O0t({
+  let en = getPluginForwardingAdmission({
     sdkUrl: Boolean(C.sdkUrl),
     remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
     environmentKind: a.CLAUDE_CODE_ENVIRONMENT_KIND,
@@ -7073,7 +7073,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
   });
   if (!en.admitted && en.reason === "disabled")
     writeDiagnosticsEvent("info", "plugin_forwarding_worker_disabled", {});
-  let Ne = P0t({
+  let Ne = getHookForwardingAdmission({
       sdkUrl: Boolean(C.sdkUrl),
       remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
       environmentKind: a.CLAUDE_CODE_ENVIRONMENT_KIND,
@@ -7108,7 +7108,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     un = isPermissionPromptsDisabled(C.permissionPrompts);
   if (un) {
     if (((le.hostAnswersElicitations = !1), Ot !== void 0))
-      n(
+      logForDebugging(
         `--permission-prompts none: permission prompts are answered with a local deny; the ${Ot === "stdio" ? "SDK host" : "--permission-prompt-tool"} is not consulted`,
       );
   }
@@ -7117,7 +7117,7 @@ async function runHeadless(e, t, o, d, _, E, I, O, v, C) {
     if (SandboxManager.isSandboxRequired()) {
       if (C.outputFormat === "stream-json") {
         let Oe = isRemoteTransportPersistent(e) ? SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE : `${SANDBOX_REQUIRED_UNAVAILABLE_MESSAGE}: ${Bn}`;
-        if (isRemoteTransportPersistent(e)) n(`sandbox unavailable detail: ${Bn}`, { level: "error" });
+        if (isRemoteTransportPersistent(e)) logForDebugging(`sandbox unavailable detail: ${Bn}`, { level: "error" });
         (Da(le.sessionState, Oe),
           await le.write(
             buildErrorResultMessage(K(), [
@@ -7234,15 +7234,15 @@ Error: sandbox required but unavailable: ${Bn}
   if (((pn.current = sn), vt)) setSdkQueueEnqueueListener(null);
   let qr = takePendingInitialUserMessage();
   if (qr) le.prependUserMessage(qr);
-  let To = hQt({
+  let To = resolveResumedAgentSettingRestore({
     hasStreamingInput: w,
     explicitAgentFlag: C.agent,
     mainThreadAgentType: H_(),
     resumedAgentSetting: Xt,
   });
   if (To.attempt && Xt) {
-    let Oe = await HZ(Gn, C.storageV5),
-      { agentDefinition: fn } = Gz(
+    let Oe = await loadSessionHomeAgentDefinitions(Gn, C.storageV5),
+      { agentDefinition: fn } = resolveResumedAgentDefinition(
         Xt,
         void 0,
         { activeAgents: v, allAgents: v },
@@ -7272,10 +7272,10 @@ Error: sandbox required but unavailable: ${Bn}
       saveAgentSetting(fn.agentType);
     }
   }
-  if (_r) vHe(sn);
-  OZ(sn, _r);
-  let Fe = IZ(sn, Ft.mainLoopModel, (Oe) => sn.push(createSystemInfoMessage(Oe, "warning"))),
-    it = Fe ? PZ(sn, Fe, _r, C.storageV5, C.credentials) : void 0;
+  if (_r) neutralizeRefusalFallbackOnFork(sn);
+  rearmCyberRefusalHeaderOnResume(sn, _r);
+  let Fe = resolveResumedSessionModel(sn, Ft.mainLoopModel, (Oe) => sn.push(createSystemInfoMessage(Oe, "warning"))),
+    it = Fe ? restoreRefusalFallbackLatch(sn, Fe, _r, C.storageV5, C.credentials) : void 0;
   if (it)
     d((Oe) => {
       if (Oe.mainLoopModel === it) return Oe;
@@ -7318,7 +7318,7 @@ Error: sandbox required but unavailable: ${Bn}
     }
     if (Vt.skippedLinks)
       process.stderr
-        .write(`Warning: ${Vt.skippedLinks} tracked ${Vt.skippedLinks === 1 ? "path was" : "paths were"} skipped: ${mAt}. Run with --debug for the paths.
+        .write(`Warning: ${Vt.skippedLinks} tracked ${Vt.skippedLinks === 1 ? "path was" : "paths were"} skipped: ${SKIPPED_TRACKED_PATHS_REASON}. Run with --debug for the paths.
 `);
     (writeToStdout(`Files rewound to state at message ${C.rewindFiles}
 `),
@@ -7379,7 +7379,7 @@ Error: sandbox required but unavailable: ${Bn}
       )
         .then(() => {
           if (!isMcpTasksEnabled()) {
-            n(
+            logForDebugging(
               "[print.ts] MCP task sidecar restore skipped: tasks gate off after the flag settle",
             );
             return;
@@ -7404,7 +7404,7 @@ Error: sandbox required but unavailable: ${Bn}
       er = gl([...Ur, ...Rn]);
     if (er.length > 0) {
       if (
-        (n(`[print.ts] ${er.length} orphaned background task(s) after restart`),
+        (logForDebugging(`[print.ts] ${er.length} orphaned background task(s) after restart`),
         (Xr = gl(Rn)),
         Xr.length > 0)
       )
@@ -7412,7 +7412,7 @@ Error: sandbox required but unavailable: ${Bn}
           initializeGrowthBook().catch(() => null),
           pd,
         );
-      sn.push(createUserMessage({ content: oJn(er), isMeta: !0 }));
+      sn.push(createUserMessage({ content: formatContainerRestartReminder(er), isMeta: !0 }));
       for (let hn of er)
         emitTaskNotification(hn.task_id, "stopped", {
           summary: `Stopped by a worker restart: ${hn.description || hn.task_id}`,
@@ -7425,12 +7425,12 @@ Error: sandbox required but unavailable: ${Bn}
           sleep(20000, void 0, { unref: !0 }).then(() => !1),
         ]);
       } catch (hn) {
-        n(
+        logForDebugging(
           `[print.ts] orphaned-task notification flush failed; keeping orphans pending for re-emit: ${ge(hn).message}`,
         );
       }
       if (!mr)
-        n(
+        logForDebugging(
           "[print.ts] orphaned-task notification delivery unconfirmed; keeping orphans pending for re-emit",
         );
       le.sessionState.notifyInternalMetadataChanged({
@@ -7475,7 +7475,7 @@ Error: sandbox required but unavailable: ${Bn}
     reattached: ns,
   } = await ay(Fn, Cn, sn, _t, Qe, (Oe) => findUnresolvedToolUse(Oe, C.storageV5));
   if (ns)
-    n(
+    logForDebugging(
       `[print.ts] restored parked prompt's tool_use ${Fn?.external?.pending_action?.tool_use_id} is off the resume chain but unresolved in the transcript \u2014 treating it as the interrupted turn's`,
     );
   let Jr = dy(Fn, Zn, I),
@@ -7494,13 +7494,13 @@ Error: sandbox required but unavailable: ${Bn}
     }),
     Wo = new Set();
   if (Er)
-    n(
+    logForDebugging(
       `[print.ts] deferring stale parked prompt cancel for ${Er.request_id} \u2014 a persisted control_response may arrive via SSE catch-up`,
     );
   try {
     Wo = Qc(le, Fn, { exceptRequestId: Er?.request_id, keepRequestIds: Jr });
   } catch (Oe) {
-    n(`[print.ts] stale parked prompt cancel failed: ${Oe}`, {
+    logForDebugging(`[print.ts] stale parked prompt cancel failed: ${Oe}`, {
       level: "error",
     });
   }
@@ -7590,7 +7590,7 @@ Error: sandbox required but unavailable: ${Bn}
       if (!zn || zn.type !== "result") {
         (process.stderr.write(`Error: No messages returned from query
 `),
-          n("runHeadless: no result message returned from query", {
+          logForDebugging("runHeadless: no result message returned from query", {
             level: "error",
           }),
           gracefulShutdownSync(1));
@@ -7598,14 +7598,14 @@ Error: sandbox required but unavailable: ${Bn}
       }
       if (C.verbose) {
         writeToStdout(
-          b(Ir) +
+          jsonStringify(Ir) +
             `
 `,
         );
         break;
       }
       writeToStdout(
-        b(zn) +
+        jsonStringify(zn) +
           `
 `,
       );
@@ -7616,7 +7616,7 @@ Error: sandbox required but unavailable: ${Bn}
       if (!zn || zn.type !== "result") {
         (process.stderr.write(`Error: No messages returned from query
 `),
-          n("runHeadless: no result message returned from query", {
+          logForDebugging("runHeadless: no result message returned from query", {
             level: "error",
           }),
           gracefulShutdownSync(1));
@@ -7665,7 +7665,7 @@ ${zn.result}`;
       ]),
       sleep(5000, void 0, { unref: !0 }),
     ]));
-  let dr = le instanceof Uz && le.permanentCloseCode !== void 0;
+  let dr = le instanceof RemoteIO && le.permanentCloseCode !== void 0;
   if (N && zn?.type !== "result") {
     let Oe;
     if (dr) Oe = "transport closed permanently";
@@ -7686,7 +7686,7 @@ function oy(e) {
 }
 function Lf(e, t, o, d) {
   let _ = e?.external?.pending_action,
-    E = GY(_);
+    E = getPendingActionRequestId(_);
   if (!_ || !E || typeof _.tool_use_id !== "string" || !_.tool_use_id)
     return "none";
   if (typeof _.tool_name === "string" && _.tool_name.startsWith("dialog:"))
@@ -7727,7 +7727,7 @@ async function ay(e, t, o, d, _, E) {
     d === void 0 ||
     d.size > 0 ||
     !O ||
-    !GY(O) ||
+    !getPendingActionRequestId(O) ||
     typeof O.tool_use_id !== "string" ||
     !O.tool_use_id ||
     (typeof O.tool_name === "string" && O.tool_name.startsWith("dialog:"))
@@ -7747,7 +7747,7 @@ async function ay(e, t, o, d, _, E) {
       if (X.type !== "user" && X.type !== "assistant") return !1;
       let te = Date.parse(X.timestamp);
       if (Number.isFinite(te) && te <= B) return !1;
-      if (X.type === "assistant") return X.message.model !== fc;
+      if (X.type === "assistant") return X.message.model !== SYNTHETIC_MODEL_NAME;
       return (
         !(t.message.isMeta === !0 && X.uuid === t.message.uuid) &&
         !isToolResultMessage(X) &&
@@ -7768,7 +7768,7 @@ function dy(e, t, o) {
     _ = e?.external?.pending_actions,
     E = [e?.external?.pending_action, ...(Array.isArray(_) ? _ : [])];
   for (let I of E) {
-    let O = GY(I);
+    let O = getPendingActionRequestId(I);
     if (!I || !O || typeof I.tool_name !== "string") continue;
     if (t?.has(I.tool_use_id)) continue;
     let v = findToolByName(o, I.tool_name),
@@ -7781,7 +7781,7 @@ function cy(e, t, o, d, _) {
   if (!a.CLAUDE_CODE_RESUME_INTERRUPTED_TURN) return;
   if (!t || t.kind === "none") return;
   let E = e?.external?.pending_action,
-    I = GY(E);
+    I = getPendingActionRequestId(E);
   if (!E || !I || !E.tool_use_id) return;
   if (typeof E.tool_name === "string" && E.tool_name.startsWith("dialog:"))
     return;
@@ -7872,7 +7872,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   if (
     (e.mcpSessionWiring.registerConnections(je),
     ComputerUseLockOwnerContext.of(e).acquire(ComputerUseMcpStateStore.over(ve)),
-    t instanceof Uz)
+    t instanceof RemoteIO)
   )
     $m(t.sessionState, v);
   let Tt = Ic.of(e),
@@ -7894,7 +7894,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Qe = () => Ft() || _t(),
     Wt = (p) =>
       p.shouldQuery === !1 ||
-      AC(p) ||
+      isPollEventCommand(p) ||
       p.pollEmptyDispatch === !0 ||
       p.passive === !0,
     mn = () => U.getCommandQueue().some((p) => isFromCurrentAgent(p) && !Wt(p)),
@@ -7953,7 +7953,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             (r(),
               logFeatureBad("per_task_stop_sparing", "budget_poll_sweep_throw"),
               logError(W),
-              n(
+              logForDebugging(
                 "[print.ts] spared-budget poll sweep failed; poll disarmed (error in error log when reporting is enabled)",
                 { level: "error" },
               ));
@@ -8006,7 +8006,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     dr = ou({ storageV5: w.storageV5 });
   function Oe(p, T) {
     return {
-      session_url: wa(p.bridgeSessionId, p.sessionIngressUrl),
+      session_url: buildClaudeAiSessionUrl(p.bridgeSessionId, p.sessionIngressUrl),
       connect_url: buildSessionWebUrl(p.environmentId, p.sessionIngressUrl),
       environment_id: p.environmentId,
       bridge_epoch: T,
@@ -8035,7 +8035,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         T = [],
         x = [];
       for (let r of ct.slice(p)) {
-        if (!xme(r) || hn.has(r.uuid)) continue;
+        if (!shouldRelayMessageToBridge(r) || hn.has(r.uuid)) continue;
         if (isCompactionMessage(r) && isCompactPairWithheldFromRemote()) {
           x.push(r);
           continue;
@@ -8064,7 +8064,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       for (let r of x) hn.add(r.uuid);
       er = ct.length;
     } catch (p) {
-      n(`[bridge:sdk] transcript forward failed: ${ge(p).message}`, {
+      logForDebugging(`[bridge:sdk] transcript forward failed: ${ge(p).message}`, {
         level: "error",
       });
     }
@@ -8075,12 +8075,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     if (Zt && p.length > 0)
       try {
         let T = p
-          .filter(yAt)
+          .filter(isSdkStreamEvent)
           .filter((x) => x.type !== "conversation_reset" || isBridgeStateFramesEnabled())
           .map(redactCompactError);
         if (T.length > 0) Zt.writeSdkMessages(T);
       } catch (T) {
-        n(`[bridge:sdk] task-event forward failed: ${ge(T).message}`, {
+        logForDebugging(`[bridge:sdk] task-event forward failed: ${ge(T).message}`, {
           level: "error",
         });
       }
@@ -8105,7 +8105,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         return;
       Zt.writeSdkMessages([redactCompactError(p)]);
     } catch (T) {
-      n(
+      logForDebugging(
         `[bridge:sdk] ${"subtype" in p ? p.subtype : p.type} forward failed: ${ge(T).message}`,
         { level: "error" },
       );
@@ -8153,7 +8153,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     t.setOnStreamClosedWithParkedQuestion(() => {
       if ((va(), Zn(), Ut && !Ut.signal.aborted)) Ut.abort(userAbortReason("shutdown"));
     }),
-    Et(async () => {
+    registerCleanup(async () => {
       if (Zt) dr.persist(Zt);
       if (un) (clearTimeout(un), (un = void 0));
       if (N && nt && !Ft() && !Cn)
@@ -8243,7 +8243,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             !V.has(de) &&
             resolveHeldPeerMessage(de, "cancelled") === "dropped"
           )
-            (n(
+            (logForDebugging(
               "[cross-session-inbound] headless: held peer message expired (no approval surface) \u2014 dropped with an expired receipt",
             ),
               vf(W, Se, de));
@@ -8264,7 +8264,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       "../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js",
     );
     p((T, x, r) => {
-      n(
+      logForDebugging(
         `[headless] cross-session hold-receipt: status=${T} from=${String(x ?? "(unknown)")}${r ? ` reason=${r.dropReason ?? "unknown"} count=${r.droppedCount}` : ""}`,
       );
     });
@@ -8359,7 +8359,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if (x) t.sessionState.notifyMetadataChanged(x);
         }
       } catch (T) {
-        n(`[print] rate_limit listener failed: ${l(T)}`, { level: "error" });
+        logForDebugging(`[print] rate_limit listener failed: ${l(T)}`, { level: "error" });
       }
     },
     yo = subscribeToLimitStatusChanges(ks),
@@ -8454,7 +8454,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       origin: resolveQueueOrigin(X.message),
       skipAttachments: shouldSkipAttachments(X.message),
       ...(X.message.taskDelivery && { taskDelivery: X.message.taskDelivery }),
-      ...tXe(X.message),
+      ...pickHearthRelayFields(X.message),
     };
     logResumeInterruptedTurn("print", X.message, !!N, le);
     let T = isRemoteToolForwardingSwitchOn() ? (w.servedCallsToAdopt ?? []) : [],
@@ -8476,7 +8476,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       )
         t.sessionState.adoptRestoredPendingAction();
       let L = bs();
-      (n(
+      (logForDebugging(
         `[print.ts] Adopting ${L.length} served call(s) the previous worker had in flight, the parked one (toolUseID=${N.tool_use_id}) included, instead of holding its prompt`,
       ),
         U.enqueue(jr(L)),
@@ -8488,19 +8488,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           parked_request_sha12: hashForTelemetry(N.request_id),
         }));
     } else if (N)
-      (n(
+      (logForDebugging(
         `[print.ts] Deferring interrupted-turn rescue for parked permission toolUseID=${N.tool_use_id}${br.length > 0 ? ` (with ${br.length} adopted served call(s) riding its resolution)` : ""}`,
       ),
         (nt = p));
     else if (br.length > 0)
-      (n(
+      (logForDebugging(
         `[print.ts] Adopting ${br.length} served call(s) the previous worker had in flight instead of re-running the interrupted turn: ${br.map(({ call: L }) => L.tool_use_id).join(",")}`,
       ),
         U.enqueue(jr(br)),
         (br = []),
         ko());
     else
-      (n(`[print.ts] Auto-resuming interrupted turn (kind: ${X.kind})`),
+      (logForDebugging(`[print.ts] Auto-resuming interrupted turn (kind: ${X.kind})`),
         removeInterruptedMessage(ct, X.message),
         U.enqueue(p));
     if ((w.journaledServedCalls ?? 0) > 0 || T.length > 0)
@@ -8575,7 +8575,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       Array.isArray(T.message.content) &&
       T.message.content.length === 1 &&
       T.message.content[0]?.type === "text" &&
-      T.message.content[0].text === ER
+      T.message.content[0].text === NO_RESPONSE_REQUESTED_TEXT
     ) {
       if ((ct.splice(p + 1, 1), er > p + 1)) er -= 1;
       os();
@@ -8609,7 +8609,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       wake_monitor_count: T.monitor,
       wake_shell_count: T.shell,
     }),
-      n(
+      logForDebugging(
         "[print.ts] Waking the session for background tasks lost to the restart",
       ),
       U.enqueuePendingNotification(p));
@@ -8620,7 +8620,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     $r = $e.map((p) => {
       let T = p.value === null ? "default" : p.value,
         x = T === "default" ? getDefaultMainLoopModel() : parseUserSpecifiedModel(T),
-        r = zh(x),
+        r = modelSupportsEffort(x),
         L = canUseAdaptiveThinking(x),
         de = modelSupportsFastMode(p.value),
         V = isFastModeSupported(x);
@@ -8634,9 +8634,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }),
         ...(r && {
           supportsEffort: !0,
-          supportedEffortLevels: im.filter((W) => {
-            if (W === "max" && !FN(x)) return !1;
-            if (W === "xhigh" && !i6(x)) return !1;
+          supportedEffortLevels: EFFORT_LEVELS.filter((W) => {
+            if (W === "max" && !modelSupportsMaxEffort(x)) return !1;
+            if (W === "xhigh" && !modelSupportsXHighEffort(x)) return !1;
             return !0;
           }),
         }),
@@ -8756,7 +8756,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               let r = (L) => {
                 if (L === null) return;
                 if (L.level === "debug") {
-                  n(`[homeSeed] ${L.text}`);
+                  logForDebugging(`[homeSeed] ${L.text}`);
                   return;
                 }
                 let de = createSystemInfoMessage(L.text, L.level);
@@ -8783,13 +8783,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           if (T.transportErrorState)
             T.transportErrorState.pendingElicitations++;
           try {
-            logMCPDebug(x, `Elicitation request received in print mode: ${b(r)}`);
+            logMCPDebug(x, `Elicitation request received in print mode: ${jsonStringify(r)}`);
             let de = r.params.mode === "url" ? "url" : "form";
             logEvent("tengu_mcp_elicitation_shown", { mode: fromEnum(de) });
             let V = await pf().runElicitationHooks(x, r.params, L.signal);
             if (V)
               return (
-                logMCPDebug(x, `Elicitation resolved by hook: ${b(V)}`),
+                logMCPDebug(x, `Elicitation resolved by hook: ${jsonStringify(V)}`),
                 logEvent("tengu_mcp_elicitation_response", {
                   mode: fromEnum(de),
                   action: fromEnum(V.action),
@@ -8915,7 +8915,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Ba = new Map(),
     xi = async (p, T, x) => {
       let r = Yt(),
-        L = ir(),
+        L = getIdentityEpoch(),
         de = (W) => ({ ...W, attemptEpoch: L }),
         V = {};
       Cs.set(p, V);
@@ -9006,7 +9006,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let x = Fo(p, T);
       if (
         x === "superseded" ||
-        (x === "dropped" && $Ie(T.client.config, T.attemptEpoch))
+        (x === "dropped" && isRemoteTransportWithStaleIdentity(T.client.config, T.attemptEpoch))
       )
         return T.client.type === "failed" &&
           T.client.errorCode === "IDENTITY_CHANGED"
@@ -9031,7 +9031,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     },
     ep = (p, T) => {
       (async () => {
-        let x = ir();
+        let x = getIdentityEpoch();
         try {
           let r = v().mcp.clients.find((Sn) => Sn.name === p);
           if (r?.type !== "cached" || getMcpServerConfigCacheKey(p, r.config) !== getMcpServerConfigCacheKey(p, T)) return;
@@ -9058,7 +9058,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             w.storageV5,
             w.credentials,
           );
-          if (ir() !== x) {
+          if (getIdentityEpoch() !== x) {
             if (W.type === "connected")
               L.detachAndCloseConnection(W).catch(() => {});
             return;
@@ -9077,9 +9077,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             return;
           }
           if (W.type !== "connected") return;
-          gE(p);
-          let Se = await Qx(p, T);
-          if (ir() !== x) {
+          evictMemoizedDiscoveryCachePaths(p);
+          let Se = await getDiscoveryCacheLegToken(p, T);
+          if (getIdentityEpoch() !== x) {
             L.detachAndCloseConnection(W).catch(() => {});
             return;
           }
@@ -9120,7 +9120,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             grantLeg: Se,
           });
         } catch (r) {
-          n(
+          logForDebugging(
             `Failed to adopt cached MCP server ${p} after lazy connect: ${l(r)}`,
             { level: "warn" },
           );
@@ -9128,11 +9128,11 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       })();
     },
     np = async (p, T) => {
-      let x = ir();
+      let x = getIdentityEpoch();
       for (let r of MCP_RETRY_BACKOFF_MS) {
         await sleep(r);
         let L = v().mcp.clients.find((Ye) => Ye.name === p);
-        if (ir() !== x || L?.type !== "failed" || isMcpServerDisabled(p)) return;
+        if (getIdentityEpoch() !== x || L?.type !== "failed" || isMcpServerDisabled(p)) return;
         if (Cs.has(p)) return;
         let de = mcpDialBlockCause(p, T);
         if (de) {
@@ -9184,15 +9184,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         L = v().mcp.clients.find((de) => de.name === x);
       if (L?.type !== "cached" || getMcpServerConfigCacheKey(x, L.config) !== getMcpServerConfigCacheKey(x, r)) return;
       if (
-        (Fo(x, { client: p, tools: [], commands: [], attemptEpoch: ir() }),
+        (Fo(x, { client: p, tools: [], commands: [], attemptEpoch: getIdentityEpoch() }),
         isRetryableMcpFailure(p))
       )
         np(x, r);
-      if (T) Oct(x, r);
+      if (T) recordLazyDialFailureStrike(x, r);
     };
   function rp() {
     if ((initMcpDiscoveryCacheKillSwitch(), !isDiscoveryCacheEnabled())) return;
-    (jt().headlessMcpTeardown?.(),
+    (getMcpClientState().headlessMcpTeardown?.(),
       Pxe((V) => {
         (Zs([V]), La([V]));
       }));
@@ -9200,7 +9200,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       T = cachedRowDialFailedEmitter.subscribe((V, W) => {
         (Yt().takeSettledCachedDialFailure(V.name, V.config), bd(V, W));
       }),
-      x = Act(
+      x = setIdentityChangeHandler(
         () =>
           void wi({
             ...xo,
@@ -9209,9 +9209,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             getHostOwnedConfigs: Ms,
           }),
       );
-    if (Cct())
+    if (consumeUnownedIdentityTrip())
       queueMicrotask(() => {
-        if (jt().headlessMcpTeardown !== L) return;
+        if (getMcpClientState().headlessMcpTeardown !== L) return;
         wi({
           ...xo,
           storageV5: w.storageV5,
@@ -9223,14 +9223,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     let r,
       L = () => {
         (r?.(), (r = void 0), p(), T(), x(), Pxe(void 0));
-        let V = jt();
+        let V = getMcpClientState();
         if (
           ((V.headlessConnectorMountInFlight = void 0),
           V.headlessMcpTeardown === L)
         )
           V.headlessMcpTeardown = null;
       };
-    ((jt().headlessMcpTeardown = L), (r = Et(async () => L())));
+    ((getMcpClientState().headlessMcpTeardown = L), (r = registerCleanup(async () => L())));
     let de = v().mcp.clients.filter((V) => V.type === "cached");
     if (de.length > 0)
       (async () => {
@@ -9320,7 +9320,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           refusalFallbackLaneEnabled: isRefusalFallbackEnabled(),
           fable5LaunchShow: !1,
           startupAnnouncement: serializeStartupAnnouncement(),
-          autoDefaultLaunchEnabled: GEt(),
+          autoDefaultLaunchEnabled: isAutoDefaultLaunchEnabled(),
           onAutoDefaultNudgeEvent: (W, Se) => handleAutoDefaultNudgeEventFromHost(W, Se, w.storageV5),
         }),
         pm(kn));
@@ -9393,7 +9393,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       getExternalPermissionMode(T.toolPermissionContext.mode),
       getFastModeStatus(p, T.fastMode),
       getFastModeUnavailableReason(p) ?? "",
-      getEffectiveEffortLevel(p, Ya(T)) ?? "",
+      getEffectiveEffortLevel(p, getSessionEffortLevel(T)) ?? "",
     ].join("\x00");
   }
   function Lo(p, T) {
@@ -9422,15 +9422,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             loadedSkills: r.filter((V) => V.terminalOriented !== !0),
             mcpCommands: de.mcp.commands,
             fastMode: de.fastMode,
-            effortValue: Ya(de),
+            effortValue: getSessionEffortLevel(de),
           }),
         ]),
           (As = L),
           (Ds = Ec()),
-          n(`[bridge:sdk] system/init announced (${p})`),
+          logForDebugging(`[bridge:sdk] system/init announced (${p})`),
           logFeatureOk("bridge_sdk_state_announce", { trigger: fromEnum(p) }));
       } catch (x) {
-        (n(
+        (logForDebugging(
           `[bridge:sdk] system/init announce failed (${p}): ${ge(x).message}`,
           { level: "error" },
         ),
@@ -9442,7 +9442,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     mode: v().toolPermissionContext.mode,
     modelForSession: v().mainLoopModelForSession,
     fastMode: v().fastMode,
-    effort: Ya(v()),
+    effort: getSessionEffortLevel(v()),
   };
   re(() => {
     let p = v(),
@@ -9450,13 +9450,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         p.toolPermissionContext.mode === ai.mode &&
         p.mainLoopModelForSession === ai.modelForSession &&
         p.fastMode === ai.fastMode &&
-        Ya(p) === ai.effort;
+        getSessionEffortLevel(p) === ai.effort;
     if (!T)
       ai = {
         mode: p.toolPermissionContext.mode,
         modelForSession: p.mainLoopModelForSession,
         fastMode: p.fastMode,
-        effort: Ya(p),
+        effort: getSessionEffortLevel(p),
       };
     if (!Zt) return;
     if (T && (As === void 0 || Ec() === Ds)) return;
@@ -9541,7 +9541,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if ("tool" in Je) {
           if (Je.unsatisfiable && !qi)
             ((qi = !0),
-              n(
+              logForDebugging(
                 `Init JSON schema: ${formatUnsatisfiableSchemaReason(Je.unsatisfiable)}: ${Je.unsatisfiable.message}`,
                 { level: "warn" },
               ));
@@ -9551,7 +9551,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             logEvent("tengu_structured_output_failure", {
               error: S("Invalid JSON schema"),
             }),
-            n(
+            logForDebugging(
               `Init JSON schema rejected, structured output disabled: ${Je.error}`,
               { level: "error" },
             ));
@@ -9599,7 +9599,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       replayUserMessages: w.replayUserMessages,
       includePartialMessages: w.includePartialMessages,
       trackFirstFrameUpload:
-        t instanceof Uz ? (p) => t.trackFirstFrameUpload(p) : void 0,
+        t instanceof RemoteIO ? (p) => t.trackFirstFrameUpload(p) : void 0,
       onCommandLifecycle: t.onCommandLifecycle,
       sessionState: t.sessionState,
       requestDialog: Srt() ? A_(t, U) : void 0,
@@ -9783,12 +9783,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       Al(Ga(Ka()), { abortController: p, userSpecifiedModel: An }),
     canUseTool: I,
     toast: (p, T, x) => {
-      n(
+      logForDebugging(
         `$.ui.toast (${p}): no notification bar in a headless session; kept here: ${T}`,
       );
     },
     status: (p, T) => {
-      n(
+      logForDebugging(
         `$.ui.status (${p}): no status row in a headless session; kept here: ${T ?? "(cleared)"}`,
       );
     },
@@ -9796,8 +9796,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       let { scope: x, ...r } = T;
       if (!isMcpTransportConnectable(r) || r.type === "sdk")
         return (
-          n(
-            `$.tool.register: server ${b(p)} has a config this session cannot connect (${String(r.type)}); not added`,
+          logForDebugging(
+            `$.tool.register: server ${jsonStringify(p)} has a config this session cannot connect (${String(r.type)}); not added`,
             { level: "warn" },
           ),
           Promise.resolve()
@@ -9816,7 +9816,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   };
   bindHookContext(za);
   let sp = raiseSessionStartOnce({
-    loaded: $t().hookRegistrationInFlight,
+    loaded: getPluginRegistryState().hookRegistrationInFlight,
     surface: null,
     interactive: !1,
   });
@@ -9884,7 +9884,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   async function qd(p) {
     try {
-      await runTimedDiagnosticStep("headless_managed_settings_wait", () => _ee());
+      await runTimedDiagnosticStep("headless_managed_settings_wait", () => awaitRemoteSettingsLoaded());
     } catch (x) {
       logError(x);
     }
@@ -9903,7 +9903,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         wo = { start: performance.now() };
       if (T) await Us(x, "plugin_install_diff");
     } catch (x) {
-      n(`Headless plugin install / MCP reconcile failed: ${l(x)}`, {
+      logForDebugging(`Headless plugin install / MCP reconcile failed: ${l(x)}`, {
         level: "error",
       });
     }
@@ -10064,7 +10064,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       deferConnect: i_e(),
     });
     if (V) ms();
-    n(
+    logForDebugging(
       `Headless MCP refresh: added=${de.added.length}, removed=${de.removed.length}`,
     );
   }
@@ -10144,7 +10144,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if ($i > 0) {
           let T = sleep($i).then(() => "timeout");
           if ((await Promise.race([Xo, T])) === "timeout")
-            (n(
+            (logForDebugging(
               `CLAUDE_CODE_SYNC_PLUGIN_INSTALL: plugin installation timed out after ${$i}ms`,
               { level: "error" },
             ),
@@ -10202,7 +10202,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             "needs-auth" || Wn instanceof McpAuthError)
         )
           je.markNeedsAuth(ht.name);
-        n(`mcp_call: lazy connect of cached server "${p}" failed: ${l(Wn)}`);
+        logForDebugging(`mcp_call: lazy connect of cached server "${p}" failed: ${l(Wn)}`);
         return;
       }
     }
@@ -10268,7 +10268,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Zd = () => {
       let p = getInitialSettings();
       return {
-        skillOverrides: b(p.skillOverrides ?? {}),
+        skillOverrides: jsonStringify(p.skillOverrides ?? {}),
         bundledSkillsDisabled: areBundledSkillsDisabled(p),
       };
     },
@@ -10366,7 +10366,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (!isShuttingDown() && ac()) {
         if (!isShuttingDown())
           return (
-            n(
+            logForDebugging(
               "[print.ts] Input closed with active swarm, injected shutdown prompt \u2014 teardown handed to its lineage",
             ),
             "handed-off"
@@ -10389,7 +10389,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (r === "deadline") {
           let L = v();
           return (
-            n(
+            logForDebugging(
               `[print.ts] Team teardown park gave up after ${_f()}ms (shutdown prompt injected: ${tn}) with ${Object.keys(L.teamContext?.teammates ?? {}).length} roster teammate(s) and ${countMatching(Object.values(L.tasks), (de) => de.type === "in_process_teammate" && de.status === "running")} in-process teammate task(s) still active; tearing down anyway`,
             ),
             logEvent("tengu_headless_team_teardown_park_timeout", {
@@ -10487,7 +10487,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             try {
               if ((await zi(), V))
                 await Us(Qd(), "late_plugin_install").catch((W) =>
-                  n(`late plugin install: applyPluginMcpDiff failed: ${l(W)}`, {
+                  logForDebugging(`late plugin install: applyPluginMcpDiff failed: ${l(W)}`, {
                     level: "error",
                   }),
                 );
@@ -10512,7 +10512,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             let In = U.dequeue(Hn);
             if (In)
               return (
-                n(
+                logForDebugging(
                   `drainCommandQueue: prioritizing orphaned-permission for toolUseID=${In.orphanedPermission?.permissionResult?.toolUseID ?? "<unknown>"}`,
                 ),
                 In
@@ -10539,7 +10539,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   U.peek(Hn) === void 0 &&
                   U.peek((to) => isFromCurrentAgent(to) && isVerifiedSlackHumanTurn(to)) === void 0
                 ) {
-                  let to = U.peek((Dr) => isCurrentAgentCommand(Dr) && !AC(Dr) && isKnownQueueMode(Dr.mode));
+                  let to = U.peek((Dr) => isCurrentAgentCommand(Dr) && !isPollEventCommand(Dr) && isKnownQueueMode(Dr.mode));
                   if (to !== void 0) return U.dequeue((Dr) => Dr === to);
                   return (
                     (Sn = cn),
@@ -10557,10 +10557,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 if (
                   Nn?.mode === "poll-event" &&
                   Nn.pollEvent !== void 0 &&
-                  oXe(Nn.pollEvent.kind)
+                  looksLikeReservedEventKind(Nn.pollEvent.kind)
                 )
                   return (
-                    sfe(
+                    settleDroppedPollEvents(
                       [Nn],
                       "reserved kind refused legacy value dispatch; redelivered on reconnect",
                     ),
@@ -10656,7 +10656,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   (pe) => pe.uuid !== void 0 && U.consumeCancelPending(pe.uuid),
                 );
               if (ro.length > 0) {
-                (sfe(ro.filter(AC), "cancelled by the host"), ki(ro));
+                (settleDroppedPollEvents(ro.filter(isPollEventCommand), "cancelled by the host"), ki(ro));
                 for (let _e of ro)
                   if (!U.consumeCancelPendingAcked(_e.uuid))
                     t.onCommandLifecycle?.(_e.uuid, "cancelled");
@@ -10690,9 +10690,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               if (!Qe() || Mo) T();
               for (let pe of Nn) t.onCommandLifecycle?.(pe, "started");
               let Ns = V.mode === "poll-event" ? [...Nn] : [];
-              if (V.mode === "poll-event") (oCe(cn), logFeatureOk("poll_event_delivery"));
-              let St = V.mode === "poll-event" ? wrapSystemReminder(ofe([rCe(V)], 0)) : V.value;
-              if (t instanceof Uz && V.mode === "prompt" && V.uuid !== void 0)
+              if (V.mode === "poll-event") (settleDeliveredPollEvents(cn), logFeatureOk("poll_event_delivery"));
+              let St = V.mode === "poll-event" ? wrapSystemReminder(formatEventDelivery([getPollEventEnvelope(V)], 0)) : V.value;
+              if (t instanceof RemoteIO && V.mode === "prompt" && V.uuid !== void 0)
                 logEvent("tengu_bridge_message_received", { is_repl: !1 });
               if (V.shouldQuery !== !1) {
                 if (
@@ -10832,7 +10832,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         if (
                           qe.type === "assistant" &&
                           qe.parent_tool_use_id === null &&
-                          qe.message.model !== fc &&
+                          qe.message.model !== SYNTHETIC_MODEL_NAME &&
                           qe.message.model !== To
                         )
                           ((To = qe.message.model),
@@ -10882,8 +10882,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           if (
                             D.shouldQuery !== !1 &&
                             Ve &&
-                            (Fr.get(CC).outstanding() > 0 ||
-                              U.peek(sXe) !== void 0)
+                            (Fr.get(AsyncEvalDispatcher).outstanding() > 0 ||
+                              U.peek(isPollEventCommandForCurrentAgent) !== void 0)
                           ) {
                             En.push(qe);
                             continue;
@@ -11139,7 +11139,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }
             let Ns = Ve && !ro,
               St = !Mo.swept && wr.some((gn) => Ns || !isParkedMcpTask(gn)),
-              Mn = Ve && !Bo && Fr.get(CC).outstanding() > 0;
+              Mn = Ve && !Bo && Fr.get(AsyncEvalDispatcher).outstanding() > 0;
             if ((St || fr || Nn || Mn) && !Ut?.signal.aborted && !dn && !isShuttingDown()) {
               if (((W = !0), !fr)) {
                 if (((it = "waiting_for_agents"), vt !== void 0)) {
@@ -11315,7 +11315,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 if (at.length > 0 && jn < MARK_READ_FAILURE_CAP && !nn) nn = !0;
                 else {
                   if (
-                    (n("[print.ts] No more active teammates, stopping poll"),
+                    (logForDebugging("[print.ts] No more active teammates, stopping poll"),
                     at.length === 0)
                   )
                     ((jn = 0), (an = !1), (nn = !1));
@@ -11332,7 +11332,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 }
               else nn = !1;
               if (at.length > 0) {
-                n(`[print.ts] Team-lead found ${at.length} unread messages`);
+                logForDebugging(`[print.ts] Team-lead found ${at.length} unread messages`);
                 let ht = await markMessagesAsRead(
                   "team-lead",
                   Je.teamContext?.teamName,
@@ -11342,7 +11342,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 if (ht) ((jn = 0), (an = !1));
                 else {
                   if ((jn++, Ye && jn < MARK_READ_FAILURE_CAP)) {
-                    (n(
+                    (logForDebugging(
                       `[print.ts] Could not mark ${at.length} inbox message(s) read (${jn}/${MARK_READ_FAILURE_CAP}); retrying next poll`,
                       { level: "warn" },
                     ),
@@ -11351,7 +11351,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     continue;
                   }
                   if (
-                    (n(
+                    (logForDebugging(
                       `[print.ts] Could not mark ${at.length} inbox message(s) read for ${jn} polls; processing the batch unmarked`,
                       { level: "warn" },
                     ),
@@ -11365,7 +11365,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   let In = isShutdownApproved(Lr.text);
                   if (In && Hn) {
                     let Sn = In.from;
-                    n(`[print.ts] Processing shutdown_approved from ${Sn}`);
+                    logForDebugging(`[print.ts] Processing shutdown_approved from ${Sn}`);
                     let wr = Je.teamContext?.teammates
                       ? Object.entries(Je.teamContext.teammates).find(
                           ([, fr]) => fr.name === Sn,
@@ -11373,7 +11373,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       : void 0;
                     if (wr)
                       (await removeTeammateFromTeamFile(Hn, { agentId: wr, name: Sn }, w.storageV5),
-                        n(`[print.ts] Removed ${Sn} from team file`),
+                        logForDebugging(`[print.ts] Removed ${Sn} from team file`),
                         await unassignAgentTasks(Hn, wr, Sn, "shutdown", w.storageV5),
                         C((fr) => {
                           if (!fr.teamContext?.teammates) return fr;
@@ -11403,7 +11403,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 return;
               }
               if (((jn = 0), (an = !1), Ve && ac())) {
-                n(
+                logForDebugging(
                   "[print.ts] Input closed with active teammates, injected shutdown prompt",
                 );
                 return;
@@ -11455,7 +11455,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             (await Sf(t, U),
             rs(),
             await flushPendingBackgroundWork(),
-            nd({ shuttingDown: isShuttingDown(), remoteTransport: t instanceof Uz }))
+            nd({ shuttingDown: isShuttingDown(), remoteTransport: t instanceof RemoteIO }))
           )
             rd(createTaskRegistry(v, C));
           setSdkQueueEnqueueListener(null);
@@ -11480,7 +11480,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         if (rl.has(x.agentId)) continue;
         rl.add(x.agentId);
         let r = !1;
-        S9({
+        resumeAgentWithNotification({
           agentId: x.agentId,
           prompt: x.prompt,
           promptOrigin: { kind: "task-notification" },
@@ -11491,14 +11491,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           canUseTool: I,
         })
           .catch((L) => {
-            if (((r = !0), L instanceof uM || L instanceof KSe))
+            if (((r = !0), L instanceof AgentStoppedByUserError || L instanceof AgentResumePermanentlyRefusedError))
               (U.remove(x.consumedCommands, { reason: "agent_stopped" }),
                 releaseSettledKeepalives(x.agentId, T.toolUseContext.taskRegistry),
-                n(
+                logForDebugging(
                   `[wakeRouter] dropping ${x.consumedCommands.length} event(s) for ${x.agentId}: ${l(L)}`,
                 ));
-            else if (L instanceof Ou)
-              n(`[wakeRouter] resume state error for ${x.agentId}: ${l(L)}`);
+            else if (L instanceof ResumeAgentStateError)
+              logForDebugging(`[wakeRouter] resume state error for ${x.agentId}: ${l(L)}`);
             else logError(L);
           })
           .finally(() => {
@@ -11515,7 +11515,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   )
     Ar();
   if (ye)
-    (n(
+    (logForDebugging(
       `[print.ts] Auto-resuming deferred tool: ${ye.toolName} (${ye.toolUseID})`,
     ),
       U.enqueue({
@@ -11551,8 +11551,8 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     } = import.meta.require("../../02-功能模块/跨会话消息(UDS)/MAX_IDLE_SUBSCRIPTIONS.7zp91kjd.js");
     (p((W) => {
       if (
-        (n(
-          `[headless] cross-session idle notice: kind=${W.kind} label=${Nu(W.label)}`,
+        (logForDebugging(
+          `[headless] cross-session idle notice: kind=${W.kind} label=${formatRedactedPreview(W.label)}`,
         ),
         !W.modelVisible)
       )
@@ -11565,19 +11565,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         import.meta.require("../../02-功能模块/Artifact发布-渲染/chunk-54kz7amv.js");
       W({
         yielded: (Ce) => {
-          (n(
+          (logForDebugging(
             `[headless] yielded Artifact comment replies for ${Ce.length} Artifact(s) to another session of this conversation`,
           ),
             Se("yielded", Ce.length));
         },
         reverted: (Ce) => {
-          (n(
+          (logForDebugging(
             `[headless] ${Ce.length} yielded Artifact reply hand-off(s) came back to this session`,
           ),
             Se("reverted", Ce.length));
         },
         stoppedElsewhere: (Ce) => {
-          (n(
+          (logForDebugging(
             `[headless] ${Ce.length} yielded Artifact reply hand-off(s) came back stopped by the other session`,
           ),
             Se("stopped_elsewhere", Ce.length));
@@ -11586,13 +11586,13 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     }
     (T(
       (W, Se) => {
-        n(
-          `[headless] cross-session idle subscription recorded from ${Nu(W)}${Se ? "" : " (unverifiable sender)"}`,
+        logForDebugging(
+          `[headless] cross-session idle subscription recorded from ${formatRedactedPreview(W)}${Se ? "" : " (unverifiable sender)"}`,
         );
       },
       (W) => {
         if (W > 0)
-          n(
+          logForDebugging(
             `[headless] ${W} more cross-session idle subscription(s) were recorded before this handler mounted`,
           );
       },
@@ -11639,7 +11639,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               if (Ve) return;
               p(W, L);
             } catch (W) {
-              n(
+              logForDebugging(
                 `[ScheduledTasks] loop.md v5 expansion failed; fire skipped: ${W}`,
               );
             }
@@ -11662,7 +11662,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       Ct.enqueue(buildControlSuccessResponse(p.request_id, T));
     },
     Wr = function (p, T) {
-      if (isRemoteTransportPersistent(e)) n(`${p}: ${T}`, { level: "error" });
+      if (isRemoteTransportPersistent(e)) logForDebugging(`${p}: ${T}`, { level: "error" });
     },
     Be = function (p, T) {
       Ct.enqueue(buildControlErrorResponse(p.request_id, T));
@@ -11702,7 +11702,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }),
           flushRecord: () => t.flushSessionState(),
           getWorkerEpoch: () => a.CLAUDE_CODE_WORKER_EPOCH,
-          getDispatchedDigest: () => CK()[x],
+          getDispatchedDigest: () => getPreSettingsEnvSnapshot()[x],
         };
       })()),
     ta = function () {
@@ -11744,7 +11744,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         r,
         L;
       try {
-        r = ot(T.directory);
+        r = resolvePath(T.directory);
       } catch {
         throw new R(
           "register_repo_root: target path could not be resolved",
@@ -11823,15 +11823,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           credentials: w.credentials,
         })
           .then(({ results: Ye, systemMessages: at }) => {
-            for (let ht of at) n(`DirectoryAdded hook: ${ht}`);
+            for (let ht of at) logForDebugging(`DirectoryAdded hook: ${ht}`);
             for (let ht of Ye)
               if (!ht.succeeded && ht.output)
-                n(`DirectoryAdded hook failed: ${ht.output}`, {
+                logForDebugging(`DirectoryAdded hook failed: ${ht.output}`, {
                   level: "error",
                 });
           })
           .catch((Ye) => {
-            n(`DirectoryAdded hook exec failed: ${Ye}`, { level: "error" });
+            logForDebugging(`DirectoryAdded hook exec failed: ${Ye}`, { level: "error" });
           })
           .finally(Je),
         T.reload_claude_md)
@@ -11969,7 +11969,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             }
           } catch (Je) {
             ((Se = "retire_write_failed"),
-              n(
+              logForDebugging(
                 `[print.ts] retiring parked permission(s) toolUseIDs=${p.join(",")} in the transcript failed: ${l(Je)}`,
                 { level: "warn" },
               ));
@@ -12039,7 +12039,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         ((Bn = !0),
           t.sessionState.notifyStateChanged("requires_action", N.details),
           (Gn = !1),
-          n(
+          logForDebugging(
             `[print.ts] No persisted control_response for parked permission toolUseID=${N.tool_use_id} \u2014 holding it answerable (CLAUDE_CODE_HOLD_UNANSWERED_PARKED_PERMISSION); not re-running, not retiring`,
           ),
           logEvent("tengu_resume_parked_permission", {
@@ -12065,7 +12065,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           (r || N.kind === "adopted" ? mn() : U.hasUserIntentCommandsInQueue()))
       ) {
         if (
-          (n(
+          (logForDebugging(
             `[print.ts] Parked permission toolUseID=${N.tool_use_id} superseded by new input during ${r ? "hold" : "wait"} (${p}) \u2014 dropping deferred rescue`,
           ),
           logEvent("tengu_resume_parked_permission", {
@@ -12092,7 +12092,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           a.CLAUDE_CODE_RETIRE_UNANSWERED_PARKED_PERMISSION) ||
         p === "denied"
       ) {
-        (n(
+        (logForDebugging(
           N.kind === "adopted"
             ? `[print.ts] Adopted sidechain parked permission toolUseID=${N.tool_use_id} ${p === "denied" ? "denied" : "unanswered"} \u2014 retiring the interrupted turn's toolUseIDs=${N.turnToolUseIds.join(",")} (CLAUDE_CODE_ADOPT_UNDERIVABLE_PARKED_PERMISSION); not re-running it`
             : `[print.ts] No persisted control_response for parked permission toolUseID=${N.tool_use_id} \u2014 retiring it unanswered (CLAUDE_CODE_RETIRE_UNANSWERED_PARKED_PERMISSION); not re-running the interrupted turn`,
@@ -12101,7 +12101,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Di());
         return;
       }
-      n(
+      logForDebugging(
         `[print.ts] No consumable persisted control_response for parked permission toolUseID=${N.tool_use_id} (${p}) \u2014 falling back to cancel + re-ask`,
       );
       let L = bs();
@@ -12144,7 +12144,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     if (x && un) (clearTimeout(un), (un = void 0));
     if (x && _t()) t.sessionState.adoptRestoredPendingAction();
     if (On() && T !== void 0 && T === N?.tool_use_id && !x) {
-      n(
+      logForDebugging(
         `[print.ts] Dropping control_response for inherited parked permission toolUseID=${T}: request_id does not match the pending prompt (hold switch)`,
         { level: "warn" },
       );
@@ -12181,7 +12181,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       });
     } catch (de) {
       if (x)
-        (n(
+        (logForDebugging(
           `[print.ts] orphan handler threw for parked permission toolUseID=${N?.tool_use_id}: ${de}`,
           { level: "error" },
         ),
@@ -12193,7 +12193,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         ((nt = void 0),
           ko(),
           t.write({ type: "control_cancel_request", request_id: N.request_id }),
-          n(
+          logForDebugging(
             `[print.ts] Parked permission toolUseID=${T} resolved by persisted control_response \u2014 dropping deferred rescue`,
           ),
           logEvent("tengu_resume_parked_permission", {
@@ -12245,7 +12245,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             await r(await mc());
           })()
             .catch((r) => {
-              n(`[print.ts] workflow_launch resume failed: ${ge(r).message}`);
+              logForDebugging(`[print.ts] workflow_launch resume failed: ${ge(r).message}`);
             })
             .finally(() => {
               if ((pn--, !gt)) Ki.start();
@@ -12303,7 +12303,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 let Ae = U.removeByFilter(isFromCurrentAgent, { reason: "cleared_on_cancel" });
                 (ki(Ae),
                   (Me = bucketNotificationsByOrigin(Ae)),
-                  sfe(Ae.filter(AC), "interrupt cleared the queue"));
+                  settleDroppedPollEvents(Ae.filter(isPollEventCommand), "interrupt cleared the queue"));
                 let Le = new Set(
                   [...Me.staleRows, ...Me.watchLifecycle].map((pe) => pe.uuid),
                 );
@@ -12329,14 +12329,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               reenqueueBucketNotifications(U, Me, F);
             } else if (r.request.subtype === "end_session") {
               if (U_(r.request.reason, process.env.CLAUDE_CODE_WORKER_EPOCH)) {
-                (n(
+                (logForDebugging(
                   "[print.ts] stale 'archived' end_session ignored on epoch>1 \u2014 from prior lifecycle",
                 ),
                   Xe(r));
                 continue;
               }
               if (
-                (n(
+                (logForDebugging(
                   `[print.ts] end_session received, reason=${r.request.reason ?? "unspecified"}`,
                 ),
                 (dn = !0),
@@ -12372,7 +12372,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               let ue = r.request.sdkMcpServerConfigs,
                 ie = isRecord(ue) ? ue : void 0;
               if (ue != null && ie === void 0)
-                n(
+                logForDebugging(
                   "initialize: ignoring sdkMcpServerConfigs (not an object keyed by server name)",
                   { level: "warn" },
                 );
@@ -12428,12 +12428,12 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     We = isRecord(Ze) ? Ze.timeout : void 0,
                     ft = parsePositiveInteger(We);
                   if (We !== void 0 && ft === void 0)
-                    n(
+                    logForDebugging(
                       `initialize: ignoring invalid timeout for SDK MCP server '${He}'`,
                     );
                   if (et) {
                     if (et.timeout !== ft)
-                      n(
+                      logForDebugging(
                         `initialize: SDK MCP server '${He}' is already registered; its timeout change is ignored until the server is removed and re-added`,
                       );
                     continue;
@@ -12606,7 +12606,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         );
                       await Us(_e, "set_cwd");
                     } catch (Ae) {
-                      n(
+                      logForDebugging(
                         `set_cwd: re-homing plugins/MCP for the new directory failed (continuing): ${l(Ae)}`,
                         { level: "error" },
                       );
@@ -12745,26 +12745,26 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   : U.dequeueAllMatching((ue) => ue.uuid === D);
               if (F.length === 0 && !U.isFoldInFlight(D))
                 U.markCancelPending(D);
-              (sfe(F.filter(AC), "cancelled by the host"), ki(F), Zr());
+              (settleDroppedPollEvents(F.filter(isPollEventCommand), "cancelled by the host"), ki(F), Zr());
               for (let ue of F)
                 if (ue.uuid !== void 0)
                   t.onCommandLifecycle?.(ue.uuid, "cancelled");
               Xe(r, { cancelled: F.length > 0 });
             } else if (r.request.subtype === "poll_event")
-              if (!Rj())
+              if (!isPollEventChannelEnabled())
                 Be(r, "poll-event delivery is not enabled for this session");
               else if (
                 typeof r.request.kind !== "string" ||
                 typeof r.request.event !== "string" ||
                 (r.request.wake !== void 0 &&
                   typeof r.request.wake !== "boolean") ||
-                (r.request.authority !== void 0 && !eZn(r.request.authority)) ||
+                (r.request.authority !== void 0 && !isValidEventAuthority(r.request.authority)) ||
                 (r.request.sender_id !== void 0 &&
                   typeof r.request.sender_id !== "string") ||
                 (r.request.sender_text !== void 0 &&
                   typeof r.request.sender_text !== "string") ||
                 (r.request.sender_text !== void 0 &&
-                  Buffer.byteLength(r.request.sender_text, "utf8") > gN) ||
+                  Buffer.byteLength(r.request.sender_text, "utf8") > MAX_EVENT_ENVELOPE_BYTES) ||
                 (r.request.sender_id !== void 0 &&
                   Buffer.byteLength(r.request.sender_id, "utf8") > 1024)
               )
@@ -12778,9 +12778,9 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   ue = r.request.wake,
                   ie =
                     r.request.sender_text !== void 0 &&
-                    r.request.event.includes(Zre(r.request.sender_text));
+                    r.request.event.includes(escapeHtmlEntities(r.request.sender_text));
                 if (r.request.sender_text !== void 0 && !ie)
-                  n(
+                  logForDebugging(
                     "poll_event: sender_text dropped from provenance \u2014 its escaped form is not embedded in the event element (derivation contract violated)",
                   );
                 let Me =
@@ -12800,23 +12800,23 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       r,
                       `poll event rejected: poll events require permission mode "auto" (got "${Ae}") \u2014 the event channel's protections route event-driven commands through the auto-mode classifier. Run with --permission-mode auto.`,
                     ));
-                else if (countMatching(U.getCommandQueueSnapshot(), AC) + cl >= rfe)
+                else if (countMatching(U.getCommandQueueSnapshot(), isPollEventCommand) + cl >= MAX_QUEUED_POLL_EVENTS)
                   (logFeatureBad("poll_event_delivery", "queue_cap_peek"),
-                    Be(r, `poll event rejected: ${rfe} events already queued`));
+                    Be(r, `poll event rejected: ${MAX_QUEUED_POLL_EVENTS} events already queued`));
                 else {
                   let Le = (() => {
-                    if (oXe(D))
+                    if (looksLikeReservedEventKind(D))
                       return (
                         logFeatureBad("poll_event_delivery", "reserved_kind"),
                         `kind "${Qn(D)}" is reserved for a server-authored producer`
                       );
                     let pe = Buffer.byteLength(F, "utf8");
-                    if (pe > gN)
+                    if (pe > MAX_EVENT_ENVELOPE_BYTES)
                       return (
                         logFeatureBad("poll_event_delivery", "envelope_too_large"),
-                        `envelope is ${pe} bytes (cap ${gN})`
+                        `envelope is ${pe} bytes (cap ${MAX_EVENT_ENVELOPE_BYTES})`
                       );
-                    let _e = twt(F);
+                    let _e = validateEventEnvelope(F);
                     if (!_e.ok)
                       return (
                         logFeatureBad("poll_event_delivery", "validation_failed"),
@@ -12850,7 +12850,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               }
                           } catch (_e) {
                             if (yt(_e))
-                              n("poll-event enqueue hook pass aborted");
+                              logForDebugging("poll-event enqueue hook pass aborted");
                             else logError(_e);
                           }
                           if ((cl--, pe !== void 0)) {
@@ -12995,14 +12995,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     precedingAssistantUuid: null,
                     error: Ze === null ? "stale target" : "unseen later turn",
                   });
-                else if (rZn(ct, _e))
+                else if (isPollToolResultMessage(ct, _e))
                   Xe(r, {
                     rewound: !1,
                     prefillText: null,
                     precedingAssistantUuid: null,
                     error: "poll tool_result target",
                   });
-                else if (gGt(ct, _e))
+                else if (hasDeliveredPollEventsFrom(ct, _e))
                   Xe(r, {
                     rewound: !1,
                     prefillText: null,
@@ -13125,7 +13125,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         (await mirrorLeafCheckpointToRemote(on.uuid, void 0),
                           await t.flushInternalEvents());
                     } catch {
-                      n(
+                      logForDebugging(
                         "rewind persist-failure remote heal failed (persistence already degraded)",
                       );
                     }
@@ -13160,7 +13160,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       }
                     } catch (on) {
                       if (yt(on))
-                        n("rewind-refusal heal aborted by stream teardown");
+                        logForDebugging("rewind-refusal heal aborted by stream teardown");
                       else logError(on);
                     }
                     Xe(r, {
@@ -13297,7 +13297,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               }
             else if (r.request.subtype === "seed_read_state") {
               try {
-                let D = ot(r.request.path),
+                let D = resolvePath(r.request.path),
                   F = validateUntrustedPath(
                     r.request.path,
                     D,
@@ -13396,7 +13396,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 { authoritative: !0, caller: "mcp_set_servers" },
               );
               if (Object.keys(F.errors).length > 0)
-                Wr("mcp_set_servers", b(F.errors));
+                Wr("mcp_set_servers", jsonStringify(F.errors));
               if ((Xe(r, { ...F, errors: By(e, F.errors) }), ue)) ms();
             } else if (r.request.subtype === "reload_plugins")
               try {
@@ -13406,7 +13406,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     readFlag: isCloudPluginForwardingFlagOn,
                     flagWaitCapMs: dd,
                     install: (Le) =>
-                      _ee().then(() => Sa(Le, w.storageV5, w.credentials)),
+                      awaitRemoteSettingsLoaded().then(() => Sa(Le, w.storageV5, w.credentials)),
                     installTimeoutMs: getPluginSyncInstallTimeoutMs(),
                     onLateEnd: (Le) => {
                       (ef(Le), (Ja = !0));
@@ -13432,7 +13432,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 if (ie.status === "fulfilled") Rs = filterCommandsForHeadless(ie.value);
                 else logError(ie.reason);
                 if (Me.status === "rejected")
-                  n(
+                  logForDebugging(
                     `reload_plugins: applyPluginMcpDiff failed: ${l(Me.reason)}`,
                     { level: "error" },
                   );
@@ -13620,7 +13620,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 content: [
                                   {
                                     type: "text",
-                                    text: `URL elicitation required (open URL, then retry): ${Y4t(ln.urlElicitationDeclined.url) ?? "[elicitation URL too long to relay \u2014 re-run this call in the terminal]"}`,
+                                    text: `URL elicitation required (open URL, then retry): ${sanitizeRelayableText(ln.urlElicitationDeclined.url) ?? "[elicitation URL too long to relay \u2014 re-run this call in the terminal]"}`,
                                   },
                                 ],
                               };
@@ -13657,7 +13657,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     if (ft.urlElicitationDeclined)
                       Be(
                         r,
-                        `URL elicitation required (open URL, then retry mcp_call): ${Y4t(ft.urlElicitationDeclined.url) ?? "[elicitation URL too long to relay \u2014 re-run this call in the terminal]"}` +
+                        `URL elicitation required (open URL, then retry mcp_call): ${sanitizeRelayableText(ft.urlElicitationDeclined.url) ?? "[elicitation URL too long to relay \u2014 re-run this call in the terminal]"}` +
                           (typeof ft.content === "string"
                             ? ` \u2014 ${withholdDetailIfRemote(e, ft.content, "(detail withheld)")}`
                             : ""),
@@ -13706,7 +13706,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         Pn = We.slice(0, 2000).replace(/[\uD800-\uDBFF]$/, "");
                       ((We =
                         ft.length > 0
-                          ? `URL elicitation required (open URL, then retry mcp_call): ${rrr(ft)} \u2014 ${Pn}`
+                          ? `URL elicitation required (open URL, then retry mcp_call): ${formatElicitationUrls(ft)} \u2014 ${Pn}`
                           : `URL elicitation required (no URL in error data): ${Pn}`),
                         Be(r, We));
                     } else
@@ -13745,7 +13745,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     Yt().disposeServerConnectionDetached(F, _e.config);
                   else if (_e?.type === "connected" && _e !== Le)
                     await Yt().clearServerCache(F, _e.config);
-                  await i2(Yt().dropDiscoveryEntry(F, _e?.config ?? Me));
+                  await awaitDiscoveryCacheFlush(Yt().dropDiscoveryEntry(F, _e?.config ?? Me));
                 }
                 let pe = getMcpToolPrefix(F);
                 (C((_e) => ({
@@ -13787,7 +13787,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               }
               let ie = clampControlChannelOverride(ue);
               if (!ie.ok)
-                (n(
+                (logForDebugging(
                   `set_mcp_permission_mode_override: rejected mode='${ie.rejected}' for ${D} (tighten-only)`,
                   { level: "warn" },
                 ),
@@ -13912,14 +13912,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     },
                     Le = ie.config.oauth?.clientId ? void 0 : F,
                     pe = "localhost",
-                    _e = ir(),
+                    _e = getIdentityEpoch(),
                     He = Ae(Le),
                     et;
                   if (Le)
                     try {
                       ((et = await He.raced), (pe = "custom"));
                     } catch (tt) {
-                      (n(
+                      (logForDebugging(
                         `[mcp_authenticate] AS rejected custom redirectUri for ${D}; falling back to localhost: ${l(tt)}`,
                       ),
                         (He = Ae()),
@@ -13942,15 +13942,15 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     Ba.delete(D),
                     js().setActiveOAuthPromise(D, Ze));
                   let Ke = Ze.then(async () => {
-                    if (ir() !== _e) {
-                      n(
+                    if (getIdentityEpoch() !== _e) {
+                      logForDebugging(
                         `MCP server ${D}: OAuth completed after an identity change; discarding without reconnecting`,
                       );
                       return;
                     }
                     if ((clearMcpNeedsAuthCache(w.storageV5), isMcpServerDisabled(D))) return;
                     if (isMcpDialBlockedByPolicy(D, ue)) {
-                      n(
+                      logForDebugging(
                         `MCP server ${D} blocked by managed policy after OAuth \u2014 skipping reconnect`,
                         { level: "warn" },
                       );
@@ -13961,7 +13961,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       return;
                     }
                     if (!Ps(D)) {
-                      n(
+                      logForDebugging(
                         `MCP server ${Qn(D)}: OAuth completed for a server that is no longer configured; not reconnecting`,
                       );
                       return;
@@ -13971,7 +13971,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     Li(D, tt);
                   })
                     .catch((tt) => {
-                      n(`MCP OAuth failed for ${D}: ${tt}`, { level: "error" });
+                      logForDebugging(`MCP OAuth failed for ${D}: ${tt}`, { level: "error" });
                     })
                     .finally(() => {
                       if (na.get(D) === Ze) (ml.delete(D), na.delete(D));
@@ -14052,7 +14052,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     },
                   )
                   .catch((et) => {
-                    if (!(et instanceof c1))
+                    if (!(et instanceof OAuthCallbackError))
                       logEvent("tengu_oauth_token_exchange_error", {
                         ...getErrorTelemetryFields(et),
                         ssl_error: kG(et) !== null,
@@ -14099,7 +14099,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                           storageV5: w.storageV5,
                           credentials: w.credentials,
                         }),
-                        z2n(),
+                        rearmDiscoveryCacheBaseline(),
                         wi({
                           ...xo,
                           storageV5: w.storageV5,
@@ -14132,10 +14132,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               ((_s = { service: ie, flow: He }),
                 He.catch((et) => {
                   if (
-                    (n(`claude_authenticate flow ended: ${et}`, {
+                    (logForDebugging(`claude_authenticate flow ended: ${et}`, {
                       level: "info",
                     }),
-                    et instanceof c1 || ue)
+                    et instanceof OAuthCallbackError || ue)
                   )
                     return;
                   logFeatureBad("sdk_claude_authenticate", "oauth_flow_failed");
@@ -14219,7 +14219,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   At.clients.find((Le) => Le.name === D);
                 if (Ae && Ae.type !== "disabled") {
                   if ((await Yt().clearServerCache(D, Ae.config), isDiscoveryCacheUsable()))
-                    await i2(Yt().dropDiscoveryEntry(D, Ae.config));
+                    await awaitDiscoveryCacheFlush(Yt().dropDiscoveryEntry(D, Ae.config));
                   let Le = mcpDialBlockCause(D, Ae.config);
                   Fo(D, {
                     client:
@@ -14247,7 +14247,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                               },
                     tools: [],
                     commands: [],
-                    attemptEpoch: ir(),
+                    attemptEpoch: getIdentityEpoch(),
                   });
                 }
                 Xe(r, {});
@@ -14310,16 +14310,16 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     for (let yn of lt) {
                       let qn;
                       try {
-                        qn = await P_(e, Ze, yn, "sdk");
+                        qn = await resolvePreModelSwitchDecision(e, Ze, yn, "sdk");
                       } catch (oo) {
                         (logError(ge(oo)), (Pt = "apply_flag_settings failed"));
                         break;
                       }
                       if (qn.decision !== "proceed") {
-                        (logFeatureSad("model_switch", "blocked_by_hook"), (Pt = Jle(qn)));
+                        (logFeatureSad("model_switch", "blocked_by_hook"), (Pt = formatModelSwitchBlockedNotice(qn)));
                         break;
                       }
-                      for (let oo of qn.messages) Ua(Rl(oo));
+                      for (let oo of qn.messages) Ua(toSingleLineDisplayText(oo));
                     }
                     if (Pt !== void 0) return (Be(r, Pt + Le), !1);
                   }
@@ -14383,7 +14383,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   }
                   let tt = { ...We };
                   for (let lt of normalizeSettingsAliases(tt, "apply_flag_settings"))
-                    n(`apply_flag_settings: ${lt.message}`, { level: "warn" });
+                    logForDebugging(`apply_flag_settings: ${lt.message}`, { level: "warn" });
                   let qe = { ...(RL() ?? {}), ...tt };
                   for (let lt of Object.keys(qe))
                     if (qe[lt] === null) delete qe[lt];
@@ -14470,19 +14470,19 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     let lt =
                       We.effortLevel == null
                         ? void 0
-                        : (Xk(We.effortLevel) ?? h$e(We.effortLevel));
+                        : (coerceEffortLevelValue(We.effortLevel) ?? resolveUltracodeEffortLevel(We.effortLevel));
                     if (We.effortLevel == null || lt !== void 0) {
-                      let Pt = XK(lt);
+                      let Pt = createEffortLevelOrDefault(lt);
                       (C((yn) =>
-                        qG(yn.sessionEffort, Pt)
+                        isSameEffortSelection(yn.sessionEffort, Pt)
                           ? yn
                           : { ...yn, sessionEffort: Pt },
                       ),
-                        iA(w.storageV5),
+                        unpinLaunchEffortLevels(w.storageV5),
                         reportSessionEffort(getMainLoopModel(), v()),
                         Lo("state_change"));
                     }
-                    if (hve(We.effortLevel) === "ultracode")
+                    if (normalizeUltracodeAlias(We.effortLevel) === "ultracode")
                       C((Pt) => (Pt.ultracode ? Pt : { ...Pt, ultracode: !0 }));
                     t.sessionState.notifyMetadataChanged({
                       effort_level:
@@ -14495,17 +14495,17 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     let lt = We.ultracode === !0;
                     if (
                       (C((Pt) => {
-                        if (Pt.ultracode === lt && (!lt || Ya(Pt) === "xhigh"))
+                        if (Pt.ultracode === lt && (!lt || getSessionEffortLevel(Pt) === "xhigh"))
                           return Pt;
                         return {
                           ...Pt,
                           ultracode: lt,
-                          sessionEffort: lt ? Yk("xhigh") : Pt.sessionEffort,
+                          sessionEffort: lt ? createEffortLevel("xhigh") : Pt.sessionEffort,
                         };
                       }),
                       lt)
                     )
-                      (iA(w.storageV5), reportSessionEffort(getMainLoopModel(), v()), Lo("state_change"));
+                      (unpinLaunchEffortLevels(w.storageV5), reportSessionEffort(getMainLoopModel(), v()), Lo("state_change"));
                   }
                   if (Ae) Xe(r);
                   return !0;
@@ -14550,7 +14550,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 }
                 let ft =
                   We.length > 0
-                    ? ` (the request's other settings were applied: ${We.map(Rl).join(", ")})`
+                    ? ` (the request's other settings were applied: ${We.map(toSingleLineDisplayText).join(", ")})`
                     : "";
                 Mn(() =>
                   enqueueSessionTask(e, async () => {
@@ -14569,7 +14569,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               }
               let D = v(),
                 F = getMainLoopModel(),
-                ue = zh(F) ? MT(F, Ya(D)) : void 0,
+                ue = modelSupportsEffort(F) ? resolveModelEffortLevel(F, getSessionEffortLevel(D)) : void 0,
                 ie = getSettingsWithSources(),
                 Me = getSettingsWithErrors()
                   .errors.filter((Ae) => Ae.severity !== "warning")
@@ -14584,7 +14584,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   model: F,
                   effort: typeof ue === "string" ? ue : null,
                   advisor: resolveAdvisorModel(D.advisorModel, F) ?? null,
-                  ultracode: sA(F, Ya(D), D.ultracode),
+                  ultracode: isUltracodeActive(F, getSessionEffortLevel(D), D.ultracode),
                 },
                 errors: Me.length > 0 ? Me : void 0,
               });
@@ -14624,10 +14624,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 Yn(r, "stop_task", ue);
               }
             } else if (r.request.subtype === "background_tasks") {
-              let D = K4t(r.request.tool_use_id);
+              let D = parseBackgroundTasksToolUseId(r.request.tool_use_id);
               if (!D.valid) {
                 (logFeatureBad("task_local_shell_background_all", "invalid_tool_use_id"),
-                  Be(r, X4t));
+                  Be(r, BACKGROUND_TASKS_TOOL_USE_ID_TYPE_ERROR));
                 continue;
               }
               if (areBackgroundTasksDisabled()) {
@@ -14654,7 +14654,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                     try {
                       saveAiGeneratedTitle(K(), ie, w.storageV5);
                     } catch (Me) {
-                      if (Rt(Me)) n(`saveAiGeneratedTitle failed: ${Me}`);
+                      if (Rt(Me)) logForDebugging(`saveAiGeneratedTitle failed: ${Me}`);
                       else logError(Me);
                     }
                     (getSdkHostedBridgeHandle()?.adoptLocalAiTitle?.(), syncTitleToRemoteSession(ie));
@@ -15045,7 +15045,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                             clientPlatform: qe.clientPlatform,
                                             ...(Un && { origin: Un }),
                                             ...(Un !== void 0 &&
-                                              !w_(Un) && {
+                                              !isUserDrivenOrUnstampedOrigin(Un) && {
                                                 skipAttachments: !0,
                                               }),
                                             ...(Un?.kind ===
@@ -15079,7 +15079,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     t.onCommandLifecycle?.(yn, "queued");
                                   if (!Ve) Ar();
                                 } catch (qe) {
-                                  n(
+                                  logForDebugging(
                                     `[bridge:sdk] onInboundMessage failed: ${qe}`,
                                     { level: "error" },
                                   );
@@ -15171,14 +15171,14 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                   return;
                                 }
                                 return enqueueSessionTask(e, () =>
-                                  P_(e, Un, tt ? null : _n, "sdk")
+                                  resolvePreModelSwitchDecision(e, Un, tt ? null : _n, "sdk")
                                     .then((Dn) => {
                                       if (Dn.decision !== "proceed")
                                         return (
                                           logFeatureSad("model_switch", "blocked_by_hook"),
-                                          { ok: !1, error: Jle(Dn) }
+                                          { ok: !1, error: formatModelSwitchBlockedNotice(Dn) }
                                         );
-                                      for (let Gr of Dn.messages) Ua(Rl(Gr));
+                                      for (let Gr of Dn.messages) Ua(toSingleLineDisplayText(Gr));
                                       return (ur(), { ok: !0 });
                                     })
                                     .catch(
@@ -15205,7 +15205,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                 ),
                               onApplyFlagSettings: (Ke) => {
                                 let tt = getMainLoopModel(),
-                                  Qt = getEffectiveEffortLevel(tt, Ya(v())),
+                                  Qt = getEffectiveEffortLevel(tt, getSessionEffortLevel(v())),
                                   qe = applyBridgeFlagSettings(Ke, {
                                     model: tt,
                                     getAppState: v,
@@ -15213,7 +15213,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     storageV5: w.storageV5,
                                   });
                                 if (!qe.ok) return qe;
-                                let ln = getEffectiveEffortLevel(tt, Ya(v()));
+                                let ln = getEffectiveEffortLevel(tt, getSessionEffortLevel(v()));
                                 return (
                                   reportSessionEffort(tt, v()),
                                   Lo("state_change", { force: ln === Qt }),
@@ -15264,7 +15264,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     if (((Ae = !1), !gt)) Zt?.sendResult();
                                   }
                                 }
-                                (n(
+                                (logForDebugging(
                                   `[bridge:sdk] State change: ${Ke}${tt ? ` \u2014 ${tt}` : ""}`,
                                 ),
                                   Ct.enqueue({
@@ -15478,7 +15478,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
               await St(r, await mc());
             })()
               .catch((St) => {
-                n(
+                logForDebugging(
                   `[print.ts] workflow_launch handler failed: ${ge(St).message}`,
                 );
               })
@@ -15515,7 +15515,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             let St = deserializeTranscriptMessages([r]);
             ct.push(...St);
           } catch (St) {
-            n(`Dropping malformed ${r.type} replay frame: ${l(St)}`, {
+            logForDebugging(`Dropping malformed ${r.type} replay frame: ${l(St)}`, {
               level: "error",
             });
             continue;
@@ -15527,7 +15527,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           let St = K();
           if (r.uuid) {
             if (Tt.has(r.uuid)) {
-              n(`Skipping duplicate bash_command message: ${r.uuid}`);
+              logForDebugging(`Skipping duplicate bash_command message: ${r.uuid}`);
               continue;
             }
             Tt.track(r.uuid);
@@ -15555,7 +15555,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             type: "user",
             message: {
               role: "user",
-              content: `<${BASH_INPUT_TAG}>${Nt(r.command)}</${BASH_INPUT_TAG}>`,
+              content: `<${BASH_INPUT_TAG}>${escapeHtmlText(r.command)}</${BASH_INPUT_TAG}>`,
             },
             session_id: St,
             parent_tool_use_id: null,
@@ -15588,7 +15588,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   type: "user",
                   message: {
                     role: "user",
-                    content: `<${BASH_STDERR_TAG}>Command failed: ${Nt(getBashSpawnFailureDetail(gn, e))}</${BASH_STDERR_TAG}>`,
+                    content: `<${BASH_STDERR_TAG}>Command failed: ${escapeHtmlText(getBashSpawnFailureDetail(gn, e))}</${BASH_STDERR_TAG}>`,
                   },
                   session_id: St,
                   parent_tool_use_id: null,
@@ -15618,7 +15618,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             ))
         ) {
           if (
-            (n(
+            (logForDebugging(
               "Dropping malformed user frame: content must be a string or an array of block objects",
               { level: "error" },
             ),
@@ -15648,10 +15648,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 exists_in_session: gn,
                 runtime_dup: D,
               }),
-              n(`Skipping duplicate user message: ${r.uuid}`),
+              logForDebugging(`Skipping duplicate user message: ${r.uuid}`),
               w.replayUserMessages)
             ) {
-              n(`Sending acknowledgment for duplicate user message: ${r.uuid}`);
+              logForDebugging(`Sending acknowledgment for duplicate user message: ${r.uuid}`);
               let ie = parseFileAttachments(r);
               Ct.enqueue({
                 type: "user",
@@ -15677,7 +15677,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           Tt.track(r.uuid);
         }
         ea("new_user_message");
-        let V = t instanceof Uz,
+        let V = t instanceof RemoteIO,
           W = t.isLocallyPrependedMessage(r),
           Se = G_(r, V, W),
           Ce = r.client_platform;
@@ -15694,10 +15694,10 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         let gr = r.isSynthetic
             ? at === void 0
               ? { kind: "unclassified" }
-              : f6(at)
+              : isProjectsRelayOrigin(at)
                 ? at
                 : void 0
-            : (at ?? (V ? getClaudeCodeHumanOrigin(Ce, r.inbound_origin) : fCn(r.origin, !1))),
+            : (at ?? (V ? getClaudeCodeHumanOrigin(Ce, r.inbound_origin) : toHumanOrigin(r.origin, !1))),
           Lr = isLocallyDeclaredSummon({
             declared: r.seeded_summon,
             isRemoteIO: V,
@@ -15707,7 +15707,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             clientPlatform: Ce,
           }),
           In = Je ? isHumanRelayOrigin(r.inbound_origin, isProjectsHumanOriginEnabled()) : isHumanRelayTurn(Ce, r.inbound_origin);
-        if (!x && r.shouldQuery !== !1 && !Ye && !r.isSynthetic && Ew(at)) {
+        if (!x && r.shouldQuery !== !1 && !Ye && !r.isSynthetic && isHumanOrUnstampedOrigin(at)) {
           let St = getMessageContentText(Se);
           if (St && !isSyntheticPromptText(St) && !isKnownSlashCommand(St, (Mn) => hasCommand(Mn, Rs))) {
             x = !0;
@@ -15920,7 +15920,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           (await Sf(t, U),
           rs(),
           await flushPendingBackgroundWork(),
-          nd({ shuttingDown: isShuttingDown(), remoteTransport: t instanceof Uz }))
+          nd({ shuttingDown: isShuttingDown(), remoteTransport: t instanceof RemoteIO }))
         )
           rd(createTaskRegistry(v, C));
         setSdkQueueEnqueueListener(null);
@@ -15934,7 +15934,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
 function explicitMcpConfigRequestsWait(e, t) {
   return (
     t ||
-    (!g0.isBridgeCarrierChild && Object.values(e).some((o) => o.type !== "sdk"))
+    (!bridgeCarrierState.isBridgeCarrierChild && Object.values(e).some((o) => o.type !== "sdk"))
   );
 }
 function yy(e) {
@@ -16049,16 +16049,16 @@ function Cf(e, t = () => !1) {
       throw Error(
         'Permission prompt tool returned an invalid result. Expected a single text block param with type="text" and a string text value.',
       );
-    let le = B_e().safeParse(xt(fe.content[0].text));
+    let le = permissionResultSchema().safeParse(xt(fe.content[0].text));
     if (!le.success)
       return (
-        n(
+        logForDebugging(
           `Permission prompt tool returned a schema-invalid result for ${d.name}: ${le.error.message.slice(0, 2000)}`,
           { level: "error" },
         ),
         {
           behavior: "deny",
-          message: `The permission prompt tool returned an invalid permission result. ${D0t}`,
+          message: `The permission prompt tool returned an invalid permission result. ${PERMISSION_RESULT_SHAPE_HINT}`,
           decisionReason: CAN_USE_TOOL_INVALID_RESULT_DENY_REASON,
         }
       );
@@ -16070,7 +16070,7 @@ function Cf(e, t = () => !1) {
           "MCP tool requires user interaction; not supported via --permission-prompt-tool",
         decisionReason: PROMPT_TOOL_ALLOW_FLAGGED_MCP_DENY_REASON,
       };
-    return L0t(xe, e, re, E, d, C.suppressAlwaysAllowRule === !0);
+    return finalizePermissionPromptToolResult(xe, e, re, E, d, C.suppressAlwaysAllowRule === !0);
   };
   return o;
 }
@@ -16182,7 +16182,7 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
   if (e.systemPrompt !== void 0)
     C.systemPrompt = by(e.systemPrompt) ? "" : e.systemPrompt;
   if (e.supportedDialogKinds !== void 0) {
-    let le = p6(e.supportedDialogKinds);
+    let le = normalizeDeclaredDialogKinds(e.supportedDialogKinds);
     (zXt(le, Uf(a.CLAUDE_CODE_WORKER_EPOCH) ? "attach_time" : "create_time"),
       O.sessionState.notifyInternalMetadataChanged({
         declared_dialog_kinds: le,
@@ -16220,7 +16220,7 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
     let le = H_() === C.agent,
       xe = findAgentByType(N(), C.agent);
     if (xe && !le) {
-      if ((PW(xe.agentType), Vae(xe), !C.systemPrompt && !isBuiltInAgent(xe))) {
+      if ((PW(xe.agentType), applyAgentFrontmatterHooks(xe), !C.systemPrompt && !isBuiltInAgent(xe))) {
         let U = xe.getSystemPrompt();
         if (U) C.systemPrompt = U;
       }
@@ -16283,7 +16283,7 @@ async function Pf(e, t, o, d, _, E, I, O, v, C) {
     X = getAccountInformation(),
     te = _().toolPermissionContext.mode,
     ye =
-      isVsCodeExtensionSession() && GEt()
+      isVsCodeExtensionSession() && isAutoDefaultLaunchEnabled()
         ? shouldShowAutoDefaultNudge(_().toolPermissionContext, { requireOnboarding: !1 })
         : null,
     N = {
@@ -16520,7 +16520,7 @@ function Bf(e, t) {
 }
 async function Ry(e, t, o, d, _) {
   if (isExiting()) {
-    n(`Headless output write failed during shutdown (${o.type})`);
+    logForDebugging(`Headless output write failed during shutdown (${o.type})`);
     return;
   }
   let E = isRemoteTransportPersistent(e);
@@ -16538,7 +16538,7 @@ async function Ry(e, t, o, d, _) {
 `),
       E)
     )
-      n(`output write failure detail: ${Ea(d)}`, { level: "error" });
+      logForDebugging(`output write failure detail: ${Ea(d)}`, { level: "error" });
     let v = O(I);
     try {
       (Da(t.sessionState, v), await t.write(buildErrorResultMessage(K(), [v])));
@@ -16549,7 +16549,7 @@ async function Ry(e, t, o, d, _) {
 }
 function endHeadlessSessionOnEscapedError(e, t, o) {
   if (isExiting()) {
-    n("runHeadless rejected during shutdown");
+    logForDebugging("runHeadless rejected during shutdown");
     return;
   }
   sessionTransportRegistry.of(e).setActive(void 0);
@@ -16568,11 +16568,11 @@ function io(e, t) {
         `
 `,
     ),
-    n(e, { level: "error" }),
+    logForDebugging(e, { level: "error" }),
     t === "stream-json")
   )
     writeToStdout(
-      b(buildErrorResultMessage(K(), [e])) +
+      jsonStringify(buildErrorResultMessage(K(), [e])) +
         `
 `,
     );
@@ -16592,21 +16592,21 @@ function Tf(e, t) {
 async function Ef(e, t, o, d) {
   let _ = null;
   try {
-    _ = DZ(worktreeStateStore.of(e.host), t, void 0, { storageV5: o.storageV5 });
+    _ = applyResumedWorktreeState(worktreeStateStore.of(e.host), t, void 0, { storageV5: o.storageV5 });
   } catch (I) {
     logError(I);
   }
-  if (_ && !_.poisoned) return (io(Fst(_).trimEnd(), d), gracefulShutdownSync(1), !0);
+  if (_ && !_.poisoned) return (io(formatWorktreeResumeError(_).trimEnd(), d), gracefulShutdownSync(1), !0);
   let E = o.persist && !isTranscriptPersistenceDisabled();
   if (_ && _.reason !== "worktree-gone" && !E)
-    return (io(Fst(_, { bindingCleared: !1 }).trimEnd(), d), gracefulShutdownSync(1), !0);
+    return (io(formatWorktreeResumeError(_, { bindingCleared: !1 }).trimEnd(), d), gracefulShutdownSync(1), !0);
   if (o.persist)
     if (isHoverRestEnabled() && o.storageV5 !== void 0) await adoptResumedSessionFileAsync(o.storageV5);
     else adoptResumedSessionFile();
   if (!_) return !1;
   if (_.reason === "worktree-gone")
-    return (process.stderr.write(yQt(_, { bindingCleared: E })), !1);
-  return (io(Fst(_, { bindingCleared: !0 }).trimEnd(), d), gracefulShutdownSync(1), !0);
+    return (process.stderr.write(formatWorktreeResumeNotice(_, { bindingCleared: E })), !1);
+  return (io(formatWorktreeResumeError(_, { bindingCleared: !0 }).trimEnd(), d), gracefulShutdownSync(1), !0);
 }
 async function Ay(e, t, o, d) {
   let _ = !IL();
@@ -16643,11 +16643,11 @@ async function Ay(e, t, o, d) {
                 `
 `,
             );
-            let w = await O8(getCwd(), d.cliAgents ?? [], d.storageV5);
+            let w = await rebuildAgentDefinitionsWithCliAgents(getCwd(), d.cliAgents ?? [], d.storageV5);
             t((X) => ({ ...X, agentDefinitions: w }));
           }
         }
-        let { adoptedSessionId: v, effectiveFork: C } = Vre(
+        let { adoptedSessionId: v, effectiveFork: C } = resolveSessionAdoption(
           O.sessionId,
           !!d.forkSession,
           { acceptCustomIds: !!d.sdkUrl },
@@ -16656,7 +16656,7 @@ async function Ay(e, t, o, d) {
           if (($p(v, "resume", O.fullPath ? dirname(O.fullPath) : null), _))
             await resetSessionFilePointer();
         }
-        EHe(O, t, o, { preserveLiveBudget: !1 });
+        restoreTranscriptDerivedState(O, t, o, { preserveLiveBudget: !1 });
         let re = nu(O.messages, d, t);
         if (C) {
           if (
@@ -16701,7 +16701,7 @@ async function Ay(e, t, o, d) {
     }
   if (d.teleport)
     try {
-      await b_();
+      await waitForPolicyLimitsToLoad();
       let E = getCloudSessionsUnavailableReason();
       if (E) throw Error(E);
       if ((logEvent("tengu_teleport_print", {}), typeof d.teleport !== "string"))
@@ -16720,7 +16720,7 @@ async function Ay(e, t, o, d) {
       return { messages: v(B.log, w, B.environmentKind) };
     } catch (E) {
       return (
-        n(`Teleport in print mode failed: ${l(E)}`, { level: "error" }),
+        logForDebugging(`Teleport in print mode failed: ${l(E)}`, { level: "error" }),
         gracefulShutdownSync(1),
         { messages: [] }
       );
@@ -16785,8 +16785,8 @@ ${le}`,
             (d.hydratePrefetch ?? Promise.resolve(null)).then(
               (xe) => (
                 markResumeHydratePrefetch(xe, fe),
-                setTranscriptLocalGcEnabled(j1n()),
-                hydrateFromCCRv2InternalEvents(v.sessionId, xe, I0t(), d.storageV5)
+                setTranscriptLocalGcEnabled(isTranscriptLocalGcEnabled()),
+                hydrateFromCCRv2InternalEvents(v.sessionId, xe, isSubagentSkipOnDeltaEnabled(), d.storageV5)
               ),
             ),
             d.restoredWorkerState,
@@ -16852,7 +16852,7 @@ ${le}`,
             let ve = a.CLAUDE_CODE_RESUME_FROM_SESSION;
             if (ve)
               try {
-                n(`[resume-from] Hydrating from source session ${ve}`);
+                logForDebugging(`[resume-from] Hydrating from source session ${ve}`);
                 let { prepareApiRequest: je } =
                     await import("../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
                   { teleportFromSessionsAPI: ut } =
@@ -16862,9 +16862,9 @@ ${le}`,
                   { accessToken: en, orgUUID: Ne } = await je(d.credentials),
                   { log: gt } = await ut(ve, Ne, en);
                 ((fe = Tt(gt)),
-                  n(`[resume-from] Loaded ${fe.length} messages from ${ve}`));
+                  logForDebugging(`[resume-from] Loaded ${fe.length} messages from ${ve}`));
               } catch (je) {
-                n(`[resume-from] Failed to hydrate from ${ve}: ${l(je)}`);
+                logForDebugging(`[resume-from] Failed to hydrate from ${ve}: ${l(je)}`);
               }
           }
           let le = performance.now(),
@@ -16876,7 +16876,7 @@ ${le}`,
                 credentials: d.credentials,
               }));
           recordStartupPhase("hooks_init_ms", performance.now() - le, le);
-          let U = Vre(te?.sessionId, !!d.forkSession, {
+          let U = resolveSessionAdoption(te?.sessionId, !!d.forkSession, {
             acceptCustomIds: !!d.sdkUrl,
           });
           if (te && U.adoptedSessionId)
@@ -16958,11 +16958,11 @@ ${le}`,
               `
 `,
           );
-          let le = await O8(getCwd(), d.cliAgents ?? [], d.storageV5);
+          let le = await rebuildAgentDefinitionsWithCliAgents(getCwd(), d.cliAgents ?? [], d.storageV5);
           t((xe) => ({ ...xe, agentDefinitions: le }));
         }
       }
-      let { adoptedSessionId: ye, effectiveFork: N } = Vre(
+      let { adoptedSessionId: ye, effectiveFork: N } = resolveSessionAdoption(
         te.sessionId,
         !!d.forkSession,
         { acceptCustomIds: !!d.sdkUrl },
@@ -16972,7 +16972,7 @@ ${le}`,
           await resetSessionFilePointer();
       }
       if (
-        (EHe(te, t, o, { preserveLiveBudget: !1 }),
+        (restoreTranscriptDerivedState(te, t, o, { preserveLiveBudget: !1 }),
         t(
           yl(re?.internal, B, {
             forkSession: d.forkSession,
@@ -17049,7 +17049,7 @@ ${le}`,
         }),
         v === "load_error" && (Kd(O) || Bp(O)))
       )
-        n(`--print resume load failed (${A(O)}): ${l(O)}`, { level: "error" });
+        logForDebugging(`--print resume load failed (${A(O)}): ${l(O)}`, { level: "error" });
       else logError(O);
       let C =
         O instanceof Error
@@ -17088,7 +17088,7 @@ function Oy(e, t) {
   if (typeof e === "string")
     if (e.trim() !== "")
       o = toAsyncIterable([
-        b({
+        jsonStringify({
           type: "user",
           session_id: "",
           message: { role: "user", content: e },
@@ -17097,10 +17097,10 @@ function Oy(e, t) {
       ]);
     else o = toAsyncIterable([]);
   else o = e;
-  if (!t.sdkUrl) return new Fae(o, t.replayUserMessages, t.sessionState);
+  if (!t.sdkUrl) return new StructuredIO(o, t.replayUserMessages, t.sessionState);
   let d = process.env.CLAUDE_CODE_ENVIRONMENT_KIND ?? null,
     _ = d === null && !isReviewOriginSession(),
-    E = new Uz({
+    E = new RemoteIO({
       streamUrl: t.sdkUrl,
       initialPrompt: o,
       replayUserMessages: t.replayUserMessages,
@@ -17111,7 +17111,7 @@ function Oy(e, t) {
       sessionId: K(),
       workerEpoch: lsn(),
       environmentKind: d,
-      isResume: FJt(process.argv),
+      isResume: hasResumeFlag(process.argv),
       earlyHydrateReads: t.earlyHydrateReads,
       adoptRefreshedAuth: $c(d),
       reportParkAtInit:
@@ -17154,13 +17154,13 @@ async function xy({
       { toolUseID: re } = C;
     if (!re) return !1;
     if (
-      (n(
+      (logForDebugging(
         `handleOrphanedPermissionResponse: received orphaned control_response for toolUseID=${re} request_id=${e.response.request_id}`,
       ),
       d.has(re))
     )
       return (
-        n(
+        logForDebugging(
           `handleOrphanedPermissionResponse: skipping duplicate orphaned permission for toolUseID=${re} (already handled)`,
         ),
         !1
@@ -17168,7 +17168,7 @@ async function xy({
     let B = await findUnresolvedToolUse(re, _);
     if (!B)
       return (
-        n(
+        logForDebugging(
           `handleOrphanedPermissionResponse: dropping orphaned control_response for toolUseID=${re} \u2014 no unresolved tool_use found`,
           { level: "warn" },
         ),
@@ -17176,7 +17176,7 @@ async function xy({
       );
     if (d.has(re))
       return (
-        n(
+        logForDebugging(
           `handleOrphanedPermissionResponse: dropping orphaned permission for toolUseID=${re} \u2014 handled while its transcript read was in flight`,
         ),
         !1
@@ -17190,7 +17190,7 @@ async function xy({
     )
       return !1;
     (d.add(re),
-      n(
+      logForDebugging(
         `handleOrphanedPermissionResponse: enqueuing orphaned permission for toolUseID=${re} messageID=${B.message.id}`,
       ));
     let X = O?.(B, re) === !0,
@@ -17224,7 +17224,7 @@ function Hf(e, t, o) {
   let d = new Map(t.clients.map((N) => [N.name, N])),
     _ = new Map((o ?? []).map((N) => [N.name, N])),
     E = new Set(t.names),
-    I = ir(),
+    I = getIdentityEpoch(),
     O = new Set(),
     v = new Set(),
     C = new Set(),
@@ -17251,7 +17251,7 @@ function Hf(e, t, o) {
       }
       if (!Yt().areMcpConfigsEqual(N.config, fe.config)) return [N];
       if (o !== void 0 && _.get(N.name) === fe) return (O.add(N.name), [fe]);
-      if (t.dialEpochs[N.name] !== I && xh(N.config))
+      if (t.dialEpochs[N.name] !== I && isRemoteTransport(N.config))
         return o === void 0 ? [N] : (re(N, fe) ?? []);
       if (o === void 0) return (O.add(N.name), [fe]);
       return re(N, fe) ?? [];
@@ -17367,7 +17367,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
           ? Wf
           : a.CLAUDE_CODE_REMOTE && areSideloadFlagsDisabledByPolicy()
             ? Vf
-            : g0.isBridgeCarrierChild
+            : bridgeCarrierState.isBridgeCarrierChild
               ? Kf
               : void 0;
   if (ve !== void 0) {
@@ -17393,7 +17393,7 @@ async function Hy(e, t, o, d, _, E, I = !1, O = !1, v, C, re) {
   if (O) {
     let vt = a.CLAUDE_CODE_REMOTE && en.size === 0;
     if (vt && Tt.size > 0)
-      n(
+      logForDebugging(
         `mcp_set_servers: payload names no SDK server; keeping ${Tt.size} registered SDK server(s)`,
       );
     for (let Ft of vt ? [] : Tt)
@@ -17498,7 +17498,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
         try {
           await it.cleanup();
         } catch (qt) {
-          n(`MCP client cleanup failed for ${Fe}: ${qt}`, { level: "error" });
+          logForDebugging(`MCP client cleanup failed for ${Fe}: ${qt}`, { level: "error" });
         }
       }
       await Yt().clearServerCache(Fe, Ve);
@@ -17523,7 +17523,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
         Yt()
           .detachAndCloseConnection(tn)
           .catch(() => {});
-      let qt = kLt(Fe, it);
+      let qt = buildIdentityChangedServer(Fe, it);
       return {
         name: Fe,
         client: qt,
@@ -17536,7 +17536,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
     pn = async (Fe) => {
       let it = e[Fe];
       if (!it) return null;
-      let Ve = ir();
+      let Ve = getIdentityEpoch();
       if (it.type === "sdk")
         return {
           name: Fe,
@@ -17547,7 +17547,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
           dialEpoch: Ve,
         };
       let tn = Bs(it),
-        qt = () => ir() !== Ve && xh(tn),
+        qt = () => getIdentityEpoch() !== Ve && isRemoteTransport(tn),
         jn = (an) => gt(Fe, tn, Ve, an);
       try {
         let an = await Yt().connectToServer(Fe, tn, void 0, v, C);
@@ -17698,7 +17698,7 @@ async function Yf(e, t, o, d, _ = "unknown", E = !1, I = !1, O, v, C, re) {
         }),
     },
     Tr = async (Fe) => {
-      let it = ir(),
+      let it = getIdentityEpoch(),
         Ve = await pn(Fe),
         tn = Ot[Fe],
         qt = Ve?.client ?? {

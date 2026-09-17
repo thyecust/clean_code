@@ -14,11 +14,11 @@ import { K, ze, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, nt, uv, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { mce, rPe, _Ge, $Se } from "./chunk-5wa92x7d.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { CallToolResultSchema, TaskStatusNotificationParamsSchema, GetTaskResultSchema, CancelTaskResultSchema } from "./mcp-protocol-schemas.js";
 import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
 import { enqueuePendingNotification, sanitizeLogValue, buildTaskNotification, MAX_CONTENT_BYTES, persistBinaryContent, formatBinaryContentSavedMessage, MCP_TASK_CANCEL_TIMEOUT_MS, isMcpTasksEnabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -38,14 +38,14 @@ async function w(e, s) {
   try {
     await (s ? deleteMcpTaskMetadata(e, s) : deleteMcpTaskMetadata(e));
   } catch (i) {
-    n(`removeMcpTaskMetadata failed: ${String(i)}`);
+    logForDebugging(`removeMcpTaskMetadata failed: ${String(i)}`);
   }
 }
 async function x(e, s, i, t, r) {
   try {
     (await i, await deleteMcpTaskMetadata(e, s, t, r));
   } catch (p) {
-    n(`removeWatcherSidecar failed: ${String(p)}`);
+    logForDebugging(`removeWatcherSidecar failed: ${String(p)}`);
   }
 }
 function N(e) {
@@ -63,7 +63,7 @@ function G(e, s, i) {
       A.set(e, t),
       e.setNotificationHandler(
         "notifications/tasks/status",
-        { params: rPe },
+        { params: TaskStatusNotificationParamsSchema },
         (r) => {
           A.get(e)?.get(r.taskId)?.(r.status, r.statusMessage);
         },
@@ -113,7 +113,7 @@ async function mcpContentToNotificationText(e, s, i, t = MAX_CONTENT_BYTES) {
     let p = await maybeTruncateOutput(r, i),
       a = typeof p === "string" ? p : r,
       o = getMaxOutputChars();
-    if (a === r && (r.length > o || Nt(r).length > o)) a = H(r, o);
+    if (a === r && (r.length > o || escapeHtmlText(r).length > o)) a = H(r, o);
     if (a === r) return { text: r };
     if (r.length > t)
       return {
@@ -201,7 +201,7 @@ async function se(e, s, i) {
     };
   } catch (a) {
     return (
-      n(`persisting MCP task result block failed: ${String(a)}`, {
+      logForDebugging(`persisting MCP task result block failed: ${String(a)}`, {
         level: "error",
       }),
       { text: `[${e.type}]`, bytesPersisted: 0 }
@@ -230,12 +230,12 @@ function buildMcpTaskNotification(e) {
     p = e.resultHint
       ? `
 
-${Nt(e.resultHint)}`
+${escapeHtmlText(e.resultHint)}`
       : "";
   return buildTaskNotification({
     taskId: e.registryId,
     status: e.status,
-    summary: Nt(i),
+    summary: escapeHtmlText(i),
     body: `
 <result>
 ${ne(r, getMaxOutputChars() - p.length)}${p}
@@ -243,15 +243,15 @@ ${ne(r, getMaxOutputChars() - p.length)}${p}
   });
 }
 function ne(e, s) {
-  let i = Nt(e);
+  let i = escapeHtmlText(e);
   if (i.length <= s) return i;
-  return Nt(H(e, s));
+  return escapeHtmlText(H(e, s));
 }
 function H(e, s) {
-  let t = Math.max(0, Math.floor(e.length * (s / Nt(e).length)));
+  let t = Math.max(0, Math.floor(e.length * (s / escapeHtmlText(e).length)));
   for (;;) {
     let r = truncateToCodeUnits(e, t);
-    if (Nt(r).length + 13 <= s || t === 0) return r + "\u2026 [truncated]";
+    if (escapeHtmlText(r).length + 13 <= s || t === 0) return r + "\u2026 [truncated]";
     t = Math.floor(t * 0.9);
   }
 }
@@ -283,7 +283,7 @@ async function ie({
         toolUseId: i.toolUseId,
       },
       r,
-    ).catch((S) => n(`writeMcpTaskMetadata ${a}: ${String(S)}`));
+    ).catch((S) => logForDebugging(`writeMcpTaskMetadata ${a}: ${String(S)}`));
   if (s.get(a)?.status === "running")
     s.update(a, (S) => ({
       ...S,
@@ -309,28 +309,28 @@ async function ie({
         try {
           await e.request(
             { method: "tasks/result", params: { taskId: o } },
-            mce,
+            CallToolResultSchema,
           );
         } catch (l) {
-          n(`mcp task ${o} getTaskResult during input_required: ${formatErrorWithCode(l)}`);
+          logForDebugging(`mcp task ${o} getTaskResult during input_required: ${formatErrorWithCode(l)}`);
         }
       if ((await sleep(O), L({ taskRegistry: s, registryId: a, registered: k }))) {
         (e
-          .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
+          .request({ method: "tasks/cancel", params: { taskId: o } }, CancelTaskResultSchema, {
             signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS),
           })
-          .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
+          .catch((l) => logForDebugging(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
           x(a, r, I, T, b));
         return;
       }
       try {
         let l = await e.request(
           { method: "tasks/get", params: { taskId: o } },
-          _Ge,
+          GetTaskResultSchema,
         );
         ((_ = 0), E(l.status, l.statusMessage));
       } catch (l) {
-        if ((_++, n(`mcp task ${o} poll failed: ${formatErrorWithCode(l)}`), _ >= X)) {
+        if ((_++, logForDebugging(`mcp task ${o} poll failed: ${formatErrorWithCode(l)}`), _ >= X)) {
           ((d = "failed"),
             (c = boundMcpStatusMessage(`Task polling failed repeatedly: ${formatErrorWithCode(l)}`)),
             (C = "poll_failed_repeatedly"));
@@ -343,7 +343,7 @@ async function ie({
       try {
         let l = await e.request(
           { method: "tasks/result", params: { taskId: o } },
-          mce,
+          CallToolResultSchema,
         );
         if (l.isError !== !0) M = collectResourceLinks(l.content);
         S = await mcpContentToNotificationText(l.content ?? [], r, p);
@@ -354,10 +354,10 @@ async function ie({
       }
     if (L({ taskRegistry: s, registryId: a, registered: k })) {
       (e
-        .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
+        .request({ method: "tasks/cancel", params: { taskId: o } }, CancelTaskResultSchema, {
           signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS),
         })
-        .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
+        .catch((l) => logForDebugging(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
         x(a, r, I, T, b));
       return;
     }
@@ -408,20 +408,20 @@ async function restoreMcpTasks(e) {
     s = await listMcpTaskMetadata(e.storageV5);
   } catch (t) {
     (logFeatureBad("mcp_task_restore", "list_failed"),
-      n(`restoreMcpTasks list failed: ${String(t)}`));
+      logForDebugging(`restoreMcpTasks list failed: ${String(t)}`));
     return;
   }
   let i = s.filter((t) => t.protocol === "sep2663");
   for (let t of s) {
     if (t.protocol === "sep2663") continue;
     if (t.protocol !== void 0) {
-      n(
+      logForDebugging(
         `restoreMcpTasks: sidecar ${t.taskId} has unknown protocol '${t.protocol}'; parked`,
         { level: "error" },
       );
       continue;
     }
-    ce(t, e).catch((r) => n(`restoreMcpTasks ${t.taskId}: ${formatErrorWithCode(r)}`));
+    ce(t, e).catch((r) => logForDebugging(`restoreMcpTasks ${t.taskId}: ${formatErrorWithCode(r)}`));
   }
   logFeatureOk("mcp_task_restore");
 }
@@ -557,11 +557,11 @@ async function ce(
       g
         .request(
           { method: "tasks/cancel", params: { taskId: e.mcpTaskId } },
-          $Se,
+          CancelTaskResultSchema,
           { signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS) },
         )
         .catch((c) =>
-          n(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(c)}`),
+          logForDebugging(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(c)}`),
         ));
     return;
   }

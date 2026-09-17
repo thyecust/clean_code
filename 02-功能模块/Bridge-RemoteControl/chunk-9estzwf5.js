@@ -31,13 +31,13 @@ import {
   getGlobalConfig,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isDebugMode, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getTelemetryDisabledEnvVar } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getMergedSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { getComplianceTaints } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { THIRD_PARTY_PROVIDER_LABELS, THIRD_PARTY_PROVIDER_ENV_VARS, getAPIProvider, isFirstPartyProvider, getSecondaryProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { D6, MRe, lBe, Qse, cBe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { formatComplianceTaintLabel, getNameableComplianceTaints, formatPolicyDeniedMessage, policyCacheMissMessage, policyRouteMissingMessage } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getPolicyCacheRevision, isPolicyLimitsEligible, isPolicyAllowed, isPolicyRouteMissing, hasNameableComplianceTaint, getPolicyDefault, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE, REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE } from "./remote-control-policy-messages.js";
 function isBridgeFirstParty() {
@@ -80,7 +80,7 @@ function S() {
   return isPolicyLimitsCacheLoaded();
 }
 function describeRemoteControlPolicyDenial() {
-  return lBe("Remote Control", "is", getComplianceTaints(), O);
+  return formatPolicyDeniedMessage("Remote Control", "is", getComplianceTaints(), O);
 }
 async function getBridgeDisabledReason() {
   if (u()) return null;
@@ -122,16 +122,16 @@ async function getBridgeDisabledReason() {
 }
 function T() {
   try {
-    if (isPolicyRouteMissing()) return cBe("Remote Control");
+    if (isPolicyRouteMissing()) return policyRouteMissingMessage("Remote Control");
     if (!hasNameableComplianceTaint()) return O;
-    if (!S()) return Qse("Remote Control");
+    if (!S()) return policyCacheMissMessage("Remote Control");
     return describeRemoteControlPolicyDenial();
   } catch {
     return REMOTE_CONTROL_POLICY_UNVERIFIABLE_MESSAGE;
   }
 }
 function D(e) {
-  return MRe(e).map(D6).join(", ");
+  return getNameableComplianceTaints(e).map(formatComplianceTaintLabel).join(", ");
 }
 function getRemoteControlPolicyLockReason() {
   if (u()) return null;
@@ -153,7 +153,7 @@ function P() {
   return T();
 }
 function getBridgeAuthDebugInfo() {
-  if (!pB()) return "";
+  if (!isDebugMode()) return "";
   let e = (o) => (o ? "set" : "unset");
   try {
     let o = getClaudeAIOAuthTokens(),
@@ -375,7 +375,7 @@ async function ensurePolicyLimitsLoadedForDiagnostic() {
   try {
     await k();
   } catch (e) {
-    n(
+    logForDebugging(
       `[bridge] policy-limits hydrate for the Remote Control diagnostic failed: ${e instanceof Error ? e.message : String(e)}`,
     );
   }

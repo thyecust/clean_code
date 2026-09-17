@@ -19,7 +19,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { assertDirChainReal, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteActive, findGitRoot, gitExe, getGitDir, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { areTasksEnabled, getTaskListId, readAllTasks } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -256,9 +256,9 @@ async function kt(o) {
       P = !isConfigDirPath(N),
       U = yt({ sessionId: a, ref: l, trigger: o.trigger, todos: o.todos });
     try {
-      if (P) await nke(e, N);
+      if (P) await assertDirChainReal(e, N);
       (await mkdir(N, { recursive: !0 }),
-        await wb(s(e, ".claude", "RESUME.md"), U, {
+        await writeFileAndFlush(s(e, ".claude", "RESUME.md"), U, {
           encoding: "utf-8",
           allowSymlink: !P,
           checkParentDir: P,

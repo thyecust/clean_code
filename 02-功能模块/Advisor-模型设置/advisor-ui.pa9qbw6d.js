@@ -13,8 +13,8 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { parseUserSpecifiedModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { stripLongContextTags } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { baseModelSupportsAdvisor, isValidAdvisorModelString, getAdvisorModelAliases, isValidAdvisorModel, isAdvisorModelPendingCreditsConsent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -25,7 +25,7 @@ import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未�
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatAdvisorConsentHint, applyAdvisorModelSetting } from "../../01-核心基础设施/共享小工具-未细化/advisor-command.js";
-import { Yle, Zg } from "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import { validateModelAvailability, formatModelDisplayName } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import { E, vr, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -33,7 +33,7 @@ function lo(Do) {
   return Do.advisorModel;
 }
 function mo(ao) {
-  return { label: Zg(ao), value: ao };
+  return { label: formatModelDisplayName(ao), value: ao };
 }
 function co() {
   logEvent("tengu_advisor_dialog_shown", {});
@@ -52,7 +52,7 @@ function K(Lo) {
     let Y = getAdvisorModelAliases();
     let Z = l?.toLowerCase();
     w = Z ? Y.find((To) => Z.includes(To)) : void 0;
-    g = l && !w && isValidAdvisorModelString(l) ? { label: stripAnsi(Zg(l)), value: l } : void 0;
+    g = l && !w && isValidAdvisorModelString(l) ? { label: stripAnsi(formatModelDisplayName(l)), value: l } : void 0;
     let k;
     if (a[4] !== g) ((k = g ? [g] : []), (a[4] = g), (a[5] = k));
     else k = a[5];
@@ -65,7 +65,7 @@ function K(Lo) {
   let N = Q,
     k;
   if (a[7] !== l || a[8] !== g || a[9] !== w)
-    ((k = l && isAdvisorModelPendingCreditsConsent(er(parseUserSpecifiedModel(l))) ? "off" : g ? g.value : (w ?? "off")),
+    ((k = l && isAdvisorModelPendingCreditsConsent(stripLongContextTags(parseUserSpecifiedModel(l))) ? "off" : g ? g.value : (w ?? "off")),
       (a[7] = l),
       (a[8] = g),
       (a[9] = w),
@@ -82,7 +82,7 @@ function K(Lo) {
   else b = a[13];
   let oo;
   if (a[14] === MEMO_CACHE_SENTINEL)
-    ((oo = e(t, {
+    ((oo = e(Text, {
       children:
         "When Claude needs stronger judgment \u2014 a complex decision, an ambiguous failure, a problem it's circling without progress \u2014 it escalates to the advisor model for guidance, then resumes. The advisor runs server-side and uses additional tokens.",
     })),
@@ -92,11 +92,11 @@ function K(Lo) {
   if (a[15] !== h)
     ((O =
       !baseModelSupportsAdvisor(h) &&
-      r(t, {
+      r(Text, {
         color: "warning",
         children: [
           "The current main model (",
-          stripAnsi(Zg(h)),
+          stripAnsi(formatModelDisplayName(h)),
           ") does not support the advisor.",
         ],
       })),
@@ -133,10 +133,10 @@ function K(Lo) {
   else J = a[28];
   let eo, to;
   if (a[29] === MEMO_CACHE_SENTINEL)
-    ((eo = r(t, {
+    ((eo = r(Text, {
       children: [
-        e(t, { color: "suggestion", children: "Recommended setup: " }),
-        e(t, {
+        e(Text, { color: "suggestion", children: "Recommended setup: " }),
+        e(Text, {
           children:
             "Sonnet as the main model with Opus as the advisor. For certain workloads this gives near-Opus performance with reduced token usage.",
         }),
@@ -148,7 +148,7 @@ function K(Lo) {
   else ((eo = a[29]), (to = a[30]));
   let L;
   if (a[31] !== O || a[32] !== J)
-    ((L = r(o, {
+    ((L = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [oo, O, J, eo, to],
@@ -208,7 +208,7 @@ var Bo = async (s, m, d) => {
   if (n === "off" || n === "unset")
     return e(T, { choice: "off", onDone: s, storageV5: m.storageV5 });
   let c = parseUserSpecifiedModel(n),
-    v = await Yle(c, { credentials: m.credentials });
+    v = await validateModelAvailability(c, { credentials: m.credentials });
   if (!v.valid) return (s(`Invalid advisor model: ${v.error}`), null);
   if (!isValidAdvisorModel(c))
     return (

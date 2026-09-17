@@ -7,30 +7,30 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { qqe } from "./chunk-mk8kjx9c.js";
+import { buildBrowserSelectionPrompt } from "./chunk-mk8kjx9c.js";
 import { promises } from "fs";
 import { createConnection } from "net";
 import { platform } from "os";
 import { dirname } from "path";
-class Pv extends Error {
+class SocketConnectionError extends Error {
   constructor(e) {
     super(e);
     this.name = "SocketConnectionError";
   }
 }
-class bGe extends Error {
+class NoExtensionConnectedError extends Error {
   constructor(e) {
     super(e);
     this.name = "NoExtensionConnectedError";
   }
 }
-class wGe extends Error {
+class ToolCallTimeoutError extends Error {
   constructor(e) {
     super(e);
     this.name = "ToolCallTimeoutError";
   }
 }
-class qSe extends Error {
+class ExtensionDisconnectedMidCallError extends Error {
   constructor(e) {
     super(e);
     this.name = "ExtensionDisconnectedMidCallError";
@@ -190,7 +190,7 @@ class v {
       let o = null,
         l = setTimeout(() => {
           if (o) clearTimeout(o);
-          n(new Pv(`[${e}] Connection attempt timed out after 5000ms`));
+          n(new SocketConnectionError(`[${e}] Connection attempt timed out after 5000ms`));
         }, 5000),
         c = () => {
           if (this.connected) (clearTimeout(l), t(!0));
@@ -201,12 +201,12 @@ class v {
   }
   async sendRequest(e, t = 30000) {
     let { serverName: n } = this.context;
-    if (!this.socket) throw new Pv(`[${n}] Cannot send request: not connected`);
+    if (!this.socket) throw new SocketConnectionError(`[${n}] Cannot send request: not connected`);
     let o = this.socket;
     return new Promise((l, c) => {
       let s = setTimeout(() => {
         ((this.responseCallback = null),
-          c(new Pv(`[${n}] Tool request timed out after ${t}ms`)));
+          c(new SocketConnectionError(`[${n}] Tool request timed out after ${t}ms`)));
       }, t);
       this.responseCallback = (u) => {
         (clearTimeout(s), l(u));
@@ -236,7 +236,7 @@ class v {
     try {
       return await this.sendRequest(e);
     } catch (o) {
-      if (!(o instanceof Pv)) throw o;
+      if (!(o instanceof SocketConnectionError)) throw o;
       return (
         n.info(
           `[${t}] Connection error, forcing reconnect and retrying: ${o.message}`,
@@ -319,7 +319,7 @@ class v {
     }
   }
 }
-function lNt(e) {
+function createBridgeSocketClient(e) {
   return new v(e);
 }
 import {
@@ -470,7 +470,7 @@ async function K(e, t) {
     content: [
       {
         type: "text",
-        text: `Multiple Chrome browsers are connected to this account and none has been selected for this session. ${qqe(e.askUserToolName)}
+        text: `Multiple Chrome browsers are connected to this account and none has been selected for this session. ${buildBrowserSelectionPrompt(e.askUserToolName)}
 
 Connected browsers:
 ${c}${s}`,
@@ -600,7 +600,7 @@ function Z(e, t) {
   let { save_to_disk: n, ...o } = t;
   return { args: o, wantsSave: e === "computer" && n === !0 };
 }
-var _ut = async (e, t, n, o, l) => {
+var executeBrowserToolCall = async (e, t, n, o, l) => {
   let { args: c, wantsSave: s } = Z(n, o);
   if (n === "switch_browser") return re(e, t);
   if (n === "list_connected_browsers") return se(e, t);
@@ -645,15 +645,15 @@ function g(e, t) {
 function ee(e, t, n) {
   if (
     (n.logger.info(`[${n.serverName}] Error calling tool:`, e),
-    e instanceof Pv || e instanceof bGe)
+    e instanceof SocketConnectionError || e instanceof NoExtensionConnectedError)
   )
     return y(n);
-  if (e instanceof wGe)
+  if (e instanceof ToolCallTimeoutError)
     return g(
       `The "${t}" tool did not respond in time. The Chrome extension is connected but the page may be loading, unresponsive, or waiting on a permission prompt in the extension side panel. Try a lighter operation (e.g., "get_page_text" instead of a screenshot) or ask the user to check the page and any pending prompts.`,
       { isBridgeTimeout: !0 },
     );
-  if (e instanceof qSe)
+  if (e instanceof ExtensionDisconnectedMidCallError)
     return g(
       `The "${t}" tool call failed because the Chrome extension disconnected mid-operation. This is usually transient (Chrome service worker restart, tab closed, network blip) and the extension often reconnects automatically. Retry the same tool call in a few seconds. If it keeps failing, ask the user to switch to Chrome (which wakes the extension) or check that the extension is still logged in.`,
     );
@@ -661,7 +661,7 @@ function ee(e, t, n) {
     `Error calling tool, please try again. : ${e instanceof Error ? e.message : String(e)}`,
   );
 }
-function TGe(e) {
+function parseTabsContextResult(e) {
   let t = e?.result?.content;
   if (!Array.isArray(t)) return {};
   for (let n of t) {
@@ -743,7 +743,7 @@ async function ne(e, t, n, o, l) {
     if (D(f)) e.onAuthenticationError();
     return { args: o, error: { content: f, isError: !0 } };
   }
-  let { tabId: u, tabGroupId: p, json: k } = TGe(a);
+  let { tabId: u, tabGroupId: p, json: k } = parseTabsContextResult(a);
   if (u === void 0) return { args: o, tabGroupId: p };
   return { args: { ...o, tabId: u }, tabContextJson: k, tabGroupId: p };
 }
@@ -906,7 +906,7 @@ async function se(e, t) {
   if (o.length > 1)
     c.push({
       type: "text",
-      text: `${o.length} browsers are connected. ${qqe(e.askUserToolName)}`,
+      text: `${o.length} browsers are connected. ${buildBrowserSelectionPrompt(e.askUserToolName)}`,
     });
   return { content: c };
 }
@@ -966,4 +966,4 @@ function C(e) {
 function D(e) {
   return C(e).toLowerCase().includes("re-authenticated");
 }
-export { Pv, bGe, wGe, qSe, lNt, _ut, TGe };
+export { SocketConnectionError, NoExtensionConnectedError, ToolCallTimeoutError, ExtensionDisconnectedMidCallError, createBridgeSocketClient, executeBrowserToolCall, parseTabsContextResult };

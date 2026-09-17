@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { toJsonSchema } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -59,13 +59,13 @@ function O(o, e) {
 `;
 }
 var _ = /^[A-Za-z_$][\w$]*$/;
-var k = (o) => (_.test(o) ? o : b(o));
+var k = (o) => (_.test(o) ? o : jsonStringify(o));
 function F(o) {
   return typeof o === "string" ||
     typeof o === "number" ||
     typeof o === "boolean" ||
     o === null
-    ? b(o)
+    ? jsonStringify(o)
     : "unknown";
 }
 var eo = 32;
@@ -187,7 +187,7 @@ function po(o) {
   for (let r of o) {
     if (!r.name.startsWith("mcp__")) continue;
     if (r.inputJSONSchema === void 0) {
-      n(`plugin-types: ${r.name} has no inputJSONSchema; skipped`);
+      logForDebugging(`plugin-types: ${r.name} has no inputJSONSchema; skipped`);
       continue;
     }
     e.push({
@@ -210,7 +210,7 @@ function outputJsonSchemaOf(o) {
   try {
     return toJsonSchema(o, { unrepresentable: "any" });
   } catch (e) {
-    n(`plugin-types: an output schema did not convert: ${e}`);
+    logForDebugging(`plugin-types: an output schema did not convert: ${e}`);
     return;
   }
 }

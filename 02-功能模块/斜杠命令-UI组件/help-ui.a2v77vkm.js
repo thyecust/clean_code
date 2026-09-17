@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 251 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { isFeedbackCommandEnabled, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -82,7 +82,7 @@ function f(Io) {
     mo[11] !== j ||
     mo[12] !== no
   )
-    ((w = e(o, {
+    ((w = e(Box, {
       flexDirection: "column",
       paddingY: 1,
       children:
@@ -90,8 +90,8 @@ function f(Io) {
           ? e(EmptyStateMessage, { children: W })
           : r(N, {
               children: [
-                e(t, { children: j }),
-                e(o, {
+                e(Text, { children: j }),
+                e(Box, {
                   marginTop: 1,
                   children: e(ve, {
                     options: ao,
@@ -128,9 +128,9 @@ function D() {
     ro = v ? 0 : 1;
   let bo;
   if (X[0] === MEMO_CACHE_SENTINEL)
-    ((bo = e(o, {
+    ((bo = e(Box, {
       flexShrink: 0,
-      children: e(t, {
+      children: e(Text, {
         children:
           "Claude understands your codebase, makes edits with your permission, and executes commands \u2014 right from your terminal.",
       }),
@@ -141,12 +141,12 @@ function D() {
   if (X[1] !== v)
     ((q =
       !v &&
-      e(o, {
-        children: r(t, {
+      e(Box, {
+        children: r(Text, {
           dimColor: !0,
           children: [
             "New here? Run ",
-            e(t, { color: "suggestion", children: "/powerup" }),
+            e(Text, { color: "suggestion", children: "/powerup" }),
             " to learn the features most people miss.",
           ],
         }),
@@ -156,12 +156,12 @@ function D() {
   else q = X[2];
   let So;
   if (X[3] === MEMO_CACHE_SENTINEL)
-    ((So = r(o, {
+    ((So = r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           flexShrink: 0,
-          children: e(t, { bold: !0, children: "Shortcuts" }),
+          children: e(Text, { bold: !0, children: "Shortcuts" }),
         }),
         e(PromptFooterHints, { gap: 2, fixedWidth: !0 }),
       ],
@@ -170,7 +170,7 @@ function D() {
   else So = X[3];
   let No;
   if (X[4] !== io || X[5] !== ro || X[6] !== q)
-    ((No = r(o, {
+    ((No = r(Box, {
       flexDirection: "column",
       paddingY: io,
       gap: ro,
@@ -313,14 +313,14 @@ function Q(he) {
   else h = n[29];
   let L;
   if (n[30] === MEMO_CACHE_SENTINEL)
-    ((L = e(o, {
+    ((L = e(Box, {
       marginTop: 1,
       flexShrink: 0,
-      children: r(t, {
+      children: r(Text, {
         children: [
           "For more help:",
           " ",
-          e(ct, { url: "https://code.claude.com/docs/en/overview" }),
+          e(Link, { url: "https://code.claude.com/docs/en/overview" }),
         ],
       }),
     })),
@@ -330,10 +330,10 @@ function Q(he) {
   if (n[31] !== po)
     ((G =
       po &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
         flexShrink: 0,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children:
             "Something else? Use /feedback to report bugs or request features.",
@@ -344,14 +344,14 @@ function Q(he) {
   else G = n[32];
   let K;
   if (n[33] !== uo || n[34] !== b.keyName || n[35] !== b.pending)
-    ((K = e(o, {
+    ((K = e(Box, {
       marginTop: 1,
       flexShrink: 0,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: b.pending
           ? r(N, { children: ["Press ", b.keyName, " again to exit"] })
-          : r(t, { italic: !0, children: [uo, " to cancel"] }),
+          : r(Text, { italic: !0, children: [uo, " to cancel"] }),
       }),
     })),
       (n[33] = uo),
@@ -361,7 +361,7 @@ function Q(he) {
   else K = n[36];
   let Do;
   if (n[37] !== K || n[38] !== h || n[39] !== G)
-    ((Do = e(o, {
+    ((Do = e(Box, {
       flexDirection: "column",
       children: r(Qr, { color: "professionalBlue", children: [h, L, G, K] }),
     })),

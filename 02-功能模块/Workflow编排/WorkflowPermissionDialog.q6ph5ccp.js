@@ -14,14 +14,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import { ps, _i, Rm, aA, Us, OD, km, Jk, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
+import { ps, sanitizeUntrustedText, MAX_DISPLAY_PAYLOAD_UNITS, needsMultilineGutter, prepareDisplayText, tryFormatShortDisplayValue, formatWithholdableValue, shouldWithholdValue, replaceLineBreaks } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { MultilineBorderBox, isConsentRow, mintConsentRowFromUpdates, PermissionReasonPanel, ConfirmationPrompt, shouldOfferAlwaysAllow } from "../权限系统/chunk-0hcqee2w.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { parseWorkflowScript } from "./workflow-script.js";
@@ -265,7 +265,7 @@ function de(n) {
   }
 }
 function An(pt) {
-  return Us(pt).text;
+  return prepareDisplayText(pt).text;
 }
 function Tn(ct) {
   return !ct;
@@ -276,19 +276,19 @@ function Mn(Je) {
 function On(H, ht) {
   return r(N, {
     children: [
-      r(t, {
+      r(Text, {
         children: [
           "  ",
           ht + 1,
           ". ",
           H.title,
           H.detail
-            ? r(t, { dimColor: !0, children: [" \u2014 ", H.detail] })
+            ? r(Text, { dimColor: !0, children: [" \u2014 ", H.detail] })
             : "",
         ],
       }),
       H.prompts.length > 0 &&
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "     ",
@@ -351,16 +351,16 @@ function on(n) {
           l.rules[0]?.ruleContent !== y
         )
           return null;
-        let a = OD(l.rules[0].ruleContent);
+        let a = tryFormatShortDisplayValue(l.rules[0].ruleContent);
         if (a === null) return null;
-        return r(t, {
+        return r(Text, {
           children: [
             "Yes, and don't ask again for ",
-            e(t, { bold: !0, children: a.display }),
+            e(Text, { bold: !0, children: a.display }),
             " ",
             "in",
             " ",
-            e(t, { bold: !0, children: sanitizeForDisplay(he()) }),
+            e(Text, { bold: !0, children: sanitizeForDisplay(he()) }),
           ],
         });
       },
@@ -374,12 +374,12 @@ function WorkflowPermissionDialog(it) {
     ee = x.length > Qe || m.scriptForged,
     mn;
   if (g[0] !== x || g[1] !== ee)
-    ((mn = ee ? "" : _i(x)), (g[0] = x), (g[1] = ee), (g[2] = mn));
+    ((mn = ee ? "" : sanitizeUntrustedText(x)), (g[0] = x), (g[1] = ee), (g[2] = mn));
   else mn = g[2];
   let Ee = mn,
     pn;
   if (g[3] !== x || g[4] !== ee)
-    ((pn = ee || Jk(x)), (g[3] = x), (g[4] = ee), (g[5] = pn));
+    ((pn = ee || shouldWithholdValue(x)), (g[3] = x), (g[4] = ee), (g[5] = pn));
   else pn = g[5];
   let S = pn,
     $e;
@@ -404,7 +404,7 @@ function WorkflowPermissionDialog(it) {
   if (g[10] !== L || g[11] !== B?.meta.phases) {
     bb1: {
       let lt = An;
-      let me = (st) => Oo(lt(st)).replace(/\s+/g, " ").trim();
+      let me = (st) => replaceLineBreaks(lt(st)).replace(/\s+/g, " ").trim();
       let wn = (at) => {
         let hn = new Set();
         let gn = [];
@@ -462,7 +462,7 @@ function WorkflowPermissionDialog(it) {
     bn;
   if (g[18] !== m.args)
     ((bn =
-      m.args === void 0 ? void 0 : km(m.args, { scrub: "key", maxUnits: Rm })),
+      m.args === void 0 ? void 0 : formatWithholdableValue(m.args, { scrub: "key", maxUnits: MAX_DISPLAY_PAYLOAD_UNITS })),
       (g[18] = m.args),
       (g[19] = bn));
   else bn = g[19];
@@ -542,7 +542,7 @@ function WorkflowPermissionDialog(it) {
     g[39] !== E
   ) {
     let He =
-      B?.meta.description !== void 0 ? Us(B.meta.description).text : void 0;
+      B?.meta.description !== void 0 ? prepareDisplayText(B.meta.description).text : void 0;
     let Z;
     if (g[59] !== O || g[60] !== j || g[61] !== S || g[62] !== E) {
       let ue = [];
@@ -601,7 +601,7 @@ function WorkflowPermissionDialog(it) {
     Me = "permission";
     Ne = "Run a dynamic workflow?";
     _e = m.requestSource;
-    ye = o;
+    ye = Box;
     We = "column";
     ve = 1;
     Ae = 0;
@@ -614,18 +614,18 @@ function WorkflowPermissionDialog(it) {
         (g[74] = m.permissionResult),
         (g[75] = ae));
     else ae = g[75];
-    ke = o;
+    ke = Box;
     Re = "column";
     xe = 1;
     Ce = 1;
     De = "hidden";
     Se =
       He &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
         children: e(MultilineBorderBox, {
-          multiline: aA(He),
-          children: e(t, { bold: !0, children: He }),
+          multiline: needsMultilineGutter(He),
+          children: e(Text, { bold: !0, children: He }),
         }),
       });
     ((g[33] = O),
@@ -684,9 +684,9 @@ function WorkflowPermissionDialog(it) {
     g[81] !== E
   )
     ((Z = S
-      ? e(o, {
+      ? e(Box, {
           marginBottom: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             children: m.scriptForged
               ? "(the workflow script could not be read from this request \u2014 approval is unavailable; deny or send feedback)"
@@ -694,16 +694,16 @@ function WorkflowPermissionDialog(it) {
           }),
         })
       : E || !j
-        ? e(o, {
+        ? e(Box, {
             borderStyle: "dashed",
             borderColor: "subtle",
             paddingX: 1,
             children: e(CodeBlock, { code: Ee, filePath: "workflow.js" }),
           })
-        : r(o, {
+        : r(Box, {
             flexDirection: "column",
             children: [
-              e(t, {
+              e(Text, {
                 children:
                   "This dynamic workflow will spin up multiple subagents across the following phases:",
               }),
@@ -722,14 +722,14 @@ function WorkflowPermissionDialog(it) {
   if (g[83] !== we || g[84] !== T)
     ((C =
       we &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
         children: e(MultilineBorderBox, {
           multiline: T?.kind === "full" && T.needsGutter,
-          children: r(t, {
+          children: r(Text, {
             children: [
-              r(t, { bold: !0, dimColor: !0, children: ["args:", " "] }),
-              e(t, { dimColor: !0, children: we }),
+              r(Text, { bold: !0, dimColor: !0, children: ["args:", " "] }),
+              e(Text, { dimColor: !0, children: we }),
             ],
           }),
         }),
@@ -768,9 +768,9 @@ function WorkflowPermissionDialog(it) {
   else q = g[94];
   let Cn;
   if (g[95] === MEMO_CACHE_SENTINEL)
-    ((Cn = e(o, {
+    ((Cn = e(Box, {
       marginBottom: 1,
-      children: e(t, { color: "warning", children: en }),
+      children: e(Text, { color: "warning", children: en }),
     })),
       (g[95] = Cn));
   else Cn = g[95];
@@ -791,7 +791,7 @@ function WorkflowPermissionDialog(it) {
   else qe = g[100];
   let Dn;
   if (g[101] === MEMO_CACHE_SENTINEL)
-    ((Dn = e(t, {
+    ((Dn = e(Text, {
       dimColor: !0,
       children: e(KeybindingHint, { chord: "ctrl+g", action: "edit script in $EDITOR" }),
     })),
@@ -799,7 +799,7 @@ function WorkflowPermissionDialog(it) {
   else Dn = g[101];
   let Fe;
   if (g[102] !== qe)
-    ((Fe = r(o, { flexDirection: "column", paddingX: 1, children: [qe, Dn] })),
+    ((Fe = r(Box, { flexDirection: "column", paddingX: 1, children: [qe, Dn] })),
       (g[102] = qe),
       (g[103] = Fe));
   else Fe = g[103];

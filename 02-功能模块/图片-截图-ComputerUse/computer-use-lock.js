@@ -13,7 +13,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { Et, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getComputerUseSession } from "./computer-use-session.js";
 import { defineStoreField } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
@@ -57,7 +57,7 @@ async function s(e) {
     let t = r.value.items[0];
     if (!t.found) return;
     try {
-      let o = z(Buffer.from(t.value).toString("utf8"));
+      let o = jsonParse(Buffer.from(t.value).toString("utf8"));
       return S(o) ? o : void 0;
     } catch {
       return;
@@ -65,7 +65,7 @@ async function s(e) {
   }
   try {
     let r = await readFile(i(), "utf8"),
-      t = z(r);
+      t = jsonParse(r);
     return S(t) ? t : void 0;
   } catch {
     return;
@@ -87,7 +87,7 @@ async function x() {
 }
 async function m(e, r) {
   if (isHoverRestEnabled() && r !== void 0) {
-    let t = await r.write(u(), b(e), {
+    let t = await r.write(u(), jsonStringify(e), {
       precondition: { type: "ifAbsent" },
       mode: 438 & ~process.umask(),
     });
@@ -105,7 +105,7 @@ async function m(e, r) {
     );
   }
   try {
-    return (await writeFile(i(), b(e), { flag: "wx" }), !0);
+    return (await writeFile(i(), jsonStringify(e), { flag: "wx" }), !0);
   } catch (t) {
     if (A(t) === "EEXIST") return !1;
     throw t;
@@ -114,7 +114,7 @@ async function m(e, r) {
 function k(e) {
   let r = getComputerUseSession();
   (r.unregisterLockCleanup?.(),
-    (r.unregisterLockCleanup = Et(async () => {
+    (r.unregisterLockCleanup = registerCleanup(async () => {
       await F(e);
     })));
 }
@@ -125,7 +125,7 @@ async function checkComputerUseLock(e) {
   if (r.sessionId === K()) return { kind: "held_by_self" };
   if (C(r.pid)) return { kind: "blocked", by: r.sessionId };
   if (
-    (n(
+    (logForDebugging(
       `Recovering stale computer-use lock from session ${r.sessionId} (PID ${r.pid})`,
     ),
     e)
@@ -164,7 +164,7 @@ async function acquireComputerUseLock(e) {
       { kind: "blocked", by: o.sessionId }
     );
   if (
-    (n(
+    (logForDebugging(
       `Recovering stale computer-use lock from session ${o.sessionId} (PID ${o.pid})`,
     ),
     e)
@@ -186,11 +186,11 @@ async function F(e) {
   if (!o || (!r && o.sessionId !== K())) return !1;
   if (e) {
     let d = await e.delete(u());
-    if (d.ok && d.value.existed) return (n("Released computer-use lock"), !0);
+    if (d.ok && d.value.existed) return (logForDebugging("Released computer-use lock"), !0);
     return !1;
   }
   try {
-    return (await unlink(i()), n("Released computer-use lock"), !0);
+    return (await unlink(i()), logForDebugging("Released computer-use lock"), !0);
   } catch {
     return !1;
   }

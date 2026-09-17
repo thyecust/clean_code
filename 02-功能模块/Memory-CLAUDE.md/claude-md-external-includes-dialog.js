@@ -13,7 +13,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -28,7 +28,7 @@ function fe() {
 }
 function he(Ue, Pe) {
   return r(
-    t,
+    Text,
     { dimColor: !0, wrap: "truncate-middle", children: ["  ", sanitizeForDisplay(Ue.path)] },
     Pe,
   );
@@ -122,7 +122,7 @@ function ClaudeMdExternalIncludesDialog(Re) {
     q = !te;
   let A;
   if (n[17] === MEMO_CACHE_SENTINEL)
-    ((A = e(t, {
+    ((A = e(Text, {
       children:
         "This project's CLAUDE.md imports files outside the current working directory. Never allow this for third-party repositories.",
     })),
@@ -131,15 +131,15 @@ function ClaudeMdExternalIncludesDialog(Re) {
   const z =
     w &&
     w.length > 0 &&
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       children: [
-        e(t, { dimColor: !0, children: "External imports:" }),
+        e(Text, { dimColor: !0, children: "External imports:" }),
         ie.map(he),
         T.length > 0
           ? r(N, {
               children: [
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   wrap: "truncate",
                   children: [
@@ -151,7 +151,7 @@ function ClaudeMdExternalIncludesDialog(Re) {
                     " not shown.",
                   ],
                 }),
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   wrap: "truncate",
                   children: [
@@ -166,12 +166,12 @@ function ClaudeMdExternalIncludesDialog(Re) {
     });
   let me;
   if (n[18] === MEMO_CACHE_SENTINEL)
-    ((me = r(t, {
+    ((me = r(Text, {
       dimColor: !0,
       children: [
         "Important: Only use Claude Code with files you trust. Accessing untrusted files may pose security risks",
         " ",
-        e(ct, { url: "https://code.claude.com/docs/en/security" }),
+        e(Link, { url: "https://code.claude.com/docs/en/security" }),
         " ",
       ],
     })),

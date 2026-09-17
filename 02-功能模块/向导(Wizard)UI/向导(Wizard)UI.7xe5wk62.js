@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { o } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
@@ -241,7 +241,7 @@ function WizardStepFrame(ze) {
   else q = L[8];
   let J;
   if (L[9] !== q)
-    ((J = e(o, {
+    ((J = e(Box, {
       marginLeft: 2,
       marginTop: 1,
       children: e(InputGuide, { children: q }),

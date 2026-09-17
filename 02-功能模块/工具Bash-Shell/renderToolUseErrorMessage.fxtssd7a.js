@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 238 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -35,7 +35,7 @@ function renderToolUseMessage(l, { verbose: a, theme: u }) {
         n = i.slice(0, h).join(`
 `);
       if (n.length > d) n = n.slice(0, d);
-      return r(t, { children: [n.trim(), "\u2026"] });
+      return r(Text, { children: [n.trim(), "\u2026"] });
     }
   }
   return m;
@@ -48,7 +48,7 @@ function renderToolUseProgressMessage(
   if (!i || !i.data)
     return e(ToolResultRow, {
       height: 1,
-      children: e(t, { dimColor: !0, children: "Running\u2026" }),
+      children: e(Text, { dimColor: !0, children: "Running\u2026" }),
     });
   let s = i.data;
   return e(ShellOutputView, {
@@ -65,7 +65,7 @@ function renderToolUseProgressMessage(
 function renderToolUseQueuedMessage() {
   return e(ToolResultRow, {
     height: 1,
-    children: e(t, { dimColor: !0, children: "Waiting\u2026" }),
+    children: e(Text, { dimColor: !0, children: "Waiting\u2026" }),
   });
 }
 function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: i }) {
@@ -81,12 +81,12 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
   if (f)
     return e(ToolResultRow, {
       height: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         children: "[Image data detected and sent to Claude]",
       }),
     });
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     children: [
       n !== "" ? e(ToolResultContent, { content: n, verbose: u }) : null,
@@ -94,7 +94,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
       n === "" && c.trim() === ""
         ? e(ToolResultRow, {
             height: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children: P
                 ? r(N, {

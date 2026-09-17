@@ -15,9 +15,9 @@ import { repeatString, firstLine, countOccurrences } from "../../01-核心基础
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getOsc52Utf8PasteWarning, setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
@@ -71,9 +71,9 @@ function tableTokenToMarkdown(n) {
   let o = [n.header.map(Q), ...n.rows.map((m) => m.map(Q))].map((m) =>
       m.map((g) => g.replace(/\|/g, "\\|").replace(/[\r\n]/g, " ")),
     ),
-    a = o[0].map((m, g) => Math.max(3, ...o.map((T) => te(T[g] ?? "")))),
+    a = o[0].map((m, g) => Math.max(3, ...o.map((T) => getStringWidth(T[g] ?? "")))),
     s = (m) =>
-      `| ${m.map((g, T) => g + " ".repeat(Math.max(0, a[T] - te(g)))).join(" | ")} |`,
+      `| ${m.map((g, T) => g + " ".repeat(Math.max(0, a[T] - getStringWidth(g)))).join(" | ")} |`,
     c = (m, g) => {
       switch (g) {
         case "center":
@@ -136,7 +136,7 @@ async function z(n, o) {
     s = we(a, o);
   return (
     await mkdir(a, { recursive: !0, mode: 448 }),
-    await wb(s, n, { encoding: "utf-8" }),
+    await writeFileAndFlush(s, n, { encoding: "utf-8" }),
     s
   );
 }
@@ -169,12 +169,12 @@ Also written to ${d}`;
 }
 function H(n, o) {
   let a = firstLine(n);
-  if (te(a) <= o) return a;
+  if (getStringWidth(a) <= o) return a;
   let s = "",
     c = 0,
     l = o - 1;
   for (let f of a) {
-    let d = te(f);
+    let d = getStringWidth(f);
     if (c + d > l) break;
     ((s += f), (c += d));
   }
@@ -288,7 +288,7 @@ Preference saved. Use /config to change copyFullResponse`);
   let j = pe,
     I;
   if (h[20] === MEMO_CACHE_SENTINEL)
-    ((I = e(t, { dimColor: !0, children: "Select content to copy:" })),
+    ((I = e(Text, { dimColor: !0, children: "Select content to copy:" })),
       (h[20] = I));
   else I = h[20];
   let me;

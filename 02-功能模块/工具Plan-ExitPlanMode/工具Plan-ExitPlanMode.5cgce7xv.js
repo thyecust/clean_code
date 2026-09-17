@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 var ENTER_PLAN_MODE_TOOL_NAME = "EnterPlanMode";
 var ASK_USER_QUESTION_TOOL_NAME = "AskUserQuestion",
   MAX_QUESTION_HEADER_CHARS = 12,
@@ -55,7 +55,7 @@ Usage notes:
 - Use multiSelect: true to allow multiple answers to be selected for a question
 - If you recommend a specific option, make that the first option in the list and add "(Recommended)" at the end of the label
 
-Plan mode note: To switch into plan mode, use ${ENTER_PLAN_MODE_TOOL_NAME} (not this tool). Once in plan mode, use this tool to clarify requirements or choose between approaches BEFORE finalizing your plan. Do NOT use this tool to ask "Is my plan ready?", "Should I proceed?", or otherwise reference "the plan" in questions \u2014 the user cannot see the plan until you call ${Wh} for approval.
+Plan mode note: To switch into plan mode, use ${ENTER_PLAN_MODE_TOOL_NAME} (not this tool). Once in plan mode, use this tool to clarify requirements or choose between approaches BEFORE finalizing your plan. Do NOT use this tool to ask "Is my plan ready?", "Should I proceed?", or otherwise reference "the plan" in questions \u2014 the user cannot see the plan until you call ${EXIT_PLAN_MODE_TOOL_NAME_ALIAS} for approval.
 `,
   EXTENDED_QUESTIONS_NOTES = `
 Extended questions (this host renders them):

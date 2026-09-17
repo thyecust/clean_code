@@ -12,7 +12,7 @@
 import { raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -86,7 +86,7 @@ async function D(e, t, r, o, i) {
         : `search route ${h.status}`;
     if (h.status === 403 && S.success)
       return (
-        n(`[plugin-skill-search] degraded to empty: ${N}`, { level: "error" }),
+        logForDebugging(`[plugin-skill-search] degraded to empty: ${N}`, { level: "error" }),
         logFeatureSad(p, "not_entitled"),
         []
       );
@@ -103,7 +103,7 @@ async function P(e, t, r, o) {
   return D(e, L, t, r, o);
 }
 function R(e, t) {
-  (n(`[plugin-skill-search] ${e} failed: ${l(t)}`, { level: "error" }),
+  (logForDebugging(`[plugin-skill-search] ${e} failed: ${l(t)}`, { level: "error" }),
     logFeatureBad(e === "plugin" ? "plugin_search" : "skill_search", "fetch_failed"));
 }
 async function E(e, t, r) {
@@ -125,7 +125,7 @@ var F = createLazyValue(() =>
   ),
   k = createLazyValue(() => c({ results: v(z()) }));
 function w(e, t) {
-  return { tool_use_id: t, type: "tool_result", content: b(e) };
+  return { tool_use_id: t, type: "tool_result", content: jsonStringify(e) };
 }
 function _(e) {
   return (e.keywords ?? []).join(", ");
@@ -203,7 +203,7 @@ var q =
       if (!p.success) {
         if (p.status === 403)
           return (
-            n(
+            logForDebugging(
               `[plugin-skill-list] degraded to empty: list-plugins 403 ${p.error}`,
               { level: "error" },
             ),
@@ -232,7 +232,7 @@ var q =
       if (!o.success) {
         if (o.status === 403)
           return (
-            n(
+            logForDebugging(
               `[plugin-skill-list] degraded to empty: list-skills 403 ${o.error}`,
               { level: "error" },
             ),
@@ -381,7 +381,7 @@ Do NOT call this if the suggestion is not relevant, you are unsure it would help
       return { data: { ...e, note: le } };
     },
     mapToolResultToToolResultBlockParam(e, t) {
-      return { tool_use_id: t, type: "tool_result", content: b(e) };
+      return { tool_use_id: t, type: "tool_result", content: jsonStringify(e) };
     },
     renderToolUseMessage: B,
   }),

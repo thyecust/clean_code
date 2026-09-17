@@ -10,13 +10,13 @@
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
-import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { rU, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { hasNoControlCharacters, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   isAgentStopPending,
@@ -50,13 +50,13 @@ import { isIP as oe } from "net";
 import { lookup } from "dns/promises";
 import { isIP as Y } from "net";
 import F from "ws";
-class ybe extends Error {
+class MonitorWsPreconditionError extends Error {
   constructor(e) {
     super(e);
     this.name = "MonitorWsPreconditionError";
   }
 }
-function R1t(e) {
+function normalizeWebSocketUrlScheme(e) {
   switch (e.protocol) {
     case "wss:":
     case "https:":
@@ -67,7 +67,7 @@ function R1t(e) {
       e.protocol = "ws:";
       break;
     default:
-      throw new ybe(`unsupported socket base scheme ${e.protocol}`);
+      throw new MonitorWsPreconditionError(`unsupported socket base scheme ${e.protocol}`);
   }
   return e.toString();
 }
@@ -79,7 +79,7 @@ async function J(e, t) {
     u = z(o.hostname);
   if (Y(u)) {
     if (isPrivateOrReservedIpAddress(u))
-      throw new ybe(
+      throw new MonitorWsPreconditionError(
         `${u} is in a private, link-local, or cloud-metadata range`,
       );
     return { url: e, tls: t.tls };
@@ -88,12 +88,12 @@ async function J(e, t) {
   try {
     h = await lookup(u, { all: !0 });
   } catch (k) {
-    throw new ybe(`could not resolve ${u}: ${ge(k).message}`);
+    throw new MonitorWsPreconditionError(`could not resolve ${u}: ${ge(k).message}`);
   }
-  if (h.length === 0) throw new ybe(`could not resolve ${u}`);
+  if (h.length === 0) throw new MonitorWsPreconditionError(`could not resolve ${u}`);
   for (let { address: k } of h)
     if (isPrivateOrReservedIpAddress(k))
-      throw new ybe(
+      throw new MonitorWsPreconditionError(
         `${u} resolves to ${k}, which is in a private, link-local, or cloud-metadata range`,
       );
   if (t.proxy) return { url: e, tls: t.tls };
@@ -106,12 +106,12 @@ async function J(e, t) {
   );
 }
 var Z = 30000,
-  Wdt = "handshake_timeout";
+  HANDSHAKE_TIMEOUT_DETAIL = "handshake_timeout";
 function Q(e, t) {
   let o = Number.isInteger(e) && e >= 100 && e <= 599 ? e : 0;
   return `${t ? "cf_mitigated" : "upgrade_rejected"}_${o}`;
 }
-function v7(e) {
+function parseUpgradeRejectDetail(e) {
   let t = /^(cf_mitigated|upgrade_rejected)_(\d{1,3})$/.exec(e ?? "");
   if (t === null) return null;
   return { status: Number(t[2]), cfMitigated: t[1] === "cf_mitigated" };
@@ -122,7 +122,7 @@ function ee(e) {
   if (e instanceof ArrayBuffer) return e.byteLength;
   return e.length;
 }
-function WPe(e) {
+function pickToolInvocationContext(e) {
   return {
     taskRegistry: e.taskRegistry,
     toolUseId: e.toolUseId,
@@ -139,8 +139,8 @@ function te(e) {
       } catch {}
   };
 }
-async function Hqe(e, t) {
-  let o = WPe(t),
+async function startWebSocketMonitor(e, t) {
+  let o = pickToolInvocationContext(t),
     { description: u, timeout_ms: h, persistent: w } = e,
     { url: M, protocols: k } = e.ws;
   checkWebSocketEgress(M);
@@ -251,7 +251,7 @@ async function Hqe(e, t) {
     let b = i?.headers ?? {},
       y = b["cf-mitigated"] !== void 0;
     ((U = Q(d, y)),
-      n(
+      logForDebugging(
         `[callWs] upgrade rejected: status=${d} cf-mitigated=${String(b["cf-mitigated"])} cf-ray=${String(b["cf-ray"])}`,
       ),
       i?.resume?.());
@@ -274,7 +274,7 @@ async function Hqe(e, t) {
       let i = p.all()[r];
       if (!i || i.status !== "running" || !_()) return;
       if (
-        (n(`[callWs] socket error: ${l.message}`),
+        (logForDebugging(`[callWs] socket error: ${l.message}`),
         !e.quietLifecycle && U === void 0)
       )
         sendMonitorEventNotification(u, `[WebSocket error: ${l.message}]`, r, {
@@ -342,7 +342,7 @@ async function Hqe(e, t) {
       (i, d, b, y, S) => {
         if (i.readyState === 0 && isMonitorSocketCurrent(d, i)) {
           try {
-            y.onLifecycle?.("close", Wdt, Date.now() - S);
+            y.onLifecycle?.("close", HANDSHAKE_TIMEOUT_DETAIL, Date.now() - S);
           } catch {}
           killMonitorTask(d, b, { quiet: !0, connectionLost: !0 });
         }
@@ -367,12 +367,12 @@ var ne =
     "Shell command or script. Each stdout line is an event; exit ends the watch.",
   re =
     "command contains control characters that would be hidden in the approval dialog",
-  se = () => s().refine(rU, re),
+  se = () => s().refine(hasNoControlCharacters, re),
   ie = () =>
     c({
       url: s()
         .refine(
-          rU,
+          hasNoControlCharacters,
           "url contains control characters that would be hidden in the approval dialog",
         )
         .refine((e) => {
@@ -600,7 +600,7 @@ var be = {
     },
     getToolUseSummary(e) {
       if (!e?.description) return null;
-      return truncate(e.description, Iw);
+      return truncate(e.description, TOOL_USE_SUMMARY_MAX_CHARS);
     },
     getActivityDescription(e) {
       return e?.description ? `Monitoring: ${e.description}` : "Monitoring";
@@ -651,8 +651,8 @@ var be = {
       return checkBashCommandPermissions({ ...e, command: e.command }, t);
     },
     async call(e, t, o, u) {
-      if ((pe(t), e.ws)) return Hqe({ ...e, ...q(e), ws: e.ws }, WPe(t));
+      if ((pe(t), e.ws)) return startWebSocketMonitor({ ...e, ...q(e), ws: e.ws }, pickToolInvocationContext(t));
       return fe(e.command, e, t, u);
     },
   });
-export { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason, MonitorTool };
+export { MonitorWsPreconditionError, normalizeWebSocketUrlScheme, HANDSHAKE_TIMEOUT_DETAIL, parseUpgradeRejectDetail, pickToolInvocationContext, startWebSocketMonitor, wsEgressDenyReason, MonitorTool };

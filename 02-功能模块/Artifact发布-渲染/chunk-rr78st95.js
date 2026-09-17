@@ -10,10 +10,10 @@
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { b5t, tie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { escapeHtmlAttribute } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { BASE58_SLUG_PATTERN, slugToUuid } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { matchDataIdAttribute } from "../图表-Mermaid/chunk-743atbtj.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -158,7 +158,7 @@ function I(e) {
     e.editorSettleWatch?.(),
     (e.editorSettleWatch = null));
 }
-function TYe(e, t, r) {
+function revokeCodeliveredFollowups(e, t, r) {
   let i = v().current;
   if (i === void 0) return;
   for (let [a, o] of i.codeliveredFollowups)
@@ -166,8 +166,8 @@ function TYe(e, t, r) {
       (i.codeliveredFollowups.delete(a), o.revoke(t));
 }
 var ae = 64,
-  $h = 5,
-  $fe = 3 * $h;
+  MAX_ARTIFACT_WATCHES = 5,
+  MAX_WATCH_HANDOFF_ENTRIES = 3 * MAX_ARTIFACT_WATCHES;
 function le() {
   return {
     live: {
@@ -452,7 +452,7 @@ function le() {
     rejectBreaker: new Ku({ max: ae }),
   };
 }
-function EYe(e) {
+function stopArtifactSupervisor(e) {
   if (((e.stopped = !0), e.abort.abort(), e.timer !== void 0))
     (clearTimeout(e.timer), (e.timer = void 0));
   (delete e.lease, delete e.renewable, delete e.wake);
@@ -464,25 +464,25 @@ var de = new Gt(() => new W());
 function v() {
   return de.of(B());
 }
-function ne() {
+function getArtifactState() {
   let e = v();
   return ((e.current ??= le()), e.current);
 }
-function Rer(e, t) {
+function markThreadAutoReplied(e, t) {
   let r = v().current?.autoReact.artifacts.get(e)?.threads.get(t);
   if (r !== void 0) r.lastAutoReplyAt = Date.now();
 }
-function vJ() {
+function rearmWatchNoticeBudgets() {
   let e = v().current;
   if (e === void 0) return;
   for (let t of e.liveDocWatch.noticeBudgets.values()) t.disclosed = !1;
 }
-function HCe() {
+function clearRefusedPublishBodies() {
   let e = v().current;
   if (e === void 0) return;
-  (e.refusedPublishBodies.clear(), vTn());
+  (e.refusedPublishBodies.clear(), clearReadDeliveries());
 }
-function vTn() {
+function clearReadDeliveries() {
   let e = v().current;
   if (e === void 0) return;
   for (let t of e.pendingHandoverReads.values())
@@ -492,7 +492,7 @@ function vTn() {
       t.confirmsResendFor.clear());
   e.readDeliveries.clear();
 }
-function ker(e) {
+function pruneRefusedPublishBodies(e) {
   let t = v().current;
   if (t === void 0) return;
   let r = t.refusedPublishBodies,
@@ -508,36 +508,36 @@ function ker(e) {
       delete o.observedFrom;
   }
 }
-function AYe() {
+function getArtifactRoom() {
   return v().current?.room;
 }
-function xer() {
+function getArtifactPresence() {
   return v().current?.presence;
 }
-function hTt(e) {
+function disposePresenceSlug(e) {
   let t = v().current?.presence;
   t?.disposeSlug?.(t, e);
 }
-function Her(e) {
+function retirePresenceSlug(e) {
   let t = v().current?.presence;
   t?.retireSlug?.(t, e);
 }
-function Ier(e) {
+function isPresenceDeclined(e) {
   return v().current?.presence.declined.has(e) === !0;
 }
-function RTn() {
+function hasArtifactState() {
   return v().current !== void 0;
 }
-function Per() {
-  let e = AYe();
+function notifyRoomConsentChanged() {
+  let e = getArtifactRoom();
   e?.consentChanged?.(e);
 }
-function Oer(e) {
-  let t = AYe();
+function notifyRoomAccountChanged(e) {
+  let t = getArtifactRoom();
   t?.accountChanged?.(t, e);
 }
-function xoe() {
-  let e = AYe();
+function disposeArtifactRoom() {
+  let e = getArtifactRoom();
   e?.dispose?.(e);
 }
 function ue(e) {
@@ -563,15 +563,15 @@ function ge(e) {
   }
   t?.stop({ killTask: !1 });
 }
-function kTn(e) {
+function resetOwnPrincipalTokens(e) {
   (e.ownPrincipalTokens.clear(),
     (e.ownPrincipalTokenAccount = null),
     e.ownPrincipalTokenEpoch++);
 }
-function Der(e = "signed_out", t) {
+function handleArtifactAccountChange(e = "signed_out", t) {
   let r = v().current;
   if (r === void 0) return;
-  if ((kTn(r), e !== "same_account")) {
+  if ((resetOwnPrincipalTokens(r), e !== "same_account")) {
     ((r.assetsOnRoster = !1),
       r.accountEpoch++,
       r.postedReplyIds.clear(),
@@ -622,7 +622,7 @@ function Der(e = "signed_out", t) {
   let { room: i, presence: a } = r;
   (i.accountChanged?.(i, t), a.accountChanged?.(a, t));
 }
-async function Ler(e) {
+async function flushLiveReplicasBeforeLogout(e) {
   if (e === "same_account") return;
   let t = v().current;
   if (t === void 0 || t.liveReplicas.replicas.size === 0) return;
@@ -631,41 +631,41 @@ async function Ler(e) {
   if (i !== void 0)
     r.push(
       i().then(
-        () => n("[liveReplica] held saves pushed before logout"),
-        (a) => n(`[liveReplica] held saves not pushed before logout: ${l(a)}`),
+        () => logForDebugging("[liveReplica] held saves pushed before logout"),
+        (a) => logForDebugging(`[liveReplica] held saves not pushed before logout: ${l(a)}`),
       ),
     );
   for (let [a, o] of t.liveReplicas.replicas)
     r.push(
       o.replica.sendFinalReport().then(
         (s) =>
-          n(
+          logForDebugging(
             `[liveReplica] final divergence report before logout ${a}: ${s ? "sent" : "nothing due"}`,
           ),
         (s) =>
-          n(
+          logForDebugging(
             `[liveReplica] final divergence report before logout ${a} failed: ${l(s)}`,
           ),
       ),
     );
   await Promise.race([Promise.all(r), sleep(2000)]);
 }
-function ICe() {
+function retireLiveDocWatches() {
   let e = v().current;
   if ((e?.liveDocWatch.stopAll?.("clear"), e !== void 0))
     for (let [t, r] of e.liveReplicas.replicas)
       r.replica.sendFinalReport().then(
         (i) =>
-          n(
+          logForDebugging(
             `[liveReplica] final divergence report at conversation retire ${t}: ${i ? "sent" : "nothing due"}`,
           ),
         (i) =>
-          n(
+          logForDebugging(
             `[liveReplica] final divergence report at conversation retire ${t} failed: ${l(i)}`,
           ),
       );
 }
-function PCe(e) {
+function resetArtifactConversationState(e) {
   let t = v().current;
   if (t === void 0) return;
   if (e?.continuesConversation !== !0)
@@ -689,14 +689,14 @@ function PCe(e) {
     (t.verify.lastPublish = void 0),
     t.verify.reads.clear());
 }
-var Ufe = "http://www.w3.org/1999/xhtml";
-function L$(e) {
+var XHTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
+function asDocument(e) {
   return e;
 }
-function Mer(e) {
+function asDocumentFragment(e) {
   return e;
 }
-function cg(e, t) {
+function getAttributeValue(e, t) {
   let r = t.toLowerCase();
   return e.attrs?.find((i) => i.name.toLowerCase() === r)?.value;
 }
@@ -704,15 +704,15 @@ import { randomUUID as fe } from "crypto";
 var me = "decision",
   he = "deliverables",
   Se = /(?:`{3,}|~{3,})[ \t]*(?:decision|deliverables)/,
-  Hoe = "[a-z0-9][a-z0-9-]{0,63}",
-  E = new RegExp(`^${Hoe}$`),
+  DECISION_ID_PATTERN = "[a-z0-9][a-z0-9-]{0,63}",
+  E = new RegExp(`^${DECISION_ID_PATTERN}$`),
   be = ["id", "question", "option", "lean", "resolved", "custom", "anchor"],
   ve = new RegExp(`^(${be.join("|")}):[ \\t]?(.*)$`),
-  F = new RegExp(`^(${Hoe})(?:[ \\t]*\\|[ \\t]*(.+))?$`),
+  F = new RegExp(`^(${DECISION_ID_PATTERN})(?:[ \\t]*\\|[ \\t]*(.+))?$`),
   ye = 300,
   we = 60,
   Me = 200,
-  xTn = /^[A-Za-z0-9 ._:/@#()+-]{1,120}$/,
+  ANCHOR_VALUE_PATTERN = /^[A-Za-z0-9 ._:/@#()+-]{1,120}$/,
   U = 2,
   j = 5,
   H = 20,
@@ -735,7 +735,7 @@ function D(e) {
   if (t.length > V) return null;
   return Buffer.from(t).toString("base64");
 }
-function CYe(e) {
+function decodeBase64Text(e) {
   if (e.length === 0 || e.length % 4 !== 0 || e.length > Re || !Te.test(e))
     return null;
   let t = Buffer.from(e, "base64");
@@ -754,20 +754,20 @@ function T(e) {
 }
 var R = "get-started",
   M = ["get-started", "keep-iterating"];
-function _Tt(e) {
+function isGetStartedDecision(e) {
   if (e.id !== R || e.options.length !== 2) return !1;
   if (e.custom !== void 0) return !1;
   let t = new Set(e.options.map((r) => r.token));
   return M.every((r) => t.has(r));
 }
 function X(e) {
-  let t = e.find(_Tt);
+  let t = e.find(isGetStartedDecision);
   if (e.some((i) => i !== t && !T(i))) return "in-progress";
   if (t?.resolved === M[0]) return "started";
   if (t !== void 0 && t.resolved === void 0) return "ready";
   return "in-progress";
 }
-var Ner =
+var DECISION_COMMENT_PATTERN =
   /^<!--ws-decision-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}-\d+-->\s*$/;
 function Pe(e) {
   let t = {},
@@ -807,7 +807,7 @@ function Pe(e) {
     if (!r.some((h) => h.token === m)) return null;
     f = { token: m, reason: g };
   }
-  if (s !== void 0 && !xTn.test(s)) return null;
+  if (s !== void 0 && !ANCHOR_VALUE_PATTERN.test(s)) return null;
   if (o !== void 0 && !r.some((u) => u.token === o)) return null;
   if (c !== void 0) {
     if (o !== void 0) return null;
@@ -824,7 +824,7 @@ function Pe(e) {
     anchor: s,
   };
 }
-function HTn(e) {
+function renderDecisionItem(e) {
   let t = T(e),
     r = t ? "resolved" : "open",
     i =
@@ -833,22 +833,22 @@ function HTn(e) {
         : e.options.find((g) => g.token === e.resolved),
     a = e.custom === void 0 ? null : D(e.custom),
     o =
-      `data-decision-id="${go(e.id)}" data-decision-state="${r}"` +
-      (e.lean === void 0 ? "" : ` data-lean-choice="${go(e.lean.token)}"`) +
+      `data-decision-id="${escapeHtmlAttribute(e.id)}" data-decision-state="${r}"` +
+      (e.lean === void 0 ? "" : ` data-lean-choice="${escapeHtmlAttribute(e.lean.token)}"`) +
       (e.resolved === void 0
         ? ""
-        : ` data-resolved-choice="${go(e.resolved)}"`) +
-      (a === null ? "" : ` data-resolved-custom="${go(a)}"`) +
-      (e.anchor === void 0 ? "" : ` data-anchor="${go(e.anchor)}"`),
+        : ` data-resolved-choice="${escapeHtmlAttribute(e.resolved)}"`) +
+      (a === null ? "" : ` data-resolved-custom="${escapeHtmlAttribute(a)}"`) +
+      (e.anchor === void 0 ? "" : ` data-anchor="${escapeHtmlAttribute(e.anchor)}"`),
     s = e.lean,
     c = e.options
       .map((g) => {
-        let h = `<span class="option-label">${go(g.label)}</span>`,
-          S = go(g.token),
+        let h = `<span class="option-label">${escapeHtmlAttribute(g.label)}</span>`,
+          S = escapeHtmlAttribute(g.token),
           d = s !== void 0 && g.token === s.token,
           p =
             s !== void 0 && g.token === s.token && s.reason !== void 0
-              ? `<span class="why">${go(s.reason)}</span>`
+              ? `<span class="why">${escapeHtmlAttribute(s.reason)}</span>`
               : "";
         if (t) {
           let P = g.token === e.resolved ? "option chosen" : "option dim",
@@ -860,14 +860,14 @@ function HTn(e) {
       .join(""),
     f =
       e.custom !== void 0
-        ? `<p class="decided">Decided: ${go(e.custom)}</p>`
+        ? `<p class="decided">Decided: ${escapeHtmlAttribute(e.custom)}</p>`
         : i === void 0
           ? ""
-          : `<p class="decided">Decided: ${go(i.label)}</p>`,
+          : `<p class="decided">Decided: ${escapeHtmlAttribute(i.label)}</p>`,
     u =
       e.anchor === void 0
         ? ""
-        : `<p class="anchor">Anchor: <code>${go(e.anchor)}</code></p>`,
+        : `<p class="anchor">Anchor: <code>${escapeHtmlAttribute(e.anchor)}</code></p>`,
     m =
       t || e.id === R
         ? ""
@@ -876,16 +876,16 @@ function HTn(e) {
   return (
     `<div class="call-item" ${o}>` +
     '<span class="marker" aria-hidden="true">\u25CF</span>' +
-    `<div class="call-body"><p><span class="q">${go(e.question)}</span></p>` +
+    `<div class="call-body"><p><span class="q">${escapeHtmlAttribute(e.question)}</span></p>` +
     f +
     u +
     `<div class="options">${c}${m}</div></div></div>`
   );
 }
-var ITn = "<!--ws-decisions-island-->",
-  PTn = "<!--ws-status-banner-->",
-  OTn = "<!--ws-status-footer-->";
-function Fer(e) {
+var DECISION_ISLAND_SLOT = "<!--ws-decisions-island-->",
+  STATUS_BANNER_SLOT = "<!--ws-status-banner-->",
+  STATUS_FOOTER_SLOT = "<!--ws-status-footer-->";
+function renderDecisionIslandScript(e) {
   if (e.length === 0) return null;
   for (let i of e) if (i.custom !== void 0 && D(i.custom) === null) return null;
   let t = e.map((i) => ({
@@ -895,14 +895,14 @@ function Fer(e) {
       choice: i.resolved ?? null,
       custom: i.custom === void 0 ? null : D(i.custom),
     })),
-    r = b({ items: t });
+    r = jsonStringify({ items: t });
   for (let i of ["<", ">", "&", "'", "\\"]) if (r.includes(i)) return null;
-  if (MTn(r) === null) return null;
+  if (parseDecisionIslandItems(r) === null) return null;
   return `<script type="application/json" id="ws-decisions">${r}</script>`;
 }
-function $er(e) {
+function renderStatusBanner(e) {
   let t = X(e),
-    r = e.find(_Tt),
+    r = e.find(isGetStartedDecision),
     i = countMatching(e, (o) => o !== r && !T(o)),
     a =
       t === "started"
@@ -914,16 +914,16 @@ function $er(e) {
             : "In progress";
   return `<div class="ws-banner" data-ws-state="${t}">${a}</div>`;
 }
-function Uer(e, t) {
+function renderStatusFooter(e, t) {
   let r = e.resolved,
     i = r === void 0 ? "open" : "resolved",
     a =
-      `data-decision-id="${go(e.id)}" data-decision-state="${i}"` +
-      (r === void 0 ? "" : ` data-resolved-choice="${go(r)}"`),
+      `data-decision-id="${escapeHtmlAttribute(e.id)}" data-decision-state="${i}"` +
+      (r === void 0 ? "" : ` data-resolved-choice="${escapeHtmlAttribute(r)}"`),
     o = e.options
       .map((c) => {
-        let f = `<span class="option-label">${go(c.label)}</span>`,
-          u = go(c.token);
+        let f = `<span class="option-label">${escapeHtmlAttribute(c.label)}</span>`,
+          u = escapeHtmlAttribute(c.token);
         if (r !== void 0)
           return `<span class="${c.token === r ? "option chosen" : "option dim"}" data-choice="${u}">${f}</span>`;
         return `<span class="${c.token === M[0] ? "option cta" : "option cta-quiet"}" role="button" aria-disabled="true" title="Deciding from the page needs this Artifact to be able to update itself" data-choice="${u}">${f}</span>`;
@@ -945,13 +945,13 @@ var C = 10,
   DTn = "data-ws-deliverable-kind",
   ke = ["pr", "artifact", "other"],
   Ce = new RegExp(
-    `/artifact/(?:[A-Za-z0-9_-]*-)?(?:[0-9a-f]{8}-|(${b5t})(?:/|$))`,
+    `/artifact/(?:[A-Za-z0-9_-]*-)?(?:[0-9a-f]{8}-|(${BASE58_SLUG_PATTERN})(?:/|$))`,
   );
 function Le(e) {
   if (/\/(?:pull|pull-requests|-\/merge_requests)\/\d+/.test(e.pathname))
     return "pr";
   let t = Ce.exec(e.pathname);
-  if (t && (t[1] === void 0 || tie(t[1]) !== null)) return "artifact";
+  if (t && (t[1] === void 0 || slugToUuid(t[1]) !== null)) return "artifact";
   return "other";
 }
 function _e(e) {
@@ -977,9 +977,9 @@ function _e(e) {
   return t.length === 0 ? null : t;
 }
 function Oe(e) {
-  return `<div class="ws-deliverables"><ul>${e.map((r) => `<li class="ws-deliverable" ${DTn}="${r.kind}"><a href="${go(r.url)}" target="_blank" rel="noopener noreferrer">${go(r.label)}</a></li>`).join("")}</ul></div>`;
+  return `<div class="ws-deliverables"><ul>${e.map((r) => `<li class="ws-deliverable" ${DTn}="${r.kind}"><a href="${escapeHtmlAttribute(r.url)}" target="_blank" rel="noopener noreferrer">${escapeHtmlAttribute(r.label)}</a></li>`).join("")}</ul></div>`;
 }
-function yTt(e) {
+function tallyDeliverableKinds(e) {
   let t = e.slice(0, C),
     r = (i) => (ke.includes(i) ? i : "other");
   return {
@@ -989,7 +989,7 @@ function yTt(e) {
     other: countMatching(t, (i) => r(i) === "other"),
   };
 }
-function Ber(e, t, r = HTn) {
+function extractWorkshopDecisions(e, t, r = renderDecisionItem) {
   let i = {
     md: e,
     substitute: (d) => ({ html: d, complete: !0 }),
@@ -1076,8 +1076,8 @@ ${w}
     deliverables: o.flatMap((d) => ("deliverables" in d ? d.deliverables : [])),
   };
 }
-var LTn = 'id="ws-decisions">';
-function wFe(e, t) {
+var DECISION_ISLAND_OPEN_TAG_END = 'id="ws-decisions">';
+function findIslandOpenTagSpans(e, t) {
   let r = `id="${t}"`,
     i = [],
     a = e.indexOf(r);
@@ -1101,7 +1101,7 @@ async function N(e, t) {
 }
 async function We(e, t) {
   let { parse: r } = await import("../../01-核心基础设施/共享小工具-未细化/parse.4jce22r9.js"),
-    i = L$(r(e, { sourceCodeLocationInfo: !0 })),
+    i = asDocument(r(e, { sourceCodeLocationInfo: !0 })),
     a = [],
     o = [{ node: i, inTemplate: !1 }];
   for (;;) {
@@ -1109,7 +1109,7 @@ async function We(e, t) {
     if (s === void 0) break;
     let { node: c, inTemplate: f } = s;
     if (c.tagName !== void 0) {
-      if (cg(c, "id") === t) a.push({ node: c, inTemplate: f });
+      if (getAttributeValue(c, "id") === t) a.push({ node: c, inTemplate: f });
     }
     for (let u of c.childNodes ?? []) o.push({ node: u, inTemplate: f });
     for (let u of c.content?.childNodes ?? [])
@@ -1117,9 +1117,9 @@ async function We(e, t) {
   }
   return a;
 }
-async function Gqt(e, t) {
+async function parseDecisionIsland(e, t) {
   if (!E.test(t)) return { ambiguous: !0 };
-  let r = wFe(e, t);
+  let r = findIslandOpenTagSpans(e, t);
   if (r.length === 0) {
     let m = await N(e, t);
     if (m === null) return { ambiguous: !0 };
@@ -1130,7 +1130,7 @@ async function Gqt(e, t) {
     o = await N(e, t);
   if (o === null || o.length !== 1 || o[0].inTemplate) return { ambiguous: !0 };
   let s = o[0].node,
-    c = (cg(s, "type") ?? "").trim().toLowerCase(),
+    c = (getAttributeValue(s, "type") ?? "").trim().toLowerCase(),
     f = s.sourceCodeLocation?.startTag,
     u = s.sourceCodeLocation?.endTag;
   if (
@@ -1145,11 +1145,11 @@ async function Gqt(e, t) {
   if (i < f.startOffset || a !== f.endOffset) return { ambiguous: !0 };
   return { json: e.slice(f.endOffset, u.startOffset) };
 }
-function MTn(e) {
+function parseDecisionIslandItems(e) {
   if (e.length > Ie) return null;
   let t;
   try {
-    t = z(e);
+    t = jsonParse(e);
   } catch {
     return null;
   }
@@ -1190,7 +1190,7 @@ function MTn(e) {
     let h = f.choice;
     if (h !== null && (typeof h !== "string" || !m.includes(h))) return null;
     let S = f.custom;
-    if (S !== null && (typeof S !== "string" || CYe(S) === null)) return null;
+    if (S !== null && (typeof S !== "string" || decodeBase64Text(S) === null)) return null;
     if (S !== null && u === R) return null;
     if (g === "open" && (h !== null || S !== null)) return null;
     if (g === "resolved" && (h !== null) === (S !== null)) return null;
@@ -1206,7 +1206,7 @@ function Fe(e) {
     e.custom === null
   );
 }
-function vYe(e) {
+function deriveIslandWorkshopState(e) {
   let t = e.find(Fe);
   if (e.some((i) => i !== t && i.state === "open")) return "in-progress";
   if (t !== void 0 && t.choice === M[0]) return "started";
@@ -1223,62 +1223,62 @@ class Y {
   }
 }
 var Q = new Y();
-function jer(e) {
+function registerWorkshopEnabledGate(e) {
   Q.register(e);
 }
-function Wer() {
+function isWorkshopEnabled() {
   return Q.isOpen();
 }
 export {
   xN,
-  TYe,
-  $h,
-  $fe,
-  EYe,
-  ne,
-  Rer,
-  vJ,
-  HCe,
-  vTn,
-  ker,
-  AYe,
-  xer,
-  hTt,
-  Her,
-  Ier,
-  RTn,
-  Per,
-  Oer,
-  xoe,
-  kTn,
-  Der,
-  Ler,
-  ICe,
-  PCe,
-  Ufe,
-  L$,
-  Mer,
-  cg,
-  Hoe,
-  xTn,
-  CYe,
-  _Tt,
-  Ner,
-  HTn,
-  ITn,
-  PTn,
-  OTn,
-  Fer,
-  $er,
-  Uer,
+  revokeCodeliveredFollowups,
+  MAX_ARTIFACT_WATCHES,
+  MAX_WATCH_HANDOFF_ENTRIES,
+  stopArtifactSupervisor,
+  getArtifactState,
+  markThreadAutoReplied,
+  rearmWatchNoticeBudgets,
+  clearRefusedPublishBodies,
+  clearReadDeliveries,
+  pruneRefusedPublishBodies,
+  getArtifactRoom,
+  getArtifactPresence,
+  disposePresenceSlug,
+  retirePresenceSlug,
+  isPresenceDeclined,
+  hasArtifactState,
+  notifyRoomConsentChanged,
+  notifyRoomAccountChanged,
+  disposeArtifactRoom,
+  resetOwnPrincipalTokens,
+  handleArtifactAccountChange,
+  flushLiveReplicasBeforeLogout,
+  retireLiveDocWatches,
+  resetArtifactConversationState,
+  XHTML_NAMESPACE,
+  asDocument,
+  asDocumentFragment,
+  getAttributeValue,
+  DECISION_ID_PATTERN,
+  ANCHOR_VALUE_PATTERN,
+  decodeBase64Text,
+  isGetStartedDecision,
+  DECISION_COMMENT_PATTERN,
+  renderDecisionItem,
+  DECISION_ISLAND_SLOT,
+  STATUS_BANNER_SLOT,
+  STATUS_FOOTER_SLOT,
+  renderDecisionIslandScript,
+  renderStatusBanner,
+  renderStatusFooter,
   DTn,
-  yTt,
-  Ber,
-  LTn,
-  wFe,
-  Gqt,
-  MTn,
-  vYe,
-  jer,
-  Wer,
+  tallyDeliverableKinds,
+  extractWorkshopDecisions,
+  DECISION_ISLAND_OPEN_TAG_END,
+  findIslandOpenTagSpans,
+  parseDecisionIsland,
+  parseDecisionIslandItems,
+  deriveIslandWorkshopState,
+  registerWorkshopEnabledGate,
+  isWorkshopEnabled,
 };

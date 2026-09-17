@@ -16,7 +16,7 @@ import { useAppStateSelector } from "../../01-核心基础设施/共享小工具
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -24,8 +24,8 @@ import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-durati
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { BackgroundTasksDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -42,7 +42,7 @@ import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
@@ -188,13 +188,13 @@ function J(Oo) {
         });
   let T;
   if (i[14] !== S)
-    ((T = S !== null && e(t, { color: "error", children: S })),
+    ((T = S !== null && e(Text, { color: "error", children: S })),
       (i[14] = S),
       (i[15] = T));
   else T = i[15];
   let ho;
   if (i[16] === MEMO_CACHE_SENTINEL)
-    ((ho = e(t, {
+    ((ho = e(Text, {
       dimColor: !0,
       wrap: "wrap-trim",
       children:
@@ -204,7 +204,7 @@ function J(Oo) {
   else ho = i[16];
   let E;
   if (i[17] !== T)
-    ((E = r(o, { flexDirection: "column", children: [T, ho] })),
+    ((E = r(Box, { flexDirection: "column", children: [T, ho] })),
       (i[17] = T),
       (i[18] = E));
   else E = i[18];

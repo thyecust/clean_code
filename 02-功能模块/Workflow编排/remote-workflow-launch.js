@@ -10,10 +10,10 @@
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isReviewOriginSession } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { MAX_WORKFLOW_SCRIPT_BYTES, MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, persistWorkflowScript } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, isWorkflowsAllowedByPolicy } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v9, Fdt, $dt, Rqe } from "./chunk-bkcg0nbj.js";
@@ -35,7 +35,7 @@ function formatWorkflowErrorLine(t, o) {
   return `remote-workflow: error[${t}]: ${D(o)}`;
 }
 function c(t) {
-  let o = b(t);
+  let o = jsonStringify(t);
   return o === void 0
     ? void 0
     : o
@@ -64,7 +64,7 @@ async function launchWorkflow({
   let w = h ? MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES : MAX_WORKFLOW_SCRIPT_BYTES;
   if (t.length > w)
     return s("script-too-large", `workflow script exceeds ${w} bytes.`);
-  if (!rU(t))
+  if (!hasNoControlCharacters(t))
     return s(
       "control-chars",
       "workflow script contains disallowed control characters.",

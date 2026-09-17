@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getLocalBinDir } from "../共享小工具-未细化/user-directories.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { constants, statSync } from "fs";
@@ -30,12 +30,12 @@ class f {
       (this.memoState = v(r)),
       this.memoState.error && this.memoState.error !== e)
     )
-      n(
+      logForDebugging(
         `${PROCESS_WRAPPER_ENV_VAR} is set but can't be used \u2014 self-spawns that require it will refuse to start rather than run unwrapped: ${this.memoState.error}`,
         { level: "error" },
       );
     else if (this.memoState.platformIgnored)
-      n(
+      logForDebugging(
         `${PROCESS_WRAPPER_ENV_VAR} is set but ignored on Windows \u2014 the launcher must exec into Claude Code, which Windows can't do; sessions run unwrapped`,
         { level: "warn" },
       );
@@ -113,7 +113,7 @@ function v(r) {
     argv: e,
     error: null,
     platformIgnored: !1,
-    record: e.map((o) => (/[\s"]/.test(o) ? b(o) : o)).join(" "),
+    record: e.map((o) => (/[\s"]/.test(o) ? jsonStringify(o) : o)).join(" "),
   };
 }
 function i(r) {
@@ -126,7 +126,7 @@ function W(r) {
   if (e.startsWith("[")) {
     let t;
     try {
-      t = z(e);
+      t = jsonParse(e);
     } catch {
       throw Error("value starts with `[` but is not valid JSON");
     }

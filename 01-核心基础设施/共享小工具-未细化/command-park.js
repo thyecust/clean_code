@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, VP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isUnattendedBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { markCommandParkBlocked, clearCommandParkBlocked } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { markCommandParkBlocked, clearCommandParkBlocked } from "../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js";
 import { logJobWriteError } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 class i {
   activePark = null;

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function ErrorMessage(u) {
   let n = _(4),
@@ -22,7 +22,7 @@ function ErrorMessage(u) {
   else r = n[1];
   let f;
   if (n[2] !== r)
-    ((f = e(t, { color: "error", children: r })), (n[2] = r), (n[3] = f));
+    ((f = e(Text, { color: "error", children: r })), (n[2] = r), (n[3] = f));
   else f = n[3];
   return f;
 }

@@ -12,9 +12,9 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { fO, Qw, b3e, Ilt } from "../../01-核心基础设施/设置-配置/chunk-ncbnx9cz.js";
+import { sanitizeImportField, sanitizeImportMessage, writeImportFallbackSkill, scanImportSources } from "../../01-核心基础设施/设置-配置/agent-import.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
@@ -57,7 +57,7 @@ function yt(zt) {
   return zt.displayName;
 }
 function bt(eo, to) {
-  return r(t, { dimColor: !0, children: ["\u2022 ", fO(eo.label)] }, to);
+  return r(Text, { dimColor: !0, children: ["\u2022 ", sanitizeImportField(eo.label)] }, to);
 }
 var H = "import:fallback-skill",
   me = () => {};
@@ -149,24 +149,24 @@ function ke(Xt) {
         try {
           let Ue = await ne.item.apply({ dryRun: R, storageV5: Ne });
           if (typeof Ue === "string") {
-            if ((q.push(`  \u2713 ${Qw(Ue)}`), ne.item.warning))
-              Je.push(Qw(ne.item.warning));
+            if ((q.push(`  \u2713 ${sanitizeImportMessage(Ue)}`), ne.item.warning))
+              Je.push(sanitizeImportMessage(ne.item.warning));
             K++;
-          } else q.push(`  - skipped ${Qw(Ue.skipped)}`);
+          } else q.push(`  - skipped ${sanitizeImportMessage(Ue.skipped)}`);
         } catch (be) {
           let Gt = be;
-          q.push(`  \u2717 ${fO(ne.item.label)}: ${Qw(l(Gt))}`);
+          q.push(`  \u2717 ${sanitizeImportField(ne.item.label)}: ${sanitizeImportMessage(l(Gt))}`);
         }
       }
       let ze = !1;
       if (Xe) {
         try {
-          let Be = await b3e(v.map(ft), { dryRun: R });
-          if (typeof Be === "string") (q.push(`  \u2713 ${Qw(Be)}`), (ze = !0));
-          else q.push(`  - skipped ${Qw(Be.skipped)}`);
+          let Be = await writeImportFallbackSkill(v.map(ft), { dryRun: R });
+          if (typeof Be === "string") (q.push(`  \u2713 ${sanitizeImportMessage(Be)}`), (ze = !0));
+          else q.push(`  - skipped ${sanitizeImportMessage(Be.skipped)}`);
         } catch ($e) {
           let Ot = $e;
-          q.push(`  \u2717 fallback skill: ${Qw(l(Ot))}`);
+          q.push(`  \u2717 fallback skill: ${sanitizeImportMessage(l(Ot))}`);
         }
       }
       logEvent("tengu_import_apply", { imported: K, dry_run: R ? 1 : 0 });
@@ -262,9 +262,9 @@ function ke(Xt) {
   let it = nt,
     rt;
   if (s[34] === MEMO_CACHE_SENTINEL)
-    ((rt = e(o, {
+    ((rt = e(Box, {
       paddingX: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: r(DotSeparatedList, {
@@ -290,7 +290,7 @@ function ke(Xt) {
     else V = s[38];
     let M;
     if (s[39] !== V)
-      ((M = e(o, { flexDirection: "column", paddingLeft: 1, children: V })),
+      ((M = e(Box, { flexDirection: "column", paddingLeft: 1, children: V })),
         (s[39] = V),
         (s[40] = M));
     else M = s[40];
@@ -355,8 +355,8 @@ function ke(Xt) {
       ((O = (V) => {
         let { item: z, source: Et } = V;
         return {
-          label: `[${Et}] ${fO(z.label)} (${qt[z.scope]})${z.warning ? " \u26A0" : ""}`,
-          ...(z.description && { description: fO(z.description) }),
+          label: `[${Et}] ${sanitizeImportField(z.label)} (${qt[z.scope]})${z.warning ? " \u26A0" : ""}`,
+          ...(z.description && { description: sanitizeImportField(z.description) }),
           value: z.id,
         };
       }),
@@ -374,7 +374,7 @@ function ke(Xt) {
   const M = `Found ${O} importable ${V} from ${it}.`;
   let ae;
   if (s[57] === MEMO_CACHE_SENTINEL)
-    ((ae = e(t, { children: "Select what to import:" })), (s[57] = ae));
+    ((ae = e(Text, { children: "Select what to import:" })), (s[57] = ae));
   else ae = s[57];
   let Q;
   if (s[58] !== b || s[59] !== A || s[60] !== ie || s[61] !== we)
@@ -420,7 +420,7 @@ async function mo(j, pe, X) {
     le = S.includes("--dry-run"),
     ce = S.some((c) => c === "--yes" || c.startsWith("--yes=")),
     k = S.find((c) => !c.startsWith("-")),
-    { scans: u, error: Y, warnings: L } = await Ilt({ from: k });
+    { scans: u, error: Y, warnings: L } = await scanImportSources({ from: k });
   if (Y || u.length === 0)
     return (
       j(Y ?? "No importable agent config found.", { display: "system" }),
@@ -435,7 +435,7 @@ async function mo(j, pe, X) {
         [
           "Detected agent config, but found nothing importable.",
           ...(L ?? []),
-          ...ee.map((I) => `  - ${fO(I.label)}: ${I.reason}`),
+          ...ee.map((I) => `  - ${sanitizeImportField(I.label)}: ${I.reason}`),
           ...(te > 0
             ? [
                 `  - ${te} item(s) from project-level config (review the project's .codex/.gemini dir directly)`,

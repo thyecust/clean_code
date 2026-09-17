@@ -12,7 +12,7 @@ import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { capitalize, pluralize, beforeFirst, truncateWithCharCount, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -35,7 +35,7 @@ import {
   getGlobalConfig,
   shouldSkipPluginAutoupdate,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { truncatePathMiddle, truncateToWidth, formatTokenEstimate, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle, truncateToWidth, formatTokenEstimate, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   CLAUDE_AI_SYNC_LABEL,
@@ -61,14 +61,14 @@ import {
   stripMcpServerPrefix,
   normalizeToolDisplayName,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, getSettings_DEPRECATED, updateSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -82,18 +82,18 @@ import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小�
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { useMcpConnections, useActivePlugins, useAppStateSession, useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import {
-  Sl,
-  sve,
-  onr,
-  V$,
-  Aa,
-  rA,
-  zoe,
+  getPluginsDir,
+  getPluginDataDir,
+  getPluginDataDirSize,
+  isValidCliNameToken,
+  buildCliCommand,
+  buildRunCommandHint,
+  getErrorPluginId,
   UJ,
-  vm,
-  K$,
-  qzt,
-} from "./chunk-7s6mt1vg.js";
+  formatPluginError,
+  formatPluginWarning,
+  formatPluginWarningGuidance,
+} from "./plugin-system-core.js";
 import {
   getCommandName,
   isMcpbFile,
@@ -181,7 +181,7 @@ import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMA
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { getPluginEditableScopes, editableScopeOf } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import { useVimModeInput, SearchInput } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
   QPt,
@@ -218,13 +218,13 @@ import {
 import { redactManagedMcpConfig, normalizePluginRelevanceSignals, matchPluginRelevanceSignal } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { nl, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useListCursor, Table, SelectableRow, DimParenthetical, StatusLine, useMcpReconnect, useMcpToggleEnabled } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { ir, xh, i2 } from "../MCP客户端/chunk-g4gdwpa0.js";
+import { getIdentityEpoch, isRemoteTransport, awaitDiscoveryCacheFlush } from "../MCP客户端/mcp-discovery-cache.js";
 import { useCopyToClipboard, CopyFeedbackHint, CopyFallbackNotice } from "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { getFlaggedPlugins, markFlaggedPluginsSeen, clearFlaggedPlugin } from "../后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { getPluginInventory } from "../MCP客户端/chunk-4xr0rjb4.js";
 import { useOnSettingsChange } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { i3e } from "../成本-Token统计/chunk-3nwwgatc.js";
-import { cQt, lIt } from "./chunk-d0tph3ay.js";
+import { getSkillTokenCountsAccess } from "../成本-Token统计/usage-transcript-scan.js";
+import { runPluginAutoupdateForMarketplaces, publishPluginAutoUpdateNotification } from "./plugin-autoupdate.js";
 import { computeSkillUsageByPlugin } from "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { BackgroundText } from "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -316,7 +316,7 @@ async function gy(a, k, v, b) {
   } catch (R) {
     return (
       logError(R),
-      n(`activatePluginsAfterInstall: falling back to needsRefresh: ${l(R)}`, {
+      logForDebugging(`activatePluginsAfterInstall: falling back to needsRefresh: ${l(R)}`, {
         level: "error",
       }),
       "refresh_failed"
@@ -325,7 +325,7 @@ async function gy(a, k, v, b) {
 }
 function fy(a, k) {
   if ("orphan" in a && a.orphan) return !1;
-  if (zoe(a) === void 0) return !1;
+  if (getErrorPluginId(a) === void 0) return !1;
   let v =
       "pluginId" in a && a.pluginId
         ? a.pluginId
@@ -400,7 +400,7 @@ function Ol({
         try {
           Mt = (await resolveMissingDependencies((await loadAllPlugins(K, se)).errors, K)).installed;
         } catch (Lt) {
-          n(`marketplace add: dep auto-resolve skipped: ${l(Lt)}`, {
+          logForDebugging(`marketplace add: dep auto-resolve skipped: ${l(Lt)}`, {
             level: "warn",
           });
         }
@@ -411,7 +411,7 @@ function Ol({
       } catch (Je) {
         let ae = ge(Je);
         if (
-          (n(`marketplace add failed: ${l(ae)}`, { level: "error" }),
+          (logForDebugging(`marketplace add failed: ${l(ae)}`, { level: "error" }),
           R(ae.message),
           we(""),
           ze(!1),
@@ -425,55 +425,55 @@ function Ol({
     E(() => {
       if (X && a && !fe.current && !w && !A) ((fe.current = !0), tt());
     }, []),
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           paddingX: 1,
           borderStyle: "round",
           children: [
-            e(o, {
+            e(Box, {
               marginBottom: 1,
-              children: e(t, { bold: !0, children: "Add Marketplace" }),
+              children: e(Text, { bold: !0, children: "Add Marketplace" }),
             }),
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
                 B &&
-                  r(o, {
+                  r(Box, {
                     marginBottom: 1,
                     flexDirection: "column",
                     children: [
-                      r(t, {
+                      r(Text, {
                         children: [
                           "claude.ai lists",
                           " ",
-                          e(t, { bold: !0, children: wr(B.name) }),
+                          e(Text, { bold: !0, children: wr(B.name) }),
                           " ",
                           "for your account:",
                         ],
                       }),
-                      r(t, { children: [" ", wr(B.source)] }),
-                      e(t, {
+                      r(Text, { children: [" ", wr(B.source)] }),
+                      e(Text, {
                         dimColor: !0,
                         children: "Type or paste its source below to add it.",
                       }),
                     ],
                   }),
-                e(t, { children: "Enter marketplace source:" }),
-                e(t, { dimColor: !0, children: "Examples:" }),
-                e(t, { dimColor: !0, children: " \xB7 owner/repo (GitHub)" }),
-                e(t, {
+                e(Text, { children: "Enter marketplace source:" }),
+                e(Text, { dimColor: !0, children: "Examples:" }),
+                e(Text, { dimColor: !0, children: " \xB7 owner/repo (GitHub)" }),
+                e(Text, {
                   dimColor: !0,
                   children: " \xB7 git@github.com:owner/repo.git (SSH)",
                 }),
-                e(t, {
+                e(Text, {
                   dimColor: !0,
                   children: " \xB7 https://example.com/marketplace.json",
                 }),
-                e(t, { dimColor: !0, children: " \xB7 ./path/to/marketplace" }),
-                e(o, {
+                e(Text, { dimColor: !0, children: " \xB7 ./path/to/marketplace" }),
+                e(Box, {
                   marginTop: 1,
                   children: e(hn, {
                     value: a,
@@ -489,23 +489,23 @@ function Ol({
               ],
             }),
             Fe &&
-              r(o, {
+              r(Box, {
                 marginTop: 1,
                 children: [
-                  e(yo, {}),
-                  e(t, {
+                  e(SpinnerGlyph, {}),
+                  e(Text, {
                     children:
                       wr(xe) || "Adding marketplace to configuration\u2026",
                   }),
                 ],
               }),
-            w && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(w) }) }),
-            A && e(o, { marginTop: 1, children: e(t, { children: sanitizeMultilineForDisplay(A) }) }),
+            w && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(w) }) }),
+            A && e(Box, { marginTop: 1, children: e(Text, { children: sanitizeMultilineForDisplay(A) }) }),
           ],
         }),
-        e(o, {
+        e(Box, {
           marginLeft: 3,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: r(DotSeparatedList, {
@@ -659,7 +659,7 @@ function gh(PC) {
 function fh() {}
 function yh(lh) {
   return (
-    n(`Failed to save plugin options: ${l(lh)}`, { level: "error" }),
+    logForDebugging(`Failed to save plugin options: ${l(lh)}`, { level: "error" }),
     lh ?? Error("save failed")
   );
 }
@@ -728,7 +728,7 @@ function Mr(aC) {
       }
       let My = _i ? await _i([_o]) : "reload-required";
       if (Fd) {
-        let Dy = Aa("plugin enable", _o);
+        let Dy = buildCliCommand("plugin enable", _o);
         let By = `enable it in /plugin${Dy ? ` or run: ${Dy}` : ""}.`;
         let Ay =
           My === "load-failed"
@@ -1145,7 +1145,7 @@ function Rr(Qd) {
   return ch;
 }
 function Ea(a, k) {
-  n(`Failed to read saved plugin options (${a}): ${l(k)}`, { level: "error" });
+  logForDebugging(`Failed to read saved plugin options (${a}): ${l(k)}`, { level: "error" });
 }
 function es(OC) {
   let LC = _(3),
@@ -1187,16 +1187,16 @@ function Da() {
   let kh = hh,
     bh;
   if (ep[1] === MEMO_CACHE_SENTINEL)
-    ((bh = r(t, { color: "claude", children: [figures.warning, " "] })),
+    ((bh = r(Text, { color: "claude", children: [figures.warning, " "] })),
       (ep[1] = bh));
   else bh = ep[1];
   let Sh;
   if (ep[2] === MEMO_CACHE_SENTINEL)
-    ((Sh = r(o, {
+    ((Sh = r(Box, {
       marginBottom: 1,
       children: [
         bh,
-        r(t, {
+        r(Text, {
           dimColor: !0,
           italic: !0,
           children: [
@@ -1219,7 +1219,7 @@ function yk() {
 function hk(Tp) {
   let [Hh, LP] = Tp;
   return r(
-    t,
+    Text,
     { dimColor: !0, children: ["\xB7 ", Hh, ": ", LP.map(wr).join(", ")] },
     Hh,
   );
@@ -1234,7 +1234,7 @@ function bk(Fa) {
 function xk(Fa) {
   let [gk, GP] = Fa;
   return r(
-    t,
+    Text,
     { dimColor: !0, children: ["\xB7 ", gk, ": ", GP.map(wr).join(", ")] },
     gk,
   );
@@ -1377,9 +1377,9 @@ function Lr(CP) {
     } = CP,
     as;
   if (jn[0] !== cp)
-    ((as = e(o, {
+    ((as = e(Box, {
       marginBottom: 1,
-      children: e(t, { bold: !0, children: cp }),
+      children: e(Text, { bold: !0, children: cp }),
     })),
       (jn[0] = cp),
       (jn[1] = as));
@@ -1390,13 +1390,13 @@ function Lr(CP) {
   else ls = jn[3];
   let us;
   if (jn[4] !== ls)
-    ((us = e(t, { bold: !0, children: ls })), (jn[4] = ls), (jn[5] = us));
+    ((us = e(Text, { bold: !0, children: ls })), (jn[4] = ls), (jn[5] = us));
   else us = jn[5];
   let ds;
   if (jn[6] !== Nt.marketplaceName || jn[7] !== dp)
     ((ds =
       dp &&
-      r(t, { dimColor: !0, children: ["from ", wr(Nt.marketplaceName)] })),
+      r(Text, { dimColor: !0, children: ["from ", wr(Nt.marketplaceName)] })),
       (jn[6] = Nt.marketplaceName),
       (jn[7] = dp),
       (jn[8] = ds));
@@ -1405,7 +1405,7 @@ function Lr(CP) {
   if (jn[9] !== Nt.entry.version)
     ((ps =
       Nt.entry.version &&
-      r(t, { dimColor: !0, children: ["Version: ", wr(Nt.entry.version)] })),
+      r(Text, { dimColor: !0, children: ["Version: ", wr(Nt.entry.version)] })),
       (jn[9] = Nt.entry.version),
       (jn[10] = ps));
   else ps = jn[10];
@@ -1419,9 +1419,9 @@ function Lr(CP) {
   if (jn[13] !== Nt.entry.description)
     ((fs =
       Nt.entry.description &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, { children: sanitizeMultilineForDisplay(Nt.entry.description) }),
+        children: e(Text, { children: sanitizeMultilineForDisplay(Nt.entry.description) }),
       })),
       (jn[13] = Nt.entry.description),
       (jn[14] = fs));
@@ -1430,9 +1430,9 @@ function Lr(CP) {
   if (jn[15] !== Nt.entry.author)
     ((ys =
       Nt.entry.author &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           children: [
             "By:",
@@ -1457,7 +1457,7 @@ function Lr(CP) {
     jn[21] !== fs ||
     jn[22] !== ys
   )
-    ((hs = r(o, {
+    ((hs = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [us, ds, ps, gs, fs, ys],
@@ -1487,7 +1487,7 @@ function Lr(CP) {
   else Eh = jn[30];
   let Ss;
   if (jn[31] !== zi)
-    ((Ss = zi && e(o, { marginBottom: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(zi) }) })),
+    ((Ss = zi && e(Box, { marginBottom: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(zi) }) })),
       (jn[31] = zi),
       (jn[32] = Ss));
   else Ss = jn[32];
@@ -1502,9 +1502,9 @@ function Lr(CP) {
           {
             active: ws,
             children: [
-              ws && e(t, { "aria-hidden": !0, children: "> " }),
-              !ws && e(t, { "aria-hidden": !0, children: "  " }),
-              e(t, {
+              ws && e(Text, { "aria-hidden": !0, children: "> " }),
+              !ws && e(Text, { "aria-hidden": !0, children: "  " }),
+              e(Text, {
                 bold: ws,
                 children:
                   Na && fp.action.startsWith("install-")
@@ -1525,13 +1525,13 @@ function Lr(CP) {
   } else vs = jn[36];
   let Wi;
   if (jn[40] !== vs)
-    ((Wi = e(o, { flexDirection: "column", children: vs })),
+    ((Wi = e(Box, { flexDirection: "column", children: vs })),
       (jn[40] = vs),
       (jn[41] = Wi));
   else Wi = jn[41];
   let Mh;
   if (jn[42] === MEMO_CACHE_SENTINEL)
-    ((Mh = e(t, {
+    ((Mh = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [
@@ -1554,7 +1554,7 @@ function Lr(CP) {
   else Mh = jn[42];
   let Cs;
   if (jn[43] !== gp)
-    ((Cs = e(o, { marginTop: 1, paddingLeft: gp, children: Mh })),
+    ((Cs = e(Box, { marginTop: 1, paddingLeft: gp, children: Mh })),
       (jn[43] = gp),
       (jn[44] = Cs));
   else Cs = jn[44];
@@ -1569,7 +1569,7 @@ function Lr(CP) {
     jn[51] !== Cs ||
     jn[52] !== hs
   )
-    (($h = r(o, {
+    (($h = r(Box, {
       flexDirection: "column",
       children: [as, hs, bs, pp, xs, Eh, Ss, Wi, Cs],
     })),
@@ -1603,7 +1603,7 @@ function _r(TP) {
       (Dr[1] = Ps));
   else Ps = Dr[1];
   let Dh;
-  if (Dr[2] === MEMO_CACHE_SENTINEL) ((Dh = e(t, { children: "Type to search" })), (Dr[2] = Dh));
+  if (Dr[2] === MEMO_CACHE_SENTINEL) ((Dh = e(Text, { children: "Type to search" })), (Dr[2] = Dh));
   else Dh = Dr[2];
   let Ts;
   if (Dr[3] !== hp)
@@ -1643,9 +1643,9 @@ function _r(TP) {
   else Bh = Dr[7];
   let Ah;
   if (Dr[8] !== Ps || Dr[9] !== Ts || Dr[10] !== Is)
-    ((Ah = e(o, {
+    ((Ah = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: r(DotSeparatedList, { children: [Ps, Dh, Ts, Is, Bh] }),
@@ -1687,7 +1687,7 @@ function Gs(MP) {
   }
   let _h;
   if (Nh[2] !== Es)
-    ((_h = r(t, { dimColor: !0, children: ["Last updated: ", Es] })),
+    ((_h = r(Text, { dimColor: !0, children: ["Last updated: ", Es] })),
       (Nh[2] = Es),
       (Nh[3] = _h));
   else _h = Nh[3];
@@ -1744,7 +1744,7 @@ function Qs(AP) {
   else Ms = Br[4];
   let Uh;
   if (Br[5] === MEMO_CACHE_SENTINEL)
-    ((Uh = e(t, { bold: !0, children: "Will install:" })), (Br[5] = Uh));
+    ((Uh = e(Text, { bold: !0, children: "Will install:" })), (Br[5] = Uh));
   else Uh = Br[5];
   let $s;
   if (Br[6] !== so.entry)
@@ -1766,7 +1766,7 @@ function Qs(AP) {
   else Bs = Br[13];
   let Vh;
   if (Br[14] !== Ms || Br[15] !== Bs)
-    ((Vh = r(o, {
+    ((Vh = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [Ms, Uh, Bs],
@@ -1822,7 +1822,7 @@ function Js(_P) {
   else zh = fi[2];
   let Ls;
   if (fi[3] !== Ep)
-    ((Ls = r(t, {
+    ((Ls = r(Text, {
       color: "warning",
       children: [
         zh,
@@ -1835,7 +1835,7 @@ function Js(_P) {
   else Ls = fi[4];
   let _s;
   if (fi[5] !== zo.destination)
-    ((_s = r(t, { children: ["  ", zo.destination] })),
+    ((_s = r(Text, { children: ["  ", zo.destination] })),
       (fi[5] = zo.destination),
       (fi[6] = _s));
   else _s = fi[6];
@@ -1843,24 +1843,24 @@ function Js(_P) {
   if (fi[7] !== zo.hiddenCharactersWarning)
     ((Fs =
       zo.hiddenCharactersWarning &&
-      r(t, { color: "error", children: ["  ", zo.hiddenCharactersWarning] })),
+      r(Text, { color: "error", children: ["  ", zo.hiddenCharactersWarning] })),
       (fi[7] = zo.hiddenCharactersWarning),
       (fi[8] = Fs));
   else Fs = fi[8];
   let Wh;
   if (fi[9] === MEMO_CACHE_SENTINEL)
-    ((Wh = r(t, { dimColor: !0, children: ["  ", "The command:"] })),
+    ((Wh = r(Text, { dimColor: !0, children: ["  ", "The command:"] })),
       (fi[9] = Wh));
   else Wh = fi[9];
   let Us;
   if (fi[10] !== zo.command)
-    ((Us = r(t, { children: ["  ", zo.command] })),
+    ((Us = r(Text, { children: ["  ", zo.command] })),
       (fi[10] = zo.command),
       (fi[11] = Us));
   else Us = fi[11];
   let Gh;
   if (fi[12] !== Ls || fi[13] !== _s || fi[14] !== Fs || fi[15] !== Us)
-    ((Gh = r(o, {
+    ((Gh = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [Ls, _s, Fs, Wh, Us],
@@ -1881,7 +1881,7 @@ function Xs(FP) {
   }
   let Qh;
   if (Gi[0] === MEMO_CACHE_SENTINEL)
-    ((Qh = e(t, {
+    ((Qh = e(Text, {
       dimColor: !0,
       children: "Installed by running a command on this machine:",
     })),
@@ -1889,9 +1889,9 @@ function Xs(FP) {
   else Qh = Gi[0];
   let Vs;
   if (Gi[1] !== Ro.source.command)
-    ((Vs = e(o, {
+    ((Vs = e(Box, {
       paddingLeft: 2,
-      children: e(t, { children: Ro.source.command }),
+      children: e(Text, { children: Ro.source.command }),
     })),
       (Gi[1] = Ro.source.command),
       (Gi[2] = Vs));
@@ -1902,24 +1902,24 @@ function Xs(FP) {
   else js = Gi[4];
   let Hs;
   if (Gi[5] !== js)
-    ((Hs = e(t, { dimColor: !0, children: js })), (Gi[5] = js), (Gi[6] = Hs));
+    ((Hs = e(Text, { dimColor: !0, children: js })), (Gi[5] = js), (Gi[6] = Hs));
   else Hs = Gi[6];
   let Yh;
   if (Gi[7] === MEMO_CACHE_SENTINEL)
-    ((Yh = areCommandPluginSourcesDisabledByPolicy() && e(t, { color: "warning", children: COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE })), (Gi[7] = Yh));
+    ((Yh = areCommandPluginSourcesDisabledByPolicy() && e(Text, { color: "warning", children: COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE })), (Gi[7] = Yh));
   else Yh = Gi[7];
   let Ks;
   if (Gi[8] !== Ro.source.mode)
     ((Ks =
       Ro.source.mode === "link" &&
       getCurrentPlatform() === "windows" &&
-      e(t, { color: "warning", children: y1e })),
+      e(Text, { color: "warning", children: y1e })),
       (Gi[8] = Ro.source.mode),
       (Gi[9] = Ks));
   else Ks = Gi[9];
   let Jh;
   if (Gi[10] !== Vs || Gi[11] !== Hs || Gi[12] !== Ks)
-    ((Jh = r(o, {
+    ((Jh = r(Box, {
       marginBottom: 1,
       flexDirection: "column",
       children: [Qh, Vs, Hs, Yh, Ks],
@@ -2045,7 +2045,7 @@ function Nr(Fa) {
             : "\xB7 Components will be discovered at installation";
         let mk;
         if (uk[9] !== Up)
-          ((mk = e(t, { dimColor: !0, children: Up })),
+          ((mk = e(Text, { dimColor: !0, children: Up })),
             (uk[9] = Up),
             (uk[10] = mk));
         else mk = uk[10];
@@ -2729,7 +2729,7 @@ function cc({
               Ot.sort((te, Ee) => te.entry.name.localeCompare(Ee.entry.name));
           } catch (bt) {
             if (ie) return;
-            (n(`Failed to fetch install counts: ${l(bt)}`),
+            (logForDebugging(`Failed to fetch install counts: ${l(bt)}`),
               Ot.sort((te, Ee) => te.entry.name.localeCompare(Ee.entry.name)));
           }
           (Fe(Ot), St(0), Ut(new Set()), at(!1), Ct(""));
@@ -2775,15 +2775,15 @@ function cc({
   if (Q) return e(ErrorMessage, { error: Q });
   if (Je === "marketplace-list") {
     if (K.length === 0)
-      return r(o, {
+      return r(Box, {
         flexDirection: "column",
         children: [
-          e(o, {
+          e(Box, {
             marginBottom: 1,
-            children: e(t, { bold: !0, children: "Select marketplace" }),
+            children: e(Text, { bold: !0, children: "Select marketplace" }),
           }),
-          e(t, { children: "No marketplaces configured." }),
-          r(t, {
+          e(Text, { children: "No marketplaces configured." }),
+          r(Text, {
             dimColor: !0,
             children: [
               "Add a marketplace first using ",
@@ -2791,10 +2791,10 @@ function cc({
               ".",
             ],
           }),
-          e(o, {
+          e(Box, {
             marginTop: 1,
             paddingLeft: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children: e(ActionKeybindingHint, {
                 action: "confirm:no",
@@ -2806,18 +2806,18 @@ function cc({
           }),
         ],
       });
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           marginBottom: 1,
-          children: e(t, { bold: !0, children: "Select marketplace" }),
+          children: e(Text, { bold: !0, children: "Select marketplace" }),
         }),
         Cn &&
-          e(o, {
+          e(Box, {
             marginBottom: 1,
             flexDirection: "column",
-            children: r(t, {
+            children: r(Text, {
               color: "warning",
               children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), Cn],
             }),
@@ -2830,11 +2830,11 @@ function cc({
               flexDirection: "column",
               marginBottom: kt < K.length - 1 ? 1 : 0,
               children: [
-                e(o, {
-                  children: r(t, {
+                e(Box, {
+                  children: r(Text, {
                     color: sn === kt ? "suggestion" : void 0,
                     children: [
-                      r(t, {
+                      r(Text, {
                         "aria-hidden": !0,
                         children: [sn === kt ? figures.pointer : " ", " "],
                       }),
@@ -2842,9 +2842,9 @@ function cc({
                     ],
                   }),
                 }),
-                e(o, {
+                e(Box, {
                   marginLeft: 2,
-                  children: e(t, {
+                  children: e(Text, {
                     dimColor: !0,
                     children: r(DotSeparatedList, {
                       children: [
@@ -2868,9 +2868,9 @@ function cc({
             ie.name,
           ),
         ),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: r(DotSeparatedList, {
@@ -2895,14 +2895,14 @@ function cc({
     });
   }
   if (Je === "plugin-details" && Re)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
         Ve &&
-          e(o, {
+          e(Box, {
             marginBottom: 1,
             flexDirection: "column",
-            children: r(t, {
+            children: r(Text, {
               color: "warning",
               children: [e(StatusIndicator, { status: "warning", withSpace: !0 }), Ve],
             }),
@@ -2921,20 +2921,20 @@ function cc({
       ],
     });
   if (fe.length === 0)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           marginBottom: 1,
-          children: e(t, { bold: !0, children: "Install plugins" }),
+          children: e(Text, { bold: !0, children: "Install plugins" }),
         }),
         e(EmptyStateMessage, {
           hint: "All plugins from this marketplace are already installed.",
           children: "No new plugins available to install.",
         }),
-        e(o, {
+        e(Box, {
           marginLeft: 3,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: e(ActionKeybindingHint, {
@@ -2948,18 +2948,18 @@ function cc({
       ],
     });
   let Oe = yt.getVisibleItems(Rt);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     tabIndex: 0,
     autoFocus: !0,
     onKeyDown: un,
     onPaste: Gt,
     children: [
-      r(o, {
+      r(Box, {
         children: [
-          e(t, { bold: !0, children: "Install Plugins" }),
+          e(Text, { bold: !0, children: "Install Plugins" }),
           yt.needsPagination &&
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 " ",
@@ -2972,16 +2972,16 @@ function cc({
             }),
         ],
       }),
-      e(o, { marginBottom: 1, children: e(SearchInput, { ...pe }) }),
+      e(Box, { marginBottom: 1, children: e(SearchInput, { ...pe }) }),
       Rt.length === 0 &&
         Be &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           children: r(EmptyStateMessage, { children: ['No plugins match "', Be, '"'] }),
         }),
       yt.scrollPosition.canScrollUp &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowUp, " more above"],
           }),
@@ -3000,14 +3000,14 @@ function cc({
             flexDirection: "column",
             marginBottom: bt && !Q ? 0 : 1,
             children: [
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, {
+                  r(Text, {
                     "aria-hidden": !0,
                     color: Dt && !nt ? "suggestion" : void 0,
                     children: [Dt && !nt ? figures.pointer : " ", " "],
                   }),
-                  r(t, {
+                  r(Text, {
                     color: ie.isInstalled ? "success" : void 0,
                     children: [
                       ie.isInstalled
@@ -3020,24 +3020,24 @@ function cc({
                       " ",
                       getPluginDisplayName(ie.entry),
                       ie.entry.category &&
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [" ", "[", wr(ie.entry.category), "]"],
                         }),
                       ie.entry.tags?.includes("community-managed") &&
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: " [Community Managed]",
                         }),
                       isNonInstallableClaudeAiPlugin(ie.entry) &&
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: " [not installable on claude.ai yet]",
                         }),
                       e(DimParenthetical, { when: ie.isInstalled, children: "installed" }),
                       te !== void 0 &&
                         X === ig &&
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [" \xB7 ", nOt(te), " installs"],
                         }),
@@ -3046,15 +3046,15 @@ function cc({
                 ],
               }),
               ie.entry.description &&
-                r(o, {
+                r(Box, {
                   marginLeft: 4,
                   children: [
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children: truncateToWidth(wr(ie.entry.description), 60),
                     }),
                     ie.entry.version &&
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [" ", "\xB7 v", wr(ie.entry.version)],
                       }),
@@ -3066,16 +3066,16 @@ function cc({
         );
       }),
       yt.scrollPosition.canScrollDown &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowDown, " more below"],
           }),
         }),
       Q &&
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: r(t, {
+          children: r(Text, {
             color: "error",
             children: [e(StatusIndicator, { status: "error", withSpace: !0 }), Q],
           }),
@@ -3118,13 +3118,13 @@ function Jp(lI) {
   let Tk = Eo.alwaysOn >= uen,
     oc;
   if (yi[4] !== Eo.isEstimate)
-    ((oc = Eo.isEstimate && e(t, { dimColor: !0, children: " (estimated)" })),
+    ((oc = Eo.isEstimate && e(Text, { dimColor: !0, children: " (estimated)" })),
       (yi[4] = Eo.isEstimate),
       (yi[5] = oc));
   else oc = yi[5];
   let ic;
   if (yi[6] !== oc)
-    ((ic = r(t, { bold: !0, children: ["Context cost", oc, ":"] })),
+    ((ic = r(Text, { bold: !0, children: ["Context cost", oc, ":"] })),
       (yi[6] = oc),
       (yi[7] = ic));
   else ic = yi[7];
@@ -3136,7 +3136,7 @@ function Jp(lI) {
   else rc = yi[9];
   let ac;
   if (yi[10] !== Wp || yi[11] !== Gp || yi[12] !== rc)
-    ((ac = r(t, {
+    ((ac = r(Text, {
       color: Wp,
       dimColor: Gp,
       children: ["\xB7 Every turn: ", rc, " tokens"],
@@ -3152,7 +3152,7 @@ function Jp(lI) {
   else lc = yi[15];
   let sc;
   if (yi[16] !== lc)
-    ((sc = r(t, {
+    ((sc = r(Text, {
       dimColor: !0,
       children: ["\xB7 When invoked: ", lc, " tokens"],
     })),
@@ -3161,7 +3161,7 @@ function Jp(lI) {
   else sc = yi[17];
   let Ik;
   if (yi[18] !== sc || yi[19] !== ic || yi[20] !== ac)
-    ((Ik = r(o, {
+    ((Ik = r(Box, {
       flexDirection: "column",
       marginBottom: 1,
       children: [ic, ac, sc],
@@ -3258,7 +3258,7 @@ function dc({
             });
           else kt.sort((Ee, me) => Ee.entry.name.localeCompare(me.entry.name));
         } catch (te) {
-          (n(`Failed to fetch install counts: ${l(te)}`),
+          (logForDebugging(`Failed to fetch install counts: ${l(te)}`),
             kt.sort((Ee, me) => Ee.entry.name.localeCompare(me.entry.name)));
         }
         let $t = new Map();
@@ -3278,7 +3278,7 @@ function dc({
             if (wt) $t.set(me.pluginId, wt);
           }
         } catch (te) {
-          n(`Failed to compute plugin suggestions: ${l(te)}`);
+          logForDebugging(`Failed to compute plugin suggestions: ${l(te)}`);
         }
         if (Ve) return;
         xt($t);
@@ -3345,7 +3345,7 @@ function dc({
                 }
               } catch (si) {
                 ((Ge = !0),
-                  n(
+                  logForDebugging(
                     `Post-refresh reload of marketplace '${st}' failed: ${l(si)}`,
                     { level: "warn" },
                   ));
@@ -3452,22 +3452,22 @@ function dc({
       isInstalling: Ut,
     });
   if (K.length === 0)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           marginBottom: 1,
-          children: e(t, { bold: !0, children: "Discover plugins" }),
+          children: e(Text, { bold: !0, children: "Discover plugins" }),
         }),
         yn &&
-          e(o, {
+          e(Box, {
             marginBottom: 1,
             children: e(StatusLine, { status: "warning", children: yn }),
           }),
         e(Zp, { reason: un }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: e(ActionKeybindingHint, {
@@ -3481,18 +3481,18 @@ function dc({
       ],
     });
   let it = St.getVisibleItems(pe);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     tabIndex: 0,
     autoFocus: !0,
     onKeyDown: Yn,
     onPaste: fn,
     children: [
-      r(o, {
+      r(Box, {
         children: [
-          e(t, { bold: !0, children: "Discover plugins" }),
+          e(Text, { bold: !0, children: "Discover plugins" }),
           St.needsPagination &&
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 " ",
@@ -3505,21 +3505,21 @@ function dc({
             }),
         ],
       }),
-      e(o, { marginBottom: 1, children: e(SearchInput, { ...Be }) }),
+      e(Box, { marginBottom: 1, children: e(SearchInput, { ...Be }) }),
       yn &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           children: e(StatusLine, { status: "warning", children: yn }),
         }),
       pe.length === 0 &&
         at &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           children: r(EmptyStateMessage, { children: ['No plugins match "', at, '"'] }),
         }),
       St.scrollPosition.canScrollUp &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowUp, " more above"],
           }),
@@ -3539,40 +3539,40 @@ function dc({
             flexDirection: "column",
             marginBottom: Dt ? 0 : 1,
             children: [
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, {
+                  r(Text, {
                     "aria-hidden": !0,
                     color: ke && !nt ? "suggestion" : void 0,
                     children: [ke && !nt ? figures.pointer : " ", " "],
                   }),
-                  r(t, {
+                  r(Text, {
                     children: [
                       ie ? figures.ellipsis : Oe ? figures.radioOn : figures.radioOff,
                       " ",
                       getPluginDisplayName(Ve.entry),
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [" ", "\xB7 ", wr(Ve.marketplaceName)],
                       }),
                       $t &&
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [" ", "\xB7 ", Mk($t)],
                         }),
                       Ve.entry.tags?.includes("community-managed") &&
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: " [Community Managed]",
                         }),
                       isNonInstallableClaudeAiPlugin(Ve.entry) &&
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: " [not installable on claude.ai yet]",
                         }),
                       kt !== void 0 &&
                         Ve.marketplaceName === ig &&
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [" \xB7 ", nOt(kt), " installs"],
                         }),
@@ -3581,9 +3581,9 @@ function dc({
                 ],
               }),
               Ve.entry.description &&
-                e(o, {
+                e(Box, {
                   marginLeft: 4,
-                  children: e(t, {
+                  children: e(Text, {
                     dimColor: !0,
                     children: truncateToWidth(wr(Ve.entry.description), 60),
                   }),
@@ -3594,8 +3594,8 @@ function dc({
         );
       }),
       St.scrollPosition.canScrollDown &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowDown, " more below"],
           }),
@@ -3613,11 +3613,11 @@ function Zp(ZI) {
       if (Ji[0] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Git is required to install marketplaces.",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Please install git and restart Claude Code.",
             }),
@@ -3632,12 +3632,12 @@ function Zp(ZI) {
       if (Ji[1] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "Your organization policy does not allow any external marketplaces.",
             }),
-            e(t, { dimColor: !0, children: "Contact your administrator." }),
+            e(Text, { dimColor: !0, children: "Contact your administrator." }),
           ],
         })),
           (Ji[1] = Nn));
@@ -3649,12 +3649,12 @@ function Zp(ZI) {
       if (Ji[2] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "Your organization restricts which marketplaces can be added.",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "Switch to the Marketplaces tab to view allowed sources.",
@@ -3670,11 +3670,11 @@ function Zp(ZI) {
       if (Ji[3] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Failed to load marketplace data.",
             }),
-            e(t, { dimColor: !0, children: "Check your network connection." }),
+            e(Text, { dimColor: !0, children: "Check your network connection." }),
           ],
         })),
           (Ji[3] = Nn));
@@ -3686,11 +3686,11 @@ function Zp(ZI) {
       if (Ji[4] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "All available plugins are already installed.",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Check for new plugins later or add more marketplaces.",
             }),
@@ -3705,11 +3705,11 @@ function Zp(ZI) {
       if (Ji[5] === MEMO_CACHE_SENTINEL)
         ((Nn = r(N, {
           children: [
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "All available plugins are installed for this project.",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: "Use the Browse tab to install at user scope.",
             }),
@@ -3749,7 +3749,7 @@ function Mk(a) {
   }
 }
 function Xp(a) {
-  return truncatePathMiddle(Ao(a).replaceAll("\\", "/"), uc);
+  return truncatePathMiddle(formatPathForDisplay(a).replaceAll("\\", "/"), uc);
 }
 F();
 import { readdir, readFile as em } from "fs/promises";
@@ -3865,7 +3865,7 @@ async function gc(a, k, v) {
         verdict: B.wouldTrigger === X.shouldTrigger ? "pass" : "fail",
       });
     } catch (B) {
-      (n(`plugin eval: trigger test for ${X.file} threw: ${l(B)}`, {
+      (logForDebugging(`plugin eval: trigger test for ${X.file} threw: ${l(B)}`, {
         level: "error",
       }),
         q.push({
@@ -3981,7 +3981,7 @@ ${figures.tick} Evaluation passed`;
         } catch (yc) {
           let Uk = yc;
           ((process.exitCode = 2),
-            n(`Plugin eval failed for ${jr}: ${l(Uk)}`, { level: "error" }),
+            logForDebugging(`Plugin eval failed for ${jr}: ${l(Uk)}`, { level: "error" }),
             Vr(`${figures.cross} ${l(Uk)}`));
         }
       };
@@ -3996,9 +3996,9 @@ ${figures.tick} Evaluation passed`;
   E(Lk, _k);
   let yc;
   if (tm[5] === MEMO_CACHE_SENTINEL)
-    ((yc = e(o, {
+    ((yc = e(Box, {
       flexDirection: "column",
-      children: e(t, { children: "Running evaluation\u2026" }),
+      children: e(Text, { children: "Running evaluation\u2026" }),
     })),
       (tm[5] = yc));
   else yc = tm[5];
@@ -4135,13 +4135,13 @@ function wc({
             } catch (nn) {
               if (nn instanceof Ui) {
                 (kt.push(Tt.name),
-                  n(
+                  logForDebugging(
                     `Marketplace ${Tt.name} not updated (managed policy): ${l(nn)}`,
                   ));
                 continue;
               }
               ($t.push(Tt.name),
-                n(`Marketplace ${Tt.name} could not be refreshed: ${l(nn)}`, {
+                logForDebugging(`Marketplace ${Tt.name} could not be refreshed: ${l(nn)}`, {
                   level: "warn",
                 }));
               continue;
@@ -4164,7 +4164,7 @@ function wc({
             blocked: nn,
             updateFailedCount: Oo,
             commandSourceSkipped: Co,
-          } = await cQt(Dt, new Set(), { skipCommandSources: !0 }, I);
+          } = await runPluginAutoupdateForMarketplaces(Dt, new Set(), { skipCommandSources: !0 }, I);
           ((_t = Tt.length),
             (Ge = Co),
             (Ot = countMatching(
@@ -4180,7 +4180,7 @@ function wc({
               En.type !== "autoupdate-disabled-by-policy" &&
               En.type !== "autoupdate-blocked-by-pinner",
           );
-          if (Po.length > 0 || Tt.length > 0) lIt(Tt, Po, [], { announce: !1 });
+          if (Po.length > 0 || Tt.length > 0) publishPluginAutoUpdateNotification(Tt, Po, [], { announce: !1 });
           me = Po.flatMap((En) =>
             "plugin" in En && typeof En.plugin === "string" ? [En.plugin] : [],
           );
@@ -4216,11 +4216,11 @@ function wc({
         if (Ge.length > 0) {
           let Tt = Ge.length,
             nn = Tt > 1,
-            Oo = Ge.find(V$) ?? "",
+            Oo = Ge.find(isValidCliNameToken) ?? "",
             Co = `${nn ? "(and the others) " : ""}to review (add --scope for a project/local install)`,
             Po = `review and update ${nn ? "each" : "it"} individually from the command line`;
           wo.push(
-            `${Tt} command-sourced ${pluralize(Tt, "plugin")} not updated here \u2014 ${rA("plugin update", Oo, { tail: Co, fallback: Po })}`,
+            `${Tt} command-sourced ${pluralize(Tt, "plugin")} not updated here \u2014 ${buildRunCommandHint("plugin update", Oo, { tail: Co, fallback: Po })}`,
           );
         }
         if (ie > 0) wo.push(`Removed ${ie} ${pluralize(ie, "marketplace")}`);
@@ -4425,42 +4425,42 @@ function wc({
       if (Wt.current) xt(!1);
     }
   }
-  if (ze) return e(t, { children: "Loading marketplaces\u2026" });
+  if (ze) return e(Text, { children: "Loading marketplaces\u2026" });
   if (
     q.length === 0 &&
     B.available.length === 0 &&
     B.hosted.length === 0 &&
     B.browseOnly.length === 0
   )
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           marginBottom: 1,
-          children: e(t, { bold: !0, children: "Manage marketplaces" }),
+          children: e(Text, { bold: !0, children: "Manage marketplaces" }),
         }),
         r(SelectableRow, {
           active: !0,
           flexDirection: "row",
           gap: 1,
           children: [
-            r(t, {
+            r(Text, {
               color: "suggestion",
               children: [
-                r(t, { "aria-hidden": !0, children: [figures.pointer, " "] }),
+                r(Text, { "aria-hidden": !0, children: [figures.pointer, " "] }),
                 "+",
               ],
             }),
-            e(t, {
+            e(Text, {
               bold: !0,
               color: "suggestion",
               children: "Add Marketplace",
             }),
           ],
         }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: w.pending
@@ -4489,9 +4489,9 @@ function wc({
     return r(FocusableBox, {
       onKeyDown: Gt,
       children: [
-        r(t, { bold: !0, children: ["Add marketplace ", wr(se.name), "?"] }),
+        r(Text, { bold: !0, children: ["Add marketplace ", wr(se.name), "?"] }),
         se.displayName !== se.name &&
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: [
               wr(formatListedAsLabel(se.name, se.displayName) ?? ""),
@@ -4499,11 +4499,11 @@ function wc({
               "on claude.ai",
             ],
           }),
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           marginTop: 1,
           children: [
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 "Install its plugins with ",
@@ -4512,7 +4512,7 @@ function wc({
                 wr(se.name),
               ],
             }),
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 "Hosted on claude.ai for",
@@ -4526,23 +4526,23 @@ function wc({
               ],
             }),
             pt &&
-              e(o, {
+              e(Box, {
                 marginTop: 1,
-                children: e(t, {
+                children: e(Text, {
                   color: "claude",
                   children: "Adding marketplace\u2026",
                 }),
               }),
-            Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
+            Je && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
             !pt &&
-              e(o, {
+              e(Box, {
                 marginTop: 1,
-                children: r(t, {
+                children: r(Text, {
                   children: [
                     "Press ",
-                    e(t, { bold: !0, children: "y" }),
+                    e(Text, { bold: !0, children: "y" }),
                     " to add or ",
-                    e(t, { bold: !0, children: "n" }),
+                    e(Text, { bold: !0, children: "n" }),
                     " to cancel",
                   ],
                 }),
@@ -4556,23 +4556,23 @@ function wc({
     return r(FocusableBox, {
       onKeyDown: un,
       children: [
-        r(t, {
+        r(Text, {
           bold: !0,
           color: "warning",
           children: [
             "Remove marketplace",
             " ",
-            e(t, { italic: !0, children: wr(Be.name) }),
+            e(Text, { italic: !0, children: wr(Be.name) }),
             "?",
           ],
         }),
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           children: [
             ne > 0 &&
-              e(o, {
+              e(Box, {
                 marginTop: 1,
-                children: r(t, {
+                children: r(Text, {
                   color: "warning",
                   children: [
                     "This will also uninstall ",
@@ -4584,26 +4584,26 @@ function wc({
                 }),
               }),
             Be.installedPlugins.length > 0 &&
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 marginTop: 1,
                 marginLeft: 2,
                 children: Be.installedPlugins.map((Ce) =>
                   e(
                     BulletItem,
-                    { children: e(t, { dimColor: !0, children: wr(Ce.name) }) },
+                    { children: e(Text, { dimColor: !0, children: wr(Ce.name) }) },
                     Ce.name,
                   ),
                 ),
               }),
-            e(o, {
+            e(Box, {
               marginTop: 1,
-              children: r(t, {
+              children: r(Text, {
                 children: [
                   "Press ",
-                  e(t, { bold: !0, children: "y" }),
+                  e(Text, { bold: !0, children: "y" }),
                   " to confirm or ",
-                  e(t, { bold: !0, children: "n" }),
+                  e(Text, { bold: !0, children: "n" }),
                   " to cancel",
                 ],
               }),
@@ -4616,15 +4616,15 @@ function wc({
   if (nt === "details" && Be) {
     let ne = Be.pendingUpdate || pt,
       Ce = fn(Be);
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(t, { bold: !0, children: wr(Be.name) }),
-        e(t, { dimColor: !0, children: wr(Be.source) }),
-        Be.note !== void 0 && e(t, { color: "warning", children: wr(Be.note) }),
-        e(o, {
+        e(Text, { bold: !0, children: wr(Be.name) }),
+        e(Text, { dimColor: !0, children: wr(Be.source) }),
+        Be.note !== void 0 && e(Text, { color: "warning", children: wr(Be.note) }),
+        e(Box, {
           marginTop: 1,
-          children: r(t, {
+          children: r(Text, {
             children: [
               Be.pluginCount || 0,
               " available",
@@ -4634,11 +4634,11 @@ function wc({
           }),
         }),
         Be.installedPlugins.length > 0 &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             marginTop: 1,
             children: [
-              r(t, {
+              r(Text, {
                 bold: !0,
                 children: [
                   "Installed plugins (",
@@ -4646,7 +4646,7 @@ function wc({
                   "):",
                 ],
               }),
-              e(o, {
+              e(Box, {
                 flexDirection: "column",
                 marginLeft: 1,
                 children: Be.installedPlugins.map((ke) =>
@@ -4657,7 +4657,7 @@ function wc({
                         wr(ke.name),
                         `
 `,
-                        e(t, {
+                        e(Text, {
                           dimColor: !0,
                           children: sanitizeMultilineForDisplay(ke.manifest.description ?? ""),
                         }),
@@ -4670,23 +4670,23 @@ function wc({
             ],
           }),
         ne &&
-          r(o, {
+          r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, { color: "claude", children: "Updating marketplace\u2026" }),
-              Lt && e(t, { dimColor: !0, children: wr(Lt) }),
+              e(Text, { color: "claude", children: "Updating marketplace\u2026" }),
+              Lt && e(Text, { dimColor: !0, children: wr(Lt) }),
             ],
           }),
         !ne &&
           Re &&
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, { color: "claude", children: wr(Re) }),
+            children: e(Text, { color: "claude", children: wr(Re) }),
           }),
-        !ne && Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
+        !ne && Je && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
         !ne &&
-          e(o, {
+          e(Box, {
             flexDirection: "column",
             marginTop: 1,
             children: Ce.map((ke, Oe) => {
@@ -4698,7 +4698,7 @@ function wc({
                   children: [
                     ke.label,
                     ke.secondaryLabel &&
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [" ", ke.secondaryLabel],
                       }),
@@ -4711,17 +4711,17 @@ function wc({
         !ne &&
           !shouldSkipPluginAutoupdate() &&
           Be.autoUpdate &&
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               children:
                 "Auto-update enabled. Claude Code will automatically update this marketplace and its installed plugins.",
             }),
           }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: ne
@@ -4751,9 +4751,9 @@ function wc({
   return r(FocusableBox, {
     onKeyDown: Xn,
     children: [
-      e(o, {
+      e(Box, {
         marginBottom: 1,
-        children: e(t, { bold: !0, children: "Manage marketplaces" }),
+        children: e(Text, { bold: !0, children: "Manage marketplaces" }),
       }),
       r(SelectableRow, {
         active: we === 0,
@@ -4761,24 +4761,24 @@ function wc({
         gap: 1,
         marginBottom: 1,
         children: [
-          r(t, {
+          r(Text, {
             color: we === 0 ? "suggestion" : void 0,
             children: [
-              r(t, {
+              r(Text, {
                 "aria-hidden": !0,
                 children: [we === 0 ? figures.pointer : " ", " "],
               }),
               "+",
             ],
           }),
-          e(t, {
+          e(Text, {
             bold: !0,
             color: we === 0 ? "suggestion" : void 0,
             children: "Add Marketplace",
           }),
         ],
       }),
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         children: [
           q.map((ne, Ce) => {
@@ -4794,47 +4794,47 @@ function wc({
                 gap: 1,
                 marginBottom: 1,
                 children: [
-                  r(t, {
+                  r(Text, {
                     color: ke ? "suggestion" : void 0,
                     children: [
-                      r(t, {
+                      r(Text, {
                         "aria-hidden": !0,
                         children: [ke ? figures.pointer : " ", " "],
                       }),
                       ne.pendingRemove ? figures.cross : figures.bullet,
                     ],
                   }),
-                  r(o, {
+                  r(Box, {
                     flexDirection: "column",
                     flexGrow: 1,
                     children: [
-                      r(o, {
+                      r(Box, {
                         flexDirection: "row",
                         gap: 1,
                         children: [
-                          r(t, {
+                          r(Text, {
                             bold: !0,
                             strikethrough: ne.pendingRemove,
                             dimColor: ne.pendingRemove,
                             children: [
                               ne.name === "claude-plugins-official" &&
-                                e(t, { color: "claude", children: "\u273B " }),
+                                e(Text, { color: "claude", children: "\u273B " }),
                               wr(ne.name),
                               ne.name === "claude-plugins-official" &&
-                                e(t, { color: "claude", children: " \u273B" }),
+                                e(Text, { color: "claude", children: " \u273B" }),
                             ],
                           }),
                           Oe.length > 0 &&
-                            r(t, {
+                            r(Text, {
                               color: "warning",
                               children: ["[", Oe.join(", "), "]"],
                             }),
                         ],
                       }),
-                      e(t, { dimColor: !0, children: wr(ne.source) }),
+                      e(Text, { dimColor: !0, children: wr(ne.source) }),
                       ne.note !== void 0 &&
-                        e(t, { color: "warning", children: wr(ne.note) }),
-                      r(t, {
+                        e(Text, { color: "warning", children: wr(ne.note) }),
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           ne.pluginCount !== void 0 &&
@@ -4875,22 +4875,22 @@ function wc({
                 gap: 1,
                 marginBottom: 1,
                 children: [
-                  r(t, {
+                  r(Text, {
                     color: ke ? "suggestion" : void 0,
                     children: [
-                      r(t, {
+                      r(Text, {
                         "aria-hidden": !0,
                         children: [ke ? figures.pointer : " ", " "],
                       }),
                       "+",
                     ],
                   }),
-                  r(o, {
+                  r(Box, {
                     flexDirection: "column",
                     flexGrow: 1,
                     children: [
-                      e(t, { bold: !0, children: wr(ne.name) }),
-                      r(t, {
+                      e(Text, { bold: !0, children: wr(ne.name) }),
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           wr(formatMarketplaceSource(ne.source)),
@@ -4915,22 +4915,22 @@ function wc({
                 gap: 1,
                 marginBottom: 1,
                 children: [
-                  r(t, {
+                  r(Text, {
                     color: ke ? "suggestion" : void 0,
                     children: [
-                      r(t, {
+                      r(Text, {
                         "aria-hidden": !0,
                         children: [ke ? figures.pointer : " ", " "],
                       }),
                       "+",
                     ],
                   }),
-                  r(o, {
+                  r(Box, {
                     flexDirection: "column",
                     flexGrow: 1,
                     children: [
-                      e(t, { bold: !0, children: wr(ne.name) }),
-                      r(t, {
+                      e(Text, { bold: !0, children: wr(ne.name) }),
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           `hosted on claude.ai (${formatMarketplaceScopeLabel(ne.scope)})`,
@@ -4948,11 +4948,11 @@ function wc({
           }),
           B.browseOnly.map((ne) =>
             e(
-              o,
+              Box,
               {
                 marginBottom: 1,
                 paddingLeft: 4,
-                children: r(t, {
+                children: r(Text, {
                   dimColor: !0,
                   children: [wr(formatBrowseOnlyMarketplace(ne)), " ", "\xB7 browse on claude.ai"],
                 }),
@@ -4963,15 +4963,15 @@ function wc({
         ],
       }),
       Ut() &&
-        r(o, {
+        r(Box, {
           marginTop: 1,
           flexDirection: "column",
           children: [
-            r(t, {
+            r(Text, {
               children: [
-                e(t, { bold: !0, children: "Pending changes:" }),
+                e(Text, { bold: !0, children: "Pending changes:" }),
                 " ",
-                e(t, {
+                e(Text, {
                   dimColor: !0,
                   children: e(ActionKeybindingHint, {
                     action: "select:accept",
@@ -4992,14 +4992,14 @@ function wc({
           ],
         }),
       pt &&
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             color: "claude",
             children: "Processing changes\u2026",
           }),
         }),
-      Je && e(o, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
+      Je && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: sanitizeMultilineForDisplay(Je) }) }),
       e(rm, { exitState: w, hasPendingActions: Ut() }),
     ],
   });
@@ -5010,9 +5010,9 @@ function rm(cE) {
   if (hc.pending) {
     let Zi;
     if (Xi[0] !== hc.keyName)
-      ((Zi = e(o, {
+      ((Zi = e(Box, {
         marginTop: 1,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           italic: !0,
           children: ["Press ", hc.keyName, " again to go back"],
@@ -5081,9 +5081,9 @@ function rm(cE) {
     Xi[15] !== xc ||
     Xi[16] !== Sc
   )
-    ((Vk = e(o, {
+    ((Vk = e(Box, {
       marginTop: 1,
-      children: e(t, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: r(DotSeparatedList, { children: [Zi, kc, bc, xc, Sc] }),
@@ -5222,13 +5222,13 @@ function hm(bE) {
   if ((E(Yk, Jk), useFocusTrap(za, !Tc), Go === 0)) {
     let qr;
     if (Qo[18] !== Pc)
-      ((qr = Pc && e(t, { dimColor: !0, children: Pc })),
+      ((qr = Pc && e(Text, { dimColor: !0, children: Pc })),
         (Qo[18] = Pc),
         (Qo[19] = qr));
     else qr = Qo[19];
     let Ic;
     if (Qo[20] !== za || Qo[21] !== qr)
-      ((Ic = e(o, {
+      ((Ic = e(Box, {
         ref: za,
         flexDirection: "column",
         tabIndex: 0,
@@ -5242,7 +5242,7 @@ function hm(bE) {
   }
   let hi = zk === "glyph" && Cc === 1 ? "count" : zk,
     Xk = Wk.slice(pn.windowStart, pn.windowEnd);
-  const dm = o,
+  const dm = Box,
     qr = "column",
     Ic = pn.bind;
   let Rc;
@@ -5250,9 +5250,9 @@ function hm(bE) {
     ((Rc =
       hi === "count" &&
       pn.moreAbove > 0 &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           children: [UP_ARROW_GLYPH, " ", pn.moreAbove, " more above"],
         }),
@@ -5286,9 +5286,9 @@ function hm(bE) {
     ((Ec =
       hi === "count" &&
       pn.moreBelow > 0 &&
-      e(o, {
+      e(Box, {
         paddingLeft: 2,
-        children: r(t, {
+        children: r(Text, {
           dimColor: !0,
           children: [DOWN_ARROW_GLYPH, " ", pn.moreBelow, " more below"],
         }),
@@ -5351,7 +5351,7 @@ function zr(LE) {
   } else ki = Mc[3];
   let nb;
   if (Mc[4] === MEMO_CACHE_SENTINEL)
-    ((nb = e(t, { bold: !0, children: "Capabilities: " })), (Mc[4] = nb));
+    ((nb = e(Text, { bold: !0, children: "Capabilities: " })), (Mc[4] = nb));
   else nb = Mc[4];
   let $c;
   if (Mc[5] !== ki)
@@ -5361,7 +5361,7 @@ function zr(LE) {
   else $c = Mc[6];
   let ob;
   if (Mc[7] !== $c)
-    ((ob = r(o, { children: [nb, e(t, { color: "text", children: $c })] })),
+    ((ob = r(Box, { children: [nb, e(Text, { color: "text", children: $c })] })),
       (Mc[7] = $c),
       (Mc[8] = ob));
   else ob = Mc[8];
@@ -5383,59 +5383,59 @@ function Oc() {
 }
 function ub(a, k, v) {
   if (a.type === "disabled")
-    return r(t, { children: [getThemeColor("inactive", v)(figures.radioOff), " disabled"] });
+    return r(Text, { children: [getThemeColor("inactive", v)(figures.radioOff), " disabled"] });
   if (a.type === "connected") {
     if (a.discoveryBearerRejected)
-      return r(t, {
+      return r(Text, {
         children: [
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 session token rejected",
         ],
       });
     if (a.toolsListError)
-      return r(t, {
+      return r(Text, {
         children: [
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 tools fetch failed",
         ],
       });
     if (a.capabilities?.tools && k === 0)
-      return r(t, {
+      return r(Text, {
         children: [
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 no tools",
         ],
       });
-    return r(t, {
+    return r(Text, {
       children: [e(StatusIndicator, { status: "success", withSpace: !0 }), "connected"],
     });
   }
   if (a.type === "cached") {
     let b = oye(a.cacheSavedAt, k);
-    return r(t, { children: [getThemeColor(b.tone, v)(b.glyph), " ", b.statusText] });
+    return r(Text, { children: [getThemeColor(b.tone, v)(b.glyph), " ", b.statusText] });
   }
   if (a.type === "pending")
-    return r(t, {
+    return r(Text, {
       children: [
-        e(t, { dimColor: !0, children: figures.radioOff }),
+        e(Text, { dimColor: !0, children: figures.radioOff }),
         " connecting\u2026",
       ],
     });
   if (a.type === "needs-auth")
-    return r(t, {
+    return r(Text, {
       children: [
         getThemeColor("warning", v)(figures.triangleUpOutline),
         " needs authentication",
       ],
     });
   if (a.errorCode === "UNCONFIGURED")
-    return r(t, {
+    return r(Text, {
       children: [
-        e(t, { dimColor: !0, children: figures.radioOff }),
+        e(Text, { dimColor: !0, children: figures.radioOff }),
         " not configured",
       ],
     });
-  return r(t, {
+  return r(Text, {
     children: [
       e(StatusIndicator, { status: "error", withSpace: !0 }),
       a.errorCode === "INVALID_CONFIG" ? "config issue" : "failed",
@@ -5476,7 +5476,7 @@ function sye(bo) {
         description: "back",
       }),
     })),
-      (sb = e(t, { dimColor: !0, children: "Checking credentials\u2026" })),
+      (sb = e(Text, { dimColor: !0, children: "Checking credentials\u2026" })),
       (Si[7] = lb),
       (Si[8] = sb));
   else ((lb = Si[7]), (sb = Si[8]));
@@ -5496,7 +5496,7 @@ function sye(bo) {
   else Dc = Si[12];
   let Bc;
   if (Si[13] !== Pm || Si[14] !== Dc)
-    ((Bc = e(o, { flexDirection: "column", paddingX: Pm, children: Dc })),
+    ((Bc = e(Box, { flexDirection: "column", paddingX: Pm, children: Dc })),
       (Si[13] = Pm),
       (Si[14] = Dc),
       (Si[15] = Bc));
@@ -5575,7 +5575,7 @@ function Rm({
           let me = te.client.type === "failed" ? getMcpClientFailureDetail(te.client) : "";
           if (mayHaveRemoteClient(j)) {
             if (me)
-              n(`mcp reconnect failed for ${Qn(a.name)}: ${me}`, {
+              logForDebugging(`mcp reconnect failed for ${Qn(a.name)}: ${me}`, {
                 level: "error",
               });
             I(
@@ -5733,7 +5733,7 @@ function Rm({
           let wt = Ge.client.type === "failed" ? getMcpClientFailureDetail(Ge.client) : "";
           if (mayHaveRemoteClient(j)) {
             if (wt)
-              n(`mcp post-auth reconnect failed for ${Qn(a.name)}: ${wt}`, {
+              logForDebugging(`mcp post-auth reconnect failed for ${Qn(a.name)}: ${wt}`, {
                 level: "error",
               });
             I(
@@ -5764,14 +5764,14 @@ function Rm({
         (await Yr().revokeServerTokens(a.name, a.config),
           logEvent("tengu_mcp_auth_config_clear", {}));
         let te = { ...a.config, scope: a.scope },
-          Ee = ir();
+          Ee = getIdentityEpoch();
         if (isDiscoveryCacheUsable())
-          await i2(
+          await awaitDiscoveryCacheFlush(
             Oc()
               .dropDiscoveryEntry(a.name, te)
               .catch(() => {}),
           );
-        if (!(xh(te) && ir() !== Ee)) await Oc().clearServerCache(a.name, te);
+        if (!(isRemoteTransport(te) && getIdentityEpoch() !== Ee)) await Oc().clearServerCache(a.name, te);
         (ze((me) => {
           let Ge = me.mcp.clients.map((xn) =>
               xn.name === a.name && xn.type !== "disabled"
@@ -5800,7 +5800,7 @@ function Rm({
       a.config.type !== "claudeai-proxy" && a.config.oauth?.xaa
         ? " Authenticating via your identity provider"
         : " A browser window will open for authentication";
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       padding: 1,
@@ -5808,18 +5808,18 @@ function Rm({
       autoFocus: !0,
       onKeyDown: yn,
       children: [
-        r(t, {
+        r(Text, {
           color: "claude",
           children: ["Authenticating with ", a.name, "\u2026"],
         }),
-        r(o, { children: [e(yo, {}), e(t, { children: te })] }),
+        r(Box, { children: [e(SpinnerGlyph, {}), e(Text, { children: te })] }),
         xe &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: [
                       "If your browser doesn't open automatically, copy this URL manually",
@@ -5830,24 +5830,24 @@ function Rm({
                 ],
               }),
               e(CopyFallbackNotice, { via: Ct }),
-              e(ct, { url: xe, assumeSupport: !0 }),
+              e(Link, { url: xe, assumeSupport: !0 }),
             ],
           }),
         B &&
           xe &&
           Wt &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             marginTop: 1,
             children: [
-              e(t, {
+              e(Text, {
                 dimColor: !0,
                 children:
                   "If the redirect page shows a connection error, paste the URL from your browser's address bar:",
               }),
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, { dimColor: !0, children: ["URL ", ">", " "] }),
+                  r(Text, { dimColor: !0, children: ["URL ", ">", " "] }),
                   e(hn, {
                     value: tn,
                     onChange: Rt,
@@ -5862,9 +5862,9 @@ function Rm({
               }),
             ],
           }),
-        e(o, {
+        e(Box, {
           marginLeft: 3,
-          children: r(t, {
+          children: r(Text, {
             dimColor: !0,
             children: [
               "Return here after authenticating in your browser. Press",
@@ -5878,7 +5878,7 @@ function Rm({
     });
   }
   if (Je)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       padding: 1,
@@ -5886,25 +5886,25 @@ function Rm({
       autoFocus: !0,
       onKeyDown: yn,
       children: [
-        r(t, {
+        r(Text, {
           color: "claude",
           children: ["Authenticating with ", a.name, "\u2026"],
         }),
-        r(o, {
+        r(Box, {
           children: [
-            e(yo, {}),
-            e(t, {
+            e(SpinnerGlyph, {}),
+            e(Text, {
               children: " A browser window will open for authentication",
             }),
           ],
         }),
         Re &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(o, {
+              r(Box, {
                 children: [
-                  r(t, {
+                  r(Text, {
                     dimColor: !0,
                     children: [
                       "If your browser doesn't open automatically, copy this URL manually",
@@ -5915,22 +5915,22 @@ function Rm({
                 ],
               }),
               e(CopyFallbackNotice, { via: Ct }),
-              e(ct, { url: Re, assumeSupport: !0 }),
+              e(Link, { url: Re, assumeSupport: !0 }),
             ],
           }),
-        r(o, {
+        r(Box, {
           marginLeft: 3,
           flexDirection: "column",
           children: [
-            r(t, {
+            r(Text, {
               color: "permission",
               children: [
                 "Press ",
-                e(t, { bold: !0, children: "Enter" }),
+                e(Text, { bold: !0, children: "Enter" }),
                 " after authenticating in your browser.",
               ],
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               italic: !0,
               children: e(ActionKeybindingHint, {
@@ -5945,7 +5945,7 @@ function Rm({
       ],
     });
   if (Lt)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       padding: 1,
@@ -5953,23 +5953,23 @@ function Rm({
       autoFocus: !0,
       onKeyDown: yn,
       children: [
-        r(t, {
+        r(Text, {
           color: "claude",
           children: ["Clear authentication for ", a.name],
         }),
         nt
           ? r(N, {
               children: [
-                e(t, {
+                e(Text, {
                   children:
                     'Find the MCP server in the browser and click "Disconnect".',
                 }),
-                r(o, {
+                r(Box, {
                   flexDirection: "column",
                   children: [
-                    r(o, {
+                    r(Box, {
                       children: [
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [
                             "If your browser didn't open automatically, copy this URL manually",
@@ -5980,22 +5980,22 @@ function Rm({
                       ],
                     }),
                     e(CopyFallbackNotice, { via: Ct }),
-                    e(ct, { url: getClaudeAiConnectorsUrl() }),
+                    e(Link, { url: getClaudeAiConnectorsUrl() }),
                   ],
                 }),
-                r(o, {
+                r(Box, {
                   marginLeft: 3,
                   flexDirection: "column",
                   children: [
-                    r(t, {
+                    r(Text, {
                       color: "permission",
                       children: [
                         "Press ",
-                        e(t, { bold: !0, children: "Enter" }),
+                        e(Text, { bold: !0, children: "Enter" }),
                         " when done.",
                       ],
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       italic: !0,
                       children: e(ActionKeybindingHint, {
@@ -6011,15 +6011,15 @@ function Rm({
             })
           : r(N, {
               children: [
-                e(t, {
+                e(Text, {
                   children:
                     'This will open claude.ai in the browser. Find the MCP server in the list and click "Disconnect".',
                 }),
-                r(o, {
+                r(Box, {
                   marginLeft: 3,
                   flexDirection: "column",
                   children: [
-                    r(t, {
+                    r(Text, {
                       color: "permission",
                       children: [
                         "Press",
@@ -6032,7 +6032,7 @@ function Rm({
                         ".",
                       ],
                     }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       italic: !0,
                       children: e(ActionKeybindingHint, {
@@ -6049,26 +6049,26 @@ function Rm({
       ],
     });
   if (tt)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       padding: 1,
       children: [
-        r(t, {
+        r(Text, {
           color: "text",
           children: [
             "Connecting to ",
-            e(t, { bold: !0, children: a.name }),
+            e(Text, { bold: !0, children: a.name }),
             "\u2026",
           ],
         }),
-        r(o, {
+        r(Box, {
           children: [
-            e(yo, {}),
-            e(t, { children: " Establishing connection to MCP server" }),
+            e(SpinnerGlyph, {}),
+            e(Text, { children: " Establishing connection to MCP server" }),
           ],
         }),
-        e(t, { dimColor: !0, children: "This may take a few moments." }),
+        e(Text, { dimColor: !0, children: "This may take a few moments." }),
       ],
     });
   let Oe = [];
@@ -6108,7 +6108,7 @@ function Rm({
       Oe[0] && Ot.includes(Oe[0].value)
         ? Oe.find((te) => !Ot.includes(te.value))?.value
         : void 0;
-  return e(o, {
+  return e(Box, {
     flexDirection: "column",
     paddingX: R ? 1 : 0,
     children: r(de, {
@@ -6128,7 +6128,7 @@ function Rm({
         ],
       }),
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           gap: 0,
           children: [
@@ -6144,7 +6144,7 @@ function Rm({
                   r(Table.Row, {
                     children: [
                       e(N, { children: "Issue:" }),
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children: sanitizeMessageText(
                           a.client.type === "failed" && a.client.displayDetail
@@ -6159,13 +6159,13 @@ function Rm({
                     children: [
                       e(N, { children: "Auth:" }),
                       zn
-                        ? r(t, {
+                        ? r(Text, {
                             children: [
                               e(StatusIndicator, { status: "success", withSpace: !0 }),
                               "authenticated",
                             ],
                           })
-                        : r(t, {
+                        : r(Text, {
                             children: [
                               e(StatusIndicator, { status: "error", withSpace: !0 }),
                               "not authenticated",
@@ -6179,7 +6179,7 @@ function Rm({
                   r(Table.Row, {
                     children: [
                       e(N, { children: "Protocol:" }),
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children: sanitizeLogValue(a.client.negotiatedProtocolVersion),
                       }),
@@ -6191,19 +6191,19 @@ function Rm({
                   r(Table.Row, {
                     children: [
                       e(N, { children: "Managed:" }),
-                      e(t, { dimColor: !0, children: "by your organization" }),
+                      e(Text, { dimColor: !0, children: "by your organization" }),
                     ],
                   }),
                 r(Table.Row, {
                   children: [
                     e(N, { children: "URL:" }),
-                    e(t, { dimColor: !0, children: redactManagedMcpConfig(a.config, a.scope).url }),
+                    e(Text, { dimColor: !0, children: redactManagedMcpConfig(a.config, a.scope).url }),
                   ],
                 }),
                 r(Table.Row, {
                   children: [
                     e(N, { children: "Config location:" }),
-                    e(t, { dimColor: !0, children: formatMcpScopeLocation(a.scope) }),
+                    e(Text, { dimColor: !0, children: formatMcpScopeLocation(a.scope) }),
                   ],
                 }),
               ],
@@ -6216,19 +6216,19 @@ function Rm({
               }),
             isConnectedMcpServer(a.client) &&
               k > 0 &&
-              r(o, {
+              r(Box, {
                 children: [
-                  e(t, { bold: !0, children: "Tools: " }),
-                  r(t, { dimColor: !0, children: [k, " ", pluralize(k, "tool")] }),
+                  e(Text, { bold: !0, children: "Tools: " }),
+                  r(Text, { dimColor: !0, children: [k, " ", pluralize(k, "tool")] }),
                 ],
               }),
             a.client.type === "connected" &&
               a.client.discoveryBearerRejected &&
-              r(o, {
+              r(Box, {
                 flexDirection: "column",
                 children: [
-                  e(t, { bold: !0, children: "Issue: " }),
-                  e(t, {
+                  e(Text, { bold: !0, children: "Issue: " }),
+                  e(Text, {
                     dimColor: !0,
                     children:
                       "claude.ai rejected the session token. Run /login, then reconnect.",
@@ -6238,18 +6238,18 @@ function Rm({
             a.client.type === "connected" &&
               !a.client.discoveryBearerRejected &&
               a.client.toolsListError &&
-              r(o, {
+              r(Box, {
                 flexDirection: "column",
                 children: [
-                  e(t, { bold: !0, children: "Issue: " }),
-                  e(t, { dimColor: !0, children: a.client.toolsListError }),
+                  e(Text, { bold: !0, children: "Issue: " }),
+                  e(Text, { dimColor: !0, children: a.client.toolsListError }),
                 ],
               }),
           ],
         }),
-        se && e(o, { children: e(ErrorMessage, { error: se }) }),
+        se && e(Box, { children: e(ErrorMessage, { error: se }) }),
         Oe.length > 0 &&
-          e(o, {
+          e(Box, {
             children: e(ve, {
               options: Oe,
               defaultFocusValue: bt,
@@ -6323,34 +6323,34 @@ function Rm({
 F();
 function pb(a, k, v) {
   if (a.type === "disabled")
-    return r(t, { children: [getThemeColor("inactive", v)(figures.radioOff), " disabled"] });
+    return r(Text, { children: [getThemeColor("inactive", v)(figures.radioOff), " disabled"] });
   if (a.type === "connected") {
     if (a.toolsListError)
-      return r(t, {
+      return r(Text, {
         children: [
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 tools fetch failed",
         ],
       });
     if (a.capabilities?.tools && k === 0)
-      return r(t, {
+      return r(Text, {
         children: [
           e(StatusIndicator, { status: "warning", withSpace: !0 }),
           "connected \xB7 no tools",
         ],
       });
-    return r(t, {
+    return r(Text, {
       children: [e(StatusIndicator, { status: "success", withSpace: !0 }), "connected"],
     });
   }
   if (a.type === "pending")
-    return r(t, {
+    return r(Text, {
       children: [
         e(StatusIndicator, { status: "pending", withSpace: !0 }),
         "connecting\u2026",
       ],
     });
-  return r(t, {
+  return r(Text, {
     children: [e(StatusIndicator, { status: "error", withSpace: !0 }), "failed"],
   });
 }
@@ -6400,17 +6400,17 @@ function sit({
       hideBorder: R,
       hideInputGuide: !0,
       children: [
-        r(t, {
+        r(Text, {
           color: "text",
-          children: ["Reconnecting to ", e(t, { bold: !0, children: a.name })],
+          children: ["Reconnecting to ", e(Text, { bold: !0, children: a.name })],
         }),
-        r(o, {
+        r(Box, {
           children: [
-            e(yo, {}),
-            e(t, { children: " Restarting MCP server process" }),
+            e(SpinnerGlyph, {}),
+            e(Text, { children: " Restarting MCP server process" }),
           ],
         }),
-        e(t, { dimColor: !0, children: "This may take a few moments." }),
+        e(Text, { dimColor: !0, children: "This may take a few moments." }),
       ],
     });
   return r(de, {
@@ -6430,7 +6430,7 @@ function sit({
       ],
     }),
     children: [
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 0,
         children: [
@@ -6443,7 +6443,7 @@ function sit({
               r(Table.Row, {
                 children: [
                   e(N, { children: "Command:" }),
-                  e(t, { dimColor: !0, children: a.config.command }),
+                  e(Text, { dimColor: !0, children: a.config.command }),
                 ],
               }),
               a.client.type === "connected" &&
@@ -6452,7 +6452,7 @@ function sit({
                 r(Table.Row, {
                   children: [
                     e(N, { children: "Protocol:" }),
-                    e(t, {
+                    e(Text, {
                       dimColor: !0,
                       children: sanitizeLogValue(a.client.negotiatedProtocolVersion),
                     }),
@@ -6463,13 +6463,13 @@ function sit({
                 r(Table.Row, {
                   children: [
                     e(N, { children: "Args:" }),
-                    e(t, { dimColor: !0, children: a.config.args.join(" ") }),
+                    e(Text, { dimColor: !0, children: a.config.args.join(" ") }),
                   ],
                 }),
               r(Table.Row, {
                 children: [
                   e(N, { children: "Config location:" }),
-                  e(t, {
+                  e(Text, {
                     dimColor: !0,
                     children: formatMcpScopeLocation(getMcpConfigByName(a.name)?.scope ?? "dynamic"),
                   }),
@@ -6485,24 +6485,24 @@ function sit({
             }),
           isConnectedMcpServer(a.client) &&
             k > 0 &&
-            r(o, {
+            r(Box, {
               children: [
-                e(t, { bold: !0, children: "Tools: " }),
-                r(t, { dimColor: !0, children: [k, " ", pluralize(k, "tool")] }),
+                e(Text, { bold: !0, children: "Tools: " }),
+                r(Text, { dimColor: !0, children: [k, " ", pluralize(k, "tool")] }),
               ],
             }),
           a.client.type === "connected" &&
             a.client.toolsListError &&
-            r(o, {
+            r(Box, {
               flexDirection: "column",
               children: [
-                e(t, { bold: !0, children: "Issue: " }),
-                e(t, { dimColor: !0, children: a.client.toolsListError }),
+                e(Text, { bold: !0, children: "Issue: " }),
+                e(Text, { dimColor: !0, children: a.client.toolsListError }),
               ],
             }),
         ],
       }),
-      e(o, {
+      e(Box, {
         children: e(ve, {
           options: ze,
           onChange: async (xe) => {
@@ -6594,19 +6594,19 @@ function sWe(v$) {
   E(kb, bb);
   let Nc;
   if (Kn[13] !== Dm)
-    ((Nc = Dm && e(t, { color: "success", children: " [read-only]" })),
+    ((Nc = Dm && e(Text, { color: "success", children: " [read-only]" })),
       (Kn[13] = Dm),
       (Kn[14] = Nc));
   else Nc = Kn[14];
   let Lc;
   if (Kn[15] !== Bm)
-    ((Lc = Bm && e(t, { color: "error", children: " [destructive]" })),
+    ((Lc = Bm && e(Text, { color: "error", children: " [destructive]" })),
       (Kn[15] = Bm),
       (Kn[16] = Lc));
   else Lc = Kn[16];
   let _c;
   if (Kn[17] !== Am)
-    ((_c = Am && e(t, { dimColor: !0, children: " [open-world]" })),
+    ((_c = Am && e(Text, { dimColor: !0, children: " [open-world]" })),
       (Kn[17] = Am),
       (Kn[18] = _c));
   else _c = Kn[18];
@@ -6632,21 +6632,21 @@ function sWe(v$) {
   else Sb = Kn[24];
   let vb;
   if (Kn[25] === MEMO_CACHE_SENTINEL)
-    ((vb = e(t, { bold: !0, children: "Tool name: " })), (Kn[25] = vb));
+    ((vb = e(Text, { bold: !0, children: "Tool name: " })), (Kn[25] = vb));
   else vb = Kn[25];
   let Fc;
   if (Kn[26] !== Qa)
-    ((Fc = r(o, { children: [vb, e(t, { dimColor: !0, children: Qa })] })),
+    ((Fc = r(Box, { children: [vb, e(Text, { dimColor: !0, children: Qa })] })),
       (Kn[26] = Qa),
       (Kn[27] = Fc));
   else Fc = Kn[27];
   let wb;
   if (Kn[28] === MEMO_CACHE_SENTINEL)
-    ((wb = e(t, { bold: !0, children: "Full name: " })), (Kn[28] = wb));
+    ((wb = e(Text, { bold: !0, children: "Full name: " })), (Kn[28] = wb));
   else wb = Kn[28];
   let Uc;
   if (Kn[29] !== Ft.name)
-    ((Uc = r(o, { children: [wb, e(t, { dimColor: !0, children: Ft.name })] })),
+    ((Uc = r(Box, { children: [wb, e(Text, { dimColor: !0, children: Ft.name })] })),
       (Kn[29] = Ft.name),
       (Kn[30] = Uc));
   else Uc = Kn[30];
@@ -6654,14 +6654,14 @@ function sWe(v$) {
   if (Kn[31] !== Ga)
     ((Vc =
       Ga &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          e(t, { bold: !0, children: "Description:" }),
-          e(t, { wrap: "wrap", children: truncateWithCharCount(Ga, Fm) }),
+          e(Text, { bold: !0, children: "Description:" }),
+          e(Text, { wrap: "wrap", children: truncateWithCharCount(Ga, Fm) }),
           Ga.length > MAX_MCP_TEXT_LENGTH &&
-            r(t, {
+            r(Text, {
               dimColor: !0,
               children: [
                 "The model receives only about the first",
@@ -6681,12 +6681,12 @@ function sWe(v$) {
       Ft.inputJSONSchema &&
       Ft.inputJSONSchema.properties &&
       Object.keys(Ft.inputJSONSchema.properties).length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          e(t, { bold: !0, children: "Parameters:" }),
-          e(o, {
+          e(Text, { bold: !0, children: "Parameters:" }),
+          e(Box, {
             marginLeft: 2,
             flexDirection: "column",
             children: Object.entries(Ft.inputJSONSchema.properties).map(
@@ -6701,7 +6701,7 @@ function sWe(v$) {
                       e(DimParenthetical, { when: P$ ?? !1, children: "required" }),
                       ":",
                       " ",
-                      e(t, {
+                      e(Text, {
                         dimColor: !0,
                         children:
                           typeof vi === "object" && vi && "type" in vi
@@ -6711,7 +6711,7 @@ function sWe(v$) {
                       typeof vi === "object" &&
                         vi &&
                         "description" in vi &&
-                        r(t, {
+                        r(Text, {
                           dimColor: !0,
                           children: [" - ", truncateWithCharCount(String(vi.description), Um)],
                         }),
@@ -6729,7 +6729,7 @@ function sWe(v$) {
   else jc = Kn[34];
   let Xr;
   if (Kn[35] !== Fc || Kn[36] !== Uc || Kn[37] !== Vc || Kn[38] !== jc)
-    ((Xr = r(o, { flexDirection: "column", children: [Fc, Uc, Vc, jc] })),
+    ((Xr = r(Box, { flexDirection: "column", children: [Fc, Uc, Vc, jc] })),
       (Kn[35] = Fc),
       (Kn[36] = Uc),
       (Kn[37] = Vc),
@@ -6911,9 +6911,9 @@ async function Lb(a) {
       validateStatus: () => !0,
       credentials: a,
     });
-    if (!k.ok) return (n(`Skill health fetch skipped: ${k.reason}`), null);
+    if (!k.ok) return (logForDebugging(`Skill health fetch skipped: ${k.reason}`), null);
     if (k.status >= 400)
-      return (n(`Skill health fetch skipped: status ${k.status}`), null);
+      return (logForDebugging(`Skill health fetch skipped: status ${k.status}`), null);
     let v = k.data?.skills;
     if (!Array.isArray(v)) return null;
     let b = new Map();
@@ -6921,7 +6921,7 @@ async function Lb(a) {
       if (w.skill_name && Ob(w.health)) b.set(w.skill_name, w.health);
     return b;
   } catch (k) {
-    return (n(`Skill health fetch skipped: ${k}`), null);
+    return (logForDebugging(`Skill health fetch skipped: ${k}`), null);
   }
 }
 function Gm() {
@@ -6955,7 +6955,7 @@ async function Jm(a, k) {
 }
 async function Vb(a, k) {
   let v = getExistingSessionPluginCacheDir();
-  if (Ym(Sl(), k.path) || (v !== null && Ym(v, k.path))) return !1;
+  if (Ym(getPluginsDir(), k.path) || (v !== null && Ym(v, k.path))) return !1;
   let b = getNonMarketplacePluginSource(k.source);
   if (b !== void 0) return b === INLINE_PLUGIN_SOURCE;
   let w = getPluginMarketplace(k.source);
@@ -7060,7 +7060,7 @@ function jb(a) {
     case "generic-error":
       return truncateWithEllipsis(a.error);
   }
-  return vm(a);
+  return formatPluginError(a);
 }
 function ii(a) {
   let k = Hb(a);
@@ -7129,7 +7129,7 @@ function Hb(a) {
     case "plugin-cache-miss":
       return "Run /plugin to refresh the plugin cache";
     case "plugin-not-installed": {
-      let v = Aa("plugin install", a.source, "--scope project");
+      let v = buildCliCommand("plugin install", a.source, "--scope project");
       return v
         ? `Run \`${v}\` to install it for this project`
         : "Install it at project scope to fix this";
@@ -7168,15 +7168,15 @@ function ex(zD) {
 }
 function tx(tg) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "row",
       children: [
-        e(o, {
+        e(Box, {
           width: 32,
-          children: r(t, { dimColor: !0, children: ["/", tg.name] }),
+          children: r(Text, { dimColor: !0, children: ["/", tg.name] }),
         }),
-        r(t, { dimColor: !0, children: ["~", tg.approxTokens, " tok/turn"] }),
+        r(Text, { dimColor: !0, children: ["~", tg.approxTokens, " tok/turn"] }),
       ],
     },
     tg.name,
@@ -7187,15 +7187,15 @@ function nx(GD) {
 }
 function ox(na) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "row",
       children: [
-        e(o, {
+        e(Box, {
           width: 32,
-          children: r(t, { dimColor: !0, children: ["/", na.name] }),
+          children: r(Text, { dimColor: !0, children: ["/", na.name] }),
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             na.count,
@@ -7267,14 +7267,14 @@ function Qc(jD) {
   let Pi = Kb,
     nr;
   if (tr[7] !== Mo.manifest.name)
-    ((nr = r(t, { bold: !0, children: [Mo.manifest.name, " \xB7 Usage"] })),
+    ((nr = r(Text, { bold: !0, children: [Mo.manifest.name, " \xB7 Usage"] })),
       (tr[7] = Mo.manifest.name),
       (tr[8] = nr));
   else nr = tr[8];
   let qb, zb;
   if (tr[9] === MEMO_CACHE_SENTINEL)
-    ((qb = e(t, { bold: !0, children: "Skill-listing footprint" })),
-      (zb = e(t, {
+    ((qb = e(Text, { bold: !0, children: "Skill-listing footprint" })),
+      (zb = e(Text, {
         dimColor: !0,
         wrap: "wrap",
         children:
@@ -7285,23 +7285,23 @@ function Qc(jD) {
   else ((qb = tr[9]), (zb = tr[10]));
   let qc;
   if (tr[11] !== Pi)
-    ((qc = r(o, {
+    ((qc = r(Box, {
       flexDirection: "column",
       children: [
         qb,
         zb,
         Pi && Pi.skills.length > 0
-          ? r(o, {
+          ? r(Box, {
               flexDirection: "column",
               marginTop: 1,
               children: [
                 Pi.skills.map(tx),
-                r(o, {
+                r(Box, {
                   flexDirection: "row",
                   marginTop: 1,
                   children: [
-                    e(o, { width: 32, children: e(t, { children: "Total" }) }),
-                    r(t, {
+                    e(Box, { width: 32, children: e(Text, { children: "Total" }) }),
+                    r(Text, {
                       children: [
                         Pi.skillCount,
                         " ",
@@ -7315,7 +7315,7 @@ function Qc(jD) {
                 }),
               ],
             })
-          : e(t, {
+          : e(Text, {
               dimColor: !0,
               children: "No model-invocable skills loaded for this plugin",
             }),
@@ -7333,7 +7333,7 @@ function Qc(jD) {
   else zc = tr[15];
   let Wb;
   if (tr[16] !== nr || tr[17] !== qc || tr[18] !== zc)
-    ((Wb = r(o, { flexDirection: "column", gap: 1, children: [nr, qc, zc] })),
+    ((Wb = r(Box, { flexDirection: "column", gap: 1, children: [nr, qc, zc] })),
       (tr[16] = nr),
       (tr[17] = qc),
       (tr[18] = zc),
@@ -7355,8 +7355,8 @@ function Wc(WD) {
     Qb,
     Yb;
   if (rg[3] === MEMO_CACHE_SENTINEL)
-    ((Qb = e(t, { bold: !0, children: "Activity" })),
-      (Yb = e(t, {
+    ((Qb = e(Text, { bold: !0, children: "Activity" })),
+      (Yb = e(Text, {
         dimColor: !0,
         wrap: "wrap",
         children:
@@ -7367,24 +7367,24 @@ function Wc(WD) {
   else ((Qb = rg[3]), (Yb = rg[4]));
   let Jb;
   if (rg[5] !== xo.skillCount || rg[6] !== xo.skills || rg[7] !== xo.totalCount)
-    ((Jb = r(o, {
+    ((Jb = r(Box, {
       flexDirection: "column",
       children: [
         Qb,
         Yb,
         xo.totalCount === 0
-          ? e(t, { dimColor: !0, children: "No activity yet" })
-          : r(o, {
+          ? e(Text, { dimColor: !0, children: "No activity yet" })
+          : r(Box, {
               flexDirection: "column",
               marginTop: 1,
               children: [
                 xo.skills.filter(nx).map(ox),
-                r(o, {
+                r(Box, {
                   flexDirection: "row",
                   marginTop: 1,
                   children: [
-                    e(o, { width: 32, children: e(t, { children: "Total" }) }),
-                    r(t, {
+                    e(Box, { width: 32, children: e(Text, { children: "Total" }) }),
+                    r(Text, {
                       children: [
                         xo.totalCount,
                         " ",
@@ -7469,14 +7469,14 @@ function Jc(lB) {
     else mn = $e[15];
     let on;
     if ($e[16] !== Ln || $e[17] !== mn)
-      ((on = e(t, { color: Ln, children: mn })),
+      ((on = e(Text, { color: Ln, children: mn })),
         ($e[16] = Ln),
         ($e[17] = mn),
         ($e[18] = on));
     else on = $e[18];
     let gn;
     if ($e[19] !== Yc || $e[20] !== mt)
-      ((gn = Yc && r(t, { children: [" ", getThemeColor(mg[Yc], mt)(figures.bullet)] })),
+      ((gn = Yc && r(Text, { children: [" ", getThemeColor(mg[Yc], mt)(figures.bullet)] })),
         ($e[19] = Yc),
         ($e[20] = mt),
         ($e[21] = gn));
@@ -7493,20 +7493,20 @@ function Jc(lB) {
     else wn = $e[22];
     let jt;
     if ($e[23] !== vn)
-      ((jt = r(t, { dimColor: vn, children: [" ", wn] })),
+      ((jt = r(Text, { dimColor: vn, children: [" ", wn] })),
         ($e[23] = vn),
         ($e[24] = jt));
     else jt = $e[24];
     let rn;
     if ($e[25] !== be.marketplace)
-      ((rn = r(t, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
+      ((rn = r(Text, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
         ($e[25] = be.marketplace),
         ($e[26] = rn));
     else rn = $e[26];
     const Ht = !lt;
     let Xt;
     if ($e[27] !== $o || $e[28] !== Ht)
-      ((Xt = r(t, { dimColor: Ht, children: [" \xB7 ", $o, " "] })),
+      ((Xt = r(Text, { dimColor: Ht, children: [" \xB7 ", $o, " "] })),
         ($e[27] = $o),
         ($e[28] = Ht),
         ($e[29] = Xt));
@@ -7514,7 +7514,7 @@ function Jc(lB) {
     const Kt = !lt;
     let Zt;
     if ($e[30] !== Do || $e[31] !== Kt)
-      ((Zt = e(t, { dimColor: Kt, children: Do })),
+      ((Zt = e(Text, { dimColor: Kt, children: Do })),
         ($e[30] = Do),
         ($e[31] = Kt),
         ($e[32] = Zt));
@@ -7523,7 +7523,7 @@ function Jc(lB) {
     if ($e[33] !== be.activity)
       ((In =
         be.activity && be.activity.skillCount > 0
-          ? r(t, {
+          ? r(Text, {
               dimColor: !0,
               children: [
                 " ",
@@ -7546,7 +7546,7 @@ function Jc(lB) {
     if ($e[35] !== be.unusedDays)
       ((Gn =
         be.unusedDays !== void 0 &&
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             " ",
@@ -7570,7 +7570,7 @@ function Jc(lB) {
       $e[43] !== jt ||
       $e[44] !== rn
     )
-      ((So = r(t, { children: [on, gn, jt, rn, Xt, Zt, In, Gn] })),
+      ((So = r(Text, { children: [on, gn, jt, rn, Xt, Zt, In, Gn] })),
         ($e[37] = Xt),
         ($e[38] = Zt),
         ($e[39] = In),
@@ -7599,7 +7599,7 @@ function Jc(lB) {
     const mn = lt ? "suggestion" : void 0;
     let on;
     if ($e[51] !== be.name || $e[52] !== mn)
-      ((on = e(t, { color: mn, children: be.name })),
+      ((on = e(Text, { color: mn, children: be.name })),
         ($e[51] = be.name),
         ($e[52] = mn),
         ($e[53] = on));
@@ -7616,20 +7616,20 @@ function Jc(lB) {
     else vn = $e[54];
     let wn;
     if ($e[55] !== gn)
-      ((wn = r(t, { dimColor: gn, children: [" ", vn] })),
+      ((wn = r(Text, { dimColor: gn, children: [" ", vn] })),
         ($e[55] = gn),
         ($e[56] = wn));
     else wn = $e[56];
     let jt;
     if ($e[57] !== be.marketplace)
-      ((jt = r(t, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
+      ((jt = r(Text, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
         ($e[57] = be.marketplace),
         ($e[58] = jt));
     else jt = $e[58];
     const rn = !lt;
     let Ht;
     if ($e[59] !== lg || $e[60] !== rn)
-      ((Ht = r(t, { dimColor: rn, children: [" \xB7 ", lg, " "] })),
+      ((Ht = r(Text, { dimColor: rn, children: [" \xB7 ", lg, " "] })),
         ($e[59] = lg),
         ($e[60] = rn),
         ($e[61] = Ht));
@@ -7637,7 +7637,7 @@ function Jc(lB) {
     const Xt = !lt;
     let Kt;
     if ($e[62] !== Xt)
-      ((Kt = e(t, { dimColor: Xt, children: "removed" })),
+      ((Kt = e(Text, { dimColor: Xt, children: "removed" })),
         ($e[62] = Xt),
         ($e[63] = Kt));
     else Kt = $e[63];
@@ -7649,7 +7649,7 @@ function Jc(lB) {
       $e[67] !== jt ||
       $e[68] !== Ht
     )
-      ((Zt = r(t, { children: [on, wn, jt, Ht, Kt] })),
+      ((Zt = r(Text, { children: [on, wn, jt, Ht, Kt] })),
         ($e[64] = Kt),
         ($e[65] = on),
         ($e[66] = wn),
@@ -7683,7 +7683,7 @@ function Jc(lB) {
     const gn = lt ? "suggestion" : void 0;
     let vn;
     if ($e[77] !== be.name || $e[78] !== gn)
-      ((vn = e(t, { color: gn, children: be.name })),
+      ((vn = e(Text, { color: gn, children: be.name })),
         ($e[77] = be.name),
         ($e[78] = gn),
         ($e[79] = vn));
@@ -7700,20 +7700,20 @@ function Jc(lB) {
     else jt = $e[80];
     let rn;
     if ($e[81] !== wn)
-      ((rn = r(t, { dimColor: wn, children: [" ", jt] })),
+      ((rn = r(Text, { dimColor: wn, children: [" ", jt] })),
         ($e[81] = wn),
         ($e[82] = rn));
     else rn = $e[82];
     let Ht;
     if ($e[83] !== be.marketplace)
-      ((Ht = r(t, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
+      ((Ht = r(Text, { dimColor: !0, children: [" \xB7 ", be.marketplace] })),
         ($e[83] = be.marketplace),
         ($e[84] = Ht));
     else Ht = $e[84];
     const Xt = !lt;
     let Kt;
     if ($e[85] !== sg || $e[86] !== Xt)
-      ((Kt = r(t, { dimColor: Xt, children: [" \xB7 ", sg, " "] })),
+      ((Kt = r(Text, { dimColor: Xt, children: [" \xB7 ", sg, " "] })),
         ($e[85] = sg),
         ($e[86] = Xt),
         ($e[87] = Kt));
@@ -7721,7 +7721,7 @@ function Jc(lB) {
     const Zt = !lt;
     let In;
     if ($e[88] !== cg || $e[89] !== Zt)
-      ((In = e(t, { dimColor: Zt, children: cg })),
+      ((In = e(Text, { dimColor: Zt, children: cg })),
         ($e[88] = cg),
         ($e[89] = Zt),
         ($e[90] = In));
@@ -7734,7 +7734,7 @@ function Jc(lB) {
       $e[94] !== rn ||
       $e[95] !== Ht
     )
-      ((Gn = r(t, { children: [vn, rn, Ht, Kt, In] })),
+      ((Gn = r(Text, { children: [vn, rn, Ht, Kt, In] })),
         ($e[91] = Kt),
         ($e[92] = In),
         ($e[93] = vn),
@@ -7765,7 +7765,7 @@ function Jc(lB) {
     const mn = lt ? "suggestion" : void 0;
     let on;
     if ($e[104] !== be.name || $e[105] !== mn)
-      ((on = e(t, { color: mn, children: be.name })),
+      ((on = e(Text, { color: mn, children: be.name })),
         ($e[104] = be.name),
         ($e[105] = mn),
         ($e[106] = on));
@@ -7782,13 +7782,13 @@ function Jc(lB) {
     else vn = $e[107];
     let wn;
     if ($e[108] !== gn)
-      ((wn = r(t, { dimColor: gn, children: [" ", vn] })),
+      ((wn = r(Text, { dimColor: gn, children: [" ", vn] })),
         ($e[108] = gn),
         ($e[109] = wn));
     else wn = $e[109];
     let jt;
     if ($e[110] !== be.source)
-      ((jt = r(t, { dimColor: !0, children: [" \xB7 ", be.source] })),
+      ((jt = r(Text, { dimColor: !0, children: [" \xB7 ", be.source] })),
         ($e[110] = be.source),
         ($e[111] = jt));
     else jt = $e[111];
@@ -7796,7 +7796,7 @@ function Jc(lB) {
     const Ht = be.lockSource ? "\uD83D\uDD12 " : "";
     let Xt;
     if ($e[112] !== ug || $e[113] !== rn || $e[114] !== Ht)
-      ((Xt = r(t, { dimColor: rn, children: [" ", "\xB7 ", Ht, ug, " "] })),
+      ((Xt = r(Text, { dimColor: rn, children: [" ", "\xB7 ", Ht, ug, " "] })),
         ($e[112] = ug),
         ($e[113] = rn),
         ($e[114] = Ht),
@@ -7805,14 +7805,14 @@ function Jc(lB) {
     const Kt = !lt;
     let Zt;
     if ($e[116] !== Bo.label || $e[117] !== Kt)
-      ((Zt = e(t, { dimColor: Kt, children: Bo.label })),
+      ((Zt = e(Text, { dimColor: Kt, children: Bo.label })),
         ($e[116] = Bo.label),
         ($e[117] = Kt),
         ($e[118] = Zt));
     else Zt = $e[118];
     let In;
     if ($e[119] !== be.tokenEstimate)
-      ((In = r(t, {
+      ((In = r(Text, {
         dimColor: !0,
         children: [" \xB7 ~", be.tokenEstimate, " tok"],
       })),
@@ -7822,7 +7822,7 @@ function Jc(lB) {
     let Gn;
     if ($e[121] !== be.usage)
       ((Gn = be.usage
-        ? r(t, {
+        ? r(Text, {
             dimColor: !0,
             children: [
               " ",
@@ -7835,7 +7835,7 @@ function Jc(lB) {
                 : `${be.usage.daysSinceUse}d`,
             ],
           })
-        : e(t, { color: "warning", children: " \xB7 never used" })),
+        : e(Text, { color: "warning", children: " \xB7 never used" })),
         ($e[121] = be.usage),
         ($e[122] = Gn));
     else Gn = $e[122];
@@ -7849,7 +7849,7 @@ function Jc(lB) {
       $e[128] !== wn ||
       $e[129] !== jt
     )
-      ((So = r(t, { children: [on, wn, jt, Xt, Zt, In, Gn] })),
+      ((So = r(Text, { children: [on, wn, jt, Xt, Zt, In, Gn] })),
         ($e[123] = Xt),
         ($e[124] = Zt),
         ($e[125] = In),
@@ -7939,14 +7939,14 @@ function Jc(lB) {
     const Ln = !lt;
     let mn;
     if ($e[156] !== Ln)
-      ((mn = e(t, { dimColor: Ln, children: "\u2514 " })),
+      ((mn = e(Text, { dimColor: Ln, children: "\u2514 " })),
         ($e[156] = Ln),
         ($e[157] = mn));
     else mn = $e[157];
     const on = lt ? "suggestion" : void 0;
     let gn;
     if ($e[158] !== be.name || $e[159] !== on)
-      ((gn = e(t, { color: on, children: be.name })),
+      ((gn = e(Text, { color: on, children: be.name })),
         ($e[158] = be.name),
         ($e[159] = on),
         ($e[160] = gn));
@@ -7963,14 +7963,14 @@ function Jc(lB) {
     else wn = $e[161];
     let jt;
     if ($e[162] !== vn)
-      ((jt = r(t, { dimColor: vn, children: [" ", wn] })),
+      ((jt = r(Text, { dimColor: vn, children: [" ", wn] })),
         ($e[162] = vn),
         ($e[163] = jt));
     else jt = $e[163];
     const rn = !lt;
     let Ht;
     if ($e[164] !== _n || $e[165] !== rn)
-      ((Ht = r(t, { dimColor: rn, children: [" \xB7 ", _n, " "] })),
+      ((Ht = r(Text, { dimColor: rn, children: [" \xB7 ", _n, " "] })),
         ($e[164] = _n),
         ($e[165] = rn),
         ($e[166] = Ht));
@@ -7978,14 +7978,14 @@ function Jc(lB) {
     const Xt = !lt;
     let Kt;
     if ($e[167] !== Fn || $e[168] !== Xt)
-      ((Kt = e(t, { dimColor: Xt, children: Fn })),
+      ((Kt = e(Text, { dimColor: Xt, children: Fn })),
         ($e[167] = Fn),
         ($e[168] = Xt),
         ($e[169] = Kt));
     else Kt = $e[169];
     let Zt;
     if ($e[170] !== oa || $e[171] !== lt)
-      ((Zt = oa && e(t, { dimColor: !lt, children: " \xB7 managed" })),
+      ((Zt = oa && e(Text, { dimColor: !lt, children: " \xB7 managed" })),
         ($e[170] = oa),
         ($e[171] = lt),
         ($e[172] = Zt));
@@ -7999,7 +7999,7 @@ function Jc(lB) {
       $e[177] !== jt ||
       $e[178] !== Ht
     )
-      ((In = r(t, { children: [mn, gn, jt, Ht, Kt, Zt] })),
+      ((In = r(Text, { children: [mn, gn, jt, Ht, Kt, Zt] })),
         ($e[173] = Kt),
         ($e[174] = Zt),
         ($e[175] = mn),
@@ -8020,7 +8020,7 @@ function Jc(lB) {
   const Ln = lt ? "suggestion" : void 0;
   let mn;
   if ($e[183] !== be.name || $e[184] !== Ln)
-    ((mn = e(t, { color: Ln, children: be.name })),
+    ((mn = e(Text, { color: Ln, children: be.name })),
       ($e[183] = be.name),
       ($e[184] = Ln),
       ($e[185] = mn));
@@ -8037,14 +8037,14 @@ function Jc(lB) {
   else gn = $e[186];
   let vn;
   if ($e[187] !== on)
-    ((vn = r(t, { dimColor: on, children: [" ", gn] })),
+    ((vn = r(Text, { dimColor: on, children: [" ", gn] })),
       ($e[187] = on),
       ($e[188] = vn));
   else vn = $e[188];
   const wn = !lt;
   let jt;
   if ($e[189] !== _n || $e[190] !== wn)
-    ((jt = r(t, { dimColor: wn, children: [" \xB7 ", _n, " "] })),
+    ((jt = r(Text, { dimColor: wn, children: [" \xB7 ", _n, " "] })),
       ($e[189] = _n),
       ($e[190] = wn),
       ($e[191] = jt));
@@ -8052,14 +8052,14 @@ function Jc(lB) {
   const rn = !lt;
   let Ht;
   if ($e[192] !== Fn || $e[193] !== rn)
-    ((Ht = e(t, { dimColor: rn, children: Fn })),
+    ((Ht = e(Text, { dimColor: rn, children: Fn })),
       ($e[192] = Fn),
       ($e[193] = rn),
       ($e[194] = Ht));
   else Ht = $e[194];
   let Xt;
   if ($e[195] !== oa || $e[196] !== lt)
-    ((Xt = oa && e(t, { dimColor: !lt, children: " \xB7 managed" })),
+    ((Xt = oa && e(Text, { dimColor: !lt, children: " \xB7 managed" })),
       ($e[195] = oa),
       ($e[196] = lt),
       ($e[197] = Xt));
@@ -8072,7 +8072,7 @@ function Jc(lB) {
     $e[201] !== jt ||
     $e[202] !== Ht
   )
-    ((Kt = r(t, { children: [mn, vn, jt, Ht, Xt] })),
+    ((Kt = r(Text, { children: [mn, vn, jt, Ht, Xt] })),
       ($e[198] = Xt),
       ($e[199] = mn),
       ($e[200] = vn),
@@ -8245,7 +8245,7 @@ function kx(Sg) {
   let [dx, GA] = Sg;
   return e(
     BulletItem,
-    { children: r(t, { dimColor: !0, children: [dx, ": ", GA.join(", ")] }) },
+    { children: r(Text, { dimColor: !0, children: [dx, ": ", GA.join(", ")] }) },
     dx,
   );
 }
@@ -8326,14 +8326,14 @@ function Tg(Sg) {
   if ((E(ax, lx), ru)) {
     let il;
     if (ol[4] === MEMO_CACHE_SENTINEL)
-      ((il = e(t, { bold: !0, children: "Components:" })), (ol[4] = il));
+      ((il = e(Text, { bold: !0, children: "Components:" })), (ol[4] = il));
     else il = ol[4];
     let ia;
     if (ol[5] !== ru)
-      ((ia = r(o, {
+      ((ia = r(Box, {
         flexDirection: "column",
         marginBottom: 1,
-        children: [il, r(t, { dimColor: !0, children: ["Error: ", ru] })],
+        children: [il, r(Text, { dimColor: !0, children: ["Error: ", ru] })],
       })),
         (ol[5] = ru),
         (ol[6] = ia));
@@ -8354,10 +8354,10 @@ function Tg(Sg) {
       }
       let ux;
       if (ol[10] === MEMO_CACHE_SENTINEL)
-        ((ux = e(t, { bold: !0, children: "Installed components:" })),
+        ((ux = e(Text, { bold: !0, children: "Installed components:" })),
           (ol[10] = ux));
       else ux = ol[10];
-      il = r(o, {
+      il = r(Box, {
         flexDirection: "column",
         marginBottom: 1,
         children: [ux, cx.map(kx)],
@@ -8390,7 +8390,7 @@ function uu(QA) {
   else au = rl[2];
   let su;
   if (rl[3] !== Ti || rl[4] !== Xo.length || rl[5] !== au)
-    ((su = r(t, { bold: !0, color: Ti, children: [YA, " ", au, ":"] })),
+    ((su = r(Text, { bold: !0, color: Ti, children: [YA, " ", au, ":"] })),
       (rl[3] = Ti),
       (rl[4] = Xo.length),
       (rl[5] = au),
@@ -8402,14 +8402,14 @@ function uu(QA) {
     if (rl[10] !== Ti)
       ((al = (Cg, JA) =>
         r(
-          o,
+          Box,
           {
             flexDirection: "column",
             marginLeft: 2,
             children: [
-              e(t, { color: Ti, children: Cg.message }),
+              e(Text, { color: Ti, children: Cg.message }),
               Cg.guidance &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   italic: !0,
                   children: [figures.arrowRight, " ", Cg.guidance],
@@ -8426,7 +8426,7 @@ function uu(QA) {
   } else cu = rl[9];
   let al;
   if (rl[12] !== su || rl[13] !== cu)
-    ((al = r(o, { flexDirection: "column", children: [su, cu] })),
+    ((al = r(Box, { flexDirection: "column", children: [su, cu] })),
       (rl[12] = su),
       (rl[13] = cu),
       (rl[14] = al));
@@ -8927,7 +8927,7 @@ function pu({
       if (!le)
         try {
           let ce = await Jm(I, pe.plugin),
-            He = z(cs(ce)),
+            He = jsonParse(cs(ce)),
             gt = splitPluginId(pe.plugin.source).name,
             Qe = He.plugins?.find(
               (Ae) => Ae.name === gt || Ae.name === pe.plugin.name,
@@ -8940,7 +8940,7 @@ function pu({
                 Ae.some((Ye) => typeof Ye === "string" && isMcpbFile(Ye)));
           }
         } catch (ce) {
-          n(`Failed to read raw marketplace.json: ${ce}`);
+          logForDebugging(`Failed to read raw marketplace.json: ${ce}`);
         }
       if (!Z) Rd(le);
     }
@@ -9096,7 +9096,7 @@ function pu({
               return;
             }
             let Ye = getInstalledPlugins().plugins[le],
-              eo = !Ye || Ye.length <= 1 ? await onr(le) : null;
+              eo = !Ye || Ye.length <= 1 ? await getPluginDataDirSize(le) : null;
             if (eo) {
               (ke(!1), Re({ type: "confirm-data-cleanup", size: eo }));
               return;
@@ -9164,7 +9164,7 @@ function pu({
         ke(!1);
         let ce = le instanceof Error ? le.message : String(le);
         (ie(`Failed to ${T}: ${ce}`),
-          n(`Failed to ${T} plugin: ${ce}`, { level: "error" }));
+          logForDebugging(`Failed to ${T} plugin: ${ce}`, { level: "error" }));
       }
     },
     ny = vr(xa);
@@ -9653,25 +9653,25 @@ function pu({
     if (!Z) return;
     (T.preventDefault(), ze(!0), Lt(Z), No(0));
   }
-  if (yn) return e(t, { children: "Loading installed plugins\u2026" });
+  if (yn) return e(Text, { children: "Loading installed plugins\u2026" });
   if (Bt.length === 0)
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
+        e(Box, {
           marginBottom: 1,
-          children: e(t, { bold: !0, children: "Manage plugins" }),
+          children: e(Text, { bold: !0, children: "Manage plugins" }),
         }),
         kt &&
-          e(o, {
+          e(Box, {
             marginBottom: 1,
             paddingLeft: 2,
-            children: e(t, { color: "success", children: kt }),
+            children: e(Text, { color: "success", children: kt }),
           }),
         e(EmptyStateMessage, { children: "No plugins or MCP servers installed." }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             children: e(ActionKeybindingHint, {
               action: "confirm:no",
@@ -9789,32 +9789,32 @@ function pu({
   }
   if (typeof ae === "object" && ae.type === "flagged-detail") {
     let T = ae.plugin;
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             bold: !0,
             children: [T.name, " @ ", T.marketplace],
           }),
         }),
-        r(o, {
+        r(Box, {
           marginBottom: 1,
           children: [
-            e(t, { dimColor: !0, children: "Status: " }),
-            e(t, { color: "error", children: "Removed" }),
+            e(Text, { dimColor: !0, children: "Status: " }),
+            e(Text, { color: "error", children: "Removed" }),
           ],
         }),
-        r(o, {
+        r(Box, {
           marginBottom: 1,
           flexDirection: "column",
           children: [
-            r(t, {
+            r(Text, {
               color: "error",
               children: ["Removed from marketplace \xB7 reason: ", T.reason],
             }),
-            e(t, { children: T.text }),
-            r(t, {
+            e(Text, { children: T.text }),
+            r(Text, {
               dimColor: !0,
               children: [
                 "Flagged on ",
@@ -9823,14 +9823,14 @@ function pu({
             }),
           ],
         }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
           flexDirection: "column",
           children: r(SelectableRow, {
             active: !0,
             children: [
-              r(t, { "aria-hidden": !0, children: [figures.pointer, " "] }),
-              e(t, { color: "suggestion", children: "Dismiss" }),
+              r(Text, { "aria-hidden": !0, children: [figures.pointer, " "] }),
+              e(Text, { color: "suggestion", children: "Dismiss" }),
             ],
           }),
         }),
@@ -9858,7 +9858,7 @@ function pu({
     return r(FocusableBox, {
       onKeyDown: sy,
       children: [
-        r(t, {
+        r(Text, {
           bold: !0,
           color: "warning",
           children: [
@@ -9866,26 +9866,26 @@ function pu({
             " is enabled in .claude/settings.json (shared with your team)",
           ],
         }),
-        r(o, {
+        r(Box, {
           marginTop: 1,
           flexDirection: "column",
           children: [
-            e(t, {
+            e(Text, {
               children:
                 "Disable it just for you in .claude/settings.local.json?",
             }),
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children:
                 "The plugin stays installed for the project; only your local override changes.",
             }),
           ],
         }),
-        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
-        e(o, {
+        Oe && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
+        e(Box, {
           marginTop: 1,
           children: Ce
-            ? e(t, { dimColor: !0, children: "Processing\u2026" })
+            ? e(Text, { dimColor: !0, children: "Processing\u2026" })
             : r(DotSeparatedList, {
                 children: [
                   e(KeybindingHint, { chord: "y", action: "disable for me", bold: !0 }),
@@ -9909,7 +9909,7 @@ function pu({
     return r(FocusableBox, {
       onKeyDown: cy,
       children: [
-        r(t, {
+        r(Text, {
           bold: !0,
           children: [
             getPluginDisplayName(pe.plugin),
@@ -9919,19 +9919,19 @@ function pu({
             " of persistent data",
           ],
         }),
-        r(o, {
+        r(Box, {
           marginTop: 1,
           flexDirection: "column",
           children: [
-            e(t, { children: "Delete it along with the plugin?" }),
-            e(t, { dimColor: !0, children: sve(Rt) }),
+            e(Text, { children: "Delete it along with the plugin?" }),
+            e(Text, { dimColor: !0, children: getPluginDataDir(Rt) }),
           ],
         }),
-        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
-        e(o, {
+        Oe && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
+        e(Box, {
           marginTop: 1,
           children: Ce
-            ? e(t, { dimColor: !0, children: "Uninstalling\u2026" })
+            ? e(Text, { dimColor: !0, children: "Uninstalling\u2026" })
             : r(DotSeparatedList, {
                 children: [
                   e(KeybindingHint, { chord: "y", action: "delete", bold: !0 }),
@@ -9957,15 +9957,15 @@ function pu({
       ce = [
         ...oe.filter(UJ).map((Ae) => ({ message: Jo(Ae), guidance: ii(Ae) })),
         ...K.filter((Ae) => z8(Ae, T, pe.plugin.name)).map((Ae) => ({
-          message: K$(Ae),
-          guidance: qzt(Ae),
+          message: formatPluginWarning(Ae),
+          guidance: formatPluginWarningGuidance(Ae),
         })),
       ],
       He = getPluginDaysSinceLastUse(pe.plugin.repository),
       gt =
         le.length === 0 && ce.length === 0
           ? null
-          : r(o, {
+          : r(Box, {
               flexDirection: "column",
               marginBottom: 1,
               children: [
@@ -9974,55 +9974,55 @@ function pu({
               ],
             }),
       Qe = sanitizePluginManifest(pe.plugin.manifest);
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             bold: !0,
             children: [getPluginDisplayName(pe.plugin), " @", " ", wr(pe.marketplace)],
           }),
         }),
-        r(o, {
+        r(Box, {
           children: [
-            e(t, { dimColor: !0, children: "Scope: " }),
-            e(t, { children: pe.scope || "user" }),
+            e(Text, { dimColor: !0, children: "Scope: " }),
+            e(Text, { children: pe.scope || "user" }),
           ],
         }),
         Qe.version &&
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { dimColor: !0, children: "Version: " }),
-              e(t, { children: Qe.version }),
+              e(Text, { dimColor: !0, children: "Version: " }),
+              e(Text, { children: Qe.version }),
             ],
           }),
         Qe.description &&
-          e(o, {
+          e(Box, {
             marginBottom: 1,
-            children: e(t, { children: Qe.description }),
+            children: e(Text, { children: Qe.description }),
           }),
         Qe.author &&
-          r(o, {
+          r(Box, {
             children: [
-              e(t, { dimColor: !0, children: "Author: " }),
-              e(t, { children: Qe.author.name }),
+              e(Text, { dimColor: !0, children: "Author: " }),
+              e(Text, { children: Qe.author.name }),
             ],
           }),
-        r(o, {
+        r(Box, {
           marginBottom: 1,
           children: [
-            e(t, { dimColor: !0, children: "Status: " }),
-            e(t, {
+            e(Text, { dimColor: !0, children: "Status: " }),
+            e(Text, {
               color: Z ? "success" : "warning",
               children: Z ? "Enabled" : "Disabled",
             }),
             pe.pendingUpdate &&
-              e(t, {
+              e(Text, {
                 color: "suggestion",
                 children: " \xB7 Marked for update",
               }),
             He !== null &&
-              r(t, {
+              r(Text, {
                 dimColor: !0,
                 children: [
                   " ",
@@ -10036,7 +10036,7 @@ function pu({
         Rt && e(Or, { pluginId: Rt, verb: "Updating", onShown: sn.record }, St),
         e(Tg, { plugin: pe.plugin, marketplace: pe.marketplace }),
         gt,
-        e(o, {
+        e(Box, {
           marginTop: 1,
           flexDirection: "column",
           children: Sa.map((Ae, Ye) => {
@@ -10046,9 +10046,9 @@ function pu({
               {
                 active: ot,
                 children: [
-                  ot && r(t, { "aria-hidden": !0, children: [figures.pointer, " "] }),
-                  !ot && e(t, { "aria-hidden": !0, children: "  " }),
-                  e(t, {
+                  ot && r(Text, { "aria-hidden": !0, children: [figures.pointer, " "] }),
+                  !ot && e(Text, { "aria-hidden": !0, children: "  " }),
+                  e(Text, {
                     bold: ot,
                     color: Ae.label.includes("Uninstall")
                       ? "error"
@@ -10064,14 +10064,14 @@ function pu({
           }),
         }),
         Ce &&
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, { children: "Processing\u2026" }),
+            children: e(Text, { children: "Processing\u2026" }),
           }),
-        Oe && e(o, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
-        e(o, {
+        Oe && e(Box, { marginTop: 1, children: e(ErrorMessage, { error: Oe }) }),
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: r(DotSeparatedList, {
@@ -10105,21 +10105,21 @@ function pu({
     let T = ae.plugin,
       Z = T.errors[0],
       oe = Z ? Jo(Z) : "Failed to load";
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       children: [
-        r(t, {
+        r(Text, {
           children: [
-            e(t, { bold: !0, children: wr(T.name) }),
-            r(t, { dimColor: !0, children: [" ", "@ ", wr(T.marketplace)] }),
-            r(t, { dimColor: !0, children: [" (", T.scope, ")"] }),
+            e(Text, { bold: !0, children: wr(T.name) }),
+            r(Text, { dimColor: !0, children: [" ", "@ ", wr(T.marketplace)] }),
+            r(Text, { dimColor: !0, children: [" (", T.scope, ")"] }),
           ],
         }),
-        e(t, { color: "error", children: oe }),
+        e(Text, { color: "error", children: oe }),
         T.scope === "managed"
-          ? e(o, {
+          ? e(Box, {
               marginTop: 1,
-              children: e(t, {
+              children: e(Text, {
                 dimColor: !0,
                 children:
                   "Managed by your organization \u2014 contact your admin",
@@ -10131,24 +10131,24 @@ function pu({
                 active: !0,
                 marginTop: 1,
                 children: [
-                  r(t, {
+                  r(Text, {
                     "aria-hidden": !0,
                     color: "suggestion",
                     children: [figures.pointer, " "],
                   }),
-                  e(t, { bold: !0, children: "Remove" }),
+                  e(Text, { bold: !0, children: "Remove" }),
                 ],
               }),
-        Ce && e(t, { children: "Processing\u2026" }),
+        Ce && e(Text, { children: "Processing\u2026" }),
         e(ErrorMessage, { error: Oe }),
         isNonMarketplacePluginSource(T.marketplace) &&
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, { dimColor: !0, children: hx(T.marketplace) }),
+            children: e(Text, { dimColor: !0, children: hx(T.marketplace) }),
           }),
-        e(o, {
+        e(Box, {
           marginTop: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: r(DotSeparatedList, {
@@ -10193,15 +10193,15 @@ function pu({
           Gt((He) => He + 1),
           Re({ type: "skill-detail", skill: { ...T, override: le } }));
       };
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        e(t, { bold: !0, children: T.name }),
-        T.description && e(t, { dimColor: !0, children: T.description }),
+        e(Text, { bold: !0, children: T.name }),
+        T.description && e(Text, { dimColor: !0, children: T.description }),
         T.whenToUse &&
-          r(t, { dimColor: !0, children: ["When to use: ", T.whenToUse] }),
-        r(t, {
+          r(Text, { dimColor: !0, children: ["When to use: ", T.whenToUse] }),
+        r(Text, {
           dimColor: !0,
           children: [
             "Source: ",
@@ -10211,7 +10211,7 @@ function pu({
             " tokens",
           ],
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Usage:",
@@ -10223,14 +10223,14 @@ function pu({
         }),
         T.allowedTools &&
           T.allowedTools.length > 0 &&
-          r(t, {
+          r(Text, {
             dimColor: !0,
             children: ["Allowed tools: ", yx(T.allowedTools)],
           }),
         T.skillRoot &&
-          r(t, { dimColor: !0, children: ["Path: ", T.skillRoot] }),
+          r(Text, { dimColor: !0, children: ["Path: ", T.skillRoot] }),
         T.lockSource === "policy" || T.lockSource === "flag"
-          ? r(t, {
+          ? r(Text, {
               dimColor: !0,
               children: [
                 "State: ",
@@ -10240,14 +10240,14 @@ function pu({
                 " settings)",
               ],
             })
-          : r(o, {
+          : r(Box, {
               flexDirection: "column",
               children: [
-                r(t, {
+                r(Text, {
                   children: [
                     "State:",
                     T.lockSource === "author" &&
-                      r(t, {
+                      r(Text, {
                         dimColor: !0,
                         children: [
                           " ",
@@ -10276,7 +10276,7 @@ function pu({
                       return e(
                         iye.Item,
                         {
-                          children: r(t, {
+                          children: r(Text, {
                             dimColor: ce,
                             children: [
                               le === T.override ? figures.radioOn : figures.radioOff,
@@ -10297,7 +10297,7 @@ function pu({
         r(DotSeparatedList, {
           children: [
             e(KeybindingHint, { chord: "Enter", action: "set state" }),
-            e(t, { dimColor: !0, children: " \xB7 " }),
+            e(Text, { dimColor: !0, children: " \xB7 " }),
             e(KeybindingHint, { chord: "Esc", action: "go back" }),
           ],
         }),
@@ -10387,11 +10387,11 @@ function pu({
         borderless: !0,
       });
     }
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       paddingX: 1,
       children: [
-        r(t, {
+        r(Text, {
           color: "warning",
           children: ["No details view for ", T.name, " (transport: ", gt, ")."],
         }),
@@ -10501,14 +10501,14 @@ function pu({
     });
   }
   let my = Oi.getVisibleItems(Mn);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     tabIndex: 0,
     autoFocus: !0,
     onKeyDown: dy,
     onPaste: py,
     children: [
-      e(o, {
+      e(Box, {
         marginBottom: 1,
         children: e(SearchInput, {
           query: Mt,
@@ -10521,10 +10521,10 @@ function pu({
         }),
       }),
       isSafeMode() &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           paddingLeft: 2,
-          children: r(t, {
+          children: r(Text, {
             color: "warning",
             children: [
               "Safe mode: plugins are disabled this session \u2014 changes here save but won't load until safe mode is off.",
@@ -10535,20 +10535,20 @@ function pu({
           }),
         }),
       kt &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           paddingLeft: 2,
-          children: e(t, { color: "success", children: kt }),
+          children: e(Text, { color: "success", children: kt }),
         }),
       Mn.length === 0 &&
         Mt &&
-        e(o, {
+        e(Box, {
           marginBottom: 1,
           children: r(EmptyStateMessage, { children: ['No items match "', Mt, '"'] }),
         }),
       Oi.scrollPosition.canScrollUp &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowUp, " more above"],
           }),
@@ -10558,13 +10558,13 @@ function pu({
           le = oe === Zn && !Fe;
         switch (T.kind) {
           case "spacer":
-            return e(o, { height: 1 }, `spacer:${oe}`);
+            return e(Box, { height: 1 }, `spacer:${oe}`);
           case "section-header":
             return e(
-              o,
+              Box,
               {
                 paddingLeft: 2,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: T.section !== "attention",
                   color: T.section === "attention" ? "warning" : void 0,
                   bold: !0,
@@ -10580,10 +10580,10 @@ function pu({
             );
           case "scope-header":
             return e(
-              o,
+              Box,
               {
                 paddingLeft: 4,
-                children: e(t, { dimColor: !0, children: mx(T.scope) }),
+                children: e(Text, { dimColor: !0, children: mx(T.scope) }),
               },
               `scope:${oe}`,
             );
@@ -10593,10 +10593,10 @@ function pu({
               {
                 active: le,
                 paddingLeft: 2,
-                children: r(t, {
+                children: r(Text, {
                   color: le ? "suggestion" : void 0,
                   children: [
-                    e(t, {
+                    e(Text, {
                       "aria-hidden": !0,
                       children: le ? `${figures.pointer} ` : "  ",
                     }),
@@ -10607,7 +10607,7 @@ function pu({
                         children: [
                           " ",
                           "disabled ",
-                          r(t, {
+                          r(Text, {
                             dimColor: !0,
                             children: ["(", T.disabledCount, ")"],
                           }),
@@ -10622,7 +10622,7 @@ function pu({
                           " ",
                           "unused claude.ai connectors",
                           " ",
-                          r(t, {
+                          r(Text, {
                             dimColor: !0,
                             children: ["(", T.unusedConnectorCount, ")"],
                           }),
@@ -10647,21 +10647,21 @@ function pu({
         }
       }),
       Oi.scrollPosition.canScrollDown &&
-        e(o, {
-          children: r(t, {
+        e(Box, {
+          children: r(Text, {
             dimColor: !0,
             children: [" ", figures.arrowDown, " more below"],
           }),
         }),
-      e(o, {
+      e(Box, {
         marginTop: 1,
         marginLeft: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           italic: !0,
           children: r(DotSeparatedList, {
             children: [
-              e(t, { children: "Type to search" }),
+              e(Text, { children: "Type to search" }),
               e(ActionKeybindingHint, {
                 action: "plugin:toggle",
                 context: "Plugin",
@@ -10691,11 +10691,11 @@ function pu({
         }),
       }),
       Oe &&
-        e(o, { marginTop: 1, marginLeft: 1, children: e(ErrorMessage, { error: Oe }) }),
+        e(Box, { marginTop: 1, marginLeft: 1, children: e(ErrorMessage, { error: Oe }) }),
       Ve.size > 0 &&
-        e(o, {
+        e(Box, {
           marginLeft: 1,
-          children: e(t, {
+          children: e(Text, {
             dimColor: !0,
             italic: !0,
             children: "Run /reload-plugins to apply changes",
@@ -10821,12 +10821,12 @@ function Ox($0) {
 }
 function Nx(Vg) {
   return r(
-    t,
+    Text,
     {
       children: [
         "  ",
-        e(t, { color: "warning", children: removeInvisibleChars(Vg.name) }),
-        e(t, {
+        e(Text, { color: "warning", children: removeInvisibleChars(Vg.name) }),
+        e(Text, {
           dimColor: !0,
           children: `  last used ${Vg.daysSinceLastUse} days ago`,
         }),
@@ -10864,14 +10864,14 @@ function kl(h0) {
   if (ra[0] !== Ig) ((bx = () => Ig()), (ra[0] = Ig), (ra[1] = bx));
   else bx = ra[1];
   let [Rg] = d(bx),
-    [b0] = d(i3e),
+    [b0] = d(getSkillTokenCountsAccess),
     Sx;
   if (ra[2] === MEMO_CACHE_SENTINEL) ((Sx = { context: "Confirmation" }), (ra[2] = Sx));
   else Sx = ra[2];
   useKeybinding("confirm:no", k0, Sx);
   let vx;
   if (ra[3] === MEMO_CACHE_SENTINEL)
-    ((vx = e(t, { bold: !0, children: "Skills loaded this session" })),
+    ((vx = e(Text, { bold: !0, children: "Skills loaded this session" })),
       (ra[3] = vx));
   else vx = ra[3];
   const Eg = b0.allowed
@@ -10879,11 +10879,11 @@ function kl(h0) {
     : "Computing skill usage\u2026";
   let wx;
   if (ra[4] !== Eg)
-    ((wx = r(o, {
+    ((wx = r(Box, {
       flexDirection: "column",
       children: [
         vx,
-        e(o, { marginTop: 1, children: e(t, { dimColor: !0, children: Eg }) }),
+        e(Box, { marginTop: 1, children: e(Text, { dimColor: !0, children: Eg }) }),
       ],
     })),
       (ra[4] = Eg),
@@ -10910,7 +10910,7 @@ function Du(x0) {
   if (!ll.ok) {
     let sl;
     if (rr[0] !== ll.message)
-      ((sl = r(t, {
+      ((sl = r(Text, {
         dimColor: !0,
         wrap: "wrap",
         children: [
@@ -10936,12 +10936,12 @@ function Du(x0) {
     } = ll.report,
     sl;
   if (rr[2] === MEMO_CACHE_SENTINEL)
-    ((sl = e(t, { bold: !0, children: "Skills loaded this session" })),
+    ((sl = e(Text, { bold: !0, children: "Skills loaded this session" })),
       (rr[2] = sl));
   else sl = rr[2];
   let hu;
   if (rr[3] !== ri)
-    ((hu = e(o, {
+    ((hu = e(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: e(Bu, { rows: ri }),
@@ -10953,11 +10953,11 @@ function Du(x0) {
   if (rr[5] !== ri.length || rr[6] !== yu)
     ((ku =
       ri.length > 0 &&
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(t, {
+          r(Text, {
             dimColor: !0,
             wrap: "wrap",
             children: [
@@ -10965,7 +10965,7 @@ function Du(x0) {
               "context = this skill's one-line listing in the system prompt, included every turn",
             ],
           }),
-          r(t, {
+          r(Text, {
             dimColor: !0,
             wrap: "wrap",
             children: [
@@ -10974,7 +10974,7 @@ function Du(x0) {
             ],
           }),
           yu === null
-            ? r(t, {
+            ? r(Text, {
                 dimColor: !0,
                 wrap: "wrap",
                 children: [
@@ -10982,7 +10982,7 @@ function Du(x0) {
                   "7d tokens = tokens attributed to the skill over the last 7 days of sessions on this machine",
                 ],
               })
-            : r(t, {
+            : r(Text, {
                 dimColor: !0,
                 wrap: "wrap",
                 children: ["  ", "7d tokens: ", yu],
@@ -11024,7 +11024,7 @@ function Du(x0) {
   else xu = rr[16];
   let Px;
   if (rr[17] !== hu || rr[18] !== ku || rr[19] !== bu || rr[20] !== xu)
-    ((Px = r(o, { flexDirection: "column", children: [sl, hu, ku, bu, xu] })),
+    ((Px = r(Box, { flexDirection: "column", children: [sl, hu, ku, bu, xu] })),
       (rr[17] = hu),
       (rr[18] = ku),
       (rr[19] = bu),
@@ -11039,7 +11039,7 @@ function Bu(v0) {
   if (cl.length === 0) {
     let ul;
     if (Su[0] === MEMO_CACHE_SENTINEL)
-      ((ul = e(t, { dimColor: !0, children: "  (no skills loaded)" })),
+      ((ul = e(Text, { dimColor: !0, children: "  (no skills loaded)" })),
         (Su[0] = ul));
     else ul = Su[0];
     return ul;
@@ -11058,21 +11058,21 @@ function Bu(v0) {
     const _g = `  ${P0}  ${T0}  ${I0}  ${R0}  ${Tx}  last used`;
     let Ix;
     if (Su[5] !== _g)
-      ((Ix = e(t, { dimColor: !0, children: _g })), (Su[5] = _g), (Su[6] = Ix));
+      ((Ix = e(Text, { dimColor: !0, children: _g })), (Su[5] = _g), (Su[6] = Ix));
     else Ix = Su[6];
-    ul = r(o, {
+    ul = r(Box, {
       flexDirection: "column",
       children: [
         Ix,
         cl.map((dl, Rx) => {
           let Fg = C0[Rx];
           return r(
-            t,
+            Text,
             {
               color: dl.usageCount === 0 ? "warning" : void 0,
               children: [
                 `  ${padEndToWidth(dl.name, Zo.name)}  `,
-                e(t, { dimColor: !0, children: padEndToWidth(dl.source, Zo.source) }),
+                e(Text, { dimColor: !0, children: padEndToWidth(dl.source, Zo.source) }),
                 `  ${padStartToWidth(Fg.context, Zo.context)}  ${padStartToWidth(Fg.week, Zo.week)}  ${padStartToWidth(String(dl.usageCount), Zo.uses)}\xD7  ${Fg.lastUsed}`,
               ],
             },
@@ -11114,13 +11114,13 @@ function Au(E0) {
     else cr = sr[13];
     Cu = cr;
     ml = lr.length <= 1;
-    wu = o;
+    wu = Box;
     Pu = "column";
     Tu = 1;
     if (sr[14] !== ar.length)
       ((fl =
         ar.length > 0 &&
-        e(t, {
+        e(Text, {
           color: "warning",
           wrap: "wrap",
           children: `${ar.length} ${pluralize(ar.length, "skill")} loaded but never invoked. Each one adds to the system prompt every turn. Disable in /skills, or remove from .claude/skills.`,
@@ -11131,7 +11131,7 @@ function Au(E0) {
     if (sr[16] !== Ri.length)
       ((yl =
         Ri.length > 0 &&
-        e(t, {
+        e(Text, {
           color: "warning",
           wrap: "wrap",
           children: `${Ri.length} ${pluralize(Ri.length, "skill")} synced from claude.ai loaded but never invoked. Each one adds to the system prompt every turn. Disable in /skills, or turn ${Ri.length === 1 ? "it" : "them"} off on claude.ai \u2014 a deleted synced copy is re-downloaded on the next sync.`,
@@ -11141,7 +11141,7 @@ function Au(E0) {
     else yl = sr[17];
     Iu =
       aa.length > 0 &&
-      e(t, {
+      e(Text, {
         color: "warning",
         wrap: "wrap",
         children: `${aa.length} plugin ${pluralize(aa.length, "skill")} loaded but never invoked, from ${Ex.join(", ")}. Each one adds to the system prompt every turn. Plugin skills can't be turned off individually \u2014 disable ${Ex.length === 1 ? "the plugin" : "those plugins"} in the Installed tab.`,
@@ -11171,7 +11171,7 @@ function Au(E0) {
   if (sr[18] !== Cu || sr[19] !== ml || sr[20] !== pl.length)
     ((cr =
       pl.length > 0 &&
-      e(t, {
+      e(Text, {
         color: "warning",
         wrap: "wrap",
         children: `${pl.length} MCP ${pluralize(pl.length, "skill")} loaded but never invoked${Cu}. Each one adds to the system prompt every turn. MCP skills live on the server, not on disk \u2014 turning ${ml ? "that server" : "those servers"} off in /mcp also removes ${ml ? "its" : "their"} tools.`,
@@ -11185,7 +11185,7 @@ function Au(E0) {
   if (sr[22] !== vu)
     ((Ru =
       vu.every(Ox) &&
-      e(t, {
+      e(Text, {
         color: "success",
         children: "All loaded skills have been used at least once.",
       })),
@@ -11228,7 +11228,7 @@ function Ou(D0) {
   }
   let $x;
   if (hl[0] === MEMO_CACHE_SENTINEL)
-    (($x = e(t, { bold: !0, children: "Plugins not used recently" })),
+    (($x = e(Text, { bold: !0, children: "Plugins not used recently" })),
       (hl[0] = $x));
   else $x = hl[0];
   let Mu;
@@ -11236,15 +11236,15 @@ function Ou(D0) {
   else Mu = hl[2];
   let $u;
   if (hl[3] !== Mu)
-    (($u = e(o, { flexDirection: "column", marginTop: 1, children: Mu })),
+    (($u = e(Box, { flexDirection: "column", marginTop: 1, children: Mu })),
       (hl[3] = Mu),
       (hl[4] = $u));
   else $u = hl[4];
   let Dx;
   if (hl[5] === MEMO_CACHE_SENTINEL)
-    ((Dx = e(o, {
+    ((Dx = e(Box, {
       marginTop: 1,
-      children: r(t, {
+      children: r(Text, {
         dimColor: !0,
         children: ["  ", "Manage these in the Installed tab"],
       }),
@@ -11253,7 +11253,7 @@ function Ou(D0) {
   else Dx = hl[5];
   let Bx;
   if (hl[6] !== $u)
-    ((Bx = r(o, {
+    ((Bx = r(Box, {
       flexDirection: "column",
       marginTop: 1,
       children: [$x, $u, Dx],
@@ -11385,9 +11385,9 @@ ${bl}`,
   E(_x, Fx);
   let Vx;
   if (Lx[8] === MEMO_CACHE_SENTINEL)
-    ((Vx = e(o, {
+    ((Vx = e(Box, {
       flexDirection: "column",
-      children: e(t, { children: "Preparing tag\u2026" }),
+      children: e(Text, { children: "Preparing tag\u2026" }),
     })),
       (Lx[8] = Vx));
   else Vx = Lx[8];
@@ -11526,7 +11526,7 @@ Or from the command line:
         } catch (ju) {
           let Yx = ju;
           ((process.exitCode = 2),
-            n(`Plugin validation failed unexpectedly for ${sa}: ${l(Yx)}`, {
+            logForDebugging(`Plugin validation failed unexpectedly for ${sa}: ${l(Yx)}`, {
               level: "error",
             }),
             la(
@@ -11545,9 +11545,9 @@ Or from the command line:
   E(qx, zx);
   let ju;
   if (Kx[4] === MEMO_CACHE_SENTINEL)
-    ((ju = e(o, {
+    ((ju = e(Box, {
       flexDirection: "column",
-      children: e(t, { children: "Running validation..." }),
+      children: e(Text, { children: "Running validation..." }),
     })),
       (Kx[4] = ju));
   else ju = Kx[4];
@@ -11672,7 +11672,7 @@ function kd(tN) {
   E(tS, nS);
   let aS;
   if (eS[4] === MEMO_CACHE_SENTINEL)
-    ((aS = e(t, { children: "Loading marketplaces..." })), (eS[4] = aS));
+    ((aS = e(Text, { children: "Loading marketplaces..." })), (eS[4] = aS));
   else aS = eS[4];
   return aS;
 }
@@ -11752,7 +11752,7 @@ function xd(rN) {
   E(sS, cS);
   let yS;
   if (lS[7] === MEMO_CACHE_SENTINEL)
-    ((yS = e(t, { children: "Loading plugins..." })), (lS[7] = yS));
+    ((yS = e(Text, { children: "Loading plugins..." })), (lS[7] = yS));
   else yS = lS[7];
   return yS;
 }
@@ -11763,7 +11763,7 @@ function vd() {
   let xN = _(1),
     hS;
   if (xN[0] === MEMO_CACHE_SENTINEL)
-    ((hS = e(o, {
+    ((hS = e(Box, {
       marginTop: 1,
       children: e(StatusLine, {
         status: "info",
@@ -11796,7 +11796,7 @@ function wd() {
   else Yu = Gu[3];
   let kS;
   if (Gu[4] === MEMO_CACHE_SENTINEL)
-    ((kS = e(t, {
+    ((kS = e(Text, {
       dimColor: !0,
       wrap: "wrap-trim",
       children:
@@ -11806,7 +11806,7 @@ function wd() {
   else kS = Gu[4];
   let bS;
   if (Gu[5] !== Yu)
-    ((bS = r(o, { marginTop: 1, flexDirection: "column", children: [Yu, kS] })),
+    ((bS = r(Box, { marginTop: 1, flexDirection: "column", children: [Yu, kS] })),
       (Gu[5] = Yu),
       (Gu[6] = bS));
   else bS = Gu[6];
@@ -11816,7 +11816,7 @@ function Cd() {
   let wN = _(1),
     xS;
   if (wN[0] === MEMO_CACHE_SENTINEL)
-    ((xS = e(o, {
+    ((xS = e(Box, {
       marginTop: 1,
       children: e(StatusLine, {
         status: "info",
@@ -11954,7 +11954,7 @@ function Yf(a, k, v, b, w, R, A, Q, I) {
   }
   let X = new Set();
   for (let B of v) {
-    let K = Qf(B, zoe(B), Q);
+    let K = Qf(B, getErrorPluginId(B), Q);
     if (K.key !== void 0 && X.has(K.key)) continue;
     if (K.key !== void 0) X.add(K.key);
     let se = UJ(B);
@@ -11982,8 +11982,8 @@ function Yf(a, k, v, b, w, R, A, Q, I) {
     (X.add(fe),
       j.push({
         label: K.label,
-        message: K$(B),
-        guidance: qzt(B),
+        message: formatPluginWarning(B),
+        guidance: formatPluginWarningGuidance(B),
         action: { kind: "none" },
         scope: K.scope,
         isAdvisory: !0,
@@ -12060,7 +12060,7 @@ function Td(CN) {
     if (Gf($i)) IS.push($i);
     else if (zf($i)) {
       if (!ON.has($i.marketplace)) RS.push($i);
-    } else if (zoe($i) !== void 0) ES.push($i);
+    } else if (getErrorPluginId($i) !== void 0) ES.push($i);
     else MS.push($i);
   }
   let pr = Yf(TS, RS, ES, MS, DN, IS, IN, getPluginEditableScopes(), [...RN, ...EN]),
@@ -12157,7 +12157,7 @@ function Td(CN) {
   if (pr.length === 0) {
     let Zu;
     if (to[10] === MEMO_CACHE_SENTINEL)
-      ((Zu = e(o, {
+      ((Zu = e(Box, {
         marginLeft: 1,
         children: e(EmptyStateMessage, { children: "No plugin errors" }),
       })),
@@ -12165,13 +12165,13 @@ function Td(CN) {
     else Zu = to[10];
     let ed;
     if (to[11] === MEMO_CACHE_SENTINEL)
-      ((ed = r(o, {
+      ((ed = r(Box, {
         flexDirection: "column",
         children: [
           Zu,
-          e(o, {
+          e(Box, {
             marginTop: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               italic: !0,
               children: e(ActionKeybindingHint, {
@@ -12188,7 +12188,7 @@ function Td(CN) {
     else ed = to[11];
     return ed;
   }
-  const cf = o,
+  const cf = Box,
     Zu = "column",
     ed = 1;
   let LS;
@@ -12204,30 +12204,30 @@ function Td(CN) {
           marginLeft: 1,
           flexDirection: "column",
           children: [
-            r(t, {
+            r(Text, {
               children: [
-                r(t, {
+                r(Text, {
                   "aria-hidden": Il,
                   color: Il ? "suggestion" : FS,
                   children: [HN, " "],
                 }),
-                e(t, { bold: Il, children: wr(Di.label) }),
+                e(Text, { bold: Il, children: wr(Di.label) }),
                 Di.scope &&
-                  r(t, { dimColor: !0, children: [" (", Di.scope, ")"] }),
+                  r(Text, { dimColor: !0, children: [" (", Di.scope, ")"] }),
               ],
             }),
-            e(o, {
+            e(Box, {
               marginLeft: 3,
-              children: e(t, {
+              children: e(Text, {
                 color: FS,
                 wrap: "wrap-trim",
                 children: sanitizeMultilineForDisplay(Di.message),
               }),
             }),
             Di.guidance &&
-              e(o, {
+              e(Box, {
                 marginLeft: 3,
-                children: e(t, {
+                children: e(Text, {
                   dimColor: !0,
                   italic: !0,
                   wrap: "wrap-trim",
@@ -12247,9 +12247,9 @@ function Td(CN) {
   if (to[14] !== Xu)
     ((td =
       Xu &&
-      e(o, {
+      e(Box, {
         marginLeft: 1,
-        children: e(t, { color: "claude", children: wr(Xu) }),
+        children: e(Text, { color: "claude", children: wr(Xu) }),
       })),
       (to[14] = Xu),
       (to[15] = td));
@@ -12289,8 +12289,8 @@ function Td(CN) {
   else VS = to[19];
   let od;
   if (to[20] !== nd)
-    ((od = e(o, {
-      children: e(t, {
+    ((od = e(Box, {
+      children: e(Text, {
         dimColor: !0,
         italic: !0,
         children: r(DotSeparatedList, { children: [US, nd, VS] }),
@@ -12616,101 +12616,101 @@ function aWe(ZN) {
   if ((E(fv, yv), Pe.type === "help")) {
     let ln;
     if (At[43] === MEMO_CACHE_SENTINEL)
-      ((ln = r(o, {
+      ((ln = r(Box, {
         flexDirection: "column",
         children: [
-          e(t, { bold: !0, children: "Plugin Command Usage:" }),
-          e(t, { children: " " }),
-          e(t, { dimColor: !0, children: "Installation:" }),
-          e(t, { children: " /plugin install - Browse and install plugins" }),
-          r(t, {
+          e(Text, { bold: !0, children: "Plugin Command Usage:" }),
+          e(Text, { children: " " }),
+          e(Text, { dimColor: !0, children: "Installation:" }),
+          e(Text, { children: " /plugin install - Browse and install plugins" }),
+          r(Text, {
             children: [
               " ",
               "/plugin install <marketplace> - Install from specific marketplace",
             ],
           }),
-          e(t, {
+          e(Text, {
             children: " /plugin install <plugin> - Install specific plugin",
           }),
-          r(t, {
+          r(Text, {
             children: [
               " ",
               "/plugin install <plugin>@<market> - Install plugin from marketplace",
             ],
           }),
-          e(t, { children: " " }),
-          e(t, { dimColor: !0, children: "Management:" }),
-          r(t, {
+          e(Text, { children: " " }),
+          e(Text, { dimColor: !0, children: "Management:" }),
+          r(Text, {
             children: [
               " ",
               "/plugin list [--enabled|--disabled] - List installed plugins",
             ],
           }),
-          e(t, { children: " /plugin manage - Manage installed plugins" }),
+          e(Text, { children: " /plugin manage - Manage installed plugins" }),
           isSkillDoctorEnabled() &&
-            e(t, {
+            e(Text, {
               children: " /plugin stats - Show skill usage and context costs",
             }),
-          e(t, { children: " /plugin enable <plugin> - Enable a plugin" }),
-          e(t, { children: " /plugin disable <plugin> - Disable a plugin" }),
-          e(t, {
+          e(Text, { children: " /plugin enable <plugin> - Enable a plugin" }),
+          e(Text, { children: " /plugin disable <plugin> - Disable a plugin" }),
+          e(Text, {
             children: " /plugin configure <plugin> - Set userConfig options",
           }),
-          e(t, {
+          e(Text, {
             children: " /plugin uninstall <plugin> - Uninstall a plugin",
           }),
-          e(t, { children: " " }),
-          e(t, { dimColor: !0, children: "Marketplaces:" }),
-          e(t, {
+          e(Text, { children: " " }),
+          e(Text, { dimColor: !0, children: "Marketplaces:" }),
+          e(Text, {
             children: " /plugin marketplace - Marketplace management menu",
           }),
-          e(t, { children: " /plugin marketplace add - Add a marketplace" }),
-          r(t, {
+          e(Text, { children: " /plugin marketplace add - Add a marketplace" }),
+          r(Text, {
             children: [
               " ",
               "/plugin marketplace add <path/url> - Add marketplace directly",
             ],
           }),
-          e(t, {
+          e(Text, {
             children: " /plugin marketplace update - Update marketplaces",
           }),
-          r(t, {
+          r(Text, {
             children: [
               " ",
               "/plugin marketplace update <name> - Update specific marketplace",
             ],
           }),
-          e(t, {
+          e(Text, {
             children: " /plugin marketplace remove - Remove a marketplace",
           }),
-          r(t, {
+          r(Text, {
             children: [
               " ",
               "/plugin marketplace remove <name> - Remove specific marketplace",
             ],
           }),
-          e(t, {
+          e(Text, {
             children: " /plugin marketplace list - List all marketplaces",
           }),
-          e(t, { children: " " }),
-          e(t, { dimColor: !0, children: "Validation:" }),
-          r(t, {
+          e(Text, { children: " " }),
+          e(Text, { dimColor: !0, children: "Validation:" }),
+          r(Text, {
             children: [
               " ",
               "/plugin validate <path> - Validate a manifest file or directory",
             ],
           }),
-          r(t, {
+          r(Text, {
             children: [
               " ",
               "/plugin tag [path] [--push] [--dry-run] [-f] - Create a release tag for the plugin",
             ],
           }),
-          e(t, { children: " " }),
-          e(t, { dimColor: !0, children: "Other:" }),
-          e(t, { children: " /plugin - Main plugin menu" }),
-          e(t, { children: " /plugin help - Show this help" }),
-          e(t, { children: " /plugins - Alias for /plugin" }),
+          e(Text, { children: " " }),
+          e(Text, { dimColor: !0, children: "Other:" }),
+          e(Text, { children: " /plugin - Main plugin menu" }),
+          e(Text, { children: " /plugin help - Show this help" }),
+          e(Text, { children: " /plugins - Alias for /plugin" }),
         ],
       })),
         (At[43] = ln));

@@ -12,17 +12,17 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { escapeHtmlText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { enqueueSdkEvent, isCloudEnvironmentSession, normalizePlainName, collectLocalBridgeSessionIds, isCloudSessionKnownLocally } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { describeAxiosError } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-function GY(e) {
+function getPendingActionRequestId(e) {
   for (let t of [e?.request_id, e?.suppressed_request_id])
     if (typeof t === "string" && t.length > 0) return t;
   return;
@@ -33,8 +33,8 @@ function R(e) {
   return {
     tool_name: e.tool_name,
     ...(t === void 0 ? {} : { display_tool_name: t }),
-    action_description: truncate(e.action_description, Iw),
-    ...(i === void 0 ? {} : { raw_command: truncate(i, Iw) }),
+    action_description: truncate(e.action_description, TOOL_USE_SUMMARY_MAX_CHARS),
+    ...(i === void 0 ? {} : { raw_command: truncate(i, TOOL_USE_SUMMARY_MAX_CHARS) }),
     tool_use_id: e.tool_use_id,
     request_id: e.request_id,
     ...(e.suppressed_request_id === void 0
@@ -42,10 +42,10 @@ function R(e) {
       : { suppressed_request_id: e.suppressed_request_id }),
   };
 }
-function aSn(e, t) {
+function buildPendingActionsList(e, t) {
   return [e, ...t.slice(0, B - 1).map(R)];
 }
-function P3t(e) {
+function parseInboundAvailability(e) {
   switch (e?.cross_session_inbound) {
     case "unavailable":
       return { acceptsPeerMessages: !1 };
@@ -55,7 +55,7 @@ function P3t(e) {
       return;
   }
 }
-class s7e {
+class SessionStateStore {
   stateChanged = Le();
   userDecisionPendingChanged = Le();
   userDecisionsPending = 0;
@@ -202,7 +202,7 @@ class s7e {
     let i = (this.getPendingActionDetails?.(e.request_id) ?? [])
       .filter((r) => r !== e)
       .reverse();
-    return { pending_action: e, pending_actions: aSn(e, i) };
+    return { pending_action: e, pending_actions: buildPendingActionsList(e, i) };
   }
   notifyMetadataChanged(e) {
     if ((this.onMetadataChanged?.(e), "goal" in e))
@@ -242,21 +242,21 @@ class s7e {
     this.onConversationReset?.();
   }
 }
-function oJn(e) {
+function formatContainerRestartReminder(e) {
   return `<system-reminder>
 The container was restarted. The following background tasks were running and are now stopped:
 ${e.map(
-  (i) => `- ${Nt(i.description || "(no description)")} (task ${Nt(i.task_id)})`,
+  (i) => `- ${escapeHtmlText(i.description || "(no description)")} (task ${escapeHtmlText(i.task_id)})`,
 ).join(`
 `)}
 Re-create them if still needed.
 </system-reminder>`;
 }
-var O3t = "Remote Control";
-function lSn(e) {
-  return isCloudEnvironmentSession(e) ? "cloud" : O3t;
+var REMOTE_CONTROL_LABEL = "Remote Control";
+function getSessionTransportLabel(e) {
+  return isCloudEnvironmentSession(e) ? "cloud" : REMOTE_CONTROL_LABEL;
 }
-function sJn(e) {
+function getSessionTitleOrDefault(e) {
   return normalizePlainName(e) ?? "(untitled)";
 }
 var M = 300000;
@@ -277,7 +277,7 @@ class C {
   }
 }
 var b = new Gt(() => new C());
-async function DAe(e = { refresh: !0 }) {
+async function refreshPeerIdentityOwner(e = { refresh: !0 }) {
   {
     let { primePeerIdentityOwner: t } = import.meta.require(
       "../权限系统/chunk-1y2g140m.js",
@@ -290,7 +290,7 @@ function m() {
     t = e();
   return t?.live ? t.key : null;
 }
-async function nbt(e, t) {
+async function loadBridgePeerSessionRows(e, t) {
   {
     let i = m();
     if (!i) return { rows: [], failed: !1, identityKey: null };
@@ -310,7 +310,7 @@ async function nbt(e, t) {
             _ = await o(f, t);
           } catch (y) {
             return (
-              n(
+              logForDebugging(
                 `[bridge:population] fetch threw: ${l(y)} \u2014 treated as failed`,
                 { level: "warn" },
               ),
@@ -318,7 +318,7 @@ async function nbt(e, t) {
             );
           }
           return (
-            n(
+            logForDebugging(
               `[bridge:population] fetched ${_.length} rows in ${Date.now() - c}ms${f.failed ? " (FAILED \u2014 not recordable)" : ""}${f.truncated ? " (truncated at page budget)" : ""}`,
             ),
             {
@@ -336,19 +336,19 @@ async function nbt(e, t) {
   }
   return { rows: [], failed: !1, identityKey: null };
 }
-function rbt(e) {
+function isBridgeRowsIdentityCurrent(e) {
   {
     let t = m();
     return t !== null && e.identityKey === t;
   }
   return !1;
 }
-function i7e(e, t, i) {
+function recordBridgeSessionRows(e, t, i) {
   {
     let r = m();
     if (!r) return;
     if (t.identityKey !== r) {
-      n(
+      logForDebugging(
         "[bridge:population] walk ran under a previous identity \u2014 ignoring its outcome for the current one",
       );
       return;
@@ -358,18 +358,18 @@ function i7e(e, t, i) {
       let o = s.listed;
       if (o !== void 0 && o.identityKey === r)
         (s.forget(),
-          n(
+          logForDebugging(
             "[bridge:population] failed walk \u2014 cleared the printed set (going cold, never sticky)",
           ));
       return;
     }
     (s.record(i, r, t.truncated === !0),
-      n(
+      logForDebugging(
         `[bridge:population] recorded ${i.length} bridge rows (cloud-deduped)`,
       ));
   }
 }
-function obt(e, t) {
+function forgetBridgeSessionRows(e, t) {
   {
     let i = m();
     if (!i || t.identityKey !== i) return;
@@ -377,15 +377,15 @@ function obt(e, t) {
       s = r.listed;
     if (s !== void 0 && s.identityKey === i)
       (r.forget(),
-        n(
+        logForDebugging(
           "[bridge:population] forgot the recorded set (an unrecordable listing superseded it)",
         ));
   }
 }
-function sbt(e) {
-  return cSn(e)?.rows;
+function getWarmBridgeSessionRows(e) {
+  return getWarmBridgeSessionListing(e)?.rows;
 }
-function cSn(e) {
+function getWarmBridgeSessionListing(e) {
   {
     let t = m(),
       i = b.of(e).listed;
@@ -393,7 +393,7 @@ function cSn(e) {
     let r = Date.now() - i.at;
     if (r >= 0 && r < M)
       return (
-        n(
+        logForDebugging(
           `[bridge:population] warm recorded set: ${i.listed.length} rows (age ${r}ms)`,
         ),
         { rows: i.listed, truncated: i.truncated }
@@ -401,7 +401,7 @@ function cSn(e) {
   }
   return;
 }
-function uSn(e, t, i) {
+function excludeLocallyKnownBridgeRows(e, t, i) {
   let r = collectLocalBridgeSessionIds(t),
     s = new Set(i.filter((o) => !isCloudSessionKnownLocally(t, o.id)).map((o) => sessionIdBody(o.id)));
   return e.filter((o) => {
@@ -409,10 +409,10 @@ function uSn(e, t, i) {
     return !r.has(u) && !s.has(u);
   });
 }
-function a7e(e, t) {
-  return uSn(e, [], t);
+function excludeCloudKnownBridgeRows(e, t) {
+  return excludeLocallyKnownBridgeRows(e, [], t);
 }
-function GNe(e) {
+function isCloudListUnavailable(e) {
   return e === "timeout" || e === "fetch_failed";
 }
 var D = 30000,
@@ -442,7 +442,7 @@ function S() {
   return e();
 }
 var k = new Gt(() => new w());
-async function jpe(e, t) {
+async function listCloudPeerSessions(e, t) {
   {
     let { hasCloudPeerAccess: i } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
     if (!i()) return { sessions: [], unavailable: "gate_off" };
@@ -461,7 +461,7 @@ async function jpe(e, t) {
       f = await withDeadline(g, P);
     if (f === void 0)
       return (
-        n(
+        logForDebugging(
           `[agents:cloud] session list not ready within ${P}ms \u2014 not searched this call, disclosing`,
           { level: "warn" },
         ),
@@ -469,7 +469,7 @@ async function jpe(e, t) {
       );
     if (o !== S())
       return (
-        n(
+        logForDebugging(
           "[agents:cloud] session list walk ran under a superseded credential \u2014 not served, disclosing",
           { level: "warn" },
         ),
@@ -502,7 +502,7 @@ function A(e, t, i, r) {
       });
     } catch (d) {
       return (
-        n(
+        logForDebugging(
           `[agents:cloud] session list threw: ${d instanceof TypeError ? "malformed session-list response \u2014 " : ""}${describeAxiosError(d)}`,
           { level: "error" },
         ),
@@ -530,7 +530,7 @@ function A(e, t, i, r) {
             : void 0,
         remoteControl: d.environment_kind === "bridge",
         unreachableFromHere: f && d.environment_kind === "bridge",
-        ...P3t(d.external_metadata),
+        ...parseInboundAvailability(d.external_metadata),
         ...(d.environment_kind === "bridge" &&
           d.connection_status === "disconnected" && { offline: !0 }),
       };
@@ -546,7 +546,7 @@ function A(e, t, i, r) {
   })();
   return (e.begin(u, i), u.finally(() => e.settle(u)), u);
 }
-function ibt(e) {
+function getWarmCloudSessions(e) {
   {
     let { hasCloudPeerAccess: t } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
     if (!t()) return;
@@ -554,45 +554,45 @@ function ibt(e) {
   }
   return;
 }
-function qNe(e, t, i) {
+function formatUnreachablePeerRefusal(e, t, i) {
   try {
-    if (!ibt(e)?.find((o) => sessionIdBody(o.id) === sessionIdBody(t))?.unreachableFromHere) return;
+    if (!getWarmCloudSessions(e)?.find((o) => sessionIdBody(o.id) === sessionIdBody(t))?.unreachableFromHere) return;
     let { formatUnreachableElevatedRefusal: s } = import.meta.require(
       "./chunk-tyce0p0b.js",
     );
     return s(i);
   } catch (r) {
-    n(
+    logForDebugging(
       `[agents:cloud] warm unreachable lookup failed (${normalizeSingleLineText(l(r))}) \u2014 treating as not known unreachable`,
       { level: "warn" },
     );
     return;
   }
 }
-var l7e = "can't receive cross-session messages (off in that session)";
-function $re(e, t, i) {
+var CANNOT_RECEIVE_MESSAGES_LABEL = "can't receive cross-session messages (off in that session)";
+function formatCannotReceiveRefusal(e, t, i) {
   try {
     let r = sessionIdBody(t);
     if (!(
-      ibt(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) ===
+      getWarmCloudSessions(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) ===
         !0 ||
-      sbt(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) === !0
+      getWarmBridgeSessionRows(e)?.some((o) => sessionIdBody(o.id) === r && o.acceptsPeerMessages === !1) === !0
     ))
       return;
-    return `Not sent: '${i}' ${l7e} \u2014 its Claude would never see the message. That session is set not to accept cross-session messages (the feature is off on its platform, or a setting or policy there refuses them); reach that machine another way, or ask its user to enable it (listings refresh within a few minutes \u2014 re-run ListAgents after they do).`;
+    return `Not sent: '${i}' ${CANNOT_RECEIVE_MESSAGES_LABEL} \u2014 its Claude would never see the message. That session is set not to accept cross-session messages (the feature is off on its platform, or a setting or policy there refuses them); reach that machine another way, or ask its user to enable it (listings refresh within a few minutes \u2014 re-run ListAgents after they do).`;
   } catch (r) {
-    n(
+    logForDebugging(
       `[agents:cloud] warm cannot-receive lookup failed (${normalizeSingleLineText(l(r))}) \u2014 treating as unknown`,
       { level: "warn" },
     );
     return;
   }
 }
-function abt(e, t) {
+function isPeerInboundUnconfirmed(e, t) {
   try {
     let i = sessionIdBody(t),
-      r = ibt(e)?.find((o) => sessionIdBody(o.id) === i),
-      s = sbt(e)?.find((o) => sessionIdBody(o.id) === i);
+      r = getWarmCloudSessions(e)?.find((o) => sessionIdBody(o.id) === i),
+      s = getWarmBridgeSessionRows(e)?.find((o) => sessionIdBody(o.id) === i);
     if ((r !== void 0 && !r.remoteControl) || (s !== void 0 && isCloudEnvironmentSession(s)))
       return !1;
     if (s?.inboundReportUnavailable && r?.acceptsPeerMessages === void 0)
@@ -600,7 +600,7 @@ function abt(e, t) {
     return !(r?.acceptsPeerMessages === !0 || s?.acceptsPeerMessages === !0);
   } catch (i) {
     return (
-      n(
+      logForDebugging(
         `[agents:cloud] warm inbound-report lookup failed (${normalizeSingleLineText(l(i))}) \u2014 treating as unreported`,
         { level: "warn" },
       ),
@@ -609,28 +609,28 @@ function abt(e, t) {
   }
 }
 export {
-  GY,
-  aSn,
-  P3t,
-  s7e,
-  oJn,
-  O3t,
-  lSn,
-  sJn,
-  DAe,
-  nbt,
-  rbt,
-  i7e,
-  obt,
-  sbt,
-  cSn,
-  uSn,
-  a7e,
-  GNe,
-  jpe,
-  ibt,
-  qNe,
-  l7e,
-  $re,
-  abt,
+  getPendingActionRequestId,
+  buildPendingActionsList,
+  parseInboundAvailability,
+  SessionStateStore,
+  formatContainerRestartReminder,
+  REMOTE_CONTROL_LABEL,
+  getSessionTransportLabel,
+  getSessionTitleOrDefault,
+  refreshPeerIdentityOwner,
+  loadBridgePeerSessionRows,
+  isBridgeRowsIdentityCurrent,
+  recordBridgeSessionRows,
+  forgetBridgeSessionRows,
+  getWarmBridgeSessionRows,
+  getWarmBridgeSessionListing,
+  excludeLocallyKnownBridgeRows,
+  excludeCloudKnownBridgeRows,
+  isCloudListUnavailable,
+  listCloudPeerSessions,
+  getWarmCloudSessions,
+  formatUnreachablePeerRefusal,
+  CANNOT_RECEIVE_MESSAGES_LABEL,
+  formatCannotReceiveRefusal,
+  isPeerInboundUnconfirmed,
 };

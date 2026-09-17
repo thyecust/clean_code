@@ -69,7 +69,7 @@ function R(r) {
   if (!i) return null;
   return +i[1] * 1e6 + +i[2] * 1000 + +i[3];
 }
-var CT = new u();
+var terminalCapabilities = new u();
 var T = {
     black: !0,
     red: !0,
@@ -90,7 +90,7 @@ var T = {
   },
   c = new Set(Object.keys(T));
 var A = /^\x1b\[([34]8);2;(\d+);(\d+);(\d+)m$/;
-function xYn(r) {
+function convertTruecolorToAnsi256(r) {
   if (chalk.level >= 3 || r.length === 0) return r;
   let i;
   for (let e = 0; e < r.length; e++) {
@@ -108,10 +108,10 @@ function xYn(r) {
   return i ?? r;
 }
 var h = "\x1B[23m";
-function HYn(r) {
+function stripItalicIfRendersAsStandout(r) {
   for (let i of r)
     if (i.endCode === h)
-      return CT.rendersItalicAsStandout()
+      return terminalCapabilities.rendersItalicAsStandout()
         ? r.filter((e) => e.endCode !== h)
         : r;
   return r;
@@ -138,7 +138,7 @@ function E(r, i, e) {
 }
 var k = /^rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)$/,
   y = /^ansi256\(\s?(\d+)\s?\)$/,
-  iK = (r, i, e) => {
+  applyColorSpec = (r, i, e) => {
     if (!i) return r;
     if (i.startsWith("ansi:"))
       switch (i.substring(5)) {
@@ -195,7 +195,7 @@ var k = /^rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)$/,
     }
     return r;
   };
-function HNe(r, i) {
+function applyTextStyles(r, i) {
   let e = r;
   if (i.inverse) e = invertText(e);
   if (i.strikethrough) e = chalk.strikethrough(e);
@@ -203,13 +203,13 @@ function HNe(r, i) {
   if (i.italic) e = chalk.italic(e);
   if (i.bold) e = chalk.bold(e);
   if (i.dim) e = chalk.dim(e);
-  if (i.color) e = iK(e, i.color, "foreground");
-  if (i.backgroundColor) e = iK(e, i.backgroundColor, "background");
+  if (i.color) e = applyColorSpec(e, i.color, "foreground");
+  if (i.backgroundColor) e = applyColorSpec(e, i.backgroundColor, "background");
   return e;
 }
-function jY(r, i) {
+function applyForegroundColor(r, i) {
   if (!i) return r;
-  return iK(r, i, "foreground");
+  return applyColorSpec(r, i, "foreground");
 }
 class f {
   byColorAndLevel = new Map();
@@ -217,13 +217,13 @@ class f {
     let i = `${r}|${chalk.level}`,
       e = this.byColorAndLevel.get(i);
     if (e === void 0)
-      ((e = beforeFirst(iK("\x00", r, "background"), "\x00")),
+      ((e = beforeFirst(applyColorSpec("\x00", r, "background"), "\x00")),
         this.byColorAndLevel.set(i, e));
     return e;
   }
 }
 var M = new f();
-function IYn(r, i) {
+function applyPersistentBackground(r, i) {
   let e = M.sequenceFor(i);
   if (e === "") return r;
   return (
@@ -239,13 +239,13 @@ ${e}`,
       )
   );
 }
-function GSt(r) {
+function isLightThemeName(r) {
   return r.startsWith("light");
 }
-function qSt(r) {
+function isBuiltinThemeName(r) {
   return typeof r === "string" && BUILTIN_THEME_NAMES.includes(r);
 }
-function w3t(r) {
+function isThemeColorKey(r) {
   return Object.hasOwn(B, r);
 }
 var v = {
@@ -692,7 +692,7 @@ var v = {
     rainbow_indigo_shimmer: "rgb(195,180,230)",
     rainbow_violet_shimmer: "rgb(230,180,210)",
   };
-function Nk(r) {
+function getThemePalette(r) {
   switch (r) {
     case "light":
       return v;
@@ -708,7 +708,7 @@ function Nk(r) {
       return B;
   }
 }
-function Tj(r) {
+function isValidThemeColorValue(r) {
   if (typeof r !== "string") return !1;
   if (/^rgb\(\s?\d{1,3},\s?\d{1,3},\s?\d{1,3}\s?\)$/.test(r)) return !0;
   if (/^#[0-9a-fA-F]{6}$/.test(r) || /^#[0-9a-fA-F]{3}$/.test(r)) return !0;
@@ -716,15 +716,15 @@ function Tj(r) {
   if (r.startsWith("ansi:")) return c.has(r.slice(5));
   return !1;
 }
-function V8e(r, i) {
+function mergeThemeOverrides(r, i) {
   if (!i) return r;
   let e = { ...r };
   for (let [n, o] of Object.entries(i))
-    if (Object.hasOwn(r, n) && Tj(o)) e[n] = o;
+    if (Object.hasOwn(r, n) && isValidThemeColorValue(o)) e[n] = o;
   return e;
 }
 var C = a.terminal === "Apple_Terminal" ? new ChalkInstance({ level: 2 }) : chalk;
-function T3t(r) {
+function getColorEscapePrefix(r) {
   let i = r.match(/rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)/);
   if (i) {
     let o = parseInt(i[1], 10),
@@ -734,8 +734,8 @@ function T3t(r) {
     return s.slice(0, s.indexOf("X"));
   }
   if (chalk.level === 0) return "";
-  let e = iK("X", r, "foreground"),
+  let e = applyColorSpec("X", r, "foreground"),
     n = e.indexOf("X");
   return n > 0 ? e.slice(0, n) : "\x1B[35m";
 }
-export { CT, xYn, HYn, iK, HNe, jY, IYn, GSt, qSt, w3t, Nk, Tj, V8e, T3t };
+export { terminalCapabilities, convertTruecolorToAnsi256, stripItalicIfRendersAsStandout, applyColorSpec, applyTextStyles, applyForegroundColor, applyPersistentBackground, isLightThemeName, isBuiltinThemeName, isThemeColorKey, getThemePalette, isValidThemeColorValue, mergeThemeOverrides, getColorEscapePrefix };

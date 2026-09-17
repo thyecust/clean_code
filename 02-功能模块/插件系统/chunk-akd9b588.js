@@ -14,7 +14,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { CS, zrt } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   removeInvisibleChars,
   isHookMatcher,
@@ -44,14 +44,14 @@ import {
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { BG, Sl } from "./chunk-7s6mt1vg.js";
+import { getPluginRegistryFileScope, getPluginsDir } from "./plugin-system-core.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
 import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk-3kmsshb6.js";
-import { pfr } from "../Hooks钩子/chunk-z3433nr6.js";
+import { analyzeHooksModule } from "../Hooks钩子/chunk-z3433nr6.js";
 import { validatePluginManifest, damerauLevenshteinDistance, buildVersionTagName, resolvePluginRenameChain } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMarketplacePluginSource, splitPluginIdOnLastAt, getPluginMarketplace, isEqualIgnoringCase } from "./chunk-33bdfgmx.js";
 import { SUPPORTED_BINARY_TARGETS, stripBinaryTargetSuffix, isExistingDirectory, checkContainedDirectory, readOptionalFileContent, readTextFileCapped } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -134,15 +134,15 @@ var he = 1,
   ),
   nt = createLazyValue(() => c({ version: T(), fetchedAt: s(), catalog: Ae() }));
 function Ne() {
-  return je(Sl(), Qe);
+  return je(getPluginsDir(), Qe);
 }
 async function at(e) {
   let t = Ne(),
-    a = isHoverRestEnabled() && e !== void 0 ? BG("catalog", Sl()) : null;
+    a = isHoverRestEnabled() && e !== void 0 ? getPluginRegistryFileScope("catalog", getPluginsDir()) : null;
   if (e && a) {
     let r = await e.read([a]);
     if (!r.ok)
-      return (n(`Failed to load plugin catalog cache: ${We(r.error)}`), null);
+      return (logForDebugging(`Failed to load plugin catalog cache: ${describeStorageError(r.error)}`), null);
     let o = r.value.items[0];
     if (!o.found) return null;
     let i = o.value;
@@ -154,46 +154,46 @@ async function st(e) {
   try {
     let t = await at(e);
     if (t === null) return null;
-    let a = nt().safeParse(z(t));
+    let a = nt().safeParse(jsonParse(t));
     if (!a.success)
-      return (n("Plugin catalog cache has invalid structure"), null);
+      return (logForDebugging("Plugin catalog cache has invalid structure"), null);
     let r = a.data;
     if (r.version !== he)
       return (
-        n(
+        logForDebugging(
           `Plugin catalog cache version mismatch (got ${r.version}, expected ${he})`,
         ),
         null
       );
     let o = new Date(r.fetchedAt).getTime();
     if (Number.isNaN(o) || Date.now() - o > et)
-      return (n("Plugin catalog cache is stale (>24 h old)"), null);
+      return (logForDebugging("Plugin catalog cache is stale (>24 h old)"), null);
     return r;
   } catch (t) {
-    if (!W(t)) n(`Failed to load plugin catalog cache: ${l(t)}`);
+    if (!W(t)) logForDebugging(`Failed to load plugin catalog cache: ${l(t)}`);
     return null;
   }
 }
 async function rt(e, t) {
   try {
     let a = Ne(),
-      r = isHoverRestEnabled() && t !== void 0 ? BG("catalog", Sl()) : null;
+      r = isHoverRestEnabled() && t !== void 0 ? getPluginRegistryFileScope("catalog", getPluginsDir()) : null;
     if (t && r) {
-      let o = await t.write(r, b(e));
+      let o = await t.write(r, jsonStringify(e));
       if (!o.ok) {
-        n(`Failed to save plugin catalog cache: ${We(o.error)}`, {
+        logForDebugging(`Failed to save plugin catalog cache: ${describeStorageError(o.error)}`, {
           level: "error",
         });
         return;
       }
-    } else (await ae().mkdir(Sl()), await writeFileAtomic(a, b(e), 384));
-    await unlink(je(Sl(), "install-counts-cache.json")).catch(() => {});
+    } else (await getFsSurface().mkdir(getPluginsDir()), await writeFileAtomic(a, jsonStringify(e), 384));
+    await unlink(je(getPluginsDir(), "install-counts-cache.json")).catch(() => {});
   } catch (a) {
-    n(`Failed to save plugin catalog cache: ${l(a)}`, { level: "error" });
+    logForDebugging(`Failed to save plugin catalog cache: ${l(a)}`, { level: "error" });
   }
 }
 async function ot() {
-  n(`Fetching plugin catalog from ${Z}`);
+  logForDebugging(`Fetching plugin catalog from ${Z}`);
   let e = performance.now();
   try {
     let t = await externalHttp.get(Z, { timeout: 1e4, maxContentLength: iwt }),
@@ -230,7 +230,7 @@ function Me(e) {
       );
     } catch (r) {
       return (
-        n(`Failed to fetch plugin catalog: ${l(r)}`, { level: "error" }),
+        logForDebugging(`Failed to fetch plugin catalog: ${l(r)}`, { level: "error" }),
         t.reset(),
         null
       );
@@ -455,7 +455,7 @@ async function He(e, t) {
     r = [],
     o;
   try {
-    o = z(cs(t));
+    o = jsonParse(cs(t));
   } catch (u) {
     return {
       success: !1,
@@ -686,7 +686,7 @@ async function kt(e) {
   }
   let i;
   try {
-    i = z(cs(o));
+    i = jsonParse(cs(o));
   } catch (d) {
     return {
       success: !1,
@@ -994,7 +994,7 @@ async function kt(e) {
     if (N.version) {
       let I;
       try {
-        let U = z(cs(K));
+        let U = jsonParse(cs(K));
         if (typeof U.version === "string") I = U.version;
       } catch (U) {
         a.push({
@@ -1206,7 +1206,7 @@ async function bt(e, t) {
   let u = f.content,
     k;
   try {
-    k = z(u);
+    k = jsonParse(u);
   } catch (E) {
     return {
       result: {
@@ -1294,7 +1294,7 @@ async function bt(e, t) {
           scan: P,
           registrations: N,
           helperCalls: O,
-        } = await pfr(d, t, h.basename(t)),
+        } = await analyzeHooksModule(d, t, h.basename(t)),
         F = N.length === 0 ? "nothing" : N.join(", "),
         L =
           P.calls.length === 0
@@ -1654,7 +1654,7 @@ async function Et(e) {
     case "unknown": {
       try {
         let o = await $e(t, { encoding: "utf-8" }),
-          i = z(cs(o));
+          i = jsonParse(cs(o));
         if (Array.isArray(i.plugins)) return ye(e);
       } catch (o) {
         if (A(o) === "ENOENT")
@@ -1696,7 +1696,7 @@ function te(e) {
 }
 function ie(e) {
   try {
-    return te(z(e));
+    return te(jsonParse(e));
   } catch {
     return;
   }
@@ -1975,7 +1975,7 @@ async function Tt(e) {
     }
     let u;
     try {
-      u = z(cs(f));
+      u = jsonParse(cs(f));
     } catch (k) {
       return { ok: !1, error: `Invalid JSON in ${i}: ${l(k)}` };
     }
@@ -2017,7 +2017,7 @@ async function Nt(e) {
   }
   let a;
   try {
-    a = z(cs(t));
+    a = jsonParse(cs(t));
   } catch {
     return;
   }

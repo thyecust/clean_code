@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 var MAX_MCP_TASK_ID_LENGTH = 128,
   MCP_TASK_ID_PATTERN = /^[\x21-\x7e]+$/,
   MCP_TASKS_EXTENSION_ID = "io.modelcontextprotocol/tasks";

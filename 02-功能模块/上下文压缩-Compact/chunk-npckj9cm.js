@@ -14,7 +14,7 @@ import { le, Zt, Io, Xu, cr, nt, hm } from "../../00-第三方库/zod/zod.3g334x
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -46,7 +46,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { formatLabelText, formatDescriptionText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { er, BR, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { stripLongContextTags, findModelConfigByProviderId, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getWIFCredentials, getWIFTokenCache } from "../认证-OAuth登录/wif-credentials.js";
 import { parseCustomHeadersFromEnv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getClientUserAgent } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
@@ -61,7 +61,7 @@ var X = createLazyValue(() =>
         disabled_reason: le().nullish(),
       }).transform(
         ({ model: t, name: e, description: u, disabled_reason: l }) => {
-          let d = BR(er(t)),
+          let d = findModelConfigByProviderId(stripLongContextTags(t)),
             c = d ? getMarketingNameForModel(t) : null,
             _ = u;
           if (d && c && l == null) {
@@ -134,7 +134,7 @@ var X = createLazyValue(() =>
 function O() {
   return {
     entrypoint: getEnvEntrypoint(),
-    model: er(getMainLoopModel()),
+    model: stripLongContextTags(getMainLoopModel()),
     ccVersion: {
       ISSUES_EXPLAINER:
         "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -233,7 +233,7 @@ async function tt(t, e) {
   if (getAPIProvider() === "gateway") {
     if (!a.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY)
       return (
-        n(
+        logForDebugging(
           "[Bootstrap] Skipped gateway /v1/models (CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY not set)",
         ),
         { response: { additional_model_options: [] }, viaScopelessOAuth: !1 }
@@ -242,12 +242,12 @@ async function tt(t, e) {
     return o && { response: o, viaScopelessOAuth: !1 };
   }
   if (isEssentialTrafficOnly())
-    return (n("[Bootstrap] Skipped: Nonessential traffic disabled"), null);
+    return (logForDebugging("[Bootstrap] Skipped: Nonessential traffic disabled"), null);
   if (getAPIProvider() !== "firstParty")
-    return (n("[Bootstrap] Skipped: 3P provider"), null);
+    return (logForDebugging("[Bootstrap] Skipped: 3P provider"), null);
   let { params: u, userAgent: l } = Q(t),
     d = async (o, r) => {
-      n("[Bootstrap] Fetching");
+      logForDebugging("[Bootstrap] Fetching");
       let p = await at.get(`${o}/api/claude_cli/bootstrap`, {
           headers: {
             "Content-Type": "application/json",
@@ -261,11 +261,11 @@ async function tt(t, e) {
         A = X().safeParse(p.data);
       if (!A.success)
         return (
-          n(`[Bootstrap] Response failed validation: ${A.error.message}`),
+          logForDebugging(`[Bootstrap] Response failed validation: ${A.error.message}`),
           logFeatureSad("api_bootstrap_fetch", "parse_failed"),
           null
         );
-      return (n("[Bootstrap] Fetch ok"), A.data);
+      return (logForDebugging("[Bootstrap] Fetch ok"), A.data);
     },
     c = getAnthropicApiKeySafe();
   if (!c && shouldUseWIFAuth())
@@ -284,7 +284,7 @@ async function tt(t, e) {
       }
     } catch (o) {
       return (
-        n(
+        logForDebugging(
           `[Bootstrap] WIF fetch failed: ${at.isAxiosError(o) ? (o.response?.status ?? o.code) : o instanceof Error ? o.constructor.name : "unknown"}`,
         ),
         logFeatureSad("api_bootstrap_fetch", "wif_unavailable"),
@@ -292,10 +292,10 @@ async function tt(t, e) {
       );
     }
   if (!getClaudeAIOAuthTokens()?.accessToken && !c)
-    return (n("[Bootstrap] Skipped: no usable OAuth, WIF, or API key"), null);
+    return (logForDebugging("[Bootstrap] Skipped: no usable OAuth, WIF, or API key"), null);
   if (a.ANTHROPIC_UNIX_SOCKET)
     return (
-      n("[Bootstrap] Skipped: unix-socket-proxied session"),
+      logForDebugging("[Bootstrap] Skipped: unix-socket-proxied session"),
       logFeatureSad("api_bootstrap_fetch", "unix_socket_skip"),
       null
     );
@@ -311,7 +311,7 @@ async function tt(t, e) {
             (A = { Authorization: `Bearer ${r}`, "anthropic-beta": OAUTH_BETA_HEADER }));
         else if (c) ((s = !1), (A = { "x-api-key": c }));
         else
-          return (n("[Bootstrap] No auth available on retry, aborting"), null);
+          return (logForDebugging("[Bootstrap] No auth available on retry, aborting"), null);
         return d(getOauthConfig().BASE_API_URL, A);
       },
       { credentials: e },
@@ -321,12 +321,12 @@ async function tt(t, e) {
     let r = at.isAxiosError(o) ? o.response?.status : void 0;
     if (s && r === 403)
       return (
-        n("[Bootstrap] Skipped: 403 for OAuth token without profile scope"),
+        logForDebugging("[Bootstrap] Skipped: 403 for OAuth token without profile scope"),
         logFeatureSad("api_bootstrap_fetch", "no_profile_scope_403"),
         null
       );
     throw (
-      n(
+      logForDebugging(
         `[Bootstrap] Fetch failed: ${at.isAxiosError(o) ? (o.response?.status ?? o.code) : "unknown"}`,
       ),
       logFeatureBad("api_bootstrap_fetch", "request_failed"),
@@ -353,7 +353,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
     let { response: s, viaScopelessOAuth: o } = _;
     if (c !== xW())
       return (
-        n(
+        logForDebugging(
           "[Bootstrap] Discarding response fetched under a superseded credential",
         ),
         logFeatureSad("api_bootstrap_fetch", "superseded_credential"),
@@ -424,8 +424,8 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
       (!l || Qs(r.autoCompactWindowsCache ?? null, I)) &&
       q
     )
-      return (n("[Bootstrap] Cache unchanged, skipping write"), !0);
-    n("[Bootstrap] Cache updated, persisting to disk");
+      return (logForDebugging("[Bootstrap] Cache unchanged, skipping write"), !0);
+    logForDebugging("[Bootstrap] Cache updated, persisting to disk");
     let G = !1;
     if (
       (await saveGlobalConfig((C) => {
@@ -464,7 +464,7 @@ async function refreshBootstrapData(t, e, { keepRenderCaches: u = !1 } = {}) {
     return !0;
   } catch (l) {
     if (cc(l))
-      n(`[Bootstrap] fetchBootstrapData failed: ${l}`, { level: "error" });
+      logForDebugging(`[Bootstrap] fetchBootstrapData failed: ${l}`, { level: "error" });
     else logError(l);
     return !1;
   }
@@ -497,7 +497,7 @@ async function ot(t) {
       l = et().safeParse(u.data);
     if (!l.success)
       return (
-        n(
+        logForDebugging(
           `[Bootstrap] Gateway /v1/models failed validation: ${l.error.message}`,
         ),
         null
@@ -505,7 +505,7 @@ async function ot(t) {
     let d = l.data.data
       .filter((c) => /(claude|anthropic)/i.test(c.id))
       .filter((c) => {
-        let _ = BR(c.id);
+        let _ = findModelConfigByProviderId(c.id);
         return _ === null || isNonCustomFableModel(firstPartyNameToCanonical(_.firstParty));
       })
       .map((c) => ({
@@ -514,12 +514,12 @@ async function ot(t) {
         description: formatDescriptionText(c.description ?? ""),
       }));
     return (
-      n(`[Bootstrap] Gateway /v1/models \u2192 ${d.length} custom options`),
+      logForDebugging(`[Bootstrap] Gateway /v1/models \u2192 ${d.length} custom options`),
       { additional_model_options: d }
     );
   } catch (u) {
     return (
-      n(
+      logForDebugging(
         `[Bootstrap] Gateway /v1/models fetch failed: ${at.isAxiosError(u) ? (u.response?.status ?? u.code) : "unknown"}`,
       ),
       null

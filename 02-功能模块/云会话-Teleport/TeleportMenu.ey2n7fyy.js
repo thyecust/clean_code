@@ -14,14 +14,14 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isCCREnvironmentKind, getRemoteControlAtStartup } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findGitRoot, getBranch, getIsHeadOnRemote, hasUnpushedCommits, getIsClean } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -29,28 +29,28 @@ import { isSelfHostedPool, markSessionTeleported, clearSessionTeleported, RESTRI
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { getTrustedDeviceToken } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { oauthHeaders } from "../Bridge-RemoteControl/code-session-api.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { yo } from "../状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { TeleportResumeWrapper } from "../Bridge-RemoteControl/teleport-resume-ui.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
-import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import { jlt, Wlt, Tee } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
+import "../认证-OAuth登录/console-profile-auth.js";
+import { AUTO_RESUME_CANCEL_MESSAGES, cancelAutoResumeForHandoff, clearHandoffInProgress } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导(Wizard)UI/向导(Wizard)UI.7xe5wk62.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
-import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
+import "../Bedrock-Vertex/bedrock-setup-wizard.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
+import "../Bedrock-Vertex/vertex-setup-wizard.js";
 import "./teleport-errors.js";
 import { appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
@@ -108,13 +108,13 @@ async function U(s) {
       I = b?.environment_kind ?? "cloud",
       B = b?.environment_id ?? m;
     return (
-      n(`[code-session] move-to-cloud ${a} \u2192 ${I} (env ${B})`),
+      logForDebugging(`[code-session] move-to-cloud ${a} \u2192 ${I} (env ${B})`),
       { ok: !0, environmentKind: I, environmentId: B, sessionId: a }
     );
   }
   let k = extractErrorDetail(p.data) ?? "";
   if (
-    (n(
+    (logForDebugging(
       `[code-session] move-to-cloud ${a} failed ${p.status}${k ? `: ${k}` : ""}`,
     ),
     p.status >= 500)
@@ -298,7 +298,7 @@ async function P(s) {
     {
       kind: "ok",
       success: v,
-      sessionUrl: wa(c, a.sessionIngressUrl, { from: "cli" }),
+      sessionUrl: buildClaudeAiSessionUrl(c, a.sessionIngressUrl, { from: "cli" }),
     }
   );
 }
@@ -362,14 +362,14 @@ async function V(s) {
   try {
     c = await P({
       beforeMove: () => {
-        if (((a = Wlt("cloud_handoff")), a))
-          s.setMessages((h) => [...h, createSystemInfoMessage(jlt.cloud_handoff, "warning")]);
+        if (((a = cancelAutoResumeForHandoff("cloud_handoff")), a))
+          s.setMessages((h) => [...h, createSystemInfoMessage(AUTO_RESUME_CANCEL_MESSAGES.cloud_handoff, "warning")]);
       },
       credentials: s.credentials,
       storageV5: s.storageV5,
     });
   } finally {
-    Tee();
+    clearHandoffInProgress();
   }
   switch (c.kind) {
     case "precondition":
@@ -399,7 +399,7 @@ ${x}`,
       return O(
         h,
         _
-          ? { kind: "reconnected", newUrl: wa(_, void 0, { from: "cli" }) }
+          ? { kind: "reconnected", newUrl: buildClaudeAiSessionUrl(_, void 0, { from: "cli" }) }
           : { kind: "reconnect-pending" },
       );
     }
@@ -440,30 +440,30 @@ function TeleportMenu({
       source: "localCommand",
     });
   if (_ === "sending")
-    return r(o, {
+    return r(Box, {
       flexDirection: "column",
       padding: 1,
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "row",
           children: [
-            e(yo, {}),
-            e(t, { bold: !0, children: "Moving your session\u2026" }),
+            e(SpinnerGlyph, {}),
+            e(Text, { bold: !0, children: "Moving your session\u2026" }),
           ],
         }),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children:
             "Same session, picking up from your branch\u2019s last push.",
         }),
       ],
     });
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     padding: 1,
     children: [
-      e(t, { bold: !0, children: "Teleport" }),
-      e(o, {
+      e(Text, { bold: !0, children: "Teleport" }),
+      e(Box, {
         flexDirection: "column",
         marginTop: 1,
         children: e(ve, {
@@ -488,7 +488,7 @@ function TeleportMenu({
           },
         }),
       }),
-      e(o, {
+      e(Box, {
         marginTop: 1,
         children: e(InputGuide, {
           children: r(DotSeparatedList, {

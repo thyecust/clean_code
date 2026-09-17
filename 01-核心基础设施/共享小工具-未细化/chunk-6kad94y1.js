@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { createBatchedSender, DATADOG_CLIENT_TOKEN } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
@@ -26,13 +26,13 @@ function m() {
 }
 async function f(e) {
   if (!isErrorReportingAllowed()) {
-    n(
+    logForDebugging(
       `dd-error-tracking: compliance verdict now blocks reporting; dropping batch=${e.length}`,
       { level: "warn" },
     );
     return;
   }
-  let r = b(e),
+  let r = jsonStringify(e),
     s = new URLSearchParams({
       ddsource: "browser",
       "dd-api-key": DATADOG_CLIENT_TOKEN,
@@ -59,11 +59,11 @@ async function f(e) {
     });
   } catch (t) {
     if (isAxiosError(t) && t.response)
-      n(
+      logForDebugging(
         `dd-error-tracking: intake responded ${t.response.status} (batch=${e.length})`,
         { level: "warn" },
       );
-    else n(`dd-error-tracking: intake failed: ${l(t)}`, { level: "warn" });
+    else logForDebugging(`dd-error-tracking: intake failed: ${l(t)}`, { level: "warn" });
   }
 }
 class i {
@@ -99,7 +99,7 @@ function enqueueErrorLog(e) {
   if (r.reportsEnqueued >= o) return;
   if ((r.reportsEnqueued++, r.reportsEnqueued === o && !r.capSentinelSent))
     ((r.capSentinelSent = !0),
-      n(
+      logForDebugging(
         `dd-error-tracking: per-process report cap reached (${o}); dropping further reports`,
         { level: "warn" },
       ),

@@ -14,7 +14,7 @@ import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isSemverGreaterThan, isSemverAtLeast, isSemverAtMost, isSemverString, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -50,7 +50,7 @@ async function n$n(a) {
       mode: 438 & ~process.umask(),
     });
     if (!r.ok && r.error.code !== "AlreadyExists")
-      n(`migrateChangelogFromConfig: ${r.error.code}`);
+      logForDebugging(`migrateChangelogFromConfig: ${r.error.code}`);
   } else {
     let r = u();
     try {
@@ -73,7 +73,7 @@ async function YQt(a) {
       let s = await a.write(p(), e, { publishDiscipline: "inPlace" });
       if (!s.ok)
         throw (
-          n(`fetchAndStoreChangelog: ${s.error.code}`),
+          logForDebugging(`fetchAndStoreChangelog: ${s.error.code}`),
           Error("fetchAndStoreChangelog: v5 write failed")
         );
     } else await getFileStorage().write(o, e);
@@ -209,7 +209,7 @@ async function o$n(
   let r = await tWe(t);
   if (!r || S(r, a))
     YQt(t).catch((e) =>
-      n(`Failed to fetch changelog: ${ge(e).message}`, { level: "error" }),
+      logForDebugging(`Failed to fetch changelog: ${ge(e).message}`, { level: "error" }),
     );
 }
 function S(a, t) {

@@ -10,7 +10,7 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getSettingsSourceDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getContextCategoryKind, analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 function formatContextLimitWarning(o) {
   let r = C(o);

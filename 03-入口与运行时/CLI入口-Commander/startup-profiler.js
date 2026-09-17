@@ -10,7 +10,7 @@
 import { j, B, bi, K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b, Jhe, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, Jhe, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -77,14 +77,14 @@ function startHeadlessTurn() {
   if (!R) return;
   let t = L();
   if ((t.advance(), V(), getPerformance().mark(`${E}turn_start`), T))
-    n(`[headlessProfiler] Started turn ${t.current}`);
+    logForDebugging(`[headlessProfiler] Started turn ${t.current}`);
 }
 function markHeadlessCheckpoint(t) {
   if (!ke()) return;
   if (!R) return;
   let o = getPerformance();
   if ((o.mark(`${E}${t}`), T))
-    n(`[headlessProfiler] Checkpoint: ${t} at ${o.now().toFixed(1)}ms`);
+    logForDebugging(`[headlessProfiler] Checkpoint: ${t} at ${o.now().toFixed(1)}ms`);
 }
 function reportHeadlessTurnMetrics() {
   if (!ke()) return;
@@ -136,7 +136,7 @@ function reportHeadlessTurnMetrics() {
   if (((e.checkpoint_count = s.length), a.CLAUDE_CODE_ENTRYPOINT))
     e.entrypoint = fromEnumOpt(getEnvEntrypoint()) ?? S("other");
   if (v) logEvent("tengu_headless_latency", e);
-  if (T) n(`[headlessProfiler] Turn ${f} metrics: ${b(e)}`);
+  if (T) logForDebugging(`[headlessProfiler] Turn ${f} metrics: ${jsonStringify(e)}`);
 }
 var P = a.CLAUDE_CODE_PROFILE_STARTUP,
   Q = 0.005,
@@ -262,7 +262,7 @@ function H(t) {
   if (!P) return;
   let o = rt(),
     s = dirname(o);
-  (ae().mkdirSync(s), Jhe(o, U(t), { encoding: "utf8", flush: !0 }));
+  (getFsSurface().mkdirSync(s), Jhe(o, U(t), { encoding: "utf8", flush: !0 }));
   let c = getPerformance().getEntriesByType("mark");
   (Jhe(
     ot(),
@@ -279,8 +279,8 @@ function H(t) {
     ),
     { encoding: "utf8", flush: !0 },
   ),
-    n("Startup profiling report:"),
-    n(U(t)));
+    logForDebugging("Startup profiling report:"),
+    logForDebugging(U(t)));
 }
 function rt() {
   return q(getClaudeConfigDir(), "startup-perf", `${K()}.txt`);

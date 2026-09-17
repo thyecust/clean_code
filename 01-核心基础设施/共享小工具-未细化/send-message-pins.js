@@ -12,7 +12,7 @@ import { createLazyValue } from "./lazy-value.js";
 import { getTeamName } from "../../02-功能模块/Teammates团队/teammate-context.js";
 import { readTeamFileAsync } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { maxSlugLength, slugify, AGENT_REF_PATTERN, parseAgentDisplayName, buildRecipientListing, resolveInProcessRecipient, createShortEntityRef } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
+import { listCloudPeerSessions } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { listPeerSessions, getBridgeSessionRows } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SEND_MESSAGE_TOOL_NAME } from "./send-message-constants.js";
 import { s, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -38,7 +38,7 @@ async function resolveSendMessagePin({
       return { kind: "proceed", pin: void 0 };
     if (!y) {
       let S = getTeamName(n.teamContext),
-        [P, M, R] = await Promise.all([S ? readTeamFileAsync(S, a) : null, listPeerSessions(), jpe(e, l)]),
+        [P, M, R] = await Promise.all([S ? readTeamFileAsync(S, a) : null, listPeerSessions(), listCloudPeerSessions(e, l)]),
         x = buildRecipientListing(n, {
           teamFile: P,
           sessions: M,

@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isInterruptLikeUserMessage } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getPromptScreenSnapshot, didPromptScreenChange, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCheckinOrigin } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
@@ -82,7 +82,7 @@ function createHeldScreeningPredicate(e) {
     } catch (i) {
       return (
         (r = !0),
-        n(`heldScreening could not read the screening: ${i}`, {
+        logForDebugging(`heldScreening could not read the screening: ${i}`, {
           level: "error",
         }),
         !0
@@ -125,7 +125,7 @@ function g(e) {
     let t = e.message?.stop_reason;
     return t === null || t === "tool_use";
   }
-  if (e.type === "user") return WT(e);
+  if (e.type === "user") return isInterruptLikeUserMessage(e);
   return !1;
 }
 function stripAbortedTurnMessages(e) {
@@ -134,7 +134,7 @@ function stripAbortedTurnMessages(e) {
   while (t > 0) {
     let i = e[t - 1];
     if (i.type === "user")
-      if (WT(i)) r ||= a(i);
+      if (isInterruptLikeUserMessage(i)) r ||= a(i);
       else if (r && a(i));
       else break;
     else if (i.type === "assistant") {
@@ -172,7 +172,7 @@ function isTranscriptUnchangedSinceMark(e, t) {
 function hasPendingUserTurn(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
-    if (r.type === "user") return !WT(r);
+    if (r.type === "user") return !isInterruptLikeUserMessage(r);
     if (r.type === "assistant") return !1;
   }
   return !1;

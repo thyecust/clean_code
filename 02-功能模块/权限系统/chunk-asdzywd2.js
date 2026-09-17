@@ -29,7 +29,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { AsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 async function spawnForkFromDirective(t, e, a, m, p) {
   if (e.getAppState().endedByModel)
@@ -45,7 +45,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
       kind: "fork",
       log: (() => {
         let c = e.agentId ?? MAIN_AGENT_ID,
-          i = e.toolState.get(CC).get(c)?.replayLog;
+          i = e.toolState.get(AsyncEvalDispatcher).get(c)?.replayLog;
         if (i) return [...i];
         if (e.replHydration?.kind === "resume") return buildReplayLogFromMessages(e.messages);
         return [];

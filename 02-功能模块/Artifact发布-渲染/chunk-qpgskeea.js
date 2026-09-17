@@ -14,7 +14,7 @@ import { isWellFormed } from "../../01-核心基础设施/核心工具-字符串
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, Xu, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Zse, ASSET_ID_RE, ARTIFACT_SLUG_RE, INVISIBLE_BLANKS, isDecisionSurfaceControl, INVISIBLE_BLANK_CODE_POINT, scrubArtifactEnvelopeTags, scrubServerLine } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { DECISION_SURFACE_BRACKET_RANGES, ASSET_ID_RE, ARTIFACT_SLUG_RE, INVISIBLE_BLANKS, isDecisionSurfaceControl, INVISIBLE_BLANK_CODE_POINT, scrubArtifactEnvelopeTags, scrubServerLine } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -38,7 +38,7 @@ import {
   getShareEntry,
   readArtifactBoot,
 } from "./chunk-01ymf0ar.js";
-import { ne, kTn } from "./chunk-rr78st95.js";
+import { getArtifactState, resetOwnPrincipalTokens } from "./chunk-rr78st95.js";
 import { s } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function N(t) {
   return typeof t === "object" && t !== null && !Array.isArray(t) ? t : null;
@@ -54,7 +54,7 @@ function C(t) {
 function W(t) {
   return C(t.from_url) || Array.isArray(t.asset_ids);
 }
-var Q3n = [
+var LEGACY_ARTIFACT_VERB_NAMES = [
     "read_file",
     "read_asset",
     "describe_type",
@@ -65,7 +65,7 @@ var Q3n = [
     "delete_asset",
     "copy_from",
   ],
-  gI = {
+  ARTIFACT_ACTION_FAMILIES = {
     comments: "comments",
     reply: "comments",
     resolve: "comments",
@@ -78,10 +78,10 @@ var Q3n = [
     verify: "check",
     preview: "check",
   };
-function E$t(t) {
-  return Object.hasOwn(gI, t);
+function isArtifactActionName(t) {
+  return Object.hasOwn(ARTIFACT_ACTION_FAMILIES, t);
 }
-function wte(t) {
+function toLegacyVerbInput(t) {
   let e = N(t);
   if (e === null) return t;
   let n = e.action;
@@ -112,7 +112,7 @@ function wte(t) {
     return { ...v(e, "path"), action: "delete_asset", asset_id: e.path };
   return t;
 }
-function Eft(t) {
+function toCoreVerbInput(t) {
   let e = N(t);
   if (e === null) return t;
   switch (e.action) {
@@ -142,7 +142,7 @@ function Eft(t) {
       return t;
   }
 }
-function lwe(t, e) {
+function toFamilyParentInput(t, e) {
   let n = N(e);
   if (n === null) return e;
   let r = n.action;
@@ -166,7 +166,7 @@ function lwe(t, e) {
   }
   return e;
 }
-function Tte(t, e) {
+function fromFamilyParentInput(t, e) {
   let n = N(e);
   if (n === null) return e;
   let r = n.action;
@@ -193,7 +193,7 @@ function Tte(t, e) {
   return e;
 }
 var K = /^u_[A-Za-z0-9_]{1,62}$/;
-function cwe(t, e) {
+function isOwnPrincipal(t, e) {
   if (e.tokens.has(t)) return !0;
   return e.account !== void 0 && t.toLowerCase() === e.account;
 }
@@ -201,11 +201,11 @@ function G() {
   return resolveOauthAccountInfo().info?.accountUuid?.toLowerCase() ?? null;
 }
 var J = new Set();
-function uwe() {
-  let t = ne(),
+function getOwnPrincipalTokens() {
+  let t = getArtifactState(),
     e = t.ownPrincipalTokens;
   if (e.size === 0) return J;
-  if (t.ownPrincipalTokenAccount !== G()) return (kTn(t), J);
+  if (t.ownPrincipalTokenAccount !== G()) return (resetOwnPrincipalTokens(t), J);
   let n = getPrincipalTokenFingerprint();
   for (let [r, o] of e) if (o !== ee && o !== n) e.delete(r);
   return new Set(e.keys());
@@ -215,12 +215,12 @@ var ee = "relay",
 async function te(t) {
   return (
     await refreshOauthTokenIfAllowed(t),
-    uwe(),
-    { epoch: ne().ownPrincipalTokenEpoch, account: G(), bearer: getPrincipalTokenFingerprint() }
+    getOwnPrincipalTokens(),
+    { epoch: getArtifactState().ownPrincipalTokenEpoch, account: G(), bearer: getPrincipalTokenFingerprint() }
   );
 }
 function re(t, e, n, r) {
-  let o = ne();
+  let o = getArtifactState();
   if (o.ownPrincipalTokenEpoch !== e.epoch || G() !== e.account) return;
   let c =
     r === "relay"
@@ -236,56 +236,56 @@ function re(t, e, n, r) {
     o.ownPrincipalTokens.set(u.data, c);
   }
 }
-function tV() {
+function isArtifactCommentsEnabled() {
   return a.CLAUDE_CODE_ARTIFACT_COMMENTS ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_teal_corbel", !1);
 }
-function Z3n() {
+function getArtifactCommentsEnabledSource() {
   return a.CLAUDE_CODE_ARTIFACT_COMMENTS !== void 0
     ? "env"
     : getFeatureValueWithSource_CACHED_MAY_BE_STALE("tengu_teal_corbel", !1).source;
 }
-function dwe() {
+function isStandingReplyEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_medlar_quoin", !1);
 }
 var ke = 256;
 function we(t) {
-  let e = ne().postedReplyIds;
+  let e = getArtifactState().postedReplyIds;
   if ((e.add(t), e.size > ke)) {
     let n = e.values().next().value;
     if (n !== void 0) e.delete(n);
   }
 }
-function Aft(t) {
-  return t !== "" && ne().postedReplyIds.has(t);
+function hasPostedReply(t) {
+  return t !== "" && getArtifactState().postedReplyIds.has(t);
 }
-function eGn() {
-  return ne().postedReplyIds.size > 0;
+function hasPostedReplies() {
+  return getArtifactState().postedReplyIds.size > 0;
 }
-function wm(t) {
+function normalizeCommentRole(t) {
   if (t.role === "degraded") return "unknown";
   return t.role === void 0 || t.role === "" ? "human" : "agent";
 }
-function M_(t) {
+function parseTimestampMs(t) {
   if (t === void 0) return null;
   let e = Date.parse(t);
   return Number.isFinite(e) ? e : null;
 }
-function EOe(t, e) {
-  let n = M_(e.createdAt);
+function hasCommentSentAfter(t, e) {
+  let n = parseTimestampMs(e.createdAt);
   if (n === null) return !1;
   return t.some((r) => {
-    let o = M_(r.toClaudeAt);
+    let o = parseTimestampMs(r.toClaudeAt);
     return o !== null && o > n;
   });
 }
-function pwe(t) {
+function getAwaitingReplyComments(t) {
   if (
     t.commentsDegraded === !0 ||
     t.resolvedDegraded === !0 ||
-    t.comments.some((o) => wm(o) === "unknown")
+    t.comments.some((o) => normalizeCommentRole(o) === "unknown")
   )
     return [];
-  let e = t.comments.findLastIndex((o) => wm(o) === "agent"),
+  let e = t.comments.findLastIndex((o) => normalizeCommentRole(o) === "agent"),
     n = e >= 0 ? t.comments[e] : void 0,
     r = t.resolved
       ? {
@@ -297,15 +297,15 @@ function pwe(t) {
       : void 0;
   return t.comments.filter(
     (o, c) =>
-      wm(o) === "human" &&
-      M_(o.toClaudeAt) !== null &&
-      (n === void 0 || c > e || EOe([o], n)) &&
-      (r === void 0 || EOe([o], r)),
+      normalizeCommentRole(o) === "human" &&
+      parseTimestampMs(o.toClaudeAt) !== null &&
+      (n === void 0 || c > e || hasCommentSentAfter([o], n)) &&
+      (r === void 0 || hasCommentSentAfter([o], r)),
   );
 }
-function Lcn(t) {
+function toWireThreads(t) {
   return t.map((e) => {
-    let n = new Set(pwe(e));
+    let n = new Set(getAwaitingReplyComments(e));
     return {
       id: e.id,
       ...(e.createdAt !== void 0 && { created_at: e.createdAt }),
@@ -325,8 +325,8 @@ function Lcn(t) {
       ...(e.anchorDetail !== void 0 && { anchor_detail: e.anchorDetail }),
       ...(e.region && { anchor_region: !0 }),
       comments: e.comments.map((r) => {
-        let o = wm(r),
-          c = M_(r.toClaudeAt) !== null,
+        let o = normalizeCommentRole(r),
+          c = parseTimestampMs(r.toClaudeAt) !== null,
           u = r.toClaudeAtDegraded === !0 || (r.toClaudeAt !== void 0 && !c),
           l = c || u;
         return {
@@ -357,49 +357,49 @@ function Ee(t) {
     t.commentsDegraded === !0 ||
     t.comments.some(
       (o) =>
-        wm(o) === "unknown" ||
-        (wm(o) === "human" && o.toClaudeAtDegraded === !0),
+        normalizeCommentRole(o) === "unknown" ||
+        (normalizeCommentRole(o) === "human" && o.toClaudeAtDegraded === !0),
     )
   )
     return null;
-  let e = t.comments.findLastIndex((o) => wm(o) === "agent");
+  let e = t.comments.findLastIndex((o) => normalizeCommentRole(o) === "agent");
   if (e < 0) return null;
   let n = t.comments[e];
-  if (M_(n.createdAt) === null) return null;
+  if (parseTimestampMs(n.createdAt) === null) return null;
   let r = !1;
   for (let [o, c] of t.comments.entries()) {
-    if (wm(c) !== "human" || c.toClaudeAt == null) continue;
-    if (M_(c.toClaudeAt) === null) return null;
-    if (((r = !0), o > e || EOe([c], n))) return null;
+    if (normalizeCommentRole(c) !== "human" || c.toClaudeAt == null) continue;
+    if (parseTimestampMs(c.toClaudeAt) === null) return null;
+    if (((r = !0), o > e || hasCommentSentAfter([c], n))) return null;
   }
   return r ? n : null;
 }
-function Cft(t, e) {
+function getStandingReply(t, e) {
   let n = U(t, e);
   return n === void 0 ? null : Ee(n);
 }
-function tGn(t, e, n) {
+function getLastUnscannedAgentComment(t, e, n) {
   let r = U(t, e);
   if (r === void 0 || r.commentsDegraded === !0) return null;
-  return r.comments.findLast((o) => wm(o) === "agent" && !n.has(o.id)) ?? null;
+  return r.comments.findLast((o) => normalizeCommentRole(o) === "agent" && !n.has(o.id)) ?? null;
 }
 function U(t, e) {
   if (t.err !== null || t.threadsDegraded === !0 || t.threadsDropped === !0)
     return;
   return t.threads.find((n) => n.id === e);
 }
-function nGn(t, e) {
+function getOwnStandingReplyId(t, e) {
   let n = U(t, e);
   if (
     n === void 0 ||
     n.commentsDegraded === !0 ||
-    n.comments.some((o) => wm(o) === "unknown")
+    n.comments.some((o) => normalizeCommentRole(o) === "unknown")
   )
     return;
-  let r = n.comments.findLast((o) => wm(o) === "agent");
-  return r !== void 0 && Aft(r.id) ? r.id : void 0;
+  let r = n.comments.findLast((o) => normalizeCommentRole(o) === "agent");
+  return r !== void 0 && hasPostedReply(r.id) ? r.id : void 0;
 }
-var nV = 4096;
+var MAX_COMMENT_TEXT_LENGTH = 4096;
 function de(t, e) {
   return t !== 10240 && INVISIBLE_BLANK_CODE_POINT.test(e);
 }
@@ -407,7 +407,7 @@ var ue =
     /[\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]/u,
   ve =
     /[ \t\u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\u2800\u{1D159}\u{13441}\u{13442}\uFFFC]{3,}/gu;
-function Ete(t) {
+function hasHiddenCodePoints(t) {
   for (let e of t.match(ve) ?? []) if (ue.test(e)) return !0;
   return Array.from(t).some((e) => {
     let n = e.codePointAt(0) ?? 0;
@@ -415,7 +415,7 @@ function Ete(t) {
     return isDecisionSurfaceControl(n) || de(n, e);
   });
 }
-function fwe(t) {
+function scrubHiddenCodePoints(t) {
   let e = Array.from(t, (n) => {
     let r = n.codePointAt(0) ?? 0;
     if (r === 10 || r === 9) return n;
@@ -424,9 +424,9 @@ function fwe(t) {
   }).join("");
   return scrubArtifactEnvelopeTags(e);
 }
-var Ce = new RegExp(`^[\\s${ue.source.slice(1, -1)}]*[\\p{Ps}${Zse}]`, "u");
-function fk(t, e, n = "") {
-  let r = fwe(t).replace(
+var Ce = new RegExp(`^[\\s${ue.source.slice(1, -1)}]*[\\p{Ps}${DECISION_SURFACE_BRACKET_RANGES}]`, "u");
+function formatMarkedLines(t, e, n = "") {
+  let r = scrubHiddenCodePoints(t).replace(
     /\n/g,
     `
 ${n}${e}| `,
@@ -504,13 +504,13 @@ function Se(t) {
     });
   return { comment: e, thread: n, payload: r };
 }
-var aue = /^[0-9a-fA-F-]{1,64}$/,
-  AOe = /^[0-9T:.\-+Z ]{1,40}$/;
-function Mcn(t) {
-  return aue.test(t) || K.test(t);
+var COMMENT_ID_RE = /^[0-9a-fA-F-]{1,64}$/,
+  ISO_TIMESTAMP_RE = /^[0-9T:.\-+Z ]{1,40}$/;
+function isValidAccountId(t) {
+  return COMMENT_ID_RE.test(t) || K.test(t);
 }
 function me(t, e, n) {
-  if (Mcn(n)) return n;
+  if (isValidAccountId(n)) return n;
   return (k(t, e), "unknown");
 }
 function Te(t, e) {
@@ -535,7 +535,7 @@ function Ie(t, e, n) {
 }
 function Me(t, e) {
   if (e === void 0 || e === "") return;
-  if (M_(e) !== null) return { resolvedAt: e };
+  if (parseTimestampMs(e) !== null) return { resolvedAt: e };
   if (e !== "degraded") k(t, "resolved_at");
   return { resolvedDegraded: !0 };
 }
@@ -544,17 +544,17 @@ function Le(t, e) {
   if (e !== void 0 && e !== null) k(t, "resolved_by");
   return;
 }
-var COe = "[anchor detail]",
-  Ate = "[anchored at]",
-  mwe = "[anchored element]",
-  gwe = "[inside region]",
-  vOe = "[location]",
-  A$t = "[on text]",
-  ROe = "[on page]",
-  $9 = "[region of]",
-  Ncn = /^#[A-Za-z_-][A-Za-z0-9_-]{0,31}$/,
-  Fcn = /^\[data-id="([A-Za-z0-9_-]{1,64})"\]$/,
-  $cn = /^[a-z][a-z0-9-]{0,23}:nth-of-type\([1-9][0-9]{0,3}\)$/,
+var ANCHOR_DETAIL_MARKER = "[anchor detail]",
+  ANCHOR_ELEMENT_MARKER = "[anchored at]",
+  ANCHOR_ELEMENT_SNIPPET_MARKER = "[anchored element]",
+  REGION_CHILD_SNIPPET_MARKER = "[inside region]",
+  ANCHOR_LABEL_MARKER = "[location]",
+  SPAN_QUOTE_MARKER = "[on text]",
+  ANCHOR_FILE_MARKER = "[on page]",
+  ANCHOR_REGION_MARKER = "[region of]",
+  CSS_ID_SELECTOR_RE = /^#[A-Za-z_-][A-Za-z0-9_-]{0,31}$/,
+  DATA_ID_SELECTOR_RE = /^\[data-id="([A-Za-z0-9_-]{1,64})"\]$/,
+  NTH_OF_TYPE_SELECTOR_RE = /^[a-z][a-z0-9-]{0,23}:nth-of-type\([1-9][0-9]{0,3}\)$/,
   ae = 128,
   Pe = /^[\p{Cc}\p{Cf}\p{Variation_Selector}\u2028\u2029]$/u;
 function Ne(t, e) {
@@ -592,7 +592,7 @@ function Be(t, e) {
   if (
     e.length <= 1024 &&
     n.length <= 10 &&
-    n.every((r, o) => $cn.test(r) || (o === 0 && (Ncn.test(r) || Fcn.test(r))))
+    n.every((r, o) => NTH_OF_TYPE_SELECTOR_RE.test(r) || (o === 0 && (CSS_ID_SELECTOR_RE.test(r) || DATA_ID_SELECTOR_RE.test(r))))
   )
     return e;
   k(t, Fe(e) ? "anchor_path_opaque" : "anchor_path");
@@ -602,7 +602,7 @@ var $e = 512,
   He = 16777216,
   Ke = 128,
   Ge = 512,
-  C$t = 8,
+  MAX_REGION_KIDS = 8,
   qe = 4096,
   Ue = /^[a-f0-9]{64}$/,
   _e = Symbol("degraded-wire-anchor-file");
@@ -622,7 +622,7 @@ function Ye(t, e) {
   let o = n.split("/");
   if (o.some((u) => u === "" || u === "." || u === "..")) return r();
   if (o[0].startsWith("_")) return r();
-  if (Ete(n)) return r();
+  if (hasHiddenCodePoints(n)) return r();
   let c = e?.file_sha;
   if (c === void 0 || c === null || c === "") return { anchorFile: n };
   if (typeof c !== "string" || !Ue.test(c))
@@ -656,7 +656,7 @@ function oe(t, e, n, r) {
     k(t, e);
     return;
   }
-  let o = fwe(n).replace(INVISIBLE_BLANKS, " ").replace(/\s+/g, " ").trim();
+  let o = scrubHiddenCodePoints(n).replace(INVISIBLE_BLANKS, " ").replace(/\s+/g, " ").trim();
   return o === "" ? void 0 : o;
 }
 function je(t, e) {
@@ -683,7 +683,7 @@ function je(t, e) {
   let c = n.kids;
   if (
     !Array.isArray(c) ||
-    c.length > C$t ||
+    c.length > MAX_REGION_KIDS ||
     !c.every(
       (u, l) =>
         Number.isInteger(u) && u >= 0 && u < qe && (l === 0 || u > c[l - 1]),
@@ -694,7 +694,7 @@ function je(t, e) {
 }
 function se(t, e, n) {
   if (n === void 0) return !1;
-  if (AOe.test(n)) return !0;
+  if (ISO_TIMESTAMP_RE.test(n)) return !0;
   return (k(t, e), !1);
 }
 function Xe(t, e = "artifact_comments_read") {
@@ -726,7 +726,7 @@ function Xe(t, e = "artifact_comments_read") {
       p = h,
       S = Be(n, _.anchor?.path),
       I = ze(n, _.anchor?.span),
-      T = I !== void 0 ? fwe(I) : void 0,
+      T = I !== void 0 ? scrubHiddenCodePoints(I) : void 0,
       B = oe(n, "anchor_label", _.anchor?.label, Ke),
       R = oe(n, "anchor_detail", _.anchor?.detail, Ge),
       P = _.anchor?.span !== void 0 && _.anchor?.span !== null,
@@ -739,7 +739,7 @@ function Xe(t, e = "artifact_comments_read") {
         continue;
       }
       let w = Q.data;
-      if (!aue.test(w.id)) {
+      if (!COMMENT_ID_RE.test(w.id)) {
         h++;
         continue;
       }
@@ -753,7 +753,7 @@ function Xe(t, e = "artifact_comments_read") {
         id: w.id,
         account: Te(n, w.author.account),
         ...(V !== void 0 && { role: V }),
-        text: fwe(w.text),
+        text: scrubHiddenCodePoints(w.text),
         ...(se(n, "created_at", w.created_at) && { createdAt: w.created_at }),
         ...(w.to_claude_at !== void 0 &&
           w.to_claude_at !== "" &&
@@ -959,7 +959,7 @@ async function rt(t, e, n, r) {
   }
   return c.fail();
 }
-async function j7(
+async function readArtifactComments(
   t,
   e,
   n,
@@ -1043,7 +1043,7 @@ function F(t, e) {
     signal: t,
   };
 }
-async function Ucn(
+async function postCommentReply(
   {
     slug: t,
     threadId: e,
@@ -1059,10 +1059,10 @@ async function Ucn(
     h = !1,
     A = c ? { resend: c } : {},
     b = c ? [{ resend: c }] : [];
-  if (o !== void 0 && r !== !0 && dwe())
+  if (o !== void 0 && r !== !0 && isStandingReplyEnabled())
     if (ARTIFACT_SLUG_RE.test(o)) d = o;
     else h = !0;
-  let _ = ne().accountEpoch,
+  let _ = getArtifactState().accountEpoch,
     E = performance.now(),
     p;
   try {
@@ -1128,12 +1128,12 @@ async function Ucn(
         { kind: "ok", threadId: e, commentId: "" }
       );
     let P = ARTIFACT_SLUG_RE.test(R.data.thread_id),
-      D = aue.test(R.data.comment_id);
+      D = COMMENT_ID_RE.test(R.data.comment_id);
     if (!P || !D) logFeatureSad("artifact_comment_reply", "malformed_echo", ...b);
     else if (h)
       logFeatureSad("artifact_comment_reply", "continues_reply_id_malformed", ...b);
     else logFeatureOk("artifact_comment_reply", ...b);
-    if (D && _ === ne().accountEpoch) we(R.data.comment_id);
+    if (D && _ === getArtifactState().accountEpoch) we(R.data.comment_id);
     return {
       kind: "ok",
       threadId: P ? R.data.thread_id : e,
@@ -1165,7 +1165,7 @@ async function Ucn(
       }
     );
   if (p.status === 409 && M(p.data) === ot) {
-    let R = _ === ne().accountEpoch ? ut(p.data) : void 0;
+    let R = _ === getArtifactState().accountEpoch ? ut(p.data) : void 0;
     return (
       logFeatureSad(
         "artifact_comment_reply",
@@ -1211,7 +1211,7 @@ async function Ucn(
     reason: I,
   };
 }
-async function rGn(t, e, n) {
+async function emitSummonStatus(t, e, n) {
   let r;
   try {
     r = await artifactFrameHttpClient.postRelayBound(
@@ -1250,7 +1250,7 @@ function mt(t, e) {
     reason: t === 404 ? "not_found" : t === 429 ? "rate_limited" : "http",
   };
 }
-async function oGn(t) {
+async function resolveCommentThread(t) {
   let { slug: e, threadId: n, afterVersion: r, signal: o, credentials: c } = t;
   if (!ARTIFACT_SLUG_RE.test(e) || !ARTIFACT_SLUG_RE.test(n))
     return {
@@ -1322,7 +1322,7 @@ var _t = "only the thread starter or a writer",
   yt = "CCR agent tokens cannot call this route",
   q =
     "thread resolve not confirmed (this session's comment connection failed on this attempt, so the thread may or may not be resolved) \u2014 retry the resolve once if you have not already, it is safe to repeat; if it fails again, leave the thread unresolved and, if you addressed it, say so in a reply on the thread";
-async function sGn({ slug: t, threadId: e, credentials: n }, r) {
+async function resolveCommentThreadViaSession({ slug: t, threadId: e, credentials: n }, r) {
   if (!ARTIFACT_SLUG_RE.test(t) || !ARTIFACT_SLUG_RE.test(e))
     return {
       kind: "error",
@@ -1460,8 +1460,8 @@ async function sGn({ slug: t, threadId: e, credentials: n }, r) {
     reason: A,
   };
 }
-function FS() {
-  let t = ne();
+function isArtifactToolsetEnabled() {
+  let t = getArtifactState();
   if (t.toolsetLatch === null)
     ((t.toolsetLatch =
       a.CLAUDE_CODE_ARTIFACT_TOOLSET ??
@@ -1470,51 +1470,51 @@ function FS() {
   return t.toolsetLatch;
 }
 export {
-  Q3n,
-  gI,
-  E$t,
-  wte,
-  Eft,
-  lwe,
-  Tte,
-  cwe,
-  uwe,
-  tV,
-  Z3n,
-  dwe,
-  Aft,
-  eGn,
-  wm,
-  M_,
-  EOe,
-  pwe,
-  Lcn,
-  Cft,
-  tGn,
-  nGn,
-  nV,
-  Ete,
-  fwe,
-  fk,
-  aue,
-  AOe,
-  Mcn,
-  COe,
-  Ate,
-  mwe,
-  gwe,
-  vOe,
-  A$t,
-  ROe,
-  $9,
-  Ncn,
-  Fcn,
-  $cn,
-  C$t,
-  j7,
-  Ucn,
-  rGn,
-  oGn,
-  sGn,
-  FS,
+  LEGACY_ARTIFACT_VERB_NAMES,
+  ARTIFACT_ACTION_FAMILIES,
+  isArtifactActionName,
+  toLegacyVerbInput,
+  toCoreVerbInput,
+  toFamilyParentInput,
+  fromFamilyParentInput,
+  isOwnPrincipal,
+  getOwnPrincipalTokens,
+  isArtifactCommentsEnabled,
+  getArtifactCommentsEnabledSource,
+  isStandingReplyEnabled,
+  hasPostedReply,
+  hasPostedReplies,
+  normalizeCommentRole,
+  parseTimestampMs,
+  hasCommentSentAfter,
+  getAwaitingReplyComments,
+  toWireThreads,
+  getStandingReply,
+  getLastUnscannedAgentComment,
+  getOwnStandingReplyId,
+  MAX_COMMENT_TEXT_LENGTH,
+  hasHiddenCodePoints,
+  scrubHiddenCodePoints,
+  formatMarkedLines,
+  COMMENT_ID_RE,
+  ISO_TIMESTAMP_RE,
+  isValidAccountId,
+  ANCHOR_DETAIL_MARKER,
+  ANCHOR_ELEMENT_MARKER,
+  ANCHOR_ELEMENT_SNIPPET_MARKER,
+  REGION_CHILD_SNIPPET_MARKER,
+  ANCHOR_LABEL_MARKER,
+  SPAN_QUOTE_MARKER,
+  ANCHOR_FILE_MARKER,
+  ANCHOR_REGION_MARKER,
+  CSS_ID_SELECTOR_RE,
+  DATA_ID_SELECTOR_RE,
+  NTH_OF_TYPE_SELECTOR_RE,
+  MAX_REGION_KIDS,
+  readArtifactComments,
+  postCommentReply,
+  emitSummonStatus,
+  resolveCommentThread,
+  resolveCommentThreadViaSession,
+  isArtifactToolsetEnabled,
 };

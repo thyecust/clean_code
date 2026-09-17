@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { uE } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { useApp } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "./keybinding-hooks.js";
 import { useKeybindingDisplayText } from "./use-keybinding-display-text.js";
 import { useDoublePressConfirm } from "./chunk-ff1hq6qq.js";
@@ -36,7 +36,7 @@ function useExitKeybindingEntries(i, r, e = !0) {
   };
 }
 function c(i, r) {
-  let { exit: e } = uE(),
+  let { exit: e } = useApp(),
     [n, t] = d({ pending: !1, keyName: null }),
     o = V(() => r ?? e, [r, e]),
     a = isKbCohesionFixesEnabled(),

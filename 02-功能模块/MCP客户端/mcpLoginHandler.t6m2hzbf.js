@@ -16,7 +16,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { configHasAuthorizationHeader, isFirstPartyDesignUrl, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getClaudeAiConnectorsUrl, buildClaudeAiMcpAuthUrl, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
+import { buildCliCommand } from "../插件系统/plugin-system-core.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { awaitMcpPolicyColdStart } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
@@ -283,7 +283,7 @@ async function mcpLogoutHandler(t, e, o) {
       );
     case "oauth": {
       (await d().revokeServerTokens(t, a.config), await logFeatureOkAsync("cli_mcp_logout"));
-      let r = (await C(a.config, o)) === null ? Aa("mcp login", t) : null,
+      let r = (await C(a.config, o)) === null ? buildCliCommand("mcp login", t) : null,
         i = r ? ` Run \`${r}\` to authenticate again.` : "";
       return cliOkAfterAnalyticsFlush(`Signed out of "${t}".${i}`);
     }

@@ -20,7 +20,7 @@ import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, Io, Xu, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { te, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { BRANCH_ARROW_GLYPH, ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { uuidSlugFromUrl, TITLE_MAX_RUNES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -40,7 +40,7 @@ import { createUserMessage } from "../../03-入口与运行时/核心应用-Agen
 import { subscribeFrameLiveOnAttach } from "./chunk-kshc4v5t.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -208,7 +208,7 @@ async function Bt(i, l) {
       slug: w.slug,
       title: Oe(w.title),
       editableTitle: w.title === void 0 ? void 0 : (sanitizeEditableTitle(w.title) ?? void 0),
-      favicon: P !== void 0 && te(P) <= 4 ? P : void 0,
+      favicon: P !== void 0 && getStringWidth(P) <= 4 ? P : void 0,
       description: Oe(w.description),
       label: Oe(w.label),
       rel: w.rel,
@@ -778,11 +778,11 @@ function bt({
     ie = !me && fe === null && P.length > 0,
     Nt =
       M.mode === "rename"
-        ? r(o, {
+        ? r(Box, {
             marginTop: 1,
             flexDirection: "column",
             children: [
-              e(t, { bold: !0, children: "Rename artifact:" }),
+              e(Text, { bold: !0, children: "Rename artifact:" }),
               e(hn, {
                 value: Z,
                 onChange: Sr,
@@ -799,7 +799,7 @@ function bt({
             ],
           })
         : null;
-  return e(o, {
+  return e(Box, {
     flexDirection: "column",
     tabIndex: 0,
     autoFocus: !0,
@@ -831,7 +831,7 @@ function bt({
               : ee
                 ? r(DotSeparatedList, {
                     children: [
-                      e(t, { children: "Type to filter" }),
+                      e(Text, { children: "Type to filter" }),
                       e(KeybindingHint, { chord: ["enter", "down"], action: "list" }),
                       e(KeybindingHint, { chord: "escape", action: "clear" }),
                     ],
@@ -870,7 +870,7 @@ function bt({
         : fe !== null
           ? e(EmptyStateMessage, { children: fe })
           : P.length === 0
-            ? r(o, {
+            ? r(Box, {
                 flexDirection: "column",
                 children: [
                   e(EmptyStateMessage, {
@@ -879,13 +879,13 @@ function bt({
                   }),
                   pe &&
                     M.mode === "list" &&
-                    e(o, {
+                    e(Box, {
                       marginTop: 1,
-                      children: e(t, { dimColor: !0, children: pe }),
+                      children: e(Text, { dimColor: !0, children: pe }),
                     }),
                 ],
               })
-            : r(o, {
+            : r(Box, {
                 flexDirection: "column",
                 gap: 1,
                 children: [
@@ -906,10 +906,10 @@ function bt({
                     },
                   }),
                   N.length === 0
-                    ? r(o, {
+                    ? r(Box, {
                         flexDirection: "column",
                         children: [
-                          e(t, {
+                          e(Text, {
                             dimColor: !0,
                             italic: !0,
                             children: W
@@ -929,17 +929,17 @@ function bt({
                           Nt,
                           pe &&
                             M.mode === "list" &&
-                            e(o, {
+                            e(Box, {
                               marginTop: 1,
-                              children: e(t, { dimColor: !0, children: pe }),
+                              children: e(Text, { dimColor: !0, children: pe }),
                             }),
                         ],
                       })
-                    : r(o, {
+                    : r(Box, {
                         flexDirection: "column",
                         children: [
                           Mt > 0 &&
-                            r(t, {
+                            r(Text, {
                               dimColor: !0,
                               children: [
                                 "  ",
@@ -962,7 +962,7 @@ function bt({
                             );
                           }),
                           Ut > 0 &&
-                            r(t, {
+                            r(Text, {
                               dimColor: !0,
                               children: [
                                 "  ",
@@ -973,12 +973,12 @@ function bt({
                               ],
                             }),
                           M.mode === "confirm-delete" &&
-                            e(o, {
+                            e(Box, {
                               marginTop: 1,
-                              children: r(t, {
+                              children: r(Text, {
                                 children: [
                                   "Delete ",
-                                  e(t, { bold: !0, children: M.title }),
+                                  e(Text, { bold: !0, children: M.title }),
                                   "? This cannot be undone.",
                                 ],
                               }),
@@ -986,9 +986,9 @@ function bt({
                           Nt,
                           pe &&
                             M.mode === "list" &&
-                            e(o, {
+                            e(Box, {
                               marginTop: 1,
-                              children: e(t, { dimColor: !0, children: pe }),
+                              children: e(Text, { dimColor: !0, children: pe }),
                             }),
                         ],
                       }),
@@ -1032,7 +1032,7 @@ function rr(bo) {
   } else Me = ve[10];
   let xe;
   if (ve[13] !== jt || ve[14] !== Vt || ve[15] !== Me)
-    ((xe = e(o, {
+    ((xe = e(Box, {
       flexDirection: "row",
       gap: 1,
       marginLeft: 1,
@@ -1119,22 +1119,22 @@ function nr(Co) {
   let dt = zr;
   const Yt = jr ? figures.pointer + " " : "  ";
   let mt;
-  if (j[21] !== Yt) ((mt = e(t, { children: Yt })), (j[21] = Yt), (j[22] = mt));
+  if (j[21] !== Yt) ((mt = e(Text, { children: Yt })), (j[21] = Yt), (j[22] = mt));
   else mt = j[22];
   const Qt = jr ? "suggestion" : void 0;
   let pt;
   if (j[23] !== A.rel)
     ((pt =
       A.rel === "shared"
-        ? e(t, { color: "permission", children: Ie })
-        : e(t, { color: "claude", children: ARTIFACT_MARKER_GLYPH })),
+        ? e(Text, { color: "permission", children: Ie })
+        : e(Text, { color: "claude", children: ARTIFACT_MARKER_GLYPH })),
       (j[23] = A.rel),
       (j[24] = pt));
   else pt = j[24];
   let gt;
   if (j[25] !== A.starred)
     ((gt =
-      A.starred === !0 && r(t, { color: "warning", children: [figures.star, " "] })),
+      A.starred === !0 && r(Text, { color: "warning", children: [figures.star, " "] })),
       (j[25] = A.starred),
       (j[26] = gt));
   else gt = j[26];
@@ -1142,7 +1142,7 @@ function nr(Co) {
   if (j[27] !== dt)
     ((yt =
       dt.length > 0 &&
-      r(t, { dimColor: !0, children: ["  ", dt.join(" \xB7 ")] })),
+      r(Text, { dimColor: !0, children: ["  ", dt.join(" \xB7 ")] })),
       (j[27] = dt),
       (j[28] = yt));
   else yt = j[28];
@@ -1154,7 +1154,7 @@ function nr(Co) {
     j[32] !== gt ||
     j[33] !== yt
   )
-    ((wt = r(t, { color: Qt, children: [pt, " ", gt, zt, yt] })),
+    ((wt = r(Text, { color: Qt, children: [pt, " ", gt, zt, yt] })),
       (j[29] = zt),
       (j[30] = Qt),
       (j[31] = pt),
@@ -1164,7 +1164,7 @@ function nr(Co) {
   else wt = j[34];
   let Wr;
   if (j[35] !== mt || j[36] !== wt)
-    ((Wr = r(o, { children: [mt, wt] })),
+    ((Wr = r(Box, { children: [mt, wt] })),
       (j[35] = mt),
       (j[36] = wt),
       (j[37] = Wr));

@@ -13,7 +13,7 @@ import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "./chunk-9g2q4bjq.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { CREDENTIALS_SUFFIX, getSecureStorageDir, getKeychainServiceName, getKeychainAccountName, KEYCHAIN_CACHE_TTL_MS, getKeychainState, KEYCHAIN_READ_FAILURE_BACKOFF_MS, invalidateKeychainCache } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -34,19 +34,19 @@ async function withSecureStorageWriteLock(e) {
   try {
     await t;
     let a = getSecureStorageDir();
-    await ae().mkdir(a);
+    await getFsSurface().mkdir(a);
     let o = await Cs(U(a, ".storage-write"), {
       realpath: !1,
       retries: { retries: 10, minTimeout: 100, maxTimeout: 1000 },
       stale: 15000,
       onCompromised: (s) =>
-        n(`[secureStorage] write lock compromised: ${l(s)}`, { level: "warn" }),
+        logForDebugging(`[secureStorage] write lock compromised: ${l(s)}`, { level: "warn" }),
     });
     try {
       return await P.run(!0, e);
     } finally {
       await o().catch((s) =>
-        n(`[secureStorage] write lock release failed: ${l(s)}`, {
+        logForDebugging(`[secureStorage] write lock release failed: ${l(s)}`, {
           level: "warn",
         }),
       );
@@ -148,13 +148,13 @@ var m = 2000,
             timeout: m,
           });
         if (s) {
-          let i = z(s);
+          let i = jsonParse(s);
           return ((e.cache = { data: i, cachedAt: Date.now() }), i);
         }
       } catch (a) {}
       if (t.data !== null)
         return (
-          n("[keychain] read failed; serving stale cache", { level: "warn" }),
+          logForDebugging("[keychain] read failed; serving stale cache", { level: "warn" }),
           (e.cache = { data: t.data, cachedAt: Date.now() }),
           t.data
         );
@@ -172,7 +172,7 @@ var m = 2000,
           if (a !== e.generation) return s === SECURE_STORAGE_READ_FAILED_SENTINEL ? null : s;
           if (((e.readInFlight = null), s === SECURE_STORAGE_READ_FAILED_SENTINEL)) {
             if (
-              (n("[keychain] readAsync failed; not caching a null", {
+              (logForDebugging("[keychain] readAsync failed; not caching a null", {
                 level: "warn",
               }),
               (e.lastReadFailure = Date.now()),
@@ -211,7 +211,7 @@ var m = 2000,
       try {
         let r = getKeychainServiceName(CREDENTIALS_SUFFIX),
           a = getKeychainAccountName(),
-          o = b(e),
+          o = jsonStringify(e),
           s = Buffer.from(o, "utf-8").toString("hex"),
           i = `add-generic-password -U -a "${a}" -s "${r}" -X "${s}"
 `,
@@ -224,7 +224,7 @@ var m = 2000,
             timeout: m,
           });
         else
-          (n(
+          (logForDebugging(
             `Keychain payload (${o.length}B JSON) exceeds security -i stdin limit; using argv`,
             { level: "warn" },
           ),
@@ -270,7 +270,7 @@ async function k() {
         ["find-generic-password", "-a", t, "-w", "-s", e],
         { useCwd: !1, preserveOutputOnError: !1, timeout: m },
       );
-    if (a === 0 && r) return z(r.trim());
+    if (a === 0 && r) return jsonParse(r.trim());
     if (a === 0 || a === K || a === W) return null;
     return SECURE_STORAGE_READ_FAILED_SENTINEL;
   } catch (e) {
@@ -308,8 +308,8 @@ var V = {
   async read() {
     let { storagePath: e } = c();
     try {
-      let t = await ae().readFile(e, { encoding: "utf8" });
-      return z(t);
+      let t = await getFsSurface().readFile(e, { encoding: "utf8" });
+      return jsonParse(t);
     } catch {
       return null;
     }
@@ -318,12 +318,12 @@ var V = {
     let { storagePath: e } = c(),
       t;
     try {
-      t = await ae().readFile(e, { encoding: "utf8" });
+      t = await getFsSurface().readFile(e, { encoding: "utf8" });
     } catch (r) {
       return X(A(r), "darwin");
     }
     try {
-      return z(t);
+      return jsonParse(t);
     } catch {
       return null;
     }
@@ -332,8 +332,8 @@ var V = {
     try {
       let { storageDir: t, storagePath: r } = c();
       return (
-        await ae().mkdir(t),
-        await writeFileAtomic(r, b(e), 384),
+        await getFsSurface().mkdir(t),
+        await writeFileAtomic(r, jsonStringify(e), 384),
         await chmod(r, 384),
         { success: !0, warning: T }
       );
@@ -346,7 +346,7 @@ var V = {
   async remove() {
     let { storagePath: e } = c();
     try {
-      return (await ae().unlink(e), !0);
+      return (await getFsSurface().unlink(e), !0);
     } catch (t) {
       if (A(t) === "ENOENT") return !0;
       return !1;
@@ -392,7 +392,7 @@ function q(e) {
         a = p(),
         o = a.generation,
         s = await w(e.writeCredentials(t), a);
-      if (s.state === "written" && o === a.generation) D(a, r, b(t));
+      if (s.state === "written" && o === a.generation) D(a, r, jsonStringify(t));
       else S(a);
       return s.state === "written"
         ? { success: !0, warning: T }
@@ -434,7 +434,7 @@ function I(e, t, r, a) {
   }
   switch (t.state) {
     case "present":
-      D(e, r, b(t.data));
+      D(e, r, jsonStringify(t.data));
       return;
     case "absent":
     case "corrupt":
@@ -469,8 +469,8 @@ var _ = {
         if (r.text === null) return null;
         return JSON.parse(r.text);
       }
-      let a = ae().readFileSync(t, { encoding: "utf8" });
-      return z(a);
+      let a = getFsSurface().readFileSync(t, { encoding: "utf8" });
+      return jsonParse(a);
     } catch {
       return null;
     }

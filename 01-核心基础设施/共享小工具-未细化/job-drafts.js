@@ -13,7 +13,7 @@ import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8
 import { writeFileAtomic, writeFileAtomicSync } from "../安全文件系统(FS加固)/atomic-file-write.js";
 import { createLazyValue } from "./lazy-value.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jobDraftStore, readJobDraftText, getJobsDir } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { readBoundedFile } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -29,7 +29,7 @@ function n(t) {
   return p(getJobsDir(), `.draft-${f(t)}`);
 }
 function u(t) {
-  return b({ ...t, ts: Date.now() });
+  return jsonStringify({ ...t, ts: Date.now() });
 }
 async function saveJobDraft(t, r, e) {
   await writeJobDraft(t, r, e);
@@ -72,7 +72,7 @@ async function readJobDraft(t, r) {
   if (e === null) return;
   let a;
   try {
-    a = g().safeParse(z(e));
+    a = g().safeParse(jsonParse(e));
   } catch {
     return;
   }
@@ -104,7 +104,7 @@ async function sweepStaleJobDrafts() {
             i = await readBoundedFile(a, d);
           if (i !== null)
             try {
-              let o = g().safeParse(z(i));
+              let o = g().safeParse(jsonParse(i));
               if (o.success && r - o.data.ts <= l) return;
             } catch {}
           await w(a, { recursive: !0, force: !0 }).catch(() => {});

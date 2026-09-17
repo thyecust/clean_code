@@ -17,7 +17,7 @@ import { parseConfigInteger, isSafeMode, xg } from "../Bedrock-Vertex/chunk-5ndh
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { We, b, z, k_, YPn, o8, n, s8, ZPn } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, readTailBytes, enableDebugLogging, flushDebugLogs, logForDebugging, getDebugLogPath, isDefaultDebugLogPath } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { escapeRegExp, pluralize, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsSchema, toJsonSchema, stripInternalSchemaDescriptions } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -29,7 +29,7 @@ import { MCP_SERVERS_BETA, getCanonicalName, getAgentDepth, isActingAsBgJob, isC
 import { isRemoteActive, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Xt } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { strip1mSuffix } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isGitLabMrTarget, glabMrId, glabMrProjectUrl } from "../Git-Worktree/git-repository-detection.js";
 import {
   canUseCloudReview,
@@ -78,13 +78,13 @@ import {
 import { getOrgMemoryStores, MEMORY_TYPES_SKILL_NAME, isMemoryTypesSkillEnabled, MEMORY_TYPES_SECTIONS_WITH_SCOPE, MEMORY_TYPES_SECTIONS_NO_SCOPE, hasTeamMemoryStore, isStoneShellPromptServed, registerAvailabilityPredicate } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { isBashToolAvailable, isSkillsAsToolsEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { im, $C, _$e, MT, eU } from "../权限系统/chunk-t3b7pg2x.js";
+import { EFFORT_LEVELS, isValidEffortLevel, parseEffortLevelAlias, resolveModelEffortLevel, sanitizeEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
-import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import { ENTER_PLAN_MODE_TOOL_NAME, ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import {
   formatArtifactServerDisplayName,
   escapeTextForDisplay,
@@ -114,11 +114,11 @@ import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-�
 import { getRosterFilePath } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { registerBundledSkillSessionReset, registerBundledSkill, getBundledSkills, getBundledSkillExtractDir, extractAdditionalSkillFiles } from "./bundled-skills.js";
 import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { K3, K8e, LYn, Lre, X8e, Fyn, $yn, iN } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { SOe } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
+import { DEFAULT_KEYBINDINGS, KEYBINDING_CONTEXT_NAMES, KEYBINDING_CONTEXT_DESCRIPTIONS, KEYBINDING_ACTION_IDS, NON_REBINDABLE_KEYS, TERMINAL_RESERVED_KEYS, MACOS_RESERVED_KEYS, isKeybindingCustomizationEnabled } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { buildArtifactToolSpellingNote } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
 import { listClaudeAiConnectorServers, getArtifactConnectorHostingState, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { markWorkshopInvokeStart } from "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
-import { Rjn } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
+import { prependPageContract } from "../Artifact发布-渲染/artifact-prompt-paragraphs.js";
 import { getUltrareviewProsePointerTip } from "../CodeReview/ultrareview-tips.js";
 import { getDaemonLockPath, getDaemonLockStateKey } from "../后台任务-Shell管理/daemon-lock.js";
 import { registerDesignSkill } from "../DesignSync/register-design-skill.js";
@@ -349,7 +349,7 @@ ${yn}`;
         ? t.roster
         : t.missingCaps.filter((h) => t.roster.includes(h)),
     r = t.roster.includes("mcp");
-  if (t.promptBody !== null) s.push(SOe(["data"]) + t.promptBody);
+  if (t.promptBody !== null) s.push(buildArtifactToolSpellingNote(["data"]) + t.promptBody);
   for (let h of d) {
     let p = t.files.find((k) => k.endsWith(`/${h}.d.ts`)),
       w = getBundledSkillExtractDir(ARTIFACT_CAPABILITIES_SKILL_NAME);
@@ -422,7 +422,7 @@ function Oe() {
     if ("err" in k)
       return (
         logFeatureSad("artifact_capability_section", "pin_readback_failed"),
-        n(`[artifact] capability pin read-back failed: ${k.err}`),
+        logForDebugging(`[artifact] capability pin read-back failed: ${k.err}`),
         null
       );
     let v = parseContractVersion(k.contract);
@@ -543,7 +543,7 @@ function st() {
       )
         markWorkshopInvokeStart(t.artifactRegistries.workshopTelemetry);
       let { SKILL_MD: o } = await it(),
-        s = SOe(["comments"]) + parseFrontmatter(o).content.trimStart();
+        s = buildArtifactToolSpellingNote(["comments"]) + parseFrontmatter(o).content.trimStart();
       if (e.trim())
         s += `
 
@@ -599,7 +599,7 @@ function De() {
     async getPromptForCommand() {
       let { SKILL_MD: e } = await import("./whenToUse.ts7my67y.js");
       return [
-        { type: "text", text: Rjn(parseFrontmatter(e).content.trimStart().replace(Cn, Sn)) },
+        { type: "text", text: prependPageContract(parseFrontmatter(e).content.trimStart().replace(Cn, Sn)) },
       ];
     },
   });
@@ -722,7 +722,7 @@ Call the \`${ENTER_PLAN_MODE_TOOL_NAME}\` tool now to enter plan mode, then:
    - The e2e test recipe (or "skip e2e because \u2026" if the user chose that)
    - The exact worker instructions you will give each agent (the shared template)
 
-5. Call \`${Wh}\` to present the plan for approval.
+5. Call \`${EXIT_PLAN_MODE_TOOL_NAME_ALIAS}\` to present the plan for approval.
 
 ## Phase 2: Spawn Workers (After Plan Approval)
 
@@ -810,7 +810,7 @@ function gt(e, t) {
   e.onChangeDynamicMcpConfig?.((s) => ({ ...s, [CLAUDE_IN_CHROME_MCP_SERVER_NAME]: t.client.config }));
   let o = e.session.mcpSessionWiring.connections();
   if (!o) {
-    n(
+    logForDebugging(
       "[claude-in-chrome] no MCP connections owner on this session; the browser tools land on the next reconcile",
     );
     return;
@@ -835,7 +835,7 @@ async function wt(e, t) {
   let o = e.abortController.signal,
     s = await openInChrome(CLAUDE_IN_CHROME_URL).catch(
       (E) => (
-        n(
+        logForDebugging(
           `[Claude in Chrome] Install setup failed to open install page: ${E}`,
           { level: "error" },
         ),
@@ -858,7 +858,7 @@ async function wt(e, t) {
     T,
     A,
     _ = I().catch((E) => {
-      (n(`[Claude in Chrome] Install setup driver failed: ${E}`, {
+      (logForDebugging(`[Claude in Chrome] Install setup driver failed: ${E}`, {
         level: "error",
       }),
         (C = "setup_driver_error"),
@@ -882,7 +882,7 @@ async function wt(e, t) {
       ),
       ie())
     ) {
-      (n(
+      (logForDebugging(
         "[Claude in Chrome] Install setup stopped: managed policy denied the chrome MCP server during the install wait",
       ),
         (C = "policy_denied_mid_wait"),
@@ -890,7 +890,7 @@ async function wt(e, t) {
       return;
     }
     if (!isClaudeInChromeAllowed()) {
-      (n(
+      (logForDebugging(
         "[Claude in Chrome] Install setup stopped: organization policy (allow_claude_browser_extension) denied Claude in Chrome during the install wait",
       ),
         (C = "chrome_policy_denied_mid_wait"),
@@ -911,7 +911,7 @@ async function wt(e, t) {
     try {
       J = await pe(CLAUDE_IN_CHROME_MCP_SERVER_NAME, M, e.storageV5, e.credentials);
     } catch (U) {
-      (n(`[Claude in Chrome] Install setup MCP connect failed: ${U}`, {
+      (logForDebugging(`[Claude in Chrome] Install setup MCP connect failed: ${U}`, {
         level: "error",
       }),
         (C = "setup_reconnect_error"),
@@ -942,7 +942,7 @@ async function wt(e, t) {
       if (!te && me >= Nn)
         ((te = !0),
           openInChrome(CHROME_EXTENSION_RECONNECT_URL).catch((fe) =>
-            n(`[Claude in Chrome] Install setup reconnect nudge failed: ${fe}`),
+            logForDebugging(`[Claude in Chrome] Install setup reconnect nudge failed: ${fe}`),
           ));
       if (h === "connecting" && me >= Mn) w("stalled");
       await sleep(yt, d.signal);
@@ -1041,7 +1041,7 @@ async function wt(e, t) {
         we
       );
     return (
-      n(`[Claude in Chrome] Install setup dialog failed: ${E}`, {
+      logForDebugging(`[Claude in Chrome] Install setup dialog failed: ${E}`, {
         level: "error",
       }),
       logFeatureBad("chrome_install_upsell", "setup_dialog_error", {
@@ -1059,7 +1059,7 @@ async function wt(e, t) {
           import("../MCP客户端/mcpClientModule.4cyej0np.js")
             .then((D) => D.mcpClientModule().clearServerCache(CLAUDE_IN_CHROME_MCP_SERVER_NAME, E))
             .catch((D) =>
-              n(
+              logForDebugging(
                 `[Claude in Chrome] Install setup orphan cleanup failed: ${D}`,
                 { level: "error" },
               ),
@@ -1085,7 +1085,7 @@ async function jn(e, t) {
     if (!d) return "not_connected";
     let r;
     try {
-      r = z(d);
+      r = jsonParse(d);
     } catch {
       return "not_connected";
     }
@@ -1173,7 +1173,7 @@ async function Be(e) {
       if (e.abortController.signal.aborted)
         return ((t.installUpsellResolution = void 0), Y);
       return (
-        n(`[Claude in Chrome] Install upsell failed: ${s}`, { level: "error" }),
+        logForDebugging(`[Claude in Chrome] Install upsell failed: ${s}`, { level: "error" }),
         logFeatureBad("chrome_install_upsell", "upsell_error"),
         Y
       );
@@ -1184,7 +1184,7 @@ async function Be(e) {
 async function qn(e, t) {
   if (ie())
     return (
-      n(
+      logForDebugging(
         "[Claude in Chrome] Skipping install upsell: blocked by managed deniedMcpServers policy",
       ),
       logFeatureSad("chrome_install_upsell", "policy_denied"),
@@ -1192,7 +1192,7 @@ async function qn(e, t) {
     );
   if (!isClaudeInChromeAllowed())
     return (
-      n(
+      logForDebugging(
         "[Claude in Chrome] Skipping install upsell: denied by organization policy (allow_claude_browser_extension)",
       ),
       logFeatureSad("chrome_install_upsell", "chrome_policy_denied"),
@@ -1213,7 +1213,7 @@ async function qn(e, t) {
     return ((getClaudeInChromeState().installUpsellResolution = void 0), Y);
   if (ye(e)) {
     if (
-      (n(
+      (logForDebugging(
         "[Claude in Chrome] Skipping install upsell: session auto-allows tool calls with no prompt (bypass or plan+bypass)",
       ),
       !getClaudeInChromeState().installUpsellBypassSuppressionCounted)
@@ -1224,7 +1224,7 @@ async function qn(e, t) {
   }
   if ((await detectAvailableBrowser()) === null)
     return (
-      n(
+      logForDebugging(
         "[Claude in Chrome] Skipping install upsell: no Chromium-family browser detected",
       ),
       logFeatureSad("chrome_install_upsell", "no_browser_detected"),
@@ -1278,7 +1278,7 @@ async function Xn(e) {
   if (e.agentId !== void 0 || e.options?.isSkillPreload) return Kn;
   if (zn(e.options?.mcpClients))
     return (
-      n(
+      logForDebugging(
         "[Claude in Chrome] Skill invoked while the chrome MCP client is in a dead state; steering away from browser tools",
       ),
       Vn
@@ -1953,7 +1953,7 @@ function di(e) {
   return Object.hasOwn(re, e);
 }
 function Ee(e) {
-  let t = e ? getCanonicalName(Xt(e)) : void 0;
+  let t = e ? getCanonicalName(strip1mSuffix(e)) : void 0;
   return t && di(t) ? t : "default";
 }
 var Qt = { cell: "low", modelEffort: "typed", finderBudgetHint: !1 },
@@ -2122,7 +2122,7 @@ async function vi(e) {
   if (t && !isSkillsAsToolsEnabled() && !t.some((s) => matchesToolName(s, SKILL_TOOL_NAME))) return "";
   return (await getAllowlistedSkillCommands(sn(), e.storageV5)).some((s) => s.name === VERIFY_SKILL_NAME) ? bi : "";
 }
-var ue = im,
+var ue = EFFORT_LEVELS,
   ki = new RegExp(`^(${ue.map((e) => e.slice(0, 3)).join("|")})[a-z]*$`, "i");
 function qe(e) {
   let [t = "", ...o] = e;
@@ -2151,7 +2151,7 @@ function _e(e) {
       unrecognizedLevel: void 0,
       ultraFallback: !0,
     };
-  let k = w.toLowerCase() === "ultra" ? void 0 : _$e(w);
+  let k = w.toLowerCase() === "ultra" ? void 0 : parseEffortLevelAlias(w);
   if (k !== void 0)
     return {
       explicit: k,
@@ -2175,7 +2175,7 @@ function _e(e) {
 }
 function _i() {
   let e = getGlobalConfig().codeReviewLastEffort;
-  return e !== void 0 && $C(e) ? e : void 0;
+  return e !== void 0 && isValidEffortLevel(e) ? e : void 0;
 }
 function Ei(e, t) {
   saveGlobalConfig(
@@ -2368,8 +2368,8 @@ function oo(e, t) {
   let { explicit: o, ultraFallback: s } = e,
     d = s ? "max" : (o ?? Ve(e, t)),
     r = t.options ? getMainLoopModel(t) : void 0,
-    h = r ? (MT(r, d ?? getEffortValue(t)) ?? d) : (d ?? getEffortValue(t));
-  return h === void 0 ? "medium" : eU(h);
+    h = r ? (resolveModelEffortLevel(r, d ?? getEffortValue(t)) ?? d) : (d ?? getEffortValue(t));
+  return h === void 0 ? "medium" : sanitizeEffortLevel(h);
 }
 function Ii({
   ultraFallback: e,
@@ -2695,14 +2695,14 @@ function yo() {
     disableModelInvocation: !0,
     userInvocable: !0,
     async getPromptForCommand(e, t) {
-      let o = YPn(),
-        s = s8();
-      await o8();
+      let o = enableDebugLogging(),
+        s = getDebugLogPath();
+      await flushDebugLogs();
       let d = K(),
         [r, h] = await Promise.all([
           bo(
             s,
-            t.storageV5 && ZPn(s, d)
+            t.storageV5 && isDefaultDebugLogPath(s, d)
               ? { backend: t.storageV5, key: STORAGE_KEYS.log(d, "debug") }
               : void 0,
           ),
@@ -2794,7 +2794,7 @@ Other daemon state on disk (Read if relevant \u2014 roster contains user prompts
 async function bo(e, t) {
   if (t) {
     let o = await t.backend.read([{ key: t.key, tail: po }]);
-    if (!o.ok) return `Failed to read last ${he} lines: ${We(o.error)}`;
+    if (!o.ok) return `Failed to read last ${he} lines: ${describeStorageError(o.error)}`;
     let s = o.value.items[0];
     if (!s.found) return "No log file exists yet.";
     return fo({
@@ -2803,7 +2803,7 @@ async function bo(e, t) {
     });
   }
   try {
-    return fo(await k_(e, po));
+    return fo(await readTailBytes(e, po));
   } catch (o) {
     return W(o)
       ? "No log file exists yet."
@@ -2829,13 +2829,13 @@ ${o}
 async function go(e, t) {
   if (t) {
     let o = await t.backend.read([{ key: t.key, tail: mo }]);
-    if (!o.ok) return `(read error: ${We(o.error)})`;
+    if (!o.ok) return `(read error: ${describeStorageError(o.error)})`;
     let s = o.value.items[0];
     if (!s.found) return null;
     return Buffer.from(s.value).toString("utf8");
   }
   try {
-    return (await k_(e, mo)).content;
+    return (await readTailBytes(e, mo)).content;
   } catch (o) {
     return W(o) ? null : `(read error: ${l(o)})`;
   }
@@ -3117,12 +3117,12 @@ ${e}`;
 function Fi() {
   return Ye(
     ["Context", "Description"],
-    K8e.filter(Gi).map((e) => [`\`${e}\``, LYn[e]]),
+    KEYBINDING_CONTEXT_NAMES.filter(Gi).map((e) => [`\`${e}\``, KEYBINDING_CONTEXT_DESCRIPTIONS[e]]),
   );
 }
 function Bi() {
   let e = {};
-  for (let t of K3)
+  for (let t of DEFAULT_KEYBINDINGS)
     for (let [o, s] of Object.entries(t.bindings))
       if (s) {
         if (!e[s]) e[s] = { keys: [], context: t.context };
@@ -3130,7 +3130,7 @@ function Bi() {
       }
   return Ye(
     ["Action", "Default Key(s)", "Context"],
-    Lre.filter(Hi).map((t) => {
+    KEYBINDING_ACTION_IDS.filter(Hi).map((t) => {
       let o = e[t],
         s = o ? o.keys.map((r) => `\`${r}\``).join(", ") : "(none)",
         d = o ? o.context : Wi(t);
@@ -3179,14 +3179,14 @@ function Wi(e) {
 function qi() {
   let e = [];
   e.push("### Non-rebindable (errors)");
-  for (let t of X8e) e.push(`- \`${t.key}\` \u2014 ${t.reason}`);
+  for (let t of NON_REBINDABLE_KEYS) e.push(`- \`${t.key}\` \u2014 ${t.reason}`);
   (e.push(""), e.push("### Terminal reserved (errors/warnings)"));
-  for (let t of Fyn)
+  for (let t of TERMINAL_RESERVED_KEYS)
     e.push(
       `- \`${t.key}\` \u2014 ${t.reason} (${t.severity === "error" ? "will not work" : "may conflict"})`,
     );
   (e.push(""), e.push("### macOS reserved (errors)"));
-  for (let t of $yn) e.push(`- \`${t.key}\` \u2014 ${t.reason}`);
+  for (let t of MACOS_RESERVED_KEYS) e.push(`- \`${t.key}\` \u2014 ${t.reason}`);
   return e.join(`
 `);
 }
@@ -3220,7 +3220,7 @@ var Ki = {
     "## File Format",
     "",
     "```json",
-    b(Ki, null, 2),
+    jsonStringify(Ki, null, 2),
     "```",
     "",
     "Always include the `$schema` and `$docs` fields.",
@@ -3248,7 +3248,7 @@ var Ki = {
     "Set a key to `null` to remove its default binding:",
     "",
     "```json",
-    b(Vi, null, 2),
+    jsonStringify(Vi, null, 2),
     "```",
   ].join(`
 `),
@@ -3266,12 +3266,12 @@ var Ki = {
     "### Rebind a key",
     "To change the external editor shortcut from `ctrl+g` to `ctrl+e`:",
     "```json",
-    b(Yi, null, 2),
+    jsonStringify(Yi, null, 2),
     "```",
     "",
     "### Add a chord binding",
     "```json",
-    b(zi, null, 2),
+    jsonStringify(zi, null, 2),
     "```",
   ].join(`
 `),
@@ -3346,7 +3346,7 @@ function So() {
       'Use when the user wants to customize keyboard shortcuts, rebind keys, add chord bindings, or modify ~/.claude/keybindings.json. Examples: "rebind ctrl+s", "add a chord shortcut", "change the submit key", "customize keybindings".',
     allowedTools: ["Read"],
     userInvocable: !1,
-    isEnabled: iN,
+    isEnabled: isKeybindingCustomizationEnabled,
     async getPromptForCommand(e) {
       let t = Fi(),
         o = Bi(),
@@ -3721,7 +3721,7 @@ function cs() {
   return isWhiteboardEnabled() && artifactCapabilitiesPromptGateOpen();
 }
 function ze() {
-  let e = ne();
+  let e = getArtifactState();
   if (e.whiteboardVariantLatch === null)
     e.whiteboardVariantLatch = isWhiteboardLiveEnabled() && artifactRoomSurfaceOpen() ? "live" : "solo";
   return e.whiteboardVariantLatch;
@@ -3755,7 +3755,7 @@ function Uo() {
       let t = ze() === "live",
         { SKILL_MD: o } = t ? await Mo() : await No(),
         s =
-          SOe(t ? ["data", "comments"] : ["comments"]) +
+          buildArtifactToolSpellingNote(t ? ["data", "comments"] : ["comments"]) +
           parseFrontmatter(o).content.trimStart();
       if (e.trim())
         s += `
@@ -4664,7 +4664,7 @@ ${d}`;
       }
       let t = toJsonSchema(getSettingsSchema(), { io: "input" });
       stripInternalSchemaDescriptions(t, !1);
-      let o = b(t, null, 2),
+      let o = jsonStringify(t, null, 2),
         s = Ps;
       if (
         ((s += `

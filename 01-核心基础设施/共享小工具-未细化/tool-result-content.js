@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { useTerminalSize } from "./use-terminal-size.js";
-import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Vye } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useTheme } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t, jr } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text, Ansi } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "./tool-result-row.js";
 import { VirtualScrollViewportContext } from "./virtual-scroll-viewport-context.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -37,12 +37,12 @@ function f() {
 }
 function C(r) {
   try {
-    let i = z(r),
-      s = b(i),
+    let i = jsonParse(r),
+      s = jsonStringify(i),
       o = r.replaceAll("\\/", "/").replace(/\s+/g, ""),
       m = s.replace(/\s+/g, "");
     if (o !== m) return r;
-    return b(i, null, 2);
+    return jsonStringify(i, null, 2);
   } catch {
     return r;
   }
@@ -103,11 +103,11 @@ function ToolResultContent(mr) {
   let O = L,
     S = cr ? "error" : fr ? "warning" : void 0,
     n;
-  if (p[9] !== O) ((n = e(jr, { children: O })), (p[9] = O), (p[10] = n));
+  if (p[9] !== O) ((n = e(Ansi, { children: O })), (p[9] = O), (p[10] = n));
   else n = p[10];
   let j;
   if (p[11] !== S || p[12] !== n)
-    ((j = e(ToolResultRow, { children: e(t, { color: S, children: n }) })),
+    ((j = e(ToolResultRow, { children: e(Text, { color: S, children: n }) })),
       (p[11] = S),
       (p[12] = n),
       (p[13] = j));

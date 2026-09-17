@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 3 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { deflateSync, inflateRawSync } from "zlib";
 var z = {
     30: { r: 0, g: 0, b: 0 },
@@ -187,7 +187,7 @@ function ansiToPng(t, r = {}) {
     for (let h of o[b])
       for (let T of h.text) {
         let M = T.codePointAt(0),
-          w = te(T);
+          w = getStringWidth(T);
         if (w === 0) continue;
         let O = d + y * P * n,
           X = p + b * m * n,
@@ -204,7 +204,7 @@ function ansiToPng(t, r = {}) {
 }
 function U(t) {
   let r = 0;
-  for (let n of t) r += te(n.text);
+  for (let n of t) r += getStringWidth(n.text);
   return r;
 }
 function J(t, r) {

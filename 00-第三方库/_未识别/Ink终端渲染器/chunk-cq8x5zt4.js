@@ -54,7 +54,7 @@ function runSteps(o, t, c = {}) {
           V = () => {
             if (S && !g && !R && !M)
               g = O(() =>
-                import("../../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js").then((s) =>
+                import("../../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js").then((s) =>
                   s.markStartupDialogBlocked(),
                 ),
               );
@@ -66,7 +66,7 @@ function runSteps(o, t, c = {}) {
                 let I = await s;
                 if (I)
                   await (
-                    await import("../../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js")
+                    await import("../../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js")
                   ).clearStartupDialogBlocked(I);
               });
           },

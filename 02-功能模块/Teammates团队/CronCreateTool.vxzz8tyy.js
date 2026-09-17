@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { bB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getTeammateContext } from "./teammate-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";

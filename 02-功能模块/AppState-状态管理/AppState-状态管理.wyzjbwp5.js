@@ -119,7 +119,7 @@ function N(e) {
   }
   return Boolean(e);
 }
-function $lt() {
+function isQuotaAutoResumeEnabled() {
   let e = q();
   return N(W(e) ? e.enabled : e);
 }
@@ -127,23 +127,23 @@ function K() {
   return ld() && !isBgSession();
 }
 function de() {
-  return K() && $lt();
+  return K() && isQuotaAutoResumeEnabled();
 }
 function ce() {
   return N(U().autoArm);
 }
-function sLt() {
+function getAutoContinueAtUsageLimitSetting() {
   return getSecuritySensitiveSetting("autoContinueAtUsageLimit")[0];
 }
-function Ult() {
+function getEffectiveAutoContinueAtUsageLimit() {
   return T(a());
 }
 function T(e) {
-  let t = sLt();
+  let t = getAutoContinueAtUsageLimitSetting();
   if (t !== void 0) return t;
   return e.autoContinueKeyPresence === "absent";
 }
-function v2n(e) {
+function cancelAutoResumeOnConversationReset(e) {
   let t = a();
   if (e === "auto_restore_cancel") return;
   if (!d(t)) return;
@@ -175,7 +175,7 @@ async function A(e, t = le) {
     )),
       e.unknowableRescanTimer.unref?.());
 }
-function Blt() {
+function isAutoContinueSettingUserControlled() {
   let e = getSecuritySensitiveSettingWithSources("autoContinueAtUsageLimit")[0]?.source;
   return e === void 0 || e === "userSettings";
 }
@@ -188,13 +188,13 @@ function iLt(e) {
     e.overageInUse !== !0
   );
 }
-function Zle(e) {
+function canOfferQuotaAutoResume(e) {
   return isClaudeAISubscriber() && getOauthAccountInfo()?.billingType !== "usage_based" && iLt(e) && de();
 }
-function C4() {
+function getAutoResumeState() {
   return a().state;
 }
-function R2n() {
+function isAutoResumeAutoArmed() {
   let e = a();
   return e.state.phase === "armed" && e.episodeArmOrigin === "auto";
 }
@@ -203,10 +203,10 @@ function F(e) {
   if (t.status === "rejected" && t.resetsAt !== void 0)
     e.armedResetKeys.add(t.resetsAt);
 }
-function O3e(e) {
+function isAutoResumeArmedForReset(e) {
   return a().armedResetKeys.has(e);
 }
-function v4() {
+function hasArmedQuotaAutoResume() {
   return a().state.phase === "armed";
 }
 function d(e) {
@@ -228,29 +228,29 @@ function _(e, t) {
     (t.uuid === e.pendingContinuationUuid || e.takeoverUuids.has(t.uuid))
   );
 }
-function nrn() {
+function isAutoResumeEpisodeActive() {
   return d(a());
 }
-function wee(e) {
+function isAutoResumeWaitingPhase(e) {
   return k(a(), e);
 }
 function k(e, t) {
   return t === "armed" || t === "stale" || x(e);
 }
-function xIe() {
+function hasPendingAutoContinuation() {
   return x(a());
 }
 function x(e) {
   let t = e.pendingContinuationUuid;
   return t !== null && getCommandQueue().some((n) => n.uuid === t);
 }
-function aLt(e) {
+function isAutoContinuationUuid(e) {
   return e !== void 0 && e === a().pendingContinuationUuid;
 }
-function HIe(e) {
+function subscribeToAutoResumeEvents(e) {
   return a().events.subscribe(e);
 }
-function rrn(e) {
+function subscribeToAutoResumeState(e) {
   return a().changed.subscribe(e);
 }
 function m(e, t) {
@@ -268,11 +268,11 @@ function pe(e, t, n) {
   let s = O[t] ?? O.at(-1) ?? 0;
   return Math.max(o, n + s);
 }
-function orn(e, t = Date.now(), n = "dialog", o) {
+function armAutoResume(e, t = Date.now(), n = "dialog", o) {
   return G(a(), e, t, n, o);
 }
 function G(e, t, n, o, s) {
-  if (!Zle(t)) return !1;
+  if (!canOfferQuotaAutoResume(t)) return !1;
   (X(e, s),
     (e.consecutiveRearms = 0),
     e.takeoverUuids.clear(),
@@ -290,9 +290,9 @@ function G(e, t, n, o, s) {
     !0
   );
 }
-function k2n(e, t = Date.now(), n) {
+function maybeAutoArmAutoResume(e, t = Date.now(), n) {
   let o = a();
-  if (!Zle(e)) return !1;
+  if (!canOfferQuotaAutoResume(e)) return !1;
   if (o.handoffInProgress) return !1;
   if (!T(o) || !ce()) return !1;
   if (isUnattendedInteractiveSession()) return !1;
@@ -325,13 +325,13 @@ function z(e, t, n, o, s = "dialog") {
       consecutiveRearms: e.consecutiveRearms,
     }));
 }
-function IIe() {
+function recheckAutoResume() {
   Re(a());
 }
-function R4(e) {
+function withAutoResumeRecheck(e) {
   return (...t) => {
     let n = e(...t);
-    if (n !== !1) IIe();
+    if (n !== !1) recheckAutoResume();
     return n;
   };
 }
@@ -411,7 +411,7 @@ function Ae(e) {
       return !1;
   }
 }
-function Jx(e) {
+function cancelAutoResume(e) {
   Q(a(), e);
 }
 function Q(e, t) {
@@ -422,7 +422,7 @@ function Q(e, t) {
     logEvent("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   if ((b(e, t), n && he(t))) e.events.emit("cancelled");
 }
-var jlt = {
+var AUTO_RESUME_CANCEL_MESSAGES = {
   background_handoff:
     "Automatic continue cancelled \xB7 this session moved to the background, so the task will not resume on its own when the usage limit resets",
   relaunch:
@@ -434,16 +434,16 @@ var jlt = {
   process_exit:
     "Automatic continue cancelled \xB7 Claude Code exited during the wait, so the task will not resume on its own when the usage limit resets (send a prompt after the reset to continue)",
 };
-function Wlt(e) {
+function cancelAutoResumeForHandoff(e) {
   let t = a();
   if (((t.handoffInProgress = !0), !d(t))) return !1;
   let n = k(t, t.state.phase);
   return (Q(t, e), n);
 }
-function Tee() {
+function clearHandoffInProgress() {
   a().handoffInProgress = !1;
 }
-function Glt(e, { dispatching: t = !1 } = {}) {
+function registerAutoResumeTakeover(e, { dispatching: t = !1 } = {}) {
   let n = a();
   if (!d(n)) return;
   if ((Y(n), n.takeoverUuids.add(e), t)) n.dispatchingTakeoverUuids.add(e);
@@ -488,7 +488,7 @@ function b(e, t) {
   if (_e(t)) logEvent("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   m(e, { phase: "idle" });
 }
-function srn(e, t) {
+function tickAutoResume(e, t) {
   let n = a();
   if (n.state.phase !== "armed" || p(n)) return "idle";
   let o = n.lastObservedMs ?? n.state.fireAtMs;
@@ -536,14 +536,14 @@ function V(e, t = L) {
       workload: CRON_WORKLOAD_NAME,
     }));
 }
-function irn() {
-  return arn() ? L : null;
+function getStaleAutoResumePrompt() {
+  return isAutoResumeStale() ? L : null;
 }
-function arn() {
+function isAutoResumeStale() {
   let e = a();
   return e.state.phase === "stale" && !p(e);
 }
-function x2n(e) {
+function dropPendingAutoContinuation(e) {
   let t = a(),
     n = t.pendingContinuationUuid;
   if (n === null || !e.some((o) => o.uuid === n)) return e;
@@ -553,7 +553,7 @@ function x2n(e) {
 function be(e) {
   if (e.episodeArmOrigin !== "auto" || T(e))
     return ((e.revocationRescan = "idle"), !1);
-  if (sLt() === void 0 && e.autoContinueKeyPresence === "unknowable") {
+  if (getAutoContinueAtUsageLimitSetting() === void 0 && e.autoContinueKeyPresence === "unknowable") {
     if (e.revocationRescan === "idle") {
       e.revocationRescan = "pending";
       let t = ++e.revocationRescanGeneration;
@@ -573,7 +573,7 @@ function be(e) {
   return ((e.revocationRescan = "idle"), !0);
 }
 function p(e) {
-  if (!$lt()) return (v(e, "killswitch"), !0);
+  if (!isQuotaAutoResumeEnabled()) return (v(e, "killswitch"), !0);
   if (be(e)) return (v(e, "setting_off"), !0);
   return !1;
 }
@@ -600,7 +600,7 @@ function v(e, t) {
 function ve(e, t) {
   return e.episodeArmOrigin === "auto" && t * 1000 - Date.now() > P;
 }
-function H2n(e) {
+function claimAutoResumeTurn(e) {
   let t = a();
   for (let c of e.turnUuids) t.dispatchingTakeoverUuids.delete(c);
   let n =
@@ -630,7 +630,7 @@ function H2n(e) {
   let I = { kind: l, queried: e.willQuery };
   return ((t.activeTurnClaim = I), t.changed.emit(), I);
 }
-function I2n(e, t) {
+function releaseAutoResumeTurn(e, t) {
   let n = a();
   for (let r of t) n.dispatchingTakeoverUuids.delete(r);
   if (e !== null) {
@@ -752,7 +752,7 @@ function R(e, t) {
   }
   return !1;
 }
-function lrn(e) {
+function startAutoResumeSubscriptions(e) {
   X(a(), e);
 }
 function X(e, t) {
@@ -765,10 +765,10 @@ function X(e, t) {
       A(e);
     })),
     (e.unsubscribeSessionSwitch = sc((n, o) => {
-      if (D3e(o)) (Q(e, "conversation_reset"), (e.handoffInProgress = !1));
+      if (isConversationResetSwitchReason(o)) (Q(e, "conversation_reset"), (e.handoffInProgress = !1));
     })));
 }
-function D3e(e) {
+function isConversationResetSwitchReason(e) {
   switch (e) {
     case "clear":
     case "resume":
@@ -783,38 +783,38 @@ function D3e(e) {
   }
 }
 export {
-  $lt,
-  sLt,
-  Ult,
-  v2n,
-  Blt,
+  isQuotaAutoResumeEnabled,
+  getAutoContinueAtUsageLimitSetting,
+  getEffectiveAutoContinueAtUsageLimit,
+  cancelAutoResumeOnConversationReset,
+  isAutoContinueSettingUserControlled,
   iLt,
-  Zle,
-  C4,
-  R2n,
-  O3e,
-  v4,
-  nrn,
-  wee,
-  xIe,
-  aLt,
-  HIe,
-  rrn,
-  orn,
-  k2n,
-  IIe,
-  R4,
-  Jx,
-  jlt,
-  Wlt,
-  Tee,
-  Glt,
-  srn,
-  irn,
-  arn,
-  x2n,
-  H2n,
-  I2n,
-  lrn,
-  D3e,
+  canOfferQuotaAutoResume,
+  getAutoResumeState,
+  isAutoResumeAutoArmed,
+  isAutoResumeArmedForReset,
+  hasArmedQuotaAutoResume,
+  isAutoResumeEpisodeActive,
+  isAutoResumeWaitingPhase,
+  hasPendingAutoContinuation,
+  isAutoContinuationUuid,
+  subscribeToAutoResumeEvents,
+  subscribeToAutoResumeState,
+  armAutoResume,
+  maybeAutoArmAutoResume,
+  recheckAutoResume,
+  withAutoResumeRecheck,
+  cancelAutoResume,
+  AUTO_RESUME_CANCEL_MESSAGES,
+  cancelAutoResumeForHandoff,
+  clearHandoffInProgress,
+  registerAutoResumeTakeover,
+  tickAutoResume,
+  getStaleAutoResumePrompt,
+  isAutoResumeStale,
+  dropPendingAutoContinuation,
+  claimAutoResumeTurn,
+  releaseAutoResumeTurn,
+  startAutoResumeSubscriptions,
+  isConversationResetSwitchReason,
 };

@@ -19,16 +19,16 @@ import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolvePathInfo, resolveSymlinkTargetSync, expandPathAliases, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { emitTaskNotification, getOwnValue, isForegroundSubagentContext, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, POWERSHELL_TOOL_NAME, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { getContainingDirectory, containsPathTraversal } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { INLINE_CODE_FLAGS, isOutsideReadsBlockedAsk, outsideReadsRuntimePathAsk, outsideReadsTooComplexAsk, BASH_COMMAND_CLAMP_DENY_REASON, BASH_COMMAND_CLAMP_CRASH_REASON } from "../权限系统/chunk-e4pfvp7x.js";
-import { hge, Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { OUTPUT_MAX_CHARS_CEILING, TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getHostCapabilityState, areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import {
   isWindowsNetworkPath,
@@ -43,7 +43,7 @@ import {
   matchingRuleForInput,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isBashToolAvailable, isGetTaskToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
@@ -119,36 +119,36 @@ import {
   storeShellOutputToStorage,
   KNOWN_COMMAND_NAMES,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir, getTaskOutputPath, persistTaskOutputSnapshot } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { ZNe, g7e, Vpe, _7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir, getTaskOutputPath, persistTaskOutputSnapshot } from "../后台任务-Shell管理/task-output.js";
+import { PREVIEW_CHAR_BUDGET, buildToolResultFilePath, formatPersistedOutputMessage, buildPreviewSlice } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
-  Swe,
-  RF,
-  Fv,
-  yM,
-  S2,
-  tw,
-  Ycn,
-  Jcn,
-  mGn,
-  x$t,
-  gk,
-  H$t,
-  I$t,
-  Ef,
-  xft,
-  OOe,
-  Qcn,
-  Zcn,
-  gGn,
-  P$t,
-  DOe,
-  LOe,
-  bwe,
-  eun,
-  tun,
-  nun,
-} from "./chunk-8sjdj5bm.js";
+  POWERSHELL_WHITESPACE_REGEX,
+  stripLeadingWhitespaceAndComments,
+  stripAllQuotes,
+  stripSurroundingQuotes,
+  normalizeQuotedString,
+  unescapeBacktickEscapes,
+  COMMON_SWITCH_PARAMETERS,
+  COMMON_VALUE_PARAMETERS,
+  POWERSHELL_APPROVED_VERBS,
+  stripTrailingSpacesAndDots,
+  hasUnvalidatableArguments,
+  getBaseNameStems,
+  getBaseNameVariants,
+  getCanonicalCommandName,
+  isDirectoryChangeCommand,
+  isOutNullCommand,
+  isSafeFormattingCommand,
+  isPipelineOfCommands,
+  hasComplexCommandSyntax,
+  isReadOnlyCommand,
+  hasActionPreferenceArgument,
+  hasVariableWritingArgument,
+  isCommandSafe,
+  SCRIPT_FILE_EXECUTION_COMMANDS,
+  ARBITRARY_CODE_EXECUTION_COMMANDS,
+  MODULE_OR_SCRIPT_INSTALL_COMMANDS,
+} from "./powershell-command-safety.js";
 import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { s, T, O, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -648,21 +648,21 @@ function Et(e) {
   return r;
 }
 function Pn(e) {
-  return je(e, Fv);
+  return je(e, stripAllQuotes);
 }
 function ze(e) {
-  let t = new Set([je(e, (o) => o), Pn(e), je(e, yM), je(e, S2)]);
+  let t = new Set([je(e, (o) => o), Pn(e), je(e, stripSurroundingQuotes), je(e, normalizeQuotedString)]);
   return Array.from(t);
 }
 function je(e, t) {
   let o = e;
-  if (((o = RF(o)), o.length > 0 && (PARAMETER_PREFIX_CHARS.has(o[0]) || o[0] === "/"))) {
+  if (((o = stripLeadingWhitespaceAndComments(o)), o.length > 0 && (PARAMETER_PREFIX_CHARS.has(o[0]) || o[0] === "/"))) {
     let a = o.indexOf(":", 1);
-    if (a > 0) o = RF(o.slice(a + 1));
+    if (a > 0) o = stripLeadingWhitespaceAndComments(o.slice(a + 1));
   }
   if (
     ((o = t(o)),
-    (o = tw(o)),
+    (o = unescapeBacktickEscapes(o)),
     (o = o.replace(/^(?:[A-Za-z0-9_.]+\\){0,3}FileSystem::/i, "")),
     (o = o.replace(/^[A-Za-z]:(?![/\\])/, "./")),
     (o = o.replaceAll("\\", "/")),
@@ -702,11 +702,11 @@ function be(e) {
 }
 var kn = ["head", "objects", "refs", "hooks"];
 function At(e) {
-  let t = ae(),
+  let t = getFsSurface(),
     o = getCwd(),
     r = _t(o, e),
-    a = D0(t, r) ?? r,
-    d = Ro(t, o).resolvedPath,
+    a = resolveSymlinkTargetSync(t, r) ?? r,
+    d = resolvePathInfo(t, o).resolvedPath,
     f = d.endsWith(Je) ? d : d + Je,
     b = be(a),
     p = be(d),
@@ -798,14 +798,14 @@ function Ct(e) {
   return /[*?[\]$]/.test(e);
 }
 function On(e) {
-  let t = ae(),
+  let t = getFsSurface(),
     o = getCwd(),
     r = _t(o, e),
-    a = An(r) ? r : (D0(t, r) ?? r),
-    d = Ro(t, o).resolvedPath,
+    a = An(r) ? r : (resolveSymlinkTargetSync(t, r) ?? r),
+    d = resolvePathInfo(t, o).resolvedPath,
     f = be(a);
   if (be(d) === f) return !0;
-  let b = Ro(t, he()).resolvedPath,
+  let b = resolvePathInfo(t, he()).resolvedPath,
     p = relative(b, d);
   if (p === ".." || p.startsWith(".." + Je) || vn(p)) return !1;
   let I = be(b),
@@ -824,7 +824,7 @@ function Ot(e, t = !1) {
     f = !1,
     b = [];
   for (let L = 0; L < e.length; L++) {
-    let _ = RF(e[L]);
+    let _ = stripLeadingWhitespaceAndComments(e[L]);
     if (_.length === 0 || !PARAMETER_PREFIX_CHARS.has(_[0])) {
       r.push(e[L]);
       continue;
@@ -841,8 +841,8 @@ function Ot(e, t = !1) {
     if (Number(F) + Number(W) + Number(E) + Number(z) !== 1) return !0;
     if (E) {
       if ("container".startsWith(C) && A !== void 0) {
-        let G = RF(A);
-        if (![Fv, yM, S2].every((se) => /^\$true$/i.test(se(G).trim()))) f = !0;
+        let G = stripLeadingWhitespaceAndComments(A);
+        if (![stripAllQuotes, stripSurroundingQuotes, normalizeQuotedString].every((se) => /^\$true$/i.test(se(G).trim()))) f = !0;
       }
       continue;
     }
@@ -888,7 +888,7 @@ var In = new Set([
   "clear-content",
 ]);
 function et(e) {
-  let t = Ef(e);
+  let t = getCanonicalCommandName(e);
   return In.has(t);
 }
 var Ln = new Set(["symboliclink", "junction", "hardlink"]);
@@ -899,17 +899,17 @@ function Nn(e) {
   );
 }
 function nt(e) {
-  if (Ef(e.name) !== "new-item") return !1;
+  if (getCanonicalCommandName(e.name) !== "new-item") return !1;
   for (let o = 0; o < e.args.length; o++) {
     let r = e.args[o] ?? "";
     if (r.length === 0) continue;
     let d = (PARAMETER_PREFIX_CHARS.has(r[0]) || r[0] === "/" ? "-" + r.slice(1) : r).toLowerCase(),
       f = d.indexOf(":", 1),
       b = f > 0 ? d.slice(0, f) : d,
-      p = tw(b.replace(/`[\r\n]+\s*/g, "")).toLowerCase();
+      p = unescapeBacktickEscapes(b.replace(/`[\r\n]+\s*/g, "")).toLowerCase();
     if (!Nn(p)) continue;
     let I = f > 0 ? d.slice(f + 1) : (e.args[o + 1]?.toLowerCase() ?? ""),
-      x = Fv(RF(tw(I.replace(/`[\r\n]+\s*/g, "")))).toLowerCase();
+      x = stripAllQuotes(stripLeadingWhitespaceAndComments(unescapeBacktickEscapes(I.replace(/`[\r\n]+\s*/g, "")))).toLowerCase();
     if (/[?*[\]($]/.test(x)) return !0;
     for (let y of Ln) if (x.length > 0 && y.startsWith(x)) return !0;
   }
@@ -969,7 +969,7 @@ function ot(e, t, o) {
     for (let I of a)
       for (let x of I.commands) {
         if (x.elementType !== "CommandAst") continue;
-        if (xft(x.name)) b = !0;
+        if (isDirectoryChangeCommand(x.name)) b = !0;
         if (et(x.name)) p = !0;
       }
     if (b && p)
@@ -1010,19 +1010,19 @@ function ot(e, t, o) {
               };
           }
         }
-      if (LOe(p.args, p.elementTypes) || DOe(p.args, p.elementTypes))
+      if (hasVariableWritingArgument(p.args, p.elementTypes) || hasActionPreferenceArgument(p.args, p.elementTypes))
         return {
           behavior: "passthrough",
           message: `Variable-writing or ActionPreference argument in '${p.name}' requires approval`,
         };
-      if (OOe(p.name) && p.args.length === 0) continue;
-      if (Qcn(p, e.command)) continue;
+      if (isOutNullCommand(p.name) && p.args.length === 0) continue;
+      if (isSafeFormattingCommand(p, e.command)) continue;
       if (!et(p.name))
         return {
           behavior: "passthrough",
           message: `No mode-specific handling for '${p.name}' in acceptEdits mode`,
         };
-      if (gk(p.name, p))
+      if (hasUnvalidatableArguments(p.name, p))
         return {
           behavior: "passthrough",
           message: `Arguments in '${p.name}' cannot be statically validated in acceptEdits mode`,
@@ -1040,19 +1040,19 @@ function ot(e, t, o) {
             behavior: "passthrough",
             message: `Nested command '${p.name}' resolved from a path-like name and requires approval`,
           };
-        if (LOe(p.args, p.elementTypes) || DOe(p.args, p.elementTypes))
+        if (hasVariableWritingArgument(p.args, p.elementTypes) || hasActionPreferenceArgument(p.args, p.elementTypes))
           return {
             behavior: "passthrough",
             message: `Variable-writing or ActionPreference argument in nested '${p.name}' requires approval`,
           };
-        if (OOe(p.name) && p.args.length === 0) continue;
-        if (Qcn(p, e.command)) continue;
+        if (isOutNullCommand(p.name) && p.args.length === 0) continue;
+        if (isSafeFormattingCommand(p, e.command)) continue;
         if (!et(p.name))
           return {
             behavior: "passthrough",
             message: `No mode-specific handling for '${p.name}' in acceptEdits mode`,
           };
-        if (gk(p.name, p))
+        if (hasUnvalidatableArguments(p.name, p))
           return {
             behavior: "passthrough",
             message: `Arguments in nested '${p.name}' cannot be statically validated in acceptEdits mode`,
@@ -1664,8 +1664,8 @@ function Vn(e) {
   return [
     ["path", e.pathParams],
     ["leafOnly", e.leafOnlyPathParams ?? []],
-    ["switch", [...e.knownSwitches, ...Ycn]],
-    ["value", [...e.knownValueParams, ...Jcn]],
+    ["switch", [...e.knownSwitches, ...COMMON_SWITCH_PARAMETERS]],
+    ["value", [...e.knownValueParams, ...COMMON_VALUE_PARAMETERS]],
   ];
 }
 function Wn(e, t) {
@@ -1697,12 +1697,12 @@ function Fe(e) {
     .split(/([/\\])/)
     .map((t, o) => {
       if (o % 2 !== 0) return t;
-      return x$t(t);
+      return stripTrailingSpacesAndDots(t);
     })
     .join("");
 }
 function Ge(e) {
-  return RF(e);
+  return stripLeadingWhitespaceAndComments(e);
 }
 function at(e) {
   if (/['"\u2018-\u201F]/.test(e)) return !0;
@@ -1732,7 +1732,7 @@ function xe(e) {
   return e;
 }
 function $e(e) {
-  let t = new Set([Fv(e), yM(e), S2(e)]);
+  let t = new Set([stripAllQuotes(e), stripSurroundingQuotes(e), normalizeQuotedString(e)]);
   for (let o of t) {
     let r = o,
       a = r.indexOf("::");
@@ -1743,25 +1743,25 @@ function $e(e) {
   return !1;
 }
 function It(e, t) {
-  let o = new Set([e, yM(e), S2(e)]);
+  let o = new Set([e, stripSurroundingQuotes(e), normalizeQuotedString(e)]);
   for (let r of [...o]) {
-    if (r.includes("`")) o.add(tw(r));
+    if (r.includes("`")) o.add(unescapeBacktickEscapes(r));
     if (r.includes("::")) {
       let a = r.slice(r.indexOf("::") + 2);
-      if ((o.add(a), a.includes("`"))) o.add(tw(a));
+      if ((o.add(a), a.includes("`"))) o.add(unescapeBacktickEscapes(a));
     }
   }
   for (let r of o) {
     let a = Fe(xe(r).replace(/\\/g, "/"));
     if (a === "") continue;
     let d = Pe(a) ? a : Ce(t, a),
-      { resolvedPath: f } = Ro(ae(), d);
+      { resolvedPath: f } = resolvePathInfo(getFsSurface(), d);
     if (isProtectedSystemPath(f)) return f;
   }
   return null;
 }
 function ie(e) {
-  return Fv(e) === e;
+  return stripAllQuotes(e) === e;
 }
 function Re(e) {
   return {
@@ -1778,28 +1778,28 @@ function De(e, t, o, r) {
   if (!e || e.includes("\x00")) return null;
   let a = xe(Fe(e)),
     d = Pe(a) ? a : Ce(t, a),
-    { resolvedPath: f } = Ro(ae(), d),
+    { resolvedPath: f } = resolvePathInfo(getFsSurface(), d),
     b = r === "read" ? "read" : "edit";
-  for (let p of Tr(f)) {
+  for (let p of expandPathAliases(f)) {
     let I = matchingRuleForInput(p, o, b, "deny");
     if (I !== null) return { resolvedPath: f, rule: I };
   }
   return null;
 }
 function Ee(e, t, o, r) {
-  let a = Fv(e),
+  let a = stripAllQuotes(e),
     d = a !== e;
   if (d) {
     let w = new Set();
     for (let C of [
       e.replaceAll("\\", "/"),
-      yM(e).replaceAll("\\", "/"),
-      S2(e).replaceAll("\\", "/"),
+      stripSurroundingQuotes(e).replaceAll("\\", "/"),
+      normalizeQuotedString(e).replaceAll("\\", "/"),
     ]) {
-      if ((w.add(C), C.includes("`"))) w.add(tw(C));
+      if ((w.add(C), C.includes("`"))) w.add(unescapeBacktickEscapes(C));
       if (C.includes("::")) {
         let A = C.slice(C.indexOf("::") + 2);
-        if ((w.add(A), A.includes("`"))) w.add(tw(A));
+        if ((w.add(A), A.includes("`"))) w.add(unescapeBacktickEscapes(A));
       }
     }
     for (let C of w) {
@@ -1833,7 +1833,7 @@ function Ee(e, t, o, r) {
       },
     };
   if (p.includes("`")) {
-    let w = tw(p),
+    let w = unescapeBacktickEscapes(p),
       C = De(w, t, o, r);
     if (C)
       return {
@@ -1936,11 +1936,11 @@ function Ee(e, t, o, r) {
             "Glob patterns are not allowed in write operations. Please specify an exact file path.",
         },
       };
-    if (Iq(p)) {
+    if (containsPathTraversal(p)) {
       let W = Pe(p) ? p : Ce(t, p),
-        { resolvedPath: E } = Ro(ae(), W),
+        { resolvedPath: E } = resolvePathInfo(getFsSurface(), W),
         z = r === "read" ? "read" : "edit";
-      for (let B of Tr(E)) {
+      for (let B of expandPathAliases(E)) {
         let q = matchingRuleForInput(B, o, z, "deny");
         if (q !== null)
           return {
@@ -1962,7 +1962,7 @@ function Ee(e, t, o, r) {
     }
     let w = Bn(p),
       C = Pe(w) ? w : Ce(t, w),
-      { resolvedPath: A } = Ro(ae(), C),
+      { resolvedPath: A } = resolvePathInfo(getFsSurface(), C),
       j = matchingRuleForInput(A, o, r === "read" ? "read" : "edit", "deny");
     if (j !== null)
       return {
@@ -1981,7 +1981,7 @@ function Ee(e, t, o, r) {
     };
   }
   let x = Pe(p) ? p : Ce(t, p),
-    { resolvedPath: y, isCanonical: L } = Ro(ae(), x),
+    { resolvedPath: y, isCanonical: L } = resolvePathInfo(getFsSurface(), x),
     _ = checkPathPermission(y, o, r, L ? [y] : void 0);
   if (d && _.allowed) return f(y);
   if (d && !_.allowed && _.decisionReason?.type === "safetyCheck")
@@ -2020,7 +2020,7 @@ var jn = new Set(["StringConstant", "Parameter"]),
     "test-path",
   ]);
 function Lt(e) {
-  let t = Ef(e.name),
+  let t = getCanonicalCommandName(e.name),
     o = getOwnValue(it, t);
   if (!o)
     return {
@@ -2135,7 +2135,7 @@ function Mt(e, t, o, r = !1) {
   );
 }
 function qn(e, t, o, r) {
-  let a = Ef(e.name),
+  let a = getCanonicalCommandName(e.name),
     d = e.elementTypes,
     f = e.name
       .slice(Math.max(e.name.lastIndexOf("\\"), e.name.lastIndexOf("/")) + 1)
@@ -2187,7 +2187,7 @@ function qn(e, t, o, r) {
       let j = xe(A);
       if (An(j)) return outsideReadsRuntimePathAsk(a);
       let W = Pe(j) ? j : Ce(t, j);
-      if (!ae().existsSync(W)) continue;
+      if (!getFsSurface().existsSync(W)) continue;
       let E = Ee(A, t, o, "read");
       if (E.allowed) continue;
       if (E.decisionReason?.type === "rule")
@@ -2269,7 +2269,7 @@ function Gn(e, t, o = !1) {
         hasUnvalidatablePathArg: w,
         optionalWrite: C,
       } = Lt(y),
-      A = Ef(y.name),
+      A = getCanonicalCommandName(y.name),
       F = getOwnValue(it, A) !== void 0;
     if (f && !F) {
       let E = qn(y, r, t, o);
@@ -2280,14 +2280,14 @@ function Gn(e, t, o = !1) {
     let j = x;
     if (!zn.has(A)) x = !0;
     if (p) {
-      let E = Ef(y.name);
+      let E = getCanonicalCommandName(y.name);
       if (I !== void 0) {
         let z = new Set();
-        for (let B of [I, Fv(I), yM(I), S2(I)]) {
-          if ((z.add(B), B.includes("`"))) z.add(tw(B));
+        for (let B of [I, stripAllQuotes(I), stripSurroundingQuotes(I), normalizeQuotedString(I)]) {
+          if ((z.add(B), B.includes("`"))) z.add(unescapeBacktickEscapes(B));
           if (B.includes("::")) {
             let q = B.slice(B.indexOf("::") + 2);
-            if ((z.add(q), q.includes("`"))) z.add(tw(q));
+            if ((z.add(q), q.includes("`"))) z.add(unescapeBacktickEscapes(q));
           }
         }
         for (let B of z) {
@@ -2310,7 +2310,7 @@ function Gn(e, t, o = !1) {
         d ??= outsideReadsRuntimePathAsk(A);
     }
     if (w) {
-      let E = Ef(y.name);
+      let E = getCanonicalCommandName(y.name);
       if (
         ((a ??= {
           behavior: "ask",
@@ -2337,7 +2337,7 @@ function Gn(e, t, o = !1) {
       )
         d ??= outsideReadsRuntimePathAsk(A);
     }
-    let W = Ef(y.name) === "remove-item";
+    let W = getCanonicalCommandName(y.name) === "remove-item";
     if (W) {
       if (
         y.args.some((z) => {
@@ -2383,7 +2383,7 @@ function Gn(e, t, o = !1) {
         if (G !== null) return Re(G);
       }
       if (!z) {
-        let G = Ef(y.name),
+        let G = getCanonicalCommandName(y.name),
           J = Array.from(allWorkingDirectories(t)),
           se = He(J),
           ee =
@@ -2395,12 +2395,12 @@ function Gn(e, t, o = !1) {
         let oe = [];
         if (B && ie(E))
           if (_ === "read") {
-            let ye = buildDirectoryReadRuleUpdate(nL(B), "session");
+            let ye = buildDirectoryReadRuleUpdate(getContainingDirectory(B), "session");
             if (ye) oe.push(ye);
           } else
             oe.push({
               type: "addDirectories",
-              directories: [nL(B)],
+              directories: [getContainingDirectory(B)],
               destination: "session",
             });
         if (
@@ -2432,7 +2432,7 @@ function Gn(e, t, o = !1) {
           hasUnvalidatablePathArg: w,
           optionalWrite: C,
         } = Lt(y),
-        A = Ef(y.name);
+        A = getCanonicalCommandName(y.name);
       if (w) {
         if (
           ((a ??= {
@@ -2450,7 +2450,7 @@ function Gn(e, t, o = !1) {
         };
         continue;
       }
-      let F = Ef(y.name) === "remove-item";
+      let F = getCanonicalCommandName(y.name) === "remove-item";
       for (let j of L) {
         if (F && $e(j)) return Re(j);
         let { allowed: W, resolvedPath: E, decisionReason: z } = Ee(j, r, t, _);
@@ -2471,7 +2471,7 @@ function Gn(e, t, o = !1) {
           if (B !== null) return Re(B);
         }
         if (!W) {
-          let B = Ef(y.name),
+          let B = getCanonicalCommandName(y.name),
             q = Array.from(allWorkingDirectories(t)),
             G = He(q),
             J =
@@ -2483,12 +2483,12 @@ function Gn(e, t, o = !1) {
           let se = [];
           if (E && ie(j))
             if (_ === "read") {
-              let oe = buildDirectoryReadRuleUpdate(nL(E), "session");
+              let oe = buildDirectoryReadRuleUpdate(getContainingDirectory(E), "session");
               if (oe) se.push(oe);
             } else
               se.push({
                 type: "addDirectories",
-                directories: [nL(E)],
+                directories: [getContainingDirectory(E)],
                 destination: "session",
               });
           if (
@@ -2514,7 +2514,7 @@ function Gn(e, t, o = !1) {
       if (p)
         a ??= {
           behavior: "ask",
-          message: `${Ef(y.name)} appears inside a control-flow or chain statement where piped expression sources cannot be statically validated and requires manual approval`,
+          message: `${getCanonicalCommandName(y.name)} appears inside a control-flow or chain statement where piped expression sources cannot be statically validated and requires manual approval`,
         };
     }
   if (e.nestedCommands) {
@@ -2547,7 +2547,7 @@ function Gn(e, t, o = !1) {
                 ? [
                     {
                       type: "addDirectories",
-                      directories: [nL(w)],
+                      directories: [getContainingDirectory(w)],
                       destination: "session",
                     },
                   ]
@@ -2584,7 +2584,7 @@ function Gn(e, t, o = !1) {
             ? [
                 {
                   type: "addDirectories",
-                  directories: [nL(_)],
+                  directories: [getContainingDirectory(_)],
                   destination: "session",
                 },
               ]
@@ -2950,7 +2950,7 @@ function as(e) {
   for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase(),
       r = POWERSHELL_COMMAND_ALIASES[o]?.toLowerCase() ?? o;
-    if (!eun.has(r)) continue;
+    if (!SCRIPT_FILE_EXECUTION_COMMANDS.has(r)) continue;
     if (Me(t, "-filepath", "-f") || Me(t, "-literalpath", "-l"))
       return {
         behavior: "ask",
@@ -3002,13 +3002,13 @@ function ls(e) {
       };
     if (t.children)
       for (let r = 0; r < t.args.length; r++) {
-        let a = tw(t.args[r].replace(/`[\r\n]+\s*/g, ""));
+        let a = unescapeBacktickEscapes(t.args[r].replace(/`[\r\n]+\s*/g, ""));
         if (!/^[-\u2013\u2014\u2015/]v[a-z]*:/i.test(a)) continue;
         let d = t.children[r];
         if (!d) continue;
         for (let f of d)
           if (
-            tw(f.text)
+            unescapeBacktickEscapes(f.text)
               .replace(/['"\u2018-\u201F\s]/g, "")
               .toLowerCase() === "runas"
           )
@@ -3019,7 +3019,7 @@ function ls(e) {
       }
     if (
       t.args.some((r) => {
-        let a = tw(r.replace(/`[\r\n]+\s*/g, ""));
+        let a = unescapeBacktickEscapes(r.replace(/`[\r\n]+\s*/g, ""));
         return /^[-\u2013\u2014\u2015/]v[a-z]*:['"` \u2018-\u201f]*runas['"` \u2018-\u201f]*$/i.test(
           a,
         );
@@ -3030,7 +3030,7 @@ function ls(e) {
         message: "Command requests elevated privileges",
       };
     for (let r of t.args) {
-      let a = Fv(r);
+      let a = stripAllQuotes(r);
       if (ut(a))
         return {
           behavior: "ask",
@@ -3055,7 +3055,7 @@ function cs(e) {
   if (!getCommandSecurityPatterns(e).hasScriptBlocks) return { behavior: "passthrough" };
   for (let r of getCommandNodes(e)) {
     let a = r.name.toLowerCase();
-    if (tun.has(a))
+    if (ARBITRARY_CODE_EXECUTION_COMMANDS.has(a))
       return {
         behavior: "ask",
         message:
@@ -3201,7 +3201,7 @@ function vs(e) {
 function Ss(e) {
   for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
-    if (nun.has(o))
+    if (MODULE_OR_SCRIPT_INSTALL_COMMANDS.has(o))
       return {
         behavior: "ask",
         message:
@@ -3391,9 +3391,9 @@ function pt(e, t, o, r) {
     if (r === "allow") return _;
     return getPowerShellCommandName(_);
   }
-  let p = a.split(Swe)[0] ?? "",
+  let p = a.split(POWERSHELL_WHITESPACE_REGEX)[0] ?? "",
     I = getPowerShellCommandName(p),
-    x = Ef(I),
+    x = getCanonicalCommandName(I),
     y = a.slice(p.length).replace(/^[\s\u0085\u180e]+/, " "),
     L = x + y;
   return Array.from(t.entries())
@@ -3429,14 +3429,14 @@ function pt(e, t, o, r) {
       if (A(a)) return !0;
       if (A(L)) return !0;
       if (C.type === "exact") {
-        let F = C.command.split(Swe)[0] ?? "";
-        if (Ef(b(F)) === x) {
+        let F = C.command.split(POWERSHELL_WHITESPACE_REGEX)[0] ?? "";
+        if (getCanonicalCommandName(b(F)) === x) {
           let W = C.command.slice(F.length).replace(/^[\s\u0085\u180e]+/, " ");
           if (d(W, y)) return !0;
         }
       } else if (C.type === "prefix") {
-        let F = C.prefix.split(Swe)[0] ?? "";
-        if (Ef(b(F)) === x) {
+        let F = C.prefix.split(POWERSHELL_WHITESPACE_REGEX)[0] ?? "";
+        if (getCanonicalCommandName(b(F)) === x) {
           let W = C.prefix.slice(F.length).replace(/^[\s\u0085\u180e]+/, " "),
             E = x + W;
           if (o === "exact") {
@@ -3444,8 +3444,8 @@ function pt(e, t, o, r) {
           } else if (d(L, E) || f(L, E + " ")) return !0;
         }
       } else if (C.type === "wildcard") {
-        let F = C.pattern.split(Swe)[0] ?? "";
-        if (Ef(b(F)) === x && o !== "exact") {
+        let F = C.pattern.split(POWERSHELL_WHITESPACE_REGEX)[0] ?? "";
+        if (getCanonicalCommandName(b(F)) === x && o !== "exact") {
           let W = C.pattern.slice(F.length).replace(/^[\s\u0085\u180e]+/, " "),
             E = x + W;
           if (matchesRuleGlob(E, L, !0, !0)) return !0;
@@ -3560,7 +3560,7 @@ async function Os(e, t) {
         element: a,
         statement: r,
         isSafeOutput:
-          a.nameType !== "application" && OOe(a.name) && a.args.length === 0,
+          a.nameType !== "application" && isOutNullCommand(a.name) && a.args.length === 0,
       });
     }
     if (r.nestedCommands)
@@ -3570,7 +3570,7 @@ async function Os(e, t) {
           element: a,
           statement: r,
           isSafeOutput:
-            a.nameType !== "application" && OOe(a.name) && a.args.length === 0,
+            a.nameType !== "application" && isOutNullCommand(a.name) && a.args.length === 0,
         });
   }
   if (o.length > 0) return o;
@@ -3649,31 +3649,31 @@ async function Is(e, t, o) {
     f.behavior === "allow" &&
     !d.valid &&
     I === null &&
-    classifyPowerShellCommand(r.split(Swe)[0] ?? "") !== "application"
+    classifyPowerShellCommand(r.split(POWERSHELL_WHITESPACE_REGEX)[0] ?? "") !== "application"
   )
     return f;
   if (!d.valid) {
-    let v = tw(r.replace(/<#[\s\S]*?#>/g, " ").replace(/`[\r\n]+\s*/g, "")),
+    let v = unescapeBacktickEscapes(r.replace(/<#[\s\S]*?#>/g, " ").replace(/`[\r\n]+\s*/g, "")),
       N = !1,
       V,
       K;
     for (let Z of v.split(/[;|\n\r{}()&]+/)) {
       let ue = Z.trim();
       if (!ue) continue;
-      let X = ue.split(Swe);
+      let X = ue.split(POWERSHELL_WHITESPACE_REGEX);
       for (let we = 0; we < X.length; we++) {
         let ke = X[we],
-          Se = Fv(ke);
+          Se = stripAllQuotes(ke);
         if (!Se) continue;
         if (V === void 0 && !PARAMETER_PREFIX_CHARS.has(ke[0] ?? "") && $e(ke)) V = ke;
-        if (Ef(Se) === "remove-item") {
+        if (getCanonicalCommandName(Se) === "remove-item") {
           N = !0;
           for (let me of X.slice(we + 1)) {
             if (PARAMETER_PREFIX_CHARS.has(me[0] ?? "")) continue;
             if ($e(me)) return Re(me);
           }
         }
-        for (let me of new Set([Se, yM(ke), S2(ke)])) {
+        for (let me of new Set([Se, stripSurroundingQuotes(ke), normalizeQuotedString(ke)])) {
           let en = [me, ...X.slice(we + 1)].join(" "),
             { matchingDenyRules: ht, matchingAskRules: tn } = Ae(
               { command: en },
@@ -3773,7 +3773,7 @@ async function Is(e, t, o) {
       if (V > 0 && (N[0] !== "/" || /^\/[A-Za-z]{1,2}:/.test(N)))
         N = N.substring(V + 1);
     }
-    return tw(N.replace(/`[\r\n]+\s*/g, ""));
+    return unescapeBacktickEscapes(N.replace(/`[\r\n]+\s*/g, ""));
   }
   function C(v) {
     let N = w(v);
@@ -3842,9 +3842,9 @@ async function Is(e, t, o) {
         decisionReason: { type: "rule", rule: Z },
       });
   }
-  let A = x.length > 1 && x.some(({ element: v }) => xft(v.name)),
+  let A = x.length > 1 && x.some(({ element: v }) => isDirectoryChangeCommand(v.name)),
     F = x.some(({ element: v }) => nt(v)),
-    j = x.some(({ element: v }) => Ef(v.name) === "git");
+    j = x.some(({ element: v }) => getCanonicalCommandName(v.name) === "git");
   if (A && j)
     y.push({
       behavior: "ask",
@@ -3863,7 +3863,7 @@ async function Is(e, t, o) {
   if (j) {
     let v = x.some(({ element: K, statement: U }) => {
         for (let D of K.redirections ?? []) if (Le(D.target)) return !0;
-        let ne = Ef(K.name);
+        let ne = getCanonicalCommandName(K.name);
         if (!mt.has(ne)) return !1;
         if (K.args.flatMap(Ue).some((D) => Le(D))) return !0;
         if (ne === "copy-item" || ne === "move-item") {
@@ -3894,11 +3894,11 @@ async function Is(e, t, o) {
   }
   if (getCurrentPlatform() === "windows" && x.length > 1) {
     let v = new Set();
-    for (let V of getFileRedirections(d)) for (let K of H$t(V.target)) v.add(K);
+    for (let V of getFileRedirections(d)) for (let K of getBaseNameStems(V.target)) v.add(K);
     let N = null;
     for (let { element: V } of x) {
       if (
-        I$t(V.name).some(
+        getBaseNameVariants(V.name).some(
           ({ base: U, stem: ne }) =>
             (ne !== "" && v.has(ne)) || (U !== ne && v.has(U)),
         )
@@ -3907,13 +3907,13 @@ async function Is(e, t, o) {
         break;
       }
       for (let U of V.redirections ?? [])
-        for (let ne of H$t(U.target)) v.add(ne);
-      let K = Ef(V.name);
+        for (let ne of getBaseNameStems(U.target)) v.add(ne);
+      let K = getCanonicalCommandName(V.name);
       if (mt.has(K))
         for (let U of V.args.flatMap(Ue)) {
           let ne = U.replace(/^[-\u2013\u2014\u2015]+[A-Za-z]+:?/, ""),
-            D = RF(ne);
-          if (Fv(D) !== "") for (let Z of H$t(D)) v.add(Z);
+            D = stripLeadingWhitespaceAndComments(ne);
+          if (stripAllQuotes(D) !== "") for (let Z of getBaseNameStems(D)) v.add(Z);
         }
     }
     if (N !== null)
@@ -3939,7 +3939,7 @@ async function Is(e, t, o) {
   if (
     x.some(({ element: N }) => {
       for (let K of N.redirections ?? []) if (qe(K.target)) return !0;
-      let V = Ef(N.name);
+      let V = getCanonicalCommandName(N.name);
       if (!mt.has(V)) return !1;
       return N.args.flatMap(Ue).some(qe);
     }) ||
@@ -3962,11 +3962,11 @@ async function Is(e, t, o) {
     x[0] !== void 0 &&
     (q ||
       x.every(
-        (v) => v.element.nameType !== "application" && !gk(v.text, v.element),
+        (v) => v.element.nameType !== "application" && !hasUnvalidatableArguments(v.text, v.element),
       ))
   )
     y.push(f);
-  if (P$t(r, d))
+  if (isReadOnlyCommand(r, d))
     y.push({
       behavior: "allow",
       updatedInput: e,
@@ -4013,7 +4013,7 @@ async function Is(e, t, o) {
   let fe = x.filter(({ element: v, isSafeOutput: N }) => {
       if (N) return !1;
       if (v.nameType === "application") return !0;
-      if (Ef(v.name) === "set-location" && v.args.length > 0) {
+      if (getCanonicalCommandName(v.name) === "set-location" && v.args.length > 0) {
         let K = v.args.find((U) => U.length === 0 || !PARAMETER_PREFIX_CHARS.has(U[0]));
         if (K && Ts(getCwd(), K) === getCwd()) return !1;
       }
@@ -4022,9 +4022,9 @@ async function Is(e, t, o) {
     ye = (v) => {
       if (v.nameType === "application") return null;
       let N = v.name.toLowerCase(),
-        V = Ef(N),
+        V = getCanonicalCommandName(N),
         K = V.indexOf("-");
-      return V !== N || (K > 0 && mGn.has(V.slice(0, K))) ? "full" : "exact";
+      return V !== N || (K > 0 && POWERSHELL_APPROVED_VERBS.has(V.slice(0, K))) ? "full" : "exact";
     },
     re = [],
     de = new Set(),
@@ -4046,7 +4046,7 @@ async function Is(e, t, o) {
     let ne = !1;
     if (U.behavior === "allow" && N.nameType === "application") {
       let D = N.name.toLowerCase(),
-        Z = yM(jt(v)).toLowerCase();
+        Z = stripSurroundingQuotes(jt(v)).toLowerCase();
       if (D.length > 0 && Z === D)
         ne = Ae(K, o, "prefix").matchingAllowRules.some((ue) => {
           let X = zt(Ke(ue.ruleValue.ruleContent ?? "")),
@@ -4056,11 +4056,11 @@ async function Is(e, t, o) {
                 : X.type === "prefix"
                   ? X.prefix
                   : X.pattern;
-          return yM(jt(we)).toLowerCase() === D;
+          return stripSurroundingQuotes(jt(we)).toLowerCase() === D;
         });
     }
     if (U.behavior === "allow" && (N.nameType !== "application" || ne) && !F) {
-      if (gk(v, N)) {
+      if (hasUnvalidatableArguments(v, N)) {
         if (V !== null) pe.add(V);
         (re.push(v), de.add(v));
         continue;
@@ -4068,7 +4068,7 @@ async function Is(e, t, o) {
       let D = ye(N);
       if (
         D !== null &&
-        (LOe(N.args, N.elementTypes, D) || DOe(N.args, N.elementTypes, D))
+        (hasVariableWritingArgument(N.args, N.elementTypes, D) || hasActionPreferenceArgument(N.args, N.elementTypes, D))
       ) {
         if (V !== null) pe.add(V);
         (re.push(v), de.add(v));
@@ -4081,7 +4081,7 @@ async function Is(e, t, o) {
       re.push(v);
       continue;
     }
-    if (V !== null && !A && !F && Zcn(V) && bwe(N, v)) continue;
+    if (V !== null && !A && !F && isPipelineOfCommands(V) && isCommandSafe(N, v)) continue;
     if (V !== null && !A && !F) {
       if (
         ot(
@@ -4105,7 +4105,7 @@ async function Is(e, t, o) {
       let D = ye(N);
       if (
         D !== null &&
-        (LOe(N.args, N.elementTypes, D) || DOe(N.args, N.elementTypes, D))
+        (hasVariableWritingArgument(N.args, N.elementTypes, D) || hasActionPreferenceArgument(N.args, N.elementTypes, D))
       )
         de.add(v);
     }
@@ -4113,7 +4113,7 @@ async function Is(e, t, o) {
   let Y = new Set(),
     le = new Set(re);
   for (let v of d.statements)
-    if (!Zcn(v) && !pe.has(v) && !le.has(v.text))
+    if (!isPipelineOfCommands(v) && !pe.has(v) && !le.has(v.text))
       (re.push(v.text), le.add(v.text), Y.add(v.text));
   if (re.length === 0) {
     if (getCommandSecurityPatterns(d).hasScriptBlocks) {
@@ -4322,7 +4322,7 @@ function Bs(e) {
   for (let f of o) {
     let b = f.trim().split(/\s+/)[0];
     if (!b) continue;
-    let p = Ef(b);
+    let p = getCanonicalCommandName(b);
     if (Ws.has(p)) continue;
     d = !0;
     let I = Fs.has(p),
@@ -4340,7 +4340,7 @@ var Xt = 2000,
 async function qs(e) {
   let t = e.trim().split(/\s+/)[0];
   if (!t) return !0;
-  let o = Ef(t);
+  let o = getCanonicalCommandName(t);
   return !zs.includes(o);
 }
 function Us(e) {
@@ -4395,7 +4395,7 @@ var Ks =
     "command contains control characters that would be hidden in the approval dialog",
   Jt = createLazyValue(() =>
     Qe({
-      command: s().refine(rU, Ks).describe("The PowerShell command to execute"),
+      command: s().refine(hasNoControlCharacters, Ks).describe("The PowerShell command to execute"),
       timeout: coerceNumericStringSchema(T().optional()).describe(
         `Optional timeout in milliseconds (max ${Be()})`,
       ),
@@ -4477,7 +4477,7 @@ var Ks =
     get maxResultSizeChars() {
       return getBashOutputMaxChars();
     },
-    persistenceThresholdCeiling: hge,
+    persistenceThresholdCeiling: OUTPUT_MAX_CHARS_CEILING,
     strict: !0,
     async description({ description: e }) {
       return e || "Run PowerShell command";
@@ -4493,8 +4493,8 @@ var Ks =
       return Bs(e.command);
     },
     isReadOnly(e) {
-      if (gGn(e.command)) return !1;
-      return P$t(e.command);
+      if (hasComplexCommandSyntax(e.command)) return !1;
+      return isReadOnlyCommand(e.command);
     },
     toAutoClassifierInput(e) {
       let t = e.dangerouslyDisableSandbox;
@@ -4505,7 +4505,7 @@ var Ks =
       if (!t.valid) return () => !0;
       let o = getCommandNodes(t).flatMap((r) => {
         let a = [r.name, ...r.args].join(" "),
-          d = [Ef(r.name), ...r.args].join(" ");
+          d = [getCanonicalCommandName(r.name), ...r.args].join(" ");
         return a.toLowerCase() === d ? [a] : [a, d];
       });
       return (r) => {
@@ -4533,11 +4533,11 @@ var Ks =
       if (!e?.command) return null;
       let { command: t, description: o } = e;
       if (o) return o;
-      return truncate(t, Iw);
+      return truncate(t, TOOL_USE_SUMMARY_MAX_CHARS);
     },
     getActivityDescription(e) {
       if (!e?.command) return "Running command";
-      return `Running ${e.description ?? truncate(e.command, Iw)}`;
+      return `Running ${e.description ?? truncate(e.command, TOOL_USE_SUMMARY_MAX_CHARS)}`;
     },
     isEnabled() {
       return !0;
@@ -4609,8 +4609,8 @@ var Ks =
       let L = t;
       if (a) {
         let C = t ? t.replace(/^(\s*\n)+/, "").trimEnd() : "",
-          A = _7e(C, ZNe);
-        L = Vpe({
+          A = buildPreviewSlice(C, PREVIEW_CHAR_BUDGET);
+        L = formatPersistedOutputMessage({
           filepath: a,
           originalSize: d ?? 0,
           isJson: !1,
@@ -4812,7 +4812,7 @@ var Ks =
           try {
             let Y = getToolResultsDirForSession(t.session);
             await ensureToolResultsDirectory(Y, t.storageV5);
-            let le = g7e(Y, w.outputTaskId, !1),
+            let le = buildToolResultFilePath(Y, w.outputTaskId, !1),
               te = isHoverRestEnabled() && t.storageV5 !== void 0 ? getSidecarKeyForToolResultFile($s(le), Ds(le)) : void 0,
               Te = !0;
             if (isHoverRestEnabled() && t.storageV5 !== void 0 && te !== void 0) {
@@ -4961,7 +4961,7 @@ async function* Qs({
     if (D instanceof Error && EXPECTED_TOOL_ERROR_NAMES.has(D.name)) throw D;
     if (Po(D))
       return (
-        n(`PowerShellTool: exec spawn failed: ${D}`),
+        logForDebugging(`PowerShellTool: exec spawn failed: ${D}`),
         {
           stdout: "",
           stderr: `Failed to execute PowerShell command: ${l(D)}`,

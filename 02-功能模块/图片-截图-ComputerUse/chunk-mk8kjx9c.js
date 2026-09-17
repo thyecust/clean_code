@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var Din = 60000,
-  Qdt = 1e4,
-  Lin = 5000,
-  Min = 150000,
-  pWn = 270000,
+var DEFAULT_BROWSER_TOOL_CALL_TIMEOUT_MS = 60000,
+  PEER_CONNECTED_WAIT_MS = 1e4,
+  LIST_EXTENSIONS_TIMEOUT_MS = 5000,
+  DEFAULT_EXTERNAL_MESSAGE_TIMEOUT_MS = 150000,
+  MAX_EXTERNAL_MESSAGE_TIMEOUT_MS = 270000,
   e = 10;
 var o = "javascript_tool",
-  YPe = new Set([
+  AUTO_APPROVABLE_BROWSER_TOOL_NAMES = new Set([
     "tabs_context_mcp",
     "tabs_create_mcp",
     "tabs_close_mcp",
@@ -25,20 +25,20 @@ var o = "javascript_tool",
     "list_connected_browsers",
     "gif_creator",
   ]),
-  fWn = new Set([
+  BRIDGE_ONLY_BROWSER_TOOL_NAMES = new Set([
     "switch_browser",
     "list_connected_browsers",
     "select_browser",
   ]),
   r =
     "Open a confirmation screen in every connected Chrome extension and let me select the right one there.";
-function qqe(t) {
+function buildBrowserSelectionPrompt(t) {
   return (
     `Before any browser action, you MUST call ${t ? `the ${t} tool` : "your ask-user tool (if available)"} with a question listing EVERY connected browser as a separate option (use the display name as the label, and include the deviceId in parentheses), plus one final option labeled exactly: "${r}" Do not skip any connected browser and do not pick one yourself. If the user picks a specific browser, call select_browser with that browser's deviceId. ` +
     "If the user picks the final option, call switch_browser \u2014 this sends a confirmation prompt to every connected Chrome extension and waits for the user to click Connect in the one they want; it also lets them name that browser."
   );
 }
-var D1t = [
+var BROWSER_MCP_TOOL_DEFINITIONS = [
   {
     name: o,
     description:
@@ -653,4 +653,4 @@ var D1t = [
     },
   },
 ];
-export { Din, Qdt, Lin, Min, pWn, YPe, fWn, qqe, D1t };
+export { DEFAULT_BROWSER_TOOL_CALL_TIMEOUT_MS, PEER_CONNECTED_WAIT_MS, LIST_EXTENSIONS_TIMEOUT_MS, DEFAULT_EXTERNAL_MESSAGE_TIMEOUT_MS, MAX_EXTERNAL_MESSAGE_TIMEOUT_MS, AUTO_APPROVABLE_BROWSER_TOOL_NAMES, BRIDGE_ONLY_BROWSER_TOOL_NAMES, buildBrowserSelectionPrompt, BROWSER_MCP_TOOL_DEFINITIONS };

@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { QNe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { te, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getClaudeAiBaseUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { getStringWidth, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 var RECENT_ACTIVITY_WINDOW_MS = 30000,
   BRIDGE_FAILED_ERROR = "bridge-failed",
@@ -30,14 +30,14 @@ function formatClockTime() {
   return `${e}:${r}:${n}`;
 }
 function buildSessionWebUrl(t, e) {
-  return `${QNe(void 0, e)}/code?environment=${t}`;
+  return `${getClaudeAiBaseUrl(void 0, e)}/code?environment=${t}`;
 }
 function getShimmerPosition(t, e) {
   let r = e + 20;
   return e + 10 - (t % r);
 }
 function splitTextForShimmer(t, e) {
-  let r = te(t),
+  let r = getStringWidth(t),
     n = e - 1,
     i = e + 1;
   if (n >= r || i < 0) return { before: t, shimmer: "", after: "" };
@@ -47,7 +47,7 @@ function splitTextForShimmer(t, e) {
     a = "",
     l = "";
   for (let { segment: o } of getGraphemeSegmenter().segment(t)) {
-    let u = te(o);
+    let u = getStringWidth(o);
     if (s + u <= m) c += o;
     else if (s > i) l += o;
     else a += o;

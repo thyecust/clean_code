@@ -11,5 +11,5 @@
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { runSkillDoctor as ynn } from "../MCP客户端/skill-doctor-report.js";
 import "../MCP客户端/skill-doctor-data.js";
-import "../成本-Token统计/chunk-3nwwgatc.js";
+import "../成本-Token统计/usage-transcript-scan.js";
 export { ynn as call };

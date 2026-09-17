@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Us } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { $N } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
+import { prepareDisplayText } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { formatEffortLevel } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useSetAppState } from "./app-state-context.js";
 import { useTerminalSize } from "./use-terminal-size.js";
 import { truncateLinesWithOverflow } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Zg } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import { formatModelDisplayName } from "../模型目录-ModelCatalog/model-switch.js";
 function j(to) {
   return { ...to, cacheMissAckedAtOutputTokens: jc() };
 }
@@ -40,7 +40,7 @@ function ModelOrEffortSwitchDialog(oo) {
     A = m ? "model" : "effort level",
     I;
   if (f[0] !== d || f[1] !== m || f[2] !== v)
-    ((I = m ? Zg(v) : d !== void 0 ? $N(d) : "auto"),
+    ((I = m ? formatModelDisplayName(v) : d !== void 0 ? formatEffortLevel(d) : "auto"),
       (f[0] = d),
       (f[1] = m),
       (f[2] = v),
@@ -67,14 +67,14 @@ function ModelOrEffortSwitchDialog(oo) {
   if (f[8] !== y || f[9] !== n || f[10] !== a || f[11] !== A)
     ((u =
       n !== void 0
-        ? e(t, { children: truncateLinesWithOverflow(Us(n).text, y, P + 1) })
-        : r(t, {
+        ? e(Text, { children: truncateLinesWithOverflow(prepareDisplayText(n).text, y, P + 1) })
+        : r(Text, {
             children: [
               "This conversation is cached for the current ",
               A,
               ". Switching to",
               " ",
-              e(t, { bold: !0, children: a }),
+              e(Text, { bold: !0, children: a }),
               " means the full history gets re-read on your next message.",
             ],
           })),
@@ -100,7 +100,7 @@ function ModelOrEffortSwitchDialog(oo) {
   else p = f[16];
   let h;
   if (f[17] !== u || f[18] !== p)
-    ((h = r(o, {
+    ((h = r(Box, {
       flexDirection: "column",
       gap: 1,
       marginBottom: 1,

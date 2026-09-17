@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isBridgeEnvironment } from "./environment-kind.js";
 class o {
@@ -44,7 +44,7 @@ function keepPrimaryIfRemote(r, e, t, i = "last") {
   try {
     if (!isRemoteTransportPersistent(r)) return i === "first" ? [e, ...t] : [...t, e];
     for (let s of t)
-      n(`error_during_execution detail: ${s}`, { level: "error" });
+      logForDebugging(`error_during_execution detail: ${s}`, { level: "error" });
     return [e];
   } catch (s) {
     return (logError(ge(s)), [e]);

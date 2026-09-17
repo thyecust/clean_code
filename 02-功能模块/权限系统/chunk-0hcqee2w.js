@@ -10,7 +10,7 @@
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
@@ -19,32 +19,32 @@ import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chal
 import { isRemoteOrPluginRequestSource, READ_TOOL_NAME, getSanitizedToolName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { te, dp, truncateToWidth, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatPathWithTilde } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { getStringWidth, wrapAnsi, truncateToWidth, wrapTextToLineCount } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { WARNING_GLYPH } from "./chunk-e4pfvp7x.js";
 import { containsWildcard, unescapeGlobSpecials, parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { o, t, jr, tn, ko, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { oN, oYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import { Box, Text, Ansi, useIsScreenReaderEnabled, useInterval, measureElement } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { ansiStyles, eastAsianWidth } from "../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { findSafetyCheckReason, sanitizeForDisplay, permissionUpdateSchema, setPermissionModeWithGuards, getAutoModeUnavailableText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
-  YJe,
+  GRAPHEME_TRUNCATION_MARKER_PATTERN,
   ps,
-  oU,
-  _i,
-  aA,
-  jd,
-  d6,
-  Eme,
-  n5,
-  D$e,
-  QJe,
-  Us,
-  km,
+  hasInvisibleCharacters,
+  sanitizeUntrustedText,
+  needsMultilineGutter,
+  collapseInvisibleCharacterRuns,
+  hasRenderableText,
+  MAX_DISPLAY_LABEL_WIDTH,
+  isWithinDisplayValueLimit,
+  disambiguateLabels,
+  buildUniqueLabelMap,
+  prepareDisplayText,
+  formatWithholdableValue,
   N4t,
-  Qk,
-  Oo,
+  toUniqueDisplayLabels,
+  replaceLineBreaks,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -81,7 +81,7 @@ function MultilineBorderBox(zr) {
   }
   let UD;
   if (Qr[0] !== Uu)
-    ((UD = e(o, {
+    ((UD = e(Box, {
       borderStyle: "single",
       borderLeft: !0,
       borderRight: !1,
@@ -144,7 +144,7 @@ function Dn(u, s, n) {
       if (c.type === "addDirectories") {
         if (!Array.isArray(c.directories)) continue;
         let T = c.directories.filter(
-          (B) => typeof B === "string" && B.trim() !== "" && te(B) > 0 && n5(B),
+          (B) => typeof B === "string" && B.trim() !== "" && getStringWidth(B) > 0 && isWithinDisplayValueLimit(B),
         );
         if (T.length === 0) continue;
         l.push({ ...c, directories: T });
@@ -155,7 +155,7 @@ function Dn(u, s, n) {
     }
     if (c.rules === void 0) continue;
     let A = c.rules.filter((T) =>
-        n5(
+        isWithinDisplayValueLimit(
           formatPermissionRule({
             toolName: T.toolName,
             ...(T.ruleContent !== void 0 && { ruleContent: T.ruleContent }),
@@ -173,10 +173,10 @@ function vD(u) {
   return (
     u.trim() !== u ||
     u === "" ||
-    oU(u) ||
+    hasInvisibleCharacters(u) ||
     ps(u) !== u ||
     /[\t\n]/.test(u) ||
-    te(u) === 0
+    getStringWidth(u) === 0
   );
 }
 function Ue(u) {
@@ -190,7 +190,7 @@ function Ue(u) {
   return !0;
 }
 function on(u) {
-  if (typeof u !== "string" || u.trim() === "" || te(u) === 0 || !n5(u))
+  if (typeof u !== "string" || u.trim() === "" || getStringWidth(u) === 0 || !isWithinDisplayValueLimit(u))
     return null;
   return rir(u);
 }
@@ -199,46 +199,46 @@ function ju(u) {
     case 0:
       return "";
     case 1:
-      return e(t, { bold: !0, children: u[0] });
+      return e(Text, { bold: !0, children: u[0] });
     case 2:
-      return r(t, {
+      return r(Text, {
         children: [
-          e(t, { bold: !0, children: u[0] }),
+          e(Text, { bold: !0, children: u[0] }),
           " and ",
-          e(t, { bold: !0, children: u[1] }),
+          e(Text, { bold: !0, children: u[1] }),
         ],
       });
     default:
-      return r(t, {
+      return r(Text, {
         children: [
-          e(t, { bold: !0, children: u.slice(0, -1).join(", ") }),
+          e(Text, { bold: !0, children: u.slice(0, -1).join(", ") }),
           ", and",
           " ",
-          e(t, { bold: !0, children: u.slice(-1)[0] }),
+          e(Text, { bold: !0, children: u.slice(-1)[0] }),
         ],
       });
   }
 }
 function formatListWithAnd(u) {
   if (u.length === 0) return "";
-  if (u.length === 1) return e(t, { bold: !0, children: u[0] });
+  if (u.length === 1) return e(Text, { bold: !0, children: u[0] });
   if (u.length === 2)
-    return r(t, {
+    return r(Text, {
       children: [
-        e(t, { bold: !0, children: u[0] }),
+        e(Text, { bold: !0, children: u[0] }),
         " and ",
-        e(t, { bold: !0, children: u[1] }),
+        e(Text, { bold: !0, children: u[1] }),
       ],
     });
-  return r(t, {
+  return r(Text, {
     children: [
       u
         .slice(0, -1)
         .map((s, n) =>
-          r(t, { children: [e(t, { bold: !0, children: s }), ",", " "] }, n),
+          r(Text, { children: [e(Text, { bold: !0, children: s }), ",", " "] }, n),
         ),
       "and ",
-      e(t, { bold: !0, children: u.at(-1) }),
+      e(Text, { bold: !0, children: u.at(-1) }),
     ],
   });
 }
@@ -263,7 +263,7 @@ function hasAllowRuleForTool(u, s, n) {
   return !1;
 }
 function sanitizeCommandPrefix(u) {
-  return u !== void 0 && ps(u) === u && !/[\t\n\u2028\u2029]/.test(u) && !oU(u)
+  return u !== void 0 && ps(u) === u && !/[\t\n\u2028\u2029]/.test(u) && !hasInvisibleCharacters(u)
     ? nir(u)
     : void 0;
 }
@@ -293,7 +293,7 @@ function renderSessionConsentLabel(u, s, n, a) {
     f = l.filter((g) => g.toolName === s);
   if (
     c.some(
-      (g) => typeof g !== "string" || g.trim() === "" || te(g) === 0 || !n5(g),
+      (g) => typeof g !== "string" || g.trim() === "" || getStringWidth(g) === 0 || !isWithinDisplayValueLimit(g),
     )
   )
     return null;
@@ -303,31 +303,31 @@ function renderSessionConsentLabel(u, s, n, a) {
         g.ruleContent && normalizeRulePathPattern(g.ruleContent) ? g.ruleContent : [],
       ),
     );
-  if (B.some((g) => !n5(g))) return null;
+  if (B.some((g) => !isWithinDisplayValueLimit(g))) return null;
   let y = dedupe(
     f.flatMap((g) => {
       if (!g.ruleContent) return [];
       return vu(g.ruleContent) ? [g.ruleContent] : [];
     }),
   );
-  if (y.some((g) => !n5(g))) return null;
-  let w = D$e(y, (g) => {
+  if (y.some((g) => !isWithinDisplayValueLimit(g))) return null;
+  let w = disambiguateLabels(y, (g) => {
       let j = vu(g) || g;
       return formatRuleContentForDisplay(n ? n(j) : j);
     }),
-    L = D$e([...B, ...T], (g) => (B.includes(g) ? formatRuleContentForDisplay(normalizeRulePathPattern(g)) : formatRuleContentForDisplay(g))),
+    L = disambiguateLabels([...B, ...T], (g) => (B.includes(g) ? formatRuleContentForDisplay(normalizeRulePathPattern(g)) : formatRuleContentForDisplay(g))),
     k = L.slice(0, B.length),
     M = L.slice(B.length);
-  if (te([...w, ...k, ...M].join(" and ")) > MAX_CONSENT_LABEL_WIDTH) return null;
+  if (getStringWidth([...w, ...k, ...M].join(" and ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   let v = T.length > 0,
     G = k.length > 0,
     K = w.length > 0;
   if (G && !v && !K)
-    return r(t, {
+    return r(Text, {
       children: ["Yes, allow reading from ", formatListWithAnd(k), " from this project"],
     });
   if (v && !G && !K)
-    return r(t, {
+    return r(Text, {
       children: [
         "Yes, and always allow access to ",
         formatListWithAnd(M),
@@ -335,7 +335,7 @@ function renderSessionConsentLabel(u, s, n, a) {
       ],
     });
   if (K && !v && !G)
-    return r(t, {
+    return r(Text, {
       children: [
         "Yes, and don't ask again for ",
         ju(w),
@@ -343,14 +343,14 @@ function renderSessionConsentLabel(u, s, n, a) {
         " ",
         a === void 0
           ? r(N, {
-              children: ["in", " ", e(t, { bold: !0, children: sanitizeForDisplay(he()) })],
+              children: ["in", " ", e(Text, { bold: !0, children: sanitizeForDisplay(he()) })],
             })
-          : r(N, { children: ["on ", e(t, { bold: !0, children: a })] }),
+          : r(N, { children: ["on ", e(Text, { bold: !0, children: a })] }),
       ],
     });
   if ((v || G) && !K) {
     let g = [...M, ...k];
-    return r(t, {
+    return r(Text, {
       children: [
         "Yes, and always allow access to ",
         formatListWithAnd(g),
@@ -361,7 +361,7 @@ function renderSessionConsentLabel(u, s, n, a) {
   if ((v || G) && K) {
     let g = [...M, ...k];
     if (g.length === 1 && w.length === 1)
-      return r(t, {
+      return r(Text, {
         children: [
           "Yes, and allow access to ",
           formatListWithAnd(g),
@@ -371,7 +371,7 @@ function renderSessionConsentLabel(u, s, n, a) {
           " commands",
         ],
       });
-    return r(t, {
+    return r(Text, {
       children: [
         "Yes, and allow ",
         formatListWithAnd(g),
@@ -493,14 +493,14 @@ function createSetModeRow(u, s) {
         : u === "default"
           ? "Yes, manually approve edits"
           : null;
-    if (a !== null) return new le(de, e(t, { children: a }), n);
+    if (a !== null) return new le(de, e(Text, { children: a }), n);
   }
   return new le(
     de,
-    r(t, {
+    r(Text, {
       children: [
         "Yes, and switch to ",
-        e(t, { bold: !0, children: YD[u] }),
+        e(Text, { bold: !0, children: YD[u] }),
         " for this session",
       ],
     }),
@@ -527,18 +527,18 @@ function createAddDirectoriesRow(u) {
   let a = dedupe(n);
   if (a.length === 0) return null;
   if (a.length > MAX_PERMISSION_RULE_ENTRIES) return null;
-  let l = Qk(a, (A) => N4t(A));
-  if (te(l.join(", ")) > MAX_CONSENT_LABEL_WIDTH) return null;
+  let l = toUniqueDisplayLabels(a, (A) => N4t(A));
+  if (getStringWidth(l.join(", ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   let c = $e([
     { type: "addDirectories", destination: "session", directories: a },
   ]);
   if (c === null) return null;
   return new le(
     de,
-    r(t, {
+    r(Text, {
       children: [
         "Yes, and always allow access to ",
-        e(t, { bold: !0, children: l.join(", ") }),
+        e(Text, { bold: !0, children: l.join(", ") }),
         " for this session",
       ],
     }),
@@ -600,9 +600,9 @@ function combineConsentRows(u, ...s) {
     throw Error("combineRows: schema rejected already-minted updates");
   return new le(
     de,
-    e(t, {
+    e(Text, {
       children: n.map((c, A) =>
-        r(t, { children: [A > 0 ? "; " : "", c.node] }, A),
+        r(Text, { children: [A > 0 ? "; " : "", c.node] }, A),
       ),
     }),
     l,
@@ -651,7 +651,7 @@ function Me(u, s = {}) {
       l += 2;
       continue;
     }
-    l += oYn(f, c);
+    l += eastAsianWidth(f, c);
   }
   return l;
 }
@@ -746,7 +746,7 @@ var gu = new Set(["\x1B", "\x9B"]),
           l = P === WD ? void 0 : P;
         } else if (M.uri !== void 0) c = M.uri.length === 0 ? void 0 : M.uri;
       }
-      let k = oN.codes.get(Number(l));
+      let k = ansiStyles.codes.get(Number(l));
       if (
         B[w + 1] ===
         `
@@ -792,7 +792,7 @@ function yu(ts) {
     { permissionResult: QD } = ts,
     Vu =
       QD?.behavior === "ask" ? QD.denialLimitFallback?.deadlineEpochMs : void 0,
-    JD = tn(),
+    JD = useIsScreenReaderEnabled(),
     We = useClock(),
     Wu;
   if (xe[0] !== We) ((Wu = We.now()), (xe[0] = We), (xe[1] = Wu));
@@ -818,7 +818,7 @@ function yu(ts) {
     Do;
   if (xe[9] === MEMO_CACHE_SENTINEL) ((Do = () => ns(ao)), (xe[9] = Do));
   else Do = xe[9];
-  if ((ko(Do, Vu !== void 0 && !JD ? 1000 : null), Vu === void 0)) {
+  if ((useInterval(Do, Vu !== void 0 && !JD ? 1000 : null), Vu === void 0)) {
     return null;
   }
   if (JD) {
@@ -837,9 +837,9 @@ function yu(ts) {
     const Qe = `${WARNING_GLYPH} Claude Code will automatically deny this request in ${Ds}, to avoid blocking progress on an unattended session`;
     let Je;
     if (xe[12] !== Qe)
-      ((Je = e(o, {
+      ((Je = e(Box, {
         marginBottom: 1,
-        children: e(t, { color: "warning", children: Qe }),
+        children: e(Text, { color: "warning", children: Qe }),
       })),
         (xe[12] = Qe),
         (xe[13] = Je));
@@ -857,9 +857,9 @@ function yu(ts) {
   const Je = `${WARNING_GLYPH} Claude Code will automatically deny this request in ${is}, to avoid blocking progress on an unattended session`;
   let so;
   if (xe[16] !== Je)
-    ((so = e(o, {
+    ((so = e(Box, {
       marginBottom: 1,
-      children: e(t, { color: "warning", children: Je }),
+      children: e(Text, { color: "warning", children: Je }),
     })),
       (xe[16] = Je),
       (xe[17] = so));
@@ -870,7 +870,7 @@ function bo(Ps) {
   return Ps.toolPermissionContext.mode;
 }
 function Ao(Ms, Ns) {
-  return e(MultilineBorderBox, { multiline: aA(Ms), children: Ns });
+  return e(MultilineBorderBox, { multiline: needsMultilineGutter(Ms), children: Ns });
 }
 function Bo(u) {
   if (u?.startsWith("plugin")) return "plugin hooks.json";
@@ -890,7 +890,7 @@ function xu(u) {
 }
 function Re(u, s, n) {
   if (!u) return null;
-  let a = (l) => Us(l).text;
+  let a = (l) => prepareDisplayText(l).text;
   if (u.type === "classifier") {
     if (u.classifier === "auto-mode")
       return {
@@ -1063,8 +1063,8 @@ function PermissionReasonPanel(Rs) {
       gn(
         bu ?? q.reasonString,
         Ju
-          ? e(t, { color: Ju, children: bu ?? q.reasonString })
-          : e(t, { children: e(jr, { children: bu ?? q.reasonString }) }),
+          ? e(Text, { color: Ju, children: bu ?? q.reasonString })
+          : e(Text, { children: e(Ansi, { children: bu ?? q.reasonString }) }),
       )),
       (Ne[8] = bu),
       (Ne[9] = q),
@@ -1073,7 +1073,7 @@ function PermissionReasonPanel(Rs) {
   else et = Ne[11];
   let ut;
   if (Ne[12] !== q)
-    ((ut = q?.configString && e(t, { dimColor: !0, children: q.configString })),
+    ((ut = q?.configString && e(Text, { dimColor: !0, children: q.configString })),
       (Ne[12] = q),
       (Ne[13] = ut));
   else ut = Ne[13];
@@ -1085,11 +1085,11 @@ function PermissionReasonPanel(Rs) {
         children: [
           gn(
             Zu ?? ae.reasonString,
-            e(t, { children: e(jr, { children: Zu ?? ae.reasonString }) }),
+            e(Text, { children: e(Ansi, { children: Zu ?? ae.reasonString }) }),
           ),
           ae.configString &&
             ae.configString !== q?.configString &&
-            e(t, { dimColor: !0, children: ae.configString }),
+            e(Text, { dimColor: !0, children: ae.configString }),
         ],
       })),
       (Ne[14] = ae),
@@ -1104,8 +1104,8 @@ function PermissionReasonPanel(Rs) {
       gn(
         Au ?? se.reasonString,
         se.themeColor
-          ? e(t, { color: se.themeColor, children: Au ?? se.reasonString })
-          : e(t, { children: e(jr, { children: Au ?? se.reasonString }) }),
+          ? e(Text, { color: se.themeColor, children: Au ?? se.reasonString })
+          : e(Text, { children: e(Ansi, { children: Au ?? se.reasonString }) }),
       )),
       (Ne[18] = Au),
       (Ne[19] = se),
@@ -1119,7 +1119,7 @@ function PermissionReasonPanel(Rs) {
     Ne[24] !== nt ||
     Ne[25] !== Dt
   )
-    ((yo = r(o, {
+    ((yo = r(Box, {
       marginBottom: 1,
       flexDirection: "column",
       children: [et, ut, nt, Dt, Qu],
@@ -1378,10 +1378,10 @@ function ConfirmationPrompt({
     if (n?.() === !1) return;
     g();
   }, [n, g]);
-  return r(o, {
+  return r(Box, {
     flexDirection: "column",
     children: [
-      typeof a === "string" ? e(t, { children: a }) : a,
+      typeof a === "string" ? e(Text, { children: a }) : a,
       e(ve, {
         selectedValue: vs,
         options: J,
@@ -1393,9 +1393,9 @@ function ConfirmationPrompt({
         onFocus: G,
         onInputModeToggle: v,
       }),
-      e(o, {
+      e(Box, {
         marginTop: 1,
-        children: e(t, {
+        children: e(Text, {
           dimColor: !0,
           children: r(DotSeparatedList, {
             children: [e(KeybindingHint, { chord: "escape", action: "cancel" }), j],
@@ -1490,7 +1490,7 @@ var iu = 80,
   Cr = /\d{1,2}:\d{2}/;
 function we(u, s, n, a) {
   return (
-    te(u) + 2 + te(s) + (n === void 0 ? 0 : te(n) + 3) <= Math.min(iu, a - 2)
+    getStringWidth(u) + 2 + getStringWidth(s) + (n === void 0 ? 0 : getStringWidth(n) + 3) <= Math.min(iu, a - 2)
   );
 }
 var gr = 64;
@@ -1498,7 +1498,7 @@ function Ot(u, s, n = 0, a = { remaining: sr, unitsRemaining: Oe }) {
   if (typeof u === "string") {
     if (u.length + 2 > a.unitsRemaining)
       throw Error("value exceeds the units display budget");
-    let l = b(u);
+    let l = jsonStringify(u);
     if (((a.unitsRemaining -= l.length), a.unitsRemaining < 0))
       throw Error("value exceeds the units display budget");
     return l;
@@ -1527,7 +1527,7 @@ function Ot(u, s, n = 0, a = { remaining: sr, unitsRemaining: Oe }) {
       )
     ) {
       let T = `[${c.join(", ")}]`;
-      if (te(T) <= iu) return T;
+      if (getStringWidth(T) <= iu) return T;
     }
     let A = "  ".repeat(s + 1),
       f = "  ".repeat(s);
@@ -1545,10 +1545,10 @@ ${f}]`;
       if (B.length > lr) throw Error("nested key exceeds the display bound");
       if (B.length > a.unitsRemaining)
         throw Error("keys exceed the units display budget");
-      if (jd(B) !== B) throw Error("nested key display would drop code points");
+      if (collapseInvisibleCharacterRuns(B) !== B) throw Error("nested key display would drop code points");
       a.unitsRemaining -= B.length;
     }
-    let c = QJe(l.map(([B]) => B));
+    let c = buildUniqueLabelMap(l.map(([B]) => B));
     for (let [B] of l) {
       let y = c.get(B) ?? B;
       if (y.length > B.length) {
@@ -1565,7 +1565,7 @@ ${f}]`;
       )
     ) {
       let B = `{ ${A.join(", ")} }`;
-      if (te(B) <= iu) return B;
+      if (getStringWidth(B) <= iu) return B;
     }
     let f = "  ".repeat(s + 1),
       T = "  ".repeat(s);
@@ -1678,13 +1678,13 @@ function Ut(u, s, n = iu) {
       text: `(${T} parameter ${T === 1 ? "name is" : "names are"} too large to show \u2014 deny unless expected)`,
       unrenderable: !0,
     });
-  let y = QJe(f),
+  let y = buildUniqueLabelMap(f),
     w = a.find(([k]) => k === "language")?.[1],
     L = 0;
   for (let [k, M] of a) {
     if (k.length > Oe) continue;
     let P = y.get(k) ?? k;
-    if (jd(k) !== k) {
+    if (collapseInvisibleCharacterRuns(k) !== k) {
       L += 1;
       continue;
     }
@@ -1696,9 +1696,9 @@ function Ut(u, s, n = iu) {
         else c.push({ kind: "inline", key: P, text: I, unrenderable: !0 });
         continue;
       }
-      let g = _i(M),
-        j = jd(g);
-      if (YJe.test(j) || j !== g) {
+      let g = sanitizeUntrustedText(M),
+        j = collapseInvisibleCharacterRuns(g);
+      if (GRAPHEME_TRUNCATION_MARKER_PATTERN.test(j) || j !== g) {
         let I = `(value of ${M.length.toLocaleString()} characters cannot be shown in full \u2014 deny unless expected)`;
         if (!we(P, I, void 0, n))
           c.push({ kind: "block", key: P, text: I, unrenderable: !0 });
@@ -1709,13 +1709,13 @@ function Ut(u, s, n = iu) {
       if (
         j.includes(`
 `) ||
-        te(j) > iu
+        getStringWidth(j) > iu
       ) {
-        let I = k === "code" && lD(w) ? _i(w) : void 0;
+        let I = k === "code" && lD(w) ? sanitizeUntrustedText(w) : void 0;
         c.push({ kind: "block", key: P, text: J, language: I });
         continue;
       }
-      let z = b(j),
+      let z = jsonStringify(j),
         X = s?.[k] === "date-time" && mr.test(j) && Cr.test(j),
         W =
           fr.has(k) && pr.test(j)
@@ -1724,13 +1724,13 @@ function Ut(u, s, n = iu) {
               ? (cD(j) ?? void 0)
               : void 0;
       if (!we(P, z, W, n)) {
-        let I = k === "code" && lD(w) ? _i(w) : void 0;
+        let I = k === "code" && lD(w) ? sanitizeUntrustedText(w) : void 0;
         c.push({ kind: "block", key: P, text: J, annotation: W, language: I });
         continue;
       }
       let H = dr.has(k)
         ? (getSlackChannelUrl(j) ?? void 0)
-        : /^https?:\/\/\S+$/.test(j) && !oU(j)
+        : /^https?:\/\/\S+$/.test(j) && !hasInvisibleCharacters(j)
           ? j
           : void 0;
       c.push({ kind: "inline", key: P, text: z, linkUrl: H, annotation: W });
@@ -1757,7 +1757,7 @@ function Ut(u, s, n = iu) {
         else c.push({ kind: "inline", key: P, text: j, unrenderable: !0 });
         continue;
       }
-      ((G = _i(g)), (v = jd(G)));
+      ((G = sanitizeUntrustedText(g)), (v = collapseInvisibleCharacterRuns(G)));
     } catch {
       if (
         !we(
@@ -1791,7 +1791,7 @@ function Ut(u, s, n = iu) {
           unrenderable: !0,
         },
       ];
-    if (YJe.test(v) || jd(G) !== G) {
+    if (GRAPHEME_TRUNCATION_MARKER_PATTERN.test(v) || collapseInvisibleCharacterRuns(G) !== G) {
       let g = `(value of ${K.toLocaleString()} formatted characters cannot be shown in full \u2014 deny unless expected)`;
       if (!we(P, g, void 0, n))
         c.push({ kind: "block", key: P, text: g, unrenderable: !0 });
@@ -1845,17 +1845,17 @@ function dD(qa) {
   if (mt[0] !== pt || mt[1] !== iD) {
     sD = EARLY_RETURN_SENTINEL;
     bb0: {
-      let Pt = dp(`${iD}:`, Math.max(10, pt - 2), { hard: !0, trim: !1 });
+      let Pt = wrapAnsi(`${iD}:`, Math.max(10, pt - 2), { hard: !0, trim: !1 });
       let aD = Pt.indexOf(`
 `);
       if (aD === -1) {
-        sD = e(t, { dimColor: !0, children: Pt });
+        sD = e(Text, { dimColor: !0, children: Pt });
         break bb0;
       }
-      gt = o;
+      gt = Box;
       Bt = "column";
-      bt = e(t, { dimColor: !0, children: Pt.slice(0, aD) });
-      Et = o;
+      bt = e(Text, { dimColor: !0, children: Pt.slice(0, aD) });
+      Et = Box;
       xt = 2;
       kt = "single";
       St = !0;
@@ -1864,9 +1864,9 @@ function dD(qa) {
       wt = !1;
       _t = !0;
       yt = 1;
-      Ct = t;
+      Ct = Text;
       ht = !0;
-      At = dp(Pt.slice(aD + 1).replace(/\n/g, ""), Math.max(10, pt - 4), {
+      At = wrapAnsi(Pt.slice(aD + 1).replace(/\n/g, ""), Math.max(10, pt - 4), {
         hard: !0,
         trim: !1,
       });
@@ -1977,7 +1977,7 @@ function $t({ entries: u, contentColumns: s }) {
             P =
               hr(k, y) && k.language !== void 0 && y !== null
                 ? y.highlight(k.text, { language: k.language })
-                : oU(k.text)
+                : hasInvisibleCharacters(k.text)
                   ? k.text
                   : linkifyUrls(k.text, n);
           return (w.set(M, P), P);
@@ -1989,7 +1989,7 @@ function $t({ entries: u, contentColumns: s }) {
         A.map((y) =>
           y === null
             ? null
-            : dp(y, Math.max(10, s - 4), { hard: !0, trim: !1 }),
+            : wrapAnsi(y, Math.max(10, s - 4), { hard: !0, trim: !1 }),
         ),
       [A, s],
     ),
@@ -2001,38 +2001,38 @@ function $t({ entries: u, contentColumns: s }) {
         ? u[0]
         : null;
   if (B !== null)
-    return e(o, {
+    return e(Box, {
       marginTop: 1,
-      children: e(t, { dimColor: !0, children: B.text }),
+      children: e(Text, { dimColor: !0, children: B.text }),
     });
   if (u.length === 0) return null;
-  return e(o, {
+  return e(Box, {
     flexDirection: "column",
     marginTop: 1,
     children: u.map((y, w) =>
       y.kind === "inline"
         ? r(
-            t,
+            Text,
             {
               children: [
-                r(t, { dimColor: !0, children: [y.key, ": "] }),
-                e(jr, {
+                r(Text, { dimColor: !0, children: [y.key, ": "] }),
+                e(Ansi, {
                   children:
                     y.linkUrl !== void 0 && T ? formatHyperlink(y.linkUrl, y.text) : y.text,
                 }),
                 y.annotation !== void 0 &&
-                  r(t, { dimColor: !0, children: [" (", y.annotation, ")"] }),
+                  r(Text, { dimColor: !0, children: [" (", y.annotation, ")"] }),
               ],
             },
             w,
           )
         : r(
-            o,
+            Box,
             {
               flexDirection: "column",
               children: [
                 e(dD, { keyText: y.key, contentColumns: s }),
-                e(o, {
+                e(Box, {
                   marginLeft: 2,
                   borderStyle: "single",
                   borderLeft: !0,
@@ -2041,12 +2041,12 @@ function $t({ entries: u, contentColumns: s }) {
                   borderBottom: !1,
                   borderDimColor: !0,
                   paddingLeft: 1,
-                  children: e(jr, { children: f[w] ?? y.text }),
+                  children: e(Ansi, { children: f[w] ?? y.text }),
                 }),
                 y.annotation !== void 0 &&
-                  e(o, {
+                  e(Box, {
                     marginLeft: 2,
-                    children: r(t, {
+                    children: r(Text, {
                       dimColor: !0,
                       children: ["(", y.annotation, ")"],
                     }),
@@ -2062,7 +2062,7 @@ function Vr(Ol) {
   return Ol.unrenderable === !0;
 }
 function Gr(Ul) {
-  return d6(Ul);
+  return hasRenderableText(Ul);
 }
 function Wr($l) {
   return !$l;
@@ -2112,21 +2112,21 @@ function _D(u, s) {
         )
           return null;
         let l = String(u.userFacingName);
-        if (te(l) >= Eme || l.includes("\u2026")) return null;
+        if (getStringWidth(l) >= MAX_DISPLAY_LABEL_WIDTH || l.includes("\u2026")) return null;
         if (s.cwd.includes("\u2026")) return null;
         let c = Math.max(24, s.maxLabelWidth),
           A = (w) =>
             `Yes, and don't ask again for ${u.userFacingName} commands in ${w}`,
           f = sanitizeForDisplay(s.cwd);
-        if (te(A(f)) <= c) return A(f);
+        if (getStringWidth(A(f)) <= c) return A(f);
         if (f !== s.cwd) return null;
-        let T = Gu(s.cwd);
-        if (te(A(T)) <= c) return A(T);
+        let T = formatPathWithTilde(s.cwd);
+        if (getStringWidth(A(T)) <= c) return A(T);
         let B = splitGraphemes(T),
           y = "";
         for (let w = 0; w < B.length; w++) {
           let L = y + B[w];
-          if (te(A(`${L}\u2026`)) > c) break;
+          if (getStringWidth(A(`${L}\u2026`)) > c) break;
           y = L;
         }
         if (y.length > 0) return A(`${y}\u2026`);
@@ -2164,7 +2164,7 @@ function ToolPermissionDialog(Sl) {
   if (O[2] === MEMO_CACHE_SENTINEL)
     ((Br = () => {
       if (pD.current) {
-        let { width: br } = Od(pD.current);
+        let { width: br } = measureElement(pD.current);
         if (br > 0) Tl(Math.max(20, br - 2));
       }
     }),
@@ -2242,7 +2242,7 @@ function ToolPermissionDialog(Sl) {
   let { node: Mu, threw: CD } = jt,
     Ke;
   if (O[21] !== Mu)
-    ((Ke = typeof Mu === "string" ? km(Mu) : null), (O[21] = Mu), (O[22] = Ke));
+    ((Ke = typeof Mu === "string" ? formatWithholdableValue(Mu) : null), (O[21] = Mu), (O[22] = Ke));
   else Ke = O[22];
   let _e = Ke,
     ge;
@@ -2372,7 +2372,7 @@ function ToolPermissionDialog(Sl) {
     }
     let Nu;
     if (O[54] !== _e.text)
-      ((Nu = Oo(_e.text).replace(/\s+/g, " ").trim()),
+      ((Nu = replaceLineBreaks(_e.text).replace(/\s+/g, " ").trim()),
         (O[54] = _e.text),
         (O[55] = Nu));
     else Nu = O[55];
@@ -2382,12 +2382,12 @@ function ToolPermissionDialog(Sl) {
     Fu = S.isMcp ? Math.max(10, Fe - 2) : Fe,
     Nu;
   if (O[56] !== Fu || O[57] !== cu)
-    ((Nu = uxt(cu, Fu, PD)), (O[56] = Fu), (O[57] = cu), (O[58] = Nu));
+    ((Nu = wrapTextToLineCount(cu, Fu, PD)), (O[56] = Fu), (O[57] = cu), (O[58] = Nu));
   else Nu = O[58];
   let Iu = Nu,
     Nr;
   if (O[59] !== Fu || O[60] !== cu)
-    ((Nr = uxt(cu, Fu, Number.MAX_SAFE_INTEGER)),
+    ((Nr = wrapTextToLineCount(cu, Fu, Number.MAX_SAFE_INTEGER)),
       (O[59] = Fu),
       (O[60] = cu),
       (O[61] = Nr));
@@ -2467,29 +2467,29 @@ function ToolPermissionDialog(Sl) {
     O[81] !== S.userFacingName
   )
     ((Gt = S.isMcp
-      ? r(o, {
+      ? r(Box, {
           flexDirection: "row",
           children: [
-            e(t, {
+            e(Text, {
               wrap: "truncate-end",
-              children: r(t, {
+              children: r(Text, {
                 bold: !0,
                 children: [S.userFacingName, " Tool:"],
               }),
             }),
             S.hasMcpSuffix
-              ? e(o, {
+              ? e(Box, {
                   flexShrink: 0,
-                  children: e(t, { dimColor: !0, children: " (MCP)" }),
+                  children: e(Text, { dimColor: !0, children: " (MCP)" }),
                 })
               : null,
           ],
         })
-      : r(t, {
+      : r(Text, {
           children: [
             S.userFacingName,
             Lu != null && Lu !== "" && r(N, { children: ["(", Lu, ")"] }),
-            S.hasMcpSuffix ? e(t, { dimColor: !0, children: " (MCP)" }) : "",
+            S.hasMcpSuffix ? e(Text, { dimColor: !0, children: " (MCP)" }) : "",
           ],
         })),
       (O[78] = Lu),
@@ -2517,22 +2517,22 @@ function ToolPermissionDialog(Sl) {
   )
     ((Xt =
       Iu !== "" &&
-      r(o, {
+      r(Box, {
         width: "100%",
         flexDirection: "column",
         marginTop: S.isMcp ? 1 : 0,
         children: [
           S.isMcp &&
-            r(t, {
+            r(Text, {
               italic: !0,
               wrap: "truncate-end",
               children: [
                 "About the ",
-                e(t, { bold: !0, children: S.userFacingName }),
+                e(Text, { bold: !0, children: S.userFacingName }),
                 " Tool:",
               ],
             }),
-          e(o, {
+          e(Box, {
             borderStyle: "single",
             borderLeft: !0,
             borderRight: !1,
@@ -2540,14 +2540,14 @@ function ToolPermissionDialog(Sl) {
             borderBottom: !1,
             borderDimColor: !0,
             paddingLeft: 1,
-            children: e(t, {
+            children: e(Text, {
               dimColor: !0,
               italic: S.isMcp,
               children: Vt ? Kt : Iu,
             }),
           }),
           du &&
-            e(t, {
+            e(Text, {
               dimColor: !0,
               children: e(KeybindingHint, {
                 chord: SD,
@@ -2569,7 +2569,7 @@ function ToolPermissionDialog(Sl) {
   else Xt = O[93];
   let qt;
   if (O[94] !== Wt || O[95] !== Xt)
-    ((qt = r(o, {
+    ((qt = r(Box, {
       ref: pD,
       width: "100%",
       flexDirection: "column",
@@ -2581,7 +2581,7 @@ function ToolPermissionDialog(Sl) {
   else qt = O[96];
   let zt;
   if (O[97] !== Gt || O[98] !== qt)
-    ((zt = r(o, {
+    ((zt = r(Box, {
       flexDirection: "column",
       paddingX: 2,
       paddingY: 1,
@@ -2630,7 +2630,7 @@ function ToolPermissionDialog(Sl) {
   else Qt = O[109];
   let Jt;
   if (O[110] !== Zt || O[111] !== Qt)
-    ((Jt = r(o, { flexDirection: "column", children: [Zt, Qt] })),
+    ((Jt = r(Box, { flexDirection: "column", children: [Zt, Qt] })),
       (O[110] = Zt),
       (O[111] = Qt),
       (O[112] = Jt));

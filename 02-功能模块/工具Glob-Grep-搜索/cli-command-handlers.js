@@ -19,14 +19,14 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getBridgeDoctorInfo } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { o, t, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { handleReplAppStateChange, partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
+import { getInstallationDiagnostics } from "../自动更新-安装/install-diagnostics.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
-import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
+import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus } from "../Bridge-RemoteControl/policy-limits-status.js";
 import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
@@ -51,7 +51,7 @@ function confirmYesNo(c, d = process.stdin) {
   );
 }
 function createSubcommandRoot() {
-  return w9e({ ...getBaseRenderOptions(!1), patchConsole: !1 });
+  return createRoot({ ...getBaseRenderOptions(!1), patchConsole: !1 });
 }
 function E(c) {
   return { ok: !0, days: SETUP_TOKEN_DEFAULT_EXPIRY_DAYS, seconds: LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS };
@@ -85,33 +85,33 @@ setup-token creates a long-lived Claude.ai subscription token, which this policy
         e(AppRoot, {
           session: p,
           onChangeAppState: (y) => handleReplAppStateChange(y, p),
-          children: r(o, {
+          children: r(Box, {
             flexDirection: "column",
             gap: 1,
             children: [
-              e(zB, {}),
+              e(WelcomeBanner, {}),
               l &&
-                r(o, {
+                r(Box, {
                   flexDirection: "column",
                   children: [
-                    e(t, {
+                    e(Text, {
                       color: "warning",
                       children:
                         "Warning: You already have authentication configured via environment variable or API key helper.",
                     }),
-                    e(t, {
+                    e(Text, {
                       color: "warning",
                       children:
                         "The setup-token command will create a new OAuth token which you can use instead.",
                     }),
                   ],
                 }),
-              r(o, {
+              r(Box, {
                 paddingLeft: 1,
                 flexDirection: "column",
                 gap: 1,
                 children: [
-                  r(t, {
+                  r(Text, {
                     bold: !0,
                     children: [
                       "This will guide you through long-lived (",
@@ -149,7 +149,7 @@ async function doctorHandler(c) {
   logEvent("tengu_doctor_command", {});
   let d;
   try {
-    let n = await Mbe({ probeKeychain: !0, storageV5: c }),
+    let n = await getInstallationDiagnostics({ probeKeychain: !0, storageV5: c }),
       f = getAutoUpdatesChannel(),
       l = [
         "Claude Code doctor",

@@ -9,6 +9,6 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 89 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { o9, Lgr } from "../../02-功能模块/认证-OAuth登录/chunk-n76cf9e6.js";
+import { WORKER_KINDS as o9, runDaemonWorker as Lgr } from "../../02-功能模块/认证-OAuth登录/daemon-worker-runtime.js";
 import "../../02-功能模块/权限系统/chunk-3kjwvb3e.js";
 export { o9 as WORKER_KINDS, Lgr as runDaemonWorker };

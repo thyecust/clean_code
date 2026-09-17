@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 120 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -29,7 +29,7 @@ function Y(yo) {
   return yo.length > 0;
 }
 function Z(Co, go) {
-  return e(t, { children: Co }, go);
+  return e(Text, { children: Co }, go);
 }
 var n = {
   ios: { url: "https://apps.apple.com/app/claude-by-anthropic/id6473753684" },
@@ -117,7 +117,7 @@ function B(co) {
   else x = i[14];
   let T;
   if (i[15] === MEMO_CACHE_SENTINEL)
-    ((T = e(o, {
+    ((T = e(Box, {
       marginTop: 1,
       children: e(InputGuide, {
         children: r(DotSeparatedList, {
@@ -133,7 +133,7 @@ function B(co) {
   let U;
   if (i[16] !== y || i[17] !== x)
     ((U = e(Qr, {
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         onKeyDown: y,
         children: [x, T],
@@ -156,14 +156,14 @@ function f(fo) {
       `
 `,
     ).filter(Y);
-    R = o;
+    R = Box;
     k = "column";
     q = uo.map(Z);
     ((N[0] = K), (N[1] = R), (N[2] = k), (N[3] = q));
   } else ((R = N[1]), (k = N[2]), (q = N[3]));
   let P;
   if (N[4] !== L)
-    ((P = e(t, { dimColor: !0, children: L })), (N[4] = L), (N[5] = P));
+    ((P = e(Text, { dimColor: !0, children: L })), (N[4] = L), (N[5] = P));
   else P = N[5];
   let V;
   if (N[6] !== R || N[7] !== k || N[8] !== q || N[9] !== P)

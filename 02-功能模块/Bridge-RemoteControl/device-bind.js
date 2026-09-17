@@ -12,7 +12,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { CL, Cg, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { createOkResult, createErrorResult, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { launchedFromHome } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { registerDevice, DeviceLimitReachedError, DeviceRegistrationUnavailableError, clearCachedDeviceRegistration, buildDefaultDeviceDisplayName } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
@@ -57,32 +57,32 @@ async function D() {
   return e(void 0);
 }
 async function localBindIdentity(e) {
-  if ((e.launchedFromHome ?? launchedFromHome)()) return Cg("launched_from_home");
+  if ((e.launchedFromHome ?? launchedFromHome)()) return createErrorResult("launched_from_home");
   let t;
   try {
     t = (e.isEgressAllowed ?? isEgressAllowed)();
   } catch {
     t = !1;
   }
-  if (!t) return Cg("egress");
+  if (!t) return createErrorResult("egress");
   let r = compareAccountUuids({
     storedAccountUuid: e.accountUuid,
     hostAccountUuid: await (e.getHostAccountUuid
       ? e.getHostAccountUuid()
       : getHostAccountUuidFromEnv(e.credentials)),
   });
-  if (r.status === "missing") return Cg("account");
-  if (r.status === "mismatch") return Cg("account_mismatch");
+  if (r.status === "missing") return createErrorResult("account");
+  if (r.status === "mismatch") return createErrorResult("account_mismatch");
   return (await (e.hasDeviceProof ?? D)().catch(() => !1))
-    ? CL({ accountUuid: r.accountUuid, source: r.source })
-    : Cg("no_device_proof");
+    ? createOkResult({ accountUuid: r.accountUuid, source: r.source })
+    : createErrorResult("no_device_proof");
 }
 async function prepareDeviceBinder(e) {
   let t = e.isEnabled ?? isViolinWoodEnabled;
   try {
-    if (!(await t())) return Cg("gate");
+    if (!(await t())) return createErrorResult("gate");
   } catch (s) {
-    return Cg(f("gate", s));
+    return createErrorResult(f("gate", s));
   }
   let r = await localBindIdentity(e);
   if (!r.ok) return _(r.error);
@@ -92,10 +92,10 @@ async function prepareDeviceBinder(e) {
   try {
     c = await registerDevice(a, e.displayName ?? buildDefaultDeviceDisplayName(), e.credentials);
   } catch (s) {
-    return Cg(f("register", s));
+    return createErrorResult(f("register", s));
   }
   let { deviceUUID: o, priv: d } = c;
-  return CL({
+  return createOkResult({
     deviceUUID: o,
     sign: () => {
       try {
@@ -108,14 +108,14 @@ async function prepareDeviceBinder(e) {
     },
     clearRegistration: () =>
       clearCachedDeviceRegistration(a, e.credentials).catch((s) => {
-        n(
+        logForDebugging(
           `[deviceBind] could not forget the cached device id: ${s instanceof Error ? s.message : String(s)}`,
         );
       }),
   });
 }
 function _(e) {
-  return (logEvent("tengu_device_bind_skipped", { reason: fromEnum(e) }), Cg(e));
+  return (logEvent("tengu_device_bind_skipped", { reason: fromEnum(e) }), createErrorResult(e));
 }
 function f(e, t) {
   return (
@@ -125,7 +125,7 @@ function f(e, t) {
       registration_unavailable: t instanceof DeviceRegistrationUnavailableError,
     }),
     logFeatureSad("device_bind", (t instanceof R && t.errorClass) || e),
-    n(
+    logForDebugging(
       `[deviceBind] continuing unbound: ${t instanceof Error ? t.message : String(t)}`,
     ),
     t instanceof DeviceLimitReachedError

@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 120 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
-import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { isRemoteActive, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -38,16 +38,16 @@ function G(to) {
     .filter(X);
 }
 function J(io) {
-  return (n(`QR code generation failed: ${io}`), []);
+  return (logForDebugging(`QR code generation failed: ${io}`), []);
 }
 function I(ao, co) {
-  return e(t, { children: ao }, co);
+  return e(Text, { children: ao }, co);
 }
 function P(oo) {
   let i = _(17),
     { onDone: eo } = oo,
     m = useAppStateSelector(x),
-    w = tn(),
+    w = useIsScreenReaderEnabled(),
     L;
   if (i[0] !== m)
     ((L = m
@@ -65,17 +65,17 @@ function P(oo) {
   if ((useKeybinding("confirm:no", eo, k), !m)) {
     let f, u;
     if (i[3] === MEMO_CACHE_SENTINEL)
-      ((f = e(o, {
+      ((f = e(Box, {
         marginBottom: 1,
-        children: e(t, { bold: !0, children: "Cloud session" }),
+        children: e(Text, { bold: !0, children: "Cloud session" }),
       })),
         (u = isRemoteActive()
-          ? e(t, {
+          ? e(Text, {
               children: hasRemoteCapability("fanout")
                 ? "This session's browser link isn't available from this view."
                 : "This session is connected directly and has no browser link \u2014 only sessions started with `claude --cloud` can be opened in the browser.",
             })
-          : e(t, {
+          : e(Text, {
               color: "warning",
               children:
                 "Not in remote mode. Start with `claude --cloud` to use this command.",
@@ -89,7 +89,7 @@ function P(oo) {
         children: [
           f,
           u,
-          e(o, {
+          e(Box, {
             marginTop: 1,
             children: e(InputGuide, {
               children: e(KeybindingHint, { chord: "escape", action: "close" }),
@@ -103,25 +103,25 @@ function P(oo) {
   }
   let f;
   if (i[6] === MEMO_CACHE_SENTINEL)
-    ((f = e(o, {
+    ((f = e(Box, {
       marginBottom: 1,
-      children: e(t, { bold: !0, children: "Cloud session" }),
+      children: e(Text, { bold: !0, children: "Cloud session" }),
     })),
       (i[6] = f));
   else f = i[6];
   let u;
   if (i[7] === MEMO_CACHE_SENTINEL)
-    ((u = e(t, { dimColor: !0, children: "Open in browser: " })), (i[7] = u));
+    ((u = e(Text, { dimColor: !0, children: "Open in browser: " })), (i[7] = u));
   else u = i[7];
   let a;
   if (i[8] !== m)
-    ((a = r(o, { children: [u, e(t, { color: "ide", children: m })] })),
+    ((a = r(Box, { children: [u, e(Text, { color: "ide", children: m })] })),
       (i[8] = m),
       (i[9] = a));
   else a = i[9];
   let v;
   if (i[10] === MEMO_CACHE_SENTINEL)
-    ((v = e(o, {
+    ((v = e(Box, {
       marginBottom: 1,
       children: e(InputGuide, {
         children: e(KeybindingHint, { chord: "escape", action: "cancel", parens: !0 }),
@@ -135,7 +135,7 @@ function P(oo) {
       !w &&
       h &&
       e(Dn, {
-        fallback: e(t, { dimColor: !0, children: "Generating QR code\u2026" }),
+        fallback: e(Text, { dimColor: !0, children: "Generating QR code\u2026" }),
         children: e(b, { qrLinesPromise: h }),
       })),
       (i[11] = w),

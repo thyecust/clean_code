@@ -15,7 +15,7 @@ import { sortByModifiedDesc, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.j
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   listGitWorktrees,
@@ -52,9 +52,9 @@ import "../插件系统/channel-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -71,7 +71,7 @@ import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
-import { rit, oit } from "../会话-历史-恢复/chunk-t3q91yqm.js";
+import { SessionLogPicker, buildCrossProjectResumeCommand } from "../会话-历史-恢复/resume-session-picker.js";
 import "../../03-入口与运行时/会话UI(REPL)/clawd-mascot.js";
 import "../工具Bash-Shell/bash-output-view.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
@@ -110,20 +110,20 @@ function q(s) {
 function j(Oe) {
   let z = _(7),
     { message: W, args: X, onDone: Ve } = Oe;
-  Un(Ve, 0);
+  useTimeout(Ve, 0);
   let U;
   if (z[0] !== X)
-    ((U = r(t, { dimColor: !0, children: [figures.pointer, " /resume ", X] })),
+    ((U = r(Text, { dimColor: !0, children: [figures.pointer, " /resume ", X] })),
       (z[0] = X),
       (z[1] = U));
   else U = z[1];
   let B;
   if (z[2] !== W)
-    ((B = e(ToolResultRow, { children: e(t, { children: W }) })), (z[2] = W), (z[3] = B));
+    ((B = e(ToolResultRow, { children: e(Text, { children: W }) })), (z[2] = W), (z[3] = B));
   else B = z[3];
   let oe;
   if (z[4] !== U || z[5] !== B)
-    ((oe = r(o, { flexDirection: "column", children: [U, B] })),
+    ((oe = r(Box, { flexDirection: "column", children: [U, B] })),
       (z[4] = U),
       (z[5] = B),
       (z[6] = oe));
@@ -214,7 +214,7 @@ function te({ onDone: s, onResume: g }) {
     let R, p;
     try {
       if (((R = isLiteLog(u) ? await loadFullLog(u, { storageV5: P }) : u), S.current)) return;
-      if (((p = await oit(R, n, m)), S.current)) return;
+      if (((p = await buildCrossProjectResumeCommand(R, n, m)), S.current)) return;
       if (p) {
         let y = await setClipboard(p);
         if (S.current) return;
@@ -253,8 +253,8 @@ function te({ onDone: s, onResume: g }) {
     return r(Qr, {
       color: "suggestion",
       children: [
-        e(t, { bold: !0, color: "suggestion", children: "Resume session" }),
-        e(o, {
+        e(Text, { bold: !0, color: "suggestion", children: "Resume session" }),
+        e(Box, {
           marginTop: 1,
           children: e(SpinnerMessageLine, {
             message: M
@@ -264,7 +264,7 @@ function te({ onDone: s, onResume: g }) {
         }),
       ],
     });
-  return e(rit, {
+  return e(SessionLogPicker, {
     logs: v,
     maxHeight: I ? Math.floor(f / 2) : f - 2,
     onCancel: J,

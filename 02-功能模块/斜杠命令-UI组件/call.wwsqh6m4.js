@@ -29,7 +29,7 @@ import "../认证-OAuth登录/url-and-error-redaction.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
 import "../MCP客户端/chunk-4xr0rjb4.js";
-import "../成本-Token统计/chunk-3nwwgatc.js";
+import "../成本-Token统计/usage-transcript-scan.js";
 import { runSkillDoctor } from "../MCP客户端/skill-doctor-report.js";
 import "../../01-核心基础设施/共享小工具-未细化/skill-usage-by-plugin.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
@@ -27,7 +27,7 @@ function l({
   if (r) {
     let o = t.parse(r)?.version;
     if (!o)
-      n(
+      logForDebugging(
         `requiredMinimumVersion '${r}' is not a valid semver version \u2014 ignoring`,
         { level: "error" },
       );
@@ -38,7 +38,7 @@ Update Claude Code using your organization's approved method, then try again. If
   if (i) {
     let o = t.parse(i)?.version;
     if (!o)
-      n(
+      logForDebugging(
         `requiredMaximumVersion '${i}' is not a valid semver version \u2014 ignoring`,
         { level: "error" },
       );

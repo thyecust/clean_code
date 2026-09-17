@@ -10,7 +10,7 @@
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -74,10 +74,10 @@ async function E(e, t) {
   if (!r.found) return null;
   let o;
   try {
-    o = z(Buffer.from(r.value).toString("utf8"));
+    o = jsonParse(Buffer.from(r.value).toString("utf8"));
   } catch (a) {
     return (
-      n(`mcpSkillCache: meta.json for ${t} is not valid JSON: ${a}`, {
+      logForDebugging(`mcpSkillCache: meta.json for ${t} is not valid JSON: ${a}`, {
         level: "warn",
       }),
       null
@@ -86,7 +86,7 @@ async function E(e, t) {
   let l = k().nullable().safeParse(o);
   if (!l.success)
     return (
-      n(
+      logForDebugging(
         `mcpSkillCache: meta.json for ${t} failed schema validation: ${l.error.message}`,
         { level: "warn" },
       ),
@@ -95,13 +95,13 @@ async function E(e, t) {
   return l.data;
 }
 async function L(e, t, i) {
-  let r = await e.write(w(t), b(i), {
+  let r = await e.write(w(t), jsonStringify(i), {
     publishDiscipline: "atomic",
     mode: 438 & ~process.umask(),
   });
   if (!r.ok)
     throw new R(
-      `meta.json write failed: ${We(r.error)}`,
+      `meta.json write failed: ${describeStorageError(r.error)}`,
       "MCP skill cache meta.json write failed",
     );
 }
@@ -152,11 +152,11 @@ async function x(e, t, i) {
   for (let r of [[t, i], [t]]) {
     let o = STORAGE_KEYS.userConfigDir(MCP_SKILL_ARCHIVES_DIR_NAME, r);
     if ((await e.statMeta(o)).ok) {
-      n(
+      logForDebugging(
         `[mcp-skills] replacing a stray file at ${MCP_SKILL_ARCHIVES_DIR_NAME}/${r.join("/")} with the cache directory`,
       );
       let l = await e.delete(o);
-      if (!l.ok) n(`[mcp-skills] could not remove it: ${We(l.error)}`);
+      if (!l.ok) logForDebugging(`[mcp-skills] could not remove it: ${describeStorageError(l.error)}`);
       return l.ok;
     }
   }
@@ -176,7 +176,7 @@ async function writeMcpSkillContent(e, t, i, r) {
     a = await e.write(o, r, l);
   if (!a.ok)
     throw new R(
-      `SKILL.md write failed: ${We(a.error)}`,
+      `SKILL.md write failed: ${describeStorageError(a.error)}`,
       "MCP skill cache SKILL.md write failed",
     );
 }

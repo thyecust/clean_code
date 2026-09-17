@@ -19,9 +19,9 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
 import { getVersionForAnalytics } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { Gu } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathWithTilde } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
 import { sanitizeTerminalName } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
@@ -175,7 +175,7 @@ function ae(Rt) {
         term_program: sanitizeTerminalName(f.termProgram),
         term_program_version: getVersionForAnalytics(f.termProgramVersion),
       });
-      let et = `\`${Gu(getSettingsFilePathForSource("userSettings") ?? "settings.json")}\``;
+      let et = `\`${formatPathWithTilde(getSettingsFilePathForSource("userSettings") ?? "settings.json")}\``;
       k(
         Z
           ? `Scroll speed reset to auto (${R} ${pluralize(R, "line")} per notch) \xB7 removed from ${et}`
@@ -214,8 +214,8 @@ function ae(Rt) {
     rt,
     ot;
   if (m[25] === MEMO_CACHE_SENTINEL)
-    ((rt = e(t, { bold: !0, children: "Scroll speed" })),
-      (ot = e(o, { height: 1 })),
+    ((rt = e(Text, { bold: !0, children: "Scroll speed" })),
+      (ot = e(Box, { height: 1 })),
       (m[25] = rt),
       (m[26] = ot));
   else ((rt = m[25]), (ot = m[26]));
@@ -224,7 +224,7 @@ function ae(Rt) {
   else q = m[28];
   let B;
   if (m[29] !== q)
-    ((B = e(t, { color: "permission", children: q })),
+    ((B = e(Text, { color: "permission", children: q })),
       (m[29] = q),
       (m[30] = B));
   else B = m[30];
@@ -233,26 +233,26 @@ function ae(Rt) {
   else L = m[32];
   let ee;
   if (m[33] !== c || m[34] !== L)
-    ((ee = r(t, { children: ["  ", c, " ", L, " per wheel notch"] })),
+    ((ee = r(Text, { children: ["  ", c, " ", L, " per wheel notch"] })),
       (m[33] = c),
       (m[34] = L),
       (m[35] = ee));
   else ee = m[35];
   let te;
   if (m[36] !== V)
-    ((te = V && e(t, { dimColor: !0, children: " (auto)" })),
+    ((te = V && e(Text, { dimColor: !0, children: " (auto)" })),
       (m[36] = V),
       (m[37] = te));
   else te = m[37];
   let re;
   if (m[38] !== V)
-    ((re = !V && r(t, { dimColor: !0, children: [" \xB7 auto is ", R] })),
+    ((re = !V && r(Text, { dimColor: !0, children: [" \xB7 auto is ", R] })),
       (m[38] = V),
       (m[39] = re));
   else re = m[39];
   let oe;
   if (m[40] !== B || m[41] !== ee || m[42] !== te || m[43] !== re)
-    ((oe = r(o, { children: [B, ee, te, re] })),
+    ((oe = r(Box, { children: [B, ee, te, re] })),
       (m[40] = B),
       (m[41] = ee),
       (m[42] = te),
@@ -260,7 +260,7 @@ function ae(Rt) {
       (m[44] = oe));
   else oe = m[44];
   let nt;
-  if (m[45] === MEMO_CACHE_SENTINEL) ((nt = e(o, { height: 1 })), (m[45] = nt));
+  if (m[45] === MEMO_CACHE_SENTINEL) ((nt = e(Box, { height: 1 })), (m[45] = nt));
   else nt = m[45];
   let st;
   if (m[46] === MEMO_CACHE_SENTINEL)
@@ -274,8 +274,8 @@ function ae(Rt) {
   else ne = m[48];
   let it, lt;
   if (m[49] === MEMO_CACHE_SENTINEL)
-    ((it = e(o, { height: 1 })),
-      (lt = e(t, {
+    ((it = e(Box, { height: 1 })),
+      (lt = e(Text, {
         dimColor: !0,
         children:
           "Scroll to feel it \xB7 \u2190/\u2192 adjust \xB7 r reset to auto \xB7 Enter save \xB7 Esc cancel",
@@ -287,7 +287,7 @@ function ae(Rt) {
   if (m[51] !== oe || m[52] !== ne)
     ((se = e(Qr, {
       color: "permission",
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [rt, ot, oe, nt, st, ne, it, lt],
       }),
@@ -310,16 +310,16 @@ function W(Kt) {
     { label: Te, value: ke } = Kt,
     ie;
   if (Ae[0] !== Te)
-    ((ie = e(o, { width: 12, children: e(t, { dimColor: !0, children: Te }) })),
+    ((ie = e(Box, { width: 12, children: e(Text, { dimColor: !0, children: Te }) })),
       (Ae[0] = Te),
       (Ae[1] = ie));
   else ie = Ae[1];
   let le;
-  if (Ae[2] !== ke) ((le = e(t, { children: ke })), (Ae[2] = ke), (Ae[3] = le));
+  if (Ae[2] !== ke) ((le = e(Text, { children: ke })), (Ae[2] = ke), (Ae[3] = le));
   else le = Ae[3];
   let at;
   if (Ae[4] !== ie || Ae[5] !== le)
-    ((at = r(o, { children: [ie, le] })),
+    ((at = r(Box, { children: [ie, le] })),
       (Ae[4] = ie),
       (Ae[5] = le),
       (Ae[6] = at));

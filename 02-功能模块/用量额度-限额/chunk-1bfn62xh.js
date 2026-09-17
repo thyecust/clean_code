@@ -11,7 +11,7 @@ import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串�
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, getDynamicConfig_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { parseSlashCommandInput as mue, canSelfManageUsageCredits } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -295,7 +295,7 @@ function getActiveFotwCampaign() {
   if (t.parsedCampaign === null || t.parsedCampaign.raw !== e) {
     let a = P().safeParse(e);
     if (!a.success)
-      n(`Promo campaign payload failed validation: ${a.error.message}`, {
+      logForDebugging(`Promo campaign payload failed validation: ${a.error.message}`, {
         level: "warn",
       });
     t.parsedCampaign = a.success
@@ -372,7 +372,7 @@ function refreshFotwEligibility(e) {
     (t.inFlightEligibilityRefresh ??= O(e)
       .catch(
         (r) => (
-          n(`FotW eligibility refresh failed: ${r}`, { level: "warn" }),
+          logForDebugging(`FotW eligibility refresh failed: ${r}`, { level: "warn" }),
           null
         ),
       )
@@ -401,7 +401,7 @@ async function O(e) {
   } catch (l) {
     return (
       logFeatureSad("api_fotw_eligibility_fetch", "request_failed"),
-      n(`FotW eligibility fetch failed: ${l}`, { level: "warn" }),
+      logForDebugging(`FotW eligibility fetch failed: ${l}`, { level: "warn" }),
       null
     );
   }
@@ -459,7 +459,7 @@ async function claimFotwCredit(e, t) {
   } catch (s) {
     return (
       logFeatureBad("api_fotw_claim", "request_failed"),
-      n(`FotW claim failed: ${s}`, { level: "warn" }),
+      logForDebugging(`FotW claim failed: ${s}`, { level: "warn" }),
       { outcome: "failed" }
     );
   }

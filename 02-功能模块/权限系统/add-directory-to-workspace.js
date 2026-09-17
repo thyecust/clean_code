@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useDebouncedCallback } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { validateWorkingDirectory, formatDirectoryValidationMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
@@ -37,7 +37,7 @@ function C() {
   let po = _(1),
     xe;
   if (po[0] === MEMO_CACHE_SENTINEL)
-    ((xe = e(t, {
+    ((xe = e(Text, {
       dimColor: !0,
       children:
         "Claude Code will be able to read files in this directory and make edits when auto-accept edits is on.",
@@ -51,7 +51,7 @@ function U(fo) {
     { path: re } = fo,
     B;
   if (se[0] !== re)
-    ((B = e(t, { color: "permission", children: re })),
+    ((B = e(Text, { color: "permission", children: re })),
       (se[0] = re),
       (se[1] = B));
   else B = se[1];
@@ -60,7 +60,7 @@ function U(fo) {
   else De = se[2];
   let we;
   if (se[3] !== B)
-    ((we = r(o, { flexDirection: "column", gap: 1, children: [B, De] })),
+    ((we = r(Box, { flexDirection: "column", gap: 1, children: [B, De] })),
       (se[3] = B),
       (se[4] = we));
   else we = se[4];
@@ -78,12 +78,12 @@ function X(yo) {
     } = yo,
     Re;
   if (w[0] === MEMO_CACHE_SENTINEL)
-    ((Re = e(t, { children: "Enter the path to the directory:" })),
+    ((Re = e(Text, { children: "Enter the path to the directory:" })),
       (w[0] = Re));
   else Re = w[0];
   let W;
   if (w[1] !== ie || w[2] !== le || w[3] !== K)
-    ((W = e(o, {
+    ((W = e(Box, {
       borderDimColor: !0,
       borderStyle: "round",
       marginTop: 1,
@@ -108,7 +108,7 @@ function X(yo) {
   if (w[5] !== ae || w[6] !== O)
     ((j =
       O.length > 0 &&
-      e(o, {
+      e(Box, {
         marginBottom: 1,
         children: e(SuggestionList, { suggestions: O, selectedSuggestion: ae, noPad: !0 }),
       })),
@@ -121,7 +121,7 @@ function X(yo) {
   else G = w[9];
   let Ae;
   if (w[10] !== W || w[11] !== j || w[12] !== G)
-    ((Ae = r(o, { flexDirection: "column", children: [Re, W, j, G] })),
+    ((Ae = r(Box, { flexDirection: "column", children: [Re, W, j, G] })),
       (w[10] = W),
       (w[11] = j),
       (w[12] = G),
@@ -159,7 +159,7 @@ function AddDirectoryToWorkspaceDialog(bo) {
       (l[1] = pe),
       (l[2] = Ke));
   else Ke = l[2];
-  let q = nk(Ke, 100),
+  let q = useDebouncedCallback(Ke, 100),
     Oe,
     Ve;
   if (l[3] !== q || l[4] !== b)
@@ -297,7 +297,7 @@ function AddDirectoryToWorkspaceDialog(bo) {
     l[29] !== u
   )
     ((M = i
-      ? r(o, {
+      ? r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [
@@ -305,7 +305,7 @@ function AddDirectoryToWorkspaceDialog(bo) {
             e(ve, { options: Q, onChange: z, onCancel: () => z("no") }),
           ],
         })
-      : r(o, {
+      : r(Box, {
           flexDirection: "column",
           gap: 1,
           children: [

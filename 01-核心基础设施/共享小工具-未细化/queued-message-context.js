@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
@@ -34,7 +34,7 @@ function QueuedMessageProvider(y) {
   let f = b,
     i;
   if (c[4] !== s || c[5] !== n)
-    ((i = e(o, { paddingX: n, children: s })),
+    ((i = e(Box, { paddingX: n, children: s })),
       (c[4] = s),
       (c[5] = n),
       (c[6] = i));

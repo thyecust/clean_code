@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { CLOUD_SNAPSHOTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import {
@@ -23,7 +23,7 @@ import {
   CLAUDE_REF_PREFIX,
   isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { on, I9 } from "../Git-Worktree/chunk-v967hawf.js";
+import { runDirSyncGit, DEFAULT_MAX_BUNDLE_BYTES } from "../Git-Worktree/dir-sync-git-repository.js";
 import { basename, dirname, isAbsolute, join as p } from "path";
 var R = "side.git",
   m = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/,
@@ -38,7 +38,7 @@ function buildSessionRefName(o, a) {
 async function listSessionRefs(o, a) {
   if (!m.test(a)) return null;
   let e = `${CLAUDE_REF_PREFIX}${a}/`,
-    u = await on(o, ["for-each-ref", "--format=%(objectname) %(refname)", e]);
+    u = await runDirSyncGit(o, ["for-each-ref", "--format=%(objectname) %(refname)", e]);
   if (u.exitCode !== 0) return null;
   let t = u.stdout
     .split(
@@ -58,7 +58,7 @@ var UNREADABLE_CARRIER_STATUS = 422,
 function createDirSyncJournalTransport({
   client: o,
   direct: a,
-  inboundMaxBytes: e = I9,
+  inboundMaxBytes: e = DEFAULT_MAX_BUNDLE_BYTES,
   stallMs: u,
   restartPauseMs: t,
 }) {
@@ -104,7 +104,7 @@ function createDirSyncJournalTransport({
         case "file":
         case "unknown":
           return (
-            n(
+            logForDebugging(
               "dir-sync: refused a container object named by a carrier this side cannot read",
             ),
             d

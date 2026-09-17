@@ -14,7 +14,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, l, A, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { mxe, ou, b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isStorageError, getTelemetryCode, jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getToolResultsDirForSession, getSidecarKeyForToolResultFile, ensureToolResultsDirectory, writeBytesExclusiveHardened } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -325,8 +325,8 @@ ${n.notice}`
               (isHoverRestEnabled() &&
               e.storageV5 !== void 0 &&
               d instanceof Error &&
-              mxe(d.cause)
-                ? ou(d.cause)
+              isStorageError(d.cause)
+                ? getTelemetryCode(d.cause)
                 : void 0),
             h = Error(n);
           if (
@@ -343,7 +343,7 @@ ${n.notice}`
     };
   },
   mapToolResultToToolResultBlockParam(e, t) {
-    return { tool_use_id: t, type: "tool_result", content: b(e) };
+    return { tool_use_id: t, type: "tool_result", content: jsonStringify(e) };
   },
 });
 function ne(e, t) {

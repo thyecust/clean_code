@@ -10,10 +10,10 @@
 import { _ } from "../../react/react.zhnvc798.js";
 import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport, useVirtualScrollViewportSize, useScrollViewport, useClaimScrollBox } from "../../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { ScrollBox } from "../../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { useCursorDeclaration } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { o, t, zye, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useFocus, measureElement } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { BackgroundText } from "../../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { e, r } from "../../react/react.kwtapczy.js";
@@ -31,7 +31,7 @@ function kt(no) {
 }
 function xt(to, Pe) {
   let [, it] = Pe;
-  return to + (it ? te(it) : 0) + 2 + 1;
+  return to + (it ? getStringWidth(it) : 0) + 2 + 1;
 }
 var m = Qt({
   selectedTab: void 0,
@@ -75,7 +75,7 @@ function qp(Pe) {
     Kn;
   if (l[0] !== le)
     ((Kn = () => {
-      let Wn = We.current ? Od(We.current).height : 0;
+      let Wn = We.current ? measureElement(We.current).height : 0;
       if (Wn !== le) Vt(Wn);
     }),
       (l[0] = le),
@@ -116,7 +116,7 @@ function qp(Pe) {
   let Ge = Un,
     spatial = !1,
     Ue = C(null),
-    { focus: Ye, blur: inkBlur } = zye(),
+    { focus: Ye, blur: inkBlur } = useFocus(),
     [B, Y] = d(Ne),
     Yn;
   if (l[10] !== Ye)
@@ -184,12 +184,12 @@ function qp(Pe) {
     ((tt = { context: "Tabs", isActive: qe }), (l[21] = qe), (l[22] = tt));
   else tt = l[22];
   useKeybindings({ "tabs:next": () => de(1), "tabs:previous": () => de(-1) }, tt);
-  let qt = oe ? te(oe) + 1 : 0,
+  let qt = oe ? getStringWidth(oe) + 1 : 0,
     zt = x.reduce(xt, 0),
     Jt = qt + zt,
     ot = Ee ? Math.max(0, Pn - Jt) : 0,
     z = Ee ? Pn : void 0;
-  const ze = o,
+  const ze = Box,
     Lt = "column",
     Je = !1 ? void 0 : 0,
     Le = !1 ? void 0 : Ne,
@@ -197,7 +197,7 @@ function qp(Pe) {
     Xe = T ? 0 : void 0,
     $e =
       !f &&
-      r(o, {
+      r(Box, {
         ref: !1 ? Ue : void 0,
         tabIndex: !1 ? 0 : void 0,
         autoFocus: !1 ? Ne : void 0,
@@ -209,7 +209,7 @@ function qp(Pe) {
         flexShrink: T ? 0 : void 0,
         alignSelf: !1 && !Ee ? "flex-start" : void 0,
         children: [
-          oe !== void 0 && e(t, { bold: !0, color: Fn, children: oe }),
+          oe !== void 0 && e(Text, { bold: !0, color: Fn, children: oe }),
           x.map((Xt, rt) => {
             let [Zt, $t] = Xt;
             return e(
@@ -224,14 +224,14 @@ function qp(Pe) {
               Zt,
             );
           }),
-          ot > 0 && e(t, { children: " ".repeat(ot) }),
+          ot > 0 && e(Text, { children: " ".repeat(ot) }),
         ],
       });
   let ue;
   if (l[23] !== se)
     ((ue =
       se != null &&
-      e(o, { ref: We, flexDirection: "column", flexShrink: 0, children: se })),
+      e(Box, { ref: We, flexDirection: "column", flexShrink: 0, children: se })),
       (l[23] = se),
       (l[24] = ue));
   else ue = l[24];
@@ -249,7 +249,7 @@ function qp(Pe) {
     l[34] !== A
   )
     ((fe = R
-      ? e(o, {
+      ? e(Box, {
           width: z,
           marginTop: f ? 0 : 1,
           flexShrink: 0,
@@ -266,7 +266,7 @@ function qp(Pe) {
             A,
           ),
         })
-      : e(o, {
+      : e(Box, {
           width: z,
           marginTop: f ? 0 : 1,
           height: ie,
@@ -355,7 +355,7 @@ function JWe(oo) {
   )
     ((we = sn
       ? e(BackgroundText, { color: pe, bold: !0, padded: !0, children: he })
-      : r(t, {
+      : r(Text, {
           inverse: P,
           bold: P,
           underline: nn && tn,
@@ -371,7 +371,7 @@ function JWe(oo) {
   else we = me[10];
   let ft;
   if (me[11] !== rn || me[12] !== be || me[13] !== we)
-    ((ft = e(o, {
+    ((ft = e(Box, {
       ref: rn,
       onClick: be,
       onMouseEnter: ct,
@@ -396,7 +396,7 @@ function ss(ro) {
   const cn = lo ? 0 : void 0;
   let ht;
   if (co[0] !== an || co[1] !== cn || co[2] !== ln)
-    ((ht = e(o, { width: ln, flexShrink: cn, children: an })),
+    ((ht = e(Box, { width: ln, flexShrink: cn, children: an })),
       (co[0] = an),
       (co[1] = cn),
       (co[2] = ln),

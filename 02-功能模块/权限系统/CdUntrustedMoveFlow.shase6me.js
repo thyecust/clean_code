@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -19,7 +19,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { parseSettingsFileUncached, resolveLocalSettingsStoreRoot } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -116,7 +116,7 @@ function Po() {
     return ge();
   } catch (We) {
     let xt = We;
-    n(
+    logForDebugging(
       `/cd: reading the project settings for the backstop prompt failed: ${xt}`,
       { level: "error" },
     );
@@ -124,27 +124,27 @@ function Po() {
   }
 }
 function Do(Nt) {
-  n(`/cd: persisting trust failed: ${Nt}`, { level: "error" });
+  logForDebugging(`/cd: persisting trust failed: ${Nt}`, { level: "error" });
 }
 function E(pt) {
   let Le = _(7),
     { message: Fe, args: He, onDone: mt } = pt;
-  Un(mt, 0);
+  useTimeout(mt, 0);
   let pe;
   if (Le[0] !== He)
-    ((pe = r(t, { dimColor: !0, children: [figures.pointer, " /cd ", He] })),
+    ((pe = r(Text, { dimColor: !0, children: [figures.pointer, " /cd ", He] })),
       (Le[0] = He),
       (Le[1] = pe));
   else pe = Le[1];
   let me;
   if (Le[2] !== Fe)
-    ((me = e(ToolResultRow, { children: e(t, { children: Fe }) })),
+    ((me = e(ToolResultRow, { children: e(Text, { children: Fe }) })),
       (Le[2] = Fe),
       (Le[3] = me));
   else me = Le[3];
   let co;
   if (Le[4] !== pe || Le[5] !== me)
-    ((co = r(o, { flexDirection: "column", children: [pe, me] })),
+    ((co = r(Box, { flexDirection: "column", children: [pe, me] })),
       (Le[4] = pe),
       (Le[5] = me),
       (Le[6] = co));
@@ -184,17 +184,17 @@ function CdTrustPrompt(ft) {
   else he = R[3];
   let ye;
   if (R[4] !== he)
-    ((ye = e(t, { bold: !0, children: he })), (R[4] = he), (R[5] = ye));
+    ((ye = e(Text, { bold: !0, children: he })), (R[4] = he), (R[5] = ye));
   else ye = R[5];
   let ve;
   if (R[6] !== fe)
     ((ve =
       fe != null &&
-      r(t, {
+      r(Text, {
         children: [
           "This directory is part of the repository at",
           " ",
-          e(t, { bold: !0, children: sanitizeForDisplay(fe) }),
+          e(Text, { bold: !0, children: sanitizeForDisplay(fe) }),
           ". Trusting it trusts that whole repository, including its other worktrees and subdirectories.",
         ],
       })),
@@ -204,20 +204,20 @@ function CdTrustPrompt(ft) {
   let Ce;
   if (R[8] !== k)
     ((Ce = k
-      ? e(t, {
+      ? e(Text, {
           children:
             "Its settings declare project permission rules and/or additional directories. They apply only if you trust this directory explicitly (it is trusted through a parent directory so far).",
         })
       : r(N, {
           children: [
-            r(t, {
+            r(Text, {
               children: [
                 "This session hasn",
                 "'",
                 "t worked here before. Is this a directory you created or one you trust?",
               ],
             }),
-            r(t, {
+            r(Text, {
               children: [
                 "Claude Code",
                 "'",
@@ -241,9 +241,9 @@ function CdTrustPrompt(ft) {
   else Se = R[12];
   let ho;
   if (R[13] === MEMO_CACHE_SENTINEL)
-    ((ho = e(t, {
+    ((ho = e(Text, {
       dimColor: !0,
-      children: e(ct, {
+      children: e(Link, {
         url: "https://code.claude.com/docs/en/security",
         children: "Security guide",
       }),
@@ -278,7 +278,7 @@ function CdTrustPrompt(ft) {
   else Re = R[22];
   let yo;
   if (R[23] === MEMO_CACHE_SENTINEL)
-    ((yo = e(t, {
+    ((yo = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [
@@ -297,7 +297,7 @@ function CdTrustPrompt(ft) {
     R[27] !== Ce ||
     R[28] !== Se
   )
-    ((Me = r(o, {
+    ((Me = r(Box, {
       flexDirection: "column",
       gap: 1,
       paddingTop: 1,
@@ -337,7 +337,7 @@ function Je(vt) {
   if (q[0] !== b.rawCount || q[1] !== b.rules || q[2] !== b.sources)
     ((De =
       b.sources.length > 0 &&
-      r(t, {
+      r(Text, {
         bold: !0,
         color: "warning",
         children: [
@@ -363,7 +363,7 @@ function Je(vt) {
   if (q[4] !== P.dirs || q[5] !== P.rawCount || q[6] !== P.sources)
     ((Te =
       P.sources.length > 0 &&
-      r(t, {
+      r(Text, {
         bold: !0,
         color: "warning",
         children: [
@@ -392,7 +392,7 @@ function Je(vt) {
     ((Ge =
       !X &&
       be.length > 0 &&
-      r(t, {
+      r(Text, {
         bold: !0,
         color: "warning",
         children: [
@@ -411,7 +411,7 @@ function Je(vt) {
     ((Ne =
       !X &&
       Pe.length > 0 &&
-      r(t, {
+      r(Text, {
         bold: !0,
         color: "warning",
         children: [
@@ -432,7 +432,7 @@ function Je(vt) {
     : "These will apply to this session as soon as you move. Only proceed if you trust this configuration.";
   let ke;
   if (q[14] !== Ye)
-    ((ke = e(t, { dimColor: !0, children: Ye })), (q[14] = Ye), (q[15] = ke));
+    ((ke = e(Text, { dimColor: !0, children: Ye })), (q[14] = Ye), (q[15] = ke));
   else ke = q[15];
   let Co;
   if (
@@ -442,7 +442,7 @@ function Je(vt) {
     q[19] !== Ne ||
     q[20] !== ke
   )
-    ((Co = r(o, { flexDirection: "column", children: [De, Te, Ge, Ne, ke] })),
+    ((Co = r(Box, { flexDirection: "column", children: [De, Te, Ge, Ne, ke] })),
       (q[16] = De),
       (q[17] = Te),
       (q[18] = Ge),
@@ -488,7 +488,7 @@ async function ut(s, a, l) {
         i = await relocateSession(a.session, h, "cd_command", a.storageV5);
       } catch (m) {
         return (
-          n(`/cd relocate failed: ${m}`, { level: "error" }),
+          logForDebugging(`/cd relocate failed: ${m}`, { level: "error" }),
           s(
             `Couldn't move to ${chalk.bold(sanitizeForDisplay(h))} \u2014 the directory may no longer exist, or the session couldn't be moved. Staying in ${chalk.bold(sanitizeForDisplay(getCwd()))}.`,
           ),
@@ -500,7 +500,7 @@ async function ut(s, a, l) {
           i.departedAdditionalDirectories,
         );
       } catch (m) {
-        n(
+        logForDebugging(
           `/cd: retiring the previous project's additional directories failed (continuing): ${m}`,
           { level: "error" },
         );
@@ -539,7 +539,7 @@ async function ut(s, a, l) {
   try {
     G = Oe(h);
   } catch (i) {
-    n(
+    logForDebugging(
       `/cd: reading the target's project settings for the trust prompt failed: ${i}`,
       { level: "error" },
     );
@@ -550,7 +550,7 @@ async function ut(s, a, l) {
     disclosures: G,
     onConfirm: async () => (
       await recordDirectoryTrust(h, a.storageV5).catch((i) => {
-        n(`/cd: persisting trust failed: ${i}`, { level: "error" });
+        logForDebugging(`/cd: persisting trust failed: ${i}`, { level: "error" });
       }),
       v()
     ),
@@ -566,7 +566,7 @@ async function Mo(s) {
     let l = await getPendingMcpServers(s.storageV5);
     if (l.pendingServers.length > 0 && getGatingSettingsErrors().length > 0)
       return (
-        n(
+        logForDebugging(
           "/cd: project MCP servers await approval but a settings file has errors; leaving them pending",
           { level: "warn" },
         ),
@@ -575,7 +575,7 @@ async function Mo(s) {
     return l;
   } catch (l) {
     return (
-      n(
+      logForDebugging(
         `/cd: collecting the new directory's project MCP servers failed (continuing without approvals): ${l}`,
         { level: "error" },
       ),
@@ -587,7 +587,7 @@ async function bo(s) {
   try {
     await s.reloadPlugins?.();
   } catch (a) {
-    n(
+    logForDebugging(
       `/cd: refreshing plugins/MCP for the new directory failed (continuing): ${a}`,
       { level: "error" },
     );
@@ -746,7 +746,7 @@ function ne(We) {
               reapplyProjectSettingsAfterTrustChange();
             } catch (W) {
               let Tt = W;
-              n(
+              logForDebugging(
                 `/cd: re-applying the project settings after the trust change failed: ${Tt}`,
                 { level: "error" },
               );

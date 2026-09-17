@@ -11,18 +11,18 @@
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { WZ, v$n, WHe, _ye, yWe, rPt } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
+import { getCloudPluginsConsentPath, saveCloudPluginsConsent, createCloudPluginsConsentStorage, resolveCloudPluginsConsent, computeCloudPluginsForwardPlan, collectCloudPluginsForwardingInputs } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { z_e } from "../Hooks钩子/chunk-6wg4v2yj.js";
 import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -94,7 +94,7 @@ function B(uo) {
   else X = c[14];
   let H;
   if (c[15] === MEMO_CACHE_SENTINEL)
-    ((H = e(t, {
+    ((H = e(Text, {
       children:
         "A cloud session normally loads only the repository's and your organization's plugins. If you say yes, each cloud session you start or attach to from this machine is also told which plugins you have turned on or off here for its folder \u2014 their names, and the address of any marketplace they come from on GitHub, in a git repository or at a URL \u2014 and installs the enabled ones itself. Saying yes sends nothing else: no plugin files, no other settings, no credentials, no local paths.",
     })),
@@ -103,13 +103,13 @@ function B(uo) {
   let A;
   if (c[16] !== k)
     ((A =
-      k !== "" && r(t, { dimColor: !0, children: ["Right now: ", k, "."] })),
+      k !== "" && r(Text, { dimColor: !0, children: ["Right now: ", k, "."] })),
       (c[16] = k),
       (c[17] = A));
   else A = c[17];
   let O;
   if (c[18] === MEMO_CACHE_SENTINEL)
-    ((O = e(t, {
+    ((O = e(Text, {
       dimColor: !0,
       children:
         "Yes and No are saved for this machine; run /cloud-plugins again to change your answer. Not now decides nothing. The answer is kept in:",
@@ -118,16 +118,16 @@ function B(uo) {
   else O = c[18];
   let R;
   if (c[19] !== V)
-    ((R = r(o, {
+    ((R = r(Box, {
       flexDirection: "column",
-      children: [O, e(t, { dimColor: !0, children: V })],
+      children: [O, e(Text, { dimColor: !0, children: V })],
     })),
       (c[19] = V),
       (c[20] = R));
   else R = c[20];
   let L;
   if (c[21] !== R || c[22] !== A)
-    ((L = r(o, { flexDirection: "column", gap: 1, children: [H, A, R] })),
+    ((L = r(Box, { flexDirection: "column", gap: 1, children: [H, A, R] })),
       (c[21] = R),
       (c[22] = A),
       (c[23] = L));
@@ -177,13 +177,13 @@ function B(uo) {
   return q;
 }
 var No = async (s, a) => {
-  let d = WHe(a.storageV5),
+  let d = createCloudPluginsConsentStorage(a.storageV5),
     m = z_e.of(a.session.host),
     g = await K(a.storageV5);
   return e(B, {
     forwarded: g.forwarded,
     stayed: g.stayed,
-    consentLocation: sanitizeForDisplay(WZ()),
+    consentLocation: sanitizeForDisplay(getCloudPluginsConsentPath()),
     onDone: (w) => {
       decideCloudPlugins(w, { deps: d, memory: m }).then((y) => s(y));
     },
@@ -191,11 +191,11 @@ var No = async (s, a) => {
 };
 async function K(s) {
   try {
-    let a = yWe(await rPt(s));
+    let a = computeCloudPluginsForwardPlan(await collectCloudPluginsForwardingInputs(s));
     return { forwarded: a.counts.forwarded, stayed: a.dropped.length };
   } catch (a) {
     return (
-      n(
+      logForDebugging(
         `/cloud-plugins: could not read this machine's plugin choices (${l(a)})`,
         { level: "warn" },
       ),
@@ -204,7 +204,7 @@ async function K(s) {
   }
 }
 async function decideCloudPlugins(s, { deps: a, memory: d }) {
-  let m = await _ye(d.consentPin, a).catch(() => "unset");
+  let m = await resolveCloudPluginsConsent(d.consentPin, a).catch(() => "unset");
   logEvent("tengu_cloud_plugins_consent", { choice: fromEnum(s), previous: fromEnum(m) });
   let g =
     m === "accepted"
@@ -219,8 +219,8 @@ async function decideCloudPlugins(s, { deps: a, memory: d }) {
       ? `Nothing decided: ${g}. Run /cloud-plugins when you want to choose.`
       : `Left as it was: ${g}.`;
   }
-  if (!(await v$n(s, a)))
-    return `Couldn\u2019t save that: ${sanitizeForDisplay(WZ())} could not be written, so nothing changed \u2014 ${g}. Check that the folder is writable, then run /cloud-plugins again.`;
+  if (!(await saveCloudPluginsConsent(s, a)))
+    return `Couldn\u2019t save that: ${sanitizeForDisplay(getCloudPluginsConsentPath())} could not be written, so nothing changed \u2014 ${g}. Check that the folder is writable, then run /cloud-plugins again.`;
   return (
     (d.consentPin.value = Promise.resolve(s)),
     (d.consentPin.given = !0),

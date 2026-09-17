@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { getComputerUseSession, getComputerUseNativeModule, runComputerUseNativeCall, notifyExpectedEscape } from "./computer-use-session.js";
 import { getComputerUseInputNativeModule } from "./computer-use-input-native.js";
@@ -78,7 +78,7 @@ async function T(o, t) {
   try {
     a = await C();
   } catch {
-    n("[computer-use] pbpaste before paste failed; proceeding without restore");
+    logForDebugging("[computer-use] pbpaste before paste failed; proceeding without restore");
   }
   try {
     if ((await A(t), (await C()) !== t))
@@ -89,7 +89,7 @@ async function T(o, t) {
       try {
         await A(a);
       } catch {
-        n("[computer-use] clipboard restore after paste failed");
+        logForDebugging("[computer-use] clipboard restore after paste failed");
       }
   }
 }
@@ -130,7 +130,7 @@ function createCliExecutor(o) {
     b = y ?? DEFAULT_HOST_BUNDLE_ID,
     h = (e) => (y === null ? [...e] : e.filter((r) => r !== y));
   return (
-    n(
+    logForDebugging(
       y
         ? `[computer-use] terminal ${y} \u2192 surrogate host (hide-exempt, activate-skip, screenshot-excluded)`
         : "[computer-use] terminal not detected; falling back to sentinel host",
@@ -143,11 +143,11 @@ function createCliExecutor(o) {
           try {
             let s = await t.apps.prepareDisplay(e, b, r);
             if (s.activated)
-              n(`[computer-use] prepareForAction: activated ${s.activated}`);
+              logForDebugging(`[computer-use] prepareForAction: activated ${s.activated}`);
             return s.hidden;
           } catch (s) {
             return (
-              n(
+              logForDebugging(
                 `[computer-use] prepareForAction failed; continuing to action: ${l(s)}`,
                 { level: "warn" },
               ),

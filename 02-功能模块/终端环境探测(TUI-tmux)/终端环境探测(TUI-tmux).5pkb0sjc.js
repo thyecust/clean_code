@@ -11,7 +11,7 @@ import { j, B, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isScreenReaderModeEnabled, isGrowthBookEnabled, getFeatureValueWithSource_CACHED_MAY_BE_STALE, getFeatureValue_CACHED_MAY_BE_STALE, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { getEnvEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
@@ -145,7 +145,7 @@ function shouldUseFullscreen(e = defaultFullscreenState) {
   if (isTmuxControlMode(e)) {
     if (!e.loggedTmuxCcDisable)
       ((e.loggedTmuxCcDisable = !0),
-        n(
+        logForDebugging(
           "fullscreen disabled: tmux -CC (iTerm2 integration mode) detected \xB7 set CLAUDE_CODE_NO_FLICKER=1 to override",
         ));
     return !1;
@@ -153,7 +153,7 @@ function shouldUseFullscreen(e = defaultFullscreenState) {
   if (u()) {
     if (!e.loggedWinSshDisable)
       ((e.loggedWinSshDisable = !0),
-        n(
+        logForDebugging(
           "fullscreen disabled: Windows over SSH (ConPTY re-rendering) detected \xB7 set CLAUDE_CODE_NO_FLICKER=1 to override",
         ));
     return !1;

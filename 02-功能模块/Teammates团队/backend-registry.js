@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { terminalBackendRegistry, isInsideTmuxSync, isInsideTmux, isTmuxAvailable, isInITerm2, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -18,20 +18,20 @@ import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路
 import { homedir } from "os";
 async function detectPythonPackageManager() {
   if ((await execFileNoThrow("which", ["uv"])).code === 0)
-    return (n("[it2Setup] Found uv (will use uv tool install)"), "uvx");
+    return (logForDebugging("[it2Setup] Found uv (will use uv tool install)"), "uvx");
   if ((await execFileNoThrow("which", ["pipx"])).code === 0)
-    return (n("[it2Setup] Found pipx package manager"), "pipx");
+    return (logForDebugging("[it2Setup] Found pipx package manager"), "pipx");
   if ((await execFileNoThrow("which", ["pip"])).code === 0)
-    return (n("[it2Setup] Found pip package manager"), "pip");
+    return (logForDebugging("[it2Setup] Found pip package manager"), "pip");
   if ((await execFileNoThrow("which", ["pip3"])).code === 0)
-    return (n("[it2Setup] Found pip3 package manager"), "pip");
-  return (n("[it2Setup] No Python package manager found"), null);
+    return (logForDebugging("[it2Setup] Found pip3 package manager"), "pip");
+  return (logForDebugging("[it2Setup] No Python package manager found"), null);
 }
 async function p() {
   return (await execFileNoThrow("which", ["it2"])).code === 0;
 }
 async function installIt2WithPackageManager(e) {
-  n(`[it2Setup] Installing it2 using ${e}`);
+  logForDebugging(`[it2Setup] Installing it2 using ${e}`);
   let t;
   switch (e) {
     case "uvx":
@@ -51,19 +51,19 @@ async function installIt2WithPackageManager(e) {
   if (t.code !== 0) {
     let a = t.stderr || "Unknown installation error";
     return (
-      n(`[it2Setup] Failed to install it2: ${a}`, { level: "error" }),
+      logForDebugging(`[it2Setup] Failed to install it2: ${a}`, { level: "error" }),
       logFeatureBad("swarm_iterm2_it2_install", `${e}_install_failed`),
       { success: !1, error: a, packageManager: e }
     );
   }
   return (
-    n("[it2Setup] it2 installed successfully"),
+    logForDebugging("[it2Setup] it2 installed successfully"),
     logFeatureOk("swarm_iterm2_it2_install"),
     { success: !0, packageManager: e }
   );
 }
 async function verifyIt2Setup() {
-  if ((n("[it2Setup] Verifying it2 setup..."), !(await p())))
+  if ((logForDebugging("[it2Setup] Verifying it2 setup..."), !(await p())))
     return (
       logFeatureBad("swarm_iterm2_it2_verify", "not_installed"),
       { success: !1, error: "it2 CLI is not installed or not in PATH" }
@@ -78,7 +78,7 @@ async function verifyIt2Setup() {
       a.includes("not enabled")
     )
       return (
-        n("[it2Setup] Python API not enabled in iTerm2"),
+        logForDebugging("[it2Setup] Python API not enabled in iTerm2"),
         logFeatureSad("swarm_iterm2_it2_verify", "python_api_not_enabled"),
         {
           success: !1,
@@ -92,7 +92,7 @@ async function verifyIt2Setup() {
     );
   }
   return (
-    n("[it2Setup] it2 setup verified successfully"),
+    logForDebugging("[it2Setup] it2 setup verified successfully"),
     logFeatureOk("swarm_iterm2_it2_verify"),
     { success: !0 }
   );
@@ -109,12 +109,12 @@ function getPythonApiSetupInstructions() {
 function markIt2SetupComplete(e) {
   if (getGlobalConfig().iterm2It2SetupComplete !== !0)
     (saveGlobalConfig((a) => ({ ...a, iterm2It2SetupComplete: !0 }), e),
-      n("[it2Setup] Marked it2 setup as complete"));
+      logForDebugging("[it2Setup] Marked it2 setup as complete"));
 }
 function setPreferTmuxOverIterm2(e, t) {
   if (getGlobalConfig().preferTmuxOverIterm2 !== e)
     (saveGlobalConfig((s) => ({ ...s, preferTmuxOverIterm2: e }), t),
-      n(`[it2Setup] Set preferTmuxOverIterm2 = ${e}`));
+      logForDebugging(`[it2Setup] Set preferTmuxOverIterm2 = ${e}`));
 }
 function d() {
   return getGlobalConfig().preferTmuxOverIterm2 === !0;
@@ -146,13 +146,13 @@ function u(e) {
 async function detectAndGetBackend(e = terminalBackendRegistry) {
   if ((await ensureBackendsRegistered(e), e.cachedDetectionResult))
     return (
-      n(
+      logForDebugging(
         `[BackendRegistry] Using cached backend: ${e.cachedDetectionResult.backend.type}`,
       ),
       e.cachedDetectionResult
     );
   if (
-    (n("[BackendRegistry] Starting backend detection..."), getTeammateModeFromSnapshot() === "iterm2")
+    (logForDebugging("[BackendRegistry] Starting backend detection..."), getTeammateModeFromSnapshot() === "iterm2")
   ) {
     if (!isInITerm2(e))
       throw (
@@ -168,7 +168,7 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
           'teammateMode is set to "iterm2" but the it2 CLI is not reachable. Install it with `pip install it2` and enable the Python API in iTerm2 (Preferences > General > Magic > Enable Python API).',
         )
       );
-    n("[BackendRegistry] Selected: iterm2 (explicit teammateMode)");
+    logForDebugging("[BackendRegistry] Selected: iterm2 (explicit teammateMode)");
     let i = u(e);
     return (
       (e.cachedDetectionResult = {
@@ -182,8 +182,8 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
   }
   let t = await isInsideTmux(),
     a = isInITerm2(e);
-  if ((n(`[BackendRegistry] Environment: insideTmux=${t}, inITerm2=${a}`), t)) {
-    n("[BackendRegistry] Selected: tmux (running inside tmux session)");
+  if ((logForDebugging(`[BackendRegistry] Environment: insideTmux=${t}, inITerm2=${a}`), t)) {
+    logForDebugging("[BackendRegistry] Selected: tmux (running inside tmux session)");
     let i = c(e);
     return (
       (e.cachedDetectionResult = {
@@ -198,15 +198,15 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
   if (a) {
     let i = d();
     if (i)
-      n(
+      logForDebugging(
         "[BackendRegistry] User prefers tmux over iTerm2, skipping iTerm2 detection",
       );
     else {
       let r = await isIt2CliAvailable(e);
       if (
-        (n(`[BackendRegistry] iTerm2 detected, it2 CLI available: ${r}`), r)
+        (logForDebugging(`[BackendRegistry] iTerm2 detected, it2 CLI available: ${r}`), r)
       ) {
-        n("[BackendRegistry] Selected: iterm2 (native iTerm2 with it2 CLI)");
+        logForDebugging("[BackendRegistry] Selected: iterm2 (native iTerm2 with it2 CLI)");
         let m = u(e);
         return (
           (e.cachedDetectionResult = {
@@ -220,8 +220,8 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
       }
     }
     let l = await isTmuxAvailable();
-    if ((n(`[BackendRegistry] it2 not available, tmux available: ${l}`), l)) {
-      n(
+    if ((logForDebugging(`[BackendRegistry] it2 not available, tmux available: ${l}`), l)) {
+      logForDebugging(
         "[BackendRegistry] Selected: tmux (fallback in iTerm2, it2 setup recommended)",
       );
       let r = c(e);
@@ -236,7 +236,7 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
       );
     }
     throw (
-      n("[BackendRegistry] ERROR: iTerm2 detected but no it2 CLI and no tmux"),
+      logForDebugging("[BackendRegistry] ERROR: iTerm2 detected but no it2 CLI and no tmux"),
       logFeatureBad("swarm_backend_detect", "iterm2_no_it2_no_tmux"),
       Error(
         "iTerm2 detected but it2 CLI not installed. Install it2 with: pip install it2",
@@ -244,8 +244,8 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
     );
   }
   let s = await isTmuxAvailable();
-  if ((n(`[BackendRegistry] Not in tmux or iTerm2, tmux available: ${s}`), s)) {
-    n("[BackendRegistry] Selected: tmux (external session mode)");
+  if ((logForDebugging(`[BackendRegistry] Not in tmux or iTerm2, tmux available: ${s}`), s)) {
+    logForDebugging("[BackendRegistry] Selected: tmux (external session mode)");
     let i = c(e);
     return (
       (e.cachedDetectionResult = {
@@ -258,7 +258,7 @@ async function detectAndGetBackend(e = terminalBackendRegistry) {
     );
   }
   throw (
-    n("[BackendRegistry] ERROR: No pane backend available"),
+    logForDebugging("[BackendRegistry] ERROR: No pane backend available"),
     logFeatureBad("swarm_backend_detect", "no_backend_available"),
     Error(k())
   );
@@ -297,7 +297,7 @@ function getCachedDetectionResult(e = terminalBackendRegistry) {
   return e.cachedDetectionResult;
 }
 function markInProcessFallback(e = terminalBackendRegistry) {
-  (n("[BackendRegistry] Marking in-process fallback as active"),
+  (logForDebugging("[BackendRegistry] Marking in-process fallback as active"),
     (e.inProcessFallbackActive = !0));
 }
 function x() {
@@ -306,7 +306,7 @@ function x() {
 function isInProcessEnabled(e = terminalBackendRegistry) {
   if (ke())
     return (
-      n("[BackendRegistry] isInProcessEnabled: true (non-interactive session)"),
+      logForDebugging("[BackendRegistry] isInProcessEnabled: true (non-interactive session)"),
       !0
     );
   let t = x(),
@@ -316,7 +316,7 @@ function isInProcessEnabled(e = terminalBackendRegistry) {
   else {
     if (e.inProcessFallbackActive)
       return (
-        n(
+        logForDebugging(
           "[BackendRegistry] isInProcessEnabled: true (fallback after pane backend unavailable)",
         ),
         !0
@@ -326,7 +326,7 @@ function isInProcessEnabled(e = terminalBackendRegistry) {
     a = !s && !i;
   }
   return (
-    n(
+    logForDebugging(
       `[BackendRegistry] isInProcessEnabled: ${a} (mode=${t}, insideTmux=${isInsideTmuxSync()}, inITerm2=${isInITerm2(e)})`,
     ),
     a

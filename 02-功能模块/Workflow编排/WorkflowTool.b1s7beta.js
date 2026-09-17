@@ -17,16 +17,16 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { describeStorageError, jsonStringify, jsonStringifyLine, jsonParse, Is, deepClone, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, countOccurrences, stripInvisibleCharacters } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { validateStorageKey } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, formatOverflowHint } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { READ_ONLY_AUTO_ALLOW_REASON, LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { hasNoControlCharacters } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
@@ -56,7 +56,7 @@ import {
 } from "./chunk-bkcg0nbj.js";
 import { usesNondeterministicApi } from "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { fin } from "./chunk-w0pgmfvw.js";
+import { getWorkflowToolPromptText } from "./workflow-tool-prompt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
 import "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
@@ -109,7 +109,7 @@ function xr(e, { apply: r }) {
   if (o !== "{" && o !== "[") return null;
   let a;
   try {
-    a = z(t);
+    a = jsonParse(t);
   } catch {
     return null;
   }
@@ -172,7 +172,7 @@ function $r(e) {
   return Array.isArray(e);
 }
 function _t(e, r) {
-  return Object.is(e, r) || b(e) === b(r);
+  return Object.is(e, r) || jsonStringify(e) === jsonStringify(r);
 }
 function rr(e, r, t = {}) {
   if (e === null || typeof e !== "object") return Object.is(e, r) ? t : void 0;
@@ -523,7 +523,7 @@ class pr {
       let _ = (this.rowsUnder.get(w) ?? 0) + 1;
       if ((this.rowsUnder.set(w, _), _ > this.maxRowsPerScope)) {
         if (
-          (n(
+          (logForDebugging(
             `world: scope ${w} exceeded ${this.maxRowsPerScope} rows \u2014 a rule is probably putting the fact it fires on; retracting it`,
             { level: "warn" },
           ),
@@ -572,7 +572,7 @@ class pr {
       if (!this.within(d.addr, e.in)) continue;
       let o = ur(r.of, d);
       if (!o) continue;
-      let a = b(o) ?? "",
+      let a = jsonStringify(o) ?? "",
         p = t.get(a);
       if (p) p.rows.push(d);
       else t.set(a, { bindings: o, rows: [d] });
@@ -626,7 +626,7 @@ class pr {
       .catch((I) => {
         let x = jr(I);
         if (
-          (n(`world rule ${e.addr} threw on row ${d}: ${x}`, { level: "warn" }),
+          (logForDebugging(`world rule ${e.addr} threw on row ${d}: ${x}`, { level: "warn" }),
           !this.isRetractedScope(e.in))
         )
           try {
@@ -676,7 +676,7 @@ class pr {
       try {
         r(e);
       } catch (t) {
-        n(`world listener threw: ${l(t)}`, { level: "warn" });
+        logForDebugging(`world listener threw: ${l(t)}`, { level: "warn" });
       }
   }
 }
@@ -690,7 +690,7 @@ async function nr(e, r) {
   } catch (a) {
     let p = r.errorInfo(a);
     if (p.stack)
-      n(
+      logForDebugging(
         `Workflow v2 script error stack:
 ${p.stack}`,
         { level: "error" },
@@ -711,11 +711,11 @@ ${p.stack}`,
   try {
     let a;
     try {
-      a = Ru(o);
+      a = deepClone(o);
     } catch {
-      a = z(b(o) ?? "null");
+      a = jsonParse(jsonStringify(o) ?? "null");
     }
-    return (b(a), { value: a });
+    return (jsonStringify(a), { value: a });
   } catch {
     return {
       error: "workflow result is not JSON-serializable (a circular reference?)",
@@ -1056,8 +1056,8 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
   function E(P) {
     let C = I(P);
     if (C === null || typeof C !== "object") return C;
-    let A = b(C);
-    return A === void 0 ? void 0 : z(A);
+    let A = jsonStringify(C);
+    return A === void 0 ? void 0 : jsonParse(A);
   }
   function pe(P, C) {
     if (typeof P !== "function")
@@ -1469,7 +1469,7 @@ class sr {
           );
       } catch (o) {
         if (this.world.isFull)
-          n(
+          logForDebugging(
             `workflow v2: kill record for ${this.runId} skipped \u2014 the world is full`,
           );
         else logError(o);
@@ -1621,7 +1621,7 @@ class sr {
         ...this.world
           .read({ topic: "error" }, I)
           .filter(x)
-          .map((E) => truncateMiddleWithMarker(`error: ${b(E.fact)}`)),
+          .map((E) => truncateMiddleWithMarker(`error: ${jsonStringify(E.fact)}`)),
         ...U.map((E) => truncateMiddleWithMarker(`script error: ${E.error ?? ""}`)),
         ...j.map((E) =>
           truncateMiddleWithMarker(
@@ -2115,10 +2115,10 @@ function Qr(e, r, t) {
         .then(async () => {
           if (a) return;
           if (isHoverRestEnabled() && t !== void 0 && d !== void 0) {
-            let x = await t.append(d, [{ data: t8(I) }]);
+            let x = await t.append(d, [{ data: jsonStringifyLine(I) }]);
             if (!x.ok)
               throw (
-                n(`world journal append failed: ${We(x.error)}`, {
+                logForDebugging(`world journal append failed: ${describeStorageError(x.error)}`, {
                   level: "warn",
                 }),
                 Error("world journal append failed", { cause: x.error })
@@ -2126,13 +2126,13 @@ function Qr(e, r, t) {
             return;
           }
           if (!o) (await mkdir(dirname(r), { recursive: !0 }), (o = !0));
-          await appendFile(r, t8(I));
+          await appendFile(r, jsonStringifyLine(I));
         })
         .catch((x) => {
           ((a = !0),
             _(),
             logFeatureSad("workflow_journal", "append_failed"),
-            n(
+            logForDebugging(
               `world journal append failed; the writer detaches and this session's later rows stay in memory only: ${x}`,
               { level: "warn" },
             ));
@@ -2179,7 +2179,7 @@ async function et(e, r) {
       I = await r.statMeta(t);
     if (!I.ok)
       throw (
-        n(`world journal stat failed: ${We(I.error)}`, { level: "warn" }),
+        logForDebugging(`world journal stat failed: ${describeStorageError(I.error)}`, { level: "warn" }),
         Error("world journal stat failed", { cause: I.error })
       );
     return (I.value.storedBytes ?? I.value.size) > I.value.size
@@ -2231,7 +2231,7 @@ function Yr(e) {
     r.push(p.data);
   }
   if (d > 0)
-    n(`world journal: skipped ${d} malformed or invalid line(s)`, {
+    logForDebugging(`world journal: skipped ${d} malformed or invalid line(s)`, {
       level: "warn",
     });
   return { lines: r, skipped: d };
@@ -2253,7 +2253,7 @@ async function Kt(e, r) {
     if (!a.ok) {
       if (a.error.code === "NotFound") return;
       throw (
-        n(`world journal read failed: ${We(a.error)}`, { level: "warn" }),
+        logForDebugging(`world journal read failed: ${describeStorageError(a.error)}`, { level: "warn" }),
         Error("world journal read failed", { cause: a.error })
       );
     }
@@ -2345,7 +2345,7 @@ function Sr(e, r) {
       if (p !== void 0) {
         if (
           (logFeatureSad("workflow_journal", "writer_reclaimed"),
-          n(
+          logForDebugging(
             `world journal at ${o} had a writer from before a session switch; the re-entered session reclaims the file and the pre-switch world stops journaling`,
             { level: "warn" },
           ),
@@ -2362,13 +2362,13 @@ function Sr(e, r) {
         if (x.length > 0 && d.rows.length === 0) w = tt(d, x);
         _ = F === 0 && w === rt(x) && d.rows.length === w;
       } catch (x) {
-        ((I = !0), n(`world journal replay failed: ${x}`, { level: "warn" }));
+        ((I = !0), logForDebugging(`world journal replay failed: ${x}`, { level: "warn" }));
       }
       if (Rr.peek(e) !== t) return Sr(e, r);
       if (!_) {
         if (
           (logFeatureSad("workflow_journal", I ? "replay_failed" : "not_whole"),
-          n(
+          logForDebugging(
             `world journal at ${o} is not whole after replay (${w} rows restored); the world stays in memory for this session`,
             { level: "warn" },
           ),
@@ -2410,7 +2410,7 @@ var Yt =
     Qe({
       script: s()
         .max(MAX_WORKFLOW_SCRIPT_BYTES)
-        .refine(rU, Yt)
+        .refine(hasNoControlCharacters, Yt)
         .optional()
         .describe(
           "Self-contained workflow script. Must begin with `export const meta = { name, description, phases }` (pure literal, no computed values) followed by the script body using agent()/parallel()/pipeline()/phase()." +
@@ -2564,10 +2564,10 @@ var ut = {
     maxResultSizeChars: 1e5,
     isEnabled: () => areWorkflowsEnabled(),
     async prompt(e) {
-      return fin(isWorkflowAuthoringSkillAvailable(e?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
+      return getWorkflowToolPromptText(isWorkflowAuthoringSkillAvailable(e?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
     },
     async description(e, r) {
-      return fin(isWorkflowAuthoringSkillAvailable(r?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
+      return getWorkflowToolPromptText(isWorkflowAuthoringSkillAvailable(r?.tools)) + getWorkflowSizeGuidelinePromptText(getGlobalConfig().workflowSizeGuideline) + lt();
     },
     get inputSchema() {
       return Xt();
@@ -2963,7 +2963,7 @@ function Le(e) {
 `,
         )
         .find((w) => w.trim()) ?? truncateToCodeUnits(e, 40),
-    d = te(t) > _r || t.length > _r ? truncateToCodeUnits(t, _r - 1) + "\u2026" : t,
+    d = getStringWidth(t) > _r || t.length > _r ? truncateToCodeUnits(t, _r - 1) + "\u2026" : t,
     o =
       countOccurrences(
         e,

@@ -13,10 +13,10 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { buildVertexBaseUrl, getVertexRegionForModel } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getModelForAnalytics, DEFAULT_3P_SONNET_KEY, DEFAULT_VERTEX_OPUS_KEY, getMarketingNameForModel, authState, getEnvAuthorizationHeader, isHostManagedProviderAuth, getConfiguredVertexProjectId, refreshGcpCredentialsIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { MODEL_CONFIGS_BY_KEY, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { tierConfig, collectStalePins, seedEnvDefaultForUserPin, collectUnpinnedTiers, predecessorsInTier } from "../../01-核心基础设施/共享小工具-未细化/chunk-nzt97y14.js";
 import { buildVertexGoogleAuth, suppressVertexAuthRejection, vertexResidualCredentialPins } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 var g = tierConfig(DEFAULT_VERTEX_OPUS_KEY);
@@ -29,7 +29,7 @@ async function findVertexUpgradeCandidates() {
   let c = (
     await Promise.all(
       o.map(async (e) => {
-        let r = to[e.defaultKey].vertex;
+        let r = MODEL_CONFIGS_BY_KEY[e.defaultKey].vertex;
         if (r === null) return null;
         let t = await d(r);
         if (
@@ -41,8 +41,8 @@ async function findVertexUpgradeCandidates() {
           !t)
         )
           return null;
-        let l = getMarketingNameForModel(to[e.pinnedKey].firstParty),
-          f = getMarketingNameForModel(to[e.defaultKey].firstParty);
+        let l = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e.pinnedKey].firstParty),
+          f = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[e.defaultKey].firstParty);
         if (!l || !f) return null;
         return {
           tier: e.tier,
@@ -57,7 +57,7 @@ async function findVertexUpgradeCandidates() {
     )
   ).filter((e) => e !== null);
   return (
-    n(`[vertex-upgrade] tiersWithPin=${o.length} candidates=${c.length}`),
+    logForDebugging(`[vertex-upgrade] tiersWithPin=${o.length} candidates=${c.length}`),
     c
   );
 }
@@ -73,7 +73,7 @@ async function checkVertexDefaultAvailability() {
   logEvent("tengu_vertex_default_check", { unpinned_tiers: fromNumber(s.length) });
   let c = await Promise.all(
       s.map(async (r) => {
-        let t = to[r.defaultKey],
+        let t = MODEL_CONFIGS_BY_KEY[r.defaultKey],
           l = await d(t.vertex);
         if (
           (logEvent("tengu_vertex_probe_result", {
@@ -87,7 +87,7 @@ async function checkVertexDefaultAvailability() {
         let f = await y(r.defaultKey, r.tier, o);
         if (!f) return null;
         let m = getMarketingNameForModel(t.firstParty),
-          p = getMarketingNameForModel(to[f.key].firstParty);
+          p = getMarketingNameForModel(MODEL_CONFIGS_BY_KEY[f.key].firstParty);
         if (!m || !p) return null;
         return {
           tier: r.tier,
@@ -96,7 +96,7 @@ async function checkVertexDefaultAvailability() {
           defaultName: m,
           fallbackKey: f.key,
           fallbackName: p,
-          fallbackVertexId: to[f.key].vertex,
+          fallbackVertexId: MODEL_CONFIGS_BY_KEY[f.key].vertex,
           ...(f.crossTier && { crossTier: !0 }),
         };
       }),
@@ -104,17 +104,17 @@ async function checkVertexDefaultAvailability() {
     e = [];
   for (let r of c) if (r !== null) e.push(r);
   return (
-    n(`[vertex-fallback] unpinnedTiers=${s.length} fallbacks=${e.length}`),
+    logForDebugging(`[vertex-fallback] unpinnedTiers=${s.length} fallbacks=${e.length}`),
     e
   );
 }
 async function y(o, s, c) {
-  let e = predecessorsInTier(o, s).filter((t) => !c?.[to[t].firstParty]),
-    r = await Promise.all(e.map((t) => d(to[t].vertex)));
+  let e = predecessorsInTier(o, s).filter((t) => !c?.[MODEL_CONFIGS_BY_KEY[t].firstParty]),
+    r = await Promise.all(e.map((t) => d(MODEL_CONFIGS_BY_KEY[t].vertex)));
   for (let [t, l] of r.entries()) if (l) return { key: e[t] };
   if (s === "opus") {
     let t = DEFAULT_3P_SONNET_KEY;
-    if (await d(to[t].vertex)) return { key: t, crossTier: !0 };
+    if (await d(MODEL_CONFIGS_BY_KEY[t].vertex)) return { key: t, crossTier: !0 };
   }
   return null;
 }

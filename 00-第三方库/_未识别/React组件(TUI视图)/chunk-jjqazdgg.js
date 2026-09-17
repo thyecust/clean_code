@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { TREE_CONNECTOR_GLYPHS } from "../../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../react/react.zhnvc798.js";
-import { o, t, pd } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, NoSelect } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { ew, Qt, L_, De, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ie(ue, fe) {
   return e(
-    o,
-    { width: 2, children: e(t, { dimColor: !0, children: U[ue] }) },
+    Box,
+    { width: 2, children: e(Text, { dimColor: !0, children: U[ue] }) },
     fe,
   );
 }
@@ -29,7 +29,7 @@ function Oye(Re) {
   if (L[0] !== h)
     ((m =
       h.length > 0 &&
-      e(pd, {
+      e(NoSelect, {
         "aria-hidden": !0,
         fromLeftEdge: !0,
         flexShrink: 0,
@@ -41,13 +41,13 @@ function Oye(Re) {
   else m = L[1];
   let v;
   if (L[2] !== G)
-    ((v = e(o, { flexGrow: 1, flexShrink: 1, children: G })),
+    ((v = e(Box, { flexGrow: 1, flexShrink: 1, children: G })),
       (L[2] = G),
       (L[3] = v));
   else v = L[3];
   let ee;
   if (L[4] !== m || L[5] !== v)
-    ((ee = r(o, { flexDirection: "row", children: [m, v] })),
+    ((ee = r(Box, { flexDirection: "row", children: [m, v] })),
       (L[4] = m),
       (L[5] = v),
       (L[6] = ee));
@@ -77,7 +77,7 @@ function W(xe) {
   else y = f[4];
   let b;
   if (f[5] !== y)
-    ((b = e(o, { flexDirection: "column", children: y })),
+    ((b = e(Box, { flexDirection: "column", children: y })),
       (f[5] = y),
       (f[6] = b));
   else b = f[6];
@@ -105,7 +105,7 @@ function X(Ne) {
   else k = P[2];
   let D;
   if (P[3] !== H || P[4] !== z || P[5] !== N)
-    ((D = L_(N) ? N : e(t, { dimColor: z, color: H, children: N })),
+    ((D = L_(N) ? N : e(Text, { dimColor: z, color: H, children: N })),
       (P[3] = H),
       (P[4] = z),
       (P[5] = N),
@@ -135,7 +135,7 @@ function X(Ne) {
   else E = P[15];
   let ce;
   if (P[16] !== w || P[17] !== E)
-    ((ce = r(o, { flexDirection: "column", children: [w, E] })),
+    ((ce = r(Box, { flexDirection: "column", children: [w, E] })),
       (P[16] = w),
       (P[17] = E),
       (P[18] = ce));

@@ -11,7 +11,7 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isBgSession, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateAtWordBoundary } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -51,7 +51,7 @@ async function S(e, t) {
     return;
   }
   if (t.getState() === "running") {
-    n("[awaySummary] ccr recap dropped: new turn already running");
+    logForDebugging("[awaySummary] ccr recap dropped: new turn already running");
     return;
   }
   if ((t.notifyMetadataChanged({ recap: o.text }), o.capped))
@@ -69,7 +69,7 @@ async function generateCcrRecap(e, t) {
       r = await t();
     } catch (i) {
       return (
-        n(`[awaySummary] fallback params rebuild failed: ${i}`),
+        logForDebugging(`[awaySummary] fallback params rebuild failed: ${i}`),
         { kind: "failed" }
       );
     }
@@ -77,7 +77,7 @@ async function generateCcrRecap(e, t) {
   }
   if (!r)
     return (
-      n("[awaySummary] no CacheSafeParams saved, skipping"),
+      logForDebugging("[awaySummary] no CacheSafeParams saved, skipping"),
       { kind: "no-turn" }
     );
   let o = new AbortController();
@@ -105,13 +105,13 @@ async function generateCcrRecap(e, t) {
       d = s.length > m;
     if (d) {
       let c = truncateAtWordBoundary(s, m);
-      (n(`[awaySummary] recap capped from ${s.length} to ${c.length} chars`),
+      (logForDebugging(`[awaySummary] recap capped from ${s.length} to ${c.length} chars`),
         (s = c));
     }
     return s ? { kind: "ok", text: s, capped: d } : { kind: "failed" };
   } catch (i) {
     if (e.aborted) return { kind: "aborted" };
-    return (n(`[awaySummary] generation failed: ${i}`), { kind: "failed" });
+    return (logForDebugging(`[awaySummary] generation failed: ${i}`), { kind: "failed" });
   }
 }
 function p(e, t) {

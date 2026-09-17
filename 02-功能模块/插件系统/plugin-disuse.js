@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { MC, $t } from "./chunk-7s6mt1vg.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getPluginSeedDirs, getPluginRegistryState } from "./plugin-system-core.js";
 import { getStrictKnownMarketplaces } from "./plugin-source-policy.js";
 import { getPolicyPluginNames, hasPendingPluginUsage, getPluginUsage, getPluginUsageStaleness, getPluginEnabledVia } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, splitPluginId } from "./chunk-33bdfgmx.js";
@@ -17,13 +17,13 @@ var d = 14,
   f = 10;
 async function getDisusedPlugins() {
   try {
-    let e = $t().pluginLoadCacheOnly;
+    let e = getPluginRegistryState().pluginLoadCacheOnly;
     if (e === void 0) return [];
     if (getStrictKnownMarketplaces() !== null) return [];
     let { enabled: s } = await e;
     if (s.length === 0) return [];
     let u = getPolicyPluginNames(),
-      l = MC(),
+      l = getPluginSeedDirs(),
       g = getGlobalConfig().numStartups,
       c = Date.now(),
       r = [];
@@ -42,7 +42,7 @@ async function getDisusedPlugins() {
     return (r.sort((t, o) => o.daysSinceLastUse - t.daysSinceLastUse), r);
   } catch (e) {
     return (
-      n(`plugin-disuse tip: failed to compute disused plugins: ${e}`, {
+      logForDebugging(`plugin-disuse tip: failed to compute disused plugins: ${e}`, {
         level: "error",
       }),
       []

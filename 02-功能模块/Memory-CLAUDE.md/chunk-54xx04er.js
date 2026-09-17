@@ -11,7 +11,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { o, t, tn, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ui, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
@@ -30,9 +30,9 @@ function x(_, { selfOpened: m, onCancelled: l }) {
     n = C(!1),
     [c, a] = d(!1),
     s = C(!1),
-    R = Un(m ? REFUSE_INPUT_WINDOW_MS : null),
+    R = useTimeout(m ? REFUSE_INPUT_WINDOW_MS : null),
     w = !m || R,
-    k = tn() ? !0 : !1,
+    k = useIsScreenReaderEnabled() ? !0 : !1,
     H = ui(REFUSE_INPUT_WINDOW_MS),
     { refusedWithin: B, noteRefused: A } = $o();
   function N() {
@@ -110,7 +110,7 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
   }
   if (n.decided)
     return n.exitHintShowing
-      ? r(t, {
+      ? r(Text, {
           dimColor: !0,
           italic: !0,
           children: ["Press ", n.exit.keyName, " again to exit"],
@@ -121,7 +121,7 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
     onCancel: () => c("not_now"),
     isCancelActive: !p,
     inputGuide: n.exit.pending
-      ? r(t, { children: ["Press ", n.exit.keyName, " again to exit"] })
+      ? r(Text, { children: ["Press ", n.exit.keyName, " again to exit"] })
       : r(DotSeparatedList, {
           children: [
             e(KeybindingHint, { chord: "enter", action: "confirm" }),
@@ -134,16 +134,16 @@ function RemoteHomeSettingsDialog({ configHome: _, storageV5: m, origin: l, onDo
           ],
         }),
     children: [
-      r(o, {
+      r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [
-          e(t, { bold: !0, children: sanitizeForDisplay(_) }),
-          e(t, {
+          e(Text, { bold: !0, children: sanitizeForDisplay(_) }),
+          e(Text, {
             children:
               "Send the CLAUDE.md, rules, output styles, and preferences in this folder, plus the permission rules that don't name paths on this machine, into each cloud session you start with claude --cloud, so it follows the same instructions and preferences. It skips credential files and anything your Read rules or sandbox settings deny, never sends hooks, environment variables, MCP servers, or plugins, and sends nothing outside this folder, even through a link or an @import. What is sent is encrypted at rest, and each launch tells you what it sent.",
           }),
-          e(t, {
+          e(Text, {
             dimColor: !0,
             children:
               "Without this, cloud sessions keep their own default settings, as they do today. Yes and No are saved for this machine; /config changes it later, from a session started without --cloud.",

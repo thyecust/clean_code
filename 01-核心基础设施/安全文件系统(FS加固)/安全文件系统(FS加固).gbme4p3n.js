@@ -13,7 +13,7 @@ import { R, l, A, Jr, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.
 import { j, Gt, B, K, he, urt, Mx, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";
-import { hs, Wnt, Gnt, Dur, CL, Cg, wc, Et, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { createInvalidArgumentError, OTHER_NAMES_TELEMETRY_CODE, LEAF_MOVED_TELEMETRY_CODE, HARDENING_UNAVAILABLE_TELEMETRY_CODE, createOkResult, createErrorResult, pathSpaces, registerCleanup, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { qR } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -134,16 +134,16 @@ function Jt(e) {
 }
 async function ee(e) {
   try {
-    return CL(await e);
+    return createOkResult(await e);
   } catch (t) {
-    return Cg(Jt(t));
+    return createErrorResult(Jt(t));
   }
 }
 var DEFAULT_OPEN_FILE_MODE = 384;
 async function Qt(e, t, r = DEFAULT_OPEN_FILE_MODE) {
   let o = await ee(Zt(e));
-  if (!o.ok && o.error.kind !== "absent") return Cg(o.error);
-  if (o.ok && !o.value.isFile()) return Cg(tn(e, o.value));
+  if (!o.ok && o.error.kind !== "absent") return createErrorResult(o.error);
+  if (o.ok && !o.value.isFile()) return createErrorResult(tn(e, o.value));
   return ee(ke(e, t | O_NOFOLLOW_NONBLOCK_FLAGS, r));
 }
 async function openFileReadOnlyHardened(e) {
@@ -152,7 +152,7 @@ async function openFileReadOnlyHardened(e) {
 }
 function en(e, t) {
   return !t.ok && t.error.kind === "fs" && isErrnoCode(t.error.error, "ELOOP")
-    ? Cg({ kind: "fs", error: xe(e, "ELOOP") })
+    ? createErrorResult({ kind: "fs", error: xe(e, "ELOOP") })
     : t;
 }
 function xe(e, t) {
@@ -173,13 +173,13 @@ function nn(e) {
       return Error("refusing a non-directory node on a write path");
     case "EFBIG":
       return Error("refusing a file over the size cap");
-    case Wnt:
+    case OTHER_NAMES_TELEMETRY_CODE:
       return Error("refusing a value that has a second name (hard link)");
-    case Gnt:
+    case LEAF_MOVED_TELEMETRY_CODE:
       return Error(
         "refusing a value whose opened object is no longer at its key",
       );
-    case Dur:
+    case HARDENING_UNAVAILABLE_TELEMETRY_CODE:
       return Error("refusing a hardened read the host cannot verify");
   }
 }
@@ -192,26 +192,26 @@ var es = new j(() => new ve());
 var LINK_MISDIRECTED_TELEMETRY_CODE = "LinkMisdirected",
   LINK_UNVERIFIED_TELEMETRY_CODE = "LinkUnverified";
 function rn(e) {
-  return hs(
+  return createInvalidArgumentError(
     e,
     "expected a segment that is not empty or made only of dots and spaces, with no path separator, NUL or set-aside shape",
   );
 }
 function validateStorageKey(e) {
   if (typeof e !== "object" || e === null)
-    return hs("key", "expected a key object");
+    return createInvalidArgumentError("key", "expected a key object");
   let t = mn(e);
   if (t !== void 0) return t;
   let r = Un(e);
   if (r === void 0)
-    return hs("key", `${e.namespace} is not a storage namespace`);
+    return createInvalidArgumentError("key", `${e.namespace} is not a storage namespace`);
   return je("key", r);
 }
 function je(e, t) {
   for (let [r, o, s] of t) {
     let i = `${e}.${r}`;
     if (o === void 0) {
-      if (s !== "optional") return hs(i, "required");
+      if (s !== "optional") return createInvalidArgumentError(i, "required");
     } else if (on(r)) {
       if (
         !(
@@ -222,7 +222,7 @@ function je(e, t) {
         ) &&
         (!Array.isArray(o) || !hasValidPathSegments(o))
       )
-        return hs(
+        return createInvalidArgumentError(
           i,
           "expected a non-empty array of segments, none empty or made only of dots and spaces, with no path separator, NUL or set-aside shape",
         );
@@ -268,66 +268,66 @@ function gn(e) {
 function mn(e) {
   if (e.namespace === "transcript") return bn(e);
   if (e.namespace === "pluginAssetCache" && !gn(e.digest))
-    return hs(
+    return createInvalidArgumentError(
       "key.digest",
       "must be a SHA-256 digest: 64 lowercase hexadecimal characters",
     );
   if (e.namespace === "globalConfig" && "kind" in e) {
-    if (!Ue(e.kind)) return hs("key.kind", $e);
+    if (!Ue(e.kind)) return createInvalidArgumentError("key.kind", $e);
     if (typeof e.stamp !== "string")
-      return hs("key.stamp", "a recovery copy key carries its stamp");
+      return createInvalidArgumentError("key.stamp", "a recovery copy key carries its stamp");
   }
   if (e.namespace === "task") return Dn(e);
   if (e.namespace === "sidecar") {
     let t = ne("key.sessionId", e.sessionId);
     if (t !== void 0) return t;
-    if (re(e.relPath)) return hs("key.relPath", Y);
-    return Ye(e.relPath) ? hs("key.relPath", ze) : void 0;
+    if (re(e.relPath)) return createInvalidArgumentError("key.relPath", Y);
+    return Ye(e.relPath) ? createInvalidArgumentError("key.relPath", ze) : void 0;
   }
   if (e.namespace === "recording")
     return (
       ne("key.sessionId", e.sessionId) ??
-      (Ve(e.stamp) ? void 0 : hs("key.stamp", En))
+      (Ve(e.stamp) ? void 0 : createInvalidArgumentError("key.stamp", En))
     );
   if (e.namespace === "jobsRoot") return On(e);
   if (e.namespace === "userConfigDir" && !Oe.has(e.dir))
-    return hs("key.dir", Te);
+    return createInvalidArgumentError("key.dir", Te);
   if (e.namespace === "fileHistory") return hn(e);
   if (e.namespace === "settings" && !Fn(e.layer))
-    return hs("key.layer", "must be user, project or local");
+    return createInvalidArgumentError("key.layer", "must be user, project or local");
   if (e.namespace === "log") return Ln(e);
-  if (e.namespace === "job" && nt(e.relPath)) return hs("key.relPath", tt);
+  if (e.namespace === "job" && nt(e.relPath)) return createInvalidArgumentError("key.relPath", tt);
   if (e.namespace === "sessionLog")
     return (
       rt("key", e) ??
       (Gn(e.logName)
         ? void 0
-        : hs(
+        : createInvalidArgumentError(
             "key.logName",
             "must be the session-log stem <sessionId8>[-<title-slug>]: up to eight word characters, then lower-case a-z / 0-9 runs joined by single hyphens; not a bare device name",
           ))
     );
   if (e.namespace === "pluginRegistry" && !sn.has(e.file))
-    return hs("key.file", an);
+    return createInvalidArgumentError("key.file", an);
   if (e.namespace === "marketplaceCache") {
-    if (!("relPath" in e)) return cn.has(e.form) ? void 0 : hs("key.form", ln);
+    if (!("relPath" in e)) return cn.has(e.form) ? void 0 : createInvalidArgumentError("key.form", ln);
     return e.form === void 0
       ? void 0
-      : hs("key.form", "a tree file key carries relPath, not form");
+      : createInvalidArgumentError("key.form", "a tree file key carries relPath, not form");
   }
   if (e.namespace !== "agentMemory") return;
-  if (!Ge(e.layer)) return hs("key.layer", "must be user, project or local");
+  if (!Ge(e.layer)) return createInvalidArgumentError("key.layer", "must be user, project or local");
   if (e.layer === "user" && "projectKey" in e)
-    return hs("key.projectKey", "the user layer is not keyed by project");
+    return createInvalidArgumentError("key.projectKey", "the user layer is not keyed by project");
   if (e.layer !== "user" && typeof e.projectKey !== "string")
-    return hs("key.projectKey", "required for the project and local layers");
+    return createInvalidArgumentError("key.projectKey", "required for the project and local layers");
   return typeof e.agentType === "string"
     ? void 0
-    : hs("key.agentType", "an agent memory key names its agent");
+    : createInvalidArgumentError("key.agentType", "an agent memory key names its agent");
 }
 function hn(e) {
   return typeof e.backupFileName !== "string" || !BACKUP_FILE_NAME_PATTERN_WITH_LEGACY.test(e.backupFileName)
-    ? hs(
+    ? createInvalidArgumentError(
         "key.backupFileName",
         "must be a backup file name the engine has ever written (hex hash @v version)",
       )
@@ -345,35 +345,35 @@ function Ue(e) {
 function bn(e) {
   let t = ne("key.sessionId", e.sessionId);
   if (t !== void 0) return t;
-  if (re(e.agentRelPath)) return hs("key.agentRelPath", Y);
+  if (re(e.agentRelPath)) return createInvalidArgumentError("key.agentRelPath", Y);
   if ("sessionJournal" in e) {
     if (typeof e.sessionJournal !== "string" || !pn(e.sessionJournal))
-      return hs("key.sessionJournal", dn);
+      return createInvalidArgumentError("key.sessionJournal", dn);
     return e.agentId === void 0 &&
       e.agentRelPath === void 0 &&
       !("journal" in e)
       ? void 0
-      : hs(
+      : createInvalidArgumentError(
           "key.sessionJournal",
           "a session journal key names the session's own journal: no agentId, agentRelPath or run journal",
         );
   }
   if ("journal" in e) {
-    if (e.journal !== !0) return hs("key.journal", "must be true");
+    if (e.journal !== !0) return createInvalidArgumentError("key.journal", "must be true");
     if (!Array.isArray(e.agentRelPath))
-      return hs(
+      return createInvalidArgumentError(
         "key.agentRelPath",
         "a run journal key carries its run directory",
       );
     return e.agentId === void 0
       ? void 0
-      : hs(
+      : createInvalidArgumentError(
           "key.agentId",
           "a transcript key names an agent transcript or the run journal, never both",
         );
   }
   return e.agentRelPath !== void 0 && e.agentId === void 0
-    ? hs("key.agentRelPath", "requires agentId or journal")
+    ? createInvalidArgumentError("key.agentRelPath", "requires agentId or journal")
     : void 0;
 }
 var CLOUD_SNAPSHOTS_DIR_NAME = "cloud-snapshots",
@@ -426,10 +426,10 @@ function isValidSessionName(e) {
 }
 function ne(e, t) {
   if (typeof t !== "string") return;
-  if (Je(t)) return hs(e, In);
-  if (qe(t)) return hs(e, Rn);
-  if (Pn(t)) return hs(e, wn);
-  return isJsonlFileName(t) ? hs(e, Y) : void 0;
+  if (Je(t)) return createInvalidArgumentError(e, In);
+  if (qe(t)) return createInvalidArgumentError(e, Rn);
+  if (Pn(t)) return createInvalidArgumentError(e, wn);
+  return isJsonlFileName(t) ? createInvalidArgumentError(e, Y) : void 0;
 }
 var kn = ".meta.json",
   xn =
@@ -452,11 +452,11 @@ function Qe(e) {
   return e === "debug" || e === "telemetry" || e === "apiDump";
 }
 function Ln(e) {
-  if (!Qe(e.channel)) return hs("key.channel", Ze);
+  if (!Qe(e.channel)) return createInvalidArgumentError("key.channel", Ze);
   if (e.channel !== "apiDump") return;
   for (let t of ["agentId", "runId"])
     if (t in e && e[t] !== void 0)
-      return hs(
+      return createInvalidArgumentError(
         `key.${t}`,
         "an apiDump key names its dump by one id \u2014 the agent's for a subagent's requests, else the session's (today's dump-prompts/<id>.jsonl); agentId and runId nest nothing on this channel",
       );
@@ -464,39 +464,39 @@ function Ln(e) {
 }
 function Dn(e) {
   if ("taskId" in e && ("meta" in e || "highWaterMark" in e))
-    return hs(
+    return createInvalidArgumentError(
       "key.taskId",
       "a task key names an item, the list metadata or the list high-water mark, never more than one",
     );
   if ("meta" in e && "highWaterMark" in e)
-    return hs(
+    return createInvalidArgumentError(
       "key.highWaterMark",
       "a task key names an item, the list metadata or the list high-water mark, never more than one",
     );
-  if ("meta" in e && e.meta !== !0) return hs("key.meta", "must be true");
+  if ("meta" in e && e.meta !== !0) return createInvalidArgumentError("key.meta", "must be true");
   if ("highWaterMark" in e && e.highWaterMark !== !0)
-    return hs("key.highWaterMark", "must be true");
+    return createInvalidArgumentError("key.highWaterMark", "must be true");
   if (typeof e.listId !== "string")
-    return hs("key.listId", "a task key carries its listId");
+    return createInvalidArgumentError("key.listId", "a task key carries its listId");
   if ("meta" in e || "highWaterMark" in e) return;
   if (typeof e.taskId !== "string")
-    return hs("key.taskId", "a task item key carries its taskId");
-  if (Cn(e.taskId)) return hs("key.taskId", xn);
+    return createInvalidArgumentError("key.taskId", "a task item key carries its taskId");
+  if (Cn(e.taskId)) return createInvalidArgumentError("key.taskId", xn);
   return;
 }
 function On(e) {
   if ("file" in e && "draftKey" in e)
-    return hs(
+    return createInvalidArgumentError(
       "key.draftKey",
       "a jobs-root key names the pins file or one draft, never both",
     );
   if ("file" in e)
-    return e.file === "pins" ? void 0 : hs("key.file", "must be pins");
+    return e.file === "pins" ? void 0 : createInvalidArgumentError("key.file", "must be pins");
   if (typeof e.draftKey !== "string")
-    return hs("key.draftKey", "a jobs-root draft key carries its draftKey");
+    return createInvalidArgumentError("key.draftKey", "a jobs-root draft key carries its draftKey");
   return $n.test(e.draftKey)
     ? void 0
-    : hs("key.draftKey", "must be 8 lowercase hex characters");
+    : createInvalidArgumentError("key.draftKey", "must be 8 lowercase hex characters");
 }
 var et = "timeline.jsonl",
   tt = `${et} is the job's timeline stream: address it as keys.jobTimeline(jobId)`;
@@ -513,11 +513,11 @@ function Gn(e) {
 }
 function rt(e, t) {
   if (t.year !== void 0 && !fe(Tn, t.year))
-    return hs(`${e}.year`, "must be four digits (YYYY)");
+    return createInvalidArgumentError(`${e}.year`, "must be four digits (YYYY)");
   if (t.month !== void 0 && !fe(Ae, t.month))
-    return hs(`${e}.month`, "must be two digits (MM)");
+    return createInvalidArgumentError(`${e}.month`, "must be two digits (MM)");
   if (t.day !== void 0 && !fe(Ae, t.day))
-    return hs(`${e}.day`, "must be two digits (DD)");
+    return createInvalidArgumentError(`${e}.day`, "must be two digits (DD)");
   return;
 }
 function fe(e, t) {
@@ -525,11 +525,11 @@ function fe(e, t) {
 }
 function Hn(e) {
   if (e.year !== void 0 && e.projectKey === void 0)
-    return hs("scope.projectKey", "required when year is given");
+    return createInvalidArgumentError("scope.projectKey", "required when year is given");
   if (e.month !== void 0 && e.year === void 0)
-    return hs("scope.year", "required when month is given");
+    return createInvalidArgumentError("scope.year", "required when month is given");
   if (e.day !== void 0 && e.month === void 0)
-    return hs("scope.month", "required when day is given");
+    return createInvalidArgumentError("scope.month", "required when day is given");
   return rt("scope", e);
 }
 var $n = /^[0-9a-f]{8}$/;
@@ -673,10 +673,10 @@ function Un(e) {
 }
 function validateStorageScope(e) {
   if (typeof e !== "object" || e === null)
-    return hs("scope", "expected a scope object");
+    return createInvalidArgumentError("scope", "expected a scope object");
   let t = Xn(e);
   if (t === void 0)
-    return hs("scope", `${String(e.namespace)} is not a listable namespace`);
+    return createInvalidArgumentError("scope", `${String(e.namespace)} is not a listable namespace`);
   return Vn(e) ?? je("scope", t);
 }
 var Wn = {
@@ -771,13 +771,13 @@ function Vn(e) {
     if (o !== void 0) return o;
   }
   for (let [o, s] of Wn[e.namespace])
-    if (o in e && e[o] !== void 0) return hs(`scope.${o}`, s);
-  if (e.namespace === "sidecar" && re(e.relPath)) return hs("scope.relPath", Y);
+    if (o in e && e[o] !== void 0) return createInvalidArgumentError(`scope.${o}`, s);
+  if (e.namespace === "sidecar" && re(e.relPath)) return createInvalidArgumentError("scope.relPath", Y);
   if (e.namespace === "sidecar" && Ye(e.relPath))
-    return hs("scope.relPath", ze);
+    return createInvalidArgumentError("scope.relPath", ze);
   if (e.namespace === "log" && e.channel !== void 0 && !Qe(e.channel))
-    return hs("scope.channel", Ze);
-  if (e.namespace === "job" && nt(e.relPath)) return hs("scope.relPath", tt);
+    return createInvalidArgumentError("scope.channel", Ze);
+  if (e.namespace === "job" && nt(e.relPath)) return createInvalidArgumentError("scope.relPath", tt);
   let r = e.namespace === "sessionLog" ? Hn(e) : void 0;
   if (r !== void 0) return r;
   if (
@@ -785,42 +785,42 @@ function Vn(e) {
     e.sessionId === void 0 &&
     e.relPath !== void 0
   )
-    return hs(
+    return createInvalidArgumentError(
       "scope.relPath",
       "requires scope.sessionId: a scratch relPath narrows one session directory, and no cross-session prefix filter exists",
     );
   if (e.namespace === "userConfigDir" && !Oe.has(e.dir))
-    return hs("scope.dir", Te);
+    return createInvalidArgumentError("scope.dir", Te);
   if (
     e.namespace === "transcript" &&
     e.agentRelPath !== void 0 &&
     (e.projectKey === void 0 || e.sessionId === void 0)
   )
-    return hs(
+    return createInvalidArgumentError(
       "scope.agentRelPath",
       "requires scope.projectKey and scope.sessionId: an agentRelPath narrows the subagents/ tree of one session directory",
     );
   if (e.namespace === "transcript" && re(e.agentRelPath))
-    return hs("scope.agentRelPath", Y);
+    return createInvalidArgumentError("scope.agentRelPath", Y);
   if (e.namespace === "pluginCache") {
     if (e.marketplace === void 0 && e.plugin !== void 0)
-      return hs(
+      return createInvalidArgumentError(
         "scope.plugin",
         "requires scope.marketplace: a plugin narrows one marketplace folder",
       );
     if (e.plugin === void 0 && e.version !== void 0)
-      return hs(
+      return createInvalidArgumentError(
         "scope.version",
         "requires scope.plugin: a version narrows one plugin folder",
       );
     if (e.version === void 0 && e.relPath !== void 0)
-      return hs(
+      return createInvalidArgumentError(
         "scope.relPath",
         "requires scope.version: a relPath narrows one version folder",
       );
   }
   if (e.namespace === "job" && e.jobId === void 0 && e.relPath !== void 0)
-    return hs(
+    return createInvalidArgumentError(
       "scope.relPath",
       "requires scope.jobId: a job relPath narrows one job directory, and no cross-job prefix filter exists",
     );
@@ -829,22 +829,22 @@ function Vn(e) {
     e.projectKey === void 0 &&
     e.sessionId !== void 0
   )
-    return hs(
+    return createInvalidArgumentError(
       "scope.sessionId",
       "requires scope.projectKey: a session narrows one project folder, and no cross-project session filter exists",
     );
   if (e.namespace === "globalConfig" && e.kind !== void 0 && !Ue(e.kind))
-    return hs("scope.kind", $e);
+    return createInvalidArgumentError("scope.kind", $e);
   return;
 }
 function Yn(e) {
-  if (!Ge(e.layer)) return hs("scope.layer", "must be user, project or local");
+  if (!Ge(e.layer)) return createInvalidArgumentError("scope.layer", "must be user, project or local");
   if (e.layer === "user" && "projectKey" in e)
-    return hs("scope.projectKey", "the user layer is not keyed by project");
+    return createInvalidArgumentError("scope.projectKey", "the user layer is not keyed by project");
   if (e.layer !== "user" && typeof e.projectKey !== "string")
-    return hs("scope.projectKey", "required for the project and local layers");
+    return createInvalidArgumentError("scope.projectKey", "required for the project and local layers");
   return e.agentType === void 0 && e.relPath !== void 0
-    ? hs(
+    ? createInvalidArgumentError(
         "scope.relPath",
         "requires scope.agentType: an agent-memory relPath narrows one agent directory",
       )
@@ -1052,7 +1052,7 @@ function fr(e) {
 }
 async function readPdfAttachment(e) {
   try {
-    let o = (await ae().stat(e)).size;
+    let o = (await getFsSurface().stat(e)).size;
     if (o === 0)
       return {
         success: !1,
@@ -1983,7 +1983,7 @@ async function findGitRootThroughBackendUncached(e, t) {
   let r = N(t),
     o = r.substring(0, r.indexOf(k) + 1) || k;
   for (;;) {
-    let s = await e.stat(wc.workspace(P(r, ".git")), { follow: !1 });
+    let s = await e.stat(pathSpaces.workspace(P(r, ".git")), { follow: !1 });
     if (!s.ok || s.value.kind === "link") return;
     if (s.value.kind === "directory" || s.value.kind === "file")
       return { gitRoot: zn(r), entry: s.value.kind };
@@ -2041,7 +2041,7 @@ function xt(e, t) {
   }
 }
 async function Lr(e, t) {
-  let r = await e.readText(wc.workspace(P(t, ".git")));
+  let r = await e.readText(pathSpaces.workspace(P(t, ".git")));
   if (!r.ok || !r.value.found) return;
   return xt(t, r.value.value);
 }
@@ -2086,7 +2086,7 @@ function seedGitRootMemo(e, t, r) {
     i = o.rootByPath.peek(e);
   if (i === void 0) o.rootByPath.set(e, s);
   else if (i !== s) {
-    n(
+    logForDebugging(
       "git root prime: findGitRoot already holds a different answer for the start path; keeping the first",
       { level: "warn" },
     );
@@ -2096,7 +2096,7 @@ function seedGitRootMemo(e, t, r) {
   let a = o.canonicalRootByRoot.peek(t);
   if (a === void 0) o.canonicalRootByRoot.set(t, r);
   else if (a !== r)
-    n(
+    logForDebugging(
       "git root prime: findCanonicalGitRoot already holds a different answer for the root; keeping the first",
       { level: "warn" },
     );
@@ -2456,13 +2456,13 @@ async function getGitState() {
 async function getGithubRepo() {
   let { parseGitRemote: e } = await import("../共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
     t = await getRemoteUrl();
-  if (!t) return (n("Local GitHub repo: unknown"), null);
+  if (!t) return (logForDebugging("Local GitHub repo: unknown"), null);
   let r = e(t);
   if (r && isGitHubHost(r.host)) {
     let o = `${r.owner}/${r.name}`;
-    return (n(`Local GitHub repo: ${o}`), o);
+    return (logForDebugging(`Local GitHub repo: ${o}`), o);
   }
-  return (n("Local GitHub repo: unknown"), null);
+  return (logForDebugging("Local GitHub repo: unknown"), null);
 }
 function isLocalHost(e) {
   let t = e.indexOf(":"),
@@ -2513,7 +2513,7 @@ function wt(e, t, r) {
   return i;
 }
 function isCurrentDirectoryBareGitRepo() {
-  let e = ae(),
+  let e = getFsSurface(),
     t = getCwd(),
     r = wt(e, t, t) ?? t;
   try {
@@ -2964,7 +2964,7 @@ class Ht {
     let t = await resolveGitDir();
     if (e !== this.generation) return;
     if (((this.gitDir = t), (this.initialized = !0), !this.cleanupHandle))
-      this.cleanupHandle = Et(async () => {
+      this.cleanupHandle = registerCleanup(async () => {
         this.stopWatching();
       });
     if (!this.gitDir) return;

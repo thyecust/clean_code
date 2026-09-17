@@ -11,14 +11,14 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { asSystemPrompt, joinTextBlocks, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Ew, F$e } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { isHumanOrUnstampedOrigin, isHumanUserMessage } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var p = 1000,
   f = 10;
@@ -36,18 +36,18 @@ function syncTitleToRemoteSession(r, l) {
     () => {
       return;
     },
-    (e) => n(`syncTitleToRemoteSession: ${e}`),
+    (e) => logForDebugging(`syncTitleToRemoteSession: ${e}`),
   );
 }
 function findFirstUserPrompt(r) {
-  return r.find(F$e);
+  return r.find(isHumanUserMessage);
 }
 function collectConversationText(r) {
   let l = [];
   for (let t of r) {
     if (t.type !== "user" && t.type !== "assistant") continue;
     if ("isMeta" in t && t.isMeta) continue;
-    if ("origin" in t && !Ew(t.origin)) continue;
+    if ("origin" in t && !isHumanOrUnstampedOrigin(t.origin)) continue;
     let e = t.message.content;
     if (typeof e === "string") l.push(e);
     else if (Array.isArray(e)) {
@@ -127,7 +127,7 @@ async function generateSessionTitle(r, l, o) {
     return (logEvent("tengu_session_title_generated", { success: e !== null }), e);
   } catch (e) {
     return (
-      n(`generateSessionTitle failed: ${e}`, { level: "error" }),
+      logForDebugging(`generateSessionTitle failed: ${e}`, { level: "error" }),
       logEvent("tengu_session_title_generated", { success: !1 }),
       null
     );

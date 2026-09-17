@@ -7,27 +7,27 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { CT } from "../../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
+import { terminalCapabilities } from "../../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import {
-  $w,
-  _f,
-  tPn,
-  Bie,
-  gm,
-  fW,
-  mW,
-  i_,
-  F2e,
-  lxt,
-  Icr,
-  Pcr,
-  rz,
-  Ocr,
-  Hhe,
-} from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+  BELL_CHARACTER,
+  buildCsiSequence,
+  cursorDown,
+  cursorToColumn,
+  CURSOR_HOME_SEQUENCE,
+  moveCursorBy,
+  ERASE_ENTIRE_LINE,
+  ERASE_SCREEN_SEQUENCE,
+  ERASE_SCROLLBACK_SEQUENCE,
+  clearLines,
+  KITTY_KEYBOARD_PUSH_ENHANCED,
+  KITTY_KEYBOARD_PUSH_LEGACY,
+  KITTY_KEYBOARD_POP,
+  ENABLE_MODIFY_OTHER_KEYS,
+  DISABLE_MODIFY_OTHER_KEYS,
+} from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { j, B, dl } from "../../lodash/lodash.2x3q7cfh.js";
 import { JETBRAINS_IDES, env as a } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   ENABLE_SYNCHRONIZED_UPDATE,
   DISABLE_SYNCHRONIZED_UPDATE,
@@ -50,15 +50,15 @@ import { e } from "../../react/react.kwtapczy.js";
 import { Qt, re, De, V, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { pg } from "../第三方库-其他/chunk-jm5cswvd.js";
 import { toESM } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var le = _f(0, "f");
+var le = buildCsiSequence(0, "f");
 function getClearTerminalSequence() {
-  return i_ + F2e + gm;
+  return ERASE_SCREEN_SEQUENCE + ERASE_SCROLLBACK_SEQUENCE + CURSOR_HOME_SEQUENCE;
 }
 function getEraseScreenSequence() {
-  return i_ + gm;
+  return ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE;
 }
 function eraseViewportInPlace(t) {
-  return gm + (mW + tPn(1)).repeat(t) + gm;
+  return CURSOR_HOME_SEQUENCE + (ERASE_ENTIRE_LINE + cursorDown(1)).repeat(t) + CURSOR_HOME_SEQUENCE;
 }
 class cee {
   _didStopImmediatePropagation = !1;
@@ -116,7 +116,7 @@ class g {
     let t = Lat(),
       r = dl(),
       o = r?.wheelFlood ?? Itn(),
-      u = r ? JETBRAINS_IDES.includes(r.terminal ?? "") : CT.isJetBrainsIdeTerminal(),
+      u = r ? JETBRAINS_IDES.includes(r.terminal ?? "") : terminalCapabilities.isJetBrainsIdeTerminal(),
       s = r?.wtSession ?? !!a.WT_SESSION,
       p = Zd(),
       i = this.value;
@@ -211,7 +211,7 @@ function lO() {
     t === "Tabby"
   )
     return !0;
-  if (CT.isJetBrainsIdeTerminal()) return !0;
+  if (terminalCapabilities.isJetBrainsIdeTerminal()) return !0;
   if (parseInt(a.KONSOLE_VERSION ?? "", 10) >= 211200) return !0;
   if (r?.includes("kitty") || a.KITTY_WINDOW_ID) return !0;
   if (r === "xterm-ghostty") return !0;
@@ -232,7 +232,7 @@ function lDt() {
     lO() &&
     a.TMUX == null &&
     process.env.ZELLIJ == null &&
-    !CT.isJetBrainsIdeTerminal() &&
+    !terminalCapabilities.isJetBrainsIdeTerminal() &&
     !Zd() &&
     a.WT_SESSION == null
   );
@@ -262,13 +262,13 @@ function cDt(t) {
   return ee.includes(t ?? a.terminal ?? "");
 }
 function G0e(t) {
-  return cDt() ? rz + (t?.legacyKitty ? Pcr : Icr) + Ocr : "";
+  return cDt() ? KITTY_KEYBOARD_POP + (t?.legacyKitty ? KITTY_KEYBOARD_PUSH_LEGACY : KITTY_KEYBOARD_PUSH_ENHANCED) + ENABLE_MODIFY_OTHER_KEYS : "";
 }
 function Nat(t) {
-  return ENTER_ALT_SCREEN + i_ + gm + G0e(t);
+  return ENTER_ALT_SCREEN + ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE + G0e(t);
 }
 function uF() {
-  return rz + EXIT_ALT_SCREEN + Hhe;
+  return KITTY_KEYBOARD_POP + EXIT_ALT_SCREEN + DISABLE_MODIFY_OTHER_KEYS;
 }
 function Fat() {
   return !!a.WT_SESSION;
@@ -306,7 +306,7 @@ function Ltn(t, r, o = !1, u) {
         i += l.content;
         break;
       case "clear":
-        if (l.count > 0) i += lxt(l.count);
+        if (l.count > 0) i += clearLines(l.count);
         break;
       case "clearTerminal":
         i += l.altScreen ? getClearTerminalSequence() : eraseViewportInPlace(l.viewportRows);
@@ -318,10 +318,10 @@ function Ltn(t, r, o = !1, u) {
         i += SHOW_CURSOR;
         break;
       case "cursorMove":
-        i += fW(l.x, s !== void 0 ? Math.max(-s, Math.min(s, l.y)) : l.y);
+        i += moveCursorBy(l.x, s !== void 0 ? Math.max(-s, Math.min(s, l.y)) : l.y);
         break;
       case "cursorTo":
-        i += Bie(l.col);
+        i += cursorToColumn(l.col);
         break;
       case "carriageReturn":
         i += "\r";
@@ -353,7 +353,7 @@ function $at(t, r, o, u, s) {
 function dE(t, r) {
   if (t === void 0) return;
   if (Number.isInteger(t)) return;
-  n(`${r} should be an integer, got ${t}`, { level: "warn" });
+  logForDebugging(`${r} should be an integer, got ${t}`, { level: "warn" });
 }
 function ne({
   children: t,
@@ -482,7 +482,7 @@ function qA() {
       [t],
     ),
     s = re(() => {
-      t($w);
+      t(BELL_CHARACTER);
     }, [t]),
     p = re(
       (i, l) => {
@@ -628,11 +628,11 @@ function x(t) {
     case "focusEvents":
       return { mode: t, on: ENABLE_FOCUS_EVENTS, off: DISABLE_FOCUS_EVENTS };
     case "extendedKeys":
-      return { mode: t, on: G0e(), off: Hhe + rz };
+      return { mode: t, on: G0e(), off: DISABLE_MODIFY_OTHER_KEYS + KITTY_KEYBOARD_POP };
     case "altScreen":
-      return { mode: t, on: ENTER_ALT_SCREEN + i_ + gm, off: EXIT_ALT_SCREEN + Hhe };
+      return { mode: t, on: ENTER_ALT_SCREEN + ERASE_SCREEN_SEQUENCE + CURSOR_HOME_SEQUENCE, off: EXIT_ALT_SCREEN + DISABLE_MODIFY_OTHER_KEYS };
     case "altScreenKeys":
-      return { mode: t, on: G0e(), off: rz };
+      return { mode: t, on: G0e(), off: KITTY_KEYBOARD_POP };
   }
 }
 class Uat {
@@ -680,9 +680,9 @@ class Uat {
     if (!this.suspended) return "";
     ((this.suspended = !1), (this.kept = void 0));
     let r = this.isSet("altScreen"),
-      o = t ? Hhe + (r ? "" : rz) : "";
+      o = t ? DISABLE_MODIFY_OTHER_KEYS + (r ? "" : KITTY_KEYBOARD_POP) : "";
     return this.entries.reduce(
-      (u, s) => u + s.on + (t && s.mode === "altScreen" ? rz : ""),
+      (u, s) => u + s.on + (t && s.mode === "altScreen" ? KITTY_KEYBOARD_POP : ""),
       o,
     );
   }

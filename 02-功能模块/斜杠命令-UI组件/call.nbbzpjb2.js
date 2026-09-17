@@ -13,14 +13,14 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ke, bB, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { archiveRemoteSession, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -32,7 +32,7 @@ import { createAbortController } from "../../03-入口与运行时/核心应用-
 import { createScheduledTask, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { CRON_DELETE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
-import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+import { buildClaudeAiSessionUrl } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -145,7 +145,7 @@ ${s}`,
     }
     let v, W, M, Ce, q;
     try {
-      let s = z(A);
+      let s = jsonParse(A);
       if (s.state === "MERGED" || s.state === "CLOSED")
         return O(
           `PR #${s.number} is ${s.state.toLowerCase()}. Autofix requires an open PR.`,
@@ -214,7 +214,7 @@ ${B.join(`
         {
           kind: "ok",
           message: `Already monitoring ${ce} in a cloud session
-  ${figures.arrowRight} ${wa(Ee.sessionId, void 0, { from: "cli" })}`,
+  ${figures.arrowRight} ${buildClaudeAiSessionUrl(Ee.sessionId, void 0, { from: "cli" })}`,
         }
       );
     w?.({ step: "spawning" });
@@ -261,7 +261,7 @@ ${B.join(`
         credentials: n.credentials,
       },
     });
-    let Xe = wa(j.id, void 0, { from: "cli" }),
+    let Xe = buildClaudeAiSessionUrl(j.id, void 0, { from: "cli" }),
       se = [];
     if (!Oe.ok)
       se.push(
@@ -395,7 +395,7 @@ function Ve(Qt) {
   else qe = V[6];
   let ze;
   if (V[7] === MEMO_CACHE_SENTINEL)
-    ((ze = e(t, {
+    ((ze = e(Text, {
       children:
         "Auto-fix monitors the PR and can post comments on your behalf using your GitHub identity.",
     })),
@@ -431,7 +431,7 @@ function Ve(Qt) {
   else be = V[13];
   let Re;
   if (V[14] !== he || V[15] !== be)
-    ((Re = r(o, {
+    ((Re = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [ze, e(ve, { options: Qe, onChange: he, onCancel: be })],
@@ -587,7 +587,7 @@ function ye(or) {
     X[24] !== Le ||
     X[25] !== We
   )
-    ((Ae = e(o, {
+    ((Ae = e(Box, {
       flexDirection: "column",
       gap: 1,
       children: R
@@ -596,12 +596,12 @@ function ye(or) {
             children: [
               e(SpinnerMessageLine, { message: ne ? "Cancelling\u2026" : me[We] }),
               ae &&
-                r(t, {
+                r(Text, {
                   dimColor: !0,
                   children: [
                     "PR:",
                     " ",
-                    e(ct, { url: formatPrUrlWithTemplate(ae.url, Le), children: ae.ref }),
+                    e(Link, { url: formatPrUrlWithTemplate(ae.url, Le), children: ae.ref }),
                   ],
                 }),
             ],

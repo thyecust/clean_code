@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { getMergedSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
-import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath } from "../后台任务-Shell管理/task-output.js";
 function isTerminalTaskStatus(e) {
   return e === "completed" || e === "failed" || e === "killed";
 }

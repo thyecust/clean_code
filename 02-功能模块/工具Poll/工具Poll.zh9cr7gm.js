@@ -15,12 +15,12 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isFromCurrentAgent, clearCcrTurnIdOnMismatch } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { _G, m1e, ZQn, Tbn, Rj, rCe, ofe, oCe, h1e } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
+import { POLL_TOOL_NAME, NO_PENDING_EVENTS_RESULT, POLL_TOOL_DESCRIPTION, EVENT_AUTHORITY_VALUES, isPollEventChannelEnabled, getPollEventEnvelope, formatEventDelivery, settleDeliveredPollEvents, getAsyncEvalDispatcher } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { s, T, v, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = createLazyValue(() => Qe({})),
   f = createLazyValue(() =>
     c({
-      content: s().describe(`Rendered event envelopes, or "${m1e}"`),
+      content: s().describe(`Rendered event envelopes, or "${NO_PENDING_EVENTS_RESULT}"`),
       eventCount: T()
         .int()
         .describe("Number of events delivered in this result"),
@@ -31,7 +31,7 @@ var d = createLazyValue(() => Qe({})),
         ),
       provenance: v(
         c({
-          authority: X(Tbn),
+          authority: X(EVENT_AUTHORITY_VALUES),
           senderId: s().optional(),
           senderText: s().optional(),
         }).nullable(),
@@ -39,7 +39,7 @@ var d = createLazyValue(() => Qe({})),
     }),
   ),
   PollTool = buildTool({
-    name: _G,
+    name: POLL_TOOL_NAME,
     searchHint: "wait for and receive queued harness events",
     maxResultSizeChars: 1e5,
     skipAggregateToolResultBudget: !0,
@@ -50,7 +50,7 @@ var d = createLazyValue(() => Qe({})),
       return f();
     },
     isEnabled() {
-      return Rj();
+      return isPollEventChannelEnabled();
     },
     isConcurrencySafe() {
       return !0;
@@ -62,7 +62,7 @@ var d = createLazyValue(() => Qe({})),
       return "Wait for pending harness events";
     },
     async prompt() {
-      return ZQn;
+      return POLL_TOOL_DESCRIPTION;
     },
     mapToolResultToToolResultBlockParam(e, t) {
       return { tool_use_id: t, type: "tool_result", content: e.content };
@@ -81,10 +81,10 @@ var d = createLazyValue(() => Qe({})),
           let a = t;
           if (!a.tryBeginPollCall())
             return {
-              data: { content: m1e, eventCount: 0, remainingWakeCount: 0 },
+              data: { content: NO_PENDING_EVENTS_RESULT, eventCount: 0, remainingWakeCount: 0 },
             };
           try {
-            let u = tYt() === "evals" ? h1e({ toolState: o }) : null;
+            let u = tYt() === "evals" ? getAsyncEvalDispatcher({ toolState: o }) : null;
             return await g(a, n, u);
           } finally {
             a.endPollCall();
@@ -94,19 +94,19 @@ var d = createLazyValue(() => Qe({})),
     },
   });
 async function g(e, t, o) {
-  let i = { data: { content: m1e, eventCount: 0, remainingWakeCount: 0 } };
+  let i = { data: { content: NO_PENDING_EVENTS_RESULT, eventCount: 0, remainingWakeCount: 0 } };
   for (;;) {
     if (t.aborted) return i;
     let { commands: n, remainingWakeCount: a } = e.drainPollEventChunk();
     if (n.length > 0) {
-      let u = n.map(rCe);
+      let u = n.map(getPollEventEnvelope);
       return (
         logFeatureOk("poll_event_delivery"),
         clearCcrTurnIdOnMismatch(n),
-        oCe(n),
+        settleDeliveredPollEvents(n),
         {
           data: {
-            content: ofe(u, a),
+            content: formatEventDelivery(u, a),
             eventCount: n.length,
             remainingWakeCount: a,
             provenance: n.map((r) => r.pollEvent?.provenance ?? null),

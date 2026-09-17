@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, A } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { commonJS, importMetaRequire } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Ce = commonJS(function (Xt, Me) {
   var U = importMetaRequire("constants"),
@@ -1308,7 +1308,7 @@ async function hf(e, t) {
     } catch {
       i = "lock release rejected with a value that cannot be described";
     }
-    n(`${t}: ${i}`, { level: "warn" });
+    logForDebugging(`${t}: ${i}`, { level: "warn" });
   }
 }
 export { Cs, Vlr, hf };

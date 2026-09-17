@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "./use-clock.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { ew, Nl, L_, re, E, vr, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -21,7 +21,7 @@ function y(I) {
 function D(R, v) {
   L_(R) ? (R.key ?? v) : v;
   return r(N, {
-    children: [v > 0 && e(t, { dimColor: !0, children: " \xB7 " }), R],
+    children: [v > 0 && e(Text, { dimColor: !0, children: " \xB7 " }), R],
   });
 }
 function DotSeparatedList(B) {

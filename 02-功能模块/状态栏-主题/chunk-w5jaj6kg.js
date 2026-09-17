@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Nk, V8e } from "./chunk-jz6b76hr.js";
+import { getThemePalette, mergeThemeOverrides } from "./chunk-jz6b76hr.js";
 import { m4 } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -29,7 +29,7 @@ var B = "dark",
     savePreview: () => {},
     cancelPreview: () => {},
     currentTheme: B,
-    resolvedTheme: Nk(B),
+    resolvedTheme: getThemePalette(B),
     activeThemeOverrides: void 0,
     customThemes: [],
     activeCustomTheme: void 0,
@@ -148,7 +148,7 @@ function ThemeProvider(Pt) {
     k = Rt ?? S?.overrides,
     ze;
   if (r[27] !== k || r[28] !== x)
-    ((ze = V8e(Nk(x), k)), (r[27] = k), (r[28] = x), (r[29] = ze));
+    ((ze = mergeThemeOverrides(getThemePalette(x), k)), (r[27] = k), (r[28] = x), (r[29] = ze));
   else ze = r[29];
   let me = ze,
     X;

@@ -12,7 +12,7 @@
 import { CS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -31,7 +31,7 @@ import {
   rejectOrchestratorProxyAuthorization,
   assertFeatureSupportedOnPlatform,
 } from "./chunk-cgmv5fe7.js";
-import { $3e } from "../Git-Worktree/chunk-33y3h2sy.js";
+import { isSupportedGitUrl } from "../Git-Worktree/git-operations.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
@@ -77,7 +77,7 @@ async function Ne(e, t, r, o, d) {
   let n = V(e, t.jti);
   try {
     (await writeFile(`${n}.jwt`, r, { mode: 384 }),
-      await writeFile(`${n}.json`, b(t, null, 2), { mode: 384 }),
+      await writeFile(`${n}.json`, jsonStringify(t, null, 2), { mode: 384 }),
       await writeFile(`${n}.stderr`, o, { mode: 384 }));
   } catch (s) {
     d(`[runner:orchestrator] debug-dir write failed: ${l(s)}`);
@@ -111,7 +111,7 @@ async function ne(e) {
   if (Y(e.claims.account_email))
     throw Error("spawn-hint account_email: control character");
   for (let p of e.claims.repo_sources) {
-    if (p.url && (!$3e(p.url) || Y(p.url)))
+    if (p.url && (!isSupportedGitUrl(p.url) || Y(p.url)))
       throw Error("spawn-hint repo_sources: unsafe git URL");
     if (p.revision && !CS(p.revision))
       throw Error("spawn-hint repo_sources: unsafe revision");
@@ -168,7 +168,7 @@ async function ne(e) {
       CLAUDE_RUNNER_PRIMARY_REPO_URL: e.claims.primary_repo_url,
       CLAUDE_RUNNER_PRIMARY_REPO_REVISION: e.claims.primary_repo_revision,
       CLAUDE_RUNNER_REPO_SOURCES:
-        e.claims.repo_sources.length > 0 ? b(e.claims.repo_sources) : "",
+        e.claims.repo_sources.length > 0 ? jsonStringify(e.claims.repo_sources) : "",
       CLAUDE_RUNNER_CORRELATION_ID: e.claims.correlation_id,
       CLAUDE_RUNNER_CLIENT_PLATFORM: t,
     },
@@ -456,7 +456,7 @@ function le(e, t, r, o) {
     let i = c;
     if (!i || i.readyState !== WebSocket.OPEN) return;
     try {
-      i.send(b(m));
+      i.send(jsonStringify(m));
     } catch (T) {
       (g(l(T)), E(`send failed: ${l(T)}`));
     }
@@ -598,7 +598,7 @@ function le(e, t, r, o) {
   function A(m) {
     let i;
     try {
-      i = z(m);
+      i = jsonParse(m);
     } catch (T) {
       E(`failed to parse tunnel request: ${l(T)}`);
       return;
@@ -1172,7 +1172,7 @@ function ft(e, t, r) {
 `));
       return;
     }
-    let w = b({
+    let w = jsonStringify({
       status: "ok",
       orchestrator_uuid: t.orchestratorUuid,
       hostname: t.hostname,

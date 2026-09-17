@@ -21,7 +21,7 @@ import {
   Can,
   van,
 } from "./chunk-2g5h49pk.js";
-import "./chunk-brx72pf1.js";
+import "./install-diagnostics.js";
 export {
   gze as StagedBinaryChecksumError,
   Bce as checkInstall,

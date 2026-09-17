@@ -12,13 +12,13 @@ import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { expandPathAliases, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isWorkspacePersistedTrusted, isPathTrusted, setPathTrusted, clearProjectPathForConfigCache } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ot, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -50,7 +50,7 @@ import { realpath, stat as j } from "fs/promises";
 import { dirname, parse } from "path";
 var _ = "Cd";
 function R(e, t) {
-  let o = dedupe([...Tr(e.requestedPath), e.canonicalPath]),
+  let o = dedupe([...expandPathAliases(e.requestedPath), e.canonicalPath]),
     c = dedupe([e.canonicalPath, normalizeTrustedSymlink(e.canonicalPath)]),
     s = (r, d, m) => m.some((y) => D(r, d, y));
   for (let r of getAlwaysDenyRules(t)) {
@@ -116,7 +116,7 @@ async function E(e) {
   return (await t(e)) === (await t(homedir()));
 }
 async function validateCdTarget(e, t) {
-  let o = ot(e);
+  let o = resolvePath(e);
   try {
     if (!(await j(o)).isDirectory())
       return { result: "not_a_directory", path: o, parent: dirname(o) };
@@ -179,13 +179,13 @@ async function relocateSession(e, t, o, c) {
         ...(getSettingsForSource("localSettings")?.permissions?.additionalDirectories ?? []),
       ].flatMap((p) => {
         try {
-          return r.map((C) => ot(p, C));
+          return r.map((C) => resolvePath(p, C));
         } catch {
           return [];
         }
       }),
     );
-  (Yu(t), setSessionCwd(t), ES(getCwd()));
+  (changeWorkingDirectory(t), setSessionCwd(t), ES(getCwd()));
   let m = !0;
   try {
     await relocateSessionTranscript(c);
@@ -193,9 +193,9 @@ async function relocateSession(e, t, o, c) {
     m = !1;
     let C = !1;
     try {
-      (Yu(s), (C = !0));
+      (changeWorkingDirectory(s), (C = !0));
     } catch {
-      n(
+      logForDebugging(
         `directory move: transcript move failed and rollback chdir failed; completing the move with the transcript left in its previous home: ${p}`,
         { level: "error" },
       );
@@ -206,7 +206,7 @@ async function relocateSession(e, t, o, c) {
     try {
       await relocateBgSessionCwd(getCwd(), c);
     } catch (p) {
-      n(`directory move: bg session state rehome failed (continuing): ${p}`, {
+      logForDebugging(`directory move: bg session state rehome failed (continuing): ${p}`, {
         level: "error",
       });
     }
@@ -214,7 +214,7 @@ async function relocateSession(e, t, o, c) {
   try {
     await settingsChangeDetector.rehome();
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: re-targeting the settings watcher failed (continuing with the previous watch): ${p}`,
       { level: "error" },
     );
@@ -222,7 +222,7 @@ async function relocateSession(e, t, o, c) {
   try {
     (updateHooksConfigSnapshot(), settingsChangeDetector.notifyChange("projectSettings", { prevCwd: l }));
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: re-resolving settings and hooks for the new directory failed (continuing): ${p}`,
       { level: "error" },
     );
@@ -230,7 +230,7 @@ async function relocateSession(e, t, o, c) {
   try {
     await discoverDynamicSkills(await getProjectDirsUpToHome("skills", getCwd()));
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: registering the new directory's skills failed (continuing without them): ${p}`,
       { level: "error" },
     );
@@ -238,7 +238,7 @@ async function relocateSession(e, t, o, c) {
   try {
     await skillChangeDetector.rehome();
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: re-targeting the skill watcher failed (continuing with the previous watch): ${p}`,
       { level: "error" },
     );
@@ -253,7 +253,7 @@ async function relocateSession(e, t, o, c) {
   try {
     y = await N(e, t, c);
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: loading the new directory's memory context failed (continuing without it): ${p}`,
       { level: "error" },
     );
@@ -270,7 +270,7 @@ async function relocateSession(e, t, o, c) {
   try {
     v = !a.CLAUDE_CODE_SANDBOXED && !VR() && !isWorkspacePersistedTrusted() && hasRepoSettingsRequiringTrust();
   } catch (p) {
-    n(
+    logForDebugging(
       `directory move: probing the gated project grants failed (continuing): ${p}`,
       { level: "error" },
     );
@@ -335,7 +335,7 @@ async function handleSetCwdControlRequest(e, t) {
   try {
     c = validateUntrustedPath(
       e.path,
-      ot(e.path),
+      resolvePath(e.path),
       t.toolPermissionContext.trustedNetworkDirectories,
     ).ok;
   } catch {
@@ -457,7 +457,7 @@ async function handleSetCwdControlRequest(e, t) {
   try {
     t.retireDepartedAdditionalDirectories?.(y);
   } catch (f) {
-    n(
+    logForDebugging(
       `set_cwd: retiring the previous project's additional directories failed (continuing): ${f}`,
       { level: "error" },
     );
@@ -465,7 +465,7 @@ async function handleSetCwdControlRequest(e, t) {
   try {
     t.enqueueMoveNotice(d);
   } catch (f) {
-    n(`set_cwd: enqueueing the move notice failed (continuing): ${f}`, {
+    logForDebugging(`set_cwd: enqueueing the move notice failed (continuing): ${f}`, {
       level: "error",
     });
   }

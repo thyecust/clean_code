@@ -10,7 +10,7 @@
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "./analytics-fields.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "./analytics-event-queue.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 class f {
@@ -29,7 +29,7 @@ function getMcpSdkGeneration() {
     let e = a.MCP_SDK_GENERATION,
       t = e === "v1" || e === "v2" ? e : void 0;
     if (e !== void 0 && t === void 0)
-      n(
+      logForDebugging(
         `MCP_SDK_GENERATION=${e} is invalid; expected 'v1' or 'v2' \u2014 ignoring`,
         { level: "warn" },
       );
@@ -38,7 +38,7 @@ function getMcpSdkGeneration() {
       c = t !== void 0 ? "env" : d ? "growthbook" : "default";
     return (
       o.latch(r),
-      n(`mcp runtime arm: ${r} (source: ${c})`),
+      logForDebugging(`mcp runtime arm: ${r} (source: ${c})`),
       logEvent("tengu_mcp_sdk_generation", { generation: fromEnum(r), source: fromEnum(c) }),
       r
     );

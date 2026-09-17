@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { formatDuration } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../核心工具-字符串与文本/ansi-text-utils.js";
 import { useClock } from "./use-clock.js";
 import { re, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();

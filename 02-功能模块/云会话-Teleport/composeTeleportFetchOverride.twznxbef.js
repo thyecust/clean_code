@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 50 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Tc, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { Tc, Is, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { isSessionIngressUrl } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { runGuardedFetch } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
@@ -135,7 +135,7 @@ function B(
     } catch {
       return (
         logTeleportFallbackOnce("relay_compose_error"),
-        n(
+        logForDebugging(
           "teleport relay tools-fingerprint computation failed \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
         ),
@@ -144,7 +144,7 @@ function B(
     }
     if (!verifyToolsBaselineIntact(_, R)) return o(t, e);
     let v = `${f.ingressOrigin}/v2/ccr-sessions/${f.remoteSessionId}/teleport/conversations/${f.marker.conversation_uuid}/completion`;
-    if (!UR(v))
+    if (!isSessionIngressUrl(v))
       return (
         revertTeleportCache("relay_unreachable", "relay url failed the CCR origin gate"),
         o(t, e)
@@ -161,7 +161,7 @@ function B(
     } catch {
       return (
         logTeleportFallbackOnce("relay_compose_error"),
-        n(
+        logForDebugging(
           "teleport relay request composition failed \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
         ),
@@ -189,7 +189,7 @@ function B(
             "relay_dispatch_timeout",
             `relay dispatch timed out after ${c}ms`,
           ),
-          n(
+          logForDebugging(
             "teleport relay dispatch timed out \u2014 reverting to standard behavior",
             { level: "warn" },
           ),
@@ -206,7 +206,7 @@ function B(
               "relay_dispatch_timeout",
               `caller signal aborted after ${Math.round(l)}ms awaiting relay headers`,
             ),
-            n(
+            logForDebugging(
               "teleport relay dispatch aborted after a long headers wait \u2014 reverting to standard behavior",
               { level: "warn" },
             ),
@@ -216,7 +216,7 @@ function B(
       }
       return (
         logTeleportFallbackOnce("relay_transport_error"),
-        n(
+        logForDebugging(
           "teleport relay transport error \u2014 standard path for this turn, latch stays armed",
           { level: "warn" },
         ),
@@ -233,7 +233,7 @@ function B(
               "relay_refused",
               "relay http 409 with the refusal discriminant",
             ),
-            n("teleport relay refused \u2014 reverting to standard behavior", {
+            logForDebugging("teleport relay refused \u2014 reverting to standard behavior", {
               level: "warn",
             }),
             o(t, e)
@@ -241,7 +241,7 @@ function B(
       } else i.body?.cancel().catch(() => {});
       return (
         logTeleportFallbackOnce("relay_unavailable"),
-        n(
+        logForDebugging(
           `teleport relay unavailable (http ${i.status}) \u2014 standard path for this turn, latch stays armed`,
           { level: "warn" },
         ),

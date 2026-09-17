@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { rBe, SQ } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { URL_PATTERN, stripTrailingPunctuation } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function LinkifiedText(T) {
   let y = _(9),
@@ -18,10 +18,10 @@ function LinkifiedText(T) {
   if (y[0] !== o) {
     r = [];
     let s = 0;
-    for (const a of o.matchAll(rBe)) {
-      let m = SQ(a[0]);
+    for (const a of o.matchAll(URL_PATTERN)) {
+      let m = stripTrailingPunctuation(a[0]);
       if (a.index > s) r.push(o.slice(s, a.index));
-      (r.push(e(ct, { url: m, children: m }, a.index)),
+      (r.push(e(Link, { url: m, children: m }, a.index)),
         (s = a.index + m.length));
     }
     let c;
@@ -33,7 +33,7 @@ function LinkifiedText(T) {
   } else r = y[1];
   let c;
   if (y[5] !== x || y[6] !== f || y[7] !== r)
-    ((c = e(t, { color: f, bold: x, children: r })),
+    ((c = e(Text, { color: f, bold: x, children: r })),
       (y[5] = x),
       (y[6] = f),
       (y[7] = r),

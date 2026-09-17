@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 class DesignSessionState {
   cachedSessionId = null;
@@ -155,7 +155,7 @@ function F(e, t) {
 }
 function areTargetsWithinPlanLimits(e) {
   if (e === void 0 || e.length === 0 || e.length > d) return !1;
-  for (let r of e) if ((b(r)?.length ?? 1 / 0) > MAX_IDENTIFIER_LENGTH || p(r)) return !1;
+  for (let r of e) if ((jsonStringify(r)?.length ?? 1 / 0) > MAX_IDENTIFIER_LENGTH || p(r)) return !1;
   let t = Math.max(0, Math.min(200, Math.floor(1800 / e.length) - 95)),
     n = 44 + (t > 0 ? t + 3 : 0);
   return (
@@ -166,7 +166,7 @@ function areTargetsWithinPlanLimits(e) {
   );
 }
 function C(e) {
-  return e.length > 0 && b(e).length <= MAX_IDENTIFIER_LENGTH && !p(e);
+  return e.length > 0 && jsonStringify(e).length <= MAX_IDENTIFIER_LENGTH && !p(e);
 }
 var PLAN_INVALIDATING_OPERATIONS = new Set(["update_sharing", "add_member", "update_member_role"]);
 function deleteApprovedPlansForProject(e, t) {
@@ -342,7 +342,7 @@ function extractPlanToken(e) {
   for (let t of e)
     if (t?.type === "text" && typeof t.text === "string")
       try {
-        let n = z(t.text),
+        let n = jsonParse(t.text),
           o = n.plan_token;
         if (typeof o !== "string" || o.length === 0) return null;
         let r = n.expires_at,

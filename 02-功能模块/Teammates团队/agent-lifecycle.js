@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isReservedRecipientName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isInProcessTeammateTask, IDLE_WINDOW_KEEPALIVE_REASON, isAgentParkedOnKeepalive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function f(r, i) {
@@ -59,7 +59,7 @@ function createAgentLifecycle(r, i) {
     },
     registerName(t, e) {
       if (isReservedRecipientName(t)) {
-        n(
+        logForDebugging(
           `[registerName] refused reserved or agent-id-shaped name "${t}" for ${e}`,
         );
         return;
@@ -102,7 +102,7 @@ function createAgentLifecycle(r, i) {
     },
     setTeammate(t, e) {
       if (e !== void 0 && isReservedRecipientName(e.name)) {
-        n(
+        logForDebugging(
           `[setTeammate] refused reserved or agent-id-shaped teammate name "${e.name}" for ${t}`,
         );
         return;

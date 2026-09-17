@@ -14,26 +14,26 @@ import { EDIT_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OA
 import { dt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { VY, W3t } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
-import { ne, Hoe, Wer } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState, DECISION_ID_PATTERN, isWorkshopEnabled } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { isWorkshopHtmlFile } from "../图表-Mermaid/chunk-743atbtj.js";
 var m = 100,
   _ = 8,
   w = 131072,
   g = 4096,
   A = 40,
-  S = new RegExp(`^${Hoe}$`),
+  S = new RegExp(`^${DECISION_ID_PATTERN}$`),
   E = 8;
 function isWorkshopProgressEnabled() {
-  return antEnv.CLAUDE_WORKSHOP_PROGRESS !== !1 && Wer();
+  return antEnv.CLAUDE_WORKSHOP_PROGRESS !== !1 && isWorkshopEnabled();
 }
 function a(t, r) {
   try {
     t();
   } catch (e) {
     logError(dt(e, `workshop authoring-progress hook failed (${r})`));
-    let o = ne().authoringProgress;
+    let o = getArtifactState().authoringProgress;
     if (!o.failureReported)
       ((o.failureReported = !0),
         logFeatureBad("workshop_authoring_progress", "hook_failed"));
@@ -41,7 +41,7 @@ function a(t, r) {
 }
 function resetAuthoringProgress() {
   a(() => {
-    let { slotsByBlockIndex: t } = ne().authoringProgress,
+    let { slotsByBlockIndex: t } = getArtifactState().authoringProgress,
       r = !1;
     for (let e of t.values()) r = r || e.shown;
     if ((t.clear(), r)) W3t.setSpinnerMessage(null);
@@ -52,7 +52,7 @@ function onToolUseStart(t, r) {
     o = e ?? r;
   if (o !== EDIT_TOOL_NAME && o !== WRITE_TOOL_NAME) return;
   a(() => {
-    let { slotsByBlockIndex: n } = ne().authoringProgress;
+    let { slotsByBlockIndex: n } = getArtifactState().authoringProgress;
     if (n.size >= _ || !isWorkshopProgressEnabled()) return;
     n.set(t, {
       raw: "",
@@ -64,7 +64,7 @@ function onToolUseStart(t, r) {
   }, "start");
 }
 function onInputJsonDelta(t, r) {
-  let e = ne().authoringProgress.slotsByBlockIndex.get(t);
+  let e = getArtifactState().authoringProgress.slotsByBlockIndex.get(t);
   if (!e || e.matched === !1) return;
   a(() => P(e, r), "delta");
 }
@@ -88,7 +88,7 @@ function P(t, r) {
   W3t.setSpinnerMessage(truncateToWidth(o, Math.max(40, n - E)));
 }
 function onToolUseStop(t) {
-  let { slotsByBlockIndex: r } = ne().authoringProgress,
+  let { slotsByBlockIndex: r } = getArtifactState().authoringProgress,
     e = r.get(t);
   if (!e) return;
   a(() => {

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { isInsideTmux, getLeaderPaneId, getUserTmuxSocket, isTmuxAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
@@ -144,7 +144,7 @@ class TmuxBackend {
     let t = await d(["display-message", "-p", "#{pane_id}"]);
     if (t.code !== 0)
       return (
-        n(
+        logForDebugging(
           `[TmuxBackend] Failed to get current pane ID (exit ${t.code}): ${t.stderr}`,
         ),
         null
@@ -160,7 +160,7 @@ class TmuxBackend {
     let a = await d(t);
     if (a.code !== 0)
       return (
-        n(
+        logForDebugging(
           `[TmuxBackend] Failed to get current window target (exit ${a.code}): ${a.stderr}`,
         ),
         null
@@ -177,7 +177,7 @@ class TmuxBackend {
       s = t ? await l(r) : await d(r);
     if (s.code !== 0) {
       if (
-        (n(
+        (logForDebugging(
           `[TmuxBackend] Failed to get pane count for ${a} (exit ${s.code}): ${s.stderr}`,
           { level: "error" },
         ),
@@ -220,7 +220,7 @@ class TmuxBackend {
       let i = o.stdout.trim(),
         u = `${SWARM_TMUX_SESSION_NAME}:${SWARM_TMUX_WINDOW_NAME}`;
       return (
-        n(
+        logForDebugging(
           `[TmuxBackend] Created external swarm session with window ${u}, pane ${i}`,
         ),
         (this.firstPaneUsedForExternal = !1),
@@ -319,7 +319,7 @@ class TmuxBackend {
     if (i.code !== 0) throw new SwarmPaneError(h(i.stderr));
     let u = i.stdout.trim();
     return (
-      n(`[TmuxBackend] Created teammate pane for ${e}: ${u}`),
+      logForDebugging(`[TmuxBackend] Created teammate pane for ${e}: ${u}`),
       await this.setPaneBorderColor(u, t),
       await this.setPaneTitle(u, e, t),
       await this.rebalancePanesWithLeader(r),
@@ -337,7 +337,7 @@ class TmuxBackend {
     if (o)
       ((i = r),
         (this.firstPaneUsedForExternal = !0),
-        n(`[TmuxBackend] Using initial pane for first teammate ${e}: ${i}`),
+        logForDebugging(`[TmuxBackend] Using initial pane for first teammate ${e}: ${i}`),
         await this.enablePaneBorderStatus(a, !0));
     else {
       let w = (await l(["list-panes", "-t", a, "-F", "#{pane_id}"])).stdout
@@ -365,7 +365,7 @@ class TmuxBackend {
         ]);
       if (m.code !== 0) throw new SwarmPaneError(h(m.stderr));
       ((i = m.stdout.trim()),
-        n(`[TmuxBackend] Created teammate pane for ${e}: ${i}`));
+        logForDebugging(`[TmuxBackend] Created teammate pane for ${e}: ${i}`));
     }
     return (
       await this.setPaneBorderColor(i, t, !0),
@@ -386,7 +386,7 @@ class TmuxBackend {
     await d(["select-layout", "-t", e, "main-vertical"]);
     let r = a[0];
     (await d(["resize-pane", "-t", r, "-x", "30%"]),
-      n(`[TmuxBackend] Rebalanced ${a.length - 1} teammate panes with leader`));
+      logForDebugging(`[TmuxBackend] Rebalanced ${a.length - 1} teammate panes with leader`));
   }
   async rebalancePanesTiled(e) {
     let a = (await l(["list-panes", "-t", e, "-F", "#{pane_id}"])).stdout
@@ -398,7 +398,7 @@ class TmuxBackend {
       .filter(Boolean);
     if (a.length <= 1) return;
     (await l(["select-layout", "-t", e, "tiled"]),
-      n(
+      logForDebugging(
         `[TmuxBackend] Rebalanced ${a.length} teammate panes with tiled layout`,
       ));
   }

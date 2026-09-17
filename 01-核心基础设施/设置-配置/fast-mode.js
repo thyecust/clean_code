@@ -11,7 +11,7 @@ import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.j
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { FAST_MODE_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import {
@@ -34,7 +34,7 @@ import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/re
 import { getConfiguredSessionModel, hasPreModelSwitchHooks, recordModelSwitchIfChanged, enqueueSessionTask, formatInlineCode, FAST_MODE_ON_LABEL, MODEL_SET_SUFFIX, ControlRequestTimeoutError } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyFlagSettingsPatch } from "../../02-功能模块/上下文压缩-Compact/apply-flag-settings.js";
 import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
-import { P_, Rl, rI } from "../模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import { resolvePreModelSwitchDecision, toSingleLineDisplayText, formatModelSwitchBlockedError } from "../模型目录-ModelCatalog/model-switch.js";
 import { resolveThemePalette } from "../共享小工具-未细化/theme-resolution.js";
 function renderFastModeIndicator(t = !0, e = !1) {
   if (!t) return FAST_MODE_GLYPH;
@@ -52,11 +52,11 @@ function getFastModeTargetModel(t) {
 async function vetFastModeTargetModel(t, e, o) {
   let m = getFastModeTargetModel(e());
   if (m === void 0 || hasRemoteControlChannel() || !hasPreModelSwitchHooks(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
-  let a = await P_(t, e, m, "command", { signal: o });
+  let a = await resolvePreModelSwitchDecision(t, e, m, "command", { signal: o });
   if (a.decision === "proceed")
     return { vetted: { target: m }, messages: a.messages };
   return {
-    refusal: rI(
+    refusal: formatModelSwitchBlockedError(
       m,
       a.decision === "ask"
         ? `${a.reason ?? "confirmation required"} (use /model to switch, then /fast)`
@@ -108,12 +108,12 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
         return;
       },
       (s) => (
-        n(`fast mode: workspace did not accept apply_flag_settings: ${l(s)}`, {
+        logForDebugging(`fast mode: workspace did not accept apply_flag_settings: ${l(s)}`, {
           level: "error",
         }),
         s instanceof ControlRequestTimeoutError
           ? { kind: "timeout" }
-          : { kind: "refused", reason: Rl(l(s)) }
+          : { kind: "refused", reason: toSingleLineDisplayText(l(s)) }
       ),
     );
   }
@@ -171,7 +171,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
       w =
         d.hookMessages.length > 0
           ? `
-${d.hookMessages.map(Rl).join(`
+${d.hookMessages.map(toSingleLineDisplayText).join(`
 `)}`
           : "";
     return `${M} ${FAST_MODE_ON_LABEL}${F} \xB7 ${k}${g}${w}`;

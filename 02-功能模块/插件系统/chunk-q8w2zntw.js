@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { shouldSkipPluginAutoupdate } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Xg, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolveSymlinkAncestrySync, fsSurface, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -30,7 +30,7 @@ import {
   shouldAutoUpdateMarketplace,
   isLocalMarketplaceSource,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Gu, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatPathWithTilde, pathExists } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource, updateSettingsForSourceWithTransform } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sanitizeUnicodeText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import {
@@ -55,7 +55,7 @@ import {
   mXe,
 } from "./chunk-ajtn749s.js";
 import { isPluginBlockedByPolicy, areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, areCommandPluginSourcesDisabledByPolicy, headersHelperPolicyRefusal, isHeadersHelperDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, isSourceDisallowedOrUnverifiable, isSourceAllowedByPolicy } from "./plugin-source-policy.js";
-import { p$e, Aa, rA, ive, NC, $t, Koe } from "./chunk-7s6mt1vg.js";
+import { removePluginDataDir, buildCliCommand, buildRunCommandHint, isDependencyError, classifyPathTrust, getPluginRegistryState, emitCommandProducerDirsChanged } from "./plugin-system-core.js";
 import {
   deletePluginOptions,
   getPolicyPluginEntries,
@@ -124,7 +124,7 @@ import {
   loadAllPlugins,
   loadAllPluginsCacheOnly,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { uD, _j, ASt, v8e } from "../Hooks钩子/chunk-z3433nr6.js";
+import { TRUSTED_PLUGIN_SETTINGS_SOURCES, isBuiltinPluginId, getBuiltinPlugin, listBuiltinPlugins } from "../Hooks钩子/chunk-z3433nr6.js";
 import { checkEnabledPlugins, getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { getDependencyErrorsForPlugin, buildMissingDependencyNotice } from "./plugin-dependency-resolution.js";
 import {
@@ -162,12 +162,12 @@ async function bUn(e, t, s) {
   try {
     return (
       await refreshMarketplace(e, s, void 0, { skipIfRecent: !0 }),
-      $t().marketplaces.delete(e),
+      getPluginRegistryState().marketplaces.delete(e),
       "refreshed"
     );
   } catch (r) {
     return (
-      n(
+      logForDebugging(
         `Failed to refresh marketplace '${e}' on catalog miss; using cached data: ${l(r)}`,
         { level: "warn" },
       ),
@@ -188,18 +188,18 @@ async function d0e(e, t, s) {
     return { outcome: "ineligible" };
   let r = t.source.source;
   if (r !== "github" && r !== "git" && r !== "url" && r !== "claudeai") {
-    if (isLocalMarketplaceSource(t.source) || r === "settings") $t().marketplaces.delete(e);
+    if (isLocalMarketplaceSource(t.source) || r === "settings") getPluginRegistryState().marketplaces.delete(e);
     return { outcome: "ineligible" };
   }
   try {
     return (
       await refreshMarketplace(e, s, void 0, { skipIfRecent: !0 }),
-      $t().marketplaces.delete(e),
+      getPluginRegistryState().marketplaces.delete(e),
       { outcome: "refreshed" }
     );
   } catch (i) {
     return (
-      n(
+      logForDebugging(
         `Failed to refresh marketplace '${e}' before scoped install; using cached data: ${l(i)}`,
         { level: "warn" },
       ),
@@ -219,12 +219,12 @@ function We(e, t) {
     case SYNCED_PLUGIN_SOURCE:
       return `This plugin is synced from your claude.ai account with no marketplace backing \u2014 it cannot be ${s} here. Manage it on claude.ai, or \`claude plugin disable\` to turn it off on this machine.`;
     case SKILLS_DIR_PLUGIN_SOURCE:
-      return `This plugin is loaded from ${Gu(Ae(getClaudeConfigDir(), "skills"))}/ with no marketplace backing \u2014 it cannot be ${s}. Delete the directory to remove it; \`claude plugin disable\` to turn it off; edits there take effect after /reload-plugins.`;
+      return `This plugin is loaded from ${formatPathWithTilde(Ae(getClaudeConfigDir(), "skills"))}/ with no marketplace backing \u2014 it cannot be ${s}. Delete the directory to remove it; \`claude plugin disable\` to turn it off; edits there take effect after /reload-plugins.`;
   }
 }
 function Ce(e, t, s) {
   if (isNonMarketplacePluginSource(t)) return We(t, s);
-  if (_j(e) && ASt(splitPluginId(e).name) !== void 0)
+  if (isBuiltinPluginId(e) && getBuiltinPlugin(splitPluginId(e).name) !== void 0)
     return "This is a built-in plugin \u2014 built-in plugins cannot be installed, updated or uninstalled. Use `claude plugin enable` / `claude plugin disable` to turn it on or off.";
   return;
 }
@@ -396,7 +396,7 @@ async function EUn(
   }
   if (!P || !S) {
     let m = k ? `marketplace "${k}"` : "any configured marketplace",
-      I = k ? Aa("plugin marketplace update", k) : null,
+      I = k ? buildCliCommand("plugin marketplace update", k) : null,
       b =
         k && !X
           ? `. Your local copy may be out of date${I ? ` \u2014 try \`${I}\`` : " \u2014 update it from /plugin > Marketplaces"}.`
@@ -504,7 +504,7 @@ This install runs that command; confirm it by running \`claude plugin install\` 
         return { success: !1, message: formatNoMatchingGitTag(m, C.dep, C.range) };
       }
     }
-  let ce = Aa("plugin enable", D),
+  let ce = buildCliCommand("plugin enable", D),
     d = ce ? ` \u2014 enable it with: ${ce}` : " \u2014 enable it in /plugin",
     F = C.installedDisabled.includes(D)
       ? C.installedDisabledByDefault.includes(D)
@@ -577,7 +577,7 @@ async function r4(e, t = "user", s = !0, r) {
     let { scope: m } = rOt(w);
     if (m !== t && N && N.length > 0) {
       if (m === "project") {
-        let I = Aa("plugin disable", e, "--scope local");
+        let I = buildCliCommand("plugin disable", e, "--scope local");
         return {
           success: !1,
           message: `Plugin "${e}" is enabled at project scope (.claude/settings.json, shared with your team). To disable just for you${I ? `: ${I}` : ", use claude plugin disable with --scope local"}`,
@@ -610,7 +610,7 @@ async function r4(e, t = "user", s = !0, r) {
     d = !ce || ce.length === 0;
   if (d && U) await markVersionOrphaned(U, r);
   if (d) {
-    if ((await deletePluginOptions(w, r), deletePluginUsage([w], r), s)) await p$e(w);
+    if ((await deletePluginOptions(w, r), deletePluginUsage([w], r), s)) await removePluginDataDir(w);
   }
   let F = findDependentPluginNames(w, k),
     h = formatRequiredByWarning(F);
@@ -628,15 +628,15 @@ async function $e(e, t, s, r, i) {
     p = Xe();
   e = normalizePluginId(e);
   let { name: k, marketplace: a } = parsePluginId(e);
-  if (a === void 0 && !_j(e)) {
+  if (a === void 0 && !isBuiltinPluginId(e)) {
     let F = formatPluginId(e, BUILTIN_PLUGIN_SOURCE),
       h = Re(e, ["user"])?.pluginId;
-    if (isTrustedBuiltinPlugin(F) && h !== void 0 && !_j(h)) return $e(h, t, s, r, i);
+    if (isTrustedBuiltinPlugin(F) && h !== void 0 && !isBuiltinPluginId(h)) return $e(h, t, s, r, i);
     if (isTrustedBuiltinPlugin(F)) {
       let I = await loadAllPlugins(i);
       if (
         ![...I.enabled, ...I.disabled].some(
-          (z) => isEqualIgnoringCase(z.name, e) && !_j(z.source),
+          (z) => isEqualIgnoringCase(z.name, e) && !isBuiltinPluginId(z.source),
         )
       )
         return $e(F, t, s, r, i);
@@ -648,7 +648,7 @@ async function $e(e, t, s, r, i) {
     let m = Re(e)?.pluginId;
     if (m !== void 0 && (isNonMarketplacePluginSource(getPluginMarketplace(m)) || isTrustedBuiltinPlugin(m))) return $e(m, t, s, r, i);
   }
-  if (_j(e) || isNonMarketplacePluginSource(a)) {
+  if (isBuiltinPluginId(e) || isNonMarketplacePluginSource(a)) {
     let F = "user",
       h = resolveTrustedBuiltinPluginId(e) ?? e,
       m = en(h, t);
@@ -690,7 +690,7 @@ async function $e(e, t, s, r, i) {
           }),
         );
       if (t && a === SYNCED_PLUGIN_SOURCE) {
-        let K = new Set(O.errors.filter(ive).map((q) => q.source)),
+        let K = new Set(O.errors.filter(isDependencyError).map((q) => q.source)),
           ue = localCopyShadowingSynced(k, [
             ...O.enabled.filter((q) => !q.isBuiltin),
             ...O.disabled
@@ -726,7 +726,7 @@ async function $e(e, t, s, r, i) {
           (h = Se(F, h, p)?.key ?? h));
     }
     if (t && a === SKILLS_DIR_PLUGIN_SOURCE) {
-      if (!areLocalPluginDirsAllowedByPolicy()) return { success: !1, message: localPluginDirsBlockedMessage(Gu(Ae(getClaudeConfigDir(), "skills"))) };
+      if (!areLocalPluginDirsAllowedByPolicy()) return { success: !1, message: localPluginDirsBlockedMessage(formatPathWithTilde(Ae(getClaudeConfigDir(), "skills"))) };
     }
     if (t && isPluginBlockedByPolicy(h))
       return {
@@ -866,7 +866,7 @@ async function $e(e, t, s, r, i) {
       z = findDependentPluginNames(P, b);
     if (z.length > 0 && !r?.bypassDependentsBlock) {
       let { name: j } = splitPluginId(P),
-        T = [...collectTransitiveDependents(P, b), P].map((oe) => Aa("plugin disable", oe)),
+        T = [...collectTransitiveDependents(P, b), P].map((oe) => buildCliCommand("plugin disable", oe)),
         de = T.every((oe) => oe !== null)
           ? `, or disable everything together: ${T.join(" && ")}`
           : ", or disable them together in /plugin.";
@@ -883,7 +883,7 @@ async function $e(e, t, s, r, i) {
       { closure: m, missing: I } = resolvePluginDependencyClosure(P, [...F, ...h]);
     if (I.length > 0) {
       let { name: E } = splitPluginId(P),
-        H = I.map((O) => Aa("plugin install", O)),
+        H = I.map((O) => buildCliCommand("plugin install", O)),
         ne = H.every((O) => O !== null)
           ? `: ${H.join(" && ")}`
           : " from /plugin.";
@@ -906,7 +906,7 @@ async function $e(e, t, s, r, i) {
     if (ee.length > 0) {
       let { name: E } = splitPluginId(P),
         H = ee.length,
-        ne = ee.map((v) => Aa("plugin enable", v)),
+        ne = ee.map((v) => buildCliCommand("plugin enable", v)),
         O = ne.every((v) => v !== null)
           ? `: ${ne.join(" && ")}`
           : " in /plugin.";
@@ -996,8 +996,8 @@ async function AUn(e) {
     k = r.filter((_) => !p.has(normalizeLookupKey(_))),
     a = (_) => new Set(_.flatMap(({ record: N }) => Object.keys(N ?? {}))),
     P = a(i),
-    S = a(i.filter(({ source: _ }) => uD.includes(_))),
-    w = v8e()
+    S = a(i.filter(({ source: _ }) => TRUSTED_PLUGIN_SETTINGS_SOURCES.includes(_))),
+    w = listBuiltinPlugins()
       .enabled.map((_) => _.source)
       .filter((_) => !(isTrustedBuiltinPlugin(_) ? S : P).has(_)),
     X = [...k, ...w];
@@ -1099,7 +1099,7 @@ async function qe(
     return {
       outcome: "failed",
       message: X,
-      failureCode: _j(e) ? "builtin" : "directory_loaded",
+      failureCode: isBuiltinPluginId(e) ? "builtin" : "directory_loaded",
     };
   let A = w,
     c = A ? `${S}@${A}` : e,
@@ -1162,7 +1162,7 @@ async function qe(
           (U = C
             ? "marketplace not refreshed \u2014 your organization's managed settings forbid its headersHelper (the version shown is from the cached catalog; ask your admin)"
             : `marketplace not refreshed (${formatShortText(l(G))})`),
-          n(
+          logForDebugging(
             `Failed to refresh marketplace '${A}' before update; using cached data: ${l(G)}`,
             { level: "warn" },
           ));
@@ -1193,7 +1193,7 @@ async function qe(
     m = D.filter((u) => u.scope === t),
     I = m.find((u) => u.projectPath === h);
   if (!I && m.length > 1)
-    n(
+    logForDebugging(
       `updatePluginOp: ${m.length} ${t}-scope installs, none match CWD '${h}'; updating '${m[0]?.projectPath}' only`,
       { level: "warn" },
     );
@@ -1223,17 +1223,17 @@ async function qe(
         outcome: "failed",
         message:
           r && !Z
-            ? `${formatDisplayText(S, 200)} is installed by running a command, which the background marketplace update never runs; it is left to the per-session re-resolve (when that is enabled) or an explicit update \u2014 ${rA("plugin update", c, { extra: Q, fallback: "a per-plugin update reviews it" })}.`
+            ? `${formatDisplayText(S, 200)} is installed by running a command, which the background marketplace update never runs; it is left to the per-session re-resolve (when that is enabled) or an explicit update \u2014 ${buildRunCommandHint("plugin update", c, { extra: Q, fallback: "a per-plugin update reviews it" })}.`
             : u
               ? COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE
-              : `${formatDisplayText(S, 200)} is disabled, so the command that installs it was not run. Enable it first, then ${rA("plugin update", c, { extra: Q, fallback: "update it explicitly" })}.`,
+              : `${formatDisplayText(S, 200)} is disabled, so the command that installs it was not run. Enable it first, then ${buildRunCommandHint("plugin update", c, { extra: Q, fallback: "update it explicitly" })}.`,
         pluginId: c,
         scope: t,
         failureCode:
           r && !Z ? "command_source_skipped" : "command_source_inactive",
       };
   }
-  let ee = ae(),
+  let ee = getFsSurface(),
     T = b.version,
     { enabled: de, disabled: oe } = s ? await loadAllPluginsCacheOnly(a) : await loadAllPlugins(a),
     le = collectDependencyRequirementsOn(c, [...de, ...oe]),
@@ -1259,7 +1259,7 @@ async function qe(
     if (G !== null && u.range !== "*") {
       let Z = await resolveVersionRange(G, d.name, u.range);
       if (Z === null)
-        n(
+        logForDebugging(
           `updatePluginOp(${c}): no ${d.name}--v* tag satisfying ${u.range}; falling back to HEAD + post-fetch guard`,
         );
       else if (Z.version === b.resolvedVersion && Z.sha === b.gitCommitSha)
@@ -1375,7 +1375,7 @@ async function qe(
         };
       }
       if (re !== null) return re;
-      let Oe = Aa("plugin update", c);
+      let Oe = buildCliCommand("plugin update", c);
       return {
         outcome: "skipped",
         message:
@@ -1534,14 +1534,14 @@ async function qe(
       Z = !L && (b.version === B || b.installPath === u || b.installPath === G),
       Q = !1;
     if (Z && typeof d.source === "object" && d.source.source === "command") {
-      let re = NC(b.installPath, { trustedRoots: getMarketplaceTrustedRoots(c, O, getOperatorDeclaredMarketplaces()) }),
+      let re = classifyPathTrust(b.installPath, { trustedRoots: getMarketplaceTrustedRoots(c, O, getOperatorDeclaredMarketplaces()) }),
         ie = re.absolute;
       Q =
         re.suspect ||
         !(await (R$(d.source)
           ? cXe(ie)
           : ie.endsWith(".zip")
-            ? El(ie)
+            ? pathExists(ie)
             : cacheDirHasPluginContentStrict(ie, a))) ||
         (R$(d.source)
           ? await Qe(ie, J ?? b.sourceProducerPath)
@@ -1568,7 +1568,7 @@ async function qe(
           },
           a,
         ),
-          Koe());
+          emitCommandProducerDirsChanged());
       let re = `${S} is already at the latest version (${B}).`;
       return {
         outcome: "up_to_date",
@@ -1607,7 +1607,7 @@ async function qe(
       ),
       J !== void 0)
     )
-      Koe();
+      emitCommandProducerDirsChanged();
     if (se && se !== u) {
       let re = isHoverRestEnabled() && a !== void 0 ? await readInstalledPluginsViaStorage(a) : readInstalledPluginsFile();
       if (
@@ -1702,7 +1702,7 @@ async function sOt(e, t) {
         r ??= p;
         continue;
       }
-      n(
+      logForDebugging(
         `Failed to load marketplace "${i}" while searching for plugin "${e}": ${l(p)}`,
         { level: "error" },
       );
@@ -1841,7 +1841,7 @@ function Ue(e, { allowNewlineAndTab: t = !1 } = {}) {
 var sn = /^[\w.-]+\/[\w.-]+$/,
   xe = 5000,
   Te = 4096;
-function men(e, t = Sh) {
+function men(e, t = fsSurface) {
   if (An(e) || jf(e))
     throw Error(
       `Invalid cwd in deep link: UNC / network paths are not supported, got "${e}"`,
@@ -1868,7 +1868,7 @@ function men(e, t = Sh) {
   if (e.length > Te)
     throw Error(`Deep link cwd exceeds ${Te} characters (got ${e.length})`);
   if (
-    Xg(t, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) !==
+    resolveSymlinkAncestrySync(t, e, { surfaceNetworkRaw: !0, unreadableAncestry: "unverified" }) !==
     void 0
   )
     throw new R(

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getPidDomain } from "./process-record.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { hostname } from "os";
@@ -36,7 +36,7 @@ import { timingSafeEqual } from "crypto";
 import { readFile } from "fs/promises";
 async function readSocketTokenFile(n) {
   try {
-    let t = z(await readFile(n, "utf8"));
+    let t = jsonParse(await readFile(n, "utf8"));
     if (t === null || typeof t !== "object") return;
     let i = {};
     if ("rvAuth" in t && typeof t.rvAuth === "string") i.rvAuth = t.rvAuth;

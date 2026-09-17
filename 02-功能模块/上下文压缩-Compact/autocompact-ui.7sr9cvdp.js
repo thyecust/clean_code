@@ -12,8 +12,8 @@
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -211,7 +211,7 @@ function uo(No) {
   else W = n[42];
   let Bo;
   if (n[43] === MEMO_CACHE_SENTINEL)
-    ((Bo = e(t, {
+    ((Bo = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [
@@ -225,7 +225,7 @@ function uo(No) {
   else Bo = n[43];
   let Po;
   if (n[44] === MEMO_CACHE_SENTINEL)
-    ((Po = e(t, {
+    ((Po = e(Text, {
       children:
         "This command configures when auto-compaction happens. The actual threshold is the minimum of this setting and your model's maximum context window.",
     })),
@@ -233,11 +233,11 @@ function uo(No) {
   else Po = n[44];
   let zo;
   if (n[45] === MEMO_CACHE_SENTINEL)
-    ((zo = r(t, {
+    ((zo = r(Text, {
       children: [
         "The auto setting picks a window tuned for your model and is",
         " ",
-        e(t, { bold: !0, children: "strongly recommended" }),
+        e(Text, { bold: !0, children: "strongly recommended" }),
         " for the best cost and performance. You can override it below.",
       ],
     })),
@@ -247,7 +247,7 @@ function uo(No) {
   if (n[46] !== Q)
     ((T =
       !Q &&
-      e(t, {
+      e(Text, {
         color: "warning",
         children: "Auto-compact is currently disabled (see /config)",
       })),
@@ -258,7 +258,7 @@ function uo(No) {
   if (n[48] !== s)
     ((E =
       s !== c &&
-      e(t, {
+      e(Text, {
         color: "warning",
         children:
           "Overriding auto may result in high token usage, especially when resuming long sessions.",
@@ -269,15 +269,15 @@ function uo(No) {
   let I;
   if (n[50] !== so || n[51] !== w)
     ((I = w
-      ? e(t, {
+      ? e(Text, {
           color: "warning",
           children:
             "CLAUDE_CODE_AUTO_COMPACT_WINDOW is set and takes precedence. Unset it to change this setting here.",
         })
-      : r(o, {
+      : r(Box, {
           children: [
-            e(t, { children: "Select auto-compact window: " }),
-            e(t, { bold: !0, color: "suggestion", children: so }),
+            e(Text, { children: "Select auto-compact window: " }),
+            e(Text, { bold: !0, color: "suggestion", children: so }),
           ],
         })),
       (n[50] = so),
@@ -286,7 +286,7 @@ function uo(No) {
   else I = n[52];
   let N;
   if (n[53] !== T || n[54] !== E || n[55] !== I)
-    ((N = r(o, {
+    ((N = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [Po, zo, T, E, I],

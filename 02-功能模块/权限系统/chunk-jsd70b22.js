@@ -15,7 +15,7 @@ import { lit as S, fromEnum, fromEnumOpt, fromSanitizer_SANITIZER_OUTPUT_ONLY } 
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { z, Ro, ae, qr, Zhe, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse, resolvePathInfo, getFsSurface, qr, redactForDisplay, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
@@ -95,32 +95,32 @@ import {
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { ot, kQ, Dge } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { resolvePath, isJupyterNotebookPath, DEFAULT_MAX_FILE_READ_BYTES } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   ps,
-  Tme,
-  Rm,
-  jd,
-  YG,
+  sanitizeInvisibleText,
+  MAX_DISPLAY_PAYLOAD_UNITS,
+  collapseInvisibleCharacterRuns,
+  hasVisibleContent,
   cse,
-  BC,
-  JG,
-  Rve,
-  Ynr,
+  MAX_DISPLAY_VALUE_UNITS,
+  formatDisplayLabel,
+  isBlankDisplayText,
+  formatMcpToolUserFacingName,
   uAt,
-  Us,
-  km,
-  Jk,
-  Jnr,
-  Oo,
+  prepareDisplayText,
+  formatWithholdableValue,
+  shouldWithholdValue,
+  hasCollapsedInvisibleRuns,
+  replaceLineBreaks,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Wh, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { EXIT_PLAN_MODE_TOOL_NAME_ALIAS, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
@@ -131,7 +131,7 @@ import { createProfanityFreeShortId, sanitizeAndTruncateText, truncateForPreview
 import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import { getServerApprovalWatchProvider } from "../../01-核心基础设施/共享小工具-未细化/server-approval-watch-provider.js";
 import { getWsSubprotocols, MAX_SUBPROTOCOLS } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
-import { LAe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { WslPathConverter } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { customSchema, defineDialog, isAsyncIterable } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
@@ -232,7 +232,7 @@ function createPermissionDecisionContext(e, r, o, t, s, k, R) {
         v = b ? `${D ? PERMISSION_DENIED_PREFIX : USER_REJECTED_TOOL_USE_PREFIX}${b}` : D ? PERMISSION_DENIED_MESSAGE : USER_REJECTED_TOOL_USE_MESSAGE,
         T = D ? v : appendAutoMemoryReminder(v);
       if (p || shouldInterruptOnDenial({ feedback: b, contentBlocks: F, isSubagent: D }))
-        (n(
+        (logForDebugging(
           `Aborting: tool=${e.name} isAbort=${p} hasFeedback=${!!b} isSubagent=${D}`,
         ),
           o.abortController.abort());
@@ -281,7 +281,7 @@ function createPermissionDecisionContext(e, r, o, t, s, k, R) {
               ),
               v.interrupt)
             )
-              (n(`Hook interrupt: tool=${e.name} hookMessage=${v.message}`),
+              (logForDebugging(`Hook interrupt: tool=${e.name} hookMessage=${v.message}`),
                 turnAbortControllerOf(o.abortController).abort());
             return this.buildDeny(v.message || "Permission denied by hook", {
               type: "hook",
@@ -365,7 +365,7 @@ function createPermissionDecisionContext(e, r, o, t, s, k, R) {
 function ze(e) {
   let r = e.input;
   if (e.tool.name === ASK_USER_QUESTION_TOOL_NAME) return formatAskUserQuestionNeeds(r);
-  if (e.tool.name === Wh) return { text: "approve plan" };
+  if (e.tool.name === EXIT_PLAN_MODE_TOOL_NAME_ALIAS) return { text: "approve plan" };
   let o = e.tool.userFacingName(e.input).trim(),
     t =
       typeof r?.command === "string"
@@ -506,7 +506,7 @@ function buildBasePermissionDescriptor(e) {
   let r = e.tool.isMcp === !0 ? e.tool.mcpInfo : void 0,
     o = e.tool.isMcp === !0,
     t;
-  if (r) t = Ynr(r);
+  if (r) t = formatMcpToolUserFacingName(r);
   else {
     let R;
     try {
@@ -535,7 +535,7 @@ function buildBasePermissionDescriptor(e) {
     requestId: e.toolUseID,
     toolName: e.tool.name,
     input: e.input,
-    description: Us(e.description).text,
+    description: prepareDisplayText(e.description).text,
     permissionResult: e.permissionResult,
     userFacingName: t,
     hasMcpSuffix: o,
@@ -609,13 +609,13 @@ function Je(e) {
 }
 function Eo(e) {
   if (!("args" in e) || e.args === void 0) return;
-  return km(e.args, { scrub: "key", maxUnits: Rm });
+  return formatWithholdableValue(e.args, { scrub: "key", maxUnits: MAX_DISPLAY_PAYLOAD_UNITS });
 }
 function Ke(e) {
   let r = buildBasePermissionDescriptor(e),
     o =
       typeof e.input.command === "string"
-        ? km(e.input.command, { maxUnits: Rm })
+        ? formatWithholdableValue(e.input.command, { maxUnits: MAX_DISPLAY_PAYLOAD_UNITS })
         : void 0,
     t = ve(e.input.mcp, "server"),
     s = ve(e.input.mcp, "tool"),
@@ -632,18 +632,18 @@ function Ke(e) {
     _ =
       R !== void 0
         ? {
-            url: km(normalizeUrlString(R), { maxUnits: Rm }),
-            protocols: c?.map((b, p) => (p < MAX_SUBPROTOCOLS ? Oo(Tme(truncateToCodeUnits(b, BC))) : "")),
+            url: formatWithholdableValue(normalizeUrlString(R), { maxUnits: MAX_DISPLAY_PAYLOAD_UNITS }),
+            protocols: c?.map((b, p) => (p < MAX_SUBPROTOCOLS ? replaceLineBreaks(sanitizeInvisibleText(truncateToCodeUnits(b, MAX_DISPLAY_VALUE_UNITS))) : "")),
             protocolsWithheld: c?.slice(0, MAX_SUBPROTOCOLS).some((b) => {
-              let p = truncateToCodeUnits(b, BC);
-              return jd(p) !== p;
+              let p = truncateToCodeUnits(b, MAX_DISPLAY_VALUE_UNITS);
+              return collapseInvisibleCharacterRuns(p) !== p;
             }),
           }
         : void 0,
     d = typeof e.input.interval_ms === "number" ? e.input.interval_ms : 30000,
     w =
       typeof e.input.description === "string"
-        ? Us(e.input.description).text
+        ? prepareDisplayText(e.input.description).text
         : void 0;
   return {
     ...r,
@@ -655,10 +655,10 @@ function Ke(e) {
   };
 }
 function Qe(e, r) {
-  let o = Oo(cse(truncateToCodeUnits(e, BC)))
+  let o = replaceLineBreaks(cse(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)))
     .replace(/\s+/g, " ")
     .trim();
-  return YG(o) ? o : r;
+  return hasVisibleContent(o) ? o : r;
 }
 function ve(e, r) {
   if (e === null || typeof e !== "object" || !(r in e)) return;
@@ -707,7 +707,7 @@ function Ze(e) {
   let r = buildBasePermissionDescriptor(e),
     o = typeof e.input.filePath === "string" ? e.input.filePath : "",
     t = typeof e.input.title === "string" ? e.input.title : "",
-    s = Rve(t) ? "" : JG(t),
+    s = isBlankDisplayText(t) ? "" : formatDisplayLabel(t),
     R = (Array.isArray(e.input.options) ? e.input.options : [])
       .filter(
         (d) =>
@@ -721,8 +721,8 @@ function Ze(e) {
           typeof d.value === "string",
       )
       .map((d) => ({
-        label: Rve(d.label) ? "" : JG(d.label),
-        description: Us(d.description).text,
+        label: isBlankDisplayText(d.label) ? "" : formatDisplayLabel(d.label),
+        description: prepareDisplayText(d.description).text,
         value: d.value,
       })),
     c,
@@ -731,7 +731,7 @@ function Ze(e) {
     ((c = `(Network path \u2014 content not previewed: ${o})`), (_ = !0));
   else
     try {
-      c = readFileSyncText(o, Dge);
+      c = readFileSyncText(o, DEFAULT_MAX_FILE_READ_BYTES);
     } catch (d) {
       if (isFileTooLargeError(d)) c = `(Artifact too large for preview: ${o})`;
       else
@@ -771,7 +771,7 @@ function eo(e) {
 function oo(e) {
   let r = buildBasePermissionDescriptor(e),
     o =
-      typeof e.input.command === "string" && e.input.command.length <= Rm
+      typeof e.input.command === "string" && e.input.command.length <= MAX_DISPLAY_PAYLOAD_UNITS
         ? ps(e.input.command)
         : "",
     t =
@@ -799,7 +799,7 @@ function to(e) {
 function buildBashPermissionDescriptor(e) {
   let r = buildBasePermissionDescriptor(e),
     o =
-      typeof e.input.command === "string" && e.input.command.length <= Rm
+      typeof e.input.command === "string" && e.input.command.length <= MAX_DISPLAY_PAYLOAD_UNITS
         ? ps(e.input.command)
         : "",
     t =
@@ -851,9 +851,9 @@ function getToolFilePath(e, r) {
 function io(e, r, o) {
   if (r === "read" || o) return null;
   try {
-    let t = ot(e),
-      s = ae(),
-      { resolvedPath: k, isSymlink: R } = Ro(s, t);
+    let t = resolvePath(e),
+      s = getFsSurface(),
+      { resolvedPath: k, isSymlink: R } = resolvePathInfo(s, t);
     return R ? k : null;
   } catch {
     return null;
@@ -870,7 +870,7 @@ async function Fo(e) {
   if (r === FileEditTool) {
     let c = FileEditTool.inputSchema.parse(o),
       _ = c.old_string.length > ne || c.new_string.length > ne,
-      d = !_ && (Jk(c.old_string) || Jk(c.new_string)),
+      d = !_ && (shouldWithholdValue(c.old_string) || shouldWithholdValue(c.new_string)),
       w = _ || d;
     return {
       title: "Edit file",
@@ -924,7 +924,7 @@ async function Fo(e) {
       let M = Xo(c.file_path) || Dr(c.file_path);
       if (!M)
         try {
-          ((_ = (await readFileWithMetadata(c.file_path, Dge)).content), (d = !0));
+          ((_ = (await readFileWithMetadata(c.file_path, DEFAULT_MAX_FILE_READ_BYTES)).content), (d = !0));
         } catch (E) {
           if (isFileTooLargeError(E)) ((d = !0), (w = !0));
           else if (!W(E) && !isNotRegularFileError(E)) throw E;
@@ -935,10 +935,10 @@ async function Fo(e) {
           (p = d ? "overwrite" : "create"));
     }
     let F = c.content.length > ne,
-      A = !F && Jk(c.content),
+      A = !F && shouldWithholdValue(c.content),
       D = F || A,
-      v = d && Jnr(_),
-      T = d && !v && Jk(_),
+      v = d && hasCollapsedInvisibleRuns(_),
+      T = d && !v && shouldWithholdValue(_),
       x = D || w || v || T;
     return {
       title: b,
@@ -995,7 +995,7 @@ async function Fo(e) {
           : c.edit_mode === "delete"
             ? "delete this cell from"
             : "make this edit to",
-      d = (c.new_source?.length ?? 0) > ne || Jk(c.new_source ?? ""),
+      d = (c.new_source?.length ?? 0) > ne || shouldWithholdValue(c.new_source ?? ""),
       w = c.edit_mode !== "insert",
       b,
       p;
@@ -1004,7 +1004,7 @@ async function Fo(e) {
         if (typeof s === "string") {
           let A = resolveNotebookCellSource(s, c.cell_id);
           if (A.kind === "found")
-            if (A.source.length > ne || Jk(A.source))
+            if (A.source.length > ne || shouldWithholdValue(A.source))
               p = "the current cell contents cannot be shown in full";
             else b = A.source;
           else
@@ -1019,15 +1019,15 @@ async function Fo(e) {
         p = "the notebook is on a network path";
       else
         try {
-          if (!(await ae().stat(c.notebook_path)).isFile())
+          if (!(await getFsSurface().stat(c.notebook_path)).isFile())
             p = "the notebook could not be read";
           else {
-            let D = await ae().readFileBytes(c.notebook_path, MAX_NOTEBOOK_FILE_BYTES + 1);
+            let D = await getFsSurface().readFileBytes(c.notebook_path, MAX_NOTEBOOK_FILE_BYTES + 1);
             if (D.length > MAX_NOTEBOOK_FILE_BYTES) p = "the notebook is too large to preview";
             else {
               let v = resolveNotebookCellSource(D.toString("utf-8"), c.cell_id);
               if (v.kind === "found")
-                if (v.source.length > ne || Jk(v.source))
+                if (v.source.length > ne || shouldWithholdValue(v.source))
                   p = "the current cell contents cannot be shown in full";
                 else b = v.source;
               else
@@ -1133,15 +1133,15 @@ function no(e, r, o) {
 async function xe(e) {
   let r = buildBasePermissionDescriptor(e),
     o = e.sedInfo.filePath,
-    t = ot(o),
+    t = resolvePath(o),
     s = ((An(o) || An(t)) && !(Oi(o) || Oi(t))) || Dr(o) || Dr(t),
     k = !checkPathPermission(t, { ...e.toolPermissionContext, mode: "acceptEdits" }, "write")
       .allowed,
     R =
       k &&
       !s &&
-      (await ae()
-        .lstat(ot(o))
+      (await getFsSurface()
+        .lstat(resolvePath(o))
         .then(
           (x) => x.isSymbolicLink(),
           () => !1,
@@ -1151,7 +1151,7 @@ async function xe(e) {
     d = !1;
   if (!s && !k)
     try {
-      ((c = (await readFileWithMetadata(t, Dge)).content), (_ = !0));
+      ((c = (await readFileWithMetadata(t, DEFAULT_MAX_FILE_READ_BYTES)).content), (_ = !0));
     } catch (x) {
       if (isFileTooLargeError(x)) ((_ = !0), (d = !0));
       else if (!W(x) && !isNotRegularFileError(x)) throw x;
@@ -1165,7 +1165,7 @@ async function xe(e) {
     } catch {
       b = !0;
     }
-  let F = p || b || w.length > ne || Jk(c) || Jk(w),
+  let F = p || b || w.length > ne || shouldWithholdValue(c) || shouldWithholdValue(w),
     A =
       s || k || d || F || c === w
         ? []
@@ -1173,7 +1173,7 @@ async function xe(e) {
     D = s
       ? `Network path \u2014 diff not previewed. The sed command will run against ${ye(t)} on approval.`
       : R
-        ? `${ye(ot(o))} is a symbolic link whose target is not editable in place here \u2014 not previewed. On approval the sed command runs as written: \`sed -i\` reads THROUGH the link and writes the result as a regular file in the link's place (the target's edited contents land there); the target itself is not modified.`
+        ? `${ye(resolvePath(o))} is a symbolic link whose target is not editable in place here \u2014 not previewed. On approval the sed command runs as written: \`sed -i\` reads THROUGH the link and writes the result as a regular file in the link's place (the target's edited contents land there); the target itself is not modified.`
         : k
           ? `Not previewable as an in-place edit here \u2014 the sed command will run against ${ye(t)} on approval.`
           : d
@@ -1315,7 +1315,7 @@ function lo(e, r, o, t) {
 }
 async function ao(e, r, o, t, s) {
   let k = !1,
-    R = ot(e),
+    R = resolvePath(e),
     c = "";
   try {
     c = (await readFileWithMetadata(R)).content;
@@ -1332,7 +1332,7 @@ async function ao(e, r, o, t, s) {
     try {
       await Fe(t, w);
     } catch (b) {
-      n(
+      logForDebugging(
         `Failed to close diff tab in IDE: ${b instanceof Error ? b.message : String(b)}`,
         { level: "error" },
       );
@@ -1349,7 +1349,7 @@ async function ao(e, r, o, t, s) {
     let p = R,
       F = w.config.ideRunningInWindows === !0;
     if (getCurrentPlatform() === "wsl" && F && a.WSL_DISTRO_NAME)
-      ((p = await new LAe(a.WSL_DISTRO_NAME).toIDEPath(R)), _());
+      ((p = await new WslPathConverter(a.WSL_DISTRO_NAME).toIDEPath(R)), _());
     let A = await invokeIdeRpc(
         "openDiff",
         {
@@ -1367,7 +1367,7 @@ async function ao(e, r, o, t, s) {
     throw Error("Not accepted");
   } catch (b) {
     if (!yt(b))
-      n(
+      logForDebugging(
         `Failed to show diff in IDE: ${b instanceof Error ? b.message : String(b)}`,
         { level: "error" },
       );
@@ -1379,7 +1379,7 @@ async function Fe(e, r) {
     if (!r || r.type !== "connected") throw Error("IDE client not available");
     (await invokeIdeRpc("close_tab", { tab_name: e }, r), logFeatureOk("ide_close_diff_tab"));
   } catch (o) {
-    (n(
+    (logForDebugging(
       `Failed to close diff tab in IDE: ${o instanceof Error ? o.message : String(o)}`,
       { level: "error" },
     ),
@@ -1437,7 +1437,7 @@ function $o(e, r) {
   }
   if (e === WriteTool) {
     let o = WriteTool.inputSchema.parse(r),
-      t = ot(o.file_path),
+      t = resolvePath(o.file_path),
       s = "";
     if (
       (!(An(o.file_path) || An(t)) || Oi(o.file_path) || Oi(t)) &&
@@ -1479,14 +1479,14 @@ function co(e, r, o) {
   if (getGlobalConfig().diffTool !== "auto") return null;
   let s = $o(e, r);
   if (s === null) return null;
-  let k = ot(s.filePath);
+  let k = resolvePath(s.filePath);
   if (
     ((An(s.filePath) || An(k)) && !(Oi(s.filePath) || Oi(k))) ||
     Dr(s.filePath) ||
     Dr(k)
   )
     return null;
-  if (kQ(s.filePath) || kQ(k)) return null;
+  if (isJupyterNotebookPath(s.filePath) || isJupyterNotebookPath(k)) return null;
   let R = getConnectedIdeClient(t);
   if (!R) return null;
   return {
@@ -1520,7 +1520,7 @@ function po(e) {
     if (T) return;
     ((T = !0),
       Fe(v, A).catch((E) => {
-        n(`closeTabInIDE failed: ${E}`, { level: "error" });
+        logForDebugging(`closeTabInIDE failed: ${E}`, { level: "error" });
       }));
   }
   let M = { ideName: mo(F), toolName: getSanitizedToolName(o.name), editCount: p.length };
@@ -1570,7 +1570,7 @@ function po(e) {
       })
       .catch((E) => {
         if (T || r.toolUseContext.abortController.signal.aborted) return;
-        (n(
+        (logForDebugging(
           `IDE diff view failed: ${E instanceof Error ? E.message : String(E)}`,
           { level: "error" },
         ),
@@ -1589,7 +1589,7 @@ function zo(e, r) {
     if (t.type === "setMode") {
       let s = e.setModeFromBridge(t.mode);
       if (!s.ok)
-        (n(
+        (logForDebugging(
           `bridge setMode '${t.mode}' rejected (${s.error}); falling back to 'default'`,
         ),
           e.setModeFromBridge("default"));
@@ -1702,7 +1702,7 @@ function uo(e) {
       let B = {
         request_id: I,
         tool_name: r.tool.name,
-        description: sanitizeAndTruncateText(Zhe(o)),
+        description: sanitizeAndTruncateText(redactForDisplay(o)),
         input_preview: truncateForPreview(s),
       };
       for (let K of U) {
@@ -1712,7 +1712,7 @@ function uo(e) {
             "permission_channel_relay",
             "permission_channel_relay_send_failed",
           ),
-            n(`Channel permission_request failed for ${K.name}: ${l(Y)}`, {
+            logForDebugging(`Channel permission_request failed for ${K.name}: ${l(Y)}`, {
               level: "error",
             }));
         });
@@ -1773,7 +1773,7 @@ function uo(e) {
             continue;
           }
           if (getToolPermissionContext(r.toolUseContext).mode === "plan") {
-            (n("Server approval observed but parked: session is in plan mode"),
+            (logForDebugging("Server approval observed but parked: session is in plan mode"),
               (U = !1),
               (B = Math.min(Math.round(B * 1.5), X)));
             continue;
@@ -1797,7 +1797,7 @@ function uo(e) {
         }
       })().catch((U) => {
         (logFeatureBad("permission_server_approval_watch", "watcher_stopped"),
-          n(`Server-approval watcher stopped (${l(U)})`));
+          logForDebugging(`Server-approval watcher stopped (${l(U)})`));
       }));
   }
   if (!R)
@@ -1823,7 +1823,7 @@ function uo(e) {
       (x?.(), M?.(), b(I));
     })().catch((I) => {
       if (I instanceof zi) {
-        n("PermissionRequest hooks cancelled (control stream closed)");
+        logForDebugging("PermissionRequest hooks cancelled (control stream closed)");
         return;
       }
       logError(I);
@@ -1960,7 +1960,7 @@ async function requestToolPermission(e, r) {
               });
             } catch (I) {
               if (
-                (n(
+                (logForDebugging(
                   `File permission reprompt: cannot preview the hook-rewritten input of ${o.tool.name} (${l(I)}); denying instead of showing a stale preview`,
                   { level: "error" },
                 ),
@@ -2022,7 +2022,7 @@ async function requestToolPermission(e, r) {
               I = parseSedInPlaceCommand(G);
             if (I === null) {
               if (
-                (n(
+                (logForDebugging(
                   "Sed-edit permission reprompt: rewritten command no longer parses as a sed edit; denying instead of showing a stale preview",
                   { level: "error" },
                 ),
@@ -2047,7 +2047,7 @@ async function requestToolPermission(e, r) {
               });
             } catch (q) {
               if (
-                (n(
+                (logForDebugging(
                   `Sed-edit permission reprompt: descriptor rebuild failed (${l(q)}); denying instead of executing a stale simulation`,
                   { level: "error" },
                 ),
@@ -2117,7 +2117,7 @@ function Pe(e, r, o) {
       try {
         O();
       } catch (H) {
-        n(`Dialog teardown failed: ${l(H)}`, { level: "error" });
+        logForDebugging(`Dialog teardown failed: ${l(H)}`, { level: "error" });
       }
   }
   let I = !1,
@@ -2607,7 +2607,7 @@ function Jo(e) {
   for (let o of r) {
     if (!o.startsWith("{")) continue;
     try {
-      let t = z(o);
+      let t = jsonParse(o);
       if (
         t !== null &&
         typeof t === "object" &&

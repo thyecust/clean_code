@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { wrapAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { OffscreenFrozenContent, ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
@@ -45,7 +45,7 @@ function ShellOutputView(ee) {
   if (!k) {
     let a;
     if (i[7] === MEMO_CACHE_SENTINEL)
-      ((a = e(t, { dimColor: !0, children: "Running\u2026 " })), (i[7] = a));
+      ((a = e(Text, { dimColor: !0, children: "Running\u2026 " })), (i[7] = a));
     else a = i[7];
     let g;
     if (i[8] !== h || i[9] !== R)
@@ -73,11 +73,11 @@ function ShellOutputView(ee) {
   else if (H > 0) w = `+${H} lines`;
   let a;
   if (i[11] !== k)
-    ((a = e(t, { dimColor: !0, children: k })), (i[11] = k), (i[12] = a));
+    ((a = e(Text, { dimColor: !0, children: k })), (i[11] = k), (i[12] = a));
   else a = i[12];
   let g;
   if (i[13] !== w)
-    ((g = w ? e(t, { dimColor: !0, children: w }) : null),
+    ((g = w ? e(Text, { dimColor: !0, children: w }) : null),
       (i[13] = w),
       (i[14] = g));
   else g = i[14];
@@ -90,13 +90,13 @@ function ShellOutputView(ee) {
   else D = i[17];
   let I;
   if (i[18] !== P)
-    ((I = P ? e(t, { dimColor: !0, children: formatFileSize(P) }) : null),
+    ((I = P ? e(Text, { dimColor: !0, children: formatFileSize(P) }) : null),
       (i[18] = P),
       (i[19] = I));
   else I = i[19];
   let L;
   if (i[20] !== g || i[21] !== D || i[22] !== I)
-    ((L = r(o, { flexDirection: "row", gap: 1, children: [g, D, I] })),
+    ((L = r(Box, { flexDirection: "row", gap: 1, children: [g, D, I] })),
       (i[20] = g),
       (i[21] = D),
       (i[22] = I),
@@ -106,7 +106,7 @@ function ShellOutputView(ee) {
   if (i[24] !== a || i[25] !== L)
     ((N = e(ToolResultRow, {
       children: e(OffscreenFrozenContent, {
-        children: r(o, { flexDirection: "column", children: [a, L] }),
+        children: r(Box, { flexDirection: "column", children: [a, L] }),
       }),
     })),
       (i[24] = a),
@@ -137,7 +137,7 @@ function O(x, u) {
     m = n.length;
   while (m > 0 && f < M) {
     let d = n[--m],
-      l = dp(d, c, { hard: !0, trim: !1 }).split(`
+      l = wrapAnsi(d, c, { hard: !0, trim: !1 }).split(`
 `),
       b = M - f;
     if (l.length > b)

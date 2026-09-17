@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 var R =
     typeof performance === "object" &&
     performance &&
@@ -953,7 +953,7 @@ function cB(t, e = 300000, i) {
     r = new Map(),
     h = new Map(),
     l = async (...o) => {
-      let a = b(o),
+      let a = jsonStringify(o),
         f = r.get(a);
       if (f && i && !i(f.value, f.timestamp)) {
         if (f.refreshPromise) return f.refreshPromise;
@@ -996,7 +996,7 @@ function cB(t, e = 300000, i) {
                 });
             })
             .catch((w) => {
-              if ((n(String(w), { level: "error" }), r.get(a) === g))
+              if ((logForDebugging(String(w), { level: "error" }), r.get(a) === g))
                 r.delete(a);
             }),
           f.value

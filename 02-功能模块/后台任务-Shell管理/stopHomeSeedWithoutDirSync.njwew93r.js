@@ -41,7 +41,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -230,7 +230,7 @@ function xr(e) {
 }
 function We(e) {
   try {
-    return z(e);
+    return jsonParse(e);
   } catch {
     return;
   }
@@ -427,7 +427,7 @@ function ao(e) {
 }
 function Rt(e) {
   return (
-    b(sortObjectKeysDeep(e), null, 2) +
+    jsonStringify(sortObjectKeysDeep(e), null, 2) +
     `
 `
   );
@@ -969,7 +969,7 @@ function vt(e) {
 function hn(e) {
   let t = gn().safeParse({ ...e, entries: e.entries.slice(-Pe) });
   if (!t.success) throw Error("home sidecar is off its own schema");
-  let n = Buffer.from(b(t.data));
+  let n = Buffer.from(jsonStringify(t.data));
   if (n.length > Ke) throw Error("home sidecar exceeds its byte bound");
   return n;
 }
@@ -1069,7 +1069,7 @@ var Ht = 1,
 function Ot(e) {
   let t = yn().safeParse({ ...e, version: Ht });
   if (!t.success) throw Error("home ready row is off-schema");
-  return Buffer.from(b(t.data));
+  return Buffer.from(jsonStringify(t.data));
 }
 function bn(e) {
   if (e.length > zo) return { ok: !1, reason: "oversize" };
@@ -1413,7 +1413,7 @@ function Hn(e, t) {
         },
       },
       j =
-        b(J, null, 2) +
+        jsonStringify(J, null, 2) +
         `
 `;
     return {

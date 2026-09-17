@@ -27,14 +27,14 @@ import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import "./chunk-rh0xpf1w.js";
+import "./bg-rendezvous-server.js";
 export {
   U0t as BackgroundAndExit,
   F0t as COORDINATOR_FORK_REFUSAL,

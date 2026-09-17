@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../共享小工具-未细化/async-timeout-utils.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Rxt } from "../设置-配置/chunk-zqr5ctyf.js";
 import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { getProcStartTime, getProcState, isExitedProcessState } from "../共享小工具-未细化/linux-proc-stat.js";
@@ -38,7 +38,7 @@ async function readLinuxProcState(e) {
   if (getCurrentPlatform() !== "linux" && getCurrentPlatform() !== "wsl") return;
   if (!p(e)) return;
   try {
-    let t = await ae().readFile(`/proc/${e}/stat`, { encoding: "utf8" });
+    let t = await getFsSurface().readFile(`/proc/${e}/stat`, { encoding: "utf8" });
     return getProcState(t);
   } catch {
     return;
@@ -63,7 +63,7 @@ var w = 16;
 async function looksLikeFullHostProcessTable() {
   let e = getCurrentPlatform();
   if (e !== "linux" && e !== "wsl") return !0;
-  let t = ae(),
+  let t = getFsSurface(),
     n = await t.readlink("/proc/self").catch(() => null);
   if (n === null || n !== String(process.pid)) return !1;
   let r = await t.readdir("/proc").catch(() => null);

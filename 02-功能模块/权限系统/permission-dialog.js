@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { QG } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { tryFormatShortLabel } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function p(l) {
-  let s = QG(l);
+  let s = tryFormatShortLabel(l);
   return s === null ? void 0 : String(s);
 }
 function PermissionRequestHeader(V) {
@@ -55,7 +55,7 @@ function PermissionRequestHeader(V) {
   const n = E !== void 0 ? `${E} ${b}` : void 0;
   let y;
   if (f[6] !== T || f[7] !== n || f[8] !== b)
-    ((y = e(t, { "aria-label": n, bold: !0, color: T, children: b })),
+    ((y = e(Text, { "aria-label": n, bold: !0, color: T, children: b })),
       (f[6] = T),
       (f[7] = n),
       (f[8] = b),
@@ -65,13 +65,13 @@ function PermissionRequestHeader(V) {
   if (f[10] !== d)
     ((h =
       d !== void 0 &&
-      r(t, { children: [e(t, { dimColor: !0, children: "\xB7 " }), d] })),
+      r(Text, { children: [e(Text, { dimColor: !0, children: "\xB7 " }), d] })),
       (f[10] = d),
       (f[11] = h));
   else h = f[11];
   let w;
   if (f[12] !== y || f[13] !== h)
-    ((w = r(o, { flexDirection: "row", gap: 1, children: [y, h] })),
+    ((w = r(Box, { flexDirection: "row", gap: 1, children: [y, h] })),
       (f[12] = y),
       (f[13] = h),
       (f[14] = w));
@@ -81,14 +81,14 @@ function PermissionRequestHeader(V) {
     ((P =
       u != null &&
       (typeof u === "string"
-        ? e(t, { dimColor: !0, wrap: "truncate-start", children: u })
+        ? e(Text, { dimColor: !0, wrap: "truncate-start", children: u })
         : u)),
       (f[15] = u),
       (f[16] = P));
   else P = f[16];
   let I;
   if (f[17] !== w || f[18] !== P)
-    ((I = r(o, { flexDirection: "column", children: [w, P] })),
+    ((I = r(Box, { flexDirection: "column", children: [w, P] })),
       (f[17] = w),
       (f[18] = P),
       (f[19] = I));
@@ -126,10 +126,10 @@ function PermissionDialogFrame(te) {
   else x = k[4];
   let N;
   if (k[5] !== x || k[6] !== B)
-    ((N = e(o, {
+    ((N = e(Box, {
       paddingX: 1,
       flexDirection: "column",
-      children: r(o, { justifyContent: "space-between", children: [x, B] }),
+      children: r(Box, { justifyContent: "space-between", children: [x, B] }),
     })),
       (k[5] = x),
       (k[6] = B),
@@ -137,14 +137,14 @@ function PermissionDialogFrame(te) {
   else N = k[7];
   let S;
   if (k[8] !== L || k[9] !== v)
-    ((S = e(o, { flexDirection: "column", paddingX: v, children: L })),
+    ((S = e(Box, { flexDirection: "column", paddingX: v, children: L })),
       (k[8] = L),
       (k[9] = v),
       (k[10] = S));
   else S = k[10];
   let M;
   if (k[11] !== X || k[12] !== N || k[13] !== S)
-    ((M = r(o, {
+    ((M = r(Box, {
       flexDirection: "column",
       borderStyle: "round",
       borderColor: X,

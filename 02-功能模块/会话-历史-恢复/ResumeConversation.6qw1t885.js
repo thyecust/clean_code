@@ -45,12 +45,12 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { reclaimSessionNameOnResume } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { getMouseMode } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { resolveSessionAdoption } from "../后台任务-Shell管理/task-output.js";
 import { setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { restoreGoalFromTranscript } from "../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { gi, o, t, n7, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { isFullscreen, Box, Text, useTerminalTitle, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -63,20 +63,20 @@ import { resetReplTabToConvo } from "../../03-入口与运行时/会话UI(REPL)/
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import {
-  THe,
+  markSessionRestored,
   renameRecordingForSession,
-  AHe,
-  Gz,
-  HZ,
-  IZ,
-  vHe,
-  PZ,
-  OZ,
-  O8,
-  RHe,
-  DZ,
+  buildStandaloneAgentContext,
+  resolveResumedAgentDefinition,
+  loadSessionHomeAgentDefinitions,
+  resolveResumedSessionModel,
+  neutralizeRefusalFallbackOnFork,
+  restoreRefusalFallbackLatch,
+  rearmCyberRefusalHeaderOnResume,
+  rebuildAgentDefinitionsWithCliAgents,
+  formatWorktreeResumeWarning,
+  applyResumedWorktreeState,
   kHe,
-} from "../Git-Worktree/chunk-xercceag.js";
+} from "../Git-Worktree/resume-session-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js";
@@ -92,12 +92,12 @@ import "../后台任务-Shell管理/chunk-n6g2zfwn.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
-import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import "../跨会话消息(UDS)/chunk-t2esphmv.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
+import "../语法高亮-Markdown渲染/markdown-renderer.js";
+import "../跨会话消息(UDS)/uds-messaging.js";
 import { useSessionHooksRegistry } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
+import "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
@@ -113,7 +113,7 @@ import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
-import { rit, LIt, oit } from "./chunk-t3q91yqm.js";
+import { SessionLogPicker, getShellCommandSeparator, buildCrossProjectResumeCommand } from "./resume-session-picker.js";
 import { AltScreenContainer } from "../../01-核心基础设施/共享小工具-未细化/alt-screen-container.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import "../后台任务-Shell管理/chunk-jfk5mpe1.js";
@@ -123,7 +123,7 @@ import "../后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
+import "../后台任务-Shell管理/bg-rendezvous-server.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
@@ -133,7 +133,7 @@ import "../权限系统/chunk-0hcqee2w.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js";
 import "../Bridge-RemoteControl/chunk-x379yyxb.js";
-import "../../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js";
+import "../../03-入口与运行时/Headless-SDK模式/sdk-message-adapter.js";
 import "../权限系统/chunk-jsd70b22.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../Bridge-RemoteControl/chunk-ga43tr2w.js";
@@ -144,7 +144,7 @@ import "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import "../Bridge-RemoteControl/client-presence.js";
 import "../Hooks钩子/chunk-6wg4v2yj.js";
 import "../AutoMode-自动模式/unattended-serving-consent.js";
-import "../远程工具执行/chunk-66axrkvh.js";
+import "../远程工具执行/remote-tool-protocol.js";
 import "../斜杠命令-框架/chunk-s195n5de.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../工具WebFetch-WebSearch/clear-session-caches.js";
@@ -160,13 +160,13 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-kaxe7rw8.js"
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import "../Artifact发布-渲染/chunk-54kz7amv.js";
 import "../权限系统/cross-session-inbound-gate.js";
-import "../Teammates团队/chunk-nhk351pe.js";
+import "../Teammates团队/peer-idle-notices.js";
 import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
-import "../Workflow编排/chunk-dyq13fbm.js";
+import "../Workflow编排/workflow-progress-ui.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-aqawy2mp.js";
-import "../Workflow编排/chunk-6gjsfh7a.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../Workflow编排/workflow-dialogs.js";
+import "../自动更新-安装/install-diagnostics.js";
 import "../自动更新-安装/chunk-2g5h49pk.js";
 import "../权限系统/chunk-qjqc5vxm.js";
 import "../Teammates团队/chunk-88ybhavr.js";
@@ -178,18 +178,18 @@ import "../MCP客户端/mcp-auth-cache.js";
 import "../语法高亮-Markdown渲染/code-block.js";
 import "../../01-核心基础设施/共享小工具-未细化/it2-setup-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
-import "../工具Bash-Shell/chunk-8sjdj5bm.js";
+import "../工具Bash-Shell/powershell-command-safety.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../../03-入口与运行时/会话UI(REPL)/remote-bootstrap-checklist.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../Skills技能/mcp-skill-cache.js";
-import "./chunk-szqky9sa.js";
+import "./retention-cleanup.js";
 import "../跨会话消息(UDS)/peer-file-transfer.js";
 import "../深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
-import "../插件系统/chunk-d0tph3ay.js";
+import "../插件系统/plugin-autoupdate.js";
 import "../限流-重试/限流-重试.4mc5yc28.js";
-import "../用量额度-限额/chunk-n4zff40p.js";
+import "../用量额度-限额/session-limit-reset.js";
 import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
 import "../认证-OAuth登录/url-and-error-redaction.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
@@ -235,7 +235,7 @@ import "../权限系统/cache-safe-params.js";
 import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import "../../01-核心基础设施/设置-配置/fast-mode.js";
-import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
+import "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
 import "../Teammates团队/agent-lifecycle.js";
 import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
@@ -339,7 +339,7 @@ function ResumeConversation({
     }, [se, N]),
     go = isCustomTitleEnabled(),
     So = V(() => a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE, []);
-  (n7(w || So ? null : "claude \xB7 resume"),
+  (useTerminalTitle(w || So ? null : "claude \xB7 resume"),
     E(() => {
       loadSameRepoMessageLogsProgressive(R, void 0, void 0, g)
         .then((s) => {
@@ -417,7 +417,7 @@ function ResumeConversation({
     ((be.current = !0), ao(!0));
     let c = performance.now();
     try {
-      let n = await oit(s, O, R);
+      let n = await buildCrossProjectResumeCommand(s, O, R);
       if (n) {
         let m = await setClipboard(n);
         if (m) process.stdout.write(m);
@@ -462,13 +462,13 @@ function ResumeConversation({
           .require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js")
           .matchSessionMode(n.mode);
         if (B) {
-          let Ao = await O8(x.project.originalCwd, [], g);
+          let Ao = await rebuildAgentDefinitionsWithCliAgents(x.project.originalCwd, [], g);
           (D((Mo) => ({ ...Mo, agentDefinitions: Ao })),
             n.messages.push(createSystemInfoMessage(B, "warning")));
         }
       }
       clearObserverPairings(x);
-      let { adoptedSessionId: m, effectiveFork: b } = Vre(n.sessionId, !!G),
+      let { adoptedSessionId: m, effectiveFork: b } = resolveSessionAdoption(n.sessionId, !!G),
         xe = m ? pinSessionId(m) : pinSessionId(K());
       if (m)
         ($p(m, "resume", s.fullPath ? dirname(s.fullPath) : null),
@@ -487,17 +487,17 @@ function ResumeConversation({
           await recordContentReplacement(n.contentReplacements, void 0, g);
       }
       restoreCostStateFromRecord(n);
-      let yo = await HZ(s.projectPath, g),
-        { agentDefinition: le } = Gz(n.agentSetting, te, no, {
+      let yo = await loadSessionHomeAgentDefinitions(s.projectPath, g),
+        { agentDefinition: le } = resolveResumedAgentDefinition(n.agentSetting, te, no, {
           sessionAgentDefinitions: yo,
           sessionCwd: s.projectPath,
           onResolveMiss: (l) => n.messages.push(createSystemInfoMessage(l, "warning")),
         });
       if (le?.mcpServers?.length) await awaitPolicyColdStart();
-      if ((D((l) => ({ ...l, agent: le?.agentType })), b)) vHe(n.messages);
-      OZ(n.messages, b);
-      let De = IZ(n.messages, so, (l) => n.messages.push(createSystemInfoMessage(l, "warning"))),
-        X = De ? PZ(n.messages, De, b, g, Ae) : void 0;
+      if ((D((l) => ({ ...l, agent: le?.agentType })), b)) neutralizeRefusalFallbackOnFork(n.messages);
+      rearmCyberRefusalHeaderOnResume(n.messages, b);
+      let De = resolveResumedSessionModel(n.messages, so, (l) => n.messages.push(createSystemInfoMessage(l, "warning"))),
+        X = De ? restoreRefusalFallbackLatch(n.messages, De, b, g, Ae) : void 0;
       if (X)
         D((l) => {
           if (l.mainLoopModel === X) return l;
@@ -509,7 +509,7 @@ function ResumeConversation({
           { isCoordinatorMode: B } = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js");
         l(B() ? "coordinator" : "normal");
       }
-      let Ie = AHe(n.agentName, n.agentColor),
+      let Ie = buildStandaloneAgentContext(n.agentName, n.agentColor),
         ce = ne ? { ...Ie, ...ne } : Ie;
       if (ce) D((l) => ({ ...l, standaloneAgentContext: ce }));
       if (
@@ -520,7 +520,7 @@ function ResumeConversation({
         ),
         applyEndedByModelOnResume(getEndedByModel(n), D),
         restoreGoalFromTranscript(n.messages, D, ro),
-        THe(x.host),
+        markSessionRestored(x.host),
         !b && n.bridgeSessionId)
       )
         D((l) =>
@@ -529,8 +529,8 @@ function ResumeConversation({
             : { ...l, replBridgeEnabled: !0, replBridgeOutboundOnly: !1 },
         );
       if (!b) {
-        let l = DZ(worktreeStateStore.of(x.host), n.worktreeSession, void 0, { storageV5: g });
-        if (l) n.messages.push(createSystemInfoMessage(RHe(l), "warning"));
+        let l = applyResumedWorktreeState(worktreeStateStore.of(x.host), n.worktreeSession, void 0, { storageV5: g });
+        if (l) n.messages.push(createSystemInfoMessage(formatWorktreeResumeWarning(l), "warning"));
         if ((resetReplTabToConvo(x.host, D), m))
           if (isHoverRestEnabled() && g !== void 0) await adoptResumedSessionFileAsync(g);
           else adoptResumedSessionFile();
@@ -602,7 +602,7 @@ function ResumeConversation({
       children: e(SpinnerMessageLine, { message: "Resuming conversation\u2026" }),
     });
   return e(Y, {
-    children: e(rit, {
+    children: e(SessionLogPicker, {
       logs: ke,
       maxHeight: to,
       onCancel: Co,
@@ -620,7 +620,7 @@ function ResumeConversation({
 function Y(Qt) {
   let bo = _(3),
     { children: me } = Qt;
-  if (!gi()) {
+  if (!isFullscreen()) {
     return me;
   }
   let To;
@@ -640,10 +640,10 @@ function qe(Vt) {
     vo;
   if (Ne[0] === MEMO_CACHE_SENTINEL) ((vo = []), (Ne[0] = vo));
   else vo = Ne[0];
-  Un(Go, 100, vo);
+  useTimeout(Go, 100, vo);
   let ko;
   if (Ne[1] === MEMO_CACHE_SENTINEL)
-    ((ko = e(t, { children: "Failed to resume the conversation." })),
+    ((ko = e(Text, { children: "Failed to resume the conversation." })),
       (Ne[1] = ko));
   else ko = Ne[1];
   const Ee = j1(wo)
@@ -651,10 +651,10 @@ function qe(Vt) {
     : "Run claude to start a new session.";
   let Fo;
   if (Ne[2] !== Ee)
-    ((Fo = r(o, {
+    ((Fo = r(Box, {
       flexDirection: "column",
       gap: 1,
-      children: [ko, e(t, { dimColor: !0, children: Ee })],
+      children: [ko, e(Text, { dimColor: !0, children: Ee })],
     })),
       (Ne[2] = Ee),
       (Ne[3] = Fo));
@@ -667,34 +667,34 @@ function Ge(Xt) {
     xo;
   if (q[0] === MEMO_CACHE_SENTINEL) ((xo = []), (q[0] = xo));
   else xo = q[0];
-  Un(Wo, 100, xo);
+  useTimeout(Wo, 100, xo);
   let Do;
   if (q[1] === MEMO_CACHE_SENTINEL)
-    ((Do = e(t, {
+    ((Do = e(Text, {
       children: "This conversation is from a different directory.",
     })),
       (q[1] = Do));
   else Do = q[1];
   let _o;
-  if (q[2] === MEMO_CACHE_SENTINEL) ((_o = e(t, { children: "To resume, run:" })), (q[2] = _o));
+  if (q[2] === MEMO_CACHE_SENTINEL) ((_o = e(Text, { children: "To resume, run:" })), (q[2] = _o));
   else _o = q[2];
   let de;
   if (q[3] !== Pe)
-    ((de = r(o, {
+    ((de = r(Box, {
       flexDirection: "column",
-      children: [_o, r(t, { children: [" ", Pe] })],
+      children: [_o, r(Text, { children: [" ", Pe] })],
     })),
       (q[3] = Pe),
       (q[4] = de));
   else de = q[4];
   let Io;
   if (q[5] === MEMO_CACHE_SENTINEL)
-    ((Io = e(t, { dimColor: !0, children: "(Command copied to clipboard)" })),
+    ((Io = e(Text, { dimColor: !0, children: "(Command copied to clipboard)" })),
       (q[5] = Io));
   else Io = q[5];
   let No;
   if (q[6] !== de)
-    ((No = r(o, { flexDirection: "column", gap: 1, children: [Do, de, Io] })),
+    ((No = r(Box, { flexDirection: "column", gap: 1, children: [Do, de, Io] })),
       (q[6] = de),
       (q[7] = No));
   else No = q[7];
@@ -706,11 +706,11 @@ function We(Jt) {
     Po;
   if (I[0] === MEMO_CACHE_SENTINEL) ((Po = []), (I[0] = Po));
   else Po = I[0];
-  Un($o, 100, Po);
+  useTimeout($o, 100, Po);
   let je = useSession(Uo),
     Oo;
   if (I[1] !== je || I[2] !== J)
-    ((Oo = J && J !== je ? `cd ${jo([J])} ${LIt()} ` : ""),
+    ((Oo = J && J !== je ? `cd ${jo([J])} ${getShellCommandSeparator()} ` : ""),
       (I[1] = je),
       (I[2] = J),
       (I[3] = Oo));
@@ -720,7 +720,7 @@ function We(Jt) {
   const He = T ? ` (${T})` : "";
   let ue;
   if (I[4] !== He)
-    ((ue = r(t, {
+    ((ue = r(Text, {
       children: [
         "That session is still running as a background session",
         He,
@@ -733,13 +733,13 @@ function We(Jt) {
   let fe;
   if (I[6] !== T)
     ((fe = T
-      ? r(t, {
+      ? r(Text, {
           children: [
             "Run ",
-            r(t, { bold: !0, children: ["claude attach ", T] }),
+            r(Text, { bold: !0, children: ["claude attach ", T] }),
             " to open it, or",
             " ",
-            r(t, { bold: !0, children: ["claude stop ", T] }),
+            r(Text, { bold: !0, children: ["claude stop ", T] }),
             " first to resume it here.",
           ],
         })
@@ -750,11 +750,11 @@ function We(Jt) {
   let pe;
   if (I[8] !== T)
     ((pe = T
-      ? e(t, { children: "To branch off a copy instead, run:" })
-      : r(t, {
+      ? e(Text, { children: "To branch off a copy instead, run:" })
+      : r(Text, {
           children: [
             "Run ",
-            e(t, { bold: !0, children: "claude agents" }),
+            e(Text, { bold: !0, children: "claude agents" }),
             " to find its id and attach to it, or run:",
           ],
         })),
@@ -763,7 +763,7 @@ function We(Jt) {
   else pe = I[9];
   let he;
   if (I[10] !== Oe || I[11] !== Be)
-    ((he = r(t, {
+    ((he = r(Text, {
       children: [" ", Oe, "claude --resume", Be, " --fork-session"],
     })),
       (I[10] = Oe),
@@ -772,7 +772,7 @@ function We(Jt) {
   else he = I[12];
   let Ce;
   if (I[13] !== pe || I[14] !== he)
-    ((Ce = r(o, { flexDirection: "column", children: [pe, he] })),
+    ((Ce = r(Box, { flexDirection: "column", children: [pe, he] })),
       (I[13] = pe),
       (I[14] = he),
       (I[15] = Ce));
@@ -781,13 +781,13 @@ function We(Jt) {
   if (I[16] !== T)
     ((Re = T
       ? null
-      : e(t, { dimColor: !0, children: "to branch off a copy." })),
+      : e(Text, { dimColor: !0, children: "to branch off a copy." })),
       (I[16] = T),
       (I[17] = Re));
   else Re = I[17];
   let Bo;
   if (I[18] !== ue || I[19] !== fe || I[20] !== Ce || I[21] !== Re)
-    ((Bo = r(o, {
+    ((Bo = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [ue, fe, Ce, Re],

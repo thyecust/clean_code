@@ -10,7 +10,7 @@
 import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -58,9 +58,9 @@ async function K(e, i) {
   if (r) {
     let a = v(r);
     if (a) return { priv: a, stored: r };
-    (n("[deviceRegistry] stored device key is unreadable; minting a new one"),
+    (logForDebugging("[deviceRegistry] stored device key is unreadable; minting a new one"),
       await w(e, r.privateKeyPkcs8B64, i).catch((u) => {
-        n(
+        logForDebugging(
           `[deviceRegistry] could not retire the unreadable device key: ${l(u)}`,
         );
       }));
@@ -153,7 +153,7 @@ async function H(e, i, r) {
       "not_sent",
     );
   if (
-    (n(
+    (logForDebugging(
       `[deviceRegistry] register status=${o.status} request_id=${String(o.response.headers?.["request-id"] ?? "")}`,
     ),
     o.status === 400 && o.data?.error?.details?.error_code === h)
@@ -167,14 +167,14 @@ async function H(e, i, r) {
   let a = Xn(o.data?.id);
   if (o.status !== 201 || a === null)
     throw new R(
-      `deviceRegistry: register ${o.status}: ${truncateToCodeUnits(String(b(o.data) ?? ""), 200)}`,
+      `deviceRegistry: register ${o.status}: ${truncateToCodeUnits(String(jsonStringify(o.data) ?? ""), 200)}`,
       "deviceRegistry: register HTTP error",
       "http_error",
     );
   if (o.data?.revoked_at !== null && o.data?.revoked_at !== void 0)
     throw (
       await w(e, s.privateKeyPkcs8B64, r).catch((d) => {
-        n(`[deviceRegistry] could not retire the revoked device key: ${l(d)}`);
+        logForDebugging(`[deviceRegistry] could not retire the revoked device key: ${l(d)}`);
       }),
       new p()
     );
@@ -186,11 +186,11 @@ async function H(e, i, r) {
         d.privateKeyPkcs8B64 === s.privateKeyPkcs8B64 ? { ...d, rowPk: u } : d,
       r,
     ).catch((d) => {
-      n(
+      logForDebugging(
         `[deviceRegistry] registered device row=${u} but could not cache it: ${l(d)}`,
       );
     }),
-    n(`[deviceRegistry] registered device row=${u}`),
+    logForDebugging(`[deviceRegistry] registered device row=${u}`),
     logFeatureOk("device_registry_register"),
     { deviceUUID: u, priv: t }
   );

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
@@ -121,8 +121,8 @@ async function M() {
 }
 async function h(r, t) {
   let e = await M();
-  if (!e) return (n("No terminal emulator detected", { level: "error" }), !1);
-  n(`Launching in terminal: ${e.name} (${e.command})`);
+  if (!e) return (logForDebugging("No terminal emulator detected", { level: "error" }), !1);
+  logForDebugging(`Launching in terminal: ${e.name} (${e.command})`);
   let s = ["--deep-link-origin"];
   if (t.repo) {
     if ((s.push(`--deep-link-repo=${t.repo}`), t.lastFetchMs !== void 0))
@@ -202,7 +202,7 @@ end tell`,
     }
   }
   return (
-    n(`Failed to launch ${r.name}, falling back to Terminal.app`),
+    logForDebugging(`Failed to launch ${r.name}, falling back to Terminal.app`),
     k({ name: "Terminal.app", command: "Terminal" }, t, e, s)
   );
 }
@@ -275,7 +275,7 @@ async function T(r, t, e = {}) {
   let s = (i) =>
     new Promise((o) => {
       let l = (c) => {
-          (n(`Failed to spawn ${r}: ${c.message}`, { level: "error" }), o(!1));
+          (logForDebugging(`Failed to spawn ${r}: ${c.message}`, { level: "error" }), o(!1));
         },
         m;
       try {
@@ -346,7 +346,7 @@ function g(r) {
     .replace(/(\\+)$/, "$1$1")}"`;
 }
 async function handleDeepLinkUri(r) {
-  n(`Handling deep link URI: ${r}`);
+  logForDebugging(`Handling deep link URI: ${r}`);
   let t;
   try {
     t = CUn(r);
@@ -358,7 +358,7 @@ async function handleDeepLinkUri(r) {
       1
     );
   }
-  n(`Parsed deep link action: ${b(t)}`);
+  logForDebugging(`Parsed deep link action: ${jsonStringify(t)}`);
   let e = await realpath(process.execPath).catch(() => process.execPath),
     { cwd: s, resolvedRepo: i } = await z(t),
     o = i ? await getRepoLastFetchTime(s) : void 0,
@@ -406,10 +406,10 @@ async function z(r) {
       e = await filterExistingRepoPaths(t);
     if (e[0])
       return (
-        n(`Resolved repo ${r.repo} \u2192 ${e[0]}`),
+        logForDebugging(`Resolved repo ${r.repo} \u2192 ${e[0]}`),
         { cwd: e[0], resolvedRepo: r.repo }
       );
-    n(`No local clone found for repo ${r.repo}, falling back to home`);
+    logForDebugging(`No local clone found for repo ${r.repo}, falling back to home`);
   }
   return { cwd: homedir() };
 }

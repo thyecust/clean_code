@@ -12,9 +12,9 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { CLAUDE_BULLET_GLYPH, EFFORT_MEDIUM_GLYPH, PAUSE_GLYPH, AUTO_ACCEPT_GLYPH, LOZENGE_OUTLINE_GLYPH, LOZENGE_FILLED_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { o, t, bs, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useAnimationFrame, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -38,10 +38,10 @@ function Go(Wt) {
   ).map(mo);
 }
 function Wo(Io, Zt) {
-  return e(t, { color: Io.color, children: Io.text }, Zt);
+  return e(Text, { color: Io.color, children: Io.text }, Zt);
 }
 function Qo(No, Ot) {
-  return e(t, { dimColor: No.dim, children: No.segments.map(Wo) }, Ot);
+  return e(Text, { dimColor: No.dim, children: No.segments.map(Wo) }, Ot);
 }
 function Zo() {
   return [];
@@ -52,7 +52,7 @@ function Oo(sn, rn) {
 function Ho(an, cn) {
   let no = 0;
   return e(
-    o,
+    Box,
     {
       height: 1,
       children: an.map((he, ln) => {
@@ -60,11 +60,11 @@ function Ho(an, cn) {
         return (
           (no = Math.max(no, he.x) + 1),
           r(
-            t,
+            Text,
             {
               children: [
                 " ".repeat(dn),
-                e(t, { color: he.color, children: he.char }),
+                e(Text, { color: he.color, children: he.char }),
               ],
             },
             ln,
@@ -86,7 +86,7 @@ function Y(Yt) {
     { live: Ke, boxRef: Ye, children: je } = Yt,
     de;
   if ($e[0] !== je)
-    ((de = e(o, {
+    ((de = e(Box, {
       flexDirection: "column",
       width: E - 4,
       height: Q,
@@ -100,10 +100,10 @@ function Y(Yt) {
     Xe = Ke ? `${LOZENGE_FILLED_GLYPH} try it` : `  ${EFFORT_MEDIUM_GLYPH} demo`;
   let me;
   if ($e[2] !== Fe || $e[3] !== Je || $e[4] !== Xe)
-    ((me = e(o, {
+    ((me = e(Box, {
       position: "absolute",
       marginLeft: E - 12,
-      children: e(t, { dimColor: Fe, color: Je, children: Xe }),
+      children: e(Text, { dimColor: Fe, color: Je, children: Xe }),
     })),
       ($e[2] = Fe),
       ($e[3] = Je),
@@ -112,7 +112,7 @@ function Y(Yt) {
   else me = $e[5];
   let Ao;
   if ($e[6] !== Ye || $e[7] !== de || $e[8] !== me)
-    ((Ao = r(o, {
+    ((Ao = r(Box, {
       ref: Ye,
       borderStyle: "round",
       borderColor: "inactive",
@@ -147,7 +147,7 @@ function v(jt) {
     { frames: $t } = jt,
     Mo = $t.map(Go),
     Ft = shouldReduceMotion(useSettings().prefersReducedMotion),
-    [Ge, Jt] = bs(Ft ? null : G),
+    [Ge, Jt] = useAnimationFrame(Ft ? null : G),
     Xt = Math.floor(Jt / G) % Mo.length,
     Gt = Mo[Xt];
   const Qe = Y,
@@ -196,13 +196,13 @@ function H(Ht) {
   else _o = Oe[0];
   let St = _o,
     en = shouldReduceMotion(useSettings().prefersReducedMotion),
-    [He, qo] = bs(en ? null : po),
+    [He, qo] = useAnimationFrame(en ? null : po),
     [on] = d(qo),
     Se = qo - on,
     Eo;
   if (Oe[1] !== pe) ((Eo = [pe]), (Oe[1] = pe), (Oe[2] = Eo));
   else Eo = Oe[2];
-  Un(pe, O + 600, Eo);
+  useTimeout(pe, O + 600, Eo);
   let zo;
   if (Oe[3] !== Se || Oe[4] !== He) {
     let eo = Array.from({ length: P }, Zo);
@@ -212,7 +212,7 @@ function H(Ht) {
       if (to >= 0 && to < P) eo[to].push(oo);
     }
     for (const nn of eo) nn.sort(Oo);
-    zo = e(o, {
+    zo = e(Box, {
       ref: He,
       position: "absolute",
       marginLeft: ho,
@@ -228,9 +228,9 @@ function H(Ht) {
 function S(un) {
   let X = _(14),
     { text: fe } = un,
-    mn = te(fe),
+    mn = getStringWidth(fe),
     pn = shouldReduceMotion(useSettings().prefersReducedMotion),
-    [so, hn] = bs(pn ? null : Z),
+    [so, hn] = useAnimationFrame(pn ? null : Z),
     fn = mn + 20,
     ro = (Math.floor(hn / Z) % fn) - 10,
     Vo;
@@ -240,25 +240,25 @@ function S(un) {
   let { before: io, shimmer: ao, after: co } = Vo,
     ge;
   if (X[3] !== io)
-    ((ge = e(t, { bold: !0, color: "claude", children: io })),
+    ((ge = e(Text, { bold: !0, color: "claude", children: io })),
       (X[3] = io),
       (X[4] = ge));
   else ge = X[4];
   let ye;
   if (X[5] !== ao)
-    ((ye = e(t, { bold: !0, color: "claudeShimmer", children: ao })),
+    ((ye = e(Text, { bold: !0, color: "claudeShimmer", children: ao })),
       (X[5] = ao),
       (X[6] = ye));
   else ye = X[6];
   let be;
   if (X[7] !== co)
-    ((be = e(t, { bold: !0, color: "claude", children: co })),
+    ((be = e(Text, { bold: !0, color: "claude", children: co })),
       (X[7] = co),
       (X[8] = be));
   else be = X[8];
   let Ko;
   if (X[9] !== so || X[10] !== ge || X[11] !== ye || X[12] !== be)
-    ((Ko = r(o, { ref: so, children: [ge, ye, be] })),
+    ((Ko = r(Box, { ref: so, children: [ge, ye, be] })),
       (X[9] = so),
       (X[10] = ge),
       (X[11] = ye),
@@ -283,7 +283,7 @@ function oe() {
   useKeybindings(Yo, jo);
   let we;
   if (xe[2] !== lo)
-    ((we = r(t, {
+    ((we = r(Text, {
       dimColor: !0,
       children: [
         "Press ",
@@ -300,7 +300,7 @@ function oe() {
   const uo = I.symbol ? `${I.symbol} ` : "  ";
   let Ce;
   if (xe[4] !== I.color || xe[5] !== I.label || xe[6] !== uo)
-    ((Ce = r(t, { color: I.color, children: [uo, I.label] })),
+    ((Ce = r(Text, { color: I.color, children: [uo, I.label] })),
       (xe[4] = I.color),
       (xe[5] = I.label),
       (xe[6] = uo),
@@ -308,7 +308,7 @@ function oe() {
   else Ce = xe[7];
   let $o;
   if (xe[8] !== we || xe[9] !== Ce)
-    (($o = e(Y, { live: !0, children: r(t, { children: [we, Ce] }) })),
+    (($o = e(Y, { live: !0, children: r(Text, { children: [we, Ce] }) })),
       (xe[8] = we),
       (xe[9] = Ce),
       (xe[10] = $o));
@@ -320,7 +320,7 @@ function B(zn) {
     { children: go } = zn,
     ot;
   if (Vn[0] !== go)
-    ((ot = e(t, { bold: !0, color: "claude", children: go })),
+    ((ot = e(Text, { bold: !0, color: "claude", children: go })),
       (Vn[0] = go),
       (Vn[1] = ot));
   else ot = Vn[1];
@@ -331,22 +331,22 @@ function a(Kn) {
     { children: yo } = Kn,
     tt;
   if (Yn[0] !== yo)
-    ((tt = e(t, { color: "suggestion", children: yo })),
+    ((tt = e(Text, { color: "suggestion", children: yo })),
       (Yn[0] = yo),
       (Yn[1] = tt));
   else tt = Yn[1];
   return tt;
 }
-var Vw = [
+var POWERUP_LESSONS = [
   {
     id: "at-mentions",
     title: "Talk to your codebase",
     tagline: "@ files, line refs",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Type ",
             e(B, { children: "@" }),
@@ -367,14 +367,14 @@ Exports validateToken() which
 checks JWT expiry and signature.`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             "Reference specific lines with ",
             e(a, { children: "src/app.ts:42" }),
             " and Claude jumps straight there. Works in both directions: Claude cites files the same way, so you can click to open them in your editor.",
           ],
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Also try: ",
@@ -395,11 +395,11 @@ checks JWT expiry and signature.`,
     id: "undo",
     title: "Undo anything",
     tagline: "/rewind, Esc-Esc",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Claude checkpoints your files before every edit. Press",
             " ",
@@ -421,11 +421,11 @@ Rewind to:
 #\u25D0 thinking\u2026`,
           ],
         }),
-        e(t, {
+        e(Text, {
           children:
             "Went down the wrong path? Rewind to before the detour and try a different prompt. Your git history stays clean.",
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Also: ",
@@ -443,11 +443,11 @@ Rewind to:
     id: "background",
     title: "Run in the background",
     tagline: "tasks, /tasks",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Long builds and test suites do not have to block you. Add",
             " ",
@@ -470,14 +470,14 @@ Rewind to:
 #[success:\u2713] bun test \xB7 284 pass`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             "Run ",
             e(a, { children: "/tasks" }),
             " to see everything in flight. Claude can read task output mid-run and react to failures automatically.",
           ],
         }),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children: "Subagents also run as tasks \u2014 it is all one queue.",
         }),
@@ -488,11 +488,11 @@ Rewind to:
     id: "memory",
     title: "Teach Claude your rules",
     tagline: "CLAUDE.md, /memory",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Drop a ",
             e(a, { children: "CLAUDE.md" }),
@@ -511,7 +511,7 @@ Writing cache.test.ts,
 running [suggestion:bun test] to verify.`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             "Run ",
             e(a, { children: "/init" }),
@@ -520,7 +520,7 @@ running [suggestion:bun test] to verify.`,
             " to edit it inline.",
           ],
         }),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children:
             "Works at three levels: repo, your home directory (all projects), and per-directory overrides.",
@@ -532,11 +532,11 @@ running [suggestion:bun test] to verify.`,
     id: "mcp",
     title: "Extend with tools",
     tagline: "MCP, /mcp",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "MCP servers give Claude new tools: read your Slack, query your database, control your browser. Run ",
             e(a, { children: "/mcp" }),
@@ -555,11 +555,11 @@ freeze. Also 3 PRs await
 your review on github.`,
           ],
         }),
-        e(t, {
+        e(Text, {
           children:
             'Once connected, tools appear automatically \u2014 ask Claude to "check my calendar" or "search our Notion" and it just works.',
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "From your shell:",
@@ -575,11 +575,11 @@ your review on github.`,
     id: "automate",
     title: "Automate your workflow",
     tagline: "skills, hooks",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Save a prompt to ",
             e(a, { children: ".claude/skills/deploy/SKILL.md" }),
@@ -603,14 +603,14 @@ your review on github.`,
 #PostToolUse hook ran prettier`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             "Hooks run your own scripts on events: before a tool call, after a response, on session start. Use them to enforce rules, log activity, or inject context. Run ",
             e(a, { children: "/hooks" }),
             " to see what fires when.",
           ],
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Run ",
@@ -625,11 +625,11 @@ your review on github.`,
     id: "subagents",
     title: "Multiply yourself",
     tagline: "subagents",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        e(t, {
+        e(Text, {
           children:
             'Claude can spawn copies of itself to work in parallel. Ask it to "use subagents to search these 5 directories" and watch the fan-out.',
         }),
@@ -648,7 +648,7 @@ your review on github.`,
   [suggestion:utils/retry.ts:18] swallowed`,
           ],
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Subagents run in isolated context. For true parallel sessions on separate branches, launch with ",
@@ -663,11 +663,11 @@ your review on github.`,
     id: "cross-device",
     title: "Code from anywhere",
     tagline: "/remote-control, /teleport",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Run ",
             e(a, { children: "/remote-control" }),
@@ -689,14 +689,14 @@ see this session at
 > ship it`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             "Run ",
             e(a, { children: "/teleport" }),
             " to move a session between here and the cloud \u2014 send this one up to keep it going after you close the lid, or pull a web session into this terminal with full history.",
           ],
         }),
-        e(t, {
+        e(Text, {
           dimColor: !0,
           children:
             "Kick off a long task, close your laptop, check progress from your phone.",
@@ -708,11 +708,11 @@ see this session at
     id: "model-dial",
     title: "Dial the model",
     tagline: "/model, /effort",
-    body: r(o, {
+    body: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(t, {
+        r(Text, {
           children: [
             "Run ",
             e(a, { children: "/model" }),
@@ -730,7 +730,7 @@ see this session at
  2. missing index on users`,
           ],
         }),
-        r(t, {
+        r(Text, {
           children: [
             e(a, { children: "/effort" }),
             " controls how long Claude thinks before answering.",
@@ -741,7 +741,7 @@ see this session at
             " when you just need a quick edit.",
           ],
         }),
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Also: ",
@@ -757,7 +757,7 @@ function ne() {
   let jn = _(1),
     nt;
   if (jn[0] === MEMO_CACHE_SENTINEL)
-    ((nt = e(t, {
+    ((nt = e(Text, {
       dimColor: !0,
       italic: !0,
       children: r(DotSeparatedList, {
@@ -776,7 +776,7 @@ function se() {
   let $n = _(1),
     st;
   if ($n[0] === MEMO_CACHE_SENTINEL)
-    ((st = e(t, {
+    ((st = e(Text, {
       dimColor: !0,
       italic: !0,
       children: r(DotSeparatedList, {
@@ -795,7 +795,7 @@ function bo() {
     rt,
     it;
   if (N[0] === MEMO_CACHE_SENTINEL)
-    ((rt = r(t, {
+    ((rt = r(Text, {
       children: [
         "Press ",
         e(B, { children: "shift+tab" }),
@@ -808,9 +808,9 @@ function bo() {
   else ((rt = N[0]), (it = N[1]));
   let at;
   if (N[2] === MEMO_CACHE_SENTINEL)
-    ((at = r(t, {
+    ((at = r(Text, {
       children: [
-        e(t, { color: "success", children: "default" }),
+        e(Text, { color: "success", children: "default" }),
         " \u2014 ask before every edit",
       ],
     })),
@@ -818,9 +818,9 @@ function bo() {
   else at = N[2];
   let ct;
   if (N[3] === MEMO_CACHE_SENTINEL)
-    ((ct = r(t, {
+    ((ct = r(Text, {
       children: [
-        e(t, { color: "autoAccept", children: "accept edits" }),
+        e(Text, { color: "autoAccept", children: "accept edits" }),
         " \u2014 edit freely, ask for commands",
       ],
     })),
@@ -828,9 +828,9 @@ function bo() {
   else ct = N[3];
   let lt;
   if (N[4] === MEMO_CACHE_SENTINEL)
-    ((lt = r(t, {
+    ((lt = r(Text, {
       children: [
-        e(t, { color: "planMode", children: "plan" }),
+        e(Text, { color: "planMode", children: "plan" }),
         " \u2014 research and propose, never touch files",
       ],
     })),
@@ -838,16 +838,16 @@ function bo() {
   else lt = N[4];
   let dt;
   if (N[5] === MEMO_CACHE_SENTINEL)
-    ((dt = r(o, {
+    ((dt = r(Box, {
       flexDirection: "column",
       paddingLeft: 2,
       children: [
         at,
         ct,
         lt,
-        r(t, {
+        r(Text, {
           children: [
-            e(t, { color: "warning", children: "auto" }),
+            e(Text, { color: "warning", children: "auto" }),
             " \u2014 Claude decides what is safe",
           ],
         }),
@@ -857,22 +857,22 @@ function bo() {
   else dt = N[5];
   let ut;
   if (N[6] === MEMO_CACHE_SENTINEL)
-    ((ut = e(t, { color: "planMode", children: "plan" })), (N[6] = ut));
+    ((ut = e(Text, { color: "planMode", children: "plan" })), (N[6] = ut));
   else ut = N[6];
   let mt;
   if (N[7] === MEMO_CACHE_SENTINEL)
-    ((mt = e(t, { color: "warning", children: "auto" })), (N[7] = mt));
+    ((mt = e(Text, { color: "warning", children: "auto" })), (N[7] = mt));
   else mt = N[7];
   let pt;
   if (N[8] === MEMO_CACHE_SENTINEL)
-    ((pt = r(o, {
+    ((pt = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
         rt,
         it,
         dt,
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "Use ",
@@ -892,19 +892,19 @@ function bo() {
 }
 F();
 function Bt(fs) {
-  return Vw.some((gs) => gs.id === fs);
+  return POWERUP_LESSONS.some((gs) => gs.id === fs);
 }
 function Dt() {
   let ys = getGlobalConfig().powerupsUnlocked ?? [];
   return new Set(ys.filter(Bt));
 }
-function LHe(cs) {
+function PowerupsBrowser(cs) {
   let f = _(48),
     { onExit: xo } = cs,
     { storageV5: wo } = useStorageV5Context(),
     [h, ls] = d(Dt),
     [R, Co] = d(null),
-    [ko, ds] = d(Vw[0].id),
+    [ko, ds] = d(POWERUP_LESSONS[0].id),
     [vo, ht] = d(!1),
     ft;
   if (f[0] === MEMO_CACHE_SENTINEL) ((ft = () => ht(!1)), (f[0] = ft));
@@ -938,9 +938,9 @@ function LHe(cs) {
         logEvent("tengu_powerup_lesson_completed", {
           lesson_id: fromEnum(Ro),
           unlocked_count: ie.size,
-          all_unlocked: ie.size === Vw.length,
+          all_unlocked: ie.size === POWERUP_LESSONS.length,
         }),
-        ie.size === Vw.length)
+        ie.size === POWERUP_LESSONS.length)
       )
         ht(!0);
     }),
@@ -951,11 +951,11 @@ function LHe(cs) {
   let ae = yt,
     bt;
   if (f[6] !== h)
-    ((bt = Vw.map((Pe) => {
+    ((bt = POWERUP_LESSONS.map((Pe) => {
       let xt = h.has(Pe.id);
       let wt = `${xt ? figures.tick : figures.circle} ${Pe.title}`;
       return {
-        label: xt ? e(t, { color: "success", children: wt }) : wt,
+        label: xt ? e(Text, { color: "success", children: wt }) : wt,
         value: Pe.id,
         description: Pe.tagline,
       };
@@ -991,25 +991,25 @@ function LHe(cs) {
     else z = f[18];
     return z;
   }
-  let Le = h.size === Vw.length,
+  let Le = h.size === POWERUP_LESSONS.length,
     A;
   if (f[19] !== Le)
     ((A = Le
       ? e(S, { text: "All powered up" })
-      : e(t, { bold: !0, color: "claude", children: "Power-ups" })),
+      : e(Text, { bold: !0, color: "claude", children: "Power-ups" })),
       (f[19] = Le),
       (f[20] = A));
   else A = f[20];
   let M;
   if (f[21] !== h.size)
-    ((M = r(t, {
+    ((M = r(Text, {
       dimColor: !0,
-      children: [" ", h.size, "/", Vw.length, " unlocked", " "],
+      children: [" ", h.size, "/", POWERUP_LESSONS.length, " unlocked", " "],
     })),
       (f[21] = h.size),
       (f[22] = M));
   else M = f[22];
-  const j = h.size / Vw.length;
+  const j = h.size / POWERUP_LESSONS.length;
   let z;
   if (f[23] !== j)
     ((z = e(ProgressBar, {
@@ -1023,7 +1023,7 @@ function LHe(cs) {
   else z = f[24];
   let De;
   if (f[25] !== A || f[26] !== M || f[27] !== z)
-    ((De = r(o, { marginBottom: 1, children: [A, M, z] })),
+    ((De = r(Box, { marginBottom: 1, children: [A, M, z] })),
       (f[25] = A),
       (f[26] = M),
       (f[27] = z),
@@ -1034,9 +1034,9 @@ function LHe(cs) {
     : "Each power-up teaches one thing Claude Code can do that most people miss. Open one, read it, try it, mark it done.";
   let Be;
   if (f[29] !== Po)
-    ((Be = e(o, {
+    ((Be = e(Box, {
       marginBottom: 1,
-      children: e(t, { dimColor: !0, wrap: "wrap", children: Po }),
+      children: e(Text, { dimColor: !0, wrap: "wrap", children: Po }),
     })),
       (f[29] = Po),
       (f[30] = Be));
@@ -1044,7 +1044,7 @@ function LHe(cs) {
   let Ae;
   if (f[31] !== re)
     ((Ae = (ps) => {
-      let Ct = Vw.find((hs) => hs.id === ps);
+      let Ct = POWERUP_LESSONS.find((hs) => hs.id === ps);
       if (Ct) re(Ct);
     }),
       (f[31] = re),
@@ -1059,7 +1059,7 @@ function LHe(cs) {
     ((Ue = e(ve, {
       options: To,
       hideIndexes: !0,
-      visibleOptionCount: Vw.length,
+      visibleOptionCount: POWERUP_LESSONS.length,
       defaultFocusValue: ko,
       onChange: Ae,
       onCancel: Me,
@@ -1072,7 +1072,7 @@ function LHe(cs) {
   else Ue = f[39];
   let kt;
   if (f[40] === MEMO_CACHE_SENTINEL)
-    ((kt = e(o, { marginTop: 1, children: e(ne, {}) })), (f[40] = kt));
+    ((kt = e(Box, { marginTop: 1, children: e(ne, {}) })), (f[40] = kt));
   else kt = f[40];
   let Ie;
   if (f[41] !== vo)
@@ -1082,7 +1082,7 @@ function LHe(cs) {
   if (f[43] !== Be || f[44] !== Ue || f[45] !== Ie || f[46] !== De)
     ((vt = e(Qr, {
       color: "claude",
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         children: [De, Be, Ue, kt, Ie],
       }),
@@ -1116,13 +1116,13 @@ function ze(xs) {
   else Ne = K[5];
   let qe;
   if (K[6] !== J.title)
-    ((qe = e(t, { bold: !0, color: "claude", children: J.title })),
+    ((qe = e(Text, { bold: !0, color: "claude", children: J.title })),
       (K[6] = J.title),
       (K[7] = qe));
   else qe = K[7];
   let Ee;
   if (K[8] !== Ne || K[9] !== qe)
-    ((Ee = r(o, { children: [Ne, qe] })),
+    ((Ee = r(Box, { children: [Ne, qe] })),
       (K[8] = Ne),
       (K[9] = qe),
       (K[10] = Ee));
@@ -1134,7 +1134,7 @@ function ze(xs) {
   if (K[12] !== J.body || K[13] !== Ee)
     ((Lt = e(Qr, {
       color: "claude",
-      children: r(o, {
+      children: r(Box, {
         flexDirection: "column",
         gap: 1,
         children: [Ee, J.body, Pt],
@@ -1146,4 +1146,4 @@ function ze(xs) {
   else Lt = K[14];
   return Lt;
 }
-export { Vw, LHe };
+export { POWERUP_LESSONS, PowerupsBrowser };

@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import { McpError } from "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
-import { XA } from "../../02-功能模块/认证-OAuth登录/chunk-j990pwax.js";
+import { UnauthorizedError } from "../../02-功能模块/认证-OAuth登录/oauth-client.js";
 function isClaudeAiBearerRejectedError(r) {
   return (
     r instanceof Error && "code" in r && r.code === "CLAUDEAI_BEARER_REJECTED"
   );
 }
 function isListAuthError(r) {
-  if (r instanceof XA) return !0;
+  if (r instanceof UnauthorizedError) return !0;
   if (isClaudeAiBearerRejectedError(r)) return !1;
   if (r instanceof Error && !(r instanceof McpError) && "code" in r) {
     if (r.code === 403)

@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { j, bi } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Et, b, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, getFsSurface } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { dirname } from "path";
 function s() {}
 async function p(n, t) {
-  let i = ae();
+  let i = getFsSurface();
   try {
     await i.appendFile(n, t);
   } catch {
@@ -30,7 +30,7 @@ class c {
         .catch(s)),
       !this.cleanupRegistered)
     )
-      ((this.cleanupRegistered = !0), Et(() => this.flush()));
+      ((this.cleanupRegistered = !0), registerCleanup(() => this.flush()));
   }
   flush() {
     return this.pendingWrite;
@@ -61,7 +61,7 @@ function l(n) {
 function e(n, t, i) {
   let r = { timestamp: new Date().toISOString(), level: n, event: t, data: i };
   return (
-    b(r) +
+    jsonStringify(r) +
     `
 `
   );

@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 function parseThinClientReply(r, o, t) {
   let e = o.safeParse(t);
   if (e.success) return e.data;
   let s = e.error.issues[0];
   return (
-    n(
+    logForDebugging(
       `[thin-client] ${r} reply did not match its schema (${e.error.issues.length} issue(s); first: ${s ? `${s.path.join(".") || "<root>"}: ${s.message}` : "unknown"})`,
       { level: "warn" },
     ),

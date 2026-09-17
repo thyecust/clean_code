@@ -15,16 +15,16 @@ import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(RE
 import { invertText, chalk } from "../../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { useTheme } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t, jr, tn, bs } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Ansi, useIsScreenReaderEnabled, useAnimationFrame } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { lF } from "../../ink/ink + react-reconciler.5rs3h07b.js";
-import { NI, nK, Ape, fNe } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
+import { ansiCodesToString, reduceAnsiCodes, undoAnsiCodes, tokenizeAnsiString } from "../../../01-核心基础设施/ANSI-样式-布局原语/ansi-text-primitives.js";
 import { useFocusTrap, useCursorDeclaration, useTextInput, useVoiceLevelMeter, usePasteHandler } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { getKeybindingChord } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NO_ANIMATION_INDEX, useReducedMotion } from "../../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { getThemeColor } from "../../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { E, V, C, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { dJn } from "../../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { hasClipboardImage } from "../../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function nat(i, a) {
@@ -98,7 +98,7 @@ var st = "clipboard-image-hint",
             c = null;
             let f = Date.now();
             if (f - a < lt) return;
-            if (await dJn())
+            if (await hasClipboardImage())
               ((a = f),
                 l({
                   key: st,
@@ -188,7 +188,7 @@ class Ie {
   codes = [];
   constructor(i) {
     this.text = i;
-    this.tokens = fNe(i);
+    this.tokens = tokenizeAnsiString(i);
   }
   segment(i) {
     let a = [];
@@ -236,13 +236,13 @@ class Ie {
     let h = ve(m),
       l = ve(this.codes);
     this.codes = l;
-    let s = NI(h),
-      u = NI(Ape(l));
+    let s = ansiCodesToString(h),
+      u = ansiCodesToString(undoAnsiCodes(l));
     return { text: s + this.text.substring(c, this.stringPos) + u, start: a };
   }
 }
 function ve(i) {
-  return nK(i).filter((a) => a.code !== a.endCode);
+  return reduceAnsiCodes(i).filter((a) => a.code !== a.endCode);
 }
 F();
 function X(io) {
@@ -259,7 +259,7 @@ function X(io) {
   const Se = lo || ao ? ro : so;
   let dt;
   if (co[0] !== ke || co[1] !== Se)
-    ((dt = e(t, { color: Se, children: ke })),
+    ((dt = e(Text, { color: Se, children: ke })),
       (co[0] = ke),
       (co[1] = Se),
       (co[2] = dt));
@@ -320,7 +320,7 @@ function Q(yo) {
   let { lines: Re, hasShimmer: bo, sweepStart: Po, cycleLength: vo } = xt,
     Io = useReducedMotion(),
     Ct = bo && !Io,
-    [Ee, ko] = bs(Ct ? 50 : null),
+    [Ee, ko] = useAnimationFrame(Ct ? 50 : null),
     Y = Ct ? Po + (Math.floor(ko / 50) % vo) : NO_ANIMATION_INDEX,
     le;
   if (D[15] !== Y || D[16] !== Re) {
@@ -328,15 +328,15 @@ function Q(yo) {
     if (D[18] !== Y)
       ((J = (yt, So) =>
         e(
-          o,
+          Box,
           {
             children:
               yt.length === 0
-                ? e(t, { children: " " })
+                ? e(Text, { children: " " })
                 : yt.map((S, Tt) => {
                     if (S.highlight?.shimmerColor && S.highlight.color) {
                       return e(
-                        t,
+                        Text,
                         {
                           children: S.text
                             .split("")
@@ -358,12 +358,12 @@ function Q(yo) {
                       );
                     }
                     return e(
-                      t,
+                      Text,
                       {
                         color: S.highlight?.color,
                         dimColor: S.highlight?.dimColor,
                         underline: S.highlight?.underline,
-                        children: e(jr, { children: S.text }),
+                        children: e(Ansi, { children: S.text }),
                       },
                       Tt,
                     );
@@ -379,7 +379,7 @@ function Q(yo) {
   } else le = D[17];
   let J;
   if (D[20] !== Ee || D[21] !== le)
-    ((J = e(o, { ref: Ee, flexDirection: "column", children: le })),
+    ((J = e(Box, { ref: Ee, flexDirection: "column", children: le })),
       (D[20] = Ee),
       (D[21] = le),
       (D[22] = J));
@@ -453,7 +453,7 @@ function f9e(Uo) {
   if (W[7] === MEMO_CACHE_SENTINEL) ((Rt = lF()), (W[7] = Rt));
   else Rt = W[7];
   let Xo = Rt,
-    Yo = tn(),
+    Yo = useIsScreenReaderEnabled(),
     { showPlaceholder: $o, renderedPlaceholder: Et } = ze({
       placeholder: g.placeholder,
       value: g.value,
@@ -489,17 +489,17 @@ function f9e(Uo) {
         : g.highlights,
     Ue = ue && ue.length > 0 ? ee(ue, Oe, It.renderedRowStartOffsets) : ue;
   if (Ue && Ue.length > 0) {
-    return r(o, {
+    return r(Box, {
       ref: ce,
       ...me,
       children: [
-        e(o, {
+        e(Box, {
           flexShrink: 0,
           "aria-preserve-whitespace": !0,
           children: e(Q, { text: Oe, highlights: Ue }),
         }),
         Mt &&
-          r(t, {
+          r(Text, {
             dimColor: !0,
             wrap: "truncate-end",
             children: [g.value?.endsWith(" ") ? "" : " ", g.argumentHint],
@@ -508,19 +508,19 @@ function f9e(Uo) {
       ],
     });
   }
-  const We = o,
-    Ge = t,
+  const We = Box,
+    Ge = Text,
     Qo = "truncate-end",
     Ve =
       $o && Et
-        ? e(jr, { children: Et })
-        : e(t, {
+        ? e(Ansi, { children: Et })
+        : e(Text, {
             "aria-preserve-whitespace": !0,
-            children: e(jr, { children: Oe }),
+            children: e(Ansi, { children: Oe }),
           }),
     qe =
       Mt &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [g.value?.endsWith(" ") ? "" : " ", g.argumentHint],
       });
@@ -586,7 +586,7 @@ function hn(n) {
   if (L[0] === MEMO_CACHE_SENTINEL) ((Dt = lF()), (L[0] = Dt));
   else Dt = L[0];
   let pn = Dt,
-    ge = tn(),
+    ge = useIsScreenReaderEnabled(),
     Ye = useVoiceSelector(_t) === "recording",
     [$e, G] = useVoiceLevelMeter();
   const Je = !!n.onImagePaste;
@@ -771,7 +771,7 @@ function hn(n) {
   else pe = L[50];
   let Kt;
   if (L[51] !== $e || L[52] !== pe)
-    ((Kt = e(o, { ref: $e, children: pe })),
+    ((Kt = e(Box, { ref: $e, children: pe })),
       (L[51] = $e),
       (L[52] = pe),
       (L[53] = Kt));

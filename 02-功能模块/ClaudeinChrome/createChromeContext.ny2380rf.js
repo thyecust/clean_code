@@ -12,13 +12,13 @@
 import "./chrome-tool-error-classifier.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "../MCP客户端/chunk-tv3jbp8f.js";
-import "../MCP客户端/chunk-98spw152.js";
+import "../MCP客户端/mcp-protocol.js";
 import "../MCP客户端/mcp-server.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
-import { aNt } from "../Bridge-RemoteControl/chunk-hbndb8am.js";
+import { createClaudeForChromeMcpServer } from "../Bridge-RemoteControl/chrome-bridge-mcp-server.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { shutdownFirstPartyEventLogging, validateOAuthToken, getClaudeAIOAuthTokens, checkAndRefreshOAuthTokenIfNeeded, saveGlobalConfig, watchGlobalConfigThroughStorage, getGlobalConfig, seedInstallIDs, shutdownDatadog } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { initDefaultDebugLog, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -30,7 +30,7 @@ import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Pl
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { isPolicyAllowedInResponse } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { jAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
+import { fetchPolicyLimitsForBearer } from "../策略限制(PolicyLimits)/policy-limits-client.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { CLAUDE_IN_CHROME_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSecureSocketPath, getAllSocketPaths } from "./claude-in-chrome-host.js";
@@ -194,7 +194,7 @@ function w() {
 async function A(e, { timeoutMs: r } = {}) {
   let o = w();
   if (o) return o;
-  let c = await jAn(e, { timeoutMs: r });
+  let c = await fetchPolicyLimitsForBearer(e, { timeoutMs: r });
   if (!c)
     return { denied: !1, unverified: "policy_unverified", verified: null };
   return isPolicyAllowedInResponse(c, "allow_claude_browser_extension")
@@ -211,11 +211,11 @@ function V(e) {
     if (u.denied)
       return (
         o.add(c),
-        n(`[Claude in Chrome] ${D} (bridge token withheld)`, { level: "warn" }),
+        logForDebugging(`[Claude in Chrome] ${D} (bridge token withheld)`, { level: "warn" }),
         !1
       );
     if (u.verified) r = u.verified.bearer;
-    else n(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
+    else logForDebugging(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
     return !0;
   };
 }
@@ -241,7 +241,7 @@ async function runClaudeInChromeMcpServer(e) {
     let o = pinStorageV5(e),
       c = credentialsStoreFor(o);
     if (isHoverRestEnabled() && o !== void 0) {
-      (zR({ storageV5: o }), watchGlobalConfigThroughStorage(o));
+      (initDefaultDebugLog({ storageV5: o }), watchGlobalConfigThroughStorage(o));
       let { primeFastPathCredentials: C } = await import("../../01-核心基础设施/共享小工具-未细化/primeFastPathCredentials.eb5w3wem.js");
       (await C(c), await seedInstallIDs(o));
     }
@@ -255,13 +255,13 @@ async function runClaudeInChromeMcpServer(e) {
         await shutdownDatadog(),
         process.exit(1));
     if (!u.verified)
-      n(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
+      logForDebugging(`[Claude in Chrome] ${k(u.unverified)}`, { level: "warn" });
     let v = createChromeContext(void 0, {
         storageV5: o,
         credentials: c,
         bearerGate: V(u.verified),
       }),
-      m = aNt(v),
+      m = createClaudeForChromeMcpServer(v),
       I = new StdioServerTransport(),
       h = !1,
       _ = async () => {
@@ -270,26 +270,26 @@ async function runClaudeInChromeMcpServer(e) {
       };
     (process.stdin.on("end", () => void _()),
       process.stdin.on("error", () => void _()),
-      n("[Claude in Chrome] Starting MCP server"),
+      logForDebugging("[Claude in Chrome] Starting MCP server"),
       await m.connect(I),
-      n("[Claude in Chrome] MCP server started"));
+      logForDebugging("[Claude in Chrome] MCP server started"));
   });
 }
 class x {
   silly(e, ...r) {
-    n(format(e, ...r), { level: "debug" });
+    logForDebugging(format(e, ...r), { level: "debug" });
   }
   debug(e, ...r) {
-    n(format(e, ...r), { level: "debug" });
+    logForDebugging(format(e, ...r), { level: "debug" });
   }
   info(e, ...r) {
-    n(format(e, ...r), { level: "info" });
+    logForDebugging(format(e, ...r), { level: "info" });
   }
   warn(e, ...r) {
-    n(format(e, ...r), { level: "warn" });
+    logForDebugging(format(e, ...r), { level: "warn" });
   }
   error(e, ...r) {
-    n(format(e, ...r), { level: "error" });
+    logForDebugging(format(e, ...r), { level: "error" });
   }
 }
 export { createChromeContext, runClaudeInChromeMcpServer };

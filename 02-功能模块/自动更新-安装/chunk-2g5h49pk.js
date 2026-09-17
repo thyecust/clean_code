@@ -15,7 +15,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, q0, ge, l, A, Jg, Po, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -29,17 +29,17 @@ import { isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口�
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import {
-  iFt,
-  Fbe,
-  Gce,
-  aFt,
-  Opt,
-  lFt,
-  fte,
-  qce,
-  zce,
-} from "./chunk-548xet6h.js";
-import { dte } from "./chunk-brx72pf1.js";
+  runWithRetry,
+  detectCurrentShell,
+  getShellConfigPaths,
+  filterClaudeAliasLines,
+  readLinesOrNull,
+  writeFileLines,
+  getMaxVersionConfig,
+  shouldForceDowngrade,
+  shouldSkipVersion,
+} from "./auto-updater.js";
+import { detectInstallType } from "./install-diagnostics.js";
 import { getXdgStateHome, getXdgCacheHome, getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -161,7 +161,7 @@ function Ue({
   if (!S) throw new rT(r, "signature_invalid");
   let F;
   try {
-    let I = Se().safeParse(z(e.toString("utf8")));
+    let I = Se().safeParse(jsonParse(e.toString("utf8")));
     F = I.success ? I.data : void 0;
   } catch {
     F = void 0;
@@ -179,7 +179,7 @@ async function Lt(e = "latest", t, r) {
   let d = Date.now(),
     p = 0;
   try {
-    let o = await iFt(
+    let o = await runWithRetry(
         (w) => (
           p++,
           Pe(`${t}/${e}`, {
@@ -193,7 +193,7 @@ async function Lt(e = "latest", t, r) {
           attempts: qe,
           timeoutMs: Ge,
           onRetry: (w, v) => {
-            n(
+            logForDebugging(
               `Version check failed on attempt ${w}/${qe}, retrying: ${v instanceof Error ? v.message : String(v)}`,
             );
           },
@@ -224,7 +224,7 @@ async function Lt(e = "latest", t, r) {
       "Failed to fetch version from binary repo",
     );
     throw (
-      n(`Failed to fetch version from ${t}/${e} after ${p} attempt(s): ${w}`, {
+      logForDebugging(`Failed to fetch version from ${t}/${e} after ${p} attempt(s): ${w}`, {
         level: "error",
       }),
       S
@@ -370,7 +370,7 @@ async function We(e, t, r, d = {}, p) {
         let q = x;
         (await new Promise((J) => q.close(() => J())),
           await Mt(r, { force: !0 }).catch((J) =>
-            n(
+            logForDebugging(
               `Failed to remove partial download: ${J instanceof Error ? J.message : String(J)}`,
               { level: "error" },
             ),
@@ -390,7 +390,7 @@ async function We(e, t, r, d = {}, p) {
       if (((o = O), (ne || Y || U) && !Ht(N) && v < le)) {
         if (Y) _ = !0;
         else if (U) w = !0;
-        (n(
+        (logForDebugging(
           `Download ${Y ? "checksum mismatch" : ne ? "stalled" : "connection dropped"} on attempt ${v}/${le}, retrying...`,
         ),
           await sleep(1000));
@@ -448,7 +448,7 @@ async function Qe(
       maxContentLength: 1048576,
     });
     ((F = x.dropRetried), (v = Buffer.from(x.data)));
-    let M = Se().safeParse(z(v.toString("utf8")));
+    let M = Se().safeParse(jsonParse(v.toString("utf8")));
     if (!M.success)
       throw new R(
         `Manifest for ${t} is not a valid release manifest`,
@@ -466,7 +466,7 @@ async function Qe(
         is_timeout: Me(x),
         platform: getPlatformForAnalytics(p),
       }),
-      n(`Failed to fetch manifest from ${e}/${t}/manifest.json: ${C}`, {
+      logForDebugging(`Failed to fetch manifest from ${e}/${t}/manifest.json: ${C}`, {
         level: "error",
       }),
       x
@@ -496,7 +496,7 @@ async function Qe(
       }
       if (N)
         (logFeatureSad("update_manifest_signature", "unsigned_legacy"),
-          n(
+          logForDebugging(
             `No manifest signature published for ${t} (predates ${$e}); continuing with checksum-only verification`,
             { level: "warn" },
           ));
@@ -507,7 +507,7 @@ async function Qe(
           expectedVersion: t,
           publicKeyPem: Oe(),
         });
-        n(`Verified manifest signature for ${t}`);
+        logForDebugging(`Verified manifest signature for ${t}`);
         let G = L.platforms[p];
         if (G && G.binary !== I) throw new rT(t, "binary_name_mismatch");
         if (
@@ -535,21 +535,21 @@ async function Qe(
       ) {
         if (D.reason === "release_predates_enforcement")
           (logFeatureSad("update_manifest_signature", D.reason),
-            n(
+            logForDebugging(
               `${t} is signed but predates manifest-signature enforcement; not eligible as a channel target for this client`,
               { level: "warn" },
             ));
         else {
           if ((logFeatureBad("update_manifest_signature", D.reason), w))
             logFeatureBad("update_download", "update_download_manifest_signature");
-          n(`Manifest signature check failed for ${x}: ${D.reason}`, {
+          logForDebugging(`Manifest signature check failed for ${x}: ${D.reason}`, {
             level: "error",
           });
         }
         throw D;
       }
       (logFeatureSad("update_manifest_signature", D.reason),
-        n(
+        logForDebugging(
           `Manifest signature check failed for ${x}: ${D.reason} (enforcement disabled; continuing)`,
           { level: "warn" },
         ));
@@ -563,7 +563,7 @@ async function Qe(
   };
 }
 async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
-  let o = ae();
+  let o = getFsSurface();
   await o.rm(t, { recursive: !0, force: !0 });
   let _ = G4(),
     w = Ipt(_),
@@ -582,7 +582,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
         responseType: "json",
         maxContentLength: 1048576,
       }).catch((O) => {
-        n(`No compressed manifest for ${e}: ${l(O)}`);
+        logForDebugging(`No compressed manifest for ${e}: ${l(O)}`);
         return;
       }),
     ]),
@@ -624,7 +624,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
         if (_e(ce) === void 0 && !Wt(ce)) throw ce;
         ((Y = !1),
           (U = G),
-          n(
+          logForDebugging(
             `Compressed binary unusable (${ce instanceof Error ? ce.message : String(ce)}), falling back to ${G}`,
           ));
       }
@@ -658,7 +658,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
         platform: getPlatformForAnalytics(_),
         compressed: Y,
       }),
-      n(`Failed to download binary from ${U}: ${J}`, { level: "error" }),
+      logForDebugging(`Failed to download binary from ${U}: ${J}`, { level: "error" }),
       O
     );
   }
@@ -684,7 +684,7 @@ async function Je(e, t, r) {
     });
   if (!o)
     return (
-      n(
+      logForDebugging(
         `Manifest for retained ${e} is unauthenticated; activating the retained copy without a checksum comparison`,
         { level: "warn" },
       ),
@@ -693,7 +693,7 @@ async function Je(e, t, r) {
   let w = p.platforms[d]?.checksum,
     v = w !== void 0 && (await ve(t, w));
   if (!v)
-    n(
+    logForDebugging(
       `Retained ${e} does not match its signed manifest checksum; re-downloading`,
     );
   return { signatureVerified: _, binaryMatches: v, expectedChecksum: w };
@@ -712,7 +712,7 @@ async function ve(e, t) {
     return (await ye(e)) === t;
   } catch (r) {
     return (
-      n(`Could not hash ${e} (${A(r) ?? ge(r).name}); treating as mismatched`),
+      logForDebugging(`Could not hash ${e} (${A(r) ?? ge(r).name}); treating as mismatched`),
       !1
     );
   }
@@ -798,7 +798,7 @@ async function Ce(e, t) {
     } catch (p) {
       if (d >= le || !Ye(p)) throw p;
       ((r = !0),
-        n(
+        logForDebugging(
           `Fetch of ${e} connection dropped on attempt ${d}/${le}, retrying...`,
         ),
         await sleep(1000));
@@ -832,11 +832,11 @@ function nn(e, t) {
   }
 }
 function ue(e) {
-  let t = ae();
+  let t = getFsSurface();
   try {
     let r = t.readFileSync(e, { encoding: "utf8" });
     if (!r || r.trim() === "") return null;
-    let d = z(r);
+    let d = jsonParse(r);
     if (typeof d.pid !== "number" || !d.version || !d.execPath) return null;
     return d;
   } catch {
@@ -850,12 +850,12 @@ function he(e) {
   if (!Fe(r)) return !1;
   if (!nn(r, d))
     return (
-      n(
+      logForDebugging(
         `Lock PID ${r} is running but does not appear to be Claude - treating as stale`,
       ),
       !1
     );
-  let p = ae();
+  let p = getFsSurface();
   try {
     let o = p.statSync(e);
     if (Date.now() - o.mtimeMs > tn) {
@@ -865,14 +865,14 @@ function he(e) {
   return !0;
 }
 function rn(e, t) {
-  writeFileAtomicSync(e, b(t, null, 2));
+  writeFileAtomicSync(e, jsonStringify(t, null, 2));
 }
 async function nt(e, t) {
-  let r = ae(),
+  let r = getFsSurface(),
     d = Jt(e);
   if (he(t)) {
     let o = ue(t);
-    return (n(`Cannot acquire lock for ${d} - held by PID ${o?.pid}`), null);
+    return (logForDebugging(`Cannot acquire lock for ${d} - held by PID ${o?.pid}`), null);
   }
   let p = {
     pid: process.pid,
@@ -883,18 +883,18 @@ async function nt(e, t) {
   try {
     if ((rn(t, p), ue(t)?.pid !== process.pid)) return null;
     return (
-      n(`Acquired PID lock for ${d} (PID ${process.pid})`),
+      logForDebugging(`Acquired PID lock for ${d} (PID ${process.pid})`),
       () => {
         try {
           if (ue(t)?.pid === process.pid)
-            (r.unlinkSync(t), n(`Released PID lock for ${d}`));
+            (r.unlinkSync(t), logForDebugging(`Released PID lock for ${d}`));
         } catch (_) {
-          n(`Failed to release lock for ${d}: ${_}`);
+          logForDebugging(`Failed to release lock for ${d}: ${_}`);
         }
       }
     );
   } catch (o) {
-    return (n(`Failed to acquire lock for ${d}: ${o}`), null);
+    return (logForDebugging(`Failed to acquire lock for ${d}: ${o}`), null);
   }
 }
 async function rt(e, t) {
@@ -922,7 +922,7 @@ async function at(e, t, r) {
   }
 }
 async function ot(e) {
-  let t = ae(),
+  let t = getFsSurface(),
     r = 0,
     d;
   try {
@@ -930,7 +930,7 @@ async function ot(e) {
   } catch (p) {
     if (W(p)) return 0;
     return (
-      n(`Failed to readdir locks directory: ${ge(p).message}`, {
+      logForDebugging(`Failed to readdir locks directory: ${ge(p).message}`, {
         level: "error",
       }),
       0
@@ -942,8 +942,8 @@ async function ot(e) {
       if ((await lstat(o)).isDirectory())
         (t.rmSync(o, { recursive: !0, force: !0 }),
           r++,
-          n(`Cleaned up legacy directory lock: ${p}`));
-      else if (!he(o)) (t.unlinkSync(o), r++, n(`Cleaned up stale lock: ${p}`));
+          logForDebugging(`Cleaned up legacy directory lock: ${p}`));
+      else if (!he(o)) (t.unlinkSync(o), r++, logForDebugging(`Cleaned up stale lock: ${p}`));
     } catch {}
     await new Promise((_) => setImmediate(_));
   }
@@ -958,7 +958,7 @@ function G4() {
   if (!t) {
     let r = Error("Unsupported architecture: arm64");
     throw (
-      n("Native installer does not support architecture: arm64", {
+      logForDebugging("Native installer does not support architecture: arm64", {
         level: "error",
       }),
       r
@@ -1034,7 +1034,7 @@ async function wt(e, t, r = 0) {
             await t();
           } catch (I) {
             throw (
-              n(`Native installer version-lock callback failed: ${I}`, {
+              logForDebugging(`Native installer version-lock callback failed: ${I}`, {
                 level: "error",
               }),
               I
@@ -1077,7 +1077,7 @@ async function wt(e, t, r = 0) {
         },
         lockfilePath: p,
         onCompromised: (_) => {
-          n(
+          logForDebugging(
             `NON-FATAL: Version lock was compromised during operation: ${_.message}`,
             { level: "info" },
           );
@@ -1104,7 +1104,7 @@ async function wt(e, t, r = 0) {
       );
     } catch (_) {
       throw (
-        n(`tryWithVersionLock: callback failed under version lock: ${l(_)}`, {
+        logForDebugging(`tryWithVersionLock: callback failed under version lock: ${l(_)}`, {
           level: "error",
         }),
         _
@@ -1135,7 +1135,7 @@ async function yt(e, t, r) {
         throw new gze();
       return (
         await rename(o, t),
-        n(
+        logForDebugging(
           `Atomically installed binary to ${t}` +
             (p > 1 ? ` (attempt ${p})` : ""),
         ),
@@ -1150,7 +1150,7 @@ async function yt(e, t, r) {
         v = w === "EBUSY" || (w === "EPERM" && !1),
         S = lt[p - 1];
       if (!v || S === void 0) throw _;
-      (n(
+      (logForDebugging(
         `atomicMoveToInstallPath attempt ${p} failed with ${w}; retrying in ${S}ms`,
       ),
         await sleep(S));
@@ -1202,13 +1202,13 @@ async function pn(e, t, r) {
         logFeatureBad("update_apply", "update_apply_native_move_failed"),
         Po(d))
       )
-        n(`installVersionFromPackage: atomic move failed: ${p}`, {
+        logForDebugging(`installVersionFromPackage: atomic move failed: ${p}`, {
           level: "error",
         });
       else logError(ge(d));
     else
       (logFeatureBad("update_apply", "update_apply_native_staging_missing"),
-        n(`installVersionFromPackage: ${p}`, { level: "error" }));
+        logForDebugging(`installVersionFromPackage: ${p}`, { level: "error" }));
     throw d;
   }
 }
@@ -1251,7 +1251,7 @@ async function gn(e, t, r) {
         logFeatureBad("update_apply", "update_apply_native_move_failed"));
     else logFeatureBad("update_apply", "update_apply_native_staging_missing");
     if (Po(d))
-      n(`installVersionFromBinary: atomic move failed: ${l(d)}`, {
+      logForDebugging(`installVersionFromBinary: atomic move failed: ${l(d)}`, {
         level: "error",
       });
     else logError(ge(d));
@@ -1301,14 +1301,14 @@ async function ut(
         throw C;
       }
       if (!r || d || !et(C)) throw C;
-      n(
+      logForDebugging(
         `Could not re-verify retained ${e} (${ge(C).name}); offline, activating as requested`,
         { level: "warn" },
       );
     }
   else if (!E && S?.checksum !== void 0) {
     if (!(await ve(o, S.checksum)))
-      (n(
+      (logForDebugging(
         `Retained ${e} no longer matches the checksum verified earlier in this process; re-downloading`,
         { level: "warn" },
       ),
@@ -1317,7 +1317,7 @@ async function ut(
   }
   let x = !1;
   if (E) {
-    n(
+    logForDebugging(
       t
         ? `Force reinstalling native installer version ${e}`
         : `Downloading native installer version ${e}`,
@@ -1339,7 +1339,7 @@ async function ut(
     }
     if ((({ moveRetried: x } = await _n(w, o, C, P)), D))
       v.set(e, { enforcingRelease: d, checksum: P });
-  } else n(`Version ${e} already installed, updating symlink`);
+  } else logForDebugging(`Version ${e} already installed, updating symlink`);
   await kn(_);
   let M = await $n(_, o, { expectedChecksum: P });
   if (M !== "updated" && !(await re(_))) {
@@ -1395,7 +1395,7 @@ function bn() {
     return (typeof e.external === "string" && ht.valid(e.external)) || null;
   } catch (e) {
     return (
-      n(`getCanaryVersion: GB read failed, falling through: ${l(e)}`),
+      logForDebugging(`getCanaryVersion: GB read failed, falling through: ${l(e)}`),
       null
     );
   }
@@ -1404,13 +1404,13 @@ async function En(e, t = !1) {
   let r = Date.now(),
     { executable: d } = Q(),
     p = !/^v?\d+\.\d+\.\d+(-\S+)?$/.test(e),
-    { maxVersion: o, forceDowngradeEnabled: _ } = await fte(),
+    { maxVersion: o, forceDowngradeEnabled: _ } = await getMaxVersionConfig(),
     w =
       _ &&
       !t &&
       p &&
       !!o &&
-      qce(
+      shouldForceDowngrade(
         {
           ISSUES_EXPLAINER:
             "report the issue at https://github.com/anthropics/claude-code/issues",
@@ -1428,19 +1428,19 @@ async function En(e, t = !1) {
         "native_update",
       ),
     v = w ? o : await Hpt(e);
-  n(`Checking for native installer update to version ${v}`);
+  logForDebugging(`Checking for native installer update to version ${v}`);
   let S = p && (await wn());
   if (e === "latest" && !w) {
     let C = bn(),
       D = C && o && isSemverGreaterThan(C, o);
     if (C && isSemverGreaterThan(C, v) && !D)
-      (n(`Native installer: canary ${C} active, overriding ${v}`), (v = C));
+      (logForDebugging(`Native installer: canary ${C} active, overriding ${v}`), (v = C));
     else if (D)
-      n(`Native installer: canary ${C} exceeds maxVersion ${o}, not applying`);
+      logForDebugging(`Native installer: canary ${C} exceeds maxVersion ${o}, not applying`);
   }
   if (!w && !t && o && isSemverGreaterThan(v, o)) {
     if (
-      (n(
+      (logForDebugging(
         `Native installer: maxVersion ${o} is set, capping update from ${v} to ${o}`,
       ),
       isSemverAtLeast(
@@ -1461,7 +1461,7 @@ async function En(e, t = !1) {
       ))
     )
       return (
-        n(
+        logForDebugging(
           `Native installer: current version ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION} is already at or above maxVersion ${o}, skipping update`,
         ),
         logEvent("tengu_native_update_skipped_max_version", {
@@ -1493,7 +1493,7 @@ async function En(e, t = !1) {
     (await re(d))
   )
     return (
-      n(`Found ${v} at ${d}, skipping install`),
+      logForDebugging(`Found ${v} at ${d}, skipping install`),
       logEvent("tengu_native_update_complete", {
         latency_ms: Date.now() - r,
         was_new_install: !1,
@@ -1502,7 +1502,7 @@ async function En(e, t = !1) {
       }),
       { success: !0, wasSkipped: !0, latestVersion: v }
     );
-  if (!t && zce(v))
+  if (!t && shouldSkipVersion(v))
     return (
       logEvent("tengu_native_update_skipped_minimum_version", {
         latency_ms: Date.now() - r,
@@ -1589,7 +1589,7 @@ async function En(e, t = !1) {
         latency_ms: M,
         target_version: getVersionForAnalytics(v),
       }),
-      n(
+      logForDebugging(
         `Native installer: resolved ${v} predates manifest signature enforcement; staying on ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}`,
         { level: "warn" },
       ),
@@ -1615,17 +1615,17 @@ async function En(e, t = !1) {
       was_new_install: F,
       was_force_reinstall: t,
     }),
-    n(`Successfully updated to version ${v}`),
+    logForDebugging(`Successfully updated to version ${v}`),
     { success: !0, latestVersion: v }
   );
 }
 async function kn(e) {
   try {
-    (await rmdir(e), n(`Removed empty directory at ${e}`));
+    (await rmdir(e), logForDebugging(`Removed empty directory at ${e}`));
   } catch (t) {
     let r = A(t);
     if (r !== "ENOTDIR" && r !== "ENOENT" && r !== "ENOTEMPTY")
-      n(`Could not remove directory at ${e}: ${t}`);
+      logForDebugging(`Could not remove directory at ${e}: ${t}`);
   }
 }
 async function $n(e, t, { expectedChecksum: r } = {}) {
@@ -1659,7 +1659,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
       if (!F)
         return (
           await unlink(S).catch(() => {}),
-          n(
+          logForDebugging(
             `Refusing to install a launcher copy of ${t} that does not match its signed checksum`,
             { level: "error" },
           ),
@@ -1699,7 +1699,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
       return "updated";
     } catch (w) {
       return (
-        n(`Failed to copy executable from ${t} to ${e}: ${w}`, {
+        logForDebugging(`Failed to copy executable from ${t} to ${e}: ${w}`, {
           level: "error",
         }),
         "failed"
@@ -1707,19 +1707,19 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
     }
   let o = dirname(e);
   try {
-    (await mkdir(o, { recursive: !0 }), n(`Created directory ${o} for symlink`));
+    (await mkdir(o, { recursive: !0 }), logForDebugging(`Created directory ${o} for symlink`));
   } catch (w) {
     return (
-      n(`Failed to create directory ${o}: ${w}`, { level: "error" }),
+      logForDebugging(`Failed to create directory ${o}: ${w}`, { level: "error" }),
       "failed"
     );
   }
   try {
-    return (await symlink(t, e), n(`Created symlink ${e} -> ${t}`), "updated");
+    return (await symlink(t, e), logForDebugging(`Created symlink ${e} -> ${t}`), "updated");
   } catch (w) {
     if (A(w) !== "EEXIST")
       return (
-        n(`Failed to create symlink from ${e} to ${t}: ${w}`, {
+        logForDebugging(`Failed to create symlink from ${e} to ${t}: ${w}`, {
           level: "error",
         }),
         "failed"
@@ -1727,7 +1727,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
   }
   if (!(await isNativeInstallerSymlink(e)) && !(await isNpmShimExecutable(e).catch(() => !1)))
     return (
-      n(
+      logForDebugging(
         `Not replacing ${e}: it was not created by the native installer (not a symlink into a claude/versions/ directory) and is not an npm shim, so this update will not overwrite it. New versions still install under the versions/ directory; remove ${e} and re-run the update to let the installer manage the launcher again.`,
         { level: "warn" },
       ),
@@ -1738,7 +1738,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
     return (
       await symlink(t, _),
       await rename(_, e),
-      n(`Atomically updated symlink ${e} -> ${t}`),
+      logForDebugging(`Atomically updated symlink ${e} -> ${t}`),
       "updated"
     );
   } catch (w) {
@@ -1746,14 +1746,14 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
       await unlink(_);
     } catch {}
     return (
-      n(`Failed to create symlink from ${e} to ${t}: ${w}`, { level: "error" }),
+      logForDebugging(`Failed to create symlink from ${e} to ${t}: ${w}`, { level: "error" }),
       "failed"
     );
   }
 }
 async function Bce(e = !1) {
   if (Ie(process.env.DISABLE_INSTALLATION_CHECKS)) return [];
-  let t = await dte();
+  let t = await detectInstallType();
   if (t === "development") return [];
   let r = getGlobalConfig();
   if (!(e || t === "native" || r.installMethod === "native")) return [];
@@ -1827,8 +1827,8 @@ async function Bce(e = !1) {
         type: "path",
       });
     } else {
-      let P = Fbe(),
-        x = Gce()[P],
+      let P = detectCurrentShell(),
+        x = getShellConfigPaths()[P],
         M = x ? x.replace(homedir(), "~") : "your shell config file";
       o.push({
         message: `Native installation exists but ~/.local/bin is not in your PATH. Run:
@@ -1856,7 +1856,7 @@ function jce(e, t = !1, r) {
   if (t) return dt(e, t, r);
   let d = Sn.of(B().host);
   if (d.inFlight)
-    return (n("installLatest: joining in-flight call"), d.inFlight);
+    return (logForDebugging("installLatest: joining in-flight call"), d.inFlight);
   let p = dt(e, t, r);
   d.begin(p);
   let o = () => {
@@ -1891,7 +1891,7 @@ async function dt(e, t = !1, r) {
       }),
       r,
     ),
-      n(
+      logForDebugging(
         'Native installer: Set installMethod to "native" and disabled legacy auto-updater for protection',
       ));
   return (
@@ -1935,7 +1935,7 @@ async function q4() {
         is_pid_based: !0,
         is_lifetime_lock: !0,
       }),
-        n(`Acquired PID lock on running version: ${t}`));
+        logForDebugging(`Acquired PID lock on running version: ${t}`));
     } else {
       let d;
       try {
@@ -1944,7 +1944,7 @@ async function q4() {
           retries: 0,
           lockfilePath: r,
           onCompromised: (p) => {
-            n(
+            logForDebugging(
               `NON-FATAL: Lock on running version was compromised: ${p.message}`,
               { level: "info" },
             );
@@ -1954,15 +1954,15 @@ async function q4() {
             is_pid_based: !1,
             is_lifetime_lock: !0,
           }),
-          n(`Acquired mtime-based lock on running version: ${t}`),
-          Et(async () => {
+          logForDebugging(`Acquired mtime-based lock on running version: ${t}`),
+          registerCleanup(async () => {
             try {
               await d?.();
             } catch {}
           }));
       } catch (p) {
         if (W(p)) {
-          n(`Cannot lock current version - file does not exist: ${t}`, {
+          logForDebugging(`Cannot lock current version - file does not exist: ${t}`, {
             level: "info",
           });
           return;
@@ -1977,18 +1977,18 @@ async function q4() {
     }
   } catch (r) {
     if (W(r)) {
-      n(`Cannot lock current version - file does not exist: ${t}`, {
+      logForDebugging(`Cannot lock current version - file does not exist: ${t}`, {
         level: "info",
       });
       return;
     }
-    n(`NON-FATAL: Failed to lock current version during execution ${l(r)}`, {
+    logForDebugging(`NON-FATAL: Failed to lock current version during execution ${l(r)}`, {
       level: "info",
     });
   }
 }
 function Ee(e, t) {
-  n(
+  logForDebugging(
     `NON-FATAL: Lock acquisition failed for ${e} (expected in multi-process scenarios): ${l(t)}`,
     { level: "error" },
   );
@@ -1997,9 +1997,9 @@ async function Tn(e) {
   let t = Q(),
     r = we(t, e);
   try {
-    (await unlink(r), n(`Force-removed lock file at ${r}`));
+    (await unlink(r), logForDebugging(`Force-removed lock file at ${r}`));
   } catch (d) {
-    n(`Failed to force-remove lock file: ${l(d)}`);
+    logForDebugging(`Failed to force-remove lock file: ${l(d)}`);
   }
 }
 async function oFt() {
@@ -2023,9 +2023,9 @@ async function oFt() {
           (await unlink(F), w++);
         } catch {}
       }
-      if (w > 0) n(`Cleaned up ${w} old Windows executables on startup`);
+      if (w > 0) logForDebugging(`Cleaned up ${w} old Windows executables on startup`);
     } catch (_) {
-      if (!W(_)) n(`Failed to clean up old Windows executables: ${_}`);
+      if (!W(_)) logForDebugging(`Failed to clean up old Windows executables: ${_}`);
     }
   }
   try {
@@ -2037,19 +2037,19 @@ async function oFt() {
         if ((await K(v)).mtime.getTime() < t)
           (await ke(v, { recursive: !0, force: !0 }),
             _++,
-            n(`Cleaned up old staging directory: ${w}`));
+            logForDebugging(`Cleaned up old staging directory: ${w}`));
       } catch {}
     }
     if (_ > 0)
-      (n(`Cleaned up ${_} orphaned staging directories`),
+      (logForDebugging(`Cleaned up ${_} orphaned staging directories`),
         logEvent("tengu_native_staging_cleanup", { cleaned_count: _ }));
   } catch (o) {
-    if (!W(o)) n(`Failed to clean up staging directories: ${o}`);
+    if (!W(o)) logForDebugging(`Failed to clean up staging directories: ${o}`);
   }
   if (de()) {
     let o = await ot(e.locks);
     if (o > 0)
-      (n(`Cleaned up ${o} stale version locks`),
+      (logForDebugging(`Cleaned up ${o} stale version locks`),
         logEvent("tengu_native_stale_locks_cleanup", { cleaned_count: o }));
   }
   let r;
@@ -2057,7 +2057,7 @@ async function oFt() {
     r = await be(e.versions);
   } catch (o) {
     if (!W(o))
-      (n(`Failed to readdir versions directory: ${o}`),
+      (logForDebugging(`Failed to readdir versions directory: ${o}`),
         logFeatureSad("native_cleanup_versions", "readdir_failed"));
     else logFeatureOk("native_cleanup_versions");
     return;
@@ -2069,7 +2069,7 @@ async function oFt() {
     if (/\.tmp\.\d+\.\d+(\.\d+)?$/.test(o)) {
       try {
         if ((await K(_)).mtime.getTime() < t)
-          (await unlink(_), p++, n(`Cleaned up orphaned temp install file: ${o}`));
+          (await unlink(_), p++, logForDebugging(`Cleaned up orphaned temp install file: ${o}`));
       } catch {}
       continue;
     }
@@ -2087,7 +2087,7 @@ async function oFt() {
     } catch {}
   }
   if (p > 0)
-    (n(`Cleaned up ${p} orphaned temp install files`),
+    (logForDebugging(`Cleaned up ${p} orphaned temp install files`),
       logEvent("tengu_native_temp_files_cleanup", { cleaned_count: p }));
   if (d.length === 0) {
     logFeatureOk("native_cleanup_versions");
@@ -2097,7 +2097,7 @@ async function oFt() {
     !(await isNativeInstallerSymlink(e.executable)) &&
     !(await isNpmShimExecutable(e.executable).catch(() => !1))
   ) {
-    (n(
+    (logForDebugging(
       `Skipping native version cleanup: the launcher at ${e.executable} is externally managed, so the version(s) it needs cannot be determined`,
     ),
       logFeatureSad("native_cleanup_versions", "skipped_external_launcher"));
@@ -2127,7 +2127,7 @@ async function oFt() {
         }
       if (M)
         (_.add(E.resolvedPath),
-          n(`Protecting locked version from cleanup: ${E.name}`));
+          logForDebugging(`Protecting locked version from cleanup: ${E.name}`));
       await new Promise((C) => setImmediate(C));
     }
     let v = d
@@ -2170,12 +2170,12 @@ async function oFt() {
             if (M && x) F++;
             else if (!M)
               (I++,
-                n(
+                logForDebugging(
                   `Skipping deletion of ${E.name} - locked by another process`,
                 ));
           } catch (x) {
             (P++,
-              n(`Failed to delete version ${E.name}: ${x}`, {
+              logForDebugging(`Failed to delete version ${E.name}: ${x}`, {
                 level: "error",
               }));
           }
@@ -2210,49 +2210,49 @@ async function nOe() {
         throw t;
       })
     ) {
-      (n(`Skipping removal of ${e.executable} - appears to be npm-managed`),
+      (logForDebugging(`Skipping removal of ${e.executable} - appears to be npm-managed`),
         logFeatureOk("native_remove_symlink"));
       return;
     }
     if (!(await isNativeInstallerSymlink(e.executable))) {
-      (n(
+      (logForDebugging(
         `Skipping removal of ${e.executable} - not created by the native installer`,
       ),
         logFeatureOk("native_remove_symlink"));
       return;
     }
     (await unlink(e.executable),
-      n(`Removed claude symlink at ${e.executable}`),
+      logForDebugging(`Removed claude symlink at ${e.executable}`),
       logFeatureOk("native_remove_symlink"));
   } catch (t) {
     if (W(t)) {
       logFeatureOk("native_remove_symlink");
       return;
     }
-    (n(`Failed to remove claude symlink: ${t}`, { level: "error" }),
+    (logForDebugging(`Failed to remove claude symlink: ${t}`, { level: "error" }),
       logFeatureBad("native_remove_symlink", "unlink_failed"));
   }
 }
 async function Can() {
   let e = [],
-    t = Gce(),
+    t = getShellConfigPaths(),
     r = !1;
   for (let [d, p] of Object.entries(t))
     try {
-      let o = await Opt(p);
+      let o = await readLinesOrNull(p);
       if (!o) continue;
-      let { filtered: _, hadAlias: w } = aFt(o);
+      let { filtered: _, hadAlias: w } = filterClaudeAliasLines(o);
       if (w)
-        (await lFt(p, _),
+        (await writeFileLines(p, _),
           e.push({
             message: `Removed claude alias from ${p}. Run: unalias claude`,
             userActionRequired: !0,
             type: "alias",
           }),
-          n(`Cleaned up claude alias from ${d} config`));
+          logForDebugging(`Cleaned up claude alias from ${d} config`));
     } catch (o) {
       ((r = !0),
-        n(`Failed to clean up claude alias from ${p}: ${o}`, {
+        logForDebugging(`Failed to clean up claude alias from ${p}: ${o}`, {
           level: "error",
         }),
         e.push({
@@ -2276,7 +2276,7 @@ async function xn(e) {
       d = !1;
     async function p(o, _) {
       try {
-        return (await unlink(o), n(`Manually removed ${_}: ${o}`), !0);
+        return (await unlink(o), logForDebugging(`Manually removed ${_}: ${o}`), !0);
       } catch {
         return !1;
       }
@@ -2293,7 +2293,7 @@ async function xn(e) {
       if (await p(o, "bin symlink")) d = !0;
     }
     if (d) {
-      n(`Successfully removed ${e} manually`);
+      logForDebugging(`Successfully removed ${e} manually`);
       let o = G4().startsWith("win32")
         ? V(r, "node_modules", e)
         : V(r, "lib", "node_modules", e);
@@ -2304,7 +2304,7 @@ async function xn(e) {
     } else return { success: !1 };
   } catch (t) {
     return (
-      n(`Manual removal failed: ${t}`, { level: "error" }),
+      logForDebugging(`Manual removal failed: ${t}`, { level: "error" }),
       { success: !1, error: `Manual removal failed: ${t}` }
     );
   }
@@ -2315,13 +2315,13 @@ async function ft(e) {
     useToolMemoryCgroup: !1,
   });
   if (t === 0)
-    return (n(`Removed global npm installation of ${e}`), { success: !0 });
+    return (logForDebugging(`Removed global npm installation of ${e}`), { success: !0 });
   else if (r && !r.includes("npm ERR! code E404")) {
     if (r.includes("npm error code ENOTEMPTY")) {
-      (n(`Failed to uninstall global npm package ${e}: ${r}`, {
+      (logForDebugging(`Failed to uninstall global npm package ${e}: ${r}`, {
         level: "error",
       }),
-        n("Attempting manual removal due to ENOTEMPTY error"));
+        logForDebugging("Attempting manual removal due to ENOTEMPTY error"));
       let d = await xn(e);
       if (d.success) return { success: !0, warning: d.warning };
       else if (d.error)
@@ -2331,7 +2331,7 @@ async function ft(e) {
         };
     }
     return (
-      n(`Failed to uninstall global npm package ${e}: ${r}`, {
+      logForDebugging(`Failed to uninstall global npm package ${e}: ${r}`, {
         level: "error",
       }),
       {
@@ -2403,11 +2403,11 @@ async function van() {
   try {
     (await ke(_, { recursive: !0 }),
       r++,
-      n(`Removed local installation at ${_}`));
+      logForDebugging(`Removed local installation at ${_}`));
   } catch (w) {
     if (!W(w))
       (e.push(`Failed to remove ${_}: ${w}`),
-        n(`Failed to remove local installation: ${w}`, { level: "error" }),
+        logForDebugging(`Failed to remove local installation: ${w}`, { level: "error" }),
         (p = !0));
   }
   if (e.length === 0) logFeatureOk("native_cleanup_npm");

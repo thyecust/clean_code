@@ -11,7 +11,7 @@ import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js"
 import { fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../共享小工具-未细化/storage-v5-context.js";
-import { o, t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { getAccountSettings, markGroveNoticeViewed, updateGroveSettings, getGroveConfig, isGroveNoticeDue } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
@@ -40,38 +40,38 @@ function Q() {
   let y = _(9),
     le;
   if (y[0] === MEMO_CACHE_SENTINEL)
-    ((le = r(t, {
+    ((le = r(Text, {
       children: [
         "An update to our Consumer Terms and Privacy Policy will take effect on",
         " ",
-        e(t, { bold: !0, children: "October 8, 2025" }),
+        e(Text, { bold: !0, children: "October 8, 2025" }),
         ". You can accept the updated terms today.",
       ],
     })),
       (y[0] = le));
   else le = y[0];
   let pe;
-  if (y[1] === MEMO_CACHE_SENTINEL) ((pe = e(t, { children: "What's changing?" })), (y[1] = pe));
+  if (y[1] === MEMO_CACHE_SENTINEL) ((pe = e(Text, { children: "What's changing?" })), (y[1] = pe));
   else pe = y[1];
   let me, fe;
   if (y[2] === MEMO_CACHE_SENTINEL)
-    ((me = e(t, { children: "\xB7 " })),
-      (fe = e(t, { bold: !0, children: "Help improve our AI models " })),
+    ((me = e(Text, { children: "\xB7 " })),
+      (fe = e(Text, { bold: !0, children: "Help improve our AI models " })),
       (y[2] = me),
       (y[3] = fe));
   else ((me = y[2]), (fe = y[3]));
   let ge;
   if (y[4] === MEMO_CACHE_SENTINEL)
-    ((ge = e(o, {
+    ((ge = e(Box, {
       paddingLeft: 1,
-      children: r(t, {
+      children: r(Text, {
         children: [
           me,
           fe,
-          r(t, {
+          r(Text, {
             children: [
               "\u2014 Allow the use of your chats and coding sessions to train and improve Anthropic AI models. Change anytime in your Privacy Settings (",
-              e(ct, {
+              e(Link, {
                 url: "https://claude.ai/settings/data-privacy-controls",
               }),
               ").",
@@ -84,18 +84,18 @@ function Q() {
   else ge = y[4];
   let ye;
   if (y[5] === MEMO_CACHE_SENTINEL)
-    ((ye = r(o, {
+    ((ye = r(Box, {
       flexDirection: "column",
       children: [
         pe,
         ge,
-        e(o, {
+        e(Box, {
           paddingLeft: 1,
-          children: r(t, {
+          children: r(Text, {
             children: [
-              e(t, { children: "\xB7 " }),
-              e(t, { bold: !0, children: "Updates to data retention " }),
-              e(t, {
+              e(Text, { children: "\xB7 " }),
+              e(Text, { bold: !0, children: "Updates to data retention " }),
+              e(Text, {
                 children:
                   "\u2014 To help us improve our AI models and safety protections, we're extending data retention to 5 years.",
               }),
@@ -108,14 +108,14 @@ function Q() {
   else ye = y[5];
   let he;
   if (y[6] === MEMO_CACHE_SENTINEL)
-    ((he = e(ct, {
+    ((he = e(Link, {
       url: "https://www.anthropic.com/news/updates-to-our-consumer-terms",
     })),
       (y[6] = he));
   else he = y[6];
   let we;
   if (y[7] === MEMO_CACHE_SENTINEL)
-    ((we = e(ct, { url: "https://anthropic.com/legal/terms" })), (y[7] = we));
+    ((we = e(Link, { url: "https://anthropic.com/legal/terms" })), (y[7] = we));
   else we = y[7];
   let be;
   if (y[8] === MEMO_CACHE_SENTINEL)
@@ -123,14 +123,14 @@ function Q() {
       children: [
         le,
         ye,
-        r(t, {
+        r(Text, {
           children: [
             "Learn more (",
             he,
             ") or read the updated Consumer Terms (",
             we,
             ") and Privacy Policy (",
-            e(ct, { url: "https://anthropic.com/legal/privacy" }),
+            e(Link, { url: "https://anthropic.com/legal/privacy" }),
             ")",
           ],
         }),
@@ -144,42 +144,42 @@ function X() {
   let A = _(7),
     De;
   if (A[0] === MEMO_CACHE_SENTINEL)
-    ((De = e(t, {
+    ((De = e(Text, {
       children: "We've updated our Consumer Terms and Privacy Policy.",
     })),
       (A[0] = De));
   else De = A[0];
   let Ae;
-  if (A[1] === MEMO_CACHE_SENTINEL) ((Ae = e(t, { children: "What's changing?" })), (A[1] = Ae));
+  if (A[1] === MEMO_CACHE_SENTINEL) ((Ae = e(Text, { children: "What's changing?" })), (A[1] = Ae));
   else Ae = A[1];
   let ke;
   if (A[2] === MEMO_CACHE_SENTINEL)
-    ((ke = r(o, {
+    ((ke = r(Box, {
       flexDirection: "column",
       children: [
-        e(t, { bold: !0, children: "Help improve our AI models" }),
-        e(t, {
+        e(Text, { bold: !0, children: "Help improve our AI models" }),
+        e(Text, {
           children:
             "Allow the use of your chats and coding sessions to train and improve Anthropic AI models. You can change this anytime in Privacy Settings",
         }),
-        e(ct, { url: "https://claude.ai/settings/data-privacy-controls" }),
+        e(Link, { url: "https://claude.ai/settings/data-privacy-controls" }),
       ],
     })),
       (A[2] = ke));
   else ke = A[2];
   let xe;
   if (A[3] === MEMO_CACHE_SENTINEL)
-    ((xe = r(o, {
+    ((xe = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
         Ae,
         ke,
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           children: [
-            e(t, { bold: !0, children: "How this affects data retention" }),
-            e(t, {
+            e(Text, { bold: !0, children: "How this affects data retention" }),
+            e(Text, {
               children:
                 "Turning ON the improve Claude setting extends data retention from 30 days to 5 years. Turning it OFF keeps the default 30-day data retention. Delete data anytime.",
             }),
@@ -191,14 +191,14 @@ function X() {
   else xe = A[3];
   let Ce;
   if (A[4] === MEMO_CACHE_SENTINEL)
-    ((Ce = e(ct, {
+    ((Ce = e(Link, {
       url: "https://www.anthropic.com/news/updates-to-our-consumer-terms",
     })),
       (A[4] = Ce));
   else Ce = A[4];
   let Pe;
   if (A[5] === MEMO_CACHE_SENTINEL)
-    ((Pe = e(ct, { url: "https://anthropic.com/legal/terms" })), (A[5] = Pe));
+    ((Pe = e(Link, { url: "https://anthropic.com/legal/terms" })), (A[5] = Pe));
   else Pe = A[5];
   let Re;
   if (A[6] === MEMO_CACHE_SENTINEL)
@@ -206,14 +206,14 @@ function X() {
       children: [
         De,
         xe,
-        r(t, {
+        r(Text, {
           children: [
             "Learn more (",
             Ce,
             ") or read the updated Consumer Terms (",
             Pe,
             ") and Privacy Policy (",
-            e(ct, { url: "https://anthropic.com/legal/privacy" }),
+            e(Link, { url: "https://anthropic.com/legal/privacy" }),
             ")",
           ],
         }),
@@ -350,7 +350,7 @@ function GroveDialog(so) {
   else He = n[15];
   let Y;
   if (n[16] !== a?.notice_is_grace_period)
-    ((Y = e(o, {
+    ((Y = e(Box, {
       flexDirection: "column",
       gap: 1,
       flexGrow: 1,
@@ -361,28 +361,28 @@ function GroveDialog(so) {
   else Y = n[17];
   let Se;
   if (n[18] === MEMO_CACHE_SENTINEL)
-    ((Se = e(o, {
+    ((Se = e(Box, {
       flexShrink: 0,
-      children: e(t, { color: "professionalBlue", children: ce }),
+      children: e(Text, { color: "professionalBlue", children: ce }),
     })),
       (n[18] = Se));
   else Se = n[18];
   let U;
   if (n[19] !== Y)
-    ((U = r(o, { flexDirection: "row", children: [Y, Se] })),
+    ((U = r(Box, { flexDirection: "row", children: [Y, Se] })),
       (n[19] = Y),
       (n[20] = U));
   else U = n[20];
   let Ye;
   if (n[21] === MEMO_CACHE_SENTINEL)
-    ((Ye = r(o, {
+    ((Ye = r(Box, {
       flexDirection: "column",
       children: [
-        e(t, {
+        e(Text, {
           bold: !0,
           children: "Please select how you'd like to continue",
         }),
-        e(t, {
+        e(Text, {
           children: "Your choice takes effect immediately upon confirmation.",
         }),
       ],
@@ -406,7 +406,7 @@ function GroveDialog(so) {
   else j = n[28];
   let q;
   if (n[29] !== h || n[30] !== V || n[31] !== j)
-    ((q = r(o, {
+    ((q = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [Ye, e(ve, { options: V, onChange: j, onCancel: h })],
@@ -461,13 +461,13 @@ function PrivacySettingsDialog(_o) {
   let O = Ve,
     qe;
   if (l[5] === MEMO_CACHE_SENTINEL)
-    ((qe = e(t, { color: "error", children: "false" })), (l[5] = qe));
+    ((qe = e(Text, { color: "error", children: "false" })), (l[5] = qe));
   else qe = l[5];
   let G = qe;
   if (x) {
     let f;
     if (l[6] === MEMO_CACHE_SENTINEL)
-      ((f = e(t, {
+      ((f = e(Text, {
         color: "error",
         children: "false (for emails with your domain)",
       })),
@@ -477,7 +477,7 @@ function PrivacySettingsDialog(_o) {
   } else if (z) {
     let f;
     if (l[7] === MEMO_CACHE_SENTINEL)
-      ((f = e(t, { color: "success", children: "true" })), (l[7] = f));
+      ((f = e(Text, { color: "success", children: "true" })), (l[7] = f));
     else f = l[7];
     G = f;
   }
@@ -496,26 +496,26 @@ function PrivacySettingsDialog(_o) {
   else f = l[9];
   let ze;
   if (l[10] === MEMO_CACHE_SENTINEL)
-    ((ze = r(t, {
+    ((ze = r(Text, {
       children: [
         "Review and manage your privacy settings at",
         " ",
-        e(ct, { url: "https://claude.ai/settings/data-privacy-controls" }),
+        e(Link, { url: "https://claude.ai/settings/data-privacy-controls" }),
       ],
     })),
       (l[10] = ze));
   else ze = l[10];
   let Je;
   if (l[11] === MEMO_CACHE_SENTINEL)
-    ((Je = e(o, {
+    ((Je = e(Box, {
       width: 44,
-      children: e(t, { bold: !0, children: "Help improve our AI models" }),
+      children: e(Text, { bold: !0, children: "Help improve our AI models" }),
     })),
       (l[11] = Je));
   else Je = l[11];
   let J;
   if (l[12] !== G)
-    ((J = r(o, { children: [Je, e(o, { children: G })] })),
+    ((J = r(Box, { children: [Je, e(Box, { children: G })] })),
       (l[12] = G),
       (l[13] = J));
   else J = l[13];

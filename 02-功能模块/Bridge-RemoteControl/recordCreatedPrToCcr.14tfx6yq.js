@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -63,14 +63,14 @@ async function recordCreatedPrToCcr(r, e) {
 }
 function u(r) {
   (logFeatureOk("ccr_record_created_pr"),
-    n(`recordCreatedPrToCcr: RecordCreatedPR -> ${r}`));
+    logForDebugging(`recordCreatedPrToCcr: RecordCreatedPR -> ${r}`));
 }
 function _(r) {
-  (logFeatureSad("ccr_record_created_pr", r), n(`recordCreatedPrToCcr: skipped (${r})`));
+  (logFeatureSad("ccr_record_created_pr", r), logForDebugging(`recordCreatedPrToCcr: skipped (${r})`));
 }
 function R(r, e) {
   if (e === 404 || e === 501) logFeatureSad("ccr_record_created_pr", "not_deployed");
   else logFeatureBad("ccr_record_created_pr", `${r}${e ? `_${e}` : ""}`);
-  n(`recordCreatedPrToCcr: RecordCreatedPR failed: ${r}${e ? ` ${e}` : ""}`);
+  logForDebugging(`recordCreatedPrToCcr: RecordCreatedPR failed: ${r}${e ? ` ${e}` : ""}`);
 }
 export { recordCreatedPrToCcr };

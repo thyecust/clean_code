@@ -13,11 +13,11 @@ import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { saveGlobalConfig, getGlobalConfig, getCurrentProjectConfig, saveCurrentProjectConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { hasUnsupportedDisplayCharacters } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { isReplDiffSidebarEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text, Link } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -107,7 +107,7 @@ import { homedir } from "os";
 import { isAbsolute as H, sep as U } from "path";
 import { resolve, sep as k, win32 as B } from "path";
 function C(o) {
-  return Ame(M(o));
+  return hasUnsupportedDisplayCharacters(M(o));
 }
 function M(o) {
   let n = sn(),
@@ -135,7 +135,7 @@ function TruncatedFilePath(Ue) {
   if (m(d) || (typeof f === "string" && m(f))) {
     let c;
     if (h[0] === MEMO_CACHE_SENTINEL)
-      ((c = e(t, {
+      ((c = e(Text, {
         dimColor: !0,
         children: "Path hidden (unsupported characters)",
       })),
@@ -157,7 +157,7 @@ function TruncatedFilePath(Ue) {
   let x = v,
     E;
   if (h[6] !== A || h[7] !== x)
-    ((E = x === null ? e(t, { children: A }) : e(ct, { url: x, children: A })),
+    ((E = x === null ? e(Text, { children: A }) : e(Link, { url: x, children: A })),
       (h[6] = A),
       (h[7] = x),
       (h[8] = E));
@@ -166,7 +166,7 @@ function TruncatedFilePath(Ue) {
 }
 function m(o) {
   let n = L(o);
-  return H(n) ? C(n) : Ame(n);
+  return H(n) ? C(n) : hasUnsupportedDisplayCharacters(n);
 }
 function L(o) {
   if (o === "~") return homedir();

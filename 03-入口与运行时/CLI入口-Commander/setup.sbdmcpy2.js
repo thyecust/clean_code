@@ -16,7 +16,7 @@ import { identity as _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第�
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { registerCleanup, changeWorkingDirectory, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -62,14 +62,14 @@ import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../0
 import { prefetchTmuxOptionProbes } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { isAgentSwarmsEnabled, captureTeammateModeSnapshotIfEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
-import { hw, NYn } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { keybindingStore, warmKeybindingsFromBackend } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { publishInboundAvailability } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
 import { o$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import "../../02-功能模块/MCP客户端/error-log-sink.js";
 import { initSinks } from "../../01-核心基础设施/共享小工具-未细化/init-sinks.js";
 import { loadCustomThemes } from "../../02-功能模块/状态栏-主题/custom-themes.js";
-import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
+import "../../02-功能模块/自动更新-安装/install-diagnostics.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { checkAndRestoreTerminalBackup } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
@@ -82,7 +82,7 @@ function X(e, o) {
       if (r || isShuttingDown() || Nn() || !isCrossSessionMessagingEnabled()) return;
       return ((r = !0), c(), se(e, o));
     });
-  return (Et(async () => c()), c);
+  return (registerCleanup(async () => c()), c);
 }
 async function se(e, o) {
   let r = await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js"),
@@ -91,7 +91,7 @@ async function se(e, o) {
     c = await r.startCrossSessionInbox(e, o);
   } catch (k) {
     if (k instanceof ud)
-      n(`[uds-messaging] Late bind refused: ${k.message}`, { level: "warn" });
+      logForDebugging(`[uds-messaging] Late bind refused: ${k.message}`, { level: "warn" });
     else logError(k);
     logFeatureBad(
       "agents_cross_session_inbox",
@@ -108,13 +108,13 @@ async function se(e, o) {
   }
   if (isExiting()) {
     (await c(),
-      n(
+      logForDebugging(
         "[uds-messaging] Late bind landed during shutdown \u2014 torn down, not published",
       ),
       logFeatureSad("agents_cross_session_inbox", "shutdown_discarded"));
     return;
   }
-  (n(
+  (logForDebugging(
     "[uds-messaging] Late bind: gate enabled by a GrowthBook refresh after startup",
   ),
     publishInboundAvailability());
@@ -143,7 +143,7 @@ async function J() {
   let e = le();
   if (!e) return "ffi_unavailable";
   if (e(0) !== 0)
-    return (n("[bg-ctty] login_tty(0) failed", { level: "warn" }), "failed");
+    return (logForDebugging("[bg-ctty] login_tty(0) failed", { level: "warn" }), "failed");
   return "acquired";
 }
 function ae() {
@@ -157,7 +157,7 @@ function le() {
     e = importMetaRequire("bun:ffi");
   } catch (o) {
     return (
-      n(
+      logForDebugging(
         `[bg-ctty] bun:ffi unavailable: ${o instanceof Error ? o.message : String(o)}`,
       ),
       null
@@ -168,7 +168,7 @@ function le() {
       let r = e.dlopen(o, { login_tty: { args: ["i32"], returns: "i32" } });
       return (c) => r.symbols.login_tty(c);
     } catch {}
-  return (n("[bg-ctty] no libc candidate exports login_tty"), null);
+  return (logForDebugging("[bg-ctty] no libc candidate exports login_tty"), null);
 }
 import { copyFile, stat as me } from "fs/promises";
 import { homedir } from "os";
@@ -205,7 +205,7 @@ async function V(e) {
     return (await copyFile(r, fe()), await R(e), { status: "restored" });
   } catch (c) {
     return (
-      n(`Failed to restore iTerm2 settings with: ${c}`, { level: "error" }),
+      logForDebugging(`Failed to restore iTerm2 settings with: ${c}`, { level: "error" }),
       await R(e),
       { status: "failed", backupPath: r }
     );
@@ -233,7 +233,7 @@ async function oe(e, o) {
   let S = await evaluateWorktreePin(e, [], resolveGitRootCandidates(e, m));
   if (!S.ok)
     return (
-      n(`[worktree] bg boot: not adopting ${e} \u2014 ${S.message}`, {
+      logForDebugging(`[worktree] bg boot: not adopting ${e} \u2014 ${S.message}`, {
         level: "warn",
       }),
       null
@@ -245,7 +245,7 @@ async function oe(e, o) {
       (k = await lockClaudeWorktree(e, m, _, "session")),
       k && !(await te(e, m)))
     )
-      n(
+      logForDebugging(
         `[worktree] bg boot: adopted ${e} but no worktree lock names this process`,
         { level: "warn" },
       );
@@ -315,12 +315,12 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
           await (
             await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js")
           ).validateExplicitMessagingSocketPath(w);
-        (n(
+        (logForDebugging(
           "[uds-messaging] Skipped: cross-session messaging gate off (will late-bind if a GrowthBook refresh enables it)",
         ),
           X(w, s));
-      } else n("[uds-messaging] Skipped: cross-session messaging gate off");
-    else if (Nn()) n("[uds-messaging] Skipped: remote thin client");
+      } else logForDebugging("[uds-messaging] Skipped: cross-session messaging gate off");
+    else if (Nn()) logForDebugging("[uds-messaging] Skipped: remote thin client");
     else {
       let t = performance.now(),
         d = await import("../../02-功能模块/Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js"),
@@ -339,7 +339,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
         logEvent("tengu_uds_startup_bind", { durationMs: Math.round(b), bound: !!v }));
     }
   if (process.env.CLAUDE_BG_BACKEND === "daemon") {
-    let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js");
+    let { startRendezvousServer: t } = await import("../../02-功能模块/后台任务-Shell管理/bg-rendezvous-server.js");
     t(s);
   }
   await captureTeammateModeSnapshotIfEnabled();
@@ -424,7 +424,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
 `),
         ),
           process.exit(1));
-      if (isLinkedWorktree(getCwd())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), setSessionCwd(C));
+      if (isLinkedWorktree(getCwd())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), changeWorkingDirectory(C), setSessionCwd(C));
       b = _ ? generateTmuxSessionName(C, worktreeBranchName(v)) : void 0;
     } else b = _ ? generateTmuxSessionName(getCwd(), worktreeBranchName(v)) : void 0;
     let I;
@@ -460,7 +460,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
         );
     }
     try {
-      Yu(I.worktreePath);
+      changeWorkingDirectory(I.worktreePath);
     } catch (E) {
       let x = Jr(E);
       if (!x) throw E;
@@ -502,7 +502,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
           : null;
       await oe(e, v);
     } catch (d) {
-      n(`[worktree] bg adopt-time reclaim skipped: ${l(d)}`);
+      logForDebugging(`[worktree] bg adopt-time reclaim skipped: ${l(d)}`);
     }
     recordStartupPhase("setup_bg_worktree_adopt_ms", performance.now() - t, t);
   }
@@ -520,7 +520,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
     (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) => {
       if (!Y)
         (t.loadPluginHooks(s, T).catch((d) => {
-          n(`plugin hooks prefetch: ${l(d)}`);
+          logForDebugging(`plugin hooks prefetch: ${l(d)}`);
         }),
           t.setupPluginHookHotReload(s, T));
     }),
@@ -567,7 +567,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
   profileCheckpoint("setup_after_prefetch");
   {
     let t = performance.now(),
-      d = [loadCustomThemes(s), ...(isHoverRestEnabled() && s !== void 0 ? [NYn(hw, s)] : [])];
+      d = [loadCustomThemes(s), ...(isHoverRestEnabled() && s !== void 0 ? [warmKeybindingsFromBackend(keybindingStore, s)] : [])];
     if (!isSimpleMode()) d.push(o$n(void 0, s));
     (await Promise.all(d),
       recordStartupPhase("setup_release_notes_ms", performance.now() - t, t));
@@ -669,6 +669,6 @@ function maybePrewarmRecallIndex(e) {
         (s) => r.isRecallVisiblePath(s, w),
       );
     }
-  })().catch((o) => n(`recall prewarm skipped: ${l(o)}`));
+  })().catch((o) => logForDebugging(`recall prewarm skipped: ${l(o)}`));
 }
 export { maybePrewarmRecallIndex, setup };

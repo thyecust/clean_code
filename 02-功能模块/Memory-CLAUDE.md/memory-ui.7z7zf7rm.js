@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 227 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir, isSafeMode, getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { repeatString, pluralize, truncateToCodePoints } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -27,8 +27,8 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { onGrowthBookRefresh, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, getGlobalConfig, getCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { getRemoteTransport, hasRemoteControlChannel, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { formatPathForDisplay } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
@@ -87,7 +87,7 @@ import {
   formatRecalledMemoryBlock,
   getAgentMemoryDir,
 } from "./Memory-CLAUDE.md.vx19drc8.js";
-import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { sanitizePlainText } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -117,7 +117,7 @@ F();
 import { writeFile } from "fs/promises";
 F();
 function qo(Zn, er) {
-  return e(t, { wrap: "truncate-end", children: sanitizeForDisplay(Zn) || " " }, er);
+  return e(Text, { wrap: "truncate-end", children: sanitizeForDisplay(Zn) || " " }, er);
 }
 var Wo = 65536,
   Go = createLazyValue(() =>
@@ -311,7 +311,7 @@ function _t(zn) {
   else je = X[21];
   let $e;
   if (X[22] === MEMO_CACHE_SENTINEL)
-    (($e = e(t, {
+    (($e = e(Text, {
       dimColor: !0,
       wrap: "wrap-trim",
       children:
@@ -323,13 +323,13 @@ function _t(zn) {
   if (X[23] !== ge)
     ((Ee =
       ge === "sentFromHere" &&
-      e(t, { dimColor: !0, wrap: "wrap-trim", children: ot("sentFromHere") })),
+      e(Text, { dimColor: !0, wrap: "wrap-trim", children: ot("sentFromHere") })),
       (X[23] = ge),
       (X[24] = Ee));
   else Ee = X[24];
   let St;
   if (X[25] !== Ee)
-    ((St = r(o, { flexDirection: "column", children: [$e, Ee] })),
+    ((St = r(Box, { flexDirection: "column", children: [$e, Ee] })),
       (X[25] = Ee),
       (X[26] = St));
   else St = X[26];
@@ -357,7 +357,7 @@ function Rt(Vn) {
   if (te.kind === "unreadable") {
     let re;
     if (We[0] !== te.reason)
-      ((re = r(t, {
+      ((re = r(Text, {
         color: "error",
         children: [
           "Couldn't list the cloud session's memory files: ",
@@ -436,7 +436,7 @@ function Ot(Xn) {
   if (K.kind === "userScope") {
     let se;
     if (tt[0] !== K.hint)
-      ((se = e(t, { dimColor: !0, wrap: "wrap-trim", children: K.hint })),
+      ((se = e(Text, { dimColor: !0, wrap: "wrap-trim", children: K.hint })),
         (tt[0] = K.hint),
         (tt[1] = se));
     else se = tt[1];
@@ -445,7 +445,7 @@ function Ot(Xn) {
   if (K.kind === "unreadable") {
     let se;
     if (tt[2] !== K.reason)
-      ((se = r(t, {
+      ((se = r(Text, {
         color: "error",
         children: ["Couldn't read it: ", K.reason],
       })),
@@ -460,7 +460,7 @@ function Ot(Xn) {
     let Qn = Math.max(5, Qt - 12);
     let Uo = No.slice(0, Qn);
     Fe = No.length - Uo.length;
-    Mt = o;
+    Mt = Box;
     se = "column";
     Ct = Uo.map(qo);
     ((tt[4] = K.contents),
@@ -474,7 +474,7 @@ function Ot(Xn) {
   if (tt[10] !== Fe || tt[11] !== K.truncated)
     ((vt =
       (Fe > 0 || K.truncated) &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           "\u2026 ",
@@ -617,7 +617,7 @@ function Zo(w) {
   return { kind: "picked", name: M === void 0 ? null : en(M.name) };
 }
 function en(w) {
-  let b = t5(w)
+  let b = sanitizePlainText(w)
     .replaceAll('"', "'")
     .replaceAll("<", "\u2039")
     .replaceAll(">", "\u203A")
@@ -950,7 +950,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     ],
     Et = new Map(),
     So = wo.map((S) => {
-      let H = Ao(S.path),
+      let H = formatPathForDisplay(S.path),
         me = S.exists ? "" : " (new)",
         pe = S.parent ? (Et.get(S.parent) ?? 0) + 1 : 0;
       Et.set(S.path, pe);
@@ -1154,27 +1154,27 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       },
       { context: "Select", isActive: Je },
     ),
-    r(o, {
+    r(Box, {
       flexDirection: "column",
       width: "100%",
       children: [
-        r(o, {
+        r(Box, {
           flexDirection: "column",
           marginBottom: 1,
           children: [
             e(nl, {
               isFocused: oe === 0,
-              children: r(t, {
+              children: r(Text, {
                 children: [
                   "Auto-memory:",
                   " ",
                   Oo
-                    ? e(t, {
+                    ? e(Text, {
                         dimColor: !0,
                         children: "unavailable for current model",
                       })
                     : isSafeMode()
-                      ? r(t, {
+                      ? r(Text, {
                           dimColor: !0,
                           children: [
                             "off in safe mode \u2014 ",
@@ -1192,7 +1192,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
               e(nl, {
                 isFocused: oe === 1,
                 styled: !1,
-                children: e(t, {
+                children: e(Text, {
                   color: oe === 1 ? "suggestion" : void 0,
                   children: Oe
                     ? r(N, {
@@ -1200,10 +1200,10 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                           "Auto-dream: ",
                           Tt ? "on" : "off",
                           Nt &&
-                            r(t, { dimColor: !0, children: [" \xB7 ", Nt] }),
+                            r(Text, { dimColor: !0, children: [" \xB7 ", Nt] }),
                         ],
                       })
-                    : e(t, {
+                    : e(Text, {
                         dimColor: !0,
                         children: "Auto-dream: off while auto-memory is off",
                       }),
@@ -1213,12 +1213,12 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
               e(nl, {
                 isFocused: oe === Qe,
                 styled: !1,
-                children: r(t, {
+                children: r(Text, {
                   color: oe === Qe ? "suggestion" : void 0,
                   children: [
                     "Write to synced project memory: ",
                     Ue ? "on" : "off",
-                    r(t, {
+                    r(Text, {
                       dimColor: !0,
                       children: [
                         " ",
@@ -1237,11 +1237,11 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
               e(nl, {
                 isFocused: !1,
                 styled: !1,
-                children: r(t, {
+                children: r(Text, {
                   children: [
                     "Synced project memory: ",
                     dt.label,
-                    r(t, { dimColor: !0, children: [" \xB7 ", dt.note] }),
+                    r(Text, { dimColor: !0, children: [" \xB7 ", dt.note] }),
                   ],
                 }),
               }),
@@ -1407,7 +1407,7 @@ function it(w) {
 function bn({ session: w, onDone: b }) {
   let M = async (R) => {
       try {
-        if (R.includes(getClaudeConfigDir())) await ae().mkdir(getClaudeConfigDir());
+        if (R.includes(getClaudeConfigDir())) await getFsSurface().mkdir(getClaudeConfigDir());
         try {
           await writeFile(R, "", { encoding: "utf8", flag: "wx" });
         } catch (I) {
@@ -1440,7 +1440,7 @@ ${V}`,
           { display: "system" },
         );
       } catch (P) {
-        (n(`Failed to open memory file ${R}: ${P}`, { level: "error" }),
+        (logForDebugging(`Failed to open memory file ${R}: ${P}`, { level: "error" }),
           b(`Couldn't open ${it(R)}: ${l(P)}`, { display: "system" }));
       }
     },
@@ -1451,16 +1451,16 @@ ${V}`,
     title: "Memory",
     onCancel: k,
     color: "remember",
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
         isSafeMode() &&
-          r(o, {
+          r(Box, {
             flexDirection: "column",
             children: [
-              r(t, { color: "suggestion", children: [figures.info, " Safe mode"] }),
-              r(t, {
+              r(Text, { color: "suggestion", children: [figures.info, " Safe mode"] }),
+              r(Text, {
                 dimColor: !0,
                 children: [
                   "CLAUDE.md files aren't loaded into this session. You can still edit them \u2014 changes take effect after you",

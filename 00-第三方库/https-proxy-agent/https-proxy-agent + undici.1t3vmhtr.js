@@ -10,7 +10,7 @@
 import { j, B, ke } from "../lodash/lodash.2x3q7cfh.js";
 import { Ie, po, rs } from "../lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../lodash/lodash.0vqzb8ad.js";
-import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hasNodeOption } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Mnt, default as at } from "../axios/axios.t0fczzmz.js";
@@ -1384,12 +1384,12 @@ var loadExtraCACerts = serializeAsyncCalls(async () => {
     return !1;
   }
   try {
-    let r = await ae().readFile(t, { encoding: "utf8" });
+    let r = await getFsSurface().readFile(t, { encoding: "utf8" });
     if (e.extraCACerts?.path === t && e.extraCACerts.content === r) return !1;
     e.extraCACerts = { path: t, content: r };
   } catch (r) {
     if (
-      (n(`CA certs: Failed to read NODE_EXTRA_CA_CERTS file (${t}): ${r}`, {
+      (logForDebugging(`CA certs: Failed to read NODE_EXTRA_CA_CERTS file (${t}): ${r}`, {
         level: "error",
       }),
       N("read_failed"))
@@ -1410,7 +1410,7 @@ function Pt() {
         if (!t.includes(o)) t.push(o);
       } else if (o) {
         if (
-          (n(
+          (logForDebugging(
             `CA certs: unrecognized CLAUDE_CODE_CERT_STORE source '${o}', ignoring`,
             { level: "warn" },
           ),
@@ -1442,7 +1442,7 @@ function vt(e) {
     });
   if (o > 0) {
     if (
-      (n(`CA certs: Dropped ${o} expired certificate(s) from system store`),
+      (logForDebugging(`CA certs: Dropped ${o} expired certificate(s) from system store`),
       N("expired_dropped"))
     )
       logFeatureSad("ca_certs_load", "expired_dropped", { dropped_count: o });
@@ -1457,12 +1457,12 @@ function bt(e) {
     r = a.NODE_EXTRA_CA_CERTS,
     o = t.includes("bundled"),
     s = t.includes("system");
-  n(`CA certs: stores=${t.join(",")}, extraCertsPath=${r}`);
+  logForDebugging(`CA certs: stores=${t.join(",")}, extraCertsPath=${r}`);
   let i = importMetaRequire("tls"),
     c = i.getCACertificates;
   if (!o && s && !c) {
     if (
-      (n(
+      (logForDebugging(
         "CA certs: stores=system but system CA API unavailable, deferring to runtime",
       ),
       N("system_api_unavailable"))
@@ -1473,7 +1473,7 @@ function bt(e) {
   let u = [];
   if (o)
     (u.push(...i.rootCertificates),
-      n(
+      logForDebugging(
         `CA certs: Loaded ${i.rootCertificates.length} bundled root certificates`,
       ));
   if (s)
@@ -1482,15 +1482,15 @@ function bt(e) {
       if (d && d.length > 0) {
         let p = vt(d);
         (u.push(...p),
-          n(`CA certs: Loaded ${p.length} system CA certificates`));
+          logForDebugging(`CA certs: Loaded ${p.length} system CA certificates`));
       } else if (
-        (n(`CA certs: system store ${c ? "returned empty" : "unavailable"}`),
+        (logForDebugging(`CA certs: system store ${c ? "returned empty" : "unavailable"}`),
         !o)
       )
         u.push(...i.rootCertificates);
     } catch (d) {
       if (
-        (n(`CA certs: Failed to load system CA certificates: ${d}`, {
+        (logForDebugging(`CA certs: Failed to load system CA certificates: ${d}`, {
           level: "error",
         }),
         N("system_store_failed"))
@@ -1501,11 +1501,11 @@ function bt(e) {
   if (r) {
     if (e.extraCACerts?.path !== r)
       try {
-        let d = ae().readFileSync(r, { encoding: "utf8" });
+        let d = getFsSurface().readFileSync(r, { encoding: "utf8" });
         e.extraCACerts = { path: r, content: d };
       } catch (d) {
         if (
-          (n(`CA certs: Failed to read NODE_EXTRA_CA_CERTS file (${r}): ${d}`, {
+          (logForDebugging(`CA certs: Failed to read NODE_EXTRA_CA_CERTS file (${r}): ${d}`, {
             level: "error",
           }),
           N("read_failed"))
@@ -1514,7 +1514,7 @@ function bt(e) {
       }
     if (e.extraCACerts?.path === r)
       (u.push(e.extraCACerts.content),
-        n(
+        logForDebugging(
           `CA certs: Appended extra certificates from NODE_EXTRA_CA_CERTS (${r})`,
         ));
   }
@@ -1532,7 +1532,7 @@ function clearCACertsCache() {
   ne(re());
 }
 function ne(e) {
-  (e.certificates.cache.clear?.(), n("Cleared CA certificates cache"));
+  (e.certificates.cache.clear?.(), logForDebugging("Cleared CA certificates cache"));
 }
 import { createPrivateKey, X509Certificate as Lt } from "crypto";
 import { Agent as Rt } from "https";
@@ -1583,7 +1583,7 @@ var Se = 1048576;
 function Le(e, t) {
   if (!e.isFile() || e.size > Se)
     return (
-      n(`mTLS: Ignoring ${t} \u2014 not a regular file or over ${Se} bytes`, {
+      logForDebugging(`mTLS: Ignoring ${t} \u2014 not a regular file or over ${Se} bytes`, {
         level: "error",
       }),
       !1
@@ -1592,34 +1592,34 @@ function Le(e, t) {
 }
 function Pe(e, t) {
   try {
-    if (!Le(ae().statSync(e), t)) return null;
-    let r = ae().readFileSync(e, { encoding: "utf8" });
+    if (!Le(getFsSurface().statSync(e), t)) return null;
+    let r = getFsSurface().readFileSync(e, { encoding: "utf8" });
     if (!we(r))
       return (
-        n(`mTLS: Ignoring incomplete ${t} \u2014 no PEM block`, {
+        logForDebugging(`mTLS: Ignoring incomplete ${t} \u2014 no PEM block`, {
           level: "error",
         }),
         null
       );
-    return (n(`mTLS: Loaded ${t}`), { path: e, content: r });
+    return (logForDebugging(`mTLS: Loaded ${t}`), { path: e, content: r });
   } catch (r) {
-    return (n(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
+    return (logForDebugging(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
   }
 }
 async function ve(e, t) {
   try {
-    if (!Le(await ae().stat(e), t)) return null;
-    let r = await ae().readFile(e, { encoding: "utf8" });
+    if (!Le(await getFsSurface().stat(e), t)) return null;
+    let r = await getFsSurface().readFile(e, { encoding: "utf8" });
     if (!we(r))
       return (
-        n(`mTLS: Ignoring incomplete ${t} \u2014 no PEM block`, {
+        logForDebugging(`mTLS: Ignoring incomplete ${t} \u2014 no PEM block`, {
           level: "error",
         }),
         null
       );
-    return (n(`mTLS: Loaded ${t}`), { path: e, content: r });
+    return (logForDebugging(`mTLS: Loaded ${t}`), { path: e, content: r });
   } catch (r) {
-    return (n(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
+    return (logForDebugging(`mTLS: Failed to load ${t}: ${r}`, { level: "error" }), null);
   }
 }
 var loadMTLSClientMaterial = serializeAsyncCalls(async () => {
@@ -1633,7 +1633,7 @@ var loadMTLSClientMaterial = serializeAsyncCalls(async () => {
     i = Boolean((t && !o) || (r && !s)),
     c = Boolean(!i && o && s && Ht(o.content, s.content));
   if (c)
-    n(
+    logForDebugging(
       "mTLS: Ignoring mismatched client cert/key pair \u2014 mid-rotation read",
       { level: "error" },
     );
@@ -1673,7 +1673,7 @@ function kt(e) {
     if (e.clientKey?.path === o) t.key = e.clientKey.content;
   }
   let s = a.CLAUDE_CODE_CLIENT_KEY_PASSPHRASE;
-  if (s) ((t.passphrase = s), n("mTLS: Using client key passphrase"));
+  if (s) ((t.passphrase = s), logForDebugging("mTLS: Using client key passphrase"));
   if (Object.keys(t).length === 0) return;
   return t;
 }
@@ -1686,7 +1686,7 @@ function getMTLSAgent() {
   let o;
   if (t || r) {
     let s = { ...t, ...(r && { ca: r }), keepAlive: !0 };
-    (n("mTLS: Creating HTTPS agent with custom certificates"), (o = new Rt(s)));
+    (logForDebugging("mTLS: Creating HTTPS agent with custom certificates"), (o = new Rt(s)));
   }
   return ((e.agentCache = { config: t, ca: r, agent: o }), o);
 }
@@ -1708,12 +1708,12 @@ function clearMTLSCache() {
 function Re(e) {
   (e.config.cache.clear?.(),
     (e.agentCache = null),
-    n("Cleared mTLS configuration cache"));
+    logForDebugging("Cleared mTLS configuration cache"));
 }
 function configureGlobalMTLS() {
   if (!getMTLSConfig()) return;
   if (a.NODE_EXTRA_CA_CERTS)
-    n(
+    logForDebugging(
       "NODE_EXTRA_CA_CERTS detected - Node.js will automatically append to built-in CAs",
     );
 }
@@ -2136,7 +2136,7 @@ async function getProxyAuthFromHelper() {
   let t = D();
   if (_t(t) && !ke() && !t.proxyAuthHelperConfig.trustAccepted())
     return (
-      n(
+      logForDebugging(
         "proxyAuthHelper configured in project/local settings but workspace trust not yet accepted \u2014 skipping",
         { level: "warn" },
       ),
@@ -2297,7 +2297,7 @@ async function getAWSProxyRequestHandler(e) {
   return new Ee.NodeHttpHandler({ httpAgent: o, httpsAgent: o, ...r });
 }
 function clearProxyCache() {
-  (D().agents.cache.clear?.(), n("Cleared proxy agent cache"));
+  (D().agents.cache.clear?.(), logForDebugging("Cleared proxy agent cache"));
 }
 export {
   UQ,

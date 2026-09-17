@@ -10,10 +10,10 @@
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { yo } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
+import { SpinnerGlyph } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
 import { formatBootstrapStepLabel, formatRemoteSessionModeLabel, formatBootstrapStepDuration } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -34,7 +34,7 @@ function RemoteBootstrapProgress() {
     W;
   if (D[0] === MEMO_CACHE_SENTINEL) ((W = () => xe(Date.now())), (D[0] = W));
   else W = D[0];
-  if ((ko(W, 1000), u === null)) {
+  if ((useInterval(W, 1000), u === null)) {
     return null;
   }
   let k = u.queuedCount,
@@ -44,7 +44,7 @@ function RemoteBootstrapProgress() {
   else E = D[2];
   let G;
   if (D[3] !== E)
-    ((G = r(t, { bold: !0, children: [E, "\u2026"] })), (D[3] = E), (D[4] = G));
+    ((G = r(Text, { bold: !0, children: [E, "\u2026"] })), (D[3] = E), (D[4] = G));
   else G = D[4];
   let H;
   if (D[5] !== O || D[6] !== Y || D[7] !== u.sessionMode || D[8] !== u.steps) {
@@ -81,16 +81,16 @@ function RemoteBootstrapProgress() {
   else q = D[15];
   let I;
   if (D[16] !== q)
-    ((I = e(o, {
+    ((I = e(Box, {
       marginTop: 1,
-      children: e(t, { dimColor: !0, children: q }),
+      children: e(Text, { dimColor: !0, children: q }),
     })),
       (D[16] = q),
       (D[17] = I));
   else I = D[17];
   let X;
   if (D[18] !== G || D[19] !== H || D[20] !== I)
-    ((X = r(o, { flexDirection: "column", marginTop: 1, children: [G, H, I] })),
+    ((X = r(Box, { flexDirection: "column", marginTop: 1, children: [G, H, I] })),
       (D[18] = G),
       (D[19] = H),
       (D[20] = I),
@@ -199,16 +199,16 @@ function ChecklistStepRow(be) {
     case "completed": {
       let l;
       if (c[4] === MEMO_CACHE_SENTINEL)
-        ((l = e(t, { color: "success", children: `  ${figures.tick} ` })),
+        ((l = e(Text, { color: "success", children: `  ${figures.tick} ` })),
           (c[4] = l));
       else l = c[4];
       let n;
       if (c[5] !== v)
-        ((n = e(t, { dimColor: !0, children: v })), (c[5] = v), (c[6] = n));
+        ((n = e(Text, { dimColor: !0, children: v })), (c[5] = v), (c[6] = n));
       else n = c[6];
       let f;
       if (c[7] !== y || c[8] !== n)
-        ((f = r(o, { children: [l, r(t, { children: [y, n] })] })),
+        ((f = r(Box, { children: [l, r(Text, { children: [y, n] })] })),
           (c[7] = y),
           (c[8] = n),
           (c[9] = f));
@@ -218,16 +218,16 @@ function ChecklistStepRow(be) {
     case "running": {
       let l;
       if (c[10] === MEMO_CACHE_SENTINEL)
-        ((l = e(o, { width: 4, paddingLeft: 2, children: e(yo, {}) })),
+        ((l = e(Box, { width: 4, paddingLeft: 2, children: e(SpinnerGlyph, {}) })),
           (c[10] = l));
       else l = c[10];
       let n;
       if (c[11] !== v)
-        ((n = e(t, { dimColor: !0, children: v })), (c[11] = v), (c[12] = n));
+        ((n = e(Text, { dimColor: !0, children: v })), (c[11] = v), (c[12] = n));
       else n = c[12];
       let f;
       if (c[13] !== y || c[14] !== n)
-        ((f = r(o, { children: [l, r(t, { children: [y, "\u2026", n] })] })),
+        ((f = r(Box, { children: [l, r(Text, { children: [y, "\u2026", n] })] })),
           (c[13] = y),
           (c[14] = n),
           (c[15] = f));
@@ -237,16 +237,16 @@ function ChecklistStepRow(be) {
         ((h =
           R !== void 0 &&
           R !== "" &&
-          e(o, {
+          e(Box, {
             paddingLeft: 6,
-            children: e(t, { dimColor: !0, children: R }),
+            children: e(Text, { dimColor: !0, children: R }),
           })),
           (c[16] = R),
           (c[17] = h));
       else h = c[17];
       let ne;
       if (c[18] !== f || c[19] !== h)
-        ((ne = r(o, { flexDirection: "column", children: [f, h] })),
+        ((ne = r(Box, { flexDirection: "column", children: [f, h] })),
           (c[18] = f),
           (c[19] = h),
           (c[20] = ne));
@@ -256,12 +256,12 @@ function ChecklistStepRow(be) {
     case "failed": {
       let l;
       if (c[21] === MEMO_CACHE_SENTINEL)
-        ((l = e(t, { color: "error", children: `  ${figures.cross} ` })),
+        ((l = e(Text, { color: "error", children: `  ${figures.cross} ` })),
           (c[21] = l));
       else l = c[21];
       let n;
       if (c[22] !== y)
-        ((n = r(o, { children: [l, e(t, { children: y })] })),
+        ((n = r(Box, { children: [l, e(Text, { children: y })] })),
           (c[22] = y),
           (c[23] = n));
       else n = c[23];
@@ -270,16 +270,16 @@ function ChecklistStepRow(be) {
         ((f =
           R !== void 0 &&
           R !== "" &&
-          e(o, {
+          e(Box, {
             paddingLeft: 6,
-            children: e(t, { color: "error", children: R }),
+            children: e(Text, { color: "error", children: R }),
           })),
           (c[24] = R),
           (c[25] = f));
       else f = c[25];
       let h;
       if (c[26] !== n || c[27] !== f)
-        ((h = r(o, { flexDirection: "column", children: [n, f] })),
+        ((h = r(Box, { flexDirection: "column", children: [n, f] })),
           (c[26] = n),
           (c[27] = f),
           (c[28] = h));
@@ -290,7 +290,7 @@ function ChecklistStepRow(be) {
       const l = `  ${figures.circle} ${y}`;
       let n;
       if (c[29] !== l)
-        ((n = e(o, { children: e(t, { dimColor: !0, children: l }) })),
+        ((n = e(Box, { children: e(Text, { dimColor: !0, children: l }) })),
           (c[29] = l),
           (c[30] = n));
       else n = c[30];

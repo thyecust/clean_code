@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 25 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { deleteMcpTaskMetadata } from "../../02-功能模块/MCP客户端/mcp-task-metadata.js";
 var MCP_TASK = {
   name: "MCP Task",
@@ -35,7 +35,7 @@ var MCP_TASK = {
     }),
       (async () => {
         (await c, await deleteMcpTaskMetadata(a, r, s, o));
-      })().catch((t) => n(`McpTask.kill deleteMcpTaskMetadata: ${String(t)}`)));
+      })().catch((t) => logForDebugging(`McpTask.kill deleteMcpTaskMetadata: ${String(t)}`)));
   },
 };
 export { MCP_TASK };

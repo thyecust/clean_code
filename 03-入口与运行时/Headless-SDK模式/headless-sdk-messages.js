@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { of } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { ZERO_USAGE_TOTALS } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { randomUUID } from "crypto";
 function buildControlSuccessResponse(r, e) {
   return {
@@ -32,7 +32,7 @@ function buildErrorResultMessage(r, e, o) {
     stop_reason: null,
     session_id: r,
     total_cost_usd: 0,
-    usage: of,
+    usage: ZERO_USAGE_TOTALS,
     modelUsage: {},
     permission_denials: [],
     uuid: randomUUID(),

@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize, truncateMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { MarkdownEngine } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { escapeHtmlAttribute, INVISIBLE_CHARS_CLASS } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { computeMean } from "../成本-Token统计/eval-report.js";
 import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -127,7 +127,7 @@ function evalReportTitle(e) {
   return e.suite.plugins.length > 0
     ? e.suite.plugins
         .map((s) => {
-          let a = ie.test(s.name) ? s.name : b(formatDisplayText(F(s.name), 80));
+          let a = ie.test(s.name) ? s.name : jsonStringify(formatDisplayText(F(s.name), 80));
           return s.version !== void 0 && oe.test(s.version)
             ? `${a} v${s.version}`
             : a;
@@ -205,7 +205,7 @@ ${i.map((p, d) => de(p, d, s)).join(`
 function ce(e) {
   let s = Object.entries(e);
   if (s.length === 0) return "";
-  return `<div class="config">${s.map(([a, n]) => `<div class="kv"><span>${r(a)}</span><code>${r(b(n) ?? "")}</code></div>`).join("")}</div>`;
+  return `<div class="config">${s.map(([a, n]) => `<div class="kv"><span>${r(a)}</span><code>${r(jsonStringify(n) ?? "")}</code></div>`).join("")}</div>`;
 }
 function pe(e, s) {
   return `<div class="grader-def">
@@ -565,9 +565,9 @@ function he(e) {
   );
 }
 function r(e) {
-  return go(F(e));
+  return escapeHtmlAttribute(F(e));
 }
-var xe = new RegExp(`[${I5t}\u2028\u2029]|[^\\P{Cc}\\n\\t]`, "gu");
+var xe = new RegExp(`[${INVISIBLE_CHARS_CLASS}\u2028\u2029]|[^\\P{Cc}\\n\\t]`, "gu");
 function F(e) {
   return e.replace(xe, " ");
 }

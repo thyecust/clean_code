@@ -14,7 +14,7 @@ import { getClaudeConfigDir, isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfa
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
@@ -33,12 +33,12 @@ import {
   getClaudeAIOAuthTokens,
   getClaudeAIOAuthTokenOrigin,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, truncateToWidth, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getStringWidth, truncateToWidth, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { replaceInvisibleChars, stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { setComplianceTaints, getComplianceTaints, registerPolicyVerdict } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
-import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { getNameableComplianceTaints, formatPolicyDeniedMessage, policyCacheMissMessage, policyRouteMissingMessage, formatPolicyBlockedReason, policyCacheMissReason, policyRouteMissingReason } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import { INVALID_TOOL_NAME_PLACEHOLDER, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -46,7 +46,7 @@ import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工�
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
 import { join as We } from "path";
-function D4t(e, t, r, o, i) {
+function buildAttributionHeader(e, t, r, o, i) {
   let l = getAPIProvider();
   if (
     !(
@@ -81,9 +81,9 @@ function D4t(e, t, r, o, i) {
         ? ` cc_prompt_id=${o};`
         : "",
     U = `x-anthropic-billing-header: cc_version=${p}; cc_entrypoint=${f};${d}${_}${S}${E}${w}`;
-  return (n(`attribution header ${U}`), U);
+  return (logForDebugging(`attribution header ${U}`), U);
 }
-function L4t(e) {
+function hasClaudeAIOAuthInferenceScope(e) {
   return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(CLAUDE_AI_INFERENCE_SCOPE));
 }
 class H {
@@ -108,13 +108,13 @@ function R() {
 function K(e) {
   R().replaceNotice(e);
 }
-function O$e() {
+function getMonitoringNotice() {
   return R().notice;
 }
-function Knr(e) {
+function subscribeMonitoringNotice(e) {
   return R().changed.subscribe(e);
 }
-var eCn = { subscribe: (e) => R().changed.subscribe(e), getSnapshot: O$e };
+var monitoringNoticeStore = { subscribe: (e) => R().changed.subscribe(e), getSnapshot: getMonitoringNotice };
 function X(e) {
   if (e === 9 || e === 10) return !1;
   return e < 32 || (e >= 127 && e <= 159);
@@ -134,11 +134,11 @@ function Z(e) {
     if (t <= 31) return 0;
     if (q(t)) return 1;
   }
-  let r = te(e);
+  let r = getStringWidth(e);
   return r === 0 ? 0 : r === 1 ? 1 : r;
 }
 var x = 4096,
-  YJe = /\u2026 \[\+\d+ graphemes\]/,
+  GRAPHEME_TRUNCATION_MARKER_PATTERN = /\u2026 \[\+\d+ graphemes\]/,
   ye = 4064,
   xe = 256;
 function Q(e) {
@@ -166,7 +166,7 @@ function W(e) {
     r = 0;
   for (let { segment: o } of getGraphemeSegmenter().segment(e)) {
     t += o;
-    let i = te(t),
+    let i = getStringWidth(t),
       l = i - r;
     if (((r = i), l !== Z(o))) return !1;
   }
@@ -178,7 +178,7 @@ function Ce(e) {
     o = 0;
   for (let { segment: i } of getGraphemeSegmenter().segment(e)) {
     r += i;
-    let l = te(r),
+    let l = getStringWidth(r),
       u = l - o;
     ((o = l), (t += u === Z(i) ? i : "\uFFFD"));
   }
@@ -250,7 +250,7 @@ function Re(e) {
     }).join(`
 `);
 }
-function rU(e) {
+function hasNoControlCharacters(e) {
   for (let t = 0; t < e.length; t++) if (X(e.charCodeAt(t))) return !1;
   return !0;
 }
@@ -268,11 +268,11 @@ function ee(e, t) {
   return t ? Re(o) : o;
 }
 var ke = /\p{DI}/gu;
-function JJe(e) {
+function stripDefaultIgnorableCharacters(e) {
   return e.replace(ke, "");
 }
-function t5(e) {
-  return ee(JJe(stripInvisibleChars(e)), !1);
+function sanitizePlainText(e) {
+  return ee(stripDefaultIgnorableCharacters(stripInvisibleChars(e)), !1);
 }
 var Te = /\p{Default_Ignorable_Code_Point}/u,
   Ne = /\p{Cf}/u;
@@ -295,7 +295,7 @@ function P(e, t) {
     Ne.test(e)
   );
 }
-function oU(e) {
+function hasInvisibleCharacters(e) {
   for (let t of e) if (P(t, t.codePointAt(0) ?? 0)) return !0;
   return !1;
 }
@@ -323,37 +323,37 @@ function De(e, t) {
   }
   return o;
 }
-function _i(e) {
+function sanitizeUntrustedText(e) {
   return ps(ne(e, Ie));
 }
-function Tme(e) {
+function sanitizeInvisibleText(e) {
   return F(re(e));
 }
 function re(e) {
   return ps(ne(e, P));
 }
-var vve = 2000,
+var MAX_DISPLAY_TEXT_UNITS = 2000,
   Me = 253;
-function lAt(e) {
+function getMaxHostnameLength(e) {
   return Me + (e.endsWith(".") && !e.endsWith("..") ? 1 : 0);
 }
-var Rm = 200000;
-function Fe(e, t = vve) {
+var MAX_DISPLAY_PAYLOAD_UNITS = 200000;
+function Fe(e, t = MAX_DISPLAY_TEXT_UNITS) {
   return truncateToCodeUnits(e, t) === e;
 }
-function aA(e) {
+function needsMultilineGutter(e) {
   return (
     e.includes(`
-`) || te(e) > 80
+`) || getStringWidth(e) > 80
   );
 }
-function tCn(e) {
-  let t = truncateToCodeUnits(e, vve),
+function truncateToTextLimit(e) {
+  let t = truncateToCodeUnits(e, MAX_DISPLAY_TEXT_UNITS),
     r = t.replace(/\t/g, " ");
   return t === e ? r : `${r}\u2026`;
 }
 function A(e) {
-  return te(e.replace(/[\uFE0E\uFE0F\u180B-\u180F\u2800]/gu, "").trim()) > 0;
+  return getStringWidth(e.replace(/[\uFE0E\uFE0F\u180B-\u180F\u2800]/gu, "").trim()) > 0;
 }
 function L(e) {
   return Array.from(e)
@@ -361,10 +361,10 @@ function L(e) {
     .join("");
 }
 function ie(e) {
-  return te(e.replace(/[\uFE0E\uFE0F\u180B-\u180F]/gu, "")) > 0;
+  return getStringWidth(e.replace(/[\uFE0E\uFE0F\u180B-\u180F]/gu, "")) > 0;
 }
 var ve = 8;
-function jd(e) {
+function collapseInvisibleCharacterRuns(e) {
   let t = "",
     r = 0,
     o = !1;
@@ -392,7 +392,7 @@ function jd(e) {
   return o ? `${t}\uFFFD` : t;
 }
 function F(e) {
-  return ps(jd(e));
+  return ps(collapseInvisibleCharacterRuns(e));
 }
 function ze(e) {
   let t = Array.from(e),
@@ -409,7 +409,7 @@ function I(e, t) {
 function le(e) {
   return I(e, "end") === "\u2026";
 }
-function Xnr(e) {
+function stripTrailingEllipsis(e) {
   let t = Array.from(e),
     r = t.length;
   for (;;) {
@@ -423,7 +423,7 @@ function Xnr(e) {
   }
   return t.slice(0, r).join("");
 }
-function YG(e) {
+function hasVisibleContent(e) {
   let t = [],
     r = !1;
   for (let o of Array.from(e)) {
@@ -448,7 +448,7 @@ function Ue(e) {
   return /^[A-Za-z_$][\w$]*$/.test(e);
 }
 function cse(e) {
-  return Tme(e);
+  return sanitizeInvisibleText(e);
 }
 function k(e) {
   return F(
@@ -462,34 +462,34 @@ function k(e) {
     ),
   );
 }
-function d6(e) {
+function hasRenderableText(e) {
   if (e === void 0) return !1;
-  let t = Tme(e)
+  let t = sanitizeInvisibleText(e)
     .replace(/\uFFFD/g, "")
     .replace(/\s+/g, " ")
     .trim();
-  return t !== "" && te(t) > 0;
+  return t !== "" && getStringWidth(t) > 0;
 }
-var Eme = 48,
-  BC = 256;
-function M4t(e) {
-  let t = cse(truncateToCodeUnits(e, BC)),
+var MAX_DISPLAY_LABEL_WIDTH = 48,
+  MAX_DISPLAY_VALUE_UNITS = 256;
+function formatSingleLineLabel(e) {
+  let t = cse(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)),
     r = t.replace(/\s+/g, " ").trim();
-  return truncateToWidth(cAt(r, t, e.length > BC), Eme);
+  return truncateToWidth(quoteIfAmbiguous(r, t, e.length > MAX_DISPLAY_VALUE_UNITS), MAX_DISPLAY_LABEL_WIDTH);
 }
-function cAt(e, t, r = !1) {
+function quoteIfAmbiguous(e, t, r = !1) {
   let o = I(e, "start") === '"' || I(e, "end") === '"' || le(e);
-  return e === t && !o && !r ? e : b(t);
+  return e === t && !o && !r ? e : jsonStringify(t);
 }
 function ae(e) {
-  let t = cse(truncateToCodeUnits(e, BC)),
+  let t = cse(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)),
     r = t.replace(/\s+/g, " ").trim();
-  return cAt(r, t, e.length > BC);
+  return quoteIfAmbiguous(r, t, e.length > MAX_DISPLAY_VALUE_UNITS);
 }
-function n5(e) {
-  return truncateToCodeUnits(e, BC) === e;
+function isWithinDisplayValueLimit(e) {
+  return truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS) === e;
 }
-function D$e(e, t) {
+function disambiguateLabels(e, t) {
   let r = new Map(),
     o = (u) => t(u).normalize("NFC");
   for (let u of e) {
@@ -498,10 +498,10 @@ function D$e(e, t) {
     (f.add(u), r.set(p, f));
   }
   let i = (u) =>
-      b(truncateToCodeUnits(u, vve)).replace(
+      jsonStringify(truncateToCodeUnits(u, MAX_DISPLAY_TEXT_UNITS)).replace(
         /[\u007f-\uffff]/g,
         (p) => `\\u${p.charCodeAt(0).toString(16).padStart(4, "0")}`,
-      ) + (u.length > vve ? "\u2026" : ""),
+      ) + (u.length > MAX_DISPLAY_TEXT_UNITS ? "\u2026" : ""),
     l = new Map();
   return e.map((u) => {
     let p = o(u);
@@ -513,9 +513,9 @@ function D$e(e, t) {
     return (d.set(u, h), h > 1 ? `${f} (#${h})` : f);
   });
 }
-function QJe(e) {
+function buildUniqueLabelMap(e) {
   let t = new Map();
-  for (let l of e) t.set(l, Ue(l) ? l : b(Tme(l)));
+  for (let l of e) t.set(l, Ue(l) ? l : jsonStringify(sanitizeInvisibleText(l)));
   let r = new Map();
   for (let l of t.values()) r.set(l, (r.get(l) ?? 0) + 1);
   let o = Be(e),
@@ -526,7 +526,7 @@ function QJe(e) {
     i.set(
       l,
       p
-        ? b(l).replace(
+        ? jsonStringify(l).replace(
             /[\u007f-\uffff]/g,
             (f) => `\\u${f.charCodeAt(0).toString(16).padStart(4, "0")}`,
           )
@@ -546,15 +546,15 @@ function Be(e) {
   }
   return r;
 }
-function Gg(e) {
-  return typeof e === "string" && Rve(e) ? "" : String(JG(e));
+function toDisplayLabelString(e) {
+  return typeof e === "string" && isBlankDisplayText(e) ? "" : String(formatDisplayLabel(e));
 }
-function JG(e) {
-  let t = typeof e === "string" && !Rve(e) ? e : INVALID_TOOL_NAME_PLACEHOLDER;
-  return l1(M4t(t));
+function formatDisplayLabel(e) {
+  let t = typeof e === "string" && !isBlankDisplayText(e) ? e : INVALID_TOOL_NAME_PLACEHOLDER;
+  return l1(formatSingleLineLabel(t));
 }
-function Rve(e) {
-  return e === "" || te(truncateToCodeUnits(e, BC)) === 0;
+function isBlankDisplayText(e) {
+  return e === "" || getStringWidth(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)) === 0;
 }
 function He(e) {
   return e
@@ -562,33 +562,33 @@ function He(e) {
     .trim()
     .replace(/\b\w/g, (t) => t.toUpperCase());
 }
-function Ynr(e) {
-  let t = truncateToCodeUnits((e.scope === "claudeai" ? e.displayName : void 0) ?? "", BC),
-    r = truncateToCodeUnits(e.title ?? "", BC),
-    o = k(truncateToCodeUnits(e.serverName, BC)),
-    i = d6(t) ? k(t) : YG(o) ? o : "(unnamed server)",
-    l = truncateToCodeUnits(e.toolName, BC),
+function formatMcpToolUserFacingName(e) {
+  let t = truncateToCodeUnits((e.scope === "claudeai" ? e.displayName : void 0) ?? "", MAX_DISPLAY_VALUE_UNITS),
+    r = truncateToCodeUnits(e.title ?? "", MAX_DISPLAY_VALUE_UNITS),
+    o = k(truncateToCodeUnits(e.serverName, MAX_DISPLAY_VALUE_UNITS)),
+    i = hasRenderableText(t) ? k(t) : hasVisibleContent(o) ? o : "(unnamed server)",
+    l = truncateToCodeUnits(e.toolName, MAX_DISPLAY_VALUE_UNITS),
     u = cse(He(l)),
     p = cse(l),
-    f = d6(r) ? k(r) : YG(u) ? u : YG(p) ? p : "(unnamed tool)";
-  return l1(truncateToWidth(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), Eme));
+    f = hasRenderableText(r) ? k(r) : hasVisibleContent(u) ? u : hasVisibleContent(p) ? p : "(unnamed tool)";
+  return l1(truncateToWidth(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), MAX_DISPLAY_LABEL_WIDTH));
 }
 function uAt(e) {
-  return l1(YH(e, "(unnamed tool)"));
+  return l1(formatDisplayTextOrDefault(e, "(unnamed tool)"));
 }
-function YH(e, t) {
-  let r = M4t(e);
-  return YG(r) ? r : t;
+function formatDisplayTextOrDefault(e, t) {
+  let r = formatSingleLineLabel(e);
+  return hasVisibleContent(r) ? r : t;
 }
-function Us(e) {
+function prepareDisplayText(e) {
   if (typeof e !== "string") return { text: l1(""), needsGutter: !1 };
-  let t = F(_i(tCn(e)));
-  return { text: l1(t), needsGutter: aA(t) };
+  let t = F(sanitizeUntrustedText(truncateToTextLimit(e)));
+  return { text: l1(t), needsGutter: needsMultilineGutter(t) };
 }
-function OD(e) {
+function tryFormatShortDisplayValue(e) {
   if (typeof e !== "string") return null;
-  if (!n5(e) || e.trim() === "" || te(e) === 0) return null;
-  if (jd(e) !== e) return null;
+  if (!isWithinDisplayValueLimit(e) || e.trim() === "" || getStringWidth(e) === 0) return null;
+  if (collapseInvisibleCharacterRuns(e) !== e) return null;
   return { display: l1(ae(e)) };
 }
 var C =
@@ -599,7 +599,7 @@ function D(e, t, r = 0) {
   if (typeof e === "string") {
     if (e.length + 2 > t.unitsRemaining)
       throw Error("payload exceeds the serialization budget");
-    let l = b(e);
+    let l = jsonStringify(e);
     if (((t.unitsRemaining -= l.length), t.unitsRemaining < 0))
       throw Error("payload exceeds the serialization budget");
     return l;
@@ -648,7 +648,7 @@ function D(e, t, r = 0) {
     if (p === void 0) continue;
     if (l.length + 2 > t.unitsRemaining)
       throw Error("payload exceeds the serialization budget");
-    let f = b(l);
+    let f = jsonStringify(l);
     if (
       ((t.unitsRemaining -= f.length + 1 + (i.length > 0 ? 1 : 0)),
       t.unitsRemaining < 0)
@@ -658,13 +658,13 @@ function D(e, t, r = 0) {
   }
   return `{${i.join(",")}}`;
 }
-function km(e, t) {
+function formatWithholdableValue(e, t) {
   let r;
   if (typeof e === "string") r = e;
   else
     try {
       let u = D(e, {
-        unitsRemaining: t?.maxUnits ?? vve,
+        unitsRemaining: t?.maxUnits ?? MAX_DISPLAY_TEXT_UNITS,
         elementsRemaining: $e,
       });
       if (u === void 0) return { kind: "withheld", marker: l1(C) };
@@ -674,7 +674,7 @@ function km(e, t) {
     }
   if (!Fe(r, t?.maxUnits)) return { kind: "withheld", marker: l1(C) };
   let o = t?.softWrap ? Q(r) : r,
-    i = (t?.scrub === "key" ? re(o) : _i(o)).replace(/\t/g, " "),
+    i = (t?.scrub === "key" ? re(o) : sanitizeUntrustedText(o)).replace(/\t/g, " "),
     l = t?.softWrap
       ? i.replaceAll(
           `
@@ -682,24 +682,24 @@ function km(e, t) {
           "",
         )
       : i;
-  if (YJe.test(l)) return { kind: "withheld", marker: l1(C) };
-  if (jd(i) !== i) return { kind: "withheld", marker: l1(C) };
-  return { kind: "full", text: l1(i), needsGutter: aA(i) };
+  if (GRAPHEME_TRUNCATION_MARKER_PATTERN.test(l)) return { kind: "withheld", marker: l1(C) };
+  if (collapseInvisibleCharacterRuns(i) !== i) return { kind: "withheld", marker: l1(C) };
+  return { kind: "full", text: l1(i), needsGutter: needsMultilineGutter(i) };
 }
-function Jk(e) {
-  let t = _i(e);
-  return YJe.test(t) || ce(t);
+function shouldWithholdValue(e) {
+  let t = sanitizeUntrustedText(e);
+  return GRAPHEME_TRUNCATION_MARKER_PATTERN.test(t) || ce(t);
 }
-function Jnr(e) {
-  return ce(_i(e));
+function hasCollapsedInvisibleRuns(e) {
+  return ce(sanitizeUntrustedText(e));
 }
 function ce(e) {
-  return jd(e) !== e;
+  return collapseInvisibleCharacterRuns(e) !== e;
 }
 function N4t(e) {
-  let t = cse(truncateToCodeUnits(e, BC)),
+  let t = cse(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)),
     r = t.replace(/\s+/g, " ").trim();
-  return cAt(
+  return quoteIfAmbiguous(
     r,
     t,
     r.includes(",") ||
@@ -707,26 +707,26 @@ function N4t(e) {
       L(r).includes(" and ") ||
       L(r).startsWith("and ") ||
       L(r).endsWith(" and") ||
-      e.length > BC ||
-      jd(truncateToCodeUnits(e, BC)) !== truncateToCodeUnits(e, BC),
+      e.length > MAX_DISPLAY_VALUE_UNITS ||
+      collapseInvisibleCharacterRuns(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)) !== truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS),
   );
 }
-function Qk(e, t = ae) {
-  return D$e(e, t).map((r) => l1(r));
+function toUniqueDisplayLabels(e, t = ae) {
+  return disambiguateLabels(e, t).map((r) => l1(r));
 }
-function Oo(e) {
+function replaceLineBreaks(e) {
   return e.replace(/[\n\r\u2028\u2029]/g, "\uFFFD");
 }
-function ZJe(e, t) {
-  let r = e.map((d) => km(d, t)),
+function formatValueListForDisplay(e, t) {
+  let r = e.map((d) => formatWithholdableValue(d, t)),
     o = new Map();
   e.forEach((d, h) => {
     let _ = r[h];
     if (_.kind === "full" && !o.has(d))
-      o.set(d, Oo(_.text).replace(/\s+/g, " ").trim());
+      o.set(d, replaceLineBreaks(_.text).replace(/\s+/g, " ").trim());
   });
   let i = e.filter((d, h) => r[h].kind === "full"),
-    l = Qk(i, (d) => o.get(d) ?? ""),
+    l = toUniqueDisplayLabels(i, (d) => o.get(d) ?? ""),
     u = [],
     p = 0,
     f = 0;
@@ -735,31 +735,31 @@ function ZJe(e, t) {
     else ((f += 1), u.push({ text: `${d.marker} (#${f})`, withheld: !0 }));
   return u;
 }
-function dAt(e) {
+function sanitizeMarkdownText(e) {
   if (typeof e !== "string") return lkn("");
-  return lkn(_i(e));
+  return lkn(sanitizeUntrustedText(e));
 }
-function QG(e) {
+function tryFormatShortLabel(e) {
   if (typeof e !== "string") return null;
-  let t = k(truncateToCodeUnits(e, BC)).replace(/\t/g, " ");
-  if (!YG(firstLine(t))) return null;
+  let t = k(truncateToCodeUnits(e, MAX_DISPLAY_VALUE_UNITS)).replace(/\t/g, " ");
+  if (!hasVisibleContent(firstLine(t))) return null;
   if (le(firstLine(t))) return null;
   return l1(truncate(t, 24, !0));
 }
-function Qnr(e, ...t) {
+function displayTextTemplate(e, ...t) {
   let r = e[0] ?? "";
   for (let o = 0; o < t.length; o++) ((r += t[o] ?? ""), (r += e[o + 1] ?? ""));
   return l1(r);
 }
-function Ame(e) {
-  return /[\u0000-\u001f\u007f-\u009f]/.test(e) || oU(e);
+function hasUnsupportedDisplayCharacters(e) {
+  return /[\u0000-\u001f\u007f-\u009f]/.test(e) || hasInvisibleCharacters(e);
 }
 function z(e) {
   let t = truncateToCodeUnits(replaceInvisibleChars(e, "").toLowerCase(), 64).trim();
   return /^[a-z0-9_-]+$/.test(t) ? t : "";
 }
-var eQe = 16;
-function nCn(e) {
+var MAX_COMPLIANCE_TAINTS = 16;
+function countLossyComplianceTaints(e) {
   let t =
     typeof e === "object" && e !== null && "compliance_taints" in e
       ? e.compliance_taints
@@ -772,7 +772,7 @@ function nCn(e) {
         .map(z)
         .filter((i) => i.length > 0),
     );
-  return r + Math.max(0, o.length - eQe);
+  return r + Math.max(0, o.length - MAX_COMPLIANCE_TAINTS);
 }
 var ue = createLazyValue(() =>
     c({
@@ -785,7 +785,7 @@ var ue = createLazyValue(() =>
               .filter((o) => typeof o === "string")
               .map(z)
               .filter((o) => o.length > 0),
-          ).slice(0, eQe);
+          ).slice(0, MAX_COMPLIANCE_TAINTS);
           if (e.length > 0 && r.length === 0)
             t.addIssue({
               code: "custom",
@@ -802,7 +802,7 @@ var ue = createLazyValue(() =>
           .max(2048)
           .url()
           .startsWith("https://")
-          .refine((e) => !Ame(e))
+          .refine((e) => !hasUnsupportedDisplayCharacters(e))
           .nullish()
           .catch(null),
       })
@@ -812,20 +812,20 @@ var ue = createLazyValue(() =>
       defaults: fe(s(), se()).default({}).catch({}),
     }),
   ),
-  L$e = {
+  EMPTY_POLICY_LIMITS_RESPONSE = {
     restrictions: {},
     compliance_taints: [],
     monitoring_notice: null,
     defaults: {},
   },
-  Znr = [
+  POLICY_SERVER_ERROR_TYPES = [
     "invalid_request_error",
     "authentication_error",
     "permission_error",
     "not_found_error",
     "rate_limit_error",
   ],
-  err = [
+  POLICY_SERVER_ERROR_CODES = [
     "ip_not_in_allowed_range",
     "claude_code_key_creator_not_member",
     "organization_disabled",
@@ -1027,13 +1027,13 @@ function isPolicyRouteMissing() {
 }
 function policyDeniedReason(e, t, r, o) {
   if (isPolicyAllowed(e)) return null;
-  if (isPolicyRouteMissing()) return cBe(t);
+  if (isPolicyRouteMissing()) return policyRouteMissingMessage(t);
   if (o !== void 0 && !hasNameableComplianceTaint()) return o;
-  if (getResponseFromCache() === null) return Qse(t);
-  return lBe(t, r, getComplianceTaints());
+  if (getResponseFromCache() === null) return policyCacheMissMessage(t);
+  return formatPolicyDeniedMessage(t, r, getComplianceTaints());
 }
 function hasNameableComplianceTaint() {
-  return MRe(getComplianceTaints()).length > 0;
+  return getNameableComplianceTaints(getComplianceTaints()).length > 0;
 }
 function policyDenyKind(e) {
   if (isPolicyAllowed(e)) return null;
@@ -1043,9 +1043,9 @@ function policyDenyKind(e) {
 function policyDeniedHint(e, t) {
   let r = policyDenyKind(e);
   if (r === null) return null;
-  if (r === "route_missing") return Iir();
+  if (r === "route_missing") return policyRouteMissingReason();
   if (t !== void 0 && !hasNameableComplianceTaint()) return t;
-  return r === "cache_miss" ? Hir() : xir(getComplianceTaints());
+  return r === "cache_miss" ? policyCacheMissReason() : formatPolicyBlockedReason(getComplianceTaints());
 }
 function areComplianceTaintsSettled() {
   if (
@@ -1056,7 +1056,7 @@ function areComplianceTaintsSettled() {
     a.ANTHROPIC_UNIX_SOCKET !== void 0 ||
     getConfiguredApiKeyHelper() !== void 0 ||
     (effectiveAuthTokenEnv() !== void 0 &&
-      !L4t({ anthropicAuthEnabled: isAnthropicAuthEnabled(), oauthScopes: getClaudeAIOAuthTokens()?.scopes }))
+      !hasClaudeAIOAuthInferenceScope({ anthropicAuthEnabled: isAnthropicAuthEnabled(), oauthScopes: getClaudeAIOAuthTokens()?.scopes }))
   )
     return !1;
   if (getResponseFromCache() !== null) return !0;
@@ -1090,60 +1090,60 @@ function ge() {
   return getResponseFromCache()?.restrictions ?? null;
 }
 export {
-  D4t,
-  L4t,
-  O$e,
-  Knr,
-  eCn,
-  YJe,
-  rU,
+  buildAttributionHeader,
+  hasClaudeAIOAuthInferenceScope,
+  getMonitoringNotice,
+  subscribeMonitoringNotice,
+  monitoringNoticeStore,
+  GRAPHEME_TRUNCATION_MARKER_PATTERN,
+  hasNoControlCharacters,
   ps,
-  JJe,
-  t5,
-  oU,
-  _i,
-  Tme,
-  vve,
-  lAt,
-  Rm,
-  aA,
-  tCn,
-  jd,
-  Xnr,
-  YG,
+  stripDefaultIgnorableCharacters,
+  sanitizePlainText,
+  hasInvisibleCharacters,
+  sanitizeUntrustedText,
+  sanitizeInvisibleText,
+  MAX_DISPLAY_TEXT_UNITS,
+  getMaxHostnameLength,
+  MAX_DISPLAY_PAYLOAD_UNITS,
+  needsMultilineGutter,
+  truncateToTextLimit,
+  collapseInvisibleCharacterRuns,
+  stripTrailingEllipsis,
+  hasVisibleContent,
   cse,
-  d6,
-  Eme,
-  BC,
-  M4t,
-  cAt,
-  n5,
-  D$e,
-  QJe,
-  Gg,
-  JG,
-  Rve,
-  Ynr,
+  hasRenderableText,
+  MAX_DISPLAY_LABEL_WIDTH,
+  MAX_DISPLAY_VALUE_UNITS,
+  formatSingleLineLabel,
+  quoteIfAmbiguous,
+  isWithinDisplayValueLimit,
+  disambiguateLabels,
+  buildUniqueLabelMap,
+  toDisplayLabelString,
+  formatDisplayLabel,
+  isBlankDisplayText,
+  formatMcpToolUserFacingName,
   uAt,
-  YH,
-  Us,
-  OD,
-  km,
-  Jk,
-  Jnr,
+  formatDisplayTextOrDefault,
+  prepareDisplayText,
+  tryFormatShortDisplayValue,
+  formatWithholdableValue,
+  shouldWithholdValue,
+  hasCollapsedInvisibleRuns,
   N4t,
-  Qk,
-  Oo,
-  ZJe,
-  dAt,
-  QG,
-  Qnr,
-  Ame,
-  eQe,
-  nCn,
-  L$e,
-  Znr,
-  err,
+  toUniqueDisplayLabels,
+  replaceLineBreaks,
+  formatValueListForDisplay,
+  sanitizeMarkdownText,
+  tryFormatShortLabel,
+  displayTextTemplate,
+  hasUnsupportedDisplayCharacters,
+  MAX_COMPLIANCE_TAINTS,
+  countLossyComplianceTaints,
+  EMPTY_POLICY_LIMITS_RESPONSE,
+  POLICY_SERVER_ERROR_TYPES,
+  POLICY_SERVER_ERROR_CODES,
   PolicyState,
   policyStates,
   setSessionCache,

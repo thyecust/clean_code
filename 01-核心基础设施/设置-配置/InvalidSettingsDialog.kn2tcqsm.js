@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 143 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
@@ -36,23 +36,23 @@ function Z(z, ct) {
     fl.Node,
     {
       children: U
-        ? r(t, {
-            children: [U, ": ", e(t, { dimColor: !0, children: z.message })],
+        ? r(Text, {
+            children: [U, ": ", e(Text, { dimColor: !0, children: z.message })],
           })
-        : e(t, { dimColor: !0, children: z.message }),
+        : e(Text, { dimColor: !0, children: z.message }),
     },
     ct,
   );
 }
 function tt(w, mt) {
   return r(
-    o,
+    Box,
     {
       flexDirection: "column",
       marginBottom: 1,
       children: [
         w.suggestion &&
-          e(t, { dimColor: !0, wrap: "wrap", children: w.suggestion }),
+          e(Text, { dimColor: !0, wrap: "wrap", children: w.suggestion }),
         w.docLink && e(LearnMoreLink, { url: w.docLink }),
       ],
     },
@@ -69,7 +69,7 @@ function h(ft) {
   if (G[0] !== x) {
     let H = x.reduce(X, {});
     let gt = Object.keys(H).sort();
-    y = o;
+    y = Box;
     k = "column";
     V = gt.map((T) => {
       let S = H[T] || [];
@@ -84,14 +84,14 @@ function h(ft) {
           }
         }),
         r(
-          o,
+          Box,
           {
             flexDirection: "column",
             children: [
-              e(t, { children: T }),
+              e(Text, { children: T }),
               e(fl, { variant: "tree", children: S.map(Z) }),
               C.size > 0 &&
-                e(o, {
+                e(Box, {
                   flexDirection: "column",
                   marginTop: 1,
                   children: Array.from(C.values()).map(tt),
@@ -182,7 +182,7 @@ function InvalidSettingsDialog(Et) {
     : "The values listed above were skipped; the rest of the file is in effect.";
   let b;
   if (f[10] !== q)
-    ((b = e(t, { dimColor: !0, children: q })), (f[10] = q), (f[11] = b));
+    ((b = e(Text, { dimColor: !0, children: q })), (f[10] = q), (f[11] = b));
   else b = f[11];
   let N;
   if (f[12] !== v || f[13] !== M)

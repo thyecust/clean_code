@@ -15,12 +15,12 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { hashForTelemetry } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { stripInvisibleChars, sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { jt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getMcpClientState } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getOfficialPluginPromptOverrides } from "../插件系统/plugin-prompt-overrides.js";
 import { MAX_SKILL_FILE_BYTES, getMcpSkillBuilders, getMcpServerConfigCacheKey, readMcpResourceRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
@@ -63,7 +63,7 @@ var B = 100,
   E = 4096;
 function j(e, r, s) {
   let c = `${e}:${getMcpServerConfigCacheKey(r.name, r.config)}`,
-    o = jt().skillsFunnelSeen,
+    o = getMcpClientState().skillsFunnelSeen,
     a = o.has(c) ? "refetch" : "initial";
   (o.add(c),
     logEvent("tengu_mcp_skills_funnel", {
@@ -113,7 +113,7 @@ class I {
       else if (m.length > 0) logFeatureOk("skill_mcp_load");
       if (m.length > 0)
         (j("surfaced", e, m.length),
-          n(
+          logForDebugging(
             `[mcp-skills] Loaded ${m.length} skills from MCP server '${e.name}'`,
           ));
       return m;
@@ -132,7 +132,7 @@ class I {
   }
 }
 function v() {
-  let e = jt();
+  let e = getMcpClientState();
   if (e.skillsFetcher === null) e.skillsFetcher = new I();
   return e.skillsFetcher;
 }

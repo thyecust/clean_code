@@ -13,7 +13,7 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { getOverageBillingOverride, getMainLoopModel, isFableFamilyOrPinnedModel, isSemverGreaterThan, isSemverString, getSanitizedShortCode, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -21,7 +21,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { o, t, tn, n9, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled, Decorative, useTimeout } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { appStateStore } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { ui, Gm, fa, $o, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -209,7 +209,7 @@ function F8(wt) {
   else Dt = Bo[3];
   let Pt;
   if (Bo[4] !== Zn || Bo[5] !== Dt || Bo[6] !== is)
-    ((Pt = e(o, {
+    ((Pt = e(Box, {
       marginTop: Zn,
       marginLeft: is,
       flexShrink: 0,
@@ -226,17 +226,17 @@ function F8(wt) {
       To && Zn > 0
         ? r(N, {
             children: [
-              e(o, {
+              e(Box, {
                 position: "absolute",
                 top: We - 1,
                 left: 0,
-                children: e(t, { color: "inactive", children: No[To] }),
+                children: e(Text, { color: "inactive", children: No[To] }),
               }),
-              e(o, {
+              e(Box, {
                 position: "absolute",
                 top: We - 1,
                 right: 0,
-                children: e(t, { color: "inactive", children: No[To] }),
+                children: e(Text, { color: "inactive", children: No[To] }),
               }),
             ],
           })
@@ -247,8 +247,8 @@ function F8(wt) {
   else Rt = Bo[10];
   let Sl;
   if (Bo[11] !== ls || Bo[12] !== us || Bo[13] !== Pt || Bo[14] !== Rt)
-    ((Sl = e(n9, {
-      children: r(o, {
+    ((Sl = e(Decorative, {
+      children: r(Box, {
         height: us,
         width: At,
         flexDirection: "column",
@@ -268,7 +268,7 @@ function F8(wt) {
 }
 function Bt(be, ae, cs, ds) {
   let Oe = _(38),
-    ms = tn(),
+    ms = useIsScreenReaderEnabled(),
     Vl;
   if (Oe[0] !== ms)
     ((Vl = () => shouldReduceMotion(getInitialSettings().prefersReducedMotion) || ms),
@@ -599,7 +599,7 @@ function vl({
     [M, B] = d(a.s),
     [T, X] = d(!1);
   if (M !== a.s) (X(sd(M)), B(a.s));
-  let V = Un(DEFAULT_RECENT_WINDOW_MS, M),
+  let V = useTimeout(DEFAULT_RECENT_WINDOW_MS, M),
     O = T && !V && w(),
     [R, U] = d("USD"),
     [I, ie] = d([]),
@@ -670,7 +670,7 @@ function vl({
       }
       c({ s: "enabled", usage: re, balance: Ae, pm: Be });
     } catch (A) {
-      (n(`Failed to load extra usage status: ${A}`, { level: "error" }),
+      (logForDebugging(`Failed to load extra usage status: ${A}`, { level: "error" }),
         c({ s: "error", msg: "Couldn't load usage credit status" }));
     }
   }
@@ -822,7 +822,7 @@ function vl({
     } catch (oe) {
       let Ae = getUserFacingErrorMessage(oe);
       if (cc(oe, (Be) => getUserFacingErrorMessage(Be) !== null))
-        n(`Extra usage credit purchase failed: ${Ae ?? l(oe)}`, {
+        logForDebugging(`Extra usage credit purchase failed: ${Ae ?? l(oe)}`, {
           level: "error",
         });
       else logError(oe);
@@ -860,13 +860,13 @@ function vl({
   let Fo = ad(K),
     kt = Fo !== null ? K : null;
   if (O)
-    return e(o, {
+    return e(Box, {
       paddingTop: 1,
       children: e(SpinnerMessageLine, { message: "Loading usage credit status\u2026" }),
     });
   switch (a.s) {
     case "loading":
-      return e(o, {
+      return e(Box, {
         paddingTop: 1,
         children: e(SpinnerMessageLine, { message: "Loading usage credit status\u2026" }),
       });
@@ -878,7 +878,7 @@ function vl({
         onDone: Jn,
       });
     case "adjusting":
-      return e(o, {
+      return e(Box, {
         paddingTop: 1,
         children: e(SpinnerMessageLine, { message: "Updating spend limit\u2026" }),
       });
@@ -1012,10 +1012,10 @@ function wl(Rm) {
   else _u = jo[3];
   let Vt;
   if (jo[4] !== Ss)
-    ((Vt = e(o, {
+    ((Vt = e(Box, {
       flexDirection: "column",
       gap: 1,
-      children: e(t, { color: "error", children: Ss }),
+      children: e(Text, { color: "error", children: Ss }),
     })),
       (jo[4] = Ss),
       (jo[5] = Vt));
@@ -1107,11 +1107,11 @@ function Dl(Em) {
     qt = "Turn on usage credits";
     Wt = Xo(jt);
     Ht = "suggestion";
-    Ut = o;
+    Ut = Box;
     Xt = "column";
     It = 1;
     if (He[33] === MEMO_CACHE_SENTINEL)
-      ((Uo = e(t, { children: "Keep using Claude when you hit a limit." })),
+      ((Uo = e(Text, { children: "Keep using Claude when you hit a limit." })),
         (He[33] = Uo));
     else Uo = He[33];
     let Je;
@@ -1123,12 +1123,12 @@ function Dl(Em) {
         (He[35] = Je));
     else Je = He[35];
     if (He[36] !== Je)
-      ((Ko = e(t, { dimColor: !0, children: Je })),
+      ((Ko = e(Text, { dimColor: !0, children: Je })),
         (He[36] = Je),
         (He[37] = Ko));
     else Ko = He[37];
     if (He[38] === MEMO_CACHE_SENTINEL)
-      ((Yo = r(t, {
+      ((Yo = r(Text, {
         dimColor: !0,
         children: [
           "By turning on, you agree to turn on usage credits as defined in our Help Center article:",
@@ -1404,7 +1404,7 @@ function Pl(Mm) {
   if (J[24] !== uo || J[25] !== le.disabled_reason)
     ((ur =
       uo &&
-      e(t, {
+      e(Text, {
         color: "warning",
         children:
           le.disabled_reason === "out_of_credits"
@@ -1420,13 +1420,13 @@ function Pl(Mm) {
     ((cr =
       je !== null &&
       je.urgent &&
-      e(t, { color: "warning", children: je.text })),
+      e(Text, { color: "warning", children: je.text })),
       (J[27] = je),
       (J[28] = cr));
   else cr = J[28];
   let dr;
   if (J[29] !== Ys)
-    ((dr = r(t, { children: [Ys, " spent"] })), (J[29] = Ys), (J[30] = dr));
+    ((dr = r(Text, { children: [Ys, " spent"] })), (J[29] = Ys), (J[30] = dr));
   else dr = J[30];
   const Ws = rr / 100;
   let fr;
@@ -1443,11 +1443,11 @@ function Pl(Mm) {
   else fr = J[33];
   let gr;
   if (J[34] !== rr)
-    ((gr = r(t, { children: [rr, "% used"] })), (J[34] = rr), (J[35] = gr));
+    ((gr = r(Text, { children: [rr, "% used"] })), (J[34] = rr), (J[35] = gr));
   else gr = J[35];
   let pr;
   if (J[36] !== dr || J[37] !== fr || J[38] !== gr)
-    ((pr = r(o, { flexDirection: "row", gap: 1, children: [dr, fr, gr] })),
+    ((pr = r(Box, { flexDirection: "row", gap: 1, children: [dr, fr, gr] })),
       (J[36] = dr),
       (J[37] = fr),
       (J[38] = gr),
@@ -1455,7 +1455,7 @@ function Pl(Mm) {
   else pr = J[39];
   let br;
   if (J[40] !== Xs || J[41] !== ar)
-    ((br = r(t, {
+    ((br = r(Text, {
       dimColor: !0,
       children: ["Resets ", ar, " \xB7 ", Xs, " monthly limit"],
     })),
@@ -1466,13 +1466,13 @@ function Pl(Mm) {
   let yr;
   if (J[43] !== je)
     ((yr =
-      je !== null && !je.urgent && e(t, { dimColor: !0, children: je.text })),
+      je !== null && !je.urgent && e(Text, { dimColor: !0, children: je.text })),
       (J[43] = je),
       (J[44] = yr));
   else yr = J[44];
   let _r;
   if (J[45] !== pr || J[46] !== br || J[47] !== yr)
-    ((_r = r(o, { flexDirection: "column", children: [pr, br, yr] })),
+    ((_r = r(Box, { flexDirection: "column", children: [pr, br, yr] })),
       (J[45] = pr),
       (J[46] = br),
       (J[47] = yr),
@@ -1493,7 +1493,7 @@ function Pl(Mm) {
   else hr = J[52];
   let Cr;
   if (J[53] !== ur || J[54] !== cr || J[55] !== _r || J[56] !== hr)
-    ((Cr = r(o, {
+    ((Cr = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [ur, cr, _r, hr],
@@ -1584,7 +1584,7 @@ function Rl(Sm) {
   else Fn = $e[13];
   let Mn;
   if ($e[14] !== Fn)
-    ((Mn = r(t, { dimColor: !0, children: ["Payment: ", Fn] })),
+    ((Mn = r(Text, { dimColor: !0, children: ["Payment: ", Fn] })),
       ($e[14] = Fn),
       ($e[15] = Mn));
   else Mn = $e[15];
@@ -1603,7 +1603,7 @@ function Rl(Sm) {
   else Dr = $e[19];
   let Ou;
   if ($e[20] === MEMO_CACHE_SENTINEL)
-    ((Ou = e(t, {
+    ((Ou = e(Text, {
       dimColor: !0,
       children:
         "By confirming, you allow Anthropic to charge your card in the amount above.",
@@ -1612,13 +1612,13 @@ function Rl(Sm) {
   else Ou = $e[20];
   let Pr;
   if ($e[21] !== xr)
-    ((Pr = xr !== null && e(t, { dimColor: !0, children: xr })),
+    ((Pr = xr !== null && e(Text, { dimColor: !0, children: xr })),
       ($e[21] = xr),
       ($e[22] = Pr));
   else Pr = $e[22];
   let Rr;
   if ($e[23] !== Mn || $e[24] !== Dr || $e[25] !== Pr)
-    ((Rr = r(o, {
+    ((Rr = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [Mn, Dr, Ou, Pr],
@@ -1647,7 +1647,7 @@ function fe(Lm) {
     { label: ei, value: ni, bold: mo, dim: fo } = Lm,
     Er;
   if (oi[0] !== mo || oi[1] !== fo || oi[2] !== ei)
-    ((Er = e(t, { dimColor: fo, bold: mo, children: ei })),
+    ((Er = e(Text, { dimColor: fo, bold: mo, children: ei })),
       (oi[0] = mo),
       (oi[1] = fo),
       (oi[2] = ei),
@@ -1655,7 +1655,7 @@ function fe(Lm) {
   else Er = oi[3];
   let Fr;
   if (oi[4] !== mo || oi[5] !== fo || oi[6] !== ni)
-    ((Fr = e(t, { dimColor: fo, bold: mo, children: ni })),
+    ((Fr = e(Text, { dimColor: fo, bold: mo, children: ni })),
       (oi[4] = mo),
       (oi[5] = fo),
       (oi[6] = ni),
@@ -1663,7 +1663,7 @@ function fe(Lm) {
   else Fr = oi[7];
   let Su;
   if (oi[8] !== Er || oi[9] !== Fr)
-    ((Su = r(o, { justifyContent: "space-between", children: [Er, Fr] })),
+    ((Su = r(Box, { justifyContent: "space-between", children: [Er, Fr] })),
       (oi[8] = Er),
       (oi[9] = Fr),
       (oi[10] = Su));
@@ -1749,7 +1749,7 @@ function El(Um) {
   else Br = q[15];
   let Iu;
   if (q[16] !== Br)
-    ((Iu = e(t, { dimColor: !0, children: Br })), (q[16] = Br), (q[17] = Iu));
+    ((Iu = e(Text, { dimColor: !0, children: Br })), (q[16] = Br), (q[17] = Iu));
   else Iu = q[17];
   let go = Iu;
   if (Km) {
@@ -1861,7 +1861,7 @@ function El(Um) {
     q[52] !== Vr ||
     q[53] !== Tr
   )
-    ((jr = r(o, {
+    ((jr = r(Box, {
       flexDirection: "column",
       width: rn,
       children: [Tr, Or, Nr, go, Vr],
@@ -1875,18 +1875,18 @@ function El(Um) {
       (q[54] = jr));
   else jr = q[54];
   let qu;
-  if (q[55] === MEMO_CACHE_SENTINEL) ((qu = e(t, { children: "Payment " })), (q[55] = qu));
+  if (q[55] === MEMO_CACHE_SENTINEL) ((qu = e(Text, { children: "Payment " })), (q[55] = qu));
   else qu = q[55];
   let Lr;
   if (q[56] !== ti) ((Lr = ke(ti)), (q[56] = ti), (q[57] = Lr));
   else Lr = q[57];
   let Ur;
   if (q[58] !== Lr)
-    ((Ur = e(t, { dimColor: !0, children: Lr })), (q[58] = Lr), (q[59] = Ur));
+    ((Ur = e(Text, { dimColor: !0, children: Lr })), (q[58] = Lr), (q[59] = Ur));
   else Ur = q[59];
   let Kr;
   if (q[60] !== rn || q[61] !== Ur)
-    ((Kr = r(o, { width: rn, children: [qu, Ur] })),
+    ((Kr = r(Box, { width: rn, children: [qu, Ur] })),
       (q[60] = rn),
       (q[61] = Ur),
       (q[62] = Kr));
@@ -1895,7 +1895,7 @@ function El(Um) {
   if (q[63] !== se)
     ((Yr =
       se &&
-      e(t, {
+      e(Text, {
         color: "warning",
         children: `Couldn't calculate tax. Try again, or buy at ${z}`,
       })),
@@ -1931,7 +1931,7 @@ function El(Um) {
   if (q[71] !== se)
     ((qr =
       !se &&
-      e(t, {
+      e(Text, {
         dimColor: !0,
         children:
           "By confirming, you allow Anthropic to charge your card in the amount above.",
@@ -1947,7 +1947,7 @@ function El(Um) {
     q[76] !== Ir ||
     q[77] !== qr
   )
-    ((Wr = r(o, {
+    ((Wr = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [jr, Kr, Yr, Ir, qr],
@@ -2051,7 +2051,7 @@ function Pn(Jm) {
   else zr = Ue[5];
   let Qr;
   if (Ue[6] !== gi || Ue[7] !== zr)
-    ((Qr = r(t, { children: [gi, " ", zr, "."] })),
+    ((Qr = r(Text, { children: [gi, " ", zr, "."] })),
       (Ue[6] = gi),
       (Ue[7] = zr),
       (Ue[8] = Qr));
@@ -2059,7 +2059,7 @@ function Pn(Jm) {
   const vi = !Jo;
   let Zr;
   if (Ue[9] !== Jo || Ue[10] !== vi)
-    ((Zr = r(t, {
+    ((Zr = r(Text, {
       color: Jo,
       dimColor: vi,
       children: ["Type ", qn, " to confirm."],
@@ -2111,7 +2111,7 @@ function Pn(Jm) {
   else na = Ue[19];
   let oa;
   if (Ue[20] !== Ci || Ue[21] !== na)
-    ((oa = e(o, {
+    ((oa = e(Box, {
       borderStyle: "single",
       borderColor: Ci,
       paddingX: 1,
@@ -2123,7 +2123,7 @@ function Pn(Jm) {
   else oa = Ue[22];
   let ta;
   if (Ue[23] !== oa || Ue[24] !== Qr || Ue[25] !== Zr)
-    ((ta = r(o, { flexDirection: "column", gap: 1, children: [Qr, Zr, oa] })),
+    ((ta = r(Box, { flexDirection: "column", gap: 1, children: [Qr, Zr, oa] })),
       (Ue[23] = oa),
       (Ue[24] = Qr),
       (Ue[25] = Zr),
@@ -2251,7 +2251,7 @@ function $l(ef) {
       da = 1;
       ma = Pi;
       if (ce[29] === MEMO_CACHE_SENTINEL)
-        ((ot = e(t, {
+        ((ot = e(Text, {
           children:
             "You can set a maximum amount you can spend on usage credits per month.",
         })),
@@ -2263,7 +2263,7 @@ function $l(ef) {
       else ln = ce[31];
       let un;
       if (ce[32] !== ln)
-        ((un = e(t, { children: ln })), (ce[32] = ln), (ce[33] = un));
+        ((un = e(Text, { children: ln })), (ce[32] = ln), (ce[33] = un));
       else un = ce[33];
       let at, dc;
       if (ce[34] === MEMO_CACHE_SENTINEL)
@@ -2303,7 +2303,7 @@ function $l(ef) {
           (ce[43] = ya));
       else ya = ce[43];
       if (ce[44] !== sn || ce[45] !== un || ce[46] !== ya)
-        ((tt = r(o, {
+        ((tt = r(Box, {
           borderStyle: "single",
           borderColor: sn,
           paddingX: 1,
@@ -2316,7 +2316,7 @@ function $l(ef) {
       else tt = ce[47];
       ga =
         Ke.ok &&
-        r(t, {
+        r(Text, {
           color: "success",
           children: ["Monthly limit: ", formatCurrencyAmount(Ke.cents, Bn)],
         });
@@ -2362,13 +2362,13 @@ function $l(ef) {
   if (wi !== EARLY_RETURN_SENTINEL) return wi;
   let Nn;
   if (ce[48] !== nt)
-    ((Nn = nt && e(t, { color: "error", children: nt })),
+    ((Nn = nt && e(Text, { color: "error", children: nt })),
       (ce[48] = nt),
       (ce[49] = Nn));
   else Nn = ce[49];
   let sn;
   if (ce[50] === MEMO_CACHE_SENTINEL)
-    ((sn = e(t, {
+    ((sn = e(Text, {
       dimColor: !0,
       children: "This spend limit goes into effect immediately.",
     })),
@@ -2376,12 +2376,12 @@ function $l(ef) {
   else sn = ce[50];
   let ln;
   if (ce[51] !== On || ce[52] !== ua || ce[53] !== Me)
-    ((ln = e(o, {
+    ((ln = e(Box, {
       flexDirection: "row",
       gap: 2,
       children: xi.map((mc, fc) =>
         r(
-          t,
+          Text,
           {
             color: Me === 1 && On === fc ? "suggestion" : void 0,
             children: [Me === 1 && On === fc ? figures.pointer : " ", " ", ua[mc]],
@@ -2611,12 +2611,12 @@ function Ml(af) {
       let Re;
       if (j[51] !== dn)
         ((Re =
-          dn && e(t, { color: "success", children: " \xB7 Currently on" })),
+          dn && e(Text, { color: "success", children: " \xB7 Currently on" })),
           (j[51] = dn),
           (j[52] = Re));
       else Re = j[52];
       if (j[53] !== Re)
-        ((mt = r(t, {
+        ((mt = r(Text, {
           children: [
             "Automatically buy more usage credits when your balance is low.",
             Re,
@@ -2629,13 +2629,13 @@ function Ml(af) {
       if (j[55] !== wn) ((mn = ke(wn)), (j[55] = wn), (j[56] = mn));
       else mn = j[56];
       if (j[57] !== mn)
-        ((ft = r(t, { dimColor: !0, children: ["Card on file: ", mn] })),
+        ((ft = r(Text, { dimColor: !0, children: ["Card on file: ", mn] })),
           (j[57] = mn),
           (j[58] = ft));
       else ft = j[58];
       let pt;
       if (j[59] === MEMO_CACHE_SENTINEL)
-        ((pt = e(t, {
+        ((pt = e(Text, {
           dimColor: !0,
           children: "When usage credit balance falls below:",
         })),
@@ -2647,7 +2647,7 @@ function Ml(af) {
       else $a = j[61];
       let Ma;
       if (j[62] !== $a)
-        ((Ma = e(t, { children: $a })), (j[62] = $a), (j[63] = Ma));
+        ((Ma = e(Text, { children: $a })), (j[62] = $a), (j[63] = Ma));
       else Ma = j[63];
       let xc, kc;
       if (j[64] === MEMO_CACHE_SENTINEL)
@@ -2688,7 +2688,7 @@ function Ml(af) {
       else Aa = j[73];
       let wc;
       if (j[74] !== Si || j[75] !== Ma || j[76] !== Aa)
-        ((wc = r(o, {
+        ((wc = r(Box, {
           borderStyle: "single",
           borderColor: Si,
           paddingX: 1,
@@ -2699,13 +2699,13 @@ function Ml(af) {
           (j[76] = Aa),
           (j[77] = wc));
       else wc = j[77];
-      Ea = r(o, {
+      Ea = r(Box, {
         flexDirection: "column",
-        children: [pt, wc, Bi && e(t, { color: "error", children: Bi })],
+        children: [pt, wc, Bi && e(Text, { color: "error", children: Bi })],
       });
       let Dc;
       if (j[78] === MEMO_CACHE_SENTINEL)
-        ((Dc = e(t, { dimColor: !0, children: "Reload balance to:" })),
+        ((Dc = e(Text, { dimColor: !0, children: "Reload balance to:" })),
           (j[78] = Dc));
       else Dc = j[78];
       const Li = Ti ? "error" : Z === 1 ? "suggestion" : "inactive";
@@ -2714,7 +2714,7 @@ function Ml(af) {
       else Ba = j[80];
       let Ta;
       if (j[81] !== Ba)
-        ((Ta = e(t, { children: Ba })), (j[81] = Ba), (j[82] = Ta));
+        ((Ta = e(Text, { children: Ba })), (j[81] = Ba), (j[82] = Ta));
       else Ta = j[82];
       let Pc, Rc, Ec;
       if (j[83] === MEMO_CACHE_SENTINEL)
@@ -2761,7 +2761,7 @@ function Ml(af) {
       else Oa = j[93];
       let Fc;
       if (j[94] !== Li || j[95] !== Ta || j[96] !== Oa)
-        ((Fc = r(o, {
+        ((Fc = r(Box, {
           borderStyle: "single",
           borderColor: Li,
           paddingX: 1,
@@ -2772,15 +2772,15 @@ function Ml(af) {
           (j[96] = Oa),
           (j[97] = Fc));
       else Fc = j[97];
-      Fa = r(o, {
+      Fa = r(Box, {
         flexDirection: "column",
-        children: [Dc, Fc, Ti && e(t, { color: "error", children: Ti })],
+        children: [Dc, Fc, Ti && e(Text, { color: "error", children: Ti })],
       });
       xa =
         ge.ok &&
         me.ok &&
         hc &&
-        r(t, {
+        r(Text, {
           color: "success",
           children: [
             "Tops up to ",
@@ -2851,7 +2851,7 @@ function Ml(af) {
   else Kn = j[99];
   let Yn;
   if (j[100] !== Kn)
-    ((Yn = r(t, {
+    ((Yn = r(Text, {
       dimColor: !0,
       children: [
         "By selecting Agree, you authorize Anthropic to automatically charge",
@@ -2871,7 +2871,7 @@ function Ml(af) {
   if (j[102] !== Ye || j[103] !== Ca || j[104] !== Pe || j[105] !== Z)
     ((Xn = Pe.map(($c, Mc) =>
       r(
-        t,
+        Text,
         {
           color: Z === 2 && Ye === Mc ? "suggestion" : void 0,
           children: [Z === 2 && Ye === Mc ? figures.pointer : " ", " ", Ca[$c]],
@@ -2900,7 +2900,7 @@ function Ml(af) {
       me.ok &&
       Z === 2 &&
       Pe[Ye] === "save" &&
-      r(t, { color: "error", children: ["\xB7 ", bo] })),
+      r(Text, { color: "error", children: ["\xB7 ", bo] })),
       (j[107] = Ye),
       (j[108] = Pe),
       (j[109] = bo),
@@ -2911,7 +2911,7 @@ function Ml(af) {
   else In = j[113];
   let Re;
   if (j[114] !== Xn || j[115] !== In)
-    ((Re = r(o, { flexDirection: "row", gap: 2, children: [Xn, In] })),
+    ((Re = r(Box, { flexDirection: "row", gap: 2, children: [Xn, In] })),
       (j[114] = Xn),
       (j[115] = In),
       (j[116] = Re));
@@ -3028,14 +3028,14 @@ function os(ff) {
   let bt = Nc,
     Va;
   if (xe[15] !== Xi)
-    ((Va = e(t, { dimColor: !0, children: Xi })), (xe[15] = Xi), (xe[16] = Va));
+    ((Va = e(Text, { dimColor: !0, children: Xi })), (xe[15] = Xi), (xe[16] = Va));
   else Va = xe[16];
   let ja;
   if (xe[17] !== fn) ((ja = getCurrencySymbol(fn)), (xe[17] = fn), (xe[18] = ja));
   else ja = xe[18];
   let La;
   if (xe[19] !== ja)
-    ((La = e(t, { children: ja })), (xe[19] = ja), (xe[20] = La));
+    ((La = e(Text, { children: ja })), (xe[19] = ja), (xe[20] = La));
   else La = xe[20];
   let Ua;
   if (
@@ -3069,14 +3069,14 @@ function os(ff) {
   else Ua = xe[28];
   let Ka;
   if (xe[29] !== La || xe[30] !== Ua)
-    ((Ka = r(o, { flexDirection: "row", gap: 1, children: [La, Ua] })),
+    ((Ka = r(Box, { flexDirection: "row", gap: 1, children: [La, Ua] })),
       (xe[29] = La),
       (xe[30] = Ua),
       (xe[31] = Ka));
   else Ka = xe[31];
   let Ya;
   if (xe[32] !== Na)
-    ((Ya = Na && e(t, { dimColor: !0, children: Na })),
+    ((Ya = Na && e(Text, { dimColor: !0, children: Na })),
       (xe[32] = Na),
       (xe[33] = Ya));
   else Ya = xe[33];
@@ -3085,7 +3085,7 @@ function os(ff) {
     ((Xa =
       G.ok &&
       !pn &&
-      r(t, {
+      r(Text, {
         color: "success",
         children: ["Buys ", formatCurrencyAmount(G.cents, fn), " of usage credits"],
       })),
@@ -3097,7 +3097,7 @@ function os(ff) {
   else Xa = xe[38];
   let Ia;
   if (xe[39] !== Sa)
-    ((Ia = Sa && e(t, { color: "error", children: Sa })),
+    ((Ia = Sa && e(Text, { color: "error", children: Sa })),
       (xe[39] = Sa),
       (xe[40] = Ia));
   else Ia = xe[40];
@@ -3109,7 +3109,7 @@ function os(ff) {
     xe[44] !== Ka ||
     xe[45] !== Ya
   )
-    ((qa = r(o, {
+    ((qa = r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [Va, Ka, Ya, Xa, Ia],
@@ -3187,7 +3187,7 @@ function Al(bf) {
             return;
           }
           if (((bn = !0), cc(el)))
-            n(`Purchase status poll failed: ${l(el)}`, { level: "error" });
+            logForDebugging(`Purchase status poll failed: ${l(el)}`, { level: "error" });
           else logError(el);
           Co("Failed to check purchase status");
         }
@@ -3232,12 +3232,12 @@ function ht(vf) {
   else Yc = Kc[0];
   let Xc;
   if (Kc[1] !== nl)
-    ((Xc = r(o, {
+    ((Xc = r(Box, {
       flexDirection: "row",
       gap: 2,
       alignItems: "center",
       paddingTop: 2,
-      children: [Yc, e(t, { dimColor: !0, children: nl })],
+      children: [Yc, e(Text, { dimColor: !0, children: nl })],
     })),
       (Kc[1] = nl),
       (Kc[2] = Xc));
@@ -3259,16 +3259,16 @@ function Bl(Cf) {
   else Ja = rl[1];
   let za;
   if (rl[2] !== ol)
-    ((za = e(o, {
+    ((za = e(Box, {
       marginTop: 1,
-      children: e(t, { color: "success", children: ol }),
+      children: e(Text, { color: "success", children: ol }),
     })),
       (rl[2] = ol),
       (rl[3] = za));
   else za = rl[3];
   let Ic;
   if (rl[4] !== Ja || rl[5] !== za)
-    ((Ic = r(o, {
+    ((Ic = r(Box, {
       flexDirection: "row",
       gap: 2,
       alignItems: "center",
@@ -3333,16 +3333,16 @@ function ts(xf) {
   else Za = Do[9];
   let Ga;
   if (Do[10] !== al)
-    ((Ga = e(o, {
+    ((Ga = e(Box, {
       marginTop: 1,
-      children: e(t, { dimColor: !0, children: al }),
+      children: e(Text, { dimColor: !0, children: al }),
     })),
       (Do[10] = al),
       (Do[11] = Ga));
   else Ga = Do[11];
   let Qc;
   if (Do[12] !== Za || Do[13] !== Ga)
-    ((Qc = r(o, {
+    ((Qc = r(Box, {
       flexDirection: "row",
       gap: 2,
       alignItems: "center",
@@ -3391,7 +3391,7 @@ function fit(Pf) {
   E(ed, nd);
   let od;
   if (es[8] !== ul)
-    ((od = e(o, { paddingTop: 1, children: e(SpinnerMessageLine, { message: ul }) })),
+    ((od = e(Box, { paddingTop: 1, children: e(SpinnerMessageLine, { message: ul }) })),
       (es[8] = ul),
       (es[9] = od));
   else od = es[9];

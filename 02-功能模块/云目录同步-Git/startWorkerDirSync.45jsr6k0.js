@@ -15,7 +15,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, toWellFormed, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -26,7 +26,7 @@ import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
+import { getPreSettingsEnvSnapshot } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 import { HOST_FIELD_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   createConcurrencyLimiter,
@@ -78,25 +78,25 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getStageFileRoot } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
-  Aze,
-  on,
-  zbe,
-  AFt,
-  Van,
-  Vbe,
-  CFt,
-  Kbe,
-  Mv,
-  yO,
-  Xan,
-  K4,
-  cOe,
-  RFt,
-  I9,
-  uOe,
-  Jce,
-  dOe,
-} from "../Git-Worktree/chunk-v967hawf.js";
+  DEFAULT_GIT_TIMEOUT_MS,
+  runDirSyncGit,
+  withHookPins,
+  runDirSyncGitStreaming,
+  createNulDelimitedSplitter,
+  runDirSyncGitCollectingFields,
+  writeBlobToNewFile,
+  readBoundedTextFile,
+  formatGitFailureDetail,
+  resolveRefObjectIds,
+  writeSessionRef,
+  writeSessionRefs,
+  deleteSessionRefs,
+  quoteGitPath,
+  DEFAULT_MAX_BUNDLE_BYTES,
+  createBundle,
+  receiveBundle,
+  readFileWithMaxBytes,
+} from "../Git-Worktree/dir-sync-git-repository.js";
 import {
   JOURNAL_VERSION_WITH_NOTE,
   MAX_USER_EVENT_UUIDS,
@@ -156,7 +156,7 @@ async function Nr(e, t, r = {}) {
           cwd: wa(e),
           env: dirSyncGitEnv(),
           abortSignal: r.signal,
-          timeout: r.timeoutMs ?? Aze,
+          timeout: r.timeoutMs ?? DEFAULT_GIT_TIMEOUT_MS,
           stdin: "ignore",
         },
       )
@@ -164,7 +164,7 @@ async function Nr(e, t, r = {}) {
   );
 }
 async function Sn(e, t = {}) {
-  let r = t.timeoutMs ?? Aze,
+  let r = t.timeoutMs ?? DEFAULT_GIT_TIMEOUT_MS,
     o = await execFileNoThrowWithCwd(
       getDirSyncGitExe(),
       [...DIR_SYNC_GIT_ARGS, "rev-parse", "--absolute-git-dir", "--show-toplevel"],
@@ -193,9 +193,9 @@ function hn(e, t, r = e.timeoutMs) {
 }
 async function It(e) {
   let [t, r, o, l] = await Promise.all([
-      on(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"]),
-      on(e, ["symbolic-ref", "-q", "HEAD"]),
-      on(e, ["ls-files", "-z", "--unmerged"]),
+      runDirSyncGit(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"]),
+      runDirSyncGit(e, ["symbolic-ref", "-q", "HEAD"]),
+      runDirSyncGit(e, ["ls-files", "-z", "--unmerged"]),
       ka(e.gitDir),
     ]),
     d = t.stdout.trim();
@@ -205,7 +205,7 @@ async function It(e) {
   let h = r.stdout.trim();
   if (t.exitCode === 1) {
     if (r.exitCode !== 0) return null;
-    if ((await on(e, ["show-ref", "--verify", "-q", h])).exitCode !== 1)
+    if ((await runDirSyncGit(e, ["show-ref", "--verify", "-q", h])).exitCode !== 1)
       return null;
   }
   if (o.exitCode !== 0 || l === void 0) return null;
@@ -237,7 +237,7 @@ async function ka(e) {
   return r.find((o) => o !== null) ?? t;
 }
 async function ba(e) {
-  let t = await Kbe(Yi(e, "sequencer", "todo"), { firstBytes: 16 });
+  let t = await readBoundedTextFile(Yi(e, "sequencer", "todo"), { firstBytes: 16 });
   switch (t.kind) {
     case "absent":
       return null;
@@ -262,13 +262,13 @@ async function qi(
   let w = { ...e, signal: void 0 },
     _ = async (B, U) => (B.exitCode !== void 0 ? B.exitCode === 0 : U());
   if (t !== null && t === o.branch) {
-    let B = await on(e, ["update-ref", "--no-deref", "-m", d, t, r, o.head]);
+    let B = await runDirSyncGit(e, ["update-ref", "--no-deref", "-m", d, t, r, o.head]);
     return (await _(B, () => Ir(w, t, r))) === !0;
   }
-  let E = await on(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"]);
+  let E = await runDirSyncGit(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"]);
   if (E.exitCode !== 0 || E.stdout.trim() !== o.head) return !1;
   if (t === null) {
-    let B = await on(e, [
+    let B = await runDirSyncGit(e, [
       "update-ref",
       "--no-deref",
       "-m",
@@ -279,7 +279,7 @@ async function qi(
     ]);
     return (await _(B, () => Ta(w, r))) === !0;
   }
-  let D = await on(e, [
+  let D = await runDirSyncGit(e, [
     "update-ref",
     "--no-deref",
     "-m",
@@ -289,11 +289,11 @@ async function qi(
     l ?? "0".repeat(r.length),
   ]);
   if ((await _(D, () => Ir(w, t, r))) !== !0) return !1;
-  let x = await on(e, ["symbolic-ref", "-m", d, "HEAD", t]),
+  let x = await runDirSyncGit(e, ["symbolic-ref", "-m", d, "HEAD", t]),
     P = await _(x, () => Ca(w, t));
   if (P === !0) return !0;
   if (P === !1)
-    await on(w, [
+    await runDirSyncGit(w, [
       "update-ref",
       "--no-deref",
       "-m",
@@ -303,13 +303,13 @@ async function qi(
   return !1;
 }
 async function Ir(e, t, r) {
-  let o = await on(e, ["rev-parse", "-q", "--verify", `${t}^{commit}`]);
+  let o = await runDirSyncGit(e, ["rev-parse", "-q", "--verify", `${t}^{commit}`]);
   return o.exitCode === void 0
     ? null
     : o.exitCode === 0 && o.stdout.trim() === r;
 }
 async function Xi(e) {
-  let t = await on(e, ["symbolic-ref", "-q", "HEAD"]);
+  let t = await runDirSyncGit(e, ["symbolic-ref", "-q", "HEAD"]);
   return t.exitCode === 0 ? t.stdout.trim() : t.exitCode === 1 ? null : void 0;
 }
 async function Ta(e, t) {
@@ -324,14 +324,14 @@ var Hn = "040000",
   Sa = /^([0-7]{6}) [a-z]+ ([0-9a-f]{40}|[0-9a-f]{64})\t(.+)$/s;
 async function Ht(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return;
-  let o = await on(e, ["ls-tree", "-z", t, "--", r], { env: GIT_PATHSPEC_ENV });
+  let o = await runDirSyncGit(e, ["ls-tree", "-z", t, "--", r], { env: GIT_PATHSPEC_ENV });
   return o.exitCode === 0
     ? (Ki(o.stdout).find((l) => l.path === r) ?? null)
     : void 0;
 }
 async function Mr(e, t, r) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return null;
-  let o = await on(e, ["ls-tree", "-r", "-z", t, "--", r], { env: GIT_PATHSPEC_ENV });
+  let o = await runDirSyncGit(e, ["ls-tree", "-r", "-z", t, "--", r], { env: GIT_PATHSPEC_ENV });
   return o.exitCode === 0
     ? Ki(o.stdout).filter((l) => l.path.startsWith(r + "/"))
     : null;
@@ -446,7 +446,7 @@ async function Gr(e, t, r, o = Fr) {
   if (o <= 0) return { ids: [], unreadable: [...r] };
   let l = await e(["hash-object", "-w", "--no-filters", "--stdin-paths"], {
     input:
-      r.map(RFt).join(`
+      r.map(quoteGitPath).join(`
 `) +
       `
 `,
@@ -531,7 +531,7 @@ async function no(e, t, r, o, l) {
     ["hash-object", ...(l === "none" ? ["--no-filters"] : []), "--stdin-paths"],
     {
       input:
-        RFt(o.path) +
+        quoteGitPath(o.path) +
         `
 `,
     },
@@ -595,7 +595,7 @@ async function ro(e, t, r, o, l, d) {
 async function io(e, t, r) {
   let o = await readlink(En(t, r), { encoding: "buffer" }).catch(() => null);
   if (o === null) return { path: r, id: null };
-  let l = await on(e, ["hash-object", "-w", "--no-filters", "--stdin"], {
+  let l = await runDirSyncGit(e, ["hash-object", "-w", "--no-filters", "--stdin"], {
       input: o,
     }),
     d = l.stdout.trim();
@@ -619,7 +619,7 @@ async function oo(e, t) {
   );
 }
 async function zr(e, t, r) {
-  let o = await on(e, ["config", "--type=bool", "--get", t], {
+  let o = await runDirSyncGit(e, ["config", "--type=bool", "--get", t], {
       answerExitCodes: [1],
     }),
     l = o.stdout.trim();
@@ -630,7 +630,7 @@ var $r = ["filter", "working-tree-encoding", "ident"],
   so = [...$r, "text", "eol", "crlf"],
   Da = /^filter\.(.+)\.(clean|smudge|process|required)$/i;
 async function zn(e) {
-  let t = await on(
+  let t = await runDirSyncGit(
     e,
     ["config", "-z", "--name-only", "--get-regexp", "^filter\\."],
     { answerExitCodes: [1] },
@@ -667,7 +667,7 @@ async function Lr(
   w,
 ) {
   let _ = [],
-    E = Van((x) => {
+    E = createNulDelimitedSplitter((x) => {
       if ((_.push(x), _.length === 3)) {
         let [P = "", B = "", U = ""] = _;
         (w(P, B, U), (_.length = 0));
@@ -783,7 +783,7 @@ async function ut(e) {
   await Promise.all(
     [e, `${e}.lock`].map((t) =>
       La(t).catch((r) => {
-        if (!W(r)) n("dir-sync: could not remove a scratch index (non-fatal)");
+        if (!W(r)) logForDebugging("dir-sync: could not remove a scratch index (non-fatal)");
       }),
     ),
   );
@@ -824,9 +824,9 @@ async function za({
       e.signal,
     );
   let x = { GIT_INDEX_FILE: w },
-    P = (N, Le = {}) => on(e, [...E, ...N], Le),
-    B = (N, Le, Sr) => AFt(e, [...E, ...N], Le, Sr),
-    U = (N, Le) => Vbe(e, [...E, ...N], Le),
+    P = (N, Le = {}) => runDirSyncGit(e, [...E, ...N], Le),
+    B = (N, Le, Sr) => runDirSyncGitStreaming(e, [...E, ...N], Le, Sr),
+    U = (N, Le) => runDirSyncGitCollectingFields(e, [...E, ...N], Le),
     R = (N, Le = {}) =>
       P(["-c", "core.splitIndex=false", ...N], { ...Le, env: x }),
     K = Nt(e.gitDir, "index"),
@@ -850,7 +850,7 @@ async function za({
           kind: "refused",
           reason: "unmerged_index",
           step: "write-tree",
-          detail: Mv("write-tree", le),
+          detail: formatGitFailureDetail("write-tree", le),
         }
       : en("write-tree", le, e.signal);
   }
@@ -858,8 +858,8 @@ async function za({
   if (ke === null)
     return wt("commit-tree", "commit-tree (index) failed", e.signal);
   let [Te, Ce, Ee, ye, ie] = await Promise.all([
-    Vbe(e, [...E, "diff-files", "-z", "--ignore-submodules=dirty"], { env: x }),
-    Vbe(e, [...E, "ls-files", "-z", "--others", "--exclude-standard"], {
+    runDirSyncGitCollectingFields(e, [...E, "diff-files", "-z", "--ignore-submodules=dirty"], { env: x }),
+    runDirSyncGitCollectingFields(e, [...E, "ls-files", "-z", "--others", "--exclude-standard"], {
       env: x,
     }),
     zr(e, "core.filemode", !0),
@@ -1162,13 +1162,13 @@ async function go({
       return !1;
     let x = await zn(e);
     if (x === null) return !1;
-    let P = (se, Q = {}) => on(e, [...x, ...se], Q),
-      B = (se, Q, le) => AFt(e, [...x, ...se], Q, le),
+    let P = (se, Q = {}) => runDirSyncGit(e, [...x, ...se], Q),
+      B = (se, Q, le) => runDirSyncGitStreaming(e, [...x, ...se], Q, le),
       [U, R, K, de] = await Promise.all([
         P(["diff-files", "--quiet", "--ignore-submodules=dirty"], {
           env: { GIT_INDEX_FILE: t.scratchIndexPath },
         }),
-        Vbe(e, [...x, "ls-files", "-z", "--others", "--exclude-standard"]),
+        runDirSyncGitCollectingFields(e, [...x, "ls-files", "-z", "--others", "--exclude-standard"]),
         wo(e),
         ao(B, h.attributeCandidates),
       ]);
@@ -1194,7 +1194,7 @@ async function yo(e, t = null) {
   );
 }
 async function wo(e) {
-  let t = await on(e, ["config", "-z", "--list"]);
+  let t = await runDirSyncGit(e, ["config", "-z", "--list"]);
   return t.exitCode === 0 ? hashSha256(t.stdout) : null;
 }
 function _o(e) {
@@ -1218,7 +1218,7 @@ function Ua(e, t) {
   return e.length === t.length && e.every((o) => r.has(o));
 }
 async function zt(e, t, r, o) {
-  let l = await on(e, ["commit-tree", t, ...r.flatMap((h) => ["-p", h])], {
+  let l = await runDirSyncGit(e, ["commit-tree", t, ...r.flatMap((h) => ["-p", h])], {
       env: ja,
       input: `${o}
 `,
@@ -1228,7 +1228,7 @@ async function zt(e, t, r, o) {
 }
 var Ur = { kind: "refused", reason: "aborted", detail: "aborted" };
 function en(e, t, r, o) {
-  return wt(e, Mv(o === void 0 ? e : `${e} (${o})`, t), r);
+  return wt(e, formatGitFailureDetail(o === void 0 ? e : `${e} (${o})`, t), r);
 }
 function wt(e, t, r) {
   return isSignalAborted(r)
@@ -1332,7 +1332,7 @@ async function dr(e) {
     let r = await Yn(e);
     if (r.kind === "unusable")
       return (
-        n(
+        logForDebugging(
           "dir-sync: info/attributes is not a plain file of modest size; line endings not pinned",
         ),
         !1
@@ -1363,7 +1363,7 @@ async function dr(e) {
     return !0;
   } catch (r) {
     return (
-      n(
+      logForDebugging(
         "dir-sync: cannot pin the checkout to unconverted line endings: " +
           String(r),
       ),
@@ -1410,13 +1410,13 @@ async function xo(e, t, r = {}) {
       }),
     ],
     [_, E, D] = await Promise.all([
-      on(e, ["rev-parse", "--is-shallow-repository"]),
+      runDirSyncGit(e, ["rev-parse", "--is-shallow-repository"]),
       tl(e, d),
-      on(e, [...w, "ls-remote", "--get-url", "--end-of-options", d]),
+      runDirSyncGit(e, [...w, "ls-remote", "--get-url", "--end-of-options", d]),
     ]);
   if (_.exitCode !== 0 || E !== !1 || D.stdout.trim() !== d)
     return "unavailable";
-  let x = await on(
+  let x = await runDirSyncGit(
       e,
       [
         "-c",
@@ -1445,7 +1445,7 @@ async function xo(e, t, r = {}) {
 }
 async function Eo(e, t) {
   if (t.length === 0) return [];
-  let r = await on(
+  let r = await runDirSyncGit(
       e,
       ["cat-file", "--batch-check=%(objectname) %(objecttype)"],
       {
@@ -1480,14 +1480,14 @@ function Za(e) {
   };
 }
 async function el(e, t) {
-  let r = await on(e, ["config", "--get", "clone.defaultRemoteName"], {
+  let r = await runDirSyncGit(e, ["config", "--get", "clone.defaultRemoteName"], {
     answerExitCodes: [1],
   });
   if (r.exitCode !== 0 && r.exitCode !== 1) return "failed";
   let o =
     r.exitCode === 0 && r.stdout.trim() !== "" ? r.stdout.trim() : "origin";
   if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(o)) return "refused";
-  let l = await on(e, ["config", "--get", "remote." + o + ".url"], {
+  let l = await runDirSyncGit(e, ["config", "--get", "remote." + o + ".url"], {
     answerExitCodes: [1],
   });
   if (l.exitCode !== 0 && l.exitCode !== 1) return "failed";
@@ -1506,7 +1506,7 @@ async function el(e, t) {
     : "refused";
 }
 async function tl(e, t) {
-  let r = await on(e, ["config", "--list", "-z", "--name-only"]);
+  let r = await runDirSyncGit(e, ["config", "--list", "-z", "--name-only"]);
   if (r.exitCode !== 0) return null;
   let o = "remote." + t + ".";
   return r.stdout
@@ -1522,7 +1522,7 @@ async function nl(e, t) {
       process.env.all_proxy ||
       "";
   if (o !== "") return o;
-  let l = await on(e, ["config", "--system", "--get", "http.proxy"], {
+  let l = await runDirSyncGit(e, ["config", "--system", "--get", "http.proxy"], {
     answerExitCodes: [1],
   });
   return l.exitCode === 0 ? l.stdout.trim() : "";
@@ -1539,8 +1539,8 @@ var il = /^([0-7]{6}) ([0-9a-f]{40}|[0-9a-f]{64}) ([123])\t(.+)$/s,
   sl = 1024,
   Ro = "three-way-text";
 async function al(e) {
-  let t = await on(e, ["config", "-z", "--list", "--name-only"]);
-  if (t.exitCode !== 0) return { ok: !1, detail: Mv("config", t) };
+  let t = await runDirSyncGit(e, ["config", "-z", "--list", "--name-only"]);
+  if (t.exitCode !== 0) return { ok: !1, detail: formatGitFailureDetail("config", t) };
   let r = dedupe(
     t.stdout.split("\x00").flatMap((l) => ol.exec(l)?.slice(1, 2) ?? []),
   );
@@ -1571,7 +1571,7 @@ async function ur(e, t, r, o) {
   let l = await al(e);
   if (isSignalAborted(e.signal)) return { ok: !1, reason: "aborted" };
   if (!l.ok) return { ok: !1, reason: "git_error", detail: l.detail };
-  let d = await on(
+  let d = await runDirSyncGit(
     e,
     [
       "-c",
@@ -1589,9 +1589,9 @@ async function ur(e, t, r, o) {
   );
   if (isSignalAborted(e.signal)) return { ok: !1, reason: "aborted" };
   if (d.exitCode === 129)
-    return { ok: !1, reason: "unsupported_git", detail: Mv("merge-tree", d) };
+    return { ok: !1, reason: "unsupported_git", detail: formatGitFailureDetail("merge-tree", d) };
   if (d.exitCode !== 0 && d.exitCode !== 1)
-    return { ok: !1, reason: "git_error", detail: Mv("merge-tree", d) };
+    return { ok: !1, reason: "git_error", detail: formatGitFailureDetail("merge-tree", d) };
   let h = ll(d.stdout, {
     base: t,
     ours: r,
@@ -1668,12 +1668,12 @@ function qn(e) {
   ]);
 }
 async function cr(e, t) {
-  let r = await on(e, ["rev-parse", `${t}^{tree}`]),
+  let r = await runDirSyncGit(e, ["rev-parse", `${t}^{tree}`]),
     o = r.stdout.trim();
   return r.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(o) ? o : null;
 }
 async function Oo(e, t) {
-  let r = await on(
+  let r = await runDirSyncGit(
       e,
       ["cat-file", "--batch-check=%(objecttype) %(objectsize)"],
       {
@@ -1750,7 +1750,7 @@ async function Do({ repository: e, onto: t, commits: r, sign: o }) {
         d.push({ old: h, new: null, subject: w.subject });
         continue;
       }
-      let P = await on(
+      let P = await runDirSyncGit(
           e,
           ["commit-tree", _.parsed.tree, "-p", l, ...(o ? ["-S"] : [])],
           {
@@ -1768,7 +1768,7 @@ async function Do({ repository: e, onto: t, commits: r, sign: o }) {
           ? isSignalAborted(e.signal)
             ? { kind: "aborted" }
             : { kind: "git_error", detail: "commit-tree did not finish" }
-          : { kind: "cannot_commit", commit: h, detail: Mv("commit-tree", P) };
+          : { kind: "cannot_commit", commit: h, detail: formatGitFailureDetail("commit-tree", P) };
       (d.push({ old: h, new: B, subject: w.subject }), (l = B));
     }
     return { kind: "replayed", tip: l, commits: d };
@@ -1780,14 +1780,14 @@ async function Do({ repository: e, onto: t, commits: r, sign: o }) {
   }
 }
 async function Io(e) {
-  let t = await on(e, ["config", "--type=bool", "--get", "commit.gpgsign"], {
+  let t = await runDirSyncGit(e, ["config", "--type=bool", "--get", "commit.gpgsign"], {
     answerExitCodes: [1],
   });
   return t.exitCode === 0 ? t.stdout.trim() === "true" : t.exitCode !== 1;
 }
 async function dl(e, t) {
   if (!GIT_OBJECT_ID_REGEX.test(t)) return "unreadable";
-  let r = await on(e, [
+  let r = await runDirSyncGit(e, [
     "rev-list",
     "--max-count=1",
     "--no-commit-header",
@@ -2096,19 +2096,19 @@ async function wl({
   if (
     !(
       await Promise.all([
-        CFt(e, o.id, _.current),
+        writeBlobToNewFile(e, o.id, _.current),
         r === null
           ? fl(_.base, "").then(
               () => !0,
               () => !1,
             )
-          : CFt(e, r.id, _.base),
-        CFt(e, l.id, _.other),
+          : writeBlobToNewFile(e, r.id, _.base),
+        writeBlobToNewFile(e, l.id, _.other),
       ])
     ).every(Boolean)
   )
     return "failed";
-  let D = await on(e, [
+  let D = await runDirSyncGit(e, [
     "merge-file",
     d === "theirs" ? "--theirs" : "--ours",
     "-q",
@@ -2118,13 +2118,13 @@ async function wl({
   ]);
   if (D.exitCode === 255) return "unmergeable";
   if (D.exitCode !== 0) return "failed";
-  let x = await on(e, ["hash-object", "-w", "--no-filters", "--", _.current]),
+  let x = await runDirSyncGit(e, ["hash-object", "-w", "--no-filters", "--", _.current]),
     P = x.stdout.trim();
   return x.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(P) ? P : "failed";
 }
 async function _l(e, t, r, o, l) {
   let d = { GIT_INDEX_FILE: qr(t, "index") };
-  if ((await on(e, ["read-tree", r], { env: d })).exitCode !== 0) return null;
+  if ((await runDirSyncGit(e, ["read-tree", r], { env: d })).exitCode !== 0) return null;
   let w = "0".repeat(r.length),
     _ = [
       ...l.map((x) => `${Xn} ${w}	${x}\x00`),
@@ -2139,7 +2139,7 @@ async function _l(e, t, r, o, l) {
   if (_.length > 0) {
     if (
       (
-        await on(e, ["update-index", "-z", "--index-info"], {
+        await runDirSyncGit(e, ["update-index", "-z", "--index-info"], {
           env: d,
           input: _.join(""),
         })
@@ -2147,7 +2147,7 @@ async function _l(e, t, r, o, l) {
     )
       return null;
   }
-  let E = await on(e, ["write-tree"], { env: d }),
+  let E = await runDirSyncGit(e, ["write-tree"], { env: d }),
     D = E.stdout.trim();
   return E.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(D) ? D : null;
 }
@@ -2179,7 +2179,7 @@ var Cl = "ccr-sync-tree-",
   Sl = "0";
 async function Re(e, t, r) {
   if (t === r && GIT_OBJECT_ID_REGEX.test(t)) return [];
-  let o = await Vbe(e, [
+  let o = await runDirSyncGitCollectingFields(e, [
     "diff-tree",
     "-r",
     "-z",
@@ -2191,7 +2191,7 @@ async function Re(e, t, r) {
   ]);
   if (o.fields === null || o.fieldBytes === null)
     return (
-      n(
+      logForDebugging(
         `dirSync: diff-tree gave no answer (exit ${String(o.exitCode)}): ${o.stderr}`,
       ),
       null
@@ -2200,7 +2200,7 @@ async function Re(e, t, r) {
 }
 async function Bo(e, t, r, o) {
   if (t === r && GIT_OBJECT_ID_REGEX.test(t)) return [];
-  let l = await Vbe(e, [
+  let l = await runDirSyncGitCollectingFields(e, [
     "diff-tree",
     "-r",
     "-z",
@@ -2213,7 +2213,7 @@ async function Bo(e, t, r, o) {
   ]);
   if (l.fields === null)
     return (
-      n(
+      logForDebugging(
         `dirSync: diff-tree gave no answer (exit ${String(l.exitCode)}): ${l.stderr}`,
       ),
       null
@@ -2303,10 +2303,10 @@ async function vn(e, t, r) {
   let o = Tl(e.gitDir, `${Cl}${bl()}`),
     l = { GIT_INDEX_FILE: o };
   try {
-    if ((await on(e, ["read-tree", t], { env: l })).exitCode !== 0) return null;
+    if ((await runDirSyncGit(e, ["read-tree", t], { env: l })).exitCode !== 0) return null;
     if (
       (
-        await on(e, ["update-index", "-z", "--index-info"], {
+        await runDirSyncGit(e, ["update-index", "-z", "--index-info"], {
           env: l,
           input: Buffer.concat(
             r.flatMap((E) => [
@@ -2323,7 +2323,7 @@ async function vn(e, t, r) {
       ).exitCode !== 0
     )
       return null;
-    let w = await on(e, ["write-tree"], { env: l }),
+    let w = await runDirSyncGit(e, ["write-tree"], { env: l }),
       _ = w.stdout.trim();
     return w.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(_) ? _ : null;
   } finally {
@@ -2540,7 +2540,7 @@ async function xl(e, t, r) {
   return Kn(e, [`--max-count=${Vr + 1}`, "--end-of-options", t, `^${r}`]);
 }
 async function Kn(e, t) {
-  let r = await on(e, ["rev-list", ...t]);
+  let r = await runDirSyncGit(e, ["rev-list", ...t]);
   if (r.exitCode !== 0) return null;
   return r.stdout
     .split(
@@ -2550,7 +2550,7 @@ async function Kn(e, t) {
     .filter((o) => o !== "");
 }
 async function Ut(e, t, r) {
-  let o = await on(
+  let o = await runDirSyncGit(
     e,
     ["merge-base", "--is-ancestor", "--end-of-options", t, r],
     { answerExitCodes: [1] },
@@ -2558,7 +2558,7 @@ async function Ut(e, t, r) {
   return o.exitCode === 0 ? !0 : o.exitCode === 1 ? !1 : null;
 }
 async function Ft(e, t) {
-  let r = await on(e, [
+  let r = await runDirSyncGit(e, [
       "rev-parse",
       "-q",
       "--verify",
@@ -2584,13 +2584,13 @@ async function Ho({
 }) {
   if (l === null || l === o) return { was: null, previousTip: null };
   if (!l.startsWith("refs/heads/") || Rl.test(l)) return null;
-  let h = await on(
+  let h = await runDirSyncGit(
     e,
     ["rev-parse", "-q", "--verify", "--end-of-options", `${l}^{commit}`],
     { answerExitCodes: [1] },
   );
   if (h.exitCode === 1) {
-    let D = await on(e, ["for-each-ref", "--format=%(refname)", "refs/heads/"]);
+    let D = await runDirSyncGit(e, ["for-each-ref", "--format=%(refname)", "refs/heads/"]);
     if (D.exitCode !== 0) return null;
     let x = D.stdout
       .split(
@@ -2617,7 +2617,7 @@ async function Uo(e, t, r, o) {
   if (o.length === 0) return r;
   let l = buildSessionRefName(t, "turns");
   if (l === null) return r;
-  let d = await on(e, ["for-each-ref", "--format=%(parent)", `${l}/`]);
+  let d = await runDirSyncGit(e, ["for-each-ref", "--format=%(parent)", `${l}/`]);
   if (d.exitCode !== 0) return null;
   let h = new Set(
       d.stdout
@@ -2698,7 +2698,7 @@ async function Yo(e, t, r) {
 }
 async function Jr(e, t, r) {
   if (r.length === 0) return new Set();
-  let o = await on(e, [
+  let o = await runDirSyncGit(e, [
       "rev-parse",
       "-q",
       "--verify",
@@ -2709,7 +2709,7 @@ async function Jr(e, t, r) {
   if (o.exitCode !== 0 || !GIT_OBJECT_ID_REGEX.test(l)) return new Set();
   let d = new Set();
   for (let h = 0; h < r.length; h += zo) {
-    let w = await on(
+    let w = await runDirSyncGit(
       e,
       ["ls-tree", "-r", "-z", "--name-only", l, "--", ...r.slice(h, h + zo)],
       { env: GIT_PATHSPEC_ENV },
@@ -2837,11 +2837,11 @@ async function Dl({ checkout: e, sessionId: t, memory: r }) {
   let o = buildSessionRefName(t, "agreed"),
     l = buildSessionRefName(t, "in/0")?.replace(/0$/, "") ?? null;
   if (o === null || l === null) return null;
-  let d = await yO(e, [o]);
+  let d = await resolveRefObjectIds(e, [o]);
   if (d === null) return;
   let h = d.get(o);
   if (h === void 0) return null;
-  let w = await on(e, [
+  let w = await runDirSyncGit(e, [
       "rev-list",
       "--max-count=1",
       "--no-commit-header",
@@ -2853,7 +2853,7 @@ async function Dl({ checkout: e, sessionId: t, memory: r }) {
   if (w.exitCode !== 0 || !GIT_OBJECT_ID_REGEX.test(E)) return;
   if (!GIT_OBJECT_ID_REGEX.test(_) || _ === r.integrated?.worktreeCommit) return null;
   let [D, x] = await Promise.all([
-      on(e, [
+      runDirSyncGit(e, [
         "rev-list",
         "--max-count=1",
         "--no-commit-header",
@@ -2861,7 +2861,7 @@ async function Dl({ checkout: e, sessionId: t, memory: r }) {
         "--end-of-options",
         _,
       ]),
-      on(e, [
+      runDirSyncGit(e, [
         "for-each-ref",
         "--format=%(refname)",
         "--points-at",
@@ -3474,7 +3474,7 @@ function ns(e) {
     r = e.maxStagedBytes ?? Qr,
     o = e.stagedObjectWaitMs ?? zl,
     l = e.direct,
-    d = e.inboundMaxBytes ?? I9,
+    d = e.inboundMaxBytes ?? DEFAULT_MAX_BUNDLE_BYTES,
     { stallMs: h, restartPauseMs: w } = e,
     _ = createCommitRouteMemo(),
     E = null;
@@ -3607,7 +3607,7 @@ async function ql(e, t, r, o, l) {
 async function Xl(e, t) {
   let r = Yl(e, t.sha256);
   try {
-    let o = await dOe(r, t.size);
+    let o = await readFileWithMaxBytes(r, t.size);
     return o.kind === "read" && o.content.length === t.size
       ? { kind: "ok", content: o.content, etag: t.sha256 }
       : { kind: "not_found" };
@@ -3730,7 +3730,7 @@ async function ei(e) {
 async function ls(e, t) {
   try {
     (await rs(ss(e), { recursive: !0 }),
-      await writeFileAtomic(e, b({ version: mr, ...t }), 384));
+      await writeFileAtomic(e, jsonStringify({ version: mr, ...t }), 384));
   } catch (r) {
     writeDiagnosticsEvent("warn", "dir_sync_git_store_write_failed", { code: A(r) ?? "unknown" });
   }
@@ -3773,7 +3773,7 @@ async function ti(e, t) {
   try {
     return (
       await rs(ss(e), { recursive: !0 }),
-      await writeFileAtomic(e, b({ version: mr, ...t }), 384),
+      await writeFileAtomic(e, jsonStringify({ version: mr, ...t }), 384),
       !0
     );
   } catch (r) {
@@ -3852,7 +3852,7 @@ async function fs(e, t) {
 function hs(e) {
   let t;
   try {
-    t = z(e);
+    t = jsonParse(e);
   } catch {
     return !1;
   }
@@ -3865,7 +3865,7 @@ function hs(e) {
   return typeof d === "string" && d !== "git";
 }
 async function ms(e) {
-  let t = await on(e, ["reflog", "show", "--format=%H", "HEAD"]);
+  let t = await runDirSyncGit(e, ["reflog", "show", "--format=%H", "HEAD"]);
   if (t.exitCode !== 0) return null;
   let r =
     t.stdout
@@ -3876,7 +3876,7 @@ async function ms(e) {
       )
       .at(-1) ?? "";
   if (r === "") {
-    let o = await on(e, ["rev-parse", "HEAD"]),
+    let o = await runDirSyncGit(e, ["rev-parse", "HEAD"]),
       l = o.stdout.trim();
     return o.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(l) ? l : null;
   }
@@ -3885,7 +3885,7 @@ async function ms(e) {
 async function ps(e, t) {
   let r = buildSessionRefName(t, "turns/0")?.slice(0, -1);
   if (r === void 0) return 0;
-  let o = await on(e, ["for-each-ref", "--format=%(refname)", r]);
+  let o = await runDirSyncGit(e, ["for-each-ref", "--format=%(refname)", r]);
   if (o.exitCode !== 0) return null;
   return o.stdout
     .split(
@@ -3899,7 +3899,7 @@ async function ps(e, t) {
 async function gs(e, t, r) {
   let o = buildSessionRefName(t, "parked/0")?.slice(0, -1);
   if (o === void 0) return [];
-  let l = await on(e, [
+  let l = await runDirSyncGit(e, [
     "for-each-ref",
     "--format=%(refname)",
     "--no-merged=HEAD",
@@ -3916,7 +3916,7 @@ async function gs(e, t, r) {
     : [];
 }
 async function wn(e, t) {
-  let r = await on(e, ["rev-parse", "-q", "--verify", `${t}^{commit}`], {
+  let r = await runDirSyncGit(e, ["rev-parse", "-q", "--verify", `${t}^{commit}`], {
     answerExitCodes: [1],
   });
   return r.exitCode === 0 ? !0 : r.exitCode === 1 ? !1 : null;
@@ -3941,7 +3941,7 @@ async function ks(e, t) {
   return t.prerequisites.filter((o, l) => r[l] !== !0);
 }
 async function Vn(e, t) {
-  let r = await on(e, ["rev-parse", `${t}^@`]);
+  let r = await runDirSyncGit(e, ["rev-parse", `${t}^@`]);
   if (r.exitCode !== 0) return null;
   let o = r.stdout
     .split(
@@ -3952,20 +3952,20 @@ async function Vn(e, t) {
   return o.every((l) => GIT_OBJECT_ID_REGEX.test(l)) ? o : null;
 }
 async function Jn(e, t) {
-  let r = await on(e, ["rev-parse", `${t}^{tree}`]),
+  let r = await runDirSyncGit(e, ["rev-parse", `${t}^{tree}`]),
     o = r.stdout.trim();
   return r.exitCode === 0 && GIT_OBJECT_ID_REGEX.test(o) ? o : null;
 }
 async function gr(e, t, r) {
   let o = buildSessionRefName(t, `turns/${r}`);
   if (o === null) return null;
-  return (await yO(e, [o]))?.get(o) ?? null;
+  return (await resolveRefObjectIds(e, [o]))?.get(o) ?? null;
 }
 async function yr(e, t, r) {
   let o = buildSessionRefName(t, "turns/0")?.slice(0, -1),
     l = buildSessionRefName(t, "seed");
   if (o === void 0 || l === null) return !1;
-  let d = await on(e, [
+  let d = await runDirSyncGit(e, [
     "for-each-ref",
     "--format=%(objectname)",
     `--points-at=${r}`,
@@ -3977,7 +3977,7 @@ async function yr(e, t, r) {
 async function bs(e, t) {
   let r = buildSessionRefName(t, "in/0")?.slice(0, -1);
   if (r === void 0) return [];
-  let o = await on(e, ["for-each-ref", "--format=%(objectname) %(refname)", r]);
+  let o = await runDirSyncGit(e, ["for-each-ref", "--format=%(objectname) %(refname)", r]);
   if (o.exitCode !== 0) return [];
   return o.stdout
     .split(
@@ -3996,7 +3996,7 @@ async function bs(e, t) {
 async function Ts(e, t, r) {
   let o = buildSessionRefName(t, "in/0")?.slice(0, -1);
   if (o === void 0) return !1;
-  let l = await on(e, [
+  let l = await runDirSyncGit(e, [
     "for-each-ref",
     "--format=%(objectname)",
     `--points-at=${r}`,
@@ -4007,7 +4007,7 @@ async function Ts(e, t, r) {
 async function ri(e, t) {
   let r = buildSessionRefName(t, "seed");
   if (r === null) return null;
-  let o = await yO(e, [r]);
+  let o = await resolveRefObjectIds(e, [r]);
   if (o === null) return;
   let l = o.get(r) ?? null;
   if (l === null) return null;
@@ -4021,7 +4021,7 @@ function Qn(e) {
 }
 async function ii(e, t, r, o, l) {
   let d = r.map((P) => `^${P}`),
-    h = await on(e, [
+    h = await runDirSyncGit(e, [
       "rev-list",
       "--objects",
       "--no-object-names",
@@ -4030,7 +4030,7 @@ async function ii(e, t, r, o, l) {
       ...d,
     ]);
   if (h.exitCode !== 0) return [];
-  let w = await on(
+  let w = await runDirSyncGit(
     e,
     ["cat-file", "--batch-check=%(objecttype) %(objectname) %(objectsize)"],
     { input: h.stdout },
@@ -4049,7 +4049,7 @@ async function ii(e, t, r, o, l) {
     .sort((P, B) => B.size - P.size)
     .slice(0, l);
   if (_.length === 0) return [];
-  let E = await on(e, [
+  let E = await runDirSyncGit(e, [
     "ls-tree",
     "-r",
     "-z",
@@ -4066,7 +4066,7 @@ async function ii(e, t, r, o, l) {
   return (
     await Promise.all(
       _.map(async (P) => {
-        let B = await on(
+        let B = await runDirSyncGit(
             e,
             [
               "log",
@@ -4098,7 +4098,7 @@ async function ii(e, t, r, o, l) {
   ).flat();
 }
 async function ld(e, t, r) {
-  let o = await on(e, [
+  let o = await runDirSyncGit(e, [
     "diff-tree",
     "-r",
     "-z",
@@ -4777,7 +4777,7 @@ async function Ms({
       t.agentCommits.kind === "parked" ? t.agentCommits.ref : null,
       t.branchPreviousTip?.ref ?? null,
     ].filter((_) => _ !== null),
-    h = await yO(e, d),
+    h = await resolveRefObjectIds(e, d),
     w;
   try {
     w = await _d({
@@ -4800,7 +4800,7 @@ async function Ms({
     await ut(t.self.scratchIndexPath);
   }
   if (w.kind === "not_applied" && w.residue.length === 0)
-    await cOe(e, h === null ? [] : d.filter((_) => !h.has(_)));
+    await deleteSessionRefs(e, h === null ? [] : d.filter((_) => !h.has(_)));
   return w;
 }
 async function _d({
@@ -4861,7 +4861,7 @@ async function _d({
             tip: U(t.branchPreviousTip.ref, t.branchPreviousTip.tip),
           };
   if (t.deletes.length > 0) {
-    let te = await on(
+    let te = await runDirSyncGit(
         e,
         ["diff-files", "--name-only", "-z", "--ignore-submodules=dirty"],
         { env: { GIT_INDEX_FILE: _.scratchIndexPath } },
@@ -4938,7 +4938,7 @@ async function _d({
   if (pe.length > 0) {
     if (
       (
-        await on(e, ["update-index", "-z", "--force-remove", "--stdin"], {
+        await runDirSyncGit(e, ["update-index", "-z", "--force-remove", "--stdin"], {
           env: { GIT_INDEX_FILE: _.scratchIndexPath },
           input: pe.map((_e) => `${_e}\x00`).join(""),
         })
@@ -4980,7 +4980,7 @@ async function _d({
     Ye = Ke === ye,
     ze = Ye
       ? null
-      : await on(xe, [...Ve, ..._r, "read-tree", "-m", "-u", Ke, ye], {
+      : await runDirSyncGit(xe, [...Ve, ..._r, "read-tree", "-m", "-u", Ke, ye], {
           env: { GIT_INDEX_FILE: _.scratchIndexPath },
         });
   if (ze !== null && ze.exitCode !== 0) {
@@ -4990,7 +4990,7 @@ async function _d({
         ),
       _e = te
         ? null
-        : await on(xe, [...Ve, ..._r, "read-tree", "--reset", "-u", Ke], {
+        : await runDirSyncGit(xe, [...Ve, ..._r, "read-tree", "--reset", "-u", Ke], {
             env: { GIT_INDEX_FILE: _.scratchIndexPath },
           }),
       Ne = new Set(le),
@@ -5016,7 +5016,7 @@ async function _d({
       detail:
         ze.exitCode === void 0
           ? "the work-tree write was interrupted"
-          : Mv("read-tree", ze),
+          : formatGitFailureDetail("read-tree", ze),
     };
   }
   let Ue = [
@@ -5043,7 +5043,7 @@ async function _d({
       let _e = await It(xe),
         Ne = _e !== null && _e.head === w.head && _e.branch === w.branch,
         Ae = `HEAD was meant to move from ${w.head} to ${t.targetHead}; git declined the move or its outcome could not be confirmed, so HEAD may stand at either`,
-        et = await on(xe, [...Ve, ..._r, "read-tree", "-m", "-u", ye, Ke], {
+        et = await runDirSyncGit(xe, [...Ve, ..._r, "read-tree", "-m", "-u", ye, Ke], {
           env: { GIT_INDEX_FILE: _.scratchIndexPath },
         }),
         Oe = et.exitCode === 0 ? await _n(e, Ee()) : [];
@@ -5062,7 +5062,7 @@ async function _d({
       Fe !== null &&
       Fe === _.indexTree &&
       (
-        await on(
+        await runDirSyncGit(
           xe,
           [
             "diff-index",
@@ -5079,10 +5079,10 @@ async function _d({
     Ze =
       Ge ||
       (Fe !== null &&
-        (await on(xe, [..._r, "read-tree", "-i", "-m", Fe])).exitCode === 0),
+        (await runDirSyncGit(xe, [..._r, "read-tree", "-i", "-m", Fe])).exitCode === 0),
     _t = Ge && Ye && _.asRead.indexStatClean && (await ko(e, _));
   if (Ze && !_t)
-    await on(xe, [...Ve, "update-index", "-q", "--refresh"], {
+    await runDirSyncGit(xe, [...Ve, "update-index", "-q", "--refresh"], {
       answerExitCodes: [1],
     });
   let qe =
@@ -5096,7 +5096,7 @@ async function _d({
       [h.worktreeCommit],
       `claude --cloud directory sync: agreed after laptop generation ${h.generation}`,
     );
-  if (st !== null && (await K4(e, [{ name: x, id: st }])))
+  if (st !== null && (await writeSessionRefs(e, [{ name: x, id: st }])))
     E.push({ name: x, id: st });
   let ve = {
       agreedTree: qe,
@@ -5173,14 +5173,14 @@ async function kd(e, t) {
       await t.reduce(
         async (d, h) => [
           ...(await d),
-          await Xan(e, h.name, h.id, { kind: "create" }),
+          await writeSessionRef(e, h.name, h.id, { kind: "create" }),
         ],
         Promise.resolve([]),
       )
     ).every(Boolean)
   )
     return t.map(({ name: d, id: h }) => ({ name: d, id: h }));
-  let o = await yO(
+  let o = await resolveRefObjectIds(
     e,
     t.map((d) => d.name),
   );
@@ -5195,7 +5195,7 @@ async function kd(e, t) {
             ? await Ut(e, `${h}^1`, `${d.id}^1`)
             : await Ut(e, h, d.id);
     if (w === null) return null;
-    let _ = w && (await Xan(e, d.name, d.id, { kind: "replace", current: h }));
+    let _ = w && (await writeSessionRef(e, d.name, d.id, { kind: "replace", current: h }));
     l.push({ name: d.name, id: _ ? d.id : h });
   }
   return l.every((d) => d.id !== null) ? l : null;
@@ -5417,7 +5417,7 @@ function br(e) {
   return buildSessionRefName(e, "start") === null ? null : `claude/${e}/start`;
 }
 async function nu(e, t, r) {
-  return (await yO(e, [t]))?.get(t) === r;
+  return (await resolveRefObjectIds(e, [t]))?.get(t) === r;
 }
 async function ru(e) {
   if (e === null) return !1;
@@ -5434,7 +5434,7 @@ async function iu(e, t) {
   if (e === null) return;
   try {
     (await Xs(Od(e), { recursive: !0 }),
-      await Ad(e, b({ emptyAtMs: t }), "utf-8"));
+      await Ad(e, jsonStringify({ emptyAtMs: t }), "utf-8"));
   } catch (r) {
     writeDiagnosticsEvent("info", "dir_sync_git_empty_start_record_unwritten", {
       code: A(r) ?? "none",
@@ -5701,7 +5701,7 @@ function Js({
     let p = await Sn(e).catch(() => null),
       C = br(t);
     if (p === null || C === null) return !1;
-    let L = await on(p, ["symbolic-ref", "-q", "HEAD"], {
+    let L = await runDirSyncGit(p, ["symbolic-ref", "-q", "HEAD"], {
       answerExitCodes: [1],
     });
     if (L.exitCode === 0 && L.stdout.trim() === `refs/heads/${C}`) return !0;
@@ -5818,7 +5818,7 @@ function Js({
   async function la(p) {
     if (r.firstWorkerProcess !== !0) return null;
     let C = await Sn(e),
-      L = C === null ? null : await zbe(C),
+      L = C === null ? null : await withHookPins(C),
       M = L === null ? null : await It(L);
     if (L === null || M === null || M.head === null) return null;
     if ((await ri(L, t)) != null || p.aborted) return null;
@@ -5962,7 +5962,7 @@ function Js({
       F = br(t),
       J = buildSessionRefName(t, "turns");
     if (M === null || F === null || J === null) return null;
-    let V = await on(M, ["symbolic-ref", "-q", "HEAD"], {
+    let V = await runDirSyncGit(M, ["symbolic-ref", "-q", "HEAD"], {
       answerExitCodes: [1],
     });
     if (V.exitCode === 1)
@@ -5970,13 +5970,13 @@ function Js({
     if (V.exitCode !== 0) return null;
     if (V.stdout.trim() === `refs/heads/${F}`)
       return { kind: "own", checkout: M };
-    let I = await on(M, ["rev-parse", "-q", "--verify", "HEAD^{commit}"], {
+    let I = await runDirSyncGit(M, ["rev-parse", "-q", "--verify", "HEAD^{commit}"], {
       answerExitCodes: [1],
     });
     if (I.exitCode === 0)
       return { kind: "committed", checkout: M, found: C, count: L };
     if (I.exitCode !== 1) return null;
-    let re = await on(M, [
+    let re = await runDirSyncGit(M, [
       "for-each-ref",
       "--count=1",
       "--format=%(refname)",
@@ -6020,14 +6020,14 @@ function Js({
       De = (ae) => hn(ae, void 0, ui),
       ue = async (ae, He) => {
         for (let yt = 0; yt < fi; yt += 1)
-          if ((await on(De(ae), He)).exitCode === 0) return !0;
+          if ((await runDirSyncGit(De(ae), He)).exitCode === 0) return !0;
         return !1;
       },
       ce = !1,
       Se = null,
       Je = C.kind === "own" || C.kind === "unborn" ? C.checkout : null;
     if (Je !== null && (await nu(Je, re, p.worktreeCommit))) {
-      if (((ce = !0), (Se = await zbe(Je)), isSignalAborted(M))) return { kind: "waiting" };
+      if (((ce = !0), (Se = await withHookPins(Je)), isSignalAborted(M))) return { kind: "waiting" };
       F();
     } else {
       let ae;
@@ -6066,8 +6066,8 @@ function Js({
       for (let Xe = 0; cn === null && Xe < fi; Xe += 1)
         if (await Nr(e, j)) cn = await Sn(e);
       if (cn === null) return J({ reason: "checkout_failed", step: "init" });
-      Se = await zbe(cn);
-      let We = await Jce({
+      Se = await withHookPins(cn);
+      let We = await receiveBundle({
         repository: De(Se),
         content: ae,
         targets: new Map([[I.tipRef, re]]),
@@ -6083,7 +6083,7 @@ function Js({
         Xe < fi;
         Xe += 1
       )
-        We = await Jce({
+        We = await receiveBundle({
           repository: De(Se),
           content: ae,
           targets: new Map([[I.tipRef, re]]),
@@ -6184,7 +6184,7 @@ function Js({
         null
       );
     }
-    let F = await zbe(M);
+    let F = await withHookPins(M);
     await yo(F.gitDir, Nn?.scratchIndexPath ?? null);
     let J = await It(F);
     if (J === null || J.head === null)
@@ -6473,7 +6473,7 @@ function Js({
         C.holds[0] ??
         L.memory.integrated?.worktreeCommit ??
         L.memory.pinnedHead,
-      J = await on(p.checkout, ["diff", "--name-only", "-z", F, M]).catch(
+      J = await runDirSyncGit(p.checkout, ["diff", "--name-only", "-z", F, M]).catch(
         () => null,
       );
     if (J === null || J.exitCode !== 0) return null;
@@ -6668,7 +6668,7 @@ function Js({
     let { note: I, armed: re } = F,
       { remembered: j } = re;
     ((bn = I.generation), (Vt = !0));
-    let ee = await zbe(re.checkout),
+    let ee = await withHookPins(re.checkout),
       he = !1;
     if (
       ((j.laptopHolds = I.holds.slice(0, MAX_LISTED_COMMITS)),
@@ -6746,7 +6746,7 @@ function Js({
       }
       if (!ne) {
         let ge = buildSessionRefName(re.sessionId, `in/${rt.generation}`),
-          be = ge === null ? null : await yO(ee, [ge]);
+          be = ge === null ? null : await resolveRefObjectIds(ee, [ge]);
         if (ge !== null && be === null) {
           writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", { probe: "pending_ref" });
           return;
@@ -6763,7 +6763,7 @@ function Js({
       }
     }
     j.pending = null;
-    let He = await yO(ee, [Je]);
+    let He = await resolveRefObjectIds(ee, [Je]);
     if (He === null) {
       writeDiagnosticsEvent("warn", "dir_sync_git_bundle_unverified", {});
       return;
@@ -6853,7 +6853,7 @@ function Js({
         return;
       }
       j.refusedBundle = null;
-    } else if (!(await K4(ee, [{ name: Je, id: I.worktreeCommit }]))) return;
+    } else if (!(await writeSessionRefs(ee, [{ name: Je, id: I.worktreeCommit }]))) return;
     j.need = null;
     let We = await Vn(ee, I.worktreeCommit);
     if (We === null) {
@@ -6935,7 +6935,7 @@ function Js({
         }),
         Pe.detail !== void 0)
       )
-        n(`dir-sync: turn start skipped (${Pe.reason}): ${Pe.detail}`);
+        logForDebugging(`dir-sync: turn start skipped (${Pe.reason}): ${Pe.detail}`);
       if (Pe.reason === "git_unsupported")
         (r.notify(
           "Directory sync: this container's git cannot merge the user's changes in (it lacks `git merge-tree --write-tree`); the user's edits are not arriving here, yours still go up.",
@@ -7102,7 +7102,7 @@ function Js({
         return (fe.gaveUpWaiting(C), { need: C.head, final: !0 });
       return { need: null, final: !1 };
     }
-    let j = await Jce({
+    let j = await receiveBundle({
       repository: p,
       content: re.content,
       targets: new Map([[C.bundle.tipRef, L]]),
@@ -7165,7 +7165,7 @@ function Js({
     let { armed: L } = P,
       { remembered: M } = L;
     await vr();
-    let F = await zbe(hn(L.checkout, void 0)),
+    let F = await withHookPins(hn(L.checkout, void 0)),
       J = [...M.userEventUuids, ...U, ...p].slice(-MAX_USER_EVENT_UUIDS);
     U = [];
     let V = await It(F);
@@ -7230,7 +7230,7 @@ function Js({
           reason: fromEnum(j.reason),
           ...(ae !== void 0 && { step: fromEnum(ae) }),
         }),
-        n(`dir-sync: turn-end snapshot refused: ${j.detail}`),
+        logForDebugging(`dir-sync: turn-end snapshot refused: ${j.detail}`),
         j.reason !== "aborted")
       )
         fe.notSent(j.detail, j.step === "info-attributes" ? "rule" : "git");
@@ -7252,7 +7252,7 @@ function Js({
       he = buildSessionRefName(L.sessionId, `turns/${ee}`);
     if (
       he === null ||
-      !(await K4(F, [{ name: he, id: j.snapshot.worktreeCommit }]))
+      !(await writeSessionRefs(F, [{ name: he, id: j.snapshot.worktreeCommit }]))
     ) {
       (writeDiagnosticsEvent("warn", "dir_sync_git_turn_ref_failed", {}),
         rr("no_ref"),
@@ -7281,7 +7281,7 @@ function Js({
       ...M.laptopHolds,
     ]);
     nt = !1;
-    let ue = await uOe({ repository: F, tips: [he], prerequisites: De }),
+    let ue = await createBundle({ repository: F, tips: [he], prerequisites: De }),
       ce = null,
       Se = "nothing_to_send",
       Je;
@@ -7423,7 +7423,7 @@ function Js({
   }
   async function ma(p) {
     let { remembered: C } = p,
-      L = await zbe(hn(p.checkout, void 0)),
+      L = await withHookPins(hn(p.checkout, void 0)),
       M = await It(L);
     if (
       M === null ||
@@ -8108,10 +8108,10 @@ function startWorkerDirSync(e, t = xu(), r = DEFAULT_BEFORE_TURN_CAP_MS, o = { g
   );
 }
 function ia() {
-  return Ie(CK().CLAUDE_CODE_DIR_SYNC_GIT);
+  return Ie(getPreSettingsEnvSnapshot().CLAUDE_CODE_DIR_SYNC_GIT);
 }
 function oa() {
-  let e = CK().CLAUDE_CODE_WORKER_EPOCH;
+  let e = getPreSettingsEnvSnapshot().CLAUDE_CODE_WORKER_EPOCH;
   if (e === void 0) return 1;
   let t = Number.parseInt(e, 10);
   return Number.isInteger(t) && t >= 1 ? t : Number.MAX_SAFE_INTEGER;

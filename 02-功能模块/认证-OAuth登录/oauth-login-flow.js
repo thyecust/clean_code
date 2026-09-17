@@ -13,7 +13,7 @@ import { getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { resolveRefreshTokenExpiresAt, shouldUseClaudeAIAuth, parseScopes, buildAuthUrl, exchangeCodeForTokens, fetchProfileInfo } from "./认证-OAuth登录.419zdfz3.js";
-import { oBe, PRe, Yse, c1 } from "./chunk-wk0e3dz4.js";
+import { isAccountOnHoldEnabled, ACCOUNT_ON_HOLD_ERROR_CODE, sanitizeAccountOnHoldUrl, OAuthCallbackError } from "./chunk-wk0e3dz4.js";
 import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { createServer } from "http";
@@ -91,7 +91,7 @@ class u {
     let o = r.searchParams.get("code") ?? void 0,
       n = r.searchParams.get("state") ?? void 0,
       s = r.searchParams.get("error") ?? void 0;
-    if (!o && s && oBe()) {
+    if (!o && s && isAccountOnHoldEnabled()) {
       this.respondToErrorCallback({
         error: s,
         errorDescription: r.searchParams.get("error_description") ?? void 0,
@@ -122,7 +122,7 @@ class u {
     res: n,
   }) {
     if (this.rejectOnStateMismatch(o, n)) return;
-    let s = t === PRe;
+    let s = t === ACCOUNT_ON_HOLD_ERROR_CODE;
     (logFeatureBad(
       "oauth_callback_listener",
       s ? "oauth_callback_account_on_hold" : "oauth_callback_authorize_error",
@@ -134,7 +134,7 @@ class u {
           : "Sign-in was canceled or failed. You can close this window.",
       ),
       this.reject(
-        new c1(R(e), t === void 0 ? void 0 : R(t), s ? Yse(r) : void 0),
+        new OAuthCallbackError(R(e), t === void 0 ? void 0 : R(t), s ? sanitizeAccountOnHoldUrl(r) : void 0),
       ));
   }
   rejectOnStateMismatch(e, t) {

@@ -10,7 +10,7 @@
 import { Zke, jo, Bs, nur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { R, dt, ge, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Np, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { startSlowOperationSpan, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -281,7 +281,7 @@ function execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNO
   } = {},
 ) {
   t?.throwIfAborted();
-  using d = Np`exec: ${e.slice(0, 200)}`;
+  using d = startSlowOperationSpan`exec: ${e.slice(0, 200)}`;
   try {
     let l = nur(e, {
       env: process.env,
@@ -410,10 +410,10 @@ async function execFileNoThrowWithCwd(
   } catch (f) {
     let M = f.message;
     if (Po(f))
-      n(`execFileNoThrow spawn failed: ${A(f)} ${M}`, { level: "error" });
+      logForDebugging(`execFileNoThrow spawn failed: ${A(f)} ${M}`, { level: "error" });
     else if (H(f))
       return (
-        n(`execFileNoThrow maxBuffer exceeded: ${M}`, { level: "error" }),
+        logForDebugging(`execFileNoThrow maxBuffer exceeded: ${M}`, { level: "error" }),
         { stdout: "", stderr: "", code: 1, maxBufferExceeded: !0 }
       );
     else logError(dt(ge(f), "execFileNoThrow unexpected rejection"));
@@ -422,7 +422,7 @@ async function execFileNoThrowWithCwd(
   if (v?.truncatedBy !== void 0) {
     let f = `stdin write failed: ${v.truncatedBy}`;
     return (
-      n(`execFileNoThrow ${f}`, { level: "error" }),
+      logForDebugging(`execFileNoThrow ${f}`, { level: "error" }),
       { stdout: "", stderr: "", code: 1, error: f }
     );
   }

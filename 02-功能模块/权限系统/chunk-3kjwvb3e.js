@@ -10,7 +10,7 @@
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PERMISSION_MODE_MANUAL_ALIAS } from "./chunk-e4pfvp7x.js";
@@ -108,7 +108,7 @@ async function updateDaemonConfig(o, t, e) {
   if (isHoverRestEnabled() && e !== void 0 && r === getDaemonJsonPath()) {
     let f = await e.write(
       STORAGE_KEYS.state("daemon-config"),
-      b(a, null, 2) +
+      jsonStringify(a, null, 2) +
         `
 `,
       { publishDiscipline: "atomic", mode: 438 & ~process.umask() },
@@ -126,7 +126,7 @@ async function updateDaemonConfig(o, t, e) {
   (await getFileStorage().mkdir(dirname(r)),
     await writeFileAtomic(
       r,
-      b(a, null, 2) +
+      jsonStringify(a, null, 2) +
         `
 `,
     ));
@@ -189,15 +189,15 @@ async function se(o, t) {
   };
   if (isHoverRestEnabled() && t) {
     try {
-      let r = await t.write(N(), b(e), { mode: 438 & ~process.umask() });
-      if (!r.ok) n(`writeScheduledStatus: ${r.error.code}`);
+      let r = await t.write(N(), jsonStringify(e), { mode: 438 & ~process.umask() });
+      if (!r.ok) logForDebugging(`writeScheduledStatus: ${r.error.code}`);
     } catch (r) {
-      n(`writeScheduledStatus: ${l(r)}`);
+      logForDebugging(`writeScheduledStatus: ${l(r)}`);
     }
     return;
   }
   try {
-    await writeFileAtomic(z(), b(e));
+    await writeFileAtomic(z(), jsonStringify(e));
   } catch {}
 }
 async function readScheduledStatus(o) {

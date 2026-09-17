@@ -21,7 +21,7 @@ import { emitTaskNotification } from "../认证-OAuth登录/认证-OAuth登录.4
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { OIe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, useIsScreenReaderEnabled } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -38,14 +38,14 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import { X8, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { FlaggedItemsRemoveDialog, AutoModeSetupReviewDialog, AUTO_MODE_SETUP_REVIEW_DIALOG, AUTO_MODE_FLAGGED_ALLOW_DIALOG } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import { PIe } from "./chunk-z0qj8awf.js";
+import { proposeAutoModeSetup } from "./auto-mode-setup-proposal.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
-import "../Git-Worktree/chunk-33y3h2sy.js";
+import "../Git-Worktree/git-operations.js";
 import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { generateTaskId, createPendingTask, figures } from "../Teammates团队/chunk-mrfx53ye.js";
@@ -437,14 +437,14 @@ function fe({
   return e(de, {
     title: "Auto-mode setup",
     onCancel: j,
-    children: r(o, {
+    children: r(Box, {
       flexDirection: "column",
       gap: 1,
       children: [
-        r(o, {
+        r(Box, {
           children: [
             e(StatusIndicator, { status: "error" }),
-            r(t, { children: [" ", n.error ?? "Something went wrong."] }),
+            r(Text, { children: [" ", n.error ?? "Something went wrong."] }),
           ],
         }),
         e(ve, {
@@ -459,7 +459,7 @@ function fe({
 var se = Math.max(ee.length, ...Q.map((n) => n.label.length));
 function he(U) {
   let Re = _(4);
-  if (tn()) {
+  if (useIsScreenReaderEnabled()) {
     let Y;
     if (Re[0] !== U) ((Y = e(le, { ...U })), (Re[0] = U), (Re[1] = Y));
     else Y = Re[1];
@@ -520,7 +520,7 @@ function ie({
     ));
   let x = q.find((c) => c.value === n.posture)?.label ?? n.posture,
     P = (c) =>
-      r(t, {
+      r(Text, {
         color: m === c ? "suggestion" : void 0,
         children: [m === c ? figures.pointer : " ", " "],
       });
@@ -529,35 +529,35 @@ function ie({
     onCancel: a,
     inputGuide: s,
     children: [
-      e(t, { children: ge }),
-      r(o, {
+      e(Text, { children: ge }),
+      r(Box, {
         flexDirection: "column",
         children: [
-          r(o, {
+          r(Box, {
             children: [
               P(0),
-              r(t, {
+              r(Text, {
                 color: m === 0 ? "suggestion" : void 0,
                 children: [ee.padEnd(se), " "],
               }),
-              r(t, { dimColor: !0, children: [figures.triangleLeft, " "] }),
-              e(t, { children: x }),
-              r(t, { dimColor: !0, children: [" ", figures.triangleRight] }),
+              r(Text, { dimColor: !0, children: [figures.triangleLeft, " "] }),
+              e(Text, { children: x }),
+              r(Text, { dimColor: !0, children: [" ", figures.triangleRight] }),
             ],
           }),
           Q.map((c, O) => {
             let j = O + 1,
               G = n.confirmSelection.includes(c.value);
             return r(
-              o,
+              Box,
               {
                 children: [
                   P(j),
-                  r(t, {
+                  r(Text, {
                     color: m === j ? "suggestion" : void 0,
                     children: [c.label.padEnd(se), " "],
                   }),
-                  r(t, {
+                  r(Text, {
                     color: G ? "success" : void 0,
                     children: ["[", G ? figures.tick : " ", "]"],
                   }),
@@ -566,11 +566,11 @@ function ie({
               c.value,
             );
           }),
-          r(o, {
+          r(Box, {
             marginTop: 1,
             children: [
               P(v - 1),
-              e(t, {
+              e(Text, {
                 bold: !0,
                 color: m === v - 1 ? "suggestion" : void 0,
                 children: "Continue",
@@ -592,11 +592,11 @@ function le({ persisted: n, cancel: a, onContinue: s }) {
     title: me,
     onCancel: a,
     children: [
-      e(t, { children: ge }),
+      e(Text, { children: ge }),
       n.confirmSrAtPosture
         ? r(N, {
             children: [
-              r(t, { children: [ee, ":"] }),
+              r(Text, { children: [ee, ":"] }),
               e(X8, {
                 options: q,
                 defaultValue: n.posture,
@@ -612,7 +612,7 @@ function le({ persisted: n, cancel: a, onContinue: s }) {
           })
         : r(N, {
             children: [
-              e(t, {
+              e(Text, {
                 children: "Optional reads (Claude already reads this project):",
               }),
               e(X8, {
@@ -698,7 +698,7 @@ async function De(n, a, s) {
       taskRegistry: w,
       requestDialog: M,
       appendSystemMessage: T,
-      propose: k = PIe,
+      propose: k = proposeAutoModeSetup,
       write: v = wSe,
     } = n,
     m = await k(
@@ -848,7 +848,7 @@ var Vo = async (n, a, s) => {
           }));
       }),
     propose: (m) =>
-      PIe(
+      proposeAutoModeSetup(
         m,
         getToolPermissionContext(a),
         AbortSignal.any([a.abortController.signal, M.signal]),

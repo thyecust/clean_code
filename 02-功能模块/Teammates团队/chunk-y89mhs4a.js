@@ -7,26 +7,26 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isCoworkHostSession, isRepublishInlinePromptEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { SKILL_TOOL_NAME, buildSkillToolName } from "../权限系统/chunk-fjrcf22x.js";
 import { PIN_CORE_BULLET, HEAD_PARAGRAPH, DELIVERABLE_PARAGRAPH, FILE_LOCATION_SENTENCE, langPromptParagraph, FILES_PROMPT_PARAGRAPH, COMMENTS_OFF_SENTENCE, ROOM_PROMPT_PARAGRAPH } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
 import {
-  Iut,
-  Put,
-  Lon,
-  Mon,
-  Non,
-  $on,
-  Uon,
-  Bon,
-  jon,
-  Won,
-  kjn,
-} from "../Artifact发布-渲染/chunk-yrjr7v83.js";
-import { FS } from "../Artifact发布-渲染/chunk-qpgskeea.js";
+  buildRuntimeCapabilitiesParagraph,
+  buildStateKeepingPagesParagraph,
+  UPDATE_ARTIFACT_PARAGRAPH,
+  FIND_ARTIFACTS_APP_NOTE,
+  FIND_ARTIFACTS_TERMINAL_NOTE,
+  READ_BEFORE_PUBLISH_PARAGRAPH,
+  CDN_ALLOWLIST_PARAGRAPH,
+  RESPONSIVE_PARAGRAPH,
+  THEME_AWARE_PARAGRAPH,
+  NEVER_PUBLISH_PARAGRAPH,
+  buildPageContractFallback,
+} from "../Artifact发布-渲染/artifact-prompt-paragraphs.js";
+import { isArtifactToolsetEnabled } from "../Artifact发布-渲染/chunk-qpgskeea.js";
 import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 var h = null,
@@ -63,7 +63,7 @@ function d(e) {
   return t.has(SKILL_TOOL_NAME) || t.has(buildSkillToolName(ARTIFACT_DESIGN_SKILL_NAME));
 }
 function artifactCorePromptCacheKeyBit(e) {
-  if (!FS()) return "";
+  if (!isArtifactToolsetEnabled()) return "";
   let t = u(e);
   return `A${[d(e) && "S", t.comments && "C", t.data && "D", t.check && "K"].filter(Boolean).join("")}:`;
 }
@@ -90,7 +90,7 @@ var b = `**Before writing the file \u2014 a skill-instructed \`.md\` included \u
   A = `**Before writing the file**: the page contract below \u2014 author HTML, the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 is this tool's own; skills are not available in this session, so read it here. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
   _ =
     "**Title**: Set a `<title>` at the top of the HTML \u2014 a name, not a summary: a short noun phrase, typically two to four words, distinctive to this page's subject, never a name plus an appended explainer after a dash or colon. The explanation belongs in the one-sentence `description` parameter. Keep the title stable across redeploys.",
-  E = [jon, _, Uon, Bon].join(`
+  E = [THEME_AWARE_PARAGRAPH, _, CDN_ALLOWLIST_PARAGRAPH, RESPONSIVE_PARAGRAPH].join(`
 
 `);
 function P(e) {
@@ -151,7 +151,7 @@ ${[
 `)}`;
 }
 function O(e) {
-  return `**To find an artifact from an earlier session**: \`action: "list"\`, then follow the update flow above with the URL you found; artifacts published earlier in THIS session need neither \u2014 calling again with the same file path redeploys them. ${e ? Mon : Non}`;
+  return `**To find an artifact from an earlier session**: \`action: "list"\`, then follow the update flow above with the URL you found; artifacts published earlier in THIS session need neither \u2014 calling again with the same file path redeploys them. ${e ? FIND_ARTIFACTS_APP_NOTE : FIND_ARTIFACTS_TERMINAL_NOTE}`;
 }
 function R(e) {
   let t = [
@@ -167,7 +167,7 @@ function R(e) {
 function corePrompt(e) {
   let t = artifactSchemaGates(),
     a = u(e),
-    s = ne().frozenArtifactTypes,
+    s = getArtifactState().frozenArtifactTypes,
     i = artifactLivePathsSchemaOpen(),
     r = h && artifactLiveEditPromptGateOpen() ? (i ? h.LIVE_FILES_PROMPT : "") + h.SYNC_PROMPT : "",
     l = t.langOn ? langPromptParagraph(s?.typesOn === !0, s?.typeCreateOn === !0) : "",
@@ -176,7 +176,7 @@ function corePrompt(e) {
       HEAD_PARAGRAPH,
       DELIVERABLE_PARAGRAPH,
       ...(t.capabilitiesOn
-        ? [Iut(t.watchRail), ...(isRepublishInlinePromptEnabled() ? [Put()] : [])]
+        ? [buildRuntimeCapabilitiesParagraph(t.watchRail), ...(isRepublishInlinePromptEnabled() ? [buildStateKeepingPagesParagraph()] : [])]
         : []),
       `${
         o
@@ -187,12 +187,12 @@ ${E}`
       }
 
 ${l}${t.multiFileOn ? FILES_PROMPT_PARAGRAPH : ""}${P(t)}`,
-      Lon,
+      UPDATE_ARTIFACT_PARAGRAPH,
       O(isCoworkHostSession()),
       y(t.commentsOn, t.watchRail, a.comments),
-      $on,
+      READ_BEFORE_PUBLISH_PARAGRAPH,
     ];
-  if (o) n.push(kjn());
+  if (o) n.push(buildPageContractFallback());
   if (r !== "") n.push(r.trim());
   if (t.handlersOn && p) n.push(p.HANDLERS_PROMPT_PARAGRAPH);
   if (t.roomOn) n.push(respell(ROOM_PROMPT_PARAGRAPH, a.comments ? w : g));
@@ -201,7 +201,7 @@ ${l}${t.multiFileOn ? FILES_PROMPT_PARAGRAPH : ""}${P(t)}`,
   let c = R(a);
   if (c !== "") n.push(c);
   return (
-    n.push(Won),
+    n.push(NEVER_PUBLISH_PARAGRAPH),
     n.join(`
 
 `)

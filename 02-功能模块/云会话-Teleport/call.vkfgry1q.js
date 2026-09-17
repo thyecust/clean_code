@@ -10,14 +10,14 @@
 
 // [preload stripped] 原本在此预载 249 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { describeSettingsSourceShort } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { isSelfHostedPool, getEnvironmentOrPoolId, getDefaultRemoteEnvironment } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -83,7 +83,7 @@ function fe(fn) {
             return;
           }
           let Xe = ge(Cn);
-          (n(`Failed to fetch remote environments: ${Xe.message}`, {
+          (logForDebugging(`Failed to fetch remote environments: ${Xe.message}`, {
             level: "error",
           }),
             Sn(Xe.message),
@@ -164,7 +164,7 @@ function fe(fn) {
   if (ee) {
     let l;
     if (s[12] !== ee)
-      ((l = r(t, { color: "error", children: ["Error: ", ee] })),
+      ((l = r(Text, { color: "error", children: ["Error: ", ee] })),
         (s[12] = ee),
         (s[13] = l));
     else l = s[13];
@@ -180,14 +180,14 @@ function fe(fn) {
   if (!I) {
     let l;
     if (s[17] === MEMO_CACHE_SENTINEL)
-      ((l = e(t, { children: "No remote environments available." })),
+      ((l = e(Text, { children: "No remote environments available." })),
         (s[17] = l));
     else l = s[17];
     let u;
     if (s[18] !== P)
       ((u =
         P &&
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: ["(couldn't list environments: ", P, ")"],
         })),
@@ -198,7 +198,7 @@ function fe(fn) {
     if (s[20] !== C)
       ((te =
         C &&
-        r(t, {
+        r(Text, {
           dimColor: !0,
           children: [
             "(ignoring self-hosted environment default ",
@@ -266,11 +266,11 @@ function K(o) {
       ? ` \xB7 ${o.alive_runner_count} ${pluralize(o.alive_runner_count, "runner")}`
       : "";
   return {
-    label: r(t, {
+    label: r(Text, {
       children: [
         o.name,
         " ",
-        r(t, { dimColor: !0, children: ["(", a, c, ")"] }),
+        r(Text, { dimColor: !0, children: ["(", a, c, ")"] }),
       ],
     }),
     value: a,
@@ -298,10 +298,10 @@ function me(Pn) {
     qe;
   if (g[2] !== w || g[3] !== y || g[4] !== $e)
     ((qe = y
-      ? r(t, {
+      ? r(Text, {
           children: [
             "Currently using: ",
-            e(t, { bold: !0, children: w.name }),
+            e(Text, { bold: !0, children: w.name }),
             $e,
           ],
         })
@@ -322,7 +322,7 @@ function me(Pn) {
       ...(De.length > 0
         ? [
             {
-              label: e(t, {
+              label: e(Text, {
                 dimColor: !0,
                 children: "\u2014 Self-hosted environments \u2014",
               }),
@@ -337,14 +337,14 @@ function me(Pn) {
   } else ((H = g[7]), (ze = g[8]));
   let Te = ze,
     He;
-  if (g[9] === MEMO_CACHE_SENTINEL) ((He = e(t, { dimColor: !0, children: Q })), (g[9] = He));
+  if (g[9] === MEMO_CACHE_SENTINEL) ((He = e(Text, { dimColor: !0, children: Q })), (g[9] = He));
   else He = g[9];
   let se;
   if (g[10] !== re || g[11] !== H)
     ((se =
       re &&
       H.length === 0 &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: ["(couldn't list environments: ", re, ")"],
       })),
@@ -356,7 +356,7 @@ function me(Pn) {
   if (g[13] !== z)
     ((ae =
       z &&
-      r(t, {
+      r(Text, {
         dimColor: !0,
         children: [
           "(ignoring self-hosted environment default ",
@@ -390,7 +390,7 @@ function me(Pn) {
   else ce = g[19];
   let Ke;
   if (g[20] === MEMO_CACHE_SENTINEL)
-    ((Ke = e(t, {
+    ((Ke = e(Text, {
       dimColor: !0,
       children: r(DotSeparatedList, {
         children: [

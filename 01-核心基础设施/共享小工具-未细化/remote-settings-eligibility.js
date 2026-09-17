@@ -11,11 +11,11 @@ import { ns, fv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isProfileRemoteSettingsCredential, getAnthropicApiKeyWithSource, hasStoredOAuthToken, getStoredOAuthSubscriptionType } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { resetSyncCache, rememberEligibility, getEligibilityMemo, getRemoteSettingsPathOverride, setEvalPolicySnapshotOnly } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { fir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { getProfileBaseUrl } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 function s(e) {
   try {
     return new URL(e).host;
@@ -23,7 +23,7 @@ function s(e) {
     return;
   }
 }
-function matchesOAuthBaseUrlHost(e = a.ANTHROPIC_BASE_URL || fir()) {
+function matchesOAuthBaseUrlHost(e = a.ANTHROPIC_BASE_URL || getProfileBaseUrl()) {
   if (!e) return !0;
   let i = s(getOauthConfig().BASE_API_URL);
   return i !== void 0 && s(e) === i;
@@ -69,7 +69,7 @@ function f() {
   try {
     i = isProfileRemoteSettingsCredential();
   } catch (t) {
-    n(
+    logForDebugging(
       `Remote settings: could not read the profile store (${l(t)}); not treating this session as profile-authenticated`,
       { level: "warn" },
     );

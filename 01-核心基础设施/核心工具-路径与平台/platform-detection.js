@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { readdir, readFile } from "fs/promises";
 import { release } from "os";
 function readProcVersionSync() {
   try {
-    return ae()
+    return getFsSurface()
       .readFileSync("/proc/version", { encoding: "utf8" })
       .toLowerCase();
   } catch {
@@ -117,7 +117,7 @@ class c {
       let e = await this.sources.readProcVersion();
       this.primedProcVersion = e.toLowerCase();
     } catch (e) {
-      n(`Failed to read /proc/version for WSL detection: ${e}`, {
+      logForDebugging(`Failed to read /proc/version for WSL detection: ${e}`, {
         level: "error",
       });
       return;
@@ -177,7 +177,7 @@ async function detectVersionControlSystems(e) {
   let r = new Set();
   if (process.env.P4PORT) r.add("perforce");
   try {
-    let s = e ?? ae().cwd(),
+    let s = e ?? getFsSurface().cwd(),
       t = new Set(await readdir(s));
     for (let [o, l] of m) if (t.has(o)) r.add(l);
   } catch {}

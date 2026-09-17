@@ -12,7 +12,7 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, isManagedRemoteSession } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getTrustedOrigin, getUntrustedOriginReason, httpClient } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -62,7 +62,7 @@ function B(t) {
   if (e !== null) return { dest: b(M, e), root: M, readOnly: !0 };
   let r = P(Q, s);
   if (r !== null) {
-    if (!AEt(a.CLAUDE_CODE_REMOTE_SESSION_ID, a.CLAUDE_CODE_ENVIRONMENT_KIND)) {
+    if (!isManagedRemoteSession(a.CLAUDE_CODE_REMOTE_SESSION_ID, a.CLAUDE_CODE_ENVIRONMENT_KIND)) {
       let d = Error(
         "staging under /outputs/ is only supported on managed remote sessions",
       );

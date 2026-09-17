@@ -11,7 +11,7 @@ import { j, rE, B } from "../../lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { getSanitizedToolName } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findToolByName, isBatchToolDefinition } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 var x = new j(() => new Set());
@@ -52,7 +52,7 @@ function b(e, r, a) {
           f = a(o, s);
         } catch (d) {
           if (d instanceof Error && d.name === "ZodError")
-            n(`batch entry normalize rejected input: ${d}`, { level: "error" });
+            logForDebugging(`batch entry normalize rejected input: ${d}`, { level: "error" });
           else logError(d);
         }
         return {

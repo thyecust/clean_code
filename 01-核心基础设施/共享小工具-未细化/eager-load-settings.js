@@ -10,7 +10,7 @@
 import { Ert, nLn, rLn, oLn, iLn, aLn, bLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isRestrictedMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, A, W, Nz } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { resolvePathInfo, getFsSurface, logForDebugging } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { cliError } from "./chunk-4f55jpqh.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -34,7 +34,7 @@ function loadSettingsFromFlag(e) {
       );
       ((s = createTempFilePath("claude-settings", ".json", { contentHash: i })), rLn(i));
     } else {
-      let { resolvedPath: r } = Ro(ae(), e),
+      let { resolvedPath: r } = resolvePathInfo(getFsSurface(), e),
         i;
       try {
         i = readFileSyncText(r, MAX_SETTINGS_FILE_BYTES);
@@ -53,14 +53,14 @@ function loadSettingsFromFlag(e) {
     (nLn(s), invalidateAllSettings());
   } catch (t) {
     if (t instanceof Error)
-      n(`Error processing --settings: ${l(t)}`, { level: "error" });
+      logForDebugging(`Error processing --settings: ${l(t)}`, { level: "error" });
     return cliError(`Error processing settings: ${l(t)}`);
   }
 }
 function c(e) {
   let t = xt(e.trim(), !1);
   if (!t || typeof t !== "object" || Array.isArray(t)) {
-    (n("--managed-settings ignored: invalid JSON object", { level: "warn" }),
+    (logForDebugging("--managed-settings ignored: invalid JSON object", { level: "warn" }),
       aLn(!0));
     return;
   }
@@ -72,7 +72,7 @@ function g(e) {
     (bLn(t), invalidateAllSettings());
   } catch (t) {
     if (t instanceof Error)
-      n(`Invalid --setting-sources flag: ${l(t)}`, { level: "error" });
+      logForDebugging(`Invalid --setting-sources flag: ${l(t)}`, { level: "error" });
     return cliError(`Error processing --setting-sources: ${l(t)}`);
   }
 }

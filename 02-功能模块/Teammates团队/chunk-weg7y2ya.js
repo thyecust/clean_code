@@ -12,7 +12,7 @@ import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getNonMainAgentTaskId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { derivePublishContextFrom, makeMainObservedVersionReader } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
+import { getArtifactState } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 var l = 32;
 function subagentPublishAdopter(n) {
@@ -29,7 +29,7 @@ function subagentPublishAdopter(n) {
   return isSocketHoldingPublishContext(t) ? t : null;
 }
 function stageSubagentPublishArm(n, t) {
-  let e = ne().live.pendingSubagentArms,
+  let e = getArtifactState().live.pendingSubagentArms,
     s = e.get(n) ?? [],
     i = s.findIndex((o) => o.slug === t.slug);
   if (i === -1) s.push(t);
@@ -44,13 +44,13 @@ function stageSubagentPublishArm(n, t) {
   }
 }
 function d(n) {
-  let t = ne().live.pendingSubagentArms,
+  let t = getArtifactState().live.pendingSubagentArms,
     e = t.get(n) ?? [];
   return (t.delete(n), e);
 }
 var c = 256;
 function b(n) {
-  let t = ne().live.finishedSubagentAdopters;
+  let t = getArtifactState().live.finishedSubagentAdopters;
   (t.delete(n), t.add(n));
   while (t.size > c) t.delete(t.values().next().value);
 }
@@ -67,7 +67,7 @@ function adoptSubagentPublishArms(n) {
   if (i === "subagent" && e.agentId !== void 0) {
     let o =
       getNonMainAgentTaskId(e.agentId, e.taskRegistry) === e.agentId ||
-      !ne().live.finishedSubagentAdopters.has(e.agentId);
+      !getArtifactState().live.finishedSubagentAdopters.has(e.agentId);
     for (let a of s)
       if (o) stageSubagentPublishArm(e.agentId, a);
       else logFeatureSad("artifact_live_subscribe", "subagent_arm_orphaned");

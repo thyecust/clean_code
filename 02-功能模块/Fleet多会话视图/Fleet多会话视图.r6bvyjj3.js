@@ -17,7 +17,7 @@ import "../后台任务-Shell管理/chunk-gnmy62vg.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ansi-renderer.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
@@ -28,7 +28,7 @@ import { BQt } from "../会话选择器-AgentsUI/会话选择器-AgentsUI.jta2pc
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
-import "../自动更新-安装/chunk-brx72pf1.js";
+import "../自动更新-安装/install-diagnostics.js";
 import "../自动更新-安装/chunk-2g5h49pk.js";
 import "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import "../Teammates团队/update-command.js";

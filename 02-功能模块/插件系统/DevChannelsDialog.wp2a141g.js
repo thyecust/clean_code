@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { gracefulShutdownSync } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -48,11 +48,11 @@ function DevChannelsDialog(I) {
     x,
     y;
   if (a[2] === MEMO_CACHE_SENTINEL)
-    ((x = e(t, {
+    ((x = e(Text, {
       children:
         "--dangerously-load-development-channels is for local channel development only. Do not use this option to run channels you have downloaded off the internet.",
     })),
-      (y = e(t, {
+      (y = e(Text, {
         children: "Please use --channels to run a list of approved channels.",
       })),
       (a[2] = x),
@@ -63,10 +63,10 @@ function DevChannelsDialog(I) {
   else i = a[5];
   let c;
   if (a[6] !== i)
-    ((c = r(o, {
+    ((c = r(Box, {
       flexDirection: "column",
       gap: 1,
-      children: [x, y, r(t, { dimColor: !0, children: ["Channels:", " ", i] })],
+      children: [x, y, r(Text, { dimColor: !0, children: ["Channels:", " ", i] })],
     })),
       (a[6] = i),
       (a[7] = c));

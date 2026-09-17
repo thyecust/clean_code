@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { uNt, gon, ijn } from "./chunk-j990pwax.js";
+import { OpenIdProviderDiscoveryMetadataSchema, startAuthorization, exchangeAuthorization } from "./oauth-client.js";
 import { R, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { redactUrl, rethrowFetchError } from "./url-and-error-redaction.js";
@@ -118,7 +118,7 @@ async function discoverOidc(r) {
       `XAA IdP: OIDC discovery returned non-JSON at ${redactUrl(e.href)} (captive portal or proxy?)`,
     );
   }
-  let i = uNt.safeParse(o);
+  let i = OpenIdProviderDiscoveryMetadataSchema.safeParse(o);
   if (!i.success)
     throw Error(`XAA IdP: invalid OIDC metadata: ${i.error.message}`);
   if (
@@ -134,7 +134,7 @@ function S(r) {
   let t = r.split(".");
   if (t.length !== 3) return;
   try {
-    let e = z(Buffer.from(t[1], "base64url").toString("utf-8"));
+    let e = jsonParse(Buffer.from(t[1], "base64url").toString("utf-8"));
     return typeof e.exp === "number" ? e.exp : void 0;
   } catch {
     return;
@@ -269,7 +269,7 @@ async function acquireIdpIdToken(r) {
         client_id: e,
         ...(r.idpClientSecret && { client_secret: r.idpClientSecret }),
       },
-      { authorizationUrl: g, codeVerifier: p } = await gon(t, {
+      { authorizationUrl: g, codeVerifier: p } = await startAuthorization(t, {
         metadata: o,
         clientInformation: f,
         redirectUrl: c,
@@ -281,7 +281,7 @@ async function acquireIdpIdToken(r) {
           (logMCPDebug("xaa", "Opening browser to IdP authorization endpoint"),
             tryOpenUrlInBrowser(g.toString()));
       }),
-      d = await ijn(t, {
+      d = await exchangeAuthorization(t, {
         metadata: o,
         clientInformation: f,
         authorizationCode: h,

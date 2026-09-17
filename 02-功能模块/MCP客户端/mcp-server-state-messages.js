@@ -10,7 +10,7 @@
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDisplayTextWithoutRedaction, MCP_BLOCKED_BY_POLICY_MESSAGE, MCP_NOT_APPROVED_MESSAGE, isUnconfiguredMcpServer } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { V$ } from "../插件系统/chunk-7s6mt1vg.js";
+import { isValidCliNameToken } from "../插件系统/plugin-system-core.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function getMcpServerType(e) {
   return e.type;
@@ -46,7 +46,7 @@ function formatDisabledElsewhereMessage(e) {
 function formatDisableNotPersistedMessage(e) {
   let n = sanitizeDisplayTextWithoutRedaction(e),
     t = `"${e}" was re-enabled in another session, so this disable didn't persist \u2014 /mcp enable ${e} then /mcp disable ${e} makes it stick. Left alone, it connects on the next launch.`;
-  return V$(e) && [...t].length <= 1024
+  return isValidCliNameToken(e) && [...t].length <= 1024
     ? t
     : `"${n}" was re-enabled in another session, so this disable didn't persist. Left alone, it connects on the next launch.`;
 }

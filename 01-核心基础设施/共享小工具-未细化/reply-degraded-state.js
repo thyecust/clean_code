@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { classifyMcpErrorSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Aq } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
+import { HEARTHBOT_SERVER_NAME } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 var d = new j(() => ({ degraded: !1 }));
 function t() {
   return d.of(B().host);
 }
 function recordReplyDegradedState(n, r) {
-  if (n !== Aq) return;
+  if (n !== HEARTHBOT_SERVER_NAME) return;
   let e = t();
   if (r === void 0) {
     e.degraded = !1;

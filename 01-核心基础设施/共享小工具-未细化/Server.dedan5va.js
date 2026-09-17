@@ -8,6 +8,6 @@
 
 // Version: 2.1.263
 import { McpServer as A1 } from "../../02-功能模块/MCP客户端/mcp-server.js";
-import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
+import "../../02-功能模块/MCP客户端/mcp-protocol.js";
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 export { A1 as Server };

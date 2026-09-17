@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { AuthenticationStatusStore } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { o, t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { Box, Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { TitledBorderBox } from "./titled-border-box.js";
 import { ErrorMessage } from "./error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -19,15 +19,15 @@ F();
 function N(f, D) {
   let b = f.match(A);
   if (!b) {
-    return e(t, { dimColor: !0, children: f }, D);
+    return e(Text, { dimColor: !0, children: f }, D);
   }
   let y = b[0];
   let L = b.index ?? 0;
   let H = f.slice(0, L);
   let J = f.slice(L + y.length);
   return r(
-    t,
-    { dimColor: !0, children: [H, e(ct, { url: y, children: y }), J] },
+    Text,
+    { dimColor: !0, children: [H, e(Link, { url: y, children: y }), J] },
     D,
   );
 }
@@ -56,7 +56,7 @@ function AuthenticationStatusBox() {
   if (i[3] !== n.output)
     ((a =
       n.output.length > 0 &&
-      e(o, { flexDirection: "column", children: n.output.slice(-5).map(N) })),
+      e(Box, { flexDirection: "column", children: n.output.slice(-5).map(N) })),
       (i[3] = n.output),
       (i[4] = a));
   else a = i[4];
@@ -66,7 +66,7 @@ function AuthenticationStatusBox() {
   else l = i[6];
   let B;
   if (i[7] !== a || i[8] !== l)
-    ((B = e(o, {
+    ((B = e(Box, {
       marginY: 1,
       children: r(TitledBorderBox, {
         color: "permission",

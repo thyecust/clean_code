@@ -12,7 +12,7 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { localJsxDialog } from "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { AR } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
+import { isHumanOrigin } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
@@ -27,7 +27,7 @@ var c = async (r, o) => {
   o.dialogStore?.dismissKind(localJsxDialog.kind);
   for await (let s of clearConversation({ ...o, clearedSessionTitle: i }))
     o.onQueryEvent?.(s);
-  let a = AR(o.submissionOrigin) && !hasAgentTaskSurvivingClear(o.taskRegistry.all());
+  let a = isHumanOrigin(o.submissionOrigin) && !hasAgentTaskSurvivingClear(o.taskRegistry.all());
   return (
     import("../权限系统/registerChromeTabGroupCleanup.epxd464c.js")
       .then((s) => s.closeSessionTabGroup({ sessionId: e, onlyIfEmpty: !a }))

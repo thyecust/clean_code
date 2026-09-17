@@ -10,11 +10,11 @@
 import { _ } from "../../react/react.zhnvc798.js";
 import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport } from "../../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
-import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { o, t, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
+import { getStringWidth } from "../../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { Box, Text, measureElement } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Q0 } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybindingContext } from "../../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
-import { Ej, $Yn } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
+import { formatKeybindingChordText, resolveKeybindingChordInContexts } from "../../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { DotSeparatedList } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useExitKeybindingEntries } from "../../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { KeybindingScope } from "../../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
@@ -32,7 +32,7 @@ function Qr(Rt) {
   if (useHasVirtualScrollViewport()) {
     let H;
     if (oe[0] !== G)
-      ((H = e(o, {
+      ((H = e(Box, {
         flexDirection: "column",
         paddingX: Vx,
         flexShrink: 0,
@@ -48,13 +48,13 @@ function Qr(Rt) {
   else H = oe[3];
   let ie;
   if (oe[4] !== G)
-    ((ie = e(o, { flexDirection: "column", paddingX: WA, children: G })),
+    ((ie = e(Box, { flexDirection: "column", paddingX: WA, children: G })),
       (oe[4] = G),
       (oe[5] = ie));
   else ie = oe[5];
   let Ge;
   if (oe[6] !== H || oe[7] !== ie)
-    ((Ge = r(o, { flexDirection: "column", paddingTop: 1, children: [H, ie] })),
+    ((Ge = r(Box, { flexDirection: "column", paddingTop: 1, children: [H, ie] })),
       (oe[6] = H),
       (oe[7] = ie),
       (oe[8] = Ge));
@@ -212,7 +212,7 @@ function Q(Bt) {
   }
   let nt;
   if (re[16] !== x.text)
-    ((nt = e(t, { dimColor: !0, italic: !0, children: x.text })),
+    ((nt = e(Text, { dimColor: !0, italic: !0, children: x.text })),
       (re[16] = x.text),
       (re[17] = nt));
   else nt = re[17];
@@ -267,10 +267,10 @@ function Be({
       continue;
     }
     if (P.has(i)) continue;
-    let u = $Yn(n.action, n.scope ? [n.scope] : [], s.bindings);
+    let u = resolveKeybindingChordInContexts(n.action, n.scope ? [n.scope] : [], s.bindings);
     if (!u) continue;
     (P.add(i),
-      b.push({ action: n.action, text: `${Ej(u)} ${i}`, depth: n.depth }));
+      b.push({ action: n.action, text: `${formatKeybindingChordText(u)} ${i}`, depth: n.depth }));
   }
   let A = new Map();
   ((K ?? []).forEach((n, i) => A.set(n, i)),
@@ -281,7 +281,7 @@ function Be({
       return n.depth - i.depth;
     }));
   let O = " \xB7 ",
-    ne = te(O),
+    ne = getStringWidth(O),
     L = 0,
     m = [];
   for (;;) {
@@ -289,13 +289,13 @@ function Be({
     let n = 0;
     for (let U of b) {
       if (m.length >= w) break;
-      let Re = (m.length === 0 ? 0 : ne) + te(U.text);
+      let Re = (m.length === 0 ? 0 : ne) + getStringWidth(U.text);
       if (f !== void 0 && n + Re + L > f && m.length > 0) break;
       (m.push(U.text), (n += Re));
     }
     let i = b.length - m.length;
     if (f === void 0 || i === 0) break;
-    let u = te(`${O}+${i} more`);
+    let u = getStringWidth(`${O}+${i} more`);
     if (u <= L) break;
     L = u;
   }
@@ -358,7 +358,7 @@ function de(on) {
       if (!B || !He.current) {
         return;
       }
-      let dt = Od(He.current).height;
+      let dt = measureElement(He.current).height;
       if (dt !== le) sn(dt);
     }),
       (h[6] = B),
@@ -381,7 +381,7 @@ function de(on) {
       typeof j === "function"
         ? j(q)
         : q.pending
-          ? r(t, { children: ["Press ", q.keyName, " again to exit"] })
+          ? r(Text, { children: ["Press ", q.keyName, " again to exit"] })
           : j != null
             ? j
             : void 0),
@@ -395,16 +395,16 @@ function de(on) {
   if (h[15] !== We || h[16] !== pe || h[17] !== X || h[18] !== Xe)
     ((mt =
       !pe &&
-      e(o, {
+      e(Box, {
         marginTop: 1,
         flexShrink: 0,
         children: Xe
-          ? e(t, { dimColor: !0, italic: !0, children: We })
+          ? e(Text, { dimColor: !0, italic: !0, children: We })
           : !X
-            ? e(t, { dimColor: !0, italic: !0, children: ee })
+            ? e(Text, { dimColor: !0, italic: !0, children: ee })
             : e(Q, {
                 boundary: ct,
-                fallback: e(t, { dimColor: !0, italic: !0, children: ee }),
+                fallback: e(Text, { dimColor: !0, italic: !0, children: ee }),
               }),
       })),
       (h[15] = We),
@@ -418,15 +418,15 @@ function de(on) {
   let fe;
   if (h[20] !== W || h[21] !== se || h[22] !== ce)
     ((fe = ce
-      ? r(o, {
+      ? r(Box, {
           justifyContent: "space-between",
           gap: 2,
           children: [
-            e(t, { bold: !0, color: W, children: se }),
-            e(t, { dimColor: !0, wrap: "truncate-start", children: ce }),
+            e(Text, { bold: !0, color: W, children: se }),
+            e(Text, { dimColor: !0, wrap: "truncate-start", children: ce }),
           ],
         })
-      : e(t, { bold: !0, color: W, children: se })),
+      : e(Text, { bold: !0, color: W, children: se })),
       (h[20] = W),
       (h[21] = se),
       (h[22] = ce),
@@ -434,13 +434,13 @@ function de(on) {
   else fe = h[23];
   let me;
   if (h[24] !== Z)
-    ((me = Z && e(t, { dimColor: !0, children: Z })),
+    ((me = Z && e(Text, { dimColor: !0, children: Z })),
       (h[24] = Z),
       (h[25] = me));
   else me = h[25];
   let ge;
   if (h[26] !== fe || h[27] !== me)
-    ((ge = r(o, { ref: He, flexDirection: "column", children: [fe, me] })),
+    ((ge = r(Box, { ref: He, flexDirection: "column", children: [fe, me] })),
       (h[26] = fe),
       (h[27] = me),
       (h[28] = ge));
@@ -454,7 +454,7 @@ function de(on) {
   else he = h[31];
   let be;
   if (h[32] !== ge || h[33] !== he)
-    ((be = r(o, { flexDirection: "column", gap: 1, children: [ge, he] })),
+    ((be = r(Box, { flexDirection: "column", gap: 1, children: [ge, he] })),
       (h[32] = ge),
       (h[33] = he),
       (h[34] = be));

@@ -12,11 +12,11 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { maxSlugLength, parsePeerAddress, isPossiblySamePath, slugify, sanitizeSessionName, getRegisteredSessionName, whenSessionRegistered, updateSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { generateAdjectiveNounName, isAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Nu, sendToUdsSocket, listAllLiveSessions, ownMessagingSocket } from "./chunk-ddtmwhn7.js";
+import { formatRedactedPreview, sendToUdsSocket, listAllLiveSessions, ownMessagingSocket } from "./chunk-ddtmwhn7.js";
 var T = 16,
   Y = 64;
 function P(e, i) {
@@ -137,7 +137,7 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
     let c = U(e, o),
       d = sanitizeSessionName(c !== void 0 && slugify(c) !== slugify(e) ? c : a.newName) || a.newName;
     return (
-      n(
+      logForDebugging(
         `[session-name] "${e}" is held by live pid ${a.holders[0]?.pid}; this session takes "${d}"`,
         { level: "info" },
       ),
@@ -147,7 +147,7 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
     );
   } catch (r) {
     return (
-      n(`[session-name] uniqueness check failed, keeping "${e}": ${l(r)}`, {
+      logForDebugging(`[session-name] uniqueness check failed, keeping "${e}": ${l(r)}`, {
         level: "warn",
       }),
       logFeatureBad("session_name_collision", "check_failed"),
@@ -284,7 +284,7 @@ async function notifyCorrespondentsOfRename(e, i, s, t, r = sendToUdsSocket, o =
   try {
     g = new Map((await o(t)).map((m) => [m.pid, m.sock]));
   } catch (m) {
-    n(
+    logForDebugging(
       `[session-name] rename notice skipped: registry unreadable (${A(m) ?? l(m)})`,
     );
     return;
@@ -301,8 +301,8 @@ async function notifyCorrespondentsOfRename(e, i, s, t, r = sendToUdsSocket, o =
           ...(k !== void 0 && { expectPeerProcStart: k }),
         });
       } catch (M) {
-        n(
-          `[session-name] rename notice to ${Nu(m)} failed: ${A(M) ?? "send error"}`,
+        logForDebugging(
+          `[session-name] rename notice to ${formatRedactedPreview(m)} failed: ${A(M) ?? "send error"}`,
         );
       }
     }),

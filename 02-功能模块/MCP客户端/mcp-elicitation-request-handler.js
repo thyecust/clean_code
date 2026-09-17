@@ -10,7 +10,7 @@
 import { MCP_ELICITATION_DIALOG, MCP_ELICITATION_WAITING_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/mcp-elicitation-dialogs.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 class g {
@@ -30,7 +30,7 @@ class g {
           ? t.transportErrorState
           : this.deps.transportErrorState;
     if (s) s.pendingElicitations++;
-    logMCPDebug(r, `Received elicitation request: ${b(e)}`);
+    logMCPDebug(r, `Received elicitation request: ${jsonStringify(e)}`);
     let { params: a } = e,
       c = w(a);
     logEvent("tengu_mcp_elicitation_shown", { mode: fromEnum(c) });
@@ -38,7 +38,7 @@ class g {
       let n = await this.deps.runElicitationHooks(r, a, o);
       if (n)
         return (
-          logMCPDebug(r, `Elicitation resolved by hook: ${b(n)}`),
+          logMCPDebug(r, `Elicitation resolved by hook: ${jsonStringify(n)}`),
           logEvent("tengu_mcp_elicitation_response", {
             mode: fromEnum(c),
             action: fromEnum(n.action),
@@ -48,7 +48,7 @@ class g {
         );
       let l = a.mode === "url" ? a.elicitationId : void 0,
         { result: d, flow: E } = await this.ask(a, o, c, l, s);
-      logMCPDebug(r, `Elicitation response: ${b(d)}`);
+      logMCPDebug(r, `Elicitation response: ${jsonStringify(d)}`);
       let p = await this.deps.runElicitationResultHooks(r, d, o, c, l);
       if (a.mode === "url" && d.action === "accept" && p.action !== "accept")
         this.abandonWaiting(l, E);

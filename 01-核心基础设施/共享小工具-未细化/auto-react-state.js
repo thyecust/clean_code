@@ -10,7 +10,7 @@
 import { dl, VP, ODn, DDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { EYe, ne, hTt } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
+import { stopArtifactSupervisor, getArtifactState, disposePresenceSlug } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { createInformationalSystemMessage, getStopGeneration, isSlugStopped, isSlugStopLatched, isSlugSwept } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function isUserPresent() {
   if (!isBgSession()) return !0;
@@ -24,11 +24,11 @@ function subscribeToUserPresenceChanges(e) {
   };
 }
 function getAutoReactWiredSlugs() {
-  if (ne().autoReact.enabledMemo !== !0) return new Set();
+  if (getArtifactState().autoReact.enabledMemo !== !0) return new Set();
   return new Set(Array.from(u(), (e) => e.slug));
 }
 function getBootingAutoReactArmSlugs() {
-  let { autoReact: e, durable: t, live: n, wakes: r } = ne(),
+  let { autoReact: e, durable: t, live: n, wakes: r } = getArtifactState(),
     i = new Set();
   if (e.enabledMemo === !1 || e.userDisarmed) return i;
   for (let [o, s] of n.bootingWiredArms) {
@@ -44,11 +44,11 @@ function getBootingAutoReactArmSlugs() {
   return i;
 }
 function* u() {
-  for (let e of ne().live.supervisors.values())
+  for (let e of getArtifactState().live.supervisors.values())
     if (!e.stopped && e.autoReactWiring !== void 0 && !isSlugStopLatched(e.slug)) yield e;
 }
 function hasLiveAutoReactSupervision(e) {
-  let { live: t } = ne();
+  let { live: t } = getArtifactState();
   for (let n of u())
     if (
       e?.reconnecting !== !0 ||
@@ -59,19 +59,19 @@ function hasLiveAutoReactSupervision(e) {
   return !1;
 }
 function hasArmedAutoReactSupervisor() {
-  return ne().autoReact.enabledMemo === !0 && hasLiveAutoReactSupervision({ reconnecting: !0 });
+  return getArtifactState().autoReact.enabledMemo === !0 && hasLiveAutoReactSupervision({ reconnecting: !0 });
 }
 function disposeSupervisors(e) {
-  let t = ne().live;
+  let t = getArtifactState().live;
   for (let n of e) {
     let r = t.supervisors.get(n);
-    if (r !== void 0) (EYe(r), t.supervisors.delete(n));
-    (hTt(n), ne().liveDocWatch.headSinks.get(n)?.sourceEnded());
+    if (r !== void 0) (stopArtifactSupervisor(r), t.supervisors.delete(n));
+    (disposePresenceSlug(n), getArtifactState().liveDocWatch.headSinks.get(n)?.sourceEnded());
   }
   c(e);
 }
 function c(e) {
-  let t = ne().live;
+  let t = getArtifactState().live;
   for (let n of e)
     if (t.inFlightSubscribes.has(n) && !t.supervisors.has(n))
       (t.retiredInFlightArms.add(n),
@@ -80,7 +80,7 @@ function c(e) {
 }
 var MAX_UNATTENDED_REPLIES = 1e4;
 function a() {
-  return ne().autoReact.unattendedReplies;
+  return getArtifactState().autoReact.unattendedReplies;
 }
 function recordUnattendedReply(e) {
   let t = a();
@@ -98,7 +98,7 @@ function takeUnattendedReplies(e) {
   return (t.delete(e), n);
 }
 function drainUnattendedReplies() {
-  let e = ne().autoReact,
+  let e = getArtifactState().autoReact,
     t = e.unattendedReplies;
   e.unattendedReplies = new Map();
   let n = 0;
