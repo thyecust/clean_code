@@ -15,7 +15,7 @@ import { formatShortText } from "../../01-核心基础设施/核心工具-字符
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bf } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { fetchRemoteEnvironments, createDefaultRemoteEnvironment, getClaudeAiConnectorsUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";

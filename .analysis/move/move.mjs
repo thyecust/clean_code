@@ -18,7 +18,7 @@
 //
 // 落盘顺序：先写新路径、再删旧路径（交给 git 的改名检测）；目录空了就删掉。
 
-import { writeFileSync, readFileSync, existsSync, unlinkSync, rmdirSync, readdirSync, mkdirSync } from "node:fs";
+import { writeFileSync, readFileSync, existsSync, unlinkSync, rmdirSync, readdirSync, mkdirSync, statSync } from "node:fs";
 import { join, dirname, normalize, relative, basename, sep } from "node:path";
 import {
   ROOT, WORK, SKIP, walkAll, loadTree, buildEdges, splice, relativeSpec, snap, short,
@@ -93,12 +93,17 @@ for (const [b, a] of targets) {
 
 const newPath = (p) => fileMap.get(p) ?? p;
 
-// 撞名闸门：_index/file-map.json 以 basename 为键，主树 .js 的 basename 必须唯一
+// 撞名闸门：_index/file-map.json 以「稳定 chunk id」为键、覆盖的是**主树**，
+// 所以只要求主树 .js 的 basename 唯一。
+// 不参与判定：`src/plugins/functionHooks/hooks-worker/`（自带依赖的独立 bundle，
+// 本来就与主树重名 —— 见 README 的旁注）与 `*.original.js`（REPLACED.md 记的原件）。
 {
+  const MAIN = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时", "cli.js"];
+  const inMain = (p) => MAIN.some((t) => p === join(ROOT, t) || p.startsWith(join(ROOT, t) + sep));
   const seen = new Map();
   for (const p of allFiles) {
-    if (!p.endsWith(".js")) continue;
-    if (p.includes(`${sep}_source${sep}`)) continue;
+    if (!p.endsWith(".js") || p.endsWith(".original.js")) continue;
+    if (!inMain(p)) continue;
     const np = newPath(p);
     const b = basename(np);
     if (seen.has(b)) errors.push(`搬完后 basename 撞名: ${b}（${short(seen.get(b))} 与 ${short(np)}）`);
@@ -173,7 +178,9 @@ for (const [f, s] of src) {
     if (/importMetaRequire\($/.test(before)) continue;   // 3.2 管这一族
     if (lit.endsWith(".js")) continue;
     const t = normalize(join(dirname(f), lit));
-    if (!existsSync(t) || t.endsWith(".js")) continue;
+    // 必须是**文件**：`"../.."` 这类字面量会解析到存在的目录，existsSync 对它也为真，
+    // 放进去会给目录造出一份同名的「资源副本」。
+    if (!existsSync(t) || t.endsWith(".js") || !statSync(t).isFile()) continue;
     if (!resourceRefs.has(t)) resourceRefs.set(t, new Set());
     resourceRefs.get(t).add(f);
   }

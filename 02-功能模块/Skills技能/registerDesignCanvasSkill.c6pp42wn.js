@@ -35,7 +35,7 @@ import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-wri
 import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import "../Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";

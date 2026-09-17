@@ -16,7 +16,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { jsonStringify, jsonParse, getFsSurface, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { isBunStandaloneExecutable, resolveExecutablePathAsync, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";

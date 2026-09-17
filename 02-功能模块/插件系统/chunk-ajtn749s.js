@@ -51,7 +51,7 @@ import { getDirentFileInfo, tryGetDirentFileInfo, removeDirectoryRecursive, env 
 import { CLAUDE_AI_OAUTH_SCOPES, preservableScopesFrom } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {

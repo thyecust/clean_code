@@ -147,7 +147,7 @@ import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(
 import { toForwardSlashPath, writeFileSyncAndFlush, writeFileAndFlush } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Jcr, wS, Bf, a_ } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { GIT_HARDENED_ARGS, execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import {
   isRemoteActive,

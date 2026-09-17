@@ -35,7 +35,7 @@ import {
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs, eur } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { readBoundedFile, getVersionForAnalytics, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FOCUS_IN_SEQUENCE, FOCUS_OUT_SEQUENCE } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";

@@ -15,7 +15,7 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { NONINTERACTIVE_GIT_ENV } from "./git-exec-hardening.js";
-import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";

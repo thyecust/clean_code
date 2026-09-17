@@ -18,7 +18,7 @@ import { registerCleanup, isCleanupDrainStarted, jsonStringify, logForDebugging 
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { resolveExecutablePathAsync, findCommandsOnPath, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
+import { Bs } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
 import { setAgentProxyNote, isShuttingDown, MAX_PROXY_FAILURE_HISTORY, setAgentProxyStatusUrl, recordAgentProxyFailure } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
