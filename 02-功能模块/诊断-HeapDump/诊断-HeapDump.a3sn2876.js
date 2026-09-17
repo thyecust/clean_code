@@ -11,31 +11,31 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { ge, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { $ar } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { writeFileSync as k } from "fs";
-import { readdir as U, readFile as R, writeFile as C } from "fs/promises";
+import { writeFileSync } from "fs";
+import { readdir, readFile, writeFile } from "fs/promises";
 import { join as w } from "path";
-import { getHeapSpaceStatistics as D, getHeapStatistics as M } from "v8";
+import { getHeapSpaceStatistics, getHeapStatistics } from "v8";
 async function T(u, a = 0) {
   let t = process.memoryUsage(),
-    e = M(),
+    e = getHeapStatistics(),
     o = process.resourceUsage(),
     m = process.uptime(),
     l;
   try {
-    l = D();
+    l = getHeapSpaceStatistics();
   } catch {}
   let d = process._getActiveHandles().length,
     f = process._getActiveRequests().length,
     s;
   try {
-    s = (await U("/proc/self/fd")).length;
+    s = (await readdir("/proc/self/fd")).length;
   } catch {}
   let c;
   try {
-    c = await R("/proc/self/smaps_rollup", "utf8");
+    c = await readFile("/proc/self/smaps_rollup", "utf8");
   } catch {}
   let g, _, v;
   try {
@@ -142,7 +142,7 @@ async function performHeapDump(u = "manual", a = 0) {
       s = w(m, d),
       c = w(m, f);
     return (
-      await C(c, b(e, null, 2), { mode: 384 }),
+      await writeFile(c, b(e, null, 2), { mode: 384 }),
       n(`[HeapDump] Diagnostics written to ${c}`),
       await j(s),
       n(`[HeapDump] Heap dump written to ${s}`),
@@ -158,7 +158,7 @@ async function performHeapDump(u = "manual", a = 0) {
     let e = ge(t);
     if (Po(e))
       n(`[HeapDump] Failed to write dump: ${e.message}`, { level: "error" });
-    else h(e);
+    else logError(e);
     return (
       i("tengu_heap_dump", {
         triggerManual: !0,
@@ -171,7 +171,7 @@ async function performHeapDump(u = "manual", a = 0) {
   }
 }
 async function j(u) {
-  (k(u, Bun.generateHeapSnapshot("v8", "arraybuffer"), { mode: 384 }),
+  (writeFileSync(u, Bun.generateHeapSnapshot("v8", "arraybuffer"), { mode: 384 }),
     Bun.gc(!0));
 }
 export { performHeapDump };

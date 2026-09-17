@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { EO, f$, dj, Rf, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $9e } from "./chunk-2ttypdwq.js";
 async function S(e) {
@@ -86,12 +86,12 @@ var b = async (e, i) => {
       });
     switch (t.kind) {
       case "ok":
-        if (t.capped) g("recap_command", "capped", { fallback_params: a });
-        else y("recap_command", { fallback_params: a });
+        if (t.capped) logFeatureSad("recap_command", "capped", { fallback_params: a });
+        else logFeatureOk("recap_command", { fallback_params: a });
         return { type: "text", value: t.text };
       case "api-error":
         return (
-          f("recap_command", "api_error", { fallback_params: a }),
+          logFeatureBad("recap_command", "api_error", { fallback_params: a }),
           { type: "text", value: t.text }
         );
       case "no-turn":
@@ -103,7 +103,7 @@ var b = async (e, i) => {
         return { type: "text", value: "Recap cancelled." };
       case "failed":
         return (
-          f("recap_command", n ? "fallback_rebuild_failed" : "failed", {
+          logFeatureBad("recap_command", n ? "fallback_rebuild_failed" : "failed", {
             fallback_params: a,
           }),
           {

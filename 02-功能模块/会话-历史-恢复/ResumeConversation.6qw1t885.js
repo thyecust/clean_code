@@ -13,11 +13,11 @@ import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { j1, K, $p } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dt, ge, z0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { $1, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { $1, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
   xn,
@@ -25,29 +25,29 @@ import {
   Cgt,
   LX,
   Jf,
-  loadConversationForResume as PV,
+  loadConversationForResume,
   YLe,
   Ht,
-  isCustomTitleEnabled as ipe,
-  recordContentReplacement as KV,
-  resetSessionFilePointer as XM,
-  adoptResumedSessionFile as XV,
-  adoptResumedSessionFileAsync as YV,
-  applyEndedByModelOnResume as Q5e,
-  buildForkAdoptionMeta as FMe,
-  adoptForkSessionMetadata as are,
-  pinSessionId as Li,
-  restoreSessionMetadata as EH,
-  getSessionIdFromLog as Kc,
-  loadAllProjectsMessageLogsProgressive as UMe,
-  loadSameRepoMessageLogsProgressive as tAe,
-  enrichLogs as mre,
+  isCustomTitleEnabled,
+  recordContentReplacement,
+  resetSessionFilePointer,
+  adoptResumedSessionFile,
+  adoptResumedSessionFileAsync,
+  applyEndedByModelOnResume,
+  buildForkAdoptionMeta,
+  adoptForkSessionMetadata,
+  pinSessionId,
+  restoreSessionMetadata,
+  getSessionIdFromLog,
+  loadAllProjectsMessageLogsProgressive,
+  loadSameRepoMessageLogsProgressive,
+  enrichLogs,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { reclaimSessionNameOnResume as Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { reclaimSessionNameOnResume } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { xH } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { restoreGoalFromTranscript as wQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js";
+import { restoreGoalFromTranscript } from "../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { gi, o, t, n7, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -59,12 +59,12 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js"
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-8spdkj0k.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { resetReplTabToConvo as j8 } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { resetReplTabToConvo } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import "../Vim模式/Vim模式.nnewe0gf.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import {
   THe,
-  renameRecordingForSession as Nst,
+  renameRecordingForSession,
   AHe,
   Gz,
   HZ,
@@ -259,7 +259,7 @@ import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行�
 import { Ire } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { dirname as Ho } from "path";
+import { dirname } from "path";
 function Go() {
   xn(1);
 }
@@ -281,7 +281,7 @@ function qo(A) {
   if (k?.[1]) return parseInt(k[1], 10);
   return null;
 }
-function Ut({
+function ResumeConversation({
   commands: A,
   worktreePaths: R,
   initialTools: k,
@@ -337,21 +337,21 @@ function Ut({
       }
       return s;
     }, [se, N]),
-    go = ipe(),
+    go = isCustomTitleEnabled(),
     So = V(() => a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE, []);
   (n7(w || So ? null : "claude \xB7 resume"),
     E(() => {
-      tAe(R, void 0, void 0, g)
+      loadSameRepoMessageLogsProgressive(R, void 0, void 0, g)
         .then((s) => {
           ((P.current = s),
             (z.current = s.logs.length),
             j(s.logs),
             W(!1),
-            y("screen_resume_conversation"));
+            logFeatureOk("screen_resume_conversation"));
         })
         .catch((s) => {
-          (f("screen_resume_conversation", "resume_conversation_load_failed"),
-            h(s),
+          (logFeatureBad("screen_resume_conversation", "resume_conversation_load_failed"),
+            logError(s),
             W(!1));
         });
     }, [R, g]));
@@ -363,7 +363,7 @@ function Ut({
         if (!c || c.nextIndex >= c.allStatLogs.length) return;
         ie.current = !0;
         let L = !1;
-        mre(c.allStatLogs, c.nextIndex, s, g)
+        enrichLogs(c.allStatLogs, c.nextIndex, s, g)
           .then((v) => {
             if (P.current !== c) return;
             if (((c.nextIndex = v.nextIndex), v.logs.length > 0)) {
@@ -388,7 +388,7 @@ function Ut({
           L = P.current;
         ((P.current = null),
           po((n) => n + 1),
-          (s ? UMe(void 0, void 0, g) : tAe(R, void 0, void 0, g))
+          (s ? loadAllProjectsMessageLogsProgressive(void 0, void 0, g) : loadSameRepoMessageLogsProgressive(R, void 0, void 0, g))
             .then((n) => {
               if (Q.current !== c) return;
               ((P.current = n), (z.current = n.logs.length), j(n.logs));
@@ -396,7 +396,7 @@ function Ut({
             .catch((n) => {
               if (Q.current !== c) return;
               if (L !== null) P.current = L;
-              (j((m) => m.slice()), h(n));
+              (j((m) => m.slice()), logError(n));
             })
             .finally(() => {
               if (Q.current !== c) return;
@@ -425,7 +425,7 @@ function Ut({
         return;
       }
       if (!G) {
-        let m = Kc(s),
+        let m = getSessionIdFromLog(s),
           b = m ? await t4(m) : null;
         if (m && b) {
           mo({ sessionId: m, jobId: b.jobId, projectPath: s.projectPath });
@@ -433,14 +433,14 @@ function Ut({
         }
       }
     } catch (n) {
-      (h(dt(ge(n), "resume picker: pre-load failed")),
-        Le({ sessionId: Kc(s) ?? void 0 }));
+      (logError(dt(ge(n), "resume picker: pre-load failed")),
+        Le({ sessionId: getSessionIdFromLog(s) ?? void 0 }));
       return;
     }
     let L = !1,
       v = "load_error";
     try {
-      let n = await PV(s, void 0, {
+      let n = await loadConversationForResume(s, void 0, {
         forkSession: G ?? !1,
         storageV5: g,
         credentials: Ae,
@@ -469,14 +469,14 @@ function Ut({
       }
       Cgt(x);
       let { adoptedSessionId: m, effectiveFork: b } = Vre(n.sessionId, !!G),
-        xe = m ? Li(m) : Li(K());
+        xe = m ? pinSessionId(m) : pinSessionId(K());
       if (m)
-        ($p(m, "resume", s.fullPath ? Ho(s.fullPath) : null),
-          await Nst(x, g),
-          await XM());
+        ($p(m, "resume", s.fullPath ? dirname(s.fullPath) : null),
+          await renameRecordingForSession(x, g),
+          await resetSessionFilePointer());
       else if (b) {
         if (
-          (await are(n, {
+          (await adoptForkSessionMetadata(n, {
             stripWorktreeSession: !0,
             stripRelocatedCwd: !0,
             destSid: xe,
@@ -484,7 +484,7 @@ function Ut({
           }),
           n.contentReplacements?.length)
         )
-          await KV(n.contentReplacements, void 0, g);
+          await recordContentReplacement(n.contentReplacements, void 0, g);
       }
       jwe(n);
       let yo = await HZ(s.projectPath, g),
@@ -513,13 +513,13 @@ function Ut({
         ce = ne ? { ...Ie, ...ne } : Ie;
       if (ce) D((l) => ({ ...l, standaloneAgentContext: ce }));
       if (
-        (Gpe(ce?.name, g, { autoOnly: !n.customTitle && !ne?.name }),
-        EH(
-          b ? FMe(n, { stripWorktreeSession: !0, stripRelocatedCwd: !0 }) : n,
+        (reclaimSessionNameOnResume(ce?.name, g, { autoOnly: !n.customTitle && !ne?.name }),
+        restoreSessionMetadata(
+          b ? buildForkAdoptionMeta(n, { stripWorktreeSession: !0, stripRelocatedCwd: !0 }) : n,
           { taintSid: xe, storageV5: g },
         ),
-        Q5e(Ire(n), D),
-        wQt(n.messages, D, ro),
+        applyEndedByModelOnResume(Ire(n), D),
+        restoreGoalFromTranscript(n.messages, D, ro),
         THe(x.host),
         !b && n.bridgeSessionId)
       )
@@ -531,9 +531,9 @@ function Ut({
       if (!b) {
         let l = DZ(oF.of(x.host), n.worktreeSession, void 0, { storageV5: g });
         if (l) n.messages.push(Ht(RHe(l), "warning"));
-        if ((j8(x.host, D), m))
-          if (M() && g !== void 0) await YV(g);
-          else XV();
+        if ((resetReplTabToConvo(x.host, D), m))
+          if (M() && g !== void 0) await adoptResumedSessionFileAsync(g);
+          else adoptResumedSessionFile();
       }
       (i("tengu_session_resumed", {
         entrypoint: S("picker"),
@@ -555,12 +555,12 @@ function Ut({
         i("tengu_session_resumed", {
           entrypoint: S("picker"),
           success: !1,
-          failure_reason: u(m),
+          failure_reason: fromEnum(m),
           error_name: z0(ge(n)),
         });
       }
-      (h(dt(ge(n), "resume picker: onSelect failed")),
-        Le({ sessionId: Kc(s) ?? void 0 }));
+      (logError(dt(ge(n), "resume picker: onSelect failed")),
+        Le({ sessionId: getSessionIdFromLog(s) ?? void 0 }));
     }
   }
   if (we) return e(We, { ...we });
@@ -800,4 +800,4 @@ function We(Jt) {
   else Bo = I[22];
   return Bo;
 }
-export { Ut as ResumeConversation };
+export { ResumeConversation };

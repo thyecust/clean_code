@@ -29,24 +29,24 @@ import {
   far,
   Het,
   uS,
-  getAllPolicyTierSettings as Rd,
+  getAllPolicyTierSettings,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { findCanonicalGitRoot as $r } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRoot } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ea, OQ, Zet, Uge, X6 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Qoe } from "../核心工具-路径与平台/chunk-2f8axr19.js";
-import { id, noProxyUnion as G8t } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { id, noProxyUnion } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { ahe } from "../共享小工具-未细化/chunk-v2wxtqf7.js";
-import { homedir as x } from "os";
-import { dirname as P, posix as h } from "path";
+import { homedir } from "os";
+import { dirname, posix } from "path";
 var o6 = "proxy-injected";
 var CJe = "ssh-placeholder";
 function jEt() {
-  return Rd()
+  return getAllPolicyTierSettings()
     .map((e) => e.sandbox?.bwrapPath)
     .find((e) => e != null);
 }
 function pnr() {
-  return Rd()
+  return getAllPolicyTierSettings()
     .map((e) => e.sandbox?.socatPath)
     .find((e) => e != null);
 }
@@ -79,7 +79,7 @@ var Q = /[ \t\n\v\f\r'"]/,
 function y(e) {
   let t = e.HTTP_PROXY || e.http_proxy || e.CLAUDE_CODE_HTTP_PROXY,
     n = e.HTTPS_PROXY || e.https_proxy || e.CLAUDE_CODE_HTTPS_PROXY,
-    r = G8t(e);
+    r = noProxyUnion(e);
   if (!t && !n) return {};
   let p = v(t),
     i = v(n);
@@ -259,7 +259,7 @@ var A = [
   N = ".";
 function G(e) {
   try {
-    return `${X6(e, $r)}/.claude`;
+    return `${X6(e, findCanonicalGitRoot)}/.claude`;
   } catch {
     return;
   }
@@ -271,14 +271,14 @@ function isScrubSandboxAvailable() {
 }
 async function assertScrubSandboxAvailable() {
   if ((N5t(), !isScrubEnabled())) return;
-  let e = x(),
+  let e = homedir(),
     t = he(),
-    n = process.env.GITHUB_ENV ? P(process.env.GITHUB_ENV) : void 0,
+    n = process.env.GITHUB_ENV ? dirname(process.env.GITHUB_ENV) : void 0,
     r = process.env.GITHUB_WORKSPACE;
   u.setScrubSandboxAvailableLatched(!1);
   let p = (process.env.PATH ?? "")
     .split(":")
-    .map((s) => (s ? h.normalize(s).replace(/\/+$/, "") : s))
+    .map((s) => (s ? posix.normalize(s).replace(/\/+$/, "") : s))
     .filter((s) => s && k.some((f) => s.startsWith(`${f}/`)));
   (u.setScrubPathsLatched({
     home: e,
@@ -493,15 +493,15 @@ function shouldUseMcpAllowlistEnv() {
 }
 function scrubSandboxConfig() {
   let e = u.scrubPathsLatched,
-    t = e?.home ?? x(),
+    t = e?.home ?? homedir(),
     n = e?.originalCwd ?? he(),
     r = e?.GITHUB_ACTION_PATH ?? process.env.GITHUB_ACTION_PATH,
     p =
       e?.runnerFileCommandsDir ??
-      (process.env.GITHUB_ENV ? P(process.env.GITHUB_ENV) : void 0),
+      (process.env.GITHUB_ENV ? dirname(process.env.GITHUB_ENV) : void 0),
     i = e?.workspace ?? process.env.GITHUB_WORKSPACE,
     l =
-      i && h.resolve(i) !== h.resolve(n)
+      i && posix.resolve(i) !== posix.resolve(n)
         ? [
             `${i}/.git/hooks`,
             `${i}/.git/config`,

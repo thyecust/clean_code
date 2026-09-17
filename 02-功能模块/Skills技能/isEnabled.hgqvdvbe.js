@@ -9,5 +9,5 @@
 // Version: 2.1.263
 import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = Ae("./SKILL-nrz66j7x.md");
-var n = e;
-export { n as SKILL_MD };
+var SKILL_MD = e;
+export { SKILL_MD };

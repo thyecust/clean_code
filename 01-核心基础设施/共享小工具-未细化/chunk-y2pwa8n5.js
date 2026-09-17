@@ -8,11 +8,11 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isCrossSessionMessagingEnabled as Mo } from "./chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "./chunk-rfb3s38d.js";
 var hO = 31457280,
   uI = 16;
 function rOe() {
-  return Mo() && H("tengu_send_file", !1);
+  return isCrossSessionMessagingEnabled() && H("tengu_send_file", !1);
 }
 var Lpt = `could not be read, is not a regular file, or exceeds the ${hO / 1048576} MiB transfer limit`,
   Mpt = 1;

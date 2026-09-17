@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { XZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { getTaskOutputPath as _l, evictTaskOutput as Sd, writeTaskOutputSnapshot as GSn, initTaskOutput as KAe } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { getTaskOutputPath, evictTaskOutput, writeTaskOutputSnapshot, initTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import {
   pUt,
   eh,
@@ -47,8 +47,8 @@ function registerWorkflowTask({
   toolUseId: c,
   startTime: m,
 }) {
-  KAe(e);
-  let _ = hr(0),
+  initTaskOutput(e);
+  let _ = createAbortController(0),
     h = {
       ...Md(e, "local_workflow", s ?? "Dynamic workflow", c),
       ...(m !== void 0 && { startTime: m }),
@@ -192,7 +192,7 @@ function completeWorkflowTask(e, r, o, t, s, a) {
     terminal: a,
   });
   if (l)
-    (GSn(
+    (writeTaskOutputSnapshot(
       l.outputFile,
       b(
         {
@@ -214,11 +214,11 @@ function completeWorkflowTask(e, r, o, t, s, a) {
         `Failed to write workflow output for ${e}: ${u instanceof Error ? u.message : u}`,
       ),
     ),
-      y("task_local_workflow"));
+      logFeatureOk("task_local_workflow"));
 }
 function failWorkflowTask(e, r, o, t, s, a) {
   let l = A(e, s, "failed", { error: r, agentCount: o, logs: t, terminal: a });
-  if ((Sd(e), l)) f("task_local_workflow", "task_local_workflow_failed");
+  if ((evictTaskOutput(e), l)) logFeatureBad("task_local_workflow", "task_local_workflow_failed");
 }
 function pauseWorkflowTask(e, r) {
   let o = A(e, r, "paused", { notified: !0 });
@@ -232,12 +232,12 @@ function buildResumePrompt(e) {
 }
 function killWorkflowTask(e, r, o) {
   if (r.get(e)?.status === "running" && eh(e) && !pUt(e))
-    g("task_kill_missing_loop_entry", "local_workflow");
+    logFeatureSad("task_kill_missing_loop_entry", "local_workflow");
   let t = A(e, r, "killed", { notified: !0 });
   if (t)
     (t.v2Run?.kill(o),
       bE(t.ownerAgentId, `workflow:${e}`, r),
-      Sd(e),
+      evictTaskOutput(e),
       pi(e, "stopped", { toolUseId: t.toolUseId, summary: t.description }),
       Ote(e));
   return t !== null;
@@ -254,7 +254,7 @@ function j(e, r, o, t) {
     }),
     s)
   )
-    y(
+    logFeatureOk(
       o === "user-skip"
         ? "task_local_workflow_skip_agent"
         : "task_local_workflow_retry_agent",
@@ -347,7 +347,7 @@ function enqueueWorkflowNotification({
 `),
           )}</diagnostics>`
         : "",
-    x = _l(e),
+    x = getTaskOutputPath(e),
     L = "";
   if (o === "completed" && t !== void 0) {
     let d = Nt(b(t)),

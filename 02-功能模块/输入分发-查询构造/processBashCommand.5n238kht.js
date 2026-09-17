@@ -11,20 +11,20 @@
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { G0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { shutdownInterruptStamp as ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { U5e, Lo, Re, m$, PI, GV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { Bk } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Gre, Kpe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { zit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ksg0m9bg.js";
 import { Iye } from "../../01-核心基础设施/共享小工具-未细化/chunk-8w004g4b.js";
-import { randomUUID as b } from "crypto";
-async function L(t, S, e) {
+import { randomUUID } from "crypto";
+async function processBashCommand(t, S, e) {
   let h = Bk() && zit() === "powershell",
-    l = Ge().respondToBashCommands ?? !0;
+    l = getInitialSettings().respondToBashCommands ?? !0;
   i("tengu_input_bash", { powershell: h, respond: l });
   let d = Re({
       content: m$({
@@ -32,7 +32,7 @@ async function L(t, S, e) {
         precedingInputBlocks: S,
       }),
     }),
-    m = b(),
+    m = randomUUID(),
     { emitToolProgress: p } = e;
   p?.({
     kind: "bash_mode_progress",
@@ -81,7 +81,7 @@ async function L(t, S, e) {
       ).data;
     if (!r) throw Error("No result received from shell command");
     let T = r.stderr,
-      c = await Kpe(y, { ...r, stderr: "" }, b(), yS(e.session), e.storageV5),
+      c = await Kpe(y, { ...r, stderr: "" }, randomUUID(), yS(e.session), e.storageV5),
       u = typeof c.content === "string" ? c.content : r.stdout,
       P = u.startsWith(Gre) ? u : Nt(u),
       f =
@@ -108,7 +108,7 @@ async function L(t, S, e) {
             d,
             PI({
               toolUse: !1,
-              interruptedByShutdown: ob(e.abortController.signal),
+              interruptedByShutdown: shutdownInterruptStamp(e.abortController.signal),
             }),
           ],
           shouldQuery: !1,
@@ -140,4 +140,4 @@ async function L(t, S, e) {
     p?.({ kind: "clear", toolUseId: m });
   }
 }
-export { L as processBashCommand };
+export { processBashCommand };

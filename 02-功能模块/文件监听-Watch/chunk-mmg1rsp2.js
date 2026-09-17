@@ -15,20 +15,20 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { wc, Et, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Vj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import {
-  clearAgentDefinitionsCache as D2,
+  clearAgentDefinitionsCache,
   Rk,
   mMe,
   _5e,
   $V,
   F8n,
   Q_t,
-  evictSentSkillNames as Egn,
-  clearCommandMemoizationCaches as rR,
-  clearCommandsCache as xE,
+  evictSentSkillNames,
+  clearCommandMemoizationCaches,
+  clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as b from "path";
@@ -79,7 +79,7 @@ function fe(o) {
     if (N || k) return;
     if (((N = !0), (B = t), (g = r), !L))
       L = F8n(() => {
-        (rR(), e.emit());
+        (clearCommandMemoizationCaches(), e.emit());
       });
     let d = ++E,
       a = await X(r);
@@ -192,7 +192,7 @@ function fe(o) {
       $V();
       let a = await D().catch(() => null);
       if (a === null) {
-        (xE(), D2(), q());
+        (clearCommandsCache(), clearAgentDefinitionsCache(), q());
         return;
       }
       let P =
@@ -200,12 +200,12 @@ function fe(o) {
         a.size === I.size &&
         [...I].every(([f, _]) => a.get(f) === _);
       if (P && d) {
-        D2();
+        clearAgentDefinitionsCache();
         return;
       }
       if (
-        (xE(),
-        D2(),
+        (clearCommandsCache(),
+        clearAgentDefinitionsCache(),
         await Q_t().catch((f) =>
           n(
             `[skills] re-reading the moved directory's skills failed: ${l(f)}`,
@@ -220,7 +220,7 @@ function fe(o) {
       else {
         if (I !== null) {
           let f = [...I].filter(([_, ie]) => a.get(_) !== ie).map(([_]) => _);
-          if (f.length > 0) Egn(f);
+          if (f.length > 0) evictSentSkillNames(f);
         }
         I = a;
       }
@@ -230,7 +230,7 @@ function fe(o) {
   function te(t) {
     if (!B)
       return (
-        h(Error("skillChangeDetector: ConfigChange hook gate not wired")),
+        logError(Error("skillChangeDetector: ConfigChange hook gate not wired")),
         Promise.resolve(!0)
       );
     return B("skills", t);
@@ -240,7 +240,7 @@ function fe(o) {
       e.emit();
     } catch (t) {
       for (let r of t instanceof AggregateError ? t.errors : [t])
-        h(dt(ge(r), "skillChangeDetector: subscriber threw during reload"));
+        logError(dt(ge(r), "skillChangeDetector: subscriber threw during reload"));
     }
   }
   function ne() {

@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { to } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { DEFAULT_3P_SONNET_KEY as e0, DEFAULT_3P_HAIKU_KEY as p5, firstPartyNameToCanonical as Yh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { DEFAULT_3P_SONNET_KEY, DEFAULT_3P_HAIKU_KEY, firstPartyNameToCanonical } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { d7 } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
 var u = Object.keys(to);
 function tierConfig(e) {
   return {
     sonnet: {
       envVarPriority: ["ANTHROPIC_DEFAULT_SONNET_MODEL"],
-      defaultKey: e0,
+      defaultKey: DEFAULT_3P_SONNET_KEY,
     },
     opus: { envVarPriority: ["ANTHROPIC_DEFAULT_OPUS_MODEL"], defaultKey: e },
     haiku: {
@@ -25,7 +25,7 @@ function tierConfig(e) {
         "ANTHROPIC_SMALL_FAST_MODEL",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL",
       ],
-      defaultKey: p5,
+      defaultKey: DEFAULT_3P_HAIKU_KEY,
     },
   };
 }
@@ -36,8 +36,8 @@ function l(e) {
   return;
 }
 function T(e) {
-  let o = Yh(e);
-  for (let r of u) if (Yh(to[r].firstParty) === o) return r;
+  let o = firstPartyNameToCanonical(e);
+  for (let r of u) if (firstPartyNameToCanonical(to[r].firstParty) === o) return r;
   return;
 }
 function upgradeKey(e) {
@@ -82,7 +82,7 @@ function seedEnvDefaultForUserPin(e, o) {
   if (!n) return;
   if (n === "haiku") return;
   let i = o[n];
-  if (Ge().modelOverrides?.[to[i.defaultKey].firstParty]) return;
+  if (getInitialSettings().modelOverrides?.[to[i.defaultKey].firstParty]) return;
   return { tier: n, envVar: i.envVarPriority.at(-1), value: r };
 }
 function collectUnpinnedTiers(e, o) {

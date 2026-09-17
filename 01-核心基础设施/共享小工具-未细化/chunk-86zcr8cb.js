@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { xe } from "./chunk-cwpbthvg.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatFileSize as Ft } from "./chunk-7axvc6rn.js";
+import { formatFileSize } from "./chunk-7axvc6rn.js";
 function IPt() {
   return e(xe, {
     height: 1,
@@ -22,7 +22,7 @@ function QHe(P) {
   let g = _(7),
     { bytes: u, status: R } = P,
     n;
-  if (g[0] !== u) ((n = Ft(u)), (g[0] = u), (g[1] = n));
+  if (g[0] !== u) ((n = formatFileSize(u)), (g[0] = u), (g[1] = n));
   else n = g[1];
   let m;
   if (g[2] !== n)

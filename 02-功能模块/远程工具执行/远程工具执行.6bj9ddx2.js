@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { gc, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   ka,
@@ -787,14 +787,14 @@ function De(e) {
 }
 var le = (e) =>
   e === "message_send"
-    ? u("message_send")
+    ? fromEnum("message_send")
     : e === "turn_start"
-      ? u("turn_start")
+      ? fromEnum("turn_start")
       : e === "before_command"
-        ? u("before_command")
+        ? fromEnum("before_command")
         : e === "after_command"
-          ? u("after_command")
-          : u("turn_end");
+          ? fromEnum("after_command")
+          : fromEnum("turn_end");
 function I(e) {
   try {
     let t = De(e);
@@ -803,23 +803,23 @@ function I(e) {
         point: le(e.point),
         guarantee:
           e.guarantee === "up"
-            ? u("up")
+            ? fromEnum("up")
             : e.guarantee === "down"
-              ? u("down")
-              : u("both"),
+              ? fromEnum("down")
+              : fromEnum("both"),
         agreed:
-          t.agreed === "unknown" ? u("unknown") : t.agreed ? u("yes") : u("no"),
+          t.agreed === "unknown" ? fromEnum("unknown") : t.agreed ? fromEnum("yes") : fromEnum("no"),
         ...("reason" in t && {
           reason:
             t.reason === "peer_too_old"
-              ? u("peer_too_old")
+              ? fromEnum("peer_too_old")
               : t.reason === "peer_stale"
-                ? u("peer_stale")
+                ? fromEnum("peer_stale")
                 : t.reason === "no_own_frame"
-                  ? u("no_own_frame")
-                  : u("peer_does_not_take"),
+                  ? fromEnum("no_own_frame")
+                  : fromEnum("peer_does_not_take"),
         }),
-        outcome: u(e.outcome),
+        outcome: fromEnum(e.outcome),
         empty: e.empty,
         ms: e.ms,
         ...(e.requests !== void 0 && { requests: e.requests }),
@@ -999,7 +999,7 @@ async function Qe(e, t) {
   let r = Date.now(),
     o = await e.runDue(t).catch(() => null);
   i("tengu_dir_sync_between_tools_publish", {
-    outcome: u(o?.kind ?? "none"),
+    outcome: fromEnum(o?.kind ?? "none"),
     duration_ms: Date.now() - r,
   });
 }
@@ -1026,7 +1026,7 @@ async function en(e, t) {
       (i("tengu_dir_sync_mid_turn", {
         point: S("after_forward_take_in"),
         duration_ms: Date.now() - a,
-        ...(f !== null && { pull: u(f.kind) }),
+        ...(f !== null && { pull: fromEnum(f.kind) }),
         noted: p !== null,
       }),
       p !== null)
@@ -1042,7 +1042,7 @@ async function nn(e, t) {
         ? null
         : await e.takeInBetweenToolCalls(t).catch(() => null);
   i("tengu_dir_sync_between_tools_take_in", {
-    outcome: u(o?.kind ?? "none"),
+    outcome: fromEnum(o?.kind ?? "none"),
     duration_ms: Date.now() - r,
     ...(o?.kind === "applied" && {
       files_updated: o.filesUpdated,
@@ -1223,8 +1223,8 @@ async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
         d.engine().then((f) => {
           if (f !== null)
             (i("tengu_dir_sync_mid_turn", {
-              point: u("pre_forward"),
-              clearance: u("machine_too_old"),
+              point: fromEnum("pre_forward"),
+              clearance: fromEnum("machine_too_old"),
             }),
               I({
                 point: "before_command",
@@ -1247,11 +1247,11 @@ async function NQt({ host: e, readOnly: t, signal: r, onStatus: o }) {
     return await a;
   } catch (f) {
     return (
-      h(f),
+      logError(f),
       n(`dir-sync: pre-forward sync point failed: ${l(f)}`, { level: "error" }),
       i("tengu_dir_sync_mid_turn", {
-        point: u("pre_forward"),
-        clearance: u("threw"),
+        point: fromEnum("pre_forward"),
+        clearance: fromEnum("threw"),
         read_only: t,
       }),
       R({
@@ -1629,8 +1629,8 @@ async function FQt({
       i("tengu_dir_sync_mid_turn", {
         point: S("after_forward"),
         duration_ms: Date.now() - a,
-        machine_push: u(y.kind),
-        ...(w !== void 0 && { pull: u(w.kind) }),
+        machine_push: fromEnum(y.kind),
+        ...(w !== void 0 && { pull: fromEnum(w.kind) }),
         noted: C !== null,
       }),
       C
@@ -1707,22 +1707,22 @@ async function FQt({
 function kn(e, t, { push: r, reply: o, pull: d, readOnly: a, escalated: f }) {
   let g = o?.kind === "done" ? o.outcome : void 0;
   return {
-    point: u(e),
+    point: fromEnum(e),
     duration_ms: Date.now() - t,
-    ...(r !== void 0 && { push: u(r.kind) }),
-    ...(o !== void 0 && { machine: u(o.kind) }),
-    ...(o?.kind === "unreachable" && { transport: u(o.transport) }),
-    ...(o?.kind === "refused" && { refused: u(o.reason) }),
+    ...(r !== void 0 && { push: fromEnum(r.kind) }),
+    ...(o !== void 0 && { machine: fromEnum(o.kind) }),
+    ...(o?.kind === "unreachable" && { transport: fromEnum(o.transport) }),
+    ...(o?.kind === "refused" && { refused: fromEnum(o.reason) }),
     ...(o?.kind === "done" && { polls: o.polls }),
     ...(g !== void 0 && {
-      catch_up: u(g.catchUp.kind),
-      machine_push: u(g.push.kind),
+      catch_up: fromEnum(g.catchUp.kind),
+      machine_push: fromEnum(g.push.kind),
     }),
-    ...(g?.catchUp.kind === "deferred" && { deferred: u(g.catchUp.reason) }),
+    ...(g?.catchUp.kind === "deferred" && { deferred: fromEnum(g.catchUp.reason) }),
     ...(g?.catchUp.kind === "failed" && {
-      catch_up_failure: u(g.catchUp.reason),
+      catch_up_failure: fromEnum(g.catchUp.reason),
     }),
-    ...(d !== void 0 && { pull: u(d.kind) }),
+    ...(d !== void 0 && { pull: fromEnum(d.kind) }),
     ...(a !== void 0 && { read_only: a }),
     ...(f !== void 0 && { escalated: f }),
   };
@@ -1731,7 +1731,7 @@ function $n(e, t, r) {
   return (
     i("tengu_dir_sync_mid_turn", {
       ...kn("pre_forward", e, t),
-      clearance: u(r.kind),
+      clearance: fromEnum(r.kind),
     }),
     r
   );

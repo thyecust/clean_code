@@ -14,7 +14,7 @@ import { s4 } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
 import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { truncateStartToWidth as Ob } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateStartToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { jJt, IB, $ae } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
@@ -288,7 +288,7 @@ function xe(Fn) {
     { file: ie, isSelected: Q, maxPathWidth: Ge } = Fn,
     kt;
   if (ce[0] !== ie.path || ce[1] !== Ge)
-    ((kt = Ob(ie.path, Ge)), (ce[0] = ie.path), (ce[1] = Ge), (ce[2] = kt));
+    ((kt = truncateStartToWidth(ie.path, Ge)), (ce[0] = ie.path), (ce[1] = Ge), (ce[2] = kt));
   else kt = ce[2];
   let Mn = kt,
     Ve = `${Q ? L.pointer + " " : "  "}${Mn}`;
@@ -410,7 +410,7 @@ function lt(n) {
     baseMode: "auto",
   };
 }
-function un(tr) {
+function DiffDialog(tr) {
   let h = _(84),
     { messages: nr, onDone: rr } = tr,
     Ct;
@@ -841,4 +841,4 @@ function un(tr) {
   else dn = h[83];
   return dn;
 }
-export { un as DiffDialog };
+export { DiffDialog };

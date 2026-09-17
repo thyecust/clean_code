@@ -11,11 +11,11 @@ import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { spawn as h } from "child_process";
-import { isAbsolute as m } from "path";
-import { createInterface as v } from "readline";
+import { spawn } from "child_process";
+import { isAbsolute } from "path";
+import { createInterface } from "readline";
 var E = "/root/.local/bin/vitals-emitter-guest",
   T = "vitals-emitter-guest",
   o = 5000,
@@ -41,7 +41,7 @@ async function Kot(e) {
 }
 async function _({ binaryResolution: e, log: r }) {
   let t = a.VITALS_EMITTER_BIN;
-  if (t && !m(t))
+  if (t && !isAbsolute(t))
     return (
       r(
         `[vitals] VITALS_EMITTER_BIN must be an absolute path (got ${t}); guest vitals disabled`,
@@ -104,7 +104,7 @@ class c {
       } = this.options,
       s;
     try {
-      s = h(
+      s = spawn(
         this.binary,
         ["--session-id", e, "--api-url", r, "--token-file", t],
         {
@@ -134,11 +134,11 @@ class c {
         if (
           (i(`[vitals] spawned ${this.binary} pid=${s.pid}`), !this.reportedOk)
         )
-          ((this.reportedOk = !0), y("ccr_vitals_emitter"));
+          ((this.reportedOk = !0), logFeatureOk("ccr_vitals_emitter"));
       }),
       s.stderr)
     )
-      v({ input: s.stderr }).on("line", (n) => i(`[vitals] ${n}`));
+      createInterface({ input: s.stderr }).on("line", (n) => i(`[vitals] ${n}`));
     await new Promise((n) => {
       (s.once("spawn", () => n()), s.once("error", () => n()));
     });
@@ -167,12 +167,12 @@ class c {
         );
       else
         (i(`[vitals] ${t}; guest vitals disabled for this session`),
-          f("ccr_vitals_emitter", "spawn_failed"));
+          logFeatureBad("ccr_vitals_emitter", "spawn_failed"));
       return;
     }
     if ((i(`[vitals] emitter ${t}`), !this.reportedUnexpectedExit))
       ((this.reportedUnexpectedExit = !0),
-        g("ccr_vitals_emitter", "exited_unexpectedly"));
+        logFeatureSad("ccr_vitals_emitter", "exited_unexpectedly"));
     if (Date.now() - this.spawnedAt > d) this.nextBackoffMs = p;
     this.scheduleRespawn();
   }

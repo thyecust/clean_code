@@ -12,7 +12,7 @@
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dyn } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
-function s(n) {
+function renderToolResultMessage(n) {
   if (!n.ended) return null;
   let l = Dyn();
   return r(o, {
@@ -27,4 +27,4 @@ function s(n) {
     ],
   });
 }
-export { s as renderToolResultMessage };
+export { renderToolResultMessage };

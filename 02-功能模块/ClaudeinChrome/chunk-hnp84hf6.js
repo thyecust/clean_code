@@ -9,20 +9,20 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { readdir as V, stat as R } from "fs/promises";
-import { homedir as T, platform as N, userInfo as z } from "os";
+import { readdir, stat as R } from "fs/promises";
+import { homedir, platform, userInfo } from "os";
 import { join as l } from "path";
-import { spawn as k } from "child_process";
-import { lstat as D } from "fs/promises";
-import { dirname as O, win32 as _ } from "path";
+import { spawn } from "child_process";
+import { lstat } from "fs/promises";
+import { dirname, win32 as _ } from "path";
 var I = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths",
   v = 1e4,
   L = 5000;
@@ -56,7 +56,7 @@ async function x(e, s = L) {
   let r = h(),
     o = `${r}\\System32\\reg.exe`;
   for (let t of ["HKCU", "HKLM"]) {
-    let c = await Be(o, ["query", `${t}\\${I}\\${e}`, "/ve"], {
+    let c = await execFileNoThrowWithCwd(o, ["query", `${t}\\${I}\\${e}`, "/ve"], {
       timeout: v,
       cwd: r,
     });
@@ -82,7 +82,7 @@ async function x(e, s = L) {
       continue;
     }
     try {
-      let m = D(p);
+      let m = lstat(p);
       m.catch(() => {});
       let d = await kt(m, s);
       if (d === void 0) {
@@ -122,8 +122,8 @@ function M(e, s) {
   return new Promise((r) => {
     let o;
     try {
-      o = k(e, s, {
-        cwd: O(e),
+      o = spawn(e, s, {
+        cwd: dirname(e),
         detached: !0,
         stdio: "ignore",
         windowsHide: !1,
@@ -183,7 +183,7 @@ var G = new j(() => new E());
 function yd() {
   return G.of(B().host);
 }
-var CFC_TOOL_PREFIX = `mcp__${vd}__`,
+var CFC_TOOL_PREFIX = `mcp__${CLAUDE_IN_CHROME_MCP_SERVER_NAME}__`,
   CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL = "ClaudeInChromeDomain",
   g = {
     chrome: {
@@ -351,7 +351,7 @@ var CFC_TOOL_PREFIX = `mcp__${vd}__`,
   C = ["chrome", "brave", "arc", "edge", "chromium", "vivaldi", "opera"];
 function getAllNativeMessagingHostsDirs() {
   let e = P(),
-    s = T(),
+    s = homedir(),
     r = [];
   for (let o of C) {
     let t = g[o];
@@ -403,7 +403,7 @@ async function detectAvailableBrowser() {
         break;
       }
       case "windows": {
-        let o = T();
+        let o = homedir();
         if (r.windows.dataPath.length > 0) {
           let t = r.windows.useRoaming
               ? l(o, "AppData", "Roaming")
@@ -444,21 +444,21 @@ function w(e) {
 }
 async function openInChrome(e) {
   if (!/^https?:\/\//i.test(e))
-    return (f("chrome_open_url", "invalid_url"), !1);
+    return (logFeatureBad("chrome_open_url", "invalid_url"), !1);
   let s = P(),
     r = await detectAvailableBrowser();
   if (!r)
     return (
       n("[Claude in Chrome] No compatible browser found"),
-      f("chrome_open_url", "no_browser"),
+      logFeatureBad("chrome_open_url", "no_browser"),
       !1
     );
   let o = g[r];
   switch (s) {
     case "macos": {
-      let t = await Fe("open", ["-a", o.macos.appName, e]);
-      if (t.code === 0) return (y("chrome_open_url"), !0);
-      return (f("chrome_open_url", "exec_failed", w(t)), !1);
+      let t = await execFileNoThrow("open", ["-a", o.macos.appName, e]);
+      if (t.code === 0) return (logFeatureOk("chrome_open_url"), !0);
+      return (logFeatureBad("chrome_open_url", "exec_failed", w(t)), !1);
     }
     case "windows": {
       let t = o.windows.appPathsExe,
@@ -468,33 +468,33 @@ async function openInChrome(e) {
         if (p) {
           if (await M(p, [e]))
             return (
-              y("chrome_open_url", {
+              logFeatureOk("chrome_open_url", {
                 open_method: S("app_paths"),
-                browser: u(r),
+                browser: fromEnum(r),
               }),
               !0
             );
           c = !0;
         }
       }
-      let i = await Be("rundll32", ["url,OpenURL", e], { cwd: h() });
+      let i = await execFileNoThrowWithCwd("rundll32", ["url,OpenURL", e], { cwd: h() });
       if (i.code === 0)
         return (
-          y("chrome_open_url", {
+          logFeatureOk("chrome_open_url", {
             open_method: c
               ? S("rundll32_after_spawn_fail")
               : t
                 ? S("rundll32")
                 : S("rundll32_no_app_paths_support"),
-            browser: u(r),
+            browser: fromEnum(r),
           }),
           !0
         );
       return (
-        f("chrome_open_url", "exec_failed", {
+        logFeatureBad("chrome_open_url", "exec_failed", {
           ...w(i),
           ...(c && { app_paths_spawn_failed: !0 }),
-          browser: u(r),
+          browser: fromEnum(r),
         }),
         !1
       );
@@ -503,29 +503,29 @@ async function openInChrome(e) {
     case "linux": {
       let t;
       for (let c of o.linux.binaries) {
-        let i = await Fe(c, [e], { useCwd: !0, useToolMemoryCgroup: !1 });
-        if (i.code === 0) return (y("chrome_open_url"), !0);
+        let i = await execFileNoThrow(c, [e], { useCwd: !0, useToolMemoryCgroup: !1 });
+        if (i.code === 0) return (logFeatureOk("chrome_open_url"), !0);
         if (t?.exitCode === void 0 || i.exitCode !== void 0) t = i;
       }
-      return (f("chrome_open_url", "exec_failed", t ? w(t) : void 0), !1);
+      return (logFeatureBad("chrome_open_url", "exec_failed", t ? w(t) : void 0), !1);
     }
     default:
-      return (f("chrome_open_url", "exec_failed"), !1);
+      return (logFeatureBad("chrome_open_url", "exec_failed"), !1);
   }
 }
 function getSocketDir() {
   return `/tmp/claude-mcp-browser-bridge-${U()}`;
 }
 function getSecureSocketPath() {
-  if (N() === "win32") return `\\\\.\\pipe\\${H()}`;
+  if (platform() === "win32") return `\\\\.\\pipe\\${H()}`;
   return l(getSocketDir(), `${process.pid}.sock`);
 }
 async function getAllSocketPaths() {
-  if (N() === "win32") return [`\\\\.\\pipe\\${H()}`];
+  if (platform() === "win32") return [`\\\\.\\pipe\\${H()}`];
   let e = [],
     s = getSocketDir();
   try {
-    let r = await V(s);
+    let r = await readdir(s);
     for (let o of r) if (o.endsWith(".sock")) e.push(l(s, o));
   } catch {}
   return e;
@@ -535,7 +535,7 @@ function H() {
 }
 function U() {
   try {
-    return z().username || "default";
+    return userInfo().username || "default";
   } catch {
     return a.USER || a.USERNAME || "default";
   }

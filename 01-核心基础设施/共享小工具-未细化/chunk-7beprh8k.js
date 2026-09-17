@@ -10,14 +10,14 @@
 import { j, bi } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Et, b, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { dirname as u } from "path";
+import { dirname } from "path";
 function s() {}
 async function p(n, t) {
   let i = ae();
   try {
     await i.appendFile(n, t);
   } catch {
-    (await i.mkdir(u(n)).catch(s), await i.appendFile(n, t));
+    (await i.mkdir(dirname(n)).catch(s), await i.appendFile(n, t));
   }
 }
 class c {

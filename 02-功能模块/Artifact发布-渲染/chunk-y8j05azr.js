@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getAuthHeaders as l5, TUe, FCt, checkAndRefreshOAuthTokenIfNeeded as Ss, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getAuthHeaders, TUe, FCt, checkAndRefreshOAuthTokenIfNeeded, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, MPn, Xu, cr, nt, hm, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { ARTIFACT_SLUG_RE as fr } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { bCe, Am, TG, jZn, nP, Nd, Fd } from "./chunk-01ymf0ar.js";
 function vft() {
   return a.CLAUDE_CODE_ARTIFACT_DB ?? H("tengu_umber_lattice", !1);
@@ -164,7 +164,7 @@ var pe = m(() =>
   );
 function J(e, r) {
   if (r === void 0 && typeof e === "object" && e !== null && e.usage !== void 0)
-    g("artifact_db_write", "malformed_usage");
+    logFeatureSad("artifact_db_write", "malformed_usage");
 }
 var we = m(() => nt({ version: Zt().int().optional(), usage: V() })),
   ke = m(() =>
@@ -308,14 +308,14 @@ async function K(e, r, t) {
   return c?.accountUuid !== void 0 && ee(c.accountUuid, e) === r;
 }
 function U() {
-  let e = l5().headers.Authorization;
+  let e = getAuthHeaders().headers.Authorization;
   return e === void 0 ? null : TUe(e);
 }
 async function te(e) {
   if (!FCt()) return;
   for (let r = 0; r < 2; r++)
     try {
-      await Ss({ credentials: e });
+      await checkAndRefreshOAuthTokenIfNeeded({ credentials: e });
     } catch {}
 }
 function cGn(e) {
@@ -372,7 +372,7 @@ async function z(e, r, t, c, o, u) {
     let l = _ === null ? void 0 : s.get(_);
     if (!l)
       ((l = (async () => {
-        if (!(await K(t, d, o))) return (g(r, "contested_me_key"), R);
+        if (!(await K(t, d, o))) return (logFeatureSad(r, "contested_me_key"), R);
         return W(i, r, t, c, d, o, u);
       })()),
         s.set(d, l),
@@ -388,7 +388,7 @@ async function z(e, r, t, c, o, u) {
   if ("composed" in h) return { ok: !1, result: h.composed };
   let v = r === "artifact_db_read" ? "read" : "write";
   return (
-    f(r, h.reason),
+    logFeatureBad(r, h.reason),
     {
       ok: !1,
       result: {
@@ -437,7 +437,7 @@ async function W(e, r, t, c, o, u, i) {
       n !== U() ||
       !(await K(t, o, u))
     )
-      return (g(r, "auth_unstable_me_key"), R);
+      return (logFeatureSad(r, "auth_unstable_me_key"), R);
     if (C()) return R;
     e.resolvedMeIds.set(o, { id: d.data.id, fingerprint: n });
   }
@@ -461,10 +461,10 @@ async function I(e, r, t, c, o, u) {
       },
     );
   } catch (s) {
-    if (qi(s)) throw s;
+    if (isCancel(s)) throw s;
     let d = e !== "artifact_db_read" && t !== x && nP(s);
     return (
-      f(e, `${i}${d ? "relay_request_error" : "request_error"}`),
+      logFeatureBad(e, `${i}${d ? "relay_request_error" : "request_error"}`),
       {
         ok: !1,
         result: {
@@ -480,7 +480,7 @@ async function I(e, r, t, c, o, u) {
   }
   if (!n.ok)
     return (
-      f(e, `${i}${n.reason.replace(/-/g, "_")}`),
+      logFeatureBad(e, `${i}${n.reason.replace(/-/g, "_")}`),
       {
         ok: !1,
         result: {
@@ -499,7 +499,7 @@ async function I(e, r, t, c, o, u) {
       d = e === "artifact_db_read" ? "read" : "write",
       _ = s ? "whoami_network_off" : "network_off";
     return (
-      g(e, `${i}${_}`),
+      logFeatureSad(e, `${i}${_}`),
       {
         ok: !1,
         result: {
@@ -517,7 +517,7 @@ async function I(e, r, t, c, o, u) {
     let s = t === x,
       d = e === "artifact_db_read" ? "read" : "write";
     return (
-      f(e, `${i}${s ? "whoami_relay_error" : "relay_error"}`, {
+      logFeatureBad(e, `${i}${s ? "whoami_relay_error" : "relay_error"}`, {
         status: n.status,
       }),
       {
@@ -549,9 +549,9 @@ var xe = "x-frame-relay-read-scope-applied",
 async function uGn(e, r, t, c, o) {
   let { slug: u, op: i, query: n } = r,
     { collection: s, docId: d } = r;
-  if (!fr.test(u))
+  if (!ARTIFACT_SLUG_RE.test(u))
     return (
-      f("artifact_db_read", "invalid_slug"),
+      logFeatureBad("artifact_db_read", "invalid_slug"),
       {
         kind: "error",
         code: "invalid_argument",
@@ -561,7 +561,7 @@ async function uGn(e, r, t, c, o) {
     );
   if (!U9.test(s) || (d !== void 0 && !vF.test(d)))
     return (
-      f("artifact_db_read", "invalid_segment"),
+      logFeatureBad("artifact_db_read", "invalid_segment"),
       {
         kind: "error",
         code: "invalid_argument",
@@ -572,7 +572,7 @@ async function uGn(e, r, t, c, o) {
     );
   if (!kOe(s))
     return (
-      f("artifact_db_read", "parity"),
+      logFeatureBad("artifact_db_read", "parity"),
       {
         kind: "error",
         code: "invalid_argument",
@@ -582,7 +582,7 @@ async function uGn(e, r, t, c, o) {
     );
   if (i === "get" && d === void 0)
     return (
-      f("artifact_db_read", "missing_doc_id"),
+      logFeatureBad("artifact_db_read", "missing_doc_id"),
       {
         kind: "error",
         code: "invalid_argument",
@@ -599,7 +599,7 @@ async function uGn(e, r, t, c, o) {
   let w = d !== void 0 ? `${s}/${d}` : s;
   if (w.length > QA)
     return (
-      f("artifact_db_read", "path_too_long"),
+      logFeatureBad("artifact_db_read", "path_too_long"),
       {
         kind: "error",
         code: "invalid_argument",
@@ -646,7 +646,7 @@ async function uGn(e, r, t, c, o) {
       let k = pe().safeParse(v.data);
       if (!k.success)
         return (
-          f("artifact_db_read", "malformed_echo"),
+          logFeatureBad("artifact_db_read", "malformed_echo"),
           {
             kind: "error",
             code: "store_unavailable",
@@ -655,9 +655,9 @@ async function uGn(e, r, t, c, o) {
           }
         );
       if (!k.data.exists)
-        return (g("artifact_db_read", "not_found"), { kind: "not_found" });
+        return (logFeatureSad("artifact_db_read", "not_found"), { kind: "not_found" });
       return (
-        y("artifact_db_read"),
+        logFeatureOk("artifact_db_read"),
         {
           kind: "ok",
           docs: [
@@ -677,7 +677,7 @@ async function uGn(e, r, t, c, o) {
     let p = ye().safeParse(v.data);
     if (!p.success)
       return (
-        f("artifact_db_read", "malformed_echo"),
+        logFeatureBad("artifact_db_read", "malformed_echo"),
         {
           kind: "error",
           code: "store_unavailable",
@@ -686,7 +686,7 @@ async function uGn(e, r, t, c, o) {
         }
       );
     return (
-      y("artifact_db_read"),
+      logFeatureOk("artifact_db_read"),
       {
         kind: "ok",
         docs: p.data.docs,
@@ -698,7 +698,7 @@ async function uGn(e, r, t, c, o) {
   let { code: l, reason: F, kind: O, limit: T } = B(v.status, v.data),
     A = l === "not_found" && v.sessionScoped === !0;
   return (
-    f("artifact_db_read", A ? "not_found_session_scoped" : F),
+    logFeatureBad("artifact_db_read", A ? "not_found_session_scoped" : F),
     {
       kind: "error",
       code: l,
@@ -709,7 +709,7 @@ async function uGn(e, r, t, c, o) {
 }
 function E(e, r, t = "") {
   return (
-    f("artifact_db_write", `${t}${e}`),
+    logFeatureBad("artifact_db_write", `${t}${e}`),
     { kind: "error", code: "invalid_argument", message: r, reason: e }
   );
 }
@@ -752,7 +752,7 @@ function de(e, r, t) {
 }
 async function dGn(e, r, t, c, o) {
   let { slug: u, op: i, data: n } = r;
-  if (!fr.test(u)) return E("invalid_slug", "not a valid artifact id");
+  if (!ARTIFACT_SLUG_RE.test(u)) return E("invalid_slug", "not a valid artifact id");
   let s = await se(r, () => z(e, "artifact_db_write", u, t, c, o));
   if (!s.ok) return s.result;
   return ce(u, i, s.path, n, t, o);
@@ -770,9 +770,9 @@ async function ce(e, r, t, c, o, u) {
   if (i.status === 200) {
     let w = we().safeParse(i.data);
     if (!w.success)
-      return (g("artifact_db_write", "malformed_echo"), { kind: "ok" });
+      return (logFeatureSad("artifact_db_write", "malformed_echo"), { kind: "ok" });
     return (
-      y("artifact_db_write"),
+      logFeatureOk("artifact_db_write"),
       J(i.data, w.data.usage),
       {
         kind: "ok",
@@ -783,7 +783,7 @@ async function ce(e, r, t, c, o, u) {
   }
   let { code: n, reason: s, kind: d, limit: _ } = B(i.status, i.data);
   return (
-    f("artifact_db_write", s),
+    logFeatureBad("artifact_db_write", s),
     {
       kind: "error",
       code: n,
@@ -794,7 +794,7 @@ async function ce(e, r, t, c, o, u) {
 }
 async function pGn(e, r, t, c, o) {
   let { slug: u, ops: i } = r;
-  if (!fr.test(u))
+  if (!ARTIFACT_SLUG_RE.test(u))
     return E("invalid_slug", "not a valid artifact id", "batch_");
   if (i.length === 0 || i.length > mk)
     return E(
@@ -861,11 +861,11 @@ async function pGn(e, r, t, c, o) {
     let p = ke().safeParse(l.data);
     if (!p.success || p.data.results.length !== i.length)
       return (
-        g("artifact_db_write", "malformed_batch_echo"),
+        logFeatureSad("artifact_db_write", "malformed_batch_echo"),
         { kind: "ok", results: i.map(() => ({})) }
       );
     return (
-      y("artifact_db_write"),
+      logFeatureOk("artifact_db_write"),
       J(l.data, p.data.usage),
       {
         kind: "ok",
@@ -878,7 +878,7 @@ async function pGn(e, r, t, c, o) {
   }
   let { code: F, reason: O, kind: T, limit: A } = B(l.status, l.data);
   return (
-    f("artifact_db_write", `batch_${O}`),
+    logFeatureBad("artifact_db_write", `batch_${O}`),
     { kind: "error", code: F, message: Me(F, T, A), reason: O }
   );
 }
@@ -894,7 +894,7 @@ function jcn(e) {
   return e !== "store_unavailable";
 }
 async function X(e, r, t, c) {
-  g("artifact_db_write", "batch_fallback_sequential");
+  logFeatureSad("artifact_db_write", "batch_fallback_sequential");
   let o = [],
     u,
     i =
@@ -916,7 +916,7 @@ async function X(e, r, t, c) {
     try {
       l = await ce(e, s, d, _, t, c);
     } catch (F) {
-      if (qi(F)) return v(!0);
+      if (isCancel(F)) return v(!0);
       throw F;
     }
     if (l.kind === "error")

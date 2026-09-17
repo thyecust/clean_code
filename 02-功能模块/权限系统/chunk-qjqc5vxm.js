@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Xl } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { createAbortController as hr, createChildAbortController as qh } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { runForkedAgent as wE, uEe, Vc, Re, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createAbortController, createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { runForkedAgent, uEe, Vc, Re, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { of } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 var b = /^\/btw\b/gi;
 function findBtwTriggerPositions(t) {
@@ -46,7 +46,7 @@ CRITICAL CONSTRAINTS:
 Simply answer the question with the information you have.</system-reminder>
 
 ${t}`,
-    y = n ? qh(n) : hr(),
+    y = n ? createChildAbortController(n) : createAbortController(),
     c = s ? r.toolUseContext.session.btwHistory : null,
     h = (a ?? c?.exchanges ?? []).flatMap((o) => [
       Re({ content: o.question }),
@@ -59,7 +59,7 @@ ${o.response}`
       }),
     ]);
   try {
-    let o = await wE({
+    let o = await runForkedAgent({
         promptMessages: [...h, Re({ content: f })],
         cacheSafeParams: r,
         canUseTool: async () => ({

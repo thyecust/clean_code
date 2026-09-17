@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { Aw, ht, isBgSession as _t, isExtraUsageAllowed as hb, getSubscriptionType as qn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Aw, ht, isBgSession, isExtraUsageAllowed, getSubscriptionType, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Km, Xmt, kO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
 async function d(t, r) {
-  return Sr("api_admin_request_create", async () => {
+  return withFeatureTelemetry("api_admin_request_create", async () => {
     let e = await ht.post(
       "/api/oauth/organizations/:orgUUID/admin_requests",
       t,
@@ -30,7 +30,7 @@ async function d(t, r) {
   });
 }
 async function m(t, r, e) {
-  return Sr("api_admin_request_list", async () => {
+  return withFeatureTelemetry("api_admin_request_list", async () => {
     let i = new URLSearchParams({ request_type: t });
     for (let a of r) i.append("statuses", a);
     let o = await ht.get(
@@ -45,7 +45,7 @@ async function m(t, r, e) {
   });
 }
 async function p(t, r) {
-  return Sr("api_admin_request_eligibility", async () => {
+  return withFeatureTelemetry("api_admin_request_eligibility", async () => {
     let e = await ht.get(
       `/api/oauth/organizations/:orgUUID/admin_requests/eligibility?request_type=${t}`,
       { auth: "teleport-org", credentials: r },
@@ -98,7 +98,7 @@ async function enn(t, r) {
     let i = c(e);
     if (cc(e, (o) => c(o) !== null))
       n(`Admin request rejected: ${i ?? l(e)}`, { level: "error" });
-    else h(e);
+    else logError(e);
     if (i) return { type: "message", value: i, filed: !1 };
   }
   return {
@@ -109,17 +109,17 @@ async function enn(t, r) {
 }
 function U9e() {
   {
-    if (_t()) return !1;
-    let t = qn(),
+    if (isBgSession()) return !1;
+    let t = getSubscriptionType(),
       r = Aw() !== null,
       e = H("tengu_ember_latch", !1) || r,
-      i = hb() && (r || ((t === "pro" || t === "max") && !St()));
+      i = isExtraUsageAllowed() && (r || ((t === "pro" || t === "max") && !St()));
     return e && i;
   }
   return !1;
 }
 async function aSe(t, r) {
-  let e = qn(),
+  let e = getSubscriptionType(),
     i = e === "team" || e === "enterprise";
   if (!Km() && i) {
     let s;
@@ -180,7 +180,7 @@ async function aSe(t, r) {
     return { type: "confirm-admin-request", extraUsage: s };
   }
   let a = i ? "https://claude.ai/admin-settings/usage" : Xmt;
-  if (!t.openInBrowser || _t())
+  if (!t.openInBrowser || isBgSession())
     return { type: "browser-opened", url: a, opened: !1 };
   try {
     let s = await Gr(a);

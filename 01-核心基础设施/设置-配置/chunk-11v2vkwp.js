@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
 import { o, t, ct } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -244,7 +244,7 @@ function OIt(so) {
         }
         (NDt(m),
           i("tengu_grove_policy_viewed", {
-            location: u(S),
+            location: fromEnum(S),
             dismissable: Fe?.notice_is_grace_period,
           }));
       };

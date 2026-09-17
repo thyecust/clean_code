@@ -16,9 +16,9 @@ import { CXn } from "../../03-入口与运行时/核心应用-Agent循环/核心
 import { fO, Qw, b3e, Ilt } from "./chunk-ncbnx9cz.js";
 import { wIe, qle } from "../共享小工具-未细化/chunk-tfx2a5vd.js";
 import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
-import { createHash as b } from "crypto";
-function k(d) {
-  let p = b("sha256");
+import { createHash } from "crypto";
+function scanDigest(d) {
+  let p = createHash("sha256");
   for (let u of [...d].sort((r, t) => r.sourceId.localeCompare(t.sourceId))) {
     p.update(u.sourceId).update("\x00");
     for (let r of [...u.result.items].sort((t, n) => t.id.localeCompare(n.id)))
@@ -53,7 +53,7 @@ var _ = async (d, p) => {
   if (m) return { type: "text", value: m };
   if (g.length === 0)
     return { type: "text", value: "No importable agent config found." };
-  let c = k(g);
+  let c = scanDigest(g);
   if (t !== void 0) {
     let s = t.indexOf("="),
       o = s === -1 ? "" : t.slice(s + 1),
@@ -202,4 +202,4 @@ async function S(d, p, u, r) {
   return [e, ...c, ...w].join(`
 `);
 }
-export { _ as call, k as scanDigest };
+export { _ as call, scanDigest };

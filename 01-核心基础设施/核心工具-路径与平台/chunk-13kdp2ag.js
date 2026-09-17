@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { readdir as u, readFile as a } from "fs/promises";
-import { release as f } from "os";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { readdir, readFile } from "fs/promises";
+import { release } from "os";
 function mXt() {
   try {
     return ae()
@@ -57,7 +57,7 @@ class c {
         }
       else this.platform = "unknown";
     } catch (e) {
-      (h(e), (this.platform = "unknown"));
+      (logError(e), (this.platform = "unknown"));
     }
     return this.platform;
   }
@@ -131,9 +131,9 @@ function i() {
     platform: "darwin",
     env: process.env,
     readProcVersionSync: mXt,
-    readProcVersion: () => a("/proc/version", { encoding: "utf8" }),
-    osRelease: f,
-    readOsRelease: () => a("/etc/os-release", "utf8"),
+    readProcVersion: () => readFile("/proc/version", { encoding: "utf8" }),
+    osRelease: release,
+    readOsRelease: () => readFile("/etc/os-release", "utf8"),
   }));
 }
 function fur() {
@@ -178,7 +178,7 @@ async function gur(e) {
   if (process.env.P4PORT) r.add("perforce");
   try {
     let s = e ?? ae().cwd(),
-      t = new Set(await u(s));
+      t = new Set(await readdir(s));
     for (let [o, l] of m) if (t.has(o)) r.add(l);
   } catch {}
   return [...r];

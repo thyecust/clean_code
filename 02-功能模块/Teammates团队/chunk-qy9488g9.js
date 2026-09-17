@@ -8,67 +8,67 @@
 
 // Version: 2.1.263
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { AK, isInsideTmuxSync as $wt, isInsideTmux as Oj, isTmuxAvailable as foe, isInITerm2 as SN, isIt2CliAvailable as L1e } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { AK, isInsideTmuxSync, isInsideTmux, isTmuxAvailable, isInITerm2, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getTeammateModeFromSnapshot as MOe } from "./chunk-88ybhavr.js";
+import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { homedir as o } from "os";
+import { homedir } from "os";
 async function Hft() {
-  if ((await Fe("which", ["uv"])).code === 0)
+  if ((await execFileNoThrow("which", ["uv"])).code === 0)
     return (n("[it2Setup] Found uv (will use uv tool install)"), "uvx");
-  if ((await Fe("which", ["pipx"])).code === 0)
+  if ((await execFileNoThrow("which", ["pipx"])).code === 0)
     return (n("[it2Setup] Found pipx package manager"), "pipx");
-  if ((await Fe("which", ["pip"])).code === 0)
+  if ((await execFileNoThrow("which", ["pip"])).code === 0)
     return (n("[it2Setup] Found pip package manager"), "pip");
-  if ((await Fe("which", ["pip3"])).code === 0)
+  if ((await execFileNoThrow("which", ["pip3"])).code === 0)
     return (n("[it2Setup] Found pip3 package manager"), "pip");
   return (n("[it2Setup] No Python package manager found"), null);
 }
 async function p() {
-  return (await Fe("which", ["it2"])).code === 0;
+  return (await execFileNoThrow("which", ["it2"])).code === 0;
 }
 async function Aun(e) {
   n(`[it2Setup] Installing it2 using ${e}`);
   let t;
   switch (e) {
     case "uvx":
-      t = await Be("uv", ["tool", "install", "it2"], { cwd: o() });
+      t = await execFileNoThrowWithCwd("uv", ["tool", "install", "it2"], { cwd: homedir() });
       break;
     case "pipx":
-      t = await Be("pipx", ["install", "it2"], { cwd: o() });
+      t = await execFileNoThrowWithCwd("pipx", ["install", "it2"], { cwd: homedir() });
       break;
     case "pip":
       if (
-        ((t = await Be("pip", ["install", "--user", "it2"], { cwd: o() })),
+        ((t = await execFileNoThrowWithCwd("pip", ["install", "--user", "it2"], { cwd: homedir() })),
         t.code !== 0)
       )
-        t = await Be("pip3", ["install", "--user", "it2"], { cwd: o() });
+        t = await execFileNoThrowWithCwd("pip3", ["install", "--user", "it2"], { cwd: homedir() });
       break;
   }
   if (t.code !== 0) {
     let a = t.stderr || "Unknown installation error";
     return (
       n(`[it2Setup] Failed to install it2: ${a}`, { level: "error" }),
-      f("swarm_iterm2_it2_install", `${e}_install_failed`),
+      logFeatureBad("swarm_iterm2_it2_install", `${e}_install_failed`),
       { success: !1, error: a, packageManager: e }
     );
   }
   return (
     n("[it2Setup] it2 installed successfully"),
-    y("swarm_iterm2_it2_install"),
+    logFeatureOk("swarm_iterm2_it2_install"),
     { success: !0, packageManager: e }
   );
 }
 async function Cun() {
   if ((n("[it2Setup] Verifying it2 setup..."), !(await p())))
     return (
-      f("swarm_iterm2_it2_verify", "not_installed"),
+      logFeatureBad("swarm_iterm2_it2_verify", "not_installed"),
       { success: !1, error: "it2 CLI is not installed or not in PATH" }
     );
-  let t = await Fe("it2", ["session", "list"]);
+  let t = await execFileNoThrow("it2", ["session", "list"]);
   if (t.code !== 0) {
     let a = t.stderr.toLowerCase();
     if (
@@ -79,7 +79,7 @@ async function Cun() {
     )
       return (
         n("[it2Setup] Python API not enabled in iTerm2"),
-        g("swarm_iterm2_it2_verify", "python_api_not_enabled"),
+        logFeatureSad("swarm_iterm2_it2_verify", "python_api_not_enabled"),
         {
           success: !1,
           error: "Python API not enabled in iTerm2 preferences",
@@ -87,13 +87,13 @@ async function Cun() {
         }
       );
     return (
-      f("swarm_iterm2_it2_verify", "communication_failed"),
+      logFeatureBad("swarm_iterm2_it2_verify", "communication_failed"),
       { success: !1, error: t.stderr || "Failed to communicate with iTerm2" }
     );
   }
   return (
     n("[it2Setup] it2 setup verified successfully"),
-    y("swarm_iterm2_it2_verify"),
+    logFeatureOk("swarm_iterm2_it2_verify"),
     { success: !0 }
   );
 }
@@ -152,18 +152,18 @@ async function Ift(e = AK) {
       e.cachedDetectionResult
     );
   if (
-    (n("[BackendRegistry] Starting backend detection..."), MOe() === "iterm2")
+    (n("[BackendRegistry] Starting backend detection..."), getTeammateModeFromSnapshot() === "iterm2")
   ) {
-    if (!SN(e))
+    if (!isInITerm2(e))
       throw (
-        f("swarm_backend_detect", "iterm2_explicit_not_in_iterm2"),
+        logFeatureBad("swarm_backend_detect", "iterm2_explicit_not_in_iterm2"),
         Error(
           'teammateMode is set to "iterm2" but this session is not running inside iTerm2. Launch Claude from iTerm2, or change teammateMode in settings.',
         )
       );
-    if (!(await L1e(e)))
+    if (!(await isIt2CliAvailable(e)))
       throw (
-        f("swarm_backend_detect", "iterm2_explicit_no_it2"),
+        logFeatureBad("swarm_backend_detect", "iterm2_explicit_no_it2"),
         Error(
           'teammateMode is set to "iterm2" but the it2 CLI is not reachable. Install it with `pip install it2` and enable the Python API in iTerm2 (Preferences > General > Magic > Enable Python API).',
         )
@@ -176,12 +176,12 @@ async function Ift(e = AK) {
         isNative: !0,
         needsIt2Setup: !1,
       }),
-      y("swarm_backend_detect"),
+      logFeatureOk("swarm_backend_detect"),
       e.cachedDetectionResult
     );
   }
-  let t = await Oj(),
-    a = SN(e);
+  let t = await isInsideTmux(),
+    a = isInITerm2(e);
   if ((n(`[BackendRegistry] Environment: insideTmux=${t}, inITerm2=${a}`), t)) {
     n("[BackendRegistry] Selected: tmux (running inside tmux session)");
     let i = c(e);
@@ -191,7 +191,7 @@ async function Ift(e = AK) {
         isNative: !0,
         needsIt2Setup: !1,
       }),
-      y("swarm_backend_detect"),
+      logFeatureOk("swarm_backend_detect"),
       e.cachedDetectionResult
     );
   }
@@ -202,7 +202,7 @@ async function Ift(e = AK) {
         "[BackendRegistry] User prefers tmux over iTerm2, skipping iTerm2 detection",
       );
     else {
-      let r = await L1e(e);
+      let r = await isIt2CliAvailable(e);
       if (
         (n(`[BackendRegistry] iTerm2 detected, it2 CLI available: ${r}`), r)
       ) {
@@ -214,12 +214,12 @@ async function Ift(e = AK) {
             isNative: !0,
             needsIt2Setup: !1,
           }),
-          y("swarm_backend_detect"),
+          logFeatureOk("swarm_backend_detect"),
           e.cachedDetectionResult
         );
       }
     }
-    let l = await foe();
+    let l = await isTmuxAvailable();
     if ((n(`[BackendRegistry] it2 not available, tmux available: ${l}`), l)) {
       n(
         "[BackendRegistry] Selected: tmux (fallback in iTerm2, it2 setup recommended)",
@@ -231,19 +231,19 @@ async function Ift(e = AK) {
           isNative: !1,
           needsIt2Setup: !i,
         }),
-        g("swarm_backend_detect", i ? "fallback_to_tmux" : "needs_it2_setup"),
+        logFeatureSad("swarm_backend_detect", i ? "fallback_to_tmux" : "needs_it2_setup"),
         e.cachedDetectionResult
       );
     }
     throw (
       n("[BackendRegistry] ERROR: iTerm2 detected but no it2 CLI and no tmux"),
-      f("swarm_backend_detect", "iterm2_no_it2_no_tmux"),
+      logFeatureBad("swarm_backend_detect", "iterm2_no_it2_no_tmux"),
       Error(
         "iTerm2 detected but it2 CLI not installed. Install it2 with: pip install it2",
       )
     );
   }
-  let s = await foe();
+  let s = await isTmuxAvailable();
   if ((n(`[BackendRegistry] Not in tmux or iTerm2, tmux available: ${s}`), s)) {
     n("[BackendRegistry] Selected: tmux (external session mode)");
     let i = c(e);
@@ -253,13 +253,13 @@ async function Ift(e = AK) {
         isNative: !1,
         needsIt2Setup: !1,
       }),
-      y("swarm_backend_detect"),
+      logFeatureOk("swarm_backend_detect"),
       e.cachedDetectionResult
     );
   }
   throw (
     n("[BackendRegistry] ERROR: No pane backend available"),
-    f("swarm_backend_detect", "no_backend_available"),
+    logFeatureBad("swarm_backend_detect", "no_backend_available"),
     Error(k())
   );
 }
@@ -301,7 +301,7 @@ function Hun(e = AK) {
     (e.inProcessFallbackActive = !0));
 }
 function x() {
-  return MOe();
+  return getTeammateModeFromSnapshot();
 }
 function l4e(e = AK) {
   if (ke())
@@ -321,13 +321,13 @@ function l4e(e = AK) {
         ),
         !0
       );
-    let s = $wt(),
-      i = SN(e);
+    let s = isInsideTmuxSync(),
+      i = isInITerm2(e);
     a = !s && !i;
   }
   return (
     n(
-      `[BackendRegistry] isInProcessEnabled: ${a} (mode=${t}, insideTmux=${$wt()}, inITerm2=${SN(e)})`,
+      `[BackendRegistry] isInProcessEnabled: ${a} (mode=${t}, insideTmux=${isInsideTmuxSync()}, inITerm2=${isInITerm2(e)})`,
     ),
     a
   );

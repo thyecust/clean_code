@@ -10,9 +10,9 @@
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { St } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getClaudeAIOAuthTokenOriginAsync as $T, getStoredOauthAccountInfo as mh } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed as Mt } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getClaudeAIOAuthTokenOriginAsync, getStoredOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function fan({ storedAccountUuid: t, hostAccountUuid: e }) {
   if (!e)
     return t
@@ -27,7 +27,7 @@ async function man(t) {
   let e = Xn(a.CLAUDE_CODE_ACCOUNT_UUID)?.toLowerCase();
   if (e === void 0) return;
   try {
-    let n = await $T(t);
+    let n = await getClaudeAIOAuthTokenOriginAsync(t);
     return n === "env" || n === "fd" ? e : void 0;
   } catch {
     return;
@@ -36,7 +36,7 @@ async function man(t) {
 async function cte(t) {
   let e;
   try {
-    e = mh()?.accountUuid;
+    e = getStoredOauthAccountInfo()?.accountUuid;
   } catch {
     e = void 0;
   }
@@ -46,7 +46,7 @@ function O7() {
   return r() === void 0;
 }
 function r() {
-  if (St() || Pe() !== "firstParty") return "egress";
-  return Mt("allow_remote_sessions") ? void 0 : "policy_org";
+  if (St() || getAPIProvider() !== "firstParty") return "egress";
+  return isPolicyAllowed("allow_remote_sessions") ? void 0 : "policy_org";
 }
 export { fan, man, cte, O7 };

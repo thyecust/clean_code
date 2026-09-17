@@ -10,15 +10,15 @@
 import { Xn, j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { MTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Y9e, lIe } from "./chunk-a5048zpn.js";
 import { s, T, O, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { createHash as G, randomUUID as M, timingSafeEqual as V } from "crypto";
+import { createHash, randomUUID, timingSafeEqual } from "crypto";
 var Q = "workflow_launch_result",
   W = 4194304,
   D = "/.workflow/",
@@ -54,9 +54,9 @@ function C(e) {
   };
 }
 function te(e, t) {
-  let r = G("sha256").update(e).digest(),
+  let r = createHash("sha256").update(e).digest(),
     n = Buffer.from(t, "hex");
-  return n.length === r.length && V(r, n);
+  return n.length === r.length && timingSafeEqual(r, n);
 }
 var F = 1;
 function re(e) {
@@ -146,7 +146,7 @@ function I(e, t, r) {
     type: "system",
     subtype: Q,
     artifact_line: t,
-    uuid: M(),
+    uuid: randomUUID(),
     session_id: e.getSessionId(),
   };
   if (r.launchUuid !== void 0) n.launch_uuid = r.launchUuid;
@@ -156,10 +156,10 @@ function I(e, t, r) {
 function K(e, t, r, n) {
   (I(e, Y9e(t, r), n),
     q("warn", "workflow_launch_failed", { layer: t }),
-    i("tengu_workflow_launch_event", { ok: !1, layer: u(t) }));
+    i("tengu_workflow_launch_event", { ok: !1, layer: fromEnum(t) }));
 }
 function S(e, t, r, n) {
-  (K(e, t, r, n), f("workflow_event_launch", t));
+  (K(e, t, r, n), logFeatureBad("workflow_event_launch", t));
 }
 function v(e, t, r, n, o) {
   (S(e, r, n, o),
@@ -216,11 +216,11 @@ async function Y(e, t, r, n, o) {
     }
     if ((c.delete(l), h(), o)) {
       (q("warn", "workflow_launch_rescue_fetch_failed", {}),
-        g("workflow_event_launch", "rescue_fetch_transient"));
+        logFeatureSad("workflow_event_launch", "rescue_fetch_transient"));
       return;
     }
     (K(e, "bundle-fetch", `bundle fetch failed: ${p.error}`, n),
-      g("workflow_event_launch", "bundle_fetch_transient"));
+      logFeatureSad("workflow_event_launch", "bundle_fetch_transient"));
     return;
   }
   let R = p.buf;
@@ -260,10 +260,10 @@ async function Y(e, t, r, n, o) {
     (c.delete(l),
       h(),
       q("warn", "workflow_launch_rescue_uncounted", {}),
-      g("workflow_event_launch", "rescue_record_unconfirmed"));
+      logFeatureSad("workflow_event_launch", "rescue_record_unconfirmed"));
     return;
   }
-  let N = M();
+  let N = randomUUID();
   (TDt.of(e.host).stash(N, {
     script: E.script,
     args: P,
@@ -280,7 +280,7 @@ async function Y(e, t, r, n, o) {
     e.prependUserMessage(`/workflow-launch-exec ${N}`),
     e.ackProcessed(l),
     i("tengu_workflow_launch_event", { ok: !0, attempt: d }),
-    y("workflow_event_launch"),
+    logFeatureOk("workflow_event_launch"),
     q("info", "workflow_launch_dispatched", { attempt: d }));
 }
 function J(e, t) {
@@ -290,7 +290,7 @@ function J(e, t) {
     e.persistRecord({ ...t, settled: !0 }),
     e.ackProcessed(t.event_uuid),
     q("warn", "workflow_launch_attempts_spent", { attempts: t.attempts }),
-    g("workflow_event_launch", "attempts_spent"));
+    logFeatureSad("workflow_event_launch", "attempts_spent"));
 }
 async function jgr(e, t) {
   let r = typeof e.uuid === "string" ? e.uuid : void 0;

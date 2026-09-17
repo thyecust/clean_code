@@ -38,8 +38,8 @@ function Nx(e) {
   let r = String(e).trim();
   return r.length <= 32 && c.test(r) ? parseInt(r.replace(E, ""), 10) : NaN;
 }
-import { homedir as R } from "os";
-import { basename as g, dirname as O, join as i, resolve as t } from "path";
+import { homedir } from "os";
+import { basename, dirname, join as i, resolve } from "path";
 var d = [
   ["claude-3-5-sonnet", "VERTEX_REGION_CLAUDE_3_5_SONNET"],
   ["claude-3-7-sonnet", "VERTEX_REGION_CLAUDE_3_7_SONNET"],
@@ -62,9 +62,9 @@ var d = [
 function s() {
   return process.env.CLAUDE_CONFIG_DIR;
 }
-var be = rs(() => (s() ?? i(R(), ".claude")).normalize("NFC"), s);
+var be = rs(() => (s() ?? i(homedir(), ".claude")).normalize("NFC"), s);
 function w_e(e) {
-  return t(be()) === t(e);
+  return resolve(be()) === resolve(e);
 }
 function T_e() {
   return i(be(), "teams");
@@ -84,14 +84,14 @@ function I() {
 var Kur = rs(() => (s() ? xMn(_()) : void 0), I);
 function y8(e) {
   let n = be();
-  if (t(e) === t(n)) return !0;
+  if (resolve(e) === resolve(n)) return !0;
   return p(e) === p(n);
 }
 function p(e) {
-  let n = t(e),
-    r = O(n),
+  let n = resolve(e),
+    r = dirname(n),
     o = RS(r) ?? r;
-  return zn(i(o, g(n)));
+  return zn(i(o, basename(n)));
 }
 function kje(e) {
   let n = process.env.NODE_OPTIONS;

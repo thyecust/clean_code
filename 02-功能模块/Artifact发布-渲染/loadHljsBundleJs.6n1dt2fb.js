@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { qJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
 var J = "./hljsBundle.generated.min.js";
-function D() {
+function loadHljsBundleJs() {
   return qJ(J, import.meta.dirname);
 }
-export { D as loadHljsBundleJs };
+export { loadHljsBundleJs };

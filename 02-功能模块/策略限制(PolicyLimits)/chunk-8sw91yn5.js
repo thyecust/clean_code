@@ -11,7 +11,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be, uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { CLAUDE_AI_INFERENCE_SCOPE as py } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -24,19 +24,19 @@ import {
   DR,
   Aor,
   KC,
-  shouldUseWIFAuth as Zc,
-  isAnthropicAuthEnabled as cl,
-  effectiveAuthTokenEnv as d0,
-  getAnthropicApiKeyWithSourceSafe as kp,
-  getAnthropicApiKeyWithSource as qg,
-  getConfiguredApiKeyHelper as bg,
-  getClaudeAIOAuthTokens as Yt,
-  getClaudeAIOAuthTokenOrigin as qD,
+  shouldUseWIFAuth,
+  isAnthropicAuthEnabled,
+  effectiveAuthTokenEnv,
+  getAnthropicApiKeyWithSourceSafe,
+  getAnthropicApiKeyWithSource,
+  getConfiguredApiKeyHelper,
+  getClaudeAIOAuthTokens,
+  getClaudeAIOAuthTokenOrigin,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { te, truncateToWidth as Xe, truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ZU, up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { getAPIProvider as Pe, isFirstPartyAnthropicBaseUrl as fo, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider, isFirstPartyAnthropicBaseUrl, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { nar, mx, rar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
 import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Hve } from "../../01-核心基础设施/共享小工具-未细化/chunk-w4swsde7.js";
@@ -44,15 +44,15 @@ import { qse, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.
 import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { readFileSync as Ke } from "fs";
+import { readFileSync } from "fs";
 import { join as We } from "path";
 function D4t(e, t, r, o, i) {
-  let l = Pe();
+  let l = getAPIProvider();
   if (
     !(
       i?.ignoreEnvOptOut === !0 &&
       l === "firstParty" &&
-      ev() &&
+      isActualFirstPartyAnthropicBaseUrl() &&
       !a.ANTHROPIC_UNIX_SOCKET
     ) &&
     po(process.env.CLAUDE_CODE_ATTRIBUTION_HEADER)
@@ -60,7 +60,7 @@ function D4t(e, t, r, o, i) {
     return "";
   let p = `${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}.${e}`,
     f = process.env.CLAUDE_CODE_ENTRYPOINT ?? "unknown",
-    d = (l === "firstParty" && fo()) || l === "vertex" ? " cch=00000;" : "",
+    d = (l === "firstParty" && isFirstPartyAnthropicBaseUrl()) || l === "vertex" ? " cch=00000;" : "",
     h = fVt(),
     _ = h ? ` cc_workload=${h};` : "",
     S = KC(t) && !t.isMainSession ? " cc_is_subagent=true;" : "",
@@ -68,7 +68,7 @@ function D4t(e, t, r, o, i) {
       r !== void 0 &&
       /^req_[A-Za-z0-9_-]{1,36}$/.test(r) &&
       l === "firstParty" &&
-      fo()
+      isFirstPartyAnthropicBaseUrl()
         ? ` cc_prev_req=${r};`
         : "",
     w =
@@ -77,14 +77,14 @@ function D4t(e, t, r, o, i) {
         o,
       ) &&
       l === "firstParty" &&
-      fo()
+      isFirstPartyAnthropicBaseUrl()
         ? ` cc_prompt_id=${o};`
         : "",
     U = `x-anthropic-billing-header: cc_version=${p}; cc_entrypoint=${f};${d}${_}${S}${E}${w}`;
   return (n(`attribution header ${U}`), U);
 }
 function L4t(e) {
-  return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(py));
+  return e.anthropicAuthEnabled && Boolean(e.oauthScopes?.includes(CLAUDE_AI_INFERENCE_SCOPE));
 }
 class H {
   notice = null;
@@ -475,7 +475,7 @@ var Eme = 48,
 function M4t(e) {
   let t = cse(oe(e, BC)),
     r = t.replace(/\s+/g, " ").trim();
-  return Xe(cAt(r, t, e.length > BC), Eme);
+  return truncateToWidth(cAt(r, t, e.length > BC), Eme);
 }
 function cAt(e, t, r = !1) {
   let o = I(e, "start") === '"' || I(e, "end") === '"' || le(e);
@@ -571,7 +571,7 @@ function Ynr(e) {
     u = cse(He(l)),
     p = cse(l),
     f = d6(r) ? k(r) : YG(u) ? u : YG(p) ? p : "(unnamed tool)";
-  return l1(Xe(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), Eme));
+  return l1(truncateToWidth(`${i} \u2014 ${f}`.replace(/\s+/g, " ").trim(), Eme));
 }
 function uAt(e) {
   return l1(YH(e, "(unnamed tool)"));
@@ -744,7 +744,7 @@ function QG(e) {
   let t = k(oe(e, BC)).replace(/\t/g, " ");
   if (!YG(kr(t))) return null;
   if (le(kr(t))) return null;
-  return l1(or(t, 24, !0));
+  return l1(truncate(t, 24, !0));
 }
 function Qnr(e, ...t) {
   let r = e[0] ?? "";
@@ -896,16 +896,16 @@ function isPolicyLimitsEligible() {
   return getPolicyLimitsIneligibleReason() === void 0;
 }
 function getPolicyLimitsIneligibleReason(e = {}) {
-  if (Pe() !== "firstParty") return "third_party_provider";
-  if (!e.skipBaseUrlCheck && !fo()) return "custom_base_url";
+  if (getAPIProvider() !== "firstParty") return "third_party_provider";
+  if (!e.skipBaseUrlCheck && !isFirstPartyAnthropicBaseUrl()) return "custom_base_url";
   try {
-    let { key: r } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    let { key: r } = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 });
     if (r) return;
   } catch {}
-  if (Zc()) return;
-  let t = Yt();
+  if (shouldUseWIFAuth()) return;
+  let t = getClaudeAIOAuthTokens();
   if (!t?.accessToken) return "no_auth";
-  if (!t.scopes?.includes(py)) return "oauth_no_inference_scope";
+  if (!t.scopes?.includes(CLAUDE_AI_INFERENCE_SCOPE)) return "oauth_no_inference_scope";
   if (t.subscriptionType == null) return;
   if (t.subscriptionType !== "enterprise" && t.subscriptionType !== "team")
     return "prosumer_oauth";
@@ -915,7 +915,7 @@ function loadCachedResponse() {
   let e = g();
   if (M() && e.storageV5 !== void 0 && e.sessionCache) return e.sessionCache;
   try {
-    let t = Ke(getCachePath(), "utf-8");
+    let t = readFileSync(getCachePath(), "utf-8");
     return parseCachedResponse(t);
   } catch {
     return null;
@@ -1051,23 +1051,23 @@ function areComplianceTaintsSettled() {
   if (
     DR() ||
     Aor() ||
-    !ev() ||
-    Pe() !== "firstParty" ||
+    !isActualFirstPartyAnthropicBaseUrl() ||
+    getAPIProvider() !== "firstParty" ||
     a.ANTHROPIC_UNIX_SOCKET !== void 0 ||
-    bg() !== void 0 ||
-    (d0() !== void 0 &&
-      !L4t({ anthropicAuthEnabled: cl(), oauthScopes: Yt()?.scopes }))
+    getConfiguredApiKeyHelper() !== void 0 ||
+    (effectiveAuthTokenEnv() !== void 0 &&
+      !L4t({ anthropicAuthEnabled: isAnthropicAuthEnabled(), oauthScopes: getClaudeAIOAuthTokens()?.scopes }))
   )
     return !1;
   if (getResponseFromCache() !== null) return !0;
-  let e = Yt();
+  let e = getClaudeAIOAuthTokens();
   return (
     (e?.subscriptionType === "pro" || e?.subscriptionType === "max") &&
-    e.scopes?.includes(py) === !0 &&
-    qD() === "store" &&
+    e.scopes?.includes(CLAUDE_AI_INFERENCE_SCOPE) === !0 &&
+    getClaudeAIOAuthTokenOrigin() === "store" &&
     !uo() &&
-    !kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key &&
-    !Zc()
+    !getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key &&
+    !shouldUseWIFAuth()
   );
 }
 function isPolicyEnforced(e) {

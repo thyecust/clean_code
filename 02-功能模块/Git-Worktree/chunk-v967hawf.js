@@ -10,11 +10,11 @@
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Z5t, OBe, tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd as Be } from "./chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
 import {
   Ct,
   dH,
@@ -30,8 +30,8 @@ import {
 import { Ypt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ca2zxbyk.js";
 import { Ha, XXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { spawn as L } from "child_process";
-import { constants as X } from "fs";
+import { spawn } from "child_process";
+import { constants } from "fs";
 import { lstat as Q, open as fe } from "fs/promises";
 var { ceil: Le, max: Ue } = Math;
 function ze(e, t, r) {
@@ -47,11 +47,11 @@ function ze(e, t, r) {
 }
 var q = ze;
 import {
-  dirname as qe,
-  isAbsolute as K,
+  dirname,
+  isAbsolute,
   join as H,
-  relative as Ye,
-  resolve as ge,
+  relative,
+  resolve,
 } from "path";
 var Aze = 60000,
   We = 16777216,
@@ -86,7 +86,7 @@ async function pe(e, t, { input: r, keepBytes: i, stopPastBytes: s }) {
           }));
       };
     try {
-      let w = L(dH(), [...l, ...t], {
+      let w = spawn(dH(), [...l, ...t], {
         cwd: u,
         env: D(e, o.pins),
         stdio: [r === void 0 ? "ignore" : "pipe", "pipe", "pipe"],
@@ -140,13 +140,13 @@ async function Z(e) {
     { gitDir: r, commonDir: i } = e,
     s = await it(r);
   if (
-    (i !== void 0 && !K(i)) ||
+    (i !== void 0 && !isAbsolute(i)) ||
     s.kind !== "directory" ||
     (s.commonDir !== void 0 &&
-      (i === void 0 || Ye(ge(r, s.commonDir), i) !== ""))
+      (i === void 0 || relative(resolve(r, s.commonDir), i) !== ""))
   )
     return t(
-      i !== void 0 && !K(i)
+      i !== void 0 && !isAbsolute(i)
         ? "the common directory it was opened with is not an absolute path"
         : s.kind !== "directory"
           ? "the git directory is not a plain directory (a gitfile, missing, or its commondir unreadable)"
@@ -189,7 +189,7 @@ function M({ gitDir: e, workTree: t }) {
 async function me(e, t, r, i) {
   let { signal: s, timeoutMs: o } = e,
     { leadingArgs: a, cwd: c } = M(e),
-    l = await Be(dH(), [...a, ...t], {
+    l = await execFileNoThrowWithCwd(dH(), [...a, ...t], {
       cwd: c,
       env: D(e, i, r.env),
       extendEnv: !1,
@@ -219,7 +219,7 @@ async function AFt(e, t, r, i = {}) {
       y = !1,
       p;
     try {
-      p = L(dH(), [...c, ...t], {
+      p = spawn(dH(), [...c, ...t], {
         cwd: l,
         env: D(e, s.pins, i.env),
         stdio: [i.input === void 0 ? "ignore" : "pipe", "pipe", "pipe"],
@@ -304,7 +304,7 @@ async function CFt(e, t, r) {
     return !1;
   let o;
   try {
-    o = await fe(r, X.O_WRONLY | X.O_CREAT | X.O_EXCL | XXe(), 384);
+    o = await fe(r, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | XXe(), 384);
   } catch {
     return !1;
   }
@@ -320,7 +320,7 @@ async function Qe(e, t, r, i) {
   let { signal: s, timeoutMs: o } = e,
     { leadingArgs: a, cwd: c } = M(e);
   return new Promise((l) => {
-    let u = L(dH(), [...a, ...t], {
+    let u = spawn(dH(), [...a, ...t], {
       cwd: c,
       env: D(e, i),
       stdio: ["ignore", r, "ignore"],
@@ -345,7 +345,7 @@ function D({ gitDir: e, commonDir: t }, r, i = {}) {
 function Ze(e, t, r) {
   let { signal: i } = e,
     { leadingArgs: s, cwd: o } = M(e);
-  return L(dH(), [...s, ...t], {
+  return spawn(dH(), [...s, ...t], {
     cwd: o,
     env: D(e, r),
     stdio: ["pipe", "pipe", "ignore"],
@@ -678,8 +678,8 @@ async function Kan(e) {
   if (r.some((o) => lt(o) || o.startsWith('"'))) return { kind: "refused" };
   let i = r[0];
   if (i === void 0) return { kind: "none" };
-  let s = K(i) ? i : ge(H(e, "objects"), i);
-  return { kind: "lender", shallowFile: H(qe(s), "shallow") };
+  let s = isAbsolute(i) ? i : resolve(H(e, "objects"), i);
+  return { kind: "lender", shallowFile: H(dirname(s), "shallow") };
 }
 function lt(e) {
   return /^[\\/]{2}/.test(e);
@@ -926,18 +926,18 @@ function r3n(e) {
 async function o3n(e, t, r, i) {
   return e.kind === "git_blob" && (await r([t], i)).get(t) === e.blobId;
 }
-import { randomUUID as ft } from "crypto";
+import { randomUUID } from "crypto";
 import {
   lstat as ie,
-  mkdir as gt,
+  mkdir,
   open as pt,
-  readdir as se,
-  rename as mt,
+  readdir,
+  rename,
   rm as Oe,
-  unlink as ae,
-  writeFile as ht,
+  unlink,
+  writeFile,
 } from "fs/promises";
-import { basename as yt, join as C } from "path";
+import { basename, join as C } from "path";
 var I9 = 104857600,
   Fe = 16,
   Ee = 16,
@@ -1042,7 +1042,7 @@ async function uOe({
     prerequisites: r,
     maxBytes: i,
     declareForkPoints: s,
-  }).catch((o) => (h(o), S("threw", "unexpected throw")));
+  }).catch((o) => (logError(o), S("threw", "unexpected throw")));
 }
 async function St({
   repository: e,
@@ -1280,7 +1280,7 @@ async function Jce({
     heldBases: i,
     heldRefs: s,
     maxBytes: o,
-  }).catch((a) => (h(a), E("threw", "unexpected throw")));
+  }).catch((a) => (logError(a), E("threw", "unexpected throw")));
 }
 async function Ot({
   repository: e,
@@ -1353,11 +1353,11 @@ async function Ot({
       { recursive: !0 },
     ),
   ]);
-  let B = ft(),
+  let B = randomUUID(),
     v = C(b, `${Ce}${B}`),
     x = `${Xpt}${B}`;
   try {
-    await gt(C(v, "pack"), { recursive: !0 });
+    await mkdir(C(v, "pack"), { recursive: !0 });
   } catch {
     return E("unpack", "could not create the quarantine directory");
   }
@@ -1518,7 +1518,7 @@ async function Ft({
     );
   if (Ct(e.signal)) return u;
   try {
-    await ht(
+    await writeFile(
       `${d}${Yce}`,
       [...p].join(`
 `) +
@@ -1532,7 +1532,7 @@ async function Ft({
   let le = C(o, a);
   try {
     for (let g of [".pack", ".rev", ".keep", Yce, ".idx"])
-      await mt(`${d}${g}`, `${le}${g}`).catch((P) => {
+      await rename(`${d}${g}`, `${le}${g}`).catch((P) => {
         if (!(g === ".rev" && W(P))) throw P;
       });
   } catch {
@@ -1625,14 +1625,14 @@ function Dt(e) {
 async function ne(e, t, r = {}) {
   let i;
   try {
-    i = await se(e, { recursive: r.recursive === !0 });
+    i = await readdir(e, { recursive: r.recursive === !0 });
   } catch {
     return;
   }
   let s = Date.now() - (r.olderThanMs ?? Ne);
   await Promise.all(
     i
-      .filter((o) => t(yt(o)))
+      .filter((o) => t(basename(o)))
       .map(async (o) => {
         let a = C(e, o);
         try {
@@ -1650,7 +1650,7 @@ async function ne(e, t, r = {}) {
 async function jt(e, t) {
   let r;
   try {
-    r = await se(e);
+    r = await readdir(e);
   } catch {
     return;
   }
@@ -1672,7 +1672,7 @@ async function jt(e, t) {
           c = s - (o.endsWith(Yce) ? _t : t);
         try {
           let l = await ie(a);
-          if (l.isFile() && l.mtimeMs < c) await ae(a);
+          if (l.isFile() && l.mtimeMs < c) await unlink(a);
         } catch (l) {
           if (!W(l))
             n(
@@ -1708,7 +1708,7 @@ async function s3n(e) {
   let t = C(e.gitDir, "objects", "pack"),
     r;
   try {
-    r = await se(t);
+    r = await readdir(t);
   } catch (o) {
     return W(o) ? new Set() : null;
   }
@@ -1856,7 +1856,7 @@ async function dOe(e, t) {
 async function De(e, t) {
   await Promise.all(
     t.map((r) =>
-      ae(`${e}${r}`).catch((i) => {
+      unlink(`${e}${r}`).catch((i) => {
         if (!W(i))
           n("dir-sync: could not delete a received pack file (non-fatal)");
       }),
@@ -1866,7 +1866,7 @@ async function De(e, t) {
 async function i3n(e) {
   await Promise.all(
     [e, `${e}.lock`].map((t) =>
-      ae(t).catch((r) => {
+      unlink(t).catch((r) => {
         if (!W(r))
           n("dir-sync: could not delete a temporary bundle file (non-fatal)");
       }),

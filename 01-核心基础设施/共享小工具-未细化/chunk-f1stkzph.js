@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { toCompatSessionId as zu, isSelfAddressableSessionId as Ftt } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId, isSelfAddressableSessionId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 function pK() {
   if (a.CLAUDE_CODE_REMOTE !== !0) return;
   let e = a.CLAUDE_CODE_REMOTE_SESSION_ID ?? "";
-  return Ftt(e) ? zu(e) : void 0;
+  return isSelfAddressableSessionId(e) ? toCompatSessionId(e) : void 0;
 }
 export { pK };

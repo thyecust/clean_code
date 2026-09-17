@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { AsyncLocalStorage as C } from "async_hooks";
-var u = new C();
+import { AsyncLocalStorage } from "async_hooks";
+var u = new AsyncLocalStorage();
 function getTeammateContext() {
   return u.getStore();
 }
@@ -23,7 +23,7 @@ function isInProcessTeammate() {
 function Vir(e) {
   return { ...e, isInProcess: !0 };
 }
-import { spawnSync as I } from "child_process";
+import { spawnSync } from "child_process";
 function getParentSessionId() {
   let e = getTeammateContext();
   if (e) return e.parentSessionId;
@@ -109,7 +109,7 @@ function x() {
   if (!a.TMUX) return !1;
   let e;
   try {
-    e = I("tmux", ["show-environment", "-g", "CLAUDE_CODE_CHILD_SESSION"], {
+    e = spawnSync("tmux", ["show-environment", "-g", "CLAUDE_CODE_CHILD_SESSION"], {
       encoding: "utf8",
       timeout: 250,
       stdio: ["ignore", "pipe", "ignore"],

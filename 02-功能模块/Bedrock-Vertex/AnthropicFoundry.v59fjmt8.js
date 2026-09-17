@@ -58,7 +58,7 @@ var u = (e) => {
     return globalThis.Deno.env?.get?.(e)?.trim() || void 0;
   return;
 };
-class d extends Bx {
+class AnthropicFoundry extends Bx {
   constructor({
     baseURL: e = u("ANTHROPIC_FOUNDRY_BASE_URL"),
     apiKey: t = u("ANTHROPIC_FOUNDRY_API_KEY"),
@@ -128,4 +128,4 @@ function x(e) {
   let t = new Th(e);
   return (delete t.messages.batches, t);
 }
-export { d as AnthropicFoundry };
+export { AnthropicFoundry };

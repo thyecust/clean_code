@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ju } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { VU } from "./chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -25,7 +25,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { basename as No, resolve as te } from "path";
+import { basename, resolve } from "path";
 function qo() {
   return "Sent to Claude on each fire. Slash commands work.";
 }
@@ -43,7 +43,7 @@ function Xo(Qo) {
   return { label: VU(Qo), value: Qo };
 }
 async function l$n(s) {
-  return J0e(void 0, s).catch((v) => (h(v), []));
+  return J0e(void 0, s).catch((v) => (logError(v), []));
 }
 function eZt(st) {
   let m = _(76),
@@ -72,7 +72,7 @@ function eZt(st) {
           }));
       } catch (re) {
         let bo = re;
-        (h(bo), B(`Toggle failed: ${l(bo)}`, { display: "system" }));
+        (logError(bo), B(`Toggle failed: ${l(bo)}`, { display: "system" }));
       }
     }),
       (m[0] = P),
@@ -376,7 +376,7 @@ function tZt(ct) {
         }
         let ke = { ...eo, [X]: To };
         if (X !== "id" && !O && (X === "prompt" || X === "dir"))
-          ke.id = ie(te(Ju(ke.dir?.trim() || x)), ke.prompt ?? "");
+          ke.id = ie(resolve(Ju(ke.dir?.trim() || x)), ke.prompt ?? "");
         return ke;
       });
     }),
@@ -506,7 +506,7 @@ function tZt(ct) {
         return;
       }
       So(!0);
-      let Do = te(Ju(g.dir?.trim() || x));
+      let Do = resolve(Ju(g.dir?.trim() || x));
       let Vo = Qre(g.schedule ?? "");
       if (Vo.cron === void 0) {
         So(!1);
@@ -531,7 +531,7 @@ function tZt(ct) {
         (await eSe(vt, void 0, $e), await ze(io, T));
       } catch (ee) {
         let jo = ee;
-        (h(jo), Ie(`Save failed: ${l(jo)}`, { display: "system" }));
+        (logError(jo), Ie(`Save failed: ${l(jo)}`, { display: "system" }));
       }
     }),
       (f[40] = _e),
@@ -589,7 +589,7 @@ function PIt(s) {
     .slice(0, 40);
 }
 function ie(s, v) {
-  let u = PIt(No(s)),
+  let u = PIt(basename(s)),
     C = PIt(v.split(/\s+/).slice(0, 4).join(" "));
   return [u, C].filter(Boolean).join("-") || "task";
 }

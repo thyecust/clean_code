@@ -13,6 +13,6 @@ var e = Ae("./cli-f091jpwx.md");
 var t = Ae("./server-6cyhjq09.md");
 var s = "./SKILL-cf37e4b8.md.zst";
 var i = Ke(s, import.meta.dirname);
-var g = i,
-  y = { "examples/cli.md": e, "examples/server.md": t };
-export { y as SKILL_FILES, g as SKILL_MD };
+var SKILL_MD = i,
+  SKILL_FILES = { "examples/cli.md": e, "examples/server.md": t };
+export { SKILL_FILES, SKILL_MD };

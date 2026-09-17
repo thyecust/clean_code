@@ -11,7 +11,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Et, Yhe, b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -19,11 +19,11 @@ import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x, oe, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ja, $nt, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { aB, G2e, execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { aB, G2e, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { fi, gPn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { Lft, $s, adn, ldn, eqn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { kIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE as Skt, getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { o6 } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { eqt, Swn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -31,23 +31,23 @@ import { nU } from "../核心工具-并发与缓存/核心工具-并发与缓存
 import { Gdt, qdt, ote, R7 } from "../共享小工具-未细化/chunk-v599v9yt.js";
 import { oun } from "../共享小工具-未细化/chunk-kk3mqttk.js";
 import { Tfe } from "../共享小工具-未细化/chunk-cyyrj58q.js";
-import { execFile as wn } from "child_process";
-import { constants as bn, statSync as Tn } from "fs";
+import { execFile } from "child_process";
+import { constants, statSync } from "fs";
 import {
-  access as xn,
+  access,
   mkdir as Pe,
   readFile as te,
   stat as mt,
   unlink as Ce,
   writeFile as Ae,
 } from "fs/promises";
-import { homedir as ve, tmpdir as Cn } from "os";
-import { delimiter as yt, join as I, parse as Sn } from "path";
+import { homedir as ve, tmpdir } from "os";
+import { delimiter, join as I, parse } from "path";
 function Ne(t) {
   return;
 }
-import { createHash as St } from "crypto";
-import { isIP as Pt } from "net";
+import { createHash } from "crypto";
+import { isIP } from "net";
 var De = "<non-linux>";
 var Le = 524288,
   At = 30000,
@@ -407,7 +407,7 @@ function Xt(t) {
                 /sec-websocket-key: *(\S+)/i.exec(
                   s.subarray(0, w).toString("latin1"),
                 )?.[1] ?? "",
-              S = St("sha1")
+              S = createHash("sha1")
                 .update(T + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
                 .digest("base64");
             if (
@@ -494,7 +494,7 @@ async function Ke(t) {
           "force-tunneled, so a session without the hosted proxy is non-functional regardless. Check network egress to the CCR base URL."
         ).replace(de, "?")),
           n(`[agent-proxy] ${s.startupError}`, { level: "error" }),
-          g("agent_proxy_init", "agent_proxy_startup_probe_failed"));
+          logFeatureSad("agent_proxy_init", "agent_proxy_startup_probe_failed"));
       }),
       Xt(r.openTimeoutMs)
         .then((c) => {
@@ -503,7 +503,7 @@ async function Ke(t) {
               "[agent-proxy] WebSocket.bufferedAmount stays 0 with bytes queued: the upload gate cannot engage on this runtime",
               { level: "warn" },
             ),
-              g("agent_proxy_init", "agent_proxy_buffered_amount_untrusted"));
+              logFeatureSad("agent_proxy_init", "agent_proxy_buffered_amount_untrusted"));
         })
         .catch((c) => {
           n(
@@ -654,7 +654,7 @@ function Vt(t, e, o, r, s) {
         "[agent-proxy] client sent TLS to the relay port (HTTPS_PROXY must be an http:// URL)",
         { level: "warn" },
       ),
-        f("agent_proxy_request", "agent_proxy_request_tls_to_relay"),
+        logFeatureBad("agent_proxy_request", "agent_proxy_request_tls_to_relay"),
         E(
           e.ctx,
           "tls_to_relay",
@@ -677,7 +677,7 @@ function Vt(t, e, o, r, s) {
             "request headers exceeded 8 KiB before the end of the CONNECT request",
           ),
           t.end(),
-          f("agent_proxy_request", "agent_proxy_request_header_too_long"),
+          logFeatureBad("agent_proxy_request", "agent_proxy_request_header_too_long"),
           E(e.ctx, "header_too_long", "headers exceeded 8 KiB"));
       return;
     }
@@ -729,7 +729,7 @@ function Vt(t, e, o, r, s) {
           "this proxy only accepts HTTPS CONNECT tunnels. Plain-HTTP/absolute-form requests are not supported \u2014 common causes are axios releases before 1.16.1 (broken HTTPS proxy handling) or a tool configured with HTTP_PROXY pointing at this relay.",
         ),
         t.end(),
-        f("agent_proxy_request", "agent_proxy_request_not_connect"));
+        logFeatureBad("agent_proxy_request", "agent_proxy_request_not_connect"));
       let [w = "", T = ""] = u.split(/\s+/),
         S = w;
       try {
@@ -753,7 +753,7 @@ function Vt(t, e, o, r, s) {
         S = Q(T.replace(/^\[|\]$/g, ""));
       if (Gt.test(S))
         E(e.ctx, "selective_invalid_host", "control byte in CONNECT host", S);
-      else if (Pt(S) === 4 && !kt(S));
+      else if (isIP(S) === 4 && !kt(S));
       else if (!Nt(S, h.includeHosts)) {
         let v = w > 0 ? Number(_.slice(w + 1)) : 443;
         Zt(t, e, S, v);
@@ -804,7 +804,7 @@ function le(t, e, o) {
 }
 function Ve(t, e, o, r) {
   if (
-    (f("agent_proxy_request", `agent_proxy_request_${o}`),
+    (logFeatureBad("agent_proxy_request", `agent_proxy_request_${o}`),
     E(e.ctx, o, r, R(e)),
     (e.closed = !0),
     (e.uploadAborted = !0),
@@ -939,7 +939,7 @@ function Jt(t, e, o, r) {
         return;
       }
       ((e.closed = !0),
-        f("agent_proxy_request", "agent_proxy_request_ws_error"),
+        logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"),
         k(
           t,
           502,
@@ -973,7 +973,7 @@ function Zt(t, e, o, r) {
         `agent-proxy selective relay: normal-networking refused ${o} (${s})`,
       ),
       t.end(),
-      f("agent_proxy_request", "agent_proxy_direct_blocked_" + s),
+      logFeatureBad("agent_proxy_request", "agent_proxy_direct_blocked_" + s),
       E(e.ctx, "direct_blocked", s, R(e)));
     return;
   }
@@ -981,7 +981,7 @@ function Zt(t, e, o, r) {
     ((e.closed = !0),
       k(t, 400, "Bad Request", "invalid CONNECT port"),
       t.end(),
-      f("agent_proxy_request", "agent_proxy_request_bad_connect_port"),
+      logFeatureBad("agent_proxy_request", "agent_proxy_request_bad_connect_port"),
       E(e.ctx, "bad_connect_port", "invalid CONNECT port", R(e)));
     return;
   }
@@ -1023,7 +1023,7 @@ function Zt(t, e, o, r) {
                 `\u2014 resolved to a blocked address (${d})`,
             ),
             t.end(),
-            f("agent_proxy_request", "agent_proxy_direct_peer_blocked_" + d),
+            logFeatureBad("agent_proxy_request", "agent_proxy_direct_peer_blocked_" + d),
             E(e.ctx, "direct_peer_blocked", d, R(e)));
           return;
         }
@@ -1192,7 +1192,7 @@ function ze(t, e, o, r) {
           if (e.openTimer) (clearTimeout(e.openTimer), (e.openTimer = void 0));
           e.pooledDeadline = void 0;
         }
-        y("agent_proxy_request");
+        logFeatureOk("agent_proxy_request");
       }
       ((e.downloadBytes += c.data.length), t.write(c.data));
     }
@@ -1209,7 +1209,7 @@ function ze(t, e, o, r) {
         return;
       }
       if (!e.established)
-        (f("agent_proxy_request", "agent_proxy_request_ws_error"),
+        (logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"),
           k(
             t,
             502,
@@ -1237,7 +1237,7 @@ function ze(t, e, o, r) {
         return;
       }
       if (!e.established)
-        (f("agent_proxy_request", "agent_proxy_request_ws_error"),
+        (logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"),
           k(
             t,
             502,
@@ -1262,7 +1262,7 @@ function Ge(t, e, o, r) {
     return;
   }
   let s = Date.now() - e.startedAt;
-  (f("agent_proxy_request", "agent_proxy_request_ws_closed_mid_exchange", {
+  (logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_closed_mid_exchange", {
     elapsed_ms: s,
     upload_bytes: e.uploadBytes,
     download_bytes: e.downloadBytes,
@@ -1336,8 +1336,8 @@ function Ze(t, e) {
   let o = { "Content-Type": "application/proto", Authorization: e.wsHeader() },
     r = new globalThis.WebSocket(t, {
       headers: o,
-      proxy: Cb(t),
-      tls: Ab() || void 0,
+      proxy: getWebSocketProxyUrl(t),
+      tls: getWebSocketTLSOptions() || void 0,
     });
   return ((r.binaryType = "arraybuffer"), r);
 }
@@ -1367,7 +1367,7 @@ function fe(t, e, o, r) {
       }
       (n(`[agent-proxy] ws open failed (${u}); attempts exhausted`),
         (e.closed = !0),
-        f("agent_proxy_request", "agent_proxy_request_ws_error"));
+        logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"));
       let h = `could not open the WebSocket tunnel to the CCR agent-proxy (${u.slice(0, 120)}) after ${e.wsAttempt} ${x(e.wsAttempt, "attempt")}`;
       (k(t, 502, "Bad Gateway", d ? `${h}. Also: ${d}` : h),
         t.end(),
@@ -1425,7 +1425,7 @@ function ge(t, e, o) {
     n(`[agent-proxy] tunnel protocol v2 negotiation failed: ${o}`, {
       level: "warn",
     }),
-    f("agent_proxy_request", "agent_proxy_request_v2_not_acked"),
+    logFeatureBad("agent_proxy_request", "agent_proxy_request_v2_not_acked"),
     k(
       t,
       502,
@@ -1496,13 +1496,13 @@ function D(t) {
 import {
   mkdir as _e,
   readFile as it,
-  realpath as we,
-  rename as dn,
+  realpath,
+  rename,
   unlink as z,
   writeFile as ee,
 } from "fs/promises";
 import { homedir as tt } from "os";
-import { dirname as he, join as U } from "path";
+import { dirname, join as U } from "path";
 var J = "changeit",
   fn = /[\s'"]/,
   nt = "# >>> ccr-agent-proxy (managed by Claude Code) >>>",
@@ -1525,7 +1525,7 @@ async function st(t) {
         `[agent-proxy] tool trust setup skipped: cannot write CA file: ${l(c)}`,
         { level: "warn" },
       ),
-      f("agent_proxy_tool_trust", "ca_file_write_failed"),
+      logFeatureBad("agent_proxy_tool_trust", "ca_file_write_failed"),
       o
     );
   }
@@ -1574,13 +1574,13 @@ async function st(t) {
     ]),
     e.length === 0)
   )
-    y("agent_proxy_tool_trust");
-  else g("agent_proxy_tool_trust", e[0]);
+    logFeatureOk("agent_proxy_tool_trust");
+  else logFeatureSad("agent_proxy_tool_trust", e[0]);
   return o;
 }
 async function rt(t, e) {
   if (t)
-    return we(t).catch(() => {
+    return realpath(t).catch(() => {
       return;
     });
   return (await e()) ?? void 0;
@@ -1593,7 +1593,7 @@ async function pn() {
     e;
   for (let o of t) {
     if (!o) continue;
-    let r = await we(o).catch(() => {
+    let r = await realpath(o).catch(() => {
       return;
     });
     if (!r) continue;
@@ -1602,12 +1602,12 @@ async function pn() {
   return e;
 }
 async function lt(t) {
-  let e = he(he(t));
+  let e = dirname(dirname(t));
   for (let o of [
     U(e, "lib", "security", "cacerts"),
     U(e, "jre", "lib", "security", "cacerts"),
   ]) {
-    let r = await we(o).catch(() => {
+    let r = await realpath(o).catch(() => {
       return;
     });
     if (r) return r;
@@ -1669,7 +1669,7 @@ async function gn(t, e, o, r) {
     return;
   }
   try {
-    await dn(p, o).catch(async () => {
+    await rename(p, o).catch(async () => {
       (await ee(o, await it(p)), await z(p).catch(() => {}));
     });
   } catch (d) {
@@ -1780,7 +1780,7 @@ async function _n(t, e, o) {
 `;
   try {
     return (
-      await _e(he(e), { recursive: !0 }),
+      await _e(dirname(e), { recursive: !0 }),
       await ee(e, s, { mode: 420 }),
       n(`[agent-proxy] wrote ${e} for login-shell trust`),
       e
@@ -1798,7 +1798,7 @@ function ut(t) {
   return `'${t.replace(/'/g, "'\\''")}'`;
 }
 async function V(t, e) {
-  let o = await Fe(t, e, {
+  let o = await execFileNoThrow(t, e, {
     timeout: 20000,
     preserveOutputOnError: !0,
     useCwd: !1,
@@ -1910,7 +1910,7 @@ async function _gr(t) {
       n("[agent-proxy] CLAUDE_CODE_REMOTE_SESSION_ID unset; proxy disabled", {
         level: "warn",
       }),
-      f("agent_proxy_init", "agent_proxy_init_no_session_id"),
+      logFeatureBad("agent_proxy_init", "agent_proxy_init_no_session_id"),
       e.state
     );
   let m = t?.tokenPath ?? En,
@@ -1920,7 +1920,7 @@ async function _gr(t) {
   if (!w && !r)
     return (
       n("[agent-proxy] no session token; proxy disabled"),
-      f("agent_proxy_init", "agent_proxy_init_no_token"),
+      logFeatureBad("agent_proxy_init", "agent_proxy_init_no_token"),
       e.state
     );
   (n(`[agent-proxy] token via ${_ ? m : "sessionIngressAuth"}`),
@@ -1962,7 +1962,7 @@ ${L}`
           "list is empty/unparsable \u2014 FAIL-CLOSED to tunnel-all",
         { level: "warn" },
       ),
-        g("agent_proxy_init", "agent_proxy_selective_empty_include"));
+        logFeatureSad("agent_proxy_init", "agent_proxy_selective_empty_include"));
   }
   let X = {
       runtime: e,
@@ -1985,12 +1985,12 @@ ${L}`
     },
     K = await Tt(X, 1);
   if (K.outcome === "retry")
-    (g("agent_proxy_init", "agent_proxy_init_ca_exhausted_retrying"),
+    (logFeatureSad("agent_proxy_init", "agent_proxy_init_ca_exhausted_retrying"),
       $n(X, K).catch((P) => {
         (n(`[agent-proxy] retry loop crashed: ${l(P)}; proxy stays disabled`, {
           level: "warn",
         }),
-          f("agent_proxy_init", "agent_proxy_init_retry_loop_crashed"));
+          logFeatureBad("agent_proxy_init", "agent_proxy_init_retry_loop_crashed"));
       }));
   return e.state;
 }
@@ -2025,7 +2025,7 @@ async function $n(t, e) {
           `[agent-proxy] ${e.detail}; still failing after ${d} attempts over ${Math.round((Date.now() - p) / 60000)} min \u2014 counting as exhausted, retrying anyway`,
           { level: "warn" },
         ),
-        f("agent_proxy_init", "agent_proxy_init_ca_exhausted"));
+        logFeatureBad("agent_proxy_init", "agent_proxy_init_ca_exhausted"));
   }
 }
 async function Tt(t, e) {
@@ -2055,7 +2055,7 @@ async function Tt(t, e) {
   if (N.outcome === "fatal")
     return (
       n(`[agent-proxy] ${N.detail}; proxy disabled`, { level: "warn" }),
-      f("agent_proxy_init", `agent_proxy_init_ca_${N.code}`),
+      logFeatureBad("agent_proxy_init", `agent_proxy_init_ca_${N.code}`),
       N
     );
   let M = N.ccrCa;
@@ -2123,7 +2123,7 @@ async function Tt(t, e) {
                     `[agent-proxy] governed git config append failed: ${l(se)}`,
                     { level: "warn" },
                   ),
-                  g("agent_proxy_tool_scoped", "git_config_append_failed"),
+                  logFeatureSad("agent_proxy_tool_scoped", "git_config_append_failed"),
                   (C = !0),
                   !1
                 ),
@@ -2134,7 +2134,7 @@ async function Tt(t, e) {
                 (n(`[agent-proxy] gh shim write failed: ${l(se)}`, {
                   level: "warn",
                 }),
-                  g("agent_proxy_tool_scoped", "gh_shim_write_failed"),
+                  logFeatureSad("agent_proxy_tool_scoped", "gh_shim_write_failed"),
                   (C = !0));
                 return;
               })
@@ -2142,11 +2142,11 @@ async function Tt(t, e) {
         ]);
       if (ae) H.ghShimDir = ae;
       if (!C)
-        y("agent_proxy_tool_scoped", { git_config: ie, gh_shim: Boolean(ae) });
+        logFeatureOk("agent_proxy_tool_scoped", { git_config: ie, gh_shim: Boolean(ae) });
     }
     if (
       (n(`[agent-proxy] enabled on 127.0.0.1:${P.port}`),
-      y("agent_proxy_init", { attempts: e }),
+      logFeatureOk("agent_proxy_init", { attempts: e }),
       Lft(xe(m, void 0)),
       Ae(X, Gn(P.port, m), "utf8")
         .then(() => {
@@ -2199,7 +2199,7 @@ async function Tt(t, e) {
             `[agent-proxy] tool trust setup failed: ${C instanceof Error ? C.message : String(C)}`,
             { level: "warn" },
           ),
-            g("agent_proxy_tool_trust", "setup_threw"));
+            logFeatureSad("agent_proxy_tool_trust", "setup_threw"));
         });
     if (u)
       await Ce(u).catch(() => {
@@ -2212,7 +2212,7 @@ async function Tt(t, e) {
         `[agent-proxy] relay start failed: ${G instanceof Error ? G.message : String(G)}; proxy disabled`,
         { level: "warn" },
       ),
-      f("agent_proxy_init", "agent_proxy_init_relay_start_failed"),
+      logFeatureBad("agent_proxy_init", "agent_proxy_init_relay_start_failed"),
       { outcome: "fatal" }
     );
   }
@@ -2274,7 +2274,7 @@ function ygr() {
     let r = {};
     if (t.ghShimDir) {
       let s = process.env.PATH ?? "";
-      r.PATH = s ? `${t.ghShimDir}${yt}${s}` : t.ghShimDir;
+      r.PATH = s ? `${t.ghShimDir}${delimiter}${s}` : t.ghShimDir;
     }
     return r;
   }
@@ -2381,12 +2381,12 @@ async function kn(t, e) {
   );
 }
 async function Nn(t, e) {
-  let o = (a.PATH ?? "").split(yt);
+  let o = (a.PATH ?? "").split(delimiter);
   for (let r of o) {
     if (!r || r === e) continue;
     let s = I(r, t);
     try {
-      if ((await xn(s, bn.X_OK), (await mt(s)).isFile())) return s;
+      if ((await access(s, constants.X_OK), (await mt(s)).isFile())) return s;
     } catch {}
   }
   return;
@@ -2399,7 +2399,7 @@ async function Dn() {
     (n(`[agent-proxy] ${l(e)}; naming only the CLIs resolved so far`, {
       level: "warn",
     }),
-      g("agent_proxy_init", "agent_proxy_path_probe_timeout"));
+      logFeatureSad("agent_proxy_init", "agent_proxy_path_probe_timeout"));
   }
   return dt.filter((e) => t.has(e));
 }
@@ -2538,10 +2538,10 @@ var Ln = [
   ],
 ];
 function Hn() {
-  let t = Sn(Cn()).root;
+  let t = parse(tmpdir()).root;
   try {
     let e = ve();
-    if (e && Tn(e).isDirectory()) return e;
+    if (e && statSync(e).isDirectory()) return e;
     return t;
   } catch {
     return t;
@@ -2551,7 +2551,7 @@ async function Mn() {
   let t = new Set(),
     e = await Promise.all(
       ["--global", "--system"].map((o) =>
-        Be("git", ["config", o, "--list", "--name-only"], {
+        execFileNoThrowWithCwd("git", ["config", o, "--list", "--name-only"], {
           timeout: 5000,
           preserveOutputOnError: !0,
           cwd: Hn(),
@@ -2709,7 +2709,7 @@ async function Yn(t, e) {
         );
       continue;
     }
-    let d = u.match(Skt);
+    let d = u.match(PEM_CERT_BLOCK_RE);
     if (!d) continue;
     let m = 0;
     for (let h of d) {
@@ -2744,7 +2744,7 @@ async function jn(t, e) {
     try {
       await Ae(I(o, r), t, "utf8");
       let p = await new Promise((c) => {
-        wn(
+        execFile(
           s[0],
           s.slice(1),
           { timeout: 1e4, cwd: "/", windowsHide: !0, ...Bs("helper") },
@@ -2753,7 +2753,7 @@ async function jn(t, e) {
       });
       if (p === 0) {
         (n(`[agent-proxy] CA installed to system trust via ${s[0]}`),
-          y("agent_proxy_system_trust"));
+          logFeatureOk("agent_proxy_system_trust"));
         return;
       }
       n(`[agent-proxy] ${s[0]} exited ${p}; falling back to env-var trust`, {
@@ -2766,7 +2766,7 @@ async function jn(t, e) {
         { level: "warn" },
       );
     }
-  if (e.length > 0) g("agent_proxy_system_trust", "unavailable");
+  if (e.length > 0) logFeatureSad("agent_proxy_system_trust", "unavailable");
 }
 async function Kn(t, e, o, { budgetMs: r, tries: s }) {
   let p = AbortSignal.timeout(r),
@@ -2787,7 +2787,7 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
           detail: `ca-cert fetch ${h.status}`,
         };
       let _ = await h.text();
-      if (!_.match(Skt)) {
+      if (!_.match(PEM_CERT_BLOCK_RE)) {
         c = "no certificate in response";
         continue;
       }

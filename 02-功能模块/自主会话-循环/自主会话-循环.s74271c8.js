@@ -17,9 +17,9 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { markSessionEndedByModel as Nhn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { END_CONVERSATION_TOOL_NAME as ab } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
-import { DESCRIPTION as gdt, END_CONVERSATION_TOOL_RESULT as i1t, END_CONVERSATION_FORK_REFLECTION_PROMPT as Osn, END_CONVERSATION_FINAL_MESSAGE as Dsn, END_CONVERSATION_REFLECTION_PROMPT as Lsn, isEndConversationToolEnabled as a1t } from "../工具EndConversation/工具EndConversation.409rx3vp.js";
+import { markSessionEndedByModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { END_CONVERSATION_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
+import { DESCRIPTION, END_CONVERSATION_TOOL_RESULT, END_CONVERSATION_FORK_REFLECTION_PROMPT, END_CONVERSATION_FINAL_MESSAGE, END_CONVERSATION_REFLECTION_PROMPT, isEndConversationToolEnabled } from "../工具EndConversation/工具EndConversation.409rx3vp.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function p(e) {
   let a = !1;
@@ -30,7 +30,7 @@ function p(e) {
       let t = o.message.content;
       if (
         Array.isArray(t) &&
-        t.some((u) => u.type === "tool_use" && u.name === ab)
+        t.some((u) => u.type === "tool_use" && u.name === END_CONVERSATION_TOOL_NAME)
       )
         return !0;
       continue;
@@ -50,17 +50,17 @@ function p(e) {
 }
 var f = m(() => Qe({})),
   g = m(() => c({ ended: O(), message: s() })),
-  D = Tt({
-    name: ab,
+  EndConversationTool = Tt({
+    name: END_CONVERSATION_TOOL_NAME,
     shouldDefer: !0,
     searchHint:
       "end the conversation \u2014 only for sustained user abuse, or when the user explicitly asks to see it demonstrated",
     maxResultSizeChars: 1e4,
     async description() {
-      return gdt;
+      return DESCRIPTION;
     },
     async prompt() {
-      return gdt;
+      return DESCRIPTION;
     },
     get inputSchema() {
       return f();
@@ -69,11 +69,11 @@ var f = m(() => Qe({})),
       return g();
     },
     userFacingName() {
-      return ab;
+      return END_CONVERSATION_TOOL_NAME;
     },
     isEnabled() {
       let e = J$e();
-      return e !== void 0 && a1t(e);
+      return e !== void 0 && isEndConversationToolEnabled(e);
     },
     isReadOnly() {
       return !0;
@@ -102,7 +102,7 @@ var f = m(() => Qe({})),
                 is_non_interactive: r,
                 phase: S("reflect"),
               }),
-              { data: { ended: !1, message: Osn } }
+              { data: { ended: !1, message: END_CONVERSATION_FORK_REFLECTION_PROMPT } }
             );
           if (!p(e.messages()))
             return (
@@ -111,7 +111,7 @@ var f = m(() => Qe({})),
                 is_non_interactive: r,
                 phase: S("reflect"),
               }),
-              { data: { ended: !1, message: Lsn } }
+              { data: { ended: !1, message: END_CONVERSATION_REFLECTION_PROMPT } }
             );
           i("tengu_end_conversation_tool_call", {
             surface: S(o),
@@ -119,20 +119,20 @@ var f = m(() => Qe({})),
             phase: S("end"),
           });
           try {
-            await Nhn(K(), e.storageV5);
+            await markSessionEndedByModel(K(), e.storageV5);
           } catch (t) {
             n(`[EndConversation] marker write failed: ${l(t)}`);
           }
           if ((e.endTurn("end_conversation"), r)) {
             let { gracefulShutdown: t } = await import("../../01-核心基础设施/核心工具-进程与信号/flushAnalyticsSinks.tbwzvw9n.js");
             return (
-              t(1, "other", { finalMessage: Dsn }),
-              { data: { ended: !0, message: i1t } }
+              t(1, "other", { finalMessage: END_CONVERSATION_FINAL_MESSAGE }),
+              { data: { ended: !0, message: END_CONVERSATION_TOOL_RESULT } }
             );
           }
-          return (e.markEndedByModel(), { data: { ended: !0, message: i1t } });
+          return (e.markEndedByModel(), { data: { ended: !0, message: END_CONVERSATION_TOOL_RESULT } });
         },
       };
     },
   });
-export { D as EndConversationTool };
+export { EndConversationTool };

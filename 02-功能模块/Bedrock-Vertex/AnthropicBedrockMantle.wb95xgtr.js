@@ -484,7 +484,7 @@ var Q = function (e, t, r, o) {
   ee,
   Ne = "bedrock-2023-05-31",
   Pe = new Set(["/v1/complete", "/v1/messages", "/v1/messages?beta=true"]);
-class te extends Eh {
+class AnthropicBedrock extends Eh {
   constructor({
     awsRegion: e = f("AWS_REGION") ?? "us-east-1",
     baseURL: t = f("ANTHROPIC_BEDROCK_BASE_URL") ??
@@ -693,7 +693,7 @@ var je = function (e, t, r, o) {
   H,
   ae,
   Ke = "bedrock-mantle";
-class ie extends Eh {
+class AnthropicBedrockMantle extends Eh {
   constructor({
     awsRegion: e,
     baseURL: t,
@@ -774,4 +774,4 @@ function De(e) {
   let { messages: t } = new Th(e);
   return { messages: t };
 }
-export { te as AnthropicBedrock, ie as AnthropicBedrockMantle };
+export { AnthropicBedrock, AnthropicBedrockMantle };

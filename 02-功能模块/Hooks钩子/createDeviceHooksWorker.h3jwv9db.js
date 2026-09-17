@@ -30,7 +30,7 @@ function re(t, m) {
   if (m.event !== t.event || !ZM(m.event)) return "event_not_allowed";
   return "awaiting_upload";
 }
-function fe(t) {
+function createDeviceHooksWorker(t) {
   let m = null,
     _ = new Map(),
     h = new Map();
@@ -500,7 +500,7 @@ function fe(t) {
 function ae(t) {
   return t !== void 0 && Number.isInteger(t) && t >= 1 ? t : 1;
 }
-async function ke(t) {
+async function productionDeviceHooksWorkerDeps(t) {
   let [
       { isRestrictedToPluginOnly: m },
       { isCustomizationDisabled: _ },
@@ -626,4 +626,4 @@ async function ke(t) {
     },
   };
 }
-export { fe as createDeviceHooksWorker, ke as productionDeviceHooksWorkerDeps };
+export { createDeviceHooksWorker, productionDeviceHooksWorkerDeps };

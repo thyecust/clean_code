@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { stat as zt } from "fs";
 import { stat as jt, readdir as Yt } from "fs/promises";
-import { EventEmitter as Ut } from "events";
+import { EventEmitter } from "events";
 import * as f from "path";
 import {
   stat as ft,
@@ -18,7 +18,7 @@ import {
   realpath as _t,
 } from "fs/promises";
 import { Readable as mt } from "stream";
-import { resolve as Y, relative as wt, join as pt, sep as yt } from "path";
+import { resolve, relative, join as pt, sep as yt } from "path";
 var p = {
     FILE_TYPE: "files",
     DIR_TYPE: "directories",
@@ -71,7 +71,7 @@ class B extends mt {
       (this._wantsDir = i ? Pt.has(i) : !1),
       (this._wantsFile = i ? gt.has(i) : !1),
       (this._wantsEverything = i === p.EVERYTHING_TYPE),
-      (this._root = Y(e)),
+      (this._root = resolve(e)),
       (this._isDirent = !s.alwaysStat),
       (this._statsProp = this._isDirent ? "dirent" : "stats"),
       (this._rdOptions = { encoding: "utf8", withFileTypes: this._isDirent }),
@@ -133,8 +133,8 @@ class B extends mt {
     let e,
       i = this._isDirent ? t.name : t;
     try {
-      let r = Y(pt(s, i));
-      ((e = { path: wt(this._root, r), fullPath: r, basename: i }),
+      let r = resolve(pt(s, i));
+      ((e = { path: relative(this._root, r), fullPath: r, basename: i }),
         (e[this._statsProp] = this._isDirent ? t : await this._stat(r)));
     } catch (r) {
       this._onError(r);
@@ -192,7 +192,7 @@ function q(t, s = {}) {
     throw Error(`readdirp: Invalid type passed. Use one of ${U.join(", ")}`);
   return ((s.root = t), new B(s));
 }
-import { watchFile as bt, unwatchFile as J, watch as It } from "fs";
+import { watchFile, unwatchFile, watch } from "fs";
 import { open as Q, stat as Z, lstat as Tt, realpath as W } from "fs/promises";
 import * as _ from "path";
 import { type as xt } from "os";
@@ -515,7 +515,7 @@ function X(t, s, e, i, r) {
       x(_.resolve(t, o), P, _.join(t, o));
   };
   try {
-    return It(t, { persistent: s.persistent }, a);
+    return watch(t, { persistent: s.persistent }, a);
   } catch (n) {
     i(n);
     return;
@@ -576,14 +576,14 @@ var x = (t, s, e, i, r) => {
       n = L.get(s),
       o = n && n.options;
     if (o && (o.persistent < e.persistent || o.interval > e.interval))
-      (J(s), (n = void 0));
+      (unwatchFile(s), (n = void 0));
     if (n) (D(n, P, r), D(n, g, a));
     else
       ((n = {
         listeners: r,
         rawEmitters: a,
         options: e,
-        watcher: bt(s, e, (c, h) => {
+        watcher: watchFile(s, e, (c, h) => {
           k(n.rawEmitters, (l) => {
             l(y.CHANGE, s, { curr: c, prev: h });
           });
@@ -595,7 +595,7 @@ var x = (t, s, e, i, r) => {
         L.set(s, n));
     return () => {
       if ((b(n, P, r), b(n, g, a), et(n.listeners) && n.watcher))
-        (L.delete(s), J(s), (n.options = n.watcher = void 0), Object.freeze(n));
+        (L.delete(s), unwatchFile(s), (n.options = n.watcher = void 0), Object.freeze(n));
     };
   };
 class O {
@@ -953,7 +953,7 @@ class dt {
     return this.fsw._isntIgnored(this.entryPath(t), t.stats);
   }
 }
-class z extends Ut {
+class z extends EventEmitter {
   constructor(t = {}) {
     super();
     ((this.closed = !1),

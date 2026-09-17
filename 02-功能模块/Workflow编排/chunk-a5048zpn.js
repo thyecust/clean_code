@@ -8,20 +8,20 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $6 } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { Uh, MTt, NTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { yve, JEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
-import { hasPermissionsToUseTool as gd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { hasPermissionsToUseTool } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { v9, Fdt, $dt, Rqe } from "./chunk-bkcg0nbj.js";
 import { Mdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1n8w0wz0.js";
 import { Vf } from "./chunk-cd542wve.js";
 import { eH } from "./chunk-hdhsmge4.js";
 import { Dh } from "../Teammates团队/chunk-mrfx53ye.js";
-import { randomUUID as A } from "crypto";
+import { randomUUID } from "crypto";
 var a = 1e5,
   W = 4000;
 function D(t) {
@@ -79,14 +79,14 @@ async function clt({
     );
   let k = v9(n.scriptBody);
   if (!k.ok) return s("compile", `workflow script compile failed: ${k.error}`);
-  let f = `wf_${A().slice(0, 12)}`,
+  let f = `wf_${randomUUID().slice(0, 12)}`,
     y = Dh("local_workflow"),
     x = NTt(n.meta.name, f, t, p.storageV5),
     C = Fdt(n.meta.name, void 0, !1),
     R = $dt(n.meta.description, void 0, !1);
   i("tengu_workflow_launched", {
-    invocation_mode: u(d),
-    workflow_source: u(d),
+    invocation_mode: fromEnum(d),
+    workflow_source: fromEnum(d),
     phase_count: n.meta.phases?.length ?? 0,
     launched_from_subagent: !1,
     has_args: o != null,
@@ -103,7 +103,7 @@ async function clt({
       meta: n.meta,
       vmScript: k.vmScript,
       toolUseContext: p,
-      canUseTool: p.canUseTool ?? gd,
+      canUseTool: p.canUseTool ?? hasPermissionsToUseTool,
       toolUseId: void 0,
       transcriptDir: eH(f),
       telemetry: {

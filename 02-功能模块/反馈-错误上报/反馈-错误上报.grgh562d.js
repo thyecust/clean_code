@@ -11,13 +11,13 @@ import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { fromNumber as Yr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromNumber } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { up, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { an, KTe, Z6t, mEe, d5e, p5e, aWt, I3, R8n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { supportsShiftEnter as ZZ } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -87,8 +87,8 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
   E(() => {
     X().then((n) => {
       i("tengu_feedback_queue_opened", {
-        queued_count: Yr(n.length),
-        this_session_count: Yr(G(n, (a) => a.source_session_id === U)),
+        queued_count: fromNumber(n.length),
+        this_session_count: fromNumber(G(n, (a) => a.source_session_id === U)),
       });
     });
   }, [X, U]);
@@ -392,7 +392,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                 }),
                 c === "details" &&
                   e(D, {
-                    chord: ZZ() ? "shift+enter" : "ctrl+j",
+                    chord: supportsShiftEnter() ? "shift+enter" : "ctrl+j",
                     action: "new line",
                   }),
                 !W && e(D, { chord: "d", action: "discard" }),

@@ -195,9 +195,9 @@ function nU(e, t, r = 32000) {
   }
   return o;
 }
-import { constants as K } from "fs";
-import { lstat as J, open as Re, unlink as Ie } from "fs/promises";
-import { verify as me, X509Certificate as U } from "crypto";
+import { constants } from "fs";
+import { lstat, open as Re, unlink } from "fs/promises";
+import { verify, X509Certificate as U } from "crypto";
 var ye = { "managed-settings": 86400, "policy-limits": 86400 },
   pe = 300,
   C = 16384,
@@ -297,7 +297,7 @@ function Ce(
   )
     return "bad_signature";
   if (
-    !me(
+    !verify(
       "sha256",
       Buffer.from(`${_}.${A}`, "utf8"),
       { key: S.publicKey, dsaEncoding: "ieee-p1363" },
@@ -411,7 +411,7 @@ async function XJe(e, t) {
 }
 async function ze(e) {
   try {
-    return (await J(e), !0);
+    return (await lstat(e), !0);
   } catch (t) {
     return !W(t);
   }
@@ -481,7 +481,7 @@ async function Me(e, t) {
 async function Pe(e, t) {
   try {
     if (dy === 0 && (await Be(e))) return;
-    let r = await Re(e, K.O_WRONLY | K.O_CREAT | K.O_TRUNC | dy, 384);
+    let r = await Re(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | dy, 384);
     try {
       await r.writeFile(b(t), { encoding: "utf-8" });
     } finally {
@@ -493,14 +493,14 @@ async function Pe(e, t) {
 }
 async function Be(e) {
   try {
-    return (await J(e)).isSymbolicLink();
+    return (await lstat(e)).isSymbolicLink();
   } catch {
     return !1;
   }
 }
 async function x(e) {
   try {
-    await Ie(e);
+    await unlink(e);
   } catch (t) {
     if (!W(t)) n(`Signed cache: failed to remove ${e} - ${l(t)}`);
   }

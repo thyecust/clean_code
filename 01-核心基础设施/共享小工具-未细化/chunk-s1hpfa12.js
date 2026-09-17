@@ -10,7 +10,7 @@
 import { ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "./chunk-h62vxw7j.js";
-import { Jh, isBgSession as _t, isBeingWatched as oZe, isBeingWatchedV5 as sZe, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Jh, isBgSession, isBeingWatched, isBeingWatchedV5, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -18,9 +18,9 @@ import { Ta } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环
 import { KI } from "./chunk-mvw7xg6n.js";
 var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
 function detectSurfaces(e) {
-  if (_t()) return new Set(["bg"]);
+  if (isBgSession()) return new Set(["bg"]);
   let t = new Set();
-  if ((e ?? oZe()) || Jh() !== null) t.add("watched");
+  if ((e ?? isBeingWatched()) || Jh() !== null) t.add("watched");
   if (hasCcrSurface()) t.add("ccr");
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "bridge" || ic()) t.add("bridge");
   if (a.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") t.add("desktop");
@@ -38,7 +38,7 @@ function hasCcrSurface() {
   return !1;
 }
 async function watchedForSurfaces(e) {
-  return M() && e !== void 0 ? sZe(e) : void 0;
+  return M() && e !== void 0 ? isBeingWatchedV5(e) : void 0;
 }
 var i = {
   bg: ["state"],

@@ -13,16 +13,16 @@ import { Dt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { PPn, env as a } from "./chunk-zqr5ctyf.js";
 import { os, x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../共享小工具-未细化/chunk-gd42wcxf.js";
 import { Ms } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { Gu } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsFilePathForSource as ho, updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { readVSCodeScrollSensitivity as Ren } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
+import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { mr } from "../共享小工具-未细化/chunk-e6f86vzh.js";
 import { a9e } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -156,9 +156,9 @@ function ae(Rt) {
       Y.current = !0;
       let Z = !Q;
       let Ft = { [y]: Z ? void 0 : String(c) };
-      let { error: $e } = await Jt("userSettings", { env: Ft }, void 0, Se);
+      let { error: $e } = await updateSettingsForSource("userSettings", { env: Ft }, void 0, Se);
       if ($e) {
-        (h($e), D(), k(`Couldn't save scroll speed: ${$e.message}`));
+        (logError($e), D(), k(`Couldn't save scroll speed: ${$e.message}`));
         return;
       }
       i("tengu_scroll_speed_set", {
@@ -175,7 +175,7 @@ function ae(Rt) {
         term_program: a9e(f.termProgram),
         term_program_version: Ms(f.termProgramVersion),
       });
-      let et = `\`${Gu(ho("userSettings") ?? "settings.json")}\``;
+      let et = `\`${Gu(getSettingsFilePathForSource("userSettings") ?? "settings.json")}\``;
       k(
         Z
           ? `Scroll speed reset to auto (${R} ${x(R, "line")} per notch) \xB7 removed from ${et}`
@@ -377,7 +377,7 @@ var dt = 20,
   zt = async (n, s) => {
     let w = s.messages.length < dt,
       U = await Dt(
-        Ren(s.session.host),
+        readVSCodeScrollSensitivity(s.session.host),
         250,
         "VS Code settings read timed out",
       ).catch(() => null);

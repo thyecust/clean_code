@@ -13,17 +13,17 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { tRe, kCt, yUe, isCCREnvironmentKind as GQe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { tRe, kCt, yUe, isCCREnvironmentKind } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FAe } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { toCompatSessionId as zu, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { isCcrV2SendEventsEnabled as ise, isCcrV2SessionCrudEnabled as XG } from "./chunk-9estzwf5.js";
-import { extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { classifyElevatedAuthError as m6 } from "./chunk-mxsfy35q.js";
+import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
+import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { classifyElevatedAuthError } from "./chunk-mxsfy35q.js";
 import { cLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { isTrustedDeviceGateEnabled as ZG, CLOUD_CANNOT_REACH_ELEVATED_HINT as z4t, getTrustedDeviceToken as uh, recoverFromUntrustedDevice as o5, untrustedDeviceHint as Rme } from "./chunk-tyce0p0b.js";
-import { adoptSelfBridgeTitleFromRoster as $Tn, getSelfBridgeCompatId as bTt, getSelfBridgeTitle as WTn } from "../权限系统/chunk-1y2g140m.js";
+import { isTrustedDeviceGateEnabled, CLOUD_CANNOT_REACH_ELEVATED_HINT, getTrustedDeviceToken, recoverFromUntrustedDevice, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
+import { adoptSelfBridgeTitleFromRoster, getSelfBridgeCompatId, getSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import { P3t } from "./chunk-1yq098a7.js";
 import { A7 } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
@@ -33,9 +33,9 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-2skajgkt.js"
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
-import { randomUUID as H } from "crypto";
+import { randomUUID } from "crypto";
 var A = 5;
-async function ne(t, i) {
+async function listBridgePeerSessions(t, i) {
   let { prepareApiRequest: u, sessionsApiWire: w } =
       await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     { getOauthConfig: P } = await import("../认证-OAuth登录/chunk-9g2q4bjq.js"),
@@ -47,17 +47,17 @@ async function ne(t, i) {
     if ((n(`[bridge:peers] auth prep failed: ${l(c)}`), t)) t.failed = !0;
     return [];
   }
-  let f = XG(),
+  let f = isCcrV2SessionCrudEnabled(),
     C = w(f ? "v1alpha2" : "v1", P().BASE_API_URL, k),
     b = {
       ...C.headers,
       ...(!f && { "x-organization-uuid": x }),
       "User-Agent": va(),
     },
-    p = await uh();
+    p = await getTrustedDeviceToken();
   if (p) b["X-Trusted-Device-Token"] = p;
-  let v = bTt(),
-    S = v ? pr(v) : void 0,
+  let v = getSelfBridgeCompatId(),
+    S = v ? sessionIdBody(v) : void 0,
     o = [],
     g = new Set(),
     m = null,
@@ -83,10 +83,10 @@ async function ne(t, i) {
     if (
       s.status === 403 &&
       !y &&
-      m6(s.data, fg(s.data)) === "untrusted_device"
+      classifyElevatedAuthError(s.data, extractErrorDetail(s.data)) === "untrusted_device"
     ) {
       y = !0;
-      let e = await o5(p);
+      let e = await recoverFromUntrustedDevice(p);
       if (e) {
         ((b["X-Trusted-Device-Token"] = e), (p = e), c--);
         continue;
@@ -117,10 +117,10 @@ async function ne(t, i) {
                 ? e.worker_status
                 : "idle";
         if (D === "archived") continue;
-        let I = d ? e.id : zu(e.id),
-          R = pr(I);
+        let I = d ? e.id : toCompatSessionId(e.id),
+          R = sessionIdBody(I);
         if (S && R === S) {
-          $Tn(e.title);
+          adoptSelfBridgeTitleFromRoster(e.title);
           continue;
         }
         if (g.has(R)) continue;
@@ -130,7 +130,7 @@ async function ne(t, i) {
             title: d ? e.title : e.title || null,
             status: D,
             updated_at: (d ? e.updated_at : e.last_event_at) ?? "",
-            ...(GQe(e.environment_kind) && {
+            ...(isCCREnvironmentKind(e.environment_kind) && {
               environmentKind: e.environment_kind,
             }),
             ...((e.connection_status === "connected" ||
@@ -166,7 +166,7 @@ async function ne(t, i) {
     t.truncated = _;
   return o;
 }
-function oe(t) {
+function isLikelyStaleBridgeError(t) {
   if (!t) return !1;
   if (t.startsWith("auth:")) return !1;
   if (t.startsWith("invalid session ID format")) return !1;
@@ -179,7 +179,7 @@ function oe(t) {
   if (/status code 5\d\d/.test(t)) return !1;
   return !0;
 }
-function ae(t) {
+function classifyBridgeSendError(t) {
   if (!t) return "other";
   if (t.startsWith("auth:")) return "bridge_auth";
   if (t.startsWith("invalid session ID format")) return "invalid_target";
@@ -189,7 +189,7 @@ function ae(t) {
   if (/timeout/i.test(t)) return "timeout";
   return "other";
 }
-async function de(t, i, u, w, P, k, x) {
+async function postInterClaudeMessage(t, i, u, w, P, k, x) {
   let {
       prepareApiRequest: f,
       getOAuthHeaders: C,
@@ -203,12 +203,12 @@ async function de(t, i, u, w, P, k, x) {
   } catch (e) {
     return { ok: !1, error: `auth: ${l(e)}` };
   }
-  let o = zu(t);
+  let o = toCompatSessionId(t);
   if (!/^session_[A-Za-z0-9_-]+$/.test(o))
     return { ok: !1, error: `invalid session ID format: ${t}` };
-  let g = bTt() ?? pK(),
+  let g = getSelfBridgeCompatId() ?? pK(),
     m = g ? tRe(g) : "unknown",
-    _ = yUe(m, WTn() ?? u, i, void 0, kCt(P, g ? FAe(m) : void 0), k),
+    _ = yUe(m, getSelfBridgeTitle() ?? u, i, void 0, kCt(P, g ? FAe(m) : void 0), k),
     y = SD(),
     c = {
       ...y,
@@ -216,17 +216,17 @@ async function de(t, i, u, w, P, k, x) {
       message: { role: "user", content: _ },
       parent_tool_use_id: null,
       session_id: o,
-      uuid: H(),
+      uuid: randomUUID(),
       ...((w?.length ?? 0) > 0 && { file_attachments: w }),
     },
-    { url: h, body: E } = cLe(p().BASE_API_URL, o, [c], ise()),
+    { url: h, body: E } = cLe(p().BASE_API_URL, o, [c], isCcrV2SendEventsEnabled()),
     T = {
       ...C(v),
       "anthropic-beta": b,
       "x-organization-uuid": S,
       "User-Agent": va(),
     },
-    s = await uh();
+    s = await getTrustedDeviceToken();
   if (s) T["X-Trusted-Device-Token"] = s;
   let r;
   try {
@@ -239,11 +239,11 @@ async function de(t, i, u, w, P, k, x) {
     return { ok: !1, error: l(e) };
   }
   if (
-    (U(o, r), r.status === 403 && m6(r.data, fg(r.data)) === "untrusted_device")
+    (U(o, r), r.status === 403 && classifyElevatedAuthError(r.data, extractErrorDetail(r.data)) === "untrusted_device")
   ) {
     if (a.CLAUDE_CODE_REMOTE === !0 && !s && !a.CLAUDE_TRUSTED_DEVICE_TOKEN)
-      return { ok: !1, error: `auth: ${z4t}` };
-    let e = await o5(s);
+      return { ok: !1, error: `auth: ${CLOUD_CANNOT_REACH_ELEVATED_HINT}` };
+    let e = await recoverFromUntrustedDevice(s);
     if (e) {
       try {
         r = await at.post(h, E, {
@@ -256,11 +256,11 @@ async function de(t, i, u, w, P, k, x) {
       }
       U(o, r);
     }
-    if (r.status === 403 && m6(r.data, fg(r.data)) === "untrusted_device") {
-      if (ZG()) return { ok: !1, error: `auth: ${Rme()}` };
+    if (r.status === 403 && classifyElevatedAuthError(r.data, extractErrorDetail(r.data)) === "untrusted_device") {
+      if (isTrustedDeviceGateEnabled()) return { ok: !1, error: `auth: ${untrustedDeviceHint()}` };
     }
   }
-  if (r.status === 403 && m6(r.data, fg(r.data)) === "session_stale_relogin")
+  if (r.status === 403 && classifyElevatedAuthError(r.data, extractErrorDetail(r.data)) === "session_stale_relogin")
     return {
       ok: !1,
       error: `auth: ${A7({ terminal: !0, reason: "session_stale_relogin" })}`,
@@ -282,15 +282,15 @@ function B(t) {
 }
 function U(t, i) {
   if (B(i.status)) return;
-  let u = fg(i.data);
+  let u = extractErrorDetail(i.data);
   n(
     `[bridge:peers] post to ${t} rejected: HTTP ${i.status}${u ? ` \u2014 ${BU(u)}` : ""}`,
     { level: "warn" },
   );
 }
 export {
-  ae as classifyBridgeSendError,
-  oe as isLikelyStaleBridgeError,
-  ne as listBridgePeerSessions,
-  de as postInterClaudeMessage,
+  classifyBridgeSendError,
+  isLikelyStaleBridgeError,
+  listBridgePeerSessions,
+  postInterClaudeMessage,
 };

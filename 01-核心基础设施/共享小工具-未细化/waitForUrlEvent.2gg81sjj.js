@@ -17,9 +17,9 @@ function n() {
     return null;
   }
 }
-function t(e) {
+function waitForUrlEvent(e) {
   let l = n();
   if (!l) return null;
   return l.waitForUrlEvent(e);
 }
-export { t as waitForUrlEvent };
+export { waitForUrlEvent };

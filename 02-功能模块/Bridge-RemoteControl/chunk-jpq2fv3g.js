@@ -10,8 +10,8 @@
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { mz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { IA, nxe } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Pse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -174,7 +174,7 @@ function QGe(e, r, t, a, d, o) {
           ? "teams_relay"
           : "other";
   return (
-    i("tengu_bridge_ingress_demoted", { platform_class: u(k) }),
+    i("tengu_bridge_ingress_demoted", { platform_class: fromEnum(k) }),
     {
       kind: "peer",
       from: "unknown",
@@ -197,8 +197,8 @@ function s6n(e, r, t, a, d, o = !1, f = !1) {
   if (l) return { kind: "peer", from: l, inbound_origin: t, ...Pse(e) };
   if (t && !B.has(t)) {
     if (t === C)
-      if (o) y("bridge_projects_human_origin");
-      else g("bridge_projects_human_origin", "disabled_by_flag");
+      if (o) logFeatureOk("bridge_projects_human_origin");
+      else logFeatureSad("bridge_projects_human_origin", "disabled_by_flag");
     if (VNt(t, o)) return { kind: "human" };
     if (t === QOe && f) return { kind: "task-notification", subkind: U };
     if (t === R4e && a)

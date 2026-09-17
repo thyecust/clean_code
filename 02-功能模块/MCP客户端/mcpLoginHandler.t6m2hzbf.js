@@ -11,21 +11,21 @@
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { i0, pA, getClaudeAIOAuthTokens as Yt, getClaudeAIOAuthTokensAsync as Qi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jV, fY, getAllMcpConfigs as vE, isMcpServerDisabled as Uo } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { i0, pA, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { jV, fY, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { exitAfterAnalyticsFlush as ys, cliErrorAfterAnalyticsFlush as di, cliOkAfterAnalyticsFlush as dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { V0 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Qg } from "../../01-核心基础设施/共享小工具-未细化/chunk-awxpn5er.js";
 import { zat } from "../../01-核心基础设施/共享小工具-未细化/chunk-k4m00mjj.js";
 import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
 import { TF } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
-import { createInterface as S } from "readline";
+import { createInterface } from "readline";
 function y() {
   return import.meta.require("./mcpClientModule.4cyej0np.js");
 }
@@ -41,7 +41,7 @@ async function v(t, e, o, u) {
       servers: a,
       pendingProjectServers: r,
       rejectedProjectServers: i,
-    } = await vE({
+    } = await getAllMcpConfigs({
       includePendingProjectServers: !0,
       includeRejectedProjectServers: !0,
       storageV5: o,
@@ -49,37 +49,37 @@ async function v(t, e, o, u) {
     }),
     p = a[t];
   if (!p) {
-    await wn(e, "not_found");
+    await logFeatureBadAsync(e, "not_found");
     let s = Object.keys(a).filter((n) => !r.has(n) && !i.has(n));
-    return di(zat(t, s, r.size > 0));
+    return cliErrorAfterAnalyticsFlush(zat(t, s, r.size > 0));
   }
   if (i.has(t))
     return (
-      await wn(e, "rejected"),
-      di(
+      await logFeatureBadAsync(e, "rejected"),
+      cliErrorAfterAnalyticsFlush(
         `"${t}" is from .mcp.json and was rejected. Run \`claude mcp reset-project-choices\` to review it again.`,
       )
     );
   if (r.has(t))
     return (
-      await wn(e, "pending_approval"),
-      di(
+      await logFeatureBadAsync(e, "pending_approval"),
+      cliErrorAfterAnalyticsFlush(
         `"${t}" is from .mcp.json and awaiting approval. Run \`claude\` in this directory to review it first.`,
       )
     );
   if (p.configError)
     return (
-      await wn(e, "config_error"),
-      di(`"${t}" has a configuration problem: ${p.configError}`)
+      await logFeatureBadAsync(e, "config_error"),
+      cliErrorAfterAnalyticsFlush(`"${t}" has a configuration problem: ${p.configError}`)
     );
   return p;
 }
 async function C(t, e) {
   if (i0(t)) return "static_auth_header";
-  if (pA(t.url) && In()) {
+  if (pA(t.url) && isFirstPartyProvider()) {
     let o;
-    if (M() && e !== void 0) o = (await Qi(e))?.accessToken;
-    else o = Yt()?.accessToken;
+    if (M() && e !== void 0) o = (await getClaudeAIOAuthTokensAsync(e))?.accessToken;
+    else o = getClaudeAIOAuthTokens()?.accessToken;
     if (o) return "first_party_auth";
     if (await TF(e)) return "first_party_design_auth";
   }
@@ -91,7 +91,7 @@ function w(t, e) {
 
 `;
 }
-async function q(t, e, o, u) {
+async function mcpLoginHandler(t, e, o, u) {
   await qs("tengu_mcp_login", {});
   let a = await v(t, "cli_mcp_login", o, u),
     r = sI(t, a);
@@ -100,8 +100,8 @@ async function q(t, e, o, u) {
       let i = fY(r.config);
       if (!i)
         return (
-          await wn("cli_mcp_login", "claudeai_no_auth_url"),
-          di(
+          await logFeatureBadAsync("cli_mcp_login", "claudeai_no_auth_url"),
+          cliErrorAfterAnalyticsFlush(
             `Couldn't build the claude.ai authorization link for "${t}". Make sure you're signed in (\`claude login\`).`,
           )
         );
@@ -116,42 +116,42 @@ async function q(t, e, o, u) {
 `,
         ),
         await m().removeMcpAuthCacheEntry(t, o),
-        await ki("cli_mcp_login"),
-        dO()
+        await logFeatureOkAsync("cli_mcp_login"),
+        cliOkAfterAnalyticsFlush()
       );
     }
     case "unsupported-transport":
       return (
-        await wn("cli_mcp_login", "unsupported_transport"),
-        di(
+        await logFeatureBadAsync("cli_mcp_login", "unsupported_transport"),
+        cliErrorAfterAnalyticsFlush(
           `"${t}" doesn't support OAuth login \u2014 it's only available for HTTP and SSE servers.`,
         )
       );
     case "anthropic-hosted":
       return (
-        await wn("cli_mcp_login", "anthropic_hosted_blocked"),
-        di(r.message)
+        await logFeatureBadAsync("cli_mcp_login", "anthropic_hosted_blocked"),
+        cliErrorAfterAnalyticsFlush(r.message)
       );
     case "oauth": {
       let i = await C(r.config, u);
       if (i === "static_auth_header")
         return (
-          await wn("cli_mcp_login", "static_auth_header"),
-          di(
+          await logFeatureBadAsync("cli_mcp_login", "static_auth_header"),
+          cliErrorAfterAnalyticsFlush(
             `"${t}" authenticates with the \`Authorization\` header in its configuration, so there's no separate login. Update that header to change its credentials.`,
           )
         );
       if (i === "first_party_auth")
         return (
-          await wn("cli_mcp_login", "first_party_auth"),
-          di(
+          await logFeatureBadAsync("cli_mcp_login", "first_party_auth"),
+          cliErrorAfterAnalyticsFlush(
             `"${t}" authenticates automatically with your Claude login. Run \`claude login\` if you're not signed in.`,
           )
         );
       if (i === "first_party_design_auth")
         return (
-          await wn("cli_mcp_login", "first_party_design_auth"),
-          di(
+          await logFeatureBadAsync("cli_mcp_login", "first_party_design_auth"),
+          cliErrorAfterAnalyticsFlush(
             `"${t}" authenticates automatically with your stored /design-login credential. Run /design-login from an interactive session to re-authorize it.`,
           )
         );
@@ -198,7 +198,7 @@ async function q(t, e, o, u) {
                   }
                   if (!process.stdout.isTTY) return;
                   (CF(),
-                    (n = S({
+                    (n = createInterface({
                       input: process.stdin,
                       output: process.stdout,
                       prompt: p,
@@ -222,17 +222,17 @@ async function q(t, e, o, u) {
         if (c instanceof d().AuthenticationCancelledError) {
           if (g)
             return (
-              await wn("cli_mcp_login", "no_tty_stdin"),
-              di(
+              await logFeatureBadAsync("cli_mcp_login", "no_tty_stdin"),
+              cliErrorAfterAnalyticsFlush(
                 `Couldn't complete authentication for "${t}": stdin isn't a terminal, so authentication can't be completed here. ` +
                   "Re-run in an interactive terminal \u2014 e.g. `ssh -t` \u2014 and paste the redirect URL when prompted.",
               )
             );
-          return (await ul("cli_mcp_login", "cancelled"), ys(130));
+          return (await logFeatureSadAsync("cli_mcp_login", "cancelled"), exitAfterAnalyticsFlush(130));
         }
         return (
-          await wn("cli_mcp_login", "oauth_flow_threw"),
-          di(`Couldn't complete authentication for "${t}": ${l(c)}`)
+          await logFeatureBadAsync("cli_mcp_login", "oauth_flow_threw"),
+          cliErrorAfterAnalyticsFlush(`Couldn't complete authentication for "${t}": ${l(c)}`)
         );
       } finally {
         if ((clearInterval(A), n))
@@ -242,9 +242,9 @@ async function q(t, e, o, u) {
       }
       return (
         await m().removeMcpAuthCacheEntry(t, o),
-        await ki("cli_mcp_login"),
-        dO(
-          Uo(t)
+        await logFeatureOkAsync("cli_mcp_login"),
+        cliOkAfterAnalyticsFlush(
+          isMcpServerDisabled(t)
             ? `Authenticated with "${t}", but it's currently disabled. Enable it in /mcp for its tools to load.`
             : `Authenticated with "${t}". Its tools are now available in Claude Code.`,
         )
@@ -255,41 +255,41 @@ async function q(t, e, o, u) {
     }
   }
 }
-async function G(t, e, o) {
+async function mcpLogoutHandler(t, e, o) {
   await qs("tengu_mcp_logout", {});
   let u = await v(t, "cli_mcp_logout", e, o),
     a = sI(t, u);
   switch (a.kind) {
     case "claudeai-proxy":
       return (
-        await ul("cli_mcp_logout", "claudeai_proxy"),
-        dO(
+        await logFeatureSadAsync("cli_mcp_logout", "claudeai_proxy"),
+        cliOkAfterAnalyticsFlush(
           `"${t}" is a claude.ai connector \u2014 its credentials live on claude.ai, not this machine. ` +
             `Disconnect it at ${Qg(jV())}`,
         )
       );
     case "unsupported-transport":
       return (
-        await wn("cli_mcp_logout", "unsupported_transport"),
-        di(
+        await logFeatureBadAsync("cli_mcp_logout", "unsupported_transport"),
+        cliErrorAfterAnalyticsFlush(
           `"${t}" doesn't use OAuth \u2014 there are no stored credentials to clear.`,
         )
       );
     case "anthropic-hosted":
       return (
         await d().revokeServerTokens(t, a.config),
-        await ul("cli_mcp_logout", "anthropic_hosted"),
-        dO(`Cleared local credentials for "${t}". ${a.message}`)
+        await logFeatureSadAsync("cli_mcp_logout", "anthropic_hosted"),
+        cliOkAfterAnalyticsFlush(`Cleared local credentials for "${t}". ${a.message}`)
       );
     case "oauth": {
-      (await d().revokeServerTokens(t, a.config), await ki("cli_mcp_logout"));
+      (await d().revokeServerTokens(t, a.config), await logFeatureOkAsync("cli_mcp_logout"));
       let r = (await C(a.config, o)) === null ? Aa("mcp login", t) : null,
         i = r ? ` Run \`${r}\` to authenticate again.` : "";
-      return dO(`Signed out of "${t}".${i}`);
+      return cliOkAfterAnalyticsFlush(`Signed out of "${t}".${i}`);
     }
     default: {
       let r = a;
     }
   }
 }
-export { q as mcpLoginHandler, G as mcpLogoutHandler };
+export { mcpLoginHandler, mcpLogoutHandler };

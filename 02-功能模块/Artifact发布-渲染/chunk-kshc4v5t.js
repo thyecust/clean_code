@@ -8,25 +8,25 @@
 
 // Version: 2.1.263
 import { Gt, B, K, ze, _B, fae, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $h, EYe, ne, xer, hTt, Her, Ier } from "./chunk-rr78st95.js";
-import { P0, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { P0, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   qwt,
-  VER_SHAPE as pR,
-  recordOwnPublish as tFe,
-  isOwnPublishedVer as nFe,
-  markPublishInFlight as hqt,
-  clearPublishInFlight as _qt,
-  isPublishInFlight as Hwn,
-  isFrameLiveSubscribeEnabled as kK,
-  isFrameLiveTokenLeaseEnabled as CG,
-  derivePublishContextFrom as vG,
-  mainObservedArtifactVersion as D$,
-  markAutoReactNoticePending as hR,
+  VER_SHAPE,
+  recordOwnPublish,
+  isOwnPublishedVer,
+  markPublishInFlight,
+  clearPublishInFlight,
+  isPublishInFlight,
+  isFrameLiveSubscribeEnabled,
+  isFrameLiveTokenLeaseEnabled,
+  derivePublishContextFrom,
+  mainObservedArtifactVersion,
+  markAutoReactNoticePending,
   Dqt,
   AJ,
   RN,
@@ -39,8 +39,8 @@ import {
   gYe,
   Ser,
 } from "./chunk-01ymf0ar.js";
-import { getUserAgent as ex, isActingAsBgJob as Ja, sameOwnerAccount as wg, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getUserAgent, isActingAsBgJob, sameOwnerAccount, H, sy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { pCn, gAt, dse } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
@@ -114,12 +114,12 @@ import {
   $ir,
   Uir,
   tie,
-  ARTIFACT_SLUG_RE as fr,
-  parseArtifactUrlAnyCase as _ge,
-  artifactViewerUrlFor as br,
-  sweepResultLineText as h0,
+  ARTIFACT_SLUG_RE,
+  parseArtifactUrlAnyCase,
+  artifactViewerUrlFor,
+  sweepResultLineText,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason as Iqe } from "../工具Monitor/工具Monitor.981fw9dy.js";
+import { ybe, R1t, Wdt, v7, WPe, Hqe, wsEgressDenyReason } from "../工具Monitor/工具Monitor.981fw9dy.js";
 import { P7, p9n, _9n } from "./chunk-qdg189tc.js";
 import {
   k9,
@@ -169,7 +169,7 @@ var yt = 120,
   Kr = "act:0";
 function Tn(e) {
   if (!e.activityOkReported)
-    ((e.activityOkReported = !0), y("artifact_activity_emit"));
+    ((e.activityOkReported = !0), logFeatureOk("artifact_activity_emit"));
 }
 function En(e, t, r) {
   (t(r), Tn(e));
@@ -242,7 +242,7 @@ function On(e) {
     try {
       qr(e, Hdt(t));
     } catch (r) {
-      h(r);
+      logError(r);
     }
   });
 }
@@ -313,7 +313,7 @@ function Lt(e, t) {
 function Dn(e) {
   if (a.CLAUDE_CODE_REMOTE) return "remote";
   if (Uir()) return "cp_override";
-  if (Iqe(We(e)) !== null) return "egress_denied";
+  if (wsEgressDenyReason(We(e)) !== null) return "egress_denied";
   return null;
 }
 async function Vn(e, t) {
@@ -323,7 +323,7 @@ async function Vn(e, t) {
       return;
     });
     if (!t.isCurrent()) return { outcome: "stale" };
-    if (wg(e.owner, _)) return { outcome: "token", token: r.cap, boot: void 0 };
+    if (sameOwnerAccount(e.owner, _)) return { outcome: "token", token: r.cap, boot: void 0 };
   }
   let i,
     d = Date.now();
@@ -349,7 +349,7 @@ async function Vn(e, t) {
   }
   let o = i.data.syncToken,
     l = typeof o === "string" && Et.test(o) ? me(o) : void 0;
-  if (e.owner !== void 0 && l !== void 0 && !wg(e.owner, l))
+  if (e.owner !== void 0 && l !== void 0 && !sameOwnerAccount(e.owner, l))
     return { outcome: "owner_changed" };
   let p = typeof o === "string" && Se(o) ? l : void 0;
   if (typeof o !== "string" || p === void 0) return { outcome: "not_admitted" };
@@ -373,7 +373,7 @@ function Un(e, t, r) {
   switch (t) {
     case "ctrl:token_refresh": {
       let i = Ct().safeParse(r);
-      if (i.success && Se(i.data.cap) && wg(e.owner, me(i.data.cap)))
+      if (i.success && Se(i.data.cap) && sameOwnerAccount(e.owner, me(i.data.cap)))
         Nn(e, { cap: i.data.cap, exp: i.data.exp });
       return !0;
     }
@@ -522,7 +522,7 @@ async function Bn(e, t, r, i) {
     let R = await Hqe(
       {
         ws: { url: We(d), protocols: [Qe, t] },
-        headers: { "User-Agent": ex() },
+        headers: { "User-Agent": getUserAgent() },
         description: r.description,
         timeout_ms: 0,
         persistent: !0,
@@ -689,7 +689,7 @@ async function Yn(e, t) {
       ie(e);
       return;
     case "other_org":
-      (g("artifact_presence", "other_org"), ie(e));
+      (logFeatureSad("artifact_presence", "other_org"), ie(e));
       return;
     case "boot_failed": {
       let d = {
@@ -713,7 +713,7 @@ async function Yn(e, t) {
         ie(e));
       return;
     case "owner_changed":
-      (g("artifact_presence", "owner_changed"), ie(e));
+      (logFeatureSad("artifact_presence", "owner_changed"), ie(e));
       return;
     case "token":
       await si(e, i.token);
@@ -737,15 +737,15 @@ async function si(e, t) {
         },
         onFrame: (p) => oi(e, p),
         onOpen: () => {
-          if (d) y("artifact_presence", { connected: !0 });
+          if (d) logFeatureOk("artifact_presence", { connected: !0 });
         },
         onEnded: (p, _) => {
           if (_.opened) {
             if (p !== ZLe && p !== GKe)
-              g("artifact_presence", `closed_${p ?? "unknown"}`);
+              logFeatureSad("artifact_presence", `closed_${p ?? "unknown"}`);
           } else {
             let S = v7(p);
-            f(
+            logFeatureBad(
               "artifact_presence",
               "connect_failed",
               S === null
@@ -766,10 +766,10 @@ async function si(e, t) {
     o.error instanceof ybe && !o.error.message.startsWith("could not resolve");
   if (!Le(e)) return;
   if (d && l) {
-    (f("artifact_presence", "ws_open_error"), ie(e));
+    (logFeatureBad("artifact_presence", "ws_open_error"), ie(e));
     return;
   }
-  (g("artifact_presence", "ws_open_error"),
+  (logFeatureSad("artifact_presence", "ws_open_error"),
     (e.state = "closed"),
     Oe(e, { on: "dial_error", deterministic: l }));
 }
@@ -777,7 +777,7 @@ function Oe(e, t) {
   if (!Le(e)) return;
   let r = Hn(e, _e().timing, t);
   if (r.next === "end") {
-    (g(
+    (logFeatureSad(
       "artifact_presence",
       r.reason === "revoked" ? "closed_4403" : "refused_gave_up",
     ),
@@ -791,7 +791,7 @@ function Oe(e, t) {
         : t.on === "socket"
           ? v7(t.detail)?.status
           : void 0;
-    g("artifact_presence", "stall_run_started", {
+    logFeatureSad("artifact_presence", "stall_run_started", {
       boot: t.on === "boot",
       ...(i !== void 0 && { http_status: i }),
     });
@@ -827,7 +827,7 @@ function oi(e, t) {
   if (Un(e, d, p)) return;
   switch (d) {
     case "join_denied":
-      (f("artifact_presence", "join_denied"), ie(e));
+      (logFeatureBad("artifact_presence", "join_denied"), ie(e));
       return;
     case "ctrl:comment":
       Kn(e.slug)?.comment();
@@ -860,7 +860,7 @@ function ui(e) {
 }
 function ci(e, t) {
   for (let r of [...e.conns.values()]) {
-    if (wg(r.owner, t)) continue;
+    if (sameOwnerAccount(r.owner, t)) continue;
     if ((et(r), e.conns.get(r.slug) === r)) e.conns.delete(r.slug);
   }
 }
@@ -911,7 +911,7 @@ function Jn(e, t) {
   if (fi.test(r)) return !1;
   if (Qn.test(r) || di.test(r)) {
     let d = Qn.test(r) ? r : `https://${r}`;
-    return _ge(d)?.slug === t;
+    return parseArtifactUrlAnyCase(d)?.slug === t;
   }
   let i = r.toLowerCase().split(/[/\\]/);
   if (i.length > 1) return i.some((d, o) => d === t && i[o - 1] === gi);
@@ -1090,7 +1090,7 @@ function Ti(e, t, r) {
           ? {
               ...o,
               description: Kt(
-                br({ slug: t, env: Vo() }),
+                artifactViewerUrlFor({ slug: t, env: Vo() }),
                 !1,
                 o.frameLive.armedVia,
               ),
@@ -1302,7 +1302,7 @@ function Li(e, t) {
       t.armedVia === "watch"
         ? "(your watch request was later stopped; idle auto-armed watches are retired)"
         : "(idle auto-armed watches are retired)";
-  return `it was armed ${r} and has seen no activity for over ${Ot(e.rewatchTiming.idleTtlMs, { mostSignificantOnly: !0 })} ${i}`;
+  return `it was armed ${r} and has seen no activity for over ${formatDuration(e.rewatchTiming.idleTtlMs, { mostSignificantOnly: !0 })} ${i}`;
 }
 function Oi(e, t, r) {
   return e === Wdt || t >= r.stallThresholdMs;
@@ -1325,7 +1325,7 @@ function jt(e, t, r) {
     p = e.supervisors.get(t);
   if (!p || p.stopped) return;
   if (ne().durable.stopLatches.isStopped(t)) {
-    if ((g("artifact_live_subscribe", "stop_latched"), d))
+    if ((logFeatureSad("artifact_live_subscribe", "stop_latched"), d))
       he(
         e,
         p,
@@ -1340,7 +1340,7 @@ function jt(e, t, r) {
     return;
   }
   if (Wi(e, p)) {
-    (y("artifact_live_subscribe", { idle_retired: !0 }),
+    (logFeatureOk("artifact_live_subscribe", { idle_retired: !0 }),
       he(e, p, Li(e, p), "idle"));
     return;
   }
@@ -1358,7 +1358,7 @@ function jt(e, t, r) {
         (p.stallOutAfterMs =
           l.maxStallMs + Math.round(Math.random() * l.stallOutJitterMs)));
       let A = r.httpStatus ?? v7(r.closeCode)?.status;
-      g("artifact_live_subscribe", "stall_run_started", {
+      logFeatureSad("artifact_live_subscribe", "stall_run_started", {
         boot: r.closeCode === void 0,
         ...(A !== void 0 && { http_status: A }),
       });
@@ -1373,8 +1373,8 @@ function jt(e, t, r) {
     p.consecutiveFailures = 0;
   else if (r.reuseRefused !== !0) p.consecutiveFailures++;
   if (p.consecutiveFailures > l.maxConsecutiveFailures || _) {
-    if (_) g("artifact_live_subscribe", "rewatch_gave_up", { stalled: !0 });
-    else g("artifact_live_subscribe", "rewatch_gave_up");
+    if (_) logFeatureSad("artifact_live_subscribe", "rewatch_gave_up", { stalled: !0 });
+    else logFeatureSad("artifact_live_subscribe", "rewatch_gave_up");
     he(
       e,
       p,
@@ -1384,7 +1384,7 @@ function jt(e, t, r) {
     );
     return;
   }
-  let v = CG(),
+  let v = isFrameLiveTokenLeaseEnabled(),
     E =
       o &&
       S &&
@@ -1486,11 +1486,11 @@ async function dr(e, t) {
   let r = e.supervisors.get(t);
   if (!r || r.stopped) return;
   if (((r.timer = void 0), ne().durable.stopLatches.isStopped(t))) {
-    (g("artifact_live_subscribe", "stop_latched"), it(e, r));
+    (logFeatureSad("artifact_live_subscribe", "stop_latched"), it(e, r));
     return;
   }
   if (r.autoReactWiring !== void 0 && Dd(t) && !Ld(t)) delete r.autoReactWiring;
-  y("artifact_live_subscribe", { rewatch_attempt: !0 });
+  logFeatureOk("artifact_live_subscribe", { rewatch_attempt: !0 });
   let i = await pe(e, {
     slug: r.slug,
     url: r.url,
@@ -1525,13 +1525,13 @@ async function dr(e, t) {
           ...(i.httpStatus !== void 0 && { httpStatus: i.httpStatus }),
         }));
     else
-      (g("artifact_live_subscribe", `rewatch_stopped_${i.reason}`),
+      (logFeatureSad("artifact_live_subscribe", `rewatch_stopped_${i.reason}`),
         he(e, r, frameLiveSkipReasonPhrase(i.reason) ?? i.reason, Qt[i.reason] ?? Tr, rs(i.reason)));
 }
 async function Pi(e, t) {
   let r = e.supervisors.get(t),
     i = r?.lease;
-  if (!CG() || r === void 0 || r.stopped || i === void 0 || i.probed) return;
+  if (!isFrameLiveTokenLeaseEnabled() || r === void 0 || r.stopped || i === void 0 || i.probed) return;
   i.probed = !0;
   let d;
   try {
@@ -1545,12 +1545,12 @@ async function Pi(e, t) {
   }
   if (e.supervisors.get(t) !== r || r.stopped) return;
   if (d.err === null && Dqt(d.data) !== void 0) {
-    y("artifact_live_subscribe", { read_refused_boot_ok: !0 });
+    logFeatureOk("artifact_live_subscribe", { read_refused_boot_ok: !0 });
     return;
   }
   if (d.err !== null && (d.status === 404 || RN(d))) {
     let p = RN(d) ? "other_org" : "not_found";
-    (g("artifact_live_subscribe", `read_stopped_${p}`),
+    (logFeatureSad("artifact_live_subscribe", `read_stopped_${p}`),
       he(e, r, frameLiveSkipReasonPhrase(p) ?? p, Qt[p] ?? p, { advice: noRewatchAdvice(p) }));
     for (let _ of Object.values(r.context.taskRegistry.all()))
       if (Yv(_) && _.status === "running" && _.frameLive?.slug === t)
@@ -1559,7 +1559,7 @@ async function Pi(e, t) {
   }
   let o = d.err === null ? "tokenless" : (d.status ?? d.errorCode);
   if (
-    (g("artifact_live_subscribe", `read_refused_boot_${o}`),
+    (logFeatureSad("artifact_live_subscribe", `read_refused_boot_${o}`),
     (o === "tokenless" ||
       (typeof o === "number" && o < 500 && o !== 408 && o !== 429)) &&
       r.lease === i)
@@ -1611,11 +1611,11 @@ function Di(e) {
       });
   }
   function R(A, F) {
-    if (!A || !pR.test(A) || _.includes(A)) return;
+    if (!A || !VER_SHAPE.test(A) || _.includes(A)) return;
     let U = F === "sync" && { via_sync: !0 };
     if (e.presenceOnly?.()) return;
-    if (nFe(i, t, A)) {
-      (y("artifact_live_subscribe", {
+    if (isOwnPublishedVer(i, t, A)) {
+      (logFeatureOk("artifact_live_subscribe", {
         ...(E ? { suppressed_own: !0 } : { suppressed_catch_up: !0 }),
         ...U,
       }),
@@ -1623,21 +1623,21 @@ function Di(e) {
       return;
     }
     if (A === d()) return;
-    if (Hwn(i, t)) {
-      y("artifact_live_subscribe", { suppressed_in_flight: !0, ...U });
+    if (isPublishInFlight(i, t)) {
+      logFeatureOk("artifact_live_subscribe", { suppressed_in_flight: !0, ...U });
       return;
     }
     if (!v.tryConsume()) {
       if ((T5n(t, "artifact-changed"), !L))
         ((L = !0),
-          g("artifact_live_subscribe", "ver_rate_suppressed", { ...U }));
+          logFeatureSad("artifact_live_subscribe", "ver_rate_suppressed", { ...U }));
       return;
     }
     ((L = !1), S(A));
     try {
       l?.(A);
     } catch {}
-    y("artifact_live_subscribe", { notified: !0, ...U });
+    logFeatureOk("artifact_live_subscribe", { notified: !0, ...U });
     let ot = `Artifact ${r} appears to have been republished elsewhere (by another session, or by someone saving from the page itself) \u2014 it is now version ${A}. Your copy is stale; re-read before editing or republishing (${qwt()}).`;
     Lmn({
       queue: ar,
@@ -1827,7 +1827,7 @@ function Bi(e) {
   t.humanTurnAtScanGeneration = t.scanGeneration;
   let r = 0;
   for (let i of [...t.sweptSlugs]) if (zt(e, i) !== null) r++;
-  if (r > 0) y("artifact_live_subscribe", { unpaused_on_turn: r });
+  if (r > 0) logFeatureOk("artifact_live_subscribe", { unpaused_on_turn: r });
   return r;
 }
 function hasStoppableAutoReactSupervision() {
@@ -1956,7 +1956,7 @@ function gr(e, t, r, i) {
       i !== void 0 ? { advice: st, passive: !0 } : void 0,
     );
   else te(e, t.slug);
-  y("artifact_live_subscribe", { evicted_least_active: !0 });
+  logFeatureOk("artifact_live_subscribe", { evicted_least_active: !0 });
 }
 function Bt(e, t) {
   let r = e.supervisors.get(t);
@@ -2043,12 +2043,12 @@ function unwatchFrameLive(e, t, r) {
         d.declined.set(e, { namingMessages: o.namingMessages }));
     d.approved.delete(e);
   }
-  return (y("artifact_live_subscribe", { unwatched: i }), { wasWatching: i });
+  return (logFeatureOk("artifact_live_subscribe", { unwatched: i }), { wasWatching: i });
 }
 function endFrameLiveWatchOfDeletedArtifact(e, t) {
   q1t(e, t.storageV5);
   let { wasWatching: r } = Sr(e, t);
-  if (r) y("artifact_live_subscribe", { unwatched: !0, artifact_deleted: !0 });
+  if (r) logFeatureOk("artifact_live_subscribe", { unwatched: !0, artifact_deleted: !0 });
 }
 function Sr(e, t) {
   let r = ne().live;
@@ -2194,11 +2194,11 @@ var Xi = new Set([
   ]),
   Qi = 5000;
 function or(e, t) {
-  (hqt(e, t), setTimeout((r, i) => _qt(r, i), Qi, e, t).unref?.());
+  (markPublishInFlight(e, t), setTimeout((r, i) => clearPublishInFlight(r, i), Qi, e, t).unref?.());
 }
 async function touchFrameLiveForMcpWrite(e, t, r) {
   try {
-    if (!fr.test(e)) return;
+    if (!ARTIFACT_SLUG_RE.test(e)) return;
     let i = ne(),
       d = i.live;
     if (d.disposed) return;
@@ -2223,7 +2223,7 @@ async function touchFrameLiveForMcpWrite(e, t, r) {
       if (p.arming) or(l, e);
       return;
     }
-    let { publishContext: _ } = vG({
+    let { publishContext: _ } = derivePublishContextFrom({
       agentId: t.agentId,
       agentType: t.agentContext?.agentType,
       isNonInteractiveSession: t.options.isNonInteractiveSession,
@@ -2234,7 +2234,7 @@ async function touchFrameLiveForMcpWrite(e, t, r) {
     ((p.arming = !0),
       await pe(d, {
         slug: e,
-        url: br({ slug: e, env: Vo() }),
+        url: artifactViewerUrlFor({ slug: e, env: Vo() }),
         getKnownVer: r,
         ownPublishes: l,
         ...ve(t),
@@ -2246,11 +2246,11 @@ async function touchFrameLiveForMcpWrite(e, t, r) {
             p.declinedEpoch = S;
         },
         (v) => {
-          ((p.arming = !1), h(v));
+          ((p.arming = !1), logError(v));
         },
       ));
   } catch (i) {
-    h(i);
+    logError(i);
   }
 }
 async function resumeFrameLiveAutoReplies(e) {
@@ -2270,7 +2270,7 @@ async function resumeFrameLiveAutoReplies(e) {
       o.taskRegistry,
       t,
       (S) => {
-        (hR(t),
+        (markAutoReactNoticePending(t),
           S.notify({
             summary: A6t(H7(S.getTitle, r)),
             detail: `Auto-replies on artifact ${r} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop). ${Ht}`,
@@ -2293,7 +2293,7 @@ async function resumeFrameLiveAutoReplies(e) {
     );
   if (_ !== null && p !== void 0) {
     if (
-      (y("artifact_live_subscribe", { resumed_in_place: !0 }), _ === "cleared")
+      (logFeatureOk("artifact_live_subscribe", { resumed_in_place: !0 }), _ === "cleared")
     )
       ne().wakes.pendingResumeDisclosure.add(t);
     return {
@@ -2342,7 +2342,7 @@ async function watchArtifactFromStartup(e) {
     commentVerbsInSchema: o,
     context: l,
   } = e;
-  if (d !== void 0 && Ja())
+  if (d !== void 0 && isActingAsBgJob())
     ian().catch(() => {
       return;
     });
@@ -2383,22 +2383,22 @@ async function maybeSubscribeFrameLive(e) {
     title: _,
     context: S,
   } = e;
-  if (l !== void 0 && Ja())
+  if (l !== void 0 && isActingAsBgJob())
     ian().catch(() => {
       return;
     });
   let v = S.artifactRegistries.ownPublishes,
     E = ne().live;
   if (i !== void 0) {
-    tFe(v, t, i);
+    recordOwnPublish(v, t, i);
     let A = E.supervisors.get(t);
     if (A !== void 0 && !A.stopped) A.lastActivityAt = Date.now();
     if (isSocketHoldingPublishContext(d)) E.mostRecentPublishSlug = t;
   }
   if (!isSocketHoldingPublishContext(d) && !(e.carriedPublishConsent === !0 && d === "bg_session")) {
     if (e.sessionResume !== !0)
-      g("artifact_live_subscribe", "publish_context", {
-        publish_context: u(d),
+      logFeatureSad("artifact_live_subscribe", "publish_context", {
+        publish_context: fromEnum(d),
       });
     return { outcome: "skipped", reason: "publish_context" };
   }
@@ -2454,7 +2454,7 @@ async function maybeSubscribeFrameLive(e) {
               ? "bare_watch_slug_stopped"
               : void 0;
     if (U !== void 0)
-      g("artifact_live_subscribe", U, { publish_context: u(d) });
+      logFeatureSad("artifact_live_subscribe", U, { publish_context: fromEnum(d) });
   }
   if (
     L &&
@@ -2482,19 +2482,19 @@ function ve(e) {
   return { context: WPe(e), signal: e.abortController.signal };
 }
 function makeArtifactReadVersionReader(e, t) {
-  return () => D$(e(), t);
+  return () => mainObservedArtifactVersion(e(), t);
 }
 function wr(e) {
-  if (!kK()) return { reason: "flag_off" };
+  if (!isFrameLiveSubscribeEnabled()) return { reason: "flag_off" };
   if (a.CLAUDE_CODE_REMOTE) return { reason: "remote" };
   return Ji(lr(e));
 }
 function rt(e) {
-  return kK() && tt(e) === null && !Ier(e);
+  return isFrameLiveSubscribeEnabled() && tt(e) === null && !Ier(e);
 }
 function Ji(e) {
   if (Fir()) return { reason: "cp_override" };
-  let t = Iqe(e);
+  let t = wsEgressDenyReason(e);
   if (t !== null) return { reason: "egress_denied", egressKind: t.kind };
   return null;
 }
@@ -2586,7 +2586,7 @@ function frameLiveSubscriptionLine(e) {
       let t = frameLiveSkipReasonPhrase(e);
       return t !== null
         ? `Live subscription: skipped \u2014 ${t}.`
-        : `Live subscription: skipped (${h0(e, 64)}).`;
+        : `Live subscription: skipped (${sweepResultLineText(e, 64)}).`;
     }
   }
 }
@@ -2630,7 +2630,7 @@ async function pe(e, t) {
               : p
                 ? "attach"
                 : "publish";
-  if (!fr.test(r)) return { outcome: "skipped", reason: "invalid_slug" };
+  if (!ARTIFACT_SLUG_RE.test(r)) return { outcome: "skipped", reason: "invalid_slug" };
   e.armOutcomes.delete(r);
   let R = ne().durable.stopLatches;
   H9({ storageV5: l.storageV5 });
@@ -2638,15 +2638,15 @@ async function pe(e, t) {
     F = () => R.isStopped(r) && (A === void 0 || R.latchGeneration(r) !== A);
   if (F())
     return (
-      g("artifact_live_subscribe", "stop_latched"),
+      logFeatureSad("artifact_live_subscribe", "stop_latched"),
       { outcome: "skipped", reason: "stop_latched" }
     );
   let U = wr(r);
   if (U !== null) {
     if (U.reason === "cp_override")
-      g("artifact_live_subscribe", "cp_override_active");
+      logFeatureSad("artifact_live_subscribe", "cp_override_active");
     else if (U.reason === "egress_denied")
-      g(
+      logFeatureSad(
         "artifact_live_subscribe",
         `egress_denied_${U.egressKind === "sandbox-policy" ? "sandbox_policy" : U.egressKind}`,
       );
@@ -2662,7 +2662,7 @@ async function pe(e, t) {
   if (ae !== null || e.inFlightSubscribes.has(r)) {
     if (ae === null && A !== void 0 && R.isStopped(r))
       return (
-        g("artifact_live_subscribe", "arm_in_flight"),
+        logFeatureSad("artifact_live_subscribe", "arm_in_flight"),
         { outcome: "skipped", reason: "arm_in_flight" }
       );
     if (!(x === "resume" && ae === null && !e.supervisors.has(r)))
@@ -2757,18 +2757,18 @@ async function pe(e, t) {
   if (t.machineArm && frameLiveWatchRows(l).length >= $h) {
     if (!Bt(e, r) || nt(e, l).length === 0)
       return (
-        g("artifact_live_subscribe", "watch_cap_reconnect"),
+        logFeatureSad("artifact_live_subscribe", "watch_cap_reconnect"),
         { outcome: "skipped", reason: "watch_cap_reconnect" }
       );
   }
   if (t.mcpWrite && Jt >= $h)
     return (
-      g("artifact_live_subscribe", "watch_cap"),
+      logFeatureSad("artifact_live_subscribe", "watch_cap"),
       J(e, r, t.machineArm, "watch_cap", X)
     );
   if (!t.machineArm && Jt >= $h && nt(e, l).length === 0)
     return (
-      g("artifact_live_subscribe", "watch_cap"),
+      logFeatureSad("artifact_live_subscribe", "watch_cap"),
       J(e, r, t.machineArm, "watch_cap", X)
     );
   let Re = ne().wakes.scanGeneration,
@@ -2801,7 +2801,7 @@ async function pe(e, t) {
         stopGeneration: Pe,
       });
     let C = () => e.handoffGeneration !== en || e.retiredInFlightArms.has(r),
-      Q = CG();
+      Q = isFrameLiveTokenLeaseEnabled();
     if (!Q) {
       let w = e.supervisors.get(r);
       if (w !== void 0) (delete w.lease, delete w.renewable);
@@ -2818,7 +2818,7 @@ async function pe(e, t) {
       let w = await sy(l.storageV5).catch(() => {
         return;
       });
-      if (!wg(me(D.token), w)) D = void 0;
+      if (!sameOwnerAccount(me(D.token), w)) D = void 0;
       if (v.aborted || C()) return J(e, r, t.machineArm, "cancelled", X);
     }
     let M,
@@ -2846,7 +2846,7 @@ async function pe(e, t) {
           let be = await Ser(r, v, l.credentials);
           if (be.err === null) ((G = be), (tn = !0));
           else {
-            g(
+            logFeatureSad(
               "artifact_live_subscribe",
               `renew_miss_${be.status ?? "no_response"}`,
             );
@@ -2909,16 +2909,16 @@ async function pe(e, t) {
       q = M.transport;
     if (q === "sync" && (!rt(r) || M.token === void 0 || !Se(M.token)))
       return (
-        g("artifact_live_subscribe", "sync_unavailable"),
+        logFeatureSad("artifact_live_subscribe", "sync_unavailable"),
         J(e, r, t.machineArm, "sync_unavailable", X, { unavailable: !0 })
       );
     let Te = M.token;
     if (!Te)
       return (
-        g("artifact_live_subscribe", oe ? rn : "no_subscription_token"),
+        logFeatureSad("artifact_live_subscribe", oe ? rn : "no_subscription_token"),
         J(e, r, t.machineArm, De ? "not_editor" : "no_subscription_token", X)
       );
-    if (oe) g("artifact_live_subscribe", rn);
+    if (oe) logFeatureSad("artifact_live_subscribe", rn);
     let on = M.ver,
       Cr = p ? () => d() ?? on : d,
       I =
@@ -2947,13 +2947,13 @@ async function pe(e, t) {
       if (an >= $h) {
         if (!Bt(e, r) || !qi(e, l))
           return (
-            g("artifact_live_subscribe", "watch_cap_reconnect"),
+            logFeatureSad("artifact_live_subscribe", "watch_cap_reconnect"),
             { outcome: "skipped", reason: "watch_cap_reconnect" }
           );
       }
     } else if (t.mcpWrite && Ve >= $h)
       return (
-        g("artifact_live_subscribe", "watch_cap"),
+        logFeatureSad("artifact_live_subscribe", "watch_cap"),
         J(e, r, t.machineArm, "watch_cap", X)
       );
     else if (Ve >= $h) {
@@ -2962,11 +2962,11 @@ async function pe(e, t) {
       if (G.length < w) {
         if (t.machineArm)
           return (
-            g("artifact_live_subscribe", "watch_cap_reconnect"),
+            logFeatureSad("artifact_live_subscribe", "watch_cap_reconnect"),
             { outcome: "skipped", reason: "watch_cap_reconnect" }
           );
         return (
-          g("artifact_live_subscribe", "watch_cap"),
+          logFeatureSad("artifact_live_subscribe", "watch_cap"),
           J(e, r, t.machineArm, "watch_cap", X)
         );
       }
@@ -3140,7 +3140,7 @@ ${Nt(w.detail)}`,
             q === "sync"
               ? { url: We(r), protocols: [Qe, Te] }
               : { url: ot, protocols: [Ai, Te] },
-          ...(q === "sync" && { headers: { "User-Agent": ex() } }),
+          ...(q === "sync" && { headers: { "User-Agent": getUserAgent() } }),
           description: Kt(i, lt, k.armedVia),
           timeout_ms: 0,
           persistent: !0,
@@ -3160,7 +3160,7 @@ ${Nt(w.detail)}`,
             q === "sync"
               ? Ui($e, r, {
                   onTokenRefresh: (Y, V) => {
-                    if (I !== void 0 && wg(me(I.token), me(Y)))
+                    if (I !== void 0 && sameOwnerAccount(me(I.token), me(Y)))
                       x5n(I, {
                         token: Y,
                         expUnixSeconds: V,
@@ -3219,7 +3219,7 @@ ${Nt(w.detail)}`,
               ) {
                 (Qf(k.taskId, l.taskRegistry, { quiet: !0 }),
                   te(e, r),
-                  g("artifact_live_subscribe", "stop_latched"));
+                  logFeatureSad("artifact_live_subscribe", "stop_latched"));
                 return;
               }
               let Ce = e.supervisors.get(r);
@@ -3227,7 +3227,7 @@ ${Nt(w.detail)}`,
                 if (q === "sync") (Her(r), Ie(r)?.reopened());
                 else
                   (jn({ slug: r, url: i, context: l }), Ie(r)?.sourceEnded());
-              y("artifact_live_subscribe", {
+              logFeatureOk("artifact_live_subscribe", {
                 armed: !0,
                 ...(q === "sync" && { sync_transport: !0 }),
                 ...(lt && { explicit: !0 }),
@@ -3278,7 +3278,7 @@ ${Nt(w.detail)}`,
                   let N = Ld(r),
                     fe = Xv(r);
                   if (Zu() && (ee || !N || fe))
-                    (hR(r),
+                    (markAutoReactNoticePending(r),
                       W.notify({
                         summary: (ee ? A6t : h5n)(H7(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were ${ee ? "resumed by a resume_replies request" : "re-enabled by this publish"} \u2014 they had been ${fe ? "handed to another session of this conversation that resumed it or published there" : N ? "paused when the user interrupted the session (Ctrl+C or Stop) and the watch had since dropped" : "stopped when their live-updates task was killed"}. ${N && !fe ? Ht : yi}`,
@@ -3291,7 +3291,7 @@ ${Nt(w.detail)}`,
                     x9({ slug: r, url: i, ...W, seed: !0 }));
                 } else {
                   if (ce.pendingResumeDisclosure.delete(r))
-                    (hR(r),
+                    (markAutoReactNoticePending(r),
                       W.notify({
                         summary: A6t(H7(W.getTitle, i)),
                         detail: `Auto-replies on artifact ${i} were resumed by a resume_replies request \u2014 they had been paused when the user interrupted the session (Ctrl+C or Stop); the watch has now connected. ${Ht}`,
@@ -3305,7 +3305,7 @@ ${Nt(w.detail)}`,
                       t.machineArm !== !0 && { pickUpRecentSummons: !0 }),
                     ...(t.machineArm === !0 &&
                       xe &&
-                      CG() && { deferMs: I5n(e.rewatchTiming) }),
+                      isFrameLiveTokenLeaseEnabled() && { deferMs: I5n(e.rewatchTiming) }),
                   });
                 }
               let Be = e.supervisors.get(r),
@@ -3433,7 +3433,7 @@ ${Nt(w.detail)}`,
             if (
               I !== void 0 &&
               z?.lease === I &&
-              (!CG() ||
+              (!isFrameLiveTokenLeaseEnabled() ||
                 (!St &&
                   !He &&
                   !Fmn(I, {
@@ -3445,11 +3445,11 @@ ${Nt(w.detail)}`,
               if ((delete z.lease, !I.opened)) delete z.renewable;
             }
             if (re)
-              g("artifact_live_subscribe", `socket_closed_${V ?? "unknown"}`, {
+              logFeatureSad("artifact_live_subscribe", `socket_closed_${V ?? "unknown"}`, {
                 chain_spared: ne().autoReact.artifacts.get(r)?.scanning === !0,
               });
             else if (vt !== void 0)
-              g("artifact_live_subscribe", "reuse_connect_failed");
+              logFeatureSad("artifact_live_subscribe", "reuse_connect_failed");
             else {
               let xe = v7(V),
                 Ce = {
@@ -3461,8 +3461,8 @@ ${Nt(w.detail)}`,
                   }),
                 };
               if (Object.keys(Ce).length > 0)
-                f("artifact_live_subscribe", "connect_failed", Ce);
-              else f("artifact_live_subscribe", "connect_failed");
+                logFeatureBad("artifact_live_subscribe", "connect_failed", Ce);
+              else logFeatureBad("artifact_live_subscribe", "connect_failed");
             }
             if (z !== void 0 && !z.stopped)
               z.lastFailure =
@@ -3497,7 +3497,7 @@ ${Nt(w.detail)}`,
       if (F()) {
         if (
           (Qf(w.data.taskId, l.taskRegistry, { quiet: !0 }),
-          g("artifact_live_subscribe", "stop_latched"),
+          logFeatureSad("artifact_live_subscribe", "stop_latched"),
           e.armOutcomes.delete(r),
           qt(e, r),
           ft || k.lastActivityAt !== Pr)
@@ -3570,7 +3570,7 @@ ${Nt(w.detail)}`,
         if ((delete w.lease, !I.opened)) delete w.renewable;
       }
       return (
-        f(
+        logFeatureBad(
           "artifact_live_subscribe",
           D !== void 0 ? "reuse_ws_open_error" : "ws_open_error",
         ),
@@ -3591,7 +3591,7 @@ ${Nt(w.detail)}`,
       try {
         P();
       } catch (ge) {
-        h(ge);
+        logError(ge);
       }
     if ((e.pendingInFlightWiring.delete(r), ye))
       (e.pendingRegistrations--, (ye = !1));

@@ -9,11 +9,11 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { IF, due } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { h4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 async function a(t, e) {
-  if (_t())
+  if (isBgSession())
     return {
       type: "text",
       value: "Session keeps running. Use /stop to end it.",

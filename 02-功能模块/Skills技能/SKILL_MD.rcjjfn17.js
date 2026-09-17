@@ -14,6 +14,6 @@ var e = "./template.html-bdacabb4.txt.zst";
 var l = Ke(e, import.meta.dirname);
 var t = "./merge-state.mjs-105f1093.txt.zst";
 var i = Ke(t, import.meta.dirname);
-var h = T,
-  j = { "template.html": l, "merge-state.mjs": i };
-export { j as SKILL_FILES, h as SKILL_MD };
+var SKILL_MD = T,
+  SKILL_FILES = { "template.html": l, "merge-state.mjs": i };
+export { SKILL_FILES, SKILL_MD };

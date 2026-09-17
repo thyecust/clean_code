@@ -9,17 +9,17 @@
 // Version: 2.1.263
 import { oo, ze, he, sn, ke, p_e, TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { my, li, $m, Xo } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, kw, mc, o0, Ia, nRn, Qor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, yt, l, A, Rt, FA, CB } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { WP, Xg, Sh, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Y6 } from "../权限系统/chunk-e4pfvp7x.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
-import { WEt, getToolPermissionContext as ce, getMainLoopModel as Bd } from "../权限系统/chunk-fjrcf22x.js";
+import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
+import { WEt, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   nH,
@@ -29,16 +29,16 @@ import {
   Nmt,
   sw,
   wDe,
-  isBuiltInAgent as xa,
-  isPluginAgent as pX,
+  isBuiltInAgent,
+  isPluginAgent,
   Wdn,
   BS,
   nh,
-  isForkSubagentEnabled as yV,
-  FORK_AGENT as EI,
+  isForkSubagentEnabled,
+  FORK_AGENT,
   sne,
-  isAgentToolPoolDenied as dTe,
-  agentToolPoolDeniedMessage as pTe,
+  isAgentToolPoolDenied,
+  agentToolPoolDeniedMessage,
   IM,
   wV,
   p3,
@@ -75,7 +75,7 @@ import {
   KKe,
   K5n,
   X5n,
-  runAgent as dw,
+  runAgent,
   EE,
   k3,
   iY,
@@ -86,22 +86,22 @@ import {
   npe,
   rpe,
   ope,
-  updateAgentMetadata as _Y,
-  readAgentMetadata as fC,
-  AgentTranscriptFetchError as XEe,
-  getAgentTranscript as pre,
-  getCommands as kf,
-  attributionSkillName as _C,
+  updateAgentMetadata,
+  readAgentMetadata,
+  AgentTranscriptFetchError,
+  getAgentTranscript,
+  getCommands,
+  attributionSkillName,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getTaskOutputPath as _l } from "../后台任务-Shell管理/chunk-x3txegas.js";
+import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { Dl } from "../../01-核心基础设施/共享小工具-未细化/chunk-n0fk8fsb.js";
-import { isCoordinatorMode as gG } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { CRON_CREATE_TOOL_NAME as nm } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { excludeCoordinatorCommsMcpTools as kj } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
+import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { cPe, Eut } from "../后台任务-Shell管理/chunk-531ast3t.js";
 import { xs } from "../Teammates团队/chunk-mrfx53ye.js";
 import { og } from "../插件系统/chunk-33bdfgmx.js";
@@ -234,11 +234,11 @@ ${p.report}`,
       return `report: ${e.report}`;
     },
   });
-var At = [Vr, re, mt, Yc, Xi, ia, nm];
+var At = [Vr, re, mt, WORKFLOW_TOOL_NAME, Xi, ia, CRON_CREATE_TOOL_NAME];
 function gNt(e) {
   return [...e.filter((p) => At.every((c) => !Kt(p, c))), qe];
 }
-import { promises as pe } from "fs";
+import { promises } from "fs";
 function won(e) {
   return (
     (e.name === mt || e.name === Vh) &&
@@ -372,7 +372,7 @@ async function _t(
 ) {
   let Xe = Date.now(),
     ie = r.getAppState(),
-    x = ce(r),
+    x = getToolPermissionContext(r),
     { taskRegistry: d } = r,
     z = x.mode,
     be = r.agentId;
@@ -401,17 +401,17 @@ async function _t(
       (d.update(e, (t) => (t.resuming ? { ...t, resuming: !1 } : t)), HX(e, d));
     },
     [Ze, o] = await Promise.all([
-      pre(oo(e), r.storageV5, { signal: r.abortController.signal }),
-      fC(oo(e), r.storageV5),
+      getAgentTranscript(oo(e), r.storageV5, { signal: r.abortController.signal }),
+      readAgentMetadata(oo(e), r.storageV5),
     ]).catch((t) => {
       if (yt(t)) throw (u(), t);
       if (
-        (f("subagent_launch", "subagent_resume_setup_read_failed"),
+        (logFeatureBad("subagent_launch", "subagent_resume_setup_read_failed"),
         u(),
         t instanceof Ou)
       )
         throw t;
-      throw t instanceof XEe || KKe(A(t) ?? CB(t))
+      throw t instanceof AgentTranscriptFetchError || KKe(A(t) ?? CB(t))
         ? new d2(l(t))
         : new Ou(l(t));
     });
@@ -429,7 +429,7 @@ async function _t(
     ae = "transientRead" in S && S.transientRead ? d2 : Ou;
   if (S.status === "malformed")
     throw (
-      f("subagent_launch", "forked_skill_resume_scoping_invalid"),
+      logFeatureBad("subagent_launch", "forked_skill_resume_scoping_invalid"),
       u(),
       new ae(
         `Agent ${e} has a malformed forked-skill scoping record; refusing to resume it without the skill's permission scoping.`,
@@ -441,7 +441,7 @@ async function _t(
     O.forkedSkillName !== void 0
   )
     throw (
-      f("subagent_launch", "forked_skill_resume_scoping_missing"),
+      logFeatureBad("subagent_launch", "forked_skill_resume_scoping_missing"),
       u(),
       new ae(
         `Agent ${e} ran as a forked skill but its scoping record is missing; refusing to resume it without the skill's permission scoping.`,
@@ -449,7 +449,7 @@ async function _t(
     );
   if (S.status === "absent-but-marked")
     throw (
-      f("subagent_launch", "forked_skill_resume_scoping_missing_cold"),
+      logFeatureBad("subagent_launch", "forked_skill_resume_scoping_missing_cold"),
       u(),
       new ae(
         `Agent ${e} carries a forked-skill provenance marker but its scoping record is missing; refusing to resume it without the skill's permission scoping.`,
@@ -458,7 +458,7 @@ async function _t(
   if (S.status === "valid" && nr(O)) {
     if (O.forkedSkillName !== S.scoping.skillName)
       throw (
-        f("subagent_launch", "forked_skill_resume_scoping_mismatch"),
+        logFeatureBad("subagent_launch", "forked_skill_resume_scoping_mismatch"),
         u(),
         new Ou(
           `Agent ${e} has a forked-skill scoping record that does not match its task record; refusing to resume it.`,
@@ -467,7 +467,7 @@ async function _t(
   } else if (S.status === "valid") {
     if ((await X5n(oo(e), r.storageV5)) !== S.scoping.skillName)
       throw (
-        f("subagent_launch", "forked_skill_resume_cold_witness_mismatch"),
+        logFeatureBad("subagent_launch", "forked_skill_resume_cold_witness_mismatch"),
         u(),
         new Ou(
           `Agent ${e} has a forked-skill scoping record with no matching provenance-marker witness; refusing to resume it on a cold path without a corroborated fork identity.`,
@@ -479,7 +479,7 @@ async function _t(
     J = [],
     de;
   if (T) {
-    let t = await kf(sn(), r.storageV5).catch(() => []),
+    let t = await getCommands(sn(), r.storageV5).catch(() => []),
       i = r
         .getAppState()
         .mcp.commands.filter(
@@ -493,7 +493,7 @@ async function _t(
       (a.context !== "fork" && a.getContext === void 0)
     )
       throw (
-        f("subagent_launch", "forked_skill_resume_skill_unresolved"),
+        logFeatureBad("subagent_launch", "forked_skill_resume_skill_unresolved"),
         u(),
         new Ou(
           `Agent ${e} ran as forked skill ${T.skillName}, which no longer resolves to a fork-capable skill; refusing to resume it without its permission scoping.`,
@@ -501,7 +501,7 @@ async function _t(
       );
     if (a.loadedFrom === "syncedSkills" && wV())
       throw (
-        f("subagent_launch", "forked_skill_resume_sync_vetoed"),
+        logFeatureBad("subagent_launch", "forked_skill_resume_sync_vetoed"),
         u(),
         new Ou(
           `Agent ${e} ran as forked skill ${T.skillName}, an account-synced skill that is currently disabled (skills sync turned off or denied by policy); refusing to resume it.`,
@@ -510,7 +510,7 @@ async function _t(
     ((K = qu(
       (await a.getAllowedTools?.()?.catch((_) => {
         throw (
-          f("subagent_launch", "forked_skill_resume_allowed_tools_failed"),
+          logFeatureBad("subagent_launch", "forked_skill_resume_allowed_tools_failed"),
           u(),
           _ instanceof Ou ? _ : new Ou(l(_))
         );
@@ -519,7 +519,7 @@ async function _t(
         [],
     )),
       (J = qu(a.disallowedTools ?? [])),
-      (de = _C(a)));
+      (de = attributionSkillName(a)));
   }
   let Ue = T
       ? (T.frozenCommandDenies ??
@@ -572,7 +572,7 @@ async function _t(
   }
   if (!P)
     throw (
-      f("subagent_launch", "subagent_resume_transcript_missing"),
+      logFeatureBad("subagent_launch", "subagent_resume_transcript_missing"),
       u(),
       new Ou(`No transcript found for agent ID: ${e}`, {
         transcriptMissing: !0,
@@ -589,11 +589,11 @@ async function _t(
         notified: !0,
         evictAfter: Date.now() + fT,
       })),
-      y("subagent_launch"),
+      logFeatureOk("subagent_launch"),
       {
         agentId: e,
         description: o?.description ?? "(resumed)",
-        outputFile: _l(e),
+        outputFile: getTaskOutputPath(e),
         alreadyCompleted: !0,
       }
     );
@@ -615,26 +615,26 @@ async function _t(
           : void 0,
     N =
       o?.isFork === !0 ||
-      (!M && o?.isFork === void 0 && o?.agentType === EI.agentType),
+      (!M && o?.isFork === void 0 && o?.agentType === FORK_AGENT.agentType),
     D =
       ue === wDe.agentType && o?.isBuiltIn !== !1
-        ? M && xa(M)
+        ? M && isBuiltInAgent(M)
           ? M
           : wDe
         : o?.isBuiltIn === !1
-          ? M && !xa(M)
+          ? M && !isBuiltInAgent(M)
             ? M
             : O2
-          : (M ?? (N ? EI : O2));
-  if (dTe(D, x))
+          : (M ?? (N ? FORK_AGENT : O2));
+  if (isAgentToolPoolDenied(D, x))
     throw (
-      f("subagent_launch", "subagent_resume_tools_denied"),
+      logFeatureBad("subagent_launch", "subagent_resume_tools_denied"),
       u(),
-      new Ou(pTe(D.agentType))
+      new Ou(agentToolPoolDeniedMessage(D.agentType))
     );
   if ((await Wdn([D])).length !== 1)
     throw (
-      f("subagent_launch", "subagent_resume_not_offered"),
+      logFeatureBad("subagent_launch", "subagent_resume_not_offered"),
       u(),
       new Ou(`Agent type '${D.agentType}' is not offered in this session.`)
     );
@@ -661,7 +661,7 @@ async function _t(
         He = i?.telemetryCode ?? "git_worktree_resume_worktree_gone",
         gt = o?.worktreePath ?? `agent ${e}`;
       if (ft) {
-        (g(fe, He),
+        (logFeatureSad(fe, He),
           n(
             `Resumed worktree ${gt} ${t}; falling back to ${_} under the session worktree's fences`,
             { level: "error" },
@@ -676,7 +676,7 @@ async function _t(
           )
         );
       throw (
-        f(fe, He),
+        logFeatureBad(fe, He),
         u(),
         new KSe(
           `This agent cannot be resumed: its worktree ${t}, and the fallback directory is not covered by the session's isolation fences.`,
@@ -687,7 +687,7 @@ async function _t(
     at = Ye(o?.inheritedWorktreePath),
     ee = it ?? at,
     B = ee
-      ? await pe.stat(ee).then(
+      ? await promises.stat(ee).then(
           (t) => (t.isDirectory() ? ee : U("exists but is not a directory")),
           (t) => {
             let i = A(t);
@@ -711,7 +711,7 @@ async function _t(
         o.inheritedWorktreePath !== void 0 &&
         o.parentAgentId !== void 0 &&
         (
-          await fC(oo(o.parentAgentId), r.storageV5).catch(
+          await readAgentMetadata(oo(o.parentAgentId), r.storageV5).catch(
             TTe("resumeAgentBackground (parent)"),
           )
         )?.worktreeCleanlyRemoved === !0
@@ -725,7 +725,7 @@ async function _t(
   let L = B;
   if (B) {
     let t = he(),
-      i = await pe.realpath(t).catch(() => t),
+      i = await promises.realpath(t).catch(() => t),
       a = await zX(B, uw(t), Y([i, iY, ...uw(iY)]), {
         requireWitnessForSelfOwningPins: !0,
         declineSelfOwningPinUnderLiveRoot: !0,
@@ -736,7 +736,7 @@ async function _t(
         a.reason !== "unverifiable" && a.reason !== "pin-is-own-launch-tree")
       )
         throw (
-          f(fe, "git_worktree_create_root_rejected"),
+          logFeatureBad(fe, "git_worktree_create_root_rejected"),
           n(
             `[worktree] refusing to resume parked agent into ${B} (${a.reason}): ${a.message}`,
             { level: "error" },
@@ -758,7 +758,7 @@ async function _t(
   if (L) {
     let t = new Date();
     try {
-      await pe.utimes(L, t, t);
+      await promises.utimes(L, t, t);
     } catch (i) {
       let a = A(i);
       if (a === "ENOENT" || a === "ENOTDIR")
@@ -798,7 +798,7 @@ async function _t(
         });
       } catch (t) {
         throw (
-          f(
+          logFeatureBad(
             "subagent_launch",
             "subagent_resume_fork_prompt_reconstruct_failed",
           ),
@@ -808,14 +808,14 @@ async function _t(
       }
     if (!te)
       throw (
-        f("subagent_launch", "subagent_resume_fork_prompt_missing"),
+        logFeatureBad("subagent_launch", "subagent_resume_fork_prompt_missing"),
         u(),
         new Ou(
           "Cannot resume fork agent: unable to reconstruct parent system prompt",
         )
       );
   }
-  let Oe = Bd(r),
+  let Oe = getMainLoopModel(r),
     Pe = cH(
       nX(b, Oe),
       Oe,
@@ -824,7 +824,7 @@ async function _t(
     );
   if (c?.kind === "observer-activity" && o?.isObserver !== !0)
     throw (
-      f("subagent_launch", "observer_resume_sidecar_unconfirmed"),
+      logFeatureBad("subagent_launch", "observer_resume_sidecar_unconfirmed"),
       u(),
       new Ou(
         `Observer sidecar for ${e} missing or did not confirm isObserver; refusing delivery`,
@@ -835,14 +835,14 @@ async function _t(
     Fe = r.options.tools.filter(nh),
     Ee = r.getAppState(),
     dt = N
-      ? kj(r.options.tools)
-      : QO(Ne, kj(Ee.mcp.tools.concat(Fe)), {
+      ? excludeCoordinatorCommsMcpTools(r.options.tools)
+      : QO(Ne, excludeCoordinatorCommsMcpTools(Ee.mcp.tools.concat(Fe)), {
           skipReplFilter: !0,
           skillTools: Ee.skillTools,
         }),
     lt = o?.isObserver
       ? gNt(
-          EE(b, QO(Ne, kj(Fe), { skipReplFilter: !0 }), !0, !1, !1, X)
+          EE(b, QO(Ne, excludeCoordinatorCommsMcpTools(Fe), { skipReplFilter: !0 }), !0, !1, !1, X)
             .resolvedTools,
         )
       : dt,
@@ -866,7 +866,7 @@ async function _t(
       isAsync: !0,
       preserveToolUseResults: !ke(),
       persistedToolResultFiles: Le,
-      querySource: p3(b.agentType, xa(b)),
+      querySource: p3(b.agentType, isBuiltInAgent(b)),
       spawnedBySkill: de,
       ...(T !== void 0 && { spawnedByForkedSkill: !0 }),
       model: o?.isObserver ? void 0 : N ? "inherit" : o?.model,
@@ -962,15 +962,15 @@ async function _t(
     try {
       if (V2t(d.get(e)) === q) {
         if (
-          (await _Y(oo(e), { stoppedByUser: !1 }, r.storageV5),
+          (await updateAgentMetadata(oo(e), { stoppedByUser: !1 }, r.storageV5),
           V2t(d.get(e)) !== q)
         )
-          await _Y(oo(e), { stoppedByUser: !0 }, r.storageV5);
+          await updateAgentMetadata(oo(e), { stoppedByUser: !0 }, r.storageV5);
       }
     } catch (t) {
       if (Rt(t) || FA(CB(t)))
         n(`failed to clear stop marker for ${e}: ${f3(t)}`, { level: "warn" });
-      else h(t);
+      else logError(t);
     }
   if (G) CI(V.agentId, d);
   if (
@@ -995,13 +995,13 @@ async function _t(
       prompt: p,
       resolvedAgentModel: Pe,
       modelsUsed: tt,
-      isBuiltInAgent: xa(b),
+      isBuiltInAgent: isBuiltInAgent(b),
       startTime: rt,
       agentType: b.agentType,
       isAsync: !0,
       agentDepth: X,
       source: b.source,
-      pluginId: pX(b) ? og(b.plugin) : void 0,
+      pluginId: isPluginAgent(b) ? og(b.plugin) : void 0,
       persistedToolResultFiles: Le,
       spawnedSubagent: nr(v) ? v.spawnedSubagent : void 0,
     },
@@ -1009,12 +1009,12 @@ async function _t(
       agentId: e,
       parentAgentId: r.agentId,
       depth: X,
-      parentSessionId: aS(),
+      parentSessionId: getParentSessionId(),
       agentType: "subagent",
       subagentName: b.agentType,
       displayName: o?.name,
       isAsync: !0,
-      isBuiltIn: xa(b),
+      isBuiltIn: isBuiltInAgent(b),
       invokingRequestId: H,
       invocationKind: "resume",
       invocationEmitted: !1,
@@ -1029,7 +1029,7 @@ async function _t(
           taskId: V.agentId,
           abortController: V.abortController,
           makeStream: (t, i, a) =>
-            dw({
+            runAgent({
               ...$e,
               session: Se,
               override: {
@@ -1048,7 +1048,7 @@ async function _t(
           toolUseContext: r,
           taskRegistry: d,
           agentIdForCleanup: e,
-          enableSummarization: p_e() || ((gG() || N || yV()) && !ke()),
+          enableSummarization: p_e() || ((isCoordinatorMode() || N || isForkSubagentEnabled()) && !ke()),
           getWorktreeResult: async () =>
             L
               ? {
@@ -1078,7 +1078,7 @@ async function _t(
         }),
       ),
     );
-  if ((y("subagent_launch"), Z))
+  if ((logFeatureOk("subagent_launch"), Z))
     try {
       await Be;
       let t = d.get(e),
@@ -1086,7 +1086,7 @@ async function _t(
       return {
         agentId: e,
         description: j,
-        outputFile: _l(e),
+        outputFile: getTaskOutputPath(e),
         inlineHandback: {
           content: i?.content ?? [],
           harnessNoteCount: i?.harnessNoteCount,
@@ -1100,6 +1100,6 @@ async function _t(
     } finally {
       d.update(e, (t) => ({ ...t, notified: !0, evictAfter: Date.now() + fT }));
     }
-  return { agentId: e, description: j, outputFile: _l(e) };
+  return { agentId: e, description: j, outputFile: getTaskOutputPath(e) };
 }
 export { gNt, won, Ton, Ou, d2, KSe, uM, y9, Dee, S9, pjn, Eon };

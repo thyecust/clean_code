@@ -11,26 +11,26 @@
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Vl } from "../权限系统/chunk-e4pfvp7x.js";
-import { truncatePathMiddle as el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
-  ASSET_ID_RE as Hp,
-  STALE_GUARD_REJECTION_PREFIX as ret,
-  STALE_GUARD_REJECTION_PREFIX_LEGACY as xkn,
-  STALE_GUARD_CONTENT_HEADER_LINE_RE as oet,
-  CONFLICT_REJECTION_PREFIX as rie,
-  parseArtifactUrl as Wt,
-  parseArtifactUrlInput as JD,
-  artifactViewerUrlFor as br,
-  canonicalArtifactTargetFor as ls,
-  sanitizeArtifactTitle as e_,
-  revealPageInvisibles as Bkn,
-  listScopeFrom as D5,
-  sweepAskCopy as Pa,
-  sweepProvenanceMarker as yb,
-  sweptAskPath as met,
-  splitWatchRows as get,
+  ASSET_ID_RE,
+  STALE_GUARD_REJECTION_PREFIX,
+  STALE_GUARD_REJECTION_PREFIX_LEGACY,
+  STALE_GUARD_CONTENT_HEADER_LINE_RE,
+  CONFLICT_REJECTION_PREFIX,
+  parseArtifactUrl,
+  parseArtifactUrlInput,
+  artifactViewerUrlFor,
+  canonicalArtifactTargetFor,
+  sanitizeArtifactTitle,
+  revealPageInvisibles,
+  listScopeFrom,
+  sweepAskCopy,
+  sweepProvenanceMarker,
+  sweptAskPath,
+  splitWatchRows,
 } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { yw, jg, getShareEntry as Cn, ownershipTag as rl, shareAudienceParenthetical as $j } from "./chunk-01ymf0ar.js";
+import { yw, jg, getShareEntry, ownershipTag, shareAudienceParenthetical } from "./chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7f3kwdxn.js";
@@ -38,8 +38,8 @@ import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { xut } from "./chunk-fx5ekm7e.js";
 import { wte, lwe, FS } from "./chunk-qpgskeea.js";
-import { ROOM_CONSENT_CLAUSE as yte, DB_BATCH_OP as sT, replayedPublishesRemaining as icn, replayedPublishesResetAt as acn, publishesRemainingLine as lcn } from "./chunk-pdd7kz7p.js";
-import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen as bm } from "./chunk-b6k1z7an.js";
+import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
+import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
 import "./chunk-x29r16ke.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
 import {
@@ -79,7 +79,7 @@ import "./chunk-5gvg7p5p.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
 import { QHe } from "../../01-核心基础设施/共享小工具-未细化/chunk-86zcr8cb.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function R(ee) {
@@ -109,30 +109,30 @@ function R(ee) {
   else V = D[7];
   return V;
 }
-import { basename as W } from "path";
+import { basename } from "path";
 var P = null,
   U = null,
   O = null,
   j = null,
   Y = 8;
-function H(s, m) {
+function renderToolUseMessage(s, m) {
   let n = FS() ? wte(s) : s;
   if (n.action === "live-edit")
     return U
-      ? U.renderLiveEditToolUse(n, m?.verbose === !0, bm())
+      ? U.renderLiveEditToolUse(n, m?.verbose === !0, artifactLivePathsSchemaOpen())
       : e(t, { children: "live-edit" });
   if (n.action === "preview") {
     let d = n,
       a = typeof d.file_path === "string" ? d.file_path : "",
-      c = yb(Pa(a) ?? "(no file)");
+      c = sweepProvenanceMarker(sweepAskCopy(a) ?? "(no file)");
     if (m?.verbose !== !0)
-      return r(t, { children: ["preview ", el(W(c), 60)] });
+      return r(t, { children: ["preview ", truncatePathMiddle(basename(c), 60)] });
     let f = Fut(d),
       g = $ut(d);
     return r(t, {
       children: [
         "preview ",
-        el(c, 1024),
+        truncatePathMiddle(c, 1024),
         e(t, {
           dimColor: !0,
           children: ` \xB7 ${f.join("/")} \xB7 ${g.join("+")}`,
@@ -145,10 +145,10 @@ function H(s, m) {
       children: [
         "sync working copy",
         typeof n.file_path === "string"
-          ? ` ${el(met(n.file_path) || "(unprintable path)", 256)}`
+          ? ` ${truncatePathMiddle(sweptAskPath(n.file_path) || "(unprintable path)", 256)}`
           : "",
         typeof n.url === "string"
-          ? ` \u2192 ${ls(n.url, "(unrecognized address)")}`
+          ? ` \u2192 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}`
           : "",
       ],
     });
@@ -157,10 +157,10 @@ function H(s, m) {
       children: [
         "version",
         typeof n.url === "string"
-          ? ` ${ls(n.url, "(unrecognized address)")}`
+          ? ` ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}`
           : "",
         typeof n.label === "string" && n.label !== ""
-          ? e(t, { dimColor: !0, children: ` \xB7 ${Pa(n.label) ?? ""}` })
+          ? e(t, { dimColor: !0, children: ` \xB7 ${sweepAskCopy(n.label) ?? ""}` })
           : null,
       ],
     });
@@ -170,8 +170,8 @@ function H(s, m) {
         c = fPe(n),
         f =
           c !== void 0
-            ? `"${Pa(oe(c, 200)) ?? ""}"`
-            : ls(Xb(n), "(unrecognized address)");
+            ? `"${sweepAskCopy(oe(c, 200)) ?? ""}"`
+            : canonicalArtifactTargetFor(Xb(n), "(unrecognized address)");
       return r(t, {
         children: [
           "list",
@@ -182,7 +182,7 @@ function H(s, m) {
         ],
       });
     }
-    let d = D5(n);
+    let d = listScopeFrom(n);
     return r(t, {
       children: [
         "list",
@@ -193,7 +193,7 @@ function H(s, m) {
   if (n.action === "list_types") {
     let d =
       typeof n.type_query === "string" && n.type_query !== ""
-        ? Pa(oe(n.type_query, 200))
+        ? sweepAskCopy(oe(n.type_query, 200))
         : null;
     return r(t, {
       children: [
@@ -207,7 +207,7 @@ function H(s, m) {
       children: [
         "describe type",
         " ",
-        e(t, { dimColor: !0, children: ls(Xb(n), "(unrecognized address)") }),
+        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(Xb(n), "(unrecognized address)") }),
       ],
     });
   if (
@@ -215,7 +215,7 @@ function H(s, m) {
     n.action === "reply" ||
     n.action === "resolve"
   ) {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
       a =
         n.action === "reply" && m?.verbose === !0
           ? mPe(mO(n).replyText)
@@ -224,15 +224,15 @@ function H(s, m) {
         (n.action === "reply" || n.action === "resolve") &&
         m?.verbose === !0 &&
         d !== null
-          ? Cn(d.slug)
+          ? getShareEntry(d.slug)
           : void 0,
-      f = $j(c);
+      f = shareAudienceParenthetical(c);
     return r(t, {
       children: [
         n.action,
         r(t, {
           dimColor: !0,
-          children: [" ", d !== null ? br(d) : "(unrecognized address)"],
+          children: [" ", d !== null ? artifactViewerUrlFor(d) : "(unrecognized address)"],
         }),
         f !== "" && e(t, { dimColor: !0, children: f }),
         a !== void 0 &&
@@ -270,25 +270,25 @@ function H(s, m) {
     let a = n.action === "read_db" ? yce(n) : void 0,
       c =
         a?.kind === "dir"
-          ? ` \u2192 ${el(Pa(a.dir) ?? "(unprintable path)", 1024)}`
+          ? ` \u2192 ${truncatePathMiddle(sweepAskCopy(a.dir) ?? "(unprintable path)", 1024)}`
           : a?.kind === "unresolvable"
             ? " \u2192 (unresolvable out_dir)"
             : "";
     if (n.action === "write_db" && m?.verbose === !0) {
-      let f = typeof n.url === "string" ? Wt(n.url) : null,
-        g = f !== null ? Cn(f.slug) : void 0,
-        p = $j(g),
+      let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+        g = f !== null ? getShareEntry(f.slug) : void 0,
+        p = shareAudienceParenthetical(g),
         { opLabel: T, docTarget: y } = gjn(n),
         { data: C, filePath: F } = b9(n),
         z =
-          T === sT
+          T === DB_BATCH_OP
             ? [Ion(w9(n)), kon(Pon(w9(n)))]
                 .filter((B) => B !== "")
                 .join(" \u2014 ")
             : F !== void 0
-              ? `from ${el(Pa(F) ?? "(unprintable path)", 1024)}`
+              ? `from ${truncatePathMiddle(sweepAskCopy(F) ?? "(unprintable path)", 1024)}`
               : E7(C),
-        N = rl(g);
+        N = ownershipTag(g);
       return r(t, {
         children: [
           d,
@@ -296,7 +296,7 @@ function H(s, m) {
           T,
           ")",
           " ",
-          e(t, { dimColor: !0, children: ls(n.url, "(unrecognized address)") }),
+          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
           e(t, { dimColor: !0, children: ` \u2014 ${y}${p}` }),
           N !== "" && e(t, { color: "warning", children: N }),
           z !== "" && e(t, { dimColor: !0, children: ` \u2014 ${z}` }),
@@ -304,16 +304,16 @@ function H(s, m) {
       });
     }
     if (n.action === "room_send" && m?.verbose === !0) {
-      let f = typeof n.url === "string" ? Wt(n.url) : null,
-        g = f !== null ? Cn(f.slug) : void 0,
-        p = $j(g),
+      let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+        g = f !== null ? getShareEntry(f.slug) : void 0,
+        p = shareAudienceParenthetical(g),
         T = E7(ZSe(n).data),
-        y = rl(g);
+        y = ownershipTag(g);
       return r(t, {
         children: [
           d,
           " ",
-          e(t, { dimColor: !0, children: ls(n.url, "(unrecognized address)") }),
+          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
           p !== "" && e(t, { dimColor: !0, children: p }),
           y !== "" && e(t, { color: "warning", children: y }),
           T !== "" && e(t, { dimColor: !0, children: ` \u2014 ${T}` }),
@@ -321,14 +321,14 @@ function H(s, m) {
       });
     }
     if (n.action === "resume_replies" && m?.verbose === !0) {
-      let f = typeof n.url === "string" ? Wt(n.url) : null,
-        g = f !== null ? Cn(f.slug) : void 0;
+      let f = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+        g = f !== null ? getShareEntry(f.slug) : void 0;
       return r(t, {
         children: [
           d,
           " ",
-          e(t, { dimColor: !0, children: ls(n.url, "(unrecognized address)") }),
-          e(t, { dimColor: !0, children: $j(g) }),
+          e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
+          e(t, { dimColor: !0, children: shareAudienceParenthetical(g) }),
         ],
       });
     }
@@ -338,7 +338,7 @@ function H(s, m) {
         " ",
         r(t, {
           dimColor: !0,
-          children: [ls(n.url, "(unrecognized address)"), c],
+          children: [canonicalArtifactTargetFor(n.url, "(unrecognized address)"), c],
         }),
       ],
     });
@@ -355,55 +355,55 @@ function H(s, m) {
       children: [
         d,
         " ",
-        e(t, { dimColor: !0, children: ls(n.url, "(unrecognized address)") }),
+        e(t, { dimColor: !0, children: canonicalArtifactTargetFor(n.url, "(unrecognized address)") }),
         a !== "" && e(t, { dimColor: !0, children: a }),
       ],
     });
   }
   if (n.action === "read") {
-    let d = JD(n.url),
-      a = d !== null ? Cn(d.slug) : void 0,
-      c = m?.verbose === !0 ? rl(a) : "";
+    let d = parseArtifactUrlInput(n.url),
+      a = d !== null ? getShareEntry(d.slug) : void 0,
+      c = m?.verbose === !0 ? ownershipTag(a) : "";
     return r(t, {
       children: [
         "read",
         " ",
         e(t, {
           dimColor: !0,
-          children: d !== null ? br(d) : "(unrecognized address)",
+          children: d !== null ? artifactViewerUrlFor(d) : "(unrecognized address)",
         }),
         c !== "" && e(t, { color: "warning", children: c }),
       ],
     });
   }
   if (n.action === "upload_asset") {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
-      a = d !== null ? Cn(d.slug) : void 0,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+      a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
-      f = c ? rl(a) : "",
-      g = el(Pa(n.file_path ?? "") ?? "(unprintable path)", 1024);
+      f = c ? ownershipTag(a) : "",
+      g = truncatePathMiddle(sweepAskCopy(n.file_path ?? "") ?? "(unprintable path)", 1024);
     return r(t, {
       children: [
         "upload ",
         g,
         e(t, {
           dimColor: !0,
-          children: ` \u2192 ${ls(n.url, "(unrecognized address)")}${c ? $j(a) : ""}`,
+          children: ` \u2192 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
         f !== "" && e(t, { color: "warning", children: f }),
       ],
     });
   }
   if (n.action === "copy_from") {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
-      a = d !== null ? Cn(d.slug) : void 0,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+      a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
-      f = c ? rl(a) : "",
+      f = c ? ownershipTag(a) : "",
       g = n.asset_ids,
       p = Array.isArray(g) ? g.length : 0,
       T = n.from_url,
-      y = typeof T === "string" ? Wt(T) : null,
-      C = c ? pPe(y !== null ? Cn(y.slug) : void 0, "assets") : "";
+      y = typeof T === "string" ? parseArtifactUrl(T) : null,
+      C = c ? pPe(y !== null ? getShareEntry(y.slug) : void 0, "assets") : "";
     return r(t, {
       children: [
         "copy ",
@@ -412,47 +412,47 @@ function H(s, m) {
         x(p, "asset"),
         " from",
         " ",
-        ls(T, "(unrecognized address)"),
+        canonicalArtifactTargetFor(T, "(unrecognized address)"),
         C !== "" && e(t, { color: "warning", children: C }),
         e(t, {
           dimColor: !0,
-          children: ` \u2192 ${ls(n.url, "(unrecognized address)")}${c ? $j(a) : ""}`,
+          children: ` \u2192 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
         f !== "" && e(t, { color: "warning", children: f }),
       ],
     });
   }
   if (n.action === "list_files" || n.action === "read_file") {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
-      a = d !== null ? Cn(d.slug) : void 0,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+      a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
-      f = c ? rl(a) : "",
+      f = c ? ownershipTag(a) : "",
       g = "list files",
       p = "";
     if (n.action === "read_file") {
       let { path: T } = JSe(n);
-      g = `save file ${T !== void 0 ? el(Pa(T) ?? "(unprintable path)", 256) : "(no path)"}`;
+      g = `save file ${T !== void 0 ? truncatePathMiddle(sweepAskCopy(T) ?? "(unprintable path)", 256) : "(no path)"}`;
       let y = n[gO] != null,
         C = QSe(n, { outDirJudged: y });
-      p = ` \u2192 ${"dest" in C ? el(Pa(C.dest) ?? "(unprintable path)", 1024) : "(no destination)"}`;
+      p = ` \u2192 ${"dest" in C ? truncatePathMiddle(sweepAskCopy(C.dest) ?? "(unprintable path)", 1024) : "(no destination)"}`;
     }
     return r(t, {
       children: [
         g,
         e(t, {
           dimColor: !0,
-          children: ` of ${ls(n.url, "(unrecognized address)")}${c ? $j(a) : ""}${p}`,
+          children: ` of ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}${p}`,
         }),
         f !== "" && e(t, { color: "warning", children: f }),
       ],
     });
   }
   if (n.action === "pin" || n.action === "unpin") {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
       a = n[M4],
       c = me(a) ? a.title : void 0,
       f = Nee(
-        (d !== null ? Cn(d.slug)?.title : void 0) ||
+        (d !== null ? getShareEntry(d.slug)?.title : void 0) ||
           (typeof c === "string" ? c : ""),
       );
     return r(t, {
@@ -461,16 +461,16 @@ function H(s, m) {
         f ? ` "${f}"` : "",
         e(t, {
           dimColor: !0,
-          children: ` \xB7 ${ls(n.url, "(unrecognized address)")}`,
+          children: ` \xB7 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}`,
         }),
       ],
     });
   }
   if (n.action === "delete") {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
-      a = d !== null ? Cn(d.slug) : void 0,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+      a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
-      f = c ? rl(a) : "",
+      f = c ? ownershipTag(a) : "",
       g = n[vut],
       p = me(g) ? g.title : void 0,
       T = Nee(a?.title || (typeof p === "string" ? p : ""));
@@ -480,7 +480,7 @@ function H(s, m) {
         T ? ` "${T}"` : "",
         e(t, {
           dimColor: !0,
-          children: ` \xB7 ${ls(n.url, "(unrecognized address)")}${c ? $j(a) : ""}`,
+          children: ` \xB7 ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}`,
         }),
         f !== "" && e(t, { color: "warning", children: f }),
       ],
@@ -491,12 +491,12 @@ function H(s, m) {
     n.action === "read_asset" ||
     n.action === "delete_asset"
   ) {
-    let d = typeof n.url === "string" ? Wt(n.url) : null,
-      a = d !== null ? Cn(d.slug) : void 0,
+    let d = typeof n.url === "string" ? parseArtifactUrl(n.url) : null,
+      a = d !== null ? getShareEntry(d.slug) : void 0,
       c = m?.verbose === !0,
-      f = c ? rl(a) : "",
+      f = c ? ownershipTag(a) : "",
       { assetId: g } = Mee(n),
-      p = g !== void 0 && Hp.test(g) ? g : "(no id)",
+      p = g !== void 0 && ASSET_ID_RE.test(g) ? g : "(no id)",
       T = n.action === "read_asset" ? YSe(n) : void 0,
       y =
         n.action === "delete_asset"
@@ -509,7 +509,7 @@ function H(s, m) {
         y,
         e(t, {
           dimColor: !0,
-          children: ` ${n.action === "delete_asset" ? "from" : "of"} ${ls(n.url, "(unrecognized address)")}${c ? $j(a) : ""}${T !== void 0 ? ` \u2192 ${el(Pa(`${T}.*`) ?? "(unprintable path)", 1024)}` : ""}`,
+          children: ` ${n.action === "delete_asset" ? "from" : "of"} ${canonicalArtifactTargetFor(n.url, "(unrecognized address)")}${c ? shareAudienceParenthetical(a) : ""}${T !== void 0 ? ` \u2192 ${truncatePathMiddle(sweepAskCopy(`${T}.*`) ?? "(unprintable path)", 1024)}` : ""}`,
         }),
         f !== "" && e(t, { color: "warning", children: f }),
       ],
@@ -517,11 +517,11 @@ function H(s, m) {
   }
   let { file_path: b, url: w } = n,
     i = m?.verbose === !0,
-    l = i && dM() && kut(n) ? yte.trimStart() : void 0,
+    l = i && dM() && kut(n) ? ROOM_CONSENT_CLAUSE.trimStart() : void 0,
     u = Xb(n);
   if (u !== void 0) {
-    let d = ls(u, "(unrecognized address)"),
-      a = b !== void 0 ? yb(Pa(b) ?? "(unprintable path)") : void 0;
+    let d = canonicalArtifactTargetFor(u, "(unrecognized address)"),
+      a = b !== void 0 ? sweepProvenanceMarker(sweepAskCopy(b) ?? "(unprintable path)") : void 0;
     return r(t, {
       children: [
         a !== void 0 ? `${a} ` : "",
@@ -535,8 +535,8 @@ ${l}`,
       ],
     });
   }
-  let h = i && w !== void 0 ? ls(w, "(unrecognized address)") : void 0,
-    v = yb(Pa(b ?? "") ?? "(unprintable path)");
+  let h = i && w !== void 0 ? canonicalArtifactTargetFor(w, "(unrecognized address)") : void 0,
+    v = sweepProvenanceMarker(sweepAskCopy(b ?? "") ?? "(unprintable path)");
   return r(t, {
     children: [
       v,
@@ -551,12 +551,12 @@ ${l}`,
   });
 }
 function S(s) {
-  return (m, n) => H(lwe(s, m), n);
+  return (m, n) => renderToolUseMessage(lwe(s, m), n);
 }
-var De = S("comments"),
-  Ue = S("data"),
-  Oe = S("check");
-function je(s) {
+var renderCommentsToolUseMessage = S("comments"),
+  renderDataToolUseMessage = S("data"),
+  renderCheckToolUseMessage = S("check");
+function renderToolUseProgressMessage(s) {
   let m = s.at(-1)?.data;
   if (!m || m.type !== "artifact_publish_retry" || m.resolved) return null;
   let n =
@@ -586,7 +586,7 @@ function X(s) {
 function J(s) {
   return "preview" in s && CNt(s) === "preview";
 }
-function We(s, m, n) {
+function renderToolResultMessage(s, m, n) {
   if (J(s)) {
     let i = {
         ...s.preview,
@@ -602,7 +602,7 @@ function We(s, m, n) {
       u = i.issues.length + (i.issuesDropped ?? 0),
       h = (a, c) => {
         let f = oe(a, c),
-          g = Pa(f) ?? "";
+          g = sweepAskCopy(f) ?? "";
         return f.length < a.length ? `${g}\u2026` : g;
       },
       v = n?.verbose === !0 ? i.issues : i.issues.slice(0, Y),
@@ -615,7 +615,7 @@ function We(s, m, n) {
             dimColor: !0,
             children: [
               l === 0 ? "Could not preview " : "Previewed ",
-              h(W(i.file), 80),
+              h(basename(i.file), 80),
               " \xB7 ",
               h(i.widths.join("/"), 24),
               " \xB7",
@@ -764,8 +764,8 @@ function We(s, m, n) {
       }),
     });
   if ("versioned" in s) {
-    let i = typeof s.versioned.url === "string" ? Wt(s.versioned.url) : null,
-      l = i ? br(i) : void 0;
+    let i = typeof s.versioned.url === "string" ? parseArtifactUrl(s.versioned.url) : null,
+      l = i ? artifactViewerUrlFor(i) : void 0;
     return e(xe, {
       children: r(t, {
         dimColor: !0,
@@ -794,7 +794,7 @@ function We(s, m, n) {
           : void 0,
       v =
         h !== void 0
-          ? `saved ${h.fileCount} ${x(h.fileCount, "document")} under ${el(Pa(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
+          ? `saved ${h.fileCount} ${x(h.fileCount, "document")} under ${truncatePathMiddle(sweepAskCopy(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
           : void 0;
     return e(xe, {
       children: e(t, {
@@ -859,11 +859,11 @@ function We(s, m, n) {
         dimColor: !0,
         children: [
           "uploaded ",
-          Pa(i.file_name) ?? "asset",
+          sweepAskCopy(i.file_name) ?? "asset",
           " (",
-          Ft(i.size_bytes),
+          formatFileSize(i.size_bytes),
           ") as ",
-          Pa(i.url) ?? "_blob/\u2026",
+          sweepAskCopy(i.url) ?? "_blob/\u2026",
         ],
       }),
     });
@@ -906,12 +906,12 @@ function We(s, m, n) {
         children: [
           "saved",
           " ",
-          el(
-            (typeof i.saved_to === "string" ? Pa(i.saved_to) : void 0) ??
+          truncatePathMiddle(
+            (typeof i.saved_to === "string" ? sweepAskCopy(i.saved_to) : void 0) ??
               "file",
             1024,
           ),
-          typeof i.size_bytes === "number" ? ` (${Ft(i.size_bytes)})` : "",
+          typeof i.size_bytes === "number" ? ` (${formatFileSize(i.size_bytes)})` : "",
         ],
       }),
     });
@@ -923,9 +923,9 @@ function We(s, m, n) {
         dimColor: !0,
         children: [
           "saved ",
-          el(Pa(i.path) ?? "asset", 1024),
+          truncatePathMiddle(sweepAskCopy(i.path) ?? "asset", 1024),
           " (",
-          Ft(i.size_bytes),
+          formatFileSize(i.size_bytes),
           ")",
         ],
       }),
@@ -974,7 +974,7 @@ function We(s, m, n) {
             : "watching for republishes"
           : s.watch.reason === "stop_latched"
             ? "not watching (stopped earlier in this session)"
-            : `not watching (${e_(s.watch.reason ?? s.watch.outcome) ?? "unknown"})`,
+            : `not watching (${sanitizeArtifactTitle(s.watch.reason ?? s.watch.outcome) ?? "unknown"})`,
       }),
     });
   if ("unwatch" in s)
@@ -987,7 +987,7 @@ function We(s, m, n) {
       }),
     });
   if ("watches" in s) {
-    let { watching: i, stopped: l } = get(s.watches),
+    let { watching: i, stopped: l } = splitWatchRows(s.watches),
       u = s.arms ?? [],
       h = G(
         u,
@@ -1027,7 +1027,7 @@ function We(s, m, n) {
             ? "auto-replies not resumed (watch stopped earlier in this session)"
             : s.resume_replies.reason === "arm_in_flight"
               ? "auto-replies not resumed (an earlier connection is still winding down; the stop stays)"
-              : `auto-replies not resumed (${e_(s.resume_replies.reason ?? s.resume_replies.outcome) ?? "unknown"})`,
+              : `auto-replies not resumed (${sanitizeArtifactTitle(s.resume_replies.reason ?? s.resume_replies.outcome) ?? "unknown"})`,
       }),
     });
   if ("verify" in s)
@@ -1076,8 +1076,8 @@ function We(s, m, n) {
       }),
     });
   if ("artifact_type" in s) {
-    let i = Wt(s.artifact_type.type_url),
-      l = i ? br(i) : void 0;
+    let i = parseArtifactUrl(s.artifact_type.type_url),
+      l = i ? artifactViewerUrlFor(i) : void 0;
     return e(xe, {
       children: r(t, {
         dimColor: !0,
@@ -1121,8 +1121,8 @@ function We(s, m, n) {
       }),
     });
   if ("opened" in s) {
-    let i = typeof s.url === "string" ? Wt(s.url) : null,
-      l = i ? br(i) : void 0;
+    let i = typeof s.url === "string" ? parseArtifactUrl(s.url) : null,
+      l = i ? artifactViewerUrlFor(i) : void 0;
     return e(xe, {
       children: r(t, {
         dimColor: !0,
@@ -1141,8 +1141,8 @@ function We(s, m, n) {
   }
   if ("created_from_type" in s) {
     let i = (l) => {
-      let u = typeof l === "string" ? Wt(l) : null,
-        h = u ? br(u) : void 0;
+      let u = typeof l === "string" ? parseArtifactUrl(l) : null,
+        h = u ? artifactViewerUrlFor(u) : void 0;
       return h !== void 0
         ? e(R, { name: h, url: h })
         : "(unrecognized address)";
@@ -1163,8 +1163,8 @@ function We(s, m, n) {
       }),
     });
   }
-  let b = icn(s.publishesRemaining),
-    w = acn(s.publishesResetAt);
+  let b = replayedPublishesRemaining(s.publishesRemaining),
+    w = replayedPublishesResetAt(s.publishesResetAt);
   return e(xe, {
     children: r(o, {
       flexDirection: "column",
@@ -1179,33 +1179,33 @@ function We(s, m, n) {
         }),
         b !== void 0 &&
           w !== void 0 &&
-          e(t, { dimColor: !0, children: lcn(b, w) }),
+          e(t, { dimColor: !0, children: publishesRemainingLine(b, w) }),
       ],
     }),
   });
 }
-function Be(s, m) {
+function renderToolUseErrorMessage(s, m) {
   if (typeof s === "string") {
     let n = xut(s);
-    if (n.startsWith(ret) || n.startsWith(xkn) || n.startsWith(rie)) {
-      let b = m.verbose ? null : oet.exec(n),
+    if (n.startsWith(STALE_GUARD_REJECTION_PREFIX) || n.startsWith(STALE_GUARD_REJECTION_PREFIX_LEGACY) || n.startsWith(CONFLICT_REJECTION_PREFIX)) {
+      let b = m.verbose ? null : STALE_GUARD_CONTENT_HEADER_LINE_RE.exec(n),
         w = s;
       if (b !== null) {
         let i = s.slice(0, s.length - n.length),
           l = n.slice(0, b.index + b[0].length - 1);
         w = `${i}${l} (content shown to the model; elided here)`;
       }
-      return e(Yd, { result: Bkn(w), verbose: m.verbose, verbatim: !0 });
+      return e(Yd, { result: revealPageInvisibles(w), verbose: m.verbose, verbatim: !0 });
     }
   }
   return e(Yd, { result: s, verbose: m.verbose });
 }
 export {
-  Oe as renderCheckToolUseMessage,
-  De as renderCommentsToolUseMessage,
-  Ue as renderDataToolUseMessage,
-  We as renderToolResultMessage,
-  Be as renderToolUseErrorMessage,
-  H as renderToolUseMessage,
-  je as renderToolUseProgressMessage,
+  renderCheckToolUseMessage,
+  renderCommentsToolUseMessage,
+  renderDataToolUseMessage,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseProgressMessage,
 };

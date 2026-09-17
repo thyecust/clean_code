@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { ad, gDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Xt, to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getUserSpecifiedModelSetting as Mf, vetUserSpecifiedModel as VAt, DEFAULT_MANTLE_OPUS_KEY as Yve, getEnvDefaultModel as vse, isEnvDefaultModelGoverning as Rse, getCanonicalName as Ue } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Xt, to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getUserSpecifiedModelSetting, vetUserSpecifiedModel, DEFAULT_MANTLE_OPUS_KEY, getEnvDefaultModel, isEnvDefaultModelGoverning, getCanonicalName } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function _(t, r) {
   if (t === "ANTHROPIC_DEFAULT_SONNET_MODEL")
     a.set("CLAUDE_CODE_3P_PROBE_WROTE_SONNET_DEFAULT", r);
@@ -90,17 +90,17 @@ function captureAdmin3PSteeringSnapshot() {
 async function apply3PDefaultFallbacks(t) {
   captureAdmin3PSteeringSnapshot();
   let r = t?.pendingUserModel?.trim(),
-    l = VAt(
+    l = vetUserSpecifiedModel(
       r === "default" || r === "inherit" || r === "" ? void 0 : (r ?? void 0),
     ),
-    o = vse(),
+    o = getEnvDefaultModel(),
     s =
       l != null && l !== ""
         ? l
         : r !== void 0 && l == null
           ? (o ?? void 0)
-          : (Mf() ?? o ?? void 0);
-  switch (Pe()) {
+          : (getUserSpecifiedModelSetting() ?? o ?? void 0);
+  switch (getAPIProvider()) {
     case "bedrock":
       return { lines: await m(s), hasHardFailure: !1 };
     case "vertex":
@@ -110,10 +110,10 @@ async function apply3PDefaultFallbacks(t) {
       if (o !== null) {
         let E = Xt(o.trim().toLowerCase());
         e =
-          !(E === "opus" || E === "best" || Ue(E) === Ue(to[Yve].firstParty)) &&
-          Rse();
+          !(E === "opus" || E === "best" || getCanonicalName(E) === getCanonicalName(to[DEFAULT_MANTLE_OPUS_KEY].firstParty)) &&
+          isEnvDefaultModelGoverning();
       }
-      let c = (l != null && l !== "") || Mf() != null || e;
+      let c = (l != null && l !== "") || getUserSpecifiedModelSetting() != null || e;
       return D(c);
     }
     default:
@@ -141,9 +141,9 @@ async function m(t) {
       ((process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = e.fallbackName),
         (process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = `Opus unavailable \u2014 using ${e.fallbackName}`));
     (i("tengu_bedrock_default_fallback", {
-      tier: u(e.tier),
-      default_key: u(e.defaultKey),
-      fallback_key: u(e.fallbackKey),
+      tier: fromEnum(e.tier),
+      default_key: fromEnum(e.defaultKey),
+      fallback_key: fromEnum(e.fallbackKey),
       cross_tier: S(e.crossTier ? "true" : "false"),
     }),
       s.push(
@@ -175,9 +175,9 @@ async function k(t) {
       ((process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_NAME = e.fallbackName),
         (process.env.ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION = `Opus unavailable \u2014 using ${e.fallbackName}`));
     (i("tengu_vertex_default_fallback", {
-      tier: u(e.tier),
-      default_key: u(e.defaultKey),
-      fallback_key: u(e.fallbackKey),
+      tier: fromEnum(e.tier),
+      default_key: fromEnum(e.defaultKey),
+      fallback_key: fromEnum(e.fallbackKey),
       cross_tier: S(e.crossTier ? "true" : "false"),
     }),
       s.push(
@@ -203,8 +203,8 @@ async function D(t) {
         (ad(e.workingMantleId),
           (s = e.workingMantleId),
           i("tengu_mantle_default_fallback", {
-            default_key: u(e.defaultKey),
-            fallback_key: u(e.workingKey),
+            default_key: fromEnum(e.defaultKey),
+            fallback_key: fromEnum(e.workingKey),
             admin_pin_refuted: S("true"),
           }),
           l.push(
@@ -219,8 +219,8 @@ async function D(t) {
       if (!t) (ad(e.fallbackMantleId), (s = e.fallbackMantleId), (c = !0));
       if (c)
         (i("tengu_mantle_default_fallback", {
-          default_key: u(e.defaultKey),
-          fallback_key: u(e.fallbackKey),
+          default_key: fromEnum(e.defaultKey),
+          fallback_key: fromEnum(e.fallbackKey),
         }),
           l.push(
             `${TIER_LABELS[e.tier]}: ${e.defaultName} not available \u2014 using ${e.fallbackName} for this session`,

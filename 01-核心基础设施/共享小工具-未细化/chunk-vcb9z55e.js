@@ -7,21 +7,21 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sanitizePath as RA, getProjectKey as yh, getProjectDir as Mp, canonicalizePath as Vu } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
+import { sanitizePath, getProjectKey, getProjectDir, canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { kd, R7t } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { If } from "./chunk-gyn0kh7v.js";
 import { join as a } from "path";
 function Y4(e) {
-  return /^[A-Za-z0-9_-]{1,128}$/.test(e) ? e : RA(e);
+  return /^[A-Za-z0-9_-]{1,128}$/.test(e) ? e : sanitizePath(e);
 }
 async function nft(e, t, n) {
-  return a(Mp(await Vu(e, If(n))), IFt(t));
+  return a(getProjectDir(await canonicalizePath(e, If(n))), IFt(t));
 }
 async function Qce(e, t, n) {
-  let r = await Vu(e, If(n)),
-    c = a(Mp(r), IFt(t)),
-    o = yh(r),
+  let r = await canonicalizePath(e, If(n)),
+    c = a(getProjectDir(r), IFt(t)),
+    o = getProjectKey(r),
     i = n === void 0 ? void 0 : oln(o, t);
   return {
     path: c,

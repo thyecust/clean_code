@@ -19,14 +19,14 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { Bf, a_ } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { getOtelHeadersHelperLastFailure as PRn, ee, ZUe, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOtelHeadersHelperLastFailure, ee, ZUe, hQ } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Tb, Xge, lL } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { S0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
 import { tv } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
-import { Jqn, isScrubOnlySandboxMode as HBt, SandboxManager as st, ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { Jqn, isScrubOnlySandboxMode, SandboxManager, ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { L9n, pte, Fbe, Gce, kan, M9n, $9n } from "./chunk-548xet6h.js";
 import { bD } from "../../01-核心基础设施/共享小工具-未细化/chunk-cyyrj58q.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -198,7 +198,7 @@ var te = new j(
     new E({
       platform: P,
       readOsRelease: () => Y("/etc/os-release", "utf8"),
-      execFileNoThrow: Fe,
+      execFileNoThrow: execFileNoThrow,
       execPath: () => process.execPath || process.argv[0] || "",
     }),
 );
@@ -235,15 +235,15 @@ function K() {
 function ute() {
   return x().getPackageManager();
 }
-import { lstat as ne, readFile as ie, realpath as V } from "fs/promises";
-import { homedir as k } from "os";
-import { stripVTControlCharacters as se } from "util";
-import { delimiter as oe, join as g, posix as C, win32 as A } from "path";
+import { lstat, readFile as ie, realpath } from "fs/promises";
+import { homedir } from "os";
+import { stripVTControlCharacters } from "util";
+import { delimiter, join as g, posix, win32 as A } from "path";
 function re() {
   let e = process.argv[1] || "",
     t = process.execPath || process.argv[0] || "";
   if (P() === "windows")
-    ((e = e.split(A.sep).join(C.sep)), (t = t.split(A.sep).join(C.sep)));
+    ((e = e.split(A.sep).join(posix.sep)), (t = t.split(A.sep).join(posix.sep)));
   return [e, t];
 }
 async function ce() {
@@ -297,7 +297,7 @@ async function dte() {
 async function ue() {
   if (bc()) {
     try {
-      return await V(process.execPath);
+      return await realpath(process.execPath);
     } catch {}
     try {
       let e = await ja("claude");
@@ -305,8 +305,8 @@ async function ue() {
     } catch {}
     try {
       return (
-        await ae().stat(g(k(), ".local/bin/claude")),
-        g(k(), ".local/bin/claude")
+        await ae().stat(g(homedir(), ".local/bin/claude")),
+        g(homedir(), ".local/bin/claude")
       );
     } catch {}
     return "native";
@@ -328,7 +328,7 @@ function de() {
 async function pe() {
   let e = ae(),
     t = [],
-    i = g(k(), ".claude", "local");
+    i = g(homedir(), ".claude", "local");
   if (await pte()) t.push({ type: "npm-local", path: i });
   let r = ["@anthropic-ai/claude-code"];
   if (
@@ -374,7 +374,7 @@ async function pe() {
         DD_SOURCEMAP_GROUP: "darwin",
       }.PACKAGE_URL,
     );
-  let s = await Fe("npm", ["-g", "config", "get", "prefix"]);
+  let s = await execFileNoThrow("npm", ["-g", "config", "get", "prefix"]);
   if (s.code === 0 && s.stdout) {
     let o = s.stdout.trim(),
       y = P() === "windows",
@@ -386,7 +386,7 @@ async function pe() {
     if (u) {
       let p = !1;
       try {
-        if ((await V(d)).includes("/Caskroom/")) p = Ppt();
+        if ((await realpath(d)).includes("/Caskroom/")) p = Ppt();
       } catch {}
       if (!p) {
         let c = !1;
@@ -407,12 +407,12 @@ async function pe() {
         } catch {}
       }
   }
-  let l = g(k(), ".local", "bin", "claude");
+  let l = g(homedir(), ".local", "bin", "claude");
   try {
     (await e.stat(l), t.push({ type: "native", path: l }));
   } catch {}
   if (ee().installMethod === "native") {
-    let o = g(k(), ".local", "share", "claude");
+    let o = g(homedir(), ".local", "share", "claude");
     try {
       if ((await e.stat(o), !t.some((y) => y.type === "native")))
         t.push({ type: "native", path: o });
@@ -423,10 +423,10 @@ async function pe() {
 function me(e, t) {
   let i = P() === "windows",
     r = t;
-  if (i) r = t.split(A.sep).join(C.sep).toLowerCase();
+  if (i) r = t.split(A.sep).join(posix.sep).toLowerCase();
   return e.some((s) => {
     let l = s;
-    if (i) l = s.split(A.sep).join(C.sep).toLowerCase();
+    if (i) l = s.split(A.sep).join(posix.sep).toLowerCase();
     let h = l.replace(/\/+$/, ""),
       o = s.replace(/[/\\]+$/, "");
     return h === r || o === "~/.local/bin" || o === "$HOME/.local/bin";
@@ -458,7 +458,7 @@ async function fe(e) {
         }
       if (d && typeof d === "object" && lL(d)) break;
     } catch {}
-  let r = PRn();
+  let r = getOtelHeadersHelperLastFailure();
   if (r)
     t.push({
       issue: `otelHeadersHelper is configured but its last invocation failed: ${r}`,
@@ -467,8 +467,8 @@ async function fe(e) {
   let s = ee();
   if (e === "development") return t;
   if (e === "native") {
-    let o = (a.PATH || "").split(oe),
-      y = k(),
+    let o = (a.PATH || "").split(delimiter),
+      y = homedir(),
       d = g(y, ".local", "bin"),
       u = g(bD(), "claude");
     if (!(await ULe(u)) && !(await vde(u).catch(() => !1)))
@@ -478,7 +478,7 @@ async function fe(e) {
       });
     if (!me(o, d))
       if (P() === "windows") {
-        let c = d.split(C.sep).join(A.sep);
+        let c = d.split(posix.sep).join(A.sep);
         t.push({
           issue: `Native installation exists but ${c} is not in your PATH`,
           fix: "Add it by opening: System Properties \u2192 Environment Variables \u2192 Edit User PATH \u2192 New \u2192 Add the path above. Then restart your terminal.",
@@ -486,7 +486,7 @@ async function fe(e) {
       } else {
         let c = Fbe(),
           v = Gce()[c],
-          S = v ? v.replace(k(), "~") : "your shell config file";
+          S = v ? v.replace(homedir(), "~") : "your shell config file";
         t.push({
           issue:
             "Native installation exists but ~/.local/bin is not in your PATH",
@@ -550,9 +550,9 @@ async function ge() {
   };
 }
 function he() {
-  if (!st.isSandboxingEnabled()) return [];
-  if (st.canMaskCredentialWarningFire()) st.checkDependencies();
-  let e = st.getMaskCredentialWarning();
+  if (!SandboxManager.isSandboxingEnabled()) return [];
+  if (SandboxManager.canMaskCredentialWarningFire()) SandboxManager.checkDependencies();
+  let e = SandboxManager.getMaskCredentialWarning();
   if (!e) return [];
   return e.split(" \xB7 ").map((t) => {
     if (t.includes("have an empty injectHosts"))
@@ -567,7 +567,7 @@ function he() {
       };
     return {
       issue: t.replace(/\s*Enable sandbox\.network\.tlsTerminate.*$/, ""),
-      fix: HBt()
+      fix: isScrubOnlySandboxMode()
         ? "Set sandbox.enabled: true plus sandbox.network.tlsTerminate, or remove the mask entries \u2014 TLS termination is never enabled in scrub-only mode"
         : "Enable sandbox.network.tlsTerminate (or remove the mask entries)",
     };
@@ -576,7 +576,7 @@ function he() {
 function ye() {
   if (P() !== "linux") return [];
   let e = [],
-    t = st.getLinuxGlobPatternWarnings();
+    t = SandboxManager.getLinuxGlobPatternWarnings();
   if (t.length > 0) {
     let i = I(t);
     e.push({
@@ -588,7 +588,7 @@ function ye() {
   return e;
 }
 function I(e) {
-  let t = e.map((s) => Sn(se(s)).trim()),
+  let t = e.map((s) => Sn(stripVTControlCharacters(s)).trim()),
     i = t.slice(0, 3).join(", "),
     r = t.length - 3;
   return r > 0 ? `${i} (${r} more)` : i;
@@ -596,14 +596,14 @@ function I(e) {
 async function we() {
   let e = P();
   if (e !== "linux" && e !== "wsl") return [];
-  if (!st.isSandboxingEnabled()) return [];
-  let t = st.getConfig();
+  if (!SandboxManager.isSandboxingEnabled()) return [];
+  let t = SandboxManager.getConfig();
   if (t === void 0 || t.filesystem.disabled) return [];
-  let { denyWithinAllow: i } = st.getFsWriteConfig(),
+  let { denyWithinAllow: i } = SandboxManager.getFsWriteConfig(),
     r = await Promise.all(
       i.map(async (l) => {
         try {
-          let h = await ne(l);
+          let h = await lstat(l);
           return h.isFile() && h.size === 0 && (h.mode & 146) === 0;
         } catch {
           return !1;
@@ -620,7 +620,7 @@ async function we() {
   ];
 }
 function xe() {
-  let e = st.getUnbracketedIpv6DomainWarnings();
+  let e = SandboxManager.getUnbracketedIpv6DomainWarnings();
   if (e.length === 0) return [];
   return [
     {
@@ -630,7 +630,7 @@ function xe() {
   ];
 }
 function Pe() {
-  let e = st.getUnbracketedIpv6InjectHostWarnings();
+  let e = SandboxManager.getUnbracketedIpv6InjectHostWarnings();
   if (e.length === 0) return [];
   return [
     {

@@ -10,19 +10,19 @@
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qAe, oh, Aj, Jpe, lG, Nh, vT, dN, TC } from "./chunk-djserjj5.js";
-import { readRoster as IE, updateRoster as S$, writeReapedTerminalState as Ope, Ep, al } from "./chunk-7wsy8vxb.js";
+import { readRoster, updateRoster, writeReapedTerminalState, Ep, al } from "./chunk-7wsy8vxb.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Wi, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { sigtermThenKill as I5, reapDetachedRepl as Tq, captureProcessStartTimeAsync as Xse } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { sigtermThenKill, reapDetachedRepl, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { lstat as B, readdir as b, unlink as p } from "fs/promises";
-import { connect as v } from "net";
-import { basename as k, join as x } from "path";
+import { lstat, readdir, unlink } from "fs/promises";
+import { connect } from "net";
+import { basename, join as x } from "path";
 async function HPt(e, t) {
   if (t.launch.mode !== "exec" || !e) return null;
   try {
@@ -61,8 +61,8 @@ async function HPt(e, t) {
   }
 }
 async function NZt(e = {}, t) {
-  return Sr("daemon_bg_reap_all", async () => {
-    let i = await IE({ silent: !0 }, t),
+  return withFeatureTelemetry("daemon_bg_reap_all", async () => {
+    let i = await readRoster({ silent: !0 }, t),
       r = new Map();
     for (let [a, o] of Object.entries(i.workers))
       r.set(a, {
@@ -75,7 +75,7 @@ async function NZt(e = {}, t) {
       });
     let s = P() === "windows",
       [c, l] = s ? [Jpe(), ".pid"] : [qAe(), ".sock"],
-      f = s && t ? await FZt(t) : await b(c).catch(() => []),
+      f = s && t ? await FZt(t) : await readdir(c).catch(() => []),
       w = new Set(f.filter((a) => a.endsWith(l)));
     for (let a of f) {
       if (!a.endsWith(l)) {
@@ -86,7 +86,7 @@ async function NZt(e = {}, t) {
           if (d && !w.has(a.slice(0, -d.length))) {
             let g = a.slice(0, -`.sock${d}`.length);
             if (!(d === ".exec-exit" && r.has(g)))
-              await p(x(c, a)).catch(() => {});
+              await unlink(x(c, a)).catch(() => {});
           }
         }
         continue;
@@ -101,7 +101,7 @@ async function NZt(e = {}, t) {
     if (!s) {
       let a = new Set();
       for (let u of r.values()) if (u.ptySock) a.add(u.ptySock);
-      let o = await b(Aj()).catch(() => []);
+      let o = await readdir(Aj()).catch(() => []);
       for (let u of o) {
         if (!u.endsWith(".pty.sock")) continue;
         let d = x(Aj(), u);
@@ -118,7 +118,7 @@ async function NZt(e = {}, t) {
           if (o.ptySock && (await sle(o.ptySock, t))) m++;
           else if (o.pid) {
             let d = await UZt(o.pid, o.procStart),
-              g = d !== "unverified" && (await Tq(o.replPid, o.replProcStart));
+              g = d !== "unverified" && (await reapDetachedRepl(o.replPid, o.replProcStart));
             switch (d) {
               case "killed":
                 m++;
@@ -137,28 +137,28 @@ async function NZt(e = {}, t) {
             let d = { state: "stopped", detail: "stopped" },
               g =
                 u?.state === "done" ? u : e.supervisorKilledAll ? d : (u ?? d);
-            if ((await Ope(a, g.state, g.detail, void 0, t), s && t))
+            if ((await writeReapedTerminalState(a, g.state, g.detail, void 0, t), s && t))
               await t
-                .delete(Ce.daemon(["pty-pids", k(dN(o.ptySock ?? oh(a)))]))
+                .delete(Ce.daemon(["pty-pids", basename(dN(o.ptySock ?? oh(a)))]))
                 .catch(() => {});
-            else await p(dN(o.ptySock ?? oh(a))).catch(() => {});
+            else await unlink(dN(o.ptySock ?? oh(a))).catch(() => {});
           }
           if (s)
             if (t) await L(t, a);
             else {
-              await p(lG(a)).catch(() => {});
+              await unlink(lG(a)).catch(() => {});
               let d = Nh(oh(a));
-              (await p(d).catch(() => {}),
-                await p(`${d}.read`).catch(() => {}),
-                await p(vT(oh(a))).catch(() => {}));
+              (await unlink(d).catch(() => {}),
+                await unlink(`${d}.read`).catch(() => {}),
+                await unlink(vT(oh(a))).catch(() => {}));
             }
         }),
       ),
       r.size > 0)
     )
-      await S$((a) => {
+      await updateRoster((a) => {
         for (let o of r.keys()) if (!S.has(o)) delete a.workers[o];
-      }, t).catch(h);
+      }, t).catch(logError);
     return { reaped: m, kept: S.size };
   });
 }
@@ -187,7 +187,7 @@ async function FZt(e) {
 var FWe = 4096;
 async function M(e) {
   try {
-    let t = await B(lG(e));
+    let t = await lstat(lG(e));
     return !t.isFile() || t.size > FWe;
   } catch (t) {
     return !W(t);
@@ -213,7 +213,7 @@ async function L(e, t) {
 }
 async function E(e, t) {
   let i = Nh(t);
-  for (let r of [k(i), `${k(i)}.read`, k(vT(t))])
+  for (let r of [basename(i), `${basename(i)}.read`, basename(vT(t))])
     await e.delete(Ce.daemon(["pty-pids", r])).catch(() => {});
 }
 function sle(e, t) {
@@ -223,19 +223,19 @@ function sle(e, t) {
         if (r) return;
         ((r = !0), i(l));
       },
-      c = v(e);
+      c = connect(e);
     (c.unref(),
       c.setTimeout(2000, () => {
         (c.destroy(), s(!1));
       }),
       c.on("error", () => {
-        p(e).catch(() => {});
+        unlink(e).catch(() => {});
         let l = Nh(e);
         if (t && P() === "windows") E(t, e).catch(() => {});
         else
-          (p(l).catch(() => {}),
-            p(`${l}.read`).catch(() => {}),
-            p(vT(e)).catch(() => {}));
+          (unlink(l).catch(() => {}),
+            unlink(`${l}.read`).catch(() => {}),
+            unlink(vT(e)).catch(() => {}));
         s(!1);
       }),
       c.once("connect", () => {
@@ -251,7 +251,7 @@ function xit(e) {
         if (i) return;
         ((i = !0), t(c));
       },
-      s = v(e);
+      s = connect(e);
     (s.unref(),
       s.setTimeout(250, () => {
         (s.destroy(), r(!1));
@@ -267,13 +267,13 @@ async function UZt(e, t) {
     process.kill(e, 0);
   } catch (r) {
     if (A(r) !== "ESRCH") return "foreign";
-    return I5([-e, e], t) ? "killed" : "gone";
+    return sigtermThenKill([-e, e], t) ? "killed" : "gone";
   }
   if (t === void 0) return "foreign";
-  let i = await Xse(e);
+  let i = await captureProcessStartTimeAsync(e);
   if (i === void 0) return "unverified";
   if (i !== t) return "foreign";
-  return I5([-e, e], t) ? "killed" : "gone";
+  return sigtermThenKill([-e, e], t) ? "killed" : "gone";
 }
 var y = pe(pg(), 1),
   R = ["dev", "engine"];
@@ -375,11 +375,11 @@ function NWe() {
     },
   };
 }
-import { freemem as D } from "os";
+import { freemem } from "os";
 function LZt() {
   let e = H("tengu_bg_low_mem_mb", 1024) * 1024 * 1024;
   if (e <= 0) return { lowMem: !1, level: void 0 };
-  if (P() !== "macos") return { lowMem: D() < e, level: void 0 };
+  if (P() !== "macos") return { lowMem: freemem() < e, level: void 0 };
   let t = I();
   return { lowMem: t !== void 0 && t >= N, level: t };
 }

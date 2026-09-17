@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { os, x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Fxt, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Fxt, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ree, o, t, jr, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -588,7 +588,7 @@ function Ne(s, i) {
   } catch (l) {
     if (l instanceof RangeError)
       n(`marked.lexer overflow on ${i.length} chars`, { level: "error" });
-    else h(l);
+    else logError(l);
     return ut(i);
   }
 }

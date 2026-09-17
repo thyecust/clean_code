@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 var ESn = 128,
   RJn = /^[\x21-\x7e]+$/,
   kJn = "io.modelcontextprotocol/tasks";
@@ -23,6 +23,6 @@ function rG(r) {
 }
 function y7e(r) {
   if (!Number.isFinite(r) || r <= 0) return;
-  return r < 1000 ? `${r}ms` : Ot(r);
+  return r < 1000 ? `${r}ms` : formatDuration(r);
 }
 export { ESn, RJn, kJn, e1e, rG, y7e };

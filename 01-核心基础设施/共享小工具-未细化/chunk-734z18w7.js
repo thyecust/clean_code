@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { ns } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { rge, getClaudeAIOAuthTokens as Yt, isClaudeAISubscriber as gt, getOauthAccountInfo as vn } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { rge, getClaudeAIOAuthTokens, isClaudeAISubscriber, getOauthAccountInfo } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R4 } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { N8, MHe, Kz } from "../../02-功能模块/Bridge-RemoteControl/chunk-3b6ct3yp.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -24,8 +24,8 @@ async function Qae(t, r, l) {
   let u = R4(t),
     c = m(l);
   try {
-    if (gt()) {
-      let o = Yt(),
+    if (isClaudeAISubscriber()) {
+      let o = getClaudeAIOAuthTokens(),
         n = !1;
       if (o?.subscriptionType && o?.rateLimitTier)
         n =
@@ -48,7 +48,7 @@ async function Qae(t, r, l) {
         );
     }
     await Gr(c);
-    let a = vn(),
+    let a = getOauthAccountInfo(),
       s = a && {
         accountUuid: a.accountUuid,
         organizationUuid: a.organizationUuid,
@@ -67,7 +67,7 @@ async function Qae(t, r, l) {
       },
     });
   } catch (a) {
-    (h(a),
+    (logError(a),
       setTimeout(
         u,
         0,

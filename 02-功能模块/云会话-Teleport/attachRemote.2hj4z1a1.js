@@ -12,14 +12,14 @@
 import { _m, K, $p, Bw, s_e, Nn, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Iu, R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { deviceToolNoticesTo as J0t } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
+import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具-未细化/chunk-sdeyn1dg.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Ise, RCt, iKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { showScreen as Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { Uot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { hit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
 function de(r) {
@@ -43,7 +43,7 @@ function ce(r) {
     return;
   }
   throw (
-    i("tengu_remote_attach_session_rejected", { reason: u(e.reason) }),
+    i("tengu_remote_attach_session_rejected", { reason: fromEnum(e.reason) }),
     new R(
       e.message,
       "cloud attach refused: the id names no session of this account, or is malformed",
@@ -51,7 +51,7 @@ function ce(r) {
     )
   );
 }
-async function ke(r, e, c, t) {
+async function attachRemote(r, e, c, t) {
   let [
       { prepareApiRequest: U, fetchSession: I },
       { getClaudeAIOAuthTokens: B, handleOAuth401Error: F },
@@ -114,17 +114,17 @@ async function ke(r, e, c, t) {
       binding: g,
       storageV5: t?.storageV5,
       dirSync: te,
-      onNotice: J0t(c),
+      onNotice: deviceToolNoticesTo(c),
       servedSettingsChanged: ee.of(c.host).servedSettingsChanged,
     }),
     b =
-      t?.viewerOnly || !ri()
+      t?.viewerOnly || !isViolinWoodEnabledCached()
         ? void 0
         : await Z({
             sessionId: e,
             binding: g,
             deviceBridge: f,
-            onNotice: J0t(c),
+            onNotice: deviceToolNoticesTo(c),
           }),
     p = !1,
     oe = new AbortController();
@@ -149,7 +149,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
     );
     a.catch(() => {});
     let A = wa(e, void 0, { from: "cli", m: "0" }),
-      w = ri(),
+      w = isViolinWoodEnabledCached(),
       P = hit("attach", A, w),
       y = {
         ...D(),
@@ -160,7 +160,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
         replBridgeExplicit: !1,
       },
       E =
-        t?.viewerOnly || !ri()
+        t?.viewerOnly || !isViolinWoodEnabledCached()
           ? Promise.resolve({
               handle: void 0,
               elsewhere: void 0,
@@ -216,7 +216,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
       deviceNotBoundNotice: f.notice,
       ...(b && { servedTools: b }),
       heldServedCall: f.heldServedCall,
-      ...(ri() &&
+      ...(isViolinWoodEnabledCached() &&
         !t?.viewerOnly && {
           eventSigner: import("./deviceEventSignerFor.14ybgam1.js").then(
             ({ deviceEventSignerOnceBoundHere: o }) =>
@@ -273,7 +273,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
         thinkingConfig: { type: "adaptive" },
       },
       async (o, d) => {
-        (Gx(o, d), await o.waitUntilExit());
+        (showScreen(o, d), await o.waitUntilExit());
       },
     );
   } finally {
@@ -287,4 +287,4 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
 function le(r) {
   return Ht(r, "warning");
 }
-export { ke as attachRemote };
+export { attachRemote };

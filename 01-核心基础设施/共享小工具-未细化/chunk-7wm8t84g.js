@@ -28,7 +28,7 @@ function JSt() {
     );
   return e;
 }
-import { createHash as m } from "crypto";
+import { createHash } from "crypto";
 function e7e(e) {
   return (
     e.configErrorReason === "url_empty" ||
@@ -71,7 +71,7 @@ function lN(e) {
     }
     return n;
   });
-  return m("sha256").update(f).digest("hex").slice(0, 16);
+  return createHash("sha256").update(f).digest("hex").slice(0, 16);
 }
 function Jn(e, o) {
   return `${e}-${lN(o)}`;

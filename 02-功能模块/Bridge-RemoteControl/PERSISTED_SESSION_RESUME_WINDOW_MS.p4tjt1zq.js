@@ -15,20 +15,20 @@ import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chu
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { B2e, getProjectsDir as Sc, getProjectKey as yh } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { isSafeBridgeId as ykt } from "../权限系统/chunk-ynkf3yy4.js";
+import { B2e, getProjectsDir, getProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isSafeBridgeId } from "../权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { mkdir as h, readFile as B, stat as _, unlink as E } from "fs/promises";
-import { dirname as x, join as I } from "path";
+import { mkdir, readFile, stat as _, unlink } from "fs/promises";
+import { dirname, join as I } from "path";
 var S = 50,
   R = 14400000,
-  ee = 900000,
+  PERSISTED_SESSION_RESUME_WINDOW_MS = 900000,
   j = 120000;
-function re(e, r, t) {
+function isPersistedStampFresh(e, r, t) {
   return r - e <= t && e - r <= j;
 }
-var F = 64,
-  p = m(() => s().max(256).refine(ykt)),
+var MAX_POINTER_ACTIVE_SESSION_IDS = 64,
+  p = m(() => s().max(256).refine(isSafeBridgeId)),
   N = m(() =>
     c({
       sessionId: $e([k(""), p()]),
@@ -36,7 +36,7 @@ var F = 64,
       source: X(["standalone", "repl"]),
       pid: T().optional(),
       procStart: s().optional(),
-      activeSessionIds: v(p()).max(F).optional(),
+      activeSessionIds: v(p()).max(MAX_POINTER_ACTIVE_SESSION_IDS).optional(),
       activeSessionIdsPersistedAt: T()
         .int()
         .min(0)
@@ -45,13 +45,13 @@ var F = 64,
     }),
   );
 function g(e) {
-  return I(Sc(), yh(e), "bridge-pointer.json");
+  return I(getProjectsDir(), getProjectKey(e), "bridge-pointer.json");
 }
 function P(e) {
-  let r = yh(e);
+  let r = getProjectKey(e);
   return _n(r) ? Ce.bridgePointer(r) : null;
 }
-async function te(e, r, t) {
+async function writeBridgePointer(e, r, t) {
   let i = g(e),
     o = M() && t !== void 0 ? P(e) : null;
   if (M() && t !== void 0 && o) {
@@ -65,7 +65,7 @@ async function te(e, r, t) {
   }
   try {
     return (
-      await h(x(i), { recursive: !0 }),
+      await mkdir(dirname(i), { recursive: !0 }),
       await On(i, b(r)),
       n(`[bridge:pointer] wrote ${i}`),
       !0
@@ -74,11 +74,11 @@ async function te(e, r, t) {
     return (n(`[bridge:pointer] write failed: ${l}`, { level: "warn" }), !1);
   }
 }
-function ne() {
+function createBridgePointerWriteQueue() {
   let e = Promise.resolve();
   return (r) => ((e = e.then(r, r)), e);
 }
-async function w(e, r, t) {
+async function readBridgePointer(e, r, t) {
   let i = g(e),
     o,
     l,
@@ -90,26 +90,26 @@ async function w(e, r, t) {
       (o = Buffer.from(d.value.items[0].value).toString("utf8")));
   } else
     try {
-      ((l = (await _(i)).mtimeMs), (o = await B(i, "utf8")));
+      ((l = (await _(i)).mtimeMs), (o = await readFile(i, "utf8")));
     } catch {
       return null;
     }
   let u = N().safeParse(O(o));
   if (!u.success) {
     if (!r?.noClear)
-      (n(`[bridge:pointer] invalid schema, clearing: ${i}`), await y(e, t));
+      (n(`[bridge:pointer] invalid schema, clearing: ${i}`), await clearBridgePointer(e, t));
     return null;
   }
   let a = Math.max(0, Date.now() - l);
   if (a > R) {
     if (!r?.noClear)
-      (n(`[bridge:pointer] stale (>4h mtime), clearing: ${i}`), await y(e, t));
+      (n(`[bridge:pointer] stale (>4h mtime), clearing: ${i}`), await clearBridgePointer(e, t));
     return null;
   }
   return { ...u.data, ageMs: a };
 }
-async function ie(e, r) {
-  let t = await w(e, void 0, r);
+async function readBridgePointerAcrossWorktrees(e, r) {
+  let t = await readBridgePointer(e, void 0, r);
   if (t) return { pointer: t, dir: e };
   let i = await B2e(e);
   if (i.length <= 1) return null;
@@ -120,11 +120,11 @@ async function ie(e, r) {
       ),
       null
     );
-  let o = yh(e),
-    l = i.filter((a) => yh(a) !== o),
+  let o = getProjectKey(e),
+    l = i.filter((a) => getProjectKey(a) !== o),
     f = await Promise.all(
       l.map(async (a) => {
-        let d = await w(a, void 0, r);
+        let d = await readBridgePointer(a, void 0, r);
         return d ? { pointer: d, dir: a } : null;
       }),
     ),
@@ -136,7 +136,7 @@ async function ie(e, r) {
     );
   return u;
 }
-async function y(e, r) {
+async function clearBridgePointer(e, r) {
   let t = g(e),
     i = r ? P(e) : null;
   if (r && i) {
@@ -146,7 +146,7 @@ async function y(e, r) {
     return;
   }
   try {
-    (await E(t), n(`[bridge:pointer] cleared ${t}`));
+    (await unlink(t), n(`[bridge:pointer] cleared ${t}`));
   } catch (o) {
     if (!W(o)) n(`[bridge:pointer] clear failed: ${o}`, { level: "warn" });
   }
@@ -159,12 +159,12 @@ function O(e) {
   }
 }
 export {
-  F as MAX_POINTER_ACTIVE_SESSION_IDS,
-  ee as PERSISTED_SESSION_RESUME_WINDOW_MS,
-  y as clearBridgePointer,
-  ne as createBridgePointerWriteQueue,
-  re as isPersistedStampFresh,
-  w as readBridgePointer,
-  ie as readBridgePointerAcrossWorktrees,
-  te as writeBridgePointer,
+  MAX_POINTER_ACTIVE_SESSION_IDS,
+  PERSISTED_SESSION_RESUME_WINDOW_MS,
+  clearBridgePointer,
+  createBridgePointerWriteQueue,
+  isPersistedStampFresh,
+  readBridgePointer,
+  readBridgePointerAcrossWorktrees,
+  writeBridgePointer,
 };

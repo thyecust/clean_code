@@ -11,26 +11,26 @@
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, Ec, q1, MA, kL, xL, hae, S_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { GPe } from "../../01-核心基础设施/共享小工具-未细化/chunk-t0dp6656.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { bt, ZJ, isModelAllowed as Rr, getMainLoopModel as rt, stepDownRestrictedFamilyAliasPick as Xh, getCanonicalName as Ue, parseUserSpecifiedModel as wt, ix, l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { bt, ZJ, isModelAllowed, getMainLoopModel, stepDownRestrictedFamilyAliasPick, getCanonicalName, parseUserSpecifiedModel, ix, l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Uge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { _c } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
-import { isInsideTmux as Oj, isTmuxAvailable as foe, isInITerm2 as SN } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
-import { getTeammateModeFromSnapshot as MOe } from "./chunk-88ybhavr.js";
+import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { Ift, a4e, Hun, l4e, c4e } from "./chunk-qy9488g9.js";
-import { respawnPaneWithCommand as W$t } from "./chunk-x0by9eq8.js";
-import { isCustomAgent as K4e, apn, U2, kV, sjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { writeToMailbox as ag, clearMailbox as kwt, PROTOCOL_FRAME_PROMPT_ERROR as iwn, isStructuredProtocolMessage as DH } from "./chunk-g6nvp9mm.js";
+import { respawnPaneWithCommand } from "./chunk-x0by9eq8.js";
+import { isCustomAgent, apn, U2, kV, sjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructuredProtocolMessage } from "./chunk-g6nvp9mm.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { jk, bZn, cCe, vwt, sanitizeName as Rwt, sanitizeAgentName as Bbn, updateTeamFile as TK, removeTeamMember as jbn } from "./chunk-6b13bhw1.js";
+import { jk, bZn, cCe, vwt, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./chunk-6b13bhw1.js";
 import { bj, dYn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { rd, pD } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import "../权限系统/chunk-jsd70b22.js";
@@ -39,7 +39,7 @@ import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/chunk-4k4dssd9.js";
 import "./chunk-5nnwwahg.js";
 import { Cin } from "./chunk-8jtd54px.js";
-import { spawnInProcessTeammate as Ain } from "./chunk-sjd69zy5.js";
+import { spawnInProcessTeammate } from "./chunk-sjd69zy5.js";
 import { ote, R7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-v599v9yt.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import "../权限系统/chunk-n4x6jsp3.js";
@@ -147,34 +147,34 @@ function O(t, e) {
   return bj(e) ? `${t} ${jo([e])}` : `${t}=${jo([e])}`;
 }
 function F(t) {
-  return t ?? rt();
+  return t ?? getMainLoopModel();
 }
 function re(t, e) {
   if (a.CLAUDE_CODE_SUBAGENT_MODEL_FORCE) t = void 0;
   if (t === "inherit") return F(e);
   if (t !== void 0) {
-    if (!Rr(t)) return Z(t, e);
+    if (!isModelAllowed(t)) return Z(t, e);
     if (e !== null && sjt(t, e)) return e;
     return t;
   }
   let o = kV();
   if (o !== "inherit") {
-    let i = wt(o);
-    if (Rr(i)) return i;
+    let i = parseUserSpecifiedModel(o);
+    if (isModelAllowed(i)) return i;
     return Z(o, e);
   }
   return F(e);
 }
 function Z(t, e) {
-  let o = Xh(t);
+  let o = stepDownRestrictedFamilyAliasPick(t);
   return (ie(t, o !== null), o ?? se(e));
 }
 function se(t) {
   let e = kV();
   if (e !== "inherit") {
-    let o = wt(e);
-    if (Rr(o)) return o;
-    return Xh(e) ?? F(t);
+    let o = parseUserSpecifiedModel(e);
+    if (isModelAllowed(o)) return o;
+    return stepDownRestrictedFamilyAliasPick(e) ?? F(t);
   }
   return F(t);
 }
@@ -193,25 +193,25 @@ function H(t, e, o = "tool") {
             : [i, "default"],
     _ =
       m !== void 0
-        ? !Rr(wt(m))
-        : (T === "tool" || T === "frontmatter") && !Rr(r),
-    p = _ && Xh(r) !== null,
+        ? !isModelAllowed(parseUserSpecifiedModel(m))
+        : (T === "tool" || T === "frontmatter") && !isModelAllowed(r),
+    p = _ && stepDownRestrictedFamilyAliasPick(r) !== null,
     d = _ && !p,
-    s = ZJ(r, Ue(r)),
-    E = ZJ(i, Ue(i)),
+    s = ZJ(r, getCanonicalName(r)),
+    E = ZJ(i, getCanonicalName(i)),
     w = {
       source: S("teammate_spawn"),
-      precedence: u(T),
-      requested_family: u(s),
-      resolved_family: u(E),
+      precedence: fromEnum(T),
+      requested_family: fromEnum(s),
+      resolved_family: fromEnum(E),
       requested_model: bt(r) ?? S("none"),
       resolved_model: bt(i) ?? S("none"),
     };
-  if (p) g("subagent_model_resolve", "family_alias_stepped_down", w);
-  else if (d) g("subagent_model_resolve", "override_dropped", w);
+  if (p) logFeatureSad("subagent_model_resolve", "family_alias_stepped_down", w);
+  else if (d) logFeatureSad("subagent_model_resolve", "override_dropped", w);
   else if (T !== "default" && s !== "other" && E !== "other" && s !== E)
-    g("subagent_model_resolve", "family_mismatch", w);
-  else y("subagent_model_resolve", w);
+    logFeatureSad("subagent_model_resolve", "family_mismatch", w);
+  else logFeatureOk("subagent_model_resolve", w);
   return i;
 }
 function ie(t, e) {
@@ -221,17 +221,17 @@ function ie(t, e) {
   );
 }
 async function me(t) {
-  return (await Fe(N6, ["has-session", "-t", t])).code === 0;
+  return (await execFileNoThrow(N6, ["has-session", "-t", t])).code === 0;
 }
 async function de(t) {
   if (!(await me(t))) {
-    let o = await Fe(N6, ["new-session", "-d", "-s", t], {
+    let o = await execFileNoThrow(N6, ["new-session", "-d", "-s", t], {
       useCwd: !0,
       useToolMemoryCgroup: !1,
     });
     if (o.code !== 0)
       throw (
-        f("subagent_launch", "subagent_teammate_tmux_session_failed"),
+        logFeatureBad("subagent_launch", "subagent_teammate_tmux_session_failed"),
         Error(
           `Failed to create tmux session '${t}': ${o.stderr || "Unknown error"}`,
         )
@@ -272,14 +272,14 @@ async function W(t, e, o, i, c, m) {
   ])
     if (bZn(d))
       throw (
-        f("subagent_launch", "subagent_teammate_control_chars"),
+        logFeatureBad("subagent_launch", "subagent_teammate_control_chars"),
         Error(
           p === "name"
             ? "Invalid name: control characters are not allowed in agent or team names"
             : "Invalid team_name: control characters are not allowed in agent or team names",
         )
       );
-  let r = await TK(
+  let r = await updateTeamFile(
     e,
     (p) => {
       let d = le(t, p),
@@ -303,7 +303,7 @@ async function W(t, e, o, i, c, m) {
   );
   if (!r)
     throw (
-      f("subagent_launch", "subagent_teammate_internal_invariant"),
+      logFeatureBad("subagent_launch", "subagent_teammate_internal_invariant"),
       Error("reserveTeammateIdentity: updateTeamFile returned undefined")
     );
   let T = !1,
@@ -326,7 +326,7 @@ async function W(t, e, o, i, c, m) {
         } catch (d) {
           n(`[spawnTeammate] pane cleanup failed for ${r.teammateId}: ${l(d)}`);
         }
-      await jbn(e, r.teammateId, m);
+      await removeTeamMember(e, r.teammateId, m);
     } else
       n(
         `[spawnTeammate] post-commit failure for ${r.teammateId}; entry kept (agent already running): ${l(p)}`,
@@ -335,7 +335,7 @@ async function W(t, e, o, i, c, m) {
   }
 }
 async function j(t, e, o, i) {
-  await TK(
+  await updateTeamFile(
     t,
     (c) => {
       let m = c.members.find((r) => r.agentId === e);
@@ -347,7 +347,7 @@ async function j(t, e, o, i) {
   );
 }
 function le(t, e) {
-  let o = Bbn(t);
+  let o = sanitizeAgentName(t);
   if (o === cp)
     throw Error(
       '"main" is a reserved recipient name (SendMessage routes it to the main conversation) \u2014 choose another teammate name.',
@@ -368,14 +368,14 @@ async function pe(t, e) {
     p = H(t.model, i().mainLoopModel, t.modelSource);
   if (!c || !m)
     throw (
-      f("subagent_launch", "subagent_teammate_missing_params"),
+      logFeatureBad("subagent_launch", "subagent_teammate_missing_params"),
       Error("name and prompt are required for spawn operation")
     );
   let d = i(),
     s = d.teamContext?.teamName;
   if (!s)
     throw (
-      f("subagent_launch", "subagent_teammate_no_team_name"),
+      logFeatureBad("subagent_launch", "subagent_teammate_no_team_name"),
       Error(
         "Internal error: session team not initialized. This should have happened at startup when agent swarms are enabled.",
       )
@@ -389,16 +389,16 @@ async function pe(t, e) {
     async ({ sanitizedName: w, teammateId: C, teammateColor: h }, k, D) => {
       let I = await Ift();
       if (I.needsIt2Setup && e.requestDialog) {
-        let x = await foe(),
+        let x = await isTmuxAvailable(),
           q = await e.requestDialog(GPe, { tmuxAvailable: x });
         if (q === "cancelled")
           throw (
-            f("subagent_launch", "subagent_teammate_iterm_cancelled"),
+            logFeatureBad("subagent_launch", "subagent_teammate_iterm_cancelled"),
             new jk("Teammate spawn cancelled - iTerm2 setup required")
           );
         if (q === "installed" || q === "use-tmux") (c4e(), (I = await Ift()));
       }
-      let P = await Oj(),
+      let P = await isInsideTmux(),
         { paneId: A, isFirstTeammate: U } =
           await I.backend.createTeammatePaneInSwarmView(w, h);
       if (
@@ -436,8 +436,8 @@ async function pe(t, e) {
         N = G(),
         Y = `cd ${jo([E])} && env ${N} ${jo(M)} ${b}${B}`;
       if (
-        (await kwt(w, s, e.storageV5),
-        (await ag(
+        (await clearMailbox(w, s, e.storageV5),
+        (await writeToMailbox(
           w,
           { from: fs, text: m, timestamp: new Date().toISOString() },
           s,
@@ -445,13 +445,13 @@ async function pe(t, e) {
         )) === void 0)
       )
         throw (
-          f("subagent_launch", "subagent_teammate_prompt_write_failed"),
+          logFeatureBad("subagent_launch", "subagent_teammate_prompt_write_failed"),
           new R(
             `Failed to write initial instructions to ${w}'s inbox \u2014 spawn aborted`,
             "spawnMultiAgent: failed to write initial teammate instructions \u2014 spawn aborted",
           )
         );
-      (await I.backend.sendCommandToPane(A, Y, !P), y("swarm_pane_spawn"), k());
+      (await I.backend.sendCommandToPane(A, Y, !P), logFeatureOk("swarm_pane_spawn"), k());
       let X = P ? "current" : M6,
         ae = P ? "current" : "swarm-view";
       return (
@@ -516,14 +516,14 @@ async function ue(t, e) {
     p = H(t.model, i().mainLoopModel, t.modelSource);
   if (!c || !m)
     throw (
-      f("subagent_launch", "subagent_teammate_missing_params"),
+      logFeatureBad("subagent_launch", "subagent_teammate_missing_params"),
       Error("name and prompt are required for spawn operation")
     );
   let d = i(),
     s = d.teamContext?.teamName;
   if (!s)
     throw (
-      f("subagent_launch", "subagent_teammate_no_team_name"),
+      logFeatureBad("subagent_launch", "subagent_teammate_no_team_name"),
       Error(
         "Internal error: session team not initialized. This should have happened at startup when agent swarms are enabled.",
       )
@@ -535,9 +535,9 @@ async function ue(t, e) {
     { agentType: r, model: p, prompt: m, planModeRequired: _, cwd: E },
     e.teammateColors,
     async ({ sanitizedName: w, teammateId: C, teammateColor: h }, k, D) => {
-      let I = `teammate-${Rwt(w)}`;
+      let I = `teammate-${sanitizeName(w)}`;
       await de(M6);
-      let P = await Fe(N6, [
+      let P = await execFileNoThrow(N6, [
         "new-window",
         "-t",
         M6,
@@ -551,11 +551,11 @@ async function ue(t, e) {
       ]);
       if (P.code !== 0)
         throw (
-          f("subagent_launch", "subagent_teammate_tmux_window_failed"),
+          logFeatureBad("subagent_launch", "subagent_teammate_tmux_window_failed"),
           Error(`Failed to create tmux window: ${P.stderr}`)
         );
       let A = P.stdout.trim();
-      (D(() => Fe(N6, ["kill-pane", "-t", A])),
+      (D(() => execFileNoThrow(N6, ["kill-pane", "-t", A])),
         await j(s, C, { tmuxPaneId: A, backendType: "tmux" }, e.storageV5));
       let U = V(),
         M = [
@@ -581,8 +581,8 @@ async function ue(t, e) {
         B = G(),
         N = `cd ${jo([E])} && env ${B} ${jo(U)} ${M}${v}`;
       if (
-        (await kwt(w, s, e.storageV5),
-        (await ag(
+        (await clearMailbox(w, s, e.storageV5),
+        (await writeToMailbox(
           w,
           { from: fs, text: m, timestamp: new Date().toISOString() },
           s,
@@ -590,7 +590,7 @@ async function ue(t, e) {
         )) === void 0)
       )
         throw (
-          f("subagent_launch", "subagent_teammate_prompt_write_failed"),
+          logFeatureBad("subagent_launch", "subagent_teammate_prompt_write_failed"),
           new R(
             `Failed to write initial instructions to ${w}'s inbox \u2014 spawn aborted`,
             "spawnMultiAgent: failed to write initial teammate instructions \u2014 spawn aborted",
@@ -599,13 +599,13 @@ async function ue(t, e) {
       try {
         cCe(N);
       } catch (L) {
-        throw (f("subagent_launch", "subagent_teammate_control_chars"), L);
+        throw (logFeatureBad("subagent_launch", "subagent_teammate_control_chars"), L);
       }
       try {
-        await W$t([], A, N);
+        await respawnPaneWithCommand([], A, N);
       } catch (L) {
         throw (
-          f("subagent_launch", "subagent_teammate_tmux_respawn_failed"),
+          logFeatureBad("subagent_launch", "subagent_teammate_tmux_respawn_failed"),
           L
         );
       }
@@ -725,13 +725,13 @@ async function z(t, e) {
     _ = H(t.model, i().mainLoopModel, t.modelSource);
   if (!c || !m)
     throw (
-      f("subagent_launch", "subagent_teammate_missing_params"),
+      logFeatureBad("subagent_launch", "subagent_teammate_missing_params"),
       Error("name and prompt are required for spawn operation")
     );
   let d = i().teamContext?.teamName;
   if (!d)
     throw (
-      f("subagent_launch", "subagent_teammate_no_team_name"),
+      logFeatureBad("subagent_launch", "subagent_teammate_no_team_name"),
       Error(
         "Internal error: session team not initialized. This should have happened at startup when agent swarms are enabled.",
       )
@@ -753,7 +753,7 @@ async function z(t, e) {
         let b = e.options.agentDefinitions.activeAgents.find(
           (v) => v.agentType === r,
         );
-        if (b && K4e(b)) h = b;
+        if (b && isCustomAgent(b)) h = b;
         n(`[handleSpawnInProcess] agent_type=${r}, found=${!!h}`);
       }
       let k = {
@@ -764,11 +764,11 @@ async function z(t, e) {
         planModeRequired: T ?? !1,
         model: _,
       };
-      await kwt(s, d, e.storageV5);
-      let D = await Ain(k, e);
+      await clearMailbox(s, d, e.storageV5);
+      let D = await spawnInProcessTeammate(k, e);
       if (!D.ok)
         throw (
-          f("subagent_launch", "subagent_teammate_inprocess_failed"),
+          logFeatureBad("subagent_launch", "subagent_teammate_inprocess_failed"),
           n(`[handleSpawnInProcess] spawn failed: ${D.error}`),
           Error("Failed to spawn in-process teammate")
         );
@@ -851,17 +851,17 @@ async function z(t, e) {
   );
 }
 async function ce(t, e, o) {
-  if (t.prompt && DH(t.prompt))
+  if (t.prompt && isStructuredProtocolMessage(t.prompt))
     throw (
-      f("subagent_launch", "subagent_teammate_protocol_frame_prompt"),
-      Error(iwn)
+      logFeatureBad("subagent_launch", "subagent_teammate_protocol_frame_prompt"),
+      Error(PROTOCOL_FRAME_PROMPT_ERROR)
     );
   if (l4e()) return z(t, e);
   try {
     await Ift();
   } catch (c) {
-    if (MOe() !== "auto")
-      throw (f("subagent_launch", "subagent_teammate_pane_unavailable"), c);
+    if (getTeammateModeFromSnapshot() !== "auto")
+      throw (logFeatureBad("subagent_launch", "subagent_teammate_pane_unavailable"), c);
     return (
       n(
         `[handleSpawn] No pane backend available, falling back to in-process: ${l(c)}`,
@@ -880,7 +880,7 @@ class ne {
 function _e(t, e) {
   if (t.shown) return;
   t.shown = !0;
-  let o = SN()
+  let o = isInITerm2()
     ? 'To force iTerm2 panes, set teammateMode: "iterm2" in settings and enable the iTerm2 Python API (Preferences > General > Magic).'
     : 'To use terminal panes, set teammateMode: "tmux" in settings.';
   e?.({
@@ -893,7 +893,7 @@ function _e(t, e) {
     },
   });
 }
-async function ct(t, e, o) {
+async function spawnTeammate(t, e, o) {
   return ce(t, e, o);
 }
-export { ct as spawnTeammate };
+export { spawnTeammate };

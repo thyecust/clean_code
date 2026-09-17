@@ -12,16 +12,16 @@ import { K, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { OSt } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Zy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { yBt, BS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { Nu, qI, dK, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { Wee, Rsn, DPe } from "../权限系统/chunk-4tar9p3n.js";
-import { isSaneEpochMs as nBe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isSaneEpochMs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, se, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var R = 43200000,
@@ -111,15 +111,15 @@ var d = new F(),
   Q = 4;
 function ysn(e, i, t, r, o, a, _, v) {
   if (!hCe(t))
-    return (g("cross_session_notify_idle", "invalid_frame"), "invalid");
+    return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
   let b = Zy(i);
   if (b === void 0)
-    return (g("cross_session_notify_idle", "invalid_frame"), "invalid");
+    return (logFeatureSad("cross_session_notify_idle", "invalid_frame"), "invalid");
   if (Wee() === "refuse")
-    return (g("cross_session_notify_idle", "refused_by_policy"), "refused");
+    return (logFeatureSad("cross_session_notify_idle", "refused_by_policy"), "refused");
   let u = d;
   if (u.exited)
-    return (g("cross_session_notify_idle", "subscription_after_exit"), "full");
+    return (logFeatureSad("cross_session_notify_idle", "subscription_after_exit"), "full");
   O(Date.now());
   let p = u.subscribers,
     l = (S) => r !== void 0 && S.targetKey === b && S.verifiedPeerPid === r,
@@ -226,14 +226,14 @@ async function QNt(e) {
   try {
     await J(i, r, o, e, t);
   } catch (a) {
-    (h(a), f("cross_session_notify_idle", "flush_internal_error"));
+    (logError(a), logFeatureBad("cross_session_notify_idle", "flush_internal_error"));
   } finally {
     i.inflightBatch = i.inflightBatch.filter((a) => !o.includes(a));
   }
 }
 async function J(e, i, t, r, o) {
   if (Wee() === "refuse") {
-    g("cross_session_notify_idle", "revoked_before_fire");
+    logFeatureSad("cross_session_notify_idle", "revoked_before_fire");
     return;
   }
   let a = e.turnEnded && e.turnConversationId === K(),
@@ -258,7 +258,7 @@ async function J(e, i, t, r, o) {
       );
     }
   if (Wee() === "refuse") {
-    g("cross_session_notify_idle", "revoked_before_fire");
+    logFeatureSad("cross_session_notify_idle", "revoked_before_fire");
     return;
   }
   if (r === "idle" && (!e.idle || yBt() > 0 || DPe() > 0)) {
@@ -288,22 +288,22 @@ async function J(e, i, t, r, o) {
         H(l.verifiedPeerPid, l.authenticated),
         l.verifiedPeerProcStart,
       ).then(
-        () => y("cross_session_notify_idle"),
+        () => logFeatureOk("cross_session_notify_idle"),
         (A) => {
           let w = W(A);
           if (r === "idle" && w === "transient" && !l.retried) {
             if ((B([{ ...l, retried: !0 }]), e.idle)) P();
-            g("cross_session_notify_idle", "notice_send_retrying");
+            logFeatureSad("cross_session_notify_idle", "notice_send_retrying");
             return;
           }
           if (w === "requester-gone")
-            g("cross_session_notify_idle", "requester_gone");
+            logFeatureSad("cross_session_notify_idle", "requester_gone");
           else if (w === "transient")
-            g(
+            logFeatureSad(
               "cross_session_notify_idle",
               l.retried ? "notice_retry_exhausted" : "notice_transient_at_exit",
             );
-          else f("cross_session_notify_idle", "notice_send_failed");
+          else logFeatureBad("cross_session_notify_idle", "notice_send_failed");
           n(
             `[peer-idle] notice to ${Nu(l.replyAddress)} failed: ${qI(String(A))}`,
           );
@@ -313,12 +313,12 @@ async function J(e, i, t, r, o) {
   );
 }
 function N() {
-  return (g("cross_session_notify_idle", "table_full"), "full");
+  return (logFeatureSad("cross_session_notify_idle", "table_full"), "full");
 }
 function M(e, i) {
   let [t] = e.splice(i, 1);
   if (t === void 0) return;
-  (g("cross_session_notify_idle", "evicted_same_class"),
+  (logFeatureSad("cross_session_notify_idle", "evicted_same_class"),
     mdt(
       t.replyTarget,
       t.origMsgId,
@@ -331,7 +331,7 @@ function O(e) {
   let i = d.subscribers;
   for (let t = i.length - 1; t >= 0; t--)
     if (e - i[t].requestedAt > R)
-      (g("cross_session_notify_idle", "expired_unfired"), i.splice(t, 1));
+      (logFeatureSad("cross_session_notify_idle", "expired_unfired"), i.splice(t, 1));
 }
 function ee() {
   let e = "";
@@ -372,7 +372,7 @@ function E(e) {
     i = t;
   }
   if (((i = i.trim()), i.length === 0)) return;
-  return Xe(i, D);
+  return truncateToWidth(i, D);
 }
 function Ssn(e, i, t) {
   let r = d.outstanding,
@@ -384,7 +384,7 @@ function Ssn(e, i, t) {
     if (p.conversationId !== a)
       (clearTimeout(p.expiry),
         r.splice(u, 1),
-        g("cross_session_notify_idle", "purged_cleared_conversation"));
+        logFeatureSad("cross_session_notify_idle", "purged_cleared_conversation"));
   }
   let _ = r.filter((u) => u.targetKey === o);
   while (_.length > V) {
@@ -392,7 +392,7 @@ function Ssn(e, i, t) {
     if (!u) break;
     (clearTimeout(u.expiry),
       r.splice(r.indexOf(u), 1),
-      g("cross_session_notify_idle", "prior_trimmed"));
+      logFeatureSad("cross_session_notify_idle", "prior_trimmed"));
   }
   let v = _.map((u) => u.msgId);
   if (r.length - v.length >= RPe) return { ok: !1, reason: "cap" };
@@ -430,7 +430,7 @@ function ne(e) {
 function ie(e) {
   let i = e.conversationId === K();
   if (
-    (g(
+    (logFeatureSad(
       "cross_session_notify_idle",
       i ? "expired_unheard" : "purged_cleared_conversation",
     ),
@@ -462,18 +462,18 @@ function bsn(e, i, t, r, o, a) {
         (clearTimeout(I.expiry), _.outstanding.splice(l, 1));
     }
   let u = i === "idle" || i === "exited" || i === "unavailable";
-  if (!u) g("cross_session_notify_idle", "notice_state_unrecognized");
+  if (!u) logFeatureSad("cross_session_notify_idle", "notice_state_unrecognized");
   let p = u ? i : "unavailable";
-  if (!Mo()) return (g("cross_session_notify_idle", "requester_gate_off"), !0);
+  if (!isCrossSessionMessagingEnabled()) return (logFeatureSad("cross_session_notify_idle", "requester_gate_off"), !0);
   if (b.conversationId !== K())
-    return (g("cross_session_notify_idle", "conversation_cleared"), !0);
+    return (logFeatureSad("cross_session_notify_idle", "conversation_cleared"), !0);
   if (p === "unavailable" && u)
-    g("cross_session_notify_idle", "peer_unavailable");
+    logFeatureSad("cross_session_notify_idle", "peer_unavailable");
   return (
     C({
       kind: p,
       label: b.label,
-      ...(p !== "unavailable" && nBe(t) && { finishedAt: t }),
+      ...(p !== "unavailable" && isSaneEpochMs(t) && { finishedAt: t }),
       ...(p === "idle" && typeof r === "string" && { detail: E(r) }),
       gate: { fromMode: o, selfSent: a },
     }),
@@ -501,14 +501,14 @@ function C(e) {
   }
   let r = te(e);
   if (r === null) {
-    g("cross_session_notify_idle", "requester_refuses_inbound");
+    logFeatureSad("cross_session_notify_idle", "requester_refuses_inbound");
     return;
   }
-  if (r.kind === "idle" || r.kind === "exited") y("cross_session_notify_idle");
+  if (r.kind === "idle" || r.kind === "exited") logFeatureOk("cross_session_notify_idle");
   try {
     t(r);
   } catch (o) {
-    h(o);
+    logError(o);
   }
 }
 function ZNt(e) {
@@ -520,7 +520,7 @@ function ZNt(e) {
   let o = K();
   for (let { admitted: a, conversationId: _ } of t) {
     if (_ !== o) {
-      g("cross_session_notify_idle", "purged_cleared_conversation");
+      logFeatureSad("cross_session_notify_idle", "purged_cleared_conversation");
       continue;
     }
     C(a);
@@ -529,7 +529,7 @@ function ZNt(e) {
     (n(
       `[peer-idle] ${r} notice(s) arrived past the pre-mount buffer and were lost`,
     ),
-      g("cross_session_notify_idle", "notice_premount_overflow"));
+      logFeatureSad("cross_session_notify_idle", "notice_premount_overflow"));
 }
 function e1t(e) {
   d.getLastTurnText = e;
@@ -547,7 +547,7 @@ function n1t(e, i = null) {
     try {
       d.onReplayDone?.(r);
     } catch (o) {
-      h(o);
+      logError(o);
     }
   }
 }
@@ -561,7 +561,7 @@ function U(e, i, t = !1) {
   try {
     r.onSubscribed(e, i, t);
   } catch (o) {
-    h(o);
+    logError(o);
   }
 }
 function r1t(e) {
@@ -647,14 +647,14 @@ function mdt(e, i, t, r, o, a = !1) {
         let p = d.unavailableRetries.get(i);
         if (p !== void 0) clearTimeout(p);
         (d.unavailableRetries.set(i, u),
-          g("cross_session_notify_idle", "unavailable_send_retrying"));
+          logFeatureSad("cross_session_notify_idle", "unavailable_send_retrying"));
         return;
       }
       if (b === "requester-gone")
-        g("cross_session_notify_idle", "requester_gone");
+        logFeatureSad("cross_session_notify_idle", "requester_gone");
       else if (b === "transient")
-        g("cross_session_notify_idle", "unavailable_retry_exhausted");
-      else f("cross_session_notify_idle", "unavailable_send_failed");
+        logFeatureSad("cross_session_notify_idle", "unavailable_retry_exhausted");
+      else logFeatureBad("cross_session_notify_idle", "unavailable_send_failed");
       n(`[peer-idle] unavailable notice to ${Nu(e)} failed: ${qI(String(v))}`);
     },
   );

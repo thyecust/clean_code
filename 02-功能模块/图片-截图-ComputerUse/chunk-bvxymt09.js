@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { NMn } from "./chunk-6kdvf977.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { w, Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var p = w(function (S, u) {
   var x = Ae("path"),
@@ -110,14 +110,14 @@ function JJn(e) {
   if (!HH().hotkey.registerEscape(e))
     return (
       n("[cu-esc] registerEscape returned false", { level: "warn" }),
-      g("computeruse_esc_register", "tap_create_failed"),
+      logFeatureSad("computeruse_esc_register", "tap_create_failed"),
       !1
     );
   return (
     f(),
     (Zp().escHotkeyRegistered = !0),
     n("[cu-esc] registered"),
-    y("computeruse_esc_register"),
+    logFeatureOk("computeruse_esc_register"),
     !0
   );
 }

@@ -13,7 +13,7 @@ import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   rV,
@@ -29,17 +29,17 @@ import {
   Gjt,
   wde,
   QVn,
-  SYNCED_FILE_ROOT as EKe,
-  shouldIgnore as kk,
-  putSyncedFile as Hne,
-  getSyncedFile as Q2,
-  SYNCED_FILE_WRITE_MODE as Ine,
-  writeUnderSyncDir as HLe,
+  SYNCED_FILE_ROOT,
+  shouldIgnore,
+  putSyncedFile,
+  getSyncedFile,
+  SYNCED_FILE_WRITE_MODE,
+  writeUnderSyncDir,
   SXn,
   nR,
   ET,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -53,10 +53,10 @@ import { Rp, $Ct, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认�
 import { Js, rc, bie, Ske, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Cet, tRt, nRt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_FAMILY_TOOL_NAMES as nie } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { patternWithRootFor as e$e } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isSettingsToCloudEnabled as LD, isSettingsToCloudEnabledCached as aU } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { ARTIFACT_TOOL_NAME, ARTIFACT_FAMILY_TOOL_NAMES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isSettingsToCloudEnabled, isSettingsToCloudEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { Cr, Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import {
   zHt,
@@ -74,7 +74,7 @@ import {
 } from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
 import { ale, GZt, Z$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -341,22 +341,22 @@ var Br = [
     ro,
     co,
     M2,
-    ...nie,
-    Yc,
+    ...ARTIFACT_FAMILY_TOOL_NAMES,
+    WORKFLOW_TOOL_NAME,
     i3,
-    ...eir.map((e) => rc(vd, e)),
+    ...eir.map((e) => rc(CLAUDE_IN_CHROME_MCP_SERVER_NAME, e)),
     "NotebookRead",
     "LS",
     ...bie.bashPrefixTools,
     Ut,
     ia,
   ],
-  Xr = nie,
+  Xr = ARTIFACT_FAMILY_TOOL_NAMES,
   qr = [...bie.bashPrefixTools, ia],
-  Zr = [Bt, Mn, Wl, ...nie, "MultiEdit", ...cn];
+  Zr = [Bt, Mn, Wl, ...ARTIFACT_FAMILY_TOOL_NAMES, "MultiEdit", ...cn];
 function Jr(e) {
   if (e === Bt) return Zr;
-  if (e === _r) return Xr;
+  if (e === ARTIFACT_TOOL_NAME) return Xr;
   if (e === tt) return cn;
   if (bie.bashPrefixTools.includes(e)) return qr;
   let t = Js(e);
@@ -373,7 +373,7 @@ var Qr = new Set([...bie.bashPrefixTools, Ut]),
   oo = /^[\w*-]+$/,
   io = /\*{3,}/,
   so = 8;
-function pn(e, { settingsToCloud: t = aU, preToolUseHookActiveHere: n }) {
+function pn(e, { settingsToCloud: t = isSettingsToCloudEnabledCached, preToolUseHookActiveHere: n }) {
   if (!ao(t))
     return {
       document: null,
@@ -783,7 +783,7 @@ function ko(e) {
   if (t.split("/").includes("..") || Eo(t) || /^~[^/]/.test(t))
     return "machine";
   if (t === "~" || t.startsWith("~/")) return "home";
-  return e$e(t, to).root !== null ? "machine" : "none";
+  return patternWithRootFor(t, to).root !== null ? "machine" : "none";
 }
 function Ao(e, t) {
   if (!me(e)) return { value: void 0, counts: St() };
@@ -2005,7 +2005,7 @@ import {
   lstat as zn,
   open as gi,
   realpath as Ue,
-  unlink as Bn,
+  unlink,
 } from "fs/promises";
 import {
   basename as Kn,
@@ -2048,12 +2048,12 @@ async function ot(e, t) {
     return null;
   }
 }
-import { lstat as oi, mkdir as Pn, realpath as Mt } from "fs/promises";
+import { lstat as oi, mkdir, realpath as Mt } from "fs/promises";
 import {
   basename as ii,
   dirname as it,
   join as si,
-  posix as ai,
+  posix,
   relative as st,
   resolve as xn,
   sep as Ft,
@@ -2077,7 +2077,7 @@ function Fn({
   storageV5: e,
   flagOn: t,
   configHome: n,
-  settingsToCloud: r = LD,
+  settingsToCloud: r = isSettingsToCloudEnabled,
 }) {
   let o = (_) => async (h, S, T) => {
     if (!(await r().catch(() => !1)))
@@ -2095,13 +2095,13 @@ function Fn({
         Error("destination names a config home the backend does not address"),
         "HOME_DEST_HOME_MISMATCH",
       );
-    let T = st(_, h).split(Ft).join(ai.sep),
+    let T = st(_, h).split(Ft).join(posix.sep),
       P = li(T);
     if (P === null) return Dn(_, h, S);
     await di(_, h);
     let F = await e.write(P, S, {
       publishDiscipline: "atomic",
-      mode: Ine,
+      mode: SYNCED_FILE_WRITE_MODE,
       precondition: { type: "none" },
       parent: "mustExist",
     });
@@ -2117,26 +2117,26 @@ function Fn({
   });
 }
 function Dn(e, t, n) {
-  return HLe(e, t, n, "replace");
+  return writeUnderSyncDir(e, t, n, "replace");
 }
 async function di(e, t) {
-  if (kk(st(e, t)))
+  if (shouldIgnore(st(e, t)))
     throw ue(
       Error("destination name is one the lane writer ignores"),
       "HOME_DEST_IGNORED",
     );
-  await Pn(e).catch((o) => {
+  await mkdir(e).catch((o) => {
     if (A(o) !== "EEXIST") throw o;
   });
   let n = await Mt(e);
-  (await ui(n, it(t)), await Pn(it(t), { recursive: !0 }));
+  (await ui(n, it(t)), await mkdir(it(t), { recursive: !0 }));
   let r = await Mt(it(t));
   if (!Cn({ path: r, directory: n }))
     throw ue(
       Error("destination parent escaped the config home"),
       "HOME_DEST_PARENT_ESCAPE",
     );
-  if (kk(st(n, si(r, ii(t)))))
+  if (shouldIgnore(st(n, si(r, ii(t)))))
     throw ue(
       Error("destination resolves to a name the lane writer ignores"),
       "HOME_DEST_IGNORED",
@@ -2166,7 +2166,7 @@ async function ui(e, t) {
           Error("destination ancestor escaped the config home"),
           "HOME_DEST_PARENT_ESCAPE",
         );
-      if (kk(st(e, r)))
+      if (shouldIgnore(st(e, r)))
         throw ue(
           Error(
             "destination ancestor resolves to a name the lane writer ignores",
@@ -2187,7 +2187,7 @@ function Cn({ path: e, directory: t }) {
 function ue(e, t) {
   return ((e.code = t), e);
 }
-import { isAbsolute as ci, join as mi, relative as pi, sep as Nn } from "path";
+import { isAbsolute, join as mi, relative as pi, sep as Nn } from "path";
 function In(e, t) {
   try {
     return SXn(
@@ -2201,7 +2201,7 @@ function In(e, t) {
 }
 function _i(e, t) {
   let n = pi(e, t);
-  if (n === "" || n === ".." || n.startsWith(`..${Nn}`) || ci(n)) return !1;
+  if (n === "" || n === ".." || n.startsWith(`..${Nn}`) || isAbsolute(n)) return !1;
   let r = VHt(n.split(Nn).join("/"));
   return r !== null && r.kind !== "output_style";
 }
@@ -2253,10 +2253,10 @@ function Vn({ storageV5: e, configHome: t }) {
       nRt(n, Cet);
     },
     now: () => Date.now(),
-    settingsToCloud: LD,
+    settingsToCloud: isSettingsToCloudEnabled,
   };
 }
-async function bi(e, t, n = EKe) {
+async function bi(e, t, n = SYNCED_FILE_ROOT) {
   let r = Un(e),
     o;
   try {
@@ -2582,7 +2582,7 @@ async function Wn(e, t) {
   }
   if (mn(d.content) !== e.sha256) return "not_ours";
   try {
-    return (await Bn(n), "removed");
+    return (await unlink(n), "removed");
   } catch (_) {
     let h = A(_) ?? "unknown";
     if (je(h)) return "gone";
@@ -2626,7 +2626,7 @@ async function Ai(e, t, n) {
     if (_ !== "ours") return { ...r, replaced: _, sha256After: null };
     try {
       return (
-        await Bn(o),
+        await unlink(o),
         { ...r, removed: !0, replaced: _, sha256After: null }
       );
     } catch (h) {
@@ -2738,13 +2738,13 @@ function Zn() {
           : null;
       switch (
         (i("tengu_home_seed_apply", {
-          outcome: u(e),
-          probe: u(t),
+          outcome: fromEnum(e),
+          probe: fromEnum(t),
           generation: r,
           epoch_gt1: o,
           duration_ms: d,
           applied_before_first_ask: _,
-          output_style_check: u(h),
+          output_style_check: fromEnum(h),
           ...(S !== null && {
             files_applied: S.filesApplied,
             files_replaced_foreign: S.filesReplacedForeign,
@@ -2761,14 +2761,14 @@ function Zn() {
             removals_failed: S.removalsFailed,
             settings_written: S.settingsWritten,
             settings_removed: S.settingsRemoved,
-            settings_refused: u(S.settingsRefused),
-            replaced_existing_settings: u(S.replacedExistingSettings),
+            settings_refused: fromEnum(S.settingsRefused),
+            replaced_existing_settings: fromEnum(S.replacedExistingSettings),
             refiltered_keys: S.refilteredKeys,
             permissions_dropped: S.permissionsDropped,
             sidecar_written: S.sidecarWritten,
           }),
           ...(n?.outcome === "config_home_unsafe" && {
-            config_home_unsafe_reason: u(n.reason),
+            config_home_unsafe_reason: fromEnum(n.reason),
           }),
         }),
         e)
@@ -2776,7 +2776,7 @@ function Zn() {
         case "applied":
         case "already_applied":
         case "empty":
-          y("ccr_home_seed");
+          logFeatureOk("ccr_home_seed");
           break;
         case "partial":
         case "stale_generation":
@@ -2787,11 +2787,11 @@ function Zn() {
         case "unannounced_row":
         case "refused_lane":
         case "flag_off":
-          g("ccr_home_seed", e);
+          logFeatureSad("ccr_home_seed", e);
           break;
         case "bad_pack":
         case "config_home_unsafe":
-          f("ccr_home_seed", e);
+          logFeatureBad("ccr_home_seed", e);
           break;
         default:
       }
@@ -2804,11 +2804,11 @@ function Zn() {
       agentNotice: o,
     }) => {
       i("tengu_home_seed_hold", {
-        outcome: u(e),
+        outcome: fromEnum(e),
         waited_ms: t,
         verdict_wait_ms: n,
         first_ask: r,
-        agent_notice: u(o),
+        agent_notice: fromEnum(o),
       });
     },
     recovery: ({
@@ -2819,7 +2819,7 @@ function Zn() {
     }) => {
       switch (
         (i("tengu_home_seed_recovery", {
-          outcome: u(e),
+          outcome: fromEnum(e),
           generation: t,
           duration_ms: n,
           rules_dropped: r,
@@ -2841,13 +2841,13 @@ function Zn() {
         case "rules_unverifiable":
         case "settings_refused":
         case "auth_failed":
-          g("ccr_home_seed", `recovery_${e}`);
+          logFeatureSad("ccr_home_seed", `recovery_${e}`);
           break;
         case "ready_unreadable":
         case "pack_unreadable":
         case "settings_unusable":
         case "threw":
-          f("ccr_home_seed", `recovery_${e}`);
+          logFeatureBad("ccr_home_seed", `recovery_${e}`);
           break;
       }
     },
@@ -2893,7 +2893,7 @@ var Di = {
     settings_unusable: "the settings file here could not be merged into",
     nothing_applied: "they could not be written here",
   };
-function Ja(e) {
+function formatHomeRestoreLine(e) {
   if (e.kind === "not_restored")
     return {
       text: `This cloud environment was recreated and the permission rules forwarded from your machine could not be restored (${Fi[e.reason]}): the deny and ask rules your machine sent are not restored here; ${e.reason === "settings_refused" ? "a cloud environment on a newer Claude Code build will have them" : "a new cloud session started from that machine will have them"}.`,
@@ -2919,7 +2919,7 @@ function Ja(e) {
     level: "notice",
   };
 }
-function Qa(e) {
+function formatHomeAppliedLine(e) {
   let { applied: t } = e,
     n = [
       ...(t.claudeMd ? ["CLAUDE.md"] : []),
@@ -2994,7 +2994,7 @@ function Ci() {
     ),
   };
 }
-function el({
+function startWorkerHomeSeed({
   session: e,
   record: t,
   configHome: n,
@@ -3018,8 +3018,8 @@ function el({
         remembered: t.announcements,
         subscribe: t.announced.subscribe,
       },
-      pullRow: Q2,
-      putRow: Hne,
+      pullRow: getSyncedFile,
+      putRow: putSyncedFile,
       readSidecar: $n,
       sidecarState: jn,
       readStandingSettings: Gn,
@@ -3039,8 +3039,8 @@ function el({
       sleep: Z,
       epochGt1: (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1,
       outputStyleAvailable: async (_) => Object.hasOwn(await dX(Q(), o), _),
-      enabled: LD,
-      enabledNow: aU,
+      enabled: isSettingsToCloudEnabled,
+      enabledNow: isSettingsToCloudEnabledCached,
       limits: {
         ...Ci(),
         requestAttempts: vn,
@@ -3050,12 +3050,12 @@ function el({
     },
   );
 }
-function tl(e) {
+function stopHomeSeedWithoutDirSync(e) {
   (q("warn", "home_seed_stopped_no_dir_sync", {}), e.stop());
 }
 export {
-  Qa as formatHomeAppliedLine,
-  Ja as formatHomeRestoreLine,
-  el as startWorkerHomeSeed,
-  tl as stopHomeSeedWithoutDirSync,
+  formatHomeAppliedLine,
+  formatHomeRestoreLine,
+  startWorkerHomeSeed,
+  stopHomeSeedWithoutDirSync,
 };

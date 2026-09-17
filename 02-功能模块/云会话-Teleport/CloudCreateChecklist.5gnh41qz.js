@@ -41,7 +41,7 @@ function Z(ft) {
 function j(K) {
   return e(PB, { status: "pending", label: K }, K);
 }
-function X(st) {
+function CloudCreateChecklist(st) {
   let n = _(26),
     { state: a, cancelling: y, onCancel: x } = st,
     { columns: D } = Se(),
@@ -166,4 +166,4 @@ function T(Ct) {
   else W = Q[9];
   return W;
 }
-export { X as CloudCreateChecklist };
+export { CloudCreateChecklist };

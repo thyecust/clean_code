@@ -66,7 +66,7 @@ var t = {
   baseDir: "built-in",
   getSystemPrompt: (o) => e(),
 };
-function i() {
+function getCoordinatorAgents() {
   return [t];
 }
-export { i as getCoordinatorAgents };
+export { getCoordinatorAgents };

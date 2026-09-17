@@ -17,15 +17,15 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { uRe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getBranch as Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
-import { probeVoiceConnectivity as Fnn, isVoiceStreamAvailable as $nn, connectVoiceStream as Unn } from "./chunk-6098r6ax.js";
+import { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream } from "./chunk-6098r6ax.js";
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -208,7 +208,7 @@ class L {
   cancelRecording = () => {
     if (this.#E || this.#e === "idle") return;
     (n("[voice] cancelRecording: discarding without submit"),
-      y("voice_cancel"),
+      logFeatureOk("voice_cancel"),
       this.#S(),
       this.#r("idle"));
   };
@@ -352,7 +352,7 @@ class L {
               (this.#s.close(), (this.#s = null));
             let _ = this.#f;
             if ((await Z(250), b())) return;
-            let k = Ije(Ge().language),
+            let k = Ije(getInitialSettings().language),
               u = await this.#I();
             if (b()) return;
             if (
@@ -421,7 +421,7 @@ class L {
             (this.#s.close(), (this.#s = null));
           if (v)
             (n(`[voice] Injecting transcript (${String(v.length)} chars)`),
-              y("voice_transcription"),
+              logFeatureOk("voice_transcription"),
               this.#t.onTranscript(v));
           else if (a === 0 && t > 2000) {
             let { message: _, errorCode: k } = J({
@@ -432,12 +432,12 @@ class L {
               (this.#t.onError(_),
               k === "voice_transcription_connection_failed")
             )
-              if (V) f("voice_transcription", P(V));
+              if (V) logFeatureBad("voice_transcription", P(V));
               else
                 this.#z().then((u) => {
-                  f("voice_transcription", P(`probe_${u}`));
+                  logFeatureBad("voice_transcription", P(`probe_${u}`));
                 });
-            else f("voice_transcription", k);
+            else logFeatureBad("voice_transcription", k);
           }
           ((this.#o = ""),
             this.#n.setState((_) => {
@@ -448,8 +448,8 @@ class L {
         })
         .catch((R) => {
           if (
-            (f("voice_transcription", "voice_transcription_finalize_failed"),
-            h(ge(R)),
+            (logFeatureBad("voice_transcription", "voice_transcription_finalize_failed"),
+            logError(ge(R)),
             !b())
           )
             this.#r("idle");
@@ -458,7 +458,7 @@ class L {
   async #D() {
     let e = this.#h.voiceModule;
     if (!e) {
-      (f("voice_start", "voice_start_module_not_loaded"),
+      (logFeatureBad("voice_start", "voice_start_module_not_loaded"),
         this.#t.onError("Voice module not loaded yet. Try again in a moment."),
         (this.#i = !1));
       return;
@@ -476,7 +476,7 @@ class L {
             { level: "error" },
           ),
           i("tengu_voice_circuit_breaker_tripped", {}),
-          f("voice_start", "voice_start_breaker_paused"),
+          logFeatureBad("voice_start", "voice_start_breaker_paused"),
           this.#t.onError(
             t.lastExpectedHint
               ? `${t.lastExpectedHint} Voice input is paused for a moment.`
@@ -501,7 +501,7 @@ class L {
     if (this.#u !== c) return;
     if (!a.available) {
       (n(`[voice] Recording not available: ${a.reason ?? "unknown"}`),
-        f("voice_start", "voice_start_recording_unavailable"),
+        logFeatureBad("voice_start", "voice_start_recording_unavailable"),
         this.#t.onError(a.reason ?? "Audio recording is not available."),
         t.recordEarlyFailure(),
         (this.#i = !1),
@@ -553,7 +553,7 @@ class L {
         return;
       }
       let u = C.hint;
-      (f("voice_start", "voice_start_capture_failed"),
+      (logFeatureBad("voice_start", "voice_start_capture_failed"),
         n(`[voice] Recording failed \u2014 ${u ?? "no audio tool found"}`, {
           level: "error",
         }),
@@ -571,10 +571,10 @@ class L {
         })));
       return;
     }
-    let b = Ge().language,
+    let b = getInitialSettings().language,
       D = Ije(b),
       R = Mcr();
-    (y("voice_start"),
+    (logFeatureOk("voice_start"),
       i("tengu_voice_recording_started", {
         focusTriggered: this.#i,
         sttLanguage: uRe(D.code),
@@ -602,7 +602,7 @@ class L {
                   (n(
                     `[voice] Focus mode: flushing final transcript immediately (${String(o.trim().length)} chars)`,
                   ),
-                    y("voice_transcription"),
+                    logFeatureOk("voice_transcription"),
                     this.#t.onTranscript(o.trim()),
                     (this.#$ += o.trim().length),
                     this.#n.setState((s) => {
@@ -663,14 +663,14 @@ class L {
                 }
               }
               if ((this.#T++, !v)) t.recordEarlyFailure();
-              (f("voice_stream_connect", "voice_stream_connection_error"),
+              (logFeatureBad("voice_stream_connect", "voice_stream_connection_error"),
                 n(`[voice] voice_stream error: ${o}`, { level: "error" }));
               let s = this.#o.trim();
               if (s)
                 (n(
                   `[voice] mid-stream error: salvaging ${String(s.length)} chars before cleanup`,
                 ),
-                  g(
+                  logFeatureSad(
                     "voice_transcription",
                     "voice_transcription_partial_salvaged",
                   ),
@@ -687,7 +687,7 @@ class L {
                 o.close();
                 return;
               }
-              ((this.#s = o), (this.#B = !0), y("voice_stream_connect"));
+              ((this.#s = o), (this.#B = !0), logFeatureOk("voice_stream_connect"));
               let m = 32000;
               if (l.length > 0) {
                 let s = 0;
@@ -720,7 +720,7 @@ class L {
                 (n(
                   "[voice] Failed to connect to voice_stream (no OAuth token?)",
                 ),
-                f("voice_stream_connect", "voice_stream_no_auth"),
+                logFeatureBad("voice_stream_connect", "voice_stream_no_auth"),
                 this.#t.onError(
                   "Voice mode requires a Claude.ai account. Please run /login to sign in.",
                 ),
@@ -740,8 +740,8 @@ class L {
           },
           (o) => {
             if (
-              (h(ge(o)),
-              f("voice_stream_connect", "voice_stream_connect_exception"),
+              (logError(ge(o)),
+              logFeatureBad("voice_stream_connect", "voice_stream_connect_exception"),
               _())
             )
               return;
@@ -760,7 +760,7 @@ class L {
     this.#I().then(k);
   }
 }
-import { basename as H } from "path";
+import { basename } from "path";
 var Q = [
   "MCP",
   "symlink",
@@ -785,7 +785,7 @@ function K(e) {
     .filter((t) => t.length > 2 && t.length <= 20);
 }
 function ee(e) {
-  let t = H(e).replace(/\.[^.]+$/, "");
+  let t = basename(e).replace(/\.[^.]+$/, "");
   return K(t);
 }
 var x = 50;
@@ -794,12 +794,12 @@ async function O(e) {
   try {
     let r = sn();
     if (r) {
-      let c = H(r);
+      let c = basename(r);
       if (c.length > 2 && c.length <= 50) t.add(c);
     }
   } catch {}
   try {
-    let r = await Da();
+    let r = await getBranch();
     if (r) for (let c of K(r)) t.add(c);
   } catch {}
   if (e)
@@ -809,7 +809,7 @@ async function O(e) {
     }
   return [...t].slice(0, x);
 }
-function we({
+function useVoice({
   onTranscript: e,
   onError: t,
   enabled: r,
@@ -836,10 +836,10 @@ function we({
           clock: C,
           voiceStore: b,
           loadVoiceModule: () => import("./checkRecordingAvailability.sby0acpc.js"),
-          connectVoiceStream: (k, u, S) => Unn(k, u, S),
+          connectVoiceStream: (k, u, S) => connectVoiceStream(k, u, S),
           credentials: V,
-          isVoiceStreamAvailable: () => $nn(),
-          probeVoiceConnectivity: () => Fnn(),
+          isVoiceStreamAvailable: () => isVoiceStreamAvailable(),
+          probeVoiceConnectivity: () => probeVoiceConnectivity(),
           getVoiceKeyterms: () => O(),
           inputs: R,
         }),
@@ -855,4 +855,4 @@ function we({
     cancelRecording: v.cancelRecording,
   };
 }
-export { we as useVoice };
+export { useVoice };

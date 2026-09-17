@@ -14,13 +14,13 @@ import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { l, A, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isTeamLead as ZC } from "../Teammates团队/chunk-811z9z0t.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isTeamLead } from "../Teammates团队/chunk-811z9z0t.js";
 import { EZn, AZn, zE, VE, Wk, CZn, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { Qt, re, De, E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { h3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
-import { watch as b } from "fs";
+import { watch } from "fs";
 var g = 5000,
   T = 50,
   f = 5000;
@@ -77,7 +77,7 @@ class UOt {
     if (s === this.#f && this.#n !== null) return;
     (this.#n?.close(), (this.#n = null), (this.#f = s));
     try {
-      let t = b(s, this.#h);
+      let t = watch(s, this.#h);
       (t.on("error", (i) => {
         if (
           (n(`Task list watcher error: ${l(i)}`, { level: "warn" }),
@@ -255,7 +255,7 @@ class UOt {
             );
             return;
           }
-          h(t);
+          logError(t);
         })
         .finally(() => {
           this.#p = !1;
@@ -286,7 +286,7 @@ var BOt = Qt(null),
 function c() {
   let e = De(BOt),
     s = U((i) => i.teamContext);
-  if (!(h3() && !Nn() && (!s || ZC(s)))) return null;
+  if (!(h3() && !Nn() && (!s || isTeamLead(s)))) return null;
   if (!e)
     throw ReferenceError(
       "useTasksV2 cannot be called outside of a TasksV2StoreContext provider (mounted by <AppStateProvider />)",

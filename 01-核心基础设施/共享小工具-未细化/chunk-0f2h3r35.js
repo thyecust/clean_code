@@ -10,7 +10,7 @@
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { N6 } from "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
 var c = "it2";
 class u {
@@ -52,7 +52,7 @@ function getUserTmuxSocket() {
   return ft(d, ",") || null;
 }
 async function isTmuxAvailable() {
-  return (await Fe(N6, ["-V"])).code === 0;
+  return (await execFileNoThrow(N6, ["-V"])).code === 0;
 }
 function isInITerm2(e = AK) {
   let { terminalProbes: o } = e;
@@ -68,7 +68,7 @@ function getIt2Command(e = AK) {
 }
 async function isIt2CliAvailable(e = AK) {
   let o = a.SHELL || "/bin/zsh",
-    s = await Fe(o, ["-lc", `command -v ${c}`], { useCwd: !1, timeout: 2000 }),
+    s = await execFileNoThrow(o, ["-lc", `command -v ${c}`], { useCwd: !1, timeout: 2000 }),
     i =
       s.code === 0
         ? (s.stdout
@@ -80,7 +80,7 @@ async function isIt2CliAvailable(e = AK) {
             .filter(Boolean)
             .at(-1) ?? "")
         : "",
-    l = async (m) => Fe(m, ["session", "list"]),
+    l = async (m) => execFileNoThrow(m, ["session", "list"]),
     t = i || c,
     r = await l(t);
   if (i && r.code !== 0 && (r.code === 127 || /ENOENT/i.test(r.error ?? "")))

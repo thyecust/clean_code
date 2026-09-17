@@ -13,12 +13,12 @@ import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { getSettingsForSource as ye, getAllPolicyTierSettings as Rd, getDurablePolicyTierSettings as pie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getAllPolicyTierSettings, getDurablePolicyTierSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { s, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { homedir as x, hostname as v } from "os";
-import { dirname as U, join as y } from "path";
+import { homedir, hostname } from "os";
+import { dirname, join as y } from "path";
 function a(e) {
   return e
     .trim()
@@ -41,10 +41,10 @@ function C() {
   }
 }
 async function A2n() {
-  return (await Su()) && (await w());
+  return (await isViolinWoodEnabled()) && (await w());
 }
 function JDt() {
-  return ri() && C();
+  return isViolinWoodEnabledCached() && C();
 }
 var UNATTENDED_SERVING_CONSENT_VERSION = 1,
   UNATTENDED_SERVING_CONSENT_TERMS = "unattended-serving:v1:auto-arm-classifier",
@@ -59,9 +59,9 @@ var UNATTENDED_SERVING_CONSENT_VERSION = 1,
     }),
   );
 function g() {
-  return y(x(), ".claude", "state", E);
+  return y(homedir(), ".claude", "state", E);
 }
-function unattendedServingMachineName(e = v()) {
+function unattendedServingMachineName(e = hostname()) {
   return M4t(a(e));
 }
 function p() {
@@ -76,10 +76,10 @@ function p() {
     },
     writeText: async (e) => {
       let t = g();
-      (await qt().mkdir(U(t), 448), await qt().atomicWrite(t, e, 384));
+      (await qt().mkdir(dirname(t), 448), await qt().atomicWrite(t, e, 384));
     },
     now: () => new Date(),
-    hostname: v,
+    hostname: hostname,
   };
 }
 async function readUnattendedServingConsent(e) {
@@ -231,9 +231,9 @@ function managedSettingsForbidUnattendedServing() {
 }
 function unattendedServingForbiddenBy() {
   let e = (t) => t?.remoteTools?.allowUnattendedServing === !1;
-  return Rd().some(e) || pie().some(e) || e(ye("policySettings"))
+  return getAllPolicyTierSettings().some(e) || getDurablePolicyTierSettings().some(e) || e(getSettingsForSource("policySettings"))
     ? "managed"
-    : e(ye("userSettings"))
+    : e(getSettingsForSource("userSettings"))
       ? "user"
       : void 0;
 }

@@ -25,8 +25,8 @@ async function m(o, a, l, u, s) {
   let n = NBn(s?.storageV5);
   return n !== null ? { systemMessage: n } : {};
 }
-function C() {
+function registerUltrareviewPostCommitHook() {
   let o = { type: "callback", callback: m, timeout: 1, internal: !0 };
   wB({ PostToolUse: [{ matcher: `${qe}|${Ut}`, hooks: [o] }] });
 }
-export { C as registerUltrareviewPostCommitHook };
+export { registerUltrareviewPostCommitHook };

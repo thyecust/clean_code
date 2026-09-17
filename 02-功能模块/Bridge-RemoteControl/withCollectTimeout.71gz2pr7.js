@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 28 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { fn, Fo, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Eu, findGitRootRecheckingNegative as H1, gitExe as lt, getGitDir as Zq } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { lstat as p, open as w } from "fs/promises";
-import { join as c, resolve as E } from "path";
+import { fn, Fo, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { Eu, findGitRootRecheckingNegative, gitExe, getGitDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { lstat, open as w } from "fs/promises";
+import { join as c, resolve } from "path";
 var d = 1e4;
-async function b(e, t = d) {
+async function withCollectTimeout(e, t = d) {
   let r = new AbortController();
   try {
     return await Promise.race([
@@ -31,23 +31,23 @@ async function b(e, t = d) {
     r.abort();
   }
 }
-async function B(e, t, r = d) {
-  let i = H1(e);
+async function collectWorktreeState(e, t, r = d) {
+  let i = findGitRootRecheckingNegative(e);
   if (!i) return null;
   try {
-    let o = await b(O(i, t), r);
-    return (y("bridge_worktree_state"), o);
+    let o = await withCollectTimeout(O(i, t), r);
+    return (logFeatureOk("bridge_worktree_state"), o);
   } catch (o) {
     return (
-      f("bridge_worktree_state", "collect_failed"),
+      logFeatureBad("bridge_worktree_state", "collect_failed"),
       n(`[bridge:worktree] collectWorktreeState failed: ${l(o)}`),
       null
     );
   }
 }
 async function O(e, t) {
-  let r = await Zq(e);
-  if (!r) (Eu().gitDirByCwd.delete(E(e)), (r = await Zq(e)));
+  let r = await getGitDir(e);
+  if (!r) (Eu().gitDirByCwd.delete(resolve(e)), (r = await getGitDir(e)));
   if (!r)
     throw Error("getGitDir returned null \u2014 cannot verify worktree state");
   let [i, o, u, s, g, _] = await Promise.all([
@@ -72,7 +72,7 @@ async function O(e, t) {
 }
 var x = 4194304;
 function a(e, t) {
-  return Be(lt(), [...fn, ...t], {
+  return execFileNoThrowWithCwd(gitExe(), [...fn, ...t], {
     cwd: e,
     env: Fo(),
     preserveOutputOnError: !1,
@@ -111,7 +111,7 @@ async function v(e) {
 }
 async function h(e) {
   try {
-    let t = await p(e);
+    let t = await lstat(e);
     return t.isFile() || t.isDirectory();
   } catch (t) {
     if (W(t)) return !1;
@@ -134,7 +134,7 @@ async function D(e) {
 async function P(e) {
   let t = c(e, ".gitattributes");
   try {
-    if (!(await p(t)).isFile()) return !1;
+    if (!(await lstat(t)).isFile()) return !1;
   } catch (i) {
     if (W(i)) return !1;
     throw i;
@@ -156,4 +156,4 @@ async function P(e) {
     await r?.close();
   }
 }
-export { B as collectWorktreeState, b as withCollectTimeout };
+export { collectWorktreeState, withCollectTimeout };

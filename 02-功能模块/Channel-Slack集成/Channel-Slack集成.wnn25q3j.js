@@ -11,10 +11,10 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { ze, KDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { rS, Aq, wir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { JJe } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { no, sf } from "../../01-核心基础设施/共享小工具-未细化/chunk-6ffbt6s0.js";
@@ -137,7 +137,7 @@ function x(e) {
 function nfe(e) {
   return e.type === "queued_command" && Zbt(e.forwardedIntent) !== void 0;
 }
-import { randomBytes as H } from "crypto";
+import { randomBytes } from "crypto";
 var fGt = "poll_",
   gN = 49152,
   rfe = 1000,
@@ -454,7 +454,7 @@ function rZn(e, t) {
 }
 function rCe(e) {
   if (e.pollEvent === void 0)
-    return (h(Error("poll-event command without pollEvent payload")), "");
+    return (logError(Error("poll-event command without pollEvent payload")), "");
   return e.pollEvent.envelope;
 }
 function sXe(e) {
@@ -476,7 +476,7 @@ function Q(e) {
 }
 var G = 6;
 function oZn() {
-  return H(G).toString("base64url");
+  return randomBytes(G).toString("base64url");
 }
 function sZn(e, t) {
   return `<event nonce="${t}"${e.slice(6)}`;
@@ -523,16 +523,16 @@ function sfe(e, t) {
         ),
       ));
   }
-  if (n) f("poll_event_delivery", "discarded");
+  if (n) logFeatureBad("poll_event_delivery", "discarded");
 }
-import { types as ee } from "util";
+import { types } from "util";
 function ife(e) {
   try {
     let t = e;
     if (t === null || (typeof t !== "object" && typeof t !== "function"))
       return !1;
     for (let n = 0; n < 64; n++) {
-      if (ee.isProxy(t)) return !1;
+      if (types.isProxy(t)) return !1;
       let r = Reflect.getPrototypeOf(t);
       if (r === null) return !1;
       if (r === Error.prototype) return !0;
@@ -600,7 +600,7 @@ class CC {
         } finally {
           if (!o) this.#r(this.#t - 1);
         }
-      }).catch(h),
+      }).catch(logError),
       { evalId: i, queuedBehind: r }
     );
   }
@@ -639,7 +639,7 @@ class CC {
     let o = this.#n(e);
     o.deliveryChain = o.deliveryChain
       .then(() => i.deliver(t, n, r))
-      .catch(h)
+      .catch(logError)
       .finally(() => this.#r(this.#t - 1));
   }
   get(e) {

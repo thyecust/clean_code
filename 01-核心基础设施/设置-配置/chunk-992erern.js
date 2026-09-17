@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
@@ -22,14 +22,14 @@ import {
   QH,
   Gve,
   Ese,
-  getMainLoopModel as rt,
-  getDefaultMainLoopModelSetting as dh,
-  getCanonicalName as Ue,
-  parseUserSpecifiedModel as wt,
+  getMainLoopModel,
+  getDefaultMainLoopModelSetting,
+  getCanonicalName,
+  parseUserSpecifiedModel,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { aKe, UO, Jf, Ym, eg, xMe, HMe, wT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _Se } from "../../02-功能模块/上下文压缩-Compact/chunk-525y6trw.js";
@@ -47,7 +47,7 @@ var Jnn = 8000,
 function A4(t) {
   if (af(aKe({ ...t, toolPermissionContext: { mode: "default" } }))) return;
   let e = Q$e();
-  return wt(e) === wt(dh()) ? null : e;
+  return parseUserSpecifiedModel(e) === parseUserSpecifiedModel(getDefaultMainLoopModelSetting()) ? null : e;
 }
 async function tLt(t, e, o) {
   let m = A4(e());
@@ -128,7 +128,7 @@ function x3e(t, e, o, m = !0, a, f = R3e) {
     )
       return Promise.resolve({ kind: "stale" });
   }
-  if ((S(), m)) Jt("userSettings", { fastMode: e ? !0 : void 0 }, void 0, a);
+  if ((S(), m)) updateSettingsForSource("userSettings", { fastMode: e ? !0 : void 0 }, void 0, a);
   return (c(), Promise.resolve(void 0));
 }
 async function H3e(t, e, o, m, a, f = !0, S, c, r, s) {
@@ -159,13 +159,13 @@ async function H3e(t, e, o, m, a, f = !0, S, c, r, s) {
   if (d.kind === "refused") return d.refusal;
   if (d.remote !== void 0) return k3e(d.remote, e);
   if (
-    (i("tengu_fast_mode_toggled", { enabled: e, source: u(a), remote: Ks() }),
+    (i("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: Ks() }),
     e)
   ) {
     let M = E4(!0),
       F = d.willPromote ? `${HMe}${eg(RR())}` : "",
-      p = rt(),
-      h = af(p) ? Ue(p) : "claude-opus-5",
+      p = getMainLoopModel(),
+      h = af(p) ? getCanonicalName(p) : "claude-opus-5",
       k = Ese(Gve(h)),
       g = f ? "" : " (this session only)",
       w =

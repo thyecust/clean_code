@@ -287,7 +287,7 @@ var J = {
   },
 };
 var m = pe(R_());
-import { PassThrough as Ze, pipeline as et, Readable as tt } from "stream";
+import { PassThrough, pipeline, Readable as tt } from "stream";
 import { Transform as Ye } from "stream";
 class L extends Ye {
   priorSignature;
@@ -354,7 +354,7 @@ class b {
     if (!(s instanceof tt))
       throw Error("Eventstream payload must be a Readable stream.");
     let i = s;
-    o.body = new Ze({ objectMode: !0 });
+    o.body = new PassThrough({ objectMode: !0 });
     let E =
         o.headers?.authorization?.match(/Signature=([\w]+)$/)?.[1] ??
         r?.["X-Amz-Signature"] ??
@@ -365,7 +365,7 @@ class b {
         messageSigner: await this.messageSigner(),
         systemClockOffsetProvider: this.systemClockOffsetProvider,
       });
-    et(i, B, o.body, (l) => {
+    pipeline(i, B, o.body, (l) => {
       if (l) throw l;
     });
     let S;
@@ -772,7 +772,7 @@ var ke = (e, t) => {
     )
   );
 };
-class rt extends we.Client {
+class BedrockRuntimeClient extends we.Client {
   config;
   constructor(...[e]) {
     let t = Ie(e || {});
@@ -1389,7 +1389,7 @@ var Ve = [
 ];
 var qe = pe(Ax()),
   Xe = pe(ta());
-class Co extends Xe.Command.classBuilder()
+class CountTokensCommand extends Xe.Command.classBuilder()
   .ep(K)
   .m(function (e, t, n, o) {
     return [qe.getEndpointPlugin(n, e.getEndpointParameterInstructions())];
@@ -1399,8 +1399,8 @@ class Co extends Xe.Command.classBuilder()
   .sc(Ve)
   .build() {}
 export {
-  rt as BedrockRuntimeClient,
-  Co as CountTokensCommand,
+  BedrockRuntimeClient,
+  CountTokensCommand,
   g2e as InternalServerException,
   y2e as ModelStreamErrorException,
   h2e as ThrottlingException,

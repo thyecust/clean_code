@@ -18,9 +18,9 @@ import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { basename as g } from "path";
-function b({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { basename } from "path";
+function renderToolUseMessage({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
   if (!o) return null;
   if (gMe(o)) return "";
   let i = c ? o : Ao(o);
@@ -40,16 +40,16 @@ function b({ file_path: o, offset: n, limit: s, pages: l }, { verbose: c }) {
   }
   return e(Pg, { filePath: o, children: i });
 }
-function k({ file_path: o }) {
+function renderToolUseTag({ file_path: o }) {
   let n = o ? gMe(o) : null;
   if (!n) return null;
   return r(t, { dimColor: !0, children: [" ", n] });
 }
-function F(o) {
+function renderToolResultMessage(o) {
   switch (o.type) {
     case "image": {
       let { originalSize: n } = o.file,
-        s = Ft(n);
+        s = formatFileSize(n);
       return e(xe, {
         height: 1,
         children: r(t, { children: ["Read image (", s, ")"] }),
@@ -68,7 +68,7 @@ function F(o) {
     }
     case "pdf": {
       let { originalSize: n } = o.file,
-        s = Ft(n);
+        s = formatFileSize(n);
       return e(xe, {
         height: 1,
         children: r(t, { children: ["Read PDF (", s, ")"] }),
@@ -84,7 +84,7 @@ function F(o) {
             " ",
             o.file.count === 1 ? "page" : "pages",
             " (",
-            Ft(o.file.originalSize),
+            formatFileSize(o.file.originalSize),
             ")",
           ],
         }),
@@ -110,13 +110,13 @@ function F(o) {
           dimColor: !0,
           children:
             o.source === "seeded"
-              ? `Already in context (${Oo(_i(g(o.file.filePath)))})`
+              ? `Already in context (${Oo(_i(basename(o.file.filePath)))})`
               : "Unchanged since last read",
         }),
       });
   }
 }
-function y(o, { verbose: n }) {
+function renderToolUseErrorMessage(o, { verbose: n }) {
   if (!n && typeof o === "string") {
     if (o.includes(yx))
       return e(xe, {
@@ -130,8 +130,8 @@ function y(o, { verbose: n }) {
   return e(Yd, { result: o, verbose: n });
 }
 export {
-  F as renderToolResultMessage,
-  y as renderToolUseErrorMessage,
-  b as renderToolUseMessage,
-  k as renderToolUseTag,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseTag,
 };

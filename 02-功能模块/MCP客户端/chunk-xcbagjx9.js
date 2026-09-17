@@ -15,11 +15,11 @@ import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { lr, le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { lP } from "../Teammates团队/chunk-thxapyam.js";
 import { ESn, RJn } from "./chunk-tznd4407.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { dirname as w, join as f } from "path";
+import { dirname, join as f } from "path";
 var x = /^k[0-9a-z]{8}$/,
   d = 256,
   g = /^(?:[^\p{Cc}\p{Cf}]|[\u200c\u200d])+$/u,
@@ -58,7 +58,7 @@ var x = /^k[0-9a-z]{8}$/,
       }),
   );
 function ite() {
-  return fy() ?? Mp(he());
+  return fy() ?? getProjectDir(he());
 }
 function y(t = K(), e = ite()) {
   return f(e, t, "mcp-tasks");
@@ -76,7 +76,7 @@ async function Zdt(t, e, r) {
   let o = M() && r !== void 0 ? k() : void 0,
     c = K(),
     s = S(t, c);
-  if ((await qt().mkdir(w(s)), r && o !== void 0)) {
+  if ((await qt().mkdir(dirname(s)), r && o !== void 0)) {
     let a = await r.write(h(o, t, c), b(e), { publishDiscipline: "inPlace" });
     if (!a.ok)
       throw (

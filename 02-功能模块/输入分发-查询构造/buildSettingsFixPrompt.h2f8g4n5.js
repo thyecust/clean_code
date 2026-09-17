@@ -14,7 +14,7 @@ var f = 500;
 function i(t) {
   return Sn(t).replaceAll("`", "").slice(0, f);
 }
-function h(t, { flagSettingsPath: n } = {}) {
+function buildSettingsFixPrompt(t, { flagSettingsPath: n } = {}) {
   if (t.length === 0) return null;
   let a = n !== void 0 && t.some((e) => e.file === n),
     r = t.map((e) => {
@@ -47,4 +47,4 @@ function h(t, { flagSettingsPath: n } = {}) {
   ].join(`
 `);
 }
-export { h as buildSettingsFixPrompt };
+export { buildSettingsFixPrompt };

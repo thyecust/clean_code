@@ -13,8 +13,8 @@ import { Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { r8, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { H$, wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { Vf, J6n } from "./chunk-cd542wve.js";
 import { vm, $t, MEt } from "../插件系统/chunk-7s6mt1vg.js";
 import { ax } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -143,8 +143,8 @@ function P(o) {
           for (let u of d.slice(l)) u.serverPluginId = e.serverPluginId;
       }
       if ((n(`Total plugin workflows loaded: ${d.length}`), c))
-        f("plugin_load_workflows", c);
-      else y("plugin_load_workflows");
+        logFeatureBad("plugin_load_workflows", c);
+      else logFeatureOk("plugin_load_workflows");
       return d;
     })()),
     s.workflows
@@ -358,7 +358,7 @@ async function b(o, s) {
   let l = i.walkFailed && Nr("projectSettings"),
     u = i.skippedInvalidMeta + i.skippedOversize + i.skippedUnreadable;
   if (l || i.userListingTruncated || u > 0 || i.nearMissExt > 0)
-    g(
+    logFeatureSad(
       "workflow_discover",
       l
         ? "project_dir_walk_failed"
@@ -380,14 +380,14 @@ async function b(o, s) {
         ...(i.userListingTruncated && { user_listing_truncated: !0 }),
       },
     );
-  else y("workflow_discover", { found: r.size });
+  else logFeatureOk("workflow_discover", { found: r.size });
   return [...r.values()].sort((m, p) => m.name.localeCompare(p.name));
 }
 function rte(o, s) {
   return H$(wo().allWorkflows, `${jy()}:${_be()}:${o}`, () => j(o, s));
 }
 async function j(o, s) {
-  if (Xr("workflows") || _be()) return [...xqe()];
+  if (isCustomizationDisabled("workflows") || _be()) return [...xqe()];
   let [t, i] = await Promise.all([b(o, s), P(s)]),
     d = S(i),
     c = xqe(),

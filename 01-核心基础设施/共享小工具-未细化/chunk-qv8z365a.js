@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { q } from "./chunk-7beprh8k.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 class TeleportLatch {
   state = { status: "inactive" };
   fallbackSadEmitted = new Set();
@@ -30,13 +30,13 @@ function activateTeleportCache(e) {
 function revertTeleportCache(e, t) {
   let r = o();
   if (r.state.status === "reverted") return;
-  if (r.state.status === "active") (g("upgrade_teleport_cache", e), l(e));
+  if (r.state.status === "active") (logFeatureSad("upgrade_teleport_cache", e), l(e));
   r.state = { status: "reverted", reason: e, detail: t };
 }
 function logTeleportFallbackOnce(e) {
   let t = o();
   if (t.fallbackSadEmitted.has(e)) return;
-  (t.fallbackSadEmitted.add(e), g("upgrade_teleport_cache", e), l(e));
+  (t.fallbackSadEmitted.add(e), logFeatureSad("upgrade_teleport_cache", e), l(e));
 }
 function l(e) {
   q("warn", "cli_teleport_relay_fallback", { reason: e });

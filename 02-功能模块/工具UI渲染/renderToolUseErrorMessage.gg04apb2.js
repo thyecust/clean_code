@@ -63,7 +63,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
 var p = 3,
   f = "Initializing\u2026";
-function I(s) {
+function renderToolResultMessage(s) {
   if ("status" in s && s.status === "forked")
     return e(xe, {
       height: 1,
@@ -84,7 +84,7 @@ function I(s) {
     children: e(t, { children: e(ue, { children: l }) }),
   });
 }
-function m(s, { tools: l, verbose: n }) {
+function renderToolUseProgressMessage(s, { tools: l, verbose: n }) {
   if (!s.length)
     return e(xe, { height: 1, children: e(t, { dimColor: !0, children: f }) });
   let a = n ? s : s.slice(-p),
@@ -126,20 +126,20 @@ function m(s, { tools: l, verbose: n }) {
     }),
   });
 }
-function v(s, { progressMessagesForMessage: l, tools: n, verbose: a }) {
-  return r(N, { children: [m(l, { tools: n, verbose: a }), e(bf, {})] });
+function renderToolUseRejectedMessage(s, { progressMessagesForMessage: l, tools: n, verbose: a }) {
+  return r(N, { children: [renderToolUseProgressMessage(l, { tools: n, verbose: a }), e(bf, {})] });
 }
-function w(s, { progressMessagesForMessage: l, tools: n, verbose: a }) {
+function renderToolUseErrorMessage(s, { progressMessagesForMessage: l, tools: n, verbose: a }) {
   return r(N, {
     children: [
-      m(l, { tools: n, verbose: a }),
+      renderToolUseProgressMessage(l, { tools: n, verbose: a }),
       e(Yd, { result: s, verbose: a }),
     ],
   });
 }
 export {
-  I as renderToolResultMessage,
-  w as renderToolUseErrorMessage,
-  m as renderToolUseProgressMessage,
-  v as renderToolUseRejectedMessage,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseProgressMessage,
+  renderToolUseRejectedMessage,
 };

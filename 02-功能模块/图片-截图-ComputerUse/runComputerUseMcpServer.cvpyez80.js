@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ListToolsRequestSchema as C0 } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { ListToolsRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
 import "../MCP客户端/chunk-j8556pzt.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -26,7 +26,7 @@ import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { che } from "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
 import "./chunk-jeefwg1w.js";
-import { homedir as N } from "os";
+import { homedir } from "os";
 var u = ["/Applications/", "/System/Applications/"],
   f = [
     /Helper(?:$|\s\()/,
@@ -120,7 +120,7 @@ async function _() {
   try {
     let t = HH(),
       { apps: e } = await mK(() => t.apps.listInstalled(), m),
-      o = l(e, N());
+      o = l(e, homedir());
     if (!o.includes("Finder")) o.unshift("Finder");
     return o;
   } catch {
@@ -130,20 +130,20 @@ async function _() {
     return;
   }
 }
-async function h() {
+async function createComputerUseMcpServerForCli() {
   let t = put(),
     e = GSe(),
     o = X2n(t, e),
     r = await _(),
     s = WSe(t.executor.capabilities, e, r);
   return (
-    o.setRequestHandler(C0, async () =>
+    o.setRequestHandler(ListToolsRequestSchema, async () =>
       t.isDisabled() ? { tools: [] } : { tools: s },
     ),
     o
   );
 }
-async function H(t) {
+async function runComputerUseMcpServer(t) {
   let e = await SGe(t);
   if (e)
     process.stderr.write(`${e}
@@ -159,7 +159,7 @@ async function H(t) {
       ]);
     (await d(a(o)), await EP(o));
   }
-  let r = await h(),
+  let r = await createComputerUseMcpServerForCli(),
     s = new che(),
     p = !1,
     i = async () => {
@@ -172,4 +172,4 @@ async function H(t) {
     await r.connect(s),
     n("[Computer Use MCP] MCP server started"));
 }
-export { h as createComputerUseMcpServerForCli, H as runComputerUseMcpServer };
+export { createComputerUseMcpServerForCli, runComputerUseMcpServer };

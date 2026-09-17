@@ -9,26 +9,26 @@
 // Version: 2.1.263
 import { bYt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ac } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { T_e } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { pointerFileIsSuspect as R0, rawPointerPathIsUnsafe as bS, gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { pointerFileIsSuspect, rawPointerPathIsUnsafe, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "./chunk-qe04h4c5.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { getAgentName as Ip, getTeamName as ii, isTeammate as Zi } from "./chunk-811z9z0t.js";
+import { getAgentName, getTeamName, isTeammate } from "./chunk-811z9z0t.js";
 import { gCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
 import { jG } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import { fs } from "./chunk-enjekn9t.js";
 import {
-  mkdir as W,
-  readFile as B,
+  mkdir,
+  readFile,
   rm as _,
-  writeFile as O,
+  writeFile,
 } from "fs/promises";
-import { join as k, resolve as D } from "path";
+import { join as k, resolve } from "path";
 class jk extends Error {
   constructor(e) {
     super(e);
@@ -129,7 +129,7 @@ async function readTeamFileAsync(e, t) {
     }
   }
   try {
-    let r = await B(getTeamFilePath(e), "utf-8");
+    let r = await readFile(getTeamFilePath(e), "utf-8");
     return x(z(r));
   } catch (r) {
     if (A(r) === "ENOENT") return null;
@@ -148,7 +148,7 @@ function logTeamFileWriteFailure(e, t) {
     n(`[TeammateTool] Failed to write team file for ${e}: ${l(t)}`, {
       level: "error",
     });
-  else h(t);
+  else logError(t);
 }
 function L(e) {
   if (!(e instanceof Error) || e.cause === void 0 || e.cause === null)
@@ -268,20 +268,20 @@ async function K(e, t, r, a) {
       case "threw":
         throw p.error;
       case "applied":
-        return (y("swarm_team_file_update"), p.result);
+        return (logFeatureOk("swarm_team_file_update"), p.result);
       default:
         return p;
     }
   }
   let I = j(d.error);
-  if (I) g("swarm_team_file_update", "lock_contended");
+  if (I) logFeatureSad("swarm_team_file_update", "lock_contended");
   if (!r?.bestEffortWrite) {
     let u = new R(
       `Team file update failed (${w(d.error)}) for ${e}`,
       "Team file update failed (storage v5)",
     );
     if (((u.cause = d.error), !I && !v(d.error)))
-      f("swarm_team_file_update", d.error.code);
+      logFeatureBad("swarm_team_file_update", d.error.code);
     throw u;
   }
   if (!E(d.error) && v(d.error))
@@ -293,7 +293,7 @@ async function K(e, t, r, a) {
       `Team file update failed (${w(d.error)}) for ${e}`,
       "Team file update failed (storage v5)",
     );
-    ((u.cause = d.error), f("swarm_team_file_update", d.error.code), h(u));
+    ((u.cause = d.error), logFeatureBad("swarm_team_file_update", d.error.code), logError(u));
   }
   return c;
 }
@@ -312,7 +312,7 @@ async function writeTeamFileAsync(e, t, r) {
     return;
   }
   let a = S(e);
-  (await W(a, { recursive: !0 }), await O(getTeamFilePath(e), b(t, null, 2)));
+  (await mkdir(a, { recursive: !0 }), await writeFile(getTeamFilePath(e), b(t, null, 2)));
 }
 async function removeTeammateFromTeamFile(e, t, r) {
   let a = t.agentId || t.name;
@@ -413,9 +413,9 @@ async function setMemberMode(e, t, r, a) {
   }
 }
 async function syncTeammateMode(e, t, r) {
-  if (!Zi()) return;
-  let a = t ?? ii(),
-    o = Ip();
+  if (!isTeammate()) return;
+  let a = t ?? getTeamName(),
+    o = getAgentName();
   if (a && o) await setMemberMode(a, o, e, r);
 }
 async function setMemberActive(e, t, r, a) {
@@ -450,10 +450,10 @@ async function q(e) {
   let t = k(e, ".git"),
     r = null;
   try {
-    if (R0(t, e)) throw Error(".git pointer file is a symlink");
-    let o = (await B(t, "utf-8")).trim().match(/^gitdir:\s*(.+)$/);
-    if (o && o[1] && !ac(o[1].trim(), e) && !bS(o[1].trim(), e)) {
-      let i = D(e, o[1].trim()),
+    if (pointerFileIsSuspect(t, e)) throw Error(".git pointer file is a symlink");
+    let o = (await readFile(t, "utf-8")).trim().match(/^gitdir:\s*(.+)$/);
+    if (o && o[1] && !ac(o[1].trim(), e) && !rawPointerPathIsUnsafe(o[1].trim(), e)) {
+      let i = resolve(e, o[1].trim()),
         s = k(i, "..", "..");
       r = k(s, "..");
     }
@@ -463,7 +463,7 @@ async function q(e) {
     return;
   }
   if (r) {
-    let a = await Be(lt(), ["worktree", "remove", "--force", e], { cwd: r });
+    let a = await execFileNoThrowWithCwd(gitExe(), ["worktree", "remove", "--force", e], { cwd: r });
     if (a.code === 0) {
       n(`[TeammateTool] Removed worktree via git: ${e}`);
       return;
@@ -487,7 +487,7 @@ function registerTeamForSessionCleanup(e) {
   bYt().add(e);
 }
 async function cleanupSessionTeams(e) {
-  return Sr("swarm_session_cleanup", async () => {
+  return withFeatureTelemetry("swarm_session_cleanup", async () => {
     let t = bYt();
     if (t.size === 0) return;
     let r = Array.from(t);
@@ -526,7 +526,7 @@ async function J(e, t) {
   );
 }
 async function V(e, t) {
-  return Sr("swarm_team_cleanup", async () => {
+  return withFeatureTelemetry("swarm_team_cleanup", async () => {
     let r = await readTeamFileAsync(e, t),
       a = [];
     if (r) {

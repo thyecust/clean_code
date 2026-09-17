@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B, ke } from "../lodash/lodash.2x3q7cfh.js";
 import { Ie, po, rs } from "../lodash/lodash.207999qb.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../lodash/lodash.0vqzb8ad.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { kje } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -1394,7 +1394,7 @@ var loadExtraCACerts = ZT(async () => {
       }),
       N("read_failed"))
     )
-      f("ca_certs_load", "read_failed");
+      logFeatureBad("ca_certs_load", "read_failed");
     if (e.extraCACerts === null) return !1;
     e.extraCACerts = null;
   }
@@ -1416,11 +1416,11 @@ function Pt() {
           ),
           N("parse_skip"))
         )
-          g("ca_certs_load", "parse_skip");
+          logFeatureSad("ca_certs_load", "parse_skip");
       }
     }
     if (t.length === 0 && N("parse_all_invalid"))
-      g("ca_certs_load", "parse_all_invalid");
+      logFeatureSad("ca_certs_load", "parse_all_invalid");
     return t.length > 0 ? t : _e;
   }
   if (kje("--use-system-ca") || kje("--use-openssl-ca")) return ["system"];
@@ -1445,7 +1445,7 @@ function vt(e) {
       (n(`CA certs: Dropped ${o} expired certificate(s) from system store`),
       N("expired_dropped"))
     )
-      g("ca_certs_load", "expired_dropped", { dropped_count: o });
+      logFeatureSad("ca_certs_load", "expired_dropped", { dropped_count: o });
   }
   return s;
 }
@@ -1467,7 +1467,7 @@ function bt(e) {
       ),
       N("system_api_unavailable"))
     )
-      g("ca_certs_load", "system_api_unavailable");
+      logFeatureSad("ca_certs_load", "system_api_unavailable");
     return;
   }
   let u = [];
@@ -1495,7 +1495,7 @@ function bt(e) {
         }),
         N("system_store_failed"))
       )
-        g("ca_certs_load", "system_store_failed");
+        logFeatureSad("ca_certs_load", "system_store_failed");
       if (!o) u.push(...i.rootCertificates);
     }
   if (r) {
@@ -1510,7 +1510,7 @@ function bt(e) {
           }),
           N("read_failed"))
         )
-          f("ca_certs_load", "read_failed");
+          logFeatureBad("ca_certs_load", "read_failed");
       }
     if (e.extraCACerts?.path === r)
       (u.push(e.extraCACerts.content),
@@ -1520,7 +1520,7 @@ function bt(e) {
   }
   let l = u.length > 0 ? Y(u) : void 0;
   if (te.size === 0 && N("ok"))
-    y("ca_certs_load", {
+    logFeatureOk("ca_certs_load", {
       cert_count: l?.length ?? 0,
       store_bundled: o,
       store_system: s,
@@ -1534,7 +1534,7 @@ function clearCACertsCache() {
 function ne(e) {
   (e.certificates.cache.clear?.(), n("Cleared CA certificates cache"));
 }
-import { createPrivateKey as wt, X509Certificate as Lt } from "crypto";
+import { createPrivateKey, X509Certificate as Lt } from "crypto";
 import { Agent as Rt } from "https";
 class be {
   clientCert = null;
@@ -1559,7 +1559,7 @@ var PEM_CERT_BLOCK_RE = /-----BEGIN CERTIFICATE-----[\s\S]*?-----END CERTIFICATE
 function Ht(e, t) {
   let r;
   try {
-    r = wt({
+    r = createPrivateKey({
       key: t,
       ...(a.CLAUDE_CODE_CLIENT_KEY_PASSPHRASE && {
         passphrase: a.CLAUDE_CODE_CLIENT_KEY_PASSPHRASE,
@@ -1718,11 +1718,11 @@ function configureGlobalMTLS() {
     );
 }
 var Ee = pe(EA(), 1);
-import { isIP as yt } from "net";
+import { isIP } from "net";
 function id(e, t) {
   return e;
 }
-import { domainToASCII as ct } from "url";
+import { domainToASCII } from "url";
 var ut = /[\u3002\uFF0E\uFF61]/g,
   zn = /[\uFF1A\uFE55\uFE13]/g;
 function c2e(e) {
@@ -1751,13 +1751,13 @@ function dt(e) {
 }
 function u2e(e) {
   if (ft.test(e)) return "";
-  let t = ct(e);
+  let t = domainToASCII(e);
   if (!lt.test(t)) return t;
   let r = dt(e);
   return r === t ? t : r;
 }
 function qlr(e) {
-  return !ft.test(e) && lt.test(ct(e));
+  return !ft.test(e) && lt.test(domainToASCII(e));
 }
 function zlr(e) {
   let t = dt(e),
@@ -2058,13 +2058,13 @@ function xt(e, t) {
   } catch {
     return !1;
   }
-  if (yt(r) === 0) return !1;
+  if (isIP(r) === 0) return !1;
   return t
     .split(/[,\s]+/)
     .filter(Boolean)
     .some((o) => {
       if (o.includes("/")) return $tt(r, o);
-      let s = yt(o);
+      let s = isIP(o);
       if (s === 0) return !1;
       return $tt(r, `${o}/${s === 4 ? 32 : 128}`);
     });

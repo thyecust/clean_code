@@ -14,23 +14,23 @@ import {
   Vrr,
   Ume,
   Krr,
-  isModelAllowed as Rr,
-  isUnservedFamilySpelling as aUe,
-  isPinnedFableModel as BD,
-  stepDownRestrictedFamilyAliasPick as Xh,
-  getBootstrapOrgDefaultEffect as $Vt,
-  getOrgLockedDefaultModel as lUe,
-  isWindowSilentDefaultPick as rvn,
-  getDefaultMainLoopModel as ol,
-  getCanonicalName as Ue,
-  parseUserSpecifiedModel as wt,
+  isModelAllowed,
+  isUnservedFamilySpelling,
+  isPinnedFableModel,
+  stepDownRestrictedFamilyAliasPick,
+  getBootstrapOrgDefaultEffect,
+  getOrgLockedDefaultModel,
+  isWindowSilentDefaultPick,
+  getDefaultMainLoopModel,
+  getCanonicalName,
+  parseUserSpecifiedModel,
   strip1mTag as n0,
   oQ,
   Tn,
-  isBgSession as _t,
-  getModelAccessCache as hZe,
-  getOrgModelDefaultCache as _Ze,
-  isProSubscriber as Bse,
+  isBgSession,
+  getModelAccessCache,
+  getOrgModelDefaultCache,
+  isProSubscriber,
   $f,
   H,
   Te,
@@ -45,9 +45,9 @@ import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-a
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ms, Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Cxt, PA } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { yar, getSettingsForSource as ye, getInitialSettings as Ge, getEffectiveSettingSource as VT, updateSettingsForSource as Jt, hasVouchedSkipDangerousModePermissionPrompt as Det } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { normalizePermissionModeAlias as mf, parsePermissionMode as gf, Y6, Eb } from "./chunk-e4pfvp7x.js";
-import { Xt, Qa, dm, getAPIProvider as Pe, getProviderForModel as Tl, hasFirstPartyCapabilities as fx } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { yar, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { normalizePermissionModeAlias, parsePermissionMode, Y6, Eb } from "./chunk-e4pfvp7x.js";
+import { Xt, Qa, dm, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 function gnr(e, t, o) {
   switch (e) {
@@ -93,7 +93,7 @@ function zh(e) {
   if (bHt(e)) return !1;
   let t = oQ(e, "effort");
   if (t !== void 0) return t;
-  let o = Ue(e),
+  let o = getCanonicalName(e),
     r = HVt(e, o);
   if (r !== void 0) return r.length > 0;
   if (
@@ -107,13 +107,13 @@ function zh(e) {
     return !1;
   if (a.CLAUDE_CODE_ALWAYS_ENABLE_EFFORT) return !0;
   if (dm(o, "effort", e) || o === "claude-mythos-5") return !0;
-  return fx(Tl(e));
+  return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function FN(e) {
   if (bHt(e)) return !1;
   let t = oQ(e, "max_effort");
   if (t !== void 0) return t;
-  let o = Ue(e),
+  let o = getCanonicalName(e),
     r = HVt(e, o);
   if (r !== void 0) return r.includes("max");
   if (
@@ -127,13 +127,13 @@ function FN(e) {
   )
     return !1;
   if (dm(o, "max_effort", e) || o === "claude-mythos-5") return !0;
-  return fx(Tl(e));
+  return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function i6(e) {
   if (bHt(e)) return !1;
   let t = oQ(e, "xhigh_effort");
   if (t !== void 0) return t;
-  let o = Ue(e),
+  let o = getCanonicalName(e),
     r = HVt(e, o);
   if (r !== void 0) return r.includes("xhigh");
   if (
@@ -149,7 +149,7 @@ function i6(e) {
   )
     return !1;
   if (dm(o, "xhigh_effort", e) || o === "claude-mythos-5") return !0;
-  return fx(Tl(e));
+  return hasFirstPartyCapabilities(getProviderForModel(e));
 }
 function ib(e) {
   return Dc() && (e === void 0 || (i6(e) && _me("xhigh", e)));
@@ -171,26 +171,26 @@ function Tnr(e) {
   return $C(e) && M(e) > M(VEt);
 }
 function Enr(e) {
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   return t === "claude-opus-5" || dm(t, "thinking_disabled_effort_cap") === !0;
 }
 function HJe(e) {
-  let t = Pe();
+  let t = getAPIProvider();
   if (t !== "firstParty" && t !== "gateway") return null;
-  let o = Ue(n0(e.trim().toLowerCase()), { identity: !0 }),
-    r = hZe().find(
-      (u) => Ue(n0(u.apiName.trim().toLowerCase()), { identity: !0 }) === o,
+  let o = getCanonicalName(n0(e.trim().toLowerCase()), { identity: !0 }),
+    r = getModelAccessCache().find(
+      (u) => getCanonicalName(n0(u.apiName.trim().toLowerCase()), { identity: !0 }) === o,
     )?.maxEffortLevel;
   return r != null && $C(r) ? r : null;
 }
 function gve(e) {
-  if (Pe() !== "firstParty") return null;
-  let t = _Ze();
+  if (getAPIProvider() !== "firstParty") return null;
+  let t = getOrgModelDefaultCache();
   if (t === null) return null;
   let o = t.default_effort_level;
   if (o == null || !$C(o)) return null;
-  let r = Ue(n0(e.trim().toLowerCase()), { identity: !0 });
-  return Ue(n0(t.name.trim().toLowerCase()), { identity: !0 }) === r ? o : null;
+  let r = getCanonicalName(n0(e.trim().toLowerCase()), { identity: !0 });
+  return getCanonicalName(n0(t.name.trim().toLowerCase()), { identity: !0 }) === r ? o : null;
 }
 function _me(e, t) {
   let o = HJe(t);
@@ -263,7 +263,7 @@ function KK(e) {
   return;
 }
 function i4t(e) {
-  let t = Ge().ultracode === !0 || hve(e) === "ultracode";
+  let t = getInitialSettings().ultracode === !0 || hve(e) === "ultracode";
   if (t) Xxt();
   return t;
 }
@@ -275,10 +275,10 @@ function VH() {
 }
 function UN(e) {
   if (MXt()) return !1;
-  let t = Ue(e);
+  let t = getCanonicalName(e);
   if (t.includes("opus-4-7")) return !ee().unpinOpus47LaunchEffort;
   if (t.includes("opus-4-8")) return !ee().unpinOpus48LaunchEffort;
-  if (Xt(t) === "claude-fable-5" || (BD(e) && !fve(t)))
+  if (Xt(t) === "claude-fable-5" || (isPinnedFableModel(e) && !fve(t)))
     return !ee().unpinFable5LaunchEffort;
   return !1;
 }
@@ -309,11 +309,11 @@ function qG(e, t) {
   );
 }
 function X() {
-  let e = Ge(),
+  let e = getInitialSettings(),
     t = I({ cli: { effort: void 0 }, env: process.env, settings: e });
   if (e.ultracode === !0) return { default: t, byModel: {} };
   let o = ms()
-      .map((s) => ye(s))
+      .map((s) => getSettingsForSource(s))
       .filter((s) => s !== void 0 && s !== null)
       .reverse(),
     r = o.map((s) => {
@@ -353,7 +353,7 @@ function Q(e) {
   return !1;
 }
 function y$e(e) {
-  return Xt(Ue(wt(e), { deterministic: !0, identity: !0 }));
+  return Xt(getCanonicalName(parseUserSpecifiedModel(e), { deterministic: !0, identity: !0 }));
 }
 function Z(e, t) {
   let o = y$e(e);
@@ -373,7 +373,7 @@ function Ya(e, t) {
       if (!Q(e.settingsEffortTable)) return e.settingsEffortTable.default;
       return q(
         e.settingsEffortTable,
-        t ?? e.mainLoopModelForSession ?? e.mainLoopModel ?? ol(),
+        t ?? e.mainLoopModelForSession ?? e.mainLoopModel ?? getDefaultMainLoopModel(),
       );
   }
 }
@@ -435,7 +435,7 @@ function tse(e, t, o, r, u) {
   if (
     typeof MT(o, e) !== "number" &&
     typeof MT(o, t) !== "number" &&
-    Err(o, Ue(o))
+    Err(o, getCanonicalName(o))
   )
     return !1;
   if (UN(o)) {
@@ -450,7 +450,7 @@ function tse(e, t, o, r, u) {
   return !0;
 }
 async function a4t(e, t, o) {
-  return Jt("userSettings", Z(t, e), void 0, o);
+  return updateSettingsForSource("userSettings", Z(t, e), void 0, o);
 }
 async function zG(e, t, o = !0, r) {
   let u = e !== void 0 ? KK(e) : void 0;
@@ -504,7 +504,7 @@ function te(e) {
 function mAn(e) {
   if (typeof e === "string") {
     let t = te(e);
-    if (e === "high" && Bse() && H("tengu_slate_finch", !1))
+    if (e === "high" && isProSubscriber() && H("tengu_slate_finch", !1))
       return `${t} \xB7 burns fastest \u2014 medium handles most tasks`;
     return t;
   }
@@ -514,11 +514,11 @@ function D(e) {
   return gve(e) ?? ne(e) ?? oe(e);
 }
 function ne(e) {
-  let t = Vrr(e, Ue(e));
+  let t = Vrr(e, getCanonicalName(e));
   return t !== void 0 && $C(t) ? t : void 0;
 }
 function oe(e) {
-  return Qa(Ue(e))?.default_effort ?? "high";
+  return Qa(getCanonicalName(e))?.default_effort ?? "high";
 }
 function A(e) {
   return Xk(e) ?? h$e(e);
@@ -536,8 +536,8 @@ function Y() {
 }
 function fAn(e) {
   let { cli: t, env: o, settings: r, agentFrontmatter: u } = e,
-    d = mf(t.permissionMode),
-    s = mf(t.inheritPermissionMode),
+    d = normalizePermissionModeAlias(t.permissionMode),
+    s = normalizePermissionModeAlias(t.inheritPermissionMode),
     l = t.dangerouslySkipPermissions,
     p = u?.permissionMode,
     E = Boolean(l || d || p);
@@ -603,7 +603,7 @@ function fAn(e) {
     let f = !GEt()
       ? void 0
       : T()
-          .map((L) => mf(ye(L)?.permissions?.defaultMode))
+          .map((L) => normalizePermissionModeAlias(getSettingsForSource(L)?.permissions?.defaultMode))
           .find((L) => L != null);
     if (f != null && Ie(o.CLAUDE_CODE_REMOTE) && !w(f)) {
       if (
@@ -637,7 +637,7 @@ function fAn(e) {
         );
     else if (f != null) c.push(f);
   } else if (r.permissions?.defaultMode) {
-    let f = mf(r.permissions.defaultMode);
+    let f = normalizePermissionModeAlias(r.permissions.defaultMode);
     if (Ie(o.CLAUDE_CODE_REMOTE) && !w(f))
       (n(
         `settings defaultMode "${f}" is not supported in CLAUDE_CODE_REMOTE \u2014 only acceptEdits, plan, default, and auto are allowed`,
@@ -731,9 +731,9 @@ function hnr(e) {
   for (let u of t) {
     let d = typeof u === "string" ? u.trim() : "";
     if (d === "") continue;
-    let s = wt(d === "default" ? ol() : d);
+    let s = parseUserSpecifiedModel(d === "default" ? getDefaultMainLoopModel() : d);
     if (o.has(s)) continue;
-    if (!Rr(s)) continue;
+    if (!isModelAllowed(s)) continue;
     if ((o.add(s), r.push(s), r.length === ie)) break;
   }
   return r.length > 0 ? r : void 0;
@@ -772,14 +772,14 @@ function fe(e, t, o) {
             : { ...c, lastSeenOrgDefaultUpdatedAt: g },
         o,
       );
-    if (lUe() === null) return e;
-    let m = e ? VT("model") : null;
+    if (getOrgLockedDefaultModel() === null) return e;
+    let m = e ? getEffectiveSettingSource("model") : null;
     if (m === "policySettings" || m === "flagSettings") return e;
     return;
   }
   let r = Ume();
-  if (!r || $Vt() === null) return e;
-  let u = e ? VT("model") : null;
+  if (!r || getBootstrapOrgDefaultEffect() === null) return e;
+  let u = e ? getEffectiveSettingSource("model") : null;
   if (u === "policySettings" || u === "flagSettings") return e;
   let d = gae().includes("userSettings"),
     s = ee().lastSeenOrgDefaultUpdatedAt,
@@ -798,10 +798,10 @@ function fe(e, t, o) {
     return;
   }
   if (t) return e;
-  let v = d ? ye("userSettings")?.model : void 0;
+  let v = d ? getSettingsForSource("userSettings")?.model : void 0;
   if (l && v) {
     if (
-      (Jt("userSettings", { model: void 0 }, void 0, o).then((g) => {
+      (updateSettingsForSource("userSettings", { model: void 0 }, void 0, o).then((g) => {
         if (!g.error) E();
       }),
       u === "userSettings")
@@ -812,7 +812,7 @@ function fe(e, t, o) {
 }
 function _nr(e, t) {
   let { cli: o, env: r, settings: u, agentFrontmatter: d } = e,
-    s = o.model === "default" ? ol() : o.model,
+    s = o.model === "default" ? getDefaultMainLoopModel() : o.model,
     l = s,
     p = null;
   if (s) p = o.model === "default" ? "cli_default" : "cli";
@@ -820,7 +820,7 @@ function _nr(e, t) {
     v;
   if (!s && E && E !== "inherit")
     ((v = E),
-      (s = wt(E)),
+      (s = parseUserSpecifiedModel(E)),
       (l = E),
       (p =
         d?.modelSource === "routine"
@@ -835,25 +835,25 @@ function _nr(e, t) {
         fe(u.model || void 0, o.isNonInteractiveSession === !0, t) || void 0),
       m !== void 0)
     )
-      p = se(VT("model"));
+      p = se(getEffectiveSettingSource("model"));
     l = m;
   }
   let c;
-  if (m && !Rr(m)) {
+  if (m && !isModelAllowed(m)) {
     let S = v !== void 0 && !g ? v : m,
-      h = g ? null : Xh(S);
+      h = g ? null : stepDownRestrictedFamilyAliasPick(S);
     if (h !== null) {
       if (((c = S), (m = h), s !== void 0)) s = h;
     } else {
-      if (!(S.trim().toLowerCase() === "default" || rvn(S)) && !g) c = S;
+      if (!(S.trim().toLowerCase() === "default" || isWindowSilentDefaultPick(S)) && !g) c = S;
       ((m = void 0), (l = void 0), (p = null), (s = void 0));
     }
   }
   let y;
-  if (m && aUe(m))
+  if (m && isUnservedFamilySpelling(m))
     ((y = m), (m = void 0), (l = void 0), (p = null), (s = void 0));
   let _ = m || null,
-    b = wt(_ ?? ol());
+    b = parseUserSpecifiedModel(_ ?? getDefaultMainLoopModel());
   return {
     effectiveModel: s,
     initialMainLoopModel: _,
@@ -888,7 +888,7 @@ function T() {
   return de.filter(Nr);
 }
 function C(e) {
-  return T().some((t) => ye(t)?.permissions?.defaultMode === e);
+  return T().some((t) => getSettingsForSource(t)?.permissions?.defaultMode === e);
 }
 function J(e) {
   return (
@@ -902,13 +902,13 @@ function xJe(e) {
 function qEt(e) {
   return (
     T()
-      .map((o) => mf(ye(o)?.permissions?.defaultMode))
+      .map((o) => normalizePermissionModeAlias(getSettingsForSource(o)?.permissions?.defaultMode))
       .find((o) => o != null) === "plan" &&
-    mf(e.permissions?.defaultMode) !== "plan"
+    normalizePermissionModeAlias(e.permissions?.defaultMode) !== "plan"
   );
 }
 function ue(e) {
-  let t = mf(e.permissions?.defaultMode);
+  let t = normalizePermissionModeAlias(e.permissions?.defaultMode);
   if (t == null || !w(t)) return;
   if (t !== "auto") return t;
   return C("auto") && xJe(e) ? "auto" : void 0;
@@ -956,14 +956,14 @@ function bnr({ seed: e, settingsMode: t, sentMode: o, startsIn: r }) {
   };
 }
 function k(e) {
-  return e === void 0 ? void 0 : gf(e);
+  return e === void 0 ? void 0 : parsePermissionMode(e);
 }
 var x =
   "Permission mode downgraded to default \u2014 bypass requires accepting the disclaimer interactively first";
 function O(e) {
-  if (!_t()) return !1;
+  if (!isBgSession()) return !1;
   if (e === "bypassPermissions")
-    return !Det() && !ee().bypassPermissionsModeAccepted;
+    return !hasVouchedSkipDangerousModePermissionPrompt() && !ee().bypassPermissionsModeAccepted;
   return !1;
 }
 function j(e, t, o) {

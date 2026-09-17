@@ -11,15 +11,15 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Et, dv, b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Gi, ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { GGn, Dzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -33,7 +33,7 @@ import { dQe, fse } from "./chunk-mxsfy35q.js";
 import { FR } from "./chunk-4zd60pbm.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { va, getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { va, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 var Ee = 1000,
   ke = 30000,
@@ -124,7 +124,7 @@ class VGe {
         ...r,
         Accept: "text/event-stream",
         "anthropic-version": "2023-06-01",
-        "anthropic-client-platform": Um(),
+        "anthropic-client-platform": getClientPlatform(),
         "User-Agent": va(),
       };
     if ((te(o, r), this.lastSequenceNum > 0))
@@ -137,7 +137,7 @@ class VGe {
       let p = await fetch(t.href, {
         headers: o,
         signal: d.signal,
-        ...As({ url: t.href }),
+        ...getProxyFetchOptions({ url: t.href }),
       });
       if (!p.ok) {
         let k = p.status === 403 ? dQe((B) => p.headers.get(B)) : void 0;
@@ -490,7 +490,7 @@ class VGe {
       ...t,
       "Content-Type": "application/json",
       "anthropic-version": "2023-06-01",
-      "anthropic-client-platform": Um(),
+      "anthropic-client-platform": getClientPlatform(),
       "User-Agent": va(),
     };
     n(`SSETransport: POST body keys=${Object.keys(e).join(",")}`);
@@ -593,7 +593,7 @@ function Pe(e) {
   if (t.endsWith("/stream")) t = t.slice(0, -7);
   return `${e.protocol}//${e.host}${t}`;
 }
-import { randomUUID as oe } from "crypto";
+import { randomUUID } from "crypto";
 var F = 61440,
   Be = F - 4096;
 function De(e) {
@@ -1424,7 +1424,7 @@ class pM {
             "PUT worker",
           );
           if (p.ok) {
-            if (d.worker_status !== void 0) y("ccr_worker_state_publish");
+            if (d.worker_status !== void 0) logFeatureOk("ccr_worker_state_publish");
             return !0;
           }
           if (U(p.status)) {
@@ -1433,7 +1433,7 @@ class pM {
               this.droppedWorkerStatePatchCount++,
               d.worker_status !== void 0)
             )
-              g("ccr_worker_state_publish", "state_4xx_dropped");
+              logFeatureSad("ccr_worker_state_publish", "state_4xx_dropped");
             return !0;
           }
           return !1;
@@ -1473,7 +1473,7 @@ class pM {
           if (w.ok) {
             if (M && M.ackedAtMs === void 0) M.ackedAtMs = performance.now();
             let T = Y(d);
-            if (T) y("ccr_task_status_publish", T);
+            if (T) logFeatureOk("ccr_task_status_publish", T);
             if (
               (this.noteBeatingEventsPostOk(d),
               this.reportDurableUpload(d, "accepted"),
@@ -1492,7 +1492,7 @@ class pM {
                   `CCRClient: client event POST rejected (${w.status}) \u2014 dropping ${C} ephemeral event(s), retrying ${T.length} durable event(s)`,
                   { level: "warn" },
                 ),
-                g("ccr_partial_messages", "ephemeral_dropped_on_4xx"),
+                logFeatureSad("ccr_partial_messages", "ephemeral_dropped_on_4xx"),
                 d.splice(0, d.length, ...T),
                 T.length === 0)
               )
@@ -1507,7 +1507,7 @@ class pM {
               );
               if (I.ok) {
                 let D = Y(T);
-                if (D) y("ccr_task_status_publish", D);
+                if (D) logFeatureOk("ccr_task_status_publish", D);
                 (this.noteBeatingEventsPostOk(T),
                   this.reportDurableUpload(T, "accepted"));
                 return;
@@ -1532,7 +1532,7 @@ class pM {
               count: T.length,
             });
             let P = Y(T);
-            if (P) f("ccr_task_status_publish", "status_events_4xx_dropped", P);
+            if (P) logFeatureBad("ccr_task_status_publish", "status_events_4xx_dropped", P);
             return;
           }
           throw new x("client event POST failed", w.retryAfterMs);
@@ -1740,8 +1740,8 @@ class pM {
       d)
     )
       i("tengu_ccr_init_park_report", {
-        reported: u(d.status),
-        reason: u(d.reason),
+        reported: fromEnum(d.status),
+        reason: fromEnum(d.reason),
       });
     let { metadata: w, durationMs: T } = await r;
     if (!this.closed)
@@ -1811,12 +1811,12 @@ class pM {
             ...R,
             "Content-Type": "application/json",
             "anthropic-version": "2023-06-01",
-            "anthropic-client-platform": Um(),
+            "anthropic-client-platform": getClientPlatform(),
             "User-Agent": va(),
           },
           body: b(r),
           signal: M?.signal ?? AbortSignal.timeout(d),
-          ...As({ url: k }),
+          ...getProxyFetchOptions({ url: k }),
         },
         T = this.gzipRequestBodyFetch
           ? await this.gzipRequestBodyFetch(k, w, (I) => fetch(k, I))
@@ -2049,15 +2049,15 @@ class pM {
       { timeout: qe, countTowardEscalation: !1 },
     )
       .then((e) => {
-        if (e.ok) y("ccr_worker_goodbye");
+        if (e.ok) logFeatureOk("ccr_worker_goodbye");
         else if (e.status !== 409)
-          g(
+          logFeatureSad(
             "ccr_worker_goodbye",
             e.status !== void 0 ? `http_${e.status}` : "send_failed",
           );
       })
       .catch(() => {
-        g("ccr_worker_goodbye", "send_threw");
+        logFeatureSad("ccr_worker_goodbye", "send_threw");
       });
   }
   heartbeatNow(e = "probe") {
@@ -2226,9 +2226,9 @@ class pM {
           },
         );
       if (!o.ok) {
-        if (e === "probe") f("ccr_heartbeat_probe", "beat_failed");
-        else if (e === "resync_stale") f("ccr_reconnect_beat", "beat_failed");
-        else if (e === "reactivate") f("ccr_reactivation_beat", "beat_failed");
+        if (e === "probe") logFeatureBad("ccr_heartbeat_probe", "beat_failed");
+        else if (e === "resync_stale") logFeatureBad("ccr_reconnect_beat", "beat_failed");
+        else if (e === "reactivate") logFeatureBad("ccr_reactivation_beat", "beat_failed");
         if (o.status === 429) {
           if (((this.lastHeartbeat429AtMs = Date.now()), e === "reactivate"))
             this.restoreReactivationArm();
@@ -2263,7 +2263,7 @@ class pM {
           try {
             this.onHeartbeatLost?.();
           } catch (E) {
-            h(E);
+            logError(E);
           }
         }
         return;
@@ -2274,9 +2274,9 @@ class pM {
         this.onRequestAuthOk?.(),
         e === "probe")
       )
-        y("ccr_heartbeat_probe");
-      else if (e === "resync_stale") y("ccr_reconnect_beat");
-      else if (e === "reactivate") y("ccr_reactivation_beat");
+        logFeatureOk("ccr_heartbeat_probe");
+      else if (e === "resync_stale") logFeatureOk("ccr_reconnect_beat");
+      else if (e === "reactivate") logFeatureOk("ccr_reactivation_beat");
       if (
         (n("CCRClient: Heartbeat sent"),
         o.data?.refreshed_auth && this.adoptRefreshedAuth)
@@ -2290,7 +2290,7 @@ class pM {
             (M) => {
               if (E && M.adopted)
                 ((this.lastAuthRefreshBadReason = null),
-                  y("ccr_worker_auth_refresh"),
+                  logFeatureOk("ccr_worker_auth_refresh"),
                   q("info", "cli_heartbeat_refreshed_auth_late_adopted"));
             },
             () => {},
@@ -2308,7 +2308,7 @@ class pM {
             }),
             k.adopted)
           )
-            (y("ccr_worker_auth_refresh"),
+            (logFeatureOk("ccr_worker_auth_refresh"),
               (this.lastAuthRefreshBadReason = null));
           else if (
             k.reason &&
@@ -2316,11 +2316,11 @@ class pM {
             k.reason !== this.lastAuthRefreshBadReason
           )
             ((this.lastAuthRefreshBadReason = k.reason),
-              f("ccr_worker_auth_refresh", k.reason));
+              logFeatureBad("ccr_worker_auth_refresh", k.reason));
         } catch {
           if (this.lastAuthRefreshBadReason !== "adopt_threw")
             ((this.lastAuthRefreshBadReason = "adopt_threw"),
-              f("ccr_worker_auth_refresh", "adopt_threw"));
+              logFeatureBad("ccr_worker_auth_refresh", "adopt_threw"));
           q("error", "cli_heartbeat_refreshed_auth_adopt_threw");
         }
       let d = o.data?.heartbeat_interval_seconds;
@@ -2396,7 +2396,7 @@ class pM {
         ) {
           if (Buffer.byteLength(b(o)) <= F)
             t.push({ payload: o, ephemeral: !0 });
-          else g("ccr_partial_messages", "oversize_ephemeral_skipped");
+          else logFeatureSad("ccr_partial_messages", "oversize_ephemeral_skipped");
           continue;
         }
         this.bufferEphemeral(o);
@@ -2406,7 +2406,7 @@ class pM {
         ((r ??= this.streamEventBufferedAt),
           t.push(...this.takeStreamEventBuffer()));
       if (o.type === "assistant" && this.streamedEphemeralSinceLastAssistant)
-        (y("ccr_partial_messages"),
+        (logFeatureOk("ccr_partial_messages"),
           (this.streamedEphemeralSinceLastAssistant = !1));
       t.push(this.toClientEvent(o));
     }
@@ -2431,7 +2431,7 @@ class pM {
       payload: {
         ...t,
         ...(d !== t.tool_use_result && { tool_use_result: d }),
-        uuid: typeof t.uuid === "string" ? t.uuid : oe(),
+        uuid: typeof t.uuid === "string" ? t.uuid : randomUUID(),
       },
       ...(r && { historical: !0 }),
       ...(o && { ephemeral: !0 }),
@@ -2440,7 +2440,7 @@ class pM {
   uploadedToolResult(e, t) {
     let r = ie(e, this.currentUploadTrim(), t);
     if (r !== e && !this.loggedToolResultBlank)
-      ((this.loggedToolResultBlank = !0), y("ccr_tool_result_blank"));
+      ((this.loggedToolResultBlank = !0), logFeatureOk("ccr_tool_result_blank"));
     return r;
   }
   setNoSubscriberStreamEventFlushIntervalMs(e) {
@@ -2470,21 +2470,21 @@ class pM {
       this.internalEventUploader.setHoldMs(t, e));
   }
   logUploadHoldEnd(e, t, r, o) {
-    y("ccr_no_subscriber_hold", {
-      lane: u(e),
-      reason: u(t),
+    logFeatureOk("ccr_no_subscriber_hold", {
+      lane: fromEnum(e),
+      reason: fromEnum(t),
       held_events: r,
       held_ms: o,
     });
   }
   logUndeliveredAtClose(e, t) {
     if (t > 0 && this.unwatched())
-      g(
+      logFeatureSad(
         "ccr_no_subscriber_hold",
         this.closingForSuccessor
           ? "undelivered_at_rebuild"
           : "undelivered_at_close",
-        { lane: u(e), undelivered_events: t },
+        { lane: fromEnum(e), undelivered_events: t },
       );
   }
   bufferEphemeral(e) {
@@ -2547,7 +2547,7 @@ class pM {
             `CCRClient: dropping oversize ephemeral stream_event (>${F} bytes)`,
             { level: "warn" },
           ),
-          g("ccr_partial_messages", "oversize_ephemeral_skipped"),
+          logFeatureSad("ccr_partial_messages", "oversize_ephemeral_skipped"),
           !1
         );
       })
@@ -2578,7 +2578,7 @@ class pM {
       let M = GGn(_);
       if (M !== _ && !this.loggedTranscriptEnvelopeStrip)
         ((this.loggedTranscriptEnvelopeStrip = !0),
-          y("ccr_worker_envelope_strip"));
+          logFeatureOk("ccr_worker_envelope_strip"));
       _ = M;
     }
     if (e === "transcript" && _.type === "user" && _.isVirtual !== !0) {
@@ -2589,7 +2589,7 @@ class pM {
         payload: {
           type: e,
           ..._,
-          uuid: typeof _.uuid === "string" ? _.uuid : oe(),
+          uuid: typeof _.uuid === "string" ? _.uuid : randomUUID(),
         },
         ...(r && { is_compaction: !0 }),
         ...(o && { session_agent_id: o }),
@@ -2647,11 +2647,11 @@ class pM {
         headers: {
           ...E,
           "anthropic-version": "2023-06-01",
-          "anthropic-client-platform": Um(),
+          "anthropic-client-platform": getClientPlatform(),
           "User-Agent": va(),
         },
         signal: p?.signal ?? AbortSignal.timeout(30000),
-        ...As({ url: o.toString() }),
+        ...getProxyFetchOptions({ url: o.toString() }),
       });
       if (_.ok) {
         let T;
@@ -2915,13 +2915,13 @@ class pM {
             headers: {
               ...r,
               "anthropic-version": "2023-06-01",
-              "anthropic-client-platform": Um(),
+              "anthropic-client-platform": getClientPlatform(),
               "User-Agent": va(),
             },
             signal: _
               ? AbortSignal.any([AbortSignal.timeout(30000), _])
               : AbortSignal.timeout(30000),
-            ...As({ url: t }),
+            ...getProxyFetchOptions({ url: t }),
           })),
           k.ok)
         ) {
@@ -3147,7 +3147,7 @@ function rdt(e) {
       try {
         r.emit();
       } catch (d) {
-        h(d);
+        logError(d);
       }
     },
     sampleIdleSeconds() {

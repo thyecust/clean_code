@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -46,7 +46,7 @@ function Lit(f, h, a) {
       f
         ? "tengu_claude_md_external_includes_dialog_accepted"
         : "tengu_claude_md_external_includes_dialog_declined",
-      { source: u(h) },
+      { source: fromEnum(h) },
     ));
 }
 function PPt(Re) {

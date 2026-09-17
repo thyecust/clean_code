@@ -42,7 +42,7 @@ function v(s) {
 function K(s, a) {
   return (s && FT(s)) || (a && FT(S(a))) || B;
 }
-function Q(se) {
+function UserCrossSessionMessage(se) {
   let i = _(23),
     {
       addMargin: M,
@@ -146,4 +146,4 @@ function S(s) {
       return s;
   }
 }
-export { Q as UserCrossSessionMessage };
+export { UserCrossSessionMessage };

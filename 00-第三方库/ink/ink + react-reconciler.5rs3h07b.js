@@ -50,12 +50,12 @@ import { sE, Fm, Ie, po } from "../lodash/lodash.207999qb.js";
 import { R, dt, ge, A, Po } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { os, Yg, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../react/react.zhnvc798.js";
 import { cz } from "../which-isexe/ isexe.knmpyrza.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { usr, zg, n5t, Isr, Psr, Dsr, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ie, $Ze } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
@@ -8872,7 +8872,7 @@ function Vm(t, s, c = "wrap") {
 import {
   closeSync as cp,
   constants as Vc,
-  fstatSync as sp,
+  fstatSync,
   openSync as $0,
   writeSync as eS,
 } from "fs";
@@ -8905,8 +8905,8 @@ function lS() {
   }
   let f = "not_same_tty";
   try {
-    let m = sp(c),
-      y = sp(1);
+    let m = fstatSync(c),
+      y = fstatSync(1);
     if (m.rdev === y.rdev && m.ino === y.ino) return { fd: c };
   } catch (m) {
     f = `fstat_${A(m) ?? "failed"}`;
@@ -9077,7 +9077,7 @@ function pp(t, s) {
       endedBy: s,
     });
   } catch (c) {
-    h(c);
+    logError(c);
   }
 }
 function ks(t) {
@@ -9286,7 +9286,7 @@ import {
   closeSync as Ox,
   constants as _g,
   openSync as wx,
-  readSync as Hx,
+  readSync,
   writeSync as $d,
 } from "fs";
 var yS = function () {
@@ -11012,7 +11012,7 @@ var qS = {
   },
 };
 var tu = qS;
-import { format as Ou } from "util";
+import { format } from "util";
 F();
 var ly = Qt(!1);
 ly.displayName = "InternalAccessibilityContext";
@@ -12307,7 +12307,7 @@ function w1(t, s) {
     try {
       m(s);
     } catch (b) {
-      h(dt(ge(b), "Ink event handler threw"));
+      logError(dt(ge(b), "Ink event handler threw"));
     }
     c = f;
   }
@@ -14162,7 +14162,7 @@ var CE = (t, s) => {
   Td = ME;
 F();
 var Xa = pe(kv(), 1);
-import { readFileSync as jv } from "fs";
+import { readFileSync } from "fs";
 function BE(Gv) {
   let { value: pM } = Gv;
   return pM.length > Wv;
@@ -14210,7 +14210,7 @@ function Cu(Gv) {
     let Hd = 0;
     if (Su && yi?.line && !Vv(Su)) {
       try {
-        let dM = jv(Su, "utf8");
+        let dM = readFileSync(Su, "utf8");
         if (((Ho = Td(dM, yi.line)), Ho?.some(BE))) Ho = void 0;
         if (Ho) {
           for (const { line: hM } of Ho) Hd = Math.max(Hd, String(hM).length);
@@ -14386,7 +14386,7 @@ async function qv(t) {
   if (s) {
     let y = s.name;
     if (a.TMUX && y.startsWith("tmux ")) {
-      let { stdout: b } = await Fe(
+      let { stdout: b } = await execFileNoThrow(
           "tmux",
           ["display-message", "-p", "#{client_termtype}"],
           { timeout: 1000, useCwd: !1 },
@@ -14601,7 +14601,7 @@ Read about how to prevent this error on https://github.com/vadimdemedes/ink/#isr
       let s;
       while ((s = this.props.stdin.read()) !== null) this.processInput(s, t);
     } catch (s) {
-      h(dt(ge(s), "stdin readable handler threw during input processing"));
+      logError(dt(ge(s), "stdin readable handler threw during input processing"));
       let { stdin: c } = this.props;
       if (
         this.rawModeEnabledCount > 0 &&
@@ -14990,7 +14990,7 @@ function Qa(t) {
 var kl = 256;
 function Lo(t, s) {
   if (!Ol().claim(`ink_tree_depth_cap:${t}`)) return;
-  h(
+  logError(
     new R(
       `${t}: ink tree depth exceeded MAX_TREE_DEPTH (${kl}) at <${s}>; skipping deeper subtree instead of overflowing the call stack`,
       "ink tree walk stopped at MAX_TREE_DEPTH",
@@ -18645,20 +18645,20 @@ class Yye {
   reportLayoutFaultErrorOnce(t) {
     let s = this.reportedLayoutFaultMessages;
     if (s.has(t.message) || s.size >= Bx) return;
-    (s.add(t.message), h(t));
+    (s.add(t.message), logError(t));
   }
   reportLayoutFaultRecovered() {
-    h(new R("ink layout pass threw; recovered by immediate re-layout"));
+    logError(new R("ink layout pass threw; recovered by immediate re-layout"));
   }
   reportLayoutFaultDropped() {
-    h(
+    logError(
       new R(
         "ink layout pass threw; immediate re-layout also threw, frame dropped",
       ),
     );
   }
   reportLayoutFaultPersisting() {
-    h(
+    logError(
       new R(
         "ink layout pass still throwing after many consecutive commits, frames dropped",
       ),
@@ -19834,21 +19834,21 @@ ${re}`
   patchConsole() {
     let t = console,
       s = {},
-      c = (...y) => n(`console.log: ${Ou(...y)}`),
+      c = (...y) => n(`console.log: ${format(...y)}`),
       f =
         (y) =>
         (...b) =>
-          h(dt(Error(`console.${y}: ${Ou(...b)}`), `console.${y} failed`)),
+          logError(dt(Error(`console.${y}: ${format(...b)}`), `console.${y} failed`)),
       m =
         (y) =>
         (...b) =>
-          n(`console.${y}: ${Ou(...b)}`, { level: "warn" });
+          n(`console.${y}: ${format(...b)}`, { level: "warn" });
     for (let y of Gx) ((s[y] = t[y]), (t[y] = c));
     for (let y of jx)
       ((s[y] = t[y]),
         (t[y] =
           y === "error"
-            ? (...b) => n(`console.error: ${Ou(...b)}`, { level: "error" })
+            ? (...b) => n(`console.error: ${format(...b)}`, { level: "error" })
             : m(y)));
     return (
       (s.assert = t.assert),
@@ -19905,7 +19905,7 @@ function B0e(t = process.stdin) {
     m = wx("/dev/tty", _g.O_RDONLY | _g.O_NONBLOCK);
     let y = Buffer.alloc(1024);
     for (let b = 0; b < 64; b++) {
-      let S = Hx(m, y, 0, y.length, null);
+      let S = readSync(m, y, 0, y.length, null);
       if (S <= 0) break;
       s.push(Buffer.from(y.subarray(0, S)));
     }

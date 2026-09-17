@@ -27,7 +27,7 @@ class YA {
   consentCacheGeneration = 0;
   grantsFetch = null;
 }
-import { randomBytes as A } from "crypto";
+import { randomBytes } from "crypto";
 var j = m(() =>
     c({
       projectId: s(),
@@ -43,7 +43,7 @@ function R(e) {
         .toLowerCase()
         .replace(/[^a-z0-9]/g, "")
         .slice(0, 16) || "anon",
-    n = A(6).toString("hex");
+    n = randomBytes(6).toString("hex");
   return `plan_${t}_${n}`;
 }
 function tT(e) {

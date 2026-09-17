@@ -71,12 +71,12 @@ import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ch1x7wx1.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
 var i = { vim: "Editor mode", "output-style": "Output style" };
-function l(n) {
+function redirectMessageFor(n) {
   let s = n && i[n] ? n : "vim";
   return `/${s} moved \u2192 ${i[s]} in /config`;
 }
 var d = async (n, s, a, c) => {
-  let m = l(c);
+  let m = redirectMessageFor(c);
   return r(o, {
     flexDirection: "column",
     children: [
@@ -85,4 +85,4 @@ var d = async (n, s, a, c) => {
     ],
   });
 };
-export { d as call, l as redirectMessageFor };
+export { d as call, redirectMessageFor };

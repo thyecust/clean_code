@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { ze, Ox } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { U, Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { getMainLoopModel as rt, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getMainLoopModel, H, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { te, truncateToWidth as Xe, formatDuration as Ot, formatDurationCoarse as zQ, formatNumber as No, formatResetTime as Au } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth, formatDuration, formatDurationCoarse, formatNumber, formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Dw } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ale } from "../工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
@@ -259,7 +259,7 @@ function so(Ts) {
     to = Math.max(15, Yn - 15 - xs),
     Tr;
   if (Et[5] !== to || Et[6] !== dt.subject)
-    ((Tr = Xe(dt.subject, to)),
+    ((Tr = truncateToWidth(dt.subject, to)),
       (Et[5] = to),
       (Et[6] = dt.subject),
       (Et[7] = Tr));
@@ -268,7 +268,7 @@ function so(Ts) {
     no = Math.max(15, Yn - 15),
     kr;
   if (Et[8] !== De || Et[9] !== no)
-    ((kr = De ? Xe(De, no) : void 0),
+    ((kr = De ? truncateToWidth(De, no) : void 0),
       (Et[8] = De),
       (Et[9] = no),
       (Et[10] = kr));
@@ -1056,7 +1056,7 @@ function Bo({
     if (ot.current.size > 0)
       (i("tengu_spinner_stall_cleared", {
         max_stall_ms: Math.round(tt.current),
-        mode: u(n),
+        mode: fromEnum(n),
         override_color: g != null,
         response_length: ct,
         thresholds_fired: ot.current.size,
@@ -1070,7 +1070,7 @@ function Bo({
         (ot.current.add(pt),
           i("tengu_spinner_stalled_ui", {
             threshold_ms: pt,
-            mode: u(n),
+            mode: fromEnum(n),
             override_color: g != null,
             time_since_last_token_ms: Math.round(z),
             response_length: ct,
@@ -1137,20 +1137,20 @@ function Bo({
     }
   } else ((gt.current = v), (Wt.current = T));
   let pe = s ? v : gt.current,
-    Kt = Ot(P),
+    Kt = formatDuration(P),
     ne = te(Kt),
     ut = yt,
-    $t = No(ut),
+    $t = formatNumber(ut),
     _t = `${L.arrowDown} ${$t} tokens`,
     St = te(_t),
     J = q.kind === "thinking" ? ei(q.thinkingMs) : "thinking",
     ft;
   switch (q.kind) {
     case "tool-running":
-      ft = `running tool for ${Ot(q.toolMs)}`;
+      ft = `running tool for ${formatDuration(q.toolMs)}`;
       break;
     case "tool-done":
-      ft = `ran tool for ${Ot(q.toolMs)}`;
+      ft = `ran tool for ${formatDuration(q.toolMs)}`;
       break;
     case "thinking":
       ft = `${J}${x}`;
@@ -1442,7 +1442,7 @@ function Xit(Yc) {
   const Po = Nn >= 300000;
   let ri;
   if (Q[2] !== Nn || Q[3] !== Po)
-    ((ri = Ot(Nn, { mostSignificantOnly: Po })),
+    ((ri = formatDuration(Nn, { mostSignificantOnly: Po })),
       (Q[2] = Nn),
       (Q[3] = Po),
       (Q[4] = ri));
@@ -1509,7 +1509,7 @@ function Xit(Yc) {
     const Rt = Jc ?? "";
     let Pt;
     if (Q[10] !== Do || Q[11] !== Rt)
-      ((Pt = Xe(Rt, Do)), (Q[10] = Do), (Q[11] = Rt), (Q[12] = Pt));
+      ((Pt = truncateToWidth(Rt, Do)), (Q[10] = Do), (Q[11] = Rt), (Q[12] = Pt));
     else Pt = Q[12];
     let Tt;
     if (Q[13] !== Pt)
@@ -1537,7 +1537,7 @@ function Xit(Yc) {
     let Qc = nt.attempt >= nt.maxRetries;
     let At;
     if (Q[20] !== ae.retryWaitMs)
-      ((At = zQ(ae.retryWaitMs)), (Q[20] = ae.retryWaitMs), (Q[21] = At));
+      ((At = formatDurationCoarse(ae.retryWaitMs)), (Q[20] = ae.retryWaitMs), (Q[21] = At));
     else At = Q[21];
     let si = At;
     let vn = Qc
@@ -1546,12 +1546,12 @@ function Xit(Yc) {
     let Lo = Math.max(10, vo - 2 - te(vn) - 2);
     let Rt;
     if (Q[22] !== ae.waitedMs)
-      ((Rt = zQ(ae.waitedMs)), (Q[22] = ae.waitedMs), (Q[23] = Rt));
+      ((Rt = formatDurationCoarse(ae.waitedMs)), (Q[22] = ae.waitedMs), (Q[23] = Rt));
     else Rt = Q[23];
     const Pt = `No response from the API after ${Rt}`;
     let Tt;
     if (Q[24] !== Lo || Q[25] !== Pt)
-      ((Tt = Xe(Pt, Lo)), (Q[24] = Lo), (Q[25] = Pt), (Q[26] = Tt));
+      ((Tt = truncateToWidth(Pt, Lo)), (Q[24] = Lo), (Q[25] = Pt), (Q[26] = Tt));
     else Tt = Q[26];
     let kt;
     if (Q[27] !== Tt)
@@ -1601,7 +1601,7 @@ function Xit(Yc) {
   let Gt = nt.error.rateLimits,
     At;
   if (Q[37] !== Gt)
-    ((At = Gt?.resetsAt ? ` (${Au(Gt.resetsAt)})` : ""),
+    ((At = Gt?.resetsAt ? ` (${formatResetTime(Gt.resetsAt)})` : ""),
       (Q[37] = Gt),
       (Q[38] = At));
   else At = Q[38];
@@ -1625,7 +1625,7 @@ function Xit(Yc) {
     jo = Math.max(10, vo - 2 - te(On) - 2),
     Pt;
   if (Q[43] !== jo || Q[44] !== $o)
-    ((Pt = Xe($o, jo)), (Q[43] = jo), (Q[44] = $o), (Q[45] = Pt));
+    ((Pt = truncateToWidth($o, jo)), (Q[43] = jo), (Q[44] = $o), (Q[45] = Pt));
   else Pt = Q[45];
   let Go = Pt,
     Tt;
@@ -1845,7 +1845,7 @@ function dr({
     );
   }, [n]);
   let Mt = qf(),
-    Lt = IJe(K ?? rt(), I ?? Mt),
+    Lt = IJe(K ?? getMainLoopModel(), I ?? Mt),
     xt =
       l.current !== null
         ? l.current - s.current - c.current

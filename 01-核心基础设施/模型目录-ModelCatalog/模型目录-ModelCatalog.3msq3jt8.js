@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ns, fLn, h_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import { TW, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -1212,7 +1212,7 @@ function getAPIProvider() {
               : "firstParty";
 }
 function getAPIProviderForAnalytics() {
-  return u(getAPIProvider());
+  return fromEnum(getAPIProvider());
 }
 function isFirstPartyProvider() {
   return getAPIProvider() === "firstParty";

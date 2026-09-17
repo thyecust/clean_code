@@ -14,9 +14,9 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { isBgSession as _t, isUnattendedBgSession as ap, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, isUnattendedBgSession, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { io, cnt, Xkt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { mS } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -31,8 +31,8 @@ import {
   Nue,
   BS,
   Hy,
-  asSystemPrompt as Zo,
-  getLastCacheSafeParams as BO,
+  asSystemPrompt,
+  getLastCacheSafeParams,
   Vc,
   Re,
   ya,
@@ -42,7 +42,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-05js9xfq.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
@@ -52,7 +52,7 @@ import { j_e, HB } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REP
 import { oat, sat, EOt, AOt, COt, vOt, ROt } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { IS } from "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
-import { runSideQuestion as l0e } from "../权限系统/chunk-qjqc5vxm.js";
+import { runSideQuestion } from "../权限系统/chunk-qjqc5vxm.js";
 import { Ur } from "../../01-核心基础设施/共享小工具-未细化/chunk-qhcr4b0p.js";
 import { o4 } from "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-wst7w7tj.js";
@@ -128,7 +128,7 @@ function ve({
     [ge, Ee] = d(0),
     { rows: at, columns: lt } = ks(Se()),
     ye = jn(),
-    J = _t() && !ye;
+    J = isBgSession() && !ye;
   (ko(() => st((a) => a + 1), T || ne ? null : 80),
     Un(() => Ee(0), ge ? 2000 : null, [ge]),
     Un(() => me(null), G ? oat : null, [G]));
@@ -306,7 +306,7 @@ ${T}`
   }
   E(() => {
     if (u !== void 0) return;
-    let a = hr(),
+    let a = createAbortController(),
       A = k.inFlight,
       f = B ?? (A?.question === i ? A : void 0),
       S = () => {},
@@ -351,7 +351,7 @@ ${T}`
               },
             ),
           )
-        : await l0e({
+        : await runSideQuestion({
             question: i,
             cacheSafeParams: await Je(x),
             parentController: a,
@@ -566,7 +566,7 @@ function Ge(i) {
   return { error: l(i) || "Failed to get response" };
 }
 function fe() {
-  return ap() || (_t() && yln());
+  return isUnattendedBgSession() || (isBgSession() && yln());
 }
 function Rt(i) {
   i.clearPendingReopen();
@@ -600,7 +600,7 @@ function j(i, u, h = fe()) {
     (i.armReopen(u, () =>
       VP(() => {
         if (yln()) i.reopenAway = !0;
-        if (ap()) {
+        if (isUnattendedBgSession()) {
           i.reopenAway = !0;
           return;
         }
@@ -635,7 +635,7 @@ function Ae(pr) {
   return gt;
 }
 function Be(i, u) {
-  return Xe(i.replace(/\s+/g, " ").trim(), u);
+  return truncateToWidth(i.replace(/\s+/g, " ").trim(), u);
 }
 function Ct(i) {
   if (
@@ -736,7 +736,7 @@ function St(i) {
 }
 async function Je(i) {
   let u = ya(St(i.messages)),
-    h = BO();
+    h = getLastCacheSafeParams();
   if (h)
     return {
       systemPrompt: h.systemPrompt,
@@ -752,7 +752,7 @@ async function Je(i) {
     j_(i.session, i.options.cacheBreakerPhrase),
   ]);
   return {
-    systemPrompt: Zo(B),
+    systemPrompt: asSystemPrompt(B),
     userContext: x,
     systemContext: b,
     toolUseContext: i,
@@ -799,7 +799,7 @@ function Ke() {
 }
 async function vt(i, u) {
   let h = u.session.btwHistory,
-    B = hr(),
+    B = createAbortController(),
     x = () => {},
     b = {
       question: i,
@@ -811,7 +811,7 @@ async function vt(i, u) {
   (h.setInFlight(b), j(h, b));
   let R;
   try {
-    let w = await l0e({
+    let w = await runSideQuestion({
       question: i,
       cacheSafeParams: await Je(u),
       parentController: B,

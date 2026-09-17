@@ -10,40 +10,40 @@
 
 // [preload stripped] 原本在此预载 70 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
   cA,
-  getUserSpecifiedModelSetting as Mf,
-  DEFAULT_MANTLE_OPUS_KEY as Yve,
-  getMarketingNameForModel as bu,
-  toProviderWireModelId as PR,
+  getUserSpecifiedModelSetting,
+  DEFAULT_MANTLE_OPUS_KEY,
+  getMarketingNameForModel,
+  toProviderWireModelId,
   DR,
   Im,
   VC,
   Rw,
   nRe,
-  isHostManagedProviderAuth as Fc,
-  hostManagedAwsSdkCredentials as v6,
-  refreshAndGetAwsCredentials as AU,
-  getDefaultAwsProviderChain as p0,
+  isHostManagedProviderAuth,
+  hostManagedAwsSdkCredentials,
+  refreshAndGetAwsCredentials,
+  getDefaultAwsProviderChain,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { to, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { d7 } from "./chunk-bnft4099.js";
 var M = Object.keys(to).filter((e) => to[e].mantle !== null);
-async function B(e = Yve, s) {
-  if (Pe() !== "mantle") return [];
+async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
+  if (getAPIProvider() !== "mantle") return [];
   if (a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) return [];
-  let r = Ge().modelOverrides;
+  let r = getInitialSettings().modelOverrides;
   if (r?.[to[e].firstParty]) return [];
-  let c = s?.userPinned ?? Mf() != null,
+  let c = s?.userPinned ?? getUserSpecifiedModelSetting() != null,
     m = a.ANTHROPIC_DEFAULT_OPUS_MODEL,
     o;
   if (m !== void 0 && !d7("opus")) {
     if (c) return [];
-    let t = await E(PR(m));
+    let t = await E(toProviderWireModelId(m));
     if (
       (i("tengu_mantle_probe_result", {
         model_key: S("admin_pin"),
@@ -62,7 +62,7 @@ async function B(e = Yve, s) {
   let l = await h(d);
   if (
     (i("tengu_mantle_probe_result", {
-      model_key: u(e),
+      model_key: fromEnum(e),
       accessible: S(l ? "true" : "false"),
     }),
     l)
@@ -74,14 +74,14 @@ async function B(e = Yve, s) {
           tier: "opus",
           refutedValue: o,
           workingKey: e,
-          workingName: bu(to[e].firstParty) ?? d,
+          workingName: getMarketingNameForModel(to[e].firstParty) ?? d,
           workingMantleId: d,
           defaultKey: e,
         },
       ];
     return [];
   }
-  let f = bu(to[e].firstParty) ?? d,
+  let f = getMarketingNameForModel(to[e].firstParty) ?? d,
     g = M.indexOf(e),
     p = M.slice(0, g)
       .reverse()
@@ -91,10 +91,10 @@ async function B(e = Yve, s) {
         let A = to[t].mantle,
           _ = await h(A);
         i("tengu_mantle_probe_result", {
-          model_key: u(t),
+          model_key: fromEnum(t),
           accessible: S(_ ? "true" : "false"),
         });
-        let w = bu(to[t].firstParty) ?? A;
+        let w = getMarketingNameForModel(to[t].firstParty) ?? A;
         return { key: t, mantleId: A, name: w, ok: _ };
       }),
     );
@@ -196,7 +196,7 @@ async function O(e) {
     });
   else {
     let l = a.CLAUDE_CODE_SKIP_MANTLE_AUTH,
-      f = Fc(),
+      f = isHostManagedProviderAuth(),
       g = {
         authToken: null,
         defaultHeaders: {
@@ -208,7 +208,7 @@ async function O(e) {
         ...Rw,
       },
       p = l ? nRe() : void 0,
-      k = l || f ? null : await AU();
+      k = l || f ? null : await refreshAndGetAwsCredentials();
     o = k
       ? new s({
           ...m,
@@ -233,11 +233,11 @@ async function O(e) {
             }),
           ...(!l && g),
           ...(!l &&
-            f && { providerChainResolver: v6("Mantle").providerChainResolver }),
+            f && { providerChainResolver: hostManagedAwsSdkCredentials("Mantle").providerChainResolver }),
           ...(!l &&
             !f &&
             !a.CLAUDE_CODE_SKIP_AWS_CRED_CACHE && {
-              providerChainResolver: () => p0(c),
+              providerChainResolver: () => getDefaultAwsProviderChain(c),
             }),
         });
   }
@@ -247,4 +247,4 @@ async function O(e) {
     messages: [{ role: "user", content: "." }],
   });
 }
-export { B as checkMantleDefaultAvailability };
+export { checkMantleDefaultAvailability };

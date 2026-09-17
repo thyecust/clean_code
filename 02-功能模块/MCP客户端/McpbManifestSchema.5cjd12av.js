@@ -50,7 +50,7 @@ var m = Wa({
     max: Zt().optional(),
   }),
   A = hm(le(), uv([le(), Zt(), Io(), cr(le())])),
-  k = Wa({
+  McpbManifestSchema = Wa({
     $schema: le().optional(),
     dxt_version: le()
       .optional()
@@ -123,7 +123,7 @@ function z(t, i) {
   }
   return t;
 }
-async function R(t) {
+async function getMcpConfigForManifest(t) {
   let {
       manifest: i,
       extensionPath: n,
@@ -178,4 +178,4 @@ function j({ manifest: t, userConfig: i }) {
     }
   return !1;
 }
-export { k as McpbManifestSchema, R as getMcpConfigForManifest };
+export { McpbManifestSchema, getMcpConfigForManifest };

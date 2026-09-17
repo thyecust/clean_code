@@ -14,7 +14,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -23,7 +23,7 @@ import { Ch } from "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { ps, _i, Rm, aA, Us, OD, km, Jk, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Fs, Hg, qw, Ig, XW, Wst } from "../权限系统/chunk-0hcqee2w.js";
-import { WORKFLOW_TOOL_NAME as Yc } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
+import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { Vf } from "./chunk-cd542wve.js";
 import { Yx } from "../../03-入口与运行时/会话UI(REPL)/chunk-zds66w6y.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7m5aewa3.js";
@@ -66,7 +66,7 @@ function fn(n, y) {
       }
       P++;
     }
-    return or(n.slice(s, P).trim(), Ve);
+    return truncate(n.slice(s, P).trim(), Ve);
   }
   s++;
   let a = [];
@@ -91,7 +91,7 @@ function fn(n, y) {
     (a.push(c), s++);
   }
   let f = a.join("").replace(/\s+/g, " ").trim();
-  return or(f, Ve);
+  return truncate(f, Ve);
 }
 function Be(n, y, s) {
   if (n[y] !== "(") return;
@@ -334,7 +334,7 @@ function on(n) {
     [
       {
         type: "addRules",
-        rules: [{ toolName: Yc, ruleContent: y }],
+        rules: [{ toolName: WORKFLOW_TOOL_NAME, ruleContent: y }],
         behavior: "allow",
         destination: "localSettings",
       },
@@ -347,7 +347,7 @@ function on(n) {
           l === void 0 ||
           l.type !== "addRules" ||
           l.rules.length !== 1 ||
-          l.rules[0]?.toolName !== Yc ||
+          l.rules[0]?.toolName !== WORKFLOW_TOOL_NAME ||
           l.rules[0]?.ruleContent !== y
         )
           return null;
@@ -367,7 +367,7 @@ function on(n) {
     },
   );
 }
-function vn(it) {
+function WorkflowPermissionDialog(it) {
   let g = _(120),
     { payload: m, answer: J, wouldTakeAnswer: Q } = it,
     [x, rt] = d(m.script),
@@ -852,4 +852,4 @@ function vn(it) {
   else Sn = g[119];
   return Sn;
 }
-export { vn as WorkflowPermissionDialog };
+export { WorkflowPermissionDialog };

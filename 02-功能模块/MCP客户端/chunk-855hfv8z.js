@@ -10,12 +10,12 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { jur, Et, dv, b, ae, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { $xt, uxe, dateToFilename as BPn, attachErrorLogSink as jPn } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { $xt, uxe, dateToFilename, attachErrorLogSink } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ore } from "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
 import { hJn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
 import { Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
-import { dirname as p, join as a } from "path";
-var f = BPn(new Date());
+import { dirname, join as a } from "path";
+var f = dateToFilename(new Date());
 function c() {
   return a(uxe.errors(), f + ".jsonl");
 }
@@ -43,7 +43,7 @@ class l {
   writerFor(e) {
     let r = this.writers.get(e);
     if (!r) {
-      let t = p(e),
+      let t = dirname(e),
         i = !1;
       ((r = u({
         writeFn: (o) => {
@@ -146,7 +146,7 @@ function S(e, r, t) {
   e.writerFor(i).write(o);
 }
 function Jtn() {
-  (jPn(y(new l())), n("Error log sink initialized"));
+  (attachErrorLogSink(y(new l())), n("Error log sink initialized"));
 }
 function y(e) {
   return {

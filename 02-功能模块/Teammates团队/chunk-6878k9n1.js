@@ -11,44 +11,44 @@ import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { K, qP, Tz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { isBgSession as _t, isDaemonBgWorker as pq, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession, isDaemonBgWorker, hq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Z4t } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isTeammate as Zi } from "./chunk-811z9z0t.js";
+import { isTeammate } from "./chunk-811z9z0t.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
-import { vre, rK, Rre, getOwnJobShortId as gu, resolveBridgeHandoffIdentity as F8e, buildBridgeReattachEnv as oK } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
+import { vre, rK, Rre, getOwnJobShortId, resolveBridgeHandoffIdentity, buildBridgeReattachEnv } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { ll } from "./chunk-thxapyam.js";
-import { getMaterializedSessionFile as il, isTranscriptPersistenceDisabled as hl, flushSessionStorage as kc, getCurrentSessionBridge as sD } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getToolPermissionContext as ce, getSessionEffort as gme } from "../权限系统/chunk-fjrcf22x.js";
-import { BG_WORKER_IDENTITY_ENV_VARS as pme } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { getMaterializedSessionFile, isTranscriptPersistenceDisabled, flushSessionStorage, getCurrentSessionBridge } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
+import { BG_WORKER_IDENTITY_ENV_VARS } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { Il } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { rd, pD } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { a9, _4, ilt, dF, X9e, cnn } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { bDt, inn, iIe } from "../后台任务-Shell管理/chunk-nhnqmzyt.js";
-import { spawn as N } from "child_process";
-import { realpath as k } from "fs/promises";
-import { homedir as O } from "os";
-import { basename as L, join as D } from "path";
+import { spawn } from "child_process";
+import { realpath } from "fs/promises";
+import { homedir } from "os";
+import { basename, join as D } from "path";
 async function slt() {
   let d = await ja("claude"),
     t = Il()[0],
     [o, c] = await Promise.all([
-      d ? k(d).catch(() => d) : null,
-      t ? k(t).catch(() => t) : null,
+      d ? realpath(d).catch(() => d) : null,
+      t ? realpath(t).catch(() => t) : null,
     ]);
   if (d && (c === null || o !== c))
     return pD({ cmd: d, prefixArgs: [], target: d });
   return rd();
 }
 var Fgr = async (d, t) => {
-  let o = _t() ? a.CLAUDE_JOB_DIR : void 0;
-  if (_t() && (!pq() || !o)) {
+  let o = isBgSession() ? a.CLAUDE_JOB_DIR : void 0;
+  if (isBgSession() && (!isDaemonBgWorker() || !o)) {
     i("tengu_update_refused", { bg_session: !0 });
-    let e = pq() ? null : gu();
+    let e = isDaemonBgWorker() ? null : getOwnJobShortId();
     return {
       type: "text",
       value: e
@@ -58,7 +58,7 @@ var Fgr = async (d, t) => {
   }
   let c = () => inn(t.taskRegistry.all());
   if (!o) {
-    let e = il(),
+    let e = getMaterializedSessionFile(),
       r = D(ll(cnn()), `${K()}.jsonl`);
     if (e && e !== r) {
       let u = c();
@@ -91,20 +91,20 @@ var Fgr = async (d, t) => {
       );
     },
     w = (e) => {
-      let r = rK(ce(t), qP());
+      let r = rK(getToolPermissionContext(t), qP());
       if (r.length === 0) return g(e);
       let u = c();
       i("tengu_update_refused", { uncarriable: !0, comment_monitor: u });
-      let p = hl() ? "" : " (add --continue to return to this conversation)";
+      let p = isTranscriptPersistenceDisabled() ? "" : " (add --continue to return to this conversation)";
       return `Can't switch to the new version from inside this session \u2014 it has restrictions a restart can't carry over (${r.join("; ")}). Nothing was changed; exit and start claude again for the new version${p}.${u ? " Exiting also stops the auto-replies to artifact comments until the next publish." : ""}`;
     },
     y = o ? g() : w();
   if (y !== void 0) return { type: "text", value: y };
   if (o) {
-    let e = L(o);
+    let e = basename(o);
     if (
       (await dF(t.messages, t.storageV5),
-      !(await Dt(kc(), 30000, "session flush").then(
+      !(await Dt(flushSessionStorage(), 30000, "session flush").then(
         () => !0,
         () => !1,
       )))
@@ -121,28 +121,28 @@ var Fgr = async (d, t) => {
       p = g(!0);
     if (p !== void 0) return { type: "text", value: p };
     let f = { ...process.env };
-    for (let s of pme) delete f[s];
+    for (let s of BG_WORKER_IDENTITY_ENV_VARS) delete f[s];
     delete f.CLAUDE_JOB_DIR;
     for (let s of Object.keys(f)) if (s.startsWith("CLAUDE_BG_")) delete f[s];
     i("tengu_update_bg_respawn", {
       carried_comment_monitor: bDt() && inn(t.taskRegistry.all()),
     });
     try {
-      let s = N(u.cmd, [...u.prefixArgs, "respawn", e], {
+      let s = spawn(u.cmd, [...u.prefixArgs, "respawn", e], {
         detached: !0,
         stdio: "ignore",
         windowsHide: !0,
         env: f,
-        cwd: O(),
+        cwd: homedir(),
       });
       (wS(s.pid),
         s.on("error", (P) => {
-          h(P);
+          logError(P);
         }),
         s.unref());
     } catch (s) {
       return (
-        h(s),
+        logError(s),
         i("tengu_update_refused", { bg_spawn_failed: !0 }),
         {
           type: "text",
@@ -158,13 +158,13 @@ var Fgr = async (d, t) => {
   await dF(t.messages, t.storageV5);
   let _ = w(!0);
   if (_ !== void 0) return { type: "text", value: _ };
-  let v = ce(t),
-    A = [...vre(v, gme(t)), ...Rre(v, Tz())],
-    b = Zi() ? void 0 : t.getAppState().teamContext?.teamName;
+  let v = getToolPermissionContext(t),
+    A = [...vre(v, getSessionEffort(t)), ...Rre(v, Tz())],
+    b = isTeammate() ? void 0 : t.getAppState().teamContext?.teamName;
   await X9e();
   let R = w(!0);
   if (R !== void 0) return { type: "text", value: R };
-  let n = Yi(),
+  let n = getReplBridgeHandle(),
     S = n?.bridgeSessionId,
     E = n?.getLastSequenceNum(),
     I = n?.outboundOnly,
@@ -181,7 +181,7 @@ var Fgr = async (d, t) => {
   let m = {};
   if (b) m.CLAUDE_INTERNAL_ASSISTANT_TEAM_NAME = b;
   (Object.assign(m, hq()),
-    Object.assign(m, oK(S, E, I, T, F8e(n, sD())) ?? {}));
+    Object.assign(m, buildBridgeReattachEnv(S, E, I, T, resolveBridgeHandoffIdentity(n, getCurrentSessionBridge())) ?? {}));
   let B = await slt(),
     C = await a9(t.messages, "relaunch", {}, t.storageV5);
   try {
@@ -209,7 +209,7 @@ Switching from ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/ant
   } catch (e) {
     if (!C) throw e;
     return (
-      h(e),
+      logError(e),
       {
         type: "text",
         value: lo(t.session)

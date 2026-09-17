@@ -12,11 +12,11 @@ import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { PERMISSION_MODE_MANUAL_ALIAS as qU } from "./chunk-e4pfvp7x.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { PERMISSION_MODE_MANUAL_ALIAS } from "./chunk-e4pfvp7x.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { isSameProcessAsync as Pm, ownProcStart as O6 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { JI, mN, eXe } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
@@ -52,7 +52,7 @@ function V(o) {
 import { readFile as re } from "fs/promises";
 import { join as oe } from "path";
 import { readFile as Y, stat as Z } from "fs/promises";
-import { dirname as ee } from "path";
+import { dirname } from "path";
 async function D(o, t) {
   let e = o ?? Vb(),
     r;
@@ -123,7 +123,7 @@ async function M9e(o, t, e) {
       );
     return;
   }
-  (await qt().mkdir(ee(r)),
+  (await qt().mkdir(dirname(r)),
     await On(
       r,
       b(a, null, 2) +
@@ -156,8 +156,8 @@ var ne = 1000,
       prompt: s().min(1),
       directory: s().min(1),
       enabled: O().default(!0),
-      permissionMode: X([...Zye, qU])
-        .transform((o) => (o === qU ? "default" : o))
+      permissionMode: X([...Zye, PERMISSION_MODE_MANUAL_ALIAS])
+        .transform((o) => (o === PERMISSION_MODE_MANUAL_ALIAS ? "default" : o))
         .default("dontAsk"),
       model: s().optional(),
       runTimeoutMinutes: T().positive().max(B).default(30),
@@ -183,7 +183,7 @@ function N() {
 async function se(o, t) {
   let e = {
     workerPid: process.pid,
-    workerProcStart: O6(),
+    workerProcStart: ownProcStart(),
     writtenAt: Date.now(),
     tasks: o,
   };
@@ -233,7 +233,7 @@ async function dBn(o) {
   } catch {
     return null;
   }
-  if (!(await Pm(r.workerPid, r.workerProcStart))) return null;
+  if (!(await isSameProcessAsync(r.workerPid, r.workerProcStart))) return null;
   return e;
 }
 var pBn = async (o, t, e, r, a) => {
@@ -390,7 +390,7 @@ function L(o, t) {
   } else o.scheduled = t;
 }
 async function eSe(o, t, e) {
-  return Sr("daemon_scheduled_add", async () => {
+  return withFeatureTelemetry("daemon_scheduled_add", async () => {
     (j().parse(o),
       await M9e(
         (r) => {
@@ -406,7 +406,7 @@ async function eSe(o, t, e) {
   });
 }
 async function tSe(o, t, e) {
-  return Sr("daemon_scheduled_remove", async () => {
+  return withFeatureTelemetry("daemon_scheduled_remove", async () => {
     let r = !1;
     return (
       await M9e(

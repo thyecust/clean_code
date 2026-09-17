@@ -123,7 +123,7 @@ var j = function (e, t, o, r) {
   x,
   T = "vertex-2023-10-16",
   R = new Set(["/v1/messages", "/v1/messages?beta=true"]);
-class A extends Eh {
+class AnthropicVertex extends Eh {
   constructor({
     baseURL: e = l("ANTHROPIC_VERTEX_BASE_URL"),
     region: t = l("CLOUD_ML_REGION") ?? null,
@@ -246,4 +246,4 @@ function S(e) {
   let t = new Th(e);
   return (delete t.messages.batches, t);
 }
-export { A as AnthropicVertex };
+export { AnthropicVertex };

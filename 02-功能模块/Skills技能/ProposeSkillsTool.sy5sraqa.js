@@ -16,7 +16,7 @@ import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { findCommand as Di, j2, L_t, getCommands as kf } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findCommand, j2, L_t, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { eJ, yQn, SQn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -67,7 +67,7 @@ var S = 1024,
       ),
     }),
   ),
-  Q = Tt({
+  ProposeSkillsTool = Tt({
     name: eJ,
     maxResultSizeChars: 1000,
     searchHint:
@@ -129,9 +129,9 @@ var S = 1024,
       let r = [],
         d = [];
       try {
-        let o = await kf(sn(), e.storageV5);
+        let o = await getCommands(sn(), e.storageV5);
         for (let h of u) {
-          let p = Di(h, o);
+          let p = findCommand(h, o);
           if (
             p?.type !== "prompt" ||
             p.loadedFrom !== "syncedSkills" ||
@@ -233,4 +233,4 @@ async function y(t) {
     return;
   }
 }
-export { Q as ProposeSkillsTool };
+export { ProposeSkillsTool };

@@ -19,8 +19,8 @@ import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import { wb } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ike } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sC, l2t, addMcpConfig as KM, userScopeMcpServerExists as Syt, readRawMcpJsonServersFromCwd as Jde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { sC, l2t, addMcpConfig, userScopeMcpServerExists, readRawMcpJsonServersFromCwd } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { G$ } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { o$e } from "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { Fk } from "../共享小工具-未细化/chunk-7wm8t84g.js";
@@ -29,40 +29,40 @@ import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { join as Ae } from "path";
 import {
-  copyFile as Ge,
-  lstat as ie,
-  mkdir as D,
-  readdir as Y,
-  readFile as Fe,
-  readlink as De,
-  realpath as ve,
+  copyFile,
+  lstat,
+  mkdir,
+  readdir,
+  readFile,
+  readlink,
+  realpath,
   rm as we,
   stat as He,
-  writeFile as H,
+  writeFile,
 } from "fs/promises";
-import { homedir as Ke, userInfo as Be } from "os";
+import { homedir as Ke, userInfo } from "os";
 import {
   basename as oe,
   dirname as ce,
-  isAbsolute as Pe,
+  isAbsolute,
   join as V,
-  parse as $e,
-  relative as ee,
-  resolve as J,
+  parse,
+  relative,
+  resolve,
   sep as le,
 } from "path";
 function ke(e) {
-  return Pe(e) || e === ".." || e.startsWith(".." + le);
+  return isAbsolute(e) || e === ".." || e.startsWith(".." + le);
 }
 var We = 10485760;
 async function R(e) {
   if ((await He(e)).size > We)
     throw Error("file exceeds IMPORT_MAX_FILE_BYTES; refusing to load");
-  return Fe(e, "utf8");
+  return readFile(e, "utf8");
 }
 async function _(e) {
   try {
-    return (await ie(e), !0);
+    return (await lstat(e), !0);
   } catch {
     return !1;
   }
@@ -118,9 +118,9 @@ function ue(e) {
   );
 }
 function me(e, t) {
-  let r = J(e, t),
-    a = ee(e, r);
-  if (a === "" || ke(a) || J(e, a) !== r) return null;
+  let r = resolve(e, t),
+    a = relative(e, r);
+  if (a === "" || ke(a) || resolve(e, a) !== r) return null;
   return r;
 }
 async function _e(e, t) {
@@ -128,24 +128,24 @@ async function _e(e, t) {
   if (r === null) return null;
   let a, o;
   try {
-    ((a = await ve(e)), (o = await ve(r)));
+    ((a = await realpath(e)), (o = await realpath(r)));
   } catch {
     return null;
   }
-  let u = ee(a, o);
+  let u = relative(a, o);
   if (u === "" || ke(u)) return null;
   return r;
 }
 async function U(e, t) {
   let r = me(e, t);
   if (r === null) return null;
-  let a = ee(e, r).split(le),
+  let a = relative(e, r).split(le),
     o = e;
   for (let u of a) {
     o = V(o, u);
     let d;
     try {
-      d = await ie(o);
+      d = await lstat(o);
     } catch (p) {
       if (W(p)) return r;
       return null;
@@ -160,9 +160,9 @@ function je(e, t = "darwin") {
 }
 async function re(e, t) {
   if (!t) return !1;
-  let r = await Ee(J(e));
+  let r = await Ee(resolve(e));
   if (r === null) return !0;
-  let a = await Ee(J(t));
+  let a = await Ee(resolve(t));
   if (a === null) return !0;
   let o;
   switch (P()) {
@@ -178,33 +178,33 @@ async function re(e, t) {
   let u = o(a),
     d = o(r);
   if (u === null || d === null) return !0;
-  let p = ee(je(u), je(d));
+  let p = relative(je(u), je(d));
   return p === "" || !ke(p);
 }
 function B() {
   let e;
   try {
-    e = Be().homedir;
+    e = userInfo().homedir;
   } catch {
     return !0;
   }
   if (!e) return !0;
-  return J(Ke()) !== J(e);
+  return resolve(Ke()) !== resolve(e);
 }
 function X(e) {
   return An(e);
 }
 async function Ee(e) {
-  let t = $e(e).root,
+  let t = parse(e).root,
     r = t,
-    a = ee(t, e).split(le),
+    a = relative(t, e).split(le),
     o = 0;
   while (a.length > 0) {
     let u = a.shift(),
       d = V(r, u),
       p;
     try {
-      p = await ie(d);
+      p = await lstat(d);
     } catch (f) {
       if (W(f)) return V(d, ...a);
       return null;
@@ -213,14 +213,14 @@ async function Ee(e) {
       if (++o > 40) return null;
       let f;
       try {
-        f = await De(d);
+        f = await readlink(d);
       } catch {
         return null;
       }
       if (X(f)) return null;
-      let k = Pe(f) ? f : V(ce(d), f),
-        h = J(k, ...a);
-      ((r = $e(h).root), (a = ee(r, h).split(le)));
+      let k = isAbsolute(f) ? f : V(ce(d), f),
+        h = resolve(k, ...a);
+      ((r = parse(h).root), (a = relative(r, h).split(le)));
       continue;
     }
     r = d;
@@ -250,7 +250,7 @@ async function pe(e, t, r, a, o, u) {
   }
   if (o) return `would append ${oe(t)} \u2192 \`${e}\``;
   let f = r ?? (await R(t));
-  await D(ce(e), { recursive: !0 });
+  await mkdir(ce(e), { recursive: !0 });
   let k = p
     ? `${p}${
         p.endsWith(`
@@ -275,13 +275,13 @@ ${f.trimEnd()}
   return `appended ${oe(t)} \u2192 \`${e}\`${h}`;
 }
 async function Se(e, t) {
-  await D(t, { recursive: !0 });
-  let r = await Y(e, { withFileTypes: !0 });
+  await mkdir(t, { recursive: !0 });
+  let r = await readdir(e, { withFileTypes: !0 });
   for (let a of r) {
     let o = V(e, a.name),
       u = V(t, a.name);
     if (a.isDirectory()) await Se(o, u);
-    else if (a.isFile()) await Ge(o, u);
+    else if (a.isFile()) await copyFile(o, u);
   }
 }
 function Ce(e) {
@@ -378,7 +378,7 @@ Relevant Claude Code config locations:
 - Skills: \`~/.claude/skills/<name>/SKILL.md\`
 - Hooks: the \`hooks\` key in settings.json (PreToolUse/PostToolUse/UserPromptSubmit/\u2026)
 `;
-  (await D(o, { recursive: !0 }), await H(u, sC(S), "utf8"));
+  (await mkdir(o, { recursive: !0 }), await writeFile(u, sC(S), "utf8"));
   let N = k.length > 0 ? " (merged with existing sections)" : "";
   return `wrote \`${u}\`${N}`;
 }
@@ -595,13 +595,13 @@ async function ze(e, t, r, a, o) {
           return {
             skipped: `${g}: .mcp.json is (or is under) a symlink \u2014 refusing project-scope write`,
           };
-        if (A === "user" ? Syt(g) : (await yW(r, Jde))[g] !== void 0)
+        if (A === "user" ? userScopeMcpServerExists(g) : (await yW(r, readRawMcpJsonServersFromCwd))[g] !== void 0)
           return { skipped: `${g}: MCP server already exists in ${A} config` };
         if (z) return `would add MCP server ${g} (${t})`;
         return (
           await (A === "project"
-            ? yW(r, () => KM(g, L, A, M))
-            : KM(g, L, A, M)),
+            ? yW(r, () => addMcpConfig(g, L, A, M))
+            : addMcpConfig(g, L, A, M)),
           `added MCP server ${g} (${A})`
         );
       },
@@ -635,7 +635,7 @@ async function ze(e, t, r, a, o) {
                 ".claude/settings.json is (or is under) a symlink \u2014 refusing project-scope write",
             };
           let g = t === "user" ? "userSettings" : "projectSettings",
-            { error: j } = await Jt(
+            { error: j } = await updateSettingsForSource(
               g,
               { permissions: { defaultMode: y } },
               void 0,
@@ -693,8 +693,8 @@ ${w.instructions ?? ""}
         if (await _(A)) return { skipped: `${g}: \`${A}\` already exists` };
         if (M) return `would write \`${A}\``;
         return (
-          await D(j, { recursive: !0 }),
-          await H(A, z, "utf8"),
+          await mkdir(j, { recursive: !0 }),
+          await writeFile(A, z, "utf8"),
           `wrote \`${A}\``
         );
       },
@@ -744,7 +744,7 @@ ${w.instructions ?? ""}
           };
         let z;
         try {
-          z = await ie(b(L, "SKILL.md"));
+          z = await lstat(b(L, "SKILL.md"));
         } catch {
           return { skipped: `${g}: no SKILL.md at \`${L}\`` };
         }
@@ -779,7 +779,7 @@ ${w.instructions ?? ""}
           };
         let ye;
         try {
-          ye = await Y(L);
+          ye = await readdir(L);
         } catch {
           return { skipped: `${g}: skill directory could not be read` };
         }
@@ -801,7 +801,7 @@ ${w.instructions ?? ""}
         try {
           (await Se(L, j),
             await we(b(j, "SKILL.md"), { force: !0 }),
-            await H(b(j, "SKILL.md"), M, "utf8"));
+            await writeFile(b(j, "SKILL.md"), M, "utf8"));
         } catch (q) {
           throw (await we(j, { recursive: !0, force: !0 }).catch(() => {}), q);
         }
@@ -849,7 +849,7 @@ ${w.instructions ?? ""}
   for (let y of p)
     o.push({ scope: t, label: y, reason: "Unrecognised config.toml key." });
   if (t === "user") {
-    let C = (await Y(e).catch(() => [])).filter((I) =>
+    let C = (await readdir(e).catch(() => [])).filter((I) =>
       I.endsWith(".config.toml"),
     );
     if (C.length > 0)
@@ -925,7 +925,7 @@ async function dt(e, t, r, a, o) {
 }
 async function ut(e, t, r) {
   let a = b(e, "prompts"),
-    o = await Y(a, { withFileTypes: !0 }).catch(() => []),
+    o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
     u = be();
   for (let d of o) {
     if (!d.isFile()) continue;
@@ -969,13 +969,13 @@ async function ut(e, t, r) {
         if (await _(k))
           return { skipped: `${Z(p, ".md")}: \`${k}\` already exists` };
         if (N) return `would copy \`${f}\` \u2192 \`${k}\``;
-        await D(tt(k), { recursive: !0 });
+        await mkdir(tt(k), { recursive: !0 });
         let y = h.trimStart().startsWith("---")
           ? `
 `
           : "";
         return (
-          await H(
+          await writeFile(
             k,
             `${y}${h.trimEnd()}
 `,
@@ -1225,10 +1225,10 @@ async function kt(e, t, r) {
       label: `MCP server "${h}"`,
       fingerprint: JSON.stringify(I),
       async apply({ dryRun: w, storageV5: g }) {
-        if (Syt(C))
+        if (userScopeMcpServerExists(C))
           return { skipped: `${C}: MCP server already exists in user config` };
         if (w) return `would add MCP server ${C} (user)`;
-        return (await KM(C, I, "user", g), `added MCP server ${C} (user)`);
+        return (await addMcpConfig(C, I, "user", g), `added MCP server ${C} (user)`);
       },
     });
   }
@@ -1244,7 +1244,7 @@ async function kt(e, t, r) {
 }
 async function bt(e, t, r) {
   let a = E(e, "commands"),
-    o = await Y(a, { withFileTypes: !0 }).catch(() => []),
+    o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
     u = be(),
     d = o.filter((p) => p.isDirectory()).map((p) => p.name);
   if (d.length > 0)
@@ -1302,7 +1302,7 @@ async function bt(e, t, r) {
       async apply({ dryRun: F }) {
         if (await _(N)) return { skipped: `${S}: \`${N}\` already exists` };
         if (F) return `would write \`${N}\``;
-        await D(E(u, "commands"), { recursive: !0 });
+        await mkdir(E(u, "commands"), { recursive: !0 });
         let L = {
             ...(j && { description: de(j) }),
             ...(w && {
@@ -1323,7 +1323,7 @@ ${o$e(L)}---
 `
               : "";
         return (
-          await H(
+          await writeFile(
             N,
             `${z}${M}${I}
 `,

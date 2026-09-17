@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Lt, uot, GW } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { mse } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
 var Aer = 600000;
 function Bqt(e) {
@@ -113,10 +113,10 @@ var bFe = new Set([
     "StreamSuspended",
   ]);
 function fTt(e) {
-  return UH.has(e) || SR.has(e) ? Ln(e) : S("other");
+  return UH.has(e) || SR.has(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("other");
 }
 function mTt(e) {
-  return SR.has(e) || UH.has(e) || bFe.has(e) ? Ln(e) : void 0;
+  return SR.has(e) || UH.has(e) || bFe.has(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : void 0;
 }
 function CTn(e) {
   return e.status !== void 0 || e.error !== void 0;
@@ -144,7 +144,7 @@ function Cer(e, t) {
 }
 function Nfe(e, t) {
   let r = /^[a-z][a-z0-9_]{0,63}$/.test(e) ? e : "unknown";
-  return Ln(
+  return fromSanitizer_SANITIZER_OUTPUT_ONLY(
     `API error: type=${r} status=${typeof t === "number" ? t : "none"}`,
   );
 }

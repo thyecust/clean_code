@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { DEFAULT_NEGOTIATED_PROTOCOL_VERSION as eIn, SUPPORTED_PROTOCOL_VERSIONS as Xq, isJSONRPCRequest as fL, isJSONRPCResultResponse as aW, isJSONRPCErrorResponse as Dke, JSONRPCMessageSchema as GR, isInitializeRequest as i7t } from "../MCP客户端/chunk-tv3jbp8f.js";
-class R {
+import { DEFAULT_NEGOTIATED_PROTOCOL_VERSION, SUPPORTED_PROTOCOL_VERSIONS, isJSONRPCRequest, isJSONRPCResultResponse, isJSONRPCErrorResponse, JSONRPCMessageSchema as GR, isInitializeRequest } from "../MCP客户端/chunk-tv3jbp8f.js";
+class WebStandardStreamableHTTPServerTransport {
   constructor(e = {}) {
     ((this._started = !1),
       (this._hasHandledRequest = !1),
@@ -334,7 +334,7 @@ data:
           )
         );
       }
-      let a = o.some(i7t);
+      let a = o.some(isInitializeRequest);
       if (a) {
         if (this._initialized && this.sessionId !== void 0)
           return (
@@ -373,16 +373,16 @@ data:
         let h = this.validateProtocolVersion(e);
         if (h) return h;
       }
-      if (!o.some(fL)) {
+      if (!o.some(isJSONRPCRequest)) {
         for (let d of o)
           this.onmessage?.(d, { authInfo: t?.authInfo, requestInfo: r });
         return new Response(null, { status: 202 });
       }
       let c = crypto.randomUUID(),
-        u = o.find((d) => i7t(d)),
+        u = o.find((d) => isInitializeRequest(d)),
         f = u
           ? u.params.protocolVersion
-          : (e.headers.get("mcp-protocol-version") ?? eIn);
+          : (e.headers.get("mcp-protocol-version") ?? DEFAULT_NEGOTIATED_PROTOCOL_VERSION);
       if (this._enableJsonResponse)
         return new Promise((d) => {
           this._streamMapping.set(c, {
@@ -391,7 +391,7 @@ data:
               this._streamMapping.delete(c);
             },
           });
-          for (let h of o) if (fL(h)) this._requestToStreamMapping.set(h.id, c);
+          for (let h of o) if (isJSONRPCRequest(h)) this._requestToStreamMapping.set(h.id, c);
           for (let h of o)
             this.onmessage?.(h, { authInfo: t?.authInfo, requestInfo: r });
         });
@@ -412,7 +412,7 @@ data:
         };
       if (this.sessionId !== void 0) m["mcp-session-id"] = this.sessionId;
       for (let d of o)
-        if (fL(d))
+        if (isJSONRPCRequest(d))
           (this._streamMapping.set(c, {
             controller: p,
             encoder: S,
@@ -427,7 +427,7 @@ data:
       await this.writePrimingEvent(p, S, c, f);
       for (let d of o) {
         let h, E;
-        if (fL(d) && this._eventStore && f >= "2025-11-25")
+        if (isJSONRPCRequest(d) && this._eventStore && f >= "2025-11-25")
           ((h = () => {
             this.closeSSEStream(d.id);
           }),
@@ -492,17 +492,17 @@ data:
   }
   validateProtocolVersion(e) {
     let t = e.headers.get("mcp-protocol-version");
-    if (t !== null && !Xq.includes(t))
+    if (t !== null && !SUPPORTED_PROTOCOL_VERSIONS.includes(t))
       return (
         this.onerror?.(
           Error(
-            `Bad Request: Unsupported protocol version: ${t} (supported versions: ${Xq.join(", ")})`,
+            `Bad Request: Unsupported protocol version: ${t} (supported versions: ${SUPPORTED_PROTOCOL_VERSIONS.join(", ")})`,
           ),
         ),
         this.createJsonErrorResponse(
           400,
           -32000,
-          `Bad Request: Unsupported protocol version: ${t} (supported versions: ${Xq.join(", ")})`,
+          `Bad Request: Unsupported protocol version: ${t} (supported versions: ${SUPPORTED_PROTOCOL_VERSIONS.join(", ")})`,
         )
       );
     return;
@@ -527,9 +527,9 @@ data:
   }
   async send(e, t) {
     let s = t?.relatedRequestId;
-    if (aW(e) || Dke(e)) s = e.id;
+    if (isJSONRPCResultResponse(e) || isJSONRPCErrorResponse(e)) s = e.id;
     if (s === void 0) {
-      if (aW(e) || Dke(e))
+      if (isJSONRPCResultResponse(e) || isJSONRPCErrorResponse(e))
         throw Error(
           "Cannot send a response on a standalone SSE stream unless resuming a previous client request",
         );
@@ -551,7 +551,7 @@ data:
       if (this._eventStore) n = await this._eventStore.storeEvent(i, e);
       this.writeSSEEvent(r.controller, r.encoder, e, n);
     }
-    if (aW(e) || Dke(e)) {
+    if (isJSONRPCResultResponse(e) || isJSONRPCErrorResponse(e)) {
       this._requestResponseMap.set(s, e);
       let n = Array.from(this._requestToStreamMapping.entries())
         .filter(([a, l]) => l === i)
@@ -579,4 +579,4 @@ data:
     }
   }
 }
-export { R as WebStandardStreamableHTTPServerTransport };
+export { WebStandardStreamableHTTPServerTransport };

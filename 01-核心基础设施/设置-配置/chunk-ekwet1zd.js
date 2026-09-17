@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { Fr } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
-import { isDangerousBashPermission as Azt, isDangerousPowerShellPermission as Czt } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isDangerousBashPermission, isDangerousPowerShellPermission } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { qe, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var p = [
   "userSettings",
@@ -29,7 +29,7 @@ function c(l, e) {
   let o = s(l);
   if (o === null) return null;
   if (e === void 0 || e === "" || /^[\s*]+$/.test(e)) return "bare";
-  return (o === qe ? Azt(o, e) : Czt(o, e)) ? "dangerous_prefix" : "scoped";
+  return (o === qe ? isDangerousBashPermission(o, e) : isDangerousPowerShellPermission(o, e)) ? "dangerous_prefix" : "scoped";
 }
 function y(l) {
   let e = {},
@@ -58,9 +58,9 @@ function I1t(l) {
       let t = c(o.toolName, o.ruleContent);
       if (t === null) continue;
       i("tengu_shell_allow_rule_added", {
-        toolName: u(r),
-        category: u(t),
-        destination: u(e.destination),
+        toolName: fromEnum(r),
+        category: fromEnum(t),
+        destination: fromEnum(e.destination),
       });
     }
   }

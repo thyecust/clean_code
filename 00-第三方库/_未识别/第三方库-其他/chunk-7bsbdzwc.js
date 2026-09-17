@@ -12,14 +12,14 @@ import { i } from "../../../01-核心基础设施/共享小工具-未细化/chun
 import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { getGlobalClaudeFile as Pi } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { getGlobalClaudeFile } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { _z } from "../../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { logMCPError as Wr, logMCPDebug as J } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { q } from "../../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
 import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { getAnthropicApiKeyWithSource as qg, hasStoredOAuthToken as wu, getOauthAccountInfo as vn, H, getWorkspacePersistedTrustKey as tS } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../lodash/lodash.0vqzb8ad.js";
+import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, H, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { lke } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Sn } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { sEt } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -1094,25 +1094,25 @@ function Nr(e, t, r) {
   }
 }
 function pct() {
-  let e = vn();
+  let e = getOauthAccountInfo();
   if (!e) return;
   return {
     accountUuid: e.accountUuid,
     organizationUuid: e.organizationUuid,
-    credentialInstalled: wu() || Lr(),
+    credentialInstalled: hasStoredOAuthToken() || Lr(),
   };
 }
 function Lr() {
   try {
     return (
-      qg({ skipRetrievingKeyFromApiKeyHelper: !0 }).source ===
+      getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 }).source ===
       "/login managed key"
     );
   } catch {
     return !1;
   }
 }
-import { isAbsolute as Dr } from "path";
+import { isAbsolute } from "path";
 function Ge(e) {
   switch (e) {
     case "projectSettings":
@@ -1160,11 +1160,11 @@ function Fr(e, t) {
 async function zr(e, t) {
   if (!t.headersHelper) return null;
   let r =
-    typeof t.pluginPath === "string" && Dr(t.pluginPath)
+    typeof t.pluginPath === "string" && isAbsolute(t.pluginPath)
       ? t.pluginPath
       : void 0;
   try {
-    J(e, "Executing headersHelper to get dynamic headers");
+    logMCPDebug(e, "Executing headersHelper to get dynamic headers");
     let a =
         t.scope !== void 0 &&
         Vr({ scope: t.scope, agentSource: t.agentSource }),
@@ -1188,19 +1188,19 @@ async function zr(e, t) {
       });
     if (s.ok)
       return (
-        J(
+        logMCPDebug(
           e,
           `Successfully retrieved ${Object.keys(s.headers).length} headers from headersHelper`,
         ),
-        y("mcp_headers_helper"),
+        logFeatureOk("mcp_headers_helper"),
         s.headers
       );
     if (s.reason === "missing_trust") {
       let o = VR()
         ? "not available to a session rooted at the home directory without a person present (home trust is session-only): run Claude Code interactively here and accept the trust dialog for that session, or work from a project directory you have trusted"
-        : `accept the trust dialog here once interactively, or set projects[${Mdn(tS())}].hasTrustDialogAccepted in ${Pi()}`;
+        : `accept the trust dialog here once interactively, or set projects[${Mdn(getWorkspacePersistedTrustKey())}].hasTrustDialogAccepted in ${getGlobalClaudeFile()}`;
       if (
-        (J(
+        (logMCPDebug(
           e,
           `headersHelper not run: this workspace has no persisted trust; ${o}.`,
         ),
@@ -1210,14 +1210,14 @@ async function zr(e, t) {
 `);
       return (
         i("tengu_mcp_headersHelper_missing_trust", {}),
-        g("mcp_headers_helper", "missing_trust"),
+        logFeatureSad("mcp_headers_helper", "missing_trust"),
         null
       );
     }
-    throw (f("mcp_headers_helper", s.reason), Error(Br(e, s.reason)));
+    throw (logFeatureBad("mcp_headers_helper", s.reason), Error(Br(e, s.reason)));
   } catch (a) {
     return (
-      Wr(e, `Error getting headers from headersHelper: ${l(a)}`),
+      logMCPError(e, `Error getting headers from headersHelper: ${l(a)}`),
       n(
         `Error getting MCP headers from headersHelper for server '${e}': ${l(a)}`,
         { level: "error" },
@@ -1250,7 +1250,7 @@ async function fct(e, t) {
     ((r[u] = c), a.push(...h));
   }
   if (a.length > 0)
-    J(
+    logMCPDebug(
       e,
       `Header values reference unset environment variables: ${Y(a).join(", ")}`,
     );

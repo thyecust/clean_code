@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Cie } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
-import { parseArtifactUrl as Wt, canonicalizeArtifactUrlInput as Cq, parseArtifactUrlInput as JD, artifactViewerUrlSpellings as cet, artifactContentOriginUrlFor as sie } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { parseArtifactUrl, canonicalizeArtifactUrlInput, parseArtifactUrlInput, artifactViewerUrlSpellings, artifactContentOriginUrlFor } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 var y = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)(.*)$/;
 function _(e) {
   let n = e.match(y);
@@ -23,16 +23,16 @@ function _(e) {
 }
 function artifactUrlRule(e, n, r, i = "url") {
   if (e.size === 0) return null;
-  let s = sie(n),
-    o = new Set([...cet(n), s, `${s}/`]);
-  if (typeof r === "string") o.add(Cq(r).trim());
+  let s = artifactContentOriginUrlFor(n),
+    o = new Set([...artifactViewerUrlSpellings(n), s, `${s}/`]);
+  if (typeof r === "string") o.add(canonicalizeArtifactUrlInput(r).trim());
   for (let [u, c] of e) {
     let t = u.indexOf(":");
     if (t <= 0) continue;
     let p = u.slice(0, t).trim(),
       l = u.slice(t + 1).trim();
     if (p !== i || l === "") continue;
-    let f = JD(l.replace(/\*$/, ""));
+    let f = parseArtifactUrlInput(l.replace(/\*$/, ""));
     if (f?.slug === n.slug && f.env === n.env) return c;
     let a = new Set([l, _(l)]);
     for (let m of a) for (let g of o) if (Cie(m, g)) return c;
@@ -40,8 +40,8 @@ function artifactUrlRule(e, n, r, i = "url") {
   return null;
 }
 function d(e) {
-  let n = Wt(e),
-    r = JD(e);
+  let n = parseArtifactUrl(e),
+    r = parseArtifactUrlInput(e);
   return [
     ...(n !== null ? [n] : []),
     ...(r !== null && (n === null || n.slug !== r.slug || n.env !== r.env)

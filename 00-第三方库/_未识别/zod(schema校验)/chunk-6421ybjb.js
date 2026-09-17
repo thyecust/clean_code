@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { j, rE, B } from "../../lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../lodash/lodash.207999qb.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { Hn } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ar, oA } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 var x = new j(() => new Set());
 function T(e, r) {
@@ -27,7 +27,7 @@ function b(e, r, a) {
   let i = ar(r, e.name);
   if (i === void 0 || !oA(i)) return null;
   let l = (u) => (
-    g("batch_tools", u, { tool_name: Hn(i.name), isMcp: !1 }),
+    logFeatureSad("batch_tools", u, { tool_name: Hn(i.name), isMcp: !1 }),
     [
       {
         type: "tool_use",
@@ -53,7 +53,7 @@ function b(e, r, a) {
         } catch (d) {
           if (d instanceof Error && d.name === "ZodError")
             n(`batch entry normalize rejected input: ${d}`, { level: "error" });
-          else h(d);
+          else logError(d);
         }
         return {
           type: "tool_use",
@@ -91,7 +91,7 @@ function B3t(e, r, a) {
     }
     if (((i ??= e.slice(0, u)), i.push(...t.synthetics), t.decomposed))
       (l.push({ id: o.id, name: o.name }),
-        y("batch_tools", { tool_name: Hn(o.name), isMcp: !1 }));
+        logFeatureOk("batch_tools", { tool_name: Hn(o.name), isMcp: !1 }));
   }
   return { content: i ?? e, batchToolUses: l };
 }
@@ -120,7 +120,7 @@ function _Jn(e, r, a) {
       let d = x.of(B().host);
       if (!d.has(t.id))
         (d.add(t.id),
-          g("batch_tools", "reassemble_threw", {
+          logFeatureSad("batch_tools", "reassemble_threw", {
             tool_name: Hn(t.name),
             isMcp: !1,
           }));

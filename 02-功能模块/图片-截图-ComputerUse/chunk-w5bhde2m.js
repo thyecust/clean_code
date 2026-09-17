@@ -10,7 +10,7 @@
 import { Z, Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { Zp, HH, mK, XSn } from "./chunk-bvxymt09.js";
 import { FMn } from "./chunk-jeefwg1w.js";
 import { s4e, IOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-bvvxxmrb.js";
@@ -39,12 +39,12 @@ function v(o, t, a) {
   return IOe(f, d, s4e);
 }
 async function C() {
-  let { stdout: o, code: t } = await Fe("pbpaste", [], { useCwd: !1 });
+  let { stdout: o, code: t } = await execFileNoThrow("pbpaste", [], { useCwd: !1 });
   if (t !== 0) throw Error(`pbpaste exited with code ${t}`);
   return o;
 }
 async function A(o) {
-  let { code: t } = await Fe("pbcopy", [], { input: o, useCwd: !1 });
+  let { code: t } = await execFileNoThrow("pbcopy", [], { input: o, useCwd: !1 });
   if (t !== 0) throw Error(`pbcopy exited with code ${t}`);
 }
 function U(o) {

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { m } from "./chunk-78nzsrc6.js";
 import { xp, Kr } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
-var s = Kr({
+var workflowPermissionDialog = Kr({
   kind: "permission_workflow",
   payload: m(() =>
     xp(
@@ -27,4 +27,4 @@ var s = Kr({
   ),
   default: { behavior: "cancelled" },
 });
-export { s as workflowPermissionDialog };
+export { workflowPermissionDialog };

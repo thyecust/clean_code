@@ -13,20 +13,20 @@ import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h
 import { b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { A_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Aet } from "../../01-核心基础设施/共享小工具-未细化/chunk-eganxf2z.js";
-import { constants as s } from "fs";
-import { lstat as P, mkdir as h, open as p } from "fs/promises";
-import { basename as H, dirname as F, isAbsolute as L, join as _ } from "path";
+import { constants } from "fs";
+import { lstat, mkdir, open as p } from "fs/promises";
+import { basename, dirname, isAbsolute, join as _ } from "path";
 function f() {
   let e = A_();
   return { storeDir: e, storePath: _(e, ".credentials.json") };
 }
-var k = s.O_NONBLOCK,
+var k = constants.O_NONBLOCK,
   c = 1048576;
 async function N(e) {
   try {
     return {
       kind: "open",
-      fileHandle: await p(e, s.O_RDONLY | s.O_NOFOLLOW | k),
+      fileHandle: await p(e, constants.O_RDONLY | constants.O_NOFOLLOW | k),
     };
   } catch (r) {
     let n = A(r);
@@ -35,9 +35,9 @@ async function N(e) {
   }
 }
 async function D(e, r) {
-  let n = s.O_WRONLY | s.O_CREAT | s.O_TRUNC;
+  let n = constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC;
   try {
-    return { kind: "open", fileHandle: await p(e, n | s.O_NOFOLLOW, r) };
+    return { kind: "open", fileHandle: await p(e, n | constants.O_NOFOLLOW, r) };
   } catch (t) {
     let a = A(t);
     if (a === "ELOOP") return { kind: "refused-symlink" };
@@ -45,7 +45,7 @@ async function D(e, r) {
   }
 }
 function S(e) {
-  return e.length > 0 && !e.includes("\x00") && L(e);
+  return e.length > 0 && !e.includes("\x00") && isAbsolute(e);
 }
 var B = new Set([".oauth_token", ".api_key", ".session_ingress_token"]);
 function m(e) {
@@ -146,7 +146,7 @@ var y = {
     let n;
     if (r === "follow")
       try {
-        n = await p(e, s.O_RDONLY | k);
+        n = await p(e, constants.O_RDONLY | k);
       } catch (t) {
         return m(A(t));
       }
@@ -180,9 +180,9 @@ var y = {
   },
   async writeHandoffCredential(e, r) {
     if (!S(e)) return { state: "write-failed", code: "EINVAL" };
-    if (!B.has(H(e))) return { state: "write-failed", code: "EINVAL" };
+    if (!B.has(basename(e))) return { state: "write-failed", code: "EINVAL" };
     try {
-      await h(F(e), { recursive: !0, mode: 448 });
+      await mkdir(dirname(e), { recursive: !0, mode: 448 });
     } catch (t) {
       return { state: "write-failed", code: A(t) };
     }
@@ -209,7 +209,7 @@ var y = {
     let { storePath: e } = f(),
       r;
     try {
-      r = await P(e, { bigint: !0 });
+      r = await lstat(e, { bigint: !0 });
     } catch (n) {
       let t = A(n);
       return w(t) === "absent"

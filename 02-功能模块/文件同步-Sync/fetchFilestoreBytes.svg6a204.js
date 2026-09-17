@@ -12,23 +12,23 @@
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { STAGE_TMP_PREFIX as EEt, getStageFileRoot as Goe, getOutputsRoot as i$e, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { STAGE_TMP_PREFIX, getStageFileRoot, getOutputsRoot, AEt } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { VQe, Hor, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { createWriteStream as G } from "fs";
+import { createWriteStream } from "fs";
 import {
-  chmod as z,
-  mkdir as J,
-  readdir as W,
-  realpath as D,
-  rename as V,
+  chmod,
+  mkdir,
+  readdir,
+  realpath,
+  rename,
   stat as T,
-  unlink as E,
+  unlink,
 } from "fs/promises";
 import { Readable as I } from "stream";
-import { pipeline as X } from "stream/promises";
-import { posix as K } from "path";
+import { pipeline } from "stream/promises";
+import { posix } from "path";
 var {
     basename: C,
     dirname: k,
@@ -37,9 +37,9 @@ var {
     normalize: Y,
     relative: L,
     sep: O,
-  } = K,
-  M = Goe(),
-  N = i$e(),
+  } = posix,
+  M = getStageFileRoot(),
+  N = getOutputsRoot(),
   H = "/uploads",
   Q = "/outputs",
   Z = 67108864,
@@ -56,7 +56,7 @@ function B(t) {
   if (t.split(O).includes(".."))
     throw Error('mount_path must not contain ".." segments');
   let s = Y(t);
-  if (C(s).startsWith(EEt))
+  if (C(s).startsWith(STAGE_TMP_PREFIX))
     throw Error("mount_path names a reserved temporary-file name");
   let e = P(H, s);
   if (e !== null) return { dest: b(M, e), root: M, readOnly: !0 };
@@ -72,7 +72,7 @@ function B(t) {
   }
   throw Error("mount_path must be under /uploads/ or /outputs/");
 }
-function he(t) {
+function addDirectoryDestFromMountPath(t) {
   let s;
   try {
     s = B(t);
@@ -96,7 +96,7 @@ async function te(t, s) {
   let e = Date.now() - 2 * S,
     r;
   try {
-    r = await W(t);
+    r = await readdir(t);
   } catch {
     return;
   }
@@ -106,7 +106,7 @@ async function te(t, s) {
       .map(async (d) => {
         let l = b(t, d);
         try {
-          if ((await T(l)).mtimeMs < e) await E(l);
+          if ((await T(l)).mtimeMs < e) await unlink(l);
         } catch {}
       }),
   );
@@ -125,13 +125,13 @@ function U(t, s) {
     message: `${t} failed: ${e}${r ? ` ${r}` : ""}`,
   };
 }
-async function ke(t) {
+async function stageFile(t) {
   if (!a.CLAUDE_CODE_REMOTE_SESSION_ID)
     return { ok: !1, error: "CLAUDE_CODE_REMOTE_SESSION_ID unset" };
   if (t.filestore_path) {
     if (a.CLAUDE_CODE_ENVIRONMENT_KIND !== void 0)
       return (
-        f("ccr_synced_file_stage", "unsupported_runner_kind"),
+        logFeatureBad("ccr_synced_file_stage", "unsupported_runner_kind"),
         i("tengu_stage_file_completed", {
           ok: !1,
           synced_unsupported_runner_kind: !0,
@@ -151,7 +151,7 @@ async function ke(t) {
         content_sha256: t.content_sha256,
         expected_local_sha256: t.expected_local_sha256,
       },
-      se,
+      fetchFilestoreBytes,
       j,
     );
   }
@@ -160,7 +160,7 @@ async function ke(t) {
     e = B(t.mount_path);
   } catch (u) {
     if (A(u) === "STAGE_OUTPUTS_UNSUPPORTED_RUNNER")
-      (f("ccr_stage_file_outputs", "unsupported_runner_kind"),
+      (logFeatureBad("ccr_stage_file_outputs", "unsupported_runner_kind"),
         i("tengu_stage_file_completed", {
           ok: !1,
           outputs_unsupported_runner_kind: !0,
@@ -185,12 +185,12 @@ async function ke(t) {
   let g = performance.now(),
     _ = Date.now(),
     n = () => Math.round(performance.now() - g),
-    w = `${EEt}${C(r)}.`,
+    w = `${STAGE_TMP_PREFIX}${C(r)}.`,
     o = b(k(r), `${w}${Date.now()}.${Math.random().toString(36).slice(2)}`);
   try {
-    await J(k(r), { recursive: !0 });
-    let u = await D(d),
-      p = await D(k(r));
+    await mkdir(k(r), { recursive: !0 });
+    let u = await realpath(d),
+      p = await realpath(k(r));
     (ee(u, p), await te(k(r), w));
   } catch (u) {
     let p =
@@ -213,13 +213,13 @@ async function ke(t) {
       q("warn", "stage_file_mkdir_failed", { code: p, duration_ms: n() }),
       !l)
     )
-      f("ccr_stage_file_outputs", "mkdir_failed");
+      logFeatureBad("ccr_stage_file_outputs", "mkdir_failed");
     return { ok: !1, error: `mkdir failed: ${p}` };
   }
   let c = await oe(t.mount_path, o);
   if (!c.ok) {
     if (
-      (await E(o).catch(() => {}),
+      (await unlink(o).catch(() => {}),
       l && c.errno === "EROFS" && !a.CLAUDE_STAGE_FILE_ROOT)
     )
       return (
@@ -240,7 +240,7 @@ async function ke(t) {
       }),
       !l)
     )
-      f("ccr_stage_file_outputs", "fetch_failed");
+      logFeatureBad("ccr_stage_file_outputs", "fetch_failed");
     return { ok: !1, error: c.error };
   }
   let m = c.bytes,
@@ -250,7 +250,7 @@ async function ke(t) {
       let u = await T(r).catch(() => null);
       if (re(u, _))
         return (
-          await E(o).catch(() => {}),
+          await unlink(o).catch(() => {}),
           i("tengu_stage_file_completed", {
             ok: !0,
             noop: !0,
@@ -259,13 +259,13 @@ async function ke(t) {
             outputs_root: !0,
           }),
           q("info", "stage_file_noop_newer_local", { duration_ms: n() }),
-          y("ccr_stage_file_outputs"),
+          logFeatureOk("ccr_stage_file_outputs"),
           { ok: !0, noop: "newer_local" }
         );
     }
-    (await z(o, l ? 292 : 420), await V(o, r));
+    (await chmod(o, l ? 292 : 420), await rename(o, r));
   } catch (u) {
-    if ((await E(o).catch(() => {}), l && x(u) && !a.CLAUDE_STAGE_FILE_ROOT))
+    if ((await unlink(o).catch(() => {}), l && x(u) && !a.CLAUDE_STAGE_FILE_ROOT))
       return (
         i("tengu_stage_file_completed", {
           ok: !0,
@@ -291,7 +291,7 @@ async function ke(t) {
       q("warn", "stage_file_write_failed", { code: p, duration_ms: n() }),
       !l)
     )
-      f("ccr_stage_file_outputs", "write_failed");
+      logFeatureBad("ccr_stage_file_outputs", "write_failed");
     return { ok: !1, error: `write failed: ${p}` };
   }
   if (
@@ -304,7 +304,7 @@ async function ke(t) {
     }),
     !l)
   )
-    y("ccr_stage_file_outputs");
+    logFeatureOk("ccr_stage_file_outputs");
   return (
     q("info", "stage_file_ok", {
       bytes: m,
@@ -434,7 +434,7 @@ async function oe(t, s) {
       }
       let c = Number(o.response?.headers["content-length"] ?? -1);
       (o.data.on("data", w),
-        await X(o.data, G(s, { flags: "wx" })),
+        await pipeline(o.data, createWriteStream(s, { flags: "wx" })),
         clearTimeout(n));
       let m = await T(s);
       if (c >= 0 && m.size !== c)
@@ -486,7 +486,7 @@ async function oe(t, s) {
     { ok: !1, error: "read failed: http 401" }
   );
 }
-async function se(t) {
+async function fetchFilestoreBytes(t) {
   let s = performance.now(),
     e = () => Math.round(performance.now() - s),
     r = await F();
@@ -537,7 +537,7 @@ async function se(t) {
   }
 }
 export {
-  he as addDirectoryDestFromMountPath,
-  se as fetchFilestoreBytes,
-  ke as stageFile,
+  addDirectoryDestFromMountPath,
+  fetchFilestoreBytes,
+  stageFile,
 };

@@ -25,11 +25,11 @@ var i = m(() =>
     nextCursor: s().nullish(),
   }),
 );
-function u(e, t) {
+function listMcpSkillPage(e, t) {
   return Yo(e.client).request(
     { method: "skills/list", params: t === void 0 ? {} : { cursor: t } },
     i(),
     { timeout: Hl() },
   );
 }
-export { u as listMcpSkillPage };
+export { listMcpSkillPage };

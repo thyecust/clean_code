@@ -14,16 +14,16 @@ import { H, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { normalizeGitRemoteUrl as tz } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { normalizeGitRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { EGe } from "../Teammates团队/chunk-hcszd97x.js";
 import { zSe } from "../Teammates团队/chunk-w2g8t42p.js";
 import { readFile as L } from "fs/promises";
-import { basename as F, join as x } from "path";
-import { readdir as y, readFile as C, stat as _ } from "fs/promises";
-import { extname as v, join as E } from "path";
+import { basename, join as x } from "path";
+import { readdir, readFile as C, stat as _ } from "fs/promises";
+import { extname, join as E } from "path";
 var T = 52428800,
   S = 200,
   g = 60,
@@ -48,12 +48,12 @@ async function w(u, a) {
     m = Date.now() - a * 24 * 60 * 60 * 1000,
     h;
   try {
-    h = await y(u);
+    h = await readdir(u);
   } catch (r) {
     if (Rt(r)) return t;
     throw r;
   }
-  let d = h.filter((r) => v(r) === ".jsonl"),
+  let d = h.filter((r) => extname(r) === ".jsonl"),
     p = (
       await Promise.all(
         d.map(async (r) => {
@@ -159,7 +159,7 @@ async function B(u) {
 }
 async function q(u) {
   let a = he(),
-    t = Mp(a),
+    t = getProjectDir(a),
     m = await w(t, u),
     h = [...m.slashCommandCounts.entries()]
       .sort((e, s) => s[1] - e[1])
@@ -175,15 +175,15 @@ async function q(u) {
           urlOrigin: typeof c?.url === "string" ? j(c.url) : void 0,
         };
       }),
-    r = (await Be("git", ["config", "user.name"], { cwd: a })).stdout.trim(),
+    r = (await execFileNoThrowWithCwd("git", ["config", "user.name"], { cwd: a })).stdout.trim(),
     l = (
-      await Be("git", ["remote", "get-url", "origin"], { cwd: a })
+      await execFileNoThrowWithCwd("git", ["remote", "get-url", "origin"], { cwd: a })
     ).stdout.trim();
   return {
     usageData: b(
       {
         generatedBy: r || void 0,
-        currentRepo: tz(l) ?? F(a),
+        currentRepo: normalizeGitRemoteUrl(l) ?? basename(a),
         windowDays: u,
         sessionCount: m.sessionFileCount,
         slashCommands: h,
@@ -349,7 +349,7 @@ If the tool returns 'unavailable' at any point, skip that call and use the manua
       "Help teammates ramp on Claude Code with a guide from your usage",
     allowedTools: J,
     contentLength: 0,
-    isEnabled: () => Mt("allow_team_onboarding"),
+    isEnabled: () => isPolicyAllowed("allow_team_onboarding"),
     policyGate: {
       policy: "allow_team_onboarding",
       featureLabel: "Team onboarding",

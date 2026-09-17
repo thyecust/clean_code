@@ -8,27 +8,27 @@
 
 // Version: 2.1.263
 import { dT, dne, CX, H2t, Fpn, Dgt, IVe, $pn, ZDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { fn, execFileNoThrowWithCwd as Be } from "./chunk-9ys1bnqr.js";
-import { gitExe as lt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { matchingRuleForInput as vi } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { R8, $z, REMOTE_READ_OPEN_FLAGS as i0t, bindCanonicalPathToHandle as l0t, isCanonicalPathContained as Oot, readHandleBounded as c0t } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { fn, execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
+import { gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { matchingRuleForInput } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { R8, $z, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { constants as j } from "fs";
-import { open as U, realpath as O } from "fs/promises";
-import { basename as B, dirname as x, isAbsolute as K, join as z } from "path";
+import { constants } from "fs";
+import { open as U, realpath } from "fs/promises";
+import { basename, dirname, isAbsolute, join as z } from "path";
 async function X(t) {
-  let n = x(t),
-    i = [B(t)];
+  let n = dirname(t),
+    i = [basename(t)];
   for (let r = 0; r < 64; r++) {
     try {
-      let s = await O(n);
+      let s = await realpath(n);
       return z(s, ...i);
     } catch (s) {
       if (s?.code !== "ENOENT") return;
     }
-    let e = x(n);
+    let e = dirname(n);
     if (e === n) return;
-    (i.unshift(B(n)), (n = e));
+    (i.unshift(basename(n)), (n = e));
   }
   return;
 }
@@ -37,11 +37,11 @@ var J = 2000000,
   D = 1e7,
   Z = 1e4,
   q = { perFileMs: 5000, totalMs: 1e4 },
-  Q = i0t | (j.O_NOFOLLOW ?? 0);
+  Q = REMOTE_READ_OPEN_FLAGS | (constants.O_NOFOLLOW ?? 0);
 function tt(t) {
   if (t.length === 0 || t.startsWith('"')) return !1;
   if (/[\u0000-\u001f\u007f]/.test(t)) return !1;
-  if (t.startsWith("-") || t.startsWith(":") || K(t)) return !1;
+  if (t.startsWith("-") || t.startsWith(":") || isAbsolute(t)) return !1;
   if (t.includes(" => ")) return !1;
   return t.split("/").every((i) => i !== "" && i !== "." && i !== "..");
 }
@@ -53,8 +53,8 @@ function E(t) {
   return { cwd: t, timeout: CX, preserveOutputOnError: !1 };
 }
 async function et(t, n, i) {
-  let { stdout: r, code: e } = await Be(
-    lt(),
+  let { stdout: r, code: e } = await execFileNoThrowWithCwd(
+    gitExe(),
     w(["ls-tree", "-r", "-l", "-z", "--full-tree", n, "--", ...i]),
     { ...E(t), maxBuffer: 1e7 },
   );
@@ -75,8 +75,8 @@ async function et(t, n, i) {
   return s;
 }
 async function nt(t, n) {
-  let { stdout: i, code: r } = await Be(
-    lt(),
+  let { stdout: i, code: r } = await execFileNoThrowWithCwd(
+    gitExe(),
     w(["ls-files", "--stage", "-z", "--", ...n]),
     { ...E(t), maxBuffer: 1e7 },
   );
@@ -98,8 +98,8 @@ async function nt(t, n) {
   for (let o of s) e.delete(o);
   if (e.size === 0) return e;
   let a = Y(Array.from(e.values(), (o) => o.oid)),
-    l = await Be(
-      lt(),
+    l = await execFileNoThrowWithCwd(
+      gitExe(),
       w(["cat-file", "--batch-check=%(objectname) %(objectsize)"]),
       {
         ...E(t),
@@ -127,7 +127,7 @@ async function nt(t, n) {
 }
 async function I(t, n) {
   if (!W.test(n)) return null;
-  let { stdout: i, code: r } = await Be(lt(), w(["cat-file", "blob", n]), {
+  let { stdout: i, code: r } = await execFileNoThrowWithCwd(gitExe(), w(["cat-file", "blob", n]), {
     ...E(t),
     maxBuffer: D + 65536,
     stripFinalNewline: !1,
@@ -147,20 +147,20 @@ async function it(t, n) {
       return { kind: "restricted" };
     let e;
     try {
-      e = await O(t);
+      e = await realpath(t);
     } catch {
       return { kind: "restricted" };
     }
-    let s = await l0t(i, r, e);
+    let s = await bindCanonicalPathToHandle(i, r, e);
     if (s === void 0) return { kind: "restricted" };
     if (
-      ((e = s), !dT(e, n, "read").allowed || vi(e, n, "read", "ask") !== null)
+      ((e = s), !dT(e, n, "read").allowed || matchingRuleForInput(e, n, "read", "ask") !== null)
     )
       return { kind: "restricted" };
     if ($z(e, n.trustedNetworkDirectories) !== void 0)
       return { kind: "restricted" };
-    if (!(await Oot(e, n))) return { kind: "restricted" };
-    let a = await c0t(i, D, r.size);
+    if (!(await isCanonicalPathContained(e, n))) return { kind: "restricted" };
+    let a = await readHandleBounded(i, D, r.size);
     if (a.overLimit) return { kind: "too-large" };
     return { kind: "ok", content: a.bytes.toString("utf-8") };
   } catch {
@@ -172,19 +172,19 @@ async function it(t, n) {
 async function H(t, n) {
   let i;
   try {
-    i = await O(t);
+    i = await realpath(t);
   } catch (r) {
     i = r?.code === "ENOENT" ? await X(t) : void 0;
   }
   return (
     i !== void 0 &&
     $z(i, n.trustedNetworkDirectories) === void 0 &&
-    (await Oot(i, n))
+    (await isCanonicalPathContained(i, n))
   );
 }
 async function rt(t, n) {
-  let { stdout: i, code: r } = await Be(
-    lt(),
+  let { stdout: i, code: r } = await execFileNoThrowWithCwd(
+    gitExe(),
     w([
       "check-attr",
       "-z",
@@ -222,8 +222,8 @@ async function rt(t, n) {
   return e;
 }
 async function st(t) {
-  let { stdout: n, exitCode: i } = await Be(
-    lt(),
+  let { stdout: n, exitCode: i } = await execFileNoThrowWithCwd(
+    gitExe(),
     w(["config", "--get", "core.autocrlf"]),
     E(t),
   );
@@ -327,8 +327,8 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
   if (c === null) return l({ hunks: [], skippedLarge: [], restricted: [] });
   let p = null;
   if (o) {
-    let u = await Be(
-      lt(),
+    let u = await execFileNoThrowWithCwd(
+      gitExe(),
       w([
         "--no-optional-locks",
         "-c",
@@ -358,7 +358,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
     }
     if (
       !y.pathsToCheck.every(
-        (d) => dT(d, n, "read").allowed && vi(d, n, "read", "ask") === null,
+        (d) => dT(d, n, "read").allowed && matchingRuleForInput(d, n, "read", "ask") === null,
       )
     ) {
       S.push(u);

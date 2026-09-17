@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 224 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_COMMENTS_TOOL_NAME as Zh, ARTIFACT_DATA_TOOL_NAME as CP, ARTIFACT_CHECK_TOOL_NAME as XD, ArtifactInputError as Oe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME, ArtifactInputError } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { PREVIEW_PROMPT_PARAGRAPH as Wze, commentsPromptParagraphs as Xze, DB_PROMPT_PARAGRAPH as Yze, VERIFY_PROMPT_PARAGRAPH as Jze } from "./chunk-pdd7kz7p.js";
+import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH, VERIFY_PROMPT_PARAGRAPH } from "./chunk-pdd7kz7p.js";
 import { gI, lwe, Tte } from "./chunk-qpgskeea.js";
 import "./chunk-x29r16ke.js";
 import { swe, iwe, Qze } from "./chunk-01jnk0v2.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0ghshta0.js";
-import { artifactSchemaGates as E9 } from "./chunk-b6k1z7an.js";
+import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
 import "./chunk-fx5ekm7e.js";
 import {
   hjn,
@@ -35,7 +35,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js"
 import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import { Out, Fon } from "./chunk-yrjr7v83.js";
 import "./chunk-5gvg7p5p.js";
-import { respell as FGe } from "../Teammates团队/chunk-y89mhs4a.js";
+import { respell } from "../Teammates团队/chunk-y89mhs4a.js";
 var l = {
     comments: [
       [/action:? "comments"/g, 'action "read"'],
@@ -98,8 +98,8 @@ function h(e) {
 }
 function m(e) {
   let a = [
-    `Read and answer the comment threads people leave on a published artifact, and manage this session's artifact watches. Publishing and reading the artifact itself is the \`${_r}\` tool's job; every call here names the artifact by its \`url\`.`,
-    FGe(Xze(e.watchRail === "none" ? Out() : ""), [
+    `Read and answer the comment threads people leave on a published artifact, and manage this session's artifact watches. Publishing and reading the artifact itself is the \`${ARTIFACT_TOOL_NAME}\` tool's job; every call here names the artifact by its \`url\`.`,
+    respell(commentsPromptParagraphs(e.watchRail === "none" ? Out() : ""), [
       ['`action: "comments"`', '`action: "read"`'],
     ]),
     h(e.watchRail),
@@ -121,17 +121,17 @@ var p = [
 ];
 function f() {
   return [
-    `The artifact itself is published and read with the \`${_r}\` tool; this tool is its page's shared database.`,
-    FGe(Yze, p),
+    `The artifact itself is published and read with the \`${ARTIFACT_TOOL_NAME}\` tool; this tool is its page's shared database.`,
+    respell(DB_PROMPT_PARAGRAPH, p),
   ].join(`
 
 `);
 }
 function w(e) {
   return [
-    `Check a page before or after publishing it with the \`${_r}\` tool.`,
-    ...(e.previewOn ? [Wze] : []),
-    ...(e.verifyOn ? [Jze] : []),
+    `Check a page before or after publishing it with the \`${ARTIFACT_TOOL_NAME}\` tool.`,
+    ...(e.previewOn ? [PREVIEW_PROMPT_PARAGRAPH] : []),
+    ...(e.verifyOn ? [VERIFY_PROMPT_PARAGRAPH] : []),
   ].join(`
 
 `);
@@ -142,7 +142,7 @@ function g(e) {
     .map(([r]) => r);
   return a.length === 0
     ? e.searchHint
-    : `${e.searchHint} (formerly the ${_r} tool's ${a.join(", ")})`;
+    : `${e.searchHint} (formerly the ${ARTIFACT_TOOL_NAME} tool's ${a.join(", ")})`;
 }
 function i(e) {
   let a = (t) => lwe(e.addon, t),
@@ -154,7 +154,7 @@ function i(e) {
     },
     shouldDefer: !0,
     briefStandalone: MS.briefStandalone,
-    familyParentToolName: _r,
+    familyParentToolName: ARTIFACT_TOOL_NAME,
     toFamilyParentInput: (t) => a(t),
     ruleContentField: MS.ruleContentField,
     getPath: (t) => MS.getPath(a(t)),
@@ -164,7 +164,7 @@ function i(e) {
     preserveToolUseResultInSubagents: MS.preserveToolUseResultInSubagents,
     stripToolUseResultAtCreation: MS.stripToolUseResultAtCreation,
     stripForStorage: MS.stripForStorage,
-    userFacingName: () => _r,
+    userFacingName: () => ARTIFACT_TOOL_NAME,
     get inputSchema() {
       return e.inputSchema();
     },
@@ -203,7 +203,7 @@ function i(e) {
     toAutoClassifierInput: (t) => MS.toAutoClassifierInput(a(t)),
     description: (t, ...o) => MS.description(a(t), ...o),
     getToolUseSummary: (t) => MS.getToolUseSummary(a(t)),
-    prompt: async () => e.prompt(E9()),
+    prompt: async () => e.prompt(artifactSchemaGates()),
     async validateInput(t, o) {
       let n = e.contradiction?.(t);
       if (n !== void 0) return { result: !1, message: n, errorCode: 8 };
@@ -214,7 +214,7 @@ function i(e) {
       try {
         return await MS.call(a(t), ...o);
       } catch (n) {
-        if (n instanceof Oe) n.message = c(e.addon, n.message);
+        if (n instanceof ArtifactInputError) n.message = c(e.addon, n.message);
         throw n;
       }
     },
@@ -231,7 +231,7 @@ function i(e) {
 }
 var R = i({
     addon: "comments",
-    name: Zh,
+    name: ARTIFACT_COMMENTS_TOOL_NAME,
     searchHint:
       "read and reply to comment threads on a published artifact; watch it for republishes",
     inputSchema: hjn,
@@ -243,18 +243,18 @@ var R = i({
   }),
   A = i({
     addon: "data",
-    name: CP,
+    name: ARTIFACT_DATA_TOOL_NAME,
     searchHint: "read and write a published artifact's shared database",
     inputSchema: _jn,
     prompt: f,
   }),
   y = i({
     addon: "check",
-    name: XD,
+    name: ARTIFACT_CHECK_TOOL_NAME,
     searchHint: "preview a page locally and read viewers' runtime diagnostics",
     inputSchema: yjn,
     prompt: w,
     offersLegacyVerb: (e) => (e === "verify" ? swe() : iwe()),
   }),
-  H = [R, A, y];
-export { H as ARTIFACT_ADDON_TOOLS };
+  ARTIFACT_ADDON_TOOLS = [R, A, y];
+export { ARTIFACT_ADDON_TOOLS };

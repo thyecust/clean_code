@@ -9,10 +9,10 @@
 // Version: 2.1.263
 import { jc, Cz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { ALLOWED_OAUTH_BASE_URLS as nae } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { ALLOWED_OAUTH_BASE_URLS } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Lt, xu, xae, Hae, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Or,
   Zl,
@@ -22,34 +22,34 @@ import {
   pb,
   QH,
   VCn,
-  isModelDenied as hP,
-  getModelEntitlementDenySet as _P,
-  isModelAllowed as Rr,
+  isModelDenied,
+  getModelEntitlementDenySet,
+  isModelAllowed,
   ZH,
   UD,
   zAt,
-  isPinnedFableModel as BD,
-  isFableFamilyOrPinnedModel as hg,
-  getModelUnavailabilityReason as t0,
-  getDefaultOpusModel as Ll,
-  isModeDependentModelSetting as xR,
-  stepDownRestrictedFamilyAliasPick as Xh,
-  getDefaultMainLoopModelSetting as dh,
-  getOrgLockedDefaultModel as lUe,
-  getDefaultMainLoopModel as ol,
-  getCanonicalName as Ue,
-  renderDefaultModelSetting as y6,
-  isOpus1mMergeEnabled as vw,
-  renderModelSetting as VN,
-  getCuratedModelPicker as g5,
-  parseUserSpecifiedModel as wt,
+  isPinnedFableModel,
+  isFableFamilyOrPinnedModel,
+  getModelUnavailabilityReason,
+  getDefaultOpusModel,
+  isModeDependentModelSetting,
+  stepDownRestrictedFamilyAliasPick,
+  getDefaultMainLoopModelSetting,
+  getOrgLockedDefaultModel,
+  getDefaultMainLoopModel,
+  getCanonicalName,
+  renderDefaultModelSetting,
+  isOpus1mMergeEnabled,
+  renderModelSetting,
+  getCuratedModelPicker,
+  parseUserSpecifiedModel,
   tc,
-  modelHasNative1MContext as _g,
-  isClaudeAISubscriber as gt,
+  modelHasNative1MContext,
+  isClaudeAISubscriber,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getRelativeSettingsFilePathForSource as T0 } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsForSource as ye, getEffectiveSettingSource as VT, updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { RP, um, er, kP, Qa, QD, getAPIProvider as Pe, usesFirstPartyModelIds as Ca, isFirstPartyAnthropicBaseUrl as fo } from "./模型目录-ModelCatalog.3msq3jt8.js";
+import { getRelativeSettingsFilePathForSource } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { getSettingsForSource, getEffectiveSettingSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { RP, um, er, kP, Qa, QD, getAPIProvider, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "./模型目录-ModelCatalog.3msq3jt8.js";
 import {
   Aue,
   OF,
@@ -73,16 +73,16 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _i, tCn, Oo } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ib, mve, Ya } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { fetchBootstrapData as f7 } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
+import { fetchBootstrapData } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
 function b(e, t, n) {
-  if (!gt()) return !1;
-  let o = e !== null ? wt(e) : ol(),
+  if (!isClaudeAISubscriber()) return !1;
+  let o = e !== null ? parseUserSpecifiedModel(e) : getDefaultMainLoopModel(),
     r = o.toLowerCase(),
     i = r.includes("opus") || r.includes("fable"),
     s = r.includes("opus-4-6"),
     u = r.includes("sonnet-4-6");
   if (t && af(e)) return !0;
-  if ((r.includes("fable") || BD(o)) && !OF() && (Aue() || tX())) return !0;
+  if ((r.includes("fable") || isPinnedFableModel(o)) && !OF() && (Aue() || tX())) return !0;
   if (!tc(r)) return !1;
   if (i && n) return !1;
   return s || u;
@@ -93,14 +93,14 @@ function p7(e, t, n, o) {
     s = r && !!e && !t;
   return (
     (i ? " \xB7 Fast mode ON" : "") +
-    (b(n, t, vw()) ? " \xB7 Draws from usage credits" : "") +
+    (b(n, t, isOpus1mMergeEnabled()) ? " \xB7 Draws from usage credits" : "") +
     (s ? " \xB7 Fast mode OFF" : "")
   );
 }
 function C2n(e, t, n) {
   if (!!e === t) return null;
   return t
-    ? `Fast mode ON${b(n, !0, vw()) ? " \xB7 Draws from usage credits" : ""}`
+    ? `Fast mode ON${b(n, !0, isOpus1mMergeEnabled()) ? " \xB7 Draws from usage credits" : ""}`
     : "Fast mode OFF";
 }
 function k() {
@@ -110,7 +110,7 @@ async function Yle(e, t) {
   let n = e.trim();
   if (!n) return { valid: !1, error: "Model name cannot be empty" };
   if (
-    !Rr(
+    !isModelAllowed(
       n,
       t.skipEntitlementDenyOverlay
         ? { skipEntitlementDenyOverlay: !0 }
@@ -125,19 +125,19 @@ async function Yle(e, t) {
     let d = n.toLowerCase();
     if (RP.includes(d)) return { valid: !0 };
     if (n === a.ANTHROPIC_CUSTOM_MODEL_OPTION) return { valid: !0 };
-    if (mdn(n) && g5()?.picker.options.some((c) => c.model.trim() === n))
+    if (mdn(n) && getCuratedModelPicker()?.picker.options.some((c) => c.model.trim() === n))
       return { valid: !0 };
     if (k().has(n)) return { valid: !0 };
   }
-  let o = Pe(),
+  let o = getAPIProvider(),
     r = a.ANTHROPIC_BASE_URL,
     i = r && URL.canParse(r) ? new URL(r).hostname : void 0,
     s =
-      fo() ||
+      isFirstPartyAnthropicBaseUrl() ||
       (i !== void 0 &&
         (i === "anthropic.com" ||
           i.endsWith(".anthropic.com") ||
-          nae.some((d) => new URL(d).hostname === i)));
+          ALLOWED_OAUTH_BASE_URLS.some((d) => new URL(d).hostname === i)));
   if (
     !(o === "gateway" || (o === "firstParty" && !s)) &&
     /[\s\p{Cc}\p{Cf}]/u.test(n)
@@ -251,7 +251,7 @@ function F(e) {
   return n !== void 0 ? Zl()[n] : void 0;
 }
 function P(e) {
-  if (Ca()) return;
+  if (usesFirstPartyModelIds()) return;
   let t = e.toLowerCase(),
     n = E().find((o) => t.includes(o.needle) || t.includes(o.needleUnderscore));
   if (n === void 0) return;
@@ -272,7 +272,7 @@ async function x(e, t) {
         typeof s.entitled !== "boolean"
       )
         return !0;
-      return s.entitled || !hP(e, VCn([s]));
+      return s.entitled || !isModelDenied(e, VCn([s]));
     });
     return i.length === r.length ? o : { ...o, modelAccessCache: i };
   }, t);
@@ -280,25 +280,25 @@ async function x(e, t) {
 async function ySe(e, t, n) {
   let o = e === "default" ? null : e,
     r;
-  if (o && hP(o, _P())) {
-    let i = Xh(o);
+  if (o && isModelDenied(o, getModelEntitlementDenySet())) {
+    let i = stepDownRestrictedFamilyAliasPick(o);
     if (i === null) {
-      if (!Rr(o, { skipEntitlementDenyOverlay: !0 }))
+      if (!isModelAllowed(o, { skipEntitlementDenyOverlay: !0 }))
         return (
-          f("model_switch", "denied_by_entitlement"),
+          logFeatureBad("model_switch", "denied_by_entitlement"),
           {
             ok: !1,
             message: `Model '${o}' is restricted by your organization's settings. Run /model to choose a different model.`,
           }
         );
-      let s = await Yle(v(o) ? wt(o) : o, {
+      let s = await Yle(v(o) ? parseUserSpecifiedModel(o) : o, {
         forceServerProbe: !0,
         skipEntitlementDenyOverlay: !0,
         credentials: n,
       });
       if (!s.valid)
         return (
-          f(
+          logFeatureBad(
             "model_switch",
             s.notFound ? "denied_by_entitlement" : "entitlement_probe_failed",
           ),
@@ -307,13 +307,13 @@ async function ySe(e, t, n) {
             message: `Model '${o}' is restricted by your organization's settings. Run /model to choose a different model.`,
           }
         );
-      (await x(o, t), f7(t, n));
+      (await x(o, t), fetchBootstrapData(t, n));
     } else ((r = o), (o = i));
-  } else if (o && !Rr(o)) {
-    let i = Xh(o);
+  } else if (o && !isModelAllowed(o)) {
+    let i = stepDownRestrictedFamilyAliasPick(o);
     if (i === null)
       return (
-        f("model_switch", "not_allowed"),
+        logFeatureBad("model_switch", "not_allowed"),
         {
           ok: !1,
           message: `Model '${o}' is not available. Your organization restricts model selection.`,
@@ -323,7 +323,7 @@ async function ySe(e, t, n) {
   }
   if (o && Znn(o))
     return (
-      f("model_switch", "opus_1m_unavailable"),
+      logFeatureBad("model_switch", "opus_1m_unavailable"),
       {
         ok: !1,
         message:
@@ -332,7 +332,7 @@ async function ySe(e, t, n) {
     );
   if (o && ern(o))
     return (
-      f("model_switch", "sonnet_1m_unavailable"),
+      logFeatureBad("model_switch", "sonnet_1m_unavailable"),
       {
         ok: !1,
         message:
@@ -340,30 +340,30 @@ async function ySe(e, t, n) {
       }
     );
   if (o) {
-    let i = t0(o);
+    let i = getModelUnavailabilityReason(o);
     if (i)
       switch (i.reason) {
         case "disabled":
           if (i.notOffered)
             return (
-              f("model_switch", "not_offered"),
+              logFeatureBad("model_switch", "not_offered"),
               { ok: !1, message: zAt(o) }
             );
           return (
-            f("model_switch", "disabled_by_org"),
+            logFeatureBad("model_switch", "disabled_by_org"),
             {
               ok: !1,
               message: `Model '${o}' is not currently available for your account${i.description ? `. ${i.description}` : "."}`,
             }
           );
         case "absent": {
-          let s = await Yle(v(o) ? wt(o) : o, {
+          let s = await Yle(v(o) ? parseUserSpecifiedModel(o) : o, {
             forceServerProbe: !0,
             credentials: n,
           });
           if (!s.valid)
             return (
-              f(
+              logFeatureBad(
                 "model_switch",
                 s.notFound ? "fable_unavailable" : "fable_probe_failed",
               ),
@@ -375,7 +375,7 @@ async function ySe(e, t, n) {
               }
             );
           return (
-            f7(t, n),
+            fetchBootstrapData(t, n),
             { ok: !0, model: o, ...(r !== void 0 && { substitutedFrom: r }) }
           );
         }
@@ -385,11 +385,11 @@ async function ySe(e, t, n) {
   try {
     let i = await Yle(o, { credentials: n });
     if (!i.valid)
-      return (f("model_switch", "invalid_model"), { ok: !1, message: i.error });
+      return (logFeatureBad("model_switch", "invalid_model"), { ok: !1, message: i.error });
     return { ok: !0, model: o, ...(r !== void 0 && { substitutedFrom: r }) };
   } catch (i) {
     return (
-      f("model_switch", "validate_exception"),
+      logFeatureBad("model_switch", "validate_exception"),
       { ok: !1, message: `Failed to validate model: ${l(i)}` }
     );
   }
@@ -470,8 +470,8 @@ function I3e(e, t, n, o, r, i, s, u) {
     r)
   )
     kIe(t, u);
-  if (s !== void 0) g("model_switch", "family_alias_stepped_down");
-  else y("model_switch");
+  if (s !== void 0) logFeatureSad("model_switch", "family_alias_stepped_down");
+  else logFeatureOk("model_switch");
   let c = `${tre}${eg(Zg(t))}${r ? " and saved as your default for new sessions" : " for this session only"}`,
     m = Mr() ? db(t, d) : !!d;
   if (Mr()) {
@@ -480,56 +480,56 @@ function I3e(e, t, n, o, r, i, s, u) {
   return ((c += p7(d, m, t, { announceKeptOn: !0 })), (c += Qnn(t)), c);
 }
 function kIe(e, t) {
-  (Jt("userSettings", { model: e ?? void 0 }, void 0, t),
-    y("model_set_default"));
+  (updateSettingsForSource("userSettings", { model: e ?? void 0 }, void 0, t),
+    logFeatureOk("model_set_default"));
 }
 function Qnn(e) {
-  let t = VT("model");
+  let t = getEffectiveSettingSource("model");
   if (
     t !== "projectSettings" &&
     t !== "localSettings" &&
     t !== "policySettings"
   ) {
-    let r = lUe();
+    let r = getOrgLockedDefaultModel();
     if (
       r !== null &&
       e !== null &&
       t !== "flagSettings" &&
       !a.ANTHROPIC_MODEL
     ) {
-      let i = wt(e),
-        s = wt(r.model),
-        u = Ue(s, { identity: !0 }),
-        d = Ue(i, { identity: !0 }),
+      let i = parseUserSpecifiedModel(e),
+        s = parseUserSpecifiedModel(r.model),
+        u = getCanonicalName(s, { identity: !0 }),
+        d = getCanonicalName(i, { identity: !0 }),
         c = /\[1m\]$/i.test(i) !== /\[1m\]$/i.test(s);
-      if (xR(e) || d !== u || c) return _(r);
+      if (isModeDependentModelSetting(e) || d !== u || c) return _(r);
     }
     return "";
   }
   if (t !== "policySettings") {
-    let r = lUe();
+    let r = getOrgLockedDefaultModel();
     if (r !== null && !a.ANTHROPIC_MODEL) {
       if (e === null) return "";
-      let i = wt(e),
-        s = wt(r.model),
-        u = Ue(s, { identity: !0 }),
-        d = Ue(i, { identity: !0 }),
+      let i = parseUserSpecifiedModel(e),
+        s = parseUserSpecifiedModel(r.model),
+        u = getCanonicalName(s, { identity: !0 }),
+        d = getCanonicalName(i, { identity: !0 }),
         c = /\[1m\]$/i.test(i) !== /\[1m\]$/i.test(s);
-      if (xR(e) || d !== u || c) return _(r);
+      if (isModeDependentModelSetting(e) || d !== u || c) return _(r);
       return "";
     }
   }
-  let n = ye(t)?.model;
+  let n = getSettingsForSource(t)?.model;
   if (n === void 0 || e === n) return "";
-  let o = t === "policySettings" ? "Managed settings" : T0(t);
-  return h(`${o} pins `, VN(n), " \u2014 that applies on restart");
+  let o = t === "policySettings" ? "Managed settings" : getRelativeSettingsFilePathForSource(t);
+  return h(`${o} pins `, renderModelSetting(n), " \u2014 that applies on restart");
 }
 function h(e, t, n) {
   return `${ie.dim(`
      ${e}`)}${eg(t)}${ie.dim(n)}`;
 }
 function _(e) {
-  let t = VN(e.model);
+  let t = renderModelSetting(e.model);
   switch (e.kind) {
     case "org":
       return h("Your organization's default (", t, ") applies on restart");
@@ -548,9 +548,9 @@ function v(e) {
 function Znn(e) {
   let t = e.toLowerCase();
   if (!(t.includes("opus") && t.includes("[1m]"))) return !1;
-  if ((t.includes("opusplan") ? [Ll(), wt(e)] : [wt(e)]).every((o) => _g(o)))
+  if ((t.includes("opusplan") ? [getDefaultOpusModel(), parseUserSpecifiedModel(e)] : [parseUserSpecifiedModel(e)]).every((o) => modelHasNative1MContext(o)))
     return !1;
-  return !ZH() && !vw();
+  return !ZH() && !isOpus1mMergeEnabled();
 }
 function ern(e) {
   let t = e.toLowerCase();
@@ -560,15 +560,15 @@ function ern(e) {
     t.includes("sonnet-5[1m]")
   ))
     return !1;
-  if (_g(wt(e))) return !1;
+  if (modelHasNative1MContext(parseUserSpecifiedModel(e))) return !1;
   return !UD();
 }
 function Zg(e) {
-  let t = y6(e ?? dh());
+  let t = renderDefaultModelSetting(e ?? getDefaultMainLoopModelSetting());
   return e === null ? `${t} (default)` : t;
 }
 function t2(e) {
-  return wt(e ?? dh());
+  return parseUserSpecifiedModel(e ?? getDefaultMainLoopModelSetting());
 }
 function nLt(e, t, n, o, r) {
   if (!r) return !1;
@@ -594,13 +594,13 @@ Base model: ${t}`;
   return `${GWt}${t}${i}${o}`;
 }
 function rLt(e) {
-  let t = e ?? dh();
-  if (!hg(wt(t))) return !1;
+  let t = e ?? getDefaultMainLoopModelSetting();
+  if (!isFableFamilyOrPinnedModel(parseUserSpecifiedModel(t))) return !1;
   return ZGn();
 }
 function n2(e) {
   if (e === null) return !1;
-  return hg(wt(e)) && Mwe();
+  return isFableFamilyOrPinnedModel(parseUserSpecifiedModel(e)) && Mwe();
 }
 function Qle(e, t) {
   if (t === void 0) return;

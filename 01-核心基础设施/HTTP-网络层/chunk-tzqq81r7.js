@@ -33,20 +33,20 @@ import {
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { dl, Trt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Mrr, fU, getMainLoopModel as rt, getCanonicalName as Ue, envSessionKind as E6, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Mrr, fU, getMainLoopModel, getCanonicalName, envSessionKind, kZe, NRn, dx, CRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vd, UP } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Xt } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Vnr } from "../共享小工具-未细化/chunk-1945b2ak.js";
-import { errorTrackingClient as DXe, isErrorTrackingCapReached as fwn, enqueueErrorLog as mwn } from "../共享小工具-未细化/chunk-6kad94y1.js";
+import { errorTrackingClient, isErrorTrackingCapReached, enqueueErrorLog } from "../共享小工具-未细化/chunk-6kad94y1.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { createHash as L } from "crypto";
-import { release as ne } from "os";
-import { homedir as W } from "os";
+import { createHash } from "crypto";
+import { release } from "os";
+import { homedir } from "os";
 import { sep as j } from "path";
 var f = "<user-code>";
 function H() {
   try {
-    return W();
+    return homedir();
   } catch {
     return "";
   }
@@ -259,10 +259,10 @@ function te(e) {
 }
 var re = 30;
 function oe() {
-  let e = DXe();
+  let e = errorTrackingClient();
   if (e.cachedUserBucket !== void 0) return e.cachedUserBucket;
   let n = dx(),
-    t = L("sha256").update(n).digest("hex");
+    t = createHash("sha256").update(n).digest("hex");
   return (
     (e.cachedUserBucket = parseInt(t.slice(0, 8), 16) % re),
     e.cachedUserBucket
@@ -277,7 +277,7 @@ function se(e, n) {
         : `${r.function ?? "?"}@${A(r.file)}`,
     )
     .join("|");
-  return L("sha256")
+  return createHash("sha256")
     .update(
       `${e}
 ${t}`,
@@ -311,9 +311,9 @@ var ie = new Set([
 ]);
 function ae() {
   try {
-    let e = rt();
+    let e = getMainLoopModel();
     if (!e) return;
-    let n = Ue(Xt(e), { identity: !0 });
+    let n = getCanonicalName(Xt(e), { identity: !0 });
     return ie.has(n) ? n : "other";
   } catch {
     return;
@@ -409,9 +409,9 @@ function Ee(e, n, t) {
     w = typeof Bun < "u" && !0,
     h = Jr(e),
     _ = a.CLAUDE_CODE_ENTRYPOINT === void 0 ? "cli" : (Vd() ?? "other"),
-    p = E6(),
+    p = envSessionKind(),
     S = Trt(),
-    R = Ie(ne());
+    R = Ie(release());
   return {
     ddtags: [
       `service:${U}`,
@@ -526,9 +526,9 @@ function Ore(e, n = "logError") {
     if (n === "logError" && be(t, r)) return;
     if ((n === "unhandled_rejection" || n === "uncaught_exception") && Re(t))
       return;
-    if (fwn()) return;
+    if (isErrorTrackingCapReached()) return;
     let o = Ee(t, n, r);
-    mwn(o);
+    enqueueErrorLog(o);
   } catch {}
 }
 export { Ore };

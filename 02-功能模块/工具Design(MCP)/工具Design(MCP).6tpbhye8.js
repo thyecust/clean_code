@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -18,11 +18,11 @@ import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Tn, ht, isHostManagedProviderAuth as Fc, getAuthTokenSource as Gl, getClaudeAIOAuthTokens as Yt, handleOAuth401Error as cm, getClaudeAIOAuthTokensAsync as Qi, getAuthTokenSourceAsync as e5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isFirstPartyAnthropicHost as GT } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { Tn, ht, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
-import { NV, lj, agn, hasHookForEvent as TT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { NV, lj, agn, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YA,
   mbe,
@@ -59,7 +59,7 @@ import "../DesignSync/chunk-aycc6z76.js";
 import "../认证-OAuth登录/chunk-5bg9xwqx.js";
 import { mWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
 import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 function N(e) {
   return Buffer.byteLength(e, "utf8");
 }
@@ -328,7 +328,7 @@ function $e(e) {
     Authorization: `Bearer ${e}`,
     "Content-Type": "application/json",
     "anthropic-version": "2023-06-01",
-    "anthropic-client-platform": Um(),
+    "anthropic-client-platform": getClientPlatform(),
   };
 }
 function P(e) {
@@ -403,7 +403,7 @@ var Re = m(() =>
     c({ operation: s(), content: v(fe(s(), se())), isError: O().optional() }),
   );
 function re(e) {
-  let t = ce(e);
+  let t = getToolPermissionContext(e);
   return (
     !e.options?.isNonInteractiveSession &&
     t.mode !== "bypassPermissions" &&
@@ -434,7 +434,7 @@ var _e = /\uDB40[\uDC20-\uDC7F\uDD00-\uDDEF]|\uD834[\uDD73-\uDD7A]/,
 function G(e) {
   if (e.agentContext?.agentType !== "main") return !1;
   try {
-    return !TT(
+    return !hasHookForEvent(
       "PermissionRequest",
       e.sessionHooksRegistry,
       e.agentContext?.agentId ?? "",
@@ -509,7 +509,7 @@ async function Te(e, t, n, r) {
     return null;
   }
 }
-var $t = Tt({
+var DesignTool = Tt({
     name: NV,
     searchHint: "work with Claude Design (claude.ai/design) projects",
     maxResultSizeChars: 1e5,
@@ -671,7 +671,7 @@ var $t = Tt({
       }
       if (!_) return { behavior: "allow", updatedInput: d };
       if (
-        ce(t).mode !== "plan" &&
+        getToolPermissionContext(t).mode !== "plan" &&
         G(t) &&
         P6n(n, e.operation, e.arguments).outcome === "allow"
       )
@@ -699,10 +699,10 @@ var $t = Tt({
           if (typeof g !== "string" || g.length === 0 || !G(t) || N4(n, g))
             return u;
           if (_qe(e.operation, e.arguments).outcome !== "pass") return u;
-          if (ce(t).mode === "plan") return u;
+          if (getToolPermissionContext(t).mode === "plan") return u;
           if (Adt(n, g)) return { behavior: "allow", updatedInput: d };
           if ((await ydt(n, g, t.credentials)) === "granted" && !N4(n, g)) {
-            if ((Jee(n, g), ce(t).mode !== "plan"))
+            if ((Jee(n, g), getToolPermissionContext(t).mode !== "plan"))
               return { behavior: "allow", updatedInput: d };
           }
           return u;
@@ -732,7 +732,7 @@ var $t = Tt({
               },
             };
           let u = _qe(e.operation, e.arguments),
-            g = ce(t).mode === "plan";
+            g = getToolPermissionContext(t).mode === "plan";
           if (u.outcome === "pass" && g) {
             if (!(
               Adt(n, i) ||
@@ -755,7 +755,7 @@ var $t = Tt({
             if (Adt(n, i)) return { behavior: "allow", updatedInput: d };
             let w = await ydt(n, i, t.credentials);
             if (w === "granted" && !N4(n, i)) {
-              if ((Jee(n, i), ce(t).mode !== "plan"))
+              if ((Jee(n, i), getToolPermissionContext(t).mode !== "plan"))
                 return { behavior: "allow", updatedInput: d };
             } else if (w === "unavailable")
               return {
@@ -770,7 +770,7 @@ var $t = Tt({
               };
             else {
               let C = () =>
-                  ce(t).mode !== "plan"
+                  getToolPermissionContext(t).mode !== "plan"
                     ? null
                     : {
                         behavior: "deny",
@@ -1523,10 +1523,10 @@ class ie extends R {
 var be = 5000;
 async function Ge(e, t, n) {
   let r;
-  if (M() && n !== void 0) r = await Qi(n);
-  else r = Yt();
+  if (M() && n !== void 0) r = await getClaudeAIOAuthTokensAsync(n);
+  else r = getClaudeAIOAuthTokens();
   if (e === r?.accessToken && Boolean(r?.refreshToken)) {
-    if ((await Promise.race([cm(e, n).catch(() => !1), Z(be, t)]), t.aborted))
+    if ((await Promise.race([handleOAuth401Error(e, n).catch(() => !1), Z(be, t)]), t.aborted))
       return null;
   }
   let d = await Promise.race([
@@ -1542,8 +1542,8 @@ async function We(e, t) {
         ? "Claude Design authentication failed (HTTP 401): a freshly refreshed credential was also rejected \u2014 likely a server-side access problem with this account or credential rather than simple expiry."
         : "Claude Design authentication failed (HTTP 401): the credential was rejected and an automatic refresh did not produce a new one.",
     d;
-  if (M() && e !== void 0) d = await Qi(e);
-  else d = Yt();
+  if (M() && e !== void 0) d = await getClaudeAIOAuthTokensAsync(e);
+  else d = getClaudeAIOAuthTokens();
   let o =
     !!d?.accessToken &&
     !!d.refreshToken &&
@@ -1551,13 +1551,13 @@ async function We(e, t) {
   if (!o && (await b6n(e)))
     return `${r} The design credential (from /design login) is expired or revoked${n ? ", and /design login requires an interactive terminal \u2014 re-authenticate outside this session" : " \u2014 run /design login to re-authenticate"}.`;
   if (!o && d?.accessToken && !d.refreshToken) {
-    let { source: p } = M() && e !== void 0 ? await e5t(e) : Gl();
+    let { source: p } = M() && e !== void 0 ? await getAuthTokenSourceAsync(e) : getAuthTokenSource();
     if (a.CLAUDE_CODE_REMOTE_SESSION_ID)
       return `${r} This remote session's credential is injected and rotated by the session host \u2014 it usually self-heals within minutes. Retry shortly; if this persists, the host session needs attention.`;
     if (
       (p === "CCR_OAUTH_TOKEN_FILE" ||
         p === "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR") &&
-      (!dZ() || Fc())
+      (!dZ() || isHostManagedProviderAuth())
     )
       return `${r} This session authenticates with an OAuth token injected by the CCR host, which has no refresh token \u2014 it cannot self-heal and has likely expired or been revoked. The credential comes from the host session; check or restart it there.`;
     if (
@@ -1571,7 +1571,7 @@ async function We(e, t) {
   return `${r} Run /login, or /design login for a separate design credential.`;
 }
 async function te(e, t, n, r, d, o, p = !1) {
-  if (!GT(Vt().BASE_API_URL))
+  if (!isFirstPartyAnthropicHost(getOauthConfig().BASE_API_URL))
     throw Error(
       "Claude Design is only reachable from api.anthropic.com; the current OAuth base URL is not on the first-party allowlist.",
     );
@@ -1661,4 +1661,4 @@ mWn({
   createObserver: (e, t, n) =>
     e.kind === "design_project_grant" ? E6n(t.get(YA), e.projectId, n) : null,
 });
-export { $t as DesignTool };
+export { DesignTool };

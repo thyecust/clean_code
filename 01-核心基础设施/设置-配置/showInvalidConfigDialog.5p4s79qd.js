@@ -14,7 +14,7 @@ import { b, Jhe } from "../核心工具-日志与脱敏/核心工具-日志与�
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { wv } from "../共享小工具-未细化/chunk-ajpjkvdj.js";
-import { AppRoot as zm } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import { ve } from "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -93,11 +93,11 @@ function C(K) {
   return S;
 }
 var D = "dark";
-async function U({ error: a }) {
+async function showInvalidConfigDialog({ error: a }) {
   let f = { ...wv(!1), theme: D };
   await new Promise(async (s) => {
     let { unmount: l } = await J0(
-      e(zm, {
+      e(AppRoot, {
         session: B(),
         children: e(C, {
           filePath: a.filePath,
@@ -120,4 +120,4 @@ async function U({ error: a }) {
     );
   });
 }
-export { U as showInvalidConfigDialog };
+export { showInvalidConfigDialog };

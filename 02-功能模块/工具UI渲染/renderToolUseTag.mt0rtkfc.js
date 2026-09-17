@@ -67,11 +67,11 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-xvyb4e66.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-function A(l) {
+function renderToolUseTag(l) {
   if (!l.task_id) return null;
   return r(t, { dimColor: !0, children: [" ", l.task_id] });
 }
-function F(l) {
+function renderToolUseProgressMessage(l) {
   let T = l.at(-1)?.data;
   return r(o, {
     flexDirection: "column",
@@ -112,7 +112,7 @@ var N = m(() =>
       .optional(),
   }),
 );
-function J(l, g, { verbose: T, theme: y }) {
+function renderToolResultMessage(l, g, { verbose: T, theme: y }) {
   return e(O, { content: l, verbose: T, theme: y });
 }
 function O(V) {
@@ -321,7 +321,7 @@ function O(V) {
   return R;
 }
 export {
-  J as renderToolResultMessage,
-  F as renderToolUseProgressMessage,
-  A as renderToolUseTag,
+  renderToolResultMessage,
+  renderToolUseProgressMessage,
+  renderToolUseTag,
 };

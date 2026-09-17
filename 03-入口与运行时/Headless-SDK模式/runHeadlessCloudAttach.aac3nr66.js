@@ -12,62 +12,62 @@
 import { _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { toCompatSessionId as zu, toInfraSessionId as yc, sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { toCompatSessionId, toInfraSessionId, sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { printCliError as rM } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { St, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { printCliError } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  getMainLoopModel as rt,
-  getDefaultOpusModel as Ll,
+  getMainLoopModel,
+  getDefaultOpusModel,
   Tn,
   SCt,
   $Qe,
-  prepareApiRequest as ox,
-  fetchSession as w6,
-  updateSessionTitle as qQe,
-  markSessionRead as zQe,
-  getAccessTokenWithCcrFallback as Ose,
-  archiveRemoteSession as LR,
-  SDK_OAUTH_REFRESH_ENTRYPOINTS as mZe,
-  handleOAuth401Error as cm,
-  getStoredOauthAccountInfo as mh,
-  getAccountInformation as pQ,
-  validateForceLoginOrg as cx,
-  isWorkspacePersistedTrusted as Cd,
+  prepareApiRequest,
+  fetchSession,
+  updateSessionTitle,
+  markSessionRead,
+  getAccessTokenWithCcrFallback,
+  archiveRemoteSession,
+  SDK_OAUTH_REFRESH_ENTRYPOINTS,
+  handleOAuth401Error,
+  getStoredOauthAccountInfo,
+  getAccountInformation,
+  validateForceLoginOrg,
+  isWorkspacePersistedTrusted,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { findGitRoot as tr, getBranch as Da } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ee } from "../CLI入口-Commander/chunk-6rfqqsva.js";
-import { getSettingsForSource as ye, getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODE_MANUAL_ALIAS as qU, parsePermissionMode as gf, CAN_USE_TOOL_INVALID_RESULT_REASON as xie, CAN_USE_TOOL_REQUEST_FAILED_REASON as Hie, _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON, _c } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { Boe, sme, Wg } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isScrubEnabled as Bu } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
   xn,
   kl,
   o3,
-  isSessionChannelDisabled as YF,
-  isRemoteToolServingSwitchOn as Upn,
-  isRemoteToolServingMuted as m3,
-  onServingMuteRecheck as AV,
-  remoteToolServingOffReason as eLe,
-  remoteToolServingPolicyName as P2t,
+  isSessionChannelDisabled,
+  isRemoteToolServingSwitchOn,
+  isRemoteToolServingMuted,
+  onServingMuteRecheck,
+  remoteToolServingOffReason,
+  remoteToolServingPolicyName,
   pT,
-  NO_SYNC_HANDLE_MESSAGE as Bfn,
-  rootLaptopDirSyncRegistry as jO,
-  takeLaptopDirSyncSession as jfn,
+  NO_SYNC_HANDLE_MESSAGE,
+  rootLaptopDirSyncRegistry,
+  takeLaptopDirSyncSession,
   lKn,
   zTe,
   Dht,
@@ -79,15 +79,15 @@ import {
   Xht,
   $Le,
   Jht,
-  teleportToRemote as Kv,
+  teleportToRemote,
   e_n,
   RY,
   wT,
   iD,
   rSt,
-  deviceHooksProcessMemories as aD,
+  deviceHooksProcessMemories,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isViolinWoodEnabled as Su, isViolinWoodEnabledCached as ri, isSettingsToCloudEnabled as LD, isCloudPluginForwardingFlagOn as j$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isCloudPluginForwardingFlagOn } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
   X9n,
   Y9n,
@@ -102,7 +102,7 @@ import {
   wFt,
   TFt,
 } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
-import { A2n, UNATTENDED_SERVING_CONSENT_VERSION as Mlt, UNATTENDED_SERVING_CONSENT_TERMS as Nlt, unattendedServingMachineName as Knn, readUnattendedServingConsent as CIe, writeUnattendedServingConsent as C3e, managedSettingsForbidUnattendedServing as hSe, primeUnattendedServingConsent as v3e } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
+import { A2n, UNATTENDED_SERVING_CONSENT_VERSION, UNATTENDED_SERVING_CONSENT_TERMS, unattendedServingMachineName, readUnattendedServingConsent, writeUnattendedServingConsent, managedSettingsForbidUnattendedServing, primeUnattendedServingConsent } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
 import {
   z_e,
   sIt,
@@ -205,7 +205,7 @@ function J(e) {
     n("[headlessFeatures] a feature hook was aborted");
     return;
   }
-  h(e);
+  logError(e);
 }
 var pe = ["settings", "hooks", "plugins", "tools"];
 async function Ce(e, t) {
@@ -522,7 +522,7 @@ function at(e) {
         if (((d = M), M.at !== "on")) C.clear();
         _.emit();
       },
-      D = P2t(),
+      D = remoteToolServingPolicyName(),
       E = N7(),
       { onAnnounceOutcome: I, onRevoked: O, onNotice: A, ...R } = t.servedTools,
       F = e.openChannel({
@@ -609,7 +609,7 @@ function rn(e) {
     case "on":
       return { state: "on" };
     case "withdrawn": {
-      let t = eLe();
+      let t = remoteToolServingOffReason();
       return { state: "off", ...(t !== void 0 && { reason: t }) };
     }
     case "refused":
@@ -640,8 +640,8 @@ function it(e) {
       serving: {
         state: "off",
         ...(e !== void 0 && { reason: e }),
-        policy: P2t(),
-        channel: YF() ? "bridge_only" : "session",
+        policy: remoteToolServingPolicyName(),
+        channel: isSessionChannelDisabled() ? "bridge_only" : "session",
       },
     },
   };
@@ -665,7 +665,7 @@ function dt(e) {
         return se("detached", p);
       case "unreadable":
         return (
-          f("device_hooks_client_register", "consent_unreadable"),
+          logFeatureBad("device_hooks_client_register", "consent_unreadable"),
           se("unreadable", p)
         );
       case "unset":
@@ -699,7 +699,7 @@ function dt(e) {
         registerCleanup: e.attach?.registerCleanup ?? Et,
         subscribeSettingsChanges:
           e.attach?.subscribeSettingsChanges ?? ((H) => kl.subscribe(H)),
-        trustAccepted: e.attach?.trustAccepted ?? (() => Cd(k)),
+        trustAccepted: e.attach?.trustAccepted ?? (() => isWorkspacePersistedTrusted(k)),
         ...(e.attach?.createSession && {
           createSession: e.attach.createSession,
         }),
@@ -808,7 +808,7 @@ function pn(e, t, o, r) {
 }
 function se(e, t, o) {
   return (
-    i("tengu_device_hooks_headless_off", { reason: u(e), reattach: t }),
+    i("tengu_device_hooks_headless_off", { reason: fromEnum(e), reattach: t }),
     {
       feature: "hooks",
       report: () => ({
@@ -865,7 +865,7 @@ class be {
       answerOnError: (r) =>
         e.respondToPermissionRequest(o, {
           behavior: "deny",
-          message: r ? xie : Hie,
+          message: r ? CAN_USE_TOOL_INVALID_RESULT_REASON : CAN_USE_TOOL_REQUEST_FAILED_REASON,
           toolUseID: t.tool_use_id,
         }),
     });
@@ -972,14 +972,14 @@ class be {
           },
         )
         .catch((I) => {
-          if ((h(I), !D)) E("answer_failed");
+          if ((logError(I), !D)) E("answer_failed");
         }),
     );
   }
   log(e, t, o, r = !1) {
     i("tengu_remote_headless_client_agent_request", {
-      subtype: u(e),
-      outcome: u(t),
+      subtype: fromEnum(e),
+      outcome: fromEnum(t),
       latency_ms: this.ports.clock.now() - o,
       reasked: r,
     });
@@ -1067,8 +1067,8 @@ function ut(e) {
     title: pT["consent.unattended.title"],
     body: pT["consent.unattended.body.host"],
     detail: pT["consent.unattended.detail"],
-    terms: Nlt,
-    version: Mlt,
+    terms: UNATTENDED_SERVING_CONSENT_TERMS,
+    version: UNATTENDED_SERVING_CONSENT_VERSION,
   };
 }
 function Ie(e) {
@@ -1080,7 +1080,7 @@ function ct({ io: e, declaredKinds: t, clock: o }) {
       C = (O) => {
         i("tengu_remote_headless_client_host_dialog", {
           dialog_kind: Tn(d.kind),
-          outcome: u(O),
+          outcome: fromEnum(O),
           latency_ms: o.now() - w,
         });
       },
@@ -1682,7 +1682,7 @@ function gt(e) {
   );
 }
 function Me(e) {
-  let t = e.id.startsWith("cse_") ? `session_${pr(e.id)}` : e.id,
+  let t = e.id.startsWith("cse_") ? `session_${sessionIdBody(e.id)}` : e.id,
     o = e.directory_sync;
   return {
     ...e,
@@ -1930,7 +1930,7 @@ class Te {
       if (((this.cancelWatchdog = null), this.stopped)) return;
       ((this.watchdogFires += 1),
         i("tengu_remote_headless_client_watchdog_fired", {
-          timeout: u(this.compacting ? "compacting" : "response"),
+          timeout: fromEnum(this.compacting ? "compacting" : "response"),
         }),
         n("[headlessCloudClient] response timeout; reconnecting"),
         this.line("warning", Hst),
@@ -1964,7 +1964,7 @@ class Te {
                   : [],
               )
               .join(" "),
-      o = Xe(D_(oe(t, jn)), Wn);
+      o = truncateToWidth(D_(oe(t, jn)), Wn);
     if (o === "") {
       this.title = "skipped";
       return;
@@ -2136,8 +2136,8 @@ class He {
       );
     (this.ports.requestOpen(w.success ? w.data : null),
       i("tengu_remote_headless_client_host_request", {
-        subtype: u("initialize"),
-        outcome: u("local"),
+        subtype: fromEnum("initialize"),
+        outcome: fromEnum("local"),
         ignored_count: C.ignored.length + this.ports.ignoredOptionsCount,
       }));
   }
@@ -2182,7 +2182,7 @@ class He {
     )
       return (
         i("tengu_remote_headless_client_interrupt_receipt", {
-          outcome: u("nothing_to_stop"),
+          outcome: fromEnum("nothing_to_stop"),
         }),
         null
       );
@@ -2217,7 +2217,7 @@ class He {
   }
   logInterruptReceipt(e, t, o) {
     i("tengu_remote_headless_client_interrupt_receipt", {
-      outcome: u(e),
+      outcome: fromEnum(e),
       latency_ms: this.ports.clock.now() - t,
       ...(o !== void 0 && { swept_announced: o }),
     });
@@ -2269,8 +2269,8 @@ class He {
   }
   log(e, t) {
     i("tengu_remote_headless_client_host_request", {
-      subtype: u(e),
-      outcome: u(t),
+      subtype: fromEnum(e),
+      outcome: fromEnum(t),
     });
   }
 }
@@ -2283,7 +2283,7 @@ function Yn(e, t) {
     ? { ...t, cancel_queued: !0 }
     : t;
 }
-import { isDeepStrictEqual as Zn } from "util";
+import { isDeepStrictEqual } from "util";
 class qe {
   cap;
   replay;
@@ -2406,7 +2406,7 @@ class qe {
     }
     return {
       verdict:
-        o.delivered && o.owed === 0 && o.stored !== void 0 && Zn(t, o.stored)
+        o.delivered && o.owed === 0 && o.stored !== void 0 && isDeepStrictEqual(t, o.stored)
           ? "consume"
           : "peer",
       dequeue: !1,
@@ -2552,7 +2552,7 @@ class Ne {
     try {
       e();
     } catch (t) {
-      h(t);
+      logError(t);
     }
   }
   abandonPostsInFlight(e) {
@@ -2612,7 +2612,7 @@ class Ne {
           "too many messages are waiting for the cloud session",
           { outcome: "overflow" },
         ),
-        i("tengu_remote_headless_client_queue_overflow", { kind: u(e.kind) }),
+        i("tengu_remote_headless_client_queue_overflow", { kind: fromEnum(e.kind) }),
         "refused"
       );
     if (
@@ -2620,7 +2620,7 @@ class Ne {
       (this.maxQueued = Math.max(this.maxQueued, this.queue.length)),
       this.ports.liveSession() !== null)
     )
-      this.ports.track(this.flush().catch(h));
+      this.ports.track(this.flush().catch(logError));
     return "new";
   }
   async untilNoHold() {
@@ -2699,7 +2699,7 @@ class Ne {
     )
       i("tengu_remote_headless_client_queue_dropped", {
         count: o.length,
-        cause: u(t),
+        cause: fromEnum(t),
       });
     return o.length;
   }
@@ -2784,13 +2784,13 @@ class Ne {
       this.forwardsInFlight.get(e)?.abort();
     r.forEach((d) =>
       i("tengu_remote_headless_client_host_request", {
-        subtype: u(d.telemetrySubtype),
-        outcome: u("cancelled"),
+        subtype: fromEnum(d.telemetrySubtype),
+        outcome: fromEnum("cancelled"),
       }),
     );
   }
   failAfterInternalError(e, t, o) {
-    h(t);
+    logError(t);
     let r = "an internal error occurred while sending it";
     if (e.kind === "control") {
       if (o !== void 0 && this.forwardsInFlight.get(e.hostRequestId) === o)
@@ -2862,8 +2862,8 @@ class Ne {
         ),
           this.contained(() =>
             i("tengu_remote_headless_client_host_request", {
-              subtype: u(e.telemetrySubtype),
-              outcome: u(d),
+              subtype: fromEnum(e.telemetrySubtype),
+              outcome: fromEnum(d),
             }),
           ));
         return;
@@ -2962,7 +2962,7 @@ class Ne {
       ));
   }
   logSend(e, t, o = {}) {
-    i("tengu_remote_headless_client_send", { kind: u(e), outcome: u(t), ...o });
+    i("tengu_remote_headless_client_send", { kind: fromEnum(e), outcome: fromEnum(t), ...o });
   }
   postOnce(e, t) {
     return t.kind === "message"
@@ -3017,8 +3017,8 @@ class Ne {
         );
     ((this.forwardCount += 1),
       i("tengu_remote_headless_client_host_request", {
-        subtype: u(o),
-        outcome: u(_),
+        subtype: fromEnum(o),
+        outcome: fromEnum(_),
         latency_ms: this.ports.clock.now() - d,
       }));
   }
@@ -3180,14 +3180,14 @@ class It {
         emit: r,
         track: o,
         account: () => {
-          let p = pQ();
+          let p = getAccountInformation();
           return {
             email: p?.email,
             organization: p?.organization,
             subscriptionType: p?.subscription,
             tokenSource: p?.tokenSource,
             apiKeySource: p?.apiKeySource,
-            apiProvider: Pe(),
+            apiProvider: getAPIProvider(),
           };
         },
         openRequested: () => this.openRequested,
@@ -3242,7 +3242,7 @@ class It {
     return (this.opened?.settle?.(e) ?? Promise.resolve(void 0)).then(
       (o) => {
         if (!o) return;
-        (i("tengu_remote_headless_client_seed_cut_short", { at: u(t) }),
+        (i("tengu_remote_headless_client_seed_cut_short", { at: fromEnum(t) }),
           this.emit(AF(this.stampedSessionId, o.level, bze(o.text))));
       },
       (o) => {
@@ -3260,9 +3260,9 @@ class It {
       },
       p = (C, k) => {
         i("tengu_remote_headless_client_worker_initialize", {
-          reason: u(r),
-          outcome: u(C.outcome),
-          ...("cause" in C && { cause: u(C.cause) }),
+          reason: fromEnum(r),
+          outcome: fromEnum(C.outcome),
+          ...("cause" in C && { cause: fromEnum(C.cause) }),
           ...("status" in C && { status: C.status }),
           attempt: k,
           n_dialog_kinds: o.length,
@@ -3306,8 +3306,8 @@ class It {
       try {
         (await t.sendControlRequest(o),
           i("tengu_remote_headless_client_opening_request", {
-            subtype: u(o.subtype),
-            outcome: u("applied"),
+            subtype: fromEnum(o.subtype),
+            outcome: fromEnum("applied"),
           }));
       } catch (p) {
         if (
@@ -3315,8 +3315,8 @@ class It {
             `[headlessCloudClient] opening request ${o.subtype} failed: ${D_(oe(l(p), 200))}`,
           ),
           i("tengu_remote_headless_client_opening_request", {
-            subtype: u(o.subtype),
-            outcome: u(r ? "refused_required" : "refused_optional"),
+            subtype: fromEnum(o.subtype),
+            outcome: fromEnum(r ? "refused_required" : "refused_optional"),
           }),
           r)
         )
@@ -3335,7 +3335,7 @@ class It {
   installOAuthBridge() {
     if (
       a.CLAUDE_CODE_SDK_HAS_OAUTH_REFRESH &&
-      mZe.has(a.CLAUDE_CODE_ENTRYPOINT ?? "")
+      SDK_OAUTH_REFRESH_ENTRYPOINTS.has(a.CLAUDE_CODE_ENTRYPOINT ?? "")
     )
       (pje(() => this.io.requestOAuthTokenRefresh()),
         (this.oauthBridgeInstalled = !0));
@@ -3345,7 +3345,7 @@ class It {
       try {
         await this.io.write(e);
       } catch (t) {
-        (h(t), this.end("output_failed", `failed to write to stdout: ${l(t)}`));
+        (logError(t), this.end("output_failed", `failed to write to stdout: ${l(t)}`));
         return;
       }
   }
@@ -3363,7 +3363,7 @@ class It {
     };
     return (
       e.then(t, (o) => {
-        (h(o), t());
+        (logError(o), t());
       }),
       e
     );
@@ -3376,11 +3376,11 @@ class It {
         } catch (t) {
           if (t instanceof Ve)
             n("[headlessCloudClient] host frame handling aborted");
-          else h(t);
+          else logError(t);
         }
     } catch (e) {
       if (e instanceof Ve) n("[headlessCloudClient] stdin reading aborted");
-      else h(e);
+      else logError(e);
       this.inputFailed = !0;
     }
     if (this.inputFailed) this.agentRequests.cancelAll();
@@ -3560,7 +3560,7 @@ class It {
         },
       });
     } catch (o) {
-      (h(o), (t = { kind: "failed", message: l(o) }));
+      (logError(o), (t = { kind: "failed", message: l(o) }));
     }
     if (this.phase !== "pre_session" || this.signalled) {
       if (
@@ -3571,7 +3571,7 @@ class It {
       ) {
         if (
           (i("tengu_remote_headless_client_open_discarded", {
-            entry: u(t.session.entry),
+            entry: fromEnum(t.session.entry),
           }),
           t.session.entry === "attach")
         )
@@ -3589,7 +3589,7 @@ class It {
     try {
       this.attach(t.session);
     } catch (o) {
-      if ((h(o), t.session.entry === "attach"))
+      if ((logError(o), t.session.entry === "attach"))
         t.session.preflightCheck?.catch(() => {});
       (this.featureAbort.abort(),
         (this.features = null),
@@ -3637,7 +3637,7 @@ class It {
           (this.features?.noteWorkerUp(R),
             i("tengu_remote_headless_client_worker_up", {
               generation: R.generation,
-              session_mode: we(R.sessionMode),
+              session_mode: fromEnumOpt(R.sessionMode),
             }));
         },
         onWorkerSessionId: (R) => {
@@ -3647,7 +3647,7 @@ class It {
       },
       {
         entry: e.entry,
-        initialSessionId: Vur(yc(e.sessionId)),
+        initialSessionId: Vur(toInfraSessionId(e.sessionId)),
         connectEpoch: this.connectEpoch,
       },
     );
@@ -3666,7 +3666,7 @@ class It {
         queuedSendCount: () => this.outbound.queuedSendUuids().length,
         sessionId: e.sessionId,
         essentialTrafficOnly: St(),
-        api: { markSessionRead: zQe, updateSessionTitle: qQe },
+        api: { markSessionRead: markSessionRead, updateSessionTitle: updateSessionTitle },
       },
       { titleFromFirstMessage: e.entry === "create" && !e.hasTitle },
     );
@@ -3886,22 +3886,22 @@ class It {
       A = r.reports();
     if (
       (i("tengu_remote_headless_client_started", {
-        entry: u(e.entry),
-        device_status: we(O?.device.status),
-        sync_state: we(O?.directory_sync.state),
+        entry: fromEnum(e.entry),
+        device_status: fromEnumOpt(O?.device.status),
+        sync_state: fromEnumOpt(O?.directory_sync.state),
         sync_reason: Cs(O?.directory_sync.reason),
         ignored_count: this.config.ignoredOptions.length,
         ..._s(O?.not_applied ?? []),
         replay_user_messages: this.config.replayUserMessages,
         include_partial_messages: this.config.includePartialMessages,
-        initialize_policy: u(this.config.initializePolicy),
+        initialize_policy: fromEnum(this.config.initializePolicy),
         has_dir_sync: e.dirSync !== void 0,
         has_home_seed: p !== void 0,
-        worker_initialize: u(this.workerInitializeReason ?? "none"),
+        worker_initialize: fromEnum(this.workerInitializeReason ?? "none"),
         machine_features: r.handles().length,
-        ...Object.fromEntries(pe.map((R) => [`feature_${R}`, we(A[R]?.state)])),
-        serving_state: we(O?.serving?.state),
-        serving_reason: we(O?.serving?.reason),
+        ...Object.fromEntries(pe.map((R) => [`feature_${R}`, fromEnumOpt(A[R]?.state)])),
+        serving_state: fromEnumOpt(O?.serving?.state),
+        serving_reason: fromEnumOpt(O?.serving?.reason),
         oauth_bridge: this.oauthBridgeInstalled,
       }),
       this.phase === "live")
@@ -3923,7 +3923,7 @@ class It {
     } catch (t) {
       if (t instanceof Ve)
         n("[headlessCloudClient] session frame handling aborted");
-      else h(t);
+      else logError(t);
     }
   }
   handleSessionFrame(e, t, o) {
@@ -3940,7 +3940,7 @@ class It {
     if (t.type === "system" && t.subtype === "init")
       this.checkRequestedPermissionMode(t.permissionMode);
     if (t.type === "system" && "permissionMode" in t) {
-      let d = gf(t.permissionMode);
+      let d = parsePermissionMode(t.permissionMode);
       if (d !== void 0)
         ((this.lastWorkerMode = d), this.workerModesSeen.add(d));
     }
@@ -3953,12 +3953,12 @@ class It {
         ? this.opened.requestedPermissionMode
         : void 0;
     if (t === void 0 || typeof e !== "string") return;
-    let o = gf(e),
+    let o = parsePermissionMode(e),
       r = o === void 0 ? void 0 : _c(o);
     if (r === t) return;
     i("tengu_remote_headless_client_mode_not_applied", {
-      requested: u(t),
-      actual: we(r),
+      requested: fromEnum(t),
+      actual: fromEnumOpt(r),
     });
     let d = `The cloud session did not apply the ${t} permission mode requested when it was created; it is in ${r ?? D_(oe(e, 24))} mode.`;
     (n(`[headlessCloudClient] ${d}`, { level: "warn" }),
@@ -3980,7 +3980,7 @@ class It {
     } catch (e) {
       if (e instanceof Ve)
         n("[headlessCloudClient] cloud_session snapshot aborted");
-      else h(e);
+      else logError(e);
       return;
     }
   }
@@ -4000,7 +4000,7 @@ class It {
     let t = this.outbound.queuedCount;
     (this.goLive(this.session.manager),
       i("tengu_remote_headless_client_worker_ready", {
-        via: u(e),
+        via: fromEnum(e),
         wait_ms: this.clock.now() - this.connectEpoch,
         queued: t,
       }));
@@ -4015,7 +4015,7 @@ class It {
     }, this.workerReadyIdleMs);
   }
   logStream(e, t = {}) {
-    i("tengu_remote_headless_client_stream", { transition: u(e), ...t });
+    i("tengu_remote_headless_client_stream", { transition: fromEnum(e), ...t });
   }
   detachIfDrained() {
     if (
@@ -4088,11 +4088,11 @@ class It {
       p = this.liveness?.stats;
     if (
       (i("tengu_remote_headless_client_ended", {
-        reason: u(e),
+        reason: fromEnum(e),
         exit_code: t,
-        ended_from: u(o),
-        entry: we(this.opened?.entry),
-        disconnect_code: we(r),
+        ended_from: fromEnum(o),
+        entry: fromEnumOpt(this.opened?.entry),
+        disconnect_code: fromEnumOpt(r),
         container_start_failed: this.containerStartFailed,
         duration_ms: this.clock.now() - this.startedAt,
         turns: this.frames?.turns ?? 0,
@@ -4114,7 +4114,7 @@ class It {
           this.frames?.counts.peerFramesDroppedBeforeInit ?? 0,
         input_failed: this.inputFailed,
         watchdog_fires: p?.watchdog_fires ?? 0,
-        title: u(p?.title ?? "not_applicable"),
+        title: fromEnum(p?.title ?? "not_applicable"),
         lines_written: p?.lines_written ?? 0,
         lines_suppressed: p?.lines_suppressed ?? 0,
         eof_to_end_ms:
@@ -4124,10 +4124,10 @@ class It {
       }),
       this.containerStartFailed)
     )
-      f("remote_headless_client", "container_start_failed");
-    else if (t !== 0) f("remote_headless_client", e);
-    else if (this.inputFailed) g("remote_headless_client", "input_failed");
-    else y("remote_headless_client");
+      logFeatureBad("remote_headless_client", "container_start_failed");
+    else if (t !== 0) logFeatureBad("remote_headless_client", e);
+    else if (this.inputFailed) logFeatureSad("remote_headless_client", "input_failed");
+    else logFeatureOk("remote_headless_client");
   }
   async end(e, t, o) {
     if (this.phase === "ending" || this.phase === "ended") return;
@@ -4151,7 +4151,7 @@ class It {
         this.outbound.settleOwedEchoes());
     } catch (w) {
       if (w instanceof Ve) n("[headlessCloudClient] teardown aborted");
-      else h(w);
+      else logError(w);
       await this.closeTransport().catch(() => {});
     }
     (this.logEnded(e, p, _, r),
@@ -4167,7 +4167,7 @@ async function* ms(e, t) {
   try {
     for await (let o of e) yield o;
   } catch (o) {
-    if (!(o instanceof Ve)) h(o);
+    if (!(o instanceof Ve)) logError(o);
     t();
   }
 }
@@ -4230,20 +4230,20 @@ var vs = [
 ];
 function Cs(e) {
   if (e === void 0) return;
-  return we(vs.find((t) => t === e)) ?? S("engine");
+  return fromEnumOpt(vs.find((t) => t === e)) ?? S("engine");
 }
 async function Dt(e, { folder: t, attempts: o, lastError: r, signal: d }) {
   let p = (_) => {
     if (
       (i("tengu_dir_sync_offline_told", {
-        via: u(_),
+        via: fromEnum(_),
         attempts: o,
         surface: S("sdk_host"),
       }),
       _ === "dialog")
     )
-      y("remote_sync_offline_dialog");
-    else g("remote_sync_offline_dialog", _);
+      logFeatureOk("remote_sync_offline_dialog");
+    else logFeatureSad("remote_sync_offline_dialog", _);
   };
   try {
     if (e === void 0 || !e.kinds.has(Wz.kind) || !me(t))
@@ -4293,7 +4293,7 @@ function bs(e) {
 }
 async function Rs(e, t, o) {
   if (t.reason === "folder") return { fileCount: t.files };
-  let r = tr(e);
+  let r = findGitRoot(e);
   if (r === null) return;
   let d = await Jb({ gitRoot: r, signal: o, timeoutMs: ks }, [
     "ls-tree",
@@ -4318,7 +4318,7 @@ async function Pt({
 }) {
   let p = S("sdk_host");
   try {
-    if (e === void 0 || !(await (d.flagOn ?? Su)().catch(() => !1))) return [];
+    if (e === void 0 || !(await (d.flagOn ?? isViolinWoodEnabled)().catch(() => !1))) return [];
     if (!e.kinds.has(ie.kind))
       return (
         i("tengu_dir_sync_mode_prompt_skipped", {
@@ -4346,7 +4346,7 @@ async function Pt({
     if (!C.offer)
       return (
         i("tengu_dir_sync_mode_prompt_skipped", {
-          reason: u(C.reason),
+          reason: fromEnum(C.reason),
           surface: p,
         }),
         C.line !== null && KHt(C) === "not_offered"
@@ -4361,40 +4361,40 @@ async function Pt({
     if (k === null || r.aborted) return [];
     i("tengu_dir_sync_mode_prompt_shown", { surface: p });
     let { answer: D, answered: E } = await e.request(ie, k, { signal: r });
-    if (!E) return (g("ccr_dir_sync_mode_prompt", "cancelled"), []);
+    if (!E) return (logFeatureSad("ccr_dir_sync_mode_prompt", "cancelled"), []);
     let I = D === "sync" ? "container_sync" : D;
     if (
-      (i("tengu_dir_sync_mode_prompt", { choice: u(I), surface: p }),
+      (i("tengu_dir_sync_mode_prompt", { choice: fromEnum(I), surface: p }),
       I === "not_now")
     )
-      return (g("ccr_dir_sync_mode_prompt", "dismissed"), []);
+      return (logFeatureSad("ccr_dir_sync_mode_prompt", "dismissed"), []);
     if (!(await (d.setRemoteFileMode ?? Lht)(I, o)))
-      f("ccr_dir_sync_mode_prompt", "not_written");
-    else if (I === "container_sync") y("ccr_dir_sync_mode_prompt");
-    else g("ccr_dir_sync_mode_prompt", "declined");
+      logFeatureBad("ccr_dir_sync_mode_prompt", "not_written");
+    else if (I === "container_sync") logFeatureOk("ccr_dir_sync_mode_prompt");
+    else logFeatureSad("ccr_dir_sync_mode_prompt", "declined");
     return [];
   } catch (_) {
     if (yt(_)) n(`[headlessCloud] sync question abandoned: ${l(_)}`);
-    else h(_);
+    else logError(_);
     return [];
   }
 }
 async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
   let d = S("desktop"),
     p = (_) => {
-      i("tengu_served_unattended_consent", { action: u(_), surface: d });
+      i("tengu_served_unattended_consent", { action: fromEnum(_), surface: d });
     };
   try {
     if (
-      ((r.prime ?? v3e)(),
+      ((r.prime ?? primeUnattendedServingConsent)(),
       e === void 0 ||
         (t !== "auto" && t !== "bypassPermissions") ||
-        !(r.servingOn ?? Upn)() ||
+        !(r.servingOn ?? isRemoteToolServingSwitchOn)() ||
         !(await (r.gateOn ?? A2n)().catch(() => !1)) ||
-        (r.forbiddenBySettings ?? hSe)())
+        (r.forbiddenBySettings ?? managedSettingsForbidUnattendedServing)())
     )
       return;
-    if ((await (r.readConsent ?? CIe)()) !== "unset") return;
+    if ((await (r.readConsent ?? readUnattendedServingConsent)()) !== "unset") return;
     if (!e.kinds.has(re.kind)) {
       p("unsupported_surface");
       return;
@@ -4402,7 +4402,7 @@ async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
     p("shown");
     let { answer: _, answered: w } = await e.request(
       re,
-      ut((r.machineName ?? Knn)()),
+      ut((r.machineName ?? unattendedServingMachineName)()),
       { signal: o },
     );
     if (!w || _ === "not_now") {
@@ -4410,7 +4410,7 @@ async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
       return;
     }
     let C = _ === "accept" ? "accepted" : "declined";
-    if ((p(C), !(await (r.writeConsent ?? C3e)(C))))
+    if ((p(C), !(await (r.writeConsent ?? writeUnattendedServingConsent)(C))))
       n(
         "[headlessCloud] unattended-serving answer not saved; asked again next launch",
         { level: "warn" },
@@ -4418,15 +4418,15 @@ async function Ot({ dialogs: e, permissionMode: t, signal: o, seams: r = {} }) {
   } catch (_) {
     if (yt(_))
       n(`[headlessCloud] unattended-serving question abandoned: ${l(_)}`);
-    else h(_);
+    else logError(_);
   }
 }
 function Ft(e) {
-  let t = e.flagsOn ?? j$e,
+  let t = e.flagsOn ?? isCloudPluginForwardingFlagOn,
     o = e.optedOut ?? (() => Boolean(a.CLAUDE_CODE_DISABLE_PLUGIN_FORWARDING)),
     r = e.clock ?? bZt,
-    d = e.muted ?? m3,
-    p = e.onMuteRecheck ?? AV;
+    d = e.muted ?? isRemoteToolServingMuted,
+    p = e.onMuteRecheck ?? onServingMuteRecheck;
   return async (_) => {
     if (o() || !(await t())) return;
     let w = _.trigger === "attach";
@@ -4447,7 +4447,7 @@ function Ft(e) {
     if (A === "aborted") return le("unreadable", "no_consent", "detached", w);
     if (A === "unreadable")
       return (
-        f("ccr_cloud_plugins_forward", "read_failed"),
+        logFeatureBad("ccr_cloud_plugins_forward", "read_failed"),
         le("unreadable", "no_consent", "read_failed", w)
       );
     if (A !== "accepted") {
@@ -4602,8 +4602,8 @@ function Is(e) {
 function le(e, t, o, r, d, p) {
   return (
     i("tengu_cloud_plugins_admission", {
-      admission: u(t),
-      source: u(o),
+      admission: fromEnum(t),
+      source: fromEnum(o),
       reattach: r,
     }),
     {
@@ -4700,7 +4700,7 @@ function Fs(e, t) {
   }
 }
 function Ht(e, t = {}) {
-  let o = (t.takeDirSync ?? jfn)(e);
+  let o = (t.takeDirSync ?? takeLaptopDirSyncSession)(e);
   return o === void 0
     ? Promise.resolve(void 0)
     : o.catch((r) => {
@@ -4718,7 +4718,7 @@ async function qt(e, t = {}) {
   }
 }
 async function As(e) {
-  jO().retire(e);
+  rootLaptopDirSyncRegistry().retire(e);
 }
 async function We(e) {
   return (e === void 0 ? lKn() : zTe(e)).catch(() => "unspecified");
@@ -4769,13 +4769,13 @@ async function xt(e, t, o = {}) {
           : { level: "warning", text: r.cutShortLine }
       );
     case "cut":
-      return (g("ccr_dir_sync_seed", "cut_at_exit"), Tt);
+      return (logFeatureSad("ccr_dir_sync_seed", "cut_at_exit"), Tt);
     case "done":
       return;
     default:
       if (d !== "arming") return;
       return (
-        g("ccr_dir_sync_seed", "cut_at_exit"),
+        logFeatureSad("ccr_dir_sync_seed", "cut_at_exit"),
         { level: "warning", text: HKn }
       );
   }
@@ -4783,7 +4783,7 @@ async function xt(e, t, o = {}) {
 function Lt({ dirSync: e, fileMode: t }) {
   if (e !== void 0) return e.sync.state();
   return t === "container_sync"
-    ? { state: "off", reason: "not_seeded", message: Bfn }
+    ? { state: "off", reason: "not_seeded", message: NO_SYNC_HANDLE_MESSAGE }
     : { state: "off", reason: "not_opted_in" };
 }
 function Nt({ dirSync: e, fileMode: t }) {
@@ -4810,9 +4810,9 @@ function je(e) {
 function Bt({ dirSync: e, fileMode: t }) {
   let o = Lt({ dirSync: e, fileMode: t });
   i("tengu_remote_headless_laptop_linked", {
-    sync_state: u(o.state),
-    sync_reason: we("reason" in o ? o.reason : void 0),
-    file_mode: u(t),
+    sync_state: fromEnum(o.state),
+    sync_reason: fromEnumOpt("reason" in o ? o.reason : void 0),
+    file_mode: fromEnum(t),
     has_dir_sync: e !== void 0,
   });
 }
@@ -4823,8 +4823,8 @@ function Wt(e, t) {
   return {
     sessionId: t,
     orgUuid: e.orgUUID,
-    getAccessToken: () => Ose() ?? e.accessToken,
-    onAuth401: cm,
+    getAccessToken: () => getAccessTokenWithCcrFallback() ?? e.accessToken,
+    onAuth401: handleOAuth401Error,
     onWorkerSessionId: (o) => {
       $p(_m(o), "remote_attach");
     },
@@ -4835,11 +4835,11 @@ async function Us() {
   return e.ok ? void 0 : e.error;
 }
 function jt() {
-  return mh()?.accountUuid;
+  return getStoredOauthAccountInfo()?.accountUuid;
 }
 function xs(e) {
   let t = U_e(e);
-  return t === void 0 || (t === "default" && e !== qU)
+  return t === void 0 || (t === "default" && e !== PERMISSION_MODE_MANUAL_ALIAS)
     ? []
     : [
         {
@@ -4880,7 +4880,7 @@ function $t(e) {
 async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
   let p = await js(e, t, o);
   if (p.kind === "refused") {
-    (await wn("remote_headless_session", p.code), rM(p.message), await xn(1));
+    (await logFeatureBadAsync("remote_headless_session", p.code), printCliError(p.message), await xn(1));
     return;
   }
   let { input: _, policy: w } = p;
@@ -4901,10 +4901,10 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
     openSession: async (D) => {
       let E;
       try {
-        E = await ox();
+        E = await prepareApiRequest();
       } catch (I) {
         return (
-          await wn("remote_headless_session", "auth"),
+          await logFeatureBadAsync("remote_headless_session", "auth"),
           {
             kind: "failed",
             message: `Error: ${Vn(l(I), Qe) || "Failed to authenticate"}`,
@@ -4923,7 +4923,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
         return Ws(I, Bs(w.notApplied, D.initialize, o));
       } catch (I) {
         return (
-          await wn("remote_headless_session", "open_threw"),
+          await logFeatureBadAsync("remote_headless_session", "open_threw"),
           {
             kind: "failed",
             message: `Error: ${Vn(l(I), Qe) || "Unable to open the cloud session"}`,
@@ -4933,7 +4933,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
     },
   }).done;
   if (k.message && k.exitCode === 0) Ye(k.message);
-  else if (k.message) rM(k.message);
+  else if (k.message) printCliError(k.message);
   await xn(k.exitCode);
 }
 var ze = 12,
@@ -5016,7 +5016,7 @@ function Ye(e) {
 `);
 }
 async function js(e, t, o) {
-  let r = await cx();
+  let r = await validateForceLoginOrg();
   if (!r.valid) return { kind: "refused", code: "org_pin", message: r.message };
   await b_();
   let d = A8();
@@ -5028,7 +5028,7 @@ async function js(e, t, o) {
   let _ = M1n(t, {
     entry: o,
     mcpConfigFlagServers: e.mcpConfigFlagServers,
-    flagSettings: ye("flagSettings"),
+    flagSettings: getSettingsForSource("flagSettings"),
     systemPrompt: e.systemPromptCli,
     appendSystemPrompt: e.appendSystemPromptCli,
     selectedAgentDefinition: e.mainThreadAgentDefinition ?? null,
@@ -5046,7 +5046,7 @@ async function js(e, t, o) {
       }
     : { kind: "ready", input: p, policy: _ };
 }
-function vl(e, t, o) {
+function runHeadlessCloudCreate(e, t, o) {
   return Qt(e, t, {
     entry: "create",
     opener: (r) => zs(e, { ...r, sessionHost: o }),
@@ -5060,7 +5060,7 @@ function Gt(e, t) {
       ...(e.homeSettingsConsent && { consentMode: e.homeSettingsConsent }),
     }),
     Ft({ memory: z_e.of(t), reachMemory: Cst.of(t) }),
-    dt({ getTools: () => e.tools, memory: aD.of(t) }),
+    dt({ getTools: () => e.tools, memory: deviceHooksProcessMemories.of(t) }),
     at({ openChannel: Rst }),
   ];
 }
@@ -5077,12 +5077,12 @@ async function zs(
   },
   C = {},
 ) {
-  let k = C.teleport ?? Kv,
+  let k = C.teleport ?? teleportToRemote,
     D = H8(e.poolOnBranch, e.poolRef),
     E = await (C.bindPreflight ?? Us)();
   if (E !== void 0)
     return (
-      await wn("remote_headless_session", "bind_unavailable", { reason: u(E) }),
+      await logFeatureBadAsync("remote_headless_session", "bind_unavailable", { reason: fromEnum(E) }),
       { kind: "failed", message: U1n(E) }
     );
   let I = new AbortController(),
@@ -5105,8 +5105,8 @@ async function zs(
       O(),
       { kind: "failed", message: "Error: Unable to create cloud session" }
     );
-  let H = await (C.settingsToCloudEnabled ?? LD)().catch(() => !1),
-    M = Ge(),
+  let H = await (C.settingsToCloudEnabled ?? isSettingsToCloudEnabled)().catch(() => !1),
+    M = getInitialSettings(),
     U =
       H &&
       e.forwardHomeSettings !== !1 &&
@@ -5115,11 +5115,11 @@ async function zs(
       gateOn: U,
       permissionModeTyped: e.permissionModeCli !== void 0,
       dangerouslySkipPermissions: !1,
-      scrubbed: Bu(),
+      scrubbed: isScrubEnabled(),
       settings: M,
       effort: void 0,
     }),
-    L = rt(),
+    L = getMainLoopModel(),
     N = (C.internalModel ?? l6e)(L),
     z = U_e(e.permissionModeCli),
     P = Vot({
@@ -5127,11 +5127,11 @@ async function zs(
       internal: N,
       explicitMode: z,
       droppedMode: e.permissionModeCli !== void 0 && z === void 0,
-      pinnedDefault: e.permissionModeCli !== qU,
+      pinnedDefault: e.permissionModeCli !== PERMISSION_MODE_MANUAL_ALIAS,
       settingsMode: Q.settingsDefault,
       settingsModeForwardable: U,
-      autoSeedable: xJe(M) && !Bu(),
-      publicModel: Ll(),
+      autoSeedable: xJe(M) && !isScrubEnabled(),
+      publicModel: getDefaultOpusModel(),
       repositoryModel: N
         ? (C.repositoryModel ?? zot)({
             model: L,
@@ -5150,14 +5150,14 @@ async function zs(
   if (P.action !== "none")
     i("tengu_remote_model_gate_hint", {
       entry_point: S("cloud_headless"),
-      permission_mode: we(z) ?? S("unset"),
-      action: u(P.action),
-      ...(P.repositoryModel && { repository_model: u(P.repositoryModel) }),
+      permission_mode: fromEnumOpt(z) ?? S("unset"),
+      action: fromEnum(P.action),
+      ...(P.repositoryModel && { repository_model: fromEnum(P.repositoryModel) }),
     });
   i("tengu_remote_create_session", {
     has_initial_prompt: S("false"),
     forwarded_count: Object.keys(o).length,
-    entry_point: u("cloud_headless"),
+    entry_point: fromEnum("cloud_headless"),
     branch_mode: D,
   });
   let B = Fa(I.signal, { signalB: r.signal });
@@ -5186,7 +5186,7 @@ async function zs(
       },
     },
     fe,
-    Jt = e.poolOnBranch ?? e.poolRef ?? (await (C.currentBranch ?? Da)()),
+    Jt = e.poolOnBranch ?? e.poolRef ?? (await (C.currentBranch ?? getBranch)()),
     x = await k({
       initialMessage: null,
       signal: I.signal,
@@ -5233,12 +5233,12 @@ async function zs(
     let q = fe;
     if (
       (await qs("tengu_remote_create_session_error", {
-        error: I.signal.aborted ? S("aborted") : q ? u(q.reason) : S("unknown"),
-        entry_point: u("cloud_headless"),
+        error: I.signal.aborted ? S("aborted") : q ? fromEnum(q.reason) : S("unknown"),
+        entry_point: fromEnum("cloud_headless"),
         branch_mode: D,
-        ...(q?.detail?.endpoint && { create_endpoint: u(q.detail.endpoint) }),
+        ...(q?.detail?.endpoint && { create_endpoint: fromEnum(q.detail.endpoint) }),
         ...(q?.detail?.serverReason && {
-          server_reason: u(q.detail.serverReason),
+          server_reason: fromEnum(q.detail.serverReason),
         }),
         ...(q?.detail?.preflightTransient !== void 0 && {
           deny_transient: S(q.detail.preflightTransient ? "true" : "false"),
@@ -5246,7 +5246,7 @@ async function zs(
       }),
       !I.signal.aborted)
     )
-      await wn("remote_headless_session", "create_failed");
+      await logFeatureBadAsync("remote_headless_session", "create_failed");
     return {
       kind: "failed",
       message: q
@@ -5262,20 +5262,20 @@ async function zs(
   if (j.status === "unbound") await ge();
   await qs("tengu_remote_create_session_success", {
     session_id: Tn(x.id),
-    entry_point: u("cloud_headless"),
+    entry_point: fromEnum("cloud_headless"),
     branch_mode: D,
     home_seed_started: x.homeSeed !== void 0,
     ...(e.homeSettingsConsent && {
-      home_settings_host_consent: u(e.homeSettingsConsent),
+      home_settings_host_consent: fromEnum(e.homeSettingsConsent),
     }),
   });
   let Se = wa(x.id, void 0, { from: "cli", m: "0" }),
-    Je = () => (C.archiveSession ?? LR)(x.id, Ts).catch(() => !1);
+    Je = () => (C.archiveSession ?? archiveRemoteSession)(x.id, Ts).catch(() => !1);
   if (j.status === "unbound") {
     let q = await Je();
     return (
-      await wn("remote_headless_session", "unbound", {
-        reason: we(j.reason) ?? S("unknown"),
+      await logFeatureBadAsync("remote_headless_session", "unbound", {
+        reason: fromEnumOpt(j.reason) ?? S("unknown"),
         archived: q,
       }),
       { kind: "failed", message: N1n(x.id, j.reason, Se, q) }
@@ -5295,12 +5295,12 @@ async function zs(
     seams: C,
   }).then(
     (q) => ({ link: q }),
-    async (q) => (await ge(), h(q), { error: l(q) }),
+    async (q) => (await ge(), logError(q), { error: l(q) }),
   );
   if ("error" in _e) {
     let q = await Je();
     return (
-      await wn("remote_headless_session", "link_failed", { archived: q }),
+      await logFeatureBadAsync("remote_headless_session", "link_failed", { archived: q }),
       { kind: "failed", message: F1n(x.id, _e.error, Se, q) }
     );
   }
@@ -5320,7 +5320,7 @@ async function zs(
         signal: r.signal,
       }),
     );
-  y("remote_headless_session");
+  logFeatureOk("remote_headless_session");
   let nt = [...R, ...(P.notice !== void 0 ? [P.notice] : [])];
   return {
     kind: "opened",
@@ -5388,7 +5388,7 @@ async function Ks({
     { fileMode: C, displayName: k, bridge: D }
   );
 }
-function Cl(e, t, o, r) {
+function runHeadlessCloudAttach(e, t, o, r) {
   return Qt(e, t, {
     entry: "attach",
     opener: (d) =>
@@ -5397,7 +5397,7 @@ function Cl(e, t, o, r) {
   });
 }
 function Vt(e) {
-  return e === void 0 ? void 0 : aD.of(e).servedSettingsChanged;
+  return e === void 0 ? void 0 : deviceHooksProcessMemories.of(e).servedSettingsChanged;
 }
 function Yt(e, t) {
   e?.sync.onOffline?.((o) => Dt(t, o));
@@ -5432,14 +5432,14 @@ async function Qs(
   w,
   C = {},
 ) {
-  let k = zu(w);
+  let k = toCompatSessionId(w);
   i("tengu_remote_attach_session", {
     session_id: Ee(k),
-    entry_point: u("cloud_headless"),
+    entry_point: fromEnum("cloud_headless"),
   });
   let D = wa(k, void 0, { from: "cli", m: "0" }),
     E = Wt(e, k),
-    I = (C.fetchSession ?? w6)(k, e),
+    I = (C.fetchSession ?? fetchSession)(k, e),
     O = await I.then(
       (P) => ({
         archived: P.session_status === "archived",
@@ -5458,16 +5458,16 @@ async function Qs(
     );
   if ("refused" in O)
     return (
-      await wn("remote_headless_session", "attach_refused"),
+      await logFeatureBadAsync("remote_headless_session", "attach_refused"),
       { kind: "failed", message: `Error: ${Vn(O.refused ?? "", 300)}` }
     );
   if (O.archived)
     return (
       i("tengu_remote_attach_session_rejected", {
         reason: S("archived"),
-        entry_point: u("cloud_headless"),
+        entry_point: fromEnum("cloud_headless"),
       }),
-      await wn("remote_headless_session", "attach_archived"),
+      await logFeatureBadAsync("remote_headless_session", "attach_archived"),
       { kind: "failed", message: $1n(k, D) }
     );
   let A = await to(k, C).then(
@@ -5476,7 +5476,7 @@ async function Qs(
   );
   if ("error" in A)
     return (
-      await wn("remote_headless_session", "attach_stream_position"),
+      await logFeatureBadAsync("remote_headless_session", "attach_stream_position"),
       {
         kind: "failed",
         message: `Error: could not read where cloud session ${a6e(k)}'s stream stands (${Vn(A.error, 200)}).`,
@@ -5507,17 +5507,17 @@ async function Qs(
   let [M, U, Q] = await Promise.all([
       R,
       F,
-      (C.settingsToCloudEnabled ?? LD)().catch(() => !1),
+      (C.settingsToCloudEnabled ?? isSettingsToCloudEnabled)().catch(() => !1),
     ]),
     L = U.handle;
   Yt(L, t.dialogs);
   let N = await (C.remoteFileMode ?? We)(L?.gitRoot);
-  if (O.unreadable) g("remote_headless_session", "attach_session_unreadable");
+  if (O.unreadable) logFeatureSad("remote_headless_session", "attach_session_unreadable");
   else if (U.handle === void 0 && U.why === "lookup_failed")
-    g("remote_headless_session", "attach_dir_sync_lookup_failed");
+    logFeatureSad("remote_headless_session", "attach_dir_sync_lookup_failed");
   else if (U.handle === void 0 && U.why === "elsewhere_unknown")
-    g("remote_headless_session", "attach_dir_sync_elsewhere_unknown");
-  else y("remote_headless_session");
+    logFeatureSad("remote_headless_session", "attach_dir_sync_elsewhere_unknown");
+  else logFeatureOk("remote_headless_session");
   let z = await Ce(
     o,
     zt({
@@ -5628,7 +5628,7 @@ function $e(e) {
   return { status: "unbound", reason: e, message: $Le(e) };
 }
 async function eo(e, t, o, r, d) {
-  if (!ri() || d === void 0) return { handle: void 0, why: "not_looked" };
+  if (!isViolinWoodEnabledCached() || d === void 0) return { handle: void 0, why: "not_looked" };
   return import("../../02-功能模块/文件同步-Sync/createLaptopDirSyncSession.ga37sg6g.js")
     .then(
       async ({
@@ -5683,4 +5683,4 @@ async function no(e) {
   return 0;
 }
 var so = 500;
-export { Cl as runHeadlessCloudAttach, vl as runHeadlessCloudCreate };
+export { runHeadlessCloudAttach, runHeadlessCloudCreate };

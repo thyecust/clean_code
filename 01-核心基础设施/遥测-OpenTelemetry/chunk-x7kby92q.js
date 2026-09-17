@@ -10,7 +10,7 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   ms,
@@ -27,11 +27,11 @@ import {
   $Be,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Hd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { kar, getSettingsForSource as ye } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { loadExtraCACerts as Pie, clearCACertsCache as C0n, loadMTLSClientMaterial as qq, getLoadedMTLSPaths as k0n, clearMTLSCache as j8t, configureGlobalAgents as vb, clearProxyCache as Vq } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { kar, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { loadExtraCACerts, clearCACertsCache, loadMTLSClientMaterial, getLoadedMTLSPaths, clearMTLSCache, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { eb } from "../核心工具-进程与信号/chunk-w78brv7j.js";
-import { setSettingsColorEnv as Zzt } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { setSettingsColorEnv } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { XE } from "../共享小工具-未细化/chunk-6eskfcpn.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var M = new Set([
@@ -445,7 +445,7 @@ class y {
     return t;
   }
   enforceManagedOtelFamilyDominance() {
-    let t = ye("policySettings"),
+    let t = getSettingsForSource("policySettings"),
       s = t?.env,
       e = (t?.otelHeadersHelper ?? "").trim() !== "",
       o = new Map();
@@ -561,28 +561,28 @@ class y {
     for (let e of j) {
       if (e === "policySettings") continue;
       if (!Nr(e)) continue;
-      Object.assign(process.env, this.filterSettingsEnv(ye(e)?.env, e));
+      Object.assign(process.env, this.filterSettingsEnv(getSettingsForSource(e)?.env, e));
     }
     (XE(),
       Object.assign(
         process.env,
-        this.filterSettingsEnv(ye("policySettings")?.env, "policySettings"),
+        this.filterSettingsEnv(getSettingsForSource("policySettings")?.env, "policySettings"),
       ));
     let t = new Map();
     for (let e of ms()) {
-      let o = this.filterSettingsEnv(ye(e)?.env, e);
+      let o = this.filterSettingsEnv(getSettingsForSource(e)?.env, e);
       for (let [i, r] of Object.entries(o))
         t.set(i.toUpperCase(), { key: i, value: r });
     }
     for (let { key: e, value: o } of t.values())
       if ($Be(e, o)) process.env[e] = o;
-    Zzt(this.settingsColorEnv);
+    setSettingsColorEnv(this.settingsColorEnv);
     let s = process.env[eb];
     if (!s || s === this.materializedProcessWrapper) {
       let e = [
-        ye("policySettings")?.processWrapper,
-        ye("flagSettings")?.processWrapper,
-        Nr("userSettings") ? ye("userSettings")?.processWrapper : void 0,
+        getSettingsForSource("policySettings")?.processWrapper,
+        getSettingsForSource("flagSettings")?.processWrapper,
+        Nr("userSettings") ? getSettingsForSource("userSettings")?.processWrapper : void 0,
       ].find((o) => typeof o === "string" && o !== "");
       if (e !== void 0)
         ((process.env[eb] = e), (this.materializedProcessWrapper = e));
@@ -604,8 +604,8 @@ class y {
     )),
       Object.assign(process.env, this.appliedGlobalConfigEnv));
     for (let d of ms())
-      Object.assign(process.env, this.filterSettingsEnv(ye(d)?.env, d));
-    (Zzt(this.settingsColorEnv), this.enforceManagedOtelFamilyDominance());
+      Object.assign(process.env, this.filterSettingsEnv(getSettingsForSource(d)?.env, d));
+    (setSettingsColorEnv(this.settingsColorEnv), this.enforceManagedOtelFamilyDominance());
     let r =
       a.NODE_EXTRA_CA_CERTS !== t ||
       a.CLAUDE_CODE_CLIENT_CERT !== o ||
@@ -615,20 +615,20 @@ class y {
       a.CLAUDE_CODE_CERT_STORE !== s ||
       a.NODE_OPTIONS !== e
     )
-      C0n();
-    let { certPath: E, keyPath: C } = k0n(),
+      clearCACertsCache();
+    let { certPath: E, keyPath: C } = getLoadedMTLSPaths(),
       S =
         (a.CLAUDE_CODE_CLIENT_CERT !== E || a.CLAUDE_CODE_CLIENT_KEY !== C) &&
         (E !== void 0 || C !== void 0);
-    if (!S) j8t();
-    (Vq(),
-      vb(),
-      Promise.all([Pie(), qq()])
+    if (!S) clearMTLSCache();
+    (clearProxyCache(),
+      configureGlobalAgents(),
+      Promise.all([loadExtraCACerts(), loadMTLSClientMaterial()])
         .then(([d, O]) => {
-          if (S && O.readFailed) j8t();
-          if (r || S || d || O.changed) (Vq(), vb());
+          if (S && O.readFailed) clearMTLSCache();
+          if (r || S || d || O.changed) (clearProxyCache(), configureGlobalAgents());
         })
-        .catch(h));
+        .catch(logError));
   }
 }
 var D = new y(),

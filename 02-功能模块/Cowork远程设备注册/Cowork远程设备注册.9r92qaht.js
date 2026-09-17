@@ -7,27 +7,27 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { OAUTH_BETA_HEADER as Bc } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
 import { O7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import {
-  createPrivateKey as k,
-  createPublicKey as _,
-  generateKeyPairSync as D,
+  createPrivateKey,
+  createPublicKey,
+  generateKeyPairSync,
 } from "crypto";
-import { hostname as S } from "os";
+import { hostname } from "os";
 var P = "/api/organizations/:orgUUID/cowork/remote_devices",
   h = "cowork_remote_device_limit_reached",
   C = "account_session_invalid";
 async function g(e, i) {
-  return (await yn().readAsync(i))?.coworkRemoteDevice?.[e];
+  return (await getSecureStorage().readAsync(i))?.coworkRemoteDevice?.[e];
 }
 async function T9n(e) {
   return Xn((await g(e, void 0))?.rowPk)?.toLowerCase();
@@ -40,7 +40,7 @@ async function E9n(e, i) {
 }
 function v(e) {
   try {
-    let i = k({
+    let i = createPrivateKey({
       key: Buffer.from(e.privateKeyPkcs8B64, "base64"),
       format: "der",
       type: "pkcs8",
@@ -65,13 +65,13 @@ async function K(e, i) {
         );
       }));
   }
-  let { privateKey: t } = D("ec", { namedCurve: "P-256" }),
+  let { privateKey: t } = generateKeyPairSync("ec", { namedCurve: "P-256" }),
     s = {
       privateKeyPkcs8B64: t
         .export({ type: "pkcs8", format: "der" })
         .toString("base64"),
     };
-  await yn()
+  await getSecureStorage()
     .mutate((a) => {
       if (a.coworkRemoteDevice?.[e]) return a;
       return { ...a, coworkRemoteDevice: { ...a.coworkRemoteDevice, [e]: s } };
@@ -94,7 +94,7 @@ async function K(e, i) {
   return { priv: o, stored: c };
 }
 async function m(e, i, r) {
-  await yn().mutate((t) => {
+  await getSecureStorage().mutate((t) => {
     let s = t.coworkRemoteDevice?.[e];
     if (!s) return t;
     let c = i(s);
@@ -114,7 +114,7 @@ async function A9n(e, i, r) {
     return await H(e, i, r);
   } catch (t) {
     throw (
-      f(
+      logFeatureBad(
         "device_registry_register",
         (t instanceof R && t.errorClass) || "unexpected_error",
       ),
@@ -125,15 +125,15 @@ async function A9n(e, i, r) {
 async function H(e, i, r) {
   let { priv: t, stored: s } = await K(e, r);
   if (s.rowPk)
-    return (y("device_registry_register"), { deviceUUID: s.rowPk, priv: t });
-  let c = _(t).export({ type: "spki", format: "der" }).toString("base64"),
+    return (logFeatureOk("device_registry_register"), { deviceUUID: s.rowPk, priv: t });
+  let c = createPublicKey(t).export({ type: "spki", format: "der" }).toString("base64"),
     o = await ht
       .post(
         P,
         { display_name: E(i), platform: x(), public_key: c },
         {
           auth: "teleport-org",
-          headers: { "anthropic-beta": Bc },
+          headers: { "anthropic-beta": OAUTH_BETA_HEADER },
           timeout: 1e4,
           validateStatus: () => !0,
           credentials: r,
@@ -191,7 +191,7 @@ async function H(e, i, r) {
       );
     }),
     n(`[deviceRegistry] registered device row=${u}`),
-    y("device_registry_register"),
+    logFeatureOk("device_registry_register"),
     { deviceUUID: u, priv: t }
   );
 }
@@ -223,7 +223,7 @@ class p extends R {
   }
 }
 async function w(e, i, r) {
-  await yn().mutate((t) => {
+  await getSecureStorage().mutate((t) => {
     if (t.coworkRemoteDevice?.[e]?.privateKeyPkcs8B64 !== i) return t;
     let { [e]: s, ...c } = t.coworkRemoteDevice;
     return { ...t, coworkRemoteDevice: c };
@@ -241,6 +241,6 @@ async function C9n(e, i) {
   );
 }
 function cze() {
-  return `Claude Code on ${S()} \xB7 ${tZ("darwin")}`;
+  return `Claude Code on ${hostname()} \xB7 ${tZ("darwin")}`;
 }
 export { T9n, E9n, A9n, Tpt, lze, C9n, cze };

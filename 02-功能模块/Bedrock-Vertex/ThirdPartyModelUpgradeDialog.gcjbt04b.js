@@ -15,7 +15,7 @@ import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-function B(k) {
+function ThirdPartyModelUpgradeDialog(k) {
   let l = _(27),
     { tierLabel: q, fromName: x, toName: a, toProviderId: y, onDone: i } = k;
   const N = `Newer ${q} model available`;
@@ -92,4 +92,4 @@ function B(k) {
   else w = l[26];
   return w;
 }
-export { B as ThirdPartyModelUpgradeDialog };
+export { ThirdPartyModelUpgradeDialog };

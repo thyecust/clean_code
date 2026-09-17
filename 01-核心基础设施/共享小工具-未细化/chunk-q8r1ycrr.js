@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "./chunk-an83zrbx.js";
-import { fromEnum as u } from "./chunk-w76kejwn.js";
-import { getProcessStartTimeAsync as Ba } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
+import { fromEnum } from "./chunk-w76kejwn.js";
+import { getProcessStartTimeAsync } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
 import { Uy } from "./chunk-sp33tdvc.js";
-import { readFile as a } from "fs/promises";
+import { readFile } from "fs/promises";
 class n {
   firedSites = new Set();
   fire(e) {
     if (this.firedSites.has(e)) return;
     (this.firedSites.add(e),
-      i("tengu_dead_probe_adopt_ticks_token", { site: u(e) }));
+      i("tengu_dead_probe_adopt_ticks_token", { site: fromEnum(e) }));
   }
   reset() {
     this.firedSites.clear();
@@ -36,7 +36,7 @@ async function y9e(e) {
 }
 async function Gye(e, t, r) {
   if (r !== void 0) {
-    if ((await Ba(e, { skipCache: !0 })) !== r) return;
+    if ((await getProcessStartTimeAsync(e, { skipCache: !0 })) !== r) return;
   } else if (t !== void 0) {
     if ((itn("kill_gate"), (await y9e(e)) !== t)) return;
   } else return;

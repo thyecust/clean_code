@@ -10,8 +10,8 @@
 
 // [preload stripped] 原本在此预载 284 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isRemoteControlOfferable as Ave } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
-import { isArtifactConflictLegacy as HT } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { isRemoteControlOfferable } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isArtifactConflictLegacy } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { tye } from "../Bridge-RemoteControl/chunk-m1vpawx6.js";
 import { U, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
@@ -61,7 +61,7 @@ function B(b) {
 }
 var K = async (t, r) =>
   e(L, { onExit: t, context: r, exposure: { logged: !1 } });
-function R(t, r, f) {
+function retireConversationForTeleportPull(t, r, f) {
   (j0t(t, r, f),
     r((a) =>
       Object.keys(a.sendMessagePins).length === 0
@@ -76,7 +76,7 @@ function R(t, r, f) {
         artifactRefs: [],
         createdFromType: {},
       },
-      { legacyConflict: HT() },
+      { legacyConflict: isArtifactConflictLegacy() },
     ));
 }
 function L(W) {
@@ -87,7 +87,7 @@ function L(W) {
     x = Ye(),
     A;
   if (i[0] !== T || i[1] !== n.getState || i[2] !== n.setState)
-    ((A = () => R(n.getState, n.setState, T)),
+    ((A = () => retireConversationForTeleportPull(n.getState, n.setState, T)),
       (i[0] = T),
       (i[1] = n.getState),
       (i[2] = n.setState),
@@ -97,7 +97,7 @@ function L(W) {
     c = U(B),
     D;
   if (i[4] !== c)
-    ((D = () => (c || Ave()) && H("tengu_teleport_send_to_cloud", !1)),
+    ((D = () => (c || isRemoteControlOfferable()) && H("tengu_teleport_send_to_cloud", !1)),
       (i[4] = c),
       (i[5] = D));
   else D = i[5];
@@ -162,4 +162,4 @@ function L(W) {
   else P = i[23];
   return P;
 }
-export { L as Teleport, K as call, R as retireConversationForTeleportPull };
+export { L as Teleport, K as call, retireConversationForTeleportPull };

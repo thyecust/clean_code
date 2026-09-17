@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qxt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
@@ -41,18 +41,18 @@ import {
   BGn,
   xn,
   fmt,
-  isRemoteToolForwardingSwitchOn as Iy,
-  isSessionChannelDisabled as YF,
-  setInternalEventWriter as K5e,
-  sealTranscriptAppendsForShutdown as Chn,
-  setInternalEventReader as X5e,
-  updateCCRTipFromAckedBatch as Ohn,
-  getValidatedCCRTip as i9t,
-  readTranscriptTailForTip as a9t,
+  isRemoteToolForwardingSwitchOn,
+  isSessionChannelDisabled,
+  setInternalEventWriter,
+  sealTranscriptAppendsForShutdown,
+  setInternalEventReader,
+  updateCCRTipFromAckedBatch,
+  getValidatedCCRTip,
+  readTranscriptTailForTip,
   gre,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getAttestationFilterPolicy as vme } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
-import { isProjectsHumanOriginEnabled as w$e } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
+import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { YAn, JAn, ase } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { Ts, jXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
 import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
@@ -63,9 +63,9 @@ import { $Jt } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { Qz } from "../插件系统/chunk-55xj4ev5.js";
 import { sdt } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
-import { getClientPlatform as Um } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
-import { createWriteStream as ge, fstatSync as ve } from "fs";
-import { PassThrough as Se } from "stream";
+import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
+import { createWriteStream, fstatSync } from "fs";
+import { PassThrough } from "stream";
 import { URL as ie } from "url";
 function I0t() {
   return H("tengu_ccr_subagent_skip_on_delta", !1);
@@ -411,11 +411,11 @@ class Uz extends Fae {
     adoptRefreshedAuth: C,
     reportParkAtInit: ae,
   }) {
-    let T = new Se({ encoding: "utf8" });
+    let T = new PassThrough({ encoding: "utf8" });
     super(T, i, s);
     ((this.inputStream = T), (this.url = bQ(new ie(e))));
     let A = o(),
-      F = { "anthropic-client-platform": Um(), ...A };
+      F = { "anthropic-client-platform": getClientPlatform(), ...A };
     if (Object.keys(A).length === 0)
       n(
         m
@@ -443,9 +443,9 @@ class Uz extends Fae {
       k = L ? Number.parseInt(L, 10) : NaN;
     if (Number.isInteger(k) && k > 2)
       try {
-        let r = ve(k);
+        let r = fstatSync(k);
         if (!r.isFIFO() && !r.isSocket()) throw Error("not a pipe");
-        let u = ge("", { fd: k, autoClose: !1 });
+        let u = createWriteStream("", { fd: k, autoClose: !1 });
         (u.on("error", (c) => {
           (n(
             `[remote-io] activity fd ${k} write error (${l(c)}); falling back to stdout`,
@@ -484,7 +484,7 @@ class Uz extends Fae {
 `);
         };
     if (R) this.transport.setOnDiagnostic?.(R);
-    let N = Iy();
+    let N = isRemoteToolForwardingSwitchOn();
     ((this.ccrClient = new pM(this.transport, this.url, {
       onDiagnostic: R,
       ...(N && {
@@ -535,22 +535,22 @@ class Uz extends Fae {
           });
           let c = `CCRClient initialization failed: ${l(r)}`;
           if (Jjn(r)) n(c, { level: "error" });
-          else h(Error(c));
+          else logError(Error(c));
           (R?.(`worker registration failed (${u}), exiting`), xn(1, "other"));
         },
       ),
       this.ccrClient.registerShutdownCleanup(),
-      K5e((r, u, c) => this.ccrClient.writeInternalEvent(r, u, c)));
+      setInternalEventWriter((r, u, c) => this.ccrClient.writeInternalEvent(r, u, c)));
     let U = y && D();
     if (
-      (X5e(
+      (setInternalEventReader(
         (r) => this.ccrClient.readInternalEvents(r),
         () => this.ccrClient.readSubagentInternalEvents(),
         y ? (r, u) => this.ccrClient.readAgentInternalEvents(r, u) : void 0,
         U,
       ),
-      (this.ccrClient.onInternalBatchAcked = (r) => Ohn(r, d)),
-      (this.ccrClient.onInternalEventLaneClosed = Chn),
+      (this.ccrClient.onInternalBatchAcked = (r) => updateCCRTipFromAckedBatch(r, d)),
+      (this.ccrClient.onInternalEventLaneClosed = sealTranscriptAppendsForShutdown),
       y)
     ) {
       let r = performance.now(),
@@ -566,7 +566,7 @@ class Uz extends Fae {
             d,
           ))
         );
-      })().catch((c) => (h(c), null))),
+      })().catch((c) => (logError(c), null))),
         this.hydratePrefetch.then(() => {
           (Ts("resume_hydrate_fetch_ms", performance.now() - r, r), jXn());
         }));
@@ -585,7 +585,7 @@ class Uz extends Fae {
       }),
       this.isBridge)
     )
-      (Dve(vme),
+      (Dve(getAttestationFilterPolicy),
         SAt(this.attestationDropSenderWriter),
         aQe((r) => {
           if (
@@ -716,7 +716,7 @@ class Uz extends Fae {
   }
   guardedFamilies() {
     return {
-      remoteTools: Iy() && !YF(),
+      remoteTools: isRemoteToolForwardingSwitchOn() && !isSessionChannelDisabled(),
       hooks: P0t({
         sdkUrl: !0,
         remoteSessionId: a.CLAUDE_CODE_REMOTE_SESSION_ID,
@@ -740,7 +740,7 @@ class Uz extends Fae {
     switch (t.kind) {
       case "refuse_request":
         return (
-          f(Ee[t.subtype], `unverified_sender_${i}`),
+          logFeatureBad(Ee[t.subtype], `unverified_sender_${i}`),
           n(
             `[remote-io] dropped a below-floor ${t.subtype} (attestation ${i}) unanswered`,
           ),
@@ -748,7 +748,7 @@ class Uz extends Fae {
         );
       case "drop_answer":
         return (
-          f(
+          logFeatureBad(
             t.answers === "hook" ? "device_hooks_serve" : "remote_tool_forward",
             `unverified_answer_dropped_${i}`,
           ),
@@ -760,7 +760,7 @@ class Uz extends Fae {
       case "strip_forwarded_plugins":
         return (
           J(e.payload, t.remainder),
-          g("ccr_cloud_plugins_forward", `unverified_patch_stripped_${i}`),
+          logFeatureSad("ccr_cloud_plugins_forward", `unverified_patch_stripped_${i}`),
           n(
             `[remote-io] stripped below-floor forwarded plugin choices from an apply_flag_settings (attestation ${i}); its other keys go on`,
           ),
@@ -769,7 +769,7 @@ class Uz extends Fae {
       case "admit_refusal":
         return (
           ee(e.payload, t.requestId, t.result),
-          g("remote_tool_forward", `unverified_refusal_admitted_${i}`),
+          logFeatureSad("remote_tool_forward", `unverified_refusal_admitted_${i}`),
           n(
             `[remote-io] admitted a below-floor refusal of served-call request ${t.requestId} (attestation ${i}) rebuilt and marked unverified: the machine is asked what became of the call`,
           ),
@@ -838,7 +838,7 @@ class Uz extends Fae {
   recordUserDrivenInbound(e) {
     switch ((super.recordUserDrivenInbound(e), e.type)) {
       case "user":
-        if (ddt(e, "remote-worker", w$e())) this.idleTracker.noteActivity();
+        if (ddt(e, "remote-worker", isProjectsHumanOriginEnabled())) this.idleTracker.noteActivity();
         return;
       case "control_response":
         if (e.response.subtype === "success") this.idleTracker.noteActivity();
@@ -994,8 +994,8 @@ function FJt(e) {
 async function oe(e, t, i, s) {
   let d = I0t(),
     o = qxt(),
-    m = i && o ? await a9t(o, s) : void 0,
-    _ = o ? await i9t(o, m, s) : void 0,
+    m = i && o ? await readTranscriptTailForTip(o, s) : void 0,
+    _ = o ? await getValidatedCCRTip(o, m, s) : void 0,
     [v, E] = await Promise.all([
       e(_?.eventId),
       (i ? m === null || _?.eventId !== void 0 : d) ? void 0 : t(),
@@ -1021,7 +1021,7 @@ function zmr(e, t) {
     );
     return i ? void 0 : d;
   })().catch((i) => {
-    h(i);
+    logError(i);
     return;
   });
 }

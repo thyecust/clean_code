@@ -12,14 +12,14 @@ import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-r
 import { R, dt, ge, A, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Np, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { mkdir as z } from "fs/promises";
+import { mkdir } from "fs/promises";
 import {
-  basename as k,
-  delimiter as g,
-  dirname as O,
-  resolve as q,
+  basename,
+  delimiter,
+  dirname,
+  resolve,
 } from "path";
 var fn = Object.freeze([
     "-c",
@@ -90,7 +90,7 @@ function eXt(
   o = r.GIT_CONFIG_COUNT,
   { allowRepoGitHooks: s = !1 } = {},
 ) {
-  let i = k(e).toLowerCase();
+  let i = basename(e).toLowerCase();
   if (!/^git(\.exe|\.cmd|\.bat|\.com)?$/.test(i)) return null;
   let d = s ? b().filter(([c]) => !re.has(c)) : b(),
     l = U(t).map((c) => t[c]);
@@ -196,7 +196,7 @@ function ie(e, t) {
   let r = p(e, "GIT_SSH_VARIANT")?.trim().toLowerCase();
   if (r !== void 0 && r !== "" && r !== "auto")
     return r === "ssh" ? "ssh" : "other";
-  return k(t.trim().replace(/\\/g, "/"))
+  return basename(t.trim().replace(/\\/g, "/"))
     .toLowerCase()
     .replace(/\.exe$/, "") === "ssh"
     ? "ssh"
@@ -251,21 +251,21 @@ function _e() {
 }
 function Vie(e) {
   let t = fe();
-  return { ...t, env: { ...t.env, GIT_CEILING_DIRECTORIES: B(O(e)) } };
+  return { ...t, env: { ...t.env, GIT_CEILING_DIRECTORIES: B(dirname(e)) } };
 }
 function B(e) {
-  if (((e = q(e)), e.includes(g)))
+  if (((e = resolve(e)), e.includes(delimiter)))
     throw new R(
-      `Cannot run git under ${e}: its path contains "${g}", which git's discovery ceiling (a "${g}"-separated list) cannot express. Use a location without "${g}" for this directory (the plugins cache \u2014 CLAUDE_CODE_PLUGIN_CACHE_DIR \u2014 or the temporary directory \u2014 TMPDIR \u2014 whichever this path is under).`,
+      `Cannot run git under ${e}: its path contains "${delimiter}", which git's discovery ceiling (a "${delimiter}"-separated list) cannot express. Use a location without "${delimiter}" for this directory (the plugins cache \u2014 CLAUDE_CODE_PLUGIN_CACHE_DIR \u2014 or the temporary directory \u2014 TMPDIR \u2014 whichever this path is under).`,
       "git working directory path contains the PATH delimiter; git discovery ceiling inexpressible",
     );
   return e;
 }
 async function fxt(e, t) {
-  let r = O(e);
+  let r = dirname(e);
   return (
-    await z(r, { recursive: !0 }),
-    { cwd: r, env: { ...t, GIT_CEILING_DIRECTORIES: B(O(r)) } }
+    await mkdir(r, { recursive: !0 }),
+    { cwd: r, env: { ...t, GIT_CEILING_DIRECTORIES: B(dirname(r)) } }
   );
 }
 var pe = 1000,
@@ -416,7 +416,7 @@ async function execFileNoThrowWithCwd(
         n(`execFileNoThrow maxBuffer exceeded: ${M}`, { level: "error" }),
         { stdout: "", stderr: "", code: 1, maxBufferExceeded: !0 }
       );
-    else h(dt(ge(f), "execFileNoThrow unexpected rejection"));
+    else logError(dt(ge(f), "execFileNoThrow unexpected rejection"));
     return { stdout: "", stderr: "", code: 1 };
   }
   if (v?.truncatedBy !== void 0) {

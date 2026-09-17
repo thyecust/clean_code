@@ -10,17 +10,17 @@
 import { uNt, gon, ijn } from "./chunk-j990pwax.js";
 import { R, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Gn, yE } from "./chunk-7jz937t3.js";
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getSecureStorage } from "./chunk-y7b7kf5n.js";
 import { hE, b7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-nw3qvjhe.js";
 import { Gr } from "../../01-核心基础设施/核心工具-路径与平台/chunk-p6wxwtjk.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { randomBytes as x } from "crypto";
-import { createServer as _ } from "http";
-import { parse as b } from "url";
+import { randomBytes } from "crypto";
+import { createServer } from "http";
+import { parse } from "url";
 var E = 300000,
   T = 30000,
   v = 60;
@@ -37,13 +37,13 @@ function Y3e(r) {
   }
 }
 async function Tct(r) {
-  let n = (await yn().readAsync())?.mcpXaaIdp?.[Y3e(r)];
+  let n = (await getSecureStorage().readAsync())?.mcpXaaIdp?.[Y3e(r)];
   if (!n) return;
   if (n.expiresAt - Date.now() <= v * 1000) return;
   return n.idToken;
 }
 async function k(r, t, e) {
-  await yn().mutate((n) => ({
+  await getSecureStorage().mutate((n) => ({
     ...n,
     mcpXaaIdp: { ...n.mcpXaaIdp, [Y3e(r)]: { idToken: t, expiresAt: e } },
   }));
@@ -56,18 +56,18 @@ async function Chr(r, t) {
 async function vLt(r) {
   let t = Y3e(r);
   try {
-    await yn().mutate((e) => {
+    await getSecureStorage().mutate((e) => {
       if (!e.mcpXaaIdp?.[t]) return e;
       let n = { ...e.mcpXaaIdp };
       return (delete n[t], { ...e, mcpXaaIdp: n });
     });
   } catch (e) {
-    J("xaa", `clearIdpIdToken(${Gn(t)}) failed: ${l(e)}`);
+    logMCPDebug("xaa", `clearIdpIdToken(${Gn(t)}) failed: ${l(e)}`);
   }
 }
 async function vhr(r, t) {
   try {
-    return await yn().mutate((e) => ({
+    return await getSecureStorage().mutate((e) => ({
       ...e,
       mcpXaaIdpConfig: { ...e.mcpXaaIdpConfig, [Y3e(r)]: { clientSecret: t } },
     }));
@@ -76,24 +76,24 @@ async function vhr(r, t) {
   }
 }
 async function RLt(r) {
-  return (await yn().readAsync())?.mcpXaaIdpConfig?.[Y3e(r)]?.clientSecret;
+  return (await getSecureStorage().readAsync())?.mcpXaaIdpConfig?.[Y3e(r)]?.clientSecret;
 }
 async function Rhr(r) {
   let t = Y3e(r);
   try {
-    await yn().mutate((e) => {
+    await getSecureStorage().mutate((e) => {
       if (!e.mcpXaaIdpConfig?.[t]) return e;
       let n = { ...e.mcpXaaIdpConfig };
       return (delete n[t], { ...e, mcpXaaIdpConfig: n });
     });
   } catch (e) {
-    J("xaa", `clearIdpClientSecret(${Gn(t)}) failed: ${l(e)}`);
+    logMCPDebug("xaa", `clearIdpClientSecret(${Gn(t)}) failed: ${l(e)}`);
   }
 }
 function A(r, t) {
   return fetch(r, {
     ...t,
-    ...As({ url: String(r) }),
+    ...getProxyFetchOptions({ url: String(r) }),
     signal: AbortSignal.timeout(T),
   }).catch((e) => yE(e, r));
 }
@@ -172,8 +172,8 @@ function O(r, t, e, n) {
       }
       e.addEventListener("abort", c, { once: !0 });
     }
-    ((o = _((a, s) => {
-      let u = b(a.url || "", !0);
+    ((o = createServer((a, s) => {
+      let u = parse(a.url || "", !0);
       if (u.pathname !== "/callback") {
         (s.writeHead(404), s.end());
         return;
@@ -256,15 +256,15 @@ function O(r, t, e, n) {
   });
 }
 async function Orn(r) {
-  return Sr("mcp_xaa_idp_login", async () => {
+  return withFeatureTelemetry("mcp_xaa_idp_login", async () => {
     let { idpIssuer: t, idpClientId: e } = r,
       n = await Tct(t);
-    if (n) return (J("xaa", `Using cached id_token for ${Gn(t)}`), n);
-    J("xaa", `No cached id_token for ${Gn(t)}; starting OIDC login`);
+    if (n) return (logMCPDebug("xaa", `Using cached id_token for ${Gn(t)}`), n);
+    logMCPDebug("xaa", `No cached id_token for ${Gn(t)}; starting OIDC login`);
     let o = await Ect(t),
       i = r.callbackPort ?? (await b7()),
       c = `http://localhost:${i}/callback`,
-      m = x(32).toString("base64url"),
+      m = randomBytes(32).toString("base64url"),
       f = {
         client_id: e,
         ...(r.idpClientSecret && { client_secret: r.idpClientSecret }),
@@ -278,7 +278,7 @@ async function Orn(r) {
       }),
       h = await O(i, m, r.abortSignal, () => {
         if ((r.onAuthorizationUrl(g.toString()), !r.skipBrowserOpen))
-          (J("xaa", "Opening browser to IdP authorization endpoint"),
+          (logMCPDebug("xaa", "Opening browser to IdP authorization endpoint"),
             Gr(g.toString()));
       }),
       d = await ijn(t, {
@@ -297,12 +297,12 @@ async function Orn(r) {
       s = a ? a * 1000 : Date.now() + (d.expires_in ?? 3600) * 1000;
     try {
       (await k(t, d.id_token, s),
-        J(
+        logMCPDebug(
           "xaa",
           `Cached id_token for ${Gn(t)} (expires ${new Date(s).toISOString()})`,
         ));
     } catch (u) {
-      J("xaa", `id_token cache write failed: ${l(u)}`);
+      logMCPDebug("xaa", `id_token cache write failed: ${l(u)}`);
     }
     return d.id_token;
   });

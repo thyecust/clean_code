@@ -31,11 +31,11 @@ var S = m(() => {
       error_count: T().catch(0),
     });
   }),
-  R =
+  REMOTE_INPUT_DECLINE =
     "/reload-plugins isn't available over a remote connection in this session.",
-  _ = "Plugin MCP server changes take effect in your next session.",
+  HEADLESS_MCP_PENDING_NOTE = "Plugin MCP server changes take effect in your next session.",
   j = async (n, e) => {
-    if (!P(e)) return { type: "text", value: R };
+    if (!P(e)) return { type: "text", value: REMOTE_INPUT_DECLINE };
     if (Ks()) {
       let o = kv(
         "reload_plugins",
@@ -99,7 +99,7 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
       let p = `Reloaded: ${[r(o.enabled_count, "plugin"), r(o.command_count + o.skill_count, "skill"), r(o.agent_count, "agent"), r(o.hook_count, "hook"), ...(s ? [] : [r(o.mcp_count, "plugin MCP server")]), r(o.lsp_count, "plugin LSP server")].join(" \xB7 ")}${d}`;
       if (s && l.mcpServersAdded.length + l.mcpServersRemoved.length > 0)
         p += `
-${_}`;
+${HEADLESS_MCP_PENDING_NOTE}`;
       if (i !== null)
         p += `
 ${i}`;
@@ -122,18 +122,18 @@ function P(n) {
 function C(n, e) {
   if (!n.wouldInvalidateCache) return null;
   if (!e)
-    return y({
+    return formatCacheWarningText({
       added: n.mcpServersAdded,
       removed: n.mcpServersRemoved,
       lspToolChange: n.lspToolChange,
     });
   if (n.lspToolChange === null) return null;
-  return y({ added: [], removed: [], lspToolChange: n.lspToolChange });
+  return formatCacheWarningText({ added: [], removed: [], lspToolChange: n.lspToolChange });
 }
 function r(n, e) {
   return `${n} ${x(n, e)}`;
 }
-function y(n) {
+function formatCacheWarningText(n) {
   let e = [...n.added, ...n.removed],
     [t] = e,
     s =
@@ -156,8 +156,8 @@ function y(n) {
   );
 }
 export {
-  _ as HEADLESS_MCP_PENDING_NOTE,
-  R as REMOTE_INPUT_DECLINE,
+  HEADLESS_MCP_PENDING_NOTE,
+  REMOTE_INPUT_DECLINE,
   j as call,
-  y as formatCacheWarningText,
+  formatCacheWarningText,
 };

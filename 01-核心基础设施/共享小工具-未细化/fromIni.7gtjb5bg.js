@@ -10,6 +10,6 @@
 import { Kq } from "../../02-功能模块/Bedrock-Vertex/chunk-q61rm009.js";
 import "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
 import { M0n } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-6ydmdmy7.js";
-var m = (o = {}) => M0n({ ...o });
-var e = (o = {}) => Kq({ ...o });
-export { m as fromIni, e as fromNodeProviderChain };
+var fromIni = (o = {}) => M0n({ ...o });
+var fromNodeProviderChain = (o = {}) => Kq({ ...o });
+export { fromIni, fromNodeProviderChain };

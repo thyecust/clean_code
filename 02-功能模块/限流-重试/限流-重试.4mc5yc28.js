@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { j, B, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { formatResetTime as Au } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
   rX,
   oDe,
@@ -80,9 +80,9 @@ function TBn(t) {
   if (o.notedWallResetsAt !== e)
     ((o.notedWallResetsAt = e),
       i("tengu_lowpri_offer_capable", {
-        arm: u(t.lowPriorityOffer),
-        tier: u(rlt()),
-        limit_type: we(t.rateLimitType) ?? void 0,
+        arm: fromEnum(t.lowPriorityOffer),
+        tier: fromEnum(rlt()),
+        limit_type: fromEnumOpt(t.rateLimitType) ?? void 0,
         auto_armed: v4(),
         client_enabled: oDe(),
         config_version: I4e(),
@@ -94,8 +94,8 @@ function TBn(t) {
   )
     ((o.withheldWallResetsAt = e),
       i("tengu_lowpri_offer_withheld", {
-        arm: u(t.lowPriorityOffer),
-        reason: u("cooloff"),
+        arm: fromEnum(t.lowPriorityOffer),
+        reason: fromEnum("cooloff"),
         client_enabled: oDe(),
         config_version: I4e(),
       }));
@@ -106,8 +106,8 @@ function rIe(t, e) {
   if (o === null || r.shownWallResetsAt === o) return;
   ((r.shownWallResetsAt = o),
     i("tengu_lowpri_offer_shown", {
-      arm: we(t.lowPriorityOffer) ?? void 0,
-      surface: u(e),
+      arm: fromEnumOpt(t.lowPriorityOffer) ?? void 0,
+      surface: fromEnum(e),
       config_version: I4e(),
     }));
 }
@@ -139,7 +139,7 @@ function B9e(t) {
 }
 function j9e(t) {
   let e = $we(),
-    o = e.phase === "active" ? Au(e.resetsAtSeconds) : void 0,
+    o = e.phase === "active" ? formatResetTime(e.resetsAtSeconds) : void 0,
     r = o ? `until your limit resets at ${o}` : "until your limit resets";
   return `${t === "resumed" ? `Lower-priority mode is back on ${r}` : `Continuing now at lower priority ${r}`}. Your weekly limit still applies, and responses may pause while waiting for spare capacity. Run /${rX} to stop.`;
 }
@@ -148,7 +148,7 @@ function W9e(t = Date.now()) {
     return `${LF().budgetExhaustedCopy}. Lower-priority mode is offered again after your weekly limit resets.`;
   let e = Fte(t);
   if (e !== void 0)
-    return `Lower-priority mode is taking a break until ${Au(Math.ceil(e / 1000)) ?? "later"}, after waiting too long for spare capacity. Try /${rX} again then.`;
+    return `Lower-priority mode is taking a break until ${formatResetTime(Math.ceil(e / 1000)) ?? "later"}, after waiting too long for spare capacity. Try /${rX} again then.`;
   return "Lower-priority mode isn't available right now.";
 }
 function EBn() {

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { dt } from "../@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { xA } from "../lru-cache/lru-cache.8crev50p.js";
 function cs(e) {
   return e.startsWith("\uFEFF") ? e.slice(1) : e;
@@ -1161,7 +1161,7 @@ function vRt(e, i) {
   }
   return e;
 }
-import { open as me, readFile as ke, stat as de } from "fs/promises";
+import { open as me, readFile, stat as de } from "fs/promises";
 var Get = "__unparsedToolInput";
 function qet(e) {
   if (typeof e !== "object" || e === null || Array.isArray(e)) return !1;
@@ -1192,7 +1192,7 @@ function se(e, i) {
     return { ok: !0, value: JSON.parse(cs(e)) };
   } catch (r) {
     if (i)
-      h(
+      logError(
         dt(
           r,
           `safeParseJSON: invalid JSON (${r instanceof Error ? r.constructor.name : typeof r}, ${e.length} bytes)`,
@@ -1309,7 +1309,7 @@ function Nge(e) {
 var P = 104857600;
 async function ake(e) {
   let { size: i } = await de(e);
-  if (i <= P) return Nge(await ke(e));
+  if (i <= P) return Nge(await readFile(e));
   await using r = await me(e, "r");
   let t = Buffer.allocUnsafe(P),
     l = 0,

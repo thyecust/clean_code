@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { ze, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { P0 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE as kKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { hU, Zy, ARTIFACT_YIELD_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
@@ -32,42 +32,42 @@ import {
   kI,
   nMe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { Nu, qI, mD, sendControlToUdsSocket as sG, sendStampedControlToUdsSocket as t1e, listRegisteredSessionRecords as C7e, ownMessagingSocket as C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { Nu, qI, mD, sendControlToUdsSocket, sendStampedControlToUdsSocket, listRegisteredSessionRecords, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { ne } from "./chunk-rr78st95.js";
 import { P7, aze, ypt, d9n, f9n, aan } from "./chunk-qdg189tc.js";
 import { dpt, san, x9 } from "./chunk-p1dkvpxj.js";
 import { Ibe } from "./chunk-5gz5xvw9.js";
 import { lte } from "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 var z = 1000,
   Q = 200,
   R = { armable: new Set(), yielded: new Set(), undo: () => {} };
 async function Z() {
-  let o = (await C7e()).find((r) => r.pid === process.pid);
+  let o = (await listRegisteredSessionRecords()).find((r) => r.pid === process.pid);
   return o === void 0 ? void 0 : { sessionId: o.sessionId, tmux: o.tmux };
 }
 async function requestReplyTakeover(e) {
   let o = await ee(e).finally(() => e.claim?.end());
   if (o.kind === "took_over")
-    y("artifact_live_subscribe", {
+    logFeatureOk("artifact_live_subscribe", {
       took_over: !0,
       holders: e.holders.length,
       armable_count: o.armable.size,
       yielded_count: o.yielded.size,
     });
   else if (o.kind !== "disabled")
-    g("artifact_live_subscribe", `takeover_${o.kind}`, {
+    logFeatureSad("artifact_live_subscribe", `takeover_${o.kind}`, {
       holders: e.holders.length,
     });
   return o;
 }
 async function ee(e) {
   if (!P7()) return { ...R, kind: "disabled" };
-  if (!Mo()) return { ...R, kind: "messaging_off" };
-  let o = C$();
+  if (!isCrossSessionMessagingEnabled()) return { ...R, kind: "messaging_off" };
+  let o = ownMessagingSocket();
   if (o === void 0 || e.holders.length === 0) return { ...R, kind: "no_inbox" };
   let r = Zy(o),
     a = e.transport?.ownRecord ?? Z,
@@ -93,7 +93,7 @@ async function ee(e) {
     if (
       t.sock === void 0 ||
       t.sock === "" ||
-      !(t.peerFeatures?.includes(kKt) ?? !1) ||
+      !(t.peerFeatures?.includes(ARTIFACT_YIELD_PEER_FEATURE) ?? !1) ||
       Zy(t.sock) === r ||
       dpt(t.kind)
     ) {
@@ -103,8 +103,8 @@ async function ee(e) {
     h.push({ sock: t.sock, pid: t.pid });
   }
   if (h.length === 0) return { ...R, kind: "holder_unreachable" };
-  let c = e.transport?.send ?? t1e,
-    u = e.transport?.sendControl ?? sG,
+  let c = e.transport?.send ?? sendStampedControlToUdsSocket,
+    u = e.transport?.sendControl ?? sendControlToUdsSocket,
     I = e.transport?.timers ?? ypt,
     T = e.transport?.now ?? Date.now,
     G = hU(o),
@@ -135,7 +135,7 @@ async function ee(e) {
           : [...t.yielded].filter((p) => d === void 0 || d.has(p));
       if (m.length === 0) return;
       for (let p of m) t.yielded.delete(p);
-      y("artifact_live_subscribe", {
+      logFeatureOk("artifact_live_subscribe", {
         [i?.precautionary !== void 0
           ? "takeover_unyield_precautionary"
           : "takeover_handed_back"]: m.length,
@@ -149,14 +149,14 @@ async function ee(e) {
       u(t.sock, _, Y(t.pid)).catch((p) => {
         if (
           (n(`[reply-yield] unyield to ${Nu(t.sock)} failed: ${qI(String(p))}`),
-          mD(p) && !Vs(t.pid))
+          mD(p) && !isProcessRunning(t.pid))
         ) {
-          g("artifact_live_subscribe", "unyield_holder_gone");
+          logFeatureSad("artifact_live_subscribe", "unyield_holder_gone");
           return;
         }
         let k = () =>
           void u(t.sock, _, Y(t.pid)).catch(() => {
-            g("artifact_live_subscribe", "unyield_send_failed");
+            logFeatureSad("artifact_live_subscribe", "unyield_send_failed");
           });
         if (mD(p)) I.setTimeout(k, z);
         else k();
@@ -213,7 +213,7 @@ async function ee(e) {
           if (mD(_)) {
             let p = f9n(d.msg_id),
               k = p.map(([J]) => J);
-            return Vs(t.pid)
+            return isProcessRunning(t.pid)
               ? { kind: "unreachable", lost: k, lostTo: p }
               : { kind: "gone", lost: k, lostTo: p };
           }
@@ -291,10 +291,10 @@ function q(e, o, r, a) {
   let s = r.get(e);
   return (s !== void 0 && s === hU(o.sock)) || (!a && !Xv(e));
 }
-function notifyTakenOverSlugStopped(e, o = sG) {
+function notifyTakenOverSlugStopped(e, o = sendControlToUdsSocket) {
   j(e, !0, o);
 }
-function handBackTakenOverSlug(e, o = sG) {
+function handBackTakenOverSlug(e, o = sendControlToUdsSocket) {
   j(e, !1, o);
 }
 function j(e, o, r) {
@@ -313,18 +313,18 @@ function j(e, o, r) {
     r(l.sock, f, h).catch((c) => {
       if (
         (n(`[reply-yield] release to ${Nu(l.sock)} failed: ${qI(String(c))}`),
-        mD(c) && !Vs(l.pid))
+        mD(c) && !isProcessRunning(l.pid))
       )
         return;
       let u = () =>
         void r(l.sock, f, h).catch(() => {
-          g("artifact_live_subscribe", "takeover_release_failed");
+          logFeatureSad("artifact_live_subscribe", "takeover_release_failed");
         });
       if (mD(c)) ypt.setTimeout(u, z);
       else u();
     });
   }
-  y("artifact_live_subscribe", {
+  logFeatureOk("artifact_live_subscribe", {
     [o ? "takeover_stop_notified" : "takeover_released"]: s.length,
   });
 }
@@ -389,7 +389,7 @@ function registerReplyYieldHolder(e) {
         let r = se(o.slugs, o.msgId),
           a = r.newlyYielded;
         if (a.length > 0)
-          y("artifact_comments_autoreact", {
+          logFeatureOk("artifact_comments_autoreact", {
             yielded_to_other_session: a.length,
           });
         return {
@@ -479,7 +479,7 @@ function re(e, o) {
       });
   }
   if (a.length > 0)
-    y("artifact_comments_autoreact", { yield_reverted: a.length });
+    logFeatureOk("artifact_comments_autoreact", { yield_reverted: a.length });
   return a;
 }
 export { requestReplyTakeover, notifyTakenOverSlugStopped, handBackTakenOverSlug, repliesYieldedLine, repliesYieldRevertedLine, repliesStoppedElsewhereLine, notifyModelOfReplyYield, registerReplyYieldHolder };

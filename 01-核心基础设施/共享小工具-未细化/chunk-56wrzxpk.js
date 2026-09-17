@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { truncate as or } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
 function Bdt(r) {
   if (typeof r !== "object" || r === null) return "";
   let n = r;
@@ -20,10 +20,10 @@ function Bdt(r) {
     "prompt",
   ]) {
     let o = n[t];
-    if (typeof o === "string") return or(o.replace(/\s+/g, " ").trim(), 60);
+    if (typeof o === "string") return truncate(o.replace(/\s+/g, " ").trim(), 60);
   }
   for (let t of Object.values(n))
-    if (typeof t === "string") return or(t.replace(/\s+/g, " ").trim(), 60);
+    if (typeof t === "string") return truncate(t.replace(/\s+/g, " ").trim(), 60);
   return "";
 }
 export { Bdt };

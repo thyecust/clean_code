@@ -28,30 +28,30 @@ import { An, my, gp, pl, li, $m, jf, Xo, FW } from "../../00-第三方库/lodash
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import {
   QJ,
-  isModelAllowed as Rr,
-  getUserSpecifiedModelSetting as Mf,
-  isModeDependentModelSetting as xR,
-  isEnvDefaultModelGoverning as Rse,
-  isExemptDefaultResolvingPick as am,
-  getCanonicalName as Ue,
-  parseUserSpecifiedModel as wt,
+  isModelAllowed,
+  getUserSpecifiedModelSetting,
+  isModeDependentModelSetting,
+  isEnvDefaultModelGoverning,
+  isExemptDefaultResolvingPick,
+  getCanonicalName,
+  parseUserSpecifiedModel,
   tc,
   GC,
   Ia,
   a5t,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Bur, WP, iae, Xg, Sh, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { reanchorGitFileWatcher as nB, clearIsGitMemo as Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getProjectDir as Mp } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { reanchorGitFileWatcher, clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { parsePermissionMode as gf } from "../权限系统/chunk-e4pfvp7x.js";
-import { er, tar, usesFirstPartyModelIds as Ca } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { parsePermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
+import { er, tar, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Pl, lP } from "../Teammates团队/chunk-thxapyam.js";
 import { oF } from "../../01-核心基础设施/共享小工具-未细化/chunk-vz37aa8z.js";
 import {
@@ -61,13 +61,13 @@ import {
   Mmt,
   bDe,
   vO,
-  rebuildAgentDefinitions as Lue,
-  getAgentDefinitionsWithOverrides as SE,
-  fileHistoryRestoreStateFromLog as HVe,
+  rebuildAgentDefinitions,
+  getAgentDefinitionsWithOverrides,
+  fileHistoryRestoreStateFromLog,
   pu,
   LTe,
-  logResumeInterruptedTurn as _Ke,
-  removeInterruptedMessage as ELe,
+  logResumeInterruptedTurn,
+  removeInterruptedMessage,
   jKn,
   U_,
   VO,
@@ -80,36 +80,36 @@ import {
   fMe,
   jde,
   Ht,
-  isTranscriptPersistenceDisabled as hl,
-  recordContentReplacement as KV,
-  resetSessionFilePointer as XM,
-  adoptResumedSessionFile as XV,
-  adoptResumedSessionFileAsync as YV,
-  adoptForkSessionMetadata as are,
-  restoreSessionMetadata as EH,
-  saveMode as ure,
-  saveWorktreeState as mC,
+  isTranscriptPersistenceDisabled,
+  recordContentReplacement,
+  resetSessionFilePointer,
+  adoptResumedSessionFile,
+  adoptResumedSessionFileAsync,
+  adoptForkSessionMetadata,
+  restoreSessionMetadata,
+  saveMode,
+  saveWorktreeState,
   PY,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fc, w_ } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
-import { isRestrictedToPluginOnly as Uu, isSourceAdminTrusted as r6 } from "../Skills技能/chunk-sapykxw7.js";
+import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
+import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
 import { Doe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { X_ } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { XS } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { primePlanSlugCollisions as lh, getPlansDirectory as Ea } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { Vre } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { reclaimSessionNameOnResume as Gpe } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
-import { CLAUDE_AGENT as uue } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
+import { reclaimSessionNameOnResume } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
+import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
-  appendFile as Me,
-  readdir as Ee,
-  rename as oe,
-  rmdir as re,
+  appendFile,
+  readdir,
+  rename,
+  rmdir,
 } from "fs/promises";
-import { basename as x, dirname as Fe, join as E, relative as L } from "path";
+import { basename, dirname as Fe, join as E, relative } from "path";
 class H {
   filePath = null;
   key = void 0;
@@ -142,7 +142,7 @@ async function renameRecordingForSession(e, o) {
   let t = ie.of(e),
     r = t.filePath;
   if (!r || t.timestamp === 0) return;
-  let s = Mp(he()),
+  let s = getProjectDir(he()),
     d = t.key,
     l = lP(s);
   if (M() && o !== void 0 && d !== void 0 && l !== void 0) {
@@ -151,8 +151,8 @@ async function renameRecordingForSession(e, o) {
       y = E(s, k, `${t.timestamp}.cast`);
     if (r === y) return;
     let v = ne(l, k, t.timestamp),
-      w = L(s, r),
-      P = L(s, y),
+      w = relative(s, r),
+      P = relative(s, y),
       R = async () => {
         if (t.failed) return;
         try {
@@ -169,10 +169,10 @@ async function renameRecordingForSession(e, o) {
   let c = E(s, `${K()}-${t.timestamp}.cast`);
   if (r === c) return;
   await t.recorder?.flush();
-  let m = x(r),
-    h = x(c);
+  let m = basename(r),
+    h = basename(c);
   try {
-    (await oe(r, c),
+    (await rename(r, c),
       t.setFilePath(c),
       n(`[asciicast] Renamed recording: ${m} \u2192 ${h}`));
   } catch {
@@ -181,16 +181,16 @@ async function renameRecordingForSession(e, o) {
 }
 async function se(e, o, t) {
   (Bur(await e.move(o, t)),
-    await re(E(Pl(), o.projectKey, o.sessionId)).catch(() => {}));
+    await rmdir(E(Pl(), o.projectKey, o.sessionId)).catch(() => {}));
 }
-import { dirname as q, resolve as ae, win32 as X } from "path";
-import { realpathSync as de, statSync as le } from "fs";
+import { dirname as q, resolve, win32 as X } from "path";
+import { realpathSync, statSync } from "fs";
 function Vae(e) {
   if (!e || !H6t(e.hooks)) {
     yHt(void 0);
     return;
   }
-  let o = !Uu("hooks") || r6(e.source),
+  let o = !isRestrictedToPluginOnly("hooks") || isSourceAdminTrusted(e.source),
     t = Mmt(e);
   if (o && t) {
     yHt(e.hooks);
@@ -236,7 +236,7 @@ function gQt(e) {
 }
 function EHe(e, o, t, r) {
   if (e.fileHistorySnapshots && e.fileHistorySnapshots.length > 0)
-    HVe(e.fileHistorySnapshots, (s) => {
+    fileHistoryRestoreStateFromLog(e.fileHistorySnapshots, (s) => {
       o((d) => ({ ...d, fileHistory: s }));
     });
   if (
@@ -280,9 +280,9 @@ function Gz(e, o, t, r) {
       (n(
         `Resumed session had agent "${e}" but it is no longer available. Using default behavior.`,
       ),
-      e !== uue.agentType)
+      e !== CLAUDE_AGENT.agentType)
     ) {
-      if ((g("session_resume", "agent_resolve_miss"), r?.onResolveMiss)) {
+      if ((logFeatureSad("session_resume", "agent_resolve_miss"), r?.onResolveMiss)) {
         let l = he(),
           c =
             r.sessionAgentDefinitions && r.sessionCwd && r.sessionCwd !== l
@@ -304,8 +304,8 @@ function Gz(e, o, t, r) {
     );
   }
   if ((PW(d.agentType), Vae(d), !Ec() && d.model && d.model !== "inherit")) {
-    let l = wt(d.model);
-    if (am(l) || Rr(l)) ad(l);
+    let l = parseUserSpecifiedModel(d.model);
+    if (isExemptDefaultResolvingPick(l) || isModelAllowed(l)) ad(l);
     else
       n(
         `Agent model "${d.model}" is not in the availableModels allowlist; keeping the session model`,
@@ -316,7 +316,7 @@ function Gz(e, o, t, r) {
 }
 async function HZ(e, o) {
   if (!e || e === he()) return;
-  let t = ae(e);
+  let t = resolve(e);
   if (
     An(e) ||
     An(t) ||
@@ -341,7 +341,7 @@ async function HZ(e, o) {
     return;
   }
   try {
-    return await SE(e, o);
+    return await getAgentDefinitionsWithOverrides(e, o);
   } catch {
     return;
   }
@@ -354,7 +354,7 @@ function hQt(e) {
 }
 async function me(e, o) {
   if (o || !e) return;
-  let t = gf(e);
+  let t = parsePermissionMode(e);
   if (t === void 0) return;
   if (t === "plan" || t === "bypassPermissions") return;
   if (t === "default") {
@@ -382,8 +382,8 @@ function CHe() {
     a.ANTHROPIC_DEFAULT_OPUS_MODEL ||
     a.ANTHROPIC_DEFAULT_SONNET_MODEL ||
     a.ANTHROPIC_DEFAULT_HAIKU_MODEL ||
-    Rse() ||
-    !Ca(),
+    isEnvDefaultModelGoverning() ||
+    !usesFirstPartyModelIds(),
   );
 }
 function IZ(e, o, t, r = (s) => s()) {
@@ -393,7 +393,7 @@ function IZ(e, o, t, r = (s) => s()) {
   if (s.kind === "mode_dependent_setting") {
     r(() =>
       i("tengu_resume_model_restore", {
-        outcome: u("skipped_mode_dependent_setting"),
+        outcome: fromEnum("skipped_mode_dependent_setting"),
         is_eap: !1,
       }),
     );
@@ -402,8 +402,8 @@ function IZ(e, o, t, r = (s) => s()) {
   if (s.kind === "declined")
     r(() =>
       i("tengu_resume_model_restore", {
-        outcome: u("declined"),
-        decline_reason: we(s.reason),
+        outcome: fromEnum("declined"),
+        decline_reason: fromEnumOpt(s.reason),
         is_eap: Doe(s.model),
       }),
     );
@@ -426,8 +426,8 @@ function pe(e, o) {
   return !1;
 }
 function J(e, o) {
-  let t = new Set(tar.map((d) => Ue(d))),
-    r = o ? wt(o) : void 0,
+  let t = new Set(tar.map((d) => getCanonicalName(d))),
+    r = o ? parseUserSpecifiedModel(o) : void 0,
     s = r ? er(r) : void 0;
   for (let d = e.length - 1; d >= 0; d--) {
     let l = e[d];
@@ -439,12 +439,12 @@ function J(e, o) {
     )
       continue;
     let c = l.message.model,
-      m = Mf();
-    if (xR(m) && !Doe(c) && pe(m, Ue(c)))
+      m = getUserSpecifiedModelSetting();
+    if (isModeDependentModelSetting(m) && !Doe(c) && pe(m, getCanonicalName(c)))
       return { kind: "mode_dependent_setting" };
-    let h = !(t.has(Ue(c)) || Doe(c) || er(c) === s)
+    let h = !(t.has(getCanonicalName(c)) || Doe(c) || er(c) === s)
       ? "unknown_family"
-      : !am(c) && !Rr(c)
+      : !isExemptDefaultResolvingPick(c) && !isModelAllowed(c)
         ? "not_allowed"
         : QJ(c)
           ? "retired"
@@ -453,7 +453,7 @@ function J(e, o) {
     if (
       ((o && tc(o)) || (r !== void 0 && tc(r))) &&
       GC(c) &&
-      (er(c) === s || (o && Ue(wt(er(o))) === Ue(c)))
+      (er(c) === s || (o && getCanonicalName(parseUserSpecifiedModel(er(o))) === getCanonicalName(c)))
     )
       return { kind: "ok", model: c + "[1m]" };
     return { kind: "ok", model: c };
@@ -473,7 +473,7 @@ function ge(e, o) {
   if (!t) return !1;
   let r = er(t.fallbackModel),
     s = er(o);
-  return r === s || Ue(r) === Ue(s);
+  return r === s || getCanonicalName(r) === getCanonicalName(s);
 }
 function vHe(e) {
   for (let o = e.length - 1; o >= 0; o--) {
@@ -489,7 +489,7 @@ function ye(e) {
     : void 0;
 }
 function T(e, o) {
-  i("tengu_resume_model_restore", { outcome: u(e), is_eap: Doe(o) });
+  i("tengu_resume_model_restore", { outcome: fromEnum(e), is_eap: Doe(o) });
 }
 function V(e, o) {
   import("../上下文压缩-Compact/chunk-npckj9cm.js").then((t) => t.fetchBootstrapData(e, o));
@@ -498,7 +498,7 @@ function PZ(e, o, t, r, s) {
   if (!ge(e, o)) return (ad(o), V(r, s), T("restored", o), o);
   if (t) {
     (i("tengu_refusal_fallback_resume_latch", {
-      action: u("fork_skip_restore"),
+      action: fromEnum("fork_skip_restore"),
     }),
       T("skipped_fork_fallback", o));
     return;
@@ -506,7 +506,7 @@ function PZ(e, o, t, r, s) {
   let d = ye(e);
   if (d && er(d.fallbackModel) === er(o)) {
     (i("tengu_refusal_fallback_resume_latch", {
-      action: u("fork_neutralized_skip"),
+      action: fromEnum("fork_neutralized_skip"),
     }),
       T("skipped_fork_neutralized", o));
     return;
@@ -521,7 +521,7 @@ function PZ(e, o, t, r, s) {
       previousModelForSession: null,
     }),
     T("restored", o),
-    i("tengu_refusal_fallback_resume_latch", { action: u("model_latch_only") }),
+    i("tengu_refusal_fallback_resume_latch", { action: fromEnum("model_latch_only") }),
     o
   );
 }
@@ -541,7 +541,7 @@ function OZ(e, o) {
         ?.requestId ?? void 0,
     ),
       i("tengu_refusal_fallback_resume_latch", {
-        action: u("header_rearmed"),
+        action: fromEnum("header_rearmed"),
       }));
 }
 async function ke(e, o, t, r, s) {
@@ -550,19 +550,19 @@ async function ke(e, o, t, r, s) {
 }
 async function O8(e, o, t) {
   wo().agentDefinitions.clear();
-  let r = await SE(e, t);
-  return Lue(r, [...r.allAgents, ...o]);
+  let r = await getAgentDefinitionsWithOverrides(e, t);
+  return rebuildAgentDefinitions(r, [...r.allAgents, ...o]);
 }
 function G(e) {
   try {
-    return de(e);
+    return realpathSync(e);
   } catch {
     return e;
   }
 }
 function z(e) {
   try {
-    return le(e).isDirectory() ? "present" : "gone";
+    return statSync(e).isDirectory() ? "present" : "gone";
   } catch (o) {
     let t = A(o);
     return t === "ENOENT" || t === "ENOTDIR" ? "gone" : "inaccessible";
@@ -596,11 +596,11 @@ function yQt(e, o) {
 function RHe(e) {
   let o = `${F}; a later --resume will re-check it.`;
   if (e.reason === "worktree-gone")
-    return `Your worktree ${U_(e.worktreePath)} no longer exists, so this session is working in the current directory without worktree isolation. ${hl() ? o : "The worktree binding has been cleared."}`;
+    return `Your worktree ${U_(e.worktreePath)} no longer exists, so this session is working in the current directory without worktree isolation. ${isTranscriptPersistenceDisabled() ? o : "The worktree binding has been cleared."}`;
   if (e.reason === "pin-is-own-launch-tree")
     return `Could not re-enter your worktree ${U_(e.worktreePath)}: ${U_(e.message)} The worktree binding is kept.`;
   if (e.poisoned) {
-    let t = hl()
+    let t = isTranscriptPersistenceDisabled()
       ? `You are working in the current directory without worktree isolation. ${o}`
       : "This session's worktree binding has been cleared; you are working in the current directory without worktree isolation.";
     return `Did not re-enter your worktree ${U_(e.worktreePath)}: ${U_(e.message)} ${t}`;
@@ -624,7 +624,7 @@ function DZ(e, o, t, r) {
 }
 function Se(e, o, t) {
   let r = Ia();
-  if (r && t?.preserveBinding !== !0) return (mC(r), null);
+  if (r && t?.preserveBinding !== !0) return (saveWorktreeState(r), null);
   if (!e) {
     if (e === null)
       return (
@@ -655,11 +655,11 @@ function Se(e, o, t) {
     return (
       PY(),
       rV("resume"),
-      Ea.cache.clear?.(),
-      lh(t?.storageV5),
-      nB(),
-      Che(),
-      Yi()?.refreshGitBranch?.(),
+      getPlansDirectory.cache.clear?.(),
+      primePlanSlugCollisions(t?.storageV5),
+      reanchorGitFileWatcher(),
+      clearIsGitMemo(),
+      getReplBridgeHandle()?.refreshGitBranch?.(),
       null
     );
   }
@@ -674,7 +674,7 @@ function Se(e, o, t) {
       unreadableAncestry: "unverified",
     }) !== void 0
   ) {
-    if (!s) mC(null);
+    if (!s) saveWorktreeState(null);
     return (
       i("tengu_worktree_resume_root_rejected", {
         reason: S("network-spelled-pin"),
@@ -691,7 +691,7 @@ function Se(e, o, t) {
   }
   let d = z(e.worktreePath);
   if (d === "gone") {
-    if (!s) mC(null);
+    if (!s) saveWorktreeState(null);
     return (
       i("tengu_worktree_resume_root_rejected", {
         reason: S("worktree-gone"),
@@ -739,12 +739,12 @@ function Se(e, o, t) {
         { level: "error" },
       ),
       i("tengu_worktree_resume_root_rejected", {
-        reason: u(m.reason),
+        reason: fromEnum(m.reason),
         poisoned: S(h ? "true" : "false"),
       }),
       h)
     ) {
-      if (!s) mC(null);
+      if (!s) saveWorktreeState(null);
       if (c) {
         let k = q(e.worktreePath),
           y = z(k) === "present" ? k : e.originalCwd;
@@ -764,11 +764,11 @@ function Se(e, o, t) {
           if (jde(y, R, { requireCovered: !0 })) ES(y);
           (PY(),
             rV("resume"),
-            Che(),
-            Ea.cache.clear?.(),
-            lh(t?.storageV5),
-            nB(),
-            Yi()?.refreshGitBranch?.());
+            clearIsGitMemo(),
+            getPlansDirectory.cache.clear?.(),
+            primePlanSlugCollisions(t?.storageV5),
+            reanchorGitFileWatcher(),
+            getReplBridgeHandle()?.refreshGitBranch?.());
         } catch {}
       }
     }
@@ -784,7 +784,7 @@ function Se(e, o, t) {
   } catch (h) {
     let k = A(h);
     if (k === "ENOENT" || k === "ENOTDIR") {
-      if (!s) mC(null);
+      if (!s) saveWorktreeState(null);
       return (
         i("tengu_worktree_resume_root_rejected", {
           reason: S("worktree-gone"),
@@ -817,10 +817,10 @@ function Se(e, o, t) {
     VLe({ ...e, liveLaunchAnchor: l }),
     PY(),
     rV("resume"),
-    Ea.cache.clear?.(),
-    lh(t?.storageV5),
-    nB(),
-    Yi()?.refreshGitBranch?.(),
+    getPlansDirectory.cache.clear?.(),
+    primePlanSlugCollisions(t?.storageV5),
+    reanchorGitFileWatcher(),
+    getReplBridgeHandle()?.refreshGitBranch?.(),
     null
   );
 }
@@ -828,7 +828,7 @@ function SQt(e, o) {
   let t = Ia();
   if (!t) return;
   if ((VLe(null), PY(), rV("resume"), t.worktreePath === e)) {
-    (Ea.cache.clear?.(), lh(o));
+    (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(o));
     return;
   }
   if (D(t.originalCwd)) return;
@@ -857,7 +857,7 @@ function SQt(e, o) {
     })
   )
     ES(Q());
-  (Ea.cache.clear?.(), lh(o), nB(), Yi()?.refreshGitBranch?.());
+  (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(o), reanchorGitFileWatcher(), getReplBridgeHandle()?.refreshGitBranch?.());
 }
 async function $st(e, o, t) {
   THe(t.session.host);
@@ -871,25 +871,25 @@ async function $st(e, o, t) {
   if (s)
     ($p(s, "resume", o.transcriptPath ? q(o.transcriptPath) : null),
       await renameRecordingForSession(t.session, t.storageV5),
-      await XM());
+      await resetSessionFilePointer());
   if (d) {
     if (
-      (await are(e, {
+      (await adoptForkSessionMetadata(e, {
         stripWorktreeSession: !0,
         stripRelocatedCwd: !0,
         storageV5: t.storageV5,
       }),
       e.contentReplacements?.length)
     )
-      await KV(e.contentReplacements, void 0, t.storageV5);
-  } else EH(e, { storageV5: t.storageV5 });
+      await recordContentReplacement(e.contentReplacements, void 0, t.storageV5);
+  } else restoreSessionMetadata(e, { storageV5: t.storageV5 });
   if ((jwe(e), !d)) {
     let f = DZ(oF.of(t.session.host), e.worktreeSession, void 0, {
       storageV5: t.storageV5,
     });
     if (f) e.messages.push(Ht(RHe(f), "warning"));
-    if (M() && t.storageV5 !== void 0) await YV(t.storageV5);
-    else XV();
+    if (M() && t.storageV5 !== void 0) await adoptResumedSessionFileAsync(t.storageV5);
+    else adoptResumedSessionFile();
   }
   let l = await HZ(e.projectPath, t.storageV5),
     { agentDefinition: c, agentType: m } = Gz(
@@ -924,13 +924,13 @@ async function $st(e, o, t) {
       );
     }
   }
-  ure(t.modeApi?.isCoordinatorMode() ? "coordinator" : "normal");
+  saveMode(t.modeApi?.isCoordinatorMode() ? "coordinator" : "normal");
   let b = o.includeAttribution ? ce(e) : void 0,
     O = AHe(e.agentName, e.agentColor),
     C = t.initialState.standaloneAgentContext
       ? { ...O, ...t.initialState.standaloneAgentContext }
       : O;
-  Gpe(C?.name, t.storageV5, {
+  reclaimSessionNameOnResume(C?.name, t.storageV5, {
     autoOnly: !e.customTitle && !t.initialState.standaloneAgentContext?.name,
   });
   let ee = await ke(
@@ -947,8 +947,8 @@ async function $st(e, o, t) {
     w_(e.turnInterruptionState.message.origin)
   )
     (n("[sessionRestore] Auto-resuming interrupted turn for bg crash-respawn"),
-      _Ke("repl_restore", e.turnInterruptionState.message),
-      ELe(e.messages, e.turnInterruptionState.message),
+      logResumeInterruptedTurn("repl_restore", e.turnInterruptionState.message),
+      removeInterruptedMessage(e.messages, e.turnInterruptionState.message),
       (I = { message: e.turnInterruptionState.message }));
   let _ = t.initialState,
     N = T2();

@@ -13,7 +13,7 @@ import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文
 import { J7, G9, wO, Q7, Kft, zOe, PF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { VYe, KYe, QTt, ZTt, eEt, XYe, GFe, lEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { statSync as de } from "fs";
+import { statSync } from "fs";
 import { join as me } from "path";
 var Ycn = ["-verbose", "-debug"],
   E = [
@@ -877,7 +877,7 @@ function xe(e) {
       for (let c of be()) {
         let i = me(t, r + c);
         try {
-          if (de(i).isFile()) return r + c;
+          if (statSync(i).isFile()) return r + c;
         } catch {}
       }
     }

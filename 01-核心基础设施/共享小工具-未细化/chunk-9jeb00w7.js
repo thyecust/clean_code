@@ -14,7 +14,7 @@ import { uE, J0 } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { N, e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, dn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
-import { PassThrough as R } from "stream";
+import { PassThrough } from "stream";
 function l() {}
 var A0e = Qt(!1);
 function Gb(k) {
@@ -45,7 +45,7 @@ async function bv(r, t) {
 async function yle(r, { columns: t, storageV5: n }) {
   let i = "",
     c = !1,
-    o = new R();
+    o = new PassThrough();
   if (t !== void 0) o.columns = t;
   return (
     o.on("data", (d) => {

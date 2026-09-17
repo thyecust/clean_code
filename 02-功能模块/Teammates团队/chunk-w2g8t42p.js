@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { OAUTH_BETA_HEADER as Bc } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ht, hasStoredOAuthToken as wu, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { ht, hasStoredOAuthToken, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 var u = 1e4,
-  a = { auth: "teleport-org", timeout: u, headers: { "anthropic-beta": Bc } };
+  a = { auth: "teleport-org", timeout: u, headers: { "anthropic-beta": OAUTH_BETA_HEADER } };
 function zSe() {
   if (St()) return !1;
-  if (!Mt("allow_team_onboarding")) return !1;
-  if (!wu()) return !1;
+  if (!isPolicyAllowed("allow_team_onboarding")) return !1;
+  if (!hasStoredOAuthToken()) return !1;
   return H("tengu_flint_harbor_share", !1);
 }
 function o(e) {
@@ -30,7 +30,7 @@ function o(e) {
   return e.data;
 }
 function t() {
-  if (!Mt("allow_team_onboarding"))
+  if (!isPolicyAllowed("allow_team_onboarding"))
     throw Error("Onboarding guide unavailable: policy-disabled");
 }
 async function rjn(e, n, r) {

@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { _U, uf, ZQe, qCt, yr, jD, tZe, eRn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getPeerBridgeIdentity as OCe } from "../权限系统/chunk-1y2g140m.js";
+import { getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
 import { pK } from "../../01-核心基础设施/共享小工具-未细化/chunk-f1stkzph.js";
 import { cp } from "./chunk-enjekn9t.js";
 var tdt =
@@ -44,9 +44,9 @@ function Ace(e) {
   return `'${e}' is this session's own address \u2014 a message or file sent there would only come back to this conversation; there is no one else at that address to send to.`;
 }
 function f2(e) {
-  let s = pr(e);
-  return [OCe()?.bridgeSessionId, pK()].some(
-    (n) => typeof n === "string" && pr(n) === s,
+  let s = sessionIdBody(e);
+  return [getPeerBridgeIdentity()?.bridgeSessionId, pK()].some(
+    (n) => typeof n === "string" && sessionIdBody(n) === s,
   );
 }
 function Yb(e) {

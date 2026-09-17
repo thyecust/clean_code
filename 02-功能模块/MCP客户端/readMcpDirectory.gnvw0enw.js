@@ -12,12 +12,12 @@
 import { Hee } from "./chunk-5wa92x7d.js";
 import { Go, Ki } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { t7e } from "./chunk-0mwqsv0r.js";
 import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
 var a = 20;
-function c(r) {
+function serverDeclaresDirectoryRead(r) {
   let e = r?.extensions?.[t7e];
   return (
     e != null &&
@@ -26,8 +26,8 @@ function c(r) {
     e.directoryRead === !0
   );
 }
-async function R(r, e) {
-  if (!c(r.capabilities))
+async function readMcpDirectory(r, e) {
+  if (!serverDeclaresDirectoryRead(r.capabilities))
     throw Error(
       "readMcpDirectory called on a server without directoryRead capability",
     );
@@ -48,7 +48,7 @@ async function R(r, e) {
     } catch (n) {
       if (s === 0 || !(n instanceof Ki && n.code === Go.InvalidParams)) throw n;
       return (
-        J(
+        logMCPDebug(
           r.name,
           `resources/directory/read ${e}: page ${s + 1} returned InvalidParams on cursor; returning ${t.length} entries from prior pages`,
         ),
@@ -58,10 +58,10 @@ async function R(r, e) {
     (t.push(...i.resources), (o = i.nextCursor), s++);
   } while (o && s < a);
   if (o)
-    J(
+    logMCPDebug(
       r.name,
       `resources/directory/read ${e}: stopped at ${a} pages with more pending`,
     );
   return t;
 }
-export { R as readMcpDirectory, c as serverDeclaresDirectoryRead };
+export { readMcpDirectory, serverDeclaresDirectoryRead };

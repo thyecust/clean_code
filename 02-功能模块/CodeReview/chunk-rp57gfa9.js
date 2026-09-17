@@ -12,11 +12,11 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { Zt, Io, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ZA } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { gD } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 var f = m(() =>
@@ -42,19 +42,19 @@ async function v(e) {
       timeout: 3000,
       credentials: e,
     });
-    if (!t.ok) return (g("api_ultrareview_quota", "request_failed"), null);
+    if (!t.ok) return (logFeatureSad("api_ultrareview_quota", "request_failed"), null);
     let o = f().safeParse(t.data);
     if (!o.success)
       return (
         n(`fetchUltrareviewQuota schema mismatch: ${o.error.message}`),
-        g("api_ultrareview_quota", "schema_mismatch"),
+        logFeatureSad("api_ultrareview_quota", "schema_mismatch"),
         null
       );
-    return (y("api_ultrareview_quota"), o.data);
+    return (logFeatureOk("api_ultrareview_quota"), o.data);
   } catch (t) {
     return (
       n(`fetchUltrareviewQuota failed: ${t}`),
-      g("api_ultrareview_quota", "request_failed"),
+      logFeatureSad("api_ultrareview_quota", "request_failed"),
       null
     );
   }
@@ -120,7 +120,7 @@ function _() {
 }
 function HDt(e) {
   if (!ZA()) return !1;
-  if (!Mt("allow_remote_sessions")) return !1;
+  if (!isPolicyAllowed("allow_remote_sessions")) return !1;
   return _()[e] === !0;
 }
 function hnn() {
@@ -130,7 +130,7 @@ function DBn(e) {
   Te((r) => (r.hasRunUltrareview ? r : { ...r, hasRunUltrareview: !0 }), e);
 }
 function C(e) {
-  i("tengu_ultrareview_awareness_shown", { surface: u(e) });
+  i("tengu_ultrareview_awareness_shown", { surface: fromEnum(e) });
 }
 function _nn(e) {
   return `${e} free ${e === 1 ? "review" : "reviews"} left`;

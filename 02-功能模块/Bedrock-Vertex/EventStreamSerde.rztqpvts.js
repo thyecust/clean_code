@@ -191,15 +191,15 @@ class x {
     };
   }
 }
-var z, E;
+var z, EventStreamSerde;
 var M = Wo(() => {
   z = s_();
-  E = x;
+  EventStreamSerde = x;
 });
 M();
-export { E as EventStreamSerde };
+export { EventStreamSerde };
 export default {
   get EventStreamSerde() {
-    return E;
+    return EventStreamSerde;
   },
 };

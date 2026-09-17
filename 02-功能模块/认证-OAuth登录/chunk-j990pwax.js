@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { kGe } from "./chunk-3wfaaze4.js";
-import { LATEST_PROTOCOL_VERSION as WQ } from "../MCP客户端/chunk-tv3jbp8f.js";
+import { LATEST_PROTOCOL_VERSION } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { PP, PQ } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { Mke, s, Nke, T, O, tB, v, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var d = Nke()
@@ -514,7 +514,7 @@ function ge(e, t) {
 }
 async function we(e, t, r, o) {
   let n = new URL(e),
-    i = o?.protocolVersion ?? WQ,
+    i = o?.protocolVersion ?? LATEST_PROTOCOL_VERSION,
     u;
   if (o?.metadataUrl) u = new URL(o.metadataUrl);
   else {
@@ -562,7 +562,7 @@ function ze(e) {
     o
   );
 }
-async function lPe(e, { fetchFn: t = fetch, protocolVersion: r = WQ } = {}) {
+async function lPe(e, { fetchFn: t = fetch, protocolVersion: r = LATEST_PROTOCOL_VERSION } = {}) {
   let o = { "MCP-Protocol-Version": r, Accept: "application/json" },
     n = ze(e);
   for (let { url: i, type: u } of n) {

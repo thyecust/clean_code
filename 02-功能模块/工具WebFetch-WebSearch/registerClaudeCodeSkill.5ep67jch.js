@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sQ, isUsing3PServices as k6, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { sQ, isUsing3PServices, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { tWe, Qst, s$n } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import { registerBundledSkill as eo } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
 import { SSt } from "../../01-核心基础设施/设置-配置/chunk-5q6f0q9d.js";
 function v() {
   return import("./SKILL_PROMPT.6yeyjf7j.js");
@@ -84,7 +84,7 @@ ${e.join(`
 ${e.join(`
 `)}`);
   }
-  let C = Object.keys(bn()).sort();
+  let C = Object.keys(getSettings_DEPRECATED()).sort();
   if (C.length > 0)
     n.push(
       `**Settings keys configured (values omitted):** ${C.join(", ")}. To see values, the user can run \`claude config list\` or open \`~/.claude/settings.json\`.`,
@@ -122,7 +122,7 @@ ${e.join(`
 
 `)}`);
   }
-  if (k6())
+  if (isUsing3PServices())
     n.push(
       "**Provider context:** This session is not using Anthropic's first-party API. WebSearch may be unavailable, `/feedback` is unavailable, and some features behave differently \u2014 check the docs page for the user's specific provider. Direct issues to https://github.com/anthropics/claude-code/issues.",
     );
@@ -152,8 +152,8 @@ ${s}`);
 
 `);
 }
-function U({ disabled: a = !1 } = {}) {
-  eo({
+function registerClaudeCodeSkill({ disabled: a = !1 } = {}) {
+  registerBundledSkill({
     name: S,
     menuDescription: "Answer questions about Claude Code features and settings",
     description: E,
@@ -171,4 +171,4 @@ function U({ disabled: a = !1 } = {}) {
     },
   });
 }
-export { U as registerClaudeCodeSkill };
+export { registerClaudeCodeSkill };

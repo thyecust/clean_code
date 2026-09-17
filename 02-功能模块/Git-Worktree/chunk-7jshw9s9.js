@@ -10,9 +10,9 @@
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrowWithCwd as Be } from "./chunk-9ys1bnqr.js";
-import { CONVENTIONAL_DEFAULT_BRANCH_NAMES as O2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
+import { CONVENTIONAL_DEFAULT_BRANCH_NAMES } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
   Ds,
   Ct,
@@ -29,9 +29,9 @@ import {
 import { pI, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { JA } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
-import { readlink as O } from "fs/promises";
+import { readlink } from "fs/promises";
 import { join as U } from "path";
-import { finished as W } from "stream/promises";
+import { finished } from "stream/promises";
 var Oan = 5000,
   Y = 1500,
   G = 8,
@@ -84,7 +84,7 @@ async function Dan({
       verdict: m.reason === "probe_failed" ? _(_ze(o, u.signal, m.failure)) : m,
     };
   } catch (c) {
-    if (!Ct(u.signal)) h(c);
+    if (!Ct(u.signal)) logError(c);
     return {
       probedAtMs: a,
       durationMs: Date.now() - a,
@@ -282,7 +282,7 @@ async function Z(e, i, r) {
       );
     return { ref: t.name, branch: t.branch, remote: o.remote, head: o.head };
   } catch (t) {
-    if (!Ct(e.signal)) h(t);
+    if (!Ct(e.signal)) logError(t);
     return null;
   }
 }
@@ -293,7 +293,7 @@ async function Q(e, i) {
       "for-each-ref",
       "--format=%(refname)%00%(objectname)%00%(symref)",
       t,
-      ...O2e.map((s) => `${r}${s}`),
+      ...CONVENTIONAL_DEFAULT_BRANCH_NAMES.map((s) => `${r}${s}`),
     ]);
   if (o.exitCode !== 0) return null;
   let a = new Map(
@@ -311,7 +311,7 @@ async function Q(e, i) {
       ...(d !== void 0 && d.target !== t && d.target.startsWith(r)
         ? [{ branch: d.target.slice(r.length), sha: d.sha }]
         : []),
-      ...O2e.flatMap((s) => {
+      ...CONVENTIONAL_DEFAULT_BRANCH_NAMES.flatMap((s) => {
         let m = a.get(`${r}${s}`);
         return m === void 0 ? [] : [{ branch: s, sha: m.sha }];
       }),
@@ -347,7 +347,7 @@ function _ze(e, i, r) {
 async function Jb({ gitRoot: e, signal: i, timeoutMs: r }, t, o) {
   let a = await H(e);
   if (a === null) return { stdout: "" };
-  return Be(dH(), S(t), {
+  return execFileNoThrowWithCwd(dH(), S(t), {
     cwd: e,
     env: a,
     extendEnv: !1,
@@ -382,7 +382,7 @@ async function pFt(
       s.stdout?.on("data", (b) => {
         if (((d += b.length), !u && d > a)) ((u = !0), s.kill());
       }));
-    let m = s.stdout ? W(s.stdout).catch(() => {}) : Promise.resolve(),
+    let m = s.stdout ? finished(s.stdout).catch(() => {}) : Promise.resolve(),
       p = await s;
     await m;
     let f =
@@ -503,7 +503,7 @@ async function F(e, i, r, t, o) {
   if (!pI(r)) return null;
   if (t === J)
     try {
-      return JA(await O(U(e, r), "buffer"));
+      return JA(await readlink(U(e, r), "buffer"));
     } catch {}
   let a = await o$(e, i, r, o);
   return a.kind === "read" ? JA(a.content) : null;

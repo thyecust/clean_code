@@ -11,27 +11,27 @@
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ke, bB, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { archiveRemoteSession as LR, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { archiveRemoteSession, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { findGitRoot as tr, getBranch as Da, getDefaultBranch as Fw, hasUnpushedCommits as Tnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { findGitRoot, getBranch, getDefaultBranch, hasUnpushedCommits } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
-import { PM, ede, _ne, IX, cde, teleportToRemote as Kv, subscribeRemoteSessionToPR as vmn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { PM, ede, _ne, IX, cde, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { nCe, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
-import { CRON_DELETE_TOOL_NAME as YS } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { getSdkHostedBridgeHandle as bw, getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { CRON_DELETE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
+import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -92,10 +92,10 @@ async function Je(a, n, { signal: c, onProgress: w }) {
             !1,
           ]
         : await Promise.all([
-            Da(h),
-            Fw(h),
+            getBranch(h),
+            getDefaultBranch(h),
             _ne({ cwd: h, storageV5: n.storageV5, credentials: n.credentials }),
-            Tnt(h),
+            hasUnpushedCommits(h),
           ]);
     if (m === void 0 && !f && G === H)
       return O(
@@ -114,7 +114,7 @@ ${s}`,
     let k;
     if (f) k = "remote_session";
     else {
-      let s = !g || tr(g) === tr(Q());
+      let s = !g || findGitRoot(g) === findGitRoot(Q());
       k = "remote_session";
     }
     let J = ["pr", "view"];
@@ -125,7 +125,7 @@ ${s}`,
       stdout: A,
       code: P,
       error: le,
-    } = await Be("gh", J, {
+    } = await execFileNoThrowWithCwd("gh", J, {
       timeout: 1e4,
       preserveOutputOnError: !0,
       abortSignal: c,
@@ -219,7 +219,7 @@ ${B.join(`
       );
     w?.({ step: "spawning" });
     let pe,
-      j = await Kv({
+      j = await teleportToRemote({
         initialMessage: Ne,
         source: "autofix_pr",
         branchName: q,
@@ -240,14 +240,14 @@ ${B.join(`
         credentials: n.credentials,
       });
     if (c.aborted) {
-      if (j) LR(j.id);
+      if (j) archiveRemoteSession(j.id);
       return ie();
     }
     if (!j)
       return O(pe ?? "cloud session creation failed.", "session_create_failed");
     w?.({ step: "subscribing" });
-    let Oe = await vmn(j.id, `${W}/${M}`, v);
-    if (c.aborted) return (LR(j.id), ie());
+    let Oe = await subscribeRemoteSessionToPR(j.id, `${W}/${M}`, v);
+    if (c.aborted) return (archiveRemoteSession(j.id), ie());
     cde({
       remoteTaskType: "autofix-pr",
       session: { id: j.id, title: j.title },
@@ -299,7 +299,7 @@ ${B.join(`
 var Ie = "Babysit PR ";
 function O(a, n) {
   return (
-    i("tengu_autofix_pr_result", { result: S("failed"), error_code: u(n) }),
+    i("tengu_autofix_pr_result", { result: S("failed"), error_code: fromEnum(n) }),
     { kind: "error", message: `Autofix PR failed: ${a}`, code: n }
   );
 }
@@ -310,13 +310,13 @@ function ie() {
   );
 }
 async function Ke(a, n, c, w) {
-  let m = Yi() ?? bw(),
+  let m = getReplBridgeHandle() ?? getSdkHostedBridgeHandle(),
     U = !1,
     T = !1,
     g = U && !T,
     f = ic() && !!m,
     Y = g && f && m ? await m.subscribePR(n, c) : { ok: !1 },
-    h = `${Ie}${a} (created in this session). Check state with \`gh pr view ${c} -R ${n} --json state,mergeable,mergeStateStatus,statusCheckRollup\` and new review comments with \`gh api --paginate repos/${n}/pulls/${c}/comments\`. If MERGED or CLOSED, delete this cron with ${YS} and report the outcome. If CI is failing, comments are unaddressed, or there are merge conflicts, fix and push.${w} Otherwise nothing to do \u2014 complete the turn without commentary.`,
+    h = `${Ie}${a} (created in this session). Check state with \`gh pr view ${c} -R ${n} --json state,mergeable,mergeStateStatus,statusCheckRollup\` and new review comments with \`gh api --paginate repos/${n}/pulls/${c}/comments\`. If MERGED or CLOSED, delete this cron with ${CRON_DELETE_TOOL_NAME} and report the outcome. If CI is failing, comments are unaddressed, or there are merge conflicts, fix and push.${w} Otherwise nothing to do \u2014 complete the turn without commentary.`,
     H = (await vj()).some(
       (I) => I.durable === !1 && I.prompt.startsWith(`${Ie}${a} `),
     );
@@ -482,7 +482,7 @@ function ye(or) {
     _e;
   if (X[2] !== oe || X[3] !== re || X[4] !== x)
     ((_e = () => {
-      let xe = hr();
+      let xe = createAbortController();
       return (
         (tt.current = xe),
         ge(oe, re, {

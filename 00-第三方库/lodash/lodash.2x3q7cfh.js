@@ -26,11 +26,11 @@ import {
 } from "./lodash.207999qb.js";
 import { OMn, idr, adr, M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { homedir as Fi } from "os";
+import { homedir } from "os";
 import { sep as cn } from "path";
 import { randomUUID as i8 } from "crypto";
 import { randomUUID as An } from "crypto";
-import { createHash as kn, randomBytes as xn } from "crypto";
+import { createHash, randomBytes } from "crypto";
 function _m(e) {
   return e;
 }
@@ -58,7 +58,7 @@ function Mb(e) {
 var Tn = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function mB(e, t) {
   let o = Buffer.from(t.replace(/-/g, ""), "hex"),
-    r = kn("sha1").update(o).update(Buffer.from(e, "utf8")).digest();
+    r = createHash("sha1").update(o).update(Buffer.from(e, "utf8")).digest();
   ((r[6] = (r[6] & 15) | 80), (r[8] = (r[8] & 63) | 128));
   let i = r.subarray(0, 16).toString("hex");
   return `${i.slice(0, 8)}-${i.slice(8, 12)}-${i.slice(12, 16)}-${i.slice(16, 20)}-${i.slice(20, 32)}`;
@@ -69,7 +69,7 @@ function Xn(e) {
 }
 function bh(e) {
   if (e && !Ye.test(e)) e = e.replace(/[^\w-]/g, "").slice(0, 63);
-  let t = xn(8).toString("hex");
+  let t = randomBytes(8).toString("hex");
   return e ? `a${e}-${t}` : `a${t}`;
 }
 var Z = "3ab19d7e-9f35-45c2-926e-75e271cc60b3";
@@ -672,7 +672,7 @@ function Br(e, t) {
   return R(e, t);
 }
 var Qs = Br;
-import { basename as _r, dirname as Ft } from "path";
+import { basename, dirname } from "path";
 class j {
   #e;
   #t = new WeakMap();
@@ -842,7 +842,7 @@ class Et {
         !o.includes("\x00") &&
         !this.primedFiles.has(o) &&
         (r.settings !== null || r.errors.length > 0) &&
-        (o === e || Ft(o) === t)
+        (o === e || dirname(o) === t)
       )
         return !0;
     return !1;
@@ -855,8 +855,8 @@ class Et {
       if (
         !o.includes("\x00") &&
         !this.primedFiles.has(o) &&
-        Ft(o) === e &&
-        !t.includes(_r(o))
+        dirname(o) === e &&
+        !t.includes(basename(o))
       )
         return !0;
     return !1;
@@ -4127,7 +4127,7 @@ function wz() {
   return e !== void 0 && String(e).trim() === "bg" ? null : adr;
 }
 function VR() {
-  return he() === Fi();
+  return he() === homedir();
 }
 function sn() {
   return g()?.projectRoot ?? n().project.projectRoot;

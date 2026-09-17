@@ -10,13 +10,13 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hVn, rht, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { formatTokens as Pn, formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 function xlt(o) {
   let r = C(o);
   if (r === null) return null;
-  let t = Pn(o.totalTokens - o.rawMaxTokens),
-    l = Pn(o.rawMaxTokens);
+  let t = formatTokens(o.totalTokens - o.rawMaxTokens),
+    l = formatTokens(o.rawMaxTokens);
   if (r === "hard_limit") {
     let m = Ie(process.env.DISABLE_COMPACT) ? "/clear" : "/compact or /clear";
     return `Context exceeds the ${l}-token limit by ${t} tokens \u2014 run ${m} to continue.`;
@@ -48,7 +48,7 @@ function Hlt(o, r) {
 `;
   ((e += `**Model:** ${T}  
 `),
-    (e += `**Tokens:** ${Pn(l)} / ${Pn(i)} (${m}%)
+    (e += `**Tokens:** ${formatTokens(l)} / ${formatTokens(i)} (${m}%)
 `));
   let d = xlt(o);
   if (d)
@@ -72,19 +72,19 @@ function Hlt(o, r) {
 `));
     for (let a of x) {
       let S = ((a.tokens / i) * 100).toFixed(1);
-      e += `| ${a.name} | ${Pn(a.tokens)} | ${S}% |
+      e += `| ${a.name} | ${formatTokens(a.tokens)} | ${S}% |
 `;
     }
     let n = t.find((a) => a.name === "Free space");
     if (n && n.tokens > 0) {
       let a = ((n.tokens / i) * 100).toFixed(1);
-      e += `| Free space | ${Pn(n.tokens)} | ${a}% |
+      e += `| Free space | ${formatTokens(n.tokens)} | ${a}% |
 `;
     }
     let s = t.find((a) => a.name === "Autocompact buffer");
     if (s && s.tokens > 0) {
       let a = ((s.tokens / i) * 100).toFixed(1);
-      e += `| Autocompact buffer | ${Pn(s.tokens)} | ${a}% |
+      e += `| Autocompact buffer | ${formatTokens(s.tokens)} | ${a}% |
 `;
     }
     e += `
@@ -99,7 +99,7 @@ function Hlt(o, r) {
       (e += `|------|--------|--------|
 `));
     for (let n of k)
-      e += `| ${n.name} | ${n.serverName} | ${Pn(n.tokens)} |
+      e += `| ${n.name} | ${n.serverName} | ${formatTokens(n.tokens)} |
 `;
     e += `
 `;
@@ -139,7 +139,7 @@ function Hlt(o, r) {
         default:
           s = String(n.source);
       }
-      e += `| ${n.agentType} | ${s} | ${Pn(n.tokens)} |
+      e += `| ${n.agentType} | ${s} | ${formatTokens(n.tokens)} |
 `;
     }
     e += `
@@ -154,7 +154,7 @@ function Hlt(o, r) {
       (e += `|------|------|--------|
 `));
     for (let n of g)
-      e += `| ${n.type} | ${n.path} | ${Pn(n.tokens)} |
+      e += `| ${n.type} | ${n.path} | ${formatTokens(n.tokens)} |
 `;
     e += `
 `;
@@ -169,7 +169,7 @@ function Hlt(o, r) {
 `));
     for (let n of p.skillFrontmatter) {
       let s = xRt(n.source) + (n.pluginName ? ` (${n.pluginName})` : "");
-      e += `| ${n.name} | ${s} | ${xx(n.tokens)} |
+      e += `| ${n.name} | ${s} | ${formatTokenEstimate(n.tokens)} |
 `;
     }
     e += `

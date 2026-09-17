@@ -13,7 +13,7 @@ import { LXe, bD } from "./chunk-cyyrj58q.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { pe } from "./chunk-2c9tjhwd.js";
 var o = pe(pg(), 1);
-import { readdir as c, stat as p } from "fs/promises";
+import { readdir, stat as p } from "fs/promises";
 import { join as a, sep as f } from "path";
 function NNe() {
   if (!bc()) return !1;
@@ -51,7 +51,7 @@ async function FNe() {
   let r = LXe(),
     e;
   try {
-    e = await c(r);
+    e = await readdir(r);
   } catch {
     return null;
   }

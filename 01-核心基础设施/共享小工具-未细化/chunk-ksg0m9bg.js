@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getInitialSettings as Ge } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Bk, Ys } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 function zit() {
-  let e = Ge().defaultShell;
+  let e = getInitialSettings().defaultShell;
   if (e === "bash" && !Ys()) return "powershell";
   if (e === "powershell" && !Bk()) return "bash";
   return e ?? (Ys() ? "bash" : "powershell");

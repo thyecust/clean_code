@@ -31,7 +31,7 @@ import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { mkdir as ke } from "fs/promises";
+import { mkdir } from "fs/promises";
 F();
 import { join as we } from "path";
 function Re(q, it) {
@@ -67,7 +67,7 @@ function Ce(n) {
 function Q(n) {
   return n.tokens.map((o) => o.raw).join("");
 }
-function xe(n) {
+function tableTokenToMarkdown(n) {
   let o = [n.header.map(Q), ...n.rows.map((m) => m.map(Q))].map((m) =>
       m.map((g) => g.replace(/\|/g, "\\|").replace(/[\r\n]/g, " ")),
     ),
@@ -91,7 +91,7 @@ function xe(n) {
   return [s(f), l, ...d.map(s)].join(`
 `);
 }
-function $e(n) {
+function normalizeTablesInMarkdown(n) {
   let o = _u.lexer(n),
     a = n,
     s = 0,
@@ -101,13 +101,13 @@ function $e(n) {
     if (f === -1) continue;
     if (((s = f + l.raw.length), l.type !== "table")) continue;
     let d = l.raw.match(/\n*$/)?.[0] ?? "",
-      m = xe(l) + d;
+      m = tableTokenToMarkdown(l) + d;
     ((a = a.slice(0, f + c) + m + a.slice(f + l.raw.length + c)),
       (c += m.length - l.raw.length));
   }
   return a;
 }
-function Pe(n) {
+function collectRecentAssistantTexts(n) {
   let o = [];
   for (let a = n.length - 1; a >= 0 && o.length < be; a--) {
     let s = n[a];
@@ -124,7 +124,7 @@ function Pe(n) {
   }
   return o;
 }
-function Y(n) {
+function fileExtension(n) {
   if (n) {
     let o = n.replace(/[^a-zA-Z0-9]/g, "");
     if (o && o !== "plaintext") return `.${o}`;
@@ -135,7 +135,7 @@ async function z(n, o) {
   let a = bl(),
     s = we(a, o);
   return (
-    await ke(a, { recursive: !0, mode: 448 }),
+    await mkdir(a, { recursive: !0, mode: 448 }),
     await wb(s, n, { encoding: "utf-8" }),
     s
   );
@@ -220,7 +220,7 @@ function ne(He) {
         return { text: R, filename: X };
       }
       let ae = k[W];
-      return { text: ae.code, filename: `copy${Y(ae.lang)}`, blockIndex: W };
+      return { text: ae.code, filename: `copy${fileExtension(ae.lang)}`, blockIndex: W };
     }),
       (h[6] = k),
       (h[7] = R),
@@ -368,7 +368,7 @@ Preference saved. Use /config to change copyFullResponse`);
   return ye;
 }
 var Qe = async (n, o, a) => {
-  let s = Pe(o.messages);
+  let s = collectRecentAssistantTexts(o.messages);
   if (s.length === 0) return (n("No assistant message to copy"), null);
   let c = 0,
     l = a?.trim();
@@ -388,7 +388,7 @@ var Qe = async (n, o, a) => {
       );
     c = g - 1;
   }
-  let f = $e(Td(s[c])),
+  let f = normalizeTablesInMarkdown(Td(s[c])),
     d = Ce(f),
     m = ee();
   if (d.length === 0 || m.copyFullResponse) {
@@ -404,8 +404,8 @@ var Qe = async (n, o, a) => {
 };
 export {
   Qe as call,
-  Pe as collectRecentAssistantTexts,
-  Y as fileExtension,
-  $e as normalizeTablesInMarkdown,
-  xe as tableTokenToMarkdown,
+  collectRecentAssistantTexts,
+  fileExtension,
+  normalizeTablesInMarkdown,
+  tableTokenToMarkdown,
 };

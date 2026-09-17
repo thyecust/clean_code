@@ -13,44 +13,44 @@ import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { R, l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, z, nje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { eje, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   si,
-  getOrganizationUUID as GD,
-  getOAuthAccountOnHold as bRe,
-  isOAuthRefreshKnownDead as wZe,
-  getClaudeAIOAuthTokenOrigin as qD,
-  handleOAuth401Error as cm,
-  readFreshOAuthAccessToken as dQ,
-  sameOwnerAccount as wg,
-  readFreshOAuthCredentialSnapshot as v5,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
-  getStoredOAuthTokenExpiresAt as XKt,
-  hasStoredOAuthRefreshToken as xRn,
-  getStoredOauthAccountInfo as mh,
+  getOrganizationUUID,
+  getOAuthAccountOnHold,
+  isOAuthRefreshKnownDead,
+  getClaudeAIOAuthTokenOrigin,
+  handleOAuth401Error,
+  readFreshOAuthAccessToken,
+  sameOwnerAccount,
+  readFreshOAuthCredentialSnapshot,
+  checkAndRefreshOAuthTokenIfNeeded,
+  getStoredOAuthTokenExpiresAt,
+  hasStoredOAuthRefreshToken,
+  getStoredOauthAccountInfo,
   Te,
   ee,
   sy,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getProjectsDir as Sc, SKIP_PRECOMPACT_THRESHOLD as qie } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { kd, snapshotGitEvidenceForBridge as XIn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectsDir, SKIP_PRECOMPACT_THRESHOLD } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { kd, snapshotGitEvidenceForBridge } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { _n, Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { hc, getSecureStorage as yn } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
-import { setCseShimGate as T0n, toInfraSessionId as yc, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
-import { isTeammate as Zi } from "../Teammates团队/chunk-811z9z0t.js";
+import { hc, getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { setCseShimGate, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
+import { isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
 import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { getBridgeTokenOverride as RH, getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeBaseUrl as Ype, getBridgeSessionNamePrefix as qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getBridgeTokenOverride, getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { p6, F$e, lrr, Dve } from "./chunk-5ne99rq3.js";
-import { retireBridgeHandle as qqt, setSelfBridgeTitle as Poe } from "../权限系统/chunk-1y2g140m.js";
+import { retireBridgeHandle, setSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import {
-  getBridgeSession as FTe,
-  updateBridgeSessionColorTag as xfn,
+  getBridgeSession,
+  updateBridgeSessionColorTag,
   Ly,
   SLe,
   XKn,
@@ -59,55 +59,55 @@ import {
   $l,
   ya,
   ZWt,
-  isSyncedTranscriptEntry as z5e,
-  getMaterializedSessionFile as il,
-  setInternalEventWriter as K5e,
-  clearInternalEventWriter as Ahn,
-  setInternalEventReader as X5e,
-  saveCustomTitle as DI,
-  writeHistorySuppression as JEe,
-  isSessionHistorySuppressed as YM,
-  readHistorySuppressionFromDisk as Fhn,
-  SUPPRESSION_SCAN_MAX_LINES as c9t,
-  isOwnTranscriptFile as SY,
-  getDerivedTranscriptPathForSession as Z5e,
-  matchesHistorySuppressionLine as u9t,
-  holdSessionHistorySuppressionFor as e8e,
-  isSessionHistorySuppressedFor as JV,
-  pinSessionId as Li,
-  holdPrecautionarySuppressionFor as JM,
-  markPrecautionClearResilientFor as W3,
-  markScanUncertaintyHoldFor as t8e,
-  isScanUncertaintyHoldFor as Whn,
-  claimPrecautionHoldForObservedCause as lre,
-  releaseScanUncertaintyHoldFor as Ghn,
-  isPrecautionarySuppressionHeldFor as fj,
-  isRowForeignToBridgeSession as f9t,
-  isBridgeBindingForeign as cpe,
-  getBridgeBoundConversationSid as qhn,
-  isRemoteEgressSuppressedFor as wY,
-  clearBridgeSession as mj,
-  getCurrentSessionBridge as sD,
-  getCurrentSessionTitle as mu,
-  getCurrentSessionAiTitle as G3,
-  getCurrentSessionAgentColor as upe,
+  isSyncedTranscriptEntry,
+  getMaterializedSessionFile,
+  setInternalEventWriter,
+  clearInternalEventWriter,
+  setInternalEventReader,
+  saveCustomTitle,
+  writeHistorySuppression,
+  isSessionHistorySuppressed,
+  readHistorySuppressionFromDisk,
+  SUPPRESSION_SCAN_MAX_LINES,
+  isOwnTranscriptFile,
+  getDerivedTranscriptPathForSession,
+  matchesHistorySuppressionLine,
+  holdSessionHistorySuppressionFor,
+  isSessionHistorySuppressedFor,
+  pinSessionId,
+  holdPrecautionarySuppressionFor,
+  markPrecautionClearResilientFor,
+  markScanUncertaintyHoldFor,
+  isScanUncertaintyHoldFor,
+  claimPrecautionHoldForObservedCause,
+  releaseScanUncertaintyHoldFor,
+  isPrecautionarySuppressionHeldFor,
+  isRowForeignToBridgeSession,
+  isBridgeBindingForeign,
+  getBridgeBoundConversationSid,
+  isRemoteEgressSuppressedFor,
+  clearBridgeSession,
+  getCurrentSessionBridge,
+  getCurrentSessionTitle,
+  getCurrentSessionAiTitle,
+  getCurrentSessionAgentColor,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { listRegisteredSessionRecords as C7e } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { isPolicyAllowed as Mt, policyDenyKind as DD, policyDeniedHint as sCn } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { listRegisteredSessionRecords } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { isPolicyAllowed, policyDenyKind, policyDeniedHint } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Ud, wEt } from "../Teammates团队/chunk-thxapyam.js";
 import { rf } from "../权限系统/chunk-qdy0h5k2.js";
-import { isBridgeEnabledBlocking as kAn, describeRemoteControlPolicyDenial as w4t, isCseShimEnabled as HAn, isBridgeStateFramesEnabled as ZK, isBridgeResumeRespectsLocalOwnerEnabled as PAn, isBridgeRestoredMatchMintEnabled as OAn } from "./chunk-9estzwf5.js";
+import { isBridgeEnabledBlocking, describeRemoteControlPolicyDenial, isCseShimEnabled, isBridgeStateFramesEnabled, isBridgeResumeRespectsLocalOwnerEnabled, isBridgeRestoredMatchMintEnabled } from "./chunk-9estzwf5.js";
 import { ef } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import { logBridgeSkip as cb } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { hG } from "./chunk-3j7ezsr7.js";
-import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE as Ive, getAttestationFilterPolicy as vme, preflightTrustedDeviceBlocking as lCn } from "./chunk-tyce0p0b.js";
+import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, getAttestationFilterPolicy, preflightTrustedDeviceBlocking } from "./chunk-tyce0p0b.js";
 import { RAe, W8e } from "./chunk-ct52ffwb.js";
-import { globalFileIndexCache as k4, generateFileSuggestions as U3e } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
+import { globalFileIndexCache, generateFileSuggestions } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { Ust } from "./chunk-2mm1aqzx.js";
 import { E2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { readFileForRemote as Dot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { buildWorkspaceDiffResponse as bQt } from "../Git-Worktree/chunk-qdn32vbw.js";
+import { readFileForRemote } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { buildWorkspaceDiffResponse } from "../Git-Worktree/chunk-qdn32vbw.js";
 import { ult, S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
 import { ndt, Yjn } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
@@ -117,11 +117,11 @@ import { APe, ldt, CPe, Bee, abe } from "../../01-核心基础设施/共享小�
 import { Gtn, _Bn, Xat } from "./chunk-1g5kqtqx.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { Jsr, FR } from "./chunk-4zd60pbm.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Qo, pxt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 var gn = 3000;
 async function gt(d, c) {
-  if (!(await Gtn(c)) || !mh()?.accountUuid) return;
+  if (!(await Gtn(c)) || !getStoredOauthAccountInfo()?.accountUuid) return;
   return (s) => mn(s, d, c);
 }
 async function mn(d, c, s) {
@@ -131,14 +131,14 @@ async function mn(d, c, s) {
   );
   return (
     n(`[bridge:signed-out] site=${d} verdict=${r}`),
-    i("tengu_bridge_token_absence_classified", { site: u(d), verdict: u(r) }),
+    i("tengu_bridge_token_absence_classified", { site: fromEnum(d), verdict: fromEnum(r) }),
     r
   );
 }
 async function hn(d, c) {
-  let s = yn(),
+  let s = getSecureStorage(),
     r = await sy(d),
-    h = !r?.accountUuid && Boolean(mh()?.accountUuid);
+    h = !r?.accountUuid && Boolean(getStoredOauthAccountInfo()?.accountUuid);
   if (r?.accountUuid || h) {
     if ((await s.readAsync(c))?.claudeAiOauth?.refreshToken === "")
       return "refresh_token_dead";
@@ -152,24 +152,24 @@ async function hn(d, c) {
   return "signed_out";
 }
 async function mt(d) {
-  let c = pr(d),
-    s = await C7e().catch(() => {
+  let c = sessionIdBody(d),
+    s = await listRegisteredSessionRecords().catch(() => {
       return;
     });
   if (s === void 0) {
-    g("bridge_resume_guard", "registry_read_failed");
+    logFeatureSad("bridge_resume_guard", "registry_read_failed");
     return;
   }
   for (let r of s) {
     if (
       r.pid === process.pid ||
       r.bridgeSessionId === void 0 ||
-      pr(r.bridgeSessionId) !== c
+      sessionIdBody(r.bridgeSessionId) !== c
     )
       continue;
     let h = r.procStartFt ?? r.procStart;
-    if (h === void 0 || !Vs(r.pid)) continue;
-    let p = await Ba(r.pid, { skipCache: !0 });
+    if (h === void 0 || !isProcessRunning(r.pid)) continue;
+    let p = await getProcessStartTimeAsync(r.pid, { skipCache: !0 });
     if (p === void 0) {
       n(
         `[bridge:repl] pid ${r.pid} advertises bridge session ${d} but its start token is unreadable \u2014 not treated as a holder`,
@@ -183,11 +183,11 @@ async function mt(d) {
 function ht() {
   try {
     if (
-      RH() === void 0 &&
-      qD() === "store" &&
-      xRn() &&
-      !wZe() &&
-      bRe() === null
+      getBridgeTokenOverride() === void 0 &&
+      getClaudeAIOAuthTokenOrigin() === "store" &&
+      hasStoredOAuthRefreshToken() &&
+      !isOAuthRefreshKnownDead() &&
+      getOAuthAccountOnHold() === null
     )
       return "unreachable";
   } catch {}
@@ -197,7 +197,7 @@ import { stat as Sn } from "fs/promises";
 import { sep as yt } from "path";
 var _t = 20;
 async function Tt(d, c, s, r, h) {
-  if (YM())
+  if (isSessionHistorySuppressed())
     return (
       n(
         "[persistence-sync] Refusing backfill: conversation carries a history-suppression taint",
@@ -205,8 +205,8 @@ async function Tt(d, c, s, r, h) {
       { uploadedMain: 0, uploadedSubagents: 0 }
     );
   let p = K(),
-    k = il(),
-    F = k !== null && SY(p, k) ? k : Z5e(p),
+    k = getMaterializedSessionFile(),
+    F = k !== null && isOwnTranscriptFile(p, k) ? k : getDerivedTranscriptPathForSession(p),
     [f, b] = await Promise.all([c.readMain(), c.readSubagents()]),
     w = new Set();
   for (let E of f?.events ?? []) {
@@ -228,7 +228,7 @@ async function Tt(d, c, s, r, h) {
       ),
       { uploadedMain: 0, uploadedSubagents: 0 }
     );
-  if (wY(Li(p)))
+  if (isRemoteEgressSuppressedFor(pinSessionId(p)))
     return (
       n(
         "[persistence-sync] Refusing backfill: foreign binding or suppression carrier present at the post-await re-consult",
@@ -237,8 +237,8 @@ async function Tt(d, c, s, r, h) {
     );
   let T = await bt(F, w, !0, r, h);
   if (T === "budget-exhausted") {
-    let E = fj(Li(p));
-    if ((JM(Li(p)), W3(Li(p)), !E)) t8e(Li(p));
+    let E = isPrecautionarySuppressionHeldFor(pinSessionId(p));
+    if ((holdPrecautionarySuppressionFor(pinSessionId(p)), markPrecautionClearResilientFor(pinSessionId(p)), !E)) markScanUncertaintyHoldFor(pinSessionId(p));
     return (
       n(
         "[persistence-sync] Taint sweep budget exhausted: refusing this backfill (precautionary hold, no durable stamp)",
@@ -248,7 +248,7 @@ async function Tt(d, c, s, r, h) {
   }
   if (T === "tainted")
     return (
-      e8e(Li(p)),
+      holdSessionHistorySuppressionFor(pinSessionId(p)),
       n(
         "[persistence-sync] Main transcript tainted: aborting sync (subagents included), healing the in-memory flag",
       ),
@@ -272,12 +272,12 @@ async function Tt(d, c, s, r, h) {
   for (let { agentId: E, path: P } of await kn(s, r)) {
     let x = await bt(P, w, !1, r, h);
     if (x === "budget-exhausted") {
-      let D = fj(Li(p));
-      if ((JM(Li(p)), W3(Li(p)), !D)) t8e(Li(p));
+      let D = isPrecautionarySuppressionHeldFor(pinSessionId(p));
+      if ((holdPrecautionarySuppressionFor(pinSessionId(p)), markPrecautionClearResilientFor(pinSessionId(p)), !D)) markScanUncertaintyHoldFor(pinSessionId(p));
       break;
     }
     if (x === "tainted") {
-      e8e(Li(p));
+      holdSessionHistorySuppressionFor(pinSessionId(p));
       break;
     }
     for (let D of x)
@@ -299,13 +299,13 @@ async function kn(d, c) {
   let r = (
       c !== void 0 ? await bn(c, d) : await Promise.all(d.map((f) => vt(f)))
     ).filter((f) => f !== null),
-    h = r.filter((f) => f.size <= qie),
+    h = r.filter((f) => f.size <= SKIP_PRECOMPACT_THRESHOLD),
     p = h.sort((f, b) => b.mtimeMs - f.mtimeMs).slice(0, _t),
     k = r.length - h.length,
     F = h.length - p.length;
   if (k > 0 || F > 0)
     n(
-      `[persistence-sync] Subagent backfill capped: ${k} over ${qie}B, ${F} beyond ${_t}-agent limit (live stream unaffected)`,
+      `[persistence-sync] Subagent backfill capped: ${k} over ${SKIP_PRECOMPACT_THRESHOLD}B, ${F} beyond ${_t}-agent limit (live stream unaffected)`,
     );
   return p;
 }
@@ -317,7 +317,7 @@ async function bt(d, c, s = !0, r, h) {
     let f = 0,
       b = r && p ? ZWt(r, p) : nje(d);
     for await (let w of b) {
-      if (u9t(w))
+      if (matchesHistorySuppressionLine(w))
         return (
           n(
             "[persistence-sync] Refusing backfill: history-suppression entry in transcript",
@@ -325,7 +325,7 @@ async function bt(d, c, s = !0, r, h) {
           "tainted"
         );
       if (F) {
-        if (++f >= c9t)
+        if (++f >= SUPPRESSION_SCAN_MAX_LINES)
           return (
             n(
               "[persistence-sync] Refusing backfill: pre-boundary taint sweep exhausted its line budget without a verdict",
@@ -340,8 +340,8 @@ async function bt(d, c, s = !0, r, h) {
       } catch {
         continue;
       }
-      if (!z5e(S)) continue;
-      if (f9t(S, h)) continue;
+      if (!isSyncedTranscriptEntry(S)) continue;
+      if (isRowForeignToBridgeSession(S, h)) continue;
       if (!c.has(S.uuid)) k.push(S);
       if ($l(S)) {
         if (!s) break;
@@ -451,7 +451,7 @@ async function bn(d, c) {
   );
 }
 function At(d) {
-  let c = Sc() + yt;
+  let c = getProjectsDir() + yt;
   if (!d.startsWith(c)) return null;
   let s = d.slice(c.length).split(yt);
   if (s.length === 2 && s[1].endsWith(".jsonl")) {
@@ -596,10 +596,10 @@ function Ct(d, c) {
   if (!CPe(r, c)) return "token is for a different session";
   return s;
 }
-var yi = { perFileMs: 400, totalMs: 1500 },
-  Si = { perFileMs: 2000, totalMs: 6000 },
+var REPL_WORKSPACE_DIFF_COMPUTE_BUDGET = { perFileMs: 400, totalMs: 1500 },
+  HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET = { perFileMs: 2000, totalMs: 6000 },
   vn = 60000;
-async function ki(d) {
+async function initReplBridge(d) {
   let {
     getToolPermissionContext: c,
     host: s,
@@ -653,31 +653,31 @@ async function ki(d) {
     workSecret: Ve,
     onWorkSecretRefresh: Vt,
   } = d ?? {};
-  (T0n(HAn), lrr(ZK), Dve(vme));
-  let v = Li(K()),
-    Oe = il() ?? void 0,
-    ke = Oe !== void 0 && v !== void 0 && !SY(v, Oe),
+  (setCseShimGate(isCseShimEnabled), lrr(isBridgeStateFramesEnabled), Dve(getAttestationFilterPolicy));
+  let v = pinSessionId(K()),
+    Oe = getMaterializedSessionFile() ?? void 0,
+    ke = Oe !== void 0 && v !== void 0 && !isOwnTranscriptFile(v, Oe),
     De = ke ? void 0 : Oe,
     _e = !1,
-    I = Boolean(ze) || YM() || fj(v) || JV(v),
-    be = () => wY(Li(K())),
+    I = Boolean(ze) || isSessionHistorySuppressed() || isPrecautionarySuppressionHeldFor(v) || isSessionHistorySuppressedFor(v),
+    be = () => isRemoteEgressSuppressedFor(pinSessionId(K())),
     le = (e) => {
-      if (I || cpe() || be()) return;
+      if (I || isBridgeBindingForeign() || be()) return;
       let t = K();
       return t ? e(t) : void 0;
     };
   async function Xe(e, t, o) {
     if (((I = !0), (_e = !0), ke))
-      g("rc_cross_account_suppression", "torn_entry_pair");
-    else y("rc_cross_account_suppression");
+      logFeatureSad("rc_cross_account_suppression", "torn_entry_pair");
+    else logFeatureOk("rc_cross_account_suppression");
     if (ke)
-      (JM(v),
-        lre(v),
+      (holdPrecautionarySuppressionFor(v),
+        claimPrecautionHoldForObservedCause(v),
         n(
           `[bridge:repl] ${t} veto under a TORN entry pair (mid-/resume window): precautionary suppression only, no permanent taint write`,
           { level: "warn" },
         ));
-    else await JEe(v, De, e, o, O);
+    else await writeHistorySuppression(v, De, e, o, O);
   }
   let Pe = 0,
     Xt = {
@@ -704,7 +704,7 @@ async function ki(d) {
             );
             return;
           }
-          (K5e(
+          (setInternalEventWriter(
             (_, H, ie) => (
               e(_, H, ie).catch((Le) => {
                 (i("tengu_session_persistence_failed", {}),
@@ -716,14 +716,14 @@ async function ki(d) {
             ),
             o,
           ),
-            X5e(t.readMain, t.readSubagents),
+            setInternalEventReader(t.readMain, t.readSubagents),
             n(
               "[bridge:repl] Session persistence enabled \u2014 transcript writer + hydrate readers registered",
             ));
         })();
       },
       onTransportPersistenceTeardown: () => {
-        (Pe++, Ahn());
+        (Pe++, clearInternalEventWriter());
       },
     },
     ne = process.env.CLAUDE_BRIDGE_REATTACH_SESSION,
@@ -746,8 +746,8 @@ async function ki(d) {
     se = ne ? "env" : Ne ? "option" : void 0,
     Qe = !1,
     Me,
-    we = (e, t) => e !== void 0 && t !== void 0 && pr(e) === pr(t),
-    A = Ke === void 0 ? sD() : (Ke ?? void 0);
+    we = (e, t) => e !== void 0 && t !== void 0 && sessionIdBody(e) === sessionIdBody(t),
+    A = Ke === void 0 ? getCurrentSessionBridge() : (Ke ?? void 0);
   if (!ne) {
     if (A) {
       let e = Boolean(A.ownerAccountUuid),
@@ -758,7 +758,7 @@ async function ki(d) {
           : void 0,
         o =
           e &&
-          wg(t, {
+          sameOwnerAccount(t, {
             accountUuid: A.ownerAccountUuid,
             organizationUuid: A.ownerOrganizationUuid,
           });
@@ -778,14 +778,14 @@ async function ki(d) {
       else {
         let m =
           e &&
-          wg(t, {
+          sameOwnerAccount(t, {
             accountUuid: A.ownerAccountUuid,
             organizationUuid: A.ownerOrganizationUuid,
           });
         if (A.noHistoryBackfill) I = !0;
         if (B && we(B, A.id)) B = A.id;
         if (!B) {
-          if (((B = A.id), (ce = A.seq), !m || !OAn())) oe = !0;
+          if (((B = A.id), (ce = A.seq), !m || !isBridgeRestoredMatchMintEnabled())) oe = !0;
           ((se = m
             ? oe
               ? "restored_owner_match_pinned"
@@ -810,8 +810,8 @@ async function ki(d) {
             ));
         else
           ((I = !0),
-            JM(v),
-            lre(v),
+            holdPrecautionarySuppressionFor(v),
+            claimPrecautionHoldForObservedCause(v),
             n(
               "[bridge:repl] Host-directed reattach: this conversation\u2019s recorded owner could not be confirmed as the current login \u2014 attaching with history channels suppressed",
               { level: "warn" },
@@ -820,12 +820,12 @@ async function ki(d) {
     }
   }
   if (ne && B) {
-    if (Qt) ((I = !0), JM(v), lre(v));
+    if (Qt) ((I = !0), holdPrecautionarySuppressionFor(v), claimPrecautionHoldForObservedCause(v));
     let e = await sy(O).catch(() => {
       return;
     });
     if (Je && e?.accountUuid) {
-      if (!wg(e, { accountUuid: Je, organizationUuid: Jt }))
+      if (!sameOwnerAccount(e, { accountUuid: Je, organizationUuid: Jt }))
         ((B = void 0),
           (ce = void 0),
           (se = void 0),
@@ -848,11 +848,11 @@ async function ki(d) {
   }
   let ue,
     et = () =>
-      Whn(v) &&
+      isScanUncertaintyHoldFor(v) &&
       !ze &&
       !_e &&
-      !YM() &&
-      !JV(v) &&
+      !isSessionHistorySuppressed() &&
+      !isSessionHistorySuppressedFor(v) &&
       A?.noHistoryBackfill !== !0 &&
       K() === v
         ? { uncertaintyOnly: !0 }
@@ -863,24 +863,24 @@ async function ki(d) {
   let Ie;
   if (B) Ie = ne ? Yt : Ze ? A?.groupingId : void 0;
   else Ie = je;
-  if (!(await kAn()))
+  if (!(await isBridgeEnabledBlocking()))
     return (
-      cb("not_enabled", "[bridge:repl] Skipping: bridge not enabled"),
+      logBridgeSkip("not_enabled", "[bridge:repl] Skipping: bridge not enabled"),
       null
     );
   let pe = M() && U !== void 0;
-  if (!(pe ? await wC(U) : m_()))
+  if (!(pe ? await getBridgeAccessTokenAsync(U) : getBridgeAccessToken()))
     return (
-      cb("no_oauth", "[bridge:repl] Skipping: no OAuth tokens"),
+      logBridgeSkip("no_oauth", "[bridge:repl] Skipping: no OAuth tokens"),
       G?.("failed", RAe, "auth"),
       null
     );
   let nt = async (e, t, o) => {
-    let m = await v5(O, U).catch(() => {
+    let m = await readFreshOAuthCredentialSnapshot(O, U).catch(() => {
       return;
     });
-    if (wg(m, e)) return !0;
-    return (cb(t, o), G?.("failed", W8e, "terminal"), !1);
+    if (sameOwnerAccount(m, e)) return !0;
+    return (logBridgeSkip(t, o), G?.("failed", W8e, "terminal"), !1);
   };
   if (
     qe &&
@@ -892,32 +892,32 @@ async function ki(d) {
   )
     return null;
   await b_();
-  let fe = DD("allow_remote_control");
+  let fe = policyDenyKind("allow_remote_control");
   if (fe === "cache_miss" || fe === "route_missing")
     return (
-      cb(
+      logBridgeSkip(
         fe === "route_missing" ? "policy_route_missing" : "policy_unverified",
         `[bridge:repl] Skipping: allow_remote_control policy unverified (${fe})`,
       ),
       G?.(
         "failed",
-        sCn("allow_remote_control", "disabled by your organization's policy"),
+        policyDeniedHint("allow_remote_control", "disabled by your organization's policy"),
         "terminal",
       ),
       null
     );
   if (fe === "org_denied")
     return (
-      cb(
+      logBridgeSkip(
         "policy_denied",
         "[bridge:repl] Skipping: allow_remote_control policy not allowed",
       ),
-      G?.("policy_disabled", w4t()),
+      G?.("policy_disabled", describeRemoteControlPolicyDenial()),
       null
     );
-  if (Ge && !Mt("allow_remote_sessions"))
+  if (Ge && !isPolicyAllowed("allow_remote_sessions"))
     return (
-      cb(
+      logBridgeSkip(
         "policy_denied",
         "[bridge:repl] Skipping mirror: allow_remote_sessions policy not allowed",
       ),
@@ -928,16 +928,16 @@ async function ki(d) {
       null
     );
   let rt = !1;
-  if (Ee && Qe && B && PAn()) {
+  if (Ee && Qe && B && isBridgeResumeRespectsLocalOwnerEnabled()) {
     let e = await mt(B);
     if (e) {
       if (Ee.mode === "decline")
         return (
-          cb(
+          logBridgeSkip(
             "restored_pointer_held_locally",
             `[bridge:repl] Skipping: bridge session ${B} from the resumed transcript is still served by local pid ${e.pid} \u2014 not taking it over (/remote-control here moves it)`,
           ),
-          y("bridge_resume_guard"),
+          logFeatureOk("bridge_resume_guard"),
           Ee.onDeclined(e),
           null
         );
@@ -947,29 +947,29 @@ async function ki(d) {
         (rt = !0));
     }
   }
-  let ae = Li(K());
-  if (!YM()) {
-    let e = await Fhn(O);
-    if (e === "found") e8e(ae);
-    else if (e === "clean") Ghn(ae);
-    else if (e === "torn") g("rc_cross_account_suppression", "scan_torn");
+  let ae = pinSessionId(K());
+  if (!isSessionHistorySuppressed()) {
+    let e = await readHistorySuppressionFromDisk(O);
+    if (e === "found") holdSessionHistorySuppressionFor(ae);
+    else if (e === "clean") releaseScanUncertaintyHoldFor(ae);
+    else if (e === "torn") logFeatureSad("rc_cross_account_suppression", "scan_torn");
     else {
-      g(
+      logFeatureSad(
         "rc_cross_account_suppression",
         e === "budget-exhausted" ? "scan_budget_exhausted" : "scan_read_error",
       );
-      let t = fj(ae);
-      if ((JM(ae), W3(ae), !t)) t8e(ae);
+      let t = isPrecautionarySuppressionHeldFor(ae);
+      if ((holdPrecautionarySuppressionFor(ae), markPrecautionClearResilientFor(ae), !t)) markScanUncertaintyHoldFor(ae);
     }
   }
-  if (!I && (YM() || fj(v) || JV(v) || K() !== v))
+  if (!I && (isSessionHistorySuppressed() || isPrecautionarySuppressionHeldFor(v) || isSessionHistorySuppressedFor(v) || K() !== v))
     ((I = !0), (ue = et()), Be?.(ue));
-  if (!RH()) {
+  if (!getBridgeTokenOverride()) {
     let e = ee();
     if (
       e.bridgeOauthDeadExpiresAt != null &&
       (e.bridgeOauthDeadFailCount ?? 0) >= 3 &&
-      XKt() === e.bridgeOauthDeadExpiresAt
+      getStoredOAuthTokenExpiresAt() === e.bridgeOauthDeadExpiresAt
     )
       return (
         n(
@@ -977,10 +977,10 @@ async function ki(d) {
         ),
         null
       );
-    await Ss({ credentials: U, storageV5: O });
-    let t = XKt();
+    await checkAndRefreshOAuthTokenIfNeeded({ credentials: U, storageV5: O });
+    let t = getStoredOAuthTokenExpiresAt();
     if (t !== null && t <= Date.now()) {
-      (cb(
+      (logBridgeSkip(
         "oauth_expired_unrefreshable",
         "[bridge:repl] Skipping: OAuth token expired and refresh failed (re-login required)",
       ),
@@ -1002,21 +1002,21 @@ async function ki(d) {
       );
     }
   }
-  let ve = await lCn(U);
+  let ve = await preflightTrustedDeviceBlocking(U);
   if (ve)
     return (
-      cb("trusted_device_unenrolled", `[bridge:repl] Skipping: ${ve}`),
-      G?.("failed", ve, ve === Ive ? "terminal" : "auth"),
+      logBridgeSkip("trusted_device_unenrolled", `[bridge:repl] Skipping: ${ve}`),
+      G?.("failed", ve, ve === PROACTIVE_ENROLLMENT_DISABLED_MESSAGE ? "terminal" : "auth"),
       null
     );
-  let Q = Ype(),
-    V = `${qre()}-${xU()}`,
+  let Q = getBridgeBaseUrl(),
+    V = `${getBridgeSessionNamePrefix()}-${xU()}`,
     Z = !1,
     N = !1;
   if ($e) ((V = $e), (Z = !0), (N = !0));
   else if (!I) {
-    let e = le(mu),
-      t = le(G3);
+    let e = le(getCurrentSessionTitle),
+      t = le(getCurrentSessionAiTitle);
     if (e) ((V = e), (Z = !0), (N = !0));
     else if (t) ((V = t), (Z = !0));
     else if (de && de.length > 0)
@@ -1042,35 +1042,35 @@ async function ki(d) {
     q = Xat({
       isOwnTitle: (e, t) => te.has(t),
       onRemoteTitleAdopted: (e, t) => {
-        (Poe(e, t), (re = e));
+        (setSelfBridgeTitle(e, t), (re = e));
       },
     }),
     ge = (e, t) => te.has(t) || q.hasSent(e, t),
     re,
-    it = `${qre()}-${xU()}`,
+    it = `${getBridgeSessionNamePrefix()}-${xU()}`,
     te = new Set([V]),
     ot;
   if (I) {
     let e = K(),
-      t = e ? G3(e) : void 0;
+      t = e ? getCurrentSessionAiTitle(e) : void 0;
     if (t) te.add(t);
-    ot = e ? mu(e) : void 0;
+    ot = e ? getCurrentSessionTitle(e) : void 0;
   }
   let st = Promise.resolve(),
     xe = (e, t, o, m) => {
-      let _ = () => m && (cpe() || be()),
+      let _ = () => m && (isBridgeBindingForeign() || be()),
         H = () => !Ue;
       if (J || _() || Ly(t)) return !1;
       return (
         (Z = !0),
         (V = e),
         te.add(e),
-        Poe(t, e),
+        setSelfBridgeTitle(t, e),
         n(`[bridge:repl] derived title from message ${o}: ${e}`),
         q
           .update(t, e, {
             baseUrl: Q,
-            getAccessToken: m_,
+            getAccessToken: getBridgeAccessToken,
             shouldSend: () => {
               if (J || _() || !H()) return !1;
               return !Ly(t);
@@ -1087,26 +1087,26 @@ async function ki(d) {
         H = AbortSignal.timeout(15000);
       S4(e, H, U).then(async (ie) => {
         let Le = () => {
-            let Se = G3(K());
+            let Se = getCurrentSessionAiTitle(K());
             return Boolean(Se && !te.has(Se));
           },
           ft = () => {
-            let Se = mu(K());
+            let Se = getCurrentSessionTitle(K());
             return (
               J || m !== Fe || Ae !== t || N || Boolean(Se && Se !== ot) || Le()
             );
           };
         if (!ie || ft()) return;
-        let fn = pe ? await wC(U) : void 0,
-          ye = await FTe(t, {
+        let fn = pe ? await getBridgeAccessTokenAsync(U) : void 0,
+          ye = await getBridgeSession(t, {
             baseUrl: Q,
-            getAccessToken: pe ? () => fn : m_,
+            getAccessToken: pe ? () => fn : getBridgeAccessToken,
             credentials: U,
           }).catch(() => null);
         if (ft()) return;
         if (ye === null) return;
         if (ye.title && !ge(t, ye.title)) {
-          (Poe(t, ye.title), q.noteRemoteTitle(t, ye.title), (re = t));
+          (setSelfBridgeTitle(t, ye.title), q.noteRemoteTitle(t, ye.title), (re = t));
           return;
         }
         xe(ie, t, _, o);
@@ -1121,17 +1121,17 @@ async function ki(d) {
         )
           q.noteRemoteTitle(Y.bridgeSessionId, e);
       }
-      let o = cpe(),
-        m = o ? qhn() : K();
+      let o = isBridgeBindingForeign(),
+        m = o ? getBridgeBoundConversationSid() : K();
       if (m)
-        DI(m, t, o ? Z5e(m) : void 0, "remote", O).catch((_) => {
+        saveCustomTitle(m, t, o ? getDerivedTranscriptPathForSession(m) : void 0, "remote", O).catch((_) => {
           n(`saveCustomTitle: transcript append failed: ${l(_)}`);
         });
       else
         n(
           "[bridge:repl] Dropping inbound rename mirror: foreign binding with no bound-sid exposure \u2014 the live conversation is not the one the phone renamed",
         );
-      if (!Zi() && !o)
+      if (!isTeammate() && !o)
         st = st.then(async () => {
           try {
             await SLe(t, "user", O);
@@ -1143,20 +1143,20 @@ async function ki(d) {
     },
     dt = (e) => {
       let t = K(),
-        o = le(G3);
+        o = le(getCurrentSessionAiTitle);
       if (!o || ge(e, o)) return !1;
       let m = X;
       return (
-        FTe(e, { baseUrl: Q, getAccessToken: m_ })
+        getBridgeSession(e, { baseUrl: Q, getAccessToken: getBridgeAccessToken })
           .catch(() => null)
           .then((_) => {
-            if (N || re === e || mu(K())) return;
+            if (N || re === e || getCurrentSessionTitle(K())) return;
             if (_ === null) return;
             if (_.title && !ge(e, _.title)) {
-              (Poe(e, _.title), q.noteRemoteTitle(e, _.title), (re = e));
+              (setSelfBridgeTitle(e, _.title), q.noteRemoteTitle(e, _.title), (re = e));
               return;
             }
-            if (K() !== t || le(G3) !== o) return;
+            if (K() !== t || le(getCurrentSessionAiTitle) !== o) return;
             if ((Fe++, xe(o, e, m, !0)))
               He = { bridgeSessionId: e, sessionId: t };
           }),
@@ -1165,22 +1165,22 @@ async function ki(d) {
     },
     tn = () => {
       let e = Y?.bridgeSessionId;
-      if (!e || J || Ue || N || re === e || mu(K())) return;
+      if (!e || J || Ue || N || re === e || getCurrentSessionTitle(K())) return;
       dt(e);
     },
     nn = (e, t) => {
       if (J) return !0;
       if (N || Zt(t) || re === t) return !0;
-      let o = le(mu);
+      let o = le(getCurrentSessionTitle);
       if (o) {
         if (!ge(t, o))
-          FTe(t, { baseUrl: Q, getAccessToken: m_ })
+          getBridgeSession(t, { baseUrl: Q, getAccessToken: getBridgeAccessToken })
             .catch(() => null)
             .then((m) => {
-              if (N || mu(K()) !== o) return;
+              if (N || getCurrentSessionTitle(K()) !== o) return;
               if (m === null) return;
               if (m.title && !ge(t, m.title)) {
-                (Poe(t, m.title), q.noteRemoteTitle(t, m.title), (re = t));
+                (setSelfBridgeTitle(t, m.title), q.noteRemoteTitle(t, m.title), (re = t));
                 return;
               }
               (xe(o, t, X, !0), (N = !0));
@@ -1191,23 +1191,23 @@ async function ki(d) {
       if (Ae !== void 0 && Ae !== t) X = 0;
       if (((Ae = t), X++, X === 1 && !Z)) at(e, t, !1);
       else if (X === 3) {
-        let m = I || cpe() || be() ? void 0 : xt?.(),
+        let m = I || isBridgeBindingForeign() || be() ? void 0 : xt?.(),
           _ = m ? ult(ya(m)) : e;
         at(_, t, m !== void 0);
       }
       return (X >= 3 && (Z || N)) || X >= 8;
     },
     rn = 200,
-    lt = await GD();
+    lt = await getOrganizationUUID();
   if (!lt)
     return (
-      cb("no_org_uuid", "[bridge:repl] Skipping: no org UUID"),
+      logBridgeSkip("no_org_uuid", "[bridge:repl] Skipping: no org UUID"),
       G?.("failed", RAe, "auth"),
       null
     );
-  let on = pe ? await wC(U) : void 0,
+  let on = pe ? await getBridgeAccessTokenAsync(U) : void 0,
     sn = await _Bn({
-      getAccessToken: pe ? () => on : m_,
+      getAccessToken: pe ? () => on : getBridgeAccessToken,
       storageV5: O,
       credentials: U,
     }),
@@ -1215,14 +1215,14 @@ async function ki(d) {
     ct = await ndt();
   if (ct)
     return (
-      cb("version_too_old", `[bridge:repl] Skipping: ${ct}`, !0),
+      logBridgeSkip("version_too_old", `[bridge:repl] Skipping: ${ct}`, !0),
       G?.("failed", "run `claude update` to upgrade", "terminal"),
       null
     );
-  let { branch: dn, gitRepoUrl: ln, defaultBranch: cn } = await XIn(),
+  let { branch: dn, gitRepoUrl: ln, defaultBranch: cn } = await snapshotGitEvidenceForBridge(),
     me;
   function ut() {
-    if (((J = !0), me?.teardown(), Y)) (q.forget(Y.bridgeSessionId), qqt(Y, O));
+    if (((J = !0), me?.teardown(), Y)) (q.forget(Y.bridgeSessionId), retireBridgeHandle(Y, O));
   }
   if (Me) {
     if (
@@ -1245,7 +1245,7 @@ async function ki(d) {
           "[bridge:repl] Skipping: work secret supplied but this init has no session to reattach (no target, or the target was vetoed)",
           { level: "error" },
         ),
-        cb("work_secret_no_target", void 0, !0),
+        logBridgeSkip("work_secret_no_target", void 0, !0),
         G?.(
           "failed",
           "Remote Control could not attach: no session to attach the host credential to",
@@ -1263,7 +1263,7 @@ async function ki(d) {
     } catch (e) {
       return (
         n(`[bridge:repl] Skipping: ${l(e)}`, { level: "error" }),
-        cb("work_secret_rejected", void 0, !0),
+        logBridgeSkip("work_secret_rejected", void 0, !0),
         G?.("failed", `Remote Control could not attach: ${l(e)}`, "terminal"),
         null
       );
@@ -1282,7 +1282,7 @@ async function ki(d) {
       noHistoryBackfill: I && ue?.uncertaintyOnly !== !0,
       neutralFallbackTitle: it,
       onReattachGoneBounce: () => {
-        (te.add(it), (I = !0), Be?.(), JM(v), W3(v), lre(v));
+        (te.add(it), (I = !0), Be?.(), holdPrecautionarySuppressionFor(v), markPrecautionClearResilientFor(v), claimPrecautionHoldForObservedCause(v));
       },
       reattachSessionId: B,
       reattachSequenceNum: ce,
@@ -1292,8 +1292,8 @@ async function ki(d) {
       neverArchive: jt,
       onAuthProven: Kt,
       onReattachPointerDead: () => {
-        if ((JM(v), W3(v), lre(v), !ke))
-          mj(v, De, De ? { targetExists: !0 } : void 0, O);
+        if ((holdPrecautionarySuppressionFor(v), markPrecautionClearResilientFor(v), claimPrecautionHoldForObservedCause(v), !ke))
+          clearBridgeSession(v, De, De ? { targetExists: !0 } : void 0, O);
         Nt?.();
       },
       baseUrl: Q,
@@ -1301,13 +1301,13 @@ async function ki(d) {
       title: V,
       ownerPin: sn,
       onOwnerChanged: ut,
-      getAccessToken: m_,
-      onAuth401: (e) => cm(e, U, O),
+      getAccessToken: getBridgeAccessToken,
+      onAuth401: (e) => handleOAuth401Error(e, U, O),
       classifyFailedOAuthRefresh: ht,
-      onReadFreshOAuthToken: () => dQ(U),
+      onReadFreshOAuthToken: () => readFreshOAuthAccessToken(U),
       onClassifyMissingOAuthToken: an,
       onProactiveRefresh: async () => {
-        await Ss({ credentials: U, storageV5: O });
+        await checkAndRefreshOAuthTokenIfNeeded({ credentials: U, storageV5: O });
       },
       toSDKMessages: (e) => XKn(e, h?.()),
       initialHistoryCap: rn,
@@ -1320,17 +1320,17 @@ async function ki(d) {
       onSessionEstablished: (e) => {
         if (
           (me?.teardown(),
-          (me = Ust(yc(e), Q, () => {
-            let o = m_();
+          (me = Ust(toInfraSessionId(e), Q, () => {
+            let o = getBridgeAccessToken();
             if (!o || J) return null;
             return { Authorization: `Bearer ${o}` };
           })),
           hG() && !St())
         )
           E2n(O);
-        let t = upe();
+        let t = getCurrentSessionAgentColor();
         if (t && t !== "default")
-          xfn(e, t, ef, { baseUrl: Q, getAccessToken: m_ });
+          updateBridgeSessionColorTag(e, t, ef, { baseUrl: Q, getAccessToken: getBridgeAccessToken });
       },
       onBeforePushTriggeringState: () => me?.pulseIfClientPresent(),
       onPermissionResponse: k,
@@ -1349,9 +1349,9 @@ async function ki(d) {
       onRenameSession: en,
       onSetColor: Bt,
       async onFileSuggestions(e) {
-        return (await U3e(k4, e, !0, O)).map((o) => ({ path: o.displayText }));
+        return (await generateFileSuggestions(globalFileIndexCache, e, !0, O)).map((o) => ({ path: o.displayText }));
       },
-      onReadFile: (e, t, o) => Dot(e, t, c?.() ?? rf(), o, "repl_bridge"),
+      onReadFile: (e, t, o) => readFileForRemote(e, t, c?.() ?? rf(), o, "repl_bridge"),
       onGetWorkspaceDiff: s
         ? (e) => {
             let t = c?.() ?? pn,
@@ -1367,7 +1367,7 @@ async function ki(d) {
                 sequence: ++un,
                 permissionContext: t,
                 pendingWaiters: 0,
-                promise: bQt(s, t, r)
+                promise: buildWorkspaceDiffResponse(s, t, r)
                   .then((ie) => {
                     if (
                       H.pendingWaiters === 0 &&
@@ -1430,7 +1430,7 @@ async function ki(d) {
       }),
       J)
     )
-      qqt(L, O);
+      retireBridgeHandle(L, O);
     ((L.selfTitle = V), (L.adoptLocalAiTitle = tn), (L.ownerVetoed = _e));
   }
   return An(L, () => me);
@@ -1453,7 +1453,7 @@ function Cn(d) {
   return r.length > Et ? r.slice(0, Et - 1) + "\u2026" : r;
 }
 export {
-  Si as HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET,
-  yi as REPL_WORKSPACE_DIFF_COMPUTE_BUDGET,
-  ki as initReplBridge,
+  HEADLESS_BRIDGE_WORKSPACE_DIFF_COMPUTE_BUDGET,
+  REPL_WORKSPACE_DIFF_COMPUTE_BUDGET,
+  initReplBridge,
 };

@@ -10,25 +10,25 @@
 
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { oo, Mb, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { lxe, St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { hasIsolatePeerMachines as gie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { PERMISSION_MODES as ly } from "../权限系统/chunk-e4pfvp7x.js";
+import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { PERMISSION_MODES } from "../权限系统/chunk-e4pfvp7x.js";
 import { HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
-  isAutoClassifierActive as yg,
+  isAutoClassifierActive,
   FT,
   Ovn,
   Xme,
@@ -49,17 +49,17 @@ import {
   zCt,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getAgentId as lS, getAgentName as Ip, getTeamName as ii, isTeammate as Zi, getTeammateColor as cS, isTeamLead as ZC } from "./chunk-811z9z0t.js";
+import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./chunk-811z9z0t.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { ps, t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt, ar, Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { $i } from "./chunk-t899nada.js";
 import {
   nH,
   xn,
-  isCustomAgent as K4e,
+  isCustomAgent,
   BS,
   sne,
   hd,
@@ -76,20 +76,20 @@ import {
   UEe,
   npe,
   rpe,
-  readAgentMetadata as fC,
-  getCurrentSessionPeerName as h9t,
-  getCurrentSessionOffBoxPeerName as _9t,
-  getCurrentSessionPeerNameFor as n8e,
-  getAgentTranscript as pre,
+  readAgentMetadata,
+  getCurrentSessionPeerName,
+  getCurrentSessionOffBoxPeerName,
+  getCurrentSessionPeerNameFor,
+  getAgentTranscript,
   Epe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled as Mo, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE as NJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { FGt, $Gt, writeToMailbox as ag, createShutdownRequestMessage as twn, createShutdownApprovedMessage as nwn, createShutdownRejectedMessage as rwn, isStructuredProtocolMessage as DH, markMessagesAsReadByPredicate as OXe } from "./chunk-g6nvp9mm.js";
+import { FGt, $Gt, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
 import { zr } from "./chunk-3k2smxfn.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
-import { primePeerIdentityOwner as UTn, getPeerBridgeIdentity as OCe } from "../权限系统/chunk-1y2g140m.js";
-import { readTeamFileAsync as Pf, updateTeamFile as TK } from "./chunk-6b13bhw1.js";
+import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
+import { readTeamFileAsync, updateTeamFile } from "./chunk-6b13bhw1.js";
 import { _bt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   tdt,
@@ -251,7 +251,7 @@ function As(e) {
     .trim();
 }
 async function He(e, t) {
-  let p = await fC(e, t);
+  let p = await readAgentMetadata(e, t);
   return p?.taskKind === "in_process_teammate" ? p : null;
 }
 async function Xe({
@@ -263,25 +263,25 @@ async function Xe({
   toolUseContext: _,
 }) {
   let i = r.name ?? d,
-    w = r.teamName ?? ii(_.getAppState().teamContext);
+    w = r.teamName ?? getTeamName(_.getAppState().teamContext);
   if (!i || !w)
     throw (
-      f("swarm_in_process_resume", "no_team_context"),
+      logFeatureBad("swarm_in_process_resume", "no_team_context"),
       Error("Cannot resume teammate: no team is active in this session")
     );
   if (l0(i))
     throw (
-      f("swarm_in_process_resume", "unclaimable_name"),
+      logFeatureBad("swarm_in_process_resume", "unclaimable_name"),
       Error(
         "Cannot resume teammate: its recorded name is a reserved recipient or agent-id-shaped name",
       )
     );
   let q,
-    N = await pre(e, _.storageV5, { signal: _.abortController.signal }).catch(
+    N = await getAgentTranscript(e, _.storageV5, { signal: _.abortController.signal }).catch(
       (F) => {
         if (yt(F)) throw F;
         throw (
-          f("swarm_in_process_resume", "transcript_load_failed"),
+          logFeatureBad("swarm_in_process_resume", "transcript_load_failed"),
           new R(
             `Cannot resume teammate: ${l(F)}`,
             "Cannot resume teammate: its transcript could not be loaded",
@@ -299,7 +299,7 @@ async function Xe({
     let F = _.options.agentDefinitions.activeAgents.find(
       (Z) => Z.agentType === r.customAgentType,
     );
-    if (F && K4e(F)) W = F;
+    if (F && isCustomAgent(F)) W = F;
     else
       ((q = "agent_type_unresolved"),
         (W = {
@@ -310,7 +310,7 @@ async function Xe({
           source: "projectSettings",
         }));
   }
-  if (!(await OXe(i, (F) => DH(F.text), w, _.storageV5)))
+  if (!(await markMessagesAsReadByPredicate(i, (F) => isStructuredProtocolMessage(F.text), w, _.storageV5)))
     n(
       `[resumeInProcessTeammate] stale protocol-frame drop for ${i} did not land; the resumed runner may see stale protocol frames`,
       { level: "warn" },
@@ -331,7 +331,7 @@ async function Xe({
         permissionMode:
           r.permissionMode !== void 0 &&
           r.permissionMode !== "bypassPermissions" &&
-          ly.includes(r.permissionMode)
+          PERMISSION_MODES.includes(r.permissionMode)
             ? r.permissionMode
             : void 0,
         resumableAgentId: e,
@@ -340,12 +340,12 @@ async function Xe({
     );
   if (!U.ok)
     throw (
-      f("swarm_in_process_resume", "spawn_failed"),
+      logFeatureBad("swarm_in_process_resume", "spawn_failed"),
       n(`[resumeInProcessTeammate] spawn failed: ${U.error}`),
       Error("Failed to respawn in-process teammate")
     );
   if (
-    (await TK(
+    (await updateTeamFile(
       w,
       (F) => {
         let Z = F.members.find((ie) => ie.agentId === U.agentId);
@@ -401,8 +401,8 @@ async function Xe({
     ),
     q)
   )
-    g("swarm_in_process_resume", q);
-  else y("swarm_in_process_resume");
+    logFeatureSad("swarm_in_process_resume", q);
+  else logFeatureOk("swarm_in_process_resume");
   return {
     agentId: U.agentId,
     taskId: U.taskId,
@@ -411,13 +411,13 @@ async function Xe({
 }
 var We = "Send a message to another agent";
 function Ge(e) {
-  let t = Mo()
+  let t = isCrossSessionMessagingEnabled()
       ? `
 | \`"worker"\` | Any agent from \`${$i}\` \u2014 subagent, another local Claude session |
 | \`"worker [3fa9c1]"\` | Same, plus its \`[ref]\` \u2014 only when a listing or an error shows one |`
       : "",
     p = "",
-    r = Mo()
+    r = isCrossSessionMessagingEnabled()
       ? `
 
 ## Cross-session
@@ -492,17 +492,17 @@ function de({
   searchTruncated: q,
 }) {
   let N = {
-    route: u(e),
+    route: fromEnum(e),
     duration_ms: Date.now() - t,
     ...(d && { blocked_wait: !0 }),
-    ...(_ !== void 0 && { via: u(_) }),
+    ...(_ !== void 0 && { via: fromEnum(_) }),
     ...(i && { exact_unique: !0 }),
     ...(w && { previously_pinned: !0 }),
     ...(q && { search_truncated: !0 }),
   };
-  if (p !== void 0) f("send_message_delivery", p, N);
-  else if (r !== void 0) g("send_message_delivery", r, N);
-  else y("send_message_delivery", N);
+  if (p !== void 0) logFeatureBad("send_message_delivery", p, N);
+  else if (r !== void 0) logFeatureSad("send_message_delivery", r, N);
+  else logFeatureOk("send_message_delivery", N);
 }
 var Rs = 100,
   ke = fA + Rs,
@@ -597,7 +597,7 @@ var ws = m(() => _s(!1)),
   Ps = m(() => ws().extend({ message: Re() })),
   Us = m(() => Ss().extend({ message: Re(ys).default(bs) }));
 function Se() {
-  if (Mo()) return zr() ? Ss() : Us();
+  if (isCrossSessionMessagingEnabled()) return zr() ? Ss() : Us();
   return zr() ? ws() : Ps();
 }
 function he(e) {
@@ -647,12 +647,12 @@ function Qe({
 }
 function ve(e, t) {
   let p = ne(e),
-    r = p && (t.agentId !== void 0 || t.teammateContext !== void 0 || Zi());
+    r = p && (t.agentId !== void 0 || t.teammateContext !== void 0 || isTeammate());
   return { notify: p && !r, refusedForPrincipal: r };
 }
 var vs = "message must not be empty";
 function Ce() {
-  g("cross_session_notify_idle", "subscribe_refused_principal");
+  logFeatureSad("cross_session_notify_idle", "subscribe_refused_principal");
 }
 function Is(e, t, p) {
   if (typeof e.message === "string" && e.message.trim().length > 0) return !1;
@@ -733,7 +733,7 @@ function ss(e, t, p, r) {
   if (e) return { model: Fs, display: Hs };
   if (ye(t, p, r))
     return (
-      g("cross_session_notify_idle", "subscribe_stripped_by_handler"),
+      logFeatureSad("cross_session_notify_idle", "subscribe_stripped_by_handler"),
       { model: Xs, display: Ws }
     );
   return;
@@ -778,11 +778,11 @@ var Ie = {
 };
 function Me(e) {
   if (e.agentId) return Ee(e, e.agentId).from;
-  return Ip() || (Zi() ? "teammate" : fs);
+  return getAgentName() || (isTeammate() ? "teammate" : fs);
 }
 async function Gs(e, t, p, r, d, _) {
   let i = r.getAppState(),
-    w = ii(i.teamContext);
+    w = getTeamName(i.teamContext);
   if (!w)
     return {
       data: {
@@ -809,7 +809,7 @@ async function Gs(e, t, p, r, d, _) {
         errorClass: "not_reachable",
       };
     else if (!se) {
-      let U = await Pf(w, r.storageV5);
+      let U = await readTeamFileAsync(w, r.storageV5);
       if (U !== null) {
         let F =
           d !== void 0
@@ -856,8 +856,8 @@ async function Gs(e, t, p, r, d, _) {
     }
   }
   let N = Me(r),
-    K = cS(),
-    Y = await ag(
+    K = getTeammateColor(),
+    Y = await writeToMailbox(
       q,
       {
         from: N,
@@ -890,20 +890,20 @@ async function Gs(e, t, p, r, d, _) {
         target: `@${e}`,
         targetColor: W,
         summary: p,
-        content: or(t, 50),
+        content: truncate(t, 50),
       },
     },
   };
 }
 async function as(e, t, p, r, d, _) {
-  let i = await ag(
+  let i = await writeToMailbox(
     e.identity.agentName,
     {
       from: Me(r),
       text: t,
       summary: p,
       timestamp: new Date().toISOString(),
-      color: cS(),
+      color: getTeammateColor(),
     },
     e.identity.teamName,
     r.storageV5,
@@ -950,14 +950,14 @@ function os(e, t) {
 }
 async function Ys(e, t, p, r) {
   let d = r.getAppState(),
-    _ = ii(d.teamContext),
+    _ = getTeamName(d.teamContext),
     i = Me(r),
     w = WCt("shutdown", t),
-    q = twn({ requestId: w, from: i, reason: p });
+    q = createShutdownRequestMessage({ requestId: w, from: i, reason: p });
   if (
-    (await ag(
+    (await writeToMailbox(
       e,
-      { from: i, text: b(q), timestamp: new Date().toISOString(), color: cS() },
+      { from: i, text: b(q), timestamp: new Date().toISOString(), color: getTeammateColor() },
       _,
       r.storageV5,
     )) === void 0
@@ -981,24 +981,24 @@ async function Ys(e, t, p, r) {
   };
 }
 async function zs(e, t) {
-  let p = ii(),
-    r = lS(),
-    d = Ip() || "teammate";
+  let p = getTeamName(),
+    r = getAgentId(),
+    d = getAgentName() || "teammate";
   n(
     `[SendMessageTool] handleShutdownApproval: teamName=${p}, agentId=${r}, agentName=${d}`,
   );
   let _, i;
   if (p) {
-    let Y = await Pf(p, t.storageV5);
+    let Y = await readTeamFileAsync(p, t.storageV5);
     if (Y && r) {
       let W = Y.members.find((o) => o.agentId === r);
       if (W) ((_ = W.tmuxPaneId), (i = W.backendType));
     }
   }
-  let w = nwn({ requestId: e, from: d, paneId: _, backendType: i }),
-    q = await ag(
+  let w = createShutdownApprovedMessage({ requestId: e, from: d, paneId: _, backendType: i }),
+    q = await writeToMailbox(
       fs,
-      { from: d, text: b(w), timestamp: new Date().toISOString(), color: cS() },
+      { from: d, text: b(w), timestamp: new Date().toISOString(), color: getTeammateColor() },
       p,
       t.storageV5,
     ),
@@ -1060,13 +1060,13 @@ async function zs(e, t) {
   };
 }
 async function Ks(e, t, p) {
-  let r = ii(),
-    d = Ip() || "teammate",
-    _ = rwn({ requestId: e, from: d, reason: t });
+  let r = getTeamName(),
+    d = getAgentName() || "teammate",
+    _ = createShutdownRejectedMessage({ requestId: e, from: d, reason: t });
   if (
-    (await ag(
+    (await writeToMailbox(
       fs,
-      { from: d, text: b(_), timestamp: new Date().toISOString(), color: cS() },
+      { from: d, text: b(_), timestamp: new Date().toISOString(), color: getTeammateColor() },
       r,
       p.storageV5,
     )) === void 0
@@ -1082,7 +1082,7 @@ async function Ks(e, t, p) {
   return {
     data: {
       success: !0,
-      message: `Shutdown rejected. Reason: "${or(t, 50)}". Continuing to work.`,
+      message: `Shutdown rejected. Reason: "${truncate(t, 50)}". Continuing to work.`,
       request_id: e,
     },
   };
@@ -1096,13 +1096,13 @@ class De extends Error {
 async function Js(e, t, p, r, d) {
   let _ = d.getAppState(),
     i = _.teamContext?.teamName;
-  if (!ZC(_.teamContext))
+  if (!isTeamLead(_.teamContext))
     throw new De(
       "Only the team lead can approve plans. Teammates cannot approve their own or other plans.",
     );
   let w = wut({
       recipientName: e,
-      leaderMode: ce(d).mode,
+      leaderMode: getToolPermissionContext(d).mode,
       proactivityLevel: _.proactivityLevel,
       tasks: _.tasks,
     }),
@@ -1115,7 +1115,7 @@ async function Js(e, t, p, r, d) {
       permissionMode: w,
     };
   if (
-    (await ag(
+    (await writeToMailbox(
       e,
       { from: fs, text: b(q), timestamp: new Date().toISOString() },
       i,
@@ -1140,7 +1140,7 @@ async function Js(e, t, p, r, d) {
 async function Qs(e, t, p, r, d) {
   let _ = d.getAppState(),
     i = _.teamContext?.teamName;
-  if (!ZC(_.teamContext))
+  if (!isTeamLead(_.teamContext))
     throw new De(
       "Only the team lead can reject plans. Teammates cannot reject their own or other plans.",
     );
@@ -1152,7 +1152,7 @@ async function Qs(e, t, p, r, d) {
     timestamp: new Date().toISOString(),
   };
   if (
-    (await ag(
+    (await writeToMailbox(
       e,
       { from: fs, text: b(w), timestamp: new Date().toISOString() },
       i,
@@ -1169,7 +1169,7 @@ async function Qs(e, t, p, r, d) {
   return {
     data: {
       success: !0,
-      message: `Plan rejected for ${t} with feedback: "${or(r, 50)}"`,
+      message: `Plan rejected for ${t} with feedback: "${truncate(r, 50)}"`,
       request_id: p,
     },
   };
@@ -1177,10 +1177,10 @@ async function Qs(e, t, p, r, d) {
 var rs =
   "Cross-machine messaging is unavailable: it sends the message through Anthropic servers, which is not allowed on a third-party provider or with nonessential traffic disabled. Messages to sessions on this machine still work.";
 function is() {
-  return Pe() === "firstParty" && !St();
+  return getAPIProvider() === "firstParty" && !St();
 }
 function ds() {
-  if (OCe()?.live) return;
+  if (getPeerBridgeIdentity()?.live) return;
   if (a.CLAUDE_CODE_REMOTE === !0)
     return pK() === void 0 ? "no-container-address" : void 0;
   return "rc-disconnected";
@@ -1198,7 +1198,7 @@ function ms(e) {
 function Ts() {
   return H("tengu_deep_feather", !0);
 }
-var cs = Tt({
+var SendMessageTool = Tt({
   name: Vr,
   searchHint: "send messages to agent teammates",
   maxResultSizeChars: 1e5,
@@ -1219,14 +1219,14 @@ var cs = Tt({
     if (FGt(e) !== void 0) return;
     let t = e.message ?? "";
     if (typeof t === "string")
-      ((e.type = "message"), (e.recipient = e.to), (e.content = or(t, 50)));
+      ((e.type = "message"), (e.recipient = e.to), (e.content = truncate(t, 50)));
     else if (typeof e.message === "object" && e.message !== null) {
       let p = e.message;
       if (((e.type = p.type), (e.recipient = e.to), p.request_id !== void 0))
         e.request_id = p.request_id;
       if (p.approve !== void 0) e.approve = p.approve;
       let r = p.reason ?? p.feedback;
-      if (r !== void 0) e.content = or(r, 50);
+      if (r !== void 0) e.content = truncate(r, 50);
     }
   },
   toAutoClassifierInput(e) {
@@ -1262,7 +1262,7 @@ var cs = Tt({
     }
   },
   async checkPermissions(e, t) {
-    if (gie() && !Ze(e.to)) {
+    if (hasIsolatePeerMachines() && !Ze(e.to)) {
       let p = uf(e.to),
         r = p.scheme;
       if (r === "bridge") {
@@ -1453,7 +1453,7 @@ var cs = Tt({
         ue(t, e, d);
       }
     }
-    if (yg(ce(t).mode))
+    if (isAutoClassifierActive(getToolPermissionContext(t).mode))
       return {
         behavior: "passthrough",
         message: "Message to another agent requires classifier review.",
@@ -1470,8 +1470,8 @@ var cs = Tt({
       };
     {
       let r = uf(e.to).scheme;
-      if ((r === "uds" || r === "bridge") && !Mo())
-        return { result: !1, message: NJe, errorCode: 9 };
+      if ((r === "uds" || r === "bridge") && !isCrossSessionMessagingEnabled())
+        return { result: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE, errorCode: 9 };
     }
     if (ne(e)) {
       if (typeof e.message !== "string")
@@ -1522,7 +1522,7 @@ var cs = Tt({
     if (uf(e.to).scheme === "uds" && typeof e.message === "string")
       return { result: !0 };
     if (typeof e.message === "string") {
-      if (DH(e.message))
+      if (isStructuredProtocolMessage(e.message))
         return {
           result: !1,
           message:
@@ -1648,7 +1648,7 @@ ${w[0].text}`,
     let d = t.agentId;
     if (d !== void 0 && nH(d))
       throw (
-        f("subagent_launch", "send_message_spawner_stop_pending"),
+        logFeatureBad("subagent_launch", "send_message_spawner_stop_pending"),
         Error(
           "This agent has been stopped and its stop is still completing; it cannot send messages.",
         )
@@ -1657,7 +1657,7 @@ ${w[0].text}`,
     function i(h, I, D) {
       de({ route: h, startedAt: _, errorClass: I, ...D });
     }
-    let w = kPe() ? HPe(ce(t)) : void 0;
+    let w = kPe() ? HPe(getToolPermissionContext(t)) : void 0;
     if (d !== void 0 && Agt(t.session, d))
       return (
         i("unresolved", "not_reachable"),
@@ -1670,10 +1670,10 @@ ${w[0].text}`,
         }
       );
     if (Ze(e.to)) {
-      if (!Mo())
+      if (!isCrossSessionMessagingEnabled())
         return (
           i("desktop_host", "not_reachable"),
-          { data: { success: !1, message: NJe } }
+          { data: { success: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } }
         );
       let h = !1;
       if (((h = ne(e)), typeof e.message !== "string"))
@@ -1773,9 +1773,9 @@ ${w[0].text}`,
         ((I = M.take(t.toolUseId, Ne(e)) !== void 0),
           M.dropToolUse(t.toolUseId));
       }
-      if ((h.scheme === "bridge" || h.scheme === "uds") && !Mo())
-        return { data: { success: !1, message: NJe } };
-      let D = n8e(h.scheme === "bridge" ? "bridge" : "uds");
+      if ((h.scheme === "bridge" || h.scheme === "uds") && !isCrossSessionMessagingEnabled())
+        return { data: { success: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } };
+      let D = getCurrentSessionPeerNameFor(h.scheme === "bridge" ? "bridge" : "uds");
       if (h.scheme === "bridge") {
         if (f2(h.target))
           return (
@@ -1807,7 +1807,7 @@ ${w[0].text}`,
             { data: { success: !1, message: P } }
           );
         let v = await IGe({
-          tool: cs,
+          tool: SendMessageTool,
           input: e,
           context: t,
           canUseTool: p,
@@ -1842,7 +1842,7 @@ ${w[0].text}`,
             w,
             t.credentials,
           ),
-          te = x.summary || or(C, 50);
+          te = x.summary || truncate(C, 50);
         if (G.ok) {
           i("bridge", void 0, {
             via: "address",
@@ -1916,7 +1916,7 @@ ${w[0].text}`,
           if (j)
             i("uds", void 0, { ...(L && !L.ok && { degradedClass: he(L) }) });
           else if (L) Je(L, i);
-          let J = e.summary || or(e.message, 50),
+          let J = e.summary || truncate(e.message, 50),
             G = L ? B(e.to, L, $i) : void 0,
             te = [
               ...(j ? [`\u201C${J}\u201D \u2192 ${e.to}${ee.message}`] : []),
@@ -1970,8 +1970,8 @@ ${w[0].text}`,
         t.storageV5,
         t.credentials,
       ));
-    if ((o.kind === "local-session" || o.kind === "cloud-session") && !Mo())
-      return { data: { success: !1, message: NJe } };
+    if ((o.kind === "local-session" || o.kind === "cloud-session") && !isCrossSessionMessagingEnabled())
+      return { data: { success: !1, message: CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } };
     if (o.kind === "cloud-session" && f2(o.sessionId))
       return (
         i("unresolved", "invalid_target"),
@@ -2003,7 +2003,7 @@ ${w[0].text}`,
       );
       return (
         i("unresolved", "invalid_target"),
-        g(
+        logFeatureSad(
           "cross_session_notify_idle",
           o.kind === "main"
             ? "subscribe_self_target"
@@ -2028,7 +2028,7 @@ ${w[0].text}`,
         return (i("unresolved", "not_reachable"), Ie);
       let h;
       try {
-        h = await fC(oo(o.agentId), t.storageV5);
+        h = await readAgentMetadata(oo(o.agentId), t.storageV5);
       } catch {
         return (i("unresolved", "not_reachable"), Ie);
       }
@@ -2175,7 +2175,7 @@ ${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
         },
       };
     }
-    await UTn({ refresh: !0, credentials: t.credentials });
+    await primePeerIdentityOwner({ refresh: !0, credentials: t.credentials });
     let U = await ajn({
       session: t.session,
       to: e.to,
@@ -2187,7 +2187,7 @@ ${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
       credentials: t.credentials,
     });
     if (U.kind === "rebound") {
-      (g("send_message_pin_guard", "rebound"),
+      (logFeatureSad("send_message_pin_guard", "rebound"),
         i("unresolved", "not_reachable"));
       let h = `'${U.name}' now resolves to a different agent than it did earlier in this conversation: earlier sends went to [${U.previous.ref}], which this name no longer reaches. Nothing was sent.`,
         I = `Not sent \u2014 '${U.name}' now means a different agent than it did earlier in this conversation; asked Claude to confirm which one it wants.`,
@@ -2195,7 +2195,7 @@ ${D}${M}${x}${v}${S}${h !== "no" ? wPe(e.to, Yb(t)) : ""}`,
         M =
           Mb(D) !== null
             ? "If you need the earlier agent and it is still running, address it by its agent ID from its spawn result."
-            : `The earlier recipient is ${pr(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${$i} if you still need that session.` : ""}`;
+            : `The earlier recipient is ${sessionIdBody(D) !== D ? "a Claude session on another machine (cloud or Remote Control)" : _ce}; this name now belongs to an agent in this session.${X ? ` Use ${$i} if you still need that session.` : ""}`;
       if (U.next === void 0) {
         let E = X
           ? `Use ${$i} to see everyone you can message.`
@@ -2223,7 +2223,7 @@ ${M}`,
       };
     }
     let F = U.pin ? { pin: U.pin } : void 0;
-    if (F) y("send_message_pin_guard");
+    if (F) logFeatureOk("send_message_pin_guard");
     if (typeof e.message !== "string") {
       let h = o.kind === "mailbox" ? o.recipientName : e.to,
         I = o.kind === "mailbox" ? (o.displayName ?? o.recipientName) : e.to;
@@ -2260,14 +2260,14 @@ ${M}`,
             {
               data: {
                 success: !1,
-                message: `The member this message was resolved to has left team '${ii(E.teamContext) ?? ""}' \u2014 nothing was sent. Another member may share the same display name '${I}'. Check the roster, or message the lead.`,
+                message: `The member this message was resolved to has left team '${getTeamName(E.teamContext) ?? ""}' \u2014 nothing was sent. Another member may share the same display name '${I}'. Check the roster, or message the lead.`,
               },
             }
           );
         else {
-          let B = ii(E.teamContext);
+          let B = getTeamName(E.teamContext);
           if (B) {
-            let P = await Pf(B, t.storageV5);
+            let P = await readTeamFileAsync(B, t.storageV5);
             if (P === null)
               return (
                 i("mailbox", "not_reachable"),
@@ -2489,7 +2489,7 @@ ${M}`,
         try {
           if (((E = await He(h, t.storageV5)), E)) {
             let P = E.name ?? o.agentName,
-              v = E.teamName ?? ii(t.getAppState().teamContext);
+              v = E.teamName ?? getTeamName(t.getAppState().teamContext);
             for (let C of Object.values(t.getAppState().tasks))
               if (
                 hd(C) &&
@@ -2584,7 +2584,7 @@ ${M}`,
         let { sendToUdsSocket: h, ownMessagingSocket: I } = import.meta.require(
             "../跨会话消息(UDS)/chunk-ddtmwhn7.js",
           ),
-          D = h9t(),
+          D = getCurrentSessionPeerName(),
           { subscribeToPeerIdle: M, idleSubscriptionLines: E } =
             import.meta.require("./subscribeToPeerIdle.tk67nd8x.js"),
           { notify: S, refusedForPrincipal: B } = ve(e, t),
@@ -2647,7 +2647,7 @@ ${C.model}`
               ...(o.searchTruncated && { searchTruncated: !0 }),
               ...(x && !x.ok && { degradedClass: he(x) }),
             }));
-          let j = e.summary || or(e.message, 50),
+          let j = e.summary || truncate(e.message, 50),
             L = PGe(d, N, { oneWay: I() === void 0 }),
             J = uPe(o),
             G = ENt(o, se);
@@ -2718,7 +2718,7 @@ ${V.display}`
             { data: { success: !1, message: P } }
           );
         let v = await IGe({
-          tool: cs,
+          tool: SendMessageTool,
           input: e,
           context: t,
           canUseTool: p,
@@ -2741,7 +2741,7 @@ ${V.display}`
           V = es(C, () => i("bridge", "handler_rewrite", { via: I }));
         if (V !== void 0) return V;
         let ee = x === e ? Z : d !== void 0 && N !== void 0 ? wge(N, C) : C,
-          j = _9t(),
+          j = getCurrentSessionOffBoxPeerName(),
           L = await D(
             o.sessionId,
             ee,
@@ -2751,7 +2751,7 @@ ${V.display}`
             w,
             t.credentials,
           ),
-          J = x.summary || or(C, 50);
+          J = x.summary || truncate(C, 50);
         if (
           (i("bridge", L.ok ? void 0 : E(L.error), {
             via: I,
@@ -2839,4 +2839,4 @@ ${V.display}`
     return null;
   },
 });
-export { cs as SendMessageTool };
+export { SendMessageTool };

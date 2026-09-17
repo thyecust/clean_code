@@ -9,27 +9,27 @@
 // Version: 2.1.263
 import { j, B, ze, sc, ld } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   g6,
-  isNonCustomOpusModel as rq,
-  isNonCustomSonnetModel as KCn,
-  getUserSpecifiedModelSetting as Mf,
-  getMainLoopModel as rt,
-  planModeConstituentFamily as jme,
-  getCanonicalName as Ue,
-  getPublicModelDisplayName as IR,
-  parseUserSpecifiedModel as wt,
-  isBgSession as _t,
-  isUnattendedInteractiveSession as Sg,
-  isClaudeAISubscriber as gt,
-  getOauthAccountInfo as vn,
+  isNonCustomOpusModel,
+  isNonCustomSonnetModel,
+  getUserSpecifiedModelSetting,
+  getMainLoopModel,
+  planModeConstituentFamily,
+  getCanonicalName,
+  getPublicModelDisplayName,
+  parseUserSpecifiedModel,
+  isBgSession,
+  isUnattendedInteractiveSession,
+  isClaudeAISubscriber,
+  getOauthAccountInfo,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSecuritySensitiveSetting as hx, getSecuritySensitiveSettingWithSources as Hq, rawSettingsKeyPresence as kBe } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSecuritySensitiveSetting, getSecuritySensitiveSettingWithSources, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import {
   Mue,
   Kte,
@@ -43,7 +43,7 @@ import {
   Qmt,
   Hzn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { randomUUID as E } from "crypto";
+import { randomUUID } from "crypto";
 var J = "later",
   L =
     "Your claude.ai usage limit has reset. Continue the task you were working on when the limit was reached; do not repeat work that is already complete.",
@@ -124,7 +124,7 @@ function $lt() {
   return N(W(e) ? e.enabled : e);
 }
 function K() {
-  return ld() && !_t();
+  return ld() && !isBgSession();
 }
 function de() {
   return K() && $lt();
@@ -133,7 +133,7 @@ function ce() {
   return N(U().autoArm);
 }
 function sLt() {
-  return hx("autoContinueAtUsageLimit")[0];
+  return getSecuritySensitiveSetting("autoContinueAtUsageLimit")[0];
 }
 function Ult() {
   return T(a());
@@ -152,12 +152,12 @@ function v2n(e) {
 var le = 2;
 async function A(e, t = le) {
   try {
-    e.autoContinueKeyPresence = await kBe(
+    e.autoContinueKeyPresence = await rawSettingsKeyPresence(
       "autoContinueAtUsageLimit",
       e.storageV5,
     );
   } catch (n) {
-    ((e.autoContinueKeyPresence = "unknowable"), h(n));
+    ((e.autoContinueKeyPresence = "unknowable"), logError(n));
   }
   if (e.autoContinueKeyPresence !== "unknowable")
     ((e.revocationRescan = "idle"), e.revocationRescanGeneration++);
@@ -176,7 +176,7 @@ async function A(e, t = le) {
       e.unknowableRescanTimer.unref?.());
 }
 function Blt() {
-  let e = Hq("autoContinueAtUsageLimit")[0]?.source;
+  let e = getSecuritySensitiveSettingWithSources("autoContinueAtUsageLimit")[0]?.source;
   return e === void 0 || e === "userSettings";
 }
 function iLt(e) {
@@ -189,7 +189,7 @@ function iLt(e) {
   );
 }
 function Zle(e) {
-  return gt() && vn()?.billingType !== "usage_based" && iLt(e) && de();
+  return isClaudeAISubscriber() && getOauthAccountInfo()?.billingType !== "usage_based" && iLt(e) && de();
 }
 function C4() {
   return a().state;
@@ -280,11 +280,11 @@ function G(e, t, n, o, s) {
     e.queuedBeforeArmUuids.clear());
   for (let r of Nue())
     if (fe(r) || (r.mode === "bash" && Kte(r)))
-      ((r.uuid ??= E()), e.queuedBeforeArmUuids.add(r.uuid));
+      ((r.uuid ??= randomUUID()), e.queuedBeforeArmUuids.add(r.uuid));
   return (
     (e.armedAtMs = n),
-    y("quota_auto_resume"),
-    i("tengu_quota_auto_resume_offer_armed", { origin: u(o) }),
+    logFeatureOk("quota_auto_resume"),
+    i("tengu_quota_auto_resume_offer_armed", { origin: fromEnum(o) }),
     z(e, t.resetsAt ?? 0, null, n, o),
     e.events.emit("armed"),
     !0
@@ -295,10 +295,10 @@ function k2n(e, t = Date.now(), n) {
   if (!Zle(e)) return !1;
   if (o.handoffInProgress) return !1;
   if (!T(o) || !ce()) return !1;
-  if (Sg()) return !1;
+  if (isUnattendedInteractiveSession()) return !1;
   let s = e.resetsAt ?? 0;
   if (s * 1000 - t > P) return !1;
-  if (ke(e.rateLimitType, rt())) return !1;
+  if (ke(e.rateLimitType, getMainLoopModel())) return !1;
   if (d(o) || o.autoArmDedupeResetKeys.has(s)) return !1;
   if (!G(o, e, t, "auto", n)) return !1;
   return (o.events.emit("auto-armed"), !0);
@@ -344,20 +344,20 @@ async function Re(e) {
   e.confirmingMainModel = !0;
   try {
     for (;;) {
-      if (((e.recheckRequestedWhileConfirming = !1), jme(Mf()) !== null))
+      if (((e.recheckRequestedWhileConfirming = !1), planModeConstituentFamily(getUserSpecifiedModelSetting()) !== null))
         return;
-      let t = rt(),
+      let t = getMainLoopModel(),
         n = e.state,
         o = await Hzn(t, void 0, e.storageV5);
       if (e.state.phase !== "armed" || p(e)) return;
-      if (e.recheckRequestedWhileConfirming || rt() !== t || e.state !== n)
+      if (e.recheckRequestedWhileConfirming || getMainLoopModel() !== t || e.state !== n)
         continue;
       if (o === null || !Ce(o)) return;
       ge(e);
       return;
     }
   } catch (t) {
-    h(t);
+    logError(t);
   } finally {
     e.confirmingMainModel = !1;
   }
@@ -419,7 +419,7 @@ function Q(e, t) {
   if (Ae(t)) e.autoArmDedupeResetKeys.clear();
   let n = k(e, e.state.phase);
   if (C(e) && e.state.phase === "idle")
-    i("tengu_quota_auto_resume_cancelled", { reason: u(t) });
+    i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   if ((b(e, t), n && he(t))) e.events.emit("cancelled");
 }
 var jlt = {
@@ -485,7 +485,7 @@ function _e(e) {
 }
 function b(e, t) {
   if (e.state.phase === "idle") return;
-  if (_e(t)) i("tengu_quota_auto_resume_cancelled", { reason: u(t) });
+  if (_e(t)) i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) });
   m(e, { phase: "idle" });
 }
 function srn(e, t) {
@@ -500,7 +500,7 @@ function srn(e, t) {
   if (n.sleptThroughReset)
     return (
       (n.sleptThroughReset = !1),
-      g("quota_auto_resume", "stale"),
+      logFeatureSad("quota_auto_resume", "stale"),
       i("tengu_quota_auto_resume_stale", {
         late_by_ms: Math.round(e - n.state.fireAtMs),
       }),
@@ -520,7 +520,7 @@ function srn(e, t) {
 }
 function V(e, t = L) {
   w(e);
-  let n = E();
+  let n = randomUUID();
   ((e.pendingContinuationUuid = n),
     (e.activeTurnClaim = null),
     e.changed.emit(),
@@ -586,7 +586,7 @@ function Y(e) {
     ((e.lastObservedMs = null), b(e, "manual_submit"));
 }
 function v(e, t) {
-  (i("tengu_quota_auto_resume_cancelled", { reason: u(t) }),
+  (i("tengu_quota_auto_resume_cancelled", { reason: fromEnum(t) }),
     C(e),
     m(e, { phase: "idle" }),
     e.events.emit(
@@ -622,7 +622,7 @@ function H2n(e) {
   else if (n) l = "continuation";
   if (l === null) return null;
   if (t.activeTurnClaim !== null)
-    h(
+    logError(
       Error(
         "quota auto-resume: a turn claimed the episode while another claim was outstanding",
       ),
@@ -655,9 +655,9 @@ function I2n(e, t) {
   }
 }
 function D(e) {
-  (f("quota_auto_resume", "continuation_dropped"),
+  (logFeatureBad("quota_auto_resume", "continuation_dropped"),
     i("tengu_quota_auto_resume_cancelled", {
-      reason: u("continuation_dropped"),
+      reason: fromEnum("continuation_dropped"),
     }),
     e.events.emit("continuation-dropped"));
 }
@@ -683,9 +683,9 @@ function Ce(e) {
 function ye(e, t, n) {
   if (!iLt(t) || !K()) return;
   let o = t.resetsAt ?? 0;
-  if (d(e) && R(t.rateLimitType, rt())) e.autoArmDedupeResetKeys.add(o);
+  if (d(e) && R(t.rateLimitType, getMainLoopModel())) e.autoArmDedupeResetKeys.add(o);
   if (e.state.phase === "armed") {
-    if (o * 1000 > e.state.fireAtMs && R(t.rateLimitType, rt()))
+    if (o * 1000 > e.state.fireAtMs && R(t.rateLimitType, getMainLoopModel()))
       S(e, o, null, e.episodeArmOrigin);
     return;
   }
@@ -698,14 +698,14 @@ function ye(e, t, n) {
     ((e.consecutiveRearms = 0),
       S(
         e,
-        R(t.rateLimitType, rt()) ? o : e.lastArmedResetsAtSeconds,
+        R(t.rateLimitType, getMainLoopModel()) ? o : e.lastArmedResetsAtSeconds,
         null,
         "dialog",
       ));
     return;
   }
   if (e.consecutiveRearms >= ee) {
-    (f("quota_auto_resume", "rearm_cap"),
+    (logFeatureBad("quota_auto_resume", "rearm_cap"),
       e.autoArmDedupeResetKeys.add(o),
       v(e, "rearm_cap"));
     return;
@@ -726,7 +726,7 @@ function S(e, t, n, o) {
 function ke(e, t) {
   if (e !== "seven_day_opus" && e !== "seven_day_sonnet") return !1;
   if (R(e, t)) return !1;
-  let n = jme(Mf());
+  let n = planModeConstituentFamily(getUserSpecifiedModelSetting());
   if (e === "seven_day_opus" && n === "opus") return !1;
   if (e === "seven_day_sonnet" && n === "sonnet") return !1;
   return !0;
@@ -738,11 +738,11 @@ function R(e, t) {
     case "overage":
       return !0;
     case "seven_day_opus":
-      return rq(Ue(t));
+      return isNonCustomOpusModel(getCanonicalName(t));
     case "seven_day_sonnet":
-      return KCn(Ue(t));
+      return isNonCustomSonnetModel(getCanonicalName(t));
     case "seven_day_overage_included": {
-      let n = IR(wt(t));
+      let n = getPublicModelDisplayName(parseUserSpecifiedModel(t));
       if (n === null) return !1;
       let o = n.toLowerCase();
       return VF().some((s) => s.toLowerCase() === o);

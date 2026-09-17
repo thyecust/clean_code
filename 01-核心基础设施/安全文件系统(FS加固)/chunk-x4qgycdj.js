@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { $M, SYNCED_FILE_WRITE_MODE as Ine, T3, Pht, o$, ej, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { $M, SYNCED_FILE_WRITE_MODE, T3, Pht, o$, ej, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Jbe } from "../共享小工具-未细化/chunk-37w8v4sh.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Ae } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
-import { lstat as ie } from "fs/promises";
+import { lstat } from "fs/promises";
 import { join as ae } from "path";
 var vze = 1e5,
   Rze = 104857600;
@@ -23,7 +23,7 @@ function pI(e) {
 }
 async function a3n(e, r) {
   try {
-    let s = await ie(ae(e, r), { bigint: !0 });
+    let s = await lstat(ae(e, r), { bigint: !0 });
     return { path: r, identity: s.ino === 0n ? null : `${s.dev}:${s.ino}` };
   } catch {
     return { path: r, identity: null };
@@ -50,10 +50,10 @@ async function P9(e, r, s, i = null) {
     ? { ...Jbe(o.content), content: o.content, mode: o.mode }
     : null;
 }
-import { close as fe, constants as N, fstat as ge } from "fs";
-import { mkdtemp as we, rm as ye, symlink as Oe } from "fs/promises";
-import { tmpdir as Ee } from "os";
-import { getSystemErrorName as he, promisify as ee } from "util";
+import { close, constants as N, fstat } from "fs";
+import { mkdtemp, rm as ye, symlink } from "fs/promises";
+import { tmpdir } from "os";
+import { getSystemErrorName, promisify } from "util";
 import { constants as z } from "fs";
 function se(e) {
   switch (e) {
@@ -163,7 +163,7 @@ async function de(e, r, s, i) {
 function ue(e) {
   return A(e) === "EEXIST" ? R("WORKING_TMP_TAKEN") : e;
 }
-async function u3n(e, r, s, i, o, t, c = Ine) {
+async function u3n(e, r, s, i, o, t, c = SYNCED_FILE_WRITE_MODE) {
   let f = le(e, s, i);
   if (x(e, f)) throw R("WORKING_DEST_IGNORED");
   let d = Y(e, f),
@@ -460,8 +460,8 @@ function ke(e, r, s) {
     unlinkIn: (t, c) => i.unlink(o(t.handle, c)),
   });
 }
-var Se = ee(ge),
-  Z = ee(fe),
+var Se = promisify(fstat),
+  Z = promisify(close),
   H;
 function T(e) {
   return Buffer.from(e + "\x00");
@@ -485,7 +485,7 @@ function ve() {
           d = Error("libSystem call failed");
         throw (
           (d.errno = f),
-          (d.code = f === 0 ? "EUNKNOWN" : he(-f)),
+          (d.code = f === 0 ? "EUNKNOWN" : getSystemErrorName(-f)),
           (d.syscall = o),
           d
         );
@@ -522,9 +522,9 @@ async function We(e) {
   let { fs: r, path: s } = e,
     i = null;
   try {
-    ((i = await r.realpath(await we(s.join(Ee(), "claude-nfa-")))),
+    ((i = await r.realpath(await mkdtemp(s.join(tmpdir(), "claude-nfa-")))),
       await r.mkdir(s.join(i, "d")),
-      await Oe(s.join(i, "d"), s.join(i, "l")));
+      await symlink(s.join(i, "d"), s.join(i, "l")));
     let o = U | M;
     try {
       await (await r.open(s.join(i, "d", "control"), o, 384)).close();

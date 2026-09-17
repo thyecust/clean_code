@@ -32,7 +32,7 @@ var S = new RegExp(`^${Hoe}$`),
   W = "http://www.w3.org/2000/svg",
   _ = "http://www.w3.org/1998/Math/MathML",
   x = 512;
-function Q(e) {
+function extractInlineScriptHashes(e) {
   let t = new Set(),
     h = (s) => {
       if ((s.tagName ?? "").toLowerCase() === "script") {
@@ -429,7 +429,7 @@ function b(e, t, h, s, i = !1, r = 0) {
   for (let p of e.childNodes ?? []) b(p, t, h, a, i, r + 1);
   for (let p of e.content?.childNodes ?? []) b(p, t, h, a, !0, r + 1);
 }
-function ee(e, t, h = "strict") {
+function verifyWorkshopHtml(e, t, h = "strict") {
   try {
     if (TAn(e))
       return {
@@ -721,4 +721,4 @@ function L(e, t, h) {
         hint: `data-ws-state says "${jN(i.value)}" but the island derives "${s}" \u2014 flip them together (text stays yours; the attribute is the wire contract).`,
       });
 }
-export { Q as extractInlineScriptHashes, ee as verifyWorkshopHtml };
+export { extractInlineScriptHashes, verifyWorkshopHtml };

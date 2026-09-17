@@ -12,7 +12,7 @@ import { Z } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Rxt } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING as YQ, execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { Zie, Lnt, Mhe } from "../共享小工具-未细化/chunk-h1jrnver.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
 function Wd(e, t) {
@@ -140,7 +140,7 @@ async function getAncestorPidsAsync(e, t = 10) {
 }
 async function getAncestorPidsCheckedAsync(e, t = 10) {
   let n = `pid=${String(e)}; for i in $(seq 1 ${t}); do ppid=$(ps -o ppid= -p $pid 2>/dev/null | tr -d ' '); if [ -z "$ppid" ]; then echo FAIL; exit 0; fi; if [ "$ppid" = "0" ] || [ "$ppid" = "1" ]; then echo END; exit 0; fi; echo $ppid; pid=$ppid; done`,
-    r = await Be("sh", ["-c", n], { timeout: 3000 }),
+    r = await execFileNoThrowWithCwd("sh", ["-c", n], { timeout: 3000 }),
     o = (r.stdout ?? "")
       .trim()
       .split(
@@ -160,7 +160,7 @@ async function getAncestorPidsCheckedAsync(e, t = 10) {
 function getProcessCommand(e) {
   try {
     let n = `ps -o command= -p ${String(e)}`,
-      r = YQ(n, { timeout: 1000 });
+      r = execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING(n, { timeout: 1000 });
     return r ? r.trim() : null;
   } catch {
     return null;
@@ -168,7 +168,7 @@ function getProcessCommand(e) {
 }
 function getProcessStartTime(e) {
   try {
-    let t = YQ(`LC_ALL=C TZ=UTC ps -o lstart= -p ${e}`, { timeout: 1000 });
+    let t = execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING(`LC_ALL=C TZ=UTC ps -o lstart= -p ${e}`, { timeout: 1000 });
     return t ? t.trim() : void 0;
   } catch {
     return;
@@ -270,7 +270,7 @@ async function m(e, t) {
   try {
     let r = t === void 0 ? "ps" : Rxt("ps", Wd(t, "PATH") ?? "");
     if (r === null) return;
-    let o = await Be(r, ["-o", "lstart=", "-p", String(e)], {
+    let o = await execFileNoThrowWithCwd(r, ["-o", "lstart=", "-p", String(e)], {
       timeout: 1000,
       ...n,
       env: { ...(t ?? process.env), LC_ALL: "C", TZ: "UTC" },
@@ -282,7 +282,7 @@ async function m(e, t) {
 }
 async function getProcessCreationTimeMsAsync(e) {
   try {
-    let t = await Be("ps", ["-o", "lstart=", "-p", String(e)], {
+    let t = await execFileNoThrowWithCwd("ps", ["-o", "lstart=", "-p", String(e)], {
       timeout: 1000,
       env: { ...process.env, LC_ALL: "C", TZ: "UTC" },
     });

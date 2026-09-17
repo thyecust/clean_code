@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 240 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
@@ -24,7 +24,7 @@ import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2
 F();
 function oe(_e) {
   return (
-    h(_e),
+    logError(_e),
     { offer: !1, reason: "probe_failed", failure: "threw", line: null }
   );
 }
@@ -42,7 +42,7 @@ var q = new Set([
   "folder_unreadable",
   "folder_is_repository",
 ]);
-function ne(ge) {
+function SyncOfferCheck(ge) {
   let i = _(22),
     { decide: b, onDecided: A, onDone: B } = ge,
     I;
@@ -178,4 +178,4 @@ function P(Se) {
   else ee = j[5];
   return ee;
 }
-export { ne as SyncOfferCheck };
+export { SyncOfferCheck };

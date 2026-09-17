@@ -11,17 +11,17 @@ import { j, B, z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
-import { createHash as g, randomUUID as D } from "crypto";
+import { createHash, randomUUID } from "crypto";
 import {
-  closeSync as y,
-  constants as m,
-  fchmodSync as T,
-  fstatSync as E,
-  lstatSync as w,
-  mkdirSync as s,
-  openSync as _,
+  closeSync,
+  constants,
+  fchmodSync,
+  fstatSync,
+  lstatSync,
+  mkdirSync,
+  openSync,
 } from "fs";
-import { tmpdir as S } from "os";
+import { tmpdir } from "os";
 import { join as d } from "path";
 function zy() {
   let e = a.CLAUDE_CODE_TMPDIR;
@@ -37,7 +37,7 @@ function jJ(e) {
       "Set CLAUDE_CODE_TMPDIR to a directory you control, or ask an administrator to remove it.",
     n;
   try {
-    n = _(t, m.O_RDONLY | m.O_DIRECTORY | m.O_NOFOLLOW);
+    n = openSync(t, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
   } catch (o) {
     let c = A(o);
     if (c === "ELOOP" || c === "ENOTDIR")
@@ -47,7 +47,7 @@ function jJ(e) {
     if (c === "EACCES") {
       let u;
       try {
-        let p = w(t);
+        let p = lstatSync(t);
         if (p.uid !== r) u = p.uid;
       } catch {}
       if (u !== void 0)
@@ -63,7 +63,7 @@ function jJ(e) {
     throw o;
   }
   try {
-    let o = E(n);
+    let o = fstatSync(n);
     if (o.uid !== r) {
       if (r === 0 && a.CLAUDE_CODE_CONTAINER_ID) {
         q("warn", "tempdir_owner_mismatch", { observed_uid: o.uid });
@@ -73,9 +73,9 @@ function jJ(e) {
         `Temp directory ${e} is owned by uid ${o.uid}, expected ${r}. Refusing to use it \u2014 another user may have pre-created it. ${i}`,
       );
     }
-    if ((o.mode & 511) !== 448) T(n, 448);
+    if ((o.mode & 511) !== 448) fchmodSync(n, 448);
   } finally {
-    y(n);
+    closeSync(n);
   }
 }
 class f {
@@ -101,10 +101,10 @@ function h(e) {
     t = d(zy(), r);
   if (t !== e.ensured) {
     if (typeof process.getuid === "function")
-      (s(t, { recursive: !0, mode: 448 }), jJ(t));
+      (mkdirSync(t, { recursive: !0, mode: 448 }), jJ(t));
     else
       try {
-        s(t, { recursive: !0, mode: 448 });
+        mkdirSync(t, { recursive: !0, mode: 448 });
       } catch {}
     e.markEnsured(t);
   }
@@ -112,9 +112,9 @@ function h(e) {
 }
 function pve() {
   let e = bl();
-  (s(e, { recursive: !0, mode: 448 }), jJ(e));
+  (mkdirSync(e, { recursive: !0, mode: 448 }), jJ(e));
   let r = d(e, "plugin-tool-staging");
-  return (s(r, { recursive: !0, mode: 448 }), jJ(r), r);
+  return (mkdirSync(r, { recursive: !0, mode: 448 }), jJ(r), r);
 }
 function Qoe() {
   let e = l.of(B().host),
@@ -126,7 +126,7 @@ function Qoe() {
   let n = d(t, `claude-${process.getuid?.() ?? 0}`),
     o = n;
   try {
-    (s(n, { recursive: !0, mode: 448 }), jJ(n));
+    (mkdirSync(n, { recursive: !0, mode: 448 }), jJ(n));
   } catch {
     o = r;
   }
@@ -134,8 +134,8 @@ function Qoe() {
 }
 function WJ(e = "claude-prompt", r = ".md", t) {
   let i = t?.contentHash
-    ? g("sha256").update(t.contentHash).digest("hex").slice(0, 16)
-    : D();
+    ? createHash("sha256").update(t.contentHash).digest("hex").slice(0, 16)
+    : randomUUID();
   return d(bl(), `${e}-${i}${r}`);
 }
 export { zy, aAn, jJ, bl, pve, Qoe, WJ };

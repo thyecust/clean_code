@@ -10,8 +10,8 @@
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -20,22 +20,22 @@ import { hO, uI, Lpt, Mpt } from "../../01-核心基础设施/共享小工具-�
 import { bTe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { YNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { randomUUID as L } from "crypto";
+import { randomUUID } from "crypto";
 import {
-  lstat as I,
-  mkdir as O,
+  lstat,
+  mkdir,
   open as B,
-  readdir as C,
+  readdir,
   stat as N,
-  unlink as M,
-  writeFile as H,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import {
-  basename as b,
-  dirname as U,
-  isAbsolute as j,
+  basename,
+  dirname,
+  isAbsolute,
   join as F,
-  resolve as X,
+  resolve,
 } from "path";
 var Y = Mpt * 24 * 60 * 60 * 1000,
   k = "file-transfers";
@@ -43,7 +43,7 @@ function S(t) {
   n(`[peer-file-transfer] ${t}`);
 }
 function pze(t) {
-  let e = b(t).replace(/[^a-zA-Z0-9._-]/g, "_") || "attachment",
+  let e = basename(t).replace(/[^a-zA-Z0-9._-]/g, "_") || "attachment",
     r = e.lastIndexOf("."),
     o = r > 0 && e.length - r <= 16 ? e.slice(r) : "",
     a = o ? e.slice(0, r) : e,
@@ -63,15 +63,15 @@ function tFt(t, e) {
 function nFt(t, e, r) {
   if (
     (i("tengu_send_file_received", {
-      transport: u(t),
+      transport: fromEnum(t),
       file_count: e,
       verified_count: r,
     }),
     r === e)
   )
-    y("peer_file_receive");
-  else if (r > 0) g("peer_file_receive", "partial_failed");
-  else f("peer_file_receive", "all_failed");
+    logFeatureOk("peer_file_receive");
+  else if (r > 0) logFeatureSad("peer_file_receive", "partial_failed");
+  else logFeatureBad("peer_file_receive", "all_failed");
 }
 async function xpt(t, e) {
   try {
@@ -127,11 +127,11 @@ async function Ean(t) {
     );
   let r = mn(e),
     o = fze();
-  await O(o, { recursive: !0, mode: 448 });
-  let a = b(t),
-    l = F(o, `${r.slice(0, 8)}-${L().slice(0, 8)}-${pze(a)}`);
+  await mkdir(o, { recursive: !0, mode: 448 });
+  let a = basename(t),
+    l = F(o, `${r.slice(0, 8)}-${randomUUID().slice(0, 8)}-${pze(a)}`);
   return (
-    await H(l, e, { mode: 384 }),
+    await writeFile(l, e, { mode: 384 }),
     {
       path: l,
       file_name: a,
@@ -144,13 +144,13 @@ async function Ean(t) {
 async function Aan() {
   let t = fze();
   try {
-    let e = await C(t),
+    let e = await readdir(t),
       r = Date.now() - Y;
     for (let o of e.slice(0, 200)) {
       let a = F(t, o);
       try {
         let l = await N(a);
-        if (l.isFile() && l.mtimeMs < r) await M(a);
+        if (l.isFile() && l.mtimeMs < r) await unlink(a);
       } catch {}
     }
   } catch {}
@@ -175,18 +175,18 @@ async function Khr(t) {
     let d = (_) => {
       (S(`${p.file_name}: ${_}`), r.push(Rpt(p.file_name, _)));
     };
-    if (ku(p.path) || !j(p.path)) {
+    if (ku(p.path) || !isAbsolute(p.path)) {
       d("invalid transfer path");
       continue;
     }
-    let h = X(p.path),
-      P = U(h);
-    if (ku(h) || b(P) !== k) {
+    let h = resolve(p.path),
+      P = dirname(h);
+    if (ku(h) || basename(P) !== k) {
       d("transfer path is outside the file-transfer spool");
       continue;
     }
     try {
-      if (!(await I(P)).isDirectory() || !(await I(h)).isFile()) {
+      if (!(await lstat(P)).isDirectory() || !(await lstat(h)).isFile()) {
         d("the transfer copy is not a regular file");
         continue;
       }
@@ -205,17 +205,17 @@ async function Khr(t) {
     }
     let E = F(
       a,
-      `${p.sha256.slice(0, 8)}-${L().slice(0, 8)}-${pze(p.file_name)}`,
+      `${p.sha256.slice(0, 8)}-${randomUUID().slice(0, 8)}-${pze(p.file_name)}`,
     );
     try {
-      if (!x) (await O(a, { recursive: !0, mode: 448 }), (x = !0));
-      await H(E, w, { mode: 384, flag: "wx" });
+      if (!x) (await mkdir(a, { recursive: !0, mode: 448 }), (x = !0));
+      await writeFile(E, w, { mode: 384, flag: "wx" });
     } catch (_) {
       (d("it could not be written to the uploads directory"),
         S(`write ${E} failed: ${_}`));
       continue;
     }
-    if ((D++, z.push(`@"${E}"`), P === l)) M(h).catch(() => {});
+    if ((D++, z.push(`@"${E}"`), P === l)) unlink(h).catch(() => {});
   }
   let A = [...z, ...r];
   return {

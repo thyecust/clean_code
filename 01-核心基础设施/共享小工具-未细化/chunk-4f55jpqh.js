@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { setBgExitCause as Fp } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { E0 } from "../设置-配置/设置-配置.aqbb35ee.js";
 function printCliError(r) {
@@ -15,7 +15,7 @@ function printCliError(r) {
 }
 function cliError(r, e = "cli_error") {
   if (r) printCliError(r);
-  (Fp(e), process.exit(1));
+  (setBgExitCause(e), process.exit(1));
   return;
 }
 function cliOk(r) {

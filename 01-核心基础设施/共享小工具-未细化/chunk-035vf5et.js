@@ -10,7 +10,7 @@
 import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { uir } from "./chunk-z36ns74j.js";
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { hostname as e } from "os";
+import { hostname } from "os";
 class o {
   pidSpace = null;
   pidDomain = void 0;
@@ -20,7 +20,7 @@ var processIdentity = new o();
 function ownPidSpace() {
   if (processIdentity.pidSpace === null) {
     let n = "";
-    processIdentity.pidSpace = `${e()}${n === "" ? "" : "#" + n}`;
+    processIdentity.pidSpace = `${hostname()}${n === "" ? "" : "#" + n}`;
   }
   return processIdentity.pidSpace;
 }
@@ -32,11 +32,11 @@ function ownPidDomain() {
     processIdentity.pidDomain
   );
 }
-import { timingSafeEqual as u } from "crypto";
-import { readFile as a } from "fs/promises";
+import { timingSafeEqual } from "crypto";
+import { readFile } from "fs/promises";
 async function RRe(n) {
   try {
-    let t = z(await a(n, "utf8"));
+    let t = z(await readFile(n, "utf8"));
     if (t === null || typeof t !== "object") return;
     let i = {};
     if ("rvAuth" in t && typeof t.rvAuth === "string") i.rvAuth = t.rvAuth;
@@ -53,6 +53,6 @@ function $R(n, t) {
   let i = Buffer.from(n),
     r = Buffer.from(t);
   if (i.length !== r.length) return !1;
-  return u(i, r);
+  return timingSafeEqual(i, r);
 }
 export { processIdentity, ownPidSpace, ownPidDomain, RRe, $R };

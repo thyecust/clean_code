@@ -16,7 +16,7 @@ import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import { EGe, don } from "./chunk-hcszd97x.js";
 import { zSe, rjn, pon, ojn, fon } from "./chunk-w2g8t42p.js";
 import { s, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { readFile as S, stat as b } from "fs/promises";
+import { readFile, stat as b } from "fs/promises";
 import { join as O } from "path";
 var k = m(() =>
     Qe({
@@ -49,7 +49,7 @@ var k = m(() =>
   ),
   u = "ONBOARDING.md",
   h = 65536,
-  v = Tt({
+  ShareOnboardingGuideTool = Tt({
     name: EGe,
     searchHint: "upload ONBOARDING.md and get a team share link",
     maxResultSizeChars: 1000,
@@ -124,7 +124,7 @@ var k = m(() =>
                   return i(
                     `${u} is over ${h / 1024}KB. Trim it before sharing.`,
                   );
-                let w = await S(r, "utf8"),
+                let w = await readFile(r, "utf8"),
                   _ = await pon(e.short_code, w, t);
                 return g("updated", _.share_url, _.short_code, !1);
               }
@@ -147,7 +147,7 @@ var k = m(() =>
           }
           if (l > h)
             return i(`${u} is over ${h / 1024}KB. Trim it before sharing.`);
-          let f = await S(n, "utf8");
+          let f = await readFile(n, "utf8");
           try {
             if (a === "update") {
               let r = o ?? (await p(t))?.short_code;
@@ -198,4 +198,4 @@ Close with: "Here's your onboarding guide: ${a}" followed by the send-to-teammat
 function i(t) {
   return { data: { status: "unavailable", message: t } };
 }
-export { v as ShareOnboardingGuideTool };
+export { ShareOnboardingGuideTool };

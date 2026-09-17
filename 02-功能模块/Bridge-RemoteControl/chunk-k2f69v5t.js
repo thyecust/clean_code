@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { L$e, getLastFetchOutcome as kve, getPolicyLimitsIneligibleReason as KJ, getResponseFromCache as ch } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { L$e, getLastFetchOutcome, getPolicyLimitsIneligibleReason, getResponseFromCache } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 function s() {
-  let e = ch();
+  let e = getResponseFromCache();
   if (e === null) return "nothing";
   return e === L$e ? "unrestricted" : "stale_cache";
 }
 function pat() {
-  let e = KJ();
+  let e = getPolicyLimitsIneligibleReason();
   if (e !== void 0) return { state: "ineligible", reason: e };
-  let t = kve();
-  if (t === null) return { state: "pending", hasCache: ch() !== null };
+  let t = getLastFetchOutcome();
+  if (t === null) return { state: "pending", hasCache: getResponseFromCache() !== null };
   return { state: "settled", outcome: t, served: s() };
 }
 function n(e) {

@@ -9,19 +9,19 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 205 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { NP } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
-import { isFileReadDenied as ZO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
+import { isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ece, bSe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { PIe, lLt } from "./chunk-z0qj8awf.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";
-import { createHash as _ } from "crypto";
-import { realpath as y } from "fs/promises";
-import { tmpdir as w } from "os";
-import { isAbsolute as g, relative as x, resolve as h } from "path";
+import { createHash } from "crypto";
+import { realpath } from "fs/promises";
+import { tmpdir } from "os";
+import { isAbsolute, relative, resolve } from "path";
 var C = ["user", "project"],
   A = { user: "all", project: "project" },
   n = `Usage:
@@ -35,18 +35,18 @@ var C = ["user", "project"],
   k = 1e6,
   v = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
   V = async (e, t) => {
-    let s = R(e);
+    let s = parseNonInteractiveArgs(e);
     return j(await q(s, t), s.requestId);
   };
 async function q(e, t) {
   if (e.mode === "usage") {
-    if (e.logCode !== void 0) f("auto_mode_setup_write", e.logCode);
+    if (e.logCode !== void 0) logFeatureBad("auto_mode_setup_write", e.logCode);
     return { ok: !1, code: "usage", reason: e.message, usage: n };
   }
   if (e.mode === "apply-file") {
     if (e.expectedSha256 === void 0)
       return (
-        f("auto_mode_setup_write", "missing_hash_arg"),
+        logFeatureBad("auto_mode_setup_write", "missing_hash_arg"),
         {
           ok: !1,
           code: "missing_hash_arg",
@@ -56,7 +56,7 @@ async function q(e, t) {
       );
     if (!S.test(e.expectedSha256))
       return (
-        f("auto_mode_setup_write", "bad_hash_arg"),
+        logFeatureBad("auto_mode_setup_write", "bad_hash_arg"),
         {
           ok: !1,
           code: "bad_hash_arg",
@@ -65,7 +65,7 @@ async function q(e, t) {
         }
       );
   }
-  let s = ce(t);
+  let s = getToolPermissionContext(t);
   if (e.mode === "propose") {
     let r = await PIe(
       e.answers,
@@ -79,9 +79,9 @@ async function q(e, t) {
     if (!r.ok) return { ok: !1, code: r.code, reason: r.reason };
     return { ok: !0, proposal: r.proposal };
   }
-  if (!g(e.path) || ece(e.path) || !(await T(e.path)))
+  if (!isAbsolute(e.path) || ece(e.path) || !(await isAllowedApplyFilePath(e.path)))
     return (
-      f("auto_mode_setup_write", "bad_path"),
+      logFeatureBad("auto_mode_setup_write", "bad_path"),
       {
         ok: !1,
         code: "bad_path",
@@ -89,9 +89,9 @@ async function q(e, t) {
           "Pass an absolute path under the system temp directory or the Claude config directory \u2014 --apply-file only reads proposal files the reviewing host wrote there.",
       }
     );
-  if (ZO(e.path, { ...s, blockReadsOutsideWorkingDirectories: void 0 }))
+  if (isFileReadDenied(e.path, { ...s, blockReadsOutsideWorkingDirectories: void 0 }))
     return (
-      f("auto_mode_setup_write", "read_denied"),
+      logFeatureBad("auto_mode_setup_write", "read_denied"),
       {
         ok: !1,
         code: "read_denied",
@@ -107,7 +107,7 @@ async function q(e, t) {
   });
   if (o === null)
     return (
-      f("auto_mode_setup_write", "read_failed"),
+      logFeatureBad("auto_mode_setup_write", "read_failed"),
       {
         ok: !1,
         code: "read_failed",
@@ -118,7 +118,7 @@ async function q(e, t) {
   let i = o.content;
   if (o.truncated)
     return (
-      f("auto_mode_setup_write", "too_large"),
+      logFeatureBad("auto_mode_setup_write", "too_large"),
       {
         ok: !1,
         code: "too_large",
@@ -127,9 +127,9 @@ async function q(e, t) {
       }
     );
   let d = e.expectedSha256.toLowerCase();
-  if (_("sha256").update(o.bytes).digest("hex") !== d)
+  if (createHash("sha256").update(o.bytes).digest("hex") !== d)
     return (
-      f("auto_mode_setup_write", "hash_mismatch"),
+      logFeatureBad("auto_mode_setup_write", "hash_mismatch"),
       {
         ok: !1,
         code: "hash_mismatch",
@@ -141,7 +141,7 @@ async function q(e, t) {
   let a = lLt(i);
   if (!a.ok)
     return (
-      f("auto_mode_setup_write", a.code),
+      logFeatureBad("auto_mode_setup_write", a.code),
       {
         ok: !1,
         code: a.code,
@@ -158,7 +158,7 @@ async function q(e, t) {
     let r = A[e.target];
     if (a.proposal.scope !== r)
       return (
-        f("auto_mode_setup_write", "scope_mismatch"),
+        logFeatureBad("auto_mode_setup_write", "scope_mismatch"),
         {
           ok: !1,
           code: "scope_mismatch",
@@ -202,22 +202,22 @@ async function q(e, t) {
     };
   }
 }
-async function T(e) {
-  let t = h(e),
+async function isAllowedApplyFilePath(e) {
+  let t = resolve(e),
     s = new Set();
-  for (let o of [w(), be()]) {
-    s.add(h(o));
+  for (let o of [tmpdir(), be()]) {
+    s.add(resolve(o));
     try {
-      s.add(await y(o));
+      s.add(await realpath(o));
     } catch {}
   }
   for (let o of s) {
-    let i = x(o, t);
-    if (i !== "" && !i.startsWith("..") && !g(i)) return !0;
+    let i = relative(o, t);
+    if (i !== "" && !i.startsWith("..") && !isAbsolute(i)) return !0;
   }
   return !1;
 }
-function I(e) {
+function extractRequestId(e) {
   let t = e.match(/^--request-id(?:=|\s+(?!--))(\S+)\s*/);
   if (!t) {
     if (/^--request-id=?(?=\s|$)/.test(e))
@@ -237,8 +237,8 @@ ${n}`,
     };
   return { ok: !0, rest: e.slice(t[0].length), requestId: s };
 }
-function R(e) {
-  let t = I(e.trim());
+function parseNonInteractiveArgs(e) {
+  let t = extractRequestId(e.trim());
   if (!t.ok)
     return { mode: "usage", message: t.message, logCode: "bad_flag_grammar" };
   let s = P(t.rest);
@@ -405,7 +405,7 @@ function j(e, t) {
 }
 export {
   V as call,
-  I as extractRequestId,
-  T as isAllowedApplyFilePath,
-  R as parseNonInteractiveArgs,
+  extractRequestId,
+  isAllowedApplyFilePath,
+  parseNonInteractiveArgs,
 };

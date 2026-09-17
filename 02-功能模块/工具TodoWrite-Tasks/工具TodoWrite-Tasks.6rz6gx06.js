@@ -12,14 +12,14 @@
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, zR } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { logFeatureOkAsync as ki, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { _F } from "../../01-核心基础设施/共享小工具-未细化/chunk-hxq0hkxe.js";
 import { Iv } from "../../01-核心基础设施/共享小工具-未细化/chunk-bfth4n1b.js";
 import { F6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
 import { sPe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
-import { spawnSync as m } from "child_process";
+import { spawnSync } from "child_process";
 function l(t) {
   return `You are guiding an operator from zero to a working **self-hosted runner** for Claude Code on the web. The operator must leave able to do this themselves \u2014 you have typed tools that make *you* efficient, but every API tool you call returns an \`equivalent.ui\` path. **After every API tool call, surface that \`equivalent.ui\` path to the operator** so they can repeat the action without you.
 
@@ -87,7 +87,7 @@ var f = [
   ].join(","),
   _ =
     "Start the self-hosted runner setup wizard. Greet me and begin Phase 1 (create an environment in the Admin UI). Walk me through one step at a time.";
-async function F(t, s) {
+async function selfHostedRunnerSetupMain(t, s) {
   if (t.includes("--help") || t.includes("-h")) {
     console.log(`Usage: claude self-hosted-runner setup [args...]
 
@@ -137,29 +137,29 @@ Any extra args are passed to the underlying Claude Code session.`);
         ],
       }),
     );
-  let e = m(process.execPath, i, { stdio: "inherit" });
+  let e = spawnSync(process.execPath, i, { stdio: "inherit" });
   if (e.error)
     return (
-      await wn("cli_self_hosted_setup", "spawn_failed"),
+      await logFeatureBadAsync("cli_self_hosted_setup", "spawn_failed"),
       console.error(
         `[self-hosted-runner:setup] failed to spawn child: ${e.error.message}`,
       ),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   if ((e.status !== null && e.status !== 0) || e.signal)
-    (await wn(
+    (await logFeatureBadAsync(
       "cli_self_hosted_setup",
       e.signal ? "child_signal" : "child_nonzero",
     ),
       console.error(
         `[self-hosted-runner:setup] child exited with status ${e.status ?? "(null)"}${e.signal ? `, signal ${e.signal}` : ""}`,
       ));
-  else await ki("cli_self_hosted_setup");
+  else await logFeatureOkAsync("cli_self_hosted_setup");
   return (
     console.error(
       "[self-hosted-runner:setup] To continue setup, re-run `claude self-hosted-runner setup` \u2014 resuming the session with `claude --resume`/`-c` will not re-enable the setup tools.",
     ),
-    ys(e.status !== null ? e.status : 1)
+    exitAfterAnalyticsFlush(e.status !== null ? e.status : 1)
   );
 }
-export { F as selfHostedRunnerSetupMain };
+export { selfHostedRunnerSetupMain };

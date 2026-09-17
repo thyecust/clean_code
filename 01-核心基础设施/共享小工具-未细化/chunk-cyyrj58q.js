@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { homedir as i } from "os";
+import { homedir } from "os";
 import { join as o } from "path";
 function r(e) {
-  return { env: e?.env ?? process.env, home: e?.homedir ?? a.HOME ?? i() };
+  return { env: e?.env ?? process.env, home: e?.homedir ?? a.HOME ?? homedir() };
 }
 function NZn(e) {
   let { env: n, home: t } = r(e);

@@ -16,7 +16,7 @@ import { nte } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { rte, v1t } from "./chunk-pqyn1fh3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-g00x7t7w.js";
 import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-async function g(o, n) {
+async function warmWorkflows(o, n) {
   if (vnr()) return;
   await rte(o, n);
 }
@@ -88,12 +88,12 @@ Invoke: Workflow(${a})${l}`,
     },
   };
 }
-async function d(o, n) {
+async function getWorkflowCommands(o, n) {
   if (!Dc()) return [];
   return (await rte(o, n)).map(m);
 }
 export {
-  d as getWorkflowCommands,
+  getWorkflowCommands,
   v1t as invalidateWorkflowCache,
-  g as warmWorkflows,
+  warmWorkflows,
 };

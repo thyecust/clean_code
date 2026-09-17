@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { getRuntimeMainLoopModel as ip } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { MO, getLastCacheSafeParamsForSameModel as Pfn, j_, hC, VS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { MO, getLastCacheSafeParamsForSameModel, j_, hC, VS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 async function Plt({
   toolUseContext: e,
   forkContextMessages: t,
@@ -19,7 +19,7 @@ async function Plt({
     systemPrompt: s,
     userContext: r,
     systemContext: m,
-  } = Pfn() ?? (await i(e, o));
+  } = getLastCacheSafeParamsForSameModel() ?? (await i(e, o));
   return {
     systemPrompt: s,
     userContext: r,
@@ -38,10 +38,10 @@ async function i(e, t) {
   return { systemPrompt: o, userContext: s, systemContext: r };
 }
 async function n(e, t) {
-  let o = ce(e),
+  let o = getToolPermissionContext(e),
     s = await VS(
       e.options.tools,
-      ip({ permissionMode: o.mode, mainLoopModel: e.options.mainLoopModel }),
+      getRuntimeMainLoopModel({ permissionMode: o.mode, mainLoopModel: e.options.mainLoopModel }),
       Array.from(o.additionalWorkingDirectories.keys()),
     );
   return MO({

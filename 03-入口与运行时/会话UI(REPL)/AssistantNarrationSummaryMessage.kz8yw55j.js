@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ar } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { getCanonicalName as Ue, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getCanonicalName, H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { eO } from "../../01-核心基础设施/共享小工具-未细化/chunk-csjxh2sy.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, pd } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -24,14 +24,14 @@ import { js } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s339rbnn.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { run } from "../../01-核心基础设施/共享小工具-未细化/chunk-se27pkgx.js";
-function w(N) {
+function AssistantNarrationSummaryMessage(N) {
   let n = _(13),
     { param: S, model: i, addMargin: E, shouldShowDot: c } = N,
     { thinking: l } = S,
     x;
   if (n[0] !== i)
     ((x = () =>
-      (typeof i === "string" && xte("quizzical_shore", void 0, Ue(i), i)) ||
+      (typeof i === "string" && xte("quizzical_shore", void 0, getCanonicalName(i), i)) ||
       H("tengu_quizzical_shore", !1)),
       (n[0] = i),
       (n[1] = x));
@@ -84,4 +84,4 @@ function w(N) {
   else T = n[12];
   return T;
 }
-export { w as AssistantNarrationSummaryMessage };
+export { AssistantNarrationSummaryMessage };

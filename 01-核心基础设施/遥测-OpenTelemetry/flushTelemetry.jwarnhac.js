@@ -19,28 +19,28 @@ import {
   Pme,
   ND,
   HAt,
-  getAuthHeadersAsync as tx,
-  withOAuth401Retry as T_,
+  getAuthHeadersAsync,
+  withOAuth401Retry,
   mVt,
   YJ,
   ht,
   C6,
-  isHostManagedProviderAuth as Fc,
-  shouldUseWIFAuth as Zc,
-  getAnthropicApiKeySafe as gb,
-  getClaudeAIOAuthTokens as Yt,
-  handleOAuth401Error as cm,
-  isClaudeAISubscriber as gt,
-  hasProfileScope as lp,
+  isHostManagedProviderAuth,
+  shouldUseWIFAuth,
+  getAnthropicApiKeySafe,
+  getClaudeAIOAuthTokens,
+  handleOAuth401Error,
+  isClaudeAISubscriber,
+  hasProfileScope,
   is1PApiCustomer as cge,
-  getSubscriptionType as qn,
-  getOtelHeadersFromHelper as ORn,
+  getSubscriptionType,
+  getOtelHeadersFromHelper,
   H,
   Bo,
   Te,
   ee,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getCACertificates as MP, getMTLSConfig as JT, Hke, getUsableProxyUrl as o_, shouldBypassProxy as QT } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getCACertificates, getMTLSConfig, Hke, getUsableProxyUrl, shouldBypassProxy } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import {
   j,
   B,
@@ -61,19 +61,19 @@ import {
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, Et, b, QPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { U1, logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { U1, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tu } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { getSettings_DEPRECATED as bn } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettings_DEPRECATED } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { F3t, qY } from "./chunk-5qbcynds.js";
 import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getResolvedWIFBaseUrlSnapshot as Pke } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
 import { Snn } from "../共享小工具-未细化/chunk-274ae0qv.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { AP } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
@@ -949,7 +949,7 @@ var ut = 3600000,
   Ve = "/api/claude_code/organizations/metrics_enabled";
 class ue extends Error {}
 async function lt() {
-  let e = YJ(await tx(), `${Vt().BASE_API_URL}${Ve}`);
+  let e = YJ(await getAuthHeadersAsync(), `${getOauthConfig().BASE_API_URL}${Ve}`);
   if (e.error)
     throw new ue(
       "Auth error: no credential usable for the metrics opt-out check",
@@ -968,7 +968,7 @@ async function lt() {
 }
 async function dt(e) {
   try {
-    let t = await T_(lt, {
+    let t = await withOAuth401Retry(lt, {
       also403Revoked: !0,
       gateToSessionOAuthCredential: !0,
       oauthRefreshLatch: e,
@@ -977,7 +977,7 @@ async function dt(e) {
       n(
         `${ND} Metrics opt-out API response: enabled=${t.metrics_logging_enabled}`,
       ),
-      y("api_metrics_opt_out_check"),
+      logFeatureOk("api_metrics_opt_out_check"),
       { enabled: t.metrics_logging_enabled, hasError: !1 }
     );
   } catch (t) {
@@ -986,7 +986,7 @@ async function dt(e) {
         `${ND} Failed to check metrics opt-out status: ${l(t)}`,
         t instanceof ue ? { level: "error" } : void 0,
       ),
-      f("api_metrics_opt_out_check", "request_failed"),
+      logFeatureBad("api_metrics_opt_out_check", "request_failed"),
       { enabled: !1, hasError: !0 }
     );
   }
@@ -1016,10 +1016,10 @@ async function Qe(e) {
   );
 }
 async function We(e) {
-  if (gt() && !lp()) return { enabled: !1, hasError: !1 };
+  if (isClaudeAISubscriber() && !hasProfileScope()) return { enabled: !1, hasError: !1 };
   let t = ee().metricsStatusCache;
   if (t) {
-    if (Date.now() - t.timestamp > je) Qe(e).catch(h);
+    if (Date.now() - t.timestamp > je) Qe(e).catch(logError);
     return { enabled: t.enabled, hasError: !1 };
   }
   return Qe(e);
@@ -1076,7 +1076,7 @@ class Oe {
   inFlight = 0;
   oauthRefreshAttempted = !1;
   constructor(e) {
-    let t = `${Vt().BASE_API_URL}/api/claude_code/metrics`,
+    let t = `${getOauthConfig().BASE_API_URL}/api/claude_code/metrics`,
       r = void 0;
     ((this.isAntEndpointOverride = !1),
       (this.endpoint = t),
@@ -1110,7 +1110,7 @@ class Oe {
           t({ code: I.ExportResultCode.SUCCESS }));
         return;
       }
-      let s = await tx(),
+      let s = await getAuthHeadersAsync(),
         o = YJ(s, this.endpoint).reasonCode === "misrouted_credential";
       if (o && !this.isAntEndpointOverride) {
         (n(
@@ -1122,7 +1122,7 @@ class Oe {
       let i =
         YJ(
           s,
-          `${Vt().BASE_API_URL}/api/claude_code/organizations/metrics_enabled`,
+          `${getOauthConfig().BASE_API_URL}/api/claude_code/organizations/metrics_enabled`,
         ).reasonCode === "misrouted_credential";
       if (!o && !i) {
         let m = await We(this.storageV5);
@@ -1148,7 +1148,7 @@ class Oe {
         }
       }
       let c = this.transformMetricsForInternal(e),
-        p = YJ(await tx(), this.endpoint),
+        p = YJ(await getAuthHeadersAsync(), this.endpoint),
         u = p.reasonCode === "misrouted_credential";
       if (p.error && !u) {
         if (p.reasonCode === "wif_error") this.reportFailure("wif_error");
@@ -1166,7 +1166,7 @@ class Oe {
         (n(`${ND} BigQuery metrics exported successfully`),
         !this.successReported)
       )
-        ((this.successReported = !0), y("internal_metrics_export"));
+        ((this.successReported = !0), logFeatureOk("internal_metrics_export"));
       (n(`${ND} BigQuery API Response: ${b(d.data, null, 2)}`),
         t({ code: I.ExportResultCode.SUCCESS }));
     } catch (r) {
@@ -1182,11 +1182,11 @@ class Oe {
     let r = `${e}:${t ?? ""}`;
     if (this.reportedFailures.has(r)) return;
     (this.reportedFailures.add(r),
-      f("internal_metrics_export", e, t === void 0 ? {} : { http_status: t }));
+      logFeatureBad("internal_metrics_export", e, t === void 0 ? {} : { http_status: t }));
   }
   dispatchHostMatchesEndpoint() {
-    if (!(gb() === null && Zc())) return !0;
-    let e = Pke();
+    if (!(getAnthropicApiKeySafe() === null && shouldUseWIFAuth())) return !0;
+    let e = getResolvedWIFBaseUrlSnapshot();
     if (e === void 0) return !1;
     return (
       (e === null ? "api.anthropic.com" : new URL(e).host) ===
@@ -1194,7 +1194,7 @@ class Oe {
     );
   }
   async postWithOAuth401Recovery(e, t) {
-    let r = Yt(),
+    let r = getClaudeAIOAuthTokens(),
       s =
         r?.accessToken &&
         r.refreshToken &&
@@ -1206,17 +1206,17 @@ class Oe {
       return await this.postOnce(e, t);
     } catch (o) {
       if (!s || !Rt(o)) throw o;
-      let i = Yt()?.accessToken;
+      let i = getClaudeAIOAuthTokens()?.accessToken;
       if (i && i !== s)
         return await this.postOnce(e, { ...t, Authorization: `Bearer ${i}` });
       if (this.oauthRefreshAttempted) throw o;
       this.oauthRefreshAttempted = !0;
       try {
-        await cm(s, void 0, this.storageV5);
+        await handleOAuth401Error(s, void 0, this.storageV5);
       } catch {
         throw o;
       }
-      let c = Yt()?.accessToken;
+      let c = getClaudeAIOAuthTokens()?.accessToken;
       if (!c || c === s) throw o;
       let p = await this.postOnce(e, { ...t, Authorization: `Bearer ${c}` });
       return ((this.oauthRefreshAttempted = !1), p);
@@ -1248,9 +1248,9 @@ class Oe {
             : "cumulative",
       };
     if (t["wsl.version"]) r["wsl.version"] = t["wsl.version"];
-    if (gt()) {
+    if (isClaudeAISubscriber()) {
       r["user.customer_type"] = "claude_ai";
-      let o = qn();
+      let o = getSubscriptionType();
       if (o) r["user.subscription_type"] = o;
     } else r["user.customer_type"] = "api";
     return {
@@ -1690,11 +1690,11 @@ function Dt(e) {
 }
 function Bt() {
   if (U1()) return !1;
-  let e = qn(),
-    t = gt() && (e === "enterprise" || e === "team");
+  let e = getSubscriptionType(),
+    t = isClaudeAISubscriber() && (e === "enterprise" || e === "team");
   return cge() || t;
 }
-async function Ts(e) {
+async function initializeTelemetry(e) {
   if (
     (Br("telemetry_init_start"),
     yt(),
@@ -1886,7 +1886,7 @@ Current timeout: ${p}ms
     }
   );
 }
-async function gs() {
+async function flushTelemetry() {
   let e = ADn();
   if (!e) return;
   let t = a.CLAUDE_CODE_OTEL_FLUSH_TIMEOUT_MS ?? 5000;
@@ -1918,7 +1918,7 @@ function Ut() {
   return e;
 }
 function Me(e) {
-  let t = bn(),
+  let t = getSettings_DEPRECATED(),
     r = {},
     s = ns();
   if (fv(s)) {
@@ -1939,7 +1939,7 @@ function Me(e) {
     i = kt(e, !!t?.otelHeadersHelper);
   if (t?.otelHeadersHelper)
     r.headers = async () => {
-      let c = await ORn();
+      let c = await getOtelHeadersFromHelper();
       return { ...o, ...c };
     };
   else if (i.send)
@@ -1982,8 +1982,8 @@ function kt(e, t) {
         return null;
       }
     };
-  if (!Fc()) return r;
-  let i = Pe();
+  if (!isHostManagedProviderAuth()) return r;
+  let i = getAPIProvider();
   if (i !== "firstParty" && i !== "gateway") return r;
   if (!s(a.ANTHROPIC_AUTH_TOKEN)) return r;
   let c = { metrics: "METRICS", logs: "LOGS", traces: "TRACES" }[e],
@@ -2084,12 +2084,12 @@ function we(e) {
   );
 }
 function ye(e) {
-  let t = o_(),
-    r = !!(t && !it(e) && !(e && QT(e))),
+  let t = getUsableProxyUrl(),
+    r = !!(t && !it(e) && !(e && shouldBypassProxy(e))),
     s = RDn(r);
   if (s) return s;
-  let o = JT(),
-    i = MP(),
+  let o = getMTLSConfig(),
+    i = getCACertificates(),
     c = { ...o, ...(i && { ca: i }) },
     p,
     u,
@@ -2112,4 +2112,4 @@ function ye(e) {
     };
   return (kDn(r, m), m);
 }
-export { gs as flushTelemetry, Ts as initializeTelemetry };
+export { flushTelemetry, initializeTelemetry };

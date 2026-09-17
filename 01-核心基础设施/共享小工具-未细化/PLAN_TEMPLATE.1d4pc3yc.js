@@ -12,7 +12,7 @@ import { Ae } from "./chunk-2c9tjhwd.js";
 var t = Ae("./SKILL-e1sgkfee.md");
 var a = "./artifact-plan.html-1506d178.txt.zst";
 var e = Ke(a, import.meta.dirname);
-var d = t,
-  m = e,
-  f = { "templates/artifact-plan.html": e };
-export { m as PLAN_TEMPLATE, f as SKILL_FILES, d as SKILL_MD };
+var SKILL_MD = t,
+  PLAN_TEMPLATE = e,
+  SKILL_FILES = { "templates/artifact-plan.html": e };
+export { PLAN_TEMPLATE, SKILL_FILES, SKILL_MD };

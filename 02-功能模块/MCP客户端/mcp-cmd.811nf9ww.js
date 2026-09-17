@@ -12,7 +12,7 @@
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -134,7 +134,7 @@ ${j}`),
     return s(
       `"${m(C)}" isn't a recognized /mcp action. Try reconnect, enable, or disable.`,
     );
-  i("tengu_mcp_command_inline", { action: u(C) });
+  i("tengu_mcp_command_inline", { action: fromEnum(C) });
   let d = e === "all" ? r : r.filter((o) => o.name === e);
   if (d.length === 0)
     return s(

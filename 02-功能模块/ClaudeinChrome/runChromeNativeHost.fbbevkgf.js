@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 19 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { le, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { getSocketDir as Q8e, getSecureSocketPath as Z8e } from "./chunk-hnp84hf6.js";
+import { getSocketDir, getSecureSocketPath } from "./chunk-hnp84hf6.js";
 import {
-  appendFile as M,
-  chmod as y,
-  mkdir as S,
-  readdir as w,
-  rmdir as R,
-  unlink as d,
+  appendFile,
+  chmod,
+  mkdir,
+  readdir,
+  rmdir,
+  unlink,
 } from "fs/promises";
-import { createServer as B } from "net";
-import { platform as g } from "os";
+import { createServer } from "net";
+import { platform } from "os";
 import { join as I } from "path";
 var _ = "1.0.0",
   v = 1048576,
@@ -34,7 +34,7 @@ function n(e, ...t) {
       r = t.length > 0 ? " " + b(t) : "",
       i = `[${s}] [Claude Chrome Native Host] ${e}${r}
 `;
-    M(C, i).catch(() => {});
+    appendFile(C, i).catch(() => {});
   }
   console.error(`[Claude Chrome Native Host] ${e}`, ...t);
 }
@@ -45,8 +45,8 @@ function a(e) {
     process.stdout.write(s),
     process.stdout.write(t));
 }
-async function A() {
-  return Sr("chrome_native_host_run", async () => {
+async function runChromeNativeHost() {
+  return withFeatureTelemetry("chrome_native_host_run", async () => {
     n("Initializing...");
     let e = new k(),
       t = new P();
@@ -68,13 +68,13 @@ class k {
   socketPath = null;
   async start() {
     if (this.running) return;
-    if (((this.socketPath = Z8e()), g() !== "win32")) {
-      let e = Q8e();
-      (await d(e).catch(() => {}),
-        await S(e, { recursive: !0, mode: 448 }),
-        await y(e, 448).catch(() => {}));
+    if (((this.socketPath = getSecureSocketPath()), platform() !== "win32")) {
+      let e = getSocketDir();
+      (await unlink(e).catch(() => {}),
+        await mkdir(e, { recursive: !0, mode: 448 }),
+        await chmod(e, 448).catch(() => {}));
       try {
-        let t = await w(e);
+        let t = await readdir(e);
         for (let s of t) {
           if (!s.endsWith(".sock")) continue;
           let r = parseInt(s.replace(".sock", ""), 10);
@@ -82,7 +82,7 @@ class k {
           try {
             process.kill(r, 0);
           } catch {
-            (await d(I(e, s)).catch(() => {}),
+            (await unlink(I(e, s)).catch(() => {}),
               n(`Removed stale socket for PID ${r}`));
           }
         }
@@ -90,7 +90,7 @@ class k {
     }
     if (
       (n(`Creating socket listener: ${this.socketPath}`),
-      (this.server = B((e) => this.handleMcpClient(e))),
+      (this.server = createServer((e) => this.handleMcpClient(e))),
       await new Promise((e, t) => {
         (this.server.listen(this.socketPath, () => {
           (n("Socket server listening for connections"),
@@ -101,10 +101,10 @@ class k {
             (n("Socket server error:", s), t(s));
           }));
       }),
-      g() !== "win32")
+      platform() !== "win32")
     )
       try {
-        (await y(this.socketPath, 384), n("Socket permissions set to 0600"));
+        (await chmod(this.socketPath, 384), n("Socket permissions set to 0600"));
       } catch (e) {
         n("Failed to set socket permissions:", e);
       }
@@ -117,14 +117,14 @@ class k {
         this.server.close(() => e());
       }),
         (this.server = null));
-    if (g() !== "win32" && this.socketPath) {
+    if (platform() !== "win32" && this.socketPath) {
       try {
-        (await d(this.socketPath), n("Cleaned up socket file"));
+        (await unlink(this.socketPath), n("Cleaned up socket file"));
       } catch {}
       try {
-        let e = Q8e();
-        if ((await w(e)).length === 0)
-          (await R(e), n("Removed empty socket directory"));
+        let e = getSocketDir();
+        if ((await readdir(e)).length === 0)
+          (await rmdir(e), n("Removed empty socket directory"));
       } catch {}
     }
     this.running = !1;
@@ -287,4 +287,4 @@ class P {
     });
   }
 }
-export { A as runChromeNativeHost };
+export { runChromeNativeHost };

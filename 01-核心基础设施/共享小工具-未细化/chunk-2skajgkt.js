@@ -10,7 +10,7 @@
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { m } from "./chunk-78nzsrc6.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { validateBridgeId as fm } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { s, T, v, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var i = m(() =>
     it({
@@ -80,7 +80,7 @@ function CPe(e, r) {
   return t.length >= 4 && t === n;
 }
 function Bee(e, r) {
-  return (fm(r, "sessionId"), `${e.replace(/\/+$/, "")}/v1/code/sessions/${r}`);
+  return (validateBridgeId(r, "sessionId"), `${e.replace(/\/+$/, "")}/v1/code/sessions/${r}`);
 }
 async function abe(e, r) {
   let t = await at.post(

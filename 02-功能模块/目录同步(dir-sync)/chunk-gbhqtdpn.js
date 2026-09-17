@@ -14,9 +14,9 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getProjectDir as Mp, canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ds, Ct, Dne, o$, nn, Mne } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { O9 } from "../文件同步-Sync/chunk-ht8ydg1v.js";
 import { JA, iln } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
@@ -489,8 +489,8 @@ import { promisify as Ye } from "util";
 import {
   deflate as vt,
   deflateSync as zt,
-  inflate as Lt,
-  inflateSync as Gt,
+  inflate,
+  inflateSync,
 } from "zlib";
 var $e = "PACK",
   We = 2,
@@ -507,7 +507,7 @@ var $e = "PACK",
   te = 512,
   Ge = 8388608,
   Kt = Ye(vt),
-  Xt = Ye(Lt);
+  Xt = Ye(inflate);
 async function Upt(e, t) {
   let r = new Set(),
     a = e.filter((l) => (r.has(l.id) ? !1 : Boolean(r.add(l.id)))),
@@ -608,7 +608,7 @@ async function Ee(e, t) {
     },
     a;
   try {
-    a = t < Xe ? Gt(e, r) : await Xt(e, r);
+    a = t < Xe ? inflateSync(e, r) : await Xt(e, r);
   } catch (o) {
     return A(o) === "Z_BUF_ERROR"
       ? L("truncated", "a zlib stream ends early")
@@ -755,16 +755,16 @@ async function on(e) {
 function de() {
   return new Promise((e) => setImmediate(e));
 }
-import { randomBytes as sn } from "crypto";
+import { randomBytes } from "crypto";
 import {
   link as an,
-  lstat as ce,
+  lstat,
   mkdir as ln,
   open as ie,
-  readdir as _e,
-  realpath as re,
+  readdir,
+  realpath,
   rm as dn,
-  unlink as tt,
+  unlink,
 } from "fs/promises";
 import { join as ee } from "path";
 import { promisify as cn } from "util";
@@ -813,8 +813,8 @@ async function j9n({
   try {
     if (
       (await ln(d, { recursive: !0, mode: En }),
-      (i = ee(await re(e), t, Re)),
-      (await re(d)) !== i)
+      (i = ee(await realpath(e), t, Re)),
+      (await realpath(d)) !== i)
     )
       return {
         kind: "unreadable",
@@ -1225,8 +1225,8 @@ function Rn({
 async function xn(e, t) {
   let r, a;
   try {
-    ((a = await re(e)),
-      (r = (await _e(e, { withFileTypes: !0 }))
+    ((a = await realpath(e)),
+      (r = (await readdir(e, { withFileTypes: !0 }))
         .filter((i) => i.isDirectory() && ot.test(i.name))
         .map((i) => i.name)
         .toSorted(
@@ -1243,9 +1243,9 @@ async function xn(e, t) {
       h,
       y;
     try {
-      if ((await re(l)) !== l) continue;
-      y = et(await ce(l, { bigint: !0 }));
-      let p = (await _e(l, { withFileTypes: !0 }))
+      if ((await realpath(l)) !== l) continue;
+      y = et(await lstat(l, { bigint: !0 }));
+      let p = (await readdir(l, { withFileTypes: !0 }))
           .filter((u) => u.isFile() && nt.test(u.name))
           .map((u) => u.name)
           .toSorted(),
@@ -1269,7 +1269,7 @@ async function xn(e, t) {
     for (let p of h) {
       let f = ee(l, p);
       try {
-        let u = await ce(f, { bigint: !0 }),
+        let u = await lstat(f, { bigint: !0 }),
           E = oe(u);
         if (E !== "")
           g.push({ name: p, path: f, inode: E, bytes: Number(u.size) });
@@ -1278,7 +1278,7 @@ async function xn(e, t) {
       }
     }
     try {
-      if ((await re(l)) !== l || et(await ce(l, { bigint: !0 })) !== y)
+      if ((await realpath(l)) !== l || et(await lstat(l, { bigint: !0 })) !== y)
         continue;
     } catch {
       continue;
@@ -1305,7 +1305,7 @@ async function xn(e, t) {
 }
 async function Fn(e) {
   try {
-    let t = (await _e(e, { withFileTypes: !0 })).filter((r) =>
+    let t = (await readdir(e, { withFileTypes: !0 })).filter((r) =>
       r.name.startsWith(wn),
     );
     await Promise.all(
@@ -1323,7 +1323,7 @@ async function Pn(e, t, r, a) {
       "." +
       String(r).padStart(bn, "0") +
       "-" +
-      sn(4).toString("hex") +
+      randomBytes(4).toString("hex") +
       ".seg",
     d = ee(e, o),
     i;
@@ -1336,7 +1336,7 @@ async function Pn(e, t, r, a) {
     );
   }
   try {
-    if ((await re(d)) !== d)
+    if ((await realpath(d)) !== d)
       throw Error("the new segment is not inside the session directory");
     let l = Buffer.concat([ne, Buffer.from([rt, it[a]])]);
     await Oe(i, l, 0);
@@ -1360,7 +1360,7 @@ async function Pn(e, t, r, a) {
       await i.close().catch(() => {
         return;
       }),
-      await tt(d).catch(() => {
+      await unlink(d).catch(() => {
         return;
       }),
       null
@@ -1584,9 +1584,9 @@ async function An(e, t) {
     );
   }
   try {
-    if (oe(await ce(a, { bigint: !0 })) !== e.inode)
+    if (oe(await lstat(a, { bigint: !0 })) !== e.inode)
       return (
-        await tt(a).catch(() => {
+        await unlink(a).catch(() => {
           return;
         }),
         !1
@@ -1630,7 +1630,7 @@ async function Nn(e) {
   } catch {}
 }
 import { mkdir as vn, open as zn } from "fs/promises";
-import { dirname as Ln } from "path";
+import { dirname } from "path";
 var xe = 1,
   mt = 262144,
   pt = 67108864,
@@ -1710,7 +1710,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
           (o = b({ version: xe, entries: a })));
       try {
         return (
-          await vn(Ln(e), { recursive: !0, mode: Hn }),
+          await vn(dirname(e), { recursive: !0, mode: Hn }),
           await On(e, o, Gn),
           !0
         );
@@ -2345,13 +2345,13 @@ import { join as Pe } from "path";
 var z9n = "trash",
   hr = "stat-cache.json";
 async function Gpt(e, t) {
-  return br(Mp(await Vu(e, If(t))));
+  return br(getProjectDir(await canonicalizePath(e, If(t))));
 }
 function br(e) {
   return Pe(e, The, txt);
 }
 function V9n(e, t) {
-  return Pe(e, Y4(yc(t)));
+  return Pe(e, Y4(toInfraSessionId(t)));
 }
 function qpt(e) {
   return Pe(e, hr);

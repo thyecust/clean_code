@@ -8,26 +8,26 @@
 
 // Version: 2.1.263
 import {
-  RELATED_TASK_META_KEY as z5,
-  isTaskAugmentedRequestParams as tIn,
-  isJSONRPCRequest as fL,
-  isJSONRPCNotification as Jtt,
-  isJSONRPCResultResponse as aW,
-  ErrorCode as xo,
-  isJSONRPCErrorResponse as Dke,
-  CancelledNotificationSchema as Pkt,
-  PingRequestSchema as Mkt,
-  ProgressNotificationSchema as Nkt,
-  CreateTaskResultSchema as V5,
-  TaskStatusNotificationSchema as dhe,
-  GetTaskRequestSchema as Fkt,
-  GetTaskResultSchema as $kt,
-  GetTaskPayloadRequestSchema as Ukt,
-  ListTasksRequestSchema as Bkt,
-  ListTasksResultSchema as jkt,
-  CancelTaskRequestSchema as Wkt,
-  CancelTaskResultSchema as rIn,
-  McpError as _o,
+  RELATED_TASK_META_KEY,
+  isTaskAugmentedRequestParams,
+  isJSONRPCRequest,
+  isJSONRPCNotification,
+  isJSONRPCResultResponse,
+  ErrorCode,
+  isJSONRPCErrorResponse,
+  CancelledNotificationSchema,
+  PingRequestSchema,
+  ProgressNotificationSchema,
+  CreateTaskResultSchema,
+  TaskStatusNotificationSchema,
+  GetTaskRequestSchema,
+  GetTaskResultSchema,
+  GetTaskPayloadRequestSchema,
+  ListTasksRequestSchema,
+  ListTasksResultSchema,
+  CancelTaskRequestSchema,
+  CancelTaskResultSchema,
+  McpError,
 } from "./chunk-tv3jbp8f.js";
 import { $c, Kkt } from "../../00-第三方库/ajv/ajv.2q22bct4.js";
 import { Ykt } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -385,27 +385,27 @@ class Xtt {
       (this._pendingDebouncedNotifications = new Set()),
       (this._taskProgressTokens = new Map()),
       (this._requestResolvers = new Map()),
-      this.setNotificationHandler(Pkt, (t) => {
+      this.setNotificationHandler(CancelledNotificationSchema, (t) => {
         this._oncancel(t);
       }),
-      this.setNotificationHandler(Nkt, (t) => {
+      this.setNotificationHandler(ProgressNotificationSchema, (t) => {
         this._onprogress(t);
       }),
-      this.setRequestHandler(Mkt, (t) => ({})),
+      this.setRequestHandler(PingRequestSchema, (t) => ({})),
       (this._taskStore = e?.taskStore),
       (this._taskMessageQueue = e?.taskMessageQueue),
       this._taskStore)
     )
-      (this.setRequestHandler(Fkt, async (t, r) => {
+      (this.setRequestHandler(GetTaskRequestSchema, async (t, r) => {
         let a = await this._taskStore.getTask(t.params.taskId, r.sessionId);
         if (!a)
-          throw new _o(
-            xo.InvalidParams,
+          throw new McpError(
+            ErrorCode.InvalidParams,
             "Failed to retrieve task: Task not found",
           );
         return { ...a };
       }),
-        this.setRequestHandler(Ukt, async (t, r) => {
+        this.setRequestHandler(GetTaskPayloadRequestSchema, async (t, r) => {
           let a = async () => {
             let n = t.params.taskId;
             if (this._taskMessageQueue) {
@@ -424,7 +424,7 @@ class Xtt {
                       i(u);
                     else {
                       let c = u,
-                        d = new _o(c.error.code, c.error.message, c.error.data);
+                        d = new McpError(c.error.code, c.error.message, c.error.data);
                       i(d);
                     }
                   else {
@@ -441,21 +441,21 @@ class Xtt {
               }
             }
             let s = await this._taskStore.getTask(n, r.sessionId);
-            if (!s) throw new _o(xo.InvalidParams, `Task not found: ${n}`);
+            if (!s) throw new McpError(ErrorCode.InvalidParams, `Task not found: ${n}`);
             if (!v(s.status))
               return (await this._waitForTaskUpdate(n, r.signal), await a());
             if (v(s.status)) {
               let o = await this._taskStore.getTaskResult(n, r.sessionId);
               return (
                 this._clearTaskQueue(n),
-                { ...o, _meta: { ...o._meta, [z5]: { taskId: n } } }
+                { ...o, _meta: { ...o._meta, [RELATED_TASK_META_KEY]: { taskId: n } } }
               );
             }
             return await a();
           };
           return await a();
         }),
-        this.setRequestHandler(Bkt, async (t, r) => {
+        this.setRequestHandler(ListTasksRequestSchema, async (t, r) => {
           try {
             let { tasks: a, nextCursor: n } = await this._taskStore.listTasks(
               t.params?.cursor,
@@ -463,23 +463,23 @@ class Xtt {
             );
             return { tasks: a, nextCursor: n, _meta: {} };
           } catch (a) {
-            throw new _o(
-              xo.InvalidParams,
+            throw new McpError(
+              ErrorCode.InvalidParams,
               `Failed to list tasks: ${a instanceof Error ? a.message : String(a)}`,
             );
           }
         }),
-        this.setRequestHandler(Wkt, async (t, r) => {
+        this.setRequestHandler(CancelTaskRequestSchema, async (t, r) => {
           try {
             let a = await this._taskStore.getTask(t.params.taskId, r.sessionId);
             if (!a)
-              throw new _o(
-                xo.InvalidParams,
+              throw new McpError(
+                ErrorCode.InvalidParams,
                 `Task not found: ${t.params.taskId}`,
               );
             if (v(a.status))
-              throw new _o(
-                xo.InvalidParams,
+              throw new McpError(
+                ErrorCode.InvalidParams,
                 `Cannot cancel task in terminal status: ${a.status}`,
               );
             (await this._taskStore.updateTaskStatus(
@@ -491,15 +491,15 @@ class Xtt {
               this._clearTaskQueue(t.params.taskId));
             let n = await this._taskStore.getTask(t.params.taskId, r.sessionId);
             if (!n)
-              throw new _o(
-                xo.InvalidParams,
+              throw new McpError(
+                ErrorCode.InvalidParams,
                 `Task not found after cancellation: ${t.params.taskId}`,
               );
             return { _meta: {}, ...n };
           } catch (a) {
-            if (a instanceof _o) throw a;
-            throw new _o(
-              xo.InvalidRequest,
+            if (a instanceof McpError) throw a;
+            throw new McpError(
+              ErrorCode.InvalidRequest,
               `Failed to cancel task: ${a instanceof Error ? a.message : String(a)}`,
             );
           }
@@ -528,7 +528,7 @@ class Xtt {
     if (t.maxTotalTimeout && r >= t.maxTotalTimeout)
       throw (
         this._timeoutInfo.delete(e),
-        _o.fromError(xo.RequestTimeout, "Maximum total timeout exceeded", {
+        McpError.fromError(ErrorCode.RequestTimeout, "Maximum total timeout exceeded", {
           maxTotalTimeout: t.maxTotalTimeout,
           totalElapsed: r,
         })
@@ -559,9 +559,9 @@ class Xtt {
     };
     let a = this._transport?.onmessage;
     ((this._transport.onmessage = (n, s) => {
-      if ((a?.(n, s), aW(n) || Dke(n))) this._onresponse(n);
-      else if (fL(n)) this._onrequest(n, s);
-      else if (Jtt(n)) this._onnotification(n);
+      if ((a?.(n, s), isJSONRPCResultResponse(n) || isJSONRPCErrorResponse(n))) this._onresponse(n);
+      else if (isJSONRPCRequest(n)) this._onrequest(n, s);
+      else if (isJSONRPCNotification(n)) this._onnotification(n);
       else this._onerror(Error(`Unknown message type: ${JSON.stringify(n)}`));
     }),
       await this._transport.start());
@@ -576,7 +576,7 @@ class Xtt {
     this._timeoutInfo.clear();
     for (let r of this._requestHandlerAbortControllers.values()) r.abort();
     this._requestHandlerAbortControllers.clear();
-    let t = _o.fromError(xo.ConnectionClosed, "Connection closed");
+    let t = McpError.fromError(ErrorCode.ConnectionClosed, "Connection closed");
     ((this._transport = void 0), this.onclose?.());
     for (let r of e.values()) r(t);
   }
@@ -597,12 +597,12 @@ class Xtt {
   _onrequest(e, t) {
     let r = this._requestHandlers.get(e.method) ?? this.fallbackRequestHandler,
       a = this._transport,
-      n = e.params?._meta?.[z5]?.taskId;
+      n = e.params?._meta?.[RELATED_TASK_META_KEY]?.taskId;
     if (r === void 0) {
       let i = {
         jsonrpc: "2.0",
         id: e.id,
-        error: { code: xo.MethodNotFound, message: "Method not found" },
+        error: { code: ErrorCode.MethodNotFound, message: "Method not found" },
       };
       if (n && this._taskMessageQueue)
         this._enqueueTaskMessage(
@@ -620,7 +620,7 @@ class Xtt {
     }
     let s = new AbortController();
     this._requestHandlerAbortControllers.set(e.id, s);
-    let o = tIn(e.params) ? e.params.task : void 0,
+    let o = isTaskAugmentedRequestParams(e.params) ? e.params.task : void 0,
       u = this._taskStore ? this.requestTaskStore(e, a?.sessionId) : void 0,
       l = {
         signal: s.signal,
@@ -634,7 +634,7 @@ class Xtt {
         },
         sendRequest: async (i, c, d) => {
           if (s.signal.aborted)
-            throw new _o(xo.ConnectionClosed, "Request was cancelled");
+            throw new McpError(ErrorCode.ConnectionClosed, "Request was cancelled");
           let f = { ...d, relatedRequestId: e.id };
           if (n && !f.relatedTask) f.relatedTask = { taskId: n };
           let p = f.relatedTask?.taskId ?? n;
@@ -673,7 +673,7 @@ class Xtt {
             jsonrpc: "2.0",
             id: e.id,
             error: {
-              code: Number.isSafeInteger(i.code) ? i.code : xo.InternalError,
+              code: Number.isSafeInteger(i.code) ? i.code : ErrorCode.InternalError,
               message: i.message ?? "Internal error",
               ...(i.data !== void 0 && { data: i.data }),
             },
@@ -723,9 +723,9 @@ class Xtt {
     let t = Number(e.id),
       r = this._requestResolvers.get(t);
     if (r) {
-      if ((this._requestResolvers.delete(t), aW(e))) r(e);
+      if ((this._requestResolvers.delete(t), isJSONRPCResultResponse(e))) r(e);
       else {
-        let s = new _o(e.error.code, e.error.message, e.error.data);
+        let s = new McpError(e.error.code, e.error.message, e.error.data);
         r(s);
       }
       return;
@@ -741,7 +741,7 @@ class Xtt {
     }
     (this._responseHandlers.delete(t), this._cleanupTimeout(t));
     let n = !1;
-    if (aW(e) && e.result && typeof e.result === "object") {
+    if (isJSONRPCResultResponse(e) && e.result && typeof e.result === "object") {
       let s = e.result;
       if (s.task && typeof s.task === "object") {
         let o = s.task;
@@ -750,9 +750,9 @@ class Xtt {
       }
     }
     if (!n) this._progressHandlers.delete(t);
-    if (aW(e)) a(e);
+    if (isJSONRPCResultResponse(e)) a(e);
     else {
-      let s = _o.fromError(e.error.code, e.error.message, e.error.data);
+      let s = McpError.fromError(e.error.code, e.error.message, e.error.data);
       a(s);
     }
   }
@@ -770,18 +770,18 @@ class Xtt {
       } catch (s) {
         yield {
           type: "error",
-          error: s instanceof _o ? s : new _o(xo.InternalError, String(s)),
+          error: s instanceof McpError ? s : new McpError(ErrorCode.InternalError, String(s)),
         };
       }
       return;
     }
     let n;
     try {
-      let s = await this.request(e, V5, r);
+      let s = await this.request(e, CreateTaskResultSchema, r);
       if (s.task)
         ((n = s.task.taskId), yield { type: "taskCreated", task: s.task });
       else
-        throw new _o(xo.InternalError, "Task creation did not return a task");
+        throw new McpError(ErrorCode.InternalError, "Task creation did not return a task");
       while (!0) {
         let o = await this.getTask({ taskId: n }, r);
         if ((yield { type: "taskStatus", task: o }, v(o.status))) {
@@ -793,12 +793,12 @@ class Xtt {
           else if (o.status === "failed")
             yield {
               type: "error",
-              error: new _o(xo.InternalError, `Task ${n} failed`),
+              error: new McpError(ErrorCode.InternalError, `Task ${n} failed`),
             };
           else if (o.status === "cancelled")
             yield {
               type: "error",
-              error: new _o(xo.InternalError, `Task ${n} was cancelled`),
+              error: new McpError(ErrorCode.InternalError, `Task ${n} was cancelled`),
             };
           return;
         }
@@ -817,7 +817,7 @@ class Xtt {
     } catch (s) {
       yield {
         type: "error",
-        error: s instanceof _o ? s : new _o(xo.InternalError, String(s)),
+        error: s instanceof McpError ? s : new McpError(ErrorCode.InternalError, String(s)),
       };
     }
   }
@@ -858,7 +858,7 @@ class Xtt {
       if (u)
         f.params = {
           ...f.params,
-          _meta: { ...(f.params?._meta || {}), [z5]: u },
+          _meta: { ...(f.params?._meta || {}), [RELATED_TASK_META_KEY]: u },
         };
       let p = (h) => {
         (this._responseHandlers.delete(d),
@@ -876,7 +876,7 @@ class Xtt {
             .catch((A) =>
               this._onerror(Error(`Failed to send cancellation: ${A}`)),
             ));
-        let g = h instanceof _o ? h : new _o(xo.RequestTimeout, String(h));
+        let g = h instanceof McpError ? h : new McpError(ErrorCode.RequestTimeout, String(h));
         i(g);
       };
       (this._responseHandlers.set(d, (h) => {
@@ -896,7 +896,7 @@ class Xtt {
       let x = r?.timeout ?? ye,
         ue = () =>
           p(
-            _o.fromError(xo.RequestTimeout, "Request timed out", {
+            McpError.fromError(ErrorCode.RequestTimeout, "Request timed out", {
               timeout: x,
             }),
           );
@@ -938,16 +938,16 @@ class Xtt {
     });
   }
   async getTask(e, t) {
-    return this.request({ method: "tasks/get", params: e }, $kt, t);
+    return this.request({ method: "tasks/get", params: e }, GetTaskResultSchema, t);
   }
   async getTaskResult(e, t, r) {
     return this.request({ method: "tasks/result", params: e }, t, r);
   }
   async listTasks(e, t) {
-    return this.request({ method: "tasks/list", params: e }, jkt, t);
+    return this.request({ method: "tasks/list", params: e }, ListTasksResultSchema, t);
   }
   async cancelTask(e, t) {
-    return this.request({ method: "tasks/cancel", params: e }, rIn, t);
+    return this.request({ method: "tasks/cancel", params: e }, CancelTaskResultSchema, t);
   }
   async notification(e, t) {
     if (!this._transport) throw Error("Not connected");
@@ -959,7 +959,7 @@ class Xtt {
         jsonrpc: "2.0",
         params: {
           ...e.params,
-          _meta: { ...(e.params?._meta || {}), [z5]: t.relatedTask },
+          _meta: { ...(e.params?._meta || {}), [RELATED_TASK_META_KEY]: t.relatedTask },
         },
       };
       await this._enqueueTaskMessage(r, {
@@ -989,7 +989,7 @@ class Xtt {
               ...o,
               params: {
                 ...o.params,
-                _meta: { ...(o.params?._meta || {}), [z5]: t.relatedTask },
+                _meta: { ...(o.params?._meta || {}), [RELATED_TASK_META_KEY]: t.relatedTask },
               },
             };
           this._transport?.send(o, t).catch((u) => this._onerror(u));
@@ -1002,7 +1002,7 @@ class Xtt {
         ...s,
         params: {
           ...s.params,
-          _meta: { ...(s.params?._meta || {}), [z5]: t.relatedTask },
+          _meta: { ...(s.params?._meta || {}), [RELATED_TASK_META_KEY]: t.relatedTask },
         },
       };
     await this._transport.send(s, t);
@@ -1051,11 +1051,11 @@ class Xtt {
     if (this._taskMessageQueue) {
       let r = await this._taskMessageQueue.dequeueAll(e, t);
       for (let a of r)
-        if (a.type === "request" && fL(a.message)) {
+        if (a.type === "request" && isJSONRPCRequest(a.message)) {
           let n = a.message.id,
             s = this._requestResolvers.get(n);
           if (s)
-            (s(new _o(xo.InternalError, "Task cancelled or completed")),
+            (s(new McpError(ErrorCode.InternalError, "Task cancelled or completed")),
               this._requestResolvers.delete(n));
           else
             this._onerror(
@@ -1074,14 +1074,14 @@ class Xtt {
     } catch {}
     return new Promise((a, n) => {
       if (t.aborted) {
-        n(new _o(xo.InvalidRequest, "Request cancelled"));
+        n(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
       let s = setTimeout(a, r);
       t.addEventListener(
         "abort",
         () => {
-          (clearTimeout(s), n(new _o(xo.InvalidRequest, "Request cancelled")));
+          (clearTimeout(s), n(new McpError(ErrorCode.InvalidRequest, "Request cancelled")));
         },
         { once: !0 },
       );
@@ -1103,8 +1103,8 @@ class Xtt {
       getTask: async (a) => {
         let n = await r.getTask(a, t);
         if (!n)
-          throw new _o(
-            xo.InvalidParams,
+          throw new McpError(
+            ErrorCode.InvalidParams,
             "Failed to retrieve task: Task not found",
           );
         return n;
@@ -1113,7 +1113,7 @@ class Xtt {
         await r.storeTaskResult(a, n, s, t);
         let o = await r.getTask(a, t);
         if (o) {
-          let u = dhe.parse({
+          let u = TaskStatusNotificationSchema.parse({
             method: "notifications/tasks/status",
             params: o,
           });
@@ -1125,19 +1125,19 @@ class Xtt {
       updateTaskStatus: async (a, n, s) => {
         let o = await r.getTask(a, t);
         if (!o)
-          throw new _o(
-            xo.InvalidParams,
+          throw new McpError(
+            ErrorCode.InvalidParams,
             `Task "${a}" not found - it may have been cleaned up`,
           );
         if (v(o.status))
-          throw new _o(
-            xo.InvalidParams,
+          throw new McpError(
+            ErrorCode.InvalidParams,
             `Cannot update task "${a}" from terminal status "${o.status}" to "${n}". Terminal states (completed, failed, cancelled) cannot transition to other states.`,
           );
         await r.updateTaskStatus(a, n, s, t);
         let u = await r.getTask(a, t);
         if (u) {
-          let l = dhe.parse({
+          let l = TaskStatusNotificationSchema.parse({
             method: "notifications/tasks/status",
             params: u,
           });

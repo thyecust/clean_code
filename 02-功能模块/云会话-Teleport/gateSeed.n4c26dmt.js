@@ -14,10 +14,10 @@ import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { CCR_SESSION_ID_RE as YNt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { vCt, trustedDeviceHeaders as wUe, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { CCR_SESSION_ID_RE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { vCt, trustedDeviceHeaders, ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   xZ,
   iIt,
@@ -33,17 +33,17 @@ import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心�
 import "../远程工具执行/chunk-66axrkvh.js";
 import { w6e, mHe, VJt, kZ, jae } from "../../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
-import { createWriteStream as R } from "fs";
+import { createWriteStream } from "fs";
 import {
-  mkdir as T,
-  readFile as q,
+  mkdir,
+  readFile,
   rm as O,
   stat as x,
-  unlink as E,
+  unlink,
 } from "fs/promises";
-import { tmpdir as N } from "os";
+import { tmpdir } from "os";
 import { join as b } from "path";
-import { pipeline as U } from "stream/promises";
+import { pipeline } from "stream/promises";
 var w = null,
   k = CFn,
   j = 4,
@@ -54,7 +54,7 @@ var w = null,
 function z() {
   let e = Jo();
   if (e.historySpoolDir === null)
-    ((e.historySpoolDir = b(N(), `cc-history-prefetch-${process.pid}`)),
+    ((e.historySpoolDir = b(tmpdir(), `cc-history-prefetch-${process.pid}`)),
       Et(() =>
         e.historySpoolDir === null
           ? void 0
@@ -63,8 +63,8 @@ function z() {
   return e.historySpoolDir;
 }
 function B(e, t, s) {
-  if (Pe() !== "firstParty") return;
-  if (!YNt.test(e)) {
+  if (getAPIProvider() !== "firstParty") return;
+  if (!CCR_SESSION_ID_RE.test(e)) {
     n(`[historyPrefetch] ${e} fails CCR_SESSION_ID_RE \u2014 refusing`, {
       level: "warn",
     });
@@ -85,12 +85,12 @@ function B(e, t, s) {
     p = performance.now(),
     d = { path: i, written: Promise.resolve(null), settled: !1, pageSize: k },
     S = (async () => {
-      await T(u, { recursive: !0, mode: 448 });
+      await mkdir(u, { recursive: !0, mode: 448 });
       let c = async (o) =>
           ht.get(`/v1/code/sessions/${e}/events?limit=${o}&sort_order=desc`, {
             auth: "teleport-org",
             credentials: t,
-            headers: await wUe(),
+            headers: await trustedDeviceHeaders(),
             responseType: "stream",
             timeout: 15000,
             validateStatus: () => !0,
@@ -116,18 +116,18 @@ function B(e, t, s) {
           f.data.resume(),
           null
         );
-      return (await U(f.data, R(i, { mode: 384 })), i);
+      return (await pipeline(f.data, createWriteStream(i, { mode: 384 })), i);
     })().catch(
       (c) => (
         n(`[historyPrefetch] ${e} failed: ${l(c)}`),
-        E(i).catch(() => {}),
+        unlink(i).catch(() => {}),
         null
       ),
     );
   if (((d.written = S), r.set(e, d), a))
     setTimeout(
       (c) => {
-        E(c).catch(() => {});
+        unlink(c).catch(() => {});
       },
       K,
       a.path,
@@ -159,13 +159,13 @@ async function L(e, t) {
       { skip: "oversize" }
     );
   try {
-    return { body: await q(t, "utf8") };
+    return { body: await readFile(t, "utf8") };
   } catch (r) {
     if (!W(r)) n(`[historyPrefetch] read ${t} failed: ${l(r)}`);
     return { skip: "gone" };
   }
 }
-async function Ae(e, t) {
+async function consumePrefetchedHistory(e, t) {
   let s = Jo().historyPrefetchEntries;
   if (!s.has(e)) B(e, t);
   let r = s.get(e);
@@ -173,7 +173,7 @@ async function Ae(e, t) {
   let a = await r.written;
   if (a === null) return null;
   let u = await L(e, a);
-  if ((await E(a).catch(() => {}), "skip" in u)) return null;
+  if ((await unlink(a).catch(() => {}), "skip" in u)) return null;
   let i = u.body,
     p = Y(i);
   if (p === null) return (n(`[historyPrefetch] ${e} parse failed`), null);
@@ -387,28 +387,28 @@ function Q(e) {
   if (e.payload.type === "user") return !qae(e.payload);
   return iIt.has(e.payload.type);
 }
-function Me(e) {
-  if (e === null) g("remote_history_prefetch", "miss");
-  else if (e.maxSequenceNum === 0) g("remote_history_prefetch", "no_seq");
+function reportPrefetchOutcome(e) {
+  if (e === null) logFeatureSad("remote_history_prefetch", "miss");
+  else if (e.maxSequenceNum === 0) logFeatureSad("remote_history_prefetch", "no_seq");
   else if (!e.complete && e.messages.length === 0)
-    g("remote_history_prefetch", "empty_partial");
-  else if (!e.complete) g("remote_history_prefetch", "incomplete");
-  else y("remote_history_prefetch");
+    logFeatureSad("remote_history_prefetch", "empty_partial");
+  else if (!e.complete) logFeatureSad("remote_history_prefetch", "incomplete");
+  else logFeatureOk("remote_history_prefetch");
 }
-function be(e) {
+function gateSeed(e) {
   if (e === null || e.maxSequenceNum === 0) return null;
   if (!e.complete && e.messages.length === 0) return null;
   return e;
 }
-function Ce(e) {
+function partialSeedNotice(e) {
   return Ht(
     `Showing recent messages \xB7 full history at ${wa(e, void 0, { from: "cli", m: "0" })}`,
     "notice",
   );
 }
 export {
-  Ae as consumePrefetchedHistory,
-  be as gateSeed,
-  Ce as partialSeedNotice,
-  Me as reportPrefetchOutcome,
+  consumePrefetchedHistory,
+  gateSeed,
+  partialSeedNotice,
+  reportPrefetchOutcome,
 };

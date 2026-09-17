@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 2 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { vvn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { cye } from "./chunk-y7gz94r8.js";
-import { createHash as n } from "crypto";
-function f(d = { byId: cye }) {
+import { createHash } from "crypto";
+function createDeviceHookTemplateStore(d = { byId: cye }) {
   let t = new Map();
   return {
     accept({ template: r, digest: e, contentBase64: s }) {
@@ -38,7 +38,7 @@ function f(d = { byId: cye }) {
           kind: "refused",
           error: "template_refused: too_large",
         };
-      if (n("sha256").update(a).digest("hex") !== e)
+      if (createHash("sha256").update(a).digest("hex") !== e)
         return {
           ok: !1,
           kind: "refused",
@@ -65,4 +65,4 @@ function f(d = { byId: cye }) {
     clear: () => t.clear(),
   };
 }
-export { f as createDeviceHookTemplateStore };
+export { createDeviceHookTemplateStore };

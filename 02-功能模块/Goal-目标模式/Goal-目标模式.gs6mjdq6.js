@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ze, ke, YLn, JLn, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getModelProposedGoalsSettingParsed as tke, getModelProposedGoalsSetting as jxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cve, AJe } from "../Skills技能/chunk-sapykxw7.js";
 import { g2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-6k8nm416.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -27,7 +27,7 @@ import { LPe } from "../../01-核心基础设施/共享小工具-未细化/chunk
 import { MPe, zee } from "../../01-核心基础设施/共享小工具-未细化/chunk-s5e85mz9.js";
 import { Vbt, Kbt, WQn, GQn } from "../../01-核心基础设施/共享小工具-未细化/chunk-wew8t48z.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { randomUUID as I } from "crypto";
+import { randomUUID } from "crypto";
 var T = m(() =>
     Qe({
       condition: s()
@@ -55,9 +55,9 @@ var T = m(() =>
   );
 function E(e) {
   if (YLn()) return;
-  (JLn(), i("tengu_goal_proposal_available", { setting: u(e) }));
+  (JLn(), i("tengu_goal_proposal_available", { setting: fromEnum(e) }));
 }
-var X = Tt({
+var ProposeGoalTool = Tt({
   name: Vbt,
   maxResultSizeChars: 1000,
   searchHint:
@@ -71,9 +71,9 @@ var X = Tt({
   shouldDefer: !0,
   isEnabled() {
     if (ke() || Nn()) return !1;
-    if (_t()) return !1;
+    if (isBgSession()) return !1;
     if (!_dt()) return !1;
-    let e = tke();
+    let e = getModelProposedGoalsSettingParsed();
     if (e === "disabled") return !1;
     return (E(e), !0);
   },
@@ -101,9 +101,9 @@ var X = Tt({
       async call({ condition: r, ask_user: w }) {
         if (e.agentId)
           throw Error("ProposeGoal cannot be used in agent contexts");
-        if (ke() || Nn() || _t())
+        if (ke() || Nn() || isBgSession())
           throw (
-            g("goal_propose", "session_shape"),
+            logFeatureSad("goal_propose", "session_shape"),
             Error(
               "Goal proposals are only available in interactive local sessions.",
             )
@@ -125,20 +125,20 @@ var X = Tt({
         let n = AJe();
         if (n !== null)
           throw (
-            g("goal_propose", n.code),
+            logFeatureSad("goal_propose", n.code),
             new R(n.message, "goal evaluator blocked")
           );
         if (e.permissions().mode === "plan")
           throw (
-            g("goal_propose", "plan_mode"),
+            logFeatureSad("goal_propose", "plan_mode"),
             Error(
               "Plan mode is active, so a goal cannot be proposed yet. Keep planning; propose the goal after the plan is approved.",
             )
           );
-        let _ = await jxn(e.storageV5);
+        let _ = await getModelProposedGoalsSetting(e.storageV5);
         if (_ === "disabled")
           throw (
-            g("goal_propose", "setting_disabled"),
+            logFeatureSad("goal_propose", "setting_disabled"),
             Error(
               "The user has disabled model-proposed goals in their settings. Do not propose goals; the user can set one themselves with /goal.",
             )
@@ -159,7 +159,7 @@ var X = Tt({
             askUser: l,
             forcedAsk: l && w === !1,
           }),
-          y("goal_propose"),
+          logFeatureOk("goal_propose"),
           !l)
         )
           return (
@@ -173,13 +173,13 @@ var X = Tt({
             { data: { condition: o, askUser: !1 } }
           );
         let a = e.toolState.get(LPe),
-          p = I();
+          p = randomUUID();
         return (
           (a.id = p),
           k(g2, { condition: o }, { place: "under" })
             .then((t) => {
               let d = a.id !== p,
-                f = tke() === "disabled",
+                f = getModelProposedGoalsSettingParsed() === "disabled",
                 v = e.permissions().mode === "plan";
               if (
                 (i("tengu_goal_proposal_decided", {
@@ -198,8 +198,8 @@ var X = Tt({
                 !t.approved || d || f || v)
               ) {
                 if (t.approved && !d) {
-                  if (f) g("goal_propose", "approved_dropped_disabled");
-                  else if (v) g("goal_propose", "approved_dropped_plan_mode");
+                  if (f) logFeatureSad("goal_propose", "approved_dropped_disabled");
+                  else if (v) logFeatureSad("goal_propose", "approved_dropped_plan_mode");
                 }
                 return;
               }
@@ -212,7 +212,7 @@ var X = Tt({
                 }));
             })
             .catch((t) => {
-              h(t);
+              logError(t);
             })
             .finally(() => {
               if (a.id === p) a.clear();
@@ -233,4 +233,4 @@ var X = Tt({
     };
   },
 });
-export { X as ProposeGoalTool };
+export { ProposeGoalTool };

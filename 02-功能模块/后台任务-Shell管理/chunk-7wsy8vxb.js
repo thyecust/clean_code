@@ -12,13 +12,13 @@ import { Xn, j, Si, B, K, Ec, vz, _B } from "../../00-第三方库/lodash/lodash
 import { Ie, Xo, Fb } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, dt, ge, l, A, Jr, Jg, WW, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromEnumArr as Ga, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromEnumArr, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Yq } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { QJ, parseUserSpecifiedModel as wt, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { QJ, parseUserSpecifiedModel, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Ri, hW, Xke, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -26,15 +26,15 @@ import { le, Xu, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { zI, YY } from "./chunk-djserjj5.js";
 import { KI } from "../../01-核心基础设施/共享小工具-未细化/chunk-mvw7xg6n.js";
-import { isExitedProcessAsync as mkn, isSameProcessAsync as Pm } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { uoe } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
-import { isUuidShaped as zke } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { B8e } from "../权限系统/chunk-8rrcddth.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { Dm } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -626,7 +626,7 @@ import {
   lstat as Et,
   mkdir as At,
   readFile as _t,
-  rename as vt,
+  rename,
   rm as He,
 } from "fs/promises";
 import { dirname as xt } from "path";
@@ -728,7 +728,7 @@ async function readRoster(e, t) {
     if (!o.isFile() || o.size > Te) {
       if (!e?.silent)
         if (
-          (h(
+          (logError(
             Error(
               `roster.json ${o.isFile() ? `too large (${o.size} bytes) \u2014 quarantining` : "is not a regular file \u2014 removing"}`,
             ),
@@ -741,14 +741,14 @@ async function readRoster(e, t) {
           o.isFile())
         )
           await me(void 0);
-        else await He(zI(), { recursive: !0, force: !0 }).catch((d) => h(d));
+        else await He(zI(), { recursive: !0, force: !0 }).catch((d) => logError(d));
       return { ...Y(), parseFailed: !0 };
     }
     r = z(await _t(zI(), "utf8"));
   } catch (o) {
     if (W(o)) return Y();
     if (!e?.silent)
-      (h(dt(ge(o), "bg roster.json read/parse failed")),
+      (logError(dt(ge(o), "bg roster.json read/parse failed")),
         i("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
@@ -765,7 +765,7 @@ async function qe(e, t, r) {
     o = RosterSchema().safeParse(e);
   } catch (d) {
     if (!t?.silent)
-      (h(d),
+      (logError(d),
         i("tengu_bg_roster_parse_failed", {
           orphaned: Je(e),
           quarantined: 1,
@@ -786,7 +786,7 @@ async function qe(e, t, r) {
         i("tengu_bg_roster_parse_failed", {
           orphaned: 0,
           quarantined: 0,
-          issuePath: Ga(g),
+          issuePath: fromEnumArr(g),
           issueCode: S("healed_stamp"),
         }));
     return o.data;
@@ -794,7 +794,7 @@ async function qe(e, t, r) {
   if (!t?.silent) {
     let d = Je(e),
       g = o.error.issues[0];
-    (h(
+    (logError(
       Error(
         `roster.json parse failed at ${Ge(g?.path) || "<root>"} (orphaning ${d} worker(s)): ${g?.message}`,
       ),
@@ -803,7 +803,7 @@ async function qe(e, t, r) {
         orphaned: d,
         quarantined: 1,
         issuePath: Ge(g?.path),
-        issueCode: we(g?.code),
+        issueCode: fromEnumOpt(g?.code),
       }),
       await me(r));
   }
@@ -811,7 +811,7 @@ async function qe(e, t, r) {
 }
 async function me(e) {
   if (!e) {
-    await vt(zI(), `${zI()}.corrupt.${Date.now()}`).catch((r) => h(r));
+    await rename(zI(), `${zI()}.corrupt.${Date.now()}`).catch((r) => logError(r));
     return;
   }
   let t = await e
@@ -820,7 +820,7 @@ async function me(e) {
       return;
     });
   if (t === void 0 || !t.ok)
-    h(
+    logError(
       new R(
         `roster quarantine v5 move failed: ${t === void 0 ? "threw" : We(t.error)}`,
         "roster quarantine v5 move failed",
@@ -828,11 +828,11 @@ async function me(e) {
     );
 }
 async function Ot(e) {
-  await He(e, { recursive: !0, force: !0 }).catch((t) => h(t));
+  await He(e, { recursive: !0, force: !0 }).catch((t) => logError(t));
 }
 async function Ue(e, t, r, o) {
   if (!t?.silent)
-    (h(r),
+    (logError(r),
       i("tengu_bg_roster_parse_failed", {
         orphaned: -1,
         quarantined: 1,
@@ -845,7 +845,7 @@ async function Ke(e, t) {
   let r = await f3t(zI());
   if (r.kind === "refused") {
     if (!t?.silent)
-      (h(Error("roster.json is not a regular file \u2014 removing")),
+      (logError(Error("roster.json is not a regular file \u2014 removing")),
         i("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
@@ -864,7 +864,7 @@ async function Ke(e, t) {
 }
 function Ve(e, t, r) {
   if (!e?.silent)
-    (h(t),
+    (logError(t),
       i("tengu_bg_roster_parse_failed", {
         orphaned: -1,
         quarantined: 0,
@@ -921,7 +921,7 @@ async function Pt(e, t) {
     d = z(Buffer.from(o.value).toString("utf8"));
   } catch (g) {
     if (!t?.silent)
-      (h(dt(ge(g), "bg roster.json read/parse failed")),
+      (logError(dt(ge(g), "bg roster.json read/parse failed")),
         i("tengu_bg_roster_parse_failed", {
           orphaned: -1,
           quarantined: 1,
@@ -937,7 +937,7 @@ async function zt(e) {
     return;
   });
   if (t === void 0 || !t.ok)
-    h(
+    logError(
       new R(
         `roster quarantine v5 delete failed: ${t?.error.code ?? "threw"}`,
         "roster quarantine v5 delete failed",
@@ -945,14 +945,14 @@ async function zt(e) {
     );
 }
 function Ge(e) {
-  return Ln(
+  return fromSanitizer_SANITIZER_OUTPUT_ONLY(
     (e ?? [])
       .map((t) => (typeof t === "string" && !It.has(t) ? "*" : String(t)))
       .join("."),
   );
 }
 function bgShort(e) {
-  return SHORT_RE.test(e) ? Ln(e) : S("invalid");
+  return SHORT_RE.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("invalid");
 }
 function Je(e) {
   let t = e !== null && typeof e === "object" ? e.workers : void 0;
@@ -1012,17 +1012,17 @@ async function Ft(e) {
 import {
   lstat as ne,
   mkdir as Fe,
-  readdir as Lt,
+  readdir,
   readFile as be,
   rm as ue,
   stat as zr,
 } from "fs/promises";
 import {
-  basename as q,
+  basename,
   dirname as Mt,
   isAbsolute as rt,
   join as J,
-  relative as jt,
+  relative,
 } from "path";
 function Xe(e) {
   if (e === void 0 || !e.kinds.includes("session_cron")) return !1;
@@ -1069,9 +1069,9 @@ function lYn(e) {
   return KI().inFlightSnapshotChanged.subscribe(e);
 }
 async function kSt(e, t) {
-  if (!Vs(e)) return "dead_pid";
-  if (!(await Pm(e, t))) return "procstart_mismatch";
-  if (await mkn(e)) return "zombie";
+  if (!isProcessRunning(e)) return "dead_pid";
+  if (!(await isSameProcessAsync(e, t))) return "procstart_mismatch";
+  if (await isExitedProcessAsync(e)) return "zombie";
   return "live";
 }
 async function M8e(e, t) {
@@ -1083,10 +1083,10 @@ function bj(e) {
 }
 function uyn() {
   let e = Ec();
-  if (e === void 0 || Pe() === "mantle") return;
+  if (e === void 0 || getAPIProvider() === "mantle") return;
   if (e === null) return "default";
   if (!e) return;
-  if (QJ(wt(e))) return;
+  if (QJ(parseUserSpecifiedModel(e))) return;
   if (vz()?.fallbackModel === e) return;
   if (!bj(e)) return;
   return e;
@@ -1335,7 +1335,7 @@ var Ae = m(() =>
         .transform(
           de(
             "linkScanPath",
-            (e) => rt(e) && e.endsWith(".jsonl") && Xn(q(e, ".jsonl")) !== null,
+            (e) => rt(e) && e.endsWith(".jsonl") && Xn(basename(e, ".jsonl")) !== null,
           ),
         )
         .optional(),
@@ -1431,9 +1431,9 @@ var Ae = m(() =>
     }).transform(({ needs_you: e, ...t }) => {
       let r =
           (t.bridgeOwnerAccountUuid !== void 0 &&
-            !zke(t.bridgeOwnerAccountUuid)) ||
+            !isUuidShaped(t.bridgeOwnerAccountUuid)) ||
           (t.bridgeOwnerOrganizationUuid !== void 0 &&
-            !zke(t.bridgeOwnerOrganizationUuid)),
+            !isUuidShaped(t.bridgeOwnerOrganizationUuid)),
         o = t.tempo ?? (e ? "blocked" : "idle");
       return {
         ...t,
@@ -1460,9 +1460,9 @@ function getJobDir(e) {
 }
 function getOwnJobShortId() {
   let e = a.CLAUDE_JOB_DIR;
-  if (e) return q(e);
+  if (e) return basename(e);
   let t = Jh();
-  if (t) return q(t.jobDir);
+  if (t) return basename(t.jobDir);
   return K().slice(0, 8);
 }
 function st(e, t) {
@@ -1551,7 +1551,7 @@ function logJobWriteError(e) {
     n(`[jobs] state write failed (${t}): ${l(e)}`, { level: "error" });
     return;
   }
-  h(e);
+  logError(e);
 }
 function resolveBridgeHandoffIdentity(e, t) {
   let r = t !== void 0 && t.id === e?.bridgeSessionId;
@@ -1620,14 +1620,14 @@ async function Wt(e, t) {
 function tt(e, t, r) {
   let o = N().peek(e);
   if (!(o?.mtimeKey.startsWith("rejected:") && o.state === null))
-    n(`[jobs] skipping ${q(e)}: state.json is ${r}`, { level: "warn" });
+    n(`[jobs] skipping ${basename(e)}: state.json is ${r}`, { level: "warn" });
   return (N().noteRejected(e, `rejected:${t}`), null);
 }
 function invalidateJobStateCache(e) {
   N().invalidate(e);
 }
 async function qt(e, t, r) {
-  let o = q(t),
+  let o = basename(t),
     d = N().peek(t);
   if (d === void 0 || d.mtimeKey.startsWith("rejected:")) {
     let x = await e.statMeta(jobStateKey(o));
@@ -1640,7 +1640,7 @@ async function qt(e, t, r) {
       let L = `rejected:${x.value.mtimeMs}:${x.value.size}`;
       if (N().peek(t)?.mtimeKey !== L)
         (n(
-          `[jobs] skipping ${q(t)}: state.json is too large (${x.value.size} bytes)`,
+          `[jobs] skipping ${basename(t)}: state.json is too large (${x.value.size} bytes)`,
           { level: "warn" },
         ),
           N().noteRejected(t, L));
@@ -1659,7 +1659,7 @@ async function qt(e, t, r) {
   if (!y.ok && at(y.error)) {
     if (N().shouldLogSidecarFallback(t))
       n(
-        `[jobs] ${q(t)}: a sidecar could not be read as a regular file; using state.json alone`,
+        `[jobs] ${basename(t)}: a sidecar could not be read as a regular file; using state.json alone`,
       );
     let x = await e.read([g]);
     y = x.ok
@@ -1682,13 +1682,13 @@ async function qt(e, t, r) {
     if (x !== void 0)
       return tt(t, x, x === "oversize" ? "too large" : "not a regular file");
     if (
-      (n(`[jobs] ${q(t)}: v5 state read failed \u2014 ${y.error.code}`, {
+      (n(`[jobs] ${basename(t)}: v5 state read failed \u2014 ${y.error.code}`, {
         level: "warn",
       }),
       N().shouldReportTransient(t))
     )
       i("tengu_bg_state_read_transient", {
-        errno: u(y.error.code),
+        errno: fromEnum(y.error.code),
         had_cache: w !== void 0,
       });
     return _e(w, r);
@@ -1700,7 +1700,7 @@ async function qt(e, t, r) {
     if (w?.mtimeKey === x) return null;
     return (
       n(
-        `[jobs] skipping ${q(t)}: state.json is too large (${f.totalBytes} bytes)`,
+        `[jobs] skipping ${basename(t)}: state.json is too large (${f.totalBytes} bytes)`,
         { level: "warn" },
       ),
       N().noteRejected(t, x),
@@ -1726,7 +1726,7 @@ function Kt(e, t, r, o, d, g, p, y) {
     if (!f.success)
       return (
         n(
-          `[jobs] skipping ${q(e)}: state.json schema validation failed \u2014 ${f.error.message}`,
+          `[jobs] skipping ${basename(e)}: state.json schema validation failed \u2014 ${f.error.message}`,
           { level: "warn" },
         ),
         N().noteRejected(e, t),
@@ -1748,7 +1748,7 @@ function Kt(e, t, r, o, d, g, p, y) {
   } catch (w) {
     if (
       (n(
-        `[jobs] ${q(e)}: state.json read/parse failed \u2014 ${w instanceof Error ? w.message : String(w)}`,
+        `[jobs] ${basename(e)}: state.json read/parse failed \u2014 ${w instanceof Error ? w.message : String(w)}`,
         { level: "warn" },
       ),
       N().shouldReportTransient(e))
@@ -1786,7 +1786,7 @@ async function lt(e, t, r) {
       if (N().peek(e)?.mtimeKey === P) return null;
       return (
         n(
-          `[jobs] skipping ${q(e)}: state.json is ${_.isFile() ? `too large (${_.size} bytes)` : "not a regular file"}`,
+          `[jobs] skipping ${basename(e)}: state.json is ${_.isFile() ? `too large (${_.size} bytes)` : "not a regular file"}`,
           { level: "warn" },
         ),
         N().noteRejected(e, P),
@@ -1799,7 +1799,7 @@ async function lt(e, t, r) {
   } catch (_) {
     if (W(_)) return (N().noteAbsent(e), null);
     n(
-      `[jobs] ${q(e)}: state.json stat failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
+      `[jobs] ${basename(e)}: state.json stat failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
       { level: "warn" },
     );
     let C = N().peek(e);
@@ -1824,7 +1824,7 @@ async function lt(e, t, r) {
     if (!P.success)
       return (
         n(
-          `[jobs] skipping ${q(e)}: state.json schema validation failed \u2014 ${P.error.message}`,
+          `[jobs] skipping ${basename(e)}: state.json schema validation failed \u2014 ${P.error.message}`,
           { level: "warn" },
         ),
         N().noteRejected(e, y),
@@ -1847,7 +1847,7 @@ async function lt(e, t, r) {
     if (W(_)) return (N().noteAbsent(e), null);
     if (
       (n(
-        `[jobs] ${q(e)}: state.json read/parse failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
+        `[jobs] ${basename(e)}: state.json read/parse failed \u2014 ${_ instanceof Error ? _.message : String(_)}`,
         { level: "warn" },
       ),
       N().shouldReportTransient(e))
@@ -2269,7 +2269,7 @@ async function listJobs(e, t) {
   if (t) return Qt(t, e);
   let r;
   try {
-    r = await Lt(getJobsDir(), { withFileTypes: !0 });
+    r = await readdir(getJobsDir(), { withFileTypes: !0 });
   } catch {
     return [];
   }
@@ -2432,7 +2432,7 @@ async function adoptRosterOrphans(e, t, r) {
         (n(`[adoptRosterOrphans] pruned dead record ${_.short} (${p[f]})`),
         N().shouldReportPruned(_.short))
       )
-        i("tengu_bg_roster_orphan_pruned", { reason: u(p[f] ?? "dead_pid") });
+        i("tengu_bg_roster_orphan_pruned", { reason: fromEnum(p[f] ?? "dead_pid") });
     } else N().notePruneCandidateLive(_.short);
   let y = d.filter((f, _) => p[_] === "live");
   if (y.length === 0) return e;
@@ -2514,7 +2514,7 @@ function spawnOrigin(e) {
 }
 function jobMatchesCwd(e, t) {
   if (e.backend === "remote") return !0;
-  let r = jt(t, spawnOrigin(e));
+  let r = relative(t, spawnOrigin(e));
   return r.split(/[/\\]/, 1)[0] !== ".." && !rt(r);
 }
 function isLoopJob(e) {

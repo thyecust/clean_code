@@ -9,19 +9,19 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow as Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { pQt } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { b1n, Wot, Got } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { CUn } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
-import { realpath as q } from "fs/promises";
-import { homedir as R } from "os";
-import { spawn as x } from "child_process";
-import { basename as C } from "path";
+import { realpath } from "fs/promises";
+import { homedir } from "os";
+import { spawn } from "child_process";
+import { basename } from "path";
 var u = [
     { name: "iTerm2", bundleId: "com.googlecode.iterm2", app: "iTerm" },
     { name: "Ghostty", bundleId: "com.mitchellh.ghostty", app: "Ghostty" },
@@ -65,7 +65,7 @@ async function F() {
     if (s) return { name: s.name, command: s.app };
   }
   for (let e of u) {
-    let { code: s, stdout: i } = await Fe(
+    let { code: s, stdout: i } = await execFileNoThrow(
       "mdfind",
       [`kMDItemCFBundleIdentifier == "${e.bundleId}"`],
       { timeout: 5000, useCwd: !1 },
@@ -73,7 +73,7 @@ async function F() {
     if (s === 0 && i.trim().length > 0) return { name: e.name, command: e.app };
   }
   for (let e of u) {
-    let { code: s } = await Fe("ls", [`/Applications/${e.app}.app`], {
+    let { code: s } = await execFileNoThrow("ls", [`/Applications/${e.app}.app`], {
       timeout: 1000,
       useCwd: !1,
     });
@@ -85,7 +85,7 @@ async function A() {
   let r = a.TERMINAL;
   if (r) {
     let e = await ja(r);
-    if (e) return { name: C(r), command: e };
+    if (e) return { name: basename(r), command: e };
   }
   let t = await ja("x-terminal-emulator");
   if (t) return { name: "x-terminal-emulator", command: t };
@@ -155,7 +155,7 @@ async function k(r, t, e, s) {
     write text ${w(o)}
   end tell
 end tell`,
-        { code: m } = await Fe("osascript", ["-e", l], { useCwd: !1 });
+        { code: m } = await execFileNoThrow("osascript", ["-e", l], { useCwd: !1 });
       if (m === 0) return !0;
       break;
     }
@@ -165,14 +165,14 @@ end tell`,
   do script ${w(o)}
   activate
 end tell`,
-        { code: m } = await Fe("osascript", ["-e", l], { useCwd: !1 });
+        { code: m } = await execFileNoThrow("osascript", ["-e", l], { useCwd: !1 });
       return m === 0;
     }
     case "Ghostty": {
       let o = ["-na", r.command, "--args", "--window-save-state=never"];
       if (i) o.push(`--working-directory=${i}`);
       o.push("-e", t, ...p(s));
-      let { code: l } = await Fe("open", o, { useCwd: !1 });
+      let { code: l } = await execFileNoThrow("open", o, { useCwd: !1 });
       if (l === 0) return !0;
       break;
     }
@@ -180,7 +180,7 @@ end tell`,
       let o = ["-na", r.command, "--args"];
       if (i) o.push("--working-directory", i);
       o.push("-e", t, ...e);
-      let { code: l } = await Fe("open", o, { useCwd: !1 });
+      let { code: l } = await execFileNoThrow("open", o, { useCwd: !1 });
       if (l === 0) return !0;
       break;
     }
@@ -188,7 +188,7 @@ end tell`,
       let o = ["-na", r.command, "--args"];
       if (i) o.push("--directory", i);
       o.push(t, ...e);
-      let { code: l } = await Fe("open", o, { useCwd: !1 });
+      let { code: l } = await execFileNoThrow("open", o, { useCwd: !1 });
       if (l === 0) return !0;
       break;
     }
@@ -196,7 +196,7 @@ end tell`,
       let o = ["-na", r.command, "--args", "start"];
       if (i) o.push("--cwd", i);
       o.push("--", t, ...e);
-      let { code: l } = await Fe("open", o, { useCwd: !1 });
+      let { code: l } = await execFileNoThrow("open", o, { useCwd: !1 });
       if (l === 0) return !0;
       break;
     }
@@ -279,7 +279,7 @@ async function T(r, t, e = {}) {
         },
         m;
       try {
-        m = x(r, t, {
+        m = spawn(r, t, {
           detached: !0,
           stdio: "ignore",
           windowsHide: !1,
@@ -345,7 +345,7 @@ function g(r) {
     .replace(/["%]/g, "")
     .replace(/(\\+)$/, "$1$1")}"`;
 }
-async function D(r) {
+async function handleDeepLinkUri(r) {
   n(`Handling deep link URI: ${r}`);
   let t;
   try {
@@ -354,12 +354,12 @@ async function D(r) {
     let c = m instanceof Error ? m.message : String(m);
     return (
       console.error(`Deep link error: ${c}`),
-      f("deep_link_handle", "parse_failed"),
+      logFeatureBad("deep_link_handle", "parse_failed"),
       1
     );
   }
   n(`Parsed deep link action: ${b(t)}`);
-  let e = await q(process.execPath).catch(() => process.execPath),
+  let e = await realpath(process.execPath).catch(() => process.execPath),
     { cwd: s, resolvedRepo: i } = await z(t),
     o = i ? await b1n(s) : void 0,
     l;
@@ -374,7 +374,7 @@ async function D(r) {
     let c = m instanceof Error ? m.message : String(m);
     return (
       console.error(`Deep link error: ${c}`),
-      f("deep_link_handle", "launch_error"),
+      logFeatureBad("deep_link_handle", "launch_error"),
       1
     );
   }
@@ -383,18 +383,18 @@ async function D(r) {
       console.error(
         "Failed to open a terminal. Make sure a supported terminal emulator is installed.",
       ),
-      f("deep_link_handle", "no_terminal"),
+      logFeatureBad("deep_link_handle", "no_terminal"),
       1
     );
-  return (y("deep_link_handle"), 0);
+  return (logFeatureOk("deep_link_handle"), 0);
 }
-async function se() {
+async function handleUrlSchemeLaunch() {
   if (a.__CFBundleIdentifier !== pQt) return null;
   try {
     let { waitForUrlEvent: r } = await import("../../01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js"),
       t = r(5000);
     if (!t) return null;
-    return await D(t);
+    return await handleDeepLinkUri(t);
   } catch {
     return null;
   }
@@ -411,6 +411,6 @@ async function z(r) {
       );
     n(`No local clone found for repo ${r.repo}, falling back to home`);
   }
-  return { cwd: R() };
+  return { cwd: homedir() };
 }
-export { D as handleDeepLinkUri, se as handleUrlSchemeLaunch };
+export { handleDeepLinkUri, handleUrlSchemeLaunch };

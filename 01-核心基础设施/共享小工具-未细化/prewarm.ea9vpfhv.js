@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { Ae } from "./chunk-2c9tjhwd.js";
-import { createRequire as t } from "module";
-import { fileURLToPath as n } from "url";
-import { dirname as s, join as f } from "path";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+import { dirname, join as f } from "path";
 var r = null;
 function u(e) {
   return (
@@ -30,13 +30,13 @@ function o() {
       e = Ae(process.env.MODIFIERS_NODE_PATH);
     else {
       let i = f(
-        s(n(import.meta.url)),
+        dirname(fileURLToPath(import.meta.url)),
         "..",
         "modifiers-napi",
         "arm64-darwin",
         "modifiers.node",
       );
-      e = t(import.meta.url)(i);
+      e = createRequire(import.meta.url)(i);
     }
     if (!u(e)) return null;
     return ((r = e), r);
@@ -44,7 +44,7 @@ function o() {
     return null;
   }
 }
-function c(e) {
+function isModifierPressed(e) {
   let i = o();
   if (!i) return !1;
   try {
@@ -53,7 +53,7 @@ function c(e) {
     return !1;
   }
 }
-function p() {
+function prewarm() {
   o();
 }
-export { c as isModifierPressed, p as prewarm };
+export { isModifierPressed, prewarm };

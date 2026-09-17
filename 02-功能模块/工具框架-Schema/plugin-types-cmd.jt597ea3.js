@@ -14,7 +14,7 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Tie } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { vk, DX, sVn, ajt, tfn, MX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Je } from "../Hooks钩子/chunk-bzqqe6xh.js";
 import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
@@ -22,9 +22,9 @@ import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { au } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var N = {};
-au(N, { call: () => ho, default: () => N, outputJsonSchemaOf: () => D });
-import { mkdir as yo, realpath as xo } from "fs/promises";
-import { relative as L, resolve as E } from "path";
+au(N, { call: () => ho, default: () => N, outputJsonSchemaOf: () => outputJsonSchemaOf });
+import { mkdir, realpath } from "fs/promises";
+import { relative, resolve as E } from "path";
 var P = ".claude/types";
 var f = "claude-code-mcp.d.ts";
 var d = (o) => ({ type: "text", level: "error", value: o });
@@ -206,7 +206,7 @@ var uo = (o, e) =>
   `// Written by Claude Code ${o}.
 ${G}
 ` + so(e);
-function D(o) {
+function outputJsonSchemaOf(o) {
   try {
     return Tie(o, { unrepresentable: "any" });
   } catch (e) {
@@ -217,7 +217,7 @@ function D(o) {
 var ho = async (o, e) => {
   let r = Q(),
     t = E(r, o.trim() || P),
-    a = ce(e),
+    a = getToolPermissionContext(e),
     s = po(
       await Promise.all(
         e
@@ -242,16 +242,16 @@ var ho = async (o, e) => {
       .map((i) => ({
         name: i.name,
         inputSchema: i.inputJSONSchema ?? MX(i.inputSchema),
-        ...(i.outputSchema !== void 0 && { outputSchema: D(i.outputSchema) }),
+        ...(i.outputSchema !== void 0 && { outputSchema: outputJsonSchemaOf(i.outputSchema) }),
       })),
     l = new Set(s.map((i) => i.name.split("__")[1] ?? i.name)),
     p = await DX(t),
-    h = await xo(r).catch(() => r);
-  if (!vk(L(r, t)) && vk(L(h, p)))
+    h = await realpath(r).catch(() => r);
+  if (!vk(relative(r, t)) && vk(relative(h, p)))
     return d(
       `Did not write ${y} or ${f}: ${t} resolves outside the project (${p}).`,
     );
-  await yo(p, { recursive: !0 });
+  await mkdir(p, { recursive: !0 });
   let T = [
     {
       name: y,
@@ -289,9 +289,9 @@ var ho = async (o, e) => {
     value: [
       `Wrote ${v}: the plugin API (module 'claude-code', early access: it may change between releases) and ${c.length} built-in ${x(c.length, "tool")}.`,
       Z,
-      `Point the plugin's tsconfig.json (or jsconfig.json) at them: "include": ["${L(r, p) || "."}", "hooks"] with "lib": ["es2023"] and "jsx": "react", "jsxFactory": "h"; the header of ${y} has the whole file. Then \`import type { Register } from "claude-code"\` types register(on, options), and e narrows per tool.`,
+      `Point the plugin's tsconfig.json (or jsconfig.json) at them: "include": ["${relative(r, p) || "."}", "hooks"] with "lib": ["es2023"] and "jsx": "react", "jsxFactory": "h"; the header of ${y} has the whole file. Then \`import type { Register } from "claude-code"\` types register(on, options), and e narrows per tool.`,
     ].join(`
 `),
   };
 };
-export { ho as call, N as default, D as outputJsonSchemaOf };
+export { ho as call, N as default, outputJsonSchemaOf };

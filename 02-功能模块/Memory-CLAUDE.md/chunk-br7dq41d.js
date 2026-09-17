@@ -10,48 +10,48 @@
 import { he, VR, ES, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isWorkspacePersistedTrusted as Cd, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isWorkspacePersistedTrusted, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { reanchorGitFileWatcher as nB, findCanonicalGitRootUncached as vA, clearIsGitMemoFor as D2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ot, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
-import { relocateBgSessionCwd as gyn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
-import { JYe, ON, Df, relativePath as JCe, patternWithRoot as t$e, normalizeTrustedSymlink as hEt } from "./Memory-CLAUDE.md.vx19drc8.js";
+import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
+import { relocateBgSessionCwd } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { JYe, ON, Df, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./Memory-CLAUDE.md.vx19drc8.js";
 import {
   gV,
   kl,
-  SandboxManager as st,
-  permissionRuleSourceDisplayString as ine,
+  SandboxManager,
+  permissionRuleSourceDisplayString,
   QBt,
   pu,
   y5e,
   Na,
-  relocateSessionTranscript as LMe,
+  relocateSessionTranscript,
   ZMe,
   eNe,
   Ny,
   bXn,
   U9t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { updateHooksConfigSnapshot as PD } from "../Skills技能/chunk-sapykxw7.js";
+import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { iM } from "../文件监听-Watch/chunk-mmg1rsp2.js";
 import { R8, $z } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Ic } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { homedir as T } from "os";
-import { realpath as S, stat as j } from "fs/promises";
-import { dirname as b, parse as M } from "path";
+import { homedir } from "os";
+import { realpath, stat as j } from "fs/promises";
+import { dirname, parse } from "path";
 var _ = "Cd";
 function R(e, t) {
   let o = Y([...Tr(e.requestedPath), e.canonicalPath]),
-    c = Y([e.canonicalPath, hEt(e.canonicalPath)]),
+    c = Y([e.canonicalPath, normalizeTrustedSymlink(e.canonicalPath)]),
     s = (r, d, m) => m.some((y) => D(r, d, y));
   for (let r of Df(t)) {
     if (r.ruleValue.toolName !== _) continue;
@@ -73,8 +73,8 @@ function R(e, t) {
   };
 }
 function D(e, t, o) {
-  let { relativePattern: c, root: s } = t$e(e, t),
-    l = JCe(s ?? Q(), o);
+  let { relativePattern: c, root: s } = patternWithRoot(e, t),
+    l = relativePath(s ?? Q(), o);
   if (l === ".." || l.startsWith("../")) return !1;
   let r = c
     .replace(/\/{2,}/g, "/")
@@ -109,25 +109,25 @@ async function E(e) {
   let t = async (o) => {
     let c = o;
     try {
-      c = await S(o);
+      c = await realpath(o);
     } catch {}
     return pf(zn(c));
   };
-  return (await t(e)) === (await t(T()));
+  return (await t(e)) === (await t(homedir()));
 }
 async function validateCdTarget(e, t) {
   let o = ot(e);
   try {
     if (!(await j(o)).isDirectory())
-      return { result: "not_a_directory", path: o, parent: b(o) };
+      return { result: "not_a_directory", path: o, parent: dirname(o) };
   } catch (r) {
     if (!Rt(r))
-      h(Object.assign(Error("cd: unexpected stat errno"), { code: A(r) }));
+      logError(Object.assign(Error("cd: unexpected stat errno"), { code: A(r) }));
     return { result: "not_found", path: o };
   }
   let c = o;
   try {
-    c = await S(o);
+    c = await realpath(o);
   } catch {
     c = o;
   }
@@ -143,7 +143,7 @@ function cdRuleRefusalMessage(e, t, o = (s) => s, c) {
     l = c?.display ?? ((r) => r);
   if (((e = l(e)), t.result === "blockedByRule")) {
     let r = l(Er(t.rule.ruleValue)),
-      d = ine(t.rule.source);
+      d = permissionRuleSourceDisplayString(t.rule.source);
     if (t.rule.ruleValue.ruleContent === void 0)
       return s
         ? `Can't move to ${o(e)} \u2014 /cd is turned off by the ${o(r)} rule in ${d}. Update the rule in /permissions to move between directories again.`
@@ -162,7 +162,7 @@ async function N(e, t, o) {
   for (let m of await Ny(e, !1, o)) c.add(pf(m.path));
   let s = [],
     l = t;
-  while (l !== M(l).root) (s.push(l), (l = b(l)));
+  while (l !== parse(l).root) (s.push(l), (l = dirname(l)));
   let r = ZMe(t),
     d = [];
   for (let m of s.reverse())
@@ -175,8 +175,8 @@ async function relocateSession(e, t, o, c) {
     r = Y([l, s]),
     d = Y(
       [
-        ...(ye("projectSettings")?.permissions?.additionalDirectories ?? []),
-        ...(ye("localSettings")?.permissions?.additionalDirectories ?? []),
+        ...(getSettingsForSource("projectSettings")?.permissions?.additionalDirectories ?? []),
+        ...(getSettingsForSource("localSettings")?.permissions?.additionalDirectories ?? []),
       ].flatMap((p) => {
         try {
           return r.map((C) => ot(p, C));
@@ -188,7 +188,7 @@ async function relocateSession(e, t, o, c) {
   (Yu(t), pu(t), ES(Q()));
   let m = !0;
   try {
-    await LMe(c);
+    await relocateSessionTranscript(c);
   } catch (p) {
     m = !1;
     let C = !1;
@@ -204,7 +204,7 @@ async function relocateSession(e, t, o, c) {
   }
   if (m)
     try {
-      await gyn(Q(), c);
+      await relocateBgSessionCwd(Q(), c);
     } catch (p) {
       n(`directory move: bg session state rehome failed (continuing): ${p}`, {
         level: "error",
@@ -220,7 +220,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   try {
-    (PD(), kl.notifyChange("projectSettings", { prevCwd: l }));
+    (updateHooksConfigSnapshot(), kl.notifyChange("projectSettings", { prevCwd: l }));
   } catch (p) {
     n(
       `directory move: re-resolving settings and hooks for the new directory failed (continuing): ${p}`,
@@ -243,12 +243,12 @@ async function relocateSession(e, t, o, c) {
       { level: "error" },
     );
   }
-  (nB(),
-    D2e(e),
-    Yi()?.refreshGitBranch?.(),
-    st.refreshConfig(),
+  (reanchorGitFileWatcher(),
+    clearIsGitMemoFor(e),
+    getReplBridgeHandle()?.refreshGitBranch?.(),
+    SandboxManager.refreshConfig(),
     QBt(),
-    i("tengu_cd_command", { source: u(o) }));
+    i("tengu_cd_command", { source: fromEnum(o) }));
   let y = "";
   try {
     y = await N(e, t, c);
@@ -268,7 +268,7 @@ async function relocateSession(e, t, o, c) {
     ),
     v = !1;
   try {
-    v = !a.CLAUDE_CODE_SANDBOXED && !VR() && !Cd() && JYe();
+    v = !a.CLAUDE_CODE_SANDBOXED && !VR() && !isWorkspacePersistedTrusted() && JYe();
   } catch (p) {
     n(
       `directory move: probing the gated project grants failed (continuing): ${p}`,
@@ -291,7 +291,7 @@ async function relocateSession(e, t, o, c) {
   };
 }
 function reapplyProjectSettingsAfterTrustChange() {
-  (Gse(), PD(), kl.notifyChange("projectSettings", { trustFlip: !0 }));
+  (Gse(), updateHooksConfigSnapshot(), kl.notifyChange("projectSettings", { trustFlip: !0 }));
 }
 function withGatedGrantsApplied(e) {
   if (e.gatedNotice === "") return e.modelMessage;
@@ -419,7 +419,7 @@ async function handleSetCwdControlRequest(e, t) {
     };
   let r = s.directory;
   if (!P6(r)) {
-    let f = vA(r),
+    let f = findCanonicalGitRootUncached(r),
       w = f != null && f !== r && !k.test(f) ? f : void 0;
     if (!o)
       return {

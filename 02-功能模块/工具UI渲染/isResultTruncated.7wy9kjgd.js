@@ -74,12 +74,12 @@ function h(K) {
   else y = u[11];
   return y;
 }
-function U(n) {
+function isResultTruncated(n) {
   if (n?.outcome !== "ok" || typeof n.content !== "string") return !1;
   let i = Sht(n.content);
   return i.length > C || i.some((s) => s.length > E);
 }
-function H(n, i, { verbose: s }) {
+function renderToolResultMessage(n, i, { verbose: s }) {
   if (n.outcome !== "ok") return null;
   return e(xe, {
     children: r(o, {
@@ -91,7 +91,7 @@ function H(n, i, { verbose: s }) {
     }),
   });
 }
-function V(n, { verbose: i }) {
+function renderToolUseErrorMessage(n, { verbose: i }) {
   if (typeof n !== "string") return e(Yd, { result: n, verbose: i });
   let s = w(n),
     l = s.indexOf(`
@@ -109,7 +109,7 @@ function V(n, { verbose: i }) {
   });
 }
 export {
-  U as isResultTruncated,
-  H as renderToolResultMessage,
-  V as renderToolUseErrorMessage,
+  isResultTruncated,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
 };

@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n6 } from "./chunk-jzy6p47z.js";
 var d = {},
   Njn = n6("whiteboardTelemetry", d);
 function Fjn(i, r, e, n) {
-  y("whiteboard_publish", {
+  logFeatureOk("whiteboard_publish", {
     seeded: n && e.elCount > 0,
     el_count: e.elCount,
     is_first_publish: n,
@@ -26,6 +26,6 @@ function Fjn(i, r, e, n) {
     }),
     t !== void 0 && e.pingCount > t)
   )
-    y("whiteboard_turn", { ping_count: e.pingCount, el_count: e.elCount });
+    logFeatureOk("whiteboard_turn", { ping_count: e.pingCount, el_count: e.elCount });
 }
 export { Njn, Fjn };

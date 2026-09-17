@@ -11,14 +11,14 @@
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { fOn, NXt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getSettingsForSource as ye, autoModeConfigSchema as OU } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getSettingsForSource, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { OIe, wSe } from "../权限系统/chunk-4wrkmv3h.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -245,8 +245,8 @@ function fe({
     if (n.resolution !== "none") return;
     ((n.resolution = "cancel"),
       i("tengu_auto_mode_setup_wizard_resolved", {
-        choice: u(S),
-        step: u(n.step),
+        choice: fromEnum(S),
+        step: fromEnum(n.step),
       }),
       v());
   }
@@ -257,8 +257,8 @@ function fe({
     if (n.resolution !== "none") return;
     ((n.resolution = "done"),
       i("tengu_auto_mode_setup_wizard_resolved", {
-        choice: u("saved"),
-        mode: u(n.mode),
+        choice: fromEnum("saved"),
+        mode: fromEnum(n.mode),
       }),
       k(K(S, A)));
   }
@@ -325,9 +325,9 @@ function fe({
           };
         if (
           (i("tengu_auto_mode_setup_wizard_answers", {
-            posture: u(V.posture),
-            scope: u(V.scope),
-            depth: u(V.depth),
+            posture: fromEnum(V.posture),
+            scope: fromEnum(V.scope),
+            depth: fromEnum(V.depth),
           }),
           (n.gathersFromGitHubOrg = OIe(V).allProjects),
           s)
@@ -371,7 +371,7 @@ function fe({
       onDecline: () => {
         if (!C("review")) return;
         ((n.resolution = "done"),
-          i("tengu_auto_mode_setup_wizard_resolved", { choice: u("decline") }),
+          i("tengu_auto_mode_setup_wizard_resolved", { choice: fromEnum("decline") }),
           k(
             "Discarded \u2014 nothing was saved. Re-run /auto-mode-setup anytime.",
           ));
@@ -648,15 +648,15 @@ function Se(go) {
 function H(n, a, s) {
   if (
     (i("tengu_auto_mode_setup_wizard_resolved", {
-      choice: u(n),
-      step: u(a),
-      ...(s !== void 0 && { mode: u(s) }),
+      choice: fromEnum(n),
+      step: fromEnum(a),
+      ...(s !== void 0 && { mode: fromEnum(s) }),
     }),
     n === "saved")
   )
-    y("auto_mode_setup_wizard");
-  else if (n === "error") f("auto_mode_setup_wizard", a);
-  else g("auto_mode_setup_wizard", n);
+    logFeatureOk("auto_mode_setup_wizard");
+  else if (n === "error") logFeatureBad("auto_mode_setup_wizard", a);
+  else logFeatureSad("auto_mode_setup_wizard", n);
 }
 function Ae() {
   return fOn();
@@ -672,7 +672,7 @@ async function we(n) {
         "warning",
       ),
     ),
-      h(
+      logError(
         new R(
           `background auto-mode setup crashed: ${l(a)}`,
           "background auto-mode setup crashed",
@@ -711,7 +711,7 @@ async function De(n, a, s) {
       n.credentials,
     ).catch(
       (C) => (
-        h(
+        logError(
           new R(
             `background auto-mode scan rejected: ${l(C)}`,
             "background auto-mode scan rejected",
@@ -820,7 +820,7 @@ var Vo = async (n, a, s) => {
     );
   let w = te(n),
     M = new AbortController(),
-    T = pe(Oe()),
+    T = pe(hasExistingAutoModeConfig()),
     k = !1,
     v = a.requestDialog;
   return e(fe, {
@@ -832,14 +832,14 @@ var Vo = async (n, a, s) => {
           we({
             answers: m,
             mode: T.mode,
-            permissionContext: ce(a),
+            permissionContext: getToolPermissionContext(a),
             taskRegistry: a.taskRegistry,
             requestDialog: v,
             appendSystemMessage: a.appendSystemMessage,
             storageV5: a.storageV5,
             credentials: a.credentials,
           }).catch((b) => {
-            h(
+            logError(
               new R(
                 `background auto-mode setup crashed: ${l(b)}`,
                 "background auto-mode setup crashed",
@@ -850,7 +850,7 @@ var Vo = async (n, a, s) => {
     propose: (m) =>
       PIe(
         m,
-        ce(a),
+        getToolPermissionContext(a),
         AbortSignal.any([a.abortController.signal, M.signal]),
         void 0,
         void 0,
@@ -861,17 +861,17 @@ var Vo = async (n, a, s) => {
     write: (m, b) => wSe({ mode: b, autoMode: J(m) }, a.storageV5),
     writeRemoval: (m) => wSe({ removeFromPermissionsAllow: m }, a.storageV5),
     onCancel: () => {
-      (g("auto_mode_setup_wizard", "cancelled"),
+      (logFeatureSad("auto_mode_setup_wizard", "cancelled"),
         w(void 0, { display: "skip" }));
     },
     onDone: (m) => {
-      if (!k) y("auto_mode_setup_wizard");
+      if (!k) logFeatureOk("auto_mode_setup_wizard");
       w(m, { display: "system" });
     },
   });
 };
-function Oe() {
-  let n = OU().safeParse(ye("userSettings")?.autoMode);
+function hasExistingAutoModeConfig() {
+  let n = autoModeConfigSchema().safeParse(getSettingsForSource("userSettings")?.autoMode);
   if (!n.success) return !1;
   let a = n.data;
   return (
@@ -881,4 +881,4 @@ function Oe() {
     (a.hard_deny?.length ?? 0) > 0
   );
 }
-export { Vo as call, Oe as hasExistingAutoModeConfig };
+export { Vo as call, hasExistingAutoModeConfig };

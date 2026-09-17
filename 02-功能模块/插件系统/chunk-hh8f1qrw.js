@@ -10,15 +10,15 @@
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Pp, isRemoteManagedSettingsVerifiedAndConsented as Yge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { Pp, isRemoteManagedSettingsVerifiedAndConsented } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { fi, Dhe, Do, Jie, Lhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { getSettingsForSource as ye, getPolicySettingsOrigin as dS } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getPolicySettingsOrigin } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { RIn } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
 function bd(e) {
-  return ye("policySettings")?.enabledPlugins?.[e] === !1;
+  return getSettingsForSource("policySettings")?.enabledPlugins?.[e] === !1;
 }
 function PH() {
-  let e = ye("policySettings");
+  let e = getSettingsForSource("policySettings");
   if (!e?.strictKnownMarketplaces) return null;
   return e.strictKnownMarketplaces;
 }
@@ -31,16 +31,16 @@ function gXe(e) {
   return `Plugins from ${e}/ are blocked by your organization's managed settings (strictKnownMarketplaces or blockedMarketplaces). Ask your administrator to add {"source":"skills-dir"} to strictKnownMarketplaces, or remove it from blockedMarketplaces.`;
 }
 function wK() {
-  return ye("policySettings")?.disableSideloadFlags === !0;
+  return getSettingsForSource("policySettings")?.disableSideloadFlags === !0;
 }
 function JS() {
-  let e = ye("policySettings");
+  let e = getSettingsForSource("policySettings");
   if (e?.disableCommandPluginSources !== void 0)
     return e.disableCommandPluginSources === !0;
   return e?.allowManagedHooksOnly === !0;
 }
 function lCe() {
-  return dS() !== "remote" || Yge();
+  return getPolicySettingsOrigin() !== "remote" || isRemoteManagedSettingsVerifiedAndConsented();
 }
 var Swt =
   "it is declared by remotely managed settings that this session could not verify with the server, or that have not been approved on this machine yet \u2014 make sure Claude Code can reach your managed-settings server, and approve the managed-settings dialog once in an interactive session (or ask your admin)";
@@ -48,7 +48,7 @@ function uJ(e, t) {
   if (!JS()) return null;
   if (e === void 0) return "lockdown";
   if (!lCe()) return "remote_policy_unconsented";
-  let r = ye("policySettings")?.extraKnownMarketplaces ?? {};
+  let r = getSettingsForSource("policySettings")?.extraKnownMarketplaces ?? {};
   if (e.source === "settings" && t !== void 0)
     return (Object.hasOwn(r, t) ? r[t] : void 0)?.source.source !== "settings"
       ? "lockdown"
@@ -68,7 +68,7 @@ function ufe(e) {
   return `${e.join(", ")} ${e.length === 1 ? "is" : "are"} disabled by your organization's managed settings (disableSideloadFlags). Plugins, custom agents, and MCP servers can only be loaded from sources your administrator has approved. Ask your administrator to remove disableSideloadFlags from managed settings, or use an approved marketplace / settings file instead.`;
 }
 function d() {
-  let e = ye("policySettings");
+  let e = getSettingsForSource("policySettings");
   if (!e?.blockedMarketplaces) return null;
   return e.blockedMarketplaces;
 }
@@ -82,13 +82,13 @@ function ZI(e) {
   return e === void 0 ? T1e() : !Hc(e);
 }
 function xGt() {
-  return ye("policySettings")?.pluginTrustMessage;
+  return getSettingsForSource("policySettings")?.pluginTrustMessage;
 }
 function _Xe() {
-  return ye("policySettings")?.pluginSuggestionMarketplaces ?? [];
+  return getSettingsForSource("policySettings")?.pluginSuggestionMarketplaces ?? [];
 }
 function yXe(e, t) {
-  let r = ye("policySettings"),
+  let r = getSettingsForSource("policySettings"),
     o = r?.extraKnownMarketplaces?.[e]?.source;
   if (o && h(t, o)) return !0;
   return r?.strictKnownMarketplaces?.some((i) => H(t, i)) ?? !1;

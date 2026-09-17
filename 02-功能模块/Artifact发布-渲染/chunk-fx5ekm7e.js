@@ -10,17 +10,17 @@
 import { Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ne, HCe, vTn, ker, PCe } from "./chunk-rr78st95.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { ARTIFACT_TOOL_NAME as _r, PR_REVIEW_SECURITY_WALL as P5, ArtifactInputError as Oe, ARTIFACT_VERSION_SAFE_RE as L6, ARTIFACT_DELETED_NOTE_TAG as oie, ARTIFACT_DELETED_NOTE_RE as Nkn, uuidSlugFromUrl as Fi, canonicalArtifactTargetFor as ls, sanitizeArtifactTitle as e_ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { runBundledSkillSessionResets as _fe } from "../Skills技能/chunk-1zy5c8mf.js";
+import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { runBundledSkillSessionResets } from "../Skills技能/chunk-1zy5c8mf.js";
 import { Tn, tt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Cr, yw, linkPathToSlug as xCe, unlinkPath as Fj, retainPathLinks as uYe } from "./chunk-01ymf0ar.js";
+import { Cr, yw, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
 import { Tce, $ee, Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
 import { nze, KWn } from "./chunk-p1dkvpxj.js";
 var E = 3,
   I = 1024,
-  P = new Set(Object.values(P5));
+  P = new Set(Object.values(PR_REVIEW_SECURITY_WALL));
 function h(e) {
   return typeof e === "string" ? e.slice(0, I) : "";
 }
@@ -138,7 +138,7 @@ function V(e) {
     try {
       a = await e(r, t, ...n);
     } catch (s) {
-      if (s instanceof Oe)
+      if (s instanceof ArtifactInputError)
         s.message = j(r, s.message, s.reasonCode ?? "unknown");
       throw s;
     }
@@ -168,7 +168,7 @@ function NGe(e, r) {
     if (u.type !== "assistant" || !Array.isArray(u.message.content)) continue;
     for (let c of u.message.content)
       if (c.type === "tool_use") {
-        if (c.name === _r) t.add(c.id);
+        if (c.name === ARTIFACT_TOOL_NAME) t.add(c.id);
         else if (c.name === Cr) n.add(c.id);
         else if (c.name === tt) a.add(c.id);
       }
@@ -180,8 +180,8 @@ function NGe(e, r) {
   for (let u of e) {
     if (u.type !== "user") continue;
     if (u.isMeta === !0 && typeof u.message.content === "string") {
-      let c = Nkn.exec(u.message.content)?.[1],
-        f = c !== void 0 ? Fi(c) : null;
+      let c = ARTIFACT_DELETED_NOTE_RE.exec(u.message.content)?.[1],
+        f = c !== void 0 ? uuidSlugFromUrl(c) : null;
       if (f !== null)
         v(f, {
           frameUrls: s,
@@ -222,7 +222,7 @@ function NGe(e, r) {
   };
 }
 var G = /^(?:<tool_use_error>)?(?:Error: )?/,
-  K = new RegExp(`^<${oie} url="([^"]+)"/>`);
+  K = new RegExp(`^<${ARTIFACT_DELETED_NOTE_TAG} url="([^"]+)"/>`);
 function W(e) {
   let r =
       typeof e === "string"
@@ -240,7 +240,7 @@ function W(e) {
           : "",
     t = xut(r.replace(G, "")),
     n = K.exec(t)?.[1];
-  return n !== void 0 ? Fi(n) : null;
+  return n !== void 0 ? uuidSlugFromUrl(n) : null;
 }
 function wjn(e) {
   let r = new Map();
@@ -266,9 +266,9 @@ function wjn(e) {
 }
 function v(e, r) {
   for (let [t, n] of Object.entries(r.frameUrls))
-    if (Fi(n.url) === e) {
+    if (uuidSlugFromUrl(n.url) === e) {
       if ((delete r.frameUrls[t], r.applyLinks && !t.includes("\x00")))
-        Fj(ot(t));
+        unlinkPath(ot(t));
     }
   for (let [t, n] of Object.entries(r.createdFromType))
     if (n.slug === e) delete r.createdFromType[t];
@@ -279,7 +279,7 @@ function H(e, r, t, n, a, s, l) {
     p = e?.artifact_delete;
   if (p !== void 0) {
     let f = p?.url,
-      d = typeof f === "string" ? Fi(f) : null;
+      d = typeof f === "string" ? uuidSlugFromUrl(f) : null;
     if (d !== null)
       v(d, {
         frameUrls: t,
@@ -291,17 +291,17 @@ function H(e, r, t, n, a, s, l) {
     return;
   }
   if (e?.created_from_type === !0) {
-    let f = typeof o?.url === "string" ? Fi(o.url) : null,
+    let f = typeof o?.url === "string" ? uuidSlugFromUrl(o.url) : null,
       d = e.type?.url,
-      m = typeof d === "string" ? Fi(d) : null;
+      m = typeof d === "string" ? uuidSlugFromUrl(d) : null;
     if (typeof o?.path !== "string") {
       if (f !== null && typeof o?.url === "string") {
         let R = `${Tce}${f}`,
-          y = typeof o.title === "string" ? e_(o.title) : null;
+          y = typeof o.title === "string" ? sanitizeArtifactTitle(o.title) : null;
         if (
           (delete t[R],
           (t[R] = {
-            url: ls(o.url, o.url),
+            url: canonicalArtifactTargetFor(o.url, o.url),
             updatedAt: Date.parse(r) || 0,
             ...(y !== null && { title: y }),
           }),
@@ -315,18 +315,18 @@ function H(e, r, t, n, a, s, l) {
     if (f !== null && m !== null && !o.path.includes("\x00"))
       s[o.path] = { slug: f, typeSlug: m };
   }
-  let u = typeof o?.url === "string" ? Fi(o.url) : null;
+  let u = typeof o?.url === "string" ? uuidSlugFromUrl(o.url) : null;
   if (e?.opened === !0) {
     if (
       typeof o?.url === "string" &&
       u !== null &&
-      !Dv(t).some(([, f]) => Fi(f.url) === u)
+      !Dv(t).some(([, f]) => uuidSlugFromUrl(f.url) === u)
     ) {
       let f = `${$ee}${u}`,
         d = (typeof o.title === "string" ? yw(o.title) : null) ?? t[f]?.title;
       (delete t[f],
         (t[f] = {
-          url: ls(o.url, o.url),
+          url: canonicalArtifactTargetFor(o.url, o.url),
           updatedAt: Date.parse(r) || 0,
           ...(d !== void 0 && { title: d }),
         }));
@@ -341,12 +341,12 @@ function H(e, r, t, n, a, s, l) {
   )
     return;
   for (let [f, d] of Object.entries(t))
-    if (f !== o.path && Fi(d.url) === u) {
-      if ((delete t[f], l)) Fj(ot(f));
+    if (f !== o.path && uuidSlugFromUrl(d.url) === u) {
+      if ((delete t[f], l)) unlinkPath(ot(f));
     }
-  if (l) xCe(ot(o.path), u);
+  if (l) linkPathToSlug(ot(o.path), u);
   delete t[o.path];
-  let c = typeof o.title === "string" ? e_(o.title) : null;
+  let c = typeof o.title === "string" ? sanitizeArtifactTitle(o.title) : null;
   if (
     ((t[o.path] = {
       url: o.url,
@@ -389,14 +389,14 @@ function Y(e, r) {
   );
 }
 function A(e, r, t) {
-  if (L6.test(t)) e[r] = t;
+  if (ARTIFACT_VERSION_SAFE_RE.test(t)) e[r] = t;
 }
 function X(e, r, t) {
   let n = e?.artifactRead;
   if (
     !n ||
     typeof n.slug !== "string" ||
-    Fi(`https://claude.ai/code/artifact/${n.slug}`) !== n.slug
+    uuidSlugFromUrl(`https://claude.ai/code/artifact/${n.slug}`) !== n.slug
   )
     return;
   if (n.seeded !== !1)
@@ -410,18 +410,18 @@ function Z(e, r) {
     t &&
     typeof t.slug === "string" &&
     typeof t.ver === "string" &&
-    Fi(`https://claude.ai/code/artifact/${t.slug}`) === t.slug
+    uuidSlugFromUrl(`https://claude.ai/code/artifact/${t.slug}`) === t.slug
   )
     A(r, t.slug, t.ver);
 }
 function ebe(e, r, t) {
   let { legacyConflict: n, continuesConversation: a = !1 } = t,
     { frameUrls: s, artifactReadVersions: l, artifactRefs: o } = r;
-  (_fe(), PCe({ continuesConversation: a }));
+  (runBundledSkillSessionResets(), PCe({ continuesConversation: a }));
   let p = ne().createdFromType;
   for (let [c, f] of Object.entries(r.createdFromType)) p.set(c, f);
   if (!a) HCe();
-  uYe(new Set(Object.keys(s).map((c) => ot(c))));
+  retainPathLinks(new Set(Object.keys(s).map((c) => ot(c))));
   let u = F(l, n);
   e((c) => {
     let f = Object.keys(c.frameUrls),

@@ -9,38 +9,38 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 21 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { setBgExitCause as Fp } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { eb, Il, Pc, YE } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { aIe, alt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tkfrb8jm.js";
-import { spawn as E } from "child_process";
-import { closeSync as v } from "fs";
-import { constants as p } from "os";
-import { isatty as u } from "tty";
+import { spawn } from "child_process";
+import { closeSync } from "fs";
+import { constants } from "os";
+import { isatty } from "tty";
 function d() {
   for (let r = 0; r < 32; r++) {
     if (r === 1 || r === 2) continue;
     try {
-      if (u(r)) v(r);
+      if (isatty(r)) closeSync(r);
     } catch {}
   }
 }
-async function U({ proactivity: r } = {}) {
+async function execRelaunch({ proactivity: r } = {}) {
   if ((await new Promise((e) => setImmediate(e)), !(await YE())))
     return (
-      await wn("agent_launcher", "relaunch_launcher_not_runnable"),
+      await logFeatureBadAsync("agent_launcher", "relaunch_launcher_not_runnable"),
       process.stderr.write(`
 ${Pc() ?? `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting), then start claude again`}
 `),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   let { cmd: n, prefixArgs: a } = rd(),
     c = process.argv.slice(2),
     t = { ...process.env };
   (delete t[aIe], Object.assign(t, alt()));
-  let i = E(n, [...a, ...c], { stdio: "inherit", env: t });
+  let i = spawn(n, [...a, ...c], { stdio: "inherit", env: t });
   d();
   let s = ["SIGINT", "SIGTERM", "SIGHUP"];
   for (let e of s)
@@ -51,15 +51,15 @@ ${Pc() ?? `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u201
     });
   return new Promise(() => {
     (i.on("close", (e, o) => {
-      let l = o ? 128 + (p.signals[o] ?? 0) : 0;
+      let l = o ? 128 + (constants.signals[o] ?? 0) : 0;
       process.exit(e ?? l);
     }),
       i.on("error", (e) => {
         (process.stderr.write(`Failed to relaunch Claude Code: ${e.message}
 `),
-          Fp("relaunch_child_error"),
+          setBgExitCause("relaunch_child_error"),
           process.exit(1));
       }));
   });
 }
-export { U as execRelaunch };
+export { execRelaunch };

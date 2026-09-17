@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ve, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -39,10 +39,10 @@ import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, it, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { watch as Ye } from "fs";
+import { watch } from "fs";
 var ce = 50;
 function Ke(e, t, r) {
-  let a = Ye(e, { recursive: !0, persistent: !1, encoding: "utf8" }, t);
+  let a = watch(e, { recursive: !0, persistent: !1, encoding: "utf8" }, t);
   return (
     a.on("error", r),
     a.unref(),
@@ -269,8 +269,8 @@ function d3n(e, { timers: t = pe } = {}) {
     };
   function ie(o, y) {
     i("tengu_dir_sync_watch", {
-      event: u(o),
-      start_error: we(
+      event: fromEnum(o),
+      start_error: fromEnumOpt(
         y === void 0
           ? null
           : y.includes("EMFILE")
@@ -615,8 +615,8 @@ function d3n(e, { timers: t = pe } = {}) {
         return (
           (x = e.nowMs()),
           i("tengu_dir_sync_settle", {
-            point: u(o),
-            outcome: u(G.kind),
+            point: fromEnum(o),
+            outcome: fromEnum(G.kind),
             files: G.kind === "shipped" ? G.files : 0,
             duration_ms:
               G.kind === "shipped" || G.kind === "unchanged" ? G.ms : 0,
@@ -748,8 +748,8 @@ function p3n(e, t) {
     },
   };
 }
-import { lstat as an, mkdir as ln, open as dn } from "fs/promises";
-import { dirname as un } from "path";
+import { lstat, mkdir, open as dn } from "fs/promises";
+import { dirname } from "path";
 var j = 67108864,
   me = 384,
   cn = 448;
@@ -774,7 +774,7 @@ async function Oe(e, t) {
       return { kind: "unreadable" };
     }
   try {
-    let r = await an(e, { bigint: !0 });
+    let r = await lstat(e, { bigint: !0 });
     if (!r.isFile()) return { kind: "unreadable" };
     let a = await dn(e, Ha());
     try {
@@ -797,7 +797,7 @@ async function Fe(e, t, r) {
       throw Error("dir-sync: session record write failed", { cause: a.error });
     return;
   }
-  (await ln(un(e), { recursive: !0, mode: cn }), await On(e, t, me));
+  (await mkdir(dirname(e), { recursive: !0, mode: cn }), await On(e, t, me));
 }
 async function Ie(e, t, r) {
   if (e.length > j) throw Error("session record too large to store");

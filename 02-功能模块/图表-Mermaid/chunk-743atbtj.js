@@ -191,7 +191,7 @@ function rse(t, e) {
   }
   return -1;
 }
-import { extname as R } from "path";
+import { extname } from "path";
 var g = {
   ".html": "text/html",
   ".css": "text/css",
@@ -226,7 +226,7 @@ var g = {
   ".wasm": "application/wasm",
 };
 function GJ(t) {
-  return g[f(R(t))];
+  return g[f(extname(t))];
 }
 function f(t) {
   return t.replace(/[A-Z]/g, (e) => e.toLowerCase());

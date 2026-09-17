@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { CL, Cg, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isViolinWoodEnabled as Su } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { launchedFromHome as I2t } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isViolinWoodEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { launchedFromHome } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { A9n, Tpt, lze, C9n, cze } from "../Cowork远程设备注册/Cowork远程设备注册.9r92qaht.js";
 import { fan, man, O7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-d4kaq0ds.js";
 import { sign as v } from "crypto";
@@ -57,7 +57,7 @@ async function D() {
   return e(void 0);
 }
 async function Q1t(e) {
-  if ((e.launchedFromHome ?? I2t)()) return Cg("launched_from_home");
+  if ((e.launchedFromHome ?? launchedFromHome)()) return Cg("launched_from_home");
   let t;
   try {
     t = (e.isEgressAllowed ?? O7)();
@@ -78,7 +78,7 @@ async function Q1t(e) {
     : Cg("no_device_proof");
 }
 async function zhr(e) {
-  let t = e.isEnabled ?? Su;
+  let t = e.isEnabled ?? isViolinWoodEnabled;
   try {
     if (!(await t())) return Cg("gate");
   } catch (s) {
@@ -86,7 +86,7 @@ async function zhr(e) {
   }
   let r = await Q1t(e);
   if (!r.ok) return _(r.error);
-  i("tengu_device_bind_account", { source: u(r.value.source) });
+  i("tengu_device_bind_account", { source: fromEnum(r.value.source) });
   let { accountUuid: a } = r.value,
     c;
   try {
@@ -100,7 +100,7 @@ async function zhr(e) {
     sign: () => {
       try {
         let s = B(e.orgUuid, a, o, d);
-        return (y("device_bind"), s);
+        return (logFeatureOk("device_bind"), s);
       } catch (s) {
         f("sign", s);
         return;
@@ -115,16 +115,16 @@ async function zhr(e) {
   });
 }
 function _(e) {
-  return (i("tengu_device_bind_skipped", { reason: u(e) }), Cg(e));
+  return (i("tengu_device_bind_skipped", { reason: fromEnum(e) }), Cg(e));
 }
 function f(e, t) {
   return (
     i("tengu_device_bind_failed", {
-      phase: u(e),
+      phase: fromEnum(e),
       limit_reached: t instanceof Tpt,
       registration_unavailable: t instanceof lze,
     }),
-    g("device_bind", (t instanceof R && t.errorClass) || e),
+    logFeatureSad("device_bind", (t instanceof R && t.errorClass) || e),
     n(
       `[deviceBind] continuing unbound: ${t instanceof Error ? t.message : String(t)}`,
     ),

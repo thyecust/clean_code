@@ -11,10 +11,10 @@ import { dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
 import { hbe } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
 import { P } from "./chunk-13kdp2ag.js";
-import { fileURLToPath as c, pathToFileURL as u } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 var s = { useCwd: !0, useToolMemoryCgroup: !1 },
   Bsn = new Set([
     "https:",
@@ -46,7 +46,7 @@ function p(r) {
 async function yqe(r) {
   try {
     let o = "open",
-      { code: t } = await Fe(o, [r], s);
+      { code: t } = await execFileNoThrow(o, [r], s);
     return t === 0;
   } catch (e) {
     return !1;
@@ -56,21 +56,21 @@ async function f(r) {
   try {
     let e = P();
     if (e === "macos") {
-      let { code: t } = await Fe("open", ["-R", "--", r]);
+      let { code: t } = await execFileNoThrow("open", ["-R", "--", r]);
       return t === 0;
     }
     if (e === "windows") {
-      let { exitCode: t } = await Fe("explorer", [`/select,${r}`]);
+      let { exitCode: t } = await execFileNoThrow("explorer", [`/select,${r}`]);
       return t !== void 0;
     }
-    let { code: o } = await Fe("dbus-send", [
+    let { code: o } = await execFileNoThrow("dbus-send", [
       "--session",
       "--print-reply",
       "--dest=org.freedesktop.FileManager1",
       "--type=method_call",
       "/org/freedesktop/FileManager1",
       "org.freedesktop.FileManager1.ShowItems",
-      `array:string:${u(r).href.replaceAll(",", "%2C")}`,
+      `array:string:${pathToFileURL(r).href.replaceAll(",", "%2C")}`,
       "string:",
     ]);
     return o === 0;
@@ -89,7 +89,7 @@ async function Sqe(r) {
   if (o === "file:") {
     if (e.host !== "") return !1;
     try {
-      let t = c(r);
+      let t = fileURLToPath(r);
       if (ku(t) || hbe(t)) return !1;
       return await f(t);
     } catch {
@@ -136,7 +136,7 @@ async function l(r) {
       o = e !== void 0 ? (e ?? void 0) : a.BROWSER,
       t = "darwin";
     if (!o && i()) return { ok: !1, reason: "no_display" };
-    return d(await Fe(o || "open", [r], s));
+    return d(await execFileNoThrow(o || "open", [r], s));
   } catch (e) {
     return {
       ok: !1,

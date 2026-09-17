@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -916,7 +916,7 @@ function LHe(cs) {
       (ds(Re.id),
         Co(Re),
         i("tengu_powerup_lesson_opened", {
-          lesson_id: u(Re.id),
+          lesson_id: fromEnum(Re.id),
           was_already_unlocked: h.has(Re.id),
           unlocked_count: h.size,
         }));
@@ -936,7 +936,7 @@ function LHe(cs) {
         (ls(ie),
         Te((ms) => ({ ...ms, powerupsUnlocked: [...ie] }), wo),
         i("tengu_powerup_lesson_completed", {
-          lesson_id: u(Ro),
+          lesson_id: fromEnum(Ro),
           unlocked_count: ie.size,
           all_unlocked: ie.size === Vw.length,
         }),

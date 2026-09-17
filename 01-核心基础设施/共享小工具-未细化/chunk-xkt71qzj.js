@@ -10,10 +10,10 @@
 import { RL, cZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "./chunk-an83zrbx.js";
 import { lit as S } from "./chunk-w76kejwn.js";
-import { bt, renderDefaultModelSetting as y6 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { bt, renderDefaultModelSetting } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { updateSettingsForSource as Jt } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "./chunk-jjr7hzzf.js";
 import { er } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { K9, tDe, X9, DF, Nwe, vue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -56,15 +56,15 @@ function cSe(t, n, a, l, s = !0, g = !1) {
           subtype: "apply_flag_settings",
           settings: { advisorModel: null },
         })
-        .catch(h);
+        .catch(logError);
     else if ((c(""), s))
-      Jt("userSettings", { advisorModel: void 0 }, void 0, l);
+      updateSettingsForSource("userSettings", { advisorModel: void 0 }, void 0, l);
     return `Advisor disabled${m}`;
   }
   if (!f) {
     if (DF(e)) return snn(e, g);
     let o = [...X9(), "off"].join(", ");
-    return `${pt(y6(e))} cannot be used as an advisor. Valid options: ${o}`;
+    return `${pt(renderDefaultModelSetting(e))} cannot be used as an advisor. Valid options: ${o}`;
   }
   if ((a((o) => (o.advisorModel === e ? o : { ...o, advisorModel: e })), r))
     jn()
@@ -72,10 +72,10 @@ function cSe(t, n, a, l, s = !0, g = !1) {
         subtype: "apply_flag_settings",
         settings: { advisorModel: e },
       })
-      .catch(h);
-  else if ((c(e), s)) Jt("userSettings", { advisorModel: e }, void 0, l);
-  let v = pt(y6(e)),
-    u = pt(y6(n)),
+      .catch(logError);
+  else if ((c(e), s)) updateSettingsForSource("userSettings", { advisorModel: e }, void 0, l);
+  let v = pt(renderDefaultModelSetting(e)),
+    u = pt(renderDefaultModelSetting(n)),
     d = `Advisor set to ${v}${m}`;
   if (!K9(n))
     d += `

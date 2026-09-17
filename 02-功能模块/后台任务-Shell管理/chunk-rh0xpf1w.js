@@ -14,17 +14,17 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, gxe, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ZU } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { gm, i_ } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ri, hW } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { Zsr } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { RRe, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { getReplBridgeHandle as Yi } from "../权限系统/chunk-1y2g140m.js";
+import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { _M, tue } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
-import { writeStateAtomic as Ti, logJobWriteError as Mi, readJobState as Zn, withOwnJobStateWrite as TAe, SEED_DETAIL as AAe, IDLE_NEEDS as xf, isOverlayNeeds as Ipe, PRE_BOOT_STATES as xre } from "./chunk-7wsy8vxb.js";
+import { writeStateAtomic, logJobWriteError, readJobState, withOwnJobStateWrite, SEED_DETAIL, IDLE_NEEDS, isOverlayNeeds, PRE_BOOT_STATES } from "./chunk-7wsy8vxb.js";
 import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ln, Mze } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
 import { ws } from "../../01-核心基础设施/共享小工具-未细化/chunk-0a6nmdka.js";
@@ -32,10 +32,10 @@ import { Dze, Lze } from "../../01-核心基础设施/共享小工具-未细化/
 import { Og, Qb } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
 import { cft } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { unlink as O } from "fs/promises";
-import { createServer as ie } from "net";
+import { unlink } from "fs/promises";
+import { createServer } from "net";
 import { join as F } from "path";
-import { StringDecoder as ae } from "string_decoder";
+import { StringDecoder } from "string_decoder";
 class I {
   resolver = null;
   registerResolver(e) {
@@ -138,12 +138,12 @@ async function ne(e, t) {
   try {
     let i = await _(r, { force: !0 }).then(
       () => !0,
-      (d) => (Mi(d), !1),
+      (d) => (logJobWriteError(d), !1),
     );
     if (o === "" && i) return;
     await E(r, o);
   } catch (i) {
-    if (!W(i)) Mi(i);
+    if (!W(i)) logJobWriteError(i);
   }
 }
 async function se(e) {
@@ -152,7 +152,7 @@ async function se(e) {
   let r = re(t);
   if (r === null)
     (n("[bg] persisted prompt stash unreadable or empty", { level: "warn" }),
-      f("bg_prompt_stash_restore", "unreadable_or_empty"));
+      logFeatureBad("bg_prompt_stash_restore", "unreadable_or_empty"));
   return r;
 }
 class A {
@@ -181,11 +181,11 @@ class A {
     let t = await se(e);
     if (t === null) return !1;
     if (this.#e.getState().stash !== null)
-      return (g("bg_prompt_stash_restore", "slot_taken"), !1);
+      return (logFeatureSad("bg_prompt_stash_restore", "slot_taken"), !1);
     return (
       (this.#t = t),
       this.#e.setState((r) => ({ ...r, stash: t })),
-      y("bg_prompt_stash_restore"),
+      logFeatureOk("bg_prompt_stash_restore"),
       !0
     );
   }
@@ -217,7 +217,7 @@ class H {
       (this.storageV5 = i),
       (this.nativeBrowserEnv = r),
       (this.pendingInteractiveMarks = o),
-      (this.server = ie((d) => this.onConnection(d))),
+      (this.server = createServer((d) => this.onConnection(d))),
       this.server.on("error", (d) =>
         n(`[bg-rv] server error: ${String(d)}`, { level: "warn" }),
       ),
@@ -242,16 +242,16 @@ class H {
     ((this.unauthedDrops = 0),
       (this.gateReported = !1),
       this.clearPreBootState().catch((o) => {
-        if (!W(o)) Mi(o);
+        if (!W(o)) logJobWriteError(o);
       }),
       this.restorePromptDraft().catch(() => {}),
-      this.promptStash.restore().catch(h),
+      this.promptStash.restore().catch(logError),
       e.on("error", () => e.destroy()),
       e.once("close", () => {
         if (this.current === e) ((this.current = void 0), yrt(!1));
       }));
     let t = "",
-      r = new ae("utf8");
+      r = new StringDecoder("utf8");
     e.on("data", (o) => {
       if (this.current !== e) {
         e.destroy();
@@ -297,7 +297,7 @@ class H {
   }
   noteUnauthedRejection() {
     if ((this.unauthedDrops++, !this.gateReported && this.unauthedDrops >= de))
-      ((this.gateReported = !0), f("bg_rv_gate", "unauthed_drops"));
+      ((this.gateReported = !0), logFeatureBad("bg_rv_gate", "unauthed_drops"));
   }
   restoreNativeBrowserEnv() {
     if (this.nativeBrowserEnv === void 0) delete process.env.BROWSER;
@@ -315,7 +315,7 @@ class H {
       if (this.authToken)
         if ("auth" in t && $R(t.auth, this.authToken)) {
           if (((this.currentAuthed = !0), !this.gateReported))
-            ((this.gateReported = !0), y("bg_rv_gate"));
+            ((this.gateReported = !0), logFeatureOk("bg_rv_gate"));
         } else {
           if (!this.currentAuthed) this.noteUnauthedRejection();
           this.send({ type: "auth-rejected" });
@@ -369,32 +369,32 @@ class H {
     let e = a.CLAUDE_JOB_DIR;
     if (!e) return;
     if (!(await this.waitForInkMount(this.current))) return;
-    await TAe(async () => {
-      let t = await Zn(e, this.storageV5);
+    await withOwnJobStateWrite(async () => {
+      let t = await readJobState(e, this.storageV5);
       if (!t) return;
       if (!t.forkSourceAlive) {
         let o = Jgt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE);
         if (o)
-          (await Ti(e, { ...t, ...o }, this.storageV5), Object.assign(t, o));
+          (await writeStateAtomic(e, { ...t, ...o }, this.storageV5), Object.assign(t, o));
       }
-      if (t.state === "working" && t.detail === AAe)
+      if (t.state === "working" && t.detail === SEED_DETAIL)
         this.armStartupWedgeWatchdog(e);
       let r = (o) => {
         let i = zS.current();
         return (
           o.tempo === "blocked" &&
-          Ipe(o) &&
+          isOverlayNeeds(o) &&
           !(i?.overlay === !0 && i.text === o.needs)
         );
       };
       if (r(t)) {
-        let o = (await Zn(e, this.storageV5)) ?? t;
+        let o = (await readJobState(e, this.storageV5)) ?? t;
         if (!r(o)) return;
-        (await Ti(
+        (await writeStateAtomic(
           e,
           {
             ...o,
-            ...(xre.includes(o.state) && { state: "running" }),
+            ...(PRE_BOOT_STATES.includes(o.state) && { state: "running" }),
             tempo: "idle",
             needs: void 0,
             needsOverlay: void 0,
@@ -406,16 +406,16 @@ class H {
           this.send({
             type: "state",
             patch: {
-              ...(xre.includes(o.state) && { state: "running" }),
+              ...(PRE_BOOT_STATES.includes(o.state) && { state: "running" }),
               tempo: "idle",
               needs: "",
             },
           }));
         return;
       }
-      if (!xre.includes(t.state)) return;
+      if (!PRE_BOOT_STATES.includes(t.state)) return;
       if (t.tempo === "blocked") return;
-      (await Ti(
+      (await writeStateAtomic(
         e,
         {
           ...t,
@@ -444,16 +444,16 @@ class H {
       (this.wedgeTimer = void 0));
   }
   onStartupWedgeTimeout(e) {
-    Zn(e, this.storageV5)
+    readJobState(e, this.storageV5)
       .then(async (t) => {
         if (
           this.wedgeDisarmed ||
           t?.state !== "working" ||
-          t.detail !== AAe ||
+          t.detail !== SEED_DETAIL ||
           t.tempo === "blocked"
         )
           return;
-        (await Ti(
+        (await writeStateAtomic(
           e,
           {
             ...t,
@@ -470,7 +470,7 @@ class H {
           }));
       })
       .catch((t) => {
-        if (!W(t)) Mi(t);
+        if (!W(t)) logJobWriteError(t);
       });
   }
   async restorePromptDraft() {
@@ -479,7 +479,7 @@ class H {
     let t = F(e, Y),
       r = await Wi(t, 4 * Q);
     if (r === null) return;
-    await O(t).catch(() => {});
+    await unlink(t).catch(() => {});
     let o = D(r);
     if (!o) return;
     if (!Dze()) Lze(o);
@@ -518,9 +518,9 @@ async function startRendezvousServer(e) {
   if ((delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH, p)) {
     let u = await RRe(p);
     if (u?.rvAuth) d = u.rvAuth;
-    await O(p).catch(() => {});
+    await unlink(p).catch(() => {});
   }
-  (await O(t).catch(() => {}), (r.server = new H(t, d, o, i, e)));
+  (await unlink(t).catch(() => {}), (r.server = new H(t, d, o, i, e)));
   let R = r.server;
   Et(() => R.promptStash.flush());
 }
@@ -529,7 +529,7 @@ function sendRv(e) {
 }
 function pe(e, t) {
   sendRv({ type: "shutting-down" });
-  let r = Yi(),
+  let r = getReplBridgeHandle(),
     o = [],
     i = a.CLAUDE_JOB_DIR;
   if (i) o.push(me(e, i).catch(() => {}));
@@ -577,12 +577,12 @@ function disarmStartupWedgeWatchdog() {
   P().server?.disarmStartupWedgeWatchdog();
 }
 async function q(e, t, r, o) {
-  let i = await Zn(e, o);
+  let i = await readJobState(e, o);
   if (!i) return { kind: "refused" };
   if (i.tempo === "blocked" && i.needs === t) return { kind: "already" };
-  if (i.tempo === "blocked" && i.needs !== xf) return { kind: "refused" };
+  if (i.tempo === "blocked" && i.needs !== IDLE_NEEDS) return { kind: "refused" };
   return (
-    await Ti(
+    await writeStateAtomic(
       e,
       {
         ...i,
@@ -601,9 +601,9 @@ async function q(e, t, r, o) {
   );
 }
 async function K(e, t, r, o) {
-  let i = await Zn(e, o);
+  let i = await readJobState(e, o);
   if (!i || i.tempo !== "blocked" || i.needs !== t) return;
-  (await Ti(e, { ...i, ...r, updatedAt: new Date().toISOString() }, o),
+  (await writeStateAtomic(e, { ...i, ...r, updatedAt: new Date().toISOString() }, o),
     sendRv({
       type: "state",
       patch: { tempo: r.tempo, needs: r.needs, detail: r.detail },
@@ -624,24 +624,24 @@ async function clearStartupDialogBlocked(e, t) {
 async function markCommandParkBlocked(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o) return { kind: "refused" };
-  return TAe(() => q(o, e, t, r));
+  return withOwnJobStateWrite(() => q(o, e, t, r));
 }
 async function clearCommandParkBlocked(e, t, r) {
   let o = a.CLAUDE_JOB_DIR;
   if (!o) return;
-  await TAe(() => K(o, e, t, r));
+  await withOwnJobStateWrite(() => K(o, e, t, r));
 }
 async function markReplayNoOp(e) {
   let t = a.CLAUDE_JOB_DIR;
   if (!t || a.CLAUDE_CODE_SESSION_KIND !== "bg") return;
-  let r = await Zn(t, e);
+  let r = await readJobState(t, e);
   if (!r || r.state !== "working" || r.tempo !== "active") return;
-  (await Ti(
+  (await writeStateAtomic(
     t,
-    { ...r, tempo: "blocked", needs: xf, updatedAt: new Date().toISOString() },
+    { ...r, tempo: "blocked", needs: IDLE_NEEDS, updatedAt: new Date().toISOString() },
     e,
   ),
-    sendRv({ type: "state", patch: { tempo: "blocked", needs: xf } }));
+    sendRv({ type: "state", patch: { tempo: "blocked", needs: IDLE_NEEDS } }));
 }
 var Y = ".prompt-draft",
   Q = 262144;
@@ -651,9 +651,9 @@ async function me(e, t) {
   await E(F(t, Y), oe(r, Q));
 }
 async function fe(e, t, r) {
-  let o = await Zn(e, r);
+  let o = await readJobState(e, r);
   if (!o || o.bridgeSessionSeq === t) return;
-  await Ti(
+  await writeStateAtomic(
     e,
     { ...o, bridgeSessionSeq: t, updatedAt: new Date().toISOString() },
     r,

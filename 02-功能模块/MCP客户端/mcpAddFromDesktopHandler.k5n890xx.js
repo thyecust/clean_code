@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 254 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { AppRoot as zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, mcpNameForAnalytics_GATE_EVALUATED as Gf } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOkAsync as ki, logFeatureBadAsync as wn } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Lq, qge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { getLocalSettingsValidationErrors as Iet, getSettingsForSource as ye, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getLocalSettingsValidationErrors, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { o, t, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
@@ -35,20 +35,20 @@ import {
   qLe,
   zLe,
   ZTe,
-  isMcpServerAllowedByPolicy as uj,
-  addMcpConfig as KM,
-  removeMcpConfig as MWt,
-  readRawMcpJsonServersFromCwd as Jde,
-  MCP_SETTINGS_SCOPES as N3,
-  isOrganizationProvidedMcpScope as mY,
-  getMcpConfigsByScope as nd,
-  getSettingsMcpConfigByName as wyt,
-  getAllMcpConfigs as vE,
-  doesEnterpriseMcpConfigExist as Zm,
-  isMcpServerDisabled as Uo,
+  isMcpServerAllowedByPolicy,
+  addMcpConfig,
+  removeMcpConfig,
+  readRawMcpJsonServersFromCwd,
+  MCP_SETTINGS_SCOPES,
+  isOrganizationProvidedMcpScope,
+  getMcpConfigsByScope,
+  getSettingsMcpConfigByName,
+  getAllMcpConfigs,
+  doesEnterpriseMcpConfigExist,
+  isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
-import { isRestrictedToPluginOnly as Uu } from "../Skills技能/chunk-sapykxw7.js";
+import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -56,10 +56,10 @@ import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { i9e } from "./chunk-rxp6fm7a.js";
-import { flushAnalyticsSinks as kF } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
+import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Gb, bv } from "../../01-核心基础设施/共享小工具-未细化/chunk-9jeb00w7.js";
-import { printCliError as rM, cliError as un, cliErrorAfterAnalyticsFlush as di, cliOkAfterAnalyticsFlush as dO } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { printCliError, cliError, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { HUn } from "./chunk-35zjqw7h.js";
 import { je } from "../../01-核心基础设施/共享小工具-未细化/chunk-7ejhgecr.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -100,7 +100,7 @@ function he(kt) {
     Ve;
   if (T[3] !== G)
     ((Je = () => {
-      vE({ storageV5: G })
+      getAllMcpConfigs({ storageV5: G })
         .then((ae) => {
           let { servers: Tt } = ae;
           return At(Tt);
@@ -140,7 +140,7 @@ function he(kt) {
   if (T[13] !== se || T[14] !== W || T[15] !== G)
     ((We = async function ne(Ke, Nt) {
       try {
-        return (await KM(se(Ke), Nt, W, G), null);
+        return (await addMcpConfig(se(Ke), Nt, W, G), null);
       } catch (K) {
         let Ot = K;
         return { serverName: Ke, reason: l(Ot) };
@@ -370,22 +370,22 @@ async function Ie(h, s, v) {
     return { status: `${L.cross} Connection error` };
   }
 }
-async function Br(
+async function mcpServeHandler(
   { debug: h, verbose: s, transport: v, port: a, resultFormat: f },
   m,
 ) {
   let y = ct(),
     i = "stdio",
     k = "raw";
-  await qs("tengu_mcp_start", { transport: u("stdio") });
+  await qs("tengu_mcp_start", { transport: fromEnum("stdio") });
   let M = 0;
   try {
     await it(y);
   } catch (g) {
     if (Rt(g))
       return (
-        await wn("cli_mcp_serve", "cli_mcp_serve_cwd_missing"),
-        di(`Error: Directory ${y} does not exist`)
+        await logFeatureBadAsync("cli_mcp_serve", "cli_mcp_serve_cwd_missing"),
+        cliErrorAfterAnalyticsFlush(`Error: Directory ${y} does not exist`)
       );
     throw g;
   }
@@ -397,11 +397,11 @@ async function Br(
     if (O) {
       if (C.isSandboxRequired())
         return (
-          await wn(
+          await logFeatureBadAsync(
             "cli_mcp_serve",
             "cli_mcp_serve_sandbox_required_unavailable",
           ),
-          di(
+          cliErrorAfterAnalyticsFlush(
             `Error: sandbox required but unavailable: ${O}
 ` +
               "  sandbox.failIfUnavailable is set \u2014 refusing to start without a working sandbox.",
@@ -425,19 +425,19 @@ async function Br(
       let { startMCPServer: j } = await import("../Teammates团队/startMCPServer.404m9js2.js");
       await j(y, h ?? !1, s ?? !1, m, "raw");
     }
-    await ki("cli_mcp_serve");
+    await logFeatureOkAsync("cli_mcp_serve");
   } catch (g) {
     return (
-      await wn("cli_mcp_serve", "cli_mcp_serve_start_failed"),
-      di(`Error: Failed to start MCP server: ${g}`)
+      await logFeatureBadAsync("cli_mcp_serve", "cli_mcp_serve_start_failed"),
+      cliErrorAfterAnalyticsFlush(`Error: Failed to start MCP server: ${g}`)
     );
   }
 }
-async function Hr(h, s, v, a) {
+async function mcpRemoveHandler(h, s, v, a) {
   let f = null,
     m = (M) => {
-      let g = N3.find((C) => C === M);
-      f = g ? (nd(g).servers[s] ?? null) : null;
+      let g = MCP_SETTINGS_SCOPES.find((C) => C === M);
+      f = g ? (getMcpConfigsByScope(g).servers[s] ?? null) : null;
     },
     y = async () => {
       if (f && (f.type === "sse" || f.type === "http"))
@@ -452,18 +452,18 @@ async function Hr(h, s, v, a) {
     },
     i;
   try {
-    let M = oy(s, wyt(s) ?? void 0);
+    let M = oy(s, getSettingsMcpConfigByName(s) ?? void 0);
     if (v.scope) {
       let g = zLe(v.scope);
-      (await qs("tengu_mcp_delete", { name: Gf(s, M), scope: u(g) }),
+      (await qs("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(g) }),
         m(g),
-        await MWt(s, g, a),
+        await removeMcpConfig(s, g, a),
         await y(),
         (i = g));
     } else {
       let g = es(),
         C = ee(),
-        O = await Jde().catch((c) => {
+        O = await readRawMcpJsonServersFromCwd().catch((c) => {
           if (c instanceof R || A(c) !== void 0) throw c;
           return {};
         }),
@@ -474,9 +474,9 @@ async function Hr(h, s, v, a) {
       if (C.mcpServers?.[s]) b.push("user");
       if (b.length === 0) {
         await V0({ hasDynamicMcpConfig: !1 });
-        let c = wyt(s)?.scope;
-        if (c && mY(c))
-          return di(
+        let c = getSettingsMcpConfigByName(s)?.scope;
+        if (c && isOrganizationProvidedMcpScope(c))
+          return cliErrorAfterAnalyticsFlush(
             `MCP server "${s}" is provided by your organization (${c === "managed" ? "managed settings" : cw("enterprise")}) and cannot be removed locally.`,
           );
         let w = [
@@ -485,14 +485,14 @@ async function Hr(h, s, v, a) {
           ...Object.keys(C.mcpServers ?? {}),
         ];
         return (
-          await wn("cli_mcp_remove", "cli_mcp_remove_not_found"),
-          di(Mtn(s, Y(w)))
+          await logFeatureBadAsync("cli_mcp_remove", "cli_mcp_remove_not_found"),
+          cliErrorAfterAnalyticsFlush(Mtn(s, Y(w)))
         );
       } else if (b.length === 1) {
         let c = b[0];
-        (await qs("tengu_mcp_delete", { name: Gf(s, M), scope: u(c) }),
+        (await qs("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(c) }),
           m(c),
-          await MWt(s, c, a),
+          await removeMcpConfig(s, c, a),
           await y(),
           (i = c));
       } else {
@@ -518,15 +518,15 @@ To remove from a specific scope, use:
 Specify a scope with -s to remove from a specific one.
 `);
         return (
-          await wn("cli_mcp_remove", "cli_mcp_remove_ambiguous_scope"),
-          di()
+          await logFeatureBadAsync("cli_mcp_remove", "cli_mcp_remove_ambiguous_scope"),
+          cliErrorAfterAnalyticsFlush()
         );
       }
     }
   } catch (M) {
-    return (await wn("cli_mcp_remove", "cli_mcp_remove_failed"), di(l(M)));
+    return (await logFeatureBadAsync("cli_mcp_remove", "cli_mcp_remove_failed"), cliErrorAfterAnalyticsFlush(l(M)));
   }
-  await ki("cli_mcp_remove");
+  await logFeatureOkAsync("cli_mcp_remove");
   let k = v.scope ? s : `"${s}"`;
   await bv(
     h,
@@ -552,7 +552,7 @@ function Be(h) {
     ) {
       let m = s.get(f.scope);
       if (!m)
-        ((m = nd(f.scope, { expandVars: !1 }).servers), s.set(f.scope, m));
+        ((m = getMcpConfigsByScope(f.scope, { expandVars: !1 }).servers), s.set(f.scope, m));
       let y = m[a] ?? f;
       if (y.scope !== "managed") {
         v[a] = y;
@@ -602,14 +602,14 @@ function He(Vr) {
 var Le = "\u23F8 Pending approval (run `claude` to approve)",
   pt = `${L.cross} Rejected (see disabledMcpjsonServers in settings)`,
   Ue = "\u2298 Disabled for this project (re-enable via /mcp)";
-async function Lr(h, s, v) {
+async function mcpListHandler(h, s, v) {
   (await qs("tengu_mcp_list", {}), await V0({ hasDynamicMcpConfig: !1 }));
-  let { servers: a, pendingProjectServers: f } = await vE({
+  let { servers: a, pendingProjectServers: f } = await getAllMcpConfigs({
     includePendingProjectServers: !0,
     storageV5: s,
     credentials: v,
   });
-  await ki("cli_mcp_list");
+  await logFeatureOkAsync("cli_mcp_list");
   let m = e(i9e, {});
   if (Object.keys(a).length === 0) {
     (await bv(
@@ -634,7 +634,7 @@ async function Lr(h, s, v) {
       async ([k, M]) => {
         let g = f.has(k)
           ? { status: Le }
-          : Uo(k)
+          : isMcpServerDisabled(k)
             ? { status: Ue }
             : await Ie(k, M, s);
         return {
@@ -665,14 +665,14 @@ async function Lr(h, s, v) {
     await h.waitUntilExit(),
     await xn(0));
 }
-async function Ur(h, s, v, a) {
-  (await qs("tengu_mcp_get", { name: Gf(s, oy(s, wyt(s) ?? void 0)) }),
+async function mcpGetHandler(h, s, v, a) {
+  (await qs("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, oy(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
     await V0({ hasDynamicMcpConfig: !1 }));
   let {
       servers: f,
       pendingProjectServers: m,
       rejectedProjectServers: y,
-    } = await vE({
+    } = await getAllMcpConfigs({
       includePendingProjectServers: !0,
       includeRejectedProjectServers: !0,
       storageV5: v,
@@ -681,16 +681,16 @@ async function Ur(h, s, v, a) {
     i = f[s] ?? null,
     k = m.has(s) ? "pending" : y.has(s) ? "rejected" : null;
   if (!i) {
-    await wn("cli_mcp_get", "cli_mcp_get_not_found");
+    await logFeatureBadAsync("cli_mcp_get", "cli_mcp_get_not_found");
     let c = Object.keys(f).filter((w) => !m.has(w) && !y.has(w));
-    return di(zat(s, c, m.size > 0));
+    return cliErrorAfterAnalyticsFlush(zat(s, c, m.size > 0));
   }
   let M =
       k === "pending"
         ? { status: Le }
         : k === "rejected"
           ? { status: pt }
-          : Uo(s)
+          : isMcpServerDisabled(s)
             ? { status: Ue }
             : await Ie(s, i, v),
     g = Be({ [s]: i })[s] ?? i,
@@ -749,7 +749,7 @@ async function Ur(h, s, v, a) {
     b =
       "This server is provided by your organization's managed settings and cannot be removed locally.";
   if (b) (C.push(""), C.push(b));
-  (await ki("cli_mcp_get"),
+  (await logFeatureOkAsync("cli_mcp_get"),
     await bv(
       h,
       e(t, {
@@ -759,7 +759,7 @@ async function Ur(h, s, v, a) {
     ),
     await xn(0));
 }
-async function zr(h, s, v, a, f) {
+async function mcpAddJsonHandler(h, s, v, a, f) {
   let m, y;
   try {
     m = zLe(a.scope);
@@ -782,7 +782,7 @@ async function zr(h, s, v, a, f) {
       "clientId" in i.oauth
         ? await Z().readClientSecret()
         : void 0;
-    await KM(s, i, m, f);
+    await addMcpConfig(s, i, m, f);
     let g = Lq().safeParse(i);
     if (
       ((y = (g.success ? g.data.type : void 0) ?? "stdio"),
@@ -808,11 +808,11 @@ async function zr(h, s, v, a, f) {
     }
     let C = m,
       O = y;
-    await qs("tengu_mcp_add", { scope: u(C), source: S("json"), type: u(O) });
+    await qs("tengu_mcp_add", { scope: fromEnum(C), source: S("json"), type: fromEnum(O) });
   } catch (i) {
-    return (await wn("cli_mcp_add_json", "cli_mcp_add_json_failed"), di(l(i)));
+    return (await logFeatureBadAsync("cli_mcp_add_json", "cli_mcp_add_json_failed"), cliErrorAfterAnalyticsFlush(l(i)));
   }
-  (await ki("cli_mcp_add_json"),
+  (await logFeatureOkAsync("cli_mcp_add_json"),
     await bv(
       h,
       r(t, {
@@ -820,13 +820,13 @@ async function zr(h, s, v, a, f) {
       }),
     ));
 }
-async function qr(h, s) {
+async function mcpAddFromDesktopHandler(h, s) {
   try {
     let v = zLe(h.scope),
       a = P();
     await qs("tengu_mcp_add", {
-      scope: u(v),
-      platform: u(a),
+      scope: fromEnum(v),
+      platform: fromEnum(a),
       source: S("desktop"),
     });
     let { readClaudeDesktopMcpServers: f } =
@@ -834,14 +834,14 @@ async function qr(h, s) {
       m = await f();
     if (Object.keys(m).length === 0)
       return (
-        await ki("cli_mcp_add_from_desktop"),
-        dO(
+        await logFeatureOkAsync("cli_mcp_add_from_desktop"),
+        cliOkAfterAnalyticsFlush(
           "No MCP servers found in Claude Desktop configuration or configuration file does not exist.",
         )
       );
-    await ki("cli_mcp_add_from_desktop");
+    await logFeatureOkAsync("cli_mcp_add_from_desktop");
     let { unmount: y } = await J0(
-      e(zm, {
+      e(AppRoot, {
         session: B(),
         storageV5: s,
         children: e(he, {
@@ -856,12 +856,12 @@ async function qr(h, s) {
     );
   } catch (v) {
     return (
-      await wn("cli_mcp_add_from_desktop", "cli_mcp_add_from_desktop_failed"),
-      di(l(v))
+      await logFeatureBadAsync("cli_mcp_add_from_desktop", "cli_mcp_add_from_desktop_failed"),
+      cliErrorAfterAnalyticsFlush(l(v))
     );
   }
 }
-async function Gr(h, s) {
+async function mcpResetChoicesHandler(h, s) {
   if (
     (await qs("tengu_mcp_reset_mcpjson_choices", {}),
     !(await FZe(
@@ -874,37 +874,37 @@ async function Gr(h, s) {
     )))
   )
     return (
-      rM(
+      printCliError(
         "Error: Failed to reset project choices: legacy approvals in ~/.claude.json could not be cleared (is the file writable?). Nothing was changed.",
       ),
-      await wn(
+      await logFeatureBadAsync(
         "cli_mcp_reset_choices",
         "cli_mcp_reset_choices_projectconfig_delete_failed",
       ),
-      await kF(),
-      un()
+      await flushAnalyticsSinks(),
+      cliError()
     );
-  let a = ye("localSettings");
+  let a = getSettingsForSource("localSettings");
   if (
     a
       ? a.enabledMcpjsonServers !== void 0 ||
         a.disabledMcpjsonServers !== void 0 ||
         a.enableAllProjectMcpServers !== void 0
-      : Iet().length > 0
+      : getLocalSettingsValidationErrors().length > 0
   ) {
     if (a !== null && uze().length > 0)
       return (
-        rM(
+        printCliError(
           "Error: Failed to reset project choices: settings.local.json carries validation warnings, and rewriting it would delete the warned entries \u2014 run `claude doctor` to list them, fix them, then re-run (legacy approvals in ~/.claude.json were cleared; local settings were not)",
         ),
-        await wn(
+        await logFeatureBadAsync(
           "cli_mcp_reset_choices",
           "cli_mcp_reset_choices_settings_warnings_blocked",
         ),
-        await kF(),
-        un()
+        await flushAnalyticsSinks(),
+        cliError()
       );
-    let { error: y } = await Jt(
+    let { error: y } = await updateSettingsForSource(
       "localSettings",
       {
         enabledMcpjsonServers: void 0,
@@ -916,22 +916,22 @@ async function Gr(h, s) {
     );
     if (y)
       return (
-        rM(
+        printCliError(
           `Error: Failed to reset project choices: ${y.message} (legacy approvals in ~/.claude.json were cleared; local settings were not)`,
         ),
-        await wn(
+        await logFeatureBadAsync(
           "cli_mcp_reset_choices",
           "cli_mcp_reset_choices_settings_write_failed",
         ),
-        await kF(),
-        un()
+        await flushAnalyticsSinks(),
+        cliError()
       );
   }
-  await ki("cli_mcp_reset_choices");
+  await logFeatureOkAsync("cli_mcp_reset_choices");
   let m = null;
   try {
-    let y = Uu("mcp");
-    if (!Zm()) {
+    let y = isRestrictedToPluginOnly("mcp");
+    if (!doesEnterpriseMcpConfigExist()) {
       let {
           serverNames: i,
           pluginServerNames: k,
@@ -945,9 +945,9 @@ async function Gr(h, s) {
         if (y && !k.has(b)) continue;
         let c = ZTe(b);
         if (c === "approved") {
-          if (Uo(b)) continue;
+          if (isMcpServerDisabled(b)) continue;
           let w = M[b];
-          if (w && !uj(b, w)) continue;
+          if (w && !isMcpServerAllowedByPolicy(b, w)) continue;
           C.push(g(b));
         } else if (c === "rejected") O.push(g(b));
         else j++;
@@ -1016,11 +1016,11 @@ function Oe(h, s, v) {
     : `${h.length} servers (${h.join(", ")}) ${v}`;
 }
 export {
-  qr as mcpAddFromDesktopHandler,
-  zr as mcpAddJsonHandler,
-  Ur as mcpGetHandler,
-  Lr as mcpListHandler,
-  Hr as mcpRemoveHandler,
-  Gr as mcpResetChoicesHandler,
-  Br as mcpServeHandler,
+  mcpAddFromDesktopHandler,
+  mcpAddJsonHandler,
+  mcpGetHandler,
+  mcpListHandler,
+  mcpRemoveHandler,
+  mcpResetChoicesHandler,
+  mcpServeHandler,
 };

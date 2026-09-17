@@ -12,16 +12,16 @@ import { hut } from "./chunk-317fgfn3.js";
 import { _ut } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isAutoClassifierActive as yg, sx, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isAutoClassifierActive, sx, si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { c2e, u2e } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { yd, CFC_TOOL_PREFIX as BI, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL as Nre } from "./chunk-hnp84hf6.js";
-import { JGn, nTe, Ka, OVn, getCurrentSessionDisplayTitle as TY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { yd, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./chunk-hnp84hf6.js";
+import { JGn, nTe, Ka, OVn, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Iee } from "../../01-核心基础设施/共享小工具-未细化/chunk-g36jzdvm.js";
 import { Gqe } from "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
@@ -87,7 +87,7 @@ function F() {
 function Hhr(e, t) {
   yd().bridgeBinding = { context: e, socketClient: t };
 }
-var V = new RegExp(`^${Nre}\\(([^)]+)\\)$`);
+var V = new RegExp(`^${CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL}\\(([^)]+)\\)$`);
 function x(e) {
   let t = new Set(),
     n = [],
@@ -100,8 +100,8 @@ function x(e) {
   );
 }
 function W(e, t) {
-  let n = BI.slice(0, -2),
-    r = `${BI}*`;
+  let n = CFC_TOOL_PREFIX.slice(0, -2),
+    r = `${CFC_TOOL_PREFIX}*`;
   for (let o of Object.values(e.alwaysAllowRules))
     for (let s of o ?? []) {
       let i = s.replace(/\(\*?\)$/, "");
@@ -312,7 +312,7 @@ function ie(e) {
       n = new URL(t.url).host;
     } catch {}
     let r = !!n && e.has(C(n));
-    if (!r) f("chrome_permission_prompt", "stale_host_mismatch");
+    if (!r) logFeatureBad("chrome_permission_prompt", "stale_host_mismatch");
     return r;
   };
 }
@@ -320,7 +320,7 @@ async function ae(e, t, n, r) {
   let o = yd().bridgeBinding;
   if (!o)
     throw (
-      f("chrome_permission_prompt", "binding_missing"),
+      logFeatureBad("chrome_permission_prompt", "binding_missing"),
       Error("Claude in Chrome bridge is not initialized in this session.")
     );
   let s = n.abortController.signal;
@@ -359,7 +359,7 @@ async function ae(e, t, n, r) {
   return { data: l, ...(a && { mcpMeta: { _meta: a } }) };
 }
 function uon(e) {
-  let t = `${BI}${e}`;
+  let t = `${CFC_TOOL_PREFIX}${e}`;
   return {
     checkPermissions: async (o, s) => {
       let i = s.toolUseId,
@@ -378,7 +378,7 @@ function uon(e) {
       if (l && l.toolName === "navigate" && typeof l.input.url === "string") {
         if (((a = k(l.input.url)), !a))
           return (
-            f("chrome_permission_prompt", "non_web_url"),
+            logFeatureBad("chrome_permission_prompt", "non_web_url"),
             {
               behavior: "deny",
               message:
@@ -394,7 +394,7 @@ function uon(e) {
         let c = await M(l.input.tabId);
         if (!c)
           return (
-            f("chrome_permission_prompt", "tab_url_unresolved"),
+            logFeatureBad("chrome_permission_prompt", "tab_url_unresolved"),
             {
               behavior: "deny",
               message:
@@ -408,7 +408,7 @@ function uon(e) {
           );
         if (((a = k(c)), !a))
           return (
-            f("chrome_permission_prompt", "non_web_tab_url"),
+            logFeatureBad("chrome_permission_prompt", "non_web_tab_url"),
             {
               behavior: "deny",
               message:
@@ -421,7 +421,7 @@ function uon(e) {
             }
           );
       }
-      let u = ce(s),
+      let u = getToolPermissionContext(s),
         p = sx(
           s.options?.tools?.find((c) => Kt(c, t)),
           u,
@@ -432,7 +432,7 @@ function uon(e) {
         b =
           u.chromeNavigationClassifierEnabled === !0 &&
           !_ &&
-          (u.chromeClassifierFloorEnabled === !0 || yg(p)),
+          (u.chromeClassifierFloorEnabled === !0 || isAutoClassifierActive(p)),
         h,
         T,
         I = () => {
@@ -445,7 +445,7 @@ function uon(e) {
         let c = J(e, o);
         if (c.kind === "deny")
           return (
-            f("chrome_permission_prompt", c.code),
+            logFeatureBad("chrome_permission_prompt", c.code),
             I(),
             {
               behavior: "deny",
@@ -465,7 +465,7 @@ function uon(e) {
             S = v === void 0 ? void 0 : k(v);
           if (S === void 0)
             return (
-              f("chrome_permission_prompt", "tab_url_unresolved"),
+              logFeatureBad("chrome_permission_prompt", "tab_url_unresolved"),
               I(),
               {
                 behavior: "deny",
@@ -489,7 +489,7 @@ function uon(e) {
           S = c.sourceOf.get(v) ?? c.sourceOf.get(P(v)) ?? "session";
         if (N(c.denied, v))
           return (
-            g("chrome_permission_prompt", "domain_rule_denied"),
+            logFeatureSad("chrome_permission_prompt", "domain_rule_denied"),
             {
               behavior: "deny",
               message: `Claude in Chrome is denied on ${a.host}.`,
@@ -498,7 +498,7 @@ function uon(e) {
                 rule: {
                   source: S,
                   ruleBehavior: "deny",
-                  ruleValue: { toolName: Nre, ruleContent: a.host },
+                  ruleValue: { toolName: CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, ruleContent: a.host },
                 },
               },
             }
@@ -516,7 +516,7 @@ function uon(e) {
               rule: {
                 source: S,
                 ruleBehavior: "allow",
-                ruleValue: { toolName: Nre, ruleContent: a.host },
+                ruleValue: { toolName: CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, ruleContent: a.host },
               },
             },
           };
@@ -538,7 +538,7 @@ function uon(e) {
             : [
                 {
                   type: "addRules",
-                  rules: [{ toolName: Nre, ruleContent: a.host }],
+                  rules: [{ toolName: CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, ruleContent: a.host }],
                   behavior: "allow",
                   destination: "session",
                 },
@@ -579,7 +579,7 @@ function uon(e) {
       if (i)
         (yd().resolvedHostByToolUseId.delete(i),
           yd().resolvedUrlByToolUseId.delete(i));
-      let l = ce(s),
+      let l = getToolPermissionContext(s),
         a = s.options?.tools?.find((w) => Kt(w, t)),
         u = sx(a, l) === "bypassPermissions",
         p = x(l),
@@ -605,7 +605,7 @@ function uon(e) {
               : { permissionMode: "ask", sessionScope: h },
         I = await ae(e, o, s, T);
       if (d !== void 0) E(K(), d);
-      if (m) y("chrome_permission_prompt");
+      if (m) logFeatureOk("chrome_permission_prompt");
       return I;
     },
   };

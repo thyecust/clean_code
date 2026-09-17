@@ -1054,7 +1054,7 @@ a.TypeRegistry.for("smithy.ts.sdk.synthetic.com.amazonaws.sts").registerError(
 var Ue = [9, "com.amazonaws.sts", "GetCallerIdentity", 0, () => ot, () => nt];
 var Ke = pe(Ax()),
   ze = pe(ta());
-class ht extends ze.Command.classBuilder()
+class GetCallerIdentityCommand extends ze.Command.classBuilder()
   .ep(B)
   .m(function (e, t, o, d) {
     return [Ke.getEndpointPlugin(o, e.getEndpointParameterInstructions())];
@@ -1063,4 +1063,4 @@ class ht extends ze.Command.classBuilder()
   .n("STSClient", "GetCallerIdentityCommand")
   .sc(Ue)
   .build() {}
-export { ht as GetCallerIdentityCommand, j as STSClient };
+export { GetCallerIdentityCommand, j as STSClient };

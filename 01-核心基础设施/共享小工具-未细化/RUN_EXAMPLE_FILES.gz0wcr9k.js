@@ -17,8 +17,8 @@ var n = Ae("./playwright-g4wwbqeh.md");
 var r = Ae("./server-z4ytjptt.md");
 var i = Ae("./tui-93b0fcsh.md");
 var o = Ae("./SKILL-9ddmsnpa.md");
-var q = o,
-  F = {
+var SKILL_MD = o,
+  RUN_EXAMPLE_FILES = {
     "examples/cli.md": e,
     "examples/electron.md": a,
     "examples/library.md": s,
@@ -26,4 +26,4 @@ var q = o,
     "examples/server.md": r,
     "examples/tui.md": i,
   };
-export { F as RUN_EXAMPLE_FILES, q as SKILL_MD };
+export { RUN_EXAMPLE_FILES, SKILL_MD };

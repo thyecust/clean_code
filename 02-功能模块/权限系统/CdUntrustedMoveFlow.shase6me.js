@@ -15,10 +15,10 @@ import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-j
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { P6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { parseSettingsFileUncached as Zge, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { parseSettingsFileUncached, X6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { findCanonicalGitRootUncached as vA } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { findCanonicalGitRootUncached } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { mo, ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-vzqtx1mx.js";
@@ -29,8 +29,8 @@ import { En } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Aot, Cot, vot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
 import { Szt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
-import { recordDirectoryTrust as XWe, validateCdTarget as NPt, cdRuleRefusalMessage as FPt, relocateSession as $Pt, reapplyProjectSettingsAfterTrustChange as UPt, withGatedGrantsApplied as BPt } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
+import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
+import { recordDirectoryTrust, validateCdTarget, cdRuleRefusalMessage, relocateSession, reapplyProjectSettingsAfterTrustChange, withGatedGrantsApplied } from "../Memory-CLAUDE.md/chunk-br7dq41d.js";
 import {
   jPt,
   s0e,
@@ -68,11 +68,11 @@ function ge() {
 }
 function Oe(s) {
   let a = ao(s),
-    l = X6(a, vA),
-    c = Zge(le(a, ".claude", "settings.json")).settings,
+    l = X6(a, findCanonicalGitRootUncached),
+    c = parseSettingsFileUncached(le(a, ".claude", "settings.json")).settings,
     u = le(l, ".claude", "settings.local.json"),
     h = le(a, ".claude", "settings.local.json"),
-    v = [Zge(u).settings, ...(h === u ? [] : [Zge(h).settings])].filter(
+    v = [parseSettingsFileUncached(u).settings, ...(h === u ? [] : [parseSettingsFileUncached(h).settings])].filter(
       (S) => S !== null,
     ),
     w =
@@ -151,7 +151,7 @@ function E(pt) {
   else co = Le[6];
   return co;
 }
-function ee(ft) {
+function CdTrustPrompt(ft) {
   let R = _(33),
     {
       directory: Xe,
@@ -460,7 +460,7 @@ async function ut(s, a, l) {
       args: "",
       onDone: () => s("Usage: /cd <path>"),
     });
-  let u = await NPt(c, ce(a));
+  let u = await validateCdTarget(c, getToolPermissionContext(a));
   switch (u.result) {
     case "not_found": {
       let i = `Couldn't find a directory at ${ie.bold(u.path)}.`;
@@ -475,7 +475,7 @@ async function ut(s, a, l) {
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "blocked_by_rule": {
-      let i = FPt(u.directory, u.check, ie.bold, { display: an });
+      let i = cdRuleRefusalMessage(u.directory, u.check, ie.bold, { display: an });
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "ok":
@@ -485,7 +485,7 @@ async function ut(s, a, l) {
     v = async () => {
       let i;
       try {
-        i = await $Pt(a.session, h, "cd_command", a.storageV5);
+        i = await relocateSession(a.session, h, "cd_command", a.storageV5);
       } catch (m) {
         return (
           n(`/cd relocate failed: ${m}`, { level: "error" }),
@@ -514,8 +514,8 @@ async function ut(s, a, l) {
     },
     w = async (i, m) => {
       if ((await bo(a), m?.persistFailed))
-        f("mcp_project_approval_dialog", "mcp_approval_persist_failed");
-      else if (m) y("mcp_project_approval_dialog");
+        logFeatureBad("mcp_project_approval_dialog", "mcp_approval_persist_failed");
+      else if (m) logFeatureOk("mcp_project_approval_dialog");
       s(
         m?.persistFailed
           ? `Moved to ${ie.bold(an(h))}. One or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \u2014 you will be asked again next time.`
@@ -534,7 +534,7 @@ async function ut(s, a, l) {
       onComplete: (m) => void w(i.modelMessage, m),
     });
   }
-  let g = vA(so(h)),
+  let g = findCanonicalGitRootUncached(so(h)),
     G;
   try {
     G = Oe(h);
@@ -544,12 +544,12 @@ async function ut(s, a, l) {
       { level: "error" },
     );
   }
-  return e(no, {
+  return e(CdUntrustedMoveFlow, {
     directory: h,
     trustRoot: g != null && g !== so(h) ? g : void 0,
     disclosures: G,
     onConfirm: async () => (
-      await XWe(h, a.storageV5).catch((i) => {
+      await recordDirectoryTrust(h, a.storageV5).catch((i) => {
         n(`/cd: persisting trust failed: ${i}`, { level: "error" });
       }),
       v()
@@ -633,7 +633,7 @@ function Y(St) {
   else V = qe[10];
   return V;
 }
-function no(jt) {
+function CdUntrustedMoveFlow(jt) {
   let te = _(18),
     {
       directory: Ie,
@@ -696,7 +696,7 @@ function no(jt) {
     te[15] !== M ||
     te[16] !== Ke
   )
-    ((re = e(ee, {
+    ((re = e(CdTrustPrompt, {
       directory: Ie,
       trustRoot: Ke,
       disclosures: Qe,
@@ -720,7 +720,7 @@ function ne(We) {
     [Pt, Dt] = d(!j.projectGrantsGated),
     [O] = d(Q),
     wo;
-  if (B[0] !== O) ((wo = () => vA(O)), (B[0] = O), (B[1] = wo));
+  if (B[0] !== O) ((wo = () => findCanonicalGitRootUncached(O)), (B[0] = O), (B[1] = wo));
   else wo = B[1];
   let [to] = d(wo),
     [ro] = d(Po);
@@ -739,11 +739,11 @@ function ne(We) {
     let $e;
     if (B[5] !== O || B[6] !== Z || B[7] !== j || B[8] !== eo)
       (($e = () => {
-        XWe(O, eo)
+        recordDirectoryTrust(O, eo)
           .catch(Do)
           .then(() => {
             try {
-              UPt();
+              reapplyProjectSettingsAfterTrustChange();
             } catch (W) {
               let Tt = W;
               n(
@@ -751,7 +751,7 @@ function ne(We) {
                 { level: "error" },
               );
             }
-            Z(BPt(j));
+            Z(withGatedGrantsApplied(j));
           });
       }),
         (B[5] = O),
@@ -775,7 +775,7 @@ function ne(We) {
       B[16] !== $e ||
       B[17] !== W
     )
-      ((Ro = e(ee, {
+      ((Ro = e(CdTrustPrompt, {
         backstop: !0,
         directory: O,
         trustRoot: z,
@@ -808,4 +808,4 @@ function ne(We) {
   else z = B[24];
   return z;
 }
-export { ee as CdTrustPrompt, no as CdUntrustedMoveFlow, ut as call };
+export { CdTrustPrompt, CdUntrustedMoveFlow, ut as call };

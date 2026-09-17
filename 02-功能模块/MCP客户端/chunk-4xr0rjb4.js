@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { ge, l, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
 import { vc, Ute, uDe, qte, dgn, Jv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { zo, q$ } from "./chunk-3kmsshb6.js";
@@ -242,6 +242,6 @@ function v(t, e) {
     Po(e))
   )
     return;
-  h(ge(e));
+  logError(ge(e));
 }
 export { getPluginInventory, computePluginTokenCost, scaleCharsToTokens };

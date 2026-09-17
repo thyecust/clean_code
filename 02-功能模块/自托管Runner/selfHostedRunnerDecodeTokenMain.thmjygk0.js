@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getProxyFetchOptions as As } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Dce } from "../../01-核心基础设施/共享小工具-未细化/chunk-kax7bdqv.js";
 import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-bgwm3fhf.js";
-import { createPublicKey as l, verify as g } from "crypto";
+import { createPublicKey, verify } from "crypto";
 function y(t) {
   let r = { header: !1, verify: !0, checkExpiry: !0, help: !1 };
   for (let e = 0; e < t.length; e++) {
@@ -108,7 +108,7 @@ async function m(t) {
   let o;
   try {
     o = await t.fetchFn(t.jwksUrl, {
-      ...As({ url: t.jwksUrl }),
+      ...getProxyFetchOptions({ url: t.jwksUrl }),
       signal: AbortSignal.timeout(30000),
     });
   } catch (a) {
@@ -131,11 +131,11 @@ async function m(t) {
   let c = "sha256",
     d =
       r === "ES256"
-        ? { key: l({ key: s, format: "jwk" }), dsaEncoding: "ieee-p1363" }
-        : { key: l({ key: s, format: "jwk" }) },
+        ? { key: createPublicKey({ key: s, format: "jwk" }), dsaEncoding: "ieee-p1363" }
+        : { key: createPublicKey({ key: s, format: "jwk" }) },
     k = Buffer.from(`${t.headerB64}.${t.payloadB64}`, "utf8"),
     f = Buffer.from(t.signatureB64, "base64url");
-  if (!g(c, k, d, f))
+  if (!verify(c, k, d, f))
     throw Error("decode-token: signature verification FAILED");
   if (t.checkExpiry !== !1) S(t.payload);
   return { kid: e };
@@ -211,7 +211,7 @@ Examples:
   echo "$SOME_TOKEN" | env -u CLAUDE_CODE_SESSION_ACCESS_TOKEN \\
     claude self-hosted-runner decode-token --no-verify
 `;
-async function C(t) {
+async function selfHostedRunnerDecodeTokenMain(t) {
   let r;
   try {
     r = y(t);
@@ -252,4 +252,4 @@ async function C(t) {
       process.exit(1));
   }
 }
-export { C as selfHostedRunnerDecodeTokenMain };
+export { selfHostedRunnerDecodeTokenMain };

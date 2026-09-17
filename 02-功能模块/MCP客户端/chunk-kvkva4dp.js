@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { fF, xv, s3e, hee, uSe, flt } from "./chunk-d7zajrh1.js";
@@ -106,9 +106,9 @@ async function k(r) {
       );
     (t.push(""), t.push(ie.dim("  Manage these in /plugin")));
   }
-  if (s.length === 0) g("cli_skill_doctor", "no_user_skills");
-  else if (d !== null) g("cli_skill_doctor", "scan_policy_denied");
-  else y("cli_skill_doctor");
+  if (s.length === 0) logFeatureSad("cli_skill_doctor", "no_user_skills");
+  else if (d !== null) logFeatureSad("cli_skill_doctor", "scan_policy_denied");
+  else logFeatureOk("cli_skill_doctor");
   return t.join(`
 `);
 }
@@ -129,8 +129,8 @@ var ynn = async (r, s) => {
   } catch (e) {
     let o = e instanceof hee ? e.cause : e;
     if (
-      (h(o),
-      f(
+      (logError(o),
+      logFeatureBad(
         "cli_skill_doctor",
         e instanceof hee ? e.featureErrorCode : "render_failed",
       ),

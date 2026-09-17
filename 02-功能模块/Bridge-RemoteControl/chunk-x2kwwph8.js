@@ -9,19 +9,19 @@
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  getCommandName as qo,
-  isCommandEnabled as zp,
-  findCommand as Di,
+  getCommandName,
+  isCommandEnabled,
+  findCommand,
   oV,
   WF,
   I2,
   Re,
   em,
-  builtInCommandNames as LI,
-  isBridgeSafeCommand as cAe,
-  findBridgeFallback as uAe,
+  builtInCommandNames,
+  isBridgeSafeCommand,
+  findBridgeFallback,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { kbe, tH, xbe } from "../用量额度-限额/chunk-1bfn62xh.js";
 import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
@@ -30,15 +30,15 @@ function resolveBridgeSlashOverride(l) {
     a = p(t, n.options.commands);
   if (a === void 0) return { kind: "none" };
   let { parsed: s, cmd: e, folded: o, effectiveCmd: d } = a;
-  if (cAe(d))
+  if (isBridgeSafeCommand(d))
     return {
       kind: "updated",
       effectiveSkipSlash: !1,
       effectiveInput: t,
       effectiveContext: n,
     };
-  let c = uAe(d);
-  if (c && zp(d))
+  let c = findBridgeFallback(d);
+  if (c && isCommandEnabled(d))
     return {
       kind: "updated",
       effectiveSkipSlash: !1,
@@ -49,7 +49,7 @@ function resolveBridgeSlashOverride(l) {
         ...n,
         options: {
           ...n.options,
-          commands: [{ ...c, isEnabled: () => zp(d) }, ...n.options.commands],
+          commands: [{ ...c, isEnabled: () => isCommandEnabled(d) }, ...n.options.commands],
         },
       },
     };
@@ -57,7 +57,7 @@ function resolveBridgeSlashOverride(l) {
     rawName: e.name,
     canonicalName: e.name,
     isMcp: e.loadedFrom === "mcp",
-    isBuiltIn: LI().has(e.name),
+    isBuiltIn: builtInCommandNames().has(e.name),
     isBundled: e.type === "prompt" && e.source === "bundled",
     isOfficial: e.type === "prompt" && I2(e),
   });
@@ -67,10 +67,10 @@ function resolveBridgeSlashOverride(l) {
     surface: S("bridge"),
     reason: S("unavailable_over_remote_control"),
   }),
-    f("cmd_dispatch", "cmd_unavailable_bridge"));
+    logFeatureBad("cmd_dispatch", "cmd_unavailable_bridge"));
   let u = o
-      ? `/${qo(e)} ${o.consumedToken} isn't available over Remote Control.`
-      : `/${qo(d)} isn't available over Remote Control.`,
+      ? `/${getCommandName(e)} ${o.consumedToken} isn't available over Remote Control.`
+      : `/${getCommandName(d)} isn't available over Remote Control.`,
     C =
       oV(e, s.args) || oV(d, o ? o.args : s.args) ? `/${s.commandName} ***` : t;
   return {
@@ -93,12 +93,12 @@ function p(l, t) {
     let o = kbe(r, t);
     if (o) r = o.commandName;
   }
-  let m = Di(r, t);
+  let m = findCommand(r, t);
   if (!m) return;
   let a = xbe(m, n.args),
-    s = a ? Di(a.targetName, t) : void 0,
+    s = a ? findCommand(a.targetName, t) : void 0,
     e =
-      a && s && zp(s)
+      a && s && isCommandEnabled(s)
         ? { command: s, consumedToken: a.consumedToken, args: a.remainingArgs }
         : void 0;
   return { parsed: n, cmd: m, folded: e, effectiveCmd: e ? e.command : m };
@@ -107,6 +107,6 @@ function bridgeSlashLineBuildsRequest(l, t) {
   let n = p(l, t);
   if (n === void 0) return !0;
   let { effectiveCmd: r } = n;
-  return r.type === "prompt" && cAe(r);
+  return r.type === "prompt" && isBridgeSafeCommand(r);
 }
 export { resolveBridgeSlashOverride, bridgeSlashLineBuildsRequest };

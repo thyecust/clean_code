@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, Tc, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -18,17 +18,17 @@ import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Gu, nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateToWidth as Xe, cxt, formatDuration as Ot, formatBarElapsed as Ihe, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateToWidth, cxt, formatDuration, formatBarElapsed, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { zj } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { gV, Rf, isTranscriptMessage as TH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gV, Rf, isTranscriptMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { buildResumePrompt as F1t } from "./chunk-va9cgbfs.js";
+import { buildResumePrompt } from "./chunk-va9cgbfs.js";
 import { Vf } from "./chunk-cd542wve.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import {
@@ -73,7 +73,7 @@ async function Wn(s, a) {
       null
     );
   }
-  let m = c.filter(TH),
+  let m = c.filter(isTranscriptMessage),
     w = m.findIndex((k) => k.type === "user"),
     h = w === -1 ? void 0 : m[w];
   for (let k = w + 1; w !== -1 && k < m.length; k++) {
@@ -136,7 +136,7 @@ function Nn(s, a) {
   return s === void 0
     ? []
     : [
-        { ...s, text: Xe(s.text, a - jn.length) },
+        { ...s, text: truncateToWidth(s.text, a - jn.length) },
         { text: jn, dimColor: !0 },
       ];
 }
@@ -145,7 +145,7 @@ function ri(s, a, l, c, m, w) {
     let C = In(a, m);
     s.push([
       { text: C },
-      { ...l, text: Xe(l.text, m - C.length - 1) },
+      { ...l, text: truncateToWidth(l.text, m - C.length - 1) },
       { text: ":", dimColor: !0 },
     ]);
   }
@@ -220,12 +220,12 @@ function li(s, a, l, c, m, w) {
 }
 F();
 import { join as Mi } from "path";
-import { mkdir as il, writeFile as al } from "fs/promises";
-import { dirname as Ln, join as En } from "path";
+import { mkdir, writeFile } from "fs/promises";
+import { dirname, join as En } from "path";
 var Oe = "Use a different name or overwrite.";
 async function ll(s, a) {
   if (s === "user") return jPe();
-  let l = tr(a);
+  let l = findGitRoot(a);
   if (l === null) return En(a, ".claude", "workflows");
   let c = (await gV("workflows", a))[0];
   if (c !== void 0) return c;
@@ -236,25 +236,25 @@ async function _n(s, a) {
     c = await ll(s.scope, s.cwd),
     m = En(c, `${l}.js`);
   if (a !== void 0 && s.scope === "user") return cl(a, l, m, s);
-  let w = s.scope !== "user" && !y8(Ln(c));
+  let w = s.scope !== "user" && !y8(dirname(c));
   if (w)
     try {
-      await nke(Ln(Ln(c)), c);
+      await nke(dirname(dirname(c)), c);
     } catch (h) {
-      throw (f("workflow_save", "write_failed"), h);
+      throw (logFeatureBad("workflow_save", "write_failed"), h);
     }
-  await il(c, { recursive: !0, mode: 448 });
+  await mkdir(c, { recursive: !0, mode: 448 });
   try {
     if (s.overwrite)
       await wb(m, s.script, { encoding: "utf8", mode: 384, checkParentDir: w });
-    else await al(m, s.script, { encoding: "utf8", mode: 384, flag: "wx" });
+    else await writeFile(m, s.script, { encoding: "utf8", mode: 384, flag: "wx" });
   } catch (h) {
     if (!s.overwrite && A(h) === "EEXIST")
       throw (
-        g("workflow_save", "already_exists"),
+        logFeatureSad("workflow_save", "already_exists"),
         Error(`Dynamic workflow "${l}" already exists at ${m}. ${Oe}`)
       );
-    throw (f("workflow_save", "write_failed"), h);
+    throw (logFeatureBad("workflow_save", "write_failed"), h);
   }
   return ci(l, m, s);
 }
@@ -268,9 +268,9 @@ async function ci(s, a, l) {
   return (
     c(),
     m(),
-    y("workflow_save"),
+    logFeatureOk("workflow_save"),
     i("tengu_workflow_saved", {
-      scope: u(l.scope),
+      scope: fromEnum(l.scope),
       overwrite: l.overwrite,
       script_size_chars: l.script.length,
     }),
@@ -288,14 +288,14 @@ async function cl(s, a, l, c) {
   if (!m.ok) {
     if (!c.overwrite && m.error.code === "AlreadyExists")
       throw (
-        g("workflow_save", "already_exists"),
+        logFeatureSad("workflow_save", "already_exists"),
         new R(
           `Dynamic workflow "${a}" already exists at ${l}. ${Oe}`,
           "workflow name collision",
         )
       );
     throw (
-      f("workflow_save", "write_failed"),
+      logFeatureBad("workflow_save", "write_failed"),
       new R(
         `Workflow save failed: ${m.error.code} (${l})`,
         "workflow save failed",
@@ -627,10 +627,10 @@ function Hc(s, a) {
     c = uye(s.fallbackModel ?? s.model, void 0),
     m = [];
   if (s.isolation != null) m.push(s.isolation);
-  if (s.tokens != null) m.push(`${Pn(s.tokens)} tok`);
+  if (s.tokens != null) m.push(`${formatTokens(s.tokens)} tok`);
   if (l === "running" && s.lastProgressAt != null) {
     let h = Math.floor((Date.now() - s.lastProgressAt) / 1000);
-    if (h >= 30) m.push(`idle ${Ot(h * 1000)}`);
+    if (h >= 30) m.push(`idle ${formatDuration(h * 1000)}`);
   }
   if (l === "queued") m.push("queued");
   if (l === "interrupted") m.push("stopped");
@@ -642,7 +642,7 @@ function Hc(s, a) {
     (l === "running" && s.startedAt != null
       ? Math.max(0, Date.now() - s.startedAt)
       : void 0);
-  return { model: c, stats: m.join(" \xB7 "), time: w != null ? Ihe(w) : "" };
+  return { model: c, stats: m.join(" \xB7 "), time: w != null ? formatBarElapsed(w) : "" };
 }
 var _a = 6;
 function Ds(s, a, l, c) {
@@ -650,7 +650,7 @@ function Ds(s, a, l, c) {
   let { model: m, stats: w, time: h } = Hc(s, c),
     v = l ? "permission" : void 0,
     C = !l,
-    W = (J, Z) => (Z <= 0 ? "" : Xe(J, Z)),
+    W = (J, Z) => (Z <= 0 ? "" : truncateToWidth(J, Z)),
     k = h ? W(h, a).padStart(Math.min(_a, a)) : "",
     S = k ? a - te(k) - 1 : a,
     I = (J, Z) => (J && Z ? 3 : 0),
@@ -688,7 +688,7 @@ function Da(s, a) {
       w = te(m.text);
     if (l + w > a) {
       let h = a - l,
-        v = h > 0 ? Xe(m.text, h) : "",
+        v = h > 0 ? truncateToWidth(m.text, h) : "",
         C = s.slice(0, c);
       if (v) C.push({ ...m, text: v });
       return { segs: C, pad: Math.max(0, h - te(v)) };
@@ -800,11 +800,11 @@ function Ns(Nm) {
     kt = [];
     let ql = He(Bt.length, to);
     if (ji) {
-      let sr = Xe(` \xB7 ${ql}`, Math.max(1, tt - 1));
+      let sr = truncateToWidth(` \xB7 ${ql}`, Math.max(1, tt - 1));
       let Li = Math.max(1, tt - te(sr));
       let et;
       if (lt[14] !== qt.title || lt[15] !== Li)
-        ((et = Xe(qt.title, Li)),
+        ((et = truncateToWidth(qt.title, Li)),
           (lt[14] = qt.title),
           (lt[15] = Li),
           (lt[16] = et));
@@ -837,7 +837,7 @@ function Ns(Nm) {
           rt,
           {
             contentWidth: tt,
-            segs: [{ text: Xe(qt.title, tt), color: "permission", bold: !0 }],
+            segs: [{ text: truncateToWidth(qt.title, tt), color: "permission", bold: !0 }],
           },
           "title",
         ),
@@ -845,7 +845,7 @@ function Ns(Nm) {
         kt.push(
           e(
             rt,
-            { contentWidth: tt, segs: [{ text: Xe(ql, tt), dimColor: !0 }] },
+            { contentWidth: tt, segs: [{ text: truncateToWidth(ql, tt), dimColor: !0 }] },
             "count",
           ),
         ),
@@ -874,7 +874,7 @@ function Ns(Nm) {
         let ir = Bt[Wo];
         let ar = Ni === "agents" && Wo === nr;
         let { glyph: Im, color: Lm } = xo(Pt(ir, rr));
-        let Jl = Xe(ir.label, Ei);
+        let Jl = truncateToWidth(ir.label, Ei);
         let Em = " ".repeat(Math.max(0, Ei - te(Jl)));
         let _m = Math.max(0, tt - (Ei + 5));
         kt.push(
@@ -1025,7 +1025,7 @@ function gn(s, a) {
   let l = [],
     c = 0;
   if (a.label) {
-    let h = ` ${Xe(a.label.text, Math.max(1, s - 2))} `;
+    let h = ` ${truncateToWidth(a.label.text, Math.max(1, s - 2))} `;
     ((c += te(h)),
       l.push(
         e(
@@ -1035,7 +1035,7 @@ function gn(s, a) {
         ),
       ));
   }
-  let m = a.tag ? ` ${Xe(a.tag, Math.max(0, s - c - 2))} ` : "",
+  let m = a.tag ? ` ${truncateToWidth(a.tag, Math.max(0, s - c - 2))} ` : "",
     w = Math.max(0, s - c - te(m));
   if ((l.push(e(t, { color: "text", children: LP.repeat(w) }, "dash")), m))
     l.push(e(t, { dimColor: !0, children: m }, "tag"));
@@ -1117,7 +1117,7 @@ function Wa(s, a, l, c, m) {
     S = c === "phases" && w ? `${L.pointer} ` : "  ",
     I = te(S) + te(C) + 1,
     T = k ? 1 + te(k) : 0,
-    j = Xe(s.title, Math.max(1, m - I - T)),
+    j = truncateToWidth(s.title, Math.max(1, m - I - T)),
     q = Math.max(0, m - I - te(j) - T),
     P = !w && s.status === "not-started",
     J = [
@@ -1133,7 +1133,7 @@ function Wa(s, a, l, c, m) {
 function Na(s, a, l, c, m, w, h) {
   let v = c === "agents" && a === l,
     { glyph: C, color: W } = xo(Pt(s, h)),
-    k = Xe(s.label, w),
+    k = truncateToWidth(s.label, w),
     S = " ".repeat(Math.max(0, w - te(k))),
     I = Math.max(0, m - (w + 4));
   return [
@@ -1152,7 +1152,7 @@ function Na(s, a, l, c, m, w, h) {
 function ja(s, a, l, c, m) {
   let w = a === l,
     { glyph: h, color: v } = xo(Pt(s, m)),
-    C = Xe(s.label, Math.max(1, c - 4));
+    C = truncateToWidth(s.label, Math.max(1, c - 4));
   return [
     { text: w ? `${L.pointer} ` : "  ", color: "permission" },
     { text: h, color: v },
@@ -1389,7 +1389,7 @@ function La({
     W = [{ text: a, bold: !0, dimColor: !0 }];
   if (C > 0)
     W.push({
-      text: Xe(
+      text: truncateToWidth(
         ` \xB7 ${l.length} lines${m ? "" : ` \xB7 ${kke} expand`}`,
         h - te(a),
       ),
@@ -1400,7 +1400,7 @@ function La({
   for (let S of k) s.push(S);
   if (!m && C > 0)
     s.push([
-      { text: Xe(`${w}\u2026 ${C} more ${x(C, "line")}`, h), dimColor: !0 },
+      { text: truncateToWidth(`${w}\u2026 ${C} more ${x(C, "line")}`, h), dimColor: !0 },
     ]);
   return C;
 }
@@ -1445,7 +1445,7 @@ function Ea({
     S.push(`attempt ${s.attempt} (${Q})`);
   }
   let I = te(W) + 1 + te(yn[a]),
-    T = S.length > 0 ? Xe(` \xB7 ${S.join(" \xB7 ")}`, Math.max(0, m - I)) : "";
+    T = S.length > 0 ? truncateToWidth(` \xB7 ${S.join(" \xB7 ")}`, Math.max(0, m - I)) : "";
   h.push([
     { text: W, color: k },
     { text: " " },
@@ -1453,17 +1453,17 @@ function Ea({
     ...(T ? [{ text: T, dimColor: !0 }] : []),
   ]);
   let j = [];
-  if (s.tokens != null) j.push(`${Pn(s.tokens)} tok`);
+  if (s.tokens != null) j.push(`${formatTokens(s.tokens)} tok`);
   if (s.toolCalls != null && s.toolCalls > 0)
     j.push(`${s.toolCalls} ${x(s.toolCalls, "tool call")}`);
-  if (s.durationMs != null) j.push(Ot(s.durationMs));
+  if (s.durationMs != null) j.push(formatDuration(s.durationMs));
   if (a === "queued" && s.queuedAt != null)
-    j.push(`waiting ${Ot(Math.max(0, w - s.queuedAt))}`);
+    j.push(`waiting ${formatDuration(Math.max(0, w - s.queuedAt))}`);
   if (a === "running" && s.lastProgressAt != null) {
     let Q = Math.floor((w - s.lastProgressAt) / 1000);
-    if (Q >= 30) j.push(`idle ${Ot(Q * 1000)}`);
+    if (Q >= 30) j.push(`idle ${formatDuration(Q * 1000)}`);
   }
-  if (j.length > 0) h.push([{ text: Xe(j.join(" \xB7 "), m), dimColor: !0 }]);
+  if (j.length > 0) h.push([{ text: truncateToWidth(j.join(" \xB7 "), m), dimColor: !0 }]);
   h.push([{ text: "" }]);
   let q = l !== "loading" && l?.prompt ? l.prompt : (s.promptPreview ?? ""),
     P = q
@@ -1513,11 +1513,11 @@ function Ea({
     )
       for (let it of Q.slice(-Ts)) {
         let pt = it.summary ? `(${it.summary})` : "";
-        h.push([{ text: Xe(`  ${it.name}${pt}`, m), dimColor: !0 }]);
+        h.push([{ text: truncateToWidth(`  ${it.name}${pt}`, m), dimColor: !0 }]);
       }
     else if (s.lastToolName != null) {
       let it = s.lastToolSummary ? `(${s.lastToolSummary})` : "";
-      h.push([{ text: Xe(`  ${s.lastToolName}${it}`, m), dimColor: !0 }]);
+      h.push([{ text: truncateToWidth(`  ${s.lastToolName}${it}`, m), dimColor: !0 }]);
     } else
       h.push([
         {
@@ -1778,7 +1778,7 @@ function Es(Xm) {
     const ge = Math.max(1, Tt - te(Vr));
     let Le;
     if (gt[12] !== Go || gt[13] !== ge)
-      ((Le = Xe(Go, ge)), (gt[12] = Go), (gt[13] = ge), (gt[14] = Le));
+      ((Le = truncateToWidth(Go, ge)), (gt[12] = Go), (gt[13] = ge), (gt[14] = Le));
     else Le = gt[14];
     let zr;
     if (gt[15] !== Le)
@@ -2040,7 +2040,7 @@ function eye({
     zs = s.status === "running" && !!c && Y === "phases";
   function Ua() {
     if (vn) h?.();
-    else if (An) v?.(F1t(s));
+    else if (An) v?.(buildResumePrompt(s));
   }
   let Za = (M) => {
       if (M.ctrl || M.meta) return;

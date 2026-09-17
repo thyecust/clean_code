@@ -12,30 +12,30 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
 import { R, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { tl, Hr, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { We, b, z, k_, YPn, o8, n, s8, ZPn } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { iu, x, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { XT, Tie, nkt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { yd, CFC_TOOL_PREFIX as BI, detectAvailableBrowser as x3t, openInChrome as WY } from "../ClaudeinChrome/chunk-hnp84hf6.js";
-import { SQe, getCanonicalName as Ue, mc, isActingAsBgJob as Ja, r5t, GUe, H, isAutoMemoryEnabled as ua, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Pt, gitExe as lt, getIsGit as hh, getDefaultBranch as Fw, getGitPushShellPatterns as wnt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { yd, CFC_TOOL_PREFIX, detectAvailableBrowser, openInChrome } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { SQe, getCanonicalName, mc, isActingAsBgJob, r5t, GUe, H, isAutoMemoryEnabled, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Pt, gitExe, getIsGit, getDefaultBranch, getGitPushShellPatterns } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { getSettingsFilePathForSource as ho } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Xt } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { EIn, AIn, CIn } from "../Git-Worktree/chunk-bk9696gx.js";
 import {
   ZA,
   UOe,
   Nft,
-  isCommandEnabled as zp,
+  isCommandEnabled,
   Ndn,
   Jwe,
   bk,
@@ -48,18 +48,18 @@ import {
   hKe,
   $jt,
   FV,
-  isMcpServerDenied as Yde,
-  doesEnterpriseMcpConfigExist as Zm,
+  isMcpServerDenied,
+  doesEnterpriseMcpConfigExist,
   HI,
-  CHROME_EXTENSION_RECONNECT_URL as xEe,
-  isClaudeInChromeAllowed as rD,
-  hasBaseChromeOfferEligibility as FWt,
-  hasChromeExtensionEvidence as $Wt,
-  isClaudeInChromeWiredThisSession as F5e,
-  markClaudeInChromeUnwired as RMe,
-  getClaudeInChromeMcpServerConfig as kMe,
-  setupClaudeInChrome as Zde,
-  isChromeExtensionInstalled as bH,
+  CHROME_EXTENSION_RECONNECT_URL,
+  isClaudeInChromeAllowed,
+  hasBaseChromeOfferEligibility,
+  hasChromeExtensionEvidence,
+  isClaudeInChromeWiredThisSession,
+  markClaudeInChromeUnwired,
+  getClaudeInChromeMcpServerConfig,
+  setupClaudeInChrome,
+  isChromeExtensionInstalled,
   $5e,
   jWt,
   WWt,
@@ -79,7 +79,7 @@ import { Wj, aEn, lEn, PFe, PTt, OC, DK, Dtr } from "../Memory-CLAUDE.md/Memory-
 import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
 import { Ys, ZY } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { im, $C, _$e, MT, eU } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, getToolPermissionContext as ce, getEffortValue as Qc, getMainLoopModel as Bd } from "../权限系统/chunk-fjrcf22x.js";
+import { so, getToolPermissionContext, getEffortValue, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { ZS } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwtsmfpc.js";
@@ -92,31 +92,31 @@ import {
   JZn,
   wD,
   ler,
-  resolveContract as Toe,
-  fetchContractDefs as Mwn,
-  fetchContractPrompt as Nwn,
-  readFrameDecl as oP,
-  isCoworkFramePublishSession as FH,
-  isArtifactToolEnabled as yR,
-  isArtifactToolRegistered as sP,
-  isPlanArtifactEnabled as voe,
-  isWorkshopEnabled as $H,
-  isWhiteboardEnabled as mTn,
-  isWhiteboardLiveEnabled as gTn,
-  isPrototypeEnabled as $qt,
-  isPlanWorkshopOfferEnabled as _Tn,
-  isArtifactTemplateSkillsEnabled as bTn,
-  isProductivitySkillsEnabled as wTn,
-  isArtifactPrReviewEnabled as Uqt,
-  isArtifactPrReviewComposeLatched as Roe,
+  resolveContract,
+  fetchContractDefs,
+  fetchContractPrompt,
+  readFrameDecl,
+  isCoworkFramePublishSession,
+  isArtifactToolEnabled,
+  isArtifactToolRegistered,
+  isPlanArtifactEnabled,
+  isWorkshopEnabled,
+  isWhiteboardEnabled,
+  isWhiteboardLiveEnabled,
+  isPrototypeEnabled,
+  isPlanWorkshopOfferEnabled,
+  isArtifactTemplateSkillsEnabled,
+  isProductivitySkillsEnabled,
+  isArtifactPrReviewEnabled,
+  isArtifactPrReviewComposeLatched,
 } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { zI } from "../后台任务-Shell管理/chunk-djserjj5.js";
-import { registerBundledSkillSessionReset as uwn, registerBundledSkill as eo, getBundledSkills as poe, getBundledSkillExtractDir as yfe, extractAdditionalSkillFiles as XGt } from "./chunk-1zy5c8mf.js";
-import { getJobsDir as OE } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { registerBundledSkillSessionReset, registerBundledSkill, getBundledSkills, getBundledSkillExtractDir, extractAdditionalSkillFiles } from "./chunk-1zy5c8mf.js";
+import { getJobsDir } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { K3, K8e, LYn, Lre, X8e, Fyn, $yn, iN } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { SOe } from "../Artifact发布-渲染/chunk-01jnk0v2.js";
-import { Jon, Zon, artifactLiveEditPromptGateOpen as bce, artifactCapabilitiesPromptGateOpen as Ov, artifactCommentsPromptGateOpen as eT, artifactRoomSurfaceOpen as wce, artifactReadPageDataPromptGateOpen as GNt } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
+import { Jon, Zon, artifactLiveEditPromptGateOpen, artifactCapabilitiesPromptGateOpen, artifactCommentsPromptGateOpen, artifactRoomSurfaceOpen, artifactReadPageDataPromptGateOpen } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
 import { qjn } from "../../01-核心基础设施/共享小工具-未细化/chunk-f7n720sn.js";
 import { Rjn } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { MBn } from "../CodeReview/chunk-rp57gfa9.js";
@@ -145,10 +145,10 @@ import {
 import { Fa } from "../../01-核心基础设施/共享小工具-未细化/chunk-qd67kfe4.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { Kr } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { O, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 function en(e) {
   return e === null || e === void 0
@@ -179,7 +179,7 @@ function Xae() {
   )
     tn(import.meta.require("./SKILL_MD.1bkj5m4h.js")).registerPlugin();
 }
-import { access as nn } from "fs/promises";
+import { access } from "fs/promises";
 import { join as rn } from "path";
 var et = 5000,
   an = 5000,
@@ -194,17 +194,17 @@ async function Re(e, t, o) {
   for (let r of t) {
     let h = d - performance.now();
     if (h <= 0) {
-      g("artifact_capability_defs", "defs_deadline");
+      logFeatureSad("artifact_capability_defs", "defs_deadline");
       break;
     }
-    let p = await Mwn(e, r, { timeoutMs: Math.min(an, h), credentials: o });
+    let p = await fetchContractDefs(e, r, { timeoutMs: Math.min(an, h), credentials: o });
     if ("err" in p) {
-      g("artifact_capability_defs", `defs_${p.cause}`);
+      logFeatureSad("artifact_capability_defs", `defs_${p.cause}`);
       continue;
     }
     s[`${e}/${r}.d.ts`] = p.dts;
   }
-  if (Object.keys(s).length > 0) y("artifact_capability_defs");
+  if (Object.keys(s).length > 0) logFeatureOk("artifact_capability_defs");
   return s;
 }
 function nt(e) {
@@ -213,16 +213,16 @@ function nt(e) {
     : e.capabilities;
 }
 async function un(e) {
-  let t = await Toe({ timeoutMs: et, credentials: e });
+  let t = await resolveContract({ timeoutMs: et, credentials: e });
   if ("err" in t)
-    return (g("artifact_capability_defs", `roster_${t.cause}`), null);
+    return (logFeatureSad("artifact_capability_defs", `roster_${t.cause}`), null);
   return { version: t.version, defs: await Re(t.version, nt(t), e) };
 }
 async function Pe(e) {
   if (e == null) return null;
-  let t = yfe(FE);
+  let t = getBundledSkillExtractDir(FE);
   try {
-    return (await Promise.all(e.files.map((o) => nn(rn(t, o)))), e);
+    return (await Promise.all(e.files.map((o) => access(rn(t, o)))), e);
   } catch {
     return null;
   }
@@ -299,7 +299,7 @@ function fn(e, t, o) {
     A =
       r !== null
         ? ""
-        : ` In hermetic/CI sessions where connectors aren't loaded but \`$CLAUDE_CODE_OAUTH_TOKEN\` is set, fetch the list via Bash: \`curl -H 'anthropic-version: 2023-06-01' -H 'anthropic-beta: ${SQe.header}' -H "Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN" ${Vt().BASE_API_URL}/v1/mcp_servers?limit=1000\`; in that case use each entry's \`display_name\` as the \`server\` value (exact display names are always accepted alongside tool-prefix segments).`;
+        : ` In hermetic/CI sessions where connectors aren't loaded but \`$CLAUDE_CODE_OAUTH_TOKEN\` is set, fetch the list via Bash: \`curl -H 'anthropic-version: 2023-06-01' -H 'anthropic-beta: ${SQe.header}' -H "Authorization: Bearer $CLAUDE_CODE_OAUTH_TOKEN" ${getOauthConfig().BASE_API_URL}/v1/mcp_servers?limit=1000\`; in that case use each entry's \`display_name\` as the \`server\` value (exact display names are always accepted alongside tool-prefix segments).`;
   return `${w}${k}${v}${C} The manifest's \`tools\` array takes the connector's upstream tool names (as returned by ${T}), which can differ from the normalized \`<toolName>\` segment when an upstream name contains \`.\` or spaces. Every \`servers[]\` entry needs a non-empty \`tools\` array naming the tools the page calls \u2014 an empty or omitted \`tools\` list is refused and never means "all tools"; to publish without connector access, leave \`mcp\` out of \`capabilities\` (pass \`capabilities: {}\` to clear a stored declaration) rather than declaring an empty \`servers\` list.${A}`;
 }
 var Qe =
@@ -307,7 +307,7 @@ var Qe =
 function gn(e) {
   let t = e.files.find((r) => r.endsWith("/mcp.d.ts")),
     o = e.files.find((r) => r.endsWith(ot)),
-    s = yfe(FE);
+    s = getBundledSkillExtractDir(FE);
   if (t) {
     let r = o
       ? `Read \`${s}/${o}\` (how a page reaches any capability on this contract) and \`${s}/${t}\` before writing any code that calls the \`mcp\` capability \u2014 they are`
@@ -352,7 +352,7 @@ ${yn}`;
   if (t.promptBody !== null) s.push(SOe(["data"]) + t.promptBody);
   for (let h of d) {
     let p = t.files.find((k) => k.endsWith(`/${h}.d.ts`)),
-      w = yfe(FE);
+      w = getBundledSkillExtractDir(FE);
     s.push(
       p
         ? `**\`${h}\`.** Its authoring guidance could not be fetched this invocation; its type definitions are extracted at \`${w}/${p}\` \u2014 Read that file before declaring this capability.`
@@ -372,7 +372,7 @@ ${yn}`;
         ? ` ${h ? "Each capability's" : "Each"} file documents its own declaration config and runtime surface \u2014 Read it before declaring that capability.`
         : "";
     s.push(
-      `**Type definitions.** Extracted under \`${yfe(FE)}\`: ${t.files.map((v) => `\`${v}\``).join(", ")}.${w}${k}`,
+      `**Type definitions.** Extracted under \`${getBundledSkillExtractDir(FE)}\`: ${t.files.map((v) => `\`${v}\``).join(", ")}.${w}${k}`,
     );
   }
   return s.join(`
@@ -380,12 +380,12 @@ ${yn}`;
 `);
 }
 function bn() {
-  return yR() && Ov();
+  return isArtifactToolEnabled() && artifactCapabilitiesPromptGateOpen();
 }
 function Oe() {
   let e = new Map(),
     t = new Set();
-  uwn(() => t.clear());
+  registerBundledSkillSessionReset(() => t.clear());
   async function o(d, r, h) {
     let p = e.get(d);
     if (p !== void 0) {
@@ -395,7 +395,7 @@ function Oe() {
         if (A.length === 0) return T.files;
         let _ = await Re(d, A, h);
         if (Object.keys(_).length === 0) return T.files;
-        if ((await XGt(FE, _)) === null) return T.files;
+        if ((await extractAdditionalSkillFiles(FE, _)) === null) return T.files;
         let L = { version: d, files: [...T.files, ...Object.keys(_)].sort() };
         if ((await Pe(L)) === null) return T.files;
         return (e.set(d, L), L.files);
@@ -403,7 +403,7 @@ function Oe() {
     }
     let w = await Re(d, r, h);
     if (Object.keys(w).length === 0) return [];
-    if ((await XGt(FE, w)) === null) return [];
+    if ((await extractAdditionalSkillFiles(FE, w)) === null) return [];
     let v = { version: d, files: Object.keys(w).sort() };
     if ((await Pe(v)) === null) return [];
     return (e.set(d, v), v.files);
@@ -415,13 +415,13 @@ function Oe() {
     if (p !== void 0) return wD(p);
     if (t.has(r)) return null;
     let w = Fa(void 0, { timeoutMs: cn }),
-      k = await oP(r, w.signal, d.credentials)
+      k = await readFrameDecl(r, w.signal, d.credentials)
         .catch(() => ({ err: "read-back threw", thrown: !0 }))
         .finally(w.cleanup);
     if (k === null) return (t.add(r), null);
     if ("err" in k)
       return (
-        g("artifact_capability_section", "pin_readback_failed"),
+        logFeatureSad("artifact_capability_section", "pin_readback_failed"),
         n(`[artifact] capability pin read-back failed: ${k.err}`),
         null
       );
@@ -430,7 +430,7 @@ function Oe() {
     else d.setArtifactContractTarget(r, v);
     return v;
   }
-  eo({
+  registerBundledSkill({
     name: FE,
     menuDescription: "Runtime capabilities for published Artifacts",
     description:
@@ -457,13 +457,13 @@ function Oe() {
     },
     async getPromptForCommand(d, r) {
       let h = await s(r),
-        p = await Toe({
+        p = await resolveContract({
           timeoutMs: et,
           ...(h !== null && { version: h }),
           credentials: r.credentials,
         }).catch(() => null);
       if (p === null || "err" in p) {
-        if (p !== null) g("artifact_capability_section", `roster_${p.cause}`);
+        if (p !== null) logFeatureSad("artifact_capability_section", `roster_${p.cause}`);
         return [{ type: "text", text: Ze(r.options.tools, null) }];
       }
       let w = {
@@ -486,15 +486,15 @@ function Oe() {
         let A = nt(p),
           [_, I] = await Promise.all([
             o(p.version, A, r.credentials),
-            Nwn(p.version, { timeoutMs: ln, credentials: r.credentials }),
+            fetchContractPrompt(p.version, { timeoutMs: ln, credentials: r.credentials }),
           ]);
         if (
           ((w.files = _.filter((L) => A.some((V) => L.endsWith(`/${V}.d.ts`)))),
           "err" in I)
         )
           if (I.cause === "http_404")
-            y("artifact_capability_section", { composed: !1, ...T });
-          else g("artifact_capability_section", `prompt_${I.cause}`, T);
+            logFeatureOk("artifact_capability_section", { composed: !1, ...T });
+          else logFeatureSad("artifact_capability_section", `prompt_${I.cause}`, T);
         else if (
           ((w.promptBody = I.promptMd),
           (w.missingCaps = I.missingCaps.filter((L) =>
@@ -502,8 +502,8 @@ function Oe() {
           )),
           w.missingCaps.length > 0)
         )
-          g("artifact_capability_section", "prompt_partial", T);
-        else y("artifact_capability_section", { composed: !0, ...T });
+          logFeatureSad("artifact_capability_section", "prompt_partial", T);
+        else logFeatureOk("artifact_capability_section", { composed: !0, ...T });
       }
       return [
         {
@@ -519,16 +519,16 @@ function Oe() {
   });
 }
 function ge() {
-  return $H() && Ov() && GNt();
+  return isWorkshopEnabled() && artifactCapabilitiesPromptGateOpen() && artifactReadPageDataPromptGateOpen();
 }
-Dtr(() => _Tn() && ge());
+Dtr(() => isPlanWorkshopOfferEnabled() && ge());
 function it() {
   return import("../../01-核心基础设施/共享小工具-未细化/WORKSHOP_PAGE_TEMPLATE.1268b5re.js");
 }
 var vn =
   "Build a design together with the user, one decision at a time - publish an evolving plan document as an Artifact, surface each open decision on the page for the reader to answer there, apply their choices in this session, and republish the updated draft until the reader starts the build. Use when asked to workshop a design, brainstorm with decision points, or drive an iterative decide-and-revise loop through an artifact.";
 function st() {
-  eo({
+  registerBundledSkill({
     name: QY,
     menuDescription: "Build a design together, one decision at a time",
     description: vn,
@@ -560,7 +560,7 @@ function rt() {
 var kn =
   "Embed reusable artifact components in any HTML artifact - first entry: the workshop decision component (clickable option rows backed by a machine-readable record the session reads back). Use when a non-workshop artifact should carry decisions the reader answers from the published page, or to look up a component's exact scripts, styles, markup contract, and composition limits.";
 function at() {
-  eo({
+  registerBundledSkill({
     name: "artifact-components",
     menuDescription: "Embed reusable components in an Artifact",
     description: kn,
@@ -585,16 +585,16 @@ var Cn = "<!-- dataviz-callout -->",
   En =
     "Load before writing any artifact, including a skill-instructed Markdown one - Markdown is never a shortcut past the design pass.";
 function Sn() {
-  if (H("tengu_cobalt_plinth_dataviz", !1) && poe().some((e) => e.name === Mbt))
+  if (H("tengu_cobalt_plinth_dataviz", !1) && getBundledSkills().some((e) => e.name === Mbt))
     return `**When adding charts or diagrams** The craft shifts from identity to honesty \u2014 pick the form the data's shape calls for, keep encodings from exaggerating, title the finding rather than the axes. Load the \`${Mbt}\` skill for the specifics; this skill continues to govern the page the chart sits in.`;
   return "";
 }
 function De() {
-  eo({
+  registerBundledSkill({
     name: pN,
     description: _n,
     whenToUse: En,
-    isEnabled: sP,
+    isEnabled: isArtifactToolRegistered,
     userInvocable: !1,
     async getPromptForCommand() {
       let { SKILL_MD: e } = await import("./whenToUse.ts7my67y.js");
@@ -607,11 +607,11 @@ function De() {
 var Tn =
   "Diagramming know-how for Artifacts - when a picture earns its place, how to draw one that shows the real mechanism, and the inline-SVG mechanics that keep it legible in both themes.";
 function Ne() {
-  eo({
+  registerBundledSkill({
     name: JAe,
     menuDescription: "Diagramming guidance for Artifacts",
     description: Tn,
-    isEnabled: sP,
+    isEnabled: isArtifactToolRegistered,
     userInvocable: !0,
     async getPromptForCommand() {
       let { SKILL_MD: e } = await import("./isEnabled.hgqvdvbe.js");
@@ -655,17 +655,17 @@ This template builds a static page from data in the conversation. If the user wa
   ];
 function dt() {
   for (let { kind: e, menuDescription: t, description: o } of Pn)
-    eo({
+    registerBundledSkill({
       name: `artifact-${e}`,
       menuDescription: t,
       description: o,
-      isEnabled: bTn,
+      isEnabled: isArtifactTemplateSkillsEnabled,
       userInvocable: !0,
       files: () => ct().then((s) => s.SKILL_FILES[e]),
       async getPromptForCommand(s) {
         let { SKILL_MD: d } = await ct(),
           r = zo(d[e]).content.trimStart();
-        if (Ov()) r += Me;
+        if (artifactCapabilitiesPromptGateOpen()) r += Me;
         if (s.trim())
           r += `
 
@@ -764,7 +764,7 @@ Examples:
   /batch replace all uses of lodash with native equivalents
   /batch add type annotations to all untyped function parameters`;
 function pt() {
-  eo({
+  registerBundledSkill({
     name: "batch",
     menuDescription: "Plan a large change; background agents each open a PR",
     description:
@@ -777,7 +777,7 @@ function pt() {
     async getPromptForCommand(e) {
       let t = e.trim();
       if (!t) return [{ type: "text", text: Rn }];
-      if (!(await hh())) return [{ type: "text", text: In }];
+      if (!(await getIsGit())) return [{ type: "text", text: In }];
       return [{ type: "text", text: xn(t) }];
     },
   });
@@ -807,7 +807,7 @@ var X6e = Kr({
   hideWhile: [],
 });
 function gt(e, t) {
-  e.onChangeDynamicMcpConfig?.((s) => ({ ...s, [vd]: t.client.config }));
+  e.onChangeDynamicMcpConfig?.((s) => ({ ...s, [CLAUDE_IN_CHROME_MCP_SERVER_NAME]: t.client.config }));
   let o = e.session.mcpSessionWiring.connections();
   if (!o) {
     n(
@@ -815,13 +815,13 @@ function gt(e, t) {
     );
     return;
   }
-  o.adoptServer(vd, t);
+  o.adoptServer(CLAUDE_IN_CHROME_MCP_SERVER_NAME, t);
 }
 function ie() {
-  return Yde(vd, kMe());
+  return isMcpServerDenied(CLAUDE_IN_CHROME_MCP_SERVER_NAME, getClaudeInChromeMcpServerConfig());
 }
 function ye(e) {
-  let { mode: t, isBypassPermissionsModeAvailable: o } = ce(e);
+  let { mode: t, isBypassPermissionsModeAvailable: o } = getToolPermissionContext(e);
   return t === "bypassPermissions" || (t === "plan" && o);
 }
 var yt = 2000,
@@ -833,7 +833,7 @@ var yt = 2000,
   $n = 5;
 async function wt(e, t) {
   let o = e.abortController.signal,
-    s = await WY(HI).catch(
+    s = await openInChrome(HI).catch(
       (E) => (
         n(
           `[Claude in Chrome] Install setup failed to open install page: ${E}`,
@@ -867,7 +867,7 @@ async function wt(e, t) {
   async function I() {
     let E = Date.now();
     while (!d.signal.aborted) {
-      if (await bH().catch(() => !1)) break;
+      if (await isChromeExtensionInstalled().catch(() => !1)) break;
       await Z(Date.now() - E >= On ? Dn : yt, d.signal);
     }
     if (d.signal.aborted) return;
@@ -889,7 +889,7 @@ async function wt(e, t) {
         w("failed"));
       return;
     }
-    if (!rD()) {
+    if (!isClaudeInChromeAllowed()) {
       (n(
         "[Claude in Chrome] Install setup stopped: organization policy (allow_claude_browser_extension) denied Claude in Chrome during the install wait",
       ),
@@ -898,8 +898,8 @@ async function wt(e, t) {
       return;
     }
     k = !0;
-    let { mcpConfig: D } = Zde({ skipReconnectAutoOpen: !0 }),
-      M = D[vd];
+    let { mcpConfig: D } = setupClaudeInChrome({ skipReconnectAutoOpen: !0 }),
+      M = D[CLAUDE_IN_CHROME_MCP_SERVER_NAME];
     if (!M) {
       ((C = "setup_no_config"), w("failed"));
       return;
@@ -909,7 +909,7 @@ async function wt(e, t) {
       ).mcpClientModule(),
       J;
     try {
-      J = await pe(vd, M, e.storageV5, e.credentials);
+      J = await pe(CLAUDE_IN_CHROME_MCP_SERVER_NAME, M, e.storageV5, e.credentials);
     } catch (U) {
       (n(`[Claude in Chrome] Install setup MCP connect failed: ${U}`, {
         level: "error",
@@ -941,7 +941,7 @@ async function wt(e, t) {
       let me = Date.now() - le;
       if (!te && me >= Nn)
         ((te = !0),
-          WY(xEe).catch((fe) =>
+          openInChrome(CHROME_EXTENSION_RECONNECT_URL).catch((fe) =>
             n(`[Claude in Chrome] Install setup reconnect nudge failed: ${fe}`),
           ));
       if (h === "connecting" && me >= Mn) w("stalled");
@@ -981,21 +981,21 @@ async function wt(e, t) {
       if (E === "continue" && D === "connected" && T) {
         if (ie())
           return (
-            g("chrome_install_upsell", "policy_denied_late", {
+            logFeatureSad("chrome_install_upsell", "policy_denied_late", {
               install_page_opened: s,
             }),
             $e
           );
-        if (!rD())
+        if (!isClaudeInChromeAllowed())
           return (
-            g("chrome_install_upsell", "chrome_policy_denied_late", {
+            logFeatureSad("chrome_install_upsell", "chrome_policy_denied_late", {
               install_page_opened: s,
             }),
             $e
           );
         if (ye(e))
           return (
-            g("chrome_install_upsell", "bypass_mode_late", {
+            logFeatureSad("chrome_install_upsell", "bypass_mode_late", {
               install_page_opened: s,
             }),
             Wn
@@ -1009,20 +1009,20 @@ async function wt(e, t) {
           C === "chrome_policy_denied_mid_wait"
         )
           return (
-            g("chrome_install_upsell", C, { install_page_opened: s }),
+            logFeatureSad("chrome_install_upsell", C, { install_page_opened: s }),
             $e
           );
-        return (f("chrome_install_upsell", C, { install_page_opened: s }), Hn);
+        return (logFeatureBad("chrome_install_upsell", C, { install_page_opened: s }), Hn);
       }
       if (E === "cancelled" && o.aborted)
         return (
-          g("chrome_install_upsell", "setup_aborted", {
+          logFeatureSad("chrome_install_upsell", "setup_aborted", {
             install_page_opened: s,
           }),
           we
         );
       return (
-        g(
+        logFeatureSad(
           "chrome_install_upsell",
           D === "waiting_install"
             ? "setup_skipped_waiting_install"
@@ -1037,27 +1037,27 @@ async function wt(e, t) {
   } catch (E) {
     if (o.aborted)
       return (
-        g("chrome_install_upsell", "setup_aborted", { install_page_opened: s }),
+        logFeatureSad("chrome_install_upsell", "setup_aborted", { install_page_opened: s }),
         we
       );
     return (
       n(`[Claude in Chrome] Install setup dialog failed: ${E}`, {
         level: "error",
       }),
-      f("chrome_install_upsell", "setup_dialog_error", {
+      logFeatureBad("chrome_install_upsell", "setup_dialog_error", {
         install_page_opened: s,
       }),
       Gn
     );
   } finally {
     if ((o.removeEventListener("abort", r), d.abort(), !v)) {
-      if (k) RMe();
+      if (k) markClaudeInChromeUnwired();
       _.then(() => {
         if (!A) return;
         let { config: E } = A;
         ((A = void 0),
           import("../MCP客户端/mcpClientModule.4cyej0np.js")
-            .then((D) => D.mcpClientModule().clearServerCache(vd, E))
+            .then((D) => D.mcpClientModule().clearServerCache(CLAUDE_IN_CHROME_MCP_SERVER_NAME, E))
             .catch((D) =>
               n(
                 `[Claude in Chrome] Install setup orphan cleanup failed: ${D}`,
@@ -1111,7 +1111,7 @@ function Fn(e, t, o) {
             },
       e.storageV5,
     ),
-    y("chrome_install_upsell", { install_page_opened: o }),
+    logFeatureOk("chrome_install_upsell", { install_page_opened: o }),
     `Claude in Chrome setup completed: the extension is installed and connected, and the mcp__claude-in-chrome__* browser tools are now available in this session. Continue the user's task using them.
 
 ${tKe}`
@@ -1130,13 +1130,13 @@ var Bn =
   Wn =
     "Browser tools were not enabled: the session switched to a mode that auto-allows tool calls without prompts (bypass permissions) while setup was in progress, and Claude in Chrome is not wired into that configuration. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. Once the session leaves that mode, /chrome completes the connection.";
 function vt() {
-  if (F5e()) return !1;
+  if (isClaudeInChromeWiredThisSession()) return !1;
   if (yd().installUpsellResolution !== void 0) return !1;
   return (
-    rD() &&
-    FWt() &&
+    isClaudeInChromeAllowed() &&
+    hasBaseChromeOfferEligibility() &&
     !ke() &&
-    !Ja() &&
+    !isActingAsBgJob() &&
     f8() === void 0 &&
     !Hr() &&
     !Rz() &&
@@ -1144,7 +1144,7 @@ function vt() {
     !Pt() &&
     vje()?.isTeleported !== !0 &&
     !xg() &&
-    !$Wt() &&
+    !hasChromeExtensionEvidence() &&
     ee().chromeInstallUpsellDismissed !== !0 &&
     H("tengu_chrome_install_upsell", !1) &&
     !ie()
@@ -1174,7 +1174,7 @@ async function Be(e) {
         return ((t.installUpsellResolution = void 0), Y);
       return (
         n(`[Claude in Chrome] Install upsell failed: ${s}`, { level: "error" }),
-        f("chrome_install_upsell", "upsell_error"),
+        logFeatureBad("chrome_install_upsell", "upsell_error"),
         Y
       );
     })),
@@ -1187,18 +1187,18 @@ async function qn(e, t) {
       n(
         "[Claude in Chrome] Skipping install upsell: blocked by managed deniedMcpServers policy",
       ),
-      g("chrome_install_upsell", "policy_denied"),
+      logFeatureSad("chrome_install_upsell", "policy_denied"),
       bt
     );
-  if (!rD())
+  if (!isClaudeInChromeAllowed())
     return (
       n(
         "[Claude in Chrome] Skipping install upsell: denied by organization policy (allow_claude_browser_extension)",
       ),
-      g("chrome_install_upsell", "chrome_policy_denied"),
+      logFeatureSad("chrome_install_upsell", "chrome_policy_denied"),
       bt
     );
-  if (await bH().catch(() => !1))
+  if (await isChromeExtensionInstalled().catch(() => !1))
     return (
       Te(
         (r) =>
@@ -1219,15 +1219,15 @@ async function qn(e, t) {
       !yd().installUpsellBypassSuppressionCounted)
     )
       ((yd().installUpsellBypassSuppressionCounted = !0),
-        g("chrome_install_upsell", "suppressed_bypass_mode"));
+        logFeatureSad("chrome_install_upsell", "suppressed_bypass_mode"));
     return ((yd().installUpsellResolution = void 0), Y);
   }
-  if ((await x3t()) === null)
+  if ((await detectAvailableBrowser()) === null)
     return (
       n(
         "[Claude in Chrome] Skipping install upsell: no Chromium-family browser detected",
       ),
-      g("chrome_install_upsell", "no_browser_detected"),
+      logFeatureSad("chrome_install_upsell", "no_browser_detected"),
       Y
     );
   switch (await t(K6e, {}, { signal: e.abortController.signal })) {
@@ -1238,7 +1238,7 @@ async function qn(e, t) {
     }
     case "dont_ask_again":
       return (
-        g("chrome_install_upsell", "dont_ask_again"),
+        logFeatureSad("chrome_install_upsell", "dont_ask_again"),
         Te(
           (r) =>
             r.chromeInstallUpsellDismissed === !0
@@ -1249,11 +1249,11 @@ async function qn(e, t) {
         je
       );
     case "not_now":
-      return (g("chrome_install_upsell", "declined"), je);
+      return (logFeatureSad("chrome_install_upsell", "declined"), je);
     case "cancelled":
       if (e.abortController.signal.aborted)
         return ((yd().installUpsellResolution = void 0), Y);
-      return (g("chrome_install_upsell", "cancelled"), je);
+      return (logFeatureSad("chrome_install_upsell", "cancelled"), je);
   }
 }
 var Y = `Browser tools are not available in this session: the Claude in Chrome extension is not set up. The user can install or connect it from ${HI} and manage browser tools with /chrome. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. Do not attempt mcp__claude-in-chrome__* tool calls.`,
@@ -1267,12 +1267,12 @@ var Kn =
     "Claude in Chrome is enabled for this session, but the browser connection is not working (it failed or was disabled), so mcp__claude-in-chrome__* tools are not available. Do not attempt them. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. The user can retry the connection with /chrome (Reconnect extension).",
   Yn = new Set(["failed", "disabled", "needs-auth"]);
 function zn(e) {
-  let t = e?.filter((o) => o.name === vd) ?? [];
+  let t = e?.filter((o) => o.name === CLAUDE_IN_CHROME_MCP_SERVER_NAME) ?? [];
   return t.length > 0 && t.every((o) => Yn.has(o.type));
 }
 async function Xn(e) {
-  let t = F5e(),
-    o = e.options?.tools?.some((s) => s.name?.startsWith(BI)) ?? !1;
+  let t = isClaudeInChromeWiredThisSession(),
+    o = e.options?.tools?.some((s) => s.name?.startsWith(CFC_TOOL_PREFIX)) ?? !1;
   if (!t) return Be(e);
   if (o) return tKe;
   if (e.agentId !== void 0 || e.options?.isSkillPreload) return Kn;
@@ -1287,7 +1287,7 @@ async function Xn(e) {
   return tKe;
 }
 function Ct({ disabled: e = !1 } = {}) {
-  eo({
+  registerBundledSkill({
     name: "claude-in-chrome",
     menuDescription: "Let Claude browse and interact with pages in your Chrome",
     description:
@@ -1296,7 +1296,7 @@ function Ct({ disabled: e = !1 } = {}) {
       "When the user wants to interact with web pages, automate browser tasks, capture screenshots, read console logs, or perform any browser-based actions. Always invoke BEFORE attempting to use any mcp__claude-in-chrome__* tools.",
     allowedTools: [],
     userInvocable: !0,
-    isEnabled: () => !e && (F5e() || vt()),
+    isEnabled: () => !e && (isClaudeInChromeWiredThisSession() || vt()),
     policyGate: {
       policy: "allow_claude_browser_extension",
       featureLabel: "Claude in Chrome",
@@ -1953,7 +1953,7 @@ function di(e) {
   return Object.hasOwn(re, e);
 }
 function Ee(e) {
-  let t = e ? Ue(Xt(e)) : void 0;
+  let t = e ? getCanonicalName(Xt(e)) : void 0;
   return t && di(t) ? t : "default";
 }
 var Qt = { cell: "low", modelEffort: "typed", finderBudgetHint: !1 },
@@ -2213,7 +2213,7 @@ async function Pi(e, t) {
     } = o,
     v = Ve(o, t),
     C = oo(o, t),
-    T = t.options ? Bd(t) : void 0,
+    T = t.options ? getMainLoopModel(t) : void 0,
     A = Ee(T),
     _ = t.options?.isSkillPreload && ui.has(A) ? "default" : A,
     I = re[_][C],
@@ -2242,8 +2242,8 @@ async function Pi(e, t) {
     if (le) te = await Ai(T, C, d);
     let fe = s ?? v;
     i("tengu_code_review_routed", {
-      effort_level: u(C),
-      effort_source: u(
+      effort_level: fromEnum(C),
+      effort_source: fromEnum(
         s !== void 0
           ? "explicit"
           : v !== void 0
@@ -2258,11 +2258,11 @@ async function Pi(e, t) {
       has_comment: r,
       has_target: d.length > 0,
       is_ultra_fallback: k,
-      low_variant: C === "low" ? u(hi[_] ?? "default") : void 0,
-      model_family: u(_),
+      low_variant: C === "low" ? fromEnum(hi[_] ?? "default") : void 0,
+      model_family: fromEnum(_),
       finder_budget: te.budget,
       agent_tool_available: le,
-      threaded_effort: fe !== void 0 ? u(Ke(_, fe)) : void 0,
+      threaded_effort: fe !== void 0 ? fromEnum(Ke(_, fe)) : void 0,
     });
   }
   let oe =
@@ -2321,8 +2321,8 @@ async function xi(e) {
     t = e;
   else return;
   try {
-    let { stdout: o, code: s } = await Fe(
-      lt(),
+    let { stdout: o, code: s } = await execFileNoThrow(
+      gitExe(),
       [
         "-c",
         "core.hooksPath=/dev/null",
@@ -2367,8 +2367,8 @@ async function xi(e) {
 function oo(e, t) {
   let { explicit: o, ultraFallback: s } = e,
     d = s ? "max" : (o ?? Ve(e, t)),
-    r = t.options ? Bd(t) : void 0,
-    h = r ? (MT(r, d ?? Qc(t)) ?? d) : (d ?? Qc(t));
+    r = t.options ? getMainLoopModel(t) : void 0,
+    h = r ? (MT(r, d ?? getEffortValue(t)) ?? d) : (d ?? getEffortValue(t));
   return h === void 0 ? "medium" : eU(h);
 }
 function Ii({
@@ -2419,7 +2419,7 @@ function Ii({
 `);
     }
     let _ =
-      k.options?.commands?.some((I) => I.name === "ultrareview" && zp(I)) ?? !1;
+      k.options?.commands?.some((I) => I.name === "ultrareview" && isCommandEnabled(I)) ?? !1;
     if (t)
       return C(
         _
@@ -2466,7 +2466,7 @@ function Ii({
   return C("");
 }
 function no() {
-  eo({
+  registerBundledSkill({
     name: gD,
     aliases: ["review"],
     menuDescription: "Review the current diff or a PR for bugs and cleanups",
@@ -2477,7 +2477,7 @@ function no() {
     getEffort(e, t) {
       let { explicit: o } = _e(e);
       if (o === void 0) return;
-      return Ke(Ee(t?.options ? Bd(t) : void 0), o);
+      return Ke(Ee(t?.options ? getMainLoopModel(t) : void 0), o);
     },
     getDefaultEffort(e, t) {
       let o = _e(e),
@@ -2485,7 +2485,7 @@ function no() {
       if (s === void 0) return;
       let d = t ? oo(o, t) : s;
       return {
-        value: Ke(Ee(t?.options ? Bd(t) : void 0), s),
+        value: Ke(Ee(t?.options ? getMainLoopModel(t) : void 0), s),
         notice: `${o.unrecognizedLevel !== void 0 ? `Ignoring unrecognized effort "${o.unrecognizedLevel}"; valid: ${ue.join(", ")}. ` : ""}Reusing ${s} effort, the level you typed last time${d !== s ? `; running at ${d} here` : ""}. Type a level like \`/code-review high\` to change it.`,
       };
     },
@@ -2586,7 +2586,7 @@ ${r}`
 You have the capability to call multiple tools in a single response. Stage and create the commit using a single message. Do not run additional commands to read or explore code beyond the git context above, and do not use any non-git tools for this task.`;
 }
 function ro() {
-  eo({
+  registerBundledSkill({
     name: j7e,
     menuDescription: "Create a git commit",
     description:
@@ -2626,7 +2626,7 @@ function ao() {
 var Oi =
   "Create a new Cowork plugin from scratch, or customize an installed plugin for a specific organization. Use when: customize plugin, set up plugin, configure plugin, tailor plugin, adjust plugin settings, customize plugin connectors, customize plugin skill, tweak plugin, modify plugin configuration, create a plugin, build a plugin, make a new plugin, develop a plugin, scaffold a plugin.";
 function lo() {
-  eo({
+  registerBundledSkill({
     name: Nbt,
     description: Oi,
     userInvocable: !1,
@@ -2657,7 +2657,7 @@ function co() {
 var Di =
   'Use this skill whenever you are about to create ANY chart, graph, plot, dashboard, or data visualization, in ANY output medium \u2014 an HTML or React artifact, inline SVG, plotting code in any library (matplotlib, plotly, d3, Recharts, \u2026), an image/PNG you will render and upload, or a chart shared into Slack. Read it BEFORE writing the first line of chart code, choosing chart colors, building a stat tile / meter / KPI row, or laying out a dashboard. When the destination is a first-party document connector (host-designated, never self-described) that renders live charts, hand it the rows (inline, or as an uploaded data file the chart cites) rather than a rendered PNG/SVG \u2014 a picture of a chart loses hover, data inspection and per-value comments. Produces visualizations that read as one system \u2014 elegant, accessible, consistent in light and dark \u2014 using a brand-neutral placeholder palette you swap for your own. Teaches a design-system-agnostic method: a form heuristic, a color formula with a runnable validator, mark specs, and interaction rules. A validated default palette is documented in `references/palette.md` \u2014 swap that file\'s values for your brand\'s. Triggers on: "chart", "graph", "plot", "data viz", "visualization", "dashboard", "analytics", "visualize data", "categorical colors", "sequential / diverging palette", "stat tile", "sparkline", "heatmap", "legend", "axis", "tooltip", "chart colors", "color by series".';
 function uo() {
-  eo({
+  registerBundledSkill({
     name: Mbt,
     menuDescription: "Chart and dashboard design guidance",
     description: Di,
@@ -2685,7 +2685,7 @@ var he = 20,
   po = 65536,
   mo = 8192;
 function yo() {
-  eo({
+  registerBundledSkill({
     name: "debug",
     menuDescription: "Turn on debug logging and investigate problems",
     description:
@@ -2742,9 +2742,9 @@ ${e || "The user did not describe a specific issue. Read the debug log and summa
 ## Settings
 
 Remember that settings are in:
-* user - ${ho("userSettings")}
-* project - ${ho("projectSettings")}
-* local - ${ho("localSettings")}
+* user - ${getSettingsFilePathForSource("userSettings")}
+* project - ${getSettingsFilePathForSource("projectSettings")}
+* local - ${getSettingsFilePathForSource("localSettings")}
 
 ## Instructions
 
@@ -2789,7 +2789,7 @@ ${d}
 
 Other daemon state on disk (Read if relevant \u2014 roster contains user prompts and env vars):
 - \`${zI()}\` \u2014 live worker roster
-- \`${OE()}/<short>/state.json\` \u2014 per-job state`;
+- \`${getJobsDir()}/<short>/state.json\` \u2014 per-job state`;
 }
 async function bo(e, t) {
   if (t) {
@@ -2818,7 +2818,7 @@ function fo({ content: e, bytesTotal: t }) {
     )
     .slice(-he).join(`
 `);
-  return `Log size: ${Ft(t)}
+  return `Log size: ${formatFileSize(t)}
 
 ### Last ${he} lines
 
@@ -2846,7 +2846,7 @@ function vo() {
 var Mi =
   'Push a React design system to claude.ai/design. This runs a converter that bundles the real component code (from Storybook or a bare package) and uploads it. Use when the user runs /design-sync or says "sync my design system to Claude Design".';
 function ko() {
-  eo({
+  registerBundledSkill({
     name: "design-sync",
     menuDescription: "Push your design system components to claude.ai/design",
     description: Mi,
@@ -3035,7 +3035,7 @@ Then, only if check 8 or 9 proposed anything, the permission question \u2014 exp
 If a check has no findings, say so in one line and move on. Keep the report tight \u2014 no padding, no restating these instructions.`;
 }
 function Co() {
-  eo({
+  registerBundledSkill({
     name: "doctor",
     aliases: ["checkup"],
     isEnabled: () => !a.DISABLE_DOCTOR_COMMAND,
@@ -3064,7 +3064,7 @@ ${e}`;
 var $i =
   "Explain where this session's tokens went, with one simple chart in plain language. Use when: explain usage, explain my usage, where did my tokens go, token usage breakdown, what used the most tokens.";
 function _o() {
-  eo({
+  registerBundledSkill({
     name: "explain-usage",
     description: $i,
     menuDescription:
@@ -3095,7 +3095,7 @@ function ji() {
   return "# Fewer Permission Prompts\n\nLook through my transcripts' MCP and bash tool calls, and based on those, make a prioritized list of patterns that I should add to my permission allowlist to reduce permission prompts. Focus on read-only commands.\n\nThe format for permissions is: `Bash(foo*)`, `Bash(foo)`, `Bash(foo bar *)`, `mcp__slack__slack_read_thread`, etc.\n\nThen, add these to the project `.claude/settings.json` under `permissions.allow`.\n\n## Steps\n\n1. **Locate transcripts.** Session transcripts live at `~/.claude/projects/<sanitized-cwd>/*.jsonl`. Each line is a JSON object. Tool calls appear as `assistant` messages with `message.content[]` entries of `type: \"tool_use\"`. The `name` field identifies the tool (e.g. `\"Bash\"`, `\"mcp__slack__slack_read_thread\"`); for Bash, `input.command` is the shell string.\n\n   Scan the recent transcripts across the user's projects dir \u2014 not just the current project \u2014 so the allowlist reflects their actual usage. Cap the scan at a reasonable number of recent sessions (e.g. 50 most-recently-modified JSONL files) so this stays fast.\n\n2. **Extract tool-call frequencies.**\n   - For `Bash` calls: parse `input.command`, take the leading command token (handling `sudo`, `timeout`, pipes, `&&`, env-var prefixes). Record the command + first subcommand pair (e.g. `git status`, `gh pr view`, `ls`, `cat`).\n   - For MCP calls: record the full tool name (e.g. `mcp__slack__slack_read_thread`).\n   - Count occurrences across the scanned transcripts.\n\n3. **Filter to read-only.** Keep only commands that don't mutate state. Examples of read-only: `ls`, `cat`, `pwd`, `git status`, `git log`, `git diff`, `git show`, `git branch`, `rg`, `grep`, `find`, `head`, `tail`, `wc`, `file`, `which`, `echo`, `date`, `gh pr view`, `gh pr list`, `gh pr diff`, `gh issue view`, `gh issue list`, `gh run list`, `gh run view`, `gh api` (GET), `bun run typecheck`, `bun run lint`, `bun run test` (for tests that don't mutate), `docker ps`, `docker logs`, `kubectl get`, `kubectl describe`, `ps`, `top`, `df`, `du`, `env`, `printenv`, any MCP tool with `read`/`get`/`list`/`search`/`view` in its name.\n\n   Drop anything that writes, deletes, renames, pushes, merges, installs, or runs a build/test that has side effects. When in doubt, leave it out.\n\n   **Never allowlist a pattern that grants arbitrary code execution.** A wildcard rule for any of these (e.g. `Bash(python3:*)`) is equivalent to allowing arbitrary code execution. This list is not exhaustive \u2014 apply the same rule to anything in the same category:\n   - Interpreters: `python`/`python3`, `node`, `bun`, `deno`, `ruby`, `perl`, `php`, `lua`, etc.\n   - Shells: `bash`, `sh`, `zsh`, `fish`, `eval`, `exec`, `ssh`, etc.\n   - Package runners: `npx`, `bunx`, `uvx`, `uv run`, etc.\n   - Task-runner wildcards: `npm run *`, `yarn run *`, `pnpm run *`, `bun run *`, `make *`, `just *`, `cargo run *`, `go run *`, etc. \u2014 an exact `Bash(bun run typecheck)` is fine, `Bash(bun run *)` is not\n   - `gh api *`, `docker run`/`exec`, `kubectl exec`, `sudo`, and similar\n\n4. **Drop commands Claude Code already auto-allows.** These don't need an allowlist entry \u2014 they never prompt. If you see any of these in the transcripts, skip them; don't suggest them to the user.\n\n   - **Always auto-allowed (any args):** `cal`, `uptime`, `cat`, `head`, `tail`, `wc`, `stat`, `strings`, `hexdump`, `od`, `nl`, `id`, `uname`, `free`, `df`, `du`, `locale`, `groups`, `nproc`, `basename`, `dirname`, `realpath`, `cut`, `paste`, `tr`, `column`, `tac`, `rev`, `fold`, `expand`, `unexpand`, `fmt`, `comm`, `cmp`, `numfmt`, `readlink`, `diff`, `true`, `false`, `sleep`, `which`, `type`, `expr`, `seq`, `tsort`, `pr`, `echo`, `ls`, `cd`.\n   - **Auto-allowed with zero args only:** `pwd`, `whoami`, `alias`.\n   - **Auto-allowed exact forms:** `claude -h`, `claude --help`, `node -v`, `node --version`, `python --version`, `python3 --version`, `ip addr`.\n   - **Auto-allowed with safe flags only (validated):** `xargs`, `file`, `sed` (read-only expressions), `sort`, `man`, `help`, `netstat`, `ps`, `base64`, `grep`, `egrep`, `fgrep`, `sha256sum`, `sha1sum`, `md5sum`, `tree`, `date`, `hostname`, `lsof`, `pgrep`, `tput`, `ss`, `fd`, `fdfind`, `aki`, `rg`, `jq`, `uniq`, `history`, `arch`, `ifconfig`, `pyright`, `find` (blocks `-delete`/`-exec`/`-execdir`/`-ok`/`-okdir`/`-fprint*`/`-fls`/`-files0-from`), `printf` (blocks any `-flag`), `test` (blocks `-v`/`-R`/`-a`/`-o`).\n   - **All git read-only subcommands:** `git status`, `git log`, `git diff`, `git show`, `git blame`, `git branch`, `git tag`, `git remote`, `git ls-files`, `git ls-remote`, `git config --get`, `git rev-parse`, `git describe`, `git stash list`, `git reflog`, `git shortlog`, `git cat-file`, `git for-each-ref`, `git worktree list`, etc.\n   - **All gh read-only subcommands:** `gh pr view`, `gh pr list`, `gh pr diff`, `gh pr checks`, `gh pr status`, `gh issue view`, `gh issue list`, `gh issue status`, `gh run view`, `gh run list`, `gh workflow list`, `gh workflow view`, `gh repo view`, `gh release view`, `gh release list`, `gh api` (GET), `gh auth status`, etc.\n   - **Docker read-only subcommands:** `docker ps`, `docker images`, `docker logs`, `docker inspect`.\n\n   Source of truth: `src/tools/BashTool/readOnlyValidation.ts` (`READONLY_COMMANDS`, `READONLY_NOARGS`, `READONLY_EXACT`, `COMMAND_ALLOWLIST`) and `src/utils/shell/readOnlyCommandValidation.ts` (`GIT_READ_ONLY_COMMANDS`, `GH_READ_ONLY_COMMANDS`, `DOCKER_READ_ONLY_COMMANDS`, `RIPGREP_READ_ONLY_COMMANDS`, `PYRIGHT_READ_ONLY_COMMANDS`). If the user is in this repo and you're unsure whether a command is covered, grep these files rather than guessing.\n\n5. **Pick the pattern form.** Use the narrowest pattern that still covers the observed usage:\n   - If the user runs many variants (`git log`, `git log --oneline`, `git log main..HEAD`): use `Bash(git log *)` \u2014 note the space before `*`, which is required for prefix matching to work correctly.\n   - If a single exact invocation is common: use `Bash(foo)` with no wildcard.\n   - For MCP: use the full tool name verbatim (no wildcard needed; they're already specific).\n   - Never widen a pattern to the point that it conflicts with the rules above (no arbitrary code execution, no mutation/side effects).\n\n6. **Prioritize.** Rank by count descending. Drop anything that appeared fewer than ~3 times \u2014 not worth the allowlist entry. Cap the list at the top ~20 so the user can skim it.\n\n7. **Present the prioritized list to the user** as a markdown table with columns: rank, pattern, count, one-line description. Example:\n\n   | # | Pattern | Count | Notes |\n   |---|---------|-------|-------|\n   | 1 | `Bash(git status *)` | 142 | repo status checks |\n   | 2 | `Bash(gh pr view *)` | 87 | PR inspection |\n   | 3 | `mcp__slack__slack_read_thread` | 54 | Slack thread reads |\n\n8. **Merge into `.claude/settings.json`** in the current project (not `~/.claude/settings.json`, not `.claude/settings.local.json`). Create the file if it doesn't exist. Preserve existing keys and existing entries in `permissions.allow`; de-duplicate against what's already there; don't remove anything; don't reorder unrelated fields.\n\n9. **Report back.** Tell the user what you added (count + a few examples), what was already in the allowlist, and what you skipped and why (e.g. \"dropped `rm` and `git push` \u2014 not read-only; dropped `cat`/`ls`/`git status` \u2014 already auto-allowed, no rule needed\").\n\nDo not add anything to `permissions.deny` or `permissions.ask`. Do not touch any other settings field.\n";
 }
 function Eo() {
-  eo({
+  registerBundledSkill({
     name: "fewer-permission-prompts",
     requires: { workspace: !0 },
     menuDescription: "Pre-approve safe read-only commands based on your usage",
@@ -3340,7 +3340,7 @@ var Ki = {
   ].join(`
 `);
 function So() {
-  eo({
+  registerBundledSkill({
     name: "keybindings-help",
     description:
       'Use when the user wants to customize keyboard shortcuts, rebind keys, add chord bindings, or modify ~/.claude/keybindings.json. Examples: "rebind ctrl+s", "add a chord shortcut", "change the submit key", "customize keybindings".',
@@ -3609,14 +3609,14 @@ function is() {
   return OC() || Wj().length > 0 ? PFe : PTt;
 }
 function xo() {
-  eo({
+  registerBundledSkill({
     name: aEn,
     description:
       "Full reference for the memory type taxonomy \u2014 what each type captures, when to save it, how to structure the body, with examples.",
     whenToUse:
       "Use before writing a memory file to choose the right `type:` frontmatter value and body structure.",
     userInvocable: !1,
-    isEnabled: () => ua() && !DK() && lEn(),
+    isEnabled: () => isAutoMemoryEnabled() && !DK() && lEn(),
     async getPromptForCommand() {
       return [
         {
@@ -3634,11 +3634,11 @@ function Io() {
 var ss =
   "Create or customize a shareable plan Artifact from an implementation plan, design doc, or RFC. Use when asked to publish a plan as an artifact, restyle or edit a plan artifact, or present a plan as a shareable page.";
 function Ro() {
-  eo({
+  registerBundledSkill({
     name: "plan-artifact",
     menuDescription: "Publish a plan as a shareable Artifact",
     description: ss,
-    isEnabled: voe,
+    isEnabled: isPlanArtifactEnabled,
     userInvocable: !0,
     files: () => Io().then((e) => e.SKILL_FILES),
     async getPromptForCommand(e) {
@@ -3665,7 +3665,7 @@ function rs() {
   );
 }
 function as() {
-  return wTn() && Ov();
+  return isProductivitySkillsEnabled() && artifactCapabilitiesPromptGateOpen();
 }
 function Oo() {
   return import("./SKILL_MD.nsvg64mn.js");
@@ -3686,7 +3686,7 @@ function Do() {
     menuDescription: o,
     description: s,
   } of ls)
-    eo({
+    registerBundledSkill({
       name: e,
       menuDescription: o,
       description: s,
@@ -3697,14 +3697,14 @@ function Do() {
         let { SKILL_MD: r } = await Oo(),
           h = zo(r[e]).content.trimStart();
         if (
-          ((h = eT()
+          ((h = artifactCommentsPromptGateOpen()
             ? h.replace(/<!-- comment-verbs:(begin|end) -->\r?\n/g, "")
             : h.replace(
                 /<!-- comment-verbs:begin -->\r?\n[\s\S]*?<!-- comment-verbs:end -->\r?\n/g,
                 "",
               )),
           (h += rs()),
-          t && Lo != null && bce())
+          t && Lo != null && artifactLiveEditPromptGateOpen())
         )
           h += Lo.LIVE_DOC_SECTION;
         if (d.trim())
@@ -3718,12 +3718,12 @@ ${d}`;
     });
 }
 function cs() {
-  return mTn() && Ov();
+  return isWhiteboardEnabled() && artifactCapabilitiesPromptGateOpen();
 }
 function ze() {
   let e = ne();
   if (e.whiteboardVariantLatch === null)
-    e.whiteboardVariantLatch = gTn() && wce() ? "live" : "solo";
+    e.whiteboardVariantLatch = isWhiteboardLiveEnabled() && artifactRoomSurfaceOpen() ? "live" : "solo";
   return e.whiteboardVariantLatch;
 }
 function No() {
@@ -3739,7 +3739,7 @@ var ds =
   hs =
     'Offer it unprompted, too - at most once per session, and putting the whiteboard up only if the user says yes - when a sketch would carry the conversation better than prose, namely when the user asks for an architecture or system design, when a plan you are writing spans three or more components or traces a request or data flow, or when you are about to ask your second or third clarifying question about how the pieces connect. Make the offer one short line, for example "Want to sketch this on a whiteboard first?", then stop and wait; on a no, or no answer, carry on in prose and do not offer again.';
 function Uo() {
-  eo({
+  registerBundledSkill({
     name: VJn,
     menuDescription:
       "Pair on a whiteboard artifact \u2014 you draw, Claude answers on it",
@@ -3777,18 +3777,18 @@ var ps =
 
 This is wired fidelity. A prototype that runs against the real thing proves far more than one against a mock. When the idea turns on the user's real data or real actions \u2014 their issues, their calendar, a doc, an API they already use \u2014 reading that live or connected data, acting on the user's behalf from the published page, or handing the viewer a file to save, is a runtime capability granted per user by the control plane and declared when you publish: load the \`${FE}\` skill before relying on it, to see which capabilities this user has and how to declare the one that fits. Fake only what no available capability covers \u2014 and if none fits, stay fully static \u2014 and keep saying what is faked.`;
 function $o() {
-  eo({
+  registerBundledSkill({
     name: KJn,
     menuDescription: "Prototype an idea as a working Artifact",
     description: ps,
     whenToUse: () => (wTe() ? ms : void 0),
-    isEnabled: $qt,
+    isEnabled: isPrototypeEnabled,
     userInvocable: !0,
     async getPromptForCommand(e, t) {
       if (!t.options?.isSkillPreload && !t.options?.modelScheduledOrigin) ler();
       let { SKILL_MD: o } = await import("./whenToUse.ayfna89f.js"),
         s = zo(o).content.trimStart();
-      if (Ov()) s += fs;
+      if (artifactCapabilitiesPromptGateOpen()) s += fs;
       if (e.trim())
         s += `
 
@@ -3810,7 +3810,7 @@ var Fo = [
   ],
   jo = lSt(_re([...Fo, "git push origin *", "git push -u origin *"]));
 async function gs() {
-  return lSt(_re([...Fo, ...(await wnt())]));
+  return lSt(_re([...Fo, ...(await getGitPushShellPatterns())]));
 }
 var ys = _re([...AXn, ...G9t, ...j9t, ...W9t]);
 function ws(e, t, o, s, d) {
@@ -3906,7 +3906,7 @@ ${p}`
 You have the capability to call multiple tools in a single response. Branch, push, and create the PR using a single message. Do not run additional commands to read or explore code beyond the git context above, and do not use any non-git tools for this task.`;
 }
 function Bo() {
-  eo({
+  registerBundledSkill({
     name: W7e,
     menuDescription: "Create a pull request",
     description:
@@ -3925,7 +3925,7 @@ function Bo() {
           $jt(t.getAppState, t.storageV5),
         ]),
         d = await e2t(GDe(o), "pr_skill", oVe(t.getProactivityLevel())),
-        r = await Fw(),
+        r = await getDefaultBranch(),
         h = /^[A-Za-z0-9._/+][A-Za-z0-9._/+-]*$/.test(r) ? r : "main",
         p = ws(e, h, d, o, s);
       return [
@@ -3955,21 +3955,21 @@ var bs =
   vs =
     "Create a PR review artifact - a structured review briefing for a GitHub pull request (synthesis title and bottom line, a recommendation, reviewer judgment calls, a visual explainer, signals, and blind spots), published as a shareable page. Use when the user asks to review a PR as an artifact, publish a PR review page, or share a review briefing. NOT a narrative walkthrough. Only for CREATING a new artifact; a published composed review page is updated ONLY through the acting loop's republish - never by editing its HTML directly.";
 function Go() {
-  eo({
+  registerBundledSkill({
     name: XJn,
     menuDescription: "Publish a PR review briefing Artifact from a template",
-    description: () => (Roe() ? vs : bs),
+    description: () => (isArtifactPrReviewComposeLatched() ? vs : bs),
     argumentHint: "[pr number or url]",
-    isEnabled: Uqt,
+    isEnabled: isArtifactPrReviewEnabled,
     userInvocable: !0,
     files: () => Ho().then((e) => e.SKILL_FILES),
     async getPromptForCommand(e, t) {
       let o = !t.options?.isSkillPreload,
         { SKILL_MD: s, SKILL_COMPOSED_MD: d } = await Ho(),
         r = zo(s).content.trimStart(),
-        h = Roe();
+        h = isArtifactPrReviewComposeLatched();
       if (h) r = zo(d).content.trimStart();
-      if (o) y("pr_review_started", { lane: h ? S("composed") : S("legacy") });
+      if (o) logFeatureOk("pr_review_started", { lane: h ? S("composed") : S("legacy") });
       let [p = "", ...w] = e.replaceAll("`", "").trim().split(/\s+/),
         k = p.replace(/^#/, ""),
         v = w.join(" ").trim();
@@ -4058,7 +4058,7 @@ review done without the ${mt} tool, not the full 4-agent
 fan-out, so whoever reads it isn't misled about what actually ran.
 `;
 function qo() {
-  eo({
+  registerBundledSkill({
     name: B7e,
     menuDescription: "Clean up the changed code without changing behavior",
     description:
@@ -4637,7 +4637,7 @@ If a hook isn't running:
 6. **Use --debug** - Run \`claude --debug\` to see hook execution logs
 `;
 function Jo() {
-  eo({
+  registerBundledSkill({
     name: "update-config",
     menuDescription:
       "Change settings: hooks, permissions, environment variables",
@@ -4691,7 +4691,7 @@ function Qo() {
 var As =
   "Verify that a code change actually does what it's supposed to by exercising it end-to-end and observing behavior \u2014 drive the affected flow, not just tests or typecheck. Run before committing nontrivial changes; bootstraps this repo's project verify skill if none exists yet. Don't invoke it on a diff that only touches tests, docs, or other code with no runtime surface to drive (a change to product source always has one) \u2014 there's nothing to observe.";
 function Zo() {
-  eo({
+  registerBundledSkill({
     name: v$,
     description: As,
     userInvocable: !0,
@@ -4722,7 +4722,7 @@ function zst() {
     ((e.bundledSkillsInitialized = !0),
     a.CLAUDE_CODE_ENTRYPOINT === "local-agent")
   ) {
-    if (FH()) (De(), Ne(), Oe());
+    if (isCoworkFramePublishSession()) (De(), Ne(), Oe());
     return;
   }
   {
@@ -4789,7 +4789,7 @@ function zst() {
     );
     p();
   }
-  Ct({ disabled: Zm() || a.CLAUDE_CODE_DISABLE_CFC_PROMPT === !0 });
+  Ct({ disabled: doesEnterpriseMcpConfigExist() || a.CLAUDE_CODE_DISABLE_CFC_PROMPT === !0 });
   let { registerRunSkill: r } = import.meta.require("./registerRunSkill.3h9k7g3w.js"),
     { registerRunSkillGeneratorSkill: h } = import.meta.require(
       "./registerRunSkillGeneratorSkill.xv52wgjx.js",

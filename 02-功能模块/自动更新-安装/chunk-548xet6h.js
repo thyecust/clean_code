@@ -11,25 +11,25 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { cf, ph, r0, sQ, Ms, u0, r1, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TZ, dt, l, A, Jr, Jg, W, Nz, Rt, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { lv, Ri, Wcr } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { getSettingsForSource as ye, getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { pe } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { access as Ae, chmod as Fe, writeFile as Me } from "fs/promises";
+import { access as Ae, chmod, writeFile as Me } from "fs/promises";
 import { join as N } from "path";
 function G() {
   return N(be(), "local");
@@ -65,7 +65,7 @@ exec "${e}/node_modules/.bin/claude" "$@"`,
         493,
       )
     )
-      await Fe(t, 493);
+      await chmod(t, 493);
     return !0;
   } catch (e) {
     return (
@@ -78,11 +78,11 @@ async function Nbe(e, t, r) {
   try {
     if (!(await Oe()))
       return (
-        f("update_apply", "update_apply_env_setup_failed"),
+        logFeatureBad("update_apply", "update_apply_env_setup_failed"),
         "install_failed"
       );
     let o = t ? t : e === "stable" ? "stable" : "latest",
-      s = await Be(
+      s = await execFileNoThrowWithCwd(
         "npm",
         [
           "install",
@@ -92,7 +92,7 @@ async function Nbe(e, t, r) {
       );
     if (s.code !== 0)
       return (
-        f("update_apply", "update_apply_local_npm_failed"),
+        logFeatureBad("update_apply", "update_apply_local_npm_failed"),
         n(`Failed to install Claude CLI package: ${s.stderr}`, {
           level: "error",
         }),
@@ -100,13 +100,13 @@ async function Nbe(e, t, r) {
       );
     return (
       await Te((c) => ({ ...c, installMethod: "local" }), r),
-      y("update_apply"),
+      logFeatureOk("update_apply"),
       "success"
     );
   } catch (o) {
     return (
-      f("update_apply", "update_apply_local_exception"),
-      h(o),
+      logFeatureBad("update_apply", "update_apply_local_exception"),
+      logError(o),
       "install_failed"
     );
   }
@@ -125,8 +125,8 @@ function Fbe() {
   if (e.includes("fish")) return "fish";
   return "unknown";
 }
-import { existsSync as Ie } from "fs";
-import { open as Ue, readFile as Le, stat as Ne } from "fs/promises";
+import { existsSync } from "fs";
+import { open as Ue, readFile, stat as Ne } from "fs/promises";
 import { homedir as ce } from "os";
 import { join as D } from "path";
 var ue = /^\s*alias\s+claude\s*=/;
@@ -134,7 +134,7 @@ function Gce(e) {
   let t = e?.homedir ?? ce(),
     r = e?.env ?? process.env,
     o = e?.platform ?? "darwin",
-    s = e?.fileExists ?? Ie,
+    s = e?.fileExists ?? existsSync,
     c = r.ZDOTDIR || t,
     R =
       o === "darwin"
@@ -167,7 +167,7 @@ function aFt(e) {
 }
 async function Opt(e) {
   try {
-    return (await Le(e, { encoding: "utf8" })).split(`
+    return (await readFile(e, { encoding: "utf8" })).split(`
 `);
   } catch (t) {
     if (Rt(t)) return null;
@@ -235,20 +235,20 @@ async function M9n(e) {
   return null;
 }
 var U = pe(pg(), 1);
-import { randomBytes as Ve } from "crypto";
-import { constants as _e } from "fs";
+import { randomBytes } from "crypto";
+import { constants } from "fs";
 import {
   access as we,
-  copyFile as de,
-  readdir as L,
-  rename as fe,
+  copyFile,
+  readdir,
+  rename,
   rm as We,
   stat as K,
-  unlink as V,
+  unlink,
   writeFile as me,
 } from "fs/promises";
 import { homedir as H } from "os";
-import { basename as Y, dirname as J, join as x } from "path";
+import { basename, dirname, join as x } from "path";
 async function iFt(e, t) {
   let r;
   for (let o = 1; o <= t.attempts; o++)
@@ -297,7 +297,7 @@ This will ensure you have access to the latest features and improvements.
 `),
         Pr(1));
   } catch (e) {
-    h(e);
+    logError(e);
   }
 }
 var Ke = 300000;
@@ -366,13 +366,13 @@ async function xe() {
   try {
     return await r1("tengu_max_version_config", {});
   } catch (e) {
-    return (h(e), {});
+    return (logError(e), {});
   }
 }
 function cFt(e) {
-  let t = Ge()?.minimumVersion;
+  let t = getInitialSettings()?.minimumVersion;
   if (t && !ph(e, t)) return `below your minimumVersion setting (${t})`;
-  let r = ye("policySettings")?.requiredMaximumVersion;
+  let r = getSettingsForSource("policySettings")?.requiredMaximumVersion;
   if (r) {
     let o = U.parse(r)?.version;
     if (!o)
@@ -453,10 +453,10 @@ async function qe(e) {
       if (Date.now() - c.mtimeMs < z) return !1;
       await t.unlink(r);
     } catch (c) {
-      if (!W(c)) return (h(c), !1);
+      if (!W(c)) return (logError(c), !1);
     }
   } catch (o) {
-    if (!W(o)) return (h(o), !1);
+    if (!W(o)) return (logError(o), !1);
   }
   try {
     return (
@@ -536,12 +536,12 @@ async function ke() {
   let e = re() === "bun",
     t = null;
   if (e)
-    t = await Be("bun", ["pm", "bin", "-g"], {
+    t = await execFileNoThrowWithCwd("bun", ["pm", "bin", "-g"], {
       cwd: H(),
       useToolMemoryCgroup: !1,
     });
   else
-    t = await Be("npm", ["-g", "config", "get", "prefix"], {
+    t = await execFileNoThrowWithCwd("npm", ["-g", "config", "get", "prefix"], {
       cwd: H(),
       useToolMemoryCgroup: !1,
     });
@@ -567,7 +567,7 @@ async function $9n() {
     let e = await ke();
     if (!e) return { hasPermissions: !1, npmPrefix: null };
     try {
-      return (await we(e, _e.W_OK), { hasPermissions: !0, npmPrefix: e });
+      return (await we(e, constants.W_OK), { hasPermissions: !0, npmPrefix: e });
     } catch {
       return (
         n("Insufficient permissions for global npm install.", {
@@ -577,12 +577,12 @@ async function $9n() {
       );
     }
   } catch (e) {
-    return (h(e), { hasPermissions: !1, npmPrefix: null });
+    return (logError(e), { hasPermissions: !1, npmPrefix: null });
   }
 }
 async function Ube(e) {
   let t = e === "stable" ? "stable" : "latest",
-    r = await Be(
+    r = await execFileNoThrowWithCwd(
       "npm",
       [
         "view",
@@ -600,7 +600,7 @@ async function Ube(e) {
     let o = r.stdout.trim();
     if (o && U.parse(o)) {
       if (
-        (g("update_check", "update_check_npm_view_stderr_warning"),
+        (logFeatureSad("update_check", "update_check_npm_view_stderr_warning"),
         n(
           `npm view exited ${r.code} but printed a valid version (${o}) \u2014 treating stderr as a warning`,
         ),
@@ -610,7 +610,7 @@ async function Ube(e) {
       return o;
     }
     if (
-      (f("update_check", "update_check_npm_view_failed"),
+      (logFeatureBad("update_check", "update_check_npm_view_failed"),
       n(`npm view failed with code ${r.code}`),
       r.stderr)
     )
@@ -619,7 +619,7 @@ async function Ube(e) {
     if (r.stdout) n(`npm stdout: ${r.stdout.trim()}`);
     return null;
   }
-  return (y("update_check"), r.stdout.trim() || null);
+  return (logFeatureOk("update_check"), r.stdout.trim() || null);
 }
 var ge = 5000,
   he = 3;
@@ -642,12 +642,12 @@ async function uFt(e) {
         },
       },
     );
-    if (t > 1) g("update_check", "update_check_gcs_retry");
-    else y("update_check");
+    if (t > 1) logFeatureSad("update_check", "update_check_gcs_retry");
+    else logFeatureOk("update_check");
     return r.data.trim();
   } catch (r) {
     return (
-      f("update_check", "update_check_gcs_failed"),
+      logFeatureBad("update_check", "update_check_gcs_failed"),
       n(`Failed to fetch ${e} from GCS after ${t} attempt(s): ${r}`),
       null
     );
@@ -657,15 +657,15 @@ async function Xe(e) {
   if (St()) return null;
   try {
     let r = (
-      await ra.get(`https://formulae.brew.sh/api/cask/${e}.json`, {
+      await externalHttp.get(`https://formulae.brew.sh/api/cask/${e}.json`, {
         timeout: 5000,
         responseType: "json",
       })
     ).data?.version;
-    return (y("update_check"), typeof r === "string" ? r : null);
+    return (logFeatureOk("update_check"), typeof r === "string" ? r : null);
   } catch (t) {
     return (
-      f("update_check", "update_check_homebrew_failed"),
+      logFeatureBad("update_check", "update_check_homebrew_failed"),
       n(`Failed to fetch ${e} from formulae.brew.sh: ${t}`),
       null
     );
@@ -691,20 +691,20 @@ async function Qe(e) {
     };
 }
 function ne(e) {
-  return we(e, _e.F_OK).then(
+  return we(e, constants.F_OK).then(
     () => !0,
     () => !1,
   );
 }
 function Se() {
-  let e = x(J(process.execPath), "..", "..");
+  let e = x(dirname(process.execPath), "..", "..");
   return [x(e, ".."), e];
 }
 async function Re() {
   return (
     await Promise.all(
       Se().map((t) =>
-        L(t, { withFileTypes: !0 })
+        readdir(t, { withFileTypes: !0 })
           .then((r) =>
             r
               .filter((o) => o.isDirectory() && o.name.startsWith("."))
@@ -724,22 +724,22 @@ async function Q(e, t) {
 }
 async function $e(e, t) {
   if (await Q(e, t)) return t;
-  let r = Y(t),
+  let r = basename(t),
     o = (await Re()).flatMap((s) => [x(s, r), x(s, "bin", r)]);
   for (let s of o) if (await Q(e, s)) return s;
   return null;
 }
 async function ee(e, t) {
-  await ae().mkdir(J(t));
+  await ae().mkdir(dirname(t));
   try {
-    let o = J(t),
-      s = `${Y(t)}.restoring.`;
-    for (let c of await L(o))
-      if (c.startsWith(s)) await V(x(o, c)).catch(() => {});
+    let o = dirname(t),
+      s = `${basename(t)}.restoring.`;
+    for (let c of await readdir(o))
+      if (c.startsWith(s)) await unlink(x(o, c)).catch(() => {});
   } catch {}
-  let r = `${t}.restoring.${Ve(4).toString("hex")}`;
+  let r = `${t}.restoring.${randomBytes(4).toString("hex")}`;
   try {
-    await de(e, r);
+    await copyFile(e, r);
     try {
       await Ri(r, t);
     } catch (o) {
@@ -747,25 +747,25 @@ async function ee(e, t) {
       if (s === void 0 || !lv.has(s)) throw o;
       if (!(await ne(t))) throw o;
       try {
-        await de(r, t);
+        await copyFile(r, t);
       } catch (c) {
-        if (Wcr.has(A(c) ?? "")) await V(t).catch(() => {});
+        if (Wcr.has(A(c) ?? "")) await unlink(t).catch(() => {});
         throw c;
       }
-      await V(r).catch(() => {});
+      await unlink(r).catch(() => {});
     }
   } catch (o) {
-    throw (await V(r).catch(() => {}), o);
+    throw (await unlink(r).catch(() => {}), o);
   }
 }
 async function et(e, t) {
-  let r = Y(process.execPath).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  let r = basename(process.execPath).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
     o = new RegExp(`^${r}\\.old\\.(\\d+)$`),
     s = (
       await Promise.all(
         t.flatMap((p) =>
           [p, x(p, "bin")].map(async (E) =>
-            (await L(E).catch(() => []))
+            (await readdir(E).catch(() => []))
               .map((T) => o.exec(T))
               .filter((T) => T !== null)
               .map((T) => ({ path: x(E, T[0]), ts: Number(T[1]) })),
@@ -780,19 +780,19 @@ async function et(e, t) {
       .reduce((p, E) => (p === null || E.ts > p.ts ? E : p), null);
   if (!R) {
     n(
-      `No preserved ${Y(process.execPath)}.old.<ts> found in ${t.length} retired dir(s) \u2014 sweep restore skipped`,
+      `No preserved ${basename(process.execPath)}.old.<ts> found in ${t.length} retired dir(s) \u2014 sweep restore skipped`,
     );
     return;
   }
   try {
     (await ee(R.path, process.execPath),
-      y("update_apply_heal", { heal_kind: S("sweep") }),
+      logFeatureOk("update_apply_heal", { heal_kind: S("sweep") }),
       n(
         `Restored missing ${process.execPath} from preserved copy ${R.path} before update attempt`,
       ));
   } catch (p) {
     let E = Jg(p);
-    (f("update_apply_heal", "sweep_restore_failed", {
+    (logFeatureBad("update_apply_heal", "sweep_restore_failed", {
       ...(E && { err_code: E }),
       heal_kind: S("sweep"),
     }),
@@ -805,7 +805,7 @@ async function Bbe(e, t) {
   let r = te();
   if (!(await qe(t)))
     return (
-      g("update_apply", "update_apply_lock_contention"),
+      logFeatureSad("update_apply", "update_apply_lock_contention"),
       n("Another process is currently installing an update", {
         level: "error",
       }),
@@ -836,7 +836,7 @@ async function Bbe(e, t) {
     let s = re();
     if (s === "npm" && a.isNpmFromWindowsPath())
       return (
-        f("update_apply", "update_apply_wsl_windows_npm"),
+        logFeatureBad("update_apply", "update_apply_wsl_windows_npm"),
         n("Windows NPM detected in WSL environment", { level: "error" }),
         i("tengu_auto_updater_windows_npm_in_wsl", {
           currentVersion: Ms(
@@ -898,8 +898,8 @@ To fix this issue:
           await Promise.all(
             (await Re()).map(async (d) =>
               (await Promise.all([
-                L(d).catch(() => []),
-                L(x(d, "bin")).catch(() => []),
+                readdir(d).catch(() => []),
+                readdir(x(d, "bin")).catch(() => []),
               ]).then(([k, v]) =>
                 [...k, ...v].some((I) => /\.exe\.old\.\d+$/.test(I)),
               ))
@@ -923,7 +923,7 @@ To fix this issue:
           .then((d) => d.ino)
           .catch(() => 0n),
         F = [process.execPath];
-      for (let d of await L(_).catch(() => []))
+      for (let d of await readdir(_).catch(() => []))
         for (let m of ["claude.exe", "cli.exe"]) {
           let k = x(_, d, m);
           if (k === process.execPath) continue;
@@ -935,7 +935,7 @@ To fix this issue:
       for (let d of F) {
         let m = `${d}.old.${C}`;
         try {
-          await fe(d, m);
+          await rename(d, m);
         } catch {
           continue;
         }
@@ -947,7 +947,7 @@ To fix this issue:
         if (k !== 0n) r.mintedPreservedInodes.add(k);
       }
     }
-    let E = await Be(s, ["install", "-g", c], {
+    let E = await execFileNoThrowWithCwd(s, ["install", "-g", c], {
         cwd: H(),
         useToolMemoryCgroup: !1,
       }),
@@ -957,12 +957,12 @@ To fix this issue:
     if (p.length && E.code !== 0) {
       for (let [w, C] of p)
         try {
-          await fe(C, w);
+          await rename(C, w);
         } catch (O) {
           try {
             (await ee(C, w),
               n(`Restored ${w} by copy after rename failed: ${O}`),
-              await V(C).catch((F) =>
+              await unlink(C).catch((F) =>
                 n(`Failed to remove ${C} after copy-restore: ${F}`),
               ));
           } catch (F) {
@@ -990,7 +990,7 @@ To fix this issue:
               let v = Jg(O),
                 I = Jg(F),
                 ie = m === void 0 ? void 0 : Jg(m);
-              f("update_apply", "update_apply_restore_failed", {
+              logFeatureBad("update_apply", "update_apply_restore_failed", {
                 ...(v && { rename_err_code: v }),
                 ...(I && { copy_err_code: I }),
                 ...(ie && { relocate_err_code: ie }),
@@ -998,7 +998,7 @@ To fix this issue:
               });
             }
             (q.push({ originalPath: w, preservedPath: d }),
-              h(
+              logError(
                 dt(
                   new Ee(
                     `Failed to restore ${w} after install failure: rename: ${O}; copy: ${F}; preserved copy: ${d ?? "not found"}`,
@@ -1009,7 +1009,7 @@ To fix this issue:
           }
         }
       if (oe > 0 && T === 0)
-        y("update_apply_heal", { heal_kind: S("relocate") });
+        logFeatureOk("update_apply_heal", { heal_kind: S("relocate") });
       let _ = new Set(p.map(([w]) => w));
       r.updateRestoreFailure =
         q[0] ??
@@ -1027,7 +1027,7 @@ To fix this issue:
           m,
           k = !1;
         for (let v of F) {
-          let I = await Be(v, ["--version"], {
+          let I = await execFileNoThrowWithCwd(v, ["--version"], {
             abortSignal: AbortSignal.timeout(45000),
             cwd: H(),
             useToolMemoryCgroup: !1,
@@ -1064,7 +1064,7 @@ To fix this issue:
           return (
             await Te((v) => ({ ...v, installMethod: "global" }), t),
             (r.updateRestoreFailure = null),
-            g("update_apply", "update_apply_npm_install_stderr_warning"),
+            logFeatureSad("update_apply", "update_apply_npm_install_stderr_warning"),
             n(
               `npm/bun exited ${E.code} with only warnings on stderr but the install-prefix re-probe confirms the install landed (now ${m}): ${_}`,
             ),
@@ -1074,11 +1074,11 @@ To fix this issue:
       if (
         (i("tengu_auto_updater_npm_failure", {
           npm_exit_code: E.code,
-          package_manager: u(s),
+          package_manager: fromEnum(s),
           is_bundled_mode: bc(),
           platform: u0(P()),
-          windows_self_rename: u(C),
-          stderr_signature: u(w),
+          windows_self_rename: fromEnum(C),
+          stderr_signature: fromEnum(w),
           npm_error_code: nt(_) ?? S("none"),
         }),
         P() === "windows" &&
@@ -1091,7 +1091,7 @@ To fix this issue:
                 )))))
       )
         return (
-          f("update_apply", "update_apply_exe_locked"),
+          logFeatureBad("update_apply", "update_apply_exe_locked"),
           n(
             `Failed to install new version of claude (running executable is locked): ${_}`,
             { level: "error" },
@@ -1100,7 +1100,7 @@ To fix this issue:
         );
       if (/\b(EACCES|EPERM|permission denied)\b/i.test(_))
         return (
-          f("update_apply", "update_apply_no_permissions"),
+          logFeatureBad("update_apply", "update_apply_no_permissions"),
           n("Insufficient permissions for global npm install.", {
             level: "error",
           }),
@@ -1108,7 +1108,7 @@ To fix this issue:
         );
       if (w === "warning_only")
         return (
-          f("update_apply", "update_apply_npm_install_stderr_warning"),
+          logFeatureBad("update_apply", "update_apply_npm_install_stderr_warning"),
           n(
             `npm/bun exited ${E.code} with only warnings on stderr but the re-probe did not confirm an advance: ${_}`,
             { level: "error" },
@@ -1116,7 +1116,7 @@ To fix this issue:
           { status: "install_failed" }
         );
       return (
-        f("update_apply", "update_apply_npm_install_failed"),
+        logFeatureBad("update_apply", "update_apply_npm_install_failed"),
         n(`Failed to install new version of claude: ${_}`, { level: "error" }),
         { status: "install_failed" }
       );
@@ -1124,7 +1124,7 @@ To fix this issue:
     return (
       await Te((_) => ({ ..._, installMethod: "global" }), t),
       (r.updateRestoreFailure = null),
-      y("update_apply"),
+      logFeatureOk("update_apply"),
       { status: "success" }
     );
   } finally {
@@ -1184,7 +1184,7 @@ function nt(e) {
     /\bnpm (?:ERR!|error) code\s+([A-Z][A-Z0-9_]{1,29})(?![A-Za-z0-9_])/.exec(
       e,
     )?.[1];
-  return t === void 0 ? void 0 : Ln(t);
+  return t === void 0 ? void 0 : fromSanitizer_SANITIZER_OUTPUT_ONLY(t);
 }
 export {
   iFt,

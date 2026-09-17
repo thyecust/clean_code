@@ -17,7 +17,7 @@ import {
   zfn,
   $M,
   r$,
-  MAX_WORKING_FILE_BYTES as Jm,
+  MAX_WORKING_FILE_BYTES,
   Pht,
   ILe,
   Oht,
@@ -126,7 +126,7 @@ var H = m(() =>
   ),
   B = /^[A-Za-z0-9_-]+$/,
   F = 104857600,
-  z = { row: Jm, file: F, direct: xht },
+  z = { row: MAX_WORKING_FILE_BYTES, file: F, direct: xht },
   rft = m(() =>
     c({
       via: s().min(1).max(32),

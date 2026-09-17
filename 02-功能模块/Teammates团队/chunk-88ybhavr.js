@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 var DEFAULT_TEAMMATE_MODE = "in-process";
 class TeammateModeSnapshot {
@@ -54,7 +54,7 @@ function captureTeammateModeSnapshot() {
 function getTeammateModeFromSnapshot() {
   let e = t();
   if (e.captured === null)
-    (h(
+    (logError(
       Error(
         "getTeammateModeFromSnapshot called before capture - this indicates an initialization bug",
       ),

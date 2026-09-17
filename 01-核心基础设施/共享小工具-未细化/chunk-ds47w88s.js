@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { getAPIProvider as Pe } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 var d = 10,
   CCR_LIST_TARGET_VISIBLE = 50,
   CCR_SESSION_ID_RE = /^(?:session|cse)_[A-Za-z0-9_-]+$/;
@@ -24,7 +24,7 @@ function S(e) {
   );
 }
 async function walkCcrSessionList(e) {
-  if (Pe() !== "firstParty") return [];
+  if (getAPIProvider() !== "firstParty") return [];
   try {
     let {
         axiosGetWithRetry: r,

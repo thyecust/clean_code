@@ -15,11 +15,11 @@ import { ws } from "../共享小工具-未细化/chunk-0a6nmdka.js";
 import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
-import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import {
   pRe,
@@ -31,17 +31,17 @@ import {
   DUe,
   gRe,
   C6,
-  isProfileRemoteSettingsCredential as NUe,
-  getAnthropicApiKeyWithSourceSafe as kp,
-  getAnthropicApiKeyWithSource as qg,
-  getClaudeAIOAuthTokens as Yt,
-  getClaudeAIOAuthTokenOriginAsync as $T,
-  handleOAuth401Error as cm,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
-  isClaudeAISubscriber as gt,
-  getStoredOauthAccountInfo as mh,
+  isProfileRemoteSettingsCredential,
+  getAnthropicApiKeyWithSourceSafe,
+  getAnthropicApiKeyWithSource,
+  getClaudeAIOAuthTokens,
+  getClaudeAIOAuthTokenOriginAsync,
+  handleOAuth401Error,
+  checkAndRefreshOAuthTokenIfNeeded,
+  isClaudeAISubscriber,
+  getStoredOauthAccountInfo,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { dy } from "../共享小工具-未细化/chunk-862jyk0r.js";
 import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -52,27 +52,27 @@ import {
   j5,
   YRt,
   _lr,
-  HELPER_CONSENT_STATE_ID as gtt,
-  getHelperConsentPath as JRt,
-  helperConsentDigest as FHn,
-  stripReservedKeys as E8t,
-  getSyncCacheResetEpoch as FQ,
-  getRemoteManagedSettingsConsentedBaseline as QRt,
-  markRemoteManagedSettingsConsented as A8t,
-  setSessionCache as JBe,
-  isRemoteManagedSettingsVerified as jR,
-  markPolicySettingsNotified as BHn,
-  getIneligibleReason as htt,
-  setLastLoadStatus as ZRt,
-  getRemoteSettingsPathOverride as YT,
-  isEvalPolicySnapshotOnly as Jge,
-  getSettingsPath as K6,
-  getMockRemoteSettingsValue as C8t,
-  getMockRemoteSettingsFixturePath as ytt,
-  remoteSettingsFileWritten as Qge,
-  unverifiedRemoteCacheWithholdsProvisions as ekt,
-  getRemoteManagedSettingsRawCache as tkt,
-  getRemoteManagedSettingsSyncFromCache as rv,
+  HELPER_CONSENT_STATE_ID,
+  getHelperConsentPath,
+  helperConsentDigest,
+  stripReservedKeys,
+  getSyncCacheResetEpoch,
+  getRemoteManagedSettingsConsentedBaseline,
+  markRemoteManagedSettingsConsented,
+  setSessionCache,
+  isRemoteManagedSettingsVerified,
+  markPolicySettingsNotified,
+  getIneligibleReason,
+  setLastLoadStatus,
+  getRemoteSettingsPathOverride,
+  isEvalPolicySnapshotOnly,
+  getSettingsPath,
+  getMockRemoteSettingsValue,
+  getMockRemoteSettingsFixturePath,
+  remoteSettingsFileWritten,
+  unverifiedRemoteCacheWithholdsProvisions,
+  getRemoteManagedSettingsRawCache,
+  getRemoteManagedSettingsSyncFromCache,
   Tke,
   Bq,
   t2e,
@@ -148,7 +148,7 @@ class ee {
   close(e, t) {
     if (((this.pendingReview = null), t === "approved"))
       (i("tengu_managed_settings_security_dialog_accepted", {}),
-        y("remote_managed_settings_security_check"));
+        logFeatureOk("remote_managed_settings_security_check"));
     else if (t === "rejected")
       i("tengu_managed_settings_security_dialog_rejected", {});
     e.settle(t);
@@ -278,7 +278,7 @@ async function oe(e, t, o) {
     R = await d;
   } catch (w) {
     throw (
-      f("remote_managed_settings_security_check", "dialog_unavailable"),
+      logFeatureBad("remote_managed_settings_security_check", "dialog_unavailable"),
       w
     );
   }
@@ -291,7 +291,7 @@ async function oe(e, t, o) {
     ),
     R === "approved")
   )
-    y("remote_managed_settings_security_check");
+    logFeatureOk("remote_managed_settings_security_check");
   return R;
 }
 var Oe = "Managed settings were not approved; exiting without applying them.";
@@ -310,13 +310,13 @@ function ie(e) {
       return !0;
   }
 }
-import { createHash as je } from "crypto";
+import { createHash } from "crypto";
 import {
   open as Ke,
-  readFile as $e,
+  readFile,
   rm as Je,
-  unlink as qe,
-  writeFile as Ge,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { join as xe } from "path";
 var He = "remote-settings-consent.json",
@@ -523,14 +523,14 @@ function vnn() {
 function et() {
   let e = ns();
   if (e) return `${e.url}/managed/settings`;
-  return `${Vt().BASE_API_URL}/api/claude_code/settings`;
+  return `${getOauthConfig().BASE_API_URL}/api/claude_code/settings`;
 }
 function K(e) {
   if (!e) return e;
   return Tke(e, "remote managed settings").settings ?? {};
 }
 function Se(e, t, o) {
-  let r = E8t(e),
+  let r = stripReservedKeys(e),
     a = Tke(r, t),
     u = r;
   if (!a.settings && Object.keys(r).length > 0 && !tt(u))
@@ -567,7 +567,7 @@ function nt(e, t) {
   return o === void 0 ? void 0 : Re(o, e);
 }
 async function rt(e) {
-  let t = C8t();
+  let t = getMockRemoteSettingsValue();
   if (t === void 0) return null;
   if (t === "fail")
     return {
@@ -584,8 +584,8 @@ async function rt(e) {
       consentIdentity: await V(e),
     };
   try {
-    let o = ytt(),
-      r = o !== void 0 ? await $e(o, "utf-8") : t,
+    let o = getMockRemoteSettingsFixturePath(),
+      r = o !== void 0 ? await readFile(o, "utf-8") : t,
       a = z(r);
     if (!a || typeof a !== "object" || Array.isArray(a))
       return {
@@ -618,10 +618,10 @@ async function c3e() {
   if (e.fetchSettledPromise) await e.fetchSettledPromise;
 }
 function fIe() {
-  return XE() && !rv();
+  return XE() && !getRemoteManagedSettingsSyncFromCache();
 }
 function knn() {
-  return !Uhe() && XE() && ekt();
+  return !Uhe() && XE() && unverifiedRemoteCacheWithholdsProvisions();
 }
 function ye() {
   i5n(async () => {
@@ -639,23 +639,23 @@ async function ot(e) {
       pinnedFingerprint: r,
     };
   }
-  if (gt() && hwn()) {
-    let r = Yt();
+  if (isClaudeAISubscriber() && hwn()) {
+    let r = getClaudeAIOAuthTokens();
     if (r?.accessToken)
       return {
         headers: {
           Authorization: `Bearer ${r.accessToken}`,
-          "anthropic-beta": Bc,
+          "anthropic-beta": OAUTH_BETA_HEADER,
         },
         accessToken: r.accessToken,
         consentIdentity: await G(e),
       };
   }
   try {
-    let { key: r } = qg({ skipRetrievingKeyFromApiKeyHelper: !0 });
+    let { key: r } = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 });
     if (r) return { headers: { "x-api-key": r } };
   } catch {}
-  if (NUe()) {
+  if (isProfileRemoteSettingsCredential()) {
     if (mir())
       return (
         n(
@@ -693,12 +693,12 @@ async function ot(e) {
       return { headers: {}, error: a, profileError: !0, retryable: u(r) };
     }
   }
-  let o = Yt();
+  let o = getClaudeAIOAuthTokens();
   if (o?.accessToken)
     return {
       headers: {
         Authorization: `Bearer ${o.accessToken}`,
-        "anthropic-beta": Bc,
+        "anthropic-beta": OAUTH_BETA_HEADER,
       },
       accessToken: o.accessToken,
       consentIdentity: await G(e),
@@ -706,15 +706,15 @@ async function ot(e) {
   return { headers: {}, error: "No authentication available" };
 }
 async function G(e) {
-  let t = mh();
-  if ((await $T(e)) !== "store") return;
+  let t = getStoredOauthAccountInfo();
+  if ((await getClaudeAIOAuthTokenOriginAsync(e)) !== "store") return;
   return t?.organizationUuid
     ? { organizationUuid: t.organizationUuid, accountUuid: t.accountUuid }
     : void 0;
 }
 function _e() {
   let e = vvt(),
-    t = mh();
+    t = getStoredOauthAccountInfo();
   return e?.organizationUuid &&
     e.accountEmail &&
     t?.organizationUuid === e.organizationUuid &&
@@ -739,7 +739,7 @@ function ve(e, t) {
   return {
     organizationUuid: `${we}${r}#${t}`,
     accountUuid:
-      a.length > st ? `sha256:${je("sha256").update(a).digest("hex")}` : a,
+      a.length > st ? `sha256:${createHash("sha256").update(a).digest("hex")}` : a,
   };
 }
 async function ke(e, t) {
@@ -754,13 +754,13 @@ async function V(e) {
         return;
       }),
     );
-  if (kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null && NUe())
+  if (getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null && isProfileRemoteSettingsCredential())
     return _e();
   return G(e);
 }
 async function J(e, t, o, r) {
   if (!e) return;
-  let a = e.organizationUuid.startsWith(we) ? await V(r) : mh();
+  let a = e.organizationUuid.startsWith(we) ? await V(r) : getStoredOauthAccountInfo();
   if (
     a?.organizationUuid !== e.organizationUuid ||
     a.accountUuid !== e.accountUuid
@@ -773,12 +773,12 @@ async function J(e, t, o, r) {
   await ge(e, t, o);
 }
 function A(e) {
-  if (FQ() === e) return !1;
+  if (getSyncCacheResetEpoch() === e) return !1;
   return (
     n(
       "Remote settings: Cache was reset (login/logout) during this fetch; discarding its result",
     ),
-    g("remote_managed_settings_pull", "reset_during_fetch"),
+    logFeatureSad("remote_managed_settings_pull", "reset_during_fetch"),
     !0
   );
 }
@@ -815,7 +815,7 @@ async function Pe(e, t = !1, o) {
       d
     );
   try {
-    (await Ss({ credentials: o }), await C6(o));
+    (await checkAndRefreshOAuthTokenIfNeeded({ credentials: o }), await C6(o));
     let d = await ot(o);
     if (
       ((r = d.accessToken),
@@ -951,7 +951,7 @@ async function Pe(e, t = !1, o) {
                 .catch(() => {
                   return;
                 })));
-          } else (await cm(r, o), (E = Yt()?.accessToken));
+          } else (await handleOAuth401Error(r, o), (E = getClaudeAIOAuthTokens()?.accessToken));
           if (E && E !== r)
             return (
               p(P),
@@ -991,8 +991,8 @@ async function Pe(e, t = !1, o) {
 }
 async function he(e, t, o) {
   let r = b(e, null, 2),
-    a = FHn(e);
-  if (M() && t !== void 0 && !YT()) {
+    a = helperConsentDigest(e);
+  if (M() && t !== void 0 && !getRemoteSettingsPathOverride()) {
     let u = await t.write(Ce.state("remote-settings"), r, {
       publishDiscipline: "inPlace",
       mode: 384,
@@ -1004,11 +1004,11 @@ async function he(e, t, o) {
     }
     if (
       (n("Remote settings: Saved via storage backend"),
-      Qge("cache", r),
-      await lse(K6(), o),
+      remoteSettingsFileWritten("cache", r),
+      await lse(getSettingsPath(), o),
       a !== void 0)
     ) {
-      let p = await t.write(Ce.state(gtt), a, {
+      let p = await t.write(Ce.state(HELPER_CONSENT_STATE_ID), a, {
         publishDiscipline: "inPlace",
         mode: 384,
       });
@@ -1020,12 +1020,12 @@ async function he(e, t, o) {
         ),
         p.ok)
       )
-        Qge("helperConsent", a);
+        remoteSettingsFileWritten("helperConsent", a);
     }
     return;
   }
   try {
-    let u = K6(),
+    let u = getSettingsPath(),
       p = await Ke(u, "w", 384);
     try {
       (await p.writeFile(r, { encoding: "utf-8" }), await p.datasync());
@@ -1039,11 +1039,11 @@ async function he(e, t, o) {
     );
     return;
   }
-  if (M() && !YT()) Qge("cache", r);
-  if ((await lse(K6(), o), a === void 0)) return;
+  if (M() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("cache", r);
+  if ((await lse(getSettingsPath(), o), a === void 0)) return;
   try {
-    if ((await Ge(JRt(), a, { mode: 384 }), M() && !YT()))
-      Qge("helperConsent", a);
+    if ((await writeFile(getHelperConsentPath(), a, { mode: 384 }), M() && !getRemoteSettingsPathOverride()))
+      remoteSettingsFileWritten("helperConsent", a);
   } catch (u) {
     n(`Remote settings: Failed to save helper consent - ${l(u)}`);
   }
@@ -1052,27 +1052,27 @@ async function hlt(e) {
   (UDt(), I$(), Za(), O().detachBarrier()?.());
   let t =
     M() && e !== void 0
-      ? await e.delete(Ce.state(gtt)).then((o) => (o.ok ? void 0 : We(o.error)))
-      : await Je(JRt(), { force: !0 }).then(() => {
+      ? await e.delete(Ce.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : We(o.error)))
+      : await Je(getHelperConsentPath(), { force: !0 }).then(() => {
           return;
         }, l);
   if (t !== void 0) {
     n(`Remote settings: Failed to remove helper consent - ${t}`);
     return;
   }
-  if (M() && !YT()) Qge("helperConsent", null);
-  if (YT()) return;
-  if ((await KJe(K6()), M() && e !== void 0)) {
-    if ((await e.delete(Ce.state("remote-settings"))).ok) Qge("cache", null);
+  if (M() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("helperConsent", null);
+  if (getRemoteSettingsPathOverride()) return;
+  if ((await KJe(getSettingsPath()), M() && e !== void 0)) {
+    if ((await e.delete(Ce.state("remote-settings"))).ok) remoteSettingsFileWritten("cache", null);
     return;
   }
   try {
-    let o = K6();
-    await qe(o);
+    let o = getSettingsPath();
+    await unlink(o);
   } catch (o) {
     if (M() && !W(o)) return;
   }
-  if (M()) Qge("cache", null);
+  if (M()) remoteSettingsFileWritten("cache", null);
 }
 async function Y(e = {}) {
   try {
@@ -1084,30 +1084,30 @@ async function Y(e = {}) {
 }
 async function ct(e) {
   if (!XE()) return { settings: null, fetchSucceeded: !0 };
-  let t = YT();
-  if (t || Jge())
+  let t = getRemoteSettingsPathOverride();
+  if (t || isEvalPolicySnapshotOnly())
     return (
       n(
         t
           ? `Remote settings: Using override file ${t} (CLAUDE_CODE_REMOTE_SETTINGS_PATH), skipping API fetch`
           : "Remote settings: confined evaluation child \u2014 serving the harness-written policy snapshot, no fetch",
       ),
-      { settings: rv(), fetchSucceeded: !0 }
+      { settings: getRemoteManagedSettingsSyncFromCache(), fetchSucceeded: !0 }
     );
-  let o = tkt(),
-    r = jR(),
+  let o = getRemoteManagedSettingsRawCache(),
+    r = isRemoteManagedSettingsVerified(),
     a = o ? bke(o) : void 0,
-    u = FQ(),
+    u = getSyncCacheResetEpoch(),
     p = O();
   if (!p.signedCacheShadowChecked) {
     if (((p.signedCacheShadowChecked = !0), a !== void 0))
-      P4t("managed-settings", K6(), a, mh);
+      P4t("managed-settings", getSettingsPath(), a, getStoredOauthAccountInfo);
   }
   try {
     let d = await it(a, e);
     if (A(u)) return { settings: null, fetchSucceeded: !1 };
     if (!d.success) {
-      f(
+      logFeatureBad(
         "remote_managed_settings_pull",
         d.errorKind ?? "remote_managed_settings_fetch_failed",
       );
@@ -1122,7 +1122,7 @@ async function ct(e) {
       if (o)
         return (
           n(`Remote settings: Using stale cache after fetch failure (${H(_)})`),
-          JBe(o),
+          setSessionCache(o),
           { settings: o, fetchSucceeded: !1, failure: _ }
         );
       return (
@@ -1130,16 +1130,16 @@ async function ct(e) {
         { settings: null, fetchSucceeded: !1, failure: _ }
       );
     }
-    if (d.settings === null && o && o === QRt()) {
+    if (d.settings === null && o && o === getRemoteManagedSettingsConsentedBaseline()) {
       (n("Remote settings: Cache still valid (304 Not Modified)"),
-        JBe(o, { verified: !0 }),
-        await lse(K6(), d.signature));
+        setSessionCache(o, { verified: !0 }),
+        await lse(getSettingsPath(), d.signature));
       let _ = A(u);
-      if ((await XJe(K6(), _), _))
+      if ((await XJe(getSettingsPath(), _), _))
         return { settings: null, fetchSucceeded: !1 };
       if (!r) {
         if ((await q(), A(u))) return { settings: null, fetchSucceeded: !1 };
-        if (o === QRt()) {
+        if (o === getRemoteManagedSettingsConsentedBaseline()) {
           if (
             (await J(d.consentIdentity, K(o), e.storageV5, e.credentials), A(u))
           )
@@ -1147,7 +1147,7 @@ async function ct(e) {
         }
       }
       return (
-        y("remote_managed_settings_pull", { status: S("not_modified") }),
+        logFeatureOk("remote_managed_settings_pull", { status: S("not_modified") }),
         { settings: o, fetchSucceeded: !0 }
       );
     }
@@ -1156,7 +1156,7 @@ async function ct(e) {
       let _ = d.consentIdentity
           ? await le(d.consentIdentity, e.storageV5)
           : null,
-        v = K(QRt()),
+        v = K(getRemoteManagedSettingsConsentedBaseline()),
         P =
           _ !== null
             ? {
@@ -1181,12 +1181,12 @@ async function ct(e) {
             (n(
               "Remote settings: Consent prompt deferred to the next interactive session (this command cannot host it); keeping the consented baseline",
             ),
-              g("remote_managed_settings_pull", "consent_deferred_no_surface"));
+              logFeatureSad("remote_managed_settings_pull", "consent_deferred_no_surface"));
           else
             (n(
               "Remote settings: No consent surface in this interactive session; keeping the consented baseline",
             ),
-              f(
+              logFeatureBad(
                 "remote_managed_settings_pull",
                 "remote_managed_settings_no_consent_surface",
               ));
@@ -1199,14 +1199,14 @@ async function ct(e) {
           { settings: o, fetchSucceeded: !0 }
         );
       }
-      if ((JBe(R, { verified: !0 }), !r)) {
+      if ((setSessionCache(R, { verified: !0 }), !r)) {
         if ((await q(), A(u))) return { settings: null, fetchSucceeded: !1 };
       }
       switch (C) {
         case "approved":
         case "no_check_needed":
           if (
-            (A8t(R),
+            (markRemoteManagedSettingsConsented(R),
             await J(d.consentIdentity, E, e.storageV5, e.credentials),
             A(u))
           )
@@ -1219,13 +1219,13 @@ async function ct(e) {
               : void 0,
           ),
             n("Remote settings: Applied new settings successfully"),
-            y("remote_managed_settings_pull", { status: S("updated") }));
+            logFeatureOk("remote_managed_settings_pull", { status: S("updated") }));
           break;
         case "deferred_non_interactive":
           (n(
             "Remote settings: Applied for this non-interactive run; consent deferred \u2014 not persisting the disk cache as consented",
           ),
-            y("remote_managed_settings_pull", {
+            logFeatureOk("remote_managed_settings_pull", {
               status: S("applied_consent_deferred"),
             }));
           break;
@@ -1236,22 +1236,22 @@ async function ct(e) {
       }
       return { settings: R, fetchSucceeded: !0 };
     }
-    if ((JBe(R, { verified: !0 }), !r)) {
+    if ((setSessionCache(R, { verified: !0 }), !r)) {
       if ((await q(), A(u))) return { settings: null, fetchSucceeded: !1 };
     }
     if (
-      (A8t(R), await J(d.consentIdentity, R, e.storageV5, e.credentials), A(u))
+      (markRemoteManagedSettingsConsented(R), await J(d.consentIdentity, R, e.storageV5, e.credentials), A(u))
     )
       return { settings: null, fetchSucceeded: !1 };
     return (
       await he({}, e.storageV5, d.signature),
       n("Remote settings: Saved empty sentinel (404 response)"),
-      y("remote_managed_settings_pull", { status: S("no_content") }),
+      logFeatureOk("remote_managed_settings_pull", { status: S("no_content") }),
       { settings: R, fetchSucceeded: !0 }
     );
   } catch {
     if (A(u)) return { settings: null, fetchSucceeded: !1 };
-    f("remote_managed_settings_pull", "remote_managed_settings_unexpected");
+    logFeatureBad("remote_managed_settings_pull", "remote_managed_settings_unexpected");
     let d = {
       errorKind: "unknown_error",
       message: "Unexpected error while applying remote settings",
@@ -1259,7 +1259,7 @@ async function ct(e) {
     if (o)
       return (
         n("Remote settings: Using stale cache after error"),
-        JBe(o),
+        setSessionCache(o),
         { settings: o, fetchSucceeded: !1, failure: d }
       );
     return { settings: null, fetchSucceeded: !1, failure: d };
@@ -1267,12 +1267,12 @@ async function ct(e) {
 }
 function D(e) {
   if (!XE()) {
-    let t = htt();
-    if (t) ZRt({ state: "ineligible", reason: t });
+    let t = getIneligibleReason();
+    if (t) setLastLoadStatus({ state: "ineligible", reason: t });
     return;
   }
   if (e.fetchSucceeded) {
-    ZRt({
+    setLastLoadStatus({
       state: "ok",
       hasSettings: e.settings !== null && Object.keys(e.settings).length > 0,
     });
@@ -1280,12 +1280,12 @@ function D(e) {
   }
   if (e.failure) {
     let t = e.settings !== null && Object.keys(e.settings).length > 0;
-    ZRt(
+    setLastLoadStatus(
       t
         ? {
             state: "stale_cache",
             failure: e.failure,
-            transportEnvWithheld: !jR(),
+            transportEnvWithheld: !isRemoteManagedSettingsVerified(),
           }
         : { state: "failed", failure: e.failure },
     );
@@ -1296,16 +1296,16 @@ async function _lt(e, t, o) {
   let r = O();
   if (XE() && !r.loadingCompletePromise) r.createBarrier();
   let a = r.fetchSettledResolve,
-    u = FQ();
-  if (rv() && r.loadingCompleteResolve) r.releaseLoadBarrier();
+    u = getSyncCacheResetEpoch();
+  if (getRemoteManagedSettingsSyncFromCache() && r.loadingCompleteResolve) r.releaseLoadBarrier();
   try {
     let {
       settings: p,
       fetchSucceeded: d,
       failure: R,
     } = await Y({ ...o, showSecurityDialog: e, storageV5: t });
-    if (FQ() === u) D({ settings: p, fetchSucceeded: d, failure: R });
-    if (FQ() === u && XE() && !YT() && !Jge()) Fe(e, t, o?.credentials);
+    if (getSyncCacheResetEpoch() === u) D({ settings: p, fetchSucceeded: d, failure: R });
+    if (getSyncCacheResetEpoch() === u && XE() && !getRemoteSettingsPathOverride() && !isEvalPolicySnapshotOnly()) Fe(e, t, o?.credentials);
     if (p !== null) N();
     return d;
   } finally {
@@ -1327,13 +1327,13 @@ async function YBn(e, t, o) {
     }),
     u = mIe(e, t, o).then(
       (p) => (p ? "refreshed" : "failed"),
-      (p) => (h(p), "failed"),
+      (p) => (logError(p), "failed"),
     );
   try {
     let p = await kt(Promise.race([u, a]), dt);
     if (p === void 0)
       return (
-        g("remote_managed_settings_startup_await", "deadline_expired"),
+        logFeatureSad("remote_managed_settings_startup_await", "deadline_expired"),
         "timed_out"
       );
     return p;
@@ -1343,7 +1343,7 @@ async function YBn(e, t, o) {
 }
 async function xnn(e, t, o) {
   (UDt(), I$());
-  let r = FQ(),
+  let r = getSyncCacheResetEpoch(),
     a = O(),
     u = a.detachBarrier();
   if (!XE())
@@ -1369,21 +1369,21 @@ async function xnn(e, t, o) {
   } finally {
     Ee(p);
   }
-  if ((n("Remote settings: Refreshed after auth change"), FQ() !== r))
+  if ((n("Remote settings: Refreshed after auth change"), getSyncCacheResetEpoch() !== r))
     return (
       n(
         "Remote settings: Refresh superseded by a login/logout reset; not notifying",
       ),
       d
     );
-  if ((D(R), !YT())) Fe(e, t, o);
+  if ((D(R), !getRemoteSettingsPathOverride())) Fe(e, t, o);
   return (N(), d);
 }
 function N() {
   try {
-    (BHn(), kl.notifyChange("policySettings"));
+    (markPolicySettingsNotified(), kl.notifyChange("policySettings"));
   } catch (e) {
-    h(e);
+    logError(e);
   }
 }
 async function q() {
@@ -1416,7 +1416,7 @@ async function q() {
     }
     r();
   } catch (e) {
-    h(e);
+    logError(e);
   }
 }
 var ut =
@@ -1425,15 +1425,15 @@ async function $Dt(e) {
   try {
     if (await e()) return { valid: !0 };
   } catch (t) {
-    h(t);
+    logError(t);
   }
   return { valid: !1, message: ut };
 }
 async function lt(e, t, o) {
   if (!XE()) return;
-  let r = rv(),
+  let r = getRemoteManagedSettingsSyncFromCache(),
     a = r ? b(r) : null,
-    u = FQ();
+    u = getSyncCacheResetEpoch();
   try {
     let p = await Y({
       background: !0,
@@ -1441,14 +1441,14 @@ async function lt(e, t, o) {
       storageV5: t,
       credentials: o,
     });
-    if (FQ() !== u) {
+    if (getSyncCacheResetEpoch() !== u) {
       n(
         "Remote settings: Background poll superseded by a login/logout reset; not notifying",
       );
       return;
     }
     if (p.fetchSucceeded) D(p);
-    let d = rv();
+    let d = getRemoteManagedSettingsSyncFromCache();
     if ((d ? b(d) : null) !== a)
       (n("Remote settings: Changed during background poll"), N());
   } catch {}

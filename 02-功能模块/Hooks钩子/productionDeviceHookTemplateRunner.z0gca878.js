@@ -10,20 +10,20 @@
 
 // [preload stripped] 原本在此预载 75 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _4e, O3, v9t, R9t, s_n, GMe, ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { jJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { $d } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { cye, uit } from "./chunk-y7gz94r8.js";
-import { spawn as L } from "child_process";
-import { createHash as F } from "crypto";
-import { constants as R } from "fs";
-import { lstat as E, mkdir as H, open as J, realpath as j } from "fs/promises";
-import { homedir as B } from "os";
+import { spawn } from "child_process";
+import { createHash } from "crypto";
+import { constants } from "fs";
+import { lstat, mkdir, open as J, realpath } from "fs/promises";
+import { homedir } from "os";
 import { join as x } from "path";
 var U = ["/usr/bin/python3", "/usr/local/bin/python3", "/bin/python3"],
   I = 86,
@@ -71,7 +71,7 @@ async function Q(o, r, e) {
     t.signal === void 0 &&
     !t.timedOut &&
     /ENOENT|spawn .* cwd|uv_cwd|not a directory/i.test(t.stderr)
-    ? C(B(), o, r, e)
+    ? C(homedir(), o, r, e)
     : t;
 }
 function C(o, r, e, t) {
@@ -87,9 +87,9 @@ function C(o, r, e, t) {
       },
       c;
     try {
-      c = L(l, a, {
+      c = spawn(l, a, {
         cwd: o,
-        env: { ...q(t.env ?? Hi()), CLAUDE_PROJECT_DIR: t.projectDir },
+        env: { ...q(t.env ?? subprocessEnv()), CLAUDE_PROJECT_DIR: t.projectDir },
         stdio: ["pipe", "pipe", "pipe"],
         detached: !0,
         windowsHide: !0,
@@ -301,16 +301,16 @@ function re(o) {
           s = async (p) => {
             let k = p.split("/").filter(Boolean);
             for (let c = 0; c < k.length; c += 1) {
-              let f = await E("/" + k.slice(0, c).join("/"));
+              let f = await lstat("/" + k.slice(0, c).join("/"));
               if (!f.isDirectory() || (f.mode & 18) !== 0 || t(f.uid))
                 return !1;
             }
             return !0;
           };
         if (!(await s(r))) return null;
-        let l = await j(r);
+        let l = await realpath(r);
         if (!(await s(l))) return null;
-        let a = await E(l);
+        let a = await lstat(l);
         return a.isFile() &&
           (a.mode & 73) !== 0 &&
           (a.mode & 18) === 0 &&
@@ -323,11 +323,11 @@ function re(o) {
     },
     mkdir: async (r, e) => {
       try {
-        await H(r, { mode: e });
+        await mkdir(r, { mode: e });
       } catch (l) {
         if (A(l) !== "EEXIST") throw l;
       }
-      let t = await E(r),
+      let t = await lstat(r),
         s = typeof process.getuid === "function" ? process.getuid() : void 0;
       if (
         !t.isDirectory() ||
@@ -340,7 +340,7 @@ function re(o) {
     templateDir: o,
   };
 }
-function Re(o) {
+function productionDeviceHookTemplateRunner(o) {
   let r = $d(),
     e = re(x(r, "device-hook-templates", String(process.pid))),
     t,
@@ -358,7 +358,7 @@ function Re(o) {
       let f = await s();
       if (f === null)
         throw Error("no absolute python3 for a device hook template");
-      (await H(r, { recursive: !0, mode: 448 }), jJ(r));
+      (await mkdir(r, { recursive: !0, mode: 448 }), jJ(r));
       let m = l.get(p);
       if (m !== void 0 && !(await oe(await m.catch(() => null), p, a.maxBytes)))
         (l.delete(p), (m = void 0));
@@ -378,8 +378,8 @@ function Re(o) {
         (g) => {
           if (
             (i("tengu_device_hook_template_run", {
-              template: u(ie(a.id)),
-              outcome: u(g.outcome),
+              template: fromEnum(telemetryTemplateId(a.id)),
+              outcome: fromEnum(g.outcome),
               duration_ms: g.durationMs,
               fields_dropped: g.fieldsDropped,
             }),
@@ -411,19 +411,19 @@ async function oe(o, r, e) {
   if (o === null) return !1;
   let t;
   try {
-    t = await J(o, R.O_RDONLY | R.O_NONBLOCK | R.O_NOFOLLOW);
+    t = await J(o, constants.O_RDONLY | constants.O_NONBLOCK | constants.O_NOFOLLOW);
     let s = await t.stat();
     if (!s.isFile() || s.size > e) return !1;
     let l = Buffer.alloc(s.size),
       { bytesRead: a } = await t.read(l, 0, s.size, 0);
-    return a === s.size && F("sha256").update(l).digest("hex") === r;
+    return a === s.size && createHash("sha256").update(l).digest("hex") === r;
   } catch {
     return !1;
   } finally {
     await t?.close().catch(() => {});
   }
 }
-function ie(o) {
+function telemetryTemplateId(o) {
   return cye(o)?.id ?? "unknown";
 }
-export { Re as productionDeviceHookTemplateRunner, ie as telemetryTemplateId };
+export { productionDeviceHookTemplateRunner, telemetryTemplateId };

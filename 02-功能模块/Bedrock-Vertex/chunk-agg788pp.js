@@ -55,8 +55,8 @@ var i = (e, o, s = !1) => {
     );
 };
 var x = pe(HA());
-import { promises as A } from "fs";
-var { writeFile: R } = A,
+import { promises } from "fs";
+var { writeFile: R } = promises,
   O = (e, o) => {
     let s = x.getSSOTokenFilepath(e),
       n = JSON.stringify(o, null, 2);

@@ -10,8 +10,8 @@
 import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ja, JETBRAINS_IDES as wW, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { ja, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { a0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";
@@ -60,7 +60,7 @@ function m() {
   return null;
 }
 import { Buffer as _ } from "buffer";
-import { isAbsolute as M } from "path";
+import { isAbsolute } from "path";
 var g = FP + String.fromCharCode(rB.OSC),
   S = FP + "\\";
 function I() {
@@ -81,7 +81,7 @@ function A() {
   let t = dl();
   if (t) {
     if (t.mux !== "tmux" || !t.tmuxSocket) return null;
-    return M(t.tmuxSocket) && a0(t.tmuxSocket) ? ["-S", t.tmuxSocket] : null;
+    return isAbsolute(t.tmuxSocket) && a0(t.tmuxSocket) ? ["-S", t.tmuxSocket] : null;
   }
   return a.TMUX ? [] : null;
 }
@@ -108,7 +108,7 @@ var k = new Set([
     "konsole",
     "windows-terminal",
     "mintty",
-    ...wW,
+    ...JETBRAINS_IDES,
   ]),
   D = new Set(["vscode", "cursor", "windsurf", "antigravity", "codium"]);
 function Jp(...t) {
@@ -224,7 +224,7 @@ async function W(t) {
   let o = { input: t, useCwd: !1, timeout: 2000 },
     r = a.LC_TERMINAL ?? "unset",
     i = e.length > 0 ? "attacher socket" : "$TMUX",
-    { code: s } = await Fe("tmux", [...e, "load-buffer", "-w", "-"], o);
+    { code: s } = await execFileNoThrow("tmux", [...e, "load-buffer", "-w", "-"], o);
   if (
     (n(
       `clipboard: tmux load-buffer -w - \u2192 exit ${s} (server=${i} LC_TERMINAL=${r})`,
@@ -232,7 +232,7 @@ async function W(t) {
     s === 0)
   )
     return !0;
-  let u = await Fe("tmux", [...e, "load-buffer", "-"], o);
+  let u = await execFileNoThrow("tmux", [...e, "load-buffer", "-"], o);
   return (
     n(
       `clipboard: retry tmux load-buffer - \u2192 exit ${u.code} (server=${i} LC_TERMINAL=${r})`,
@@ -271,7 +271,7 @@ function N(t) {
   let e = { input: t, useCwd: !1, timeout: 2000 };
   switch (P()) {
     case "macos":
-      Fe("pbcopy", [], e);
+      execFileNoThrow("pbcopy", [], e);
       return;
     case "linux": {
       let o = d();
@@ -282,12 +282,12 @@ function N(t) {
       else if (o.tool === "wl-copy") G(t);
       else if (o.tool === "xclip") {
         let r = { ...e, useToolMemoryCgroup: !1 };
-        (Fe("xclip", ["-selection", "clipboard"], r),
-          Fe("xclip", ["-selection", "primary"], r));
+        (execFileNoThrow("xclip", ["-selection", "clipboard"], r),
+          execFileNoThrow("xclip", ["-selection", "primary"], r));
       } else if (o.tool === "xsel") {
         let r = { ...e, useToolMemoryCgroup: !1 };
-        (Fe("xsel", ["--clipboard", "--input"], r),
-          Fe("xsel", ["--primary", "--input"], r));
+        (execFileNoThrow("xsel", ["--clipboard", "--input"], r),
+          execFileNoThrow("xsel", ["--primary", "--input"], r));
       } else if (o.tool === "addon") {
         try {
           o.recordAddonWrite(m()?.setLinuxClipboardText(t) !== !1);
@@ -299,11 +299,11 @@ function N(t) {
       return;
     }
     case "wsl": {
-      Fe("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", w], e);
+      execFileNoThrow("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", w], e);
       return;
     }
     case "windows": {
-      Fe("powershell", ["-NoProfile", "-NonInteractive", "-Command", w], e);
+      execFileNoThrow("powershell", ["-NoProfile", "-NonInteractive", "-Command", w], e);
       return;
     }
   }
@@ -319,20 +319,20 @@ async function G(t) {
       stderr: "ignore",
       useToolMemoryCgroup: !1,
     };
-  if ((await Fe("wl-copy", [], r), !e.isLatestWaylandCopy(o))) return;
-  await Fe("wl-copy", ["--primary"], r);
+  if ((await execFileNoThrow("wl-copy", [], r), !e.isLatestWaylandCopy(o))) return;
+  await execFileNoThrow("wl-copy", ["--primary"], r);
 }
 async function vNe(t = "clipboard") {
   if (p()) return "";
   let e = { useCwd: !1, timeout: 2000 };
   switch (P()) {
     case "macos": {
-      let o = await Fe("pbpaste", [], e);
+      let o = await execFileNoThrow("pbpaste", [], e);
       return o.code === 0 ? o.stdout : "";
     }
     case "windows":
     case "wsl": {
-      let o = await Fe(
+      let o = await execFileNoThrow(
         P() === "wsl" ? "powershell.exe" : "powershell",
         ["-NoProfile", "-NonInteractive", "-Command", F],
         e,
@@ -355,7 +355,7 @@ async function vNe(t = "clipboard") {
           ["xsel", [o ? "--primary" : "--clipboard", "--output"]],
         ];
       for (let [i, s] of r) {
-        let u = await Fe(i, [...s], e);
+        let u = await execFileNoThrow(i, [...s], e);
         if (u.code === 0) return u.stdout;
       }
       return (await Y(o, e.timeout)) ?? "";

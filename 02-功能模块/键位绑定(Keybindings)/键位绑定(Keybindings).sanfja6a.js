@@ -12,8 +12,8 @@ import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Tvn, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
@@ -21,10 +21,10 @@ import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zq
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { s, Uf, v, c, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -156,9 +156,9 @@ function HAe(e) {
       r.push({ chord: gw(o), action: p, context: t.context });
   return r;
 }
-import { readFileSync as ee } from "fs";
-import { readFile as Ne, stat as Ie } from "fs/promises";
-import { dirname as Me, join as Oe } from "path";
+import { readFileSync } from "fs";
+import { readFile, stat as Ie } from "fs/promises";
+import { dirname, join as Oe } from "path";
 var B = P(),
   le = B === "windows" || B === "wsl",
   de = le ? "alt+v" : "ctrl+v",
@@ -1169,18 +1169,18 @@ function F(e) {
 }
 function C(e, r) {
   if (e?.suppressFeatureEvents) return;
-  if (r === "ok") y("keybinding_load_user_config");
-  else f("keybinding_load_user_config", r);
+  if (r === "ok") logFeatureOk("keybinding_load_user_config");
+  else logFeatureBad("keybinding_load_user_config", r);
 }
 function U() {
-  return !iN() || Xr("keybindings");
+  return !iN() || isCustomizationDisabled("keybindings");
 }
 function MYn(e) {
   let r = L();
   if (U()) return r;
   if (M() && e !== void 0) return r;
   try {
-    let t = ee(Y8e(), "utf-8"),
+    let t = readFileSync(Y8e(), "utf-8"),
       o = z(t),
       p =
         typeof o === "object" && o !== null && "bindings" in o
@@ -1193,7 +1193,7 @@ function MYn(e) {
 }
 async function ne(e, r, t) {
   let o = L();
-  if (!iN() || Xr("keybindings")) return { bindings: o, warnings: [] };
+  if (!iN() || isCustomizationDisabled("keybindings")) return { bindings: o, warnings: [] };
   let p = Y8e();
   if (r) {
     let d = await r.read([Uyn]);
@@ -1203,7 +1203,7 @@ async function ne(e, r, t) {
       if (
         (n(`[keybindings] Error loading ${p}: ${h}`), t?.suppressFeatureEvents)
       )
-        g("keybinding_load_user_config", "warm_backend_read_failed_fell_back");
+        logFeatureSad("keybinding_load_user_config", "warm_backend_read_failed_fell_back");
       return (
         C(t, "keybinding_config_parse_error"),
         {
@@ -1223,7 +1223,7 @@ async function ne(e, r, t) {
     return Ue(Buffer.from(b.value).toString("utf-8"), e, o, p, t);
   }
   try {
-    let d = await Ne(p, "utf-8"),
+    let d = await readFile(p, "utf-8"),
       b = z(d),
       k;
     if (typeof b === "object" && b !== null && "bindings" in b) k = b.bindings;
@@ -1376,7 +1376,7 @@ async function NYn(e, r) {
     ((e.bindings = t.bindings),
       (e.warnings = []),
       (e.warmedFromBackend = !0),
-      y("keybinding_load_user_config"));
+      logFeatureOk("keybinding_load_user_config"));
   return e.bindings;
 }
 function te(e) {
@@ -1399,7 +1399,7 @@ function ONe(e) {
     return { bindings: e.bindings, warnings: e.warnings };
   e.warmedFromBackend = !1;
   let r = L();
-  if (!iN() || Xr("keybindings"))
+  if (!iN() || isCustomizationDisabled("keybindings"))
     return (
       (e.bindings = r),
       (e.warnings = []),
@@ -1407,13 +1407,13 @@ function ONe(e) {
     );
   let t = Y8e();
   try {
-    let o = ee(t, "utf-8"),
+    let o = readFileSync(t, "utf-8"),
       p = z(o),
       d;
     if (typeof p === "object" && p !== null && "bindings" in p) d = p.bindings;
     else
       return (
-        f("keybinding_load_user_config", "keybinding_config_invalid_format"),
+        logFeatureBad("keybinding_load_user_config", "keybinding_config_invalid_format"),
         (e.bindings = r),
         (e.warnings = [
           {
@@ -1433,7 +1433,7 @@ function ONe(e) {
           ? 'Set "bindings" to an array of keybinding blocks'
           : 'Each block must have "context" (string) and "bindings" (object mapping keys to a string action or null)';
       return (
-        f("keybinding_load_user_config", "keybinding_config_invalid_structure"),
+        logFeatureBad("keybinding_load_user_config", "keybinding_config_invalid_structure"),
         (e.bindings = r),
         (e.warnings = [
           { type: "parse_error", severity: "error", message: h, suggestion: w },
@@ -1450,20 +1450,20 @@ function ONe(e) {
       (n(`[keybindings] Found ${e.warnings.length} validation issue(s)`),
         F(e.warnings));
     return (
-      y("keybinding_load_user_config"),
+      logFeatureOk("keybinding_load_user_config"),
       { bindings: e.bindings, warnings: e.warnings }
     );
   } catch (o) {
     if (W(o))
       return (
-        y("keybinding_load_user_config"),
+        logFeatureOk("keybinding_load_user_config"),
         (e.bindings = r),
         (e.warnings = []),
         { bindings: e.bindings, warnings: e.warnings }
       );
     return (
       n(`[keybindings] Error loading ${t}: ${l(o)}`),
-      f("keybinding_load_user_config", "keybinding_config_parse_error"),
+      logFeatureBad("keybinding_load_user_config", "keybinding_config_parse_error"),
       (e.bindings = r),
       (e.warnings = [
         {
@@ -1478,21 +1478,21 @@ function ONe(e) {
 }
 async function FYn(e) {
   if (e.initialized || e.disposed) return;
-  if (!iN() || Xr("keybindings")) {
+  if (!iN() || isCustomizationDisabled("keybindings")) {
     n("[keybindings] Skipping file watcher - user customization disabled");
     return;
   }
   let r = Y8e(),
-    t = Me(r);
+    t = dirname(r);
   try {
     if (!(await Ie(t)).isDirectory()) {
       (n(`[keybindings] Not watching: ${t} is not a directory`),
-        g("keybinding_watcher_init", "watch_dir_inaccessible"));
+        logFeatureSad("keybinding_watcher_init", "watch_dir_inaccessible"));
       return;
     }
   } catch {
     (n(`[keybindings] Not watching: ${t} does not exist`),
-      g("keybinding_watcher_init", "watch_dir_inaccessible"));
+      logFeatureSad("keybinding_watcher_init", "watch_dir_inaccessible"));
     return;
   }
   ((e.initialized = !0),
@@ -1513,7 +1513,7 @@ async function FYn(e) {
       n(`[keybindings] watcher error: ${l(o)}`, { level: "warn" }),
     ),
     Et(e),
-    y("keybinding_watcher_init"));
+    logFeatureOk("keybinding_watcher_init"));
 }
 async function Q(e, r) {
   n(`[keybindings] Detected change to ${r}`);
@@ -1523,10 +1523,10 @@ async function Q(e, r) {
       (e.warnings = t.warnings),
       (e.warmedFromBackend = !1),
       e.changed.emit(t),
-      y("keybinding_hot_reload"));
+      logFeatureOk("keybinding_hot_reload"));
   } catch (t) {
     (n(`[keybindings] Error reloading: ${l(t)}`),
-      g("keybinding_hot_reload", "keybinding_reload_failed"));
+      logFeatureSad("keybinding_hot_reload", "keybinding_reload_failed"));
   }
 }
 function ze(e, r) {
@@ -1542,7 +1542,7 @@ var ie = 200,
   Ge = /[\p{Cf}\p{Cs}\p{Zl}\p{Zp}\p{Variation_Selector}]+/gu;
 function rg(e) {
   let r = e === void 0 ? "" : To(pt(e).replace(Ge, " "));
-  return r === "" ? void 0 : Xe(oe(r, Ye), ie);
+  return r === "" ? void 0 : truncateToWidth(oe(r, Ye), ie);
 }
 function w$() {
   let e = P();
@@ -1757,12 +1757,12 @@ function LNe(e, r, t, o) {
 var Ve = new Set(Lre);
 function ae(e) {
   if (e.startsWith("command:")) return S("command:custom");
-  if (Ve.has(e)) return Ln(e);
+  if (Ve.has(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("unknown");
 }
 var qe = /^[A-Za-z0-9 +\-_/[\]\u2191\u2193\u2190\u2192]{1,32}$/u;
 function Ze(e) {
-  return qe.test(e) ? Ln(e) : S("invalid");
+  return qe.test(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("invalid");
 }
 var Je = 1000;
 function X3(e) {
@@ -1775,9 +1775,9 @@ function X3(e) {
 function IAe(e, r, t, o) {
   i("tengu_keybinding_fallback_used", {
     action: ae(e),
-    context: u(r),
+    context: fromEnum(r),
     fallback: Ze(t),
-    reason: u(o),
+    reason: fromEnum(o),
   });
 }
 export {

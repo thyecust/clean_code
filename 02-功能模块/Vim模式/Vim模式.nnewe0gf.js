@@ -10,10 +10,10 @@
 import { Ie, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { j, Gt, uOn, aMn, lMn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { A, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { os, ln, WL } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Ar, Olr, Dp } from "../权限系统/chunk-e4pfvp7x.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
@@ -22,15 +22,15 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Ty, Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { cf, ph, Ms, isClaudeAISubscriber as gt, getSubscriptionName as YKt, ee, Sq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { cf, ph, Ms, isClaudeAISubscriber, getSubscriptionName, ee, Sq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { te, dp, truncatePathMiddle as el, truncateToWidth as Xe, truncateStartToWidth as Ob, truncateToWidthNoEllipsis as SL, truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getInitialSettings as Ge, getSecuritySensitiveSetting as hx } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { te, dp, truncatePathMiddle, truncateToWidth, truncateStartToWidth, truncateToWidthNoEllipsis, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getInitialSettings, getSecuritySensitiveSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { o, t, ct, bs, ko, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Mpe, Npe, $St, USt } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
@@ -39,8 +39,8 @@ import { Ol } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
 import {
   _p,
-  supportsShiftEnter as ZZ,
-  hasUsedBackslashReturn as ven,
+  supportsShiftEnter,
+  hasUsedBackslashReturn,
   hle,
   TOt,
   Nye,
@@ -254,7 +254,7 @@ var ns = Yl(function (Tl) {
       let Fr = _t - 2 - 4 - Yi - kl;
       let Pn;
       if (Ue[6] !== jr || Ue[7] !== fe.displayText || Ue[8] !== Fr)
-        ((Pn = jr ? Ob(fe.displayText, Fr) : el(fe.displayText, Fr)),
+        ((Pn = jr ? truncateStartToWidth(fe.displayText, Fr) : truncatePathMiddle(fe.displayText, Fr)),
           (Ue[6] = jr),
           (Ue[7] = fe.displayText),
           (Ue[8] = Fr),
@@ -264,7 +264,7 @@ var ns = Yl(function (Tl) {
     } else if (wl) {
       let tt;
       if (Ue[10] !== fe.displayText)
-        ((tt = Xe(fe.displayText, 30)),
+        ((tt = truncateToWidth(fe.displayText, 30)),
           (Ue[10] = fe.displayText),
           (Ue[11] = tt));
       else tt = Ue[11];
@@ -276,7 +276,7 @@ var ns = Yl(function (Tl) {
       let Yo = Math.max(0, _l);
       let tt;
       if (Ue[12] !== fe.description || Ue[13] !== Yo)
-        ((tt = Xe(fe.description.replace(bn, " "), Yo)),
+        ((tt = truncateToWidth(fe.description.replace(bn, " "), Yo)),
           (Ue[12] = fe.description),
           (Ue[13] = Yo),
           (Ue[14] = tt));
@@ -315,8 +315,8 @@ var ns = Yl(function (Tl) {
     if (Ue[21] !== it || Ue[22] !== He)
       ((Mt =
         He.includes("/") || He.includes("\\")
-          ? Ob(He, it - 2)
-          : Xe(He, it - 2)),
+          ? truncateStartToWidth(He, it - 2)
+          : truncateToWidth(He, it - 2)),
         (Ue[21] = it),
         (Ue[22] = He),
         (Ue[23] = Mt));
@@ -385,7 +385,7 @@ var ns = Yl(function (Tl) {
     Kn = en;
     bb0: {
       let Qi = fe.description ? fe.description.replace(bn, " ").trim() : "";
-      let [El, Zi] = Go ? es(Qi, Gr) : [Xe(Qi, Gr), ""];
+      let [El, Zi] = Go ? es(Qi, Gr) : [truncateToWidth(Qi, Gr), ""];
       jn = $e ? "suggestion" : void 0;
       let Yt;
       if (Ue[58] !== Je || Ue[59] !== Ht || Ue[60] !== Et || Ue[61] !== ft)
@@ -474,7 +474,7 @@ var ns = Yl(function (Tl) {
         break bb0;
       }
       $n = it + $r + Hr;
-      Br = Xe(Zi, Math.max(0, _t - $n - 4));
+      Br = truncateToWidth(Zi, Math.max(0, _t - $n - 4));
     }
     ((Ue[34] = Go),
       (Ue[35] = Je),
@@ -649,7 +649,7 @@ function ra(l, b, x) {
 }
 function es(l, b) {
   if (b <= 0 || te(l) <= b) return [l, ""];
-  let x = SL(l, b),
+  let x = truncateToWidthNoEllipsis(l, b),
     O = l.slice(x.length);
   if (O.startsWith(" ")) return [x, O.trimStart()];
   let R = x.lastIndexOf(" ");
@@ -678,8 +678,8 @@ function zz() {
   return Eo("editorMode", "normal").value === "vim";
 }
 function WQt() {
-  if (ZZ()) return "shift + \u23CE for newline";
-  return ven()
+  if (supportsShiftEnter()) return "shift + \u23CE for newline";
+  return hasUsedBackslashReturn()
     ? "\\\u23CE for newline"
     : "backslash (\\) + return (\u23CE) for newline";
 }
@@ -1608,7 +1608,7 @@ function fa(l) {
   return b;
 }
 function Zr() {
-  return fa(hx("vimInsertModeRemaps")[0] ?? {});
+  return fa(getSecuritySensitiveSetting("vimInsertModeRemaps")[0] ?? {});
 }
 var sr = { d: "delete", c: "change", y: "yank" };
 function eo(l) {
@@ -2242,7 +2242,7 @@ function ao(l) {
         let Re = W.slice(ve).join(""),
           ke = Zr();
         if (ke.size > 0 && ke.has(Re.normalize("NFC"))) {
-          (y("vim_insert_remap"),
+          (logFeatureOk("vim_insert_remap"),
             ne(z, { buffer: { text: K, offset: X }, claimEmptyInsert: !0 }));
           return;
         }
@@ -2360,14 +2360,14 @@ function ao(l) {
           let Do = X.offset - W.char.length,
             Uo = X.text.slice(0, Do) + X.text.slice(X.offset);
           (x(Uo),
-            y("vim_insert_remap"),
+            logFeatureOk("vim_insert_remap"),
             ne(z, { buffer: { text: Uo, offset: Do }, claimEmptyInsert: !0 }),
             I.preventDefault());
           return;
         }
         if (je && !ke && xe.has(Ce)) {
           (Ve(),
-            y("vim_insert_remap"),
+            logFeatureOk("vim_insert_remap"),
             ne(z, { claimEmptyInsert: !0 }),
             I.preventDefault());
           return;
@@ -3436,7 +3436,7 @@ function Yst(l, b, x) {
             O.current = !0;
             return;
           }
-          ((O.current = !0), (R.current = H), y("clipboard_write"), w(H));
+          ((O.current = !0), (R.current = H), logFeatureOk("clipboard_write"), w(H));
         })
       );
     }, [b, l]),
@@ -3497,9 +3497,9 @@ function J6e(l, b) {
           w = v.lineStart !== void 0 ? v.lineStart + 1 : void 0,
           S = v.lineEnd !== void 0 ? v.lineEnd + 1 : void 0;
         (b({ filePath: v.filePath, lineStart: w, lineEnd: S }),
-          y("ide_at_mention"));
+          logFeatureOk("ide_at_mention"));
       } catch (v) {
-        (h(v), f("ide_at_mention", "ide_at_mention_failed"));
+        (logError(v), logFeatureBad("ide_at_mention", "ide_at_mention_failed"));
       }
     });
   }, [x, b]);
@@ -3530,7 +3530,7 @@ function JR() {
       if (!Ol().claim("voice_init_gate")) return;
       i("tengu_voice_init_gate", {
         user_intent_store: l,
-        user_intent_disk: _8e(Ge()),
+        user_intent_disk: _8e(getInitialSettings()),
         has_voice_auth: z9t(),
         voice_mode_allowed: V9t(),
         auth_version: b,
@@ -3682,12 +3682,12 @@ function Y_e({ composer: l, isActive: b = !0 }) {
       (G) => {
         let oe = v.current;
         if (oe === null) {
-          f("voice_transcript_insert", "no_anchor");
+          logFeatureBad("voice_transcript_insert", "no_anchor");
           return;
         }
         let J = w.current;
         if (l.value !== S.current) {
-          g("voice_transcript_insert", "input_diverged");
+          logFeatureSad("voice_transcript_insert", "input_diverged");
           return;
         }
         let ye = oe.length > 0 && !/\s$/.test(oe) && G.length > 0,
@@ -3698,7 +3698,7 @@ function Y_e({ composer: l, isActive: b = !0 }) {
           be = oe.length + ce.length + G.length;
         (l.setValueWithCursor(ne, be),
           (S.current = ne),
-          y("voice_transcript_insert"),
+          logFeatureOk("voice_transcript_insert"),
           (v.current = oe + ce + G));
         let ge = B === "tap" || H,
           Y = l.submit !== void 0 && ge && Lcr(G) >= 3 && l.submit(ne, !0);
@@ -4069,18 +4069,18 @@ function FZ(l, b) {
     M = w.at(-1) || "",
     D = te(S),
     P = te(M);
-  if (w.length === 1) return Xe(l, b);
-  if (S === "" && R + v + P >= b) return `${x}${Xe(M, Math.max(1, b - v))}`;
+  if (w.length === 1) return truncateToWidth(l, b);
+  if (S === "" && R + v + P >= b) return `${x}${truncateToWidth(M, Math.max(1, b - v))}`;
   if (S !== "" && R * 2 + v + P >= b)
-    return `${O}${x}${Xe(M, Math.max(1, b - R - v))}`;
+    return `${O}${x}${truncateToWidth(M, Math.max(1, b - R - v))}`;
   if (w.length === 2) {
     let q = b - R - v - P;
-    return `${SL(S, q)}${O}${x}${M}`;
+    return `${truncateToWidthNoEllipsis(S, q)}${O}${x}${M}`;
   }
   let H = b - D - P - R - 2 * v;
   if (H <= 0) {
     let q = Math.max(0, b - P - R - 2 * v);
-    return `${SL(S, q)}${x}${O}${x}${M}`;
+    return `${truncateToWidthNoEllipsis(S, q)}${x}${O}${x}${M}`;
   }
   let B = [];
   for (let q = w.length - 2; q > 0; q--) {
@@ -4102,21 +4102,21 @@ function PHe() {
       : b
         ? `${x} in ${b.replace(/^https?:\/\//, "")}`
         : x,
-    R = Pe(),
-    v = R !== "firstParty" ? yA[R] : gt() ? YKt() : "API Usage Billing",
-    w = Ge().agent;
+    R = getAPIProvider(),
+    v = R !== "firstParty" ? THIRD_PARTY_PROVIDER_LABELS[R] : isClaudeAISubscriber() ? getSubscriptionName() : "API Usage Billing",
+    w = getInitialSettings().agent;
   return { version: l, cwd: O, billingType: v, agentName: w };
 }
 function VQt(l, b, x) {
   if (te(l) + 3 + te(b) > x)
     return {
       shouldSplit: !0,
-      truncatedModel: or(l, x),
-      truncatedBilling: or(b, x),
+      truncatedModel: truncate(l, x),
+      truncatedBilling: truncate(b, x),
     };
   return {
     shouldSplit: !1,
-    truncatedModel: or(l, Math.max(x - te(b) - 3, 10)),
+    truncatedModel: truncate(l, Math.max(x - te(b) - 3, 10)),
     truncatedBilling: b,
   };
 }
@@ -4222,7 +4222,7 @@ function xo() {
 }
 F();
 F();
-import { basename as an, dirname as Vr } from "path";
+import { basename, dirname } from "path";
 F();
 var rn = pe(pg(), 1);
 function xi(l) {
@@ -4394,7 +4394,7 @@ function Ro({
         toVersion: Ms(de),
         durationMs: Date.now() - he,
         wasMigrated: Y === "local",
-        installationType: u(be),
+        installationType: fromEnum(be),
       });
     else if (ge !== "in_progress")
       i("tengu_auto_updater_fail", {
@@ -4403,7 +4403,7 @@ function Ro({
         status: ge,
         durationMs: Date.now() - he,
         wasMigrated: Y === "local",
-        installationType: u(be),
+        installationType: fromEnum(be),
       });
     w((Ee) => {
       let Oe = Ee.autoUpdaterResult,
@@ -4503,11 +4503,11 @@ function Ro({
                     children: [
                       e(et, { status: "error", withSpace: !0 }),
                       "Update failed and ",
-                      an(Z.originalPath),
+                      basename(Z.originalPath),
                       " could not be restored \u2014 it was preserved at:",
                     ],
                   }),
-                  Vr(Z.preservedPath) === Vr(Z.originalPath)
+                  dirname(Z.preservedPath) === dirname(Z.originalPath)
                     ? r(t, {
                         color: "error",
                         wrap: "truncate",
@@ -4515,7 +4515,7 @@ function Ro({
                           Z.preservedPath,
                           " \xB7 rename it back to",
                           " ",
-                          an(Z.originalPath),
+                          basename(Z.originalPath),
                           " or run",
                           " ",
                           r(t, {
@@ -4581,7 +4581,7 @@ function Ro({
                 children: [
                   e(et, { status: "error", withSpace: !0 }),
                   "Update failed and ",
-                  an(Z.originalPath),
+                  basename(Z.originalPath),
                   " could not be restored (no preserved copy found) \xB7 reinstall with",
                   " ",
                   r(t, {
@@ -4918,7 +4918,7 @@ function wo({
   });
 }
 F();
-import { homedir as Vi } from "os";
+import { homedir } from "os";
 import { join as Yu } from "path";
 function Xu(Qp) {
   return Qp.autoUpdaterResult;
@@ -5104,8 +5104,8 @@ function Pr($p) {
       let _i = { pm_homebrew: _n === "homebrew", pm_winget: _n === "winget" };
       i("tengu_pkg_manager_auto_updater_start", _i);
       let [$u, ...Jp] = Fu;
-      let In = await Be($u, Jp, {
-        cwd: Vi(),
+      let In = await execFileNoThrowWithCwd($u, Jp, {
+        cwd: homedir(),
         timeout: 300000,
         env:
           _n === "homebrew"
@@ -5313,10 +5313,10 @@ function J_e(hm) {
       let ym = !Ran();
       let Om = Date.now();
       let No = await dte();
-      (y("update_detection", {
+      (logFeatureOk("update_detection", {
         duration_ms: Date.now() - Om,
         first_in_process: ym,
-        installation_type: u(No),
+        installation_type: fromEnum(No),
       }),
         n(`AutoUpdaterWrapper: Installation type: ${No}`),
         bm(No === "native"),

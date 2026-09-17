@@ -20,7 +20,7 @@ import { zZ } from "./chunk-ktp8xtmy.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var h = 2,
   d = 160;
-function I(l, { verbose: a, theme: u }) {
+function renderToolUseMessage(l, { verbose: a, theme: u }) {
   let { command: g } = l;
   if (!g) return null;
   let m = g;
@@ -40,7 +40,7 @@ function I(l, { verbose: a, theme: u }) {
   }
   return m;
 }
-function k(
+function renderToolUseProgressMessage(
   l,
   { verbose: a, tools: u, terminalSize: g, inProgressToolCallCount: m },
 ) {
@@ -62,13 +62,13 @@ function k(
     verbose: a,
   });
 }
-function w() {
+function renderToolUseQueuedMessage() {
   return e(xe, {
     height: 1,
     children: e(t, { dimColor: !0, children: "Waiting\u2026" }),
   });
 }
-function v(l, a, { verbose: u, theme: g, tools: m, style: i }) {
+function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: i }) {
   let p = a.at(-1)?.data?.timeoutMs,
     {
       stdout: n,
@@ -114,13 +114,13 @@ function v(l, a, { verbose: u, theme: g, tools: m, style: i }) {
     ],
   });
 }
-function A(l, { verbose: a, progressMessagesForMessage: u, tools: g }) {
+function renderToolUseErrorMessage(l, { verbose: a, progressMessagesForMessage: u, tools: g }) {
   return e(Yd, { result: l, verbose: a });
 }
 export {
-  v as renderToolResultMessage,
-  A as renderToolUseErrorMessage,
-  I as renderToolUseMessage,
-  k as renderToolUseProgressMessage,
-  w as renderToolUseQueuedMessage,
+  renderToolResultMessage,
+  renderToolUseErrorMessage,
+  renderToolUseMessage,
+  renderToolUseProgressMessage,
+  renderToolUseQueuedMessage,
 };

@@ -30,57 +30,57 @@ function r() {
     } catch {}
   return null;
 }
-function c() {
+function isNativeAudioAvailable() {
   return r() !== null;
 }
-function l(t, o) {
+function startNativeRecording(t, o) {
   let e = r();
   if (!e) return !1;
   return e.startRecording(t, o);
 }
-function s() {
+function stopNativeRecording() {
   let t = r();
   if (!t) return;
   t.stopRecording();
 }
-function d() {
+function isNativeRecordingActive() {
   let t = r();
   if (!t) return !1;
   return t.isRecording();
 }
-function p(t, o) {
+function startNativePlayback(t, o) {
   let e = r();
   if (!e) return !1;
   return e.startPlayback(t, o);
 }
-function f(t) {
+function writeNativePlaybackData(t) {
   let o = r();
   if (!o) return;
   o.writePlaybackData(t);
 }
-function m() {
+function stopNativePlayback() {
   let t = r();
   if (!t) return;
   t.stopPlayback();
 }
-function b() {
+function isNativePlaying() {
   let t = r();
   if (!t) return !1;
   return t.isPlaying();
 }
-function v() {
+function microphoneAuthorizationStatus() {
   let t = r();
   if (!t || !t.microphoneAuthorizationStatus) return 0;
   return t.microphoneAuthorizationStatus();
 }
 export {
-  c as isNativeAudioAvailable,
-  b as isNativePlaying,
-  d as isNativeRecordingActive,
-  v as microphoneAuthorizationStatus,
-  p as startNativePlayback,
-  l as startNativeRecording,
-  m as stopNativePlayback,
-  s as stopNativeRecording,
-  f as writeNativePlaybackData,
+  isNativeAudioAvailable,
+  isNativePlaying,
+  isNativeRecordingActive,
+  microphoneAuthorizationStatus,
+  startNativePlayback,
+  startNativeRecording,
+  stopNativePlayback,
+  stopNativeRecording,
+  writeNativePlaybackData,
 };

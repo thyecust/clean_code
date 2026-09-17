@@ -25,7 +25,7 @@ import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { kt } from "../共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   b0,
@@ -55,11 +55,11 @@ import {
   XRt,
   mtt,
   MHn,
-  isRemoteManagedSettingsVerified as jR,
-  isRemoteManagedSettingsVerifiedAndConsented as Yge,
-  registerSyncCacheResetListener as $Hn,
-  getEligibilityMemo as wie,
-  getRemoteManagedSettingsSyncFromCache as rv,
+  isRemoteManagedSettingsVerified,
+  isRemoteManagedSettingsVerifiedAndConsented,
+  registerSyncCacheResetListener,
+  getEligibilityMemo,
+  getRemoteManagedSettingsSyncFromCache,
   v8t,
   R8t,
   wke,
@@ -86,7 +86,7 @@ import {
   blr,
   jq,
   ehe,
-  getRelativeSettingsFilePathForSource as T0,
+  getRelativeSettingsFilePathForSource,
   Aie,
   QHn,
   wlr,
@@ -107,21 +107,21 @@ import {
   D8t,
   Ilr,
   Ttt,
-  settingsMergeCustomizer as GU,
+  settingsMergeCustomizer,
   Plr,
   E0,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { y8 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rL, wb } from "./chunk-fx8qr1md.js";
 import { q } from "../共享小工具-未细化/chunk-7beprh8k.js";
-import { execFileNoThrowWithCwd as Be } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { findCanonicalGitRoot as $r, dirIsInGitRepo as KIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { mn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -151,49 +151,49 @@ function registerWriteQueueDrain(e) {
 function drainRegisteredWriteQueues() {
   return lt.drainAll();
 }
-import { basename as Vi, dirname as pe, join as fe, resolve as wn } from "path";
+import { basename, dirname as pe, join as fe, resolve } from "path";
 import {
-  appendFile as jn,
-  mkdir as zn,
-  readFile as Vn,
-  writeFile as Yn,
+  appendFile,
+  mkdir,
+  readFile,
+  writeFile,
 } from "fs/promises";
-import { homedir as ct } from "os";
-import { dirname as Jn, isAbsolute as ut, join as Me } from "path";
+import { homedir } from "os";
+import { dirname as Jn, isAbsolute, join as Me } from "path";
 async function L5t(e, t) {
-  let { code: r } = await Be("git", ["check-ignore", "--", e], {
+  let { code: r } = await execFileNoThrowWithCwd("git", ["check-ignore", "--", e], {
     preserveOutputOnError: !1,
     cwd: t,
   });
   return r === 0;
 }
 async function Xn(e) {
-  let { stdout: t, code: r } = await Be(
+  let { stdout: t, code: r } = await execFileNoThrowWithCwd(
       "git",
       ["config", "--global", "--get", "core.excludesfile"],
       { preserveOutputOnError: !1, cwd: e },
     ),
     o = r === 0 ? t.trim() : "";
   if (o) {
-    if (o === "~" || o.startsWith("~/")) return Me(ct(), o.slice(2));
-    if (ut(o)) return o;
+    if (o === "~" || o.startsWith("~/")) return Me(homedir(), o.slice(2));
+    if (isAbsolute(o)) return o;
   }
   let d = a.XDG_CONFIG_HOME;
-  if (d && ut(d)) return Me(d, "git", "ignore");
-  return Me(ct(), ".config", "git", "ignore");
+  if (d && isAbsolute(d)) return Me(d, "git", "ignore");
+  return Me(homedir(), ".config", "git", "ignore");
 }
 async function M5t(e, t = Q()) {
   try {
-    if (!(await KIn(t))) return { written: !1, effective: !1 };
+    if (!(await dirIsInGitRepo(t))) return { written: !1, effective: !1 };
     let r = e.replaceAll("\\", "/"),
       o = `**/${r}`,
       d = r.endsWith("/") ? `${r}sample-file.txt` : r;
     if (await L5t(d, t)) return { written: !1, effective: !0 };
     let _ = await Xn(t),
       p = Jn(_);
-    await zn(p, { recursive: !0 });
+    await mkdir(p, { recursive: !0 });
     try {
-      if ((await Vn(_, { encoding: "utf-8" })).includes(o)) {
+      if ((await readFile(_, { encoding: "utf-8" })).includes(o)) {
         let I = (await dt(d, t)) ? "already_tracked" : "excludesfile_not_read";
         return (
           n(
@@ -203,7 +203,7 @@ async function M5t(e, t = Q()) {
           { written: !1, effective: !1, reason: I }
         );
       }
-      await jn(
+      await appendFile(
         _,
         `
 ${o}
@@ -211,7 +211,7 @@ ${o}
       );
     } catch (O) {
       if (A(O) === "ENOENT")
-        await Yn(
+        await writeFile(
           _,
           `${o}
 `,
@@ -241,7 +241,7 @@ ${o}
   }
 }
 async function dt(e, t) {
-  let { code: r } = await Be("git", ["ls-files", "--error-unmatch", "--", e], {
+  let { code: r } = await execFileNoThrowWithCwd("git", ["ls-files", "--error-unmatch", "--", e], {
     preserveOutputOnError: !1,
     cwd: t,
   });
@@ -413,7 +413,7 @@ function rr(e) {
 function ft(e, t) {
   if (!t) return {};
   return {
-    [`${e}_status`]: u(t.status),
+    [`${e}_status`]: fromEnum(t.status),
     [`${e}_exit_code`]: t.exitCode ?? void 0,
     [`${e}_errno`]: nr(t.errno),
     [`${e}_signal`]: rr(t.signal),
@@ -603,7 +603,7 @@ async function Et(e, t) {
   } catch {}
   return !1;
 }
-import { posix as dn, win32 as gn } from "path";
+import { posix, win32 as gn } from "path";
 import { win32 as yt } from "path";
 var Pt = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"],
   Ot = "C:\\Windows",
@@ -2056,7 +2056,7 @@ class _n {
     try {
       (da().changed.emit("policySettings"), this.refreshed.emit());
     } catch (e) {
-      h(e);
+      logError(e);
     }
   }
   stopRefreshTimer() {
@@ -2118,7 +2118,7 @@ class _n {
                   { level: "warn" },
                 ),
                   Qe(O.error, I, _),
-                  g(
+                  logFeatureSad(
                     "settings_policy_helpers_per_os",
                     "refresh_fell_back_to_default",
                   ),
@@ -2140,7 +2140,7 @@ class _n {
                   "the last successful helper output still governs",
                   _,
                 ),
-                g("settings_policy_helper", "refresh_failed"));
+                logFeatureSad("settings_policy_helper", "refresh_failed"));
               return;
             }
             if ((et(), this.state.serving === "default"))
@@ -2148,7 +2148,7 @@ class _n {
                 "policyHelper refresh: helper recovered; its output replaces the static default settings payload",
                 { level: "info" },
               ),
-                y("settings_policy_helpers_per_os"));
+                logFeatureOk("settings_policy_helpers_per_os"));
             ((this.state.serving = "helper"),
               (this.state.mergesOutput = d.outputBehavior === "merge"),
               (this.state.output = O.output),
@@ -2156,7 +2156,7 @@ class _n {
               this.announceTierChange());
           })
           .catch((O) => {
-            h(O);
+            logError(O);
           })
           .finally(() => this.settleRefreshExec());
       },
@@ -2183,7 +2183,7 @@ async function ABe(e, t, r) {
   if (o) {
     if (!T.structuralRefusalLogged)
       ((T.structuralRefusalLogged = !0),
-        f(
+        logFeatureBad(
           "settings_policy_helpers_per_os",
           o.path === ""
             ? "document_invalid"
@@ -2201,7 +2201,7 @@ async function ABe(e, t, r) {
     p = _ !== void 0,
     E = p ? void 0 : e?.policyHelper;
   if (!d && !E) {
-    if (wie() === !0 && !rv())
+    if (getEligibilityMemo() === !0 && !getRemoteManagedSettingsSyncFromCache())
       n(
         "policyHelper: no helper configuration present at helper-pass time (remote managed settings eligible, no payload in cache); a payload landing later arms one only through a fetch cycle after preAction",
         { level: "debug" },
@@ -2209,10 +2209,10 @@ async function ABe(e, t, r) {
     return ((T.initializeAttempted = !1), null);
   }
   if (p) {
-    if (!Yge()) {
-      if (((T.initializeAttempted = !1), jR()))
+    if (!isRemoteManagedSettingsVerifiedAndConsented()) {
+      if (((T.initializeAttempted = !1), isRemoteManagedSettingsVerified()))
         (Ze("not yet approved in the managed-settings dialog", _),
-          g("settings_policy_helpers_per_os", "remote_consent_missing"));
+          logFeatureSad("settings_policy_helpers_per_os", "remote_consent_missing"));
       else Ze("remote settings not verified this session", _);
       return null;
     }
@@ -2247,21 +2247,21 @@ async function ABe(e, t, r) {
   try {
     if (N.fromPerOs && T.defaultFallback)
       (await qe(N, { suppressExecEvents: !0 }),
-        y("settings_policy_helpers_per_os"));
+        logFeatureOk("settings_policy_helpers_per_os"));
     else if (N.fromPerOs) {
       let L;
       try {
         L = await qe(N, { armedFromRemote: p, suppressExecEvents: p });
       } catch (U) {
         throw (
-          f(
+          logFeatureBad(
             "settings_policy_helpers_per_os",
             U instanceof Ne ? U.code : "error",
           ),
           U
         );
       }
-      if (L === "applied") y("settings_policy_helpers_per_os");
+      if (L === "applied") logFeatureOk("settings_policy_helpers_per_os");
     } else await qe(N);
   } catch (L) {
     if (L instanceof Ne) {
@@ -2271,7 +2271,7 @@ async function ABe(e, t, r) {
             `${L.message}; applying the static ${T.defaultFallback.sourceField} settings payload instead`,
             { level: "warn" },
           ),
-          g(
+          logFeatureSad(
             "settings_policy_helpers_per_os",
             "fell_back_to_default_on_failure",
           ),
@@ -2392,14 +2392,14 @@ function Hi(e, t) {
         I = Kge().safeParse(O);
       if (!I.success)
         return (
-          f("settings_policy_helpers_per_os", "default_payload_invalid"),
+          logFeatureBad("settings_policy_helpers_per_os", "default_payload_invalid"),
           `${d.field} is not a valid static settings payload (${I.error.issues[0]?.message ?? "failed validation"}); Claude Code will not start until it is fixed`
         );
     }
     let _ = d.onChain && !o ? Pn(d.raw, d.field) : R8t(d.raw, d.field);
     if ("error" in _)
       return (
-        f("settings_policy_helpers_per_os", "default_payload_invalid"),
+        logFeatureBad("settings_policy_helpers_per_os", "default_payload_invalid"),
         `${d.field} is not a valid static settings payload (${_.error}); Claude Code will not start until it is fixed`
       );
     if (d.onChain && !o)
@@ -2473,7 +2473,7 @@ function vi(e, t, r, o) {
   if (p) return { kind: "helper", config: p, fromPerOs: !0 };
   if (T.defaultFallback)
     return (
-      g("settings_policy_helpers_per_os", "fell_back_to_default"),
+      logFeatureSad("settings_policy_helpers_per_os", "fell_back_to_default"),
       n(
         `policyHelper: no policyHelpers helper entry for platform "${d}"; applying the static ${T.defaultFallback.sourceField} settings payload`,
         { level: "info" },
@@ -2482,7 +2482,7 @@ function vi(e, t, r, o) {
     );
   if (t)
     return (
-      g("settings_policy_helpers_per_os", "fell_back_to_singular"),
+      logFeatureSad("settings_policy_helpers_per_os", "fell_back_to_singular"),
       { kind: "helper", config: t, fromPerOs: !1 }
     );
   let E = `${hn}"${d}", no default settings payload, and no policyHelper fallback; no policy helper will run`;
@@ -2499,7 +2499,7 @@ function vi(e, t, r, o) {
     !T.noEntrySadLogged)
   )
     ((T.noEntrySadLogged = !0),
-      g("settings_policy_helpers_per_os", "no_entry_for_platform"));
+      logFeatureSad("settings_policy_helpers_per_os", "no_entry_for_platform"));
   return null;
 }
 class Ne extends Error {
@@ -2526,13 +2526,13 @@ async function qe({ config: e, fromPerOs: t }, r) {
       n("policyHelper: remote arming revoked during exec; discarding output", {
         level: "warn",
       }),
-      g("settings_policy_helpers_per_os", "deactivated_during_exec"),
+      logFeatureSad("settings_policy_helpers_per_os", "deactivated_during_exec"),
       T.releaseLatchAfterTornDownExec(),
       "dropped"
     );
   }
   if ("error" in _) {
-    if (!r?.suppressExecEvents) f("settings_policy_helper", _.code);
+    if (!r?.suppressExecEvents) logFeatureBad("settings_policy_helper", _.code);
     throw new Ne(_.code, `policyHelper failed: ${_.error}`);
   }
   if (
@@ -2550,7 +2550,7 @@ async function qe({ config: e, fromPerOs: t }, r) {
     }),
     !r?.suppressExecEvents)
   )
-    y("settings_policy_helper");
+    logFeatureOk("settings_policy_helper");
   return "applied";
 }
 function yn() {
@@ -2603,7 +2603,7 @@ function bar(e) {
     "policyHelper: OS-admin helper pass retired; the remote payload that landed shadows the MDM/file policy it was read from",
     { level: "info" },
   ),
-    g("settings_policy_helper", "retired_shadowed_by_remote"),
+    logFeatureSad("settings_policy_helper", "retired_shadowed_by_remote"),
     T.announceTierChange());
 }
 function be() {
@@ -2615,10 +2615,10 @@ function be() {
     n("policyHelper: remote-armed helper deactivated", { level: "info" }),
     T.announceTierChange());
 }
-$Hn(be);
+registerSyncCacheResetListener(be);
 function cn(e) {
   let t = T.readRemotePayload;
-  return t !== null && Yge() && _e(t()) === XRt(e);
+  return t !== null && isRemoteManagedSettingsVerifiedAndConsented() && _e(t()) === XRt(e);
 }
 async function Fi(e, t) {
   try {
@@ -2644,7 +2644,7 @@ async function Fi(e, t) {
       (n("policyHelper: remote retry revoked during exec; discarding output", {
         level: "warn",
       }),
-        g("settings_policy_helpers_per_os", "deactivated_during_exec"));
+        logFeatureSad("settings_policy_helpers_per_os", "deactivated_during_exec"));
       return;
     }
     if ("error" in o) {
@@ -2652,7 +2652,7 @@ async function Fi(e, t) {
         `policyHelper retry failed (remote entry still not armed): ${o.error}`,
         { level: "warn" },
       ),
-        g("settings_policy_helper", "refresh_failed"));
+        logFeatureSad("settings_policy_helper", "refresh_failed"));
       return;
     }
     (T.apply({
@@ -2666,10 +2666,10 @@ async function Fi(e, t) {
     }),
       De(),
       n("policyHelper: remote entry armed by a retry tick", { level: "info" }),
-      y("settings_policy_helpers_per_os"),
+      logFeatureOk("settings_policy_helpers_per_os"),
       T.announceTierChange());
   } catch (r) {
-    h(r);
+    logError(r);
   }
 }
 function war(e) {
@@ -2708,13 +2708,13 @@ function Mi() {
         T.announceTierChange());
     })
     .catch((d) => {
-      h(d);
+      logError(d);
     });
 }
 function $i(e) {
   if (
     ((T.readRemotePayload = e),
-    !T.midSessionArmingEnabled || T.initializeAttempted || !Yge())
+    !T.midSessionArmingEnabled || T.initializeAttempted || !isRemoteManagedSettingsVerifiedAndConsented())
   )
     return;
   let t = e();
@@ -2722,7 +2722,7 @@ function $i(e) {
   let r = T.retiredHelperPaths.size;
   ABe(t, "remote", [])
     .catch((o) => {
-      h(o);
+      logError(o);
     })
     .finally(() => {
       let o = T.state?.armedFromRemote === !0;
@@ -2740,7 +2740,7 @@ function Tar(e) {
   let o = e(),
     d = _e(o);
   if (t) {
-    if (!Yge() || d !== XRt(t)) be();
+    if (!isRemoteManagedSettingsVerifiedAndConsented() || d !== XRt(t)) be();
   } else if (d !== r) De();
 }
 function Ear() {
@@ -2806,7 +2806,7 @@ async function ki(e, t, r) {
   if (!r || p.input !== void 0) L = Nt(p);
   else if (e.path === void 0)
     return { error: "remote-armed helper has no path", code: "bad_path" };
-  else L = (o === "win32" ? gn : dn).dirname(e.path);
+  else L = (o === "win32" ? gn : posix).dirname(e.path);
   let U = process.env,
     x = r ? an(Cn?.() ?? U, o) : U,
     {
@@ -2816,7 +2816,7 @@ async function ki(e, t, r) {
       error: K,
       maxBufferExceeded: ce,
       timedOut: st,
-    } = await Be(p.file, p.args, {
+    } = await execFileNoThrowWithCwd(p.file, p.args, {
       timeout: N,
       cwd: L,
       useToolMemoryCgroup: !1,
@@ -2892,7 +2892,7 @@ function Dn(e, t, r, o) {
   return hlr(e, t === "win32" ? "windows" : "linux");
 }
 function Gi(e, t, r, o) {
-  let d = t === "win32" ? gn : dn;
+  let d = t === "win32" ? gn : posix;
   if (typeof e !== "string") return "path must be a string";
   if (!d.isAbsolute(e)) return `path must be absolute: ${e}`;
   if (t === "win32") {
@@ -3078,7 +3078,7 @@ class $n {
   fire(e) {
     if (this.firedSites.has(e)) return;
     (this.firedSites.add(e),
-      i("tengu_dead_probe_legacy_local_settings", { site: u(e) }));
+      i("tengu_dead_probe_legacy_local_settings", { site: fromEnum(e) }));
   }
   reset() {
     this.firedSites.clear();
@@ -3100,7 +3100,7 @@ function D() {
     flagPath: q1(),
     flagExpectedContent: MA() ?? d8(),
     coworkPlugins: Irt(),
-    canonicalGitRoot: $r,
+    canonicalGitRoot: findCanonicalGitRoot,
     mdm: () => PU(),
     hkcu: () => Rge(),
     helper: () => yn(),
@@ -3134,7 +3134,7 @@ function getLegacyLocalSettingsFilePath() {
 function projectSettingsAliasesUserSettings() {
   let e = getSettingsFilePathForSource("projectSettings"),
     t = getSettingsFilePathForSource("userSettings");
-  return !!e && !!t && wn(e) === wn(t);
+  return !!e && !!t && resolve(e) === resolve(t);
 }
 function getLocalSettingsValidationErrors() {
   let e = getSettingsFilePathForSource("localSettings");
@@ -3180,7 +3180,7 @@ function readRepoDirSettingsFresh(e) {
     return "unreadable";
   let [_, p] = d.map(({ settings: E }) => E);
   return {
-    settings: p === null || p === void 0 ? (_ ?? null) : b0({}, p, _ ?? {}, GU),
+    settings: p === null || p === void 0 ? (_ ?? null) : b0({}, p, _ ?? {}, settingsMergeCustomizer),
   };
 }
 function flagInlineConsentDropped() {
@@ -3261,7 +3261,7 @@ async function sourceFileConsentDropped(e, t) {
   return ot(o);
 }
 function ve(e, t) {
-  return e === "userSettings" && Vi(t) === jq.default;
+  return e === "userSettings" && basename(t) === jq.default;
 }
 async function Un(e) {
   let t = await e.read([Ce.userSettings()]);
@@ -3552,7 +3552,7 @@ async function Xi(e, t, r, o, d) {
           try {
             getSettingsWithErrors();
           } catch (F) {
-            h(F);
+            logError(F);
           }
           Fn(e);
         }
@@ -3604,12 +3604,12 @@ async function Xi(e, t, r, o, d) {
       else E = C.error;
     }
     if (e === "localSettings")
-      M5t(T0("localSettings"), he()).then((C) => {
+      M5t(getRelativeSettingsFilePathForSource("localSettings"), he()).then((C) => {
         if (!C.written) return;
-        if (C.effective) y("gitignore_global_rule");
+        if (C.effective) logFeatureOk("gitignore_global_rule");
         else if (C.reason === "already_tracked")
-          g("gitignore_global_rule", C.reason);
-        else f("gitignore_global_rule", C.reason ?? "write_ineffective");
+          logFeatureSad("gitignore_global_rule", C.reason);
+        else logFeatureBad("gitignore_global_rule", C.reason ?? "write_ineffective");
       });
   } catch (N) {
     let L = Error(`Failed to read raw settings from ${r}: ${N}`);
@@ -3619,7 +3619,7 @@ async function Xi(e, t, r, o, d) {
   try {
     getSettingsWithErrors();
   } catch (N) {
-    h(N);
+    logError(N);
   }
   return (Fn(e), { error: E });
 }
@@ -3649,7 +3649,7 @@ function Fn(e) {
   try {
     da().changed.emit(e);
   } catch (t) {
-    for (let r of t instanceof AggregateError ? t.errors : [t]) h(r);
+    for (let r of t instanceof AggregateError ? t.errors : [t]) logError(r);
   }
 }
 async function Mn(e) {
@@ -3762,7 +3762,7 @@ function getManagedSettingsKeysForLogging(e) {
 }
 function getSettingsAfterPluginLoad(e) {
   if (!da().pluginBaseLoaded)
-    i("tengu_plugin_settings_premature_read", { key: u(e) });
+    i("tengu_plugin_settings_premature_read", { key: fromEnum(e) });
   let { settings: t } = getSettingsWithErrors();
   return (t || {})[e];
 }
@@ -3862,7 +3862,7 @@ function getAutoModeConfig() {
             { level: "warn" },
           ),
           i("tengu_settings_auto_mode_rules_untrusted_source_ignored", {
-            source: u(E),
+            source: fromEnum(E),
           }));
     }
   let r = [],

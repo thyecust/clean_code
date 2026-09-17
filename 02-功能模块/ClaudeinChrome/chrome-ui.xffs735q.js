@@ -14,21 +14,21 @@ import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-7
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { isClaudeAISubscriber as gt, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isClaudeAISubscriber, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { HI, CHROME_EXTENSION_RECONNECT_URL as xEe, isChromeExtensionInstalled as bH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { HI, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { openInChrome as WY } from "./chunk-hnp84hf6.js";
+import { openInChrome } from "./chunk-hnp84hf6.js";
 import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { Gp } from "../../01-核心基础设施/共享小工具-未细化/chunk-c8g7bday.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME as vd } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
 import { s, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -61,7 +61,7 @@ function ce(jo) {
           if (!X.current) Fo(Jo);
         })
         .catch((Qo) => {
-          if ((f("chrome_browser_picker", "list_failed"), !X.current))
+          if ((logFeatureBad("chrome_browser_picker", "list_failed"), !X.current))
             Ko(ge(Qo).message);
         }),
       () => {
@@ -96,7 +96,7 @@ function ce(jo) {
       let lo = O?.find((Zo) => Zo.deviceId === co);
       Se(q, "select_browser", { deviceId: co })
         .then(() => {
-          (y("chrome_browser_picker"),
+          (logFeatureOk("chrome_browser_picker"),
             u(
               lo
                 ? `Now using browser "${lo.name}" for Chrome actions.`
@@ -104,7 +104,7 @@ function ce(jo) {
             ));
         })
         .catch((ao) => {
-          (f("chrome_browser_picker", "select_failed"),
+          (logFeatureBad("chrome_browser_picker", "select_failed"),
             n(`claude-in-chrome select_browser failed: ${ge(ao).message}`, {
               level: "error",
             }),
@@ -267,7 +267,7 @@ function So(zn) {
   return zn.mcp.clients;
 }
 function Po(Ro) {
-  return Ro.name === vd && Ro.type === "connected";
+  return Ro.name === CLAUDE_IN_CHROME_MCP_SERVER_NAME && Ro.type === "connected";
 }
 function ko(An) {
   return An + 1;
@@ -310,7 +310,7 @@ function Je(Sn) {
     vo;
   if (i[3] === p)
     ((vo = function ae(Mn) {
-      WY(Mn).catch(h);
+      openInChrome(Mn).catch(logError);
     }),
       (i[3] = vo));
   else vo = i[3];
@@ -325,12 +325,12 @@ function Je(Sn) {
         }
         case "reconnect": {
           (Be(_o),
-            bH()
+            isChromeExtensionInstalled()
               .then((yo) => {
                 if ((Bn(yo), yo)) ho(!1);
               })
-              .catch(h),
-            ae(xEe));
+              .catch(logError),
+            ae(CHROME_EXTENSION_RECONNECT_URL));
           break bb19;
         }
         case "manage-permissions": {
@@ -568,7 +568,7 @@ function Je(Sn) {
   return Io;
 }
 var In = async function (b) {
-  let R = await bH().catch(
+  let R = await isChromeExtensionInstalled().catch(
       (H) => (
         n(
           `[Claude in Chrome] Extension detection failed: ${H instanceof Error ? H.message : String(H)}`,
@@ -578,7 +578,7 @@ var In = async function (b) {
       ),
     ),
     w = ee(),
-    M = gt(),
+    M = isClaudeAISubscriber(),
     D = a.isWslEnvironment();
   return e(Je, {
     onDone: b,

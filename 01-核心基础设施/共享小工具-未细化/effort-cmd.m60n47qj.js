@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { DA } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getDefaultMainLoopModelSetting as dh, parseUserSpecifiedModel as wt } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ib, VK } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { getEffortValue as Qc } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { getEffortValue } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { olt, K9e, lSe } from "../../02-功能模块/斜杠命令-UI组件/chunk-d9snm4c7.js";
 async function f(s, t) {
   let e = s.trim(),
     o = t.getAppState(),
-    r = wt(o.mainLoopModelForSession ?? o.mainLoopModel ?? dh());
+    r = parseUserSpecifiedModel(o.mainLoopModelForSession ?? o.mainLoopModel ?? getDefaultMainLoopModelSetting());
   if (DA.includes(e)) return { type: "text", value: olt() };
   if (e === "current" || e === "status") {
-    let { message: a } = K9e(Qc(t), r, o.ultracode);
+    let { message: a } = K9e(getEffortValue(t), r, o.ultracode);
     return { type: "text", value: a };
   }
   if (!e)

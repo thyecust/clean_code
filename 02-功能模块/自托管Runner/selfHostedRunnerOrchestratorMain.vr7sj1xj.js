@@ -14,7 +14,7 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { getWebSocketTLSOptions as Ab, getWebSocketProxyUrl as Cb, configureGlobalAgents as vb } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
   Pae,
@@ -36,38 +36,38 @@ import { uu } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { ml } from "../../01-核心基础设施/共享小工具-未细化/chunk-vdg9aytt.js";
 import { Uy } from "../../01-核心基础设施/共享小工具-未细化/chunk-sp33tdvc.js";
 import { AP, Svt } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { randomUUID as Ge } from "crypto";
-import { constants as Ke } from "fs";
+import { randomUUID } from "crypto";
+import { constants } from "fs";
 import {
-  access as Be,
-  mkdir as Ye,
+  access,
+  mkdir,
   readFile as ze,
   stat as Qe,
 } from "fs/promises";
-import { createServer as Ve } from "http";
-import { hostname as Xe } from "os";
-import { join as Je, resolve as ue } from "path";
-import { spawn as Ee } from "child_process";
-import { randomBytes as Se } from "crypto";
+import { createServer } from "http";
+import { hostname } from "os";
+import { join as Je, resolve } from "path";
+import { spawn } from "child_process";
+import { randomBytes } from "crypto";
 import {
   open as be,
-  readdir as ke,
+  readdir,
   stat as Re,
-  unlink as X,
-  writeFile as Q,
+  unlink,
+  writeFile,
 } from "fs/promises";
-import { tmpdir as Te } from "os";
+import { tmpdir } from "os";
 import { join as V } from "path";
 var P = 5000,
   $e = 512,
   ye = 300000;
 async function ve(e, t) {
-  let r = V(Te(), `${e}-${Se(6).toString("hex")}`),
+  let r = V(tmpdir(), `${e}-${randomBytes(6).toString("hex")}`),
     o = await be(r, "wx", 384);
   try {
     await o.writeFile(t);
   } catch (d) {
-    throw (await X(r).catch(() => {}), d);
+    throw (await unlink(r).catch(() => {}), d);
   } finally {
     await o.close();
   }
@@ -76,9 +76,9 @@ async function ve(e, t) {
 async function Ne(e, t, r, o, d) {
   let n = V(e, t.jti);
   try {
-    (await Q(`${n}.jwt`, r, { mode: 384 }),
-      await Q(`${n}.json`, b(t, null, 2), { mode: 384 }),
-      await Q(`${n}.stderr`, o, { mode: 384 }));
+    (await writeFile(`${n}.jwt`, r, { mode: 384 }),
+      await writeFile(`${n}.json`, b(t, null, 2), { mode: 384 }),
+      await writeFile(`${n}.stderr`, o, { mode: 384 }));
   } catch (s) {
     d(`[runner:orchestrator] debug-dir write failed: ${l(s)}`);
   }
@@ -86,11 +86,11 @@ async function Ne(e, t, r, o, d) {
     let s = Date.now() - ye,
       w =
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jwt|json|stderr)$/;
-    for (let c of await ke(e)) {
+    for (let c of await readdir(e)) {
       if (!w.test(c)) continue;
       let p = V(e, c),
         a = await Re(p).catch(() => null);
-      if (a?.isFile() && a.mtimeMs < s) await X(p).catch(() => {});
+      if (a?.isFile() && a.mtimeMs < s) await unlink(p).catch(() => {});
     }
   } catch (s) {
     d(`[runner:orchestrator] debug-dir prune failed: ${l(s)}`);
@@ -180,7 +180,7 @@ async function ne(e) {
     await new Promise((p) => {
       let a;
       try {
-        ((a = Ee(e.hookPath, [], {
+        ((a = spawn(e.hookPath, [], {
           cwd: void 0,
           env: d,
           stdio: ["ignore", "pipe", "pipe"],
@@ -317,7 +317,7 @@ async function ne(e) {
         }));
     });
   } finally {
-    await X(o).catch((p) =>
+    await unlink(o).catch((p) =>
       e.onDebug(`[runner:orchestrator] failed to delete ${o}: ${l(p)}`),
     );
   }
@@ -662,8 +662,8 @@ function le(e, t, r, o) {
     try {
       m = new globalThis.WebSocket(d, {
         headers: { Authorization: `Bearer ${r.poolSecret}` },
-        proxy: Cb(d),
-        tls: Ab() || void 0,
+        proxy: getWebSocketProxyUrl(d),
+        tls: getWebSocketTLSOptions() || void 0,
       });
     } catch (i) {
       (g(l(i)), E(`WebSocket construct failed: ${l(i)}`), L());
@@ -772,7 +772,7 @@ function ct(e) {
   let t = {
       apiUrl: pe,
       hooksDir: process.env.SELF_HOSTED_RUNNER_HOOKS_DIR
-        ? ue(process.env.SELF_HOSTED_RUNNER_HOOKS_DIR)
+        ? resolve(process.env.SELF_HOSTED_RUNNER_HOOKS_DIR)
         : void 0,
       healthPort: lt(
         process.env.SELF_HOSTED_RUNNER_HEALTH_PORT,
@@ -808,7 +808,7 @@ function ct(e) {
         if (a) ((t.poolSecretFile = a), c++);
         break;
       case "--hooks-dir":
-        if (a) ((t.hooksDir = ue(a)), c++);
+        if (a) ((t.hooksDir = resolve(a)), c++);
         break;
       case "--health-port":
         if (a) {
@@ -946,7 +946,7 @@ async function ut(e) {
   if (!r.isFile())
     throw Error(`spawn-runner hook at ${t} is not a regular file`);
   try {
-    await uu(Be(t, Ke.X_OK), 5000, `access ${t}`);
+    await uu(access(t, constants.X_OK), 5000, `access ${t}`);
   } catch {
     throw Error(`spawn-runner hook at ${t} is not executable (chmod +x ${t})`);
   }
@@ -1156,7 +1156,7 @@ function ht(e, t = Date.now()) {
   return n;
 }
 function ft(e, t, r) {
-  let o = Ve((n, s) => {
+  let o = createServer((n, s) => {
     if (n.method === "GET" && n.url === "/metrics") {
       let c = ht(t);
       (s.writeHead(200, {
@@ -1446,7 +1446,7 @@ function wt(e) {
   ),
     process.exit(1));
 }
-async function dn(e) {
+async function selfHostedRunnerOrchestratorMain(e) {
   if (e.includes("--help") || e.includes("-h")) {
     console.log(`Usage: claude self-hosted-runner orchestrator [options]
 
@@ -1502,7 +1502,7 @@ Debug:
   --help, -h                  Show this help message`);
     return;
   }
-  vb();
+  configureGlobalAgents();
   let t;
   try {
     (_ot("orchestrator mode"), ANn(e), (t = ct(e)));
@@ -1534,13 +1534,13 @@ Run 'claude self-hosted-runner orchestrator --help' for usage.`),
     (s(`[runner:fatal] ${l(h)}`), process.exit(1));
   }
   if (t.debugDir)
-    await Ye(t.debugDir, { recursive: !0, mode: 448 }).catch((h) =>
+    await mkdir(t.debugDir, { recursive: !0, mode: 448 }).catch((h) =>
       s(
         `[runner:warn] failed to create --debug-dir ${t.debugDir}: ${l(h)} \u2014 continuing without debug artifacts`,
       ),
     );
-  let p = Ge(),
-    a = Xe();
+  let p = randomUUID(),
+    a = hostname();
   s(
     `[runner:orchestrator] starting orchestrator_uuid=${p} hostname=${a} hook-concurrency=${t.hookConcurrency} hook-timeout=${t.hookTimeoutMs}ms`,
   );
@@ -1636,4 +1636,4 @@ async function Et(e) {
     "No environment secret provided. Use --environment-secret-file or set SELF_HOSTED_RUNNER_ENVIRONMENT_SECRET.",
   );
 }
-export { dn as selfHostedRunnerOrchestratorMain };
+export { selfHostedRunnerOrchestratorMain };

@@ -15,7 +15,7 @@ var i = pe(HA());
 var c = pe(zd()),
   f = pe(HA());
 import { exec as w } from "child_process";
-import { promisify as m } from "util";
+import { promisify } from "util";
 var p = pe(kb()),
   a = (r, e, o) => {
     if (e.Version !== 1)
@@ -48,7 +48,7 @@ var u = async (r, e, o) => {
   if (e[r]) {
     let t = s.credential_process;
     if (t !== void 0) {
-      let d = m(f.externalDataInterceptor?.getTokenRecord?.().exec ?? w);
+      let d = promisify(f.externalDataInterceptor?.getTokenRecord?.().exec ?? w);
       try {
         let { stdout: n } = await d(t),
           l;
@@ -72,7 +72,7 @@ var u = async (r, e, o) => {
       { logger: o },
     );
 };
-var h =
+var fromProcess =
   (r = {}) =>
   async ({ callerClientConfig: e } = {}) => {
     r.logger?.debug("@aws-sdk/credential-provider-process - fromProcess");
@@ -83,4 +83,4 @@ var h =
       r.logger,
     );
   };
-export { h as fromProcess };
+export { fromProcess };

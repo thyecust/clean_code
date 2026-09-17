@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { _5, getSubscriptionType as qn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { _5, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -72,7 +72,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
     p = await i(he(), w, s, e);
   } catch (d) {
     return (
-      f("auto_mode_setup_propose", "recon_failed"),
+      logFeatureBad("auto_mode_setup_propose", "recon_failed"),
       n(`auto-mode-setup gather failed: ${l(d)}`, { level: "error" }),
       {
         ok: !1,
@@ -87,7 +87,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
     r = v.value;
   if (r === "")
     return (
-      f("auto_mode_setup_propose", "no_model"),
+      logFeatureBad("auto_mode_setup_propose", "no_model"),
       {
         ok: !1,
         code: "no_model",
@@ -167,7 +167,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
   }
   if (!u.ok) {
     if (u.result.code !== "aborted")
-      f("auto_mode_setup_propose", u.result.code);
+      logFeatureBad("auto_mode_setup_propose", u.result.code);
     return u.result;
   }
   let h = lLt(u.text),
@@ -185,14 +185,14 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
       if (_.ok) ((h = _), (A = !0));
     }
   }
-  if (!h.ok) return (f("auto_mode_setup_propose", h.code), h);
+  if (!h.ok) return (logFeatureBad("auto_mode_setup_propose", h.code), h);
   let T = D(h.proposal.remove_from_permissions_allow, p);
-  if (T) return (f("auto_mode_setup_propose", T.code), T);
+  if (T) return (logFeatureBad("auto_mode_setup_propose", T.code), T);
   if (h.droppedUnsafeAllowCount > 0)
-    g("auto_mode_setup_propose", "unsafe_allow_dropped");
-  else if (A) g("auto_mode_setup_propose", "parse_repaired");
-  else if (E) g("auto_mode_setup_propose", "model_fell_back");
-  else y("auto_mode_setup_propose");
+    logFeatureSad("auto_mode_setup_propose", "unsafe_allow_dropped");
+  else if (A) logFeatureSad("auto_mode_setup_propose", "parse_repaired");
+  else if (E) logFeatureSad("auto_mode_setup_propose", "model_fell_back");
+  else logFeatureOk("auto_mode_setup_propose");
   return {
     ok: !0,
     proposal: { ...h.proposal, mode: "append", scope: o.scope },
@@ -287,7 +287,7 @@ ${t}
   return s;
 }
 function j(o) {
-  let s = qn(),
+  let s = getSubscriptionType(),
     t =
       s === "pro" || s === "max"
         ? `Claude subscription is ${s} \u2192 lean personal/hobby`

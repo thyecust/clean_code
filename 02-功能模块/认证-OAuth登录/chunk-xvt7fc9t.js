@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS as uB, CLAUDE_AI_INFERENCE_SCOPE as py } from "./chunk-9g2q4bjq.js";
+import { LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS, CLAUDE_AI_INFERENCE_SCOPE } from "./chunk-9g2q4bjq.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   lm,
-  revokeOAuthToken as eS,
-  fetchAndStoreUserRoles as uZe,
+  revokeOAuthToken,
+  fetchAndStoreUserRoles,
   FKt,
   gsr,
   ZCt,
@@ -29,16 +29,16 @@ import {
   gRn,
   ysr,
   $Kt,
-  getConfiguredAwsAuthRefresh as C5,
-  isAwsAuthRefreshFromProjectSettings as sge,
-  refreshAwsAuth as svt,
-  clearAwsCredentialsCache as R6,
-  resetAwsAuthRefreshCooldown as _Re,
-  getOauthAccountInfo as vn,
-  validateForceLoginOrg as cx,
-  getForcedLoginMethod as R5,
-  gatewaySignInScreenConfigured as vZe,
-  policyUnreadableForEnforcement as DRn,
+  getConfiguredAwsAuthRefresh,
+  isAwsAuthRefreshFromProjectSettings,
+  refreshAwsAuth,
+  clearAwsCredentialsCache,
+  resetAwsAuthRefreshCooldown,
+  getOauthAccountInfo,
+  validateForceLoginOrg,
+  getForcedLoginMethod,
+  gatewaySignInScreenConfigured,
+  policyUnreadableForEnforcement,
   Bo,
   Te,
 } from "./认证-OAuth登录.419zdfz3.js";
@@ -47,12 +47,12 @@ import { le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
 import { Tvt, Yse, c1, Evt } from "./chunk-wk0e3dz4.js";
-import { getSecureStorage as yn } from "./chunk-y7b7kf5n.js";
+import { getSecureStorage } from "./chunk-y7b7kf5n.js";
 import { J5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { xH, h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
@@ -98,12 +98,12 @@ class ye extends Error {
 async function dt(s, c, M = {}) {
   try {
     let H = await Wt(s, c, M);
-    return (y("oauth_console_profile_login"), H);
+    return (logFeatureOk("oauth_console_profile_login"), H);
   } catch (H) {
     if (H instanceof ye && H.fallbackCures)
-      g("oauth_console_profile_login", "refused_fell_back");
+      logFeatureSad("oauth_console_profile_login", "refused_fell_back");
     else
-      f("oauth_console_profile_login", H instanceof ye ? "refused" : "error");
+      logFeatureBad("oauth_console_profile_login", H instanceof ye ? "refused" : "error");
     throw H;
   }
 }
@@ -151,14 +151,14 @@ async function Wt(s, c, { loginHint: M, loginMethod: H, orgUUID: D }) {
     throw U;
   }
   return (
-    await uZe(T.accessToken).catch((U) => n(String(U), { level: "error" })),
+    await fetchAndStoreUserRoles(T.accessToken).catch((U) => n(String(U), { level: "error" })),
     await yen({ ...ee }),
     R
   );
 }
 async function Vt() {
-  if (Pe() !== "firstParty") return null;
-  let s = yn();
+  if (getAPIProvider() !== "firstParty") return null;
+  let s = getSecureStorage();
   s.invalidateCache?.();
   let c = (await s.readAsync())?.claudeAiOauth;
   return c?.refreshToken
@@ -167,9 +167,9 @@ async function Vt() {
 }
 async function Xt(s) {
   if (s === null) return;
-  await eS(s.refreshToken, s.clientId);
+  await revokeOAuthToken(s.refreshToken, s.clientId);
   try {
-    await yn().mutate((c) => ({ ...c, claudeAiOauth: void 0 }));
+    await getSecureStorage().mutate((c) => ({ ...c, claudeAiOauth: void 0 }));
   } catch (c) {
     n(
       `Console profile login: could not clear the replaced claude.ai login record: ${l(c)}`,
@@ -178,7 +178,7 @@ async function Xt(s) {
   }
 }
 function jt(s) {
-  if (!s.scopes.includes(py))
+  if (!s.scopes.includes(CLAUDE_AI_INFERENCE_SCOPE))
     return Error(
       "The organization didn't grant inference access to this sign-in, so Claude Code can't use it.",
     );
@@ -193,7 +193,7 @@ function jt(s) {
   return { refreshToken: s.refreshToken, expiresAtMs: s.expiresAt };
 }
 async function ut(s) {
-  if (s.refreshToken) await eS(s.refreshToken, uIe);
+  if (s.refreshToken) await revokeOAuthToken(s.refreshToken, uIe);
 }
 F();
 var uo = "urn:ietf:params:oauth:grant-type:device_code",
@@ -284,7 +284,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     try {
       let v = FKt(j);
       if ((await gsr(v), G !== R.current)) return;
-      let Y = await ra.get(`${v}/.well-known/oauth-authorization-server`, {
+      let Y = await externalHttp.get(`${v}/.well-known/oauth-authorization-server`, {
         headers: { "User-Agent": va() },
         timeout: 1e4,
       });
@@ -328,7 +328,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
     z({ state: "connecting" });
     try {
       let P = gRe(v, G.deviceAuthorizationEndpoint),
-        { data: oe } = await ra.post(
+        { data: oe } = await externalHttp.post(
           G.deviceAuthorizationEndpoint,
           new URLSearchParams({ surface: fo }).toString(),
           {
@@ -367,7 +367,7 @@ function Xe({ onDone: s, onCancel: c, initialUrl: M, screenLocked: H }) {
       if ((await Z(K * 1000), P !== R.current)) return;
       try {
         let V = gRe(oe, G),
-          { data: w } = await ra.post(
+          { data: w } = await externalHttp.post(
             G,
             new URLSearchParams({ grant_type: uo, device_code: v }).toString(),
             {
@@ -714,12 +714,12 @@ function V8({
     se = Os((q) => q.proactivityLevel),
     fe = Os((q) => q.toolPermissionContext),
     de = (R ? Sv : 0) + ee,
-    te = bn() || {},
-    I = R5() === "gateway",
+    te = getSettings_DEPRECATED() || {},
+    I = getForcedLoginMethod() === "gateway",
     { forceLoginGatewayUrl: j } = $Kt(),
     G = te.forceLoginMethod === "gateway" && !I ? void 0 : te.forceLoginMethod,
     v = z ?? G,
-    Y = vZe(),
+    Y = gatewaySignInScreenConfigured(),
     P =
       v === "claudeai"
         ? "Login method pre-selected: Subscription Plan (Claude Pro/Max)"
@@ -742,9 +742,9 @@ function V8({
     [ge, Mt] = d(() => D === "setup-token" || v === "claudeai"),
     [et, Ft] = d(!1),
     [Nt, tt] = d(null),
-    Gt = DRn(),
+    Gt = policyUnreadableForEnforcement(),
     Ie =
-      Pe() === "firstParty" &&
+      getAPIProvider() === "firstParty" &&
       !Gt &&
       te.forceLoginOrgUUID === void 0 &&
       v !== "claudeai",
@@ -875,7 +875,7 @@ function V8({
       (i("tengu_oauth_manual_entry", {}),
         he.handleManualAuthCodeInput({ authorizationCode: L, state: ne }));
     } catch (L) {
-      (h(L),
+      (logError(L),
         B({
           state: "error",
           message: l(L),
@@ -929,7 +929,7 @@ function V8({
           .startOAuthFlow(async (L) => q(L), {
             loginWithClaudeAi: ge,
             inferenceOnly: D === "setup-token",
-            expiresIn: D === "setup-token" ? (T ?? uB) : void 0,
+            expiresIn: D === "setup-token" ? (T ?? LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS) : void 0,
             orgUUID: Me,
           })
           .catch((L) => {
@@ -965,7 +965,7 @@ function V8({
             c?.());
         else {
           await ple(X, { storageV5: U, credentials: Q });
-          let L = await cx(Q);
+          let L = await validateForceLoginOrg(Q);
           if (!L.valid) throw Error(L.message);
           (B({ state: "success" }),
             c?.(),
@@ -1109,7 +1109,7 @@ function V8({
                         To(
                           w.expiresAt !== void 0 && Number.isFinite(w.expiresAt)
                             ? Math.round((w.expiresAt - Date.now()) / 1000)
-                            : (T ?? uB),
+                            : (T ?? LONG_LIVED_OAUTH_TOKEN_TTL_SECONDS),
                         ),
                         "):",
                       ],
@@ -1167,22 +1167,22 @@ function Je(tn) {
     _o;
   if (bt[0] !== Re)
     ((_o = () => {
-      let wo = C5();
+      let wo = getConfiguredAwsAuthRefresh();
       if (!wo) {
         Re(!1);
         return;
       }
-      if (sge() && !Bo()) {
+      if (isAwsAuthRefreshFromProjectSettings() && !Bo()) {
         Re(!1);
         return;
       }
       let kt = new AbortController();
       return (
-        svt(wo, kt.signal).then((Co) => {
+        refreshAwsAuth(wo, kt.signal).then((Co) => {
           if (kt.signal.aborted) {
             return;
           }
-          if (Co) (R6(), _Re());
+          if (Co) (clearAwsCredentialsCache(), resetAwsAuthRefreshCooldown());
           Re(Co);
         }),
         () => kt.abort()
@@ -1504,7 +1504,7 @@ function Ut(on) {
     }
     case "platform_setup": {
       let a;
-      if (u[43] === p) ((a = C5()), (u[43] = a));
+      if (u[43] === p) ((a = getConfiguredAwsAuthRefresh()), (u[43] = a));
       else a = u[43];
       let rn = a;
       let b;
@@ -1855,13 +1855,13 @@ function Ut(on) {
             ? null
             : r(N, {
                 children: [
-                  vn()?.emailAddress
+                  getOauthAccountInfo()?.emailAddress
                     ? r(t, {
                         dimColor: !0,
                         children: [
                           "Logged in as",
                           " ",
-                          e(t, { children: vn()?.emailAddress }),
+                          e(t, { children: getOauthAccountInfo()?.emailAddress }),
                         ],
                       })
                     : null,

@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createRequire as Qr } from "module";
-var Vr = Qr("/"),
+import { createRequire } from "module";
+var Vr = createRequire("/"),
   Xr;
 try {
   Xr = Vr("worker_threads").Worker;
@@ -825,7 +825,7 @@ var vn = function (n) {
       n
     );
   })();
-var wn = (function () {
+var ZipDeflate = (function () {
   function n(r, t) {
     var e = this;
     if (!t) t = {};
@@ -964,7 +964,7 @@ var mn = (function () {
     n
   );
 })();
-function xn(n, r) {
+function zipSync(n, r) {
   if (!r) r = {};
   var t = {},
     e = [];
@@ -1015,7 +1015,7 @@ function xn(n, r) {
   }
   return (Kr(T, i, e.length, E, B), T);
 }
-function zn(n, r) {
+function unzipSync(n, r) {
   var t = {},
     e = n.length - 22;
   for (; K(n, e) != 101010256; --e) if (!e || n.length - e > 65558) S(13);
@@ -1047,4 +1047,4 @@ function zn(n, r) {
   }
   return t;
 }
-export { mn as Zip, wn as ZipDeflate, zn as unzipSync, xn as zipSync };
+export { mn as Zip, ZipDeflate, unzipSync, zipSync };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { YPe } from "../../02-功能模块/图片-截图-ComputerUse/chunk-mk8kjx9c.js";
-import { CFC_TOOL_PREFIX as BI } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import { CFC_TOOL_PREFIX } from "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
 import { nTe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { me } from "./chunk-6rcgxa93.js";
 var a = {
@@ -72,7 +72,7 @@ function u(o) {
   return r;
 }
 function Gqe(o, e) {
-  let r = o.startsWith(BI) ? o.slice(BI.length) : o;
+  let r = o.startsWith(CFC_TOOL_PREFIX) ? o.slice(CFC_TOOL_PREFIX.length) : o;
   if (r === "computer") {
     let t = typeof e.action === "string" ? e.action : void 0;
     if (t && i[t]) return i[t];

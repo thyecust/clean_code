@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { bh, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vir } from "./chunk-811z9z0t.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { Kt } from "../权限系统/chunk-qdy0h5k2.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { bue, cUt, hd, nr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { X_ } from "./chunk-g6nvp9mm.js";
@@ -39,7 +39,7 @@ async function spawnInProcessTeammate(t, o) {
     c = t.resumableAgentId ?? bh(e);
   n(`[spawnInProcessTeammate] Spawning ${s} (taskId: ${d})`);
   try {
-    let r = hr(),
+    let r = createAbortController(),
       a = K(),
       S = {
         agentId: s,
@@ -73,7 +73,7 @@ async function spawnInProcessTeammate(t, o) {
         model: P,
         abortController: r,
         awaitingPlanApproval: !1,
-        permissionMode: t.permissionMode ?? M(ce(o).mode, l),
+        permissionMode: t.permissionMode ?? M(getToolPermissionContext(o).mode, l),
         isIdle: !1,
         lastReportedToolCount: 0,
         lastReportedTokenCount: 0,
@@ -104,7 +104,7 @@ async function spawnInProcessTeammate(t, o) {
     }
     return (
       n(`[spawnInProcessTeammate] Registered ${s} in AppState`),
-      y("swarm_in_process_spawn"),
+      logFeatureOk("swarm_in_process_spawn"),
       {
         ok: !0,
         agentId: s,
@@ -118,7 +118,7 @@ async function spawnInProcessTeammate(t, o) {
     let a = r instanceof Error ? r.message : "Unknown error during spawn";
     return (
       n(`[spawnInProcessTeammate] Failed to spawn ${s}: ${a}`),
-      f("swarm_in_process_spawn", "spawn_failed"),
+      logFeatureBad("swarm_in_process_spawn", "spawn_failed"),
       { ok: !1, agentId: s, error: a }
     );
   }

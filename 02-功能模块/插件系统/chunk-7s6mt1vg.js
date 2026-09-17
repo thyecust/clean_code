@@ -39,13 +39,13 @@ import { kA } from "../../01-核心基础设施/安全文件系统(FS加固)/chu
 import { j, rE, B, he, Irt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isAbsolute as te } from "path";
@@ -186,8 +186,8 @@ function TJe(e, t) {
 function rve(e) {
   return wR(e) === "node_modules";
 }
-import { readdir as ue, rm as de, stat as ce } from "fs/promises";
-import { delimiter as ge, join as I } from "path";
+import { readdir, rm as de, stat as ce } from "fs/promises";
+import { delimiter, join as I } from "path";
 var pe = "plugins",
   K = "cowork_plugins";
 function me() {
@@ -203,7 +203,7 @@ function Sl() {
 function MC() {
   let e = a.CLAUDE_CODE_PLUGIN_SEED_DIR;
   if (!e) return [];
-  return e.split(ge).filter(Boolean).map(Ju);
+  return e.split(delimiter).filter(Boolean).map(Ju);
 }
 function ove(e) {
   return e.replace(/[^a-zA-Z0-9\-_]/g, "-");
@@ -226,7 +226,7 @@ async function onr(e) {
   let t = sve(e),
     i = 0,
     r = async (o) => {
-      for (let u of await ue(o, { withFileTypes: !0 })) {
+      for (let u of await readdir(o, { withFileTypes: !0 })) {
         let d = I(o, u.name);
         if (u.isDirectory()) await r(d);
         else
@@ -242,7 +242,7 @@ async function onr(e) {
     throw o;
   }
   if (i === 0) return null;
-  return { bytes: i, human: Ft(i) };
+  return { bytes: i, human: formatFileSize(i) };
 }
 async function p$e(e) {
   let t = sve(e);
@@ -639,7 +639,7 @@ function inr(e) {
     G(i, "CLAUDE_CODE_PLUGIN_ATTRIBUTION entry"),
   ).get(OEt(e));
 }
-import { normalize as Me, parse as we, resolve as q, sep as De } from "path";
+import { normalize, parse, resolve as q, sep as De } from "path";
 var lve =
   "is network-shaped, carries a dot segment or link component, or could not be classified";
 function NC(e, { trustedRoots: t = [] } = {}) {
@@ -679,7 +679,7 @@ function Ie(e, t) {
   let i = Oje(e),
     r;
   for (let o of $e(t))
-    for (let u of [o, Me(o)]) {
+    for (let u of [o, normalize(o)]) {
       let d = Oje(u.replace(/[\\/]+$/, ""));
       if (d === "" || d === ".") continue;
       let g;
@@ -703,7 +703,7 @@ function t6(e) {
 }
 function N(e) {
   if (P() !== "windows") return;
-  let t = we(e).root,
+  let t = parse(e).root,
     i = (o) => Krt(NW(o)),
     r = i(t);
   if (r === void 0) {
@@ -809,7 +809,7 @@ function $t() {
 function MEt() {
   $t().workflows = void 0;
 }
-import { readFileSync as Ue, statSync as Fe } from "fs";
+import { readFileSync, statSync } from "fs";
 import { isAbsolute as Q, join as Te, resolve as Z } from "path";
 function X$(e, t, i = Date.now()) {
   return Number.isFinite(e) && Math.abs(i - e) < t;
@@ -841,9 +841,9 @@ function JEn(e) {
     let d;
     try {
       let p = Te(u, "installed_plugins.json"),
-        b = Fe(p);
+        b = statSync(p);
       if (!b.isFile() || b.size > je) continue;
-      let y = Ue(p, "utf8");
+      let y = readFileSync(p, "utf8");
       d = JSON.parse(y);
     } catch {
       continue;
@@ -883,7 +883,7 @@ function Koe() {
   try {
     $t().commandProducerDirsChanged.emit();
   } catch (e) {
-    h(e);
+    logError(e);
   }
 }
 var anr = rE(() => $t().commandProducerDirsChanged);

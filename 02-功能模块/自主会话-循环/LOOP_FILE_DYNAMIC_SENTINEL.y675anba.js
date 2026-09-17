@@ -20,7 +20,7 @@ import { cR, oJ } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
 import { Xi, sCe, eoe, kT, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { ia } from "../../01-核心基础设施/共享小工具-未细化/chunk-5vhxw3s9.js";
 import { Ae } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { readFileSync as S } from "fs";
+import { readFileSync } from "fs";
 import { join as u } from "path";
 var p = Ae("./loopAutonomousPreamble-07qcyhv4.md");
 var y = Ae("./loopAutonomousPreamblePersistent-3zqtkrvg.md");
@@ -28,10 +28,10 @@ function g() {
   if (a.CLAUDE_CODE_LOOP_PERSISTENT) return !0;
   return H("tengu_kairos_loop_persistent", !1);
 }
-function v() {
+function getAutonomousLoopPreamble() {
   return g() ? y : p;
 }
-function w() {
+function logAutonomousLoopActivation() {
   i("tengu_kairos_loop_persistent_activated", { variant: g() });
 }
 function h(e = !1) {
@@ -64,13 +64,13 @@ function I(e) {
 }
 function L(e, t) {
   if (!I(t)) return null;
-  w();
+  logAutonomousLoopActivation();
   let o = t === eoe ? E() : b();
   if (e.autonomousPreambleDelivered || e.lastLoopFileDelivered !== null)
     return o;
   return (
     (e.autonomousPreambleDelivered = !0),
-    `${v()}
+    `${getAutonomousLoopPreamble()}
 
 ---
 
@@ -78,8 +78,8 @@ ${o}`
   );
 }
 var k = "__autonomous_preamble__",
-  x = "<<loop.md>>",
-  d = "<<loop.md-dynamic>>";
+  LOOP_FILE_SENTINEL = "<<loop.md>>",
+  LOOP_FILE_DYNAMIC_SENTINEL = "<<loop.md-dynamic>>";
 function C() {
   return `# /loop tick \u2014 loop.md tasks
 
@@ -90,14 +90,14 @@ function F() {
 
 Work the tasks from the loop.md contents established earlier in this conversation. If you cannot find them, treat this as a no-op tick.
 
-You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive, call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${d}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h(!0)}`;
+You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive, call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h(!0)}`;
 }
 function M() {
   return `# /loop tick \u2014 loop.md absent (dynamic pacing)
 
 loop.md is not currently present. Run the autonomous check using the loop instructions established earlier in this conversation.
 
-You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive \u2014 and to pick up loop.md if it is recreated \u2014 call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${d}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
+You scheduled this tick via the ${Xi} tool (not a recurring cron). To keep the loop alive \u2014 and to pick up loop.md if it is recreated \u2014 call ${Xi} again at the end of this turn with \`prompt\` set to the literal sentinel \`${LOOP_FILE_DYNAMIC_SENTINEL}\` and \`noop\` set to \`true\` if this tick changed nothing (or \`false\` if it did) \u2014 otherwise the loop ends after this tick.${m}${h()}`;
 }
 var l = 25000;
 function P(e) {
@@ -117,7 +117,7 @@ function _() {
 function c(e) {
   let t;
   try {
-    t = S(e, "utf-8");
+    t = readFileSync(e, "utf-8");
   } catch (n) {
     if (Rt(n) || A(n) === "EISDIR") return null;
     throw n;
@@ -126,7 +126,7 @@ function c(e) {
   if (o.length === 0) return null;
   return { path: e, content: P(o) };
 }
-async function N(e) {
+async function readLoopFileAsync(e) {
   if (!e) return _();
   let t = c(u(sn(), ".claude", "loop.md"));
   if (t) return t;
@@ -141,19 +141,19 @@ async function N(e) {
   if (s.length === 0) return null;
   return { path: o, content: P(s) };
 }
-function f(e) {
-  return e === x || e === d;
+function isLoopFileSentinel(e) {
+  return e === LOOP_FILE_SENTINEL || e === LOOP_FILE_DYNAMIC_SENTINEL;
 }
 function D(e, t) {
-  if (!f(t)) return null;
+  if (!isLoopFileSentinel(t)) return null;
   return T(e, t, _());
 }
 async function q(e, t, o) {
-  if (!f(t)) return null;
-  return T(e, t, await N(o));
+  if (!isLoopFileSentinel(t)) return null;
+  return T(e, t, await readLoopFileAsync(o));
 }
 function T(e, t, o) {
-  let n = t === d;
+  let n = t === LOOP_FILE_DYNAMIC_SENTINEL;
   if (o) {
     let s = n ? F() : C();
     if (e.lastLoopFileDelivered === o.content) return s;
@@ -172,36 +172,36 @@ ${o.content}
 ${s}`
     );
   }
-  w();
+  logAutonomousLoopActivation();
   let r = n ? M() : b();
   if (e.lastLoopFileDelivered === k || e.autonomousPreambleDelivered) return r;
   return (
     (e.lastLoopFileDelivered = k),
     (e.autonomousPreambleDelivered = !0),
-    `${v()}
+    `${getAutonomousLoopPreamble()}
 
 ---
 
 ${r}`
   );
 }
-function re(e) {
-  return I(e) || f(e);
+function isLoopDefaultSentinel(e) {
+  return I(e) || isLoopFileSentinel(e);
 }
-function se(e, t) {
+function resolveLoopDefaultFire(e, t) {
   return L(e, t) ?? D(e, t) ?? t;
 }
-async function ae(e, t, o) {
+async function resolveLoopDefaultFireAsync(e, t, o) {
   return L(e, t) ?? (await q(e, t, o)) ?? t;
 }
 export {
-  d as LOOP_FILE_DYNAMIC_SENTINEL,
-  x as LOOP_FILE_SENTINEL,
-  v as getAutonomousLoopPreamble,
-  re as isLoopDefaultSentinel,
-  f as isLoopFileSentinel,
-  w as logAutonomousLoopActivation,
-  N as readLoopFileAsync,
-  se as resolveLoopDefaultFire,
-  ae as resolveLoopDefaultFireAsync,
+  LOOP_FILE_DYNAMIC_SENTINEL,
+  LOOP_FILE_SENTINEL,
+  getAutonomousLoopPreamble,
+  isLoopDefaultSentinel,
+  isLoopFileSentinel,
+  logAutonomousLoopActivation,
+  readLoopFileAsync,
+  resolveLoopDefaultFire,
+  resolveLoopDefaultFireAsync,
 };

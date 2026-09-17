@@ -10,21 +10,21 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { fileSuffixForOauthConfig as F1 } from "./chunk-9g2q4bjq.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fileSuffixForOauthConfig } from "./chunk-9g2q4bjq.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { $5, A_, Sx, tv, Q5t, MU, eHn, wA } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING as YQ, execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING, execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { homedir as Q } from "os";
+import { homedir } from "os";
 import { join as x } from "path";
 var hc = Symbol("secureStorage.READ_FAILED");
-import { AsyncLocalStorage as L } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks";
 import { join as U } from "path";
-var P = new L(),
+var P = new AsyncLocalStorage(),
   R = Promise.resolve();
 async function Xxn(e) {
   if (P.getStore()) return e();
@@ -98,11 +98,11 @@ function v(e, t) {
         i = await e.update(a);
       if (i.success) {
         if (s === null) await t.delete(o);
-        return (y("secure_storage_credentials_write"), i);
+        return (logFeatureOk("secure_storage_credentials_write"), i);
       }
       if (i.transient)
         return (
-          g(
+          logFeatureSad(
             "secure_storage_credentials_write",
             "primary_transient_skip_fallback",
           ),
@@ -112,12 +112,12 @@ function v(e, t) {
       if (u.success) {
         if (s !== null) await e.delete();
         return (
-          g("secure_storage_credentials_write", "plaintext_fallback_used"),
+          logFeatureSad("secure_storage_credentials_write", "plaintext_fallback_used"),
           { success: !0, warning: u.warning }
         );
       }
       return (
-        f("secure_storage_credentials_write", "primary_and_fallback_failed"),
+        logFeatureBad("secure_storage_credentials_write", "primary_and_fallback_failed"),
         { success: !1 }
       );
     },
@@ -144,7 +144,7 @@ var m = 2000,
       try {
         let a = Sx($5),
           o = tv(),
-          s = YQ(`security find-generic-password -a "${o}" -w -s "${a}"`, {
+          s = execSyncWithDefaults_BLOCKS_EVENT_LOOP_WILL_FREEZE_UI_MAKE_SURE_YOU_KNOW_WHAT_YOU_ARE_DOING(`security find-generic-password -a "${o}" -w -s "${a}"`, {
             timeout: m,
           });
         if (s) {
@@ -250,7 +250,7 @@ var m = 2000,
         let e = Sx($5),
           t = tv();
         return (
-          await Fe("security", ["delete-generic-password", "-a", t, "-s", e], {
+          await execFileNoThrow("security", ["delete-generic-password", "-a", t, "-s", e], {
             timeout: m,
             useCwd: !1,
           }),
@@ -265,7 +265,7 @@ async function k() {
   try {
     let e = Sx($5),
       t = tv(),
-      { stdout: r, code: a } = await Fe(
+      { stdout: r, code: a } = await execFileNoThrow(
         "security",
         ["find-generic-password", "-a", t, "-w", "-s", e],
         { useCwd: !1, preserveOutputOnError: !1, timeout: m },
@@ -291,7 +291,7 @@ function Yxn() {
     h
   );
 }
-import { chmod as Y } from "fs/promises";
+import { chmod } from "fs/promises";
 import { join as G } from "path";
 function c() {
   let e = A_(),
@@ -334,7 +334,7 @@ var V = {
       return (
         await ae().mkdir(t),
         await On(r, b(e), 384),
-        await Y(r, 384),
+        await chmod(r, 384),
         { success: !0, warning: T }
       );
     } catch {
@@ -529,7 +529,7 @@ function te() {
 function re() {
   return {
     legacyPath: x(be(), ".config.json"),
-    configPath: x(process.env.CLAUDE_CONFIG_DIR || Q(), `.claude${F1()}.json`),
+    configPath: x(process.env.CLAUDE_CONFIG_DIR || homedir(), `.claude${fileSuffixForOauthConfig()}.json`),
   };
 }
 function primeWindowsCredManBackendEnabled(e) {

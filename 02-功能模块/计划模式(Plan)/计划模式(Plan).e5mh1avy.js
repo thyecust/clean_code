@@ -15,17 +15,17 @@ import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { createAbortController as hr } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { getInitialSettings as Ge } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { C5t, het, xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { posix as te } from "path";
-var { dirname: I, isAbsolute: ne, join: T, normalize: ie } = te,
+import { posix } from "path";
+var { dirname: I, isAbsolute: ne, join: T, normalize: ie } = posix,
   DEFAULT_STAGE_FILE_ROOT = "/mnt/user-data/uploads",
   DEFAULT_OUTPUTS_ROOT = T(I(DEFAULT_STAGE_FILE_ROOT), "outputs"),
   STAGE_TMP_PREFIX = ".stage-tmp.";
@@ -40,12 +40,12 @@ function getStageFileRoot() {
 function getOutputsRoot() {
   return T(I(getStageFileRoot()), "outputs");
 }
-import { lstat as se, readdir as oe } from "fs/promises";
+import { lstat, readdir } from "fs/promises";
 import {
-  basename as v,
-  dirname as A,
+  basename,
+  dirname,
   join as d,
-  resolve as O,
+  resolve,
   sep as U,
 } from "path";
 var Wh = "ExitPlanMode",
@@ -77,9 +77,9 @@ class X {
   snapshotChain = Promise.resolve();
   planFileCacheKeyFor(t) {
     if (this.planFileCache === null) return null;
-    let e = O(t);
-    if (A(e) !== P()) return null;
-    return v(e);
+    let e = resolve(t);
+    if (dirname(e) !== P()) return null;
+    return basename(e);
   }
   notePlanFileWritten(t, e) {
     if (this.planFileCache === null) {
@@ -133,10 +133,10 @@ class X {
   }
   noteEarly(t, e) {
     if (!M()) return;
-    let i = O(t);
-    if (A(i) !== P()) return;
-    if ((this.earlyGeneration++, e === void 0)) this.earlyObserved.delete(v(i));
-    else this.earlyObserved.set(v(i), e);
+    let i = resolve(t);
+    if (dirname(i) !== P()) return;
+    if ((this.earlyGeneration++, e === void 0)) this.earlyObserved.delete(basename(i));
+    else this.earlyObserved.set(basename(i), e);
   }
   watchSlug(t, e) {
     this.releaseStaleWatches();
@@ -498,7 +498,7 @@ async function de(t, e) {
   if (i !== null) (planFiles().activatePlanFileCache(t), planFiles().commitPlanListing(e, i));
 }
 async function x(t, e) {
-  let i = hr(),
+  let i = createAbortController(),
     r = !1;
   return (
     await Promise.race([
@@ -530,11 +530,11 @@ async function primePlanSlugCollisions(t) {
     return;
   }
   try {
-    let i = await oe(e);
+    let i = await readdir(e);
     if (e !== C()) return;
     planFiles().commitPlanListing(e, i);
   } catch (i) {
-    if (!W(i) && !Rt(i)) h(i);
+    if (!W(i) && !Rt(i)) logError(i);
     if (e !== C()) return;
     if (W(i)) planFiles().commitPlanListing(e, []);
   }
@@ -555,7 +555,7 @@ function y(t) {
 var w = { publishDiscipline: "inPlace" };
 async function N(t) {
   try {
-    let e = await se(d(getPlansDirectory(), `${t}.md`));
+    let e = await lstat(d(getPlansDirectory(), `${t}.md`));
     return { ...w, mode: e.mode & 511 };
   } catch {
     return w;
@@ -585,10 +585,10 @@ class z {
     return ((this.#e ??= this.#t()), this.#e);
   }
   #t() {
-    let e = Ge().plansDirectory;
+    let e = getInitialSettings().plansDirectory;
     if (e) {
       let i = Q(),
-        r = O(i, e);
+        r = resolve(i, e);
       if (pe(r, i)) return r;
       n(`plansDirectory must be within project root: ${e}`, { level: "error" });
     }
@@ -620,7 +620,7 @@ function pe(t, e) {
   for (;;) {
     let s = RS(r);
     if (s !== null) return s === i || s.startsWith(i + U);
-    let o = A(r);
+    let o = dirname(r);
     if (o === r) return !1;
     r = o;
   }
@@ -652,9 +652,9 @@ async function saveRejectedUltraplan(t, e) {
 async function persistPlanEdit(t, e, i) {
   try {
     await m(i);
-    let r = v(t, ".md"),
+    let r = basename(t, ".md"),
       s =
-        i !== void 0 && g() && A(t) === getPlansDirectory() && kd(p(r)) === void 0
+        i !== void 0 && g() && dirname(t) === getPlansDirectory() && kd(p(r)) === void 0
           ? p(r)
           : void 0;
     if (i !== void 0 && s !== void 0) {
@@ -697,7 +697,7 @@ async function getPlanWorkshopDoc(t) {
     if (W(i)) return null;
     if (Rt(i))
       return (n(`getPlanWorkshopDoc: read failed for ${e}: ${i}`), null);
-    return (h(i), null);
+    return (logError(i), null);
   }
 }
 function planWorkshopDocExists() {
@@ -724,8 +724,8 @@ function getPlan(t) {
   let e = getPlanFilePath(t),
     i = planFiles().planFileCache;
   if (i !== null && g()) {
-    if (t) planFiles().watchAgentPlanFile(getPlanSlug(K()), v(e));
-    let r = i.get(v(e));
+    if (t) planFiles().watchAgentPlanFile(getPlanSlug(K()), basename(e));
+    let r = i.get(basename(e));
     if (r !== void 0) return r;
   }
   return J(e);
@@ -739,7 +739,7 @@ async function getPlanAsync(t, e) {
   return D(e, y(i), "getPlan");
 }
 function q(t) {
-  let e = v(getPlanFilePath(t)),
+  let e = basename(getPlanFilePath(t)),
     i = planFiles();
   if (t && i.planFileCache !== null) i.watchAgentPlanFile(getPlanSlug(K()), e);
   return e;
@@ -755,7 +755,7 @@ async function planExistsAsync(t, e) {
 async function readPlanFileFresh(t) {
   let e = getPlanFilePath();
   if (M() && t !== void 0 && g()) {
-    let i = v(e),
+    let i = basename(e),
       r = planFiles(),
       s = r.planFileWatches.get(i);
     if (s !== void 0) {
@@ -774,7 +774,7 @@ function J(t) {
   } catch (e) {
     if (W(e)) return null;
     if (Rt(e)) return (n(`getPlan: read failed for ${t}: ${e}`), null);
-    return (h(e), null);
+    return (logError(e), null);
   }
 }
 var he = /^[a-z0-9][a-z0-9-]{0,119}$/;
@@ -791,7 +791,7 @@ function Y(t) {
 }
 async function V(t, e, i) {
   if (mJe() === null) return;
-  if (i && g()) return ge(i, t, e).catch(h);
+  if (i && g()) return ge(i, t, e).catch(logError);
   let r = d(getPlansDirectory(), `${e}.workshop.md`);
   try {
     await qt().read(r);
@@ -799,7 +799,7 @@ async function V(t, e, i) {
   } catch (o) {
     if (!W(o)) {
       if (Rt(o)) n(`recoverWorkshopDocForResume: read failed for ${r}: ${o}`);
-      else h(o);
+      else logError(o);
       return;
     }
   }
@@ -817,7 +817,7 @@ async function V(t, e, i) {
       n(`Workshop doc recovery write failed for ${r}: ${o}`);
       return;
     }
-    h(o);
+    logError(o);
   } finally {
     notePlanFileForgotten(r);
   }
@@ -866,16 +866,16 @@ async function copyPlanForResume(t, e, i) {
   let r = Y(t);
   if (!r) return !1;
   let s = e ?? K();
-  if ((setPlanSlug(s, r), i && g())) return Fe(i, t, r).catch((l) => (h(l), !1));
+  if ((setPlanSlug(s, r), i && g())) return Fe(i, t, r).catch((l) => (logError(l), !1));
   let o = d(getPlansDirectory(), `${r}.md`);
-  await V(t, r).catch(h);
+  await V(t, r).catch(logError);
   try {
     return (await qt().read(o), !0);
   } catch (l) {
     if (!W(l)) {
       if (Rt(l))
         return (n(`copyPlanForResume: read failed for ${o}: ${l}`), !1);
-      return (h(l), !1);
+      return (logError(l), !1);
     }
     if (mJe() === null) return !1;
     n(`Plan file missing during resume: ${o}. Attempting recovery.`);
@@ -895,7 +895,7 @@ async function copyPlanForResume(t, e, i) {
         return (await m(), await qt().write(o, c), !0);
       } catch (f) {
         if (Rt(f)) return (n(`Plan recovery write failed for ${o}: ${f}`), !1);
-        return (h(f), !1);
+        return (logError(f), !1);
       } finally {
         notePlanFileForgotten(o);
       }
@@ -929,7 +929,7 @@ async function me(t, e) {
   );
 }
 async function Fe(t, e, i) {
-  await V(e, i, t).catch(h);
+  await V(e, i, t).catch(logError);
   let r = `${i}.md`,
     s = planFiles().observePlanFile(r),
     o = await t.read([p(i)]);
@@ -991,14 +991,14 @@ async function copyPlanForFork(t, e, i) {
     l = getPlanSlug(e),
     u = d(s, `${l}.md`);
   if ((planFiles().exemptSlugFromRevalidation(e, l), i && g()))
-    return Pe(i, r, l).catch((c) => (h(c), !1));
+    return Pe(i, r, l).catch((c) => (logError(c), !1));
   await m();
   try {
     await qt().copy(d(s, `${r}.workshop.md`), d(s, `${l}.workshop.md`));
   } catch (c) {
     if (!W(c))
       if (Rt(c)) n(`copyPlanForFork: workshop sibling copy failed: ${c}`);
-      else h(c);
+      else logError(c);
   } finally {
     notePlanFileForgotten(d(s, `${l}.workshop.md`));
   }
@@ -1007,7 +1007,7 @@ async function copyPlanForFork(t, e, i) {
   } catch (c) {
     if (W(c)) return !1;
     if (Rt(c)) return (n(`copyPlanForFork: copy failed for ${o}: ${c}`), !1);
-    return (h(c), !1);
+    return (logError(c), !1);
   } finally {
     notePlanFileForgotten(u);
   }

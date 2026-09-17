@@ -11,29 +11,29 @@ import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { j, B, hB, u8, Nm } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { OAUTH_BETA_HEADER as Bc, getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { OAUTH_BETA_HEADER, getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l, A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qPn, We, Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
-  getAuthHeadersAsync as tx,
-  shouldUseWIFAuth as Zc,
-  effectiveAuthTokenEnv as d0,
-  getAuthTokenSource as Gl,
-  getApiKeyPrefixBucket as _Rn,
-  getAnthropicApiKeyWithSource as qg,
-  getConfiguredApiKeyHelper as bg,
-  getClaudeAIOAuthTokens as Yt,
-  checkAndRefreshOAuthTokenIfNeededWithOutcome as jUe,
-  isClaudeAISubscriber as gt,
-  getStoredOauthAccountInfo as mh,
+  getAuthHeadersAsync,
+  shouldUseWIFAuth,
+  effectiveAuthTokenEnv,
+  getAuthTokenSource,
+  getApiKeyPrefixBucket,
+  getAnthropicApiKeyWithSource,
+  getConfiguredApiKeyHelper,
+  getClaudeAIOAuthTokens,
+  checkAndRefreshOAuthTokenIfNeededWithOutcome,
+  isClaudeAISubscriber,
+  getStoredOauthAccountInfo,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getAPIProvider as Pe, isActualFirstPartyAnthropicBaseUrl as ev } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   aAt,
@@ -53,30 +53,30 @@ import {
   L$e,
   Znr,
   err,
-  setSessionCache as use,
-  setLastFetchOutcome as F4t,
-  getLastFetchOutcome as kve,
-  detachPolicyLimitsBackend as rCn,
-  getSessionCache as sU,
-  suppressDiskAdoption as $4t,
-  getDiskAdoptionEpoch as tQe,
-  liftDiskAdoptionSuppression as U4t,
-  isDiskAdoptionSuppressed as B4t,
-  getCachePath as iU,
-  isPolicyLimitsEligible as lA,
-  getPolicyLimitsIneligibleReason as KJ,
-  loadCachedResponse as nQe,
-  parseCachedResponse as j4t,
-  projectPolicyLimitsBody as pAt,
-  serverBodyOf as rQe,
-  seedSessionCacheFromPrime as W4t,
-  getResponseFromCache as ch,
+  setSessionCache,
+  setLastFetchOutcome,
+  getLastFetchOutcome,
+  detachPolicyLimitsBackend,
+  getSessionCache,
+  suppressDiskAdoption,
+  getDiskAdoptionEpoch,
+  liftDiskAdoptionSuppression,
+  isDiskAdoptionSuppressed,
+  getCachePath,
+  isPolicyLimitsEligible,
+  getPolicyLimitsIneligibleReason,
+  loadCachedResponse,
+  parseCachedResponse,
+  projectPolicyLimitsBody,
+  serverBodyOf,
+  seedSessionCacheFromPrime,
+  getResponseFromCache,
 } from "./chunk-8sw91yn5.js";
 import { QAn } from "../../01-核心基础设施/共享小工具-未细化/chunk-1945b2ak.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { statSync as ye } from "fs";
-import { unlink as _e, utimes as Se, writeFile as ve } from "fs/promises";
+import { statSync } from "fs";
+import { unlink, utimes, writeFile } from "fs/promises";
 function N(e, t, r = {}) {
   let o = setInterval(e, t);
   if (r.unref) o.unref?.();
@@ -151,8 +151,8 @@ async function re({
     if (_.result === "valid" && _.issuedAt !== void 0)
       await znr(t, d, Math.min(_.issuedAt, Math.floor(h / 1000)));
     i("tengu_signed_cache_shadow", {
-      cache: u(e),
-      result: u(_.result),
+      cache: fromEnum(e),
+      result: fromEnum(_.result),
       age_s: _.ageSeconds,
       cert_days_left: _.certDaysLeft,
       has_org_uuid: o !== void 0,
@@ -186,42 +186,42 @@ var K = 1e4,
   Cfr = 86400000;
 function se() {
   try {
-    return Math.max(0, Date.now() - ye(iU()).mtimeMs);
+    return Math.max(0, Date.now() - statSync(getCachePath()).mtimeMs);
   } catch {
     return;
   }
 }
 var ne = Date.now();
 function ae(e) {
-  let t = sU();
+  let t = getSessionCache();
   if (!t) return e;
   let r = Y([...t.compliance_taints, ...e.compliance_taints]).slice(0, eQe);
   if (r.length === t.compliance_taints.length) return t;
   return { ...t, compliance_taints: r };
 }
 function ue() {
-  return `${Vt().BASE_API_URL}${NRe}`;
+  return `${getOauthConfig().BASE_API_URL}${NRe}`;
 }
 function V() {
   try {
-    return new URL(Vt().BASE_API_URL).host;
+    return new URL(getOauthConfig().BASE_API_URL).host;
   } catch {
     return "unknown host";
   }
 }
 function Re(e) {
-  return bke(rQe(e));
+  return bke(serverBodyOf(e));
 }
 function qJe() {
-  return lA() && nQe() === null;
+  return isPolicyLimitsEligible() && loadCachedResponse() === null;
 }
 function Te() {
   let e = null;
   try {
-    e = qg({ skipRetrievingKeyFromApiKeyHelper: !0 }).key;
+    e = getAnthropicApiKeyWithSource({ skipRetrievingKeyFromApiKeyHelper: !0 }).key;
   } catch {}
-  if (!e && Zc()) return "wif";
-  if (gt() && Yt()?.accessToken) return "oauth";
+  if (!e && shouldUseWIFAuth()) return "wif";
+  if (isClaudeAISubscriber() && getClaudeAIOAuthTokens()?.accessToken) return "oauth";
   return e ? "api_key" : "oauth";
 }
 async function Ae(e, t, r) {
@@ -242,8 +242,8 @@ async function Ae(e, t, r) {
 async function ke(e, t) {
   let r;
   try {
-    r = await jUe({ credentials: t });
-    let o = await tx();
+    r = await checkAndRefreshOAuthTokenIfNeededWithOutcome({ credentials: t });
+    let o = await getAuthHeadersAsync();
     if (o.error)
       return {
         success: !1,
@@ -278,7 +278,7 @@ async function ke(e, t) {
         { success: !0, response: null, etag: e, signature: Cve(d.headers) }
       );
     }
-    let p = pAt(d.data);
+    let p = projectPolicyLimitsBody(d.data);
     if (!p.success) {
       let h = Ie(p.error.issues[0]?.path[0]),
         _ = (d.headers["content-type"] ?? "").toString().toLowerCase(),
@@ -358,17 +358,17 @@ async function ke(e, t) {
   }
 }
 async function jAn(e, { timeoutMs: t = K } = {}) {
-  if (Pe() !== "firstParty" || !ev()) return null;
+  if (getAPIProvider() !== "firstParty" || !isActualFirstPartyAnthropicBaseUrl()) return null;
   try {
     let r = await at.get(ue(), {
         headers: {
           Authorization: `Bearer ${e}`,
-          "anthropic-beta": Bc,
+          "anthropic-beta": OAUTH_BETA_HEADER,
           "User-Agent": va(),
         },
         timeout: t,
       }),
-      o = pAt(r.data);
+      o = projectPolicyLimitsBody(r.data);
     if (!o.success)
       return (
         n(
@@ -401,10 +401,10 @@ var Oe = [
 ];
 function le() {
   return {
-    has_custom_base_url: !ev(),
-    has_auth_token: Boolean(d0()),
-    has_api_key_helper: Boolean(bg()),
-    api_key_prefix: u(_Rn()),
+    has_custom_base_url: !isActualFirstPartyAnthropicBaseUrl(),
+    has_auth_token: Boolean(effectiveAuthTokenEnv()),
+    has_api_key_helper: Boolean(getConfiguredApiKeyHelper()),
+    api_key_prefix: fromEnum(getApiKeyPrefixBucket()),
   };
 }
 function vfr(e) {
@@ -450,7 +450,7 @@ function D() {
 }
 var de = 1048576;
 async function WAn(e) {
-  if (!M() || e === void 0 || !lA()) return;
+  if (!M() || e === void 0 || !isPolicyLimitsEligible()) return;
   try {
     let t = await e.read([{ key: D(), offset: 0, length: de + 1 }]);
     if (!t.ok) {
@@ -461,14 +461,14 @@ async function WAn(e) {
     }
     let r = t.value.items[0];
     if (!r.found) {
-      W4t(e, null);
+      seedSessionCacheFromPrime(e, null);
       return;
     }
     if (r.totalBytes > de) {
       n("Policy limits: prime skipped (oversize cache); raw cache read stays");
       return;
     }
-    W4t(e, j4t(Buffer.from(r.value).toString("utf-8")));
+    seedSessionCacheFromPrime(e, parseCachedResponse(Buffer.from(r.value).toString("utf-8")));
   } catch (t) {
     n(`Policy limits: prime failed: ${l(t)}`);
   }
@@ -513,11 +513,11 @@ class GAn {
   stop() {
     if (
       (this.sessionGeneration++,
-      $4t(),
+      suppressDiskAdoption(),
       this.stopBackgroundPolling(),
-      use(null),
-      F4t(null),
-      rCn(),
+      setSessionCache(null),
+      setLastFetchOutcome(null),
+      detachPolicyLimitsBackend(),
       this.loadingCompleteResolve?.(),
       (this.loadingCompletePromise = null),
       (this.loadingCompleteResolve = null),
@@ -527,7 +527,7 @@ class GAn {
   }
   initializeLoadingPromise() {
     if (this.loadingCompletePromise) return;
-    if (lA())
+    if (isPolicyLimitsEligible())
       this.loadingCompletePromise = new Promise((e) => {
         ((this.loadingCompleteResolve = e),
           (this.loadingTimeoutId = setTimeout(
@@ -558,14 +558,14 @@ class GAn {
     if (M() && this.storageV5 !== void 0) {
       let o, s;
       try {
-        let a = await this.storageV5.write(D(), b(rQe(e), null, 2), {
+        let a = await this.storageV5.write(D(), b(serverBodyOf(e), null, 2), {
           publishDiscipline: "inPlace",
           mode: 384,
         });
         if (a.ok)
           return (
-            n(`Policy limits: Saved to ${iU()}`),
-            await lse(iU(), r),
+            n(`Policy limits: Saved to ${getCachePath()}`),
+            await lse(getCachePath(), r),
             "saved"
           );
         ((o = We(a.error)), (s = Fe(a.error)));
@@ -575,9 +575,9 @@ class GAn {
       return (this.recordCacheWriteFailure(o, s), "failed");
     }
     try {
-      let o = iU();
+      let o = getCachePath();
       return (
-        await ve(o, b(rQe(e), null, 2), { encoding: "utf-8", mode: 384 }),
+        await writeFile(o, b(serverBodyOf(e), null, 2), { encoding: "utf-8", mode: 384 }),
         n(`Policy limits: Saved to ${o}`),
         await lse(o, r),
         "saved"
@@ -597,30 +597,30 @@ class GAn {
       (n(`Policy limits: Failed to save - ${e}`), !this.cacheWriteFailureLogged)
     )
       ((this.cacheWriteFailureLogged = !0),
-        i("tengu_policy_limits_cache_write_failed", { errno: u(t) }));
+        i("tengu_policy_limits_cache_write_failed", { errno: fromEnum(t) }));
   }
   async fetchAndLoad(e, t = !1) {
     this.used = !0;
     let r = e === "policy_limits_load" && !this.startupLoadClaimed;
     if (r) this.startupLoadClaimed = !0;
-    if (!lA()) return null;
+    if (!isPolicyLimitsEligible()) return null;
     if (r) this.startupLoadState = "in_flight";
-    let o = B4t() ? null : nQe(),
+    let o = isDiskAdoptionSuppressed() ? null : loadCachedResponse(),
       s = o === L$e ? null : o,
-      a = tQe(),
+      a = getDiskAdoptionEpoch(),
       d = se();
-    if (s && !sU()) use(s);
+    if (s && !getSessionCache()) setSessionCache(s);
     let p = s ? Re(s) : void 0,
       m = this.cacheClearEpoch;
     if (!this.signedCacheShadowChecked) {
       if (((this.signedCacheShadowChecked = !0), p !== void 0))
-        P4t("policy-limits", iU(), p, mh);
+        P4t("policy-limits", getCachePath(), p, getStoredOauthAccountInfo);
     }
     let h = Te(),
       _ = Date.now(),
-      L = kve(),
+      L = getLastFetchOutcome(),
       T = () => {
-        let C = kve();
+        let C = getLastFetchOutcome();
         return C !== null && C.success && C !== L;
       },
       q = !1,
@@ -640,7 +640,7 @@ class GAn {
     try {
       let C = V(),
         c = await Ae(p, this.credentials, (S) => {
-          if (kve()?.success) return;
+          if (getLastFetchOutcome()?.success) return;
           this.recordFetchOutcome(m, {
             success: !1,
             host: C,
@@ -657,10 +657,10 @@ class GAn {
           n(
             "Policy limits: Discarding a fetch that outlived the account session",
           ),
-          sU()
+          getSessionCache()
         );
       }
-      if (tQe() !== a)
+      if (getDiskAdoptionEpoch() !== a)
         (n(
           "Policy limits: the disk snapshot predates an account-boundary hold; not installable",
         ),
@@ -683,18 +683,18 @@ class GAn {
           attempts: c.attempts,
           is_load: e === "policy_limits_load",
           awaited: t,
-          auth_type: u(h),
-          error_code: we(Q),
-          token_source: u(Gl().source),
+          auth_type: fromEnum(h),
+          error_code: fromEnumOpt(Q),
+          token_source: fromEnum(getAuthTokenSource().source),
           ...le(),
-          auth_unavailable_reason: we(c.authUnavailableReason),
+          auth_unavailable_reason: fromEnumOpt(c.authUnavailableReason),
           token_refresh_outcome:
-            h === "oauth" ? we(c.tokenRefreshOutcome) : void 0,
+            h === "oauth" ? fromEnumOpt(c.tokenRefreshOutcome) : void 0,
           http_status: c.httpStatus,
-          parse_error_field: we(c.parseErrorField),
-          parse_error_content_type: we(c.parseErrorContentType),
-          server_error_type: we(c.serverErrorType),
-          server_error_code: we(c.serverErrorCode),
+          parse_error_field: fromEnumOpt(c.parseErrorField),
+          parse_error_content_type: fromEnumOpt(c.parseErrorContentType),
+          server_error_type: fromEnumOpt(c.serverErrorType),
+          server_error_code: fromEnumOpt(c.serverErrorCode),
         }),
         !O)
       ) {
@@ -713,20 +713,20 @@ class GAn {
               : "Policy limits: Using stale cache after fetch failure",
           );
           let R = ae(S);
-          return (use(R), g(e, I ? "spurious_304" : "stale_cache_used"), R);
+          return (setSessionCache(R), logFeatureSad(e, I ? "spurious_304" : "stale_cache_used"), R);
         }
         if (
           (c.httpStatus === 404 || c.httpStatus === 304) &&
-          sU() === null &&
+          getSessionCache() === null &&
           !H("tengu_rustling_orbit", !1)
         )
           return (
             n(
               `Policy limits: ${c.httpStatus} with no cache, no restrictions for this session (not persisted)`,
             ),
-            use(L$e),
+            setSessionCache(L$e),
             (this.serverConfirmedGeneration = E),
-            g(
+            logFeatureSad(
               e,
               c.httpStatus === 404
                 ? "route_missing_fail_open"
@@ -734,44 +734,44 @@ class GAn {
             ),
             L$e
           );
-        return (f(e, U), null);
+        return (logFeatureBad(e, U), null);
       }
       let F = c.response;
       if (F === null || F === void 0) {
-        if (!s) return (X(), f(e, "unexpected_error"), null);
+        if (!s) return (X(), logFeatureBad(e, "unexpected_error"), null);
         n("Policy limits: Cache still valid (304 Not Modified)");
         let S = s,
           R = s.compliance_taints,
           te =
             this.serverConfirmedGeneration === E
-              ? (sU()?.compliance_taints ?? [])
+              ? (getSessionCache()?.compliance_taints ?? [])
               : [];
-        if (te.some((w) => !R.includes(w)) && nCn(rQe(s)) > 0)
+        if (te.some((w) => !R.includes(w)) && nCn(serverBodyOf(s)) > 0)
           ((S = { ...s, compliance_taints: Y([...te, ...R]).slice(0, eQe) }),
             n(
               "Policy limits: lossy cached compliance_taints \u2014 kept the session taint set",
             ));
-        (use(S),
+        (setSessionCache(S),
           (this.serverConfirmedGeneration = E),
           k({ success: !0, host: C }));
         try {
           if (M() && this.storageV5 !== void 0) {
             if ((await this.storageV5.touch(D())).ok)
-              (await lse(iU(), c.signature),
-                await XJe(iU(), this.cacheClearEpoch !== m));
+              (await lse(getCachePath(), c.signature),
+                await XJe(getCachePath(), this.cacheClearEpoch !== m));
           } else {
             let w = new Date();
-            (await Se(iU(), w, w),
-              await lse(iU(), c.signature),
-              await XJe(iU(), this.cacheClearEpoch !== m));
+            (await utimes(getCachePath(), w, w),
+              await lse(getCachePath(), c.signature),
+              await XJe(getCachePath(), this.cacheClearEpoch !== m));
           }
         } catch {}
-        return (y(e), S);
+        return (logFeatureOk(e), S);
       }
       let P = F;
       if (c.lossyComplianceTaints) {
         let S = [
-          ...(sU()?.compliance_taints ?? []),
+          ...(getSessionCache()?.compliance_taints ?? []),
           ...(s?.compliance_taints ?? []),
         ];
         if (S.length > 0)
@@ -783,10 +783,10 @@ class GAn {
               "Policy limits: lossy compliance_taints \u2014 kept the known taint set",
             ));
       }
-      (use(P),
+      (setSessionCache(P),
         (this.serverConfirmedGeneration = E),
         k({ success: !0, host: C }));
-      let me = tQe(),
+      let me = getDiskAdoptionEpoch(),
         ee = await this.saveCachedResponse(
           P,
           E,
@@ -795,14 +795,14 @@ class GAn {
       if (this.sessionGeneration !== E) {
         if (ee !== "stale") {
           let S = await this.deleteCacheFile();
-          if (($4t(), !S))
+          if ((suppressDiskAdoption(), !S))
             n(
               "Policy limits: could not remove a dead fetch's cache write; disk adoption suppressed until the next save",
             );
         }
-        return (this.dropUnconfirmedSessionCache(), sU());
+        return (this.dropUnconfirmedSessionCache(), getSessionCache());
       }
-      if (ee === "saved" && tQe() === me) U4t();
+      if (ee === "saved" && getDiskAdoptionEpoch() === me) liftDiskAdoptionSuppression();
       if (
         (n(
           Object.keys(P.restrictions).length > 0
@@ -811,8 +811,8 @@ class GAn {
         ),
         c.lossyComplianceTaints)
       )
-        g(e, "lossy_compliance_taints");
-      else y(e);
+        logFeatureSad(e, "lossy_compliance_taints");
+      else logFeatureOk(e);
       return P;
     } catch {
       let C = this.sessionGeneration !== E;
@@ -821,53 +821,53 @@ class GAn {
           (this.startupLoadErrorCode = C
             ? "session_changed"
             : "unexpected_error"));
-      if (C) return sU();
+      if (C) return getSessionCache();
       if (!q) X();
       let c = this.staleFallbackSource();
       if (c) {
         n("Policy limits: Using stale cache after error");
         let x = ae(c);
-        return (use(x), g(e, "stale_cache_used"), x);
+        return (setSessionCache(x), logFeatureSad(e, "stale_cache_used"), x);
       }
-      return (f(e, "unexpected_error"), null);
+      return (logFeatureBad(e, "unexpected_error"), null);
     }
   }
   logCacheStateAtFirstPrompt() {
     if (this.firstPromptStateLogged) return;
     this.firstPromptStateLogged = !0;
-    let e = KJ(),
+    let e = getPolicyLimitsIneligibleReason(),
       t = e === void 0,
-      r = e === "custom_base_url" ? KJ({ skipBaseUrlCheck: !0 }) === void 0 : t,
-      o = ch() !== null,
+      r = e === "custom_base_url" ? getPolicyLimitsIneligibleReason({ skipBaseUrlCheck: !0 }) === void 0 : t,
+      o = getResponseFromCache() !== null,
       s = t ? se() : void 0,
       a = this.startupLoadState,
       d = this.startupAwaitResult,
       p = this.startupLoadErrorCode,
-      m = u(QAn());
+      m = fromEnum(QAn());
     i("tengu_policy_limits_cache_state_at_first_prompt", {
       eligible: t,
-      ineligible_reason: we(e),
+      ineligible_reason: fromEnumOpt(e),
       eligible_if_base_url_gate_removed: r,
       has_cache: o,
       cache_age_ms: s,
       would_fail_closed: t && (!o || (s ?? 1 / 0) > Cfr),
-      token_source: u(Gl().source),
+      token_source: fromEnum(getAuthTokenSource().source),
       ...le(),
       ms_since_startup: Date.now() - ne,
-      load_state: u(a),
-      startup_fetch_error_code: we(p),
-      startup_await_result: u(d),
+      load_state: fromEnum(a),
+      startup_fetch_error_code: fromEnumOpt(p),
+      startup_await_result: fromEnum(d),
       error_reporting_gate: m,
     });
   }
   async load({ startupAwaited: e = !1 } = {}) {
-    if (((this.used = !0), lA() && !this.loadingCompletePromise))
+    if (((this.used = !0), isPolicyLimitsEligible() && !this.loadingCompletePromise))
       this.loadingCompletePromise = new Promise((r) => {
         this.loadingCompleteResolve = r;
       });
     let t = this.loadingCompleteResolve;
     try {
-      if ((await this.fetchAndLoad("policy_limits_load", e), lA()))
+      if ((await this.fetchAndLoad("policy_limits_load", e), isPolicyLimitsEligible()))
         this.startBackgroundPolling();
     } finally {
       if (t) {
@@ -880,7 +880,7 @@ class GAn {
     }
   }
   async refresh() {
-    if (((this.used = !0), this.stop(), this.initializeLoadingPromise(), !lA()))
+    if (((this.used = !0), this.stop(), this.initializeLoadingPromise(), !isPolicyLimitsEligible()))
       return;
     if (!(await this.deleteCacheFile()))
       n(
@@ -898,48 +898,48 @@ class GAn {
     this.dropUnconfirmedSessionCache();
   }
   recordFetchOutcome(e, t) {
-    if (this.cacheClearEpoch === e) F4t(t);
+    if (this.cacheClearEpoch === e) setLastFetchOutcome(t);
   }
   staleFallbackSource() {
-    if (B4t()) return sU();
-    return nQe() ?? sU();
+    if (isDiskAdoptionSuppressed()) return getSessionCache();
+    return loadCachedResponse() ?? getSessionCache();
   }
   dropUnconfirmedSessionCache() {
     if (
-      sU() !== null &&
+      getSessionCache() !== null &&
       this.serverConfirmedGeneration !== this.sessionGeneration
     )
-      use(null);
+      setSessionCache(null);
   }
   async deleteCacheFile() {
     if (
       (this.cacheClearEpoch++,
-      await KJe(iU()),
+      await KJe(getCachePath()),
       M() && this.storageV5 !== void 0)
     )
       try {
         await this.storageV5.delete(D());
       } catch {}
     try {
-      return (await _e(iU()), !0);
+      return (await unlink(getCachePath()), !0);
     } catch (e) {
       return W(e);
     }
   }
   async poll() {
-    if (!lA()) return;
-    let e = sU(),
+    if (!isPolicyLimitsEligible()) return;
+    let e = getSessionCache(),
       t = e ? b(e) : null;
     try {
       await this.fetchAndLoad("policy_limits_poll");
-      let r = sU();
+      let r = getSessionCache();
       if ((r ? b(r) : null) !== t)
         n("Policy limits: Changed during background poll");
     } catch {}
   }
   startBackgroundPolling() {
     if (((this.used = !0), this.poller !== null)) return;
-    if (!lA()) return;
+    if (!isPolicyLimitsEligible()) return;
     if (
       ((this.poller = I4t(() => void this.poll(), Ee, { unref: !0 })),
       !this.cleanupRegistered)
@@ -999,7 +999,7 @@ function Cyr() {
   return v();
 }
 function vyr() {
-  (v().stop(), U4t(), (z().client = void 0));
+  (v().stop(), liftDiskAdoptionSuppression(), (z().client = void 0));
 }
 function zAn() {
   v().initializeLoadingPromise();

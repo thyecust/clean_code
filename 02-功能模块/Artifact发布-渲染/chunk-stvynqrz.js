@@ -12,16 +12,16 @@ import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-5
 import { Ve, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, Tr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { parseRetryAfterHeader as Yy } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, Zt, Io, cr, nt, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isCancel as qi } from "../../00-第三方库/axios/axios.t0fczzmz.js";
+import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { G5, KU } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { externalHttp as ra } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
-import { ASSET_ID_RE as Hp, ARTIFACT_SLUG_RE as fr } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { ASSET_ID_RE, ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
   SCe,
@@ -52,23 +52,23 @@ import {
   $Xe,
   qk,
   Fd,
-  resolveContract as Toe,
-  foldBootCowritten as cTt,
+  resolveContract,
+  foldBootCowritten,
   IC,
   _Fe,
 } from "./chunk-01ymf0ar.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
-  closeSync as se,
-  constants as V,
-  fstatSync as ae,
-  lstatSync as L,
-  openSync as ie,
+  closeSync,
+  constants,
+  fstatSync,
+  lstatSync,
+  openSync,
   read as de,
-  realpathSync as ue,
+  realpathSync,
 } from "fs";
-import { extname as ce } from "path";
-import { promisify as fe } from "util";
+import { extname } from "path";
+import { promisify } from "util";
 function Ccn() {
   return a.CLAUDE_CODE_ARTIFACT_ASSETS ?? !0;
 }
@@ -100,7 +100,7 @@ var B = new Map([
   q3n = Y(B.values()).flatMap((e) => S$t(e) ?? []),
   g$t = [...B.keys()].map((e) => e.slice(1)).join(", ");
 function r4e(e) {
-  return B.get(ce(e).toLowerCase());
+  return B.get(extname(e).toLowerCase());
 }
 var me = new Set([
   "text/csv",
@@ -151,7 +151,7 @@ function eV(e) {
   if (B7(e)) return { kind: "network" };
   let r;
   try {
-    r = ue(e);
+    r = realpathSync(e);
   } catch (s) {
     return { kind: "unresolved", error: s };
   }
@@ -159,7 +159,7 @@ function eV(e) {
 }
 function z3n(e) {
   try {
-    let r = L(e, { bigint: !0 });
+    let r = lstatSync(e, { bigint: !0 });
     return {
       real: e,
       identity: j(r),
@@ -174,12 +174,12 @@ function Hcn(e, r = eV(e), s = r.kind !== "network" && bft(e)) {
 }
 function bft(e) {
   try {
-    return L(e).isSymbolicLink();
+    return lstatSync(e).isSymbolicLink();
   } catch {
     return !0;
   }
 }
-var J = fe(de);
+var J = promisify(de);
 async function o4e(e, r, s, u) {
   let t = r,
     o =
@@ -211,7 +211,7 @@ async function o4e(e, r, s, u) {
     return { kind: "error", reason: "via_link", message: K };
   let d;
   try {
-    d = L(i, { bigint: !0 });
+    d = lstatSync(i, { bigint: !0 });
   } catch (g) {
     return o !== void 0 && W(g)
       ? { kind: "error", reason: "changed", message: T }
@@ -227,17 +227,17 @@ async function o4e(e, r, s, u) {
       message:
         "file_path is one of several hard links to its file, and this approval did not examine that \u2014 copy the file to a fresh path under the working directory and upload the copy",
     };
-  let x = 536870912 | V.O_NONBLOCK,
+  let x = 536870912 | constants.O_NONBLOCK,
     v;
   try {
-    v = ie(i, V.O_RDONLY | x);
+    v = openSync(i, constants.O_RDONLY | x);
   } catch (g) {
     if (A(g) === "ELOOP")
       return { kind: "error", reason: "changed", message: T };
     return M(g);
   }
   try {
-    let g = ae(v, { bigint: !0 });
+    let g = fstatSync(v, { bigint: !0 });
     if (!g.isFile())
       return { kind: "error", reason: "not_a_file", message: _$t };
     if (xcn(g.ino))
@@ -248,7 +248,7 @@ async function o4e(e, r, s, u) {
       let h = eV(e);
       if (h.kind !== "resolved" || h.real !== i)
         return { kind: "error", reason: "changed", message: T };
-      let k = L(i, { bigint: !0 });
+      let k = lstatSync(i, { bigint: !0 });
       if (k.dev !== g.dev || k.ino !== g.ino)
         return { kind: "error", reason: "changed", message: T };
     } catch {
@@ -275,7 +275,7 @@ async function o4e(e, r, s, u) {
   } catch (g) {
     return M(g);
   } finally {
-    se(v);
+    closeSync(v);
   }
 }
 var _e = new Set([
@@ -305,7 +305,7 @@ var mI = /^[0-9a-f]{64}$/,
   F9 = 10,
   te = m(() =>
     nt({
-      opaque_id: le().regex(Hp),
+      opaque_id: le().regex(ASSET_ID_RE),
       url: le()
         .optional()
         .catch(void 0),
@@ -318,7 +318,7 @@ var mI = /^[0-9a-f]{64}$/,
     nt({
       assets: cr(
         nt({
-          opaque_id: le().regex(Hp),
+          opaque_id: le().regex(ASSET_ID_RE),
           url: le()
             .optional()
             .catch(void 0),
@@ -482,7 +482,7 @@ async function N(e, r) {
     );
   let E = ne();
   if (!v && !E.assetsOnRoster) {
-    let h = await Toe({
+    let h = await resolveContract({
       timeoutMs: 5000,
       signal: r,
       credentials: e.credentials,
@@ -546,7 +546,7 @@ async function N(e, r) {
           )
         ).res;
       } catch (F) {
-        if (qi(F) || F instanceof Ve) throw F;
+        if (isCancel(F) || F instanceof Ve) throw F;
         return (
           Lj(wN, !0),
           l(
@@ -589,14 +589,14 @@ async function N(e, r) {
       z(_.status, _.data).code !== "policy_denied"
     ) {
       let k = _.response.headers?.["retry-after"],
-        R = Yy(typeof k === "string" ? k : void 0);
+        R = parseRetryAfterHeader(typeof k === "string" ? k : void 0);
       if (R !== void 0 && R <= Se) {
         if ((await Z(R, r), r.aborted)) throw new Ve();
         if (((c.retried = !0), (_ = await p()), h(_))) return g();
       }
     }
   } catch (h) {
-    if (qi(h) || h instanceof Ve) throw h;
+    if (isCancel(h) || h instanceof Ve) throw h;
     if (x && !TCe(wN)) Lj(wN, !0);
     if (KU(h) !== void 0)
       return l(
@@ -646,7 +646,7 @@ async function N(e, r) {
 }
 function I(e, r) {
   let { code: s, reason: u, detail: t } = z(e.status, e.data),
-    o = Yy(e.retryAfter);
+    o = parseRetryAfterHeader(e.retryAfter);
   return r(
     s,
     u,
@@ -662,8 +662,8 @@ function I(e, r) {
 async function V3n(e, r) {
   let { slug: s, bytes: u, contentType: t } = e,
     o = {},
-    c = P((x) => f("artifact_asset_upload", x, o), "upload");
-  if (!fr.test(s))
+    c = P((x) => logFeatureBad("artifact_asset_upload", x, o), "upload");
+  if (!ARTIFACT_SLUG_RE.test(s))
     return c("invalid_request", "invalid_slug", "not a valid artifact id");
   let i = m$t(t);
   if (u.length === 0 || u.length > i)
@@ -707,7 +707,7 @@ async function V3n(e, r) {
     );
   return (
     (ne().assetsOnRoster = !0),
-    y("artifact_asset_upload", { ...o, size_bytes: d.data.size_bytes }),
+    logFeatureOk("artifact_asset_upload", { ...o, size_bytes: d.data.size_bytes }),
     {
       kind: "ok",
       id: d.data.opaque_id,
@@ -721,8 +721,8 @@ async function V3n(e, r) {
 async function K3n(e, r) {
   let { slug: s, after: u } = e,
     t = {},
-    o = P((l) => f("artifact_asset_list", l, t), "list");
-  if (!fr.test(s))
+    o = P((l) => logFeatureBad("artifact_asset_list", l, t), "list");
+  if (!ARTIFACT_SLUG_RE.test(s))
     return o("invalid_request", "invalid_slug", "not a valid artifact id");
   if (u !== void 0 && !N9.test(u))
     return o(
@@ -750,8 +750,8 @@ async function K3n(e, r) {
     return o("upstream_error", "malformed_reply", "the listing was unreadable");
   return (
     (ne().assetsOnRoster = !0),
-    cTt(s, i.data.cowritten),
-    y("artifact_asset_list", { ...t, count: i.data.assets.length }),
+    foldBootCowritten(s, i.data.cowritten),
+    logFeatureOk("artifact_asset_list", { ...t, count: i.data.assets.length }),
     {
       kind: "ok",
       assets: i.data.assets.map((l) => ({
@@ -776,10 +776,10 @@ async function K3n(e, r) {
 async function X3n(e, r) {
   let { slug: s, id: u } = e,
     t = {},
-    o = P((l) => f("artifact_asset_delete", l, t), "delete");
-  if (!fr.test(s))
+    o = P((l) => logFeatureBad("artifact_asset_delete", l, t), "delete");
+  if (!ARTIFACT_SLUG_RE.test(s))
     return o("invalid_request", "invalid_slug", "not a valid artifact id");
-  if (!Hp.test(u))
+  if (!ASSET_ID_RE.test(u))
     return o("invalid_request", "invalid_id", "not a valid asset id");
   let c = await N(
     {
@@ -805,19 +805,19 @@ async function X3n(e, r) {
     );
   return (
     (ne().assetsOnRoster = !0),
-    y("artifact_asset_delete", { ...t, deleted: i.data.deleted }),
+    logFeatureOk("artifact_asset_delete", { ...t, deleted: i.data.deleted }),
     { kind: "ok", deleted: i.data.deleted }
   );
 }
 var Te = m(() =>
-    nt({ assets: cr(te().extend({ from_id: le().regex(Hp) })).max(F9) }),
+    nt({ assets: cr(te().extend({ from_id: le().regex(ASSET_ID_RE) })).max(F9) }),
   ),
   Fe = 120000;
 async function Y3n(e, r) {
   let { slug: s, fromSlug: u, ids: t } = e,
     o = {},
-    c = P((d) => f("artifact_asset_copy", d, o), "copy");
-  if (!fr.test(s) || !fr.test(u))
+    c = P((d) => logFeatureBad("artifact_asset_copy", d, o), "copy");
+  if (!ARTIFACT_SLUG_RE.test(s) || !ARTIFACT_SLUG_RE.test(u))
     return c("invalid_request", "invalid_slug", "not a valid artifact id");
   if (s === u)
     return c(
@@ -828,7 +828,7 @@ async function Y3n(e, r) {
   if (
     t.length === 0 ||
     t.length > F9 ||
-    !t.every((d) => Hp.test(d)) ||
+    !t.every((d) => ASSET_ID_RE.test(d)) ||
     new Set(t).size !== t.length
   )
     return c(
@@ -864,7 +864,7 @@ async function Y3n(e, r) {
     );
   return (
     (ne().assetsOnRoster = !0),
-    y("artifact_asset_copy", { ...o, count: t.length }),
+    logFeatureOk("artifact_asset_copy", { ...o, count: t.length }),
     {
       kind: "ok",
       assets: l.data.assets.map((d) => ({
@@ -887,11 +887,11 @@ var ee =
   "asset reads run only from a local session or an Anthropic-hosted cloud session with its gateway relay enabled; retrying from here will not help";
 async function J3n(e, r, s, u) {
   let t = (w, S) => (
-    f("artifact_asset_read", w),
+    logFeatureBad("artifact_asset_read", w),
     { kind: "error", message: `asset read failed: ${S}`, reason: w }
   );
-  if (!fr.test(e.slug)) return t("invalid_slug", "not a valid artifact id");
-  if (!Hp.test(r)) return t("invalid_id", "not a valid asset id");
+  if (!ARTIFACT_SLUG_RE.test(e.slug)) return t("invalid_slug", "not a valid artifact id");
+  if (!ASSET_ID_RE.test(r)) return t("invalid_id", "not a valid asset id");
   let o = _oe() || ($Xe() && !TN(_w));
   if (!o && a.CLAUDE_CODE_REMOTE) return t("relay_unavailable", ee);
   let c = await IC(e, "artifact_asset_read", s, {
@@ -957,7 +957,7 @@ async function J3n(e, r, s, u) {
         );
       p = { status: w.status, headers: w.response.headers, data: w.data };
     } else {
-      let S = await ra.get(
+      let S = await externalHttp.get(
         `${`https://${v}`}${d}?__frame_t=${encodeURIComponent(l)}`,
         {
           signal: s,
@@ -977,7 +977,7 @@ async function J3n(e, r, s, u) {
         (p = { status: S.status, headers: S.headers, data: S.data }));
     }
   } catch (w) {
-    if (qi(w)) throw w;
+    if (isCancel(w)) throw w;
     if (o) yoe();
     let S = o ? void 0 : KU(w);
     if (S !== void 0) {

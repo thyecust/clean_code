@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { j, bi, K, jc, ke, m_e, V1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Za } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { getSettingsForSource as ye, parentManagedTierParticipates as Ige, getSettings_DEPRECATED as bn, getPolicySettingsLoadErrors as xq, filterFatalPolicyErrors as mie } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { resetSettingsCacheWithBackendRead as GJe } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
+import { getSettingsForSource, parentManagedTierParticipates, getSettings_DEPRECATED, getPolicySettingsLoadErrors, filterFatalPolicyErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import { Bo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function isRestrictedToPluginOnly(t) {
-  let o = ye("policySettings")?.strictPluginOnlyCustomization;
+  let o = getSettingsForSource("policySettings")?.strictPluginOnlyCustomization;
   if (o === !0) return !0;
   if (Array.isArray(o)) return o.includes(t);
   return !1;
@@ -53,11 +53,11 @@ function a() {
   return bi(h);
 }
 function l() {
-  let t = ye("policySettings");
+  let t = getSettingsForSource("policySettings");
   if (t?.disableAllHooks === !0) return {};
   if (t?.allowManagedHooksOnly === !0 || Hr()) return t?.hooks ?? {};
   if (isRestrictedToPluginOnly("hooks")) return t?.hooks ?? {};
-  let o = bn();
+  let o = getSettings_DEPRECATED();
   if (o.disableAllHooks === !0) return t?.hooks ?? {};
   return o.hooks ?? {};
 }
@@ -65,25 +65,25 @@ function shouldAllowManagedHooksOnly() {
   return Hr() || shouldAllowManagedHooksOnlyByPolicy();
 }
 function shouldAllowManagedHooksOnlyByPolicy() {
-  let t = ye("policySettings");
+  let t = getSettingsForSource("policySettings");
   if (t?.allowManagedHooksOnly === !0) return !0;
-  if (bn().disableAllHooks === !0 && t?.disableAllHooks !== !0) return !0;
+  if (getSettings_DEPRECATED().disableAllHooks === !0 && t?.disableAllHooks !== !0) return !0;
   return !1;
 }
 function shouldHoldGuardHooksByAdmin() {
-  return Hr() || ye("policySettings")?.allowManagedHooksOnly === !0;
+  return Hr() || getSettingsForSource("policySettings")?.allowManagedHooksOnly === !0;
 }
 function shouldHoldDeviceHooksByPolicy() {
   return shouldHoldGuardHooksByAdmin() || policySettingsUnreadable();
 }
 function policySettingsUnreadable() {
-  return mie(xq()).length > 0 || (m_e() && Ige());
+  return filterFatalPolicyErrors(getPolicySettingsLoadErrors()).length > 0 || (m_e() && parentManagedTierParticipates());
 }
 function areDeviceHooksStoodDown() {
   return shouldHoldDeviceHooksByPolicy() || isRestrictedToPluginOnly("hooks");
 }
 function shouldDisableAllHooksIncludingManaged() {
-  return ye("policySettings")?.disableAllHooks === !0;
+  return getSettingsForSource("policySettings")?.disableAllHooks === !0;
 }
 function shouldSkipSessionHooksByPolicy() {
   return shouldDisableAllHooksIncludingManaged() || shouldAllowManagedHooksOnlyByPolicy();
@@ -95,7 +95,7 @@ function updateHooksConfigSnapshot(t) {
   (Za(t), a().store(l()), V1());
 }
 async function updateHooksConfigSnapshotThroughBackend(t) {
-  let o = await GJe(t);
+  let o = await resetSettingsCacheWithBackendRead(t);
   try {
     (a().store(l()), V1());
   } finally {
@@ -113,13 +113,13 @@ function getHooksConfigFromSnapshot() {
 }
 function Q$(t, o) {
   i("tengu_goal_cleared", {
-    reason: u(o),
+    reason: fromEnum(o),
     iterations: t.iterations,
     durationMs: Date.now() - t.setAt,
-    origin: we(t.origin),
+    origin: fromEnumOpt(t.origin),
   });
 }
-import { randomUUID as H } from "crypto";
+import { randomUUID } from "crypto";
 var m$e = 4000,
   A = new Set(["clear", "stop", "off", "reset", "none", "cancel"]);
 function cve(t) {
@@ -171,7 +171,7 @@ function v(t, o) {
 function uve(t, o, s) {
   let e = s ?? v(t, o),
     n = AJe();
-  if (n !== null) return (g("goal_set", n.code, { origin: u(e) }), n.message);
+  if (n !== null) return (logFeatureSad("goal_set", n.code, { origin: fromEnum(e) }), n.message);
   let r = K(),
     d = o.getAppState().activeGoal;
   if (d !== void 0) Q$(d, "superseded");
@@ -191,9 +191,9 @@ function uve(t, o, s) {
     i("tengu_stop_hook_added", {
       promptLength: t.length,
       via: S("goal"),
-      origin: u(e),
+      origin: fromEnum(e),
     }),
-    y("goal_set"),
+    logFeatureOk("goal_set"),
     null
   );
 }
@@ -217,7 +217,7 @@ function dve(t) {
 function Jzt(t, o) {
   return {
     type: "attachment",
-    uuid: H(),
+    uuid: randomUUID(),
     timestamp: new Date().toISOString(),
     attachment: { type: "goal_status", met: t, sentinel: !0, condition: o },
   };

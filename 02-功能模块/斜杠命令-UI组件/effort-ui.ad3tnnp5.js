@@ -221,7 +221,7 @@ function io(n, c) {
   let u = g6e(n, c);
   return u === null ? "" : `${Jot(u)} the estimated cost of ${l} (the default)`;
 }
-function dt(n) {
+function getSliderGeometry(n) {
   let c = n ? HJe(n) : null,
     l = Sr(c ? im.indexOf(c) + 1 : im.length),
     u = n && Anr(n) ? wr : void 0,
@@ -351,25 +351,25 @@ var Zo = 80,
   ut = ao,
   cn = [62, 22, 118],
   kr = [140, 80, 240],
-  je = Array.from({ length: 8 }, (n, c) => {
+  RIPPLE_RAMP = Array.from({ length: 8 }, (n, c) => {
     let l = c / 7,
       u = (f) => Math.round(cn[f] + (kr[f] - cn[f]) * l);
     return `rgb(${u(0)},${u(1)},${u(2)})`;
   }),
-  qe = je.at(-1),
+  qe = RIPPLE_RAMP.at(-1),
   le = qe;
-function an(n, c, l) {
+function rippleDistance(n, c, l) {
   let u = n - l,
     f = (c - ee) * 2;
   return Math.sqrt(u * u + f * f);
 }
-function un(n, c) {
+function rippleLevel(n, c) {
   if (n > c.travel) return null;
   let l = (((n - c.travel) % it) + it) % it,
     u = (1 + Math.cos((2 * Math.PI * l) / it)) / 2;
-  return Math.min(je.length - 1, Math.round(u * (je.length - 1)));
+  return Math.min(RIPPLE_RAMP.length - 1, Math.round(u * (RIPPLE_RAMP.length - 1)));
 }
-function x($l) {
+function UltraRippleText($l) {
   let An = _(10),
     {
       text: Oo,
@@ -385,7 +385,7 @@ function x($l) {
     Ae = [];
     let In = 0;
     for (const On of Oo) {
-      let Ln = un(an(Lo + In, Ro, wt.originCol), wt);
+      let Ln = rippleLevel(rippleDistance(Lo + In, Ro, wt.originCol), wt);
       let Vo = Ae.at(-1);
       if (Vo && Vo.level === Ln) Vo.text = Vo.text + On;
       else Ae.push({ text: On, level: Ln });
@@ -403,7 +403,7 @@ function x($l) {
         return e(
           t,
           {
-            backgroundColor: je[kt.level],
+            backgroundColor: RIPPLE_RAMP[kt.level],
             color: Go ?? ke,
             bold: St,
             children: kt.text,
@@ -488,7 +488,7 @@ function go(Ll) {
     H = qa(),
     Re = It(),
     _n;
-  if (g[0] !== H) ((_n = dt(H)), (g[0] = H), (g[1] = _n));
+  if (g[0] !== H) ((_n = getSliderGeometry(H)), (g[0] = H), (g[1] = _n));
   else _n = g[1];
   let s = _n,
     Hn;
@@ -753,7 +753,7 @@ function go(Ll) {
   let Xt;
   if (g[74] !== Xe || g[75] !== G || g[76] !== W || g[77] !== a || g[78] !== h)
     ((Xt = a
-      ? e(x, {
+      ? e(UltraRippleText, {
           text: `${Xe}Effort${" ".repeat(Math.max(0, G - W - 6))}`,
           col: -h,
           row: en,
@@ -774,7 +774,7 @@ function go(Ll) {
   let Ht;
   if (g[82] !== G || g[83] !== a || g[84] !== h)
     ((Ht = a
-      ? e(x, { text: " ".repeat(G), col: -h, row: on, ripple: a })
+      ? e(UltraRippleText, { text: " ".repeat(G), col: -h, row: on, ripple: a })
       : e(o, { height: 1 })),
       (g[82] = G),
       (g[83] = a),
@@ -785,7 +785,7 @@ function go(Ll) {
   if (g[86] !== J || g[87] !== z || g[88] !== a || g[89] !== h || g[90] !== Gt)
     ((Bt = e(o, {
       children: a
-        ? e(x, {
+        ? e(UltraRippleText, {
             text: `${J}Faster${Gt}Smarter${z}`,
             col: -h,
             row: nn,
@@ -825,7 +825,7 @@ function go(Ll) {
       children: a
         ? r(N, {
             children: [
-              e(x, {
+              e(UltraRippleText, {
                 text: `${J}${me}`,
                 col: -h,
                 row: at,
@@ -839,7 +839,7 @@ function go(Ll) {
                 color: ke,
                 children: "\u25B2",
               }),
-              e(x, {
+              e(UltraRippleText, {
                 text: `${Fe}${z}`,
                 col: ne + 1,
                 row: at,
@@ -875,7 +875,7 @@ function go(Ll) {
   else Jt = g[104];
   let zt;
   if (g[105] !== J || g[106] !== a || g[107] !== h)
-    ((zt = a && e(x, { text: J, col: -h, row: ee, ripple: a })),
+    ((zt = a && e(UltraRippleText, { text: J, col: -h, row: ee, ripple: a })),
       (g[105] = J),
       (g[106] = a),
       (g[107] = h),
@@ -903,7 +903,7 @@ function go(Ll) {
           children: [
             ge > 0 &&
               (a
-                ? e(x, {
+                ? e(UltraRippleText, {
                     text: Te(ge - 1),
                     col: s.labelStarts[ge] - s.spacers[ge - 1],
                     row: ee,
@@ -911,7 +911,7 @@ function go(Ll) {
                   })
                 : e(t, { children: Te(ge - 1) })),
             a && I !== ge
-              ? e(x, {
+              ? e(UltraRippleText, {
                   text: dr.label,
                   col: s.labelStarts[ge],
                   row: ee,
@@ -940,7 +940,7 @@ function go(Ll) {
   let ye;
   if (g[122] !== Vt || g[123] !== ct || g[124] !== z || g[125] !== a)
     ((ye = a
-      ? e(x, { text: `${ct}${z}`, col: Vt, row: ee, ripple: a })
+      ? e(UltraRippleText, { text: `${ct}${z}`, col: Vt, row: ee, ripple: a })
       : ct
         ? e(t, { children: ct })
         : null),
@@ -969,7 +969,7 @@ function go(Ll) {
     ((Kt = s.sublabel
       ? e(o, {
           children: a
-            ? e(x, {
+            ? e(UltraRippleText, {
                 text: `${J}${" ".repeat(s.sublabel.start)}${s.sublabel.text}${z}`,
                 col: -h,
                 row: rn,
@@ -1040,7 +1040,7 @@ function go(Ll) {
   let Zt;
   if (g[151] !== G || g[152] !== a || g[153] !== h)
     ((Zt = a
-      ? e(x, { text: " ".repeat(G), col: -h, row: ln, ripple: a })
+      ? e(UltraRippleText, { text: " ".repeat(G), col: -h, row: ln, ripple: a })
       : e(o, { height: 1 })),
       (g[151] = G),
       (g[152] = a),
@@ -1057,7 +1057,7 @@ function go(Ll) {
   )
     ((Ut = e(ci, {
       children: a
-        ? e(x, {
+        ? e(UltraRippleText, {
             text: `${Xe}${Wn}${" ".repeat(Math.max(0, G - W - te(Wn)))}`,
             col: -h,
             row: sn,
@@ -1128,7 +1128,7 @@ function po(Jl) {
     j = qa(),
     He = It(),
     mr;
-  if (q[0] !== j) ((mr = dt(j)), (q[0] = j), (q[1] = mr));
+  if (q[0] !== j) ((mr = getSliderGeometry(j)), (q[0] = j), (q[1] = mr));
   else mr = q[1];
   let T = mr,
     jl = ft(j, eo, zl, T),
@@ -1282,10 +1282,10 @@ async function il(n, c, l) {
   });
 }
 export {
-  je as RIPPLE_RAMP,
-  x as UltraRippleText,
+  RIPPLE_RAMP,
+  UltraRippleText,
   il as call,
-  dt as getSliderGeometry,
-  an as rippleDistance,
-  un as rippleLevel,
+  getSliderGeometry,
+  rippleDistance,
+  rippleLevel,
 };

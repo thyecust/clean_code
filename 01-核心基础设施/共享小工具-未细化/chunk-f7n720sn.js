@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fromEnum as u } from "./chunk-w76kejwn.js";
-import { logFeatureOk as y } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fromEnum } from "./chunk-w76kejwn.js";
+import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { iFe, Iwn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { n6 } from "./chunk-jzy6p47z.js";
 var k = {
@@ -35,19 +35,19 @@ function m(t, e) {
 }
 function Vjn(t, e, a, i, r, d) {
   if (
-    (y("workshop_turn", {
+    (logFeatureOk("workshop_turn", {
       artifact_slug: iFe(e),
       artifact_version: Iwn(a),
       decisions_total: r,
       decisions_resolved: d,
-      state: u(i),
+      state: fromEnum(i),
     }),
     i !== "started")
   )
     return;
   let s = !0;
   if ((t.set((n) => ((s = n.startedSeen.includes(e)), S(n, e))), !s))
-    y("workshop_build_started", { artifact_slug: iFe(e) });
+    logFeatureOk("workshop_build_started", { artifact_slug: iFe(e) });
 }
 function rsn(t, e, a, i, r, d) {
   let s;
@@ -68,18 +68,18 @@ function rsn(t, e, a, i, r, d) {
   });
   let { prev: n, next: p } = s;
   if (n.invokeT0 !== null && d)
-    y("workshop_first_page", {
+    logFeatureOk("workshop_first_page", {
       invoke_to_publish_ms: Math.round(performance.now() - n.invokeT0),
-      first_publish_state: u(i),
+      first_publish_state: fromEnum(i),
     });
   if (!n.startedSeen.includes(e) && p.startedSeen.includes(e))
-    y("workshop_build_started", { artifact_slug: iFe(e) });
+    logFeatureOk("workshop_build_started", { artifact_slug: iFe(e) });
   if (!n.completedSeen.includes(e) && p.completedSeen.includes(e)) {
     let l = r.n > 0 ? "structural" : "post_kickoff_republish";
-    y("workshop_build_completed", {
+    logFeatureOk("workshop_build_completed", {
       artifact_slug: iFe(e),
       artifact_version: Iwn(a),
-      source: u(l),
+      source: fromEnum(l),
       deliverables_n: r.n,
       deliverables_pr: r.pr,
       deliverables_artifact: r.artifact,

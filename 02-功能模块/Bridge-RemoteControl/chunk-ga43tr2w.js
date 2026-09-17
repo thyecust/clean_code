@@ -12,22 +12,22 @@ import { hB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { truncate as or } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Jo, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { Jo, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { axn, eRt } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
 import { FRe, WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isProcessProvablyGone as Vg, isSameProcessAsync as Pm, ownProcStartAsync as gA } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isProcessProvablyGone, isSameProcessAsync, ownProcStartAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import { CNe, b3t, xyn, Hyn, Lpe } from "./chunk-ct52ffwb.js";
-import { fmt, wgt, i4n, getBridgeSessionOrStatus as Mjt, Ly, QWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { fmt, wgt, i4n, getBridgeSessionOrStatus, Ly, QWt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
@@ -43,12 +43,12 @@ import {
   TAt,
   EAt,
 } from "./chunk-5ne99rq3.js";
-import { isBridgeAuthReviveEnabled as x$e, isBridgeNonOrigin403RetryEnabled as R4t, isBridgeOwnerPinnedEndEnabled as wme, isBridgeHostDeclinedEndEnabled as k4t, isBridgeSignedOutNeutralEnabled as LAn, isCcrV2SessionCrudEnabled as XG } from "./chunk-9estzwf5.js";
-import { logBridgeSkip as cb } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { isProactiveEnrollmentDisabled as r5, isTrustedDeviceGateEnabled as ZG, getTrustedDeviceToken as uh, withUntrustedDeviceRecovery as M$e, untrustedDeviceHint as Rme } from "./chunk-tyce0p0b.js";
-import { fse, rVt, isCreateSessionFailure as oVt, createCodeSession as sVt, isCredentialsFailure as eq, isCredentialsRejection as MD, fetchRemoteCredentials as iVt, archiveCodeSession as bCn, unarchiveCodeSession as aVt } from "./chunk-mxsfy35q.js";
-import { reseedBridgePermissionMode as NTn, reseedBridgeCrossSessionInbound as BTn, reseedBridgeModel as jTn } from "../权限系统/chunk-1y2g140m.js";
-import { getBridgeBaseUrlOverride as oG, getBridgeSessionNamePrefix as qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { isBridgeAuthReviveEnabled, isBridgeNonOrigin403RetryEnabled, isBridgeOwnerPinnedEndEnabled, isBridgeHostDeclinedEndEnabled, isBridgeSignedOutNeutralEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
+import { logBridgeSkip } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { isProactiveEnrollmentDisabled, isTrustedDeviceGateEnabled, getTrustedDeviceToken, withUntrustedDeviceRecovery, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
+import { fse, rVt, isCreateSessionFailure, createCodeSession, isCredentialsFailure, isCredentialsRejection, fetchRemoteCredentials, archiveCodeSession, unarchiveCodeSession } from "./chunk-mxsfy35q.js";
+import { reseedBridgePermissionMode, reseedBridgeCrossSessionInbound, reseedBridgeModel } from "../权限系统/chunk-1y2g140m.js";
+import { getBridgeBaseUrlOverride, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { aSn } from "./chunk-1yq098a7.js";
 import { VGe, KGe, Qjn, pM, rdt } from "./chunk-znhfst8k.js";
 import { ddt } from "./chunk-jpq2fv3g.js";
@@ -57,7 +57,7 @@ import { odt, sdt, ibe } from "../../03-入口与运行时/Headless-SDK模式/ch
 import { e6n } from "./chunk-z5v9hvat.js";
 import { lbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-42rkrq9r.js";
 import { vRe } from "./chunk-4zd60pbm.js";
-import { isProcessRunning as Vs } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var Vn = {
@@ -216,7 +216,7 @@ function ii(t) {
 function oi(t, p) {
   return ii(async () => {
     if (!(await ni())) return;
-    let v = await gA(),
+    let v = await ownProcStartAsync(),
       w = { pid: process.pid, procStart: v, createdAt: Date.now() };
     await Te((I) => {
       let S = Object.entries(I.replBridgePlaceholders ?? {}).filter(
@@ -244,8 +244,8 @@ async function Xjn() {
       if (w.pid === process.pid || v.has(w.pid)) continue;
       if (
         w.procStart !== void 0
-          ? Vs(w.pid) && (await Pm(w.pid, w.procStart))
-          : Vs(w.pid)
+          ? isProcessRunning(w.pid) && (await isSameProcessAsync(w.pid, w.procStart))
+          : isProcessRunning(w.pid)
       )
         (v.add(w.pid), p++);
     }
@@ -268,11 +268,11 @@ function Ir(t, p) {
   });
 }
 function si(t, p) {
-  return pr(t) === pr(p);
+  return sessionIdBody(t) === sessionIdBody(p);
 }
 async function Fo(t) {
-  if (Vg(t.pid)) return !0;
-  return Vs(t.pid) && !(await Pm(t.pid, t.procStart));
+  if (isProcessProvablyGone(t.pid)) return !0;
+  return isProcessRunning(t.pid) && !(await isSameProcessAsync(t.pid, t.procStart));
 }
 function Ht(t) {
   if (
@@ -287,7 +287,7 @@ function Ht(t) {
 }
 async function $o(t, p, v) {
   if (!(await Fo(p))) return "keep";
-  let { session: w, notFound: I } = await Mjt(t, {
+  let { session: w, notFound: I } = await getBridgeSessionOrStatus(t, {
     baseUrl: v.baseUrl,
     getAccessToken: v.getAccessToken,
   });
@@ -305,11 +305,11 @@ async function $o(t, p, v) {
   let S = await v.archive(t);
   if (!Ht(S))
     return (
-      f("bridge_placeholder_sweep", typeof S === "number" ? `http_${S}` : S),
+      logFeatureBad("bridge_placeholder_sweep", typeof S === "number" ? `http_${S}` : S),
       "keep"
     );
   return (
-    y("bridge_placeholder_sweep"),
+    logFeatureOk("bridge_placeholder_sweep"),
     n(`[bridge:placeholder] archived orphaned placeholder ${t} (status=${S})`),
     "remove"
   );
@@ -323,11 +323,11 @@ function ai(t) {
       if ((await Z(t.startDelayMs ?? No), !(await ni()))) return;
       let v = ee().replBridgePlaceholders;
       if (!v) return;
-      let w = t.skipSessionId ? pr(t.skipSessionId) : void 0,
+      let w = t.skipSessionId ? sessionIdBody(t.skipSessionId) : void 0,
         I = [];
       for (let [S, L] of Object.entries(v)) {
         let B = Date.now() - L.createdAt;
-        if (Math.abs(B) < Bo || pr(S) === w) continue;
+        if (Math.abs(B) < Bo || sessionIdBody(S) === w) continue;
         if (!Ho.test(S)) {
           I.push(S);
           continue;
@@ -438,12 +438,12 @@ async function xt(t) {
       }),
         Q.close());
     } catch (me) {
-      h(me);
+      logError(me);
     }
     try {
       Pr?.(M, oe, He);
     } catch (me) {
-      h(me);
+      logError(me);
     }
   }
   let W = new pM(Q, new URL(p), {
@@ -713,7 +713,7 @@ async function Yjn(t) {
             stillWanted: () => !R && se === void 0,
             reuseHeldAboveS: Math.ceil(D.token_refresh_buffer_ms / 1000) + 60,
           }).then((r) => {
-            if (r !== null && !eq(r)) Qt = !0;
+            if (r !== null && !isCredentialsFailure(r)) Qt = !0;
             return r;
           });
         }
@@ -722,7 +722,7 @@ async function Yjn(t) {
   if (!Nr)
     return (
       n("[remote-bridge] No OAuth token"),
-      f("bridge_connect", "bridge_connect_no_token"),
+      logFeatureBad("bridge_connect", "bridge_connect_no_token"),
       null
     );
   let yr = () => ie() ?? Nr,
@@ -747,7 +747,7 @@ async function Yjn(t) {
       o = (d) =>
         Lt(
           (_, P) =>
-            sVt(
+            createCodeSession(
               p,
               _,
               Xt,
@@ -771,7 +771,7 @@ async function Yjn(t) {
         ),
       a = await o(Hr);
     if (
-      oVt(a) &&
+      isCreateSessionFailure(a) &&
       a.reason === "grouping_rejected" &&
       Rr === void 0 &&
       Hr !== void 0
@@ -813,13 +813,13 @@ async function Yjn(t) {
   function nn(e) {
     if (e !== null && e.terminal === !1) {
       (_e?.("failed", ct, "auth"),
-        cb("v2_session_create_oauth_rejected", void 0, !0),
-        f("bridge_connect", "bridge_connect_create_oauth_rejected"));
+        logBridgeSkip("v2_session_create_oauth_rejected", void 0, !0),
+        logFeatureBad("bridge_connect", "bridge_connect_create_oauth_rejected"));
       return;
     }
-    (_e?.("failed", qi(oVt(e) ? e : null)),
-      cb("v2_session_create_failed", void 0, !0),
-      f("bridge_connect", "bridge_connect_session_create_failed"));
+    (_e?.("failed", qi(isCreateSessionFailure(e) ? e : null)),
+      logBridgeSkip("v2_session_create_failed", void 0, !0),
+      logFeatureBad("bridge_connect", "bridge_connect_session_create_failed"));
   }
   let Gi = "JWT refresh failed: no OAuth token \u2014 run /login",
     ct = "Claude.ai login was rejected \u2014 run /login, then /remote-control",
@@ -837,8 +837,8 @@ async function Yjn(t) {
         q("info", "bridge_repl_v2_revive_reattach_teleported"),
         Ge?.(),
         _e?.("failed", Lpe, "terminal"),
-        cb("v2_revive_reattach_teleported", void 0, !0),
-        f("bridge_connect", "bridge_connect_reattach_teleported"),
+        logBridgeSkip("v2_revive_reattach_teleported", void 0, !0),
+        logFeatureBad("bridge_connect", "bridge_connect_reattach_teleported"),
         null
       );
     (n(
@@ -860,8 +860,8 @@ async function Yjn(t) {
           "Remote Control could not attach: the host supplied a session credential but no session to attach to",
           "terminal",
         ),
-        cb("v2_work_secret_no_session", void 0, !0),
-        f("bridge_connect", "bridge_connect_work_secret_no_session"),
+        logBridgeSkip("v2_work_secret_no_session", void 0, !0),
+        logFeatureBad("bridge_connect", "bridge_connect_work_secret_no_session"),
         null
       );
     ((b = je),
@@ -885,13 +885,13 @@ async function Yjn(t) {
       ),
         q("info", "bridge_repl_v2_reattach_elevated_auth"));
       let o =
-        e.reason === "untrusted_device" && !ZG()
+        e.reason === "untrusted_device" && !isTrustedDeviceGateEnabled()
           ? { terminal: !0, reason: "request_rejected", status: 403 }
           : { terminal: !0, reason: e.reason };
       return (
         _e?.("failed", A7(o), Le(o)),
-        cb("v2_reattach_elevated_auth", void 0, !0),
-        f("bridge_connect", "bridge_connect_reattach_elevated_auth"),
+        logBridgeSkip("v2_reattach_elevated_auth", void 0, !0),
+        logFeatureBad("bridge_connect", "bridge_connect_reattach_elevated_auth"),
         null
       );
     }
@@ -904,11 +904,11 @@ async function Yjn(t) {
         le(),
         Ge?.(),
         _e?.("failed", Lpe, "terminal"),
-        cb("v2_revive_reattach_gone", void 0, !0, {
-          reattach_origin: we(S),
+        logBridgeSkip("v2_revive_reattach_gone", void 0, !0, {
+          reattach_origin: fromEnumOpt(S),
           revive_initiated: L === !0,
         }),
-        f("bridge_connect", "bridge_connect_reattach_gone"),
+        logFeatureBad("bridge_connect", "bridge_connect_reattach_gone"),
         null
       );
     if (e?.outcome === "gone") {
@@ -917,16 +917,16 @@ async function Yjn(t) {
       ),
         (ft = !0),
         le(),
-        (Xt = ke ?? `${qre()}-${xU()}`),
+        (Xt = ke ?? `${getBridgeSessionNamePrefix()}-${xU()}`),
         q("info", "bridge_repl_v2_reattach_fallback", {
           via: "unarchive",
           status: e.status,
         }),
         i("tengu_bridge_repl_env_expired_fresh_session", {
           v2: !0,
-          via: u("unarchive"),
-          status: typeof e.status === "number" ? e.status : u(e.status),
-          reattach_origin: we(S),
+          via: fromEnum("unarchive"),
+          status: typeof e.status === "number" ? e.status : fromEnum(e.status),
+          reattach_origin: fromEnumOpt(S),
           revive_initiated: L === !0,
         }));
       let r = await tn();
@@ -942,8 +942,8 @@ async function Yjn(t) {
         q("info", "bridge_repl_v2_revive_fresh_refused"),
         le(),
         _e?.("failed", Lpe, "terminal"),
-        cb("v2_revive_fresh_refused", void 0, !0),
-        f("bridge_connect", "bridge_connect_revive_fresh_refused"),
+        logBridgeSkip("v2_revive_fresh_refused", void 0, !0),
+        logFeatureBad("bridge_connect", "bridge_connect_revive_fresh_refused"),
         null
       );
     let e = await tn();
@@ -969,11 +969,11 @@ async function Yjn(t) {
     Be = void 0;
   }
   function ht(e) {
-    if (!eq(e) || !at(e)) {
-      if (e !== null && !eq(e) && !MD(e)) _t();
+    if (!isCredentialsFailure(e) || !at(e)) {
+      if (e !== null && !isCredentialsFailure(e) && !isCredentialsRejection(e)) _t();
       return e;
     }
-    if (!R4t()) return e;
+    if (!isBridgeNonOrigin403RetryEnabled()) return e;
     let r = Date.now();
     if (Be === void 0 || r - Be.lastAtMs > Ki)
       Be = { startedAtMs: r, lastAtMs: r, refusals: 0 };
@@ -1000,7 +1000,7 @@ async function Yjn(t) {
       Dr(b, p, e, D.http_timeout_ms, void 0, Er).then((a) => {
         if (V !== r) return a;
         let d = ht(a);
-        if (d !== null && !eq(d) && !MD(d)) (Br(e), Mt());
+        if (d !== null && !isCredentialsFailure(d) && !isCredentialsRejection(d)) (Br(e), Mt());
         return d;
       });
     if (!ur()) return o();
@@ -1020,22 +1020,22 @@ async function Yjn(t) {
       `[remote-bridge] Reattach ${b}: /bridge failed after unarchive; surfacing retry prompt`,
     ),
       q("info", "v2_remote_creds_reattach_transient"));
-  if (!K || eq(K) || MD(K)) {
+  if (!K || isCredentialsFailure(K) || isCredentialsRejection(K)) {
     let e =
         K === null
           ? de
             ? "Couldn't reconnect to your Remote Control session. Retry, or start a fresh session without --resume."
             : "Remote credentials fetch failed \u2014 see debug log"
-          : MD(K)
+          : isCredentialsRejection(K)
             ? Wi
             : A7(K),
-      r = K === null ? (L ? "auth" : "terminal") : MD(K) ? "auth" : Le(K),
+      r = K === null ? (L ? "auth" : "terminal") : isCredentialsRejection(K) ? "auth" : Le(K),
       o =
         K === null
           ? de
             ? "v2_remote_creds_reattach_transient"
             : "v2_remote_creds_failed"
-          : MD(K)
+          : isCredentialsRejection(K)
             ? "v2_remote_creds_oauth_rejected"
             : at(K)
               ? `v2_remote_creds_request_rejected_${K.source}`
@@ -1045,8 +1045,8 @@ async function Yjn(t) {
         `[remote-bridge] Creds failed; onStateChange ${_e ? "set" : "UNSET"}, msg="${e}"`,
       ),
       _e?.("failed", e, r),
-      cb(o, void 0, !0),
-      f("bridge_connect", "bridge_connect_creds_failed"),
+      logBridgeSkip(o, void 0, !0),
+      logFeatureBad("bridge_connect", "bridge_connect_creds_failed"),
       !de)
     )
       Ze(b, p, rn(), v, D.http_timeout_ms, void 0, Ee);
@@ -1109,7 +1109,7 @@ async function Yjn(t) {
       noSubscriberStreamEventFlushIntervalMs: dn(),
       noSubscriberUploadHoldMs: ze(),
       outboundOnly: br,
-      nonOrigin403Retry: R4t(),
+      nonOrigin403Retry: isBridgeNonOrigin403RetryEnabled(),
       onNonOriginRejectionRecovered: go,
       retainUndeliveredOnClose: !0,
       internalEventUploader: {
@@ -1136,8 +1136,8 @@ async function Yjn(t) {
         level: "error",
       }),
       _e?.("failed", `Transport setup failed: ${l(e)}`),
-      cb("v2_transport_setup_failed", void 0, !0),
-      f("bridge_connect", "bridge_connect_transport_failed"),
+      logBridgeSkip("v2_transport_setup_failed", void 0, !0),
+      logFeatureBad("bridge_connect", "bridge_connect_transport_failed"),
       !de)
     )
       Ze(b, p, rn(), v, D.http_timeout_ms, void 0, Ee);
@@ -1187,7 +1187,7 @@ async function Yjn(t) {
     try {
       co("withdrawn");
     } catch (e) {
-      (h(e), f("bridge_webagent_mcp_inject", "relinquish_threw"));
+      (logError(e), logFeatureBad("bridge_webagent_mcp_inject", "relinquish_threw"));
     }
   }
   function co(e) {}
@@ -1269,7 +1269,7 @@ async function Yjn(t) {
       queued: e,
       undelivered: o.length,
     }),
-      g("bridge_repl", "client_events_lost_at_dead_end", {
+      logFeatureSad("bridge_repl", "client_events_lost_at_dead_end", {
         queued: e,
         undelivered: o.length,
       }));
@@ -1282,7 +1282,7 @@ async function Yjn(t) {
       d = a.includes("task_notification"),
       _ = a.includes("background_tasks_changed");
     if (d || _)
-      g("ccr_task_status_publish", "status_events_lost_at_dead_end", {
+      logFeatureSad("ccr_task_status_publish", "status_events_lost_at_dead_end", {
         has_terminal_bookend: d,
         has_level: _,
       });
@@ -1302,16 +1302,16 @@ async function Yjn(t) {
   function De(e, r, o = !0) {
     if (o) ((lr = void 0), (xe = void 0));
     if (!Ye || !cr()) return !1;
-    if (r === void 0) g("bridge_presence", e);
-    else g("bridge_presence", e, r);
+    if (r === void 0) logFeatureSad("bridge_presence", e);
+    else logFeatureSad("bridge_presence", e, r);
     return !0;
   }
   function te(e, r) {
     if (((lr = void 0), (xe = void 0), (X = !0), !cr())) return !1;
     if (!Ye)
-      return (f("bridge_connect", "bridge_connect_died_before_presence"), !1);
-    if (r === void 0) f("bridge_presence", e);
-    else f("bridge_presence", e, r);
+      return (logFeatureBad("bridge_connect", "bridge_connect_died_before_presence"), !1);
+    if (r === void 0) logFeatureBad("bridge_presence", e);
+    else logFeatureBad("bridge_presence", e, r);
     return !0;
   }
   let Jr = !1;
@@ -1370,18 +1370,18 @@ async function Yjn(t) {
     if (!cr()) return;
     switch (e.leg) {
       case "ok":
-        y("bridge_token_refresh");
+        logFeatureOk("bridge_token_refresh");
         return;
       case "sad":
-        g("bridge_token_refresh", e.code);
+        logFeatureSad("bridge_token_refresh", e.code);
         return;
       case "bad":
-        f("bridge_token_refresh", e.code);
+        logFeatureBad("bridge_token_refresh", e.code);
         return;
     }
   }
   function wn(e) {
-    if (!k4t()) return;
+    if (!isBridgeHostDeclinedEndEnabled()) return;
     let r = Cvn();
     if (r === void 0 || r.generation <= e) return Tn();
     return Sn(r.reason);
@@ -1410,7 +1410,7 @@ async function Yjn(t) {
     return e === "host_signed_out" ? "auth" : "terminal";
   }
   function An() {
-    return ce !== void 0 && !R && !z && wme();
+    return ce !== void 0 && !R && !z && isBridgeOwnerPinnedEndEnabled();
   }
   function ur() {
     return An() && ce !== void 0 && ce.identityLooksChanged();
@@ -1501,8 +1501,8 @@ async function Yjn(t) {
     }
     if (cr())
       i("tengu_bridge_owner_changed", {
-        site: u(e),
-        archive_status: u(o),
+        site: fromEnum(e),
+        archive_status: fromEnum(o),
         episode_already_dead: r,
       });
   }
@@ -1512,7 +1512,7 @@ async function Yjn(t) {
     return;
   }
   function Tt() {
-    if (ce !== void 0 && wme() && ce.identityLooksChanged())
+    if (ce !== void 0 && isBridgeOwnerPinnedEndEnabled() && ce.identityLooksChanged())
       return { token: ce.ownerToken(), source: "pinned_owner" };
     return { token: ie(), source: "current" };
   }
@@ -1704,9 +1704,9 @@ async function Yjn(t) {
       (i("tengu_bridge_repl_connect_timeout", {
         v2: !0,
         elapsed_ms: D.connect_timeout_ms,
-        cause: u(e),
+        cause: fromEnum(e),
       }),
-      f("bridge_connect", "bridge_connect_timeout"),
+      logFeatureBad("bridge_connect", "bridge_connect_timeout"),
       X)
     );
     else if (Object.values(Re).some((r) => r.cause === e))
@@ -1844,7 +1844,7 @@ async function Yjn(t) {
               D,
             );
           if (R || V !== o) return;
-          if (MD(fe)) {
+          if (isCredentialsRejection(fe)) {
             if (
               (n(
                 A
@@ -1903,12 +1903,12 @@ async function Yjn(t) {
                 C = { leg: "sad", code: "post_refresh_remint_null" };
               return;
             }
-            if (eq(pe)) {
+            if (isCredentialsFailure(pe)) {
               ((C = { leg: "bad", code: `post_refresh_credentials_${Le(pe)}` }),
                 j(A7(pe), Le(pe), st("refresh", pe)));
               return;
             }
-            if (pe === null || MD(pe)) {
+            if (pe === null || isCredentialsRejection(pe)) {
               let ne = Qe ? void 0 : wn(Se);
               if (ne !== void 0) {
                 ((C = { leg: "sad", code: ne }),
@@ -1949,7 +1949,7 @@ async function Yjn(t) {
               C = { leg: "sad", code: "remint_null" };
             return;
           }
-          if (eq(fe)) {
+          if (isCredentialsFailure(fe)) {
             ((C = { leg: "bad", code: `credentials_${Le(fe)}` }),
               j(A7(fe), Le(fe), st("refresh", fe)));
             return;
@@ -2039,12 +2039,12 @@ async function Yjn(t) {
       if (
         (i("tengu_bridge_repl_ws_connected", {
           v2: !0,
-          cause: u(Zr),
+          cause: fromEnum(Zr),
           ...(kt > 0 && { remint_attempts: kt }),
         }),
         !Ye && cr())
       )
-        ((Ye = !0), y("bridge_presence"));
+        ((Ye = !0), logFeatureOk("bridge_presence"));
       if (!Rt && me && me.length > 0 && !ft) {
         Rt = !0;
         let o = k;
@@ -2160,9 +2160,9 @@ async function Yjn(t) {
         i("tengu_bridge_repl_ws_closed", {
           code: e,
           v2: !0,
-          close_cause: we(r),
+          close_cause: fromEnumOpt(r),
           recovery_in_flight: ue,
-          ...(o !== void 0 && { reject_source: u(o.rejectSource) }),
+          ...(o !== void 0 && { reject_source: fromEnum(o.rejectSource) }),
         }));
     if (ue) {
       let E = ir ? Date.now() - ir : 0;
@@ -2290,9 +2290,9 @@ async function Yjn(t) {
         k.connect(),
         So(_),
         Qr?.(),
-        NTn(),
-        BTn(),
-        jTn(),
+        reseedBridgePermissionMode(),
+        reseedBridgeCrossSessionInbound(),
+        reseedBridgeModel(),
         e6n(),
         xi?.(),
         (gr = setTimeout(Bn, D.connect_timeout_ms, Zr)),
@@ -2306,7 +2306,7 @@ async function Yjn(t) {
       try {
         so(e, C);
       } catch (E) {
-        (h(E), f("bridge_webagent_mcp_inject", "refresh_threw"));
+        (logError(E), logFeatureBad("bridge_webagent_mcp_inject", "refresh_threw"));
       }
       (mt?.updateAccessToken(e.worker_jwt), Mr());
     } finally {
@@ -2315,7 +2315,7 @@ async function Yjn(t) {
     return "rebuilt";
   }
   async function Hn(e, r, o) {
-    let a = !o && rr !== void 0 && cr() && LAn(),
+    let a = !o && rr !== void 0 && cr() && isBridgeSignedOutNeutralEnabled(),
       d = a ? await rr(e) : void 0;
     if (a && (R || V !== r)) return;
     if (d === "signed_out") {
@@ -2327,7 +2327,7 @@ async function Yjn(t) {
         De("signed_out"),
         !Ye)
       )
-        g("bridge_connect", "signed_out");
+        logFeatureSad("bridge_connect", "signed_out");
       ((X = !0), J(zi, "auth"));
       return;
     }
@@ -2383,7 +2383,7 @@ async function Yjn(t) {
             te("recovery_exhausted", { close_code: e, remint_attempts: _ });
           return { creds: null, attempts: _ };
         }
-        if (MD(A)) {
+        if (isCredentialsRejection(A)) {
           if (re && !P) {
             if (await Ar("owner_changed_recovery", r))
               return { creds: null, attempts: _ };
@@ -2411,7 +2411,7 @@ async function Yjn(t) {
             { creds: null, attempts: _ }
           );
         }
-        if (eq(A)) {
+        if (isCredentialsFailure(A)) {
           if ((J(A7(A), Le(A)), !o)) te(st("recovery", A));
           return (
             q("info", "bridge_repl_v2_remint_loop_denied"),
@@ -2473,7 +2473,7 @@ async function Yjn(t) {
     },
   };
   function Fn(e) {
-    if (e === 4094) return x$e();
+    if (e === 4094) return isBridgeAuthReviveEnabled();
     return e === 401 || e === 4091 || e === 4093;
   }
   let $n = 30000,
@@ -2558,7 +2558,7 @@ async function Yjn(t) {
         C = xr,
         E = await vr(() => $r(P, o), "fetchRemoteCredentials (recovery)", D);
       if (V !== o) return;
-      if ((!E || MD(E)) && !R && Re[e].needsOAuthRefresh && re && !d) {
+      if ((!E || isCredentialsRejection(E)) && !R && Re[e].needsOAuthRefresh && re && !d) {
         let A = !1;
         for (let U = 1; U <= D.oauth_retry_max_attempts && !R; U++) {
           Vr(
@@ -2591,7 +2591,7 @@ async function Yjn(t) {
           break;
         }
         if (V !== o) return;
-        if (MD(E) && !A) {
+        if (isCredentialsRejection(E) && !A) {
           if (!R) {
             let U = wn(_);
             if (U !== void 0) {
@@ -2621,7 +2621,7 @@ async function Yjn(t) {
         xn(e, `could not fetch fresh session credentials after code ${e}`);
         return;
       }
-      if (MD(E) && !Re[e].needsOAuthRefresh && re) {
+      if (isCredentialsRejection(E) && !Re[e].needsOAuthRefresh && re) {
         if (await Ar("owner_changed_recovery", o)) return;
         let A = !1;
         try {
@@ -2644,7 +2644,7 @@ async function Yjn(t) {
             return;
         }
       }
-      if (MD(E)) {
+      if (isCredentialsRejection(E)) {
         if ((J(ct, "auth"), !r)) te("recovery_credentials_rejected");
         return;
       }
@@ -2653,7 +2653,7 @@ async function Yjn(t) {
         let A = await Eo(e, o, r, gt() ? Re[e].remintCap : void 0);
         if (((E = A.creds), (j = A.attempts), !E || R || V !== o)) return;
       }
-      if (eq(E)) {
+      if (isCredentialsFailure(E)) {
         if (!R) {
           if ((J(A7(E), Le(E)), !r)) te(st("recovery", E));
         }
@@ -2791,7 +2791,7 @@ async function Yjn(t) {
     if (e !== void 0) {
       if (!Ly(b)) {
         let j = Me === void 0 ? Tn() : void 0;
-        if (j !== void 0 && Ye && k4t()) De(j);
+        if (j !== void 0 && Ye && isBridgeHostDeclinedEndEnabled()) De(j);
         else te(e);
       }
       ((Me = void 0), (lr = void 0), (xe = void 0));
@@ -2833,7 +2833,7 @@ async function Yjn(t) {
         q("info", "bridge_repl_v2_teardown"),
         i("tengu_bridge_repl_teardown", {
           v2: !0,
-          archive_status: u(j),
+          archive_status: fromEnum(j),
           archive_ok: !1,
         }),
         Ln());
@@ -2866,8 +2866,8 @@ async function Yjn(t) {
       q("info", "bridge_repl_v2_teardown"),
       i("tengu_bridge_repl_teardown", {
         v2: !0,
-        archive_status: u(E),
-        archive_credential: we(_?.source),
+        archive_status: fromEnum(E),
+        archive_credential: fromEnumOpt(_?.source),
         archive_ok: typeof O === "number" && O < 400,
         archive_http_status:
           typeof O === "number" ? O : O === "untrusted_device" ? 403 : void 0,
@@ -2884,7 +2884,7 @@ async function Yjn(t) {
     inProtectedNamespace: NL(),
     ...lbe(),
   }),
-    y("bridge_connect"));
+    logFeatureOk("bridge_connect"));
   function Ne(e) {
     if (!z) return !1;
     return (n(`[remote-bridge] Dropping ${e} after owner change`), !0);
@@ -3005,7 +3005,7 @@ async function Yjn(t) {
             tool_name: r.tool_name,
             display_tool_name: _?.label ?? r.display_name ?? r.tool_name,
             action_description:
-              _?.body ?? qr(r.description || O || (P && or(P, 120)) || ""),
+              _?.body ?? qr(r.description || O || (P && truncate(P, 120)) || ""),
             raw_command: _ ? void 0 : P,
             tool_use_id: r.tool_use_id,
             request_id: _ ? "" : e.request_id,
@@ -3070,7 +3070,7 @@ async function Yjn(t) {
         prNumber: r,
         baseUrl: p,
         getAccessToken: ie,
-        getTrustedDeviceToken: uh,
+        getTrustedDeviceToken: getTrustedDeviceToken,
       });
       if (!_.ok && o)
         if (d) hr.set(a, d);
@@ -3085,7 +3085,7 @@ async function Yjn(t) {
         prNumber: r,
         baseUrl: p,
         getAccessToken: ie,
-        getTrustedDeviceToken: uh,
+        getTrustedDeviceToken: getTrustedDeviceToken,
       });
       if (o.ok) hr.delete(`${e}#${r}`);
       return o;
@@ -3101,7 +3101,7 @@ async function Yjn(t) {
       });
     },
     async fetchInboxMessage(e) {
-      let r = (o) => (f("bridge_inbox_fetch", o), { ok: !1, reason: o });
+      let r = (o) => (logFeatureBad("bridge_inbox_fetch", o), { ok: !1, reason: o });
       if (R) return r("no_bridge");
       if (z) return r("owner_changed");
       return r("feature_disabled");
@@ -3160,7 +3160,7 @@ async function Lt(t, p, v, w) {
           Q = await t(B, () => {
             F = !0;
           }),
-          le = MD(Q);
+          le = isCredentialsRejection(Q);
         if (
           (Q === null || le) &&
           F &&
@@ -3202,7 +3202,7 @@ async function Lt(t, p, v, w) {
   return L;
 }
 function Vo(t) {
-  if (t.reason === "untrusted_device") return !r5();
+  if (t.reason === "untrusted_device") return !isProactiveEnrollmentDisabled();
   return t.reason === "session_stale_relogin";
 }
 function Le(t) {
@@ -3234,7 +3234,7 @@ function ci(t) {
 function A7(t) {
   switch (t.reason) {
     case "untrusted_device":
-      return Rme();
+      return untrustedDeviceHint();
     case "session_stale_relogin":
       return "session expired for trusted-device check \u2014 run /login to re-authenticate";
     case "invalid_session_id":
@@ -3247,18 +3247,18 @@ function A7(t) {
   }
 }
 async function Ko(t, p, v, w, I, S) {
-  let L = await uh(),
-    B = await iVt(t, p, v, w, L, I);
-  if (eq(B) && B.reason === "untrusted_device")
-    B = (await M$e(L, (F) => iVt(t, p, v, w, F, I), S)) ?? B;
+  let L = await getTrustedDeviceToken(),
+    B = await fetchRemoteCredentials(t, p, v, w, L, I);
+  if (isCredentialsFailure(B) && B.reason === "untrusted_device")
+    B = (await withUntrustedDeviceRecovery(L, (F) => fetchRemoteCredentials(t, p, v, w, F, I), S)) ?? B;
   if (!B) return null;
-  if (MD(B)) return B;
-  if (eq(B)) {
-    if (B.reason === "untrusted_device" && !ZG())
+  if (isCredentialsRejection(B)) return B;
+  if (isCredentialsFailure(B)) {
+    if (B.reason === "untrusted_device" && !isTrustedDeviceGateEnabled())
       return { terminal: !0, reason: "request_rejected", status: 403 };
     return B;
   }
-  return oG() ? { ...B, api_base_url: p } : B;
+  return getBridgeBaseUrlOverride() ? { ...B, api_base_url: p } : B;
 }
 function ui(t, p) {
   if (t === 403 || t === 404) return "superseded_unknown";
@@ -3329,11 +3329,11 @@ async function Ze(t, p, v, w, I, S, L) {
       "skipped_superseded"
     );
   if (!v) return "no_token";
-  let B = await uh().catch(() => {
+  let B = await getTrustedDeviceToken().catch(() => {
       return;
     }),
-    F = await bCn(p, v, t, I, {
-      useV2: XG(),
+    F = await archiveCodeSession(p, v, t, I, {
+      useV2: isCcrV2SessionCrudEnabled(),
       orgUUID: w,
       trustedDeviceToken: B,
     });
@@ -3342,11 +3342,11 @@ async function Ze(t, p, v, w, I, S, L) {
 }
 async function Yo(t, p, v, w, I, S, L) {
   if (!v) return { outcome: "ok" };
-  let B = await uh().catch(() => {
+  let B = await getTrustedDeviceToken().catch(() => {
       return;
     }),
-    F = await aVt(p, v, t, I, {
-      useV2: XG(),
+    F = await unarchiveCodeSession(p, v, t, I, {
+      useV2: isCcrV2SessionCrudEnabled(),
       orgUUID: w,
       trustedDeviceToken: B,
     });
@@ -3357,10 +3357,10 @@ async function Yo(t, p, v, w, I, S, L) {
     );
   if (F === "untrusted_device" || F === "session_stale_relogin") {
     if (F === "untrusted_device") {
-      let le = await M$e(
+      let le = await withUntrustedDeviceRecovery(
         B,
         (ke) =>
-          aVt(p, v, t, I, { useV2: XG(), orgUUID: w, trustedDeviceToken: ke }),
+          unarchiveCodeSession(p, v, t, I, { useV2: isCcrV2SessionCrudEnabled(), orgUUID: w, trustedDeviceToken: ke }),
         L,
       );
       if (typeof le === "number" && (le < 300 || le === 409))

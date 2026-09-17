@@ -7,27 +7,27 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var t = new Set(["update", "upgrade", "doctor", "forward-home-settings"]);
-function r(o) {
+var NON_REPL_SUBCOMMANDS = new Set(["update", "upgrade", "doctor", "forward-home-settings"]);
+function isMcpServeInvocation(o) {
   let n = o.indexOf("mcp");
   return n !== -1 && o[n + 1] === "serve";
 }
-function i(o) {
+function isAgentsJsonInvocation(o) {
   let n = o.indexOf("agents");
   return n !== -1 && o.includes("--json", n + 1);
 }
-function s(o) {
+function isPluginEvalInvocation(o) {
   return o.some(
     (n, e) => (n === "plugin" || n === "plugins") && o[e + 1] === "eval",
   );
 }
-function a(o) {
+function isRemoteControlInvocation(o) {
   return o.some((n) => n === "remote-control" || n === "rc");
 }
 export {
-  t as NON_REPL_SUBCOMMANDS,
-  i as isAgentsJsonInvocation,
-  r as isMcpServeInvocation,
-  s as isPluginEvalInvocation,
-  a as isRemoteControlInvocation,
+  NON_REPL_SUBCOMMANDS,
+  isAgentsJsonInvocation,
+  isMcpServeInvocation,
+  isPluginEvalInvocation,
+  isRemoteControlInvocation,
 };

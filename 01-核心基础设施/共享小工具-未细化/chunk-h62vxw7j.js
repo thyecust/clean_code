@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { realpathSync as r } from "fs";
+import { realpathSync } from "fs";
 import { cwd as c } from "process";
 function o(n) {
   return n.normalize("NFC");
@@ -17,12 +17,12 @@ function OMn() {
   if (
     typeof process < "u" &&
     typeof process.cwd === "function" &&
-    typeof r === "function"
+    typeof realpathSync === "function"
   )
     try {
       let e = c();
       try {
-        n = o(r(e));
+        n = o(realpathSync(e));
       } catch {
         n = o(e);
       }

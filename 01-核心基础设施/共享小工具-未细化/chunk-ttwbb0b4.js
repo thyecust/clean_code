@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { j, VP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isUnattendedBgSession as ap } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { markCommandParkBlocked as dln, clearCommandParkBlocked as pln } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { logJobWriteError as Mi } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { isUnattendedBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { markCommandParkBlocked, clearCommandParkBlocked } from "../../02-功能模块/后台任务-Shell管理/chunk-rh0xpf1w.js";
+import { logJobWriteError } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 class i {
   activePark = null;
 }
 var s = new j(() => new i());
 async function aye(r, e, n, a) {
-  if (!ap()) return !1;
+  if (!isUnattendedBgSession()) return !1;
   let o = s.of(r),
-    t = await dln(e, n, a);
+    t = await markCommandParkBlocked(e, n, a);
   switch (t.kind) {
     case "refused":
       return !1;
@@ -33,12 +33,12 @@ async function aye(r, e, n, a) {
 function d(r, e, n, a) {
   r.activePark?.unsubscribe();
   let o = VP(() => {
-    if (ap()) return;
+    if (isUnattendedBgSession()) return;
     let t = r.activePark;
     if (!t || t.needs !== e) return;
     ((r.activePark = null),
       t.unsubscribe(),
-      pln(e, t.prior, t.storageV5).catch(Mi));
+      clearCommandParkBlocked(e, t.prior, t.storageV5).catch(logJobWriteError));
   });
   r.activePark = { needs: e, prior: n, storageV5: a, unsubscribe: o };
 }

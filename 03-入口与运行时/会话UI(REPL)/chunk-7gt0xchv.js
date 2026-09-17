@@ -10,7 +10,7 @@
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { yo } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
@@ -188,7 +188,7 @@ function PB(be) {
     V = oe === void 0 ? "truncate" : oe,
     te;
   if (c[0] !== Q || c[1] !== A || c[2] !== V)
-    ((te = A === void 0 || V === "wrap" ? A : Xe(A, Math.max(20, Q - 8))),
+    ((te = A === void 0 || V === "wrap" ? A : truncateToWidth(A, Math.max(20, Q - 8))),
       (c[0] = Q),
       (c[1] = A),
       (c[2] = V),

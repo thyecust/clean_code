@@ -8,35 +8,35 @@
 
 // Version: 2.1.263
 import { K, he, sn, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import { executeNotificationHooks as gC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
 import { Z0e, Yat } from "../../01-核心基础设施/共享小工具-未细化/chunk-6t3vmc74.js";
 var m = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}$/;
 function a9e(e) {
   if (e == null) return;
-  if (m.test(e)) return Ln(e);
+  if (m.test(e)) return fromSanitizer_SANITIZER_OUTPUT_ONLY(e);
   return S("nonconforming");
 }
 async function yv(e, t, { storageV5: o, credentials: r } = {}) {
   let l = Eo("preferredNotifChannel", "auto").value;
-  await gC({ id: K(), project: { originalCwd: he(), projectRoot: sn() } }, e, {
+  await executeNotificationHooks({ id: K(), project: { originalCwd: he(), projectRoot: sn() } }, e, {
     storageV5: o,
     credentials: r,
   });
   let s = await p(l, e, t);
-  if (s === "error") f("notification_show", "send_failed");
-  else y("notification_show");
+  if (s === "error") logFeatureBad("notification_show", "send_failed");
+  else logFeatureOk("notification_show");
   i("tengu_notification_method_used", {
-    configured_channel: u(NU.includes(l) ? l : "invalid"),
-    notification_type: u(e.notificationType),
-    method_used: u(s),
+    configured_channel: fromEnum(NU.includes(l) ? l : "invalid"),
+    notification_type: fromEnum(e.notificationType),
+    method_used: fromEnum(s),
     term: a9e(a.terminal),
     attacher_term: a9e(dl()?.terminal),
   });
@@ -111,13 +111,13 @@ function _() {
 async function h() {
   try {
     let t = (
-      await Fe("osascript", [
+      await execFileNoThrow("osascript", [
         "-e",
         'tell application "Terminal" to name of current settings of front window',
       ])
     ).stdout.trim();
     if (!t) return !1;
-    let o = await Fe("defaults", ["export", "com.apple.Terminal", "-"]);
+    let o = await execFileNoThrow("defaults", ["export", "com.apple.Terminal", "-"]);
     if (o.code !== 0) return !1;
     let r = Yat(o.stdout);
     if (!Z0e(r))

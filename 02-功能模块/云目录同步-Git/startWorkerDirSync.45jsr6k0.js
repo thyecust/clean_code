@@ -13,17 +13,17 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { A, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, Yg, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { clearIsGitMemo as Che } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { D1, mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
@@ -39,11 +39,11 @@ import {
   wKe,
   TKe,
   kLe,
-  WORKING_FILESTORE_PREFIX as jX,
-  LANE_FULL_REASON as Hht,
-  LANE_DENIED_REASON as Iht,
-  putSyncedFile as Hne,
-  getSyncedFile as Q2,
+  WORKING_FILESTORE_PREFIX,
+  LANE_FULL_REASON,
+  LANE_DENIED_REASON,
+  putSyncedFile,
+  getSyncedFile,
   GO,
   ILe,
   Z2,
@@ -76,7 +76,7 @@ import {
   nj,
   lmn,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getStageFileRoot as Goe } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
+import { getStageFileRoot } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
   Aze,
   on,
@@ -127,8 +127,8 @@ import {
   writeFile as Ad,
 } from "fs/promises";
 import { dirname as Od, join as xn } from "path";
-import { isDeepStrictEqual as Dd } from "util";
-import { lstat as ya, realpath as Wi } from "fs/promises";
+import { isDeepStrictEqual } from "util";
+import { lstat as ya, realpath } from "fs/promises";
 import { join as Yi, dirname as wa } from "path";
 var _a = [
   ["rebase-merge", "rebase"],
@@ -141,7 +141,7 @@ var _a = [
 async function Nr(e, t, r = {}) {
   return (
     (
-      await Be(
+      await execFileNoThrowWithCwd(
         dH(),
         [
           ...Pne,
@@ -165,7 +165,7 @@ async function Nr(e, t, r = {}) {
 }
 async function Sn(e, t = {}) {
   let r = t.timeoutMs ?? Aze,
-    o = await Be(
+    o = await execFileNoThrowWithCwd(
       dH(),
       [...Pne, "rev-parse", "--absolute-git-dir", "--show-toplevel"],
       {
@@ -182,8 +182,8 @@ async function Sn(e, t = {}) {
 `);
   if (l === "" || d === "") return null;
   let [h, w] = await Promise.all([
-    Wi(e).catch(() => null),
-    Wi(d).catch(() => null),
+    realpath(e).catch(() => null),
+    realpath(d).catch(() => null),
   ]);
   if (h === null || h !== w) return null;
   return { gitDir: l, workTree: h, signal: t.signal, timeoutMs: r };
@@ -346,21 +346,21 @@ function Ki(e) {
     });
 }
 import { randomUUID as Na } from "crypto";
-import { constants as tn } from "fs";
+import { constants } from "fs";
 import {
-  copyFile as Ma,
+  copyFile,
   lstat as co,
   mkdir as fo,
   open as ho,
   readdir as $a,
   stat as mo,
   unlink as La,
-  utimes as Ba,
+  utimes,
 } from "fs/promises";
 import { join as Nt } from "path";
-import { lstat as lr, open as Ea, readlink as va } from "fs/promises";
+import { lstat as lr, open as Ea, readlink } from "fs/promises";
 import { dirname as Pa, join as En, sep as Vi } from "path";
-import { createHash as Qi } from "crypto";
+import { createHash } from "crypto";
 var Br = 26214400,
   dt = {
     file: "100644",
@@ -593,7 +593,7 @@ async function ro(e, t, r, o, l, d) {
   };
 }
 async function io(e, t, r) {
-  let o = await va(En(t, r), { encoding: "buffer" }).catch(() => null);
+  let o = await readlink(En(t, r), { encoding: "buffer" }).catch(() => null);
   if (o === null) return { path: r, id: null };
   let l = await on(e, ["hash-object", "-w", "--no-filters", "--stdin"], {
       input: o,
@@ -701,7 +701,7 @@ async function Ia(e, t) {
 }
 async function ao(e, t) {
   if (t.length === 0) return "";
-  let r = Qi("sha256");
+  let r = createHash("sha256");
   return (await Lr(
     e,
     t,
@@ -715,7 +715,7 @@ async function lo(e, t, r) {
   if (t.length === 0) return { transforming: new Set(), digest: "" };
   let o = new Set(),
     l = new Set(),
-    d = Qi("sha256"),
+    d = createHash("sha256"),
     [h, w] = await Promise.all([
       Lr(e, t, { attributes: so, onChunk: (_) => d.update(_) }, (_, E, D) => {
         if (!Ji(E, D)) return;
@@ -833,9 +833,9 @@ async function za({
     de = await Un(K),
     se = null;
   try {
-    await Ma(K, w);
+    await copyFile(K, w);
     let N = await mo(K);
-    (await Ba(w, N.atime, N.mtime), (se = gn(N)));
+    (await utimes(w, N.atime, N.mtime), (se = gn(N)));
   } catch (N) {
     if (!W(N)) throw N;
     let Le = await R(["read-tree", t]);
@@ -1276,7 +1276,7 @@ var Wr = "* -text -filter -ident -working-tree-encoding",
 async function Yn(e) {
   let t = Nt(e.gitDir, "info"),
     r = Nt(t, "attributes"),
-    o = await ho(r, tn.O_RDONLY | tn.O_NOFOLLOW | tn.O_NONBLOCK).catch((l) => {
+    o = await ho(r, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK).catch((l) => {
       if (_o(l)) return null;
       throw l;
     });
@@ -1347,7 +1347,7 @@ async function dr(e) {
 `,
       l = await ho(
         t,
-        tn.O_WRONLY | tn.O_APPEND | tn.O_CREAT | tn.O_NOFOLLOW | tn.O_NONBLOCK,
+        constants.O_WRONLY | constants.O_APPEND | constants.O_CREAT | constants.O_NOFOLLOW | constants.O_NONBLOCK,
         420,
       );
     try {
@@ -3452,7 +3452,7 @@ function Zo(e) {
     );
   return t;
 }
-import { posix as Hl } from "path";
+import { posix } from "path";
 var Qr = 104857600,
   zl = 20000,
   es = { first: 100, most: 1000 },
@@ -3461,12 +3461,12 @@ var Qr = 104857600,
 function Yl(e, t) {
   if (!D1.test(t))
     throw Error("a sync object is named by a lowercase-hex sha256");
-  return Hl.join(e, Ul, t + Wl);
+  return posix.join(e, Ul, t + Wl);
 }
 function ns(e) {
   let t = () => {
       try {
-        return e.stageRoot ?? Goe();
+        return e.stageRoot ?? getStageFileRoot();
       } catch {
         return null;
       }
@@ -3506,7 +3506,7 @@ function ns(e) {
       case "conflict":
         return { kind: "conflict" };
       case "error":
-        return K.laneReason === Hht ? { kind: "lane_full" } : ts(K);
+        return K.laneReason === LANE_FULL_REASON ? { kind: "lane_full" } : ts(K);
     }
   }
   return {
@@ -3627,7 +3627,7 @@ function Kl(e, t) {
   });
 }
 function ts(e) {
-  if (e.errorKind === "gated" || e.status === 501 || e.laneReason === Iht)
+  if (e.errorKind === "gated" || e.status === 501 || e.laneReason === LANE_DENIED_REASON)
     return { kind: "lane_unavailable" };
   if (e.status === 401 || e.status === 403) return { kind: "unauthorized" };
   return { kind: "failed", ...(e.status !== void 0 && { status: e.status }) };
@@ -3636,8 +3636,8 @@ import { mkdir as rs, readFile as is, stat as os } from "fs/promises";
 import {
   dirname as ss,
   join as Jl,
-  relative as Ql,
-  resolve as Zr,
+  relative,
+  resolve,
   sep as Zl,
 } from "path";
 var mr = 1,
@@ -3753,10 +3753,10 @@ async function ds(e, t) {
     if (!o.success)
       return (q("warn", "dir_sync_git_ended_unreadable", {}), null);
     let { version: l, ...d } = o.data,
-      h = Zr(t),
+      h = resolve(t),
       w =
-        Zr(d.setAsideIn).startsWith(h + Zl) &&
-        !Ql(h, Zr(d.setAsideIn)).includes("..");
+        resolve(d.setAsideIn).startsWith(h + Zl) &&
+        !relative(h, resolve(d.setAsideIn)).includes("..");
     return {
       ...d,
       line: aln(d.line),
@@ -4548,25 +4548,25 @@ function Zn(e) {
 function Cs(e, t, r = {}) {
   if (
     (i("tengu_dir_sync_git_worker_turn_start", {
-      outcome: u(e),
+      outcome: fromEnum(e),
       generation: t,
       ...r,
     }),
     e === "applied" || e === "already_integrated")
   )
-    y("ccr_dir_sync_git_worker_turn_start");
-  else if (e === "mismatch") f("ccr_dir_sync_git_worker_turn_start", e);
-  else g("ccr_dir_sync_git_worker_turn_start", e);
+    logFeatureOk("ccr_dir_sync_git_worker_turn_start");
+  else if (e === "mismatch") logFeatureBad("ccr_dir_sync_git_worker_turn_start", e);
+  else logFeatureSad("ccr_dir_sync_git_worker_turn_start", e);
 }
 function Ss(e, t = {}) {
   if (
-    (i("tengu_dir_sync_git_worker_turn_end", { outcome: u(e), ...t }),
+    (i("tengu_dir_sync_git_worker_turn_end", { outcome: fromEnum(e), ...t }),
     e === "shipped" || e === "nothing_to_send")
   )
-    y("ccr_dir_sync_git_worker_turn_end");
+    logFeatureOk("ccr_dir_sync_git_worker_turn_end");
   else if (e === "bundle_failed" || e === "no_ref")
-    f("ccr_dir_sync_git_worker_turn_end", e);
-  else g("ccr_dir_sync_git_worker_turn_end", e);
+    logFeatureBad("ccr_dir_sync_git_worker_turn_end", e);
+  else logFeatureSad("ccr_dir_sync_git_worker_turn_end", e);
 }
 function Es(e) {
   switch (e.reason) {
@@ -4751,9 +4751,9 @@ import {
   lstat as Os,
   mkdir as Is,
   rename as Ns,
-  rmdir as pd,
+  rmdir,
 } from "fs/promises";
-import { dirname as kr, isAbsolute as gd, join as Gt } from "path";
+import { dirname as kr, isAbsolute, join as Gt } from "path";
 var yd = 32,
   wd = 32,
   _r = [
@@ -5204,7 +5204,7 @@ async function $s(e, t) {
   let r = kr(t);
   while (r !== "." && r !== "") {
     try {
-      await pd(Gt(e, r));
+      await rmdir(Gt(e, r));
     } catch {
       return;
     }
@@ -5310,7 +5310,7 @@ async function Cd(e, t) {
 function di(e) {
   return (
     e !== "" &&
-    !gd(e) &&
+    !isAbsolute(e) &&
     e.split(/[/\\]/).every((t) => t !== "" && t !== "." && t !== ".." && !Sd(t))
   );
 }
@@ -5720,7 +5720,7 @@ function Js({
         null
       );
     }
-    (Che(), q("info", "dir_sync_git_empty_start_agent_git_aside", {}));
+    (clearIsGitMemo(), q("info", "dir_sync_git_empty_start_agent_git_aside", {}));
     let p = await er(e);
     return p === null || p.gitEntry !== "none"
       ? null
@@ -5731,7 +5731,7 @@ function Js({
       C = await er(e);
     if (Me && p !== null && C !== null && C.gitEntry === "none") {
       let L = await Nr(e, p);
-      (Che(), q("info", "dir_sync_git_empty_start_claimed", { claimed: L }));
+      (clearIsGitMemo(), q("info", "dir_sync_git_empty_start_claimed", { claimed: L }));
     }
   }
   async function ki() {
@@ -5739,7 +5739,7 @@ function Js({
     let p = await r.transport.publishJournal(qt, { ifMatchEtag: null });
     if (
       (q("info", "dir_sync_git_empty_start_told_laptop", {
-        outcome: u(p.kind),
+        outcome: fromEnum(p.kind),
       }),
       p.kind === "ok" ||
         p.kind === "unauthorized" ||
@@ -5791,10 +5791,10 @@ function Js({
   }
   function vi() {
     return St === "sync_point"
-      ? u("sync_point")
+      ? fromEnum("sync_point")
       : St === "between_tools"
-        ? u("between_tools")
-        : u("turn");
+        ? fromEnum("between_tools")
+        : fromEnum("turn");
   }
   function Bt(p) {
     return (
@@ -5993,7 +5993,7 @@ function Js({
         q("warn", "dir_sync_git_empty_start_failed", { reason: ae.reason }),
         i("tengu_dir_sync_git_empty_start", {
           outcome: S("failed"),
-          reason: u(ae.reason),
+          reason: fromEnum(ae.reason),
           ...("found" in ae && { found: ae.count ?? ae.found.length }),
         }),
         { kind: "failed", failure: ae }
@@ -6039,7 +6039,7 @@ function Js({
           if (
             (i("tengu_dir_sync_git_empty_start", {
               outcome: S("waiting"),
-              fetch: u(Xe.kind),
+              fetch: fromEnum(Xe.kind),
             }),
             Xe.kind === "failed" && Xe.status === dI)
           )
@@ -6135,7 +6135,7 @@ function Js({
         return J({ reason: "checkout_failed", step: ae });
     }
     return (
-      Che(),
+      clearIsGitMemo(),
       q("info", "dir_sync_git_empty_start", { generation: p.generation }),
       i("tengu_dir_sync_git_empty_start", {
         outcome: S("started"),
@@ -6386,10 +6386,10 @@ function Js({
       }),
         i("tengu_dir_sync_git_worker_cleared", {
           armed: L !== null,
-          outcome: u(j.kind),
+          outcome: fromEnum(j.kind),
           recorded: V,
           resumed: !1,
-          reason: we(p.reason ?? void 0),
+          reason: fromEnumOpt(p.reason ?? void 0),
           moved: he,
           left: De,
           unsynced_paths: I?.count ?? -1,
@@ -6402,7 +6402,7 @@ function Js({
     if (M <= C) return C;
     return (
       fe.heldLong(M, L, C === 0),
-      i("tengu_dir_sync_git_worker_turn_held", { minutes: M, what: u(L) }),
+      i("tengu_dir_sync_git_worker_turn_held", { minutes: M, what: fromEnum(L) }),
       M
     );
   }
@@ -6429,7 +6429,7 @@ function Js({
       (q("warn", "dir_sync_git_worker_offline", { waited_ms: L, waiting: p }),
         i("tengu_dir_sync_git_worker_offline", {
           waited_ms: L,
-          waiting: u(p),
+          waiting: fromEnum(p),
           told_before: ve !== null,
         }));
     }
@@ -6712,7 +6712,7 @@ function Js({
     let Se =
       ce.installsBankedThrough !== j.installsBankedThrough ||
       ce.lastNotedGeneration !== j.lastNotedGeneration ||
-      !Dd(ce.installs, j.installs);
+      !isDeepStrictEqual(ce.installs, j.installs);
     if (
       ((j.installs = ce.installs),
       (j.installsBankedThrough = ce.installsBankedThrough),
@@ -6773,7 +6773,7 @@ function Js({
       (fe.reusedGeneration(I, yt),
         (j.need = I.head),
         (j.refusedBundle = I.bundle?.sha256 ?? null),
-        jt("mismatch", I.generation, { reason: u("generation_reused") }),
+        jt("mismatch", I.generation, { reason: fromEnum("generation_reused") }),
         await vt(re, r.storePath));
       return;
     }
@@ -6930,8 +6930,8 @@ function Js({
           ...(Pe.snapshotStep !== void 0 && { step: Pe.snapshotStep }),
         }),
         jt("skipped", I.generation, {
-          reason: u(Pe.reason),
-          ...(Pe.snapshotStep !== void 0 && { step: u(Pe.snapshotStep) }),
+          reason: fromEnum(Pe.reason),
+          ...(Pe.snapshotStep !== void 0 && { step: fromEnum(Pe.snapshotStep) }),
         }),
         Pe.detail !== void 0)
       )
@@ -6969,7 +6969,7 @@ function Js({
           self_kept: Pe.plan.selfKept,
         }),
         jt("not_applied", I.generation, {
-          reason: u(me.reason),
+          reason: fromEnum(me.reason),
           residue: me.residue.length,
           self_kept: Pe.plan.selfKept,
         }),
@@ -7029,11 +7029,11 @@ function Js({
     }),
       jt("applied", I.generation, {
         self_kept: Pe.plan.selfKept,
-        head: u(me.report.head.kind),
-        agent_commits: u(me.report.agentCommits.kind),
+        head: fromEnum(me.report.head.kind),
+        agent_commits: fromEnum(me.report.agentCommits.kind),
         branch_followed: me.report.branch !== null,
         ...(me.report.branch !== null && {
-          branch_moved_by: u(me.report.branch.movedBy),
+          branch_moved_by: fromEnum(me.report.branch.movedBy),
         }),
         files_updated: me.report.files.updated,
         files_merged: me.report.files.merged.length,
@@ -7187,7 +7187,7 @@ function Js({
         (q("info", "dir_sync_git_turn_end_skipped", {
           reason: V?.midOperation ?? ae,
         }),
-        rr("checkout_unready", { reason: u(ae) }),
+        rr("checkout_unready", { reason: fromEnum(ae) }),
         C !== void 0)
       )
         await ut(C.scratchIndexPath);
@@ -7227,8 +7227,8 @@ function Js({
           ...(ae !== void 0 && { step: ae }),
         }),
         rr("snapshot_refused", {
-          reason: u(j.reason),
-          ...(ae !== void 0 && { step: u(ae) }),
+          reason: fromEnum(j.reason),
+          ...(ae !== void 0 && { step: fromEnum(ae) }),
         }),
         n(`dir-sync: turn-end snapshot refused: ${j.detail}`),
         j.reason !== "aborted")
@@ -7320,7 +7320,7 @@ function Js({
           fe.overCap(ue.sizeBytes, await ii(F, he, De, Ws, Ys)));
       else
         ((Se = "put_failed"),
-          (Je = u(ae.kind)),
+          (Je = fromEnum(ae.kind)),
           an(ae),
           fe.notShipped(vs(ae), St === "sync_point"));
     } else if (ue.reason === "too_large")
@@ -7329,7 +7329,7 @@ function Js({
     else if (ue.reason !== "nothing_to_send") {
       if (
         ((Se = "bundle_failed"),
-        (Je = u(ue.reason)),
+        (Je = fromEnum(ue.reason)),
         q("warn", "dir_sync_git_turn_end_bundle_failed", { reason: ue.reason }),
         ue.reason !== "aborted")
       )
@@ -7454,9 +7454,9 @@ function Js({
   }
   function Or(p, C, L, M) {
     i("tengu_dir_sync_git_worker_push_point", {
-      outcome: u(p),
+      outcome: fromEnum(p),
       generation: C,
-      ...(L !== void 0 && { reason: u(L) }),
+      ...(L !== void 0 && { reason: fromEnum(L) }),
       ...(M !== void 0 && { hinted_writes: M }),
     });
   }
@@ -7470,7 +7470,7 @@ function Js({
     if (se !== null || R != null)
       return (
         i("tengu_dir_sync_git_worker_pull_point", {
-          outcome: u("skipped"),
+          outcome: fromEnum("skipped"),
           ...(p === "latest" ? { latest: !0 } : { expected: p }),
         }),
         { kind: "skipped", reason: "sync_ended" }
@@ -7541,7 +7541,7 @@ function Js({
     }
     return (
       i("tengu_dir_sync_git_worker_pull_point", {
-        outcome: u(J.kind),
+        outcome: fromEnum(J.kind),
         ...(p === "latest" ? { latest: !0 } : { expected: p }),
       }),
       J
@@ -7590,10 +7590,10 @@ function Js({
                   r.notify(Fs(e, he.line, ce, null)),
                   i("tengu_dir_sync_git_worker_cleared", {
                     armed: !1,
-                    outcome: u(ce.kind),
+                    outcome: fromEnum(ce.kind),
                     recorded: !0,
                     resumed: !0,
-                    reason: we(he.reason ?? void 0),
+                    reason: fromEnumOpt(he.reason ?? void 0),
                     moved: ce.kind === "not_cleared" ? 0 : ce.moved,
                     left: ce.kind === "not_cleared" ? -1 : ce.left.length,
                     unsynced_paths: -1,
@@ -7686,9 +7686,9 @@ function Js({
         let C = P.kind === "armed" ? P.armed.remembered.turn : 0;
         return (
           i("tengu_dir_sync_git_worker_push_point", {
-            outcome: u("failed"),
+            outcome: fromEnum("failed"),
             generation: C,
-            reason: u("crashed"),
+            reason: fromEnum("crashed"),
           }),
           { kind: "failed", reason: "crashed", generation: C }
         );
@@ -7710,7 +7710,7 @@ function Js({
         }
         return (
           i("tengu_dir_sync_git_worker_pull_point", {
-            outcome: u("failed"),
+            outcome: fromEnum("failed"),
             expected: p,
           }),
           { kind: "failed", reason: "crashed" }
@@ -7928,9 +7928,9 @@ async function Qs(e, t, r, o) {
             kind: d.errorKind,
             status: d.status,
           }),
-          g("ccr_dir_sync_seed", "manifest_refused", {
+          logFeatureSad("ccr_dir_sync_seed", "manifest_refused", {
             status: d.status,
-            refusal: u(d.errorKind),
+            refusal: fromEnum(d.errorKind),
           }),
           r("refused")
         );
@@ -7953,7 +7953,7 @@ function ta() {
   return a.CLAUDE_CODE_WORKER_EPOCH ?? 0;
 }
 function wi(e) {
-  return jX + "/" + e;
+  return WORKING_FILESTORE_PREFIX + "/" + e;
 }
 function ra() {
   return {
@@ -8070,7 +8070,7 @@ async function na(e, t, r) {
   if (l >= 200 && l < 300) return { kind: "response", status: l, data: d };
   let h = Eu().safeParse(d),
     w = h.success ? h.data.error : void 0,
-    _ = Qjt(e, l, w, Hht);
+    _ = Qjt(e, l, w, LANE_FULL_REASON);
   if (l !== 404)
     q(
       _?.kind === "unsupported" ? "info" : "warn",
@@ -8094,12 +8094,12 @@ var Pu = {
 function xu() {
   return {
     enabled: $Qt,
-    pullSeedFile: Q2,
+    pullSeedFile: getSyncedFile,
     announceVerdict: zFn,
     priorWorkerProcess: oa() > 1,
   };
 }
-function lp(e, t = xu(), r = GFn, o = { git: ia() }, l = o.git ? Ru(e) : null) {
+function startWorkerDirSync(e, t = xu(), r = GFn, o = { git: ia() }, l = o.git ? Ru(e) : null) {
   return (
     Zs(t),
     (o.git && l !== null
@@ -8125,7 +8125,7 @@ function Ru(e) {
     sessionId: t.sessionId,
     deps: {
       enabled: $Qt,
-      transport: ns({ getRow: Q2, putRow: Hne, direct: ra() }),
+      transport: ns({ getRow: getSyncedFile, putRow: putSyncedFile, direct: ra() }),
       storePath: Cr(r, `git-${t.sessionId}.json`),
       endedPath: Cr(r, `ended-${t.sessionId}.json`),
       emptyAtStartPath: Cr(r, `empty-at-start-${t.sessionId}.json`),
@@ -8137,4 +8137,4 @@ function Ru(e) {
     },
   };
 }
-export { lp as startWorkerDirSync };
+export { startWorkerDirSync };

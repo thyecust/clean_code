@@ -7,16 +7,16 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { xN, ne } from "./chunk-rr78st95.js";
-import { observationStamp as O$, observedWithoutSource as vfe, compareArtifactVersions as dFe } from "./chunk-01ymf0ar.js";
+import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";
 import { rDe, j2, y4n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { createHash as _ } from "crypto";
-import { readFile as z, stat as G, unlink as K } from "fs/promises";
+import { createHash } from "crypto";
+import { readFile, stat as G, unlink } from "fs/promises";
 function versionHeldBy(e, r, n) {
   return (
     e.ver === r && (e.observers === void 0 || Object.hasOwn(e.observers, n))
@@ -25,7 +25,7 @@ function versionHeldBy(e, r, n) {
 function L(e, r, n) {
   return (
     versionHeldBy(e.getArtifactReadObservation(r), n, e.agentId ?? "main") &&
-    !vfe(e.agentId, r, n)
+    !observedWithoutSource(e.agentId, r, n)
   );
 }
 async function registerHandoverRead(
@@ -66,7 +66,7 @@ async function registerHandoverRead(
       return;
     });
   if (s === void 0) return R;
-  let C = _("sha256").update(n).digest("hex"),
+  let C = createHash("sha256").update(n).digest("hex"),
     p = ne().pendingHandoverReads,
     v = p.get(H),
     u =
@@ -131,7 +131,7 @@ async function refreshHandoverCopy(e, r) {
     t = ne().pendingHandoverReads,
     i = t.get(n);
   if (i === void 0) return;
-  if (_("sha256").update(r).digest("hex") !== i.contentHash) {
+  if (createHash("sha256").update(r).digest("hex") !== i.contentHash) {
     t.delete(n);
     return;
   }
@@ -221,7 +221,7 @@ function U(e, r) {
 async function discardHandoverCopy(e, r) {
   (ne().pendingHandoverReads.delete(ot(e)),
     y4n(r, e),
-    await K(e).catch(() => {}));
+    await unlink(e).catch(() => {}));
 }
 var w = {
   artifactRead: void 0,
@@ -243,13 +243,13 @@ async function prepareHandoverRead(e, r, n, t) {
     )
       return w;
     if (Math.floor(t.mtimeMs) !== d.mtimeMs || t.totalLines !== d.totalLines)
-      return (g("artifact_handover_read", "file_changed"), w);
+      return (logFeatureSad("artifact_handover_read", "file_changed"), w);
     if (j(d, e, r)) return w;
     let c = [t.firstLine, t.firstLine + t.lineCount],
       l = await X(e, d.bytes, d.contentHash);
     if (l === "changed")
-      return (i.delete(e), g("artifact_handover_read", "file_changed"), w);
-    if (l === "unreadable") g("artifact_handover_read", "file_unreadable");
+      return (i.delete(e), logFeatureSad("artifact_handover_read", "file_changed"), w);
+    if (l === "unreadable") logFeatureSad("artifact_handover_read", "file_unreadable");
     let a = l === "holds",
       F = (d.linesPrepared.get(o) ?? []).filter((s) => s.messageId === n),
       b = I([...(d.linesReturned.get(o) ?? []), ...F.map((s) => s.range), c]),
@@ -274,7 +274,7 @@ async function prepareHandoverRead(e, r, n, t) {
             Q(d, e, r, n, o) ? { slug: d.slug, ver: d.ver } : void 0
           );
         } catch (s) {
-          h(s);
+          logError(s);
           return;
         }
       },
@@ -289,18 +289,18 @@ async function prepareHandoverRead(e, r, n, t) {
       commit: T,
     };
   } catch (i) {
-    return (h(i), w);
+    return (logError(i), w);
   }
 }
 function q(e, r) {
   let n = r.getArtifactReadObservation(e.slug).ver;
-  return n !== void 0 && n !== e.ver && (dFe(n, e.ver) ?? 0) > 0;
+  return n !== void 0 && n !== e.ver && (compareArtifactVersions(n, e.ver) ?? 0) > 0;
 }
 function j(e, r, n) {
   if (q(e, n))
     return (
       ne().pendingHandoverReads.delete(r),
-      g("artifact_handover_read", "superseded"),
+      logFeatureSad("artifact_handover_read", "superseded"),
       !0
     );
   return !1;
@@ -329,25 +329,25 @@ function Q(e, r, n, t, i) {
   let d = D(e, n.agentId, i),
     o = d?.observedFrom;
   try {
-    n.setArtifactReadVersion(e.slug, e.ver, O$(n.agentId, t));
+    n.setArtifactReadVersion(e.slug, e.ver, observationStamp(n.agentId, t));
   } finally {
     if (d !== void 0)
       if (o === void 0) delete d.observedFrom;
       else d.observedFrom = o;
   }
   if (versionHeldBy(n.getArtifactReadObservation(e.slug), e.ver, i))
-    return (y("artifact_handover_read"), !0);
+    return (logFeatureOk("artifact_handover_read"), !0);
   return (
     e.unrecordableBy.add(i),
-    g("artifact_handover_read", "seed_not_persisted"),
+    logFeatureSad("artifact_handover_read", "seed_not_persisted"),
     !1
   );
 }
 async function X(e, r, n) {
   try {
     return (await G(e)).size === r &&
-      _("sha256")
-        .update(await z(e))
+      createHash("sha256")
+        .update(await readFile(e))
         .digest("hex") === n
       ? "holds"
       : "changed";

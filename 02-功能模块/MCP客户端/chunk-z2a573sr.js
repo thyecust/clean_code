@@ -18,7 +18,7 @@ import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { jt, wQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logMCPError as Wr, logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   gr,
@@ -28,9 +28,9 @@ import {
   YVe,
   x8n,
   H8n,
-  isMcpDialBlockedByPolicy as d$,
-  mcpDialBlockCause as Yp,
-  isMcpServerDisabled as Uo,
+  isMcpDialBlockedByPolicy,
+  mcpDialBlockCause,
+  isMcpServerDisabled,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { tfe, IH } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { sI } from "../../01-核心基础设施/共享小工具-未细化/chunk-g2fqhcwj.js";
@@ -174,7 +174,7 @@ function j(t, e) {
       return { behavior: "allow", updatedInput: h };
     },
     async call(h, i) {
-      let y = Yp(t, e);
+      let y = mcpDialBlockCause(t, e);
       if (y === "managed-policy")
         return {
           data: {
@@ -182,7 +182,7 @@ function j(t, e) {
             message: `${yLt(t)}. Only an organization admin can change this; do not retry or ask the user to enable it.`,
           },
         };
-      if (Uo(t))
+      if (isMcpServerDisabled(t))
         return {
           data: {
             status: "error",
@@ -226,14 +226,14 @@ function j(t, e) {
       let P = ir();
       R.then(async () => {
         if (ir() !== P) {
-          J(
+          logMCPDebug(
             t,
             "OAuth completed after an identity change; discarding without reconnecting",
           );
           return;
         }
-        if ((Aee(i.storageV5), Uo(t) || d$(t, e))) {
-          J(
+        if ((Aee(i.storageV5), isMcpServerDisabled(t) || isMcpDialBlockedByPolicy(t, e))) {
+          logMCPDebug(
             t,
             "OAuth completed but the server is now disabled or policy-blocked; not reconnecting",
           );
@@ -246,7 +246,7 @@ function j(t, e) {
           i.credentials,
         );
         if (ir() !== P) {
-          J(
+          logMCPDebug(
             t,
             "OAuth completed after an identity change; discarding the stale reconnect",
           );
@@ -254,20 +254,20 @@ function j(t, e) {
         }
         let A = i.getMcp().clients.some((C) => C.name === t),
           S = i.session.mcpSessionWiring.connections();
-        if (!A || S === void 0 || Uo(t) || d$(t, e)) {
-          (J(
+        if (!A || S === void 0 || isMcpServerDisabled(t) || isMcpDialBlockedByPolicy(t, e)) {
+          (logMCPDebug(
             t,
             "OAuth completed after the server was removed, disabled, or policy-blocked; discarding the fresh connection",
           ),
             w()
               .clearServerCache(t, e)
-              .catch((C) => J(t, `Orphan-connection cleanup failed: ${l(C)}`)));
+              .catch((C) => logMCPDebug(t, `Orphan-connection cleanup failed: ${l(C)}`)));
           return;
         }
         (S.adoptServer(t, o, { appendIfAbsent: !1 }),
-          J(t, `OAuth complete, reconnected with ${o.tools.length} tool(s)`));
+          logMCPDebug(t, `OAuth complete, reconnected with ${o.tools.length} tool(s)`));
       }).catch((o) => {
-        Wr(t, `OAuth flow failed after tool-triggered start: ${l(o)}`);
+        logMCPError(t, `OAuth flow failed after tool-triggered start: ${l(o)}`);
       });
       try {
         let o = await Promise.race([_, R.then(() => null)]);

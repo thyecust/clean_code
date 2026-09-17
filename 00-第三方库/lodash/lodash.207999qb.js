@@ -451,17 +451,17 @@ function Zur(t) {
 function edr(t) {
   return /^(?=[^.]{3,8}(?:\.|$))[^.]{1,6}~[0-9]{1,6}(?:\.[^.]{1,3})?$/.test(t);
 }
-import { lstatSync as Qe, readlinkSync as V, realpathSync as kt } from "fs";
-import { readlink as tr } from "fs/promises";
-import { homedir as Pt } from "os";
+import { lstatSync, readlinkSync, realpathSync } from "fs";
+import { readlink } from "fs/promises";
+import { homedir } from "os";
 import {
-  basename as M,
-  dirname as c,
-  isAbsolute as m,
+  basename,
+  dirname,
+  isAbsolute,
   join as G,
-  parse as K,
-  relative as B,
-  resolve as f,
+  parse,
+  relative,
+  resolve,
   sep as d,
 } from "path";
 import * as J from "path";
@@ -567,7 +567,7 @@ function XR(t, e) {
   return r === null || r !== C_e(e);
 }
 function ac(t, e) {
-  let r = f(e, t);
+  let r = resolve(e, t);
   if ($xe(t, e) || $xe(r, e)) return !0;
   let n = C_e(e);
   for (let o of [t, r]) {
@@ -707,7 +707,7 @@ function Xo(t) {
   return An(t) && !Oi(t);
 }
 function Ju(t) {
-  if (t === "~" || t.startsWith("~/")) return Pt() + t.slice(1);
+  if (t === "~" || t.startsWith("~/")) return homedir() + t.slice(1);
   return t;
 }
 function Fx(t) {
@@ -760,7 +760,7 @@ function Tt(t) {
 }
 function RS(t) {
   try {
-    return NW(kt.native(t));
+    return NW(realpathSync.native(t));
   } catch {
     return null;
   }
@@ -771,12 +771,12 @@ function yZ(t) {
   return It(t).real ?? null;
 }
 function AHt(t, e) {
-  let r = f(e).toLowerCase(),
-    n = c(f(t)).toLowerCase();
+  let r = resolve(e).toLowerCase(),
+    n = dirname(resolve(t)).toLowerCase();
   if (n === r || Nt(n, r) || Et(n, r, "lexical")) return !0;
   let o = yZ(e)?.toLowerCase();
   if (o == null) return !1;
-  let i = yZ(c(f(t)))?.toLowerCase();
+  let i = yZ(dirname(resolve(t)))?.toLowerCase();
   if (i == null) return !0;
   return i === o || Nt(i, o) || Et(i, o, "canonical");
 }
@@ -801,11 +801,11 @@ function R(t) {
 }
 var W;
 function Et(t, e, r) {
-  let n = Pt(),
+  let n = homedir(),
     o = (process.env.LOCALAPPDATA ?? "").trim();
   if (r === "lexical")
     return z(
-      Ot(n, o, (u) => f(u).toLowerCase()),
+      Ot(n, o, (u) => resolve(u).toLowerCase()),
       t,
       e,
     );
@@ -813,9 +813,9 @@ function Et(t, e, r) {
   if (W?.key === i) return z(W.aliasDirs, t, e);
   let s = !0,
     a = Ot(n, o, (u) => {
-      if (!or(u)) return f(u).toLowerCase();
+      if (!or(u)) return resolve(u).toLowerCase();
       let l = yZ(u)?.toLowerCase();
-      if (l == null) return ((s = !1), f(u).toLowerCase());
+      if (l == null) return ((s = !1), resolve(u).toLowerCase());
       return l;
     });
   if (s) W = { key: i, aliasDirs: a };
@@ -884,8 +884,8 @@ function E(t) {
   return t.toUpperCase().toLowerCase();
 }
 function FW(t) {
-  return M(c(t)) === "worktrees" && M(c(c(t))) === ".claude"
-    ? c(c(c(t)))
+  return basename(dirname(t)) === "worktrees" && basename(dirname(dirname(t))) === ".claude"
+    ? dirname(dirname(dirname(t)))
     : null;
 }
 function Bxe(t, { allowLocalWsl: e = !1 } = {}) {
@@ -893,14 +893,14 @@ function Bxe(t, { allowLocalWsl: e = !1 } = {}) {
   if (r(t)) return !1;
   if (Ww(t)) return !0;
   let n = Oz(t);
-  if (!m(n)) return !0;
+  if (!isAbsolute(n)) return !0;
   if (jxe(n, { allowLocalWsl: e })) return !0;
-  let o = f(n);
+  let o = resolve(n);
   for (;;) {
     let i = It(o);
     if (i.real !== void 0) return Ww(i.real) && !r(i.real);
     if (i.code !== "ENOENT" && i.code !== "ENOTDIR") return !0;
-    let s = c(o);
+    let s = dirname(o);
     if (s === o) return !1;
     o = s;
   }
@@ -941,34 +941,34 @@ function Ww(t) {
 }
 function DYt(t, { allowLocalWsl: e = !1 } = {}) {
   let r = Oz(t);
-  if (!m(r)) return !0;
-  let { root: n } = K(r);
+  if (!isAbsolute(r)) return !0;
+  let { root: n } = parse(r);
   return S(n, w(r.slice(n.length)), 0, e);
 }
 function vHt(t, e) {
   return S(t, w(e), 0, !1, { trustedStart: !0, trustedRoot: t });
 }
-function RHt(t, e = c(t)) {
-  let r = O(() => V(t));
+function RHt(t, e = dirname(t)) {
+  let r = O(() => readlinkSync(t));
   if (r.value === void 0) return r.code !== "ENOENT" && r.code !== "EINVAL";
   let n = r.value.replace(/^\/{2,}/, "/");
   if (jt(n)) return !0;
   let o = !1;
   if (o && pl(n)) return !0;
-  let i = o ? G(K(e).root, n) : n,
+  let i = o ? G(parse(e).root, n) : n,
     s = { trustedStart: !0, trustedRoot: e };
-  if (m(i)) {
-    let l = B(e, i);
-    if (!pl(i) && l !== "" && !Lt(l) && !m(l)) return S(e, w(l), 1, !1, s);
+  if (isAbsolute(i)) {
+    let l = relative(e, i);
+    if (!pl(i) && l !== "" && !Lt(l) && !isAbsolute(l)) return S(e, w(l), 1, !1, s);
     return Ww(i) || jxe(i);
   }
   if (Ww(i)) return !0;
-  let a = B(e, c(t)),
-    u = !Lt(a) && !m(a);
-  return S(u ? e : c(t), [...(u ? w(a) : []), ...w(i)], 1, !1, s);
+  let a = relative(e, dirname(t)),
+    u = !Lt(a) && !isAbsolute(a);
+  return S(u ? e : dirname(t), [...(u ? w(a) : []), ...w(i)], 1, !1, s);
 }
 function jxe(t, e = {}) {
-  return DYt(t, e) || (pl(t) && DYt(f(t), e));
+  return DYt(t, e) || (pl(t) && DYt(resolve(t), e));
 }
 var ar = 40;
 function w(t) {
@@ -992,18 +992,18 @@ function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
     let _ = e[l];
     if (_ === ".") continue;
     if (_ === "..") {
-      u = c(u);
+      u = dirname(u);
       continue;
     }
     let A = G(u, _);
     if (!a(A) && P(A, n)) return !0;
-    let L = O(() => Qe(A));
+    let L = O(() => lstatSync(A));
     if (L.value === void 0) {
       if (L.code !== "ENOENT" && L.code !== "ENOTDIR") return !0;
       let g = A;
       for (let D of e.slice(l + 1))
         if (
-          ((g = D === ".." ? c(g) : D === "." ? g : G(g, D)), !a(g) && P(g, n))
+          ((g = D === ".." ? dirname(g) : D === "." ? g : G(g, D)), !a(g) && P(g, n))
         )
           return !0;
       return !1;
@@ -1011,22 +1011,22 @@ function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
     let j;
     if (L.value.isSymbolicLink()) {
       if (r >= ar) return !0;
-      if (((j = O(() => V(A)).value), j === void 0)) return !0;
+      if (((j = O(() => readlinkSync(A)).value), j === void 0)) return !0;
     } else {
       u = A;
       continue;
     }
     let p = j.replace(/^\/{2,}/, "/");
-    if (!(o && m(p) && !pl(p) && a(p)) && P(p, n)) return !0;
+    if (!(o && isAbsolute(p) && !pl(p) && a(p)) && P(p, n)) return !0;
     let I = e.slice(l + 1);
     if (jt(p)) return !0;
-    if (m(p)) {
+    if (isAbsolute(p)) {
       if (o && !pl(p) && a(p))
         return S(i, [...w(p.slice(s.length)), ...I], r + 1, n, {
           trustedStart: !0,
           trustedRoot: i,
         });
-      let g = K(p).root;
+      let g = parse(p).root;
       return S(g, [...w(p.slice(g.length)), ...I], r + 1, n);
     }
     return S(u, [...w(p), ...I], r + 1, n, {
@@ -1037,7 +1037,7 @@ function S(t, e, r, n, { trustedStart: o = !1, trustedRoot: i = t } = {}) {
   return !1;
 }
 function It(t) {
-  let e = O(() => NW(kt.native(t)));
+  let e = O(() => NW(realpathSync.native(t)));
   return { real: e.value, code: e.code };
 }
 function Y(t) {
@@ -1069,7 +1069,7 @@ function odr(t) {
   let e,
     r = O(() => {
       try {
-        return V(t);
+        return readlinkSync(t);
       } catch (n) {
         throw ((e = n), n);
       }
@@ -1080,7 +1080,7 @@ async function Tae(t) {
   let e,
     r = await ur(async () => {
       try {
-        return await tr(t);
+        return await readlink(t);
       } catch (n) {
         throw ((e = n), n);
       }
@@ -1117,24 +1117,24 @@ function Oz(t) {
 }
 function $b(t, { foldCase: e, knownNotSuspect: r = !1 } = {}) {
   if (((e ??= !0), (t = Oz(t)), $W(t) || li(t))) {
-    let a = Oje(f(Oje(t))).normalize("NFC");
+    let a = Oje(resolve(Oje(t))).normalize("NFC");
     return e ? a.toLowerCase() : a;
   }
-  if (!r && jxe(m(t) ? t : f(t))) {
-    let a = f(t).normalize("NFC");
+  if (!r && jxe(isAbsolute(t) ? t : resolve(t))) {
+    let a = resolve(t).normalize("NFC");
     return e ? a.toLowerCase() : a;
   }
-  let n = f(t),
+  let n = resolve(t),
     o = [],
     i = RS(n);
-  while (i === null && c(n) !== n) (o.unshift(M(n)), (n = c(n)), (i = RS(n)));
-  i = o.length > 0 ? f(i ?? n, ...o) : (i ?? n);
+  while (i === null && dirname(n) !== n) (o.unshift(basename(n)), (n = dirname(n)), (i = RS(n)));
+  i = o.length > 0 ? resolve(i ?? n, ...o) : (i ?? n);
   let s = Oje(i).normalize("NFC");
   return e ? s.toLowerCase() : s;
 }
 function wh(t, e, { alreadyComparable: r = !1, foldCase: n } = {}) {
-  let o = B(r ? t : $b(t, { foldCase: n }), r ? e : $b(e, { foldCase: n }));
-  return o === "" || (!m(o) && o !== ".." && !o.startsWith(`..${d}`));
+  let o = relative(r ? t : $b(t, { foldCase: n }), r ? e : $b(e, { foldCase: n }));
+  return o === "" || (!isAbsolute(o) && o !== ".." && !o.startsWith(`..${d}`));
 }
 function $W(t) {
   return An(t);

@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { invalidateJobStateCache as xc, readJobState as Zn, syncRespawnFlag as sR } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
+import { invalidateJobStateCache, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 var r = "--inherit-permission-mode";
 function s(e) {
   return e === r || e.startsWith(`${r}=`);
@@ -25,7 +25,7 @@ function f() {
 function v3n({ inheritPermissionModeCli: e, resolvedMode: n, storageV5: i }) {
   if (!e) return;
   ((f().mode = n),
-    sR("--permission-mode", [r], n, void 0, i).catch((o) => h(o)));
+    syncRespawnFlag("--permission-mode", [r], n, void 0, i).catch((o) => logError(o)));
 }
 async function R3n(e) {
   let n = f(),
@@ -36,15 +36,15 @@ async function R3n(e) {
     n.mode = void 0;
     return;
   }
-  let t = await Zn(o, e);
+  let t = await readJobState(o, e);
   if (!t?.respawnFlags) return;
   if (!t.respawnFlags.some(s)) {
     n.mode = void 0;
     return;
   }
-  (await sR("--permission-mode", [r], i, void 0, e, void 0, (p) => p.some(s)),
-    xc(o));
-  let d = await Zn(o, e);
+  (await syncRespawnFlag("--permission-mode", [r], i, void 0, e, void 0, (p) => p.some(s)),
+    invalidateJobStateCache(o));
+  let d = await readJobState(o, e);
   if (d?.respawnFlags && !d.respawnFlags.some(s)) n.mode = void 0;
 }
 export { v3n, R3n };

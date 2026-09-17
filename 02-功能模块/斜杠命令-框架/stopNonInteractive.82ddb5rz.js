@@ -9,23 +9,23 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { isBgSession as _t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 var t = {
     type: "local-jsx",
     name: "stop",
     description:
       "Stop this background session; transcript and worktree are kept",
     immediate: !0,
-    isEnabled: _t,
+    isEnabled: isBgSession,
   },
-  s = {
+  stopNonInteractive = {
     type: "local",
     name: "stop",
     supportsNonInteractive: !0,
     description:
       "Stop this background session; transcript and worktree are kept",
-    isEnabled: _t,
+    isEnabled: isBgSession,
     load: () => import("./stop-cmd.3kf59me0.js"),
   },
   r = t;
-export { r as default, s as stopNonInteractive };
+export { r as default, stopNonInteractive };

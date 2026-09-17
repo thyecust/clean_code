@@ -94,7 +94,7 @@ function w({
     last_write_bytes: t.bytes,
   };
 }
-function W(t) {
+function startEventLoopStallDetector(t) {
   y.of(t).start(a.CLAUDE_CODE_REMOTE ? T : p);
 }
 class b {
@@ -206,4 +206,4 @@ class b {
   }
 }
 var y = new j(() => new b());
-export { W as startEventLoopStallDetector };
+export { startEventLoopStallDetector };

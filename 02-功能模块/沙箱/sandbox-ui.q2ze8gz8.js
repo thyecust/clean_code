@@ -15,21 +15,21 @@ import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getSettingsFilePathForSource as ho, getSettings_DEPRECATED as bn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import {
-  checkWindowsSandboxStatusAsync as Y4e,
+  checkWindowsSandboxStatusAsync,
   r3,
   xDe,
   L2,
-  resolveWindowsTlsTerminateCaSource as gX,
-  willSandboxTlsTerminate as Fue,
-  isInstalledWindowsTlsCaCurrent as kBt,
-  shouldAllowManagedSandboxDomainsOnly as ene,
-  shouldForceSandboxOn as eTe,
-  addToExcludedCommands as tpn,
-  SandboxManager as st,
+  resolveWindowsTlsTerminateCaSource,
+  willSandboxTlsTerminate,
+  isInstalledWindowsTlsCaCurrent,
+  shouldAllowManagedSandboxDomainsOnly,
+  shouldForceSandboxOn,
+  addToExcludedCommands,
+  SandboxManager,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vwjrfkgt.js";
@@ -45,16 +45,16 @@ import { ut } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-import { relative as Wn } from "path";
+import { relative } from "path";
 function ce(Un, Fn) {
   return e(t, { dimColor: !0, children: Un }, Fn);
 }
 function G() {
   let Ao = _(3),
-    Bn = st.isSandboxingEnabled(),
+    Bn = SandboxManager.isSandboxingEnabled(),
     ie;
   if (Ao[0] === p) {
-    let le = st.checkDependencies();
+    let le = SandboxManager.checkDependencies();
     ie =
       le.warnings.length > 0
         ? e(o, {
@@ -82,12 +82,12 @@ function G() {
   }
   let j;
   if (Ao[2] === p) {
-    let M = st.getFsReadConfig();
-    let Z = st.getFsWriteConfig();
-    let S = st.getNetworkRestrictionConfig();
-    let Eo = st.getAllowUnixSockets();
-    let de = st.getExcludedCommands();
-    let oo = st.getLinuxGlobPatternWarnings();
+    let M = SandboxManager.getFsReadConfig();
+    let Z = SandboxManager.getFsWriteConfig();
+    let S = SandboxManager.getNetworkRestrictionConfig();
+    let Eo = SandboxManager.getAllowUnixSockets();
+    let de = SandboxManager.getExcludedCommands();
+    let oo = SandboxManager.getLinuxGlobPatternWarnings();
     j = r(o, {
       flexDirection: "column",
       children: [
@@ -165,7 +165,7 @@ function G() {
                 color: "permission",
                 children: [
                   "Network Restrictions",
-                  ene() ? " (Managed)" : "",
+                  shouldAllowManagedSandboxDomainsOnly() ? " (Managed)" : "",
                   ":",
                 ],
               }),
@@ -247,16 +247,16 @@ function Be(we) {
 function Fe(Ho) {
   let ke = null;
   let Re = !0;
-  if (Fue())
-    ((ke = Ho.user.caCertThumb !== void 0 && kBt(Ho.user.caCertThumb)),
-      (Re = gX().source === "managed"));
+  if (willSandboxTlsTerminate())
+    ((ke = Ho.user.caCertThumb !== void 0 && isInstalledWindowsTlsCaCurrent(Ho.user.caCertThumb)),
+      (Re = resolveWindowsTlsTerminateCaSource().source === "managed"));
   return { ...Ho, caTrusted: ke, caManaged: Re };
 }
 function He(ot) {
   return { probeError: L2(l(ot), { omitCcRemedy: !0 }) };
 }
 function Ue() {
-  return Y4e({ srtWin: xDe() }).then(Fe).catch(He);
+  return checkWindowsSandboxStatusAsync({ srtWin: xDe() }).then(Fe).catch(He);
 }
 function Ie(Te) {
   return (
@@ -593,11 +593,11 @@ function co(et) {
 function K(gt) {
   let mo = _(5),
     { onComplete: Io } = gt,
-    xt = st.isSandboxingEnabled(),
+    xt = SandboxManager.isSandboxingEnabled(),
     ht =
-      st.areSandboxSettingsLockedByPolicy() ||
-      st.areUnsandboxedCommandsForbiddenByPolicy(),
-    je = st.areUnsandboxedCommandsAllowed();
+      SandboxManager.areSandboxSettingsLockedByPolicy() ||
+      SandboxManager.areUnsandboxedCommandsForbiddenByPolicy(),
+    je = SandboxManager.areUnsandboxedCommandsAllowed();
   if (!xt) {
     let W;
     if (mo[0] === p)
@@ -687,7 +687,7 @@ function go(wt) {
   if (C[9] !== I)
     ((Ke = async function V(yt) {
       let _e = yt;
-      (await st.setSandboxSettings({ allowUnsandboxedCommands: _e === "open" }),
+      (await SandboxManager.setSandboxSettings({ allowUnsandboxedCommands: _e === "open" }),
         I(
           _e === "open"
             ? "\u2713 Unsandboxed fallback allowed - commands can run outside sandbox when necessary"
@@ -788,16 +788,16 @@ function vo(Mt) {
   let x = _(32),
     { onComplete: y, depCheck: O } = Mt,
     Ye;
-  if (x[0] === p) ((Ye = st.isSandboxingEnabled()), (x[0] = Ye));
+  if (x[0] === p) ((Ye = SandboxManager.isSandboxingEnabled()), (x[0] = Ye));
   else Ye = x[0];
   let $t = Ye,
     on;
-  if (x[1] === p) ((on = st.isAutoAllowBashIfSandboxedEnabled()), (x[1] = on));
+  if (x[1] === p) ((on = SandboxManager.isAutoAllowBashIfSandboxedEnabled()), (x[1] = on));
   else on = x[1];
   let Gt = on,
     xo = O.warnings.length > 0,
     en;
-  if (x[2] === p) ((en = bn()), (x[2] = en));
+  if (x[2] === p) ((en = getSettings_DEPRECATED()), (x[2] = en));
   else en = x[2];
   let qt = en.sandbox?.network?.allowAllUnixSockets,
     qo = xo && !qt,
@@ -816,13 +816,13 @@ function vo(Mt) {
   else nn = x[3];
   let Vt = nn,
     tn;
-  if (x[4] === p) ((tn = eTe()), (x[4] = tn));
+  if (x[4] === p) ((tn = shouldForceSandboxOn()), (x[4] = tn));
   else tn = x[4];
   let sn = tn,
     rn = Vt(),
     Kt = sn && rn === "disabled" ? "regular" : rn,
     ln;
-  if (x[5] === p) ((ln = st.isAutoAllowSupported()), (x[5] = ln));
+  if (x[5] === p) ((ln = SandboxManager.isAutoAllowSupported()), (x[5] = ln));
   else ln = x[5];
   let z = ln,
     an;
@@ -853,7 +853,7 @@ function vo(Mt) {
     ((mn = async function J(Jt) {
       bb41: switch (Jt) {
         case "auto-allow": {
-          (await st.setSandboxSettings({
+          (await SandboxManager.setSandboxSettings({
             enabled: !0,
             autoAllowBashIfSandboxed: !0,
           }),
@@ -861,7 +861,7 @@ function vo(Mt) {
           break bb41;
         }
         case "regular": {
-          (await st.setSandboxSettings({
+          (await SandboxManager.setSandboxSettings({
             enabled: !0,
             ...(z && { autoAllowBashIfSandboxed: !1 }),
           }),
@@ -873,7 +873,7 @@ function vo(Mt) {
           break bb41;
         }
         case "disabled": {
-          (await st.setSandboxSettings({
+          (await SandboxManager.setSandboxSettings({
             enabled: !1,
             ...(z && { autoAllowBashIfSandboxed: !1 }),
           }),
@@ -1136,9 +1136,9 @@ function Wo(Xt) {
   return Tn;
 }
 async function ps(s, u, n) {
-  let c = bn().theme || "light",
+  let c = getSettings_DEPRECATED().theme || "light",
     b = P();
-  if (!st.isSupportedPlatform()) {
+  if (!SandboxManager.isSupportedPlatform()) {
     let a =
         b === "wsl"
           ? "Error: Sandboxing requires WSL2. WSL1 is not supported."
@@ -1146,7 +1146,7 @@ async function ps(s, u, n) {
       m = ut("error", c)(a);
     return (s(m), null);
   }
-  if (!st.isPlatformInEnabledList()) {
+  if (!SandboxManager.isPlatformInEnabledList()) {
     let a = ut(
       "error",
       c,
@@ -1155,7 +1155,7 @@ async function ps(s, u, n) {
     );
     return (s(a), null);
   }
-  if (st.areSandboxSettingsLockedByPolicy()) {
+  if (SandboxManager.areSandboxSettingsLockedByPolicy()) {
     let a = ut(
       "error",
       c,
@@ -1194,7 +1194,7 @@ async function ps(s, u, n) {
     );
   }
   if (!g) {
-    let a = st.checkDependencies();
+    let a = SandboxManager.checkDependencies();
     return e(vo, { onComplete: s, depCheck: a });
   }
   if (g)
@@ -1210,9 +1210,9 @@ async function ps(s, u, n) {
         return (s(Y), null);
       }
       let m = a.replace(/^["']|["']$/g, ""),
-        { settingsSource: T } = tpn(m),
-        v = ho(T),
-        R = v ? Wn(Bw(), v) : ".claude/settings.local.json",
+        { settingsSource: T } = addToExcludedCommands(m),
+        v = getSettingsFilePathForSource(T),
+        R = v ? relative(Bw(), v) : ".claude/settings.local.json",
         Q = v && R.startsWith("..") ? v : R,
         X = ut("success", c)(`Added "${m}" to excluded commands in ${Q}`);
       return (s(X), null);

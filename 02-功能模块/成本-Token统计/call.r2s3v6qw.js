@@ -12,9 +12,9 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { Aw, getOauthAccountInfo as vn, getSubscriptionType as qn, getRateLimitTier as UT, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { Aw, getOauthAccountInfo, getSubscriptionType, getRateLimitTier, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { formatResetTime as Au } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import {
@@ -110,12 +110,12 @@ function Ge(bn) {
     [st] = cn(),
     rt = QR(),
     oi;
-  if (b[0] === p) ((oi = qn()), (b[0] = oi));
+  if (b[0] === p) ((oi = getSubscriptionType()), (b[0] = oi));
   else oi = b[0];
   let si = oi,
     ri;
   if (b[1] === p) {
-    let Ln = si === "max" && UT() === "default_claude_max_20x";
+    let Ln = si === "max" && getRateLimitTier() === "default_claude_max_20x";
     ri = !Ln && z9();
     b[1] = ri;
   } else ri = b[1];
@@ -169,7 +169,7 @@ function Ge(bn) {
     if (rt.resetsAt) {
       let Xe;
       if (b[5] !== rt.resetsAt)
-        ((Xe = Au(rt.resetsAt, !0)), (b[5] = rt.resetsAt), (b[6] = Xe));
+        ((Xe = formatResetTime(rt.resetsAt, !0)), (b[5] = rt.resetsAt), (b[6] = Xe));
       else Xe = b[6];
       Ut = Xe;
       break bb0;
@@ -498,15 +498,15 @@ function zt(co) {
     n = QR(),
     { storageV5: $t } = _e(),
     Ti;
-  if (l[0] === p) ((Ti = qn()), (l[0] = Ti));
+  if (l[0] === p) ((Ti = getSubscriptionType()), (l[0] = Ti));
   else Ti = l[0];
   let Bt = Ti,
     Di;
-  if (l[1] === p) ((Di = UT()), (l[1] = Di));
+  if (l[1] === p) ((Di = getRateLimitTier()), (l[1] = Di));
   else Di = l[1];
   let fo = Di,
-    ho = vn()?.hasExtraUsageEnabled === !0,
-    Pi = vn()?.billingType === "usage_based",
+    ho = getOauthAccountInfo()?.hasExtraUsageEnabled === !0,
+    Pi = getOauthAccountInfo()?.billingType === "usage_based",
     _o = Bt === "max" && fo === "default_claude_max_20x",
     Et = Bt === "team" || Bt === "enterprise",
     go = H("tengu_jade_anvil_4", !1),
@@ -948,7 +948,7 @@ function Ze(m, f) {
       label: "Wait here, then continue automatically shortly",
       confirmationPhrase: "shortly",
     };
-  let y = Au(m);
+  let y = formatResetTime(m);
   if (y)
     return {
       label: `Wait here, then continue automatically at ${y}`,

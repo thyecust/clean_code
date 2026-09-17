@@ -10,8 +10,8 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { AHt } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execFileSync as g } from "child_process";
-import { lstatSync as m } from "fs";
+import { execFileSync } from "child_process";
+import { lstatSync } from "fs";
 import { join as w } from "path";
 function E() {
   return !1;
@@ -32,7 +32,7 @@ var h = new j(() => new f()),
   b = 5000;
 function u(e) {
   try {
-    return m(e, { throwIfNoEntry: !1 }) === void 0;
+    return lstatSync(e, { throwIfNoEntry: !1 }) === void 0;
   } catch {
     return !1;
   }
@@ -60,7 +60,7 @@ function findExecutableWindows(e, t = !1) {
   let c = a.SYSTEMROOT || "C:\\Windows",
     d = w(c, "System32", "where.exe");
   try {
-    let i = g(d, [e], {
+    let i = execFileSync(d, [e], {
         stdio: "pipe",
         encoding: "utf8",
         timeout: b,

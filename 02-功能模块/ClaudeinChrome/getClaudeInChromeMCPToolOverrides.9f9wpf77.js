@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { trackClaudeInChromeTabId as Vyn } from "./chunk-hnp84hf6.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { trackClaudeInChromeTabId } from "./chunk-hnp84hf6.js";
 import "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import "./chunk-317fgfn3.js";
 import "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
@@ -18,7 +18,7 @@ import { uon } from "./chunk-v8138qz5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kdfkgcfn.js";
 function c(e, o, s) {
   let a = e.tabId;
-  if (typeof a === "number") Vyn(a);
+  if (typeof a === "number") trackClaudeInChromeTabId(a);
   let r = [];
   switch (o) {
     case "navigate":
@@ -27,11 +27,11 @@ function c(e, o, s) {
           let t = new URL(e.url);
           r.push(t.hostname);
         } catch {
-          r.push(Xe(e.url, 30));
+          r.push(truncateToWidth(e.url, 30));
         }
       break;
     case "find":
-      if (typeof e.query === "string") r.push(`pattern: ${Xe(e.query, 30)}`);
+      if (typeof e.query === "string") r.push(`pattern: ${truncateToWidth(e.query, 30)}`);
       break;
     case "computer":
       if (typeof e.action === "string") {
@@ -47,7 +47,7 @@ function c(e, o, s) {
             r.push(`${t} at (${e.coordinate.join(", ")})`);
           else r.push(t);
         else if (t === "type" && typeof e.text === "string")
-          r.push(`type "${Xe(e.text, 15)}"`);
+          r.push(`type "${truncateToWidth(e.text, 15)}"`);
         else if (t === "key" && typeof e.text === "string")
           r.push(`key ${e.text}`);
         else if (t === "scroll" && typeof e.scroll_direction === "string")
@@ -67,12 +67,12 @@ function c(e, o, s) {
       break;
     case "read_console_messages":
       if (typeof e.pattern === "string")
-        r.push(`pattern: ${Xe(e.pattern, 20)}`);
+        r.push(`pattern: ${truncateToWidth(e.pattern, 20)}`);
       if (e.onlyErrors === !0) r.push("errors only");
       break;
     case "read_network_requests":
       if (typeof e.urlPattern === "string")
-        r.push(`pattern: ${Xe(e.urlPattern, 20)}`);
+        r.push(`pattern: ${truncateToWidth(e.urlPattern, 20)}`);
       break;
     case "shortcuts_execute":
       if (typeof e.shortcutId === "string")
@@ -93,7 +93,7 @@ function c(e, o, s) {
   }
   return r.join(", ") || null;
 }
-function d(e) {
+function getClaudeInChromeMCPToolOverrides(e) {
   return {
     userFacingName(o) {
       return `Claude in Chrome[${e.replace(/_mcp$/, "")}]`;
@@ -104,4 +104,4 @@ function d(e) {
     ...uon(e),
   };
 }
-export { d as getClaudeInChromeMCPToolOverrides };
+export { getClaudeInChromeMCPToolOverrides };

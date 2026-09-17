@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { StringDecoder as s } from "string_decoder";
+import { StringDecoder } from "string_decoder";
 var p = 1048576;
 function Pit(o, r) {
-  let d = new s("utf8"),
+  let d = new StringDecoder("utf8"),
     e = "",
     t = !1,
     l = (i) => {

@@ -20,7 +20,7 @@ import { Ay } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 var _ = 1048576,
   w = 32,
   k = 200;
-function F(e) {
+function createRemoteToolsAnnounceWorker(e) {
   let u = { served: 0, ignored: 0, passthrough: 0, plumbing: 0, displaced: !1 },
     a = (i, o) => (
       e.telemetry.announce({ outcome: i, ...u }),
@@ -178,7 +178,7 @@ function F(e) {
     },
   };
 }
-async function W(e) {
+async function productionRemoteToolsAnnounceDeps(e) {
   let u = e.toolState.get(u9),
     [
       { isAccountGateServed: a, isViolinWoodEnabled: m },
@@ -251,6 +251,6 @@ async function W(e) {
   };
 }
 export {
-  F as createRemoteToolsAnnounceWorker,
-  W as productionRemoteToolsAnnounceDeps,
+  createRemoteToolsAnnounceWorker,
+  productionRemoteToolsAnnounceDeps,
 };

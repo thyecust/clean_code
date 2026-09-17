@@ -1169,11 +1169,11 @@ function sm(e) {
   return c;
 }
 var jc = { generatePluginConfiguration: sm };
-import { EOL as am } from "os";
+import { EOL } from "os";
 import cm from "util";
 import * as Yc from "process";
 function Wc(e, ...t) {
-  Yc.stderr.write(`${cm.format(e, ...t)}${am}`);
+  Yc.stderr.write(`${cm.format(e, ...t)}${EOL}`);
 }
 var Qc = (typeof process < "u" && process.env && process.env.DEBUG) || void 0,
   Jc,
@@ -1727,8 +1727,8 @@ function er(e) {
   }
   return !1;
 }
-import { inspect as Em } from "util";
-var dl = Em.custom;
+import { inspect } from "util";
+var dl = inspect.custom;
 var Bs = "REDACTED",
   Cm = [
     "x-ms-client-request-id",
@@ -10367,11 +10367,11 @@ function vh({ clientCapabilities: e, managedIdentityIdParams: t, system: r }) {
 }
 import { randomUUID as iy } from "crypto";
 var Za = { randomUUID: iy };
-import { randomFillSync as sy } from "crypto";
+import { randomFillSync } from "crypto";
 var is = new Uint8Array(256),
   os = is.length;
 function ec() {
-  if (os > is.length - 16) (sy(is), (os = 0));
+  if (os > is.length - 16) (randomFillSync(is), (os = 0));
   return is.slice(os, (os += 16));
 }
 var ye = [];
@@ -12610,10 +12610,10 @@ class Pr extends De {
   }
 }
 import {
-  accessSync as DE,
-  constants as Mf,
-  statSync as UE,
-  readFileSync as LE,
+  accessSync,
+  constants,
+  statSync,
+  readFileSync,
 } from "fs";
 import HE from "path";
 /*! @azure/msal-node v3.8.1 2025-10-29 */ var FE = "2019-11-01",
@@ -12638,7 +12638,7 @@ class Jt extends De {
     if (!e || !t) {
       let r = $E.darwin;
       try {
-        (DE(r, Mf.F_OK | Mf.R_OK), (e = Df), (t = Uf));
+        (accessSync(r, constants.F_OK | constants.R_OK), (e = Df), (t = Uf));
       } catch (n) {}
     }
     return [e, t];
@@ -12698,14 +12698,14 @@ class Jt extends De {
       if (a + c !== s) throw ae(Qi);
       let l;
       try {
-        l = await UE(s).size;
+        l = await statSync(s).size;
       } catch (m) {
         throw ae(So);
       }
       if (l > Th) throw ae(Ji);
       let d;
       try {
-        d = LE(s, me.UTF8);
+        d = readFileSync(s, me.UTF8);
       } catch (m) {
         throw ae(So);
       }
@@ -14706,7 +14706,7 @@ class xc {
     });
   }
 }
-import { createHash as em, createPrivateKey as pC } from "crypto";
+import { createHash, createPrivateKey } from "crypto";
 import { readFile as gC } from "fs/promises";
 var Oo = "ClientCertificateCredential",
   tm = z(Oo);
@@ -14758,7 +14758,7 @@ class Mc {
       ),
       r;
     if (this.certificateConfiguration.certificatePassword !== void 0)
-      r = pC({
+      r = createPrivateKey({
         key: t.certificateContents,
         passphrase: this.certificateConfiguration.certificatePassword,
         format: "pem",
@@ -14788,11 +14788,11 @@ async function yC(e, t) {
     throw Error(
       "The file at the specified path does not contain a PEM-encoded certificate.",
     );
-  let l = em("sha1")
+  let l = createHash("sha1")
       .update(Buffer.from(a[0], "base64"))
       .digest("hex")
       .toUpperCase(),
-    d = em("sha256")
+    d = createHash("sha256")
       .update(Buffer.from(a[0], "base64"))
       .digest("hex")
       .toUpperCase();
@@ -15084,7 +15084,7 @@ class nm {
     );
   }
 }
-class om extends xc {
+class DefaultAzureCredential extends xc {
   constructor(e) {
     let t = process.env.AZURE_TOKEN_CREDENTIALS
         ? process.env.AZURE_TOKEN_CREDENTIALS.trim().toLowerCase()
@@ -15121,7 +15121,7 @@ class om extends xc {
     super(...i);
   }
 }
-function kC(e, t, r) {
+function getBearerTokenProvider(e, t, r) {
   let { abortSignal: n, tracingOptions: o } = r || {},
     i = qn();
   i.addPolicy(Zn({ credential: e, scopes: t }));
@@ -15144,4 +15144,4 @@ function kC(e, t, r) {
   }
   return s;
 }
-export { om as DefaultAzureCredential, kC as getBearerTokenProvider };
+export { DefaultAzureCredential, getBearerTokenProvider };

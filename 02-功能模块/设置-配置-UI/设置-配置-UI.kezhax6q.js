@@ -10,32 +10,32 @@
 import { AS, ML, mv, ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromSanitizer_SANITIZER_OUTPUT_ONLY as Ln } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, yf, xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x, ln, Ux } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ne, Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { gi, o, t, ct, jr, tn, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   Mr,
   Jy,
   af,
-  bytesPerTokenForModel as lf,
-  renderModelName as oi,
+  bytesPerTokenForModel,
+  renderModelName,
   Tn,
-  isBgSession as _t,
-  isUnattendedBgSession as ap,
+  isBgSession,
+  isUnattendedBgSession,
   fq,
-  isClaudeAISubscriber as gt,
-  hasStoredOAuthToken as wu,
-  getSubscriptionType as qn,
-  isConsumerSubscriber as x6,
+  isClaudeAISubscriber,
+  hasStoredOAuthToken,
+  getSubscriptionType,
+  isConsumerSubscriber,
   VD,
   Te,
   ee,
@@ -44,22 +44,22 @@ import {
   hQ,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, formatDuration as Ot, formatNumber as No, formatTokens as Pn, formatRelativeTimeAgo as uy, formatResetText as $2e } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { listedProjectKey as Y5 } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { te, formatDuration, formatNumber, formatTokens, formatRelativeTimeAgo, formatResetText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { listedProjectKey } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { ake } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { getSettingsForSource as ye, getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource, getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { DP, iv, VU } from "../权限系统/chunk-e4pfvp7x.js";
 import { NU } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { mx } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { D6, Lvt, KZe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isCustomizationDisabled as Xr } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { jY, T3t } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { cn, c4 } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -74,8 +74,8 @@ import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/ch
 import { Ye } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5g6jeny.js";
 import { dd } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { isChannelsEnabled as R9 } from "../插件系统/chunk-rbjz1q03.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { isChannelsEnabled } from "../插件系统/chunk-rbjz1q03.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Ebe } from "../插件系统/chunk-4k4dssd9.js";
 import { d_, U, It, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { q8 } from "../../01-核心基础设施/共享小工具-未细化/chunk-kp7erqvh.js";
@@ -93,8 +93,8 @@ import {
   MDe,
   ATe,
   f5e,
-  isTranscriptMessage as TH,
-  getCurrentSessionDisplayTitle as TY,
+  isTranscriptMessage,
+  getCurrentSessionDisplayTitle,
   Ny,
   h8e,
   M_n,
@@ -106,14 +106,14 @@ import {
 import { YEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
 import { Pl } from "../Teammates团队/chunk-thxapyam.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { isArtifactConfigToggleable as yYe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { ensurePolicyLimitsLoadedForDiagnostic as Eve } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isArtifactConfigToggleable } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { hG, Qbt } from "../Bridge-RemoteControl/chunk-3j7ezsr7.js";
 import { K_ } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { fDt } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
 import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
-import { isWebSetupEnabled as nIe } from "../斜杠命令-框架/chunk-a4vej95c.js";
+import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { et } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { cE, qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -123,7 +123,7 @@ import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { WA, Vx, Sv, Qr, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import { RemoteHomeSettingsDialog as zZt } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
+import { RemoteHomeSettingsDialog } from "../Memory-CLAUDE.md/chunk-54xx04er.js";
 import { Lit, PPt } from "../Memory-CLAUDE.md/chunk-hg0ww0g3.js";
 import { Ult, Blt } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Dlt, Llt, T2n } from "../推送通知(Push)/推送通知(Push).8ab67cqd.js";
@@ -278,7 +278,7 @@ var Pm = w(function (Oi) {
 F();
 F();
 function gr(s, c, m) {
-  if (Pe() !== "firstParty" || !x6() || !nIe()) return;
+  if (getAPIProvider() !== "firstParty" || !isConsumerSubscriber() || !isWebSetupEnabled()) return;
   let T = b4.of(s);
   return { current: () => T.peek(c, m), settled: T.read(c, m) };
 }
@@ -354,7 +354,7 @@ function Gf(td, Wb) {
 function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
   let R = a.CLAUDE_CODE_TMUX_SESSION,
     v = jn()?.sessionId,
-    H = TY(s) ?? e(t, { dimColor: !0, children: "/rename to add a name" }),
+    H = getCurrentSessionDisplayTitle(s) ?? e(t, { dimColor: !0, children: "/rename to add a name" }),
     B = ym(),
     Y = "";
   if (B.length > 0) {
@@ -364,11 +364,11 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
           : `server:${O.name}`,
       ).join(", "),
       j =
-        Pe() !== "firstParty"
+        getAPIProvider() !== "firstParty"
           ? "not available on third-party providers"
-          : !R9()
+          : !isChannelsEnabled()
             ? "not currently available"
-            : Ebe(ye("policySettings"))
+            : Ebe(getSettingsForSource("policySettings"))
               ? "blocked by org policy"
               : void 0;
     Y = j
@@ -388,23 +388,23 @@ function od({ sessionId: s, cwd: c, accountStatus: m, webSetupStatus: T }) {
       : []),
     {
       label: "Session kind",
-      value: !_t()
+      value: !isBgSession()
         ? "interactive"
-        : ap()
+        : isUnattendedBgSession()
           ? "background job \xB7 unattended"
           : "background job \xB7 attached",
     },
     ...(R ? [{ label: "tmux session", value: R }] : []),
     ...(Y ? [{ label: "Channels", value: Y }] : []),
-    ...(Mo() && Lb.CLAUDE_CODE_MESSAGING_SOCKET
+    ...(isCrossSessionMessagingEnabled() && udsEnv.CLAUDE_CODE_MESSAGING_SOCKET
       ? [
           {
             label: "Peer address",
-            value: `uds:${Lb.CLAUDE_CODE_MESSAGING_SOCKET}`,
+            value: `uds:${udsEnv.CLAUDE_CODE_MESSAGING_SOCKET}`,
           },
         ]
       : []),
-    ...(Mo() && !Lb.CLAUDE_CODE_MESSAGING_SOCKET && fDt() !== void 0
+    ...(isCrossSessionMessagingEnabled() && !udsEnv.CLAUDE_CODE_MESSAGING_SOCKET && fDt() !== void 0
       ? [
           {
             label: "Peer address",
@@ -859,7 +859,7 @@ function $r(mC) {
     Xn = kn(pC),
     og;
   if (si[0] !== lo || si[1] !== Xn)
-    ((og = Xr("outputStyles") && !Xn.some((fC) => fC.value === lo)),
+    ((og = isCustomizationDisabled("outputStyles") && !Xn.some((fC) => fC.value === lo)),
       (si[0] = lo),
       (si[1] = Xn),
       (si[2] = og));
@@ -1340,10 +1340,10 @@ var _g = /^[a-z][A-Za-z0-9]{0,63}$/,
   Pg = /^[A-Za-z0-9_-]{1,64}$/,
   Og = new Set(["Allowed", "Not allowed"]);
 function na(s) {
-  return _g.test(s) ? Ln(s) : S("nonconforming");
+  return _g.test(s) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(s) : S("nonconforming");
 }
 function Ld(s) {
-  return Pg.test(s) || Og.has(s) ? Ln(s) : S("nonconforming");
+  return Pg.test(s) || Og.has(s) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(s) : S("nonconforming");
 }
 function Gg() {
   return "";
@@ -1396,12 +1396,12 @@ function ga({
     [I, X] = d(AIe),
     J = C(I),
     [me, he] = d(() => ({
-      ...Ge(),
+      ...getInitialSettings(),
       ...Olt(),
       feedbackDrafts: f5e(),
       autoContinueAtUsageLimit: Ult(),
     })),
-    Re = C(Ge()),
+    Re = C(getInitialSettings()),
     [Ie, qe] = d(me?.outputStyle || uT),
     ke = C(Ie),
     [Xe, Et] = d(() => es().hasClaudeMdExternalIncludesApproved === !0),
@@ -1476,11 +1476,11 @@ function ga({
       (Ou.source === "default" || Ou.source === "userSettings"),
     Zp = !dAe(),
     ef = Blt(),
-    tf = yYe(),
+    tf = isArtifactConfigToggleable(),
     Lu = kn(Ny(B, !0, A, H)),
     of = M_n(Lu),
     bt = hQ(),
-    rr = hG() && !St() && wu(),
+    rr = hG() && !St() && hasStoredOAuthToken(),
     {
       settings: Po,
       helpers: {
@@ -1505,7 +1505,7 @@ function ga({
       awaySummaryEnabled: Wp,
       showDefaultViewPicker: Hp,
       pushTogglesVisible: rr,
-      crossSessionInboxRowVisible: Mo(),
+      crossSessionInboxRowVisible: isCrossSessionMessagingEnabled(),
       isConnectedToIde: Xp,
       inAppSelection: v,
       isFileCheckpointingAvailable: Jp,
@@ -1809,7 +1809,7 @@ function ga({
         if (k.lock.source === "managed") return;
         ((rt.current = k.id),
           (ft.current = da(we)),
-          Eve()
+          ensurePolicyLimitsLoadedForDiagnostic()
             .catch(() => {})
             .finally(() => Rt((oe) => oe + 1)));
         return;
@@ -1854,7 +1854,7 @@ function ga({
                 });
             })
             .catch((le) => {
-              (h(ge(le)),
+              (logError(ge(le)),
                 j({
                   key: "config-change-refused",
                   kind: "warning",
@@ -1915,7 +1915,7 @@ function ga({
         if ((me?.autoUpdatesChannel ?? "latest") === "latest")
           (De("ChannelDowngrade"), m(!0));
         else
-          (Jt(
+          (updateSettingsForSource(
             "userSettings",
             { autoUpdatesChannel: void 0, minimumVersion: void 0 },
             void 0,
@@ -2001,7 +2001,7 @@ function ga({
         else
           (Te((le) => ({ ...le, defaultToAgentsView: ne }), A),
             X((le) => ({ ...le, defaultToAgentsView: ne })));
-        i("tengu_config_changed", { setting: u(oe.id), value: ne });
+        i("tengu_config_changed", { setting: fromEnum(oe.id), value: ne });
       },
       [Vn, sr, A],
     );
@@ -2052,7 +2052,7 @@ function ga({
                 onCancel: () => {
                   (De(null), m(!1));
                 },
-                helpText: Xr("themes")
+                helpText: isCustomizationDisabled("themes")
                   ? `Custom themes are disabled in safe mode \u2014 ${yf()} to load them${Zb(K) ? `. Your saved theme "${Zb(K)}" is a custom theme; selecting a preset here replaces it` : ""}`
                   : "",
                 hideEscToCancel: !0,
@@ -2097,7 +2097,7 @@ function ga({
                           });
                       })
                       .catch((ne) => {
-                        (h(ge(ne)),
+                        (logError(ge(ne)),
                           j({
                             key: "model-switch-blocked",
                             kind: "warning",
@@ -2131,7 +2131,7 @@ function ga({
               ],
             })
           : Fe === "RemoteHomeSettings"
-            ? e(zZt, {
+            ? e(RemoteHomeSettingsDialog, {
                 configHome: be(),
                 storageV5: A,
                 origin: "config_panel",
@@ -2194,7 +2194,7 @@ function ga({
                             m(!1),
                             ML().delete(Tpe),
                             mv("output_style"),
-                            Jt("localSettings", { outputStyle: k }, void 0, A),
+                            updateSettingsForSource("localSettings", { outputStyle: k }, void 0, A),
                             i("tengu_output_style_changed", {
                               style: k ?? uT,
                               source: S("config_panel"),
@@ -2230,7 +2230,7 @@ function ga({
                             (Kt(k),
                               De(null),
                               m(!1),
-                              Jt("userSettings", { language: k }, void 0, A),
+                              updateSettingsForSource("userSettings", { language: k }, void 0, A),
                               i("tengu_language_changed", {
                                 language: k ?? "default",
                                 source: S("config_panel"),
@@ -2422,7 +2422,7 @@ function ga({
                                           A,
                                         ),
                                         X((ne) => ({ ...ne, autoUpdates: !0 })),
-                                        Jt(
+                                        updateSettingsForSource(
                                           "userSettings",
                                           {
                                             autoUpdatesChannel: oe,
@@ -2437,7 +2437,7 @@ function ga({
                                           minimumVersion: void 0,
                                         })),
                                         i("tengu_autoupdate_enabled", {
-                                          channel: u(oe),
+                                          channel: fromEnum(oe),
                                         }));
                                     },
                                   }),
@@ -2480,7 +2480,7 @@ function ga({
                                       "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
                                     DD_SOURCEMAP_GROUP: "darwin",
                                   }.VERSION;
-                                (Jt("userSettings", oe, void 0, A),
+                                (updateSettingsForSource("userSettings", oe, void 0, A),
                                   he((ne) => ({ ...ne, ...oe })),
                                   i("tengu_autoupdate_channel_changed", {
                                     channel: S("stable"),
@@ -2502,7 +2502,7 @@ function ga({
                                   (sf(oe),
                                     i("tengu_config_changed", {
                                       setting: S("notifChannel"),
-                                      value: u(oe),
+                                      value: fromEnum(oe),
                                     }));
                                 },
                                 onToggleInputNeeded: () => {
@@ -3290,7 +3290,7 @@ function mi() {
     Yd = q8() ?? Zk,
     qg;
   if (os[0] !== zd || os[1] !== Yd || os[2] !== Kd)
-    ((qg = t0e([...Kd, ...zd], lf(Yd ?? void 0))),
+    ((qg = t0e([...Kd, ...zd], bytesPerTokenForModel(Yd ?? void 0))),
       (os[0] = zd),
       (os[1] = Yd),
       (os[2] = Kd),
@@ -3357,7 +3357,7 @@ function mi() {
 }
 F();
 function Ih(kD) {
-  return (h(kD), { day: vi, week: vi });
+  return (logError(kD), { day: vi, week: vi });
 }
 function _h(vD, xD) {
   return `${vD}% of your usage came from subagents under "${xD}"`;
@@ -3941,20 +3941,20 @@ function ol(BD) {
             }),
             e(Le, { width: ds, text: mm(Ft) }),
             e(Le, { width: ms, text: String(Ft.runs) }),
-            e(Le, { width: ps, text: Pn(Ft.tokens) }),
+            e(Le, { width: ps, text: formatTokens(Ft.tokens) }),
             fn &&
               e(Le, {
                 width: jo,
                 text:
                   Ft.runs > 0 && Ft.tokens > 0
-                    ? Pn(Math.round(Ft.tokens / Ft.runs))
+                    ? formatTokens(Math.round(Ft.tokens / Ft.runs))
                     : "\u2013",
               }),
             e(Le, {
               width: fs,
               text:
                 Ft.lastRunMs > 0
-                  ? uy(new Date(Ft.lastRunMs), { now: UD })
+                  ? formatRelativeTimeAgo(new Date(Ft.lastRunMs), { now: UD })
                   : "\u2013",
             }),
           ],
@@ -4154,7 +4154,7 @@ function so(w0) {
   if (rl) {
     let wt;
     if (st[0] !== gm || st[1] !== rl || st[2] !== fm)
-      ((wt = $2e(rl, !0, fm, gm)),
+      ((wt = formatResetText(rl, !0, fm, gm)),
         (st[0] = gm),
         (st[1] = rl),
         (st[2] = fm),
@@ -4292,7 +4292,7 @@ function Pi() {
     T0 = D0 - 2,
     al = Math.min(T0, 80),
     Uh;
-  if (ll[0] === p) ((Uh = gt()), (ll[0] = Uh));
+  if (ll[0] === p) ((Uh = isClaudeAISubscriber()), (ll[0] = Uh));
   else Uh = ll[0];
   let v0 = Uh,
     Wh;
@@ -4319,7 +4319,7 @@ function Pi() {
         children: [
           jh,
           Hh,
-          Pe() === "gateway"
+          getAPIProvider() === "gateway"
             ? e(Ol, { maxWidth: al })
             : v0
               ? e($l, { maxWidth: al })
@@ -4451,7 +4451,7 @@ async function Im() {
 var vn = "Failed to load usage data";
 function _m(s, c) {
   if (s === void 0) return "";
-  return ` as of ${uy(new Date(s), { now: c })}`;
+  return ` as of ${formatRelativeTimeAgo(new Date(s), { now: c })}`;
 }
 function $l(wm) {
   let $e = _(62),
@@ -4495,11 +4495,11 @@ function $l(wm) {
             fetchedAtMs: void 0,
             enrichError: null,
           }),
-            y("usage_plan_limits"));
+            logFeatureOk("usage_plan_limits"));
           break bb34;
         }
         case "empty_response": {
-          (f("usage_plan_limits", "empty_response"), gl(vn));
+          (logFeatureBad("usage_plan_limits", "empty_response"), gl(vn));
           break bb34;
         }
         case "seeded": {
@@ -4535,7 +4535,7 @@ function $l(wm) {
                     : "Could not refresh usage data",
             };
           }),
-            g(
+            logFeatureSad(
               "usage_plan_limits",
               Ve.rateLimitedVia === null
                 ? "refresh_failed_seeded"
@@ -4550,7 +4550,7 @@ function $l(wm) {
             (gl(
               "Usage endpoint is rate limited. Please try again in a moment.",
             ),
-              f(
+              logFeatureBad(
                 "usage_plan_limits",
                 Ve.rateLimitedVia === "envelope"
                   ? "rate_limited_envelope"
@@ -4558,7 +4558,7 @@ function $l(wm) {
               ));
           else
             (gl(Ve.responseBody ? `${vn}: ${Ve.responseBody}` : vn),
-              f("usage_plan_limits", "load_failed"));
+              logFeatureBad("usage_plan_limits", "load_failed"));
         }
       }
       ey(!1);
@@ -4662,7 +4662,7 @@ function $l(wm) {
     return no;
   }
   let oo;
-  if ($e[23] === p) ((oo = qn()), ($e[23] = oo));
+  if ($e[23] === p) ((oo = getSubscriptionType()), ($e[23] = oo));
   else oo = $e[23];
   let vm = oo,
     L0 = vm === "max" || vm === "team" || vm === null,
@@ -4841,7 +4841,7 @@ var Do = "Usage credits";
 function Fl(K0) {
   let wo = _(27),
     { extraUsage: Ke, maxWidth: Mm } = K0,
-    Ml = qn(),
+    Ml = getSubscriptionType(),
     Em = Ml === "pro" || Ml === "max";
   if (!Em && !(Ml === "team" || Ml === "enterprise")) {
     return null;
@@ -5073,39 +5073,39 @@ function Ty(s) {
       return ie.gray("\xB7");
   }
 }
-import { spawn as vy } from "child_process";
-import { mkdir as xy, unlink as My, writeFile as Ey } from "fs/promises";
+import { spawn } from "child_process";
+import { mkdir, unlink, writeFile } from "fs/promises";
 import { join as Om } from "path";
 async function Lm(s, c) {
   try {
     let m = Om(bl(), "screenshots");
-    await xy(m, { recursive: !0, mode: 448 });
+    await mkdir(m, { recursive: !0, mode: 448 });
     let T = Om(m, `screenshot-${Date.now()}.png`),
       { ansiToPng: R } = await import("../图片-截图-ComputerUse/ansiToPng.5cwtw2dv.js"),
       v = R(s, c);
-    await Ey(T, v);
+    await writeFile(T, v);
     let A;
     try {
       A = await Ay(T);
     } catch (H) {
       return (
-        h(H),
-        f("clipboard_write", "copy_failed"),
+        logError(H),
+        logFeatureBad("clipboard_write", "copy_failed"),
         {
           success: !1,
           message: `Failed to copy screenshot: ${H instanceof Error ? H.message : "Unknown error"}`,
         }
       );
     } finally {
-      await My(T).catch(() => {});
+      await unlink(T).catch(() => {});
     }
-    if (A.success) y("clipboard_write");
-    else f("clipboard_write", "copy_failed");
+    if (A.success) logFeatureOk("clipboard_write");
+    else logFeatureBad("clipboard_write", "copy_failed");
     return A;
   } catch (m) {
     return (
-      h(m),
-      f("clipboard_write", "render_failed"),
+      logError(m),
+      logFeatureBad("clipboard_write", "render_failed"),
       {
         success: !1,
         message: `Failed to copy screenshot: ${m instanceof Error ? m.message : "Unknown error"}`,
@@ -5117,7 +5117,7 @@ async function Ay(s) {
   let c = P();
   if (c === "macos") {
     let T = `set the clipboard to (read (POSIX file "${s.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}") as \xABclass PNGf\xBB)`,
-      R = await Be("osascript", ["-e", T], { timeout: 5000 });
+      R = await execFileNoThrowWithCwd("osascript", ["-e", T], { timeout: 5000 });
     if (R.code === 0)
       return { success: !0, message: "Screenshot copied to clipboard" };
     return { success: !1, message: `Failed to copy to clipboard: ${R.stderr}` };
@@ -5142,7 +5142,7 @@ async function Ay(s) {
   }
   if (c === "windows") {
     let m = `Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Clipboard]::SetImage([System.Drawing.Image]::FromFile(${zNe(s, "the screenshot temp path (override with CLAUDE_CODE_TMPDIR)")}))`,
-      T = await Be("powershell", ["-NoProfile", "-Command", m], {
+      T = await execFileNoThrowWithCwd("powershell", ["-NoProfile", "-Command", m], {
         timeout: 5000,
       });
     if (T.code === 0)
@@ -5158,7 +5158,7 @@ function Ry(s, c, m = 5000) {
   return new Promise((T) => {
     let R;
     try {
-      R = vy(s, c, {
+      R = spawn(s, c, {
         cwd: void 0,
         detached: !0,
         stdio: "ignore",
@@ -5180,7 +5180,7 @@ function Ry(s, c, m = 5000) {
     (R.once("exit", (B) => A(B)), R.once("error", () => A(null)), R.unref());
   });
 }
-import { basename as $y, join as Ao, sep as Gm } from "path";
+import { basename, join as Ao, sep as Gm } from "path";
 import { join as Iy } from "path";
 var Ko = 5,
   _y = 1,
@@ -5563,9 +5563,9 @@ async function Ts(s, c = {}, m, T) {
         n(`Failed to read session file ${I}: ${l(J)}`);
         continue;
       }
-      let he = $y(I, ".jsonl"),
+      let he = basename(I, ".jsonl"),
         Re = [];
-      for (let fe of X) if (TH(fe)) Re.push(fe);
+      for (let fe of X) if (isTranscriptMessage(fe)) Re.push(fe);
       if (Re.length === 0) continue;
       let Ie = I.includes(`${Gm}subagents${Gm}`),
         qe = Ie ? Re : Re.filter((fe) => !fe.isSidechain);
@@ -5747,7 +5747,7 @@ async function Fy(s, c) {
     A = new Set(),
     H = await v({ namespace: "transcript" }, (G) => {
       for (let j of G) {
-        let O = Y5(j, R);
+        let O = listedProjectKey(j, R);
         if (O !== void 0) A.add(O);
       }
     });
@@ -6518,8 +6518,8 @@ function pu(s) {
       (T += v.cacheReadInputTokens || 0),
       (R += v.cacheCreationInputTokens || 0));
   return (
-    `Input ${No(c)} \xB7 Output ${No(m)} \xB7 ` +
-    `Cache read ${No(T)} \xB7 Cache write ${No(R)}`
+    `Input ${formatNumber(c)} \xB7 Output ${formatNumber(m)} \xB7 ` +
+    `Cache read ${formatNumber(T)} \xB7 Cache write ${formatNumber(R)}`
   );
 }
 function fu(s, c) {
@@ -6528,8 +6528,8 @@ function fu(s, c) {
 }
 function gu(s) {
   return (
-    `Cache: ${No(s.cacheReadInputTokens || 0)} read \xB7 ` +
-    `${No(s.cacheCreationInputTokens || 0)} write`
+    `Cache: ${formatNumber(s.cacheReadInputTokens || 0)} read \xB7 ` +
+    `${formatNumber(s.cacheCreationInputTokens || 0)} write`
   );
 }
 function hu(Lv) {
@@ -6611,7 +6611,7 @@ function hu(Lv) {
         children: [
           "Favorite model:",
           " ",
-          e(t, { color: "claude", bold: !0, children: oi(aS[0]) }),
+          e(t, { color: "claude", bold: !0, children: renderModelName(aS[0]) }),
         ],
       });
     ((Me[0] = io.dailyActivity),
@@ -6663,7 +6663,7 @@ function hu(Lv) {
       (Me[34] = Is));
   else Is = Me[34];
   let On;
-  if (Me[35] !== In) ((On = No(In)), (Me[35] = In), (Me[36] = On));
+  if (Me[35] !== In) ((On = formatNumber(In)), (Me[35] = In), (Me[36] = On));
   else On = Me[36];
   let pc;
   if (Me[37] !== On)
@@ -6707,7 +6707,7 @@ function hu(Lv) {
   else gc = Me[45];
   let hc;
   if (Me[46] !== xe.totalSessions)
-    ((hc = No(xe.totalSessions)), (Me[46] = xe.totalSessions), (Me[47] = hc));
+    ((hc = formatNumber(xe.totalSessions)), (Me[46] = xe.totalSessions), (Me[47] = hc));
   else hc = Me[47];
   let yc;
   if (Me[48] !== hc)
@@ -6731,7 +6731,7 @@ function hu(Lv) {
         children: [
           "Longest session:",
           " ",
-          e(t, { color: "claude", children: Ot(xe.longestSession.duration) }),
+          e(t, { color: "claude", children: formatDuration(xe.longestSession.duration) }),
         ],
       })),
       (Me[50] = xe.longestSession),
@@ -7369,7 +7369,7 @@ function Ls(Gv) {
   else hS = Vt[2];
   let wp = hS,
     tu;
-  if (Vt[3] !== bp) ((tu = oi(bp)), (Vt[3] = bp), (Vt[4] = tu));
+  if (Vt[3] !== bp) ((tu = renderModelName(bp)), (Vt[3] = bp), (Vt[4] = tu));
   else tu = Vt[4];
   let ou;
   if (Vt[5] !== tu)
@@ -7390,11 +7390,11 @@ function Ls(Gv) {
   else su = Vt[11];
   let iu;
   if (Vt[12] !== Mt.inputTokens)
-    ((iu = No(Mt.inputTokens)), (Vt[12] = Mt.inputTokens), (Vt[13] = iu));
+    ((iu = formatNumber(Mt.inputTokens)), (Vt[12] = Mt.inputTokens), (Vt[13] = iu));
   else iu = Vt[13];
   let ru;
   if (Vt[14] !== Mt.outputTokens)
-    ((ru = No(Mt.outputTokens)), (Vt[14] = Mt.outputTokens), (Vt[15] = ru));
+    ((ru = formatNumber(Mt.outputTokens)), (Vt[14] = Mt.outputTokens), (Vt[15] = ru));
   else ru = Vt[15];
   let au;
   if (Vt[16] !== iu || Vt[17] !== ru)
@@ -7449,7 +7449,7 @@ function bu(s, c, m) {
     if (se.some((ce) => ce > 0))
       (Y.push(se),
         G.push({
-          model: oi(Q),
+          model: renderModelName(Q),
           coloredBullet: jY(L.bullet, O[(Y.length - 1) % O.length]),
         }));
   }
@@ -7528,14 +7528,14 @@ function TS(s, c) {
     (m.push(Li(s.dailyActivity, { terminalWidth: 56 })), m.push(""));
   let { modelEntries: Y, totalTokens: G } = Bn(s.modelUsage),
     j = Y[0];
-  if (j) m.push(B("Favorite model", oi(j[0]), "Total tokens", No(G)));
+  if (j) m.push(B("Favorite model", renderModelName(j[0]), "Total tokens", formatNumber(G)));
   (m.push(""),
     m.push(
       B(
         "Sessions",
-        No(s.totalSessions),
+        formatNumber(s.totalSessions),
         "Longest session",
-        s.longestSession ? Ot(s.longestSession.duration) : "N/A",
+        s.longestSession ? formatDuration(s.longestSession.duration) : "N/A",
       ),
     ));
   let O = `${s.streaks.currentStreak} ${s.streaks.currentStreak === 1 ? "day" : "days"}`,
@@ -7575,15 +7575,15 @@ function vS(s) {
     (c.push(H), c.push(""));
   }
   (c.push(
-    `${L.star} Favorite: ${ie.magenta.bold(oi(R?.[0] || ""))} \xB7 ${L.circle} Total: ${ie.magenta(No(T))} tokens`,
+    `${L.star} Favorite: ${ie.magenta.bold(renderModelName(R?.[0] || ""))} \xB7 ${L.circle} Total: ${ie.magenta(formatNumber(T))} tokens`,
   ),
     c.push(""));
   let A = m.slice(0, 3);
   for (let [H, B] of A) {
     let Y = fu(B, T);
-    (c.push(`${L.bullet} ${ie.bold(oi(H))} ${ie.gray(`(${Y}%)`)}`),
+    (c.push(`${L.bullet} ${ie.bold(renderModelName(H))} ${ie.gray(`(${Y}%)`)}`),
       c.push(
-        ie.dim(`  In: ${No(B.inputTokens)} \xB7 Out: ${No(B.outputTokens)}`),
+        ie.dim(`  In: ${formatNumber(B.inputTokens)} \xB7 Out: ${formatNumber(B.outputTokens)}`),
       ),
       c.push(ie.dim(`  ${gu(B)}`)));
   }

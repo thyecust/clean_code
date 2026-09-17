@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Gt, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
@@ -26,10 +26,10 @@ function k3t(e) {
   return e.code === "Failed" && AH(e.telemetryCode);
 }
 import {
-  lstat as h,
-  readFile as E,
-  unlink as c,
-  writeFile as L,
+  lstat,
+  readFile,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { join as U } from "path";
 var I = "computer-use.lock",
@@ -64,7 +64,7 @@ async function s(e) {
     }
   }
   try {
-    let r = await E(i(), "utf8"),
+    let r = await readFile(i(), "utf8"),
       t = z(r);
     return S(t) ? t : void 0;
   } catch {
@@ -80,7 +80,7 @@ function C(e) {
 }
 async function x() {
   try {
-    return !(await h(i())).isFile();
+    return !(await lstat(i())).isFile();
   } catch (e) {
     return A(e) === "ENOENT";
   }
@@ -105,7 +105,7 @@ async function m(e, r) {
     );
   }
   try {
-    return (await L(i(), b(e), { flag: "wx" }), !0);
+    return (await writeFile(i(), b(e), { flag: "wx" }), !0);
   } catch (t) {
     if (A(t) === "EEXIST") return !1;
     throw t;
@@ -131,7 +131,7 @@ async function UYn(e) {
     e)
   )
     await e.delete(u());
-  else await c(i()).catch(() => {});
+  else await unlink(i()).catch(() => {});
   return { kind: "free" };
 }
 function a() {
@@ -142,25 +142,25 @@ async function BYn(e) {
     t = { sessionId: r, pid: process.pid, acquiredAt: Date.now() };
   if (!e) await qt().mkdir(be());
   if (e && a()) {
-    if ((await s(e)) && a()) return (y("computeruse_lock_acquire"), p);
+    if ((await s(e)) && a()) return (logFeatureOk("computeruse_lock_acquire"), p);
   }
-  if (await m(t, e)) return (k(e), y("computeruse_lock_acquire"), l);
+  if (await m(t, e)) return (k(e), logFeatureOk("computeruse_lock_acquire"), l);
   let o = await s(e);
   if (!o) {
     if (e) await e.delete(u());
-    else await c(i()).catch(() => {});
+    else await unlink(i()).catch(() => {});
     if (await m(t, e))
-      return (k(e), g("computeruse_lock_acquire", "stale_recovered"), l);
+      return (k(e), logFeatureSad("computeruse_lock_acquire", "stale_recovered"), l);
     return (
-      f("computeruse_lock_acquire", "lock_held"),
+      logFeatureBad("computeruse_lock_acquire", "lock_held"),
       { kind: "blocked", by: (await s(e))?.sessionId ?? "unknown" }
     );
   }
-  if (a()) return (y("computeruse_lock_acquire"), p);
-  if (o.sessionId === r) return (y("computeruse_lock_acquire"), p);
+  if (a()) return (logFeatureOk("computeruse_lock_acquire"), p);
+  if (o.sessionId === r) return (logFeatureOk("computeruse_lock_acquire"), p);
   if (C(o.pid))
     return (
-      f("computeruse_lock_acquire", "lock_held"),
+      logFeatureBad("computeruse_lock_acquire", "lock_held"),
       { kind: "blocked", by: o.sessionId }
     );
   if (
@@ -170,11 +170,11 @@ async function BYn(e) {
     e)
   )
     await e.delete(u());
-  else await c(i()).catch(() => {});
+  else await unlink(i()).catch(() => {});
   if (await m(t, e))
-    return (k(e), g("computeruse_lock_acquire", "stale_recovered"), l);
+    return (k(e), logFeatureSad("computeruse_lock_acquire", "stale_recovered"), l);
   return (
-    f("computeruse_lock_acquire", "lock_held"),
+    logFeatureBad("computeruse_lock_acquire", "lock_held"),
     { kind: "blocked", by: (await s(e))?.sessionId ?? "unknown" }
   );
 }
@@ -190,7 +190,7 @@ async function F(e) {
     return !1;
   }
   try {
-    return (await c(i()), n("Released computer-use lock"), !0);
+    return (await unlink(i()), n("Released computer-use lock"), !0);
   } catch {
     return !1;
   }

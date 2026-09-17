@@ -9,33 +9,33 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { zn } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { getOauthConfig as Vt } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { tUe, ht, checkAndRefreshOAuthTokenIfNeeded as Ss } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
+import { tUe, ht, checkAndRefreshOAuthTokenIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { le, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we, fromEnumArr as Ga } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { fn, Kke, zie, execFileNoThrow as Fe } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { gitExe as lt, getBranch as Da, getDefaultBranch as Fw } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { truncateToWidth as Xe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { fn, Kke, zie, execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { gitExe, getBranch, getDefaultBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Do, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { ERt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { Mw, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
-import { isPolicyAllowed as Mt, policyDeniedReason as op } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { getBridgeEntitlementBlocker as $Je } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { getBridgeEntitlementBlocker } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import {
   kte,
-  getReviewCostNote as q7,
-  getReviewDurationNote as HF,
+  getReviewCostNote,
+  getReviewDurationNote,
   EGn,
   $Oe,
   X$t,
@@ -56,13 +56,13 @@ import {
   cde,
   S3,
   FLe,
-  teleportToRemote as Kv,
+  teleportToRemote,
   Kne,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { DBn } from "./chunk-rp57gfa9.js";
-import { homedir as pe } from "os";
-import { resolve as me } from "path";
+import { homedir } from "os";
+import { resolve } from "path";
 var de = m(() =>
   nt({
     action: ru(["proceed", "confirm", "blocked"]),
@@ -119,14 +119,14 @@ async function fe(r) {
     if (!e.success)
       return (
         n(`fetchUltrareviewPreflight schema mismatch: ${e.error.message}`),
-        g("api_ultrareview_preflight", "schema_mismatch"),
+        logFeatureSad("api_ultrareview_preflight", "schema_mismatch"),
         null
       );
-    return (y("api_ultrareview_preflight"), e.data);
+    return (logFeatureOk("api_ultrareview_preflight"), e.data);
   } catch (d) {
     return (
       n(`fetchUltrareviewPreflight failed: ${d}`),
-      g("api_ultrareview_preflight", "request_failed"),
+      logFeatureSad("api_ultrareview_preflight", "request_failed"),
       null
     );
   }
@@ -180,7 +180,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           i("tengu_review_remote_precondition_recovery", {
             reason: S("base_ref_not_found"),
             method: S("pr_arg_normalization"),
-            outcome: u(C),
+            outcome: fromEnum(C),
           });
       },
       R = await Pb(),
@@ -237,7 +237,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     let M,
       P,
       [{ stdout: j, code: V }, I] = await Promise.all([
-        Fe(
+        execFileNoThrow(
           "gh",
           [
             "pr",
@@ -262,7 +262,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         !d?.suppressOfferedRecoveryEvent)
       )
         i("tengu_review_remote_github_access_probe", {
-          verdict: u(I.verdict),
+          verdict: fromEnum(I.verdict),
           http_status: I.httpStatus ?? void 0,
         });
     }
@@ -271,17 +271,17 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       I?.verdict === "github_repo_not_found"
     ) {
       (i("tengu_review_remote_precondition_failed", {
-        reason: u(I.verdict),
+        reason: fromEnum(I.verdict),
         cwd_is_home: L(),
       }),
         s("failed"));
       let C = `${c.owner}/${c.name}`,
-        F = `${Vt().CLAUDE_AI_ORIGIN}/code/onboarding?step=alt-auth`,
+        F = `${getOauthConfig().CLAUDE_AI_ORIGIN}/code/onboarding?step=alt-auth`,
         G =
           !Hd() &&
           !St() &&
-          Mt("allow_remote_sessions") &&
-          Mt("allow_quick_web_setup")
+          isPolicyAllowed("allow_remote_sessions") &&
+          isPolicyAllowed("allow_quick_web_setup")
             ? `run /web-setup${t.startsWith("/") ? "" : " in Claude Code"} to reuse your GitHub CLI login`
             : "",
         U = `then re-run ${t} ${_}`,
@@ -351,8 +351,8 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     );
   let w = async (s) =>
       (
-        await Fe(
-          lt(),
+        await execFileNoThrow(
+          gitExe(),
           [...fn, "rev-parse", "--verify", "--quiet", "--end-of-options", s],
           { preserveOutputOnError: !1 },
         )
@@ -458,26 +458,26 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         i("tengu_review_remote_precondition_recovery", {
           reason: S("base_ref_not_found"),
           method: S("fetch_retry"),
-          outcome: u(s),
+          outcome: fromEnum(s),
         });
       if (A) {
         if (s === "succeeded" && d?.suppressSucceededRecoveryEvent) return;
         i("tengu_review_remote_precondition_recovery", {
           reason: S("base_ref_not_found"),
           method: S("prose_instructions"),
-          outcome: u(s),
+          outcome: fromEnum(s),
         });
       }
     },
-    v = h || (await Fw()) || "main",
-    X = (await Da()) || "HEAD",
+    v = h || (await getDefaultBranch()) || "main",
+    X = (await getBranch()) || "HEAD",
     Z = async (s) =>
-      Fe(lt(), [...fn, "merge-base", s, "HEAD"], { preserveOutputOnError: !1 }),
+      execFileNoThrow(gitExe(), [...fn, "merge-base", s, "HEAD"], { preserveOutputOnError: !1 }),
     D = `origin/${v}`,
     { stdout: J, code: re } = await Z(D);
   if (re !== 0) ((D = v), ({ stdout: J, code: re } = await Z(D)));
   let W = J.trim(),
-    q = (s) => Fe(lt(), [...fn, ...s], { preserveOutputOnError: !1 }),
+    q = (s) => execFileNoThrow(gitExe(), [...fn, ...s], { preserveOutputOnError: !1 }),
     ie = `Your checkout has no branches (detached HEAD only), which cloud review can't bundle. Create one first \u2014 \`git checkout -b <name>\` \u2014 then rerun ${t}.`;
   if (re !== 0 || !W) {
     let s = (await q(["rev-parse", "--verify", "--quiet", "HEAD"])).code === 0,
@@ -494,8 +494,8 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           (await q(["rev-parse", "--verify", "--quiet", `origin/${v}`]))
             .code === 0 ||
           (await q(["rev-parse", "--verify", "--quiet", v])).code === 0,
-        { stdout: F, code: G } = await Fe(
-          lt(),
+        { stdout: F, code: G } = await execFileNoThrow(
+          gitExe(),
           [...fn, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", _e],
           { preserveOutputOnError: !1, env: { ...process.env, LC_ALL: "C" } },
         );
@@ -627,8 +627,8 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         { ok: !1, reason: "no_refs", error: ie }
       );
   }
-  let { stdout: ne, code: k } = await Fe(
-    lt(),
+  let { stdout: ne, code: k } = await execFileNoThrow(
+    gitExe(),
     [...fn, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", W],
     { preserveOutputOnError: !1, env: { ...process.env, LC_ALL: "C" } },
   );
@@ -663,8 +663,8 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
         cwd_is_home: L(),
       }),
         H("failed"));
-      let { stdout: B, code: M } = await Fe(
-          lt(),
+      let { stdout: B, code: M } = await execFileNoThrow(
+          gitExe(),
           [
             ...fn,
             "-c",
@@ -716,7 +716,7 @@ function be(r, t = 3) {
     .join(", ")}.`;
 }
 function previewInstructions(r, t = 80) {
-  return Xe(r.replace(/\s+/g, " ").trim(), t);
+  return truncateToWidth(r.replace(/\s+/g, " ").trim(), t);
 }
 async function ve(r) {
   if (r.startsWith("-") || r.includes(":") || /\s/.test(r)) return "not_found";
@@ -725,8 +725,8 @@ async function ve(r) {
       GIT_SSH_COMMAND: `${a.GIT_SSH_COMMAND || "ssh"} -o BatchMode=yes -o StrictHostKeyChecking=yes`,
       GIT_ALLOW_PROTOCOL: "https:http:ssh",
     },
-    d = await Fe(
-      lt(),
+    d = await execFileNoThrow(
+      gitExe(),
       [
         ...fn,
         ...zie,
@@ -754,8 +754,8 @@ async function ve(r) {
   )
     return "not_found";
   return (
-    await Fe(
-      lt(),
+    await execFileNoThrow(
+      gitExe(),
       [
         ...fn,
         ...zie,
@@ -776,8 +776,8 @@ async function ve(r) {
     : "fetch_failed";
 }
 async function ye(r) {
-  let { stdout: t, code: d } = await Fe(
-    lt(),
+  let { stdout: t, code: d } = await execFileNoThrow(
+    gitExe(),
     [
       ...fn,
       "for-each-ref",
@@ -832,7 +832,7 @@ async function checkOverageGate({ overageConfirmed: r, credentials: t }) {
       if (r) return { kind: "proceed", billingNote: e, githubLogin: o };
       return {
         kind: "needs-confirm",
-        body: `This review bills as usage credits (${q7()}).`,
+        body: `This review bills as usage credits (${getReviewCostNote()}).`,
         billingNote: e,
         githubLogin: o,
       };
@@ -853,7 +853,7 @@ async function launchRemoteReview(r, t, d, e) {
     if (k.length > 0) {
       i("tengu_review_remote_precondition_failed", {
         reason: S("remote_agent_ineligible"),
-        precondition_errors: Ga(k.map((s) => s.type)),
+        precondition_errors: fromEnumArr(k.map((s) => s.type)),
         cwd_is_home: L(),
       });
       let b = k.map((s) => {
@@ -871,7 +871,7 @@ async function launchRemoteReview(r, t, d, e) {
           outcome: S("failed"),
         });
       return (
-        f("ultrareview_launch", "remote_agent_ineligible"),
+        logFeatureBad("ultrareview_launch", "remote_agent_ineligible"),
         _(`Ultrareview cannot launch:
 ${b}`)
       );
@@ -919,11 +919,11 @@ ${b}`)
           reason: S("no_github_remote_post_confirm"),
           cwd_is_home: L(),
         }),
-        f("ultrareview_launch", "no_github_remote"),
+        logFeatureBad("ultrareview_launch", "no_github_remote"),
         null
       );
     let s = `ultrareview: ${b.owner}/${b.name}#${r.prNumber}`;
-    ((A = await Kv({
+    ((A = await teleportToRemote({
       initialMessage: null,
       source: "ultrareview",
       description: s,
@@ -941,10 +941,10 @@ ${b}`)
       },
       onCreateFail: (R, c, B) => {
         ((v = R),
-          (X = u(c)),
+          (X = fromEnum(c)),
           (Z = B?.status),
-          (D = we(B?.serverType)),
-          (J = we(B?.serverReason)));
+          (D = fromEnumOpt(B?.serverType)),
+          (J = fromEnumOpt(B?.serverReason)));
       },
     })),
       (te = `/ultrareview ${r.prNumber}`),
@@ -960,7 +960,7 @@ ${b}`)
     Y = R;
     let B, M;
     if (
-      ((A = await Kv({
+      ((A = await teleportToRemote({
         initialMessage: null,
         source: "ultrareview",
         description: `ultrareview: ${k}`,
@@ -974,17 +974,17 @@ ${b}`)
         tags: ["ultrareview"],
         environmentVariables: { BUGHUNTER_BASE_BRANCH: s, ...T },
         onBundleFail: (P, j) => {
-          ((B = P), (M = u(j)));
+          ((B = P), (M = fromEnum(j)));
         },
         onBundleNotice: (P) => {
           H.push(P);
         },
         onCreateFail: (P, j, V) => {
           ((v = P),
-            (X = u(j)),
+            (X = fromEnum(j)),
             (Z = V?.status),
-            (D = we(V?.serverType)),
-            (J = we(V?.serverReason)));
+            (D = fromEnumOpt(V?.serverType)),
+            (J = fromEnumOpt(V?.serverReason)));
         },
       })),
       !A)
@@ -1004,7 +1004,7 @@ ${b}`)
           method: S("empty_tree_bundle"),
           outcome: S("failed"),
         });
-      if (!P) f("ultrareview_launch", "teleport_failed");
+      if (!P) logFeatureBad("ultrareview_launch", "teleport_failed");
       return _(
         B ??
           (v
@@ -1033,7 +1033,7 @@ ${b}`)
       }),
       !t.abortController.signal.aborted)
     )
-      f("ultrareview_launch", "teleport_failed");
+      logFeatureBad("ultrareview_launch", "teleport_failed");
     if (v) return _(`Ultrareview could not start the cloud session: ${v}`);
     return null;
   }
@@ -1054,7 +1054,7 @@ ${b}`)
     }).taskId;
   if (
     (i("tengu_review_remote_launched", {
-      mode: u(r.mode),
+      mode: fromEnum(r.mode),
       had_arg: r.hadArg,
       post_armed:
         e?.postReviewToPR === !0 && r.mode === "pr" && !e?.signal?.aborted,
@@ -1069,8 +1069,8 @@ ${b}`)
       method: S("empty_tree_bundle"),
       outcome: S("succeeded"),
     }),
-      g("ultrareview_launch", "no_merge_base_empty_tree_fallback"));
-  else y("ultrareview_launch");
+      logFeatureSad("ultrareview_launch", "no_merge_base_empty_tree_fallback"));
+  else logFeatureOk("ultrareview_launch");
   DBn(t.storageV5);
   let W = S3(A.id),
     q = d.trim()
@@ -1098,7 +1098,7 @@ Your text was read as a note, not a base branch \u2014 the standard review runs 
     blocks: [
       {
         type: "text",
-        text: `${q}Ultrareview launched for ${h} (${HF()}, runs in the cloud). Track: ${W}${
+        text: `${q}Ultrareview launched for ${h} (${getReviewDurationNote()}, runs in the cloud). Track: ${W}${
           e?.postReviewToPR && r.mode === "pr"
             ? `
 When it finishes, the findings will be posted to the PR as a comment from your GitHub account. (Keep this session open: the consent lives only here, so if it ends before the review finishes, nothing will be posted \u2014 even on resume.)`
@@ -1119,14 +1119,14 @@ async function runUltrareviewHeadless(r, t) {
     let T = vGn();
     return (
       i("tengu_review_remote_gate_blocked", {
-        reason: we(T) ?? S("unknown"),
-        entitlement_blocker: T === "entitlement" ? we($Je()) : void 0,
+        reason: fromEnumOpt(T) ?? S("unknown"),
+        entitlement_blocker: T === "entitlement" ? fromEnumOpt(getBridgeEntitlementBlocker()) : void 0,
       }),
       { status: "error", message: "Ultrareview is currently unavailable." }
     );
   }
   await b_();
-  let d = op("allow_remote_sessions", "Cloud sessions", "are");
+  let d = policyDeniedReason("allow_remote_sessions", "Cloud sessions", "are");
   if (d) return { status: "error", message: d };
   let e = await precheckLaunchScope(r, t.invocation, {
     suppressSucceededRecoveryEvent: !t.confirm,
@@ -1164,7 +1164,7 @@ ${T}${A}`;
   )
     return {
       status: "needs-confirm",
-      body: `Couldn't verify your review quota right now, so this review may bill as usage credits (${q7()}).${_()}`,
+      body: `Couldn't verify your review quota right now, so this review may bill as usage credits (${getReviewCostNote()}).${_()}`,
       billingNote: "",
     };
   if (o.kind === "needs-confirm") {
@@ -1208,7 +1208,7 @@ Note for findings (not a base branch): "${previewInstructions(e.scope.instructio
     return {
       status: "needs-confirm",
       body: `${T}${A}
-${HF()} \xB7 Est. cost ${q7()} USD`,
+${getReviewDurationNote()} \xB7 Est. cost ${getReviewCostNote()} USD`,
       billingNote: o.billingNote,
     };
   }
@@ -1260,9 +1260,9 @@ function he() {
 }
 function L() {
   try {
-    let r = pe();
+    let r = homedir();
     if (!r) return !1;
-    return ERt(zn(me(Q())), zn(me(r)));
+    return ERt(zn(resolve(Q())), zn(resolve(r)));
   } catch {
     return !1;
   }
@@ -1274,7 +1274,7 @@ async function $e(r, t, d) {
       o.addEventListener("abort", () => w(e), { once: !0 });
     }),
     E = (async () => {
-      await Ss();
+      await checkAndRefreshOAuthTokenIfNeeded();
       let { linkedAccountAccess: w, httpStatus: p } = await DTe(r, t, o);
       return { verdict: w, httpStatus: p };
     })().catch(

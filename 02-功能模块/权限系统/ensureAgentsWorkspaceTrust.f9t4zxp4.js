@@ -16,11 +16,11 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Nae } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-function S() {
+function agentsTrustDecision() {
   if (Ie(!1) || Boolean(a.IS_DEMO) || a.CLAUBBIT) return "skip";
   return Bo() && !Nae() ? "trusted" : "ask";
 }
-async function T(r, i, o) {
+async function ensureAgentsWorkspaceTrust(r, i, o) {
   switch (i) {
     case "skip":
       if (!a.CLAUBBIT && Bo()) {
@@ -75,4 +75,4 @@ async function T(r, i, o) {
     }
   }
 }
-export { S as agentsTrustDecision, T as ensureAgentsWorkspaceTrust };
+export { agentsTrustDecision, ensureAgentsWorkspaceTrust };

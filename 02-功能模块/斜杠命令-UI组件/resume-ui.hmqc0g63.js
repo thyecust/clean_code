@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Xn, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { $1, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { $1, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
@@ -19,16 +19,16 @@ import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   q9,
-  isCustomTitleEnabled as ipe,
-  getSessionIdFromLog as Kc,
-  isLiteLog as gj,
-  loadFullLog as AY,
-  searchSessionsByCustomTitle as QM,
-  getLastSessionLog as CY,
-  loadAllProjectsMessageLogsProgressive as UMe,
-  loadSameRepoMessageLogs as a8e,
-  loadSameRepoMessageLogsProgressive as tAe,
-  enrichLogs as mre,
+  isCustomTitleEnabled,
+  getSessionIdFromLog,
+  isLiteLog,
+  loadFullLog,
+  searchSessionsByCustomTitle,
+  getLastSessionLog,
+  loadAllProjectsMessageLogsProgressive,
+  loadSameRepoMessageLogs,
+  loadSameRepoMessageLogsProgressive,
+  enrichLogs,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Se } from "../../01-核心基础设施/共享小工具-未细化/chunk-mb654mj6.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -149,11 +149,11 @@ function te({ onDone: s, onResume: g }) {
         (w(!0), (k.current = null));
         try {
           let R = u
-            ? await UMe(void 0, void 0, P)
-            : await tAe(i, void 0, void 0, P);
+            ? await loadAllProjectsMessageLogsProgressive(void 0, void 0, P)
+            : await loadSameRepoMessageLogsProgressive(i, void 0, void 0, P);
           if (S.current) return;
           k.current = R;
-          let p = G(R.logs, K());
+          let p = filterResumableSessions(R.logs, K());
           ((A.current = p.length), T(p));
         } catch (R) {
           if (S.current) return;
@@ -179,11 +179,11 @@ function te({ onDone: s, onResume: g }) {
         if (!i || i.nextIndex >= i.allStatLogs.length) return;
         V.current = !0;
         let R = !1;
-        mre(i.allStatLogs, i.nextIndex, u, P)
+        enrichLogs(i.allStatLogs, i.nextIndex, u, P)
           .then((p) => {
             if (k.current !== i || S.current) return;
             i.nextIndex = p.nextIndex;
-            let y = G(p.logs, K());
+            let y = filterResumableSessions(p.logs, K());
             if (y.length > 0) {
               let Z = A.current;
               ($1(y).forEach((N, ee) => {
@@ -206,14 +206,14 @@ function te({ onDone: s, onResume: g }) {
   async function Y(u) {
     if (D.current) return;
     D.current = !0;
-    let i = Xn(Kc(u));
+    let i = Xn(getSessionIdFromLog(u));
     if (!i) {
       s("Failed to resume conversation");
       return;
     }
     let R, p;
     try {
-      if (((R = gj(u) ? await AY(u, { storageV5: P }) : u), S.current)) return;
+      if (((R = isLiteLog(u) ? await loadFullLog(u, { storageV5: P }) : u), S.current)) return;
       if (((p = await oit(R, n, m)), S.current)) return;
       if (p) {
         let y = await z_(p);
@@ -222,7 +222,7 @@ function te({ onDone: s, onResume: g }) {
       }
     } catch (y) {
       if (S.current) return;
-      (h(dt(ge(y), "resume command: handleSelect failed")),
+      (logError(dt(ge(y), "resume command: handleSelect failed")),
         s("Failed to resume conversation"));
       return;
     }
@@ -275,8 +275,8 @@ function te({ onDone: s, onResume: g }) {
     onToggleAllProjects: Q,
   });
 }
-function G(s, g) {
-  return s.filter((v) => !v.isSidechain && Kc(v) !== g);
+function filterResumableSessions(s, g) {
+  return s.filter((v) => !v.isSidechain && getSessionIdFromLog(v) !== g);
 }
 var Fe = async (s, g, v) => {
   let T = async (a, n, c) => {
@@ -288,14 +288,14 @@ var Fe = async (s, g, v) => {
       try {
         (await g.resume?.(a, n, c), s(void 0, { display: "skip" }));
       } catch (I) {
-        (h(dt(ge(I), "resume: context.resume failed")),
+        (logError(dt(ge(I), "resume: context.resume failed")),
           s(`Failed to resume: ${l(I)}`));
       }
     },
     m = v?.trim();
   if (!m) return e(te, { onDone: s, onResume: T }, Date.now());
   let O = await q9(he()),
-    b = await a8e(O, void 0, void 0, g.storageV5);
+    b = await loadSameRepoMessageLogs(O, void 0, void 0, g.storageV5);
   if (b.length === 0)
     return e(j, {
       message: "No conversations found to resume.",
@@ -305,23 +305,23 @@ var Fe = async (s, g, v) => {
   let w = Xn(m);
   if (w) {
     let a = b
-      .filter((c) => Kc(c) === w)
+      .filter((c) => getSessionIdFromLog(c) === w)
       .sort((c, f) => f.modified.getTime() - c.modified.getTime());
     if (a.length > 0) {
       let c = a[0],
-        f = gj(c) ? await AY(c, { storageV5: g.storageV5 }) : c;
+        f = isLiteLog(c) ? await loadFullLog(c, { storageV5: g.storageV5 }) : c;
       return (T(w, f, "slash_command_session_id"), null);
     }
-    let n = await CY(w, void 0, g.storageV5);
+    let n = await getLastSessionLog(w, void 0, g.storageV5);
     if (n) return (T(w, n, "slash_command_session_id"), null);
   }
-  if (ipe()) {
-    let a = await QM(m, { exact: !0 }, g.storageV5);
+  if (isCustomTitleEnabled()) {
+    let a = await searchSessionsByCustomTitle(m, { exact: !0 }, g.storageV5);
     if (a.length === 1) {
       let n = a[0],
-        c = Xn(Kc(n));
+        c = Xn(getSessionIdFromLog(n));
       if (c) {
-        let f = gj(n) ? await AY(n, { storageV5: g.storageV5 }) : n;
+        let f = isLiteLog(n) ? await loadFullLog(n, { storageV5: g.storageV5 }) : n;
         return (T(c, f, "slash_command_title"), null);
       }
     }
@@ -333,4 +333,4 @@ var Fe = async (s, g, v) => {
   let M = q({ resultType: "sessionNotFound", arg: m });
   return e(j, { message: M, args: m, onDone: () => s(M) });
 };
-export { Fe as call, G as filterResumableSessions };
+export { Fe as call, filterResumableSessions };

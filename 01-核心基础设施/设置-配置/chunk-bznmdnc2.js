@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { R, mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../共享小工具-未细化/chunk-w76kejwn.js";
 import { Cz, lZ, ML, mv } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import {
@@ -20,9 +20,9 @@ import {
   db,
   pb,
   QH,
-  isModelAllowed as Rr,
-  isFableAvailable as Cse,
-  modelDisplayString as WC,
+  isModelAllowed,
+  isFableAvailable,
+  modelDisplayString,
   fq,
   H,
   Te,
@@ -35,12 +35,12 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { xg } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "./chunk-zqr5ctyf.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nr, XBe } from "./设置-配置.aqbb35ee.js";
 import { Pt } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getInitialSettings as Ge, updateSettingsForSource as Jt, getSecuritySensitiveSettingWithSources as Hq, getAskUserQuestionTimeout as eke, getDialogExpiry as Let, getModelProposedGoalsSettingParsed as tke } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings, updateSettingsForSource, getSecuritySensitiveSettingWithSources, getAskUserQuestionTimeout, getDialogExpiry, getModelProposedGoalsSettingParsed } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { xb } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODES as ly, DP, E1, _c, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { PERMISSION_MODES, DP, E1, _c, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { NU, ARt, Mge, CRt, jet } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
 import { RP } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { XH } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
@@ -58,26 +58,26 @@ import {
   Vv,
   Ym,
   Qht,
-  transitionPlanAutoMode as QKe,
+  transitionPlanAutoMode,
   rgn,
   z_t,
   hpe,
   Tpe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCustomizationDisabled as Xr } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
-import { isSettingsToCloudEnabledCached as aU } from "../共享小工具-未细化/chunk-97crm80y.js";
+import { isCustomizationDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
+import { isSettingsToCloudEnabledCached } from "../共享小工具-未细化/chunk-97crm80y.js";
 import { Qn } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { isRemoteControlHardDisabled as KG, isBridgeEnabled as lb, getRemoteControlPolicyLockReason as E4t, applyRemoteControlToAppState as FAn } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
+import { isRemoteControlHardDisabled, isBridgeEnabled, getRemoteControlPolicyLockReason, applyRemoteControlToAppState } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import { Qbt } from "../../02-功能模块/Bridge-RemoteControl/chunk-3j7ezsr7.js";
-import { resolveArtifactEnableSetting as yFe, getArtifactDefaultOn as Fqt } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { resolveArtifactEnableSetting, getArtifactDefaultOn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { zs } from "../共享小工具-未细化/chunk-k2rb4dgd.js";
 import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
 import { ny } from "../共享小工具-未细化/chunk-6smvq03f.js";
-import { JDt, writeUnattendedServingConsent as C3e, unattendedServingConsentView as Kle, managedSettingsForbidUnattendedServing as hSe, unattendedServingForbiddenBy as QDt, unattendedServingConsentMayHoldYes as ZDt } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
+import { JDt, writeUnattendedServingConsent, unattendedServingConsentView, managedSettingsForbidUnattendedServing, unattendedServingForbiddenBy, unattendedServingConsentMayHoldYes } from "../../02-功能模块/AutoMode-自动模式/chunk-15n5gf3t.js";
 import { Zb } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
 import { Ult } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { Vnn } from "../../02-功能模块/推送通知(Push)/推送通知(Push).8ab67cqd.js";
-import { DEFAULT_TEAMMATE_MODE as Pft, getCliTeammateModeOverride as Iun, clearCliTeammateModeOverride as Pun } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
+import { DEFAULT_TEAMMATE_MODE, getCliTeammateModeOverride, clearCliTeammateModeOverride } from "../../02-功能模块/Teammates团队/chunk-88ybhavr.js";
 import { c4e } from "../../02-功能模块/Teammates团队/chunk-qy9488g9.js";
 import { Xnn } from "../核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { A4 } from "./chunk-992erern.js";
@@ -107,15 +107,15 @@ var ne = ["never", "60s", "5m", "10m"],
 function Olt() {
   return {
     ...!1,
-    askUserQuestionTimeout: eke(),
-    dialogExpiry: Let(),
+    askUserQuestionTimeout: getAskUserQuestionTimeout(),
+    dialogExpiry: getDialogExpiry(),
     crossSessionInbound: ie("crossSessionInbound")?.value,
-    modelProposedGoals: tke(),
-    enableArtifact: yFe().enabled,
+    modelProposedGoals: getModelProposedGoalsSettingParsed(),
+    enableArtifact: resolveArtifactEnableSetting().enabled,
   };
 }
 function ie(l) {
-  return Hq(l).find((r) => Nr(r.source));
+  return getSecuritySensitiveSettingWithSources(l).find((r) => Nr(r.source));
 }
 function W(l) {
   let r = ie(l)?.source;
@@ -137,7 +137,7 @@ function Oe(l) {
 }
 function AIe() {
   let l = ee(),
-    r = Ge();
+    r = getInitialSettings();
   return {
     ...l,
     theme: r.theme ?? l.theme,
@@ -162,11 +162,11 @@ function AIe() {
   };
 }
 function Pe() {
-  let l = Cse();
+  let l = isFableAvailable();
   return [
     "default",
     ...RP.filter(
-      (r) => (l || !r.includes("fable")) && !Znn(r) && !ern(r) && Rr(r),
+      (r) => (l || !r.includes("fable")) && !Znn(r) && !ern(r) && isModelAllowed(r),
     ),
   ];
 }
@@ -210,7 +210,7 @@ var U = {
   Ue =
     "Turned off in your user settings (remoteTools.allowUnattendedServing: false in ~/.claude/settings.json) \u2014 remove it there to re-enable";
 function re() {
-  return QDt() === "user" ? Ue : xe;
+  return unattendedServingForbiddenBy() === "user" ? Ue : xe;
 }
 function Le(l) {
   return ((zs.remoteHomeSettingsRowSeen ||= l), zs.remoteHomeSettingsRowSeen);
@@ -252,13 +252,13 @@ function gSe(l) {
   } = l;
   function h(e) {
     return M() && v !== void 0
-      ? Jt("userSettings", e, void 0, v)
-      : Jt("userSettings", e);
+      ? updateSettingsForSource("userSettings", e, void 0, v)
+      : updateSettingsForSource("userSettings", e);
   }
   function L(e) {
     return M() && v !== void 0
-      ? Jt("localSettings", e, void 0, v)
-      : Jt("localSettings", e);
+      ? updateSettingsForSource("localSettings", e, void 0, v)
+      : updateSettingsForSource("localSettings", e);
   }
   function k(e, o) {
     if (M() && v !== void 0) XH(e, o, v);
@@ -282,7 +282,7 @@ function gSe(l) {
         if (te !== C.latestPick.current) return;
         if (P.decision !== "proceed")
           return (
-            g("model_switch", "blocked_by_hook"),
+            logFeatureSad("model_switch", "blocked_by_hook"),
             {
               error: new mi(
                 rI(
@@ -326,7 +326,7 @@ function gSe(l) {
     let O = p7(b, _, e);
     w((T) => {
       let N =
-        WC(e) +
+        modelDisplayString(e) +
         O +
         c +
         (d ? " \xB7 this session only \u2014 /model to set up" : "");
@@ -378,7 +378,7 @@ function gSe(l) {
   let J = Tre(r.workflowSizeGuideline);
   function X(e) {
     if (e !== "false") {
-      let t = E4t();
+      let t = getRemoteControlPolicyLockReason();
       if (t !== null)
         return {
           error: new R(t, "Remote Control setting locked by org policy"),
@@ -398,11 +398,11 @@ function gSe(l) {
         p((s) => ({ ...s, remoteControlAtStartup: t })));
     }
     let o = yq();
-    A((t) => FAn(t, o));
+    A((t) => applyRemoteControlToAppState(t, o));
     return;
   }
   function Re() {
-    let e = E4t();
+    let e = getRemoteControlPolicyLockReason();
     if (e !== null)
       return {
         id: "remoteControl",
@@ -410,7 +410,7 @@ function gSe(l) {
         value: "disabled",
         lock: {
           reason: e,
-          source: KG() ? "managed" : "policy",
+          source: isRemoteControlHardDisabled() ? "managed" : "policy",
           writableWhileLocked: ["false"],
         },
         options: ["true", "false", "default"],
@@ -470,7 +470,7 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(Le(aU() || r.remoteHomeSettingsMode === "forward")
+    ...(Le(isSettingsToCloudEnabledCached() || r.remoteHomeSettingsMode === "forward")
       ? [
           {
             id: "remoteHomeSettings",
@@ -515,18 +515,18 @@ function gSe(l) {
           },
         ]
       : []),
-    ...(JDt() || Kle() !== "unset" || ZDt()
+    ...(JDt() || unattendedServingConsentView() !== "unset" || unattendedServingConsentMayHoldYes()
       ? [
           {
             id: "unattendedServing",
             label: "Unattended commands from cloud sessions on this computer",
-            value: U[Kle()],
+            value: U[unattendedServingConsentView()],
             options: [U.declined, U.accepted],
             type: "enum",
             pickToCommit: !0,
             consentGated: !0,
-            canWithdraw: () => Kle() === "accepted" || ZDt(),
-            ...(hSe() && {
+            canWithdraw: () => unattendedServingConsentView() === "accepted" || unattendedServingConsentMayHoldYes(),
+            ...(managedSettingsForbidUnattendedServing() && {
               lock: {
                 reason: re(),
                 source: "managed",
@@ -535,14 +535,14 @@ function gSe(l) {
             }),
             onChange(e) {
               let o = e === U.accepted ? "accepted" : "declined";
-              if (o === "accepted" && hSe()) return { error: new mi(re()) };
+              if (o === "accepted" && managedSettingsForbidUnattendedServing()) return { error: new mi(re()) };
               let t =
                 o === "accepted"
                   ? "accepted"
-                  : Kle() === "accepted"
+                  : unattendedServingConsentView() === "accepted"
                     ? "revoked"
                     : "declined";
-              return C3e(o).then((s) => {
+              return writeUnattendedServingConsent(o).then((s) => {
                 if ((p((d) => ({ ...d })), !s))
                   return {
                     error: new mi(
@@ -550,7 +550,7 @@ function gSe(l) {
                     ),
                   };
                 i("tengu_served_unattended_consent", {
-                  action: u(t),
+                  action: fromEnum(t),
                   surface: S("cli"),
                 });
                 return;
@@ -626,7 +626,7 @@ function gSe(l) {
         (A((o) => ({ ...o, thinkingEnabled: e })),
           h({ alwaysThinkingEnabled: e ? void 0 : !1 }),
           i("tengu_thinking_toggled", { enabled: e }),
-          y("thinking_toggle"));
+          logFeatureOk("thinking_toggle"));
       },
     },
     ...(Mr() && Jy()
@@ -694,7 +694,7 @@ function gSe(l) {
                   if (d !== C.latestFastPick.current) return;
                   if (b.decision !== "proceed")
                     return (
-                      g("model_switch", "blocked_by_hook"),
+                      logFeatureSad("model_switch", "blocked_by_hook"),
                       {
                         error: new mi(
                           rI(
@@ -870,15 +870,15 @@ function gSe(l) {
           {
             id: "artifacts",
             label: "Artifacts",
-            value: f?.enableArtifact ?? Fqt(),
+            value: f?.enableArtifact ?? getArtifactDefaultOn(),
             type: "boolean",
             async onChange(e) {
-              let o = e === Fqt() ? void 0 : e;
+              let o = e === getArtifactDefaultOn() ? void 0 : e;
               m((s) => ({ ...s, enableArtifact: e }));
               let t = await h({ enableArtifact: o, disableArtifact: void 0 });
               if (t?.error)
                 return (
-                  m((s) => ({ ...s, enableArtifact: yFe().enabled })),
+                  m((s) => ({ ...s, enableArtifact: resolveArtifactEnableSetting().enabled })),
                   { error: t.error }
                 );
               w((s) => ({ ...s, artifacts: e ? "on" : "off" }));
@@ -978,7 +978,7 @@ function gSe(l) {
         (h({ timeFormat: o }),
           m((t) => ({ ...t, timeFormat: o })),
           w((t) => ({ ...t, timeFormat: o })),
-          i("tengu_time_format_setting_changed", { value: u(o) }));
+          i("tengu_time_format_setting_changed", { value: fromEnum(o) }));
       },
     },
     {
@@ -987,7 +987,7 @@ function gSe(l) {
       value: f?.permissions?.defaultMode || "default",
       options: (() => {
         let e = ["default", "plan"],
-          o = ly,
+          o = PERMISSION_MODES,
           t = ["bypassPermissions"];
         return [...e, ...o.filter((s) => !e.includes(s) && !t.includes(s))];
       })(),
@@ -1056,7 +1056,7 @@ function gSe(l) {
         (h({ useAutoModeDuringPlan: e }),
           m((o) => ({ ...o, useAutoModeDuringPlan: e })),
           A((o) => {
-            let t = QKe(o.toolPermissionContext);
+            let t = transitionPlanAutoMode(o.toolPermissionContext);
             if (t === o.toolPermissionContext) return o;
             return { ...o, toolPermissionContext: t };
           }),
@@ -1176,7 +1176,7 @@ function gSe(l) {
     {
       id: "theme",
       label: "Theme",
-      value: Xr("themes") && Zb(D) ? `${D} (disabled in safe mode)` : D,
+      value: isCustomizationDisabled("themes") && Zb(D) ? `${D} (disabled in safe mode)` : D,
       type: "managedEnum",
       options: CRt,
       optionsHint: "For custom themes, use /theme.",
@@ -1229,7 +1229,7 @@ function gSe(l) {
       id: "outputStyle",
       label: "Output style",
       value:
-        Xr("outputStyles") && !Object.hasOwn(hV, I)
+        isCustomizationDisabled("outputStyles") && !Object.hasOwn(hV, I)
           ? `${I} (disabled in safe mode)`
           : I,
       type: "managedEnum",
@@ -1263,7 +1263,7 @@ function gSe(l) {
                 }),
                 w((s) => ({ ...s, "Default view": e })),
                 i("tengu_default_view_setting_changed", {
-                  value: u(o ?? "unset"),
+                  value: fromEnum(o ?? "unset"),
                 }));
             },
           },
@@ -1295,7 +1295,7 @@ function gSe(l) {
         (k("editorMode", o),
           p((t) => ({ ...t, editorMode: o })),
           i("tengu_editor_mode_changed", {
-            mode: u(o),
+            mode: fromEnum(o),
             source: S("config_panel"),
           }));
       },
@@ -1307,7 +1307,7 @@ function gSe(l) {
             id: "askUserQuestionTimeout",
             label: "Question auto-continue timeout",
             consentGated: !0,
-            value: f?.askUserQuestionTimeout ?? eke() ?? "never",
+            value: f?.askUserQuestionTimeout ?? getAskUserQuestionTimeout() ?? "never",
             options: [...ne],
             type: "enum",
             async onChange(e) {
@@ -1322,7 +1322,7 @@ function gSe(l) {
                   { error: s.error }
                 );
               i("tengu_ask_user_question_timeout_changed", {
-                value: u(o),
+                value: fromEnum(o),
                 source: S("config_panel"),
               });
             },
@@ -1333,7 +1333,7 @@ function gSe(l) {
           {
             id: "modelProposedGoals",
             label: "Claude-proposed goals",
-            value: f?.modelProposedGoals ?? tke(),
+            value: f?.modelProposedGoals ?? getModelProposedGoalsSettingParsed(),
             options: [...jet],
             type: "enum",
             consentGated: !0,
@@ -1344,7 +1344,7 @@ function gSe(l) {
               let t = await h({ modelProposedGoals: o });
               if (t?.error) return { error: t.error };
               i("tengu_model_proposed_goals_changed", {
-                value: u(o),
+                value: fromEnum(o),
                 source: S("config_panel"),
               });
             },
@@ -1390,7 +1390,7 @@ function gSe(l) {
         let o = e === "default" ? null : e;
         if (n2(o))
           return (
-            g("model_fable_consent", "config_shorthand_blocked"),
+            logFeatureSad("model_fable_consent", "config_shorthand_blocked"),
             {
               error: new mi(
                 "needs usage-credits consent \u2014 run /model first",
@@ -1413,7 +1413,7 @@ function gSe(l) {
               (E((t) => ({ ...t, diffTool: o })),
                 p((t) => ({ ...t, diffTool: o })),
                 i("tengu_diff_tool_changed", {
-                  tool: u(o),
+                  tool: fromEnum(o),
                   source: S("config_panel"),
                 }));
             },
@@ -1469,12 +1469,12 @@ function gSe(l) {
     },
     ...(zr()
       ? (() => {
-          let e = Iun();
+          let e = getCliTeammateModeOverride();
           return [
             {
               id: "teammateMode",
               label: e ? `Teammate mode [overridden: ${e}]` : "Teammate mode",
-              value: r.teammateMode ?? Pft,
+              value: r.teammateMode ?? DEFAULT_TEAMMATE_MODE,
               options: ["auto", "tmux", "iterm2", "in-process"],
               type: "enum",
               onChange(t) {
@@ -1485,17 +1485,17 @@ function gSe(l) {
                   t !== "in-process"
                 )
                   return;
-                (Pun(t),
+                (clearCliTeammateModeOverride(t),
                   c4e(),
                   k("teammateMode", t),
                   p((s) => ({ ...s, teammateMode: t })),
-                  i("tengu_teammate_mode_changed", { mode: u(t) }));
+                  i("tengu_teammate_mode_changed", { mode: fromEnum(t) }));
               },
             },
           ];
         })()
       : []),
-    ...(lb() || KG() ? [Re()] : []),
+    ...(isBridgeEnabled() || isRemoteControlHardDisabled() ? [Re()] : []),
     ...(W("dialogExpiry")
       ? []
       : [
@@ -1519,7 +1519,7 @@ function gSe(l) {
                   { error: d.error }
                 );
               i("tengu_dialog_expiry_changed", {
-                value: u(o),
+                value: fromEnum(o),
                 source: S("config_panel"),
               });
             },
@@ -1548,7 +1548,7 @@ function gSe(l) {
                   { error: d.error }
                 );
               i("tengu_cross_session_inbound_changed", {
-                value: u(o),
+                value: fromEnum(o),
                 source: S("config_panel"),
               });
             },
@@ -1556,7 +1556,7 @@ function gSe(l) {
         ]
       : []),
     ...[],
-    ...(lb(), []),
+    ...(isBridgeEnabled(), []),
     ...[],
     ...(ke
       ? [

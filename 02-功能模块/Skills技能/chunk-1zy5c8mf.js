@@ -8,24 +8,24 @@
 
 // Version: 2.1.263
 import { wo } from "../../01-核心基础设施/共享小工具-未细化/chunk-k6pta6f5.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { getBundledSkillsRoot as Rzt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getBundledSkillsRoot } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
 import { jy } from "../../01-核心基础设施/共享小工具-未细化/chunk-vp8yvx5r.js";
 import { join as P } from "path";
-import { constants as c } from "fs";
-import { lstat as x, mkdir as S, open as b } from "fs/promises";
+import { constants } from "fs";
+import { lstat, mkdir, open as b } from "fs/promises";
 import {
-  dirname as w,
-  isAbsolute as C,
+  dirname,
+  isAbsolute,
   join as v,
-  normalize as F,
+  normalize,
   sep as T,
 } from "path";
-var k = c.O_NOFOLLOW ?? 0,
-  B = c.O_WRONLY | c.O_CREAT | c.O_EXCL | k;
+var k = constants.O_NOFOLLOW ?? 0,
+  B = constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | k;
 async function E(e, o, r = 384) {
   let t = await b(e, B, r);
   try {
@@ -36,8 +36,8 @@ async function E(e, o, r = 384) {
   }
 }
 function O(e, o) {
-  let r = F(o);
-  if (C(r) || r.split(T).includes("..") || r.split("/").includes(".."))
+  let r = normalize(o);
+  if (isAbsolute(r) || r.split(T).includes("..") || r.split("/").includes(".."))
     throw Error("bundled file path escapes its extraction dir");
   return v(e, r);
 }
@@ -45,7 +45,7 @@ async function Nwt(e, o, r) {
   let t = new Map();
   for (let [l, g] of Object.entries(o)) {
     let a = O(e, l),
-      d = w(a),
+      d = dirname(a),
       u = [a, g, r?.mode?.(l) ?? 384],
       i = t.get(d);
     if (i) i.push(u);
@@ -53,16 +53,16 @@ async function Nwt(e, o, r) {
   }
   await Promise.all(
     [...t].map(async ([l, g]) => {
-      (await S(l, { recursive: !0, mode: 448 }),
+      (await mkdir(l, { recursive: !0, mode: 448 }),
         await Promise.all(
           g.map(([a, d, u]) =>
             E(a, d, u).catch((i) => {
               if (r?.tolerateExisting && A(i) === "EEXIST") {
                 if (r.tolerateExisting !== "verify-content")
-                  return x(a).then((s) => {
+                  return lstat(a).then((s) => {
                     if (!s.isFile()) throw i;
                   });
-                return b(a, c.O_RDONLY | k | (c.O_NONBLOCK ?? 0))
+                return b(a, constants.O_RDONLY | k | (constants.O_NONBLOCK ?? 0))
                   .then((s) =>
                     s
                       .stat()
@@ -192,7 +192,7 @@ function getRegisteredBundledSkillsIgnoringKillSwitch() {
   return [...wo().bundledSkills];
 }
 function getBundledSkillExtractDir(e) {
-  return P(Rzt(), e);
+  return P(getBundledSkillsRoot(), e);
 }
 async function R(e, o) {
   if (Object.keys(o).length === 0) return null;
@@ -200,7 +200,7 @@ async function R(e, o) {
   try {
     return (
       await Nwt(r, o, { tolerateExisting: "verify-content" }),
-      y("skill_bundled_extract"),
+      logFeatureOk("skill_bundled_extract"),
       r
     );
   } catch (t) {
@@ -208,7 +208,7 @@ async function R(e, o) {
       n(
         `Failed to extract bundled skill '${e}' to ${r}: ${t instanceof Error ? t.message : String(t)}`,
       ),
-      f("skill_bundled_extract", "skill_bundled_extract_write_failed"),
+      logFeatureBad("skill_bundled_extract", "skill_bundled_extract_write_failed"),
       null
     );
   }

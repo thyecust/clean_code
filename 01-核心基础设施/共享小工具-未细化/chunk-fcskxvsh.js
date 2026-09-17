@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { readFileSync as o } from "fs";
-import { readFile as i } from "fs/promises";
+import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import { isAbsolute, join } from "path";
 var u = [40, 181, 47, 253];
 function s(t) {
@@ -18,13 +18,13 @@ function _4t(t, e) {
   return isAbsolute(t) ? t : join(e, t);
 }
 async function qJ(t, e) {
-  let r = await i(_4t(t, e));
+  let r = await readFile(_4t(t, e));
   return (s(r) ? await Bun.zstdDecompress(r) : r).toString("utf8");
 }
 function Ke(t, e) {
   let r = _4t(t, e);
   try {
-    let n = o(r);
+    let n = readFileSync(r);
     return (s(n) ? Bun.zstdDecompressSync(n) : n).toString("utf8");
   } catch (n) {
     throw Object.assign(

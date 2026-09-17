@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
-import { readlink as e } from "fs/promises";
+import { readlink } from "fs/promises";
 async function jdt(n) {
   let r = P();
   if (r !== "linux" && r !== "wsl") return null;
   try {
-    let t = await e(`/proc/self/fd/${n}`);
+    let t = await readlink(`/proc/self/fd/${n}`);
     return t.startsWith("/") && !t.endsWith(" (deleted)") ? t : null;
   } catch {
     return null;

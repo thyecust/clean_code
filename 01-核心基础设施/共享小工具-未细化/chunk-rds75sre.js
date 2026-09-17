@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { M } from "./chunk-h62vxw7j.js";
-import { sessionIdBody as pr } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { qt } from "./chunk-km6n9zrg.js";
 import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
@@ -16,7 +16,7 @@ import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与�
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "./chunk-78nzsrc6.js";
 import { s, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dirname as g, join as w } from "path";
+import { dirname, join as w } from "path";
 var D = 50,
   y = m(() =>
     c({ version: k(1), sessions: v(c({ id: s(), reason: s(), at: s() })) }),
@@ -48,9 +48,9 @@ function x(r, o) {
 }
 async function rememberUnboundCreate(r, o, t) {
   try {
-    let e = pr(r),
+    let e = sessionIdBody(r),
       a = [
-        ...(await f(t)).filter((p) => pr(p.id) !== e),
+        ...(await f(t)).filter((p) => sessionIdBody(p.id) !== e),
         { id: e, reason: o, at: t.now().toISOString() },
       ].slice(-D);
     await t.writeText(
@@ -64,8 +64,8 @@ async function rememberUnboundCreate(r, o, t) {
 }
 async function unboundCreateReason(r, o, t) {
   try {
-    let e = pr(r),
-      i = (await f(t)).find((a) => pr(a.id) === e);
+    let e = sessionIdBody(r),
+      i = (await f(t)).find((a) => sessionIdBody(a.id) === e);
     return i !== void 0 && o(i.reason) ? i.reason : void 0;
   } catch (e) {
     n(`[deviceBind] unbound-create record unreadable (${l(e)})`);
@@ -97,7 +97,7 @@ function productionUnboundCreatesDeps(r) {
         return;
       }
       let i = d();
-      (await qt().mkdir(g(i), 448), await qt().atomicWrite(i, e, 384));
+      (await qt().mkdir(dirname(i), 448), await qt().atomicWrite(i, e, 384));
     },
     now: () => new Date(),
     retentionCutoff: async () => {

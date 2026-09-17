@@ -8,36 +8,36 @@
 
 // Version: 2.1.263
 import { Xn, Si, K, sc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ARTIFACT_SLUG_RE as fr } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isActingAsBgJob as Ja, getBgJobDir as WD } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { isActingAsBgJob, getBgJobDir } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ownProcStartMemo as Kse, ownProcStartAsync as gA, procIdentityFields as kU } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { ownPidSpace as UZe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { ownProcStartMemo, ownProcStartAsync, procIdentityFields } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownPidSpace } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
-  getMaterializedSessionFile as il,
-  getTranscriptPathForSession as Tp,
-  getTranscriptWriteFailureSeq as ore,
-  registerTranscriptExitReStamp as sre,
-  registerTranscriptExitDrain as Thn,
-  registerForeignTranscriptExitReStamp as $yt,
-  currentSessionFileIsFor as VEe,
-  onSessionFileMaterialized as Ehn,
-  flushSessionStorage as kc,
-  appendEntryToCurrentTranscriptNow as Wyt,
-  sealTornTranscriptTail as Ihn,
-  appendEntryToFileAsync as RE,
-  recordArtifactCommentMonitor as Khn,
-  takeResumedArtifactCommentMonitor as Xhn,
+  getMaterializedSessionFile,
+  getTranscriptPathForSession,
+  getTranscriptWriteFailureSeq,
+  registerTranscriptExitReStamp,
+  registerTranscriptExitDrain,
+  registerForeignTranscriptExitReStamp,
+  currentSessionFileIsFor,
+  onSessionFileMaterialized,
+  flushSessionStorage,
+  appendEntryToCurrentTranscriptNow,
+  sealTornTranscriptTail,
+  appendEntryToFileAsync,
+  recordArtifactCommentMonitor,
+  takeResumedArtifactCommentMonitor,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yl } from "../Teammates团队/chunk-thxapyam.js";
 import { ne, RTn } from "./chunk-rr78st95.js";
 import { s, T, se, v, c, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { basename as U } from "path";
+import { basename } from "path";
 var ot = { published: "published", comment: "comment" },
   z = 64,
   W = 16,
@@ -143,7 +143,7 @@ function n9n(e) {
   if (r.success)
     for (let [f, l] of j(r.data.rows)) {
       let h = t.row.safeParse(l);
-      if (!fr.test(f) || !h.success) {
+      if (!ARTIFACT_SLUG_RE.test(f) || !h.success) {
         n++;
         continue;
       }
@@ -159,7 +159,7 @@ function n9n(e) {
     i = t.stopsEnvelope.safeParse(e);
   if (i.success)
     for (let [f, l] of j(i.data.stopped)) {
-      if (!fr.test(f)) {
+      if (!ARTIFACT_SLUG_RE.test(f)) {
         n++;
         continue;
       }
@@ -167,13 +167,13 @@ function n9n(e) {
       if ((d.set(f, h.success ? h.data.at_ms : Date.now()), !h.success)) n++;
     }
   if (!r.success || !i.success)
-    g(
+    logFeatureSad(
       "artifact_durable_subscribe",
       i.success && t.newerEnvelope.safeParse(e).success
         ? "registry_newer_version"
         : "registry_invalid",
     );
-  else if (n > 0) g("artifact_durable_subscribe", "registry_entry_invalid");
+  else if (n > 0) logFeatureSad("artifact_durable_subscribe", "registry_entry_invalid");
   let u = t.orphansEnvelope.safeParse(e),
     p = u.success ? u.data.orphans : [];
   return { rows: o, stopped: d, orphans: p };
@@ -254,33 +254,33 @@ function H(e) {
   };
 }
 function Z() {
-  let e = Kse.token;
-  if (e === void 0) return (gA(), {});
-  let t = WD();
-  if (t === void 0 || !/^[0-9a-f]{8}$/.test(U(t))) return {};
-  let { procStart: n, procStartFt: o } = kU(e);
+  let e = ownProcStartMemo.token;
+  if (e === void 0) return (ownProcStartAsync(), {});
+  let t = getBgJobDir();
+  if (t === void 0 || !/^[0-9a-f]{8}$/.test(basename(t))) return {};
+  let { procStart: n, procStartFt: o } = procIdentityFields(e);
   return H({
     holderPid: process.pid,
-    holderJob: U(t),
+    holderJob: basename(t),
     holderProcStart: n,
     holderProcStartFt: o,
-    holderPidSpace: UZe().slice(0, 160),
+    holderPidSpace: ownPidSpace().slice(0, 160),
   });
 }
 function ian() {
-  return gA();
+  return ownProcStartAsync();
 }
 function mpt(e, t) {
   let n = dt(),
     o = n.envelope.safeParse(e);
   if (!o.success)
     return (
-      g("artifact_live_subscribe", "comment_monitor_intent_invalid"),
+      logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_invalid"),
       null
     );
   if (o.data.sessionId !== K())
     return (
-      g("artifact_live_subscribe", "comment_monitor_intent_foreign"),
+      logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_foreign"),
       null
     );
   if (o.data.crossLineMerged === !0) t?.onLossy?.();
@@ -296,7 +296,7 @@ function mpt(e, t) {
       break;
     }
     let h = n.record.safeParse(l);
-    if (!fr.test(f)) {
+    if (!ARTIFACT_SLUG_RE.test(f)) {
       (i++, t?.onLossy?.());
       continue;
     }
@@ -331,7 +331,7 @@ function mpt(e, t) {
     });
   }
   if (i > 0)
-    g("artifact_live_subscribe", "comment_monitor_intent_record_invalid");
+    logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_record_invalid");
   return d;
 }
 function sze(e) {
@@ -364,7 +364,7 @@ function hpt(e, t) {
     d = n.bySlug.get(e)?.title;
   n.forgottenAt.delete(e);
   let i = Date.now(),
-    u = Ja() ? { holder: "bg", ...Z() } : void 0;
+    u = isActingAsBgJob() ? { holder: "bg", ...Z() } : void 0;
   if (
     (n.bySlug.set(e, {
       state: "armed",
@@ -379,9 +379,9 @@ function hpt(e, t) {
     ct(e, i);
 }
 function ct(e, t) {
-  gA()
+  ownProcStartAsync()
     .then(() => {
-      if (!RTn() || !Ja()) return;
+      if (!RTn() || !isActingAsBgJob()) return;
       let n = ne().commentMonitorIntent,
         o = n.bySlug.get(e);
       if (
@@ -531,13 +531,13 @@ function ut() {
   e.leftWith = {
     sid: t,
     traveling: n,
-    unwritten: !e.onFile && !VEe(t) && e.adoptPendingFor !== t,
+    unwritten: !e.onFile && !currentSessionFileIsFor(t) && e.adoptPendingFor !== t,
     inWindow: e.adoptPendingFor === t,
   };
 }
 function E() {
   let e = ne().commentMonitorIntent;
-  if (!VEe(K())) return;
+  if (!currentSessionFileIsFor(K())) return;
   for (let [t, n] of e.parked) {
     if (n.traveling === void 0 || t === K()) continue;
     let o = !1;
@@ -549,22 +549,22 @@ function E() {
   }
 }
 function D(e, t) {
-  if (VEe(t)) {
+  if (currentSessionFileIsFor(t)) {
     if (e.adoptPendingFor === t) e.adoptPendingFor = null;
     return !1;
   }
-  return e.adoptPendingFor === t || il() !== null;
+  return e.adoptPendingFor === t || getMaterializedSessionFile() !== null;
 }
 function B(e, t, n, o, r) {
   if (t === null) return;
   let d = ne().commentMonitorIntent,
     i = { path: t, line: Q(e, n) };
   (d.pendingLines.set(e, i),
-    $yt(O),
+    registerForeignTranscriptExitReStamp(O),
     (d.writeChain = d.writeChain.then(async () => {
-      if ((await kc().catch(() => {}), d.pendingLines.get(e) !== i)) return;
+      if ((await flushSessionStorage().catch(() => {}), d.pendingLines.get(e) !== i)) return;
       if (d.exitStamped) return;
-      if ((d.pendingLines.delete(e), !o && ore() === r)) return;
+      if ((d.pendingLines.delete(e), !o && getTranscriptWriteFailureSeq() === r)) return;
       if (e === d.sid) {
         ((d.lastWritten = R), A());
         return;
@@ -598,24 +598,24 @@ function P(e, t, n, o) {
     u = { type: "artifact-comment-monitor", v: 1, sessionId: e, artifacts: i };
   r.owedLines.delete(e);
   let p = { path: t, line: i };
-  if ((r.pendingLines.set(e, p), $yt(O), o?.durableNow === !0)) Wyt(u, t, I(u));
+  if ((r.pendingLines.set(e, p), registerForeignTranscriptExitReStamp(O), o?.durableNow === !0)) appendEntryToCurrentTranscriptNow(u, t, I(u));
   r.writeChain = r.writeChain
     .then(async () => {
-      if ((await kc().catch(() => {}), r.exitStamped)) return;
+      if ((await flushSessionStorage().catch(() => {}), r.exitStamped)) return;
       if (e === r.sid) {
         if (r.pendingLines.get(e) === p) r.pendingLines.delete(e);
         ((r.lastWritten = R), A());
         return;
       }
       if (
-        (await RE(t, u, d, { onlyIfExists: !0, tornTailEntry: I(u) }),
+        (await appendEntryToFileAsync(t, u, d, { onlyIfExists: !0, tornTailEntry: I(u) }),
         r.pendingLines.get(e) === p)
       )
         r.pendingLines.delete(e);
     })
     .catch(() => {
       if (r.pendingLines.get(e) !== p) {
-        g("artifact_live_subscribe", "comment_monitor_intent_write_failed");
+        logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_write_failed");
         return;
       }
       if ((r.pendingLines.delete(e), r.owedLines.size >= 2 * G)) {
@@ -623,7 +623,7 @@ function P(e, t, n, o) {
         if (f !== void 0) r.owedLines.delete(f);
       }
       (r.owedLines.set(e, { path: t, line: i }),
-        g("artifact_live_subscribe", "comment_monitor_intent_write_failed"));
+        logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_write_failed"));
     });
 }
 function a9n(e, t) {
@@ -753,24 +753,24 @@ function C(e) {
       t.tornStops.clear(),
       (t.onFile = !1));
   }
-  if (!t.onFile && VEe(n)) t.onFile = !0;
+  if (!t.onFile && currentSessionFileIsFor(n)) t.onFile = !0;
   if (
-    ((t.transcriptPath = D(t, n) ? yl() : Tp(n)),
+    ((t.transcriptPath = D(t, n) ? yl() : getTranscriptPathForSession(n)),
     t.unsubscribeMaterialized === void 0)
   )
-    t.unsubscribeMaterialized = Ehn(() => {
-      if (t.sid !== null && VEe(t.sid)) t.onFile = !0;
+    t.unsubscribeMaterialized = onSessionFileMaterialized(() => {
+      if (t.sid !== null && currentSessionFileIsFor(t.sid)) t.onFile = !0;
       E();
     });
   if (t.unsubscribeSwitch === void 0)
-    ((t.unregisterExitDrain = Thn(() => (J(t), t.writeChain))),
-      $yt(O),
+    ((t.unregisterExitDrain = registerTranscriptExitDrain(() => (J(t), t.writeChain))),
+      registerForeignTranscriptExitReStamp(O),
       (t.unsubscribeSwitch = sc((i, u) => {
-        if (u === "cd" && t.sid === i) t.transcriptPath = Tp(i);
+        if (u === "cd" && t.sid === i) t.transcriptPath = getTranscriptPathForSession(i);
         if (lt(u)) ut();
         if (u === "clear") queueMicrotask(A);
       })));
-  let d = t.earlySeed ?? Xhn();
+  let d = t.earlySeed ?? takeResumedArtifactCommentMonitor();
   if (((t.earlySeed = void 0), d !== void 0)) {
     let i = !1,
       u = mpt(d, {
@@ -782,7 +782,7 @@ function C(e) {
         },
       });
     if (u !== null) {
-      if (d.tailTorn === !0) Ihn(t.transcriptPath ?? void 0);
+      if (d.tailTorn === !0) sealTornTranscriptTail(t.transcriptPath ?? void 0);
       let { stopLatches: p } = ne().durable,
         f = new Map();
       for (let [l, h] of u) {
@@ -807,7 +807,7 @@ function C(e) {
       }
       if (((t.pendingRestore = f), !i && t.lastWritten === null))
         ((t.lastWritten = V(Object.fromEntries(u))),
-          (t.failureSeqAtWrite = ore()));
+          (t.failureSeqAtWrite = getTranscriptWriteFailureSeq()));
       else if (i && t.lastWritten === null) t.lastWritten = R;
       I7();
     }
@@ -863,14 +863,14 @@ function O() {
     n,
     o = () => nt(e, _(e)),
     r = !e.exitStamped && e.sid === t;
-  if (r && VEe(t)) {
+  if (r && currentSessionFileIsFor(t)) {
     if (
       e.wroteCurrentLine ||
       o() ||
       e.owedLines.has(t) ||
       e.pendingLines.has(t)
     )
-      (E(), (e.wroteCurrentLine = !0), sre(et));
+      (E(), (e.wroteCurrentLine = !0), registerTranscriptExitReStamp(et));
   } else if (r && D(e, t) && e.transcriptPath !== null && o()) {
     let i = N(e, {
       type: "artifact-comment-monitor",
@@ -952,9 +952,9 @@ function A(e) {
   (E(), I7());
   let n = _(t),
     o = V(n);
-  if (o === t.lastWritten && ore() === t.failureSeqAtWrite) return;
+  if (o === t.lastWritten && getTranscriptWriteFailureSeq() === t.failureSeqAtWrite) return;
   if (
-    ((t.failureSeqAtWrite = ore()),
+    ((t.failureSeqAtWrite = getTranscriptWriteFailureSeq()),
     t.lastWritten === null && t.bySlug.size === 0)
   ) {
     t.lastWritten = o;
@@ -971,20 +971,20 @@ function A(e) {
       ((t.lastWritten = R), e?.durableNow === !0 && t.transcriptPath !== null)
     ) {
       let d = N(t, r);
-      Wyt(d, t.transcriptPath, I(d));
+      appendEntryToCurrentTranscriptNow(d, t.transcriptPath, I(d));
     }
     return;
   }
   if (
     ((t.lastWritten = o),
     (t.wroteCurrentLine = !0),
-    sre(et),
+    registerTranscriptExitReStamp(et),
     e?.durableNow === !0)
   )
-    Wyt(r);
-  Khn(r, t.storageV5).catch(() => {
+    appendEntryToCurrentTranscriptNow(r);
+  recordArtifactCommentMonitor(r, t.storageV5).catch(() => {
     if (t.lastWritten === o) t.lastWritten = R;
-    g("artifact_live_subscribe", "comment_monitor_intent_write_failed");
+    logFeatureSad("artifact_live_subscribe", "comment_monitor_intent_write_failed");
   });
 }
 export {

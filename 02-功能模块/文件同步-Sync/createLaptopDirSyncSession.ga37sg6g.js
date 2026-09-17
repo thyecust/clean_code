@@ -12,17 +12,17 @@
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
-import { toInfraSessionId as yc } from "../权限系统/chunk-ynkf3yy4.js";
+import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { getProjectsDir as Sc } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { isViolinWoodEnabledCached as ri } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getProjectsDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import {
-  laptopDirSyncRegistries as _de,
+  laptopDirSyncRegistries,
   CLe,
   yde,
   DLe,
@@ -49,11 +49,11 @@ import { p3n, mte } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
 import { N7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-rs9aqm75.js";
 import { vy } from "../../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js";
 import { nft, Qce, oln, IFt } from "../../01-核心基础设施/共享小工具-未细化/chunk-vcb9z55e.js";
-import { lstat as H, readdir as K } from "fs/promises";
-import { dirname as U, join as C, resolve as T } from "path";
+import { lstat, readdir } from "fs/promises";
+import { dirname, join as C, resolve } from "path";
 var G = 250,
   L = 30000;
-function R({
+function createLaptopDirSyncSession({
   sessionId: a,
   gitRoot: w,
   boundToThisMachine: d,
@@ -64,7 +64,7 @@ function R({
   storageV5: D,
   engine: r,
 }) {
-  let i = yc(a),
+  let i = toInfraSessionId(a),
     o = N7(),
     m = {
       sessionId: i,
@@ -148,7 +148,7 @@ function N(a, w, d, p) {
         if (e === void 0)
           return (
             (S = !0),
-            f("ccr_dir_sync_pull", `${d}_engine_open_timeout`),
+            logFeatureBad("ccr_dir_sync_pull", `${d}_engine_open_timeout`),
             a(
               "File sync could not start for this session: its engine did not open in time",
               "warning",
@@ -159,12 +159,12 @@ function N(a, w, d, p) {
             ),
             null
           );
-        return ((s = e), y("ccr_dir_sync_pull", { engine: u(d) }), e);
+        return ((s = e), logFeatureOk("ccr_dir_sync_pull", { engine: fromEnum(d) }), e);
       },
       (e) => (
         (S = !0),
-        h(e),
-        f("ccr_dir_sync_pull", `${d}_engine_open_failed`),
+        logError(e),
+        logFeatureBad("ccr_dir_sync_pull", `${d}_engine_open_failed`),
         a(
           "File sync could not start for this session: its engine failed to open",
           "warning",
@@ -269,14 +269,14 @@ function N(a, w, d, p) {
     streaming: _,
   };
 }
-async function Fe(
+async function attachLaptopDirSyncSession(
   a,
   { boundToThisMachine: w, credentials: d, host: p, storageV5: s },
 ) {
-  let S = yc(a);
-  if (!ri()) return;
-  let k = T(he()),
-    D = tr(he()),
+  let S = toInfraSessionId(a);
+  if (!isViolinWoodEnabledCached()) return;
+  let k = resolve(he()),
+    D = findGitRoot(he()),
     r = async (E) => {
       let b = await Qce(E, S, s),
         P = await mte(b.path, S, b.v5);
@@ -300,8 +300,8 @@ async function Fe(
   let c = m && o !== null ? o : await r(_);
   if (c.kind === "absent") return;
   let e = () => (
-    g("ccr_dir_sync_pull", "attach_engine_declined"),
-    R({
+    logFeatureSad("ccr_dir_sync_pull", "attach_engine_declined"),
+    createLaptopDirSyncSession({
       sessionId: S,
       gitRoot: _,
       boundToThisMachine: Promise.resolve(!1),
@@ -313,7 +313,7 @@ async function Fe(
         line: _Kn,
         level: "info",
       },
-      registry: _de.of(p),
+      registry: laptopDirSyncRegistries.of(p),
       storageV5: s,
     })
   );
@@ -325,7 +325,7 @@ async function Fe(
     return e();
   if (c.kind === "git" && c.record.start.kind === "folder")
     return (await i(_))
-      ? R({
+      ? createLaptopDirSyncSession({
           sessionId: S,
           gitRoot: _,
           boundToThisMachine:
@@ -337,42 +337,42 @@ async function Fe(
             start: c.record.start,
             ...(c.record.ended !== void 0 && { endedEarlier: c.record.ended }),
           },
-          registry: _de.of(p),
+          registry: laptopDirSyncRegistries.of(p),
           storageV5: s,
         })
       : void 0;
   if (c.kind === "unsupported")
     return (
-      g("ccr_dir_sync_pull", "attach_engine_unsupported"),
-      R({
+      logFeatureSad("ccr_dir_sync_pull", "attach_engine_unsupported"),
+      createLaptopDirSyncSession({
         sessionId: S,
         gitRoot: _,
         boundToThisMachine: Promise.resolve(!1),
         createFacts: void 0,
         credentials: d,
         engine: { kind: "stopped", reason: "engine_unsupported", line: Nht },
-        registry: _de.of(p),
+        registry: laptopDirSyncRegistries.of(p),
         storageV5: s,
       })
     );
   if (D === null || m) {
     if (c.kind === "unreadable")
-      g("ccr_dir_sync_pull", "attach_folder_record_unreadable");
+      logFeatureSad("ccr_dir_sync_pull", "attach_folder_record_unreadable");
     return c.kind === "unreadable"
-      ? R({
+      ? createLaptopDirSyncSession({
           sessionId: S,
           gitRoot: _,
           boundToThisMachine: Promise.resolve(!1),
           createFacts: void 0,
           credentials: d,
           engine: { kind: "stopped", reason: "store_unreadable", line: RKe },
-          registry: _de.of(p),
+          registry: laptopDirSyncRegistries.of(p),
           storageV5: s,
         })
       : void 0;
   }
   if (c.kind === "git")
-    return R({
+    return createLaptopDirSyncSession({
       sessionId: S,
       gitRoot: _,
       boundToThisMachine: c.record.uploadOnly === !0 ? Promise.resolve(!1) : w,
@@ -384,19 +384,19 @@ async function Fe(
         uploadAtOpen: !1,
         ...(c.record.ended !== void 0 && { endedEarlier: c.record.ended }),
       },
-      registry: _de.of(p),
+      registry: laptopDirSyncRegistries.of(p),
       storageV5: s,
     });
   return (
-    g("ccr_dir_sync_pull", "attach_record_unreadable"),
-    R({
+    logFeatureSad("ccr_dir_sync_pull", "attach_record_unreadable"),
+    createLaptopDirSyncSession({
       sessionId: S,
       gitRoot: _,
       boundToThisMachine: Promise.resolve(!1),
       createFacts: void 0,
       credentials: d,
       engine: { kind: "stopped", reason: "store_unreadable", line: RKe },
-      registry: _de.of(p),
+      registry: laptopDirSyncRegistries.of(p),
       storageV5: s,
     })
   );
@@ -409,7 +409,7 @@ var q = 4000,
   I = { kind: "elsewhere" },
   F = { kind: "nowhere" };
 async function j(a, w) {
-  return H(a).then(
+  return lstat(a).then(
     (d) => ((w === "file" ? d.isFile() : d.isDirectory()) ? !0 : void 0),
     (d) => {
       let p = A(d);
@@ -421,22 +421,22 @@ function x(a) {
   return j(a, "file");
 }
 async function B(a) {
-  let w = await j(U(a), "dir");
+  let w = await j(dirname(a), "dir");
   return w === !0 ? x(a) : w;
 }
-async function Pe(a, w, d = q) {
-  if (!ri()) return { kind: "unknown", why: "not_looked" };
-  let p = yc(a),
+async function dirSyncElsewhereLookup(a, w, d = q) {
+  if (!isViolinWoodEnabledCached()) return { kind: "unknown", why: "not_looked" };
+  let p = toInfraSessionId(a),
     s = he(),
-    S = tr(s) ?? T(s);
+    S = findGitRoot(s) ?? resolve(s);
   if (M() && w !== void 0) return X(w, S, p, d);
   let k = await nft(S, p, w),
-    D = Sc(),
+    D = getProjectsDir(),
     r = IFt(p);
   try {
     let i = await B(k);
     if (i !== !1) return i ? F : { kind: "unknown", why: "here_unreadable" };
-    let o = await K(D, { withFileTypes: !0 }),
+    let o = await readdir(D, { withFileTypes: !0 }),
       m = await Promise.all(o.map((t) => vy(t, C(D, t.name), "unknown"))),
       _ = o.filter((t, E) => m[E] === "dir"),
       c = _.slice(0, d),
@@ -463,7 +463,7 @@ async function Pe(a, w, d = q) {
     );
   }
 }
-function Le() {
+function dirSyncElsewhereLine() {
   return `File sync for this session was set up from another directory on this machine, not ${an(he())}: edits here are not uploaded, and Claude's changes are not written here. Attaching from that directory resumes it if sync is still on there.`;
 }
 async function X(a, w, d, p) {
@@ -540,8 +540,8 @@ async function z(a, w, d, p) {
       : F;
 }
 export {
-  Fe as attachLaptopDirSyncSession,
-  R as createLaptopDirSyncSession,
-  Le as dirSyncElsewhereLine,
-  Pe as dirSyncElsewhereLookup,
+  attachLaptopDirSyncSession,
+  createLaptopDirSyncSession,
+  dirSyncElsewhereLine,
+  dirSyncElsewhereLookup,
 };

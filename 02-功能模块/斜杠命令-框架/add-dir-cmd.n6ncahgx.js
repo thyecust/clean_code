@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { qlt, L3e } from "../../01-核心基础设施/设置-配置/chunk-m0ds6tjw.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-sr0ezxnp.js";
 async function d(r, t) {
   let o = r.trim();
   if (!o) return { type: "text", value: "Usage: /add-dir <path>" };
-  let e = await YX(o, ce(t));
+  let e = await YX(o, getToolPermissionContext(t));
   if (e.resultType !== "success")
     return {
       type: "text",

@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 99 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { registerBundledSkill as eo } from "../Skills技能/chunk-1zy5c8mf.js";
-import { readdir as h } from "fs/promises";
+import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
+import { readdir } from "fs/promises";
 function l() {
   return import("./SKILL_MODEL_VARS.xb5anhsm.js");
 }
@@ -37,7 +37,7 @@ async function f() {
   let o = Q(),
     t;
   try {
-    t = await h(o);
+    t = await readdir(o);
   } catch {
     return null;
   }
@@ -116,8 +116,8 @@ function p(o) {
   let t = o.trim().toLowerCase().split(/\s+/)[0] ?? "";
   return d.find((e) => e === t) ?? "none";
 }
-function v({ disabled: o = !1 } = {}) {
-  eo({
+function registerClaudeApiSkill({ disabled: o = !1 } = {}) {
+  registerBundledSkill({
     name: "claude-api",
     menuDescription: "Build and debug apps that use the Claude API",
     description: b,
@@ -129,8 +129,8 @@ function v({ disabled: o = !1 } = {}) {
       let [n, a] = await Promise.all([f(), l()]);
       return (
         i("tengu_claude_api_skill_loaded", {
-          detected_lang: u(n ?? "none"),
-          subcommand: u(p(t)),
+          detected_lang: fromEnum(n ?? "none"),
+          subcommand: fromEnum(p(t)),
           has_args: t.trim().length > 0,
         }),
         [{ type: "text", text: L(n, t, a, typeof r === "string") }]
@@ -145,4 +145,4 @@ function v({ disabled: o = !1 } = {}) {
     },
   });
 }
-export { v as registerClaudeApiSkill };
+export { registerClaudeApiSkill };

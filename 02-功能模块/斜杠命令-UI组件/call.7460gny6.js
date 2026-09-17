@@ -13,7 +13,7 @@ import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-j
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { xe } from "../../01-核心基础设施/共享小工具-未细化/chunk-cwpbthvg.js";
-import { getToolPermissionContext as ce } from "../权限系统/chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Hye } from "../权限系统/chunk-sx24y271.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-e6f86vzh.js";
@@ -48,7 +48,7 @@ function D(X) {
 }
 async function T(s, a, m) {
   let y = (m ?? "").trim(),
-    d = ce(a),
+    d = getToolPermissionContext(a),
     f = async (n, c = !1) => {
       let A = await qlt(a, n, c);
       s(`${A} ${ie.dim("\xB7 /permissions to manage")}`);

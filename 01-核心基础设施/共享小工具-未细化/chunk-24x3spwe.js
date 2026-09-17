@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ae } from "./chunk-2c9tjhwd.js";
-import { userInfo as s } from "os";
+import { userInfo } from "os";
 var t = "com.anthropic.claudecode",
   _Rt = "HKLM\\SOFTWARE\\Policies\\ClaudeCode",
   yRt = "HKCU\\SOFTWARE\\Policies\\ClaudeCode",
@@ -26,7 +26,7 @@ function xBe() {
 function Lar() {
   let e = "";
   try {
-    e = s().username;
+    e = userInfo().username;
   } catch {}
   let r = [];
   if (e)

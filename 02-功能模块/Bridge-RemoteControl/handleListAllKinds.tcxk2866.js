@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { PERMISSION_MODE_MANUAL_ALIAS as qU, normalizePermissionModeAlias as mf } from "../权限系统/chunk-e4pfvp7x.js";
+import { PERMISSION_MODE_MANUAL_ALIAS, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { D9e, L9e } from "../认证-OAuth登录/chunk-n76cf9e6.js";
 import { Qre } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
 import { Zye, eSe, tSe, J0e } from "../权限系统/chunk-3kjwvb3e.js";
@@ -20,7 +20,7 @@ import { Jae } from "../../01-核心基础设施/设置-配置/chunk-bmk73cc4.js
 import { tF } from "../后台任务-Shell管理/chunk-jfk5mpe1.js";
 import { Vb } from "../../01-核心基础设施/共享小工具-未细化/chunk-d3d1v4d6.js";
 import { If } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { basename as y, resolve as h } from "path";
+import { basename, resolve } from "path";
 function u(e) {
   process.stdout.write(
     e +
@@ -98,7 +98,7 @@ async function B(e, i) {
     r.push({
       kind: "remote-control",
       dir: t.dir,
-      name: t.name ?? y(t.dir),
+      name: t.name ?? basename(t.dir),
       spawnMode: t.spawnMode ?? "same-dir",
     });
   let n = await J0e(e, i);
@@ -164,15 +164,15 @@ async function K(e, i, o) {
   function r(g) {
     return Zye.includes(g);
   }
-  let a = mf(e.flags.get("permission-mode"));
+  let a = normalizePermissionModeAlias(e.flags.get("permission-mode"));
   if (e.flags.has("permission-mode") && !r(a ?? "")) {
-    let g = Zye.map((w) => (w === "default" ? qU : w));
+    let g = Zye.map((w) => (w === "default" ? PERMISSION_MODE_MANUAL_ALIAS : w));
     c(`--permission-mode must be one of ${g.join(", ")}`);
   }
   let n = e.flags.get("prompt"),
     t = e.flags.get("id"),
     l = e.flags.get("dir"),
-    f = h(l ?? Q());
+    f = resolve(l ?? Q());
   if (!t && !n)
     c("--prompt is required (or pass --id to update an existing task)");
   let s = t ?? O(f, n),
@@ -184,8 +184,8 @@ async function K(e, i, o) {
   let M = Qre(S);
   if (M.error !== void 0) c(`invalid --cron '${S}': ${M.error}`);
   let F = M.cron,
-    C = l ? h(l) : (m?.directory ?? h(Q())),
-    E = a ?? mf(m?.permissionMode) ?? "dontAsk",
+    C = l ? resolve(l) : (m?.directory ?? resolve(Q())),
+    E = a ?? normalizePermissionModeAlias(m?.permissionMode) ?? "dontAsk",
     x = e.flags.get("model") ?? m?.model ?? void 0,
     { isPathTrusted: P } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
   if (!P(C))
@@ -215,7 +215,7 @@ function O(e, i) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "")
         .slice(0, 40),
-    r = o(y(e)),
+    r = o(basename(e)),
     a = o(i.split(/\s+/).slice(0, 4).join(" "));
   return [r, a].filter(Boolean).join("-") || "task";
 }
@@ -230,7 +230,7 @@ async function j(e, i, o) {
       s.map((d) => ({
         kind: "remote-control",
         dir: d.dir,
-        name: d.name ?? y(d.dir),
+        name: d.name ?? basename(d.dir),
         spawnMode: d.spawnMode ?? "same-dir",
       })),
     );
@@ -245,7 +245,7 @@ async function j(e, i, o) {
     return;
   }
   await k();
-  let r = await Vu(h(e.flags.get("dir") ?? Q()), If(o)),
+  let r = await canonicalizePath(resolve(e.flags.get("dir") ?? Q()), If(o)),
     { isPathTrusted: a } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
   if (!a(r))
     c(
@@ -260,20 +260,20 @@ async function j(e, i, o) {
 }
 async function q(e, i, o) {
   let a = (await T(i, o)).remoteControl ?? [],
-    n = a.filter((s) => (s.name ?? y(s.dir)) === e);
+    n = a.filter((s) => (s.name ?? basename(s.dir)) === e);
   if (n.length === 1) return n[0].dir;
   if (n.length > 1)
     c(
       `ambiguous: multiple remote-control servers match name '${e}'. Use a dir instead.`,
     );
   let t = If(o),
-    l = await Vu(h(e), t),
+    l = await canonicalizePath(resolve(e), t),
     f = [];
-  for (let s of a) if ((await Vu(s.dir, t)) === l) f.push(s);
+  for (let s of a) if ((await canonicalizePath(s.dir, t)) === l) f.push(s);
   if (f.length >= 1) return f[0].dir;
   c(`no remote-control server matched '${e}'`);
 }
-async function V(e, i = Vb(), o) {
+async function handleListAllKinds(e, i = Vb(), o) {
   let r = await B(i, o);
   if (e) {
     u(b(r, null, 2));
@@ -281,9 +281,9 @@ async function V(e, i = Vb(), o) {
   }
   D(r);
 }
-async function ee(e, i, o = Vb(), r) {
+async function handleCliKind(e, i, o = Vb(), r) {
   let a = I(e, i);
   if (e === "scheduled") return K(a, o, r);
   return j(a, o, r);
 }
-export { ee as handleCliKind, V as handleListAllKinds };
+export { handleCliKind, handleListAllKinds };

@@ -13,11 +13,11 @@ import { Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
-import { bytesPerTokenForModel as lf } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { bytesPerTokenForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { S1, ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokenEstimate as xx } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getSettingsForSource as ye, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oa } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
@@ -28,7 +28,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { Ze } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { getCommandName as qo, an, J_t, clearCommandMemoizationCaches as rR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getCommandName, an, J_t, clearCommandMemoizationCaches } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Zr } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhstj6d7.js";
 import { is } from "../../01-核心基础设施/共享小工具-未细化/chunk-fafq09h6.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -188,7 +188,7 @@ function Xt(Mt) {
 function _t(xo, Oo) {
   return (
     E(xo.source, xo.loadedFrom).localeCompare(E(Oo.source, Oo.loadedFrom)) ||
-    qo(xo).localeCompare(qo(Oo))
+    getCommandName(xo).localeCompare(getCommandName(Oo))
   );
 }
 function jt(Ws) {
@@ -212,9 +212,9 @@ var H = ["on", "name-only", "user-invocable-only", "off"],
     off: { glyph: L.cross, label: "off", color: "error" },
   };
 function $o(a, c) {
-  let P = ye("policySettings")?.skillOverrides?.[c];
+  let P = getSettingsForSource("policySettings")?.skillOverrides?.[c];
   if (P) return { value: P, source: "policy" };
-  let w = ye("flagSettings")?.skillOverrides?.[c];
+  let w = getSettingsForSource("flagSettings")?.skillOverrides?.[c];
   if (w) return { value: w, source: "flag" };
   if (a.disableModelInvocation)
     return { value: "user-invocable-only", source: "author" };
@@ -223,8 +223,8 @@ function $o(a, c) {
 }
 function To(a) {
   return (
-    ye("projectSettings")?.skillOverrides?.[a] ??
-    ye("userSettings")?.skillOverrides?.[a]
+    getSettingsForSource("projectSettings")?.skillOverrides?.[a] ??
+    getSettingsForSource("userSettings")?.skillOverrides?.[a]
   );
 }
 function E(a, c) {
@@ -256,7 +256,7 @@ function Ae(Es) {
         Pe = oo.sort(
           (nt, rt) =>
             (st.get(rt) ?? 0) - (st.get(nt) ?? 0) ||
-            qo(nt).localeCompare(qo(rt)),
+            getCommandName(nt).localeCompare(getCommandName(rt)),
         );
         break bb0;
       }
@@ -267,7 +267,7 @@ function Ae(Es) {
   let l = Pe,
     it;
   if (i[3] === p)
-    ((it = ye("localSettings")?.skillOverrides ?? {}), (i[3] = it));
+    ((it = getSettingsForSource("localSettings")?.skillOverrides ?? {}), (i[3] = it));
   else it = i[3];
   let to = it,
     so;
@@ -422,7 +422,7 @@ function Ae(Es) {
         if (ko !== _s) Fe++;
       }
       if (Ct > 0) {
-        let { error: xt } = await Jt(
+        let { error: xt } = await updateSettingsForSource(
           "localSettings",
           { skillOverrides: vt },
           void 0,
@@ -434,7 +434,7 @@ function Ae(Es) {
           });
           return;
         }
-        rR();
+        clearCommandMemoizationCaches();
       }
       R(Fe > 0 ? `Updated ${Fe} skill ${x(Fe, "override")}` : "No changes", {
         display: "system",
@@ -734,7 +734,7 @@ function Ne(Zs) {
     T = Lo[Ys],
     Bt;
   if (z[0] !== Po || z[1] !== O)
-    ((Bt = xx(J_t(O, Po))), (z[0] = Po), (z[1] = O), (z[2] = Bt));
+    ((Bt = formatTokenEstimate(J_t(O, Po))), (z[0] = Po), (z[1] = O), (z[2] = Bt));
   else Bt = z[2];
   let Ro = `${Bt} tok`,
     Ee;
@@ -793,7 +793,7 @@ async function kn(a, c) {
   return e(Ae, {
     onExit: a,
     commands: c.options.commands,
-    bytesPerToken: lf(c.options.mainLoopModel),
+    bytesPerToken: bytesPerTokenForModel(c.options.mainLoopModel),
   });
 }
 export { kn as call };

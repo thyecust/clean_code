@@ -26,7 +26,7 @@ import { Yl, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行�
 import { p, en } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
-import { extname as Nt } from "path";
+import { extname } from "path";
 var Qt = 500;
 function K(s, i, m, f) {
   let u = Iur(`${f}\x00${cne.pluginGrammarGeneration}`, m),
@@ -99,7 +99,7 @@ function Y(xr) {
   } else ((q = j[3]), (Et = j[4]));
   if (Et !== en) return Et;
   let A;
-  if (j[8] !== yt) ((A = Nt(yt).slice(1)), (j[8] = yt), (j[9] = A));
+  if (j[8] !== yt) ((A = extname(yt).slice(1)), (j[8] = yt), (j[9] = A));
   else A = j[9];
   let wt = A,
     D;

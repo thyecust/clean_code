@@ -16,16 +16,16 @@ import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { l, A, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isCustomizationDisabled as Xr } from "./chunk-dqyc6kge.js";
+import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
 import { qSt, Nk, Tj } from "./chunk-jz6b76hr.js";
 import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
 import { Xa } from "../../01-核心基础设施/共享小工具-未细化/chunk-jzy6p47z.js";
 import { ZT } from "../../01-核心基础设施/共享小工具-未细化/chunk-17typpec.js";
 import { s, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { readdir as K, readFile as U, stat as _ } from "fs/promises";
-import { basename as w, extname as D, join as C } from "path";
-import { isDeepStrictEqual as I } from "util";
+import { readdir, readFile, stat as _ } from "fs/promises";
+import { basename, extname, join as C } from "path";
+import { isDeepStrictEqual } from "util";
 class N {
   customThemeBases = void 0;
   userThemes = void 0;
@@ -44,7 +44,7 @@ class N {
     if (
       ((this.customThemeBases = new Map(e.map((t) => [t.slug, t.base]))),
       this.addCustomThemeBases(this.pluginThemes.getState()),
-      this.userThemes === void 0 || !I(this.userThemes, e))
+      this.userThemes === void 0 || !isDeepStrictEqual(this.userThemes, e))
     )
       this.userThemes = e;
     return this.userThemes;
@@ -132,7 +132,7 @@ async function S(e, t, r, i, a, h) {
       n(`[theme] ${e} exceeds 256KB; skipping`, { level: "warn" });
       return;
     }
-    f = await U(e, "utf8");
+    f = await readFile(e, "utf8");
   } catch (o) {
     if (!W(o)) n(`[theme] failed to read ${e}`, { level: "warn" });
     return;
@@ -155,14 +155,14 @@ async function R(e, t, r, i) {
               d.key.namespace === "userConfigDir"
                 ? (d.key.relPath.at(-1) ?? "")
                 : "";
-            if (D(T) !== ".json") continue;
+            if (extname(T) !== ".json") continue;
             if ((d.size ?? 0) > P) {
               n(`[theme] ${C(e, T)} exceeds 256KB; skipping`, {
                 level: "warn",
               });
               continue;
             }
-            o.push({ slug: r + w(T, ".json"), name: T });
+            o.push({ slug: r + basename(T, ".json"), name: T });
           }
         },
       ).catch(
@@ -229,10 +229,10 @@ async function R(e, t, r, i) {
   }
   let a;
   try {
-    a = await K(e);
+    a = await readdir(e);
   } catch (f) {
     if (A(f) === "ENOTDIR") {
-      let o = await S(e, r + w(e, ".json"), t);
+      let o = await S(e, r + basename(e, ".json"), t);
       return o ? [o] : [];
     }
     if (!Rt(f)) n(`[theme] readdir ${e} failed`, { level: "warn" });
@@ -240,15 +240,15 @@ async function R(e, t, r, i) {
   }
   let h = [];
   for (let f of a) {
-    if (D(f) !== ".json") continue;
-    let o = await S(C(e, f), r + w(f, ".json"), t);
+    if (extname(f) !== ".json") continue;
+    let o = await S(C(e, f), r + basename(f, ".json"), t);
     if (o) h.push(o);
   }
   return h;
 }
 var _Oe = ZT(async (e) => {
     let t = dk(),
-      r = Xr("themes")
+      r = isCustomizationDisabled("themes")
         ? []
         : ((await R(twe(), "user", "", e)) ?? t.cachedUserThemes());
     return (
@@ -294,7 +294,7 @@ function wln(e) {
   );
 }
 function $Ft(e) {
-  if (Xr("themes")) return () => {};
+  if (isCustomizationDisabled("themes")) return () => {};
   let t = RT.watch(twe(), {
     persistent: !0,
     ignoreInitial: !0,

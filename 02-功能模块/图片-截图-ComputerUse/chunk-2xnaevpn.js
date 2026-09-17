@@ -12,18 +12,18 @@ import { CA } from "../../01-核心基础设施/安全文件系统(FS加固)/安
 import { aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
 import { hO, uI } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import { pze, Rpt, kpt, tFt, nFt, rFt } from "../跨会话消息(UDS)/chunk-qvnte9zp.js";
-import { getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeBaseUrl as Ype } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { Cce, gsn } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
 import { Ds, bTe, Vzn, Kzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KNe, iJn } from "./chunk-0dcnsftb.js";
-import { randomUUID as C } from "crypto";
-import { mkdir as T, realpath as N, writeFile as O } from "fs/promises";
+import { randomUUID } from "crypto";
+import { mkdir, realpath, writeFile } from "fs/promises";
 import { join as L } from "path";
 var j = 30000;
 function a(e) {
@@ -36,11 +36,11 @@ var z = {
   "image/webp": "webp",
 };
 async function D(e, s, l, m, p) {
-  let i = M() && p !== void 0 ? await wC(p) : m_();
+  let i = M() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken();
   if (!i) return (a("skip: no oauth token"), { failure: "download" });
   let r;
   try {
-    let o = `${Ype()}/api/oauth/files/${encodeURIComponent(e.file_uuid)}/content`;
+    let o = `${getBridgeBaseUrl()}/api/oauth/files/${encodeURIComponent(e.file_uuid)}/content`;
     if (typeof e.file_size === "number" && e.file_size > hO)
       return { failure: "download" };
     let b = await at.get(o, {
@@ -80,7 +80,7 @@ async function D(e, s, l, m, p) {
         : null,
     d = u ? `image.${z[KNe(r)]}` : pze(e.file_name),
     h = (
-      u ? C().slice(0, 8) : e.file_uuid.slice(0, 8) || C().slice(0, 8)
+      u ? randomUUID().slice(0, 8) : e.file_uuid.slice(0, 8) || randomUUID().slice(0, 8)
     ).replace(/[^a-zA-Z0-9_-]/g, "_"),
     k = bTe(),
     _ = Vzn(h, d),
@@ -94,13 +94,13 @@ async function D(e, s, l, m, p) {
       return (a(`write ${c} failed: ${We(o.error)}`), { failure: "write" });
   } else
     try {
-      (await T(k, { recursive: !0, mode: 448 }), await O(c, r, { mode: 384 }));
+      (await mkdir(k, { recursive: !0, mode: 448 }), await writeFile(c, r, { mode: 384 }));
     } catch (o) {
       return (a(`write ${c} failed: ${o}`), { failure: "write" });
     }
   if (s && e.sha256 === void 0)
     try {
-      Kzn(await N(c), mn(r));
+      Kzn(await realpath(c), mn(r));
     } catch {
       a(`registration skipped for ${c}`);
     }
@@ -126,10 +126,10 @@ async function H(e, s, l, m, p) {
     return { prefix: "", imageBlocks: [], inlinedImagePaths: [] };
   a(`resolving ${e.length} attachment(s)`);
   let i = e.filter((t) => typeof t.sha256 === "string");
-  if (!(M() && p !== void 0 ? await wC(p) : m_())) {
+  if (!(M() && p !== void 0 ? await getBridgeAccessTokenAsync(p) : getBridgeAccessToken())) {
     if (
       (a("skip: no oauth token"),
-      g("bridge_attachment_resolve", "no_token"),
+      logFeatureSad("bridge_attachment_resolve", "no_token"),
       i.length > 0)
     ) {
       let t = i.length - uI,
@@ -189,13 +189,13 @@ async function H(e, s, l, m, p) {
     nFt("bridge", v, F);
   let E = B.length + o.length;
   if (E === 0)
-    f("bridge_attachment_resolve", x ? "digest_mismatch" : "all_failed");
+    logFeatureBad("bridge_attachment_resolve", x ? "digest_mismatch" : "all_failed");
   else if (E < d.length)
-    g("bridge_attachment_resolve", x ? "digest_mismatch" : "partial_failed");
-  else if (h) g("bridge_attachment_resolve", "over_count_cap");
-  else y("bridge_attachment_resolve");
-  if (A > 0) g("bridge_attachment_inline_image", "fallback_path_ref");
-  else if (o.length > 0) y("bridge_attachment_inline_image");
+    logFeatureSad("bridge_attachment_resolve", x ? "digest_mismatch" : "partial_failed");
+  else if (h) logFeatureSad("bridge_attachment_resolve", "over_count_cap");
+  else logFeatureOk("bridge_attachment_resolve");
+  if (A > 0) logFeatureSad("bridge_attachment_inline_image", "fallback_path_ref");
+  else if (o.length > 0) logFeatureOk("bridge_attachment_inline_image");
   let S = [...B, ...u];
   return {
     prefix: S.length > 0 ? S.join(" ") + " " : "",

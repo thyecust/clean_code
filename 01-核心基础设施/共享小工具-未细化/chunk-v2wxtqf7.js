@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { KD } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { resolve as o } from "path";
+import { resolve } from "path";
 function ahe() {
   let r = a.CLAUDE_CODE_FEDERATION_CACHE_DIR;
-  if (r) return o(r);
+  if (r) return resolve(r);
   let e = KD();
-  return e === null ? null : o(e, "credentials", "federation");
+  return e === null ? null : resolve(e, "credentials", "federation");
 }
 export { ahe };

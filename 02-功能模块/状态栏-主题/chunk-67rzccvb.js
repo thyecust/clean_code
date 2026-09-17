@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { $Be } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { qe, YC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { oEt, qCe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { isAbsolute as j } from "path";
+import { isAbsolute } from "path";
 function S() {
-  return { sources: m(), read: ye, rules: qCe };
+  return { sources: m(), read: getSettingsForSource, rules: qCe };
 }
 var m = () => {
   let { gateProject: t } = oEt(),
@@ -41,7 +41,7 @@ function een(
       ["projectSettings", ".claude/settings.json"],
       ["localSettings", ".claude/settings.local.json"],
     ],
-    read: ye,
+    read: getSettingsForSource,
     rules: qCe,
   },
 ) {
@@ -98,7 +98,7 @@ function s0e(t = S()) {
   return { rules: c, sources: e, rawCount: r };
 }
 function p(t) {
-  if (j(t) || t.startsWith("~")) return 0;
+  if (isAbsolute(t) || t.startsWith("~")) return 0;
   if (t.includes("..")) return 1;
   return 2;
 }
@@ -145,17 +145,17 @@ function WPt(t) {
 }
 function nen() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (WPt(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (WPt(s)) t.push(".claude/settings.local.json");
   return t;
 }
 function ren() {
   let t = [];
-  if (ye("projectSettings")?.autoMemoryDirectory !== void 0)
+  if (getSettingsForSource("projectSettings")?.autoMemoryDirectory !== void 0)
     t.push(".claude/settings.json");
-  if (ye("localSettings")?.autoMemoryDirectory !== void 0)
+  if (getSettingsForSource("localSettings")?.autoMemoryDirectory !== void 0)
     t.push(".claude/settings.local.json");
   return t;
 }
@@ -164,9 +164,9 @@ function GPt(t) {
 }
 function oen() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (GPt(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (GPt(s)) t.push(".claude/settings.local.json");
   return t;
 }
@@ -175,9 +175,9 @@ function qPt(t) {
 }
 function sen() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (qPt(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (qPt(s)) t.push(".claude/settings.local.json");
   return t;
 }
@@ -186,9 +186,9 @@ function zPt(t) {
 }
 function ien() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (zPt(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (zPt(s)) t.push(".claude/settings.local.json");
   return t;
 }
@@ -197,9 +197,9 @@ function VPt(t) {
 }
 function aen() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (VPt(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (VPt(s)) t.push(".claude/settings.local.json");
   return t;
 }
@@ -209,9 +209,9 @@ function f(t) {
 }
 function len() {
   let t = [],
-    e = ye("projectSettings");
+    e = getSettingsForSource("projectSettings");
   if (f(e)) t.push(".claude/settings.json");
-  let s = ye("localSettings");
+  let s = getSettingsForSource("localSettings");
   if (f(s)) t.push(".claude/settings.local.json");
   return t;
 }

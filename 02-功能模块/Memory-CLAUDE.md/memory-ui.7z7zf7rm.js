@@ -14,23 +14,23 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { os, x, us } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ne } from "../../01-核心基础设施/共享小工具-未细化/chunk-eebsvd7r.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Ff, isAutoMemoryEnabled as ua, isAutoMemoryDisabledForCurrentMainLoopModel as hvt, getAutoMemPath as Ns, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { Ff, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, ee, es } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { jn, Ks, findGitRoot as tr } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { formatTokens as Pn, formatRelativeTimeAgo as uy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { jn, Ks, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getInitialSettings as Ge, updateSettingsForSource as Jt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { ue } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -49,7 +49,7 @@ import {
   Vqt,
   CFe,
   zer,
-  clearOrgMemoryCredential as M$,
+  clearOrgMemoryCredential,
   om,
   OYe,
   DCe,
@@ -60,14 +60,14 @@ import {
   Ker,
   jfe,
   vTt,
-  waitForOrgMemoryDecisionSettled as vFe,
-  getOrgMemoryDecision as nf,
-  getOrgMemoryServedIdentity as RTt,
-  shrinkOrgMemoryDecisionWriteAsk as kTt,
-  getOrgMemoryPickerData as HTt,
-  discoverOrgMemoryStores as tEn,
-  reconnectOrgMemory as nEn,
-  disconnectOrgMemory as rEn,
+  waitForOrgMemoryDecisionSettled,
+  getOrgMemoryDecision,
+  getOrgMemoryServedIdentity,
+  shrinkOrgMemoryDecisionWriteAsk,
+  getOrgMemoryPickerData,
+  discoverOrgMemoryStores,
+  reconnectOrgMemory,
+  disconnectOrgMemory,
   IK,
   Wj,
   FCe,
@@ -114,7 +114,7 @@ import { s, T, O, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { G } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-import { writeFile as Sn } from "fs/promises";
+import { writeFile } from "fs/promises";
 F();
 function qo(Zn, er) {
   return e(t, { wrap: "truncate-end", children: an(Zn) || " " }, er);
@@ -388,7 +388,7 @@ function Rt(Vn) {
         value: String(Yn),
         label: bt.shownPath,
         description:
-          `${bt.type} \xB7 ${Pn(bt.tokens)} tokens` +
+          `${bt.type} \xB7 ${formatTokens(bt.tokens)} tokens` +
           (!bt.userScope
             ? ""
             : et === "sentFromHere"
@@ -499,7 +499,7 @@ function Ot(Xn) {
   return Ho;
 }
 F();
-import { mkdir as pn } from "fs/promises";
+import { mkdir } from "fs/promises";
 import { join as xt } from "path";
 var ze = `${ih} / ${Ed} / ${$a}`,
   to = 80,
@@ -524,12 +524,12 @@ async function ro(w, b) {
       W = () => {
         j = nt();
       },
-      V = b === "off" ? rEn(W) : nEn(W),
+      V = b === "off" ? disconnectOrgMemory(W) : reconnectOrgMemory(W),
       B = (await kt(V, Ko)) ?? "timeout";
     if (B !== "timeout" && B.kind === "refused")
       return (
         oo("refused", j, j, []),
-        g("org_memory_project_switch", B.reason),
+        logFeatureSad("org_memory_project_switch", B.reason),
         { outcome: "refused", notice: ln(B.reason) }
       );
     let I = nt(),
@@ -543,15 +543,15 @@ async function ro(w, b) {
     Qo(z, j, I);
     let ce = z === "switched" || z === "connected" ? await rn(I.stores) : [];
     if ((oo(z, j, I, ce, he), he))
-      g("org_memory_project_switch", "selection_dropped");
+      logFeatureSad("org_memory_project_switch", "selection_dropped");
     else if (z === "unavailable" || z === "pending")
-      g(
+      logFeatureSad(
         "org_memory_project_switch",
         B === "timeout" ? "switch_deadline" : nn(B.current),
       );
-    else y("org_memory_project_switch", { outcome: u(z) });
+    else logFeatureOk("org_memory_project_switch", { outcome: fromEnum(z) });
     if (z === "pending")
-      V.then(() => vFe(Xo, void 0, { unref: !0 }))
+      V.then(() => waitForOrgMemoryDecisionSettled(Xo, void 0, { unref: !0 }))
         .then(() => {
           if (k !== M.latest) return;
           let Ye = nt();
@@ -567,10 +567,10 @@ async function ro(w, b) {
     };
   } catch (M) {
     return (
-      kTt(),
-      M$(),
-      h(M),
-      f("org_memory_project_switch", "unexpected_throw"),
+      shrinkOrgMemoryDecisionWriteAsk(),
+      clearOrgMemoryCredential(),
+      logError(M),
+      logFeatureBad("org_memory_project_switch", "unexpected_throw"),
       { outcome: "unavailable", notice: cn(b) }
     );
   }
@@ -596,8 +596,8 @@ function ke(w) {
 }
 function nt() {
   return {
-    project: Zo(nf()),
-    servedEarlier: RTt() !== null,
+    project: Zo(getOrgMemoryDecision()),
+    servedEarlier: getOrgMemoryServedIdentity() !== null,
     stores: kFe(Wj()).map((w) => ({
       id: xJ(w),
       description: xFe(w),
@@ -613,7 +613,7 @@ function Zo(w) {
   if (b === null || w.selectionSource !== "preference")
     return { kind: "default" };
   if (HK(b)) return { kind: "picked", name: "all public projects" };
-  let M = HTt()?.candidates.find((k) => k.id === b);
+  let M = getOrgMemoryPickerData()?.candidates.find((k) => k.id === b);
   return { kind: "picked", name: M === void 0 ? null : en(M.name) };
 }
 function en(w) {
@@ -677,7 +677,7 @@ async function rn(w) {
 }
 function oo(w, b, M, k, R = !1) {
   i("tengu_org_memory_project_switch", {
-    outcome: u(w),
+    outcome: fromEnum(w),
     pick_dropped: R,
     stores_before: b.stores.length,
     stores_after: M.stores.length,
@@ -830,7 +830,7 @@ function un(w) {
   }
 }
 function ao(w) {
-  return tr(w) !== null;
+  return findGitRoot(w) !== null;
 }
 class co {
   promise = null;
@@ -845,11 +845,11 @@ var rt = new Gt(() => new co());
 var Ae = "__open_folder__";
 function fn(w, b, M) {
   return w.rowsOnce(async () => {
-    let k = await tEn(b, M).catch(() => null),
-      R = HTt();
+    let k = await discoverOrgMemoryStores(b, M).catch(() => null),
+      R = getOrgMemoryPickerData();
     if (k === null) return { mounts: [], picker: R };
     let P = Ker(),
-      j = nf(),
+      j = getOrgMemoryDecision(),
       W =
         j.state === "on"
           ? j.initialGrant.find(
@@ -900,8 +900,8 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     j = rt.of(w),
     { storageV5: W, credentials: V } = _e(),
     B = kn(Ny(w, !1, W, V)),
-    I = ua() || Hr(),
-    Ce = ua() && !Hr(),
+    I = isAutoMemoryEnabled() || Hr(),
+    Ce = isAutoMemoryEnabled() && !Hr(),
     { mounts: z, picker: Ie } = Ce
       ? kn(fn(j, W, V))
       : { mounts: [], picker: null },
@@ -915,7 +915,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     [fo, go] = d(!1),
     $t = C(!1),
     lt = k !== void 0 && IK(),
-    le = nf(),
+    le = getOrgMemoryDecision(),
     dt = !Ce
       ? null
       : le.state === "on"
@@ -999,7 +999,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     if (
       (Le.push({
         label: "Open auto-memory folder",
-        value: `${Ae}${Ns()}`,
+        value: `${Ae}${getAutoMemPath()}`,
         description: "",
       }),
       OC())
@@ -1052,14 +1052,14 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
   let ut = [...Dt, ...So, ...Le],
     pt = P.memorySelectorLastPath,
     Co = pt && ut.some((S) => S.value === pt) ? pt : ut[0]?.value || "",
-    [Oe, It] = d(ua),
+    [Oe, It] = d(isAutoMemoryEnabled),
     [Tt, vo] = d(Djt),
-    [Xe, Ro] = d(hvt);
+    [Xe, Ro] = d(isAutoMemoryDisabledForCurrentMainLoopModel);
   E(
     () =>
       Ff(() => {
-        let S = hvt();
-        if (S !== Xe) (Ro(S), It(ua()));
+        let S = isAutoMemoryDisabledForCurrentMainLoopModel();
+        if (S !== Xe) (Ro(S), It(isAutoMemoryEnabled()));
       }),
     [Xe],
   );
@@ -1081,7 +1081,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
         ? ""
         : ft === 0
           ? "never"
-          : `last ran ${uy(new Date(ft))}`,
+          : `last ran ${formatRelativeTimeAgo(new Date(ft))}`,
     [oe, gt] = d(null),
     Je = oe !== null,
     [Ue, Ut] = d(jfe),
@@ -1106,15 +1106,15 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     if (Hr()) return;
     if (Xe) return;
     let S = !Oe;
-    (Jt("userSettings", { autoMemoryEnabled: S }, void 0, W),
+    (updateSettingsForSource("userSettings", { autoMemoryEnabled: S }, void 0, W),
       It(S),
       i("tengu_auto_memory_toggled", { enabled: S }));
   }
   function $o() {
     if (!ye || !Oe) return;
     let S = !Tt,
-      H = S && Ge().autoDreamEnabled === void 0;
-    (Jt("userSettings", { autoDreamEnabled: S }, void 0, W),
+      H = S && getInitialSettings().autoDreamEnabled === void 0;
+    (updateSettingsForSource("userSettings", { autoDreamEnabled: S }, void 0, W),
       vo(S),
       i("tengu_auto_dream_toggled", { enabled: S, is_first_enable: H }));
   }
@@ -1285,7 +1285,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                       J = H ? null : S,
                       Z = zer(pe, W),
                       ne = Z === "saved" || Z === "cleared",
-                      fe = nf(),
+                      fe = getOrgMemoryDecision(),
                       Eo =
                         Z === "noop" &&
                         (J === null
@@ -1303,7 +1303,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                     if (Z === "saved" && me !== void 0)
                       i("tengu_org_memory_project_selected", {
                         is_default: me.isDefault === !0,
-                        kind: u(me.kind),
+                        kind: fromEnum(me.kind),
                         private: me.visibility === "private",
                         reconnects_now: Wt,
                       });
@@ -1318,13 +1318,13 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                         ),
                         go(!0));
                     else if (ne) {
-                      let Pe = nf(),
+                      let Pe = getOrgMemoryDecision(),
                         yt =
                           Pe.state === "on" &&
                           Pe.request.writeAccess &&
                           (J === null || Pe.request.selection !== J) &&
-                          kTt();
-                      if (yt || Pe.state === "undecided") M$();
+                          shrinkOrgMemoryDecisionWriteAsk();
+                      if (yt || Pe.state === "undecided") clearOrgMemoryCredential();
                       if ((jt(J), J === null))
                         (we(null),
                           Te(
@@ -1362,7 +1362,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                 }
                 if (S.startsWith(Ae)) {
                   let H = S.slice(Ae.length);
-                  pn(H, { recursive: !0 })
+                  mkdir(H, { recursive: !0 })
                     .catch(() => {})
                     .then(() => yqe(H))
                     .catch(() => {});
@@ -1386,7 +1386,7 @@ var gn = m(() =>
   }),
 );
 function hn(w) {
-  return pr(w);
+  return sessionIdBody(w);
 }
 function mo(w) {
   let b = ee().remoteHomeSettingsSent?.[hn(w)];
@@ -1394,13 +1394,13 @@ function mo(w) {
   let M = gn().safeParse(b);
   return M.success ? M.data : void 0;
 }
-import { homedir as yn } from "os";
-import { relative as wn } from "path";
+import { homedir } from "os";
+import { relative } from "path";
 function it(w) {
-  let b = yn(),
+  let b = homedir(),
     M = Q(),
     k = w.startsWith(b) ? "~" + w.slice(b.length) : null,
-    R = w.startsWith(M) ? "./" + wn(M, w) : null;
+    R = w.startsWith(M) ? "./" + relative(M, w) : null;
   if (k && R) return k.length <= R.length ? k : R;
   return k || R || w;
 }
@@ -1409,7 +1409,7 @@ function bn({ session: w, onDone: b }) {
       try {
         if (R.includes(be())) await ae().mkdir(be());
         try {
-          await Sn(R, "", { encoding: "utf8", flag: "wx" });
+          await writeFile(R, "", { encoding: "utf8", flag: "wx" });
         } catch (I) {
           if (A(I) !== "EEXIST") throw I;
         }

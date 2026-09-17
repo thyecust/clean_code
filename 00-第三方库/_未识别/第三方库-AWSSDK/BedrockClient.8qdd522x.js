@@ -597,7 +597,7 @@ var xe = (e, o) => {
     )
   );
 };
-class He extends he.Client {
+class BedrockClient extends he.Client {
   config;
   constructor(...[e]) {
     let o = ve(e || {});
@@ -927,7 +927,7 @@ var Be = [
 ];
 var Je = pe(Ax()),
   Ne = pe(ta());
-class Ro extends Ne.Command.classBuilder()
+class GetInferenceProfileCommand extends Ne.Command.classBuilder()
   .ep(M)
   .m(function (e, o, t, r) {
     return [Je.getEndpointPlugin(t, e.getEndpointParameterInstructions())];
@@ -938,7 +938,7 @@ class Ro extends Ne.Command.classBuilder()
   .build() {}
 var Ve = pe(Ax()),
   qe = pe(ta());
-class mo extends qe.Command.classBuilder()
+class ListInferenceProfilesCommand extends qe.Command.classBuilder()
   .ep(M)
   .m(function (e, o, t, r) {
     return [Ve.getEndpointPlugin(t, e.getEndpointParameterInstructions())];
@@ -948,7 +948,7 @@ class mo extends qe.Command.classBuilder()
   .sc(Be)
   .build() {}
 export {
-  He as BedrockClient,
-  Ro as GetInferenceProfileCommand,
-  mo as ListInferenceProfilesCommand,
+  BedrockClient,
+  GetInferenceProfileCommand,
+  ListInferenceProfilesCommand,
 };

@@ -9,14 +9,14 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { fA, uf, qCt, yr, si, getRegisteredSessionName as mb, whenSessionRegistered as rZe, updateSessionName as t1, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { fA, uf, qCt, yr, si, getRegisteredSessionName, whenSessionRegistered, updateSessionName, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { xU, qir } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { Nu, sendToUdsSocket as T7e, listAllLiveSessions as A$, ownMessagingSocket as C$ } from "./chunk-ddtmwhn7.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { Nu, sendToUdsSocket, listAllLiveSessions, ownMessagingSocket } from "./chunk-ddtmwhn7.js";
 var T = 16,
   Y = 64;
 function P(e, i) {
@@ -113,7 +113,7 @@ function takePendingYield() {
     i = e.pendingYield;
   return ((e.pendingYield = void 0), i);
 }
-var w = { whenRegistered: rZe, listLive: A$ };
+var w = { whenRegistered: whenSessionRegistered, listLive: listAllLiveSessions };
 function v() {
   return H("tengu_session_name_uniqueness", !0);
 }
@@ -141,7 +141,7 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
         `[session-name] "${e}" is held by live pid ${a.holders[0]?.pid}; this session takes "${d}"`,
         { level: "info" },
       ),
-      y("session_name_collision"),
+      logFeatureOk("session_name_collision"),
       (getSessionNamingState().lastYield = { base: yr(t), name: d }),
       { name: d, yielded: !0 }
     );
@@ -150,7 +150,7 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
       n(`[session-name] uniqueness check failed, keeping "${e}": ${l(r)}`, {
         level: "warn",
       }),
-      f("session_name_collision", "check_failed"),
+      logFeatureBad("session_name_collision", "check_failed"),
       { name: e, yielded: !1 }
     );
   }
@@ -183,7 +183,7 @@ function settledYieldFor(e, i) {
     : void 0;
 }
 function h(e) {
-  let i = mb();
+  let i = getRegisteredSessionName();
   return i !== void 0 && yr(i.name) === yr(e);
 }
 function x(e) {
@@ -203,7 +203,7 @@ async function claimSessionNameAtStartup(e) {
     } = e,
     a = e.scheduleRecheck ?? R;
   if (i) await t(i, e.sessionNameArgSource ?? "user");
-  let c = mb();
+  let c = getRegisteredSessionName();
   if (!s || !c || c.source === "derived") return;
   if (i) getSessionNamingState().userTypedName = i;
   let d = async (u, p, g = u) => {
@@ -235,7 +235,7 @@ function scheduleSettledRecheck(e) {
   });
 }
 function renameSupersededDuringScan(e, i, s) {
-  let t = mb();
+  let t = getRegisteredSessionName();
   if (t === void 0 || t.source === "derived") return;
   if (t.source === "collision" && settledYieldFor(e?.name ?? i, t.name) !== void 0) return;
   let r = yr(t.name);
@@ -247,10 +247,10 @@ async function reclaimSessionNameOnResume(e, i, s = {}) {
     r = e ? si(e) : "";
   if (!r || !(await t.whenRegistered())) return;
   if (s.autoOnly) {
-    await t1(r, i, "auto");
+    await updateSessionName(r, i, "auto");
     return;
   }
-  let o = mb();
+  let o = getRegisteredSessionName();
   if (
     o !== void 0 &&
     o.source !== "auto" &&
@@ -261,23 +261,23 @@ async function reclaimSessionNameOnResume(e, i, s = {}) {
   let a = await claimUniqueSessionName(r, "rename", t);
   if (renameSupersededDuringScan(o, r, a.name)) return;
   let c = async (d, u) => {
-    (await t1(d, i, "collision"), getSessionNamingState().announceYield(d, u));
+    (await updateSessionName(d, i, "collision"), getSessionNamingState().announceYield(d, u));
   };
   if (!a.yielded) {
-    (await t1(r, i), scheduleSettledRecheck({ name: r, deps: t, onYield: c }));
+    (await updateSessionName(r, i), scheduleSettledRecheck({ name: r, deps: t, onYield: c }));
     return;
   }
   if (
-    (await t1(a.name, i, "collision"),
+    (await updateSessionName(a.name, i, "collision"),
     scheduleSettledRecheck({ name: a.name, suffixBase: r, deps: t, onYield: c }),
     a.name === o?.name)
   )
     return;
   getSessionNamingState().announceYield(a.name, r);
 }
-async function notifyCorrespondentsOfRename(e, i, s, t, r = T7e, o = w.listLive) {
-  if (!v() || !Mo() || getSessionNamingState().correspondents.size === 0) return;
-  let a = C$(),
+async function notifyCorrespondentsOfRename(e, i, s, t, r = sendToUdsSocket, o = w.listLive) {
+  if (!v() || !isCrossSessionMessagingEnabled() || getSessionNamingState().correspondents.size === 0) return;
+  let a = ownMessagingSocket(),
     [c, d, u] = [e, i, s].map(si),
     p = `This session was renamed from "${c}" to "${d}" ("${u}" is held by another live session on this machine). Address this one as "${d}" from now on.`,
     g;

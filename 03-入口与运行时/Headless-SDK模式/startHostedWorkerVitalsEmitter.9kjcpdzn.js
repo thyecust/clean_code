@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Rq, AQ } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
 import { Kot } from "../../02-功能模块/自托管Runner/chunk-t1eaahr7.js";
 import { Wi } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-async function d({ sessionId: o, sdkUrl: i }) {
+async function startHostedWorkerVitalsEmitter({ sessionId: o, sdkUrl: i }) {
   try {
     let t = a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ?? Rq;
     if (!(await Wi(t, AQ))?.trim()) {
@@ -35,4 +35,4 @@ async function d({ sessionId: o, sdkUrl: i }) {
     n(`[vitals] not started: ${l(t)}`);
   }
 }
-export { d as startHostedWorkerVitalsEmitter };
+export { startHostedWorkerVitalsEmitter };

@@ -21,8 +21,8 @@ var h = Ae("./SKILL-8zd8x5rj.md");
 var d = (e) => (typeof e === "string" ? e : e.default),
   v = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8z5qg1sz.js"),
   w = import.meta.require("../../01-核心基础设施/共享小工具-未细化/default.8tgnzppc.js"),
-  N = h,
-  V = {
+  SKILL_MD = h,
+  SKILL_FILES = {
     "references/anti-patterns.md": t,
     "references/choosing-a-form.md": a,
     "references/color-formula.md": s,
@@ -33,4 +33,4 @@ var d = (e) => (typeof e === "string" ? e : e.default),
     "scripts/validate_palette.js": d(v),
     "scripts/validate_palette.py": d(w),
   };
-export { V as SKILL_FILES, N as SKILL_MD };
+export { SKILL_FILES, SKILL_MD };

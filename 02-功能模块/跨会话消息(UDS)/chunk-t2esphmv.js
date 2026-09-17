@@ -12,9 +12,9 @@ import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chu
 import { ud, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { env as a, udsEnv as Lb } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getProcessStartTokenLinuxSync as xRe, getAncestorPidsLinuxSync as hkn, getAncestorPidsCheckedAsync as bvt, getProcessStartTimeAsync as Ba } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getProcessStartTokenLinuxSync, getAncestorPidsLinuxSync, getAncestorPidsCheckedAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
 import {
   wor,
   hU,
@@ -31,7 +31,7 @@ import {
   qor,
   Kor,
   Xor,
-  isRegistrySweepPermitted as Lse,
+  isRegistrySweepPermitted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { BS, rzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -45,15 +45,15 @@ import {
   IJn,
   CSn,
   vSn,
-  creditPacerForHeldSend as HSn,
-  debitPacerForReleasedSend as K3t,
-  admitReceiptForOutstandingSend as ISn,
-  admitDroppedIdsByDestination as PSn,
-  sendControlToUdsSocket as sG,
-  registeredLivePeerForSocket as E7e,
-  registeredInboxesOfPids as OSn,
+  creditPacerForHeldSend,
+  debitPacerForReleasedSend,
+  admitReceiptForOutstandingSend,
+  admitDroppedIdsByDestination,
+  sendControlToUdsSocket,
+  registeredLivePeerForSocket,
+  registeredInboxesOfPids,
 } from "./chunk-ddtmwhn7.js";
-import { getSessionNamingState as rh, noteVettedCorrespondent as dSn } from "./chunk-9kzxq41e.js";
+import { getSessionNamingState, noteVettedCorrespondent } from "./chunk-9kzxq41e.js";
 import { OJn, DJn, v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import {
   kPe,
@@ -82,25 +82,25 @@ import {
 } from "../Teammates团队/chunk-nhk351pe.js";
 import { rOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { randomBytes as Se, randomUUID as Ge } from "crypto";
-import { unlinkSync as Ve } from "fs";
+import { randomBytes, randomUUID } from "crypto";
+import { unlinkSync } from "fs";
 import {
-  chmod as Oe,
-  lstat as N,
-  mkdir as ie,
-  readdir as Xe,
-  readlink as Be,
-  realpath as ue,
-  unlink as oe,
+  chmod,
+  lstat,
+  mkdir,
+  readdir,
+  readlink,
+  realpath,
+  unlink,
 } from "fs/promises";
-import { createServer as He, Socket as je } from "net";
+import { createServer, Socket as je } from "net";
 import {
-  basename as fe,
-  dirname as C,
-  isAbsolute as se,
+  basename,
+  dirname,
+  isAbsolute,
   join as U,
-  normalize as Ye,
-  resolve as ce,
+  normalize,
+  resolve,
 } from "path";
 var Pe = 500,
   Ne = 32;
@@ -122,9 +122,9 @@ class ye {
 var Le = new j(() => new ye()),
   Ke = {
     readAncestors: async (e) => {
-      let { ancestors: t, readFailed: i, truncated: r } = await bvt(e);
+      let { ancestors: t, readFailed: i, truncated: r } = await getAncestorPidsCheckedAsync(e);
       if (r && !i && !t.includes(process.pid))
-        ({ ancestors: t, readFailed: i, truncated: r } = await bvt(e, Ne));
+        ({ ancestors: t, readFailed: i, truncated: r } = await getAncestorPidsCheckedAsync(e, Ne));
       if (!t.includes(process.pid)) {
         if (i) throw Error("ancestry walk failed");
         if (r)
@@ -132,7 +132,7 @@ var Le = new j(() => new ye()),
       }
       return t;
     },
-    readStartToken: (e) => Ba(e, { skipCache: !0 }),
+    readStartToken: (e) => getProcessStartTimeAsync(e, { skipCache: !0 }),
   };
 function qe(e, t = process.pid) {
   if (t === 1) return !1;
@@ -311,7 +311,7 @@ async function Je(e, t, i, r, d) {
     return;
   }
   if (!Te(e)) return;
-  let w = typeof e.uuid === "string" ? e.uuid : Ge(),
+  let w = typeof e.uuid === "string" ? e.uuid : randomUUID(),
     o = PPe();
   if (o !== void 0) {
     (Gee("uds: dropped before attachment materialization", o),
@@ -391,7 +391,7 @@ function Me(e) {
     i !== void 0 &&
     hDt(t.from, i, t.verifiedPeerPid) !== void 0
   )
-    dSn(t.from, t.verifiedPeerPid, t.verifiedPeerProcStart);
+    noteVettedCorrespondent(t.from, t.verifiedPeerPid, t.verifiedPeerProcStart);
 }
 function hDt(e, t, i) {
   if (!e.startsWith("uds:") || !Dse(e)) return;
@@ -425,11 +425,11 @@ async function ke(e, t, i, r, d) {
           e.status === "expired" && e.status_detail === "refused"
             ? "refused"
             : e.status,
-        w = ISn(e.orig_msg_id, s),
+        w = admitReceiptForOutstandingSend(e.orig_msg_id, s),
         o = w?.destination;
       if (e.status === "dropped") {
         let p = IJn(e.drop_reason),
-          E = PSn(Qe(e.dropped_msg_ids));
+          E = admitDroppedIdsByDestination(Qe(e.dropped_msg_ids));
         if (o !== void 0) {
           let u = E.get(o) ?? { dropped: 0, wereHeld: 0 };
           if ((u.dropped++, w?.wasHeld)) u.wereHeld++;
@@ -437,7 +437,7 @@ async function ke(e, t, i, r, d) {
         }
         if (p === "queue-full")
           for (let [u, { wereHeld: _ }] of E)
-            for (let k = 0; k < _; k++) K3t(u);
+            for (let k = 0; k < _; k++) debitPacerForReleasedSend(u);
         if (E.size === 0)
           n(
             `[uds-messaging] peer_message_status dropped: neither orig_msg_id=${Ee(e.orig_msg_id)} nor any named id matches an outstanding send`,
@@ -452,15 +452,15 @@ async function ke(e, t, i, r, d) {
           `[uds-messaging] peer_message_status dropped: no outstanding send matches orig_msg_id=${Ee(e.orig_msg_id)}`,
         );
       else {
-        if (s === "held") HSn(o);
-        else if (s === "delivered" && w?.wasHeld) K3t(o);
+        if (s === "held") creditPacerForHeldSend(o);
+        else if (s === "delivered" && w?.wasHeld) debitPacerForReleasedSend(o);
         c().onPeerMessageStatus?.(s, o);
       }
     } else if (e.action === "notify_when_idle") {
       let s = hsn().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] notify_when_idle dropped: malformed frame"),
-          g("cross_session_notify_idle", "malformed_frame"));
+          logFeatureSad("cross_session_notify_idle", "malformed_frame"));
         return;
       }
       let w = c().activeSocketPath,
@@ -470,17 +470,17 @@ async function ke(e, t, i, r, d) {
         (n(
           "[uds-messaging] notify_when_idle dropped: own inbox not bound (shutting down)",
         ),
-          g("cross_session_notify_idle", "own_inbox_unbound"));
+          logFeatureSad("cross_session_notify_idle", "own_inbox_unbound"));
       else if (p === void 0)
         (n(
           `[uds-messaging] notify_when_idle dropped: reply address unshaped or outside our socket namespace (${Nu(o)})`,
         ),
-          g("cross_session_notify_idle", "unvettable_reply_target"));
+          logFeatureSad("cross_session_notify_idle", "unvettable_reply_target"));
       else if (Zy(p) === Zy(w))
         (n(
           "[uds-messaging] notify_when_idle dropped: reply target is this session (self-target)",
         ),
-          g("cross_session_notify_idle", "self_target_frame"));
+          logFeatureSad("cross_session_notify_idle", "self_target_frame"));
       else {
         let E = await le(t, r, d),
           u = ysn(
@@ -503,7 +503,7 @@ async function ke(e, t, i, r, d) {
       let s = _sn().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] peer_idle_notice dropped: malformed frame"),
-          g("cross_session_notify_idle", "malformed_notice"));
+          logFeatureSad("cross_session_notify_idle", "malformed_notice"));
         return;
       }
       if (!nqe(s.data.orig_msg_id)) {
@@ -530,7 +530,7 @@ async function ke(e, t, i, r, d) {
       let s = l9n().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] yield_artifact_replies dropped: malformed frame"),
-          g("artifact_comments_autoreact", "yield_malformed_frame"));
+          logFeatureSad("artifact_comments_autoreact", "yield_malformed_frame"));
         return;
       }
       let w = c().activeSocketPath,
@@ -539,7 +539,7 @@ async function ke(e, t, i, r, d) {
         (n(
           `[uds-messaging] yield_artifact_replies dropped: ${w === void 0 ? "own inbox not bound" : "reply address unshaped or outside our socket namespace"} (${Nu(s.data.from)})`,
         ),
-          g("artifact_comments_autoreact", "yield_unvettable_target"));
+          logFeatureSad("artifact_comments_autoreact", "yield_unvettable_target"));
         return;
       }
       if (Zy(o) === Zy(w)) {
@@ -548,7 +548,7 @@ async function ke(e, t, i, r, d) {
         );
         return;
       }
-      let p = await E7e(o);
+      let p = await registeredLivePeerForSocket(o);
       if (
         p === void 0 ||
         p.sessionId !== K() ||
@@ -557,7 +557,7 @@ async function ke(e, t, i, r, d) {
         (n(
           `[uds-messaging] yield_artifact_replies refused: requester is not a verified live session of this conversation (${Nu(s.data.from)})`,
         ),
-          g("artifact_comments_autoreact", "yield_requester_unverified"),
+          logFeatureSad("artifact_comments_autoreact", "yield_requester_unverified"),
           can(
             s.data,
             o,
@@ -587,7 +587,7 @@ async function ke(e, t, i, r, d) {
       let s = c9n().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] artifact_replies_yielded dropped: malformed frame"),
-          g("artifact_live_subscribe", "yield_malformed_answer"));
+          logFeatureSad("artifact_live_subscribe", "yield_malformed_answer"));
         return;
       }
       if (!m9n(s.data.orig_msg_id)) {
@@ -637,7 +637,7 @@ function tn(e) {
           !c().silentDropReported)
         )
           ((c().silentDropReported = !0),
-            g("cross_session_inbox_auth", "silent_connection_deadline"));
+            logFeatureSad("cross_session_inbox_auth", "silent_connection_deadline"));
         e.destroy();
       } catch (S) {
         n(`[uds-messaging] Failed to close a silent connection: ${S}`, {
@@ -658,7 +658,7 @@ function tn(e) {
     E = process.pid !== 1 && ksn();
   if (E) {
     let S = ybt(e),
-      R = S !== void 0 ? xRe(S) : void 0;
+      R = S !== void 0 ? getProcessStartTokenLinuxSync(S) : void 0;
     if (S !== void 0 && R !== void 0) p = { pid: S, token: R };
   }
   let u = "",
@@ -673,7 +673,7 @@ function tn(e) {
         !c().authDropReported)
       )
         ((c().authDropReported = !0),
-          f("cross_session_inbox_auth", "unauthed_drop"));
+          logFeatureBad("cross_session_inbox_auth", "unauthed_drop"));
       e.destroy();
     },
     b = (S) => {
@@ -684,7 +684,7 @@ function tn(e) {
             ((_ = Xor(S.token, c().activeTokens)),
             _ !== void 0 && !c().authOkReported)
           )
-            ((c().authOkReported = !0), y("cross_session_inbox_auth"));
+            ((c().authOkReported = !0), logFeatureOk("cross_session_inbox_auth"));
           if (_ === void 0 && c().authRequired) m("a bad auth frame");
         }
         return;
@@ -703,12 +703,12 @@ function tn(e) {
                 ? p.pid === d
                   ? p.token
                   : void 0
-                : xRe(d)),
+                : getProcessStartTokenLinuxSync(d)),
           (w = !0),
           d !== void 0 && E)
         )
           o =
-            p !== void 0 && p.pid === d && xRe(d) === p.token ? hkn(d) : void 0;
+            p !== void 0 && p.pid === d && getProcessStartTokenLinuxSync(d) === p.token ? getAncestorPidsLinuxSync(d) : void 0;
       }
       Ze(S, d, s, o, _);
     },
@@ -791,7 +791,7 @@ function Ogr() {
 var z = 103;
 function Vdr() {
   let e = a.XDG_RUNTIME_DIR || zy(),
-    t = ce(U(e, "cc-socks", `${process.pid}.sock`));
+    t = resolve(U(e, "cc-socks", `${process.pid}.sock`));
   if (Buffer.byteLength(t) <= z) return t;
   return sBn();
 }
@@ -808,7 +808,7 @@ async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   let s = r ? kt(QNt("exited"), en) : void 0;
   if ((await d, await s, r)) await rzn();
   try {
-    await oe(t);
+    await unlink(t);
   } catch {}
   let w = c();
   if (w.activeKeyFile !== void 0)
@@ -819,14 +819,14 @@ function Y() {
   ((c().activeSocketPath = void 0),
     (c().activeTokens = void 0),
     delete process.env.CLAUDE_CODE_MESSAGING_SOCKET,
-    Lb.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
+    udsEnv.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
     vSn(void 0),
     Csn(null),
     vsn(null),
     t1t(null),
     lan(null),
     r1t(null),
-    (rh().senderMode = null));
+    (getSessionNamingState().senderMode = null));
 }
 function sn(e, t, i, r) {
   return async () => {
@@ -858,27 +858,27 @@ function te(e, t) {
   });
 }
 function rn(e) {
-  let t = `${e.replace(/\.sock$/, "")}-${Se(4).toString("hex")}.sock`;
+  let t = `${e.replace(/\.sock$/, "")}-${randomBytes(4).toString("hex")}.sock`;
   if (Buffer.byteLength(t) <= z) return t;
   let i = U(e, ".."),
     r = z - Buffer.byteLength(U(i, ".sock"));
-  return U(i, `${Se(8).toString("hex").slice(0, Math.max(1, r))}.sock`);
+  return U(i, `${randomBytes(8).toString("hex").slice(0, Math.max(1, r))}.sock`);
 }
 async function on(e) {
-  let t = `${fe(e).replace(/\.sock$/, "")}-`,
+  let t = `${basename(e).replace(/\.sock$/, "")}-`,
     i;
   try {
-    i = await Xe(C(e));
+    i = await readdir(dirname(e));
   } catch {
     return;
   }
   for (let r of i) {
     if (!r.startsWith(t) || !/^[0-9a-f]{8}\.sock$/.test(r.slice(t.length)))
       continue;
-    let d = U(C(e), r);
+    let d = U(dirname(e), r);
     if ((await ge(d)) === "live") continue;
     try {
-      (await oe(d), n(`[uds-messaging] Reaped stale moved-aside socket ${d}`));
+      (await unlink(d), n(`[uds-messaging] Reaped stale moved-aside socket ${d}`));
     } catch {}
   }
 }
@@ -886,7 +886,7 @@ async function an(e, t) {
   if ((await on(t), await te(e, t))) return t;
   if ((await ge(t)) !== "live") {
     try {
-      await oe(t);
+      await unlink(t);
     } catch {}
     if (await te(e, t)) return t;
   }
@@ -909,8 +909,8 @@ function Dgr(e, t) {
   return Xdr(e ?? Vdr(), t, { isExplicit: e !== void 0 });
 }
 function q() {
-  (Lb.unset("CLAUDE_CODE_MESSAGING_SOCKET"),
-    Lb.unset("CLAUDE_CODE_MESSAGING_TOKEN"));
+  (udsEnv.unset("CLAUDE_CODE_MESSAGING_SOCKET"),
+    udsEnv.unset("CLAUDE_CODE_MESSAGING_TOKEN"));
 }
 var dn = [
   "directory_rule",
@@ -1094,7 +1094,7 @@ function $e(e, t, i) {
   return;
 }
 async function Ae(e) {
-  if (!se(e))
+  if (!isAbsolute(e))
     throw T("internal", Error("sockets directory must be absolute here"));
   let t = process.getuid?.(),
     i = (h) => {
@@ -1133,8 +1133,8 @@ async function Ae(e) {
   let w = OJn(),
     o = async (h, M) => {
       try {
-        let v = M.isSymbolicLink() ? U(await ue(C(h)), fe(h)) : await ue(h),
-          x = await N(v);
+        let v = M.isSymbolicLink() ? U(await realpath(dirname(h)), basename(h)) : await realpath(h),
+          x = await lstat(v);
         return x.dev === M.dev && x.ino === M.ino ? v : void 0;
       } catch {
         return;
@@ -1154,8 +1154,8 @@ async function Ae(e) {
       if ((h.mode & 16) !== 0) return !1;
       return !0;
     },
-    m = a.TERMUX_VERSION && a.PREFIX ? C(C(a.PREFIX)) : void 0,
-    b = (h) => C(h) === h || h === m,
+    m = a.TERMUX_VERSION && a.PREFIX ? dirname(dirname(a.PREFIX)) : void 0,
+    b = (h) => dirname(h) === h || h === m,
     D = async (h, M, v = 0) => {
       if (v > 16)
         throw T(
@@ -1165,10 +1165,10 @@ async function Ae(e) {
       let x = !1,
         pe,
         he = !1;
-      for (let O = h, Q = !0; ; O = C(O), Q = !1) {
+      for (let O = h, Q = !0; ; O = dirname(O), Q = !1) {
         let I;
         try {
-          I = await N(O);
+          I = await lstat(O);
         } catch (G) {
           if (!W(G)) throw G;
         }
@@ -1186,9 +1186,9 @@ async function Ae(e) {
                 ),
                 V(O, I),
               );
-            let ee = (await Be(O)).replace(/\/{2,}/g, "/"),
+            let ee = (await readlink(O)).replace(/\/{2,}/g, "/"),
               ae = ee.length > 1 && ee.endsWith("/") ? ee.slice(0, -1) : ee,
-              Ue = se(ae) ? ae : `${await ue(C(O))}/${ae}`,
+              Ue = isAbsolute(ae) ? ae : `${await realpath(dirname(O))}/${ae}`,
               { startExists: Fe } = await D(Ue, G, v + 1);
             if (Q) x = Fe;
           } else {
@@ -1216,12 +1216,12 @@ async function Ae(e) {
       }
       return { startExists: x, deepestExisting: pe, sawSymlink: he };
     },
-    S = C(e),
+    S = dirname(e),
     R = await D(S, !1),
     L = !R.startExists,
     F;
   try {
-    F = await N(e);
+    F = await lstat(e);
   } catch (h) {
     if (!W(h)) throw h;
   }
@@ -1237,14 +1237,14 @@ async function Ae(e) {
             ),
           );
       };
-    for (let v = S; v !== R.deepestExisting && !b(v); v = C(v)) h.unshift(v);
+    for (let v = S; v !== R.deepestExisting && !b(v); v = dirname(v)) h.unshift(v);
     for (let v of h)
       try {
-        await ie(v, { mode: 448 });
+        await mkdir(v, { mode: 448 });
       } catch (x) {
         if (W(x) && R.sawSymlink) throw ve();
         if (A(x) !== "EEXIST") throw x;
-        M(await N(v));
+        M(await lstat(v));
       }
     if (!(await D(S, !0)).startExists)
       throw T(
@@ -1254,16 +1254,16 @@ async function Ae(e) {
   }
   if (F === void 0) {
     try {
-      await ie(e, { mode: 448 });
+      await mkdir(e, { mode: 448 });
     } catch (h) {
       if (A(h) !== "EEXIST") throw h;
     }
-    F = await N(e);
+    F = await lstat(e);
   }
-  if ((i(F), (F.mode & 511) !== 448)) await Oe(e, 448);
+  if ((i(F), (F.mode & 511) !== 448)) await chmod(e, 448);
 }
 async function Kdr(e) {
-  if (!se(e))
+  if (!isAbsolute(e))
     throw new ud(
       e === ""
         ? "--messaging-socket-path was given an empty value (an unset shell variable?). Pass an absolute socket path."
@@ -1278,8 +1278,8 @@ async function Kdr(e) {
     throw new ud(
       `--messaging-socket-path must name a socket file inside a directory, got: ${e}`,
     );
-  let r = Ye(e).replace(/\/+$/, "");
-  if (r === "" || !r.startsWith("/") || fe(r) === "")
+  let r = normalize(e).replace(/\/+$/, "");
+  if (r === "" || !r.startsWith("/") || basename(r) === "")
     throw new ud(
       `--messaging-socket-path must name a socket file inside a directory, got: ${e}`,
     );
@@ -1291,7 +1291,7 @@ async function Kdr(e) {
     throw new ud(
       `--messaging-socket-path is too long for a Unix socket (${Buffer.byteLength(r)} bytes, max ${z}): ${r}. Choose a shorter path, e.g. under $XDG_RUNTIME_DIR or /tmp/<private-dir>.`,
     );
-  let d = C(r),
+  let d = dirname(r),
     s =
       "Use a private directory you own that only you use, e.g. mkdir -m 700 <dir> (or chmod 700 an existing one).",
     w = (m) => {
@@ -1315,7 +1315,7 @@ async function Kdr(e) {
     },
     o = async () => {
       try {
-        return await N(d);
+        return await lstat(d);
       } catch (m) {
         let b = A(m);
         if (W(m)) return;
@@ -1337,10 +1337,10 @@ async function Kdr(e) {
   if (p !== void 0) return (w(p), r);
   let E = process.getuid?.(),
     u = [];
-  for (let m = C(d); ; m = C(m)) {
+  for (let m = dirname(d); ; m = dirname(m)) {
     let b;
     try {
-      b = await N(m);
+      b = await lstat(m);
     } catch (D) {
       if (!W(D))
         throw new ud(
@@ -1355,23 +1355,23 @@ async function Kdr(e) {
         );
       break;
     }
-    if (C(m) === m) break;
+    if (dirname(m) === m) break;
   }
   let _ = !1;
   try {
     for (let m of u)
       try {
-        await ie(m, { mode: 448 });
+        await mkdir(m, { mode: 448 });
       } catch (b) {
         if (A(b) !== "EEXIST") throw b;
-        let D = await N(m);
+        let D = await lstat(m);
         if (!D.isDirectory() || (E !== void 0 && D.uid !== E))
           throw new ud(
             `--messaging-socket-path: ${m} appeared while your sockets directory was being created and is not a directory you own \u2014 refusing to use it. ${s}`,
           );
       }
     try {
-      (await ie(d, { mode: 448 }), (_ = !0));
+      (await mkdir(d, { mode: 448 }), (_ = !0));
     } catch (m) {
       if (A(m) !== "EEXIST") throw m;
     }
@@ -1417,19 +1417,19 @@ async function gn(e, t, i = {}) {
       );
     return;
   }
-  if (!i.isExplicit && !0 && !se(e)) e = ce(e);
+  if (!i.isExplicit && !0 && !isAbsolute(e)) e = resolve(e);
   if (i.isExplicit) {
     if (((e = await Kdr(e)), (await ge(e)) === "live"))
       throw new ud(
         `--messaging-socket-path points to a live socket: ${e}. Another process is listening there. Remove it or choose a different path.`,
       );
   } else {
-    let o = C(e);
+    let o = dirname(e);
     try {
       await Ae(o);
     } catch (p) {
       let E = fn(p) ? await v7e() : void 0,
-        u = E === void 0 ? void 0 : ce(sBn(E)),
+        u = E === void 0 ? void 0 : resolve(sBn(E)),
         _ = u === void 0 ? void 0 : U(u, "..");
       if (u === void 0 || _ === void 0 || _ === o) return $e(o, p, Ce(p));
       let k = xe(p);
@@ -1447,12 +1447,12 @@ async function gn(e, t, i = {}) {
   }
   if (i.isExplicit)
     try {
-      await oe(e);
+      await unlink(e);
     } catch {}
   c().activeSocketPath = e;
   let d, s;
   try {
-    d = He({ allowHalfOpen: !0 }, (o) => {
+    d = createServer({ allowHalfOpen: !0 }, (o) => {
       (c().connectedClients.add(o),
         n("[uds-messaging] Client connected"),
         tn(o),
@@ -1493,10 +1493,10 @@ async function gn(e, t, i = {}) {
     let o = Et(async () => {
       (n("[uds-messaging] Shutting down"), await H(d, e, t));
     });
-    ((s = o), await Oe(e, 384));
+    ((s = o), await chmod(e, 384));
     try {
       ((c().activeKeyFile = await Gor(e, w.peerToken, t, {
-        sweepPermitted: await Lse(),
+        sweepPermitted: await isRegistrySweepPermitted(),
       })),
         yn());
     } catch (u) {
@@ -1524,14 +1524,14 @@ async function gn(e, t, i = {}) {
         be("key_publish_failed"));
     }
     ((process.env.CLAUDE_CODE_MESSAGING_SOCKET = e),
-      Lb.set("CLAUDE_CODE_MESSAGING_TOKEN", w.childToken),
+      udsEnv.set("CLAUDE_CODE_MESSAGING_TOKEN", w.childToken),
       vSn(hU(e)));
     let p = hU(e);
     return (
       vsn(Me),
-      (rh().senderMode = iBn),
+      (getSessionNamingState().senderMode = iBn),
       t1t((u, _, k, m, b) =>
-        sG(
+        sendControlToUdsSocket(
           u,
           { action: "peer_idle_notice", ..._, from: p, ...(m ? hn() : {}) },
           {
@@ -1543,7 +1543,7 @@ async function gn(e, t, i = {}) {
       ),
       lan(
         (u, _, k, m) =>
-          sG(
+          sendControlToUdsSocket(
             u,
             { action: "artifact_replies_yielded", ..._, from: p },
             {
@@ -1554,7 +1554,7 @@ async function gn(e, t, i = {}) {
           ),
         p,
       ),
-      r1t((u) => OSn(u)),
+      r1t((u) => registeredInboxesOfPids(u)),
       Csn((u, _, k) => {
         let m = u.origin?.kind === "peer" ? u.origin : void 0,
           b = m?.from;
@@ -1566,7 +1566,7 @@ async function gn(e, t, i = {}) {
           );
           return;
         }
-        return sG(
+        return sendControlToUdsSocket(
           D,
           {
             action: "peer_message_status",
@@ -1701,7 +1701,7 @@ function aBn() {
   try {
     let e = c().activeKeyFile;
     if (e === void 0) return;
-    Ve(e);
+    unlinkSync(e);
   } catch {}
 }
 export {

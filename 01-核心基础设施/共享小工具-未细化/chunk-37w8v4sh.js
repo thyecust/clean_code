@@ -12,7 +12,7 @@ import { $M, nn, Wht } from "../../03-入口与运行时/核心应用-Agent循�
 import { mn } from "./chunk-z5tdbda7.js";
 import { PFt, Zce, xze, OFt } from "../../02-功能模块/文件同步-Sync/chunk-ht8ydg1v.js";
 import { s, T, v, c, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { createHash as i } from "crypto";
+import { createHash } from "crypto";
 var o = 1,
   l = 2,
   d = 3,
@@ -108,7 +108,7 @@ function C3n(e, t) {
   return n.success && n.data.sessionId === t ? n.data.note : null;
 }
 function JA(e, t = "sha1") {
-  return i(t).update(`blob ${e.length}\x00`).update(e).digest("hex");
+  return createHash(t).update(`blob ${e.length}\x00`).update(e).digest("hex");
 }
 function Jbe(e) {
   return { sha256: mn(e), gitBlobId: JA(e) };

@@ -13,12 +13,12 @@ import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
-import { logMCPDebug as J } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { T$ } from "../../01-核心基础设施/共享小工具-未细化/chunk-1avr3bqa.js";
 import { rn } from "../../01-核心基础设施/共享小工具-未细化/chunk-q4e7ggp5.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { readFile as P, stat as v } from "fs/promises";
+import { readFile, stat as v } from "fs/promises";
 import { join as f } from "path";
 var tOe = "mcp-skill-archives",
   p = "meta.json",
@@ -127,7 +127,7 @@ async function I9n(e, t, i) {
   }
   let D = f(o, a);
   try {
-    let u = await P(f(D, Cpt), "utf8");
+    let u = await readFile(f(D, Cpt), "utf8");
     return { hit: !0, cacheKey: a, skillMd: u };
   } catch {
     return l;
@@ -145,7 +145,7 @@ async function P9n(e, t, i, r) {
     l = f(S(), o),
     a = f(l, i),
     d = await Tan(o, i, a, r);
-  if (d) J(e, `Skill '${t.name}' content unchanged \u2014 reusing ${a}`);
+  if (d) logMCPDebug(e, `Skill '${t.name}' content unchanged \u2014 reusing ${a}`);
   return { slug: o, slugDir: l, keyDir: a, alreadyCached: d };
 }
 async function x(e, t, i) {

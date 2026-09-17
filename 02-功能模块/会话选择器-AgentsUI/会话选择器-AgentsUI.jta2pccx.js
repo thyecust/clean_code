@@ -13,7 +13,7 @@ import { Le, my, jf, Xo, Ju } from "../../00-第三方库/lodash/lodash.207999qb
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { AppRoot as zm } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { Me } from "../../01-核心基础设施/共享小工具-未细化/chunk-0dh9gct8.js";
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { Pre } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
@@ -23,13 +23,13 @@ import { Ir } from "../../03-入口与运行时/会话UI(REPL)/chunk-fgcep5na.js
 import { _e } from "../../01-核心基础设施/共享小工具-未细化/chunk-gd42wcxf.js";
 import { Et, dv, z, hxe, Sh, k_, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  getMainLoopModel as rt,
-  renderModelSetting as VN,
-  PEER_PROTOCOL as vKt,
-  isBgSession as _t,
-  touchFleetViewHeartbeat as oRn,
-  clearFleetViewHeartbeat as sRn,
-  getAuthTokenSource as Gl,
+  getMainLoopModel,
+  renderModelSetting,
+  PEER_PROTOCOL,
+  isBgSession,
+  touchFleetViewHeartbeat,
+  clearFleetViewHeartbeat,
+  getAuthTokenSource,
   zg,
   hq,
   H,
@@ -37,29 +37,29 @@ import {
   ee,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, w8, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { os, x, ft, kr, ln, jW, U0, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { getLogDisplayTitle as pxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getLogDisplayTitle, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { getProjectDir as Mp, canonicalizePath as Vu } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Pt, findCanonicalGitRoot as $r } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { te, truncateToWidth as Xe, truncateStartToWidth as Ob, truncate as or, formatDuration as Ot, formatTokens as Pn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
+import { Pt, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { te, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { getInitialSettings as Ge, hasSkipDangerousModePermissionPrompt as eL } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getInitialSettings, hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
 import { $Q, Vl, Eb, dL, rhe, TA } from "../权限系统/chunk-e4pfvp7x.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { SQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { dW } from "../Git-Worktree/chunk-bk9696gx.js";
-import { remoteRowId as Ntt, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { remoteRowId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { oa, iee, oDt } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { getEraseScreenSequence as Otn, eraseViewportInPlace as Mat, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { getEraseScreenSequence, eraseViewportInPlace, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { rk } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { XAe } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ct, bs, ko, e7, aO, n7, Un, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -69,8 +69,8 @@ import { sl } from "../键位绑定(Keybindings)/chunk-qy43nqgh.js";
 import { K3, Dre, HAe, w$, Wyn, R3t } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { Es } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
-  isCommandEnabled as zp,
-  findCommand as Di,
+  isCommandEnabled,
+  findCommand,
   K7,
   hue,
   p4e,
@@ -83,7 +83,7 @@ import {
   WF,
   EM,
   rC,
-  isSkillOff as Tk,
+  isSkillOff,
   bgt,
   n4n,
   PM,
@@ -98,56 +98,56 @@ import {
   Y2,
   bmn,
   YLe,
-  isMcpServerBlockedAtConnectTime as Oh,
-  loadSameRepoMessageLogs as a8e,
+  isMcpServerBlockedAtConnectTime,
+  loadSameRepoMessageLogs,
   pSt,
-  builtInCommandNames as LI,
-  getBuiltinCommands as lAe,
-  meetsAvailabilityRequirement as ype,
-  getCommands as kf,
+  builtInCommandNames,
+  getBuiltinCommands,
+  meetsAvailabilityRequirement,
+  getCommands,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KEt } from "../权限系统/chunk-t3b7pg2x.js";
 import { Wh } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { sendControlToUdsSocket as sG, listAllLiveSessions as A$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { sendControlToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { KE, LH } from "../../01-核心基础设施/共享小工具-未细化/chunk-sda3j0p4.js";
 import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
 import {
-  UNGROUPED as PE,
-  EARLIER as G_,
-  isReservedGroupName as N8e,
-  sanitizeGroupName as g3t,
-  getJobDir as rr,
-  watchJobDirOnce as fyn,
-  writeStateAtomic as Ti,
-  readJobState as Zn,
-  syncJobName as b$,
-  writeSortOrder as yyn,
-  writeStateSortOrder as Syn,
-  writeJobGroup as HSt,
-  withSortOrderLock as byn,
-  writeJobPinned as ISt,
-  listJobs as q_,
-  markCrashed as EAe,
-  SEED_DETAIL as AAe,
-  IDLE_NEEDS as xf,
-  IDLE_DETAIL as Ppe,
-  makeInitialState as sK,
-  adoptRosterOrphans as wyn,
-  terminalOutcome as Hf,
-  isSettled as Hs,
-  isExecLaunch as KS,
-  isLocalDaemonAgent as PSt,
-  spawnOrigin as wj,
-  jobMatchesCwd as U8e,
-  isLoopJob as CAe,
-  isSelfDriving as dD,
+  UNGROUPED,
+  EARLIER,
+  isReservedGroupName,
+  sanitizeGroupName,
+  getJobDir,
+  watchJobDirOnce,
+  writeStateAtomic,
+  readJobState,
+  syncJobName,
+  writeSortOrder,
+  writeStateSortOrder,
+  writeJobGroup,
+  withSortOrderLock,
+  writeJobPinned,
+  listJobs,
+  markCrashed,
+  SEED_DETAIL,
+  IDLE_NEEDS,
+  IDLE_DETAIL,
+  makeInitialState,
+  adoptRosterOrphans,
+  terminalOutcome,
+  isSettled,
+  isExecLaunch,
+  isLocalDaemonAgent,
+  spawnOrigin,
+  jobMatchesCwd,
+  isLoopJob,
+  isSelfDriving,
   al,
 } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { FJe, sAt } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
 import { Qd, nee } from "../../01-核心基础设施/共享小工具-未细化/chunk-ejtvp07p.js";
-import { openDaemonLease as UWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { showScreen as Gx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
+import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import {
   Tye,
   zx,
@@ -185,11 +185,11 @@ import {
 } from "../后台任务-Shell管理/chunk-xmxjyg29.js";
 import { y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
 import { dze, eFt, San, ban, H9n, Apt } from "../../01-核心基础设施/共享小工具-未细化/chunk-5pc36v8n.js";
-import { CCR_LIST_TARGET_VISIBLE as XNt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
+import { CCR_LIST_TARGET_VISIBLE } from "../../01-核心基础设施/共享小工具-未细化/chunk-ds47w88s.js";
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { wv } from "../../01-核心基础设施/共享小工具-未细化/chunk-ajpjkvdj.js";
-import { hasTeammateModeSnapshot as Oun, captureTeammateModeSnapshot as q$t } from "../Teammates团队/chunk-88ybhavr.js";
-import { createFleetViewHost as Z_e, useAttachFleetOwners as KQt } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
+import { hasTeammateModeSnapshot, captureTeammateModeSnapshot } from "../Teammates团队/chunk-88ybhavr.js";
+import { createFleetViewHost, useAttachFleetOwners } from "../../01-核心基础设施/共享小工具-未细化/chunk-6nr84z8c.js";
 import { ue, Y0 } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { kIt } from "../../01-核心基础设施/共享小工具-未细化/chunk-sxbs7q5c.js";
 import { dd, iat, _le, Fye } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
@@ -237,13 +237,13 @@ import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/
 import { L } from "../Teammates团队/chunk-mrfx53ye.js";
 import { If, hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
 import { lK, Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { isBypassPermissionsModeDisabled as ey } from "../权限系统/chunk-pcxn6gwz.js";
+import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
 import { Xs, iB, oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { p } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { randomUUID as pu } from "crypto";
-import { resolve as Yy } from "path";
+import { resolve } from "path";
 function qu() {
   return !1;
 }
@@ -294,10 +294,10 @@ function Yu(s) {
   };
 }
 function Qu(s, c) {
-  let m = new Set(c.map((w) => pr(w.state.sessionId))),
+  let m = new Set(c.map((w) => sessionIdBody(w.state.sessionId))),
     b = s.filter(
       (w) =>
-        w.id.startsWith("remote-pending-") && !m.has(pr(w.state.sessionId)),
+        w.id.startsWith("remote-pending-") && !m.has(sessionIdBody(w.state.sessionId)),
     ),
     k = [...c, ...b];
   return s.length === k.length &&
@@ -364,14 +364,14 @@ function xi(s, c, m) {
   if (!b) return;
   return (
     s.notified.delete(c),
-    { ms_since_notification: Math.max(0, m - b.at), notified_kind: u(b.kind) }
+    { ms_since_notification: Math.max(0, m - b.at), notified_kind: fromEnum(b.kind) }
   );
 }
 function ec(s) {
-  let c = s?.agent ?? Ge().agent;
+  let c = s?.agent ?? getInitialSettings().agent;
   if (!s && !c) return;
   let m = s?.permissionMode ? Eb(s.permissionMode) : void 0,
-    b = !ey() && (eL() || Boolean(ee().bypassPermissionsModeAccepted)),
+    b = !isBypassPermissionsModeDisabled() && (hasSkipDangerousModePermissionPrompt() || Boolean(ee().bypassPermissionsModeAccepted)),
     k = m === "bypassPermissions" && !b ? void 0 : m,
     w = s?.allowBypass && b ? !0 : void 0,
     v = s?.effort ? KEt(s.effort).level : void 0;
@@ -464,11 +464,11 @@ function Fi(vS) {
   return Ih;
 }
 function tc(s, c) {
-  return PSt(s.state) && s.id !== c;
+  return isLocalDaemonAgent(s.state) && s.id !== c;
 }
 function oc(s, c) {
   let m = c ?? "unknown";
-  ((s.entryChannel = u(m)), (s.openFinished = null));
+  ((s.entryChannel = fromEnum(m)), (s.openFinished = null));
 }
 function nc(s, c, m = i) {
   let b = c.now ?? Date.now();
@@ -482,7 +482,7 @@ function nc(s, c, m = i) {
       R = v ?? Ln(w.state.updatedAt) ?? b;
     m("tengu_bg_result_seen", {
       trigger: k.has(w.id) ? S("list_open") : S("render"),
-      outcome: we(Hf(w.state.state)),
+      outcome: fromEnumOpt(terminalOutcome(w.state.state)),
       overlap: Ph(w, c.allCandidates, b),
       entry_channel: s.entryChannel,
       seen_latency_ms: Math.max(0, b - R),
@@ -718,7 +718,7 @@ function uc(s) {
   );
 }
 function vr(s) {
-  return s === AAe || s === Ppe;
+  return s === SEED_DETAIL || s === IDLE_DETAIL;
 }
 function Nt(s) {
   return uc(pt(s))
@@ -728,7 +728,7 @@ function Nt(s) {
     .trim();
 }
 function Li(s) {
-  return Jh(Mp(s.cwd), `${s.sessionId}.jsonl`);
+  return Jh(getProjectDir(s.cwd), `${s.sessionId}.jsonl`);
 }
 async function cc(s, c) {
   try {
@@ -754,8 +754,8 @@ function Uo(s) {
   return s?.filter((c) => !U0.test(c.href)) ?? [];
 }
 function Co(s, c) {
-  let m = Hf(s.state);
-  if (m && s.tempo !== "active" && !(m === "success" && dD(s))) return m;
+  let m = terminalOutcome(s.state);
+  if (m && s.tempo !== "active" && !(m === "success" && isSelfDriving(s))) return m;
   let b = Uo(s.children).filter((v) => v.kind !== "frame");
   if (
     c &&
@@ -773,7 +773,7 @@ function Co(s, c) {
 }
 function lo(s, c) {
   if (c === "busy") return "active";
-  if (Hs(s) && !(Hf(s.state) === "success" && dD(s))) return "completed";
+  if (isSettled(s) && !(terminalOutcome(s.state) === "success" && isSelfDriving(s))) return "completed";
   if (s.tempo === "blocked" || c === "waiting") return "blocked";
   return "active";
 }
@@ -800,7 +800,7 @@ function Bi(s, c, m) {
   if (s.activity === "stopped") return "done";
   if (m === "waiting") return "blocked";
   if (
-    !dD(s.state) &&
+    !isSelfDriving(s.state) &&
     Uo(s.state.children).some((k) => {
       let w = c?.get(k.href);
       if (w?.state !== "OPEN") return !1;
@@ -814,8 +814,8 @@ function Bi(s, c, m) {
   return "working";
 }
 function Ni(s) {
-  let c = Hf(s.state);
-  return (c === "failure" || c === "stopped") && Hs(s) && !KS(s);
+  let c = terminalOutcome(s.state);
+  return (c === "failure" || c === "stopped") && isSettled(s) && !isExecLaunch(s);
 }
 function Rr(s) {
   return `job:${s}`;
@@ -857,7 +857,7 @@ function mc(s, c, m) {
           }
           if (X++ >= O) continue;
         }
-        I.push({ kind: "job", job: Ce, origin: wj(Ce.state), group: ge });
+        I.push({ kind: "job", job: Ce, origin: spawnOrigin(Ce.state), group: ge });
       }
       if (ge === "done")
         while (de < ce.length) {
@@ -886,7 +886,7 @@ function mc(s, c, m) {
   for (let X = 0; X < s.length; X++) {
     let de = s[X],
       ce = c.get(de.id),
-      Ie = wj(de.state);
+      Ie = spawnOrigin(de.state);
     if (X === 0 || ce !== c.get(s[X - 1].id)) {
       if (q && ce !== "pinned")
         (I.push({ kind: "header", origin: R, group: v }), (q = !1));
@@ -909,13 +909,13 @@ function mc(s, c, m) {
   if (q && s.length > 0) I.push({ kind: "header", origin: R, group: v });
   let se = !b && !w ? A : [];
   if (se.length > 0) {
-    I.push({ kind: "header", origin: R, group: G_ });
+    I.push({ kind: "header", origin: R, group: EARLIER });
     let X = Math.max(0, Math.min(O, se.length));
     for (let ce of se.slice(0, X))
-      I.push({ kind: "earlier", entry: ce, origin: R, group: G_ });
+      I.push({ kind: "earlier", entry: ce, origin: R, group: EARLIER });
     let de = se.length - X;
-    if (de > 0) I.push({ kind: "fold", origin: R, group: G_, hidden: de });
-    return { rows: I, doneCount: se.length, doneFoldHidden: de, foldGroup: G_ };
+    if (de > 0) I.push({ kind: "fold", origin: R, group: EARLIER, hidden: de });
+    return { rows: I, doneCount: se.length, doneFoldHidden: de, foldGroup: EARLIER };
   }
   let oe = K > O ? K - O : 0;
   if (oe > 0) I.push({ kind: "fold", origin: R, group: "done", hidden: oe });
@@ -941,9 +941,9 @@ function Vi(s, c) {
   return { doneCap: Math.max(0, m(Gh)), compactHeader: !0 };
 }
 function Ui(s) {
-  if (s.backend === "remote") return wj(s);
-  let c = wj(s);
-  return $r(c) ?? c;
+  if (s.backend === "remote") return spawnOrigin(s);
+  let c = spawnOrigin(s);
+  return findCanonicalGitRoot(c) ?? c;
 }
 function _a(s) {
   return Gu(s);
@@ -1009,10 +1009,10 @@ var wc = 120000,
 var Sc = 30000;
 function Kh() {
   return {
-    listJobs: (s) => q_(void 0, s),
+    listJobs: (s) => listJobs(void 0, s),
     listAliveDaemonJobs: (s) => RWe(s),
-    adoptRosterOrphans: (s, c, m) => wyn(s, c, m),
-    listAllLiveSessions: (s) => A$(s),
+    adoptRosterOrphans: (s, c, m) => adoptRosterOrphans(s, c, m),
+    listAllLiveSessions: (s) => listAllLiveSessions(s),
     listRemoteSessions: () => zu(),
     interruptRemoteSession: (s) =>
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((c) => c.interruptRemoteSession(s)),
@@ -1025,9 +1025,9 @@ function Kh() {
     fetchPrStatusByUrl: (s) => n4n(s),
     loadPrStatusCache: (s) => s4n(s),
     persistPrStatusCache: (s, c) => o4n(s, c),
-    touchFleetViewHeartbeat: (s) => oRn(s),
-    clearFleetViewHeartbeat: (s) => sRn(s),
-    watchJobDirOnce: (s, c) => fyn(s, c),
+    touchFleetViewHeartbeat: (s) => touchFleetViewHeartbeat(s),
+    clearFleetViewHeartbeat: (s) => clearFleetViewHeartbeat(s),
+    watchJobDirOnce: (s, c) => watchJobDirOnce(s, c),
   };
 }
 function $h() {
@@ -1185,7 +1185,7 @@ class kc {
   }
   liveStatus(s) {
     let { sessionId: c, resumeSessionId: m } = s.state;
-    if (KS(s.state)) return s.state.tempo === "active" ? "busy" : void 0;
+    if (isExecLaunch(s.state)) return s.state.tempo === "active" ? "busy" : void 0;
     if (s.state.backend === "remote")
       return s.state.tempo === "active"
         ? "busy"
@@ -1318,14 +1318,14 @@ class kc {
     this.load();
   };
   load = async () => {
-    if (Mo() && H("tengu_fleetview_peers", !1))
+    if (isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1))
       this.#e.touchFleetViewHeartbeat(this.#n);
     let s = ++this.#f,
       [c, m] = await Promise.all([
         this.#e.listJobs(this.#n),
         this.#e.listAliveDaemonJobs(this.#n),
       ]),
-      b = EAe(await this.#e.adoptRosterOrphans(c, m.records, this.#n), m.shorts)
+      b = markCrashed(await this.#e.adoptRosterOrphans(c, m.records, this.#n), m.shorts)
         .filter((I) => !this.#m.has(I.id))
         .map((I) => ({ ...I, activity: Co(I.state, this.#t.prStatuses) }));
     if (s <= this.#u) return;
@@ -1363,7 +1363,7 @@ class kc {
       if (K.length === w.length && K.every((J) => I[J] === q[J])) return I;
       return q;
     });
-    let v = b.filter((I) => CAe(I.state));
+    let v = b.filter((I) => isLoopJob(I.state));
     if (v.length > 0) {
       let q = (
         await Promise.all(
@@ -1519,7 +1519,7 @@ class kc {
               ? w
               : m,
           ),
-          Mo() && H("tengu_fleetview_peers", !1))
+          isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1))
         ) {
           let w = new Set((this.#t.jobs ?? []).map((O) => O.state.sessionId)),
             v = Date.now(),
@@ -1530,7 +1530,7 @@ class kc {
                   O.pid !== process.pid &&
                   O.sessionId &&
                   !w.has(O.sessionId) &&
-                  (O.peerProtocol ?? 0) >= vKt &&
+                  (O.peerProtocol ?? 0) >= PEER_PROTOCOL &&
                   v - (O.updatedAt ?? O.startedAt) < 86400000,
               )
               .map((O) => {
@@ -1579,11 +1579,11 @@ class kc {
         if (s !== this.#v) return;
         let m = c
           .map((b) => {
-            let k = Ntt(b.id),
+            let k = remoteRowId(b.id),
               w = Yu(b),
               v = this.#S.get(k);
             if (v !== void 0)
-              if (Hs(w) || Date.now() > v) this.#S.delete(k);
+              if (isSettled(w) || Date.now() > v) this.#S.delete(k);
               else w = { ...w, state: "stopped", tempo: "idle", needs: void 0 };
             return { id: k, state: w, activity: Co(w) };
           })
@@ -1609,7 +1609,7 @@ class kc {
     (this.#S.set(s.id, Date.now() + wc),
       this.updateRemoteJobs((m) =>
         m.map((b) =>
-          b.id === s.id && !Hs(b.state)
+          b.id === s.id && !isSettled(b.state)
             ? {
                 ...b,
                 state: {
@@ -1626,7 +1626,7 @@ class kc {
     try {
       if (!(await this.#e.interruptRemoteSession(c)))
         throw Error("interrupt rejected");
-      (y("fleet_view_stop_session"),
+      (logFeatureOk("fleet_view_stop_session"),
         i("tengu_bg_agent_action", {
           action: S("stop"),
           source: S("fleet"),
@@ -1634,7 +1634,7 @@ class kc {
         }));
     } catch (m) {
       throw (
-        f("fleet_view_stop_session", "interrupt_failed"),
+        logFeatureBad("fleet_view_stop_session", "interrupt_failed"),
         n(`[fleet:remote] interrupt ${c} failed: ${l(m)}`),
         this.#S.delete(s.id),
         this.loadRemote(),
@@ -1649,7 +1649,7 @@ class kc {
     try {
       if (!(await this.#e.archiveRemoteSession(c)))
         throw Error("archive rejected");
-      (y("fleet_view_archive_session"),
+      (logFeatureOk("fleet_view_archive_session"),
         i("tengu_bg_agent_action", {
           action: S("archive"),
           source: S("fleet"),
@@ -1657,7 +1657,7 @@ class kc {
         }));
     } catch (m) {
       throw (
-        f("fleet_view_archive_session", "archive_failed"),
+        logFeatureBad("fleet_view_archive_session", "archive_failed"),
         n(`[fleet:remote] archive ${c} failed: ${l(m)}`),
         this.#w.delete(s.id),
         this.loadRemote(),
@@ -1669,7 +1669,7 @@ class kc {
 function _r(s, c) {
   if (s.roster) {
     if (!s.roster.usesStorage(c))
-      h(
+      logError(
         Error(
           "[fleet:roster] ensureFleetRoster called with a different storageV5 than the visit was created with; keeping the original",
         ),
@@ -1851,19 +1851,19 @@ class _c {
     if ((this.#m.clear(), this.#l.clear(), s.length === 0 && c.length === 0))
       return Promise.resolve();
     let m = this.#e;
-    return byn(() =>
+    return withSortOrderLock(() =>
       Promise.all([
-        ...s.map(([b, k]) => yyn(rr(b), k, m)),
-        ...c.map(([b, k]) => Syn(rr(b), k, m)),
+        ...s.map(([b, k]) => writeSortOrder(getJobDir(b), k, m)),
+        ...c.map(([b, k]) => writeStateSortOrder(getJobDir(b), k, m)),
       ]),
     )
       .then(() => {
-        y("fleet_view_reorder_job");
+        logFeatureOk("fleet_view_reorder_job");
       })
       .catch((b) => {
-        (h(b),
+        (logError(b),
           this.#d?.(`Couldn't save order \u2014 ${l(b)}`),
-          f("fleet_view_reorder_job", "write_sort_order_failed"));
+          logFeatureBad("fleet_view_reorder_job", "write_sort_order_failed"));
       });
   }
   toggleCollapsed(s, c) {
@@ -2134,7 +2134,7 @@ function Ac(
   let R = new Set();
   for (let A of [m, b, k, w]) for (let I of A) R.add(I.id);
   let O = G(w, (A) => !A.id.startsWith("remote-pending-")),
-    W = !v || O === 0 || O >= XNt;
+    W = !v || O === 0 || O >= CCR_LIST_TARGET_VISIBLE;
   s.sweepReplyDrafts({
     now: Date.now(),
     isGuarded: (A) =>
@@ -2368,7 +2368,7 @@ async function zi(s, c, m) {
   try {
     let b = he(),
       k = await q9(b);
-    return (await a8e(k, void 0, c ? eb : void 0, m)).flatMap((R) => {
+    return (await loadSameRepoMessageLogs(k, void 0, c ? eb : void 0, m)).flatMap((R) => {
       if (!R.sessionId || !R.fullPath) return [];
       if (s.has(R.sessionId)) return [];
       if (!c && R.sessionKind === "bg") return [];
@@ -2376,7 +2376,7 @@ async function zi(s, c, m) {
         {
           sessionId: R.sessionId,
           fullPath: R.fullPath,
-          title: To(pt(pxe(R))) || R.sessionId.slice(0, 8),
+          title: To(pt(getLogDisplayTitle(R))) || R.sessionId.slice(0, 8),
           modified: R.modified,
           cwd: R.relocatedCwd ?? R.projectPath ?? b,
         },
@@ -2387,7 +2387,7 @@ async function zi(s, c, m) {
       n(`[fleetview] past-session enumeration failed: ${l(b)}`, {
         level: "error",
       });
-    else h(b);
+    else logError(b);
     return null;
   }
 }
@@ -2644,20 +2644,20 @@ function Xi(s) {
   return !1;
 }
 function Zi(s, c) {
-  Z3(Ka(rt()))
+  Z3(Ka(getMainLoopModel()))
     .then((m) => {
       if (m) s(m);
       else
-        (f("input_image_paste", "not_found"), c("No image found in clipboard"));
+        (logFeatureBad("input_image_paste", "not_found"), c("No image found in clipboard"));
     })
     .catch((m) => {
-      (f("input_image_paste", "clipboard_read_failed"),
-        h(m),
+      (logFeatureBad("input_image_paste", "clipboard_read_failed"),
+        logError(m),
         c("Couldn't read an image from the clipboard"));
     });
 }
 async function Vc(s) {
-  let c = await q_(void 0, s).catch(() => []),
+  let c = await listJobs(void 0, s).catch(() => []),
     m = !1;
   return (
     Te((b) => {
@@ -2763,8 +2763,8 @@ function Uc(s, c) {
         .query.trim()
         .slice(1)
         .split(/\s+(.*)/, 2),
-      lt = Di(Ve.toLowerCase(), lAe());
-    if (lt && zp(lt) && ype(lt)) {
+      lt = findCommand(Ve.toLowerCase(), getBuiltinCommands());
+    if (lt && isCommandEnabled(lt) && meetsAvailabilityRequirement(lt)) {
       if (lt.fleetHostCall) {
         (Tt(),
           lt
@@ -2780,7 +2780,7 @@ function Uc(s, c) {
               Ye,
             )
             .catch((dt) => {
-              (h(dt), m.setError(l(dt)));
+              (logError(dt), m.setError(l(dt)));
             }));
         return;
       }
@@ -2812,7 +2812,7 @@ function Uc(s, c) {
             zi(at, !0, R).then((jt) => {
               if (Gt !== w.resumePickerGen) return;
               if (jt === null) {
-                (f("fleet_view_resume_picker", "load_failed"),
+                (logFeatureBad("fleet_view_resume_picker", "load_failed"),
                   w.setResumePicker({ entries: [], failed: !0 }));
                 return;
               }
@@ -2821,7 +2821,7 @@ function Uc(s, c) {
                   !b.isDeleting(st.sessionId.slice(0, 8)) &&
                   !b.isDeletingSession(st.sessionId),
               );
-              (y("fleet_view_resume_picker", { count: Jt.length }),
+              (logFeatureOk("fleet_view_resume_picker", { count: Jt.length }),
                 w.setResumePicker({ entries: Jt, failed: !1 }));
             });
             return;
@@ -2831,7 +2831,7 @@ function Uc(s, c) {
             rawName: lt.name,
             canonicalName: lt.name,
             isMcp: !1,
-            isBuiltIn: LI().has(lt.name),
+            isBuiltIn: builtInCommandNames().has(lt.name),
             isBundled: !1,
             isOfficial: !1,
           });
@@ -2935,7 +2935,7 @@ function Uc(s, c) {
       st = Je.exec ? j9(Je.exec, Jt) : void 0,
       Qt = {
         id: at,
-        state: sK({
+        state: makeInitialState({
           template: st
             ? { name: "exec", description: "" }
             : Je.routine
@@ -3131,18 +3131,18 @@ async function Oa(s, c, m) {
   } finally {
     O();
   }
-  if (I === null) (y("fleet_view_reply"), b.clearReplyFailure(W));
-  else if (I === TPt) (y("fleet_view_reply"), b.clearReplyFailure(W));
+  if (I === null) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
+  else if (I === TPt) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
   else {
     if (K) n(`[fleetview] peek-reply respawn failed: ${I}`);
     let ne = Date.now();
     if (b.isRetryOfRecentReplyFailure(W, ne))
-      g("fleet_view_reply", "retry_of_recent_failure");
-    else if (I === nle) g("fleet_view_reply", "not_running_no_respawn");
-    else if (K && J) g("fleet_view_reply", "queued_for_later");
-    else if (j) g("fleet_view_reply", "dead_epoch_transcript_gone");
-    else if (K) f("fleet_view_reply", "respawn_failed");
-    else if (kZt(I)) g("fleet_view_reply", "daemon_restarting");
+      logFeatureSad("fleet_view_reply", "retry_of_recent_failure");
+    else if (I === nle) logFeatureSad("fleet_view_reply", "not_running_no_respawn");
+    else if (K && J) logFeatureSad("fleet_view_reply", "queued_for_later");
+    else if (j) logFeatureSad("fleet_view_reply", "dead_epoch_transcript_gone");
+    else if (K) logFeatureBad("fleet_view_reply", "respawn_failed");
+    else if (kZt(I)) logFeatureSad("fleet_view_reply", "daemon_restarting");
     else {
       let se = I,
         oe = [...se.matchAll(/\bE[A-Z]{2,14}\b/g)].find(
@@ -3151,8 +3151,8 @@ async function Oa(s, c, m) {
       n(`[fleetview] peek-reply send failed: ${se}`);
       let X = !1;
       if (!q && oe !== void 0 && sb.has(oe) && Og(m) === "prompt")
-        X = await Ti(
-          rr(c.id),
+        X = await writeStateAtomic(
+          getJobDir(c.id),
           { ...c.state, queuedPrompt: m, updatedAt: new Date().toISOString() },
           R,
         ).then(
@@ -3167,8 +3167,8 @@ async function Oa(s, c, m) {
       let de = { errno: w8(q ?? oe) ?? S("unknown") };
       if (X)
         ((I = "Reply queued \u2014 will be sent when this session restarts"),
-          g("fleet_view_reply", "queued_for_later", de));
-      else f("fleet_view_reply", "send_failed", de);
+          logFeatureSad("fleet_view_reply", "queued_for_later", de));
+      else logFeatureBad("fleet_view_reply", "send_failed", de);
     }
     b.noteReplyFailure(W, ne);
   }
@@ -3243,16 +3243,16 @@ var wb = 3;
 function yb(s) {
   let c = s.state,
     m =
-      Hs(c) && !(Hf(c.state) === "success" && dD(c))
+      isSettled(c) && !(terminalOutcome(c.state) === "success" && isSelfDriving(c))
         ? Date.parse(c.firstTerminalAt ?? c.updatedAt)
         : Date.now();
-  return Ot(Math.max(0, m - Date.parse(c.createdAt)), {
+  return formatDuration(Math.max(0, m - Date.parse(c.createdAt)), {
     mostSignificantOnly: !0,
   });
 }
 function Hn(s, c) {
   let m = Date.now();
-  if (c != null && c > m) return `in ${Ot(c - m, { mostSignificantOnly: !0 })}`;
+  if (c != null && c > m) return `in ${formatDuration(c - m, { mostSignificantOnly: !0 })}`;
   return yb(s);
 }
 function So(s, c = !1, m = !1) {
@@ -3403,7 +3403,7 @@ function Sn(s, c, m, b) {
   return { word: "Idle", color: void 0, dim: !0 };
 }
 function rp(s, c, m) {
-  let { color: b, dim: k } = Sn(c, s.tempo, m, Hf(s.state));
+  let { color: b, dim: k } = Sn(c, s.tempo, m, terminalOutcome(s.state));
   return { color: b, dim: k };
 }
 var Zc = { error: 2, warning: 1 };
@@ -3529,7 +3529,7 @@ function Vn(s, c, m, b, k, w = !1) {
 function Wn(s, c, m) {
   if (c && s.tempo !== "active" && m === void 0) return $Q;
   if (m === "busy" || m === "shell") return null;
-  if (CAe(s)) return vb();
+  if (isLoopJob(s)) return vb();
   return kb();
 }
 function kn() {
@@ -3554,9 +3554,9 @@ var Ib = 172800000,
   Kn = { needs: "simple:needs", live: "simple:live", done: "simple:done" };
 function jn(s, c) {
   if (c === "busy") return "live";
-  if (Hs(s) && !(Hf(s.state) === "success" && dD(s))) return "done";
+  if (isSettled(s) && !(terminalOutcome(s.state) === "success" && isSelfDriving(s))) return "done";
   if (c === "waiting") return "needs";
-  if (s.tempo === "blocked" && s.needs && s.needs !== xf) return "needs";
+  if (s.tempo === "blocked" && s.needs && s.needs !== IDLE_NEEDS) return "needs";
   return "live";
 }
 function Ha(s) {
@@ -3621,7 +3621,7 @@ function lp(
   let K = [{ kind: "newsession", origin: b, group: Lb }],
     J = (ge, ke) => {
       for (let Ce of ke)
-        K.push({ kind: "job", job: Ce, origin: wj(Ce.state), group: ge });
+        K.push({ kind: "job", job: Ce, origin: spawnOrigin(Ce.state), group: ge });
     };
   (J($n, v), J(Kn.needs, R), J(Kn.live, O));
   let ne =
@@ -3634,7 +3634,7 @@ function lp(
     X = Math.max(0, W.length - oe - se),
     de = k ? 0 : oe + X,
     ce = de >= Db ? de : 0,
-    Ie = G(W.slice(W.length - ce), (ge) => Hf(ge.state.state) === "failure");
+    Ie = G(W.slice(W.length - ce), (ge) => terminalOutcome(ge.state.state) === "failure");
   if ((J(Kn.done, W.slice(0, W.length - ce)), ce > 0))
     K.push({ kind: "fold", origin: b, group: Zo, hidden: ce });
   return {
@@ -3661,12 +3661,12 @@ function Bb(s) {
 }
 function Nb(s, c) {
   if (s === void 0 || s <= 0) return;
-  let m = `${Pn(s)} tokens`;
+  let m = `${formatTokens(s)} tokens`;
   return c ? `${L.arrowDown} ${m}` : m;
 }
 function Ga(s, c) {
   let m = c(s),
-    b = Sn(s.activity, s.state.tempo, m, Hf(s.state.state));
+    b = Sn(s.activity, s.state.tempo, m, terminalOutcome(s.state.state));
   if (b.word === uo.working) return { ...b, color: void 0, dim: !0 };
   if (b.word !== uo.blocked) return b;
   return jn(s.state, m) === "needs"
@@ -3681,9 +3681,9 @@ function Wa(s, c) {
 }
 function $a(s, c, m, b) {
   let k = zg() ? 1 / 0 : Math.max(24, Math.min(72, Math.floor(b * 0.55))),
-    w = (A) => (k === 1 / 0 ? A : Xe(A, k));
+    w = (A) => (k === 1 / 0 ? A : truncateToWidth(A, k));
   if (jn(s.state, m) === "done") return;
-  let R = s.state.needs && s.state.needs !== xf ? s.state.needs : void 0;
+  let R = s.state.needs && s.state.needs !== IDLE_NEEDS ? s.state.needs : void 0;
   if (R) return w(Nt(R));
   if (!s.state.pinned && c.word !== uo.working) return;
   let O = Bb(s.state);
@@ -3698,7 +3698,7 @@ function ls(s, c, m, b) {
   let k = c === "bash" ? null : Bn(s),
     w = k ? ts(k) : void 0,
     v = c === "bash" || k ? null : es(s),
-    R = (W) => !b || U8e(W.state, b),
+    R = (W) => !b || jobMatchesCwd(W.state, b),
     O = k ? (W) => Ta(W, k, w) : v ? (W) => Da(W, v) : null;
   return O ? (m ?? []).find((W) => R(W) && O(W.state))?.id : void 0;
 }
@@ -3770,7 +3770,7 @@ function dp({
     } = Kc(se ? "" : j),
     bt = Ue ? ts(Ue) : void 0,
     xt = [...(s ?? []), ...(be ? c : [])],
-    Ut = Ie ? xt.filter((me) => U8e(me.state, Ie)) : xt,
+    Ut = Ie ? xt.filter((me) => jobMatchesCwd(me.state, Ie)) : xt,
     He = le ? (J === "remote" ? m : Ut) : Ce ? [...Ut, ...m] : Ut,
     Tt = He.filter((me) => {
       if (ye && !me.state.template.toLowerCase().startsWith(ye)) return !1;
@@ -3820,11 +3820,11 @@ function dp({
             : Je
               ? Bi(me, k, w(me))
               : Ve
-                ? (me.state.group ?? PE)
+                ? (me.state.group ?? UNGROUPED)
                 : Ui(me.state),
       ]),
     ),
-    lt = (me) => (me === "pinned" ? -1 : me === PE ? 1 : 0),
+    lt = (me) => (me === "pinned" ? -1 : me === UNGROUPED ? 1 : 0),
     dt = [...Wt].sort((me, ht) => {
       let Ct = Ye.get(me.id),
         $t = Ye.get(ht.id);
@@ -3891,7 +3891,7 @@ function dp({
   } else if (!ke && J !== "remote" && at.length > 0) {
     let me = new Set(dt.map((Ct) => Ye.get(Ct.id))).size,
       ht = Vi(We, dt.length + Math.max(0, me * 2 - 1));
-    if (((ut = ht.doneCap), (Lt = ht.compactHeader), !q.has(G_)))
+    if (((ut = ht.doneCap), (Lt = ht.compactHeader), !q.has(EARLIER)))
       Dt = at.length >= ut + Hi ? ut : 1 / 0;
   }
   let Xt = {
@@ -3933,7 +3933,7 @@ function dp({
     Qe.set(ht, (Qe.get(ht) ?? 0) + 1);
   }
   if (at.length > 0 && J !== "remote") {
-    let me = Je ? "done" : G_;
+    let me = Je ? "done" : EARLIER;
     Qe.set(me, (Qe.get(me) ?? 0) + at.length);
   }
   if (I.size > 0)
@@ -4111,20 +4111,20 @@ async function mp(s, c, m) {
     v.closeResumePicker(),
     i("tengu_fleetview_earlier_open", {
       ms_since_mount: Date.now() - W,
-      via: u(m),
+      via: fromEnum(m),
     }));
   let K = c.sessionId.slice(0, 8),
     J = (se, oe, X) => {
       if ((R.endPromote(c.sessionId), v.resumePromoteSessionId === c.sessionId))
         v.resumePromoteSessionId = null;
       if (m === "resume_picker")
-        if (se === "bad") f("fleet_view_resume_picker", oe);
-        else g("fleet_view_resume_picker", oe);
+        if (se === "bad") logFeatureBad("fleet_view_resume_picker", oe);
+        else logFeatureSad("fleet_view_resume_picker", oe);
       I(X);
     },
     j;
   try {
-    if ((await A$(O)).some((ce) => ce.sessionId === c.sessionId)) {
+    if ((await listAllLiveSessions(O)).some((ce) => ce.sessionId === c.sessionId)) {
       J("sad", "session_live_elsewhere", $We);
       return;
     }
@@ -4136,7 +4136,7 @@ async function mp(s, c, m) {
       );
       return;
     }
-    if ((await Zn(rr(K), O)) !== null) {
+    if ((await readJobState(getJobDir(K), O)) !== null) {
       J(
         "sad",
         "already_in_list",
@@ -4145,7 +4145,7 @@ async function mp(s, c, m) {
       return;
     }
     if (
-      (await q_(void 0, O)).some(
+      (await listJobs(void 0, O)).some(
         (ce) =>
           ce.state.sessionId === c.sessionId ||
           ce.state.resumeSessionId === c.sessionId,
@@ -4204,7 +4204,7 @@ async function mp(s, c, m) {
         de = A;
       }
     if (de !== c.cwd && m === "resume_picker")
-      g("fleet_view_resume_picker", "cwd_fallback");
+      logFeatureSad("fleet_view_resume_picker", "cwd_fallback");
     ({ state: j } = await IWe(
       c.sessionId,
       {
@@ -4221,7 +4221,7 @@ async function mp(s, c, m) {
       n(`[fleetview] past-session seed write failed: ${l(se)}`, {
         level: "error",
       });
-    else h(se);
+    else logError(se);
     J("bad", "promote_failed", `Couldn't open ${c.title} \u2014 ${l(se)}`);
     return;
   }
@@ -4247,12 +4247,12 @@ function cs(s, c) {
   if ((k.closeResumePicker(), W.some((oe) => oe.id === c.id))) return;
   if (c.state.backend === "peer") {
     (A("Can't attach \u2014 this session is running in another terminal"),
-      y("fleet_view_open"));
+      logFeatureOk("fleet_view_open"));
     return;
   }
   if (c.state.backend === "remote") {
     if (c.id.startsWith("remote-pending-")) {
-      (A(Cr), y("fleet_view_open"));
+      (A(Cr), logFeatureOk("fleet_view_open"));
       return;
     }
     O({
@@ -4265,17 +4265,17 @@ function cs(s, c) {
     return;
   }
   if (b.terminalHolderOf(c) !== void 0) {
-    (A($We), y("fleet_view_open"));
+    (A($We), logFeatureOk("fleet_view_open"));
     return;
   }
   if (
     c.state.deadEpochReapedAt !== void 0 &&
-    Hs(c.state) &&
-    !KS(c.state) &&
+    isSettled(c.state) &&
+    !isExecLaunch(c.state) &&
     w.forkRefusedJobId !== c.id
   ) {
     if (w.deadEpochGoneJobId === c.id) {
-      (A(up), y("fleet_view_open"));
+      (A(up), logFeatureOk("fleet_view_open"));
       return;
     }
     let oe = w.deadEpochOfferedJobId === c.id && us(m, k, v, za);
@@ -4289,7 +4289,7 @@ function cs(s, c) {
         (w.deadEpochOfferedJobId = c.id),
         A(za),
         i("tengu_fleetview_dead_epoch_offer", {}),
-        y("fleet_view_open"));
+        logFeatureOk("fleet_view_open"));
       return;
     }
     w.deadEpochOfferedJobId = null;
@@ -4299,7 +4299,7 @@ function cs(s, c) {
   let J =
     (us(m, k, v, Ya) || us(m, k, v, qa)) &&
     w.restartOfferedJobId === c.id &&
-    !KS(c.state);
+    !isExecLaunch(c.state);
   if (w.restartOfferedJobId === c.id) w.restartOfferedJobId = null;
   let j = Vb();
   (Tye(j, "fleet", R).catch(() => {}), w.arm(c.id, j), A(null));
@@ -4325,7 +4325,7 @@ function cs(s, c) {
       return;
     }
     if ((w.disarm(), !oe.ok && oe.errorCode === "kill_unconfirmed")) {
-      (g("fleet_view_open", "restart_stop_unconfirmed"),
+      (logFeatureSad("fleet_view_open", "restart_stop_unconfirmed"),
         n(
           `[FV-attach] confirmed restart of ${c.id} could not stop the worker: ${oe.error}`,
           { level: "warn" },
@@ -4346,20 +4346,20 @@ function cs(s, c) {
       });
     else if (oe.errorCode === "fork_transcript_never_materialized")
       (zx(j, R).catch(() => {}),
-        g("fleet_view_open", "fork_transcript_never_materialized"),
+        logFeatureSad("fleet_view_open", "fork_transcript_never_materialized"),
         (w.forkRefusedJobId = c.id),
         A(ja));
     else if (oe.errorCode === "resume_session_live_elsewhere")
       (zx(j, R).catch(() => {}),
-        g("fleet_view_open", "resume_session_live_elsewhere"),
+        logFeatureSad("fleet_view_open", "resume_session_live_elsewhere"),
         A(oe.error));
     else if (oe.errorCode === "dead_epoch_transcript_gone")
       (zx(j, R).catch(() => {}),
-        g("fleet_view_open", "dead_epoch_transcript_gone"),
+        logFeatureSad("fleet_view_open", "dead_epoch_transcript_gone"),
         (w.deadEpochGoneJobId = c.id),
         A(up));
     else
-      (f("fleet_view_open", "respawn_failed"),
+      (logFeatureBad("fleet_view_open", "respawn_failed"),
         A(oe.error),
         zx(j, R).catch(() => {}));
   });
@@ -4387,7 +4387,7 @@ function gp(s, c) {
         if (!A.ok) {
           if (!W()) return;
           (k.endNewSession(),
-            f("fleet_view_new_session", A.reason ?? "spawn_failed"),
+            logFeatureBad("fleet_view_new_session", A.reason ?? "spawn_failed"),
             v(A.error));
           return;
         }
@@ -4398,36 +4398,36 @@ function gp(s, c) {
           (await Z(100), (q = b.jobs?.find((K) => K.id === A.short)));
         if (!W()) return;
         if ((k.endNewSession(), !q)) {
-          (g("fleet_view_new_session", "row_pending"),
+          (logFeatureSad("fleet_view_new_session", "row_pending"),
             v("Still starting \u2014 open the new session once it appears"));
           return;
         }
-        (y("fleet_view_new_session"), cs(s, q));
+        (logFeatureOk("fleet_view_new_session"), cs(s, q));
       } catch (I) {
         if (!W()) return;
         (k.endNewSession(),
-          h(I),
-          f("fleet_view_new_session", "threw"),
+          logError(I),
+          logFeatureBad("fleet_view_new_session", "threw"),
           v(`Couldn't start a new session \u2014 ${l(I)}`));
       }
     },
     (A) => {
       if (!W()) return;
       (k.endNewSession(),
-        h(A),
-        f("fleet_view_new_session", "threw"),
+        logError(A),
+        logFeatureBad("fleet_view_new_session", "threw"),
         v(`Couldn't start a new session \u2014 ${l(A)}`));
     },
   );
 }
 function Tr(s, c, m) {
   i("tengu_bg_agent_action", {
-    action: u(s),
+    action: fromEnum(s),
     source: S("fleet"),
     jobSessionId: Ee(c.sessionId),
     agent: c.template,
     jobState: fI(c.state),
-    tempo: u(c.tempo),
+    tempo: fromEnum(c.tempo),
     ...m,
     ...!1,
   });
@@ -4450,7 +4450,7 @@ function hp(s, c, m, b, k, w) {
           O = m(
             (W) =>
               W.map((A) =>
-                A.id === v.id && !Hs(A.state)
+                A.id === v.id && !isSettled(A.state)
                   ? {
                       ...A,
                       state: {
@@ -4473,7 +4473,7 @@ function hp(s, c, m, b, k, w) {
           let W = await VZ(v.id, v.state, void 0, w);
           if (!W.confirmed)
             throw (
-              f("fleet_view_stop_job", "kill_unconfirmed"),
+              logFeatureBad("fleet_view_stop_job", "kill_unconfirmed"),
               new Or(W.error ?? "worker may still be running")
             );
           (i("tengu_bg_agent_action", {
@@ -4481,11 +4481,11 @@ function hp(s, c, m, b, k, w) {
             source: S("fleet"),
             jobSessionId: Ee(v.state.sessionId),
           }),
-            y("fleet_view_stop_job"));
-          let A = rr(v.id),
-            I = await Zn(A, w);
-          if (I && !Hs(I))
-            await Ti(
+            logFeatureOk("fleet_view_stop_job"));
+          let A = getJobDir(v.id),
+            I = await readJobState(A, w);
+          if (I && !isSettled(I))
+            await writeStateAtomic(
               A,
               {
                 ...I,
@@ -4523,7 +4523,7 @@ function hp(s, c, m, b, k, w) {
             !A.removed && !A.keptWorktree)
           )
             throw (
-              f("fleet_view_delete_job", A.errorCode ?? "delete_unconfirmed"),
+              logFeatureBad("fleet_view_delete_job", A.errorCode ?? "delete_unconfirmed"),
               b(v.id, { notice: A.error ?? "worker may still be running" }),
               new Or(A.error ?? "worker may still be running")
             );
@@ -4539,7 +4539,7 @@ function hp(s, c, m, b, k, w) {
             } = A,
             j = A.keptReason ?? "remove_failed";
           if (
-            (g("fleet_view_delete_job", `worktree_kept_${j}`),
+            (logFeatureSad("fleet_view_delete_job", `worktree_kept_${j}`),
             K && I !== void 0)
           ) {
             let se = x(K.count, "it", "them");
@@ -4565,9 +4565,9 @@ function hp(s, c, m, b, k, w) {
           );
         }
         if (A.leftWorktreeDir)
-          g("fleet_view_delete_job", "worktree_left_in_place");
-        else y("fleet_view_delete_job");
-        if (v.state.pinned) ISt(v.id, !1, w).catch(() => {});
+          logFeatureSad("fleet_view_delete_job", "worktree_left_in_place");
+        else logFeatureOk("fleet_view_delete_job");
+        if (v.state.pinned) writeJobPinned(v.id, !1, w).catch(() => {});
         if (
           (i("tengu_bg_agent_action", {
             action: S("delete"),
@@ -4591,7 +4591,7 @@ F();
 function bp(s) {
   let [c, m] = d([]);
   (E(() => {
-    if (Pt() || _t()) return;
+    if (Pt() || isBgSession()) return;
     if (!nde()) return;
     let b = !1;
     return (
@@ -4605,7 +4605,7 @@ function bp(s) {
           ideRunningInWindows: k.ideRunningInWindows,
           scope: "dynamic",
         };
-        if ((await YLe(), b || Oh("ide", w))) return;
+        if ((await YLe(), b || isMcpServerBlockedAtConnectTime("ide", w))) return;
         let { clearServerCache: v, connectToServer: R } = import.meta
             .require("../MCP客户端/mcpClientModule.4cyej0np.js")
             .mcpClientModule(),
@@ -4658,7 +4658,7 @@ function rl(yC) {
   ) {
     let { version: Lr, cwd: Yb } = PHe();
     ms = Lr;
-    Rn = Xa ? `${VN(Xa)} (session)` : VN(wp?.model ?? rt());
+    Rn = Xa ? `${renderModelSetting(Xa)} (session)` : renderModelSetting(wp?.model ?? getMainLoopModel());
     Mr = !!Yb && ps !== yp && ps !== Sp;
     zb = FZ(Mr ? Gu(ps) : Yb, Math.max(Dr - 11 - (Rn ? te(Rn) + 3 : 0), 10));
     ((vn[0] = Sp),
@@ -4819,7 +4819,7 @@ function sw(qC) {
 var Ss = te(" (reserved name)");
 function Io(s, c, m, b = !1) {
   if (b && s) {
-    let W = Ob(s, Math.max(m - 1, 1));
+    let W = truncateStartToWidth(s, Math.max(m - 1, 1));
     return r(N, {
       children: [
         e(t, { inverse: !0, children: W }),
@@ -4835,7 +4835,7 @@ function Io(s, c, m, b = !1) {
     }
   let v = s.slice(k, w) || " ",
     R = s.slice(w),
-    O = Ob(s.slice(0, k), m - te(v) - (R ? 1 : 0));
+    O = truncateStartToWidth(s.slice(0, k), m - te(v) - (R ? 1 : 0));
   return r(N, {
     children: [
       e(t, { children: O }),
@@ -4865,7 +4865,7 @@ function ks(HC) {
       attaching: $o,
       heldInTerminal: Nr,
     } = HC,
-    qn = Hf(wt.state.state),
+    qn = terminalOutcome(wt.state.state),
     zn = qn && wt.state.tempo !== "active" ? VC : void 0,
     ul = Eo.detail - te("group: ") - Ss >= 24,
     Gr = Sn(wt.activity, wt.state.tempo, ll, qn),
@@ -4903,7 +4903,7 @@ function ks(HC) {
     Ip =
       po &&
       wt.state.tempo === "blocked" &&
-      wt.state.needs === xf &&
+      wt.state.needs === IDLE_NEEDS &&
       wt.state.detail &&
       !ow
         ? wt.state.detail
@@ -4911,7 +4911,7 @@ function ks(HC) {
     hs =
       po && co
         ? xp
-          ? xp === xf
+          ? xp === IDLE_NEEDS
             ? Ip
               ? Nt(Ip)
               : Hp(wt.state.cwd) || wt.state.cwd
@@ -4924,7 +4924,7 @@ function ks(HC) {
                 (!po &&
                   co &&
                   wt.state.tempo === "blocked" &&
-                  wt.state.needs === xf &&
+                  wt.state.needs === IDLE_NEEDS &&
                   "space to send it a prompt") ||
                 (wt.state.tempo === "blocked" && wt.state.needs) ||
                 (!ow && wt.state.detail) ||
@@ -5734,20 +5734,20 @@ function od(CE) {
                     children: [
                       Ze.group === "pinned"
                         ? "Pinned"
-                        : Ze.group === G_
+                        : Ze.group === EARLIER
                           ? "Past"
                           : xn
                             ? uo[Ze.group]
                             : Fl
-                              ? Ze.group === PE
+                              ? Ze.group === UNGROUPED
                                 ? "Ungrouped"
-                                : or(Ze.group, Math.max(Cn - 10, 10))
+                                : truncate(Ze.group, Math.max(Cn - 10, 10))
                               : FZ(_a(Ze.group), Math.max(Cn - 10, 10)),
                       $E &&
                         r(N, {
                           children: [" ", e(t, { dimColor: !0, children: WE })],
                         }),
-                      (xn ? Ze.group === "done" : Ze.group === G_) &&
+                      (xn ? Ze.group === "done" : Ze.group === EARLIER) &&
                         jr &&
                         Kr !== "remote" &&
                         !Ur &&
@@ -5943,7 +5943,7 @@ function od(CE) {
                 marginLeft: 1,
                 children: e(t, {
                   dimColor: !0,
-                  children: Ot(
+                  children: formatDuration(
                     Math.max(0, Date.now() - zl.modified.getTime()),
                     { mostSignificantOnly: !0 },
                   ),
@@ -5956,7 +5956,7 @@ function od(CE) {
       }
       let it = Ze.job;
       if (_n) {
-        let Yl = Hf(it.state.state);
+        let Yl = terminalOutcome(it.state.state);
         let Ql = As(it);
         let Os = Ga(it, As);
         let jE =
@@ -6077,8 +6077,8 @@ function od(CE) {
                       Fl &&
                       tr.id === $l(Ze.group) &&
                       Ze.group !== "pinned" &&
-                      Ze.group !== PE &&
-                      Ze.group !== G_,
+                      Ze.group !== UNGROUPED &&
+                      Ze.group !== EARLIER,
                   }
                 : void 0,
             deleteRefused: Dl.get(it.id)?.notice,
@@ -6179,7 +6179,7 @@ function od(CE) {
       Kr !== "remote" &&
       !Ur &&
       !Oo.some(
-        (Cw) => Cw.kind === "header" && Cw.group === (xn ? "done" : G_),
+        (Cw) => Cw.kind === "header" && Cw.group === (xn ? "done" : EARLIER),
       ) &&
       e(o, {
         paddingLeft: 2,
@@ -6396,7 +6396,7 @@ function fd(hx) {
                             sn &&
                               !ai &&
                               e(t, {
-                                children: Hs(sn.state)
+                                children: isSettled(sn.state)
                                   ? "ctrl+x to delete"
                                   : "ctrl+x to stop",
                               }),
@@ -6461,8 +6461,8 @@ function fd(hx) {
                                   ? e(D, { chord: "ctrl+x", action: "delete" })
                                   : !ld && ud && zo?.kind === "header"
                                     ? zo.group !== "pinned" &&
-                                      zo.group !== PE &&
-                                      zo.group !== G_
+                                      zo.group !== UNGROUPED &&
+                                      zo.group !== EARLIER
                                       ? e(D, {
                                           chord: "ctrl+x",
                                           action: "ungroup",
@@ -6700,7 +6700,7 @@ function Js(Zx) {
   const pi = Math.max(0, jw - $w);
   let zw;
   if (qt[4] !== pi)
-    ((zw = Ot(pi, { mostSignificantOnly: !0 })), (qt[4] = pi), (qt[5] = zw));
+    ((zw = formatDuration(pi, { mostSignificantOnly: !0 })), (qt[4] = pi), (qt[5] = zw));
   else zw = qt[5];
   let am = zw,
     Yw;
@@ -6718,7 +6718,7 @@ function Js(Zx) {
     ((Qw = e(t, { dimColor: !0, children: "dir " })), (qt[9] = Qw));
   else Qw = qt[9];
   let Sd;
-  if (qt[10] !== bo.id) ((Sd = rr(bo.id)), (qt[10] = bo.id), (qt[11] = Sd));
+  if (qt[10] !== bo.id) ((Sd = getJobDir(bo.id)), (qt[10] = bo.id), (qt[11] = Sd));
   else Sd = qt[11];
   let kd;
   if (qt[12] !== Sd)
@@ -6974,7 +6974,7 @@ function Nd({
     { storageV5: J } = _e(),
     [j, ne] = d(() => Date.now()),
     se =
-      Hf(s.state.state) === null ? Nt(s.state.needs ?? "") || void 0 : void 0,
+      terminalOutcome(s.state.state) === null ? Nt(s.state.needs ?? "") || void 0 : void 0,
     oe = s.state.tempo === "blocked" ? s.state.block?.questions : void 0,
     X = oe?.length ? oe : void 0,
     de = O.map((ae) => ae.row.href),
@@ -6993,7 +6993,7 @@ function Nd({
     ge = X ? "questions" : se ? "needs" : Ie.length > 0 ? "output" : "detail",
     ke = ge === "questions" || ge === "needs";
   ko(() => ne(Date.now()), ke ? (j - K < 60000 ? 1000 : 30000) : null);
-  let Ce = ke ? Ot(Math.max(0, j - K), { mostSignificantOnly: !0 }) : "",
+  let Ce = ke ? formatDuration(Math.max(0, j - K), { mostSignificantOnly: !0 }) : "",
     be = C(!1),
     le = C(null);
   dd(le, !0);
@@ -7078,7 +7078,7 @@ function Nd({
         return;
       }
       EPt(gt, Re, s.id, J)
-        .catch((Ke) => (h(Ke), gt))
+        .catch((Ke) => (logError(Ke), gt))
         .then((Ke) => v(Ke))
         .then(
           (Ke) => {
@@ -7174,7 +7174,7 @@ function Nd({
     }),
     mt = X ? 2 + (X[0]?.options.length ?? 0) : 0,
     Gt = s.state.budget
-      ? `${Pn(s.state.budget.spent)}/${Pn(s.state.budget.target)} tokens`
+      ? `${formatTokens(s.state.budget.spent)}/${formatTokens(s.state.budget.target)} tokens`
       : "",
     at = ke || Gt ? 1 : 0,
     { rows: Xt, columns: jt } = Se(),
@@ -7652,7 +7652,7 @@ function qd(SP) {
                             marginLeft: 1,
                             children: e(t, {
                               dimColor: !0,
-                              children: Ot(
+                              children: formatDuration(
                                 Math.max(0, Date.now() - Dm.modified.getTime()),
                                 { mostSignificantOnly: !0 },
                               ),
@@ -7732,8 +7732,8 @@ function qd(SP) {
               (Wd &&
                 gi?.kind === "header" &&
                 gi.group !== "pinned" &&
-                gi.group !== PE &&
-                gi.group !== G_) ||
+                gi.group !== UNGROUPED &&
+                gi.group !== EARLIER) ||
               (!!At &&
                 !an &&
                 !(At.state.backend !== "daemon" && !At.state.sock)),
@@ -7747,7 +7747,7 @@ function qd(SP) {
               9,
               G(Ud, (gy) => gy.kind === "job" && gy.origin === xm),
             ),
-            canDelete: At && !an ? (Hs(At.state) ? "delete" : "stop") : void 0,
+            canDelete: At && !an ? (isSettled(At.state) ? "delete" : "stop") : void 0,
             canGoBack: !1,
           })
         : km && !lr
@@ -8409,13 +8409,13 @@ function hg(s) {
             },
       ),
     ),
-      sG(q, { action: "rename", name: K }, { storageV5: k })
+      sendControlToUdsSocket(q, { action: "rename", name: K }, { storageV5: k })
         .then(() => {
-          y("fleet_view_rename_job");
+          logFeatureOk("fleet_view_rename_job");
         })
         .catch((J) => {
           (n(`[fleetview] peer rename failed: ${J}`),
-            f("fleet_view_rename_job", "peer_uds_failed"),
+            logFeatureBad("fleet_view_rename_job", "peer_uds_failed"),
             O("Couldn't rename \u2014 that session isn't responding"),
             c.updateAdoptedPeers((j) =>
               j.map((ne) =>
@@ -8448,15 +8448,15 @@ function hg(s) {
           )
         : J,
     ),
-    b$(I, K, "user", k).then((J) => {
+    syncJobName(I, K, "user", k).then((J) => {
       if (J) {
-        y("fleet_view_rename_job");
+        logFeatureOk("fleet_view_rename_job");
         return;
       }
       (O(
         "Couldn't rename \u2014 the job may have been removed or its state file is unwritable.",
       ),
-        f("fleet_view_rename_job", "sync_name_failed"),
+        logFeatureBad("fleet_view_rename_job", "sync_name_failed"),
         c.updateJobs((j) =>
           j
             ? j.map((ne) =>
@@ -8478,8 +8478,8 @@ function bg(s) {
     return;
   }
   let K = I.kind === "assign" && q >= 0 ? v[q] : void 0,
-    J = g3t(K ?? R()) || void 0;
-  if (J && N8e(J)) return;
+    J = sanitizeGroupName(K ?? R()) || void 0;
+  if (J && isReservedGroupName(J)) return;
   if (I.kind === "assign") {
     let oe = c.jobs?.find((X) => X.id === I.jobId)?.state.group;
     if ((O(), J !== oe)) Vy(s, I.jobId, J);
@@ -8507,14 +8507,14 @@ function bg(s) {
         : oe,
     ));
   let se = ne.map(c.holdJob);
-  Promise.all(ne.map((oe) => HSt(rr(oe), J, w)))
+  Promise.all(ne.map((oe) => writeJobGroup(getJobDir(oe), J, w)))
     .then(() => {
-      y("fleet_view_group_rename");
+      logFeatureOk("fleet_view_group_rename");
     })
     .catch((oe) => {
-      (h(oe),
+      (logError(oe),
         A(`Couldn't rename group \u2014 ${l(oe)}`),
-        f("fleet_view_group_rename", "write_group_failed"),
+        logFeatureBad("fleet_view_group_rename", "write_group_failed"),
         c.reload());
     })
     .finally(() => {
@@ -8542,7 +8542,7 @@ function iu(s, c, m, b = !1) {
       n(`[FleetView] action '${j}' fs failure (${ne.code}): ${l(ne)}`, {
         level: "error",
       });
-    else h(ne);
+    else logError(ne);
     A(`Couldn't ${j} \u2014 ${l(ne)}`);
   };
   if (c === "x" && !b && v.pending?.id !== m.id) {
@@ -8551,7 +8551,7 @@ function iu(s, c, m, b = !1) {
       se = Jn(m.state, ne),
       oe = v.generation;
     v.arm(m.id, q.label === "stop", ne, se);
-    let X = !(W && Hs(m.state));
+    let X = !(W && isSettled(m.state));
     if (j && X)
       Promise.resolve(j.run(m, { bulk: b })).catch((de) => {
         if (
@@ -8617,16 +8617,16 @@ function Vy(s, c, m) {
           )
         : q,
     ),
-    k.uncollapse(R(m ?? PE, "group")));
+    k.uncollapse(R(m ?? UNGROUPED, "group")));
   let I = b.holdJob(c);
-  HSt(rr(c), m, v)
+  writeJobGroup(getJobDir(c), m, v)
     .then(() => {
-      y(A);
+      logFeatureOk(A);
     })
     .catch((q) => {
-      (h(q),
+      (logError(q),
         O(`Couldn't set group \u2014 ${l(q)}`),
-        f(A, "write_group_failed"),
+        logFeatureBad(A, "write_group_failed"),
         b.reload());
     })
     .finally(I);
@@ -8638,10 +8638,10 @@ function Uy(s, c) {
     O = (m.jobs ?? [])
       .filter((A) => A.state.group === c && A.state.backend === "daemon")
       .map((A) => A.id);
-  ((b.followOrigin = PE),
+  ((b.followOrigin = UNGROUPED),
     (b.followId = null),
     m.bumpGen(),
-    b.uncollapse(v(c, "group"), v(PE, "group")),
+    b.uncollapse(v(c, "group"), v(UNGROUPED, "group")),
     m.updateJobs((A) =>
       A
         ? A.map((I) =>
@@ -8652,14 +8652,14 @@ function Uy(s, c) {
         : A,
     ));
   let W = O.map(m.holdJob);
-  Promise.all(O.map((A) => HSt(rr(A), void 0, w)))
+  Promise.all(O.map((A) => writeJobGroup(getJobDir(A), void 0, w)))
     .then(() => {
-      y("fleet_view_group_delete");
+      logFeatureOk("fleet_view_group_delete");
     })
     .catch((A) => {
-      (h(A),
+      (logError(A),
         R(`Couldn't remove group \u2014 ${l(A)}`),
-        f("fleet_view_group_delete", "write_group_failed"),
+        logFeatureBad("fleet_view_group_delete", "write_group_failed"),
         m.reload());
     })
     .finally(() => {
@@ -8902,7 +8902,7 @@ function wg(s, c) {
           b.isDeleting(et.sessionId.slice(0, 8)) ||
           b.isDeletingSession(et.sessionId);
         if (se.has(et.sessionId) || ae) {
-          (g(
+          (logFeatureSad(
             "fleet_view_resume_picker",
             ae ? "deleting_in_flight" : "already_in_list",
           ),
@@ -9043,7 +9043,7 @@ function wg(s, c) {
     let fe = ze ? ["state", "directory", "group"] : ["state", "directory"],
       Ae = fe.indexOf(w.getSnapshot().groupMode),
       Be = fe[(Ae + 1) % fe.length];
-    if (Be === "group") y("fleet_view_group_mode");
+    if (Be === "group") logFeatureOk("fleet_view_group_mode");
     (w.setGroupMode(Be),
       Te(
         (et) =>
@@ -9071,7 +9071,7 @@ function wg(s, c) {
           ? "Can't pin a cloud session"
           : "Can't pin a session that's running in another terminal",
       ),
-        y("fleet_view_pin_toggle"));
+        logFeatureOk("fleet_view_pin_toggle"));
       return;
     }
     let Be = Ae.id,
@@ -9087,14 +9087,14 @@ function wg(s, c) {
           ) ?? It,
       ));
     let gt = b.holdJob(Be);
-    ISt(Be, ae, R)
+    writeJobPinned(Be, ae, R)
       .then(() => {
-        y("fleet_view_pin_toggle");
+        logFeatureOk("fleet_view_pin_toggle");
       })
       .catch((It) => {
-        (h(It),
+        (logError(It),
           st(`Couldn't ${ae ? "pin" : "unpin"} \u2014 ${l(It)}`),
-          f("fleet_view_pin_toggle", "pin_write_failed"),
+          logFeatureBad("fleet_view_pin_toggle", "pin_write_failed"),
           b.reload());
       })
       .finally(gt);
@@ -9105,9 +9105,9 @@ function wg(s, c) {
       (Qe(),
       le &&
         oe?.kind === "header" &&
-        oe.group !== PE &&
+        oe.group !== UNGROUPED &&
         oe.group !== "pinned" &&
-        oe.group !== G_)
+        oe.group !== EARLIER)
     ) {
       (Ve(oe.group),
         St(),
@@ -9260,9 +9260,9 @@ function wg(s, c) {
   if (c.ctrl && c.key === "x") {
     if ((Qe(), J.length > 0)) return;
     if (!Fe && le && oe?.kind === "header") {
-      if (oe.group === "pinned" || oe.group === PE || oe.group === G_) {
+      if (oe.group === "pinned" || oe.group === UNGROUPED || oe.group === EARLIER) {
         st(
-          `${oe.group === "pinned" ? "Pinned" : oe.group === PE ? "Ungrouped" : "Past"} is reserved \u2014 can't ungroup`,
+          `${oe.group === "pinned" ? "Pinned" : oe.group === UNGROUPED ? "Ungrouped" : "Past"} is reserved \u2014 can't ungroup`,
         );
         return;
       }
@@ -9353,7 +9353,7 @@ var Us = 3600000,
   yg = 21600000,
   au = "CLAUDE_AGENTS_AUTO_RELAUNCHED_AT";
 function Sg(s, { cwdFilter: c, onError: m }) {
-  (i("tengu_bg_agent_action", { action: u(`fleetview_update_${s}`) }),
+  (i("tengu_bg_agent_action", { action: fromEnum(`fleetview_update_${s}`) }),
     slt()
       .then((b) => {
         if (s === "auto" && Date.now() - Nm() < Us) return;
@@ -9375,7 +9375,7 @@ Switching from ${{ ISSUES_EXPLAINER: "report the issue at https://github.com/ant
         });
       })
       .catch((b) => {
-        if ((h(b), s === "manual"))
+        if ((logError(b), s === "manual"))
           m(`Couldn't switch to the latest build \u2014 ${l(b)}`);
       }));
 }
@@ -9429,12 +9429,12 @@ class kg {
             this.#a({ templates: new Map(this.#e.templates).set(s, b) });
         });
     if (!this.#e.skills.has(s))
-      kf(s, c)
+      getCommands(s, c)
         .catch(() => [])
         .then((b) => {
           if (m || this.#e.skills.has(s)) return;
           let k = b
-            .filter((w) => !w.isHidden && !Tk(w))
+            .filter((w) => !w.isHidden && !isSkillOff(w))
             .map((w) => ({
               kind:
                 w.type !== "prompt"
@@ -9465,7 +9465,7 @@ function $y(s, c) {
     k = [];
   for (let w of c) {
     let v = s.get(w.id),
-      R = w.band === "blocked" && w.needs === xf;
+      R = w.band === "blocked" && w.needs === IDLE_NEEDS;
     if (
       (m.set(w.id, R ? (v ?? Rg) : w.band), v === void 0 || v === w.band || R)
     )
@@ -9510,7 +9510,7 @@ function _g(s, c) {
     for (let A of O)
       if (Zu(c, A.sessionId, A.kind, W))
         i("tengu_bg_agent_notification", {
-          kind: u(A.kind),
+          kind: fromEnum(A.kind),
           jobSessionId: Ee(A.sessionId),
         });
   });
@@ -9545,7 +9545,7 @@ function Cg({
     [],
   );
   let [oe] = d(() => O ?? Ei()),
-    [X] = d(() => W ?? Z_e()),
+    [X] = d(() => W ?? createFleetViewHost()),
     [de] = d(() => _r(X, A)),
     {
       jobs: ce,
@@ -9605,7 +9605,7 @@ function Cg({
   E(() => {
     let T = !1;
     return (
-      Vu(ut, If(A)).then((Oe) => {
+      canonicalizePath(ut, If(A)).then((Oe) => {
         if (!T && Oe !== ut) Gt(Oe);
       }),
       () => {
@@ -9613,7 +9613,7 @@ function Cg({
       }
     );
   }, [ut, A]);
-  let at = k && !U8e({ cwd: mt }, k) ? k : mt,
+  let at = k && !jobMatchesCwd({ cwd: mt }, k) ? k : mt,
     [Xt, jt] = d(ut),
     [Jt] = d(() => vg(X)),
     {
@@ -9628,7 +9628,7 @@ function Cg({
   }, [Jt, ut]);
   let no = Qe.get(ut) ?? lu,
     Ft = mo.get(ut) ?? du,
-    fe = Y([...(ce ?? []), ...Ie].map((T) => wj(T.state)))
+    fe = Y([...(ce ?? []), ...Ie].map((T) => spawnOrigin(T.state)))
       .sort()
       .join("\x00"),
     { allRepos: Ae, worktreeBranches: Be } = V(() => {
@@ -9668,8 +9668,8 @@ function Cg({
           X.earlier.endLoad(Oe);
         })
         .then((De) => {
-          if (De === null) f("fleet_view_earlier_load", "load_failed");
-          else y("fleet_view_earlier_load");
+          if (De === null) logFeatureBad("fleet_view_earlier_load", "load_failed");
+          else logFeatureOk("fleet_view_earlier_load");
           if (
             !T &&
             (De === null || De.length === 0) &&
@@ -9787,7 +9787,7 @@ function Cg({
     canonicalLauncherCwd: mt,
     storageV5: A,
   }),
-    KQt(Ve, { clock: I, groupsEnabled: ve }));
+    useAttachFleetOwners(Ve, { clock: I, groupsEnabled: ve }));
   let bu = () => Ar(bt, He),
     $s = V(Bc, []),
     {
@@ -9838,7 +9838,7 @@ function Cg({
         .sort((De, Kt) => De.localeCompare(Kt));
     }, [ye, ki, ce, gr]),
     wo = gr.trim(),
-    Su = wo !== "" && N8e(wo),
+    Su = wo !== "" && isReservedGroupName(wo),
     Hg =
       ye !== null &&
       wo !== "" &&
@@ -9939,7 +9939,7 @@ function Cg({
       [de, pe, A],
     );
   E(() => {
-    (n("[PERF:bg-remount-end]"), y("screen_fleet_view"));
+    (n("[PERF:bg-remount-end]"), logFeatureOk("screen_fleet_view"));
   }, []);
   let ta = re(
     () =>
@@ -9964,11 +9964,11 @@ function Cg({
       if ((xe.setActiveTab(T), Ye(null), T === "remote")) de.loadRemote();
     },
     Iu = (T) => de.liveStatus(T),
-    th = Mo() && H("tengu_fleetview_peers", !1),
+    th = isCrossSessionMessagingEnabled() && H("tengu_fleetview_peers", !1),
     [, oh] = d(0),
     na = Date.now(),
     Pu = V(
-      () => new Set((ce ?? []).filter((T) => CAe(T.state)).map((T) => T.id)),
+      () => new Set((ce ?? []).filter((T) => isLoopJob(T.state)).map((T) => T.id)),
       [ce],
     ),
     nh = (ce ?? []).some((T) => {
@@ -10006,7 +10006,7 @@ function Cg({
       );
     }, []));
   let ra = !1,
-    Ou = V(() => Gl().hasToken, []),
+    Ou = V(() => getAuthTokenSource().hasToken, []),
     Fn = dp({
       jobs: ce,
       adoptedPeers: Ie,
@@ -10070,7 +10070,7 @@ function Cg({
     } = Fn,
     yr = (T) => ao.findIndex((Oe) => Oe.kind === "job" && Oe.job.id === T);
   if ((bt.releasePromoted(Fu), ne && xe.firstImpression("simple")))
-    y("fleet_view_simple");
+    logFeatureOk("fleet_view_simple");
   if (_i.doneFoldHidden > 0 && xe.firstImpression("fold"))
     i("tengu_fleetview_fold_shown", {
       done_count: _i.doneCount,
@@ -10095,15 +10095,15 @@ function Cg({
   (n7(gh ? null : pc(G(ah, (T) => lo(T.state, Iu(T)) === "blocked"))),
     _g(
       sh
-        .filter((T) => PSt(T.state))
+        .filter((T) => isLocalDaemonAgent(T.state))
         .map((T) => ({
           id: T.id,
           sessionId: T.state.sessionId,
           band: lo(T.state),
           label: So(T.state, T.id === c),
           needs: T.state.needs,
-          outcome: Hf(T.state.state),
-          selfDriving: dD(T.state),
+          outcome: terminalOutcome(T.state.state),
+          selfDriving: isSelfDriving(T.state),
         })),
       oe,
     ));
@@ -10539,7 +10539,7 @@ function YFn(s, c, m) {
   if (s) return Nat();
   let b = oDt(process.stdout, null).rows;
   if (b !== process.stdout.rows) return "";
-  return c && !m ? Mat(b) : "";
+  return c && !m ? eraseViewportInPlace(b) : "";
 }
 async function BQt(s, c) {
   let m = !1;
@@ -10556,15 +10556,15 @@ async function BQt(s, c) {
     ((await import("../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js")).registerToolHosts(),
     Xae(),
     zst(),
-    zr() && !Oun())
+    zr() && !hasTeammateModeSnapshot())
   )
-    q$t();
+    captureTeammateModeSnapshot();
   (B$n(c?.dispatchExtraArgs ?? []),
     i("tengu_bg_agent_action", {
       action: S("list_open"),
-      mode: u(ee().fleetViewGroupMode ?? "state"),
+      mode: fromEnum(ee().fleetViewGroupMode ?? "state"),
     }));
-  let w = c?.host ?? Z_e();
+  let w = c?.host ?? createFleetViewHost();
   if ((oc(w.resultSeen, c?.entryChannel), !ee().hasOpenedAgentsView))
     await Te((le) => ({ ...le, hasOpenedAgentsView: !0 }), c?.storageV5);
   let v = [];
@@ -10579,10 +10579,10 @@ async function BQt(s, c) {
     }
   }
   process.stdin.on("readable", R);
-  let O = c?.cwdFilter ? await Vu(Yy(c.cwdFilter), If(c?.storageV5)) : void 0,
+  let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), If(c?.storageV5)) : void 0,
     W = ec(c?.dispatchDefaults),
     A = M() ? c?.storageV5 : void 0;
-  (Et(A ? () => CPt(A) : CPt), Et(UWe("claude agents")));
+  (Et(A ? () => CPt(A) : CPt), Et(openDaemonLease("claude agents")));
   let I = s,
     q = a.CLAUDE_AGENTS_SELECT,
     K = c?.autoOpenJobId,
@@ -10600,7 +10600,7 @@ async function BQt(s, c) {
     X = c?.originJobId,
     de = c?.originSpawn;
   delete process.env.CLAUDE_AGENTS_SELECT;
-  let ce = await H9n(await Vu(Q(), If(c?.storageV5)), c?.storageV5),
+  let ce = await H9n(await canonicalizePath(Q(), If(c?.storageV5)), c?.storageV5),
     Ie = _r(w, c?.storageV5);
   Wi(w, Ie, c?.storageV5, ce?.collapsed);
   let ge = ji(w, { query: ce?.q || void 0 }),
@@ -10611,7 +10611,7 @@ async function BQt(s, c) {
   while (v.length) process.stdin.unshift(v.pop());
   let be;
   if (K !== void 0) {
-    if (Ie.jobs === null) Ie.seedJobs(await q_(void 0, c?.storageV5));
+    if (Ie.jobs === null) Ie.seedJobs(await listJobs(void 0, c?.storageV5));
     let le = Ie.jobs?.find((Fe) => Fe.id === K);
     if (le) {
       let Fe = performance.now(),
@@ -10638,7 +10638,7 @@ async function BQt(s, c) {
           e(kIt, {
             killRing: w.killRing,
             children: e(
-              zm,
+              AppRoot,
               {
                 session: B(),
                 storageV5: c?.storageV5,
@@ -10680,9 +10680,9 @@ async function BQt(s, c) {
           await import("./login-ui.y0z0y3sz.js"),
         tt = await Promise.race([
           new Promise((ye) => {
-            Gx(
+            showScreen(
               I,
-              e(zm, {
+              e(AppRoot, {
                 session: B(),
                 storageV5: c?.storageV5,
                 initialState: Ce && {
@@ -10699,11 +10699,11 @@ async function BQt(s, c) {
           I.waitUntilExit().then(() => "exited"),
         ]);
       if (tt === "exited") break;
-      if ((Gx(I, null), process.stdout.isTTY)) process.stdout.write(Otn());
+      if ((showScreen(I, null), process.stdout.isTTY)) process.stdout.write(getEraseScreenSequence());
       if (tt) {
         let { runOrgMemoryAuthBoundary: ye } =
           await import("./login-ui.y0z0y3sz.js");
-        if ((ye(), await CPt(c?.storageV5), Pe() === "gateway")) {
+        if ((ye(), await CPt(c?.storageV5), getAPIProvider() === "gateway")) {
           I.unmount();
           break;
         }
@@ -10763,14 +10763,14 @@ async function BQt(s, c) {
             storageV5: c?.storageV5,
           }).catch(
             (ze) => (
-              h(ze),
-              f("job_attach", "threw"),
+              logError(ze),
+              logFeatureBad("job_attach", "threw"),
               { kind: "error", msg: `Couldn't attach \u2014 ${l(ze)}` }
             ),
           ),
         ye = await tt(ve.short ?? le.job.id, ve.ok),
         $e = !1;
-      if (ye.kind === "error" && ye.orphaned && !KS(le.job.state)) {
+      if (ye.kind === "error" && ye.orphaned && !isExecLaunch(le.job.state)) {
         let ot = await wn(
           le.job.id,
           { force: !0, knownState: le.job.state },
@@ -10785,15 +10785,15 @@ async function BQt(s, c) {
         ye.kind === "error" && !ye.ended)
       ) {
         if (ye.notResponding)
-          if (KS(le.job.state)) ge.setError(pp);
+          if (isExecLaunch(le.job.state)) ge.setError(pp);
           else fp(ke, ge, le.job.id);
         else ge.setError(ye.msg);
-        if ($e && ye.orphaned) g("fleet_view_open", "recovered_then_crashed");
+        if ($e && ye.orphaned) logFeatureSad("fleet_view_open", "recovered_then_crashed");
         else
-          f("fleet_view_open", $e ? "orphan_recovery_failed" : "attach_failed");
+          logFeatureBad("fleet_view_open", $e ? "orphan_recovery_failed" : "attach_failed");
       } else {
         if (ye.msg) ge.setError(ye.msg);
-        y("fleet_view_open");
+        logFeatureOk("fleet_view_open");
       }
       (Tr("detach", le.job.state, { attachDurationMs: Date.now() - xe }),
         n(
@@ -10804,8 +10804,8 @@ async function BQt(s, c) {
       let xe = le.gestureId ?? qe;
       if (xe !== void 0) zx(xe, c?.storageV5).catch(() => {});
       if (ve.errorCode === "fork_transcript_never_materialized")
-        g("fleet_view_open", "fork_transcript_never_materialized");
-      else f("fleet_view_open", "respawn_failed");
+        logFeatureSad("fleet_view_open", "fork_transcript_never_materialized");
+      else logFeatureBad("fleet_view_open", "respawn_failed");
     }
     if ((HOn(), (I = await w9e(wv(!1))), J)) {
       if (!Fe) process.stdout.write(YFn(Fe, je, m));

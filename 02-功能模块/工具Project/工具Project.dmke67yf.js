@@ -16,7 +16,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { Ve, l, A, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { mxe, ou, b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { yS, hL, _L, Ahe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { isPolicyAllowed as Mt } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { Tt } from "../权限系统/chunk-qdy0h5k2.js";
 import {
   kce,
@@ -32,13 +32,13 @@ import {
   g6n,
   fqe,
   s1t,
-  safeInline as m2,
+  safeInline,
 } from "../GoogleDrive集成/GoogleDrive集成.f0ersdj8.js";
 import { s, T, O, se, v, c, Qe, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
-import { constants as N } from "fs";
-import { open as J, realpath as R, stat as U } from "fs/promises";
-import { join as K, sep as F, resolve as x } from "path";
+import { constants } from "fs";
+import { open as J, realpath, stat as U } from "fs/promises";
+import { join as K, sep as F, resolve } from "path";
 function D(e) {
   if (!me(e) || typeof e.force !== "boolean") return null;
   let t = { ...e };
@@ -168,7 +168,7 @@ function E(e) {
       return e.query ? `Search "${e.query}"` : "Search project";
     case "project_write": {
       let t = e.path ?? "?",
-        r = e.local_path ? ` from ${x(he(), e.local_path)}` : "";
+        r = e.local_path ? ` from ${resolve(he(), e.local_path)}` : "";
       return `Write ${t}${r}`;
     }
     case "project_delete":
@@ -227,13 +227,13 @@ async function re(e) {
 function L() {
   return a.CLAUDE_PROJECT_UUID;
 }
-var qe = Tt({
+var ProjectsTool = Tt({
   name: I,
   searchHint: "read and write the session's attached claude.ai project",
   maxResultSizeChars: 300000,
   persistenceThresholdCeiling: 300000,
   isEnabled() {
-    return Mt("allow_projects_tool") && L() !== void 0;
+    return isPolicyAllowed("allow_projects_tool") && L() !== void 0;
   },
   async description() {
     return P;
@@ -362,15 +362,15 @@ function ie(e, t) {
 var W = 26214400;
 async function ce(e) {
   let t = (_) => (_.endsWith(F) ? _ : _ + F),
-    r = x(he()),
-    i = x(r, e);
+    r = resolve(he()),
+    i = resolve(r, e);
   if (i !== r && !i.startsWith(t(r)))
     throw new w(
       "project_write: local_path must be inside the working directory.",
     );
   let u, p;
   try {
-    [u, p] = await Promise.all([R(i), R(r)]);
+    [u, p] = await Promise.all([realpath(i), realpath(r)]);
   } catch (_) {
     let f = A(_);
     if (f === "ENOENT" || f === "ENOTDIR" || f === "ENAMETOOLONG")
@@ -384,11 +384,11 @@ async function ce(e) {
       "project_write: local_path resolves outside the working directory.",
     );
   let d = 0,
-    n = N.O_NONBLOCK ?? 0,
+    n = constants.O_NONBLOCK ?? 0,
     o = 536870912,
     h;
   try {
-    h = await J(u, N.O_RDONLY | d | o | n);
+    h = await J(u, constants.O_RDONLY | d | o | n);
   } catch (_) {
     let f = A(_);
     if (f === "ENOENT")
@@ -407,7 +407,7 @@ async function ce(e) {
       g,
       y;
     try {
-      ((g = await R(i)), (y = await U(g, { bigint: !0 })));
+      ((g = await realpath(i)), (y = await U(g, { bigint: !0 })));
     } catch {
       throw Error("project_write: local_path was replaced during the upload.");
     }
@@ -461,7 +461,7 @@ async function ue(e, t, r, i, u, p, d) {
   let n = (f) => {
       if (f > o1t)
         throw new w(
-          `project_read: "${m2(t)}" is ${f} bytes, above the ${o1t}-byte limit for in-session downloads.`,
+          `project_read: "${safeInline(t)}" is ${f} bytes, above the ${o1t}-byte limit for in-session downloads.`,
         );
     },
     o = await Hsn(e, r.file_uuid, u, d);
@@ -488,7 +488,7 @@ async function ue(e, t, r, i, u, p, d) {
     file_kind: o.file_kind,
     local_file: _,
     created_at: o.created_at ?? null,
-    notice: `"${m2(t)}" is a ${m2(o.file_kind)} upload with no text extract; its original bytes (${o.file_size_bytes}) were saved to local_file. Open it with file-appropriate tooling.`,
+    notice: `"${safeInline(t)}" is a ${safeInline(o.file_kind)} upload with no text extract; its original bytes (${o.file_size_bytes}) were saved to local_file. Open it with file-appropriate tooling.`,
   };
 }
 async function pe(e, t, r, i, u) {
@@ -522,12 +522,12 @@ function H(e, t) {
 function G(e, t) {
   let r = e.documents.map((d) => d.file_name).filter((d) => d !== null),
     i = (e.files ?? []).map((d) => d.file_name).filter((d) => d !== null),
-    u = [...r, ...i].map(m2),
+    u = [...r, ...i].map(safeInline),
     p =
       u.length > 0
         ? ` Available: ${u.slice(0, 30).join(", ")}${u.length > 30 ? `, \u2026 and ${u.length - 30} more` : ""}`
         : " The project has no docs or files.";
-  return new w(`No doc or file at "${m2(t)}".${p}`);
+  return new w(`No doc or file at "${safeInline(t)}".${p}`);
 }
 function S(e, t, r) {
   if (e === void 0) throw new w(`${r} requires "${t}"`);
@@ -639,7 +639,7 @@ async function we(e, t, r, i, u, p) {
         replaced: g !== void 0,
         present_to_user: e.present_to_user ?? !1,
         ...(e.local_path !== void 0
-          ? { local_path: x(he(), e.local_path) }
+          ? { local_path: resolve(he(), e.local_path) }
           : {}),
       };
     }
@@ -650,7 +650,7 @@ async function we(e, t, r, i, u, p) {
       if (!h) {
         if (H(o, n))
           throw Error(
-            `"${m2(n)}" is a file upload; project_delete only removes text docs. File uploads can be removed from the project in claude.ai.`,
+            `"${safeInline(n)}" is a file upload; project_delete only removes text docs. File uploads can be removed from the project in claude.ai.`,
           );
         throw G(o, n);
       }
@@ -681,4 +681,4 @@ function ge(e) {
   }
   return r;
 }
-export { qe as ProjectsTool };
+export { ProjectsTool };

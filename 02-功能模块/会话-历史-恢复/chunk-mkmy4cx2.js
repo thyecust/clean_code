@@ -11,28 +11,28 @@ import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { be, Kur } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { tje } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { gz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { resolveExecutableSafely as EL } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
+import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
 import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import { randomUUID as ce } from "crypto";
+import { randomUUID } from "crypto";
 import { once as C } from "events";
-import { constants as P, createWriteStream as ue } from "fs";
+import { constants, createWriteStream } from "fs";
 import {
   lstat as J,
   open as B,
   lstat as x,
-  readdir as b,
-  realpath as z,
-  rename as fe,
+  readdir,
+  realpath,
+  rename,
   stat as de,
 } from "fs/promises";
-import { basename as E, dirname as F, isAbsolute as le, join as S } from "path";
-import { createInterface as pe } from "readline";
-import { execFile as ae } from "child_process";
-import { promisify as oe } from "util";
-var se = oe(ae);
+import { basename, dirname, isAbsolute, join as S } from "path";
+import { createInterface } from "readline";
+import { execFile } from "child_process";
+import { promisify } from "util";
+var se = promisify(execFile);
 async function B2e(e) {
-  let n = EL("git");
+  let n = resolveExecutableSafely("git");
   if (n === null) return [];
   try {
     let { stdout: r } = await se(
@@ -201,7 +201,7 @@ async function appendEntriesToJsonlFile(e, n, r) {
 async function q(e, n, r, t) {
   if (t !== void 0 && t.hoverRestOn && (r === "w" || n.length > 0))
     return me(t.source, n, r);
-  let a = ue(e, { mode: 384, flags: r });
+  let a = createWriteStream(e, { mode: 384, flags: r });
   try {
     for (let i of n)
       if (
@@ -278,11 +278,11 @@ function extractFirstPromptFromEntries(e) {
   }
   return n.commandFallback;
 }
-var T = P.O_RDONLY | P.O_NOFOLLOW | P.O_NONBLOCK;
+var T = constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK;
 async function readHeadAndTail(e, n, r, t) {
   if (t !== void 0 && t.hoverRestOn) return ge(t.source);
   try {
-    if (T === P.O_RDONLY) {
+    if (T === constants.O_RDONLY) {
       if (!(await J(e)).isFile()) return { head: "", tail: "" };
     }
     let a = await B(e, T);
@@ -351,7 +351,7 @@ async function j(e, n) {
     return R(t) ? "none" : "unknown";
   }
   try {
-    let t = pe({ input: r.createReadStream() });
+    let t = createInterface({ input: r.createReadStream() });
     for await (let a of t)
       if (a.includes('"type":"user"') || a.includes('"type":"assistant"'))
         return (t.close(), "has");
@@ -419,9 +419,9 @@ async function K(e) {
   }
 }
 async function quarantineJobTranscript(e, n) {
-  let r = `orphaned-${Date.now()}-${ce().slice(0, 8)}`,
+  let r = `orphaned-${Date.now()}-${randomUUID().slice(0, 8)}`,
     t = n !== void 0 && n.hoverRestOn ? n.source : void 0,
-    a = t !== void 0 && e.endsWith(".jsonl") ? X(e, E(e, ".jsonl"), t) : void 0;
+    a = t !== void 0 && e.endsWith(".jsonl") ? X(e, basename(e, ".jsonl"), t) : void 0;
   if (a !== void 0 && t !== void 0) {
     let { key: o } = a;
     if (o.namespace !== "transcript") return !1;
@@ -438,13 +438,13 @@ async function quarantineJobTranscript(e, n) {
   }
   let i = `${e.endsWith(".jsonl") ? e.slice(0, -6) : e}.${r}.jsonl`;
   try {
-    return (await fe(e, i), !0);
+    return (await rename(e, i), !0);
   } catch {
     return !1;
   }
 }
 function isTranscriptFileResumeArg(e) {
-  return le(e) && e.endsWith(".jsonl");
+  return isAbsolute(e) && e.endsWith(".jsonl");
 }
 async function resolveJobTranscript(e, n, r, t, a) {
   let i = await canonicalizePath(n, workspaceV5Of(a?.source, a?.hoverRestOn === !0));
@@ -460,7 +460,7 @@ async function resolveJobTranscript(e, n, r, t, a) {
     c.push(
       r.endsWith(`${e}.jsonl`)
         ? { path: r, via: "linkScanPath" }
-        : { path: S(F(r), `${e}.jsonl`), via: "linkScanDir" },
+        : { path: S(dirname(r), `${e}.jsonl`), via: "linkScanDir" },
     );
   let u =
     a !== void 0 && a.hoverRestOn ? { ...a, source: Q(a.source) } : void 0;
@@ -498,8 +498,8 @@ async function resolveJobTranscript(e, n, r, t, a) {
   return { ...c[0], hasMessages: !1 };
 }
 function X(e, n, r) {
-  let t = addressableProjectKey(F(e), r.isKeySegment);
-  if (t === void 0 || E(e) !== `${n}.jsonl` || !r.isKeySegment(n)) return;
+  let t = addressableProjectKey(dirname(e), r.isKeySegment);
+  if (t === void 0 || basename(e) !== `${n}.jsonl` || !r.isKeySegment(n)) return;
   return { backend: r.backend, key: r.transcriptKey(t, n) };
 }
 async function Pe(e, n, r) {
@@ -571,7 +571,7 @@ async function findSoleTranscriptWithMessagesById(e, n = new Set(), r) {
   let t = getProjectsDir(),
     a = null;
   try {
-    for (let i of await b(t, { withFileTypes: !0 })) {
+    for (let i of await readdir(t, { withFileTypes: !0 })) {
       if (!i.isDirectory()) continue;
       let o = S(t, i.name, `${e}.jsonl`);
       if (n.has(o)) continue;
@@ -624,7 +624,7 @@ async function ve(e, n, r) {
 async function readSessionLite(e, n) {
   if (n !== void 0 && n.hoverRestOn) return ee(n.source);
   try {
-    if (T === P.O_RDONLY) {
+    if (T === constants.O_RDONLY) {
       if (!(await J(e)).isFile()) return null;
     }
     let r = await B(e, T);
@@ -692,7 +692,7 @@ async function recordedCwdCollidesWithProjectResolved(e, n, r, t, a) {
       let c = await a.realPath(e);
       if (!c.ok || !c.value.found) return !1;
       i = zn(c.value.path);
-    } else i = zn(await z(e));
+    } else i = zn(await realpath(e));
   } catch {
     return !1;
   }
@@ -724,8 +724,8 @@ function getProjectDir(e) {
   return S(getProjectsDir(), getProjectKey(e));
 }
 function addressableProjectKey(e, n) {
-  let r = E(e);
-  return F(e) === getProjectsDir() && n(r) ? r : void 0;
+  let r = basename(e);
+  return dirname(e) === getProjectsDir() && n(r) ? r : void 0;
 }
 async function canonicalizePath(e, n) {
   try {
@@ -733,7 +733,7 @@ async function canonicalizePath(e, n) {
       let r = await n.realPath(e);
       return zn(r.ok && r.value.found ? r.value.path : e);
     }
-    return zn(await z(e));
+    return zn(await realpath(e));
   } catch {
     return zn(e);
   }
@@ -748,7 +748,7 @@ async function dirBelongsToProject(e, n, r, t) {
   let o = k(n),
     c;
   try {
-    c = await b(e, { withFileTypes: !0 });
+    c = await readdir(e, { withFileTypes: !0 });
   } catch {
     return !1;
   }
@@ -808,13 +808,13 @@ async function findProjectDirs(e, n) {
   let r = getProjectDir(e),
     t = [];
   try {
-    (await b(r), t.push(r));
+    (await readdir(r), t.push(r));
   } catch {}
   let a = legacyDerivedProjectKey(e);
   if (a !== void 0) {
     let l = S(getProjectsDir(), a);
     try {
-      (await b(l), t.push(l));
+      (await readdir(l), t.push(l));
     } catch {}
     return t;
   }
@@ -826,7 +826,7 @@ async function findProjectDirs(e, n) {
     s = u(i.slice(0, MAX_SANITIZED_LENGTH) + "-"),
     p = u(r);
   try {
-    for (let l of await b(o, { withFileTypes: !0 })) {
+    for (let l of await readdir(o, { withFileTypes: !0 })) {
       if (!l.isDirectory() || !u(l.name).startsWith(s)) continue;
       let f = S(o, l.name);
       if (u(f) !== p && (await dirBelongsToProject(f, e, c))) t.push(f);
@@ -997,7 +997,7 @@ async function resolveSessionFilePath(e, n, r, t) {
   }
   let s;
   try {
-    s = await b(u);
+    s = await readdir(u);
   } catch {
     return;
   }

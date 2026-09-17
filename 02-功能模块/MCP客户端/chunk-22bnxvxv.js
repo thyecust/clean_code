@@ -10,8 +10,8 @@
 import { su, oE, vW, l8, c8, jw } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l, cc } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { isClaudeAISubscriber as gt, hasProfileScope as lp, getOauthAccountInfo as vn, getSubscriptionType as qn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isClaudeAISubscriber, hasProfileScope, getOauthAccountInfo, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   Azn,
   Ymt,
@@ -100,11 +100,11 @@ async function plt(e, i) {
   return s;
 }
 async function y(e, i) {
-  let s = vn()?.accountUuid;
+  let s = getOauthAccountInfo()?.accountUuid;
   try {
     let t = await kO(i);
     if (!t) return { status: "empty_response" };
-    let o = gt() && lp(),
+    let o = isClaudeAISubscriber() && hasProfileScope(),
       r = Azn(t),
       d = Ymt(t);
     if (!r || (o && !d)) {
@@ -131,7 +131,7 @@ async function y(e, i) {
     return { status: "ok", utilization: t };
   } catch (t) {
     if (cc(t)) n(`Failed to load usage data: ${l(t)}`, { level: "error" });
-    else h(t);
+    else logError(t);
     let o = t,
       r = o.response?.status === 429 ? "http_429" : null,
       d = r3e(e);
@@ -162,8 +162,8 @@ function _(e) {
   };
 }
 async function o3e({ includeBehaviors: e = !0, storageV5: i, credentials: s }) {
-  let t = gt(),
-    o = t && lp(),
+  let t = isClaudeAISubscriber(),
+    o = t && hasProfileScope(),
     [r, d] = await Promise.all([
       o
         ? plt(i, s).then((a) =>
@@ -173,7 +173,7 @@ async function o3e({ includeBehaviors: e = !0, storageV5: i, credentials: s }) {
       e && t && Ble().allowed
         ? a3e(i).then(
             (a) => ({ day: _(a.day), week: _(a.week) }),
-            (a) => (h(a), null),
+            (a) => (logError(a), null),
           )
         : Promise.resolve(null),
     ]),
@@ -200,7 +200,7 @@ async function o3e({ includeBehaviors: e = !0, storageV5: i, credentials: s }) {
       total_lines_removed: c8(),
       model_usage: jw(),
     },
-    subscription_type: qn(),
+    subscription_type: getSubscriptionType(),
     rate_limits_available: o,
     rate_limits:
       r === null

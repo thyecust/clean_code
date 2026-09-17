@@ -9,37 +9,37 @@
 // Version: 2.1.263
 import { oo, bh, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, kw, mc, o0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getParentSessionId as aS } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId } from "../Teammates团队/chunk-811z9z0t.js";
 import {
-  FORK_AGENT as EI,
-  buildChildMessage as Vmt,
+  FORK_AGENT,
+  buildChildMessage,
   p3,
   RV,
   yne,
   cH,
   MO,
   zne,
-  runAgent as dw,
+  runAgent,
   k3,
   Q6t,
   Re,
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { getToolPermissionContext as ce } from "./chunk-fjrcf22x.js";
+import { getToolPermissionContext } from "./chunk-fjrcf22x.js";
 import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 async function spawnForkFromDirective(t, e, a, m, p) {
   if (e.getAppState().endedByModel)
-    return (f("subagent_launch", "subagent_fork_ended_by_model"), null);
+    return (logFeatureBad("subagent_launch", "subagent_fork_ended_by_model"), null);
   if (Ci())
-    return (f("subagent_launch", "subagent_fork_coordinator_mode"), null);
+    return (logFeatureBad("subagent_launch", "subagent_fork_coordinator_mode"), null);
   let o = e.renderedSystemPrompt;
   if (!o) {
     if (((o = await _(e)), !o))
-      return (f("subagent_launch", "subagent_fork_prompt_missing"), null);
+      return (logFeatureBad("subagent_launch", "subagent_fork_prompt_missing"), null);
   }
   let C = {
       kind: "fork",
@@ -58,7 +58,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
     { taskRegistry: s } = e,
     T = Date.now(),
     d = mc(e.agentContext) + 1,
-    S = cH(EI.model, e.options.mainLoopModel, "inherit", ce(e).mode),
+    S = cH(FORK_AGENT.model, e.options.mainLoopModel, "inherit", getToolPermissionContext(e).mode),
     u = RV({
       agentId: n,
       ownerAgentId: ze(),
@@ -66,7 +66,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
       description: g,
       prompt: t,
       model: S,
-      selectedAgent: EI,
+      selectedAgent: FORK_AGENT,
       taskRegistry: s,
       toolUseId: e.toolUseId,
       sessionScratch: e.session.sessionScratch,
@@ -75,7 +75,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
   (e.agentLifecycle.registerName(r, oo(n)),
     sr().agentSpawned.emit({
       agentId: n,
-      agentType: EI.agentType,
+      agentType: FORK_AGENT.agentType,
       parentAgentId: e.agentId,
       taskRegistry: s,
     }));
@@ -84,18 +84,18 @@ async function spawnForkFromDirective(t, e, a, m, p) {
       resolvedAgentModel: S,
       isBuiltInAgent: !0,
       startTime: T,
-      agentType: EI.agentType,
+      agentType: FORK_AGENT.agentType,
       isAsync: !0,
       agentDepth: d,
-      source: EI.source,
+      source: FORK_AGENT.source,
     },
     A = {
       agentId: n,
       parentAgentId: e.agentId,
       depth: d,
-      parentSessionId: aS(),
+      parentSessionId: getParentSessionId(),
       agentType: "subagent",
-      subagentName: EI.agentType,
+      subagentName: FORK_AGENT.agentType,
       displayName: r,
       isAsync: !0,
       isBackgroundAgent: !0,
@@ -111,19 +111,19 @@ async function spawnForkFromDirective(t, e, a, m, p) {
         taskId: u.agentId,
         abortController: k,
         makeStream: (c, i, b) =>
-          dw({
+          runAgent({
             onQueryProgress: i,
             onStreamTokenEstimate: b,
-            onModelRestricted: zne(EI.agentType, e.appendSystemMessage),
-            agentDefinition: EI,
+            onModelRestricted: zne(FORK_AGENT.agentType, e.appendSystemMessage),
+            agentDefinition: FORK_AGENT,
             promptMessages: [
               ...(m ?? []),
-              Re({ content: [{ type: "text", text: Vmt(t) }] }),
+              Re({ content: [{ type: "text", text: buildChildMessage(t) }] }),
             ],
             toolUseContext: e,
             canUseTool: a,
             isAsync: !0,
-            querySource: p3(EI.agentType, !0),
+            querySource: p3(FORK_AGENT.agentType, !0),
             forkOrigin: p,
             spawnedBySkill: e.options.spawnedBySkill ?? e.options.activeSkill,
             spawnedByForkedSkill: e.options.spawnedByForkedSkill,
@@ -152,7 +152,7 @@ async function spawnForkFromDirective(t, e, a, m, p) {
         onRunSettled: P,
       }),
     ),
-    y("subagent_launch"),
+    logFeatureOk("subagent_launch"),
     { agentId: n, name: r }
   );
 }
@@ -161,7 +161,7 @@ async function _(t) {
     a = e.agent
       ? e.agentDefinitions.activeAgents.find((o) => o.agentType === e.agent)
       : void 0,
-    m = Array.from(ce(t).additionalWorkingDirectories.keys()),
+    m = Array.from(getToolPermissionContext(t).additionalWorkingDirectories.keys()),
     p = await VS(t.options.tools, t.options.mainLoopModel, m);
   return MO({
     mainThreadAgentDefinition: a,

@@ -11,10 +11,10 @@
 // [preload stripped] 原本在此预载 27 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { lo } from "./chunk-dajvcsw3.js";
-import { performHeapDump as pnn } from "../../02-功能模块/诊断-HeapDump/诊断-HeapDump.a3sn2876.js";
-import { basename as l } from "path";
+import { performHeapDump } from "../../02-功能模块/诊断-HeapDump/诊断-HeapDump.a3sn2876.js";
+import { basename } from "path";
 async function x(s, e) {
-  let t = await pnn(),
+  let t = await performHeapDump(),
     o = lo(e.session);
   if (!t.success) {
     if (o)
@@ -28,8 +28,8 @@ async function x(s, e) {
       );
     return { type: "text", value: `Failed to create heap dump: ${t.error}` };
   }
-  let p = o ? l(t.heapPath) : t.heapPath,
-    r = o ? l(t.diagPath) : t.diagPath;
+  let p = o ? basename(t.heapPath) : t.heapPath,
+    r = o ? basename(t.diagPath) : t.diagPath;
   if (o) n(`heapdump written: ${t.heapPath} ${t.diagPath}`);
   let i = [p, r, "", u(t.diagnostics)];
   return (

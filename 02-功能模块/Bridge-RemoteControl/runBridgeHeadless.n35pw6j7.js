@@ -13,40 +13,40 @@ import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { M } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Z, kt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureBadAsync as wn, withFeatureTelemetry as Sr } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tl, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { normalizePermissionModeAlias as mf, mkt, Dtt, Ltt } from "../权限系统/chunk-e4pfvp7x.js";
+import { normalizePermissionModeAlias, mkt, Dtt, Ltt } from "../权限系统/chunk-e4pfvp7x.js";
 import { Ve, R, dt, l, A, dot, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, dxe, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { St, dxe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { pXt, IPn, $nt, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
 import { rd } from "../../01-核心基础设施/共享小工具-未细化/chunk-7dzh4mjq.js";
 import { q } from "../../01-核心基础设施/共享小工具-未细化/chunk-7beprh8k.js";
-import { te, truncateToWidth as Xe, formatDuration as Ot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { te, truncateToWidth, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { HCn, Wi, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { redactGitRemoteCredentials as Uie } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { ea, Za, Nr, PBe, rc, ctt, Vge, x8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  drainRegisteredWriteQueues as y0,
+  drainRegisteredWriteQueues,
   PU,
   Rge,
   S0,
   vet,
   oRt,
-  getSettingsParseErrorsForSource as pRt,
-  getSettingsForSource as ye,
-  getAllPolicyTierSettings as Rd,
-  getPolicySettingsLoadErrors as xq,
+  getSettingsParseErrorsForSource,
+  getSettingsForSource,
+  getAllPolicyTierSettings,
+  getPolicySettingsLoadErrors,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { validateBridgeId as fm, toCompatSessionId as zu, toInfraSessionId as yc, sessionIdBody as pr } from "../权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId, toCompatSessionId, toInfraSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Eq, Hvt, Pvt, Ovt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -59,15 +59,15 @@ import {
   KLe,
   sj,
   v3,
-  MCP_SETTINGS_SCOPES as N3,
-  getMcpConfigsByScope as nd,
+  MCP_SETTINGS_SCOPES,
+  getMcpConfigsByScope,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
 import { Dve, $$e } from "./chunk-5ne99rq3.js";
-import { isBridgeEnvReregisterEnabled as DAn, isCcrV2SendEventsEnabled as ise, isCcrV2SessionCrudEnabled as XG, isBridgeServerSessionConfigEnabled as NAn } from "./chunk-9estzwf5.js";
-import { debugTruncate as lVt, debugBody as G$e, describeAxiosError as pQe, parseRetryAfterHeader as Yy, extractErrorDetail as fg } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { getAttestationFilterPolicy as vme, getTrustedDeviceToken as uh, withUntrustedDeviceRecovery as M$e } from "./chunk-tyce0p0b.js";
-import { getBridgeAccessToken as m_, getBridgeAccessTokenAsync as wC, getBridgeSessionNamePrefix as qre } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
+import { isBridgeEnvReregisterEnabled, isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled, isBridgeServerSessionConfigEnabled } from "./chunk-9estzwf5.js";
+import { debugTruncate, debugBody, describeAxiosError, parseRetryAfterHeader, extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
+import { getAttestationFilterPolicy, getTrustedDeviceToken, withUntrustedDeviceRecovery } from "./chunk-tyce0p0b.js";
+import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeSessionNamePrefix } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
 import { vAe, ANe, Iyn } from "./chunk-ct52ffwb.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
@@ -89,9 +89,9 @@ import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { P, Hxt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { va } from "../../01-核心基础设施/共享小工具-未细化/chunk-qdhvxsk2.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { randomUUID as Gt } from "crypto";
-import { homedir as Dr, hostname as Or } from "os";
-import { basename as Gn, join as zn, resolve as sr } from "path";
+import { randomUUID } from "crypto";
+import { homedir, hostname } from "os";
+import { basename, join as zn, resolve } from "path";
 class Le extends Error {
   status;
   errorType;
@@ -144,7 +144,7 @@ function Xt(e) {
   }
   return {
     async registerBridgeEnvironment(w, _) {
-      return Sr(
+      return withFeatureTelemetry(
         "bridge_environment_register",
         async () => {
           t(`[bridge:api] POST /v1/environments/bridge bridgeId=${w.bridgeId}`);
@@ -153,7 +153,7 @@ function Xt(e) {
               ...(w.machineId != null && { machine_id: w.machineId }),
               directory: w.dir,
               branch: w.branch,
-              git_repo_url: Uie(w.gitRepoUrl),
+              git_repo_url: redactGitRemoteCredentials(w.gitRepoUrl),
               max_sessions: w.maxSessions,
               metadata: { worker_type: w.workerType },
               ...(w.hostProfile && { host: w.hostProfile }),
@@ -177,9 +177,9 @@ function Xt(e) {
               `[bridge:api] POST /v1/environments/bridge -> ${E.status} environment_id=${E.data.environment_id}`,
             ),
             t(
-              `[bridge:api] >>> ${G$e({ ...T, ...(T.host && { host: { tools: T.host.tools.length, mcp: T.host.mcp_servers?.length ?? 0 } }) })}`,
+              `[bridge:api] >>> ${debugBody({ ...T, ...(T.host && { host: { tools: T.host.tools.length, mcp: T.host.mcp_servers?.length ?? 0 } }) })}`,
             ),
-            t(`[bridge:api] <<< ${G$e(E.data)}`),
+            t(`[bridge:api] <<< ${debugBody(E.data)}`),
             E.data
           );
         },
@@ -187,7 +187,7 @@ function Xt(e) {
       );
     },
     async pollForWork(w, _, T, E, W) {
-      fm(w, "environmentId");
+      validateBridgeId(w, "environmentId");
       let N = o;
       o = 0;
       let ue = {};
@@ -211,13 +211,13 @@ function Xt(e) {
         t(
           `[bridge:api] GET .../work/poll -> ${ne.status} workId=${ne.data.id} type=${ne.data.data?.type}${ne.data.data?.id ? ` sessionId=${ne.data.data.id}` : ""}`,
         ),
-        t(`[bridge:api] <<< ${G$e(ne.data)}`),
+        t(`[bridge:api] <<< ${debugBody(ne.data)}`),
         ne.data
       );
     },
     async acknowledgeWork(w, _, T) {
-      (fm(w, "environmentId"),
-        fm(_, "workId"),
+      (validateBridgeId(w, "environmentId"),
+        validateBridgeId(_, "workId"),
         t(`[bridge:api] POST .../work/${_}/ack`));
       let E = await at.post(
         `${e.baseUrl}/v1/environments/${w}/work/${_}/ack`,
@@ -228,8 +228,8 @@ function Xt(e) {
         t(`[bridge:api] POST .../work/${_}/ack -> ${E.status}`));
     },
     async stopWork(w, _, T, E) {
-      (fm(w, "environmentId"),
-        fm(_, "workId"),
+      (validateBridgeId(w, "environmentId"),
+        validateBridgeId(_, "workId"),
         t(`[bridge:api] POST .../work/${_}/stop force=${E}`));
       let W = await at.post(
         `${e.baseUrl}/v1/environments/${w}/work/${_}/stop`,
@@ -240,7 +240,7 @@ function Xt(e) {
         t(`[bridge:api] POST .../work/${_}/stop -> ${W.status}`));
     },
     async deregisterEnvironment(w) {
-      (fm(w, "environmentId"),
+      (validateBridgeId(w, "environmentId"),
         t(`[bridge:api] DELETE /v1/environments/bridge/${w}`));
       let _ = await C(
         async (T) =>
@@ -255,10 +255,10 @@ function Xt(e) {
         t(`[bridge:api] DELETE /v1/environments/bridge/${w} -> ${_.status}`));
     },
     async archiveSession(w) {
-      fm(w, "sessionId");
+      validateBridgeId(w, "sessionId");
       let _ = e.useCcrV2SessionCrud?.()
-        ? `/v1/code/sessions/${yc(w)}/archive`
-        : `/v1/sessions/${zu(w)}/archive`;
+        ? `/v1/code/sessions/${toInfraSessionId(w)}/archive`
+        : `/v1/sessions/${toCompatSessionId(w)}/archive`;
       t(`[bridge:api] POST ${_}`);
       let T = await C(
         async (E) =>
@@ -281,11 +281,11 @@ function Xt(e) {
         t(`[bridge:api] POST ${_} -> ${T.status}`));
     },
     async reconnectSession(w, _, T) {
-      return Sr(
+      return withFeatureTelemetry(
         "bridge_session_reconnect",
         async () => {
-          (fm(w, "environmentId"),
-            fm(_, "sessionId"),
+          (validateBridgeId(w, "environmentId"),
+            validateBridgeId(_, "sessionId"),
             t(
               `[bridge:api] POST /v1/environments/${w}/bridge/reconnect session_id=${_}`,
             ));
@@ -310,8 +310,8 @@ function Xt(e) {
       );
     },
     async heartbeatWork(w, _, T) {
-      (fm(w, "environmentId"),
-        fm(_, "workId"),
+      (validateBridgeId(w, "environmentId"),
+        validateBridgeId(_, "workId"),
         t(`[bridge:api] POST .../work/${_}/heartbeat`));
       let E = await at.post(
         `${e.baseUrl}/v1/environments/${w}/work/${_}/heartbeat`,
@@ -327,7 +327,7 @@ function Xt(e) {
       );
     },
     async sendPermissionResponseEvent(w, _, T) {
-      fm(w, "sessionId");
+      validateBridgeId(w, "sessionId");
       let { url: E, body: W } = cLe(
         e.baseUrl,
         w,
@@ -342,14 +342,14 @@ function Xt(e) {
       });
       (wt(N.status, N.data, "SendPermissionResponseEvent"),
         t(`[bridge:api] POST ${E} -> ${N.status}`),
-        t(`[bridge:api] >>> ${G$e(W)}`),
-        t(`[bridge:api] <<< ${G$e(N.data)}`));
+        t(`[bridge:api] >>> ${debugBody(W)}`),
+        t(`[bridge:api] <<< ${debugBody(N.data)}`));
     },
   };
 }
 function wt(e, t, o, d) {
   if (e === 200 || e === 204) return;
-  let p = fg(t),
+  let p = extractErrorDetail(t),
     r = Wr(t);
   switch (e) {
     case 401:
@@ -380,7 +380,7 @@ function wt(e, t, o, d) {
         r ?? "environment_expired",
       );
     case 429: {
-      let C = Yy(
+      let C = parseRetryAfterHeader(
         typeof d?.["retry-after"] === "string" ? d["retry-after"] : void 0,
       );
       throw Object.assign(
@@ -423,12 +423,12 @@ function Wr(e) {
   }
   return;
 }
-import { createHash as Zr } from "crypto";
+import { createHash } from "crypto";
 import {
-  lstat as ur,
-  mkdtemp as en,
+  lstat,
+  mkdtemp,
   rm as tn,
-  writeFile as gr,
+  writeFile,
 } from "fs/promises";
 import { join as Qt } from "path";
 var Fr = /^[a-zA-Z0-9_-]{1,64}$/;
@@ -466,11 +466,11 @@ function dr(e, t = Eq) {
     p = rc(t, "");
   return d.map((r) => (r.startsWith(p) ? r.slice(p.length) : r));
 }
-import { spawn as jr } from "child_process";
-import { createWriteStream as Hr } from "fs";
+import { spawn } from "child_process";
+import { createWriteStream } from "fs";
 import { rm as qr } from "fs/promises";
-import { dirname as Vr, join as lr } from "path";
-import { createInterface as cr } from "readline";
+import { dirname, join as lr } from "path";
+import { createInterface } from "readline";
 var Gr = 10,
   zr = 10;
 function Rt(e) {
@@ -598,8 +598,8 @@ function Jt(e) {
       let r = null,
         C;
       if (e.debugFile)
-        ((C = lr(Vr(e.debugFile), `bridge-transcript-${d}.jsonl`)),
-          (r = Hr(C, { flags: "a" })),
+        ((C = lr(dirname(e.debugFile), `bridge-transcript-${d}.jsonl`)),
+          (r = createWriteStream(C, { flags: "a" })),
           r.on("error", (j) => {
             (e.onDebug(`[bridge:session] Transcript write error: ${j.message}`),
               (r = null));
@@ -689,7 +689,7 @@ function Jt(e) {
         e.onDebug(`[bridge:session] Debug log: ${p}`);
       let I;
       try {
-        I = jr(e.execPath, w, {
+        I = spawn(e.execPath, w, {
           cwd: o,
           stdio: ["pipe", "pipe", "pipe"],
           env: ae,
@@ -705,7 +705,7 @@ function Jt(e) {
         Ke = !1,
         We = !1;
       if (I.stderr)
-        cr({ input: I.stderr }).on("line", (Se) => {
+        createInterface({ input: I.stderr }).on("line", (Se) => {
           if (Se.startsWith($$e)) {
             let $e = To(Se.slice($$e.length));
             if (e.onChildWarning) e.onChildWarning(t.sessionId, $e);
@@ -728,7 +728,7 @@ function Jt(e) {
           D.push(Se);
         });
       if (I.stdout)
-        cr({ input: I.stdout }).on("line", (Se) => {
+        createInterface({ input: I.stdout }).on("line", (Se) => {
           if (r)
             r.write(
               Se +
@@ -736,7 +736,7 @@ function Jt(e) {
 `,
             );
           if (
-            (e.onDebug(`[bridge:ws] sessionId=${t.sessionId} <<< ${lVt(Se)}`),
+            (e.onDebug(`[bridge:ws] sessionId=${t.sessionId} <<< ${debugTruncate(Se)}`),
             e.verbose)
           )
             process.stderr.write(
@@ -827,7 +827,7 @@ function Jt(e) {
           },
           writeStdin(j) {
             if (I.stdin && !I.stdin.destroyed)
-              (e.onDebug(`[bridge:ws] sessionId=${t.sessionId} >>> ${lVt(j)}`),
+              (e.onDebug(`[bridge:ws] sessionId=${t.sessionId} >>> ${debugTruncate(j)}`),
                 I.stdin.write(j));
           },
           updateAccessToken(j) {
@@ -1016,15 +1016,15 @@ async function pn(e, t) {
     let d;
     if (e.mcpConfigJson) {
       let r = Qt(o, an);
-      (await gr(r, e.mcpConfigJson, { flag: "wx", mode: 384 }),
+      (await writeFile(r, e.mcpConfigJson, { flag: "wx", mode: 384 }),
         (d = { path: r, ingressUrl: t.apiBaseUrl }));
     }
     let p;
     if (e.appendSystemPrompt) {
       let r = Qt(o, dn),
         C = Buffer.from(e.appendSystemPrompt, "utf8");
-      (await gr(r, C, { flag: "wx", mode: 384 }),
-        (p = { path: r, sha256: Zr("sha256").update(C).digest("hex") }));
+      (await writeFile(r, C, { flag: "wx", mode: 384 }),
+        (p = { path: r, sha256: createHash("sha256").update(C).digest("hex") }));
     }
     return {
       extraArgs: e.extraArgs,
@@ -1040,7 +1040,7 @@ async function gn(e) {
   for (let t = 0; ; t++)
     try {
       let o = await EBt(),
-        d = await ur(o);
+        d = await lstat(o);
       if (!d.isDirectory()) throw Error("bridge spawn root is not a directory");
       if (P() !== "windows") {
         if (
@@ -1050,8 +1050,8 @@ async function gn(e) {
         )
           throw Error("bridge spawn root has unexpected owner or mode");
       }
-      let p = await en(Qt(o, `${Rt(e)}-`)),
-        r = await ur(o).catch(() => null);
+      let p = await mkdtemp(Qt(o, `${Rt(e)}-`)),
+        r = await lstat(o).catch(() => null);
       if (r?.dev !== d.dev || r.ino !== d.ino)
         throw (
           await Zt(p),
@@ -1074,7 +1074,7 @@ function fn(e, t) {
     { level: "warn" },
   ),
     i("tengu_bridge_server_config_rejected", { ...t, reason: S("gate_off") }),
-    g("bridge_server_session_config", "gate_off", t));
+    logFeatureSad("bridge_server_session_config", "gate_off", t));
 }
 async function br(e, t) {
   let o = {
@@ -1100,7 +1100,7 @@ async function br(e, t) {
     meta_mcp: d.mcpConfigJson !== null,
     auto_allow: d.autoAllowTools.length,
     ignored_mcp: d.ignoredMcpServers,
-    ...(d.metaDropReason !== null && { meta_drop: u(d.metaDropReason) }),
+    ...(d.metaDropReason !== null && { meta_drop: fromEnum(d.metaDropReason) }),
   };
   if (r !== void 0) {
     (n(`[bridge:server-config] not applied sessionId=${t.sessionId}: ${r}`, {
@@ -1110,7 +1110,7 @@ async function br(e, t) {
         ...C,
         reason: S("prepare_failed"),
       }),
-      f("bridge_server_session_config", "prepare_failed", C));
+      logFeatureBad("bridge_server_session_config", "prepare_failed", C));
     return;
   }
   if (!p) {
@@ -1122,7 +1122,7 @@ async function br(e, t) {
         ...C,
         reason: S("nothing_applied"),
       }),
-      g("bridge_server_session_config", "nothing_applied", C));
+      logFeatureSad("bridge_server_session_config", "nothing_applied", C));
     return;
   }
   let w = d.mcpConfigJson
@@ -1138,8 +1138,8 @@ async function br(e, t) {
     i("tengu_bridge_server_config_applied", C),
     d.metaDropReason !== null)
   )
-    g("bridge_server_session_config", "meta_mcp_not_verified", C);
-  else y("bridge_server_session_config", C);
+    logFeatureSad("bridge_server_session_config", "meta_mcp_not_verified", C);
+  else logFeatureOk("bridge_server_session_config", C);
   return p;
 }
 var mn = { type: "utf8", errorCorrectionLevel: "L", small: !0 };
@@ -1268,12 +1268,12 @@ function vr(e) {
       j(`    ${ie.dim(`Capacity: ${I}/${X} \xB7 ${ze}`)}
 `);
       for (let [, rt] of Ke) {
-        let Ye = rt.title ? Xe(rt.title, 35) : ie.dim("Attached"),
+        let Ye = rt.title ? truncateToWidth(rt.title, 35) : ie.dim("Attached"),
           Ce = wBn(Ye, rt.url),
           Ie = rt.activity,
           Ee =
             Ie && Ie.type !== "result" && Ie.type !== "error"
-              ? ie.dim(` ${Xe(Ie.summary, 40)}`)
+              ? ie.dim(` ${truncateToWidth(Ie.summary, 40)}`)
               : "";
         j(`    ${Ce}${Ee}
 `);
@@ -1290,7 +1290,7 @@ function vr(e) {
 `);
     }
     if (X === 1 && !k && ae && Date.now() - ce < yBn)
-      j(`  ${ie.dim(Xe(ae, 60))}
+      j(`  ${ie.dim(truncateToWidth(ae, 60))}
 `);
     let ot = N ?? E;
     if (ot) {
@@ -1352,7 +1352,7 @@ function vr(e) {
     },
     logSessionStart(k, J) {
       if (o) {
-        let de = Xe(J, 80);
+        let de = truncateToWidth(J, 80);
         $e(
           ie.dim(`[${Ple()}]`) +
             ` Session started: ${ie.white(`"${de}"`)} (${ie.dim(k)})
@@ -1363,7 +1363,7 @@ function vr(e) {
     logSessionComplete(k, J) {
       $e(
         ie.dim(`[${Ple()}]`) +
-          ` Session ${ie.green("completed")} (${Ot(J)}) ${ie.dim(k)}
+          ` Session ${ie.green("completed")} (${formatDuration(J)}) ${ie.dim(k)}
 `,
       );
     },
@@ -1407,7 +1407,7 @@ function vr(e) {
       ((C = null),
         $e(
           ie.dim(`[${Ple()}]`) +
-            ` ${ie.green("Reconnected")} after ${Ot(k)}
+            ` ${ie.green("Reconnected")} after ${formatDuration(k)}
 `,
         ));
     },
@@ -1495,7 +1495,7 @@ function vr(e) {
       if (!de) return;
       let be = si(J);
       if (((de.title = be), p === "reconnecting" || p === "failed")) return;
-      if (X === 1) ((p = "titled"), (r = Xe(be, 40)));
+      if (X === 1) ((p = "titled"), (r = truncateToWidth(be, 40)));
       De();
     },
     removeSession(k) {
@@ -1532,8 +1532,8 @@ function yr(e) {
   }
   return { signal: d, wake: o };
 }
-import { readdir as _n, readFile as Sn, stat as hn } from "fs/promises";
-import { release as bn } from "os";
+import { readdir, readFile, stat as hn } from "fs/promises";
+import { release } from "os";
 import { join as vn } from "path";
 var yn = 1500,
   $r = 262144,
@@ -1602,21 +1602,21 @@ function er(e) {
   if (xn()) return "off";
   let t = (r) => r?.remoteControl?.shareHostProfile,
     o = [
-      ...Rd(),
-      ye("policySettings"),
-      ye("flagSettings"),
-      ye("userSettings"),
+      ...getAllPolicyTierSettings(),
+      getSettingsForSource("policySettings"),
+      getSettingsForSource("flagSettings"),
+      getSettingsForSource("userSettings"),
     ].map(t),
     d = Vge.find((r) => o.includes(r)) ?? e,
-    p = [d, ...PBe.filter(Nr).map((r) => t(ye(r)))];
+    p = [d, ...PBe.filter(Nr).map((r) => t(getSettingsForSource(r)))];
   return Vge.find((r) => p.includes(r)) ?? d;
 }
 function xn() {
   return [
-    ...xq(),
-    ...pRt("flagSettings"),
-    ...pRt("userSettings"),
-    ...PBe.filter(Nr).flatMap((t) => pRt(t)),
+    ...getPolicySettingsLoadErrors(),
+    ...getSettingsParseErrorsForSource("flagSettings"),
+    ...getSettingsParseErrorsForSource("userSettings"),
+    ...PBe.filter(Nr).flatMap((t) => getSettingsParseErrorsForSource(t)),
   ].some((t) => {
     if (t.path === "") return !0;
     if (t.statusOnly) return !1;
@@ -1652,7 +1652,7 @@ async function Ar(e) {
     }
     return e;
   } catch (t) {
-    h(t);
+    logError(t);
     return;
   }
 }
@@ -1667,7 +1667,7 @@ async function tr(e) {
     }
     return await Bn({ includeMcpServers: o === "full", signal: e });
   } catch (t) {
-    h(t);
+    logError(t);
     return;
   }
 }
@@ -1685,7 +1685,7 @@ async function Bn({ includeMcpServers: e, signal: t }) {
         Promise.all(
           r.map((W) =>
             W.catch((N) => {
-              h(N);
+              logError(N);
             }),
           ),
         ).then(() => !0),
@@ -1713,24 +1713,24 @@ async function Bn({ includeMcpServers: e, signal: t }) {
         duration_ms: Date.now() - o,
         tools_count: E.tools.length,
         mcp_count: E.mcp_servers?.length ?? 0,
-        platform: we(d),
-        arch: we("arm64"),
+        platform: fromEnumOpt(d),
+        arch: fromEnumOpt("arm64"),
         wsl: E.wsl === !0,
       }),
       _)
     )
-      y("bridge_host_profile");
-    else if (!w) g("bridge_host_profile", "deadline");
+      logFeatureOk("bridge_host_profile");
+    else if (!w) logFeatureSad("bridge_host_profile", "deadline");
     return E;
   } catch (p) {
-    (h(p),
+    (logError(p),
       i("tengu_bridge_host_profile_collect", {
         outcome: S("error"),
         duration_ms: Date.now() - o,
-        platform: we(d),
-        arch: we("arm64"),
+        platform: fromEnumOpt(d),
+        arch: fromEnumOpt("arm64"),
       }),
-      f("bridge_host_profile", "error"));
+      logFeatureBad("bridge_host_profile", "error"));
     return;
   }
 }
@@ -1758,7 +1758,7 @@ async function Nn(e, t) {
       return;
     }
     case "win32": {
-      let o = bn();
+      let o = release();
       if (jt.test(o)) t.osVersion = o;
       return;
     }
@@ -1774,7 +1774,7 @@ async function Rr(e, t) {
 async function Ln(e) {
   let t;
   try {
-    t = await _n(Er);
+    t = await readdir(Er);
   } catch {
     return;
   }
@@ -1808,7 +1808,7 @@ async function jn(e) {
     return;
   }
   try {
-    (await Sn(Dn, "utf8"), (e.cuda = "cuda"));
+    (await readFile(Dn, "utf8"), (e.cuda = "cuda"));
   } catch {}
 }
 async function Tr(e) {
@@ -1820,11 +1820,11 @@ async function Tr(e) {
 }
 async function Hn(e) {
   let t = new Set();
-  for (let o of N3) {
+  for (let o of MCP_SETTINGS_SCOPES) {
     if (o === "project") continue;
     let d;
     try {
-      d = Object.keys(nd(o, { expandVars: !1 }).servers);
+      d = Object.keys(getMcpConfigsByScope(o, { expandVars: !1 }).servers);
     } catch (r) {
       n(`[bridge:host-profile] could not read ${o} MCP config: ${l(r)}`, {
         level: "warn",
@@ -1892,7 +1892,7 @@ async function Cr({
       E)
     )
       return (
-        f("bridge_env_reregister", "register_rejected"),
+        logFeatureBad("bridge_env_reregister", "register_rejected"),
         { outcome: "fatal" }
       );
     return { outcome: "transient", retryAfterMs: Vn(T) };
@@ -1904,7 +1904,7 @@ async function Cr({
         { level: "warn" },
       ),
       i("tengu_bridge_env_reregister", { attempt: p, outcome: S("replaced") }),
-      f("bridge_env_reregister", "replaced"),
+      logFeatureBad("bridge_env_reregister", "replaced"),
       await e
         .deregisterEnvironment(C.environment_id)
         .catch((T) =>
@@ -2004,7 +2004,7 @@ function Kn(e, t, o) {
   } catch (d) {
     let p = l(d);
     return (
-      h(dt(Error(`Session spawn failed: ${p}`), "Session spawn failed")),
+      logError(dt(Error(`Session spawn failed: ${p}`), "Session spawn failed")),
       p
     );
   }
@@ -2021,20 +2021,20 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     ce = new Map((e.initialSessionRequeues ?? []).map((v) => [v, 0])),
     I = !1,
     X = (v, V) => {
-      let L = pr(v),
+      let L = sessionIdBody(v),
         O = !1;
-      for (let F of [...ce.keys()]) if (pr(F) === L) (ce.delete(F), (O = !0));
+      for (let F of [...ce.keys()]) if (sessionIdBody(F) === L) (ce.delete(F), (O = !0));
       if (!O) return;
       if (V) I = !0;
       if (ce.size === 0)
-        if (I) g("bridge_shutdown_requeue", "requeue_dropped");
-        else y("bridge_shutdown_requeue");
+        if (I) logFeatureSad("bridge_shutdown_requeue", "requeue_dropped");
+        else logFeatureOk("bridge_shutdown_requeue");
     },
     ge = !1,
     D = new Map(),
     Ke = (v) => {
-      let V = pr(v);
-      for (let L of D.keys()) if (pr(L) === V) return !0;
+      let V = sessionIdBody(v);
+      for (let L of D.keys()) if (sessionIdBody(L) === V) return !0;
       return !1;
     },
     We = new Set();
@@ -2055,7 +2055,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
     He = new Set(),
     De = new Map(),
     k,
-    J = _ ? zu(_) : void 0;
+    J = _ ? toCompatSessionId(_) : void 0;
   if (J && E) De.set(J, new Set([E]));
   let de = 0,
     be = new Map(),
@@ -2155,7 +2155,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             requeue_attempts: V + 1,
             outcome: S("requeue_dropped"),
           }),
-          g("bridge_env_reregister", "requeue_dropped"));
+          logFeatureSad("bridge_env_reregister", "requeue_dropped"));
       else ae.set(v, V + 1);
     }
   }
@@ -2221,7 +2221,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (e.maxSessions > 1) r.refreshDisplay();
       return;
     }
-    let F = Ot(Date.now() - L),
+    let F = formatDuration(Date.now() - L),
       re = V.activities
         .filter((ee) => ee.type === "tool_start")
         .slice(-5)
@@ -2256,9 +2256,9 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       (be.delete(v), ze?.cancel(v), Te.wake());
       let ee = Date.now() - V;
       (n(
-        `[bridge:session] sessionId=${v} workId=${F ?? "unknown"} exited status=${O} duration=${Ot(ee)}`,
+        `[bridge:session] sessionId=${v} workId=${F ?? "unknown"} exited status=${O} duration=${formatDuration(ee)}`,
       ),
-        i("tengu_bridge_session_done", { status: u(O), duration_ms: ee }),
+        i("tengu_bridge_session_done", { status: fromEnum(O), duration_ms: ee }),
         q("info", "bridge_session_done", { status: O, duration_ms: ee }),
         r.clearStatus(),
         _t());
@@ -2281,7 +2281,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             )
               n(`Bridge session failed: ${Ze}`, { level: "error" });
             else
-              h(
+              logError(
                 dt(
                   Error(`Bridge session failed: ${Ze}`),
                   "Bridge session failed",
@@ -2359,7 +2359,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       if (Ee !== null || Be !== null) {
         let U = Date.now() - (Ee ?? Be ?? Date.now());
         (r.logReconnected(U),
-          n(`[bridge:poll] Reconnected after ${Ot(U)}`),
+          n(`[bridge:poll] Reconnected after ${formatDuration(U)}`),
           i("tengu_bridge_reconnected", { disconnected_ms: U }),
           (ut = !1));
       }
@@ -2377,7 +2377,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             attempt: ne,
             outcome: S("recovered"),
           }),
-          y("bridge_env_reregister"));
+          logFeatureOk("bridge_env_reregister"));
       if (((ne = 0), !L)) {
         if (ae.size > 0 || ce.size > 0) await ot();
         if (D.size >= e.maxSessions) {
@@ -2418,7 +2418,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                       : "config_disabled";
             if (
               (i("tengu_bridge_heartbeat_mode_exited", {
-                reason: u(lt),
+                reason: fromEnum(lt),
                 heartbeat_cycles: st,
                 active_sessions: D.size,
               }),
@@ -2512,9 +2512,9 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             Ce(
               d
                 .heartbeatWork(t, L.id, re.session_ingress_token)
-                .then(() => y("bridge_work_heartbeat"))
+                .then(() => logFeatureOk("bridge_work_heartbeat"))
                 .catch((U) => {
-                  (g("bridge_work_heartbeat", "initial_failed"),
+                  (logFeatureSad("bridge_work_heartbeat", "initial_failed"),
                     n(
                       `[bridge:work] Initial heartbeat failed workId=${L.id}: ${l(U)}`,
                     ));
@@ -2531,7 +2531,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         case "session": {
           let U = L.data.id;
           try {
-            fm(U, "session_id");
+            validateBridgeId(U, "session_id");
           } catch {
             (await ee(), r.logError(`Invalid session_id received: ${U}`));
             break;
@@ -2567,7 +2567,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 n(
                   `[bridge:session] CCR v2: registered worker sessionId=${U} epoch=${st} attempt=${ve}`,
                 ),
-                y("bridge_register_worker"));
+                logFeatureOk("bridge_register_worker"));
               break;
             } catch (Ne) {
               let Ge = l(Ne);
@@ -2585,12 +2585,12 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               (r.logError(
                 `CCR v2 worker registration failed for session ${U}: ${Ge}`,
               ),
-                f("bridge_register_worker", "request_failed"));
+                logFeatureBad("bridge_register_worker", "request_failed"));
               let { kind: ct, status: B } = Ps(Ne);
               if (ct !== "other" && ((B ?? 0) < 500 || B === 503))
                 n(`registerWorker failed: ${Ge}`, { level: "error" });
               else
-                h(
+                logError(
                   dt(
                     Error(`registerWorker failed: ${Ge}`),
                     "registerWorker failed",
@@ -2629,7 +2629,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             }
           }
           n(`[bridge:session] Spawning sessionId=${U} sdkUrl=${Ue}`);
-          let ke = zu(U),
+          let ke = toCompatSessionId(U),
             Pt = ++de;
           be.set(U, Pt);
           let vt =
@@ -2637,7 +2637,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 ? await br(re, {
                     sessionId: U,
                     apiBaseUrl: e.apiBaseUrl,
-                    enabled: NAn(),
+                    enabled: isBridgeServerSessionConfigEnabled(),
                   })
                 : void 0,
             Yt = vt === void 0 ? _r(re.claude_code_args) : [],
@@ -2665,7 +2665,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
                 onFirstUserMessage: (ve) => {
                   if (He.has(ke)) return;
                   He.add(ke);
-                  let Ne = Xe(ve.replace(/\s+/g, " ").trim(), os);
+                  let Ne = truncateToWidth(ve.replace(/\s+/g, " ").trim(), os);
                   (r.setSessionTitle(ke, Ne),
                     n(`[bridge:title] derived title for ${ke}: ${Ne}`),
                     import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js")
@@ -2716,7 +2716,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
             It = Date.now() - he;
           (i("tengu_bridge_session_started", {
             active_sessions: D.size,
-            spawn_mode: u(lt),
+            spawn_mode: fromEnum(lt),
             in_worktree: Ae.has(U),
             spawn_duration_ms: It,
             worktree_create_ms: pt,
@@ -2790,7 +2790,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           V.status === 404 &&
           !yt(V.errorType) &&
           !(ge && D.size === 0) &&
-          DAn()
+          isBridgeEnvReregisterEnabled()
         )
           if (ne < Ht) {
             (ne++,
@@ -2836,7 +2836,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
               attempt: ne,
               outcome: S("gave_up"),
             }),
-              f("bridge_env_reregister", "gave_up"));
+              logFeatureBad("bridge_env_reregister", "gave_up"));
         if (((ft = !0), V.status !== 401 && yt(V.errorType)))
           r.logStatus(ir(V.message));
         else if (Kt(V)) n(`[bridge:work] Suppressed 403 error: ${V.message}`);
@@ -2856,7 +2856,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           }));
         break;
       }
-      let L = pQe(V);
+      let L = describeAxiosError(V);
       if (Qn(V) || Zn(V)) {
         let O = Date.now();
         if (le !== null && O - le > Mr(w))
@@ -2893,7 +2893,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           (r.logVerbose(
             `Connection error, retrying in ${Wt(re)} (${Math.round(F / 1000)}s elapsed): ${L}`,
           ),
-          r.updateReconnectingStatus(Wt(re), Ot(F)),
+          r.updateReconnectingStatus(Wt(re), formatDuration(F)),
           Hle().non_exclusive_heartbeat_interval_ms > 0)
         )
           await Fe();
@@ -2934,7 +2934,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
           (r.logVerbose(
             `Poll failed, retrying in ${Wt(re)} (${Math.round(F / 1000)}s elapsed): ${L}`,
           ),
-          r.updateReconnectingStatus(Wt(re), Ot(F)),
+          r.updateReconnectingStatus(Wt(re), formatDuration(F)),
           Hle().non_exclusive_heartbeat_interval_ms > 0)
         )
           await Fe();
@@ -3011,11 +3011,11 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
         [...v.entries()].map(([O, F]) =>
           d
             .stopWork(t, F, ue, !0)
-            .then(() => y("bridge_work_stop"))
+            .then(() => logFeatureOk("bridge_work_stop"))
             .catch((re) => {
-              if (qt(re)) g("bridge_work_stop", "env_gone");
+              if (qt(re)) logFeatureSad("bridge_work_stop", "env_gone");
               else
-                f(
+                logFeatureBad(
                   "bridge_work_stop",
                   re instanceof Le && re.status === 403
                     ? "shutdown_403"
@@ -3063,7 +3063,7 @@ async function Br(e, t, o, d, p, r, C, w = Yn, _, T, E) {
       await Promise.allSettled(
         [...$t].map((v) =>
           d
-            .archiveSession(Ft.get(v) ?? zu(v))
+            .archiveSession(Ft.get(v) ?? toCompatSessionId(v))
             .catch((V) =>
               r.logVerbose(`Failed to archive session ${v}: ${l(V)}`),
             ),
@@ -3125,21 +3125,21 @@ async function Lt(e, t, o, d, p, r = 1000) {
     try {
       (await e.stopWork(t, o, d, !1),
         n(`[bridge:work] stopWork succeeded for workId=${o} on attempt ${w}/3`),
-        y("bridge_work_stop"));
+        logFeatureOk("bridge_work_stop"));
       return;
     } catch (_) {
       if (_ instanceof Le) {
         if (Kt(_))
           (n(`[bridge:work] Suppressed stopWork 403 for ${o}: ${_.message}`),
-            g("bridge_work_stop", "fatal_403"));
+            logFeatureSad("bridge_work_stop", "fatal_403"));
         else if (qt(_))
           (n(
             `[bridge:work] stopWork skipped for ${o} \u2014 environment gone: ${_.message}`,
           ),
-            g("bridge_work_stop", "env_gone"));
+            logFeatureSad("bridge_work_stop", "env_gone"));
         else
           (p.logError(`Failed to stop work ${o}: ${_.message}`),
-            f(
+            logFeatureBad(
               "bridge_work_stop",
               _.status === 401
                 ? "fatal_401"
@@ -3160,7 +3160,7 @@ async function Lt(e, t, o, d, p, r = 1000) {
       } else
         (p.logError(`Failed to stop work ${o} after 3 attempts: ${T}`),
           q("error", "bridge_stop_work_failed", { attempts: 3 }),
-          f("bridge_work_stop", "retries_exhausted"));
+          logFeatureBad("bridge_work_stop", "retries_exhausted"));
     }
 }
 async function nr(e, t, o) {
@@ -3256,10 +3256,10 @@ function ss(e) {
     else if (I === "--verbose" || I === "-v") t = !0;
     else if (I === "--sandbox") o = !0;
     else if (I === "--no-sandbox") o = !1;
-    else if (I === "--debug-file" && ce + 1 < e.length) d = sr(e[++ce]);
-    else if (I.startsWith("--debug-file=")) d = sr(I.slice(13));
-    else if (I === "--permission-mode" && ce + 1 < e.length) p = mf(e[++ce]);
-    else if (I.startsWith("--permission-mode=")) p = mf(I.slice(18));
+    else if (I === "--debug-file" && ce + 1 < e.length) d = resolve(e[++ce]);
+    else if (I.startsWith("--debug-file=")) d = resolve(I.slice(13));
+    else if (I === "--permission-mode" && ce + 1 < e.length) p = normalizePermissionModeAlias(e[++ce]);
+    else if (I.startsWith("--permission-mode=")) p = normalizePermissionModeAlias(I.slice(18));
     else if (I === "--name" && ce + 1 < e.length) r = e[++ce];
     else if (I.startsWith("--name=")) r = I.slice(7);
     else if (I === "--remote-control-session-name-prefix" && ce + 1 < e.length)
@@ -3416,15 +3416,15 @@ NOTES
 }
 var os = 80;
 async function as(e) {
-  let t = M() && e !== void 0 ? await wC(e) : m_();
+  let t = M() && e !== void 0 ? await getBridgeAccessTokenAsync(e) : getBridgeAccessToken();
   if (!t) return null;
-  let o = XG(),
+  let o = isCcrV2SessionCrudEnabled(),
     d;
   if (!o) {
     let { getOrganizationUUID: r } = await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js");
     d = (await r()) ?? void 0;
   }
-  let p = await uh().catch(() => {
+  let p = await getTrustedDeviceToken().catch(() => {
     return;
   });
   return { accessToken: t, useV2: o, orgUUID: d, trustedDeviceToken: p };
@@ -3444,7 +3444,7 @@ async function ds(e, t, o) {
         trustedDeviceToken: _,
       });
     if (E === "untrusted_device") {
-      let W = await M$e(
+      let W = await withUntrustedDeviceRecovery(
         _,
         (N) => T(t, r, e, 1e4, { useV2: C, orgUUID: w, trustedDeviceToken: N }),
         o,
@@ -3453,7 +3453,7 @@ async function ds(e, t, o) {
     }
     if (typeof E === "number" && E < 300)
       return (
-        y("bridge_session_unarchive"),
+        logFeatureOk("bridge_session_unarchive"),
         n(
           `[bridge:init] Unarchived reaped session ${e} before reattach (status=${String(E)})`,
         ),
@@ -3467,7 +3467,7 @@ async function ds(e, t, o) {
         !1
       );
     return (
-      f("bridge_session_unarchive", typeof E === "number" ? `http_${E}` : E),
+      logFeatureBad("bridge_session_unarchive", typeof E === "number" ? `http_${E}` : E),
       n(
         `[bridge:init] Unarchive of reaped session ${e} failed (status=${String(E)}) \u2014 keeping prior reattach behavior`,
         { level: "warn" },
@@ -3516,7 +3516,7 @@ function Ur(e, t, o, d, p, r, C, w, _, T) {
   );
   return (E.unref?.(), E);
 }
-async function da(e, t, o) {
+async function bridgeMain(e, t, o) {
   let d = ss(e);
   if (d.help) {
     await is();
@@ -3525,14 +3525,14 @@ async function da(e, t, o) {
   if (d.error) (console.error(`Error: ${d.error}`), process.exit(1));
   let p = Pc();
   if (p) {
-    (f("agent_launcher", "remote_control_refused"),
+    (logFeatureBad("agent_launcher", "remote_control_refused"),
       console.error(
         `Error: ${p} \u2014 Remote Control sessions are not started unwrapped; fix the launcher, then retry`,
       ));
     let { exitAfterAnalyticsFlush: B } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js");
     return B(1);
   }
-  (q4(), Dve(vme));
+  (q4(), Dve(getAttestationFilterPolicy));
   let {
     verbose: r,
     sandbox: C,
@@ -3563,7 +3563,7 @@ async function da(e, t, o) {
         process.exit(1));
     }
   }
-  let D = sr("."),
+  let D = resolve("."),
     { enableConfigs: Ke, checkHasTrustDialogAccepted: We } =
       await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
   await Ke();
@@ -3572,7 +3572,7 @@ async function da(e, t, o) {
   let { setOriginalCwd: et, setCwdState: j } =
     await import("../AppState-状态管理/getOriginalCwd.mg2gq0d6.js");
   if ((et(D), j(D), !We())) {
-    let B = Dr() === Q();
+    let B = homedir() === Q();
     (console.error(
       B
         ? `Error: Workspace not trusted. ${D} is your home directory, and for security home-directory trust is never saved, so running \`claude\` here first won't help. Run \`claude rc\` from a project directory instead (run \`claude\` there once to accept the trust dialog).`
@@ -3687,7 +3687,7 @@ Spawn mode for this project:
     oe.close();
     let K = _e.trim() === "2" ? "worktree" : "same-dir";
     ((Ce = K),
-      i("tengu_bridge_spawn_mode_chosen", { spawn_mode: u(K) }),
+      i("tengu_bridge_spawn_mode_chosen", { spawn_mode: fromEnum(K) }),
       await de((se) => {
         if (se.remoteControlSpawnMode === K) return se;
         return { ...se, remoteControlSpawnMode: K };
@@ -3751,11 +3751,11 @@ Spawn mode for this project:
       process.exit(1));
   let zt = tr(),
     { branch: Et, gitRepoUrl: ht, defaultBranch: $t } = await Fe(),
-    Ft = Or(),
+    Ft = hostname(),
     { getOrCreateRemoteControlMachineId: or } =
       await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
     v = await or(t),
-    V = Gt(),
+    V = randomUUID(),
     { handleOAuth401Error: L } = await import("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     O = Xt({
       baseUrl: be,
@@ -3775,9 +3775,9 @@ Spawn mode for this project:
       }.VERSION,
       onDebug: n,
       onAuth401: (B) => L(B, o, t),
-      getTrustedDeviceToken: uh,
-      useCcrV2Routing: ise,
-      useCcrV2SessionCrud: XG,
+      getTrustedDeviceToken: getTrustedDeviceToken,
+      useCcrV2Routing: isCcrV2SendEventsEnabled,
+      useCcrV2SessionCrud: isCcrV2SessionCrudEnabled,
     }),
     F = le,
     re;
@@ -3815,7 +3815,7 @@ Spawn mode for this project:
         (je = se.activeSessionIds),
         (ut = se.activeSessionIdsPersistedAt));
     try {
-      fm(X, "sessionId");
+      validateBridgeId(X, "sessionId");
     } catch {
       (console.error(
         `Error: Invalid session ID "${X}". Session IDs must not contain unsafe characters.`,
@@ -3872,7 +3872,7 @@ Spawn mode for this project:
     sandbox: C,
     bridgeId: V,
     workerType: "claude_code",
-    environmentId: Gt(),
+    environmentId: randomUUID(),
     reuseEnvironmentId: F,
     hostProfile: await zt,
     apiBaseUrl: be,
@@ -3949,7 +3949,7 @@ Spawn mode for this project:
             process.exit(1));
       }
       if (((nt = Qe), nt)) {
-        let K = yc(nt),
+        let K = toInfraSessionId(nt),
           se = K === nt ? [nt] : [nt, K],
           Me = !1,
           it = [];
@@ -3986,7 +3986,7 @@ Spawn mode for this project:
         ));
     else {
       if (ft) Ct = await ds(X, be, o);
-      let B = yc(X),
+      let B = toInfraSessionId(X),
         oe = B === X ? [X] : [X, B],
         _e = !1,
         K;
@@ -4007,7 +4007,7 @@ Spawn mode for this project:
         let se = K,
           Me = se instanceof Le;
         if (Ct && Me)
-          await wn(
+          await logFeatureBadAsync(
             "bridge_session_unarchive",
             "abandoned_after_fatal_reconnect",
           );
@@ -4036,8 +4036,8 @@ The session may still be resumable \u2014 try running the same command again.`,
     sandbox: ee.sandbox,
     verbose: ee.verbose,
     heartbeat_interval_ms: Re.non_exclusive_heartbeat_interval_ms,
-    spawn_mode: u(ee.spawnMode),
-    spawn_mode_source: u(Ie),
+    spawn_mode: fromEnum(ee.spawnMode),
+    spawn_mode_source: fromEnum(Ie),
     pre_create_session: Be,
     worktree_available: Ye,
   }),
@@ -4071,7 +4071,7 @@ The session may still be resumable \u2014 try running the same command again.`,
     }),
     { parseGitHubRepository: qe } = await import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js"),
     pt = ht ? qe(ht) : null,
-    ke = pt ? pt.split("/").pop() : Gn(D);
+    ke = pt ? pt.split("/").pop() : basename(D);
   he.setRepoInfo(ke, Et);
   let Pt = pe !== "single-session" && Ye;
   if (Pt) he.setSpawnModeDisplay(pe);
@@ -4088,7 +4088,7 @@ The session may still be resumable \u2014 try running the same command again.`,
         if (!Pt) return;
         let oe = ee.spawnMode === "same-dir" ? "worktree" : "same-dir";
         ((ee.spawnMode = oe),
-          i("tengu_bridge_spawn_mode_toggled", { spawn_mode: u(oe) }),
+          i("tengu_bridge_spawn_mode_toggled", { spawn_mode: fromEnum(oe) }),
           he.logStatus(
             oe === "worktree"
               ? "Spawn mode: worktree (new sessions get isolated git worktrees)"
@@ -4130,7 +4130,7 @@ The session may still be resumable \u2014 try running the same command again.`,
   let mt = U ?? nt ?? null,
     bt;
   if (Be && !U && !nt) {
-    let B = T ?? `${qre()}-${xU()}`,
+    let B = T ?? `${getBridgeSessionNamePrefix()}-${xU()}`,
       { createBridgeSession: oe } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
     try {
       let _e = xe ? await Ae(o) : void 0;
@@ -4211,8 +4211,8 @@ The session may still be resumable \u2014 try running the same command again.`,
         oe = [];
         return;
       }
-      let se = pr(K),
-        Me = oe.filter((tt) => pr(tt) !== se);
+      let se = sessionIdBody(K),
+        Me = oe.filter((tt) => sessionIdBody(tt) !== se);
       if (Me.length === oe.length) return;
       if (((oe = Me), Me.length > 0)) B.activeSessionIds = Me;
       else (delete B.activeSessionIds, delete B.activeSessionIdsPersistedAt);
@@ -4250,14 +4250,14 @@ The session may still be resumable \u2014 try running the same command again.`,
       Jw(process.stdin, !1);
     process.stdin.pause();
   }
-  await y0();
+  await drainRegisteredWriteQueues();
   try {
     process.exit(0);
   } catch (B) {
     process.kill(process.pid, "SIGKILL");
   }
 }
-class Tt extends Error {
+class BridgeHeadlessPermanentError extends Error {
   constructor(e) {
     super(e);
     this.name = "BridgeHeadlessPermanentError";
@@ -4266,12 +4266,12 @@ class Tt extends Error {
 function cs(e, t) {
   if (!e) return null;
   let o = t ?? "Remote Control is disabled by your organization\u2019s policy.";
-  if (e === "org_denied") return new Tt(o);
+  if (e === "org_denied") return new BridgeHeadlessPermanentError(o);
   if (e === "route_missing")
     return new R(o, "Remote Control denied: policy route not served (404)");
   return new R(o, "Remote Control denied: policy cache miss (transient)");
 }
-async function la(e, t) {
+async function runBridgeHeadless(e, t) {
   let { dir: o, log: d } = e,
     p = Pc();
   if (p)
@@ -4289,7 +4289,7 @@ async function la(e, t) {
   let { initSinks: T } = await import("./initSinks.6cfazjmq.js");
   T();
   let { getSettingsWithErrors: E } = await import("../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js");
-  if (E().settings.disableRemoteControl === !0) throw new Tt(e5);
+  if (E().settings.disableRemoteControl === !0) throw new BridgeHeadlessPermanentError(e5);
   let { composePolicyLimitsClient: W, primePolicyLimitsCache: N } =
     await import("../../01-核心基础设施/共享小工具-未细化/POLICY_LIMITS_FIRST_ATTEMPT_WAIT_MS.hw6w9yxm.js");
   (W({ storageV5: e.storageV5 }), await N(e.storageV5));
@@ -4303,8 +4303,8 @@ async function la(e, t) {
   );
   if (ae) throw ae;
   if (!_())
-    throw new Tt(
-      Dr() === Q()
+    throw new BridgeHeadlessPermanentError(
+      homedir() === Q()
         ? `Workspace not trusted: ${o} is the home directory, whose trust is never saved \u2014 running \`claude\` there first won't help. Run Remote Control from a project directory instead.`
         : `Workspace not trusted: ${o}. Run \`claude\` in that directory first to accept the trust dialog.`,
     );
@@ -4316,7 +4316,7 @@ async function la(e, t) {
     !I.includes("localhost") &&
     !I.includes("127.0.0.1")
   )
-    throw new Tt(
+    throw new BridgeHeadlessPermanentError(
       "Remote Control base URL uses HTTP. Only HTTPS or localhost HTTP is allowed.",
     );
   let X = I,
@@ -4325,17 +4325,17 @@ async function la(e, t) {
     { hasWorktreeCreateHook: Ke } = await import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
   if (e.spawnMode === "worktree") {
     if (!(Ke() || D(o) !== null))
-      throw new Tt(
+      throw new BridgeHeadlessPermanentError(
         `Worktree mode requires a git repository or WorktreeCreate hooks. Directory ${o} has neither.`,
       );
   }
   let We = tr(t),
     { branch: Je, gitRepoUrl: et, defaultBranch: j } = await ge(),
-    Se = Or(),
+    Se = hostname(),
     { getOrCreateRemoteControlMachineId: $e } =
       await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
     fe = await $e(e.storageV5),
-    Ae = Gt(),
+    Ae = randomUUID(),
     Oe,
     xe = !1,
     He = [],
@@ -4389,7 +4389,7 @@ async function la(e, t) {
       sandbox: e.sandbox,
       bridgeId: Ae,
       workerType: "claude_code",
-      environmentId: Gt(),
+      environmentId: randomUUID(),
       reuseEnvironmentId: Oe,
       hostProfile: await We,
       apiBaseUrl: I,
@@ -4417,9 +4417,9 @@ async function la(e, t) {
       }.VERSION,
       onDebug: d,
       onAuth401: e.onAuth401,
-      getTrustedDeviceToken: uh,
-      useCcrV2Routing: ise,
-      useCcrV2SessionCrud: XG,
+      getTrustedDeviceToken: getTrustedDeviceToken,
+      useCcrV2Routing: isCcrV2SendEventsEnabled,
+      useCcrV2SessionCrud: isCcrV2SessionCrudEnabled,
     }),
     de,
     be;
@@ -4448,8 +4448,8 @@ async function la(e, t) {
       }
       if (le === "retry") Fe.push(Be);
     }
-    if (!pe && Fe.length === 0) y("bridge_shutdown_requeue");
-  } else if (He.length > 0) f("bridge_shutdown_requeue", "env_reuse_declined");
+    if (!pe && Fe.length === 0) logFeatureOk("bridge_shutdown_requeue");
+  } else if (He.length > 0) logFeatureBad("bridge_shutdown_requeue", "env_reuse_declined");
   if (Fe.length > 0 || Te.length > 0)
     ((k.initialSessionRequeues = [...Te, ...Fe]),
       (k.initialSessionRequeuesPersistedAt = De));
@@ -4576,7 +4576,7 @@ function us(e) {
   };
 }
 export {
-  Tt as BridgeHeadlessPermanentError,
-  da as bridgeMain,
-  la as runBridgeHeadless,
+  BridgeHeadlessPermanentError,
+  bridgeMain,
+  runBridgeHeadless,
 };

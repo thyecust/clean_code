@@ -11,11 +11,11 @@ import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Vhe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { isClaudeAISubscriber as gt, getSubscriptionType as qn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getSettingsForSource as ye } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getAPIProvider as Pe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isClaudeAISubscriber, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { go, YRe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { getChannelAllowlist as O1t, isChannelsEnabled as R9 } from "./chunk-rbjz1q03.js";
+import { getChannelAllowlist, isChannelsEnabled } from "./chunk-rbjz1q03.js";
 import { Abe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4bx97hcx.js";
 import { og } from "./chunk-33bdfgmx.js";
 import { s, c, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -56,7 +56,7 @@ function g(e, r) {
 }
 function Ydt(e) {
   if (e) return { entries: e, source: "org" };
-  return { entries: O1t(), source: "ledger" };
+  return { entries: getChannelAllowlist(), source: "ledger" };
 }
 function Pin(e) {
   return (
@@ -64,8 +64,8 @@ function Pin(e) {
   );
 }
 function Ebe(e) {
-  if (gt()) {
-    let r = qn();
+  if (isClaudeAISubscriber()) {
+    let r = getSubscriptionType();
     return (r === "team" || r === "enterprise") && e?.channelsEnabled !== !0;
   }
   return e !== null && e.channelsEnabled !== !0;
@@ -90,19 +90,19 @@ function XPe(e, r, i, o) {
       reason:
         "connection negotiated a modern protocol revision with no unsolicited notification path",
     };
-  if (Pe() !== "firstParty")
+  if (getAPIProvider() !== "firstParty")
     return {
       action: "skip",
       kind: "provider",
       reason: "channels are not available on third-party providers",
     };
-  if (!R9())
+  if (!isChannelsEnabled())
     return {
       action: "skip",
       kind: "disabled",
       reason: "channels feature is not currently available",
     };
-  let a = ye("policySettings");
+  let a = getSettingsForSource("policySettings");
   if (Ebe(a))
     return {
       action: "skip",

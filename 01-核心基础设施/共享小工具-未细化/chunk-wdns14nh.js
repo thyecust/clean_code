@@ -9,8 +9,8 @@
 // Version: 2.1.263
 import { K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "./chunk-an83zrbx.js";
-import { lit as S, fromEnum as u } from "./chunk-w76kejwn.js";
-import { logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { lit as S, fromEnum } from "./chunk-w76kejwn.js";
+import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q$, AJe } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 function s(l) {
   if (!l) return null;
@@ -27,7 +27,7 @@ function s(l) {
 function restoreGoalFromTranscript(l, n, e) {
   let t = s(l),
     a = t !== null ? AJe() : null;
-  if (a !== null) g("goal_set", a.code, { origin: u("restored") });
+  if (a !== null) logFeatureSad("goal_set", a.code, { origin: fromEnum("restored") });
   let r;
   if (t === null || a !== null) {
     if (
@@ -66,7 +66,7 @@ function restoreGoalFromTranscript(l, n, e) {
     i("tengu_stop_hook_added", {
       promptLength: t.length,
       via: S("goal"),
-      origin: u("restored"),
+      origin: fromEnum("restored"),
     }));
 }
 export { restoreGoalFromTranscript };

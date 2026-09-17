@@ -13,28 +13,28 @@ import { RYt } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { oe, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Rh } from "../后台任务-Shell管理/chunk-5jv5fvbn.js";
-import { isClaudeMdLoadingDisabled as uR } from "../状态栏-主题/chunk-dqyc6kge.js";
+import { isClaudeMdLoadingDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import {
   Lve,
   cA,
   wCn,
-  modelDisplayString as WC,
-  shouldUseWIFAuth as Zc,
-  isAnthropicAuthEnabled as cl,
-  getAnthropicApiKeyWithSourceSafe as kp,
-  isOAuthRefreshKnownDead as wZe,
-  isOAuthRefreshKnownDeadAsync as f0,
-  isClaudeAISubscriber as gt,
-  getOauthAccountInfo as vn,
-  getAccountInformation as pQ,
+  modelDisplayString,
+  shouldUseWIFAuth,
+  isAnthropicAuthEnabled,
+  getAnthropicApiKeyWithSourceSafe,
+  isOAuthRefreshKnownDead,
+  isOAuthRefreshKnownDeadAsync,
+  isClaudeAISubscriber,
+  getOauthAccountInfo,
+  getAccountInformation,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Zar, ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { formatNumber as No } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Rar, getSettingsForSource as ye, getArmedHelperOutput as Hxn, getMergedPolicySources as Pet, getManagedFileSettingsPresence as Dxn, getPolicySettingsOrigin as dS, getShadowedManagedSources as Mxn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { formatNumber } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { Rar, getSettingsForSource, getArmedHelperOutput, getMergedPolicySources, getManagedFileSettingsPresence, getPolicySettingsOrigin, getShadowedManagedSources } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { getMTLSConfig as JT, getProxyUrl as Die, parseProxyUrl as Lie } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { THIRD_PARTY_PROVIDER_LABELS as yA, getAPIProvider as Pe, getSecondaryProvider as GRe } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getMTLSConfig, getProxyUrl, parseProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, getSecondaryProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -165,7 +165,7 @@ function oUn(s = [], e) {
   ];
 }
 async function sUn(s, e, l) {
-  if (uR()) return [];
+  if (isClaudeMdLoadingDisabled()) return [];
   let i = await Ny(s, !1, e, l),
     o = g8e(i),
     n = [],
@@ -174,27 +174,27 @@ async function sUn(s, e, l) {
     o.forEach((p) => {
       let c = Ao(p.path);
       n.push(
-        `Large ${c} will impact performance (${No(p.content.length)} chars > ${No(u)})`,
+        `Large ${c} will impact performance (${formatNumber(p.content.length)} chars > ${formatNumber(u)})`,
       );
     }),
     n
   );
 }
 function S(s = "remote") {
-  let e = Pet();
+  let e = getMergedPolicySources();
   if (!e) return null;
   return `Enterprise managed settings (${e.map((i) => (i === "remote" ? s : g(i))).join(" + ")}, merged)`;
 }
 function iUn() {
   let s = ms(),
-    e = Hxn(),
+    e = getArmedHelperOutput(),
     o = [
       {
         label: "Setting sources",
         value: s
           .filter((c) => {
             if (c === "policySettings" && e.composes !== "none") return !0;
-            let d = ye(c);
+            let d = getSettingsForSource(c);
             return d !== null && Object.keys(d).length > 0;
           })
           .map((c) => {
@@ -212,7 +212,7 @@ function iUn() {
                   `Enterprise managed settings (${h})`
                 );
               }
-              let d = dS();
+              let d = getPolicySettingsOrigin();
               if (d === null) return null;
               return S() ?? v(d);
             }
@@ -221,7 +221,7 @@ function iUn() {
           .filter((c) => c !== null),
       },
     ],
-    n = Mxn();
+    n = getShadowedManagedSources();
   if (n.length > 0) o.push({ label: "Skipped sources", value: n.map(v) });
   let u = Sle();
   if (u && NUn(u))
@@ -239,7 +239,7 @@ function g(s) {
     case "hklm":
       return "HKLM";
     case "file": {
-      let { hasBase: e, hasDropIns: l } = Dxn();
+      let { hasBase: e, hasDropIns: l } = getManagedFileSettingsPresence();
       if (e && l) return "file + drop-ins";
       return l ? "drop-ins" : "file";
     }
@@ -324,17 +324,17 @@ async function cUn(s) {
 }
 function jWe(s) {
   if (!(M() && s !== void 0)) return;
-  return (async () => ({ refreshKnownDead: cl() && (await f0(s)) }))().catch(
+  return (async () => ({ refreshKnownDead: isAnthropicAuthEnabled() && (await isOAuthRefreshKnownDeadAsync(s)) }))().catch(
     () => ({ refreshKnownDead: !1 }),
   );
 }
 function Oit(s) {
-  let e = pQ();
+  let e = getAccountInformation();
   if (!e) return [];
   let l = [];
-  if (s !== void 0 && M() ? s.refreshKnownDead : cl() && wZe()) {
+  if (s !== void 0 && M() ? s.refreshKnownDead : isAnthropicAuthEnabled() && isOAuthRefreshKnownDead()) {
     l.push({ label: "Login", value: "Expired \u2014 log in again" });
-    let n = vn();
+    let n = getOauthAccountInfo();
     if (n?.organizationName && !a.IS_DEMO)
       l.push({ label: "Organization", value: n.organizationName });
     if (n?.emailAddress && !a.IS_DEMO)
@@ -344,7 +344,7 @@ function Oit(s) {
   if (e.subscription)
     l.push({ label: "Login method", value: `${e.subscription} account` });
   let i = " \xB7 not in use",
-    o = gt();
+    o = isClaudeAISubscriber();
   if (e.tokenSource) {
     let n =
       e.tokenSource === "claude.ai" ||
@@ -361,8 +361,8 @@ function Oit(s) {
       label: "API key",
       value: o ? `${e.apiKeySource}${i}` : e.apiKeySource,
     });
-  if (Zc()) l.push({ label: "Profile", value: qZe() });
-  if (Zc() && kp({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null) {
+  if (shouldUseWIFAuth()) l.push({ label: "Profile", value: qZe() });
+  if (shouldUseWIFAuth() && getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key === null) {
     let n = vvt();
     if (!a.IS_DEMO) {
       if (n?.organizationName || n?.organizationUuid)
@@ -381,11 +381,11 @@ function Oit(s) {
   return l;
 }
 function Dit() {
-  let s = Pe(),
+  let s = getAPIProvider(),
     e = [];
   if (s !== "firstParty") {
-    let o = GRe(),
-      n = o ? `${yA[s]} + ${yA[o]}` : yA[s];
+    let o = getSecondaryProvider(),
+      n = o ? `${THIRD_PARTY_PROVIDER_LABELS[s]} + ${THIRD_PARTY_PROVIDER_LABELS[o]}` : THIRD_PARTY_PROVIDER_LABELS[s];
     e.push({ label: "API provider", value: n });
   }
   if (s === "firstParty") {
@@ -445,22 +445,22 @@ function Dit() {
     let o = ns();
     if (o) e.push({ label: "Gateway URL", value: o.url });
   }
-  if (s === "mantle" || GRe() === "mantle") {
+  if (s === "mantle" || getSecondaryProvider() === "mantle") {
     let o = a.ANTHROPIC_BEDROCK_MANTLE_BASE_URL;
     if (o) e.push({ label: "Amazon Bedrock (Mantle) base URL", value: o });
     if (s === "mantle") e.push({ label: "AWS region", value: b() });
     if (a.CLAUDE_CODE_SKIP_MANTLE_AUTH)
       e.push({ value: "Amazon Bedrock (Mantle) auth skipped" });
   }
-  let l = Die();
+  let l = getProxyUrl();
   if (l)
     e.push({
       label: "Proxy",
-      value: Lie(l)
+      value: parseProxyUrl(l)
         ? l
         : `${l.replace(/\p{Cc}/gu, "")} (invalid \u2014 ignored; fix or unset the proxy env var)`,
     });
-  let i = JT();
+  let i = getMTLSConfig();
   if (a.NODE_EXTRA_CA_CERTS)
     e.push({ label: "Additional CA cert(s)", value: a.NODE_EXTRA_CA_CERTS });
   if (i) {
@@ -489,10 +489,10 @@ function b() {
   }
 }
 function uUn(s) {
-  let e = WC(s);
+  let e = modelDisplayString(s);
   {
     let l = iDe();
-    if (l !== void 0) return `${e} (${pmt(WC(l.previousModel))})`;
+    if (l !== void 0) return `${e} (${pmt(modelDisplayString(l.previousModel))})`;
   }
   return e;
 }

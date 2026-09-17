@@ -20,11 +20,11 @@ var n = Ae("./template.html-j5g90adz.txt");
 var l = Ae("./SKILL-z3x847gz.md");
 var h = "./template.html-4414d93a.txt.zst";
 var d = Ke(h, import.meta.dirname);
-var Z = { dashboard: e, report: l, "data-table": r, explainer: i },
-  F = {
+var SKILL_MD = { dashboard: e, report: l, "data-table": r, explainer: i },
+  SKILL_FILES = {
     dashboard: { "template.html": a },
     report: { "template.html": d },
     "data-table": { "template.html": s },
     explainer: { "template.html": n },
   };
-export { F as SKILL_FILES, Z as SKILL_MD };
+export { SKILL_FILES, SKILL_MD };

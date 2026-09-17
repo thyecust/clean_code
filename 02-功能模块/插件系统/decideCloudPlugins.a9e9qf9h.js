@@ -10,12 +10,12 @@
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { truncatePathMiddle as el } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
+import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { D } from "../键位绑定(Keybindings)/chunk-j7q2s4h6.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -36,7 +36,7 @@ function B(uo) {
     { forwarded: f, stayed: P, consentLocation: M, onDone: T } = uo,
     G = C(!1),
     I;
-  if (c[0] !== M) ((I = el(M.replace(/\s+/g, " "), Y)), (c[0] = M), (c[1] = I));
+  if (c[0] !== M) ((I = truncatePathMiddle(M.replace(/\s+/g, " "), Y)), (c[0] = M), (c[1] = I));
   else I = c[1];
   let V = I,
     J;
@@ -185,7 +185,7 @@ var No = async (s, a) => {
     stayed: g.stayed,
     consentLocation: an(WZ()),
     onDone: (w) => {
-      Q(w, { deps: d, memory: m }).then((y) => s(y));
+      decideCloudPlugins(w, { deps: d, memory: m }).then((y) => s(y));
     },
   });
 };
@@ -203,9 +203,9 @@ async function K(s) {
     );
   }
 }
-async function Q(s, { deps: a, memory: d }) {
+async function decideCloudPlugins(s, { deps: a, memory: d }) {
   let m = await _ye(d.consentPin, a).catch(() => "unset");
-  i("tengu_cloud_plugins_consent", { choice: u(s), previous: u(m) });
+  i("tengu_cloud_plugins_consent", { choice: fromEnum(s), previous: fromEnum(m) });
   let g =
     m === "accepted"
       ? "cloud sessions from this machine use your enabled plugins"
@@ -229,4 +229,4 @@ async function Q(s, { deps: a, memory: d }) {
     `Saved: ${s === "accepted" ? "cloud sessions from this machine use your enabled plugins \u2014 the ones attached from this terminal now, new ones from the start" : m === "accepted" ? "your plugins stay on this machine from now on \u2014 nothing more is sent from this terminal, and a session already using them keeps them only until it restarts" : "your plugins stay on this machine; cloud sessions load only the repository\u2019s and your organization\u2019s plugins"}. Run /cloud-plugins again to change it.`
   );
 }
-export { No as call, Q as decideCloudPlugins };
+export { No as call, decideCloudPlugins };

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { isFirstPartyProvider as In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 function i(s) {
   if (!s.startsWith("https://")) return { ok: !1, cause: "non_https" };
   let e;
@@ -39,7 +39,7 @@ function r() {
   if (!n) return { ok: !1, cause: "missing_session_id" };
   if (!n.startsWith("cse_")) return { ok: !1, cause: "non_cse_session_id" };
   if (!t.test(n)) return { ok: !1, cause: "malformed_session_id" };
-  if (!In()) return { ok: !1, cause: "non_first_party" };
+  if (!isFirstPartyProvider()) return { ok: !1, cause: "non_first_party" };
   return { ok: !0, config: { ingressOrigin: e.origin, remoteSessionId: n } };
 }
 function nwe() {

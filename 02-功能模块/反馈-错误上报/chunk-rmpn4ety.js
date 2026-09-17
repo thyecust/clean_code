@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { lit as S, fromEnum as u, fromEnumOpt as we } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { Np, Tc, Is, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -35,7 +35,7 @@ import {
   yT,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { logFeatureOk as y, logFeatureBad as f } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { C8, eHe, tHe, v8, ZHt, n0t, n6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 var J = 65536;
@@ -302,10 +302,10 @@ async function xye({
     if (t !== "card_send_as_is") uMe(e.draft_id);
     return (
       i("tengu_feedback_draft_submitted", {
-        type: u(e.type),
-        trigger: u(e.trigger),
-        failure_mode: we(e.failure_mode),
-        task_category: we(e.task_category),
+        type: fromEnum(e.type),
+        trigger: fromEnum(e.trigger),
+        failure_mode: fromEnumOpt(e.failure_mode),
+        task_category: fromEnumOpt(e.task_category),
         transcript_included:
           D.transcript.length > 0 || D.rawTranscriptJsonl
             ? S("true")
@@ -317,12 +317,12 @@ async function xye({
         feedback_id: Ee(r.feedbackId),
         last_request_id: Ee(g),
       }),
-      y("feedback_draft_submit"),
+      logFeatureOk("feedback_draft_submit"),
       { success: !0, feedbackId: r.feedbackId }
     );
   }
   if (
-    (f("feedback_draft_submit", r.failureReason ?? "network_error", {
+    (logFeatureBad("feedback_draft_submit", r.failureReason ?? "network_error", {
       from_this_session: m ? S("true") : S("false"),
     }),
     r.isZdrOrg)
@@ -353,9 +353,9 @@ async function YWe(e, s, k) {
   if ((uMe(e.draft_id), !c)) return;
   if (e.source_session_id === K()) V_t();
   i("tengu_feedback_draft_discarded", {
-    type: u(e.type),
-    trigger: u(e.trigger),
-    discarded_via: u(s),
+    type: fromEnum(e.type),
+    trigger: fromEnum(e.trigger),
+    discarded_via: fromEnum(s),
   });
 }
 export { xye, YWe };

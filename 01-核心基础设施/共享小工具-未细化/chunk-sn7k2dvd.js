@@ -11,7 +11,7 @@ import { Ert, nLn, rLn, oLn, iLn, aLn, bLn } from "../../00-第三方库/lodash/
 import { DW } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, A, W, Nz } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { cliError as un } from "./chunk-4f55jpqh.js";
+import { cliError } from "./chunk-4f55jpqh.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
 import { Ts } from "../遥测-OpenTelemetry/chunk-5j0f24ra.js";
@@ -26,7 +26,7 @@ function Tdr(e) {
       s;
     if (a) {
       let r = xt(t);
-      if (!r) return un("Error: Invalid JSON provided to --settings");
+      if (!r) return cliError("Error: Invalid JSON provided to --settings");
       let i = JSON.stringify(r).replace(
         /[\u007f-\u009f]/g,
         (o) =>
@@ -39,13 +39,13 @@ function Tdr(e) {
       try {
         i = Ex(r, n_);
       } catch (o) {
-        if (W(o)) return un(`Error: Settings file not found: ${r}`);
+        if (W(o)) return cliError(`Error: Settings file not found: ${r}`);
         if (A(o) === "ERR_FILE_TOO_LARGE")
-          return un(
+          return cliError(
             `Error: Settings file exceeds the ${n_ / 1048576}MiB limit: ${r}`,
           );
         if (Iie(o) || Nz(o))
-          return un(`Error: Cannot use settings file (${l(o)}): ${r}`);
+          return cliError(`Error: Cannot use settings file (${l(o)}): ${r}`);
         throw o;
       }
       ((s = r), oLn(i));
@@ -54,7 +54,7 @@ function Tdr(e) {
   } catch (t) {
     if (t instanceof Error)
       n(`Error processing --settings: ${l(t)}`, { level: "error" });
-    return un(`Error processing settings: ${l(t)}`);
+    return cliError(`Error processing settings: ${l(t)}`);
   }
 }
 function c(e) {
@@ -73,7 +73,7 @@ function g(e) {
   } catch (t) {
     if (t instanceof Error)
       n(`Invalid --setting-sources flag: ${l(t)}`, { level: "error" });
-    return un(`Error processing --setting-sources: ${l(t)}`);
+    return cliError(`Error processing --setting-sources: ${l(t)}`);
   }
 }
 function tJt() {

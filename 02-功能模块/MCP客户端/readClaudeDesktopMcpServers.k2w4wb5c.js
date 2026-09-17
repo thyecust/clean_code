@@ -15,8 +15,8 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { LPn, P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { readdir as u, readFile as d, stat as p } from "fs/promises";
-import { homedir as m } from "os";
+import { readdir, readFile, stat as p } from "fs/promises";
+import { homedir } from "os";
 import { join as l } from "path";
 async function g() {
   let o = P();
@@ -26,7 +26,7 @@ async function g() {
     );
   if (o === "macos")
     return l(
-      m(),
+      homedir(),
       "Library",
       "Application Support",
       "Claude",
@@ -41,7 +41,7 @@ async function g() {
   }
   try {
     try {
-      let e = await u("/mnt/c/Users", { withFileTypes: !0 });
+      let e = await readdir("/mnt/c/Users", { withFileTypes: !0 });
       for (let r of e) {
         if (
           r.name === "Public" ||
@@ -72,7 +72,7 @@ async function g() {
     "Could not find Claude Desktop config file in Windows. Make sure Claude Desktop is installed on Windows.",
   );
 }
-async function R() {
+async function readClaudeDesktopMcpServers() {
   if (!LPn.includes(P()))
     throw Error(
       "Unsupported platform - Claude Desktop integration only works on macOS and WSL.",
@@ -81,7 +81,7 @@ async function R() {
     let o = await g(),
       i;
     try {
-      i = await d(o, { encoding: "utf8" });
+      i = await readFile(o, { encoding: "utf8" });
     } catch (s) {
       if (A(s) === "ENOENT") return {};
       throw s;
@@ -104,4 +104,4 @@ async function R() {
     );
   }
 }
-export { R as readClaudeDesktopMcpServers };
+export { readClaudeDesktopMcpServers };

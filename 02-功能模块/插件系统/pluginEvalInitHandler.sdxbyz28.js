@@ -24,8 +24,8 @@ import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import {
   qN,
-  getSmallFastModel as xm,
-  parseUserSpecifiedModel as wt,
+  getSmallFastModel,
+  parseUserSpecifiedModel,
   aa,
   qe,
   Bt,
@@ -36,12 +36,12 @@ import {
   Wl,
   Ut,
   C6,
-  shouldUseWIFAuth as Zc,
-  effectiveAuthTokenEnv as d0,
-  getConfiguredApiKeyHelper as bg,
-  clearOAuthTokenCache as Hw,
-  getClaudeAIOAuthTokensAsync as Qi,
-  checkAndRefreshOAuthTokenIfNeeded as Ss,
+  shouldUseWIFAuth,
+  effectiveAuthTokenEnv,
+  getConfiguredApiKeyHelper,
+  clearOAuthTokenCache,
+  getClaudeAIOAuthTokensAsync,
+  checkAndRefreshOAuthTokenIfNeeded,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
@@ -56,10 +56,10 @@ import {
   Pue,
   Oue,
   Jl,
-  SandboxManager as st,
+  SandboxManager,
   M2,
   Que,
-  asSystemPrompt as Zo,
+  asSystemPrompt,
   Ka,
   TE,
   pC,
@@ -74,9 +74,9 @@ import {
   pyt,
   Ngn,
   PWt,
-  expandMcpPolicyPredicates as Wgn,
-  isMcpServerBlockedAtConnectTime as Oh,
-  doesEnterpriseMcpConfigExist as Zm,
+  expandMcpPolicyPredicates,
+  isMcpServerBlockedAtConnectTime,
+  doesEnterpriseMcpConfigExist,
   WV,
   xr,
   yC,
@@ -98,11 +98,11 @@ import {
   Cu,
   ru,
 } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { bc, kxt, env as a, antEnv as Wn } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { logFeatureOk as y, logFeatureBad as f, logFeatureSad as g, logFeatureOkAsync as ki, logFeatureBadAsync as wn, logFeatureSadAsync as ul } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { bc, kxt, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { jo, Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Int, dPn, aB, execFileNoThrow as Fe, execFileNoThrowWithCwd as Be } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { Int, dPn, aB, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import {
   o8t,
   OQ,
@@ -114,8 +114,8 @@ import {
   rc,
   zRt,
   KBe,
-  SETTINGS_FILENAME as T8t,
-  getRemoteManagedSettingsSyncFromCache as rv,
+  SETTINGS_FILENAME,
+  getRemoteManagedSettingsSyncFromCache,
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
@@ -138,25 +138,25 @@ import {
   yxn,
   uS,
   Sxn,
-  getSettingsForSource as ye,
-  getAllPolicyTierSettings as Rd,
+  getSettingsForSource,
+  getAllPolicyTierSettings,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Fr, qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { XRe, rxn } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { um, getAPIProvider as Pe, isFirstPartyProvider as In } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { um, getAPIProvider, isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { nS, qZe, KD } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { IU, U6 } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { ARTIFACT_TOOL_NAME as _r, ARTIFACT_SLUG_RE as fr, ARTIFACT_STUB_URL_PREFIX as fBe, parseArtifactUrl as Wt, parseStubArtifactUrl as yge } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, ARTIFACT_STUB_URL_PREFIX, parseArtifactUrl, parseStubArtifactUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { DANGEROUS_FILES as YCe, DANGEROUS_DIRECTORIES as VFe, normalizeCaseForComparison as dr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DANGEROUS_FILES, DANGEROUS_DIRECTORIES, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { nA, zH, aP } from "../MCP客户端/chunk-3kmsshb6.js";
 import { vm, lve, NC } from "./chunk-7s6mt1vg.js";
 import { so } from "../权限系统/chunk-fjrcf22x.js";
-import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS as pme, isArtifactDevBaseUrlVar as e4t, subprocessEnv as Hi } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
+import { o6, CJe, rAn, BG_WORKER_IDENTITY_ENV_VARS, isArtifactDevBaseUrlVar, subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gJ, Cr, XXe, rFe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { lR, Xre } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Rbn, aCe } from "./chunk-ajtn749s.js";
-import { getWIFTokenCache as BQ } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
+import { getWIFTokenCache } from "../认证-OAuth登录/chunk-x3rm9w4b.js";
 import { Ile } from "../Workflow编排/chunk-qjm604e8.js";
 import { i9, nSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
 import { _ee } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
@@ -181,7 +181,7 @@ import {
 } from "./chunk-ka6sg2f0.js";
 import { vUn, hen, RUn, Vit, kUn, xUn } from "../成本-Token统计/chunk-rnndxh1m.js";
 import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { writeStdoutAndDrain as Kb, exitAfterAnalyticsFlush as ys } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
+import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { QWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-m2j3585w.js";
 import { jdt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wprkdaj.js";
 import { vy } from "../../01-核心基础设施/共享小工具-未细化/chunk-mbq1q667.js";
@@ -195,11 +195,11 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-fpr1vv1t.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-36nx9gcx.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-c0wtcn4y.js";
 import { s, T, O, se, v, c, $e, fe, X, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { formatFileSize as Ft } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
+import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
 import { me } from "../../01-核心基础设施/共享小工具-未细化/chunk-6rcgxa93.js";
 import { G, Y } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-import { spawnSync as jm } from "child_process";
+import { spawnSync } from "child_process";
 import {
   readdir as Ai,
   lstat as Yt,
@@ -245,7 +245,7 @@ async function $i({
 }) {
   let w = Sr();
   try {
-    let E = Zo([pc(e, r.abortWhen), i]),
+    let E = asSystemPrompt([pc(e, r.abortWhen), i]),
       _ = mc(t, o, u),
       S = {
         querySource: "plugin_eval_mock",
@@ -1990,7 +1990,7 @@ import {
   realpath as $o,
   rmdir as Ps,
 } from "fs/promises";
-import { tmpdir as Ds, userInfo as lu } from "os";
+import { tmpdir as Ds, userInfo } from "os";
 import at from "path";
 var Lo =
   "is not owned by you, is writable by other users, is a symlink, or could not be fully examined (see --debug)";
@@ -2061,7 +2061,7 @@ function fu(e) {
   if (e?.username !== void 0) return e.username ?? void 0;
   let t;
   try {
-    t = lu().username;
+    t = userInfo().username;
   } catch {
     t = void 0;
   }
@@ -2148,7 +2148,7 @@ async function wu(e) {
 }
 async function Ao(e) {
   for (let t of ["/usr/bin/id", "/bin/id"]) {
-    let r = await Be(t, e, {
+    let r = await execFileNoThrowWithCwd(t, e, {
       preserveOutputOnError: !0,
       env: {
         PATH: "/usr/bin:/bin",
@@ -2644,7 +2644,7 @@ async function Gs(e, t, r, i) {
 }
 import { constants as Fo } from "fs";
 import {
-  chmod as Iu,
+  chmod,
   lstat as Uo,
   open as Pu,
   readdir as Du,
@@ -2662,7 +2662,7 @@ async function ln(e, { harnessOwned: t = !1 } = {}) {
     let u = (p) => p.ino === o.ino && p.dev === o.dev;
     if ((Number(o.mode) & 448) !== 448) {
       if (!r) return;
-      if ((await Iu(e, 448), !u(await Uo(e, { bigint: !0 })))) return;
+      if ((await chmod(e, 448), !u(await Uo(e, { bigint: !0 })))) return;
     }
     if ((await Nu(e)) !== e) return;
     let d = await Pu(e, Lu);
@@ -3547,11 +3547,11 @@ async function td(e) {
   return !1;
 }
 import { createHash as nd, randomBytes as rd } from "crypto";
-import En, { basename as od } from "path";
+import En, { basename } from "path";
 async function ca(e) {
   let t = new Map();
   for (let r of e) {
-    let i = od(r),
+    let i = basename(r),
       { plugin: o } = await CEe(r, `${i}@${np}`, !0, i, !0),
       u = id(o.manifest.mcpServers);
     if (u.length > 0)
@@ -3798,7 +3798,7 @@ import {
   lstat as zr,
   open as Vr,
   readlink as dd,
-  unlink as fd,
+  unlink,
 } from "fs/promises";
 import pd from "path";
 async function ga(e, t, r) {
@@ -3932,11 +3932,11 @@ async function Yr(e, t) {
   if (t.ino === 0n) return;
   let r = await zr(e, { bigint: !0 }).catch(() => null);
   if (r !== null && !r.isSymbolicLink() && r.ino === t.ino && r.dev === t.dev)
-    await fd(e).catch(() => {});
+    await unlink(e).catch(() => {});
 }
 var ha = 30000;
 async function wa() {
-  if (Pe() !== "firstParty") return { ok: !0 };
+  if (getAPIProvider() !== "firstParty") return { ok: !0 };
   if (md()) return gd();
   return { ok: !0 };
 }
@@ -3951,7 +3951,7 @@ function md() {
 async function gd() {
   let e;
   try {
-    e = await BQ();
+    e = await getWIFTokenCache();
   } catch (t) {
     return {
       ok: !1,
@@ -4019,26 +4019,26 @@ async function _a(e, t) {
   }
   if (r) return null;
   if (
-    !In() ||
+    !isFirstPartyProvider() ||
     (xg() ? void 0 : a.ANTHROPIC_API_KEY) ||
     IU("CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR") ||
     !!U6() ||
-    d0() ||
+    effectiveAuthTokenEnv() ||
     a.ANTHROPIC_UNIX_SOCKET ||
-    bg() ||
+    getConfiguredApiKeyHelper() ||
     Object.keys(lDe()).some((d) => d.toLowerCase() === "x-api-key") ||
-    Zc()
+    shouldUseWIFAuth()
   )
     return null;
-  let i = await Qi(e);
+  let i = await getClaudeAIOAuthTokensAsync(e);
   if (!i?.accessToken) return null;
   let o = Date.now() + t * 1000 + ya,
     u;
   if (i.expiresAt !== null && i.expiresAt < o) {
     if (
-      (await Ss({ credentials: e, force: !0 }),
-      Hw(),
-      (i = await Qi(e)),
+      (await checkAndRefreshOAuthTokenIfNeeded({ credentials: e, force: !0 }),
+      clearOAuthTokenCache(),
+      (i = await getClaudeAIOAuthTokensAsync(e)),
       !i?.accessToken)
     )
       return null;
@@ -4062,7 +4062,7 @@ import {
   open as ba,
   readdir as yd,
   realpath as _d,
-  rename as va,
+  rename,
 } from "fs/promises";
 import Kt from "path";
 function bd(e) {
@@ -4104,8 +4104,8 @@ async function Ea(e) {
       throw Error("home/ or tmp/ is not a real directory");
     (await wd(t, { mode: 448 }),
       (r = await ba(t, Cn.O_RDONLY | Cn.O_DIRECTORY | Cn.O_NOFOLLOW)),
-      await va(e.home, Kt.join(t, "home")),
-      await va(e.tmpDir, Kt.join(t, "tmp")),
+      await rename(e.home, Kt.join(t, "home")),
+      await rename(e.tmpDir, Kt.join(t, "tmp")),
       await r.chmod(64),
       await i.chmod(320));
     let w = (N, F) =>
@@ -4170,13 +4170,13 @@ import {
   realpath as mt,
   rm as Gt,
   stat as mr,
-  symlink as Cd,
+  symlink,
   writeFile as Zr,
 } from "fs/promises";
 import { constants as Oa } from "fs";
 import Ot from "os";
 import k from "path";
-import { fileURLToPath as Od } from "url";
+import { fileURLToPath } from "url";
 var vd = m(() =>
     c({
       nonce: s(),
@@ -4274,7 +4274,7 @@ function jn(e, t, r = {}) {
       (o.push(...h), i.push(...w), u.push(...w.map(Fr)));
     } else o.push(d);
   }
-  if (r.artifactPublishGranted) (i.push(_r), u.push(Fr(_r)));
+  if (r.artifactPublishGranted) (i.push(ARTIFACT_TOOL_NAME), u.push(Fr(ARTIFACT_TOOL_NAME)));
   for (let d of r.mockedTools ?? []) (i.push(d), u.push(Fr(d)));
   for (let d of qu([e.join(",")])) {
     if (!Aa(d)) {
@@ -4472,7 +4472,7 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
       },
       lt = () => {
         if (P() === "windows" && De.pid !== void 0) {
-          Fe("taskkill", ["/T", "/F", "/PID", String(De.pid)]).then(() => {
+          execFileNoThrow("taskkill", ["/T", "/F", "/PID", String(De.pid)]).then(() => {
             if (De.exitCode === null && De.signalCode === null)
               De.kill("SIGKILL");
           });
@@ -4691,12 +4691,12 @@ async function $d(e, t, r, i, o, u, d) {
           : [];
       }),
     ),
-    h = [ye("policySettings"), ...Rd()].flatMap((I) =>
+    h = [getSettingsForSource("policySettings"), ...getAllPolicyTierSettings()].flatMap((I) =>
       I?.sandbox ? [I.sandbox] : [],
     ),
     w = (I) => h.some(I),
     E =
-      !st.isPlatformInEnabledList() ||
+      !SandboxManager.isPlatformInEnabledList() ||
       w(
         (I) =>
           Array.isArray(I.enabledPlatforms) &&
@@ -4936,7 +4936,7 @@ async function $d(e, t, r, i, o, u, d) {
       let q = I;
       if (/^file:/i.test(I))
         try {
-          q = Od(I);
+          q = fileURLToPath(I);
         } catch {
           throw ce(
             "COURSIER_CREDENTIALS holds a file: URL that is not a local path",
@@ -5352,8 +5352,8 @@ async function $d(e, t, r, i, o, u, d) {
           ),
           ...Wd.map((I) => k.join(e.home, ".git", I)),
           k.join(e.cwd, vt),
-          ...VFe.filter((I) => I !== ".git").map((I) => k.join(e.home, I)),
-          ...YCe.map((I) => k.join(e.home, I)),
+          ...DANGEROUS_DIRECTORIES.filter((I) => I !== ".git").map((I) => k.join(e.home, I)),
+          ...DANGEROUS_FILES.map((I) => k.join(e.home, I)),
         ].map(sr),
         denyRead: [
           ...N,
@@ -7013,7 +7013,7 @@ var cf = [
     "CLAUDE_CODE_SUBSCRIPTION_TYPE",
     "CLAUDE_CODE_RATE_LIMIT_TIER",
     "CLAUDE_CODE_OTEL_DIAG_STDERR",
-    ...pme,
+    ...BG_WORKER_IDENTITY_ENV_VARS,
   ]),
   wf = [
     "CLAUDE_CODE_REMOTE",
@@ -7025,7 +7025,7 @@ var cf = [
 function yf(e) {
   if (kq(e)) return !lRt(e);
   if (mf.test(e)) return !gf.has(e);
-  return hf.has(e) || wf.some((t) => e.startsWith(t)) || e4t(e) || OQ(e);
+  return hf.has(e) || wf.some((t) => e.startsWith(t)) || isArtifactDevBaseUrlVar(e) || OQ(e);
 }
 var _f = new Set(["http_proxy", "https_proxy", "no_proxy", "all_proxy"]);
 function bf(e) {
@@ -7202,7 +7202,7 @@ async function If(e, t) {
     let u = k.join(e.home, i);
     await ti(k.dirname(u), { recursive: !0 });
     try {
-      await Cd(o, u, "junction");
+      await symlink(o, u, "junction");
     } catch (d) {
       n(
         `[eval] could not link ${i} into the sandbox home (${A(d) ?? "unknown"}); an SSO-cached login will not reach the child`,
@@ -7216,14 +7216,14 @@ var Pf = 3,
   Df = 7200000;
 async function Nf(e) {
   await _ee();
-  let t = rv();
+  let t = getRemoteManagedSettingsSyncFromCache();
   if (!t && XE())
     n(
       "[eval] no cached organization policy to hand the child (the managed-settings fetch has not produced one); a child that cannot fetch runs without the remote-managed tier",
       { level: "warn" },
     );
   let r = (t && o8t(t)) ?? {},
-    i = { ...Wgn(r), managedSourcesBehavior: "merge" },
+    i = { ...expandMcpPolicyPredicates(r), managedSourcesBehavior: "merge" },
     o = k.join(e.configDir, fi),
     u = b(i);
   try {
@@ -7242,7 +7242,7 @@ async function Nf(e) {
       );
   }
 }
-var fi = T8t;
+var fi = SETTINGS_FILENAME;
 async function $f(e) {
   let t =
     e.kind === "gateway"
@@ -7333,7 +7333,7 @@ function Mf(e, t, r, i, o = !1) {
       (u.LOCALAPPDATA = k.join(t.home, "AppData", "Local")));
   }
   let d = new Set(Object.keys(u).map((D) => D.toUpperCase())),
-    p = { ...Hi() };
+    p = { ...subprocessEnv() };
   Object.assign(p, dar(p));
   for (let [D, U] of Object.entries(process.env))
     if (/^EVAL_/i.test(D) && U !== void 0) p[D] = U;
@@ -7412,7 +7412,7 @@ var Ff = m(() =>
     nt({
       type: Cu("tool_use"),
       id: le(),
-      name: Cu(_r),
+      name: Cu(ARTIFACT_TOOL_NAME),
       input: nt({ action: le().optional() }).passthrough().optional(),
     }),
   ),
@@ -7459,7 +7459,7 @@ function Hf(e) {
     let o = ll().safeParse(i);
     if (!o.success) continue;
     let u = o.data.tool_use_result.url,
-      d = Wt(u);
+      d = parseArtifactUrl(u);
     if (!d || t.has(d.slug)) continue;
     (t.add(d.slug), r.push({ url: u, slug: d.slug, env: d.env }));
   }
@@ -7470,7 +7470,7 @@ function Bf(e) {
   for (let { message: r } of al(e)) {
     let i = ll().safeParse(r);
     if (!i.success) continue;
-    let o = yge(i.data.tool_use_result.url);
+    let o = parseStubArtifactUrl(i.data.tool_use_result.url);
     if (o) t.add(o.slug);
   }
   return t;
@@ -7501,7 +7501,7 @@ async function Kf(e, t) {
       )
     );
   }
-  if (((r = r.filter((o) => fr.test(o) && t.has(o))), r.length < t.size))
+  if (((r = r.filter((o) => ARTIFACT_SLUG_RE.test(o) && t.has(o))), r.length < t.size))
     throw new R(
       `a corroborated artifact publish is missing from the staging directory (${t.size - r.length} of ${t.size})`,
       "eval: stub publish payload missing",
@@ -7539,7 +7539,7 @@ async function Kf(e, t) {
       throw _;
     }
     let C = Wf().safeParse(S);
-    if (!C.success || C.data.slug !== o || C.data.url !== `${fBe}${o}`) throw _;
+    if (!C.success || C.data.slug !== o || C.data.url !== `${ARTIFACT_STUB_URL_PREFIX}${o}`) throw _;
     i.push({
       record: {
         url: C.data.url,
@@ -7743,7 +7743,7 @@ var Ba = [
   ["credential.helper", ""],
 ];
 function dt(e) {
-  return ei() ? dr(e.normalize("NFC")) : e;
+  return ei() ? normalizeCaseForComparison(e.normalize("NFC")) : e;
 }
 function ei() {
   let e = P();
@@ -8018,7 +8018,7 @@ function lp() {
   );
 }
 async function cp() {
-  let { stdout: e, code: t } = await Fe("id", ["-un"], {
+  let { stdout: e, code: t } = await execFileNoThrow("id", ["-un"], {
       preserveOutputOnError: !1,
     }),
     r = e.trim();
@@ -9207,7 +9207,7 @@ ${e.criteria}`,
     let { block: E, dimensions: _ } = await Bg({
       data: r.bytes,
       mediaType: r.mediaType,
-      limits: Ka(hr(t.judgeModel) ?? xm()),
+      limits: Ka(hr(t.judgeModel) ?? getSmallFastModel()),
     });
     if (E.type !== "image" || E.source.type !== "base64")
       return Lt(
@@ -9227,7 +9227,7 @@ Agent output (${no(e.focus)}) is the attached image:`,
     let S = _?.displayWidth ? `, ${_.displayWidth}x${_.displayHeight}px` : "",
       C = Ure(r.bytes),
       L = C ? `, ${C.width}x${C.height}px` : "";
-    ((d = `[image shown to the judge: ${r.path} \u2014 sent as ${E.source.media_type}, ${Ft(Buffer.byteLength(E.source.data, "base64"))}${S}; file on disk: ${r.mediaType}, ${Ft(r.bytes.length)}${L}]`),
+    ((d = `[image shown to the judge: ${r.path} \u2014 sent as ${E.source.media_type}, ${formatFileSize(Buffer.byteLength(E.source.data, "base64"))}${S}; file on disk: ${r.mediaType}, ${formatFileSize(r.bytes.length)}${L}]`),
       (p = " (image)"));
   } else {
     let E =
@@ -9334,7 +9334,7 @@ async function kl(e, t) {
   return r;
 }
 async function qp(e, t) {
-  let r = Zo([
+  let r = asSystemPrompt([
       "You are a strict, terse evaluation judge for coding-agent traces.",
     ]),
     i,
@@ -9382,7 +9382,7 @@ class wi extends Error {
   }
 }
 function hr(e) {
-  return e && um(e.toLowerCase().trim()) ? wt(e) : e;
+  return e && um(e.toLowerCase().trim()) ? parseUserSpecifiedModel(e) : e;
 }
 function hi(e) {
   if (e.length <= 24)
@@ -9443,7 +9443,7 @@ async function Zp(e, t, r) {
     }
     if (h.size > BigInt(gi))
       throw new R(
-        `focus file ${r} exceeds ${Ft(gi)}`,
+        `focus file ${r} exceeds ${formatFileSize(gi)}`,
         "grader focus file too large",
       );
     let _ = Number(h.size),
@@ -9572,11 +9572,11 @@ async function Il(e, t, r, i) {
     let p = Sl()
       ? o
           .map((h) => h.registeredName)
-          .filter((h) => Oh(h, { ...d.stdioConfigs[h], scope: "dynamic" }))
+          .filter((h) => isMcpServerBlockedAtConnectTime(h, { ...d.stdioConfigs[h], scope: "dynamic" }))
       : [];
     if (p.length > 0) throw new ao(p);
     if (u !== null && Sl()) {
-      let h = ye("policySettings")?.env ?? {},
+      let h = getSettingsForSource("policySettings")?.env ?? {},
         w = [...ui].filter((E) =>
           Object.keys(h).some((_) => _.toUpperCase() === E),
         );
@@ -9627,7 +9627,7 @@ function Pl(e) {
 }
 import { createHash as Ml, randomBytes as Dl } from "crypto";
 import { mkdtemp as om, rm as Nl } from "fs/promises";
-import { createServer as im } from "net";
+import { createServer } from "net";
 import { tmpdir as sm } from "os";
 import $l from "path";
 var am = m(() =>
@@ -9645,7 +9645,7 @@ async function jl({ credentials: e }) {
         ? `\\\\?\\pipe\\cc-eval-agent-${Dl(8).toString("hex")}`
         : $l.join(r, "s"),
     o = new Set(),
-    u = im((d) => {
+    u = createServer((d) => {
       (o.add(d), d.once("close", () => o.delete(d)), dm(d, t));
     });
   try {
@@ -10248,7 +10248,7 @@ async function zl(e) {
       He = L.get(V),
       ge = U(V);
     if (He instanceof Error) {
-      f("cli_plugin_eval_mocks", "load_failed");
+      logFeatureBad("cli_plugin_eval_mocks", "load_failed");
       let Ae = Sn(He.message);
       (t.onLine(`  ${V.name}: ${Ae}`),
         J.push({
@@ -10292,10 +10292,10 @@ async function zl(e) {
           `  ${V.name}: not granted (missing --allow-tools grant, or a malformed entry): ${Te.denied.join(", ")}`,
         ),
       );
-    let ue = (Ae) => qu([Ae.join(",")]).some((Qe) => Fr(Qe).toolName === _r);
+    let ue = (Ae) => qu([Ae.join(",")]).some((Qe) => Fr(Qe).toolName === ARTIFACT_TOOL_NAME);
     if ((ue(Te.denied) || ue(t.allowTools)) && !_e)
       t.onLine(
-        `  ${V.name}: the ${_r} tool is not available inside eval runs; --allow-tools cannot enable it`,
+        `  ${V.name}: the ${ARTIFACT_TOOL_NAME} tool is not available inside eval runs; --allow-tools cannot enable it`,
       );
     if (V.execution.artifact_publish === !0 && !_e)
       t.onLine(
@@ -10601,7 +10601,7 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
         N.mockRecordings = [...F.state.recordings];
     }
     if (((L = N.costUsd), C))
-      if (K) g("cli_plugin_eval_mocks", "agent_call_in_flight");
+      if (K) logFeatureSad("cli_plugin_eval_mocks", "agent_call_in_flight");
       else Nm(N);
     let re = C
       ? {
@@ -10872,13 +10872,13 @@ function Ti(e, t) {
 }
 function Pm(e, t, r) {
   if (!e.granted || t === "without") return;
-  if (r.published) y("cli_plugin_eval_artifact_publish");
-  else if (r.errored) g("cli_plugin_eval_artifact_publish", "run_errored");
-  else g("cli_plugin_eval_artifact_publish", "no_publish");
+  if (r.published) logFeatureOk("cli_plugin_eval_artifact_publish");
+  else if (r.errored) logFeatureSad("cli_plugin_eval_artifact_publish", "run_errored");
+  else logFeatureSad("cli_plugin_eval_artifact_publish", "no_publish");
 }
 function Ci(e, t) {
   return (
-    (t.artifactPublish ?? Wn.CLAUDE_CODE_EVAL_ALLOW_ARTIFACT_PUBLISH === !0) &&
+    (t.artifactPublish ?? antEnv.CLAUDE_CODE_EVAL_ALLOW_ARTIFACT_PUBLISH === !0) &&
     e.execution.artifact_publish === !0
   );
 }
@@ -10886,7 +10886,7 @@ function Dm(e, t) {
   let r = e.execution.growthbook_overrides ?? {},
     i = new Set(
       t.allowFlagOverrides ??
-        (Wn.CLAUDE_CODE_EVAL_ALLOW_FLAG_OVERRIDES ?? "")
+        (antEnv.CLAUDE_CODE_EVAL_ALLOW_FLAG_OVERRIDES ?? "")
           .split(",")
           .map((d) => d.trim())
           .filter((d) => d.length > 0),
@@ -10905,17 +10905,17 @@ function Oi(e, t, r) {
 }
 function Nm(e) {
   if (e.mockSetupFailure === "registration")
-    f("cli_plugin_eval_mocks", "standin_registration");
+    logFeatureBad("cli_plugin_eval_mocks", "standin_registration");
   else if (e.mockSetupFailure === "identity")
-    f("cli_plugin_eval_mocks", "standin_identity");
+    logFeatureBad("cli_plugin_eval_mocks", "standin_identity");
   else if (e.mockSetupFailure === "tools_missing")
-    f("cli_plugin_eval_mocks", "standin_tools_missing");
+    logFeatureBad("cli_plugin_eval_mocks", "standin_tools_missing");
   else if (e.mockSetupFailure === "integrity")
-    f("cli_plugin_eval_mocks", "standin_integrity");
+    logFeatureBad("cli_plugin_eval_mocks", "standin_integrity");
   else if (e.aborted !== null && e.aborted.reason.startsWith(jQ))
-    g("cli_plugin_eval_mocks", "agent_relay_failed");
-  else if (e.aborted !== null) g("cli_plugin_eval_mocks", "aborted_by_mock");
-  else y("cli_plugin_eval_mocks");
+    logFeatureSad("cli_plugin_eval_mocks", "agent_relay_failed");
+  else if (e.aborted !== null) logFeatureSad("cli_plugin_eval_mocks", "aborted_by_mock");
+  else logFeatureOk("cli_plugin_eval_mocks");
 }
 var $m = 5000;
 function Lm(e) {
@@ -11031,7 +11031,7 @@ async function ic(e, t) {
   if (o) return { kind: "plugin", root: o.path, pluginId: o.source };
   return ic(d[0], t);
 }
-async function ak(e, t, r, i) {
+async function pluginEvalHandler(e, t, r, i) {
   let o = e ?? Q(),
     u;
   if (e) {
@@ -11096,11 +11096,11 @@ async function ak(e, t, r, i) {
   } catch (ue) {
     return (
       Ge(`Error: ${l(ue)}`),
-      await wn(
+      await logFeatureBadAsync(
         "cli_plugin_eval",
         ue instanceof R ? "target_refused" : "exception",
       ),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   }
   let {
@@ -11133,8 +11133,8 @@ async function ak(e, t, r, i) {
   if (!K.ok)
     return (
       Ge(`Error: ${K.error}`),
-      await wn("cli_plugin_eval", "eval_dir_refused"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval", "eval_dir_refused"),
+      exitAfterAnalyticsFlush(1)
     );
   if (K.warning) Ge(`Warning: ${K.warning}`);
   let de = K.value.segments;
@@ -11143,8 +11143,8 @@ async function ak(e, t, r, i) {
   } catch (ue) {
     return (
       Ge(`Error: ${l(ue)}`),
-      await wn("cli_plugin_eval", "eval_dir_unvettable"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval", "eval_dir_unvettable"),
+      exitAfterAnalyticsFlush(1)
     );
   }
   let re = (ue) => bn(ue, p);
@@ -11292,7 +11292,7 @@ Terminated \u2014 finishing up\u2026
 `),
         );
       } else if ((await Zl(t.json, Le)) && typeof t.json === "string")
-        await Kb(`Wrote ${t.json}
+        await writeStdoutAndDrain(`Wrote ${t.json}
 `);
       if (
         (await Xl({
@@ -11305,7 +11305,7 @@ Terminated \u2014 finishing up\u2026
         ie.signal.aborted)
       )
         return ec(_e);
-      return (await ul("cli_plugin_eval", "no_cases"), ys(1));
+      return (await logFeatureSadAsync("cli_plugin_eval", "no_cases"), exitAfterAnalyticsFlush(1));
     }
     let Ze = u ? null : (Ye ?? null),
       Ce = u ? Q() : (Ze ?? De),
@@ -11373,13 +11373,13 @@ Terminated \u2014 finishing up\u2026
 `);
       let xe = await Zl(t.json, Le, Qe);
       if (xe && typeof t.json === "string")
-        await Kb(`Wrote ${t.json}
+        await writeStdoutAndDrain(`Wrote ${t.json}
 `);
       else if (!xe && Ie === 0) gt = !0;
     } else if (lt);
     else {
       if (
-        (await Kb(`
+        (await writeStdoutAndDrain(`
 ${E0(RUn(ue))}
 `),
         Ne.length > 0)
@@ -11413,13 +11413,13 @@ Re-run with --keep-temp to preserve each run's sandbox (workspace + trace.jsonl)
       ie.signal.aborted)
     )
       return ec(_e);
-    if (gt) return ys(1);
-    return (await Gm(ue, Ne, Ie, t.threshold ?? 1, lt === !0), ys(Ie));
+    if (gt) return exitAfterAnalyticsFlush(1);
+    return (await Gm(ue, Ne, Ie, t.threshold ?? 1, lt === !0), exitAfterAnalyticsFlush(Ie));
   } catch (ue) {
     return (
-      await wn("cli_plugin_eval", "exception"),
+      await logFeatureBadAsync("cli_plugin_eval", "exception"),
       Ge(`Error: ${l(ue)}`),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   } finally {
     (process.off("SIGINT", He), process.off("SIGTERM", ge));
@@ -11427,27 +11427,27 @@ Re-run with --keep-temp to preserve each run's sandbox (workspace + trace.jsonl)
 }
 async function Gm(e, t, r, i, o = !1) {
   if (o) {
-    await wn("cli_plugin_eval", "auth_preflight_failed");
+    await logFeatureBadAsync("cli_plugin_eval", "auth_preflight_failed");
     return;
   }
   if (r === 2) {
     if (e.partial_reason === "auth_failed") {
-      await wn("cli_plugin_eval", "auth_failed");
+      await logFeatureBadAsync("cli_plugin_eval", "auth_failed");
       return;
     }
-    await ul("cli_plugin_eval", e.partial_reason ?? "cost_ceiling");
+    await logFeatureSadAsync("cli_plugin_eval", e.partial_reason ?? "cost_ceiling");
     return;
   }
   if (t.length > 0) {
     if (e.cases.length === 0) {
-      await wn("cli_plugin_eval", "no_cases_loaded");
+      await logFeatureBadAsync("cli_plugin_eval", "no_cases_loaded");
       return;
     }
-    await ul("cli_plugin_eval", "case_load_errors");
+    await logFeatureSadAsync("cli_plugin_eval", "case_load_errors");
     return;
   }
   let u = G(e.cases, (d) => d.score < i);
-  await ki("cli_plugin_eval", {
+  await logFeatureOkAsync("cli_plugin_eval", {
     all_passed: u === 0,
     num_cases: e.cases.length,
     num_failing_cases: u,
@@ -11570,10 +11570,10 @@ async function Xl(e) {
               (N ??= "publish_failed"));
         }
     }
-    if (N === null) await ki("cli_plugin_eval_report");
-    else if (r) await ul("cli_plugin_eval_report", N);
-    else if (N === "publish_interrupted") await ul("cli_plugin_eval_report", N);
-    else await wn("cli_plugin_eval_report", N);
+    if (N === null) await logFeatureOkAsync("cli_plugin_eval_report");
+    else if (r) await logFeatureSadAsync("cli_plugin_eval_report", N);
+    else if (N === "publish_interrupted") await logFeatureSadAsync("cli_plugin_eval_report", N);
+    else await logFeatureBadAsync("cli_plugin_eval_report", N);
   } catch (C) {
     Ge(
       `${t === "render" ? "Couldn't build the HTML report" : t === "setup" ? "Couldn't prepare to publish the report" : "Couldn't finish publishing the report"}: ${l(C)}`,
@@ -11585,8 +11585,8 @@ async function Xl(e) {
           ? "publish_setup_failed"
           : "publish_failed";
     await (r
-      ? ul("cli_plugin_eval_report", L)
-      : wn("cli_plugin_eval_report", L));
+      ? logFeatureSadAsync("cli_plugin_eval_report", L)
+      : logFeatureBadAsync("cli_plugin_eval_report", L));
   }
 }
 var ql = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
@@ -11599,7 +11599,7 @@ async function Hm(e) {
     (process.stderr
       .write(`warning: eval result does not match resultSchema.ts (${o}) \u2014 please report this bug
 `),
-      await ul("cli_plugin_eval", "result_schema_drift"));
+      await logFeatureSadAsync("cli_plugin_eval", "result_schema_drift"));
   }
   return { result: t, valid: r.success };
 }
@@ -11609,7 +11609,7 @@ async function Zl(e, { result: t, valid: r }, i) {
       process.stderr
         .write(`warning: --json result withheld because it failed schema validation
 `),
-      await ul("cli_plugin_eval", "json_withheld_invalid"),
+      await logFeatureSadAsync("cli_plugin_eval", "json_withheld_invalid"),
       !1
     );
   try {
@@ -11629,12 +11629,12 @@ async function Zl(e, { result: t, valid: r }, i) {
       process.stderr
         .write(`${Sn(`warning: could not write --json result: ${String(o)}`)}
 `),
-      await ul("cli_plugin_eval", "json_write_failed"),
+      await logFeatureSadAsync("cli_plugin_eval", "json_write_failed"),
       !1
     );
   }
 }
-async function lk(e, t = {}) {
+async function pluginEvalInitHandler(e, t = {}) {
   let r = process.stdin.isTTY && process.stdout.isTTY,
     i = !t.bare && (t.forceInteractive || r);
   if (i && !r)
@@ -11645,8 +11645,8 @@ async function lk(e, t = {}) {
 `
           : "The authoring interview requires an interactive terminal (TTY). Run `claude plugin eval init` in a terminal, or drop --interactive and pass a case name (e.g. `claude plugin eval init my-case`) to write a blank template instead.\n",
       ),
-      await wn("cli_plugin_eval_init", "no_tty"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "no_tty"),
+      exitAfterAnalyticsFlush(1)
     );
   if (e !== void 0 && (!ql.test(e) || Mr(e) !== void 0)) {
     let U = !ql.test(e)
@@ -11654,8 +11654,8 @@ async function lk(e, t = {}) {
       : `it ${Mr(e)}`;
     return (
       Ge(`Error: case name ${JSON.stringify(e)} is invalid \u2014 ${U}`),
-      await wn("cli_plugin_eval_init", "bad_case_name"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "bad_case_name"),
+      exitAfterAnalyticsFlush(1)
     );
   }
   let o = i ? { kind: "interview" } : e ? { kind: "bare", caseName: e } : null;
@@ -11668,8 +11668,8 @@ async function lk(e, t = {}) {
           : `A case name is required when no TTY is available (the interview needs an interactive terminal). Pass a name to write a blank template.
 `,
       ),
-      await wn("cli_plugin_eval_init", "missing_case_name"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "missing_case_name"),
+      exitAfterAnalyticsFlush(1)
     );
   let u = er(),
     d = await or(u);
@@ -11686,8 +11686,8 @@ async function lk(e, t = {}) {
       Ge(
         `Error: ${na(d)} is not a plugin or skill folder \u2014 run \`claude plugin eval init\` from the plugin's root folder, or pass --eval-dir to scaffold here on purpose.`,
       ),
-      await wn("cli_plugin_eval_init", "cwd_not_a_plugin"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "cwd_not_a_plugin"),
+      exitAfterAnalyticsFlush(1)
     );
   let h =
       p === null
@@ -11708,8 +11708,8 @@ async function lk(e, t = {}) {
   if (!E.ok)
     return (
       Ge(`Error: ${E.error}`),
-      await wn("cli_plugin_eval_init", "eval_dir_refused"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "eval_dir_refused"),
+      exitAfterAnalyticsFlush(1)
     );
   if (E.warning) Ge(`Warning: ${E.warning}`);
   if (E.value.componentOverlap !== void 0)
@@ -11717,21 +11717,21 @@ async function lk(e, t = {}) {
       Ge(
         `Error: not scaffolding \u2014 ${E.value.componentOverlap}; ${E.value.componentOverlapRecourse ?? "pass --eval-dir to use another directory"}`,
       ),
-      await wn(
+      await logFeatureBadAsync(
         "cli_plugin_eval_init",
         E.value.componentOverlapUnverifiable
           ? "manifest_unverifiable"
           : "component_overlap",
       ),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   try {
     E.value = await sc(d, E.value);
   } catch (U) {
     return (
       Ge(`Error: ${l(U)}`),
-      await wn("cli_plugin_eval_init", "eval_dir_unvettable"),
-      ys(1)
+      await logFeatureBadAsync("cli_plugin_eval_init", "eval_dir_unvettable"),
+      exitAfterAnalyticsFlush(1)
     );
   }
   if (o.kind === "interview") {
@@ -11741,12 +11741,12 @@ async function lk(e, t = {}) {
     } catch (F) {
       (await lo(U),
         Ge(`Error: ${l(F)}`),
-        await wn("cli_plugin_eval_init_interactive", "write_failed"),
-        await ys(1));
+        await logFeatureBadAsync("cli_plugin_eval_init_interactive", "write_failed"),
+        await exitAfterAnalyticsFlush(1));
       return;
     }
     let N = await Bm(d, e, E.value);
-    (await lo(U), await ys(N));
+    (await lo(U), await exitAfterAnalyticsFlush(N));
     return;
   }
   if (!t.bare && !r)
@@ -11769,16 +11769,16 @@ async function lk(e, t = {}) {
       process.stdout
         .write(`Created ${Ee.relative(d, S)} and ${Ee.relative(d, C)}
 `),
-      await ki("cli_plugin_eval_init"),
-      ys(0)
+      await logFeatureOkAsync("cli_plugin_eval_init"),
+      exitAfterAnalyticsFlush(0)
     );
   } catch (U) {
     if (L) await Ii(_, { recursive: !0, force: !0 }).catch(() => {});
     return (
       await lo(D),
-      await wn("cli_plugin_eval_init", "write_failed"),
+      await logFeatureBadAsync("cli_plugin_eval_init", "write_failed"),
       Ge(`Error: ${l(U)}`),
-      ys(1)
+      exitAfterAnalyticsFlush(1)
     );
   }
 }
@@ -11789,7 +11789,7 @@ async function Bm(e, t, r) {
       ...(bc() || !process.argv[1] ? [] : [process.argv[1]]),
       "--append-system-prompt",
       i,
-      ...(Zm() ? [] : ["--strict-mcp-config"]),
+      ...(doesEnterpriseMcpConfigExist() ? [] : ["--strict-mcp-config"]),
       "--",
       Is,
     ];
@@ -11800,30 +11800,30 @@ async function Bm(e, t, r) {
   for (let h of ["SIGINT", "SIGTERM", "SIGHUP", "SIGBREAK"])
     (process.removeAllListeners(h), process.on(h, () => {}));
   a.set("CLAUDE_CODE_EVAL_INTERVIEW_SESSION", !0);
-  let p = jm(o, d, { cwd: e, stdio: "inherit", env: process.env });
+  let p = spawnSync(o, d, { cwd: e, stdio: "inherit", env: process.env });
   if (p.error)
     return (
-      await wn("cli_plugin_eval_init_interactive", "spawn_failed"),
+      await logFeatureBadAsync("cli_plugin_eval_init_interactive", "spawn_failed"),
       process.stderr
         .write(`${Sn(`Failed to start interview session: ${p.error.message}`)}
 `),
       1
     );
-  if (p.status === 0) return (await ki("cli_plugin_eval_init_interactive"), 0);
+  if (p.status === 0) return (await logFeatureOkAsync("cli_plugin_eval_init_interactive"), 0);
   if (p.status === null && p.signal !== null)
     return (
       await (p.signal === "SIGINT"
-        ? ul("cli_plugin_eval_init_interactive", "interrupted")
-        : wn("cli_plugin_eval_init_interactive", "signal_killed")),
+        ? logFeatureSadAsync("cli_plugin_eval_init_interactive", "interrupted")
+        : logFeatureBadAsync("cli_plugin_eval_init_interactive", "signal_killed")),
       128 + (Um.constants.signals[p.signal] ?? 1)
     );
   return (
-    await wn("cli_plugin_eval_init_interactive", "nonzero_exit"),
+    await logFeatureBadAsync("cli_plugin_eval_init_interactive", "nonzero_exit"),
     p.status ?? 1
   );
 }
 async function ec(e) {
-  (await ul("cli_plugin_eval", e === "SIGTERM" ? "terminated" : "interrupted"),
+  (await logFeatureSadAsync("cli_plugin_eval", e === "SIGTERM" ? "terminated" : "interrupted"),
     await xn(e === "SIGTERM" ? 143 : 130));
 }
 async function Wm(e, t, r) {
@@ -12214,4 +12214,4 @@ function Ge(e) {
 `,
   );
 }
-export { ak as pluginEvalHandler, lk as pluginEvalInitHandler };
+export { pluginEvalHandler, pluginEvalInitHandler };

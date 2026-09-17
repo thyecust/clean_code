@@ -115,7 +115,7 @@ var A = pe(oAt(), 1),
   D =
     "Set `project` or the `ANTHROPIC_GOOGLE_CLOUD_PROJECT` environment variable (or provide `baseURL`).",
   z = ["apiKey", "authToken", "credentials", "config", "profile"];
-class I extends Bx {
+class AnthropicGoogleCloud extends Bx {
   get completions() {
     throw new gn(
       "The deprecated text Completions API is not available on Claude Platform on Google Cloud",
@@ -262,4 +262,4 @@ class I extends Bx {
       );
     return t;
   }));
-export { I as AnthropicGoogleCloud };
+export { AnthropicGoogleCloud };

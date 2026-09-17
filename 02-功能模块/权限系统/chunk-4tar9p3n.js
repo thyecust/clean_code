@@ -12,11 +12,11 @@ import { ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logFeatureOk as y, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nr, k8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSettingsForSource as ye, getSettingsWithErrors as bb } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { PERMISSION_MODES as ly } from "./chunk-e4pfvp7x.js";
-import { isCrossSessionMessagingEnabled as Mo } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
+import { getSettingsForSource, getSettingsWithErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
+import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { R4e, Dwe, Xdn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
 import { Nu } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
@@ -39,7 +39,7 @@ function O() {
 }
 var p = { accept: 0, hold: 1, refuse: 2 },
   Q = 100,
-  P = new Set(ly);
+  P = new Set(PERMISSION_MODES);
 function rqe(e) {
   if (e !== null)
     ((ds().inbound.shuttingDown = !1),
@@ -124,7 +124,7 @@ function I() {
   let e, o;
   for (let s of ["policySettings", "flagSettings", "userSettings"]) {
     if (!Nr(s)) continue;
-    let t = ye(s)?.crossSessionInbound;
+    let t = getSettingsForSource(s)?.crossSessionInbound;
     if (t !== void 0) {
       ((e = t), (o = s));
       break;
@@ -132,7 +132,7 @@ function I() {
   }
   for (let s of ["localSettings", "projectSettings"]) {
     if (!Nr(s)) continue;
-    let t = ye(s)?.crossSessionInbound;
+    let t = getSettingsForSource(s)?.crossSessionInbound;
     if (t === void 0) continue;
     if (p[t] > p[e ?? "accept"]) ((e = t), (o = "repoSettings"));
     else if (
@@ -147,7 +147,7 @@ function I() {
   return { value: e, decidedBy: o };
 }
 function N() {
-  return bb().errors.some(
+  return getSettingsWithErrors().errors.some(
     (e) => e.path === k8t && e.severity === "warning" && !e.statusOnly,
   );
 }
@@ -162,7 +162,7 @@ function b(e) {
   }
 }
 function w() {
-  return Mo() ? void 0 : { policy: "refuse", refuseCause: "kill-switch" };
+  return isCrossSessionMessagingEnabled() ? void 0 : { policy: "refuse", refuseCause: "kill-switch" };
 }
 function _() {
   let e = w();
@@ -281,7 +281,7 @@ function R(e, o) {
   let s = ds().inbound;
   switch ((xPe(), o.policy)) {
     case "accept":
-      return (D("policy-accepts"), y("peer_inbound_gate"), "accept");
+      return (D("policy-accepts"), logFeatureOk("peer_inbound_gate"), "accept");
     case "refuse":
       return (
         Gee(
@@ -301,7 +301,7 @@ function R(e, o) {
             `[cross-session-inbound] shutdown: not parking a late peer message \u2014 settled as expired: ${f(e)}`,
           ),
           s.sendPeerReceipt?.(e, "expired"),
-          g("peer_inbound_gate", "shutdown_expired"),
+          logFeatureSad("peer_inbound_gate", "shutdown_expired"),
           "refused"
         );
       if (s.held.length >= Q) {
@@ -319,7 +319,7 @@ function R(e, o) {
         n(
           `[cross-session-inbound] held inbound peer message (${s.held.length} held, cause=${t}): ${f(e)}`,
         ),
-        g("peer_inbound_gate", "held"),
+        logFeatureSad("peer_inbound_gate", "held"),
         s.onPeerHeld)
       )
         (s.onPeerHeld(e, s.held.length, t), s.announced.set(e, t));
@@ -398,11 +398,11 @@ function Gee(e, o) {
     (n(
       `[cross-session-inbound] refused inbound peer message \u2014 cross-session messaging disabled (kill switch) (${e})`,
     ),
-      g("peer_inbound_gate", "kill_switch"));
+      logFeatureSad("peer_inbound_gate", "kill_switch"));
     return;
   }
   (n(`[cross-session-inbound] refused inbound peer message (${e})`),
-    g("peer_inbound_gate", "refused"));
+    logFeatureSad("peer_inbound_gate", "refused"));
 }
 function qee(e) {
   return (xPe(), D(e));
@@ -447,7 +447,7 @@ function D(e) {
   if (i.length === 0) return 0;
   let c = [];
   for (let r of i)
-    if (A(r)) (c.push(r), y("peer_inbound_gate"));
+    if (A(r)) (c.push(r), logFeatureOk("peer_inbound_gate"));
     else o.onPeerHoldDropped?.(r);
   if (
     (n(
@@ -490,7 +490,7 @@ function OPe(e, o) {
       n(
         "[cross-session-inbound] held peer message APPROVED \u2014 released to queue",
       ),
-      y("peer_inbound_gate"),
+      logFeatureOk("peer_inbound_gate"),
       s.onPeerHoldReleased?.([i], "approved"),
       s.sendPeerReceipt?.(i, "delivered"),
       "delivered"

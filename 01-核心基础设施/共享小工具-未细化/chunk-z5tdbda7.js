@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { createHash as u } from "crypto";
+import { createHash } from "crypto";
 var D1 = /^[0-9a-f]{64}$/;
 function mn(t) {
-  return u("sha256").update(t).digest("hex");
+  return createHash("sha256").update(t).digest("hex");
 }
 var fi = "github.com",
   gPn = [`git@${fi}:`, `ssh://git@${fi}/`],

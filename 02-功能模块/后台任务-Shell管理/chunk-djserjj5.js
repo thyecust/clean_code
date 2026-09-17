@@ -11,7 +11,7 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { b, z, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { processIdentity as zse } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { processIdentity } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { On, x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
@@ -103,35 +103,35 @@ async function v7e() {
   return e;
 }
 function X3t() {
-  return ((zse.uidsCollapse ??= L(ae())), zse.uidsCollapse);
+  return ((processIdentity.uidsCollapse ??= L(ae())), processIdentity.uidsCollapse);
 }
 function L(e) {
   return !1;
 }
-import { createHash as K, randomBytes as x } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import {
-  lstatSync as j,
-  mkdirSync as V,
-  readFileSync as X,
-  rmSync as H,
-  writeFileSync as G,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
 } from "fs";
 import {
-  chmod as E,
-  lstat as l,
-  mkdir as d,
-  readdir as y,
+  chmod,
+  lstat,
+  mkdir,
+  readdir,
   readFile as R,
   rm as I,
-  utimes as J,
+  utimes,
 } from "fs/promises";
-import { connect as Y } from "net";
-import { basename as q, dirname as O, join as i, resolve as Q } from "path";
+import { connect } from "net";
+import { basename, dirname, join as i, resolve } from "path";
 function c() {
   return i(be(), "daemon");
 }
 function Z() {
-  return K("sha256").update(Q(be())).digest("hex").slice(0, 8);
+  return createHash("sha256").update(resolve(be())).digest("hex").slice(0, 8);
 }
 function KY() {
   let e = process.getuid?.() ?? 0,
@@ -148,26 +148,26 @@ var te = rs(
     for (let t = 0; t < 8; t++) {
       let n;
       try {
-        let o = j(e);
+        let o = lstatSync(e);
         if (!o.isFile() || o.size > 4096) {
           try {
-            H(e, { recursive: !0, force: !0 });
+            rmSync(e, { recursive: !0, force: !0 });
           } catch {}
           n = "invalid";
-        } else n = X(e, "utf8").trim();
+        } else n = readFileSync(e, "utf8").trim();
       } catch (o) {
         if (!W(o)) throw o;
       }
       if (n !== void 0) {
         if (ee.test(n)) return n;
         if (n === "" && t < 3) continue;
-        let o = x(8).toString("hex");
+        let o = randomBytes(8).toString("hex");
         return (x0(e, o, 384), o);
       }
-      let r = x(8).toString("hex");
-      V(c(), { recursive: !0, mode: 448 });
+      let r = randomBytes(8).toString("hex");
+      mkdirSync(c(), { recursive: !0, mode: 448 });
       try {
-        return (G(e, r, { flag: "wx", mode: 384 }), r);
+        return (writeFileSync(e, r, { flag: "wx", mode: 384 }), r);
       } catch (o) {
         if (A(o) !== "EEXIST") throw o;
       }
@@ -195,7 +195,7 @@ function wbt() {
 async function LJn() {
   let e = wbt();
   try {
-    let n = await l(e);
+    let n = await lstat(e);
     if (n.isFile() && n.size <= 4096) {
       let r = (await R(e, "utf8")).trim();
       if (r) return r;
@@ -203,12 +203,12 @@ async function LJn() {
   } catch (n) {
     if (!W(n)) throw n;
   }
-  let t = x(16).toString("hex");
-  return (await d(c(), { recursive: !0, mode: 448 }), await On(e, t, 384), t);
+  let t = randomBytes(16).toString("hex");
+  return (await mkdir(c(), { recursive: !0, mode: 448 }), await On(e, t, 384), t);
 }
 async function zre() {
   try {
-    let e = await l(wbt());
+    let e = await lstat(wbt());
     if (!e.isFile() || e.size > 4096) return;
     return (await R(wbt(), "utf8")).trim() || void 0;
   } catch {
@@ -218,35 +218,35 @@ async function zre() {
 async function MJn() {
   let e = c();
   if (P() === "windows") {
-    (await d(e, { recursive: !0 }), await E(e, 448).catch(() => {}));
+    (await mkdir(e, { recursive: !0 }), await chmod(e, 448).catch(() => {}));
     return;
   }
-  (await d(e, { recursive: !0, mode: 448 }), k());
+  (await mkdir(e, { recursive: !0, mode: 448 }), k());
   let t = process.getuid?.(),
-    n = await l(e);
+    n = await lstat(e);
   if (t !== void 0 && n.uid !== t)
     throw Error(`refusing to use daemon dir: ${e} is owned by uid ${n.uid}`);
-  if ((n.mode & 511) !== 448) await E(e, 448);
+  if ((n.mode & 511) !== 448) await chmod(e, 448);
 }
 async function R7e() {
   if (P() === "windows") return;
   let e = KY();
-  await d(e, { recursive: !0, mode: 448 });
+  await mkdir(e, { recursive: !0, mode: 448 });
   let t = new Date();
-  (await J(e, t, t).catch(() => {}), await _([O(e), e]));
+  (await utimes(e, t, t).catch(() => {}), await _([dirname(e), e]));
 }
 var Y3t = "ENOTOWNED";
 async function _(e) {
   let t = process.getuid?.();
   k();
   for (let n of e) {
-    let r = await l(n);
+    let r = await lstat(n);
     if (t !== void 0 && r.uid !== t)
       throw Object.assign(
         Error(`refusing to bind: ${n} is owned by uid ${r.uid}`),
         { code: Y3t },
       );
-    if ((r.mode & 511) !== 448) await E(n, 448);
+    if ((r.mode & 511) !== 448) await chmod(n, 448);
   }
 }
 var NSn =
@@ -256,15 +256,15 @@ function k() {
 }
 async function NJn(e) {
   if (P() === "windows") {
-    await d(e, { recursive: !0 }).catch(() => {});
+    await mkdir(e, { recursive: !0 }).catch(() => {});
     return;
   }
   await R7e();
   let t = [qAe(), J3t()];
-  for (let n of t) await d(n, { recursive: !0, mode: 448 });
+  for (let n of t) await mkdir(n, { recursive: !0, mode: 448 });
   if (!t.includes(e)) {
     if (
-      await d(e, { recursive: !0, mode: 448 }).then(
+      await mkdir(e, { recursive: !0, mode: 448 }).then(
         () => !0,
         () => !1,
       )
@@ -276,19 +276,19 @@ async function NJn(e) {
 function FJn() {
   if (P() === "windows") return;
   let e = KY(),
-    t = O(e),
-    n = q(e);
-  y(t, { withFileTypes: !0 })
+    t = dirname(e),
+    n = basename(e);
+  readdir(t, { withFileTypes: !0 })
     .then(async (r) => {
       for (let o of r) {
         if (!o.isDirectory() || o.name === n) continue;
         let s = i(t, o.name);
         if (!(await ne(i(s, "control.sock")))) continue;
-        let u = await l(s).catch(() => null);
+        let u = await lstat(s).catch(() => null);
         if (!u || Date.now() - u.mtimeMs < 1e4) continue;
-        let p = await y(i(s, "rv")).catch(() => []),
-          g = await y(i(s, "pty")).catch(() => []),
-          w = await y(i(s, "spare")).catch(() => []);
+        let p = await readdir(i(s, "rv")).catch(() => []),
+          g = await readdir(i(s, "pty")).catch(() => []),
+          w = await readdir(i(s, "spare")).catch(() => []);
         if (p.length || g.length || w.length) continue;
         await I(s, { recursive: !0, force: !0 }).catch(() => {});
       }
@@ -300,7 +300,7 @@ function ne(e) {
     n = new Promise((o) => {
       t = o;
     }),
-    r = Y(e);
+    r = connect(e);
   return (
     r.setTimeout(1000, () => {
       (r.destroy(), t(!1));

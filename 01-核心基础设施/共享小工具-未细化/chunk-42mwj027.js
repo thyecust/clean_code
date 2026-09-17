@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { dl, VP, ODn, DDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { isBgSession as _t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { EYe, ne, hTt } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { lV, WM, Dd, Xp, Ld } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function j4() {
-  if (!_t()) return !0;
+  if (!isBgSession()) return !0;
   return dl() !== null && ODn();
 }
 function S9n(e) {

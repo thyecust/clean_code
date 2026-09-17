@@ -62,11 +62,11 @@ function BNe(n) {
 function t(n) {
   return n?.kind === "task-notification" ? "task-notification" : "prompt";
 }
-import { AsyncLocalStorage as o } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks";
 var jNe = "X-CCR-Turn-Id",
   u = 128,
   d = /^[\x21-\x7e]+$/,
-  r = new o();
+  r = new AsyncLocalStorage();
 function tJn(n, e) {
   return r.run({ id: n }, e);
 }

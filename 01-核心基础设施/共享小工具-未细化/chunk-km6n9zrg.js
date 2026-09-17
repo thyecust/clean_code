@@ -10,33 +10,33 @@
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
 import { dy } from "./chunk-862jyk0r.js";
-import { AsyncLocalStorage as f } from "async_hooks";
-import { constants as p } from "fs";
+import { AsyncLocalStorage } from "async_hooks";
+import { constants } from "fs";
 import {
-  appendFile as y,
-  copyFile as b,
-  lstat as w,
-  mkdir as P,
+  appendFile,
+  copyFile,
+  lstat,
+  mkdir,
   open as u,
-  readdir as d,
-  readFile as l,
+  readdir,
+  readFile,
   stat as S,
-  unlink as h,
-  writeFile as o,
+  unlink,
+  writeFile,
 } from "fs/promises";
 class z7t {
   read(r) {
-    return l(r, "utf8");
+    return readFile(r, "utf8");
   }
   readBytes(r) {
-    return l(r);
+    return readFile(r);
   }
   write(r, e, t) {
-    return o(r, e, { encoding: "utf8", mode: t });
+    return writeFile(r, e, { encoding: "utf8", mode: t });
   }
   async mkdir(r, e) {
     try {
-      await P(r, { recursive: !0, mode: e });
+      await mkdir(r, { recursive: !0, mode: e });
     } catch (t) {
       if (A(t) !== "EEXIST") throw t;
     }
@@ -45,29 +45,29 @@ class z7t {
     return On(r, e, t);
   }
   delete(r) {
-    return h(r);
+    return unlink(r);
   }
   list(r) {
-    return d(r);
+    return readdir(r);
   }
   append(r, e, t) {
-    return y(r, e, { encoding: "utf8", mode: t });
+    return appendFile(r, e, { encoding: "utf8", mode: t });
   }
   writeExclusive(r, e, t) {
-    return o(r, e, { encoding: "utf8", flag: "wx", mode: t });
+    return writeFile(r, e, { encoding: "utf8", flag: "wx", mode: t });
   }
   writeBytesExclusive(r, e, t) {
-    return o(r, e, { flag: "wx", mode: t });
+    return writeFile(r, e, { flag: "wx", mode: t });
   }
   copy(r, e) {
-    return b(r, e);
+    return copyFile(r, e);
   }
   async stat(r) {
     return { mtimeMs: (await S(r)).mtimeMs };
   }
   async lstat(r) {
     try {
-      let e = await w(r);
+      let e = await lstat(r);
       return {
         isSymbolicLink: e.isSymbolicLink(),
         isFile: e.isFile(),
@@ -81,7 +81,7 @@ class z7t {
     }
   }
   async listEntries(r) {
-    return (await d(r, { withFileTypes: !0 })).map((t) => ({
+    return (await readdir(r, { withFileTypes: !0 })).map((t) => ({
       name: t.name,
       isDirectory: t.isDirectory(),
       isFile: t.isFile(),
@@ -98,7 +98,7 @@ class z7t {
   }
   async readTail(r, e, t) {
     a("readTail", "maxBytes", e);
-    let n = t?.noFollow ? p.O_RDONLY | dy : "r",
+    let n = t?.noFollow ? constants.O_RDONLY | dy : "r",
       i = await u(r, n);
     try {
       let s = await i.stat();
@@ -130,7 +130,7 @@ async function c(r, e, t) {
   }
   return i === t ? n : Buffer.from(n.subarray(0, i));
 }
-var B = new f();
+var B = new AsyncLocalStorage();
 function qt() {
   return B.getStore() ?? new z7t();
 }

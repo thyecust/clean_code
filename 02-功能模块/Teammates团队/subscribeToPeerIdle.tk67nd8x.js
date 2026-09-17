@@ -10,40 +10,40 @@
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { hU, Dse, Uor, Zy, NOTIFY_IDLE_PEER_FEATURE as RKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { hU, Dse, Uor, Zy, NOTIFY_IDLE_PEER_FEATURE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
-import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket as t1e, registeredLivePeerForSocket as E7e, ownMessagingSocket as C$ } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
+import { dK, BAe, bbt, mD, sendStampedControlToUdsSocket, registeredLivePeerForSocket, ownMessagingSocket } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { cbe, Wee } from "../权限系统/chunk-4tar9p3n.js";
 import { RPe, pdt, Ssn, nqe, fdt } from "./chunk-nhk351pe.js";
 import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-async function K(e, r, s, i) {
+async function subscribeToPeerIdle(e, r, s, i) {
   try {
     return await y(e, r, s, i);
   } catch (n) {
     return (
-      h(n),
-      f("cross_session_notify_idle", "subscribe_internal_error"),
+      logError(n),
+      logFeatureBad("cross_session_notify_idle", "subscribe_internal_error"),
       { ok: !1, reason: "send-failed", error: n }
     );
   }
 }
 async function y(e, r, s, i) {
   if (Wee() === "refuse") return t("requester-refuses-inbound");
-  let n = C$();
+  let n = ownMessagingSocket();
   if (n === void 0) return t("no-inbox");
   let a = Zy(e);
   if (a === void 0) return t("unreachable-namespace");
   if (a === Zy(n)) return t("self-target");
   let o;
   try {
-    o = await E7e(e);
+    o = await registeredLivePeerForSocket(e);
   } catch {
     o = void 0;
   }
-  if (o !== void 0 && !(o.features?.includes(RKt) ?? !1))
+  if (o !== void 0 && !(o.features?.includes(NOTIFY_IDLE_PEER_FEATURE) ?? !1))
     return t("peer-unsupported");
   if (!Uor(n, a, o?.features, await x()) || !Dse(hU(n)))
     return t("unreachable-namespace");
@@ -54,7 +54,7 @@ async function y(e, r, s, i) {
   let b = l.priors;
   try {
     return (
-      await t1e(
+      await sendStampedControlToUdsSocket(
         e,
         {
           action: "notify_when_idle",
@@ -71,7 +71,7 @@ async function y(e, r, s, i) {
       fdt(u.msg_id);
       for (let c of b) fdt(c);
       return (
-        f("cross_session_notify_idle", "subscribe_peer_gone"),
+        logFeatureBad("cross_session_notify_idle", "subscribe_peer_gone"),
         { ok: !1, reason: "peer-gone", error: d }
       );
     }
@@ -79,7 +79,7 @@ async function y(e, r, s, i) {
       fdt(u.msg_id);
       let c = b.some(nqe);
       return (
-        f("cross_session_notify_idle", "subscribe_send_failed"),
+        logFeatureBad("cross_session_notify_idle", "subscribe_send_failed"),
         {
           ok: !1,
           reason: "send-failed",
@@ -89,15 +89,15 @@ async function y(e, r, s, i) {
       );
     }
     return (
-      g("cross_session_notify_idle", "subscribe_send_uncertain"),
+      logFeatureSad("cross_session_notify_idle", "subscribe_send_uncertain"),
       { ok: !1, reason: "send-uncertain", error: d }
     );
   }
 }
 function t(e) {
-  return (g("cross_session_notify_idle", m[e]), { ok: !1, reason: e });
+  return (logFeatureSad("cross_session_notify_idle", m[e]), { ok: !1, reason: e });
 }
-function w(e) {
+function idleSelfTargetMessage(e) {
   return `notify_when_idle: ${e} is THIS session \u2014 nothing was subscribed; you already know when your own turn ends.`;
 }
 var m = {
@@ -132,7 +132,7 @@ function S(e, r) {
     case "no-inbox":
       return "notify_when_idle needs this session to have a messaging inbox, and it has none \u2014 no notice will arrive.";
     case "self-target":
-      return w("that address");
+      return idleSelfTargetMessage("that address");
     case "requester-refuses-inbound":
       return "notify_when_idle: this session does not accept inbound cross-session traffic (messaging is off here or crossSessionInbound is refuse), so an idle notice could never be shown to you \u2014 nothing was subscribed.";
     case "unreachable-namespace":
@@ -179,14 +179,14 @@ function I(e, r) {
       return `The idle subscription for ${s} could not be set up; you will not be told when it goes idle.`;
   }
 }
-function N(e, r, s) {
+function idleSubscriptionLines(e, r, s) {
   try {
     return {
       model: r.ok ? _(e, r.peerKnownCapable) : S(r, s),
       display: I(e, r),
     };
   } catch (i) {
-    h(i);
+    logError(i);
     let n = r.ok
       ? "Idle subscription sent."
       : "The idle subscription could not be set up.";
@@ -198,7 +198,7 @@ async function x() {
   return e === void 0 ? [] : [e];
 }
 export {
-  w as idleSelfTargetMessage,
-  N as idleSubscriptionLines,
-  K as subscribeToPeerIdle,
+  idleSelfTargetMessage,
+  idleSubscriptionLines,
+  subscribeToPeerIdle,
 };

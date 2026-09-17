@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { isFirstPartyProvider as In } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isFirstPartyProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 function G7() {
-  return a.CLAUDE_CODE_REMOTE && In();
+  return a.CLAUDE_CODE_REMOTE && isFirstPartyProvider();
 }
 export { G7 };

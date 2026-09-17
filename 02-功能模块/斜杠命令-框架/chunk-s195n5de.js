@@ -8,38 +8,38 @@
 
 // Version: 2.1.263
 import { YP, Ve, zi, yt, dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum as u } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
 import { bh, K, sn, Nb, Rg, TB, Oxe, Rje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Id, pp, logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { Id, pp, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { cmdFeature as uz, logFeatureOk as y, logFeatureBad as f, logFeatureSad as g } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { nq, inlineSkillModelOverride as rQ, mc, o0, isBgSession as _t, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { cmdFeature, logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { nq, inlineSkillModelOverride, mc, o0, isBgSession, wl, Ms } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { C_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { nxt, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
 import { Rir, kir, TQ } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { validateBridgeId as fm, toCompatSessionId as zu } from "../权限系统/chunk-ynkf3yy4.js";
+import { validateBridgeId, toCompatSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { lo } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import { isRestrictedToPluginOnly as Uu, isSourceAdminTrusted as r6 } from "../Skills技能/chunk-sapykxw7.js";
-import { isPolicyAllowed as Mt, policyDeniedReason as op, policyDenyKind as DD } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
+import { isRestrictedToPluginOnly, isSourceAdminTrusted } from "../Skills技能/chunk-sapykxw7.js";
+import { isPolicyAllowed, policyDeniedReason, policyDenyKind } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { CSt } from "../Hooks钩子/chunk-z3433nr6.js";
-import { getBundledSkills as poe } from "../Skills技能/chunk-1zy5c8mf.js";
+import { getBundledSkills } from "../Skills技能/chunk-1zy5c8mf.js";
 import { iA, Xy } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, getToolPermissionContext as ce, getEffortValue as Qc } from "../权限系统/chunk-fjrcf22x.js";
-import { isSilentAbortReason as qK, shutdownInterruptStamp as ob } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
+import { so, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
+import { isSilentAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
   Nft,
-  getCommandName as qo,
-  isCommandEnabled as zp,
+  getCommandName,
+  isCommandEnabled,
   Y$t,
   pue,
-  findCommand as Di,
+  findCommand,
   oV,
-  getCommand as gue,
+  getCommand,
   XGn,
   $S,
   gr,
@@ -52,9 +52,9 @@ import {
   cX,
   Gdn,
   UBt,
-  hasPermissionsToUseTool as gd,
-  isSkillExcludedFromModel as HM,
-  isSkillOff as Tk,
+  hasPermissionsToUseTool,
+  isSkillExcludedFromModel,
+  isSkillOff,
   wV,
   qVe,
   Ck,
@@ -64,8 +64,8 @@ import {
   X2,
   UTe,
   wLe,
-  prepareForkedCommandContext as wht,
-  extractResultText as Tht,
+  prepareForkedCommandContext,
+  extractResultText,
   VKe,
   I6t,
   O6t,
@@ -74,12 +74,12 @@ import {
   Kne,
   jmn,
   C_t,
-  runAgent as dw,
+  runAgent,
   EE,
   dEe,
   Lde,
-  getAttachmentMessages as Jne,
-  createAttachmentMessage as pn,
+  getAttachmentMessages,
+  createAttachmentMessage,
   tg,
   MEe,
   Re,
@@ -93,12 +93,12 @@ import {
   Ht,
   em,
   $l,
-  builtInCommandNames as LI,
-  shippedCommandNames as LY,
-  getBuiltinCommands as lAe,
-  meetsAvailabilityRequirement as ype,
-  attributionSkillName as _C,
-  deriveRequires as gSt,
+  builtInCommandNames,
+  shippedCommandNames,
+  getBuiltinCommands,
+  meetsAvailabilityRequirement,
+  attributionSkillName,
+  deriveRequires,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sp, Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { f7e, bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
@@ -121,7 +121,7 @@ import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
 import { gD } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
 import { iCe } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
 import { dfe } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { randomUUID as oe } from "crypto";
+import { randomUUID } from "crypto";
 function Me(e, o, t, m, l) {
   let c = 0;
   for (let _ of C_) {
@@ -149,7 +149,7 @@ function _e({
   credentials: l,
 }) {
   if (o !== void 0 || t) return;
-  if (_t()) return;
+  if (isBgSession()) return;
   TWn(e);
   let c = npt(l);
   if (!B1t(e)) return;
@@ -224,7 +224,7 @@ function je() {
   let e = a.CLAUDE_CODE_REMOTE_SESSION_ID;
   if (!e) return;
   try {
-    return zu(fm(e, "CLAUDE_CODE_REMOTE_SESSION_ID"));
+    return toCompatSessionId(validateBridgeId(e, "CLAUDE_CODE_REMOTE_SESSION_ID"));
   } catch {
     return;
   }
@@ -232,7 +232,7 @@ function je() {
 function Ae(e, o) {
   let t = je();
   if (!t) return;
-  let m = Di(e, o);
+  let m = findCommand(e, o);
   if (!m) return;
   let l = xe[m.name];
   return l ? l({ remoteSessionId: t }) : void 0;
@@ -248,7 +248,7 @@ async function Pe(e, o, t) {
     c = e.agentId ? void 0 : e.getAppState().activeGoal;
   try {
     let _ = t.executeStopHooks(
-        ce(e).mode,
+        getToolPermissionContext(e).mode,
         e.abortController.signal,
         void 0,
         !1,
@@ -261,7 +261,7 @@ async function Pe(e, o, t) {
       v = [];
     for await (let T of _) {
       if (T.timedOut && c && T.hook?.prompt === c.condition)
-        g("goal_met", "evaluator_timeout");
+        logFeatureSad("goal_met", "evaluator_timeout");
       if (T.message?.type === "attachment") {
         let U = T.message.attachment;
         if ("hookEvent" in U && U.hookEvent === "Stop") {
@@ -277,11 +277,11 @@ async function Pe(e, o, t) {
           (l = !0));
       if (T.additionalContexts && T.additionalContexts.length > 0)
         (m.push(
-          pn({
+          createAttachmentMessage({
             type: "hook_additional_context",
             content: T.additionalContexts,
             hookName: "Stop",
-            toolUseID: `hook-${oe()}`,
+            toolUseID: `hook-${randomUUID()}`,
             hookEvent: "Stop",
           }),
         ),
@@ -294,7 +294,7 @@ async function Pe(e, o, t) {
   if (!l)
     try {
       let _ = t.executeStopHooks(
-        ce(e).mode,
+        getToolPermissionContext(e).mode,
         e.abortController.signal,
         void 0,
         !1,
@@ -318,7 +318,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       rawName: e.name,
       canonicalName: e.name,
       isMcp: e.loadedFrom === "mcp",
-      isBuiltIn: LI().has(e.name),
+      isBuiltIn: builtInCommandNames().has(e.name),
       isBundled: e.source === "bundled",
       isOfficial: I2(e),
     });
@@ -357,8 +357,8 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       availableTools: r,
       webFetchReadmissionAllowed: k,
       frozenCommandDenies: C,
-    } = await wht(e, o, t, te, {
-      extractAttachments: T ? void 0 : Jne,
+    } = await prepareForkedCommandContext(e, o, t, te, {
+      extractAttachments: T ? void 0 : getAttachmentMessages,
       replaceCommandRules: !0,
       replaceDenyRules: !T,
       deferInvocationRecording: Z,
@@ -367,19 +367,19 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
       p.length > 0 ? [...(t.permissionLayers ?? []), ...p] : t.permissionLayers;
   if (l.length > 0 || m.length > 0)
     I.push(Re({ content: [...l, ...m], isMeta: !0 }));
-  if (B && B.length > 0) I.push(pn({ type: "inlined_image_paths", paths: B }));
+  if (B && B.length > 0) I.push(createAttachmentMessage({ type: "inlined_image_paths", paths: B }));
   let H = await C_t(e, sn(), {
     options: {
       tools: EE(
         M,
         k
-          ? X2(M, r, ce(t), {
+          ? X2(M, r, getToolPermissionContext(t), {
               activeAgents: t.options.agentDefinitions.activeAgents,
             })
           : r,
         Z,
       ).resolvedTools,
-      spawnedBySkill: _C(e),
+      spawnedBySkill: attributionSkillName(e),
     },
     storageV5: t.storageV5,
   });
@@ -389,7 +389,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     O = j !== void 0 ? { ...M, effort: j } : M,
     R = Re({
       content: m$({
-        inputString: `/${qo(e)} ${o}`.trim(),
+        inputString: `/${getCommandName(e)} ${o}`.trim(),
         precedingInputBlocks: l.length > 0 ? [...l, ...m] : m,
       }),
       uuid: U,
@@ -400,14 +400,14 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
     n(`Executing forked slash command /${e.name} with agent ${O.agentType}`),
     Z)
   ) {
-    P?.markTurnActive(T ? void 0 : `/${qo(e)} ${o}`.trim());
+    P?.markTurnActive(T ? void 0 : `/${getCommandName(e)} ${o}`.trim());
     let Q;
     try {
       Q = await D6t({
         agentId: x,
         agentDefinition: O,
         command: e,
-        description: `/${qo(e)} ${o}`.trim(),
+        description: `/${getCommandName(e)} ${o}`.trim(),
         prompt: s,
         promptMessages: I,
         context: t,
@@ -417,7 +417,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         readFileState: b,
         availableTools: r,
         webFetchReadmissionAllowed: k,
-        spawnedBySkill: _C(e),
+        spawnedBySkill: attributionSkillName(e),
         recordInvocationOnSuccess: A,
         frozenCommandDenies: C,
       });
@@ -455,7 +455,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
                 XGn({
                   agentId: Q.agentId,
                   skillName: e.name,
-                  description: `/${qo(e)} ${o}`.trim(),
+                  description: `/${getCommandName(e)} ${o}`.trim(),
                 }),
             ),
           ],
@@ -486,7 +486,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         parentToolUseID: G,
         toolUseID: `${G}-${le}`,
         timestamp: new Date().toISOString(),
-        uuid: oe(),
+        uuid: randomUUID(),
       }
     ),
     se = () => {
@@ -496,18 +496,18 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
         progressMessages: [...D],
       });
     };
-  P?.markTurnActive(T ? void 0 : `/${qo(e)} ${o}`.trim());
+  P?.markTurnActive(T ? void 0 : `/${getCommandName(e)} ${o}`.trim());
   try {
     se();
-    for await (let Q of dw({
+    for await (let Q of runAgent({
       agentDefinition: O,
       promptMessages: I,
-      onModelRestricted: I6t(_C(e), t.onQueryEvent),
+      onModelRestricted: I6t(attributionSkillName(e), t.onQueryEvent),
       toolUseContext: { ...t, getAppState: d, permissionLayers: E },
       canUseTool: c,
       isAsync: !1,
       querySource: "agent:custom",
-      spawnedBySkill: _C(e),
+      spawnedBySkill: attributionSkillName(e),
       spawnedByForkedSkill: !0,
       model: e.model,
       availableTools: r,
@@ -566,7 +566,7 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   } finally {
     (Oxe(x), t.emitToolProgress?.({ kind: "clear", toolUseId: G }));
   }
-  let pe = Tht(N, "Command completed");
+  let pe = extractResultText(N, "Command completed");
   (n(`Forked slash command /${e.name} completed with agent ${x}`),
     await P?.settleTurnEnd(N));
   let F = await Pe(t, N, _);
@@ -583,10 +583,10 @@ async function ze(e, o, t, m, l, c, _, v = [], T, U, P, W, B) {
   };
 }
 function qe(e, o, { interactive: t }) {
-  let m = [o, lAe(), poe(), CSt()],
+  let m = [o, getBuiltinCommands(), getBundledSkills(), CSt()],
     l;
   for (let T of m) {
-    let U = Di(e, T);
+    let U = findCommand(e, T);
     if (U?.policyGate) {
       l = U;
       break;
@@ -594,17 +594,17 @@ function qe(e, o, { interactive: t }) {
   }
   let c = l?.policyGate;
   if (!l || !c) return;
-  if (!ype(l)) return;
-  if (Mt(c.policy)) {
-    if (t && !Rg() && zp(l) && Di(e, o) === void 0)
+  if (!meetsAvailabilityRequirement(l)) return;
+  if (isPolicyAllowed(c.policy)) {
+    if (t && !Rg() && isCommandEnabled(l) && findCommand(e, o) === void 0)
       return { command: l, reason: kir(l.name), kind: "stale_list" };
     return;
   }
-  let _ = DD(c.policy),
+  let _ = policyDenyKind(c.policy),
     v =
       _ === "cache_miss"
         ? Rir(c.featureLabel)
-        : op(c.policy, c.featureLabel, c.verb ?? "is");
+        : policyDeniedReason(c.policy, c.featureLabel, c.verb ?? "is");
   if (v === null || _ === null) return;
   return { command: l, reason: v, kind: _ };
 }
@@ -628,15 +628,15 @@ function commandThrowTextForTranscript(e, o, t) {
 }
 async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z) {
   function te() {
-    let w = oe(),
+    let w = randomUUID(),
       L = MEe(o) ? void 0 : w;
     if (L !== void 0) Rje(L);
-    let z = Xy(l.options.mainLoopModel, Qc(l));
+    let z = Xy(l.options.mainLoopModel, getEffortValue(l));
     i("tengu_input_prompt", {
-      ...(T && { prompt_source: u(T) }),
-      ...(z && { effort_level: u(z) }),
+      ...(T && { prompt_source: fromEnum(T) }),
+      ...(z && { effort_level: fromEnum(z) }),
     });
-    let ee = c || oe();
+    let ee = c || randomUUID();
     return (
       bo("user_prompt", {
         prompt_length: String(e.length),
@@ -663,7 +663,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   if (!s) {
     if ((i("tengu_input_slash_missing", {}), l.options.isNonInteractiveSession))
       return te();
-    f("cmd_dispatch", "cmd_parse_failed");
+    logFeatureBad("cmd_dispatch", "cmd_parse_failed");
     let w = "Commands are in the form `/command [args]`";
     return {
       messages: [
@@ -688,23 +688,23 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     if (w) ((d = w.commandName), (p = w.args));
     else if (d.includes("://")) I = !0;
   }
-  let b = Di(d, l.options.commands);
-  if (b && !zp(b)) b = void 0;
+  let b = findCommand(d, l.options.commands);
+  if (b && !isCommandEnabled(b)) b = void 0;
   if (!b && !A && p.trim()) {
     let w = p.trimStart(),
       L = w.search(/\s/),
       z = L === -1 ? w : w.slice(0, L),
       ee = `${d}:${z}`,
-      he = Di(ee, l.options.commands);
+      he = findCommand(ee, l.options.commands);
     if (he)
       ((b = he), (d = ee), (p = L === -1 ? "" : w.slice(L + 1).trimStart()));
   }
   let r, k;
-  if (b && !Tk(b)) {
+  if (b && !isSkillOff(b)) {
     let w = xbe(b, p);
     if (w) {
-      let L = Di(w.targetName, l.options.commands);
-      if (L && zp(L))
+      let L = findCommand(w.targetName, l.options.commands);
+      if (L && isCommandEnabled(L))
         ((k = `${d} ${w.consumedToken}`),
           (b = L),
           (d = w.targetName),
@@ -716,7 +716,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     }
   }
   if (b?.loadedFrom === "syncedSkills" && wV()) b = void 0;
-  let C = LI().has(d);
+  let C = builtInCommandNames().has(d);
   if (isSlashCommandBlockedByEndedByModel(b, l.getAppState().endedByModel)) {
     let w = Mk(
       "Claude ended this conversation. Start a new session (or /clear) to continue.",
@@ -742,7 +742,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           had_suggestion: !1,
           policy_denied: re !== "stale_list",
         }),
-          f(
+          logFeatureBad(
             "cmd_dispatch",
             re === "stale_list" ? "cmd_stale_list" : `cmd_policy_${re}`,
           ));
@@ -770,15 +770,15 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           resultText: ne,
         };
       }
-      if (l.options.isNonInteractiveSession && LI().has(d)) {
-        let X = lAe(),
+      if (l.options.isNonInteractiveSession && builtInCommandNames().has(d)) {
+        let X = getBuiltinCommands(),
           ne = Ae(d, X) ?? `/${$S(Qn(d))} isn't available in this environment.`;
         (i("tengu_input_slash_invalid", {
           input_length: d.length,
           had_suggestion: !1,
         }),
-          f("cmd_dispatch", "cmd_unavailable_headless"));
-        let re = Di(d, X),
+          logFeatureBad("cmd_dispatch", "cmd_unavailable_headless"));
+        let re = findCommand(d, X),
           me = !p ? "" : re !== void 0 && oV(re, p) ? "***" : $S(nq(p));
         return {
           messages: [
@@ -796,11 +796,11 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           .filter(
             (X) =>
               !X.isHidden &&
-              !Tk(X) &&
-              zp(X) &&
+              !isSkillOff(X) &&
+              isCommandEnabled(X) &&
               !(X.loadedFrom === "syncedSkills" && Nb()),
           )
-          .map((X) => ({ name: qo(X), aliases: X.aliases })),
+          .map((X) => ({ name: getCommandName(X), aliases: X.aliases })),
         { maxEditDistance: 2 },
       );
       (i("tengu_input_slash_invalid", {
@@ -809,7 +809,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         had_suggestion: Boolean(z),
         suggestion_distance: z ? Kne(d, z) : void 0,
       }),
-        f("cmd_dispatch", "cmd_unknown"));
+        logFeatureBad("cmd_dispatch", "cmd_unknown"));
       let ee = gr(d, 512),
         he = z ? gr(z, 200) : void 0,
         ye = z
@@ -847,7 +847,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
           : "custom",
     R = oV(b, p) ? `/${d} ***` : e;
   if (!(l.deferSlashToEngine?.(b) ?? !1)) {
-    let w = oe();
+    let w = randomUUID();
     (Rje(w),
       bo("user_prompt", {
         prompt_length: String(R.length),
@@ -910,7 +910,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
     });
   }
   if (D.length === 0) {
-    if (Qe) y("cmd_dispatch");
+    if (Qe) logFeatureOk("cmd_dispatch");
     return (
       Te(),
       {
@@ -938,7 +938,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
         input_length: d.length,
         had_suggestion: !1,
       }),
-        f("cmd_dispatch", "cmd_unknown"));
+        logFeatureBad("cmd_dispatch", "cmd_unknown"));
     return {
       messages: [GV(), ...D],
       shouldQuery: G,
@@ -947,7 +947,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
       model: se,
     };
   }
-  if (!Y) (y("cmd_dispatch"), Te());
+  if (!Y) (logFeatureOk("cmd_dispatch"), Te());
   let Le = D.length > 0 && D[0] && $l(D[0]),
     Ie =
       G ||
@@ -976,7 +976,7 @@ async function processSlashCommand(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, 
   };
 }
 function Se(e, o) {
-  let t = `/${qo(e)} opens an interactive panel and isn't available in this environment. Run it from the Claude Code terminal instead.`;
+  let t = `/${getCommandName(e)} opens an interactive panel and isn't available in this environment. Run it from the Claude Code terminal instead.`;
   return {
     messages: [
       em(we(e, o)),
@@ -988,10 +988,10 @@ function Se(e, o) {
   };
 }
 async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
-  let s = gue(e, t.options.commands),
-    d = uz(LY().has(e) ? e : "custom");
-  if (!zp(s)) {
-    f(d, "cmd_policy_disabled");
+  let s = getCommand(e, t.options.commands),
+    d = cmdFeature(shippedCommandNames().has(e) ? e : "custom");
+  if (!isCommandEnabled(s)) {
+    logFeatureBad(d, "cmd_policy_disabled");
     let p = `/${$S(Qn(e))} isn't available in this session.`;
     if (t.options.isNonInteractiveSession)
       return {
@@ -1010,8 +1010,8 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       resultText: p,
     };
   }
-  if (Tk(s)) {
-    if ((f(d, "cmd_skill_override_off"), t.options.isNonInteractiveSession)) {
+  if (isSkillOff(s)) {
+    if ((logFeatureBad(d, "cmd_skill_override_off"), t.options.isNonInteractiveSession)) {
       let M = `Skill "${gr(s.name, 200)}" is disabled via skillOverrides. Remove the override from your settings to run it.`;
       return {
         messages: [
@@ -1048,7 +1048,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
     });
   if (s.userInvocable === !1)
     return (
-      f(d, "cmd_not_user_invocable"),
+      logFeatureBad(d, "cmd_not_user_invocable"),
       {
         messages: [
           Re({
@@ -1064,7 +1064,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
       }
     );
   if (s.type === "local-jsx" && t.options.isNonInteractiveSession)
-    return (f(d, "cmd_local_jsx_headless"), Se(s, o));
+    return (logFeatureBad(d, "cmd_local_jsx_headless"), Se(s, o));
   try {
     switch (s.type) {
       case "local-jsx":
@@ -1072,7 +1072,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           let A = !1,
             M = (r, k) => {
               if (A) return;
-              if (((A = !0), y(d), k?.display === "skip")) {
+              if (((A = !0), logFeatureOk(d), k?.display === "skip")) {
                 p({
                   messages: [],
                   shouldQuery: !1,
@@ -1126,7 +1126,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             },
             I = s.load ?? t.options.resolveCommandDialog?.(s);
           if (!I) {
-            (f(d, "cmd_local_jsx_no_dialog_resolution"), p(Se(s, o)));
+            (logFeatureBad(d, "cmd_local_jsx_no_dialog_resolution"), p(Se(s, o)));
             return;
           }
           let b = pue(s, o, t.presentation ?? "inline");
@@ -1149,18 +1149,18 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               if (A) return;
               let k = t.localJsx;
               if (!k) {
-                (f(d, "cmd_local_jsx_no_panel_host"), (A = !0), p(Se(s, o)));
+                (logFeatureBad(d, "cmd_local_jsx_no_panel_host"), (A = !0), p(Se(s, o)));
                 return;
               }
               k.show(r, {
-                commandName: qo(s),
+                commandName: getCommandName(s),
                 immediate: b,
                 hidesPrompt: !0,
                 retireAtTurnBoundary: !0,
               }).closed.then((E) => {
                 if (E === "dismissed" && !A)
                   ((A = !0),
-                    f(d, "cmd_local_jsx_dismissed"),
+                    logFeatureBad(d, "cmd_local_jsx_dismissed"),
                     p({ messages: [], shouldQuery: !1, command: s }));
               });
             })
@@ -1170,9 +1170,9 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 n(
                   `local-jsx command aborted: ${r instanceof Error ? r.message : String(r)}`,
                 );
-              else h(dt(ge(r), "local-jsx slash command threw"));
+              else logError(dt(ge(r), "local-jsx slash command threw"));
               if (
-                (f(d, k ? "cmd_local_jsx_aborted" : "cmd_local_jsx_threw"), A)
+                (logFeatureBad(d, k ? "cmd_local_jsx_aborted" : "cmd_local_jsx_threw"), A)
               )
                 return;
               if (((A = !0), k)) {
@@ -1199,7 +1199,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
         });
       case "local": {
         if (t.deferSlashToEngine?.(s)) {
-          let M = `/${qo(s)} ${o}`.trim(),
+          let M = `/${getCommandName(s)} ${o}`.trim(),
             I = Re({
               content: m$({ inputString: M, precedingInputBlocks: m }),
               uuid: v,
@@ -1215,7 +1215,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             content: m$({ inputString: ie(s, o), precedingInputBlocks: m }),
             uuid: v,
           }),
-          A = Pt() && gSt(s).workspace;
+          A = Pt() && deriveRequires(s).workspace;
         if (A) t.applyMessageOp({ type: "append", messages: [p] });
         try {
           let M = GV(),
@@ -1224,8 +1224,8 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               ? await gv(b, t.abortController.signal, () => new Ve())
               : await b;
           if (r.type === "text" && r.level === "error")
-            f(d, "cmd_returned_error");
-          else y(d);
+            logFeatureBad(d, "cmd_returned_error");
+          else logFeatureOk(d);
           if (r.type === "skip")
             return { messages: [], shouldQuery: !1, command: s };
           if (r.type === "compact") {
@@ -1294,10 +1294,10 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
             n(
               `local command aborted: ${M instanceof Error ? M.message : String(M)}`,
             );
-          else h(dt(ge(M), "local slash command threw"));
+          else logError(dt(ge(M), "local slash command threw"));
           let I = yt(M);
-          if (I && t.abortController.signal.aborted) g(d, "cmd_local_aborted");
-          else f(d, I ? "cmd_local_aborted" : "cmd_local_threw");
+          if (I && t.abortController.signal.aborted) logFeatureSad(d, "cmd_local_aborted");
+          else logFeatureBad(d, I ? "cmd_local_aborted" : "cmd_local_threw");
           let b = I ? "local-command-stdout" : "local-command-stderr",
             r = A ? nxt : "Interrupted",
             k = I
@@ -1330,7 +1330,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
           i("tengu_stacked_slash_commands", { stacked_count: p.length });
         try {
           let r = await De(s, I, t);
-          if ("blocked" in r) return (f(d, "cmd_hook_blocked"), r.blocked);
+          if ("blocked" in r) return (logFeatureBad(d, "cmd_hook_blocked"), r.blocked);
           if (!t.options.isNonInteractiveSession && !T)
             if ((s.onUserTypedArgs?.(I, t), s.getEffort?.(I, t) !== void 0))
               iA(t.storageV5);
@@ -1347,7 +1347,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
               j = [];
             for await (let R of V.executeUserPromptSubmitHooks(
               E,
-              ce(t).mode,
+              getToolPermissionContext(t).mode,
               t,
               cjt({ promptSource: x ?? "typed" }),
             )) {
@@ -1362,7 +1362,7 @@ async function Ke(e, o, t, m, l, c, _, v, T, U, P, W, B, x, V, q, Z, te) {
                 }
               }
               if (R.blockingError) {
-                f(d, "cmd_prompt_submit_hook_blocked");
+                logFeatureBad(d, "cmd_prompt_submit_hook_blocked");
                 let N = V.getUserPromptSubmitHookBlockingMessage(
                     R.blockingError,
                   ),
@@ -1384,7 +1384,7 @@ Original prompt: ${E}`;
                   ? `Operation stopped by hook: ${R.stopReason}`
                   : "Operation stopped by hook";
                 return (
-                  f(d, "cmd_prompt_submit_hook_stopped"),
+                  logFeatureBad(d, "cmd_prompt_submit_hook_stopped"),
                   {
                     messages: [
                       Re({ content: N }),
@@ -1399,11 +1399,11 @@ Original prompt: ${E}`;
               }
               if (R.additionalContexts && R.additionalContexts.length > 0)
                 H.push(
-                  pn({
+                  createAttachmentMessage({
                     type: "hook_additional_context",
                     content: R.additionalContexts,
                     hookName: "UserPromptSubmit",
-                    toolUseID: `hook-${oe()}`,
+                    toolUseID: `hook-${randomUUID()}`,
                     hookEvent: "UserPromptSubmit",
                   }),
                 );
@@ -1414,7 +1414,7 @@ Original prompt: ${E}`;
               t,
               m,
               l,
-              _ ?? gd,
+              _ ?? hasPermissionsToUseTool,
               V,
               [...r.hookMessages, ...H],
               T,
@@ -1427,9 +1427,9 @@ Original prompt: ${E}`;
               O.messages.push(
                 Ht(`UserPromptSubmit hook error: ${j.join("; ")}`, "warning"),
               );
-            if (O.aborted) f(d, "cmd_prompt_aborted");
-            else if (O.threw) f(d, "cmd_prompt_threw");
-            else if ((y(d), b)) O.messages.splice(1, 0, b);
+            if (O.aborted) logFeatureBad(d, "cmd_prompt_aborted");
+            else if (O.threw) logFeatureBad(d, "cmd_prompt_threw");
+            else if ((logFeatureOk(d), b)) O.messages.splice(1, 0, b);
             return O;
           }
           let k = await ve(s, I, t, m, l, v, r.hookMessages, T, q, te);
@@ -1494,7 +1494,7 @@ Original prompt: ${E}`;
                 (k.effort = H.effort ?? k.effort));
             } catch (E) {
               if (E instanceof Ve) throw E;
-              (h(dt(ge(E), "stacked slash command expansion threw")),
+              (logError(dt(ge(E), "stacked slash command expansion threw")),
                 k.messages.push(
                   Ht(
                     `Stacked skill /${Qn(C.name)} failed to load: ${commandThrowTextForTranscript(E, C.name, t.session)}`,
@@ -1510,27 +1510,27 @@ Original prompt: ${E}`;
               ),
             );
           if (b) k.messages.push(b);
-          return (y(d), k);
+          return (logFeatureOk(d), k);
         } catch (r) {
           if (yt(r)) {
-            f(d, "cmd_prompt_aborted");
+            logFeatureBad(d, "cmd_prompt_aborted");
             let k = [
               Re({
                 content: m$({ inputString: ie(s, o), precedingInputBlocks: m }),
                 uuid: v,
               }),
             ];
-            if (!qK(t.abortController.signal.reason))
+            if (!isSilentAbortReason(t.abortController.signal.reason))
               k.push(
                 PI({
                   toolUse: !1,
-                  interruptedByShutdown: ob(t.abortController.signal),
+                  interruptedByShutdown: shutdownInterruptStamp(t.abortController.signal),
                 }),
               );
             return { messages: k, shouldQuery: !1, command: s };
           }
           return (
-            f(d, "cmd_prompt_threw"),
+            logFeatureBad(d, "cmd_prompt_threw"),
             {
               messages: [
                 Re({
@@ -1554,7 +1554,7 @@ Original prompt: ${E}`;
   } catch (p) {
     if (p instanceof YP)
       return (
-        f(d, "cmd_malformed"),
+        logFeatureBad(d, "cmd_malformed"),
         {
           messages: [
             Re({
@@ -1569,10 +1569,10 @@ Original prompt: ${E}`;
   }
 }
 function ie(e, o) {
-  return qV(qo(e), oV(e, o) ? "***" : o);
+  return qV(getCommandName(e), oV(e, o) ? "***" : o);
 }
 function we(e, o) {
-  return qV(Qn(qo(e)), oV(e, o) ? "***" : nq(o));
+  return qV(Qn(getCommandName(e)), oV(e, o) ? "***" : nq(o));
 }
 var Oe = 5;
 function Xe(e, o, t, m) {
@@ -1598,7 +1598,7 @@ function Xe(e, o, t, m) {
       if (!V || V.commandName !== P.commandName) break;
       W = V.args;
     }
-    let B = Di(P.commandName, t);
+    let B = findCommand(P.commandName, t);
     if (
       !B ||
       B.type !== "prompt" ||
@@ -1606,8 +1606,8 @@ function Xe(e, o, t, m) {
       B.getContext !== void 0 ||
       B.argsMayContainSlashCommands ||
       B.userInvocable === !1 ||
-      !zp(B) ||
-      Tk(B)
+      !isCommandEnabled(B) ||
+      isSkillOff(B)
     )
       break;
     if (((c = P.args), (_ = W), m?.(B))) continue;
@@ -1653,7 +1653,7 @@ async function De(e, o, t) {
       o,
       e.source,
       l,
-      ce(t).mode,
+      getToolPermissionContext(t).mode,
       t,
     )) {
       if (c.message?.type === "progress") continue;
@@ -1690,11 +1690,11 @@ Original prompt: ${l}`;
       }
       if (c.additionalContexts?.length)
         m.push(
-          pn({
+          createAttachmentMessage({
             type: "hook_additional_context",
             content: c.additionalContexts,
             hookName: "UserPromptExpansion",
-            toolUseID: `hook-${oe()}`,
+            toolUseID: `hook-${randomUUID()}`,
             hookEvent: "UserPromptExpansion",
           }),
         );
@@ -1715,7 +1715,7 @@ Original prompt: ${l}`;
   return { hookMessages: m };
 }
 async function processPromptSlashCommand(e, o, t, m, l = !1) {
-  let c = Di(e, t);
+  let c = findCommand(e, t);
   if (!c) throw new YP(`Unknown command: ${Qn(e)}`);
   if (c.type !== "prompt")
     throw Error(
@@ -1729,7 +1729,7 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
   if (iCe(t) && !P) {
     let r = Ue(e, o),
       k = e.isMcp && e.loadedFrom !== "mcp",
-      C = HM(e);
+      C = isSkillExcludedFromModel(e);
     if (e.disableModelInvocation || k || C) {
       let O = [
         k
@@ -1739,12 +1739,12 @@ async function ve(e, o, t, m = [], l = [], c, _ = [], v, T, U, P = !1) {
       if (e.description) O.push(`Description: ${e.description}`);
       let R = Object.entries(e.subcommands ?? {})
         .filter(([, D]) => {
-          let G = Di(D, t.options.commands);
+          let G = findCommand(D, t.options.commands);
           return (
             G !== void 0 &&
-            zp(G) &&
+            isCommandEnabled(G) &&
             !G.disableModelInvocation &&
-            !HM(G) &&
+            !isSkillExcludedFromModel(G) &&
             !(G.isMcp && G.loadedFrom !== "mcp")
           );
         })
@@ -1815,7 +1815,7 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
           : t,
       ),
     ),
-    B = (!Uu("hooks") || r6(e.source)) && !P;
+    B = (!isRestrictedToPluginOnly("hooks") || isSourceAdminTrusted(e.source)) && !P;
   if (e.hooks && B) {
     let r = K();
     Me(
@@ -1833,7 +1833,7 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
     q = wLe(e.name);
   if (!(P && q !== null)) TB(e.name, x, V, t.agentId ?? null);
   if (q && !P) t.applyAttributionOp({ kind: "recordVerification", method: q });
-  t.options.activeSkill = _C(e);
+  t.options.activeSkill = attributionSkillName(e);
   let te = Ue(e, o),
     s = P ? [] : qu((await e.getAllowedTools?.()) ?? e.allowedTools ?? []),
     d = qu(e.disallowedTools ?? []);
@@ -1843,14 +1843,14 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
       dfe(e) || P || v
         ? []
         : await UTe(
-            Jne(
+            getAttachmentMessages(
               W.filter((r) => r.type === "text")
                 .map((r) => r.text)
                 .join(" "),
               t,
               U ?? null,
               [],
-              { now: () => new Date().toISOString(), uuid: () => oe() },
+              { now: () => new Date().toISOString(), uuid: () => randomUUID() },
               t.messages,
               "repl_main_thread",
               { planSlugSeed: o },
@@ -1861,12 +1861,12 @@ Instruct a worker to use this skill by including "Use the /${Qn(e.name)} skill" 
     messages: [
       Re({ content: te, uuid: c, origin: T }),
       ...be([Re({ content: p, isMeta: !0 }), ...(I ? [I] : []), ...M, ..._]),
-      pn({ type: "command_permissions", allowedTools: s, model: rQ(e.model) }),
+      createAttachmentMessage({ type: "command_permissions", allowedTools: s, model: inlineSkillModelOverride(e.model) }),
     ],
     shouldQuery: !0,
     allowedTools: s,
     disallowedTools: d,
-    model: rQ(e.model),
+    model: inlineSkillModelOverride(e.model),
     effort:
       e.getEffort?.(o, t) ?? e.getDefaultEffort?.(o, t)?.value ?? e.effort,
     command: e,

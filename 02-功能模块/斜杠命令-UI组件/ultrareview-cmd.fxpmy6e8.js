@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 212 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { parseUltrareviewArgs as Z9e, ultrareviewLaunchAcknowledgementNudge as t3e, runUltrareviewHeadless as $le } from "../CodeReview/CodeReview.ddrd6y06.js";
+import { parseUltrareviewArgs, ultrareviewLaunchAcknowledgementNudge, runUltrareviewHeadless } from "../CodeReview/CodeReview.ddrd6y06.js";
 var m = async (o, r, t) => {
   let a = t ? `/${t}` : "/ultrareview",
-    { scopeArgs: s, applyFixes: n, postReview: i } = Z9e(o),
-    e = await $le(s, {
+    { scopeArgs: s, applyFixes: n, postReview: i } = parseUltrareviewArgs(o),
+    e = await runUltrareviewHeadless(s, {
       confirm: !0,
       singlePass: !0,
       withholdOverageConsent: !0,
@@ -27,7 +27,7 @@ var m = async (o, r, t) => {
     });
   switch (e.status) {
     case "launched":
-      return { type: "query", value: e.message, prompt: t3e(n) };
+      return { type: "query", value: e.message, prompt: ultrareviewLaunchAcknowledgementNudge(n) };
     case "needs-confirm": {
       let l = Hd()
         ? "Run /ultrareview to confirm and launch the cloud review."

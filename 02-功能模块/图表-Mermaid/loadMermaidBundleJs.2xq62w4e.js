@@ -11,7 +11,7 @@ import { qJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-
 var D = "./mermaid.min.js";
 var H = `/*! mermaid v11.16.1 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist */
 `;
-async function J() {
+async function loadMermaidBundleJs() {
   return H + (await qJ(D, import.meta.dirname));
 }
-export { J as loadMermaidBundleJs };
+export { loadMermaidBundleJs };

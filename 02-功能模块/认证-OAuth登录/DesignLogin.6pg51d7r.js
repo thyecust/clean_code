@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { DESIGN_OAUTH_SCOPES as eZ, getOauthConfig as Vt } from "./chunk-9g2q4bjq.js";
+import { DESIGN_OAUTH_SCOPES, getOauthConfig } from "./chunk-9g2q4bjq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { logError as h } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { revokeOAuthToken as eS } from "./认证-OAuth登录.419zdfz3.js";
+import { revokeOAuthToken } from "./认证-OAuth登录.419zdfz3.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { o, t, ct, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { vt } from "../../01-核心基础设施/共享小工具-未细化/chunk-tmxdrqem.js";
@@ -51,7 +51,7 @@ function ie(Te) {
   return Te();
 }
 var G = "Paste code here if prompted > ";
-function At(Re) {
+function DesignLogin(Re) {
   let g = _(54),
     { onDone: k, hadExistingCredential: pt } = Re,
     Bt;
@@ -136,7 +136,7 @@ function At(Re) {
         return;
       }
       try {
-        let Pe = Vt();
+        let Pe = getOauthConfig();
         let wt = bdt();
         let bt = await D.startOAuthFlow(
           async (Ae) => {
@@ -146,13 +146,13 @@ function At(Re) {
           },
           {
             loginWithClaudeAi: !0,
-            oauthClient: { clientId: wt, scopes: eZ },
+            oauthClient: { clientId: wt, scopes: DESIGN_OAUTH_SCOPES },
             skipProfileFetch: !0,
             successRedirectUrl: Pe.CLAUDEAI_SUCCESS_URL,
           },
         );
         if (rt.current) {
-          if (bt.refreshToken) await eS(bt.refreshToken, wt);
+          if (bt.refreshToken) await revokeOAuthToken(bt.refreshToken, wt);
           return;
         }
         b({ state: "processing" });
@@ -166,12 +166,12 @@ function At(Re) {
           return;
         }
         if (rt.current) {
-          await eS(z.slot.refreshToken, z.slot.clientId);
+          await revokeOAuthToken(z.slot.refreshToken, z.slot.clientId);
           return;
         }
         let $t = await Sdt(z.slot);
         if (!$t.success) {
-          (await eS(z.slot.refreshToken, z.slot.clientId),
+          (await revokeOAuthToken(z.slot.refreshToken, z.slot.clientId),
             b({
               state: "error",
               message:
@@ -188,7 +188,7 @@ function At(Re) {
           ));
       } catch (st) {
         let Mt = st;
-        (h(Mt),
+        (logError(Mt),
           i("tengu_design_oauth_login_error", {}),
           b({
             state: "error",
@@ -508,6 +508,6 @@ function ut(ze) {
 }
 async function xe(m) {
   let B = (await fbe()) !== null;
-  return e(At, { onDone: (a) => m(a), hadExistingCredential: B });
+  return e(DesignLogin, { onDone: (a) => m(a), hadExistingCredential: B });
 }
-export { At as DesignLogin, xe as call };
+export { DesignLogin, xe as call };
