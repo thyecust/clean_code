@@ -7,8 +7,5 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var n = /^req_[A-Za-z0-9_-]{1,36}$/;
-function mse(t) {
-  return typeof t === "string" && n.test(t);
-}
-export { mse };
+var gy = 4096;
+export { gy };

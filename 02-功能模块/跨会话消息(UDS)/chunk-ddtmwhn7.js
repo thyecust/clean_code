@@ -25,7 +25,7 @@ import {
   Eor,
   kCt,
   yUe,
-  fA,
+  maxSlugLength,
   uf,
   a0,
   ZQe,
@@ -549,7 +549,7 @@ function Ge(e) {
   return e
     .filter($e)
     .slice(0, MAX_FORMER_NAMES)
-    .map(({ name: t, until: r }) => ({ name: oe(t, fA), until: r }));
+    .map(({ name: t, until: r }) => ({ name: oe(t, maxSlugLength), until: r }));
 }
 function je() {
   return (ds().outbound.pacer ??= ee(w7e));

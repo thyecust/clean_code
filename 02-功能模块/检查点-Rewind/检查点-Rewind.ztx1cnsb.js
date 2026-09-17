@@ -14,7 +14,7 @@ import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
 import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { fn, Fo, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";

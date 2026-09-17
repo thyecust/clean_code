@@ -15,7 +15,7 @@ import "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";

@@ -12,7 +12,7 @@
 import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
 import { wle, VB } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { he, MA, LL, Mx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { be, Hr, yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { Wf, x, Fje, hy } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";

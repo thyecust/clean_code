@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Te, ee, es, eu } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
 import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
 import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";

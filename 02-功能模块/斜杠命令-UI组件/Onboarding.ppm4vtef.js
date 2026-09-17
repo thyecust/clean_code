@@ -12,7 +12,7 @@
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";

@@ -10,7 +10,7 @@
 import {
   ege,
   Qvn,
-  yr,
+  slugify,
   tge,
   iRe,
   SU,
@@ -231,7 +231,7 @@ function N(e, n, i) {
   let p = [],
     u = new Set(t !== void 0 ? [t] : []),
     g = new Set();
-  for (let o of e.agentNameRegistry.keys()) g.add(yr(o));
+  for (let o of e.agentNameRegistry.keys()) g.add(slugify(o));
   let c = SU(e),
     r = (o, m) => iRe({ name: o, agentId: m }, c) || !tge(o);
   for (let [o, m] of Object.entries(s?.teammates ?? {})) {
@@ -265,7 +265,7 @@ function N(e, n, i) {
 }
 function x(e, n, i) {
   let s = uq(e) ?? e;
-  if (!i.has(yr(s))) return !1;
+  if (!i.has(slugify(s))) return !1;
   return n.agentNameRegistry.has(e) || s !== e ? "unreachable" : "bare-only";
 }
 function _(e, n) {

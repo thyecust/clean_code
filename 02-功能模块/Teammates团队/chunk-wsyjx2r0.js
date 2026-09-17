@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oo, Mb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { oo, parseShortId } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -17,7 +17,7 @@ import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { getTeamName } from "./chunk-811z9z0t.js";
 import {
   FT,
-  yr,
+  slugify,
   tge,
   iRe,
   SU,
@@ -86,7 +86,7 @@ async function IGe({
   return { proceed: !0, input: c.data, asked: !0 };
 }
 function XSe(e, i, o) {
-  let s = yr(i);
+  let s = slugify(i);
   e((t) =>
     t.sendMessagePins[s]?.id === o.id
       ? t
@@ -178,7 +178,7 @@ Your session list was too long to check completely, so a session by that name ma
   Ron = "your session list was too long to check completely";
 async function OGe(e, i, o, s, t, r) {
   await DAe({ refresh: !0, credentials: r });
-  let a = yr(i),
+  let a = slugify(i),
     l = getTeamName(s.teamContext),
     d = null;
   if (vUe(i)) return { kind: "not-found", closest: [] };
@@ -186,7 +186,7 @@ async function OGe(e, i, o, s, t, r) {
     if (i === cp) return { kind: "main" };
     let b = s.teamContext?.teammates ?? {},
       k = Object.entries(b).find(([, h]) => h.name === i),
-      _ = Mb(i) ?? Mb(a),
+      _ = parseShortId(i) ?? parseShortId(a),
       m = k || _ ? void 0 : s.agentNameRegistry.get(i),
       w = _ ?? m;
     if (w) return X(s, w, i);
@@ -215,7 +215,7 @@ async function OGe(e, i, o, s, t, r) {
       V = Object.entries(b).find(
         ([h, p]) =>
           (iRe({ name: p.name, agentId: h }, ke) || !tge(p.name)) &&
-          yr(p.name) === a,
+          slugify(p.name) === a,
       );
     if (V !== void 0)
       return {
@@ -225,15 +225,15 @@ async function OGe(e, i, o, s, t, r) {
         memberIdentitySource: "team-context",
       };
     for (let [h, p] of s.agentNameRegistry)
-      if (!tge(h) && yr(h) === a) return X(s, p, h);
+      if (!tge(h) && slugify(h) === a) return X(s, p, h);
     let A = ne;
     if (A) {
       let [h, p] = await Promise.all([fWt(), jpe(e, r)]),
         F = h.sessions,
-        W = await de(e, s.sendMessagePins, yr(A.name), p, a, cgn(e), r),
+        W = await de(e, s.sendMessagePins, slugify(A.name), p, a, cgn(e), r),
         { rows: G, unavailable: Re } = W,
         S = bP(s, { teamFile: d, sessions: F, cloud: p.sessions, bridge: G }),
-        T = yr(A.name),
+        T = slugify(A.name),
         ie = (N, H, Ne, xe) => {
           let M = B(N, s);
           return M.kind === "local-session" || M.kind === "cloud-session"
@@ -275,7 +275,7 @@ async function OGe(e, i, o, s, t, r) {
       return { kind: "mailbox", recipientName: i };
     if (i !== fs && l0(i))
       return L(
-        yr(i),
+        slugify(i),
         bP(s, { teamFile: null, sessions: [] }),
         (m) => m.kind === "teammate",
       );
@@ -302,7 +302,7 @@ async function OGe(e, i, o, s, t, r) {
           memberIdentitySource: "roster",
         };
     }
-    let _ = b.find(([, m]) => yr(m.name) === a);
+    let _ = b.find(([, m]) => slugify(m.name) === a);
     if (_ !== void 0)
       return {
         kind: "mailbox",
@@ -420,7 +420,7 @@ function C(e, i, o) {
 function P(e, i) {
   let o = Object.hasOwn(e, i) ? e[i] : void 0;
   if (o === void 0) return;
-  if (Mb(o.id) !== null) return "agent";
+  if (parseShortId(o.id) !== null) return "agent";
   if (o.id.startsWith("cse_")) return "cloud";
   return sessionIdBody(o.id) !== o.id ? "remote-control" : "local";
 }
@@ -689,10 +689,10 @@ function D(e, i) {
 }
 function L(e, i, o) {
   let s = o ? i.candidates.filter(o) : i.candidates,
-    t = Y(s.map((a) => yr(a.name)));
+    t = Y(s.map((a) => slugify(a.name)));
   return {
     kind: "not-found",
-    closest: rMe(e, t, be).map((a) => s.find((l) => yr(l.name) === a)),
+    closest: rMe(e, t, be).map((a) => s.find((l) => slugify(l.name) === a)),
   };
 }
 function pe(e, i, o, s, t, r = !1) {

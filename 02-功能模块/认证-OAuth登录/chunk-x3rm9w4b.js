@@ -23,7 +23,7 @@ import {
   Po,
   Rt,
 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -225,7 +225,7 @@ function C(e, t, r, s) {
           (typeof p !== "number" || Date.now() / 1000 < p - Kxe)
         ) {
           let { logEvent: _ } = await import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-            { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js");
+            { fromEnum: g } = await import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js");
           return (
             _("tengu_wif_user_oauth_refresh_race_resolved", { mode: g(r) }),
             n(

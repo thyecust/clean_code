@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { H, Te, ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { lit as S, fromEnumOpt } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnumOpt } from "../共享小工具-未细化/analytics-fields.js";
 import { i } from "../共享小工具-未细化/chunk-an83zrbx.js";
 import { getSettingsForSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionMode } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";

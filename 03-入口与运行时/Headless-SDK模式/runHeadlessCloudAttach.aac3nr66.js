@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 236 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { identity as _m, Xn, Vur, $p, he, pje, kz } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Z, kt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { toCompatSessionId, toInfraSessionId, sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { m } from "../../01-核心基础设施/共享小工具-未细化/chunk-78nzsrc6.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ve, zi, yt, Iu, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";

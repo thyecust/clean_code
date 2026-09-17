@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Sxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Fm } from "../../00-第三方库/lodash/lodash.207999qb.js";
+import { isSymbol as Sxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { isObject as Fm } from "../../00-第三方库/lodash/lodash.207999qb.js";
 var o = /\s/;
 function m(r) {
   var t = r.length;

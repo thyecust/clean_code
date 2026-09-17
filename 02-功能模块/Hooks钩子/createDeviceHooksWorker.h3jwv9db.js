@@ -532,7 +532,7 @@ async function productionDeviceHooksWorkerDeps(t) {
       import("./createDeviceHookTemplateStore.947t9qjd.js"),
       import("./productionDeviceHookTemplateRunner.z0gca878.js"),
       import("../../01-核心基础设施/共享小工具-未细化/logEvent.q8d8f1jd.js"),
-      import("../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js"),
+      import("../../01-核心基础设施/共享小工具-未细化/analytics-fields.js"),
       import("../../00-第三方库/lodash/lodash.0vqzb8ad.js"),
     ]),
     p = I({

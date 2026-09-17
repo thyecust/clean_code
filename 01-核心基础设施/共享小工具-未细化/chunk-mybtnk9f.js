@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Mb, Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { parseShortId, Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { m } from "./chunk-78nzsrc6.js";
 import { getTeamName } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
 import { readTeamFileAsync } from "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
-import { fA, yr, b5, jD, bP, aRe, lRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { maxSlugLength, slugify, b5, jD, bP, aRe, lRe } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jpe } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { pWt, lgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Vr } from "./chunk-9mfwkyac.js";
@@ -29,7 +29,7 @@ async function ajn({
   if (typeof o !== "string") return { kind: "proceed", pin: void 0 };
   let i = b(r);
   if (i === null) return { kind: "proceed", pin: void 0 };
-  let g = yr(i.name),
+  let g = slugify(i.name),
     p = Object.hasOwn(n.sendMessagePins, g) ? n.sendMessagePins[g] : void 0;
   if (p !== void 0 && p.id === i.id) return { kind: "proceed", pin: p };
   if (p !== void 0) {
@@ -78,10 +78,10 @@ var A = m(() =>
   c({
     success: k(!0),
     pin: c({
-      name: s().min(1).max(fA),
+      name: s().min(1).max(maxSlugLength),
       id: s()
         .max(1024)
-        .refine((e) => Mb(e) !== null),
+        .refine((e) => parseShortId(e) !== null),
       ref: s().regex(new RegExp(`^${b5}$`)),
     }),
   }),
@@ -106,7 +106,7 @@ function _on(e) {
         continue;
       let a = A().safeParse(r.toolUseResult);
       if (!a.success) continue;
-      t.set(yr(a.data.pin.name), {
+      t.set(slugify(a.data.pin.name), {
         id: a.data.pin.id,
         name: a.data.pin.name,
         ref: a.data.pin.ref,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "./chunk-w76kejwn.js";
+import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "./analytics-fields.js";
 import { _n } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { M } from "./chunk-h62vxw7j.js";

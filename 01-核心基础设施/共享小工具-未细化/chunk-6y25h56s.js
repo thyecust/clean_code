@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { _m, $p, irt, cOn, uLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { identity as _m, $p, irt, cOn, uLn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { lU, resetEnvDerivedAuthCaches, qUe, LZe, Gse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";

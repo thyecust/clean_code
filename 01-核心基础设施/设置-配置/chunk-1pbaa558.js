@@ -16,7 +16,7 @@ import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-A
 import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { m } from "../共享小工具-未细化/chunk-78nzsrc6.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
-import { lit as S } from "../共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../共享小工具-未细化/analytics-fields.js";
 import { l, W, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Et, b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";

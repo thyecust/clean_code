@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { Lt, uot, GW } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-import { mse } from "../../../01-核心基础设施/共享小工具-未细化/chunk-ezxdt3dm.js";
+import { lit, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+import { isValidRequestId } from "../../../01-核心基础设施/共享小工具-未细化/request-id.js";
 var Aer = 600000;
 function Bqt(e) {
   return e.escalated ? e.retryWindowMs : e.firstWindowMs;
@@ -113,7 +113,7 @@ var bFe = new Set([
     "StreamSuspended",
   ]);
 function fTt(e) {
-  return UH.has(e) || SR.has(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : S("other");
+  return UH.has(e) || SR.has(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : lit("other");
 }
 function mTt(e) {
   return SR.has(e) || UH.has(e) || bFe.has(e) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(e) : void 0;
@@ -136,7 +136,7 @@ function Cer(e, t) {
       typeof r === "object" && r !== null && "request_id" in r
         ? r.request_id
         : void 0,
-    o = [t, e.requestID, n].some(mse),
+    o = [t, e.requestID, n].some(isValidRequestId),
     i = (c(e) ? e : void 0)?.error?.error?.message,
     E = typeof i === "string" && i !== "",
     l = E && p.has(i);

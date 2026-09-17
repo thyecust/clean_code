@@ -13,7 +13,7 @@ import { Si, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Z, Xrt, gv } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { zl, Oa, rc, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";

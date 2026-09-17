@@ -7,23 +7,21 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Sz } from "./lodash.2x3q7cfh.js";
+import { toString as Sz } from "./lodash.2x3q7cfh.js";
 import { i, qs } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
-function P(e, r, o, a) {
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
+function arrayReduce(e, r, o, a) {
   var n = -1,
     s = e == null ? 0 : e.length;
   if (a && s) o = e[++n];
   while (++n < s) o = r(o, e[n], n, e);
   return o;
 }
-var x = P;
-function z(e) {
+function basePropertyOf(e) {
   return function (r) {
     return e == null ? void 0 : e[r];
   };
 }
-var c = z;
 var W = {
     "\xC0": "A",
     "\xC1": "A",
@@ -216,7 +214,7 @@ var W = {
     "\u0149": "'n",
     "\u017F": "s",
   },
-  Z = c(W),
+  Z = basePropertyOf(W),
   m = Z;
 var j = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g,
   V = "\\u0300-\\u036f",
@@ -304,13 +302,12 @@ function Ce(e, r, o) {
 var M = Ce;
 var Fe = "['\u2019]",
   Te = RegExp(Fe, "g");
-function ve(e) {
+function createCompounder(e) {
   return function (r) {
-    return x(M(_(r).replace(Te, "")), e, "");
+    return arrayReduce(M(_(r).replace(Te, "")), e, "");
   };
 }
-var H = ve;
-var ye = H(function (e, r, o) {
+var ye = createCompounder(function (e, r, o) {
     return e + (o ? "_" : "") + r.toLowerCase();
   }),
   d = ye;

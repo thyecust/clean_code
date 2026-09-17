@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { fA, uf, qCt, yr, si, getRegisteredSessionName, whenSessionRegistered, updateSessionName, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { maxSlugLength, uf, qCt, slugify, si, getRegisteredSessionName, whenSessionRegistered, updateSessionName, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
@@ -32,27 +32,27 @@ function E(e, i, s) {
       t.pid !== s &&
       t.name !== void 0 &&
       t.procStart !== void 0 &&
-      yr(t.name) === e,
+      slugify(t.name) === e,
   );
 }
 function D(e) {
-  return new Set(e.flatMap((i) => (i.name === void 0 ? [] : [yr(i.name)])));
+  return new Set(e.flatMap((i) => (i.name === void 0 ? [] : [slugify(i.name)])));
 }
-function L(e, i, s = xU) {
-  let t = (r) => `${oe(e, fA - r.length - 1)}-${r}`;
+function generateUniqueName(e, i, s = xU) {
+  let t = (r) => `${oe(e, maxSlugLength - r.length - 1)}-${r}`;
   for (let r = 0; r < T; r++) {
     let o = t(s());
-    if (!i.has(yr(o))) return o;
+    if (!i.has(slugify(o))) return o;
   }
   for (let r = 2; ; r++) {
     let o = t(`${s()}-${r}`);
-    if (!i.has(yr(o))) return o;
+    if (!i.has(slugify(o))) return o;
   }
 }
 function O(e) {
   let { desiredName: i, self: s, live: t, moment: r, slug: o } = e,
     a = e.suffixBase ?? i,
-    c = yr(i);
+    c = slugify(i);
   if (!c) return { kind: "keep" };
   let d = E(c, t, s.pid),
     u =
@@ -67,7 +67,7 @@ function O(e) {
               ),
             );
   if (u.length === 0) return { kind: "keep" };
-  return { kind: "yield", newName: L(a, D(t), o), holders: u };
+  return { kind: "yield", newName: generateUniqueName(a, D(t), o), holders: u };
 }
 class N {
   correspondents = new Map();
@@ -135,14 +135,14 @@ async function claimUniqueSessionName(e, i, s = w, t = e) {
     });
     if (a.kind === "keep") return { name: e, yielded: !1 };
     let c = U(e, o),
-      d = si(c !== void 0 && yr(c) !== yr(e) ? c : a.newName) || a.newName;
+      d = si(c !== void 0 && slugify(c) !== slugify(e) ? c : a.newName) || a.newName;
     return (
       n(
         `[session-name] "${e}" is held by live pid ${a.holders[0]?.pid}; this session takes "${d}"`,
         { level: "info" },
       ),
       logFeatureOk("session_name_collision"),
-      (getSessionNamingState().lastYield = { base: yr(t), name: d }),
+      (getSessionNamingState().lastYield = { base: slugify(t), name: d }),
       { name: d, yielded: !0 }
     );
   } catch (r) {
@@ -162,7 +162,7 @@ function U(e, i) {
     r = t === void 0 ? void 0 : b(t);
   if (t === void 0 || r === void 0) return;
   let o = x(e) ?? e,
-    a = oe(o, fA - r.suffix.length - 1);
+    a = oe(o, maxSlugLength - r.suffix.length - 1);
   return r.base.toLowerCase() === a.toLowerCase() ? t : void 0;
 }
 function b(e) {
@@ -177,14 +177,14 @@ function settledYieldFor(e, i) {
     t = x(e) ?? e;
   return s !== void 0 &&
     i !== void 0 &&
-    yr(s.name) === yr(i) &&
-    s.base === yr(t)
+    slugify(s.name) === slugify(i) &&
+    s.base === slugify(t)
     ? i
     : void 0;
 }
 function h(e) {
   let i = getRegisteredSessionName();
-  return i !== void 0 && yr(i.name) === yr(e);
+  return i !== void 0 && slugify(i.name) === slugify(e);
 }
 function x(e) {
   return b(e)?.base;
@@ -238,8 +238,8 @@ function renameSupersededDuringScan(e, i, s) {
   let t = getRegisteredSessionName();
   if (t === void 0 || t.source === "derived") return;
   if (t.source === "collision" && settledYieldFor(e?.name ?? i, t.name) !== void 0) return;
-  let r = yr(t.name);
-  if ((e !== void 0 && r === yr(e.name)) || r === yr(i) || r === yr(s)) return;
+  let r = slugify(t.name);
+  if ((e !== void 0 && r === slugify(e.name)) || r === slugify(i) || r === slugify(s)) return;
   return t;
 }
 async function reclaimSessionNameOnResume(e, i, s = {}) {
@@ -255,7 +255,7 @@ async function reclaimSessionNameOnResume(e, i, s = {}) {
     o !== void 0 &&
     o.source !== "auto" &&
     o.source !== "derived" &&
-    yr(o.name) === yr(r)
+    slugify(o.name) === slugify(r)
   )
     return;
   let a = await claimUniqueSessionName(r, "rename", t);

@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { TB, EB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "./chunk-w0pgmfvw.js";
 import { XPt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jkmndwnz.js";

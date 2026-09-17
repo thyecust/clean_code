@@ -29,7 +29,7 @@ import { Xn, K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Dt } from "../../01-核心基础设施/共享小工具-未细化/chunk-510m1t2d.js";
 import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
 import { Ve, zi, yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Kn, sje } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { i } from "../../01-核心基础设施/共享小工具-未细化/chunk-an83zrbx.js";
-import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/chunk-w76kejwn.js";
+import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import {
   getCommandName,
