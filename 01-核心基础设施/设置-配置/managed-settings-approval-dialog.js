@@ -11,7 +11,7 @@ import { REFUSE_INPUT_WINDOW_MS } from "../共享小工具-未细化/recent-wind
 import { useAnswerRefusalState } from "../共享小工具-未细化/use-answer-refusal-state.js";
 import { pluralize, countOccurrences } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { jU, j5, DHn, LHn, NHn } from "./设置-配置.aqbb35ee.js";
+import { buildSettingsSummary, hasSettingsSummaryEntries, diffSettingsSummaries, isTelemetryOnlyEnvChange, getManagedSettingsApprovalRows } from "./设置-配置.aqbb35ee.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { Vm } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useKeybinding } from "../共享小工具-未细化/keybinding-hooks.js";
@@ -163,10 +163,10 @@ function Oe(wn) {
     Ke,
     jt;
   if (i[0] !== Je || i[1] !== de || i[2] !== T || i[3] !== Be) {
-    let zt = jU(T);
-    let Q = DHn(Je, zt);
-    let le = j5(Q.changed) ? Q.changed : zt;
-    I = LHn(le, T) ? ft : mt;
+    let zt = buildSettingsSummary(T);
+    let Q = diffSettingsSummaries(Je, zt);
+    let le = hasSettingsSummaryEntries(Q.changed) ? Q.changed : zt;
+    I = isTelemetryOnlyEnvChange(le, T) ? ft : mt;
     let Qe = le === Q.changed ? Q.unchangedCount : 0;
     let j = Q.removedCount;
     A =
@@ -196,7 +196,7 @@ function Oe(wn) {
       sandboxRows: me,
       envRows: $n,
       categoryRows: Cn,
-    } = NHn(le);
+    } = getManagedSettingsApprovalRows(le);
     B = he;
     Ke = me;
     Ve = [...B, ...Ke, ...$n, ...Cn];

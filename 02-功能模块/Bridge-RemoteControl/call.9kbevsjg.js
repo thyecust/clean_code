@@ -32,7 +32,7 @@ import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
-import { R0e } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { isDialogKindOpen } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
@@ -57,8 +57,8 @@ import "../../01-核心基础设施/共享小工具-未细化/feature-flag-versi
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { N8, Kz } from "./chunk-3b6ct3yp.js";
-import { o6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { zJt } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { markRemoteControlUsed } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { shouldShowRemoteControlDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../权限系统/permission-dialog.js";
 import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
@@ -159,7 +159,7 @@ function ze(_o) {
     K[6] !== W
   )
     ((Ye = function P() {
-      if ((o6e(g?.storageV5), zJt())) {
+      if ((markRemoteControlUsed(g?.storageV5), shouldShowRemoteControlDialog())) {
         let $e = g?.requestDialog;
         if (!$e) {
           u(
@@ -169,7 +169,7 @@ function ze(_o) {
           return;
         }
         let We = g?.dialogStore;
-        if (We && R0e(We.getState(), REMOTE_CALLOUT_DIALOG.kind)) {
+        if (We && isDialogKindOpen(We.getState(), REMOTE_CALLOUT_DIALOG.kind)) {
           u("", { display: "system" });
           return;
         }

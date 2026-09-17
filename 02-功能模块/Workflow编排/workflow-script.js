@@ -9,11 +9,11 @@
 // Version: 2.1.263
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
-import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 var S = new Set(["__proto__", "constructor", "prototype"]),
   P =
     /^(?:\s|\/\/[^\n\r\u2028\u2029]*[\n\r\u2028\u2029]|\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/)*export\s+const\s+meta\s*=\s*(?=\{)/;
-function parseWorkflowScript(e, { validateBody: t = !0, maxBytes: n = Uh } = {}) {
+function parseWorkflowScript(e, { validateBody: t = !0, maxBytes: n = MAX_WORKFLOW_SCRIPT_BYTES } = {}) {
   if (e.length > n) return { error: `Script exceeds ${n} bytes` };
   let { parse: r, parseExpressionAt: i } = fAe(),
     o = t ? null : P.exec(e);

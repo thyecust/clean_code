@@ -69,7 +69,7 @@ import {
 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { CA, SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_IMAGE_LIMITS, getCurrentToolResultsDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Wre, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { MCP_URL_ELICITATION_DIALOG, getMcpNeedsAuthCachePath, getMcpNeedsAuthCacheStateKey, readMcpNeedsAuthCache, invalidateMcpNeedsAuthCache, createMcpAuthStubTools, initMcpDiscoveryCacheKillSwitch } from "./mcp-auth-cache.js";
@@ -106,7 +106,7 @@ import { We, Et, b, fp, n } from "../../01-核心基础设施/核心工具-日�
 import { pluralize, truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { pS, rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_TIMER_DELAY_MS, buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { _xt, jo, yxt, Qie } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
@@ -1065,7 +1065,7 @@ function getMcpToolTimeoutMs(e) {
     (e?.timeout !== void 0 && e.timeout >= 1000 ? e.timeout : void 0) ??
     a.MCP_TOOL_TIMEOUT ??
     Er;
-  return Math.min(Math.max(o, 1000), pS);
+  return Math.min(Math.max(o, 1000), MAX_TIMER_DELAY_MS);
 }
 var xr = 300000,
   Nr = 1800000,
@@ -1698,7 +1698,7 @@ function getMcpRequestTimeoutMs(e) {
   let o =
     (e?.timeout !== void 0 && e.timeout >= 1000 ? e.timeout : void 0) ??
     a.MCP_TOOL_TIMEOUT;
-  return o !== void 0 ? Math.min(Math.max(o, fo), pS) : fo;
+  return o !== void 0 ? Math.min(Math.max(o, fo), MAX_TIMER_DELAY_MS) : fo;
 }
 function getArmedRequestTimeoutMs(e) {
   return Math.max(getMcpRequestTimeoutMs(e), getMcpTimeoutMs());
@@ -4021,7 +4021,7 @@ ${E.description}`
       }
       if (se.check === "meta") Te++;
       else Me++;
-      if (F?.[E.name] !== "blocked" && No(w ? E.name : rc(e.name, E.name)))
+      if (F?.[E.name] !== "blocked" && No(w ? E.name : buildMcpToolName(e.name, E.name)))
         $e.push({ toolName: E.name, reason: se.detail });
       return (
         logMCPError(
@@ -4096,7 +4096,7 @@ ${E.description}`
     _e = e.config.pluginSource ? buildPluginTelemetryFieldsFromId(e.config.pluginSource, getPolicyPluginNames()) : void 0,
     ee = rS(e.config),
     W = I.map((E) => {
-      let ue = rc(e.name, E.name),
+      let ue = buildMcpToolName(e.name, E.name),
         ae = E._meta?.["anthropic/maxResultSizeChars"],
         se = typeof ae === "number" && Number.isFinite(ae) && ae > 0,
         Ie = E._meta?.["anthropic/requiresUserInteraction"] === !0,
@@ -4802,7 +4802,7 @@ async function callIdeRpc(e, t, o) {
       tool: e,
       args: t,
       signal: createAbortController().signal,
-      imageLimits: CA,
+      imageLimits: DEFAULT_IMAGE_LIMITS,
       idleTimeoutMs: 0,
       storageV5: void 0,
       credentials: void 0,
@@ -5601,7 +5601,7 @@ async function processMCPResult(e, t, o, r, d, p, h) {
     for (let _e of Se) if (_e.length > ie) ie = _e.length;
     re = { count: Se.length, maxLen: ie };
   }
-  let I = await tG(Me, Q, SS(), p);
+  let I = await tG(Me, Q, getCurrentToolResultsDir(), p);
   if (nG(I)) {
     let Se = Me.length;
     return (

@@ -14,7 +14,7 @@ import { z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱�
 import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { ot } from "../核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Nr, Ow, CHn, getRemoteManagedSettingsSyncFromCache } from "./设置-配置.aqbb35ee.js";
+import { isSettingsSourceEnabled, PROJECT_SCOPED_SETTINGS_SOURCE_SET, getSpinnerTipsSchema, getRemoteManagedSettingsSyncFromCache } from "./设置-配置.aqbb35ee.js";
 import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -33,7 +33,7 @@ var ORG_TIP_ID_PREFIX = "org-tip:",
   H = /^[A-Za-z0-9._-]{1,64}$/,
   X = 40,
   x = ["policySettings", "flagSettings", "userSettings"],
-  K = [...Ow],
+  K = [...PROJECT_SCOPED_SETTINGS_SOURCE_SET],
   Y = "org-tip:file:",
   J = new Set(["EAGAIN", "EBUSY", "EINTR", "EIO", "EMFILE", "ENFILE"]),
   Z = /[\p{Cc}\p{Cf}\u2028\u2029\u180e\ufe00-\ufe0f\u{e0100}-\u{e01ef}]/gu;
@@ -87,7 +87,7 @@ async function V(e) {
       await i.close();
     }
     let a = Q().safeParse(z(r)),
-      l = a.success ? CHn().parse(a.data) : void 0;
+      l = a.success ? getSpinnerTipsSchema().parse(a.data) : void 0;
     if (l === void 0)
       return (
         logFeatureBad("tips_org_tips_file_load", "wrong_shape"),
@@ -176,7 +176,7 @@ function ie(e) {
 function R(e) {
   let t = [];
   for (let i of e) {
-    if (!Nr(i)) continue;
+    if (!isSettingsSourceEnabled(i)) continue;
     let r = getSettingsForSource(i)?.spinnerTipsOverride;
     if (r) t.push({ source: i, override: r });
   }

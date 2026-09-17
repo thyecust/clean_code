@@ -17,10 +17,10 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { RECORD_CREATED_PR_PATH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { B1e } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { hasSessionAccessToken } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 var m = 1500;
 async function recordCreatedPrToCcr(r, e) {
-  let c = B1e(),
+  let c = hasSessionAccessToken(),
     i = c ? null : (getReplBridgeHandle() ?? getSdkHostedBridgeHandle());
   if (!c && !i?.recordCreatedPR) return;
   if (r.provider !== "github") return;

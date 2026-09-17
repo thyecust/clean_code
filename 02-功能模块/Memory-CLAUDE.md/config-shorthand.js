@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isFastModeEnabled, hashForTelemetry, hasStoredOAuthToken, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { readUnattendedServingConsent } from "../AutoMode-自动模式/unattended-serving-consent.js";
@@ -244,7 +244,7 @@ class S {
   keys = void 0;
   remoteWorkspace = !1;
   lookup() {
-    if (this.remoteWorkspace !== Pt())
+    if (this.remoteWorkspace !== isRemoteActive())
       ((this.remoteWorkspace = !this.remoteWorkspace), (this.keys = void 0));
     return ((this.keys ??= b()), this.keys);
   }

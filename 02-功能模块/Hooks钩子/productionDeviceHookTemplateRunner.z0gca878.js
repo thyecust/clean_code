@@ -16,7 +16,7 @@ import { getHookCgroupOptions, hookOutputSchema, installDeviceHooks, removeDevic
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { assertSafeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { $d } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getResolvedClaudeTempDir } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { getHookTemplateById, isPreToolUseHook } from "./hook-template-catalog.js";
 import { spawn } from "child_process";
@@ -341,7 +341,7 @@ function re(o) {
   };
 }
 function productionDeviceHookTemplateRunner(o) {
-  let r = $d(),
+  let r = getResolvedClaudeTempDir(),
     e = re(x(r, "device-hook-templates", String(process.pid))),
     t,
     s = () => (

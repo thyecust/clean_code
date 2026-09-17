@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { S1, Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { CLAUDE_AI_SYNC_LABEL, removeInvisibleChars } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSkillUsageStats, getSkillListingCharCounts, collectSkillCommands, attributionSkillName, dropShadowedFallbackSkills, isFallbackStub } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { te, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -112,11 +112,11 @@ async function collectSkillUsageData(n) {
       d = i !== void 0 && M.has(i) && m.get(i) === 1 ? i : void 0,
       f = getSkillUsageStats(e.name, d ?? e.unqualifiedName);
     r.push({
-      name: e.pluginInfo ? Pp(e.name) : e.name,
+      name: e.pluginInfo ? removeInvisibleChars(e.name) : e.name,
       source: e.pluginInfo
-        ? Pp(e.pluginInfo.pluginManifest.name)
+        ? removeInvisibleChars(e.pluginInfo.pluginManifest.name)
         : e.loadedFrom === "syncedSkills"
-          ? S1
+          ? CLAUDE_AI_SYNC_LABEL
           : e.source,
       owner:
         e.source === "plugin"
@@ -162,7 +162,7 @@ async function collectSkillUsageData(n) {
       return s === void 0 || !I.has(s);
     }),
     L = dedupe(g.map(u).filter((e) => e !== void 0)).map((e) =>
-      Pp(n.mcpClients.find((s) => normalizeMcpName(s.name) === e)?.name ?? e),
+      removeInvisibleChars(n.mcpClients.find((s) => normalizeMcpName(s.name) === e)?.name ?? e),
     );
   return {
     rows: r,

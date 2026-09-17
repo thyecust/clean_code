@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { fromEnum } from "./analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { iFe, Iwn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { sanitizeArtifactSlugForTelemetry, sanitizeArtifactVersionForTelemetry } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { defineStoreField } from "./state-store.js";
 var k = {
     startedSeen: [],
@@ -36,8 +36,8 @@ function m(t, e) {
 function logWorkshopTurn(t, e, a, i, r, d) {
   if (
     (logFeatureOk("workshop_turn", {
-      artifact_slug: iFe(e),
-      artifact_version: Iwn(a),
+      artifact_slug: sanitizeArtifactSlugForTelemetry(e),
+      artifact_version: sanitizeArtifactVersionForTelemetry(a),
       decisions_total: r,
       decisions_resolved: d,
       state: fromEnum(i),
@@ -47,7 +47,7 @@ function logWorkshopTurn(t, e, a, i, r, d) {
     return;
   let s = !0;
   if ((t.set((n) => ((s = n.startedSeen.includes(e)), S(n, e))), !s))
-    logFeatureOk("workshop_build_started", { artifact_slug: iFe(e) });
+    logFeatureOk("workshop_build_started", { artifact_slug: sanitizeArtifactSlugForTelemetry(e) });
 }
 function logWorkshopPublish(t, e, a, i, r, d) {
   let s;
@@ -73,12 +73,12 @@ function logWorkshopPublish(t, e, a, i, r, d) {
       first_publish_state: fromEnum(i),
     });
   if (!n.startedSeen.includes(e) && p.startedSeen.includes(e))
-    logFeatureOk("workshop_build_started", { artifact_slug: iFe(e) });
+    logFeatureOk("workshop_build_started", { artifact_slug: sanitizeArtifactSlugForTelemetry(e) });
   if (!n.completedSeen.includes(e) && p.completedSeen.includes(e)) {
     let l = r.n > 0 ? "structural" : "post_kickoff_republish";
     logFeatureOk("workshop_build_completed", {
-      artifact_slug: iFe(e),
-      artifact_version: Iwn(a),
+      artifact_slug: sanitizeArtifactSlugForTelemetry(e),
+      artifact_version: sanitizeArtifactVersionForTelemetry(a),
       source: fromEnum(l),
       deliverables_n: r.n,
       deliverables_pr: r.pr,

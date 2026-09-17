@@ -42,7 +42,7 @@ import {
   validateForceLoginOrg,
   isWorkspacePersistedTrusted,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { sanitizeAnalyticsId } from "../CLI入口-Commander/startup-profiler.js";
@@ -52,7 +52,7 @@ import { PERMISSION_MODE_MANUAL_ALIAS, parsePermissionMode, CAN_USE_TOOL_INVALID
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
-import { Boe, sme, Wg } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { DEVICE_FIELD_NAME, isValidMachineName, hasRequestedMachine } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
   gracefulShutdown,
@@ -152,28 +152,28 @@ import {
 } from "../../02-功能模块/Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { b_ } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import {
-  A8,
-  s6e,
-  y1n,
-  k8,
-  S0t,
-  Not,
-  CZ,
-  $ot,
-  H8,
-  M1n,
-  U_e,
-  a6e,
-  N1n,
-  F1n,
-  $1n,
-  U1n,
-  DJt,
-  R0t,
-  B1n,
-  l6e,
-  zot,
-  Vot,
+  getCloudSessionsUnavailableReason,
+  isStaleBootstrapFrame,
+  isBootstrapStepId,
+  createRemoteBootstrapState,
+  parseBootstrapStepMeta,
+  reduceRemoteBootstrapState,
+  formatBootstrapStepLabel,
+  formatRemoteSessionSummary,
+  getBranchMode,
+  checkCloudSessionCliOptions,
+  getSelectablePermissionMode,
+  formatSessionIdForDisplay,
+  formatSessionBindFailedMessage,
+  formatSessionSetupFailedMessage,
+  formatSessionArchivedMessage,
+  formatSessionNotCreatedMessage,
+  createCloudSessionRecord,
+  FORWARDED_SYSTEM_PROMPT_OPTION_KEYS,
+  mergeForwardedSystemPromptOptions,
+  isInternalModel,
+  getRepositoryModelSource,
+  resolveInitialPermissionMode,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { localBindIdentity } from "../../02-功能模块/Bridge-RemoteControl/device-bind.js";
 import { deviceEventSignerFor } from "../../02-功能模块/认证-OAuth登录/device-event-signer.js";
@@ -1001,10 +1001,10 @@ function gn(e, t) {
   );
 }
 function yn(e) {
-  if (Wg(e)) return !0;
+  if (hasRequestedMachine(e)) return !0;
   if (typeof e !== "object" || e === null) return !1;
-  let t = e[Boe];
-  return typeof t === "string" && sme(t);
+  let t = e[DEVICE_FIELD_NAME];
+  return typeof t === "string" && isValidMachineName(t);
 }
 var ie = defineDialog({
     kind: "cloud_sync_consent",
@@ -1524,8 +1524,8 @@ class Ae {
   }
   reduceBootstrap(e) {
     let t = this.ports.clock.now(),
-      o = S0t(e);
-    if (o.stepId === "start_cc" && o.stepStatus === "completed" && !s6e(e, t)) {
+      o = parseBootstrapStepMeta(e);
+    if (o.stepId === "start_cc" && o.stepStatus === "completed" && !isStaleBootstrapFrame(e, t)) {
       let k =
         this.bootCountedByFrameAt !== null &&
         t - this.bootCountedByFrameAt < ht;
@@ -1549,10 +1549,10 @@ class Ae {
       this.bootstrap !== null &&
       this.bootstrap.hasStructuredSteps &&
       !this.bootstrap.terminal;
-    if (this.workerReady && !r && s6e(e, t)) return;
+    if (this.workerReady && !r && isStaleBootstrapFrame(e, t)) return;
     let d = this.bootstrap !== null,
-      p = this.bootstrap ?? k8(this.connectEpoch),
-      _ = Not(p, e, "", t, this.connectEpoch);
+      p = this.bootstrap ?? createRemoteBootstrapState(this.connectEpoch),
+      _ = reduceRemoteBootstrapState(p, e, "", t, this.connectEpoch);
     if (
       ((this.bootstrap = _),
       this.ports.onProvisioning?.(_, d ? p : null),
@@ -1560,7 +1560,7 @@ class Ae {
     )
       this.narrateAfterReady = !1;
     if (this.workerReady) return;
-    let { stepId: w, stepStatus: C } = S0t(e);
+    let { stepId: w, stepStatus: C } = parseBootstrapStepMeta(e);
     if (w !== null && C === "failed") {
       (this.releaseHeld(),
         this.ports.outbound.failQueued(
@@ -1867,11 +1867,11 @@ class Te {
     let o = e.steps.findLast(
       (p) =>
         p.status === "running" &&
-        y1n(p.id) &&
+        isBootstrapStepId(p.id) &&
         t?.steps.find((_) => _.id === p.id)?.status !== "running",
     );
     if (o !== void 0) {
-      let p = CZ(o, e.sessionMode);
+      let p = formatBootstrapStepLabel(o, e.sessionMode);
       if (p !== this.lastProvisioningLine)
         ((this.lastProvisioningLine = p), this.line("notice", `${p}\u2026`));
     }
@@ -1885,7 +1885,7 @@ class Te {
       return;
     }
     if (e.terminal && !(t?.terminal ?? !1))
-      ((this.lastProvisioningLine = ""), this.line("notice", $ot(e)));
+      ((this.lastProvisioningLine = ""), this.line("notice", formatRemoteSessionSummary(e)));
   }
   noteDelivered(e) {
     this.maybeTitle(e);
@@ -4838,7 +4838,7 @@ function jt() {
   return getStoredOauthAccountInfo()?.accountUuid;
 }
 function xs(e) {
-  let t = U_e(e);
+  let t = getSelectablePermissionMode(e);
   return t === void 0 || (t === "default" && e !== PERMISSION_MODE_MANUAL_ALIAS)
     ? []
     : [
@@ -4897,7 +4897,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
             ...w.ignored,
             ...$s(w.forwarded, e, e.effectiveModel ?? a.ANTHROPIC_MODEL),
           ]),
-    openingInitializeHonours: o === "create" ? R0t : [],
+    openingInitializeHonours: o === "create" ? FORWARDED_SYSTEM_PROMPT_OPTION_KEYS : [],
     openSession: async (D) => {
       let E;
       try {
@@ -4907,7 +4907,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
           await logFeatureBadAsync("remote_headless_session", "auth"),
           {
             kind: "failed",
-            message: `Error: ${Vn(l(I), Qe) || "Failed to authenticate"}`,
+            message: `Error: ${formatDisplayText(l(I), Qe) || "Failed to authenticate"}`,
           }
         );
       }
@@ -4915,7 +4915,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
         let I = await r({
           apiCreds: E,
           host: D,
-          forwarded: o === "create" ? B1n(w.forwarded, D.initialize) : {},
+          forwarded: o === "create" ? mergeForwardedSystemPromptOptions(w.forwarded, D.initialize) : {},
           features: d,
           storageV5: e.storageV5,
           credentials: e.credentials,
@@ -4926,7 +4926,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
           await logFeatureBadAsync("remote_headless_session", "open_threw"),
           {
             kind: "failed",
-            message: `Error: ${Vn(l(I), Qe) || "Unable to open the cloud session"}`,
+            message: `Error: ${formatDisplayText(l(I), Qe) || "Unable to open the cloud session"}`,
           }
         );
       }
@@ -4940,14 +4940,14 @@ var ze = 12,
   Qe = 2000,
   Ns = 40;
 function Bs(e, t, o) {
-  let r = new Set(o === "attach" ? R0t : []),
+  let r = new Set(o === "attach" ? FORWARDED_SYSTEM_PROMPT_OPTION_KEYS : []),
     d =
       t === null
         ? []
         : validateCloudInitializeOptions(
             t,
             "strict",
-            new Set([...(o === "create" ? R0t : []), "supportedDialogKinds"]),
+            new Set([...(o === "create" ? FORWARDED_SYSTEM_PROMPT_OPTION_KEYS : []), "supportedDialogKinds"]),
           ).ignored.map((O) => ({
             kind: r.has(O) ? "kept" : getOptionRetentionKind(O),
             name: `initialize.${O}`,
@@ -5019,13 +5019,13 @@ async function js(e, t, o) {
   let r = await validateForceLoginOrg();
   if (!r.valid) return { kind: "refused", code: "org_pin", message: r.message };
   await b_();
-  let d = A8();
+  let d = getCloudSessionsUnavailableReason();
   if (d)
     return { kind: "refused", code: "unavailable", message: `Error: ${d}` };
   let p = e.inputPrompt;
   if (typeof p === "string")
     return { kind: "refused", code: "no_stream_input", message: Hs };
-  let _ = M1n(t, {
+  let _ = checkCloudSessionCliOptions(t, {
     entry: o,
     mcpConfigFlagServers: e.mcpConfigFlagServers,
     flagSettings: getSettingsForSource("flagSettings"),
@@ -5078,12 +5078,12 @@ async function zs(
   C = {},
 ) {
   let k = C.teleport ?? teleportToRemote,
-    D = H8(e.poolOnBranch, e.poolRef),
+    D = getBranchMode(e.poolOnBranch, e.poolRef),
     E = await (C.bindPreflight ?? Us)();
   if (E !== void 0)
     return (
       await logFeatureBadAsync("remote_headless_session", "bind_unavailable", { reason: fromEnum(E) }),
-      { kind: "failed", message: U1n(E) }
+      { kind: "failed", message: formatSessionNotCreatedMessage(E) }
     );
   let I = new AbortController(),
     O = Et(() => I.abort()),
@@ -5120,9 +5120,9 @@ async function zs(
       effort: void 0,
     }),
     L = getMainLoopModel(),
-    N = (C.internalModel ?? l6e)(L),
-    z = U_e(e.permissionModeCli),
-    P = Vot({
+    N = (C.internalModel ?? isInternalModel)(L),
+    z = getSelectablePermissionMode(e.permissionModeCli),
+    P = resolveInitialPermissionMode({
       model: L,
       internal: N,
       explicitMode: z,
@@ -5133,7 +5133,7 @@ async function zs(
       autoSeedable: xJe(M) && !isScrubEnabled(),
       publicModel: getDefaultOpusModel(),
       repositoryModel: N
-        ? (C.repositoryModel ?? zot)({
+        ? (C.repositoryModel ?? getRepositoryModelSource)({
             model: L,
             modelCli: e.modelCli,
             agent: e.mainThreadAgentDefinition,
@@ -5250,7 +5250,7 @@ async function zs(
     return {
       kind: "failed",
       message: q
-        ? `Error: ${Vn(q.message, Qe)}`
+        ? `Error: ${formatDisplayText(q.message, Qe)}`
         : "Error: Unable to create cloud session",
     };
   }
@@ -5278,7 +5278,7 @@ async function zs(
         reason: fromEnumOpt(j.reason) ?? S("unknown"),
         archived: q,
       }),
-      { kind: "failed", message: N1n(x.id, j.reason, Se, q) }
+      { kind: "failed", message: formatSessionBindFailedMessage(x.id, j.reason, Se, q) }
     );
   }
   let et = Wt(t, x.id),
@@ -5301,7 +5301,7 @@ async function zs(
     let q = await Je();
     return (
       await logFeatureBadAsync("remote_headless_session", "link_failed", { archived: q }),
-      { kind: "failed", message: F1n(x.id, _e.error, Se, q) }
+      { kind: "failed", message: formatSessionSetupFailedMessage(x.id, _e.error, Se, q) }
     );
   }
   let { link: ue } = _e,
@@ -5340,7 +5340,7 @@ async function zs(
         (await ge(), await ue.bridge.stop(), await $t(tt));
       },
       cloudSession: () =>
-        DJt({
+        createCloudSessionRecord({
           sessionId: x.id,
           viewUrl: Se,
           device: {
@@ -5459,7 +5459,7 @@ async function Qs(
   if ("refused" in O)
     return (
       await logFeatureBadAsync("remote_headless_session", "attach_refused"),
-      { kind: "failed", message: `Error: ${Vn(O.refused ?? "", 300)}` }
+      { kind: "failed", message: `Error: ${formatDisplayText(O.refused ?? "", 300)}` }
     );
   if (O.archived)
     return (
@@ -5468,7 +5468,7 @@ async function Qs(
         entry_point: fromEnum("cloud_headless"),
       }),
       await logFeatureBadAsync("remote_headless_session", "attach_archived"),
-      { kind: "failed", message: $1n(k, D) }
+      { kind: "failed", message: formatSessionArchivedMessage(k, D) }
     );
   let A = await to(k, C).then(
     (P) => ({ position: P }),
@@ -5479,7 +5479,7 @@ async function Qs(
       await logFeatureBadAsync("remote_headless_session", "attach_stream_position"),
       {
         kind: "failed",
-        message: `Error: could not read where cloud session ${a6e(k)}'s stream stands (${Vn(A.error, 200)}).`,
+        message: `Error: could not read where cloud session ${formatSessionIdForDisplay(k)}'s stream stands (${formatDisplayText(A.error, 200)}).`,
       }
     );
   let R = (C.resolveBinding ?? resolveAttachDeviceBinding)({
@@ -5552,7 +5552,7 @@ async function Qs(
       featureHandles: z,
       dispose: () => $t(z),
       cloudSession: () =>
-        DJt({
+        createCloudSessionRecord({
           sessionId: k,
           viewUrl: D,
           device: Js(M),

@@ -116,16 +116,16 @@ import {
   queryAndGetAssistantMessage,
   getModelMaxOutputTokens,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { TOOL_SEARCH_TOOL_NAME, Df, jH, ime, ni, sm, PT, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { TOOL_SEARCH_TOOL_NAME, getAlwaysDenyRules, getAlwaysAskRules, doesRuleMatchTool, findMatchingDenyRule, findMatchingAskRule, findRuleMatchingInputFields, collectRulesByContent } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createDefaultToolPermissionContext, findToolByName } from "../权限系统/chunk-qdy0h5k2.js";
 import { createChildAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import {
-  Bwt,
-  N1e,
-  bCe,
-  Cr,
-  yw,
+  getStoreBearerOauthAccountInfo,
+  resolveOauthAccountInfo,
+  getStoreBearerOauthAccountInfoAsync,
+  WEB_FETCH_TOOL_NAME,
+  formatArtifactTitle,
   isFrameLiveTokenLeaseEnabled,
   servedPageLooksNested,
   startsWithSkeletonOpen,
@@ -136,8 +136,8 @@ import {
   PUBLISH_OUTCOME_UNKNOWN_FRAME,
   unlinkPath,
   markAutoReactNoticePending,
-  ED,
-  wer,
+  readArtifactContent,
+  mintStoredPageProbe,
   isWorkshopEnabled,
 } from "./chunk-01ymf0ar.js";
 import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
@@ -192,10 +192,10 @@ function $e() {
     ? `the ${ARTIFACT_COMMENTS_TOOL_NAME} tool (load it with ${TOOL_SEARCH_TOOL_NAME}, query \`select:${ARTIFACT_COMMENTS_TOOL_NAME}\`, if it is not loaded)`
     : `the ${ARTIFACT_TOOL_NAME} tool`;
 }
-function k9(e) {
+function describeArtifactCommentsAction(e) {
   return `${ARTIFACT_COMMENTS_TOOL_NAME} tool, action "${e === "comments" ? "read" : e}"`;
 }
-function _2(e, t) {
+function selectArtifactToolsetText(e, t) {
   return FS() ? t() : e;
 }
 function Nn(e, t) {
@@ -249,7 +249,7 @@ function Kn() {
   return ne().autoReact.ledgerMaxAgeMsOverride ?? Lr;
 }
 function Oe() {
-  return Bwt()?.accountUuid?.toLowerCase() ?? null;
+  return getStoreBearerOauthAccountInfo()?.accountUuid?.toLowerCase() ?? null;
 }
 function Ur(e) {
   let t = new Map(),
@@ -337,7 +337,7 @@ function Br(e) {
     ? e.sessionId
     : void 0;
 }
-function QPe() {
+function ensureAutoReactLedgerLoaded() {
   at();
 }
 function jn(e, t = Date.now()) {
@@ -591,7 +591,7 @@ function Fn(e, t, n) {
   });
   o.ledgerLastAppend = Promise.all([o.ledgerLastAppend, l]).then(() => {});
 }
-function rpt(e) {
+function setAutoReactLedgerStorage(e) {
   if (e !== void 0) ne().autoReact.ledgerStorageV5 = e;
 }
 function zn(e) {
@@ -599,9 +599,9 @@ function zn(e) {
   if (e !== void 0) t.ledgerStorageV5 = e;
   if (!t.ledgerRetiredSids.has(K())) t.ledgerOwnerSid = K();
 }
-function x7(e) {
+function scheduleAutoReactLedgerWrite(e) {
   let { autoReact: t } = ne();
-  (rpt(e?.storageV5), (t.ledgerExitCleanup ??= Et(Xr)));
+  (setAutoReactLedgerStorage(e?.storageV5), (t.ledgerExitCleanup ??= Et(Xr)));
   let n = t.ledgerDebounceMsOverride ?? $n;
   if (t.ledgerOwnerSid === null || t.ledgerOwnerSid === K())
     t.ledgerDeferredSince = null;
@@ -633,7 +633,7 @@ function Jr() {
     return;
   return Yn(t, Date.now()) ?? void 0;
 }
-function AWn(e) {
+function clearAutoReactLedger(e) {
   let { autoReact: t } = ne();
   if (e?.stillCurrent !== !1) {
     if (t.ledgerOwnerSid !== null) t.ledgerRetiredSids.add(t.ledgerOwnerSid);
@@ -656,52 +656,52 @@ function AWn(e) {
     (t.ledgerDeferredSince = null),
     (t.ledgerOwnerSid = null));
 }
-function Xin(e) {
-  (Ft(e), x7({ flush: !0 }));
+function resetAutoReactLedgerForSlug(e) {
+  (Ft(e), scheduleAutoReactLedgerWrite({ flush: !0 }));
 }
-var Jin = { comments: ARTIFACT_COMMENTS_TOOL_NAME, data: ARTIFACT_DATA_TOOL_NAME, check: ARTIFACT_CHECK_TOOL_NAME };
-function ZPe(e, t) {
+var ARTIFACT_FAMILY_TOOL_NAMES = { comments: ARTIFACT_COMMENTS_TOOL_NAME, data: ARTIFACT_DATA_TOOL_NAME, check: ARTIFACT_CHECK_TOOL_NAME };
+function resolveArtifactActionTool(e, t) {
   let n = t?.action,
     o = typeof n === "string" && Object.hasOwn(gI, n) ? gI[n] : void 0;
   return o === void 0
     ? void 0
     : {
-        tool: { name: Jin[o], ruleContentField: e.ruleContentField },
+        tool: { name: ARTIFACT_FAMILY_TOOL_NAMES[o], ruleContentField: e.ruleContentField },
         input: Tte(o, t),
       };
 }
-function spt(e, t, n, o) {
-  let r = ZPe(t, n);
+function findArtifactActionToolRule(e, t, n, o) {
+  let r = resolveArtifactActionTool(t, n);
   if (r === void 0) return null;
   return (
-    (o === "deny" ? ni(e, r.tool) : sm(e, r.tool)) ?? PT(e, r.tool, r.input, o)
+    (o === "deny" ? findMatchingDenyRule(e, r.tool) : findMatchingAskRule(e, r.tool)) ?? findRuleMatchingInputFields(e, r.tool, r.input, o)
   );
 }
-function Jqe(e, t, n) {
-  let o = ZPe({ name: ARTIFACT_TOOL_NAME }, t)?.tool.name;
+function findArtifactUrlRule(e, t, n) {
+  let o = resolveArtifactActionTool({ name: ARTIFACT_TOOL_NAME }, t)?.tool.name;
   for (let r of [ARTIFACT_TOOL_NAME, ...(o ? [o] : [])]) {
-    let i = artifactUrlInputRule(ah(e, r, n), t);
+    let i = artifactUrlInputRule(collectRulesByContent(e, r, n), t);
     if (i !== null) return i;
   }
   return null;
 }
-function vWn(e, t, n, o) {
-  let r = ZPe(t, n);
-  return PT(e, t, n, o) ?? (r === void 0 ? null : PT(e, r.tool, r.input, o));
+function evaluateArtifactPermissionWithAction(e, t, n, o) {
+  let r = resolveArtifactActionTool(t, n);
+  return findRuleMatchingInputFields(e, t, n, o) ?? (r === void 0 ? null : findRuleMatchingInputFields(e, r.tool, r.input, o));
 }
-var Qn = { name: Cr, mcpInfo: void 0 },
+var Qn = { name: WEB_FETCH_TOOL_NAME, mcpInfo: void 0 },
   Qr = new Set(["toolsNarrowing", "command"]);
-function Uce(e, t, n, o) {
+function findArtifactDomainRule(e, t, n, o) {
   let r =
     o === "deny"
-      ? ni(
+      ? findMatchingDenyRule(
           e,
           Qn,
-          Df(e).filter((l) => !Qr.has(l.source)),
+          getAlwaysDenyRules(e).filter((l) => !Qr.has(l.source)),
         )
-      : sm(e, Qn);
+      : findMatchingAskRule(e, Qn);
   if (r !== null) return r;
-  let i = ah(e, Cr, o);
+  let i = collectRulesByContent(e, WEB_FETCH_TOOL_NAME, o);
   if (i.size === 0) return null;
   let d = new Set([new URL(artifactViewerUrlFor(t)).hostname, new URL(artifactContentOriginUrlFor(t)).hostname]);
   if (typeof n === "string")
@@ -714,12 +714,12 @@ function Uce(e, t, n, o) {
   }
   return null;
 }
-function Hh(e, t, n, o, r = {}) {
-  let i = ZPe({ name: ARTIFACT_TOOL_NAME }, { action: r.action })?.tool.name,
-    d = Uce(e, t, n, o);
+function findArtifactUrlOrDomainRule(e, t, n, o, r = {}) {
+  let i = resolveArtifactActionTool({ name: ARTIFACT_TOOL_NAME }, { action: r.action })?.tool.name,
+    d = findArtifactDomainRule(e, t, n, o);
   if (d !== null) return d;
   for (let l of [ARTIFACT_TOOL_NAME, ...(i ? [i] : [])]) {
-    let p = ah(e, l, o),
+    let p = collectRulesByContent(e, l, o),
       S =
         artifactUrlRule(p, t, n) ?? (r.copySource === !0 ? artifactUrlRule(p, t, n, "from_url") : null);
     if (S !== null) return S;
@@ -729,7 +729,7 @@ function Hh(e, t, n, o, r = {}) {
 var Zn = id({ fn: null }, (e) => {
   e.fn = null;
 });
-function Qqe(e) {
+function registerHeldReplyCanUseTool(e) {
   return ((Zn.fn = e), e);
 }
 function eo() {
@@ -745,13 +745,13 @@ class to {
   }
 }
 var no = new to();
-function kWn(e) {
+function registerArtifactCommentsAvailability(e) {
   no.register(e);
 }
-function nT() {
+function isArtifactCommentsAvailable() {
   return no.isAvailable();
 }
-function xWn(e) {
+function parseWatchArtifactTarget(e) {
   let t = e.trim(),
     n = Vo(),
     o = tie(t);
@@ -771,17 +771,17 @@ function xWn(e) {
   return { slug: i.slug, url: artifactViewerUrlFor(i) };
 }
 var dt = null;
-function HWn(e) {
+function setStartupWatchTarget(e) {
   dt = e;
 }
-function IWn() {
+function takeStartupWatchTarget() {
   let e = dt;
   return ((dt = null), e);
 }
-function PWn() {
+function getStartupWatchTarget() {
   return dt;
 }
-function Zqe(e) {
+function stripWatchArtifactFlags(e) {
   let t = [];
   for (let n = 0; n < e.length; n++) {
     let o = e[n];
@@ -798,7 +798,7 @@ function Zqe(e) {
   }
   return t;
 }
-function q1t(e, t) {
+function removeWatchArtifactArg(e, t) {
   e = e.toLowerCase();
   let n = ["--watch-artifact", "--watch-artifact-no-autoreact"],
     o = _B(),
@@ -840,17 +840,17 @@ function ro(e) {
   }
   if (n === void 0) return !1;
   return (
-    fae([...Zqe(_B()), "--watch-artifact-no-autoreact", n]),
+    fae([...stripWatchArtifactFlags(_B()), "--watch-artifact-no-autoreact", n]),
     syncRespawnFlag("--watch-artifact-no-autoreact", ["--watch-artifact"], n, void 0, e),
     !0
   );
 }
-var z1t = 999,
+var MAX_COMMENT_CENSUS_COUNT = 999,
   Zr = 120000;
 function ve() {
   return ne().live.commentCensus;
 }
-function V1t(e, t = Date.now()) {
+function initCommentCensus(e, t = Date.now()) {
   let n = ve().get(e);
   ve().set(e, {
     readIds: n?.readIds ?? null,
@@ -862,14 +862,14 @@ function V1t(e, t = Date.now()) {
     partial: n?.partial ?? !1,
   });
 }
-function OWn(e) {
+function markCommentCensusDirty(e) {
   let t = ve().get(e);
   if (t !== void 0) ((t.dirty = !0), t.generation++);
 }
-function eze(e) {
+function getCommentCensusGeneration(e) {
   return ve().get(e)?.generation;
 }
-function lpt(e, t, n, o = !1) {
+function updateCommentCensusCounts(e, t, n, o = !1) {
   let r = ve().get(e);
   if (r === void 0) return;
   let i = 0,
@@ -898,24 +898,24 @@ function lpt(e, t, n, o = !1) {
     }
   }
   if (
-    ((r.plain = Math.min(i, z1t)),
-    (r.awaiting = Math.min(d, z1t)),
+    ((r.plain = Math.min(i, MAX_COMMENT_CENSUS_COUNT)),
+    (r.awaiting = Math.min(d, MAX_COMMENT_CENSUS_COUNT)),
     (r.partial = l),
     n === r.generation)
   )
     r.dirty = !1;
 }
-function DWn(e, t, n, o, r = !1) {
-  if (!ve().has(e)) V1t(e);
+function recordCommentCensusReadIds(e, t, n, o, r = !1) {
+  if (!ve().has(e)) initCommentCensus(e);
   let i = ve().get(e),
     d = i.readIds ?? new Set();
   for (let l of t) d.add(l);
-  ((i.readIds = d), lpt(e, n, o, r));
+  ((i.readIds = d), updateCommentCensusCounts(e, n, o, r));
 }
-function nan(e) {
+function getCommentCensusEntry(e) {
   return ve().get(e);
 }
-function LWn(e) {
+function deleteCommentCensusEntry(e) {
   ve().delete(e);
 }
 var He = 180000;
@@ -936,7 +936,7 @@ function ao(e) {
   e.idleWaiters.clear();
   for (let n of t) queueMicrotask(n);
 }
-function tze(e) {
+function setSessionUserBusy(e) {
   let t = ct();
   if (e === t.busy) return;
   if (((t.busy = e), (t.busySince = e ? performance.now() : 0), !e)) ao(t);
@@ -998,11 +998,11 @@ function Me(e, t, n) {
 function fo(e, t) {
   return `${e.toLowerCase()}:*:${t}`;
 }
-function ran(e) {
+function isArtifactCommentEnvelopeText(e) {
   let t = go(e);
   return t !== null && (t.startsWith(Ht) || t.startsWith(Bt));
 }
-function upt(e) {
+function parseArtifactCommentEnvelope(e) {
   if (!e.startsWith(Ht)) return null;
   let t = e.split(
     `
@@ -1039,18 +1039,18 @@ function ui(e) {
   return { slug: i, count: Number(d), gestureAt: l };
 }
 function li(e) {
-  let t = upt(e);
+  let t = parseArtifactCommentEnvelope(e);
   if (t !== null) return Me(t.slug, t.threadId, t.gestureAt);
   let n = ui(e);
   return n === null ? null : fo(n.slug, n.gestureAt);
 }
-function MWn(e) {
+function claimSeededSummonFromMessage(e) {
   if (e.seededSummon !== !0 || e.shouldQuery === !1) return null;
   let t = go(e.value),
     n = t === null ? null : li(t);
   if (t === null || n === null) return null;
   fi([n]);
-  let o = upt(t);
+  let o = parseArtifactCommentEnvelope(t);
   if (o !== null) mi(n, o);
   return n;
 }
@@ -1068,12 +1068,12 @@ function mi(e, t) {
     n.delete(o);
   }
 }
-function NWn(e, t, n) {
+function settleSummonSeed(e, t, n) {
   let { open: o, settled: r } = ne().summonSeeds,
     i = e.toLowerCase(),
     d = t.toLowerCase();
   for (let [p, S] of o) if (S.slug === i && S.threadId === d) o.delete(p);
-  let l = n == null ? null : upt(n);
+  let l = n == null ? null : parseArtifactCommentEnvelope(n);
   if (
     l !== null &&
     l.slug.toLowerCase() === i &&
@@ -1088,13 +1088,13 @@ function NWn(e, t, n) {
     }
   }
 }
-function FWn(e) {
+function isSummonSettled(e) {
   return ne().summonSeeds.settled.has(Me(e.slug, e.threadId, e.gestureAt));
 }
-function $Wn(e) {
+function getOpenSummonSeed(e) {
   return ne().summonSeeds.open.get(Me(e.slug, e.threadId, e.gestureAt));
 }
-function UWn(e) {
+function isLocallyDeclaredSummon(e) {
   return (
     e.declared === !0 &&
     !e.isRemoteIO &&
@@ -1104,7 +1104,7 @@ function UWn(e) {
     (e.clientPlatform === void 0 || e.clientPlatform === ti)
   );
 }
-function BWn(e, t) {
+function recordSummonReadClaims(e, t) {
   let n = [];
   for (let o of t)
     for (let r of pwe(o))
@@ -1166,16 +1166,16 @@ function _o(e) {
   }
   return o;
 }
-function nze(e) {
+function hasAutoEditChainPublishId(e) {
   return e !== void 0 && ne().autoEditAttribution.chainPublishIds.has(e);
 }
-function jWn(e, t) {
+function getStagedAutoEditBaseVersion(e, t) {
   let n = ne().autoEditAttribution.staged.get(e);
   if (n === void 0 || n.consumed || t === void 0 || n.expectedToolUseId !== t)
     return null;
   return n.baseVersion;
 }
-function WWn(e, t, n) {
+function getStagedAutoEditContentSha(e, t, n) {
   let o = ne().autoEditAttribution.staged.get(e);
   if (
     o === void 0 ||
@@ -1191,7 +1191,7 @@ function WWn(e, t, n) {
     return null;
   return { contentSha256: o.contentSha256 };
 }
-function GWn(e, t) {
+function consumeStagedAutoEditAttribution(e, t) {
   let n = ne().autoEditAttribution.staged.get(e);
   if (n === void 0 || n.consumed || t === void 0 || n.expectedToolUseId !== t)
     return null;
@@ -1210,7 +1210,7 @@ function yo(e) {
   let { staged: t } = ne().autoEditAttribution;
   if (t.get(e.slug) === e) t.delete(e.slug);
 }
-async function Hbe(e) {
+async function resolveLiveSessionHolder(e) {
   let t = !1,
     n = [];
   for (let i of e.records) {
@@ -1232,7 +1232,7 @@ async function Hbe(e) {
   }
   n.sort(
     (i, d) =>
-      Number(dpt(d.kind)) - Number(dpt(i.kind)) ||
+      Number(isBackgroundSessionKind(d.kind)) - Number(isBackgroundSessionKind(i.kind)) ||
       (d.statusUpdatedAt ?? 0) - (i.statusUpdatedAt ?? 0),
   );
   let [o, ...r] = n;
@@ -1245,11 +1245,11 @@ async function Hbe(e) {
       }
     : { verdict: t ? "unknown" : "none" };
 }
-function dpt(e) {
+function isBackgroundSessionKind(e) {
   return e !== void 0 && e !== "interactive";
 }
 function zt(e) {
-  if (dpt(e.kind)) return "background";
+  if (isBackgroundSessionKind(e.kind)) return "background";
   switch (e.entrypoint) {
     case "claude-desktop":
     case "claude-desktop-3p":
@@ -1261,10 +1261,10 @@ function zt(e) {
       return e.tmux !== void 0 && TMUX_LOCATION_RE.test(e.tmux) ? "tmux" : "terminal";
   }
 }
-function ppt(e, t, n) {
-  return { where: san(e, n), surface: zt(e), others: t };
+function buildHolderDescriptor(e, t, n) {
+  return { where: describeHolderSession(e, n), surface: zt(e), others: t };
 }
-function oan(e) {
+function describeHolderWithOthers(e) {
   return e.others > 0
     ? `${e.where} and ${e.others} other ${pluralize(e.others, "session")}`
     : e.where;
@@ -1287,7 +1287,7 @@ function So(e, t) {
 function Ro(e, t) {
   return wo(e.startedAt, t);
 }
-function san(e, t) {
+function describeHolderSession(e, t) {
   let n =
       e.name !== void 0 &&
       (e.nameSource === void 0 ||
@@ -1331,7 +1331,7 @@ function san(e, t) {
       return `another terminal${r(i, o, S)}`;
   }
 }
-function XWn(e, t) {
+function getHolderTelemetryFields(e, t) {
   let n = So(e, t),
     o = Ro(e, t);
   return {
@@ -1342,7 +1342,7 @@ function XWn(e, t) {
     holder_has_inbox: e.sock !== void 0 && e.sock !== "",
   };
 }
-async function YWn(e, t, n) {
+async function resolveJobHolderVerdict(e, t, n) {
   let { holderPid: o, holderJob: r } = e,
     i = n.identityOf(e);
   if (o === void 0 || i === void 0 || r === void 0) return "unproven";
@@ -1366,7 +1366,7 @@ async function YWn(e, t, n) {
     return "unproven";
   }
 }
-function JWn(e, t) {
+function stripGoneJobHolderFields(e, t) {
   let n = !1,
     o = new Map();
   for (let [r, i] of e)
@@ -1385,38 +1385,38 @@ function JWn(e, t) {
   return n ? o : e;
 }
 import { createHash, randomUUID as or } from "crypto";
-function W1t() {
+function getAlwaysAllowRuleDestination() {
   return isVsCodeExtensionSession() || (isClaudeDesktopAppSession() && !isClaudecodeEnv()) ? "userSettings" : "session";
 }
 var wi = "action:reply";
-function G1t() {
+function isArtifactReplyConsentEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ochre_plover", !1);
 }
-function opt(e, t, n) {
+function findArtifactReplyAllowRule(e, t, n) {
   if (
-    !G1t() ||
+    !isArtifactReplyConsentEnabled() ||
     e.mode === "plan" ||
     t.parsed === null ||
-    Yin(e, { ...t, parsed: t.parsed }, n)
+    isArtifactActionCoveredByRule(e, { ...t, parsed: t.parsed }, n)
   )
     return null;
-  for (let [o, r] of ah(e, ARTIFACT_TOOL_NAME, "allow")) {
+  for (let [o, r] of collectRulesByContent(e, ARTIFACT_TOOL_NAME, "allow")) {
     let i = Xt(o);
     if (i !== null && matchesWildcardPattern(i, "reply")) return r;
   }
   return null;
 }
-function Yin(e, t, n) {
+function isArtifactActionCoveredByRule(e, t, n) {
   let { parsed: o } = t,
     r = (i) => {
-      if (!Si.some((p) => ime(e, p, i))) return !1;
+      if (!Si.some((p) => doesRuleMatchTool(e, p, i))) return !1;
       let d = i.ruleValue.ruleContent;
       if (d === void 0) return !0;
       let l = Xt(d);
       if (l !== null) return n.some((p) => matchesWildcardPattern(l, p));
       return artifactUrlRule(new Map([[d, i]]), o, t.rawUrl) !== null;
     };
-  return Df(e).some(r) || jH(e).some(r);
+  return getAlwaysDenyRules(e).some(r) || getAlwaysAskRules(e).some(r);
 }
 var Si = [{ name: ARTIFACT_TOOL_NAME }, { name: ARTIFACT_COMMENTS_TOOL_NAME, familyParentToolName: ARTIFACT_TOOL_NAME }];
 function Xt(e) {
@@ -1433,22 +1433,22 @@ function To(e) {
     Xt(e.ruleValue.ruleContent) !== null
   );
 }
-function CWn() {
+function buildArtifactReplyAllowRuleSuggestion() {
   return {
     type: "addRules",
     rules: [{ toolName: ARTIFACT_TOOL_NAME, ruleContent: wi }],
     behavior: "allow",
-    destination: W1t(),
+    destination: getAlwaysAllowRuleDestination(),
   };
 }
-var ipt = "__artifactCommentTarget",
+var ARTIFACT_COMMENT_TARGET_FIELD = "__artifactCommentTarget",
   Ri = 120,
   Ti = 4000,
   vi = 32;
 function ki(e, t) {
   return `${e}/${t}`;
 }
-function apt(e) {
+function normalizeCommentText(e) {
   return fwe(e)
     .replace(/[\n\t]/g, " ")
     .replace(INVISIBLE_BLANKS, " ")
@@ -1459,7 +1459,7 @@ function apt(e) {
     .trim();
 }
 function Ci(e, t) {
-  let n = apt(e);
+  let n = normalizeCommentText(e);
   return Array.from(n).length > t ? `${scrubArtifactEnvelopeTags(truncateToCodePoints(n, t))}\u2026` : n;
 }
 function Ei(e, t, n) {
@@ -1490,7 +1490,7 @@ function Ei(e, t, n) {
     resolved: o.resolved && o.resolvedDegraded !== !0,
   };
 }
-function Qin(e) {
+function canPromptForCommentRead(e) {
   let t = getToolPermissionContext(e);
   return (
     e.toolUseId !== void 0 &&
@@ -1498,7 +1498,7 @@ function Qin(e) {
     t.shouldAvoidPermissionPrompts !== !0
   );
 }
-async function Zin(e, t, n) {
+async function readCommentTargetForConsent(e, t, n) {
   if (!ARTIFACT_SLUG_RE.test(t)) return;
   let o = ki(e.slug, t),
     r = ne().commentTargets,
@@ -1515,7 +1515,7 @@ async function Zin(e, t, n) {
       j7(e, l, n.credentials, "artifact_comment_consent_read", {
         skipBootProbe: !0,
       }),
-      bCe(n.credentials),
+      getStoreBearerOauthAccountInfoAsync(n.credentials),
     ]);
     if (S.err !== null) {
       r.delete(o);
@@ -1545,7 +1545,7 @@ async function Zin(e, t, n) {
     p();
   }
 }
-function ean(e) {
+function describeCommentForPrompt(e) {
   switch (e.by) {
     case "user":
       return `your comment "${e.excerpt}"`;
@@ -1557,7 +1557,7 @@ function ean(e) {
       return `the comment "${e.excerpt}"`;
   }
 }
-function RWn(e) {
+function describeThreadForPrompt(e) {
   switch (e.by) {
     case "user":
       return "your comment thread";
@@ -1569,10 +1569,10 @@ function RWn(e) {
       return "a comment thread";
   }
 }
-function tan(e, t) {
-  if (t === void 0 && !(ipt in e)) return;
-  let { [ipt]: n, ...o } = e;
-  return t === void 0 ? o : { ...o, [ipt]: t };
+function setArtifactCommentTargetField(e, t) {
+  if (t === void 0 && !(ARTIFACT_COMMENT_TARGET_FIELD in e)) return;
+  let { [ARTIFACT_COMMENT_TARGET_FIELD]: n, ...o } = e;
+  return t === void 0 ? o : { ...o, [ARTIFACT_COMMENT_TARGET_FIELD]: t };
 }
 var xi = /(^|[\s\u3002\u3001\uFF1F\uFF01])@(?!\s)/g;
 function vo(e) {
@@ -1703,7 +1703,7 @@ function ze(e) {
 function Jt(e) {
   return e.replace(/\s+/g, " ");
 }
-function K1t() {
+function isAnchorSnippetResolutionEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_teal_corbel_finial", !0);
 }
 async function Qt(e, t, n) {
@@ -1824,14 +1824,14 @@ function Do(e) {
   let S = truncateToCodePoints(i, Co);
   return S === "" ? r : `${r} ${S}${d || S.length < i.length ? "\u2026" : ""}`;
 }
-async function X1t(e) {
+async function readArtifactSourceHtml(e) {
   if (e.signal.aborted) return;
   let t = new AbortController(),
     n = () => t.abort();
   e.signal.addEventListener("abort", n, { once: !0 });
   let o = setTimeout((r) => r.abort(), Eo, t);
   try {
-    let r = ED(
+    let r = readArtifactContent(
         { slug: e.slug, env: Vo(), ...(e.file !== void 0 && { file: e.file }) },
         t.signal,
         e.credentials,
@@ -1863,7 +1863,7 @@ function Mo(e) {
     e.created_at ?? "",
   );
 }
-async function qWn(e, t, n = {}) {
+async function resolveThreadAnchorSnippets(e, t, n = {}) {
   let { onlyThreadIds: o, memoKey: r, regionKids: i } = n,
     d = ne(),
     { anchorSnippets: l, accountEpoch: p } = d,
@@ -1963,7 +1963,7 @@ function Zt(e) {
   let t = { ...e, consumed: !1 };
   return (ne().summonAnswers.set(e.expectedToolUseId, t), t);
 }
-function zWn(e, t, n) {
+function consumeSummonAnswerClaim(e, t, n) {
   let o = n === void 0 ? void 0 : ne().summonAnswers.get(n);
   if (o === void 0 || o.consumed || o.slug !== e || o.threadId !== t)
     return { answersSummon: !1 };
@@ -1982,12 +1982,12 @@ function Lo(e) {
   let t = { ...e, consumed: !1 };
   return (ne().pipelineReplyOrigins.set(e.expectedToolUseId, t), t);
 }
-function VWn(e, t, n) {
+function consumePipelineReplyOrigin(e, t, n) {
   let o = n === void 0 ? void 0 : ne().pipelineReplyOrigins.get(n);
   if (o === void 0 || o.consumed || o.slug !== e || o.threadId !== t) return !1;
   return ((o.consumed = !0), !0);
 }
-function KWn(e) {
+function isPipelineReplyOriginToolUseId(e) {
   return e !== void 0 && ne().pipelineReplyOrigins.has(e);
 }
 function Fo(e) {
@@ -2284,7 +2284,7 @@ function Sa() {
   return t !== null && t > 0 ? Math.min(Math.max(t, ba), wa) : la;
 }
 async function Ra(e) {
-  let { info: t } = N1e(),
+  let { info: t } = resolveOauthAccountInfo(),
     n = (await getClaudeAIOAuthTokenOriginAsync(e)) === "store" ? t?.accountUuid?.toLowerCase() : void 0;
   return { account: n === "" ? void 0 : n, tokens: uwe() };
 }
@@ -2404,7 +2404,7 @@ function La(e) {
   return {
     summary: formatCommentsWaitingSummary(r),
     detail:
-      `${l}. No automatic reply was posted and no automatic edit was attempted: this session publishes the artifact from ${d}, so a requested change belongs in that source (or whatever generates it), not in the served copy. Read the thread (${_2('Artifact tool, action "comments"', () => k9("comments"))}); answer any question in your reply, and if it asks for a change and the change is appropriate, make it in the source and republish.` +
+      `${l}. No automatic reply was posted and no automatic edit was attempted: this session publishes the artifact from ${d}, so a requested change belongs in that source (or whatever generates it), not in the served copy. Read the thread (${selectArtifactToolsetText('Artifact tool, action "comments"', () => describeArtifactCommentsAction("comments"))}); answer any question in your reply, and if it asks for a change and the change is appropriate, make it in the source and republish.` +
       Ke(),
   };
 }
@@ -2435,7 +2435,7 @@ function Ua(e, t) {
   return dr(e).some((n) => _t(t, n).fire);
 }
 var $a = 30000;
-function rze() {
+function isArtifactAutoReactOptedIn() {
   let e = ne().autoReact;
   return (
     (e.optIn ??=
@@ -2523,7 +2523,7 @@ var pt = Object.freeze(
   Ga = 2000;
 function ur(e, t, n) {
   let o = getToolPermissionContext(e);
-  return Uce(o, t, n, "deny") !== null || Uce(o, t, n, "ask") !== null;
+  return findArtifactDomainRule(o, t, n, "deny") !== null || findArtifactDomainRule(o, t, n, "ask") !== null;
 }
 function At(e, t) {
   let n = getToolPermissionContext(t);
@@ -2544,14 +2544,14 @@ function bt(e) {
     !e.classifierDenyRules
   );
 }
-function QWn(e, t, n) {
+function wouldAutoApproveToolCall(e, t, n) {
   let o = getToolPermissionContext(n);
   return (
     bt(At(e, n)) &&
     n.hookAskFloor !== !0 &&
     n.requireCanUseTool !== !0 &&
-    sm(o, e) === null &&
-    PT(o, e, t, "ask") === null
+    findMatchingAskRule(o, e) === null &&
+    findRuleMatchingInputFields(o, e, t, "ask") === null
   );
 }
 var Ka = new Set(["action", "url", "thread_id", "text"]);
@@ -2612,25 +2612,25 @@ var Va =
     "plain text only \u2014 no emoji (the posting gate rejects the invisible joiner/variation-selector code points most emoji contain), ordinary spaces only (it also rejects runs of non-breaking/ideographic spaces and braille blanks)",
   gn =
     "Never describe how the request gets handled behind the scenes \u2014 no mention of sessions, threads, flags, capability grants, or pick-up machinery.";
-function Zu() {
+function isArtifactAutoReactEnabled() {
   let e = ne(),
-    t = !e.autoReact.userDisarmed && rze() && nT();
+    t = !e.autoReact.userDisarmed && isArtifactAutoReactOptedIn() && isArtifactCommentsAvailable();
   if (e.autoReact.enabledMemo !== t)
     ((e.autoReact.enabledMemo = t), refreshAllSummonArms(e.live));
   return t;
 }
-function ZWn(e) {
+function shouldDropAutoReactTaskNotification(e) {
   if (e?.kind !== "task-notification" || e.source !== "artifact-auto-react")
     return !1;
-  return !Zu() || (e.slug !== void 0 && isSlugStopLatched(e.slug));
+  return !isArtifactAutoReactEnabled() || (e.slug !== void 0 && isSlugStopLatched(e.slug));
 }
-function fpt(e) {
+function disarmArtifactAutoReact(e) {
   let t = ne();
   ((t.autoReact.userDisarmed = !0), ro(e?.storageV5), i9n(e));
   for (let n of [...t.wakes.takenFrom.keys()])
     import("./chunk-54kz7amv.js").then((o) => o.notifyTakenOverSlugStopped(n));
   (Vn(),
-    x7({ flush: !0, storageV5: e?.storageV5 }),
+    scheduleAutoReactLedgerWrite({ flush: !0, storageV5: e?.storageV5 }),
     (t.autoReact.enabledMemo = !1),
     refreshAllSummonArms(t.live));
 }
@@ -2678,7 +2678,7 @@ function rn(e) {
           d({
             summary: formatReplyNotPostedSummary(e.artifactName),
             detail:
-              `The user declined a drafted reply to a comment thread on artifact ${e.url} and said: "${apt(t.feedback)}". Act on that; replies to comments on this artifact will not be drafted for them again this session \u2014 use ${$e()} to read and reply if they ask.` +
+              `The user declined a drafted reply to a comment thread on artifact ${e.url} and said: "${normalizeCommentText(t.feedback)}". Act on that; replies to comments on this artifact will not be drafted for them again this session \u2014 use ${$e()} to read and reply if they ask.` +
               Ke(),
           }));
       te(l, { status: "declined", reason: "ask_mode" });
@@ -2691,7 +2691,7 @@ function rn(e) {
       let A =
         !o.autoModeDeclineNoticed &&
         e.editLanded !== !0 &&
-        Zu() &&
+        isArtifactAutoReactEnabled() &&
         !isSlugStopLatched(r) &&
         getScanEpoch(r) === i;
       if (A)
@@ -2749,7 +2749,7 @@ function rn(e) {
     t.kind === "summon_foreign"
   ) {
     if ((logFeatureSad("artifact_comments_autoreact", Pr(t.kind), _), S !== void 0))
-      if (Zu() && !isSlugStopLatched(r) && getScanEpoch(r) === i) (markAutoReactNoticePending(r), d(S));
+      if (isArtifactAutoReactEnabled() && !isSlugStopLatched(r) && getScanEpoch(r) === i) (markAutoReactNoticePending(r), d(S));
       else
         logFeatureSad(
           "artifact_comments_autoreact",
@@ -2778,7 +2778,7 @@ function rn(e) {
     !isUserPresent())
   )
     recordUnattendedReply(r);
-  if ((hr(n, t), e.heldForPerson !== !0 && (!Zu() || isSlugStopLatched(r) || getScanEpoch(r) !== i))) {
+  if ((hr(n, t), e.heldForPerson !== !0 && (!isArtifactAutoReactEnabled() || isSlugStopLatched(r) || getScanEpoch(r) !== i))) {
     logFeatureOk("artifact_comments_autoreact", {
       replied: !0,
       post_stop_notice_suppressed: !0,
@@ -2953,14 +2953,14 @@ async function Ge(e) {
     );
   return E;
 }
-function oze(e) {
+function resetAutoReactStateForSlug(e) {
   Ft(e);
   let t = ne().autoReact.artifacts.get(e);
   if (!t) {
-    x7({ flush: !0 });
+    scheduleAutoReactLedgerWrite({ flush: !0 });
     return;
   }
-  (lr(t), (t.accountUuid = Oe() ?? t.accountUuid), x7({ flush: !0 }));
+  (lr(t), (t.accountUuid = Oe() ?? t.accountUuid), scheduleAutoReactLedgerWrite({ flush: !0 }));
 }
 function lr(e) {
   (e.threads.clear(),
@@ -3038,10 +3038,10 @@ function Ja(e, t) {
     e.turnTimestamps.length < Sa()
   );
 }
-function H7(e, t) {
+function formatArtifactDisplayName(e, t) {
   let n = e?.();
   if (n === void 0 || n === "") return t;
-  let o = yw(n);
+  let o = formatArtifactTitle(n);
   if (o === null) return t;
   return `"${vo(o.replace(/"/g, "'").replace(QUOTE_HOMOGLYPHS, "'").replace(SINGLE_QUOTE_RUNS, "'"))}"`;
 }
@@ -3067,8 +3067,8 @@ function Qa(e) {
   if (t.length === 0) return e;
   return { ...e, publishTranscript: n, context: pr(e.context, t) };
 }
-function x9(e) {
-  if (!Zu()) return;
+function scheduleArtifactAutoReactWake(e) {
+  if (!isArtifactAutoReactEnabled()) return;
   if (isSlugYielded(e.slug)) reclaimSlugsFromDeadHolders();
   let t = isAutoReactDisarmedForSlug(e.slug),
     n = e.getWiring?.(),
@@ -3215,7 +3215,7 @@ function es(e, t) {
     e.readRetryAttempts = 0;
     return;
   }
-  x9({
+  scheduleArtifactAutoReactWake({
     ...t,
     confirm: void 0,
     confirmBase: void 0,
@@ -3243,7 +3243,7 @@ async function ts(e) {
     return;
   }
   Ze(r).ruleWithheldNoted = !1;
-  let S = H7(e.getTitle, i);
+  let S = formatArtifactDisplayName(e.getTitle, i);
   zn(l.storageV5);
   let R = Ze(r);
   R.scanning = !0;
@@ -3260,7 +3260,7 @@ async function ts(e) {
     W = !1,
     G = null;
   try {
-    let j = eze(r),
+    let j = getCommentCensusGeneration(r),
       [, I] = await Promise.all([
         Ba({ summonPickupRequested: e.pickUpRecentSummons === !0 }),
         j7(
@@ -3298,7 +3298,7 @@ async function ts(e) {
       return;
     }
     if (I.threadsDropped === !0) W = o === "owed";
-    if (getScanEpoch(r) === w) lpt(r, I.threads, j, I.threadsDropped === !0);
+    if (getScanEpoch(r) === w) updateCommentCensusCounts(r, I.threads, j, I.threadsDropped === !0);
     let V = I.threadsDropped === !0 || getScanEpoch(r) !== w ? null : ns(I.threads, R);
     if (e.confirm === !0) {
       let le = e.confirmBase;
@@ -3350,20 +3350,20 @@ async function ts(e) {
       !re &&
       I.threadsDropped !== !0 &&
       !(I.threads.length === 0 && (R.threads.size > 0 || R.everHadThreads)) &&
-      Zu() &&
+      isArtifactAutoReactEnabled() &&
       !isSlugStopLatched(r) &&
       getScanEpoch(r) === w
     )
       ((R.baselined = !0), (R.everBaselined = !0));
   } finally {
-    if (((R.scanning = !1), x7(), D && t.newestKickAt === N))
+    if (((R.scanning = !1), scheduleAutoReactLedgerWrite(), D && t.newestKickAt === N))
       t.kickSettled = !0;
     if (t.rescanWanted) {
       t.rescanWanted = !1;
       let j = t.rescanArgs ?? e;
-      ((t.rescanArgs = null), x9({ ...j, reentry: !0 }));
+      ((t.rescanArgs = null), scheduleArtifactAutoReactWake({ ...j, reentry: !0 }));
     } else if (!t.kickSettled && t.newestKickAt !== 0 && getScanEpoch(r) === w && !isSlugStopLatched(r))
-      x9({
+      scheduleArtifactAutoReactWake({
         ...e,
         seed: void 0,
         reentry: void 0,
@@ -3384,7 +3384,7 @@ async function ts(e) {
           if (t.idleRescanCancel === I)
             ((t.idleRescanCancel = null), (t.idleRescanUnmuted = !1));
           if (!isSlugStopLatched(r))
-            x9({
+            scheduleArtifactAutoReactWake({
               ...e,
               ...(j && { suppressSummonStatus: !1 }),
               seed: void 0,
@@ -3465,7 +3465,7 @@ async function rs(e) {
     S = (p?.mcpInfo === void 0 ? p : void 0) ?? (FS() ? void 0 : e.tool),
     R,
     w = () => (e.threadsDropped, []);
-  if (!Zu() || isSlugStopLatched(t)) return;
+  if (!isArtifactAutoReactEnabled() || isSlugStopLatched(t)) return;
   let _ = l.threads.get(r.id);
   if (r.commentsDegraded === !0) return _ ? void 0 : "deferred_first_sight";
   if (r.resolvedDegraded === !0)
@@ -3628,7 +3628,7 @@ async function rs(e) {
       storageV5: i.storageV5,
     },
     tt = (C) => {
-      if (!Zu() || isSlugStopLatched(t) || getScanEpoch(t) !== e.scanGen)
+      if (!isArtifactAutoReactEnabled() || isSlugStopLatched(t) || getScanEpoch(t) !== e.scanGen)
         return (
           logFeatureSad("artifact_comments_autoreact", `stopped_during_${C}`),
           te(ee, { status: "declined", reason: "auto_reply_off" }),
@@ -3967,7 +3967,7 @@ async function rs(e) {
             : void 0;
       if ((hr(_, q), q.commentId !== void 0)) ee.coversReplyId = q.commentId;
       if (((_.lastAutoReplyAt = Date.now()), !isUserPresent())) recordUnattendedReply(t);
-      let pe = !Zu() || isSlugStopLatched(t) || getScanEpoch(t) !== e.scanGen;
+      let pe = !isArtifactAutoReactEnabled() || isSlugStopLatched(t) || getScanEpoch(t) !== e.scanGen;
       if (
         (logFeatureOk("artifact_comments_autoreact", {
           ...de,
@@ -4173,7 +4173,7 @@ async function rs(e) {
       });
       if (F.outcome === "stood_down") return;
       let ae = (de) => {
-        if (Zu() && !isSlugStopLatched(t) && getScanEpoch(t) === e.scanGen) {
+        if (isArtifactAutoReactEnabled() && !isSlugStopLatched(t) && getScanEpoch(t) === e.scanGen) {
           let pe = Ne ? ` beyond the acknowledgement${qe([Te])}` : "";
           (markAutoReactNoticePending(t),
             d({
@@ -4241,7 +4241,7 @@ async function rs(e) {
                   detail:
                     `Auto-edited artifact ${n} in response to thread ${r.id} and posted a summary reply${Mt}. ` +
                     "Review the change \u2014 if it missed the mark, edit the artifact yourself and republish." +
-                    ` The thread may not be resolved \u2014 check it (${_2('action "comments"', () => k9("comments"))}); if the change is right and the thread is still open, resolve it (${_2('Artifact tool, action "resolve"', () => k9("resolve"))}). Do NOT post another reply \u2014 the summary reply is already in the thread.`,
+                    ` The thread may not be resolved \u2014 check it (${selectArtifactToolsetText('action "comments"', () => describeArtifactCommentsAction("comments"))}); if the change is right and the thread is still open, resolve it (${selectArtifactToolsetText('Artifact tool, action "resolve"', () => describeArtifactCommentsAction("resolve"))}). Do NOT post another reply \u2014 the summary reply is already in the thread.`,
                 }
             : F.failKind === "summon_foreign"
               ? {
@@ -4311,7 +4311,7 @@ async function rs(e) {
         let de = qe([Te]),
           pe = F.post?.kind,
           Pe = F.post?.kind === "refused" && F.post.autoModeDeclined;
-        if (Zu() && !isSlugStopLatched(t) && getScanEpoch(t) === e.scanGen)
+        if (isArtifactAutoReactEnabled() && !isSlugStopLatched(t) && getScanEpoch(t) === e.scanGen)
           (markAutoReactNoticePending(t),
             d({
               summary:
@@ -4438,7 +4438,7 @@ async function rs(e) {
         }),
         ye !== null)
       )
-        x7();
+        scheduleAutoReactLedgerWrite();
     };
   if (ye === null) {
     await Mn();
@@ -4598,12 +4598,12 @@ async function Rt(e) {
     if (e.anchorSnippetMemo?.resolved)
       ((U = e.anchorSnippetMemo.snippet),
         (W = e.anchorSnippetMemo.inside ?? []));
-    else if (t.anchorFileDegraded || t.carried || !K1t()) U = void 0;
+    else if (t.anchorFileDegraded || t.carried || !isAnchorSnippetResolutionEnabled()) U = void 0;
     else {
       let G =
           e.sourceHtml !== void 0 && t.anchorFile === void 0
             ? e.sourceHtml
-            : await X1t({
+            : await readArtifactSourceHtml({
                 slug: e.slug,
                 ...(t.anchorFile !== void 0 && { file: t.anchorFile }),
                 signal: n.abortController.signal,
@@ -4944,7 +4944,7 @@ function ws(e) {
   return null;
 }
 async function Ss(e, t, n) {
-  let o = await ED(
+  let o = await readArtifactContent(
     { slug: e, env: Vo() },
     t.abortController.signal,
     t.credentials,
@@ -5069,7 +5069,7 @@ Patch rules: each "find" must be copied character-for-character from the source 
 
 Rules for an edit: change only what the thread asked for and preserve everything else (including the document's <title>, unless the thread asks to rename it); the reply MUST state specifically what you changed (it is the audit record viewers see, e.g. "Changed the header color to purple"); the reply must claim ONLY this edit \u2014 it posts after the update actually publishes, and the system never posts it if the update fails \u2014 and must not promise future actions or further edits. Reply text rules (both decisions): brief, ${hn}. ${gn}`,
     G = () =>
-      Zu() &&
+      isArtifactAutoReactEnabled() &&
       !isSlugStopLatched(e.slug) &&
       (e.scanGen === void 0 || getScanEpoch(e.slug) === e.scanGen) &&
       getToolPermissionContext(i).mode !== "plan",
@@ -5272,7 +5272,7 @@ Re-read the source, account for your earlier edits, and output the complete deci
         telemetry: { ...I(), visible_chars: Se.length, rewrite: !Ce },
         favicon: l,
         sourceVer: d.ver,
-        sourceProbe: wer(e.slug, d.html),
+        sourceProbe: mintStoredPageProbe(e.slug, d.html),
         ...(Ce && startsWithSkeletonOpen(d.html) && { roundTripSignal: mintRoundTripPublishSignal(e.slug) }),
         ...(d.title !== void 0 && d.title !== "" && { storedTitle: d.title }),
       };
@@ -5354,10 +5354,10 @@ var Cs = {
       "composing a requested automatic edit ran past its time limit and was abandoned, so the artifact was NOT changed. Read the thread and make the change yourself if appropriate.",
   };
 function Ke() {
-  return ` Once you have finished acting on the thread, post a brief reply saying what you did \u2014 first check the thread (${_2('action "comments"', () => k9("comments"))}): if a Claude reply answering it already stands, do NOT post another \u2014 and resolve the thread (${_2('Artifact tool, action "resolve"', () => k9("resolve"))}); leave it open only if the conversation is still active or the commenter still needs to read an answer from you.`;
+  return ` Once you have finished acting on the thread, post a brief reply saying what you did \u2014 first check the thread (${selectArtifactToolsetText('action "comments"', () => describeArtifactCommentsAction("comments"))}): if a Claude reply answering it already stands, do NOT post another \u2014 and resolve the thread (${selectArtifactToolsetText('Artifact tool, action "resolve"', () => describeArtifactCommentsAction("resolve"))}); leave it open only if the conversation is still active or the commenter still needs to read an answer from you.`;
 }
 function Tr() {
-  return ` Once the promised reply is posted, resolve the thread (${_2('Artifact tool, action "resolve"', () => k9("resolve"))}); leave it open only if the conversation is still active or the commenter still needs to read an answer from you.`;
+  return ` Once the promised reply is posted, resolve the thread (${selectArtifactToolsetText('Artifact tool, action "resolve"', () => describeArtifactCommentsAction("resolve"))}); leave it open only if the conversation is still active or the commenter still needs to read an answer from you.`;
 }
 function qe(e) {
   let t = e.filter((n) => n !== void 0 && aue.test(n));
@@ -5366,7 +5366,7 @@ function qe(e) {
 function mt(e) {
   return (
     ` The auto-posted reply${qe(e)} is already in the thread \u2014 do NOT post another; the commenter can see it.` +
-    ` Once you have finished acting on the thread, resolve it (${_2('Artifact tool, action "resolve"', () => k9("resolve"))}); leave it open only if the conversation is still active or the commenter still needs an answer beyond the posted reply.`
+    ` Once you have finished acting on the thread, resolve it (${selectArtifactToolsetText('Artifact tool, action "resolve"', () => describeArtifactCommentsAction("resolve"))}); leave it open only if the conversation is still active or the commenter still needs an answer beyond the posted reply.`
   );
 }
 var vr =
@@ -5650,83 +5650,83 @@ function et(e) {
   );
 }
 export {
-  k9,
-  _2,
-  QPe,
-  rpt,
-  x7,
-  AWn,
-  Xin,
-  W1t,
-  G1t,
-  opt,
-  Yin,
-  CWn,
-  Jin,
-  ZPe,
-  spt,
-  Jqe,
-  vWn,
-  Uce,
-  Hh,
-  ipt,
-  apt,
-  Qin,
-  Zin,
-  ean,
-  RWn,
-  tan,
-  Qqe,
-  kWn,
-  nT,
-  xWn,
-  HWn,
-  IWn,
-  PWn,
-  Zqe,
-  q1t,
-  z1t,
-  V1t,
-  OWn,
-  eze,
-  lpt,
-  DWn,
-  nan,
-  LWn,
-  tze,
+  describeArtifactCommentsAction,
+  selectArtifactToolsetText,
+  ensureAutoReactLedgerLoaded,
+  setAutoReactLedgerStorage,
+  scheduleAutoReactLedgerWrite,
+  clearAutoReactLedger,
+  resetAutoReactLedgerForSlug,
+  getAlwaysAllowRuleDestination,
+  isArtifactReplyConsentEnabled,
+  findArtifactReplyAllowRule,
+  isArtifactActionCoveredByRule,
+  buildArtifactReplyAllowRuleSuggestion,
+  ARTIFACT_FAMILY_TOOL_NAMES,
+  resolveArtifactActionTool,
+  findArtifactActionToolRule,
+  findArtifactUrlRule,
+  evaluateArtifactPermissionWithAction,
+  findArtifactDomainRule,
+  findArtifactUrlOrDomainRule,
+  ARTIFACT_COMMENT_TARGET_FIELD,
+  normalizeCommentText,
+  canPromptForCommentRead,
+  readCommentTargetForConsent,
+  describeCommentForPrompt,
+  describeThreadForPrompt,
+  setArtifactCommentTargetField,
+  registerHeldReplyCanUseTool,
+  registerArtifactCommentsAvailability,
+  isArtifactCommentsAvailable,
+  parseWatchArtifactTarget,
+  setStartupWatchTarget,
+  takeStartupWatchTarget,
+  getStartupWatchTarget,
+  stripWatchArtifactFlags,
+  removeWatchArtifactArg,
+  MAX_COMMENT_CENSUS_COUNT,
+  initCommentCensus,
+  markCommentCensusDirty,
+  getCommentCensusGeneration,
+  updateCommentCensusCounts,
+  recordCommentCensusReadIds,
+  getCommentCensusEntry,
+  deleteCommentCensusEntry,
+  setSessionUserBusy,
   cpt,
-  ran,
-  upt,
-  MWn,
-  NWn,
-  FWn,
-  $Wn,
-  UWn,
-  BWn,
-  nze,
-  jWn,
-  WWn,
-  GWn,
-  K1t,
-  X1t,
-  qWn,
-  zWn,
-  VWn,
-  KWn,
-  Hbe,
-  dpt,
-  ppt,
-  oan,
-  san,
-  XWn,
-  YWn,
-  JWn,
-  rze,
-  QWn,
-  Zu,
-  ZWn,
-  fpt,
-  oze,
-  H7,
-  x9,
+  isArtifactCommentEnvelopeText,
+  parseArtifactCommentEnvelope,
+  claimSeededSummonFromMessage,
+  settleSummonSeed,
+  isSummonSettled,
+  getOpenSummonSeed,
+  isLocallyDeclaredSummon,
+  recordSummonReadClaims,
+  hasAutoEditChainPublishId,
+  getStagedAutoEditBaseVersion,
+  getStagedAutoEditContentSha,
+  consumeStagedAutoEditAttribution,
+  isAnchorSnippetResolutionEnabled,
+  readArtifactSourceHtml,
+  resolveThreadAnchorSnippets,
+  consumeSummonAnswerClaim,
+  consumePipelineReplyOrigin,
+  isPipelineReplyOriginToolUseId,
+  resolveLiveSessionHolder,
+  isBackgroundSessionKind,
+  buildHolderDescriptor,
+  describeHolderWithOthers,
+  describeHolderSession,
+  getHolderTelemetryFields,
+  resolveJobHolderVerdict,
+  stripGoneJobHolderFields,
+  isArtifactAutoReactOptedIn,
+  wouldAutoApproveToolCall,
+  isArtifactAutoReactEnabled,
+  shouldDropAutoReactTaskNotification,
+  disarmArtifactAutoReact,
+  resetAutoReactStateForSlug,
+  formatArtifactDisplayName,
+  scheduleArtifactAutoReactWake,
 };

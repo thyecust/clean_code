@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { OP } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { yieldToEventLoop } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { readStoredTrustedDeviceToken, clearTrustedDeviceToken, enrollTrustedDevice } from "./chunk-tyce0p0b.js";
@@ -23,7 +23,7 @@ import { REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.j
 import { Oer } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getConversationMessages, gracefulShutdown, relatchTenguSandboxGbConfig, findLastAssistantMessage, createSystemInfoMessage, stripThinkingBlocks, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { jj, clearOrgMemoryCredential, onOrgMemoryAuthCompletion, clearOrgMemoryDiscoveryCaches, clearOrgMemoryDiscoveryAccountState } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getOrgMemoryIdentity, clearOrgMemoryCredential, onOrgMemoryAuthCompletion, clearOrgMemoryDiscoveryCaches, clearOrgMemoryDiscoveryAccountState } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getToolPermissionContext, getSessionEffort } from "../权限系统/chunk-fjrcf22x.js";
 import { dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { vre, rK, Rre } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
@@ -49,7 +49,7 @@ import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/Rea
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Pdr() {
-  onOrgMemoryAuthCompletion(jj());
+  onOrgMemoryAuthCompletion(getOrgMemoryIdentity());
 }
 async function N8(o, s, i) {
   if (
@@ -358,7 +358,7 @@ async function ngr(o, s) {
           onConsentNeeded: () => (
             (T = !0),
             o(Ndr(), { display: "system" }),
-            OP()
+            yieldToEventLoop()
           ),
         }),
         v = MHe(s, w, N, { envTokenWasSet: u, envWarningOnce: m });

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatResetTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { MAX_ARTIFACT_BYTES, dailyPublishResetEpochSeconds, MANIFEST_TOTAL_BUDGET, BINARY_FILE_MAX_BYTES, RG, Ife, Pfe } from "./chunk-01ymf0ar.js";
+import { MAX_ARTIFACT_BYTES, dailyPublishResetEpochSeconds, MANIFEST_TOTAL_BUDGET, BINARY_FILE_MAX_BYTES, MAX_PUBLISH_FILES, ARTIFACT_OTHER_ORG_MESSAGE, OTHER_ORG_SIGN_IN_HINT } from "./chunk-01ymf0ar.js";
 import { mk } from "./chunk-y8j05azr.js";
 import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, ARTIFACT_CAPABILITIES_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 var VERIFY_GUIDE_TEXT = `Before claiming this page works: pass action: "verify" to read the runtime diagnostics viewers' browsers captured for this version \u2014 an empty result means no viewer has loaded it yet, not that it works.`,
@@ -43,7 +43,7 @@ function userCanDeleteThemselves(e) {
     ? "the user can delete it themselves on claude.ai, from the Artifact's own menu."
     : "the user can delete it themselves: in the Claude Code terminal `/artifacts` lists their Artifacts (press d to delete the selected one), or on claude.ai from the Artifact's own menu.";
 }
-var OTHER_ORG_DENY = `${Ife} \u2014 nothing in this session can reach it until ${Pfe}`,
+var OTHER_ORG_DENY = `${ARTIFACT_OTHER_ORG_MESSAGE} \u2014 nothing in this session can reach it until ${OTHER_ORG_SIGN_IN_HINT}`,
   OTHER_ORG_DECISION_REASON = "Artifact is in another of the user's organizations",
   OPEN_PROMPT_PARAGRAPH =
     '**To show the user an existing artifact**: pass `action: "open"` with its `url` \u2014 use it when another tool has just created or updated an artifact the user should now look at; it publishes nothing, and your own publishes never need it.',
@@ -185,7 +185,7 @@ function langPromptParagraph(e, t) {
 
 `;
 }
-var FILES_PROMPT_PARAGRAPH = `**Supporting files**: To publish a multi-file artifact (separate CSS/JS/data/images), pass \`files\` as a map of published path \u2192 source file: \`{"app.js": "dist/app.js", "data/points.json": "build/points.json"}\`. The published path (the key) is what the HTML references (\`<script src="app.js">\`); the source (the value) is where the bytes come from on disk \u2014 a path string, or \`{from, contentType}\` when the type can't be inferred from the published extension. Pass \`root\` to resolve all relative sources against one base directory instead of retyping a long build prefix (\`root: "dist"\` + \`{"app.js": "app.js"}\`) \u2014 \`root\` never changes published paths, only where sources are read from. A plain list of paths still works when each file should be published at its own on-disk spelling. Sources must lie under the working directory, one file per entry. Reference published files by relative path with no leading slash: root-relative paths (\`/x\`) are not served. When you update an existing artifact, files you pass are added or replaced and files you leave out are kept; map a published path to \`null\` to remove it (\`{"old.js": null}\`). Limits: the page and each text file ${MAX_ARTIFACT_BYTES / 1024 / 1024}MB or smaller; each binary file (images, audio, video, wasm, fonts) ${BINARY_FILE_MAX_BYTES / 1024 / 1024}MB or smaller; at most ${RG} \`files\` entries per publish (removals included) and ${MANIFEST_TOTAL_BUDGET / 1024 / 1024}MB total per version; every file must be a standard web media type.
+var FILES_PROMPT_PARAGRAPH = `**Supporting files**: To publish a multi-file artifact (separate CSS/JS/data/images), pass \`files\` as a map of published path \u2192 source file: \`{"app.js": "dist/app.js", "data/points.json": "build/points.json"}\`. The published path (the key) is what the HTML references (\`<script src="app.js">\`); the source (the value) is where the bytes come from on disk \u2014 a path string, or \`{from, contentType}\` when the type can't be inferred from the published extension. Pass \`root\` to resolve all relative sources against one base directory instead of retyping a long build prefix (\`root: "dist"\` + \`{"app.js": "app.js"}\`) \u2014 \`root\` never changes published paths, only where sources are read from. A plain list of paths still works when each file should be published at its own on-disk spelling. Sources must lie under the working directory, one file per entry. Reference published files by relative path with no leading slash: root-relative paths (\`/x\`) are not served. When you update an existing artifact, files you pass are added or replaced and files you leave out are kept; map a published path to \`null\` to remove it (\`{"old.js": null}\`). Limits: the page and each text file ${MAX_ARTIFACT_BYTES / 1024 / 1024}MB or smaller; each binary file (images, audio, video, wasm, fonts) ${BINARY_FILE_MAX_BYTES / 1024 / 1024}MB or smaller; at most ${MAX_PUBLISH_FILES} \`files\` entries per publish (removals included) and ${MANIFEST_TOTAL_BUDGET / 1024 / 1024}MB total per version; every file must be a standard web media type.
 
 `,
   COMMENTS_OFF_SENTENCE =

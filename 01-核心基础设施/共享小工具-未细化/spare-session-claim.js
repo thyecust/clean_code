@@ -12,7 +12,7 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { resetUserData, resetEnvDerivedAuthCaches, resetGrowthBook, resetTrustDialogAcceptedCache, clearProjectPathForConfigCache } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Za, MRt, NRt, uke } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { invalidateAllSettings, isManagedOnlyEnvVar, isProxyEnvVar, isTlsClientCertEnvVar } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Avt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
@@ -79,7 +79,7 @@ async function bootClaimedSpare(e, m) {
   if (e.sessionId) $p(_m(e.sessionId), "spare_claim", null, n);
   else irt(n);
   if (
-    (Za(),
+    (invalidateAllSettings(),
     clearProjectPathForConfigCache(),
     resetTrustDialogAcceptedCache(),
     cOn(),
@@ -88,7 +88,7 @@ async function bootClaimedSpare(e, m) {
     Ie(e.env.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
   ) {
     for (let t of Object.keys(process.env))
-      if (MRt(t) || t === "ANTHROPIC_CUSTOM_HEADERS" || NRt(t) || uke(t))
+      if (isManagedOnlyEnvVar(t) || t === "ANTHROPIC_CUSTOM_HEADERS" || isProxyEnvVar(t) || isTlsClientCertEnvVar(t))
         delete process.env[t];
   }
   (delete process.env.ANTHROPIC_AUTH_TOKEN,

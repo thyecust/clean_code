@@ -30,14 +30,14 @@ import {
   observationStamp,
   observedWithoutSource,
   MANIFEST_TEXT_TYPES,
-  HC,
-  wJ,
+  escapeUnprintableForMessage,
+  validateReadableFilePath,
   rTn,
   audienceViewNote,
   shareAudience,
-  ED,
-  ber,
-  Aoe,
+  readArtifactContent,
+  readArtifactFileByPath,
+  getSafeArtifactReadError,
   isCoworkFramePublishSession,
   othersArtifactReadIsUserOnly,
 } from "./chunk-01ymf0ar.js";
@@ -85,7 +85,7 @@ function Me(t) {
   if (r === void 0) return { errMsg: "its percent-encoding is malformed" };
   if (/%2f/i.test(a))
     return { errMsg: 'a path segment contains an encoded "/"' };
-  let g = wJ(r);
+  let g = validateReadableFilePath(r);
   return "errMsg" in g ? { errMsg: g.errMsg } : { path: g.key };
 }
 function i_r(t, a, r) {
@@ -121,12 +121,12 @@ async function ucn({
     x =
       M === void 0
         ? ""
-        : HC(M).replace(/]/g, "\\u005d").replace(/\[/g, "\\u005b"),
+        : escapeUnprintableForMessage(M).replace(/]/g, "\\u005d").replace(/\[/g, "\\u005b"),
     e,
     l;
-  if (M === void 0) e = await ED(t, I.signal, o.credentials, se);
+  if (M === void 0) e = await readArtifactContent(t, I.signal, o.credentials, se);
   else {
-    let s = await ber(t, M, I.signal, o.credentials, se);
+    let s = await readArtifactFileByPath(t, M, I.signal, o.credentials, se);
     if (((e = s), s.err === null))
       l = {
         contentType: Nv.test(s.contentType)
@@ -136,7 +136,7 @@ async function ucn({
       };
   }
   if (e.err !== null) {
-    let s = Aoe(e);
+    let s = getSafeArtifactReadError(e);
     if (s !== e.err) n(`[artifact] read failed: ${e.err}`);
     if (M !== void 0 && e.missingFile === !0)
       return {

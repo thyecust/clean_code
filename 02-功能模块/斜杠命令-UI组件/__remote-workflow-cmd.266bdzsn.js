@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Uh } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import "../Workflow编排/chunk-bkcg0nbj.js";
 import "../../01-核心基础设施/共享小工具-未细化/nondeterminism-check.js";
 import "../Workflow编排/workflow-script.js";
@@ -40,8 +40,8 @@ var d = async (s, t) => {
   let l,
     r = a.CLAUDE_REMOTE_WORKFLOW_ARGS;
   if (r !== void 0 && r !== "") {
-    if (r.length > Uh)
-      return e("args-too-large", `${REMOTE_WORKFLOW_ARGS_ENV} exceeds ${Uh} bytes.`);
+    if (r.length > MAX_WORKFLOW_SCRIPT_BYTES)
+      return e("args-too-large", `${REMOTE_WORKFLOW_ARGS_ENV} exceeds ${MAX_WORKFLOW_SCRIPT_BYTES} bytes.`);
     try {
       l = JSON.parse(r);
     } catch (n) {

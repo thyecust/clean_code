@@ -11,7 +11,7 @@ import { checkPathPermission, createStructuredPatch, GIT_DIFF_COMMAND_TIMEOUT_MS
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { matchingRuleForInput } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { R8, $z, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { validateUntrustedPath, getUntrustedPathReason, REMOTE_READ_OPEN_FLAGS, bindCanonicalPathToHandle, isCanonicalPathContained, readHandleBounded } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { constants } from "fs";
 import { open as U, realpath } from "fs/promises";
@@ -157,7 +157,7 @@ async function it(t, n) {
       ((e = s), !checkPathPermission(e, n, "read").allowed || matchingRuleForInput(e, n, "read", "ask") !== null)
     )
       return { kind: "restricted" };
-    if ($z(e, n.trustedNetworkDirectories) !== void 0)
+    if (getUntrustedPathReason(e, n.trustedNetworkDirectories) !== void 0)
       return { kind: "restricted" };
     if (!(await isCanonicalPathContained(e, n))) return { kind: "restricted" };
     let a = await readHandleBounded(i, D, r.size);
@@ -178,7 +178,7 @@ async function H(t, n) {
   }
   return (
     i !== void 0 &&
-    $z(i, n.trustedNetworkDirectories) === void 0 &&
+    getUntrustedPathReason(i, n.trustedNetworkDirectories) === void 0 &&
     (await isCanonicalPathContained(i, n))
   );
 }
@@ -351,7 +351,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
   for (let u of f) {
     await new Promise((d) => setImmediate(d));
     let m = z(s, u),
-      y = R8(m, m, n.trustedNetworkDirectories);
+      y = validateUntrustedPath(m, m, n.trustedNetworkDirectories);
     if (!y.ok) {
       S.push(u);
       continue;

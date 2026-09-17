@@ -19,7 +19,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jt, rS, Jse, UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { U5 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { containsEnvVarPlaceholder } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -394,10 +394,10 @@ function Ge(e) {
 }
 function wt(e) {
   let t = e;
-  if (typeof t.url === "string" && U5(t.url)) return !0;
+  if (typeof t.url === "string" && containsEnvVarPlaceholder(t.url)) return !0;
   if (t.headers && typeof t.headers === "object") {
     for (let r of Object.values(t.headers))
-      if (typeof r === "string" && U5(r)) return !0;
+      if (typeof r === "string" && containsEnvVarPlaceholder(r)) return !0;
   }
   return !1;
 }

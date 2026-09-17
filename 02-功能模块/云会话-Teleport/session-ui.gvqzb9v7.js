@@ -14,7 +14,7 @@ import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { Pt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
@@ -69,9 +69,9 @@ function P(oo) {
         marginBottom: 1,
         children: e(t, { bold: !0, children: "Cloud session" }),
       })),
-        (u = Pt()
+        (u = isRemoteActive()
           ? e(t, {
-              children: eE("fanout")
+              children: hasRemoteCapability("fanout")
                 ? "This session's browser link isn't available from this view."
                 : "This session is connected directly and has no browser link \u2014 only sessions started with `claude --cloud` can be opened in the browser.",
             })

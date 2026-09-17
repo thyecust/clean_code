@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 13 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { rtt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { StdioMcpServerSchema } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -93,7 +93,7 @@ async function readClaudeDesktopMcpServers() {
     let r = {};
     for (let [s, c] of Object.entries(e)) {
       if (!c || typeof c !== "object") continue;
-      let f = rtt().safeParse(c);
+      let f = StdioMcpServerSchema().safeParse(c);
       if (f.success) r[s] = f.data;
     }
     return r;

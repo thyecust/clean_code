@@ -20,7 +20,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { getMainLoopModel, BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME, GLOB_TOOL_NAME, GREP_TOOL_NAME, NOTEBOOK_EDIT_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FILE_STATE_MAX_ENTRIES, createFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -43,11 +43,11 @@ import {
   REFUSED_TOOL_INPUT_FIELDS,
   createAssistantMessage,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { MAIN_AGENT_ID } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { kGt } from "../插件系统/chunk-ajtn749s.js";
-import { JHt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { aF } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { pruneSyncedSkillsForClosedGate } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { createBaseAppState } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
 import { createInMemoryArtifactRegistries, NOOP_TEAMMATE_COLORS, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { noopSessionHooksRegistry } from "../../01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js";
@@ -91,7 +91,7 @@ function q(e, m, d, S, a, C = "raw") {
     let r = getHostCapabilityState();
     (r.disableBackgroundTasks(), r.disableUnsandboxedCommands());
   }
-  if ((setDynamicSkillState(createDynamicSkillState()), refreshSkillsSyncVetoed(), Nb())) JHt(a).catch(logError);
+  if ((setDynamicSkillState(createDynamicSkillState()), refreshSkillsSyncVetoed(), Nb())) pruneSyncedSkillsForClosedGate(a).catch(logError);
   if ((kGt(), HW())) prunePluginsForClosedGate().catch(logError);
   let H = createFileStateCache(FILE_STATE_MAX_ENTRIES),
     U = new PerClassInstanceRegistry(),
@@ -139,7 +139,7 @@ function q(e, m, d, S, a, C = "raw") {
               }),
               inputSchema: G(v, [
                 ...(p ? k : []),
-                ...(getToolRemoteExecution(i).supported ? [vo] : []),
+                ...(getToolRemoteExecution(i).supported ? [HOST_FIELD_NAME] : []),
               ]),
               outputSchema: void 0,
             };
@@ -179,15 +179,15 @@ function q(e, m, d, S, a, C = "raw") {
               verbose: m,
               agentDefinitions: { activeAgents: [], allAgents: [] },
             },
-            getAppState: () => aF(),
+            getAppState: () => createBaseAppState(),
             setAppState: () => {},
             markPrResolvedThisSession: () => {},
             isUltrareviewOverageConfirmed: () => !1,
             markUltrareviewOverageConfirmed: () => {},
-            getAdvisorSetting: () => aF().advisorModel,
-            getMcp: () => aF().mcp,
-            getProactivityLevel: () => aF().proactivityLevel,
-            getWebBrowser: () => aF().webBrowser,
+            getAdvisorSetting: () => createBaseAppState().advisorModel,
+            getMcp: () => createBaseAppState().mcp,
+            getProactivityLevel: () => createBaseAppState().proactivityLevel,
+            getWebBrowser: () => createBaseAppState().webBrowser,
             setToolPermissionContext: () => {},
             setSessionToolPermissionContext: () => {},
             taskRegistry: noopTaskRegistry,
@@ -195,7 +195,7 @@ function q(e, m, d, S, a, C = "raw") {
             sessionHooksRegistry: noopSessionHooksRegistry,
             setWebBrowserSlice: () => {},
             setArtifactReadVersion: () => {},
-            getArtifactReadObservation: artifactReadObservationIn(aF),
+            getArtifactReadObservation: artifactReadObservationIn(createBaseAppState),
             artifactRegistries: createInMemoryArtifactRegistries(),
             setArtifactContractTarget: () => {},
             getArtifactContractTarget: () => ({ targetSlug: void 0, pins: {} }),
@@ -288,7 +288,7 @@ ${t}`;
           }
           return { isError: !0, content: [{ type: "text", text: c }] };
         } finally {
-          F.get(CC).release(Cj);
+          F.get(CC).release(MAIN_AGENT_ID);
         }
       },
     ),

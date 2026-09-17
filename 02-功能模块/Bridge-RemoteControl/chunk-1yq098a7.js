@@ -21,7 +21,7 @@ import { enqueueSdkEvent, isCloudEnvironmentSession, normalizePlainName, collect
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { describeAxiosError } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 function GY(e) {
   for (let t of [e?.request_id, e?.suppressed_request_id])
     if (typeof t === "string" && t.length > 0) return t;
@@ -563,7 +563,7 @@ function qNe(e, t, i) {
     return s(i);
   } catch (r) {
     n(
-      `[agents:cloud] warm unreachable lookup failed (${BU(l(r))}) \u2014 treating as not known unreachable`,
+      `[agents:cloud] warm unreachable lookup failed (${normalizeSingleLineText(l(r))}) \u2014 treating as not known unreachable`,
       { level: "warn" },
     );
     return;
@@ -582,7 +582,7 @@ function $re(e, t, i) {
     return `Not sent: '${i}' ${l7e} \u2014 its Claude would never see the message. That session is set not to accept cross-session messages (the feature is off on its platform, or a setting or policy there refuses them); reach that machine another way, or ask its user to enable it (listings refresh within a few minutes \u2014 re-run ListAgents after they do).`;
   } catch (r) {
     n(
-      `[agents:cloud] warm cannot-receive lookup failed (${BU(l(r))}) \u2014 treating as unknown`,
+      `[agents:cloud] warm cannot-receive lookup failed (${normalizeSingleLineText(l(r))}) \u2014 treating as unknown`,
       { level: "warn" },
     );
     return;
@@ -601,7 +601,7 @@ function abt(e, t) {
   } catch (i) {
     return (
       n(
-        `[agents:cloud] warm inbound-report lookup failed (${BU(l(i))}) \u2014 treating as unreported`,
+        `[agents:cloud] warm inbound-report lookup failed (${normalizeSingleLineText(l(i))}) \u2014 treating as unreported`,
         { level: "warn" },
       ),
       !0

@@ -15,7 +15,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { describeSettingsSourceShort } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { isSelfHostedPool, getEnvironmentOrPoolId, getDefaultRemoteEnvironment } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -137,7 +137,7 @@ function fe(fn) {
         let j = getDefaultRemoteEnvironment();
         let Tn =
           j.id !== void 0 && j.id !== getEnvironmentOrPoolId(L) && j.source !== void 0
-            ? ` \u2014 note: ${ay(j.source)} settings pin ${j.id}, which takes precedence here`
+            ? ` \u2014 note: ${describeSettingsSourceShort(j.source)} settings pin ${j.id}, which takes precedence here`
             : "";
         i(`Set default ${Nn} to ${chalk.bold(L.name)} (${getEnvironmentOrPoolId(L)})${Tn}`);
       });
@@ -205,7 +205,7 @@ function fe(fn) {
             C.id,
             " ",
             "from ",
-            ay(C.source),
+            describeSettingsSourceShort(C.source),
             " settings \u2014 self-hosted placement is only honoured from user/policy/flag settings)",
           ],
         })),
@@ -290,7 +290,7 @@ function me(Pn) {
     } = Pn,
     We;
   if (g[0] !== y)
-    ((We = y && y !== "userSettings" ? ` (from ${ay(y)} settings)` : ""),
+    ((We = y && y !== "userSettings" ? ` (from ${describeSettingsSourceShort(y)} settings)` : ""),
       (g[0] = y),
       (g[1] = We));
   else We = g[1];
@@ -363,7 +363,7 @@ function me(Pn) {
           z.id,
           " ",
           "from ",
-          ay(z.source),
+          describeSettingsSourceShort(z.source),
           " settings \u2014 self-hosted placement is only honoured from user/policy/flag settings)",
         ],
       })),

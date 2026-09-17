@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { pke, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { hasPluginSource, isConnectedMcpServer } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
@@ -52,10 +52,10 @@ function z(s) {
 }
 function _(s) {
   if (s.type !== "claudeai-proxy") return !1;
-  return s.scope === "claudeai" || (s.scope === "dynamic" && !pke(s));
+  return s.scope === "claudeai" || (s.scope === "dynamic" && !hasPluginSource(s));
 }
 function H(s) {
-  return ts(s) && _(s.config);
+  return isConnectedMcpServer(s) && _(s.config);
 }
 function G(s) {
   let t = [];
@@ -485,7 +485,7 @@ function registerScheduleRemoteAgentsSkill() {
       for (let e of t.options.mcpClients)
         if (
           (_(e.config) &&
-            (ts(e) ||
+            (isConnectedMcpServer(e) ||
               ((e.type === "failed" || e.type === "pending") &&
                 e.config.scope === "claudeai"))) ||
           C.has(e.name)

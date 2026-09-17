@@ -21,7 +21,7 @@ import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Lq, qge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { McpServerConfigSchema, formatServerDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getLocalSettingsValidationErrors, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
@@ -57,7 +57,7 @@ import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import { McpConfigDiagnostics } from "./mcp-config-diagnostics.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
-import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { awaitMcpPolicyColdStart, redactManagedMcpConfig, collectProjectMcpServerNames } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { printCliError, cliError, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { formatMcpConnectionError } from "./mcp-error-messages.js";
@@ -473,7 +473,7 @@ async function mcpRemoveHandler(h, s, v, a) {
       if (j) b.push("project");
       if (C.mcpServers?.[s]) b.push("user");
       if (b.length === 0) {
-        await V0({ hasDynamicMcpConfig: !1 });
+        await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !1 });
         let c = getSettingsMcpConfigByName(s)?.scope;
         if (c && isOrganizationProvidedMcpScope(c))
           return cliErrorAfterAnalyticsFlush(
@@ -559,7 +559,7 @@ function Be(h) {
         continue;
       }
       let i = B1(y);
-      v[a] = "url" in i ? Fz(i, y.scope) : i;
+      v[a] = "url" in i ? redactManagedMcpConfig(i, y.scope) : i;
     } else v[a] = B1(f);
   return v;
 }
@@ -603,7 +603,7 @@ var Le = "\u23F8 Pending approval (run `claude` to approve)",
   pt = `${figures.cross} Rejected (see disabledMcpjsonServers in settings)`,
   Ue = "\u2298 Disabled for this project (re-enable via /mcp)";
 async function mcpListHandler(h, s, v) {
-  (await logEventAsync("tengu_mcp_list", {}), await V0({ hasDynamicMcpConfig: !1 }));
+  (await logEventAsync("tengu_mcp_list", {}), await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !1 }));
   let { servers: a, pendingProjectServers: f } = await getAllMcpConfigs({
     includePendingProjectServers: !0,
     storageV5: s,
@@ -667,7 +667,7 @@ async function mcpListHandler(h, s, v) {
 }
 async function mcpGetHandler(h, s, v, a) {
   (await logEventAsync("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, shouldSendMcpServerTelemetry(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
-    await V0({ hasDynamicMcpConfig: !1 }));
+    await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !1 }));
   let {
       servers: f,
       pendingProjectServers: m,
@@ -783,7 +783,7 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
         ? await Z().readClientSecret()
         : void 0;
     await addMcpConfig(s, i, m, f);
-    let g = Lq().safeParse(i);
+    let g = McpServerConfigSchema().safeParse(i);
     if (
       ((y = (g.success ? g.data.type : void 0) ?? "stdio"),
       M &&
@@ -936,8 +936,8 @@ async function mcpResetChoicesHandler(h, s) {
           serverNames: i,
           pluginServerNames: k,
           rootServers: M,
-        } = await cJt(s),
-        g = (b) => qge(b, k.has(b)),
+        } = await collectProjectMcpServerNames(s),
+        g = (b) => formatServerDisplayName(b, k.has(b)),
         C = [],
         O = [],
         j = 0;

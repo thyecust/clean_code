@@ -31,14 +31,14 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { ENVIRONMENTS_BETA, readBoundedFile, sanitizeSessionName, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { redactGitRemoteCredentials } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { ea, Za, Nr, PBe, rc, ctt, Vge, x8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy, invalidateAllSettings, isSettingsSourceEnabled, PROJECT_LOCAL_SETTINGS_SOURCES, buildMcpToolName, collectMcpToolPermissionRules, HOST_PROFILE_LEVELS, REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   drainRegisteredWriteQueues,
-  PU,
-  Rge,
-  S0,
-  vet,
-  oRt,
+  getMdmSettings,
+  getHkcuSettings,
+  getWslInheritsWindowsSettings,
+  replaceMdmSettings,
+  loadMdmSettingsFromOs,
   getSettingsParseErrorsForSource,
   getSettingsForSource,
   getAllPolicyTierSettings,
@@ -462,8 +462,8 @@ function dr(e, t = Eq) {
         }),
     });
   }
-  let { allow: d } = ctt({ [t]: { type: "http", tools: o } }),
-    p = rc(t, "");
+  let { allow: d } = collectMcpToolPermissionRules({ [t]: { type: "http", tools: o } }),
+    p = buildMcpToolName(t, "");
   return d.map((r) => (r.startsWith(p) ? r.slice(p.length) : r));
 }
 import { spawn } from "child_process";
@@ -884,7 +884,7 @@ function ln(e, t) {
     };
   let _ =
     r.autoAllowTools.length > 0
-      ? [`--allowedTools=${r.autoAllowTools.map((T) => rc(Eq, T)).join(",")}`]
+      ? [`--allowedTools=${r.autoAllowTools.map((T) => buildMcpToolName(Eq, T)).join(",")}`]
       : [];
   return {
     extraArgs: [...o, ..._],
@@ -922,7 +922,7 @@ function wr(e) {
 }
 function _r(e) {
   if (!e) return [];
-  let t = ea(e, (o, d) => fr.has(d));
+  let t = pickBy(e, (o, d) => fr.has(d));
   return wr(t).extraArgs;
 }
 function cn(e, t) {
@@ -1596,7 +1596,7 @@ var yn = 1500,
   On = createLazyValue(() => c({ cuda: c({ version: s() }) }));
 function Pr() {
   let e = getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_host_profile", "off");
-  return Vge.find((t) => t === e) ?? "off";
+  return HOST_PROFILE_LEVELS.find((t) => t === e) ?? "off";
 }
 function er(e) {
   if (xn()) return "off";
@@ -1607,22 +1607,22 @@ function er(e) {
       getSettingsForSource("flagSettings"),
       getSettingsForSource("userSettings"),
     ].map(t),
-    d = Vge.find((r) => o.includes(r)) ?? e,
-    p = [d, ...PBe.filter(Nr).map((r) => t(getSettingsForSource(r)))];
-  return Vge.find((r) => p.includes(r)) ?? d;
+    d = HOST_PROFILE_LEVELS.find((r) => o.includes(r)) ?? e,
+    p = [d, ...PROJECT_LOCAL_SETTINGS_SOURCES.filter(isSettingsSourceEnabled).map((r) => t(getSettingsForSource(r)))];
+  return HOST_PROFILE_LEVELS.find((r) => p.includes(r)) ?? d;
 }
 function xn() {
   return [
     ...getPolicySettingsLoadErrors(),
     ...getSettingsParseErrorsForSource("flagSettings"),
     ...getSettingsParseErrorsForSource("userSettings"),
-    ...PBe.filter(Nr).flatMap((t) => getSettingsParseErrorsForSource(t)),
+    ...PROJECT_LOCAL_SETTINGS_SOURCES.filter(isSettingsSourceEnabled).flatMap((t) => getSettingsParseErrorsForSource(t)),
   ].some((t) => {
     if (t.path === "") return !0;
     if (t.statusOnly) return !1;
     if (t.severity !== "warning") return !0;
     return (
-      t.path === x8t ||
+      t.path === REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY ||
       t.path === "remoteControl" ||
       t.path.startsWith("remoteControl.")
     );
@@ -1633,18 +1633,18 @@ async function Ar(e) {
   try {
     let t = Pr();
     if (t === "off") return;
-    let o = await oRt();
-    Za();
+    let o = await loadMdmSettingsFromOs();
+    invalidateAllSettings();
     let d = er(t),
-      p = { mdm: PU(), hkcu: Rge(), wslInherits: S0() },
+      p = { mdm: getMdmSettings(), hkcu: getHkcuSettings(), wslInherits: getWslInheritsWindowsSettings() },
       r;
-    vet(o.mdm, o.hkcu, o.wslInherits);
+    replaceMdmSettings(o.mdm, o.hkcu, o.wslInherits);
     try {
-      (Za(), (r = er(t)));
+      (invalidateAllSettings(), (r = er(t)));
     } finally {
-      (vet(p.mdm, p.hkcu, p.wslInherits), Za());
+      (replaceMdmSettings(p.mdm, p.hkcu, p.wslInherits), invalidateAllSettings());
     }
-    let C = Vge.find((w) => w === d || w === r) ?? "off";
+    let C = HOST_PROFILE_LEVELS.find((w) => w === d || w === r) ?? "off";
     if (C === "off") return;
     if (C === "basic" && e.mcp_servers !== void 0) {
       let { mcp_servers: w, ..._ } = e;

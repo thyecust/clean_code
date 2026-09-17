@@ -29,9 +29,9 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { BASH_TOOL_NAME, EDIT_TOOL_NAME, READ_TOOL_NAME, WRITE_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { vo, kD, DC, IT } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME, getDefaultMachineName, isReservedMachineName, sanitizeMachineName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Slt, hIe, yIe, o2n, s2n } from "./chunk-66axrkvh.js";
 import { stageDirSyncNotice } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
@@ -39,10 +39,10 @@ import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/�
 import { s, T, O, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function _It({ requested: e, attached: t }) {
-  let r = IT(e),
+  let r = sanitizeMachineName(e),
     o = e.trim().replace(/\s+\(offline\)$/i, "");
-  if (DC(o.toLowerCase()) && !DC(e))
-    return `No machine named "${r}" is attached to this session \u2014 to run this in the session's own environment, omit "${vo}".`;
+  if (isReservedMachineName(o.toLowerCase()) && !isReservedMachineName(e))
+    return `No machine named "${r}" is attached to this session \u2014 to run this in the session's own environment, omit "${HOST_FIELD_NAME}".`;
   let d = t.find((p) => p.replace(/ \(offline\)$/, "") === o.toLowerCase()),
     a = d?.replace(/ \(offline\)$/, "");
   if (a !== void 0 && a !== e) {
@@ -74,7 +74,7 @@ function vQt({ name: e, announced: t, runsOnlyThere: r }) {
           : "this session's Claude Code is the older of the two: a newer cloud environment is needed, not a change on the machine",
     g =
       r === void 0
-        ? `Omit "${vo}" to run it ${te()} instead.`
+        ? `Omit "${HOST_FIELD_NAME}" to run it ${te()} instead.`
         : `${r} exists only on ${e}, so it cannot run from this session until then.`;
   return `${e} is attached but the two Claude Code builds share no remote-tool protocol version (${a}); the call did not run; ${f}. ${g}`;
 }
@@ -82,12 +82,12 @@ function RQt() {
   return "The attached machine could not be reached through the device bridge right now; the call did not run. Try again shortly.";
 }
 function HFn(e) {
-  return `The attached machine's tools could not be read yet \u2014 it may still be connecting (or serving is switched off on it, or its announcement could not be verified by this session), so "${IT(e)}" cannot be matched right now; the call did not run. Try again in a few seconds.`;
+  return `The attached machine's tools could not be read yet \u2014 it may still be connecting (or serving is switched off on it, or its announcement could not be verified by this session), so "${sanitizeMachineName(e)}" cannot be matched right now; the call did not run. Try again in a few seconds.`;
 }
 function Y(e, t) {
   return t
-    ? `for the Claude Code on "${IT(e)}" to re-announce its tools after this session's environment restarted`
-    : `for "${IT(e)}", which could not be reached through the device bridge and whose Claude Code did not announce tools to this session`;
+    ? `for the Claude Code on "${sanitizeMachineName(e)}" to re-announce its tools after this session's environment restarted`
+    : `for "${sanitizeMachineName(e)}", which could not be reached through the device bridge and whose Claude Code did not announce tools to this session`;
 }
 var L =
   "it may be asleep, offline, not running, serving may be switched off on it, or its announcement could not be verified by this session";
@@ -98,7 +98,7 @@ function PFn(e, t, r = !0) {
   return `This session already waited ${Math.round(t / 1000)} s earlier ${Y(e, r)}, and it still has not \u2014 ${L}. Nothing was sent. Ask the user to check Claude Code on their machine.`;
 }
 function OFn(e) {
-  return `The attached machine's Claude Code last announced that it serves no tools to this session (it withdrew them, or serving is switched off on it), so "${IT(e)}" cannot run anything right now; nothing was sent. Ask the user to check Claude Code on their machine.`;
+  return `The attached machine's Claude Code last announced that it serves no tools to this session (it withdrew them, or serving is switched off on it), so "${sanitizeMachineName(e)}" cannot run anything right now; nothing was sent. Ask the user to check Claude Code on their machine.`;
 }
 function DFn() {
   return `A machine is bound to this session but its Claude Code has not connected \u2014 ${L}; the call did not run. Ask the user to check Claude Code on their machine.`;
@@ -116,14 +116,14 @@ function SIt({ name: e, toolName: t }) {
   return `${e} does not serve ${t} right now (its MCP server may have disconnected there); nothing ran.`;
 }
 function MFn({ name: e, toolName: t }) {
-  return `${t} runs only on ${e}; omit "${vo}".`;
+  return `${t} runs only on ${e}; omit "${HOST_FIELD_NAME}".`;
 }
 function NFn({ name: e, toolName: t, served: r }) {
   let o =
     r.length === 0
       ? ""
       : ` \u2014 or do it on ${e} through a tool it does serve there (${r.join(", ")})`;
-  return `${e} does not serve ${t} right now (its Claude Code may be an older version); omit "${vo}" to run it ${te()}${o}.`;
+  return `${e} does not serve ${t} right now (its Claude Code may be an older version); omit "${HOST_FIELD_NAME}" to run it ${te()}${o}.`;
 }
 function Gst({ name: e, ruleMessage: t }) {
   return `${t} ${e} was not contacted.`;
@@ -243,20 +243,20 @@ function CIt({ name: e, detail: t }) {
   return `The call to ${e} failed in transit (${F(t, P)}); it may not have run.`;
 }
 function G6e({ name: e, message: t }) {
-  return `[refused by ${IT(e)}] ${F(t, P)}`;
+  return `[refused by ${sanitizeMachineName(e)}] ${F(t, P)}`;
 }
 function ee({ name: e, message: t }) {
-  return `[refused \u2014 did not run on ${IT(e)}] ${F(t, P)}`;
+  return `[refused \u2014 did not run on ${sanitizeMachineName(e)}] ${F(t, P)}`;
 }
 function ne({ name: e, message: t }) {
-  return `[failed on ${IT(e)}] ${F(t, P)}`;
+  return `[failed on ${sanitizeMachineName(e)}] ${F(t, P)}`;
 }
 var we = 256,
   P = 8192;
 function HQt(e, t) {
   let r =
     e.working_dir === "" ? "unknown directory" : _e(IQt(e.working_dir, t), we);
-  return `[ran on ${IT(e.name)} \xB7 ${r}]`;
+  return `[ran on ${sanitizeMachineName(e.name)} \xB7 ${r}]`;
 }
 function IQt(e, t) {
   let r = t?.replace(/[\\/]$/, "");
@@ -284,7 +284,7 @@ function K(e) {
   return (e / 1048576).toFixed(2);
 }
 function te() {
-  return kD() === "container" ? "in the container" : "on this machine";
+  return getDefaultMachineName() === "container" ? "in the container" : "on this machine";
 }
 function N(e) {
   return `The approval for this call could not be verified as the user's own answer, so ${e} did not run it and nothing ran (its earlier permission request for this call may stay open there; that is harmless). To proceed, send the call again and have the user approve from the terminal or desktop prompt, unedited.`;
@@ -666,7 +666,7 @@ function Pe(e, t, r) {
     return { output: void 0, hostLocal: a };
   let f = o2n.get(e.name);
   if (f === void 0) return { output: void 0, hostLocal: a };
-  let g = ea(o, (_, w) => f.has(w)),
+  let g = pickBy(o, (_, w) => f.has(w)),
     p =
       e.name === BASH_TOOL_NAME
         ? g
@@ -1018,9 +1018,9 @@ async function en(e, t) {
         : f?.kind === "failed" && f.reason === "abandoned"
           ? `Directory sync: ${o.name} gave up sending what the last command run there changed; files it changed there reach this session with the user's next message.`
           : f?.kind === "not_seen"
-            ? `Directory sync: ${o.name} says it sent what the last command run there changed, but it has not reached this session yet; it is taken in when it lands \u2014 until then, read those files on ${o.name} (the ${vo} argument).`
+            ? `Directory sync: ${o.name} says it sent what the last command run there changed, but it has not reached this session yet; it is taken in when it lands \u2014 until then, read those files on ${o.name} (the ${HOST_FIELD_NAME} argument).`
             : f?.kind === "failed"
-              ? `Directory sync: what the last command run on ${o.name} changed there could not be taken in here just now; it is taken in when it lands \u2014 until then, read those files on ${o.name} (the ${vo} argument).`
+              ? `Directory sync: what the last command run on ${o.name} changed there could not be taken in here just now; it is taken in when it lands \u2014 until then, read those files on ${o.name} (the ${HOST_FIELD_NAME} argument).`
               : null;
     if (
       (logEvent("tengu_dir_sync_mid_turn", {
@@ -1669,8 +1669,8 @@ async function FQt({
         _(
           void 0,
           y.kind === "sent"
-            ? `Directory sync: ${f} sent what that command changed, but those files are written here only after this task hands back to the main conversation \u2014 to read them now, read them on ${f} (the ${vo} argument).`
-            : `Directory sync: ${f}'s earlier changes are not all here yet and are written here only after this task hands back to the main conversation \u2014 to read them now, read them on ${f} (the ${vo} argument).`,
+            ? `Directory sync: ${f} sent what that command changed, but those files are written here only after this task hands back to the main conversation \u2014 to read them now, read them on ${f} (the ${HOST_FIELD_NAME} argument).`
+            : `Directory sync: ${f}'s earlier changes are not all here yet and are written here only after this task hands back to the main conversation \u2014 to read them now, read them on ${f} (the ${HOST_FIELD_NAME} argument).`,
         )
       );
     let M = d
@@ -1752,12 +1752,12 @@ function vn(e, t) {
     case "nothing_new":
       return null;
     case "not_seen":
-      return `${t} says it sent what that command changed, but it has not reached this session yet; it is taken in when it lands \u2014 until then, read those files on ${t} (the ${vo} argument).`;
+      return `${t} says it sent what that command changed, but it has not reached this session yet; it is taken in when it lands \u2014 until then, read those files on ${t} (the ${HOST_FIELD_NAME} argument).`;
     case "failed":
-      return `what that command changed on ${t} could not be taken in here just now (${e.reason.replace(/_/g, " ")}); it is taken in when it lands \u2014 until then, read those files on ${t} (the ${vo} argument).`;
+      return `what that command changed on ${t} could not be taken in here just now (${e.reason.replace(/_/g, " ")}); it is taken in when it lands \u2014 until then, read those files on ${t} (the ${HOST_FIELD_NAME} argument).`;
     case "skipped":
     case "unsupported":
-      return `what that command changed on ${t} is not taken in here (${e.kind === "skipped" ? e.reason.replace(/_/g, " ") : "this build cannot read what it sends"}); read those files on ${t} (the ${vo} argument).`;
+      return `what that command changed on ${t} is not taken in here (${e.kind === "skipped" ? e.reason.replace(/_/g, " ") : "this build cannot read what it sends"}); read those files on ${t} (the ${HOST_FIELD_NAME} argument).`;
   }
 }
 export {

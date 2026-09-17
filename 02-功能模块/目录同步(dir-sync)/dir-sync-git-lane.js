@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { The } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { CLOUD_SNAPSHOTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import {
   SEED_LAPTOP_JOURNAL_PATH,
@@ -29,7 +29,7 @@ var R = "side.git",
   m = /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/,
   g = /^[a-z][a-z0-9-]{0,31}(?:\/[a-z0-9][a-z0-9_-]{0,63})?$/;
 function getSideGitDirPath(o) {
-  return p(o, The, R);
+  return p(o, CLOUD_SNAPSHOTS_DIR_NAME, R);
 }
 function buildSessionRefName(o, a) {
   let e = `${CLAUDE_REF_PREFIX}${o}/${a}`;

@@ -27,7 +27,7 @@ import { clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(F
 import { SHA256_HEX_REGEX, hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { CK } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { HOST_FIELD_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   createConcurrencyLimiter,
   isSignalAborted,
@@ -112,7 +112,7 @@ import { DEFAULT_BEFORE_TURN_CAP_MS, getDirSyncWorkerSessionFile, announceDirSyn
 import { buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { escapeMarkupText, escapePromptText, escapeMarkupAttribute } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { dirname as vu, join as Cr } from "path";
@@ -472,7 +472,7 @@ async function Gr(e, t, r, o = Fr) {
 }
 async function to(e) {
   try {
-    let t = await Ea(e, Ha());
+    let t = await Ea(e, getSafeReadOpenFlags());
     try {
       return (await t.stat()).isFile();
     } finally {
@@ -5374,7 +5374,7 @@ function Fs(e, t, r, o) {
       o === null || o.count === 0
         ? ""
         : ` These files had changed here and had NOT reached the user's machine when sync ended: ${o.names.map(Tr).join(", ")}${o.count > o.names.length ? ` and ${o.count - o.names.length} more` : ""}${w}.`;
-  return `Directory sync has STOPPED for this session and will not resume in it \u2014 the user's machine reported: "${gi(t)}". So that you and the user never work on two different versions of the project, ${d} Nothing was changed on the user's machine \u2014 it has all of the user's files and everything of yours that reached it. From now on the project's files live ONLY on the user's machine: run commands there and read, edit and write files there by adding "${vo}": "<that machine>" to Bash, Read, Edit and Write calls (the attached-machines note names the machine and its project directory; use absolute paths there); use this environment only for scratch work that needs none of the project's files, do not recreate project files here, and stop any background command you started here that uses the project. If that machine is not reachable for tools, tell the user plainly that you cannot reach their files until it reconnects.${_} Tell the user in one or two sentences that file sync stopped and why, and that you are continuing directly on their machine.`;
+  return `Directory sync has STOPPED for this session and will not resume in it \u2014 the user's machine reported: "${gi(t)}". So that you and the user never work on two different versions of the project, ${d} Nothing was changed on the user's machine \u2014 it has all of the user's files and everything of yours that reached it. From now on the project's files live ONLY on the user's machine: run commands there and read, edit and write files there by adding "${HOST_FIELD_NAME}": "<that machine>" to Bash, Read, Edit and Write calls (the attached-machines note names the machine and its project directory; use absolute paths there); use this environment only for scratch work that needs none of the project's files, do not recreate project files here, and stop any background command you started here that uses the project. If that machine is not reachable for tools, tell the user plainly that you cannot reach their files until it reconnects.${_} Tell the user in one or two sentences that file sync stopped and why, and that you are continuing directly on their machine.`;
 }
 function Kd(e) {
   return `# File sync stopped for this session
@@ -5666,7 +5666,7 @@ function Js({
               ? "this environment was recreated empty and the user's machine only sends changes on top of what the earlier one had"
               : `git could not write the checkout (${p.step})`;
     (r.notify(
-      `Directory sync is OFF for this session and the working directory does NOT hold the user's files: ${C}. Tell the user plainly; their terminal is being told too, and it ends the session's file sync there. The project's files live only on the user's machine: if it is attached for tools (the attached-machines note names it and its project directory), run commands and read, edit and write files there by adding "${vo}": "<that machine>" to Bash, Read, Edit and Write calls; do not recreate project files here. If that machine is not reachable for tools, say that you cannot reach their files from this session.`,
+      `Directory sync is OFF for this session and the working directory does NOT hold the user's files: ${C}. Tell the user plainly; their terminal is being told too, and it ends the session's file sync there. The project's files live only on the user's machine: if it is attached for tools (the attached-machines note names it and its project directory), run commands and read, edit and write files there by adding "${HOST_FIELD_NAME}": "<that machine>" to Bash, Read, Edit and Write calls; do not recreate project files here. If that machine is not reachable for tools, say that you cannot reach their files from this session.`,
     ),
       (qt = xs(
         p.reason === "directory_not_empty"

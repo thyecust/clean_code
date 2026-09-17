@@ -12,7 +12,7 @@ import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { An, ac, li, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { NP, ynt, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { readFileHardened, isNotFoundError, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { b, z, Is, Ro, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
@@ -26,12 +26,12 @@ import { getFileStorage } from "../../01-核心基础设施/共享小工具-未�
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { streamRipgrepSearch, runRipgrepSearch, DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, getPermissionRuleLabel, isPathWithinDir, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { n_, jq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_SETTINGS_FILE_BYTES, SETTINGS_FILENAMES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { BASH_TOOL_NAME, READ_TOOL_NAME, POWERSHELL_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { wTt, nb, findCommandNode, extractCommandArguments, zCe, tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { extractGitConfigRemoteUrls, getBashParserModule, findCommandNode, extractCommandArguments, shouldClassifyAllShellCommands, isDangerousRuleCached } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gF } from "../Git-Worktree/chunk-33y3h2sy.js";
@@ -148,7 +148,7 @@ async function Lt(e) {
     u = !1,
     h = new AbortController(),
     _ = async () => {
-      let w = await Be.realpath(r).catch((D) => (ynt(D) ? r : null));
+      let w = await Be.realpath(r).catch((D) => (isNotFoundError(D) ? r : null));
       if (w === null) {
         p = "home-unreadable";
         return;
@@ -220,7 +220,7 @@ async function Gn(e, t, r, o, s, l = null) {
   let i = e;
   if (t) {
     if (s(e)) return { remotes: [] };
-    let p = await NP(e, xt, { noFollow: !0, requireNlink1: !0 }),
+    let p = await readFileHardened(e, xt, { noFollow: !0, requireNlink1: !0 }),
       u = p === null ? null : Vn(p);
     if (u === null || jt(u, dirname(e))) return null;
     if (((i = ct(dirname(e), u)), !ut(i, r, o)))
@@ -229,7 +229,7 @@ async function Gn(e, t, r, o, s, l = null) {
     let h = await Ot(i, r, o, s);
     if (h === "missing") return null;
     if (h === "refused") return { remotes: [] };
-    let _ = await NP(He(i, "commondir"), xt, {
+    let _ = await readFileHardened(He(i, "commondir"), xt, {
       noFollow: !0,
       requireNlink1: !0,
     });
@@ -247,16 +247,16 @@ async function Gn(e, t, r, o, s, l = null) {
   }
   let d = He(i, "config");
   if (s(i) || s(d)) return { remotes: [] };
-  let m = await NP(d, Hn, { noFollow: !0, requireNlink1: !0 });
+  let m = await readFileHardened(d, Hn, { noFollow: !0, requireNlink1: !0 });
   if (m === null) return t ? null : { remotes: [] };
   let c = Wn(m, l);
-  if (c.length === 0 && wTt(m).length === 0)
+  if (c.length === 0 && extractGitConfigRemoteUrls(m).length === 0)
     return { remotes: c, note: "no-remote" };
   return { remotes: c };
 }
 function Wn(e, t = null) {
   let r = [];
-  for (let o of wTt(e)) {
+  for (let o of extractGitConfigRemoteUrls(e)) {
     let s = Ue(o, t);
     if (s !== null && !r.includes(s)) {
       if ((r.push(s), r.length >= In)) break;
@@ -928,7 +928,7 @@ var fr = 4000,
   mr = 20;
 function pr(e) {
   if (e.length === 0 || e.length > fr) return [];
-  let t = nb()?.parse(e, mr);
+  let t = getBashParserModule()?.parse(e, mr);
   if (!t) return [];
   let r = findCommandNode(t, null);
   return r === null ? [] : extractCommandArguments(r);
@@ -1127,7 +1127,7 @@ async function xe(e, t, r = ye) {
     d = Ar(i, l.resolvedPath);
   if (d === "" || d.startsWith("..") || Sr(d)) return null;
   if (l.resolvedPath !== L(i, t)) return null;
-  return NP(l.resolvedPath, r, { noFollow: !0 });
+  return readFileHardened(l.resolvedPath, r, { noFollow: !0 });
 }
 var Et = 256;
 function hn(e, t = B) {
@@ -1537,7 +1537,7 @@ async function Lr(e, t) {
 }
 function nn(e) {
   let { toolName: t, ruleContent: r } = parsePermissionRule(e);
-  return tJe(t, r);
+  return isDangerousRuleCached(t, r);
 }
 function wn(e) {
   let t = {};
@@ -1587,7 +1587,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
 Present but SKIPPED: failed the indirection gate (requires a regular non-symlink file with link count 1 inside a real .claude directory). Tell the user; do not read or rewrite this file.`
     );
   if (i.size > 1e6) return s("oversized");
-  let d = await NP(r, 1e6, { noFollow: !0, requireNlink1: !0 });
+  let d = await readFileHardened(r, 1e6, { noFollow: !0, requireNlink1: !0 });
   if (d == null) return s("unreadable");
   let m;
   try {
@@ -1626,7 +1626,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getCl
     c = await gn(
       t,
       1e6,
-      r !== void 0 && bt(t) === bt(L(getClaudeConfigDir(), jq.default))
+      r !== void 0 && bt(t) === bt(L(getClaudeConfigDir(), SETTINGS_FILENAMES.default))
         ? { backend: r, key: STORAGE_KEYS.userSettings() }
         : void 0,
     );
@@ -1656,7 +1656,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getCl
     }
   }
   let p = await Ir(e),
-    u = zCe()
+    u = shouldClassifyAllShellCommands()
       ? `
 _Note: classifyAllShell is active, so at runtime auto mode ignores every Bash/PowerShell allow rule \u2014 a superset of the entries flagged here, including any shell entries in the destructive list; outside auto mode all of these rules still apply._`
       : "",
@@ -1894,7 +1894,7 @@ async function Kr(e, t, r) {
     l = new Set(),
     i = !1,
     d = performance.now() + _t(e.platform) - 50,
-    m = await M.realpath(e.homeDir).catch((p) => (ynt(p) ? e.homeDir : null));
+    m = await M.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
   if (m === null) return { words: [], filesRead: [], partial: !0 };
   if (ece(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
   let c = (p) => isFileReadDenied(p, t);
@@ -1907,7 +1907,7 @@ async function Kr(e, t, r) {
       i = !0;
       continue;
     }
-    let u = await M.realpath(p.path).catch((v) => (ynt(v) ? p.path : null));
+    let u = await M.realpath(p.path).catch((v) => (isNotFoundError(v) ? p.path : null));
     if (u === null) {
       i = !0;
       continue;
@@ -1922,7 +1922,7 @@ async function Kr(e, t, r) {
       i = !0;
       break;
     }
-    let _ = await NP(p.path, Qt, {
+    let _ = await readFileHardened(p.path, Qt, {
       fromTail: !0,
       sniffEncoding: p.format === "psreadline",
       requireNlink1: !0,
@@ -2207,7 +2207,7 @@ async function an(
         continue;
       }
       let de = await Promise.race([
-        NP(ue, o.perFileCap, {
+        readFileHardened(ue, o.perFileCap, {
           fromTail: !0,
           noFollow: !0,
           requireNlink1: !0,
@@ -2629,7 +2629,7 @@ ${t(e.soft_deny).map((r) => `- ${r}`).join(`
 var zlt = ["allow", "soft_deny", "hard_deny"],
   m7 = 200,
   SSe = 1e4,
-  oo = n_ / 4,
+  oo = MAX_SETTINGS_FILE_BYTES / 4,
   so = 200,
   io = 50000;
 class bSe extends Error {
@@ -2746,7 +2746,7 @@ async function ao(e, t) {
           let X = Buffer.byteLength(b(U));
           if (X > oo)
             h.push(
-              `The autoMode settings section is ${Math.round(X / 1024)}KB serialized \u2014 the whole settings file stops loading past ${Math.round(n_ / 1048576)}MiB. Consider trimming rules or environment entries.`,
+              `The autoMode settings section is ${Math.round(X / 1024)}KB serialized \u2014 the whole settings file stops loading past ${Math.round(MAX_SETTINGS_FILE_BYTES / 1048576)}MiB. Consider trimming rules or environment entries.`,
             );
           E.autoMode = N;
         }

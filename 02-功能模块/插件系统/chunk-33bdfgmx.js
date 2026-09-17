@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { stt, d8t, Wge, wx } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { COMMUNITY_MARKETPLACE_NAMES, OFFICIAL_MARKETPLACE_NAMES, isReservedMarketplaceName, getPluginIdSchema } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 function l(e) {
   return u(e) || e === "synced";
 }
@@ -28,7 +28,7 @@ function normalizePluginId(e) {
 }
 function normalizePluginSourceName(e) {
   let n = e.toLowerCase();
-  return Wge(n) ? n : e;
+  return isReservedMarketplaceName(n) ? n : e;
 }
 function hasNonMarketplacePluginSource(e) {
   return getNonMarketplacePluginSource(e) !== void 0;
@@ -141,7 +141,7 @@ function getPluginMarketplace(e) {
 }
 function parsePluginIdIgnoringReservedMarketplace(e) {
   let { name: n, marketplace: t } = splitPluginIdOnLastAt(e);
-  if ((isOfficialOrCommunityMarketplace(t) || t === BUILTIN_PLUGIN_SOURCE) && !wx().safeParse(e).success) return { name: n };
+  if ((isOfficialOrCommunityMarketplace(t) || t === BUILTIN_PLUGIN_SOURCE) && !getPluginIdSchema().safeParse(e).success) return { name: n };
   return { name: n, marketplace: t };
 }
 function isEqualIgnoringCase(e, n) {
@@ -157,10 +157,10 @@ function filterPluginIdsByName(e, n) {
   return e.filter((t) => isEqualIgnoringCase(splitPluginId(t).name, n));
 }
 function isOfficialMarketplace(e) {
-  return e !== void 0 && d8t.has(e.toLowerCase());
+  return e !== void 0 && OFFICIAL_MARKETPLACE_NAMES.has(e.toLowerCase());
 }
 function isOfficialOrCommunityMarketplace(e) {
-  return isOfficialMarketplace(e) || (e !== void 0 && stt.has(e.toLowerCase()));
+  return isOfficialMarketplace(e) || (e !== void 0 && COMMUNITY_MARKETPLACE_NAMES.has(e.toLowerCase()));
 }
 var f = new Set([
   "anthropic-skills",

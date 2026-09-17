@@ -10,21 +10,21 @@
 
 // [preload stripped] 原本在此预载 242 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  vWe,
-  VZ,
-  RZt,
-  RWe,
-  wPt,
-  F$n,
-  zHe,
-  nle,
-  TPt,
-  kZt,
-  VHe,
-  xZt,
-  $$n,
-  Tit,
-  e4,
+  RECAP_TRIGGER_FILE as vWe,
+  killJob as VZ,
+  killOrphanedWorker as RZt,
+  listAliveDaemonJobs as RWe,
+  probeDaemonJob as wPt,
+  isDaemonJobPresent as F$n,
+  applyReplyPatch as zHe,
+  REPLY_ENOJOB_MSG as nle,
+  REPLY_PEER_NO_SOCK_MSG as TPt,
+  isReplyDaemonRestartingMsg as kZt,
+  replyToJob as VHe,
+  attachJob as xZt,
+  WORKTREE_DIGEST_PATTERN as $$n,
+  formatKeptWorktreeLabel as Tit,
+  deleteJob as e4,
 } from "./chunk-xmxjyg29.js";
 import "./chunk-jfk5mpe1.js";
 import "./chunk-gnmy62vg.js";

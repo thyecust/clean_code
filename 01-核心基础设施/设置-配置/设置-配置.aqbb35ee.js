@@ -123,14 +123,14 @@ function Xi(e) {
     return !e.apply(this, t);
   };
 }
-var r8t = Xi;
+var negate = Xi;
 var qi = Object.prototype,
   Zi = qi.hasOwnProperty;
 function Qi(e, t, o) {
   var r = e[t];
   if (!(Zi.call(e, t) && isEqualPrimitive(r, o)) || (o === void 0 && !(t in e))) sZ(e, t, o);
 }
-var lke = Qi;
+var assignValue = Qi;
 function ta(e, t, o, r) {
   if (!Fm(e)) return e;
   t = a8(t, e);
@@ -147,7 +147,7 @@ function ta(e, t, o, r) {
       if (((h = r ? r(f, g, p) : void 0), h === void 0))
         h = Fm(f) ? f : _xe(t[i + 1]) ? [] : {};
     }
-    (lke(p, g, h), (p = p[g]));
+    (assignValue(p, g, h), (p = p[g]));
   }
   return e;
 }
@@ -212,16 +212,16 @@ function ga(e, t) {
     })
   );
 }
-var ea = ga;
+var pickBy = ga;
 function ma(e, t) {
-  return ea(e, r8t(GP(t)));
+  return pickBy(e, negate(GP(t)));
 }
-var tu = ma;
+var omitBy = ma;
 var et = [
   { alias: "additionalMarketplaces", canonical: "extraKnownMarketplaces" },
   { alias: "allowedMarketplaces", canonical: "strictKnownMarketplaces" },
 ];
-function Dq(e, t) {
+function normalizeSettingsAliases(e, t) {
   if (!isRecord(e)) return [];
   let o = [];
   for (let { alias: r, canonical: i } of et) {
@@ -554,13 +554,13 @@ var pt = createLazyValue(() =>
       }),
     ),
   ),
-  yie = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"],
-  t8t = "_SLOT_COLLISION_",
-  Xet = "_INVALID_PAIR_",
+  AWS_CREDENTIAL_ENV_VARS = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"],
+  SLOT_COLLISION_MARKER = "_SLOT_COLLISION_",
+  INVALID_PAIR_MARKER = "_INVALID_PAIR_",
   tt = "_PARENT_PAIR_SUPPRESSOR_",
-  cHn = "_MERGE_PAIR_SUPPRESSOR_",
-  ya = [t8t, Xet, tt, cHn],
-  n8t = (e) => ya.some((t) => e.startsWith(t)),
+  MERGE_PAIR_SUPPRESSOR_MARKER = "_MERGE_PAIR_SUPPRESSOR_",
+  ya = [SLOT_COLLISION_MARKER, INVALID_PAIR_MARKER, tt, MERGE_PAIR_SUPPRESSOR_MARKER],
+  isSyntheticSecretName = (e) => ya.some((t) => e.startsWith(t)),
   mt = createLazyValue(() =>
     c({
       accessKeyIdVar: He().describe(
@@ -674,7 +674,7 @@ var pt = createLazyValue(() =>
       })
       .optional(),
   ),
-  kRt = createLazyValue(() =>
+  SandboxSettingsSchema = createLazyValue(() =>
     c({
       enabled: O().optional(),
       failIfUnavailable: O()
@@ -845,7 +845,7 @@ function Re(e, t, o) {
   }
 }
 var to = new Set(["disableAllHooks"]);
-function o8t(e) {
+function extractManagedSettings(e) {
   let t = {};
   for (let { path: f, restrictive: y } of nt) {
     if (to.has(f[0])) continue;
@@ -890,7 +890,7 @@ function o8t(e) {
       f.secretAccessKeyVar,
       f.sessionTokenVar,
     ]),
-    p = yie.filter((f) => u.includes(f));
+    p = AWS_CREDENTIAL_ENV_VARS.filter((f) => u.includes(f));
   if (p.length > 0)
     d.awsPairs = p.map((f, y) => ({
       accessKeyIdVar: f,
@@ -934,7 +934,7 @@ var ba = [
   "availableModels",
   "enforceAvailableModels",
 ];
-function tlr(e, { maxLength: t }) {
+function findTextIssue(e, { maxLength: t }) {
   let o = oo(e);
   if (o !== -1) return { kind: "line_break", index: Ae(e, o) };
   for (let i = 0; i < e.length; i++) {
@@ -950,7 +950,7 @@ function tlr(e, { maxLength: t }) {
   if (r > t) return { kind: "too_long", length: r, maxLength: t };
   return null;
 }
-function s8t(e) {
+function findTrimmedTextIssue(e) {
   let t = 0,
     o = e.length;
   while (t < o && no(e.charCodeAt(t))) t++;
@@ -965,7 +965,7 @@ function s8t(e) {
   }
   return null;
 }
-function i8t(e) {
+function measureText(e) {
   let t = 1;
   for (let o = 0; o < e.length; o++) {
     let r = e.charCodeAt(o);
@@ -976,7 +976,7 @@ function i8t(e) {
   }
   return { length: ro(e), lineCount: t };
 }
-function a8t(e, { length: t, lineCount: o }) {
+function describeTextIssue(e, { length: t, lineCount: o }) {
   let r = t === 1 ? "1 character" : `${t} characters`,
     i = o > 1 ? `${r} on ${o} lines` : r;
   switch (e.kind) {
@@ -1059,7 +1059,7 @@ function Ae(e, t) {
 function ro(e) {
   return Ae(e, e.length);
 }
-var $U = [
+var PROVIDER_CONFIG_ENV_VARS = [
     "CLAUDE_CODE_USE_BEDROCK",
     "CLAUDE_CODE_USE_VERTEX",
     "CLAUDE_CODE_USE_FOUNDRY",
@@ -1081,7 +1081,7 @@ var $U = [
     "CLAUDE_CODE_USE_MANTLE",
   ],
   ka = ["AWS_BEARER_TOKEN_BEDROCK", "ANTHROPIC_AWS_API_KEY"],
-  LBe = "OTEL_EXPORTER_OTLP_",
+  OTEL_EXPORTER_OTLP_PREFIX = "OTEL_EXPORTER_OTLP_",
   io = [
     "OTEL_LOG_RAW_API_BODIES",
     "OTEL_LOG_USER_PROMPTS",
@@ -1093,7 +1093,7 @@ var $U = [
     "BETA_TRACING_ENDPOINT",
     "ANT_OTEL_LOGS_EXPORTER",
   ],
-  ao = [LBe, `ANT_${LBe}`],
+  ao = [OTEL_EXPORTER_OTLP_PREFIX, `ANT_${OTEL_EXPORTER_OTLP_PREFIX}`],
   lo = {
     apiKeyHelper: [
       "ANTHROPIC_BASE_URL",
@@ -1119,10 +1119,10 @@ var $U = [
     ],
   },
   co = ["CLAUDE_CODE_MEMORY_API_BASE_URL", "CLAUDE_CODE_MEMORY_API_TOKEN"];
-function OQ(e) {
+function isMemoryApiEnvVar(e) {
   return co.includes(e);
 }
-var iL = [
+var BASE_URL_ENV_VARS = [
     "ANTHROPIC_BASE_URL",
     "_CLAUDE_CODE_ASSUME_FIRST_PARTY_BASE_URL",
     "ANTHROPIC_BEDROCK_BASE_URL",
@@ -1139,7 +1139,7 @@ var iL = [
     "CLAUDE_CODE_ARTIFACT_VIEWER_BASE_URL",
     ...co,
   ],
-  $ge = [
+  BASE_URL_ENV_GROUPS = [
     {
       endpoint: "ANTHROPIC_BASE_URL",
       companions: [
@@ -1184,8 +1184,8 @@ var iL = [
       companions: ["CLAUDE_CODE_SKIP_MANTLE_AUTH", "ANTHROPIC_CUSTOM_HEADERS"],
     },
   ],
-  Jet = dedupe($ge.flatMap((e) => [e.endpoint, ...e.companions])),
-  UU = [
+  ALL_BASE_URL_ENV_VARS = dedupe(BASE_URL_ENV_GROUPS.flatMap((e) => [e.endpoint, ...e.companions])),
+  API_KEY_ENV_VARS = [
     "ANTHROPIC_API_KEY",
     "ANTHROPIC_AUTH_TOKEN",
     "CLAUDE_CODE_OAUTH_TOKEN",
@@ -1194,7 +1194,7 @@ var iL = [
     "ANTHROPIC_FOUNDRY_AUTH_TOKEN",
     "ANTHROPIC_AWS_API_KEY",
   ],
-  IRt = [
+  SKIP_AUTH_ENV_VARS = [
     "CLAUDE_CODE_SKIP_BEDROCK_AUTH",
     "CLAUDE_CODE_SKIP_VERTEX_AUTH",
     "CLAUDE_CODE_SKIP_FOUNDRY_AUTH",
@@ -1202,7 +1202,7 @@ var iL = [
     "CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH",
     "CLAUDE_CODE_SKIP_MANTLE_AUTH",
   ],
-  PRt = [
+  MODEL_ENV_VARS = [
     "ANTHROPIC_MODEL",
     "ANTHROPIC_DEFAULT_MODEL",
     "ANTHROPIC_DEFAULT_FABLE_MODEL",
@@ -1227,21 +1227,21 @@ var iL = [
     "CLAUDE_CODE_3P_PROBE_WROTE_SONNET_DEFAULT",
     "CLAUDE_CODE_3P_PROBE_WROTE_OPUS_DEFAULT",
   ],
-  ORt = [
+  CUSTOM_MODEL_OPTION_ENV_VARS = [
     "ANTHROPIC_CUSTOM_MODEL_OPTION",
     "ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION",
     "ANTHROPIC_CUSTOM_MODEL_OPTION_NAME",
     "ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES",
   ],
-  Qet = [
+  TOKEN_FD_ENV_VARS = [
     "CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR",
     "CLAUDE_CODE_GATEWAY_TOKEN_FILE_DESCRIPTOR",
     "CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR",
     "CLAUDE_CODE_WEBSOCKET_AUTH_FILE_DESCRIPTOR",
   ],
-  Zet = [
+  SECRET_TOKEN_ENV_VARS = [
     "CLAUDE_CODE_OAUTH_TOKEN",
-    ...Qet,
+    ...TOKEN_FD_ENV_VARS,
     "CLAUDE_CODE_ARTIFACTS_API_TOKEN",
     "CLAUDE_CODE_SLACK_TAG_TOKEN",
     "CLAUDE_CODE_HFI_BEARER_TOKEN",
@@ -1256,7 +1256,7 @@ var iL = [
     "CLAUDE_BG_CLAIM_AUTH",
   ],
   Xt = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN"],
-  MBe = [
+  AWS_ENV_VARS = [
     ...Xt,
     "AWS_PROFILE",
     "AWS_CONFIG_FILE",
@@ -1264,9 +1264,9 @@ var iL = [
     "GOOGLE_APPLICATION_CREDENTIALS",
     "GOOGLE_CLOUD_PROJECT",
   ];
-function NBe(e, t) {
+function clearAwsEnvVars(e, t) {
   for (let o of Xt) delete e[o];
-  for (let o of MBe) if (!t?.[o]) delete e[o];
+  for (let o of AWS_ENV_VARS) if (!t?.[o]) delete e[o];
 }
 var qt = [
     "AWS_CONTAINER_CREDENTIALS_FULL_URI",
@@ -1278,7 +1278,7 @@ var qt = [
     "AWS_WEB_IDENTITY_TOKEN_FILE",
     "AWS_ROLE_ARN",
   ],
-  DRt = [
+  GCE_METADATA_ENV_VARS = [
     "GCE_METADATA_HOST",
     "GCE_METADATA_ROOT",
     "GCE_METADATA_IP",
@@ -1286,22 +1286,22 @@ var qt = [
   ],
   va = new Set([
     "CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST",
-    ...$U,
-    ...iL,
-    ...UU,
-    ...IRt,
+    ...PROVIDER_CONFIG_ENV_VARS,
+    ...BASE_URL_ENV_VARS,
+    ...API_KEY_ENV_VARS,
+    ...SKIP_AUTH_ENV_VARS,
     "CLAUDE_CODE_HOST_AUTH_ENV_VAR",
     "CLAUDE_CODE_SDK_HAS_HOST_AUTH_REFRESH",
     "CLAUDE_CODE_HOST_AUTH_REFRESH_TIMEOUT_MS",
     "CLAUDE_CODE_HOST_CREDS_FILE",
-    ...MBe,
+    ...AWS_ENV_VARS,
     "GCLOUD_PROJECT",
     "GOOGLE_CLOUD_QUOTA_PROJECT",
-    ...DRt,
+    ...GCE_METADATA_ENV_VARS,
     ...qt,
     "AWS_REGION",
     "AWS_DEFAULT_REGION",
-    ...PRt,
+    ...MODEL_ENV_VARS,
     "ANTHROPIC_BEDROCK_SERVICE_TIER",
     "ANTHROPIC_BEDROCK_REGION_PREFIX",
     "CLAUDE_CODE_CERT_STORE",
@@ -1310,24 +1310,24 @@ var qt = [
     "CLAUDE_CODE_BG_CLASSIFIER_MODEL",
     "CLAUDE_CONTEXT_COLLAPSE_MODEL",
     "CLAUDE_CODE_SUBAGENT_MODEL_FORCE",
-    ...ORt,
+    ...CUSTOM_MODEL_OPTION_ENV_VARS,
   ]),
-  LRt = ["VERTEX_REGION_CLAUDE_"],
+  VERTEX_REGION_ENV_PREFIXES = ["VERTEX_REGION_CLAUDE_"],
   Aa = ["AWS_ENDPOINT_URL"];
-function MRt(e) {
+function isManagedOnlyEnvVar(e) {
   let t = e.toUpperCase();
   return (
     va.has(t) ||
-    LRt.some((o) => t.startsWith(o)) ||
+    VERTEX_REGION_ENV_PREFIXES.some((o) => t.startsWith(o)) ||
     Aa.some((o) => t.startsWith(o))
   );
 }
 var Ca = new Set(["AWS_PROFILE"]);
-function nlr(e) {
+function isAwsProfileEnvVar(e) {
   return Ca.has(e.toUpperCase());
 }
 var wa = new Set(["HTTP_PROXY", "HTTPS_PROXY", "NO_PROXY"]);
-function NRt(e) {
+function isProxyEnvVar(e) {
   return wa.has(e.toUpperCase());
 }
 var Ta = new Set([
@@ -1338,22 +1338,22 @@ var Ta = new Set([
   "NODE_TLS_REJECT_UNAUTHORIZED",
   "CLAUDE_CODE_OAUTH_SCOPES",
 ]);
-function uke(e) {
+function isTlsClientCertEnvVar(e) {
   return Ta.has(e.toUpperCase());
 }
-var ett = [
+var HOST_AUTH_ENV_VARS = [
   "ANTHROPIC_UNIX_SOCKET",
   "CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST",
   "CLAUDE_CODE_HOST_AUTH_ENV_VAR",
 ];
-function FBe(e) {
+function hasHostManagedAuth(e) {
   return (
     !!e.ANTHROPIC_UNIX_SOCKET ||
     Ie(e.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST) ||
     !!e.CLAUDE_CODE_HOST_AUTH_ENV_VAR
   );
 }
-function Uge(e) {
+function getHostManagedEnvVarsToStrip(e) {
   if (!Ie(e.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST)) return [];
   let t = Jt.some((i) => Ie(e[i])),
     o =
@@ -1362,19 +1362,19 @@ function Uge(e) {
       !!e.AWS_PROFILE ||
       !!e.AWS_CONFIG_FILE ||
       !!e.AWS_SHARED_CREDENTIALS_FILE,
-    r = MBe.filter((i) => e[i] === "");
+    r = AWS_ENV_VARS.filter((i) => e[i] === "");
   return [
     "ANTHROPIC_CUSTOM_HEADERS",
-    ...UU,
+    ...API_KEY_ENV_VARS,
     ...(t && o ? Xt : []),
     ...r,
-    dke(e),
+    getHostAuthEnvVarName(e),
     "CLAUDE_CODE_HOST_CREDS_FILE",
   ].filter((i) => !!i);
 }
-function dke(e) {
+function getHostAuthEnvVarName(e) {
   let t = e.CLAUDE_CODE_HOST_AUTH_ENV_VAR;
-  if (!t || ett.includes(t) || $U.includes(t)) return;
+  if (!t || HOST_AUTH_ENV_VARS.includes(t) || PROVIDER_CONFIG_ENV_VARS.includes(t)) return;
   return t;
 }
 var uo = [
@@ -1629,12 +1629,12 @@ function Da(e) {
     if (o === -1) return !1;
     let r = t.slice(0, o).trim();
     return (
-      !Ma.test(r) || s8t(t.slice(o + 1)) !== null || Ia.test(r.toLowerCase())
+      !Ma.test(r) || findTrimmedTextIssue(t.slice(o + 1)) !== null || Ia.test(r.toLowerCase())
     );
   });
 }
 var Ma = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
-function $Be(e, t) {
+function shouldForwardEnvVar(e, t) {
   let o = e.toUpperCase();
   return (
     Ra.has(o) ||
@@ -1643,39 +1643,39 @@ function $Be(e, t) {
     (o === "ANTHROPIC_CUSTOM_HEADERS" && !Da(t))
   );
 }
-function da() {
+function getHostSettingsStore() {
   return HXt.of(B().host);
 }
-function Pw() {
-  return da().mergedSettings;
+function getMergedSettings() {
+  return getHostSettingsStore().mergedSettings;
 }
-function Za(e) {
-  da().invalidateAll(e);
+function invalidateAllSettings(e) {
+  getHostSettingsStore().invalidateAll(e);
 }
-function Yar() {
-  return da().pluginBase;
+function getPluginSettingsBase() {
+  return getHostSettingsStore().pluginBase;
 }
-function Jar(e) {
-  da().setPluginBase(e);
+function setPluginSettingsBase(e) {
+  getHostSettingsStore().setPluginBase(e);
 }
-function Qar() {
-  da().clearPluginBase();
+function clearPluginSettingsBase() {
+  getHostSettingsStore().clearPluginBase();
 }
-function wr(e) {
+function sanitizeForDisplay(e) {
   return replaceInvisibleChars(e, " ", { keepEmojiJoiners: !0 });
 }
-function ff(e) {
+function sanitizeMultilineForDisplay(e) {
   return replaceInvisibleChars(e, " ", { keepNewlines: !0 });
 }
 function fo(e) {
   return replaceInvisibleChars(e, "", { keepEmojiJoiners: !0 });
 }
-function UBe(e, t = wr) {
+function sanitizeOptionalText(e, t = sanitizeForDisplay) {
   if (e === void 0) return;
   let o = t(e);
   return o.trim() === "" ? void 0 : o;
 }
-function ttt(e) {
+function toHttpUrl(e) {
   if (e === void 0) return;
   let t = replaceInvisibleChars(e, "");
   try {
@@ -1685,40 +1685,40 @@ function ttt(e) {
     return;
   }
 }
-function rlr(e) {
+function sanitizePluginManifest(e) {
   return {
     ...e,
-    displayName: UBe(e.displayName),
-    version: UBe(e.version),
-    description: UBe(e.description, ff),
+    displayName: sanitizeOptionalText(e.displayName),
+    version: sanitizeOptionalText(e.version),
+    description: sanitizeOptionalText(e.description, sanitizeMultilineForDisplay),
     author:
       e.author === void 0
         ? void 0
         : {
             ...e.author,
-            name: wr(e.author.name),
-            email: UBe(e.author.email),
-            url: ttt(e.author.url),
+            name: sanitizeForDisplay(e.author.name),
+            email: sanitizeOptionalText(e.author.email),
+            url: toHttpUrl(e.author.url),
           },
-    homepage: ttt(e.homepage),
-    repository: ttt(e.repository),
-    license: UBe(e.license),
-    keywords: e.keywords?.map(wr),
+    homepage: toHttpUrl(e.homepage),
+    repository: toHttpUrl(e.repository),
+    license: sanitizeOptionalText(e.license),
+    keywords: e.keywords?.map(sanitizeForDisplay),
   };
 }
-function Pp(e) {
+function removeInvisibleChars(e) {
   return fo(e);
 }
-function sd(e) {
+function getPluginDisplayName(e) {
   let t = ho(e) ? e.manifest.displayName : e.displayName;
   return (
-    Bge(typeof t === "string" ? wr(t).trim() : t) ??
-    Bge(Pp(e.name)) ??
-    Bge(Pp(ho(e) ? e.source : "")) ??
+    toNonBlankString(typeof t === "string" ? sanitizeForDisplay(t).trim() : t) ??
+    toNonBlankString(removeInvisibleChars(e.name)) ??
+    toNonBlankString(removeInvisibleChars(ho(e) ? e.source : "")) ??
     "(unprintable plugin name)"
   );
 }
-function Bge(e) {
+function toNonBlankString(e) {
   if (typeof e !== "string") return;
   return e.trim() ? e : void 0;
 }
@@ -1729,7 +1729,7 @@ function ho(e) {
 }
 var La =
   "The command contains non-ASCII, hidden or control characters (shown as \\u{\u2026} escapes). Do not proceed unless you expected them.";
-function ntt(e) {
+function sanitizeCommandRequest(e) {
   let { text: t, escaped: o } = Ke(e.command);
   return {
     destination: fp(e.archiveUrl),
@@ -1748,11 +1748,11 @@ function Ke(e) {
   };
 }
 import { posix as Us, win32 as zs } from "path";
-var BBe = String.raw`\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-[^}]*)?\}`;
-function U5(e) {
-  return new RegExp(BBe).test(e);
+var ENV_VAR_PLACEHOLDER_RE = String.raw`\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-[^}]*)?\}`;
+function containsEnvVarPlaceholder(e) {
+  return new RegExp(ENV_VAR_PLACEHOLDER_RE).test(e);
 }
-var dHn = createLazyValue(() =>
+var McpConfigScopeSchema = createLazyValue(() =>
     X([
       "local",
       "user",
@@ -1782,13 +1782,13 @@ var dHn = createLazyValue(() =>
         "@internal CCR backend wire hint; folded into timeout at parse.",
       ),
   );
-function l8t({ request_timeout_ms: e, ...t }) {
+function normalizeMcpServerTimeout({ request_timeout_ms: e, ...t }) {
   return {
     ...t,
     ...(t.timeout === void 0 && e !== void 0 && { timeout: Math.min(e, Na) }),
   };
 }
-var rtt = createLazyValue(() =>
+var StdioMcpServerSchema = createLazyValue(() =>
     c({
       type: k("stdio").optional(),
       command: s().min(1, "Command cannot be empty"),
@@ -1824,7 +1824,7 @@ var rtt = createLazyValue(() =>
       ]).optional(),
     }),
   ),
-  c8t = createLazyValue(() =>
+  SseMcpServerSchema = createLazyValue(() =>
     c({
       type: k("sse"),
       url: s(),
@@ -1837,8 +1837,8 @@ var rtt = createLazyValue(() =>
       alwaysLoad: O().optional(),
       discoveryCache: O().optional(),
       role: Fe(),
-      toolPermissions: fe(s(), $Rt()).optional(),
-    }).transform(l8t),
+      toolPermissions: fe(s(), ToolPermissionSchema()).optional(),
+    }).transform(normalizeMcpServerTimeout),
   ),
   za = createLazyValue(() =>
     c({
@@ -1863,7 +1863,7 @@ var rtt = createLazyValue(() =>
       role: Fe(),
     }),
   ),
-  FRt = createLazyValue(() =>
+  HttpMcpServerSchema = createLazyValue(() =>
     c({
       type: X(["http", "streamable-http"]).transform(() => "http"),
       url: s(),
@@ -1876,8 +1876,8 @@ var rtt = createLazyValue(() =>
       alwaysLoad: O().optional(),
       discoveryCache: O().optional(),
       role: Fe(),
-      toolPermissions: fe(s(), $Rt()).optional(),
-    }).transform(l8t),
+      toolPermissions: fe(s(), ToolPermissionSchema()).optional(),
+    }).transform(normalizeMcpServerTimeout),
   ),
   ja = ["command", "args", "env", "headersHelper"],
   Ka = new Set(["http", "streamable-http", "sse"]),
@@ -1942,13 +1942,13 @@ var Qt = createLazyValue(() =>
               r.split("."),
               "contains control or invisible format characters (in a key or a value); a managed settings document must not be able to print escape sequences",
             );
-          else if (!d && U5(i))
+          else if (!d && containsEnvVarPlaceholder(i))
             t(
               r.split("."),
               "${VAR} references are not expanded in managed settings; use a literal value (a managed settings document must not read the user's environment)",
             );
       })
-      .pipe($e([FRt(), c8t()])),
+      .pipe($e([HttpMcpServerSchema(), SseMcpServerSchema()])),
   ),
   en = `"managedMcpServers" must be an object keyed by server name (the .mcp.json mcpServers shape; Claude Desktop's array form of its same-named key is not accepted here: use the server name as the key and "type" instead of "transport"). No managed MCP servers are installed from it until it is fixed.`;
 function yt(e, t) {
@@ -1981,7 +1981,7 @@ function yt(e, t) {
   }
   return o;
 }
-var pHn = createLazyValue(() =>
+var WebSocketMcpServerSchema = createLazyValue(() =>
     c({
       type: k("ws"),
       url: s(),
@@ -1992,7 +1992,7 @@ var pHn = createLazyValue(() =>
       role: Fe(),
     }),
   ),
-  fHn = createLazyValue(() =>
+  SdkMcpServerSchema = createLazyValue(() =>
     c({
       type: k("sdk"),
       name: s(),
@@ -2000,8 +2000,8 @@ var pHn = createLazyValue(() =>
       alwaysLoad: O().optional(),
     }),
   ),
-  $Rt = createLazyValue(() => X(["allow", "ask", "blocked"])),
-  mHn = createLazyValue(() =>
+  ToolPermissionSchema = createLazyValue(() => X(["allow", "ask", "blocked"])),
+  ClaudeAiProxyMcpServerSchema = createLazyValue(() =>
     c({
       type: k("claudeai-proxy"),
       url: s(),
@@ -2010,7 +2010,7 @@ var pHn = createLazyValue(() =>
       iconUrl: s().optional(),
       timeout: Pe().optional(),
       alwaysLoad: O().optional(),
-      toolPermissions: fe(s(), $Rt()).optional(),
+      toolPermissions: fe(s(), ToolPermissionSchema()).optional(),
       stateless: O().optional(),
       cachedInitResponse: fe(s(), se()).nullish(),
       discoverSupport: X(["supported", "legacy", "unknown"])
@@ -2022,19 +2022,19 @@ var pHn = createLazyValue(() =>
       enterpriseManaged: O().optional(),
     }),
   ),
-  Lq = createLazyValue(() => $e([rtt(), c8t(), za(), Ha(), FRt(), pHn(), fHn(), mHn()]));
-function pke(e) {
+  McpServerConfigSchema = createLazyValue(() => $e([StdioMcpServerSchema(), SseMcpServerSchema(), za(), Ha(), HttpMcpServerSchema(), WebSocketMcpServerSchema(), SdkMcpServerSchema(), ClaudeAiProxyMcpServerSchema()]));
+function hasPluginSource(e) {
   return e?.pluginSource !== void 0;
 }
-function gHn(e) {
+function isClaudeAiProxyServer(e) {
   if (e.type !== "claudeai-proxy") return !1;
-  return e.scope === "claudeai" || (e.scope === "dynamic" && !pke(e));
+  return e.scope === "claudeai" || (e.scope === "dynamic" && !hasPluginSource(e));
 }
-var Uf = createLazyValue(() => c({ mcpServers: fe(s(), Lq()) }));
-function ts(e) {
+var Uf = createLazyValue(() => c({ mcpServers: fe(s(), McpServerConfigSchema()) }));
+function isConnectedMcpServer(e) {
   return e.type === "connected" || e.type === "cached";
 }
-function fke(e, t) {
+function shouldRefetchMcpServer(e, t) {
   if (t.type !== "cached" || !e) return !0;
   return !(
     e.type === "connected" ||
@@ -2114,7 +2114,7 @@ function Xa(e) {
   if (r || i || d || u) t.push(e.slice(12, 16));
   return t;
 }
-function jge(e) {
+function isLoopbackOrMetadataHost(e) {
   let t = e.toLowerCase().replace(/^\[|\]$/g, "");
   if (t.endsWith(".")) t = t.slice(0, -1);
   if (t === "" || t === "localhost" || t.endsWith(".localhost")) return !0;
@@ -2139,7 +2139,7 @@ function jge(e) {
     return ko(i, d, u, p) || Eo.has(`${i}.${d}.${u}.${p}`);
   });
 }
-function jBe(e) {
+function toUrlString(e) {
   if (e.href) return e.href;
   let t =
     e.host ??
@@ -2149,7 +2149,7 @@ function jBe(e) {
         : e.hostname) + (e.port ? `:${e.port}` : ""));
   return e.protocol && t ? `${e.protocol}//${t}` : "";
 }
-var C_ = [
+var HOOK_EVENT_NAMES = [
     "PreToolUse",
     "PostToolUse",
     "PostToolUseFailure",
@@ -2184,8 +2184,8 @@ var C_ = [
     "DirectoryAdded",
     "MessageDisplay",
   ],
-  zar = ["clear", "resume", "logout", "prompt_input_exit", "other"],
-  FU = "__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__";
+  SESSION_END_REASONS = ["clear", "resume", "logout", "prompt_input_exit", "other"],
+  SYSTEM_PROMPT_DYNAMIC_BOUNDARY = "__SYSTEM_PROMPT_DYNAMIC_BOUNDARY__";
 function we(e) {
   return !Array.isArray ? Io(e) === "[object Array]" : Array.isArray(e);
 }
@@ -3060,7 +3060,7 @@ function xl(
     return p;
   });
 }
-class Oq {
+class Fuse {
   constructor(e, t = {}, o) {
     ((this.options = { ...K, ...t }),
       this.options.useExtendedSearch,
@@ -3207,20 +3207,20 @@ class Oq {
     return r;
   }
 }
-Oq.version = "7.0.0";
-Oq.createIndex = No;
-Oq.parseIndex = hl;
-Oq.config = K;
-Oq.parseQuery = Wo;
+Fuse.version = "7.0.0";
+Fuse.createIndex = No;
+Fuse.parseIndex = hl;
+Fuse.config = K;
+Fuse.parseQuery = Wo;
 Cl($o);
-var RRt = /[:_-]/g;
-class e8t {
+var COMMAND_NAME_SEPARATOR_RE = /[:_-]/g;
+class CommandSearchIndex {
   fuse;
   constructor(e) {
     let t = e.map((o) => {
       let { name: r, displayName: i } = o,
-        d = r.split(RRt).filter(Boolean),
-        u = i !== r ? i.split(RRt).filter(Boolean) : [];
+        d = r.split(COMMAND_NAME_SEPARATOR_RE).filter(Boolean),
+        u = i !== r ? i.split(COMMAND_NAME_SEPARATOR_RE).filter(Boolean) : [];
       return {
         descriptionKey: (o.description ?? "")
           .split(" ")
@@ -3234,7 +3234,7 @@ class e8t {
         aliasKey: o.aliases,
       };
     });
-    this.fuse = new Oq(t, {
+    this.fuse = new Fuse(t, {
       includeScore: !0,
       threshold: 0.3,
       location: 0,
@@ -3300,7 +3300,7 @@ class e8t {
       .map((g) => g.r.item.candidate);
   }
 }
-function OP() {
+function yieldToEventLoop() {
   if (typeof setImmediate === "function")
     return new Promise((e) => setImmediate(e));
   if (typeof MessageChannel === "function")
@@ -3322,8 +3322,8 @@ var Vo = 16,
   Ll = 1,
   Nl = 100,
   Go = 64,
-  Vet = 4;
-class Ket {
+  YIELD_BUDGET_MS = 4;
+class FuzzyFilePathIndex {
   paths = [];
   lowerPaths = [];
   charBits = new Int32Array(0);
@@ -3354,8 +3354,8 @@ class Ket {
     for (let p = 0; p < e.length; p++) {
       let g = e[p];
       if (g.length > 0 && !r.has(g)) (r.add(g), i.push(g));
-      if ((p & 255) === 255 && performance.now() - d > Vet) {
-        if ((await OP(), this.buildGen !== o)) return (t(), !1);
+      if ((p & 255) === 255 && performance.now() - d > YIELD_BUDGET_MS) {
+        if ((await yieldToEventLoop(), this.buildGen !== o)) return (t(), !1);
         d = performance.now();
       }
     }
@@ -3363,10 +3363,10 @@ class Ket {
     let u = !0;
     for (let p = 0; p < i.length; p++)
       if (
-        (this.indexPath(p), (p & 255) === 255 && performance.now() - d > Vet)
+        (this.indexPath(p), (p & 255) === 255 && performance.now() - d > YIELD_BUDGET_MS)
       ) {
         if (((this.readyCount = p + 1), u)) (t(), (u = !1));
-        if ((await OP(), this.buildGen !== o)) return !1;
+        if ((await yieldToEventLoop(), this.buildGen !== o)) return !1;
         d = performance.now();
       }
     return ((this.readyCount = i.length), t(), !0);
@@ -3546,7 +3546,7 @@ function Fl(e, t) {
     r.slice(0, t).map((i) => ({ path: i, score: 0, positions: [] }))
   );
 }
-var sHn = [
+var USAGE_LIMIT_MESSAGE_PREFIXES = [
     "You've hit your",
     "You've reached your",
     "You're out of usage credits",
@@ -3560,10 +3560,10 @@ var sHn = [
     "You're out of extra usage",
     "Your seat type doesn't include extra usage",
   ],
-  Var = [/^Fable(?: [^\u00B7\n]{1,40})? requires usage credits\./],
-  iHn = ["This service is disabled for your org"],
-  aHn = ["You've used", "You're close to"],
-  lHn = [
+  USAGE_CREDIT_REQUIREMENT_PATTERNS = [/^Fable(?: [^\u00B7\n]{1,40})? requires usage credits\./],
+  SERVICE_DISABLED_MESSAGE_PREFIXES = ["This service is disabled for your org"],
+  USAGE_WARNING_MESSAGE_PREFIXES = ["You've used", "You're close to"],
+  USAGE_MODE_CHANGE_MESSAGE_PREFIXES = [
     "You're now using usage credits",
     "You're now using your usage allocation",
     "Now using your usage allocation",
@@ -3571,7 +3571,7 @@ var sHn = [
     "You're now using extra usage",
     "Now using extra usage",
   ];
-class Fge extends Error {}
+class AbortError extends Error {}
 var qo = ["bash", "powershell"];
 var rt = createLazyValue(() =>
   s()
@@ -3776,8 +3776,8 @@ var olr = 24576,
       ),
     }),
   ),
-  G6 = createLazyValue(() => x2e(X(C_), v(kt())));
-function slr(e) {
+  HooksSettingsSchema = createLazyValue(() => x2e(X(HOOK_EVENT_NAMES), v(kt())));
+function validateHookFilePathPattern(e) {
   if (
     /\$(?!\{CLAUDE_(?:PROJECT_DIR|PLUGIN_ROOT|PLUGIN_DATA)\})/.test(e) ||
     e.includes("`") ||
@@ -3851,9 +3851,9 @@ function fn(e) {
     )
     .join("; ");
 }
-function Mq(e) {
+function isHookMatcher(e) {
   if (!e || typeof e !== "object" || Array.isArray(e)) return !1;
-  if (!("matcher" in e) && Object.keys(e).some((o) => C_.includes(o)))
+  if (!("matcher" in e) && Object.keys(e).some((o) => HOOK_EVENT_NAMES.includes(o)))
     return !1;
   let t = e.hooks;
   if (Array.isArray(t)) return t.length > 0;
@@ -3863,30 +3863,30 @@ function Mq(e) {
     ("matcher" in e || typeof t.type === "string")
   );
 }
-function DQ(
+function containsHookMatcher(
   e,
   t = 3,
   { matchersCount: o = !0, unscannedKeys: r = Zo, inHooksList: i = !1 } = {},
 ) {
   if (es(e)) return !0;
-  if (o && Mq(e)) return !0;
+  if (o && isHookMatcher(e)) return !0;
   if (t === 0 || !e || typeof e !== "object") return !1;
   if (Array.isArray(e))
     return e.some((d) =>
-      DQ(d, t - 1, { matchersCount: o, unscannedKeys: r, inHooksList: i }),
+      containsHookMatcher(d, t - 1, { matchersCount: o, unscannedKeys: r, inHooksList: i }),
     );
   if (i && typeof e.type === "string") return !1;
   return Object.entries(e).some(
     ([d, u]) =>
       !r.has(d) &&
-      DQ(u, t - 1, {
+      containsHookMatcher(u, t - 1, {
         unscannedKeys: r,
-        matchersCount: o && !C_.includes(d),
+        matchersCount: o && !HOOK_EVENT_NAMES.includes(d),
         inHooksList: d === "hooks" && Array.isArray(u),
       }),
   );
 }
-function b1(e, t) {
+function hasMisplacedGuardHooks(e, t) {
   if (!e || typeof e !== "object" || Array.isArray(e)) return !1;
   return (
     es(e) ||
@@ -3894,7 +3894,7 @@ function b1(e, t) {
       ([o, r]) =>
         o !== "hooks" &&
         !t.has(o) &&
-        DQ(r, 3, { unscannedKeys: t, matchersCount: !C_.includes(o) }),
+        containsHookMatcher(r, 3, { unscannedKeys: t, matchersCount: !HOOK_EVENT_NAMES.includes(o) }),
     )
   );
 }
@@ -3910,35 +3910,35 @@ var Zo = new Set(),
     "skillOverrides",
     "modelSettings",
   ]),
-  WBe = new Set(["metadata", "mcpServers", "lspServers"]),
-  hHn = new Set([...WBe, "experimental"]),
-  URt = Zo;
+  NON_HOOK_TOP_LEVEL_KEYS = new Set(["metadata", "mcpServers", "lspServers"]),
+  NON_HOOK_TOP_LEVEL_KEYS_EXTENDED = new Set([...NON_HOOK_TOP_LEVEL_KEYS, "experimental"]),
+  EMPTY_KEY_SET = Zo;
 function es(e) {
   if (!e || typeof e !== "object" || Array.isArray(e)) return !1;
   return Object.entries(e).some(
     ([t, o]) =>
-      q6.has(t) &&
+      GUARD_HOOK_EVENTS.has(t) &&
       o !== null &&
       o !== void 0 &&
       !(Array.isArray(o) && o.length === 0),
   );
 }
-function LQ(e) {
-  if (Mq(e)) return !0;
-  if (Array.isArray(e)) return e.some(LQ);
+function declaresGuardHook(e) {
+  if (isHookMatcher(e)) return !0;
+  if (Array.isArray(e)) return e.some(declaresGuardHook);
   if (!e || typeof e !== "object") return !1;
   return Object.entries(e).some(
     ([t, o]) =>
-      q6.has(t) &&
+      GUARD_HOOK_EVENTS.has(t) &&
       o !== null &&
       o !== void 0 &&
       !(Array.isArray(o) && o.length === 0),
   );
 }
-var q6 = new Set(["PreToolUse", "PermissionRequest"]);
+var GUARD_HOOK_EVENTS = new Set(["PreToolUse", "PermissionRequest"]);
 function At(e, t) {
   if (!Array.isArray(e)) return { stripped: [], unloadableGuards: [] };
-  let o = q6.has(t),
+  let o = GUARD_HOOK_EVENTS.has(t),
     r = vt(),
     i = kt(),
     d = [],
@@ -3956,7 +3956,7 @@ function At(e, t) {
           aboutType: !1,
         });
       };
-    if (DQ(g, 3, { matchersCount: !1 })) {
+    if (containsHookMatcher(g, 3, { matchersCount: !1 })) {
       (o ? d : u).push({
         matcherIndex: p,
         hookIndex: void 0,
@@ -4008,11 +4008,11 @@ function At(e, t) {
       : { stripped: d, unloadableGuards: u }
   );
 }
-class Nq extends Error {}
-var Kg =
+class HooksConfigError extends Error {}
+var UNLOADABLE_GUARD_HOOK_NOTE =
   "a PreToolUse/PermissionRequest hook that cannot be loaded may be what guards the permissions declared beside it, so nothing it sits in is applied until the entry is fixed or removed";
-function Fq(e) {
-  if (Mq(e) || (Array.isArray(e) && e.some(Mq)))
+function validateHooksConfig(e) {
+  if (isHookMatcher(e) || (Array.isArray(e) && e.some(isHookMatcher)))
     return {
       notes: [],
       unloadableGuards: [
@@ -4022,13 +4022,13 @@ function Fq(e) {
   if (!e || typeof e !== "object" || Array.isArray(e))
     return { notes: [], unloadableGuards: [] };
   let t = e,
-    o = new Set(C_),
+    o = new Set(HOOK_EVENT_NAMES),
     r = [],
     i = [];
   for (let [d, u] of Object.entries(t)) {
     let p = escapeAllControlCharacters(d);
     if (!o.has(d)) {
-      if (DQ(u, 3, { matchersCount: !Array.isArray(u) })) {
+      if (containsHookMatcher(u, 3, { matchersCount: !Array.isArray(u) })) {
         i.push(
           `hooks.${p}: not a hook event, but it holds PreToolUse/PermissionRequest hooks`,
         );
@@ -4038,7 +4038,7 @@ function Fq(e) {
       continue;
     }
     if (!Array.isArray(u)) {
-      if ((q6.has(d) && u !== null) || DQ(u, 3, { matchersCount: !1 })) {
+      if ((GUARD_HOOK_EVENTS.has(d) && u !== null) || containsHookMatcher(u, 3, { matchersCount: !1 })) {
         i.push(`hooks.${p}: must be an array of matchers; received ${he(u)}`);
         continue;
       }
@@ -4056,7 +4056,7 @@ function Fq(e) {
   }
   return { notes: r, unloadableGuards: i };
 }
-function _Hn(e) {
+function normalizeHooksConfig(e) {
   if (typeof e !== "object" || e === null || Array.isArray(e))
     return {
       hooks: void 0,
@@ -4066,9 +4066,9 @@ function _Hn(e) {
           reason: `must be an object mapping hook event names to matcher arrays; received ${he(e)}`,
         },
       ],
-      unloadableGuards: Array.isArray(e) && e.some(Mq) ? ["hooks"] : [],
+      unloadableGuards: Array.isArray(e) && e.some(isHookMatcher) ? ["hooks"] : [],
     };
-  if (Mq(e))
+  if (isHookMatcher(e))
     return {
       hooks: void 0,
       invalid: [
@@ -4080,14 +4080,14 @@ function _Hn(e) {
       ],
       unloadableGuards: ["hooks"],
     };
-  let t = new Set(C_),
+  let t = new Set(HOOK_EVENT_NAMES),
     o = v(kt()),
     r = Object.entries(e).map(([d, u]) => {
       if (!t.has(d))
         return {
           invalid: {
             path: `hooks.${d}`,
-            reason: `unknown hook event. Valid events: ${C_.join(", ")}`,
+            reason: `unknown hook event. Valid events: ${HOOK_EVENT_NAMES.join(", ")}`,
           },
         };
       let { stripped: p, unloadableGuards: g } = At(u, d);
@@ -4095,7 +4095,7 @@ function _Hn(e) {
         return {
           invalid: {
             path: `hooks.${d}`,
-            reason: `${g.map((_) => `${_.path}: ${_.problem}`).join("; ")} \u2014 ${Kg}`,
+            reason: `${g.map((_) => `${_.path}: ${_.problem}`).join("; ")} \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}`,
           },
           unloadableGuard: !0,
         };
@@ -4113,7 +4113,7 @@ function _Hn(e) {
         : `must be an array of matchers; received ${he(u)}`;
       return {
         invalid: { path: `hooks.${d}`, reason: y },
-        ...(q6.has(d) &&
+        ...(GUARD_HOOK_EVENTS.has(d) &&
           u !== null &&
           !Array.isArray(u) && { unloadableGuard: !0 }),
       };
@@ -4133,7 +4133,7 @@ function he(e) {
   let t = typeof e;
   return `${t === "object" ? "an" : "a"} ${t}`;
 }
-function BU(e) {
+function normalizeSingleLineText(e) {
   return replaceControlChars(Gl(removeLoneSurrogates(e)))
     .replace(/ {2,}/g, " ")
     .trim();
@@ -4150,36 +4150,36 @@ function Gl(e) {
   }
   return t;
 }
-function Vn(e, t = 160) {
-  return ott(
-    BU(ns(e, t))
+function formatDisplayText(e, t = 160) {
+  return truncateWithEllipsis(
+    normalizeSingleLineText(ns(e, t))
       .normalize("NFC")
       .replace(/[`\uff40\u02cb\u1fef\u2035]/g, "'")
       .replace(os, ""),
     t,
   );
 }
-function yHn(e, t = 2000) {
-  let o = BU(ns(e, t));
+function formatLongDisplayText(e, t = 2000) {
+  let o = normalizeSingleLineText(ns(e, t));
   return o.length > t ? `${truncateToCodeUnits(o, t)}\u2026` : o;
 }
-function ott(e, t = 2000) {
+function truncateWithEllipsis(e, t = 2000) {
   return e.length > t ? `${truncateToCodeUnits(e, t)}\u2026` : e;
 }
-function w1(e, t = 160) {
+function sanitizeInlineText(e, t = 160) {
   let o = removeLoneSurrogates(e)
     .replace(/[\p{Cc}\p{Cf}]/gu, (r) => (/\s/.test(r) ? r : ""))
     .replace(/\s+/g, " ")
     .trim();
   return o.length > t ? `${truncateToCodeUnits(o, t)}\u2026` : o;
 }
-function Al(e, t = 300) {
-  return Vn(e ?? "", t);
+function toDisplayText(e, t = 300) {
+  return formatDisplayText(e ?? "", t);
 }
 var Yl =
   /[\p{Pi}\p{Pf}\u201a\u201e\u201f\u2e32\u2e34\u2e41\u2e49\u2e42\u3003\u300c-\u300f\ufe41-\ufe44\u301d-\u301f\u275b-\u2760\u276e\u276f\u{1f676}-\u{1f678}\u2032-\u2037\u2057\u02b9\u02ba\u0374\u02bd-\u02bf\u02c8\u02d2\u02d3\u02ca\u02ce\u02cf\u02dd\u02f4-\u02f6\u02ee\u00b4\u0384\u0385\u1fbd\u1fbf\u1fcd-\u1fcf\u1fdd-\u1fdf\u1ffd\u1ffe\u05f3\u05f4\u0559-\u055b\u07f4\u07f5\ua67f\ua78b\ua78c\uff02\uff07\uff62\uff63]/gu;
-function zt(e, t = 300) {
-  return Vn(e ?? "", t)
+function formatQuotedDisplayText(e, t = 300) {
+  return formatDisplayText(e ?? "", t)
     .replace(Yl, "")
     .replace(/[\u02bb\u02bc]/g, "\u2019")
     .replace(/"/g, "\u201D")
@@ -4203,12 +4203,12 @@ function ns(e, t) {
     : o;
 }
 var os = /(?<![^\s\p{P}])\p{M}+/gu;
-function nv(e, { isComposed: t } = {}) {
+function toErrorMessage(e, { isComposed: t } = {}) {
   let o = l(e);
-  return t?.(e) ? yHn(o, 2000) : Vn(o, 500);
+  return t?.(e) ? formatLongDisplayText(o, 2000) : formatDisplayText(o, 500);
 }
-var mke = 500,
-  u8t = 32;
+var MAX_CONSENT_TEXT_LENGTH = 500,
+  MAX_PRODUCER_PATH_HISTORY = 32;
 function ls() {
   return {
     claudeaiPluginId: s()
@@ -4223,7 +4223,7 @@ function ls() {
 function ds() {
   return {
     sourceCommand: s()
-      .max(mke + 20)
+      .max(MAX_CONSENT_TEXT_LENGTH + 20)
       .optional()
       .catch(void 0)
       .describe(
@@ -4241,7 +4241,7 @@ function ds() {
       .transform((e) =>
         e
           .filter((t) => typeof t === "string" && t.length <= 4096 && ss(t))
-          .slice(-u8t),
+          .slice(-MAX_PRODUCER_PATH_HISTORY),
       )
       .optional()
       .catch(void 0)
@@ -4256,7 +4256,7 @@ function ss(e) {
 var us = /[^\x20-\x7E]| {4,}/;
 function En() {
   return s()
-    .max(mke, {
+    .max(MAX_CONSENT_TEXT_LENGTH, {
       message:
         "headersHelper must not be longer than the install consent UI can display",
     })
@@ -4265,12 +4265,12 @@ function En() {
         "headersHelper must be printable ASCII (letters, digits, punctuation, single spaces) with no runs of 4 or more spaces",
     });
 }
-var stt = new Set([
+var COMMUNITY_MARKETPLACE_NAMES = new Set([
     "claude-community",
     "claude-plugins-community",
     "healthcare",
   ]),
-  d8t = new Set([
+  OFFICIAL_MARKETPLACE_NAMES = new Set([
     "claude-code-marketplace",
     "claude-code-plugins",
     "claude-plugins-official",
@@ -4285,20 +4285,20 @@ var stt = new Set([
     "financial-services-plugins",
     "first-party-plugins",
   ]),
-  B5 = new Set([...d8t, ...stt]),
+  RESERVED_MARKETPLACE_NAMES = new Set([...OFFICIAL_MARKETPLACE_NAMES, ...COMMUNITY_MARKETPLACE_NAMES]),
   ql = new Set(["knowledge-work-plugins", "first-party-plugins"]);
-function MQ(e, t, o) {
+function shouldAutoUpdateMarketplace(e, t, o) {
   if (o !== void 0) return o;
   if (t.autoUpdate !== void 0) return t.autoUpdate;
   if (t.source?.source === "claudeai") return !0;
   let r = e.toLowerCase();
-  return d8t.has(r) && !ql.has(r);
+  return OFFICIAL_MARKETPLACE_NAMES.has(r) && !ql.has(r);
 }
 var Zl =
     /(?:official[^a-z0-9]*(anthropic|claude)|(?:anthropic|claude)[^a-z0-9]*official|^(?:anthropic|claude)[^a-z0-9]*(marketplace|plugins|official))/i,
   Ql = /[^\u0020-\u007E]/;
-function SHn(e) {
-  if (B5.has(e.toLowerCase())) return !1;
+function looksLikeOfficialMarketplaceName(e) {
+  if (RESERVED_MARKETPLACE_NAMES.has(e.toLowerCase())) return !1;
   if (Ql.test(e)) return !0;
   return Zl.test(e);
 }
@@ -4331,9 +4331,9 @@ function tc(e) {
     return !1;
   }
 }
-function gke(e, t) {
+function getReservedMarketplaceNameError(e, t) {
   let o = e.toLowerCase();
-  if (!B5.has(o)) return null;
+  if (!RESERVED_MARKETPLACE_NAMES.has(o)) return null;
   if (t.source === "github") {
     let r = t.repo || "";
     if (!r.toLowerCase().startsWith(`${Ct}/`) || r.split("/").includes(".."))
@@ -4372,17 +4372,17 @@ var pe = createLazyValue(() => s().startsWith("./")),
     "skills-dir": "plugins auto-loaded from .claude/skills/",
     synced: "plugins synced from your claude.ai account",
   };
-function Wge(e) {
+function isReservedMarketplaceName(e) {
   return Object.hasOwn(ps, e);
 }
-var p8t = createLazyValue(() =>
+var getMarketplaceNameSchema = createLazyValue(() =>
     s()
       .min(1, "Marketplace must have a name")
       .refine((e) => !e.includes(" "), {
         message:
           'Marketplace name cannot contain spaces. Use kebab-case (e.g., "my-marketplace")',
       })
-      .refine((e) => !ltt.test(e), {
+      .refine((e) => !CONTROL_OR_BIDI_CHARS_PATTERN.test(e), {
         message:
           "Marketplace name cannot contain control or bidirectional-formatting characters",
       })
@@ -4397,13 +4397,13 @@ var p8t = createLazyValue(() =>
             'Marketplace name cannot contain path separators (/ or \\), ".." sequences, or be "."',
         },
       )
-      .refine((e) => !SHn(e), {
+      .refine((e) => !looksLikeOfficialMarketplaceName(e), {
         message:
           "Marketplace name impersonates an official Anthropic/Claude marketplace",
       })
       .superRefine((e, t) => {
         let o = e.toLowerCase();
-        if (!Wge(o)) return;
+        if (!isReservedMarketplaceName(o)) return;
         t.addIssue({
           code: "custom",
           message: `Marketplace name "${o}" is reserved for ${ps[o]}`,
@@ -4417,7 +4417,7 @@ var p8t = createLazyValue(() =>
         message:
           'Plugin name cannot contain spaces. Use kebab-case (e.g., "my-plugin")',
       })
-      .refine((e) => !ltt.test(e), {
+      .refine((e) => !CONTROL_OR_BIDI_CHARS_PATTERN.test(e), {
         message:
           "Plugin name cannot contain control or bidirectional-formatting characters",
       }),
@@ -4489,12 +4489,12 @@ var p8t = createLazyValue(() =>
     }),
   ),
   oc = 1,
-  BRt = createLazyValue(() =>
+  getHooksJsonSchema = createLazyValue(() =>
     c({
       description: s()
         .optional()
         .describe("Brief, user-facing explanation of what these hooks provide"),
-      hooks: Hb(() => G6())
+      hooks: Hb(() => HooksSettingsSchema())
         .optional()
         .describe(
           "The hooks provided by the plugin, in the same format as the one used for settings",
@@ -4519,7 +4519,7 @@ var p8t = createLazyValue(() =>
         Ne().describe(
           "Path to file with additional hooks (in addition to those in hooks/hooks.json, if it exists), relative to the plugin root",
         ),
-        Hb(() => G6()).describe(
+        Hb(() => HooksSettingsSchema()).describe(
           "Additional hooks (in addition to those in hooks/hooks.json, if it exists)",
         ),
         v(
@@ -4527,7 +4527,7 @@ var p8t = createLazyValue(() =>
             Ne().describe(
               "Path to file with additional hooks (in addition to those in hooks/hooks.json, if it exists), relative to the plugin root",
             ),
-            Hb(() => G6()).describe(
+            Hb(() => HooksSettingsSchema()).describe(
               "Additional hooks (in addition to those in hooks/hooks.json, if it exists)",
             ),
           ]),
@@ -4607,7 +4607,7 @@ var p8t = createLazyValue(() =>
       ]),
     }),
   ),
-  f8t = createLazyValue(() => $e([s(), v(s())])),
+  getEvalsSchema = createLazyValue(() => $e([s(), v(s())])),
   gs = createLazyValue(() =>
     c({
       outputStyles: $e([
@@ -4701,14 +4701,14 @@ var p8t = createLazyValue(() =>
         is().describe(
           "Path or URL to MCPB file containing MCP server configuration",
         ),
-        fe(s(), Lq()).describe(
+        fe(s(), McpServerConfigSchema()).describe(
           "MCP server configurations keyed by server name",
         ),
         v(
           $e([
             Ne().describe("Path to MCP servers configuration file"),
             is().describe("Path or URL to MCPB file"),
-            fe(s(), Lq()).describe("Inline MCP server configurations"),
+            fe(s(), McpServerConfigSchema()).describe("Inline MCP server configurations"),
           ]),
         ).describe(
           "Array of MCP server configurations (paths, MCPB files, or inline definitions)",
@@ -4783,7 +4783,7 @@ var p8t = createLazyValue(() =>
       ),
     }),
   ),
-  itt = createLazyValue(() =>
+  getLspServerConfigSchema = createLazyValue(() =>
     Qe({
       command: s()
         .min(1)
@@ -4885,7 +4885,7 @@ var p8t = createLazyValue(() =>
         ),
     }),
   ),
-  bHn = createLazyValue(() =>
+  getMonitorsSchema = createLazyValue(() =>
     v(_c()).refine((e) => new Set(e.map((t) => t.name)).size === e.length, {
       message: "Monitor names must be unique within a plugin",
     }),
@@ -4896,7 +4896,7 @@ var p8t = createLazyValue(() =>
         Ne().describe(
           "Path to a JSON file containing the monitors array, relative to the plugin root",
         ),
-        bHn(),
+        getMonitorsSchema(),
       ]).describe(
         "Background watch scripts the host arms as persistent Monitor tasks (unsandboxed, same trust tier as hooks) so plugins need not instruct the model to arm them. When omitted, monitors/monitors.json at the plugin root is loaded if present.",
       ),
@@ -4908,13 +4908,13 @@ var p8t = createLazyValue(() =>
         Ne().describe(
           "Path to .lsp.json configuration file relative to plugin root",
         ),
-        fe(s(), itt()).describe(
+        fe(s(), getLspServerConfigSchema()).describe(
           "LSP server configurations keyed by server name",
         ),
         v(
           $e([
             Ne().describe("Path to LSP configuration file"),
-            fe(s(), itt()).describe("Inline LSP server configurations"),
+            fe(s(), getLspServerConfigSchema()).describe("Inline LSP server configurations"),
           ]),
         ).describe(
           "Array of LSP server configurations (paths or inline definitions)",
@@ -4934,28 +4934,28 @@ var p8t = createLazyValue(() =>
         return t.test(e) || o.test(e);
       }, "Invalid npm package name format"),
   ),
-  hke = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9_-])?$/,
-  wHn = /^[0-9a-f]{64}$/,
-  GBe = 16,
-  m8t = 64,
-  $q = 1048576,
-  Ec = createLazyValue(() => c({ sha256: s().regex(wHn) }));
-function qBe(e) {
+  BINARIES_BASENAME_PATTERN = /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9_-])?$/,
+  SHA256_HEX_PATTERN = /^[0-9a-f]{64}$/,
+  MAX_FETCHED_BINARIES = 16,
+  MAX_DECLARED_BINARIES = 64,
+  MAX_PLUGIN_FILE_BYTES = 1048576,
+  Ec = createLazyValue(() => c({ sha256: s().regex(SHA256_HEX_PATTERN) }));
+function parsePluginBinaries(e) {
   let t = fe(s(), se()).safeParse(e);
   if (!t.success) return;
   let o = Object.create(null),
     r = 0;
   for (let [i, d] of Object.entries(t.data)) {
-    if (r >= m8t) break;
+    if (r >= MAX_DECLARED_BINARIES) break;
     let u = Ec().safeParse(d);
-    if (hke.test(i) && u.success) ((o[i] = u.data), r++);
+    if (BINARIES_BASENAME_PATTERN.test(i) && u.success) ((o[i] = u.data), r++);
   }
   return r > 0 ? o : void 0;
 }
 var kc = createLazyValue(() =>
     c({
       binaries: se()
-        .transform(qBe)
+        .transform(parsePluginBinaries)
         .describe(
           "sha256-pinned files to fetch into bin/ at install time, keyed by basename (target triple encoded in the name)",
         ),
@@ -4979,7 +4979,7 @@ var kc = createLazyValue(() =>
           ...gc().partial().shape,
           ...ys().partial().shape,
           ...gs().partial().shape,
-          evals: f8t()
+          evals: getEvalsSchema()
             .optional()
             .describe(
               "Directory of eval cases for the plugin evaluation harness, relative to the plugin root (default: evals/). A list is accepted; its first entry is the case directory.",
@@ -4993,7 +4993,7 @@ var kc = createLazyValue(() =>
       ),
     }),
   );
-var Gge = createLazyValue(() =>
+var getPluginManifestSchema = createLazyValue(() =>
     c({
       ...nc().shape,
       ...sc().partial().shape,
@@ -5121,8 +5121,8 @@ var Gge = createLazyValue(() =>
       }),
       c({
         source: k("settings"),
-        name: p8t()
-          .refine((e) => !B5.has(e.toLowerCase()), {
+        name: getMarketplaceNameSchema()
+          .refine((e) => !RESERVED_MARKETPLACE_NAMES.has(e.toLowerCase()), {
             message:
               "Reserved marketplace names cannot be used with settings sources. validateOfficialNameSource only accepts github/git sources from anthropics/* for these names; a settings source would be rejected after loadAndCacheMarketplace has already written to disk with cleanupNeeded=false.",
           })
@@ -5151,12 +5151,12 @@ var Gge = createLazyValue(() =>
   bs = createLazyValue(() =>
     s().regex(/^[0-9a-fA-F]{64}$/, "Must be a 64-character hex SHA-256 digest"),
   ),
-  g8t =
+  ARCHIVE_URL_POLICY_MESSAGE =
     "Archive URLs must use https:// and must not point at a loopback, link-local, or cloud-metadata host";
-function h8t(e) {
+function isAllowedArchiveUrl(e) {
   try {
     let t = new URL(e);
-    return t.protocol === "https:" && !jge(t.hostname);
+    return t.protocol === "https:" && !isLoopbackOrMetadataHost(t.hostname);
   } catch {
     return !1;
   }
@@ -5166,7 +5166,7 @@ var Cc = createLazyValue(() =>
       source: k("archive"),
       url: s()
         .url()
-        .refine(h8t, { message: g8t })
+        .refine(isAllowedArchiveUrl, { message: ARCHIVE_URL_POLICY_MESSAGE })
         .describe(
           "HTTPS URL of a zip archive containing the plugin. The plugin root (the directory holding .claude-plugin/) may be at the top of the archive " +
             "or nested one directory deep \u2014 a single wrapping directory is stripped.",
@@ -5257,7 +5257,7 @@ var Cc = createLazyValue(() =>
         source: k("command"),
         command: s()
           .min(1)
-          .max(mke, {
+          .max(MAX_CONSENT_TEXT_LENGTH, {
             message:
               "command must not be longer than the install consent UI can display",
           })
@@ -5327,13 +5327,13 @@ var Cc = createLazyValue(() =>
         },
       ),
   );
-function att(e) {
+function isDotRelativeSourcePath(e) {
   return typeof e === "string" && e.startsWith("./");
 }
-function Om(e) {
+function isLocalMarketplaceSource(e) {
   return e.source === "file" || e.source === "directory";
 }
-var _8t = createLazyValue(() =>
+var getRelevanceSignalsSchema = createLazyValue(() =>
     c({
       cli: v(s().max(64))
         .max(10)
@@ -5372,7 +5372,7 @@ var _8t = createLazyValue(() =>
         ),
     }),
   ),
-  y8t = createLazyValue(() =>
+  getPluginRelevanceSchema = createLazyValue(() =>
     c({
       topic: s()
         .max(64)
@@ -5381,13 +5381,13 @@ var _8t = createLazyValue(() =>
           'What the user is working with when this plugin is relevant \u2014 fills "Working with {topic}?". ' +
             'Often the product name (e.g. "Stripe"); use a domain (e.g. "design") when the plugin name does not read naturally as a topic. Defaults to the plugin name with each hyphen-segment capitalized.',
         ),
-      signals: _8t()
+      signals: getRelevanceSignalsSchema()
         .optional()
         .describe("Matchers that determine when the plugin is relevant."),
     }),
   ),
-  jRt = createLazyValue(() =>
-    Gge()
+  getMarketplacePluginSchema = createLazyValue(() =>
+    getPluginManifestSchema()
       .partial()
       .extend({
         name: wt().describe("Unique identifier matching the plugin name"),
@@ -5416,14 +5416,14 @@ var _8t = createLazyValue(() =>
           .describe(
             "Require the plugin manifest to be present in the plugin folder. If false, the marketplace entry provides the manifest.",
           ),
-        relevance: ai((e) => (isRecord(e) ? e : void 0), y8t().optional()).describe(
+        relevance: ai((e) => (isRecord(e) ? e : void 0), getPluginRelevanceSchema().optional()).describe(
           `Declares when this plugin is relevant to the user's work. Consumed by the spinner tip ("Working with {topic}?"), session-start auto-suggest, and marketplace browse ranking.`,
         ),
       }),
   ),
   Oc = createLazyValue(() => c({ name: wt() }));
 function Tc(e) {
-  let t = jRt();
+  let t = getMarketplacePluginSchema();
   return e.flatMap((o, r) => {
     let i = t.safeParse(o);
     if (i.success) {
@@ -5444,7 +5444,7 @@ function Tc(e) {
       n(`Stubbing unparseable marketplace plugin entry (${d}): ${u}`, {
         level: "warn",
       });
-      let p = S8t(isRecord(o) ? o.source : void 0)
+      let p = isBarePluginSourceName(isRecord(o) ? o.source : void 0)
         ? Lc
         : vn(o)
           ? void 0
@@ -5510,7 +5510,7 @@ function Ot(e) {
         d =
           r.code === "unrecognized_keys"
             ? `Unrecognized ${r.keys.length === 1 ? "field" : "fields"}: ${r.keys.map(ve).join(", ")}`
-            : Vn(r.message, Dc);
+            : formatDisplayText(r.message, Dc);
       return i ? `${i}: ${d}` : d;
     }),
     o = e.length - t.length;
@@ -5519,10 +5519,10 @@ function Ot(e) {
 var Mc = /^[A-Za-z0-9][-A-Za-z0-9._]*$/,
   Lc =
     'Bare source names resolve under metadata.pluginRoot, which this marketplace does not set (or sets to a path outside the marketplace root). Use a "./relative/path" source, or set metadata.pluginRoot to allow bare names.';
-function S8t(e) {
+function isBarePluginSourceName(e) {
   return typeof e === "string" && Mc.test(e) && !e.includes("..");
 }
-function THn(e) {
+function normalizePluginRootPath(e) {
   if (
     typeof e !== "string" ||
     e === "" ||
@@ -5536,25 +5536,25 @@ function THn(e) {
   if (t.split("/").some((o) => o === "" || o === "." || o === "..")) return;
   return t;
 }
-function EHn(e, t) {
-  if (t === void 0 || !isRecord(e) || !S8t(e.source)) return e;
+function resolvePluginEntrySource(e, t) {
+  if (t === void 0 || !isRecord(e) || !isBarePluginSourceName(e.source)) return e;
   let o = t === "." ? `./${e.source}` : `./${t}/${e.source}`;
   return { ...e, source: o };
 }
-function AHn(e) {
+function resolveMarketplacePluginSources(e) {
   if (!isRecord(e) || !Array.isArray(e.plugins)) return e;
-  let t = isRecord(e.metadata) ? THn(e.metadata.pluginRoot) : void 0;
+  let t = isRecord(e.metadata) ? normalizePluginRootPath(e.metadata.pluginRoot) : void 0;
   if (t === void 0) return e;
-  return { ...e, plugins: e.plugins.map((o) => EHn(o, t)) };
+  return { ...e, plugins: e.plugins.map((o) => resolvePluginEntrySource(o, t)) };
 }
-var _ke = createLazyValue(() =>
+var getMarketplaceManifestSchema = createLazyValue(() =>
     c({
       $schema: s()
         .optional()
         .describe(
           "JSON Schema reference for editor autocomplete/validation; ignored at load time",
         ),
-      name: p8t(),
+      name: getMarketplaceNameSchema(),
       version: s().optional().describe("Marketplace manifest version"),
       description: s()
         .optional()
@@ -5592,21 +5592,21 @@ var _ke = createLazyValue(() =>
         ),
     }),
   ),
-  aL = createLazyValue(() => ai(AHn, _ke())),
+  getMarketplaceSchema = createLazyValue(() => ai(resolveMarketplacePluginSources, getMarketplaceManifestSchema())),
   bn = "[A-Za-z0-9][-A-Za-z0-9._]*",
   Nc = new RegExp(`^${bn}$`);
-function ilr(e) {
+function isValidPluginName(e) {
   return Nc.test(e);
 }
-var wx = createLazyValue(() =>
+var getPluginIdSchema = createLazyValue(() =>
     s().regex(
       new RegExp(`^${bn}@${bn}$`),
       "Plugin ID must be in format: plugin@marketplace",
     ),
   ),
-  alr = new RegExp(`[@:\\s/\\\\${INVISIBLE_CHAR_CLASS}]`, "u"),
-  llr = new RegExp(`[${INVISIBLE_CHAR_CLASS}]`, "u"),
-  ltt = /[\p{Cc}\u200E\u200F\u202A-\u202E\u2066-\u2069]/u,
+  INVALID_PLUGIN_NAME_CHARS_PATTERN = new RegExp(`[@:\\s/\\\\${INVISIBLE_CHAR_CLASS}]`, "u"),
+  INVISIBLE_CHARS_PATTERN = new RegExp(`[${INVISIBLE_CHAR_CLASS}]`, "u"),
+  CONTROL_OR_BIDI_CHARS_PATTERN = /[\p{Cc}\u200E\u200F\u202A-\u202E\u2066-\u2069]/u,
   Uc = /^[A-Za-z0-9][-A-Za-z0-9._]*(@[A-Za-z0-9][-A-Za-z0-9._]*)?(@\^[^@]*)?$/,
   zc = createLazyValue(() =>
     $e([
@@ -5658,10 +5658,10 @@ var wx = createLazyValue(() =>
       ...ds(),
     }),
   ),
-  WRt = createLazyValue(() =>
+  getInstalledPluginsV1Schema = createLazyValue(() =>
     c({
       version: k(1).describe("Schema version 1"),
-      plugins: fe(wx(), Hc()).describe(
+      plugins: fe(getPluginIdSchema(), Hc()).describe(
         "Map of plugin IDs to their installation metadata",
       ),
     }),
@@ -5696,10 +5696,10 @@ var wx = createLazyValue(() =>
       ...ds(),
     }),
   ),
-  b8t = createLazyValue(() =>
+  getInstalledPluginsV2Schema = createLazyValue(() =>
     c({
       version: k(2).describe("Schema version 2"),
-      plugins: fe(wx(), v(Kc())).describe(
+      plugins: fe(getPluginIdSchema(), v(Kc())).describe(
         "Map of plugin IDs to arrays of installation entries",
       ),
     }),
@@ -5720,18 +5720,18 @@ var wx = createLazyValue(() =>
         ),
     }),
   ),
-  yke = createLazyValue(() => fe(s(), Fc())),
-  z6 = "claudeai-",
-  GRt = ["org", "default", "account"];
-var Sie = ["aspell", "hunspell", "ispell"],
-  clr = `!
+  getKnownMarketplacesSchema = createLazyValue(() => fe(s(), Fc())),
+  CLAUDE_AI_MARKETPLACE_NAME_PREFIX = "claudeai-",
+  CLAUDE_AI_MARKETPLACE_SCOPES = ["org", "default", "account"];
+var SPELLCHECK_BACKENDS = ["aspell", "hunspell", "ispell"],
+  SPELLCHECK_VERBOSE_MODE_COMMAND = `!
 `,
   Bc = /^[A-Za-z][A-Za-z0-9_.,-]{0,63}$/;
-function qRt(e) {
+function isValidDictionaryName(e) {
   return Bc.test(e);
 }
-function ulr(e, t) {
-  let o = t !== void 0 && qRt(t) ? t : void 0;
+function buildSpellcheckerArgs(e, t) {
+  let o = t !== void 0 && isValidDictionaryName(t) ? t : void 0;
   switch (e) {
     case "aspell":
       return [
@@ -5746,17 +5746,17 @@ function ulr(e, t) {
       return ["-a", ...(o ? ["-d", o] : [])];
   }
 }
-function dlr(e) {
+function detectSpellcheckBackend(e) {
   if (!e.startsWith("@(#) International Ispell")) return null;
   if (/but really Aspell/i.test(e)) return "aspell";
   if (/but really Hunspell/i.test(e)) return "hunspell";
   return "ispell";
 }
-function plr(e) {
+function buildSpellcheckRequestLine(e) {
   return `^${e.join(" ")}
 `;
 }
-function flr(e) {
+function parseSpellcheckResponseLine(e) {
   if (e === "") return { type: "end" };
   switch (e[0]) {
     case "*":
@@ -5776,7 +5776,7 @@ function flr(e) {
       return { type: "unrecognized" };
   }
 }
-var pS = 2147483647;
+var MAX_TIMER_DELAY_MS = 2147483647;
 var $c = ["autoMode", "deepLink", "voice", "briefView", "screenReader"];
 var Tt = {
   autoMode: {
@@ -5866,7 +5866,7 @@ var Tt = {
     }),
   },
 };
-function zBe() {
+function getEnabledSettingsSections() {
   return $c.filter((e) => Tt[e].buildGate());
 }
 function ks(e) {
@@ -5884,20 +5884,20 @@ function As(e) {
   for (let o of e) t.push(...(Tt[o].permissionModes?.() ?? []));
   return t;
 }
-function Js(e) {
+function parseMcpToolName(e) {
   let t = e.split("__"),
     [o, r, ...i] = t;
   if (o !== "mcp" || !r) return null;
   let d = i.length > 0 ? i.join("__") : void 0;
   return { serverName: r, toolName: d };
 }
-function Oa(e) {
+function getMcpToolPrefix(e) {
   return `mcp__${normalizeMcpName(e)}__`;
 }
-function rc(e, t) {
-  return `${Oa(e)}${normalizeMcpName(t)}`;
+function buildMcpToolName(e, t) {
+  return `${getMcpToolPrefix(e)}${normalizeMcpName(t)}`;
 }
-function ctt(e) {
+function collectMcpToolPermissionRules(e) {
   let t = { always_allow: 0, always_ask: 1, always_deny: 2 },
     o = new Map();
   for (let [u, p] of Object.entries(e)) {
@@ -5907,7 +5907,7 @@ function ctt(e) {
       if (h === void 0) continue;
       let f = t[h];
       if (f === void 0) continue;
-      let y = rc(u, g.name),
+      let y = buildMcpToolName(u, g.name),
         _ = o.get(y);
       if (_ === void 0 || f > (t[_] ?? -1)) o.set(y, h);
     }
@@ -5921,11 +5921,11 @@ function ctt(e) {
     else d.push(u);
   return { allow: r, deny: i, ask: d };
 }
-function mlr(e, t) {
+function applyDynamicMcpServerPermissionRules(e, t) {
   let o = Object.fromEntries(
       Object.entries(t).filter(([, u]) => u.scope === "dynamic"),
     ),
-    { allow: r, deny: i, ask: d } = ctt(o);
+    { allow: r, deny: i, ask: d } = collectMcpToolPermissionRules(o);
   if (r.length === 0 && i.length === 0 && d.length === 0) return e;
   return {
     ...e,
@@ -5943,41 +5943,41 @@ function mlr(e, t) {
     },
   };
 }
-function fS(e) {
-  return e.mcpInfo ? rc(e.mcpInfo.serverName, e.mcpInfo.toolName) : e.name;
+function getFullToolName(e) {
+  return e.mcpInfo ? buildMcpToolName(e.mcpInfo.serverName, e.mcpInfo.toolName) : e.name;
 }
-function utt(e, t) {
+function stripMcpServerPrefix(e, t) {
   let o = `mcp__${normalizeMcpName(t)}__`;
   return e.replace(o, "");
 }
-function dtt(e) {
+function normalizeToolDisplayName(e) {
   let t = e.replace(/\s*\(MCP\)\s*$/, "");
   t = t.trim();
   let o = t.indexOf(" - ");
   if (o !== -1) return t.substring(o + 3).trim();
   return t;
 }
-function qge(e, t) {
-  if (!t) return Vn(e, Rt);
-  let o = VBe(e);
+function formatServerDisplayName(e, t) {
+  if (!t) return formatDisplayText(e, Rt);
+  let o = parsePluginScopedServerName(e);
   return o
-    ? `${Vn(o.serverName, Rt)} (from plugin ${Vn(o.pluginName, Rt)})`
-    : Vn(e, Rt);
+    ? `${formatDisplayText(o.serverName, Rt)} (from plugin ${formatDisplayText(o.pluginName, Rt)})`
+    : formatDisplayText(e, Rt);
 }
 var Rt = 80;
-function VBe(e) {
+function parsePluginScopedServerName(e) {
   if (!e.startsWith("plugin:")) return;
   let t = e.split(":");
   if (t.length < 3) return;
   return { pluginName: t[1], serverName: t.slice(2).join(":") };
 }
-function zge(e, t) {
+function isSameMcpServerName(e, t) {
   if (e.startsWith("plugin:") || t.startsWith("plugin:")) return e === t;
   return normalizeMcpName(e) === normalizeMcpName(t);
 }
-function zRt(e, t) {
-  let o = Js(e),
-    r = Js(t);
+function matchesMcpToolRule(e, t) {
+  let o = parseMcpToolName(e),
+    r = parseMcpToolName(t);
   return (
     o !== null &&
     r !== null &&
@@ -5987,7 +5987,7 @@ function zRt(e, t) {
       (r.toolName !== void 0 && containsWildcard(o.toolName) && matchesToolNameGlob(o.toolName, r.toolName)))
   );
 }
-var bie = {
+var TOOL_RULE_VALIDATION = {
   filePatternTools: [
     "Read",
     "Write",
@@ -6035,14 +6035,14 @@ var bie = {
   },
 };
 function An(e) {
-  return bie.filePatternTools.includes(e);
+  return TOOL_RULE_VALIDATION.filePatternTools.includes(e);
 }
 function Cs(e) {
-  return bie.bashPrefixTools.includes(e);
+  return TOOL_RULE_VALIDATION.bashPrefixTools.includes(e);
 }
 function ws(e) {
-  return Object.hasOwn(bie.customValidation, e)
-    ? bie.customValidation[e]
+  return Object.hasOwn(TOOL_RULE_VALIDATION.customValidation, e)
+    ? TOOL_RULE_VALIDATION.customValidation[e]
     : void 0;
 }
 function Rs(e, t) {
@@ -6085,9 +6085,9 @@ function Xc(e) {
   }
   return;
 }
-function KBe(e) {
+function getAllowRuleWildcardError(e) {
   if (!containsWildcard(e)) return null;
-  let t = Js(e);
+  let t = parseMcpToolName(e);
   if (t && !containsWildcard(t.serverName)) return null;
   return {
     valid: !1,
@@ -6097,7 +6097,7 @@ function KBe(e) {
     examples: ["mcp__puppeteer__*", "mcp__github__get_*"],
   };
 }
-function Ske(e, t) {
+function validatePermissionRule(e, t) {
   if (!e || e.trim() === "")
     return { valid: !1, error: "Permission rule cannot be empty" };
   let o = parseToolRuleSpec(e);
@@ -6123,7 +6123,7 @@ function Ske(e, t) {
     };
   }
   let r = parsePermissionRule(e),
-    i = Js(r.toolName);
+    i = parseMcpToolName(r.toolName);
   if (i) {
     if (o.kind === "call")
       return {
@@ -6139,7 +6139,7 @@ function Ske(e, t) {
         ].filter(Boolean),
       };
     if (t === "allow") {
-      let u = KBe(r.toolName);
+      let u = getAllowRuleWildcardError(r.toolName);
       if (u) return u;
     }
     return { valid: !0 };
@@ -6147,7 +6147,7 @@ function Ske(e, t) {
   if (!r.toolName || r.toolName.length === 0)
     return { valid: !1, error: "Tool name cannot be empty" };
   if (t === "allow") {
-    let u = KBe(r.toolName);
+    let u = getAllowRuleWildcardError(r.toolName);
     if (u) return u;
   }
   if (
@@ -6249,7 +6249,7 @@ var Cn = createLazyValue(() => xs()),
   Ps = createLazyValue(() => xs("allow"));
 function xs(e) {
   return s().superRefine((t, o) => {
-    let r = Ske(t, e);
+    let r = validatePermissionRule(t, e);
     if (!r.valid) {
       let i = r.error;
       if (r.suggestion) i += `. ${r.suggestion}`;
@@ -6259,8 +6259,8 @@ function xs(e) {
     }
   });
 }
-var XBe = ["accept", "hold", "refuse"],
-  Vge = ["off", "basic", "full"],
+var CROSS_SESSION_INBOUND_MODES = ["accept", "hold", "refuse"],
+  HOST_PROFILE_LEVELS = ["off", "basic", "full"],
   qc = createLazyValue(() => fe(s(), createCoercedZodString()));
 function Hs(e) {
   return c({
@@ -6294,7 +6294,7 @@ function Hs(e) {
       .describe("Additional directories to include in the permission scope"),
   }).passthrough();
 }
-var glr = createLazyValue(() => Hs(zBe())),
+var getPermissionsSchema = createLazyValue(() => Hs(getEnabledSettingsSections())),
   Zc = createLazyValue(() =>
     $e([
       s(),
@@ -6305,7 +6305,7 @@ var glr = createLazyValue(() => Hs(zBe())),
         ),
     ]),
   ),
-  CHn = createLazyValue(() =>
+  getSpinnerTipsSchema = createLazyValue(() =>
     ai(
       (e) =>
         Array.isArray(e)
@@ -6434,22 +6434,22 @@ var glr = createLazyValue(() => Hs(zBe())),
     ),
   ),
   Qc = /[\x00-\x1f\x7f-\x9f\u2028\u2029]|\p{DI}/u;
-function vHn(e) {
+function isUncPath(e) {
   let t = e.replaceAll("/", "\\");
   if (UL(t)) return !1;
   return /^\\{2}[^\\]/.test(t);
 }
-function ptt(e) {
+function isNetworkAutomountPath(e) {
   return li(e) || /^\/network\/servers(\/|$)/i.test(e);
 }
-function RHn(e) {
+function isKernelMagicLinkPath(e) {
   return /^\/(proc|dev\/(fd|stdin|stdout|stderr))(\/|$)/i.test(e);
 }
-function kHn(e, t, o = {}) {
+function isNormalizedPath(e, t, o = {}) {
   if (t === "win32") {
     let r = e.replaceAll("/", "\\");
     if (UL(r)) return !1;
-    let i = vHn(r);
+    let i = isUncPath(r);
     if (o.rejectUnc && i) return !1;
     if (o.rejectDriveRelative) {
       if (!/^[A-Za-z]:\\/.test(r) && !i && /^(\\|[A-Za-z]:)/.test(r)) return !1;
@@ -6469,30 +6469,30 @@ function kHn(e, t, o = {}) {
     if (/\\{2}/.test(u)) return !1;
     return !r.endsWith("\\") || /^([A-Za-z]:)?\\$/.test(r);
   }
-  if (o.rejectNetworkRoot && ptt(e)) return !1;
-  if (o.rejectMagicLinkRoot && RHn(e)) return !1;
+  if (o.rejectNetworkRoot && isNetworkAutomountPath(e)) return !1;
+  if (o.rejectMagicLinkRoot && isKernelMagicLinkPath(e)) return !1;
   if (Us.normalize(e) !== e) return !1;
   if (e.split("/").some((r) => r === "." || r === "..")) return !1;
   if (/\/{2}/.test(e)) return !1;
   return !e.endsWith("/") || e === "/";
 }
-var xHn = /\.(exe|ps1)$/i;
-function HHn(e) {
+var WINDOWS_EXECUTABLE_SUFFIX_PATTERN = /\.(exe|ps1)$/i;
+function isPowerShellScriptPath(e) {
   return /\.ps1$/i.test(e);
 }
-function IHn(e) {
-  return HHn(e) && /[[\]`*?]/.test(e);
+function isPowerShellPathWithWildcards(e) {
+  return isPowerShellScriptPath(e) && /[[\]`*?]/.test(e);
 }
-var PHn =
+var POWERSHELL_PATH_WILDCARD_MESSAGE =
     'a .ps1 path must not contain "[", "]", "`", "*", or "?" on Windows (PowerShell resolves them as wildcard syntax)',
   ed = () => s().describe("Absolute path to the helper executable"),
   Ge = (e) => ai((t) => (t === null ? void 0 : t), e.optional()).optional(),
-  w8t = pS,
+  MAX_TIMEOUT_MS = MAX_TIMER_DELAY_MS,
   Is = (e) =>
     T()
       .int()
       .min(e)
-      .transform((t) => Math.min(t, w8t)),
+      .transform((t) => Math.min(t, MAX_TIMEOUT_MS)),
   Ds = ["path", "script", "defaultSettings"];
 function js(e) {
   if (!e || typeof e !== "object" || Array.isArray(e)) return !1;
@@ -6523,7 +6523,7 @@ var It = createLazyValue(() =>
     ).describe(
       "Fixed interpreter for `script`: 'sh' (/bin/sh) on macos/linux/wsl entries; 'pwsh' (PowerShell at its fixed install locations, never PATH) on the windows entry",
     ),
-  OHn = "exactly one of path/script must be configured",
+  PATH_SCRIPT_EXCLUSIVE_MESSAGE = "exactly one of path/script must be configured",
   td = '"script" and "interpreter" must be configured together',
   nd =
     "script must be ASCII-only on Windows (PowerShell decodes stdin with the console OEM code page); spell non-ASCII characters as escapes, e.g. [char]0x00E9",
@@ -6543,13 +6543,13 @@ var It = createLazyValue(() =>
       .describe(
         "Inline helper script, delivered to the fixed interpreter over stdin (never written to disk)",
       );
-function hlr(e, t) {
+function getInlinePolicyHelperConfigError(e, t) {
   let o = c({ script: Bs(t), interpreter: Fs(t) }).safeParse(e);
   return o.success
     ? null
     : o.error.issues[0]?.message || "invalid inline helper config";
 }
-var Uq = ["macos", "linux", "windows", "wsl"];
+var POLICY_HELPER_PLATFORMS = ["macos", "linux", "windows", "wsl"];
 function od(e) {
   return e === "windows" ? "win32" : "posix";
 }
@@ -6575,11 +6575,11 @@ function id(e) {
       message: "path must be absolute",
     })
     .refine(
-      (r) => !(t === "win32" && o.requireWin32ExecutableSuffix) || xHn.test(r),
+      (r) => !(t === "win32" && o.requireWin32ExecutableSuffix) || WINDOWS_EXECUTABLE_SUFFIX_PATTERN.test(r),
       { message: "path must end in .exe or .ps1 on Windows" },
     )
-    .refine((r) => t !== "win32" || !IHn(r), { message: PHn })
-    .refine((r) => kHn(r, t, o), {
+    .refine((r) => t !== "win32" || !isPowerShellPathWithWildcards(r), { message: POWERSHELL_PATH_WILDCARD_MESSAGE })
+    .refine((r) => isNormalizedPath(r, t, o), {
       message:
         t === "win32"
           ? 'path must be in normalized form: no "." or ".." segments, no doubled or trailing separators, no component ending in "." or a space, no ":" outside the drive letter, no device-namespace (\\\\?\\) prefix, no drive-relative (\\dir or C:name) or UNC (\\\\server\\share) form'
@@ -6587,7 +6587,7 @@ function id(e) {
     })
     .describe("Absolute path to the helper executable");
 }
-var In = [...Uq, "default"],
+var In = [...POLICY_HELPER_PLATFORMS, "default"],
   wn = [
     "path",
     "script",
@@ -6598,7 +6598,7 @@ var In = [...Uq, "default"],
     "defaultSettings",
   ],
   Pt = ["managedSettings", "appendSystemPrompt"],
-  Kge = createLazyValue(() =>
+  getStaticSettingsPayloadSchema = createLazyValue(() =>
     fe(s(), se()).superRefine((e, t) => {
       for (let o of ["policyHelper", "policyHelpers"])
         if (e[o] !== void 0 && e[o] !== null)
@@ -6610,7 +6610,7 @@ var In = [...Uq, "default"],
         if (e[o] !== void 0 && e[o] !== null)
           t.addIssue({
             code: "custom",
-            message: `must not contain "${o}" \u2014 a static payload is a managed-settings object, not a policyHelpers entry; entry fields (${wn.join("/")}) belong on the per-OS entries (policyHelpers.${Uq.join("/")})`,
+            message: `must not contain "${o}" \u2014 a static payload is a managed-settings object, not a policyHelpers entry; entry fields (${wn.join("/")}) belong on the per-OS entries (policyHelpers.${POLICY_HELPER_PLATFORMS.join("/")})`,
           });
       for (let o of Pt)
         if (e[o] !== void 0 && e[o] !== null)
@@ -6630,7 +6630,7 @@ var In = [...Uq, "default"],
     'Entry must carry "path" (a helper executable) or "script" + "interpreter" (an inline helper), and/or "defaultSettings" (a static settings payload)';
 function ld(e) {
   let { path: t, script: o, interpreter: r, defaultSettings: i } = e;
-  if (t !== void 0 && o !== void 0) return OHn;
+  if (t !== void 0 && o !== void 0) return PATH_SCRIPT_EXCLUSIVE_MESSAGE;
   if ((o === void 0) !== (r === void 0)) return td;
   if (t === void 0 && o === void 0 && i === void 0) return ad;
   return null;
@@ -6655,9 +6655,9 @@ function $s(e, t) {
         o.issues.push({ code: "custom", message: r, input: o.value });
     });
 }
-var Ay = createLazyValue(() => $s("linux", Kge()));
-function On(e, t = Kge()) {
-  return e === "default" ? Kge() : $s(e, t);
+var Ay = createLazyValue(() => $s("linux", getStaticSettingsPayloadSchema()));
+function On(e, t = getStaticSettingsPayloadSchema()) {
+  return e === "default" ? getStaticSettingsPayloadSchema() : $s(e, t);
 }
 var cd = createLazyValue(() =>
     c(
@@ -6673,7 +6673,7 @@ var cd = createLazyValue(() =>
       ),
     ),
   ),
-  Xge = ["skills", "agents", "hooks", "mcp"],
+  CUSTOMIZATION_SURFACES = ["skills", "agents", "hooks", "mcp"],
   Ms = Object.freeze({ type: "invalid-entry-stripped" }),
   dd = createLazyValue(() =>
     $e([
@@ -6707,7 +6707,7 @@ var cd = createLazyValue(() =>
       .max(AUTO_COMPACT_WINDOW_MAX)
       .optional()
       .catch(void 0);
-function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
+function buildSettingsSchema(e, { strictPolicyHelperKeys: t = !1 } = {}) {
   function o(i) {
     return fe(s(), Tn()).check((d) => {
       for (let [u, p] of Object.entries(d.value))
@@ -7039,7 +7039,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "Enterprise denylist of MCP servers that are explicitly blocked. If a server is on the denylist, it will be blocked across all scopes including enterprise. Denylist takes precedence over allowlist - if a server is on both lists, it is denied.",
       ),
-    hooks: G6()
+    hooks: HooksSettingsSchema()
       .optional()
       .describe("Custom commands to run before/after tool executions"),
     worktree: c({
@@ -7181,8 +7181,8 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
         "When true (and set in managed settings), claude.ai cloud MCP connectors load alongside managed-mcp.json instead of being suppressed by its exclusive-control lockdown. Default off preserves the lockdown. Read from managed settings only.",
       ),
     strictPluginOnlyCustomization: ai(
-      (i) => (Array.isArray(i) ? i.filter((d) => Xge.includes(d)) : i),
-      $e([O(), v(X(Xge))]),
+      (i) => (Array.isArray(i) ? i.filter((d) => CUSTOMIZATION_SURFACES.includes(d)) : i),
+      $e([O(), v(X(CUSTOMIZATION_SURFACES))]),
     )
       .optional()
       .catch(void 0)
@@ -7338,7 +7338,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "Skip the WebFetch blocklist check for enterprise environments with restrictive security policies",
       ),
-    sandbox: kRt().optional(),
+    sandbox: SandboxSettingsSchema().optional(),
     feedbackSurveyRate: T()
       .min(0)
       .max(1)
@@ -7363,7 +7363,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       excludeDefault: O()
         .optional()
         .catch(void 0),
-      tips: CHn().optional(),
+      tips: getSpinnerTipsSchema().optional(),
       tipsFile: s()
         .optional()
         .catch(void 0)
@@ -7397,7 +7397,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
         .optional()
         .catch(void 0)
         .describe(
-          `Which spell checker to run: ${Sie.map((i) => `"${i}"`).join(", ")}, or "auto" (default) for the first of those found on PATH`,
+          `Which spell checker to run: ${SPELLCHECK_BACKENDS.map((i) => `"${i}"`).join(", ")}, or "auto" (default) for the first of those found on PATH`,
         ),
       language: s()
         .optional()
@@ -7416,7 +7416,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .optional()
       .catch(void 0)
       .describe(
-        `Underline misspelled words in the prompt input as you type, using an installed ${Sie.slice(0, -1).join(", ")} or ${Sie.at(-1)} (off unless "enabled" is true; does nothing if none is installed). Read from user, flag and managed settings only (the whole block from the highest-precedence of those applies); ignored in project .claude/settings.json and .claude/settings.local.json.`,
+        `Underline misspelled words in the prompt input as you type, using an installed ${SPELLCHECK_BACKENDS.slice(0, -1).join(", ")} or ${SPELLCHECK_BACKENDS.at(-1)} (off unless "enabled" is true; does nothing if none is installed). Read from user, flag and managed settings only (the whole block from the highest-precedence of those applies); ignored in project .claude/settings.json and .claude/settings.local.json.`,
       ),
     terminalTitleFromRename: O()
       .optional()
@@ -7448,7 +7448,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
     modelSettings: ai(
       (i) =>
         typeof i === "object" && i !== null && !Array.isArray(i)
-          ? tu(i, (d, u) => Object.hasOwn(Object.prototype, u))
+          ? omitBy(i, (d, u) => Object.hasOwn(Object.prototype, u))
           : i,
       fe(
         s(),
@@ -7834,7 +7834,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .optional()
       .describe("Start Remote Control bridge automatically each session"),
     remoteControl: c({
-      shareHostProfile: X(Vge)
+      shareHostProfile: X(HOST_PROFILE_LEVELS)
         .optional()
         .catch(void 0)
         .describe(
@@ -7853,7 +7853,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
       .describe(
         "When no background service is running: 'transient' spawns one for this login session; 'ask' offers to install it persistently",
       ),
-    crossSessionInbound: X(XBe)
+    crossSessionInbound: X(CROSS_SESSION_INBOUND_MODES)
       .optional()
       .catch(void 0)
       .describe(
@@ -7875,7 +7875,7 @@ function YBe(e, { strictPolicyHelperKeys: t = !1 } = {}) {
     ...ks(e),
   }).passthrough();
 }
-var XT = createLazyValue(() => YBe(zBe())),
+var getSettingsSchema = createLazyValue(() => buildSettingsSchema(getEnabledSettingsSections())),
   Ls = Object.freeze({ serverName: "invalid-entry-stripped" });
 function Ns(e, t, o) {
   return v(
@@ -7893,7 +7893,7 @@ function Ns(e, t, o) {
     .optional();
 }
 function Dn(e, t) {
-  let o = XT(),
+  let o = getSettingsSchema(),
     r = {};
   for (let [S, E] of Object.entries(o.shape))
     r[S] = E.catch((C) => {
@@ -8064,7 +8064,7 @@ function Dn(e, t) {
             message: `"${C}" inside the singular policyHelper is ignored \u2014 "policyHelper" and "policyHelpers" are TOP-LEVEL settings keys; nothing nests inside the singular entry. The nested config will NOT apply from here.`,
             statusOnly: !0,
           });
-      for (let C of Uq)
+      for (let C of POLICY_HELPER_PLATFORMS)
         if (E[C] !== void 0 && E[C] !== null)
           e({
             path: "policyHelper",
@@ -8080,7 +8080,7 @@ function Dn(e, t) {
       if (E.outputBehavior !== void 0 && E.outputBehavior !== null)
         e({
           path: "policyHelper",
-          message: `"outputBehavior" on the singular policyHelper is ignored \u2014 it is only honored on the policyHelpers per-OS entries (policyHelpers.${Uq.join("/")}); this helper's output REPLACES the policy tier whatever the value says.`,
+          message: `"outputBehavior" on the singular policyHelper is ignored \u2014 it is only honored on the policyHelpers per-OS entries (policyHelpers.${POLICY_HELPER_PLATFORMS.join("/")}); this helper's output REPLACES the policy tier whatever the value says.`,
           statusOnly: !0,
         });
       if (E.path === null || E.path === void 0) i = !0;
@@ -8106,7 +8106,7 @@ function Dn(e, t) {
         C,
         D = On(
           S,
-          Kge()
+          getStaticSettingsPayloadSchema()
             .optional()
             .catch((H) => {
               ((E = !0),
@@ -8114,7 +8114,7 @@ function Dn(e, t) {
                   `policyHelpers.${S}.defaultSettings`,
                   H.issues[0]?.message ??
                     d(
-                      Kge(),
+                      getStaticSettingsPayloadSchema(),
                       C && typeof C === "object" && !Array.isArray(C)
                         ? C.defaultSettings
                         : void 0,
@@ -8144,7 +8144,7 @@ function Dn(e, t) {
                 message: `"${U}" on the policyHelpers.${S} entry is ignored \u2014 "policyHelper" and "policyHelpers" are TOP-LEVEL settings keys; nothing nests inside an entry. The nested config will NOT apply from here.`,
                 statusOnly: !0,
               });
-          for (let U of Uq)
+          for (let U of POLICY_HELPER_PLATFORMS)
             if (N[U] !== void 0 && N[U] !== null)
               e({
                 path: `policyHelpers.${S}`,
@@ -8162,7 +8162,7 @@ function Dn(e, t) {
         return H === null ? void 0 : H;
       }, D.optional()).catch((H) => {
         if (S === "default") {
-          p("policyHelpers.default", H.issues[0]?.message ?? d(Kge(), C));
+          p("policyHelpers.default", H.issues[0]?.message ?? d(getStaticSettingsPayloadSchema(), C));
           return;
         }
         if (E) return;
@@ -8172,7 +8172,7 @@ function Dn(e, t) {
           let ne = U,
             re = ne.defaultSettings;
           if (re !== void 0 && re !== null) {
-            let J = Kge().safeParse(re);
+            let J = getStaticSettingsPayloadSchema().safeParse(re);
             if (J.success) {
               let F = ne.outputBehavior,
                 V = F === void 0 || F === null ? null : Ks().safeParse(F);
@@ -8234,7 +8234,7 @@ function Dn(e, t) {
                   : ", or on the singular policyHelper key";
             e({
               path: "policyHelpers",
-              message: `"${C}" directly on the policyHelpers map is ignored \u2014 helper configs go on a per-OS entry (policyHelpers.${Uq.join("/")})${D}. No helper runs from this field here.`,
+              message: `"${C}" directly on the policyHelpers map is ignored \u2014 helper configs go on a per-OS entry (policyHelpers.${POLICY_HELPER_PLATFORMS.join("/")})${D}. No helper runs from this field here.`,
               statusOnly: !0,
             });
           }
@@ -8251,7 +8251,7 @@ function Dn(e, t) {
         (S) => (
           e({
             path: "policyHelpers",
-            message: `"policyHelpers" could not be parsed: expected an object mapping OS keys (${Uq.join(", ")}) to helper entries, plus an optional "default" settings payload (${S.issues[0]?.message ?? "failed schema validation"}). When delivered from an OS-admin policy source (MDM or the managed settings file), Claude Code will not start until this is fixed.`,
+            message: `"policyHelpers" could not be parsed: expected an object mapping OS keys (${POLICY_HELPER_PLATFORMS.join(", ")}) to helper entries, plus an optional "default" settings payload (${S.issues[0]?.message ?? "failed schema validation"}). When delivered from an OS-admin policy source (MDM or the managed settings file), Claude Code will not start until this is fixed.`,
             startupFatal: !0,
           }),
           {}
@@ -8287,11 +8287,11 @@ function Dn(e, t) {
         H = D("accessKeyIdVar"),
         N = D("secretAccessKeyVar"),
         U = D("sessionTokenVar"),
-        ne = yie;
+        ne = AWS_CREDENTIAL_ENV_VARS;
       if (![H, N, U].some((le) => le !== void 0 && ne.includes(le))) return;
       let re = (le) => le !== void 0 && He().safeParse(le).success;
       y += 1;
-      let J = (le) => `${Xet}${le}_${w}${y}_`,
+      let J = (le) => `${INVALID_PAIR_MARKER}${le}_${w}${y}_`,
         F = re(H) ? H : J("ACCESS_KEY_ID"),
         V = re(N) && N !== F ? N : J("SECRET_ACCESS_KEY"),
         ie =
@@ -8300,7 +8300,7 @@ function Dn(e, t) {
             : re(U) && U !== F && U !== V
               ? U
               : J("SESSION_TOKEN"),
-        xe = (le) => le.startsWith(Xet);
+        xe = (le) => le.startsWith(INVALID_PAIR_MARKER);
       if (!xe(F) && !xe(V)) {
         let le = ne.includes(V) ? V : void 0;
         if (((V = J("SECRET_ACCESS_KEY")), le !== void 0)) {
@@ -8458,7 +8458,7 @@ function Dn(e, t) {
           let D =
             E !== void 0
               ? [E]
-              : yie.flatMap((H) => {
+              : AWS_CREDENTIAL_ENV_VARS.flatMap((H) => {
                   let N = R({ accessKeyIdVar: H }, []);
                   return N !== void 0 ? [N] : [];
                 });
@@ -8506,7 +8506,7 @@ function Dn(e, t) {
           path: "sandbox.credentials",
           message: `${S.issues[0]?.message ?? "Failed schema validation"}. The credentials block was degraded to a fail-closed skeleton (all-deny sigv4, implicit AWS auto-pairing suppressed, no masking) until it is fixed.`,
         });
-        let E = yie.flatMap((C) => {
+        let E = AWS_CREDENTIAL_ENV_VARS.flatMap((C) => {
           let D = R({ accessKeyIdVar: C }, []);
           return D !== void 0 ? [D] : [];
         });
@@ -8520,7 +8520,7 @@ function Dn(e, t) {
         );
       });
   return (
-    (r.sandbox = kRt()
+    (r.sandbox = SandboxSettingsSchema()
       .extend({ credentials: L })
       .optional()
       .catch((S) => {
@@ -8551,31 +8551,31 @@ function Dn(e, t) {
       })
   );
 }
-function ftt(e) {
+function isServerNameEntry(e) {
   return "serverName" in e && e.serverName !== void 0;
 }
-function VRt(e) {
+function isServerCommandEntry(e) {
   return "serverCommand" in e && e.serverCommand !== void 0;
 }
-function KRt(e) {
+function isServerUrlEntry(e) {
   return "serverUrl" in e && e.serverUrl !== void 0;
 }
 import { createHash } from "crypto";
-function NQ(e) {
-  if (Array.isArray(e)) return e.map(NQ);
+function sortObjectKeysDeep(e) {
+  if (Array.isArray(e)) return e.map(sortObjectKeysDeep);
   if (e !== null && typeof e === "object") {
     let t = {};
-    for (let o of Object.keys(e).sort()) t[o] = NQ(e[o]);
+    for (let o of Object.keys(e).sort()) t[o] = sortObjectKeysDeep(e[o]);
     return t;
   }
   return e;
 }
-function bke(e) {
-  let t = NQ(e),
+function hashCanonicalJson(e) {
+  let t = sortObjectKeysDeep(e),
     o = b(t);
   return `sha256:${createHash("sha256").update(o).digest("hex")}`;
 }
-function jU(e) {
+function buildSettingsSummary(e) {
   if (!e)
     return {
       shellSettings: {},
@@ -8589,7 +8589,7 @@ function jU(e) {
     let h = e[g];
     if (g === "policyHelpers") {
       if (h !== null && typeof h === "object")
-        for (let y of Uq) {
+        for (let y of POLICY_HELPER_PLATFORMS) {
           let _ = er(h[y]);
           if (_) {
             if (((t[`policyHelpers.${y}`] = _.command), _.scriptSize))
@@ -8688,7 +8688,7 @@ function jU(e) {
     for (let [g, h] of Object.entries(e.env)) {
       if (h === void 0) continue;
       let f = String(h);
-      if (f.length > 0 && !$Be(g, f)) u[g] = f;
+      if (f.length > 0 && !shouldForwardEnvVar(g, f)) u[g] = f;
     }
   let p =
     e.hooks !== void 0 &&
@@ -8767,7 +8767,7 @@ function Sd(e) {
     typeof e.script === "string"
   );
 }
-function XRt(e) {
+function getPolicyHelperCommand(e) {
   return er(e)?.command;
 }
 function er(e) {
@@ -8818,7 +8818,7 @@ function bd(e) {
   let t = "args" in e && Array.isArray(e.args) ? e.args.map(String) : [];
   return b([e.command, ...t]);
 }
-function j5(e) {
+function hasSettingsSummaryEntries(e) {
   return (
     Object.keys(e.shellSettings).length > 0 ||
     Object.keys(e.envVars).length > 0 ||
@@ -8839,13 +8839,13 @@ function nr(e) {
   };
 }
 function Ye(e) {
-  return b(NQ(e));
+  return b(sortObjectKeysDeep(e));
 }
-function YRt(e) {
+function hashSettingsSummary(e) {
   return hashSha256(Ln(e));
 }
 function Nn(e, t, o) {
-  if (YRt(t) === e) return !0;
+  if (hashSettingsSummary(t) === e) return !0;
   return (
     typeof o === "string" &&
     o.length > 0 &&
@@ -8865,26 +8865,26 @@ function Ws(e, t, o) {
   ]);
 }
 function Vs(e, t) {
-  let o = jU(e),
-    r = jU(t);
-  if (!j5(r)) return !1;
-  if (!j5(o)) return !0;
+  let o = buildSettingsSummary(e),
+    r = buildSettingsSummary(t);
+  if (!hasSettingsSummaryEntries(r)) return !1;
+  if (!hasSettingsSummaryEntries(o)) return !0;
   return Ln(o) !== Ln(r);
 }
-function _lr(e, t) {
+function settingsDivergeFromConsent(e, t) {
   switch (e.source) {
     case "consented_payload":
       return Vs(e.settings, t);
     case "org_record": {
-      let o = jU(t);
-      if (!j5(o)) return !1;
+      let o = buildSettingsSummary(t);
+      if (!hasSettingsSummaryEntries(o)) return !1;
       if (Nn(e.dangerousSettingsHash, o, t?.claudeMd)) return !1;
       return Vs(e.consentedPayload, t);
     }
   }
 }
-function DHn(e, t) {
-  let o = jU(e),
+function diffSettingsSummaries(e, t) {
+  let o = buildSettingsSummary(e),
     r = 0,
     i = 0,
     d = {};
@@ -8926,9 +8926,9 @@ var kd = /^OTEL_EXPORTER_OTLP_(?:LOGS_|METRICS_|TRACES_)?ENDPOINT$/,
     "CLAUDE_CODE_ENHANCED_TELEMETRY_BETA",
     "ENABLE_ENHANCED_TELEMETRY_BETA",
   ]);
-function LHn(e, t) {
-  let o = t ? jU(t) : e;
-  return Gs(e) && Gs(o) && !j5({ ...o, envVars: {} });
+function isTelemetryOnlyEnvChange(e, t) {
+  let o = t ? buildSettingsSummary(t) : e;
+  return Gs(e) && Gs(o) && !hasSettingsSummaryEntries({ ...o, envVars: {} });
 }
 function Gs(e) {
   let t = rr(e),
@@ -8975,10 +8975,10 @@ var Id = 256,
   Xs = 180,
   qs = 60,
   sr = 32;
-function mtt(e) {
+function replaceNonPrintableAscii(e) {
   return e.replace(/[^\x20-\x7e]/gu, "?");
 }
-function MHn(e, t) {
+function describePolicyHelperCommand(e, t) {
   let o = xt(e, !1);
   if (!Array.isArray(o)) return;
   let [r, i, d] = o,
@@ -8999,7 +8999,7 @@ function MHn(e, t) {
   return p.length ? `${u} (${p.join(", ")})` : u;
 }
 function Dd(e) {
-  let t = mtt(e),
+  let t = replaceNonPrintableAscii(e),
     o = t.length > Id,
     r;
   if (!o) r = b(t);
@@ -9023,7 +9023,7 @@ function rr(e) {
     return r ? { key: t, text: `${t}=${r}`, url: r } : { key: t, text: t };
   });
 }
-function NHn(e) {
+function getManagedSettingsApprovalRows(e) {
   let { commandRows: t, sandboxRows: o, envRows: r, categoryRows: i } = Md(e);
   return { commandRows: t, sandboxRows: o, envRows: r, categoryRows: i };
 }
@@ -9032,7 +9032,7 @@ function Md(e) {
   for (let [d, u] of Object.entries(e.shellSettings)) {
     if (u === void 0) continue;
     if (d.startsWith("policyHelpers.")) {
-      let g = MHn(u, e.inlineHelperScriptSizes?.[d]);
+      let g = describePolicyHelperCommand(u, e.inlineHelperScriptSizes?.[d]);
       t.push(g ? `${d}=${g}` : d);
       continue;
     }
@@ -9086,15 +9086,15 @@ function lr(e) {
     )
   )
     return;
-  let t = jU(e);
+  let t = buildSettingsSummary(e);
   return Zs(t) ? t : void 0;
 }
 function helperConsentDigest(e) {
   let t = lr(e);
-  return t && YRt(t);
+  return t && hashSettingsSummary(t);
 }
 function stripReservedKeys(e) {
-  return tu(e, (t, o) => o.startsWith("$") && o !== "$schema");
+  return omitBy(e, (t, o) => o.startsWith("$") && o !== "$schema");
 }
 class cr {
   sessionCache = null;
@@ -9181,7 +9181,7 @@ function markRemoteManagedSettingsConsented(e) {
   ee().markConsented(e);
 }
 function setSessionCache(e, t, o) {
-  (ee().replaceSessionCache(e, t), Za(o));
+  (ee().replaceSessionCache(e, t), invalidateAllSettings(o));
 }
 function isRemoteManagedSettingsVerified() {
   let { sessionCache: e, verifiedPayload: t } = ee();
@@ -9236,7 +9236,7 @@ function isProjectedSnapshot(e) {
   return e !== null && ee().projectedView?.view === e;
 }
 function Ud(e) {
-  return e && isEvalPolicySnapshotOnly() ? { ...o8t(e), managedSourcesBehavior: "merge" } : e;
+  return e && isEvalPolicySnapshotOnly() ? { ...extractManagedSettings(e), managedSourcesBehavior: "merge" } : e;
 }
 function getSettingsPath() {
   return getRemoteSettingsPathOverride() ?? ar(getClaudeConfigDir(), SETTINGS_FILENAME);
@@ -9540,22 +9540,22 @@ var Wd = new Set(
     "ALL_PROXY",
     "NODE_OPTIONS",
     "NODE_TLS_REJECT_UNAUTHORIZED",
-    ...$U,
-    ...iL,
+    ...PROVIDER_CONFIG_ENV_VARS,
+    ...BASE_URL_ENV_VARS,
     "AWS_ENDPOINT_URL_STS",
     "AWS_ENDPOINT_URL",
     "AWS_ENDPOINT_URL_SSO",
     "AWS_ENDPOINT_URL_SSO_OIDC",
     "AWS_ENDPOINT_URL_BEDROCK",
     "AWS_ENDPOINT_URL_BEDROCK_RUNTIME",
-    ...MBe,
+    ...AWS_ENV_VARS,
     ...qt,
-    ...DRt,
+    ...GCE_METADATA_ENV_VARS,
     "CLOUDSDK_CONFIG",
     "GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES",
     "GCLOUD_PROJECT",
     "CLAUDE_CODE_CUSTOM_OAUTH_URL",
-    ...UU,
+    ...API_KEY_ENV_VARS,
     "CLAUDE_CODE_API_BASE_URL",
     "CLAUDE_CODE_OAUTH_REFRESH_TOKEN",
     "CLAUDE_CODE_OAUTH_SCOPES",
@@ -9603,7 +9603,7 @@ function Vd(e) {
   if (!e || (!e.env && !("managedMcpServers" in e))) return e;
   let { managedMcpServers: t, ...o } = e;
   return e.env
-    ? { ...o, env: tu(e.env, (r, i) => Wd.has(i.toUpperCase())) }
+    ? { ...o, env: omitBy(e.env, (r, i) => Wd.has(i.toUpperCase())) }
     : o;
 }
 function unverifiedRemoteCacheWithholdsProvisions() {
@@ -9621,8 +9621,8 @@ function getRemoteManagedSettingsRawCache() {
   let t = Un() !== void 0,
     o = zd();
   if (o) {
-    if ((e.seedFromDisk(o), t)) da().invalidatePolicyLayer();
-    else Za();
+    if ((e.seedFromDisk(o), t)) getHostSettingsStore().invalidatePolicyLayer();
+    else invalidateAllSettings();
     return o;
   }
   return null;
@@ -9710,7 +9710,7 @@ function uu(e) {
   var o = cu.call(t, "constructor") && t.constructor;
   return typeof o == "function" && o instanceof o && vr.call(o) == du;
 }
-var zet = uu;
+var isPlainObjectRecord = uu;
 function pu(e, t) {
   if (t === "constructor" && typeof e[t] === "function") return;
   if (t == "__proto__") return;
@@ -9727,7 +9727,7 @@ function gu(e, t, o, r) {
       g = r ? r(o[p], e[p], p, o, e) : void 0;
     if (g === void 0) g = e[p];
     if (i) sZ(o, p, g);
-    else lke(o, p, g);
+    else assignValue(o, p, g);
   }
   return o;
 }
@@ -9756,7 +9756,7 @@ function fu(e, t, o, r, i, d, u) {
       else if (w) ((y = !1), (f = at(g, !0)));
       else if (R) ((y = !1), (f = jt(g, !0)));
       else f = [];
-    else if (zet(g) || e_e(g)) {
+    else if (isPlainObjectRecord(g) || e_e(g)) {
       if (((f = p), e_e(p))) f = Ar(p);
       else if (!Fm(p) || xje(p)) f = Ft(g);
     } else y = !1;
@@ -9859,7 +9859,7 @@ function wu(e, t, o) {
     return isEqualPrimitive(o[t], e);
   return !1;
 }
-var Z5t = wu;
+var isIterateeCall = wu;
 function Ou(e) {
   return Mr(function (t, o) {
     var r = -1,
@@ -9868,7 +9868,7 @@ function Ou(e) {
       u = i > 2 ? o[2] : void 0;
     if (
       ((d = e.length > 3 && typeof d == "function" ? (i--, d) : void 0),
-      u && Z5t(o[0], o[1], u))
+      u && isIterateeCall(o[0], o[1], u))
     )
       ((d = i < 3 ? void 0 : d), (i = 1));
     t = Object(t);
@@ -9883,8 +9883,8 @@ var Lr = Ou;
 var Tu = Lr(function (e, t, o, r) {
     Tr(e, t, o, r);
   }),
-  b0 = Tu;
-var S1 = "claude.ai sync",
+  mergeWith = Tu;
+var CLAUDE_AI_SYNC_LABEL = "claude.ai sync",
   Pu = {
     advisor: "config",
     agents: "config",
@@ -10014,11 +10014,11 @@ var S1 = "claude.ai sync",
     ultrareview: "agent",
     workflows: "agent",
   };
-function Kar(e) {
+function getCommandKind(e) {
   if (e.type === "prompt") return "skill";
   return Pu[e.name] ?? "action";
 }
-function Xar(e) {
+function getSkillSourceCategory(e) {
   if (e.type !== "prompt") return "builtin";
   if (e.loadedFrom === "syncedSkills") return "synced";
   switch (e.source) {
@@ -10042,14 +10042,14 @@ function Xar(e) {
       return "flag";
   }
 }
-var yi = [
+var SETTINGS_SOURCE_ORDER = [
   "userSettings",
   "projectSettings",
   "localSettings",
   "flagSettings",
   "policySettings",
 ];
-function ay(e) {
+function describeSettingsSourceShort(e) {
   switch (e) {
     case "userSettings":
       return "user";
@@ -10063,7 +10063,7 @@ function ay(e) {
       return "managed";
   }
 }
-function xRt(e) {
+function getSettingsSourceDisplayName(e) {
   switch (e) {
     case "userSettings":
       return "User";
@@ -10084,10 +10084,10 @@ function xRt(e) {
     case "memoryStore":
       return "Memory store";
     case "syncedSkills":
-      return S1;
+      return CLAUDE_AI_SYNC_LABEL;
   }
 }
-function Yet(e) {
+function describeSettingsSource(e) {
   switch (e) {
     case "userSettings":
       return "user settings";
@@ -10113,10 +10113,10 @@ function Yet(e) {
       return "cloud-session credential guard";
   }
 }
-function Zar(e) {
-  return capitalize(Yet(e));
+function getSettingsSourceTitle(e) {
+  return capitalize(describeSettingsSource(e));
 }
-function elr(e) {
+function parseSettingsSourcesArg(e) {
   if (e === "") return [];
   let t = e.split(",").map((r) => r.trim()),
     o = [];
@@ -10138,22 +10138,22 @@ function elr(e) {
     }
   return o;
 }
-function ms() {
+function getEnabledSettingsSources() {
   let e = gae(),
-    t = da();
+    t = getHostSettingsStore();
   if (t.enabledSources?.allowed === e) return t.enabledSources.result;
   let o = new Set(e);
   (o.add("flagSettings"), o.add("policySettings"));
-  let r = yi.filter((i) => o.has(i));
+  let r = SETTINGS_SOURCE_ORDER.filter((i) => o.has(i));
   return ((t.enabledSources = { allowed: e, result: r }), r);
 }
-function Nr(e) {
-  return ms().includes(e);
+function isSettingsSourceEnabled(e) {
+  return getEnabledSettingsSources().includes(e);
 }
-var w0 = ["userSettings", "projectSettings", "localSettings"],
-  PBe = ["projectSettings", "localSettings"],
-  Ow = new Set(PBe),
-  cke = ["localSettings", "projectSettings", "userSettings"];
+var USER_PROJECT_LOCAL_SETTINGS_SOURCES = ["userSettings", "projectSettings", "localSettings"],
+  PROJECT_LOCAL_SETTINGS_SOURCES = ["projectSettings", "localSettings"],
+  PROJECT_SCOPED_SETTINGS_SOURCE_SET = new Set(PROJECT_LOCAL_SETTINGS_SOURCES),
+  HOOK_SETTINGS_SOURCE_ORDER = ["localSettings", "projectSettings", "userSettings"];
 import { join as xu } from "path";
 class Ur {
   managedFilePath = void 0;
@@ -10163,7 +10163,7 @@ class Ur {
   }
   getDropInDir() {
     return (
-      (this.dropInDir ??= xu(Tb(), "managed-settings.d")),
+      (this.dropInDir ??= xu(getManagedSettingsDirPath(), "managed-settings.d")),
       this.dropInDir
     );
   }
@@ -10175,11 +10175,11 @@ class Ur {
   }
 }
 var zr = new Ur();
-function Tb() {
+function getManagedSettingsDirPath() {
   return zr.getManagedFilePath();
 }
 function Iu() {
-  let e = uHn();
+  let e = getSystemManagedSettingsPathOverride();
   if (e !== void 0) return e;
   switch (getCurrentPlatform()) {
     case "macos":
@@ -10190,10 +10190,10 @@ function Iu() {
       return "/etc/claude-code";
   }
 }
-function uHn() {
+function getSystemManagedSettingsPathOverride() {
   return;
 }
-function HRt() {
+function getManagedSettingsDropInDir() {
   return zr.getDropInDir();
 }
 function Du(e, t) {
@@ -10408,7 +10408,7 @@ function Wt(e, t, o, r, i, d) {
   return (
     Hr(I || e, function (L, Q) {
       if (I) ((Q = L), (L = e[Q]));
-      lke(u, Q, Wt(L, t, o, Q, e, d));
+      assignValue(u, Q, Wt(L, t, o, Q, e, d));
     }),
     u
   );
@@ -10418,7 +10418,7 @@ function Wp(e) {
   var t = e == null ? 0 : e.length;
   return t ? e[t - 1] : void 0;
 }
-var sL = Wp;
+var lastArrayElement = Wp;
 function Vp(e, t, o) {
   var r = -1,
     i = e.length;
@@ -10429,9 +10429,9 @@ function Vp(e, t, o) {
   while (++r < i) d[r] = e[r + t];
   return d;
 }
-var OBe = Vp;
+var sliceArrayRange = Vp;
 function Gp(e, t) {
-  return t.length < 2 ? e : bxe(e, OBe(t, 0, -1));
+  return t.length < 2 ? e : bxe(e, sliceArrayRange(t, 0, -1));
 }
 var di = Gp;
 var Yp = Object.prototype,
@@ -10447,11 +10447,11 @@ function Xp(e, t) {
     if ((i === "constructor" || i === "prototype") && o < r - 1) return !1;
   }
   var d = di(e, t);
-  return d == null || delete d[bz(sL(t))];
+  return d == null || delete d[bz(lastArrayElement(t))];
 }
 var ui = Xp;
 function qp(e) {
-  return zet(e) ? void 0 : e;
+  return isPlainObjectRecord(e) ? void 0 : e;
 }
 var pi = qp;
 var gi = F0 ? F0.isConcatSpreadable : void 0;
@@ -10501,7 +10501,7 @@ var tg = 1,
     while (i--) ui(o, t[i]);
     return o;
   }),
-  zl = sg;
+  omitObjectKeys = sg;
 function rg(e, t) {
   return dt(e, t, function (o, r) {
     return PXt(e, r);
@@ -10511,22 +10511,22 @@ var bi = rg;
 var ig = Vt(function (e, t) {
     return e == null ? {} : bi(e, t);
   }),
-  DBe = ig;
+  pickObjectKeys = ig;
 import { homedir } from "os";
 import { dirname, join as ye, resolve } from "path";
-function qHn(e) {
+function hasAttributionOverrides(e) {
   return e !== void 0 && (e.commit !== void 0 || e.pr !== void 0);
 }
 function Ei(e, t) {
   let o = e?.commitTrailers;
   if (typeof o === "boolean") return o ? "explicit-enabled" : "disabled";
-  if (e !== void 0 && qHn(e))
+  if (e !== void 0 && hasAttributionOverrides(e))
     return e.commit === "" ? "disabled" : "implicit-enabled";
   if (t !== void 0) return t ? "implicit-enabled" : "disabled";
   return;
 }
 var ki = 512;
-function v8t(e) {
+function sanitizeSettingsWarnings(e) {
   return e.map(ag);
 }
 function ag(e) {
@@ -10562,7 +10562,7 @@ function ag(e) {
   };
 }
 function ct(e) {
-  let t = mtt(e.replace(/\s+/gu, " "));
+  let t = replaceNonPrintableAscii(e.replace(/\s+/gu, " "));
   return t.length > ki ? `${t.slice(0, ki - 1)}\u2026` : t;
 }
 var lg = new Set([
@@ -10577,7 +10577,7 @@ var lg = new Set([
   "custom",
   "function",
 ]);
-function Tie(e, t) {
+function toJsonSchema(e, t) {
   let o = t?.io ?? "output",
     r = t?.unrepresentable ?? "throw";
   return {
@@ -10637,17 +10637,17 @@ function cg(e, t) {
   }
 }
 function Kn(e) {
-  let t = e ? YBe(e) : XT(),
-    o = Tie(t, { unrepresentable: "any" });
-  return (nkt(o, !1), b(o, null, 2));
+  let t = e ? buildSettingsSchema(e) : getSettingsSchema(),
+    o = toJsonSchema(t, { unrepresentable: "any" });
+  return (stripInternalSchemaDescriptions(o, !1), b(o, null, 2));
 }
 var dg = /^@internal(?:\b|$)/;
 function vi(e) {
   return typeof e === "string" && dg.test(e);
 }
-function nkt(e, t) {
+function stripInternalSchemaDescriptions(e, t) {
   if (Array.isArray(e)) {
-    for (let i of e) nkt(i, t);
+    for (let i of e) stripInternalSchemaDescriptions(i, t);
     return;
   }
   if (e === null || typeof e !== "object") return;
@@ -10672,7 +10672,7 @@ function nkt(e, t) {
       }
     }
   }
-  for (let i of Object.values(o)) nkt(i, t);
+  for (let i of Object.values(o)) stripInternalSchemaDescriptions(i, t);
 }
 var Te = "https://code.claude.com/docs/en",
   ug = [
@@ -10798,7 +10798,7 @@ function Ai(e) {
   if (!o.docLink && e.path) o.docLink = pg[beforeFirst(e.path, ".")];
   return o;
 }
-var gg = createLazyValue(() => YBe(zBe(), { strictPolicyHelperKeys: !0 }).strict());
+var gg = createLazyValue(() => buildSettingsSchema(getEnabledSettingsSections(), { strictPolicyHelperKeys: !0 }).strict());
 function Ci(e) {
   return e.code === "invalid_type";
 }
@@ -10876,16 +10876,16 @@ function qe(e, t) {
     };
   });
 }
-function zHn(e) {
+function validateSettingsJson(e) {
   try {
     let t = z(e),
-      o = Dq(isRecord(t) ? { ...t } : t, "settings").map(Yt),
+      o = normalizeSettingsAliases(isRecord(t) ? { ...t } : t, "settings").map(Yt),
       r = gg().safeParse(t),
       i = r.success ? [] : qe(r.error, "settings"),
-      d = KHn(t);
+      d = getCrossSessionInboundErrorMessage(t);
     if (d !== void 0)
-      i.push({ path: k8t, message: `"crossSessionInbound" ${d}.` });
-    let u = VHn(t);
+      i.push({ path: CROSS_SESSION_INBOUND_SETTING_KEY, message: `"crossSessionInbound" ${d}.` });
+    let u = validatePolicyHelpersPayloads(t);
     if (i.length === 0 && o.length === 0 && u.length === 0)
       return { isValid: !0 };
     return {
@@ -10913,7 +10913,7 @@ function zHn(e) {
     };
   }
 }
-function R8t(e, t) {
+function parseManagedSettingsPayload(e, t) {
   let o = Ru(e),
     r = [];
   if (o && typeof o === "object") {
@@ -10924,8 +10924,8 @@ function R8t(e, t) {
         delete u[p];
       }
   }
-  let i = wke(o, t, { mcpServerEntrySalvageOnly: !0, policySource: !0 }),
-    d = XT().safeParse(o);
+  let i = collectSettingsWarnings(o, t, { mcpServerEntrySalvageOnly: !0, policySource: !0 }),
+    d = getSettingsSchema().safeParse(o);
   if (!d.success) {
     let u = t.startsWith("policyHelpers.") ? "payload" : "managedSettings",
       p = d.error.issues
@@ -10938,7 +10938,7 @@ function R8t(e, t) {
   }
   return { settings: d.data, warnings: i, strippedKeys: r };
 }
-function VHn(e) {
+function validatePolicyHelpersPayloads(e) {
   if (!e || typeof e !== "object" || Array.isArray(e)) return [];
   let t = e.policyHelpers;
   if (!t || typeof t !== "object" || Array.isArray(t)) return [];
@@ -10946,7 +10946,7 @@ function VHn(e) {
     r = t;
   if (r.default !== void 0 && r.default !== null)
     o.push(["policyHelpers.default", r.default]);
-  for (let d of Uq) {
+  for (let d of POLICY_HELPER_PLATFORMS) {
     let u = r[d];
     if (u && typeof u === "object" && !Array.isArray(u)) {
       let p = u.defaultSettings;
@@ -10956,8 +10956,8 @@ function VHn(e) {
   }
   let i = [];
   for (let [d, u] of o) {
-    for (let g of Dq(isRecord(u) ? { ...u } : u, d)) i.push(`${d}: ${Yt(g)}`);
-    let p = R8t(u, d);
+    for (let g of normalizeSettingsAliases(isRecord(u) ? { ...u } : u, d)) i.push(`${d}: ${Yt(g)}`);
+    let p = parseManagedSettingsPayload(u, d);
     if ("error" in p)
       i.push(
         `${d}: not a valid static settings payload \u2014 Claude Code refuses to start on it when delivered from an OS-admin policy source (${p.error})`,
@@ -10986,7 +10986,7 @@ function fg(e, t) {
           }),
           !1
         );
-      let g = Ske(p, d);
+      let g = validatePermissionRule(p, d);
       if (!g.valid) {
         let h = `Invalid permission rule "${p}" was skipped: ${g.error}`;
         if (g.suggestion) h += `. ${g.suggestion}`;
@@ -11006,16 +11006,16 @@ function fg(e, t) {
   }
   return i;
 }
-var hg = new Set(C_);
+var hg = new Set(HOOK_EVENT_NAMES);
 function yg(e, t) {
   if (!e || typeof e !== "object") return [];
   return [
-    ...(b1(e, Qo)
+    ...(hasMisplacedGuardHooks(e, Qo)
       ? [
           {
             file: t,
             path: "hooks",
-            message: `PreToolUse/PermissionRequest hooks are declared outside "hooks" (at the top level or under another key) \u2014 ${Kg}.`,
+            message: `PreToolUse/PermissionRequest hooks are declared outside "hooks" (at the top level or under another key) \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.`,
             severity: "fatal",
             docLink: "https://code.claude.com/docs/en/hooks",
           },
@@ -11032,12 +11032,12 @@ function Sg(e, t) {
     Array.isArray(e.hooks)
   ) {
     let i = ce(e.hooks);
-    if (Array.isArray(e.hooks) && (e.hooks.some(isRecord) || LQ(e.hooks)))
+    if (Array.isArray(e.hooks) && (e.hooks.some(isRecord) || declaresGuardHook(e.hooks)))
       return [
         {
           file: t,
           path: "hooks",
-          message: `"hooks" must be an object mapping event names to matcher arrays; received ${i} \u2014 ${Kg}.`,
+          message: `"hooks" must be an object mapping event names to matcher arrays; received ${i} \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.`,
           invalidValue: i,
           docLink: "https://code.claude.com/docs/en/hooks",
         },
@@ -11057,12 +11057,12 @@ function Sg(e, t) {
     );
   }
   let o = e.hooks;
-  if (Mq(o))
+  if (isHookMatcher(o))
     return [
       {
         file: t,
         path: "hooks",
-        message: `"hooks" must be an object mapping event names to matcher arrays; received a single matcher \u2014 ${Kg}.`,
+        message: `"hooks" must be an object mapping event names to matcher arrays; received a single matcher \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.`,
         docLink: "https://code.claude.com/docs/en/hooks",
       },
     ];
@@ -11070,11 +11070,11 @@ function Sg(e, t) {
   for (let i of Object.keys(o)) {
     let d = escapeAllControlCharacters(i);
     if (!hg.has(i)) {
-      if (DQ(o[i], 3, { matchersCount: !Array.isArray(o[i]) })) {
+      if (containsHookMatcher(o[i], 3, { matchersCount: !Array.isArray(o[i]) })) {
         r.push({
           file: t,
           path: `hooks.${d}`,
-          message: `"${d}" is not a hook event, but it holds PreToolUse/PermissionRequest hooks \u2014 ${Kg}.`,
+          message: `"${d}" is not a hook event, but it holds PreToolUse/PermissionRequest hooks \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.`,
           docLink: "https://code.claude.com/docs/en/hooks",
         });
         continue;
@@ -11083,7 +11083,7 @@ function Sg(e, t) {
         r.push({
           file: t,
           path: `hooks.${d}`,
-          message: `Unknown hook event "${d}" was ignored. Valid events: ${C_.join(", ")}`,
+          message: `Unknown hook event "${d}" was ignored. Valid events: ${HOOK_EVENT_NAMES.join(", ")}`,
           severity: "warning",
           invalidValue: d,
           docLink: "https://code.claude.com/docs/en/hooks",
@@ -11094,11 +11094,11 @@ function Sg(e, t) {
     if (!Array.isArray(o[i])) {
       let u = o[i],
         p = ce(u);
-      if ((q6.has(i) && u !== null) || DQ(u, 3, { matchersCount: !1 })) {
+      if ((GUARD_HOOK_EVENTS.has(i) && u !== null) || containsHookMatcher(u, 3, { matchersCount: !1 })) {
         r.push({
           file: t,
           path: `hooks.${d}`,
-          message: `Hook event "${d}" must be an array of matchers; received ${p} \u2014 ${Kg}.`,
+          message: `Hook event "${d}" must be an array of matchers; received ${p} \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.`,
           invalidValue: p,
           docLink: "https://code.claude.com/docs/en/hooks",
         });
@@ -11124,7 +11124,7 @@ function Sg(e, t) {
         path: g.aboutType
           ? `hooks.${i}.${g.path}.type`
           : `hooks.${i}.${g.path}`,
-        message: `${g.problem} \u2014 ${Kg}.${g.aboutType ? ` Valid types: ${[...vt()].join(", ")}` : ""}`,
+        message: `${g.problem} \u2014 ${UNLOADABLE_GUARD_HOOK_NOTE}.${g.aboutType ? ` Valid types: ${[...vt()].join(", ")}` : ""}`,
         severity: "fatal",
         invalidValue: g.received,
         docLink: "https://code.claude.com/docs/en/hooks",
@@ -11386,17 +11386,17 @@ function Rg(e, t, o) {
   return [Pg(i, t, o?.policySource === !0)];
 }
 function Ri(e) {
-  return typeof e === "string" && XBe.includes(e);
+  return typeof e === "string" && CROSS_SESSION_INBOUND_MODES.includes(e);
 }
-var k8t = "crossSessionInbound";
-function KHn(e) {
+var CROSS_SESSION_INBOUND_SETTING_KEY = "crossSessionInbound";
+function getCrossSessionInboundErrorMessage(e) {
   if (!isRecord(e)) return;
   let t = e.crossSessionInbound;
   if (t === void 0 || Ri(t)) return;
   return Pi(t);
 }
 function Pi(e) {
-  let t = XBe.map((r) => `"${r}"`).join(", "),
+  let t = CROSS_SESSION_INBOUND_MODES.map((r) => `"${r}"`).join(", "),
     o =
       typeof e === "string"
         ? `"${ve(e).replace(/^<key>$/, "<value>")}"`
@@ -11404,30 +11404,30 @@ function Pi(e) {
   return `must be one of ${t}; received ${o}`;
 }
 function Pg(e, t, o = !1) {
-  let r = XBe.map((d) => `"${d}"`).join(", "),
+  let r = CROSS_SESSION_INBOUND_MODES.map((d) => `"${d}"`).join(", "),
     i = o
       ? 'In managed settings an unrecognized value is treated as "refuse" (the most restrictive): cross-session messages to this session are turned away until an administrator fixes it.'
       : "This value was ignored; while it is present, cross-session messages are held for your approval instead of being delivered. Set it to one of the values above.";
   return {
     file: t,
-    path: k8t,
+    path: CROSS_SESSION_INBOUND_SETTING_KEY,
     message: `"crossSessionInbound" ${Pi(e)}. ${i}`,
     severity: "warning",
     expected: r,
     ...(o && { statusOnly: !0 }),
   };
 }
-var x8t = "remoteControl.shareHostProfile";
+var REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY = "remoteControl.shareHostProfile";
 function xg(e, t, o) {
   if (!isRecord(e) || e.remoteControl === void 0) return [];
   let r = o?.policySource === !0,
-    i = Vge.map((_) => `"${_}"`).join(", "),
+    i = HOST_PROFILE_LEVELS.map((_) => `"${_}"`).join(", "),
     d = r
       ? 'In managed settings this is treated as "off" (the most restrictive): Remote Control environments report nothing about this machine until an administrator fixes it.'
       : "While it is present, Remote Control environments report nothing about this machine.",
     u = (_) => ({
       file: t,
-      path: x8t,
+      path: REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY,
       message: `${_}. ${d}`,
       severity: "warning",
       expected: i,
@@ -11458,16 +11458,16 @@ function xg(e, t, o) {
     );
   }
   let y = g.shareHostProfile;
-  if (y !== void 0 && !(typeof y === "string" && Vge.includes(y))) {
+  if (y !== void 0 && !(typeof y === "string" && HOST_PROFILE_LEVELS.includes(y))) {
     if (r) g.shareHostProfile = "off";
     else delete g.shareHostProfile;
-    h.push(u(`"${x8t}" must be one of ${i}; received ${p(y)}`));
+    h.push(u(`"${REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY}" must be one of ${i}; received ${p(y)}`));
   }
   return h;
 }
-function wke(e, t, o) {
+function collectSettingsWarnings(e, t, o) {
   return [
-    ...Dq(e, t),
+    ...normalizeSettingsAliases(e, t),
     ...fg(e, t),
     ...yg(e, t),
     ...Cg(e, t),
@@ -11481,44 +11481,44 @@ function wke(e, t, o) {
     ...(o?.mcpServerEntrySalvageOnly ? Eg(e, t) : []),
   ];
 }
-function XHn(e) {
+function resolveEnabledSettingsSources(e) {
   let t = new Set(e.allowedSources);
   return (
     t.add("flagSettings"),
     t.add("policySettings"),
-    yi.filter((o) => t.has(o))
+    SETTINGS_SOURCE_ORDER.filter((o) => t.has(o))
   );
 }
 function Mg() {
-  return ye(Tb(), "managed-settings.json");
+  return ye(getManagedSettingsDirPath(), "managed-settings.json");
 }
-function QBe(e) {
+function readManagedFileSettings(e) {
   if (getCurrentPlatform() === "wsl" && e.wslInherits?.()) {
     let t = Fn(WSL_MANAGED_SETTINGS_DIR, e.store);
     if (t.settings) return t;
-    let o = Fn(Tb(), e.store);
+    let o = Fn(getManagedSettingsDirPath(), e.store);
     return { settings: o.settings, errors: [...t.errors, ...o.errors] };
   }
-  return Fn(Tb(), e.store);
+  return Fn(getManagedSettingsDirPath(), e.store);
 }
-function ZBe(e) {
-  return getCurrentPlatform() === "wsl" && e ? [WSL_MANAGED_SETTINGS_DIR, Tb()] : [Tb()];
+function getManagedSettingsDirs(e) {
+  return getCurrentPlatform() === "wsl" && e ? [WSL_MANAGED_SETTINGS_DIR, getManagedSettingsDirPath()] : [getManagedSettingsDirPath()];
 }
-function rkt(e) {
+function isManagedDropInSettingsFile(e) {
   return e.endsWith(".json") && !e.startsWith(".");
 }
 function Fn(e, t) {
   let o = [],
     r = {},
     i = !1,
-    { settings: d, errors: u } = WU(
+    { settings: d, errors: u } = parseSettingsFileCached(
       ye(e, "managed-settings.json"),
       t,
       void 0,
       !0,
     );
   if ((o.push(...u), d && Object.keys(d).length > 0))
-    ((r = b0(r, d, settingsMergeCustomizer)), (i = !0));
+    ((r = mergeWith(r, d, settingsMergeCustomizer)), (i = !0));
   let p = ye(e, "managed-settings.d");
   try {
     let g = t.folderListingForPolicyWalk(p),
@@ -11527,28 +11527,28 @@ function Fn(e, t) {
     else
       ((h = ae()
         .readdirSync(p)
-        .filter((f) => (f.isFile() || f.isSymbolicLink()) && rkt(f.name))
+        .filter((f) => (f.isFile() || f.isSymbolicLink()) && isManagedDropInSettingsFile(f.name))
         .map((f) => f.name)
         .sort()),
         t.noteWalkListing(p, h));
     for (let f of h) {
-      let { settings: y, errors: _ } = WU(ye(p, f), t, void 0, !0);
+      let { settings: y, errors: _ } = parseSettingsFileCached(ye(p, f), t, void 0, !0);
       if ((o.push(..._), y && Object.keys(y).length > 0))
-        ((r = b0(r, y, settingsMergeCustomizer)), (i = !0));
+        ((r = mergeWith(r, y, settingsMergeCustomizer)), (i = !0));
     }
   } catch (g) {
     let h = A(g);
     if (h !== "ENOENT" && h !== "ENOTDIR")
       (n(`managed-settings.d read failed: ${g}`, { level: "error" }),
-        o.push(okt(p, g, "directory")));
+        o.push(createSettingsReadError(p, g, "directory")));
   }
-  return { settings: i && lL(r) ? r : null, errors: o };
+  return { settings: i && hasSettingsContent(r) ? r : null, errors: o };
 }
-function YHn(e, t) {
-  if (W(e)) Ake(t);
+function reportSettingsReadError(e, t) {
+  if (W(e)) logBrokenSettingsSymlink(t);
   else n(`settings file read failed at ${t}: ${e}`, { level: "error" });
 }
-function WU(e, t, o, r) {
+function parseSettingsFileCached(e, t, o, r) {
   let i = o !== void 0 ? `${e}\x00pinned` : e,
     d = t.parsedFiles.get(i);
   if (d)
@@ -11567,7 +11567,7 @@ function Wn(e) {
     errors: t.errors,
   };
 }
-function Tke(e, t) {
+function parseSettingsContentCached(e, t) {
   let o = xi.get(e),
     r = o?.get(t);
   if (r)
@@ -11586,7 +11586,7 @@ function Tke(e, t) {
 var xi = new WeakMap();
 function Lg(e, t) {
   let o = Ru(e),
-    r = wke(o, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
+    r = collectSettingsWarnings(o, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
     i = [],
     d = Dn(Li(t, i), t).safeParse(o);
   if (!d.success) return { settings: null, errors: [...r, ...qe(d.error, t)] };
@@ -11595,7 +11595,7 @@ function Lg(e, t) {
     errors: [...r, ...i],
   };
 }
-function e2e(e) {
+function isManagedMcpServersKey(e) {
   return (
     isHostManagedSettingsEntrypoint() && (e === "managedMcpServers" || e.startsWith("managedMcpServers."))
   );
@@ -11604,7 +11604,7 @@ function Mi(e, t) {
   if (!isRecord(e) || !("managedMcpServers" in e)) return [];
   return (
     delete e.managedMcpServers,
-    e2e("managedMcpServers")
+    isManagedMcpServersKey("managedMcpServers")
       ? []
       : [
           {
@@ -11619,7 +11619,7 @@ function Mi(e, t) {
 }
 function Li(e, t) {
   return (o) => {
-    if (e2e(o.path)) return;
+    if (isManagedMcpServersKey(o.path)) return;
     if (
       (t.push({
         file: e,
@@ -11636,10 +11636,10 @@ function Li(e, t) {
       });
   };
 }
-function Bq(e) {
+function loadRemoteManagedSettings(e) {
   let t = e?.remote ? e.remote() : getRemoteManagedSettingsSyncFromCache(),
     o =
-      !e?.remote && !e2e("managedMcpServers") && unverifiedRemoteCacheWithholdsProvisions()
+      !e?.remote && !isManagedMcpServersKey("managedMcpServers") && unverifiedRemoteCacheWithholdsProvisions()
         ? [
             {
               file: "remote managed settings",
@@ -11653,18 +11653,18 @@ function Bq(e) {
         : [];
   if (!t || Object.keys(t).length === 0)
     return { settings: null, errors: o, servedSnapshot: !1 };
-  let { settings: r, errors: i } = Tke(t, "remote managed settings");
-  return { settings: r, errors: [...o, ...v8t(i)], servedSnapshot: isProjectedSnapshot(t) };
+  let { settings: r, errors: i } = parseSettingsContentCached(t, "remote managed settings");
+  return { settings: r, errors: [...o, ...sanitizeSettingsWarnings(i)], servedSnapshot: isProjectedSnapshot(t) };
 }
-var H8t = "parent managed settings",
-  t2e = ["cleanupPeriodDays", "desktopSessionCleanupPeriodDays"];
-function btt(e) {
+var PARENT_MANAGED_SETTINGS_LABEL = "parent managed settings",
+  CLEANUP_PERIOD_SETTING_KEYS = ["cleanupPeriodDays", "desktopSessionCleanupPeriodDays"];
+function loadParentManagedSettings(e) {
   let t = e.parentManaged;
   if (!t || Object.keys(t).length === 0) return { settings: null, errors: [] };
-  let o = Tke(t, H8t);
-  if (o.settings?.managedMcpServers !== void 0 && !e2e("managedMcpServers"))
+  let o = parseSettingsContentCached(t, PARENT_MANAGED_SETTINGS_LABEL);
+  if (o.settings?.managedMcpServers !== void 0 && !isManagedMcpServersKey("managedMcpServers"))
     o.errors.push({
-      file: H8t,
+      file: PARENT_MANAGED_SETTINGS_LABEL,
       path: "managedMcpServers",
       message: `"managedMcpServers" is only honored from the organization's managed settings sources (server-managed, MDM, managed-settings.json), not from settings a host passes in, and was ignored here.`,
       severity: "warning",
@@ -11672,12 +11672,12 @@ function btt(e) {
     });
   return o;
 }
-function wtt(e) {
+function loadSdkInlineSettings(e) {
   let t = e.flagInline;
   if (!t) return { settings: null, errors: [] };
   let o = Ru(t),
-    r = [...Mi(o, "SDK inline settings"), ...wke(o, "SDK inline settings")],
-    i = XT().safeParse(o);
+    r = [...Mi(o, "SDK inline settings"), ...collectSettingsWarnings(o, "SDK inline settings")],
+    i = getSettingsSchema().safeParse(o);
   if (!i.success)
     return {
       settings: null,
@@ -11687,49 +11687,49 @@ function wtt(e) {
     return { settings: null, errors: r };
   return { settings: i.data, errors: r };
 }
-var n_ = 2097152;
+var MAX_SETTINGS_FILE_BYTES = 2097152;
 function parseSettingsFileUncached(e, t, o) {
   try {
     let r;
     if (t !== void 0) r = t;
     else {
       let { resolvedPath: i } = Ro(ae(), e);
-      r = readFileSyncText(i, n_);
+      r = readFileSyncText(i, MAX_SETTINGS_FILE_BYTES);
     }
-    return Eke(r, e, o);
+    return parseSettingsContent(r, e, o);
   } catch (r) {
     return Ni(r, e);
   }
 }
-function Slr(e, t) {
+function readSettingsFileCached(e, t) {
   let o;
   try {
     let { resolvedPath: d } = Ro(ae(), e);
-    o = readFileSyncText(d, n_);
+    o = readFileSyncText(d, MAX_SETTINGS_FILE_BYTES);
   } catch (d) {
     return (t.delete(e), Ni(d, e));
   }
   let r = t.get(e),
-    i = r !== void 0 && r.content === o ? r.parsed : Eke(o, e);
+    i = r !== void 0 && r.content === o ? r.parsed : parseSettingsContent(o, e);
   return (
     t.set(e, { content: o, parsed: i }),
     { settings: i.settings ? Ru(i.settings) : null, errors: i.errors }
   );
 }
-function Eke(e, t, o) {
+function parseSettingsContent(e, t, o) {
   if (e.trim() === "") return { settings: {}, errors: [] };
   let r = Ru(xt(e, !1));
   if (o) {
-    if (!isRecord(r)) return { settings: null, errors: [I8t(t)] };
-    let u = wke(r, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
+    if (!isRecord(r)) return { settings: null, errors: [createUnparsableSettingsError(t)] };
+    let u = collectSettingsWarnings(r, t, { skipMcpServerEntryFilter: !0, policySource: !0 }),
       p = [],
       g = Dn(Li(t, p), t).safeParse(r);
     if (!g.success)
       return { settings: null, errors: [...u, ...qe(g.error, t)] };
     return { settings: g.data, errors: [...u, ...p] };
   }
-  let i = [...Mi(r, t), ...wke(r, t)],
-    d = XT().safeParse(r);
+  let i = [...Mi(r, t), ...collectSettingsWarnings(r, t)],
+    d = getSettingsSchema().safeParse(r);
   if (!d.success) {
     let u = qe(d.error, t);
     return { settings: null, errors: [...i, ...u] };
@@ -11738,7 +11738,7 @@ function Eke(e, t, o) {
     return { settings: null, errors: i };
   return { settings: d.data, errors: i };
 }
-function I8t(e, { userWritable: t = !1 } = {}) {
+function createUnparsableSettingsError(e, { userWritable: t = !1 } = {}) {
   return t
     ? {
         file: e,
@@ -11755,19 +11755,19 @@ function I8t(e, { userWritable: t = !1 } = {}) {
         startupFatal: !0,
       };
 }
-function Ake(e) {
+function logBrokenSettingsSymlink(e) {
   n(
     `Broken symlink or missing file encountered for settings.json at path: ${e}`,
   );
 }
-function Eie() {
+function emptySettingsResult() {
   return { settings: null, errors: [] };
 }
 function Ni(e, t) {
-  if ((YHn(e, t), W(e))) return Eie();
-  return { settings: null, errors: [okt(t, e)] };
+  if ((reportSettingsReadError(e, t), W(e))) return emptySettingsResult();
+  return { settings: null, errors: [createSettingsReadError(t, e)] };
 }
-function okt(e, t, o = "file") {
+function createSettingsReadError(e, t, o = "file") {
   return {
     file: e,
     path: "",
@@ -11775,7 +11775,7 @@ function okt(e, t, o = "file") {
     severity: "fatal",
   };
 }
-function skt(e, t) {
+function resolveSettingsSourceRootDir(e, t) {
   switch (e) {
     case "userSettings":
       return resolve(getClaudeConfigDir());
@@ -11783,18 +11783,18 @@ function skt(e, t) {
     case "projectSettings":
       return resolve(t.cwd);
     case "localSettings":
-      return X6(t.cwd, t.canonicalGitRoot);
+      return resolveLocalSettingsStoreRoot(t.cwd, t.canonicalGitRoot);
     case "flagSettings":
       return t.flagPath ? dirname(resolve(t.flagPath)) : resolve(t.cwd);
   }
 }
-function X6(e, t) {
-  let o = JHn(e, t);
+function resolveLocalSettingsStoreRoot(e, t) {
+  let o = decideLocalSettingsStoreRoot(e, t);
   if (o.decided !== void 0) return o.decided;
   if (!zg(o.root)) return o.cwdResolved;
   return o.root;
 }
-function JHn(e, t) {
+function decideLocalSettingsStoreRoot(e, t) {
   let o = t?.(e);
   if (!o) return { decided: resolve(e) };
   let r = resolve(o),
@@ -11810,7 +11810,7 @@ function JHn(e, t) {
   return { decided: void 0, root: r, cwdResolved: i };
 }
 function Ng(e) {
-  return da().localStoreProbes.canonicalRootOwnerUids(e, Ug);
+  return getHostSettingsStore().localStoreProbes.canonicalRootOwnerUids(e, Ug);
 }
 function Ug(e) {
   let t = ae(),
@@ -11863,28 +11863,28 @@ function zg(e) {
   }
 }
 function Hg() {
-  return da().localStoreProbes.normalizedRealHomeDir(jg);
+  return getHostSettingsStore().localStoreProbes.normalizedRealHomeDir(jg);
 }
 function jg() {
   let e = RS(homedir());
   if (e === null) throw Error("home directory realpath unavailable");
   return zn(e);
 }
-function blr(e, t) {
-  return e === "localSettings" ? resolve(t.cwd) : skt(e, t);
+function resolveRuleAnchorRootForSource(e, t) {
+  return e === "localSettings" ? resolve(t.cwd) : resolveSettingsSourceRootDir(e, t);
 }
-var jq = { default: "settings.json", cowork: "cowork_settings.json" };
+var SETTINGS_FILENAMES = { default: "settings.json", cowork: "cowork_settings.json" };
 function Fg(e) {
-  if (e.coworkPlugins || a.CLAUDE_CODE_USE_COWORK_PLUGINS) return jq.cowork;
-  return jq.default;
+  if (e.coworkPlugins || a.CLAUDE_CODE_USE_COWORK_PLUGINS) return SETTINGS_FILENAMES.cowork;
+  return SETTINGS_FILENAMES.default;
 }
-function ehe(e, t) {
+function resolveSettingsFilePathForSource(e, t) {
   switch (e) {
     case "userSettings":
-      return ye(skt(e, t), Fg(t));
+      return ye(resolveSettingsSourceRootDir(e, t), Fg(t));
     case "projectSettings":
     case "localSettings":
-      return ye(skt(e, t), getRelativeSettingsFilePathForSource(e));
+      return ye(resolveSettingsSourceRootDir(e, t), getRelativeSettingsFilePathForSource(e));
     case "policySettings":
       return Mg();
     case "flagSettings":
@@ -11899,14 +11899,14 @@ function getRelativeSettingsFilePathForSource(e) {
       return ye(".claude", "settings.local.json");
   }
 }
-function Aie(e) {
-  if (X6(e.cwd, e.canonicalGitRoot) === resolve(e.cwd)) return;
+function resolveLegacyLocalSettingsFilePath(e) {
+  if (resolveLocalSettingsStoreRoot(e.cwd, e.canonicalGitRoot) === resolve(e.cwd)) return;
   return ye(resolve(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
 }
-function QHn(e, t) {
+function getSettingsForSourceCached(e, t) {
   let o = t.store.perSource.get(e);
   if (o !== void 0) return o;
-  let r = D8t(e, t);
+  let r = resolveSettingsForSourceWriteSeed(e, t);
   return (t.store.perSource.set(e, r), r);
 }
 function Ui(e, t = !1) {
@@ -11924,7 +11924,7 @@ function $g(e) {
   }
   return t.sandbox ?? {};
 }
-function P8t(e, t) {
+function getValueAtPath(e, t) {
   return Ee(e, t);
 }
 function Wg(e, t) {
@@ -11959,7 +11959,7 @@ function Wg(e, t) {
     o.availableModels = e.availableModels;
   if (e.enforceAvailableModels === !0) o.enforceAvailableModels = !0;
   if (e.permissions) {
-    let d = DBe(e.permissions, ["deny", "ask"]);
+    let d = pickObjectKeys(e.permissions, ["deny", "ask"]);
     if (e.permissions.disableBypassPermissionsMode === "disable")
       d.disableBypassPermissionsMode = "disable";
     if (e.permissions.disableAutoMode === "disable")
@@ -11976,8 +11976,8 @@ function Wg(e, t) {
   if (e.sandbox) {
     let { network: d, filesystem: u, credentials: p } = e.sandbox,
       g = {},
-      h = d ? DBe(d, ["deniedDomains"]) : {},
-      f = u ? DBe(u, ["denyRead", "denyWrite"]) : {};
+      h = d ? pickObjectKeys(d, ["deniedDomains"]) : {},
+      f = u ? pickObjectKeys(u, ["denyRead", "denyWrite"]) : {};
     if (d) {
       if (
         t.sandbox?.network?.allowManagedDomainsOnly !== !0 &&
@@ -12019,12 +12019,12 @@ function Wg(e, t) {
       }
       if (Object.keys(w).length > 0) g.credentials = w;
     }
-    if ((b0(g, $g(e)), Object.keys(g).length > 0)) o.sandbox = g;
+    if ((mergeWith(g, $g(e)), Object.keys(g).length > 0)) o.sandbox = g;
   }
   return o;
 }
 function zi(e, t) {
-  let o = yie,
+  let o = AWS_CREDENTIAL_ENV_VARS,
     r = new Set(t.flatMap(Ii));
   return dedupe(e.flatMap(Ii))
     .filter((i) => o.includes(i) && !r.has(i))
@@ -12040,8 +12040,8 @@ function Ii(e) {
   );
 }
 var Vg = new Set([
-  ...[...PRt].filter((e) => e !== "ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION"),
-  ...ORt,
+  ...[...MODEL_ENV_VARS].filter((e) => e !== "ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION"),
+  ...CUSTOM_MODEL_OPTION_ENV_VARS,
   "CLAUDE_CODE_AUTO_MODE_MODEL",
   "CLAUDE_CODE_BG_CLASSIFIER_MODEL",
   "CLAUDE_CONTEXT_COLLAPSE_MODEL",
@@ -12072,25 +12072,25 @@ function Gt(e) {
     e.env = t;
   }
 }
-function wlr(e) {
+function resolvePairedPolicyModelOverrides(e) {
   let t = e.store.policy.pairedModelOverrides;
   if (t !== void 0) return t.value;
   try {
-    QHn("policySettings", e);
+    getSettingsForSourceCached("policySettings", e);
   } catch {}
   return e.store.policy.pairedModelOverrides?.value;
 }
-function Tlr(e) {
-  if (!e.hostManagedProvider || O8t(e).some((t) => t.modelPricing !== void 0))
+function resolveHostManagedModelPricing(e) {
+  if (!e.hostManagedProvider || getPolicyTierSettings(e).some((t) => t.modelPricing !== void 0))
     return;
-  return btt(e).settings?.modelPricing;
+  return loadParentManagedSettings(e).settings?.modelPricing;
 }
-function Elr(e) {
+function resolveHostManagedToolSearchEnv(e) {
   let t = e.store.policy.hostToolSearchEnv;
   if (t !== void 0) return t.value;
   let o;
   if (e.hostManagedProvider) {
-    let r = btt(e).settings?.env ?? {};
+    let r = loadParentManagedSettings(e).settings?.env ?? {};
     for (let [i, d] of Object.entries(r)) {
       if (i === "ENABLE_TOOL_SEARCH") {
         o = d;
@@ -12101,7 +12101,7 @@ function Elr(e) {
   }
   return ((e.store.policy.hostToolSearchEnv = { value: o }), o);
 }
-function O8t(e) {
+function getPolicyTierSettings(e) {
   let t = e.store.policy.allTiers;
   if (t !== void 0) return t;
   let o = am(e);
@@ -12113,18 +12113,18 @@ function isAdminPolicyOrigin(e) {
 function Gn() {
   return getCurrentPlatform() === "macos" ? "plist" : "hklm";
 }
-function Alr(e) {
+function resolvePolicyForceLoginMethod(e) {
   let t = {
       ...e,
       remote: () => null,
       helper: e.helperArmedFromRemote?.() === !1 ? e.helper : () => null,
     },
-    o = Wq(t);
+    o = resolveArmedHelperOutput(t);
   if (o.composes === "tier") return o.helper.forceLoginMethod;
   return Se(t).admin?.forceLoginMethod;
 }
-function ZHn(e) {
-  let t = Wq(e);
+function resolveBasePolicySettingsOrigin(e) {
+  let t = resolveArmedHelperOutput(e);
   if (t.composes === "tier") return "helper";
   let o = Se(e);
   if (t.composes === "remoteSlot" || o.present.remote) return "remote";
@@ -12134,8 +12134,8 @@ function ZHn(e) {
   let r = e.hkcu?.();
   return r && Object.keys(r.settings).length > 0 ? "hkcu" : null;
 }
-function Clr(e) {
-  let t = Wq(e),
+function resolveShadowedManagedSources(e) {
+  let t = resolveArmedHelperOutput(e),
     o = t.composes === "none" ? null : t.mergedOver,
     r = Se(e),
     i = [];
@@ -12143,7 +12143,7 @@ function Clr(e) {
   if (t.composes === "remoteSlot" || r.present.remote) i.push("remote");
   if (r.present.mdm) i.push(Gn());
   if (r.present.file) i.push("file");
-  let d = e0n(e) ?? [],
+  let d = resolveMergedPolicySources(e) ?? [],
     [u, ...p] = i,
     g = p.filter((f) => f !== o && !d.includes(f)),
     h = e.hkcu?.();
@@ -12153,17 +12153,17 @@ function Clr(e) {
 }
 function Se(e) {
   let t = [],
-    { settings: o, errors: r, servedSnapshot: i } = Bq(e);
+    { settings: o, errors: r, servedSnapshot: i } = loadRemoteManagedSettings(e);
   t.push(...r);
-  let d = Wq(e),
+  let d = resolveArmedHelperOutput(e),
     u = d.composes === "remoteSlot" ? d.helper : Bn(o),
     { settings: p, errors: g } = Wn(e);
   t.push(...g);
   let h = Bn(p),
-    { settings: f, errors: y } = e.file?.() ?? QBe(e);
+    { settings: f, errors: y } = e.file?.() ?? readManagedFileSettings(e);
   t.push(...y);
   let _ = Bn(f),
-    { settings: w, errors: R } = btt(e);
+    { settings: w, errors: R } = loadParentManagedSettings(e);
   t.push(...R);
   let I =
       w !== null &&
@@ -12173,7 +12173,7 @@ function Se(e) {
       Qg(u, i && d.composes !== "remoteSlot", [
         h,
         _,
-        ...(I ? [DBe(w, Zg)] : []),
+        ...(I ? [pickObjectKeys(w, Zg)] : []),
       ]),
       h,
       _,
@@ -12186,14 +12186,14 @@ function Se(e) {
               V !== null &&
               (V === o && i
                 ? u !== null
-                : V.managedSourcesBehavior !== void 0 || lL(V)),
+                : V.managedSourcesBehavior !== void 0 || hasSettingsContent(V)),
           )
     )?.managedSourcesBehavior,
     E = u !== null && i && d.composes !== "remoteSlot",
     { admin: C, merged: D } = Yg(L, S, E),
     H = { remote: u !== null, mdm: h !== null, file: _ !== null },
     N = (V) =>
-      V !== null && (V === L[0] || Object.keys(zl(V, Wi())).length > 0),
+      V !== null && (V === L[0] || Object.keys(omitObjectKeys(V, Wi())).length > 0),
     U = { remote: N(u), mdm: N(h), file: N(_) },
     ne = {
       allowManagedPermissionRulesOnly:
@@ -12237,7 +12237,7 @@ function Yg(e, t, o) {
   if (t !== "merge" || e.length < 2)
     return { admin: i === void 0 ? r : d, merged: !1 };
   let u = e.slice(1).map((g, h) => {
-      let f = o && h === 0 ? { ...g } : zl(g, Wi());
+      let f = o && h === 0 ? { ...g } : omitObjectKeys(g, Wi());
       if (!(o && h === 0)) {
         for (let _ of Bg) if (Ee(f, _) !== void 0) Re(f, _, void 0);
       }
@@ -12248,20 +12248,20 @@ function Yg(e, t, o) {
       return f;
     }),
     p = {};
-  for (let g of [...u].reverse()) b0(p, g, $n);
+  for (let g of [...u].reverse()) mergeWith(p, g, $n);
   return (
-    b0(p, d, o ? em : $n),
+    mergeWith(p, d, o ? em : $n),
     tm(p, [r, ...u]),
     Jg(p, [r, ...u], o),
     { admin: p, merged: !0 }
   );
 }
 var Hi = ["managedSourcesBehavior", "wslInheritsWindowsSettings"];
-function lL(e) {
+function hasSettingsContent(e) {
   return Object.keys(e).some((t) => !Hi.includes(t));
 }
 function Bn(e) {
-  return e && lL(e) ? e : null;
+  return e && hasSettingsContent(e) ? e : null;
 }
 function Jg(e, t, o) {
   let r = t.findIndex((d) => d.availableModels !== void 0),
@@ -12297,7 +12297,7 @@ var qg = [
 function Qg(e, t, o) {
   if (e === null || !t) return e;
   let r = qg.filter((i) => o.some((d) => d?.[i] !== void 0));
-  return r.length === 0 ? e : zl(e, r);
+  return r.length === 0 ? e : omitObjectKeys(e, r);
 }
 function $n(e, t, o) {
   if (o !== void 0 && (ji.includes(o) || Xg.includes(o))) return Ki(e, t, o);
@@ -12336,14 +12336,14 @@ function tm(e, t) {
       delete e.strictPluginOnlyCustomization;
   }
 }
-function e0n(e) {
+function resolveMergedPolicySources(e) {
   let t = e.store.policy.mergedSources;
   if (t !== void 0) return t.value;
   let o = nm(e);
   return ((e.store.policy.mergedSources = { value: o }), o);
 }
 function nm(e) {
-  if (Wq(e).composes === "tier") return null;
+  if (resolveArmedHelperOutput(e).composes === "tier") return null;
   let { merged: t, composed: o } = Se(e);
   if (!t) return null;
   let r = [];
@@ -12352,7 +12352,7 @@ function nm(e) {
   if (o.file) r.push("file");
   return r;
 }
-function Wq(e) {
+function resolveArmedHelperOutput(e) {
   let t = e.helper?.() ?? null;
   if (!t) return { composes: "none" };
   let o = e.helperArmedFromRemote?.() === !1 ? "tier" : "remoteSlot";
@@ -12360,9 +12360,9 @@ function Wq(e) {
     return { composes: o, helper: t, mergedOver: null };
   if (!e.store.policy.mergedHelper) {
     let r, i;
-    if (o === "remoteSlot") ((r = Bq(e).settings), (i = "remote"));
+    if (o === "remoteSlot") ((r = loadRemoteManagedSettings(e).settings), (i = "remote"));
     else if ((r = Wn(e).settings)) i = getCurrentPlatform() === "macos" ? "plist" : "hklm";
-    else ((r = (e.file?.() ?? QBe(e)).settings), (i = "file"));
+    else ((r = (e.file?.() ?? readManagedFileSettings(e)).settings), (i = "file"));
     e.store.policy.mergedHelper = {
       helper: im(r, t),
       mergedOver: Object.keys(Bi(r)).length > 0 ? i : null,
@@ -12396,12 +12396,12 @@ function rm(e, t, o) {
 }
 function im(e, t) {
   let o = Bi(e),
-    r = b0({}, o, t, rm);
+    r = mergeWith({}, o, t, rm);
   if (o.env && t.env) r.env = om(o.env, t.env);
   return r;
 }
-function vlr(e) {
-  let t = Wq(e);
+function resolveMachineAdminTierSettings(e) {
+  let t = resolveArmedHelperOutput(e);
   if (t.composes === "tier") return [t.helper];
   let { tiers: o, present: r, merged: i, snapshotFirst: d } = Se(e),
     u = r.remote ? o.slice(1) : o;
@@ -12410,29 +12410,29 @@ function vlr(e) {
   return u.slice(0, 1);
 }
 function am(e) {
-  let t = Wq(e);
+  let t = resolveArmedHelperOutput(e);
   if (t.composes === "tier") return [t.helper];
   let { tiers: o, parentSlice: r } = Se(e);
   return r ? [...o, r] : o;
 }
-function Rlr(e) {
-  if (Wq(e).composes === "tier") return !1;
+function doesParentManagedTierParticipate(e) {
+  if (resolveArmedHelperOutput(e).composes === "tier") return !1;
   let t = Se(e);
   return Ui(t.admin, t.snapshotFirst && !t.present.mdm && !t.present.file);
 }
-function klr(e) {
+function isRemoteSettingsRefreshForced(e) {
   let { tiers: t, admin: o, parentSlice: r } = Se({ ...e, helper: void 0 });
   if (t.some((i) => i.forceRemoteSettingsRefresh === !0)) return !0;
   return !o && !r && e.hkcu?.().settings.forceRemoteSettingsRefresh === !0;
 }
-function xlr(e) {
+function resolveDurablePolicyTierSettings(e) {
   let t = e.store.policy.durableTiers;
   if (t !== void 0) return t;
   let o = lm(e);
   return ((e.store.policy.durableTiers = o), o);
 }
 function lm(e) {
-  let t = Wq(e);
+  let t = resolveArmedHelperOutput(e);
   if (t.composes === "tier") return [t.helper];
   let { tiers: o, admin: r } = Se(e);
   if (!r) {
@@ -12492,10 +12492,10 @@ function Vi(e, t, o, r = 0) {
   return Object.fromEntries(d);
 }
 var um = "CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION";
-function Hlr(e, t) {
+function resolveAdminTierEnvValue(e, t) {
   let o = e.store.policy.adminTierEnvView;
   if (o !== void 0) return o[t];
-  let r = O8t(e),
+  let r = getPolicyTierSettings(e),
     i =
       a.CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION === !0
         ? (r[0]?.env ?? {})
@@ -12522,11 +12522,11 @@ function gm(e) {
   let t = Wn(e);
   return t.settings
     ? t.errors
-    : [...t.errors, ...(e.file?.() ?? QBe(e)).errors];
+    : [...t.errors, ...(e.file?.() ?? readManagedFileSettings(e)).errors];
 }
 function Gi(e) {
-  let t = Wq(e),
-    o = (e.helperWarnings?.() ?? []).filter((I) => !e2e(I.path));
+  let t = resolveArmedHelperOutput(e),
+    o = (e.helperWarnings?.() ?? []).filter((I) => !isManagedMcpServersKey(I.path));
   if (t.composes === "tier") {
     let { helper: I } = t;
     e.store.lastPolicyEnvComposition = null;
@@ -12569,7 +12569,7 @@ function Gi(e) {
     if (u) return { settings: { ...u }, errors: [...p, ...(I?.errors ?? [])] };
     return { settings: null, errors: [...p, ...(I?.errors ?? [])] };
   }
-  let f = b0({}, d ?? {}, i ?? {}, settingsMergeCustomizer);
+  let f = mergeWith({}, d ?? {}, i ?? {}, settingsMergeCustomizer);
   if (r.some((I) => I.forceRemoteSettingsRefresh === !0))
     f.forceRemoteSettingsRefresh = !0;
   let y = a.CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION === !0,
@@ -12625,45 +12625,45 @@ function Gi(e) {
     { settings: f, errors: p }
   );
 }
-function D8t(e, t, { includeLegacyLocalSettings: o = !0 } = {}) {
+function resolveSettingsForSourceWriteSeed(e, t, { includeLegacyLocalSettings: o = !0 } = {}) {
   if (e === "policySettings") return Gi(t).settings;
-  let r = ehe(e, t),
+  let r = resolveSettingsFilePathForSource(e, t),
     { settings: i } = r
-      ? WU(r, t.store, e === "flagSettings" ? t.flagExpectedContent : void 0)
+      ? parseSettingsFileCached(r, t.store, e === "flagSettings" ? t.flagExpectedContent : void 0)
       : { settings: null };
   if (e === "flagSettings") {
-    let { settings: d } = wtt(t);
-    if (d) return b0(i || {}, d, settingsMergeCustomizer);
+    let { settings: d } = loadSdkInlineSettings(t);
+    if (d) return mergeWith(i || {}, d, settingsMergeCustomizer);
   }
   if (e === "localSettings" && o) {
-    let d = Aie(t);
+    let d = resolveLegacyLocalSettingsFilePath(t);
     if (d) {
-      let { settings: u } = WU(d, t.store);
+      let { settings: u } = parseSettingsFileCached(d, t.store);
       if (u)
         return (
           t.onLegacyLocalSettingsRead?.("per_source"),
-          b0(u, i || {}, settingsMergeCustomizer)
+          mergeWith(u, i || {}, settingsMergeCustomizer)
         );
     }
   }
   return i;
 }
-function Ilr(e, t) {
+function collectSettingsParseErrorsForSource(e, t) {
   let o = [],
-    r = ehe(e, t);
+    r = resolveSettingsFilePathForSource(e, t);
   if (r)
     o.push(
-      ...WU(r, t.store, e === "flagSettings" ? t.flagExpectedContent : void 0)
+      ...parseSettingsFileCached(r, t.store, e === "flagSettings" ? t.flagExpectedContent : void 0)
         .errors,
     );
-  if (e === "flagSettings") o.push(...wtt(t).errors);
+  if (e === "flagSettings") o.push(...loadSdkInlineSettings(t).errors);
   if (e === "localSettings") {
-    let i = Aie(t);
-    if (i) o.push(...WU(i, t.store).errors);
+    let i = resolveLegacyLocalSettingsFilePath(t);
+    if (i) o.push(...parseSettingsFileCached(i, t.store).errors);
   }
   return o;
 }
-function Ttt(e, t) {
+function shallowMergeSettingsMaps(e, t) {
   return { ...e, ...t };
 }
 function settingsMergeCustomizer(e, t, o) {
@@ -12677,7 +12677,7 @@ function settingsMergeCustomizer(e, t, o) {
     isRecord(e) &&
     isRecord(t)
   )
-    return Ttt(e, t);
+    return shallowMergeSettingsMaps(e, t);
   return;
 }
 function Yi(e) {
@@ -12688,14 +12688,14 @@ function Yi(e) {
     ...(Array.isArray(t) && { options: t.map((o) => (isRecord(o) ? { ...o } : o)) }),
   };
 }
-function Plr(e) {
+function loadSettingsFromDisk(e) {
   if (e.store.isLoadingFromDisk) return { settings: {}, errors: [] };
   let t = Date.now();
   (writeDiagnosticsEvent("info", "settings_load_started"), (e.store.isLoadingFromDisk = !0));
   try {
     let o = e.store.pluginBase,
       r = {};
-    if (o) r = b0(r, o, settingsMergeCustomizer);
+    if (o) r = mergeWith(r, o, settingsMergeCustomizer);
     let i = [],
       d = new Set(),
       u = new Set(),
@@ -12706,39 +12706,39 @@ function Plr(e) {
         }
       },
       g = null;
-    for (let h of XHn(e)) {
+    for (let h of resolveEnabledSettingsSources(e)) {
       if (h === "policySettings") {
         let { settings: y, errors: _ } = Gi(e);
-        if (((g = y), y)) r = b0(r, y, settingsMergeCustomizer);
+        if (((g = y), y)) r = mergeWith(r, y, settingsMergeCustomizer);
         p(_);
         continue;
       }
       if (h === "localSettings") {
-        let y = Aie(e);
+        let y = resolveLegacyLocalSettingsFilePath(e);
         if (y && !u.has(resolve(y))) {
           u.add(resolve(y));
-          let { settings: _, errors: w } = WU(y, e.store);
+          let { settings: _, errors: w } = parseSettingsFileCached(y, e.store);
           if ((p(w), _))
-            (e.onLegacyLocalSettingsRead?.("cascade"), (r = b0(r, _, settingsMergeCustomizer)));
+            (e.onLegacyLocalSettingsRead?.("cascade"), (r = mergeWith(r, _, settingsMergeCustomizer)));
         }
       }
-      let f = ehe(h, e);
+      let f = resolveSettingsFilePathForSource(h, e);
       if (f) {
         let y = resolve(f),
           _ = h === "flagSettings" && e.flagExpectedContent !== void 0;
         if (!u.has(y) || _) {
           u.add(y);
-          let { settings: w, errors: R } = WU(
+          let { settings: w, errors: R } = parseSettingsFileCached(
             f,
             e.store,
             h === "flagSettings" ? e.flagExpectedContent : void 0,
           );
-          if ((p(R), w)) r = b0(r, w, settingsMergeCustomizer);
+          if ((p(R), w)) r = mergeWith(r, w, settingsMergeCustomizer);
         }
       }
       if (h === "flagSettings") {
-        let { settings: y, errors: _ } = wtt(e);
-        if ((p(_), y)) r = b0(r, y, settingsMergeCustomizer);
+        let { settings: y, errors: _ } = loadSdkInlineSettings(e);
+        if ((p(_), y)) r = mergeWith(r, y, settingsMergeCustomizer);
       }
     }
     if (g) {
@@ -12761,250 +12761,250 @@ function Plr(e) {
   }
 }
 import { stripVTControlCharacters } from "util";
-function E0(e) {
+function stripAnsiControlCharacters(e) {
   return stripVTControlCharacters(e).replace(/(?![\t\n])[\p{Cc}\p{Cf}\u2028\u2029]/gu, "");
 }
 export {
-  lke,
-  ea,
-  zet,
-  Z5t,
-  b0,
-  C_,
-  zar,
-  FU,
-  Oq,
-  RRt,
-  e8t,
-  OP,
-  Vet,
-  Ket,
-  sHn,
-  Var,
-  iHn,
-  aHn,
-  lHn,
-  Fge,
-  yie,
-  t8t,
-  Xet,
-  cHn,
-  n8t,
-  kRt,
-  S1,
-  Kar,
-  Xar,
-  da,
-  Pw,
-  Za,
-  Yar,
-  Jar,
-  Qar,
-  yi,
-  ay,
-  xRt,
-  Yet,
-  Zar,
-  elr,
-  ms,
-  Nr,
-  w0,
-  PBe,
-  Ow,
-  cke,
-  Tb,
-  uHn,
-  HRt,
-  sL,
-  OBe,
-  zl,
-  DBe,
-  r8t,
-  tu,
-  Dq,
-  o8t,
-  tlr,
-  s8t,
-  i8t,
-  a8t,
-  $U,
-  LBe,
-  OQ,
-  iL,
-  $ge,
-  Jet,
-  UU,
-  IRt,
-  PRt,
-  ORt,
-  Qet,
-  Zet,
-  MBe,
-  NBe,
-  DRt,
-  LRt,
-  MRt,
-  nlr,
-  NRt,
-  uke,
-  ett,
-  FBe,
-  Uge,
-  dke,
-  $Be,
-  wr,
-  ff,
-  UBe,
-  ttt,
-  rlr,
-  Pp,
-  sd,
-  Bge,
-  ntt,
-  BBe,
-  U5,
-  dHn,
-  l8t,
-  rtt,
-  c8t,
-  FRt,
-  pHn,
-  fHn,
-  $Rt,
-  mHn,
-  Lq,
-  pke,
-  gHn,
-  ts,
-  fke,
-  jge,
-  jBe,
+  assignValue,
+  pickBy,
+  isPlainObjectRecord,
+  isIterateeCall,
+  mergeWith,
+  HOOK_EVENT_NAMES,
+  SESSION_END_REASONS,
+  SYSTEM_PROMPT_DYNAMIC_BOUNDARY,
+  Fuse,
+  COMMAND_NAME_SEPARATOR_RE,
+  CommandSearchIndex,
+  yieldToEventLoop,
+  YIELD_BUDGET_MS,
+  FuzzyFilePathIndex,
+  USAGE_LIMIT_MESSAGE_PREFIXES,
+  USAGE_CREDIT_REQUIREMENT_PATTERNS,
+  SERVICE_DISABLED_MESSAGE_PREFIXES,
+  USAGE_WARNING_MESSAGE_PREFIXES,
+  USAGE_MODE_CHANGE_MESSAGE_PREFIXES,
+  AbortError,
+  AWS_CREDENTIAL_ENV_VARS,
+  SLOT_COLLISION_MARKER,
+  INVALID_PAIR_MARKER,
+  MERGE_PAIR_SUPPRESSOR_MARKER,
+  isSyntheticSecretName,
+  SandboxSettingsSchema,
+  CLAUDE_AI_SYNC_LABEL,
+  getCommandKind,
+  getSkillSourceCategory,
+  getHostSettingsStore,
+  getMergedSettings,
+  invalidateAllSettings,
+  getPluginSettingsBase,
+  setPluginSettingsBase,
+  clearPluginSettingsBase,
+  SETTINGS_SOURCE_ORDER,
+  describeSettingsSourceShort,
+  getSettingsSourceDisplayName,
+  describeSettingsSource,
+  getSettingsSourceTitle,
+  parseSettingsSourcesArg,
+  getEnabledSettingsSources,
+  isSettingsSourceEnabled,
+  USER_PROJECT_LOCAL_SETTINGS_SOURCES,
+  PROJECT_LOCAL_SETTINGS_SOURCES,
+  PROJECT_SCOPED_SETTINGS_SOURCE_SET,
+  HOOK_SETTINGS_SOURCE_ORDER,
+  getManagedSettingsDirPath,
+  getSystemManagedSettingsPathOverride,
+  getManagedSettingsDropInDir,
+  lastArrayElement,
+  sliceArrayRange,
+  omitObjectKeys,
+  pickObjectKeys,
+  negate,
+  omitBy,
+  normalizeSettingsAliases,
+  extractManagedSettings,
+  findTextIssue,
+  findTrimmedTextIssue,
+  measureText,
+  describeTextIssue,
+  PROVIDER_CONFIG_ENV_VARS,
+  OTEL_EXPORTER_OTLP_PREFIX,
+  isMemoryApiEnvVar,
+  BASE_URL_ENV_VARS,
+  BASE_URL_ENV_GROUPS,
+  ALL_BASE_URL_ENV_VARS,
+  API_KEY_ENV_VARS,
+  SKIP_AUTH_ENV_VARS,
+  MODEL_ENV_VARS,
+  CUSTOM_MODEL_OPTION_ENV_VARS,
+  TOKEN_FD_ENV_VARS,
+  SECRET_TOKEN_ENV_VARS,
+  AWS_ENV_VARS,
+  clearAwsEnvVars,
+  GCE_METADATA_ENV_VARS,
+  VERTEX_REGION_ENV_PREFIXES,
+  isManagedOnlyEnvVar,
+  isAwsProfileEnvVar,
+  isProxyEnvVar,
+  isTlsClientCertEnvVar,
+  HOST_AUTH_ENV_VARS,
+  hasHostManagedAuth,
+  getHostManagedEnvVarsToStrip,
+  getHostAuthEnvVarName,
+  shouldForwardEnvVar,
+  sanitizeForDisplay,
+  sanitizeMultilineForDisplay,
+  sanitizeOptionalText,
+  toHttpUrl,
+  sanitizePluginManifest,
+  removeInvisibleChars,
+  getPluginDisplayName,
+  toNonBlankString,
+  sanitizeCommandRequest,
+  ENV_VAR_PLACEHOLDER_RE,
+  containsEnvVarPlaceholder,
+  McpConfigScopeSchema,
+  normalizeMcpServerTimeout,
+  StdioMcpServerSchema,
+  SseMcpServerSchema,
+  HttpMcpServerSchema,
+  WebSocketMcpServerSchema,
+  SdkMcpServerSchema,
+  ToolPermissionSchema,
+  ClaudeAiProxyMcpServerSchema,
+  McpServerConfigSchema,
+  hasPluginSource,
+  isClaudeAiProxyServer,
+  isConnectedMcpServer,
+  shouldRefetchMcpServer,
+  isLoopbackOrMetadataHost,
+  toUrlString,
   olr,
-  G6,
-  slr,
-  Mq,
-  DQ,
-  b1,
-  WBe,
-  hHn,
-  URt,
-  LQ,
-  q6,
-  Nq,
-  Kg,
-  Fq,
-  _Hn,
-  BU,
-  Vn,
-  yHn,
-  ott,
-  w1,
-  Al,
-  zt,
-  nv,
-  mke,
-  u8t,
-  stt,
-  d8t,
-  B5,
-  MQ,
-  SHn,
-  gke,
-  Wge,
-  p8t,
-  BRt,
-  f8t,
-  itt,
-  bHn,
-  hke,
-  wHn,
-  GBe,
-  m8t,
-  $q,
-  qBe,
-  Gge,
-  g8t,
-  h8t,
-  att,
-  Om,
-  _8t,
-  y8t,
-  jRt,
-  S8t,
-  THn,
-  EHn,
-  AHn,
-  _ke,
-  aL,
-  ilr,
-  wx,
-  alr,
-  llr,
-  ltt,
-  WRt,
-  b8t,
-  yke,
-  z6,
-  GRt,
-  Sie,
-  clr,
-  qRt,
-  ulr,
-  dlr,
-  plr,
-  flr,
-  pS,
-  zBe,
-  Js,
-  Oa,
-  rc,
-  ctt,
-  mlr,
-  fS,
-  utt,
-  dtt,
-  qge,
-  VBe,
-  zge,
-  zRt,
-  bie,
-  KBe,
-  Ske,
-  XBe,
-  Vge,
-  glr,
-  CHn,
-  vHn,
-  ptt,
-  RHn,
-  kHn,
-  xHn,
-  HHn,
-  IHn,
-  PHn,
-  w8t,
-  OHn,
-  hlr,
-  Uq,
-  Kge,
-  Xge,
-  YBe,
-  XT,
-  ftt,
-  VRt,
-  KRt,
-  NQ,
-  bke,
-  jU,
-  XRt,
-  j5,
-  YRt,
-  _lr,
-  DHn,
-  LHn,
-  mtt,
-  MHn,
-  NHn,
+  HooksSettingsSchema,
+  validateHookFilePathPattern,
+  isHookMatcher,
+  containsHookMatcher,
+  hasMisplacedGuardHooks,
+  NON_HOOK_TOP_LEVEL_KEYS,
+  NON_HOOK_TOP_LEVEL_KEYS_EXTENDED,
+  EMPTY_KEY_SET,
+  declaresGuardHook,
+  GUARD_HOOK_EVENTS,
+  HooksConfigError,
+  UNLOADABLE_GUARD_HOOK_NOTE,
+  validateHooksConfig,
+  normalizeHooksConfig,
+  normalizeSingleLineText,
+  formatDisplayText,
+  formatLongDisplayText,
+  truncateWithEllipsis,
+  sanitizeInlineText,
+  toDisplayText,
+  formatQuotedDisplayText,
+  toErrorMessage,
+  MAX_CONSENT_TEXT_LENGTH,
+  MAX_PRODUCER_PATH_HISTORY,
+  COMMUNITY_MARKETPLACE_NAMES,
+  OFFICIAL_MARKETPLACE_NAMES,
+  RESERVED_MARKETPLACE_NAMES,
+  shouldAutoUpdateMarketplace,
+  looksLikeOfficialMarketplaceName,
+  getReservedMarketplaceNameError,
+  isReservedMarketplaceName,
+  getMarketplaceNameSchema,
+  getHooksJsonSchema,
+  getEvalsSchema,
+  getLspServerConfigSchema,
+  getMonitorsSchema,
+  BINARIES_BASENAME_PATTERN,
+  SHA256_HEX_PATTERN,
+  MAX_FETCHED_BINARIES,
+  MAX_DECLARED_BINARIES,
+  MAX_PLUGIN_FILE_BYTES,
+  parsePluginBinaries,
+  getPluginManifestSchema,
+  ARCHIVE_URL_POLICY_MESSAGE,
+  isAllowedArchiveUrl,
+  isDotRelativeSourcePath,
+  isLocalMarketplaceSource,
+  getRelevanceSignalsSchema,
+  getPluginRelevanceSchema,
+  getMarketplacePluginSchema,
+  isBarePluginSourceName,
+  normalizePluginRootPath,
+  resolvePluginEntrySource,
+  resolveMarketplacePluginSources,
+  getMarketplaceManifestSchema,
+  getMarketplaceSchema,
+  isValidPluginName,
+  getPluginIdSchema,
+  INVALID_PLUGIN_NAME_CHARS_PATTERN,
+  INVISIBLE_CHARS_PATTERN,
+  CONTROL_OR_BIDI_CHARS_PATTERN,
+  getInstalledPluginsV1Schema,
+  getInstalledPluginsV2Schema,
+  getKnownMarketplacesSchema,
+  CLAUDE_AI_MARKETPLACE_NAME_PREFIX,
+  CLAUDE_AI_MARKETPLACE_SCOPES,
+  SPELLCHECK_BACKENDS,
+  SPELLCHECK_VERBOSE_MODE_COMMAND,
+  isValidDictionaryName,
+  buildSpellcheckerArgs,
+  detectSpellcheckBackend,
+  buildSpellcheckRequestLine,
+  parseSpellcheckResponseLine,
+  MAX_TIMER_DELAY_MS,
+  getEnabledSettingsSections,
+  parseMcpToolName,
+  getMcpToolPrefix,
+  buildMcpToolName,
+  collectMcpToolPermissionRules,
+  applyDynamicMcpServerPermissionRules,
+  getFullToolName,
+  stripMcpServerPrefix,
+  normalizeToolDisplayName,
+  formatServerDisplayName,
+  parsePluginScopedServerName,
+  isSameMcpServerName,
+  matchesMcpToolRule,
+  TOOL_RULE_VALIDATION,
+  getAllowRuleWildcardError,
+  validatePermissionRule,
+  CROSS_SESSION_INBOUND_MODES,
+  HOST_PROFILE_LEVELS,
+  getPermissionsSchema,
+  getSpinnerTipsSchema,
+  isUncPath,
+  isNetworkAutomountPath,
+  isKernelMagicLinkPath,
+  isNormalizedPath,
+  WINDOWS_EXECUTABLE_SUFFIX_PATTERN,
+  isPowerShellScriptPath,
+  isPowerShellPathWithWildcards,
+  POWERSHELL_PATH_WILDCARD_MESSAGE,
+  MAX_TIMEOUT_MS,
+  PATH_SCRIPT_EXCLUSIVE_MESSAGE,
+  getInlinePolicyHelperConfigError,
+  POLICY_HELPER_PLATFORMS,
+  getStaticSettingsPayloadSchema,
+  CUSTOMIZATION_SURFACES,
+  buildSettingsSchema,
+  getSettingsSchema,
+  isServerNameEntry,
+  isServerCommandEntry,
+  isServerUrlEntry,
+  sortObjectKeysDeep,
+  hashCanonicalJson,
+  buildSettingsSummary,
+  getPolicyHelperCommand,
+  hasSettingsSummaryEntries,
+  hashSettingsSummary,
+  settingsDivergeFromConsent,
+  diffSettingsSummaries,
+  isTelemetryOnlyEnvChange,
+  replaceNonPrintableAscii,
+  describePolicyHelperCommand,
+  getManagedSettingsApprovalRows,
   SETTINGS_FILENAME,
   HELPER_CONSENT_STATE_ID,
   getHelperConsentPath,
@@ -13038,68 +13038,68 @@ export {
   unverifiedRemoteCacheWithholdsProvisions,
   getRemoteManagedSettingsRawCache,
   getRemoteManagedSettingsSyncFromCache,
-  qHn,
-  v8t,
-  Tie,
-  nkt,
-  zHn,
-  R8t,
-  VHn,
-  k8t,
-  KHn,
-  x8t,
-  wke,
-  XHn,
-  QBe,
-  ZBe,
-  rkt,
-  YHn,
-  WU,
-  Tke,
-  e2e,
-  Bq,
-  H8t,
-  t2e,
-  btt,
-  wtt,
-  n_,
+  hasAttributionOverrides,
+  sanitizeSettingsWarnings,
+  toJsonSchema,
+  stripInternalSchemaDescriptions,
+  validateSettingsJson,
+  parseManagedSettingsPayload,
+  validatePolicyHelpersPayloads,
+  CROSS_SESSION_INBOUND_SETTING_KEY,
+  getCrossSessionInboundErrorMessage,
+  REMOTE_CONTROL_SHARE_HOST_PROFILE_KEY,
+  collectSettingsWarnings,
+  resolveEnabledSettingsSources,
+  readManagedFileSettings,
+  getManagedSettingsDirs,
+  isManagedDropInSettingsFile,
+  reportSettingsReadError,
+  parseSettingsFileCached,
+  parseSettingsContentCached,
+  isManagedMcpServersKey,
+  loadRemoteManagedSettings,
+  PARENT_MANAGED_SETTINGS_LABEL,
+  CLEANUP_PERIOD_SETTING_KEYS,
+  loadParentManagedSettings,
+  loadSdkInlineSettings,
+  MAX_SETTINGS_FILE_BYTES,
   parseSettingsFileUncached,
-  Slr,
-  Eke,
-  I8t,
-  Ake,
-  Eie,
-  okt,
-  skt,
-  X6,
-  JHn,
-  blr,
-  jq,
-  ehe,
+  readSettingsFileCached,
+  parseSettingsContent,
+  createUnparsableSettingsError,
+  logBrokenSettingsSymlink,
+  emptySettingsResult,
+  createSettingsReadError,
+  resolveSettingsSourceRootDir,
+  resolveLocalSettingsStoreRoot,
+  decideLocalSettingsStoreRoot,
+  resolveRuleAnchorRootForSource,
+  SETTINGS_FILENAMES,
+  resolveSettingsFilePathForSource,
   getRelativeSettingsFilePathForSource,
-  Aie,
-  QHn,
-  P8t,
-  wlr,
-  Tlr,
-  Elr,
-  O8t,
+  resolveLegacyLocalSettingsFilePath,
+  getSettingsForSourceCached,
+  getValueAtPath,
+  resolvePairedPolicyModelOverrides,
+  resolveHostManagedModelPricing,
+  resolveHostManagedToolSearchEnv,
+  getPolicyTierSettings,
   isAdminPolicyOrigin,
-  Alr,
-  ZHn,
-  Clr,
-  lL,
-  e0n,
-  Wq,
-  vlr,
-  Rlr,
-  klr,
-  xlr,
-  Hlr,
-  D8t,
-  Ilr,
-  Ttt,
+  resolvePolicyForceLoginMethod,
+  resolveBasePolicySettingsOrigin,
+  resolveShadowedManagedSources,
+  hasSettingsContent,
+  resolveMergedPolicySources,
+  resolveArmedHelperOutput,
+  resolveMachineAdminTierSettings,
+  doesParentManagedTierParticipate,
+  isRemoteSettingsRefreshForced,
+  resolveDurablePolicyTierSettings,
+  resolveAdminTierEnvValue,
+  resolveSettingsForSourceWriteSeed,
+  collectSettingsParseErrorsForSource,
+  shallowMergeSettingsMaps,
   settingsMergeCustomizer,
-  Plr,
-  E0,
+  loadSettingsFromDisk,
+  stripAnsiControlCharacters,
 };

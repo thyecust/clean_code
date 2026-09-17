@@ -14,16 +14,16 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { INNER_TOOL_USE_ID_SUFFIX, BashTool, createUserMessage, prependPrecedingInputBlocks, createInterruptedMessage, createLocalCommandCaveatMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getToolResultsDirForSession } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { Bk } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { isPowerShellToolEnabled } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Gre, Kpe } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
 import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
 async function processBashCommand(t, S, e) {
-  let h = Bk() && getDefaultShell() === "powershell",
+  let h = isPowerShellToolEnabled() && getDefaultShell() === "powershell",
     l = getInitialSettings().respondToBashCommands ?? !0;
   logEvent("tengu_input_bash", { powershell: h, respond: l });
   let d = createUserMessage({
@@ -81,7 +81,7 @@ async function processBashCommand(t, S, e) {
       ).data;
     if (!r) throw Error("No result received from shell command");
     let T = r.stderr,
-      c = await Kpe(y, { ...r, stderr: "" }, randomUUID(), yS(e.session), e.storageV5),
+      c = await Kpe(y, { ...r, stderr: "" }, randomUUID(), getToolResultsDirForSession(e.session), e.storageV5),
       u = typeof c.content === "string" ? c.content : r.stdout,
       P = u.startsWith(Gre) ? u : Nt(u),
       f =

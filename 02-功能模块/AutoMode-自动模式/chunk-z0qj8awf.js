@@ -17,7 +17,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { getThinkingBudgetDefaults, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
-import { tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isDangerousRuleCached } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, isTruncatedStopReason, resolveAutoModeClassifierModel, getClassifierFallbackModel, joinTextBlocks, sideQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   N3e,
@@ -228,7 +228,7 @@ function lLt(o) {
       if (r === DEFAULTS_SLOT_MARKER) return !0;
       if (r.length > SSe) return !0;
       let { toolName: c, ruleContent: b } = parsePermissionRule(r);
-      return !tJe(c, b);
+      return !isDangerousRuleCached(c, b);
     });
   let w = k - e.allow.length,
     p = drn({

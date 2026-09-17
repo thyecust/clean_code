@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 243 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { markdownParser } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { repeatString, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -24,7 +24,7 @@ import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { stripAnalysisTags, joinTextBlocks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
@@ -55,7 +55,7 @@ function Ae(at) {
 var X = "response.md",
   be = 20;
 function Ce(n) {
-  let o = _u.lexer(stripAnalysisTags(n)),
+  let o = markdownParser.lexer(stripAnalysisTags(n)),
     a = [];
   for (let s of o)
     if (s.type === "code") {
@@ -92,7 +92,7 @@ function tableTokenToMarkdown(n) {
 `);
 }
 function normalizeTablesInMarkdown(n) {
-  let o = _u.lexer(n),
+  let o = markdownParser.lexer(n),
     a = n,
     s = 0,
     c = 0;
@@ -388,7 +388,7 @@ var Qe = async (n, o, a) => {
       );
     c = g - 1;
   }
-  let f = normalizeTablesInMarkdown(Td(s[c])),
+  let f = normalizeTablesInMarkdown(stripMemoryTags(s[c])),
     d = Ce(f),
     m = getGlobalConfig();
   if (d.length === 0 || m.copyFullResponse) {

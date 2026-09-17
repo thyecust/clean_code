@@ -13,7 +13,7 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { Tie } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { toJsonSchema } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { isPathOutsideRoot, resolveRealpathAllowMissing, openFileForWrite, assertRegularFilePath, assertOpenFileMatchesPath, convertSchemaToJsonSchema } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { HooksError } from "../Hooks钩子/chunk-bzqqe6xh.js";
@@ -208,7 +208,7 @@ ${G}
 ` + so(e);
 function outputJsonSchemaOf(o) {
   try {
-    return Tie(o, { unrepresentable: "any" });
+    return toJsonSchema(o, { unrepresentable: "any" });
   } catch (e) {
     n(`plugin-types: an output schema did not convert: ${e}`);
     return;

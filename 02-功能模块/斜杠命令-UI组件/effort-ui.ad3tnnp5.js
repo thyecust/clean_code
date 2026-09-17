@@ -12,7 +12,7 @@
 import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { HELP_FLAGS } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pickRainbowColor } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
   im,
@@ -37,7 +37,7 @@ import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原�
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { K1n, g6e, Jot } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { isEffortCostMultiplierEnabled, getEffortCostMultiplier, formatCostMultiplier } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { X8 } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { formatKeybindingChord, KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -206,20 +206,20 @@ function so(n, c) {
   );
 }
 function co(n) {
-  return n !== void 0 && K1n() && g6e(n, KH(n)) !== null;
+  return n !== void 0 && isEffortCostMultiplierEnabled() && getEffortCostMultiplier(n, KH(n)) !== null;
 }
 function io(n, c) {
   let l = KH(n);
   if (c === "max" && FN(n)) {
-    let f = g6e(n, "max");
-    return f === null ? GG : `${GG} (${Jot(f)})`;
+    let f = getEffortCostMultiplier(n, "max");
+    return f === null ? GG : `${GG} (${formatCostMultiplier(f)})`;
   }
   if (c === l)
     return gve(n) === null
       ? "The default effort for this model"
       : "The default effort for this model, set by your organization";
-  let u = g6e(n, c);
-  return u === null ? "" : `${Jot(u)} the estimated cost of ${l} (the default)`;
+  let u = getEffortCostMultiplier(n, c);
+  return u === null ? "" : `${formatCostMultiplier(u)} the estimated cost of ${l} (the default)`;
 }
 function getSliderGeometry(n) {
   let c = n ? HJe(n) : null,
@@ -455,7 +455,7 @@ function ft(n, c, l, u) {
     let y = u.levels.findIndex((S) => S.value === "ultracode");
     if (y !== -1) return y;
   }
-  let f = jn() ? void 0 : VH(),
+  let f = getRemoteTransport() ? void 0 : VH(),
     b = UN(n) ? void 0 : c,
     m = f === null ? void 0 : (f ?? b);
   if (m !== void 0) {

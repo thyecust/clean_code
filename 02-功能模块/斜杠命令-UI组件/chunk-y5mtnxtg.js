@@ -28,10 +28,10 @@ import {
   getOauthAccountInfo,
   getAccountInformation,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Zar, ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getSettingsSourceTitle, getEnabledSettingsSources } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { formatNumber } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Rar, getSettingsForSource, getArmedHelperOutput, getMergedPolicySources, getManagedFileSettingsPresence, getPolicySettingsOrigin, getShadowedManagedSources } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isPolicyHelperServingDefaultPayload, getSettingsForSource, getArmedHelperOutput, getMergedPolicySources, getManagedFileSettingsPresence, getPolicySettingsOrigin, getShadowedManagedSources } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getMTLSConfig, getProxyUrl, parseProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, getSecondaryProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -44,7 +44,7 @@ import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
 import { Bce } from "../自动更新-安装/chunk-2g5h49pk.js";
 import { Ept } from "../会话-历史-恢复/chunk-szqky9sa.js";
-import { M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { getPolicyLimitsStatus, formatPolicyLimitsStatus, shouldReportPolicyLimits } from "../Bridge-RemoteControl/policy-limits-status.js";
 import { getManagedSettingsStatus, shouldReportManagedSettingsStatus, formatManagedSettingsStatus } from "../../01-核心基础设施/共享小工具-未细化/managed-settings-status.js";
 import { r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -186,7 +186,7 @@ function S(s = "remote") {
   return `Enterprise managed settings (${e.map((i) => (i === "remote" ? s : g(i))).join(" + ")}, merged)`;
 }
 function iUn() {
-  let s = ms(),
+  let s = getEnabledSettingsSources(),
     e = getArmedHelperOutput(),
     o = [
       {
@@ -200,7 +200,7 @@ function iUn() {
           .map((c) => {
             if (c === "policySettings") {
               if (e.composes !== "none") {
-                let f = Rar(),
+                let f = isPolicyHelperServingDefaultPayload(),
                   m = f
                     ? "default settings payload"
                     : e.composes === "tier"
@@ -216,7 +216,7 @@ function iUn() {
               if (d === null) return null;
               return S() ?? v(d);
             }
-            return Zar(c);
+            return getSettingsSourceTitle(c);
           })
           .filter((c) => c !== null),
       },
@@ -302,7 +302,7 @@ async function lUn(s) {
 async function cUn(s) {
   let e = await Mbe({ storageV5: s }),
     l = [],
-    { statusNotices: i, invalidEntries: o } = M_e(getSettingsWithMcpErrors().errors);
+    { statusNotices: i, invalidEntries: o } = partitionSettingsErrors(getSettingsWithMcpErrors().errors);
   if (o.length > 0) {
     let u = dedupe(o.map((c) => c.file)).join(", ");
     l.push(`Found invalid entries in: ${u}.`);

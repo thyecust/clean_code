@@ -16,7 +16,7 @@ import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { URL_HANDLER_BUNDLE_ID } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
-import { b1n, Wot, Got } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { getRepoLastFetchTime, getTrackedRepoPaths, filterExistingRepoPaths } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { CUn } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
 import { realpath } from "fs/promises";
 import { homedir } from "os";
@@ -361,7 +361,7 @@ async function handleDeepLinkUri(r) {
   n(`Parsed deep link action: ${b(t)}`);
   let e = await realpath(process.execPath).catch(() => process.execPath),
     { cwd: s, resolvedRepo: i } = await z(t),
-    o = i ? await b1n(s) : void 0,
+    o = i ? await getRepoLastFetchTime(s) : void 0,
     l;
   try {
     l = await h(e, {
@@ -402,8 +402,8 @@ async function handleUrlSchemeLaunch() {
 async function z(r) {
   if (r.cwd) return { cwd: r.cwd };
   if (r.repo) {
-    let t = Wot(r.repo),
-      e = await Got(t);
+    let t = getTrackedRepoPaths(r.repo),
+      e = await filterExistingRepoPaths(t);
     if (e[0])
       return (
         n(`Resolved repo ${r.repo} \u2192 ${e[0]}`),

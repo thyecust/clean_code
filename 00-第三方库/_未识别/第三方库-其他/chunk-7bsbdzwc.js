@@ -20,9 +20,9 @@ import { writeDiagnosticsEvent } from "../../../01-核心基础设施/共享小�
 import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, getFeatureValue_CACHED_MAY_BE_STALE, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
-import { lke } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { assignValue } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { replaceControlChars } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { sEt } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isFirstTimeForKey } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { buildCredentialBlankLists, expandEnvVars, formatTrustKeyJson } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { swt } from "../../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import {
@@ -765,7 +765,7 @@ function Ye(e, t, r) {
 }
 var B = Ye;
 function Je(e, t) {
-  return B(e || [], t || [], lke);
+  return B(e || [], t || [], assignValue);
 }
 var ict = Je;
 var Ze =
@@ -1204,7 +1204,7 @@ async function zr(e, t) {
           e,
           `headersHelper not run: this workspace has no persisted trust; ${o}.`,
         ),
-        ke() && sEt(`mcp headersHelper ${e}`))
+        ke() && isFirstTimeForKey(`mcp headersHelper ${e}`))
       )
         writeToStderr(`MCP server '${replaceControlChars(e)}': headersHelper not run \u2014 this workspace has no persisted trust; ${o}.
 `);

@@ -172,7 +172,7 @@ import {
   w3n,
   tln,
 } from "../目录同步(dir-sync)/chunk-zbxyj64j.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { qbe } from "../文件同步-Sync/chunk-eg4wmaq4.js";
 import { getSideGitDirPath, buildSessionRefName, listSessionRefs, UNREADABLE_CARRIER_STATUS, createDirSyncJournalTransport } from "../目录同步(dir-sync)/dir-sync-git-lane.js";
 import { truncateWithEllipsis } from "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
@@ -1979,7 +1979,7 @@ async function Gd(e, t) {
       let a = await lr(e, { bigint: !0 });
       if (!a.isFile()) return !1;
       if (
-        ((r = await oo(e, Ha())),
+        ((r = await oo(e, getSafeReadOpenFlags())),
         (s = await r.stat({ bigint: !0 })),
         !s.isFile() || !ks(a, s))
       )
@@ -2004,7 +2004,7 @@ async function Hd(e) {
   try {
     let r = await lr(e, { bigint: !0 });
     if (!r.isFile()) return null;
-    t = await oo(e, Ha());
+    t = await oo(e, getSafeReadOpenFlags());
     let o = await t.stat({ bigint: !0 });
     return o.isFile() && ks(r, o) ? await t.readFile() : null;
   } catch {
@@ -2422,7 +2422,7 @@ async function nu(e, t, r, o) {
     if (!a.isFile()) return null;
     s =
       r === void 0
-        ? await Yd(e, Ha())
+        ? await Yd(e, getSafeReadOpenFlags())
         : await r.anchor.open(r.rel, ao.O_RDONLY | ao.O_NONBLOCK);
     let d = await s.stat({ bigint: !0 });
     if (
@@ -4855,7 +4855,7 @@ async function Ko(e) {
   }
   let r;
   try {
-    r = await pa(e, Ha());
+    r = await pa(e, getSafeReadOpenFlags());
   } catch (o) {
     let s = A(o);
     return s === "ENOENT"

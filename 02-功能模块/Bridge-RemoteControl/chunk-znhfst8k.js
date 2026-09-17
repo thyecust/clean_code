@@ -31,7 +31,7 @@ import { GY } from "./chunk-1yq098a7.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import { classifyResponseSource, isNonOriginSource } from "./code-session-api.js";
 import { getTokenExpiry } from "./chunk-4zd60pbm.js";
-import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -1394,7 +1394,7 @@ class pM {
       (this.probeBeatSpacingMs = r?.probeBeatSpacingMs ?? ze),
       (this.heartbeatJitterFraction = r?.heartbeatJitterFraction ?? 0),
       (this.maxAdvisedIntervalMs = this.advertiseHeartbeatProbeSupport
-        ? Math.floor(pS / (1 + this.heartbeatJitterFraction))
+        ? Math.floor(MAX_TIMER_DELAY_MS / (1 + this.heartbeatJitterFraction))
         : $e),
       (this.streamEventFlushIntervalMs = X(
         "streamEventFlushIntervalMs",

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { yt, l } from "./chunk-h4f48kbj.js";
+import { isAbortError, errorMessage } from "./chunk-h4f48kbj.js";
 import {
   formatAbortReason,
   HooksError,
@@ -847,7 +847,7 @@ function ws(e) {
   );
 }
 function Es({ error: e, handler: t, site: r, effect: o }) {
-  let n = Re(t, l(e));
+  let n = Re(t, errorMessage(e));
   if ((h().log(`hook failed: ${n} (${r.event}; ${o})`, "error"), !L(t)))
     h().hookFailed({
       plugin: t.name,
@@ -991,7 +991,7 @@ var gr = () => ({
   fromBelow: [],
   belowRejected: void 0,
 });
-var xr = (e, t) => t.aborted && (yt(e) || l(e) === formatAbortReason(t));
+var xr = (e, t) => t.aborted && (isAbortError(e) || errorMessage(e) === formatAbortReason(t));
 var Vs =
   ({
     handler: e,
@@ -1084,7 +1084,7 @@ async function Aae({
       s ?? i,
     )(e, o)
     .catch((a) => {
-      throw (h().log(`hooks chain failed: ${l(a)}`, "error"), a);
+      throw (h().log(`hooks chain failed: ${errorMessage(a)}`, "error"), a);
     });
 }
 var kmr = {
@@ -2637,7 +2637,7 @@ var to =
     async function a(m) {
       if (
         (h().log(
-          `hooks module ${e.pluginName}: the on("*") hook failed at engine.create (${l(m)}); passed on`,
+          `hooks module ${e.pluginName}: the on("*") hook failed at engine.create (${errorMessage(m)}); passed on`,
           "warn",
         ),
         p)
@@ -2748,7 +2748,7 @@ function wa({ pluginName: e, live: t, unloaded: r, invoke: o, signalFrom: n }) {
     if (r()) throw createEnvironmentUnloadedError(e);
     let d = () => {
         o(f, []).catch((b) =>
-          h().log(`${e}: $.clock.${i}: the callback threw: ` + l(b), "warn"),
+          h().log(`${e}: $.clock.${i}: the callback threw: ` + errorMessage(b), "warn"),
         );
       },
       u = {},
@@ -2947,7 +2947,7 @@ function go(e, t) {
   try {
     r = JSON.stringify(e);
   } catch (o) {
-    throw new HooksError(`${t}: $.store.set: value is not JSON data (${l(o)})`);
+    throw new HooksError(`${t}: $.store.set: value is not JSON data (${errorMessage(o)})`);
   }
   if (typeof r !== "string")
     throw new HooksError(
@@ -3076,7 +3076,7 @@ function Ro(e) {
 }
 function Qa(e, t) {
   let r = (i, a) => {
-      t(i, a).catch((f) => h().log(`[${e}] $.${i} dropped: ${l(f)}`, "warn"));
+      t(i, a).catch((f) => h().log(`[${e}] $.${i} dropped: ${errorMessage(f)}`, "warn"));
     },
     o = (i) => r("ui.log", { text: String(i) }),
     n = (i, a = {}) => {
@@ -3431,7 +3431,7 @@ function Fo(e, t, r) {
     let { name: i, message: a } = s;
     return t.makeError(
       typeof i === "string" ? i : "Error",
-      typeof a === "string" ? a : l(s),
+      typeof a === "string" ? a : errorMessage(s),
     );
   }
   return { fromEnvironment: o, intoEnvironment: n };
@@ -3708,7 +3708,7 @@ var Ff = (e) => E(zo(e));
 var Vo = ({ handle: e, repeat: t }) => (t ? clearInterval(e) : clearTimeout(e));
 var Nt = ({ pluginName: e, api: t, invoke: r, fn: o, args: n }) => {
   r(o, n).catch((s) =>
-    h().log(`${e}: ${t}: the callback threw: ${l(s)}`, "warn"),
+    h().log(`${e}: ${t}: the callback threw: ${errorMessage(s)}`, "warn"),
   );
 };
 function Uf({ timers: e, id: t, fire: r }) {
@@ -3831,7 +3831,7 @@ async function Qf(e, t, r = {}) {
   function yn(x, v) {
     let A = I(v);
     if (typeof A !== "object" || !A) return A;
-    return (Wt.set(A, { plugin: o, op: x, message: l(v) }), A);
+    return (Wt.set(A, { plugin: o, op: x, message: errorMessage(v) }), A);
   }
   let gn = C(async (...x) => {
     let [v, A, H] = x,

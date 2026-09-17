@@ -13,26 +13,26 @@ import { Ekn, LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz
 import { qR, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  JRe,
-  cxn,
-  Ret,
-  uxn,
-  QRe,
-  N5t,
-  par,
-  kge,
-  EBe,
-  ket,
-  kq,
-  xet,
-  lRt,
-  far,
-  Het,
-  uS,
+  isRegistryIndexVar,
+  isIndexVarOrAliasSet,
+  sanitizeIndexUrlValue,
+  getIndexVarAliasAssignment,
+  getScrubbedEnvVarNames,
+  initEnvScrubEnabled,
+  resetEnvScrubEnabled,
+  CREDENTIAL_ENV_VAR_NAMES,
+  isGitConfigOrProxyVar,
+  sanitizeBuildToolEnvValue,
+  isCredentialEnvVarName,
+  BUNDLE_SEGMENT_ENV_VAR_PATTERN,
+  isClaudeCodeEnvVarAllowlisted,
+  GITHUB_TOKEN_ENV_VAR_NAMES,
+  isCredentialPrefixedEnvVar,
+  looksLikeSecret,
   getAllPolicyTierSettings,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { findCanonicalGitRoot } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ea, OQ, Zet, Uge, X6 } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy, isMemoryApiEnvVar, SECRET_TOKEN_ENV_VARS, getHostManagedEnvVarsToStrip, resolveLocalSettingsStoreRoot } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { getChildProcessTmpDir } from "../核心工具-路径与平台/temp-directory.js";
 import { id, noProxyUnion } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getFederationCacheDir } from "../共享小工具-未细化/federation-cache-dir.js";
@@ -227,7 +227,7 @@ class w {
   }
 }
 var u = id(new w(), (e) => {
-  (e.reset(), par());
+  (e.reset(), resetEnvScrubEnabled());
 });
 class H {
   getAgentProxyEnv = void 0;
@@ -259,7 +259,7 @@ var A = [
   N = ".";
 function G(e) {
   try {
-    return `${X6(e, findCanonicalGitRoot)}/.claude`;
+    return `${resolveLocalSettingsStoreRoot(e, findCanonicalGitRoot)}/.claude`;
   } catch {
     return;
   }
@@ -270,7 +270,7 @@ function isScrubSandboxAvailable() {
   return !1;
 }
 async function assertScrubSandboxAvailable() {
-  if ((N5t(), !isScrubEnabled())) return;
+  if ((initEnvScrubEnabled(), !isScrubEnabled())) return;
   let e = homedir(),
     t = he(),
     n = process.env.GITHUB_ENV ? dirname(process.env.GITHUB_ENV) : void 0,
@@ -305,7 +305,7 @@ function Y() {
   try {
     let t = z(e);
     if (t && typeof t === "object" && !Array.isArray(t)) {
-      let n = ea(
+      let n = pickBy(
         t,
         (r, p) =>
           typeof r === "number" && Number.isFinite(r) && p.trim().length > 0,
@@ -345,14 +345,14 @@ function isArtifactDevBaseUrlVar(e) {
 }
 function armedRunnerShedsName(e) {
   let t = e.toUpperCase();
-  return !EBe(e) && kq(e) && !far.has(t) && !lRt(t);
+  return !isGitConfigOrProxyVar(e) && isCredentialEnvVarName(e) && !GITHUB_TOKEN_ENV_VAR_NAMES.has(t) && !isClaudeCodeEnvVarAllowlisted(t);
 }
-var te = new Set(Zet.map((e) => e.toUpperCase()));
+var te = new Set(SECRET_TOKEN_ENV_VARS.map((e) => e.toUpperCase()));
 function isChildScrubbedCredentialFamily(e) {
   let t = e.replace(/^INPUT_/, "");
   return (
     isArtifactDevBaseUrlVar(t) ||
-    OQ(t) ||
+    isMemoryApiEnvVar(t) ||
     t.startsWith("OTEL_") ||
     t === "CLAUDE_CODE_OTEL_DIAG_STDERR"
   );
@@ -364,9 +364,9 @@ function childScrubbedCredentialKeys() {
       (n === "CLAUDE_CODE_OAUTH_TOKEN" || n === "ANTHROPIC_API_KEY") &&
       e[n] === CJe;
   return [
-    ...Zet.filter((n) => !t(n)),
+    ...SECRET_TOKEN_ENV_VARS.filter((n) => !t(n)),
     ...Object.keys(e).filter((n) => isChildScrubbedCredentialFamily(n.toUpperCase())),
-    ...Uge(e),
+    ...getHostManagedEnvVarsToStrip(e),
     ...Ekn(),
     "CLAUDE_CODE_SUBSCRIPTION_TYPE",
     "CLAUDE_CODE_RATE_LIMIT_TIER",
@@ -393,7 +393,7 @@ function subprocessEnv() {
       Object.keys(process.env).some((o) => isChildScrubbedCredentialFamily(o.toUpperCase())) ||
       process.env.CLAUDE_CODE_SUBSCRIPTION_TYPE !== void 0 ||
       process.env.CLAUDE_CODE_RATE_LIMIT_TIER !== void 0,
-    f = Uge(process.env),
+    f = getHostManagedEnvVarsToStrip(process.env),
     K = Ekn(),
     R = !1;
   R = BG_WORKER_IDENTITY_ENV_VARS.some((o) => process.env[o] !== void 0);
@@ -447,7 +447,7 @@ function subprocessEnv() {
   }
   if (!_) return d;
   let F = re(),
-    J = QRe().length > 0;
+    J = getScrubbedEnvVarNames().length > 0;
   for (let [o, E] of Object.entries(d)) {
     if (E === o6 && Object.hasOwn(t, o)) continue;
     if (
@@ -458,27 +458,27 @@ function subprocessEnv() {
       continue;
     if (
       F.has(o.toUpperCase().replace(/-/g, "_")) ||
-      xet.test(o) ||
-      Het(o) ||
+      BUNDLE_SEGMENT_ENV_VAR_PATTERN.test(o) ||
+      isCredentialPrefixedEnvVar(o) ||
       (J && armedRunnerShedsName(o))
     ) {
       delete d[o];
       continue;
     }
-    if (E === void 0 || EBe(o)) continue;
+    if (E === void 0 || isGitConfigOrProxyVar(o)) continue;
     let C = typeof E === "string" ? E : String(E);
-    if (JRe(o)) {
-      let O = Ret(o, C);
+    if (isRegistryIndexVar(o)) {
+      let O = sanitizeIndexUrlValue(o, C);
       if (O.value !== C) d[o] = O.value;
       if (O.cut) {
-        let T = uxn(o, O.value);
-        if (T !== void 0 && !cxn(d, T.name)) d[T.name] = T.value;
+        let T = getIndexVarAliasAssignment(o, O.value);
+        if (T !== void 0 && !isIndexVarOrAliasSet(d, T.name)) d[T.name] = T.value;
       }
       continue;
     }
-    let g = ket(o, C);
+    let g = sanitizeBuildToolEnvValue(o, C);
     if (g === void 0) {
-      if (uS(C)) delete d[o];
+      if (looksLikeSecret(C)) delete d[o];
     } else if (g !== C)
       if (g === "") delete d[o];
       else d[o] = g;
@@ -603,12 +603,12 @@ function ne(e) {
 }
 var b;
 function re() {
-  let e = QRe(),
+  let e = getScrubbedEnvVarNames(),
     t = e.length > 0;
   if (b?.armed !== t)
     b = {
       armed: t,
-      names: new Set([...kge, ...e].map((n) => n.toUpperCase())),
+      names: new Set([...CREDENTIAL_ENV_VAR_NAMES, ...e].map((n) => n.toUpperCase())),
     };
   return b.names;
 }

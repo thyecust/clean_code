@@ -26,7 +26,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { onGrowthBookRefresh, isAutoMemoryEnabled, isAutoMemoryDisabledForCurrentMainLoopModel, getAutoMemPath, getGlobalConfig, getCurrentProjectConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { jn, Ks, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel, findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ao } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getInitialSettings, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -43,23 +43,23 @@ import { isAutoDreamAvailable, isAutoDreamEnabled, readAutoMemLastConsolidatedAt
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import {
-  jj,
-  qTn,
-  HK,
-  Vqt,
-  CFe,
-  zer,
+  getOrgMemoryIdentity,
+  EXPLICIT_OFF_SENTINEL,
+  isPublicProjectsSelection,
+  getStoredOrgMemorySelection,
+  getOrgMemorySelection,
+  setOrgMemorySelection,
   clearOrgMemoryCredential,
-  om,
-  OYe,
-  DCe,
-  N$,
-  Vk,
-  HN,
-  DYe,
-  Ker,
-  jfe,
-  vTt,
+  normalizeStorePath,
+  isMonorepoWriteBlockEnabled,
+  areOrgMemoryWriteGatesOpen,
+  canWriteOrgMemory,
+  getGrantedStoreMode,
+  getMemoryStorePathKind,
+  hasPrivateGroupingStore,
+  wasLastAskDowngraded,
+  isOrgMemoryWriteOptedInForAccount,
+  setOrgMemoryWriteOptIn,
   waitForOrgMemoryDecisionSettled,
   getOrgMemoryDecision,
   getOrgMemoryServedIdentity,
@@ -68,24 +68,24 @@ import {
   discoverOrgMemoryStores,
   reconnectOrgMemory,
   disconnectOrgMemory,
-  IK,
-  Wj,
-  FCe,
-  xJ,
-  kFe,
-  xFe,
-  ih,
-  Ed,
-  $a,
-  ezt,
-  cEn,
-  HG,
-  ctr,
-  OC,
-  Wy,
-  fEn,
-  mEn,
-  LFe,
+  isOrgMemoryReadEnabled,
+  getOrgMemoryStores,
+  isMemoryStoreWritable,
+  getMemoryStoreId,
+  sortMemoryStores,
+  getMemoryStoreDescription,
+  MEMORY_LIST_TOOL_NAME,
+  MEMORY_READ_TOOL_NAME,
+  MEMORY_WRITE_TOOL_NAME,
+  buildMemoryStoreView,
+  formatMemoryStoreLine,
+  setSharedMemoryServedViaTools,
+  readStorePromptIndex,
+  hasTeamMemoryStore,
+  getTeamMemoryDir,
+  describeMemoryIndex,
+  formatRecalledMemoryBlock,
+  getAgentMemoryDir,
 } from "./Memory-CLAUDE.md.vx19drc8.js";
 import { t5 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -501,7 +501,7 @@ function Ot(Xn) {
 F();
 import { mkdir } from "fs/promises";
 import { join as xt } from "path";
-var ze = `${ih} / ${Ed} / ${$a}`,
+var ze = `${MEMORY_LIST_TOOL_NAME} / ${MEMORY_READ_TOOL_NAME} / ${MEMORY_WRITE_TOOL_NAME}`,
   to = 80,
   Yo =
     /[\u2039\u203A\uFF1C\uFF1E\uFE64\uFE65\u3008\u3009\u2329\u232A\u27E8\u27E9\u02C2\u02C3]/g,
@@ -518,8 +518,8 @@ async function ro(w, b) {
   try {
     let M = Jo.of(w),
       k = M.begin(),
-      R = b === "project" ? Vqt() : null,
-      P = jj(),
+      R = b === "project" ? getStoredOrgMemorySelection() : null,
+      P = getOrgMemoryIdentity(),
       j = nt(),
       W = () => {
         j = nt();
@@ -539,7 +539,7 @@ async function ro(w, b) {
         B !== "timeout" && B.current.state === "on"
           ? B.current.request.selection
           : null,
-      he = !Ce && R !== null && Ie !== R && jj() === P && Vqt() === null;
+      he = !Ce && R !== null && Ie !== R && getOrgMemoryIdentity() === P && getStoredOrgMemorySelection() === null;
     Qo(z, j, I);
     let ce = z === "switched" || z === "connected" ? await rn(I.stores) : [];
     if ((oo(z, j, I, ce, he), he))
@@ -556,7 +556,7 @@ async function ro(w, b) {
           if (k !== M.latest) return;
           let Ye = nt();
           if (ke(j) || Ye.stores.length > 0)
-            HG(Ye.stores.some((q) => q.writable));
+            setSharedMemoryServedViaTools(Ye.stores.some((q) => q.writable));
         })
         .catch(() => {});
     let qe = mn(z, b, j, I, ce, he);
@@ -579,15 +579,15 @@ function Qo(w, b, M) {
   switch (w) {
     case "switched":
     case "connected":
-      HG(M.stores.some((k) => k.writable));
+      setSharedMemoryServedViaTools(M.stores.some((k) => k.writable));
       return;
     case "disconnected":
     case "unavailable":
     case "pending":
-      if (ke(b)) HG(!1);
+      if (ke(b)) setSharedMemoryServedViaTools(!1);
       return;
     case "unchanged":
-      if (ke(b) || M.stores.length > 0) HG(M.stores.some((k) => k.writable));
+      if (ke(b) || M.stores.length > 0) setSharedMemoryServedViaTools(M.stores.some((k) => k.writable));
       return;
   }
 }
@@ -598,10 +598,10 @@ function nt() {
   return {
     project: Zo(getOrgMemoryDecision()),
     servedEarlier: getOrgMemoryServedIdentity() !== null,
-    stores: kFe(Wj()).map((w) => ({
-      id: xJ(w),
-      description: xFe(w),
-      writable: FCe(w),
+    stores: sortMemoryStores(getOrgMemoryStores()).map((w) => ({
+      id: getMemoryStoreId(w),
+      description: getMemoryStoreDescription(w),
+      writable: isMemoryStoreWritable(w),
       promptIndex: w.promptIndex,
       store: w,
     })),
@@ -612,7 +612,7 @@ function Zo(w) {
   let b = w.request.selection;
   if (b === null || w.selectionSource !== "preference")
     return { kind: "default" };
-  if (HK(b)) return { kind: "picked", name: "all public projects" };
+  if (isPublicProjectsSelection(b)) return { kind: "picked", name: "all public projects" };
   let M = getOrgMemoryPickerData()?.candidates.find((k) => k.id === b);
   return { kind: "picked", name: M === void 0 ? null : en(M.name) };
 }
@@ -665,7 +665,7 @@ function nn(w) {
 }
 async function rn(w) {
   let b = w.filter((k) => k.promptIndex !== void 0),
-    M = await Promise.all(b.map((k) => ctr(k.store)));
+    M = await Promise.all(b.map((k) => readStorePromptIndex(k.store)));
   return b.map((k, R) => {
     let P = M[R];
     if (P === null || P === void 0)
@@ -775,36 +775,36 @@ function mn(w, b, M, k, R, P = !1) {
     case "pending":
       if (ke(M))
         return wrapSystemReminder(
-          `This session is no longer connected to ${Ve(M.project)} (a re-pick in /memory is still being applied). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale. Call ${ih} with no arguments to check what, if anything, is connected before relying on the memory tools again.`,
+          `This session is no longer connected to ${Ve(M.project)} (a re-pick in /memory is still being applied). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale. Call ${MEMORY_LIST_TOOL_NAME} with no arguments to check what, if anything, is connected before relying on the memory tools again.`,
         );
       return b === "off"
         ? null
         : wrapSystemReminder(
-            `The user picked a project's shared memory in /memory and the connection is still being set up; nothing is connected yet. Before relying on the ${ze} tools, call ${ih} with no arguments: once it lists connected stores, read your teammates' shared memories and save new shared learnings through those tools as their prompts describe. Your personal memory directory, if your system prompt names one, is unaffected either way.`,
+            `The user picked a project's shared memory in /memory and the connection is still being set up; nothing is connected yet. Before relying on the ${ze} tools, call ${MEMORY_LIST_TOOL_NAME} with no arguments: once it lists connected stores, read your teammates' shared memories and save new shared learnings through those tools as their prompts describe. Your personal memory directory, if your system prompt names one, is unaffected either way.`,
           );
     case "disconnected":
     case "unavailable":
       if (!ke(M)) return null;
       return wrapSystemReminder(
-        `This session is no longer connected to ${Ve(M.project)} (${w === "disconnected" ? "the user turned it off in /memory" : P ? "the project the user re-picked is no longer available, so the pick was cleared and nothing connected" : "reconnecting to the re-picked project failed"}). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale, and nothing is connected for the memory tools to serve until the user reconnects in /memory (${ih} with no arguments reports what, if anything, is connected whenever you need to re-check). If the user asks you to remember something, use your personal memory directory if your system prompt names one; otherwise explain that project memory is disconnected for this session.`,
+        `This session is no longer connected to ${Ve(M.project)} (${w === "disconnected" ? "the user turned it off in /memory" : P ? "the project the user re-picked is no longer available, so the pick was cleared and nothing connected" : "reconnecting to the re-picked project failed"}). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale, and nothing is connected for the memory tools to serve until the user reconnects in /memory (${MEMORY_LIST_TOOL_NAME} with no arguments reports what, if anything, is connected whenever you need to re-check). If the user asks you to remember something, use your personal memory directory if your system prompt names one; otherwise explain that project memory is disconnected for this session.`,
       );
     case "switched":
     case "connected": {
       let V = k.stores.map((z) =>
-          ezt(z.store, z.writable, z.id, z.description),
+          buildMemoryStoreView(z.store, z.writable, z.id, z.description),
         ),
         B = V.find((z) => !z.readOnly),
         I =
           B === void 0
-            ? `Every connected store is read-only in this session: ${$a} calls are refused.`
-            : `Save new shared memories in \`${B.id}\` under \`${B.projectDir}\` and keep its index \`${B.indexPath}\` current, as the ${$a} tool prompt describes. Private memories belong in your personal memory directory, if your system prompt names one; the shared stores are for what teammates should also see. Never save secrets, credentials or other sensitive data to the shared stores.`;
+            ? `Every connected store is read-only in this session: ${MEMORY_WRITE_TOOL_NAME} calls are refused.`
+            : `Save new shared memories in \`${B.id}\` under \`${B.projectDir}\` and keep its index \`${B.indexPath}\` current, as the ${MEMORY_WRITE_TOOL_NAME} tool prompt describes. Private memories belong in your personal memory directory, if your system prompt names one; the shared stores are for what teammates should also see. Never save secrets, credentials or other sensitive data to the shared stores.`;
       return [
         wrapSystemReminder(
           [
             `The project memory connected to this session has changed: ${P ? `the project the user picked in /memory is no longer available, so ${Ve(k.project)} is connected instead` : k.project.kind === "default" ? "the user picked a project in /memory, and the default project memory is what is now connected" : `the user picked ${Ve(k.project)} in /memory`}.${W}`,
             "",
-            `Connected memory stores for the rest of this session \u2014 pass an id as the ${ze} tools' store argument, and call ${ih} with no arguments to re-check this set whenever you are unsure:`,
-            ...V.map(cEn),
+            `Connected memory stores for the rest of this session \u2014 pass an id as the ${ze} tools' store argument, and call ${MEMORY_LIST_TOOL_NAME} with no arguments to re-check this set whenever you are unsure:`,
+            ...V.map(formatMemoryStoreLine),
             "",
             I,
           ].join(`
@@ -819,14 +819,14 @@ function mn(w, b, M, k, R, P = !1) {
 }
 function un(w) {
   let b = `/${w.store.promptIndex}`,
-    M = fEn(w.store.id, b);
+    M = describeMemoryIndex(w.store.id, b);
   switch (w.state) {
     case "unavailable":
-      return `(${M} could not be fetched just now \u2014 call ${Ed} on it when you need it.)`;
+      return `(${M} could not be fetched just now \u2014 call ${MEMORY_READ_TOOL_NAME} on it when you need it.)`;
     case "empty":
       return `(${M} is currently empty.)`;
     case "loaded":
-      return mEn(M, b, w.content);
+      return formatRecalledMemoryBlock(M, b, w.content);
   }
 }
 function ao(w) {
@@ -848,39 +848,39 @@ function fn(w, b, M) {
     let k = await discoverOrgMemoryStores(b, M).catch(() => null),
       R = getOrgMemoryPickerData();
     if (k === null) return { mounts: [], picker: R };
-    let P = Ker(),
+    let P = wasLastAskDowngraded(),
       j = getOrgMemoryDecision(),
       W =
         j.state === "on"
           ? j.initialGrant.find(
               (I) =>
-                HN(I.path) === "grouping_root" ||
-                (I.kind === "grouping_root" && HN(I.path) === "unknown"),
+                getMemoryStorePathKind(I.path) === "grouping_root" ||
+                (I.kind === "grouping_root" && getMemoryStorePathKind(I.path) === "unknown"),
             )
           : void 0,
       V =
         j.state === "on"
           ? j.initialGrant.find(
-              (I) => I.kind === "grouping" || HN(I.path) === "grouping",
+              (I) => I.kind === "grouping" || getMemoryStorePathKind(I.path) === "grouping",
             )
           : void 0,
-      B = j.state === "on" && DYe(j.initialGrant);
+      B = j.state === "on" && hasPrivateGroupingStore(j.initialGrant);
     return {
       mounts: k
         .filter((I) => I.scope === "team")
         .map((I) => ({
           mount: I.mount,
-          dir: xt(Wy(), I.mount),
+          dir: xt(getTeamMemoryDir(), I.mount),
           description:
-            W !== void 0 && om(I.path) === om(W.path)
-              ? I.mode === "rw" && Vk(I.path) === "rw" && N$()
+            W !== void 0 && normalizeStorePath(I.path) === normalizeStorePath(W.path)
+              ? I.mode === "rw" && getGrantedStoreMode(I.path) === "rw" && canWriteOrgMemory()
                 ? "public project memory, read-write"
                 : "public project memory, read-only"
-              : V !== void 0 && om(I.path) === om(V.path)
+              : V !== void 0 && normalizeStorePath(I.path) === normalizeStorePath(V.path)
                 ? B
                   ? "private project, read-only"
                   : "project memory, read-only"
-                : I.mode === "rw" && Vk(I.path) === "rw" && N$()
+                : I.mode === "rw" && getGrantedStoreMode(I.path) === "rw" && canWriteOrgMemory()
                   ? "read-write"
                   : B
                     ? "read-only \u2014 private project selected"
@@ -907,14 +907,14 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
       : { mounts: [], picker: null },
     [he, ce] = d(!1),
     [qe, Ye] = d(!1),
-    [q, jt] = d(CFe),
-    at = q !== null && HK(q),
-    [uo] = d(IK),
+    [q, jt] = d(getOrgMemorySelection),
+    at = q !== null && isPublicProjectsSelection(q),
+    [uo] = d(isOrgMemoryReadEnabled),
     [ct] = d(() => getCurrentProjectConfig().orgMemoryRead ?? !0),
     [po, Te] = d(null),
     [fo, go] = d(!1),
     $t = C(!1),
-    lt = k !== void 0 && IK(),
+    lt = k !== void 0 && isOrgMemoryReadEnabled(),
     le = getOrgMemoryDecision(),
     dt = !Ce
       ? null
@@ -986,7 +986,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     At =
       q !== null &&
       (Mo
-        ? DYe(le.initialGrant)
+        ? hasPrivateGroupingStore(le.initialGrant)
         : Y?.candidates.find((S) => S.id === q)?.visibility === "private"),
     ko =
       q === null || Y === null
@@ -1002,11 +1002,11 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
         value: `${Ae}${getAutoMemPath()}`,
         description: "",
       }),
-      OC())
+      hasTeamMemoryStore())
     )
       Le.push({
         label: "Open team memory folder",
-        value: `${Ae}${Wy()}`,
+        value: `${Ae}${getTeamMemoryDir()}`,
         description: "",
       });
     if (!uo)
@@ -1034,14 +1034,14 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
           po ||
           (at
             ? "set automatically \u2014 pick a project to choose where saves go"
-            : Y.writeOptInAvailable && DCe() && !jfe()
+            : Y.writeOptInAvailable && areOrgMemoryWriteGatesOpen() && !isOrgMemoryWriteOptedInForAccount()
               ? "change \xB7 org allows write opt-in (/config)"
               : "change"),
       });
     }
     for (let S of bo.activeAgents)
       if (S.memory) {
-        let H = LFe(S.agentType, S.memory);
+        let H = getAgentMemoryDir(S.agentType, S.memory);
         Le.push({
           label: `Open ${chalk.bold(S.agentType)} agent memory`,
           value: `${Ae}${H}`,
@@ -1084,9 +1084,9 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
           : `last ran ${formatRelativeTimeAgo(new Date(ft))}`,
     [oe, gt] = d(null),
     Je = oe !== null,
-    [Ue, Ut] = d(jfe),
+    [Ue, Ut] = d(isOrgMemoryWriteOptedInForAccount),
     [Po, we] = d(null);
-  Re.write ||= !OYe() && (Ue || (z.length > 0 && DCe()));
+  Re.write ||= !isMonorepoWriteBlockEnabled() && (Ue || (z.length > 0 && areOrgMemoryWriteGatesOpen()));
   let ht = ct && q !== null && Re.write,
     Qe = ye ? 2 : 1,
     Ht = ht ? Qe : ye ? 1 : 0;
@@ -1094,9 +1094,9 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     if (!ht) return;
     jFt(() => {
       let S = !Ue,
-        H = vTt(S, W);
+        H = setOrgMemoryWriteOptIn(S, W);
       if (H === "granted" || H === "withdrawn") (j.reset(), Ut(S), we(null));
-      else if (H === "noop") (Ut(jfe()), we(null));
+      else if (H === "noop") (Ut(isOrgMemoryWriteOptedInForAccount()), we(null));
       else if (H === "refused_gates") we("unavailable right now");
       else if (H === "refused_identity") we("requires an OAuth login");
       else if (H === "refused_read_off") we("enable reads first");
@@ -1281,9 +1281,9 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
                   jFt(() => {
                     let H = S === st,
                       me = H ? void 0 : Y.candidates.find((Pe) => Pe.id === S),
-                      pe = H ? qTn : S,
+                      pe = H ? EXPLICIT_OFF_SENTINEL : S,
                       J = H ? null : S,
-                      Z = zer(pe, W),
+                      Z = setOrgMemorySelection(pe, W),
                       ne = Z === "saved" || Z === "cleared",
                       fe = getOrgMemoryDecision(),
                       Eo =
@@ -1481,9 +1481,9 @@ ${V}`,
   });
 }
 var si = async (w, b) => {
-  let M = jn();
+  let M = getRemoteTransport();
   if (M) {
-    if (!Ks())
+    if (!hasRemoteControlChannel())
       return (
         w("Memory files aren't available over this remote connection"),
         null

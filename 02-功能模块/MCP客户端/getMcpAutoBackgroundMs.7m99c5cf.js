@@ -19,7 +19,7 @@ import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_TIMER_DELAY_MS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { attachDetachableAbortRelay } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { enqueuePendingNotification } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "./chunk-tv3jbp8f.js";
@@ -63,7 +63,7 @@ function getMcpAutoBackgroundMs(e, { isNonInteractiveSession: r = !1 } = {}) {
   if (areBackgroundTasksDisabled()) return 0;
   if (r && !a.CLAUDE_AUTO_BACKGROUND_TASKS) return 0;
   let s = a.CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS;
-  if (s !== void 0) return Math.min(Math.max(0, s), pS);
+  if (s !== void 0) return Math.min(Math.max(0, s), MAX_TIMER_DELAY_MS);
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_mcp_auto_background", !0) ? V : 0;
 }
 async function callMcpToolWithAutoBackground({

@@ -46,12 +46,12 @@ import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-fla
 import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import {
-  Za,
-  bke,
-  jU,
-  j5,
-  YRt,
-  _lr,
+  invalidateAllSettings,
+  hashCanonicalJson,
+  buildSettingsSummary,
+  hasSettingsSummaryEntries,
+  hashSettingsSummary,
+  settingsDivergeFromConsent,
   HELPER_CONSENT_STATE_ID,
   getHelperConsentPath,
   helperConsentDigest,
@@ -73,12 +73,12 @@ import {
   unverifiedRemoteCacheWithholdsProvisions,
   getRemoteManagedSettingsRawCache,
   getRemoteManagedSettingsSyncFromCache,
-  Tke,
-  Bq,
-  t2e,
+  parseSettingsContentCached,
+  loadRemoteManagedSettings,
+  CLEANUP_PERIOD_SETTING_KEYS,
 } from "./设置-配置.aqbb35ee.js";
 import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { U5t, Tar } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { refreshPolicyHelperFromRemotePayload, reconcileRemoteArmedPolicyHelper } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { vvt, mir, gir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { commitExit } from "../共享小工具-未细化/exit-commit-state.js";
@@ -235,8 +235,8 @@ async function X() {
   return r;
 }
 async function oe(e, t, o) {
-  if (!t || !j5(jU(t))) return "no_check_needed";
-  if (!_lr(e, t)) return "no_check_needed";
+  if (!t || !hasSettingsSummaryEntries(buildSettingsSummary(t))) return "no_check_needed";
+  if (!settingsDivergeFromConsent(e, t)) return "no_check_needed";
   if (!ld()) return "deferred_non_interactive";
   let r = e.source === "consented_payload" ? e.settings : e.consentedPayload,
     a = F();
@@ -411,12 +411,12 @@ async function ge(e, t, o) {
       );
       return;
     }
-    let p = jU(t),
+    let p = buildSettingsSummary(t),
       d = r.get(e.organizationUuid),
       R = d?.accountUuid === e.accountUuid,
-      w = !j5(p);
+      w = !hasSettingsSummaryEntries(p);
     if (w && !(d && R)) return;
-    let _ = w && d ? d.dangerousSettingsHash : YRt(p),
+    let _ = w && d ? d.dangerousSettingsHash : hashSettingsSummary(p),
       v = Date.now();
     if (R && d.dangerousSettingsHash === _ && v - d.updatedAt < Ne) return;
     r.delete(e.organizationUuid);
@@ -527,11 +527,11 @@ function et() {
 }
 function K(e) {
   if (!e) return e;
-  return Tke(e, "remote managed settings").settings ?? {};
+  return parseSettingsContentCached(e, "remote managed settings").settings ?? {};
 }
 function Se(e, t, o) {
   let r = stripReservedKeys(e),
-    a = Tke(r, t),
+    a = parseSettingsContentCached(r, t),
     u = r;
   if (!a.settings && Object.keys(r).length > 0 && !tt(u))
     return (
@@ -555,11 +555,11 @@ function Se(e, t, o) {
 }
 function tt(e) {
   let t = Object.keys(e);
-  return t.length > 0 && t.every((o) => t2e.some((r) => r === o));
+  return t.length > 0 && t.every((o) => CLEANUP_PERIOD_SETTING_KEYS.some((r) => r === o));
 }
 function Re(e, t) {
   let o = e;
-  for (let r of t2e) if (r in t && !(r in o)) o = { ...o, [r]: t[r] };
+  for (let r of CLEANUP_PERIOD_SETTING_KEYS) if (r in t && !(r in o)) o = { ...o, [r]: t[r] };
   return o;
 }
 function nt(e, t) {
@@ -1049,7 +1049,7 @@ async function he(e, t, o) {
   }
 }
 async function hlt(e) {
-  (UDt(), resetRemoteSettingsSyncCache(), Za(), O().detachBarrier()?.());
+  (UDt(), resetRemoteSettingsSyncCache(), invalidateAllSettings(), O().detachBarrier()?.());
   let t =
     isHoverRestEnabled() && e !== void 0
       ? await e.delete(STORAGE_KEYS.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : We(o.error)))
@@ -1078,8 +1078,8 @@ async function Y(e = {}) {
   try {
     return await ct(e);
   } finally {
-    let t = () => Bq().settings;
-    (Tar(t), U5t(t));
+    let t = () => loadRemoteManagedSettings().settings;
+    (reconcileRemoteArmedPolicyHelper(t), refreshPolicyHelperFromRemotePayload(t));
   }
 }
 async function ct(e) {
@@ -1096,7 +1096,7 @@ async function ct(e) {
     );
   let o = getRemoteManagedSettingsRawCache(),
     r = isRemoteManagedSettingsVerified(),
-    a = o ? bke(o) : void 0,
+    a = o ? hashCanonicalJson(o) : void 0,
     u = getSyncCacheResetEpoch(),
     p = O();
   if (!p.signedCacheShadowChecked) {
@@ -1351,7 +1351,7 @@ async function xnn(e, t, o) {
       u?.(),
       D({ settings: null, fetchSucceeded: !0 }),
       N(),
-      U5t(() => Bq().settings),
+      refreshPolicyHelperFromRemotePayload(() => loadRemoteManagedSettings().settings),
       { fetchSucceeded: !0 }
     );
   vnn();

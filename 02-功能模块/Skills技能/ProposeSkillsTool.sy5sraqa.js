@@ -19,7 +19,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { findCommand, getDefaultFileReadingLimits, isSkillPlaceholderCurrent, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { eJ, yQn, SQn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { PROPOSE_SKILLS_TOOL_NAME, PROPOSE_SKILLS_TOOL_DESCRIPTION, PROPOSE_SKILLS_TOOL_PROMPT } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isFullFileView, matchesFileStateContent, normalizeFileContent } from "../MCP客户端/chunk-3kmsshb6.js";
 import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
@@ -68,7 +68,7 @@ var S = 1024,
     }),
   ),
   ProposeSkillsTool = buildTool({
-    name: eJ,
+    name: PROPOSE_SKILLS_TOOL_NAME,
     maxResultSizeChars: 1000,
     searchHint:
       "propose skills from recurring procedures for the user to review and save",
@@ -105,10 +105,10 @@ var S = 1024,
 `);
     },
     async description() {
-      return yQn;
+      return PROPOSE_SKILLS_TOOL_DESCRIPTION;
     },
     async prompt() {
-      return SQn;
+      return PROPOSE_SKILLS_TOOL_PROMPT;
     },
     renderToolUseMessage(t) {
       let e = (t.proposals ?? []).filter((r) => r?.name).slice(0, 3);

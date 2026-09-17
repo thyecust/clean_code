@@ -19,7 +19,7 @@ import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-�
 import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -1335,7 +1335,7 @@ var SendMessageTool = buildTool({
         } catch (_) {
           return (
             n(
-              `[SendMessage] permission-phase resolve failed (${BU(l(_))}) \u2014 asking`,
+              `[SendMessage] permission-phase resolve failed (${normalizeSingleLineText(l(_))}) \u2014 asking`,
               { level: "warn" },
             ),
             ue(t, e, null),

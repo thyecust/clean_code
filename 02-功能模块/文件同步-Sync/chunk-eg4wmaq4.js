@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { truncateToCodePoints, isWellFormed, toWellFormed, ANY_CONTROL_CHAR_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { kJ, $Tt, MK } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { nodeIgnoreModule, getIgnorePatternCompileError, filterCompilableIgnorePatterns } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   createConcurrencyLimiter,
   isSignalAborted,
@@ -30,10 +30,10 @@ import {
 import { vze } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { isPathEligibleForSync, compareByPath } from "./sync-journal.js";
 import { Vpt, Z9n } from "./chunk-tqwnv5vj.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var P = toESM(kJ(), 1);
+var P = toESM(nodeIgnoreModule(), 1);
 import {
   lstat,
   open as q,
@@ -121,7 +121,7 @@ function iOe(e) {
 function wze(e, { ignoreCase: t }) {
   let n = (o) => (t ? o.normalize("NFC") : o),
     r = P.default({ ignorecase: t }).add(
-      MK(e.map(n), "dir_sync_folder_ignore"),
+      filterCompilableIgnorePatterns(e.map(n), "dir_sync_folder_ignore"),
     );
   return {
     ignoresFile: (o) => r.ignores(n(o)),
@@ -168,7 +168,7 @@ async function Tze(e) {
   if (n.nlink !== 1n) return m("linked");
   if (n.size > BigInt(F)) return m("too_large");
   try {
-    let r = await q(t, Ha());
+    let r = await q(t, getSafeReadOpenFlags());
     try {
       let o = await r.stat({ bigint: !0 });
       if (!o.isFile() || o.dev !== n.dev || o.ino !== n.ino || o.nlink !== 1n)
@@ -190,7 +190,7 @@ async function Tze(e) {
   }
 }
 function v(e) {
-  return $Tt(e) === null && $Tt(e.normalize("NFC")) === null;
+  return getIgnorePatternCompileError(e) === null && getIgnorePatternCompileError(e.normalize("NFC")) === null;
 }
 var ue = /[[\\]/,
   Y = /^\*{2,}$/;

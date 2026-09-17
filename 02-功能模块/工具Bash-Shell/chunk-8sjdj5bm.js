@@ -11,7 +11,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { normalizeDashCharacters, POWERSHELL_COMMAND_ALIASES, PARAMETER_PREFIX_CHARS, isParameterToken, getStatements, isNullRedirectTarget, getCommandSecurityPatterns } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { VYe, KYe, QTt, ZTt, eEt, XYe, GFe, lEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { GIT_SAFE_FLAGS_BY_SUBCOMMAND, GH_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_CONNECTION_FLAGS, DOCKER_SAFE_FLAGS_BY_SUBCOMMAND, DOCKER_READ_ONLY_SUBCOMMANDS, isCliFlagToken, areCommandFlagsSafe, INTERPRETER_COMMAND_NAMES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { statSync } from "fs";
 import { join as me } from "path";
@@ -1240,8 +1240,8 @@ function te(e, t) {
     let s = e[n] ?? "",
       o = t[n] ?? "";
     if (o.includes("\x00") || G(s).includes("\x00")) return !1;
-    if (XYe(o) !== XYe(s) || (o === "--") !== (s === "--")) return !1;
-    if (XYe(s) && s !== o && X(s) !== X(o)) return !1;
+    if (isCliFlagToken(o) !== isCliFlagToken(s) || (o === "--") !== (s === "--")) return !1;
+    if (isCliFlagToken(s) && s !== o && X(s) !== X(o)) return !1;
   }
   return !0;
 }
@@ -1281,9 +1281,9 @@ function K(e) {
     s = t + 1 < e.length ? e[t + 1]?.toLowerCase() || "" : "",
     o = `git ${n} ${s}`,
     r = `git ${n}`,
-    c = VYe[o],
+    c = GIT_SAFE_FLAGS_BY_SUBCOMMAND[o],
     i = 2;
-  if (!c) ((c = VYe[r]), (i = 1));
+  if (!c) ((c = GIT_SAFE_FLAGS_BY_SUBCOMMAND[r]), (i = 1));
   if (!c) return !1;
   let l = e.slice(t + i);
   if (n === "ls-remote") {
@@ -1301,7 +1301,7 @@ function K(e) {
     c.additionalCommandIsDangerousCallback("", l)
   )
     return !1;
-  return GFe(l, 0, c, { commandName: "git" });
+  return areCommandFlagsSafe(l, 0, c, { commandName: "git" });
 }
 function Re(e) {
   let t = R(e);
@@ -1311,8 +1311,8 @@ function Re(e) {
 function q(e) {
   return !1;
 }
-var Y = new Set(QTt.filter((e) => /^-[^-]$/.test(e)).map((e) => e[1])),
-  Te = [...QTt.filter((e) => e.startsWith("--")), "--tls"];
+var Y = new Set(DOCKER_CONNECTION_FLAGS.filter((e) => /^-[^-]$/.test(e)).map((e) => e[1])),
+  Te = [...DOCKER_CONNECTION_FLAGS.filter((e) => e.startsWith("--")), "--tls"];
 function Oe(e) {
   if (e.length === 0) return !0;
   let t = R(e);
@@ -1331,8 +1331,8 @@ function Oe(e) {
     if (Te.some((i) => c.startsWith(i))) return !1;
   }
   let n = `docker ${t[0]?.toLowerCase()}`;
-  if (eEt.includes(n)) return !0;
-  let s = ZTt[n];
+  if (DOCKER_READ_ONLY_SUBCOMMANDS.includes(n)) return !0;
+  let s = DOCKER_SAFE_FLAGS_BY_SUBCOMMAND[n];
   if (!s) return !1;
   let o = t.slice(1);
   if (
@@ -1340,7 +1340,7 @@ function Oe(e) {
     s.additionalCommandIsDangerousCallback("", o)
   )
     return !1;
-  return GFe(o, 0, s);
+  return areCommandFlagsSafe(o, 0, s);
 }
 function ye(e) {
   if (e.length === 0) return !1;
@@ -1441,7 +1441,7 @@ var ke = new Set(["invoke-webrequest", "invoke-restmethod"]),
       ...Me,
       ...je,
       "foreach-object",
-      ...lEt.filter((t) => !t.includes(" ")),
+      ...INTERPRETER_COMMAND_NAMES.filter((t) => !t.includes(" ")),
     ]);
     return new Set([...e, ...De(e)]);
   })();

@@ -14,8 +14,8 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { bytesPerTokenForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { S1, ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { CLAUDE_AI_SYNC_LABEL, describeSettingsSourceShort } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -228,7 +228,7 @@ function To(a) {
   );
 }
 function E(a, c) {
-  if (c === "syncedSkills") return S1;
+  if (c === "syncedSkills") return CLAUDE_AI_SYNC_LABEL;
   switch (a) {
     case "mcp":
     case "plugin":
@@ -239,7 +239,7 @@ function E(a, c) {
     case "builtin":
       return "built-in";
     default:
-      return ay(a);
+      return describeSettingsSourceShort(a);
   }
 }
 function Ae(Es) {
@@ -789,7 +789,7 @@ function Ne(Zs) {
   return Nt;
 }
 async function kn(a, c) {
-  if (jn()) return e(Oe, { onExit: a });
+  if (getRemoteTransport()) return e(Oe, { onExit: a });
   return e(Ae, {
     onExit: a,
     commands: c.options.commands,

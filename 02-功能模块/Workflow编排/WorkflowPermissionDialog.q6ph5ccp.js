@@ -22,7 +22,7 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { ps, _i, Rm, aA, Us, OD, km, Jk, Oo } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { Fs, Hg, qw, Ig, XW, Wst } from "../权限系统/chunk-0hcqee2w.js";
+import { MultilineBorderBox, isConsentRow, mintConsentRowFromUpdates, PermissionReasonPanel, ConfirmationPrompt, shouldOfferAlwaysAllow } from "../权限系统/chunk-0hcqee2w.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { editTextInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
@@ -314,7 +314,7 @@ function tn(n, y, s, l, a) {
         ...(a && { feedback: a }),
       };
     case "yes-always": {
-      if (l === null || !Hg(l))
+      if (l === null || !isConsentRow(l))
         return { behavior: "allow", updatedInput: { ...y.input, script: s } };
       return {
         behavior: "allow",
@@ -330,7 +330,7 @@ var Wn = new Set(["addRules"]);
 function on(n) {
   let y = n.workflowName;
   if (y === void 0) return null;
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -470,7 +470,7 @@ function WorkflowPermissionDialog(it) {
     we = T === void 0 ? void 0 : T.kind === "full" ? T.text : T.marker,
     Pn;
   if (g[20] !== T?.kind || g[21] !== m || g[22] !== S)
-    ((Pn = Wst(m) && T?.kind !== "withheld" && !S ? on(m) : null),
+    ((Pn = shouldOfferAlwaysAllow(m) && T?.kind !== "withheld" && !S ? on(m) : null),
       (g[20] = T?.kind),
       (g[21] = m),
       (g[22] = S),
@@ -610,7 +610,7 @@ function WorkflowPermissionDialog(it) {
     if (g[74] !== m.permissionResult)
       ((ae =
         m.permissionResult.denialLimitFallback !== void 0 &&
-        e(Ig, { permissionResult: m.permissionResult, toolType: "tool" })),
+        e(PermissionReasonPanel, { permissionResult: m.permissionResult, toolType: "tool" })),
         (g[74] = m.permissionResult),
         (g[75] = ae));
     else ae = g[75];
@@ -623,7 +623,7 @@ function WorkflowPermissionDialog(it) {
       He &&
       e(o, {
         marginBottom: 1,
-        children: e(Fs, {
+        children: e(MultilineBorderBox, {
           multiline: aA(He),
           children: e(t, { bold: !0, children: He }),
         }),
@@ -724,7 +724,7 @@ function WorkflowPermissionDialog(it) {
       we &&
       e(o, {
         marginTop: 1,
-        children: e(Fs, {
+        children: e(MultilineBorderBox, {
           multiline: T?.kind === "full" && T.needsGutter,
           children: r(t, {
             children: [
@@ -776,7 +776,7 @@ function WorkflowPermissionDialog(it) {
   else Cn = g[95];
   let qe;
   if (g[96] !== Ze || g[97] !== Ue || g[98] !== Pe || g[99] !== je)
-    ((qe = e(XW, {
+    ((qe = e(ConfirmationPrompt, {
       options: Pe,
       onSelect: Ue,
       onCancel: Ze,

@@ -22,7 +22,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { Cc } from "../后台任务-Shell管理/chunk-c7mzes79.js";
+import { useDialogStore } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
@@ -38,7 +38,7 @@ import { rehydrateArtifactFrameState } from "../Artifact发布-渲染/chunk-fx5e
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
-import { j0t } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { clearGoalOnResumeSwap } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import { resetConversation } from "../../01-核心基础设施/共享小工具-未细化/conversation-reset.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -62,7 +62,7 @@ function B(b) {
 var K = async (t, r) =>
   e(L, { onExit: t, context: r, exposure: { logged: !1 } });
 function retireConversationForTeleportPull(t, r, f) {
-  (j0t(t, r, f),
+  (clearGoalOnResumeSwap(t, r, f),
     r((a) =>
       Object.keys(a.sendMessagePins).length === 0
         ? a
@@ -83,7 +83,7 @@ function L(W) {
   let i = _(24),
     { onExit: o, context: p, exposure: C } = W,
     n = useAppState(),
-    T = Cc(),
+    T = useDialogStore(),
     x = useSession(),
     A;
   if (i[0] !== T || i[1] !== n.getState || i[2] !== n.setState)

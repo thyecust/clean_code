@@ -25,14 +25,14 @@ import { BRANCH_ARROW_GLYPH, ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { uuidSlugFromUrl, TITLE_MAX_RUNES } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
-  Am,
-  Nd,
-  qwt,
-  Q1e,
-  pqt,
+  formatNotAuthenticatedMessage,
+  artifactFrameHttpClient,
+  getArtifactReadInstruction,
+  normalizeArtifactTitle,
+  sanitizeEditableTitle,
   zZn,
-  VZn,
-  Fd,
+  sanitizeFaviconText,
+  buildFrameHeaders,
   mainObservedArtifactVersion,
   artifactViewerUrl,
 } from "./chunk-01ymf0ar.js";
@@ -47,7 +47,7 @@ import { useKeybindings } from "../../01-核心基础设施/共享小工具-未�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { M0t, N0t, KW, u6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { fitEditedText, collapseToSingleLine, computeListWindow, removeFrameUrl } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -68,7 +68,7 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../Bridge-RemoteControl/remote-control-ui-strings.js";
-import { gPe, Dut, _Pe, Kon } from "./chunk-b6k1z7an.js";
+import { setArtifactPinned, deleteArtifact, forgetDeletedArtifact, formatArtifactDeletedNote } from "./chunk-b6k1z7an.js";
 import { ATTACHED_FRAME_URL_PREFIX, CREATED_FRAME_URL_PREFIX, isCreatedFrameKey, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -142,15 +142,15 @@ var Mr = createLazyValue(() =>
   Ir = 4194304;
 function Oe(i) {
   if (i === void 0) return;
-  return Q1e(i) ?? void 0;
+  return normalizeArtifactTitle(i) ?? void 0;
 }
 async function Bt(i, l) {
   let p;
   try {
-    p = await Nd.get("/api/frame/frames?limit=200", {
+    p = await artifactFrameHttpClient.get("/api/frame/frames?limit=200", {
       refreshOAuth: !0,
       credentials: i,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 15000,
       maxContentLength: Ir,
       signal: l,
@@ -168,7 +168,7 @@ async function Bt(i, l) {
       {
         err:
           p.reason === "no-auth"
-            ? Am(p.detail)
+            ? formatNotAuthenticatedMessage(p.detail)
             : `Artifacts unavailable: ${p.reason}`,
       }
     );
@@ -203,11 +203,11 @@ async function Bt(i, l) {
       S++;
       continue;
     }
-    let P = w.favicon === void 0 ? void 0 : (VZn(w.favicon) ?? void 0);
+    let P = w.favicon === void 0 ? void 0 : (sanitizeFaviconText(w.favicon) ?? void 0);
     u.push({
       slug: w.slug,
       title: Oe(w.title),
-      editableTitle: w.title === void 0 ? void 0 : (pqt(w.title) ?? void 0),
+      editableTitle: w.title === void 0 ? void 0 : (sanitizeEditableTitle(w.title) ?? void 0),
       favicon: P !== void 0 && te(P) <= 4 ? P : void 0,
       description: Oe(w.description),
       label: Oe(w.label),
@@ -251,7 +251,7 @@ async function Kt(i, l, p, h) {
         host: "frame",
         auth: "claude-ai-oauth",
         refreshOAuth: !0,
-        headers: Fd(),
+        headers: buildFrameHeaders(),
         timeout: 15000,
         maxContentLength: Nr,
         validateStatus: () => !0,
@@ -272,7 +272,7 @@ async function Kt(i, l, p, h) {
       {
         err:
           u.reason === "no-auth"
-            ? Am(u.detail)
+            ? formatNotAuthenticatedMessage(u.detail)
             : `Artifact rename unavailable: ${u.reason}`,
       }
     );
@@ -286,7 +286,7 @@ async function Kt(i, l, p, h) {
   if (u.status === 400 || u.status === 409) {
     if (u.status === 409) logFeatureSad("artifact_rename", "conflict");
     else logFeatureBad("artifact_rename", "rejected");
-    let v = typeof u.data === "string" ? Q1e(u.data.trim()) : null;
+    let v = typeof u.data === "string" ? normalizeArtifactTitle(u.data.trim()) : null;
     return {
       err: v
         ? `Couldn't rename artifact: ${v}`
@@ -299,8 +299,8 @@ async function Kt(i, l, p, h) {
       { err: `Couldn't rename artifact (HTTP ${u.status})` }
     );
   let S = Br().safeParse(u.data),
-    R = S.success && S.data.title !== void 0 ? Q1e(S.data.title) : null;
-  return (logFeatureOk("artifact_rename"), { err: null, title: R ?? Q1e(l) ?? "" });
+    R = S.success && S.data.title !== void 0 ? normalizeArtifactTitle(S.data.title) : null;
+  return (logFeatureOk("artifact_rename"), { err: null, title: R ?? normalizeArtifactTitle(l) ?? "" });
 }
 function Yr(i, l, p) {
   let h = l ? ["all", "mine", "shared", "pinned"] : ["all", "mine", "shared"],
@@ -478,7 +478,7 @@ function bt({
           (Pe.current = n.slug),
           b(s),
           k(s ? `Pinned ${c}` : `Unpinned ${c}`),
-          gPe(n.slug, s, R)
+          setArtifactPinned(n.slug, s, R)
             .then((H) => {
               if (H.err === null) return;
               if ((k(H.err), He.current !== q && !Ae.current.has(n.slug)))
@@ -514,7 +514,7 @@ function bt({
       [z],
     ),
     Sr = re((n) => {
-      let s = M0t(oe.current, n, TITLE_MAX_RUNES);
+      let s = fitEditedText(oe.current, n, TITLE_MAX_RUNES);
       if (
         ((ce.current =
           s.caret === "pass"
@@ -537,7 +537,7 @@ function bt({
     _r = re(() => {
       let n = J.current;
       if (n.mode !== "rename") return;
-      let s = pqt(oe.current) ?? "";
+      let s = sanitizeEditableTitle(oe.current) ?? "";
       if (
         (z({ mode: "list" }),
         (kt.current = Date.now()),
@@ -679,7 +679,7 @@ function bt({
               ((We.current = !0), i(I, { display: "system" }));
             else k(I);
           };
-          Dut(c, R, {
+          deleteArtifact(c, R, {
             source: "dialog",
             ...(Number.isFinite(H) && {
               sinceUpdateSeconds: Math.max(
@@ -773,7 +773,7 @@ function bt({
       windowEnd: kr,
       moreAbove: Mt,
       moreBelow: Ut,
-    } = KW(ge, N.length, Dr),
+    } = computeListWindow(ge, N.length, Dr),
     Lr = N.slice(Ot, kr),
     ie = !me && fe === null && P.length > 0,
     Nt =
@@ -1202,7 +1202,7 @@ function we(i) {
   return i.title || i.label || i.slug;
 }
 function en(i) {
-  return zZn(N0t(i));
+  return zZn(collapseToSingleLine(i));
 }
 function Te(i, l) {
   for (let [p, h] of getNonOpenedFrameUrlEntries(i)) if (!isCreatedFrameKey(p) && uuidSlugFromUrl(h.url) === l) return p;
@@ -1286,7 +1286,7 @@ async function Ct(i) {
         : se
           ? `Attached ${ARTIFACT_MARKER_GLYPH} ${v} \u2014 not watching (its watch was stopped earlier in this session)`
           : `Attached ${ARTIFACT_MARKER_GLYPH} ${v}`,
-      metaMessage: `The user attached the artifact ${R} to this session as the current artifact of interest. re-read it before editing or republishing (${qwt()}).${Ve}`,
+      metaMessage: `The user attached the artifact ${R} to this session as the current artifact of interest. re-read it before editing or republishing (${getArtifactReadInstruction()}).${Ve}`,
     }
   );
 }
@@ -1328,7 +1328,7 @@ function lr(Xo) {
     ((nn = function Be(Jo) {
       ne((sr) => {
         let on = Te(sr.frameUrls, Jo.slug);
-        return on === void 0 ? sr : u6e(sr, on);
+        return on === void 0 ? sr : removeFrameUrl(sr, on);
       });
     }),
       (Ee[6] = ne),
@@ -1338,10 +1338,10 @@ function lr(Xo) {
     an;
   if (Ee[8] !== Q || Ee[9] !== ne)
     ((an = function Ke(sn) {
-      (_Pe(sn, { updateAppState: ne, context: Q }),
+      (forgetDeletedArtifact(sn, { updateAppState: ne, context: Q }),
         Q.applyMessageOp({
           type: "append",
-          messages: [createUserMessage({ content: Kon(artifactViewerUrl(sn)), isMeta: !0 })],
+          messages: [createUserMessage({ content: formatArtifactDeletedNote(artifactViewerUrl(sn)), isMeta: !0 })],
         }));
     }),
       (Ee[8] = Q),

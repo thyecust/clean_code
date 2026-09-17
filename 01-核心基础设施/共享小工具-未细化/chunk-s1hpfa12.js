@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { getBgTakeover, isBgSession, isBeingWatched, isBeingWatchedV5, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { eE } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { hasRemoteCapability } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { shouldUseFullscreen } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getBgJobRuntimeState } from "./bg-job-runtime-state.js";
 var u = new Set(["remote", "remote_cowork", "remote_desktop", "remote_mobile"]);
@@ -29,7 +29,7 @@ function detectSurfaces(e) {
   return t;
 }
 function hasCcrSurface() {
-  if (eE("fanout")) return !0;
+  if (hasRemoteCapability("fanout")) return !0;
   if (a.CLAUDE_CODE_ENVIRONMENT_KIND === "byoc") return !0;
   if (a.CLAUDE_CODE_REMOTE)
     return (

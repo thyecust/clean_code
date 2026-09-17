@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Y1e, WXe, GXe, qXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { buildGitHubPullUrl, GITHUB_OWNER_PATTERN, GITHUB_REPO_PATTERN, GIT_COMMIT_SHA_PATTERN } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { GITHUB_HOST, normalizeHostname } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
@@ -75,9 +75,9 @@ async function h(n, e) {
   if (typeof u !== "string" || typeof t !== "string") return null;
   let r = d(u),
     l = t.toLowerCase();
-  if (r === null || !Number.isSafeInteger(i) || i < 1 || !qXe.test(l))
+  if (r === null || !Number.isSafeInteger(i) || i < 1 || !GIT_COMMIT_SHA_PATTERN.test(l))
     return null;
-  if (r.number !== i || !WXe.test(r.owner) || !GXe.test(r.repo)) return null;
+  if (r.number !== i || !GITHUB_OWNER_PATTERN.test(r.owner) || !GITHUB_REPO_PATTERN.test(r.repo)) return null;
   return { owner: r.owner, repo: r.repo, number: i, headSha: l };
 }
 async function verifyPrReviewPublishTarget(n, e, o = {}) {
@@ -101,7 +101,7 @@ async function verifyPrReviewPublishTarget(n, e, o = {}) {
     let l = e.reviewed_head_sha.toLowerCase();
     if (o.acceptReviewedShaAsAnchor === !0)
       return { ok: !0, identity: { ...r, headSha: l } };
-    let c = await h([Y1e(r.owner, r.repo, r.number)], t.cwd);
+    let c = await h([buildGitHubPullUrl(r.owner, r.repo, r.number)], t.cwd);
     if (c === null)
       return {
         ok: !1,

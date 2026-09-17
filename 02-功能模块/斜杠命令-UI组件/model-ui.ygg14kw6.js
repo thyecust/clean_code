@@ -42,7 +42,7 @@ import {
   getAdditionalModelOptionsCache,
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jn, Pt, Ks, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel, hasRemoteCapability } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Xt, getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import {
   toModelPickerOption,
@@ -62,7 +62,7 @@ import { VH, Yk, Ya, ese, tse, zG } from "../权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector, useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { RZ, Q1, fHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { ModelPicker, CancellableStatusMessage, ExtraUsageDialog } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -219,7 +219,7 @@ function co(vn) {
   return vn !== null;
 }
 function mo() {
-  return jn() !== null && Ks();
+  return getRemoteTransport() !== null && hasRemoteControlChannel();
 }
 function uo(Gn) {
   return Gn.mainLoopModel;
@@ -426,11 +426,11 @@ ${Q.current.map(Rl).join(`
     t(L);
   }
   if (Me)
-    return e(Q1, { message: "Checking model availability\u2026", onCancel: A });
+    return e(CancellableStatusMessage, { message: "Checking model availability\u2026", onCancel: A });
   if (te) {
     let { model: s, effort: w } = te,
       ne = _e.current;
-    return e(fHe, {
+    return e(ExtraUsageDialog, {
       variant: "picker",
       modelName: renderFableModelName(parseUserSpecifiedModel(s ?? getDefaultMainLoopModelSetting())),
       onDone: (Y, N) => {
@@ -446,7 +446,7 @@ ${Q.current.map(Rl).join(`
     });
   }
   if ($e)
-    return e(Q1, {
+    return e(CancellableStatusMessage, {
       message: "Running PreModelSwitch hooks\u2026",
       onCancel: () => {
         (Ee.current?.abort(),
@@ -474,7 +474,7 @@ ${Q.current.map(Rl).join(`
         (k(null), (oe.current = !1));
       },
     });
-  return e(RZ, {
+  return e(ModelPicker, {
     initial: M,
     sessionModel: q,
     onSelect: v,
@@ -504,7 +504,7 @@ function Rt(yn) {
     Bt;
   if (pe[0] !== ue || pe[1] !== V)
     ((Nt = () => {
-      let jt = jn();
+      let jt = getRemoteTransport();
       if (!jt) {
         V(Qe, { display: "system" });
         return;
@@ -578,7 +578,7 @@ function Rt(yn) {
   if (ie === null) {
     let Ae;
     if (pe[11] !== ue || pe[12] !== V)
-      ((Ae = e(Q1, {
+      ((Ae = e(CancellableStatusMessage, {
         message: "Loading models from the cloud session\u2026",
         onCancel: () => {
           (ue.abort(),
@@ -642,7 +642,7 @@ function Rt(yn) {
   else Ve = pe[26];
   let Ut;
   if (pe[27] !== ft || pe[28] !== ie || pe[29] !== Ve)
-    ((Ut = e(RZ, {
+    ((Ut = e(ModelPicker, {
       initial: ft,
       options: ie,
       headerText:
@@ -695,7 +695,7 @@ function De(wn) {
     W[6] !== R
   )
     ((xt = (Be, gt) => {
-      let Rn = !Pt();
+      let Rn = !isRemoteActive();
       let Jt = I3e(ae, Be, () => R.getState(), be, Rn, "command", gt, le);
       if (gt !== void 0 && Be !== null)
         Fe({
@@ -803,8 +803,8 @@ ${qt.map(Rl).join(`
     W[24] !== le
   )
     ((oo = () => {
-      let no = jn();
-      if (no && Ks()) {
+      let no = getRemoteTransport();
+      if (no && hasRemoteControlChannel()) {
         ySe(J, le, we).then((ye) => {
           if (Ke.current) {
             return;
@@ -953,7 +953,7 @@ ${qt.map(Rl).join(`
     else K = W[35];
     let Ce;
     if (W[36] !== j || W[37] !== K)
-      ((Ce = e(Q1, { message: j, onCancel: K })),
+      ((Ce = e(CancellableStatusMessage, { message: j, onCancel: K })),
         (W[36] = j),
         (W[37] = K),
         (W[38] = Ce));
@@ -996,7 +996,7 @@ ${qt.map(Rl).join(`
     else K = W[46];
     let Ce;
     if (W[47] !== j || W[48] !== K)
-      ((Ce = e(fHe, { variant: "picker", modelName: j, onDone: K })),
+      ((Ce = e(ExtraUsageDialog, { variant: "picker", modelName: j, onDone: K })),
         (W[47] = j),
         (W[48] = K),
         (W[49] = Ce));
@@ -1064,7 +1064,7 @@ ${qt.map(Rl).join(`
   if (Pn) {
     let j;
     if (W[65] !== b)
-      ((j = e(Q1, {
+      ((j = e(CancellableStatusMessage, {
         message: "Running PreModelSwitch hooks\u2026",
         onCancel: () => {
           (Vt.current?.abort(),
@@ -1137,8 +1137,8 @@ var bn = async (r, t, o) => {
         session: t.session,
       })
     );
-  if (jn()) {
-    if (eE("modelCatalog") && Ks())
+  if (getRemoteTransport()) {
+    if (hasRemoteCapability("modelCatalog") && hasRemoteControlChannel())
       return e(Rt, {
         getMessages: () => t.getMessages?.() ?? t.messages,
         onDone: r,

@@ -14,7 +14,7 @@ import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -35,7 +35,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
 import { runWindowsSandboxInstall } from "./windows-sandbox-install.js";
-import { Sf } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { StatusLine } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
@@ -976,14 +976,14 @@ function vo(Mt) {
   let zo = hn,
     wn;
   if (x[26] === MEMO_CACHE_SENTINEL)
-    ((wn = Pt()
+    ((wn = isRemoteActive()
       ? e(o, {
           marginTop: 1,
           children: e(t, {
             dimColor: !0,
             wrap: "wrap-trim",
             children:
-              jn()?.sessionId !== void 0
+              getRemoteTransport()?.sessionId !== void 0
                 ? "Commands Claude runs on this computer use this sandbox; the cloud session's own sandbox, in its container, isn't shown or changed here."
                 : "Commands Claude runs on this computer use this sandbox; the remote session's own sandbox isn't shown or changed here.",
           }),
@@ -1039,7 +1039,7 @@ function Wo(Xt) {
       Jo &&
       e(o, {
         marginBottom: 1,
-        children: e(Sf, {
+        children: e(StatusLine, {
           status: "warning",
           children: "Cannot block unix domain sockets (see Dependencies tab)",
         }),

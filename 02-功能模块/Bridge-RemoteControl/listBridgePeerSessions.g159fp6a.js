@@ -15,7 +15,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { buildBridgeAddress, appendHopToChain, buildCrossSessionEnvelope, isCCREnvironmentKind } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FAe } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
-import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
@@ -284,7 +284,7 @@ function U(t, i) {
   if (B(i.status)) return;
   let u = extractErrorDetail(i.data);
   n(
-    `[bridge:peers] post to ${t} rejected: HTTP ${i.status}${u ? ` \u2014 ${BU(u)}` : ""}`,
+    `[bridge:peers] post to ${t} rejected: HTTP ${i.status}${u ? ` \u2014 ${normalizeSingleLineText(u)}` : ""}`,
     { level: "warn" },
   );
 }

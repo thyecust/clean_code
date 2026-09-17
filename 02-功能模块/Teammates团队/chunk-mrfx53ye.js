@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Pw } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getMergedSettings } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
 function isTerminalTaskStatus(e) {
@@ -408,10 +408,10 @@ function formatWorkflowSizeGuidelineChangedMessage(e) {
   return `The workflow size guideline for this session changed: ${g(e)}. ${h()}`;
 }
 function isWorkflowSizeGuidelineConfigured() {
-  return Pw()?.settings.workflowSizeGuideline !== void 0;
+  return getMergedSettings()?.settings.workflowSizeGuideline !== void 0;
 }
 function resolveWorkflowSizeGuideline(e) {
-  let t = parseWorkflowSizeGuideline(Pw()?.settings.workflowSizeGuideline) ?? parseWorkflowSizeGuideline(e);
+  let t = parseWorkflowSizeGuideline(getMergedSettings()?.settings.workflowSizeGuideline) ?? parseWorkflowSizeGuideline(e);
   return t === void 0 ? { size: f, isDefault: !0 } : { size: t, isDefault: !1 };
 }
 function getSessionStartWorkflowSizeGuideline(e) {

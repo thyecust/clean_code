@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { VBe } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parsePluginScopedServerName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { splitPluginId, isOfficialMarketplace, isFirstPartyPlugin } from "./chunk-33bdfgmx.js";
 import { s, se, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -69,7 +69,7 @@ function getOverriddenServerInstructions(e, r) {
   if (!e) return;
   let i = e.server_instructions_by_server;
   if (i) {
-    let u = VBe(r),
+    let u = parsePluginScopedServerName(r),
       t = u && i[u.serverName];
     if (t !== void 0) return t;
   }

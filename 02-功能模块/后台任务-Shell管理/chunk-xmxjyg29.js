@@ -26,13 +26,13 @@ import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小�
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { kd, isValidGitSha, findGitRoot, findGitRootVerifyingPositive, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey, isValidGitSha, findGitRoot, findGitRootVerifyingPositive, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { $P, gm, mW, i_, oB, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
-import { $U, $ge, FBe } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { PROVIDER_CONFIG_ENV_VARS, BASE_URL_ENV_GROUPS, hasHostManagedAuth } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { hasSkipDangerousModePermissionPrompt, hasAutoModeOptIn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -269,7 +269,7 @@ var Wn = createKeyedSerialQueue();
 function Jt(e, t) {
   return Wn.run("g:" + e, t).catch(() => {});
 }
-async function Tye(e, t, o) {
+async function claimAttachBeacon(e, t, o) {
   if (!Hn.test(e)) return;
   let r = {
     gestureId: e,
@@ -337,7 +337,7 @@ function ut(e, t, o) {
     await writeFileAtomic(Gt(e), b(r), 384);
   });
 }
-async function zx(e, t) {
+async function releaseAttachBeacon(e, t) {
   if (!Hn.test(e)) return;
   (_v().ownedBeacons.delete(e),
     await Jt(e, async () => {
@@ -1529,12 +1529,12 @@ async function qt(e) {
     subject: truncateToWidth(stripAnsiAndControlChars(s[1]).trim(), Bo),
   };
 }
-function bPt(e) {
+function formatUnpushedCommitsSummary(e) {
   return `${e.count}${ur(e)} unpushed ${pluralize(e.count, "commit")} on ${e.branch ?? "detached HEAD"}`;
 }
-function wit(e) {
+function formatUnpushedCommitsDetail(e) {
   let t = e.count > 1 ? `, \u2026 and ${e.count - 1}${ur(e)} more` : "";
-  return `${bPt(e)} (${e.shortSha} ${e.subject}${t})`;
+  return `${formatUnpushedCommitsSummary(e)} (${e.shortSha} ${e.subject}${t})`;
 }
 async function un(e, t) {
   if (!isValidGitSha(t)) return !1;
@@ -1719,7 +1719,7 @@ var Wo = new j(() => new fr());
 function mr() {
   return Wo.of(B().host);
 }
-function qHe(e, t) {
+function trackJobPromise(e, t) {
   return (
     mr().track(
       e,
@@ -2004,7 +2004,7 @@ function ci(e) {
         : { cmd: "/bin/sh", args: ["-c", e] }
   );
 }
-async function IWe(e, t, o) {
+async function preSeedReplBgJob(e, t, o) {
   let r = e.slice(0, 8),
     s = getJobDir(r);
   await ensureJobTmpDir(r, o);
@@ -2026,7 +2026,7 @@ async function IWe(e, t, o) {
       originCwd: t.worktree?.originCwd,
       bgIsolation: "none",
       interactiveLineage: !0,
-      providerEnv: PWe(),
+      providerEnv: callerProviderEnv(),
       sessionPermissionRules: t.sessionPermissionRules,
       memoryToggledOff: t.memoryToggledOff,
       linkScanPath: t.linkScanPath,
@@ -2038,13 +2038,13 @@ async function IWe(e, t, o) {
     else (await oi(getHostManagedDir(), { recursive: !0, mode: 448 }), await ii(getHostManagedMarkerPath(r), ""));
   return { short: r, jobDir: s, state: d };
 }
-async function eF(e, t, o = "shell", r, s, c, d, _) {
+async function spawnBgSession(e, t, o = "shell", r, s, c, d, _) {
   let p = Or(e);
   if (p) return { ok: !1, error: p, reason: "gate_blocked" };
   let v = t ?? vr(),
     E = d ?? v.slice(0, 8),
     k = getJobDir(E);
-  return qHe(
+  return trackJobPromise(
     E,
     (async () => {
       try {
@@ -2086,14 +2086,14 @@ async function di(e, t, o, r, s, c, d) {
     te = Se(w),
     K = Pr(w),
     ce = Ir(w, "--fork-session"),
-    pe = Cit(w),
+    pe = stripResumeFlags(w),
     be =
       r?.bgIsolation === "default"
         ? void 0
         : t === "repl"
           ? "none"
           : r?.bgIsolation,
-    ve = r?.providerEnv ?? PWe(),
+    ve = r?.providerEnv ?? callerProviderEnv(),
     je = r?.sessionPermissionRules,
     de = r?.memoryToggledOff,
     Re = r?.forkSourceAlive,
@@ -2392,14 +2392,14 @@ async function ui(e, t) {
     }
   }
   for (let w of new Set([_, v?.state.daemonShort ?? _])) {
-    let O = await wPt(w, o);
+    let O = await probeDaemonJob(w, o);
     if (O.alive || O.present)
       return { kind: "copy", reason: "running", original: _ };
   }
   if (v !== null) {
     if (t?.restricted)
       return { kind: "copy", reason: "restricted", original: _ };
-    let w = Cit(s),
+    let w = stripResumeFlags(s),
       O = r >= 0 ? -1 : Ar(w);
     if (w.length > (O >= 0 ? 1 : 0))
       return { kind: "copy", reason: "own-options", original: _ };
@@ -2454,7 +2454,7 @@ function mi(e, t) {
       return `note: a restricted shell does not wake background session ${e.original} in place, so this started a restricted copy as ${t}.`;
   }
 }
-async function cgr(e, t) {
+async function handleBgFlag(e, t) {
   let o = _t(e),
     r = o >= 0 ? e.slice(0, o) : e,
     s = Se(r),
@@ -2493,7 +2493,7 @@ async function cgr(e, t) {
       process.stderr
         .write(`warning: --exec ignores ${ce.join(" ")} (only --name composes)
 `);
-    let pe = await eF(
+    let pe = await spawnBgSession(
       [],
       void 0,
       "shell",
@@ -2514,7 +2514,7 @@ async function cgr(e, t) {
     }
     (await logFeatureOkAsync("cli_bg_dispatch_exec"),
       process.stdout.write(
-        rle(pe.short, void 0, T || C) +
+        formatBgHints(pe.short, void 0, T || C) +
           `
 `,
       ));
@@ -2530,7 +2530,7 @@ async function cgr(e, t) {
     await pi(k.wakeRow, E, d, t);
     return;
   }
-  let w = await eF(
+  let w = await spawnBgSession(
     v,
     k.kind === "continue" ? k.sessionId : void 0,
     "shell",
@@ -2556,7 +2556,7 @@ async function cgr(e, t) {
     process.stderr.write(`${mi(k, w.short)}
 `);
   process.stdout.write(
-    rle(w.short, w.idle ? IDLE_DETAIL : void 0, w.name) +
+    formatBgHints(w.short, w.idle ? IDLE_DETAIL : void 0, w.name) +
       `
 `,
   );
@@ -2583,7 +2583,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
       (process.exitCode = 1));
     return;
   }
-  let p = await KHe(
+  let p = await respawnJob(
     e,
     o !== void 0 ? { initialPrompt: o, keepQueuedPrompt: !0 } : void 0,
     c,
@@ -2624,7 +2624,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
       .write(`note: woke session ${e} with its saved options (${E.join(", ")}).
 `);
   process.stdout.write(
-    rle(
+    formatBgHints(
       p.short,
       o === void 0 && !t.queuedPrompt ? IDLE_DETAIL : void 0,
       p.state.name ? sanitizeSessionName(p.state.name) || void 0 : void 0,
@@ -2741,7 +2741,7 @@ function wi(e) {
       return "id collision with a prior job";
   }
 }
-function rle(e, t, o) {
+function formatBgHints(e, t, o) {
   let r = (s, c) => chalk.dim("  " + s.padEnd(26) + c);
   return [
     `backgrounded \xB7 ${chalk.cyan(e)}${o ? ` \xB7 ${o}` : ""}${t ? chalk.dim(` ${t}`) : ""}`,
@@ -2864,7 +2864,7 @@ Usage: ${t}
   ),
     process.exit(1));
 }
-async function ugr(e, t) {
+async function logsHandler(e, t) {
   let o = await yn(
       e,
       "claude logs <id>",
@@ -2986,7 +2986,7 @@ async function hn(e, t = {}, o) {
   return { r: v, waitedMs: E };
 }
 var vi = "ENOJOB: probe found no handle \u2014 worker retired or settled";
-async function dgr(e, t) {
+async function attachHandler(e, t) {
   let o = performance.now(),
     r = !1,
     s = await yn(
@@ -3010,11 +3010,11 @@ async function dgr(e, t) {
         ((r = !0), ut(d, { daemonBooted: !0 }, t));
       },
     };
-  Tye(_.gestureId, "bg_cli", t).catch(() => {});
+  claimAttachBeacon(_.gestureId, "bg_cli", t).catch(() => {});
   let p = () => (c > 0 ? { waited_transient_ms: c } : void 0),
     v = async (C, N) => (
       xe(_, "error"),
-      await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
+      await Promise.race([releaseAttachBeacon(_.gestureId, t).catch(() => {}), sleep(750)]),
       await logFeatureBadAsync("cli_bg_attach", "daemon_unavailable", p()),
       process.stderr
         .write(`${C} \u2014 ${bgSupervisorNoun()} is unavailable (${N})${daemonHint("status")}
@@ -3056,7 +3056,7 @@ async function dgr(e, t) {
           .write(`Session ${s} can't start \u2014 ${Er(C.detail) || "it crashed repeatedly"}
 `),
         xe(_, "error", "worker_crash_loop"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
+        await Promise.race([releaseAttachBeacon(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
     if (N)
@@ -3075,7 +3075,7 @@ async function dgr(e, t) {
     else
       process.stderr.write(`Waking session ${s}\u2026
 `);
-    let te = await KHe(s, void 0, t).catch((K) => ({
+    let te = await respawnJob(s, void 0, t).catch((K) => ({
       ok: !1,
       alive: !1,
       short: void 0,
@@ -3101,7 +3101,7 @@ async function dgr(e, t) {
         process.stderr.write(`${te.error}
 `),
         xe(_, "error", "respawn_failed"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
+        await Promise.race([releaseAttachBeacon(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
     else
@@ -3119,7 +3119,7 @@ async function dgr(e, t) {
 `,
         ),
         xe(_, "error", "respawn_failed"),
-        await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
+        await Promise.race([releaseAttachBeacon(_.gestureId, t).catch(() => {}), sleep(750)]),
         exitAfterAnalyticsFlush(1)
       );
   }
@@ -3175,7 +3175,7 @@ async function dgr(e, t) {
     }
   }
   if (
-    (await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
+    (await Promise.race([releaseAttachBeacon(_.gestureId, t).catch(() => {}), sleep(750)]),
     k.outcome === "detached" && k.msg && (FATAL_ATTACH_CODE.test(k.msg) || TRANSIENT_ATTACH_CODE.test(k.msg)))
   )
     return (
@@ -3246,7 +3246,7 @@ function Ai(e, t, o) {
     o === !0
   );
 }
-async function pgr(e, t) {
+async function respawnHandler(e, t) {
   if ((Cr(), e === "--help" || e === "-h")) {
     process.stdout.write(`Usage: claude respawn <id>|--all
 
@@ -3286,7 +3286,7 @@ Usage: claude respawn <id>|--all
     let v = 0,
       E = 0;
     for (let k of p) {
-      let w = await KHe(k.id, { force: !0, knownState: k.state }, t);
+      let w = await respawnJob(k.id, { force: !0, knownState: k.state }, t);
       if (w.ok)
         (v++,
           process.stdout
@@ -3325,7 +3325,7 @@ Usage: claude respawn <id>|--all
     return;
   }
   let c = s[0],
-    d = await KHe(c, { force: !0 }, t);
+    d = await respawnJob(c, { force: !0 }, t);
   if (!d.ok && d.alive) {
     (process.stderr
       .write(`${c}: still running \u2014 couldn't confirm restart, retry in a moment
@@ -3346,7 +3346,7 @@ Usage: claude respawn <id>|--all
       .write(`respawned ${c}${d.short !== c ? ` \u2192 ${d.short}` : ""}
 `));
 }
-async function fgr(e, t) {
+async function stopHandler(e, t) {
   let o = await yn(
       e,
       "claude stop <id>",
@@ -3354,7 +3354,7 @@ async function fgr(e, t) {
       t,
     ),
     r = await readJobState(getJobDir(o), t),
-    { confirmed: s, error: c } = await VZ(o, r ?? void 0, void 0, t);
+    { confirmed: s, error: c } = await killJob(o, r ?? void 0, void 0, t);
   if (!s) {
     (await logFeatureBadAsync("cli_bg_stop", "kill_unconfirmed"),
       process.stderr.write(
@@ -3408,7 +3408,7 @@ async function fgr(e, t) {
 }
 var Sr = `Usage: claude rm <id> [--discard-unpushed <commit>@<worktree-id>]
 `;
-async function mgr(e, t, o = Tr(process.argv.slice(2))) {
+async function rmHandler(e, t, o = Tr(process.argv.slice(2))) {
   let r,
     s,
     c,
@@ -3433,7 +3433,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
         D === void 0 ||
         !isValidGitSha(D) ||
         J === void 0 ||
-        !$$n.test(J)
+        !WORKTREE_DIGEST_PATTERN.test(J)
       ) {
         c = `option '--discard-unpushed' takes the <commit>@<worktree-id> value shown by a previous 'claude rm <id>' refusal
 `;
@@ -3465,7 +3465,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
       process.exit(1));
   let k = E[0],
     w = await readJobState(getJobDir(k), t),
-    O = await e4(k, s === void 0 ? {} : { discardUnpushed: s }, t);
+    O = await deleteJob(k, s === void 0 ? {} : { discardUnpushed: s }, t);
   if (!O.removed) {
     let {
       error: N,
@@ -3480,7 +3480,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
       if ((await logFeatureSadAsync("cli_bg_rm", "kept_worktree"), K)) {
         let pe = pluralize(K.count, "it", "them");
         (process.stdout.write(
-          `kept ${k} \u2014 ${wit(K)}
+          `kept ${k} \u2014 ${formatUnpushedCommitsDetail(K)}
 ` +
             (ce
               ? `  worktree: ${D}
@@ -3494,7 +3494,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
         return;
       }
       (process.stdout.write(
-        `kept ${k} \u2014 worktree ${Tit(J, te)}
+        `kept ${k} \u2014 worktree ${formatKeptWorktreeLabel(J, te)}
   worktree kept at ${D}
 ` +
           (J === "unverified" || J === "shared_record"
@@ -3597,7 +3597,7 @@ function xt(e, t, o) {
   }
   return s;
 }
-function PZt(e, t, o, r) {
+function rewriteDispatchFlagValue(e, t, o, r) {
   let s = Se(e),
     c = [...e],
     d = !1;
@@ -3726,7 +3726,7 @@ function Ir(e, t) {
   let o = Se(e);
   return e.some((r, s) => !o.has(s) && r === t);
 }
-function Cit(e) {
+function stripResumeFlags(e) {
   let t = Se(e),
     o = [];
   for (let r = 0; r < e.length; r++) {
@@ -3873,7 +3873,7 @@ function Ii(e) {
   }
   return o;
 }
-function PWe() {
+function callerProviderEnv() {
   let e = {};
   for (let t of ryn) {
     let o = process.env[t];
@@ -3888,9 +3888,9 @@ function PWe() {
   return e;
 }
 function Oi(e) {
-  if (FBe(process.env)) return {};
+  if (hasHostManagedAuth(process.env)) return {};
   let t = {};
-  for (let o of $ge) {
+  for (let o of BASE_URL_ENV_GROUPS) {
     if (
       !process.env[o.endpoint] ||
       (o.selection !== void 0 && !Ie(e[o.selection]))
@@ -3912,7 +3912,7 @@ function Er(e) {
   );
 }
 var Fi = new Set([
-  ...$U,
+  ...PROVIDER_CONFIG_ENV_VARS,
   "AWS_CONFIG_FILE",
   "AWS_SHARED_CREDENTIALS_FILE",
   "AWS_PROFILE",
@@ -3932,9 +3932,9 @@ function $r(e) {
     color: e.color,
   };
 }
-var $B = $r(CLAUDE_AGENT);
-function kWe(e, t) {
-  if (!e?.agent) return $B;
+var CLAUDE_AGENT_TEMPLATE = $r(CLAUDE_AGENT);
+function resolveAgentTemplate(e, t) {
+  if (!e?.agent) return CLAUDE_AGENT_TEMPLATE;
   let o = e.agent,
     r = o.toLowerCase(),
     s =
@@ -3942,15 +3942,15 @@ function kWe(e, t) {
       t?.find((d) => d.name.toLowerCase().endsWith(`:${r}`));
   if (s) return s;
   let c = getBuiltInAgents().find((d) => d.agentType.toLowerCase() === r);
-  if (c) return { ...$B, name: c.agentType };
-  if (o.includes(":")) return { ...$B, name: o };
-  return t ? $B : { ...$B, name: o };
+  if (c) return { ...CLAUDE_AGENT_TEMPLATE, name: c.agentType };
+  if (o.includes(":")) return { ...CLAUDE_AGENT_TEMPLATE, name: o };
+  return t ? CLAUDE_AGENT_TEMPLATE : { ...CLAUDE_AGENT_TEMPLATE, name: o };
 }
-async function xWe(e, t) {
+async function listCustomAgents(e, t) {
   let { activeAgents: o } = await getAgentDefinitionsWithOverrides(e, t);
   return o.filter((r) => !isBuiltInAgent(r)).map($r);
 }
-async function U$n(e) {
+async function findChildRepos(e) {
   let t;
   try {
     t = await xi(e, { withFileTypes: !0 });
@@ -3975,7 +3975,7 @@ async function U$n(e) {
     r = (await Promise.all(o)).filter((s) => s !== null);
   return Object.fromEntries(r);
 }
-async function EPt(e, t, o, r) {
+async function materializePastedImages(e, t, o, r) {
   let s = parsePastedPlaceholders(e).filter((v) => t[v.id]?.type === "image");
   if (s.length === 0) return e;
   let c = getJobDir(o),
@@ -4015,13 +4015,13 @@ async function EPt(e, t, o, r) {
   }
   return p;
 }
-function B$n(e) {
+function setDispatchExtraArgs(e) {
   Qe().setExtraArgs(e);
 }
-function j$n() {
+function getDispatchExtraArgs() {
   return Qe().extraArgs;
 }
-function Eit(e) {
+function formatDispatchDefaultFlags(e) {
   if (!e) return [];
   return [
     ...W_("--model", e.model),
@@ -4037,9 +4037,9 @@ function Eit(e) {
     ...W_("--append-system-prompt", e.appendSystemPrompt),
   ];
 }
-function HZt(e, t, o, r) {
+function dispatchAgentJob(e, t, o, r) {
   let s = o?.sessionId ?? Bt();
-  return qHe(s.slice(0, 8), Li(e, t, { ...o, sessionId: s }, r));
+  return trackJobPromise(s.slice(0, 8), Li(e, t, { ...o, sessionId: s }, r));
 }
 async function Li(e, t, o, r) {
   let {
@@ -4058,7 +4058,7 @@ async function Li(e, t, o, r) {
   let v = s.slice(0, 8),
     E = c ?? getCwd(),
     k = d ? W_("--routine", d) : W_("--agent", e.name),
-    w = [...Qe().extraArgs, ...k, ...Eit(_)],
+    w = [...Qe().extraArgs, ...k, ...formatDispatchDefaultFlags(_)],
     O = getJobDir(v);
   try {
     (await ensureJobTmpDir(v, r),
@@ -4075,7 +4075,7 @@ async function Li(e, t, o, r) {
               tempo: "idle",
               detail: "(idle \u2014 waiting for trigger)",
             }),
-          providerEnv: PWe(),
+          providerEnv: callerProviderEnv(),
           sessionId: s,
           cwd: E,
           originCwd: E,
@@ -4094,21 +4094,21 @@ async function Li(e, t, o, r) {
   }
   let C = [...w, ...(t ? ["--", t] : [])],
     N = Date.now(),
-    T = await eF(C, s, "fleet", E, void 0, void 0, void 0, r),
+    T = await spawnBgSession(C, s, "fleet", E, void 0, void 0, void 0, r),
     D = !T.ok && (T.reason === "gate_blocked" || T.reason === "cwd_gone");
   if (!T.ok && !T.alive && T.reason === "ack_timeout" && Date.now() - N < 2000)
     (n(`bg: dispatch fast-failed (${Date.now() - N}ms) \u2014 retrying once`, {
       level: "warn",
     }),
       await sleep(500),
-      (T = await eF(C, s, "fleet", E, void 0, void 0, void 0, r)));
+      (T = await spawnBgSession(C, s, "fleet", E, void 0, void 0, void 0, r)));
   if (!T.ok) {
     if (T.alive)
       return (
         logFeatureSad("fleet_view_dispatch", "alive_collision"),
         { ok: !1, error: T.error, alive: !0 }
       );
-    if (!D) await VZ(v, void 0, void 0, r).catch(() => {});
+    if (!D) await killJob(v, void 0, void 0, r).catch(() => {});
     return (
       await Qt(O, { recursive: !0, force: !0 }).catch(() => {}),
       invalidateJobStateCache(O),
@@ -4122,15 +4122,15 @@ async function Li(e, t, o, r) {
   return { ok: !0, jobId: T.short, sessionId: s };
 }
 var ji = { name: "exec", description: "" };
-function HWe() {
+function isAgentViewBashModeEnabled() {
   return !0;
 }
-function W$n(e, t, o, r) {
+function dispatchExecJob(e, t, o, r) {
   let s = t ?? Bt(),
     c = s.slice(0, 8),
     d = o ?? getCwd(),
     _ = getJobDir(c);
-  return qHe(
+  return trackJobPromise(
     c,
     (async () => {
       try {
@@ -4140,7 +4140,7 @@ function W$n(e, t, o, r) {
             makeInitialState({
               template: ji,
               intent: e,
-              providerEnv: PWe(),
+              providerEnv: callerProviderEnv(),
               sessionId: s,
               cwd: d,
               originCwd: d,
@@ -4157,7 +4157,7 @@ function W$n(e, t, o, r) {
           { ok: !1, error: `Couldn't create the job \u2014 ${l(v)}` }
         );
       }
-      let p = await eF(
+      let p = await spawnBgSession(
         [],
         s,
         "fleet",
@@ -4174,7 +4174,7 @@ function W$n(e, t, o, r) {
             { ok: !1, error: p.error, alive: !0 }
           );
         return (
-          await VZ(c, void 0, void 0, r).catch(() => {}),
+          await killJob(c, void 0, void 0, r).catch(() => {}),
           await Qt(_, { recursive: !0, force: !0 }).catch(() => {}),
           invalidateJobStateCache(_),
           (p.reason === "cwd_gone" ? logFeatureSad : logFeatureBad)(
@@ -4191,7 +4191,7 @@ function W$n(e, t, o, r) {
     })(),
   );
 }
-function IZt(e, t) {
+function areDefaultsEqual(e, t) {
   if (e === t) return !0;
   if (!e || !t) return !1;
   let o = new Set([...Object.keys(e), ...Object.keys(t)]);
@@ -4225,10 +4225,10 @@ class xr {
     if (t) this.discarded = !1;
     if (o !== void 0) {
       if (!this.spare && this.ensuring) await this.ensuring.catch(() => {});
-      if (this.spare && !IZt(this.spare.defaults, o)) {
+      if (this.spare && !areDefaultsEqual(this.spare.defaults, o)) {
         logFeatureSad("job_spare_ensure", "defaults_mismatch_reboot");
         let _ = this.take();
-        if (_) await e4(_.jobId, { internal: !0 }, s).catch(() => {});
+        if (_) await deleteJob(_.jobId, { internal: !0 }, s).catch(() => {});
       }
     }
     if (this.spare || this.ensuring || this.discarded) return;
@@ -4244,10 +4244,10 @@ class xr {
           let _ = await canonicalizePath(e, createHoverRestOptions(s)),
             p = r;
           if (p === void 0 && o?.agent)
-            (clearAgentDefinitionsCache(), (p = await xWe(_, s).catch(() => [])));
-          let v = kWe(o, p).name,
-            E = await eF(
-              [...this.extraArgs, ...W_("--agent", v), ...Eit(o)],
+            (clearAgentDefinitionsCache(), (p = await listCustomAgents(_, s).catch(() => [])));
+          let v = resolveAgentTemplate(o, p).name,
+            E = await spawnBgSession(
+              [...this.extraArgs, ...W_("--agent", v), ...formatDispatchDefaultFlags(o)],
               c,
               "spare",
               _,
@@ -4257,7 +4257,7 @@ class xr {
               s,
             );
           if (!E.ok) {
-            (await e4(d, { internal: !0 }, s).catch(() => {}),
+            (await deleteJob(d, { internal: !0 }, s).catch(() => {}),
               (Nr(E.reason) ? logFeatureSad : logFeatureBad)(
                 "job_spare_ensure",
                 E.reason ?? "spawn_failed",
@@ -4265,7 +4265,7 @@ class xr {
             return;
           }
           if (this.discarded) {
-            (await e4(d, { internal: !0 }, s),
+            (await deleteJob(d, { internal: !0 }, s),
               logFeatureSad("job_spare_ensure", "discarded_after_spawn"));
             return;
           }
@@ -4279,7 +4279,7 @@ class xr {
             n(`[PERF:bg-spare-spawned] ${d}`),
             logFeatureOk("job_spare_ensure"));
         } catch {
-          (await e4(d, { internal: !0 }, s).catch(() => {}),
+          (await deleteJob(d, { internal: !0 }, s).catch(() => {}),
             logFeatureBad("job_spare_ensure", "threw"));
         }
       })()));
@@ -4293,33 +4293,33 @@ class xr {
     if (((this.discarded = !0), this.ensuring))
       await this.ensuring.catch(() => {});
     let t = this.take();
-    if (t) await e4(t.jobId, { internal: !0 }, e);
+    if (t) await deleteJob(t.jobId, { internal: !0 }, e);
   }
 }
 var Ui = new j(() => new xr());
 function Qe() {
   return Ui.of(B().host);
 }
-function APt() {
+function getSpareJob() {
   return Qe().spare;
 }
-function G$n(e) {
+function markSpareJobReady(e) {
   Qe().markReady(e);
 }
-function Ait(e, t = !1, o, r, s) {
+function ensureSpareJob(e, t = !1, o, r, s) {
   return Qe().ensure(e, t, o, r, s);
 }
-async function q$n(e, t, o) {
+async function claimSpareJob(e, t, o) {
   n("[PERF:bg-claim-start]");
   let r = Qe().take(),
-    s = t ?? kWe(r?.defaults),
+    s = t ?? resolveAgentTemplate(r?.defaults),
     c = async (_, p) => {
       if (
         (n(`[bg-spare] claim miss (${_})${p ? `: ${p}` : ""}`),
         logEvent("tengu_bg_spare_claim_fail", { reason: fromEnum(_) }),
         r)
       ) {
-        let v = await e4(
+        let v = await deleteJob(
           r.jobId,
           { internal: !0, knownGone: _ === "enojob" },
           o,
@@ -4332,19 +4332,19 @@ async function q$n(e, t, o) {
             ));
         else logFeatureSad("job_claim_spare", _);
       } else logFeatureSad("job_claim_spare", _);
-      return HZt(s, e, { targetCwd: r?.cwd, defaults: r?.defaults }, o);
+      return dispatchAgentJob(s, e, { targetCwd: r?.cwd, defaults: r?.defaults }, o);
     };
   if (!r) return c("no-spare");
-  let d = zHe(
+  let d = applyReplyPatch(
     makeInitialState({
       template: s,
       respawnFlags: [
         ...Qe().extraArgs,
         ...W_("--agent", s.name),
-        ...Eit(r.defaults),
+        ...formatDispatchDefaultFlags(r.defaults),
       ],
       intent: e,
-      providerEnv: PWe(),
+      providerEnv: callerProviderEnv(),
       sessionId: r.sessionId,
       cwd: r.cwd,
       originCwd: r.cwd,
@@ -4352,8 +4352,8 @@ async function q$n(e, t, o) {
     e,
   );
   try {
-    let _ = await VHe(r.jobId, e, void 0, d, void 0, o);
-    if (_) return c(_.err === nle ? "enojob" : "reply", _.err);
+    let _ = await replyToJob(r.jobId, e, void 0, d, void 0, o);
+    if (_) return c(_.err === REPLY_ENOJOB_MSG ? "enojob" : "reply", _.err);
   } catch (_) {
     return c("reply-throw", l(_));
   }
@@ -4365,7 +4365,7 @@ async function q$n(e, t, o) {
     { ok: !0, jobId: r.jobId, sessionId: r.sessionId }
   );
 }
-function CPt(e) {
+function discardSpareJob(e) {
   return Qe().discard(e);
 }
 function Br(e, t) {
@@ -4396,7 +4396,7 @@ ${o}`,
     (c) => (logJobWriteError(c), !1),
   );
 }
-async function KHe(e, t, o) {
+async function respawnJob(e, t, o) {
   let r = getJobDir(e),
     s = t?.knownState,
     c = pr(e);
@@ -4431,7 +4431,7 @@ async function KHe(e, t, o) {
     );
   let _ = d.daemonShort ?? e,
     p = Date.now(),
-    v = await wPt(_, o),
+    v = await probeDaemonJob(_, o),
     E = Date.now() - p,
     k = v.alive;
   if (!t?.force && !t?.forceUnresponsive && k)
@@ -4483,9 +4483,9 @@ async function KHe(e, t, o) {
     pe = null,
     be = createTranscriptSource(createBackendHandle(o)),
     ve = v.daemonUp && !v.alive && !v.present && O === _;
-  if (ve) ((ce = RZt(O, o)), (pe = resolveJobTranscript(D, w.cwd, w.linkScanPath, void 0, be)));
+  if (ve) ((ce = killOrphanedWorker(O, o)), (pe = resolveJobTranscript(D, w.cwd, w.linkScanPath, void 0, be)));
   else {
-    let X = await VZ(O, d, void 0, o);
+    let X = await killJob(O, d, void 0, o);
     if (((te = Date.now() - J), k && !X.confirmed))
       return (
         logEvent("tengu_bg_respawn_unconfirmed_bail", {}),
@@ -4504,7 +4504,7 @@ async function KHe(e, t, o) {
     let ue = Date.now(),
       fe = ue + 3000;
     while (Date.now() < fe) {
-      if (!(await F$n(O))) break;
+      if (!(await isDaemonJobPresent(O))) break;
       await sleep(100);
     }
     K = Date.now() - ue;
@@ -4584,7 +4584,7 @@ async function KHe(e, t, o) {
       d.template === "exec" && d.respawnFlags.length === 0 ? d.intent : void 0,
     He =
       w.name && (w.nameSource === "user" || w.nameSource === "collision")
-        ? PZt(w.respawnFlags, "--name", "-n", w.name)
+        ? rewriteDispatchFlagValue(w.respawnFlags, "--name", "-n", w.name)
         : void 0,
     Ue = De && !ge;
   if (Ue) {
@@ -4627,10 +4627,10 @@ async function KHe(e, t, o) {
   if (!De && Ke) {
     let X = Ke;
     clearAgentDefinitionsCache();
-    let ue = await xWe(w.cwd, o).catch(() => {
+    let ue = await listCustomAgents(w.cwd, o).catch(() => {
         return;
       }),
-      fe = kWe({ agent: X }, ue).name;
+      fe = resolveAgentTemplate({ agent: X }, ue).name;
     if (fe !== X)
       ye = Oe
         ? ye.toSpliced(Pe, 2, ...W_("--agent", fe))
@@ -4728,7 +4728,7 @@ ${t.initialPrompt}`
         }),
       }),
     },
-    _e = await eF(Ne, D, "fleet", w.cwd, re, Le, e, o);
+    _e = await spawnBgSession(Ne, D, "fleet", w.cwd, re, Le, e, o);
   if (
     !_e.ok &&
     !_e.alive &&
@@ -4740,7 +4740,7 @@ ${t.initialPrompt}`
       { level: "warn" },
     ),
       await sleep(500),
-      (_e = await eF(Ne, D, "fleet", w.cwd, re, Le, e, o)));
+      (_e = await spawnBgSession(Ne, D, "fleet", w.cwd, re, Le, e, o)));
   let wt = Date.now() - qe,
     bt = Date.now() - p;
   if (
@@ -4809,10 +4809,10 @@ ${t.initialPrompt}`
     }
     return { ok: !0, short: _e.short, state: Me };
   }
-  let et = Ae ? zHe(Me, Ae) : Me,
+  let et = Ae ? applyReplyPatch(Me, Ae) : Me,
     Nt =
       He && w.name
-        ? (PZt(Me.respawnFlags, "--name", "-n", w.name) ?? Me.respawnFlags)
+        ? (rewriteDispatchFlagValue(Me.respawnFlags, "--name", "-n", w.name) ?? Me.respawnFlags)
         : void 0,
     st = w.state === "failed" || w.state === "stopped" || !!ge,
     At = {
@@ -4854,18 +4854,18 @@ ${t.initialPrompt}`
 function Nr(e) {
   return e === "gate_blocked" || e === "cwd_gone";
 }
-var vWe = "recap.trigger";
+var RECAP_TRIGGER_FILE = "recap.trigger";
 function Xi(e, t) {
   if (isHoverRestEnabled() && t !== void 0) {
-    let o = STORAGE_KEYS.job(e, [vWe]);
-    if (kd(o) === void 0) {
+    let o = STORAGE_KEYS.job(e, [RECAP_TRIGGER_FILE]);
+    if (validateStorageKey(o) === void 0) {
       t.write(o, "", { publishDiscipline: "inPlace" }).catch(() => {});
       return;
     }
   }
-  qi(Rn(getJobDir(e), vWe), "").catch(() => {});
+  qi(Rn(getJobDir(e), RECAP_TRIGGER_FILE), "").catch(() => {});
 }
-async function VZ(e, t, o, r) {
+async function killJob(e, t, o, r) {
   if (t?.backend === "peer") return { confirmed: !0 };
   let s = o?.handoff ? !0 : void 0,
     c = o?.evict ? !0 : void 0,
@@ -4883,7 +4883,7 @@ async function VZ(e, t, o, r) {
       })));
   if (d.ok) return { confirmed: !0 };
   if (d.code === "ENOJOB" || d.code === "ENOCONN" || d.code === "ETIMEOUT") {
-    let _ = await RZt(e, r);
+    let _ = await killOrphanedWorker(e, r);
     if (_.anyMatch && d.code === "ENOJOB") return { confirmed: _.confirmed };
     let p = !1;
     if (d.code === "ENOCONN" || d.code === "ETIMEOUT") {
@@ -4928,7 +4928,7 @@ async function VZ(e, t, o, r) {
   }
   return { confirmed: !1, error: d.error };
 }
-async function RZt(e, t) {
+async function killOrphanedWorker(e, t) {
   let o = await killPtySocket(getPtySocketPath(e)),
     r = !1,
     s = !0,
@@ -4957,7 +4957,7 @@ async function RZt(e, t) {
     }
   return { confirmed: s, anyMatch: r, scanFailed: c };
 }
-async function RWe(e) {
+async function listAliveDaemonJobs(e) {
   let t = await controlRequest({ proto: BG_PROTO, op: "list" });
   if (t.ok && t.op === "list")
     return {
@@ -4972,7 +4972,7 @@ async function RWe(e) {
     records: [],
   };
 }
-async function wPt(e, t) {
+async function probeDaemonJob(e, t) {
   let o = await controlRequest({ proto: BG_PROTO, op: "has", short: e });
   if (o.ok && o.op === "has")
     return { alive: o.alive, present: o.present ?? o.alive, daemonUp: !0 };
@@ -4980,11 +4980,11 @@ async function wPt(e, t) {
     s = r !== void 0 && (await M8e(r.pid, r.procStart));
   return { alive: s, present: s, daemonUp: !1 };
 }
-async function F$n(e) {
+async function isDaemonJobPresent(e) {
   let t = await controlRequest({ proto: BG_PROTO, op: "has", short: e });
   return t.ok && t.op === "has" ? (t.present ?? t.alive) : !1;
 }
-function zHe(e, t) {
+function applyReplyPatch(e, t) {
   return {
     ...e,
     ...(hasOutstandingAsk(e) && { state: "working" }),
@@ -4997,12 +4997,12 @@ function zHe(e, t) {
     updatedAt: new Date().toISOString(),
   };
 }
-var nle = "That session isn't running \u2014 respawn it first",
-  TPt = "Can't send \u2014 that session is running in another terminal";
+var REPLY_ENOJOB_MSG = "That session isn't running \u2014 respawn it first",
+  REPLY_PEER_NO_SOCK_MSG = "Can't send \u2014 that session is running in another terminal";
 function Gr() {
   return `Couldn't reach the ${bgSupervisorNoun()} \u2014 it may be restarting. Press Enter to retry`;
 }
-function kZt(e) {
+function isReplyDaemonRestartingMsg(e) {
   return e.startsWith(Gr());
 }
 var Fr =
@@ -5015,7 +5015,7 @@ async function Mr(e, t, o) {
   if (r.queuedPrompt !== void 0) return r.queuedPrompt === t;
   return ot(e, r, t, o);
 }
-async function VHe(e, t, o, r, s, c) {
+async function replyToJob(e, t, o, r, s, c) {
   let d = Date.now(),
     _ = (T, D) => {
       logEvent("tengu_bg_reply_outcome", {
@@ -5025,7 +5025,7 @@ async function VHe(e, t, o, r, s, c) {
       });
     };
   if (o?.backend === "peer") {
-    if (!o.sock) return (logFeatureOk("job_reply"), _("ok"), { err: TPt });
+    if (!o.sock) return (logFeatureOk("job_reply"), _("ok"), { err: REPLY_PEER_NO_SOCK_MSG });
     try {
       return (await sendToUdsSocket(o.sock, t, c), logFeatureOk("job_reply"), _("ok"), null);
     } catch (T) {
@@ -5075,7 +5075,7 @@ async function VHe(e, t, o, r, s, c) {
     if (v && !r) {
       invalidateJobStateCache(p);
       let T = (await readJobState(p, c)) ?? v,
-        D = zHe(T, t);
+        D = applyReplyPatch(T, t);
       if (D.queuedPrompt === t) D.queuedPrompt = void 0;
       writeStateAtomic(p, D, c).catch(logJobWriteError);
     }
@@ -5096,7 +5096,7 @@ async function VHe(e, t, o, r, s, c) {
     if (!r)
       (logFeatureSad("job_reply", "job_reply_not_running"),
         _("sad", "job_reply_not_running"));
-    return { err: nle, code: w.code };
+    return { err: REPLY_ENOJOB_MSG, code: w.code };
   }
   if (w.code === "ENOCONN" || w.code === "ETIMEOUT") {
     if (!r && w.code === "ENOCONN") {
@@ -5105,7 +5105,7 @@ async function VHe(e, t, o, r, s, c) {
         return (
           logFeatureSad("job_reply", "job_reply_not_running"),
           _("sad", "job_reply_not_running"),
-          { err: nle, code: "ENOJOB" }
+          { err: REPLY_ENOJOB_MSG, code: "ENOJOB" }
         );
     }
     if (!r)
@@ -5180,7 +5180,7 @@ async function Lr(e, t, o) {
   }
   return;
 }
-async function xZt(e, t = {}) {
+async function attachJob(e, t = {}) {
   (Xi(e, t.storageV5), n("[PERF:bg-attach-start]"), B0e());
   let o = RACED_SOCKET_GAP,
     r = TRANSIENT_ATTACH_CODE,
@@ -5427,25 +5427,25 @@ var Zi = {
       "could not be verified against other sessions' records \u2014 a sibling record was unreadable; retry, or inspect ~/.claude/jobs",
   },
   Kr = 32,
-  $$n = new RegExp(`^[0-9a-f]{${Kr}}$`);
+  WORKTREE_DIGEST_PATTERN = new RegExp(`^[0-9a-f]{${Kr}}$`);
 function Qi(e) {
   return hashSha256(e).slice(0, Kr);
 }
-function Tit(e, t) {
+function formatKeptWorktreeLabel(e, t) {
   let o = Zi[e ?? "remove_failed"],
     r = t ? normalizeWhitespace(t) : "";
   if (!r) return o;
   let s = r.length <= 120 ? r : `${truncateToCodeUnits(r, 40)}\u2026${takeLastCodeUnits(r, 79)}`;
   return `${o} (${s})`;
 }
-async function e4(e, t = {}, o) {
+async function deleteJob(e, t = {}, o) {
   let r = await readJobState(getJobDir(e), o),
     s = r?.worktreePath ? await listAllLiveSessions(o).catch(() => []) : [],
     c = new Set();
   for (let E of s)
     if (E.kind === "bg" && (E.jobId === e || E.sessionId?.startsWith(e)))
       c.add(E.pid);
-  let d = await VZ(
+  let d = await killJob(
     e,
     r ?? void 0,
     { knownGone: t.knownGone, evict: !0 },
@@ -5645,7 +5645,7 @@ async function e4(e, t = {}, o) {
       errorCode: "jobdir_rm_failed",
     };
   }
-  if (isHoverRestEnabled() && o !== void 0 && kd(xPt(e)) === void 0) await LWe(o, e);
+  if (isHoverRestEnabled() && o !== void 0 && validateStorageKey(xPt(e)) === void 0) await LWe(o, e);
   else await Ki(getHostManagedMarkerPath(e)).catch(() => {});
   if ((invalidateJobStateCache(getJobDir(e)), !t.internal))
     if (_)
@@ -5748,54 +5748,54 @@ async function Hr(e, t, o, { includeUnsettled: r }, s) {
   return null;
 }
 export {
-  Tye,
-  zx,
-  qHe,
-  bPt,
-  wit,
-  vWe,
-  VZ,
-  RZt,
-  RWe,
-  wPt,
-  F$n,
-  zHe,
-  nle,
-  TPt,
-  kZt,
-  VHe,
-  xZt,
-  $$n,
-  Tit,
-  e4,
-  $B,
-  kWe,
-  xWe,
-  U$n,
-  EPt,
-  B$n,
-  j$n,
-  Eit,
-  HZt,
-  HWe,
-  W$n,
-  IZt,
-  APt,
-  G$n,
-  Ait,
-  q$n,
-  CPt,
-  KHe,
-  IWe,
-  eF,
-  cgr,
-  rle,
-  ugr,
-  dgr,
-  pgr,
-  fgr,
-  mgr,
-  PZt,
-  Cit,
-  PWe,
+  claimAttachBeacon,
+  releaseAttachBeacon,
+  trackJobPromise,
+  formatUnpushedCommitsSummary,
+  formatUnpushedCommitsDetail,
+  RECAP_TRIGGER_FILE,
+  killJob,
+  killOrphanedWorker,
+  listAliveDaemonJobs,
+  probeDaemonJob,
+  isDaemonJobPresent,
+  applyReplyPatch,
+  REPLY_ENOJOB_MSG,
+  REPLY_PEER_NO_SOCK_MSG,
+  isReplyDaemonRestartingMsg,
+  replyToJob,
+  attachJob,
+  WORKTREE_DIGEST_PATTERN,
+  formatKeptWorktreeLabel,
+  deleteJob,
+  CLAUDE_AGENT_TEMPLATE,
+  resolveAgentTemplate,
+  listCustomAgents,
+  findChildRepos,
+  materializePastedImages,
+  setDispatchExtraArgs,
+  getDispatchExtraArgs,
+  formatDispatchDefaultFlags,
+  dispatchAgentJob,
+  isAgentViewBashModeEnabled,
+  dispatchExecJob,
+  areDefaultsEqual,
+  getSpareJob,
+  markSpareJobReady,
+  ensureSpareJob,
+  claimSpareJob,
+  discardSpareJob,
+  respawnJob,
+  preSeedReplBgJob,
+  spawnBgSession,
+  handleBgFlag,
+  formatBgHints,
+  logsHandler,
+  attachHandler,
+  respawnHandler,
+  stopHandler,
+  rmHandler,
+  rewriteDispatchFlagValue,
+  stripResumeFlags,
+  callerProviderEnv,
 };

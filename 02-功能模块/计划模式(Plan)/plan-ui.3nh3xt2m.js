@@ -15,13 +15,13 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, isRemoteActive, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { _6e, B0t, Q1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { planArtifactSlot, ModePushTimeoutError, registerModePushWaiter } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
 import { getIdeDisplayName, prepareContextForPlanMode, createUserMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Oc } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { applyPermissionUpdate } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { notePlanFileForgotten, peekPlanSlug, getPlanFilePath, getPlanAsync } from "./计划模式(Plan).e5mh1avy.js";
 import { renderToPlainText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
@@ -96,22 +96,22 @@ async function me(a, l, m) {
     (h8(O, "plan"),
       M((s) => ({
         ...s,
-        toolPermissionContext: Oc(prepareContextForPlanMode(s.toolPermissionContext), {
+        toolPermissionContext: applyPermissionUpdate(prepareContextForPlanMode(s.toolPermissionContext), {
           type: "setMode",
           mode: "plan",
           destination: "session",
         }),
       })));
-  if (Pt()) {
-    if (!Ks())
+  if (isRemoteActive()) {
+    if (!hasRemoteControlChannel())
       return (a(c ? "Enabled plan mode" : "Already in plan mode."), null);
-    let s = jn(),
+    let s = getRemoteTransport(),
       i = m.trim();
     if (c && i && i !== "open" && i !== "share") {
       try {
-        await Q1n(l.session, "plan", x);
+        await registerModePushWaiter(l.session, "plan", x);
       } catch (u) {
-        let b = u instanceof B0t;
+        let b = u instanceof ModePushTimeoutError;
         return (
           logFeatureBad(
             "plan_remote_query",
@@ -234,19 +234,19 @@ async function me(a, l, m) {
     return null;
   }
   if (V[0] === "share") {
-    if (!_6e.isPlanArtifactEnabled())
+    if (!planArtifactSlot.isPlanArtifactEnabled())
       return (a("Publishing plans is not available in this session."), null);
     let s =
       "Couldn't publish plan \u2014 try /plan share again, or run with --debug for details.";
     try {
-      let i = await _6e.publishPlanArtifact(
+      let i = await planArtifactSlot.publishPlanArtifact(
         C,
         l.artifactRegistries.ownPublishes,
         l.credentials,
       );
       if (i.url)
         (M((p) => {
-          let d = _6e.workshopVerifiedSlugsWith(p.workshopVerifiedSlugs, i);
+          let d = planArtifactSlot.workshopVerifiedSlugsWith(p.workshopVerifiedSlugs, i);
           return d === null ? p : { ...p, workshopVerifiedSlugs: d };
         }),
           a(`Published plan: ${i.url}`));
@@ -267,7 +267,7 @@ async function me(a, l, m) {
         planContent: C,
         planPath: s ? void 0 : g,
         editorName: H,
-        canShare: _6e.isPlanArtifactEnabled(),
+        canShare: planArtifactSlot.isPlanArtifactEnabled(),
       }),
     v = await renderToPlainText(q(k), { storageV5: l.storageV5 });
   if (!k && mayHaveRemoteClient(l.session)) v = await renderToPlainText(q(!0), { storageV5: l.storageV5 });

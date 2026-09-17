@@ -22,8 +22,8 @@ import { bc, ja, env as a } from "../../01-核心基础设施/设置-配置/chun
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getOtelHeadersHelperLastFailure, getGlobalConfig, formatAutoUpdaterDisabledReason, getAutoUpdaterDisabledReason } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Tb, Xge, lL } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { S0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getManagedSettingsDirPath, CUSTOMIZATION_SURFACES, hasSettingsContent } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getWslInheritsWindowsSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
 import { getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { getRipgrepStatus, isScrubOnlySandboxMode, SandboxManager, isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -434,8 +434,8 @@ function me(e, t) {
 }
 async function fe(e) {
   let t = [],
-    i = [Tb()];
-  if (getCurrentPlatform() === "wsl" && S0()) i.unshift(WSL_MANAGED_SETTINGS_DIR);
+    i = [getManagedSettingsDirPath()];
+  if (getCurrentPlatform() === "wsl" && getWslInheritsWindowsSettings()) i.unshift(WSL_MANAGED_SETTINGS_DIR);
   for (let o of i)
     try {
       let y = await ie(g(o, "managed-settings.json"), "utf-8"),
@@ -446,17 +446,17 @@ async function fe(e) {
         if (!Array.isArray(u))
           t.push({
             issue: `managed-settings.json: strictPluginOnlyCustomization has an invalid value (expected true or an array, got ${typeof u})`,
-            fix: `The field is silently ignored (schema .catch rescues it). Set it to true, or an array of: ${Xge.join(", ")}.`,
+            fix: `The field is silently ignored (schema .catch rescues it). Set it to true, or an array of: ${CUSTOMIZATION_SURFACES.join(", ")}.`,
           });
         else {
-          let p = u.filter((c) => typeof c === "string" && !Xge.includes(c));
+          let p = u.filter((c) => typeof c === "string" && !CUSTOMIZATION_SURFACES.includes(c));
           if (p.length > 0)
             t.push({
               issue: `managed-settings.json: strictPluginOnlyCustomization has ${p.length} value(s) this client doesn't recognize: ${p.map(String).join(", ")}`,
-              fix: `These are silently ignored (forwards-compat). Known surfaces for this version: ${Xge.join(", ")}. Either remove them, or this client is older than the managed-settings intended.`,
+              fix: `These are silently ignored (forwards-compat). Known surfaces for this version: ${CUSTOMIZATION_SURFACES.join(", ")}. Either remove them, or this client is older than the managed-settings intended.`,
             });
         }
-      if (d && typeof d === "object" && lL(d)) break;
+      if (d && typeof d === "object" && hasSettingsContent(d)) break;
     } catch {}
   let r = getOtelHeadersHelperLastFailure();
   if (r)

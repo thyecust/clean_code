@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { P2e } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_MAX_IMAGE_RAW_BYTES } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { An, Dr, ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -509,9 +509,9 @@ async function Bg({ data: e, mediaType: t, limits: r }) {
     throw p;
   }
   let c = m.buffer;
-  if (c.length > P2e)
+  if (c.length > DEFAULT_MAX_IMAGE_RAW_BYTES)
     try {
-      c = await gSn(m.buffer, P2e, m.mediaType);
+      c = await gSn(m.buffer, DEFAULT_MAX_IMAGE_RAW_BYTES, m.mediaType);
     } catch (p) {
       n(
         `Image byte-budget compression failed, passing through unbudgeted: ${l(p)}`,

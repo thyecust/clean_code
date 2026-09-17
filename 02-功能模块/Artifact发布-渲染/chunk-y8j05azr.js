@@ -17,7 +17,7 @@ import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { bCe, Am, TG, jZn, nP, Nd, Fd } from "./chunk-01ymf0ar.js";
+import { getStoreBearerOauthAccountInfoAsync, formatNotAuthenticatedMessage, CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE, getFrameRoute, isFrameRelayAttemptError, artifactFrameHttpClient, buildFrameHeaders } from "./chunk-01ymf0ar.js";
 function vft() {
   return a.CLAUDE_CODE_ARTIFACT_DB ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_umber_lattice", !1);
 }
@@ -74,7 +74,7 @@ function _e(e, r) {
   if (e !== 403 || typeof r !== "string") return;
   let t = r.trim();
   if (me.has(t)) return { code: "credential_rejected", reason: "custody_403" };
-  if (t.startsWith(TG))
+  if (t.startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE))
     return { code: "cloud_unavailable", reason: "ccr_credential_refused" };
   return;
 }
@@ -296,11 +296,11 @@ function ee(e, r) {
   return `${e}:${r}`;
 }
 function C() {
-  return jZn("POST", Y) === "relay";
+  return getFrameRoute("POST", Y) === "relay";
 }
 async function Oe(e, r) {
   if (C()) return null;
-  let t = (await bCe(r))?.accountUuid;
+  let t = (await getStoreBearerOauthAccountInfoAsync(r))?.accountUuid;
   return t ? ee(t, e) : null;
 }
 async function K(e, r, t) {
@@ -447,13 +447,13 @@ async function I(e, r, t, c, o, u) {
   let i = t === "batch" ? "batch_" : "",
     n;
   try {
-    n = await Nd.post(
+    n = await artifactFrameHttpClient.post(
       Y,
       { slug: r, verb: t, args: c },
       {
         refreshOAuth: !0,
         credentials: o.credentials,
-        headers: Fd(),
+        headers: buildFrameHeaders(),
         timeout: o.timeout,
         maxContentLength: o.maxContentLength,
         signal: u,
@@ -462,7 +462,7 @@ async function I(e, r, t, c, o, u) {
     );
   } catch (s) {
     if (isCancel(s)) throw s;
-    let d = e !== "artifact_db_read" && t !== x && nP(s);
+    let d = e !== "artifact_db_read" && t !== x && isFrameRelayAttemptError(s);
     return (
       logFeatureBad(e, `${i}${d ? "relay_request_error" : "request_error"}`),
       {
@@ -488,7 +488,7 @@ async function I(e, r, t, c, o, u) {
           code: "store_unavailable",
           message:
             n.reason === "no-auth"
-              ? Am(n.detail)
+              ? formatNotAuthenticatedMessage(n.detail)
               : `db ${e === "artifact_db_read" ? "read" : "write"} unavailable: ${n.reason}`,
           reason: "transport",
         },

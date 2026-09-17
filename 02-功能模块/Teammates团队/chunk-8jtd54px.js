@@ -17,7 +17,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { emitTaskNotification, bytesPerTokenForModel, runWithAgentContext, getAgentDepth } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { SYSTEM_PROMPT_DYNAMIC_BOUNDARY } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runWithTeammateContext } from "./teammate-context.js";
 import {
@@ -56,11 +56,11 @@ import {
   isLoggableMessage,
   buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { NFe, RD } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { readPrimedAgentMemory, persistPermissionUpdates } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { cloneFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { UE, mG, WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { TASK_CREATE_TOOL_NAME, TASK_GET_TOOL_NAME, TASK_UPDATE_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import {
   loe,
   RC,
@@ -175,7 +175,7 @@ function Ge(s, e, t, _) {
                   w.suppressAlwaysAllowRule === !0
                 ? stripWholeToolGrantsForAsk(D, o, getToolPermissionContext(T))
                 : D;
-          RD(z, T.storageV5).catch(logError);
+          persistPermissionUpdates(z, T.storageV5).catch(logError);
           let X = a && Object.keys(a).length > 0 ? a : p;
           l({
             behavior: "allow",
@@ -601,13 +601,13 @@ async function Je(s) {
   if (p === "replace" && w) ie = w;
   else {
     let H = [
-      ...(await buildDefaultSystemPrompt(z, X, void 0, { teammate: !0 })).filter((W) => W !== FU),
+      ...(await buildDefaultSystemPrompt(z, X, void 0, { teammate: !0 })).filter((W) => W !== SYSTEM_PROMPT_DYNAMIC_BOUNDARY),
       TEAMMATE_SYSTEM_PROMPT_ADDENDUM,
     ];
     if (m) {
       let W = m.getSystemPrompt({
         toolUseContext: d,
-        primedAgentMemory: await NFe(m, d.storageV5),
+        primedAgentMemory: await readPrimedAgentMemory(m, d.storageV5),
       });
       if (W)
         H.push(`
@@ -630,7 +630,7 @@ ${W}`);
       whenToUse: `In-process teammate: ${e.agentName}`,
       getSystemPrompt: () => ie,
       tools: m?.tools
-        ? dedupe([...m.tools, SEND_MESSAGE_TOOL_NAME, ...(K ? [UE, mG, TASK_LIST_TOOL_NAME, WE] : [])])
+        ? dedupe([...m.tools, SEND_MESSAGE_TOOL_NAME, ...(K ? [TASK_CREATE_TOOL_NAME, TASK_GET_TOOL_NAME, TASK_LIST_TOOL_NAME, TASK_UPDATE_TOOL_NAME] : [])])
         : ["*"],
       source: "projectSettings",
       permissionMode: "default",

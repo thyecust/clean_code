@@ -30,44 +30,44 @@ import { isTempFilePath, writeFileAtomic } from "../../01-核心基础设施/安
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { n_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { MAX_SETTINGS_FILE_BYTES } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot, rL } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isTempScratchName, stripRecursiveGlobSuffix, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Gj, $d, ome, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { normalizePathForCompare, getResolvedClaudeTempDir, getResolvedChildProcessTmpDir, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
 import {
-  Pae,
-  zYt,
-  P_e,
-  Yxe,
-  Kje,
-  fot,
-  mot,
-  T8,
-  VYt,
-  O_e,
-  Xje,
-  _Nn,
-  yNn,
-  SNn,
-  bNn,
-  got,
-  hot,
-  wNn,
-  TNn,
-  ENn,
-  _ot,
-  yot,
-  Jxe,
-  CNn,
-  KYt,
-  vNn,
+  RUNNER_VERSION,
+  POLL_WORK_TIMEOUT_MS,
+  getHttpStatusFromError,
+  shouldRetryRequest,
+  classifyPollError,
+  createEmptyPollErrorCounts,
+  createRunnerApiClient,
+  UNKNOWN_CLIENT_PLATFORM,
+  CLIENT_PLATFORM_PATTERN,
+  normalizeClientPlatform,
+  escapeLogValue,
+  createDurationHistogram,
+  observeDuration,
+  deleteSessionChildMetrics,
+  startMetricsServer,
+  PROXY_AUTHORIZATION_COMMAND_ENV_VAR,
+  PROXY_AUTHORIZATION_FILE_ENV_VAR,
+  buildSessionProxyEnvOverrides,
+  resolveProxyAuthorizationConfig,
+  startEgressProxy,
+  assertFeatureSupportedOnPlatform,
+  resolveHookExecutable,
+  CheckoutHookFailedError,
+  runCheckoutHook,
+  getInFlightHookCount,
+  runPostSessionHook,
 } from "./chunk-cgmv5fe7.js";
 import { serverToolsValueNamesSelfHostedRunnerTool, sanitizeServerClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/chunk-02q6xmh3.js";
 import { configureGitGovernedEntries } from "./runner-git-config.js";
@@ -1369,7 +1369,7 @@ async function Os(e, t, n) {
         initialDelayMs: 500,
         maxDelayMs: 8000,
         maxAttempts: 5,
-        shouldRetry: Yxe,
+        shouldRetry: shouldRetryRequest,
         signal: n,
         onRetry: (K, Ne) => {
           i(
@@ -1413,7 +1413,7 @@ async function Os(e, t, n) {
         initialDelayMs: 500,
         maxDelayMs: 8000,
         maxAttempts: 5,
-        shouldRetry: Yxe,
+        shouldRetry: shouldRetryRequest,
         signal: n,
         onRetry: (K, Ne) => {
           i(
@@ -1477,7 +1477,7 @@ async function Os(e, t, n) {
             initialDelayMs: 500,
             maxDelayMs: 8000,
             maxAttempts: 5,
-            shouldRetry: Yxe,
+            shouldRetry: shouldRetryRequest,
             signal: n,
             onRetry: (N, I) => {
               i(
@@ -1506,7 +1506,7 @@ async function Os(e, t, n) {
             initialDelayMs: 500,
             maxDelayMs: 8000,
             maxAttempts: 5,
-            shouldRetry: Yxe,
+            shouldRetry: shouldRetryRequest,
             signal: n,
             onRetry: (N, I) => {
               i(
@@ -1648,7 +1648,7 @@ async function Os(e, t, n) {
       let Ct = He,
         at = [],
         be = [],
-        Vt = await yot(Jt, "checkout");
+        Vt = await resolveHookExecutable(Jt, "checkout");
       if (Vt && St)
         h(
           `[runner:warn] --push-outcome-on-release does not push repos checked out via the checkout lifecycle hook (${Vt}); use the post-session hook to snapshot those`,
@@ -1685,7 +1685,7 @@ async function Os(e, t, n) {
                 );
                 return;
               }
-              let tt = be.find((dt) => Gj(dt) === Gj(he));
+              let tt = be.find((dt) => normalizePathForCompare(dt) === normalizePathForCompare(he));
               if (tt !== void 0)
                 return (
                   i(
@@ -1729,7 +1729,7 @@ async function Os(e, t, n) {
                   `[runner:session] refusing to pass unsafe repo URL to checkout hook: ${Ve}`,
                   "refusing to pass unsafe repo URL to checkout hook",
                 );
-              (await CNn({
+              (await runCheckoutHook({
                 hookPath: Vt,
                 cwd: He,
                 sessionId: e,
@@ -1879,7 +1879,7 @@ async function Os(e, t, n) {
               }
               throw new Vn(T.repo, T.ref);
             }
-            if (Vt && !Oe && tt instanceof Jxe && !n.aborted) {
+            if (Vt && !Oe && tt instanceof CheckoutHookFailedError && !n.aborted) {
               h(
                 `[runner:warn] checkout hook failed for context source ${T.repo} (${tt.telemetryMessage}); not a work repo (no push_targets entry), skipping it: ` +
                   redactSecrets(tt.message),
@@ -2094,9 +2094,9 @@ async function Os(e, t, n) {
       }
       if (Rt !== "off" && !wn) logFeatureOk("self_hosted_confine");
       if (
-        ($n(Ze, "config dir", $d().replace(/[/\\]$/, ""), [
+        ($n(Ze, "config dir", getResolvedClaudeTempDir().replace(/[/\\]$/, ""), [
           getClaudeTempDir(),
-          ome().replace(/[/\\]$/, ""),
+          getResolvedChildProcessTmpDir().replace(/[/\\]$/, ""),
         ]),
         Te.mark("runner_prep_repo_settings_ms"),
         Ue)
@@ -2471,7 +2471,7 @@ async function Os(e, t, n) {
       Re = `setup threw: ${Le}`;
       let gt = K instanceof Vn || Vlt(Le);
       {
-        let Qe = P_e(K);
+        let Qe = getHttpStatusFromError(K);
         if (Qe !== void 0 && Qe >= 500)
           me = "SESSION_FAILURE_KIND_ANTHROPIC_CONTROL_PLANE_5XX";
         else if (gt) me = "SESSION_FAILURE_KIND_SESSION_CONFIG_ERROR";
@@ -2515,7 +2515,7 @@ async function Os(e, t, n) {
     let D = redactSecrets(_e instanceof Error ? _e.message : String(_e));
     Re = `pre-spawn threw: ${D}`;
     {
-      let ue = P_e(_e);
+      let ue = getHttpStatusFromError(_e);
       if (ue !== void 0 && ue >= 500)
         me = "SESSION_FAILURE_KIND_ANTHROPIC_CONTROL_PLANE_5XX";
     }
@@ -2580,9 +2580,9 @@ async function Os(e, t, n) {
       }
     }
     if (ut) {
-      let D = await yot(Jt, "post-session");
+      let D = await resolveHookExecutable(Jt, "post-session");
       if (D)
-        await vNn({
+        await runPostSessionHook({
           hookPath: D,
           cwd: He ?? d,
           sessionId: e,
@@ -2810,7 +2810,7 @@ function ro(e) {
       CLAUDE_CODE_RETRY_WATCHDOG: "1",
       CLAUDE_CODE_MAX_RETRIES: "",
       CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE: "self_hosted",
-      CLAUDE_RUNNER_CLIENT_PLATFORM: O_e(w),
+      CLAUDE_RUNNER_CLIENT_PLATFORM: normalizeClientPlatform(w),
       DISABLE_AUTOUPDATER: "1",
       CLAUDE_ENABLE_STREAM_WATCHDOG: "1",
       CLAUDE_RUNNER_CLAUDE_BIN: process.execPath,
@@ -2841,7 +2841,7 @@ function ro(e) {
           : { CCR_AGENT_PROXY_ENABLED: void 0 }),
       SELF_HOSTED_RUNNER_POOL_SECRET: void 0,
       SELF_HOSTED_RUNNER_ENVIRONMENT_SECRET: void 0,
-      ...wNn(),
+      ...buildSessionProxyEnvOverrides(),
       SELF_HOSTED_RUNNER_HOST_CONFIG_DIR: void 0,
       CLAUDE_CODE_EXIT_AFTER_STOP_DELAY: void 0,
       CLAUDE_CODE_WORKER_EPOCH: String(o),
@@ -4283,7 +4283,7 @@ async function No(e, t, n) {
       let V;
       try {
         V = await xe(
-          readFileWithMetadata(w, n_).then((H) => H.content),
+          readFileWithMetadata(w, MAX_SETTINGS_FILE_BYTES).then((H) => H.content),
           `readFile ${w}`,
         );
       } catch (H) {
@@ -5426,7 +5426,7 @@ function Fs(e) {
               Authorization: `Bearer ${r.runnerToken}`,
               Accept: "text/event-stream",
               "anthropic-version": "2023-06-01",
-              "x-self-hosted-runner-version": Pae,
+              "x-self-hosted-runner-version": RUNNER_VERSION,
             },
             ...getProxyFetchOptions({ url: c }),
             signal: i.signal,
@@ -5517,7 +5517,7 @@ var ka = 1000,
   ba = 5000,
   Gs = 2000,
   Ra = In,
-  Ta = zYt + 2000,
+  Ta = POLL_WORK_TIMEOUT_MS + 2000,
   ya = 5000,
   va = 1e4,
   Ys = "/workspace",
@@ -5953,11 +5953,11 @@ Connection:
                               rewritten for child processes, other proxy variables incl. ALL_PROXY
                               are cleared for them; NO_PROXY is unchanged). The value is never
                               logged. Not supported with the orchestrator subcommand yet.
-                              [env: ${got}]
+                              [env: ${PROXY_AUTHORIZATION_COMMAND_ENV_VAR}]
   --proxy-authorization-file <path>
                               Same, but the header value is read from a file (re-read for each new
                               connection, so a file rotated in place is picked up). Set only one of
-                              the two. [env: ${hot}]
+                              the two. [env: ${PROXY_AUTHORIZATION_FILE_ENV_VAR}]
 
 Runtime:
   --capacity <n>              Max concurrent sessions (default: ${js})
@@ -6131,13 +6131,13 @@ Debug:
   try {
     if (
       ((t = Na(e)),
-      (r = TNn({
+      (r = resolveProxyAuthorizationConfig({
         command: t.proxyAuthorizationCommand,
         file: t.proxyAuthorizationFile,
       })),
       process.env.SELF_HOSTED_RUNNER_HOOKS_DIR)
     )
-      _ot("--hooks-dir");
+      assertFeatureSupportedOnPlatform("--hooks-dir");
     (xa(t.baseDirSource), q4(), (n = await Da(t)), await Pr(t.baseDir));
   } catch (v) {
     (console.error(`error: ${redactSecrets(l(v))}
@@ -6254,7 +6254,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
   let ae = process.env.SELF_HOSTED_RUNNER_HOOKS_DIR,
     te = t.execPath;
   if (!te) {
-    let v = await yot(ae, "command");
+    let v = await resolveHookExecutable(ae, "command");
     if (v) ((te = v), i(`[runner:hook] using command hook ${v}`));
   }
   let { execPath: le, execArgs: we } = Pa(te);
@@ -6276,7 +6276,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
   let fe;
   if (r)
     try {
-      ((fe = await ENn(r, { onStatus: i, onDebug: p })),
+      ((fe = await startEgressProxy(r, { onStatus: i, onDebug: p })),
         logFeatureOk("self_hosted_egress_proxy_auth"));
     } catch (v) {
       (logFeatureBad("self_hosted_egress_proxy_auth", "listener_start_failed"),
@@ -6286,7 +6286,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
         await m(),
         process.exit(1));
     }
-  let ke = mot({ baseUrl: t.apiUrl, poolSecret: n, onDebug: p }),
+  let ke = createRunnerApiClient({ baseUrl: t.apiUrl, poolSecret: n, onDebug: p }),
     Ae = t.clientLabel ?? hostname();
   if (t.lockToAccountId)
     i(`Registering locked to account: ${t.lockToAccountId}`);
@@ -6296,7 +6296,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
       initialDelayMs: 1000,
       maxDelayMs: 16000,
       maxAttempts: 5,
-      shouldRetry: Yxe,
+      shouldRetry: shouldRetryRequest,
       onRetry: (O, C) => {
         i(
           `RegisterRunner attempt ${O} transient failure (${C instanceof Error ? C.message : C}) \u2014 retrying`,
@@ -6348,7 +6348,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
     },
     zt = (v, O = "signal") => {
       if (qe === "draining") {
-        let F = KYt();
+        let F = getInFlightHookCount();
         if (F > 0)
           i(
             `[runner] Forced shutdown with ${F} post-session hook(s) still running \u2014 they continue in their own process group, but their output is no longer captured and the runner's timeout budget no longer applies.`,
@@ -6365,7 +6365,7 @@ Run 'claude self-hosted-runner --help' for usage.`),
                 Ue("no new signal"),
         ),
         i(L));
-      let C = KYt();
+      let C = getInFlightHookCount();
       if (C > 0)
         i(
           `[runner] ${C} post-session hook(s) still running \u2014 waiting for them within the budget above. Another SIGTERM force-exits the runner immediately; make sure your supervisor's stop timeout covers the full budget so hooks are not cut short.`,
@@ -6510,10 +6510,10 @@ Run 'claude self-hosted-runner --help' for usage.`),
     yt = {
       runnerId: de,
       activeSessions: 0,
-      sessionsStarted: new Map([[T8, 0]]),
-      sessionsCompleted: new Map([[T8, 0]]),
-      sessionsFailed: new Map([[T8, 0]]),
-      sessionsInterrupted: new Map([[T8, 0]]),
+      sessionsStarted: new Map([[UNKNOWN_CLIENT_PLATFORM, 0]]),
+      sessionsCompleted: new Map([[UNKNOWN_CLIENT_PLATFORM, 0]]),
+      sessionsFailed: new Map([[UNKNOWN_CLIENT_PLATFORM, 0]]),
+      sessionsInterrupted: new Map([[UNKNOWN_CLIENT_PLATFORM, 0]]),
       sessionClientPlatform: new Map(),
       lastPollAt: 0,
       version: {
@@ -6535,13 +6535,13 @@ Run 'claude self-hosted-runner --help' for usage.`),
       lockedAccountEmail: null,
       initializingSessions: 0,
       sessionInitErrors: 0,
-      sessionInitDurations: _Nn(),
+      sessionInitDurations: createDurationHistogram(),
       sessionStartHookErrors: 0,
-      pollErrors: fot(),
+      pollErrors: createEmptyPollErrorCounts(),
       sessionIdle: new Map(),
     };
   St.current = yt;
-  let Te = t.healthPort > 0 ? bNn(t.healthPort, yt, i) : void 0,
+  let Te = t.healthPort > 0 ? startMetricsServer(t.healthPort, yt, i) : void 0,
     Et = await bs(i),
     Ke = await Ts(p);
   try {
@@ -6833,7 +6833,7 @@ async function Ma(e, t) {
           if (
             typeof q.client_platform === "string" &&
             q.client_platform &&
-            VYt.test(q.client_platform)
+            CLIENT_PLATFORM_PATTERN.test(q.client_platform)
           )
             ne.set(q.session_id, q.client_platform);
           else if (
@@ -6844,7 +6844,7 @@ async function Ma(e, t) {
             if (ae.size > 256) ae.clear();
             (ae.add(q.session_id),
               m(
-                `[runner:session] assignment client_platform rejected by the charset gate (label falls back to "unknown"): "${Xje(q.client_platform)}" (len=${q.client_platform.length}, session=${Xje(q.session_id)})`,
+                `[runner:session] assignment client_platform rejected by the charset gate (label falls back to "unknown"): "${escapeLogValue(q.client_platform)}" (len=${q.client_platform.length}, session=${escapeLogValue(q.session_id)})`,
               ));
           }
         }
@@ -6859,7 +6859,7 @@ async function Ma(e, t) {
         if (i) ((i.lastPollAt = Ae), (i.activeSessions = h.size));
       } catch (_) {
         if (t.aborted) break;
-        let q = Kje(_);
+        let q = classifyPollError(_);
         if (i) i.pollErrors[q]++;
         let re = _ instanceof Error ? _.message : String(_);
         if (Js(_)) {
@@ -6976,7 +6976,7 @@ async function Ma(e, t) {
           p(`Picked up session ${_} (${h.size + 1}/${d.capacity} active)`));
         let re = new AbortController(),
           x = _.replace(/^cse_/, "session_"),
-          ee = ne.get(_) ?? T8;
+          ee = ne.get(_) ?? UNKNOWN_CLIENT_PLATFORM;
         (i?.sessionIdle.set(x, null), i?.sessionClientPlatform.set(x, ee));
         let E = Date.now();
         i?.claimVisibility?.set(x, { pickedUpAt: E });
@@ -7434,7 +7434,7 @@ async function Ma(e, t) {
                         break;
                       case "end":
                         (i.initializingSessions--,
-                          yNn(i.sessionInitDurations, k.durationSec));
+                          observeDuration(i.sessionInitDurations, k.durationSec));
                         break;
                       case "exit-before-init":
                         if ((i.initializingSessions--, k.failed))
@@ -7536,7 +7536,7 @@ async function Ma(e, t) {
                 (i.sessionIdle.delete(x),
                   i.sessionClientPlatform.delete(x),
                   i.claimVisibility?.delete(x),
-                  SNn(i, x));
+                  deleteSessionChildMetrics(i, x));
               let k = h.size >= d.capacity;
               if ((h.delete(_), U?.(), i)) i.activeSessions = h.size;
               if (h.size === 0) {
@@ -7596,7 +7596,7 @@ async function Ma(e, t) {
               if (i) i.lastPollAt = Date.now();
             })
             .catch((Pe) => {
-              if (i) i.pollErrors[Kje(Pe)]++;
+              if (i) i.pollErrors[classifyPollError(Pe)]++;
               m(
                 `[runner] shutdown: lease heartbeat failed (best-effort): ${Pe}`,
               );

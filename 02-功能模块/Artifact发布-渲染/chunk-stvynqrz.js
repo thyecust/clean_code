@@ -24,38 +24,38 @@ import { externalHttp } from "../../01-核心基础设施/共享小工具-未细
 import { ASSET_ID_RE, ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
 import {
-  SCe,
-  Am,
-  bN,
-  jwt,
-  $1e,
-  U1e,
-  vK,
-  _w,
-  j1e,
-  W1e,
-  z1e,
-  V1e,
-  wN,
-  MH,
-  _oe,
-  FXe,
-  TN,
-  Lj,
-  EG,
-  TCe,
-  Twn,
-  K1e,
-  yoe,
-  aqt,
-  Ewn,
-  $Xe,
-  qk,
-  Fd,
+  formatNoGatewayCredentialMessage,
+  formatNotAuthenticatedMessage,
+  isProxyAllowlistBlocked,
+  classifySandboxProxyDenial,
+  SANDBOX_PROXY_DENIAL_MESSAGES,
+  getProxyErrorHeaderValue,
+  getDenyReasonHeader,
+  ARTIFACT_MOUNT_FAMILY,
+  buildArtifactFramePath,
+  buildFrameAssetTokenHeader,
+  ARTIFACT_NETWORK_OFF_MESSAGE,
+  isArtifactNetworkOffResponse,
+  FRAME_FAMILY_BLOBS,
+  canRelayFrameFamily,
+  isHostedFrameRelayEnabled,
+  isArtifactAgentDirectEnabled,
+  isFrameFamilyDeclined,
+  declineFrameFamily,
+  markFrameFamilyServed,
+  isFrameFamilyVouched,
+  unvouchFrameFamily,
+  shouldAbandonFrameRelay,
+  markArtifactRelayHopFailed,
+  requestViaFrameTunnel,
+  classifyFrameRelayResponse,
+  isByocFrameRelayEnabled,
+  MAX_ARTIFACT_FILE_BYTES,
+  buildFrameHeaders,
   resolveContract,
   foldBootCowritten,
-  IC,
-  _Fe,
+  readArtifactBoot,
+  redactFrameToken,
 } from "./chunk-01ymf0ar.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import {
@@ -75,7 +75,7 @@ function Ccn() {
 var D = "image/svg+xml",
   pe = 2097152;
 function m$t(e) {
-  return e === D ? pe : qk;
+  return e === D ? pe : MAX_ARTIFACT_FILE_BYTES;
 }
 var B = new Map([
     [".png", "image/png"],
@@ -323,7 +323,7 @@ var mI = /^[0-9a-f]{64}$/,
             .optional()
             .catch(void 0),
           content_type: le().regex(Nv).max(wft),
-          size_bytes: Zt().int().nonnegative().max(qk),
+          size_bytes: Zt().int().nonnegative().max(MAX_ARTIFACT_FILE_BYTES),
           sha256: le().regex(mI).optional(),
           created_at: le().regex(Icn).max(wft),
         }),
@@ -459,10 +459,10 @@ var Re =
 async function N(e, r) {
   let { verb: s, route: u, body: t, contentType: o, marks: c, fail: i } = e,
     l = (h) => ({ replied: !1, failure: h }),
-    d = s !== "copy" && FXe();
+    d = s !== "copy" && isArtifactAgentDirectEnabled();
   if (d) c.agent_direct = !0;
-  let x = !d && $Xe() && !TN(wN),
-    v = (!d && _oe()) || x,
+  let x = !d && isByocFrameRelayEnabled() && !isFrameFamilyDeclined(FRAME_FAMILY_BLOBS),
+    v = (!d && isHostedFrameRelayEnabled()) || x,
     g = () =>
       l(
         i(
@@ -472,7 +472,7 @@ async function N(e, r) {
         ),
       );
   if (!v && !d && a.CLAUDE_CODE_REMOTE) return g();
-  if (v && !MH())
+  if (v && !canRelayFrameFamily())
     return l(
       i(
         "store_unavailable",
@@ -494,7 +494,7 @@ async function N(e, r) {
   }
   let C = {
       maxRedirects: 0,
-      headers: { ...Fd(), "Content-Type": o, Accept: "application/json" },
+      headers: { ...buildFrameHeaders(), "Content-Type": o, Accept: "application/json" },
       ...(e.verb === "upload"
         ? {
             streamUpload: {
@@ -512,7 +512,7 @@ async function N(e, r) {
     },
     p = async () =>
       v
-        ? (await aqt("POST", u, t, C, wN)).res
+        ? (await requestViaFrameTunnel("POST", u, t, C, FRAME_FAMILY_BLOBS)).res
         : httpClient.post(u, t, {
             ...C,
             host: "frame",
@@ -522,18 +522,18 @@ async function N(e, r) {
           }),
     _;
   try {
-    if (x && e.verb === "upload" && !TCe(wN)) {
+    if (x && e.verb === "upload" && !isFrameFamilyVouched(FRAME_FAMILY_BLOBS)) {
       let k;
       try {
         k = (
-          await aqt(
+          await requestViaFrameTunnel(
             "POST",
             e.probeRoute,
             b({ limit: 1 }),
             {
               maxRedirects: 0,
               headers: {
-                ...Fd(),
+                ...buildFrameHeaders(),
                 "Content-Type": "application/json",
                 Accept: "application/json",
               },
@@ -542,13 +542,13 @@ async function N(e, r) {
               validateStatus: () => !0,
               signal: r,
             },
-            wN,
+            FRAME_FAMILY_BLOBS,
           )
         ).res;
       } catch (F) {
         if (isCancel(F) || F instanceof Ve) throw F;
         return (
-          Lj(wN, !0),
+          declineFrameFamily(FRAME_FAMILY_BLOBS, !0),
           l(
             i(
               "store_unavailable",
@@ -558,10 +558,10 @@ async function N(e, r) {
           )
         );
       }
-      let R = Ewn(k);
-      if (R.refused) return (Lj(wN), g());
+      let R = classifyFrameRelayResponse(k);
+      if (R.refused) return (declineFrameFamily(FRAME_FAMILY_BLOBS), g());
       if (!R.vouched) {
-        if (!k.ok || k.status >= 500 || k.status === 499) Lj(wN, !0);
+        if (!k.ok || k.status >= 500 || k.status === 499) declineFrameFamily(FRAME_FAMILY_BLOBS, !0);
         return l(
           i(
             "store_unavailable",
@@ -570,16 +570,16 @@ async function N(e, r) {
           ),
         );
       }
-      EG(wN);
+      markFrameFamilyServed(FRAME_FAMILY_BLOBS);
     }
     let h = (k) => {
       if (!x) return !1;
-      let R = Ewn(k);
+      let R = classifyFrameRelayResponse(k);
       if (R.refused && !(k.ok && k.status === 413))
-        return (Lj(wN), Twn(wN), !0);
-      if (R.vouched) EG(wN);
-      else if (!TCe(wN) && (!k.ok || k.status >= 500 || k.status === 499))
-        Lj(wN, !0);
+        return (declineFrameFamily(FRAME_FAMILY_BLOBS), unvouchFrameFamily(FRAME_FAMILY_BLOBS), !0);
+      if (R.vouched) markFrameFamilyServed(FRAME_FAMILY_BLOBS);
+      else if (!isFrameFamilyVouched(FRAME_FAMILY_BLOBS) && (!k.ok || k.status >= 500 || k.status === 499))
+        declineFrameFamily(FRAME_FAMILY_BLOBS, !0);
       return !1;
     };
     if (((_ = await p()), h(_))) return g();
@@ -597,7 +597,7 @@ async function N(e, r) {
     }
   } catch (h) {
     if (isCancel(h) || h instanceof Ve) throw h;
-    if (x && !TCe(wN)) Lj(wN, !0);
+    if (x && !isFrameFamilyVouched(FRAME_FAMILY_BLOBS)) declineFrameFamily(FRAME_FAMILY_BLOBS, !0);
     if (KU(h) !== void 0)
       return l(
         i(
@@ -624,8 +624,8 @@ async function N(e, r) {
       message:
         _.reason === "no-auth"
           ? v
-            ? SCe(_.detail)
-            : Am(_.detail)
+            ? formatNoGatewayCredentialMessage(_.detail)
+            : formatNotAuthenticatedMessage(_.detail)
           : `asset ${s} unavailable: ${_.reason}`,
     });
   if (
@@ -683,7 +683,7 @@ async function V3n(e, r) {
       probeRoute: re(s),
       body: u,
       contentType: t,
-      maxBodyLength: qk + 4096,
+      maxBodyLength: MAX_ARTIFACT_FILE_BYTES + 4096,
       marks: o,
       fail: c,
       credentials: e.credentials,
@@ -697,7 +697,7 @@ async function V3n(e, r) {
     !d.success ||
     d.data.content_type !== t ||
     (t === D
-      ? d.data.size_bytes === 0 || d.data.size_bytes > qk
+      ? d.data.size_bytes === 0 || d.data.size_bytes > MAX_ARTIFACT_FILE_BYTES
       : d.data.size_bytes !== u.length)
   )
     return c(
@@ -892,9 +892,9 @@ async function J3n(e, r, s, u) {
   );
   if (!ARTIFACT_SLUG_RE.test(e.slug)) return t("invalid_slug", "not a valid artifact id");
   if (!ASSET_ID_RE.test(r)) return t("invalid_id", "not a valid asset id");
-  let o = _oe() || ($Xe() && !TN(_w));
+  let o = isHostedFrameRelayEnabled() || (isByocFrameRelayEnabled() && !isFrameFamilyDeclined(ARTIFACT_MOUNT_FAMILY));
   if (!o && a.CLAUDE_CODE_REMOTE) return t("relay_unavailable", ee);
-  let c = await IC(e, "artifact_asset_read", s, {
+  let c = await readArtifactBoot(e, "artifact_asset_read", s, {
     gatePublicRead: !1,
     credentials: u,
   });
@@ -937,14 +937,14 @@ async function J3n(e, r, s, u) {
     p;
   try {
     if (o) {
-      let w = await httpClient.get(j1e(e.slug, d), {
+      let w = await httpClient.get(buildArtifactFramePath(e.slug, d), {
         host: "ccr-gateway",
         auth: "session-jwt",
-        headers: W1e(l),
+        headers: buildFrameAssetTokenHeader(l),
         responseType: "arraybuffer",
         timeout: Q,
         maxRedirects: 0,
-        maxContentLength: qk + 1,
+        maxContentLength: MAX_ARTIFACT_FILE_BYTES + 1,
         validateStatus: () => !0,
         signal: s,
       });
@@ -952,7 +952,7 @@ async function J3n(e, r, s, u) {
         return t(
           w.reason.replace(/-/g, "_"),
           w.reason === "no-auth"
-            ? SCe(w.detail)
+            ? formatNoGatewayCredentialMessage(w.detail)
             : `artifact content is unreachable from this session (${w.reason})`,
         );
       p = { status: w.status, headers: w.response.headers, data: w.data };
@@ -964,13 +964,13 @@ async function J3n(e, r, s, u) {
           timeout: Q,
           responseType: "arraybuffer",
           maxRedirects: 0,
-          maxContentLength: qk + 1,
+          maxContentLength: MAX_ARTIFACT_FILE_BYTES + 1,
           validateStatus: () => !0,
           ...void 0,
         },
       );
-      if (bN(S.status, S.headers)) return g();
-      let O = vK(S.headers);
+      if (isProxyAllowlistBlocked(S.status, S.headers)) return g();
+      let O = getDenyReasonHeader(S.headers);
       if (O !== void 0 && (S.status < 200 || S.status >= 300))
         return E(S.status, O);
       (ne().contentHostEgressDenied.delete(e.env),
@@ -978,23 +978,23 @@ async function J3n(e, r, s, u) {
     }
   } catch (w) {
     if (isCancel(w)) throw w;
-    if (o) yoe();
+    if (o) markArtifactRelayHopFailed();
     let S = o ? void 0 : KU(w);
     if (S !== void 0) {
-      if (bN(S.connectStatus, S.headers)) return g();
-      let O = vK(S.headers);
+      if (isProxyAllowlistBlocked(S.connectStatus, S.headers)) return g();
+      let O = getDenyReasonHeader(S.headers);
       if (O !== void 0) return E(S.connectStatus, O);
-      return C(S.connectStatus, U1e(S.headers));
+      return C(S.connectStatus, getProxyErrorHeaderValue(S.headers));
     }
     return t(
       "request_error",
-      `the content fetch failed in transit, timed out, or exceeded the ${qk >> 20} MiB limit`,
+      `the content fetch failed in transit, timed out, or exceeded the ${MAX_ARTIFACT_FILE_BYTES >> 20} MiB limit`,
     );
   }
-  if (o && K1e(p.status)) return t("relay_unavailable", ee);
-  if (o && V1e(p.status, p.data))
-    return t("network_off", `${z1e}; retrying from here will not help`);
-  if (o) yoe(p.status);
+  if (o && shouldAbandonFrameRelay(p.status)) return t("relay_unavailable", ee);
+  if (o && isArtifactNetworkOffResponse(p.status, p.data))
+    return t("network_off", `${ARTIFACT_NETWORK_OFF_MESSAGE}; retrying from here will not help`);
+  if (o) markArtifactRelayHopFailed(p.status);
   if (p.status === 404)
     return t(
       "http_404",
@@ -1004,14 +1004,14 @@ async function J3n(e, r, s, u) {
     );
   let _ = o
     ? void 0
-    : jwt({
+    : classifySandboxProxyDenial({
         status: p.status,
         headers: p.headers,
         data: p.data,
-        redact: (w) => _Fe(w, l),
+        redact: (w) => redactFrameToken(w, l),
         label: "[artifact] asset fetch",
       });
-  if (_ !== void 0) return t(_, $1e[_]);
+  if (_ !== void 0) return t(_, SANDBOX_PROXY_DENIAL_MESSAGES[_]);
   if (p.status === 401 || p.status === 403)
     return t(
       `http_${p.status}`,
@@ -1024,7 +1024,7 @@ async function J3n(e, r, s, u) {
       `http_${p.status}`,
       `unexpected answer from the content host (HTTP ${p.status})`,
     );
-  if (o) EG(_w);
+  if (o) markFrameFamilyServed(ARTIFACT_MOUNT_FAMILY);
   let h = p.headers,
     k = o
       ? (h?.["x-frame-asset-content-type"] ?? h?.["content-type"])
@@ -1036,12 +1036,12 @@ async function J3n(e, r, s, u) {
       "the content host served a type this tool does not save",
     );
   let F = Buffer.from(p.data ?? new ArrayBuffer(0));
-  if (F.length === 0 || F.length > qk)
+  if (F.length === 0 || F.length > MAX_ARTIFACT_FILE_BYTES)
     return t(
       "size",
       F.length === 0
         ? "the asset is empty"
-        : `the asset exceeds the ${qk >> 20} MiB limit`,
+        : `the asset exceeds the ${MAX_ARTIFACT_FILE_BYTES >> 20} MiB limit`,
     );
   return { kind: "ok", bytes: F, contentType: R, relay: o === !0 };
 }

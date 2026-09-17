@@ -13,11 +13,11 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { ARTIFACT_TOOL_NAME, PR_REVIEW_SECURITY_WALL, ArtifactInputError, ARTIFACT_VERSION_SAFE_RE, ARTIFACT_DELETED_NOTE_TAG, ARTIFACT_DELETED_NOTE_RE, uuidSlugFromUrl, canonicalArtifactTargetFor, sanitizeArtifactTitle } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runBundledSkillSessionResets } from "../Skills技能/bundled-skills.js";
 import { hashForTelemetry, READ_TOOL_NAME } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Cr, yw, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
+import { WEB_FETCH_TOOL_NAME, formatArtifactTitle, linkPathToSlug, unlinkPath, retainPathLinks } from "./chunk-01ymf0ar.js";
 import { CREATED_FRAME_URL_PREFIX, OPENED_FRAME_URL_PREFIX, getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
-import { nze, KWn } from "./chunk-p1dkvpxj.js";
+import { hasAutoEditChainPublishId, isPipelineReplyOriginToolUseId } from "./chunk-p1dkvpxj.js";
 var E = 3,
   I = 1024,
   P = new Set(Object.values(PR_REVIEW_SECURITY_WALL));
@@ -104,7 +104,7 @@ function D(e) {
     .join("|");
 }
 function w(e) {
-  return KWn(e.toolUseId) || nze(e.toolUseId);
+  return isPipelineReplyOriginToolUseId(e.toolUseId) || hasAutoEditChainPublishId(e.toolUseId);
 }
 function withArtifactRejectBreaker(e) {
   let { validationErrorSteer: r, validateInput: t, call: n } = e,
@@ -169,7 +169,7 @@ function collectArtifactStateFromMessages(e, r) {
     for (let c of u.message.content)
       if (c.type === "tool_use") {
         if (c.name === ARTIFACT_TOOL_NAME) t.add(c.id);
-        else if (c.name === Cr) n.add(c.id);
+        else if (c.name === WEB_FETCH_TOOL_NAME) n.add(c.id);
         else if (c.name === READ_TOOL_NAME) a.add(c.id);
       }
   }
@@ -248,7 +248,7 @@ function collectUsedMcpServerNames(e) {
     if (n.type !== "assistant" || !Array.isArray(n.message.content)) continue;
     for (let a of n.message.content) {
       if (a.type !== "tool_use") continue;
-      let s = Js(a.name)?.serverName;
+      let s = parseMcpToolName(a.name)?.serverName;
       if (s !== void 0) r.set(a.id, s);
     }
   }
@@ -323,7 +323,7 @@ function H(e, r, t, n, a, s, l) {
       !getNonOpenedFrameUrlEntries(t).some(([, f]) => uuidSlugFromUrl(f.url) === u)
     ) {
       let f = `${OPENED_FRAME_URL_PREFIX}${u}`,
-        d = (typeof o.title === "string" ? yw(o.title) : null) ?? t[f]?.title;
+        d = (typeof o.title === "string" ? formatArtifactTitle(o.title) : null) ?? t[f]?.title;
       (delete t[f],
         (t[f] = {
           url: canonicalArtifactTargetFor(o.url, o.url),

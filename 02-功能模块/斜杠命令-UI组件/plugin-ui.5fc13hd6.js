@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 273 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Lot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { getRemoteTransport } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { buildSessionContext } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../成本-Token统计/chunk-3nwwgatc.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
@@ -49,13 +49,13 @@ import "../../01-核心基础设施/共享小工具-未细化/mcp-control-handle
 import "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 async function r(t, o, s) {
-  let n = jn() !== null;
+  let n = getRemoteTransport() !== null;
   return e(aWe, {
     onComplete: t,
     args: s,
     commands: o.options.commands,
     cloudSession: n,
-    getSessionContext: () => Lot(o.messages, o.readFileState),
+    getSessionContext: () => buildSessionContext(o.messages, o.readFileState),
     getSkillStatsInputs: () => buildSkillDoctorContext(o),
     getReloadCacheImpactOptions: n
       ? void 0

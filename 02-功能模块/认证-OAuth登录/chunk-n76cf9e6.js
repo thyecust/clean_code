@@ -17,7 +17,7 @@ import { b, z, zR, n } from "../../01-核心基础设施/核心工具-日志与�
 import { withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { EXTERNAL_PERMISSION_MODES, normalizePermissionModeAlias } from "../权限系统/chunk-e4pfvp7x.js";
 import { isDaemonWorkerRegistryEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
@@ -566,7 +566,7 @@ async function D9e(e, t, y) {
           let u = normalizeRemoteControlEntries(p.remoteControl),
             h = u.findIndex((f) => f.dir === e.dir);
           if (h >= 0) {
-            let f = ea(e, (k) => k !== void 0);
+            let f = pickBy(e, (k) => k !== void 0);
             ((u[h] = { ...u[h], ...f }), (d = "updated"));
           } else (u.push(e), (d = "added"));
           p.remoteControl = u;

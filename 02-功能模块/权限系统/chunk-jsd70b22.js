@@ -119,7 +119,7 @@ import {
   Oo,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./chunk-fjrcf22x.js";
-import { FK, bzt, Kk, nme, RD, Wg } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { areUserPermissionRulesAllowed, sanitizePermissionUpdates, applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates, hasRequestedMachine } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Wh, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
@@ -212,13 +212,13 @@ function Uqe(e, r, o, t, s, k, R) {
     },
     persistPermissions(b) {
       if (b.length === 0 || isPluginSteeredAgent(o)) return !1;
-      if ((RD(b, o.storageV5).catch(logError), R !== void 0)) R(Kk(unstripSkillInvocationAllowRules(getToolPermissionContext(o)), b));
+      if ((persistPermissionUpdates(b, o.storageV5).catch(logError), R !== void 0)) R(applyPermissionUpdates(unstripSkillInvocationAllowRules(getToolPermissionContext(o)), b));
       else
-        (o.setSessionToolPermissionContext((p) => Kk(p, b)),
+        (o.setSessionToolPermissionContext((p) => applyPermissionUpdates(p, b)),
           setImmediate(() => {
             toolPermissionContextChangeSignal.emit();
           }));
-      return b.some((p) => nme(p.destination));
+      return b.some((p) => isPersistableSettingsSource(p.destination));
     },
     setModeFromBridge(b) {
       return setPermissionModeWithGuards(b, getToolPermissionContext(o), o.setToolPermissionContext);
@@ -313,7 +313,7 @@ function Uqe(e, r, o, t, s, k, R) {
       };
     },
     handleUserAllow(b, p, F) {
-      let A = bzt(p),
+      let A = sanitizePermissionUpdates(p),
         D =
           o.forRemoteExecution === !0 || isPluginSteeredAgent(o)
             ? []
@@ -347,8 +347,8 @@ function Uqe(e, r, o, t, s, k, R) {
         o.forRemoteExecution === !0
           ? []
           : e.suppressesAllPermissionUpdates?.(r) === !0
-            ? withoutGrantsForRemoteScope(bzt(p))
-            : bzt(p),
+            ? withoutGrantsForRemoteScope(sanitizePermissionUpdates(p))
+            : sanitizePermissionUpdates(p),
       );
       return (
         this.logDecision(
@@ -546,7 +546,7 @@ function Lv(e) {
     isMcp: e.tool.isMcp ?? !1,
     isAskCappedByOrg: e.tool.mcpInfo?.effectiveMaxPermission === "ask",
     showAlwaysAllow:
-      FK() &&
+      areUserPermissionRulesAllowed() &&
       !(
         e.permissionResult.behavior === "ask" &&
         e.permissionResult.suppressAlwaysAllowRule === !0
@@ -1473,7 +1473,7 @@ function Ho(e, r, o) {
 function co(e, r, o) {
   if (e !== FileEditTool && e !== WriteTool) return null;
   if (o.forRemoteExecution === !0) return null;
-  if (Wg(r)) return null;
+  if (hasRequestedMachine(r)) return null;
   let t = o.options.mcpClients;
   if (!hasConnectedIdeClient(t)) return null;
   if (getGlobalConfig().diffTool !== "auto") return null;
@@ -1498,7 +1498,7 @@ function co(e, r, o) {
 }
 function po(e) {
   if (e.permissionResult.localDisplayOnly === !0) return { closeTab: () => {} };
-  if (e.ctx.toolUseContext.forRemoteExecution === !0 || Wg(e.input))
+  if (e.ctx.toolUseContext.forRemoteExecution === !0 || hasRequestedMachine(e.input))
     return { closeTab: () => {} };
   let {
       ctx: r,
@@ -1921,7 +1921,7 @@ async function Bqe(e, r) {
       let T = co(o.tool, D, o.toolUseContext),
         x = Date.now(),
         M,
-        E = o.toolUseContext.forRemoteExecution === !0 || Wg(D),
+        E = o.toolUseContext.forRemoteExecution === !0 || hasRequestedMachine(D),
         V = await wbe({
           ...p,
           input: D,
@@ -1956,7 +1956,7 @@ async function Bqe(e, r) {
                 permissionResult: N,
                 filePath: I,
                 remoteWorkspace:
-                  o.toolUseContext.forRemoteExecution === !0 || Wg(j),
+                  o.toolUseContext.forRemoteExecution === !0 || hasRequestedMachine(j),
               });
             } catch (I) {
               if (
@@ -2002,7 +2002,7 @@ async function Bqe(e, r) {
   if (o.tool === BashTool) {
     let D = s.updatedInput ?? o.input,
       v = typeof D.command === "string" ? D.command : "",
-      T = o.toolUseContext.forRemoteExecution === !0 || Wg(D) ? null : parseSedInPlaceCommand(v);
+      T = o.toolUseContext.forRemoteExecution === !0 || hasRequestedMachine(D) ? null : parseSedInPlaceCommand(v);
     if (T !== null) {
       let M = await xe({
         ...p,

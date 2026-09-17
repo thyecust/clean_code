@@ -14,7 +14,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
-import { Eu, findGitRootRecheckingNegative, gitExe, getGitDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getGitRepoCache, findGitRootRecheckingNegative, gitExe, getGitDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { lstat, open as w } from "fs/promises";
 import { join as c, resolve } from "path";
 var d = 1e4;
@@ -47,7 +47,7 @@ async function collectWorktreeState(e, t, r = d) {
 }
 async function O(e, t) {
   let r = await getGitDir(e);
-  if (!r) (Eu().gitDirByCwd.delete(resolve(e)), (r = await getGitDir(e)));
+  if (!r) (getGitRepoCache().gitDirByCwd.delete(resolve(e)), (r = await getGitDir(e)));
   if (!r)
     throw Error("getGitDir returned null \u2014 cannot verify worktree state");
   let [i, o, u, s, g, _] = await Promise.all([

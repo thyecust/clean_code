@@ -15,7 +15,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { normalizePathSegment } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { The, txt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { createConcurrencyLimiter, isSignalAborted, readExactBytes, readSeedFile, GIT_OBJECT_ID_REGEX, isNonZeroObjectId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { compareByPath } from "../文件同步-Sync/sync-journal.js";
@@ -23,7 +23,7 @@ import { computeGitBlobId, isMtimeSettled } from "../../01-核心基础设施/�
 import { iOe, wze, $an, Tze, Uan } from "../文件同步-Sync/chunk-eg4wmaq4.js";
 import { sanitizePathSegment } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
 import { createHoverRestOptions } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, se, v, c, uW, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -1505,7 +1505,7 @@ function Qe(e, t) {
 async function ct(e) {
   while (e.paths[0] !== void 0)
     try {
-      let t = await ie(e.paths[0], Ha());
+      let t = await ie(e.paths[0], getSafeReadOpenFlags());
       if (oe(await t.stat({ bigint: !0 })) !== e.inode)
         return (
           await t.close().catch(() => {
@@ -1565,7 +1565,7 @@ async function An(e, t) {
   if (r === void 0) return !1;
   let a = ee(t, e.name);
   try {
-    let o = await ie(r, Ha());
+    let o = await ie(r, getSafeReadOpenFlags());
     try {
       if (oe(await o.stat({ bigint: !0 })) !== e.inode) return !1;
       await an(r, a);
@@ -1604,7 +1604,7 @@ function oe(e) {
 }
 async function Dn(e) {
   try {
-    let t = await ie(e, Ha());
+    let t = await ie(e, getSafeReadOpenFlags());
     try {
       await t.sync();
     } finally {
@@ -1722,7 +1722,7 @@ async function Bpt(e, { maxEntries: t = mt } = {}) {
 }
 async function Wn(e) {
   try {
-    let t = await zn(e, Ha());
+    let t = await zn(e, getSafeReadOpenFlags());
     try {
       let r = await t.stat();
       if (!r.isFile() || r.size > pt) return [];
@@ -2348,7 +2348,7 @@ async function Gpt(e, t) {
   return br(getProjectDir(await canonicalizePath(e, createHoverRestOptions(t))));
 }
 function br(e) {
-  return Pe(e, The, txt);
+  return Pe(e, CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME);
 }
 function V9n(e, t) {
   return Pe(e, sanitizePathSegment(toInfraSessionId(t)));

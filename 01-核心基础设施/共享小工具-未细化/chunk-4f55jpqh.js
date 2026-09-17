@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
-import { E0 } from "../设置-配置/设置-配置.aqbb35ee.js";
+import { stripAnsiControlCharacters } from "../设置-配置/设置-配置.aqbb35ee.js";
 function printCliError(r) {
   console.error(chalk.red(r));
 }
@@ -35,7 +35,7 @@ async function writeStdoutAndDrain(r) {
 }
 function cliWarn(r) {
   process.stderr.write(
-    chalk.yellow(E0(r)) +
+    chalk.yellow(stripAnsiControlCharacters(r)) +
       `
 `,
   );

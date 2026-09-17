@@ -32,7 +32,7 @@ import {
   getStoredOauthAccountInfo,
   getFeatureValue_CACHED_MAY_BE_STALE,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { bke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { hashCanonicalJson } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getAPIProvider, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { NRe } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
@@ -210,7 +210,7 @@ function V() {
   }
 }
 function Re(e) {
-  return bke(serverBodyOf(e));
+  return hashCanonicalJson(serverBodyOf(e));
 }
 function qJe() {
   return isPolicyLimitsEligible() && loadCachedResponse() === null;

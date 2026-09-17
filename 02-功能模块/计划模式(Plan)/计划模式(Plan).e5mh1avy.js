@@ -18,7 +18,7 @@ import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -156,7 +156,7 @@ class X {
       this.planFileCache === null ||
       this.planFileWatches.has(e) ||
       !g() ||
-      kd(p(y(e))) !== void 0
+      validateStorageKey(p(y(e))) !== void 0
     )
       return;
     let s = {
@@ -654,7 +654,7 @@ async function persistPlanEdit(t, e, i) {
     await m(i);
     let r = basename(t, ".md"),
       s =
-        i !== void 0 && g() && dirname(t) === getPlansDirectory() && kd(p(r)) === void 0
+        i !== void 0 && g() && dirname(t) === getPlansDirectory() && validateStorageKey(p(r)) === void 0
           ? p(r)
           : void 0;
     if (i !== void 0 && s !== void 0) {

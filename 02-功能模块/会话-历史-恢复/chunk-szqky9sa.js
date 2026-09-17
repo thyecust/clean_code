@@ -18,7 +18,7 @@ import { logDirectories, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTempFileFor, writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
 import { isTempFileName, isValidPathSegment, getNormalizedNames, STORAGE_KEYS, createBridgeSpawnKey } from "../Teammates团队/storage-keys.js";
-import { Nr, H8t, t2e } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isSettingsSourceEnabled, PARENT_MANAGED_SETTINGS_LABEL, CLEANUP_PERIOD_SETTING_KEYS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
   isTempScratchName,
   LOCKFILE_ACQUIRE_OPTIONS,
@@ -45,23 +45,23 @@ import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台�
 import { MASKED_IDS_FILE_NAME, getModelCatalogCacheDir, getFeatureValue_CACHED_MAY_BE_STALE, getMemoryBaseDir, getAutoMemPath } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { LITE_READ_BUF_SIZE, extractFieldFromFirstEntryStrict, extractFieldFromLastEntryStrict, readHeadAndTail, anchorOffsetTail } from "./chunk-mkmy4cx2.js";
-import { The, lcr, txt, xIn, ccr, Ehe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { CLOUD_SNAPSHOTS_DIR_NAME, ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME, parseRecordingStampFromFileName, isValidSessionName, TOOL_RESULTS_DIR_NAME } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { isDesktopHostEntrypointValue } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getSettingsForSource, getSettings_DEPRECATED, anyAdminPolicyTierGovernsRetention, getPolicySettingsLoadErrors, getSecuritySensitiveSetting, rawSettingsKeyPresence } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isTainted } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
 import {
-  IN,
-  PN,
-  Foe,
-  LK,
-  GYe,
-  Itr,
-  Ptr,
-  Xj,
-  UFe,
-  Otr,
+  MANIFEST_FILE_NAME,
+  STAGING_DIR_NAME,
+  isSkillBucketId,
+  SYNCED_SKILLS_DIR_PATH,
+  SKILLS_TRASH_DIR_PATH,
+  SKILLS_STAGING_DIR_PATH,
+  SYNCED_SKILLS_STAGING_DIR_PATH,
+  SYNCED_PLUGINS_DIR_PATH,
+  PLUGINS_TRASH_DIR_PATH,
+  SYNCED_PLUGINS_STAGING_DIR_PATH,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { emitRetentionSweepEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
@@ -111,7 +111,7 @@ var q = 30,
   ];
 function ue(e) {
   let t = getNormalizedNames(e);
-  return isValidPathSegment(e) && t.length === 1 && t[0] === e.toLowerCase() && ccr(e);
+  return isValidPathSegment(e) && t.length === 1 && t[0] === e.toLowerCase() && isValidSessionName(e);
 }
 function ve(e) {
   return (
@@ -121,7 +121,7 @@ function ve(e) {
   );
 }
 async function Ept(e) {
-  if (!Nr("userSettings") && getSettings_DEPRECATED()?.cleanupPeriodDays === void 0)
+  if (!isSettingsSourceEnabled("userSettings") && getSettings_DEPRECATED()?.cleanupPeriodDays === void 0)
     return (
       n(
         "Skipping retention cleanup: userSettings source is disabled (--setting-sources) and no enabled source provides cleanupPeriodDays.",
@@ -133,7 +133,7 @@ async function Ept(e) {
     getSettingsWithMcpErrors().errors.filter((r) => !r.mcpErrorMetadata && r.severity !== "warning")
       .length > 0
   )
-    for (let r of t2e) {
+    for (let r of CLEANUP_PERIOD_SETTING_KEYS) {
       let a = await rawSettingsKeyPresence(
         r,
         e,
@@ -201,8 +201,8 @@ function Ae() {
   if (anyAdminPolicyTierGovernsRetention()) return !0;
   return getPolicySettingsLoadErrors().some(
     (e) =>
-      e.file !== H8t &&
-      (t2e.some((t) => t === e.path) || e.severity !== "warning"),
+      e.file !== PARENT_MANAGED_SETTINGS_LABEL &&
+      (CLEANUP_PERIOD_SETTING_KEYS.some((t) => t === e.path) || e.severity !== "warning"),
   );
 }
 function v9n() {
@@ -301,7 +301,7 @@ async function O(e, t) {
     await t.rmdir(e);
   } catch {}
 }
-var re = [lcr, txt];
+var re = [ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME];
 async function Me(e, t, r, a) {
   try {
     for (let p of re) await he(d(e, p), t, r, a);
@@ -602,7 +602,7 @@ async function Be() {
             }
           continue;
         }
-        if (k.name === The) {
+        if (k.name === CLOUD_SNAPSHOTS_DIR_NAME) {
           await Me(I, e, a, t);
           continue;
         }
@@ -611,7 +611,7 @@ async function Be() {
           if (C !== null && C.mtime < e) await O(I, a);
           continue;
         }
-        let N = d(I, Ehe);
+        let N = d(I, TOOL_RESULTS_DIR_NAME);
         if (await G(N, a)) {
           let C = await a.readdir(N).catch(() => []);
           for (let U of C)
@@ -643,7 +643,7 @@ async function Be() {
         }
         let Y = await a.readdir(I).catch(() => []);
         for (let C of Y) {
-          if (!C.isFile() || !(ve(C.name) || xIn(C.name) !== void 0)) continue;
+          if (!C.isFile() || !(ve(C.name) || parseRecordingStampFromFileName(C.name) !== void 0)) continue;
           if (C.name === "custom-title.json" && B.has(k.name)) continue;
           try {
             if (await x(d(I, C.name), e, a, t)) t.messages++;
@@ -1071,10 +1071,10 @@ function nt() {
 async function st(e) {
   return F(
     F(
-      await j(Itr, { refuseRedirectedRoot: !0, storageV5: e }),
-      await j(Ptr, { refuseRedirectedRoot: !0, storageV5: e }),
+      await j(SKILLS_STAGING_DIR_PATH, { refuseRedirectedRoot: !0, storageV5: e }),
+      await j(SYNCED_SKILLS_STAGING_DIR_PATH, { refuseRedirectedRoot: !0, storageV5: e }),
     ),
-    await ge(LK, e),
+    await ge(SYNCED_SKILLS_DIR_PATH, e),
   );
 }
 async function ge(e, t) {
@@ -1098,11 +1098,11 @@ async function ge(e, t) {
     return r;
   }
   for (let y of w) {
-    if (!y.isDirectory() || !Foe(y.name)) continue;
+    if (!y.isDirectory() || !isSkillBucketId(y.name)) continue;
     r = F(
       r,
-      await j(d(e, "*", PN), {
-        baseDir: d(o, y.name, PN),
+      await j(d(e, "*", STAGING_DIR_NAME), {
+        baseDir: d(o, y.name, STAGING_DIR_NAME),
         refuseRedirectedRoot: !0,
         storageV5: t,
       }),
@@ -1111,7 +1111,7 @@ async function ge(e, t) {
   return r;
 }
 function it(e) {
-  return j(GYe, { refuseRedirectedRoot: !0, storageV5: e });
+  return j(SKILLS_TRASH_DIR_PATH, { refuseRedirectedRoot: !0, storageV5: e });
 }
 async function Se(e, t, r, a) {
   let o = E(),
@@ -1140,7 +1140,7 @@ async function Se(e, t, r, a) {
   for (let P of R) {
     if (
       !P.isDirectory() ||
-      !Foe(P.name) ||
+      !isSkillBucketId(P.name) ||
       P.name === w ||
       !(await hasSyncMarker(p, P.name))
     )
@@ -1148,7 +1148,7 @@ async function Se(e, t, r, a) {
     let b = d(p, P.name),
       _;
     try {
-      _ = (await D.lstat(d(b, IN)).catch(() => D.lstat(b))).mtime;
+      _ = (await D.lstat(d(b, MANIFEST_FILE_NAME)).catch(() => D.lstat(b))).mtime;
     } catch {
       continue;
     }
@@ -1172,18 +1172,18 @@ async function Se(e, t, r, a) {
   return o;
 }
 function at(e) {
-  return Se(Xj, UFe, "plugins_sync_trash_move_failed", e);
+  return Se(SYNCED_PLUGINS_DIR_PATH, PLUGINS_TRASH_DIR_PATH, "plugins_sync_trash_move_failed", e);
 }
 function ot(e) {
-  return Se(LK, GYe, "skills_sync_trash_move_failed", e);
+  return Se(SYNCED_SKILLS_DIR_PATH, SKILLS_TRASH_DIR_PATH, "skills_sync_trash_move_failed", e);
 }
 function ct(e) {
-  return j(UFe, { refuseRedirectedRoot: !0, storageV5: e });
+  return j(PLUGINS_TRASH_DIR_PATH, { refuseRedirectedRoot: !0, storageV5: e });
 }
 async function lt(e) {
   return F(
-    await j(Otr, { refuseRedirectedRoot: !0, storageV5: e }),
-    await ge(Xj, e),
+    await j(SYNCED_PLUGINS_STAGING_DIR_PATH, { refuseRedirectedRoot: !0, storageV5: e }),
+    await ge(SYNCED_PLUGINS_DIR_PATH, e),
   );
 }
 async function ut() {

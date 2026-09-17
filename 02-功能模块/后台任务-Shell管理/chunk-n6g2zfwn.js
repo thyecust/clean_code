@@ -46,7 +46,7 @@ import { GIT_HARDENED_ARGS } from "../Git-Worktree/git-exec-hardening.js";
 import { findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
-import { Om, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isLocalMarketplaceSource, CLAUDE_AI_MARKETPLACE_NAME_PREFIX } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isDesktopHostSession, isVsCodeExtensionSession, isClaudecodeEnv } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
@@ -58,7 +58,7 @@ import { Vo, ARTIFACT_TOOL_NAME, ARTIFACT_SLUG_RE, parseArtifactUrl, artifactVie
 import { provenSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { getSessionAnnouncementState } from "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import { BG, Sl, xEt, $t } from "../插件系统/chunk-7s6mt1vg.js";
-import { Td, rtr, otr, HFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags, getMemoryTagStats, collectMemoryCitationMetrics, stripMemoryTagsFromContentBlocks } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   getCommandName,
   dropShadowedSyncedSkills,
@@ -142,10 +142,10 @@ import { getSdkHostedBridgeHandle, getReplBridgeHandle } from "../权限系统/c
 import { syncLiveInFlightSnapshot } from "./chunk-7wsy8vxb.js";
 import { getCronJitterConfig } from "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
 import { mpt, sze, gpt, _pt } from "../Artifact发布-渲染/chunk-5gz5xvw9.js";
-import { nT, Hbe, ppt, oan, XWn, JWn, Zu } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
+import { isArtifactCommentsAvailable, resolveLiveSessionHolder, buildHolderDescriptor, describeHolderWithOthers, getHolderTelemetryFields, stripGoneJobHolderFields, isArtifactAutoReactEnabled } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { onArmSettled, slugRepliesWiredHere, maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 import { relinkAdoptedAgentSymlinks } from "./chunk-c7mzes79.js";
-import { Iot, nHe } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { collectMinimalAmbientContext, buildSystemInitMessage } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { isVerifiedSlackHumanTurn } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { r4 } from "../插件系统/chunk-q8w2zntw.js";
 import { summarizeBackgroundTasks } from "./background-task-inventory.js";
@@ -185,7 +185,7 @@ function Dt() {
 function Ut(e) {
   return e.requiresModel === void 0 || isModelAllowed(e.requiresModel);
 }
-function W_e(e) {
+function pickStartupAnnouncement(e) {
   let t = getSessionAnnouncementState();
   if (t.startupAnnouncementPick !== void 0) return t.startupAnnouncementPick;
   let o = getGlobalConfig().announcementImpressions ?? {},
@@ -195,7 +195,7 @@ function W_e(e) {
   if (e && r !== void 0) t.startupAnnouncementPick = r;
   return r;
 }
-function nFn() {
+function serializeStartupAnnouncement() {
   let e = Dt()
     .filter(Ut)
     .sort((t, o) => o.priority - t.priority)[0];
@@ -207,7 +207,7 @@ function nFn() {
     footer: e.footer,
   });
 }
-function E6e(e, t, o) {
+function mergeSyncedSkillsWithCommands(e, t, o) {
   let r = dropShadowedSyncedSkills(e, [...t, ...o]);
   if (t.length === 0) return r;
   let s = new Set(r.map((p) => p.name)),
@@ -247,7 +247,7 @@ async function jt({ loaded: e, surface: t, interactive: o }) {
     n(`session.start: failed: ${l(s)}`, { level: "error" });
   }
 }
-function XJt(e) {
+function raiseSessionStartOnce(e) {
   let t = sessionStartPromise.get();
   if (t !== void 0) return t;
   let o = jt(e);
@@ -256,7 +256,7 @@ function XJt(e) {
 import { open as zt } from "fs/promises";
 var qn = 8388608,
   Yn = '"artifact-comment-monitor"';
-async function lFn(e) {
+async function getTranscriptFileInfo(e) {
   let t = getTranscriptPathForSession(e),
     o = await Xn(t);
   return o === void 0 ? void 0 : { path: t, size: o };
@@ -385,7 +385,7 @@ function lt(
   }
 }
 function qt(e) {
-  return e !== void 0 ? oan(e) : "another session on this machine";
+  return e !== void 0 ? describeHolderWithOthers(e) : "another session on this machine";
 }
 function Yt(e, t, o) {
   let r = e?.others ?? 0,
@@ -435,17 +435,17 @@ function dt(e, t = "unprovable") {
     ? `${Re(e)}: this session can watch at most ${$h} Artifacts at once. Ask Claude to stop watching one, then publish one of these again, to turn its replies back on.`
     : `${Re(e)}. Ask Claude to watch one of these, or publish it again, to turn its replies back on.`;
 }
-function sFn(e) {
+function formatConversationSwitchNotice(e) {
   return `${Re(e)} \u2014 switching conversations inside a session doesn't bring comment monitors back. Publish the Artifact again, or ask Claude to watch it, to turn its replies back on.`;
 }
-function iFn(e) {
+function formatIncompleteWatchStateNotice(e) {
   return `${Re(e)}: this conversation's saved watch state was incomplete. Ask Claude to watch one of these; replies come back with the next publish after that.`;
 }
-function YJt(e, t, o = "repl") {
+function formatHeldByLiveSessionNotice(e, t, o = "repl") {
   let r = t?.others ?? 0,
     s =
       t !== void 0
-        ? `it is also open in ${oan(t)}`
+        ? `it is also open in ${describeHolderWithOthers(t)}`
         : "another live session of it is running",
     d =
       r > 0
@@ -463,7 +463,7 @@ function YJt(e, t, o = "repl") {
 function Jt(e, t) {
   return en(e, t) ?? (t === "unknown" ? "holder_unknown" : "unavailable");
 }
-function Q0t(e, t) {
+function logArtifactLiveSubscribeSad(e, t) {
   let o =
     e === "held_by_live_session"
       ? "resume_held_live"
@@ -482,7 +482,7 @@ function Q0t(e, t) {
     job_holder: fromEnum(t.jobHolder),
     ...(t.surface !== void 0 && { surface: t.surface }),
     holder_count: t.liveHolder !== void 0 ? 1 + t.otherHolders : 0,
-    ...(t.liveHolder !== void 0 && XWn(t.liveHolder, t.now)),
+    ...(t.liveHolder !== void 0 && getHolderTelemetryFields(t.liveHolder, t.now)),
   });
 }
 function en(e, t) {
@@ -490,9 +490,9 @@ function en(e, t) {
   return e === "bg" ? "held_by_job" : null;
 }
 function tn(e, t, o, r = "repl") {
-  return t === "live" ? YJt(e, o, r) : dt(e);
+  return t === "live" ? formatHeldByLiveSessionNotice(e, o, r) : dt(e);
 }
-function aFn(e, t) {
+function getArmedSlugsNotMatching(e, t) {
   return He(e, {}).filter((o) => !t(o));
 }
 function at(e) {
@@ -743,7 +743,7 @@ function sn(e) {
     }).catch(() => {});
   O(!0);
 }
-function JJt(e, t, o) {
+function runArtifactLiveRearmPrelude(e, t, o) {
   try {
     Zn(e, t, o);
   } catch (r) {
@@ -765,7 +765,7 @@ function Zn(e, t, o) {
     T = !1,
     k,
     C = "not_attempted",
-    L = (V) => (w !== void 0 ? ppt(w, v.length, V) : void 0),
+    L = (V) => (w !== void 0 ? buildHolderDescriptor(w, v.length, V) : void 0),
     B = 0,
     J = new Set(),
     Z = new Set(),
@@ -786,7 +786,7 @@ function Zn(e, t, o) {
       )
         return;
       ((O = !0),
-        Q0t(V, {
+        logArtifactLiveSubscribeSad(V, {
           path: D,
           probed: E,
           liveHolder: w,
@@ -931,7 +931,7 @@ function Zn(e, t, o) {
       if (D && ue !== void 0 && J.size > 0 && t.jobHolderVerdicts !== void 0)
         try {
           ((F = await t.jobHolderVerdicts(ue, d, Date.now())),
-            (ue = JWn(ue, F)),
+            (ue = stripGoneJobHolderFields(ue, F)),
             Mt());
           let P = countMatching([...F.values()], (N) => N === "gone");
           if (P > 0)
@@ -947,7 +947,7 @@ function Zn(e, t, o) {
         Nn = ke.length > 0,
         Rt = ke.some((P) => P.holder !== "bg"),
         It = async () =>
-          Hbe({
+          resolveLiveSessionHolder({
             records: await (
               o?.listSessionRecords ??
               (await import("../跨会话消息(UDS)/chunk-ddtmwhn7.js")).listRegisteredSessionRecords
@@ -1003,7 +1003,7 @@ function Zn(e, t, o) {
                         : 0),
                   ),
                 ),
-        Je = o?.isAutoReactEnabled ?? Zu;
+        Je = o?.isAutoReactEnabled ?? isArtifactAutoReactEnabled;
       if (
         I === "live" &&
         w !== void 0 &&
@@ -1254,7 +1254,7 @@ function Zn(e, t, o) {
       });
     });
 }
-function cFn(e) {
+function rearmArtifactLiveInHeadlessHost(e) {
   {
     let { hostInitialized: t, getAppState: o, deps: r } = e,
       s;
@@ -1318,7 +1318,7 @@ function cFn(e) {
           baseline: w,
         });
       };
-    JJt(
+    runArtifactLiveRearmPrelude(
       { initialMessages: e.initialMessages, storageV5: e.storageV5 },
       {
         publishContext: s,
@@ -1333,7 +1333,7 @@ function cFn(e) {
         },
         readFrameState: p,
         getKnownVer: (w) => mainObservedArtifactVersion(o(), w),
-        commentsGateOpen: r?.commentsGateOpen ?? nT,
+        commentsGateOpen: r?.commentsGateOpen ?? isArtifactCommentsAvailable,
         mayRequestTakeover: () => !1,
         rereadRecords: r?.rereadRecords ?? E,
       },
@@ -1394,7 +1394,7 @@ function to(e, t) {
 function an(e) {
   return getCommandQueueSnapshot().some((t) => typeof t.value === "string" && t.value.includes(e));
 }
-async function _He(e, t, o, r, s) {
+async function restoreTaskRegistryFromTranscript(e, t, o, r, s) {
   if (isHoverRestEnabled() && s !== void 0) await relinkAdoptedAgentSymlinks({ storageV5: s });
   let d = parseForkSourceKey(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     c = e;
@@ -1712,14 +1712,14 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
     ),
       r(I));
 }
-function pFn(e) {
+function notifyOrphanedAgentAutoResumed(e) {
   xe(
     e,
     void 0,
     `Background agent "${Nt(e.description)}" had no completion record after the previous Claude Code process exited, and was automatically restarted from its saved transcript. It is running in the background again; its result will arrive as a separate task notification.`,
   );
 }
-function fFn(e, t) {
+function notifyOrphanedAgentAlreadyCompleted(e, t) {
   let o = t.get(e.agentId),
     r =
       e.isWebFetchLaunch ||
@@ -1730,7 +1730,7 @@ function fFn(e, t) {
     `Background agent "${Nt(e.description)}" had already completed before the previous Claude Code process exited \u2014 only its completion notification was lost, so it was not restarted and no further task notification will arrive. ${r ? "Send it a message with SendMessage to get its report." : "Read its output file (and check its worktree, if any) for the result."}`,
   );
 }
-function mFn(e, t) {
+function notifyOrphanedAgentResumeFailed(e, t) {
   xe(
     e,
     "stopped",
@@ -1939,7 +1939,7 @@ function ft(e) {
 function pt(e) {
   return e.isWebFetchLaunch ? void 0 : e.outputFile;
 }
-function yHe(e, t, o) {
+function waitForStoreCondition(e, t, o) {
   let r = () => {
     try {
       return t(e.getState());
@@ -1957,7 +1957,7 @@ function yHe(e, t, o) {
       });
   });
 }
-function A6e(e, t) {
+function collectPendingAgentNotifications(e, t) {
   if (!t || e.length === 0) return [];
   let o = new Map(),
     r = new Map();
@@ -1982,7 +1982,7 @@ function A6e(e, t) {
     consumedCommands: d,
   }));
 }
-function dst(e) {
+function isDisplayableAssistantMessage(e) {
   return (
     e.type === "assistant" &&
     e.message.model !== fc &&
@@ -1990,13 +1990,13 @@ function dst(e) {
     e.isVirtual !== !0
   );
 }
-function pst(e, t) {
+function messageSupersedes(e, t) {
   let o = e.supersedesUuids;
   if (o === void 0 || o.length === 0) return !1;
   if (o.includes(t.uuid)) return !0;
   return normalizeMessageBlocks([t]).some((r) => o.includes(r.uuid));
 }
-function eQt(e) {
+function createTurnEventTail(e) {
   let t = Promise.resolve(),
     o = 0,
     r = 0,
@@ -2037,8 +2037,8 @@ function eQt(e) {
     },
   };
 }
-var C6e = {};
-defineExportGetters(C6e, { createTurnEventTail: () => eQt, default: () => C6e });
+var turnEventTailModule = {};
+defineExportGetters(turnEventTailModule, { createTurnEventTail: () => createTurnEventTail, default: () => turnEventTailModule });
 var Fe = (e, t) => ({
   turnId: e,
   messageId: null,
@@ -2065,7 +2065,7 @@ function yt(e) {
       (e.toolUses.length > 0 ? "tool_use" : "end_turn"),
   };
 }
-function tQt(e) {
+function createTurnStep(e) {
   let t = Fe("", 0);
   function o() {
     if (t.messageId === null) return;
@@ -2092,10 +2092,10 @@ function tQt(e) {
     },
   };
 }
-var v6e = {};
-defineExportGetters(v6e, {
-  createTurnStep: () => tQt,
-  default: () => v6e,
+var turnStepModule = {};
+defineExportGetters(turnStepModule, {
+  createTurnStep: () => createTurnStep,
+  default: () => turnStepModule,
   emptyStep: () => Fe,
   turnStepInputOf: () => yt,
 });
@@ -2126,7 +2126,7 @@ function Ao(e) {
     }),
   };
 }
-function bHe(e) {
+function buildRateLimitEventMessage(e) {
   let t = e.rateLimitGraceActive === !0 ? getActiveLimitGrace() : null;
   return createRateLimitEventMessage(
     {
@@ -2141,7 +2141,7 @@ function bHe(e) {
   );
 }
 var vo = 30000;
-function yFn({ minimumIntervalMs: e = vo, now: t = Date.now } = {}) {
+function createRateLimitReemitThrottle({ minimumIntervalMs: e = vo, now: t = Date.now } = {}) {
   let o = new Map();
   return function (s) {
     if (getAPIProvider() === "gateway") return !1;
@@ -2167,11 +2167,11 @@ function un(e, t) {
     { rate_limit_info: t }
   );
 }
-function tIt(e, t) {
+function buildRateLimitMirrorMetadata(e, t) {
   if (!isBridgeRateLimitEventEnabled()) return;
   return un(e, toRateLimitMirrorInfo(t.rate_limit_info));
 }
-function R6e(e, t) {
+function forwardRateLimitEventToBridge(e, t) {
   if (!isBridgeRateLimitEventEnabled()) return !1;
   try {
     e.writeSdkMessages([t]);
@@ -2184,7 +2184,7 @@ function R6e(e, t) {
     );
   }
   try {
-    let o = tIt(e, t);
+    let o = buildRateLimitMirrorMetadata(e, t);
     if (o) e.reportMetadata(o);
   } catch (o) {
     n(`[bridge] rate_limit_info metadata mirror failed: ${l(o)}`, {
@@ -2193,7 +2193,7 @@ function R6e(e, t) {
   }
   return !0;
 }
-function hst() {
+function handleBridgeTransportRebuilt() {
   if (!isBridgeRateLimitEventEnabled() || !haveLimitsBeenObserved()) return;
   let e = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
   if (!e) return;
@@ -2203,8 +2203,8 @@ function hst() {
     cn(e);
     return;
   }
-  let o = bHe(t),
-    r = o && tIt(e, o);
+  let o = buildRateLimitEventMessage(t),
+    r = o && buildRateLimitMirrorMetadata(e, o);
   if (r) e.reportMetadata(r);
 }
 function cn(e) {
@@ -2212,17 +2212,17 @@ function cn(e) {
   let t = un(e, null);
   if (t) e.reportMetadata(t);
 }
-function q_e(e) {
+function forwardCurrentRateLimitsToBridge(e) {
   if (!haveLimitsBeenObserved()) return;
   let t = getCurrentLimits();
   if (bt(t)) {
     cn(e);
     return;
   }
-  let o = bHe(t);
-  if (o && R6e(e, o)) logFeatureOk("bridge_rate_limit_forward");
+  let o = buildRateLimitEventMessage(t);
+  if (o && forwardRateLimitEventToBridge(e, o)) logFeatureOk("bridge_rate_limit_forward");
 }
-function _st({
+function buildSdkInitMessage({
   model: e,
   permissionMode: t,
   commands: o,
@@ -2232,8 +2232,8 @@ function _st({
   fastMode: c,
   effortValue: p,
 }) {
-  return nHe({
-    ...Iot(),
+  return buildSystemInitMessage({
+    ...collectMinimalAmbientContext(),
     tools: [],
     mcpClients: [],
     model: e,
@@ -2250,13 +2250,13 @@ function _st({
     effort: getEffectiveEffortLevel(e, p),
   });
 }
-function k6e(e) {
+function isSlashCommandInput(e) {
   if (typeof e === "string") return e.trim().startsWith("/");
   for (let t of e) if (t.type === "text") return t.text.trim().startsWith("/");
   return !1;
 }
-function x6e(e, t, o) {
-  if (k6e(t)) return "later";
+function resolveCommandPriority(e, t, o) {
+  if (isSlashCommandInput(t)) return "later";
   if (e === "now") return "now";
   if (o) return "later";
   if (e !== void 0) return e;
@@ -2265,29 +2265,29 @@ function x6e(e, t, o) {
 function mn(e) {
   return e.verifiedSlackHumanTurn === !0 && e.priority === "later";
 }
-function H6e(e) {
+function hasPendingDeferredSlackTurn(e) {
   return e.peek(mn) !== void 0 || e.someInFlightDrainCommand(mn);
 }
-function I6e(e) {
+function hasPendingVerifiedSlackTurn(e) {
   return e.peek(isVerifiedSlackHumanTurn) !== void 0 || e.someInFlightDrainCommand(isVerifiedSlackHumanTurn);
 }
-function rQt(e, t) {
+function peekCommandPreferringSlackTurn(e, t) {
   let o = e.peek(t);
   if (!o || o.priority === "now") return o;
   return e.peek((r) => t(r) && isVerifiedSlackHumanTurn(r)) ?? o;
 }
-function SFn(e, t) {
-  let o = rQt(e, t);
+function dequeueCommandPreferringSlackTurn(e, t) {
+  let o = peekCommandPreferringSlackTurn(e, t);
   if (o === void 0) return;
   return e.dequeue((r) => r === o);
 }
-function yst(e) {
+function getBridgeInitializeCommands(e) {
   if (!getFeatureValue_CACHED_MAY_BE_STALE("tengu_bridge_initialize_commands", !1)) return [];
   if (Rg()) return [];
   let t = toBridgeSlashCommands(e);
   return (logFeatureOk("bridge_initialize_commands"), t);
 }
-function Sst(e, t, o, r) {
+function recordDeclaredDialogKinds(e, t, o, r) {
   let s = e.size;
   for (let d of t) {
     if (e.size >= uCn) break;
@@ -2336,10 +2336,10 @@ function Ct(e, t) {
       : " Run /model to see available models.";
   return `Model "${e}" is not a recognized model id.${o}`;
 }
-function oQt(e) {
+function parseAllowedUserModel(e) {
   return e !== void 0 && (isExemptDefaultResolvingPick(e) || isModelAllowed(e)) ? parseUserSpecifiedModel(e) : void 0;
 }
-function bFn({ messages: e, queriedInProcess: t, activeModel: o }) {
+function getConversationModel({ messages: e, queriedInProcess: t, activeModel: o }) {
   if (t && e.some((r) => s5(r) || pn(r) !== void 0)) return o;
   for (let r = e.length - 1; r >= 0; r--) {
     let s = e[r];
@@ -2358,7 +2358,7 @@ function bFn({ messages: e, queriedInProcess: t, activeModel: o }) {
   }
   return;
 }
-function sQt({ appliedModel: e, previousModel: t, conversationModel: o }) {
+function shouldInjectModelSwitchMessages({ appliedModel: e, previousModel: t, conversationModel: o }) {
   if (o === void 0) return !1;
   let r = parseUserSpecifiedModel(e),
     s = At(r);
@@ -2375,7 +2375,7 @@ function hn(e) {
   let o = stepDownRestrictedFamilyAliasPick(e);
   return o === null ? { kind: "blocked" } : { kind: "steppedDown", model: o };
 }
-function bst(e, t) {
+function rejectUnrecognizedModel(e, t) {
   let o = St(e);
   if (o.recognized) return;
   return (
@@ -2388,7 +2388,7 @@ function bst(e, t) {
     { ok: !1, error: Ct(sanitizeDisplayName(e), o.suggestion) }
   );
 }
-async function wFn(e, t) {
+async function handleSetModelRequest(e, t) {
   let o = e.model;
   if (o != null && typeof o !== "string") {
     if ((logFeatureBad("model_switch", "invalid_model_type"), e.system_prompt !== void 0))
@@ -2426,7 +2426,7 @@ async function wFn(e, t) {
         logFeatureBad("system_prompt_switch", "model_switch_rejected");
       return { ok: !1, error: Ct(sanitizeDisplayName(s), d.suggestion) };
     case "blocked": {
-      let C = oQt(t.getActiveModel());
+      let C = parseAllowedUserModel(t.getActiveModel());
       if (
         (t.noticeRestrictedModel(s, C),
         logFeatureBad("model_switch", "not_allowed"),
@@ -2467,7 +2467,7 @@ async function wFn(e, t) {
     (recordModelSwitchIfChanged(t.session, _(), I, "sdk"),
     t.applyModel(c),
     (getMainLoopModel() !== w || parseUserSpecifiedModel(c) !== parseUserSpecifiedModel(v ?? w)) &&
-      sQt({ appliedModel: c, previousModel: v ?? w, conversationModel: T }))
+      shouldInjectModelSwitchMessages({ appliedModel: c, previousModel: v ?? w, conversationModel: T }))
   )
     t.injectModelSwitchBreadcrumbs(s, c);
   if ((t.recordAllowedModelApplied(), p !== null))
@@ -2503,7 +2503,7 @@ function xo(e) {
       return;
   }
 }
-function wst(e, t, o = Date.now()) {
+function consumeRecentTimestamp(e, t, o = Date.now()) {
   let r = e.get(t);
   return (e.delete(t), r !== void 0 && o - r <= 120000);
 }
@@ -2530,13 +2530,13 @@ class bn {
   }
 }
 var Sc = new j(() => new bn());
-function hHe(e) {
+function getTranscriptWatermark(e) {
   return {
     messageCount: countMatching(e, (t) => t.type !== "progress"),
     lastMessageUuid: e.findLast((t) => t.type !== "progress")?.uuid,
   };
 }
-class G_e {
+class SandboxClassifierVerdictCache {
   verdicts = new Map();
   getOrClassify(e, t, o, r) {
     let s = `${e}:${t ?? "*"}`,
@@ -2573,7 +2573,7 @@ class G_e {
   }
 }
 import { isAbsolute, resolve } from "path";
-function KJt(e, t, o) {
+function diffDeclaredMarketplaces(e, t, o) {
   let r = [],
     s = [],
     d = [];
@@ -2588,7 +2588,7 @@ function KJt(e, t, o) {
   }
   return { missing: r, sourceChanged: s, upToDate: d };
 }
-async function lst(e) {
+async function reconcileDeclaredMarketplaces(e) {
   let t = getDeclaredMarketplaces();
   if (Object.keys(t).length === 0)
     return {
@@ -2609,7 +2609,7 @@ async function lst(e) {
     ),
       (r = {}));
   }
-  let s = KJt(t, r, { projectRoot: he() }),
+  let s = diffDeclaredMarketplaces(t, r, { projectRoot: he() }),
     d = [
       ...s.missing.map((w) => ({
         name: w,
@@ -2631,13 +2631,13 @@ async function lst(e) {
       continue;
     }
     if (xEt(w.name)) {
-      let v = `not materialized: names starting with "${z6}" are reserved for marketplaces hosted on claude.ai \u2014 rename the declaration`;
+      let v = `not materialized: names starting with "${CLAUDE_AI_MARKETPLACE_NAME_PREFIX}" are reserved for marketplaces hosted on claude.ai \u2014 rename the declaration`;
       (n(`[reconcile] '${w.name}' ${v}`, { level: "warn" }),
         _.push({ name: w.name, error: v }),
         e?.onProgress?.({ type: "failed", name: w.name, error: v }));
       continue;
     }
-    if (w.action === "update" && Om(w.source) && !(await El(w.source.path))) {
+    if (w.action === "update" && isLocalMarketplaceSource(w.source) && !(await El(w.source.path))) {
       (n(
         `[reconcile] '${w.name}' declared path does not exist; keeping materialized entry`,
       ),
@@ -2799,7 +2799,7 @@ async function An(e) {
       (delete t[s], (r = !0));
   if ((($t().flaggedPlugins = t), r)) await Ve(t, e);
 }
-function gHe() {
+function getFlaggedPlugins() {
   return $t().flaggedPlugins ?? {};
 }
 async function Mn(e, t) {
@@ -2808,7 +2808,7 @@ async function Mn(e, t) {
   let r = { ...o.flaggedPlugins, [e]: { flaggedAt: new Date().toISOString() } };
   (await Ve(r, t), n(`Flagged plugin: ${e}`));
 }
-async function rFn(e, t) {
+async function markFlaggedPluginsSeen(e, t) {
   let o = $t();
   if (o.flaggedPlugins === null) o.flaggedPlugins = await je(t);
   let r = new Date().toISOString(),
@@ -2820,7 +2820,7 @@ async function rFn(e, t) {
   }
   if (s) await Ve(d, t);
 }
-async function oFn(e, t) {
+async function clearFlaggedPlugin(e, t) {
   let o = $t();
   if (o.flaggedPlugins === null) o.flaggedPlugins = await je(t);
   if (!(e in o.flaggedPlugins)) return;
@@ -2839,10 +2839,10 @@ function Qo(e, t, o) {
   }
   return d;
 }
-async function cst(e) {
+async function enforceDelistedPlugins(e) {
   await An(e);
   let t = isHoverRestEnabled() && e !== void 0 ? await getInstalledPluginsViaStorage(e) : getInstalledPlugins(),
-    o = gHe(),
+    o = getFlaggedPlugins(),
     r = await getKnownMarketplacesOrEmpty(e),
     s = [];
   for (let d of Object.keys(r))
@@ -2906,7 +2906,7 @@ var Zo = 10,
   vn = 1000 / Zo,
   Rn = 3,
   In = 1e4;
-function uFn({
+function createDisplayTransformQueue({
   session: e,
   sessionHooks: t,
   onStreamingDisplay: o,
@@ -2998,7 +2998,7 @@ function uFn({
     if (C) k.finalDispatched = !0;
     ((k.flushedOffset = L), (k.lastFlushAt = Date.now()));
     let J = k.index;
-    (k.index++, I(k, J, C, Td(B)));
+    (k.index++, I(k, J, C, stripMemoryTags(B)));
   }
   function v(k) {
     if (k.flushTimer !== null) return;
@@ -3098,9 +3098,9 @@ function Tn(e, t, o) {
           ? { name: "thinking", source: r.thinking }
           : null;
     if (s === null) continue;
-    let d = rtr(s.source);
+    let d = getMemoryTagStats(s.source);
     if (d.openTagCount === 0 && d.closeTagCount === 0) continue;
-    let c = otr(s.source, (p) => e.citedStatus(p));
+    let c = collectMemoryCitationMetrics(s.source, (p) => e.citedStatus(p));
     logEvent("tengu_cc_memory_tag_stripped", {
       surface: fromEnum(s.name),
       seam: fromEnum(o),
@@ -3123,7 +3123,7 @@ function Tn(e, t, o) {
     });
   }
 }
-function Z0t(e, t) {
+function pruneDisplayedMessageContent(e, t) {
   if (Object.keys(e.displayedMessageContent).length === 0) return e;
   let o = new Set();
   for (let d of t) if (d.type === "assistant") o.add(d.message.id);
@@ -3135,9 +3135,9 @@ function Z0t(e, t) {
   if (!s) return e;
   return { ...e, displayedMessageContent: r };
 }
-async function dFn(e, t, o, r, s, d, c) {
+async function applyMessageDisplayHooks(e, t, o, r, s, d, c) {
   Tn(getMemoryCitationTracker.of(e), t, "sdk");
-  let p = HFe(t.message.content),
+  let p = stripMemoryTagsFromContentBlocks(t.message.content),
     _ =
       p === t.message.content
         ? t
@@ -3182,8 +3182,8 @@ async function dFn(e, t, o, r, s, d, c) {
     },
   };
 }
-var gFn = "tengu_juniper_vale",
-  ust = {
+var FOLLOWUP_ASK_FEATURE_FLAG = "tengu_juniper_vale",
+  DEFAULT_FEEDBACK_SURVEY_CONFIG = {
     minTimeBeforeFeedbackMs: 600000,
     minTimeBetweenFeedbackMs: 3600000,
     minTimeBetweenGlobalFeedbackMs: 1e8,
@@ -3193,15 +3193,15 @@ var gFn = "tengu_juniper_vale",
     onForModels: ["*"],
     probability: 0.005,
   },
-  eIt = { probability: 0 },
-  Wae = { enabled: !1, maxChars: 500, autoDismissAfterMs: 30000 };
+  DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG = { probability: 0 },
+  DEFAULT_FOLLOWUP_ASK_CONFIG = { enabled: !1, maxChars: 500, autoDismissAfterMs: 30000 };
 import { randomUUID as tr } from "crypto";
 var nr = 7200000,
-  SHe = new Set([BRIEF_TOOL_NAME]);
+  TEXT_TOOL_NAMES = new Set([BRIEF_TOOL_NAME]);
 function qe(e) {
   return /\S/.test(e);
 }
-function hFn(e) {
+function isNonBlankTextDelta(e) {
   return (
     e.type === "content_block_delta" &&
     e.delta.type === "text_delta" &&
@@ -3211,7 +3211,7 @@ function hFn(e) {
 function xn(e) {
   return !e.isApiErrorMessage && e.message.model !== fc;
 }
-function fst(e, t) {
+function hasRenderableAssistantText(e, t) {
   if (!xn(e)) return !1;
   let { content: o } = e.message;
   if (typeof o === "string") return qe(o);
@@ -3224,7 +3224,7 @@ function fst(e, t) {
 function or(e) {
   return e === "tool_use" || e === "server_tool_use" || e === "mcp_tool_use";
 }
-function QJt({
+function createTurnFirstTextTracker({
   queryChainId: e,
   observesUserWait: t,
   promptTiming: o,
@@ -3382,13 +3382,13 @@ function QJt({
     },
   };
 }
-function _Fn({ toolUseContext: e, sessionState: t }) {
+function createTurnFirstTextObserver({ toolUseContext: e, sessionState: t }) {
   let o = tr();
   e.queryTracking = { chainId: o, depth: -1 };
-  let r = QJt({
+  let r = createTurnFirstTextTracker({
     queryChainId: o,
     observesUserWait: t !== void 0,
-    textToolNames: SHe,
+    textToolNames: TEXT_TOOL_NAMES,
   });
   r.setUserWaiting(t?.userDecisionPending ?? !1);
   let s = t?.userDecisionPendingChanged.subscribe((d) => r.setUserWaiting(d));
@@ -3400,10 +3400,10 @@ function _Fn({ toolUseContext: e, sessionState: t }) {
   };
 }
 import { randomUUID as rr } from "crypto";
-function mst(e, t) {
+function markVerifiedSlackHumanTurn(e, t) {
   dGt(e, t, { verifiedSlackHumanTurn: !0 });
 }
-function gst(e, t) {
+function resolveMessageUuid(e, t) {
   return e || (t ? rr() : void 0);
 }
 function _e(e, t) {
@@ -3479,7 +3479,7 @@ function Dn(e, t) {
     return;
   }
 }
-function ZJt(e) {
+function completeTurn(e) {
   let { turnId: t, transcript: o, span: r, durationMs: s, aborted: d } = e;
   (releaseTurnAbortController(t), e.turnEvents.flushStep(t));
   let c = En(o, r),
@@ -3492,9 +3492,9 @@ function ZJt(e) {
   );
 }
 import { randomUUID as gr } from "crypto";
-function Hdr(e, t) {
-  let o = eQt(e),
-    r = tQt((s) => {
+function createTurnEventHub(e, t) {
+  let o = createTurnEventTail(e),
+    r = createTurnStep((s) => {
       let d = turnEvents({ signal: t() });
       o.enqueue("turn.step", () => d.turn.step(s).then(() => []));
     });
@@ -3508,7 +3508,7 @@ function Hdr(e, t) {
     sever: o.sever,
   };
 }
-function nQt(e) {
+function beginTurn(e) {
   let { newMessages: t, input: o, signal: r, abort: s } = e,
     d = e.turnEvents.begin();
   bindTurnAbortController({ turnId: d, abort: s });
@@ -3523,7 +3523,7 @@ function nQt(e) {
   );
 }
 var vr = 200;
-function Tst(e, t) {
+function applyMessageOp(e, t) {
   switch (t.type) {
     case "append":
       return t.messages.length === 0 ? e : [...e, ...t.messages];
@@ -3567,75 +3567,75 @@ function Tst(e, t) {
   }
 }
 export {
-  W_e,
-  nFn,
-  gHe,
-  rFn,
-  oFn,
-  E6e,
-  hHe,
-  G_e,
-  KJt,
-  lst,
-  cst,
-  XJt,
-  sFn,
-  iFn,
-  YJt,
-  Q0t,
-  aFn,
-  lFn,
-  JJt,
-  cFn,
-  uFn,
-  Z0t,
-  dFn,
-  _He,
-  pFn,
-  fFn,
-  mFn,
-  yHe,
-  A6e,
-  gFn,
-  ust,
-  eIt,
-  Wae,
-  dst,
-  pst,
-  SHe,
-  hFn,
-  fst,
-  QJt,
-  _Fn,
-  mst,
-  gst,
-  ZJt,
-  eQt,
-  C6e,
-  tQt,
-  v6e,
-  Hdr,
-  nQt,
-  bHe,
-  yFn,
-  tIt,
-  R6e,
-  hst,
-  q_e,
-  _st,
-  k6e,
-  x6e,
-  H6e,
-  I6e,
-  rQt,
-  SFn,
-  yst,
-  Sst,
-  oQt,
-  bFn,
-  sQt,
-  bst,
-  wFn,
-  wst,
-  Tst,
+  pickStartupAnnouncement,
+  serializeStartupAnnouncement,
+  getFlaggedPlugins,
+  markFlaggedPluginsSeen,
+  clearFlaggedPlugin,
+  mergeSyncedSkillsWithCommands,
+  getTranscriptWatermark,
+  SandboxClassifierVerdictCache,
+  diffDeclaredMarketplaces,
+  reconcileDeclaredMarketplaces,
+  enforceDelistedPlugins,
+  raiseSessionStartOnce,
+  formatConversationSwitchNotice,
+  formatIncompleteWatchStateNotice,
+  formatHeldByLiveSessionNotice,
+  logArtifactLiveSubscribeSad,
+  getArmedSlugsNotMatching,
+  getTranscriptFileInfo,
+  runArtifactLiveRearmPrelude,
+  rearmArtifactLiveInHeadlessHost,
+  createDisplayTransformQueue,
+  pruneDisplayedMessageContent,
+  applyMessageDisplayHooks,
+  restoreTaskRegistryFromTranscript,
+  notifyOrphanedAgentAutoResumed,
+  notifyOrphanedAgentAlreadyCompleted,
+  notifyOrphanedAgentResumeFailed,
+  waitForStoreCondition,
+  collectPendingAgentNotifications,
+  FOLLOWUP_ASK_FEATURE_FLAG,
+  DEFAULT_FEEDBACK_SURVEY_CONFIG,
+  DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG,
+  DEFAULT_FOLLOWUP_ASK_CONFIG,
+  isDisplayableAssistantMessage,
+  messageSupersedes,
+  TEXT_TOOL_NAMES,
+  isNonBlankTextDelta,
+  hasRenderableAssistantText,
+  createTurnFirstTextTracker,
+  createTurnFirstTextObserver,
+  markVerifiedSlackHumanTurn,
+  resolveMessageUuid,
+  completeTurn,
+  createTurnEventTail,
+  turnEventTailModule,
+  createTurnStep,
+  turnStepModule,
+  createTurnEventHub,
+  beginTurn,
+  buildRateLimitEventMessage,
+  createRateLimitReemitThrottle,
+  buildRateLimitMirrorMetadata,
+  forwardRateLimitEventToBridge,
+  handleBridgeTransportRebuilt,
+  forwardCurrentRateLimitsToBridge,
+  buildSdkInitMessage,
+  isSlashCommandInput,
+  resolveCommandPriority,
+  hasPendingDeferredSlackTurn,
+  hasPendingVerifiedSlackTurn,
+  peekCommandPreferringSlackTurn,
+  dequeueCommandPreferringSlackTurn,
+  getBridgeInitializeCommands,
+  recordDeclaredDialogKinds,
+  parseAllowedUserModel,
+  getConversationModel,
+  shouldInjectModelSwitchMessages,
+  rejectUnrecognizedModel,
+  handleSetModelRequest,
+  consumeRecentTimestamp,
+  applyMessageOp,
 };

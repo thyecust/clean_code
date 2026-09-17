@@ -10,8 +10,8 @@
 import { j, B, g_e } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { shouldForceGatewayLogin, getGlobalConfig, enableConfigs } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { da } from "./设置-配置.aqbb35ee.js";
-import { rRt, ABe, uRt, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getHostSettingsStore } from "./设置-配置.aqbb35ee.js";
+import { awaitMdmSettingsLoaded, runPolicyHelperPass, hasActivePolicyHelper, getBasePolicySettings, getBasePolicySettingsOrigin, getPolicyHelperSourceLoadErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, ensureKeychainPrefetchCompleted } from "../共享小工具-未细化/keychain-prefetch.js";
 import { goe } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { checkVersionPolicy } from "../共享小工具-未细化/version-policy.js";
@@ -46,11 +46,11 @@ async function ensureFastPathSettingsLoaded(t) {
       import("../共享小工具-未细化/chunk-bgf8jybv.js"),
     ]);
     (await r(e),
-      await Promise.all([enableConfigs(e), o(e, da())]),
+      await Promise.all([enableConfigs(e), o(e, getHostSettingsStore())]),
       i(getGlobalConfig().cachedGrowthBookFeatures?.tengu_windows_credman === !0),
       await a(e));
   } else await enableConfigs();
-  if ((await rRt(), await ensureKeychainPrefetchCompleted(KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS), isHoverRestEnabled() && e !== void 0)) {
+  if ((await awaitMdmSettingsLoaded(), await ensureKeychainPrefetchCompleted(KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS), isHoverRestEnabled() && e !== void 0)) {
     let [
         { credentialsStoreFor: o },
         { primeFileDescriptorCredentials: i },
@@ -74,7 +74,7 @@ async function runFastPathPolicyHelper() {
   let t = l();
   if (t.helperResult) return t.helperResult.error;
   let e = t.beginHelperRun();
-  if (((e.error = await ABe(getBasePolicySettings(), getBasePolicySettingsOrigin(), getPolicyHelperSourceLoadErrors())), uRt())) goe();
+  if (((e.error = await runPolicyHelperPass(getBasePolicySettings(), getBasePolicySettingsOrigin(), getPolicyHelperSourceLoadErrors())), hasActivePolicyHelper())) goe();
   return e.error;
 }
 async function loadFastPathPolicy(t) {

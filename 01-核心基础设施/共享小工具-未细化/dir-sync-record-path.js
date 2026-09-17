@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { sanitizePath, getProjectKey, getProjectDir, canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { kd, R7t } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { validateStorageKey, DIR_SYNC_RECORD_FILE_SUFFIX } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { createHoverRestOptions } from "./hover-rest-transcript.js";
 import { join as a } from "path";
 function sanitizePathSegment(e) {
@@ -31,9 +31,9 @@ async function resolveDirSyncRecordLocation(e, t, n) {
 }
 function getDirSyncRecordKey(e, t) {
   let n = STORAGE_KEYS.dirSyncRecord(e, sanitizePathSegment(t));
-  return kd(n) === void 0 ? n : void 0;
+  return validateStorageKey(n) === void 0 ? n : void 0;
 }
 function getDirSyncRecordFileName(e) {
-  return `${sanitizePathSegment(e)}${R7t}`;
+  return `${sanitizePathSegment(e)}${DIR_SYNC_RECORD_FILE_SUFFIX}`;
 }
 export { sanitizePathSegment, getDirSyncRecordPath, resolveDirSyncRecordLocation, getDirSyncRecordKey, getDirSyncRecordFileName };

@@ -66,11 +66,11 @@ import {
   isAutoMemPath,
 } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getCwd } from "../../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
-import { Pt } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive } from "../../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, truncateToWidthNoEllipsis, truncate, formatSecondsShort, formatDuration, formatNumber, formatTokens, formatResetTime } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { hasValidPathSegments, STORAGE_KEYS } from "../../../02-功能模块/Teammates团队/storage-keys.js";
 import { oL, xt } from "../../jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Js } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { parseMcpToolName } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { j6, Uet, HQ, Ao, yx, TRt } from "../../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import {
@@ -210,16 +210,16 @@ import {
   shouldInjectMemoryFile,
   USAGE_CREDITS_COMMAND,
 } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Td, PC, $a, U$, UCe, zfe, qj, UYe, Ni } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags, parseMemoryDocument, MEMORY_WRITE_TOOL_NAME, getMemoryProjectKey, canUseTeamMemoryStorage, resolveAutoMemPath, isWithinTeamMemoryDir, UYe, REPL_TOOL_NAME } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { ps } from "../../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { FRONTMATTER_PATTERN, STRICT_FRONTMATTER_PATTERN, parseFrontmatter } from "../../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
 import { eU } from "../../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { SKILL_TOOL_NAME } from "../../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 import { filterOutHookProgressMessages, getRegisteredTools, findToolByName, parseToolInput } from "../../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import { Jc, getPlan } from "../../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Cr } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { WEB_FETCH_TOOL_NAME } from "../../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isViolinWoodEnabledCached } from "../../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { BE, jE, _D, Wbt, YI, lR, ti, X7e, eJ, Xre } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { GET_TASK_TOOL_NAME, isGetTaskToolEnabled, WEB_SEARCH_TOOL_NAME, REPL_REGISTERED_TOOL_UI_TABLE_KEY, TASK_OUTPUT_TOOL_NAME, ENTER_WORKTREE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME, getStructuredOutputText, PROPOSE_SKILLS_TOOL_NAME, EXIT_WORKTREE_TOOL_NAME } from "../../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { sp, ER, pse, hAt } from "../../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import {
   dJ,
@@ -2494,7 +2494,7 @@ function ai(Sz) {
   if (Qh[0] !== uP || Qh[1] !== sP || Qh[2] !== lP || Qh[3] !== iP) {
     mP = EARLY_RETURN_SENTINEL;
     bb0: {
-      let cP = Td(lP);
+      let cP = stripMemoryTags(lP);
       if (!cP) {
         mP = null;
         break bb0;
@@ -2673,7 +2673,7 @@ var Ra = "    ",
   wP = "\u258C";
 function mp(mT) {
   let Xz = _(2);
-  if (!isReplVerboseEnabled() || mT.param.name !== Ni) {
+  if (!isReplVerboseEnabled() || mT.param.name !== REPL_TOOL_NAME) {
     return null;
   }
   let $O;
@@ -3337,8 +3337,8 @@ function Uv(l, f) {
 var Ev = 256,
   IP = /^[a-zA-Z0-9_-]{1,128}$/;
 function Zae(l, f) {
-  if (!Pt() || !isViolinWoodEnabledCached()) return;
-  let g = Js(l);
+  if (!isRemoteActive() || !isViolinWoodEnabledCached()) return;
+  let g = parseMcpToolName(l);
   if (!g?.toolName || !IP.test(g.serverName) || !IP.test(g.toolName)) return;
   return Ov.of(f)(l, g.serverName, g.toolName);
 }
@@ -4972,7 +4972,7 @@ var _y = {
         isResultTruncated: l.isResultTruncated,
       };
     },
-    get [$a]() {
+    get [MEMORY_WRITE_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/isResultTruncated.7wy9kjgd.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -4988,7 +4988,7 @@ var _y = {
         renderToolUseTag: l.renderToolUseTag,
       };
     },
-    get [YI]() {
+    get [TASK_OUTPUT_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/renderToolUseTag.mt0rtkfc.js");
       return {
         renderToolResultMessage: l.renderToolResultMessage,
@@ -5015,8 +5015,8 @@ var _y = {
     },
     [GREP_TOOL_NAME]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
     [GLOB_TOOL_NAME]: { renderToolResultMessage: ry, renderToolUseErrorMessage: ty },
-    [Cr]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
-    [_D]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
+    [WEB_FETCH_TOOL_NAME]: { renderToolResultMessage: renderWebFetchResultMessage, renderToolUseProgressMessage: renderWebFetchProgressMessage },
+    [WEB_SEARCH_TOOL_NAME]: { renderToolResultMessage: BC, renderToolUseProgressMessage: DC },
     [REPORT_FINDINGS_TOOL_NAME]: { renderToolResultMessage: EC },
     get [SKILL_TOOL_NAME]() {
       let l = import.meta.require("../../../02-功能模块/工具UI渲染/renderToolUseErrorMessage.gg04apb2.js");
@@ -5028,12 +5028,12 @@ var _y = {
       };
     },
     [LSP_TOOL_NAME]: { renderToolResultMessage: oC, renderToolUseErrorMessage: eC },
-    [Ni]: {
+    [REPL_TOOL_NAME]: {
       renderToolUseErrorMessage: bC,
       renderToolUseProgressMessage: RC,
       renderToolUseRejectedMessage: MC,
     },
-    [Wbt]: {
+    [REPL_REGISTERED_TOOL_UI_TABLE_KEY]: {
       renderToolResultMessage: Bu.renderToolResultMessage,
       renderToolUseRejectedMessage: Bu.renderToolUseRejectedMessage,
       renderToolUseErrorMessage: Bu.renderToolUseErrorMessage,
@@ -5043,8 +5043,8 @@ var _y = {
     [READ_MCP_RESOURCE_DIR_TOOL_NAME]: { renderToolResultMessage: KC },
     [READ_MCP_RESOURCE_TOOL_NAME]: { renderToolResultMessage: YC },
     [ENTER_PLAN_MODE_TOOL_NAME]: { renderToolResultMessage: jC, renderToolUseRejectedMessage: FC },
-    [lR]: { renderToolResultMessage: $C },
-    [Xre]: { renderToolResultMessage: WC },
+    [ENTER_WORKTREE_TOOL_NAME]: { renderToolResultMessage: $C },
+    [EXIT_WORKTREE_TOOL_NAME]: { renderToolResultMessage: WC },
     [CRON_CREATE_TOOL_NAME]: { renderToolResultMessage: XC },
     [CRON_DELETE_TOOL_NAME]: { renderToolResultMessage: QC },
     [CRON_LIST_TOOL_NAME]: { renderToolResultMessage: JC },
@@ -5058,7 +5058,7 @@ var _y = {
     [MONITOR_TOOL_NAME]: { renderToolResultMessage: HC },
     [SEND_USER_FILE_TOOL_NAME]: { renderToolResultMessage: ow },
     [SEND_FILE_TOOL_NAME]: { renderToolResultMessage: ew },
-    [eJ]: { renderToolResultMessage: rw },
+    [PROPOSE_SKILLS_TOOL_NAME]: { renderToolResultMessage: rw },
     [PUSH_NOTIFICATION_TOOL_NAME]: { renderToolResultMessage: zC },
     [SEND_MESSAGE_TOOL_NAME]: { renderToolResultMessage: ZC },
     [SHOW_ONBOARDING_ROLE_PICKER_TOOL_NAME]: { renderToolResultMessage: tw },
@@ -5337,7 +5337,7 @@ function qy(S4) {
           Ue.name.startsWith("mcp__") ||
           Ue.name.startsWith("skill__") ||
           Ue.name.startsWith("eval_registered__") ||
-          Ue.name === ti ||
+          Ue.name === STRUCTURED_OUTPUT_TOOL_NAME ||
           Ue.name === "WebBrowser" ||
           EXPECTED_ABSENT_TOOL_NAMES.has(Ue.name) ||
           getFindGrepToolNames().has(Ue.name) ||
@@ -5400,7 +5400,7 @@ function qy(S4) {
   E(ts, Up);
   let RD;
   if (ht[17] !== Do.erroredToolUseIDs || ht[18] !== Ue)
-    ((RD = X7e(Ue, Do.erroredToolUseIDs)),
+    ((RD = getStructuredOutputText(Ue, Do.erroredToolUseIDs)),
       (ht[17] = Do.erroredToolUseIDs),
       (ht[18] = Ue),
       (ht[19] = RD));
@@ -6295,7 +6295,7 @@ async function WD(l) {
 }
 async function qD(l, f, g) {
   if (!l.endsWith(".md")) return null;
-  let T = (S) => isAutoMemPath(S) && !qj(S) && !Xy(f, S);
+  let T = (S) => isAutoMemPath(S) && !isWithinTeamMemoryDir(S) && !Xy(f, S);
   if (ID(l)) {
     let S = normalize(l);
     return T(S) ? S : null;
@@ -6397,7 +6397,7 @@ function GD(l, f, g) {
     l.endsWith(".md") &&
     l.startsWith(f + Wa) &&
     !l.startsWith(g + Wa) &&
-    !qj(l) &&
+    !isWithinTeamMemoryDir(l) &&
     !Xy(f + Wa, l)
   );
 }
@@ -6405,7 +6405,7 @@ async function zD(l, f, g, T) {
   return j6(l, async () => {
     let y;
     try {
-      let [S, P, A] = await Promise.all([realpath(f), zfe(), zfe("team")]);
+      let [S, P, A] = await Promise.all([realpath(f), resolveAutoMemPath(), resolveAutoMemPath("team")]);
       if (S !== f || !GD(f, P, A)) return !1;
       y = Cw(P, f).split(Wa);
     } catch {
@@ -6458,12 +6458,12 @@ function Sw(l, f, g) {
   if (T === null || y === null || T[1].trim() !== y[1].trim()) return null;
   let R = parseFrontmatter(l, f);
   if (R.parseError || Object.keys(R.frontmatter).length === 0) return null;
-  let k = PC(l, f),
+  let k = parseMemoryDocument(l, f),
     { frontmatter: S } = k,
     P = jD(S.metadata[xw], g),
     A = HD(l, y[0], P);
   if (A === null) return null;
-  let O = PC(A, f),
+  let O = parseMemoryDocument(A, f),
     I = Bp({
       name: k.frontmatter.name,
       description: k.frontmatter.description,
@@ -6489,9 +6489,9 @@ async function mZt(l, f, g, T) {
   try {
     if (!Number.isInteger(g) || g < 1 || g > 3) return [];
     let y = getAutoMemPath(),
-      R = T === void 0 ? void 0 : U$(y),
+      R = T === void 0 ? void 0 : getMemoryProjectKey(y),
       k =
-        isHoverRestEnabled() && T !== void 0 && R !== void 0 && (await UCe(y))
+        isHoverRestEnabled() && T !== void 0 && R !== void 0 && (await canUseTeamMemoryStorage(y))
           ? { storageV5: T, projectKey: R }
           : void 0,
       S = null,
@@ -6524,7 +6524,7 @@ async function mZt(l, f, g, T) {
 }
 function jp(l) {
   let f = normalize(l);
-  return f.endsWith(".md") && isAutoMemPath(f) && !qj(f) && !Xy(getAutoMemPath(), f);
+  return f.endsWith(".md") && isAutoMemPath(f) && !isWithinTeamMemoryDir(f) && !Xy(getAutoMemPath(), f);
 }
 function gZt(l) {
   return (l ?? []).filter((f) => f.rated === void 0);
@@ -7769,7 +7769,7 @@ function Ai(s8) {
       if (Nr[15] !== Am || Nr[16] !== wi)
         ((nl =
           wi !== void 0 &&
-          jE() &&
+          isGetTaskToolEnabled() &&
           (Am === void 0 ||
             getSessionStateStore().bashTaskDeliveryOutcomes.get(Am) !== "no_host")),
           (Nr[15] = Am),
@@ -7781,7 +7781,7 @@ function Ai(s8) {
       if (Nr[18] !== MM || Nr[19] !== wi)
         ((Ui = MM ? P0(wi) : ""),
           (sl = MM
-            ? `delivered to Claude as a ${BE} result${Ui ? ` (${formatNumber(Ui.length)} chars)` : ""}`
+            ? `delivered to Claude as a ${GET_TASK_TOOL_NAME} result${Ui ? ` (${formatNumber(Ui.length)} chars)` : ""}`
             : null),
           (Nr[18] = MM),
           (Nr[19] = wi),
@@ -12472,7 +12472,7 @@ function Fb(Are) {
   return WF;
 }
 function vN(l, f, g) {
-  let T = Td(l);
+  let T = stripMemoryTags(l);
   if (f < 1) return T;
   let y = Vm(T, f, "wrap").split(`
 `);

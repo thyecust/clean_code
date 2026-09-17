@@ -17,9 +17,9 @@ import { g0, UR, VZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isSubagentSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { buildMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { sme } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isValidMachineName } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { sanitizeDisplayText, getMcpClients, isRemoteToolForwardingEnabled, isSessionChannelDisabled, CCR_NEEDS_APPROVAL_ERROR_CODE, classifyMcpErrorSource, REMOTE_DEVICES_SERVER_NAME, DEVICE_LOCAL_TOOL_NAMES, BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   pE,
@@ -407,7 +407,7 @@ function X(t, e, r) {
 }
 function Pe(t) {
   let e = parseDevicePassthroughMeta(sanitizeDeep(t._meta?.[DEVICE_PASSTHROUGH_META_KEY]));
-  return e !== void 0 && e.tool === rc(...Oe(t.name)) && sme(e.target.name)
+  return e !== void 0 && e.tool === buildMcpToolName(...Oe(t.name)) && isValidMachineName(e.target.name)
     ? e
     : void 0;
 }
@@ -417,7 +417,7 @@ function Oe(t) {
 }
 function Ae(t) {
   let e = vlt(sanitizeDeep(t._meta?.[sM]));
-  return e !== void 0 && e.tool === t.name && sme(e.target.name) ? e : void 0;
+  return e !== void 0 && e.tool === t.name && isValidMachineName(e.target.name) ? e : void 0;
 }
 var Le = 8000,
   De = 5000,

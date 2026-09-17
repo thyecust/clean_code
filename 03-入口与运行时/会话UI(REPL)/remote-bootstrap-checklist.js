@@ -14,7 +14,7 @@ import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { yo } from "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
-import { CZ, Fot, aHe } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { formatBootstrapStepLabel, formatRemoteSessionModeLabel, formatBootstrapStepDuration } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
@@ -40,7 +40,7 @@ function RemoteBootstrapProgress() {
   let k = u.queuedCount,
     E;
   if (D[1] !== u.sessionMode)
-    ((E = Fot(u.sessionMode)), (D[1] = u.sessionMode), (D[2] = E));
+    ((E = formatRemoteSessionModeLabel(u.sessionMode)), (D[1] = u.sessionMode), (D[2] = E));
   else E = D[2];
   let G;
   if (D[3] !== E)
@@ -103,14 +103,14 @@ function J(Re) {
     { step: s, sessionMode: P, now: C, columns: S } = Re,
     Z;
   if (T[0] !== P || T[1] !== s)
-    ((Z = CZ(s, P)), (T[0] = P), (T[1] = s), (T[2] = Z));
+    ((Z = formatBootstrapStepLabel(s, P)), (T[0] = P), (T[1] = s), (T[2] = Z));
   else Z = T[2];
   let m = Z;
   switch (s.status) {
     case "completed": {
       let i;
       if (T[3] !== C || T[4] !== s)
-        ((i = aHe(s, C)), (T[3] = C), (T[4] = s), (T[5] = i));
+        ((i = formatBootstrapStepDuration(s, C)), (T[3] = C), (T[4] = s), (T[5] = i));
       else i = T[5];
       let z;
       if (T[6] !== m || T[7] !== i)
@@ -124,7 +124,7 @@ function J(Re) {
     case "running": {
       let i;
       if (T[9] !== C || T[10] !== s)
-        ((i = aHe(s, C)), (T[9] = C), (T[10] = s), (T[11] = i));
+        ((i = formatBootstrapStepDuration(s, C)), (T[9] = C), (T[10] = s), (T[11] = i));
       else i = T[11];
       let z;
       if (T[12] !== S || T[13] !== m || T[14] !== s.detail || T[15] !== i)

@@ -17,7 +17,7 @@ import { createMainAgentContext } from "../认证-OAuth登录/认证-OAuth登录
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { asSystemPrompt, joinTextBlocks, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ew, F$e } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var p = 1000,
@@ -52,7 +52,7 @@ function collectConversationText(r) {
     if (typeof e === "string") l.push(e);
     else if (Array.isArray(e)) {
       for (let u of e)
-        if ("type" in u && u.type === "text" && "text" in u) l.push(Td(u.text));
+        if ("type" in u && u.type === "text" && "text" in u) l.push(stripMemoryTags(u.text));
     }
   }
   let o = l.join(`

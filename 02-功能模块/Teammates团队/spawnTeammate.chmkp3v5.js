@@ -17,7 +17,7 @@ import { getModelForAnalytics, classifyModelFamily, isModelAllowed, getMainLoopM
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Uge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getHostManagedEnvVarsToStrip } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
@@ -132,7 +132,7 @@ var oe = [
 ];
 function G() {
   let t = ["CLAUDECODE=1", "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1"],
-    e = new Set(Uge(process.env));
+    e = new Set(getHostManagedEnvVarsToStrip(process.env));
   e.delete("CLAUDE_CODE_HOST_CREDS_FILE");
   for (let i of oe) {
     if (e.has(i)) continue;

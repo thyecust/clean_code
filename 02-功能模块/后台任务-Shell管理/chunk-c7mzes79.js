@@ -40,7 +40,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, Io, cr, nt, Cu, ru, Rmr } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { OP, yi, zl, r8t, ts, fke, Oa, hasPolicySettingsNotified } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { yieldToEventLoop, SETTINGS_SOURCE_ORDER, omitObjectKeys, negate, isConnectedMcpServer, shouldRefetchMcpServer, getMcpToolPrefix, hasPolicySettingsNotified } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getJobDir, getOwnJobShortId, listJobs, IDLE_NEEDS, terminalOutcome, isSettled, isSelfDriving } from "./chunk-7wsy8vxb.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
@@ -59,11 +59,11 @@ import {
 import { captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { v7t } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { DEFAULT_OPEN_FILE_MODE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsForSource, getInitialSettings, getSettings_DEPRECATED, isAdminPolicyUnreadable } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { iA } from "../权限系统/chunk-t3b7pg2x.js";
 import { getProjectsDir, getProjectKeyFromDir, getSessionSubagentsDir, getAgentTranscriptPath } from "../Teammates团队/transcript-paths.js";
-import { iP, OG, rEt, tme, Oc, $d, bR, ZYe, iEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { isManagedPermissionRulesOnlyEnabled, getEffectivePermissionRules, getDeclaredAndRepoOnlyDirectories, getEffectiveAdditionalDirectories, applyPermissionUpdate, getResolvedClaudeTempDir, getCurrentProjectTempDir, getProjectTempDirForPath, realpathIfResolvable } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
 import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -357,7 +357,7 @@ function kt(t) {
   });
 }
 function Fr() {
-  return [bR()];
+  return [getCurrentProjectTempDir()];
 }
 function cn(t) {
   return nt({
@@ -440,7 +440,7 @@ function un(t = Lr()) {
 var pn = createLazyValue(() => un());
 function fn(t) {
   let o = Array.isArray(t) ? t : [t];
-  return un(cn(() => [bR(), ...o]));
+  return un(cn(() => [getCurrentProjectTempDir(), ...o]));
 }
 var Yt = 67108864;
 async function detachAndSerializeShell(t, o) {
@@ -480,7 +480,7 @@ async function detachAndSerializeShell(t, o) {
       if (!w.startsWith(L + Jt)) {
         if (
           !(
-            await Promise.all([$d(), ...[]].map((x) => realpath(x).catch(() => null)))
+            await Promise.all([getResolvedClaudeTempDir(), ...[]].map((x) => realpath(x).catch(() => null)))
           )
             .filter((x) => x !== null)
             .some((x) => w.startsWith(x + Jt))
@@ -652,7 +652,7 @@ async function serializeAdoptable(t, o) {
   )
     return null;
   let v = (
-      await Promise.all(s.map((x) => detachAndSerializeShell(x, { rerootOutputsTo: bR() })))
+      await Promise.all(s.map((x) => detachAndSerializeShell(x, { rerootOutputsTo: getCurrentProjectTempDir() })))
     ).filter((x) => x !== null),
     w = await Promise.all(l.map((x) => serializeAdoptAgent(x))),
     T = await Promise.all(k.map((x) => serializeAdoptWorkflow(x))),
@@ -714,7 +714,7 @@ async function serializeAdoptable(t, o) {
       if (w.length === 0) return;
       for (let I of v) if (I.agentId !== void 0) x.remove(I.taskId);
       for (let I of l) I.abortController.abort(userAbortReason("background"));
-      (await OP(),
+      (await yieldToEventLoop(),
         await flushSessionStorage().catch((I) => {
           (logFeatureSad("task_local_agent", "adopt_checkpoint_flush_failed"),
             n(`[adopt] checkpoint flush: ${I}`, { level: "warn" }));
@@ -1051,7 +1051,7 @@ async function Vr(t, o, r) {
         Error("adopted file copy source is not the validated inode"),
         { code: "ADOPT_IDENTITY_MISMATCH" },
       );
-    let k = await dt(o, "wx", v7t),
+    let k = await dt(o, "wx", DEFAULT_OPEN_FILE_MODE),
       c = !1;
     try {
       let v = Buffer.allocUnsafe($r);
@@ -1796,7 +1796,7 @@ function adoptedCounts(t) {
     adopted_frame_live: t?.frameLive?.length ?? 0,
   };
 }
-function aF() {
+function createBaseAppState() {
   let t = import.meta.require("../Teammates团队/teammate-context.js"),
     o = t.isTeammate() && t.isPlanModeRequired() ? "plan" : "default";
   return {
@@ -1905,7 +1905,7 @@ function aF() {
 var EMPTY_PROJECTS_SELF_IDENTITY = { accountKey: null, ownMessageIds: [], wireAccountId: null };
 function getDefaultAppState() {
   return {
-    ...aF(),
+    ...createBaseAppState(),
     taskDecorations: {},
     prStatus: null,
     prNeedsAuth: !1,
@@ -1988,7 +1988,7 @@ function Ne(gl) {
   else ai = yn[3];
   return ai;
 }
-function J8() {
+function useAutoModeDenials() {
   let di = De(bt);
   if (!di) {
     throw ReferenceError(
@@ -2011,7 +2011,7 @@ function Rt(Cl) {
   else ci = _l[2];
   return ci;
 }
-function xOt() {
+function useFpsMetrics() {
   return De(Tt);
 }
 F();
@@ -2023,7 +2023,7 @@ function to(t, o) {
   return t[s] + (t[l] - t[s]) * (r - s);
 }
 var Rn = 1024;
-function HOt() {
+function createSessionMetricsStore() {
   let t = new Map(),
     o = new Map(),
     r = new Map();
@@ -2075,7 +2075,7 @@ function Ct(Nl) {
   let Tn = _(8),
     { store: Bl, children: An } = Nl,
     ui;
-  if (Tn[0] === MEMO_CACHE_SENTINEL) ((ui = HOt()), (Tn[0] = ui));
+  if (Tn[0] === MEMO_CACHE_SENTINEL) ((ui = createSessionMetricsStore()), (Tn[0] = ui));
   else ui = Tn[0];
   let Be = Bl ?? ui,
     { storageV5: Pt } = useStorageV5Context(),
@@ -2148,7 +2148,7 @@ class ro extends r7 {
 }
 function Hi(resolvedAction, willConsume) {}
 var Wi = 1000;
-function ble(pd) {
+function KeybindingSetupIfNeeded(pd) {
   let bi = _(4),
     { children: ut } = pd;
   if (useKeybindingContext()) {
@@ -2642,24 +2642,24 @@ function $i(t, o) {
 var Un = $i;
 function Ki(t, o) {
   var r = vg(t) ? vXt : Un;
-  return r(t, r8t(GP(o, 3)));
+  return r(t, negate(GP(o, 3)));
 }
-var nO = Ki;
+var filterCollection = Ki;
 function Hn(t, o) {
   let r = t.clients.findIndex((k) => k.name === o);
   if (r === -1) return t;
   let s = t.clients[r];
-  if (!s || !ts(s)) return t;
+  if (!s || !isConnectedMcpServer(s)) return t;
   let l = [...t.clients];
   return (
     (l[r] = { name: o, type: "needs-auth", config: s.config }),
     { ...t, clients: l }
   );
 }
-function IOt(t, o, r, s) {
+function adoptMcpServer(t, o, r, s) {
   let l = t.mcp.clients.some((c) => c.name === o);
   if (!l && s?.appendIfAbsent === !1) return t;
-  let k = Oa(o);
+  let k = getMcpToolPrefix(o);
   return {
     ...t,
     mcp: {
@@ -2678,15 +2678,15 @@ function IOt(t, o, r, s) {
     },
   };
 }
-function FUn(t, o, r) {
+function replaceServerToolsInState(t, o, r) {
   if (!t.clients.some((l) => l.name === o && l.type === "connected")) return t;
-  let s = Oa(o);
+  let s = getMcpToolPrefix(o);
   return { ...t, tools: [...t.tools.filter((l) => !isToolFromMcpServer(l, o, s)), ...r] };
 }
-function gat(t, o, r) {
+function replaceServerToolsInMcpState(t, o, r) {
   if (!t.mcp.clients.some((l) => l.name === o && l.type === "connected"))
     return t;
-  let s = Oa(o);
+  let s = getMcpToolPrefix(o);
   return {
     ...t,
     mcp: {
@@ -2695,14 +2695,14 @@ function gat(t, o, r) {
     },
   };
 }
-function $Un(t, o, r) {
+function reconcileDynamicMcpState(t, o, r) {
   let s = new Set(t.clients),
     l = new Map(o.clients.map((T) => [T.name, T])),
     k = r;
   for (let T of r.clients) {
     if (!s.has(T)) continue;
     let L = l.get(T.name),
-      D = Oa(T.name),
+      D = getMcpToolPrefix(T.name),
       O = (W) => isToolFromMcpServer(W, T.name, D);
     if (L === void 0) {
       k = {
@@ -2722,7 +2722,7 @@ function $Un(t, o, r) {
     v = new Set(r.clients.map((T) => T.name)),
     w = o.clients.filter((T) => !c.has(T.name) && !v.has(T.name));
   if (w.length > 0) {
-    let T = w.map((L) => [L.name, Oa(L.name)]);
+    let T = w.map((L) => [L.name, getMcpToolPrefix(L.name)]);
     k = {
       ...k,
       clients: [...k.clients, ...w],
@@ -2745,19 +2745,19 @@ function Gi(t) {
 }
 function $n(t, o, r) {
   return {
-    tools: nO(t.tools, (s) => s.name?.startsWith(r)),
-    commands: nO(t.commands, (s) => isMcpServerScopedName(s, o)),
-    resources: zl(t.resources, o),
-    resourceTemplates: zl(t.resourceTemplates, o),
+    tools: filterCollection(t.tools, (s) => s.name?.startsWith(r)),
+    commands: filterCollection(t.commands, (s) => isMcpServerScopedName(s, o)),
+    resources: omitObjectKeys(t.resources, o),
+    resourceTemplates: omitObjectKeys(t.resourceTemplates, o),
   };
 }
-class v0e {
+class McpConnectionsStore {
   #e;
   constructor(t) {
     this.#e = t;
   }
   static over(t) {
-    return new v0e(createFieldAccessor(t.getState, t.setState, "mcp"));
+    return new McpConnectionsStore(createFieldAccessor(t.getState, t.setState, "mcp"));
   }
   get() {
     return this.#e.get();
@@ -2766,13 +2766,13 @@ class v0e {
     this.#e.set((o) => Hn(o, t));
   }
   adoptServer(t, o, r) {
-    this.#e.set((s) => IOt({ mcp: s }, t, o, r).mcp);
+    this.#e.set((s) => adoptMcpServer({ mcp: s }, t, o, r).mcp);
   }
   swapServerTools(t, o) {
     let r = !1;
     return (
       this.#e.set((s) => {
-        let l = gat({ mcp: s }, t, o);
+        let l = replaceServerToolsInMcpState({ mcp: s }, t, o);
         return ((r = l.mcp !== s), l.mcp);
       }),
       r
@@ -2813,7 +2813,7 @@ class v0e {
     let r = [...t, ...o];
     if (r.length === 0) return;
     this.#e.set((s) => {
-      let l = r.map((c) => [c, Oa(c)]),
+      let l = r.map((c) => [c, getMcpToolPrefix(c)]),
         k = (c) => l.some(([v, w]) => isToolFromMcpServer(c, v, w));
       return {
         ...s,
@@ -2824,10 +2824,10 @@ class v0e {
               ? [{ name: c.name, type: "pending", config: c.config }]
               : [c],
         ),
-        tools: nO(s.tools, k),
-        commands: nO(s.commands, (c) => r.some((v) => isMcpServerScopedName(c, v))),
-        resources: zl(s.resources, r),
-        resourceTemplates: zl(s.resourceTemplates, r),
+        tools: filterCollection(s.tools, k),
+        commands: filterCollection(s.commands, (c) => r.some((v) => isMcpServerScopedName(c, v))),
+        resources: omitObjectKeys(s.resources, r),
+        resourceTemplates: omitObjectKeys(s.resourceTemplates, r),
       };
     });
   }
@@ -2853,14 +2853,14 @@ class v0e {
           H = O ? (c ?? []) : c,
           W = O ? (v ?? []) : v,
           x = O ? (w ?? []) : w,
-          I = Oa(D.name),
+          I = getMcpToolPrefix(D.name),
           j = s.clients.findIndex((Q) => Q.name === D.name),
           q = j !== -1 ? s.clients[j] : void 0,
           J =
             D.type === "connected" &&
             q?.type === "connected" &&
             q.client === D.client,
-          K = ts(D) && mcpDialBlockCause(D.name, D.config) === "managed-policy";
+          K = isConnectedMcpServer(D) && mcpDialBlockCause(D.name, D.config) === "managed-policy";
         if (
           D.type !== "disabled" &&
           !J &&
@@ -2871,7 +2871,7 @@ class v0e {
           if (D.type === "connected") Gi(D);
           if (
             (o.onOrphanedDisable(D.name),
-            q && q.type !== "disabled" && (q.type !== "connected" || !ts(D)))
+            q && q.type !== "disabled" && (q.type !== "connected" || !isConnectedMcpServer(D)))
           )
             s = {
               ...s,
@@ -2884,7 +2884,7 @@ class v0e {
             };
           continue;
         }
-        let Y = ts(D) ? mcpDialBlockCause(D.name, D.config) : null;
+        let Y = isConnectedMcpServer(D) ? mcpDialBlockCause(D.name, D.config) : null;
         if (Y) {
           o.onDoorDenied(D.name);
           let Q = D.config;
@@ -2939,7 +2939,7 @@ class v0e {
           if (D.type === "connected") tt().detachAndCloseConnection(D);
           continue;
         }
-        if (j !== -1 && !fke(s.clients[j], D)) continue;
+        if (j !== -1 && !shouldRefetchMcpServer(s.clients[j], D)) continue;
         let X =
             j === -1
               ? [...s.clients, D]
@@ -2947,23 +2947,23 @@ class v0e {
           ee =
             U === void 0
               ? s.tools
-              : [...nO(s.tools, (Q) => Q.name?.startsWith(I)), ...U],
+              : [...filterCollection(s.tools, (Q) => Q.name?.startsWith(I)), ...U],
           de =
             H === void 0
               ? s.commands
-              : [...nO(s.commands, (Q) => isMcpServerScopedName(Q, D.name)), ...H],
+              : [...filterCollection(s.commands, (Q) => isMcpServerScopedName(Q, D.name)), ...H],
           se =
             W === void 0
               ? s.resources
               : W.length > 0
                 ? { ...s.resources, [D.name]: W }
-                : zl(s.resources, D.name),
+                : omitObjectKeys(s.resources, D.name),
           ce =
             x === void 0
               ? s.resourceTemplates
               : x.length > 0
                 ? { ...s.resourceTemplates, [D.name]: x }
-                : zl(s.resourceTemplates, D.name);
+                : omitObjectKeys(s.resourceTemplates, D.name);
         s = {
           ...s,
           clients: X,
@@ -3012,7 +3012,7 @@ function Je(gc) {
   else Yi = zi[2];
   return Yi;
 }
-function g9e() {
+function useInputSelectionBridge() {
   let Ji = De(jt);
   if (!Ji) {
     throw ReferenceError(
@@ -3081,7 +3081,7 @@ function Ht(xc) {
   else Zi = Qi[2];
   return Zi;
 }
-function Ien() {
+function useMailbox() {
   let es = De(Ut);
   if (!es) {
     throw Error("useMailbox must be used within a MailboxProvider");
@@ -3089,13 +3089,13 @@ function Ien() {
   return es;
 }
 F();
-function tk(t) {
+function getTopBareDialog(t) {
   return t.open.findLast((o) => !o.userInvoked) ?? null;
 }
-function Q8(t) {
+function getTopUserInvokedDialog(t) {
   return t.open.findLast((o) => o.userInvoked === !0) ?? null;
 }
-function R0e(t, o) {
+function isDialogKindOpen(t, o) {
   return t.open.some((r) => r.kind === o);
 }
 function ho() {
@@ -3119,7 +3119,7 @@ function ho() {
       onClosed: o.subscribe,
       open(w) {
         t.setState((T) => {
-          let L = tk(T),
+          let L = getTopBareDialog(T),
             D = L?.holdsTop === !0 && go(L, w) && w.succeeds !== !0;
           if (
             (w.place === "under" || D) &&
@@ -3196,60 +3196,60 @@ function os(t, o) {
 function go(t, o) {
   return (t.userInvoked === !0) === (o.userInvoked === !0);
 }
-var Uye = Qt(null);
-function Cc() {
-  let t = De(Uye);
+var DialogStoreContext = Qt(null);
+function useDialogStore() {
+  let t = De(DialogStoreContext);
   if (!t)
     throw ReferenceError(
       "useDialogStore cannot be called outside of a DialogStoreContext provider (mounted by <AppStateProvider />)",
     );
   return t;
 }
-function Bye() {
-  let t = Cc(),
+function useHasOpenDialogs() {
+  let t = useDialogStore(),
     o = () => t.getState().open.length > 0;
   return At(t.subscribe, o, o);
 }
-function Z8() {
-  let t = Cc(),
-    o = () => tk(t.getState()) !== null;
+function useHasBareDialog() {
+  let t = useDialogStore(),
+    o = () => getTopBareDialog(t.getState()) !== null;
   return At(t.subscribe, o, o);
 }
-function qb(t) {
-  let o = Cc(),
-    r = () => R0e(o.getState(), t);
+function useIsDialogKindOpen(t) {
+  let o = useDialogStore(),
+    r = () => isDialogKindOpen(o.getState(), t);
   return At(o.subscribe, r, r);
 }
-function h9e() {
-  let t = Cc(),
-    o = () => Q8(t.getState());
+function useTopUserInvokedDialog() {
+  let t = useDialogStore(),
+    o = () => getTopUserInvokedDialog(t.getState());
   return At(t.subscribe, o, o);
 }
-function UUn() {
-  let t = Cc(),
-    o = () => tk(t.getState());
+function useTopBareDialog() {
+  let t = useDialogStore(),
+    o = () => getTopBareDialog(t.getState());
   return At(t.subscribe, o, o);
 }
-function Pen(t) {
-  let o = Cc(),
-    r = () => POt(tk(o.getState()), t);
+function useTopBareDialogHiddenWhile(t) {
+  let o = useDialogStore(),
+    r = () => isDialogHiddenWhile(getTopBareDialog(o.getState()), t);
   return At(o.subscribe, r, r);
 }
-function POt(t, o) {
+function isDialogHiddenWhile(t, o) {
   return t?.hideWhile?.includes(o) === !0;
 }
-function hat() {
-  let t = Cc(),
-    o = () => tk(t.getState())?.kind;
+function useTopBareDialogKind() {
+  let t = useDialogStore(),
+    o = () => getTopBareDialog(t.getState())?.kind;
   return At(t.subscribe, o, o);
 }
-function sF(t) {
-  let o = Cc(),
+function useDialogStoreSelector(t) {
+  let o = useDialogStore(),
     r = () => t(o.getState());
   return At(o.subscribe, r, r);
 }
 F();
-function wle(t) {
+function useOnSettingsChange(t) {
   let o = vr(t);
   E(
     () =>
@@ -3274,7 +3274,7 @@ function qn() {
   let t = worktreeStateStore.of(B().host).last;
   return [
     ...(getBgTakeover()?.adoptShellOutputReadRoot ? [getBgTakeover().adoptShellOutputReadRoot] : []),
-    ...(t ? [ZYe(iEt(t.worktreePath))] : []),
+    ...(t ? [getProjectTempDirForPath(realpathIfResolvable(t.worktreePath))] : []),
   ];
 }
 function Yn(t) {
@@ -3297,7 +3297,7 @@ function Yn(t) {
       jobDir: void 0,
       agentTranscriptPaths: {},
       workflowTranscriptDirs: {},
-      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? bR(),
+      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? getCurrentProjectTempDir(),
       mergeShellOutputReadRoots: qn(),
     };
   }
@@ -3340,7 +3340,7 @@ function Yn(t) {
       workflowTranscriptDirs: Object.fromEntries(
         l.map((O) => [O.workflowRunId, getWorkflowTranscriptDir(O.workflowRunId)]),
       ),
-      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? bR(),
+      projectTempDir: getBgTakeover()?.adoptShellOutputRoot ?? getCurrentProjectTempDir(),
       mergeShellOutputReadRoots: qn(),
     }
   );
@@ -3369,7 +3369,7 @@ function Qn(
       try {
         await withTimeout(
           (async () => {
-            (await OP(), await flushSessionStorage());
+            (await yieldToEventLoop(), await flushSessionStorage());
           })(),
           rs,
           zn,
@@ -3448,7 +3448,7 @@ function Qn(
   })();
   return (trackPendingWrite(O), O);
 }
-function wat(t, o) {
+function runExitHandoff(t, o) {
   let r = Yn(t),
     s =
       r.shells.length > 0 ||
@@ -3483,7 +3483,7 @@ function $t(t, o = new Set()) {
     }
   }
 }
-function Tat(t) {
+function subscribeToRefusalFallbackRestoreSync(t) {
   return sc((o, r, s) => {
     if (!s) return;
     (is(s, t),
@@ -3494,7 +3494,7 @@ function Tat(t) {
       }));
   });
 }
-function WUn(t) {
+function subscribeToRefusalFallbackRestore(t) {
   return sc((o, r, s) => {
     if (s) t();
   });
@@ -3526,26 +3526,26 @@ function is(t, o) {
   ad(t.overrideValue);
 }
 import { resolve } from "path";
-var rtn = new Gt(() => Le());
-function Eat(t, o, r, s, l) {
+var autoModeGateChangeNotifier = new Gt(() => Le());
+function applySettingsChange(t, o, r, s, l) {
   let k = getInitialSettings();
   (n(`Settings changed from ${o}, updating app state`), resetLocalSettingsGitTrackedCache());
-  let c = OG();
+  let c = getEffectivePermissionRules();
   (updateHooksConfigSnapshot({ userLayer: "retain" }), clearCommandMemoizationCaches());
   let v = !1;
   if (
     (r((w) => {
       let T = syncPermissionRulesFromDisk(w.toolPermissionContext, c);
-      T = stn(
+      T = syncAdditionalWorkingDirectories(
         T,
         w.settings.permissions?.additionalDirectories,
-        tme(),
+        getEffectiveAdditionalDirectories(),
         o,
         l?.trustFlip === !0,
         l?.prevCwd,
         s,
       );
-      let L = otn(T, c);
+      let L = applyDisabledModePolicies(T, c);
       if (
         ((T = L.context),
         (v = L.exitedAutoMode),
@@ -3567,17 +3567,17 @@ function Eat(t, o, r, s, l) {
     }),
     v)
   )
-    rtn.of(t).emit();
+    autoModeGateChangeNotifier.of(t).emit();
 }
-function Aat(t) {
+function runIfPolicySettingsNotified(t) {
   if (hasPolicySettingsNotified()) t();
 }
-function otn(t, o) {
+function applyDisabledModePolicies(t, o) {
   let r = t;
   if (r.isBypassPermissionsModeAvailable && isBypassPermissionsModeDisabled()) r = createDisabledBypassPermissionsContext(r);
   if (r.strippedDangerousRules !== void 0) {
-    let l = new Set(yi),
-      k = !iP(),
+    let l = new Set(SETTINGS_SOURCE_ORDER),
+      k = !isManagedPermissionRulesOnlyEnabled(),
       c = {};
     for (let [v, w] of Object.entries(r.strippedDangerousRules))
       if (w && (k || v === "command") && !l.has(v)) c[v] = [...w];
@@ -3587,7 +3587,7 @@ function otn(t, o) {
   if (s) r = createDisabledAutoModeContext(r);
   return { context: transitionPlanAutoMode(r), exitedAutoMode: s };
 }
-function stn(t, o, r, s, l = !1, k, c) {
+function syncAdditionalWorkingDirectories(t, o, r, s, l = !1, k, c) {
   let v = new Set((o ?? []).flatMap((I) => rt(I, k))),
     w = new Set((r ?? []).flatMap((I) => rt(I))),
     T = t.additionalWorkingDirectories,
@@ -3595,7 +3595,7 @@ function stn(t, o, r, s, l = !1, k, c) {
     D = [...w].filter(
       (I) => (!v.has(I) || (l && !T.has(I))) && !Kt(T.get(I)?.source),
     ),
-    { declared: O, repoOnly: U } = rEt((I) => [...rt(I, he()), ...rt(I)], c),
+    { declared: O, repoOnly: U } = getDeclaredAndRepoOnlyDirectories((I) => [...rt(I, he()), ...rt(I)], c),
     H = (I) => (U.has(I) ? "projectSettings" : "localSettings"),
     W = [...T.entries()].filter(
       ([I, j]) =>
@@ -3642,7 +3642,7 @@ function stn(t, o, r, s, l = !1, k, c) {
     if (q) x = { ...x, trustedNetworkDirectories: j };
   }
   if (L.length > 0)
-    x = Oc(x, {
+    x = applyPermissionUpdate(x, {
       type: "removeDirectories",
       directories: L,
       destination: "localSettings",
@@ -3651,19 +3651,19 @@ function stn(t, o, r, s, l = !1, k, c) {
     for (let I of ["projectSettings", "localSettings"]) {
       let j = D.filter((q) => H(q) === I);
       if (j.length > 0)
-        x = Oc(x, { type: "addDirectories", directories: j, destination: I });
+        x = applyPermissionUpdate(x, { type: "addDirectories", directories: j, destination: I });
     }
   return x;
 }
-function Cat(t, o) {
-  let r = new Set(tme().flatMap((k) => rt(k))),
+function retireDepartedAdditionalDirectories(t, o) {
+  let r = new Set(getEffectiveAdditionalDirectories().flatMap((k) => rt(k))),
     s = t.additionalWorkingDirectories,
     l = o.filter((k) => {
       let c = s.get(k);
       return c !== void 0 && !r.has(k) && !Kt(c.source);
     });
   if (l.length === 0) return t;
-  return Oc(t, {
+  return applyPermissionUpdate(t, {
     type: "removeDirectories",
     directories: l,
     destination: "localSettings",
@@ -3684,7 +3684,7 @@ function rt(t, o) {
 }
 F();
 var Vt = Qt(null);
-function VB() {
+function useSessionHooksRegistry() {
   let t = De(Vt);
   if (!t)
     throw ReferenceError(
@@ -3759,7 +3759,7 @@ function qt(jp) {
   if (te[13] !== wo || te[14] !== oe || te[15] !== ko)
     ((ms = () => {
       let hs = ko
-        ? () => wat(oe.getState().tasks, wo)
+        ? () => runExitHandoff(oe.getState().tasks, wo)
         : () => $t(oe.getState().tasks);
       let Up = Et(hs);
       return () => {
@@ -3775,7 +3775,7 @@ function qt(jp) {
   else ((ms = te[16]), (gs = te[17]));
   E(ms, gs);
   let Ss;
-  if (te[18] !== oe) ((Ss = () => v0e.over(oe)), (te[18] = oe), (te[19] = Ss));
+  if (te[18] !== oe) ((Ss = () => McpConnectionsStore.over(oe)), (te[18] = oe), (te[19] = Ss));
   else Ss = te[19];
   let [ue] = d(Ss),
     ys;
@@ -3829,7 +3829,7 @@ function qt(jp) {
   E(Ps, Cs);
   let _s;
   if (te[40] !== oe.setState)
-    ((_s = () => Tat(oe.setState)), (te[40] = oe.setState), (te[41] = _s));
+    ((_s = () => subscribeToRefusalFallbackRestoreSync(oe.setState)), (te[40] = oe.setState), (te[41] = _s));
   else _s = te[41];
   let xs;
   if (te[42] !== oe) ((xs = [oe]), (te[42] = oe), (te[43] = xs));
@@ -3837,18 +3837,18 @@ function qt(jp) {
   E(_s, xs);
   let Ms;
   if (te[44] !== fe || te[45] !== be || te[46] !== oe.setState)
-    ((Ms = (Gp, _settings, Vp) => Eat(fe, Gp, oe.setState, be, Vp)),
+    ((Ms = (Gp, _settings, Vp) => applySettingsChange(fe, Gp, oe.setState, be, Vp)),
       (te[44] = fe),
       (te[45] = be),
       (te[46] = oe.setState),
       (te[47] = Ms));
   else Ms = te[47];
   let vo = vr(Ms);
-  wle(vo);
+  useOnSettingsChange(vo);
   let Es;
   if (te[48] !== vo)
     ((Es = () => {
-      Aat(() => vo("policySettings"));
+      runIfPolicySettingsNotified(() => vo("policySettings"));
     }),
       (te[48] = vo),
       (te[49] = Es));
@@ -3898,7 +3898,7 @@ function qt(jp) {
   if (te[65] !== ir || te[66] !== Co)
     ((_o = e(Ht, {
       children: e(VoiceProvider, {
-        children: e(Uye.Provider, { value: ir, children: Co }),
+        children: e(DialogStoreContext.Provider, { value: ir, children: Co }),
       }),
     })),
       (te[65] = ir),
@@ -3968,7 +3968,7 @@ function AppRoot(ff) {
   let Ar = Os,
     No;
   if (Oe[2] !== Oo || Oe[3] !== br)
-    ((No = br ? e(ble, { children: Oo }) : Oo),
+    ((No = br ? e(KeybindingSetupIfNeeded, { children: Oo }) : Oo),
       (Oe[2] = Oo),
       (Oe[3] = br),
       (Oe[4] = No));
@@ -4047,33 +4047,33 @@ function AppRoot(ff) {
   return js;
 }
 export {
-  J8,
-  xOt,
-  HOt,
-  ble,
-  nO,
-  IOt,
-  FUn,
-  gat,
-  $Un,
-  v0e,
-  g9e,
-  Ien,
-  tk,
-  Q8,
-  R0e,
-  Uye,
-  Cc,
-  Bye,
-  Z8,
-  qb,
-  h9e,
-  UUn,
-  Pen,
-  POt,
-  hat,
-  sF,
-  wle,
+  useAutoModeDenials,
+  useFpsMetrics,
+  createSessionMetricsStore,
+  KeybindingSetupIfNeeded,
+  filterCollection,
+  adoptMcpServer,
+  replaceServerToolsInState,
+  replaceServerToolsInMcpState,
+  reconcileDynamicMcpState,
+  McpConnectionsStore,
+  useInputSelectionBridge,
+  useMailbox,
+  getTopBareDialog,
+  getTopUserInvokedDialog,
+  isDialogKindOpen,
+  DialogStoreContext,
+  useDialogStore,
+  useHasOpenDialogs,
+  useHasBareDialog,
+  useIsDialogKindOpen,
+  useTopUserInvokedDialog,
+  useTopBareDialog,
+  useTopBareDialogHiddenWhile,
+  isDialogHiddenWhile,
+  useTopBareDialogKind,
+  useDialogStoreSelector,
+  useOnSettingsChange,
   FleetNudgeStore,
   ensureFleetNudgeStore,
   FleetNudgeStoreContext,
@@ -4124,17 +4124,17 @@ export {
   countCarriedSince,
   carriesTasks,
   adoptedCounts,
-  wat,
-  Tat,
-  WUn,
-  rtn,
-  Eat,
-  Aat,
-  otn,
-  stn,
-  Cat,
-  VB,
-  aF,
+  runExitHandoff,
+  subscribeToRefusalFallbackRestoreSync,
+  subscribeToRefusalFallbackRestore,
+  autoModeGateChangeNotifier,
+  applySettingsChange,
+  runIfPolicySettingsNotified,
+  applyDisabledModePolicies,
+  syncAdditionalWorkingDirectories,
+  retireDepartedAdditionalDirectories,
+  useSessionHooksRegistry,
+  createBaseAppState,
   EMPTY_PROJECTS_SELF_IDENTITY,
   getDefaultAppState,
   AppRoot,

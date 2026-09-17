@@ -355,14 +355,14 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import {
-  v0,
-  k7t,
-  jn,
-  Pt,
-  Ks,
-  eE,
-  x7t,
-  H7t,
+  openFileReadOnlyHardened,
+  NO_REMOTE_TRANSPORT,
+  getRemoteTransport,
+  isRemoteActive,
+  hasRemoteControlChannel,
+  hasRemoteCapability,
+  canCancelExternalLoading,
+  createRemoteTransport,
   onWatchedGitStateChange,
   findGitRoot,
   findCanonicalGitRoot,
@@ -400,30 +400,30 @@ import { isValidPathSegment, STORAGE_KEYS } from "../../02-功能模块/Teammate
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { oL, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  ea,
-  Oq,
-  RRt,
-  e8t,
-  Kar,
-  Xar,
-  Yet,
-  ms,
-  Nr,
-  tu,
-  sd,
-  ts,
-  fke,
-  Vn,
-  nv,
-  MQ,
-  Sie,
-  clr,
-  qRt,
-  ulr,
-  dlr,
-  plr,
-  flr,
-  pS,
+  pickBy,
+  Fuse,
+  COMMAND_NAME_SEPARATOR_RE,
+  CommandSearchIndex,
+  getCommandKind,
+  getSkillSourceCategory,
+  describeSettingsSource,
+  getEnabledSettingsSources,
+  isSettingsSourceEnabled,
+  omitBy,
+  getPluginDisplayName,
+  isConnectedMcpServer,
+  shouldRefetchMcpServer,
+  formatDisplayText,
+  toErrorMessage,
+  shouldAutoUpdateMarketplace,
+  SPELLCHECK_BACKENDS,
+  SPELLCHECK_VERBOSE_MODE_COMMAND,
+  isValidDictionaryName,
+  buildSpellcheckerArgs,
+  detectSpellcheckBackend,
+  buildSpellcheckRequestLine,
+  parseSpellcheckResponseLine,
+  MAX_TIMER_DELAY_MS,
   getLastLoadStatus,
   onLastLoadStatusChanged,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -1398,24 +1398,24 @@ import {
 } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getSessionTranscriptPath } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 import {
-  Td,
-  str,
-  jl,
-  PC,
+  stripMemoryTags,
+  extractMemoryCitations,
+  MEMORY_INDEX_FILE_NAME,
+  parseMemoryDocument,
   Loe,
-  Ni,
-  iP,
-  FK,
-  QYe,
-  Oc,
-  Kk,
-  DG,
-  ZYe,
-  iEt,
-  wzt,
-  Wg,
-  qFe,
-  ni,
+  REPL_TOOL_NAME,
+  isManagedPermissionRulesOnlyEnabled,
+  areUserPermissionRulesAllowed,
+  collectRuleValuesFromUpdates,
+  applyPermissionUpdate,
+  applyPermissionUpdates,
+  persistPermissionUpdate,
+  getProjectTempDirForPath,
+  realpathIfResolvable,
+  getToolCallMachineRouting,
+  hasRequestedMachine,
+  PERMISSION_RULE_SOURCES,
+  findMatchingDenyRule,
   normalizeCaseForComparison,
   toPosixPath,
   isScratchpadEnabled,
@@ -1481,9 +1481,9 @@ import { b7e, PJn } from "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmw
 import { getSessionNamingState, takePendingYield, reclaimSessionNameOnResume } from "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import {
-  Cr,
-  Efe,
-  yw,
+  WEB_FETCH_TOOL_NAME,
+  buildArtifactReadGuidance,
+  formatArtifactTitle,
   makeOwnPublishesStore,
   isArtifactConflictLegacy,
   artifactReadObservationIn,
@@ -1501,10 +1501,10 @@ import {
 } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
 import { isCustomizationDisabled, isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
 import { emitOtelEvent, emitPermissionModeChanged } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
-import { Cl, BW } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
+import { stableStringify, MAX_HOOK_DROP_LENGTH } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import { isViolinWoodEnabledCached, isSettingsToCloudEnabledCached, isCloudPluginForwardingEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
-import { Uk, hD, XS, ZY, V_, lR, ti, X7e, isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { SHELL_TOOL_NAMES, getPreferredShellToolName, TODO_WRITE_TOOL_NAME, isSkillsAsToolsEnabled, isReplModeEnabled, ENTER_WORKTREE_TOOL_NAME, STRUCTURED_OUTPUT_TOOL_NAME, getStructuredOutputText, isCoordinatorMode } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { Tj } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import {
   getTerminalMultiplexer,
@@ -1645,7 +1645,7 @@ import { _$ } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t
 import { getComputerUseNativeModule } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { LOGIN_SLASH_COMMAND, REMOTE_CONTROL_MALFORMED_RESPONSE_MESSAGE, REMOTE_CONTROL_ACCOUNT_UNVERIFIED_MESSAGE, REMOTE_CONTROL_PREVIOUS_SESSION_UNAVAILABLE_MESSAGE } from "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
 import { isAgentsFleetEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
-import { qHe, vWe, Eit, IWe, eF, rle, Cit } from "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
+import { trackJobPromise, RECAP_TRIGGER_FILE, formatDispatchDefaultFlags, preSeedReplBgJob, spawnBgSession, formatBgHints, stripResumeFlags } from "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
 import {
   sk,
   Lat,
@@ -1804,25 +1804,25 @@ import { findFirstUserPrompt, generateSessionTitle } from "../../02-功能模块
 import { registerAdoptedWorkflowTask, pauseWorkflowTask, killWorkflowTask, skipWorkflowAgent, retryWorkflowAgent } from "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
 import { sze, gpt, o9n, ate } from "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
 import {
-  J8,
-  xOt,
-  ble,
-  g9e,
-  Ien,
-  tk,
-  Q8,
-  R0e,
-  Uye,
-  Cc,
-  Bye,
-  Z8,
-  qb,
-  h9e,
-  UUn,
-  Pen,
-  POt,
-  hat,
-  sF,
+  useAutoModeDenials,
+  useFpsMetrics,
+  KeybindingSetupIfNeeded,
+  useInputSelectionBridge,
+  useMailbox,
+  getTopBareDialog,
+  getTopUserInvokedDialog,
+  isDialogKindOpen,
+  DialogStoreContext,
+  useDialogStore,
+  useHasOpenDialogs,
+  useHasBareDialog,
+  useIsDialogKindOpen,
+  useTopUserInvokedDialog,
+  useTopBareDialog,
+  useTopBareDialogHiddenWhile,
+  isDialogHiddenWhile,
+  useTopBareDialogKind,
+  useDialogStoreSelector,
   useFleetNudgeStore,
   STALE_THRESHOLD_MS,
   TAKEOVER_ADOPT_WAIT_MS,
@@ -1856,9 +1856,9 @@ import {
   countCarriedSince,
   carriesTasks,
   adoptedCounts,
-  rtn,
-  Cat,
-  VB,
+  autoModeGateChangeNotifier,
+  retireDepartedAdditionalDirectories,
+  useSessionHooksRegistry,
   getDefaultAppState,
   AppRoot,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
@@ -1880,70 +1880,70 @@ import {
   kHe,
 } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
 import {
-  Fz,
-  D_e,
-  XHt,
-  Zje,
-  L_e,
-  DNn,
-  e6e,
-  M_e,
-  Zxe,
-  C8,
-  eHe,
-  pJt,
-  Mae,
-  tHe,
-  v8,
-  KNn,
-  fJt,
-  gJt,
-  Pot,
-  rHe,
+  redactManagedMcpConfig,
+  normalizeMcpServerStatus,
+  serializeMcpServerStatuses,
+  redactCompactError,
+  enqueueStatusSdkEvent,
+  enqueueStreamEvent,
+  emitBackgroundTasksChanged,
+  partitionSettingsErrors,
+  serializeFeedbackPayload,
+  hasThirdPartyTranscriptMarkers,
+  anyTranscriptEntryHasThirdPartyMarkers,
+  readRecentTranscriptTail,
+  resolveFeedbackSubmissionMode,
+  MAX_RAW_TRANSCRIPT_BYTES,
+  MAX_FEEDBACK_PAYLOAD_BYTES,
+  submitFeedbackSurveyFollowup,
+  writeFeedbackBundleZip,
+  parseFooterIndicatorText,
+  attachStartupTiming,
+  processUserInput,
   REMOTE_READ_MAX_BYTES,
-  _Jt,
-  oHe,
-  u0t,
-  d0t,
-  JNn,
-  QNn,
-  f0t,
-  yJt,
-  e1n,
-  g0t,
-  h0t,
-  t1n,
-  n1n,
-  r1n,
-  o1n,
-  s1n,
-  i1n,
-  bJt,
-  a1n,
-  wJt,
-  l1n,
-  c1n,
-  u1n,
-  d1n,
-  p1n,
-  f1n,
-  m1n,
-  g1n,
-  Mot,
-  _1n,
-  iHe,
-  s6e,
-  k8,
-  Not,
-  TJt,
-  $ot,
-  Uot,
-  EJt,
-  w1n,
-  vZ,
-  AJt,
-  CJt,
-  b0t,
+  getInterruptScopeForOrigin,
+  createSdkEngine,
+  hasRecordedFullscreenCrashForVersion,
+  clearFullscreenCrashState,
+  markFullscreenFirstFrame,
+  TUI_TRIAL_ENV_OVERRIDES,
+  markFullscreenUpsellExhausted,
+  getNextFullscreenUpsellImpression,
+  resolveEntryPermissionMode,
+  collectBashCommands,
+  collectBashHosts,
+  collectUsedToolNames,
+  UPSELL_IDLE_DELAY_MINUTES,
+  REMOTE_CONTROL_READY_PUSH_MESSAGE,
+  getLongTurnNudgeConfig,
+  isWithinNudgeHours,
+  getPermissionNudgeConfig,
+  shouldShowRemoteControlUpsell,
+  recordRemoteControlUpsellShown,
+  shouldShowPushNotificationsUpsell,
+  recordPushNotificationsUpsellShown,
+  shouldShowLongTurnNudge,
+  recordLongTurnNudgeShown,
+  shouldShowPermissionNudge,
+  recordPermissionNudgeShown,
+  getReadyPushNudgeConfig,
+  shouldSendReadyPushNotification,
+  recordReadyPushNotificationSent,
+  recordRemoteControlSurfaceSeen,
+  restoreTeammateContextFromSession,
+  createConfigChangeHookGate,
+  isStaleBootstrapFrame,
+  createRemoteBootstrapState,
+  reduceRemoteBootstrapState,
+  finishRemoteBootstrap,
+  formatRemoteSessionSummary,
+  isSessionCwdSafeToAdopt,
+  PREFILL_LONG_PROMPT_THRESHOLD,
+  formatExamplePromptHint,
+  spinnerTipHostStateStore,
+  isAdvertisedCommandAvailable,
+  isTipRelevant,
+  getApplicableSpinnerTips,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { Act, Cct, ir, xh, xct, gE, Qx, Oct } from "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
@@ -1953,18 +1953,18 @@ import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { isArtifactReplyYieldEnabled } from "../../02-功能模块/Artifact发布-渲染/artifact-reply-yield.js";
 import {
-  Qqe,
-  nT,
-  IWn,
-  PWn,
-  Zqe,
-  tze,
-  Hbe,
-  ppt,
-  YWn,
-  Zu,
-  ZWn,
-  fpt,
+  registerHeldReplyCanUseTool,
+  isArtifactCommentsAvailable,
+  takeStartupWatchTarget,
+  getStartupWatchTarget,
+  stripWatchArtifactFlags,
+  setSessionUserBusy,
+  resolveLiveSessionHolder,
+  buildHolderDescriptor,
+  resolveJobHolderVerdict,
+  isArtifactAutoReactEnabled,
+  shouldDropAutoReactTaskNotification,
+  disarmArtifactAutoReact,
 } from "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import {
   xdt,
@@ -2127,60 +2127,60 @@ import {
   refreshFotwEligibility,
 } from "../../02-功能模块/用量额度-限额/chunk-1bfn62xh.js";
 import {
-  W_e,
-  gHe,
-  E6e,
-  hHe,
-  G_e,
-  KJt,
-  lst,
-  cst,
-  XJt,
-  sFn,
-  iFn,
-  YJt,
-  Q0t,
-  aFn,
-  JJt,
-  uFn,
-  Z0t,
-  _He,
-  pFn,
-  fFn,
-  mFn,
-  yHe,
-  A6e,
-  gFn,
-  ust,
-  eIt,
-  Wae,
-  dst,
-  pst,
-  SHe,
-  fst,
-  QJt,
-  mst,
-  gst,
-  ZJt,
-  eQt,
-  C6e,
-  tQt,
-  v6e,
-  nQt,
-  bHe,
-  R6e,
-  hst,
-  q_e,
-  _st,
-  x6e,
-  H6e,
-  I6e,
-  rQt,
-  yst,
-  Sst,
-  bst,
-  wst,
-  Tst,
+  pickStartupAnnouncement,
+  getFlaggedPlugins,
+  mergeSyncedSkillsWithCommands,
+  getTranscriptWatermark,
+  SandboxClassifierVerdictCache,
+  diffDeclaredMarketplaces,
+  reconcileDeclaredMarketplaces,
+  enforceDelistedPlugins,
+  raiseSessionStartOnce,
+  formatConversationSwitchNotice,
+  formatIncompleteWatchStateNotice,
+  formatHeldByLiveSessionNotice,
+  logArtifactLiveSubscribeSad,
+  getArmedSlugsNotMatching,
+  runArtifactLiveRearmPrelude,
+  createDisplayTransformQueue,
+  pruneDisplayedMessageContent,
+  restoreTaskRegistryFromTranscript,
+  notifyOrphanedAgentAutoResumed,
+  notifyOrphanedAgentAlreadyCompleted,
+  notifyOrphanedAgentResumeFailed,
+  waitForStoreCondition,
+  collectPendingAgentNotifications,
+  FOLLOWUP_ASK_FEATURE_FLAG,
+  DEFAULT_FEEDBACK_SURVEY_CONFIG,
+  DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG,
+  DEFAULT_FOLLOWUP_ASK_CONFIG,
+  isDisplayableAssistantMessage,
+  messageSupersedes,
+  TEXT_TOOL_NAMES,
+  hasRenderableAssistantText,
+  createTurnFirstTextTracker,
+  markVerifiedSlackHumanTurn,
+  resolveMessageUuid,
+  completeTurn,
+  createTurnEventTail,
+  turnEventTailModule,
+  createTurnStep,
+  turnStepModule,
+  beginTurn,
+  buildRateLimitEventMessage,
+  forwardRateLimitEventToBridge,
+  handleBridgeTransportRebuilt,
+  forwardCurrentRateLimitsToBridge,
+  buildSdkInitMessage,
+  resolveCommandPriority,
+  hasPendingDeferredSlackTurn,
+  hasPendingVerifiedSlackTurn,
+  peekCommandPreferringSlackTurn,
+  getBridgeInitializeCommands,
+  recordDeclaredDialogKinds,
+  rejectUnrecognizedModel,
+  consumeRecentTimestamp,
+  applyMessageOp,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-n6g2zfwn.js";
 import { js, XZt } from "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { pDt, Kat, mDt, gDt } from "../../02-功能模块/跨会话消息(UDS)/chunk-t2esphmv.js";
@@ -2202,34 +2202,34 @@ import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工�
 import { runEffortCommand } from "../../02-功能模块/斜杠命令-UI组件/effort-level.js";
 import { Enn, glt, Cnn, VBn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import {
-  LZ,
-  D8,
-  K_e,
-  pIt,
-  kFn,
-  Kae,
-  F6e,
-  $6e,
-  OB,
-  xS,
-  fIt,
-  Fs,
-  Hg,
-  xFn,
-  qw,
-  L8,
-  mIt,
-  gIt,
-  TQt,
-  Bst,
-  hIt,
-  Ig,
-  jst,
-  U6e,
-  B6e,
-  MZ,
-  XW,
-  EQt,
+  MAX_PERMISSION_RULE_ENTRIES,
+  MAX_PERMISSION_UPDATES,
+  MAX_CONSENT_LABEL_WIDTH,
+  RULES_AND_DIRECTORIES_UPDATE_TYPES,
+  RULES_ONLY_UPDATE_TYPES,
+  formatListWithAnd,
+  normalizeRulePathPattern,
+  hasAllowRuleForTool,
+  sanitizeCommandPrefix,
+  formatRuleContentForDisplay,
+  renderSessionConsentLabel,
+  MultilineBorderBox,
+  isConsentRow,
+  consentRowSchema,
+  mintConsentRowFromUpdates,
+  createSetModeRow,
+  createAddDirectoriesRow,
+  createRuleConsentRow,
+  AUTO_MODE_ROW_LABELS,
+  createAutoModeRow,
+  combineConsentRows,
+  PermissionReasonPanel,
+  ENABLE_AUTO_MODE_DESCRIPTION,
+  useAutoModeOffer,
+  getFeedbackTypeForAnswer,
+  useConsentFeedbackState,
+  ConfirmationPrompt,
+  ToolPermissionDialog,
 } from "../../02-功能模块/权限系统/chunk-0hcqee2w.js";
 import { createArtifactRegistries, createTeammateColorAssigner, PermissionRelayRegistry } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { skillChangeDetector } from "../../02-功能模块/文件监听-Watch/skill-change-detector.js";
@@ -2521,7 +2521,7 @@ import {
 } from "fs/promises";
 F();
 import { dirname as TJe, join as xJe } from "path";
-function HB(w) {
+function detachToBackgroundDaemon(w) {
   if (!isDaemonBgWorker()) return;
   let I = formatDetachedBackgroundMessage();
   if (sendRv({ type: "detach-request", msg: I, broadcast: w?.broadcast })) {
@@ -2673,8 +2673,8 @@ function W$t(T2o) {
 function q$t(x2o) {
   return x2o.tasks;
 }
-var Vmr = async (w, I, ne) => {
-    if (isBgSession()) return (logEvent("tengu_background_already_bg", {}), w(), HB(), null);
+var runBackgroundCommand = async (w, I, ne) => {
+    if (isBgSession()) return (logEvent("tengu_background_already_bg", {}), w(), detachToBackgroundDaemon(), null);
     if (isTranscriptPersistenceDisabled())
       return (
         w(
@@ -2683,7 +2683,7 @@ var Vmr = async (w, I, ne) => {
         null
       );
     let me = (ne ?? "").trim(),
-      pe = Uae(I.messages, me);
+      pe = deriveBackgroundSeed(I.messages, me);
     if (pe === null)
       return (
         w("Nothing to background yet \u2014 send a message first."),
@@ -2698,11 +2698,11 @@ var Vmr = async (w, I, ne) => {
     });
   },
   F$t = 3000,
-  F0t =
+  COORDINATOR_FORK_REFUSAL =
     "Forking is not available in coordinator sessions. Use /branch instead.";
-async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
+async function spawnBackgroundFork(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   if (He?.keepParent && isCoordinatorModeEnabled())
-    return { ok: !1, error: F0t, queued: !1, reason: "coordinator_mode" };
+    return { ok: !1, error: COORDINATOR_FORK_REFUSAL, queued: !1, reason: "coordinator_mode" };
   let Ke = _B(),
     Je = He?.keepParent ? truncateToCodeUnits(qr(normalizeWhitespace(I ?? "")), 60) : "",
     Qe = w.name
@@ -2770,9 +2770,9 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   }
   let xo =
       He?.keepParent && go
-        ? `This conversation was forked out of ${ao?.worktreePath ?? he()}${ao?.worktreeBranch ? ` (branch ${ao.worktreeBranch})` : ""}, a linked worktree the original session is still working in \u2014 never edit files, run commands, or enter that worktree with ${lR}. You are in ${go.to}${ro ? "" : `; before making code changes, create a new worktree of your own with ${lR} instead of reusing the original's${ao?.worktreeBranch ? `, and if the task builds on the original's work, base your new branch on ${ao.worktreeBranch} rather than checking that branch out (it stays checked out in the original's worktree)` : ""}`}.`
+        ? `This conversation was forked out of ${ao?.worktreePath ?? he()}${ao?.worktreeBranch ? ` (branch ${ao.worktreeBranch})` : ""}, a linked worktree the original session is still working in \u2014 never edit files, run commands, or enter that worktree with ${ENTER_WORKTREE_TOOL_NAME}. You are in ${go.to}${ro ? "" : `; before making code changes, create a new worktree of your own with ${ENTER_WORKTREE_TOOL_NAME} instead of reusing the original's${ao?.worktreeBranch ? `, and if the task builds on the original's work, base your new branch on ${ao.worktreeBranch} rather than checking that branch out (it stays checked out in the original's worktree)` : ""}`}.`
         : ho === "own-worktree"
-          ? `This conversation was forked from a session that is still working in this checkout (${he()}). Before making code changes, create a new worktree of your own with ${lR} so your edits don't land where the original session is editing.`
+          ? `This conversation was forked from a session that is still working in this checkout (${he()}). Before making code changes, create a new worktree of your own with ${ENTER_WORKTREE_TOOL_NAME} so your edits don't land where the original session is editing.`
           : void 0,
     Wo = Oe.findLast(isLoggableMessage),
     Ro =
@@ -2790,10 +2790,10 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
   if (He?.keepParent && _o !== null) {
     ((An ??= vJe()), (wn = An.slice(0, 8)));
     try {
-      on = await Cdr(_o, wn, He.storageV5, Ro);
+      on = await snapshotParentTranscript(_o, wn, He.storageV5, Ro);
     } catch (no) {
       return (
-        await X1n(wn, He.storageV5),
+        await removeSnapshotJobDir(wn, He.storageV5),
         logEvent("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
         {
           ok: !1,
@@ -2814,7 +2814,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
     zo = [
       ...(on !== null ? ["--resume", on, "--fork-session"] : []),
       ...(He?.replyOnResume ? ["--reply-on-resume"] : []),
-      ...(He?.keepParent ? Zqe(Ke) : Ke),
+      ...(He?.keepParent ? stripWatchArtifactFlags(Ke) : Ke),
       ...Ct.flatMap((no) => ["--add-dir", no]),
       ...to.flatMap((no) => ["--allowed-tools", no]),
       ...zt.flatMap((no) => ["--disallowed-tools", no]),
@@ -2836,7 +2836,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       ...(I ? ["--", I] : []),
     ],
     Sr = Oe.at(-1)?.timestamp,
-    Kn = await eF(
+    Kn = await spawnBgSession(
       zo,
       An,
       "repl",
@@ -2876,7 +2876,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       (logEvent("tengu_background_spawn_failed", { via: fromEnum(Ae) }),
       wn !== void 0 && !Kn.alive)
     )
-      X1n(wn, He?.storageV5);
+      removeSnapshotJobDir(wn, He?.storageV5);
     let no = !1;
     if (
       Ae === "left_arrow" &&
@@ -2887,7 +2887,7 @@ async function uHe(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       let jo = getJobDir(He.providedSessionId.slice(0, 8)),
         Cn = await readJobState(jo, He.storageV5);
       if (Cn)
-        no = await vdr({
+        no = await queueRescueRow({
           sessionFile: _o,
           forkSessionId: He.providedSessionId,
           jobDir: jo,
@@ -2954,7 +2954,7 @@ async function SJe(w, I, ne, me) {
   });
 }
 var kJe = ["tmp", "parent-transcript.jsonl"];
-async function Cdr(w, I, ne, me) {
+async function snapshotParentTranscript(w, I, ne, me) {
   let pe = xJe(getJobDir(I), ...kJe),
     be =
       me === void 0
@@ -3000,14 +3000,14 @@ async function Cdr(w, I, ne, me) {
     );
   return pe;
 }
-async function X1n(w, I) {
+async function removeSnapshotJobDir(w, I) {
   if (I !== void 0 && isValidPathSegment(w)) {
     await I.deleteScope({ namespace: "job", jobId: w }).catch(() => {});
     return;
   }
   await _Je(getJobDir(w), { recursive: !0, force: !0 }).catch(() => {});
 }
-async function vdr(w) {
+async function queueRescueRow(w) {
   let {
       sessionFile: I,
       forkSessionId: ne,
@@ -3031,7 +3031,7 @@ async function vdr(w) {
           detail:
             "couldn't start in the background \u2014 press Enter to retry",
           linkScanPath: Ae,
-          respawnFlags: Cre(Cit(be)),
+          respawnFlags: Cre(stripResumeFlags(be)),
           updatedAt: new Date().toISOString(),
         },
         xe,
@@ -3070,7 +3070,7 @@ async function U$t(w, I) {
   }
   await _Je(w, { force: !0 }).catch(() => {});
 }
-async function Rdr(w, I, ne) {
+async function writeAdoptHandoff(w, I, ne) {
   let me = getJobDir(w),
     pe = isHoverRestEnabled() && ne !== void 0 ? ne : void 0;
   if (pe === void 0) await CJe(me, { recursive: !0, mode: 448 });
@@ -3089,14 +3089,14 @@ ${vB(w.adopted.adopted_frame_live)}`
         : "";
   return I + ne;
 }
-async function $0t(w) {
+async function forkSessionToBackground(w) {
   let I = await serializeAdoptable(w.tasks, w.queue),
     ne;
   if (I) {
     ne = vJe();
     let Oe = !1;
     try {
-      (await Rdr(ne.slice(0, 8), I.payload, w.storageV5),
+      (await writeAdoptHandoff(ne.slice(0, 8), I.payload, w.storageV5),
         (Oe = !0),
         await I.checkpointAgents(w.taskRegistry));
     } catch {
@@ -3115,7 +3115,7 @@ async function $0t(w) {
     ),
     pe = await t8(w.seed, w.storageV5),
     be = pe.name !== w.seed.name ? pe.name : void 0,
-    xe = await uHe(
+    xe = await spawnBackgroundFork(
       pe,
       w.prompt,
       w.sessionEffort,
@@ -3158,10 +3158,10 @@ async function $0t(w) {
     frameLiveLost: w.exitsAfterward ? Ae : 0,
   };
 }
-function WJt(w) {
-  return isAgentsFleetEnabled() && !isBgSession() && !isTranscriptPersistenceDisabled() && isTaskAdoptionEnabled() && Uae(w, "") !== null;
+function canBackgroundSession(w) {
+  return isAgentsFleetEnabled() && !isBgSession() && !isTranscriptPersistenceDisabled() && isTaskAdoptionEnabled() && deriveBackgroundSeed(w, "") !== null;
 }
-function U0t(g2o) {
+function BackgroundAndExit(g2o) {
   let S$t = _(11),
     { messages: o8, isMidTurn: ime, responseStreaming: sme } = g2o,
     ame = useAppState(),
@@ -3186,7 +3186,7 @@ function U0t(g2o) {
         return;
       }
       b$t.current = !0;
-      let w$t = Uae(o8, "");
+      let w$t = deriveBackgroundSeed(o8, "");
       if (w$t === null) {
         (logFeatureBad("bg_exit_dialog_background", "no_seed"),
           gracefulShutdown(0, "prompt_input_exit", {
@@ -3199,10 +3199,10 @@ function U0t(g2o) {
         let fJe = computeAdoptability(Px.tasks);
         let h2o = countLiveWorkflowAgents(Px.tasks, fJe);
         let gJe = summarizeAdoptableTasks(
-          tu(Px.tasks, (C$t) => isAdoptableTask(C$t, fJe) || isCarriedFrameLiveWatch(C$t)),
+          omitBy(Px.tasks, (C$t) => isAdoptableTask(C$t, fJe) || isCarriedFrameLiveWatch(C$t)),
           { cronFilter: (y2o) => !isAdoptableCron(y2o, fJe) },
         );
-        let BV = await $0t({
+        let BV = await forkSessionToBackground({
           seed: w$t,
           prompt: null,
           messages: o8,
@@ -3233,7 +3233,7 @@ ${gJe.summary} couldn't be moved and ${gJe.count === 1 ? "was" : "were"} stopped
           await gracefulShutdown(0, "prompt_input_exit", {
             suppressResumeHint: !0,
             finalMessage:
-              rle(BV.short, BV.handedOff ? "(worktree handed off)" : void 0) +
+              formatBgHints(BV.short, BV.handedOff ? "(worktree handed off)" : void 0) +
               b2o +
               (_$t
                 ? `
@@ -3268,7 +3268,7 @@ ${_$t}`
   else T$t = S$t[10];
   return T$t;
 }
-function Uae(w, I, ne = "(backgrounded)") {
+function deriveBackgroundSeed(w, I, ne = "(backgrounded)") {
   let me = I,
     pe = !1,
     be;
@@ -3336,7 +3336,7 @@ function RJe(S2o) {
     fme = R$t;
     hme = countLiveWorkflowAgents(Vh, bme);
     yme = summarizeAdoptableTasks(
-      tu(Vh, (P$t) => isAdoptableTask(P$t, bme) || isCarriedFrameLiveWatch(P$t)),
+      omitBy(Vh, (P$t) => isAdoptableTask(P$t, bme) || isCarriedFrameLiveWatch(P$t)),
       { cronFilter: (k2o) => !isAdoptableCron(k2o, bme) },
     );
     ((jy[2] = Vh), (jy[3] = pme), (jy[4] = fme), (jy[5] = hme), (jy[6] = yme));
@@ -3394,7 +3394,7 @@ function RJe(S2o) {
       }
       ((A$t.current = !0),
         (async () => {
-          let pM = await $0t({
+          let pM = await forkSessionToBackground({
             seed: UV,
             prompt: wB,
             messages: jV,
@@ -3427,7 +3427,7 @@ function RJe(S2o) {
               await gracefulShutdown(0, "prompt_input_exit", {
                 suppressResumeHint: !0,
                 finalMessage:
-                  rle(
+                  formatBgHints(
                     pM.short,
                     pM.handedOff ? "(worktree handed off)" : void 0,
                   ) + xB(pM),
@@ -3640,7 +3640,7 @@ function shouldShowAutoModeEntryWarning() {
     ) && !getGlobalConfig().hasSeenAutoModeEntryWarning
   );
 }
-function Q1(W2o) {
+function CancellableStatusMessage(W2o) {
   let AJe = _(4),
     { message: MJe, onCancel: V$t } = W2o,
     K$t;
@@ -3693,7 +3693,7 @@ function R1t($zo) {
 function M1t() {
   return new AbortController();
 }
-function nst(Mzo) {
+function FastModePicker(Mzo) {
   let Wy = _(40),
     { onDone: Yb, unavailableReason: a8, storageV5: cG } = Mzo,
     d8 = useAppStateSelector(C1t),
@@ -3784,7 +3784,7 @@ function nst(Mzo) {
       logEvent("tengu_fast_mode_toggled", {
         enabled: $y,
         source: S("picker"),
-        remote: Ks(),
+        remote: hasRemoteControlChannel(),
       });
       let Ozo =
         l1t.length > 0
@@ -3795,7 +3795,7 @@ ${l1t.map(Rl).join(`
       let u1t = $y
         ? `${renderFastModeIndicator($y)} ${FAST_MODE_ON_LABEL}${Lzo ? `${MODEL_SET_SUFFIX}${formatInlineCode(getFastModeModelDisplayName())}` : ""} \xB7 ${i1t}${Ozo}`
         : "Fast mode OFF";
-      if (!Ks()) {
+      if (!hasRemoteControlChannel()) {
         if (!$y) RB(_1t);
         return c1t.then(
           (DJe) => (fM(!1), Yb(DJe === void 0 ? u1t : formatFastModeRemoteResult(DJe, $y)), DJe),
@@ -3887,7 +3887,7 @@ ${l1t.map(Rl).join(`
     if (Mme !== null) {
       let i0;
       if (Wy[25] !== Mme || Wy[26] !== Yb)
-        ((i0 = e(Q1, {
+        ((i0 = e(CancellableStatusMessage, {
           message: "Running PreModelSwitch hooks\u2026",
           onCancel: () => {
             (Mme.abort(), EJe(null), fM(!1), Yb(FAST_MODE_CANCELLED_MESSAGE, { display: "system" }));
@@ -3903,7 +3903,7 @@ ${l1t.map(Rl).join(`
     if (Wy[28] === MEMO_CACHE_SENTINEL)
       ((i0 = e(t, {
         dimColor: !0,
-        children: Ks()
+        children: hasRemoteControlChannel()
           ? "Waiting for the workspace\u2026"
           : "Applying fast mode\u2026",
       })),
@@ -4068,7 +4068,7 @@ function LJe(Wzo) {
       if (S8[14] === MEMO_CACHE_SENTINEL)
         ((mG = e(t, {
           dimColor: !0,
-          children: Ks()
+          children: hasRemoteControlChannel()
             ? "Waiting for the workspace\u2026"
             : "Applying fast mode\u2026",
         })),
@@ -4091,7 +4091,7 @@ function LJe(Wzo) {
       else Fme = S8[17];
       let w1t;
       if (S8[18] !== mG || S8[19] !== Fme)
-        ((w1t = e(Q1, { message: mG, onCancel: Fme })),
+        ((w1t = e(CancellableStatusMessage, { message: mG, onCancel: Fme })),
           (S8[18] = mG),
           (S8[19] = Fme),
           (S8[20] = w1t));
@@ -4100,7 +4100,7 @@ function LJe(Wzo) {
     }
   }
 }
-async function Kmr(w, I, ne) {
+async function runFastModeCommand(w, I, ne) {
   if (!isFastModeEnabled()) return (w(getFastModeUnavailableMessage() ?? "Fast mode is not available"), null);
   let me = ne?.trim().toLowerCase();
   if (me === "on" || me === "off")
@@ -4109,12 +4109,12 @@ async function Kmr(w, I, ne) {
   let pe = getFastModeUnavailableMessage();
   return (
     logEvent("tengu_fast_mode_picker_shown", { unavailable_reason: pe ?? "" }),
-    e(nst, { onDone: w, unavailableReason: pe, storageV5: I.storageV5 })
+    e(FastModePicker, { onDone: w, unavailableReason: pe, storageV5: I.storageV5 })
   );
 }
 F();
 var Bme = ["default", "fullscreen"];
-async function rst(w, I, ne, me, pe, { responseStreaming: be, trial: xe }) {
+async function relaunchInto(w, I, ne, me, pe, { responseStreaming: be, trial: xe }) {
   await assertLauncherRunnable();
   let Ae = await recordExitTranscript(ne, "relaunch", { responseStreaming: be }, pe);
   return relaunchWithErrorNotice(
@@ -4125,7 +4125,7 @@ async function rst(w, I, ne, me, pe, { responseStreaming: be, trial: xe }) {
       proactivity: me,
       env: {
         CLAUDE_CODE_TUI_JUST_SWITCHED: w,
-        ...(xe && w === "fullscreen" ? QNn : {}),
+        ...(xe && w === "fullscreen" ? TUI_TRIAL_ENV_OVERRIDES : {}),
         ...getScreenReaderEnvOverrides(),
       },
       dropEnv: [
@@ -4137,19 +4137,19 @@ async function rst(w, I, ne, me, pe, { responseStreaming: be, trial: xe }) {
     pe,
   );
 }
-function ost(w) {
+function relaunchFailedMessage(w) {
   return `Couldn't switch renderers \u2014 ${w instanceof Error ? w.message : String(w)}. The setting was saved; restart Claude Code to apply it.`;
 }
-function kdr(w, I) {
+function cannotSwitchRendererMessage(w, I) {
   return `Cannot switch renderers in this session \u2014 it has restrictions a restart can't carry over (${I.join("; ")}). Nothing was changed. Running /tui ${w} in a session started without them switches every later session too.`;
 }
-function Z1n(w) {
+function savedWithoutRestartMessage(w) {
   return `Staying on the default renderer without a restart \u2014 this session now has restrictions a restart can't carry over (${w.join("; ")}); the preference is saved.`;
 }
-function xdr(w, I) {
+function savedWithoutRestartForTasksMessage(w, I) {
   return `Staying on the ${w} renderer without a restart \u2014 ${I === "comment_monitor" ? "Claude is now auto-replying to artifact comments and a restart would stop the replies (stop the monitor via /tasks, or ask Claude to stop it)" : "work is now running in the background"}; the preference is saved.`;
 }
-var Xmr = async (w, I, ne) => {
+var runTuiCommand = async (w, I, ne) => {
   let me = ne.trim().toLowerCase(),
     pe = shouldUseFullscreen() ? "fullscreen" : "default";
   if (me === "") {
@@ -4203,7 +4203,7 @@ var Xmr = async (w, I, ne) => {
         ),
         null
       );
-    await d0t(I.storageV5);
+    await clearFullscreenCrashState(I.storageV5);
     let ao = Av();
     return (
       logEvent("tengu_tui_command", {
@@ -4236,14 +4236,14 @@ var Xmr = async (w, I, ne) => {
     Qe = Je === shouldUseFullscreen();
   if (Qe && getInitialSettings().tui === be)
     return (
-      await d0t(I.storageV5),
+      await clearFullscreenCrashState(I.storageV5),
       w(`Already using the ${be} renderer.`, { display: "system" }),
       null
     );
   let it = (to) => {
       let zt = rK(getToolPermissionContext(I), qP());
       if (zt.length > 0)
-        return (logEvent("tengu_tui_refused", { uncarriable: !0 }), kdr(be, zt));
+        return (logEvent("tengu_tui_refused", { uncarriable: !0 }), cannotSwitchRendererMessage(be, zt));
       let ao = Ke();
       if (ao !== void 0)
         return (
@@ -4279,7 +4279,7 @@ var Xmr = async (w, I, ne) => {
       ),
       null
     );
-  await d0t(I.storageV5);
+  await clearFullscreenCrashState(I.storageV5);
   let eo = Av(),
     jt =
       (a.CLAUDE_CODE_TUI_JUST_SWITCHED === "fullscreen" ||
@@ -4325,7 +4325,7 @@ var Xmr = async (w, I, ne) => {
     });
   let Tt = Ke();
   if (Tt !== void 0) return Ume(be, Tt, w);
-  return rst(be, at.flags, Oe(), at.handoff, I.storageV5, {
+  return relaunchInto(be, at.flags, Oe(), at.handoff, I.storageV5, {
     responseStreaming: He(),
   }).catch(
     (to) => (
@@ -4336,7 +4336,7 @@ var Xmr = async (w, I, ne) => {
               "Couldn't switch renderers (detail withheld on this connection). The setting was saved; restart Claude Code to apply it.",
               l(to),
             )
-          : ost(to),
+          : relaunchFailedMessage(to),
         { display: "system" },
       ),
       null
@@ -4350,7 +4350,7 @@ function Ume(w, I, ne) {
       comment_monitor: I.kind === "comment_monitor",
       deferred: !0,
     }),
-    ne(xdr(w, I.kind), { display: "system" }),
+    ne(savedWithoutRestartForTasksMessage(w, I.kind), { display: "system" }),
     null
   );
 }
@@ -4426,7 +4426,7 @@ function KJe(IQo) {
           let N1t = rK(AB().toolPermissionContext, qP());
           if (N1t.length > 0) {
             (logEvent("tengu_tui_refused", { uncarriable: !0 }),
-              s0(Z1n(N1t), { display: "system" }));
+              s0(savedWithoutRestartMessage(N1t), { display: "system" }));
             return;
           }
           let L1t = vG();
@@ -4434,7 +4434,7 @@ function KJe(IQo) {
             Ume("default", L1t, s0);
             return;
           }
-          rst("default", yG(), SG(), AB(), CG, {
+          relaunchInto("default", yG(), SG(), AB(), CG, {
             responseStreaming: kG(),
           }).catch(($Je) => {
             (logError($Je),
@@ -4444,7 +4444,7 @@ function KJe(IQo) {
                       "Couldn't switch renderers (detail withheld on this connection). The setting was saved; restart Claude Code to apply it.",
                       l($Je),
                     )
-                  : ost($Je),
+                  : relaunchFailedMessage($Je),
                 { display: "system" },
               ));
           });
@@ -5051,7 +5051,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
   try {
     let Qe = await (async () => {
       n("[PERF:bg-leftarrow-start]");
-      let it = Uae(w, "");
+      let it = deriveBackgroundSeed(w, "");
       if (it !== null && isTranscriptPersistenceDisabled())
         return (
           logEvent("tengu_left_arrow_blocked", {
@@ -5077,7 +5077,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
         go,
         fo;
       try {
-        ({ short: go, jobDir: fo } = await IWe(
+        ({ short: go, jobDir: fo } = await preSeedReplBgJob(
           eo,
           {
             ...Zt,
@@ -5204,9 +5204,9 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
       );
       let zo = { settled: !1, ok: !1, forkSessionId: eo };
       if (
-        (qHe(
+        (trackJobPromise(
           go,
-          uHe(Zt, null, I, ne, me, pe, be, "left_arrow", w, {
+          spawnBackgroundFork(Zt, null, I, ne, me, pe, be, "left_arrow", w, {
             proactivityLevel: Oe?.proactivityLevel,
             providedSessionId: eo,
             replyOnResume: Oe?.replyOnResume,
@@ -5298,7 +5298,7 @@ async function XJe(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke) {
           logError(nn);
         }
       let Kn = await relaunchClaudeCode({
-        args: ["agents", ...Eit(Sr)],
+        args: ["agents", ...formatDispatchDefaultFlags(Sr)],
         env: {
           CLAUDE_AGENTS_SELECT: Oe?.autoOpenJobId ?? go,
           ...getScreenReaderEnvOverrides(),
@@ -5372,7 +5372,7 @@ class R8 {
   onBgDetach = () => {
     let w = this.#e.now();
     if (w - this.#m < iWt && getAttachStampMs() <= this.#m) return;
-    ((this.#m = w), HB());
+    ((this.#m = w), detachToBackgroundDaemon());
   };
   requestAttach(w) {
     if (this.#s !== void 0) return !1;
@@ -5741,7 +5741,7 @@ class R8 {
         );
       };
       if (leftArrowNeedsInterstitial(He, Je)) {
-        let jt = tu(He, (go) => isAdoptableTask(go, Je) || isCarriedFrameLiveWatch(go)),
+        let jt = omitBy(He, (go) => isAdoptableTask(go, Je) || isCarriedFrameLiveWatch(go)),
           Tt = summarizeAdoptableTasks(jt, { cronFilter: (go) => !isAdoptableCron(go, Je) }).summary,
           to = Tt !== "",
           zt = Qe.size,
@@ -6699,7 +6699,7 @@ function NG(w) {
       for (let ne of I) {
         if (ne.type !== "thinking") return !1;
         let me = ne.thinking;
-        if (me !== "" && !(me.startsWith("<") && Td(me) === "")) return !1;
+        if (me !== "" && !(me.startsWith("<") && stripMemoryTags(me) === "")) return !1;
       }
       return !0;
     }
@@ -8225,7 +8225,7 @@ function b9(w, I, ne) {
 function Cfe(w, I, ne) {
   return countMatching(w, (me) => me.type === "needs-auth" && b9(me, I, ne));
 }
-function Sf(L4o) {
+function StatusLine(L4o) {
   let j3e = _(9),
     { status: _fe, children: B3e } = L4o,
     { color: Tfe } = STATUS_PRESENTATION[_fe],
@@ -8284,7 +8284,7 @@ function Ife(w) {
       return I + estimateTokens(me);
     }, 0);
 }
-function Qot() {
+function hasPolicySettings() {
   let w = getSettingsForSource("policySettings");
   return w !== null && Object.keys(w).length > 0;
 }
@@ -9332,7 +9332,7 @@ function gge() {
 }
 F();
 function xKt() {
-  return W_e(!1);
+  return pickStartupAnnouncement(!1);
 }
 function Sge() {
   let gU = _(18),
@@ -9341,7 +9341,7 @@ function Sge() {
     [_4e] = d(xKt),
     wKt;
   if (gU[0] !== C4e || gU[1] !== _4e)
-    ((wKt = C4e ? W_e(!0) : _4e), (gU[0] = C4e), (gU[1] = _4e), (gU[2] = wKt));
+    ((wKt = C4e ? pickStartupAnnouncement(!0) : _4e), (gU[0] = C4e), (gU[1] = _4e), (gU[2] = wKt));
   else wKt = gU[2];
   let pg = wKt,
     CKt;
@@ -9413,11 +9413,11 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     render: () =>
       r(N, {
         children: [
-          r(Sf, {
+          r(StatusLine, {
             status: "warning",
             children: [
               "Safe mode: all customizations are disabled (CLAUDE.md, skills, plugins, hooks, MCP, agents, and more)",
-              Qot() &&
+              hasPolicySettings() &&
                 r(N, {
                   children: [
                     " \xB7 ",
@@ -9448,7 +9448,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
         children: I.map((me) => {
           let pe = me.path.startsWith(getCwd()) ? NKt(getCwd(), me.path) : me.path;
           return r(
-            Sf,
+            StatusLine,
             {
               status: "warning",
               children: [
@@ -9486,7 +9486,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
       let w = getAuthTokenSource();
       return e(o, {
         marginTop: 1,
-        children: r(Sf, {
+        children: r(StatusLine, {
           status: "warning",
           children: [
             w.source,
@@ -9512,7 +9512,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
       let { source: w } = getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 });
       return e(o, {
         marginTop: 1,
-        children: r(Sf, {
+        children: r(StatusLine, {
           status: "warning",
           children: [
             w,
@@ -9546,7 +9546,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
         flexDirection: "column",
         marginTop: 1,
         children: [
-          r(Sf, {
+          r(StatusLine, {
             status: "warning",
             children: [
               "Both ",
@@ -9592,7 +9592,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     isActive: (w) => Ife(w.agentDefinitions) > Afe,
     render: (w) => {
       let I = Ife(w.agentDefinitions);
-      return r(Sf, {
+      return r(StatusLine, {
         status: "warning",
         children: [
           "Agent descriptions are over the",
@@ -9626,7 +9626,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     type: "warning",
     isActive: (w) => w.mcpNeedsAuthCount > 0,
     render: (w) =>
-      r(Sf, {
+      r(StatusLine, {
         status: "warning",
         children: [
           w.mcpNeedsAuthCount,
@@ -9646,7 +9646,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     isActive: (w) =>
       Kat.of(w.session.host).lastStartFailureCause === "socket_dir_refused",
     render: (w) =>
-      r(Sf, {
+      r(StatusLine, {
         status: "warning",
         children: [
           "Cross-session messaging is off:",
@@ -9671,7 +9671,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     render: (w) =>
       w.modelDeprecationWarning === null
         ? null
-        : r(Sf, {
+        : r(StatusLine, {
             status: "warning",
             children: [
               w.modelDeprecationWarning.message,
@@ -9690,7 +9690,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     render: (w) =>
       w.modelRestrictedWarning === null
         ? null
-        : e(Sf, {
+        : e(StatusLine, {
             status: "warning",
             children: formatModelRestrictedMessage(
               w.modelRestrictedWarning.requested,
@@ -9704,7 +9704,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     type: "info",
     isActive: () => isTainted("hipaa"),
     render: () =>
-      r(Sf, {
+      r(StatusLine, {
         status: "info",
         children: [
           "HIPAA \xB7 some features are restricted",
@@ -9724,7 +9724,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
       let w = getManagedSettingsStatus();
       if (w?.state !== "failed" && w?.state !== "stale_cache") return null;
       let I = formatManagedSettingsError(w.failure.errorKind, w.failure.httpStatus);
-      return r(Sf, {
+      return r(StatusLine, {
         status: "warning",
         children: [
           "Remote managed settings failed to load (",
@@ -9748,7 +9748,7 @@ var Nw = { org: 30, launch: 20, campaign: 15, promo: 10, hint: 5 },
     render: () => {
       let w = O$e();
       if (!w) return null;
-      return r(Sf, {
+      return r(StatusLine, {
         status: "info",
         children: [
           w.text,
@@ -9838,7 +9838,7 @@ function H4e() {
         M4e = null;
         break bb0;
       }
-      RKt = r(Sf, {
+      RKt = r(StatusLine, {
         status: "warning",
         children: [
           "Your login expires in ",
@@ -9956,7 +9956,7 @@ var r2t = {
     isActive: () => L4e().length > 0,
     render: () => {
       let w = L4e();
-      return r(Sf, {
+      return r(StatusLine, {
         status: "warning",
         children: [
           "Prompt caching off (",
@@ -9993,8 +9993,8 @@ var r2t = {
     promo: !1,
     priority: Nw.launch,
     isActive: () =>
-      W_e(!1) !== void 0 && !(getActiveFotwCampaign()?.isTopPriorityAnnouncement === !0 && x9()),
-    showAccentBar: () => W_e(!1)?.accentBar !== !1,
+      pickStartupAnnouncement(!1) !== void 0 && !(getActiveFotwCampaign()?.isTopPriorityAnnouncement === !0 && x9()),
+    showAccentBar: () => pickStartupAnnouncement(!1)?.accentBar !== !1,
     render: () => e(Sge, {}),
   },
   m2t = {
@@ -10343,7 +10343,7 @@ function O9(xge) {
   else H2t = Rge[10];
   return H2t;
 }
-var Bz = Yl(function (Htn) {
+var WelcomeChrome = Yl(function (Htn) {
   let Dge = _(10),
     { latchAnnouncementSlot: Y2t, hideWelcomeChrome: J2t } = Htn,
     cK = Y2t === void 0 ? !0 : Y2t,
@@ -13529,7 +13529,7 @@ function K7e(win) {
       (cc[126] = l7));
   else l7 = cc[126];
   let a7e = l7,
-    tsn = qb(localJsxDialog.kind),
+    tsn = useIsDialogKindOpen(localJsxDialog.kind),
     l7e = !Tin && !tsn,
     WK = De(Z0),
     nYt,
@@ -13898,7 +13898,7 @@ var V7e = Yl(K7e, (w, I) => {
     return !0;
   }),
   G7e = new Set();
-function jz(g7e) {
+function ConversationMessageList(g7e) {
   let MU = _(38),
     kd,
     h7e,
@@ -14426,7 +14426,7 @@ function OU({
 }) {
   let pe = aO(),
     be = useKeybindingContext(),
-    xe = g9e(),
+    xe = useInputSelectionBridge(),
     { addNotification: Ae } = useNotificationQueue(),
     { storageV5: Oe } = useStorageV5Context(),
     He = useIsHistorySearchOpen(),
@@ -14466,7 +14466,7 @@ function OU({
         if (!zt) return;
         if (eo) recordPageJump();
         let ao = -Math.max(1, Math.floor(zt.getViewportHeight() / 2)),
-          co = IB(zt, ao, eo);
+          co = scrollByLines(zt, ao, eo);
         ne?.(co, zt);
       },
       "scroll:pageDown": () => {
@@ -14474,7 +14474,7 @@ function OU({
         if (!zt) return;
         if (eo) recordPageJump();
         let ao = Math.max(1, Math.floor(zt.getViewportHeight() / 2)),
-          co = IB(zt, ao, eo);
+          co = scrollByLines(zt, ao, eo);
         ne?.(co, zt);
       },
       "scroll:lineUp": () => {
@@ -14632,7 +14632,7 @@ function aZe(w) {
   else w.scrollTo(Math.max(0, w.getScrollHeight() - w.getViewportHeight()));
   return !0;
 }
-function IB(w, I, ne = !0) {
+function scrollByLines(w, I, ne = !0) {
   let me = Math.max(0, w.getScrollHeight() - w.getViewportHeight()),
     pe = Math.min(w.getScrollTop(), me) + w.getPendingDelta() + I;
   if (pe >= me) return aZe(w);
@@ -14658,16 +14658,16 @@ function N5t(w, I, ne = !0) {
       return null;
     case "lineUp":
     case "lineDown":
-      return IB(w, I === "lineDown" ? 1 : -1, ne);
+      return scrollByLines(w, I === "lineDown" ? 1 : -1, ne);
     case "halfPageUp":
     case "halfPageDown": {
       let me = Math.max(1, Math.floor(w.getViewportHeight() / 2));
-      return IB(w, I === "halfPageDown" ? me : -me, ne);
+      return scrollByLines(w, I === "halfPageDown" ? me : -me, ne);
     }
     case "fullPageUp":
     case "fullPageDown": {
       let me = Math.max(1, w.getViewportHeight());
-      return IB(w, I === "fullPageDown" ? me : -me, ne);
+      return scrollByLines(w, I === "fullPageDown" ? me : -me, ne);
     }
     case "top":
       return (w.scrollTo(0), !1);
@@ -14773,7 +14773,7 @@ function x0(Oan) {
     pZe = useAppStateSelector(K5t),
     Bk = useSetAppState();
   useNotificationQueue();
-  let fZe = Cc();
+  let fZe = useDialogStore();
   useSession();
   let O5t;
   if (lA[0] !== pZe || lA[1] !== Bk)
@@ -14910,15 +14910,15 @@ function yye() {
 }
 F();
 function b7(w) {
-  return SZe(w, [...(V_() ? getBuiltinTools() : []), ...(isWebFetchAgentEnabled() ? [WebFetchTool] : [])]);
+  return SZe(w, [...(isReplModeEnabled() ? getBuiltinTools() : []), ...(isWebFetchAgentEnabled() ? [WebFetchTool] : [])]);
 }
-function J1n(w, I) {
+function addEnabledDefaultTools(w, I) {
   return SZe(
     w,
     [
-      ...(V_() ? getBuiltinTools() : []),
+      ...(isReplModeEnabled() ? getBuiltinTools() : []),
       ...(isWebFetchAgentEnabled() && !a.CLAUDE_CODE_SIMPLE ? [WebFetchTool] : []),
-    ].filter((ne) => ne.isEnabled() && !ni(I, ne)),
+    ].filter((ne) => ne.isEnabled() && !findMatchingDenyRule(I, ne)),
   );
 }
 function SZe(w, I) {
@@ -15011,9 +15011,9 @@ async function sJt(
           keybindings: !1,
           children: r(_Ze, {
             children: [
-              at[0] === 0 && e(Bz, { latchAnnouncementSlot: !1 }),
+              at[0] === 0 && e(WelcomeChrome, { latchAnnouncementSlot: !1 }),
               e(ExpandedContentProvider, {
-                children: e(jz, {
+                children: e(ConversationMessageList, {
                   source: {
                     kind: "static",
                     messages: I,
@@ -15038,7 +15038,7 @@ async function sJt(
     (await me(Zt), Ae?.(at + xe));
   }
 }
-async function est(w, I, ne, { columns: me, storageV5: pe }) {
+async function renderTranscriptToText(w, I, ne, { columns: me, storageV5: pe }) {
   let be = [];
   return (
     await sJt(w, I, ne, (xe) => void be.push(stripAnsi(xe)), {
@@ -15071,7 +15071,7 @@ function f2(ncn) {
     scn = dJt === void 0 ? !1 : dJt,
     wye = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o"),
     acn = useKeybindingDisplayText("transcript:toggleShowAll", "Transcript", "ctrl+e"),
-    Cye = Bye(),
+    Cye = useHasOpenDialogs(),
     { columns: lcn } = useTerminalSize(),
     mJt;
   if (R0[0] === MEMO_CACHE_SENTINEL) ((mJt = getEditorDisplayName()), (R0[0] = mJt));
@@ -15706,7 +15706,7 @@ function x7(_cn) {
             try {
               let Icn = Math.max(80, (process.stdout.columns ?? 80) - 6);
               let Ecn = (
-                await est(QZe, Hk.messages, u2, {
+                await renderTranscriptToText(QZe, Hk.messages, u2, {
                   columns: Icn,
                   storageV5: YZe,
                 })
@@ -15778,7 +15778,7 @@ function x7(_cn) {
   let aet = Ww ? "uncapped" : A_ ? "all" : void 0,
     ube;
   if (fg[34] !== qZe)
-    ((ube = e(Bz, { hideWelcomeChrome: qZe })), (fg[34] = qZe), (fg[35] = ube));
+    ((ube = e(WelcomeChrome, { hideWelcomeChrome: qZe })), (fg[34] = qZe), (fg[35] = ube));
   else ube = fg[35];
   let dbe;
   if (fg[36] !== Hk || fg[37] !== WZe)
@@ -15796,7 +15796,7 @@ function x7(_cn) {
     fg[43] !== dbe ||
     fg[44] !== u2
   )
-    ((mbe = e(jz, {
+    ((mbe = e(ConversationMessageList, {
       source: dbe,
       tools: u2,
       commands: $Ze,
@@ -16130,7 +16130,7 @@ F();
 var HU = Qt(null);
 function zy(w, I, { perReveal: ne = !1 } = {}) {
   let me = De(HU),
-    pe = De(Uye),
+    pe = De(DialogStoreContext),
     be = vr(I),
     [xe] = d(() =>
       ne && me !== null && pe
@@ -16157,7 +16157,7 @@ function Cet() {
   if (isFullscreenGateFromFallback()) return !1;
   if (qP()) return !1;
   if ((getGlobalConfig().fullscreenUpsellSeenCount ?? 0) >= MAX_FULLSCREEN_UPSELL_COUNT) return !1;
-  if (u0t()) return !1;
+  if (hasRecordedFullscreenCrashForVersion()) return !1;
   return !0;
 }
 function Lbe(Hun) {
@@ -16167,7 +16167,7 @@ function Lbe(Hun) {
     a3t;
   if (b2[0] !== ket)
     ((a3t = () => {
-      let $un = yJt(ket);
+      let $un = getNextFullscreenUpsellImpression(ket);
       logEvent("tengu_fullscreen_upsell_dialog_shown", { impression: $un });
     }),
       (b2[0] = ket),
@@ -16480,7 +16480,7 @@ function w3t(w) {
   logFeatureSad("effort_medium_nudge", "served_copy_invalid");
   let me = new Set(ne.error.issues.map((be) => be.path[0]));
   if (me.has("body") || me.has("fromEffort") || me.has("toEffort")) return;
-  let pe = I.safeParse(tu(w, (be, xe) => me.has(xe)));
+  let pe = I.safeParse(omitBy(w, (be, xe) => me.has(xe)));
   return pe.success ? Met(pe.data) : void 0;
 }
 function Met(w) {
@@ -16493,8 +16493,8 @@ function Vbe({ model: w, effortValue: I, ultracode: ne }) {
   if (
     me === void 0 ||
     VH() !== void 0 ||
-    Pt() ||
-    !Nr("userSettings") ||
+    isRemoteActive() ||
+    !isSettingsSourceEnabled("userSettings") ||
     isActingAsBgJob() ||
     a.CLAUDE_BRIDGE_REATTACH_SESSION !== void 0 ||
     f8() !== void 0 ||
@@ -16515,7 +16515,7 @@ function _3t(w, I) {
 }
 function T3t(w) {
   let I = y$e(w),
-    ne = ms();
+    ne = getEnabledSettingsSources();
   for (let me = ne.length - 1; me >= 0; me--) {
     let pe = ne[me],
       be = getSettingsForSource(pe),
@@ -16688,7 +16688,7 @@ async function M3t(w, I) {
     case "cancelled":
       return;
     case "dismiss":
-      (f0t(I.storageV5), logEvent("tengu_fullscreen_upsell_dialog_dismissed", {}));
+      (markFullscreenUpsellExhausted(I.storageV5), logEvent("tengu_fullscreen_upsell_dialog_dismissed", {}));
       return;
     case "accept":
       await A3t(I);
@@ -16730,7 +16730,7 @@ async function A3t({
     He = [...vre(xe, Ae), ...Rre(xe, Tz())];
   logEvent("tengu_fullscreen_upsell_dialog_accepted", {});
   try {
-    await rst(
+    await relaunchInto(
       "fullscreen",
       He,
       I(),
@@ -16747,12 +16747,12 @@ async function A3t({
       pe,
     );
     if (Je) logError(Je);
-    else f0t(pe);
+    else markFullscreenUpsellExhausted(pe);
     let Qe = Ke instanceof Error ? Ke.message : String(Ke);
     me({
       key: "fullscreen-upsell-done",
       kind: "feedback",
-      text: Je ? `Couldn't switch renderers \u2014 ${Qe}.` : ost(Ke),
+      text: Je ? `Couldn't switch renderers \u2014 ${Qe}.` : relaunchFailedMessage(Ke),
       priority: "immediate",
       timeoutMs: 12000,
     });
@@ -16989,7 +16989,7 @@ var $_ = defineDialog({
   ),
   result: createLazyValue(() =>
     $e([
-      c({ allow: O(), persistToSettings: O(), persistRow: xFn().optional() }),
+      c({ allow: O(), persistToSettings: O(), persistRow: consentRowSchema().optional() }),
       k("cancelled"),
     ]),
   ),
@@ -17075,10 +17075,10 @@ async function Wet({ host: w, workerName: I, requestId: ne }, me) {
   }
 }
 function qet({ allow: w, persistToSettings: I, persistRow: ne }, me, pe) {
-  if (I && w && ne !== void 0 && Hg(ne)) {
+  if (I && w && ne !== void 0 && isConsentRow(ne)) {
     for (let be of ne.applies)
       (pe(be),
-        DG(be)
+        persistPermissionUpdate(be)
           .then(() => SandboxManager.refreshConfig())
           .catch(logError));
     SandboxManager.addSessionAllowedHost(me);
@@ -17096,7 +17096,7 @@ function V7(kpn) {
     { onSubmit: Vet } = kpn,
     zbe = useKeybindingContext(),
     vpn = useHasNonAutocompleteOverlay(),
-    wpn = qb(localJsxDialog.kind),
+    wpn = useIsDialogKindOpen(localJsxDialog.kind),
     Get;
   bb0: {
     if (!zbe) {
@@ -17374,7 +17374,7 @@ function z3t(w, I) {
     let me = w[ne];
     if (!E0(me)) continue;
     for (let pe of me.message.content) {
-      if (pe.type !== "tool_use" || pe.name !== XS) continue;
+      if (pe.type !== "tool_use" || pe.name !== TODO_WRITE_TOOL_NAME) continue;
       let be = pe.input,
         Ae = (
           typeof be === "object" &&
@@ -17588,7 +17588,7 @@ PREVIOUS LINE: ${pe ?? ""}`,
     });
     if (ne.signal.aborted) return { kind: "aborted" };
     if (xe.stop_reason === "max_tokens") return { kind: "truncated" };
-    let Ae = Td(
+    let Ae = stripMemoryTags(
         joinTextBlocks(
           xe.content,
           `
@@ -17867,14 +17867,14 @@ class z7 {
   host = null;
   changed = Le();
   toolPoolCache = null;
-  verdicts = new G_e();
+  verdicts = new SandboxClassifierVerdictCache();
   verdictsPermissionContext;
   stops = [];
   connected = !1;
   disposed = !1;
   narrowToWorker = jU(u6t);
-  mergePluginCommands = jU(E6e);
-  mergeMcpCommands = jU(E6e);
+  mergePluginCommands = jU(mergeSyncedSkillsWithCommands);
+  mergeMcpCommands = jU(mergeSyncedSkillsWithCommands);
   filterForThinClient = jU(filterCommandsForRemoteMode);
   addDisplayOnlyTools = jU(b7);
   buildCombinedInitialTools = jU((w, I, ne, me, pe, be, xe, Ae) => [
@@ -17945,7 +17945,7 @@ class z7 {
         },
         removeMcpServer: async (I) => {
           this.updateDynamicMcpConfig((ne) =>
-            tu(ne ?? {}, (me, pe) => pe === I),
+            omitBy(ne ?? {}, (me, pe) => pe === I),
           );
         },
         refreshContext: w.refreshContext,
@@ -18249,7 +18249,7 @@ function jU(w) {
   };
 }
 function cSe({ store: w, scope: I, readPendingQueryParams: ne }) {
-  return oHe({
+  return createSdkEngine({
     run: runAgentTurn,
     queryParams: async (me) => ne(),
     commands: () => toSlashCommands(I.commands),
@@ -18258,7 +18258,7 @@ function cSe({ store: w, scope: I, readPendingQueryParams: ne }) {
     agents: () => toAgentInfos(w.getState().agentDefinitions.activeAgents),
     account: toAccountInfo(),
     outputStyle: getConfiguredOutputStyleName(),
-    mcpServers: () => XHt(w.getState().mcp.clients),
+    mcpServers: () => serializeMcpServerStatuses(w.getState().mcp.clients),
     hostOwnsPermissionMode: !0,
     hostOwnsModel: !0,
   });
@@ -18293,7 +18293,7 @@ async function f6t(w = new Set(), I) {
         Je.source.source === "settings" ||
         !isSourceAllowedByPolicy(Je.source) ||
         findContainingSeedDir(Je.installLocation) !== void 0 ||
-        !MQ(Ke, Je, be[Ke]?.autoUpdate)
+        !shouldAutoUpdateMarketplace(Ke, Je, be[Ke]?.autoUpdate)
       )
         continue;
       let Qe = Ae.get(Ke);
@@ -18378,11 +18378,11 @@ async function ptt(w, I) {
   try {
     let ne = getDeclaredMarketplaces(),
       me = await getKnownMarketplaces(I).catch(() => ({})),
-      pe = KJt(ne, me),
+      pe = diffDeclaredMarketplaces(ne, me),
       be = [...pe.missing, ...pe.sourceChanged.map((Ke) => Ke.name)];
     if ((w.setPendingMarketplaces(be), be.length > 0))
       n(`Installing ${be.length} marketplace(s) in background`);
-    let xe = await lst({
+    let xe = await reconcileDeclaredMarketplaces({
       storageV5: I,
       onProgress: (Ke) => {
         switch (Ke.type) {
@@ -18592,8 +18592,8 @@ function gSe({ enabled: w = !0 } = {}) {
             warnings: Je,
           } = await loadAllPluginsCacheOnly(be),
           Qe = [...Ke];
-        if ((await cst(be)).length > 0) reinitializeLspServerManager(be);
-        let at = Object.keys(gHe()).length;
+        if ((await enforceDelistedPlugins(be)).length > 0) reinitializeLspServerManager(be);
+        let at = Object.keys(getFlaggedPlugins()).length;
         (Zm("plugins", at),
           I((fo) => {
             if (fo.setupIssues.flaggedPluginCount === at) return fo;
@@ -18610,7 +18610,7 @@ function gSe({ enabled: w = !0 } = {}) {
           Qe.push({
             type: "generic-error",
             source: "plugin-commands",
-            error: `Failed to load plugin commands: ${nv(fo)}`,
+            error: `Failed to load plugin commands: ${toErrorMessage(fo)}`,
           });
         }
         try {
@@ -18619,7 +18619,7 @@ function gSe({ enabled: w = !0 } = {}) {
           Qe.push({
             type: "generic-error",
             source: "plugin-agents",
-            error: `Failed to load plugin agents: ${nv(fo)}`,
+            error: `Failed to load plugin agents: ${toErrorMessage(fo)}`,
           });
         }
         try {
@@ -18628,7 +18628,7 @@ function gSe({ enabled: w = !0 } = {}) {
           Qe.push({
             type: "generic-error",
             source: "plugin-hooks",
-            error: `Failed to load plugin hooks: ${nv(fo)}`,
+            error: `Failed to load plugin hooks: ${toErrorMessage(fo)}`,
           });
         }
         let jt = (
@@ -18739,7 +18739,7 @@ function gSe({ enabled: w = !0 } = {}) {
               Qe = {
                 type: "generic-error",
                 source: "plugin-system",
-                error: nv(He),
+                error: toErrorMessage(He),
               };
             return {
               ...Ke,
@@ -18853,7 +18853,7 @@ function hSe() {
     runAutoModeGateCheck(xe, pe.getState().toolPermissionContext, me, ne, be);
   }, [w, I, ne]);
   let Oe = useAppStateSession();
-  E(() => rtn.of(Oe).subscribe(() => be(buildAutoModeGateNotification(getAutoModeUnavailableNotification("settings")))), [be, Oe]);
+  E(() => autoModeGateChangeNotifier.of(Oe).subscribe(() => be(buildAutoModeGateNotification(getAutoModeUnavailableNotification("settings")))), [be, Oe]);
 }
 F();
 async function _6t(w, I, ne) {
@@ -18930,7 +18930,7 @@ async function P6t(w, I, ne) {
   let me = {},
     pe = R6t(w, me),
     be = createLineBatcher(pe.onBatch),
-    xe = await executeShellCommand(w.command, ne.abortController.signal, hD(), {
+    xe = await executeShellCommand(w.command, ne.abortController.signal, getPreferredShellToolName(), {
       host: I,
       preventCwdChanges: !0,
       shouldUseSandbox: !1,
@@ -19089,7 +19089,7 @@ function wSe() {
     { storageV5: me } = useStorageV5Context(),
     [pe, be] = d(0);
   (E(() => {
-    if (!T2 || !ZY() || Rg()) return;
+    if (!T2 || !isSkillsAsToolsEnabled() || Rg()) return;
     let xe = settingsChangeDetector.subscribe(() => be((Oe) => Oe + 1)),
       Ae = skillChangeDetector.subscribe(() => be((Oe) => Oe + 1));
     return () => {
@@ -19097,7 +19097,7 @@ function wSe() {
     };
   }, []),
     E(() => {
-      if (!T2 || !ZY() || Rg()) return;
+      if (!T2 || !isSkillsAsToolsEnabled() || Rg()) return;
       let xe = !1;
       return (
         getSkillToolCommands(ne, me)
@@ -19131,7 +19131,7 @@ async function CSe(w, I, ne, me, pe) {
   }
   let He = buildAgentId(TEAM_LEAD_AGENT_NAME, be),
     Ke = Oe.teamAllowedPaths;
-  if (Ke && Ke.length > 0 && iP())
+  if (Ke && Ke.length > 0 && isManagedPermissionRulesOnlyEnabled())
     (n(
       `[TeammateInit] Skipping ${Ke.length} team-wide allowed path(s): permission rules are restricted to managed settings (allowManagedPermissionRulesOnly)`,
     ),
@@ -19151,7 +19151,7 @@ async function CSe(w, I, ne, me, pe) {
       ),
         w((Ct) => ({
           ...Ct,
-          toolPermissionContext: Oc(Ct.toolPermissionContext, {
+          toolPermissionContext: applyPermissionUpdate(Ct.toolPermissionContext, {
             type: "addRules",
             rules: [{ toolName: Qe.toolName, ruleContent: Zt }],
             behavior: "allow",
@@ -19253,7 +19253,7 @@ async function vtt(w, I, ne, me) {
 function TSe(w, { enabled: I = !0 } = {}) {
   let ne = useSession(),
     me = useSetAppState(),
-    pe = VB(),
+    pe = useSessionHooksRegistry(),
     { storageV5: be } = useStorageV5Context();
   E(() => {
     if (!I) return;
@@ -19263,7 +19263,7 @@ function TSe(w, { enabled: I = !0 } = {}) {
         Ae = xe && "teamName" in xe ? xe.teamName : void 0,
         Oe = xe && "agentName" in xe ? xe.agentName : void 0;
       if (Ae && Oe) {
-        await _1n(me, Ae, Oe, be);
+        await restoreTeammateContextFromSession(me, Ae, Oe, be);
         let Ke = (await readTeamFileAsync(Ae, be))?.members.find((Je) => Je.name === Oe);
         if (Ke)
           await CSe(
@@ -19690,7 +19690,7 @@ async function rZ(w) {
         let { descriptor: Ke, outcome: Je } =
           Ae === void 0
             ? {
-                descriptor: Wg(w.input) ? await He() : await Oe(),
+                descriptor: hasRequestedMachine(w.input) ? await He() : await Oe(),
                 outcome: void 0,
               }
             : Ae.preview === "local"
@@ -19726,7 +19726,7 @@ function o4t(w) {
   return w === WriteTool || w === FileEditTool;
 }
 function n4t(w) {
-  if (w.lookup === void 0 || !Wg(w.input) || !isViolinWoodEnabledCached()) return;
+  if (w.lookup === void 0 || !hasRequestedMachine(w.input) || !isViolinWoodEnabledCached()) return;
   try {
     let I = w.lookup({
       toolUseId: w.toolUseId,
@@ -19792,10 +19792,10 @@ function i4t(w, I) {
 }
 var s4t = 1e4;
 async function l4t(w) {
-  if (!eE("fileRead")) return;
+  if (!hasRemoteCapability("fileRead")) return;
   try {
     let I = await withTimeout(
-      jn().sendControlRequest({
+      getRemoteTransport().sendControlRequest({
         subtype: "read_file",
         path: w,
         max_bytes: REMOTE_READ_MAX_BYTES,
@@ -19816,7 +19816,7 @@ async function l4t(w) {
   }
 }
 function c4t(w) {
-  return qFe.includes(w);
+  return PERMISSION_RULE_SOURCES.includes(w);
 }
 function ISe(w) {
   return ps(stripAnsi(w));
@@ -19938,7 +19938,7 @@ class x2 {
         }),
         theme: Ae,
         toolPermissionContext: xe,
-        remoteWorkspace: Pt(),
+        remoteWorkspace: isRemoteActive(),
         heldServedCall: this.inputs.heldServedCall,
         signal: Ke.signal,
       })
@@ -20034,7 +20034,7 @@ class D0 {
     let be = m$n(me.raw).slice(0, Att);
     ne((xe) => {
       let Ae = xe.findIndex((Oe) => Oe.index === w);
-      if (Ae === -1 || xe[Ae].contentBlock.name !== Ni) return xe;
+      if (Ae === -1 || xe[Ae].contentBlock.name !== REPL_TOOL_NAME) return xe;
       return xe.with(Ae, {
         ...xe[Ae],
         contentBlock: { ...xe[Ae].contentBlock, input: { code: be } },
@@ -20043,7 +20043,7 @@ class D0 {
   }
 }
 F();
-class B0t extends Error {
+class ModePushTimeoutError extends Error {
   constructor() {
     super("set_permission_mode push not acknowledged in time");
     this.name = "ModePushTimeoutError";
@@ -20072,11 +20072,11 @@ var Ntt = new Gt(() => new Ett());
 function sZ(w, I, ne) {
   Ntt.of(w).settle(I, ne);
 }
-function Q1n(w, I, ne) {
+function registerModePushWaiter(w, I, ne) {
   return Ntt.of(w).register(I, ne);
 }
 function m4t(w, I) {
-  ((w.pending = w.pending.filter((ne) => ne !== I)), I.reject(new B0t()));
+  ((w.pending = w.pending.filter((ne) => ne !== I)), I.reject(new ModePushTimeoutError()));
 }
 var p4t = [1000, 3000, 9000];
 function Ftt(w, I) {
@@ -20953,7 +20953,7 @@ function $tt({
             So.current?.onWorkerUp(),
             zn.hasStructuredSteps)
           ) {
-            if (!zn.dismissed) xe((Ri) => [...Ri, createSystemInfoMessage($ot(zn), "info")]);
+            if (!zn.dismissed) xe((Ri) => [...Ri, createSystemInfoMessage(formatRemoteSessionSummary(zn), "info")]);
             if (!zn.steps.some((Ri) => Ri.status === "failed"))
               logFeatureOk("remote_bootstrap");
           }
@@ -20986,7 +20986,7 @@ function $tt({
     ),
     fi = re(() => {
       let zn = Cn.current;
-      if (zn !== null && !zn.terminal) Fn(TJt(zn, Date.now()));
+      if (zn !== null && !zn.terminal) Fn(finishRemoteBootstrap(zn, Date.now()));
       if (!Qo.current) {
         if (
           ((Ho.current = !1),
@@ -21292,7 +21292,7 @@ function $tt({
         vl = (() => {
           if (w.viewerOnly || !isViolinWoodEnabledCached()) return null;
           try {
-            return Htt(iHe(to, jt, eo), jt, deviceHooksProcessMemories.of(Tt));
+            return Htt(createConfigChangeHookGate(to, jt, eo), jt, deviceHooksProcessMemories.of(Tt));
           } catch (Wn) {
             return (logError(Wn), null);
           }
@@ -21380,15 +21380,15 @@ function $tt({
                   Cn.current !== null &&
                   Cn.current.hasStructuredSteps &&
                   !Cn.current.terminal;
-              if (Qo.current && !Cs && s6e(Wn, hs)) return;
+              if (Qo.current && !Cs && isStaleBootstrapFrame(Wn, hs)) return;
               let ys = kZ(Wn);
               if (!ho.current && ys.type === "env_log" && ys.message !== "") {
                 if (!Qo.current) ro(!0);
                 On(ys.message, "provisioning");
               }
               {
-                let Il = Cn.current ?? k8(hs),
-                  bu = Not(
+                let Il = Cn.current ?? createRemoteBootstrapState(hs),
+                  bu = reduceRemoteBootstrapState(
                     Il,
                     Wn,
                     ys.type === "env_log" ? ys.message : "",
@@ -21499,7 +21499,7 @@ function $tt({
               if (hs.cwd) {
                 let Cs = hs.cwd,
                   ys = ++zu;
-                Uot(Cs, "useRemoteSession")
+                isSessionCwdSafeToAdopt(Cs, "useRemoteSession")
                   .then((Il) => {
                     if (Il && ys === zu && ai.current === Fa) s_e(Cs);
                   })
@@ -22394,7 +22394,7 @@ function $tt({
             (ho.current = !1),
             ro(!0),
             Gn.current.push({ content: zn, opts: xi }));
-          let Xs = Cn.current ?? k8(Date.now());
+          let Xs = Cn.current ?? createRemoteBootstrapState(Date.now());
           return (
             In({ ...Xs, queuedCount: Gn.current.length }),
             Vr(zn),
@@ -22540,17 +22540,17 @@ function Ktt({
   ccrSessionId: pe,
 }) {
   return w.isRemoteMode
-    ? H7t("ssh", w, !1)
+    ? createRemoteTransport("ssh", w, !1)
     : I.isRemoteMode
-      ? H7t("direct", I, !1)
+      ? createRemoteTransport("direct", I, !1)
       : ne.isRemoteMode
-        ? H7t("ccr", ne, me, pe)
-        : k7t;
+        ? createRemoteTransport("ccr", ne, me, pe)
+        : NO_REMOTE_TRANSPORT;
 }
 class LSe {
   #e;
   #t = null;
-  #o = { activeRemote: k7t };
+  #o = { activeRemote: NO_REMOTE_TRANSPORT };
   #n = Le();
   retraction = z0t();
   modeWire = { applied: null, lastBroadcast: null };
@@ -22677,7 +22677,7 @@ class LSe {
               (Qe.name === Oe || Qe.aliases?.includes(Oe) || getCommandName(Qe) === Oe),
           )
         : void 0,
-      Ke = He ? routeThinClientCommand(He, Ks()) : "post-text",
+      Ke = He ? routeThinClientCommand(He, hasRemoteControlChannel()) : "post-text",
       Je =
         Ke === "unavailable" && He
           ? He.name
@@ -22871,7 +22871,7 @@ function OSe({
       Je.setActiveRemote(jt);
     }, [Je, jt]),
     Btt(Je),
-    { transport: Je, activeRemote: jt, cancellableExternalLoading: x7t(jt, at) }
+    { transport: Je, activeRemote: jt, cancellableExternalLoading: canCancelExternalLoading(jt, at) }
   );
 }
 import { randomUUID as qot } from "crypto";
@@ -22925,29 +22925,29 @@ function rS() {
   return w ? "progress" : ne ? "panel" : me ? "draft" : I ? "typing" : null;
 }
 function T4t() {
-  let w = Pen("panel");
-  return h9e() !== null && w;
+  let w = useTopBareDialogHiddenWhile("panel");
+  return useTopUserInvokedDialog() !== null && w;
 }
 function x4t() {
-  let w = Pen("draft"),
+  let w = useTopBareDialogHiddenWhile("draft"),
     I = Qy();
   return At(I.subscribe, () => w && I.getState().value.trim() !== "");
 }
 function M2() {
-  let w = Z8(),
-    I = h9e() !== null,
+  let w = useHasBareDialog(),
+    I = useTopUserInvokedDialog() !== null,
     ne = rS();
   if (I || (w && ne === null)) return "visible";
   return w ? "suppressed" : "none";
 }
 function YU() {
-  let w = UUn(),
+  let w = useTopBareDialog(),
     I = rS(),
     ne = Ytt();
   return I !== null || ne ? null : w;
 }
 function BSe() {
-  let w = hat(),
+  let w = useTopBareDialogKind(),
     I = rS(),
     ne = Ytt();
   return I !== null || ne ? void 0 : w;
@@ -22967,10 +22967,10 @@ function Jtt(w, I) {
     },
     get() {
       let ne = w.getState(),
-        me = tk(ne),
-        be = Q8(ne) !== null && POt(me, "panel"),
+        me = getTopBareDialog(ne),
+        be = getTopUserInvokedDialog(ne) !== null && isDialogHiddenWhile(me, "panel"),
         xe = I.getState(),
-        Ae = xe.value.trim() !== "" && POt(me, "draft");
+        Ae = xe.value.trim() !== "" && isDialogHiddenWhile(me, "draft");
       return ztt() || be || Ae || xe.active || Qtt() ? void 0 : me?.kind;
     },
   };
@@ -23054,7 +23054,7 @@ async function tot(w, I, ne) {
     };
     me.set(
       Ae,
-      await YWn(Oe, Ae, {
+      await resolveJobHolderVerdict(Oe, Ae, {
         pidViewTrusted: () => at("trusted", isRegistrySweepPermitted),
         pidState: (Zt) => (isProcessRunning(Zt) ? "alive" : isProcessProvablyGone(Zt) ? "gone" : "unknown"),
         isSameProcess: provenSameProcessAsync,
@@ -23120,7 +23120,7 @@ async function M4t(w, I, ne, me, pe, be, xe = 60000) {
     let Oe = R4t(pe(w), "adopt.json"),
       He;
     try {
-      let Ke = await v0(Oe);
+      let Ke = await openFileReadOnlyHardened(Oe);
       if (!Ke.ok) return Ke.error.kind !== "absent";
       He = Ke.value;
       let Je = await He.stat();
@@ -23585,7 +23585,7 @@ function zSe(w) {
       : w.footerLinks,
   };
 }
-function j0t(w, I, ne) {
+function clearGoalOnResumeSwap(w, I, ne) {
   (closeAllWebViews(w), ne.dismissKind(GOAL_PROPOSAL_DIALOG.kind));
   let me = w().activeGoal;
   if (me !== void 0) logGoalCleared(me, "resume_swap");
@@ -23775,7 +23775,7 @@ function Sot({
     He = new Map(),
     Ke = (Qe) => {
       if ((Ae.delete(Qe), be || xe.has(Qe))) return;
-      let it = A6e(ne.getCommandQueueSnapshot(), I.getState().tasks).find(
+      let it = collectPendingAgentNotifications(ne.getCommandQueueSnapshot(), I.getState().tasks).find(
         (eo) => eo.agentId === Qe,
       );
       if (!it) return;
@@ -23835,7 +23835,7 @@ function Sot({
               ne.recheckCommandQueue();
             }, Y4t)
           : void 0;
-        for (let { agentId: Ct } of A6e(Qe, it)) {
+        for (let { agentId: Ct } of collectPendingAgentNotifications(Qe, it)) {
           if (xe.has(Ct) || Ae.has(Ct)) continue;
           Ae.set(Ct, setTimeout(Ke, 0, Ct));
         }
@@ -24652,7 +24652,7 @@ function Iot({
   return xe;
 }
 function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
-  if (Pt()) return () => {};
+  if (isRemoteActive()) return () => {};
   let pe = getOwnJobShortId(),
     be = getJobDir(pe),
     xe,
@@ -24723,7 +24723,7 @@ function S8t({ session: w, storageV5: I, credentials: ne, setAppState: me }) {
   return (Ke(), () => xe?.close());
 }
 function k8t({ storageV5: w, credentials: I }) {
-  if (Pt()) return () => {};
+  if (isRemoteActive()) return () => {};
   return (
     mDt((ne) => {
       let me = sanitizeSessionName(ne ?? "");
@@ -24852,7 +24852,7 @@ async function Bot(w) {
       context: be,
     } = w,
     xe = w.arm ?? watchArtifactFromStartup,
-    Ae = w.autoReactGate ?? Zu,
+    Ae = w.autoReactGate ?? isArtifactAutoReactEnabled,
     Oe = await xe({
       slug: I.slug,
       url: I.url,
@@ -24881,7 +24881,7 @@ async function Bot(w) {
     comments: He,
   });
   let Ke = He ? "new versions and comments" : "new versions",
-    Je = Efe();
+    Je = buildArtifactReadGuidance();
   return {
     notificationText: `${ARTIFACT_MARKER_GLYPH} Watching artifact \u2014 you'll be notified about ${Ke}.`,
     metaMessage: `The user started this session watching the artifact ${I.url} (via claude --watch-artifact). It is the current artifact of interest. ${Je.contentReadsBlocked ?? `Re-read it before editing or republishing (${Je.readRemedy}).`} You will be notified when it is republished${He ? " and when it receives comments" : ""}.`,
@@ -24900,13 +24900,13 @@ function Hot({
       if (Qe === void 0) return;
       I.replace((it) => [...it, createUserMessage({ content: Qe, isMeta: !0 })]);
     },
-    Oe = IWn();
+    Oe = takeStartupWatchTarget();
   if (Oe === null) {
     Ae(oke(nke(xe), rke));
     return;
   }
   if ((Ae(oke(nke(xe), rke, Oe.url)), Oe.autoReactDisarmed))
-    fpt({ storageV5: me });
+    disarmArtifactAutoReact({ storageV5: me });
   let He = (Qe) =>
       pe({
         key: "watch-artifact",
@@ -24928,7 +24928,7 @@ function Hot({
       return Bot({
         target: Oe,
         ...(at !== void 0 && { tool: at }),
-        commentVerbsInSchema: nT(),
+        commentVerbsInSchema: isArtifactCommentsAvailable(),
         getKnownVer: () => mainObservedArtifactVersion(ne.getState(), Oe.slug),
         context: Qe,
       }).then((Zt) => {
@@ -25259,7 +25259,7 @@ class fZ {
         await import("../../02-功能模块/Git-Worktree/chunk-xercceag.js");
       if ((await ho(me, Ke), await resetSessionFilePointer(), ne !== "fork")) {
         if (
-          (j0t(pe.getState, pe.setState, Ae),
+          (clearGoalOnResumeSwap(pe.getState, pe.setState, Ae),
           ICe(),
           xoe(),
           this.rehydrateResumedFrameState(jt),
@@ -25328,10 +25328,10 @@ class fZ {
           if (xo.length > 0) {
             let Ro = Vo();
             jt.push(
-              createSystemInfoMessage(iFn(xo.map((on) => artifactViewerUrlFor({ slug: on, env: Ro }))), "warning"),
+              createSystemInfoMessage(formatIncompleteWatchStateNotice(xo.map((on) => artifactViewerUrlFor({ slug: on, env: Ro }))), "warning"),
             );
           }
-          let Wo = aFn(po, ate);
+          let Wo = getArmedSlugsNotMatching(po, ate);
           if (Wo.length > 0) {
             let Ro = fo,
               on = "unknown",
@@ -25341,7 +25341,7 @@ class fZ {
             try {
               let { listRegisteredSessionRecords: Kn } =
                   await import("../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js"),
-                nn = await Hbe({
+                nn = await resolveLiveSessionHolder({
                   records: await Kn(),
                   sessionId: Ro,
                   selfPid: process.pid,
@@ -25359,7 +25359,7 @@ class fZ {
               zo = Wo.map((Kn) => artifactViewerUrlFor({ slug: Kn, env: vo })),
               Sr = Date.now();
             if (on !== "none" && yn)
-              Q0t(on === "live" ? "held_by_live_session" : "holder_unknown", {
+              logArtifactLiveSubscribeSad(on === "live" ? "held_by_live_session" : "holder_unknown", {
                 path: "switch",
                 probed: yn,
                 liveHolder: An,
@@ -25374,9 +25374,9 @@ class fZ {
               });
             if (on === "live")
               jt.push(
-                createSystemInfoMessage(YJt(zo, An !== void 0 ? ppt(An, wn, Sr) : void 0), "notice"),
+                createSystemInfoMessage(formatHeldByLiveSessionNotice(zo, An !== void 0 ? buildHolderDescriptor(An, wn, Sr) : void 0), "notice"),
               );
-            else jt.push(createSystemInfoMessage(sFn(zo), "notice"));
+            else jt.push(createSystemInfoMessage(formatConversationSwitchNotice(zo), "notice"));
           }
         }
         if (
@@ -25395,7 +25395,7 @@ class fZ {
             storageV5: Ke,
             credentials: Je,
           });
-        (HL(kg().map((po) => po.id)), _He(jt, Oe, void 0, void 0, Ke));
+        (HL(kg().map((po) => po.id)), restoreTaskRegistryFromTranscript(jt, Oe, void 0, void 0, Ke));
       } else {
         sze({ ...(Ke !== void 0 && { storageV5: Ke }) });
         let Ho = getCurrentWorktreeSession();
@@ -25511,7 +25511,7 @@ class fZ {
     (xe.registerSetter((Ae, Oe) => I2(I.setState, Ae, Oe)),
       w.push(() => xe.unregisterSetter()),
       w.push(this.turn.watchLaunchPrompt()),
-      JNn(),
+      markFullscreenFirstFrame(),
       commitSessionLatch(me),
       Hot({
         initialMessages: this.initialMessages,
@@ -25620,7 +25620,7 @@ class fZ {
       ));
   }
   _raiseSessionStart() {
-    XJt({
+    raiseSessionStartOnce({
       loaded: loadPluginHooks(this.storageV5, this.credentials),
       surface: "terminal",
       interactive: !0,
@@ -25688,7 +25688,7 @@ class fZ {
               let Qe = getBgTakeover();
               if (!Qe?.adoptShellOutputRoot) {
                 let it = worktreeStateStore.of(I.host).last;
-                return it ? ZYe(iEt(it.worktreePath)) : void 0;
+                return it ? getProjectTempDirForPath(realpathIfResolvable(it.worktreePath)) : void 0;
               }
               return Qe.adoptShellOutputReadRoot
                 ? [Qe.adoptShellOutputRoot, Qe.adoptShellOutputReadRoot]
@@ -25843,16 +25843,16 @@ class fZ {
               this.resumeAdoptedAgents(at, Ct, Oe, Ke);
             }
           } finally {
-            await _He(w, ne, (Qe) => this.resumeOrphanedAgents(Qe, Oe), Je, me);
+            await restoreTaskRegistryFromTranscript(w, ne, (Qe) => this.resumeOrphanedAgents(Qe, Oe), Je, me);
           }
         })();
-      } else _He(w, ne, void 0, void 0, me);
+      } else restoreTaskRegistryFromTranscript(w, ne, void 0, void 0, me);
       if (be.getState().initialMessage === null) this.maybePromptStaleResume(w);
     }
   }
   resumeAdoptedAgents(w, I, ne, me) {
     let { store: pe, taskRegistry: be, storageV5: xe, messageQueue: Ae } = this;
-    yHe(pe, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
+    waitForStoreCondition(pe, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
       .then(() => {
         if (!isActingAsBgJob() || getBgJobDir() !== ne) {
           n(
@@ -25920,7 +25920,7 @@ class fZ {
   }
   resumeOrphanedAgents(w, I) {
     let { store: ne, taskRegistry: me, storageV5: pe } = this;
-    yHe(ne, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
+    waitForStoreCondition(ne, mcpSettledForAdopt, { timeoutMs: STALE_THRESHOLD_MS / 4 })
       .then(() => {
         if (!isActingAsBgJob() || getBgJobDir() !== I) {
           n(
@@ -25940,15 +25940,15 @@ class fZ {
           })
             .then((Ae) => {
               if (Ae.alreadyCompleted) {
-                fFn({ ...xe, outputFile: xe.outputFile ?? Ae.outputFile }, me);
+                notifyOrphanedAgentAlreadyCompleted({ ...xe, outputFile: xe.outputFile ?? Ae.outputFile }, me);
                 return;
               }
-              (pFn(xe), syncLiveInFlightSnapshot(summarizeBackgroundTasks(me.all()), pe));
+              (notifyOrphanedAgentAutoResumed(xe), syncLiveInFlightSnapshot(summarizeBackgroundTasks(me.all()), pe));
             })
             .catch((Ae) => {
               if (
                 (logFeatureSad("task_local_agent", "orphan_auto_resume_failed"),
-                mFn(xe, l(Ae)),
+                notifyOrphanedAgentResumeFailed(xe, l(Ae)),
                 Ae instanceof Ou)
               ) {
                 n(
@@ -25998,10 +25998,10 @@ class fZ {
   };
   rearmArtifactLiveOnMount() {
     let { store: w, taskRegistry: I, storageV5: ne } = this;
-    JJt(
+    runArtifactLiveRearmPrelude(
       {
         initialMessages: this.initialMessages,
-        startupWatchSlug: PWn()?.slug,
+        startupWatchSlug: getStartupWatchTarget()?.slug,
         storageV5: ne,
       },
       {
@@ -26219,7 +26219,7 @@ class fZ {
       });
     else He(Ct);
     if (
-      (be((jt) => Z0t(jt, me.getSnapshot())),
+      (be((jt) => pruneDisplayedMessageContent(jt, me.getSnapshot())),
       this.bumpConversationId(),
       runPostCompactCleanup(
         it.session,
@@ -26368,7 +26368,7 @@ Error: sandbox required but unavailable: ${me}
       case "classify":
         return be
           .sandboxClassifierVerdicts()
-          .getOrClassify(w.host, w.port, hHe(xe()), () =>
+          .getOrClassify(w.host, w.port, getTranscriptWatermark(xe()), () =>
             classifySandboxNetworkAccess(
               w.host,
               w.port,
@@ -27593,12 +27593,12 @@ function Dke({
   };
 }
 F();
-function KW(w, I, ne) {
+function computeListWindow(w, I, ne) {
   let me = oa(w - ne + 1, 0, Math.max(0, I - ne)),
     pe = Math.min(me + ne, I);
   return { windowStart: me, windowEnd: pe, moreAbove: me, moreBelow: I - pe };
 }
-function BJt({
+function useListCursor({
   count: w,
   visibleCount: I,
   isDisabled: ne = !1,
@@ -27651,7 +27651,7 @@ function BJt({
     }
     pe?.(Tt, to);
   }
-  let jt = KW(it, w, I);
+  let jt = computeListWindow(it, w, I);
   return {
     cursor: it,
     ...jt,
@@ -28228,7 +28228,7 @@ function cee(Nke) {
       windowEnd: RDn,
       moreAbove: PDn,
       moreBelow: Bke,
-    } = KW(xDn, hh.length, nee),
+    } = computeListWindow(xDn, hh.length, nee),
     MDn = iee(sm, SA),
     w9t = hh.map((Nnt) => (lm(Nnt) || MDn.has(Nnt.id) ? 0 : _rt(sm, Srt(Nnt)))),
     C9t;
@@ -29388,7 +29388,7 @@ function qve(w) {
     ),
     vo = useHasNonAbovePromptInputOverlay(),
     zo = useHasAnyOverlay() && !vo,
-    Sr = qb(localJsxDialog.kind),
+    Sr = useIsDialogKindOpen(localJsxDialog.kind),
     Kn = M2() === "visible",
     nn = (be !== void 0 && !be.aborted) || xe,
     no = to.some((In) => isPoppableCommand(In, Je)),
@@ -29432,7 +29432,7 @@ function qve(w) {
       Fn = Object.values(In).some(Wve),
       Qo = getObserverPairing(eo, MAIN_AGENT_KEY)?.state === "armed",
       Gn = Object.values(In).some(isClaimableAutoReactSubscription),
-      Sn = Zu(),
+      Sn = isArtifactAutoReactEnabled(),
       Mn = $ve != null && $ve.liveDocWatchCount() > 0,
       Or =
         getLiveArtifactConnectionCount() > 0 ||
@@ -30280,8 +30280,8 @@ async function VZt(w, I) {
     );
   }
 }
-async function Xot(w, I, ne = {}) {
-  if (Pt()) return [];
+async function getDirectoryCompletions(w, I, ne = {}) {
+  if (isRemoteActive()) return [];
   let { basePath: me = getCwd(), maxResults: pe = 10 } = ne,
     be = Xrt(I, me);
   if (!be) return [];
@@ -30344,7 +30344,7 @@ async function GZt(w, I) {
   }
 }
 async function lwe(w, I, ne = {}) {
-  if (Pt()) return [];
+  if (isRemoteActive()) return [];
   let { basePath: me = getCwd(), maxResults: pe = 10, keepDotPrefix: be = !1 } = ne,
     xe = Xrt(I, me);
   if (!xe) return [];
@@ -30377,7 +30377,7 @@ function Zrt(w) {
 function KZt(w, I) {
   if (w.commandMatcherIndex?.commands === I)
     return w.commandMatcherIndex.matcher;
-  let ne = new e8t(
+  let ne = new CommandSearchIndex(
     I.filter((me) => !me.isHidden).map((me) => ({
       name: me.name,
       displayName: getCommandName(me),
@@ -30454,7 +30454,7 @@ function QZt(w, I) {
 }
 function YZt(w, I) {
   if (I.type !== "prompt") return QZt(w, I.name);
-  switch (Xar(I)) {
+  switch (getSkillSourceCategory(I)) {
     case "project":
       return "project";
     case "plugin":
@@ -30488,7 +30488,7 @@ function cwe(w, I, ne, me, pe) {
     metadata: I,
     matchedAlias: me,
     query: pe,
-    ...(ne && { kind: Kar(I), sourceTag: Oe }),
+    ...(ne && { kind: getCommandKind(I), sourceTag: Oe }),
   };
 }
 function xee(w, I, ne) {
@@ -30563,11 +30563,11 @@ function pwe(w, I) {
   if (!uwe(ne.metadata)) return !0;
   let me = w.slice(1).toLowerCase().trim();
   if (me === "") return !0;
-  let pe = me.split(RRt).join("");
+  let pe = me.split(COMMAND_NAME_SEPARATOR_RE).join("");
   if (pe === "") return !1;
   let be = ne.metadata;
   return [be.name, getCommandName(be), ...(be.aliases ?? [])].some((xe) => {
-    let Ae = xe.toLowerCase().split(RRt).filter(Boolean);
+    let Ae = xe.toLowerCase().split(COMMAND_NAME_SEPARATOR_RE).filter(Boolean);
     return Ae.some((Oe, He) => Ae.slice(He).join("").startsWith(pe));
   });
 }
@@ -32543,7 +32543,7 @@ async function vwe(
     it = [];
   for (let at of He) it.push({ source: at, score: at.score ?? 0.5 });
   if (Qe.length > 0) {
-    let Zt = new Oq(Qe, {
+    let Zt = new Fuse(Qe, {
       includeScore: !0,
       threshold: 0.6,
       keys: [
@@ -32594,7 +32594,7 @@ async function Iee(w, I, ne, me, pe) {
     });
   }
   let Ke = normalizeMcpName(xe),
-    Je = ne.find((zt) => normalizeMcpName(zt.name) === Ke && ts(zt));
+    Je = ne.find((zt) => normalizeMcpName(zt.name) === Ke && isConnectedMcpServer(zt));
   if (!Je) return [];
   let Qe = {};
   for (let [zt, ao] of Object.entries(He.resolvedArgs))
@@ -32752,7 +32752,7 @@ function gH(w, I, ne, me, pe, be) {
   return (pe(He), be(Oe.length + w.displayText.length + 1), !0);
 }
 async function veo(w, I, ne, me, pe) {
-  if (Pt()) return [];
+  if (isRemoteActive()) return [];
   try {
     w.current?.abort();
     let be = new AbortController();
@@ -32954,7 +32954,7 @@ function Awe({
     Gi = re(
       async (Ko, cr = !1) => {
         ((jo.current = Ko), (Cn.current = cr ? "at" : "file"));
-        let pr = Pt(),
+        let pr = isRemoteActive(),
           Vr = null,
           wr = cr && !pr ? _o.getState().mcp.resourceTemplates : ho;
         if (cr && !pr) {
@@ -32999,7 +32999,7 @@ function Awe({
     );
   E(() => {
     let Ko = setImmediate((pr) => {
-        if (!Pt()) startBackgroundCacheRefresh(globalFileIndexCache, pr);
+        if (!isRemoteActive()) startBackgroundCacheRefresh(globalFileIndexCache, pr);
       }, Ro),
       cr = globalFileIndexCache.indexBuildComplete.subscribe(() => {
         let pr = jo.current;
@@ -33133,7 +33133,7 @@ function Awe({
               description: Xs ? `send message \xB7 ${Xs}` : "send message",
             });
           }
-          if (isCrossSessionMessagingEnabled() && !Pt()) {
+          if (isCrossSessionMessagingEnabled() && !isRemoteActive()) {
             let Ri = Mn.current,
               ns =
                 Ri?.value === Ko && Ri.partial === yi
@@ -33226,7 +33226,7 @@ function Awe({
               (gn.cancel(), Fr.cancel(), Ln());
               return;
             }
-            let zn = await Xot(Wo, hi);
+            let zn = await getDirectoryCompletions(Wo, hi);
             if (zn.length > 0) {
               (zt((xi) => ({
                 suggestions: zn,
@@ -33649,7 +33649,7 @@ function Awe({
           if (pr) {
             let Vr = pr.token.startsWith("@"),
               wr = Twe(pr),
-              ur = Pt();
+              ur = isRemoteActive();
             ((jo.current = wr), (Cn.current = Vr ? "at" : "file"));
             let Pi = Vr && !ur ? _o.getState().mcp.resourceTemplates : ho,
               ki = null;
@@ -34655,7 +34655,7 @@ function jto() {}
 var uat = 8,
   mat = 10,
   pat = 2;
-function S6e(EUn) {
+function SearchablePickerDialog(EUn) {
   let Vu = _(108),
     {
       title: Iit,
@@ -35344,7 +35344,7 @@ function LCe({ initialQuery: w, onSelect: I, onCancel: ne }) {
     Zt = at ? Math.floor((me - 6) * 0.5) : me - 6,
     Ct = Math.max(20, Zt - gat - 1),
     eo = at ? Math.max(20, me - Zt - 12) : Math.max(20, me - 10);
-  return e(S6e, {
+  return e(SearchablePickerDialog, {
     title: r(t, {
       children: [
         "Search prompts ",
@@ -35508,7 +35508,7 @@ function FCe(w) {
 }
 var Qw = "__NO_PREFERENCE__",
   tlt = 14;
-function RZ({
+function ModelPicker({
   initial: w,
   sessionModel: I,
   onSelect: ne,
@@ -36211,7 +36211,7 @@ function lno(sWn) {
   return nZt(sWn, !0);
 }
 function flt(w, I) {
-  return { level: w, entryMode: e1n(w, I), mode: null };
+  return { level: w, entryMode: resolveEntryPermissionMode(w, I), mode: null };
 }
 var ino = Yl(function ($1n) {
     let rb = _(45),
@@ -36225,7 +36225,7 @@ var ino = Yl(function ($1n) {
       } = $1n;
     (useActiveOverlay("proactivity-dialog"), useAppStateSelector(ano));
     let w_e = useAppStateSelector(fR),
-      C_e = qb(localJsxDialog.kind),
+      C_e = useIsDialogKindOpen(localJsxDialog.kind),
       Qoo,
       Yoo;
     if (rb[0] !== w_e || rb[1] !== kte || rb[2] !== C_e)
@@ -39006,7 +39006,7 @@ function gut(t2n) {
   else wro = hro[11];
   return wro;
 }
-var Vi = Object.assign(gut, { Row: fut });
+var Table = Object.assign(gut, { Row: fut });
 function Gro(B2n, U2n) {
   return e(t, { wrap: "truncate-end", children: B2n }, U2n);
 }
@@ -39076,7 +39076,7 @@ function boe(M2n) {
   else Lro = rp[16];
   let fRe;
   if (rp[17] !== iu.result || rp[18] !== iu.status)
-    ((fRe = r(Vi.Row, {
+    ((fRe = r(Table.Row, {
       children: [
         Lro,
         iu.status === "running"
@@ -39123,7 +39123,7 @@ function boe(M2n) {
   else gRe = rp[24];
   let hRe;
   if (rp[25] !== gRe)
-    ((hRe = r(Vi.Row, { children: [Oro, gRe] })),
+    ((hRe = r(Table.Row, { children: [Oro, gRe] })),
       (rp[25] = gRe),
       (rp[26] = hRe));
   else hRe = rp[26];
@@ -39134,14 +39134,14 @@ function boe(M2n) {
   else yRe = rp[28];
   let bRe;
   if (rp[29] !== kut || rp[30] !== yRe)
-    ((bRe = r(Vi.Row, { children: [yRe, kut] })),
+    ((bRe = r(Table.Row, { children: [yRe, kut] })),
       (rp[29] = kut),
       (rp[30] = yRe),
       (rp[31] = bRe));
   else bRe = rp[31];
   let SRe;
   if (rp[32] !== xut || rp[33] !== fRe || rp[34] !== hRe || rp[35] !== bRe)
-    ((SRe = r(Vi, {
+    ((SRe = r(Table, {
       columns: Nro,
       forceWidth: xut,
       children: [fRe, hRe, bRe],
@@ -39402,7 +39402,7 @@ function Cj(w) {
     );
   return isLiveBackgroundTask(w);
 }
-function y6e(Kzn) {
+function BackgroundTasksDialog(Kzn) {
   let ha = _(283),
     {
       onDone: ul,
@@ -41236,12 +41236,12 @@ function kR(w, I) {
   }
   return w.length - 1;
 }
-function u6e(w, I) {
+function removeFrameUrl(w, I) {
   let ne = Object.keys(w.frameUrls),
     me = ne.indexOf(I);
   if (me === -1) return w;
   let pe = ne.filter((Ae) => Ae !== I),
-    be = tu(w.frameUrls, (Ae, Oe) => Oe === I),
+    be = omitBy(w.frameUrls, (Ae, Oe) => Oe === I),
     xe = pe[Math.min(me, pe.length - 1)] ?? null;
   return { ...w, frameUrls: be, frameNavPath: xe, frameExpanded: !1 };
 }
@@ -41287,7 +41287,7 @@ function Bdt(w, I, ne, me) {
 function xj(w, I) {
   if (hasFrameUrlPrefix(w))
     return (
-      (I.title !== void 0 ? yw(I.title) : null) ?? w.slice(w.indexOf(":") + 1)
+      (I.title !== void 0 ? formatArtifactTitle(I.title) : null) ?? w.slice(w.indexOf(":") + 1)
     );
   return parse(w).name;
 }
@@ -41396,7 +41396,7 @@ function Udt(w) {
       w.type === "deep-link"
         ? "Prompt from an external link"
         : "Pre-filled prompt",
-    ne = w.prefillLength > EJt;
+    ne = w.prefillLength > PREFILL_LONG_PROMPT_THRESHOLD;
   return [
     {
       text: `${I}${ne ? ` (${w.prefillLength.toLocaleString("en-US")} chars)` : ""}`,
@@ -42104,7 +42104,7 @@ function oAe(YXn) {
     _mt = BQ(),
     tlo;
   if (TS[0] !== _mt)
-    ((tlo = !Pt() && _mt === "pro"), (TS[0] = _mt), (TS[1] = tlo));
+    ((tlo = !isRemoteActive() && _mt === "pro"), (TS[0] = _mt), (TS[1] = tlo));
   else tlo = TS[1];
   let jMe = tlo,
     Tmt = aMe(jMe ? 30000 : null),
@@ -42118,7 +42118,7 @@ function oAe(YXn) {
   else olo = TS[5];
   let WMe = olo,
     [qMe, XXn] = d(null),
-    ZXn = !Pt() && Boolean(getConfiguredApiKeyHelper()),
+    ZXn = !isRemoteActive() && Boolean(getConfiguredApiKeyHelper()),
     nlo;
   if (TS[6] === MEMO_CACHE_SENTINEL)
     ((nlo = () => {
@@ -42246,7 +42246,7 @@ function oAe(YXn) {
   let llo, clo, ulo;
   if (TS[30] === MEMO_CACHE_SENTINEL)
     ((llo = e(rne, {})),
-      (clo = !Pt() && e(dne, {})),
+      (clo = !isRemoteActive() && e(dne, {})),
       (ulo = e(Q_e, {})),
       (TS[30] = llo),
       (TS[31] = clo),
@@ -42352,7 +42352,7 @@ function fne(w) {
 async function rAe(w) {
   let [I, ne] = await Promise.all([
     getGitWorktreeName(w),
-    Pt() ? Promise.resolve(null) : getRemoteUrl(),
+    isRemoteActive() ? Promise.resolve(null) : getRemoteUrl(),
   ]);
   return { gitWorktree: I, repo: ne ? parseGitRemote(ne) : null };
 }
@@ -42447,7 +42447,7 @@ function xlo({
     }),
     ...(Je && { vim: { mode: Qe ?? "INSERT" } }),
     ...(Ct && { agent: { name: Ct } }),
-    ...(jn() !== null && { remote: { session_id: w.id } }),
+    ...(getRemoteTransport() !== null && { remote: { session_id: w.id } }),
     ...(Ke && {
       pr: {
         number: Ke.number,
@@ -42596,7 +42596,7 @@ class gne {
     (this.#s?.(), (this.#s = null));
     let w = nAe(this.#t.statusLine);
     if (w === null) return;
-    let I = Math.min(pS, w),
+    let I = Math.min(MAX_TIMER_DELAY_MS, w),
       ne = () => {
         (this.#b(), (this.#s = this.#e.setTimeout(ne, I)));
       };
@@ -42605,7 +42605,7 @@ class gne {
   #y(w) {
     if (w === this.#c) return;
     if ((this.#m?.(), (this.#m = null), (this.#c = w), w === null)) return;
-    let I = Math.min(pS, Math.max(0, w + Clo - Date.now()));
+    let I = Math.min(MAX_TIMER_DELAY_MS, Math.max(0, w + Clo - Date.now()));
     this.#m = this.#e.setTimeout(() => {
       ((this.#m = null), (this.#c = null), this.#b());
     }, I);
@@ -43094,7 +43094,7 @@ function Cne($6n) {
 }
 F();
 var Pne = 2500;
-function j_e() {
+function FleetAgentNudge() {
   let ev = _(32),
     Gj = !tn(),
     _ne = useFleetNudgeStore(),
@@ -43513,7 +43513,7 @@ function WAe() {
     ne = useStorageV5Context().storageV5;
   return (
     E(() => {
-      if (!isBgSession() || Pt()) return;
+      if (!isBgSession() || isRemoteActive()) return;
       let me = getOwnJobShortId(),
         pe = getJobDir(me),
         be,
@@ -43841,7 +43841,7 @@ function One(H7n) {
   FAe();
   let Dpt = useTerminalFocusState(),
     Vco;
-  if (tv[0] !== Dpt) ((Vco = Vpt(Dpt) && !Pt()), (tv[0] = Dpt), (tv[1] = Vco));
+  if (tv[0] !== Dpt) ((Vco = Vpt(Dpt) && !isRemoteActive()), (tv[0] = Dpt), (tv[1] = Vco));
   else Vco = tv[1];
   let Dne = Vco,
     ZN = VAe(YAe, Dne),
@@ -43965,7 +43965,7 @@ function One(H7n) {
             QAe.key,
             " again to",
             " ",
-            isBgSession() || eE("catchupReplay")
+            isBgSession() || hasRemoteCapability("catchupReplay")
               ? "detach (session keeps running)"
               : "exit",
           ],
@@ -44192,12 +44192,12 @@ function qpt({
   let Fn = tn(),
     Qo = Ine(),
     Gn = At(subscribeGlobalConfigInstalled, fuo),
-    Sn = V(() => gJt(Gn), [Gn]);
+    Sn = V(() => parseFooterIndicatorText(Gn), [Gn]);
   if (w === "bash")
     return e(t, { color: "bashBorder", children: "! for shell mode" });
   let Mn = I?.mode,
-    Or = jn(),
-    Br = !Or && !Pt(),
+    Or = getRemoteTransport(),
+    Br = !Or && !isRemoteActive(),
     fi = Br ? muo(yn) : null,
     Xi = Br ? puo(yn) : 0,
     Ln = !isDefaultPermissionMode(Mn),
@@ -44234,9 +44234,9 @@ function qpt({
       !(Wi && zt < 56 + Ki) &&
       !(qs && zt < 48 + Ki) &&
       !(fi && zt < 48 + Xi + Jr),
-    As = Or ? eE("setPermissionMode") && !Or.viewerOnly : !Pt(),
+    As = Or ? hasRemoteCapability("setPermissionMode") && !Or.viewerOnly : !isRemoteActive(),
     Ls = !Fn && Prt(_o, Ro),
-    va = on && !Ls && !Fn && Ro === void 0 && Tt && !Pt();
+    va = on && !Ls && !Fn && Ro === void 0 && Tt && !isRemoteActive();
   if (po) return e(o, { height: 1, overflow: "hidden", children: e(Uve, {}) });
   if (ro) {
     let ki = Cn,
@@ -44316,7 +44316,7 @@ function qpt({
               Is === "interrupt_agents" && " \xB7 ",
             ],
           }),
-          Is === "interrupt_agents" && e(j_e, {}),
+          Is === "interrupt_agents" && e(FleetAgentNudge, {}),
         ],
       });
     else if (Is === "ctrl_t")
@@ -44324,7 +44324,7 @@ function qpt({
         dimColor: !0,
         children: e(KeybindingHint, { chord: Io, action: Pa, format: { keyCase: "lower" } }),
       });
-    else if (Is === "agents") wi = e(j_e, {});
+    else if (Is === "agents") wi = e(FleetAgentNudge, {});
     else if (Is === "voice")
       wi = r(t, { dimColor: !0, children: ["hold ", So, " to speak"] });
     else if (Is === "shortcuts")
@@ -44461,7 +44461,7 @@ function qpt({
   else if (ne) ss.push(...oc);
   let hc =
       (isBgSession() || Nn()) && Qe && Oe && !xo && !be && !Fn
-        ? e(j_e, {}, "bg-detach")
+        ? e(FleetAgentNudge, {}, "bg-detach")
         : null,
     cr =
       !gn &&
@@ -44479,7 +44479,7 @@ function qpt({
       ) &&
       getGlobalConfig().leftArrowOpensAgents !== !1 &&
       !Fn
-        ? e(j_e, {}, "fg-agents")
+        ? e(FleetAgentNudge, {}, "fg-agents")
         : null,
     pr = Op(_o, Ho, Ro).length > 0 || (Ro !== void 0 && Af(_o[Ro])),
     Vr = Oi ? e(wne, { tasksSelected: it, onOpenDialog: at }) : null;
@@ -44884,7 +44884,7 @@ F();
 var Fne = 250;
 var sL = {};
 defineExportGetters(sL, { clean: () => Zj, default: () => sL, read: () => gIe });
-var Zj = (w) => w.replace(/\s+/g, " ").trim().slice(0, BW);
+var Zj = (w) => w.replace(/\s+/g, " ").trim().slice(0, MAX_HOOK_DROP_LENGTH);
 function gIe(w, I, ne) {
   let me = Zj(Rtn(w)),
     pe = `${getPermissionModeIndicator(I)} on`,
@@ -45085,7 +45085,7 @@ function qne(w) {
   return w.replaceAll("+", " + ");
 }
 var Df = { keyCase: "lower", modSep: " + " };
-function pHe(Mer) {
+function PromptFooterHints(Mer) {
   let Su = _(90),
     { dimColor: Ha, fixedWidth: Buo, gap: eft, paddingX: tft } = Mer;
   const oft = useKeybindingDisplayText("app:toggleTranscript", "Global", "ctrl+o");
@@ -45958,7 +45958,7 @@ function Ugt(oor) {
   if (ror) {
     let hI;
     if (Ph[26] === MEMO_CACHE_SENTINEL)
-      ((hI = e(pHe, { dimColor: !0, fixedWidth: !0, paddingX: 2 })),
+      ((hI = e(PromptFooterHints, { dimColor: !0, fixedWidth: !0, paddingX: 2 })),
         (Ph[26] = hI));
     else hI = Ph[26];
     return hI;
@@ -47029,14 +47029,14 @@ function dDe({ maxBufferSize: w, debounceMs: I }) {
 F();
 import { homedir as imo } from "os";
 async function smo(w, I) {
-  let ne = w !== "auto" && Sie.includes(w) ? [w] : Sie;
-  if (I !== void 0 && !qRt(I))
+  let ne = w !== "auto" && SPELLCHECK_BACKENDS.includes(w) ? [w] : SPELLCHECK_BACKENDS;
+  if (I !== void 0 && !isValidDictionaryName(I))
     n(
       `[spellcheck] ignoring language "${I}" (not a plain dictionary name); the checker's default dictionary applies`,
     );
   for (let me of ne) {
     let pe = await ja(me);
-    if (pe) return { command: pe, args: ulr(me, I) };
+    if (pe) return { command: pe, args: buildSpellcheckerArgs(me, I) };
   }
   return (
     n(
@@ -47153,7 +47153,7 @@ class bht {
     ((this.#u = new Set(I)),
       this.#p.clear(),
       this.#R(this.#v, "response timeout"),
-      this.#t.process.stdin?.write(plr(I)));
+      this.#t.process.stdin?.write(buildSpellcheckRequestLine(I)));
   }
   async #S() {
     this.#t = { status: "resolving" };
@@ -47260,7 +47260,7 @@ class bht {
   }
   #T(w) {
     if (this.#t.status === "starting") {
-      let ne = dlr(w);
+      let ne = detectSpellcheckBackend(w);
       if (!ne) {
         this.#_(`unexpected banner: ${truncateToCodeUnits(w, mDe)}`, "checker_failed_to_start");
         return;
@@ -47268,7 +47268,7 @@ class bht {
       if (
         (clearTimeout(this.#g),
         (this.#t = { status: "ready", process: this.#t.process, backend: ne }),
-        this.#t.process.stdin?.write(clr),
+        this.#t.process.stdin?.write(SPELLCHECK_VERBOSE_MODE_COMMAND),
         !this.#a)
       )
         ((this.#a = !0), logFeatureOk("input_spellcheck", { backend: fromEnum(ne) }));
@@ -47279,7 +47279,7 @@ class bht {
       this.#_(`unexpected output: ${truncateToCodeUnits(w, mDe)}`, "checker_protocol_error");
       return;
     }
-    let I = flr(w);
+    let I = parseSpellcheckResponseLine(w);
     switch (I.type) {
       case "correct":
         return;
@@ -47464,14 +47464,14 @@ function Dmo(w) {
   );
 }
 function Nmo(w) {
-  return Sie.some((I) => I === w);
+  return SPELLCHECK_BACKENDS.some((I) => I === w);
 }
 function Lmo(w) {
   if (w === void 0 || w === "auto") return "auto";
   if (Nmo(w)) return w;
   return (
     n(
-      `[spellcheck] unknown spellcheck.checker "${w}"; looking for ${Sie.join(", ")} instead`,
+      `[spellcheck] unknown spellcheck.checker "${w}"; looking for ${SPELLCHECK_BACKENDS.join(", ")} instead`,
     ),
     "auto"
   );
@@ -47513,7 +47513,7 @@ function gDe({
     if (Oe && Ae?.enabled === void 0)
       wht(
         w,
-        `the spellcheck block in ${Yet(Oe)} applies (as a whole, over any lower tier) and has no usable "enabled": true, so spell checking is off`,
+        `the spellcheck block in ${describeSettingsSource(Oe)} applies (as a whole, over any lower tier) and has no usable "enabled": true, so spell checking is off`,
       );
   }, [w, be, Ae, Oe]);
   let He = Ae?.enabled === !0,
@@ -47522,7 +47522,7 @@ function gDe({
     Qe = He ? Ae.color : void 0,
     it = V(() => Lmo(Ke), [Ke]),
     at = V(() => {
-      if (Je === void 0 || qRt(Je)) return Je;
+      if (Je === void 0 || isValidDictionaryName(Je)) return Je;
       n(
         `[spellcheck] ignoring spellcheck.language "${Je}": not a plain dictionary name`,
       );
@@ -49679,7 +49679,7 @@ function _bt(Wsr) {
       (Ts[311] = dgo));
   else dgo = Ts[311];
   let u0e = dgo,
-    $re = g9e(),
+    $re = useInputSelectionBridge(),
     ygo,
     bgo;
   if (Ts[312] !== u0e || Ts[313] !== $re)
@@ -50092,7 +50092,7 @@ function w0e({
           ? "Press up to select a queued message, then Enter to edit it"
           : "Press up to edit queued messages";
     }
-    if (I < 1 && !ne && be) return w1n(K());
+    if (I < 1 && !ne && be) return formatExamplePromptHint(K());
   }, [w, pe, xe, I, ne, be, me]);
 }
 F();
@@ -50444,7 +50444,7 @@ function Okt(pmr) {
   else Xgo = $i[4];
   let D0e = G$(Xgo),
     K$ = useMainLoopModel(),
-    fmr = qb(localJsxDialog.kind),
+    fmr = useIsDialogKindOpen(localJsxDialog.kind),
     Wp = useHasNonAutocompleteOverlay() || fmr,
     O0e = QU(),
     LS = useSession(),
@@ -51329,7 +51329,7 @@ function Okt(pmr) {
     Myo;
   if ($i[183] !== tc)
     ((Myo = () => {
-      if (!Pt()) {
+      if (!isRemoteActive()) {
         return !1;
       }
       return (
@@ -51356,7 +51356,7 @@ function Okt(pmr) {
     $i[190] !== zc
   )
     ((Ayo = () => {
-      if (Pt()) {
+      if (isRemoteActive()) {
         if (SC || Ubt || Hp !== "prompt" || iSt.current) {
           tc({
             key: "remote-model-picker-unavailable",
@@ -51386,7 +51386,7 @@ function Okt(pmr) {
     Iyo;
   if ($i[192] !== A5 || $i[193] !== zc)
     ((Iyo = () => {
-      if (!Ks() && A5()) {
+      if (!hasRemoteControlChannel() && A5()) {
         return;
       }
       (Rho(DSo), zc(!1));
@@ -51399,7 +51399,7 @@ function Okt(pmr) {
     Eyo;
   if ($i[195] !== A5 || $i[196] !== zc)
     ((Eyo = () => {
-      if (!Ks() && A5()) {
+      if (!hasRemoteControlChannel() && A5()) {
         return;
       }
       (aSt(NSo), zc(!1));
@@ -51410,7 +51410,7 @@ function Okt(pmr) {
   else Eyo = $i[197];
   let VSt = Eyo,
     handleStepAttention = (opr) => {
-      if (jn() || Pt()) {
+      if (getRemoteTransport() || isRemoteActive()) {
         return;
       }
       let Dyo = _u.getState().attentionBudget;
@@ -51473,7 +51473,7 @@ function Okt(pmr) {
         return;
       }
       if (YI === I5) {
-        if ((logFeatureBad("mode_switch", "no_other_modes"), Pt()))
+        if ((logFeatureBad("mode_switch", "no_other_modes"), isRemoteActive()))
           tc({
             key: "remote-permission-mode-noop",
             kind: "feedback",
@@ -51491,7 +51491,7 @@ function Okt(pmr) {
           : buildPermissionModeTransition(_T, hL, "shift_tab"));
       queueScreenReaderAnnouncement(`[${getPermissionModeIndicator(YI)} on]`);
       if (
-        (logEvent("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !Ks())
+        (logEvent("tengu_mode_cycle", { to: fromEnum(YI), trigger: fromEnum("shift_tab") }), !hasRemoteControlChannel())
       )
         logFeatureOk("mode_switch");
       if (YI === "plan") logFeatureOk("mode_plan_enter");
@@ -51719,7 +51719,7 @@ function Okt(pmr) {
   let ebo;
   if ($i[261] !== tc || $i[262] !== zc)
     ((ebo = () => {
-      if (Pt()) {
+      if (isRemoteActive()) {
         tc({
           key: "remote-history-search-unavailable",
           kind: "feedback",
@@ -51820,7 +51820,7 @@ function Okt(pmr) {
       }
       let [cbo, mpr] = lbo;
       return (
-        Ra((ppr) => u6e(ppr, cbo)),
+        Ra((ppr) => removeFrameUrl(ppr, cbo)),
         tc({
           key: "frame-dismissed",
           kind: "feedback",
@@ -52366,7 +52366,7 @@ function Okt(pmr) {
       ((RL = e(o, {
         flexDirection: "column",
         marginTop: 1,
-        children: e(RZ, {
+        children: e(ModelPicker, {
           initial: u5,
           sessionModel: d5,
           onSelect: gkt,
@@ -52413,7 +52413,7 @@ function Okt(pmr) {
       ((RL = e(o, {
         flexDirection: "column",
         marginTop: 1,
-        children: e(nst, {
+        children: e(FastModePicker, {
           onDone: ykt,
           unavailableReason: V0e.unavailableReason,
           storageV5: cp,
@@ -52432,7 +52432,7 @@ function Okt(pmr) {
     ((RL = (cie) => {
       (Ra((Ppr) => ({ ...Ppr, thinkingEnabled: cie })),
         aSt(!1),
-        jn()
+        getRemoteTransport()
           ?.sendControlRequest({
             subtype: "set_max_thinking_tokens",
             max_thinking_tokens: cie ? null : 0,
@@ -52623,7 +52623,7 @@ function Okt(pmr) {
     const $g = typeof Ebt === "string" ? Ebt : void 0;
     let $R;
     if ($i[444] !== mm.closeBashesDialog || $i[445] !== Bf || $i[446] !== $g)
-      (($R = e(y6e, {
+      (($R = e(BackgroundTasksDialog, {
         onDone: up,
         toolUseContext: Bf,
         initialDetailTaskId: $g,
@@ -53105,7 +53105,7 @@ function mie(Jfr) {
   let ogr = YSo,
     JSo;
   if (H5[7] !== $kt || H5[8] !== m1)
-    ((JSo = jn() === null && ($kt || (ogr && m1))),
+    ((JSo = getRemoteTransport() === null && ($kt || (ogr && m1))),
       (H5[7] = $kt),
       (H5[8] = m1),
       (H5[9] = JSo));
@@ -53201,7 +53201,7 @@ function Ykt(w, I, ne) {
   }
   return w;
 }
-function m6e(ygr) {
+function BorderedTextPreview(ygr) {
   let bgr = _(8),
     {
       value: Gkt,
@@ -53678,7 +53678,7 @@ function zNe({
     children: r(TitledBorderBox, {
       children: [
         lr,
-        e(m6e, {
+        e(BorderedTextPreview, {
           value: pe.detailsPreview,
           dim: !0,
           columns: Math.max(1, Ke - 4),
@@ -53830,7 +53830,7 @@ function p1(rhr) {
   return iLe;
 }
 F();
-function M0t(w, I, ne) {
+function fitEditedText(w, I, ne) {
   let me = Array.from(I);
   if (me.length <= ne) return { text: I, caret: "pass" };
   let pe = Array.from(w),
@@ -53856,7 +53856,7 @@ function M0t(w, I, ne) {
 }
 var lLe = 600,
   kko = 1500;
-function N0t(w) {
+function collapseToSingleLine(w) {
   return stripAnsi(w)
     .replace(/\r\n|\r|\n/g, " ")
     .replaceAll("\t", " ");
@@ -53900,8 +53900,8 @@ function uvt({
     co = C(null),
     [, go] = d(0),
     fo = (Ho) => {
-      let po = N0t(Ho),
-        xo = M0t(zt.current, po, ne);
+      let po = collapseToSingleLine(Ho),
+        xo = fitEditedText(zt.current, po, ne);
       if (
         ((co.current =
           xo.caret === "pass"
@@ -53974,7 +53974,7 @@ function uvt({
           focus: !0,
           showCursor: !0,
           multiline: !1,
-          inputFilter: N0t,
+          inputFilter: collapseToSingleLine,
           onExit: () => {
             if (!at()) it({ text: null, method: "escape" });
           },
@@ -54022,11 +54022,11 @@ var dvt = 30000;
 function cLe(w) {
   appStateStore.pendingSurveyFeedbackSource = w;
 }
-function z1n() {
+function hasPendingSurveyFeedback() {
   let w = appStateStore.pendingSurveyFeedbackSource;
   return w !== null && Date.now() - w.setAt <= dvt;
 }
-function V1n() {
+function takePendingSurveyFeedback() {
   let w = appStateStore.pendingSurveyFeedbackSource;
   if (
     ((appStateStore.pendingSurveyFeedbackSource = null), !w || Date.now() - w.setAt > dvt)
@@ -54320,7 +54320,7 @@ function QS({
   handleUndo: me,
   handleTranscriptSelect: pe,
   handleFollowupResolve: be,
-  followupAskConfig: xe = Wae,
+  followupAskConfig: xe = DEFAULT_FOLLOWUP_ASK_CONFIG,
   followupArmActive: Ae = !1,
   turnInProgress: Oe = !1,
   submittingShare: He = !0,
@@ -55069,9 +55069,9 @@ async function Rie(w, I) {
     n("Collecting transcript for sharing", { level: "info" });
     let ne = vrt(),
       me = extractAgentIdsFromMessages(w),
-      pe = Pt(),
+      pe = isRemoteActive(),
       [be, xe] = await Promise.all([loadSubagentTranscripts(me, I), pe ? "" : getHead()]),
-      Ae = (await pJt(getSessionTranscriptPath(), tHe, I)) ?? void 0;
+      Ae = (await readRecentTranscriptTail(getSessionTranscriptPath(), MAX_RAW_TRANSCRIPT_BYTES, I)) ?? void 0;
     return {
       kind: "captured",
       messages: w,
@@ -55090,7 +55090,7 @@ async function eJ(w, I, ne, me, pe) {
 async function FLe(w, I, ne, me) {
   if (isEssentialTrafficOnly()) return tE(S("essential_traffic_only"));
   if (!isPolicyAllowed("allow_product_feedback")) return tE(S("policy_blocked"));
-  let pe = Mae().kind === "bundle" ? "bundle" : "post";
+  let pe = resolveFeedbackSubmissionMode().kind === "bundle" ? "bundle" : "post";
   try {
     let be = await w;
     if (be.kind === "blocked") return tE(fromEnum(be.errorCode));
@@ -55100,12 +55100,12 @@ async function FLe(w, I, ne, me) {
       { rawTranscriptJsonl: Ke } = be;
     if (pe === "post") {
       for (let [to, zt] of Object.entries(Ae))
-        if (eHe(zt))
+        if (anyTranscriptEntryHasThirdPartyMarkers(zt))
           (delete Ae[to],
             n(
               `subagent transcript ${to} withheld: contains_3p_transcript_markers`,
             ));
-      if (Ke !== void 0 && C8(Ke))
+      if (Ke !== void 0 && hasThirdPartyTranscriptMarkers(Ke))
         ((Ke = void 0),
           n(
             "rawTranscriptJsonl withheld from transcript share: contains_3p_transcript_markers",
@@ -55149,8 +55149,8 @@ async function FLe(w, I, ne, me) {
         rawTranscriptJsonl: Je,
       };
     if (pe === "bundle") {
-      let to = Zxe(Qe, qvt, Vvt, { extraOuterFields: { appearance_id: ne } }),
-        zt = await fJt(to, "transcript.json");
+      let to = serializeFeedbackPayload(Qe, qvt, Vvt, { extraOuterFields: { appearance_id: ne } }),
+        zt = await writeFeedbackBundleZip(to, "transcript.json");
       if (zt.success)
         return (
           logFeatureOk("feedback_transcript_share"),
@@ -55177,7 +55177,7 @@ async function FLe(w, I, ne, me) {
     for (let [to, zt] of jt.entries()) {
       let ao;
       try {
-        ao = Zxe(zt, qvt, Vvt, { extraOuterFields: { appearance_id: ne } });
+        ao = serializeFeedbackPayload(zt, qvt, Vvt, { extraOuterFields: { appearance_id: ne } });
       } catch (go) {
         if (go instanceof RangeError) {
           Tt = S("payload_range_error");
@@ -55185,7 +55185,7 @@ async function FLe(w, I, ne, me) {
         }
         throw go;
       }
-      if (ao.length > v8) {
+      if (ao.length > MAX_FEEDBACK_PAYLOAD_BYTES) {
         Tt = S("payload_too_large_precheck");
         continue;
       }
@@ -55469,11 +55469,11 @@ function ULe({
       timeLastShownAtClock: null,
       submitCountAtLastAppearance: null,
     })),
-    it = DL("tengu_feedback_survey_config", ust),
-    at = DL("tengu_bad_survey_transcript_ask_config", eIt),
-    Zt = DL("tengu_fine_survey_transcript_ask_config", eIt),
-    Ct = DL("tengu_good_survey_transcript_ask_config", eIt),
-    [eo, jt] = d(Wae),
+    it = DL("tengu_feedback_survey_config", DEFAULT_FEEDBACK_SURVEY_CONFIG),
+    at = DL("tengu_bad_survey_transcript_ask_config", DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG),
+    Zt = DL("tengu_fine_survey_transcript_ask_config", DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG),
+    Ct = DL("tengu_good_survey_transcript_ask_config", DEFAULT_SURVEY_TRANSCRIPT_ASK_CONFIG),
+    [eo, jt] = d(DEFAULT_FOLLOWUP_ASK_CONFIG),
     [Tt, to] = d(!1),
     zt = getInitialSettings().feedbackSurveyRate,
     ao = useClock(),
@@ -55502,8 +55502,8 @@ function ULe({
       },
       [ne, pe, xe, I],
     ),
-    xo = Cc(),
-    Wo = Bye(),
+    xo = useDialogStore(),
+    Wo = useHasOpenDialogs(),
     Ro = C(!1),
     on = C(null),
     An = Wvt(Oe),
@@ -55541,7 +55541,7 @@ function ULe({
     ),
     zo = re(
       (gn) => {
-        (jt(Wae),
+        (jt(DEFAULT_FOLLOWUP_ASK_CONFIG),
           to(!1),
           _o(),
           (Ho.current = null),
@@ -55609,7 +55609,7 @@ function ULe({
         if (gn !== "bad" && gn !== "fine" && gn !== "good") return !1;
         if (isEssentialTrafficOnly()) return !1;
         if (!isPolicyAllowed("allow_product_feedback")) return !1;
-        if (Mae().kind === "disabled") return !1;
+        if (resolveFeedbackSubmissionMode().kind === "disabled") return !1;
         if (Pie()) return !0;
         if (getGlobalConfig().transcriptShareDismissed) return !1;
         let On =
@@ -55693,11 +55693,11 @@ function ULe({
         )
           return !1;
         if (getAPIProvider() !== "firstParty") return !1;
-        let ai = Mae().kind;
+        let ai = resolveFeedbackSubmissionMode().kind;
         if (ai !== "post" && ai !== "share") return !1;
         if (ai === "share" && getAuthHeaders().error) return !1;
-        if (Qvt()) return (jt({ ...Wae, enabled: !0 }), to(!0), ho(), !0);
-        let Fr = getFeatureValue_CACHED_MAY_BE_STALE(gFn, Wae) ?? {},
+        if (Qvt()) return (jt({ ...DEFAULT_FOLLOWUP_ASK_CONFIG, enabled: !0 }), to(!0), ho(), !0);
+        let Fr = getFeatureValue_CACHED_MAY_BE_STALE(FOLLOWUP_ASK_FEATURE_FLAG, DEFAULT_FOLLOWUP_ASK_CONFIG) ?? {},
           Oi = (Wi, qs) =>
             typeof Wi === "number" && Number.isFinite(Wi) && Wi > 0 ? Wi : qs,
           rs = (Wi, qs) =>
@@ -55706,10 +55706,10 @@ function ULe({
               : qs,
           Fi = {
             enabled: Fr.enabled === !0,
-            maxChars: Oi(Fr.maxChars, Wae.maxChars),
+            maxChars: Oi(Fr.maxChars, DEFAULT_FOLLOWUP_ASK_CONFIG.maxChars),
             autoDismissAfterMs: rs(
               Fr.autoDismissAfterMs,
-              Wae.autoDismissAfterMs,
+              DEFAULT_FOLLOWUP_ASK_CONFIG.autoDismissAfterMs,
             ),
           };
         if ((jt(Fi), to(Fi.enabled === !0), Fi.enabled === !0)) ho();
@@ -55775,7 +55775,7 @@ function ULe({
           Oi = ro.current;
         return (
           _o(),
-          KNn({
+          submitFeedbackSurveyFollowup({
             description: ai,
             appearanceId: gn,
             surveyResponse: Jr ?? "bad",
@@ -56280,7 +56280,7 @@ function $wt(w) {
   if (!Array.isArray(I)) return [];
   return I.filter(
     (ne) => typeof ne === "object" && ne !== null && ne.type === "text",
-  ).flatMap((ne) => str(ne.text));
+  ).flatMap((ne) => extractMemoryCitations(ne.text));
 }
 function Fie(bb, VLe, Tvo, KLe) {
   let TC = _(41),
@@ -57959,7 +57959,7 @@ function sse(K_r) {
     z_r = useSession(),
     _Ct = useStoreSelector(bv),
     u_o = useStoreSelector(hv, R_o),
-    OT = Z8(),
+    OT = useHasBareDialog(),
     d_o;
   if (sE[0] !== bv) ((d_o = () => new xie(bv)), (sE[0] = bv), (sE[1] = d_o));
   else d_o = sE[1];
@@ -58622,10 +58622,10 @@ function nFe(JTr) {
   return J_o;
 }
 F();
-function K1n() {
+function isEffortCostMultiplierEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_marbled_teal", !1);
 }
-function g6e(w, I) {
+function getEffortCostMultiplier(w, I) {
   if (!zh(w)) return null;
   let ne = Qa(getCanonicalName(w))?.effort_cost_index;
   if (!ne) return null;
@@ -58634,7 +58634,7 @@ function g6e(w, I) {
   if (me === void 0 || !pe) return null;
   return me / pe;
 }
-function Jot(w) {
+function formatCostMultiplier(w) {
   if (w < 0.1)
     return `~${Math.max(0.01, Math.round(w * 100) / 100).toFixed(2)}x`;
   let I = Math.round(w * 10) / 10;
@@ -58928,11 +58928,11 @@ function RFe(Axr) {
 }
 function $_t(w, I) {
   if (I === "max" && FN(w)) return GG;
-  let ne = g6e(w, I),
+  let ne = getEffortCostMultiplier(w, I),
     me = KH(w);
   if (ne === null || I === me)
     return "{from} effort uses more tokens per task than {to}.";
-  return `{from} effort is ${Jot(ne)} the estimated cost of ${me} (the default).`;
+  return `{from} effort is ${formatCostMultiplier(ne)} the estimated cost of ${me} (the default).`;
 }
 function q_t(w, I) {
   let ne = G_t(I, wse),
@@ -59248,7 +59248,7 @@ function _To(w, I) {
 function ETo() {
   logEvent("tengu_usage_credits_admin_request_confirm_shown", {});
 }
-function tst(IRr) {
+function UsageCreditsAdminRequestDialog(IRr) {
   let XR = _(36),
     { extraUsage: _se, onDone: MJ, onOutcome: AJ, wouldTakeAnswer: iTt } = IRr,
     { credentials: sTt } = useStorageV5Context(),
@@ -59443,7 +59443,7 @@ function tst(IRr) {
   else ITo = XR[35];
   return ITo;
 }
-function fHe(w) {
+function ExtraUsageDialog(w) {
   let {
       variant: I,
       modelName: ne = "Fable",
@@ -59781,7 +59781,7 @@ function fHe(w) {
         }),
       });
     case "confirm-admin-request":
-      return e(tst, {
+      return e(UsageCreditsAdminRequestDialog, {
         extraUsage: He.extraUsage,
         wouldTakeAnswer: be,
         onDone: (zo) => Oe("dismiss", zo),
@@ -60265,7 +60265,7 @@ function Mse(ZPr) {
   else uxo = Pse[11];
   return uxo;
 }
-function zJt() {
+function shouldShowRemoteControlDialog() {
   return !getGlobalConfig().remoteDialogSeen;
 }
 function uBe(uMr) {
@@ -60333,7 +60333,7 @@ F();
 var Ase = 3,
   ZS = Math.max(2 * WA, 2 * (Sv + Vx)),
   ek = 20;
-function cHe(w, I, ne = Ase + 1) {
+function truncateLinesWithOverflow(w, I, ne = Ase + 1) {
   let me = Math.max(ek, I - ZS),
     pe = w
       .split(
@@ -61225,7 +61225,7 @@ function oxt({ serverName: w, params: I, onResponse: ne }) {
     ),
     On = Math.max(1, Or - Br - Ln - Gi - Math.min(1, jt.length) * Xi),
     Jr = Mn ? Math.min(gn, On) : Ase + 1,
-    ai = V(() => cHe(Us(me).text, wn, Jr), [me, wn, Jr]),
+    ai = V(() => truncateLinesWithOverflow(Us(me).text, wn, Jr), [me, wn, Jr]),
     Fr = ai
       ? Ln
         ? `
@@ -61402,7 +61402,7 @@ function ABe(mAr) {
   let Xg = Rxo,
     Pxo;
   if (wc[6] !== mBe || wc[7] !== HTt)
-    ((Pxo = cHe(Us(HTt).text, mBe)),
+    ((Pxo = truncateLinesWithOverflow(Us(HTt).text, mBe)),
       (wc[6] = mBe),
       (wc[7] = HTt),
       (wc[8] = Pxo));
@@ -61642,7 +61642,7 @@ ${Pxo}`,
         flexDirection: "column",
         children:
           fd || oP
-            ? e(Fs, {
+            ? e(MultilineBorderBox, {
                 multiline: Xg.kind === "full" && Xg.needsGutter,
                 children: nP
                   ? r(t, {
@@ -61650,7 +61650,7 @@ ${Pxo}`,
                     })
                   : e(t, { children: Xg.kind === "full" ? Xg.text : null }),
               })
-            : e(Fs, {
+            : e(MultilineBorderBox, {
                 multiline: uu.kind === "full" && uu.needsGutter,
                 children: e(t, {
                   children: uu.kind === "full" ? uu.text : uu.marker,
@@ -61834,13 +61834,13 @@ ${Pxo}`,
       flexDirection: "column",
       children:
         fd || oP
-          ? e(Fs, {
+          ? e(MultilineBorderBox, {
               multiline: Xg.kind === "full" && Xg.needsGutter,
               children: nP
                 ? r(t, { children: [cO, e(t, { bold: !0, children: AC }), dO] })
                 : e(t, { children: Xg.kind === "full" ? Xg.text : null }),
             })
-          : e(Fs, {
+          : e(MultilineBorderBox, {
               multiline: uu.kind === "full" && uu.needsGutter,
               children: e(t, {
                 children: uu.kind === "full" ? uu.text : uu.marker,
@@ -62316,7 +62316,7 @@ function rxt(wAr) {
                         dimColor: !0,
                         children: truncateToWidth(Oo(xBe.text), Math.max(ek, rP - 6 - ZS)),
                       })
-                    : e(Fs, {
+                    : e(MultilineBorderBox, {
                         multiline: xBe.needsGutter,
                         children: e(t, { dimColor: !0, children: xBe.text }),
                       }),
@@ -62447,7 +62447,7 @@ function rUe(oIr) {
       .flatMap(sxt),
     lRo = DBe.length <= yae ? DBe : DBe.slice(0, yae - 1),
     aae = DBe.length - lRo.length;
-  const axt = Fs,
+  const axt = MultilineBorderBox,
     sIr = IBe.needsGutter,
     lxt = t,
     aIr = !0,
@@ -63148,11 +63148,11 @@ function yUe(XIr) {
       let kae;
       if (jf[7] !== lk) ((kae = consentHostEntry(lk)), (jf[7] = lk), (jf[8] = kae));
       else kae = jf[8];
-      hW = qw(
+      hW = mintConsentRowFromUpdates(
         [
           {
             type: "addRules",
-            rules: [{ toolName: Cr, ruleContent: `domain:${kae}` }],
+            rules: [{ toolName: WEB_FETCH_TOOL_NAME, ruleContent: `domain:${kae}` }],
             behavior: "allow",
             destination: "localSettings",
           },
@@ -63165,7 +63165,7 @@ function yUe(XIr) {
               vae === void 0 ||
               vae.type !== "addRules" ||
               vae.rules.length !== 1 ||
-              vae.rules[0]?.toolName !== Cr ||
+              vae.rules[0]?.toolName !== WEB_FETCH_TOOL_NAME ||
               vae.rules[0]?.ruleContent !== `domain:${consentHostEntry(lk)}`
             ) {
               return null;
@@ -63282,7 +63282,7 @@ function yUe(XIr) {
   let pUe;
   if (jf[26] !== Pxt || jf[27] !== dUe)
     ((pUe = r(o, {
-      children: [FRo, e(Fs, { multiline: Pxt, children: dUe })],
+      children: [FRo, e(MultilineBorderBox, { multiline: Pxt, children: dUe })],
     })),
       (jf[26] = Pxt),
       (jf[27] = dUe),
@@ -63548,7 +63548,7 @@ function CUe(bEr) {
   return JRo;
 }
 F();
-async function b6e() {
+async function resolveBundleSeedViability() {
   let [w, I] = await Promise.all([detectCurrentRepositoryWithHost(), checkGate_CACHED_OR_BLOCKING("tengu_ccr_bundle_seed_enabled")]),
     ne = findGitRoot(getCwd()) !== null && (a.CCR_ENABLE_BUNDLE || I);
   if (!ne) return { cloneViable: !1, bundleSeedEnabled: ne };
@@ -63564,7 +63564,7 @@ function mPo(QEr) {
 function pPo() {
   return dRt;
 }
-function sst(w) {
+function getBundleSeedNotice(w) {
   if (!w.bundleSeedEnabled) return null;
   return w.cloneViable
     ? "This will try to clone your git remote and fall back to uploading this repository."
@@ -63590,7 +63590,7 @@ function HUe(KEr) {
     Qxt = useAppStateSelector(mPo),
     ePo;
   if (FO[2] !== tX)
-    ((ePo = () => (tX ? b6e().catch(pPo) : null)), (FO[2] = tX), (FO[3] = ePo));
+    ((ePo = () => (tX ? resolveBundleSeedViability().catch(pPo) : null)), (FO[2] = tX), (FO[3] = ePo));
   else ePo = FO[3];
   let [Yxt] = d(ePo),
     Jxt = ui(),
@@ -63690,7 +63690,7 @@ function UUe(YEr) {
     } = YEr,
     PUe = iPo ? kn(iPo) : null,
     sPo;
-  if (Iv[0] !== PUe) ((sPo = PUe && sst(PUe)), (Iv[0] = PUe), (Iv[1] = sPo));
+  if (Iv[0] !== PUe) ((sPo = PUe && getBundleSeedNotice(PUe)), (Iv[0] = PUe), (Iv[1] = sPo));
   else sPo = Iv[1];
   let MUe = sPo,
     aPo;
@@ -65385,7 +65385,7 @@ function Vae(oNr) {
   else yje = Lc[53];
   let bje;
   if (Lc[54] !== zO.displayQuestion.needsGutter || Lc[55] !== yje)
-    ((bje = e(Fs, {
+    ((bje = e(MultilineBorderBox, {
       multiline: zO.displayQuestion.needsGutter,
       children: yje,
     })),
@@ -65934,7 +65934,7 @@ function Jae(FNr) {
   else Lje = hy[55];
   let wAo;
   if (hy[56] !== $u.displayQuestion.needsGutter || hy[57] !== Lje)
-    ((wAo = e(Fs, {
+    ((wAo = e(MultilineBorderBox, {
       multiline: $u.displayQuestion.needsGutter,
       children: Lje,
     })),
@@ -66134,7 +66134,7 @@ function Xae(pLr) {
       !qPt &&
       e(o, {
         marginBottom: 1,
-        children: e(Sf, {
+        children: e(StatusLine, {
           status: "warning",
           children: "You have not answered all questions",
         }),
@@ -66157,7 +66157,7 @@ function Xae(pLr) {
               flexDirection: "column",
               marginLeft: 1,
               children: [
-                e(Fs, {
+                e(MultilineBorderBox, {
                   multiline: jje?.displayQuestion.needsGutter ?? !1,
                   children: e(BulletItem, {
                     children: jje?.displayQuestion.text || "Question",
@@ -66182,7 +66182,7 @@ function Xae(pLr) {
   else Hje = hP[10];
   let $je;
   if (hP[11] !== VPt)
-    (($je = e(Ig, { permissionResult: VPt, toolType: "tool" })),
+    (($je = e(PermissionReasonPanel, { permissionResult: VPt, toolType: "tool" })),
       (hP[11] = VPt),
       (hP[12] = $je));
   else $je = hP[12];
@@ -67366,7 +67366,7 @@ async function HMt(w, I) {
 }
 F();
 F();
-function Yot({
+function FlaggedItemsRemoveDialog({
   flagged: w,
   initialPicking: I,
   onPickingChange: ne,
@@ -67482,7 +67482,7 @@ F();
 function rEo(IFr) {
   return Oo(IFr);
 }
-function d6e(xFr) {
+function AutoModeSetupReviewDialog(xFr) {
   let Bh = _(49),
     {
       proposal: Tb,
@@ -67812,7 +67812,7 @@ function Y$e(VFr) {
     ule[15] !== j$e ||
     ule[16] !== $$e
   )
-    ((mEo = e(d6e, {
+    ((mEo = e(AutoModeSetupReviewDialog, {
       proposal: XMt,
       hideIndexes: !0,
       defaultFocusValue: eAt,
@@ -67906,7 +67906,7 @@ function J$e(QFr) {
     KX[24] !== z$e ||
     KX[25] !== Q$e
   )
-    ((yEo = e(Yot, {
+    ((yEo = e(FlaggedItemsRemoveDialog, {
       hideIndexes: !0,
       flagged: W$e.flagged,
       initialPicking: jC.picking,
@@ -67927,7 +67927,7 @@ function J$e(QFr) {
   else yEo = KX[26];
   return yEo;
 }
-var p6e = defineDialog({
+var AUTO_MODE_SETUP_REVIEW_DIALOG = defineDialog({
     kind: "auto_mode_setup_review",
     payload: createLazyValue(() =>
       c({
@@ -67943,7 +67943,7 @@ var p6e = defineDialog({
     result: createLazyValue(() => X(["accept", "decline", "cancelled"])),
     default: "cancelled",
   }),
-  f6e = defineDialog({
+  AUTO_MODE_FLAGGED_ALLOW_DIALOG = defineDialog({
     kind: "auto_mode_flagged_allow",
     payload: createLazyValue(() => c({ flagged: v(s()), runId: s() })),
     result: createLazyValue(() => $e([c({ toRemove: v(s()) }), k("cancelled")])),
@@ -67979,7 +67979,7 @@ function rAt({
   onEditablePrefixChange: Ae,
   hasBackendSuggestions: Oe,
   showEnableAutoModeOption: He = !1,
-  enableAutoModeDescription: Ke = jst,
+  enableAutoModeDescription: Ke = ENABLE_AUTO_MODE_DESCRIPTION,
 }) {
   let Je = [];
   if (pe)
@@ -67992,7 +67992,7 @@ function rAt({
       allowEmptySubmitToCancel: !0,
     });
   else Je.push({ label: "Yes", value: "yes" });
-  if (FK()) {
+  if (areUserPermissionRulesAllowed()) {
     let Qe =
       w !== null &&
       w.applies.some(
@@ -68018,7 +68018,7 @@ function rAt({
   }
   if (He)
     Je.push({
-      label: TQt.workflow,
+      label: AUTO_MODE_ROW_LABELS.workflow,
       description: Ke,
       value: "yes-enable-auto-mode",
     });
@@ -68034,12 +68034,12 @@ function rAt({
   else Je.push({ label: "No", value: "no" });
   return Je;
 }
-var vEo = (w) => $6e(w, BASH_TOOL_NAME, e1e);
+var vEo = (w) => hasAllowRuleForTool(w, BASH_TOOL_NAME, e1e);
 function wEo(w, I) {
-  return qw(w, {
-    displayedTypes: pIt,
+  return mintConsentRowFromUpdates(w, {
+    displayedTypes: RULES_AND_DIRECTORIES_UPDATE_TYPES,
     labelPredicate: vEo,
-    renderLabel: (ne) => fIt(ne, BASH_TOOL_NAME, e1e, I),
+    renderLabel: (ne) => renderSessionConsentLabel(ne, BASH_TOOL_NAME, e1e, I),
   });
 }
 function YX(w, I, ne, me = {}) {
@@ -68051,7 +68051,7 @@ function YX(w, I, ne, me = {}) {
         ...(me.feedback && { feedback: me.feedback }),
       };
     case "yes-apply-suggestions": {
-      if (ne === null || !Hg(ne))
+      if (ne === null || !isConsentRow(ne))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -68060,7 +68060,7 @@ function YX(w, I, ne, me = {}) {
       };
     }
     case "yes-prefix-edited": {
-      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, BASH_TOOL_NAME);
+      let pe = createRuleConsentRow(me.editablePrefixSeed, me.editablePrefix, BASH_TOOL_NAME);
       if (pe === null) return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -68084,7 +68084,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     xe = V(() => km(w.input.command, { maxUnits: Rm }), [w.input.command]),
     Ae = xe.kind === "withheld" || typeof w.input.command !== "string",
     { requestedMachine: Oe, runsOnMachine: He } = V(
-      () => wzt(w.input),
+      () => getToolCallMachineRouting(w.input),
       [w.input],
     ),
     Ke =
@@ -68116,8 +68116,8 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       logSubmitted: co,
       logEscape: go,
       hintNode: fo,
-    } = MZ({
-      feedbackTypeOf: B6e,
+    } = useConsentFeedbackState({
+      feedbackTypeOf: getFeedbackTypeForAnswer,
       toolName: at,
       isMcp: w.isMcp,
       initialFocusedType: "accept",
@@ -68126,21 +68126,21 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     [ho, _o] = d(() => {
       if (Ae) return;
       if (ro) {
-        let Io = QYe([...(Qe?.applies ?? [])]).filter(
+        let Io = collectRuleValuesFromUpdates([...(Qe?.applies ?? [])]).filter(
           (So) => So.toolName === BASH_TOOL_NAME && So.ruleContent,
         );
-        if (Io.length === 1) return OB(Io[0].ruleContent);
+        if (Io.length === 1) return sanitizeCommandPrefix(Io[0].ruleContent);
         if (Io.length > 1) return;
       }
       let un = getTwoTokenCommandPrefix(pe);
-      if (un) return OB(`${un} *`);
+      if (un) return sanitizeCommandPrefix(`${un} *`);
       let lr = getSingleTokenCommandPrefix(pe);
-      if (lr) return OB(`${lr} *`);
-      return OB(pe);
+      if (lr) return sanitizeCommandPrefix(`${lr} *`);
+      return sanitizeCommandPrefix(pe);
     }),
     Ho = C(void 0),
     po = C(!1);
-  if (!po.current) ((po.current = !0), (Ho.current = OB(ho)));
+  if (!po.current) ((po.current = !0), (Ho.current = sanitizeCommandPrefix(ho)));
   let xo = C(!1),
     Wo = re((un) => {
       ((xo.current = !0), _o(un));
@@ -68156,7 +68156,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
           let Io = await stripEnvVarsFromCommandPrefix(pe, lr[0]);
           if (un || xo.current) return;
           if (!isShellWrapperCommand(Io)) {
-            let So = OB(`${lr[0]} *`);
+            let So = sanitizeCommandPrefix(`${lr[0]} *`);
             if (So !== void 0) ((Ho.current = So), _o(So));
           }
         })
@@ -68186,7 +68186,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       offered: wn,
       canOfferAutoMode: yn,
       enableAutoMode: vo,
-    } = U6e(w.requestSource),
+    } = useAutoModeOffer(w.requestSource),
     zo =
       isAskRuleDrivenReason(be) ||
       w.permissionResult.matchedAskRule?.ruleBehavior === "ask" ||
@@ -68292,13 +68292,13 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         paddingX: 2,
         paddingY: 1,
         children: [
-          e(Fs, {
+          e(MultilineBorderBox, {
             multiline: xe.kind === "full" && xe.needsGutter,
             children: e(t, {
               children: xe.kind === "withheld" ? xe.marker : xe.text,
             }),
           }),
-          e(Fs, {
+          e(MultilineBorderBox, {
             multiline: aA(w.description),
             children: e(t, { dimColor: !0, children: w.description }),
           }),
@@ -68307,7 +68307,7 @@ function iAt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       r(o, {
         flexDirection: "column",
         children: [
-          e(Ig, { permissionResult: w.permissionResult, toolType: "command" }),
+          e(PermissionReasonPanel, { permissionResult: w.permissionResult, toolType: "command" }),
           Ro &&
             e(o, {
               marginBottom: 1,
@@ -68357,7 +68357,7 @@ function bAt(w, I, ne) {
     case "allow":
       return { behavior: "allow", updatedInput: I.input };
     case "allow-domain":
-      if (ne === null || !Hg(ne))
+      if (ne === null || !isConsentRow(ne))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -68370,7 +68370,7 @@ function bAt(w, I, ne) {
 }
 function SAt(w) {
   if (!w) return null;
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -68497,7 +68497,7 @@ function s1e(lUr) {
   if ($v[19] !== uk.permissionResult)
     ((t1e =
       uk.permissionResult.denialLimitFallback !== void 0 &&
-      e(Ig, { permissionResult: uk.permissionResult, toolType: "tool" })),
+      e(PermissionReasonPanel, { permissionResult: uk.permissionResult, toolType: "tool" })),
       ($v[19] = uk.permissionResult),
       ($v[20] = t1e));
   else t1e = $v[20];
@@ -68507,7 +68507,7 @@ function s1e(lUr) {
       mk && ZE !== null
         ? ZE.kind === "withheld"
           ? e(t, { dimColor: !0, children: ZE.marker })
-          : e(Fs, {
+          : e(MultilineBorderBox, {
               multiline: ZE.needsGutter,
               children: e(t, { dimColor: !0, children: ZE.text }),
             })
@@ -69114,7 +69114,7 @@ function lDo(NHr) {
 function JAt(w, I) {
   switch (w) {
     case "yes": {
-      if (I === null || !Hg(I)) return { behavior: "deny" };
+      if (I === null || !isConsentRow(I)) return { behavior: "deny" };
       return {
         behavior: "allow",
         updatedInput: {},
@@ -69148,7 +69148,7 @@ function L1e(EHr) {
     QAt = fa(DHr),
     YAt = useAppStateSelector(lDo),
     tDo;
-  if (lD[4] === MEMO_CACHE_SENTINEL) ((tDo = L8("plan")), (lD[4] = tDo));
+  if (lD[4] === MEMO_CACHE_SENTINEL) ((tDo = createSetModeRow("plan")), (lD[4] = tDo));
   else tDo = lD[4];
   let M1e = tDo,
     oDo;
@@ -69315,9 +69315,9 @@ class XAt {
       : this.implementation.workshopVerifiedSlugsWith(w, I);
   }
 }
-var _6e = new XAt();
+var planArtifactSlot = new XAt();
 function ZAt(w) {
-  _6e.register(w);
+  planArtifactSlot.register(w);
 }
 ZAt({
   isPlanArtifactEnabled: isPlanArtifactEnabled,
@@ -69430,7 +69430,7 @@ function FIt({
       });
   if (!xe) {
     if (pe) {
-      let at = L8("bypassPermissions", {
+      let at = createSetModeRow("bypassPermissions", {
         isBypassPermissionsModeAvailable: pe,
       });
       if (at !== null)
@@ -69438,18 +69438,18 @@ function FIt({
           (Ke["yes-accept-edits-keep-context"] = "bypassPermissions"),
           Oe.push({ label: at.node, value: "yes-accept-edits-keep-context" }));
     } else if (Qe) {
-      let at = Bst("exit-plan-resume");
+      let at = createAutoModeRow("exit-plan-resume");
       ((He["yes-resume-auto-mode"] = at),
         (Ke["yes-resume-auto-mode"] = "auto"),
         Oe.push({ label: at.node, value: "yes-resume-auto-mode" }));
     } else {
-      let at = L8("acceptEdits", { labelVariant: "plan-keep-context" });
+      let at = createSetModeRow("acceptEdits", { labelVariant: "plan-keep-context" });
       if (at !== null)
         ((He["yes-accept-edits-keep-context"] = at),
           (Ke["yes-accept-edits-keep-context"] = "acceptEdits"),
           Oe.push({ label: at.node, value: "yes-accept-edits-keep-context" }));
     }
-    let it = L8("default", { labelVariant: "plan-keep-context" });
+    let it = createSetModeRow("default", { labelVariant: "plan-keep-context" });
     if (it !== null)
       ((He["yes-default-keep-context"] = it),
         (Ke["yes-default-keep-context"] = "default"),
@@ -69520,7 +69520,7 @@ function HIt(w, I) {
     w === "yes-default-keep-context" ||
     w === "yes-resume-auto-mode"
   ) {
-    if (He === null || !Hg(He)) return { behavior: "deny" };
+    if (He === null || !isConsentRow(He)) return { behavior: "deny" };
     return {
       behavior: "allow",
       updatedInput: Ke,
@@ -69583,7 +69583,7 @@ function qIt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
     Kn = _o.length <= EIt,
     nn = V(() => Kn && !Jk(_o), [Kn, _o]),
     no = V(() => (nn ? dAt(_o) : null), [nn, _o]),
-    jo = V(() => L8("default"), []),
+    jo = V(() => createSetModeRow("default"), []),
     Cn = V(
       () =>
         FIt({
@@ -69884,7 +69884,7 @@ ${_o}${wi}${Ms}${da}`,
     if (Ri) {
       let yc = Cn.keepContextRows[ur] ?? null,
         zu = Cn.keepContextModes[ur];
-      if (yc === null || zu === void 0 || !Hg(yc)) {
+      if (yc === null || zu === void 0 || !isConsentRow(yc)) {
         I(zn());
         return;
       }
@@ -69946,7 +69946,7 @@ ${_o}${wi}${Ms}${da}`,
     }
     if (!ne()) return;
     if (ur === "yes") {
-      if (jo === null || !Hg(jo)) {
+      if (jo === null || !isConsentRow(jo)) {
         I({ behavior: "deny" });
         return;
       }
@@ -70107,7 +70107,7 @@ ${_o}${wi}${Ms}${da}`,
               e(o, {
                 flexDirection: "column",
                 paddingX: 1,
-                children: e(Ig, {
+                children: e(PermissionReasonPanel, {
                   permissionResult: w.permissionResult,
                   toolType: "tool",
                 }),
@@ -70384,23 +70384,23 @@ var rEt = new Set(["addRules"]),
   U0o = "(file family: no shell tool)";
 function H0o(w) {
   let I = w.filter((be) => be.type === "addRules").flatMap((be) => be.rules);
-  if (I.length === 0 || I.length > LZ) return null;
+  if (I.length === 0 || I.length > MAX_PERMISSION_RULE_ENTRIES) return null;
   let ne = [];
   for (let be of I) {
     if (
       be.toolName !== READ_TOOL_NAME ||
       be.ruleContent === void 0 ||
-      !F6e(be.ruleContent) ||
+      !normalizeRulePathPattern(be.ruleContent) ||
       !n5(be.ruleContent)
     )
       return null;
     ne.push(be.ruleContent);
   }
   let me = dedupe(ne),
-    pe = D$e(me, (be) => xS(F6e(be)));
-  if (te(pe.join(" and ")) > K_e) return null;
+    pe = D$e(me, (be) => formatRuleContentForDisplay(normalizeRulePathPattern(be)));
+  if (te(pe.join(" and ")) > MAX_CONSENT_LABEL_WIDTH) return null;
   return r(t, {
-    children: ["Yes, allow reading from ", Kae(pe), " during this session"],
+    children: ["Yes, allow reading from ", formatListWithAnd(pe), " during this session"],
   });
 }
 function j0o(w, I, ne) {
@@ -70408,7 +70408,7 @@ function j0o(w, I, ne) {
     pe = B0o(w);
   if ((me || pe) && I !== "read") {
     let Qe = pe ? USER_CLAUDE_DIR_GLOB : PROJECT_CLAUDE_DIR_GLOB,
-      it = qw(
+      it = mintConsentRowFromUpdates(
         [
           {
             type: "addRules",
@@ -70439,26 +70439,26 @@ function j0o(w, I, ne) {
     xe = [],
     Ae = be.find((Qe) => Qe.type === "setMode");
   if (Ae?.type === "setMode" && Ae.mode === "acceptEdits") {
-    let Qe = L8("acceptEdits");
+    let Qe = createSetModeRow("acceptEdits");
     if (Qe !== null) xe.push(Qe);
   }
   let Oe = be.find((Qe) => Qe.type === "addDirectories");
   if (Oe?.type === "addDirectories") {
-    let Qe = mIt(Oe.directories);
+    let Qe = createAddDirectoriesRow(Oe.directories);
     if (Qe !== null) xe.push(Qe);
   }
   let He = be.filter((Qe) => Qe.type === "addRules");
   if (He.length > 0) {
-    let Qe = qw(He, {
+    let Qe = mintConsentRowFromUpdates(He, {
       displayedTypes: rEt,
-      labelPredicate: (it) => $6e(it, U0o),
+      labelPredicate: (it) => hasAllowRuleForTool(it, U0o),
       renderLabel: H0o,
     });
     if (Qe !== null) xe.push(Qe);
   }
   let [Ke, ...Je] = xe;
   if (Ke === void 0) return null;
-  return { row: Je.length === 0 ? Ke : hIt(Ke, ...Je), value: "yes-session" };
+  return { row: Je.length === 0 ? Ke : combineConsentRows(Ke, ...Je), value: "yes-session" };
 }
 function aEt({
   filePath: w,
@@ -70973,7 +70973,7 @@ function fNo(w, I, ne) {
         ...(ne && { feedback: ne }),
       };
     case "accept-session": {
-      if (!Hg(w.row)) return { behavior: "allow", updatedInput: I.input };
+      if (!isConsentRow(w.row)) return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
         updatedInput: I.input,
@@ -71100,7 +71100,7 @@ function vEt({ payload: w, answer: I }) {
     xe = V(() => hNo(w, me, pe), [w, me, pe]),
     Ae = V(() => getSanitizedToolName(w.toolName), [w.toolName]),
     { requestedMachine: Oe, runsOnMachine: He } = V(
-      () => wzt(w.input),
+      () => getToolCallMachineRouting(w.input),
       [w.input],
     ),
     {
@@ -71115,8 +71115,8 @@ function vEt({ payload: w, answer: I }) {
       logSubmitted: jt,
       logEscape: Tt,
       hintNode: to,
-    } = MZ({
-      feedbackTypeOf: B6e,
+    } = useConsentFeedbackState({
+      feedbackTypeOf: getFeedbackTypeForAnswer,
       toolName: Ae,
       isMcp: w.isMcp,
       initialFocusedType: "accept",
@@ -71220,7 +71220,7 @@ function vEt({ payload: w, answer: I }) {
           w.permissionResult.denialLimitFallback !== void 0 &&
             e(o, {
               paddingX: 1,
-              children: e(Ig, {
+              children: e(PermissionReasonPanel, {
                 permissionResult: w.permissionResult,
                 toolType: "edit",
               }),
@@ -71477,7 +71477,7 @@ function OEt(w, I, ne, me) {
         ...(me && { feedback: me }),
       };
     case "yes-apply-suggestions": {
-      if (ne === null || !Hg(ne))
+      if (ne === null || !isConsentRow(ne))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -71491,7 +71491,7 @@ function OEt(w, I, ne, me) {
 }
 function INo(w) {
   let I = w.filter((pe) => pe.type === "addRules").flatMap((pe) => pe.rules);
-  if (I.length === 0 || I.length > LZ) return null;
+  if (I.length === 0 || I.length > MAX_PERMISSION_RULE_ENTRIES) return null;
   let ne;
   try {
     ne = I.map((pe) =>
@@ -71504,9 +71504,9 @@ function INo(w) {
   } catch {
     return null;
   }
-  let me = Qk(dedupe(ne), (pe) => xS(pe));
-  if (te(me.join(" and ")) > K_e) return null;
-  return r(t, { children: ["Yes, and don't ask again for ", Kae(me)] });
+  let me = Qk(dedupe(ne), (pe) => formatRuleContentForDisplay(pe));
+  if (te(me.join(" and ")) > MAX_CONSENT_LABEL_WIDTH) return null;
+  return r(t, { children: ["Yes, and don't ask again for ", formatListWithAnd(me)] });
 }
 function FEt(w) {
   let I =
@@ -71515,7 +71515,7 @@ function FEt(w) {
       : void 0;
   if (!Array.isArray(I) || I.length === 0) return null;
   let ne = [],
-    me = qw(I, { displayedTypes: kFn, renderLabel: INo });
+    me = mintConsentRowFromUpdates(I, { displayedTypes: RULES_ONLY_UPDATE_TYPES, renderLabel: INo });
   if (me !== null) ne.push(me);
   let pe = [],
     be = !1;
@@ -71526,10 +71526,10 @@ function FEt(w) {
         typeof Oe === "number" &&
         Number.isSafeInteger(Oe) &&
         Oe >= 0 &&
-        Oe <= D8),
+        Oe <= MAX_PERMISSION_UPDATES),
       be)
     ) {
-      let He = D8 * LZ;
+      let He = MAX_PERMISSION_UPDATES * MAX_PERMISSION_RULE_ENTRIES;
       for (let Ke = 0; Ke < Oe && be; Ke++)
         try {
           let Je = I[Ke];
@@ -71555,12 +71555,12 @@ function FEt(w) {
     be = !1;
   }
   if (be && pe.length > 0) {
-    let Oe = mIt(pe);
+    let Oe = createAddDirectoriesRow(pe);
     if (Oe !== null) ne.push(Oe);
   }
   let [xe, ...Ae] = ne;
   if (xe === void 0) return null;
-  return Ae.length === 0 ? xe : hIt(xe, ...Ae);
+  return Ae.length === 0 ? xe : combineConsentRows(xe, ...Ae);
 }
 function BEt(w) {
   let I =
@@ -71656,7 +71656,7 @@ function iqe(Vqr) {
               ],
             }),
             rl.mcp.argsDisplay !== void 0
-              ? e(Fs, {
+              ? e(MultilineBorderBox, {
                   multiline:
                     rl.mcp.argsDisplay.kind === "full" &&
                     rl.mcp.argsDisplay.needsGutter,
@@ -71671,7 +71671,7 @@ function iqe(Vqr) {
       : rl.ws
         ? r(N, {
             children: [
-              e(Fs, {
+              e(MultilineBorderBox, {
                 multiline: rl.ws.url.kind === "full" && rl.ws.url.needsGutter,
                 children: r(t, {
                   children: [
@@ -71704,7 +71704,7 @@ function iqe(Vqr) {
             ],
           })
         : rl.command
-          ? e(Fs, {
+          ? e(MultilineBorderBox, {
               multiline: rl.command.kind === "full" && rl.command.needsGutter,
               children: e(t, { children: iq(rl.command) }),
             })
@@ -71727,7 +71727,7 @@ function iqe(Vqr) {
   else QWe = Lb[21];
   let YWe;
   if (Lb[22] !== QWe || Lb[23] !== zWe)
-    ((YWe = e(Fs, { multiline: zWe, children: QWe })),
+    ((YWe = e(MultilineBorderBox, { multiline: zWe, children: QWe })),
       (Lb[22] = QWe),
       (Lb[23] = zWe),
       (Lb[24] = YWe));
@@ -71747,14 +71747,14 @@ function iqe(Vqr) {
   const LEt = rl.mcp || rl.ws ? "tool" : "command";
   let XWe;
   if (Lb[28] !== rl.permissionResult || Lb[29] !== LEt)
-    ((XWe = e(Ig, { permissionResult: rl.permissionResult, toolType: LEt })),
+    ((XWe = e(PermissionReasonPanel, { permissionResult: rl.permissionResult, toolType: LEt })),
       (Lb[28] = rl.permissionResult),
       (Lb[29] = LEt),
       (Lb[30] = XWe));
   else XWe = Lb[30];
   let ZWe;
   if (Lb[31] !== IEt || Lb[32] !== AEt || Lb[33] !== DEt)
-    ((ZWe = e(XW, { options: DEt, onSelect: AEt, onCancel: IEt })),
+    ((ZWe = e(ConfirmationPrompt, { options: DEt, onSelect: AEt, onCancel: IEt })),
       (Lb[31] = IEt),
       (Lb[32] = AEt),
       (Lb[33] = DEt),
@@ -71946,10 +71946,10 @@ var fk = {
     ...{},
     ...(jEt && { [jEt.kind]: { notification: VC } }),
     ...DNo,
-    [p6e.kind]: {
+    [AUTO_MODE_SETUP_REVIEW_DIALOG.kind]: {
       notification: { text: "Auto-mode setup proposal is ready for review" },
     },
-    [f6e.kind]: {
+    [AUTO_MODE_FLAGGED_ALLOW_DIALOG.kind]: {
       notification: {
         text: "Auto-mode setup flagged some permission rules for review",
       },
@@ -71999,7 +71999,7 @@ function qEt({
     });
   else Oe.push({ label: "Yes", value: "yes" });
   let He = Ae ?? w !== null;
-  if (FK() && He) {
+  if (areUserPermissionRulesAllowed() && He) {
     let Ke =
       w !== null &&
       w.applies.some(
@@ -72140,12 +72140,12 @@ function BNo(w) {
   }
   return I.slice(0, ne).join(" ");
 }
-var UNo = (w) => $6e(w, POWERSHELL_TOOL_NAME);
+var UNo = (w) => hasAllowRuleForTool(w, POWERSHELL_TOOL_NAME);
 function HNo(w) {
-  return qw(w, {
-    displayedTypes: pIt,
+  return mintConsentRowFromUpdates(w, {
+    displayedTypes: RULES_AND_DIRECTORIES_UPDATE_TYPES,
     labelPredicate: UNo,
-    renderLabel: (I) => fIt(I, POWERSHELL_TOOL_NAME),
+    renderLabel: (I) => renderSessionConsentLabel(I, POWERSHELL_TOOL_NAME),
   });
 }
 function Wle(w, I, ne, me = {}) {
@@ -72157,7 +72157,7 @@ function Wle(w, I, ne, me = {}) {
         ...(me.feedback && { feedback: me.feedback }),
       };
     case "yes-apply-suggestions": {
-      if (ne === null || !Hg(ne))
+      if (ne === null || !isConsentRow(ne))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72166,7 +72166,7 @@ function Wle(w, I, ne, me = {}) {
       };
     }
     case "yes-prefix-edited": {
-      let pe = gIt(me.editablePrefixSeed, me.editablePrefix, POWERSHELL_TOOL_NAME);
+      let pe = createRuleConsentRow(me.editablePrefixSeed, me.editablePrefix, POWERSHELL_TOOL_NAME);
       if (pe === null) return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72197,17 +72197,17 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       logSubmitted: at,
       logEscape: Zt,
       hintNode: Ct,
-    } = MZ({
-      feedbackTypeOf: B6e,
+    } = useConsentFeedbackState({
+      feedbackTypeOf: getFeedbackTypeForAnswer,
       toolName: be,
       isMcp: w.isMcp,
       initialFocusedType: "accept",
     }),
     eo = typeof w.input.command !== "string" || w.input.command.length > Rm,
-    [jt, Tt] = d(() => (eo ? void 0 : OB(pe))),
+    [jt, Tt] = d(() => (eo ? void 0 : sanitizeCommandPrefix(pe))),
     to = C(void 0),
     zt = C(!1);
-  if (!zt.current) ((zt.current = !0), (to.current = OB(jt)));
+  if (!zt.current) ((zt.current = !0), (to.current = sanitizeCommandPrefix(jt)));
   let ao = C(!1);
   E(() => {
     if (eo) return;
@@ -72217,7 +72217,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         .then((An) => {
           if (on || ao.current) return;
           if (An.length > 0) {
-            let wn = OB(`${An[0]} *`);
+            let wn = sanitizeCommandPrefix(`${An[0]} *`);
             if (wn !== void 0) ((to.current = wn), Tt(wn));
           }
         })
@@ -72325,13 +72325,13 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
         paddingX: 2,
         paddingY: 1,
         children: [
-          e(Fs, {
+          e(MultilineBorderBox, {
             multiline: ro.kind === "full" && ro.needsGutter,
             children: e(t, {
               children: ro.kind === "withheld" ? ro.marker : ro.text,
             }),
           }),
-          e(Fs, {
+          e(MultilineBorderBox, {
             multiline: aA(w.description),
             children: e(t, { dimColor: !0, children: w.description }),
           }),
@@ -72340,7 +72340,7 @@ function KEt({ payload: w, answer: I, wouldTakeAnswer: ne }) {
       r(o, {
         flexDirection: "column",
         children: [
-          e(Ig, { permissionResult: w.permissionResult, toolType: "command" }),
+          e(PermissionReasonPanel, { permissionResult: w.permissionResult, toolType: "command" }),
           _o &&
             e(o, {
               marginBottom: 1,
@@ -72477,7 +72477,7 @@ function Iqe(UGr) {
       QEt !== "" &&
       e(o, {
         marginTop: 1,
-        children: e(Fs, {
+        children: e(MultilineBorderBox, {
           multiline: aA(QEt),
           children: e(t, { color: "inactive", children: QEt }),
         }),
@@ -72570,7 +72570,7 @@ function iDt(w, I, ne, me) {
         ...(me && { feedback: me }),
       };
     case "yes-exact": {
-      if (ne.exactRow === null || !Hg(ne.exactRow))
+      if (ne.exactRow === null || !isConsentRow(ne.exactRow))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72579,7 +72579,7 @@ function iDt(w, I, ne, me) {
       };
     }
     case "yes-prefix": {
-      if (ne.prefixRow === null || !Hg(ne.prefixRow))
+      if (ne.prefixRow === null || !isConsentRow(ne.prefixRow))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72604,7 +72604,7 @@ function dDt(w) {
   return ne;
 }
 function sDt(w, I) {
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -72643,7 +72643,7 @@ function sDt(w, I) {
 function lDt(w, I) {
   let ne = dDt(w.skill);
   if (ne === null) return null;
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -72807,7 +72807,7 @@ function eVe(tKr) {
             flexDirection: "column",
             paddingX: 2,
             paddingY: 1,
-            children: e(Fs, {
+            children: e(MultilineBorderBox, {
               multiline: Kle.needsGutter,
               children: e(t, { dimColor: !0, children: Kle.text }),
             }),
@@ -72818,13 +72818,13 @@ function eVe(tKr) {
   else Hqe = Kf[31];
   let qqe;
   if (Kf[32] !== Eu.permissionResult)
-    ((qqe = e(Ig, { permissionResult: Eu.permissionResult, toolType: "tool" })),
+    ((qqe = e(PermissionReasonPanel, { permissionResult: Eu.permissionResult, toolType: "tool" })),
       (Kf[32] = Eu.permissionResult),
       (Kf[33] = qqe));
   else qqe = Kf[33];
   let Gqe;
   if (Kf[34] !== oDt || Kf[35] !== tDt || Kf[36] !== XEt || Kf[37] !== ZEt)
-    ((Gqe = e(XW, {
+    ((Gqe = e(ConfirmationPrompt, {
       options: XEt,
       onSelect: tDt,
       onCancel: oDt,
@@ -72869,7 +72869,7 @@ function _Dt(w, I, ne) {
     case "yes":
       return { behavior: "allow", updatedInput: I.input };
     case "yes-dont-ask-again-domain":
-      if (ne === null || !Hg(ne))
+      if (ne === null || !isConsentRow(ne))
         return { behavior: "allow", updatedInput: I.input };
       return {
         behavior: "allow",
@@ -72881,7 +72881,7 @@ function _Dt(w, I, ne) {
   }
 }
 function TDt(w) {
-  return qw(
+  return mintConsentRowFromUpdates(
     [
       {
         type: "addRules",
@@ -73012,7 +73012,7 @@ function SVe(yKr) {
   )
     ((nVe =
       zv.kind === "full"
-        ? e(Fs, {
+        ? e(MultilineBorderBox, {
             multiline: zv.needsGutter,
             children: r(t, { children: ["url: ", zv.text] }),
           })
@@ -73027,7 +73027,7 @@ function SVe(yKr) {
   if (of[25] !== lq.needsGutter || of[26] !== lq.text)
     ((rVe =
       lq.text !== ""
-        ? e(Fs, {
+        ? e(MultilineBorderBox, {
             multiline: lq.needsGutter,
             children: r(t, { children: ["prompt: ", lq.text] }),
           })
@@ -73048,7 +73048,7 @@ function SVe(yKr) {
   else aVe = of[31];
   let lVe;
   if (of[32] !== iVe || of[33] !== aVe)
-    ((lVe = e(Fs, { multiline: iVe, children: aVe })),
+    ((lVe = e(MultilineBorderBox, { multiline: iVe, children: aVe })),
       (of[32] = iVe),
       (of[33] = aVe),
       (of[34] = lVe));
@@ -73068,7 +73068,7 @@ function SVe(yKr) {
   else uVe = of[38];
   let dVe;
   if (of[39] !== yd.permissionResult)
-    ((dVe = e(Ig, { permissionResult: yd.permissionResult, toolType: "tool" })),
+    ((dVe = e(PermissionReasonPanel, { permissionResult: yd.permissionResult, toolType: "tool" })),
       (of[39] = yd.permissionResult),
       (of[40] = dVe));
   else dVe = of[40];
@@ -73277,7 +73277,7 @@ function e0t(ezr) {
   else wVe = gLo[2];
   let SLo;
   if (gLo[3] !== ADt.modelName || gLo[4] !== wVe || gLo[5] !== NDt)
-    ((SLo = e(fHe, {
+    ((SLo = e(ExtraUsageDialog, {
       variant: "mid-session",
       modelName: ADt.modelName,
       wouldTakeAnswer: NDt,
@@ -73314,13 +73314,13 @@ function ZLo(w) {
 }
 function ece() {
   let rzr = _(3),
-    _Ve = Cc(),
+    _Ve = useDialogStore(),
     BDt = rS() !== null,
     wLo;
   if (rzr[0] !== _Ve || rzr[1] !== BDt)
     ((wLo = () => {
       let CLo = _Ve.getState();
-      return Zle(CLo) || (!BDt && tk(CLo) !== null);
+      return Zle(CLo) || (!BDt && getTopBareDialog(CLo) !== null);
     }),
       (rzr[0] = _Ve),
       (rzr[1] = BDt),
@@ -73331,7 +73331,7 @@ function ece() {
 }
 function oce() {
   let izr = _(2),
-    TVe = Cc(),
+    TVe = useDialogStore(),
     TLo;
   if (izr[0] !== TVe)
     ((TLo = () => Zle(TVe.getState())), (izr[0] = TVe), (izr[1] = TLo));
@@ -73340,19 +73340,19 @@ function oce() {
   return At(TVe.subscribe, xLo, xLo);
 }
 function Zle(w) {
-  let I = Q8(w);
+  let I = getTopUserInvokedDialog(w);
   return I !== null && !ZLo(I);
 }
 function A3(w) {
   return w.open.some((I) => I.userInvoked !== !0 && !sq.has(I.kind));
 }
 function qVe(w, I) {
-  let ne = I ? Cy(w) : tk(w);
+  let ne = I ? Cy(w) : getTopBareDialog(w);
   return WEt(ne?.kind);
 }
 function nce() {
   let szr = _(3),
-    DVe = Cc(),
+    DVe = useDialogStore(),
     UDt = sO(),
     RLo;
   if (szr[0] !== UDt || szr[1] !== DVe)
@@ -73366,13 +73366,13 @@ function nce() {
 }
 function rce() {
   let MLo = _(6),
-    BVe = Cc(),
+    BVe = useDialogStore(),
     P3 = sO(),
     WVe = YU(),
     ALo;
   if (MLo[0] !== P3 || MLo[1] !== BVe)
     ((ALo = () => {
-      let ILo = Q8(BVe.getState());
+      let ILo = getTopUserInvokedDialog(BVe.getState());
       return ILo !== null && Gf(fk, ILo, P3) === "modal";
     }),
       (MLo[0] = P3),
@@ -73391,8 +73391,8 @@ function rce() {
   return DLo || azr;
 }
 function XDt(w, I) {
-  let ne = tk(w),
-    me = Q8(w);
+  let ne = getTopBareDialog(w),
+    me = getTopUserInvokedDialog(w);
   return (
     (ne !== null && Gf(fk, ne, I) === "modal") ||
     (me !== null && Gf(fk, me, I) === "modal")
@@ -73423,7 +73423,7 @@ var VVe = {
   ...fl(MCP_ELICITATION_DIALOG, QLo),
   ...fl(MCP_ELICITATION_WAITING_DIALOG, YLo),
   ...fl(MCP_URL_ELICITATION_DIALOG, JLo),
-  ...fl(PERMISSION_PROMPT_DIALOG, EQt),
+  ...fl(PERMISSION_PROMPT_DIALOG, ToolPermissionDialog),
   ...fl($qe, SVe),
   ...fl(Fqe, eVe),
   ...fl(Nqe, KEt),
@@ -73455,8 +73455,8 @@ var VVe = {
   ...(YDt && JDt
     ? fl(JDt.slackSignInOfferDialog, YDt.SlackSignInOfferDialog)
     : {}),
-  ...fl(p6e, Y$e),
-  ...fl(f6e, J$e),
+  ...fl(AUTO_MODE_SETUP_REVIEW_DIALOG, Y$e),
+  ...fl(AUTO_MODE_FLAGGED_ALLOW_DIALOG, J$e),
 };
 F();
 import { spawn } from "child_process";
@@ -73768,12 +73768,12 @@ function JVe() {
     }, [w, Ae, Oe]));
 }
 function COo() {
-  let w = Cc(),
+  let w = useDialogStore(),
     I = () => Cy(w.getState())?.kind;
   return At(w.subscribe, I, I);
 }
 function _Oo() {
-  let w = Cc(),
+  let w = useDialogStore(),
     I = () => {
       let ne = Cy(w.getState());
       if (ne?.kind !== G_.kind) return;
@@ -73792,7 +73792,7 @@ function _Oo() {
   return At(w.subscribe, I, I);
 }
 function TOo() {
-  let w = Cc(),
+  let w = useDialogStore(),
     I = () => {
       let ne = w
         .getState()
@@ -73815,15 +73815,15 @@ function s0t(w) {
   return;
 }
 function xOo() {
-  let w = Cc(),
-    I = () => s0t(tk(w.getState()));
+  let w = useDialogStore(),
+    I = () => s0t(getTopBareDialog(w.getState()));
   return At(w.subscribe, I, I);
 }
 function lce() {
-  let w = Cc(),
+  let w = useDialogStore(),
     I = () => {
       let ne = w.getState(),
-        me = tk(ne),
+        me = getTopBareDialog(ne),
         pe = ne.open.findLast((be) => be !== me && be.kind === MCP_ELICITATION_DIALOG.kind);
       return s0t(pe);
     };
@@ -73879,7 +73879,7 @@ function dce(AQr) {
     E3 = useStoreSelector(ROo, YOo),
     m0t = useStoreSelector(ROo, JOo),
     LQr = useStoreSelector(XVe, XOo),
-    p0t = qb(localJsxDialog.kind),
+    p0t = useIsDialogKindOpen(localJsxDialog.kind),
     D3 = useAppStateSelector(ZOo),
     POo;
   if (cx[0] !== D3 || cx[1] !== E3)
@@ -73888,7 +73888,7 @@ function dce(AQr) {
       (cx[1] = E3),
       (cx[2] = POo));
   else POo = cx[2];
-  let y0t = sF(POo),
+  let y0t = useDialogStoreSelector(POo),
     MOo,
     AOo;
   if (cx[3] !== cce.isRunning)
@@ -74087,7 +74087,7 @@ function mq(PYr) {
     } = PYr,
     P0t = useAppState(),
     { rows: A0t } = useTerminalSize(),
-    mce = qb(localJsxDialog.kind),
+    mce = useIsDialogKindOpen(localJsxDialog.kind),
     I0t = useStoreSelector(cq, SFo);
   const E0t = IYr === "transcript";
   let nFo;
@@ -74406,7 +74406,7 @@ function tBo(x5r) {
   return x5r === null;
 }
 function oBo(BFo) {
-  return Cy(BFo) ?? tk(BFo);
+  return Cy(BFo) ?? getTopBareDialog(BFo);
 }
 function nBo(R5r) {
   return R5r.open;
@@ -74421,9 +74421,9 @@ function NP(S5r) {
     oNt = MFo === void 0 ? VVe : MFo,
     nf = AFo === void 0 ? fk : AFo;
   wq(k5r);
-  let gce = Cc(),
+  let gce = useDialogStore(),
     Xv = sO(),
-    nNt = h9e(),
+    nNt = useTopUserInvokedDialog(),
     gGe = YU(),
     { hidden: My, reason: rNt } = OGe(),
     v5r = nNt !== null && Gf(nf, nNt, Xv) === Yv,
@@ -74568,7 +74568,7 @@ function NP(S5r) {
 }
 function OGe() {
   let FFo = _(5),
-    lNt = sF(oBo),
+    lNt = useDialogStoreSelector(oBo),
     yq = rS();
   switch (yq) {
     case "panel":
@@ -74595,12 +74595,12 @@ function OGe() {
 }
 function FGe(kce, wce) {
   let SGe = _(12),
-    Sq = sF(nBo),
+    Sq = useDialogStoreSelector(nBo),
     UFo;
-  if (SGe[0] !== Sq) ((UFo = tk({ open: Sq })), (SGe[0] = Sq), (SGe[1] = UFo));
+  if (SGe[0] !== Sq) ((UFo = getTopBareDialog({ open: Sq })), (SGe[0] = Sq), (SGe[1] = UFo));
   else UFo = SGe[1];
   let Cce = UFo;
-  if (Q8({ open: Sq }) !== null) {
+  if (getTopUserInvokedDialog({ open: Sq }) !== null) {
     let _ce;
     if (SGe[2] === MEMO_CACHE_SENTINEL) ((_ce = []), (SGe[2] = _ce));
     else _ce = SGe[2];
@@ -74656,7 +74656,7 @@ function BGe(vGe) {
 function UGe(L5r) {
   let vq = _(26),
     { request: Yd, components: O5r, notification: _Ge, hostShownAt: uNt } = L5r,
-    kq = Cc(),
+    kq = useDialogStore(),
     TGe = O5r[Yd.kind],
     WFo;
   if (vq[0] !== kq || vq[1] !== uNt || vq[2] !== Yd.id || vq[3] !== Yd.payload)
@@ -74762,7 +74762,7 @@ var Pce = "buried-idle-cue";
 function $Ge(G5r) {
   let z5r = _(3),
     { requestId: dNt, notification: K5r } = G5r,
-    mNt = Cc(),
+    mNt = useDialogStore(),
     GFo;
   if (z5r[0] !== mNt || z5r[1] !== dNt)
     ((GFo = () => mNt.firstReveal(dNt, Pce)),
@@ -74777,7 +74777,7 @@ function j3(KFo, Q5r) {
 }
 function WGe(DGe) {
   let Y5r = _(5),
-    LGe = Z8(),
+    LGe = useHasBareDialog(),
     Tce = rS(),
     zFo,
     QFo;
@@ -74800,7 +74800,7 @@ function WGe(DGe) {
 function wq(EP) {
   let J5r = _(4);
   WGe(EP !== void 0);
-  let HF = Cc(),
+  let HF = useDialogStore(),
     YFo,
     JFo;
   if (J5r[0] !== HF || J5r[1] !== EP)
@@ -75192,7 +75192,7 @@ function Dce(aXr) {
   else PBo = LP[0];
   let aKe;
   if (LP[1] !== UNt)
-    ((aKe = e(Bz, { hideWelcomeChrome: UNt })), (LP[1] = UNt), (LP[2] = aKe));
+    ((aKe = e(WelcomeChrome, { hideWelcomeChrome: UNt })), (LP[1] = UNt), (LP[2] = aKe));
   else aKe = LP[2];
   let cKe;
   if (LP[3] !== VF || LP[4] !== e6)
@@ -75214,7 +75214,7 @@ function Dce(aXr) {
     LP[12] !== $Nt ||
     LP[13] !== ENt
   )
-    ((uKe = e(jz, {
+    ((uKe = e(ConversationMessageList, {
       source: cKe,
       tools: ENt,
       commands: DNt,
@@ -75463,7 +75463,7 @@ function QNt(w) {
 }
 async function YNt(w) {
   if (getSettings_DEPRECATED().spinnerTipsEnabled === !1) return;
-  let I = await b0t(w);
+  let I = await getApplicableSpinnerTips(w);
   if (I.length === 0) return;
   return QNt(I);
 }
@@ -75472,7 +75472,7 @@ async function XNt(w, I) {
     return await w.content(I);
   } catch (ne) {
     return (
-      vZ.of(I.session.host).failedTipIds.add(w.id),
+      spinnerTipHostStateStore.of(I.session.host).failedTipIds.add(w.id),
       logError(dt(ge(ne), "tip content threw")),
       ""
     );
@@ -75500,7 +75500,7 @@ function BBo() {
 }
 async function oLt(w) {
   if (getSettings_DEPRECATED().spinnerTipsEnabled === !1) return;
-  let I = vZ.of(w.session.host);
+  let I = spinnerTipHostStateStore.of(w.session.host);
   if (shouldExcludeDefaultTips()) return;
   let ne = await I.getMarketplacePluginTips(w.storageV5);
   if (ne.length === 0) return;
@@ -75512,9 +75512,9 @@ async function oLt(w) {
       xe = getPluginSuggestionShownCount(pe.pluginId);
     if ((BBo().fire(xe, be), Math.max(be, xe) >= yKe)) continue;
     if (getSessionsSinceTipShown(pe.id) < pe.cooldownSessions) continue;
-    if (pe.advertisedCommand !== void 0 && !(await AJt(pe.advertisedCommand)))
+    if (pe.advertisedCommand !== void 0 && !(await isAdvertisedCommandAvailable(pe.advertisedCommand)))
       continue;
-    if (await CJt(pe, w)) me.push(pe);
+    if (await isTipRelevant(pe, w)) me.push(pe);
   }
   return QNt(me);
 }
@@ -75625,7 +75625,7 @@ async function t6(w) {
     fo = w.pastedContents ?? {},
     ro = Zt ?? HBo(),
     ho = new Set(parsePastedPlaceholders(co).map((nn) => nn.id)),
-    _o = ea(
+    _o = pickBy(
       fo,
       (nn) => (nn.type !== "image" && nn.type !== "audio") || ho.has(nn.id),
     ),
@@ -76021,8 +76021,8 @@ async function rLt(w) {
                 ? { kind: "task-notification" }
                 : void 0),
             Qo = Go.isMeta || !Ew(Fn) ? "system" : (Go.inputSource ?? Qe),
-            Gn = gst(Go.uuid, Go.verifiedSlackHumanTurn),
-            Sn = await rHe({
+            Gn = resolveMessageUuid(Go.uuid, Go.verifiedSlackHumanTurn),
+            Sn = await processUserInput({
               input: Go.value,
               preExpansionInput: Go.preExpansionValue,
               promptSource: Qo,
@@ -76070,7 +76070,7 @@ async function rLt(w) {
           if (Go.skipAttachments === !0 || Go.mode === "poll-event")
             markUserMessagesSkipAttachments(Sn.messages);
           if (Go.taskDelivery) attachTaskDeliveryToUserMessage(Sn.messages, Go.taskDelivery, Gn);
-          if (Go.verifiedSlackHumanTurn && Gn) mst(Sn.messages, Gn);
+          if (Go.verifiedSlackHumanTurn && Gn) markVerifiedSlackHumanTurn(Sn.messages, Gn);
           if ((_o.push(...Sn.messages), Sn.engineDeferredSlash))
             An = Sn.engineDeferredSlash;
           if (In)
@@ -76287,7 +76287,7 @@ class SKe {
   subscribe = this._changed.subscribe;
   getSnapshot = () => this._status !== "idle";
   _notify() {
-    (kMn(this._status), tze(this._status !== "idle"), this._changed.emit());
+    (kMn(this._status), setSessionUserBusy(this._status !== "idle"), this._changed.emit());
   }
 }
 function lLt(w, I) {
@@ -76378,7 +76378,7 @@ async function cLt({
         continue;
       }
       if (Qe.type === "system" && Qe.subtype === "status") {
-        L_e({
+        enqueueStatusSdkEvent({
           status: Qe.status,
           permissionMode: Qe.permissionMode,
           compactResult: Qe.compact_result,
@@ -76419,7 +76419,7 @@ async function cLt({
       if (Qe.type === "conversation_reset") continue;
       if (Qe.type === "command_lifecycle") continue;
       if (Qe.type === "stream_event") {
-        (DNn(Qe), pe(Qe));
+        (enqueueStreamEvent(Qe), pe(Qe));
         continue;
       }
       pe(Qe);
@@ -76616,7 +76616,7 @@ class kKe {
     let ne = w === void 0 ? void 0 : I;
     if (
       w === this._snapshot.userInputOnProcessing &&
-      Cl(ne) === Cl(this._snapshot.placeholderOrigin)
+      stableStringify(ne) === stableStringify(this._snapshot.placeholderOrigin)
     )
       return;
     this._publish({ userInputOnProcessing: w, placeholderOrigin: ne });
@@ -76984,7 +76984,7 @@ class Wce {
       credentials: be,
     } = w;
     return (
-      (this._displayTransformQueue = uFn({
+      (this._displayTransformQueue = createDisplayTransformQueue({
         session: I,
         sessionHooks: ne,
         storageV5: pe,
@@ -77147,9 +77147,9 @@ class Wce {
       });
   }
   _absorbSessionSignals(w) {
-    for (let I of g0t(w)) this._bashTools.add(I);
-    for (let I of h0t(w)) this._bashHosts.add(I);
-    for (let I of t1n(w)) this._toolsUsed.add(I);
+    for (let I of collectBashCommands(w)) this._bashTools.add(I);
+    for (let I of collectBashHosts(w)) this._bashHosts.add(I);
+    for (let I of collectUsedToolNames(w)) this._toolsUsed.add(I);
   }
   _resetSessionSignals() {
     (this._bashTools.clear(),
@@ -77262,9 +77262,9 @@ class Wce {
       Ae = pe.replace,
       Oe = this.abortController;
     if (w === "remote" && !I.isRemoteMode)
-      this._engine.interrupt("remote-cancel", _Jt(w));
+      this._engine.interrupt("remote-cancel", getInterruptScopeForOrigin(w));
     if (ne) return !0;
-    if (!Oe && !this.guard.isActive && !x7t(I, this.isExternalLoading))
+    if (!Oe && !this.guard.isActive && !canCancelExternalLoading(I, this.isExternalLoading))
       return !1;
     (n(`[onCancel] source=${w} streamMode=${me.get().mode}`),
       xe.clearPending(),
@@ -77297,7 +77297,7 @@ class Wce {
     let at = w === "remote" ? "remote-cancel" : "user-cancel";
     if (I.isRemoteMode) (I.cancelRequest(), Oe?.abort(userAbortReason(at)));
     else if ((Oe?.abort(userAbortReason(at)), w !== "remote"))
-      this._engine.interrupt(at, _Jt(w));
+      this._engine.interrupt(at, getInterruptScopeForOrigin(w));
     return (this.setAbortController(null), be(), !0);
   };
   interruptForSubmit = () => {
@@ -77366,7 +77366,7 @@ class Wce {
         isNonInteractiveSession: !1,
         resolveCommandDialog: at,
         renderDebugControls: getInkInstanceRegistry().get(process.stdout)?.renderDebug,
-        requiresStructuredOutput: Sr.some((no) => matchesToolName(no, ti)),
+        requiresStructuredOutput: Sr.some((no) => matchesToolName(no, STRUCTURED_OUTPUT_TOOL_NAME)),
         dynamicMcpConfig: xe.dynamicMcpConfig,
         theme: Zt,
         agentDefinitions: Kn
@@ -77414,7 +77414,7 @@ class Wce {
       },
       retireDepartedAdditionalDirectories: (no) => {
         Tt((jo) => {
-          let Cn = Cat(jo.toolPermissionContext, no);
+          let Cn = retireDepartedAdditionalDirectories(jo.toolPermissionContext, no);
           return Cn === jo.toolPermissionContext
             ? jo
             : { ...jo, toolPermissionContext: Cn };
@@ -77502,7 +77502,7 @@ class Wce {
         I.main.setMode(w.mode);
         return;
       case "sdk_status":
-        L_e({ status: w.status, ...w.metadata });
+        enqueueStatusSdkEvent({ status: w.status, ...w.metadata });
         return;
     }
   };
@@ -77544,7 +77544,7 @@ class Wce {
           messages: this.stream.pendingPreservedInsert.preserved,
         }),
           (this.stream.pendingPreservedInsert = null));
-      (ne((Qe) => Z0t(Qe, [...I.getSnapshot(), ...Ke])), me());
+      (ne((Qe) => pruneDisplayedMessageContent(Qe, [...I.getSnapshot(), ...Ke])), me());
     } else if (w.type === "progress" && isEphemeralToolProgress(w.data.type))
       Ae({ type: "replace-last-ephemeral-progress", message: w });
     else {
@@ -77618,7 +77618,7 @@ class Wce {
       I?.onAssistantMessage(w);
       for (let Zt of w.message.content) {
         if (Zt.type !== "tool_use") continue;
-        if (((this._toolUseThisTurn = !0), I && SHe.has(Zt.name)))
+        if (((this._toolUseThisTurn = !0), I && TEXT_TOOL_NAMES.has(Zt.name)))
           this._pendingReplyToolUses.set(Zt.id, w.message.id);
       }
     } else if (
@@ -77697,7 +77697,7 @@ class Wce {
         displayTransform: this._displayTransform(ne),
         onCompactEvent: this.applyCompactEvent,
       }),
-      w.type === "assistant" && fst(w))
+      w.type === "assistant" && hasRenderableAssistantText(w))
     )
       this._noteTextBlockShown(I, w.message.id);
   };
@@ -77756,7 +77756,7 @@ class Wce {
           Kn = Sr?.value ?? vo.stackedOriginalInput ?? getMessageContentText(vo.message.content);
         if (Kn === null) continue;
         let nn = resolveQueueOrigin(vo);
-        if (ZWn(nn)) {
+        if (shouldDropAutoReactTaskNotification(nn)) {
           if (nn?.kind === "task-notification" && nn.slug !== void 0) {
             if (
               nn.coalesced !== void 0 &&
@@ -77838,7 +77838,7 @@ class Wce {
       if (zt && ne && w.some((zo) => zo.type === "user" && !zo.isMeta))
         ((vo = bLt()), zt(yn, vo));
       if (ne)
-        Ro = nQt({
+        Ro = beginTurn({
           turnEvents: ho,
           newMessages: w,
           input: xe,
@@ -77919,7 +77919,7 @@ class Wce {
         this.setAbortController(null);
       }
       if ((this._openTurnSpans.delete(An), Ro !== null))
-        ZJt({
+        completeTurn({
           turnEvents: ho,
           turnId: Ro,
           transcript: Ct,
@@ -78081,11 +78081,11 @@ class Wce {
     };
     this.stream.deferredSlashEchoUuid = Qe?.messageUuid ?? null;
     let Gn = pe
-        ? QJt({
+        ? createTurnFirstTextTracker({
             queryChainId: nn,
             observesUserWait: !0,
             promptTiming: at,
-            textToolNames: SHe,
+            textToolNames: TEXT_TOOL_NAMES,
             schedule: this._scheduleTimeout,
           })
         : null,
@@ -78103,8 +78103,8 @@ class Wce {
             (this.applyEvent(Br, Gn),
             Zt !== void 0 &&
               Br.type === "assistant" &&
-              dst(Br) &&
-              (Sn !== void 0 || (Mn !== void 0 && pst(Br, Mn))))
+              isDisplayableAssistantMessage(Br) &&
+              (Sn !== void 0 || (Mn !== void 0 && messageSupersedes(Br, Mn))))
           )
             ((this._host ?? w).stampBridgeReply({
               assistantUuid: Br.uuid,
@@ -78378,7 +78378,7 @@ ${fo}
       if (
         (me((to) => {
           let zt = jt.mode
-            ? Kk(to.toolPermissionContext, $It(jt.mode))
+            ? applyPermissionUpdates(to.toolPermissionContext, $It(jt.mode))
             : to.toolPermissionContext;
           if (jt.mode === "auto")
             zt = stripDangerousPermissionsForAutoMode({ ...zt, mode: "auto", prePlanMode: void 0 });
@@ -78666,8 +78666,8 @@ async function XBo(w, I, ne) {
 F();
 function vKe() {
   let { host: w } = useSession(),
-    I = Cc(),
-    ne = sF(Cy),
+    I = useDialogStore(),
+    ne = useDialogStoreSelector(Cy),
     me = ne?.kind === Sbe.kind;
   E(() => {
     if (!isBgSession()) {
@@ -78814,8 +78814,8 @@ function SLt(w, I) {
     function ne(me) {
       let pe = I();
       if (!pe) return;
-      let be = bHe(me);
-      if (be) R6e(pe, be);
+      let be = buildRateLimitEventMessage(me);
+      if (be) forwardRateLimitEventToBridge(pe, be);
     }
     return subscribeToLimitStatusChanges(ne);
   }, [w, I]);
@@ -78840,7 +78840,7 @@ function qce() {
 var oUo = 1e4;
 function vLt(w) {
   try {
-    let I = drainSdkEvents().filter(yAt).map(Zje);
+    let I = drainSdkEvents().filter(yAt).map(redactCompactError);
     if (I.length > 0) w.writeSdkMessages(I);
   } catch (I) {
     n(`[bridge:repl] queued SDK event forward failed: ${l(I)}`, {
@@ -79083,7 +79083,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
   if (ns && w.some(s5)) Xs(!1);
   (E(() => (b7e(ownBridgePeerAddress), () => b7e(void 0)), []),
     E(() => {
-      if (Pt() || ns) return;
+      if (isRemoteActive() || ns) return;
       logEvent("tengu_bridge_repl_evaluated", {
         would_auto_on: getCcrAutoConnectDefault(),
         repl_bridge_enabled: qi.getState().replBridgeEnabled,
@@ -79107,7 +79107,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
         let vl = await getSlashCommandToolSkills(getCwd(), it),
           Tl = qi.getState(),
           ll = performance.now(),
-          zl = _st({
+          zl = buildSdkInitMessage({
             model: getMainLoopModel(),
             permissionMode: Tl.toolPermissionContext.mode,
             commands: qs(),
@@ -79117,8 +79117,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
             fastMode: Tl.fastMode,
             effortValue: Ya(Tl),
           });
-        if ((Pot(zl, ll), Ms.writeSdkMessages([zl]), Wa && Tt.current === Ms))
-          L_e({
+        if ((attachStartupTiming(zl, ll), Ms.writeSdkMessages([zl]), Wa && Tt.current === Ms))
+          enqueueStatusSdkEvent({
             status: null,
             permissionMode: getExternalPermissionMode(Tl.toolPermissionContext.mode),
           });
@@ -79155,7 +79155,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
       };
     }, [xi]),
     E(() => {
-      if (!Bi || Pt() || ns) return;
+      if (!Bi || isRemoteActive() || ns) return;
       let wi = wr;
       if (!wi)
         (va(BRIDGE_FAILED_ERROR),
@@ -79550,7 +79550,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               Tt.current &&
               !qi.getState().replBridgeConnected
             )
-              q_e(Tt.current);
+              forwardCurrentRateLimitsToBridge(Tt.current);
             Wi((di) => {
               if (di.replBridgeConnected) return di;
               return { ...di, replBridgeConnected: !0 };
@@ -79592,7 +79592,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               }));
             break;
           case "connected": {
-            if ((va(BRIDGE_FAILED_ERROR), Wn && !qi.getState().replBridgeConnected)) q_e(Wn);
+            if ((va(BRIDGE_FAILED_ERROR), Wn && !qi.getState().replBridgeConnected)) forwardCurrentRateLimitsToBridge(Wn);
             if (
               (Wi((di) => {
                 if (di.replBridgeSessionActive) return di;
@@ -79608,13 +79608,13 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               Is({ seedPermissionMode: !0 }),
               Wn && !Go.current && !So.current)
             ) {
-              let di = f1n();
-              if (di && m1n(di, Ms, da)) {
+              let di = getReadyPushNudgeConfig();
+              if (di && shouldSendReadyPushNotification(di, Ms, da)) {
                 if (
                   ((Go.current = !0),
                   di.probability >= 1 || Math.random() < di.probability)
                 )
-                  (Wn.writeSdkMessages([frr(r1n, K())]), g1n(di, it));
+                  (Wn.writeSdkMessages([frr(REMOTE_CONTROL_READY_PUSH_MESSAGE, K())]), recordReadyPushNotificationSent(di, it));
               }
             }
             break;
@@ -79820,14 +79820,14 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     ),
                   };
                 },
-                getCommands: () => yst(qs()),
+                getCommands: () => getBridgeInitializeCommands(qs()),
                 onClientInitialize: wi
                   ? void 0
                   : () => Is({ seedPermissionMode: !0 }),
                 onDialogKindsDeclared: wi
                   ? void 0
                   : (Ei, Bs) => {
-                      Sst(qu, Ei, Bs, () => {
+                      recordDeclaredDialogKinds(qu, Ei, Bs, () => {
                         let la = Tt.current;
                         if (la)
                           saveBridgeSession(
@@ -79867,7 +79867,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                   let Bs = Ei == null || Ei.trim().toLowerCase() === "default",
                     la = Bs ? getDefaultMainLoopModel() : Ei;
                   if (!Bs) {
-                    let li = bst(la, S("bridge_repl"));
+                    let li = rejectUnrecognizedModel(la, S("bridge_repl"));
                     if (li) return li;
                   }
                   let Xc = (li) => (Bs ? null : li),
@@ -80009,7 +80009,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                   return qi.getState().mcp.clients.map((Ei) => {
                     let Bs;
                     if (Ei.config.type === "sse" || Ei.config.type === "http")
-                      Bs = Fz(
+                      Bs = redactManagedMcpConfig(
                         { type: Ei.config.type, url: Ei.config.url },
                         Ei.config.scope,
                       );
@@ -80030,10 +80030,10 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                       };
                     return {
                       name: Ei.name,
-                      status: D_e(Ei.type),
+                      status: normalizeMcpServerStatus(Ei.type),
                       config: Bs,
                       scope: Ei.config.scope,
-                      serverInfo: ts(Ei) ? Ei.serverInfo : void 0,
+                      serverInfo: isConnectedMcpServer(Ei) ? Ei.serverInfo : void 0,
                       error: Ei.type === "failed" ? Ei.error : void 0,
                     };
                   });
@@ -80168,7 +80168,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                     );
                   assertMcpServerReconnectable(qi.getState().mcp.clients, Ei);
                   let la = await Bs(Ei, {
-                    discardDiscovery: !wst(_o.current, Ei),
+                    discardDiscovery: !consumeRecentTimestamp(_o.current, Ei),
                   });
                   drr(la.client);
                 },
@@ -80268,7 +80268,7 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
                 enableSessionPersistence: wi || isPersistentRemoteSessionEnabled() || isRemoteControlInternalEventsEnabled(),
                 storageV5: it,
                 credentials: at,
-                onTransportRebuilt: hst,
+                onTransportRebuilt: handleBridgeTransportRebuilt,
               });
             if (vo.current === Xu) {
               if (((vo.current = void 0), !ys)) zo(Sr(Xu.sid));
@@ -80380,8 +80380,8 @@ function _Lt(w, I, ne, me, pe, be, xe, Ae, Oe, He, Ke, Je) {
               (reportBridgeModel(Il),
               reportSessionEffort(Il, qi.getState()),
               setInboundAvailabilityPublisher(reportBridgeCrossSessionInbound),
-              e6e(qi.getState()),
-              q_e(ys),
+              emitBackgroundTasksChanged(qi.getState()),
+              forwardCurrentRateLimitsToBridge(ys),
               detectCurrentRepositoryWithHost(),
               (jo.current = 0),
               !wi)
@@ -80791,7 +80791,7 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
     let Ke = parseInboundUserEvent(I);
     if (!Ke) return;
     let { uuid: Je } = Ke;
-    Mot(Ke.clientPlatform, xe);
+    recordRemoteControlSurfaceSeen(Ke.clientPlatform, xe);
     let Qe = classifyInboundOrigin(
       Ke.content,
       Ke.clientPlatform,
@@ -80840,7 +80840,7 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
         origin: dropOriginBodyIfValueChanged(Qe, eo, Ke.content),
         isMeta: !0,
         skipAttachments: !0,
-        ...(I6e(w) && { priority: "later" }),
+        ...(hasPendingVerifiedSlackTurn(w) && { priority: "later" }),
       };
     else {
       let go = getInboundOriginOverride(Qe, Ke.clientPlatform, Ke.inboundOrigin);
@@ -80855,7 +80855,7 @@ async function sUo(w, I, ne, me, pe, be, xe, Ae) {
               priority: "later",
             }),
           ...(isHumanRelayTurn(Ke.clientPlatform, Ke.inboundOrigin) && {
-            priority: x6e(void 0, eo, H6e(w)),
+            priority: resolveCommandPriority(void 0, eo, hasPendingDeferredSlackTurn(w)),
             verifiedSlackHumanTurn: !0,
           }),
         }));
@@ -81243,7 +81243,7 @@ class Kce {
       return;
     }
     if (isBgSession()) {
-      HB();
+      detachToBackgroundDaemon();
       return;
     }
     let I = getCurrentWorktreeSession() !== null,
@@ -81897,11 +81897,11 @@ function OUo(LKe) {
   };
 }
 function Zce(w, I) {
-  return Uk.includes(w) ? b({ command: I.command }) : b(I);
+  return SHELL_TOOL_NAMES.includes(w) ? b({ command: I.command }) : b(I);
 }
 function FLt() {
   let DLt = _(11),
-    { recordDenial: PLt, getDenials: MLt, removeDenial: ALt } = J8(),
+    { recordDenial: PLt, getDenials: MLt, removeDenial: ALt } = useAutoModeDenials(),
     { storageV5: ILt } = useStorageV5Context(),
     { addNotification: EKe } = useNotificationQueue(),
     ELt = useSetAppState(),
@@ -82103,7 +82103,7 @@ function FLt() {
   else vUo = DLt[8];
   let OLt = vUo,
     NUo;
-  if (DLt[9] !== OLt) ((NUo = Qqe(OLt)), (DLt[9] = OLt), (DLt[10] = NUo));
+  if (DLt[9] !== OLt) ((NUo = registerHeldReplyCanUseTool(OLt)), (DLt[9] = OLt), (DLt[10] = NUo));
   else NUo = DLt[10];
   return NUo;
 }
@@ -82291,7 +82291,7 @@ function zLt(w) {
 function $Ke({ queue: w, executeInput: I }) {
   if (w.getCommandQueue().find(isMainThreadCommand)?.screeningPending === !0)
     return { processed: !1 };
-  let ne = rQt(w, isMainThreadCommand);
+  let ne = peekCommandPreferringSlackTurn(w, isMainThreadCommand);
   if (!ne) return { processed: !1 };
   if (zLt(ne) || ne.mode === "bash") {
     let Oe = [w.dequeue((He) => He === ne)];
@@ -82332,7 +82332,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
     me = At(ne.subscribe, ne.getSnapshot),
     pe = useCommandQueue(),
     be = ep(),
-    xe = De(Uye),
+    xe = De(DialogStoreContext),
     Ae = re(
       () =>
         xe !== null &&
@@ -82365,7 +82365,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
             it.pending === 0 &&
             !Ae() &&
             !glt() &&
-            !(xe !== null && R0e(xe.getState(), localJsxDialog.kind)) &&
+            !(xe !== null && isDialogKindOpen(xe.getState(), localJsxDialog.kind)) &&
             pe.getCommandQueue().length > 0
           )
             $Ke({ queue: pe, executeInput: w.executeQueuedInput });
@@ -82381,7 +82381,7 @@ function WKe({ turn: w, hasActiveLocalJsxUI: I }) {
 }
 F();
 function VKe(w) {
-  let I = Ien(),
+  let I = useMailbox(),
     ne = useStoreSelector(w, (xe) => xe.isLoading),
     me = V(() => I.subscribe.bind(I), [I]),
     pe = re(() => I.revision, [I]),
@@ -82407,7 +82407,7 @@ class iue {
     if (((this.#e = ne), this.#t(ne, I), ne !== I)) this.#o.emit();
   };
   apply = (w) => {
-    this.replace((I) => Tst(I, w));
+    this.replace((I) => applyMessageOp(I, w));
   };
 }
 import { randomUUID as Yjt } from "crypto";
@@ -82608,7 +82608,7 @@ function cue(w, I) {
   }
 }
 var cHo = 1000,
-  uHo = hHe([]);
+  uHo = getTranscriptWatermark([]);
 function dHo(w) {
   let I = typeof w === "string" ? w : INVALID_TOOL_NAME_PLACEHOLDER,
     ne = I.startsWith("mcp__");
@@ -82633,7 +82633,7 @@ class r2e {
   #l = 0;
   #a = !1;
   #s;
-  #m = new G_e();
+  #m = new SandboxClassifierVerdictCache();
   #c = new Set();
   #u = new Map();
   #p = 0;
@@ -83155,7 +83155,7 @@ class r2e {
               applyPermissionUpdate: (no) =>
                 be((jo) => ({
                   ...jo,
-                  toolPermissionContext: Oc(jo.toolPermissionContext, no),
+                  toolPermissionContext: applyPermissionUpdate(jo.toolPermissionContext, no),
                 })),
             },
           )
@@ -83490,7 +83490,7 @@ function uue(eri) {
     nri[4] !== u2e
   )
     ((fHo = () => {
-      if (Pt()) {
+      if (isRemoteActive()) {
         return;
       }
       if (isBgSession() && !s6) {
@@ -84123,7 +84123,7 @@ var QHo = ["Goodbye!", "See ya!", "Bye!", "Catch you later!"];
 function jOt() {
   return pickRandom(QHo) ?? "Goodbye!";
 }
-function h6e(hii) {
+function ExitSessionDialog(hii) {
   let DD = _(39),
     {
       showWorktree: LOt,
@@ -84209,7 +84209,7 @@ function h6e(hii) {
         break bb0;
       }
       if (UOt && I2e) {
-        Nue = e(U0t, {
+        Nue = e(BackgroundAndExit, {
           messages: I2e,
           isMidTurn: bii ?? !1,
           responseStreaming: b6(),
@@ -84218,7 +84218,7 @@ function h6e(hii) {
       }
       if (f6.length > 0) {
         let E2e;
-        if (I2e !== void 0 && WJt(I2e)) {
+        if (I2e !== void 0 && canBackgroundSession(I2e)) {
           let BP;
           if (DD[31] === MEMO_CACHE_SENTINEL) ((BP = () => yii(!0)), (DD[31] = BP));
           else BP = DD[31];
@@ -84284,7 +84284,7 @@ function Oue(xii) {
     Rii[6] !== cw.messages ||
     Rii[7] !== cw.showWorktree
   )
-    ((JHo = e(h6e, {
+    ((JHo = e(ExitSessionDialog, {
       showWorktree: cw.showWorktree,
       backgroundItems: cw.backgroundItems,
       messages: cw.messages,
@@ -84437,7 +84437,7 @@ function O2e(w, I, ne, me) {
     vo = re(
       (no) => {
         let jo = Oe.get().clients.find((Cn) => Cn.name === no);
-        for (let Cn of on.current) if (Cn.name === no && fke(jo, Cn)) jo = Cn;
+        for (let Cn of on.current) if (Cn.name === no && shouldRefetchMcpServer(jo, Cn)) jo = Cn;
         return jo;
       },
       [Oe],
@@ -85015,7 +85015,7 @@ function O2e(w, I, ne, me) {
             un = ir();
           try {
             let lr = Oe.get().clients.find((Sn) => Sn.name === no);
-            if (lr === void 0 || !ts(lr) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
+            if (lr === void 0 || !isConnectedMcpServer(lr) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
               Cn();
               return;
             }
@@ -85045,7 +85045,7 @@ function O2e(w, I, ne, me) {
               return;
             }
             let Gn = Oe.get().clients.find((Sn) => Sn.name === no);
-            if (Gn === void 0 || !ts(Gn) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
+            if (Gn === void 0 || !isConnectedMcpServer(Gn) || isMcpServerDisabled(no) || isMcpDialBlockedByPolicy(no, jo)) {
               Cn();
               return;
             }
@@ -85301,7 +85301,7 @@ function O2e(w, I, ne, me) {
             let Fn = to.current.get(In.name);
             if (Fn) (Fn(), to.current.delete(In.name));
             if (
-              (Ho.current.delete(In.name), ro.current.delete(In.name), !ts(In))
+              (Ho.current.delete(In.name), ro.current.delete(In.name), !isConnectedMcpServer(In))
             )
               continue;
             if (In.type === "connected") asMcpSdkClient(In.client).onclose = void 0;
@@ -85334,7 +85334,7 @@ function O2e(w, I, ne, me) {
           Go = Io && So && (Qc().mcpIdentityChangedSinceLastCheck() || lr);
         if (Go) {
           let Gi = Qc(),
-            gn = Oe.get().clients.filter(ts),
+            gn = Oe.get().clients.filter(isConnectedMcpServer),
             On = new Set(),
             Jr = new Set(),
             ai = Oe.get().clients;
@@ -85395,7 +85395,7 @@ function O2e(w, I, ne, me) {
         if (no) return;
         (He.addErrors(Gn), He.addWarnings(Sn));
         let Mn = { ...Qo, ...filterDynamicMcpServersByPolicy(w).configs },
-          Or = tu(Mn, (Gi, gn) => isMcpServerDisabled(gn));
+          Or = omitBy(Mn, (Gi, gn) => isMcpServerDisabled(gn));
         if (Object.keys(Or).length > 0 || (So && Object.keys(Mn).length > 0))
           Qc().seedMcpIdentityCheck();
         if (Object.keys(Or).length > 0)
@@ -85439,7 +85439,7 @@ function O2e(w, I, ne, me) {
               let Oi = to.current.get(Fr.name);
               if (Oi) (Oi(), to.current.delete(Fr.name));
               if (
-                (Ho.current.delete(Fr.name), ro.current.delete(Fr.name), ts(Fr))
+                (Ho.current.delete(Fr.name), ro.current.delete(Fr.name), isConnectedMcpServer(Fr))
               ) {
                 if (Fr.type === "connected") asMcpSdkClient(Fr.client).onclose = void 0;
                 Qc()
@@ -85465,7 +85465,7 @@ function O2e(w, I, ne, me) {
               if (!Oi) continue;
               let rs = to.current.get(Fr);
               if (rs) (rs(), to.current.delete(Fr));
-              if (ts(Oi)) {
+              if (isConnectedMcpServer(Oi)) {
                 if (Oi.type === "connected") asMcpSdkClient(Oi.client).onclose = void 0;
                 Qc()
                   .clearServerCache(Fr, Oi.config)
@@ -85493,7 +85493,7 @@ function O2e(w, I, ne, me) {
             (Oe.setSuppressedClaudeAiConnectors(ai), Object.keys(Br).length > 0)
           ) {
             Oe.addPendingServers(Br);
-            let Fr = tu(Br, (Oi, rs) => isMcpServerDisabled(rs));
+            let Fr = omitBy(Br, (Oi, rs) => isMcpServerDisabled(rs));
             if (
               Object.keys(Fr).length > 0 ||
               (So && Object.keys(Br).length > 0)
@@ -85720,14 +85720,14 @@ function ljo() {
   clearMcpControlHandlers();
 }
 var Iq = Qt(null);
-function Bae() {
+function useMcpReconnect() {
   let ojo = De(Iq);
   if (!ojo) {
     throw Error("useMcpReconnect must be used within MCPConnectionManager");
   }
   return ojo.reconnectMcpServer;
 }
-function P8() {
+function useMcpToggleEnabled() {
   let njo = De(Iq);
   if (!njo) {
     throw Error("useMcpToggleEnabled must be used within MCPConnectionManager");
@@ -85895,7 +85895,7 @@ function j2e(w) {
   };
 }
 F();
-function jm(QOt) {
+function SelectableRow(QOt) {
   let YOt = _(10),
     $2e,
     W2e,
@@ -86044,7 +86044,7 @@ function J2e(Dai) {
   if (nFt[2] !== V2e || nFt[3] !== oFt)
     ((G2e = v6.map((bjo, rFt) =>
       e(
-        jm,
+        SelectableRow,
         {
           active: rFt === V2e,
           children: e(X2e, {
@@ -86193,7 +86193,7 @@ function Hze(fli) {
     nze = C(new Set()),
     [hFt, yFt] = d(0),
     [bFt, rze] = d("row"),
-    Dq = Z8(),
+    Dq = useHasBareDialog(),
     ND = useGlobalExitKeybinding();
   useActiveOverlay("session-memory-viewer");
   let uw = j2e(gli);
@@ -86237,7 +86237,7 @@ function Hze(fli) {
         (gFt.current = new Set([...gFt.current, kFt.path])));
     },
     _6 = function _6(Fq, Bq, Sli) {
-      let kli = jFt(Fq.path) === jl;
+      let kli = jFt(Fq.path) === MEMORY_INDEX_FILE_NAME;
       let Ejo = Bq === "good" && zue.current.has(Fq.path);
       let Djo = Bq === "bad" && nze.current.has(Fq.path);
       if (Bq === "good" && !Ejo)
@@ -86575,7 +86575,7 @@ function Lze(Pli) {
       windowEnd: Ili,
       moreAbove: Kjo,
       moreBelow: zjo,
-    } = KW(Vjo, cf.length, $Ft);
+    } = computeListWindow(Vjo, cf.length, $Ft);
     let Eli = cf.slice(Gjo, Ili);
     let Cze = lze ? CFt : cf.length;
     mze = o;
@@ -86882,7 +86882,7 @@ function qFt(w) {
 function VFt(w) {
   let I = stripAnsi(w);
   try {
-    let ne = PC(I).body.trim();
+    let ne = parseMemoryDocument(I).body.trim();
     return ne === "" ? I.trim() : ne;
   } catch {
     return I.trim();
@@ -86985,7 +86985,7 @@ function Wze() {
 }
 F();
 function qze(w) {
-  let I = VB(),
+  let I = useSessionHooksRegistry(),
     ne = useAppStateSession();
   E(() => {
     let me = new Set([sessionHooksRegistryStore.of(w), sessionHooksRegistryStore.of(ne)]),
@@ -87536,7 +87536,7 @@ var gBt = {
       return [w.addNotification, w.removeNotification, I, ne, me];
     },
     setup: () => (w) => {
-      if (Pt()) return;
+      if (isRemoteActive()) return;
       let { ideStatus: I, ideName: ne, showIDEInstallError: me } = ede(w);
       if (me || I !== "disconnected" || !ne) {
         w.removeNotification("ide-status-disconnected");
@@ -87559,7 +87559,7 @@ var gBt = {
       ede(w).showIDEInstallError,
     ],
     setup: () => (w) => {
-      if (Pt()) return;
+      if (isRemoteActive()) return;
       if (!ede(w).showIDEInstallError) {
         w.removeNotification("ide-status-install-error");
         return;
@@ -87629,7 +87629,7 @@ function h$o(w) {
       if (me.type !== "tool_use" || !("name" in me)) continue;
       let pe = me.name;
       if (pe.startsWith("mcp__")) return !1;
-      if (Uk.includes(pe)) {
+      if (SHELL_TOOL_NAMES.includes(pe)) {
         let xe = me.input?.command || "";
         if (f$o.some((Ae) => Ae.test(xe))) return !1;
       }
@@ -87699,7 +87699,7 @@ var k$o = 5000,
                   ...Ke.plugins,
                   errors: [
                     ...Ke.plugins.errors,
-                    { type: "generic-error", source: Ae, error: Vn(Oe, 500) },
+                    { type: "generic-error", source: Ae, error: formatDisplayText(Oe, 500) },
                   ],
                 },
               };
@@ -87715,7 +87715,7 @@ var k$o = 5000,
           });
         }
         function be() {
-          if (Pt()) return !0;
+          if (isRemoteActive()) return !0;
           if (Cxe()) return !0;
           let Ae = getLspServerManagerStatus();
           if (Ae.status === "failed")
@@ -87732,7 +87732,7 @@ var k$o = 5000,
           }
           return !0;
         }
-        if (!Pt() && !be()) return;
+        if (!isRemoteActive() && !be()) return;
         let xe = e7(
           ne,
           () => {
@@ -88043,7 +88043,7 @@ var TBt = {
       I = [],
       ne = new WeakSet();
     return ({ store: me, storageV5: pe, credentials: be }, xe) => {
-      if (Pt()) return;
+      if (isRemoteActive()) return;
       let Ae = vFn((Ke, Je, Qe, it) => {
         n(
           `Plugin autoupdate notification: ${Ke.length} plugin(s) updated (${Qe.length} re-resolved), ${Je.length} skipped (pinned, deferred or refused)`,
@@ -88118,7 +88118,7 @@ var TBt = {
         }
       }
       function He(Ke, Je) {
-        if (Pt()) return;
+        if (isRemoteActive()) return;
         if (Ke.length === 0) return;
         let Qe = Ke.map((at) => {
             let Zt = at.indexOf("@");
@@ -88367,9 +88367,9 @@ var OBt = {
         if (w) ((w = !1), me(NBt));
         return;
       }
-      if (!ne || w || Pt()) return;
-      let xe = o1n();
-      if (xe === null || !c1n(xe) || !s1n(xe)) return;
+      if (!ne || w || isRemoteActive()) return;
+      let xe = getLongTurnNudgeConfig();
+      if (xe === null || !shouldShowLongTurnNudge(xe) || !isWithinNudgeHours(xe)) return;
       let Ae = pe.setTimeout(() => {
         let {
           addNotification: Oe,
@@ -88380,7 +88380,7 @@ var OBt = {
         if (w || !He) return;
         if (((w = !0), xe.probability < 1 && Math.random() >= xe.probability))
           return;
-        (u1n(xe, Je),
+        (recordLongTurnNudgeShown(xe, Je),
           Oe({
             key: NBt,
             kind: "upsell",
@@ -88428,14 +88428,14 @@ var Qze = "rc-permission-nudge",
         storageV5: Qe,
       }) {
         if (Je < ne) ne = 0;
-        if (w || !Oe || !He || !P$o.has(Ke) || Pt()) return;
+        if (w || !Oe || !He || !P$o.has(Ke) || isRemoteActive()) return;
         if (!I) {
-          let it = i1n();
+          let it = getPermissionNudgeConfig();
           if (
             it.probability <= 0 ||
             Je < it.afterPromptCount ||
             Je <= ne ||
-            !d1n(it.maxImpressions)
+            !shouldShowPermissionNudge(it.maxImpressions)
           )
             return;
           if (((ne = Je), Math.random() >= it.probability)) return;
@@ -88443,7 +88443,7 @@ var Qze = "rc-permission-nudge",
         }
         if (Ae.isLoading) return;
         ((w = !0),
-          p1n(Qe),
+          recordPermissionNudgeShown(Qe),
           xe({
             key: Qze,
             kind: "upsell",
@@ -88504,19 +88504,19 @@ var BBt = "rc-idle-upsell",
         turnAtRender: { isLoading: be, lastQueryCompletionTime: xe },
         storageV5: Ae,
       }) => {
-        if (Pt() || xe === 0 || be || w) return;
-        let Oe = !HBt(pe) && bJt() ? "rc" : wJt() ? "push" : null;
+        if (isRemoteActive() || xe === 0 || be || w) return;
+        let Oe = !HBt(pe) && shouldShowRemoteControlUpsell() ? "rc" : shouldShowPushNotificationsUpsell() ? "push" : null;
         if (Oe === null) return;
         let He = Date.now() - xe,
-          Ke = n1n * 60000 - He,
+          Ke = UPSELL_IDLE_DELAY_MINUTES * 60000 - He,
           Je = me.setTimeout(
             () => {
               if (w) return;
               let Qe = Math.round((Date.now() - xe) / 60000);
               if (Oe === "rc") {
-                if (HBt(pe) || !bJt()) return;
+                if (HBt(pe) || !shouldShowRemoteControlUpsell()) return;
                 ((w = !0),
-                  a1n(Ae),
+                  recordRemoteControlUpsellShown(Ae),
                   I({
                     key: BBt,
                     kind: "upsell",
@@ -88532,9 +88532,9 @@ var BBt = "rc-idle-upsell",
                   }),
                   logEvent("tengu_rc_upsell_notification_shown", { idleMinutes: Qe }));
               } else {
-                if (!wJt()) return;
+                if (!shouldShowPushNotificationsUpsell()) return;
                 ((w = !0),
-                  l1n(Ae),
+                  recordPushNotificationsUpsellShown(Ae),
                   I({
                     key: UBt,
                     kind: "upsell",
@@ -88731,12 +88731,12 @@ var zBt = {
 };
 function D$o({ addNotification: w, removeNotification: I, storageV5: ne }) {}
 function YBt() {
-  return M_e(getSettingsWithMcpErrors().errors).invalidEntries;
+  return partitionSettingsErrors(getSettingsWithMcpErrors().errors).invalidEntries;
 }
 var XBt = { id: "settings-errors", deps: (w) => [w.store], setup: () => N$o };
 function N$o({ store: w }) {
   function I(ne) {
-    if (Pt()) return;
+    if (isRemoteActive()) return;
     (Zm("settings", ne.length),
       w.setState((me) => {
         if (me.setupIssues.settingsErrorCount === ne.length) return me;
@@ -88816,7 +88816,7 @@ var sUt = {
     let w = new Set(),
       I = new Set();
     return ({ addNotification: ne, store: me }) => {
-      if (jn() !== null) return;
+      if (getRemoteTransport() !== null) return;
       for (let [pe, be] of Object.entries(me.getState().tasks)) {
         if (!isInProcessTeammateTask(be)) continue;
         if (be.status === "running" && !w.has(pe)) (w.add(pe), ne(rUt(1)));
@@ -89164,7 +89164,7 @@ function yUt(w) {
       continue;
     }
     if (me.type !== "assistant") continue;
-    for (let pe of me.message.content) if (X7e(pe, I) !== null) return !0;
+    for (let pe of me.message.content) if (getStructuredOutputText(pe, I) !== null) return !0;
   }
   return !1;
 }
@@ -89382,11 +89382,11 @@ class Zze {
       if (!isBgSession()) return;
       let w = a.CLAUDE_JOB_DIR;
       if (!w) return;
-      let I = q$o(w, vWe),
+      let I = q$o(w, RECAP_TRIGGER_FILE),
         ne = () => this.#o,
         me = (He) => this.#v(He),
         { clock: pe, storageV5: be } = this.#e,
-        xe = isHoverRestEnabled() && be !== void 0 ? jobKeyFor(w, [vWe]) : void 0,
+        xe = isHoverRestEnabled() && be !== void 0 ? jobKeyFor(w, [RECAP_TRIGGER_FILE]) : void 0,
         Ae = be !== void 0 && xe !== void 0 ? { backend: be, key: xe } : void 0,
         Oe = pe.setTimeout(function He() {
           try {
@@ -89583,7 +89583,7 @@ async function oQe(w, I, ne) {
     }),
     Oe.map(({ info: He, pluginId: Ke }) => ({
       pluginId: Ke,
-      pluginName: sd(He.entry),
+      pluginName: getPluginDisplayName(He.entry),
       marketplaceName: He.marketplaceName,
       description: He.entry.description,
       isOfficial: He.isOfficial,
@@ -89619,7 +89619,7 @@ function nQe() {
   let w = C(!1),
     I = C(new Map()),
     ne = re((me, pe) => {
-      if (Pt() || isUnattendedInteractiveSession()) return;
+      if (isRemoteActive() || isUnattendedInteractiveSession()) return;
       if (w.current) {
         I.current.set(me, pe);
         return;
@@ -89799,7 +89799,7 @@ function DUt({ pluginId: w, pluginName: I }, ne, me, pe) {
               He = resolveMarketplaceEntryPath(Oe);
             if (He.entryPath === void 0)
               throw new R(
-                `Plugin ${Vn(w, 120)}: ${He.reason}`,
+                `Plugin ${formatDisplayText(w, 120)}: ${He.reason}`,
                 "lsp plugin recommendation marketplace path refused",
               );
             Ae = He.entryPath;
@@ -89893,7 +89893,7 @@ async function fQe(w, I) {
     );
   return {
     pluginId: ne,
-    pluginName: sd(be.entry),
+    pluginName: getPluginDisplayName(be.entry),
     marketplaceName: pe ?? "",
     pluginDescription: be.entry.description,
     sourceCommand: w.sourceCommand,
@@ -90241,8 +90241,8 @@ function _1o(w) {
   return (
     E(() => {
       if (!w) return;
-      let me = jn();
-      if (!me || !eE("controlChannel")) {
+      let me = getRemoteTransport();
+      if (!me || !hasRemoteCapability("controlChannel")) {
         (logFeatureSad("remote_workspace_diff_fetch", "no_channel"),
           ne({
             data: bde(!1),
@@ -90291,7 +90291,7 @@ function _1o(w) {
     I
   );
 }
-function jJt(w) {
+function getWorkspaceDiffData(w) {
   let I = Sde(0, !w),
     ne = _1o(w);
   return w ? ne : { data: I, notice: null };
@@ -90330,7 +90330,7 @@ function wQe(w, I, ne, me) {
 }
 F();
 import { resolve as JUt } from "path";
-function jx(Syi) {
+function DimParenthetical(Syi) {
   let kyi = _(2),
     { children: GUt, when: T1o } = Syi;
   if (!(T1o === void 0 ? !0 : T1o)) {
@@ -90345,7 +90345,7 @@ function jx(Syi) {
   return x1o;
 }
 var XUt = 1e6;
-function $ae(Oyi) {
+function DiffFileView(Oyi) {
   let xu = _(73),
     {
       filePath: Ld,
@@ -90370,7 +90370,7 @@ function $ae(Oyi) {
     xu[5] !== KUt
   ) {
     bb0: {
-      if (!Ld || TQe || _Qe || RQe || PQe || Pt()) {
+      if (!Ld || TQe || _Qe || RQe || PQe || isRemoteActive()) {
         let Nu;
         if (xu[7] === MEMO_CACHE_SENTINEL)
           ((Nu = { firstLine: null, fileContent: void 0 }), (xu[7] = Nu));
@@ -90442,7 +90442,7 @@ function $ae(Oyi) {
       ((Nu = e(t, { bold: !0, children: Ld })), (xu[17] = Ld), (xu[18] = Nu));
     else Nu = xu[18];
     let bp;
-    if (xu[19] === MEMO_CACHE_SENTINEL) ((bp = e(jx, { children: "untracked" })), (xu[19] = bp));
+    if (xu[19] === MEMO_CACHE_SENTINEL) ((bp = e(DimParenthetical, { children: "untracked" })), (xu[19] = bp));
     else bp = xu[19];
     let uh;
     if (xu[20] !== Nu)
@@ -90464,7 +90464,7 @@ function $ae(Oyi) {
     let UD;
     if (xu[25] !== Ld)
       ((UD =
-        !Pt() &&
+        !isRemoteActive() &&
         r(t, {
           dimColor: !0,
           italic: !0,
@@ -90547,7 +90547,7 @@ function $ae(Oyi) {
         children: e(t, {
           dimColor: !0,
           italic: !0,
-          children: Pt()
+          children: isRemoteActive()
             ? "Diff too large to display."
             : "Large file - diff exceeds 1 MB limit",
         }),
@@ -90574,7 +90574,7 @@ function $ae(Oyi) {
   const bp = xQe ?? !1;
   let uh;
   if (xu[51] !== bp)
-    ((uh = e(jx, { when: bp, children: "truncated" })),
+    ((uh = e(DimParenthetical, { when: bp, children: "truncated" })),
       (xu[51] = bp),
       (xu[52] = uh));
   else uh = xu[52];
@@ -91424,7 +91424,7 @@ function RYe(USi) {
                       },
                       children: [
                         e(Divider, { width: bk }),
-                        e($ae, {
+                        e(DiffFileView, {
                           filePath: KD.path,
                           hunks: $6.get(KD.path) ?? [],
                           isBinary: KD.isBinary,
@@ -91642,7 +91642,7 @@ function PYe(hki) {
                     flexDirection: "column",
                     children: [
                       e(Divider, { width: Y6 }),
-                      e($ae, {
+                      e(DiffFileView, {
                         filePath: sV.path,
                         hunks: RHt.get(sV.path) ?? [],
                         isBinary: sV.isBinary,
@@ -91895,7 +91895,7 @@ function DGo(_error, dGo) {
 }
 var Jjt = import.meta.require("../../02-功能模块/Teammates团队/useScheduledTasks.jbtbk679.js").useScheduledTasks;
 var Xjt = () => null;
-function W0t(DYe) {
+function REPLScreen(DYe) {
   let iqo = _(5),
     bCi = useCommandQueue();
   const KHt = DYe.messageQueue ?? bCi;
@@ -91981,9 +91981,9 @@ function w5e(SCi) {
     u4 = usePartialStateUpdater(),
     $a = useAppState(),
     ujt = useActivePlugins(),
-    p4 = VB();
+    p4 = useSessionHooksRegistry();
   qze(mc);
-  let Vb = Cc(),
+  let Vb = useDialogStore(),
     n_ = useSpinnerStore();
   Wze();
   let HYe;
@@ -92211,7 +92211,7 @@ function w5e(SCi) {
   let Aqo;
   if (ls[56] !== qYe)
     ((Aqo = () =>
-      C6e.createTurnEventTail((NCi) => qYe({ type: "append", messages: NCi }))),
+      turnEventTailModule.createTurnEventTail((NCi) => qYe({ type: "append", messages: NCi }))),
       (ls[56] = qYe),
       (ls[57] = Aqo));
   else Aqo = ls[57];
@@ -92226,7 +92226,7 @@ function w5e(SCi) {
         applyPermissionUpdate: (LCi) =>
           Tc((Eqo) => ({
             ...Eqo,
-            toolPermissionContext: Oc(Eqo.toolPermissionContext, LCi),
+            toolPermissionContext: applyPermissionUpdate(Eqo.toolPermissionContext, LCi),
           })),
       })),
       (ls[58] = Kb),
@@ -92506,7 +92506,7 @@ function w5e(SCi) {
   let Yqo = nQe();
   (hde(Cd, Yqo), yde(Cd, Yqo));
   let JD = Al.localJsx,
-    $h = qb(localJsxDialog.kind),
+    $h = useIsDialogKindOpen(localJsxDialog.kind),
     GYe = oce(),
     Jqo;
   if (ls[137] !== Al || ls[138] !== mc || ls[139] !== Wu || ls[140] !== $a)
@@ -92525,9 +92525,9 @@ function w5e(SCi) {
       (ls[141] = Jqo));
   else Jqo = ls[141];
   let [vk] = d(Jqo),
-    KYe = Bye(),
+    KYe = useHasOpenDialogs(),
     zYe = M2(),
-    $Ci = sF(_Go),
+    $Ci = useDialogStoreSelector(_Go),
     Xqo,
     Zqo;
   if (ls[142] !== Cx.isRunning)
@@ -92540,7 +92540,7 @@ function w5e(SCi) {
   let WCi = At(Cx.subscribe, Xqo, Zqo),
     qCi = $h && !WCi,
     YYe = ece(),
-    VCi = hat(),
+    VCi = useTopBareDialogKind(),
     JYe = _x === ULTRAPLAN_CHOICE_DIALOG.kind,
     eVo;
   if (ls[145] !== _x) ((eVo = isMcpElicitationDialogKind(_x)), (ls[145] = _x), (ls[146] = eVo));
@@ -92651,7 +92651,7 @@ function w5e(SCi) {
   let lVo;
   if (ls[175] !== YD || ls[176] !== Ji.abortController?.signal)
     ((lVo = () =>
-      v6e.createTurnStep((KCi) => {
+      turnStepModule.createTurnStep((KCi) => {
         let zCi = HookEvents.turnEvents({ signal: Ji.abortController?.signal });
         YD.enqueue("turn.step", () => zCi.turn.step(KCi).then(xGo));
       })),
@@ -92824,7 +92824,7 @@ function w5e(SCi) {
     } = EB(hVo),
     Mjt = pye(),
     XYe = useStoreSelector(Yc, RGo),
-    e5e = qb(ULTRAPLAN_CHOICE_DIALOG.kind),
+    e5e = useIsDialogKindOpen(ULTRAPLAN_CHOICE_DIALOG.kind),
     yVo,
     bVo;
   if (ls[219] !== XYe || ls[220] !== Yc || ls[221] !== e5e)
@@ -92954,7 +92954,7 @@ function w5e(SCi) {
   let a_i = useStoreSelector(Yc, MGo),
     Djt = nce(),
     r5e = rce(),
-    l_i = sF(A3),
+    l_i = useDialogStoreSelector(A3),
     i5e = jCi && l_i,
     AVo,
     IVo;
@@ -93154,7 +93154,7 @@ function w5e(SCi) {
       (ls[312] = Qs),
       (ls[313] = WVo));
   else WVo = ls[313];
-  (E($Vo, WVo), PKe(xOt()), CKe(Bde, Bde.length === Iy?.length, wx));
+  (E($Vo, WVo), PKe(useFpsMetrics()), CKe(Bde, Bde.length === Iy?.length, wx));
   const Bjt = vCi ? FYe : void 0;
   let qVo;
   if (
@@ -93778,7 +93778,7 @@ function w5e(SCi) {
     else e0 = ls[484];
     let fB;
     if (ls[485] !== D4 || ls[486] !== e0)
-      ((fB = r(ble, { children: [D4, e0] })),
+      ((fB = r(KeybindingSetupIfNeeded, { children: [D4, e0] })),
         (ls[485] = D4),
         (ls[486] = e0),
         (ls[487] = fB));
@@ -94114,7 +94114,7 @@ function w5e(SCi) {
   else k5e = ls[583];
   let cGo;
   if (ls[584] !== D4 || ls[585] !== dB || ls[586] !== mB || ls[587] !== k5e)
-    ((cGo = r(ble, { children: [dB, D4, mB, k5e] })),
+    ((cGo = r(KeybindingSetupIfNeeded, { children: [dB, D4, mB, k5e] })),
       (ls[584] = D4),
       (ls[585] = dB),
       (ls[586] = mB),
@@ -94137,77 +94137,77 @@ function w5e(SCi) {
   return uGo;
 }
 export {
-  Xot,
-  M0t,
-  N0t,
-  KW,
-  BJt,
-  u6e,
-  Yot,
-  d6e,
-  p6e,
-  f6e,
-  j_e,
-  HB,
-  m6e,
-  z1n,
-  V1n,
-  Vi,
-  RZ,
-  jm,
-  jJt,
-  IB,
-  jx,
-  $ae,
-  cHe,
-  K1n,
-  g6e,
-  Jot,
-  Vmr,
-  F0t,
-  uHe,
-  Cdr,
-  X1n,
-  vdr,
-  Rdr,
-  $0t,
-  WJt,
-  U0t,
-  Uae,
-  h6e,
-  Sf,
-  Qot,
+  getDirectoryCompletions,
+  fitEditedText,
+  collapseToSingleLine,
+  computeListWindow,
+  useListCursor,
+  removeFrameUrl,
+  FlaggedItemsRemoveDialog,
+  AutoModeSetupReviewDialog,
+  AUTO_MODE_SETUP_REVIEW_DIALOG,
+  AUTO_MODE_FLAGGED_ALLOW_DIALOG,
+  FleetAgentNudge,
+  detachToBackgroundDaemon,
+  BorderedTextPreview,
+  hasPendingSurveyFeedback,
+  takePendingSurveyFeedback,
+  Table,
+  ModelPicker,
+  SelectableRow,
+  getWorkspaceDiffData,
+  scrollByLines,
+  DimParenthetical,
+  DiffFileView,
+  truncateLinesWithOverflow,
+  isEffortCostMultiplierEnabled,
+  getEffortCostMultiplier,
+  formatCostMultiplier,
+  runBackgroundCommand,
+  COORDINATOR_FORK_REFUSAL,
+  spawnBackgroundFork,
+  snapshotParentTranscript,
+  removeSnapshotJobDir,
+  queueRescueRow,
+  writeAdoptHandoff,
+  forkSessionToBackground,
+  canBackgroundSession,
+  BackgroundAndExit,
+  deriveBackgroundSeed,
+  ExitSessionDialog,
+  StatusLine,
+  hasPolicySettings,
   AUTO_DEFAULT_NOTICE_TITLE,
   AUTO_DEFAULT_NOTICE_BODY,
   AUTO_DEFAULT_NOTICE_URL,
   shouldShowAutoDefaultNotice,
   shouldShowAutoModeEntryWarning,
-  Bz,
-  jz,
-  J1n,
-  est,
-  tst,
-  Q1,
-  nst,
-  Kmr,
-  pHe,
-  Bae,
-  P8,
-  fHe,
-  _6e,
-  B0t,
-  Q1n,
-  zJt,
-  y6e,
-  j0t,
-  S6e,
-  rst,
-  ost,
-  kdr,
-  Z1n,
-  xdr,
-  Xmr,
-  b6e,
-  sst,
-  W0t,
+  WelcomeChrome,
+  ConversationMessageList,
+  addEnabledDefaultTools,
+  renderTranscriptToText,
+  UsageCreditsAdminRequestDialog,
+  CancellableStatusMessage,
+  FastModePicker,
+  runFastModeCommand,
+  PromptFooterHints,
+  useMcpReconnect,
+  useMcpToggleEnabled,
+  ExtraUsageDialog,
+  planArtifactSlot,
+  ModePushTimeoutError,
+  registerModePushWaiter,
+  shouldShowRemoteControlDialog,
+  BackgroundTasksDialog,
+  clearGoalOnResumeSwap,
+  SearchablePickerDialog,
+  relaunchInto,
+  relaunchFailedMessage,
+  cannotSwitchRendererMessage,
+  savedWithoutRestartMessage,
+  savedWithoutRestartForTasksMessage,
+  runTuiCommand,
+  resolveBundleSeedViability,
+  getBundleSeedNotice,
+  REPLScreen,
 };

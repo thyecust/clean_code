@@ -14,7 +14,7 @@ import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zq
 import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { countLineBreaks, formatPastedTextPlaceholder, expandPastedContents, getIdeDisplayName } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { Td } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { stripMemoryTags } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { spawn, spawnSync as S } from "child_process";
 import { basename } from "path";
 function O(t) {
@@ -193,7 +193,7 @@ var E =
     "# \u2500\u2500\u2500 Write your reply below this line \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500",
   R = 50;
 function N(t) {
-  let e = Td(t).split(`
+  let e = stripMemoryTags(t).split(`
 `);
   if (e.length > R)
     ((e = e.slice(-R)), e.unshift("\u2026 (earlier output truncated)"));

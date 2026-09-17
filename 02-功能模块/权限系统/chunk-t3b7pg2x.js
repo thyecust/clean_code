@@ -42,10 +42,10 @@ import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { ms, Nr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getEnabledSettingsSources, isSettingsSourceEnabled } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isTopLevelCoworkSession, isVsCodeExtensionSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { yar, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getPolicyHelperAppendSystemPrompt, getSettingsForSource, getInitialSettings, getEffectiveSettingSource, updateSettingsForSource, hasVouchedSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { normalizePermissionModeAlias, parsePermissionMode, clampPermissionMode, parsePermissionModeOrDefault } from "./chunk-e4pfvp7x.js";
 import { Xt, Qa, dm, getAPIProvider, getProviderForModel, hasFirstPartyCapabilities } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
@@ -312,7 +312,7 @@ function X() {
   let e = getInitialSettings(),
     t = I({ cli: { effort: void 0 }, env: process.env, settings: e });
   if (e.ultracode === !0) return { default: t, byModel: {} };
-  let o = ms()
+  let o = getEnabledSettingsSources()
       .map((s) => getSettingsForSource(s))
       .filter((s) => s !== void 0 && s !== null)
       .reverse(),
@@ -442,7 +442,7 @@ function tse(e, t, o, r, u) {
     if (e === void 0 || P(e, o) === P(D(o), o)) return !1;
   } else if (MT(o, e) === MT(o, t)) return !1;
   if (
-    Ks() &&
+    hasRemoteControlChannel() &&
     e !== void 0 &&
     KK(typeof e === "string" ? Z$(e, o) : e) === void 0
   )
@@ -454,7 +454,7 @@ async function a4t(e, t, o) {
 }
 async function zG(e, t, o = !0, r) {
   let u = e !== void 0 ? KK(e) : void 0;
-  if (o && (e === void 0 || u !== void 0) && !jn()) {
+  if (o && (e === void 0 || u !== void 0) && !getRemoteTransport()) {
     let d = await a4t(u, t, r);
     if (d.error) return d.error;
   }
@@ -867,7 +867,7 @@ function _nr(e, t) {
 function ynr(e) {
   let t = e.cli.systemPrompt,
     o = e.cli.appendSystemPrompt,
-    r = yar();
+    r = getPolicyHelperAppendSystemPrompt();
   if (r)
     o = o
       ? `${o}
@@ -885,7 +885,7 @@ function w(e) {
   return ae.includes(e);
 }
 function T() {
-  return de.filter(Nr);
+  return de.filter(isSettingsSourceEnabled);
 }
 function C(e) {
   return T().some((t) => getSettingsForSource(t)?.permissions?.defaultMode === e);

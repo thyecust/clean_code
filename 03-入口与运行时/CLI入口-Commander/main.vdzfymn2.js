@@ -128,7 +128,7 @@ import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { Pt, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
@@ -136,18 +136,18 @@ import "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
 import "../../02-功能模块/Teammates团队/storage-keys.js";
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Za, getLastLoadStatus, getRemoteSettingsPathOverride, isAdminPolicyOrigin } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { invalidateAllSettings, getLastLoadStatus, getRemoteSettingsPathOverride, isAdminPolicyOrigin } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import {
-  rRt,
-  har,
-  ABe,
-  _ar,
-  cRt,
-  uRt,
-  Sar,
-  bar,
-  war,
+  awaitMdmSettingsLoaded,
+  policyHelperRefreshedEvents,
+  runPolicyHelperPass,
+  hasRemotePolicyHelperEntry,
+  getPolicyHelperClaudeMd,
+  hasActivePolicyHelper,
+  wasPolicyHelperInitializeAttempted,
+  retireOsAdminPolicyHelper,
+  enableMidSessionPolicyHelperArming,
   getSettingsForSource,
   getInitialSettings,
   getSettings_DEPRECATED,
@@ -277,7 +277,7 @@ import "../../01-核心基础设施/共享小工具-未细化/host-state-store.j
 import "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import "../../02-功能模块/插件系统/chunk-ajtn749s.js";
-import { OG, tme } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { getEffectivePermissionRules, getEffectiveAdditionalDirectories } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { areSideloadFlagsDisabledByPolicy, sideloadFlagsBlockedMessage } from "../../02-功能模块/插件系统/plugin-source-policy.js";
 import "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
@@ -391,56 +391,56 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js"
 import "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-kshc4v5t.js";
 import {
-  V0,
-  vot,
-  xNn,
-  QHt,
-  Oae,
-  t6e,
-  Edr,
-  A8,
-  r6e,
-  YNn,
+  awaitMcpPolicyColdStart,
+  getPendingMcpServers,
+  renderMcpServerApprovalDialog,
+  handleAppStateChange,
+  handleReplAppStateChange,
+  PLUGIN_SCAFFOLD_COMPONENTS,
+  initializeBuiltinPlugins,
+  getCloudSessionsUnavailableReason,
+  resolveCommandQueue,
+  checkFullscreenBootCanary,
   p0t,
-  o6e,
-  sHe,
-  h1n,
-  iHe,
-  S1n,
+  markRemoteControlUsed,
+  checkGitHubAuthStatus,
+  buildInitialTeamContext,
+  createConfigChangeHookGate,
+  formatDeepLinkSessionNotice,
   launchSessionRepl,
-  T1n,
-  E1n,
-  A1n,
-  C1n,
-  v1n,
-  RJt,
-  x8,
-  R1n,
-  Bot,
-  F_e,
-  w0t,
-  T0t,
-  jot,
-  E0t,
-  A0t,
-  H8,
-  x1n,
-  H1n,
-  Wot,
-  Got,
-  I1n,
-  P1n,
-  $_e,
-  O1n,
-  D1n,
-  U_e,
-  l6e,
-  zot,
-  Vot,
+  getSetEnvVarNames,
+  getNonDefaultGlobalConfigKeys,
+  getSetUserSettingsKeys,
+  startInitializeRequestReader,
+  getInitializeRequestResult,
+  iterateStdinJsonLines,
+  runLifecycleHooks,
+  suppressInitialMessage,
+  parseSelfAddressableSessionId,
+  mergeAgentMcpServers,
+  getTeammateContextModule,
+  systemPromptModule,
+  applyBriefModeFlag,
+  prewarmStartupServices,
+  reportPluginSessionTelemetry,
+  getBranchMode,
+  runCliActionHandler,
+  addTrackedRepoPath,
+  getTrackedRepoPaths,
+  filterExistingRepoPaths,
+  createChecklistState,
+  reduceChecklistState,
+  getChecklistPhase,
+  getChecklistCancelMessage,
+  createMcpConnectionManager,
+  getSelectablePermissionMode,
+  isInternalModel,
+  getRepositoryModelSource,
+  resolveInitialPermissionMode,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { lO } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import "../../02-功能模块/会话-历史-恢复/session-title.js";
-import { HOt, wat, Tat, otn, stn, aF, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
+import { createSessionMetricsStore, runExitHandoff, subscribeToRefusalFallbackRestoreSync, applyDisabledModePolicies, syncAdditionalWorkingDirectories, createBaseAppState, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
@@ -2989,7 +2989,7 @@ function An(v, k, O) {
       "--author-email <email>",
       "Author email (default: git config user.email)",
     )
-    .option("--with <components...>", `Also scaffold: ${t6e.join(", ")}`)
+    .option("--with <components...>", `Also scaffold: ${PLUGIN_SCAFFOLD_COMPONENTS.join(", ")}`)
     .option(
       "-f, --force",
       "Overwrite an existing .claude-plugin/ at the target",
@@ -3505,7 +3505,7 @@ function oa(v) {
 }
 function In(v, k) {
   return async (O) => {
-    let R = await vot(v),
+    let R = await getPendingMcpServers(v),
       T = getGatingSettingsErrors();
     if (R.pendingServers.length === 0) return null;
     if (T.length > 0) {
@@ -3523,7 +3523,7 @@ function In(v, k) {
       );
     }
     try {
-      return await xNn(
+      return await renderMcpServerApprovalDialog(
         R,
         (x) => {
           try {
@@ -3614,7 +3614,7 @@ function qt(v, k, O) {
 }
 async function io(v, k, O, R, T) {
   let x = showScreen(v, k);
-  (markConfigBootPhaseComplete(), E0t(O, R, T));
+  (markConfigBootPhaseComplete(), prewarmStartupServices(O, R, T));
   try {
     if (
       (await Promise.race([
@@ -3693,7 +3693,7 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
         },
         L,
       ),
-      { session: v, onChangeAppState: Oae, marksJobBlocked: !0, storageV5: N },
+      { session: v, onChangeAppState: handleReplAppStateChange, marksJobBlocked: !0, storageV5: N },
     ),
     L
   );
@@ -3778,7 +3778,7 @@ function ia(
     },
     () => {
       if (
-        (H1n(D),
+        (addTrackedRepoPath(D),
         kn(D),
         dR(),
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
@@ -4241,7 +4241,7 @@ function Bn(v) {
     O = getBaseRenderOptions(v);
   if (O.stdin) logEvent("tengu_stdin_interactive", {});
   let R = new yr(),
-    T = HOt();
+    T = createSessionMetricsStore();
   xOn(T);
   let x = a.CLAUDE_CODE_FRAME_TIMING_LOG,
     U = -1,
@@ -4381,12 +4381,12 @@ function zn(v, k) {
   function W(j) {
     return (
       N(() => logFeatureSad("ccr_create_checklist", "cancelled")),
-      Rr(v, O1n(j), { exitCode: 130, beforeExit: () => gracefulShutdown(130) })
+      Rr(v, getChecklistCancelMessage(j), { exitCode: 130, beforeExit: () => gracefulShutdown(130) })
     );
   }
   function K(j) {
     let V = R;
-    if (V === null || U || $_e(V) === "created") return;
+    if (V === null || U || getChecklistPhase(V) === "created") return;
     if (x !== null) {
       ((U = !0),
         logEvent("tengu_cloud_create_cancel_forced", { waited_ms: Date.now() - x }),
@@ -4396,7 +4396,7 @@ function zn(v, k) {
     ((x = Date.now()),
       k.onCancel(),
       logEvent("tengu_cloud_create_cancelled", {
-        phase: fromEnum($_e(V)),
+        phase: fromEnum(getChecklistPhase(V)),
         request_sent: V.requestSent,
       }));
     try {
@@ -4412,7 +4412,7 @@ function zn(v, k) {
         try {
           let q = Date.now(),
             J = R === null;
-          if (((R = P1n(R ?? I1n(q), j, q)), L(V, R), J))
+          if (((R = reduceChecklistState(R ?? createChecklistState(q), j, q)), L(V, R), J))
             logEvent("tengu_cloud_create_checklist_shown", {});
           if (j.kind === "created") N(() => logFeatureOk("ccr_create_checklist"));
         } catch (q) {
@@ -4430,7 +4430,7 @@ async function Kn(v, k, O, R) {
       import("../../02-功能模块/会话-历史-恢复/ResumeConversation.6qw1t885.js"),
     ]),
     { session: U, storageV5: D, credentials: N } = k,
-    I = r6e(D);
+    I = resolveCommandQueue(D);
   await io(
     v,
     e(AppRoot, {
@@ -4438,7 +4438,7 @@ async function Kn(v, k, O, R) {
       storageV5: D,
       messageQueue: I,
       initialState: k.initialState,
-      onChangeAppState: (L) => Oae(L, U, D, N),
+      onChangeAppState: (L) => handleReplAppStateChange(L, U, D, N),
       writesExitHandoff: !0,
       getFpsMetrics: k.getFpsMetrics,
       stats: k.stats,
@@ -5039,7 +5039,7 @@ async function Ci() {
   let v = getSettingsForSource("policySettings");
   return JSON.stringify([
     v?.claudeMd ?? null,
-    cRt(),
+    getPolicyHelperClaudeMd(),
     v?.claudeMdExcludes ?? null,
     v?.autoMemoryEnabled ?? null,
     v?.env ?? null,
@@ -5047,7 +5047,7 @@ async function Ci() {
   ]);
 }
 async function Sa() {
-  if (isClaudeMdLoadingDisabled() || Pt()) return [];
+  if (isClaudeMdLoadingDisabled() || isRemoteActive()) return [];
   let v = new Set(),
     k = getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved || !1;
   return [
@@ -5077,7 +5077,7 @@ function vi(v) {
   return (R(!0), () => R(!1));
 }
 async function bi(v, k) {
-  let O = r6e(v.storageV5),
+  let O = resolveCommandQueue(v.storageV5),
     {
       autoCompactWindow: R,
       claudeaiConfigPromise: T,
@@ -5134,7 +5134,7 @@ async function bi(v, k) {
     } = v;
   if ((HDn(Ve ?? "text"), ut)) {
     if ((rje(!0), dR(), initializeTelemetryAfterTrust(v.storageV5), isViolinWoodEnabledCached() && !isSimpleMode()))
-      settingsChangeDetector.initialize(iHe(yt, v.storageV5, v.credentials), v.storageV5, {
+      settingsChangeDetector.initialize(createConfigChangeHookGate(yt, v.storageV5, v.credentials), v.storageV5, {
         machineServesSession: !0,
       });
     let { runHeadlessCloudAttach: Ce, runHeadlessCloudCreate: Ye } =
@@ -5145,7 +5145,7 @@ async function bi(v, k) {
     let Ce = await validateForceLoginOrg(v.credentials);
     if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
     await b_();
-    let Ye = A8();
+    let Ye = getCloudSessionsUnavailableReason();
     if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     if (Ve === "stream-json")
       return cliError(
@@ -5222,7 +5222,7 @@ async function bi(v, k) {
     let Ce = await validateForceLoginOrg(v.credentials);
     if (!Ce.valid) return cliErrorAfterAnalyticsFlush(Ce.message);
     await b_();
-    let Ye = A8();
+    let Ye = getCloudSessionsUnavailableReason();
     if (Ye) return cliErrorAfterAnalyticsFlush(`Error: ${Ye}`);
     let tt = typeof Ue === "string" && Ue.trim() !== "" ? Ue : null;
     if (tt === null)
@@ -5232,9 +5232,9 @@ async function bi(v, k) {
     logEvent("tengu_remote_create_session", {
       has_initial_prompt: S("true"),
       entry_point: fromEnum("pool_headless"),
-      branch_mode: H8(Je, De),
+      branch_mode: getBranchMode(Je, De),
     });
-    let St = U_e(Tt),
+    let St = getSelectablePermissionMode(Tt),
       Qt = Je ?? De ?? (await getBranch()),
       jt,
       ft,
@@ -5266,7 +5266,7 @@ async function bi(v, k) {
         (await logEventAsync("tengu_remote_create_session_error", {
           error: fromEnumOpt(ft),
           entry_point: fromEnum("pool_headless"),
-          branch_mode: H8(Je, De),
+          branch_mode: getBranchMode(Je, De),
           ...(gt?.endpoint && { create_endpoint: fromEnum(gt.endpoint) }),
           ...(gt?.serverReason && { server_reason: fromEnum(gt.serverReason) }),
           ...(gt?.preflightTransient !== void 0 && {
@@ -5285,7 +5285,7 @@ async function bi(v, k) {
     await logEventAsync("tengu_remote_create_session_success", {
       session_id: hashForTelemetry(me.id),
       entry_point: fromEnum("pool_headless"),
-      branch_mode: H8(Je, De),
+      branch_mode: getBranchMode(Je, De),
     });
     let Lo = wa(me.id, void 0, { from: "cli", m: "0" });
     if (Ve === "json")
@@ -5320,7 +5320,7 @@ async function bi(v, k) {
     He =
       k.continue || k.resume || se || fo
         ? void 0
-        : x8(yt, {
+        : runLifecycleHooks(yt, {
             kind: "session-start",
             source: "startup",
             storageV5: v.storageV5,
@@ -5333,7 +5333,7 @@ async function bi(v, k) {
   if (!ho.valid) return (printCliError(ho.message), await flushAnalyticsSinks(), cliError());
   let _o = qe ? [] : Le ? Le.then(filterCommandsForHeadless) : filterCommandsForHeadless(ce);
   if (_o instanceof Promise) _o.catch(() => {});
-  let Fo = aF(),
+  let Fo = createBaseAppState(),
     Xe = {
       ...Fo,
       mainLoopModel: Rt,
@@ -5354,10 +5354,10 @@ async function bi(v, k) {
       }),
     },
     bo = new s7e(),
-    at = createStore(Xe, (Ce) => QHt(Ce, yt, bo, v.storageV5, v.credentials));
+    at = createStore(Xe, (Ce) => handleAppStateChange(Ce, yt, bo, v.storageV5, v.credentials));
   if (
-    (Et(() => wat(at.getState().tasks, v.storageV5)),
-    Tat(at.setState),
+    (Et(() => runExitHandoff(at.getState().tasks, v.storageV5)),
+    subscribeToRefusalFallbackRestoreSync(at.setState),
     verifyAutoModeGateAccess(Se, at.getState().fastMode).then(({ updateContext: Ce }) => {
       at.setState((Ye) => {
         let tt = Ce(Ye.toolPermissionContext);
@@ -5369,7 +5369,7 @@ async function bi(v, k) {
   )
     LLn(!0);
   nDn(mt);
-  let nr = D1n({
+  let nr = createMcpConnectionManager({
     regularMcpConfigs: et,
     claudeaiConfigPromise: T,
     state: {
@@ -5389,11 +5389,11 @@ async function bi(v, k) {
     profileCheckpoint("after_connectMcp_claudeai"),
     !isSimpleMode())
   )
-    (E0t(yt, v.storageV5, v.credentials),
+    (prewarmStartupServices(yt, v.storageV5, v.credentials),
       import("../../02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js").then((Ce) =>
         Ce.startBackgroundHousekeeping(B().host, v.storageV5),
       ));
-  (A0t(v.storageV5, v.credentials), profileCheckpoint("before_print_import"));
+  (reportPluginSessionTelemetry(v.storageV5, v.credentials), profileCheckpoint("before_print_import"));
   let {
     runHeadless: Uo,
     explicitMcpConfigRequestsWait: No,
@@ -5465,10 +5465,10 @@ async function bi(v, k) {
 }
 function ya() {
   if (getRemoteSettingsPathOverride()) return !1;
-  if (Sar()) return !1;
+  if (wasPolicyHelperInitializeAttempted()) return !1;
   let v = getBasePolicySettings(),
     k = getBasePolicySettingsOrigin();
-  if (k === "remote") return _ar(v);
+  if (k === "remote") return hasRemotePolicyHelperEntry(v);
   return (
     isAdminPolicyOrigin(k) && (v?.policyHelpers != null || v?.policyHelper != null) && fIe()
   );
@@ -5525,9 +5525,9 @@ function ki(v) {
       I.getOptionValue("sdkUrl") === void 0 &&
       !process.stdin.isTTY
     )
-      C1n(RJt);
+      startInitializeRequestReader(iterateStdinJsonLines);
     if (
-      (await Promise.all([rRt(), ensureKeychainPrefetchCompleted()]),
+      (await Promise.all([awaitMdmSettingsLoaded(), ensureKeychainPrefetchCompleted()]),
       profileCheckpoint("preAction_after_mdm"),
       (R = await initializeApp({
         showInvalidConfigDialog: v.showInvalidConfigDialog,
@@ -5542,7 +5542,7 @@ function ki(v) {
     let { initSinks: K } = await import("../../02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js");
     (K(), profileCheckpoint("preAction_after_sinks"));
     let j = performance.now(),
-      V = await v1n();
+      V = await getInitializeRequestResult();
     if (V) recordStartupPhase("await_initialize_ms", performance.now() - j, j);
     if (V?.kind === "violation") return cliError(V.message);
     let q = V?.kind === "applied" ? V : void 0,
@@ -5588,13 +5588,13 @@ function ki(v) {
     KAn({ startupAwaited: Le });
     {
       let oe = getBasePolicySettingsOrigin();
-      bar(oe);
-      let je = await ABe(getBasePolicySettings(), oe, getPolicyHelperSourceLoadErrors());
+      retireOsAdminPolicyHelper(oe);
+      let je = await runPolicyHelperPass(getBasePolicySettings(), oe, getPolicyHelperSourceLoadErrors());
       if (je) return cliError(je);
-      if ((war(ka), uRt())) goe();
+      if ((enableMidSessionPolicyHelperArming(ka), hasActivePolicyHelper())) goe();
     }
     let qe = vi(B());
-    if ((har.subscribe(qe), areSideloadFlagsDisabledByPolicy())) {
+    if ((policyHelperRefreshedEvents.subscribe(qe), areSideloadFlagsDisabledByPolicy())) {
       let oe = [],
         je = ($e) =>
           Array.isArray($e)
@@ -5624,7 +5624,7 @@ function ki(v) {
     ) {
       let oe = I.getOptionValue("addDir");
       if (Array.isArray(oe) && oe.every((je) => typeof je === "string")) Hz(oe);
-      (Edr(),
+      (initializeBuiltinPlugins(),
         loadAllPluginsCacheOnly(R, T).catch(() => {}),
         (O = !0),
         profileCheckpoint("preAction_after_plugin_early_kick"));
@@ -6161,7 +6161,7 @@ function ki(v) {
     N = () => O;
   (D.action(async (I, L) => {
     let W = foldRestricted(L, pv()),
-      K = await x1n(I, W, k, N, v.pendingConnect, v.pendingSSH, v, R, T);
+      K = await runCliActionHandler(I, W, k, N, v.pendingConnect, v.pendingSSH, v, R, T);
     if (K.kind === "exited") return;
     if (K.kind === "prepared-headless") return bi(K, W);
     if (!v.runInteractiveSession)
@@ -6363,7 +6363,7 @@ function Ta() {
   (kW(null),
     UDt(),
     resetRemoteSettingsSyncCache(),
-    Za(),
+    invalidateAllSettings(),
     process.stderr.write(
       CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE +
         `
@@ -6510,12 +6510,12 @@ async function Na(v, k) {
   let [O, R, T, x] = await Promise.all([
       getIsGit(),
       getWorktreeCount(),
-      sHe({ allowNetworkFallbackForOldGh: !1 }),
+      checkGitHubAuthStatus({ allowNetworkFallbackForOldGh: !1 }),
       null,
     ]),
-    U = T1n(),
-    D = E1n(v),
-    N = A1n(getInitialSettings());
+    U = getSetEnvVarNames(),
+    D = getNonDefaultGlobalConfigKeys(v),
+    N = getSetUserSettingsKeys(getInitialSettings());
   logEvent("tengu_startup_telemetry", {
     is_git: O,
     worktree_count: R,
@@ -6690,7 +6690,7 @@ async function ja(v) {
     Kt = null,
     Ve = Bn(!1),
     { getFpsMetrics: Tt, stats: Bt } = Ve;
-  YNn({ storageV5: fe });
+  checkFullscreenBootCanary({ storageV5: fe });
   let { createRoot: Je } = await import("../../02-功能模块/Daemon-守护服务/createRoot.pw1402cq.js"),
     De = await Je(Ve.renderOptions, { storageV5: fe });
   (logEvent("tengu_timer", {
@@ -6774,7 +6774,7 @@ ${Rt}`
     if (((Ue = le === null), le))
       cliWarn(`${le}
 ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
-    else o6e(fe);
+    else markRemoteControlUsed(fe);
   }
   if (Nt && zt?.trim().toLowerCase() === "/login") zt = "";
   if (Nt) {
@@ -6876,7 +6876,7 @@ function Nr(v, k) {
         has_repo: Boolean(k.deepLinkRepo),
       }),
       n(
-        S1n({
+        formatDeepLinkSessionNotice({
           cwd: getCwd(),
           prefillLength: k.prefill?.length,
           repo: k.deepLinkRepo,
@@ -6986,18 +6986,18 @@ async function $a(v, k, O, R) {
       import("../../01-核心基础设施/共享小工具-未细化/parseGitHubRepository.3ng6714h.js").then((Oe) => {
         Oe.detectCurrentRepositoryWithHost();
       });
-    let _e = OG(),
-      ve = otn(stn(syncPermissionRulesFromDisk(Ao, _e), [], tme(), void 0, !1, void 0, ae), _e);
+    let _e = getEffectivePermissionRules(),
+      ve = applyDisabledModePolicies(syncAdditionalWorkingDirectories(syncPermissionRulesFromDisk(Ao, _e), [], getEffectiveAdditionalDirectories(), void 0, !1, void 0, ae), _e);
     if (((St = ve.context), ve.exitedAutoMode)) tt.push(buildAutoModeGateNotification(getAutoModeUnavailableNotification("settings")));
   }
   let Qt = {
       ...St,
-      mode: isAgentSwarmsEnabled() && w0t().isPlanModeRequired() ? "plan" : St.mode,
+      mode: isAgentSwarmsEnabled() && getTeammateContextModule().isPlanModeRequired() ? "plan" : St.mode,
     },
     jt = Ox(),
     ft = Oi({ remoteControlFlag: yt, isRemoteThinClient: Nn() || Boolean(Xe) });
   Pi(ft);
-  let gt = Ho?.teamContext ?? (getDynamicTeamContext() ? await h1n(ae) : void 0),
+  let gt = Ho?.teamContext ?? (getDynamicTeamContext() ? await buildInitialTeamContext(ae) : void 0),
     me = {
       sessionNoticesPoll: { pendingDeliveryUuids: [] },
       settings: getInitialSettings(),
@@ -7138,7 +7138,7 @@ async function $a(v, k, O, R) {
   (saveGlobalConfig((_e) => ({ ..._e, numStartups: (_e.numStartups ?? 0) + 1 }), ae),
     setImmediate(
       (_e, ve, Oe) => {
-        (Na(getGlobalConfig(), ve), A0t(_e, Oe));
+        (Na(getGlobalConfig(), ve), reportPluginSessionTelemetry(_e, Oe));
       },
       v.storageV5,
       Ve,
@@ -7183,7 +7183,7 @@ async function $a(v, k, O, R) {
     },
     sr = {
       session: Se,
-      modeApi: T0t,
+      modeApi: systemPromptModule,
       mainThreadAgentDefinition: T,
       agentDefinitions: D,
       currentCwd: V,
@@ -7228,15 +7228,15 @@ async function $a(v, k, O, R) {
         sr,
       );
       if (We.restoredAgentDef) T = We.restoredAgentDef;
-      (jot(k),
+      (applyBriefModeFlag(k),
         await Ur(k),
         logEvent("tengu_continue", {
           success: !0,
           resume_duration_ms: Math.round(performance.now() - ve),
         }),
         (_e = !0));
-      let Vt = F_e(ce, We.restoredAgentDef ?? T, { strictMcpConfig: ho });
-      if (Object.keys(Vt).length > 0) await V0({ hasDynamicMcpConfig: !0 });
+      let Vt = mergeAgentMcpServers(ce, We.restoredAgentDef ?? T, { strictMcpConfig: ho });
+      if (Object.keys(Vt).length > 0) await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !0 });
       await launchSessionRepl(
         se,
         {
@@ -7295,11 +7295,11 @@ async function $a(v, k, O, R) {
     }
     if (x !== null || Xe) {
       await b_();
-      let ne = A8();
+      let ne = getCloudSessionsUnavailableReason();
       if (ne) return await Ne(se, `Error: ${ne}`, () => gracefulShutdown(1));
     }
     if (x !== null) {
-      let ne = Bot(x),
+      let ne = parseSelfAddressableSessionId(x),
         Z = ne !== null ? toCompatSessionId(ne) : null;
       if (Je !== null) {
         if (ao) {
@@ -7392,7 +7392,7 @@ Usage: claude --cloud "your task description"`,
       } else {
         logEvent("tengu_remote_create_session", {
           has_initial_prompt: String(de),
-          branch_mode: H8(De, et),
+          branch_mode: getBranchMode(De, et),
         });
         try {
           vt = await prepareApiRequest(He);
@@ -7463,9 +7463,9 @@ Usage: claude --cloud "your task description"`,
           });
         if (nt) {
           ko = getMainLoopModel();
-          let Ze = l6e(ko);
+          let Ze = isInternalModel(ko);
           if (
-            ((ot = Vot({
+            ((ot = resolveInitialPermissionMode({
               model: ko,
               internal: Ze,
               explicitMode: Fe,
@@ -7475,7 +7475,7 @@ Usage: claude --cloud "your task description"`,
               autoSeedable: xJe(getInitialSettings()) && !isScrubEnabled(),
               publicModel: getDefaultOpusModel(),
               repositoryModel: Ze
-                ? zot({
+                ? getRepositoryModelSource({
                     model: ko,
                     modelCli: k.model,
                     agent: T,
@@ -7554,7 +7554,7 @@ Usage: claude --cloud "your task description"`,
             to?.failed(),
             logEvent("tengu_remote_create_session_error", {
               error: fromEnum(ct.failReason),
-              branch_mode: H8(De, et),
+              branch_mode: getBranchMode(De, et),
               settings_gate: S(oo ? "on" : "off"),
               ...(ct.failDetail?.endpoint && {
                 create_endpoint: fromEnum(ct.failDetail.endpoint),
@@ -7583,7 +7583,7 @@ Usage: claude --cloud "your task description"`,
           logEvent("tengu_remote_create_session_success", {
             session_id: sanitizeAnalyticsId(kt.id),
             initial_prompt_withheld: kt.withheldInitialMessage !== void 0,
-            branch_mode: H8(De, et),
+            branch_mode: getBranchMode(De, et),
             permission_mode_source: S(
               Fe
                 ? "flag"
@@ -7711,7 +7711,7 @@ Usage: claude --cloud "your task description"`,
         cr = Go !== void 0 && Wo === void 0 ? formatUnboundNotice(Go) : void 0,
         Ui = {
           ...me,
-          initialMessage: R1n(de && Je !== null && ao, me.initialMessage),
+          initialMessage: suppressInitialMessage(de && Je !== null && ao, me.initialMessage),
           remoteSessionUrl: Gr,
           ...(qo !== void 0 && {
             toolPermissionContext: { ...me.toolPermissionContext, mode: qo },
@@ -7839,8 +7839,8 @@ Usage: claude --cloud "your task description"`,
             );
             let Fe = Z.sessionRepo;
             if (Fe) {
-              let ze = Wot(Fe),
-                xt = await Got(ze);
+              let ze = getTrackedRepoPaths(Fe),
+                xt = await filterExistingRepoPaths(ze);
               if (xt.length > 0) {
                 let ht = await $n(se, {
                   targetRepo: Fe,
@@ -8063,9 +8063,9 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           }
         : void 0);
     if (lt) {
-      (jot(k), await Ur(k));
-      let ne = F_e(ce, lt.restoredAgentDef ?? T, { strictMcpConfig: ho });
-      if (Object.keys(ne).length > 0) await V0({ hasDynamicMcpConfig: !0 });
+      (applyBriefModeFlag(k), await Ur(k));
+      let ne = mergeAgentMcpServers(ce, lt.restoredAgentDef ?? T, { strictMcpConfig: ho });
+      if (Object.keys(ne).length > 0) await awaitMcpPolicyColdStart({ hasDynamicMcpConfig: !0 });
       await launchSessionRepl(
         se,
         {
@@ -8143,9 +8143,9 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
   } else {
     let _e = je && oe.length === 0 ? je : void 0;
     (profileCheckpoint("action_after_hooks"),
-      jot(k),
+      applyBriefModeFlag(k),
       await Ur(k),
-      saveMode(T0t?.isCoordinatorMode() ? "coordinator" : "normal"),
+      saveMode(systemPromptModule?.isCoordinatorMode() ? "coordinator" : "normal"),
       Nr(Se, k));
     let ve = oe.length > 0 ? oe : void 0;
     await launchSessionRepl(

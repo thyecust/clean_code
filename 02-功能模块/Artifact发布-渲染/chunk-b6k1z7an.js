@@ -19,7 +19,7 @@ import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5
 import { yir, bir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { httpClient, REMOTE_DEVICES_MCP_SERVER_NAME, hasFreshGrowthBookFeatures, getFeatureValue_CACHED_MAY_BE_STALE } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ts, Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isConnectedMcpServer, parseMcpToolName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
@@ -27,23 +27,23 @@ import { ASSET_ID_RE, ARTIFACT_SLUG_RE, ARTIFACT_DELETED_NOTE_TAG, uuidSlugFromU
 import { parseRetryAfterHeader } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { TYe, ne, Hoe, CYe, vYe } from "./chunk-rr78st95.js";
 import {
-  bCe,
-  Am,
-  TG,
-  hoe,
-  rqt,
-  sqt,
-  RK,
-  MH,
-  wwn,
-  hJ,
-  nP,
-  Nd,
-  WZn,
-  Xwt,
-  Z1e,
-  Mj,
-  Fd,
+  getStoreBearerOauthAccountInfoAsync,
+  formatNotAuthenticatedMessage,
+  CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE,
+  isNotFoundResponseBody,
+  FRAME_FAMILY_SUBSCRIPTIONS,
+  resolveFrameRouteFamily,
+  isFrameRelayEnabled,
+  canRelayFrameFamily,
+  isFrameFamilyHopFailed,
+  isRelayedUpstreamResponse,
+  isFrameRelayAttemptError,
+  artifactFrameHttpClient,
+  registerArtifactReadAvailability,
+  isDeclarableServerName,
+  NO_PIN_VERSION_SENTINEL,
+  VERSION_PATTERN,
+  buildFrameHeaders,
   isArtifactLangEnabled,
   isFrameMultiFileEnabled,
   isFrameCopyFromEnabled,
@@ -52,8 +52,8 @@ import {
   MAX_COPY_SOURCES,
   ARTIFACT_LIST_SCOPES,
   denyPolicyBody,
-  TD,
-  RG,
+  MAX_PUBLISHED_PATH_LENGTH,
+  MAX_PUBLISH_FILES,
   unlinkPath,
   isCoworkHostSession,
   isWorkshopSchemaEnabled,
@@ -73,7 +73,7 @@ import {
   lGn,
 } from "./chunk-y8j05azr.js";
 import { swe, iwe, awe, U3n, _cn, y2 } from "./chunk-01jnk0v2.js";
-import { kWn, nT } from "./chunk-p1dkvpxj.js";
+import { registerArtifactCommentsAvailability, isArtifactCommentsAvailable } from "./chunk-p1dkvpxj.js";
 import {
   VERIFY_CLAUSE,
   PREVIEW_CLAUSE,
@@ -103,7 +103,7 @@ import { countMatching, dedupe } from "../../01-核心基础设施/共享小工�
 function te(e) {
   let r = [];
   for (let t of e) {
-    if (!ts(t)) continue;
+    if (!isConnectedMcpServer(t)) continue;
     let { config: i } = t,
       o =
         i && typeof i === "object" && "url" in i && typeof i.url === "string"
@@ -134,14 +134,14 @@ async function de(e, r) {
     if (t.get(e) === c) t.delete(e);
   }
 }
-function xjn() {
+function listDurableWatchRows() {
   return [...F().values()];
 }
-function hPe(e) {
+function getDurableWatchRow(e) {
   return F().get(e);
 }
 var mt = [30000, 120000, 600000];
-function Hjn(e, r) {
+function restoreDurableWatchesFromWorkerState(e, r) {
   if (!a.CLAUDE_CODE_REMOTE || e === null) return;
   if (e.readFailed) {
     if (
@@ -251,7 +251,7 @@ function Ne(e) {
   if (!t) return null;
   return { found: r, dial: t };
 }
-function Ijn(e) {
+function hasWakeMinter(e) {
   return Ne(e) !== null;
 }
 async function Me(e, r) {
@@ -286,12 +286,12 @@ var wt = "/integrations/v1/code/webhook-triggers/",
   vt = "/fire",
   At = ["published", "comment"],
   Se = ["published"];
-function Pjn() {
+function getDurableWatchRailBlockReason() {
   return a.CLAUDE_CODE_REMOTE ? null : "not_remote";
 }
-function qon() {
+function getSubscribeForbiddenState() {
   let e = ne().durable.subscribeForbidden;
-  if (e && !e.relayActive && MH(rqt)) return (we(), null);
+  if (e && !e.relayActive && canRelayFrameFamily(FRAME_FAMILY_SUBSCRIPTIONS)) return (we(), null);
   return e;
 }
 function we() {
@@ -309,7 +309,7 @@ function Et(e, r) {
   }
   return t ? !1 : null;
 }
-function zon(e) {
+function getWatchUrlWithheldReason(e) {
   if (!a.CLAUDE_CODE_REMOTE) return null;
   let { watchUrlWithheld: r, watchUrlGranted: t } = ne().durable;
   if (r) return r;
@@ -453,8 +453,8 @@ async function He(e) {
 }
 async function je(e, r, t, i) {
   try {
-    let o = await Nd.post(e, r, {
-      headers: Fd(),
+    let o = await artifactFrameHttpClient.post(e, r, {
+      headers: buildFrameHeaders(),
       timeout: 15000,
       refreshOAuth: !0,
       credentials: i,
@@ -462,7 +462,7 @@ async function je(e, r, t, i) {
     });
     return { res: o, relayed: o.route === "relay" };
   } catch (o) {
-    return { res: void 0, relayed: nP(o) };
+    return { res: void 0, relayed: isFrameRelayAttemptError(o) };
   }
 }
 function Be(e) {
@@ -471,7 +471,7 @@ function Be(e) {
 function ue(e) {
   return e.relayed ? [{ relay: !0 }] : [];
 }
-async function xNt(e) {
+async function subscribeDurableWatch(e) {
   let { slug: r, context: t, detachedFromUser: i } = e;
   U6n(r);
   let o;
@@ -588,7 +588,7 @@ async function Ie(e, r, t, i) {
     return { outcome: "failed", reason: "client_policy" };
   if (t && ne().durable.originatorRefused)
     return { outcome: "failed", reason: "no_originator", latched: !0 };
-  let c = qon();
+  let c = getSubscribeForbiddenState();
   if (t && c)
     return {
       outcome: "failed",
@@ -596,7 +596,7 @@ async function Ie(e, r, t, i) {
       latched: !0,
       serverMessage: c.serverMessage,
     };
-  let u = t ? zon(r) : null;
+  let u = t ? getWatchUrlWithheldReason(r) : null;
   if (u) return { outcome: "skipped", reason: u };
   let l = await Me(r, t ? { detachedFromUser: t } : void 0);
   if (!l) {
@@ -662,12 +662,12 @@ async function Ie(e, r, t, i) {
     C = !1,
     M,
     P = !1,
-    D = nT() ? At : Se,
+    D = isArtifactCommentsAvailable() ? At : Se,
     j = !1,
     N = `/api/frame/subscribe/${e}`,
-    B = RK() ? sqt("POST", N) : null,
-    re = MH(B),
-    ae = B !== null && wwn(B),
+    B = isFrameRelayEnabled() ? resolveFrameRouteFamily("POST", N) : null,
+    re = canRelayFrameFamily(B),
+    ae = B !== null && isFrameFamilyHopFailed(B),
     ie = () =>
       je(
         N,
@@ -775,7 +775,7 @@ async function Ie(e, r, t, i) {
     ...q,
   };
 }
-async function HNt(e) {
+async function unsubscribeDurableWatch(e) {
   let { slug: r, context: t } = e;
   if ((Vsn(r), !F().has(r) && !a.CLAUDE_CODE_REMOTE))
     return { wasWatching: !1, teardown: "unsent" };
@@ -839,13 +839,13 @@ function Xe() {
   if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
   return a.CLAUDE_CODE_ARTIFACT_DELETE ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_alder", !1);
 }
-function INt() {
+function getArtifactDeleteUnavailableMessage() {
   return isCoworkHostSession()
     ? `Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, ${userCanDeleteThemselves(!0)}`
     : "Deleting Artifacts isn't available in this cloud session right now, so nothing was deleted; do not retry here. If the Artifact is the user's own, they can delete it themselves on claude.ai from the Artifact's own menu, or with `/artifacts` in Claude Code on their own machine (press d on the selected one).";
 }
-function Von() {
-  return isAnthropicHostedEnvironment() && !MH();
+function isArtifactDeleteRelayUnavailable() {
+  return isAnthropicHostedEnvironment() && !canRelayFrameFamily();
 }
 var Vt = {
   ok: !1,
@@ -875,13 +875,13 @@ function Ye(e, r, t) {
     ...(r && { retried: !0 }),
   };
 }
-async function Dut(e, r, t) {
+async function deleteArtifact(e, r, t) {
   let i = () =>
-      Von()
+      isArtifactDeleteRelayUnavailable()
         ? Promise.resolve(Vt)
-        : Nd.deleteRelayOnly(`/api/frame/${encodeURIComponent(e)}`, {
+        : artifactFrameHttpClient.deleteRelayOnly(`/api/frame/${encodeURIComponent(e)}`, {
             refreshOAuth: !0,
-            headers: Fd(),
+            headers: buildFrameHeaders(),
             timeout: 15000,
             maxContentLength: Bt,
             signal: t.signal,
@@ -904,7 +904,7 @@ async function Dut(e, r, t) {
     }
   } catch (l) {
     if (isCancel(l) || l instanceof Ve || t.signal?.aborted) throw l;
-    let d = nP(l);
+    let d = isFrameRelayAttemptError(l);
     return (
       logFeatureBad("artifact_delete", "request_error", Ye(t, c, d ? "relay" : "direct")),
       {
@@ -923,14 +923,14 @@ async function Dut(e, r, t) {
           ...u,
           status: o.status,
         }),
-        { err: INt(), reason: "unavailable" }
+        { err: getArtifactDeleteUnavailableMessage(), reason: "unavailable" }
       );
     return (
       logFeatureBad("artifact_delete", o.reason, u),
       {
         err:
           o.reason === "no-auth"
-            ? Am(o.detail)
+            ? formatNotAuthenticatedMessage(o.detail)
             : `Artifact delete unavailable: ${o.reason}`,
         reason: "unavailable",
       }
@@ -942,7 +942,7 @@ async function Dut(e, r, t) {
       { err: qe(`HTTP ${o.status}`), reason: "http_failed", status: o.status }
     );
   if (o.status === 404) {
-    if (!hoe(o.data))
+    if (!isNotFoundResponseBody(o.data))
       return (
         logFeatureBad("artifact_delete", "not_found_foreign", { ...u, status: 404 }),
         {
@@ -967,10 +967,10 @@ async function Dut(e, r, t) {
           status: 403,
         }
       );
-    if (l.startsWith(TG))
+    if (l.startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE))
       return (
         logFeatureBad("artifact_delete", "ccr_credential_refused", u),
-        { err: INt(), reason: "unavailable", status: 403 }
+        { err: getArtifactDeleteUnavailableMessage(), reason: "unavailable", status: 403 }
       );
   }
   if (o.status < 200 || o.status >= 300)
@@ -985,7 +985,7 @@ async function Dut(e, r, t) {
         status: o.status,
       }
     );
-  if (o.status !== 204 || (o.route === "relay" && !hJ(o)))
+  if (o.status !== 204 || (o.route === "relay" && !isRelayedUpstreamResponse(o)))
     return (
       logFeatureBad("artifact_delete", "ok_foreign", { ...u, status: o.status }),
       {
@@ -1016,7 +1016,7 @@ function Xt(e, r) {
     ...(l && { artifactReadObservers: E }),
   };
 }
-function _Pe(e, r) {
+function forgetDeletedArtifact(e, r) {
   r.updateAppState((l) => Xt(l, e));
   let {
     shareStatus: t,
@@ -1035,21 +1035,21 @@ function _Pe(e, r) {
     endFrameLiveWatchOfDeletedArtifact(e, r.context),
     ne().liveDocWatch.stop?.(e),
     leaveArtifactRoom(e),
-    a.CLAUDE_CODE_REMOTE || hPe(e) !== void 0)
+    a.CLAUDE_CODE_REMOTE || getDurableWatchRow(e) !== void 0)
   )
-    HNt({ slug: e, context: r.context }).catch(logError);
+    unsubscribeDurableWatch({ slug: e, context: r.context }).catch(logError);
 }
-function Kon(e) {
+function formatArtifactDeletedNote(e) {
   return `<${ARTIFACT_DELETED_NOTE_TAG} url="${e}"/> The user deleted this Artifact from /artifacts: its link no longer works for anyone, it cannot be restored, and it cannot be published to again \u2014 publishing the same file creates a new Artifact at a new URL. Do not pass this url to the Artifact tool.`;
 }
-function RNt() {
+function isArtifactPinEnabled() {
   if (a.CLAUDE_CODE_REMOTE && !isAnthropicHostedEnvironment()) return !1;
   return a.CLAUDE_CODE_ARTIFACT_PIN ?? getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_holly", !1);
 }
-var kNt =
+var ARTIFACT_PIN_UNAVAILABLE_MESSAGE =
   "Pinning artifacts isn't available in this cloud session yet, so nothing changed; do not retry here. The user can pin or unpin it themselves from the artifact's menu on claude.ai.";
-function Gon() {
-  return isAnthropicHostedEnvironment() && !MH();
+function isArtifactPinRelayUnavailable() {
+  return isAnthropicHostedEnvironment() && !canRelayFrameFamily();
 }
 var Kt = {
     ok: !1,
@@ -1065,11 +1065,11 @@ function Ke(e, r) {
     route: r === "relay" ? S("relay") : S("direct"),
   };
 }
-async function gPe(e, r, t, i = { source: "dialog" }) {
+async function setArtifactPinned(e, r, t, i = { source: "dialog" }) {
   let o = `/api/frame/favorite/${encodeURIComponent(e)}`,
     c = {
       refreshOAuth: !0,
-      headers: Fd(),
+      headers: buildFrameHeaders(),
       timeout: 15000,
       maxContentLength: Ze,
       signal: i.signal,
@@ -1078,14 +1078,14 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
     u = r ? "pin" : "unpin",
     l;
   try {
-    l = Gon()
+    l = isArtifactPinRelayUnavailable()
       ? Kt
       : r
-        ? await Nd.postRelayOnly(o, void 0, c)
-        : await Nd.deleteRelayOnly(o, c);
+        ? await artifactFrameHttpClient.postRelayOnly(o, void 0, c)
+        : await artifactFrameHttpClient.deleteRelayOnly(o, c);
   } catch (b) {
     if (isCancel(b)) throw b;
-    let p = nP(b);
+    let p = isFrameRelayAttemptError(b);
     return (
       logFeatureBad("artifact_pin", "request_error", Ke(i, p ? "relay" : "direct")),
       {
@@ -1101,14 +1101,14 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
     if (l.reason === "relay-unavailable" || l.reason === "relay-not-served")
       return (
         logFeatureBad("artifact_pin", l.reason.replace(/-/g, "_"), d),
-        { err: kNt, reason: "unavailable" }
+        { err: ARTIFACT_PIN_UNAVAILABLE_MESSAGE, reason: "unavailable" }
       );
     return (
       logFeatureBad("artifact_pin", l.reason, d),
       {
         err:
           l.reason === "no-auth"
-            ? Am(l.detail)
+            ? formatNotAuthenticatedMessage(l.detail)
             : `Artifact ${u} unavailable: ${l.reason}`,
         reason: "unavailable",
       }
@@ -1133,11 +1133,11 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
   if (
     l.status === 403 &&
     typeof l.data === "string" &&
-    l.data.trim().startsWith(TG)
+    l.data.trim().startsWith(CCR_AGENT_TOKEN_FORBIDDEN_MESSAGE)
   )
     return (
       logFeatureBad("artifact_pin", "ccr_credential_refused", d),
-      { err: kNt, reason: "unavailable" }
+      { err: ARTIFACT_PIN_UNAVAILABLE_MESSAGE, reason: "unavailable" }
     );
   if (l.status < 200 || l.status >= 300)
     return (
@@ -1147,7 +1147,7 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
         reason: "http_failed",
       }
     );
-  if (l.route === "relay" && !hJ(l))
+  if (l.route === "relay" && !isRelayedUpstreamResponse(l))
     return (
       logFeatureBad("artifact_pin", "ok_foreign", d),
       {
@@ -1167,7 +1167,7 @@ async function gPe(e, r, t, i = { source: "dialog" }) {
 var Je = "/api/oauth/account/settings",
   Jt = 100;
 async function Zt(e) {
-  let r = (await bCe(e))?.organizationUuid;
+  let r = (await getStoreBearerOauthAccountInfoAsync(e))?.organizationUuid;
   if (!r) return;
   let t = {
       auth: "claude-ai-oauth",
@@ -1190,18 +1190,18 @@ async function Zt(e) {
     t,
   );
 }
-var T9 = new RegExp(`^${Hoe}$`),
+var SCHEMA_TOKEN_RE = new RegExp(`^${Hoe}$`),
   Qt = 1,
-  PNt = 16,
+  MAX_SCHEMA_FIELDS = 16,
   et = 16,
-  ONt = 16,
+  MAX_TOKEN_ARRAY_ITEMS = 16,
   tt = 16,
   rt = 16,
-  DNt = 64;
+  MAX_SCHEMA_ENTRIES = 64;
 var er = 65536,
-  Xon = 16;
+  MAX_DERIVED_FIELDS = 16;
 function L(e) {
-  return typeof e === "string" && T9.test(e);
+  return typeof e === "string" && SCHEMA_TOKEN_RE.test(e);
 }
 function tr(e) {
   if (!isRecord(e)) return "schema document must be an object";
@@ -1222,12 +1222,12 @@ function tr(e) {
   if (!L(e.name)) return "name must be a token";
   if (!L(e.island)) return "island must be a token";
   let o = e.maxEntries;
-  if (typeof o !== "number" || !Number.isInteger(o) || o < 1 || o > DNt)
-    return `maxEntries must be an integer in 1..${DNt}`;
+  if (typeof o !== "number" || !Number.isInteger(o) || o < 1 || o > MAX_SCHEMA_ENTRIES)
+    return `maxEntries must be an integer in 1..${MAX_SCHEMA_ENTRIES}`;
   if (!isRecord(e.fields)) return "fields must be an object";
   let c = Object.keys(e.fields);
-  if (c.length === 0 || c.length > PNt)
-    return `fields must declare 1..${PNt} fields`;
+  if (c.length === 0 || c.length > MAX_SCHEMA_FIELDS)
+    return `fields must declare 1..${MAX_SCHEMA_FIELDS} fields`;
   let u = e.fields;
   for (let p of c) {
     if (!L(p)) return `field name must be a token: ${p}`;
@@ -1268,9 +1268,9 @@ function tr(e) {
           !Number.isInteger(C) ||
           _ < 0 ||
           C < _ ||
-          C > ONt
+          C > MAX_TOKEN_ARRAY_ITEMS
         )
-          return `field ${p}: need 0 <= minItems <= maxItems <= ${ONt}`;
+          return `field ${p}: need 0 <= minItems <= maxItems <= ${MAX_TOKEN_ARRAY_ITEMS}`;
         break;
       }
       case "ref": {
@@ -1351,7 +1351,7 @@ function rr(e, r, t, i) {
   }
   return "unknown invariant shape";
 }
-function Ojn(e, r) {
+function parseDataIslandEntries(e, r) {
   if (Buffer.byteLength(e, "utf-8") > er) return null;
   let t;
   try {
@@ -1440,7 +1440,7 @@ function he() {
       islandOwners: new Map(),
       metaVerdicts: new Map(),
     }),
-      ar({ doc: Yon, enabled: () => ot.isOpen(), derive: or }));
+      ar({ doc: WORKSHOP_DECISIONS_SCHEMA, enabled: () => ot.isOpen(), derive: or }));
   return e.interactionSchemas;
 }
 function ar(e) {
@@ -1453,7 +1453,7 @@ function ar(e) {
     );
   (i.set(r, e), o.set(t, r));
 }
-function Lut(e) {
+function resolveInteractionSchema(e) {
   let { byName: r, metaVerdicts: t } = he(),
     i = r.get(e);
   if (i === void 0) return { ok: !1, reason: "unknown" };
@@ -1467,10 +1467,10 @@ function nt() {
     .filter(([, e]) => e.enabled())
     .map(([e]) => e);
 }
-function Djn() {
+function listInteractionSchemaNames() {
   return [...he().byName.keys()];
 }
-function Ljn(e, r) {
+function deriveSchemaValues(e, r) {
   if (e.derive === void 0) return { ok: !0 };
   let t;
   try {
@@ -1480,7 +1480,7 @@ function Ljn(e, r) {
   }
   if (!isRecord(t)) return { ok: !1 };
   let i = Object.keys(t);
-  if (i.length > Xon) return { ok: !1 };
+  if (i.length > MAX_DERIVED_FIELDS) return { ok: !1 };
   let o = {};
   for (let c of i) {
     let u = t[c];
@@ -1489,7 +1489,7 @@ function Ljn(e, r) {
   }
   return { ok: !0, derived: o };
 }
-var Yon = {
+var WORKSHOP_DECISIONS_SCHEMA = {
   format: 1,
   name: "workshop-decisions",
   island: "ws-decisions",
@@ -1541,7 +1541,7 @@ function lt() {
       `Runtime capabilities this page declares, as {name: config}. The control plane is the authority on valid names and config shapes. An empty object clears any previously stored declaration; omit the field on a redeploy to carry the stored declaration forward unchanged. Before declaring any capability, load the \`${ARTIFACT_CAPABILITIES_SKILL_NAME}\` skill for the current contract and per-capability guidance.`,
     );
 }
-function Jon(e) {
+function listClaudeAiConnectorServers(e) {
   let r = new Map();
   for (let t of e) {
     if (t.mcpInfo?.scope !== "claudeai") continue;
@@ -1554,14 +1554,14 @@ function Jon(e) {
     let c = t.mcpInfo.displayName ?? i;
     r.set(i, {
       server: c,
-      toolPrefix: Js(t.name)?.serverName ?? i,
+      toolPrefix: parseMcpToolName(t.name)?.serverName ?? i,
       toolNames: [t.mcpInfo.toolName],
-      ...(Xwt(c) ? {} : { declarable: !1 }),
+      ...(isDeclarableServerName(c) ? {} : { declarable: !1 }),
     });
   }
   return [...r.values()];
 }
-function Qon(e) {
+function listRemoteDeviceServerNames(e) {
   let r = `mcp__${REMOTE_DEVICES_MCP_SERVER_NAME}__`,
     t = new Set();
   for (let i of e) {
@@ -1596,7 +1596,7 @@ function lr(e) {
       server: l,
       toolPrefix: c.serverName,
       toolNames: [c.toolName],
-      ...(Xwt(l) ? {} : { declarable: !1 }),
+      ...(isDeclarableServerName(l) ? {} : { declarable: !1 }),
     });
   }
   let i = [...r.values()];
@@ -1609,20 +1609,20 @@ function lr(e) {
 function cr() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_cobalt_plinth_yew", !1);
 }
-function Zon(e, r) {
+function getArtifactConnectorHostingState(e, r) {
   let t = sr() ? lr(e) : null,
     i = te(r ?? []);
   if (!i) return { ccrHosted: !1, metaConnector: null, hosted: t };
   let o = a.CLAUDE_CODE_REMOTE === !0,
     c = i.name,
     u = e.find((b) => b.mcpInfo?.serverName === c),
-    l = u && Js(u.name)?.serverName,
+    l = u && parseMcpToolName(u.name)?.serverName,
     d = l && cr() ? { server: yir, toolPrefix: l } : null;
   return { ccrHosted: o, metaConnector: d, hosted: t };
 }
-function Mjn(e, r) {
-  let { metaConnector: t, hosted: i } = Zon(e, r),
-    o = [...Jon(e), ...(i === null ? [] : [...i.named, ...i.undeclarable])];
+function listArtifactConnectorServers(e, r) {
+  let { metaConnector: t, hosted: i } = getArtifactConnectorHostingState(e, r),
+    o = [...listClaudeAiConnectorServers(e), ...(i === null ? [] : [...i.named, ...i.undeclarable])];
   return t ? [...o, t] : o;
 }
 function ct() {
@@ -1631,35 +1631,35 @@ function ct() {
   );
 }
 var be = ["light", "dark"],
-  esn = [1280, 390],
+  DEFAULT_PREVIEW_WIDTHS = [1280, 390],
   ur = be,
-  Sce = 3,
+  MAX_PREVIEW_WIDTHS = 3,
   ve = 320,
   Ae = 2560,
-  yPe = 100,
-  Mut = 12,
-  Nut = 48;
-function Fut(e) {
+  MAX_REPORTED_DROPPED_ISSUES = 100,
+  MAX_PREVIEW_SHOTS = 12,
+  MAX_PREVIEW_ISSUES = 48;
+function normalizePreviewWidths(e) {
   let r = Array.isArray(e.widths) ? e.widths : [],
     t = dedupe(
       r
         .filter((i) => typeof i === "number" && Number.isFinite(i))
         .map((i) => Math.round(Math.min(Ae, Math.max(ve, i)))),
-    ).slice(0, Sce);
-  return t.length > 0 ? t : [...esn];
+    ).slice(0, MAX_PREVIEW_WIDTHS);
+  return t.length > 0 ? t : [...DEFAULT_PREVIEW_WIDTHS];
 }
-function $ut(e) {
+function normalizePreviewThemes(e) {
   let r = Array.isArray(e.themes) ? e.themes : [],
     t = be.filter((i) => r.includes(i));
   return t.length > 0 ? t : [...ur];
 }
-function dM() {
+function isArtifactRoomFeatureEnabled() {
   return null?.isArtifactRoomEnabled() === !0;
 }
-function LNt(e) {
+function isArtifactRoomAllowed(e) {
   return null?.artifactRoomSkipReason(e) === null;
 }
-function tsn() {
+function getArtifactRoomService() {
   throw Error("artifact rooms are not compiled into this build");
 }
 var I = null,
@@ -1782,10 +1782,10 @@ function previewFieldSchemas() {
   return {
     widths: v(T().int().min(ve).max(Ae))
       .min(1)
-      .max(Sce)
+      .max(MAX_PREVIEW_WIDTHS)
       .optional()
       .describe(
-        `preview only: viewport widths to render at, in CSS pixels (default 1280 and 390; at most ${Sce}).`,
+        `preview only: viewport widths to render at, in CSS pixels (default 1280 and 390; at most ${MAX_PREVIEW_WIDTHS}).`,
       ),
     themes: v(X(be))
       .min(1)
@@ -1825,7 +1825,7 @@ function gr() {
     r = dr && e.length > 0,
     t = tV(),
     i = vft(),
-    o = dM(),
+    o = isArtifactRoomFeatureEnabled(),
     c = sessionWatchRail();
   ne().frozenWatchRail = c;
   let u = isFrameMultiFileEnabled();
@@ -1843,7 +1843,7 @@ function gr() {
   let C = iwe(),
     M = ct(),
     P = ge !== null && Ee !== null && Ee.isArtifactHandlersEnabled(),
-    D = RNt();
+    D = isArtifactPinEnabled();
   ((ne().frozenArtifactPins = D),
     n(
       `Artifact input schema built: capabilities=${p} comments=${t} db=${i} assets=${w} files=${u} types=${l} type_catalog=${b} read_page_data=${r} room=${o} verify=${E} delete=${A} copy_from=${_} preview=${C} open=${M} endpoints=${P} pin=${D} flag_source=${Z3n()} gb_fresh=${hasFreshGrowthBookFeatures()}`,
@@ -1896,7 +1896,7 @@ function gr() {
       }),
       ...(r && {
         schema: s()
-          .regex(T9)
+          .regex(SCHEMA_TOKEN_RE)
           .optional()
           .describe(
             `Which registered interaction schema to validate the page's data island against. Required for read_page_data (e.g. "${e[0]}"); meaningless for every other action.`,
@@ -1978,7 +1978,7 @@ function gr() {
                 ),
               ...(N && I.liveFileEntryKeys()),
             }),
-          ).max(RG),
+          ).max(MAX_PUBLISH_FILES),
           fe(
             s().min(1).max(512),
             $e([
@@ -2154,7 +2154,7 @@ function gr() {
       }),
       ...((u || P) && {
         path: s()
-          .max(P ? Ee.MAX_HANDLER_TARGET_CHARS : TD)
+          .max(P ? Ee.MAX_HANDLER_TARGET_CHARS : MAX_PUBLISHED_PATH_LENGTH)
           .optional()
           .describe(
             [
@@ -2211,8 +2211,8 @@ function gr() {
         contract: $e([
           k("latest"),
           s()
-            .regex(Mj)
-            .refine((R) => R !== Z1e, {
+            .regex(VERSION_PATTERN)
+            .refine((R) => R !== NO_PIN_VERSION_SENTINEL, {
               message:
                 "0.0.0 is the no-pin sentinel, not a version \u2014 omit the field to keep the artifact's current version",
             }),
@@ -2303,7 +2303,7 @@ function artifactRoomPromptGateOpen() {
   return "topic" in inputSchema().shape;
 }
 function artifactRoomSurfaceOpen() {
-  return artifactRoomPromptGateOpen() && dM();
+  return artifactRoomPromptGateOpen() && isArtifactRoomFeatureEnabled();
 }
 function zodEnumFieldIncludes(e, r) {
   if (e === null || (typeof e !== "object" && typeof e !== "function"))
@@ -2330,51 +2330,51 @@ function artifactPreviewPromptGateOpen() {
 function artifactHandlersPromptGateOpen() {
   return zodEnumFieldIncludes(inputSchema().shape.action, "run_script");
 }
-WZn(artifactReadPageDataPromptGateOpen);
-kWn(artifactCommentsPromptGateOpen);
+registerArtifactReadAvailability(artifactReadPageDataPromptGateOpen);
+registerArtifactCommentsAvailability(artifactCommentsPromptGateOpen);
 export {
-  RNt,
-  kNt,
-  Gon,
-  gPe,
-  xjn,
-  hPe,
-  Hjn,
-  Ijn,
-  Pjn,
-  qon,
-  zon,
-  xNt,
-  HNt,
-  INt,
-  Von,
-  Dut,
-  _Pe,
-  Kon,
-  T9,
-  PNt,
-  ONt,
-  DNt,
-  Xon,
-  Ojn,
-  Lut,
-  Djn,
-  Ljn,
-  Yon,
-  Jon,
-  Qon,
-  Zon,
-  Mjn,
-  esn,
-  Sce,
-  yPe,
-  Mut,
-  Nut,
-  Fut,
-  $ut,
-  dM,
-  LNt,
-  tsn,
+  isArtifactPinEnabled,
+  ARTIFACT_PIN_UNAVAILABLE_MESSAGE,
+  isArtifactPinRelayUnavailable,
+  setArtifactPinned,
+  listDurableWatchRows,
+  getDurableWatchRow,
+  restoreDurableWatchesFromWorkerState,
+  hasWakeMinter,
+  getDurableWatchRailBlockReason,
+  getSubscribeForbiddenState,
+  getWatchUrlWithheldReason,
+  subscribeDurableWatch,
+  unsubscribeDurableWatch,
+  getArtifactDeleteUnavailableMessage,
+  isArtifactDeleteRelayUnavailable,
+  deleteArtifact,
+  forgetDeletedArtifact,
+  formatArtifactDeletedNote,
+  SCHEMA_TOKEN_RE,
+  MAX_SCHEMA_FIELDS,
+  MAX_TOKEN_ARRAY_ITEMS,
+  MAX_SCHEMA_ENTRIES,
+  MAX_DERIVED_FIELDS,
+  parseDataIslandEntries,
+  resolveInteractionSchema,
+  listInteractionSchemaNames,
+  deriveSchemaValues,
+  WORKSHOP_DECISIONS_SCHEMA,
+  listClaudeAiConnectorServers,
+  listRemoteDeviceServerNames,
+  getArtifactConnectorHostingState,
+  listArtifactConnectorServers,
+  DEFAULT_PREVIEW_WIDTHS,
+  MAX_PREVIEW_WIDTHS,
+  MAX_REPORTED_DROPPED_ISSUES,
+  MAX_PREVIEW_SHOTS,
+  MAX_PREVIEW_ISSUES,
+  normalizePreviewWidths,
+  normalizePreviewThemes,
+  isArtifactRoomFeatureEnabled,
+  isArtifactRoomAllowed,
+  getArtifactRoomService,
   noWatchRailCollabNote,
   readPageDataDescribe,
   frozenSnapshotAdmits,

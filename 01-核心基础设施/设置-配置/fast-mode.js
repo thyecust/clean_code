@@ -28,7 +28,7 @@ import {
   parseUserSpecifiedModel,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
-import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { getRemoteTransport, hasRemoteControlChannel } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { getConfiguredSessionModel, hasPreModelSwitchHooks, recordModelSwitchIfChanged, enqueueSessionTask, formatInlineCode, FAST_MODE_ON_LABEL, MODEL_SET_SUFFIX, ControlRequestTimeoutError } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -51,7 +51,7 @@ function getFastModeTargetModel(t) {
 }
 async function vetFastModeTargetModel(t, e, o) {
   let m = getFastModeTargetModel(e());
-  if (m === void 0 || Ks() || !hasPreModelSwitchHooks(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
+  if (m === void 0 || hasRemoteControlChannel() || !hasPreModelSwitchHooks(t)) return { vetted: UNVETTED_FAST_MODE_TARGET, messages: [] };
   let a = await P_(t, e, m, "command", { signal: o });
   if (a.decision === "proceed")
     return { vetted: { target: m }, messages: a.messages };
@@ -95,9 +95,9 @@ function applyFastModeSetting(t, e, o, m = !0, a, f = UNVETTED_FAST_MODE_TARGET)
           );
         });
     };
-  if (Ks()) {
+  if (hasRemoteControlChannel()) {
     S();
-    let r = jn()?.sendControlRequest({
+    let r = getRemoteTransport()?.sendControlRequest({
       subtype: "apply_flag_settings",
       settings: { fastMode: e ? !0 : null, ...(e && { model: getFastModeModelId() }) },
     });
@@ -159,7 +159,7 @@ async function runFastModeToggle(t, e, o, m, a, f = !0, S, c, r, s) {
   if (d.kind === "refused") return d.refusal;
   if (d.remote !== void 0) return formatFastModeRemoteResult(d.remote, e);
   if (
-    (logEvent("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: Ks() }),
+    (logEvent("tengu_fast_mode_toggled", { enabled: e, source: fromEnum(a), remote: hasRemoteControlChannel() }),
     e)
   ) {
     let M = renderFastModeIndicator(!0),

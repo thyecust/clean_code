@@ -13,21 +13,21 @@ import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getGlobalConfig } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  ms,
-  Nr,
-  LBe,
-  OQ,
-  iL,
-  Qet,
-  MRt,
-  nlr,
-  NRt,
-  uke,
-  ett,
-  $Be,
+  getEnabledSettingsSources,
+  isSettingsSourceEnabled,
+  OTEL_EXPORTER_OTLP_PREFIX,
+  isMemoryApiEnvVar,
+  BASE_URL_ENV_VARS,
+  TOKEN_FD_ENV_VARS,
+  isManagedOnlyEnvVar,
+  isAwsProfileEnvVar,
+  isProxyEnvVar,
+  isTlsClientCertEnvVar,
+  HOST_AUTH_ENV_VARS,
+  shouldForwardEnvVar,
 } from "../设置-配置/设置-配置.aqbb35ee.js";
 import { isDesktopHostEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { kar, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { setPreSettingsEnvSnapshotProvider, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { loadExtraCACerts, clearCACertsCache, loadMTLSClientMaterial, getLoadedMTLSPaths, clearMTLSCache, configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { LRe } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { PROCESS_WRAPPER_ENV_VAR } from "../核心工具-进程与信号/process-wrapper-launcher.js";
@@ -40,7 +40,7 @@ var M = new Set([
   "ANTHROPIC_API_KEY",
   "ANTHROPIC_AUTH_TOKEN",
   "CLAUDE_CODE_OAUTH_TOKEN",
-  ...iL.filter((t) => t.startsWith("CLAUDE_CODE_ARTIFACT") || OQ(t)),
+  ...BASE_URL_ENV_VARS.filter((t) => t.startsWith("CLAUDE_CODE_ARTIFACT") || isMemoryApiEnvVar(t)),
 ]);
 function c(t) {
   if (!t || !process.env.ANTHROPIC_UNIX_SOCKET) return t || {};
@@ -156,12 +156,12 @@ function N(t, s, e) {
   return o ?? t;
 }
 var F = new Set([
-  ...ett,
+  ...HOST_AUTH_ENV_VARS,
   "CLAUDE_CODE_HOST_CREDS_FILE",
   "CLAUDE_CODE_HOST_AUTH_ENV_VAR",
   "CLAUDE_BG_AUTH_SNAPSHOT_PATH",
   "CLAUDE_BG_SOCKET_TOKENS_PATH",
-  ...Qet,
+  ...TOKEN_FD_ENV_VARS,
   "CLAUDE_CODE_MESSAGING_SOCKET",
   "CLAUDE_CODE_MESSAGING_TOKEN",
   "CLAUDE_CODE_DISABLE_ADMIN_ENV_UNION",
@@ -194,7 +194,7 @@ function L(t, s, e, o) {
       r[E] = C;
       continue;
     }
-    if (MRt(E) && (e.managedByHost || !nlr(E))) {
+    if (isManagedOnlyEnvVar(E) && (e.managedByHost || !isAwsProfileEnvVar(E))) {
       if (e.managedByHost) g(o, E, s);
       continue;
     }
@@ -205,7 +205,7 @@ function L(t, s, e, o) {
     if (
       e.managedByHostFlag &&
       (!e.desktopHost || m.has(s)) &&
-      (NRt(E) || uke(E))
+      (isProxyEnvVar(E) || isTlsClientCertEnvVar(E))
     ) {
       g(o, E, s, e.desktopHost);
       continue;
@@ -307,7 +307,7 @@ function xC() {
 function moe() {
   return D.getAppliedGlobalConfigEnv();
 }
-kar(CK);
+setPreSettingsEnvSnapshotProvider(CK);
 function gwn() {
   D.dropPreSettingsEnvSnapshot();
 }
@@ -316,12 +316,12 @@ function Dj(t, s = "policySettings") {
 }
 var j = ["userSettings", "flagSettings", "policySettings"],
   p = ["TRACES", "METRICS", "LOGS", "PROFILES"],
-  _ = LBe,
+  _ = OTEL_EXPORTER_OTLP_PREFIX,
   U = new Set(["HEADERS", "CLIENT_KEY", "CLIENT_CERTIFICATE"]),
   P = new Set(["OTEL_LOGS_EXPORTER", "OTEL_TRACES_EXPORTER"]),
   u = "CLAUDE_CODE_ENABLE_TELEMETRY",
   v = "BETA_TRACING_ENDPOINT";
-var Ae = new Set([`${LBe}ENDPOINT`, `${LBe}HEADERS`, `${LBe}PROTOCOL`]);
+var Ae = new Set([`${OTEL_EXPORTER_OTLP_PREFIX}ENDPOINT`, `${OTEL_EXPORTER_OTLP_PREFIX}HEADERS`, `${OTEL_EXPORTER_OTLP_PREFIX}PROTOCOL`]);
 function R(t) {
   return t;
 }
@@ -560,7 +560,7 @@ class y {
       Object.assign(process.env, this.appliedGlobalConfigEnv));
     for (let e of j) {
       if (e === "policySettings") continue;
-      if (!Nr(e)) continue;
+      if (!isSettingsSourceEnabled(e)) continue;
       Object.assign(process.env, this.filterSettingsEnv(getSettingsForSource(e)?.env, e));
     }
     (isRemoteSettingsEligible(),
@@ -569,20 +569,20 @@ class y {
         this.filterSettingsEnv(getSettingsForSource("policySettings")?.env, "policySettings"),
       ));
     let t = new Map();
-    for (let e of ms()) {
+    for (let e of getEnabledSettingsSources()) {
       let o = this.filterSettingsEnv(getSettingsForSource(e)?.env, e);
       for (let [i, r] of Object.entries(o))
         t.set(i.toUpperCase(), { key: i, value: r });
     }
     for (let { key: e, value: o } of t.values())
-      if ($Be(e, o)) process.env[e] = o;
+      if (shouldForwardEnvVar(e, o)) process.env[e] = o;
     setSettingsColorEnv(this.settingsColorEnv);
     let s = process.env[PROCESS_WRAPPER_ENV_VAR];
     if (!s || s === this.materializedProcessWrapper) {
       let e = [
         getSettingsForSource("policySettings")?.processWrapper,
         getSettingsForSource("flagSettings")?.processWrapper,
-        Nr("userSettings") ? getSettingsForSource("userSettings")?.processWrapper : void 0,
+        isSettingsSourceEnabled("userSettings") ? getSettingsForSource("userSettings")?.processWrapper : void 0,
       ].find((o) => typeof o === "string" && o !== "");
       if (e !== void 0)
         ((process.env[PROCESS_WRAPPER_ENV_VAR] = e), (this.materializedProcessWrapper = e));
@@ -603,7 +603,7 @@ class y {
       "globalConfig",
     )),
       Object.assign(process.env, this.appliedGlobalConfigEnv));
-    for (let d of ms())
+    for (let d of getEnabledSettingsSources())
       Object.assign(process.env, this.filterSettingsEnv(getSettingsForSource(d)?.env, d));
     (setSettingsColorEnv(this.settingsColorEnv), this.enforceManagedOtelFamilyDominance());
     let r =

@@ -23,7 +23,7 @@ import { o, t, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Oae, M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { handleReplAppStateChange, partitionSettingsErrors } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
@@ -84,7 +84,7 @@ setup-token creates a long-lived Claude.ai subscription token, which this policy
       c.render(
         e(AppRoot, {
           session: p,
-          onChangeAppState: (y) => Oae(y, p),
+          onChangeAppState: (y) => handleReplAppStateChange(y, p),
           children: r(o, {
             flexDirection: "column",
             gap: 1,
@@ -207,7 +207,7 @@ async function doctorHandler(c) {
         await Promise.race([A, sleep(200)]);
     }
     let p = l.push("Organization policy: \u2026") - 1,
-      { statusNotices: g, invalidEntries: _ } = M_e(getSettingsWithMcpErrors().errors);
+      { statusNotices: g, invalidEntries: _ } = partitionSettingsErrors(getSettingsWithMcpErrors().errors);
     if (_.length > 0) {
       l.push("", chalk.yellow("Invalid settings"));
       for (let s of _) {

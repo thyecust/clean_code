@@ -31,7 +31,7 @@ import { CREDENTIALS_SUFFIX, getKeychainServiceName, getKeychainAccountName } fr
 import "../../02-功能模块/MCP客户端/chunk-tv3jbp8f.js";
 import "../../02-功能模块/MCP客户端/chunk-98spw152.js";
 import "../../02-功能模块/MCP客户端/mcp-server.js";
-import { Fge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { AbortError } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parsePositiveInteger } from "../../01-核心基础设施/共享小工具-未细化/parse-positive-integer.js";
 import { pushCliArg } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
@@ -829,13 +829,13 @@ function ze(e) {
   return t === void 0 ? "" : ` (${t})`;
 }
 function Ee() {
-  return J1(new Fge("Claude Code process aborted by user"), {
+  return J1(new AbortError("Claude Code process aborted by user"), {
     telemetryMessage: "Claude Code process aborted by user",
     errorClass: "aborted",
   });
 }
 function bt() {
-  return J1(new Fge("Operation aborted"), {
+  return J1(new AbortError("Operation aborted"), {
     telemetryMessage: "Operation aborted",
     errorClass: "aborted",
   });
@@ -1129,7 +1129,7 @@ class _e {
       if (this.firstResultReceivedResolve) this.firstResultReceivedResolve();
       if (
         this.lastErrorResultText !== void 0 &&
-        !(e instanceof Fge) &&
+        !(e instanceof AbortError) &&
         e?.name !== "SSEHttpError"
       ) {
         let t = J1(
@@ -1919,7 +1919,7 @@ class _e {
       (n("[Query] Calling transport.endInput() to close stdin to CLI process"),
         this.transport.endInput());
     } catch (t) {
-      if (!(t instanceof Fge)) throw t;
+      if (!(t instanceof AbortError)) throw t;
     }
   }
   waitForFirstResult() {

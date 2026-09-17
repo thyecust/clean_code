@@ -13,7 +13,7 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Nr, k8t } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { isSettingsSourceEnabled, CROSS_SESSION_INBOUND_SETTING_KEY } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettingsWithErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -123,7 +123,7 @@ function getConfiguredInboundPolicy() {
 function I() {
   let e, o;
   for (let s of ["policySettings", "flagSettings", "userSettings"]) {
-    if (!Nr(s)) continue;
+    if (!isSettingsSourceEnabled(s)) continue;
     let t = getSettingsForSource(s)?.crossSessionInbound;
     if (t !== void 0) {
       ((e = t), (o = s));
@@ -131,7 +131,7 @@ function I() {
     }
   }
   for (let s of ["localSettings", "projectSettings"]) {
-    if (!Nr(s)) continue;
+    if (!isSettingsSourceEnabled(s)) continue;
     let t = getSettingsForSource(s)?.crossSessionInbound;
     if (t === void 0) continue;
     if (p[t] > p[e ?? "accept"]) ((e = t), (o = "repoSettings"));
@@ -148,7 +148,7 @@ function I() {
 }
 function N() {
   return getSettingsWithErrors().errors.some(
-    (e) => e.path === k8t && e.severity === "warning" && !e.statusOnly,
+    (e) => e.path === CROSS_SESSION_INBOUND_SETTING_KEY && e.severity === "warning" && !e.statusOnly,
   );
 }
 function b(e) {

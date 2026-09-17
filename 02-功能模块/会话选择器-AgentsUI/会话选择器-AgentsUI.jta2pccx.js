@@ -48,7 +48,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getProjectDir, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Pt, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
+import { isRemoteActive, findCanonicalGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te, truncateToWidth, truncateStartToWidth, truncate, formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getInitialSettings, hasSkipDangerousModePermissionPrompt } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -149,39 +149,39 @@ import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/
 import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import {
-  Tye,
-  zx,
-  bPt,
-  wit,
-  VZ,
-  RWe,
-  zHe,
-  nle,
-  TPt,
-  kZt,
-  VHe,
-  xZt,
-  Tit,
-  e4,
-  $B,
-  kWe,
-  xWe,
-  U$n,
-  EPt,
-  B$n,
-  j$n,
-  HZt,
-  HWe,
-  W$n,
-  IZt,
-  APt,
-  G$n,
-  Ait,
-  q$n,
-  CPt,
-  KHe,
-  IWe,
-  eF,
+  claimAttachBeacon,
+  releaseAttachBeacon,
+  formatUnpushedCommitsSummary,
+  formatUnpushedCommitsDetail,
+  killJob,
+  listAliveDaemonJobs,
+  applyReplyPatch,
+  REPLY_ENOJOB_MSG,
+  REPLY_PEER_NO_SOCK_MSG,
+  isReplyDaemonRestartingMsg,
+  replyToJob,
+  attachJob,
+  formatKeptWorktreeLabel,
+  deleteJob,
+  CLAUDE_AGENT_TEMPLATE,
+  resolveAgentTemplate,
+  listCustomAgents,
+  findChildRepos,
+  materializePastedImages,
+  setDispatchExtraArgs,
+  getDispatchExtraArgs,
+  dispatchAgentJob,
+  isAgentViewBashModeEnabled,
+  dispatchExecJob,
+  areDefaultsEqual,
+  getSpareJob,
+  markSpareJobReady,
+  ensureSpareJob,
+  claimSpareJob,
+  discardSpareJob,
+  respawnJob,
+  preSeedReplBgJob,
+  spawnBgSession,
 } from "../后台任务-Shell管理/chunk-xmxjyg29.js";
 import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { saveJobDraft, writeJobDraft, writeJobDraftSync, deleteJobDraft, readJobDraft, sweepStaleJobDrafts } from "../../01-核心基础设施/共享小工具-未细化/job-drafts.js";
@@ -760,7 +760,7 @@ function Co(s, c) {
   if (
     c &&
     s.tempo !== "active" &&
-    s.template === $B.name &&
+    s.template === CLAUDE_AGENT_TEMPLATE.name &&
     b.length &&
     b.every((v) => c.get(v.href)?.state === "MERGED")
   )
@@ -1010,7 +1010,7 @@ var Sc = 30000;
 function Kh() {
   return {
     listJobs: (s) => listJobs(void 0, s),
-    listAliveDaemonJobs: (s) => RWe(s),
+    listAliveDaemonJobs: (s) => listAliveDaemonJobs(s),
     adoptRosterOrphans: (s, c, m) => adoptRosterOrphans(s, c, m),
     listAllLiveSessions: (s) => listAllLiveSessions(s),
     listRemoteSessions: () => zu(),
@@ -1494,8 +1494,8 @@ class kc {
           if (w.jobId) c.set(Rr(w.jobId), w.status);
         }
         for (let w of c.keys()) this.#h.delete(w);
-        let b = APt();
-        if (b && s.some((w) => w.sessionId === b.sessionId)) G$n(b.sessionId);
+        let b = getSpareJob();
+        if (b && s.some((w) => w.sessionId === b.sessionId)) markSpareJobReady(b.sessionId);
         let k = !1;
         for (let [w, v] of this.#b) {
           let R = s.find((O) => O.sessionId === w || O.jobId === v.jobId);
@@ -2178,7 +2178,7 @@ class Oc {
   #m = new Map();
   constructor(s = {}) {
     let c = s.query ?? "",
-      m = HWe() && c.startsWith("!"),
+      m = isAgentViewBashModeEnabled() && c.startsWith("!"),
       b = m ? c.slice(1) : c;
     this.#e = {
       query: b,
@@ -2394,9 +2394,9 @@ async function zi(s, c, m) {
 import { isAbsolute as tb } from "path";
 function Yi(s, c, m = {}, b = []) {
   let k = s.trim();
-  if (HWe() && k.startsWith("!")) {
+  if (isAgentViewBashModeEnabled() && k.startsWith("!")) {
     let J = k.slice(1).trim();
-    return { template: $B, intent: "", matched: !!J, exec: J };
+    return { template: CLAUDE_AGENT_TEMPLATE, intent: "", matched: !!J, exec: J };
   }
   let w = k.toLowerCase();
   if (w.startsWith("a:") || w.startsWith("s:") || w.startsWith("o:"))
@@ -2429,7 +2429,7 @@ function Yi(s, c, m = {}, b = []) {
       routine: O,
     };
   if (v) return { template: v, intent: A, matched: !0, cwd: R, routine: O };
-  return { template: $B, intent: A, matched: !1, cwd: R, routine: O };
+  return { template: CLAUDE_AGENT_TEMPLATE, intent: A, matched: !1, cwd: R, routine: O };
 }
 function xa(s) {
   let c = s.trim();
@@ -2664,7 +2664,7 @@ async function Vc(s) {
       let k = b.agentLastUsed ?? {},
         w = { ...k };
       for (let v of c) {
-        if (v.state.template === $B.name) continue;
+        if (v.state.template === CLAUDE_AGENT_TEMPLATE.name) continue;
         if (k[v.state.template] !== void 0) continue;
         let R = Date.parse(v.state.createdAt);
         if (Number.isNaN(R)) continue;
@@ -2681,7 +2681,7 @@ var ib = 4,
   Cr = "Still starting \u2014 try again in a moment",
   sb = new Set(["EPIPE", "ECONNRESET", "ECONNREFUSED", "ENOTCONN"]);
 function wn(...s) {
-  return KHe(...s).catch((c) => ({
+  return respawnJob(...s).catch((c) => ({
     ok: !1,
     error: `Couldn't respawn \u2014 ${l(c)}`,
     alive: !1,
@@ -2911,7 +2911,7 @@ function Uc(s, c) {
       }
     }
     let dt = m.getSnapshot().sessionModel,
-      Dt = APt(),
+      Dt = getSpareJob(),
       Lt =
         !parsePastedPlaceholders(Ve).some((fe) => m.pastes[fe.id]?.type === "image") &&
         Ve.length <= lK &&
@@ -2924,13 +2924,13 @@ function Uc(s, c) {
         !Je.routine &&
         !dt &&
         Ye === Dt.cwd &&
-        IZt(Dt.defaults, X) &&
+        areDefaultsEqual(Dt.defaults, X) &&
         Lt,
       Gt = mt ? Dt.sessionId : nb(),
       at = Gt.slice(0, 8);
     ((k.followId = at), m.beginProgrammaticChange());
     let Xt = Je.matched && !Je.exec ? Je.template.name : null,
-      jt = Je.matched ? Je.template : kWe(X, lt),
+      jt = Je.matched ? Je.template : resolveAgentTemplate(X, lt),
       Jt = m.pastes,
       st = Je.exec ? expandPastedContents(Je.exec, Jt) : void 0,
       Qt = {
@@ -2976,13 +2976,13 @@ function Uc(s, c) {
       let fe =
         st || Je.matched || lt || !X?.agent
           ? jt
-          : kWe(X, await xWe(Ye, R).catch(() => []));
+          : resolveAgentTemplate(X, await listCustomAgents(Ye, R).catch(() => []));
       return st
-        ? W$n(st, Gt, Ye, R)
+        ? dispatchExecJob(st, Gt, Ye, R)
         : mt
-          ? q$n(Ve, fe, R)
-          : EPt(Ve, Jt, at, R).then((Ae) =>
-              HZt(
+          ? claimSpareJob(Ve, fe, R)
+          : materializePastedImages(Ve, Jt, at, R).then((Ae) =>
+              dispatchAgentJob(
                 fe,
                 Ae,
                 {
@@ -2997,7 +2997,7 @@ function Uc(s, c) {
             );
     })().then(
       (fe) => {
-        if (mt) Ait(se, !1, X, Ce.get(se), R);
+        if (mt) ensureSpareJob(se, !1, X, Ce.get(se), R);
         if (!fe.ok) return Ft(fe.error);
         if (mt && fe.jobId !== at)
           ((k.followId = fe.jobId),
@@ -3032,7 +3032,7 @@ function Uc(s, c) {
         else if ((b.reload(), !mt)) b.watchPendingJobDir(at);
       },
       (fe) => {
-        if (mt) Ait(se, !1, X, Ce.get(se), R);
+        if (mt) ensureSpareJob(se, !1, X, Ce.get(se), R);
         Ft(l(fe));
       },
     );
@@ -3088,7 +3088,7 @@ async function Oa(s, c, m) {
     if (!ne?.some((se) => se.id === c.id)) return ne;
     return ne.map((se) => {
       if (se.id !== c.id) return se;
-      let oe = zHe(se.state, m);
+      let oe = applyReplyPatch(se.state, m);
       return { ...se, state: oe, activity: Co(oe) };
     });
   });
@@ -3099,19 +3099,19 @@ async function Oa(s, c, m) {
     j = !1;
   try {
     let ne = () => xi(v, c.state.sessionId, Date.now()),
-      se = await VHe(c.id, m, c.state, void 0, ne, R);
-    if (((I = se?.err ?? null), (q = se?.code), I === nle)) {
+      se = await replyToJob(c.id, m, c.state, void 0, ne, R);
+    if (((I = se?.err ?? null), (q = se?.code), I === REPLY_ENOJOB_MSG)) {
       let oe = w.getWarming(c.id);
       if (oe) {
         await oe;
-        let X = await VHe(c.id, m, c.state, void 0, ne, R);
+        let X = await replyToJob(c.id, m, c.state, void 0, ne, R);
         ((I = X?.err ?? null), (q = X?.code));
       }
     }
-    if (I === nle && getDraftMode(m) === "prompt") {
+    if (I === REPLY_ENOJOB_MSG && getDraftMode(m) === "prompt") {
       let oe = await wn(c.id, { knownState: c.state, initialPrompt: m }, R);
       if (!oe.ok && oe.alive) {
-        let X = await VHe(c.id, m, c.state, void 0, ne, R);
+        let X = await replyToJob(c.id, m, c.state, void 0, ne, R);
         ((I = X?.err ?? null), (q = X?.code));
       } else
         ((K = !oe.ok),
@@ -3132,17 +3132,17 @@ async function Oa(s, c, m) {
     O();
   }
   if (I === null) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
-  else if (I === TPt) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
+  else if (I === REPLY_PEER_NO_SOCK_MSG) (logFeatureOk("fleet_view_reply"), b.clearReplyFailure(W));
   else {
     if (K) n(`[fleetview] peek-reply respawn failed: ${I}`);
     let ne = Date.now();
     if (b.isRetryOfRecentReplyFailure(W, ne))
       logFeatureSad("fleet_view_reply", "retry_of_recent_failure");
-    else if (I === nle) logFeatureSad("fleet_view_reply", "not_running_no_respawn");
+    else if (I === REPLY_ENOJOB_MSG) logFeatureSad("fleet_view_reply", "not_running_no_respawn");
     else if (K && J) logFeatureSad("fleet_view_reply", "queued_for_later");
     else if (j) logFeatureSad("fleet_view_reply", "dead_epoch_transcript_gone");
     else if (K) logFeatureBad("fleet_view_reply", "respawn_failed");
-    else if (kZt(I)) logFeatureSad("fleet_view_reply", "daemon_restarting");
+    else if (isReplyDaemonRestartingMsg(I)) logFeatureSad("fleet_view_reply", "daemon_restarting");
     else {
       let se = I,
         oe = [...se.matchAll(/\bE[A-Z]{2,14}\b/g)].find(
@@ -3264,11 +3264,11 @@ function So(s, c = !1, m = !1) {
   if (k.length === 0) {
     if (c) return m ? "session you came from" : "current session";
     if (
-      (s.template === "bg" || s.template === $B.name) &&
+      (s.template === "bg" || s.template === CLAUDE_AGENT_TEMPLATE.name) &&
       s.state === "working"
     )
       return m ? "untitled session" : "new session";
-    if (m && (s.template === "bg" || s.template === $B.name))
+    if (m && (s.template === "bg" || s.template === CLAUDE_AGENT_TEMPLATE.name))
       return "untitled session";
     return normalizeWhitespace(s.template);
   }
@@ -4205,7 +4205,7 @@ async function mp(s, c, m) {
       }
     if (de !== c.cwd && m === "resume_picker")
       logFeatureSad("fleet_view_resume_picker", "cwd_fallback");
-    ({ state: j } = await IWe(
+    ({ state: j } = await preSeedReplBgJob(
       c.sessionId,
       {
         intent: c.title,
@@ -4302,7 +4302,7 @@ function cs(s, c) {
     !isExecLaunch(c.state);
   if (w.restartOfferedJobId === c.id) w.restartOfferedJobId = null;
   let j = Vb();
-  (Tye(j, "fleet", R).catch(() => {}), w.arm(c.id, j), A(null));
+  (claimAttachBeacon(j, "fleet", R).catch(() => {}), w.arm(c.id, j), A(null));
   let ne = w.nextRespawnAttempt(),
     se = w.getWarming(c.id);
   if (!se)
@@ -4321,7 +4321,7 @@ function cs(s, c) {
       w.trackWarming(c.id, se));
   se.then((oe) => {
     if (!w.isCurrentRespawnAttempt(ne)) {
-      zx(j, R).catch(() => {});
+      releaseAttachBeacon(j, R).catch(() => {});
       return;
     }
     if ((w.disarm(), !oe.ok && oe.errorCode === "kill_unconfirmed")) {
@@ -4330,7 +4330,7 @@ function cs(s, c) {
           `[FV-attach] confirmed restart of ${c.id} could not stop the worker: ${oe.error}`,
           { level: "warn" },
         ),
-        zx(j, R).catch(() => {}),
+        releaseAttachBeacon(j, R).catch(() => {}),
         (w.restartOfferedJobId = c.id),
         A(qa));
       return;
@@ -4345,23 +4345,23 @@ function cs(s, c) {
         gestureId: j,
       });
     else if (oe.errorCode === "fork_transcript_never_materialized")
-      (zx(j, R).catch(() => {}),
+      (releaseAttachBeacon(j, R).catch(() => {}),
         logFeatureSad("fleet_view_open", "fork_transcript_never_materialized"),
         (w.forkRefusedJobId = c.id),
         A(ja));
     else if (oe.errorCode === "resume_session_live_elsewhere")
-      (zx(j, R).catch(() => {}),
+      (releaseAttachBeacon(j, R).catch(() => {}),
         logFeatureSad("fleet_view_open", "resume_session_live_elsewhere"),
         A(oe.error));
     else if (oe.errorCode === "dead_epoch_transcript_gone")
-      (zx(j, R).catch(() => {}),
+      (releaseAttachBeacon(j, R).catch(() => {}),
         logFeatureSad("fleet_view_open", "dead_epoch_transcript_gone"),
         (w.deadEpochGoneJobId = c.id),
         A(up));
     else
       (logFeatureBad("fleet_view_open", "respawn_failed"),
         A(oe.error),
-        zx(j, R).catch(() => {}));
+        releaseAttachBeacon(j, R).catch(() => {}));
   });
 }
 function gp(s, c) {
@@ -4372,7 +4372,7 @@ function gp(s, c) {
   let O = k.beginNewSession();
   v(null);
   let W = () => k.isCurrentNewSessionAttempt(O);
-  eF(
+  spawnBgSession(
     pv() ? ["--restricted"] : [],
     void 0,
     "shell",
@@ -4470,7 +4470,7 @@ function hp(s, c, m, b, k, w) {
             v.id,
           );
         try {
-          let W = await VZ(v.id, v.state, void 0, w);
+          let W = await killJob(v.id, v.state, void 0, w);
           if (!W.confirmed)
             throw (
               logFeatureBad("fleet_view_stop_job", "kill_unconfirmed"),
@@ -4513,7 +4513,7 @@ function hp(s, c, m, b, k, w) {
           A;
         try {
           if (
-            ((A = await e4(
+            ((A = await deleteJob(
               v.id,
               O === void 0
                 ? { force: !0 }
@@ -4546,19 +4546,19 @@ function hp(s, c, m, b, k, w) {
             if (J === void 0)
               return (
                 b(v.id, {
-                  notice: `${bPt(K)} \u2014 push ${se} first; another session also records this worktree`,
+                  notice: `${formatUnpushedCommitsSummary(K)} \u2014 push ${se} first; another session also records this worktree`,
                 }),
-                `${wit(K)} \u2014 push ${se} first; another finished session also records this worktree. Worktree: ${I}`
+                `${formatUnpushedCommitsDetail(K)} \u2014 push ${se} first; another finished session also records this worktree. Worktree: ${I}`
               );
             return (
               b(v.id, {
-                notice: `${bPt(K)} \u2014 delete again to discard`,
+                notice: `${formatUnpushedCommitsSummary(K)} \u2014 delete again to discard`,
                 discardOffer: { pin: J, worktree: I },
               }),
-              `${wit(K)} \u2014 push ${se}, or delete again to discard. Worktree: ${I}`
+              `${formatUnpushedCommitsDetail(K)} \u2014 push ${se}, or delete again to discard. Worktree: ${I}`
             );
           }
-          let ne = Tit(j, q);
+          let ne = formatKeptWorktreeLabel(j, q);
           return (
             b(v.id, { notice: `worktree ${ne}` }),
             `Worktree kept at ${I} \u2014 ${ne}; the session was not deleted`
@@ -4591,7 +4591,7 @@ F();
 function bp(s) {
   let [c, m] = d([]);
   (E(() => {
-    if (Pt() || isBgSession()) return;
+    if (isRemoteActive() || isBgSession()) return;
     if (!shouldAutoConnectIde()) return;
     let b = !1;
     return (
@@ -7077,7 +7077,7 @@ function Nd({
           ));
         return;
       }
-      EPt(gt, Re, s.id, J)
+      materializePastedImages(gt, Re, s.id, J)
         .catch((Ke) => (logError(Ke), gt))
         .then((Ke) => v(Ke))
         .then(
@@ -8945,7 +8945,7 @@ function wg(s, c) {
     if ((Qe(), (c.ctrl && c.key === "c") || c.key === "escape")) {
       v.abandonRespawnAttempt();
       let fe = v.disarm();
-      if (fe !== null) zx(fe, R).catch(() => {});
+      if (fe !== null) releaseAttachBeacon(fe, R).catch(() => {});
       v.dropWarming(nt);
       return;
     }
@@ -8966,7 +8966,7 @@ function wg(s, c) {
         return;
       v.abandonRespawnAttempt();
       let fe = v.disarm();
-      if (fe !== null) zx(fe, R).catch(() => {});
+      if (fe !== null) releaseAttachBeacon(fe, R).catch(() => {});
     } else return;
   }
   if (c.ctrl && c.key === "c") {
@@ -9324,7 +9324,7 @@ function wg(s, c) {
     return;
   }
   if (
-    HWe() &&
+    isAgentViewBashModeEnabled() &&
     !Ue &&
     isBashModeShortcut(c.key) &&
     !m.getSnapshot().query &&
@@ -9359,7 +9359,7 @@ function Sg(s, { cwdFilter: c, onError: m }) {
         if (s === "auto" && Date.now() - Nm() < Us) return;
         return relaunchClaudeCode({
           launcher: b,
-          args: ["agents", ...(c ? ["--cwd", c] : []), ...j$n()],
+          args: ["agents", ...(c ? ["--cwd", c] : []), ...getDispatchExtraArgs()],
           env: {
             [AGENT_VIEW_RELAUNCH_ENV_KEY]: "1",
             ...(s === "auto" && { [au]: String(Date.now()) }),
@@ -9397,7 +9397,7 @@ class kg {
   }
   loadLauncher(s) {
     if (!this.#e.childRepos.has(s))
-      U$n(s).then((c) => {
+      findChildRepos(s).then((c) => {
         if (this.#e.childRepos.has(s)) return;
         this.#a({
           childRepos: new Map(this.#e.childRepos).set(
@@ -9422,7 +9422,7 @@ class kg {
   loadTarget(s, c) {
     let m = !1;
     if (!this.#e.templates.has(s))
-      xWe(s, c)
+      listCustomAgents(s, c)
         .catch(() => [])
         .then((b) => {
           if (!m && !this.#e.templates.has(s))
@@ -9978,7 +9978,7 @@ function Cg({
     });
   (ko(() => oh((T) => T + 1), nh ? 1000 : ce?.length ? 30000 : null),
     E(() => {
-      Ait(at, !0, w, st.get(at), A);
+      ensureSpareJob(at, !0, w, st.get(at), A);
     }, [at, w, st, A]),
     E(() => {
       if (X.agentLastUsedMigrationDone) return;
@@ -10559,7 +10559,7 @@ async function BQt(s, c) {
     isAgentSwarmsEnabled() && !hasTeammateModeSnapshot())
   )
     captureTeammateModeSnapshot();
-  (B$n(c?.dispatchExtraArgs ?? []),
+  (setDispatchExtraArgs(c?.dispatchExtraArgs ?? []),
     logEvent("tengu_bg_agent_action", {
       action: S("list_open"),
       mode: fromEnum(getGlobalConfig().fleetViewGroupMode ?? "state"),
@@ -10582,7 +10582,7 @@ async function BQt(s, c) {
   let O = c?.cwdFilter ? await canonicalizePath(resolve(c.cwdFilter), createHoverRestOptions(c?.storageV5)) : void 0,
     W = ec(c?.dispatchDefaults),
     A = isHoverRestEnabled() ? c?.storageV5 : void 0;
-  (Et(A ? () => CPt(A) : CPt), Et(openDaemonLease("claude agents")));
+  (Et(A ? () => discardSpareJob(A) : discardSpareJob), Et(openDaemonLease("claude agents")));
   let I = s,
     q = a.CLAUDE_AGENTS_SELECT,
     K = c?.autoOpenJobId,
@@ -10616,7 +10616,7 @@ async function BQt(s, c) {
     if (le) {
       let Fe = performance.now(),
         pe = pu();
-      (Tye(pe, "fleet", c?.storageV5).catch(() => {}),
+      (claimAttachBeacon(pe, "fleet", c?.storageV5).catch(() => {}),
         (be = {
           type: "open",
           job: le,
@@ -10703,7 +10703,7 @@ async function BQt(s, c) {
       if (tt) {
         let { runOrgMemoryAuthBoundary: ye } =
           await import("./login-ui.y0z0y3sz.js");
-        if ((ye(), await CPt(c?.storageV5), getAPIProvider() === "gateway")) {
+        if ((ye(), await discardSpareJob(c?.storageV5), getAPIProvider() === "gateway")) {
           I.unmount();
           break;
         }
@@ -10725,7 +10725,7 @@ async function BQt(s, c) {
     let yt = Date.now(),
       qe;
     if (le.respawnResult === void 0 && le.gestureId === void 0)
-      ((qe = pu()), Tye(qe, "fleet", c?.storageV5).catch(() => {}));
+      ((qe = pu()), claimAttachBeacon(qe, "fleet", c?.storageV5).catch(() => {}));
     let ve =
       le.respawnResult ??
       (await wn(
@@ -10754,9 +10754,9 @@ async function BQt(s, c) {
           interactive: {},
         };
       if (le.gestureId === void 0 && qe === void 0)
-        Tye(nt.gestureId, "fleet", c?.storageV5).catch(() => {});
+        claimAttachBeacon(nt.gestureId, "fleet", c?.storageV5).catch(() => {});
       let tt = (ot, Ue) =>
-          xZt(ot, {
+          attachJob(ot, {
             alreadyInAlt: Fe,
             gateStdinUntilFirstFrame: Ue,
             gesture: nt,
@@ -10781,7 +10781,7 @@ async function BQt(s, c) {
         else ye = { kind: "error", msg: ot.error };
       }
       if (
-        (zx(nt.gestureId, c?.storageV5).catch(() => {}),
+        (releaseAttachBeacon(nt.gestureId, c?.storageV5).catch(() => {}),
         ye.kind === "error" && !ye.ended)
       ) {
         if (ye.notResponding)
@@ -10802,7 +10802,7 @@ async function BQt(s, c) {
     } else {
       ge.setError(ve.error);
       let xe = le.gestureId ?? qe;
-      if (xe !== void 0) zx(xe, c?.storageV5).catch(() => {});
+      if (xe !== void 0) releaseAttachBeacon(xe, c?.storageV5).catch(() => {});
       if (ve.errorCode === "fork_transcript_never_materialized")
         logFeatureSad("fleet_view_open", "fork_transcript_never_materialized");
       else logFeatureBad("fleet_view_open", "respawn_failed");

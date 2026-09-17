@@ -44,7 +44,7 @@ import { HOOK_REWRITE_HEADLESS_DENY_REASON, CAN_USE_TOOL_STREAM_CLOSED_DENY_REAS
 import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ps } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
-import { Kk, nme, RD } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { applyPermissionUpdates, isPersistableSettingsSource, persistPermissionUpdates } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { turnAbortControllerOf } from "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { Wh } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import {
@@ -76,8 +76,8 @@ import {
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { Cr } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { u1e } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { WEB_FETCH_TOOL_NAME } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
+import { CONNECT_GITHUB_TOOL_NAME } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { N$e, wAt, TAt } from "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
 import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
@@ -146,8 +146,8 @@ function L0t(t, e, r, o, l = e, d = !1) {
   if (t.behavior === "allow") {
     let f = F(t.updatedPermissions, l, r, o, d);
     if (f?.length)
-      (o.setSessionToolPermissionContext((_) => Kk(_, f)),
-        RD(f, o.storageV5).catch(logError));
+      (o.setSessionToolPermissionContext((_) => applyPermissionUpdates(_, f)),
+        persistPermissionUpdates(f, o.storageV5).catch(logError));
     let g =
       t.updatedInput && Object.keys(t.updatedInput).length > 0
         ? t.updatedInput
@@ -205,7 +205,7 @@ function ye(t, e) {
     }
     case Wh:
       return { label: "Plan", body: "Plan ready for review" };
-    case u1e:
+    case CONNECT_GITHUB_TOOL_NAME:
       return { label: formatToolDisplayName(t.name), body: "" };
     default:
       return { label: formatToolDisplayName(t.name), body: "" };
@@ -476,8 +476,8 @@ async function be(t, e, r, o, l) {
             ? withoutGrantsForRemoteScope(g.updatedPermissions ?? [])
             : (g.updatedPermissions ?? []);
         if (y.length > 0)
-          (o.setSessionToolPermissionContext((R) => Kk(R, y)),
-            await RD(y, o.storageV5));
+          (o.setSessionToolPermissionContext((R) => applyPermissionUpdates(R, y)),
+            await persistPermissionUpdates(y, o.storageV5));
         return {
           decision: {
             behavior: "allow",
@@ -486,7 +486,7 @@ async function be(t, e, r, o, l) {
             decisionReason: { type: "hook", hookName: "PermissionRequest" },
           },
           interrupt: !1,
-          permanent: y.some((R) => nme(R.destination)),
+          permanent: y.some((R) => isPersistableSettingsSource(R.destination)),
         };
       } else
         return {
@@ -1642,7 +1642,7 @@ class Fae {
         try {
           let p = {
               type: "addRules",
-              rules: [{ toolName: Cr, ruleContent: `domain:${consentHostEntry(d)}` }],
+              rules: [{ toolName: WEB_FETCH_TOOL_NAME, ruleContent: `domain:${consentHostEntry(d)}` }],
               behavior: "allow",
               destination: "localSettings",
             },
@@ -1666,7 +1666,7 @@ class Fae {
           }
           if (g.behavior !== "allow") return !1;
           let _ = g.updatedPermissions;
-          if (_ && _.length > 0) (t?.((y) => Kk(y, _)), await RD(_, e));
+          if (_ && _.length > 0) (t?.((y) => applyPermissionUpdates(y, _)), await persistPermissionUpdates(_, e));
           return (SandboxManager.addSessionAllowedHost(d), !0);
         } catch {
           return !1;

@@ -58,7 +58,7 @@ import { recordStartupPhase, markHydratePrefetchSettled } from "../../01-核心�
 import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
 import { pE, fSe, d9, h2n } from "./chunk-66axrkvh.js";
 import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
-import { VW } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { isHermeticModeEnabled } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { TOKEN_FILE_RETRY_DELAYS_MS } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY } from "../插件系统/plugin-forwarding.js";
 import { isUserActivityRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
@@ -723,7 +723,7 @@ class Uz extends Fae {
         environmentKind: void 0,
         entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
         disabled: a.CLAUDE_CODE_DISABLE_HOOK_FORWARDING,
-        hermetic: VW(),
+        hermetic: isHermeticModeEnabled(),
       }).admitted,
       plugins: O0t({
         sdkUrl: !0,
@@ -731,7 +731,7 @@ class Uz extends Fae {
         environmentKind: void 0,
         entrypoint: a.CLAUDE_CODE_ENTRYPOINT,
         disabled: a.CLAUDE_CODE_DISABLE_PLUGIN_FORWARDING,
-        hermetic: VW(),
+        hermetic: isHermeticModeEnabled(),
       }).admitted,
     };
   }

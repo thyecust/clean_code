@@ -21,7 +21,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { escapeInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { wr, ff, sd } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { sanitizeForDisplay, sanitizeMultilineForDisplay, getPluginDisplayName } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { Ui, mXe } from "./chunk-ajtn749s.js";
 import { areLocalPluginDirsAllowedByPolicy, localPluginDirsBlockedMessage, marketplacesRefusedByPolicyClause } from "./plugin-source-policy.js";
@@ -85,21 +85,21 @@ import {
 import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { cliError, writeStdoutAndDrain, flushAnalyticsBeforeExit, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import {
-  Dae,
-  Lae,
-  NNn,
-  FNn,
-  $Nn,
-  UNn,
-  BNn,
-  jNn,
-  WNn,
-  GNn,
-  t6e,
-  qNn,
-  zNn,
-  VNn,
-  Rot,
+  PluginOperationFailedError,
+  handlePluginCommandError,
+  confirmPluginEntryDisclosure,
+  reviewPluginCommandSource,
+  runPluginInstallCommand,
+  runPluginUninstallCommand,
+  runPluginPruneCommand,
+  runPluginDisableCommand,
+  runPluginDisableAllCommand,
+  runPluginUpdateCommand,
+  PLUGIN_SCAFFOLD_COMPONENTS,
+  validatePluginName,
+  buildPluginScaffoldFiles,
+  writePluginScaffoldFiles,
+  ensureBuiltinPluginsRegistered,
 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { resolveMissingDependencies } from "./plugin-dependency-resolution.js";
@@ -155,9 +155,9 @@ function Be(a, o, s) {
 }
 function Z(a, o) {
   if (a instanceof Ui)
-    return (n(`${o} refused: ${a.message}`), cliError(ff(a.message)));
+    return (n(`${o} refused: ${a.message}`), cliError(sanitizeMultilineForDisplay(a.message)));
   (n(`Failed to ${o}: ${l(a)}`, { level: "error" }),
-    cliError(ff(`${figures.cross} Failed to ${o}: ${l(a)}`)));
+    cliError(sanitizeMultilineForDisplay(`${figures.cross} Failed to ${o}: ${l(a)}`)));
 }
 function de(a) {
   let o = [];
@@ -301,7 +301,7 @@ function z(a, o, s) {
 }
 async function pluginInitHandler(a, o, s, d) {
   let c = [],
-    p = qNn(o);
+    p = validatePluginName(o);
   if (p) {
     (logFeatureBad("cli_plugin_init", "invalid_name"),
       c.push(`${figures.cross} Invalid plugin name "${o}": ${p}`),
@@ -310,11 +310,11 @@ async function pluginInitHandler(a, o, s, d) {
   }
   let k = [];
   for (let D of s.with ?? [])
-    if (t6e.includes(D)) k.push(D);
+    if (PLUGIN_SCAFFOLD_COMPONENTS.includes(D)) k.push(D);
     else {
       (logFeatureBad("cli_plugin_init", "invalid_component"),
         c.push(
-          `${figures.cross} Unknown --with component "${D}". Valid: ${t6e.join(", ")}`,
+          `${figures.cross} Unknown --with component "${D}". Valid: ${PLUGIN_SCAFFOLD_COMPONENTS.join(", ")}`,
         ),
         z(a, c, 1));
       return;
@@ -340,10 +340,10 @@ async function pluginInitHandler(a, o, s, d) {
       `${figures.warning} --author-email was ignored because no author name was found. Pass --author or set git config user.name.`,
     );
   let C = P ? (R ? { name: P, email: R } : { name: P }) : void 0,
-    N = zNn({ name: o, description: s.description, author: C, with: k }),
+    N = buildPluginScaffoldFiles({ name: o, description: s.description, author: C, with: k }),
     A;
   try {
-    let D = await VNn(v, N, { force: s.force });
+    let D = await writePluginScaffoldFiles(v, N, { force: s.force });
     if (!D.ok) {
       (logFeatureBad("cli_plugin_init", "target_exists"),
         c.push(`${figures.cross} ${D.error}`),
@@ -407,7 +407,7 @@ async function pluginInitHandler(a, o, s, d) {
 }
 async function pluginListHandler(a, o, s, d) {
   if (o.cowork) SB(!0);
-  (Rot(), logEvent("tengu_plugin_list_command", {}));
+  (ensureBuiltinPluginsRegistered(), logEvent("tengu_plugin_list_command", {}));
   let c = await getInstalledPluginsViaStorage(s),
     { getPluginEditableScopes: p, editableScopeOf: k } =
       await import("../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js"),
@@ -874,7 +874,7 @@ async function marketplaceRemoveHandler(a, o, s, d) {
           figures.tick,
           " Successfully removed marketplace:",
           " ",
-          wr(o),
+          sanitizeForDisplay(o),
           s.scope ? ` (from ${s.scope} settings)` : "",
         ],
       }),
@@ -999,7 +999,7 @@ function ve(Pa) {
     { promise: Sa } = Pa,
     ye = kn(Sa),
     le;
-  if (xe[0] !== ye) ((le = ff(ye)), (xe[0] = ye), (xe[1] = le));
+  if (xe[0] !== ye) ((le = sanitizeMultilineForDisplay(ye)), (xe[0] = ye), (xe[1] = le));
   else le = xe[1];
   let Oe;
   if (xe[2] !== le)
@@ -1046,9 +1046,9 @@ async function pluginInstallHandler(a, o, s, d) {
     k,
     w = (N) => {
       if (p) dle(p.outcome);
-      return Lae(N, "install", o);
+      return handlePluginCommandError(N, "install", o);
     },
-    v = await FNn(
+    v = await reviewPluginCommandSource(
       o,
       {
         yes: s.yes,
@@ -1070,7 +1070,7 @@ async function pluginInstallHandler(a, o, s, d) {
     return;
   }
   let P = v?.grantKey,
-    R = await NNn(o, { yes: s.yes, scope: c, resolvedMarketplace: k }, d).catch(
+    R = await confirmPluginEntryDisclosure(o, { yes: s.yes, scope: c, resolvedMarketplace: k }, d).catch(
       w,
     );
   if (R === "declined" || R === "unconfirmed") {
@@ -1086,12 +1086,12 @@ async function pluginInstallHandler(a, o, s, d) {
       await gracefulShutdown(1));
     return;
   }
-  let C = $Nn(o, c, s.config, P, R, d, p).then(
+  let C = runPluginInstallCommand(o, c, s.config, P, R, d, p).then(
     (N) => (logFeatureOk("cli_plugin_install"), N),
   );
   (a.render(
     e(Dn, {
-      fallback: e(t, { children: wr(`Installing plugin "${o}"...`) }),
+      fallback: e(t, { children: sanitizeForDisplay(`Installing plugin "${o}"...`) }),
       children: e(ve, { promise: C }),
     }),
   ),
@@ -1102,8 +1102,8 @@ async function pluginUninstallHandler(a, o, s, d) {
   if (s.cowork) SB(!0);
   let c = me(s);
   ae("tengu_plugin_uninstall_command", o, fromEnum(c));
-  let p = await UNn(o, c, s.keepData, s.prune, s.yes, d);
-  (await renderAndWaitForExit(a, e(t, { children: ff(s.prune ? p : `${figures.tick} ${p}`) })),
+  let p = await runPluginUninstallCommand(o, c, s.keepData, s.prune, s.yes, d);
+  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(s.prune ? p : `${figures.tick} ${p}`) })),
     await logFeatureOkAsync("cli_plugin_uninstall"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1111,8 +1111,8 @@ async function pluginPruneHandler(a, o, s) {
   if (o.cowork) SB(!0);
   let d = me(o);
   logEvent("tengu_plugin_prune_command", { scope: fromEnum(d), dry_run: o.dryRun ?? !1 });
-  let c = await BNn(d, { dryRun: o.dryRun, yes: o.yes }, s);
-  (await renderAndWaitForExit(a, e(t, { children: ff(c) })),
+  let c = await runPluginPruneCommand(d, { dryRun: o.dryRun, yes: o.yes }, s);
+  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(c) })),
     await logFeatureOkAsync("cli_plugin_prune"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1122,12 +1122,12 @@ async function pluginEnableHandler(a, o, s, d) {
   ae("tengu_plugin_enable_command", o, fromEnum(c ?? "auto"));
   let p;
   try {
-    if ((await reloadPluginDirsFromDisk(), Rot(), (p = await f0e(o, c, d)), !p.success))
-      throw new Dae(p.message);
+    if ((await reloadPluginDirsFromDisk(), ensureBuiltinPluginsRegistered(), (p = await f0e(o, c, d)), !p.success))
+      throw new PluginOperationFailedError(p.message);
   } catch (k) {
-    return await Lae(k, "enable", o);
+    return await handlePluginCommandError(k, "enable", o);
   }
-  (await renderAndWaitForExit(a, r(t, { children: [figures.tick, " ", ff(p.message)] })),
+  (await renderAndWaitForExit(a, r(t, { children: [figures.tick, " ", sanitizeMultilineForDisplay(p.message)] })),
     await logEventAsync("tengu_plugin_enabled_cli", {
       ...buildPluginTelemetryFieldsFromId(p.pluginId || o, getPolicyPluginNames()),
       scope: fromEnumOpt(p.scope),
@@ -1143,15 +1143,15 @@ async function pluginDisableHandler(a, o, s, d) {
   let c;
   if (s.all) {
     if (s.scope) cliError("Cannot use --scope with --all");
-    (logEvent("tengu_plugin_disable_command", {}), Rot(), (c = await WNn(d)));
+    (logEvent("tengu_plugin_disable_command", {}), ensureBuiltinPluginsRegistered(), (c = await runPluginDisableAllCommand(d)));
   } else {
     let p = Ie(s);
     (ae("tengu_plugin_disable_command", o, fromEnum(p ?? "auto")),
       await reloadPluginDirsFromDisk(),
-      Rot(),
-      (c = await jNn(o, p, d)));
+      ensureBuiltinPluginsRegistered(),
+      (c = await runPluginDisableCommand(o, p, d)));
   }
-  (await renderAndWaitForExit(a, e(t, { children: ff(c) })),
+  (await renderAndWaitForExit(a, e(t, { children: sanitizeMultilineForDisplay(c) })),
     await logFeatureOkAsync("cli_plugin_disable"),
     await exitAfterAnalyticsFlush(0));
 }
@@ -1165,11 +1165,11 @@ async function pluginUpdateHandler(a, o, s) {
     d = o.scope;
   }
   if (o.cowork && d !== "user") cliError("--cowork can only be used with user scope");
-  await GNn(a, d, { yes: o.yes }, s);
+  await runPluginUpdateCommand(a, d, { yes: o.yes }, s);
 }
 async function pluginDetailsHandler(a, o, s, d, c) {
   if (s.cowork) SB(!0);
-  (Rot(), logEvent("tengu_plugin_details_command", {}));
+  (ensureBuiltinPluginsRegistered(), logEvent("tengu_plugin_details_command", {}));
   let {
       getPluginInventory: p,
       computePluginTokenCost: k,
@@ -1185,9 +1185,9 @@ async function pluginDetailsHandler(a, o, s, d, c) {
   if (!m) {
     logFeatureBad("cli_plugin_details", "not_found");
     let I = `Plugin "${o}" not found. Run \`claude plugin list\` to see installed plugins, or pass --plugin-dir <path> to load one from disk.`;
-    if (s.json) return cliError(ff(I));
+    if (s.json) return cliError(sanitizeMultilineForDisplay(I));
     let j = await a();
-    (await renderAndWaitForExit(j, e(t, { children: ff(I) })), process.exit(1));
+    (await renderAndWaitForExit(j, e(t, { children: sanitizeMultilineForDisplay(I) })), process.exit(1));
   }
   let H = getPluginMarketplace(m.source) ?? INLINE_PLUGIN_SOURCE,
     E = s.models?.length ? s.models : [getMainLoopModel()],
@@ -1199,9 +1199,9 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     (logError(dt(ge(I), "plugin details: inventory/token-cost failed")),
       logFeatureBad("cli_plugin_details", "inventory_failed"));
     let j = `${figures.cross} Could not load details for "${m.name}": ${l(I)}`;
-    if (s.json) return cliError(ff(j));
+    if (s.json) return cliError(sanitizeMultilineForDisplay(j));
     let Q = await a();
-    (await renderAndWaitForExit(Q, e(t, { children: ff(j) })), process.exit(1));
+    (await renderAndWaitForExit(Q, e(t, { children: sanitizeMultilineForDisplay(j) })), process.exit(1));
   }
   let { tokens: Y, inventory: T } = B;
   if (s.json) {
@@ -1227,7 +1227,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
     return;
   }
   let O = [],
-    U = sd(m),
+    U = getPluginDisplayName(m),
     D = U === m.name ? m.name : `${U} (${m.name})`;
   if (
     (O.push(`${D} ${m.manifest.version ?? ""}`.trimEnd()),
@@ -1297,7 +1297,7 @@ async function pluginDetailsHandler(a, o, s, d, c) {
   await renderAndWaitForExit(q, e(t, { children: X(O) }));
 }
 function X(a) {
-  return a.map(wr).join(`
+  return a.map(sanitizeForDisplay).join(`
 `);
 }
 function ne(a) {

@@ -33,7 +33,7 @@ import {
   classifyAuthToken,
   isRegistrySweepPermitted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { formatDisplayText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { enqueueCommand, flushPeerDropReceipts } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTempBaseDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { isUuidString, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
@@ -971,7 +971,7 @@ function xe(e) {
   let i = t.mode.toString(8).padStart(4, "0"),
     r = `(owner ${t.uid}:${t.gid}, mode ${i})`,
     d = "or pass --messaging-socket-path",
-    s = Vn(t.path),
+    s = formatDisplayText(t.path),
     w = s === t.path,
     o = `'${Array.from(s, (u) => {
       if (cn.test(u)) return u;

@@ -15,7 +15,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { MTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
+import { MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { formatWorkflowErrorLine, getWorkflowDisabledReason } from "./remote-workflow-launch.js";
 import { s, T, O, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { createHash, randomUUID, timingSafeEqual } from "crypto";
@@ -77,7 +77,7 @@ function re(e) {
       let w = e.subarray(r, r + h);
       return ((r += h), { ok: !0, buf: w });
     },
-    o = n(MTt, "script");
+    o = n(MAX_SERVER_AUTHORED_WORKFLOW_SCRIPT_BYTES, "script");
   if (!o.ok) return t(o.error);
   if (o.buf.length === 0) return t("script frame is empty");
   let c = n(W, "args_json");

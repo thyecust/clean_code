@@ -25,7 +25,7 @@ import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-
 import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { l9e, o4 } from "../状态栏-主题/chunk-jrr487ty.js";
-import { b6e, sst } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { resolveBundleSeedViability, getBundleSeedNotice } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Dn, kn, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -63,7 +63,7 @@ function me(ho) {
   let Re = C(xe),
     Ae;
   if (O[1] !== T)
-    ((Ae = () => (T ? b6e().catch(ze) : null)), (O[1] = T), (O[2] = Ae));
+    ((Ae = () => (T ? resolveBundleSeedViability().catch(ze) : null)), (O[1] = T), (O[2] = Ae));
   else Ae = O[2];
   let [Le] = d(Ae),
     q = C(!1),
@@ -177,7 +177,7 @@ function ce(go) {
     } = go,
     Z = Ie ? kn(Ie) : null,
     He;
-  if (J[0] !== Z) ((He = Z && sst(Z)), (J[0] = Z), (J[1] = He));
+  if (J[0] !== Z) ((He = Z && getBundleSeedNotice(Z)), (J[0] = Z), (J[1] = He));
   else He = J[1];
   let oe = He,
     E = D

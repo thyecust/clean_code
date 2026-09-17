@@ -16,7 +16,7 @@ import { getConversationMessages, gracefulShutdown, flushSessionStorage } from "
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { m0t, SJt, ZNn } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { MIN_CLAUDE_DESKTOP_VERSION, getClaudeDesktopStatus, openSessionInClaudeDesktop } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { recordExitTranscript, appendCancelledContinueNotice } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -25,7 +25,7 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
-import { HB } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
+import { detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
@@ -121,7 +121,7 @@ Learn more at ${D}`,
       let c = !1;
       async function T() {
         s({ state: "checking" });
-        let a = await SJt();
+        let a = await getClaudeDesktopStatus();
         if (a.status === "not-installed") {
           s({
             state: "prompt-download",
@@ -132,7 +132,7 @@ Learn more at ${D}`,
         if (a.status === "version-too-old") {
           s({
             state: "prompt-download",
-            downloadMessage: `Claude Desktop needs to be updated (found v${a.version}, need v${m0t}+).`,
+            downloadMessage: `Claude Desktop needs to be updated (found v${a.version}, need v${MIN_CLAUDE_DESKTOP_VERSION}+).`,
           });
           return;
         }
@@ -140,7 +140,7 @@ Learn more at ${D}`,
           s({ state: "flushing" }),
           await flushSessionStorage(),
           s({ state: "opening" }));
-        let i = await ZNn();
+        let i = await openSessionInClaudeDesktop();
         if (!i.success) {
           s({ state: "error", error: appendCancelledContinueNotice(i.error, c) });
           return;
@@ -153,7 +153,7 @@ Learn more at ${D}`,
               }),
               isBgSession())
             )
-              HB({ broadcast: !0 });
+              detachToBackgroundDaemon({ broadcast: !0 });
             await gracefulShutdown(0, "other");
           }, 500));
       }

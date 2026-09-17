@@ -24,7 +24,7 @@ import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(
 import { getMainLoopModel, isScreenReaderModeEnabled, queueScreenReaderAnnouncement, getFeatureValue_CACHED_MAY_BE_STALE, saveGlobalConfig, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { pickBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -2034,7 +2034,7 @@ function m9e({
         if ((l?.(!1), ze("escape-again-to-clear"), e)) {
           if (m && I === "" && e.trim() !== "") {
             let u = X
-                ? ea(X(), (xe) => xe.type === "text" && xe.unavailable === !0)
+                ? pickBy(X(), (xe) => xe.type === "text" && xe.unavailable === !0)
                 : void 0,
               k = se?.(),
               N = k !== void 0 ? buildDraftText(e, k) : e,

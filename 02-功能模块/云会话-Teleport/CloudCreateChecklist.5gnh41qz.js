@@ -22,7 +22,7 @@ import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import { ChecklistStepRow } from "../../03-入口与运行时/会话UI(REPL)/remote-bootstrap-checklist.js";
-import { k8, CZ, $_e, HJt, IJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
+import { createRemoteBootstrapState, formatBootstrapStepLabel, getChecklistPhase, buildChecklistStepDisplay, getChecklistHeaderLabel } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -36,7 +36,7 @@ function Y() {
   return Date.now();
 }
 function Z(ft) {
-  return CZ(ft, "new");
+  return formatBootstrapStepLabel(ft, "new");
 }
 function j(K) {
   return e(ChecklistStepRow, { status: "pending", label: K }, K);
@@ -51,7 +51,7 @@ function CloudCreateChecklist(st) {
   else M = n[0];
   ko(M, 1000);
   let O;
-  if (n[1] !== a) ((O = $_e(a)), (n[1] = a), (n[2] = O));
+  if (n[1] !== a) ((O = getChecklistPhase(a)), (n[1] = a), (n[2] = O));
   else O = n[2];
   let s = O === "created",
     z;
@@ -66,11 +66,11 @@ function CloudCreateChecklist(st) {
   else E = n[6];
   useKeybindings(ut, E);
   let H;
-  if (n[7] === MEMO_CACHE_SENTINEL) ((H = k8(0).steps.map(Z)), (n[7] = H));
+  if (n[7] === MEMO_CACHE_SENTINEL) ((H = createRemoteBootstrapState(0).steps.map(Z)), (n[7] = H));
   else H = n[7];
   let dt = H,
     g;
-  if (n[8] !== a) ((g = IJt(a)), (n[8] = a), (n[9] = g));
+  if (n[8] !== a) ((g = getChecklistHeaderLabel(a)), (n[8] = a), (n[9] = g));
   else g = n[9];
   let k;
   if (n[10] !== g)
@@ -138,7 +138,7 @@ function T(Ct) {
     { step: u, state: B, now: G, columns: P } = Ct,
     U;
   if (Q[0] !== G || Q[1] !== B || Q[2] !== u)
-    ((U = HJt(u, B, G)), (Q[0] = G), (Q[1] = B), (Q[2] = u), (Q[3] = U));
+    ((U = buildChecklistStepDisplay(u, B, G)), (Q[0] = G), (Q[1] = B), (Q[2] = u), (Q[3] = U));
   else U = Q[3];
   let i = U,
     W;

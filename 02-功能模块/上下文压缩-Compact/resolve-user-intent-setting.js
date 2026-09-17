@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { DEFAULT_GLOBAL_CONFIG, getGlobalConfig } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { getEnabledSettingsSources } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { projectSettingsAliasesUserSettings, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 var USER_INTENT_SETTING_KEYS = [
   "theme",
@@ -29,7 +29,7 @@ var USER_INTENT_SETTING_KEYS = [
   "agentPushNotifEnabled",
 ];
 function resolveSetting(n, s) {
-  let o = ms(),
+  let o = getEnabledSettingsSources(),
     r = o.includes("userSettings") && projectSettingsAliasesUserSettings();
   for (let t = o.length - 1; t >= 0; t--) {
     let e = o[t];

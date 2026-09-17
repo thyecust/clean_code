@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
-import { jit, BB } from "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
+import { getHighlightCore, resolveHighlightLanguageId } from "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 var l = new Map(
   Object.entries({
     keyword: chalk.blue,
@@ -70,9 +70,9 @@ function u(e, t) {
   let r = t?.language;
   if (!r) return e;
   try {
-    let n = BB(r);
+    let n = resolveHighlightLanguageId(r);
     if (!n) return e;
-    let o = jit().highlight(e, { language: n, ignoreIllegals: !0 }),
+    let o = getHighlightCore().highlight(e, { language: n, ignoreIllegals: !0 }),
       s = o._emitter ?? o.emitter,
       i = s?.rootNode ?? s?.root;
     if (!i || typeof i === "string") return e;
@@ -82,7 +82,7 @@ function u(e, t) {
   }
 }
 function c(e) {
-  return BB(e) !== null;
+  return resolveHighlightLanguageId(e) !== null;
 }
 var d = { highlight: u, supportsLanguage: c };
 function getSyntaxHighlightAdapter() {

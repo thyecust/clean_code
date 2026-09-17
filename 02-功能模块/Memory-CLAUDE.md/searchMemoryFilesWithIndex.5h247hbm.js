@@ -13,7 +13,7 @@ import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
-import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
+import { getSafeReadOpenFlags } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { lstat as Bn, realpath as me } from "fs/promises";
@@ -818,7 +818,7 @@ var j = Symbol("transient-read-failure"),
   },
   A = (e) => (En(e) ? "structural" : Pn(e) ? "permission" : "other"),
   lt = async (e, t) => {
-    let n = await Sn(e, Ha());
+    let n = await Sn(e, getSafeReadOpenFlags());
     try {
       let o = await n.stat();
       if (!o.isFile())
@@ -1290,7 +1290,7 @@ var yt = 10,
   Oe = 67108864,
   ke = Symbol("index-file-oversized"),
   xt = async (e) => {
-    let t = await Dn(e, Ha());
+    let t = await Dn(e, getSafeReadOpenFlags());
     try {
       let n = await t.stat();
       if (!n.isFile())
