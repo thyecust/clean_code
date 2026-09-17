@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { vg, yz, arrayMap as n_e, ze } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Qt, De, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 var { floor: k, random: x } = Math;
 function P(e, i) {

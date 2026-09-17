@@ -23,11 +23,11 @@ import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
-import { Cs, Vlr } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs, Vlr } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { claudeDownloadsHttpClient } from "../插件系统/chunk-ajtn749s.js";
-import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import { SR, UH, tf } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import {
   runWithRetry,
   detectCurrentShell,
@@ -41,7 +41,7 @@ import {
 } from "./auto-updater.js";
 import { detectInstallType } from "./install-diagnostics.js";
 import { getXdgStateHome, getXdgCacheHome, getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { s, T, c, it, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var ht = toESM(pg(), 1);

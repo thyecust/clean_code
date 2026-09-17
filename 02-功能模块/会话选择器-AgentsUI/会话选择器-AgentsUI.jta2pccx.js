@@ -59,7 +59,7 @@ import { stripTrailingPunctuation } from "../认证-OAuth登录/chunk-wk0e3dz4.j
 import { isGitLabMergeRequestUrl } from "../工作树-Git/git-repository-detection.js";
 import { remoteRowId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { oa, iee, oDt } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { getEraseScreenSequence, eraseViewportInPlace, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { getEraseScreenSequence, eraseViewportInPlace, cDt, Nat, uF, qA } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { useStdin } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { isFullscreenEnabled } from "../终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
 import { Box, Text, Link, useAnimationFrame, useInterval, startClockInterval, useSelection, useTerminalTitle, useTimeout, createRoot } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -147,7 +147,7 @@ import {
 import { isPastSessionsExperimentEnabled, AGENT_VIEW_RELAUNCH_ENV_KEY } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { useVoiceSelector, useVoiceGetState } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { openDaemonLease } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import {
   claimAttachBeacon,
   releaseAttachBeacon,
@@ -233,7 +233,7 @@ import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未�
 import { openHyperlink } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { buildDraftText, getDraftMode, getDraftValue, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
-import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Nl, re, E, dn, V, pk, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { createHoverRestOptions, resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { LARGE_PASTE_CHAR_THRESHOLD, readClipboardImage } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";

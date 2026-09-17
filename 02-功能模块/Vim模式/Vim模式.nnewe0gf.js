@@ -15,7 +15,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { repeatString, countOccurrences, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { CLAUDE_BULLET_GLYPH, SEARCH_PREFIX_GLYPH, LOZENGE_OUTLINE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
-import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { Zd } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -85,9 +85,9 @@ import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-�
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { getAutoUpdatesChannel } from "../自动更新-安装/auto-updates-channel.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Yl, re, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Yl, re, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { s, T, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter, getFirstGrapheme, getLastGrapheme, countGraphemes, countWords } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";

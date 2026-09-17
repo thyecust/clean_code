@@ -39,7 +39,7 @@ import { useReducedMotion } from "../../01-核心基础设施/共享小工具-�
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { SHIMMER_STEP_MS, getShimmerPosition, splitTextForShimmer } from "../远程控制-Bridge/remote-control-ui-strings.js";
-import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";

@@ -36,7 +36,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-f4zey5rf.js"
 import "../../02-功能模块/成本-Token统计/chunk-adrc9xt1.js";
 import "../会话UI-REPL/clawd-mascot.js";
 import "../../02-功能模块/编排-Workflow/workflow-progress-ui.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../../02-功能模块/远程控制-Bridge/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../02-功能模块/GitHub集成/chunk-bfz9rjjm.js";
@@ -78,7 +78,7 @@ import "../../01-核心基础设施/共享小工具-未细化/background-text.js
 import "../会话UI-REPL/scroll-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../02-功能模块/权限系统/chunk-qjqc5vxm.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../../02-功能模块/通知-Notifications/通知-Notifications.g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";

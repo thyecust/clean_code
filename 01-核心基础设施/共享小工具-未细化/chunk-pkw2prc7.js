@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Gt, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 var AUTO_CONTINUE_PREFILL_TEXT = "continue";
 function stripAutoContinuePrefill(t, e, n) {

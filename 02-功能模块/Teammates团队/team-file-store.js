@@ -17,7 +17,7 @@ import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { pointerFileIsSuspect, rawPointerPathIsUnsafe, gitExe } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { STORAGE_KEYS } from "./storage-keys.js";
-import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getAgentName, getTeamName, isTeammate } from "./teammate-context.js";
 import { createJitteredBackoffDelay } from "../../01-核心基础设施/共享小工具-未细化/jittered-backoff-delay.js";
 import { isPathSafeToRemove } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";

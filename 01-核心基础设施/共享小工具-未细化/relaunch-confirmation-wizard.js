@@ -13,7 +13,7 @@ import { Box, Text, useApp } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js
 import { useKeybinding } from "./keybinding-hooks.js";
 import { useAppState } from "./app-state-context.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 function RelaunchConfirmationWizard(k) {

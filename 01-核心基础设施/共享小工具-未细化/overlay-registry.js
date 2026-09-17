@@ -10,7 +10,7 @@
 import { getInkInstanceRegistry } from "./ink-instance-registry.js";
 import { AppStateContext, useAppStateSelector, useAppStateSelectorUnchecked } from "./app-state-context.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { De, E, dn, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { De, E, dn, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function b() {
   return getInkInstanceRegistry().get(process.stdout)?.invalidatePrevFrame();

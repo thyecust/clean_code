@@ -24,7 +24,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { isEssentialTrafficOnly, logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { E, C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";

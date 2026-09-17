@@ -13,9 +13,9 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Box, Text, useAnimationFrame } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { processMessagesForTeleportResume, checkOutTeleportedSessionBranch, teleportResumeCodeSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 F();
 var i = ["\u25D0", "\u25D3", "\u25D1", "\u25D2"],

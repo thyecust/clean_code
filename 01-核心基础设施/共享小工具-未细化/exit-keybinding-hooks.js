@@ -12,7 +12,7 @@ import { useKeybindings } from "./keybinding-hooks.js";
 import { useKeybindingDisplayText } from "./use-keybinding-display-text.js";
 import { useDoublePressConfirm } from "./chunk-ff1hq6qq.js";
 import { isKbCohesionFixesEnabled } from "./kb-cohesion-fixes.js";
-import { re, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function useGlobalExitKeybinding(i, r, e = !0) {
   let { handleInterrupt: n, handleExit: t, exitState: o } = c(r, i),

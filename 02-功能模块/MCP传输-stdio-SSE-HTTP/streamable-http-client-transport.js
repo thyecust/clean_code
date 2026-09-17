@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isJSONRPCRequest, isJSONRPCResultResponse, JSONRPCMessageSchema as GR, isInitializedNotification } from "../MCP客户端/chunk-tv3jbp8f.js";
 import { UnauthorizedError, auth, extractWWWAuthenticateParams } from "../认证-OAuth登录/oauth-client.js";
-import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
+import { RGe } from "../../00-第三方库/_未识别/chunk-10wtfjv0.js";
 function headersToRecord(e) {
   if (!e) return {};
   if (e instanceof Headers) return Object.fromEntries(e.entries());

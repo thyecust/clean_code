@@ -152,7 +152,7 @@ import {
   filterPluginIdsByName,
   getSettingsSourceForScope,
 } from "./chunk-33bdfgmx.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 async function refreshMarketplaceOnCatalogMiss(e, t, s) {

@@ -20,7 +20,7 @@ import {
   E$n,
   A$n,
   Bdr,
-} from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+} from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import "../远程控制-Bridge/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
@@ -48,7 +48,7 @@ import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js";
 import "../通知-Notifications/通知-Notifications.g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";

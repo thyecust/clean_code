@@ -49,7 +49,7 @@
   "confidence": "low"
  },
  "chunk-03pqme4r.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-03pqme4r.js",
+  "path": "00-第三方库/@aws-sdk/chunk-03pqme4r.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 20.7,
@@ -301,8 +301,8 @@
   "confidence": "low"
  },
  "chunk-10wtfjv0.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/_未识别/chunk-10wtfjv0.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 6.6,
   "confidence": "medium"
@@ -763,8 +763,8 @@
   "confidence": "low"
  },
  "chunk-27d886dy.js": {
-  "path": "00-第三方库/_未识别/第三方库-HTTP代理/defaultProvider.27d886dy.js",
-  "module": "第三方库 · HTTP 代理",
+  "path": "00-第三方库/@aws-sdk/defaultProvider.27d886dy.js",
+  "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 0.7,
   "confidence": "low"
@@ -938,9 +938,9 @@
   "confidence": "high"
  },
  "chunk-2x6t9gq6.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 13.3,
   "confidence": "medium"
  },
@@ -1239,7 +1239,7 @@
   "confidence": "high"
  },
  "chunk-3zapb67e.js": {
-  "path": "00-第三方库/_未识别/第三方库-OpenTelemetry/chunk-3zapb67e.js",
+  "path": "00-第三方库/@opentelemetry/chunk-3zapb67e.js",
   "module": "第三方库 · OpenTelemetry",
   "tier": 0,
   "kb": 6.3,
@@ -1883,8 +1883,8 @@
   "confidence": "medium"
  },
  "chunk-5y6047zm.js": {
-  "path": "00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js",
-  "module": "第三方库 · Node polyfill",
+  "path": "00-第三方库/_未识别/chunk-5y6047zm.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 8.2,
   "confidence": "high"
@@ -1932,7 +1932,7 @@
   "confidence": "low"
  },
  "chunk-6421ybjb.js": {
-  "path": "00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js",
+  "path": "00-第三方库/zod/chunk-6421ybjb.js",
   "module": "zod (schema 校验)",
   "tier": 0,
   "kb": 8.7,
@@ -2198,7 +2198,7 @@
   "confidence": "low"
  },
  "chunk-6ydmdmy7.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-6ydmdmy7.js",
+  "path": "00-第三方库/@aws-sdk/chunk-6ydmdmy7.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 17.3,
@@ -2303,8 +2303,8 @@
   "confidence": "low"
  },
  "chunk-7bsbdzwc.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-7bsbdzwc.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/ajv/chunk-7bsbdzwc.js",
+  "module": "第三方库 · ajv",
   "tier": 0,
   "kb": 35.0,
   "confidence": "high"
@@ -2667,8 +2667,8 @@
   "confidence": "high"
  },
  "chunk-8fpdwg2e.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/graceful-fs/chunk-8fpdwg2e.js",
+  "module": "第三方库 · graceful-fs",
   "tier": 0,
   "kb": 36.4,
   "confidence": "high"
@@ -2716,7 +2716,7 @@
   "confidence": "low"
  },
  "chunk-8qdd522x.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/BedrockClient.8qdd522x.js",
+  "path": "00-第三方库/@aws-sdk/BedrockClient.8qdd522x.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 27.0,
@@ -2821,9 +2821,9 @@
   "confidence": "high"
  },
  "chunk-92g8hxqw.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 12.8,
   "confidence": "medium"
  },
@@ -3164,7 +3164,7 @@
   "confidence": "low"
  },
  "chunk-a99y1qer.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/CreateOAuth2TokenCommand.a99y1qer.js",
+  "path": "00-第三方库/@aws-sdk/CreateOAuth2TokenCommand.a99y1qer.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 21.8,
@@ -3381,7 +3381,7 @@
   "confidence": "low"
  },
  "chunk-axscv2na.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/ENV_KEY.axscv2na.js",
+  "path": "00-第三方库/@aws-sdk/ENV_KEY.axscv2na.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 0.7,
@@ -3850,7 +3850,7 @@
   "confidence": "low"
  },
  "chunk-ck8mz0z4.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-ck8mz0z4.js",
+  "path": "00-第三方库/@aws-sdk/chunk-ck8mz0z4.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 24.7,
@@ -3871,8 +3871,8 @@
   "confidence": "high"
  },
  "chunk-cpfawwsx.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-cpfawwsx.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/@aws-sdk/chunk-cpfawwsx.js",
+  "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 21.1,
   "confidence": "high"
@@ -3892,7 +3892,7 @@
   "confidence": "low"
  },
  "chunk-cq8x5zt4.js": {
-  "path": "00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js",
+  "path": "00-第三方库/_未识别/chunk-cq8x5zt4.js",
   "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 5.7,
@@ -4186,9 +4186,9 @@
   "confidence": "low"
  },
  "chunk-dhg42t8r.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 13.3,
   "confidence": "medium"
  },
@@ -4207,7 +4207,7 @@
   "confidence": "high"
  },
  "chunk-dm9sg03f.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-dm9sg03f.js",
+  "path": "00-第三方库/@aws-sdk/chunk-dm9sg03f.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 17.7,
@@ -4340,8 +4340,8 @@
   "confidence": "high"
  },
  "chunk-e0ewk5yt.js": {
-  "path": "00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js",
-  "module": "第三方库 · 加密库",
+  "path": "00-第三方库/_未识别/chunk-e0ewk5yt.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 6.4,
   "confidence": "high"
@@ -4809,7 +4809,7 @@
   "confidence": "medium"
  },
  "chunk-fy6ebeyr.js": {
-  "path": "00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js",
+  "path": "00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js",
   "module": "第三方库 · OpenTelemetry",
   "tier": 0,
   "kb": 84.7,
@@ -4984,8 +4984,8 @@
   "confidence": "low"
  },
  "chunk-gdyh44zt.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/supports-color/chunk-gdyh44zt.js",
+  "module": "第三方库 · supports-color",
   "tier": 0,
   "kb": 5.4,
   "confidence": "high"
@@ -5068,8 +5068,8 @@
   "confidence": "high"
  },
  "chunk-gv6wj3ch.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/fflate/zipSync.gv6wj3ch.js",
+  "module": "第三方库 · fflate",
   "tier": 0,
   "kb": 28.8,
   "confidence": "high"
@@ -5306,7 +5306,7 @@
   "confidence": "low"
  },
  "chunk-hm8z9h7j.js": {
-  "path": "00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js",
+  "path": "00-第三方库/_未识别/chunk-hm8z9h7j.js",
   "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 17.4,
@@ -5453,7 +5453,7 @@
   "confidence": "low"
  },
  "chunk-j03jpdbn.js": {
-  "path": "00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js",
+  "path": "00-第三方库/react/React运行时-JSX.j03jpdbn.js",
   "module": "React 运行时 / JSX",
   "tier": 0,
   "kb": 9.8,
@@ -5544,8 +5544,8 @@
   "confidence": "low"
  },
  "chunk-jd89krpb.js": {
-  "path": "00-第三方库/_未识别/第三方库-Google认证/chunk-jd89krpb.js",
-  "module": "第三方库 · Google 认证",
+  "path": "00-第三方库/_未识别/chunk-jd89krpb.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 0.6,
   "confidence": "low"
@@ -5600,9 +5600,9 @@
   "confidence": "medium"
  },
  "chunk-jjqazdgg.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-jjqazdgg.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 4.2,
   "confidence": "medium"
  },
@@ -5621,8 +5621,8 @@
   "confidence": "low"
  },
  "chunk-jm5cswvd.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/semver/chunk-jm5cswvd.js",
+  "module": "第三方库 · semver",
   "tier": 0,
   "kb": 40.4,
   "confidence": "high"
@@ -5691,8 +5691,8 @@
   "confidence": "medium"
  },
  "chunk-jtb5q5xr.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/@aws-sdk/chunk-jtb5q5xr.js",
+  "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 73.3,
   "confidence": "high"
@@ -5817,7 +5817,7 @@
   "confidence": "low"
  },
  "chunk-k58dgrhz.js": {
-  "path": "00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js",
+  "path": "00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js",
   "module": "第三方库 · @anthropic-ai/sdk",
   "tier": 0,
   "kb": 10.2,
@@ -6237,7 +6237,7 @@
   "confidence": "low"
  },
  "chunk-mjf8wc6r.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-mjf8wc6r.js",
+  "path": "00-第三方库/@aws-sdk/chunk-mjf8wc6r.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 20.6,
@@ -6272,7 +6272,7 @@
   "confidence": "high"
  },
  "chunk-mkw5nmp8.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-mkw5nmp8.js",
+  "path": "00-第三方库/@aws-sdk/chunk-mkw5nmp8.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 33.3,
@@ -6349,7 +6349,7 @@
   "confidence": "low"
  },
  "chunk-mwf4pmq2.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js",
+  "path": "00-第三方库/@aws-sdk/chunk-mwf4pmq2.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 20.8,
@@ -6685,7 +6685,7 @@
   "confidence": "low"
  },
  "chunk-nv86vjtp.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/BedrockRuntimeClient.nv86vjtp.js",
+  "path": "00-第三方库/@aws-sdk/BedrockRuntimeClient.nv86vjtp.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 35.9,
@@ -7021,7 +7021,7 @@
   "confidence": "low"
  },
  "chunk-psby6rnv.js": {
-  "path": "00-第三方库/_未识别/第三方库-parse5/chunk-psby6rnv.js",
+  "path": "00-第三方库/parse5/chunk-psby6rnv.js",
   "module": "第三方库 · parse5",
   "tier": 0,
   "kb": 8.5,
@@ -8267,9 +8267,9 @@
   "confidence": "medium"
  },
  "chunk-tp42fv8j.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 20.3,
   "confidence": "medium"
  },
@@ -8736,7 +8736,7 @@
   "confidence": "low"
  },
  "chunk-w3axq133.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-w3axq133.js",
+  "path": "00-第三方库/@aws-sdk/chunk-w3axq133.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 12.0,
@@ -9002,8 +9002,8 @@
   "confidence": "high"
  },
  "chunk-wzx01n9v.js": {
-  "path": "00-第三方库/_未识别/第三方库-Azure身份认证/default.wzx01n9v.js",
-  "module": "第三方库 · Azure 身份认证",
+  "path": "00-第三方库/_未识别/default.wzx01n9v.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 12.0,
   "confidence": "low"
@@ -9065,8 +9065,8 @@
   "confidence": "high"
  },
  "chunk-x46ksw6d.js": {
-  "path": "00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js",
-  "module": "第三方库 · 其他",
+  "path": "00-第三方库/qrcode/chunk-x46ksw6d.js",
+  "module": "第三方库 · qrcode",
   "tier": 0,
   "kb": 88.8,
   "confidence": "high"
@@ -9450,9 +9450,9 @@
   "confidence": "low"
  },
  "chunk-yhkvt9ba.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 10.3,
   "confidence": "high"
  },
@@ -9478,9 +9478,9 @@
   "confidence": "low"
  },
  "chunk-ym1wn9mq.js": {
-  "path": "00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js",
-  "module": "React 组件 (TUI 视图)",
-  "tier": 0,
+  "path": "01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js",
+  "module": "UI 组件 / TUI",
+  "tier": 1,
   "kb": 406.7,
   "confidence": "medium"
  },
@@ -9618,15 +9618,15 @@
   "confidence": "low"
  },
  "chunk-z4m8wtvr.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/GetCallerIdentityCommand.z4m8wtvr.js",
+  "path": "00-第三方库/@aws-sdk/GetCallerIdentityCommand.z4m8wtvr.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 29.9,
   "confidence": "high"
  },
  "chunk-z54vzq0y.js": {
-  "path": "00-第三方库/_未识别/第三方库-加密库/第三方库-加密库.z54vzq0y.js",
-  "module": "第三方库 · 加密库",
+  "path": "00-第三方库/_未识别/第三方库-加密库.z54vzq0y.js",
+  "module": "Ink 终端渲染器",
   "tier": 0,
   "kb": 16.4,
   "confidence": "high"
@@ -9660,7 +9660,7 @@
   "confidence": "medium"
  },
  "chunk-z7ktsccq.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js",
+  "path": "00-第三方库/@aws-sdk/chunk-z7ktsccq.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 7.1,
@@ -9681,7 +9681,7 @@
   "confidence": "high"
  },
  "chunk-zcs53e9c.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/ENV_CMDS_RELATIVE_URI.zcs53e9c.js",
+  "path": "00-第三方库/@aws-sdk/ENV_CMDS_RELATIVE_URI.zcs53e9c.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 10.9,
@@ -9695,7 +9695,7 @@
   "confidence": "low"
  },
  "chunk-zdrvwe5r.js": {
-  "path": "00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js",
+  "path": "00-第三方库/@aws-sdk/chunk-zdrvwe5r.js",
   "module": "第三方库 · AWS SDK",
   "tier": 0,
   "kb": 15.8,

@@ -73,7 +73,7 @@ import "../自动更新-安装/install-diagnostics.js";
 import { lockCurrentVersion } from "../自动更新-安装/native-installer.js";
 import { removeGuiHostEntrypoint, removeRestrictedEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { NESTED_SESSION_MARKER_ENV_VARS, NON_INHERITED_SESSION_ENV_VARS } from "../编排-Workflow/session-env-vars.js";
-import { eI } from "../../00-第三方库/_未识别/第三方库-其他/chunk-x46ksw6d.js";
+import { eI } from "../../00-第三方库/qrcode/chunk-x46ksw6d.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import { parseWorkSecret, sessionIdsMatch, buildSessionApiUrl, registerWorker } from "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import { resolveBridgeDaemonOwner, createBridgeTitleWriter } from "./chunk-1g5kqtqx.js";

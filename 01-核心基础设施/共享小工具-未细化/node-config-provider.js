@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { HA } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
+import { HA } from "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
 import { getPropertyProviderModule } from "../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
 import { commonJS } from "./chunk-2c9tjhwd.js";
 var getNodeConfigProviderModule = commonJS(function (E) {

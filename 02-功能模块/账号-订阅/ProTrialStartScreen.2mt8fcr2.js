@@ -30,7 +30,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/welcome-banner.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
-import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ProTrialStartScreen(L) {

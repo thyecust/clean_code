@@ -11,7 +11,7 @@ import { CLAUDE_AI_INFERENCE_SCOPE } from "../../02-功能模块/认证-OAuth登
 import { isAnalyticsDisabled, getAuthTokenSource, getConfiguredApiKeyHelper, hasStoredOAuthToken, hasOAuthScope, getFeatureValue_CACHED_MAY_BE_STALE } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isPolicyAllowed, areComplianceTaintsSettled, getResponseFromCache } from "../../02-功能模块/策略限制-PolicyLimits/chunk-8sw91yn5.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
 var r = toESM(pg(), 1);
 var t = "tengu_orford_ness",

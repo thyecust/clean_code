@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Lm } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-w3axq133.js";
+import { Lm } from "../../00-第三方库/@aws-sdk/chunk-w3axq133.js";
 import { fromSso } from "./sso-token-provider.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { lhe } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
+import { lhe } from "../../00-第三方库/@aws-sdk/chunk-zdrvwe5r.js";
 import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { getPropertyProviderModule } from "./smithy-property-provider.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

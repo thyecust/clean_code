@@ -704,7 +704,7 @@ import { sessionTransportRegistry, isRemoteTransportPersistent, summarizeMcpServ
 import { getMcpServerConfigCacheKey, registerMcpNotificationHandler, setMcpClientOnClose, addMcpClientOnCloseHandler, isMcpClientTransportClosed, deliverMcpTransportMessage } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 import { getArtifactState } from "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
-import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import { kG } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { removeTeammateFromTeamFile } from "../../02-功能模块/Teammates团队/team-file-store.js";
 import { buildClaudeAiSessionUrl } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import { setSdkHostedBridgeHandle, getSdkHostedBridgeHandle, reportBridgePermissionMode, setSupervisedBridgeSession, reportBridgeCrossSessionInbound, reportBridgeModel, ownBridgePeerAddress } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";

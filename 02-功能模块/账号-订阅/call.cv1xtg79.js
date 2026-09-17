@@ -18,8 +18,8 @@ import { Box, Text } from "../../01-核心基础设施/ANSI-样式-布局原语/
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -55,7 +55,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../成本-Token统计/usage-credits-flow.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
-import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function x(M) {

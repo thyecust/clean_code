@@ -30,7 +30,7 @@ import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { parseAccountOnHoldApiError, isNoRefreshAvailableError, getAuthPrecedenceSource, resetProfileAuthCache } from "./chunk-wk0e3dz4.js";
-import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getFederationCacheDir } from "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { mkdir, readFile, stat as F } from "fs/promises";

@@ -17,7 +17,7 @@ import { logForDebugging } from "../../01-核心基础设施/核心工具-日志
 import { wrapOscForMultiplexer, OSC_CODES } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { createOscQuery } from "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
 import { isTmuxControlMode } from "../终端环境探测-TUI-tmux/终端环境探测-TUI-tmux.5pkb0sjc.js";
-import { sk } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { sk } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import { setSystemTheme, detectThemeFromColor } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 var v = 2000;
 function watchSystemTheme(e, d, p) {

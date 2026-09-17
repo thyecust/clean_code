@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { HA } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
+import { HA } from "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
 import { getPropertyProviderModule } from "./smithy-property-provider.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var S = toESM(getPropertyProviderModule()),
@@ -16,7 +16,7 @@ var g = 300000,
   p =
     "To refresh this SSO session run 'aws sso login' with the corresponding profile.";
 var k = async (e, o = {}) => {
-  let { SSOOIDCClient: s } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-ck8mz0z4.js").then((m) =>
+  let { SSOOIDCClient: s } = await import("../../00-第三方库/@aws-sdk/chunk-ck8mz0z4.js").then((m) =>
       toESM(m.default),
     ),
     n = (f) => o.clientConfig?.[f] ?? o.parentClientConfig?.[f];
@@ -29,7 +29,7 @@ var k = async (e, o = {}) => {
   );
 };
 var h = async (e, o, s = {}) => {
-  let { CreateTokenCommand: n } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-ck8mz0z4.js").then(
+  let { CreateTokenCommand: n } = await import("../../00-第三方库/@aws-sdk/chunk-ck8mz0z4.js").then(
     (m) => toESM(m.default),
   );
   return (await k(o, s)).send(

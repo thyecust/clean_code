@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, De, d, At, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { createStore } from "./state-store.js";
 F();
 function x() {

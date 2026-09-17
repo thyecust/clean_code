@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { HA } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-z7ktsccq.js";
+import { HA } from "../../00-第三方库/@aws-sdk/chunk-z7ktsccq.js";
 import { awsSdkCoreClientModule } from "../../01-核心基础设施/共享小工具-未细化/aws-sdk-core-client.js";
 import { getPropertyProviderModule } from "./smithy-property-provider.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -53,7 +53,7 @@ var i = toESM(getPropertyProviderModule()),
       ENV_CMDS_RELATIVE_URI: r,
       fromContainerMetadata: n,
       fromInstanceMetadata: s,
-    } = await import("../../00-第三方库/_未识别/第三方库-AWSSDK/ENV_CMDS_RELATIVE_URI.zcs53e9c.js");
+    } = await import("../../00-第三方库/@aws-sdk/ENV_CMDS_RELATIVE_URI.zcs53e9c.js");
     if (process.env[r] || process.env[o]) {
       e.logger?.debug(
         "@aws-sdk/credential-provider-node - remoteProvider::fromHttp/fromContainerMetadata",

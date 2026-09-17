@@ -2119,7 +2119,7 @@ import {
 import { getSessionAccessToken, getSessionAuthHeaders } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { getSecureStorage } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
-import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import {
   REPO_PATH_SEGMENT_PATTERN,
   HOSTNAME_PATTERN,
@@ -2851,7 +2851,7 @@ import {
   j3t,
   VY,
   gbt,
-} from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+} from "../../00-第三方库/zod/chunk-6421ybjb.js";
 import { PLUGIN_EVAL_QUICKREF_MD } from "../../01-核心基础设施/共享小工具-未细化/plugin-eval-quickref-asset.js";
 import { sessionTransportRegistry, mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { MAX_SKILL_FILE_BYTES, registerMcpSkillBuilders, getMcpSkillBuilders, hashMcpServerConfig, getMcpServerConfigCacheKey, invokeMcpToolRaw, readMcpResourceRaw, registerMcpNotificationHandler } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
@@ -2884,7 +2884,7 @@ import {
   gTt,
   Wqt,
   ver,
-} from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+} from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import { appStateStore, getTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import { getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { materializeFileMap, getBundledSkills, getRegisteredBundledSkillsIgnoringKillSwitch } from "../../02-功能模块/Skills技能/bundled-skills.js";
@@ -3058,7 +3058,7 @@ import {
   AGENT_STOPPED_NOTE_PREFIX,
   SUBAGENT_TYPE_REQUIRED_MESSAGE,
 } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { isValidRequestId } from "../../01-核心基础设施/共享小工具-未细化/request-id.js";
 import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, JAVASCRIPT_TOOL_NAME, isClaudeInChromeMCPServer, isClaudeInChromeMcpLaunch } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { defineDialog } from "../../02-功能模块/对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
@@ -43006,7 +43006,7 @@ function yEr(e, t) {
   return r ? { isValid: !1, error: r } : { isValid: !0 };
 }
 async function extractMcpbArchive(e) {
-  let { unzipSync: t } = await import("../../00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js"),
+  let { unzipSync: t } = await import("../../00-第三方库/fflate/zipSync.gv6wj3ch.js"),
     o = {
       fileCount: 0,
       totalUncompressedSize: 0,
@@ -66779,7 +66779,7 @@ async function writeFileAtomicWithMkdir(e, t) {
 async function $3r(e) {
   let t = {};
   await sQt(e, "", t, new Set());
-  let { zipSync: o } = await import("../../00-第三方库/_未识别/第三方库-其他/zipSync.gv6wj3ch.js"),
+  let { zipSync: o } = await import("../../00-第三方库/fflate/zipSync.gv6wj3ch.js"),
     d = o(t, { level: 6 });
   return (
     logForDebugging(

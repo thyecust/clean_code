@@ -142,12 +142,15 @@ const push = (f, e) => {
 const editsOf = (f) => src.get(f) ?? readFileSync(f, "utf8");
 
 // 3.1 静态 / 动态 / 字面懒加载：相对引用方解析
+//
+// **两端任一动过都要重算**。只判「目标搬了没有」会漏掉「来源搬了、目标没搬」——
+// 这时相对基准变了，说明符同样要改。阶段 2 全是同深度的目录改名，说明符恰好不变，
+// 所以这个 bug 被掩盖；阶段 3 跨深度搬文件时暴露成 162 条悬空依赖。
 let edgeRewrites = 0;
 for (const e of buildEdges(src)) {
-  const to = e.to;
-  if (!fileMap.has(to)) continue;
+  if (!fileMap.has(e.from) && !fileMap.has(e.to)) continue;
   const newFrom = newPath(e.from);
-  const newTo = newPath(to);
+  const newTo = newPath(e.to);
   const spec = relativeSpec(newFrom, newTo);
   if (spec === e.spec) continue;
   push(e.from, { start: e.specStart, end: e.specEnd, text: spec });
@@ -221,7 +224,54 @@ for (const [, pl] of resourcePlacement) {
   resourceCopies += pl.copies.size;
 }
 
-// ---------- 4. 编辑落盘 ----------
+// ---------- 4. 索引归属（必须在落盘**之前**算完）----------
+//
+// 顺序很要紧：早先把这一步放在落盘之后，于是「新目录没有索引归属」这类错误
+// 在树已经搬动之后才报出来，留下「盘上搬了、索引没动」的中间态。
+const fm0 = readFileMap();
+const keyOfPath = new Map();
+for (const [k, v] of Object.entries(fm0)) keyOfPath.set(v.path, k);
+
+const specCache = new Map();
+function specFor(destDir, sourceEntry) {
+  if (modSpec[destDir]) return modSpec[destDir];
+  if (specCache.has(destDir)) return specCache.get(destDir);
+  const tally = new Map();
+  for (const v of Object.values(fm0)) {
+    if (dirname(v.path) !== destDir) continue;
+    const k = `${v.module} ${v.tier}`;
+    tally.set(k, (tally.get(k) ?? 0) + 1);
+  }
+  let spec;
+  if (tally.size) {
+    const [k] = [...tally].sort((a, b) => b[1] - a[1])[0];
+    const [module, tier] = k.split(" ");
+    spec = { module, tier: Number(tier) };
+  } else {
+    // 该目录在索引里没有任何条目：沿用文件自己原来的归属（它没换模块，只是换了目录）
+    spec = { module: sourceEntry.module, tier: sourceEntry.tier };
+  }
+  specCache.set(destDir, spec);
+  return spec;
+}
+
+const indexPlan = [];
+for (const [a, b] of fileMap) {
+  if (!a.endsWith(".js")) continue;
+  const oldRel = relative(ROOT, a), newRel = relative(ROOT, b);
+  const key = keyOfPath.get(oldRel);
+  if (!key) continue;                       // `.original.js` 这类不入索引
+  const spec = specFor(relative(ROOT, dirname(b)), fm0[key]);
+  indexPlan.push({ key, path: newRel, module: spec.module, tier: spec.tier });
+}
+
+if (errors.length) {
+  console.log("计划有问题 —— 什么都没写：");
+  for (const e of errors) console.log("  ✗ " + e);
+  process.exit(1);
+}
+
+// ---------- 5. 编辑落盘 ----------
 
 const manifest = {
   plan: planFile,
@@ -307,61 +357,26 @@ for (const [res, pl] of resourcePlacement) {
   }
 }
 
-// 清空目录
+// 清空目录。两类都要清：目录搬动留下的，以及文件搬动后变空的父目录 ——
+// 只清前者会让 `_未识别/` 那种「文件都挪走了、壳还在」的空壳留下来。
 function prune(dir) {
-  if (!existsSync(dir)) return;
+  if (!existsSync(dir) || dir === ROOT) return;
   for (const e of readdirSync(dir, { withFileTypes: true })) {
     if (e.isDirectory() && !SKIP.has(e.name)) prune(join(dir, e.name));
   }
-  if (dir !== ROOT && readdirSync(dir).length === 0) rmdirSync(dir);
+  if (dir !== ROOT && existsSync(dir) && readdirSync(dir).length === 0) rmdirSync(dir);
 }
-for (const d of dirRemovals.sort((a, b) => b.length - a.length)) prune(d);
+const pruneRoots = new Set(dirRemovals);
+for (const [a] of fileMap) pruneRoots.add(dirname(a));
+for (const d of [...pruneRoots].sort((a, b) => b.length - a.length)) prune(d);
 
-// ---------- 5. 同步 _index ----------
+// ---------- 6. 同步 _index ----------
 
-const fmText0 = readFileSync(join(ROOT, "_index/file-map.json"), "utf8");
-let fmText = fmText0;
-const fm = readFileMap();
-
-// 目的地目录 -> 索引归属（模块显示名 / tier）
-const destSpec = new Map();
-for (const [a, b] of fileMap) {
-  if (!a.endsWith(".js")) continue;
-  const destDir = relative(ROOT, dirname(b));
-  if (destSpec.has(destDir)) continue;
-  if (modSpec[destDir]) { destSpec.set(destDir, modSpec[destDir]); continue; }
-  // 该目录里已有的条目占多数的是什么
-  const tally = new Map();
-  for (const v of Object.values(fm)) {
-    if (dirname(v.path) !== destDir) continue;
-    const k = `${v.module} ${v.tier}`;
-    tally.set(k, (tally.get(k) ?? 0) + 1);
-  }
-  if (tally.size) {
-    const [k] = [...tally].sort((x, y) => y[1] - x[1])[0];
-    const [module, tier] = k.split(" ");
-    destSpec.set(destDir, { module, tier: Number(tier) });
-  } else {
-    errors.push(`新目录没有索引归属，请在 plan.modules 里给出: ${destDir}`);
-  }
-}
-if (errors.length) {
-  console.log("索引归属缺失（树已搬动，先补 plan.modules 再重跑同步）：");
-  for (const e of errors) console.log("  ✗ " + e);
-  process.exit(1);
-}
-
+let fmText = readFileSync(join(ROOT, "_index/file-map.json"), "utf8");
 let indexPatched = 0;
-const fmPaths = new Map();   // 索引里的 path -> 键
-for (const [k, v] of Object.entries(fm)) fmPaths.set(v.path, k);
-for (const [a, b] of fileMap) {
-  if (!a.endsWith(".js")) continue;
-  const oldRel = relative(ROOT, a), newRel = relative(ROOT, b);
-  const key = fmPaths.get(oldRel);
-  if (!key) { console.log(`  note: 索引里没有 ${oldRel}`); continue; }
-  const spec = destSpec.get(relative(ROOT, dirname(b)));
-  const r = patchEntry(fmText, key, { path: newRel, module: spec.module, tier: spec.tier });
-  if (!r.ok) { console.log(`  note: 索引未同步 ${key}: ${r.why}`); continue; }
+for (const it of indexPlan) {
+  const r = patchEntry(fmText, it.key, { path: it.path, module: it.module, tier: it.tier });
+  if (!r.ok) { console.log(`  note: 索引未同步 ${it.key}: ${r.why}`); continue; }
   fmText = r.text;
   indexPatched++;
 }
@@ -373,5 +388,5 @@ if (rt) console.log(`  note: modules.md 重生成后自检不为零 diff @${rt.a
 
 manifest.indexPatched = indexPatched;
 writeFileSync(manifestFile, JSON.stringify(manifest, null, 1));
-console.log(`已搬 ${fileMap.size} 个文件 · 改 ${perFile.size} 个文件的路径 · 索引同步 ${indexPatched} 条 · 资源 ${manifest.resources.length} 项`);
+console.log(`已搬 ${fileMap.size} 个文件 · 改 ${perFile.size} 个文件的路径 · 索引同步 ${indexPatched}/${indexPlan.length} 条 · 资源 ${manifest.resources.length} 项`);
 console.log(`manifest -> ${manifestFile}`);

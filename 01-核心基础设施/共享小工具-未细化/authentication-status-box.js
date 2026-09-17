@@ -13,7 +13,7 @@ import { Box, Text, Link } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { TitledBorderBox } from "./titled-border-box.js";
 import { ErrorMessage } from "./error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 F();
 function N(f, D) {

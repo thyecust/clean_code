@@ -47,7 +47,7 @@ import "../../01-核心基础设施/核心工具-字符串与文本/markdown-ans
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { Markdown } from "../语法高亮-Markdown渲染/markdown-renderer.js";
-import { $8 } from "../../00-第三方库/_未识别/React组件(TUI视图)/React组件(TUI视图).ym1wn9mq.js";
+import { $8 } from "../../01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js";
 import { FleetAgentNudge, detachToBackgroundDaemon } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { LEFT_ARROW_HINT_TIMEOUT_MS, DETACH_CONFIRM_HINT, AMBIGUOUS_LEFT_ARROW_HINT, createLeftArrowGestureState, resolveLeftArrowGesture, applyLeftArrowGestureState, logLeftArrowBlocked } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../后台任务-Shell管理/bg-rendezvous-server.js";
@@ -59,7 +59,7 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import { s, se, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

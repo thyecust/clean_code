@@ -9,13 +9,13 @@
 // Version: 2.1.263
 import { gn, xu, Th, Xxe, GL, Eh } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import "../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
-import { FOe } from "../../00-第三方库/_未识别/第三方库-加密库/chunk-e0ewk5yt.js";
+import { FOe } from "../../00-第三方库/_未识别/chunk-e0ewk5yt.js";
 import "../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
-import { jtt, g2e, h2e, _2e, y2e } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mjf8wc6r.js";
+import { jtt, g2e, h2e, _2e, y2e } from "../../00-第三方库/@aws-sdk/chunk-mjf8wc6r.js";
 import { nu } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { lhe } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-zdrvwe5r.js";
-import { ta } from "../../00-第三方库/_未识别/第三方库-AWSSDK/chunk-mwf4pmq2.js";
-import "../../00-第三方库/_未识别/第三方库-其他/chunk-jtb5q5xr.js";
+import { lhe } from "../../00-第三方库/@aws-sdk/chunk-zdrvwe5r.js";
+import { ta } from "../../00-第三方库/@aws-sdk/chunk-mwf4pmq2.js";
+import "../../00-第三方库/@aws-sdk/chunk-jtb5q5xr.js";
 import { utilBase64Module, fetchHttpHandlerModule } from "./chunk-p991cddr.js";
 import "../../01-核心基础设施/共享小工具-未细化/smithy-context-module.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";

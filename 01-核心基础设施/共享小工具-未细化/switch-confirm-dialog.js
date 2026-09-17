@@ -16,7 +16,7 @@ import { useSetAppState } from "./app-state-context.js";
 import { useTerminalSize } from "./use-terminal-size.js";
 import { truncateLinesWithOverflow } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../UI组件-TUI/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatModelDisplayName } from "../模型目录-ModelCatalog/model-switch.js";
 function j(to) {

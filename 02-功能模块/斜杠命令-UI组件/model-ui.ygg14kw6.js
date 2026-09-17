@@ -108,7 +108,7 @@ import {
   isFableModelBlockedByUsageCredits,
   resolveEffortLevelForModel,
 } from "../../01-核心基础设施/模型目录-ModelCatalog/model-switch.js";
-import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();

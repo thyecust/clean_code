@@ -27,7 +27,7 @@ import { useKeybindings } from "../../01-核心基础设施/共享小工具-未�
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
-import { kG } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import { kG } from "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../使用时长-Wellbeing/使用时长-Wellbeing.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -41,7 +41,7 @@ import "../认证-OAuth登录/console-profile-auth.js";
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../向导UI-Wizard/向导UI-Wizard.7xe5wk62.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import "../模型接入-Bedrock-Vertex/bedrock-setup-wizard.js";
 import { OAuthLoginScreen } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../模型接入-Bedrock-Vertex/vertex-setup-wizard.js";
@@ -64,7 +64,7 @@ import { WelcomeBanner } from "../../03-入口与运行时/CLI入口-Commander/w
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../远程控制-Bridge/remote-control-ui-strings.js";
 import "../认证-OAuth登录/oauth-login-flow.js";
-import { ew, Qt, L_, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { ew, Qt, L_, De, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();

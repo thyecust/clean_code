@@ -22,11 +22,11 @@ import { Box, Text, useInterval } from "../../01-核心基础设施/ANSI-样式-
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.js";
 import { SelectListRow, Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI-REPL/scroll-box.js";
-import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
+import { qp, ss, Jd } from "../../01-核心基础设施/UI组件-TUI/chunk-yhkvt9ba.js";
 import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
@@ -35,7 +35,7 @@ import { getEnabledModelOptions } from "../../03-入口与运行时/核心应用
 import { bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { XL } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-2x6t9gq6.js";
+import { XL } from "../../01-核心基础设施/UI组件-TUI/chunk-2x6t9gq6.js";
 import { addRemoteControlEntry, removeRemoteControlEntry } from "../认证-OAuth登录/daemon-worker-runtime.js";
 import { loadDaemonConfig } from "../../01-核心基础设施/设置-配置/daemon-config.js";
 import { loadScheduledTasks, ScheduledTaskDetail, ScheduledTaskForm } from "../权限系统/scheduled-task-ui.js";
@@ -46,7 +46,7 @@ import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-�
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getDaemonJsonPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -1117,7 +1117,7 @@ async function renderDaemonHubStandalone(n) {
       import("./getBaseRenderOptions.caxv2veh.js"),
     ]),
     { AppRoot: k } = await import("../后台任务-Shell管理/chunk-c7mzes79.js"),
-    { getEraseScreenSequence: f } = await import("../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js"),
+    { getEraseScreenSequence: f } = await import("../../00-第三方库/_未识别/chunk-hm8z9h7j.js"),
     H = await yt(n);
   process.stdout.write(f());
   let R = await s(i(!1));

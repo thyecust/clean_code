@@ -10,7 +10,7 @@
 import { isBunStandaloneExecutable } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getLauncherArgv } from "../核心工具-进程与信号/process-wrapper-launcher.js";
 import { getClaudeVersionsDir, getLocalBinDir } from "./user-directories.js";
-import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
+import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
 var o = toESM(pg(), 1);
 import { readdir, stat as p } from "fs/promises";

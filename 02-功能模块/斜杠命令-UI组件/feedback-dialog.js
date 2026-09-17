@@ -25,8 +25,8 @@ import { KeybindingHint } from "../键位绑定-Keybindings/keybinding-display.j
 import { Select } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { hn } from "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
+import { de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { FeedbackDraftsPanel } from "../反馈-错误上报/反馈-错误上报.grgh562d.js";
 import { resolveFeedbackSubmissionMode, getRedactedInMemoryErrors, submitFeedbackPayload, createFeedbackBundle } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { hasPendingSurveyFeedback, takePendingSurveyFeedback } from "../../03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js";
@@ -35,7 +35,7 @@ import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
-import { Dn, kn, re, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, re, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();

@@ -17,7 +17,7 @@ import { getFsSurface, logForDebugging } from "../../01-核心基础设施/核�
 import { logError } from "../模型接入-Bedrock-Vertex/chunk-27ncq5fr.js";
 import { refreshOAuthToken, revokeOAuthToken, isOAuthTokenExpired, isInvalidGrantError } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
-import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { OAuthLoginFlow } from "../认证-OAuth登录/oauth-login-flow.js";
 import { join as O } from "path";

@@ -35,7 +35,7 @@ import { useKeybinding } from "../../01-核心基础设施/共享小工具-未�
 import { useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI-REPL/notification-queue.js";
-import { WA, Vx, de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import { WA, Vx, de } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { OAuthLoginScreen } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import { showStandaloneSecurityDialog } from "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
@@ -45,7 +45,7 @@ import { persistTranscriptLeafCheckpoint, relaunchClaudeCode } from "../../01-�
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { BRIDGE_FAILED_ERROR } from "./remote-control-ui-strings.js";
-import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function runOrgMemoryAuthBoundary() {

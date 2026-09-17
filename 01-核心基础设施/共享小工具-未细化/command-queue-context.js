@@ -10,7 +10,7 @@
 import { getCommandQueueInstance } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 var t = Qt(void 0);
 function CommandQueueProvider(f) {

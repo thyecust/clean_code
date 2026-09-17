@@ -14,7 +14,7 @@ import { terminalCapabilities } from "../../02-功能模块/状态栏-主题/chu
 import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { MarkdownTokenizer, MarkdownEngine, markdownParser } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import { ARTIFACT_MARKER_GLYPH, withArtifactMarker, BLOCKQUOTE_BAR_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import { Tf } from "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import { isCanonicalArtifactViewerUrl, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
 import { getCwd } from "../共享小工具-未细化/cwd-context.js";

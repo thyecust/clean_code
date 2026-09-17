@@ -23,7 +23,7 @@ import { ConfirmPrompt } from "../共享小工具-未细化/confirm-prompt.js";
 import { PermissionDialogFrame } from "../../02-功能模块/权限系统/permission-dialog.js";
 import { InputGuide } from "../共享小工具-未细化/input-guide.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, V, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();

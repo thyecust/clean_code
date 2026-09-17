@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Kx } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { Kx } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
+import { De, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 function useTerminalSize() {
   let e = De(Kx);

@@ -196,8 +196,8 @@ import {
   OAuthTokenRevocationRequestSchema,
 } from "./mcp-protocol-schemas.js";
 import { generatePkceChallenge } from "../认证-OAuth登录/pkce-challenge.js";
-import { hce } from "../../00-第三方库/_未识别/第三方库-Nodepolyfill/chunk-5y6047zm.js";
-import { RGe } from "../../00-第三方库/_未识别/第三方库-其他/chunk-10wtfjv0.js";
+import { hce } from "../../00-第三方库/_未识别/chunk-5y6047zm.js";
+import { RGe } from "../../00-第三方库/_未识别/chunk-10wtfjv0.js";
 import {
   yhe,
   lW,

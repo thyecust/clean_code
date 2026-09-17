@@ -32,7 +32,7 @@ import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-restricted-launch-flags.js";
 import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getCarriableEffortLevel } from "../权限系统/chunk-t3b7pg2x.js";
 import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Mie } from "../../00-第三方库/_未识别/第三方库-其他/chunk-cpfawwsx.js";
+import { Mie } from "../../00-第三方库/@aws-sdk/chunk-cpfawwsx.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
 var _ = toESM(Mie(), 1),
   {

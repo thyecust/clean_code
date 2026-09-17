@@ -53,7 +53,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../02-功能模块/远程控制-Bridge/remote-control-ui-strings.js";
 import { buildInFlightTaskItems } from "../../02-功能模块/后台任务-Shell管理/background-task-inventory.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function z() {}

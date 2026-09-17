@@ -69,7 +69,7 @@ import "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import "../认证-OAuth登录/credential-file-descriptors.js";
 import "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import "../认证-OAuth登录/secure-storage.js";
-import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
 import "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import "../工作树-Git/git-repository-detection.js";

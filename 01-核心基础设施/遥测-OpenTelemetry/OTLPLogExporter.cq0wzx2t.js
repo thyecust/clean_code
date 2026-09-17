@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { otlpExporterBaseModule, otlpTransformerModule, otlpHttpExporterBaseModule } from "./遥测-OpenTelemetry.0xhcvej6.js";
-import "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
+import "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var t = toESM(otlpExporterBaseModule()),
   e = toESM(otlpTransformerModule()),

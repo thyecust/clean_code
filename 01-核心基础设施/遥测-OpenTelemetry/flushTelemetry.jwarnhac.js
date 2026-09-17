@@ -75,7 +75,7 @@ import { getGatewayIdentityAttributes, otelContextManager } from "./otel-events.
 import { isDetailedTracingEnabled, logPerfettoTracingInit, isEnhancedTelemetryBetaEnabled, endInteractionSpan } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
-import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
+import { bee } from "../../00-第三方库/@opentelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
 import { decodeTokenClaims } from "../../02-功能模块/远程控制-Bridge/chunk-4zd60pbm.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { getCurrentPlatform, getWslVersion } from "../核心工具-路径与平台/platform-detection.js";

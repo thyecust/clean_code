@@ -178,7 +178,7 @@ import "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { isReviewOriginSession, hasCredentialDescriptor, getOAuthToken, getGatewayToken, getApiKey, getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import "../../02-功能模块/认证-OAuth登录/secure-storage.js";
-import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
+import "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import "../../02-功能模块/工作树-Git/git-repository-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
@@ -311,7 +311,7 @@ import "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式-Plan/计划模式-Plan.e5mh1avy.js";
 import "../../02-功能模块/Teammates团队/transcript-paths.js";
 import { resolveCcrAutoConnectDefault } from "../../02-功能模块/远程控制-Bridge/chunk-9estzwf5.js";
-import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
+import "../../00-第三方库/zod/chunk-6421ybjb.js";
 import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/max-subagent-spawn-depth.js";
 import "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
@@ -325,7 +325,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js"
 import "../../02-功能模块/制品发布-Artifact/chunk-rr78st95.js";
 import "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
+import "../../00-第三方库/@anthropic-ai/sdk/chunk-k58dgrhz.js";
 import "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import "../../02-功能模块/后台任务-Shell管理/task-output.js";
@@ -376,7 +376,7 @@ import { SessionStateStore } from "../../02-功能模块/远程控制-Bridge/chu
 import "../../02-功能模块/远程控制-Bridge/remote-control-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
-import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
+import "../../00-第三方库/supports-color/chunk-gdyh44zt.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { INSTALLABLE_SCOPES, ALL_PLUGIN_SCOPES } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
@@ -438,7 +438,7 @@ import {
   getRepositoryModelSource,
   resolveInitialPermissionMode,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { lO } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
+import { lO } from "../../00-第三方库/_未识别/chunk-hm8z9h7j.js";
 import "../../02-功能模块/会话-历史-恢复/session-title.js";
 import { createSessionMetricsStore, runExitHandoff, subscribeToRefusalFallbackRestoreSync, applyDisabledModePolicies, syncAdditionalWorkingDirectories, createBaseAppState, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
@@ -482,7 +482,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js"
 import "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js";
 import "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
-import { runSteps, showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
+import { runSteps, showScreen } from "../../00-第三方库/_未识别/chunk-cq8x5zt4.js";
 import "../../01-核心基础设施/共享小工具-未细化/storage-v5-env-pin.js";
 import "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js";
@@ -522,11 +522,11 @@ import "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.j
 import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
 import "../../02-功能模块/键位绑定-Keybindings/keybinding-display.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-tp42fv8j.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-dhg42t8r.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
+import "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
 import { shouldOfferTrustBackstop } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { eagerLoadSettings } from "../../01-核心基础设施/共享小工具-未细化/eager-load-settings.js";
@@ -573,7 +573,7 @@ import "../../01-核心基础设施/共享小工具-未细化/websocket-subproto
 import "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
 import "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
-import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
+import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import "../../01-核心基础设施/共享小工具-未细化/org-skills-sync.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
