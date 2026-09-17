@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { b } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Yo } from "./chunk-1ftn6vfs.js";
-var Fk = 1e6;
+import { asMcpSdkClient } from "./chunk-1ftn6vfs.js";
+var MAX_SKILL_FILE_BYTES = 1e6;
 class p {
   loaderSide = null;
   register(e) {
@@ -17,10 +17,10 @@ class p {
   }
 }
 var a = new p();
-function qYn(e) {
+function registerMcpSkillBuilders(e) {
   a.register(e);
 }
-function JSt() {
+function getMcpSkillBuilders() {
   let e = a.loaderSide;
   if (!e)
     throw Error(
@@ -29,13 +29,13 @@ function JSt() {
   return e;
 }
 import { createHash } from "crypto";
-function e7e(e) {
+function isMcpServerUrlMissing(e) {
   return (
     e.configErrorReason === "url_empty" ||
     (!e.configError && "url" in e && e.url.trim() === "")
   );
 }
-function lN(e) {
+function hashMcpServerConfig(e) {
   let {
       scope: o,
       pluginSource: r,
@@ -60,7 +60,7 @@ function lN(e) {
     t.type === "stdio" || (t.type === void 0 && "command" in t))
   )
     ((t.type = "stdio"), (t.args = t.args ?? []));
-  if (e7e(e)) t.unconfigured = !0;
+  if (isMcpServerUrlMissing(e)) t.unconfigured = !0;
   if (s !== void 0) t.agentSource = s;
   let f = b(t, (y, n) => {
     if (n && typeof n === "object" && !Array.isArray(n)) {
@@ -73,51 +73,51 @@ function lN(e) {
   });
   return createHash("sha256").update(f).digest("hex").slice(0, 16);
 }
-function Jn(e, o) {
-  return `${e}-${lN(o)}`;
+function getMcpServerConfigCacheKey(e, o) {
+  return `${e}-${hashMcpServerConfig(o)}`;
 }
-function GI(e, o, r) {
+function invokeMcpToolRaw(e, o, r) {
   return import.meta
     .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
     .mcpClientModule()
     .invokeToolRaw(e.client, o, r);
 }
-function UNe(e, o, r) {
+function readMcpResourceRaw(e, o, r) {
   return import.meta
     .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
     .mcpClientModule()
     .readResourceRaw(e.client, o, r);
 }
-function QSt(e, o) {
+function listMcpToolsRaw(e, o) {
   return import.meta
     .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
     .mcpClientModule()
     .listToolsRaw(e.client, o);
 }
-function CH(e, o, r) {
+function registerMcpNotificationHandler(e, o, r) {
   import.meta
     .require("../../02-功能模块/MCP客户端/mcpClientModule.4cyej0np.js")
     .mcpClientModule()
     .onMcpNotification(e, o, r);
 }
-function Q3(e, o) {
-  Yo(e.client).onclose = o;
+function setMcpClientOnClose(e, o) {
+  asMcpSdkClient(e.client).onclose = o;
 }
-function zYn(e, o) {
-  let r = Yo(e.client),
+function addMcpClientOnCloseHandler(e, o) {
+  let r = asMcpSdkClient(e.client),
     i = r.onclose;
   r.onclose = () => {
     (i?.(), o());
   };
 }
-function VYn(e) {
-  let o = Yo(e.client);
+function isMcpClientTransportClosed(e) {
+  let o = asMcpSdkClient(e.client);
   return o != null && "transport" in o && o.transport === void 0;
 }
-function KYn(e, o) {
-  return Yo(e.client).notification(o);
+function sendMcpNotification(e, o) {
+  return asMcpSdkClient(e.client).notification(o);
 }
-function XYn(e, o) {
-  Yo(e.client)?.transport?.onmessage?.(o);
+function deliverMcpTransportMessage(e, o) {
+  asMcpSdkClient(e.client)?.transport?.onmessage?.(o);
 }
-export { Fk, qYn, JSt, e7e, lN, Jn, GI, UNe, QSt, CH, Q3, zYn, VYn, KYn, XYn };
+export { MAX_SKILL_FILE_BYTES, registerMcpSkillBuilders, getMcpSkillBuilders, isMcpServerUrlMissing, hashMcpServerConfig, getMcpServerConfigCacheKey, invokeMcpToolRaw, readMcpResourceRaw, listMcpToolsRaw, registerMcpNotificationHandler, setMcpClientOnClose, addMcpClientOnCloseHandler, isMcpClientTransportClosed, sendMcpNotification, deliverMcpTransportMessage };

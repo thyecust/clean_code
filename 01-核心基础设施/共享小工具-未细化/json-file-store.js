@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { mkdir, readFile } from "fs/promises";
 import { dirname } from "path";
@@ -59,7 +59,7 @@ function createJsonFileStore(e, f, c) {
         ? `
 `
         : "");
-    await On(e, r, T);
+    await writeFileAtomic(e, r, T);
   }
   let l = Promise.resolve();
   function y(t) {

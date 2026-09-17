@@ -9,17 +9,17 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { fz, I0, hXt } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { BASH_STDOUT_TAG, BASH_STDERR_TAG, BASH_EXIT_CODE_TAG } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getDefaultShell } from "../../01-核心基础设施/共享小工具-未细化/get-default-shell.js";
 import { getBashSpawnFailureDetail } from "../../01-核心基础设施/共享小工具-未细化/bash-spawn-failure-detail.js";
 import { randomUUID } from "crypto";
 async function runHeadlessBashCommand(e) {
   let { command: s } = e,
-    i = e.cwd ?? Q(),
+    i = e.cwd ?? getCwd(),
     { file: a, args: n } =
       getDefaultShell() === "powershell"
         ? { file: "pwsh", args: ["-NoProfile", "-Command", s] }
@@ -40,7 +40,7 @@ async function runHeadlessBashCommand(e) {
   let l = t ? getBashSpawnFailureDetail(t, e.session) : "";
   return {
     outputUuid: randomUUID(),
-    outputText: `<${fz}>${Nt(m)}</${fz}><${I0}>${Nt(d || l)}</${I0}><${hXt}>${o}</${hXt}>`,
+    outputText: `<${BASH_STDOUT_TAG}>${Nt(m)}</${BASH_STDOUT_TAG}><${BASH_STDERR_TAG}>${Nt(d || l)}</${BASH_STDERR_TAG}><${BASH_EXIT_CODE_TAG}>${o}</${BASH_EXIT_CODE_TAG}>`,
     exitCode: o,
   };
 }

@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Pl, ll } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import {
   mkdir,
   readdir,
@@ -23,19 +23,19 @@ function P(t) {
   return p(m(), `${t}.json`);
 }
 function m() {
-  let t = fy() ?? ll(he());
+  let t = fy() ?? getProjectDir(he());
   return p(t, K(), "workflows");
 }
 function getWorkflowTranscriptDir(t) {
-  let a = fy() ?? ll(he());
+  let a = fy() ?? getProjectDir(he());
   return p(a, K(), "subagents", "workflows", t);
 }
 function getCurrentProjectKey() {
-  let t = fy() ?? ll(he());
-  return dirname(t) === Pl() ? basename(t) : void 0;
+  let t = fy() ?? getProjectDir(he());
+  return dirname(t) === getProjectsDir() ? basename(t) : void 0;
 }
 function W(t, a, s) {
-  return Ce.sidecar(t, a, ["workflows", `${s}.json`]);
+  return STORAGE_KEYS.sidecar(t, a, ["workflows", `${s}.json`]);
 }
 async function writeWorkflowSnapshot(t, a, s) {
   try {
@@ -45,7 +45,7 @@ async function writeWorkflowSnapshot(t, a, s) {
       r = K();
     if (
       (await mkdir(dirname(l), { recursive: !0, mode: 448 }),
-      isHoverRestEnabled() && s && e !== void 0 && _n(`${t}.json`))
+      isHoverRestEnabled() && s && e !== void 0 && isValidPathSegment(`${t}.json`))
     ) {
       let o = await s.write(W(e, r, t), b(i), {
         publishDiscipline: "inPlace",

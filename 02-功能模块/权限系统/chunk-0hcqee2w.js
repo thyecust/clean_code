@@ -11,19 +11,19 @@ import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { y5, tt, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Gu } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te, dp, truncateToWidth, uxt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { oL } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { iv } from "./chunk-e4pfvp7x.js";
-import { Tx, akt, Fr, Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { WARNING_GLYPH } from "./chunk-e4pfvp7x.js";
+import { containsWildcard, unescapeGlobSpecials, parsePermissionRule, formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { o, t, jr, tn, ko, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oN, oYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
@@ -46,7 +46,7 @@ import {
   Qk,
   Oo,
 } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -58,19 +58,19 @@ import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未
 import { tEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { renderToolUseMessageByToolName } from "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import { useAnswerRefusalState } from "../../01-核心基础设施/共享小工具-未细化/use-answer-refusal-state.js";
-import { SPt } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import { linkifyUrls } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { useHyperlinkSupport } from "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import { zL } from "./chunk-hv6z01db.js";
+import { canCycleToAuto } from "./permission-mode-cycle.js";
 import { PermissionDialogFrame } from "./permission-dialog.js";
 import { useSettings } from "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
-import { vrn } from "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import { getSlackChannelUrl } from "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import { re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { INVALID_TOOL_NAME_PLACEHOLDER, nir, rir, mintDisplayedUpdates } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { oz } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { splitGraphemes } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function Fs(zr) {
@@ -156,7 +156,7 @@ function Dn(u, s, n) {
     if (c.rules === void 0) continue;
     let A = c.rules.filter((T) =>
         n5(
-          Er({
+          formatPermissionRule({
             toolName: T.toolName,
             ...(T.ruleContent !== void 0 && { ruleContent: T.ruleContent }),
           }),
@@ -182,9 +182,9 @@ function vD(u) {
 function Ue(u) {
   if (u === INVALID_TOOL_NAME_PLACEHOLDER) return !1;
   if (vD(u)) return !1;
-  let s = Fr(Er({ toolName: u }));
+  let s = parsePermissionRule(formatPermissionRule({ toolName: u }));
   if (s.toolName !== u || s.ruleContent !== void 0) return !1;
-  if (Tx(u)) return !1;
+  if (containsWildcard(u)) return !1;
   let n = Js(u);
   if (n !== null && !n.toolName) return !1;
   return !0;
@@ -243,7 +243,7 @@ function Kae(u) {
   });
 }
 function F6e(u) {
-  return akt(
+  return unescapeGlobSpecials(
     (u?.replace(/\/\*\*$/, "") || "")
       .replace(/^\.\//, "")
       .replace(/^\/\//, "/"),
@@ -829,12 +829,12 @@ function yu(ts) {
       let ro = Math.max(1, Math.round(hu / 1000));
       ze =
         hu >= 60000
-          ? `about ${oo} ${x(oo, "minute")}`
-          : `about ${ro} ${x(ro, "second")}`;
+          ? `about ${oo} ${pluralize(oo, "minute")}`
+          : `about ${ro} ${pluralize(ro, "second")}`;
       ((xe[10] = hu), (xe[11] = ze));
     } else ze = xe[11];
     let Ds = ze;
-    const Qe = `${iv} Claude Code will automatically deny this request in ${Ds}, to avoid blocking progress on an unattended session`;
+    const Qe = `${WARNING_GLYPH} Claude Code will automatically deny this request in ${Ds}, to avoid blocking progress on an unattended session`;
     let Je;
     if (xe[12] !== Qe)
       ((Je = e(o, {
@@ -854,7 +854,7 @@ function yu(ts) {
   if (xe[14] !== ze) ((Qe = ze.padStart(2, "0")), (xe[14] = ze), (xe[15] = Qe));
   else Qe = xe[15];
   let is = `${os}:${Qe}`;
-  const Je = `${iv} Claude Code will automatically deny this request in ${is}, to avoid blocking progress on an unattended session`;
+  const Je = `${WARNING_GLYPH} Claude Code will automatically deny this request in ${is}, to avoid blocking progress on an unattended session`;
   let so;
   if (xe[16] !== Je)
     ((so = e(o, {
@@ -900,7 +900,7 @@ ${a(u.reason)}`,
         themeColor: "error",
       };
     return {
-      reasonString: `Classifier ${ie.bold(a(u.classifier))} requires confirmation for this ${s}.
+      reasonString: `Classifier ${chalk.bold(a(u.classifier))} requires confirmation for this ${s}.
 ${a(u.reason)}`,
       configString: void 0,
     };
@@ -916,7 +916,7 @@ ${a(u.reason)}`,
   }
   switch (u.type) {
     case "rule": {
-      let l = ie.bold(a(Er(u.rule.ruleValue)));
+      let l = chalk.bold(a(formatPermissionRule(u.rule.ruleValue)));
       if (
         n === "auto" &&
         u.rule.ruleBehavior === "ask" &&
@@ -939,9 +939,9 @@ ${a(u.reason)}`,
           ? `:
 ${a(u.reason)}`
           : ".",
-        c = u.hookSource ? ` ${ie.dim(`[${a(u.hookSource)}]`)}` : "";
+        c = u.hookSource ? ` ${chalk.dim(`[${a(u.hookSource)}]`)}` : "";
       return {
-        reasonString: `Hook ${ie.bold(a(u.hookName))} requires confirmation for this ${s}${l}${c}`,
+        reasonString: `Hook ${chalk.bold(a(u.hookName))} requires confirmation for this ${s}${l}${c}`,
         configString: `${Bo(u.hookSource)} to update hooks`,
       };
     }
@@ -960,7 +960,7 @@ ${a(u.reason)}`
 function Ig(Rs) {
   let Ne = _(27),
     { permissionResult: ce, toolType: pn } = Rs,
-    Xu = U(bo),
+    Xu = useAppStateSelector(bo),
     ke = ce?.behavior === "ask" ? ce.denialLimitFallback?.disclosure : void 0,
     q = Re(ce?.decisionReason, pn, Xu),
     se = ke !== void 0 && ke !== ce?.decisionReason ? Re(ke, pn, Xu) : null,
@@ -1009,7 +1009,7 @@ function Ig(Rs) {
       }
       let _s = Math.max(20, eu - 8);
       return (
-        ln(
+        countOccurrences(
           je(Eo, _s, { trim: !0, hard: !0 }),
           `
 `,
@@ -1155,7 +1155,7 @@ function MZ(Ks) {
       isMcp: tu,
       initialFocusedType: hn,
     } = Ks,
-    yn = It(),
+    yn = useSetAppState(),
     [nu, Vs] = d(""),
     [Du, Gs] = d(""),
     [fe, Bn] = d(!1),
@@ -1413,12 +1413,12 @@ function rr(_a) {
 var jst = "\xB7 workflows run best with it on";
 function U6e(Ra) {
   let DD = _(10),
-    Ie = U(rr),
-    tD = It(),
+    Ie = useAppStateSelector(rr),
+    tD = useSetAppState(),
     { addNotification: nD } = useNotificationQueue(),
     nr;
   if (DD[0] !== Ie)
-    ((nr = (Ie.mode === "default" || Ie.mode === "acceptEdits") && zL(Ie)),
+    ((nr = (Ie.mode === "default" || Ie.mode === "acceptEdits") && canCycleToAuto(Ie)),
       (DD[0] = Ie),
       (DD[1] = nr));
   else nr = DD[1];
@@ -1729,7 +1729,7 @@ function Ut(u, s, n = iu) {
         continue;
       }
       let H = dr.has(k)
-        ? (vrn(j) ?? void 0)
+        ? (getSlackChannelUrl(j) ?? void 0)
         : /^https?:\/\/\S+$/.test(j) && !oU(j)
           ? j
           : void 0;
@@ -1963,7 +1963,7 @@ function dD(qa) {
   return ir;
 }
 function $t({ entries: u, contentColumns: s }) {
-  let [n] = cn(),
+  let [n] = useTheme(),
     l = useSettings().syntaxHighlightingDisabled ?? !1,
     c = C(new Map()),
     A = V(() => {
@@ -1979,7 +1979,7 @@ function $t({ entries: u, contentColumns: s }) {
                 ? y.highlight(k.text, { language: k.language })
                 : oU(k.text)
                   ? k.text
-                  : SPt(k.text, n);
+                  : linkifyUrls(k.text, n);
           return (w.set(M, P), P);
         });
       return ((c.current = w), L);
@@ -2122,7 +2122,7 @@ function _D(u, s) {
         if (f !== s.cwd) return null;
         let T = Gu(s.cwd);
         if (te(A(T)) <= c) return A(T);
-        let B = oz(T),
+        let B = splitGraphemes(T),
           y = "";
         for (let w = 0; w < B.length; w++) {
           let L = y + B[w];
@@ -2194,7 +2194,7 @@ function EQt(Sl) {
       (O[10] = xr));
   else xr = O[10];
   let He = xr,
-    [mD] = cn(),
+    [mD] = useTheme(),
     jt;
   bb0: {
     if (S.renderedToolUseMessage != null) {

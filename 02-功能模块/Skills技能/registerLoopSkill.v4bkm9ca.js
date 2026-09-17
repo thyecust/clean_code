@@ -14,16 +14,16 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { isBgSession, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { K_n } from "../语音-音频/chunk-cfhndstm.js";
+import { markLoopStarted } from "../语音-音频/loop-wakeup-scheduler.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { PUSH_NOTIFICATION_TOOL_NAME, isAgentPushNotificationEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { CRON_CREATE_TOOL_NAME, CRON_DELETE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { registerBundledSkill } from "./chunk-1zy5c8mf.js";
-import { so } from "../权限系统/chunk-fjrcf22x.js";
-import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
-import { Fbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Xi, sCe, eoe, kT, sg } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { registerBundledSkill } from "./bundled-skills.js";
+import { SKILL_TOOL_NAME } from "../权限系统/chunk-fjrcf22x.js";
+import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
+import { LOOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME, sCe, AUTONOMOUS_LOOP_DYNAMIC_SENTINEL, TASK_LIST_TOOL_NAME, TASK_STOP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 var r = import.meta.require("../自主会话-循环/LOOP_FILE_DYNAMIC_SENTINEL.y675anba.js"),
   b = "10m";
@@ -52,7 +52,7 @@ function T() {
     isFirstPartyProvider() &&
     isClaudeAISubscriber() &&
     isPolicyAllowed("allow_remote_sessions") &&
-    isPolicyAllowed(gM) &&
+    isPolicyAllowed(ALLOW_ROUTINES_POLICY) &&
     ym().length === 0
   )
     return `
@@ -67,7 +67,7 @@ If either is true, call ${ASK_USER_QUESTION_TOOL_NAME} first:
 - \`header\`: "Schedule"
 - \`options\`: \`[{label: "Cloud schedule (recommended)", description: "Runs in Anthropic's cloud even after you close this session"}, {label: "This session only", description: "Runs in this terminal until you exit"}]\`
 
-If they pick **Cloud schedule**: do NOT call ${CRON_CREATE_TOOL_NAME}. Invoke the \`schedule\` skill directly via the ${so} tool with \`args\` set to their original input verbatim (e.g. \`${so}({skill: "schedule", args: "every morning tell me a joke"})\`), then follow that skill's instructions to completion. Do NOT tell the user to run /schedule themselves. **Then stop \u2014 do not continue to any section below** (no ${CRON_CREATE_TOOL_NAME}, no ${Xi}, no "execute the prompt now").
+If they pick **Cloud schedule**: do NOT call ${CRON_CREATE_TOOL_NAME}. Invoke the \`schedule\` skill directly via the ${SKILL_TOOL_NAME} tool with \`args\` set to their original input verbatim (e.g. \`${SKILL_TOOL_NAME}({skill: "schedule", args: "every morning tell me a joke"})\`), then follow that skill's instructions to completion. Do NOT tell the user to run /schedule themselves. **Then stop \u2014 do not continue to any section below** (no ${CRON_CREATE_TOOL_NAME}, no ${SCHEDULE_WAKEUP_TOOL_NAME}, no "execute the prompt now").
 If they pick **This session only**:
 - If the trigger was a parsed \u226560-minute interval (rule 1 or 2): continue below with that interval.
 - If the trigger was daily phrasing only (rule 3, no parsed interval): do NOT call ${CRON_CREATE_TOOL_NAME}. Explain that a daily-cadence loop won't fire before this session closes, so there's nothing useful to schedule locally \u2014 suggest they either pick Cloud schedule, or re-run \`/loop\` with an explicit shorter interval (e.g. \`/loop 1h <prompt>\`) if they want a session loop. Then stop.
@@ -82,7 +82,7 @@ function I() {
     isFirstPartyProvider() &&
     isClaudeAISubscriber() &&
     isPolicyAllowed("allow_remote_sessions") &&
-    isPolicyAllowed(gM)
+    isPolicyAllowed(ALLOW_ROUTINES_POLICY)
   ) {
     if (ym().length > 0)
       return ` End the confirmation with this exact line on its own, italicized: ${"`_Runs until you close this session \xB7 For durable cloud-based loops, use /schedule_`"}`;
@@ -109,16 +109,16 @@ function A(e) {
   let o = `The user wants you to self-pace. Decide what makes the next iteration worth running \u2014 a passage of time, or an observable event.
 
 1. **Run the parsed prompt now.** If it's a slash command, invoke it via the Skill tool; otherwise act on it directly.
-2. **If the next run is gated on an event** (CI finishing, a log line matching, a file changing, a PR comment) and no ${MONITOR_TOOL_NAME} is already running for it: arm one now with \`persistent: true\`. Its events arrive as \`<task-notification>\` messages and wake this loop immediately \u2014 you do not wait for the ${Xi} deadline. Arm once; on later iterations call ${kT} first and skip this step if a monitor is already running.
-3. **Briefly confirm**: that you're self-pacing, whether a ${MONITOR_TOOL_NAME} is the primary wake signal, that you ran the task now, and what fallback delay you're about to pick. Write this as text *before* calling ${Xi} \u2014 the turn ends as soon as that tool returns.
-4. **Then, as the last action of this turn, decide whether the loop continues.** If the task needs another iteration, call ${Xi} with:
+2. **If the next run is gated on an event** (CI finishing, a log line matching, a file changing, a PR comment) and no ${MONITOR_TOOL_NAME} is already running for it: arm one now with \`persistent: true\`. Its events arrive as \`<task-notification>\` messages and wake this loop immediately \u2014 you do not wait for the ${SCHEDULE_WAKEUP_TOOL_NAME} deadline. Arm once; on later iterations call ${TASK_LIST_TOOL_NAME} first and skip this step if a monitor is already running.
+3. **Briefly confirm**: that you're self-pacing, whether a ${MONITOR_TOOL_NAME} is the primary wake signal, that you ran the task now, and what fallback delay you're about to pick. Write this as text *before* calling ${SCHEDULE_WAKEUP_TOOL_NAME} \u2014 the turn ends as soon as that tool returns.
+4. **Then, as the last action of this turn, decide whether the loop continues.** If the task needs another iteration, call ${SCHEDULE_WAKEUP_TOOL_NAME} with:
    - \`delaySeconds\`: with a ${MONITOR_TOOL_NAME} armed this is the **fallback heartbeat** \u2014 how long to wait if no event fires (lean 1200\u20131800s; idle ticks more frequent than the task needs are pure overhead). Without a ${MONITOR_TOOL_NAME} this is the cadence \u2014 pick based on what you observed. Read the tool's own description for cache-aware delay guidance.
    - \`reason\`: one short sentence on why you picked that delay.
    - \`prompt\`: the full original /loop input verbatim, prefixed with \`/loop \` so the next firing re-enters this skill and continues the loop. For example, if the user typed \`/loop check the deploy\`, pass \`/loop check the deploy\` as the prompt.
    - \`noop\`: \`true\` if this tick changed nothing ("still waiting", "quiet hold"); \`false\` if it did something worth keeping. Consecutive \`noop: true\` ticks collapse in the terminal.
    If it doesn't need another iteration, stop instead (step 6) \u2014 re-arming is a per-turn choice, not a default.
-5. **If you were woken by a \`<task-notification>\`** rather than this prompt: handle the event in the context of the loop task, then make the same decision. If the loop should continue, call ${Xi} again with the same \`prompt\` and the same 1200\u20131800s \`delaySeconds\` from step 4 (the ${MONITOR_TOOL_NAME} remains the wake signal; the new wakeup is only the fallback heartbeat). If the event means the work is finished, stop (step 6).
-6. **To stop the loop** \u2014 the task is complete, further iterations can't make progress, or the user asked you to stop \u2014 call ${Xi} with \`stop: true\` (no other fields) and ${sg} any ${MONITOR_TOOL_NAME} you armed (use ${kT} to find the task ID if it is no longer in context). Stopping is the loop's normal ending \u2014 the user can restart it anytime with /loop.${y()}`;
+5. **If you were woken by a \`<task-notification>\`** rather than this prompt: handle the event in the context of the loop task, then make the same decision. If the loop should continue, call ${SCHEDULE_WAKEUP_TOOL_NAME} again with the same \`prompt\` and the same 1200\u20131800s \`delaySeconds\` from step 4 (the ${MONITOR_TOOL_NAME} remains the wake signal; the new wakeup is only the fallback heartbeat). If the event means the work is finished, stop (step 6).
+6. **To stop the loop** \u2014 the task is complete, further iterations can't make progress, or the user asked you to stop \u2014 call ${SCHEDULE_WAKEUP_TOOL_NAME} with \`stop: true\` (no other fields) and ${TASK_STOP_TOOL_NAME} any ${MONITOR_TOOL_NAME} you armed (use ${TASK_LIST_TOOL_NAME} to find the task ID if it is no longer in context). Stopping is the loop's normal ending \u2014 the user can restart it anytime with /loop.${y()}`;
   return `# /loop \u2014 schedule a recurring or self-paced prompt
 
 Parse the input below into \`[interval] <prompt\u2026>\` and schedule it.
@@ -167,28 +167,28 @@ var f = (e, o, t) => {
   else (r.logAutonomousLoopActivation(), (n = r.getAutonomousLoopPreamble()));
   let h = e ? "the loop.md tasks" : "the autonomous check";
   if (o) {
-    let c = e ? r.LOOP_FILE_DYNAMIC_SENTINEL : eoe,
+    let c = e ? r.LOOP_FILE_DYNAMIC_SENTINEL : AUTONOMOUS_LOOP_DYNAMIC_SENTINEL,
       k = e
         ? `# /loop \u2014 loop.md tasks with dynamic pacing
 
-The user invoked \`/loop\` with no prompt and no interval and has a loop-tasks file at \`${e.path}\`. Run those tasks now, then self-pace the next iteration via ${Xi} \u2014 no cron.`
+The user invoked \`/loop\` with no prompt and no interval and has a loop-tasks file at \`${e.path}\`. Run those tasks now, then self-pace the next iteration via ${SCHEDULE_WAKEUP_TOOL_NAME} \u2014 no cron.`
         : `# /loop \u2014 autonomous default with dynamic pacing
 
-The user invoked \`/loop\` with no prompt and no interval. Run the autonomous check now, then self-pace the next iteration via ${Xi} \u2014 no cron.`,
+The user invoked \`/loop\` with no prompt and no interval. Run the autonomous check now, then self-pace the next iteration via ${SCHEDULE_WAKEUP_TOOL_NAME} \u2014 no cron.`,
       v = e
         ? `that you're running tasks from \`${e.path}\` in dynamic-pacing mode, that you ran the first tick now`
         : "that this is the autonomous default in dynamic-pacing mode, that you ran the check now",
       O = `1. **Run ${h} now**, following the instructions inlined below.
-2. **If the next tick is gated on an event** (CI finishing, a PR comment, a log line) and no ${MONITOR_TOOL_NAME} is already running for it: arm one now with \`persistent: true\`. Its events wake this loop immediately \u2014 you do not wait for the ${Xi} deadline. Arm once; on later ticks call ${kT} first and skip if a monitor is already running.
-3. **Briefly confirm**: ${v}, whether a ${MONITOR_TOOL_NAME} is the primary wake signal, and what fallback delay you're about to pick. Write this as text *before* calling ${Xi} \u2014 the turn ends as soon as that tool returns.
-4. **Then, as the last action of this turn, decide whether the loop continues.** If the next check is worth running, call ${Xi} with:
+2. **If the next tick is gated on an event** (CI finishing, a PR comment, a log line) and no ${MONITOR_TOOL_NAME} is already running for it: arm one now with \`persistent: true\`. Its events wake this loop immediately \u2014 you do not wait for the ${SCHEDULE_WAKEUP_TOOL_NAME} deadline. Arm once; on later ticks call ${TASK_LIST_TOOL_NAME} first and skip if a monitor is already running.
+3. **Briefly confirm**: ${v}, whether a ${MONITOR_TOOL_NAME} is the primary wake signal, and what fallback delay you're about to pick. Write this as text *before* calling ${SCHEDULE_WAKEUP_TOOL_NAME} \u2014 the turn ends as soon as that tool returns.
+4. **Then, as the last action of this turn, decide whether the loop continues.** If the next check is worth running, call ${SCHEDULE_WAKEUP_TOOL_NAME} with:
    - \`delaySeconds\`: with a ${MONITOR_TOOL_NAME} armed this is the fallback heartbeat (lean 1200\u20131800s). Without one, pick based on what you observed this turn \u2014 quiet branch? wait longer. Lots in flight? wait shorter. Read the tool's own description for cache-aware delay guidance.
    - \`reason\`: one short sentence on why you picked that delay.
    - \`prompt\`: the literal string \`${c}\` \u2014 the dynamic-mode sentinel expands at fire time to the full instructions (first fire / first fire post-compact / loop.md edited) or a dynamic-pacing-specific short reminder (subsequent fires). Do not pass the full instructions; that is handled automatically.
    - \`noop\`: \`true\` if this tick changed nothing ("still waiting", "quiet hold"); \`false\` if it did something worth keeping. Consecutive \`noop: true\` ticks collapse in the terminal.
    If it isn't, stop instead (step 6) \u2014 re-arming is a per-turn choice, not a default.
-5. **If woken by a \`<task-notification>\`** rather than this prompt: handle the event, then make the same decision. If the loop should continue, call ${Xi} again with \`${c}\` and the same 1200\u20131800s \`delaySeconds\` (the ${MONITOR_TOOL_NAME} remains the wake signal; the new wakeup is only the fallback heartbeat). If the event means the work is finished, stop (step 6).
-6. **To stop the loop** \u2014 the task is complete, further iterations can't make progress, or the user asked you to stop \u2014 call ${Xi} with \`stop: true\` (no other fields) and ${sg} any ${MONITOR_TOOL_NAME} you armed (use ${kT} to find the task ID if it is no longer in context). Stopping is the loop's normal ending \u2014 the user can restart it anytime with /loop.${y()}`;
+5. **If woken by a \`<task-notification>\`** rather than this prompt: handle the event, then make the same decision. If the loop should continue, call ${SCHEDULE_WAKEUP_TOOL_NAME} again with \`${c}\` and the same 1200\u20131800s \`delaySeconds\` (the ${MONITOR_TOOL_NAME} remains the wake signal; the new wakeup is only the fallback heartbeat). If the event means the work is finished, stop (step 6).
+6. **To stop the loop** \u2014 the task is complete, further iterations can't make progress, or the user asked you to stop \u2014 call ${SCHEDULE_WAKEUP_TOOL_NAME} with \`stop: true\` (no other fields) and ${TASK_STOP_TOOL_NAME} any ${MONITOR_TOOL_NAME} you armed (use ${TASK_LIST_TOOL_NAME} to find the task ID if it is no longer in context). Stopping is the loop's normal ending \u2014 the user can restart it anytime with /loop.${y()}`;
     return `${k}
 
 ## Action
@@ -231,7 +231,7 @@ ${n}`;
 };
 function registerLoopSkill() {
   registerBundledSkill({
-    name: Fbt,
+    name: LOOP_SKILL_NAME,
     menuDescription:
       "Repeat a prompt or command on an interval (e.g. /loop 5m /foo)",
     aliases: ["proactive"],
@@ -261,14 +261,14 @@ function registerLoopSkill() {
             u = await r.readLoopFileAsync(o.storageV5);
           if (n) {
             if (!o.options?.isSkillPreload && !o.options?.modelScheduledOrigin)
-              K_n();
+              markLoopStarted();
             return [{ type: "text", text: f(u, !0, l) }];
           }
           return [{ type: "text", text: f(u, !1, l) }];
         }
       }
       if (!t) return [{ type: "text", text: E() }];
-      if (!o.options?.isSkillPreload && !o.options?.modelScheduledOrigin) K_n();
+      if (!o.options?.isSkillPreload && !o.options?.modelScheduledOrigin) markLoopStarted();
       return [{ type: "text", text: A(t) }];
     },
   });

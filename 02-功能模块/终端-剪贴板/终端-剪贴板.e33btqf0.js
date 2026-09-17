@@ -11,11 +11,11 @@ import { j, B, dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ja, JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { FP, $w, khe, rB } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { a0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { CT } from "../状态栏-主题/chunk-jz6b76hr.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class C {
   hooks = null;
@@ -28,16 +28,16 @@ class C {
   }
 }
 var f = new C();
-function Pyn(t) {
+function setTerminalHooks(t) {
   f.setHooks(t);
 }
-function Oyn() {
+function getTerminalHooks() {
   return f.hooks;
 }
-function TYn(t) {
+function setTerminalUiMounted(t) {
   f.setUiMounted(t);
 }
-function G8e() {
+function getTerminalUiMounted() {
   return f.uiMounted;
 }
 var c = null,
@@ -66,7 +66,7 @@ var g = FP + String.fromCharCode(rB.OSC),
 function I() {
   return dl()?.terminal ?? a.terminal;
 }
-function q8e() {
+function getTerminalMultiplexer() {
   let t = dl();
   if (t) return t.mux;
   if (a.TMUX) return "tmux";
@@ -85,15 +85,15 @@ function A() {
   }
   return a.TMUX ? [] : null;
 }
-function Mpe() {
+function getNativeCopyModifierKey() {
   let t = I();
   if (t === "Apple_Terminal") return "Fn";
   if (t === "iTerm.app") return "Option";
   if (dl()?.isVscodeTerm || (t && D.has(t)))
-    return P() === "macos" ? "Option" : "Shift";
+    return getCurrentPlatform() === "macos" ? "Option" : "Shift";
   if (t && k.has(t)) return "Shift";
   if (a.LC_TERMINAL === "iTerm2") return "Option";
-  return p() || q8e() !== null || P() === "macos"
+  return p() || getTerminalMultiplexer() !== null || getCurrentPlatform() === "macos"
     ? "Shift (Option in iTerm2, Fn in Terminal.app)"
     : "Shift";
 }
@@ -111,12 +111,12 @@ var k = new Set([
     ...JETBRAINS_IDES,
   ]),
   D = new Set(["vscode", "cursor", "windsurf", "antigravity", "codium"]);
-function Jp(...t) {
+function formatOscSequence(...t) {
   let e = I() === "kitty" ? S : $w;
   return `${g}${t.join(khe)}${e}`;
 }
-function mw(t) {
-  let e = q8e();
+function wrapOscForMultiplexer(t) {
+  let e = getTerminalMultiplexer();
   if (e === "tmux")
     return `\x1BPtmux;${t.replaceAll("\x1B", "\x1B\x1B")}\x1B\\`;
   if (e === "screen") return `\x1BP${t.replaceAll("\x1B", "\x1B\x1B")}\x1B\\`;
@@ -129,7 +129,7 @@ class L {
   waylandCopyGeneration = 0;
   async probe() {
     if (
-      P() !== "linux" ||
+      getCurrentPlatform() !== "linux" ||
       (typeof this.tool === "string" && this.tool !== "addon")
     )
       return;
@@ -174,9 +174,9 @@ var H = new j(() => new L());
 function d() {
   return H.of(B().host);
 }
-function Npe() {
+function getClipboardCopyStrategy() {
   if (!p())
-    switch (P()) {
+    switch (getCurrentPlatform()) {
       case "macos":
       case "windows":
       case "wsl":
@@ -188,16 +188,16 @@ function Npe() {
   if (A()) return "tmux-buffer";
   return "osc52";
 }
-function $St() {
+function probeLinuxClipboardTool() {
   return d().probe();
 }
-function EYn() {
-  if (P() !== "linux") return "not_linux";
+function getLinuxClipboardToolState() {
+  if (getCurrentPlatform() !== "linux") return "not_linux";
   let { tool: t } = d();
   if (t === void 0) return "not_probed";
   return t ?? "none";
 }
-function AYn() {
+function isVteTerminal() {
   return a.VTE_VERSION != null;
 }
 function O() {
@@ -214,7 +214,7 @@ function v() {
 function U(t) {
   return /[^\x00-\x7f]/.test(t);
 }
-function USt(t) {
+function getOsc52Utf8PasteWarning(t) {
   if (!CT.hasOsc52ClipboardUtf8Bug() || !U(t)) return null;
   return "VS Code 1.123/1.124 will mojibake this paste \u2014 update to \u22651.125";
 }
@@ -241,35 +241,35 @@ async function W(t) {
   );
 }
 var h = 76;
-async function z_(t) {
+async function setClipboard(t) {
   let e = _.from(t, "utf8").toString("base64");
   if (!p()) N(t);
   await W(t);
-  let o = q8e(),
+  let o = getTerminalMultiplexer(),
     r = p(),
     i = o === "tmux" ? "raw+dcs" : o === "screen" ? "dcs" : "raw";
   if (
     (n(
-      `clipboard: setClipboard mux=${o ?? "none"} ssh=${r} native=${!r} predicted=${Npe()} emit=${i} bytes=${t.length}`,
+      `clipboard: setClipboard mux=${o ?? "none"} ssh=${r} native=${!r} predicted=${getClipboardCopyStrategy()} emit=${i} bytes=${t.length}`,
     ),
     o === "tmux")
   ) {
     let s = `${FP}]52;c;${e}${$w}`;
-    return s + mw(s);
+    return s + wrapOscForMultiplexer(s);
   }
   if (o === "screen") {
     let s = [];
     for (let u = 0; u < e.length; u += h) s.push(e.slice(u, u + h));
     return `${FP}P${FP}]52;c;${s.join(`${S}${FP}P`)}${$w}${S}`;
   }
-  return Jp(_d.CLIPBOARD, "c", e);
+  return formatOscSequence(OSC_CODES.CLIPBOARD, "c", e);
 }
 var w =
     "[Console]::InputEncoding = [Text.Encoding]::UTF8; Set-Clipboard -Value ([Console]::In.ReadToEnd())",
   F = "[Console]::OutputEncoding = [Text.Encoding]::UTF8; Get-Clipboard -Raw";
 function N(t) {
   let e = { input: t, useCwd: !1, timeout: 2000 };
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "macos":
       execFileNoThrow("pbcopy", [], e);
       return;
@@ -322,10 +322,10 @@ async function G(t) {
   if ((await execFileNoThrow("wl-copy", [], r), !e.isLatestWaylandCopy(o))) return;
   await execFileNoThrow("wl-copy", ["--primary"], r);
 }
-async function vNe(t = "clipboard") {
+async function readClipboard(t = "clipboard") {
   if (p()) return "";
   let e = { useCwd: !1, timeout: 2000 };
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "macos": {
       let o = await execFileNoThrow("pbpaste", [], e);
       return o.code === 0 ? o.stdout : "";
@@ -333,7 +333,7 @@ async function vNe(t = "clipboard") {
     case "windows":
     case "wsl": {
       let o = await execFileNoThrow(
-        P() === "wsl" ? "powershell.exe" : "powershell",
+        getCurrentPlatform() === "wsl" ? "powershell.exe" : "powershell",
         ["-NoProfile", "-NonInteractive", "-Command", F],
         e,
       );
@@ -375,7 +375,7 @@ async function Y(t, e) {
     return (n(`clipboard: addon read: ${l(o)}`), null);
   }
 }
-var _d = {
+var OSC_CODES = {
   SET_TITLE_AND_ICON: 0,
   SET_ICON: 1,
   SET_TITLE: 2,
@@ -397,18 +397,18 @@ var _d = {
   ITERM2_PROPRIETARY: 1337,
   TAB_STATUS: 21337,
 };
-function CYn(t) {
+function parseOscSequence(t) {
   let e = t.indexOf(";"),
     o = e >= 0 ? t.slice(0, e) : t,
     r = e >= 0 ? t.slice(e + 1) : "",
     i = parseInt(o, 10);
-  if (i === _d.SET_TITLE_AND_ICON)
+  if (i === OSC_CODES.SET_TITLE_AND_ICON)
     return { type: "title", action: { type: "both", title: r } };
-  if (i === _d.SET_ICON)
+  if (i === OSC_CODES.SET_ICON)
     return { type: "title", action: { type: "iconName", name: r } };
-  if (i === _d.SET_TITLE)
+  if (i === OSC_CODES.SET_TITLE)
     return { type: "title", action: { type: "windowTitle", title: r } };
-  if (i === _d.HYPERLINK) {
+  if (i === OSC_CODES.HYPERLINK) {
     let s = r.split(";"),
       u = s[0] ?? "",
       y = s.slice(1).join(";");
@@ -428,7 +428,7 @@ function CYn(t) {
       },
     };
   }
-  if (i === _d.TAB_STATUS) return { type: "tabStatus", action: V(r) };
+  if (i === OSC_CODES.TAB_STATUS) return { type: "tabStatus", action: V(r) };
   return { type: "unknown", sequence: `\x1B]${t}` };
 }
 function R(t) {
@@ -480,29 +480,29 @@ function* K(t) {
     else e += s;
   if (e || r) yield [e, o];
 }
-function kAe(t, e) {
-  if (!t) return xAe;
+function formatHyperlinkStart(t, e) {
+  if (!t) return HYPERLINK_END;
   let o = { id: X(t), ...e },
     r = Object.entries(o)
       .map(([i, s]) => `${i}=${s}`)
       .join(":");
-  return Jp(_d.HYPERLINK, r, t);
+  return formatOscSequence(OSC_CODES.HYPERLINK, r, t);
 }
 function X(t) {
   let e = 0;
   for (let o = 0; o < t.length; o++) e = ((e << 5) - e + t.charCodeAt(o)) | 0;
   return (e >>> 0).toString(36);
 }
-var xAe = Jp(_d.HYPERLINK, "", ""),
-  RNe = { NOTIFY: 0, BADGE: 2, PROGRESS: 4 },
-  kNe = { CLEAR: 0, SET: 1, ERROR: 2, INDETERMINATE: 3 },
-  BSt = `${g}${_d.ITERM2};${RNe.PROGRESS};${kNe.CLEAR};${$w}`,
-  vYn = `${g}${_d.SET_TITLE_AND_ICON};${$w}`,
-  jSt = Jp(_d.TAB_STATUS, "indicator=;status=;status-color=");
-function z8e() {
+var HYPERLINK_END = formatOscSequence(OSC_CODES.HYPERLINK, "", ""),
+  ITERM2_OSC_COMMANDS = { NOTIFY: 0, BADGE: 2, PROGRESS: 4 },
+  ITERM2_PROGRESS_STATES = { CLEAR: 0, SET: 1, ERROR: 2, INDETERMINATE: 3 },
+  CLEAR_ITERM2_PROGRESS_SEQUENCE = `${g}${OSC_CODES.ITERM2};${ITERM2_OSC_COMMANDS.PROGRESS};${ITERM2_PROGRESS_STATES.CLEAR};${$w}`,
+  RESET_TITLE_AND_ICON_SEQUENCE = `${g}${OSC_CODES.SET_TITLE_AND_ICON};${$w}`,
+  RESET_TAB_STATUS_SEQUENCE = formatOscSequence(OSC_CODES.TAB_STATUS, "indicator=;status=;status-color=");
+function isTabStatusEnabled() {
   return !1;
 }
-function RYn(t) {
+function formatTabStatus(t) {
   let e = [],
     o = (r) =>
       r.type === "rgb"
@@ -516,38 +516,38 @@ function RYn(t) {
     );
   if ("statusColor" in t)
     e.push(`status-color=${t.statusColor ? o(t.statusColor) : ""}`);
-  return Jp(_d.TAB_STATUS, e.join(";"));
+  return formatOscSequence(OSC_CODES.TAB_STATUS, e.join(";"));
 }
 function q(t) {
   let e = _.from(JSON.stringify(t)).toString("base64");
-  return Jp(_d.ITERM2_PROPRIETARY, `SetProfileProperty=Initial Text=${e}`);
+  return formatOscSequence(OSC_CODES.ITERM2_PROPRIETARY, `SetProfileProperty=Initial Text=${e}`);
 }
 var ft = q("");
 export {
-  Pyn,
-  Oyn,
-  TYn,
-  G8e,
-  q8e,
-  Mpe,
-  Jp,
-  mw,
-  Npe,
-  $St,
-  EYn,
-  AYn,
-  USt,
-  z_,
-  vNe,
-  _d,
-  CYn,
-  kAe,
-  xAe,
-  RNe,
-  kNe,
-  BSt,
-  vYn,
-  jSt,
-  z8e,
-  RYn,
+  setTerminalHooks,
+  getTerminalHooks,
+  setTerminalUiMounted,
+  getTerminalUiMounted,
+  getTerminalMultiplexer,
+  getNativeCopyModifierKey,
+  formatOscSequence,
+  wrapOscForMultiplexer,
+  getClipboardCopyStrategy,
+  probeLinuxClipboardTool,
+  getLinuxClipboardToolState,
+  isVteTerminal,
+  getOsc52Utf8PasteWarning,
+  setClipboard,
+  readClipboard,
+  OSC_CODES,
+  parseOscSequence,
+  formatHyperlinkStart,
+  HYPERLINK_END,
+  ITERM2_OSC_COMMANDS,
+  ITERM2_PROGRESS_STATES,
+  CLEAR_ITERM2_PROGRESS_SEQUENCE,
+  RESET_TITLE_AND_ICON_SEQUENCE,
+  RESET_TAB_STATUS_SEQUENCE,
+  isTabStatusEnabled,
+  formatTabStatus,
 };

@@ -14,32 +14,32 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, w8, H_e, I_e, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, b, z, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, Qu, jW, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, takeLastCodeUnits, CONTROL_CHARS_REGEX, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { eb, Uwt, Il, Pc, YE, _wn, ywn, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { PROCESS_WRAPPER_ENV_VAR, getProcessWrapperState, getLauncherArgv, getLauncherConfigError, isLauncherRunnable, isExecutableFile, getAbsoluteLauncherPaths, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { i9, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
+import { removeGuiHostEntrypoint, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import { $U, iL, UU, Qet, NBe, dke } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { resolveWrappedClaudeInvocation, resolveClaudeInvocation, getInstalledClaudePath, applyProcessWrapper, findInstalledVersionBinary } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Wi, Ms, H, ee, c5t } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te, gm, mW, i_, dp, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { Ar, a2e } from "../权限系统/chunk-e4pfvp7x.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { procIdentityOf } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { Tve, Sme, Lc } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { Eye, MWe, Cye } from "./chunk-gnmy62vg.js";
-import { GWe, Kw, ZP, kye, qWe, Fit, n0e, Rh, XZ } from "./chunk-5jv5fvbn.js";
-import { X3t, g_, LJn, R7e, NSn, VI } from "./chunk-djserjj5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { CLAUDE_BULLET_GLYPH, THEREFORE_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
+import { procIdentityOf } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
+import { timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { isDaemonCliEnabled, isDaemonServiceInstallEnabled, bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { getVersionTarget, hasVersionTarget, parseVersionTimestamp } from "./chunk-gnmy62vg.js";
+import { terminateProcessGracefully, getDaemonLockPath, readDaemonLock, LOCK_VERIFY_ATTEMPTS, verifyProcessStartTime, classifyDaemonLockStaleness, isProcessIdentityKnown, getVerifiedDaemonLock, describeStopFailure } from "./daemon-lock.js";
+import { hasUidCollapse, redactDaemonNonce, readOrCreateControlKey, ensureDaemonRuntimeDir, UID_COLLAPSE_REFUSAL_MESSAGE, getControlSocketPath } from "./chunk-djserjj5.js";
 import {
   k8e,
   oyn,
@@ -60,7 +60,7 @@ import {
   readJobState,
 } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { cO, vv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
+import { enableTerminalMode, HIDE_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { Uv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
@@ -68,13 +68,13 @@ import { HJn } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { o0e, aE } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { fromJobState } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { mPn } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { mPn } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import {
   access as dr,
@@ -109,7 +109,7 @@ function Ke() {
 }
 async function OWe(t) {
   let { jsonPath: e, logPath: o } = t,
-    c = await wfe();
+    c = await getLauncherErrorMessage();
   if (c)
     return {
       ok: !1,
@@ -117,7 +117,7 @@ async function OWe(t) {
       serviceId: be,
       servicePath: "",
     };
-  let s = [...Il(), OZt()],
+  let s = [...getLauncherArgv(), OZt()],
     d = a.PATH || "/usr/local/bin:/usr/bin:/bin";
   {
     let m = at();
@@ -283,8 +283,8 @@ async function RPt() {
     t.execPathStale = !0;
   }
   let s = e.slice(0, o - 1).map(Pt);
-  for (let d of ywn(s))
-    if (!(await _wn(d))) {
+  for (let d of getAbsoluteLauncherPaths(s))
+    if (!(await isExecutableFile(d))) {
       t.launcherPrefixDead = !0;
       break;
     }
@@ -342,28 +342,28 @@ var Rr = new Set([
   "EPERM",
 ]);
 async function vit(t, e) {
-  let o = Pc();
+  let o = getLauncherConfigError();
   if (o)
     return (
       logFeatureBad("agent_launcher", "invalid_config"),
       { err: new R(o, "CLAUDE_CODE_PROCESS_WRAPPER is misconfigured") }
     );
-  if (!(await YE()))
+  if (!(await isLauncherRunnable()))
     return (
       logFeatureBad("agent_launcher", "launcher_not_runnable"),
       {
         err: new R(
-          `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting); background sessions are not started unwrapped`,
+          `${PROCESS_WRAPPER_ENV_VAR}: launcher \`${getLauncherArgv()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting); background sessions are not started unwrapped`,
           "CLAUDE_CODE_PROCESS_WRAPPER launcher is not runnable",
         ),
       }
     );
-  let c = Il(),
+  let c = getLauncherArgv(),
     { cmd: s, prefixArgs: d, target: m } = resolveWrappedClaudeInvocation(),
     _ = [s, ...d, ...t],
     w = Br({ dropShellOAuthToken: await $r(e) });
-  if (P() === "windows") {
-    if (Uwt().platformIgnored) logFeatureSad("agent_launcher", "platform_unsupported");
+  if (getCurrentPlatform() === "windows") {
+    if (getProcessWrapperState().platformIgnored) logFeatureSad("agent_launcher", "platform_unsupported");
     let T = await It(_, w);
     if (T.ok) return { err: null };
     (n(
@@ -377,7 +377,7 @@ async function vit(t, e) {
         rc: T.rc,
       }));
   }
-  let k = P() === "macos" ? await Ir() : [],
+  let k = getCurrentPlatform() === "macos" ? await Ir() : [],
     E = await mkdtemp(lt(tmpdir(), "cc-daemon-")).catch(() => null),
     v = E ? lt(E, "stderr.log") : void 0,
     N = v ? await Er(v, "w").catch(() => null) : null;
@@ -395,7 +395,7 @@ async function vit(t, e) {
         (Y = r.waitedMs),
         r.recovered)
       ) {
-        if (P() === "windows")
+        if (getCurrentPlatform() === "windows")
           T = (await It(_, w)).ok ? { err: null } : await Pe(_, w, N?.fd);
         else T = await Pe(await Re(k, _), w, N?.fd);
         I = A(T.err);
@@ -758,7 +758,7 @@ function Lr(t) {
   return `'${t.replaceAll("'", "''")}'`;
 }
 async function $r(t) {
-  if (P() === "macos" || !process.env.CLAUDE_CODE_OAUTH_TOKEN) return !1;
+  if (getCurrentPlatform() === "macos" || !process.env.CLAUDE_CODE_OAUTH_TOKEN) return !1;
   return !!(await getSecureStorage().readAsync(t))?.claudeAiOauth?.refreshToken;
 }
 function Br(t) {
@@ -770,8 +770,8 @@ function Br(t) {
     delete e.CLAUDE_CODE_EVAL_INTERVIEW_SESSION,
     delete e.CLAUDE_CODE_BRIDGE_SESSION_ID,
     g4(e),
-    Q0e(e),
-    i9(e));
+    removeBgDispatcherPlanEnvVars(e),
+    removeGuiHostEntrypoint(e));
   let o = new Set(
     ["CLAUDE_BG_AUTH_SNAPSHOT_PATH", ...Qet].map((s) => s.toUpperCase()),
   );
@@ -889,7 +889,7 @@ async function ht(t) {
     if ((await qe(t)).trim().length === 0) return !1;
     if (t.wrapperConfigured && e.code === 0 && e.signal === null) return !1;
   }
-  let o = await Ut(t, kye);
+  let o = await Ut(t, LOCK_VERIFY_ATTEMPTS);
   if (o !== !1) return ((t.siblingHolderSeen = o === !0), !1);
   return !0;
 }
@@ -912,7 +912,7 @@ async function $e(t, e, o) {
 async function Ut(t, e) {
   let o;
   try {
-    o = await Rh(e, t.storageV5);
+    o = await getVerifiedDaemonLock(e, t.storageV5);
   } catch {
     return null;
   }
@@ -921,7 +921,7 @@ async function Ut(t, e) {
 async function Ft(t) {
   let e;
   try {
-    e = await ZP(t.storageV5);
+    e = await readDaemonLock(t.storageV5);
   } catch {
     return { lock_at_deadline: S("unreadable") };
   }
@@ -954,14 +954,14 @@ async function Ft(t) {
   } catch (d) {
     if (A(d) !== "EPERM") return { lock_at_deadline: S("other_dead"), ...o };
     return {
-      lock_at_deadline: (await Fit(e))
+      lock_at_deadline: (await classifyDaemonLockStaleness(e))
         ? S("other_eperm_stale")
         : S("other_eperm"),
       ...o,
     };
   }
   return {
-    lock_at_deadline: (await qWe(e.pid, procIdentityOf(e), 1).catch(() => !1))
+    lock_at_deadline: (await verifyProcessStartTime(e.pid, procIdentityOf(e), 1).catch(() => !1))
       ? S("other_alive")
       : S("other_dead"),
     ...o,
@@ -1026,14 +1026,14 @@ var Qr = "\x1B[2m",
   Yt = "\x1B[0m",
   en = 2,
   tn = "dark",
-  Kt = L.pointer,
+  Kt = figures.pointer,
   rn =
     "  Session is starting \u2014 showing its transcript until it appears. Ctrl+Z to detach";
 function nn(t) {
   if (!/[\x00-\x09\x0b-\x1f\x7f-\x9f]/.test(t)) return t;
-  return pt(t)
+  return stripAnsi(t)
     .replace(/\t/g, "  ")
-    .replace(jW, "")
+    .replace(CONTROL_CHARS_REGEX, "")
     .replace(/[\v\f\r]/g, "");
 }
 var Xt = /(\x1b\[[0-9;]*m)/,
@@ -1135,7 +1135,7 @@ function dn(t, e) {
       (sn(d, m.slice(2, -1)), (c += m));
       continue;
     }
-    for (let { segment: _ } of Xs().segment(m)) {
+    for (let { segment: _ } of getGraphemeSegmenter().segment(m)) {
       let w = _.length === 1 && _.charCodeAt(0) < 127 ? 1 : te(_);
       if (s > 0 && s + w > e)
         (o.push(d.size > 0 ? c + Yt : c), (c = cn(d)), (s = 0));
@@ -1269,7 +1269,7 @@ function pn(t, e, o, c) {
       let re = K[X];
       if (re.text.length > ne) {
         if (I.length === 0) {
-          let le = Qu(re.text, ne),
+          let le = takeLastCodeUnits(re.text, ne),
             de = le.indexOf(`
 `);
           if (de >= 0) le = le.slice(de + 1);
@@ -1284,8 +1284,8 @@ function pn(t, e, o, c) {
   let Y = [],
     q = s >= 4 ? 2 : 0,
     G = Math.max(1, s - q),
-    ae = ie.level;
-  ie.level = d;
+    ae = chalk.level;
+  chalk.level = d;
   let ue = performance.now();
   try {
     for (let O of I) {
@@ -1293,15 +1293,15 @@ function pn(t, e, o, c) {
       let K = nn(O.text);
       switch (O.role) {
         case "tool": {
-          let X = truncateToWidth(`${Ar} ${K.replace(/\n/g, " ")}`, s);
+          let X = truncateToWidth(`${CLAUDE_BULLET_GLYPH} ${K.replace(/\n/g, " ")}`, s);
           Y.push({ text: X, dim: !0 });
           break;
         }
         case "thinking": {
           let X = K.replace(/\s+/g, " ").trim();
           for (let [re, le] of _t(X, G).entries()) {
-            let de = q === 0 || le === "" ? "" : re === 0 ? `${a2e} ` : "  ";
-            Y.push({ text: de + ie.italic(le), dim: !0 });
+            let de = q === 0 || le === "" ? "" : re === 0 ? `${THEREFORE_GLYPH} ` : "  ";
+            Y.push({ text: de + chalk.italic(le), dim: !0 });
           }
           break;
         }
@@ -1313,7 +1313,7 @@ function pn(t, e, o, c) {
             } catch {
               X = K;
             }
-          let re = getThemeColor("text", m)(Ar);
+          let re = getThemeColor("text", m)(CLAUDE_BULLET_GLYPH);
           for (let [le, de] of _t(X, G).entries()) {
             let ce = q === 0 || de === "" ? "" : le === 0 ? `${re} ` : "  ";
             Y.push({ text: ce + de, dim: !1 });
@@ -1335,7 +1335,7 @@ function pn(t, e, o, c) {
       }
     }
   } finally {
-    ie.level = ae;
+    chalk.level = ae;
   }
   let p = 0,
     r = [];
@@ -1354,7 +1354,7 @@ function pn(t, e, o, c) {
   let fe = M.join(`\r
 `);
   if (fe.length > 65536 + o * s * 32) fe = fe.replace(on, "");
-  return vv + fe;
+  return HIDE_CURSOR + fe;
 }
 function wt(t, e, o, c) {
   let s;
@@ -1393,7 +1393,7 @@ var He = 1048576,
 function bn() {
   let t = H("tengu_bg_attach_stall_ms", _n);
   if (t === 0) return 0;
-  let e = Il().length > 0 ? wn : 2000;
+  let e = getLauncherArgv().length > 0 ? wn : 2000;
   return Math.max(e, t);
 }
 function vn(t, e, o, c, s, d) {
@@ -1409,7 +1409,7 @@ function vn(t, e, o, c, s, d) {
       let k = await readJobState(getJobDir(m.short), d).catch(() => null),
         E = k?.resumeSessionId ?? m.sessionId,
         v = k?.cwd ?? m.cwd,
-        N = Mh(sN(d)),
+        N = createTranscriptSource(createBackendHandle(d)),
         T = await resolveJobTranscript(E, v, k?.linkScanPath, void 0, N),
         V = T.hasMessages;
       if (!V) await quarantineJobTranscript(T.path, N);
@@ -1450,9 +1450,9 @@ async function K$n(
   m = new Promise(() => {}),
   _,
 ) {
-  let w = VI();
-  await R7e();
-  let k = await LJn();
+  let w = getControlSocketPath();
+  await ensureDaemonRuntimeDir();
+  let k = await readOrCreateControlKey();
   await Jt(w).catch(() => {});
   let E = new Set(),
     v = new Set(),
@@ -1532,7 +1532,7 @@ async function K$n(
     ae = !1;
   G.on("error", (p) => {
     if (ae) {
-      n(`bg control server bind: ${g_(l(p))}`, { level: "warn" });
+      n(`bg control server bind: ${redactDaemonNonce(l(p))}`, { level: "warn" });
       return;
     }
     logError(p);
@@ -1680,7 +1680,7 @@ async function Qt(t, e, o, c, s, d, m, _) {
   }
   return C(o, {
     ok: !1,
-    error: `${Lc()} didn't acknowledge in time \u2014 retry`,
+    error: `${bgSupervisorNoun()} didn't acknowledge in time \u2014 retry`,
     code: "ETIMEOUT",
   });
 }
@@ -1760,7 +1760,7 @@ async function Pn(t, e, o, c) {
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      processWrapper: Gk(),
+      processWrapper: getLauncherCommandString(),
     });
   }
   if (G === "yield") return C(e, { ok: !0, op: "yield", yielding: E() });
@@ -1786,7 +1786,7 @@ async function Pn(t, e, o, c) {
   if (!w())
     return C(e, {
       ok: !1,
-      error: `${Lc()} starting (adoption in progress)`,
+      error: `${bgSupervisorNoun()} starting (adoption in progress)`,
       code: "ESTARTING",
     });
   let ae = q.proto;
@@ -1798,7 +1798,7 @@ async function Pn(t, e, o, c) {
       }),
       C(e, {
         ok: !1,
-        error: `proto mismatch (server=${BG_PROTO}, client=${ae}) \u2014 ${Lc()} and CLI versions differ; restart claude`,
+        error: `proto mismatch (server=${BG_PROTO}, client=${ae}) \u2014 ${bgSupervisorNoun()} and CLI versions differ; restart claude`,
         code: "EPROTO",
         serverProto: BG_PROTO,
         serverVersion: {
@@ -1854,7 +1854,7 @@ async function Pn(t, e, o, c) {
     case "await-ack":
       return Qt(s, V, e, "await-ack", p.short, p.nonce, p.timeoutMs);
     case "dispatch":
-      if (!$R(p.auth, I))
+      if (!timingSafeStringEqual(p.auth, I))
         return C(e, {
           ok: !1,
           error:
@@ -1867,7 +1867,7 @@ async function Pn(t, e, o, c) {
       }
       return Qt(s, V, e, "dispatch", p.d.short, p.d.nonce, p.timeoutMs, d(p.d));
     case "reply": {
-      if (!$R(p.auth, I))
+      if (!timingSafeStringEqual(p.auth, I))
         return C(e, {
           ok: !1,
           error:
@@ -1957,7 +1957,7 @@ async function Pn(t, e, o, c) {
           "[bg-attach] legacy client (no control key) \u2014 allowed via peerUid",
           { level: "warn" },
         );
-      else if (!$R(p.auth, I))
+      else if (!timingSafeStringEqual(p.auth, I))
         return C(e, {
           ok: !1,
           error:
@@ -1999,7 +1999,7 @@ async function Pn(t, e, o, c) {
           F = await readJobState(getJobDir(D.short), ne).catch(() => null),
           me = F?.resumeSessionId ?? D.sessionId,
           ge = F?.cwd ?? D.cwd,
-          Ee = Mh(sN(ne)),
+          Ee = createTranscriptSource(createBackendHandle(ne)),
           ke = await resolveJobTranscript(me, ge, F?.linkScanPath, void 0, Ee),
           Ne = ke.hasMessages;
         if (!Ne) await quarantineJobTranscript(ke.path, Ee);
@@ -2271,7 +2271,7 @@ async function Pn(t, e, o, c) {
               yt();
               let me = D.includes(i_) || D.includes(K) ? D : F;
               if ((ce(), Ae(!1), e.writableLength <= He))
-                (e.write(r.decModeSnapshot().map(cO).join("") + me), rt());
+                (e.write(r.decModeSnapshot().map(enableTerminalMode).join("") + me), rt());
               else e.destroy();
               return;
             }
@@ -2288,7 +2288,7 @@ async function Pn(t, e, o, c) {
         it = r.onRepaintDone.subscribe(() => {
           (ce(), Ae(!0));
         });
-      if (P() === "windows") for (let D of r.attachers.values()) D.kick();
+      if (getCurrentPlatform() === "windows") for (let D of r.attachers.values()) D.kick();
       let Se = p.attachId ?? e;
       if (
         (r.attachers.set(Se, {
@@ -2400,7 +2400,7 @@ async function Pn(t, e, o, c) {
     case "ensure-spare":
       return (er(Y, "ensure_spare"), C(e, { ok: !0, op: "ensure-spare" }));
     case "permission-response":
-      if (!$R(p.auth, I))
+      if (!timingSafeStringEqual(p.auth, I))
         return C(e, {
           ok: !1,
           error:
@@ -2478,7 +2478,7 @@ async function kPt(t, e) {
       let d = Date.now();
       if (d >= c) {
         c = d + 1000;
-        let m = await Rh(1, e).catch(() => null);
+        let m = await getVerifiedDaemonLock(1, e).catch(() => null);
         if (m?.origin === "service") return m;
         if (m?.origin === "foreground") return null;
       }
@@ -2500,9 +2500,9 @@ async function Dn(t, e) {
           await On(_.version, t, _.processWrapper, _.upgradePending === !0, e)
         )
           return "down";
-        let w = Pc();
+        let w = getLauncherConfigError();
         if (w && !_.processWrapper) return { refuse: w };
-        if (!_.processWrapper && Gk() !== "" && !(await YE()))
+        if (!_.processWrapper && getLauncherCommandString() !== "" && !(await isLauncherRunnable()))
           return { refuse: bt() };
         ar(_.processWrapper);
         let k =
@@ -2539,7 +2539,7 @@ async function Dn(t, e) {
     }
     if (!_.ok && _.code === "ENOCONN") {
       if (!c) {
-        let w = await Rh(1, e).catch(() => null);
+        let w = await getVerifiedDaemonLock(1, e).catch(() => null);
         if (w?.bgDisabled) return "down";
         if (w) c = !0;
       }
@@ -2548,9 +2548,9 @@ async function Dn(t, e) {
       continue;
     }
     {
-      let w = Pc();
+      let w = getLauncherConfigError();
       if (w) return { refuse: w };
-      if (Gk() !== "" && !(await YE())) return { refuse: bt() };
+      if (getLauncherCommandString() !== "" && !(await isLauncherRunnable())) return { refuse: bt() };
     }
     return "up";
   }
@@ -2567,10 +2567,10 @@ async function Dn(t, e) {
   );
 }
 async function KL(t = {}, e) {
-  if (P() !== "windows" && X3t())
+  if (getCurrentPlatform() !== "windows" && hasUidCollapse())
     return (
       logFeatureBad("daemon_ensure_running", "uid_collapse"),
-      { ok: !1, reason: NSn, causeCode: "uid_collapse" }
+      { ok: !1, reason: UID_COLLAPSE_REFUSAL_MESSAGE, causeCode: "uid_collapse" }
     );
   return or(t, e, !1);
 }
@@ -2620,9 +2620,9 @@ async function or(t, e, o) {
         fresh_install: !1,
         clock_jump: m,
         duration_ms: Date.now() - c,
-        platform_darwin: P() === "macos",
-        platform_linux: P() === "linux",
-        platform_windows: P() === "windows",
+        platform_darwin: getCurrentPlatform() === "macos",
+        platform_linux: getCurrentPlatform() === "linux",
+        platform_windows: getCurrentPlatform() === "windows",
       }),
       he)
     )
@@ -2651,8 +2651,8 @@ async function or(t, e, o) {
       }
     );
   if (!E) {
-    let U = Pc();
-    if (!(await YE()) && (await Rh(1, e).catch(() => null)))
+    let U = getLauncherConfigError();
+    if (!(await isLauncherRunnable()) && (await getVerifiedDaemonLock(1, e).catch(() => null)))
       return (
         logFeatureBad("daemon_ensure_running", "daemon_ensure_client_wrapper_refused"),
         logFeatureBad("agent_launcher", "zombie_kill_client_misconfigured"),
@@ -2672,7 +2672,7 @@ async function or(t, e, o) {
         ? null
         : Date.now() - v.lastTransientSpawnAt;
   v.lastTransientSpawnAt = Date.now();
-  let T = b({ label: Mn(), cwd: Q(), pid: process.pid }),
+  let T = b({ label: Mn(), cwd: getCwd(), pid: process.pid }),
     V = Date.now(),
     I = ["daemon", "run", "--origin", "transient", "--spawned-by", T],
     ne = await vit(I),
@@ -2691,14 +2691,14 @@ async function or(t, e, o) {
         errno_enoent: A(Y) === "ENOENT",
         errno_eacces: A(Y) === "EACCES",
         errno: Jr(Y) ?? S("unknown"),
-        launcher_configured: Il().length > 0 || Pc() !== null,
+        launcher_configured: getLauncherArgv().length > 0 || getLauncherConfigError() !== null,
       }),
       logFeatureBad("daemon_ensure_running", "daemon_ensure_spawn_failed"),
       {
         ok: !1,
         reason: ae
           ? `Claude Code is being updated by npm on this machine (still not runnable after ${Math.round(Ye / 60000)} min, ${Jr(Y) ?? "spawn failed"}) \u2014 try again when the update finishes`
-          : `spawn ${Lc()}: ${l(Y)}`,
+          : `spawn ${bgSupervisorNoun()}: ${l(Y)}`,
         causeCode: Jr(Y) ?? "spawn",
       }
     );
@@ -2707,7 +2707,7 @@ async function or(t, e, o) {
       spawnIssuedAt: V + ue,
       child: q,
       stderrPath: p,
-      wrapperConfigured: Il().length > 0,
+      wrapperConfigured: getLauncherArgv().length > 0,
       storageV5: e,
     }),
     x = await $e(r, Date.now() + 30000, !1),
@@ -2745,7 +2745,7 @@ async function or(t, e, o) {
             spawnIssuedAt: Date.now(),
             child: J.child,
             stderrPath: p,
-            wrapperConfigured: Il().length > 0,
+            wrapperConfigured: getLauncherArgv().length > 0,
             storageV5: e,
           })),
           n(
@@ -2759,7 +2759,7 @@ async function or(t, e, o) {
         ),
         logEvent("tengu_bg_daemon_spawn_failed", {
           errno: Jr(J.err) ?? S("unknown"),
-          launcher_configured: Il().length > 0 || Pc() !== null,
+          launcher_configured: getLauncherArgv().length > 0 || getLauncherConfigError() !== null,
           after_reinstall_wait: !0,
         }),
         J.stderrPath)
@@ -2787,9 +2787,9 @@ ${U}`,
           (he) => !"/\\".includes(U[he.index - 1] ?? "."),
         )?.[0]));
       let J = U.split(/\r?\n/)
-        .map((he) => To(pt(he)))
+        .map((he) => normalizeWhitespace(stripAnsi(he)))
         .find((he) => he.length > 0);
-      se = J && J.length > 200 ? `${oe(J, 200)}\u2026` : J;
+      se = J && J.length > 200 ? `${truncateToCodeUnits(J, 200)}\u2026` : J;
     }
   }
   if (p) Ze(dirname(p), { recursive: !0, force: !0 }).catch(() => {});
@@ -2800,9 +2800,9 @@ ${U}`,
       fresh_install: !1,
       clock_jump: M || m || re,
       duration_ms: Date.now() - c,
-      platform_darwin: P() === "macos",
-      platform_linux: P() === "linux",
-      platform_windows: P() === "windows",
+      platform_darwin: getCurrentPlatform() === "macos",
+      platform_linux: getCurrentPlatform() === "linux",
+      platform_windows: getCurrentPlatform() === "windows",
       had_stderr: de,
       child_exited: r.childExit !== null,
       ...(r.childExit?.code !== void 0 &&
@@ -2825,7 +2825,7 @@ ${U}`,
     if ((Ln(), G || fe))
       logFeatureSad("daemon_ensure_running", "daemon_ensure_spawn_waited_reinstall");
     else et(o);
-    if (Il().length > 0) {
+    if (getLauncherArgv().length > 0) {
       let U = await controlRequest({ proto: BG_PROTO, op: "nudge" }).catch(() => null);
       ar(U?.ok && U.op === "nudge" ? U.processWrapper : void 0);
     }
@@ -2843,7 +2843,7 @@ ${U}`,
   let ve = K
       ? ` \u2014 Claude Code is being updated by npm on this machine (still not runnable after ${Math.round(Ye / 60000)} min); try again when the update finishes`
       : "",
-    Oe = Il()[0];
+    Oe = getLauncherArgv()[0];
   if (Oe)
     return (
       logEvent("tengu_bg_daemon_spawn_failed", {
@@ -2864,14 +2864,14 @@ ${U}`,
       ok: !1,
       causeCode: "exited",
       reason: se
-        ? `${Lc()} ${I_e} (${U}): ${se}${ve}`
-        : `${Lc()} ${I_e} (${U}, nothing on stderr) and no other ${Lc()} answered within ${Math.round(Math.min(Date.now() - r.spawnIssuedAt - O, X) / 1000)}s${ve}`,
+        ? `${bgSupervisorNoun()} ${I_e} (${U}): ${se}${ve}`
+        : `${bgSupervisorNoun()} ${I_e} (${U}, nothing on stderr) and no other ${bgSupervisorNoun()} answered within ${Math.round(Math.min(Date.now() - r.spawnIssuedAt - O, X) / 1000)}s${ve}`,
     };
   }
   return {
     ok: !1,
     causeCode: "timeout",
-    reason: `${Lc()} ${H_e} ${X / 1000}s${ve}`,
+    reason: `${bgSupervisorNoun()} ${H_e} ${X / 1000}s${ve}`,
   };
 }
 function et(t) {
@@ -2888,13 +2888,13 @@ function In(t) {
   if (t.daemonOrigin !== "transient") return !1;
   if (t.daemonVersion === t.clientVersion) return !1;
   if (t.daemonTarget === t.clientTarget) return !1;
-  let e = Cye(t.daemonVersion),
-    o = Cye(t.clientVersion);
+  let e = parseVersionTimestamp(t.daemonVersion),
+    o = parseVersionTimestamp(t.clientVersion);
   if (e !== null && o !== null) {
-    if (Eye(t.daemonVersion) !== Eye(t.clientVersion)) return !1;
+    if (getVersionTarget(t.daemonVersion) !== getVersionTarget(t.clientVersion)) return !1;
     return o > e;
   }
-  if (MWe(t.daemonVersion) || MWe(t.clientVersion)) return !1;
+  if (hasVersionTarget(t.daemonVersion) || hasVersionTarget(t.clientVersion)) return !1;
   return (
     Ue.valid(t.clientVersion) !== null &&
     Ue.valid(t.daemonVersion) !== null &&
@@ -2902,7 +2902,7 @@ function In(t) {
   );
 }
 async function On(t, e, o, c, s) {
-  if (Pc() !== null) return !1;
+  if (getLauncherConfigError() !== null) return !1;
   if (!H("tengu_bg_binary_takeover", !0)) return !1;
   let d =
       t !==
@@ -2922,7 +2922,7 @@ async function On(t, e, o, c, s) {
     m = d && !c,
     _ = Nn(o, d);
   if (!m && !_) return !1;
-  if (!(await YE())) return !1;
+  if (!(await isLauncherRunnable())) return !1;
   if (await ir()) return !1;
   if (
     !e &&
@@ -2938,9 +2938,9 @@ async function On(t, e, o, c, s) {
     let I = resolveClaudeInvocation({ pinToCurrentBinary: !0 }).cmd;
     if (I === k || !(await _e(I))) return !1;
   }
-  let E = await Rh(1, s).catch(() => null);
+  let E = await getVerifiedDaemonLock(1, s).catch(() => null);
   if (!E) return !1;
-  if (!n0e(E))
+  if (!isProcessIdentityKnown(E))
     return (
       n(
         `bg: skipping stale-daemon retire \u2014 lock pid ${E.pid} has no procStart identity`,
@@ -2987,20 +2987,20 @@ async function On(t, e, o, c, s) {
         }.VERSION ||
         (c && v));
   if (!N && !T) return !1;
-  let V = await GWe(E.pid);
+  let V = await terminateProcessGracefully(E.pid);
   if (V === "timed-out") {
     try {
       process.kill(E.pid, "SIGKILL");
     } catch {}
-    V = await GWe(E.pid);
+    V = await terminateProcessGracefully(E.pid);
   }
   if (V !== "exited") return !1;
   if (T) _v().prefixAxis = "took-over";
   return (
     n(
       N
-        ? `bg: ${Lc()} pid ${E.pid} runs ${E.version}; this binary (${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}) is a newer build \u2014 retired the stale ${Lc()} so new sessions use the current binary`
-        : `bg: ${Lc()} pid ${E.pid} predates CLAUDE_CODE_PROCESS_WRAPPER and spawns sessions unwrapped \u2014 retired it so the replacement runs through the configured launcher`,
+        ? `bg: ${bgSupervisorNoun()} pid ${E.pid} runs ${E.version}; this binary (${{ ISSUES_EXPLAINER: "report the issue at https://github.com/anthropics/claude-code/issues", PACKAGE_URL: "@anthropic-ai/claude-code", README_URL: "https://code.claude.com/docs/en/overview", VERSION: "2.1.263", FEEDBACK_CHANNEL: "https://github.com/anthropics/claude-code/issues", BUILD_TIME: "2026-09-06T01:08:56Z", GIT_SHA: "37ae3f38d765199d54a6913cd61c6c9ad8576cc6", HOOKS_WORKER_URL: "./src/plugins/functionHooks/hooks-worker/hooks-worker.js", DD_SOURCEMAP_GROUP: "darwin" }.VERSION}) is a newer build \u2014 retired the stale ${bgSupervisorNoun()} so new sessions use the current binary`
+        : `bg: ${bgSupervisorNoun()} pid ${E.pid} predates CLAUDE_CODE_PROCESS_WRAPPER and spawns sessions unwrapped \u2014 retired it so the replacement runs through the configured launcher`,
       { level: "warn" },
     ),
     logEvent("tengu_bg_daemon_binary_takeover", {
@@ -3013,14 +3013,14 @@ async function On(t, e, o, c, s) {
   );
 }
 function Nn(t, e) {
-  if (Gk() === "" || t) return !1;
+  if (getLauncherCommandString() === "" || t) return !1;
   let c = _v();
   if (c.prefixAxis === "took-over") {
     if (e) return !1;
     if (!c.prefixContractViolationLogged)
       ((c.prefixContractViolationLogged = !0),
         n(
-          `bg: a raw ${Lc()} is running again after this session's launcher-driven restart. Two causes look identical from here: a claude session started BEFORE CLAUDE_CODE_PROCESS_WRAPPER was deployed cold-started it (restart those sessions), or the launcher does not pass that variable through in the environment it hands to \`exec\` (launcher contract #3). Sessions dispatched to it run unwrapped either way; \`claude daemon status\` shows the launcher it records.`,
+          `bg: a raw ${bgSupervisorNoun()} is running again after this session's launcher-driven restart. Two causes look identical from here: a claude session started BEFORE CLAUDE_CODE_PROCESS_WRAPPER was deployed cold-started it (restart those sessions), or the launcher does not pass that variable through in the environment it hands to \`exec\` (launcher contract #3). Sessions dispatched to it run unwrapped either way; \`claude daemon status\` shows the launcher it records.`,
           { level: "warn" },
         ),
         logEvent("tengu_bg_launcher_replacement_raw", {}));
@@ -3031,7 +3031,7 @@ function Nn(t, e) {
   return ((c.prefixAxis = "attempted"), !0);
 }
 async function nr(t) {
-  let e = await Rh(1, t).catch(() => null);
+  let e = await getVerifiedDaemonLock(1, t).catch(() => null);
   if (!e) return null;
   if (e.bgDisabled)
     return (
@@ -3076,21 +3076,21 @@ async function nr(t) {
       }),
       null
     );
-  if (!n0e(e))
+  if (!isProcessIdentityKnown(e))
     return (
       n(
         `bg: supervisor lock pid ${e.pid} alive but identity unverifiable (no procStart) \u2014 not signalled`,
         { level: "warn" },
       ),
       {
-        reason: `${XZ({ pid: e.pid, outcome: "unverified" })}. If no daemon is running, delete ${Kw()}; if pid ${e.pid} is a live process you own, stop it yourself first.`,
+        reason: `${describeStopFailure({ pid: e.pid, outcome: "unverified" })}. If no daemon is running, delete ${getDaemonLockPath()}; if pid ${e.pid} is a live process you own, stop it yourself first.`,
         code: "daemon_ensure_zombie_unverified",
         causeCode: "zombie",
       }
     );
   let s = !1;
   try {
-    s = await lstat(VI()).then(
+    s = await lstat(getControlSocketPath()).then(
       () => !0,
       () => !1,
     );
@@ -3100,10 +3100,10 @@ async function nr(t) {
       `bg: supervisor pid ${e.pid} alive but control socket unreachable \u2014 signalling restart`,
       { level: "warn" },
     ),
-    (await GWe(e.pid)) === "eperm")
+    (await terminateProcessGracefully(e.pid)) === "eperm")
   )
     return {
-      reason: `${Lc()} socket missing; could not restart supervisor (EPERM)`,
+      reason: `${bgSupervisorNoun()} socket missing; could not restart supervisor (EPERM)`,
       code: "daemon_ensure_zombie_kill_failed",
       causeCode: "zombie",
     };
@@ -3123,7 +3123,7 @@ function Mn() {
   return "claude";
 }
 async function Ln() {
-  let t = P();
+  let t = getCurrentPlatform();
   if (t !== "linux" && t !== "wsl") return;
   let e = await Tn("/etc/systemd/logind.conf", "utf8").catch(() => "");
   if (!/^\s*KillUserProcesses\s*=\s*yes\b/im.test(e)) return;
@@ -3133,19 +3133,19 @@ async function Ln() {
   );
 }
 function bt() {
-  return `${eb}: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting); background sessions are not started unwrapped`;
+  return `${PROCESS_WRAPPER_ENV_VAR}: launcher \`${getLauncherArgv()[0]}\` was deleted or is not executable \u2014 restore it (or fix the setting); background sessions are not started unwrapped`;
 }
 function ar(t) {
-  let e = Gk();
+  let e = getLauncherCommandString();
   if (e === "" || !t) return;
   if (t === e) logFeatureOk("agent_launcher");
   else logFeatureSad("agent_launcher", "served_by_skewed_wrapper");
 }
 async function sr() {
-  return Sme() && (await ole()) && !process.env.CLAUDE_CONFIG_DIR && Tve();
+  return isDaemonServiceInstallEnabled() && (await ole()) && !process.env.CLAUDE_CONFIG_DIR && isDaemonCliEnabled();
 }
 function xPt(t) {
-  return Ce.daemon(["host-managed", t]);
+  return STORAGE_KEYS.daemon(["host-managed", t]);
 }
 var $n = { namespace: "daemon", relPath: ["host-managed"] };
 async function Rit(t) {

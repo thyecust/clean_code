@@ -16,7 +16,7 @@ import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { jn, Pt, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { _6e, B0t, Q1n } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { resolveEditorCommand, editFileInExternalEditor } from "../../03-入口与运行时/会话UI(REPL)/external-editor.js";
@@ -174,10 +174,10 @@ async function me(a, l, m) {
         u = p.content,
         b = (I) =>
           e(A, {
-            planContent: pt(u).slice(0, J),
+            planContent: stripAnsi(u).slice(0, J),
             planPath:
               p.path !== void 0 && !I
-                ? pt(p.path).replace(/[\r\n]/g, " ")
+                ? stripAnsi(p.path).replace(/[\r\n]/g, " ")
                 : void 0,
             editorName: void 0,
             canShare: !1,

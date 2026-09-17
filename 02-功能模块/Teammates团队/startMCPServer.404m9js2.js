@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 201 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
-import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
+import { McpServer } from "../MCP客户端/mcp-server.js";
 import { artifactReadObservationIn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { bh, B, Nb, HW } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { dt, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -21,7 +21,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import { getMainLoopModel, qe, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { vo } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { tA, DT } from "../MCP客户端/chunk-3kmsshb6.js";
+import { FILE_STATE_MAX_ENTRIES, createFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { createDefaultToolPermissionContext, findToolByName, parseToolInput, getToolRemoteExecution, isBatchToolDefinition } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getHostCapabilityState } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
@@ -49,7 +49,7 @@ import { kGt } from "../插件系统/chunk-ajtn749s.js";
 import { JHt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { aF } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { credentialsStoreFor } from "../认证-OAuth登录/credentials-store.js";
-import { elt, tlt, i7 } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
+import { createInMemoryArtifactRegistries, NOOP_TEAMMATE_COLORS, EMPTY_PERMISSION_RELAYS } from "../../01-核心基础设施/共享小工具-未细化/chunk-m85ks9bj.js";
 import { noopSessionHooksRegistry } from "../../01-核心基础设施/共享小工具-未细化/noop-session-hooks-registry.js";
 import { PerClassInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/per-class-instance-registry.js";
 import { noopAgentLifecycle } from "./agent-lifecycle.js";
@@ -93,9 +93,9 @@ function q(e, m, d, S, a, C = "raw") {
   }
   if ((N8n(pgn()), d3(), Nb())) JHt(a).catch(logError);
   if ((kGt(), HW())) wmt().catch(logError);
-  let H = DT(tA),
+  let H = createFileStateCache(FILE_STATE_MAX_ENTRIES),
     U = new PerClassInstanceRegistry(),
-    E = new A1(
+    E = new McpServer(
       {
         name: "claude/tengu",
         version: {
@@ -196,18 +196,18 @@ function q(e, m, d, S, a, C = "raw") {
             setWebBrowserSlice: () => {},
             setArtifactReadVersion: () => {},
             getArtifactReadObservation: artifactReadObservationIn(aF),
-            artifactRegistries: elt(),
+            artifactRegistries: createInMemoryArtifactRegistries(),
             setArtifactContractTarget: () => {},
             getArtifactContractTarget: () => ({ targetSlug: void 0, pins: {} }),
             agentLifecycle: noopAgentLifecycle,
-            teammateColors: tlt,
+            teammateColors: NOOP_TEAMMATE_COLORS,
             rootToolSurface: { tools: _, mainLoopModel: getMainLoopModel() },
             messages: [],
             turnStartIndex: 0,
             readFileState: H,
             dedupUnchangedReads: !1,
             toolState: F,
-            permissionRelays: i7,
+            permissionRelays: EMPTY_PERMISSION_RELAYS,
             getFileHistoryState: () => {
               return;
             },

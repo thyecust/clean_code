@@ -14,7 +14,7 @@ import { Et, Is, n } from "../../01-核心基础设施/核心工具-日志与脱
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getProcessStartTokenLinuxSync, getAncestorPidsLinuxSync, getAncestorPidsCheckedAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getProcessStartTokenLinuxSync, getAncestorPidsLinuxSync, getAncestorPidsCheckedAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import {
   wor,
   hU,
@@ -35,8 +35,8 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { BS, rzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { zy } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
-import { hCe, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { getTempBaseDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
+import { isUuidString, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import {
   Nu,
   qI,
@@ -54,20 +54,20 @@ import {
   registeredInboxesOfPids,
 } from "./chunk-ddtmwhn7.js";
 import { getSessionNamingState, noteVettedCorrespondent } from "./chunk-9kzxq41e.js";
-import { OJn, DJn, v7e } from "../后台任务-Shell管理/chunk-djserjj5.js";
+import { getSystemDirAllowlist, detectUidCollapse, getCurrentUid } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import {
-  kPe,
-  Csn,
-  a6n,
-  vsn,
-  iqe,
-  HPe,
-  ksn,
-  cqe,
-  PPe,
-  Gee,
-} from "../权限系统/chunk-4tar9p3n.js";
-import { l9n, c9n, u9n, m9n, g9n, lan, can, y9n } from "../Artifact发布-渲染/chunk-qdg189tc.js";
+  isHarborKiteModeEmitEnabled,
+  setPeerReceiptSender,
+  sendUndeliveredPeerReceipt,
+  setCorrespondentRecorder,
+  settleHeldPeerMessagesOnShutdown,
+  classifyPermissionMode,
+  needsPeerModeVerdict,
+  gatePeerInboundMessage,
+  getSessionRefuseCause,
+  logInboundRefused,
+} from "../权限系统/cross-session-inbound-gate.js";
+import { getYieldArtifactRepliesSchema, getArtifactRepliesYieldedSchema, getUnyieldArtifactRepliesSchema, hasOutstandingYieldWait, handleYieldAnswer, setReplyYieldSender, handleYieldRequest, handleUnyieldRequest } from "../Artifact发布-渲染/artifact-reply-yield.js";
 import {
   hsn,
   _sn,
@@ -80,8 +80,8 @@ import {
   Esn,
   mdt,
 } from "../Teammates团队/chunk-nhk351pe.js";
-import { rOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { isSendFileEnabled } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes, randomUUID } from "crypto";
 import { unlinkSync } from "fs";
 import {
@@ -273,14 +273,14 @@ function Igr(e) {
   c().onEnableRemoteControl = e;
 }
 function Ee(e) {
-  return hCe(e) ? e : e === void 0 ? "(none)" : "(malformed)";
+  return isUuidString(e) ? e : e === void 0 ? "(none)" : "(malformed)";
 }
 function Qe(e) {
   if (!Array.isArray(e)) return [];
   let t = [];
   for (let i of e) {
     if (t.length >= CSn) break;
-    if (hCe(i)) t.push(i);
+    if (isUuidString(i)) t.push(i);
   }
   return t;
 }
@@ -312,15 +312,15 @@ async function Je(e, t, i, r, d) {
   }
   if (!Te(e)) return;
   let w = typeof e.uuid === "string" ? e.uuid : randomUUID(),
-    o = PPe();
+    o = getSessionRefuseCause();
   if (o !== void 0) {
-    (Gee("uds: dropped before attachment materialization", o),
-      a6n(
+    (logInboundRefused("uds: dropped before attachment materialization", o),
+      sendUndeliveredPeerReceipt(
         {
           kind: "peer",
           from: e.from ?? "unknown",
           ...(t !== void 0 && { verifiedPeerPid: t }),
-          ...(hCe(e.msg_id) && { msg_id: e.msg_id }),
+          ...(isUuidString(e.msg_id) && { msg_id: e.msg_id }),
         },
         "refused",
       ));
@@ -331,7 +331,7 @@ async function Je(e, t, i, r, d) {
         ? e.priority
         : "next",
     E = s;
-  if (e.file_attachments !== void 0 && rOe())
+  if (e.file_attachments !== void 0 && isSendFileEnabled())
     try {
       let {
           emitPeerFileReceiveTelemetry: m,
@@ -355,7 +355,7 @@ async function Je(e, t, i, r, d) {
         ...(t !== void 0 && { verifiedPeerPid: t }),
         ...(i !== void 0 && { verifiedPeerProcStart: i }),
         ...(u && { selfSent: u }),
-        ...(hCe(e.msg_id) && { msg_id: e.msg_id }),
+        ...(isUuidString(e.msg_id) && { msg_id: e.msg_id }),
         ...Pse(s),
       },
       E,
@@ -372,7 +372,7 @@ async function Je(e, t, i, r, d) {
       isMeta: !0,
       skipAttachments: !0,
     };
-  if (cqe(k) !== "accept") return;
+  if (gatePeerInboundMessage(k) !== "accept") return;
   (BS(k),
     n(
       `[uds-messaging] Routed user message to queue (priority=${p}): ${Nu(E, 80)}`,
@@ -527,7 +527,7 @@ async function ke(e, t, i, r, d) {
           `[uds-messaging] peer_idle_notice not admitted: subscription for orig_msg_id=${Nu(s.data.orig_msg_id)} was already consumed`,
         );
     } else if (e.action === "yield_artifact_replies") {
-      let s = l9n().safeParse(e);
+      let s = getYieldArtifactRepliesSchema().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] yield_artifact_replies dropped: malformed frame"),
           logFeatureSad("artifact_comments_autoreact", "yield_malformed_frame"));
@@ -558,7 +558,7 @@ async function ke(e, t, i, r, d) {
           `[uds-messaging] yield_artifact_replies refused: requester is not a verified live session of this conversation (${Nu(s.data.from)})`,
         ),
           logFeatureSad("artifact_comments_autoreact", "yield_requester_unverified"),
-          can(
+          handleYieldRequest(
             s.data,
             o,
             t === void 0 ? void 0 : { pid: t, writeToken: i },
@@ -567,7 +567,7 @@ async function ke(e, t, i, r, d) {
           ));
         return;
       }
-      can(
+      handleYieldRequest(
         s.data,
         o,
         {
@@ -578,25 +578,25 @@ async function ke(e, t, i, r, d) {
         Date.now(),
       );
     } else if (e.action === "unyield_artifact_replies") {
-      let s = u9n().safeParse(e);
-      if (!s.success || !y9n(s.data, t))
+      let s = getUnyieldArtifactRepliesSchema().safeParse(e);
+      if (!s.success || !handleUnyieldRequest(s.data, t))
         n(
           "[uds-messaging] unyield_artifact_replies dropped: malformed, uncorrelated or already handed back",
         );
     } else if (e.action === "artifact_replies_yielded") {
-      let s = c9n().safeParse(e);
+      let s = getArtifactRepliesYieldedSchema().safeParse(e);
       if (!s.success) {
         (n("[uds-messaging] artifact_replies_yielded dropped: malformed frame"),
           logFeatureSad("artifact_live_subscribe", "yield_malformed_answer"));
         return;
       }
-      if (!m9n(s.data.orig_msg_id)) {
+      if (!hasOutstandingYieldWait(s.data.orig_msg_id)) {
         n(
           "[uds-messaging] artifact_replies_yielded dropped: uncorrelated or already settled",
         );
         return;
       }
-      g9n(s.data, t);
+      handleYieldAnswer(s.data, t);
     } else
       n(`[uds-messaging] Unhandled control action: ${Nu(String(e.action))}`);
   } else n(`[uds-messaging] Received unhandled message type: ${Nu(e.type)}`);
@@ -655,7 +655,7 @@ function tn(e) {
     w = !1,
     o,
     p,
-    E = process.pid !== 1 && ksn();
+    E = process.pid !== 1 && needsPeerModeVerdict();
   if (E) {
     let S = ybt(e),
       R = S !== void 0 ? getProcessStartTokenLinuxSync(S) : void 0;
@@ -790,7 +790,7 @@ function Ogr() {
 }
 var z = 103;
 function Vdr() {
-  let e = a.XDG_RUNTIME_DIR || zy(),
+  let e = a.XDG_RUNTIME_DIR || getTempBaseDir(),
     t = resolve(U(e, "cc-socks", `${process.pid}.sock`));
   if (Buffer.byteLength(t) <= z) return t;
   return sBn();
@@ -803,7 +803,7 @@ function sBn(e = process.getuid?.() ?? 0) {
 async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   for (let o of c().connectedClients) o.destroy();
   if ((c().connectedClients.clear(), e.close(), r)) Esn();
-  let d = r ? iqe() : void 0;
+  let d = r ? settleHeldPeerMessagesOnShutdown() : void 0;
   await nn();
   let s = r ? withDeadline(QNt("exited"), en) : void 0;
   if ((await d, await s, r)) await rzn();
@@ -821,10 +821,10 @@ function Y() {
     delete process.env.CLAUDE_CODE_MESSAGING_SOCKET,
     udsEnv.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
     vSn(void 0),
-    Csn(null),
-    vsn(null),
+    setPeerReceiptSender(null),
+    setCorrespondentRecorder(null),
     t1t(null),
-    lan(null),
+    setReplyYieldSender(null),
     r1t(null),
     (getSessionNamingState().senderMode = null));
 }
@@ -1121,7 +1121,7 @@ async function Ae(e) {
     },
     r = (h) => h === t,
     d = process.getgid?.(),
-    s = await DJn();
+    s = await detectUidCollapse();
   if (s?.uidCollapses)
     throw T(
       "uid_collapse",
@@ -1130,7 +1130,7 @@ async function Ae(e) {
       ),
     );
   r = (h) => h === t && !s?.uidCollapses;
-  let w = OJn(),
+  let w = getSystemDirAllowlist(),
     o = async (h, M) => {
       try {
         let v = M.isSymbolicLink() ? U(await realpath(dirname(h)), basename(h)) : await realpath(h),
@@ -1428,7 +1428,7 @@ async function gn(e, t, i = {}) {
     try {
       await Ae(o);
     } catch (p) {
-      let E = fn(p) ? await v7e() : void 0,
+      let E = fn(p) ? await getCurrentUid() : void 0,
         u = E === void 0 ? void 0 : resolve(sBn(E)),
         _ = u === void 0 ? void 0 : U(u, "..");
       if (u === void 0 || _ === void 0 || _ === o) return $e(o, p, Ce(p));
@@ -1482,7 +1482,7 @@ async function gn(e, t, i = {}) {
         throw Error("listen EADDRINUSE on the requested socket path");
     } else ((e = await an(d, e)), (c().activeSocketPath = e));
     {
-      let u = await v7e(),
+      let u = await getCurrentUid(),
         _ = process.getuid?.();
       c().peerDirOwnerUids = [
         ...(_ !== void 0 ? [_] : []),
@@ -1528,7 +1528,7 @@ async function gn(e, t, i = {}) {
       vSn(hU(e)));
     let p = hU(e);
     return (
-      vsn(Me),
+      setCorrespondentRecorder(Me),
       (getSessionNamingState().senderMode = iBn),
       t1t((u, _, k, m, b) =>
         sendControlToUdsSocket(
@@ -1541,7 +1541,7 @@ async function gn(e, t, i = {}) {
           },
         ),
       ),
-      lan(
+      setReplyYieldSender(
         (u, _, k, m) =>
           sendControlToUdsSocket(
             u,
@@ -1555,7 +1555,7 @@ async function gn(e, t, i = {}) {
         p,
       ),
       r1t((u) => registeredInboxesOfPids(u)),
-      Csn((u, _, k) => {
+      setPeerReceiptSender((u, _, k) => {
         let m = u.origin?.kind === "peer" ? u.origin : void 0,
           b = m?.from;
         if (typeof b !== "string") return;
@@ -1671,16 +1671,16 @@ function hn() {
   return e === void 0 ? {} : { from_mode: e };
 }
 function iBn() {
-  if (!kPe()) return;
-  let e = ds().inbound.getCurrentMode;
+  if (!isHarborKiteModeEmitEnabled()) return;
+  let e = getBridgeHostState().inbound.getCurrentMode;
   if (e)
     try {
-      return HPe(e());
+      return classifyPermissionMode(e());
     } catch {
       return;
     }
-  let t = ds().inbound.modeAtUnwire;
-  return t !== void 0 ? HPe(t) : void 0;
+  let t = getBridgeHostState().inbound.modeAtUnwire;
+  return t !== void 0 ? classifyPermissionMode(t) : void 0;
 }
 function Ie(e) {
   return wor(e) ? e : void 0;
@@ -1690,8 +1690,8 @@ function le(e, t, i) {
     selfSentAncestry: t,
     verifiedPeerPid: e,
     childTokenPresented: i === "child",
-    needsVerdict: ksn(),
-    platform: P(),
+    needsVerdict: needsPeerModeVerdict(),
+    platform: getCurrentPlatform(),
   });
 }
 function yn() {

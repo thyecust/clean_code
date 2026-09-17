@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ErrorCode, ListResourcesResultSchema, McpError } from "./chunk-tv3jbp8f.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { t7e } from "./chunk-0mwqsv0r.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 var n = 20;
 function serverDeclaresDirectoryRead(r) {
-  let e = r?.extensions?.[t7e];
+  let e = r?.extensions?.[MCP_SKILLS_EXTENSION_ID];
   return (
     e != null &&
     typeof e === "object" &&
@@ -35,13 +35,13 @@ async function readMcpDirectory(r, e) {
   do {
     let i;
     try {
-      i = await Yo(r.client).request(
+      i = await asMcpSdkClient(r.client).request(
         {
           method: "resources/directory/read",
           params: { uri: e, ...(t && { cursor: t }) },
         },
         ListResourcesResultSchema,
-        { timeout: Hl() },
+        { timeout: getMcpTimeoutMs() },
       );
     } catch (a) {
       if (s === 0 || !(a instanceof McpError && a.code === ErrorCode.InvalidParams)) throw a;

@@ -7,23 +7,23 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { qu } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
+import { splitToolRuleList } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 var r = "self_hosted_runner_";
 function e(n) {
   return n.startsWith(r);
 }
 function toolsSpecNamesSelfHostedRunnerTool(n) {
-  return qu([...n]).some(e);
+  return splitToolRuleList([...n]).some(e);
 }
 function s(n) {
-  return qu([n])
+  return splitToolRuleList([n])
     .filter((t) => !e(t))
     .join(",");
 }
 function serverToolsValueNamesSelfHostedRunnerTool(n) {
   if (n === void 0) return !1;
   let t = typeof n === "string" ? n : String(n);
-  return qu([t]).some(e);
+  return splitToolRuleList([t]).some(e);
 }
 function sanitizeServerClaudeCodeArgs(n) {
   let t = n.tools;

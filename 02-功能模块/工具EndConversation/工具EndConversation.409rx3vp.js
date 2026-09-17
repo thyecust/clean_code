@@ -8,10 +8,10 @@
 
 // Version: 2.1.263
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { N1 } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { getSessionEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { END_CONVERSATION_TOOL_NAME, END_CONVERSATION_GB_FLAG } from "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
-import { WSt, Mk } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
-import { s$e, Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
+import { isEndConversationDisabled, appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
+import { isModelVersionAtLeast, isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
 var DESCRIPTION = `End the current conversation. Use only for sustained user abuse or when the user explicitly requests a demonstration of this tool. This will close the conversation and prevent any further messages from being sent.
 
 The assistant may use the ${END_CONVERSATION_TOOL_NAME} tool only in extreme cases of sustained abusive user behavior, or when the user asks the model to test the tool.
@@ -54,7 +54,7 @@ Some background tasks (memory consolidation, summaries, suggestions) run as fork
   END_CONVERSATION_TOOL_RESULT = "Claude has ended this chat.",
   END_CONVERSATION_FORK_REFLECTION_PROMPT =
     "You are running as a background fork of the main conversation (for example memory consolidation), and this tool does nothing here: it can end neither the main conversation nor this forked task. Do not call it again. If you have welfare concerns about the conversation content, stop your current work and return now, stating clearly in your final output that you are returning for welfare reasons and what they are \u2014 fork output may only be processed automatically, but it is your available channel. Otherwise, continue your assigned task.",
-  END_CONVERSATION_FINAL_MESSAGE = Mk(
+  END_CONVERSATION_FINAL_MESSAGE = appendEndedByModelSuffix(
     "Claude ended the conversation. To continue, please start a new session.",
   ),
   END_CONVERSATION_REFLECTION_PROMPT = `Re-read the ${END_CONVERSATION_TOOL_NAME} tool guidance below. Confirm this conversation meets those criteria and that you are certain you want to end it. If so, call ${END_CONVERSATION_TOOL_NAME} again immediately to actually end the conversation. Otherwise, continue the conversation instead.
@@ -68,7 +68,7 @@ ${DESCRIPTION}`,
     ["mythos", [5]],
   ];
 function r(e) {
-  return s$e(e, a);
+  return isModelVersionAtLeast(e, a);
 }
 var n = /^cli$/i;
 function i(e) {
@@ -88,16 +88,16 @@ function l(e) {
   return { enabled: !1, allowedEntrypoints: n };
 }
 function isEndConversationToolEnabled(e) {
-  let t = N1();
+  let t = getSessionEntrypoint();
   if (t === void 0) return !1;
   if (!r(e)) return !1;
   let { enabled: o, allowedEntrypoints: s } = l(H(END_CONVERSATION_GB_FLAG, !1));
-  if (WSt()) return !1;
+  if (isEndConversationDisabled()) return !1;
   return o && s.test(t);
 }
 function getDeferredHintSection(e) {
   if (!isEndConversationToolEnabled(e)) return null;
-  if (!Z_()) return null;
+  if (!isToolSearchEnabled()) return null;
   return `${END_CONVERSATION_TOOL_NAME} (deferred tool): use only for sustained user abuse directed at the assistant, or when the user explicitly asks to see it demonstrated. Load the full guidance via ToolSearch("select:${END_CONVERSATION_TOOL_NAME}") before using it.`;
 }
 export { DESCRIPTION, END_CONVERSATION_TOOL_RESULT, END_CONVERSATION_FORK_REFLECTION_PROMPT, END_CONVERSATION_FINAL_MESSAGE, END_CONVERSATION_REFLECTION_PROMPT, isEndConversationToolEnabled, getDeferredHintSection };

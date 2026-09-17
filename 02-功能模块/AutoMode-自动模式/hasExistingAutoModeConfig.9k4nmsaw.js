@@ -44,11 +44,11 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../Git-Worktree/chunk-33y3h2sy.js";
 import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Dh, Md, L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { generateTaskId, createPendingTask, figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Me = "Expected a function";
 function be(n, a) {
@@ -82,9 +82,9 @@ function Z(n) {
   return;
 }
 function re(n, a, s) {
-  let w = Dh("auto_mode_scan"),
+  let w = generateTaskId("auto_mode_scan"),
     M = {
-      ...Md(w, "auto_mode_scan", "scanning for auto-mode setup"),
+      ...createPendingTask(w, "auto_mode_scan", "scanning for auto-mode setup"),
       type: "auto_mode_scan",
       status: "running",
       skipTranscript: !0,
@@ -522,7 +522,7 @@ function ie({
     P = (c) =>
       r(t, {
         color: m === c ? "suggestion" : void 0,
-        children: [m === c ? L.pointer : " ", " "],
+        children: [m === c ? figures.pointer : " ", " "],
       });
   return r(de, {
     title: me,
@@ -540,9 +540,9 @@ function ie({
                 color: m === 0 ? "suggestion" : void 0,
                 children: [ee.padEnd(se), " "],
               }),
-              r(t, { dimColor: !0, children: [L.triangleLeft, " "] }),
+              r(t, { dimColor: !0, children: [figures.triangleLeft, " "] }),
               e(t, { children: x }),
-              r(t, { dimColor: !0, children: [" ", L.triangleRight] }),
+              r(t, { dimColor: !0, children: [" ", figures.triangleRight] }),
             ],
           }),
           Q.map((c, O) => {
@@ -559,7 +559,7 @@ function ie({
                   }),
                   r(t, {
                     color: G ? "success" : void 0,
-                    children: ["[", G ? L.tick : " ", "]"],
+                    children: ["[", G ? figures.tick : " ", "]"],
                   }),
                 ],
               },

@@ -10,43 +10,43 @@
 function r(n) {
   return n;
 }
-function S(n) {
+function fromLiteral(n) {
   return r(n);
 }
-function u(n) {
+function fromEnum(n) {
   return r(n);
 }
-function we(n) {
+function fromEnumOpt(n) {
   return n == null ? void 0 : r(n);
 }
-function Yr(n) {
+function fromNumber(n) {
   return r(String(n));
 }
-function KP(n) {
+function fromNumberOpt(n) {
   return n == null ? void 0 : r(String(n));
 }
-function _y(...n) {
+function concatSafe(...n) {
   return r(n.join(""));
 }
 function jHt(n) {
   return r(n.join(","));
 }
-function Ga(n) {
+function fromEnumArr(n) {
   return r([...n].sort().join(","));
 }
-function W0(n, t) {
+function joinSafe(n, t) {
   return r(n.join(t ?? ","));
 }
-function Ln(n) {
+function fromSanitizer(n) {
   return r(n);
 }
-function Gf(n, t) {
-  return t ? Ln(n) : void 0;
+function mcpNameForAnalytics(n, t) {
+  return t ? fromSanitizer(n) : void 0;
 }
-function Mz(n, t) {
-  return t ? Ln(n) : S("custom");
+function agentTypeForAnalytics(n, t) {
+  return t ? fromSanitizer(n) : fromLiteral("custom");
 }
-function WYt(n, t) {
-  return t ? Ln(n) : S("third-party");
+function pluginIdForAnalytics(n, t) {
+  return t ? fromSanitizer(n) : fromLiteral("third-party");
 }
-export { S, u, we, Yr, KP, _y, jHt, Ga, W0, Ln, Gf, Mz, WYt };
+export { fromLiteral, fromEnum, fromEnumOpt, fromNumber, fromNumberOpt, concatSafe, jHt, fromEnumArr, joinSafe, fromSanitizer, mcpNameForAnalytics, agentTypeForAnalytics, pluginIdForAnalytics };

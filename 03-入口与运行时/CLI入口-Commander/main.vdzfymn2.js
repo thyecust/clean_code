@@ -52,23 +52,23 @@ import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小�
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Iu, dt, ge, l, A, Gw, EZ, hv, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, Yu, zur, fp, zR, rje, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { tl, Nx, be, kje, uo, Hr, Grt, Yur } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, parseNumericValue, getClaudeConfigDir, hasNodeOption, isSimpleMode, isSafeMode, isSupervisedMode, parseEnvAssignments } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { os } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import "../../00-第三方库/zod/zod.3g334xwq.js";
 import { Hx, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0d0nn4ae.js";
-import { cur, uur } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Ee, Br, Fnt } from "./chunk-6rfqqsva.js";
-import { Ts, $Xn, BXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
-import { Gxn } from "../../01-核心基础设施/核心工具-路径与平台/chunk-svk2cp17.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import { initHostState, parseSessionStartMode } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { sanitizeAnalyticsId, profileCheckpoint, profileReport } from "./startup-profiler.js";
+import { recordStartupPhase, recordSpawnToExec, wasWarmSpareClaimed } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
+import "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
+import { startMdmRawRead } from "../../01-核心基础设施/核心工具-路径与平台/mdm-raw-read.js";
+import "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { startKeychainPrefetch, ensureKeychainPrefetchCompleted } from "../../01-核心基础设施/共享小工具-未细化/keychain-prefetch.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
   q$e,
   lU,
@@ -122,19 +122,19 @@ import {
   eBe,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { Pt, getIsGit, getBranch, getWorktreeCount } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isTranscriptFileResumeArg } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
-import "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import "../../02-功能模块/Teammates团队/storage-keys.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Za, getLastLoadStatus, getRemoteSettingsPathOverride, isAdminPolicyOrigin } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -161,40 +161,40 @@ import {
   hasSkipDangerousModePermissionPrompt,
   getAutoModeConfig,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS, E1, Eb } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
-import "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
+import "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS, isSelectablePermissionMode, parsePermissionModeOrDefault } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
+import "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
 import { toCompatSessionId, remoteRowId } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { getDynamicTeamContext } from "../../02-功能模块/Teammates团队/chunk-811z9z0t.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { getDynamicTeamContext } from "../../02-功能模块/Teammates团队/teammate-context.js";
+import "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { Xt, getAPIProvider, isFirstPartyApiBackend } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import "../../00-第三方库/axios/axios.t0fczzmz.js";
 import "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { $6, IU, gx, TBe, U6, Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
-import "../../02-功能模块/认证-OAuth登录/chunk-y7b7kf5n.js";
+import { isReviewOriginSession, hasCredentialDescriptor, getOAuthToken, getGatewayToken, getApiKey, getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
+import "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
-import "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
+import "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
+import "../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
 import "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import "../../02-功能模块/Hooks钩子/session-feature-cache.js";
-import { v$e, Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
-import { ny, FJe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
+import { USER_INTENT_SETTING_KEYS, resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
+import { ny, isPastSessionsExperimentEnabled } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { printCliError, cliError, cliOk, cliWarn, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
-import "../../02-功能模块/ClaudeinChrome/chunk-hnp84hf6.js";
+import "../../02-功能模块/ClaudeinChrome/claude-in-chrome-host.js";
 import { isClaudeMdLoadingDisabled } from "../../02-功能模块/状态栏-主题/chunk-dqyc6kge.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
+import "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { goe, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import {
@@ -278,10 +278,10 @@ import "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 import "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 import { OG, tme } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { wK, ufe } from "../../02-功能模块/插件系统/chunk-hh8f1qrw.js";
-import "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { areSideloadFlagsDisabledByPolicy, sideloadFlagsBlockedMessage } from "../../02-功能模块/插件系统/plugin-source-policy.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import "../../02-功能模块/MCP客户端/chunk-3kmsshb6.js";
-import "../../02-功能模块/图片-截图-ComputerUse/chunk-b8jsase9.js";
+import "../../02-功能模块/图片-截图-ComputerUse/computer-use-lock.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
 import "../../02-功能模块/Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
@@ -290,7 +290,7 @@ import "../../02-功能模块/Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import {
   xJe,
   qEt,
@@ -309,7 +309,7 @@ import "../../01-核心基础设施/共享小工具-未细化/host-claim-registr
 import "../../02-功能模块/图表-Mermaid/chunk-743atbtj.js";
 import "../核心应用-Agent循环/chunk-h3cty6gp.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import "../../02-功能模块/Teammates团队/chunk-thxapyam.js";
+import "../../02-功能模块/Teammates团队/transcript-paths.js";
 import { resolveCcrAutoConnectDefault } from "../../02-功能模块/Bridge-RemoteControl/chunk-9estzwf5.js";
 import "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { isExiting, commitExit } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
@@ -318,8 +318,8 @@ import "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5c
 import "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import "../../02-功能模块/Bridge-RemoteControl/push-notification-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import "../../02-功能模块/Teammates团队/chunk-t899nada.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-9d5wk5b9.js";
+import "../../02-功能模块/Teammates团队/list-agents-tool-constants.js";
+import "../../02-功能模块/后台任务-Shell管理/scheduled-tasks.js";
 import "../../02-功能模块/Cron-定时任务/chunk-mk3zm4ew.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-vtgvbed1.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
@@ -330,34 +330,34 @@ import "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-x3txegas.js";
 import "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import "../../02-功能模块/跨会话消息(UDS)/chunk-9kzxq41e.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-reporting-eligibility.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-6kad94y1.js";
-import { Ore } from "../../01-核心基础设施/HTTP-网络层/chunk-tzqq81r7.js";
-import { BJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
+import { latchTuiTrialFromEnv } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
-import { MSt } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
+import { formatContinuedInMessage } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import "../../02-功能模块/文件监听-Watch/文件监听-Watch.3efypmps.js";
 import "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
 import "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
-import "../../02-功能模块/Teammates团队/chunk-6b13bhw1.js";
+import "../../02-功能模块/Teammates团队/team-file-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
+import "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
 import "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
-import "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
+import "../../02-功能模块/Skills技能/bundled-skills.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-5jqttbex.js";
 import { wa } from "../../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
-import { zr } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
+import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-tyce0p0b.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-mxsfy35q.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import "../../02-功能模块/Bridge-RemoteControl/code-session-api.js";
+import "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-0qtt3z52.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js";
@@ -367,13 +367,13 @@ import "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-sta
 import "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { foldRestricted, cliCarriesSessionConfig } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-52kaw3c1.js";
-import "../../02-功能模块/语音-音频/chunk-cfhndstm.js";
+import "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 import "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
 import "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
 import { s7e } from "../../02-功能模块/Bridge-RemoteControl/chunk-1yq098a7.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-ct52ffwb.js";
+import "../../02-功能模块/Bridge-RemoteControl/remote-control-messages.js";
 import "../../01-核心基础设施/共享小工具-未细化/c4e-upsell-command-gate.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-sdk-generation.js";
 import "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
@@ -381,11 +381,11 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js"
 import "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { jB, n9e } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
 import { n$n, zw } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import { hln } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
-import "../../02-功能模块/上下文压缩-Compact/chunk-40jcpbzh.js";
+import { setSessionPromptLaunchWarning } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
+import "../../02-功能模块/上下文压缩-Compact/context-usage.js";
 import "../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-qpgskeea.js";
-import "../../02-功能模块/Artifact发布-渲染/chunk-qdg189tc.js";
+import "../../02-功能模块/Artifact发布-渲染/artifact-reply-yield.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-p1dkvpxj.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-d8c3rz29.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-5gz5xvw9.js";
@@ -439,42 +439,42 @@ import {
   Vot,
 } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { lO } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import "../../02-功能模块/会话-历史-恢复/chunk-ybcvb652.js";
+import "../../02-功能模块/会话-历史-恢复/session-title.js";
 import { HOt, wat, Tat, otn, stn, aF, EMPTY_PROJECTS_SELF_IDENTITY, AppRoot } from "../../02-功能模块/后台任务-Shell管理/chunk-c7mzes79.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js";
+import { TIER_LABELS, withProbeDeadline, apply3PDefaultFallbacks as Bnn } from "../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js";
+import "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import { registerToolHosts } from "../../01-核心基础设施/共享小工具-未细化/chunk-dypysnt9.js";
 import { qJe, b_, KAn, zJe } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { XBn, fIe, _lt, mIe, YBn, $Dt, UDt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
 import { capturePolicySnapshot, hasPolicyDiverged } from "../../01-核心基础设施/共享小工具-未细化/chunk-22525f7p.js";
 import { CHe, $st } from "../../02-功能模块/Git-Worktree/chunk-xercceag.js";
-import { CF, gOe, Dze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import { stopCapturingEarlyInput, consumeEarlyInput, hasEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import "../会话UI(REPL)/notification-queue.js";
 import "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
+import "../../02-功能模块/状态栏-主题/custom-themes.js";
 import { o, t, uE } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { credentialsStoreFor } from "../../02-功能模块/认证-OAuth登录/credentials-store.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kk7p3hsm.js";
-import { Cv } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ewa397cg.js";
+import { SHOW_CURSOR } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+import "../../01-核心基础设施/共享小工具-未细化/terminal-querier.js";
 import "../../02-功能模块/键位绑定(Keybindings)/keybinding-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/command-queue-context.js";
 import "../../02-功能模块/MCP客户端/chunk-g4gdwpa0.js";
-import "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
+import "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import "../../02-功能模块/工具TodoWrite-Tasks/chunk-5a7p8d2p.js";
+import "../../02-功能模块/工具TodoWrite-Tasks/tasks-v2-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import "../../02-功能模块/Workflow编排/chunk-va9cgbfs.js";
 import "../../02-功能模块/MCP客户端/mcp-task-metadata.js";
@@ -483,13 +483,13 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-s1hpfa12.js"
 import "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-artifact-consent-slugs.js";
 import { runSteps, showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-5ss8pwgq.js";
+import "../../01-核心基础设施/共享小工具-未细化/storage-v5-env-pin.js";
 import "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bgf8jybv.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-fpak7ean.js";
-import { nJt, Qxe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-aqq8azxz.js";
+import { initializeApp, initializeTelemetryAfterTrust } from "../../01-核心基础设施/遥测-OpenTelemetry/app-init.js";
 import "../../01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js";
-import "../../02-功能模块/权限系统/chunk-8zbmhy8a.js";
+import "../../02-功能模块/权限系统/inherit-permission-mode-flag.js";
 import "../../02-功能模块/Skills技能/Skills技能.dpy2ket5.js";
 import { registerClientDataGetters } from "../../02-功能模块/上下文压缩-Compact/chunk-npckj9cm.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-y8j05azr.js";
@@ -499,23 +499,23 @@ import "../../02-功能模块/Artifact发布-渲染/chunk-stvynqrz.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-b6k1z7an.js";
 import "../../01-核心基础设施/共享小工具-未细化/workshop-telemetry.js";
 import "../../02-功能模块/Artifact发布-渲染/chunk-yrjr7v83.js";
-import "../../02-功能模块/CodeReview/chunk-rp57gfa9.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-5jv5fvbn.js";
-import "../../02-功能模块/DesignSync/chunk-zyy4nsb8.js";
-import "../../02-功能模块/CodeReview/chunk-cwdcyphs.js";
+import "../../02-功能模块/CodeReview/ultrareview-tips.js";
+import "../../02-功能模块/后台任务-Shell管理/daemon-lock.js";
+import "../../02-功能模块/DesignSync/register-design-skill.js";
+import "../../02-功能模块/CodeReview/pr-review-target.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import "../../02-功能模块/自动更新-安装/chunk-548xet6h.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hrfnq7gz.js";
-import { dSe } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
+import { shouldShowGroveNotice } from "../../02-功能模块/Grove-隐私设置/chunk-a4mdm49v.js";
 import "../../02-功能模块/斜杠命令-框架/chunk-a4vej95c.js";
 import "../../02-功能模块/用量额度-限额/chunk-1bfn62xh.js";
-import "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
-import { uze, Dbe } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
-import "../../02-功能模块/文件监听-Watch/chunk-mmg1rsp2.js";
+import "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
+import { getLocalSettingsErrorsBlockingWrite, getGatingSettingsErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import "../../02-功能模块/文件监听-Watch/skill-change-detector.js";
 import "../../02-功能模块/交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
+import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -528,16 +528,16 @@ import "../../01-核心基础设施/共享小工具-未细化/use-keybinding-dis
 import "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
-import { Nae } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
-import { tJt } from "../../01-核心基础设施/共享小工具-未细化/chunk-sn7k2dvd.js";
+import { shouldOfferTrustBackstop } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
+import { eagerLoadSettings } from "../../01-核心基础设施/共享小工具-未细化/eager-load-settings.js";
 import { checkVersionPolicyForCommand } from "../../01-核心基础设施/共享小工具-未细化/version-policy.js";
 import "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
 import { resetAuthCachesAfterLogin, buildAutoModeGateNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-8r3h1dwe.js";
 import "../../01-核心基础设施/共享小工具-未细化/apply-node-extra-ca-certs.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-me1cqqmp.js";
-import "../../02-功能模块/权限系统/chunk-hv6z01db.js";
-import { hit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
-import "../Headless-SDK模式/chunk-9r4nh249.js";
+import "../../01-核心基础设施/共享小工具-未细化/daemon-status.js";
+import "../../02-功能模块/权限系统/permission-mode-cycle.js";
+import { buildCloudSessionStatusMessage } from "../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
+import "../Headless-SDK模式/cloud-flag-validation.js";
 import { formatSessionLiveElsewhereMessage, getLiveSessionHolder } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -550,73 +550,73 @@ import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未
 import "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-fgegxt0m.js";
 import "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
-import { tIe } from "../../02-功能模块/权限系统/chunk-2ttypdwq.js";
-import "../../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js";
+import { isAwaySummaryEnabled } from "../../02-功能模块/权限系统/ccr-recap.js";
+import "../../02-功能模块/后台任务-Shell管理/background-task-inventory.js";
 import "../../02-功能模块/Teammates团队/background-task-summary.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-tkfrb8jm.js";
-import "../../02-功能模块/插件系统/chunk-bh1q9esj.js";
+import "../../01-核心基础设施/共享小工具-未细化/relaunch-terminal-size.js";
+import "../../02-功能模块/插件系统/plugin-dependency-resolution.js";
 import "../../02-功能模块/插件系统/plugin-state-store.js";
 import "../../02-功能模块/插件系统/plugin-disuse.js";
 import "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import "../../02-功能模块/MCP客户端/chunk-k2gczbnj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
-import "../../02-功能模块/Teammates团队/chunk-w2g8t42p.js";
+import "../../02-功能模块/MCP客户端/mcp-server-state-messages.js";
+import "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import "../../02-功能模块/Teammates团队/onboarding-guide-api.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-531ast3t.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-z5v9hvat.js";
+import "../../02-功能模块/Bridge-RemoteControl/bridge-effort-sync.js";
 import "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
+import "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
 import "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import "../../02-功能模块/Workflow编排/workflow-snapshots.js";
-import "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-42mwj027.js";
+import "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
+import "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
+import "../../01-核心基础设施/共享小工具-未细化/auto-react-state.js";
 import "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
 import "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
-import "../../02-功能模块/MCP客户端/chunk-0mwqsv0r.js";
+import "../../02-功能模块/MCP客户端/mcp-skills-extension.js";
 import "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import "../../02-功能模块/DesignSync/chunk-5kyac4wk.js";
+import "../../02-功能模块/DesignSync/design-sync-tool-metadata.js";
 import "../../02-功能模块/MCP客户端/chunk-tznd4407.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 import "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
 import "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
 import "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
 import "../../02-功能模块/工具Monitor/monitor-tool-description.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
+import "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import "../../02-功能模块/Teammates团队/chunk-eey53z5b.js";
+import "../../02-功能模块/Teammates团队/permission-sync-mailbox.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-bacs4ztm.js";
 import { resetRemoteSettingsSyncCache } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
 import "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
-import "../../02-功能模块/工具ToolSearch/chunk-1m51pqtd.js";
+import "../../02-功能模块/工具ToolSearch/tool-search-enablement.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
 import "../../02-功能模块/权限系统/chunk-pcxn6gwz.js";
 import "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { px, Air, y5t, Cir, vir } from "../../02-功能模块/上下文压缩-Compact/chunk-qbdgst52.js";
+import { isFlagPresent, isNonInteractiveMode, findArgIndex, isCcProtocolUrl, isHelpRequested } from "../../02-功能模块/上下文压缩-Compact/cli-args.js";
 import "../../02-功能模块/Teammates团队/chunk-enjekn9t.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { serializeAsyncCalls } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import "../../01-核心基础设施/共享小工具-未细化/federation-cache-dir.js";
 import "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { mL, s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
+import "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { xHt } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
+import { getHandleUriInjectionError } from "../../01-核心基础设施/共享小工具-未细化/cli-arg-parsing.js";
 import { getBuildRefName } from "../../01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { ensureClientAgentEnv } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import "../../02-功能模块/图片-截图-ComputerUse/computer-use-swift-native.js";
@@ -2372,7 +2372,7 @@ function Zo(v, k, O, R) {
     k.includes(`
 `)
   ) {
-    let L = x <= O ? os(" ", O - x + Mo) : " ".repeat(Mo);
+    let L = x <= O ? repeatString(" ", O - x + Mo) : " ".repeat(Mo);
     return (T + v + L + k).replace(
       /\n/g,
       `
@@ -2381,7 +2381,7 @@ function Zo(v, k, O, R) {
   }
   let U = R - xo - O - Mo;
   if (x <= O && U >= Ns) {
-    let L = os(" ", O - x + Mo),
+    let L = repeatString(" ", O - x + Mo),
       W = " ".repeat(xo + O + Mo),
       K = wr(k, U);
     return (
@@ -2562,7 +2562,7 @@ Usage: claude mcp add <name> <command> [args...]`);
             let q = W === "sse" ? "SSE" : "HTTP";
             if (!N) return cliErrorAfterAnalyticsFlush(`Error: URL is required for ${q} transport.`);
             let J = D.header ? BKn(D.header) : void 0,
-              X = D.callbackPort ? tl(D.callbackPort) : void 0;
+              X = D.callbackPort ? parseConfigInteger(D.callbackPort) : void 0;
             if (X !== void 0 && (!Number.isInteger(X) || X <= 0 || X > 65535))
               return cliErrorAfterAnalyticsFlush(
                 "Error: --callback-port must be an integer in [1, 65535]",
@@ -2621,7 +2621,7 @@ Warning: The command "${q}" looks like a URL, but is being interpreted as a stdi
                   .write(`If this is a remote server, re-run with --transport http (or sse).
 `);
             }
-            let J = Yur(D.env);
+            let J = parseEnvAssignments(D.env);
             (await addMcpConfig(T, { type: "stdio", command: N, args: I, env: J }, L, R),
               process.stdout
                 .write(`Added stdio MCP server ${T} with command: ${q} ${I.join(" ")} to ${L} config
@@ -2675,7 +2675,7 @@ function vn(v, k) {
           return cliError(
             `Error: --issuer must use https:// (got "${x.protocol}//${x.host}")`,
           );
-        let U = T.callbackPort ? tl(T.callbackPort) : void 0;
+        let U = T.callbackPort ? parseConfigInteger(T.callbackPort) : void 0;
         if (U !== void 0 && (!Number.isInteger(U) || U <= 0 || U > 65535))
           return cliError("Error: --callback-port must be an integer in [1, 65535]");
         let D = T.clientSecret ? a.MCP_XAA_IDP_CLIENT_SECRET : void 0;
@@ -3149,7 +3149,7 @@ function An(v, k, O) {
               W,
               {
                 ...K,
-                runs: K.runs ? tl(K.runs) : void 0,
+                runs: K.runs ? parseConfigInteger(K.runs) : void 0,
                 maxCostUsd: K.maxCostUsd ? parseFloat(K.maxCostUsd) : void 0,
                 threshold: K.threshold ? parseFloat(K.threshold) : void 0,
                 noScaffold: K.scaffold === void 0 ? void 0 : !K.scaffold,
@@ -3506,7 +3506,7 @@ function oa(v) {
 function In(v, k) {
   return async (O) => {
     let R = await vot(v),
-      T = Dbe();
+      T = getGatingSettingsErrors();
     if (R.pendingServers.length === 0) return null;
     if (T.length > 0) {
       let x = dedupe(T.map((U) => U.file).filter(Boolean)).join(", ");
@@ -3632,11 +3632,11 @@ async function io(v, k, O, R, T) {
       (Dte(
         `Claude Code exited after an unrecoverable interface error (${D.message}).${I}`,
       ),
-      isBgSession() || Grt())
+      isBgSession() || isSupervisedMode())
     )
       throw U;
     try {
-      Ore(D, "unhandled_rejection");
+      reportError(D, "unhandled_rejection");
     } catch {}
     await xn(1, "other");
     return;
@@ -3669,7 +3669,7 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
         primePlanSlugCollisions(N),
         capturePolicySnapshot(),
-        setImmediate(Qxe, N),
+        setImmediate(initializeTelemetryAfterTrust, N),
         null
       ),
     ];
@@ -3737,7 +3737,7 @@ function ia(
     },
     (j) => {
       if (a.CLAUBBIT) return null;
-      if (((K = Bo()), K && !Nae())) return null;
+      if (((K = Bo()), K && !shouldOfferTrustBackstop())) return null;
       return (
         (W = !0),
         import("../../02-功能模块/权限系统/TrustDialog.syp7kdw2.js").then(({ TrustDialog: V }) =>
@@ -3784,13 +3784,13 @@ function ia(
         import("./setup.sbdmcpy2.js").then((j) => j.maybePrewarmRecallIndex(v)),
         primePlanSlugCollisions(D),
         capturePolicySnapshot(),
-        W && !K && !Nn() && !uo())
+        W && !K && !Nn() && !isSimpleMode())
       )
         import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((j) => j.startMemoryWatcher(D, N));
-      return (setImmediate(Qxe, D), null);
+      return (setImmediate(initializeTelemetryAfterTrust, D), null);
     },
     async (j) => {
-      if (!(await dSe(D, N))) return null;
+      if (!(await shouldShowGroveNotice(D, N))) return null;
       let { GroveDialog: V } = await import("../../02-功能模块/Grove-隐私设置/PrivacySettingsDialog.xfhvxg8z.js");
       return e(V, {
         showIfAlreadyViewed: !1,
@@ -3918,7 +3918,7 @@ function ia(
         { doesEnterpriseMcpConfigExist: Me, isMcpServerDenied: Le } =
           await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
         { CLAUDE_IN_CHROME_MCP_SERVER_NAME: qe } =
-          await import("../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js"),
+          await import("../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js"),
         { getClaudeInChromeMcpServerConfig: fe, isClaudeInChromeAllowed: oe } =
           await import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js");
       if (Me() || Le(qe, fe()) || !oe())
@@ -4455,7 +4455,7 @@ var pa = 1000;
 function ua() {
   let v = process.argv[1] || "",
     k = process.execPath || process.argv[0] || "";
-  if (P() === "windows")
+  if (getCurrentPlatform() === "windows")
     ((v = v.split(Qn.sep).join(posix.sep)), (k = k.split(Qn.sep).join(posix.sep)));
   let O = [v, k],
     R = [
@@ -4522,17 +4522,17 @@ function oi() {
 }
 function ni({ interactivity: v }) {
   let k = process.argv.slice(2),
-    O = v.kind === "non-interactive" || Air(k);
-  if (O) CF();
-  if ((xDn(!O), cur(O), Crt(uur(k)), ensureClientAgentEnv(), !Ie(a.CLAUDE_CODE_REMOTE))) {
+    O = v.kind === "non-interactive" || isNonInteractiveMode(k);
+  if (O) stopCapturingEarlyInput();
+  if ((xDn(!O), initHostState(O), Crt(parseSessionStartMode(k)), ensureClientAgentEnv(), !Ie(a.CLAUDE_CODE_REMOTE))) {
     if (
       a.CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR ||
-      (a.CLAUDE_BG_AUTH_SNAPSHOT_PATH && !uo() && !a.CLAUDE_CODE_OAUTH_TOKEN)
+      (a.CLAUDE_BG_AUTH_SNAPSHOT_PATH && !isSimpleMode() && !a.CLAUDE_CODE_OAUTH_TOKEN)
     )
-      gx();
-    if (a.CLAUDE_CODE_GATEWAY_TOKEN_FILE_DESCRIPTOR) TBe();
-    if (a.CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR) U6();
-    if (a.CLAUDE_CODE_WEBSOCKET_AUTH_FILE_DESCRIPTOR) Gi();
+      getOAuthToken();
+    if (a.CLAUDE_CODE_GATEWAY_TOKEN_FILE_DESCRIPTOR) getGatewayToken();
+    if (a.CLAUDE_CODE_API_KEY_FILE_DESCRIPTOR) getApiKey();
+    if (a.CLAUDE_CODE_WEBSOCKET_AUTH_FILE_DESCRIPTOR) getSessionAccessToken();
   }
   let T = (() => {
     if (Ie(a.GITHUB_ACTIONS)) return "github-action";
@@ -4544,9 +4544,9 @@ function ni({ interactivity: v }) {
     if (a.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") return "claude-desktop";
     let U =
       a.CLAUDE_CODE_SESSION_ACCESS_TOKEN ||
-      IU("CLAUDE_CODE_WEBSOCKET_AUTH_FILE_DESCRIPTOR") ||
+      hasCredentialDescriptor("CLAUDE_CODE_WEBSOCKET_AUTH_FILE_DESCRIPTOR") ||
       a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ||
-      (Ie(a.CLAUDE_CODE_REMOTE) && (Gi() || $6()));
+      (Ie(a.CLAUDE_CODE_REMOTE) && (getSessionAccessToken() || isReviewOriginSession()));
     if (a.CLAUDE_CODE_ENTRYPOINT === "remote" || U) return "remote";
     return "cli";
   })();
@@ -4565,7 +4565,7 @@ function ni({ interactivity: v }) {
     (fa.has(a.CLAUDE_CODE_ENTRYPOINT ?? "") || T === "remote")
   )
     tLn(!0);
-  (Br("main_client_type_determined"), tJt());
+  (profileCheckpoint("main_client_type_determined"), eagerLoadSettings());
 }
 var Tr = PERMISSION_MODES.map((v) => (v === "default" ? PERMISSION_MODE_MANUAL_ALIAS : v)),
   ga = [...PERMISSION_MODES, PERMISSION_MODE_MANUAL_ALIAS];
@@ -4582,7 +4582,7 @@ async function ii() {
     T = k(v.disabledMcpjsonServers);
   if (!O && !R && !T) return;
   try {
-    if (uze().length > 0) {
+    if (getLocalSettingsErrorsBlockingWrite().length > 0) {
       n(
         "migrateEnableAllProjectMcpServersToSettings: deferring \u2014 settings.local.json carries validation errors a write could compound; will retry next startup",
         { level: "error" },
@@ -4914,7 +4914,7 @@ async function _i(v) {
   let k = ee(),
     O = getSettingsForSource("userSettings"),
     R = {};
-  for (let T of v$e) {
+  for (let T of USER_INTENT_SETTING_KEYS) {
     let x = k[T];
     if (x === void 0) continue;
     if (x === VD[T]) continue;
@@ -5133,7 +5133,7 @@ async function bi(v, k) {
       verbose: Ho,
     } = v;
   if ((HDn(Ve ?? "text"), ut)) {
-    if ((rje(!0), dR(), Qxe(v.storageV5), isViolinWoodEnabledCached() && !uo()))
+    if ((rje(!0), dR(), initializeTelemetryAfterTrust(v.storageV5), isViolinWoodEnabledCached() && !isSimpleMode()))
       kl.initialize(iHe(yt, v.storageV5, v.credentials), v.storageV5, {
         machineServesSession: !0,
       });
@@ -5313,7 +5313,7 @@ async function bi(v, k) {
     return;
   }
   if (Ve === "stream-json" || Ve === "json") rje(!0);
-  (dR(), Qxe(v.storageV5));
+  (dR(), initializeTelemetryAfterTrust(v.storageV5));
   let Lt = (k.continue || k.resume || se) && !CHe() ? null : jCn(ao ?? lo);
   if (Lt && Ve !== "json" && Ve !== "stream-json") cliWarn(Lt);
   let ae = performance.now(),
@@ -5326,9 +5326,9 @@ async function bi(v, k) {
             storageV5: v.storageV5,
             credentials: v.credentials,
           }).then(
-            (Ce) => (Ts("hooks_init_ms", performance.now() - ae, ae), Ce),
+            (Ce) => (recordStartupPhase("hooks_init_ms", performance.now() - ae, ae), Ce),
           );
-  (He?.catch(() => {}), Br("before_validateForceLoginOrg"));
+  (He?.catch(() => {}), profileCheckpoint("before_validateForceLoginOrg"));
   let ho = await validateForceLoginOrg(v.credentials);
   if (!ho.valid) return (printCliError(ho.message), await Eue(), cliError());
   let _o = qe ? [] : Le ? Le.then(filterCommandsForHeadless) : filterCommandsForHeadless(ce);
@@ -5381,25 +5381,25 @@ async function bi(v, k) {
     storageV5: v.storageV5,
     credentials: v.credentials,
   });
-  Br("before_connectMcp");
+  profileCheckpoint("before_connectMcp");
   let Ao = performance.now();
   if (
     (await nr.connect(),
-    Ts("mcp_connect_ms", performance.now() - Ao, Ao),
-    Br("after_connectMcp_claudeai"),
-    !uo())
+    recordStartupPhase("mcp_connect_ms", performance.now() - Ao, Ao),
+    profileCheckpoint("after_connectMcp_claudeai"),
+    !isSimpleMode())
   )
     (E0t(yt, v.storageV5, v.credentials),
       import("../../02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js").then((Ce) =>
         Ce.startBackgroundHousekeeping(B().host, v.storageV5),
       ));
-  (A0t(v.storageV5, v.credentials), Br("before_print_import"));
+  (A0t(v.storageV5, v.credentials), profileCheckpoint("before_print_import"));
   let {
     runHeadless: Uo,
     explicitMcpConfigRequestsWait: No,
     endHeadlessSessionOnEscapedError: ir,
   } = await import("../Headless-SDK模式/runHeadless.p72d7p8s.js");
-  (Br("after_print_import"),
+  (profileCheckpoint("after_print_import"),
     Uo(
       yt,
       Ue,
@@ -5503,7 +5503,7 @@ function Pa(v, k) {
 }
 function ki(v) {
   let k = new Wt().configureHelp(Ot()).enablePositionalOptions();
-  Br("run_commander_initialized");
+  profileCheckpoint("run_commander_initialized");
   let O = !1,
     R,
     T,
@@ -5516,7 +5516,7 @@ function ki(v) {
       (...L) =>
         I(R, T, ...L);
   k.hook("preAction", async (I, L) => {
-    Br("preAction_start");
+    profileCheckpoint("preAction_start");
     let W = performance.now();
     if (
       L === k &&
@@ -5528,8 +5528,8 @@ function ki(v) {
       C1n(RJt);
     if (
       (await Promise.all([rRt(), ensureKeychainPrefetchCompleted()]),
-      Br("preAction_after_mdm"),
-      (R = await nJt({
+      profileCheckpoint("preAction_after_mdm"),
+      (R = await initializeApp({
         showInvalidConfigDialog: v.showInvalidConfigDialog,
         storageV5EnvPin: v.storageV5EnvPin,
       })),
@@ -5537,13 +5537,13 @@ function ki(v) {
       isHoverRestEnabled() && R !== void 0)
     )
       zR({ storageV5: R });
-    if ((Br("preAction_after_init"), !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE))
+    if ((profileCheckpoint("preAction_after_init"), !a.CLAUDE_CODE_DISABLE_TERMINAL_TITLE))
       process.title = "claude";
     let { initSinks: K } = await import("../../02-功能模块/Bridge-RemoteControl/initSinks.6cfazjmq.js");
-    (K(), Br("preAction_after_sinks"));
+    (K(), profileCheckpoint("preAction_after_sinks"));
     let j = performance.now(),
       V = await v1n();
-    if (V) Ts("await_initialize_ms", performance.now() - j, j);
+    if (V) recordStartupPhase("await_initialize_ms", performance.now() - j, j);
     if (V?.kind === "violation") return cliError(V.message);
     let q = V?.kind === "applied" ? V : void 0,
       J = [...Ei(I.getOptionValue("pluginDir")), ...(q?.pluginDirs ?? [])];
@@ -5561,7 +5561,7 @@ function ki(v) {
       ce.every((oe) => typeof oe === "string")
     )
       (wLn(ce), Zf("preAction: --plugin-url inline plugins"));
-    (await Ra(R), Br("preAction_after_migrations"));
+    (await Ra(R), profileCheckpoint("preAction_after_migrations"));
     let Me = L.parent?.name() === "auth";
     if (isForceRemoteSettingsRefreshConfigured() && !Me) {
       let oe = await $Dt(async () =>
@@ -5594,7 +5594,7 @@ function ki(v) {
       if ((war(ka), uRt())) goe();
     }
     let qe = vi(B());
-    if ((har.subscribe(qe), wK())) {
+    if ((har.subscribe(qe), areSideloadFlagsDisabledByPolicy())) {
       let oe = [],
         je = ($e) =>
           Array.isArray($e)
@@ -5609,7 +5609,7 @@ function ki(v) {
         if (je(I.getOptionValue($e)) || je(L.getOptionValue($e))) oe.push(ut);
       if (q && q.pluginDirs.length + q.pluginDirsNoMcp.length > 0)
         oe.push("plugins (initialize request)");
-      if (oe.length > 0) return cliError(ufe(oe));
+      if (oe.length > 0) return cliError(sideloadFlagsBlockedMessage(oe));
     }
     let fe = checkVersionPolicyForCommand(L);
     if (fe) return cliError(fe);
@@ -5617,7 +5617,7 @@ function ki(v) {
       (kl.subscribe((oe) => {
         if (oe === "policySettings") qe();
       }),
-      Br("preAction_after_remote_settings"),
+      profileCheckpoint("preAction_after_remote_settings"),
       L === k &&
         I.getOptionValue("worktree") === void 0 &&
         !a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL)
@@ -5627,9 +5627,9 @@ function ki(v) {
       (Edr(),
         ei(R, T).catch(() => {}),
         (O = !0),
-        Br("preAction_after_plugin_early_kick"));
+        profileCheckpoint("preAction_after_plugin_early_kick"));
     }
-    (Ts("pre_action_ms", performance.now() - W, W), Qun(L === k));
+    (recordStartupPhase("pre_action_ms", performance.now() - W, W), Qun(L === k));
   });
   let D = k
       .name("claude")
@@ -5801,7 +5801,7 @@ function ki(v) {
           "API-side task budget in tokens (output_config.task_budget)",
         )
           .argParser((I) => {
-            let L = Nx(I);
+            let L = parseNumericValue(I);
             if (isNaN(L) || L <= 0 || !Number.isInteger(L))
               throw new Ft("--task-budget must be a positive integer");
             return L;
@@ -6344,7 +6344,7 @@ function ki(v) {
         "Work directly on <branch> in the remote session (checkout and push to it). On self-hosted environments this includes pushing to the default branch when it is not protected \u2014 use GitHub branch protection to restrict. Mutually exclusive with --ref. Requires --cloud or --environment.",
       ).hideHelp(),
     ),
-    Br("run_main_options_built"),
+    profileCheckpoint("run_main_options_built"),
     { program: k, rootCommand: D, withStorageV5: x, withStartupHandles: U }
   );
 }
@@ -6355,7 +6355,7 @@ function Ei(v) {
   return Array.isArray(v) && v.every((k) => typeof k === "string") ? v : [];
 }
 function Ai(v) {
-  let k = Nx(v);
+  let k = parseNumericValue(v);
   if (Number.isNaN(k)) throw new Ft("must be a number");
   return k;
 }
@@ -6445,12 +6445,12 @@ function Pi(v) {
 }
 var xa = createLazyValue(() => c({ session_id: s(), ws_url: s(), work_dir: s().optional() }));
 process.env.NoDefaultCurrentDirectoryInExePath = "1";
-Br("main_tsx_entry");
-Ts("node_boot_ms", process.uptime() * 1000, 0);
-$Xn();
-Gxn();
+profileCheckpoint("main_tsx_entry");
+recordStartupPhase("node_boot_ms", process.uptime() * 1000, 0);
+recordSpawnToExec();
+startMdmRawRead();
 startKeychainPrefetch();
-Br("main_tsx_imports_loaded");
+profileCheckpoint("main_tsx_imports_loaded");
 var tr = () =>
   import("../../01-核心基础设施/设置-配置/showStandaloneSecurityDialog.nm3g924k.js").then(
     (v) => v.showStandaloneSecurityDialog,
@@ -6500,8 +6500,8 @@ function Ua() {
   let v = {};
   if (a.NODE_EXTRA_CA_CERTS) v.has_node_extra_ca_certs = !0;
   if (a.CLAUDE_CODE_CLIENT_CERT) v.has_client_cert = !0;
-  if (kje("--use-system-ca")) v.has_use_system_ca = !0;
-  if (kje("--use-openssl-ca")) v.has_use_openssl_ca = !0;
+  if (hasNodeOption("--use-system-ca")) v.has_use_system_ca = !0;
+  if (hasNodeOption("--use-openssl-ca")) v.has_use_openssl_ca = !0;
   if (a.CLAUDE_CODE_CERT_STORE) v.cert_store = a.CLAUDE_CODE_CERT_STORE;
   return v;
 }
@@ -6521,7 +6521,7 @@ async function Na(v, k) {
     worktree_count: R,
     ...k,
     ...!1,
-    warm_spare_claimed: BXn(),
+    warm_spare_claimed: wasWarmSpareClaimed(),
     gh_auth_status: fromEnum(T.status),
     sandbox_enabled: SandboxManager.isSandboxingEnabled(),
     are_unsandboxed_commands_allowed: SandboxManager.areUnsandboxedCommandsAllowed(),
@@ -6529,11 +6529,11 @@ async function Na(v, k) {
       SandboxManager.isAutoAllowBashIfSandboxedEnabled(),
     auto_updater_disabled: Sq(),
     prefers_reduced_motion: getInitialSettings().prefersReducedMotion ?? !1,
-    precompute_compaction_setting_enabled: Eo(
+    precompute_compaction_setting_enabled: resolveSetting(
       "precomputeCompactionEnabled",
       pLe(),
     ).value,
-    theme: Eo("theme", "dark").value,
+    theme: resolveSetting("theme", "dark").value,
     set_env_var_count: U.length,
     set_env_vars: U.join(","),
     nondefault_setting_count: D.length,
@@ -6545,18 +6545,18 @@ async function Na(v, k) {
   });
 }
 async function Hw(v) {
-  (Br("main_function_start"),
+  (profileCheckpoint("main_function_start"),
     Qr(),
     registerToolHosts(),
     oi(),
-    BJn(),
+    latchTuiTrialFromEnv(),
     process.on("exit", () => {
       La();
     }),
-    Br("main_warning_handler_initialized"));
+    profileCheckpoint("main_warning_handler_initialized"));
   let k = process.argv.indexOf("--handle-uri");
   if (k !== -1 && process.argv[k + 1]) {
-    let T = xHt(process.argv);
+    let T = getHandleUriInjectionError(process.argv);
     if (T) (console.error(T), process.exit(1));
     let x = process.argv[k + 1],
       { enableConfigs: U } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js");
@@ -6593,12 +6593,12 @@ async function Hw(v) {
     }
   }
   (ni({ interactivity: { kind: "detect" } }),
-    Br("main_before_run"),
+    profileCheckpoint("main_before_run"),
     await Ba(O, R, v),
-    Br("main_after_run"));
+    profileCheckpoint("main_after_run"));
 }
 async function Ba(v, k, O) {
-  Br("run_function_start");
+  profileCheckpoint("run_function_start");
   let {
       program: R,
       withStorageV5: T,
@@ -6616,29 +6616,29 @@ async function Ba(v, k, O) {
       pendingSSH: k,
     }),
     U = process.argv.slice(2),
-    D = px("-p", U) || px("--print", U),
-    N = y5t(Cir, U) !== -1;
+    D = isFlagPresent("-p", U) || isFlagPresent("--print", U),
+    N = findArgIndex(isCcProtocolUrl, U) !== -1;
   if (D && !N)
     return (
-      Br("run_before_parse"),
+      profileCheckpoint("run_before_parse"),
       await R.parseAsync(process.argv),
-      Br("run_after_parse"),
+      profileCheckpoint("run_after_parse"),
       R
     );
-  if (!vir(U) && !N)
+  if (!isHelpRequested(U) && !N)
     return (
-      Br("run_before_parse"),
+      profileCheckpoint("run_before_parse"),
       await R.parseAsync(process.argv),
-      Br("run_after_parse"),
+      profileCheckpoint("run_after_parse"),
       R
     );
   En(R, T);
   return (
-    Br("run_before_parse"),
+    profileCheckpoint("run_before_parse"),
     await R.parseAsync(process.argv),
-    Br("run_after_parse"),
-    Br("main_after_run"),
-    Fnt(),
+    profileCheckpoint("run_after_parse"),
+    profileCheckpoint("main_after_run"),
+    profileReport(),
     R
   );
 }
@@ -6649,7 +6649,7 @@ function La() {
     : process.stdout.isTTY
       ? process.stdout
       : void 0
-  )?.write(Cv);
+  )?.write(SHOW_CURSOR);
 }
 async function ja(v) {
   let {
@@ -6705,7 +6705,7 @@ async function ja(v) {
       isSSHPending: D,
       isRemoteMode: Nn(),
       hasTeleport: Boolean(R),
-      isSafeMode: Hr() || x.restricted === !0,
+      isSafeMode: isSafeMode() || x.restricted === !0,
       permissionMode: T,
       isBypassPermissionsModeAvailable: x.isBypassPermissionsModeAvailable,
       teammateAgentId: U?.agentId,
@@ -6729,7 +6729,7 @@ async function ja(v) {
     )),
     kLn(Nt),
     n(`[STARTUP] showSetupScreens() completed in ${Date.now() - ao}ms`),
-    ((!V && Bo()) || (!q && isWorkspacePersistedTrusted())) && !J && !uo() && !Nn())
+    ((!V && Bo()) || (!q && isWorkspacePersistedTrusted())) && !J && !isSimpleMode() && !Nn())
   ) {
     let le = Date.now();
     $e = getClaudeCodeMcpConfigs(ut, { storageV5: fe, credentials: oe }).then(
@@ -6742,7 +6742,7 @@ async function ja(v) {
     );
   else if (et) {
     try {
-      logEvent("tengu_claude_in_chrome_setup", { platform: u0(P()) });
+      logEvent("tengu_claude_in_chrome_setup", { platform: u0(getCurrentPlatform()) });
       let { mcpConfig: le, systemPrompt: mt } = setupClaudeInChrome();
       if (((ut = { ...ut, ...le }), mt))
         Rt = Rt
@@ -6751,7 +6751,7 @@ async function ja(v) {
 ${Rt}`
           : mt;
     } catch (le) {
-      (logEvent("tengu_claude_in_chrome_setup_failed", { platform: u0(P()) }),
+      (logEvent("tengu_claude_in_chrome_setup_failed", { platform: u0(getCurrentPlatform()) }),
         logError(le),
         n(`[Claude in Chrome] Error (startup offer): ${le}`));
     }
@@ -6877,7 +6877,7 @@ function Nr(v, k) {
       }),
       n(
         S1n({
-          cwd: Q(),
+          cwd: getCwd(),
           prefillLength: k.prefill?.length,
           repo: k.deepLinkRepo,
           lastFetch:
@@ -6889,9 +6889,9 @@ function Nr(v, k) {
       ),
       k.prefill)
     )
-      hln(v, { type: "deep-link", prefillLength: k.prefill.length });
+      setSessionPromptLaunchWarning(v, { type: "deep-link", prefillLength: k.prefill.length });
   } else if (k.prefill)
-    hln(v, { type: "prefill", prefillLength: k.prefill.length });
+    setSessionPromptLaunchWarning(v, { type: "prefill", prefillLength: k.prefill.length });
 }
 async function $a(v, k, O, R) {
   let { mainThreadAgentDefinition: T, remote: x } = v,
@@ -6992,7 +6992,7 @@ async function $a(v, k, O, R) {
   }
   let Qt = {
       ...St,
-      mode: zr() && w0t().isPlanModeRequired() ? "plan" : St.mode,
+      mode: isAgentSwarmsEnabled() && w0t().isPlanModeRequired() ? "plan" : St.mode,
     },
     jt = Ox(),
     ft = Oi({ remoteControlFlag: yt, isRemoteThinClient: Nn() || Boolean(Xe) });
@@ -7011,8 +7011,8 @@ async function $a(v, k, O, R) {
       agentNameRegistry: new Map(),
       sendMessagePins: {},
       agentTypesInvokedThisSession: new Set(),
-      verbose: No ?? Eo("verbose", !1).value,
-      showMessageTimestamps: Eo("showMessageTimestamps", !1).value,
+      verbose: No ?? resolveSetting("verbose", !1).value,
+      showMessageTimestamps: resolveSetting("showMessageTimestamps", !1).value,
       mainLoopModel: Rt,
       mainLoopModelForSession: null,
       isBriefOnly: jt,
@@ -7101,7 +7101,7 @@ async function $a(v, k, O, R) {
       attribution: lTe(),
       thinkingEnabled: nr,
       promptSuggestionEnabled: ght(),
-      awaySummaryEnabled: tIe(),
+      awaySummaryEnabled: isAwaySummaryEnabled(),
       displayedMessageContent: {},
       inbox: { messages: [] },
       promptSuggestion: { status: "empty" },
@@ -7215,7 +7215,7 @@ async function $a(v, k, O, R) {
           await logEventAsync("tengu_continue", { success: !1 }),
           await Ne(
             se,
-            Ct === void 0 ? "No conversation found to continue" : MSt(Ct),
+            Ct === void 0 ? "No conversation found to continue" : formatContinuedInMessage(Ct),
           )
         );
       let We = await $st(
@@ -7313,8 +7313,8 @@ async function $a(v, k, O, R) {
       }
       let de = !Z && x.length > 0,
         Qe = de ? randomUUID() : void 0,
-        ue = Tt ? Eb(Tt) : void 0,
-        Fe = ue && E1(ue) && ue !== "bypassPermissions" ? ue : void 0,
+        ue = Tt ? parsePermissionModeOrDefault(Tt) : void 0,
+        Fe = ue && isSelectablePermissionMode(ue) && ue !== "bypassPermissions" ? ue : void 0,
         ze = H("tengu_remote_backend", !1);
       if (Z && !ze)
         return await Ne(
@@ -7342,7 +7342,7 @@ Usage: claude --cloud "your task description"`,
         qo,
         Yo = null;
       if (Z) {
-        (logEvent("tengu_remote_attach_session", { session_id: Ee(Z) }), Nr(Se, k));
+        (logEvent("tengu_remote_attach_session", { session_id: sanitizeAnalyticsId(Z) }), Nr(Se, k));
         let [
             { attachRemote: nt },
             { createFleetViewHost: Po },
@@ -7412,7 +7412,7 @@ Usage: claude --cloud "your task description"`,
               : null;
         if (to === null)
           process.stderr.write(
-            ie.dim("Creating remote session\u2026") +
+            chalk.dim("Creating remote session\u2026") +
               `
 `,
           );
@@ -7447,7 +7447,7 @@ Usage: claude --cloud "your task description"`,
           oo &&
           FKn({ staysAttached: ze, launchMayForward: Le, hostConsent: qe })
         )
-          await Yn(se, { configHome: be(), storageV5: ae });
+          await Yn(se, { configHome: getClaudeConfigDir(), storageV5: ae });
         let zo = NKn({
             settingsToCloudEnabled: oo,
             launchMayForward: Le,
@@ -7581,7 +7581,7 @@ Usage: claude --cloud "your task description"`,
         if (
           ((ht = ct.notices),
           logEvent("tengu_remote_create_session_success", {
-            session_id: Ee(kt.id),
+            session_id: sanitizeAnalyticsId(kt.id),
             initial_prompt_withheld: kt.withheldInitialMessage !== void 0,
             branch_mode: H8(De, et),
             permission_mode_source: S(
@@ -7606,7 +7606,7 @@ Usage: claude --cloud "your task description"`,
         )
           logEvent("tengu_remote_model_gate_hint", {
             entry_point: S("interactive"),
-            session_id: Ee(kt.id),
+            session_id: sanitizeAnalyticsId(kt.id),
             permission_mode: fromEnumOpt(Mt) ?? S("unset"),
             requested_mode: fromEnumOpt(ue) ?? S("unset"),
             settings_mode: fromEnumOpt(At.permissionMode) ?? S("unset"),
@@ -7696,7 +7696,7 @@ Usage: claude --cloud "your task description"`,
           }),
         },
         Gr = wa(xt, void 0, { from: "cli", m: "0" }),
-        qr = hit("create", Gr, isViolinWoodEnabledCached()),
+        qr = buildCloudSessionStatusMessage("create", Gr, isViolinWoodEnabledCached()),
         Yr = Yo ? [Ht(Yo.text, Yo.level)] : [],
         Kr = ht.map((nt) => Ht(nt, "warning")),
         Jr = de ? Re({ content: x, uuid: Qe }) : null,
@@ -7819,7 +7819,7 @@ Usage: claude --cloud "your task description"`,
             Z = await validateSessionRepository(ne);
           if (Z.status === "host_unverified") {
             let Fe =
-              Z.sessionHost && !Do(Z.sessionHost)
+              Z.sessionHost && !isGitHubHost(Z.sessionHost)
                 ? `${Z.sessionHost}/${Z.sessionRepo}`
                 : (Z.sessionRepo ?? "");
             if (
@@ -7835,7 +7835,7 @@ Usage: claude --cloud "your task description"`,
               Z.status === "mismatch"
                 ? "tengu_teleport_error_repo_mismatch_sessions_api"
                 : "tengu_teleport_error_repo_not_in_git_dir_sessions_api",
-              { sessionId: Ee(Xe), stage: S("direct_arg_detect") },
+              { sessionId: sanitizeAnalyticsId(Xe), stage: S("direct_arg_detect") },
             );
             let Fe = Z.sessionRepo;
             if (Fe) {
@@ -7860,7 +7860,7 @@ Usage: claude --cloud "your task description"`,
 This repo is ${eo.currentDisplay}.`
                       : ""));
                 } else {
-                  if (Z.sessionHost && !Do(Z.sessionHost))
+                  if (Z.sessionHost && !isGitHubHost(Z.sessionHost))
                     ht = `${Z.sessionHost}/${Fe}`;
                   if (Z.rawRemoteUrl)
                     vt = `
@@ -7868,7 +7868,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
                 }
                 throw new Iu(
                   `You must run claude --teleport ${Xe} from a checkout of ${ht}.${vt}`,
-                  ie.red(`You must run claude --teleport ${Xe} from a checkout of ${ie.bold(ht)}.${vt}
+                  chalk.red(`You must run claude --teleport ${Xe} from a checkout of ${chalk.bold(ht)}.${vt}
 `),
                 );
               }
@@ -7876,7 +7876,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           } else if (Z.status === "error")
             throw new Iu(
               Z.errorMessage || "Failed to validate session",
-              ie.red(`Error: ${Z.errorMessage || "Failed to validate session"}
+              chalk.red(`Error: ${Z.errorMessage || "Failed to validate session"}
 `),
             );
           let { showTeleportErrorsImpl: de } =
@@ -8094,16 +8094,16 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       !k.forkSession &&
       Vt === void 0 &&
       !Ue &&
-      !Dze() &&
+      !hasEarlyInput() &&
       k.name === void 0 &&
       k.watchArtifact === void 0 &&
       k.watchArtifactNoAutoreact === void 0 &&
       !cliCarriesSessionConfig(k) &&
       ny() &&
-      FJe()
+      isPastSessionsExperimentEnabled()
     ) {
       (logEvent("tengu_fleetview", { viaResume: !0 }),
-        gOe(),
+        consumeEarlyInput(),
         import("../../02-功能模块/会话-历史-恢复/startBackgroundHousekeeping.t1hjzkg6.js").then((de) =>
           de.startBackgroundHousekeeping(B().host, ae),
         ));
@@ -8142,7 +8142,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
       );
   } else {
     let _e = je && oe.length === 0 ? je : void 0;
-    (Br("action_after_hooks"),
+    (profileCheckpoint("action_after_hooks"),
       jot(k),
       await Ur(k),
       saveMode(T0t?.isCoordinatorMode() ? "coordinator" : "normal"),

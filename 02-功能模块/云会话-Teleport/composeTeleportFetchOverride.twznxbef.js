@@ -12,9 +12,9 @@
 import { Tc, Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { $he } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
-import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { runGuardedFetch } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
+import { getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { getTeleportCacheState, revertTeleportCache, logTeleportFallbackOnce, verifyPreAnchorIntact, verifyToolsBaselineIntact } from "../../01-核心基础设施/共享小工具-未细化/chunk-qv8z365a.js";
 import { resolveProxyFetchOptions } from "../../01-核心基础设施/共享小工具-未细化/proxy-fetch-options.js";
 import { getCcrSessionConfig } from "../../01-核心基础设施/共享小工具-未细化/ccr-session-config.js";
@@ -98,7 +98,7 @@ function B(
   } = {},
 ) {
   if (!d) return r;
-  let o = (t, e) => (r ? r(t, e) : $he(t, e));
+  let o = (t, e) => (r ? r(t, e) : runGuardedFetch(t, e));
   return async (t, e) => {
     let f = getTeleportCacheState();
     if (f.status !== "active") return o(t, e);
@@ -125,7 +125,7 @@ function B(
       R =
         h === void 0
           ? null
-          : mn(
+          : hashSha256(
               Tc(
                 Array.isArray(h)
                   ? [h.some((s) => O(s)), h.filter((s) => !O(s))]
@@ -156,7 +156,7 @@ function B(
         m.set("content-type", s.get("content-type") ?? "application/json"));
       let l = s.get("anthropic-beta");
       if (l !== null) m.set("anthropic-beta", l);
-      for (let [F, M] of Object.entries(ZD())) m.set(F, M);
+      for (let [F, M] of Object.entries(getSessionAuthHeaders())) m.set(F, M);
       m.set("anthropic-version", f.marker.anthropic_version);
     } catch {
       return (
@@ -174,7 +174,7 @@ function B(
       C = setTimeout((s) => s.abort(), c, k),
       w = k.signal;
     try {
-      i = await $he(v, {
+      i = await runGuardedFetch(v, {
         ...(await resolveProxyFetchOptions(v)),
         method: "POST",
         headers: m,

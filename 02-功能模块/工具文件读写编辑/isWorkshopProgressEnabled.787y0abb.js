@@ -17,7 +17,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { VY, W3t } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-6421ybjb.js";
 import { ne, Hoe, Wer } from "../Artifact发布-渲染/chunk-rr78st95.js";
-import { LJe } from "../图表-Mermaid/chunk-743atbtj.js";
+import { isWorkshopHtmlFile } from "../图表-Mermaid/chunk-743atbtj.js";
 var m = 100,
   _ = 8,
   w = 131072,
@@ -72,7 +72,7 @@ function P(t, r) {
   if (t.raw.length < w) t.raw += r;
   if (t.matched === null) {
     let i = extractFilePaths(t.raw);
-    if (i.some(LJe)) t.matched = !0;
+    if (i.some(isWorkshopHtmlFile)) t.matched = !0;
     else if (t.raw.length >= g || (i.length > 0 && !t.batch)) {
       ((t.matched = !1), (t.raw = ""));
       return;

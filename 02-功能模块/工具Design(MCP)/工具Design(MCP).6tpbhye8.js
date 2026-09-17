@@ -15,7 +15,7 @@ import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48k
 import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Tn, ht, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -24,39 +24,39 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { NV, lj, agn, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
-  YA,
-  mbe,
-  hqe,
-  $sn,
-  Xee,
-  Yee,
-  Jee,
-  Adt,
-  Ice,
-  N4,
-  gbe,
-  H6n,
-  I6n,
-  _qe,
-  P6n,
-  O6n,
+  DesignSessionState,
+  deletePlansForProject,
+  MAX_IDENTIFIER_LENGTH,
+  areTargetsWithinPlanLimits,
+  PLAN_INVALIDATING_OPERATIONS,
+  deleteApprovedPlansForProject,
+  addVerifiedProjectGrant,
+  isProjectGrantVerified,
+  deleteVerifiedProjectGrantsForProject,
+  shouldRecardProject,
+  markProjectForRecard,
+  isProjectGrantIneligible,
+  approvePlan,
+  resolvePlanTargets,
+  checkPlanApproval,
+  extractPlanToken,
 } from "../Memory-CLAUDE.md/chunk-9b6sc1gb.js";
 import {
-  mqe,
-  Vee,
-  S6n,
-  C9,
-  b6n,
-  NPe,
-  gqe,
-  Kee,
-  ydt,
-  T6n,
-  E6n,
-} from "../DesignSync/chunk-20rab5yy.js";
-import { ube, u6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
-import "../DesignSync/chunk-aycc6z76.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+  isDesignConsentBit,
+  getDesignConsentPrompt,
+  invalidateDesignConsentCache,
+  seedDesignConsentBit,
+  hasDesignCredential,
+  resolveDesignAuth,
+  wouldNeedDesignConsent,
+  postDesignConsent,
+  checkDesignProjectGrant,
+  recordDesignProjectGrant,
+  createDesignGrantWatcher,
+} from "../DesignSync/design-consent-and-grants.js";
+import { isDesignSyncEnabled, u6n } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
+import "../DesignSync/design-oauth-credentials.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { mWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
 import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
@@ -445,7 +445,7 @@ function G(e) {
 }
 async function Te(e, t, n, r) {
   try {
-    let d = await NPe(r);
+    let d = await resolveDesignAuth(r);
     if (d.ok !== !0) return null;
     let o = await Se(
       e,
@@ -496,7 +496,7 @@ async function Te(e, t, n, r) {
           /[\u200C\u200D\uFE0F]/.test(i)
         )
           return null;
-        let C = oe(g, Ee);
+        let C = truncateToCodeUnits(g, Ee);
         return {
           name: C === g ? g : `${C.trimEnd()}\u2026`,
           sharingLabel: he[u],
@@ -519,7 +519,7 @@ var DesignTool = buildTool({
     get outputSchema() {
       return Ie();
     },
-    isEnabled: ube,
+    isEnabled: isDesignSyncEnabled,
     isConcurrencySafe(e) {
       if (e.operation === lj) return !0;
       return (L(e.operation) ?? K(e.operation))?.readOnly === !0;
@@ -560,7 +560,7 @@ var DesignTool = buildTool({
               "ClaudeDesign finalize_plan: project_id contains characters outside the server id charset (letters, digits, dot, underscore, dash).",
             errorCode: 1,
           };
-        if (n.length > hqe - 2)
+        if (n.length > MAX_IDENTIFIER_LENGTH - 2)
           return {
             result: !1,
             message:
@@ -571,8 +571,8 @@ var DesignTool = buildTool({
       return { result: !0 };
     },
     async checkPermissions(e, t) {
-      let n = t.toolState.get(YA),
-        r = e.operation === lj ? null : await gqe(n, t.credentials),
+      let n = t.toolState.get(DesignSessionState),
+        r = e.operation === lj ? null : await wouldNeedDesignConsent(n, t.credentials),
         d = {
           ...e,
           __consentBitShown: r,
@@ -582,7 +582,7 @@ var DesignTool = buildTool({
           __reservedTargetsAskShown: void 0,
           __finalizePlanAskShown: void 0,
         },
-        o = r !== null ? Vee(r) : null;
+        o = r !== null ? getDesignConsentPrompt(r) : null;
       if (e.operation === "finalize_plan" && e.arguments?.scope === "project")
         return {
           behavior: "deny",
@@ -628,8 +628,8 @@ var DesignTool = buildTool({
             e.arguments.plan_token.length > 0
           )
         ) {
-          let g = _qe(e.operation, e.arguments);
-          if (g.outcome !== "pass" || !$sn(g.targets)) {
+          let g = resolvePlanTargets(e.operation, e.arguments);
+          if (g.outcome !== "pass" || !areTargetsWithinPlanLimits(g.targets)) {
             let w = g.targets !== void 0 && g.targets.length === 0,
               C = g.outcome === "pass";
             return {
@@ -673,7 +673,7 @@ var DesignTool = buildTool({
       if (
         getToolPermissionContext(t).mode !== "plan" &&
         G(t) &&
-        P6n(n, e.operation, e.arguments).outcome === "allow"
+        checkPlanApproval(n, e.operation, e.arguments).outcome === "allow"
       )
         return { behavior: "allow", updatedInput: d };
       if (
@@ -696,13 +696,13 @@ var DesignTool = buildTool({
               },
             },
             g = e.arguments?.project_id;
-          if (typeof g !== "string" || g.length === 0 || !G(t) || N4(n, g))
+          if (typeof g !== "string" || g.length === 0 || !G(t) || shouldRecardProject(n, g))
             return u;
-          if (_qe(e.operation, e.arguments).outcome !== "pass") return u;
+          if (resolvePlanTargets(e.operation, e.arguments).outcome !== "pass") return u;
           if (getToolPermissionContext(t).mode === "plan") return u;
-          if (Adt(n, g)) return { behavior: "allow", updatedInput: d };
-          if ((await ydt(n, g, t.credentials)) === "granted" && !N4(n, g)) {
-            if ((Jee(n, g), getToolPermissionContext(t).mode !== "plan"))
+          if (isProjectGrantVerified(n, g)) return { behavior: "allow", updatedInput: d };
+          if ((await checkDesignProjectGrant(n, g, t.credentials)) === "granted" && !shouldRecardProject(n, g)) {
+            if ((addVerifiedProjectGrant(n, g), getToolPermissionContext(t).mode !== "plan"))
               return { behavior: "allow", updatedInput: d };
           }
           return u;
@@ -720,7 +720,7 @@ var DesignTool = buildTool({
           };
         let i = e.arguments?.project_id;
         if (typeof i === "string" && i.length > 0) {
-          if (H6n(n, i))
+          if (isProjectGrantIneligible(n, i))
             return {
               behavior: "deny",
               message: `ClaudeDesign ${e.operation}: this project cannot hold a durable write grant for this account (it may be shared from another organization) \u2014 use finalize_plan with writes (and deletes if needed), then pass the returned plan_token.`,
@@ -731,14 +731,14 @@ var DesignTool = buildTool({
                 classifierApprovable: !1,
               },
             };
-          let u = _qe(e.operation, e.arguments),
+          let u = resolvePlanTargets(e.operation, e.arguments),
             g = getToolPermissionContext(t).mode === "plan";
           if (u.outcome === "pass" && g) {
             if (!(
-              Adt(n, i) ||
-              (!N4(n, i) &&
-                (await ydt(n, i, t.credentials)) === "granted" &&
-                !N4(n, i))
+              isProjectGrantVerified(n, i) ||
+              (!shouldRecardProject(n, i) &&
+                (await checkDesignProjectGrant(n, i, t.credentials)) === "granted" &&
+                !shouldRecardProject(n, i))
             ))
               return {
                 behavior: "deny",
@@ -750,12 +750,12 @@ var DesignTool = buildTool({
                   classifierApprovable: !1,
                 },
               };
-            Jee(n, i);
+            addVerifiedProjectGrant(n, i);
           } else if (u.outcome === "pass") {
-            if (Adt(n, i)) return { behavior: "allow", updatedInput: d };
-            let w = await ydt(n, i, t.credentials);
-            if (w === "granted" && !N4(n, i)) {
-              if ((Jee(n, i), getToolPermissionContext(t).mode !== "plan"))
+            if (isProjectGrantVerified(n, i)) return { behavior: "allow", updatedInput: d };
+            let w = await checkDesignProjectGrant(n, i, t.credentials);
+            if (w === "granted" && !shouldRecardProject(n, i)) {
+              if ((addVerifiedProjectGrant(n, i), getToolPermissionContext(t).mode !== "plan"))
                 return { behavior: "allow", updatedInput: d };
             } else if (w === "unavailable")
               return {
@@ -828,11 +828,11 @@ var DesignTool = buildTool({
             }
           } else {
             if (!(
-              $sn(u.targets) &&
-              (Adt(n, i) ||
-                (!N4(n, i) &&
-                  (await ydt(n, i, t.credentials)) === "granted" &&
-                  !N4(n, i)))
+              areTargetsWithinPlanLimits(u.targets) &&
+              (isProjectGrantVerified(n, i) ||
+                (!shouldRecardProject(n, i) &&
+                  (await checkDesignProjectGrant(n, i, t.credentials)) === "granted" &&
+                  !shouldRecardProject(n, i)))
             )) {
               let I = u.targets !== void 0 && u.targets.length === 0;
               return {
@@ -850,7 +850,7 @@ var DesignTool = buildTool({
               };
             }
             return (
-              Jee(n, i),
+              addVerifiedProjectGrant(n, i),
               {
                 behavior: "ask",
                 message: `Design ${e.operation} writes to claude.ai/design.`,
@@ -906,19 +906,19 @@ var DesignTool = buildTool({
       };
     },
     async call(e, t) {
-      let n = t.toolState.get(YA),
+      let n = t.toolState.get(DesignSessionState),
         r = e.__consentAskCanReachUser ?? !1,
         d = r && re(t);
       if (e.operation === "finalize_plan" && r) {
         let h = (e.arguments ?? {}).project_id;
-        if (typeof h === "string" && h.length > 0) Yee(n, h);
+        if (typeof h === "string" && h.length > 0) deleteApprovedPlansForProject(n, h);
       }
-      if (Xee.has(e.operation)) {
+      if (PLAN_INVALIDATING_OPERATIONS.has(e.operation)) {
         let h = (e.arguments ?? {}).project_id;
         if (typeof h === "string" && h.length > 0)
-          (Yee(n, h), mbe(n, h), Ice(n, h), gbe(n, h));
+          (deleteApprovedPlansForProject(n, h), deletePlansForProject(n, h), deleteVerifiedProjectGrantsForProject(n, h), markProjectForRecard(n, h));
       }
-      let o = await NPe(t.credentials);
+      let o = await resolveDesignAuth(t.credentials);
       if (!o.ok)
         throw new R(
           Je(o, {
@@ -954,7 +954,7 @@ var DesignTool = buildTool({
           "design_tool_exec_backstop_tokenless_copy",
         );
       if (u !== null) {
-        let h = _qe(e.operation, e.arguments),
+        let h = resolvePlanTargets(e.operation, e.arguments),
           k = e.__reservedTargetsAskShown === !0;
         if (h.outcome !== "pass" && !k)
           throw new R(
@@ -974,7 +974,7 @@ var DesignTool = buildTool({
             G(t))
         ) {
           let h = e.arguments ?? {},
-            k = C.isError !== !0 ? O6n(C.content) : null,
+            k = C.isError !== !0 ? extractPlanToken(C.content) : null,
             f = (S) =>
               Array.isArray(S) ? S.filter((D) => typeof D === "string") : [];
           if (
@@ -982,7 +982,7 @@ var DesignTool = buildTool({
             typeof h.project_id === "string" &&
             h.scope !== "project"
           )
-            I6n(n, k.token, {
+            approvePlan(n, k.token, {
               projectId: h.project_id,
               writes: f(h.writes),
               deletes: f(h.deletes),
@@ -1007,18 +1007,18 @@ var DesignTool = buildTool({
       async function I(h) {
         try {
           let k = await Se(n, e.operation, e.arguments, p, g, w, t.credentials);
-          if (_ !== null && !g.aborted && k.isError !== !0) C9(n, _, !0);
+          if (_ !== null && !g.aborted && k.isError !== !0) seedDesignConsentBit(n, _, !0);
           if (
             u !== null &&
             !g.aborted &&
             k.isError !== !0 &&
-            ((y === u && !i) || !N4(n, u))
+            ((y === u && !i) || !shouldRecardProject(n, u))
           )
-            Jee(n, u);
+            addVerifiedProjectGrant(n, u);
           return k;
         } catch (k) {
           if (k instanceof Y) {
-            if ((Ice(n, k.projectId), S6n(n), h.grant === !0)) throw k;
+            if ((deleteVerifiedProjectGrantsForProject(n, k.projectId), invalidateDesignConsentCache(n), h.grant === !0)) throw k;
             if (k.projectId !== y || i) {
               if (
                 e.operation === "write_files" ||
@@ -1045,7 +1045,7 @@ var DesignTool = buildTool({
                 "design_tool_needs_project_grant_no_prompt",
               );
             try {
-              await T6n(n, k.projectId, t.credentials);
+              await recordDesignProjectGrant(n, k.projectId, t.credentials);
             } catch (S) {
               if (Ps(S).kind === "auth")
                 throw new R(
@@ -1061,21 +1061,21 @@ var DesignTool = buildTool({
           let f = k.consent;
           if (f !== _)
             throw (
-              C9(n, f, !1),
+              seedDesignConsentBit(n, f, !1),
               new R(
-                `${Vee(f)} The user hasn't granted this yet \u2014 ask them to retry (the prompt will show on the next call) or run /design consent.`,
+                `${getDesignConsentPrompt(f)} The user hasn't granted this yet \u2014 ask them to retry (the prompt will show on the next call) or run /design consent.`,
                 "design_tool_needs_consent_not_shown",
               )
             );
           if (!d)
             throw (
-              C9(n, f, !1),
+              seedDesignConsentBit(n, f, !1),
               new R(
-                `${Vee(f)} The user hasn't granted this \u2014 run /design consent to grant it (it can't be approved automatically in this permission mode).`,
+                `${getDesignConsentPrompt(f)} The user hasn't granted this \u2014 run /design consent to grant it (it can't be approved automatically in this permission mode).`,
                 "design_tool_needs_consent_no_prompt",
               )
             );
-          return (await Kee(n, f, t.credentials), I({ ...h, consent: !0 }));
+          return (await postDesignConsent(n, f, t.credentials), I({ ...h, consent: !0 }));
         }
       }
     },
@@ -1271,7 +1271,7 @@ function xe(e) {
   if (e == null || typeof e !== "object" || e.error !== "needs_consent")
     return null;
   let t = e.consent;
-  return mqe(t) ? t : null;
+  return isDesignConsentBit(t) ? t : null;
 }
 class Y extends Error {
   projectId;
@@ -1288,7 +1288,7 @@ function Ne(e) {
   if (
     typeof t !== "string" ||
     t.length === 0 ||
-    t.length > hqe - 2 ||
+    t.length > MAX_IDENTIFIER_LENGTH - 2 ||
     !/^[A-Za-z0-9._-]+$/.test(t)
   )
     return null;
@@ -1320,7 +1320,7 @@ function Be(e) {
   let t = e.replace(/\s+/g, " ").trim(),
     n = t.indexOf(". "),
     r = n > 0 ? t.slice(0, n + 1) : t;
-  return r.length > 140 ? oe(r, 140).trimEnd() + "\u2026" : r;
+  return r.length > 140 ? truncateToCodeUnits(r, 140).trimEnd() + "\u2026" : r;
 }
 async function Se(e, t, n, r, d, o, p) {
   try {
@@ -1530,7 +1530,7 @@ async function Ge(e, t, n) {
       return null;
   }
   let d = await Promise.race([
-    NPe(n).catch(() => null),
+    resolveDesignAuth(n).catch(() => null),
     sleep(be, t).then(() => null),
   ]);
   return d?.ok === !0 && d.accessToken !== e ? d.accessToken : null;
@@ -1548,7 +1548,7 @@ async function We(e, t) {
     !!d?.accessToken &&
     !!d.refreshToken &&
     d.scopes?.includes("user:design:read") === !0;
-  if (!o && (await b6n(e)))
+  if (!o && (await hasDesignCredential(e)))
     return `${r} The design credential (from /design login) is expired or revoked${n ? ", and /design login requires an interactive terminal \u2014 re-authenticate outside this session" : " \u2014 run /design login to re-authenticate"}.`;
   if (!o && d?.accessToken && !d.refreshToken) {
     let { source: p } = isHoverRestEnabled() && e !== void 0 ? await getAuthTokenSourceAsync(e) : getAuthTokenSource();
@@ -1659,6 +1659,6 @@ function Je(e, t) {
 mWn({
   isEnabled: u6n,
   createObserver: (e, t, n) =>
-    e.kind === "design_project_grant" ? E6n(t.get(YA), e.projectId, n) : null,
+    e.kind === "design_project_grant" ? createDesignGrantWatcher(t.get(DesignSessionState), e.projectId, n) : null,
 });
 export { DesignTool };

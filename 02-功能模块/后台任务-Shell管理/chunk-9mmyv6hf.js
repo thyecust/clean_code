@@ -16,7 +16,7 @@ import { logFeatureBad, withFeatureTelemetry } from "../../00-第三方库/lodas
 import { l, A, Jr, Gw, lNn, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { BG_EXIT_CAUSE_SESSION_IN_USE, setBgExitCause, readAndClearBgExitCause, readAndClearBgExitDetail } from "./chunk-z5vtnzjg.js";
-import { To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
@@ -33,16 +33,16 @@ import {
   FBe,
   dke,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { eb, bfe, Il, Pc, YE } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
+import { PROCESS_WRAPPER_ENV_VAR, FAST_CRASH_WINDOW_MS, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { Bs, eur } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { Wi, Ms, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jke, xhe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { RRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { i9, nSe, g4, Q0e } from "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { readLinuxProcState, sigtermThenKill, reapDetachedRepl, getProcessStartTime, isSameProcess, getProcessStartTimeAsync, captureProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
+import { readSocketTokenFile } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { removeGuiHostEntrypoint, NON_INHERITED_ENV_VARS, g4, removeBgDispatcherPlanEnvVars } from "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import {
   nyn,
   yj,
@@ -68,35 +68,35 @@ import {
   al,
 } from "./chunk-7wsy8vxb.js";
 import {
-  Y3t,
-  NJn,
-  jAe,
-  WAe,
-  GAe,
-  x7e,
-  oh,
-  Aj,
-  $Jn,
-  UJn,
-  lG,
-  Nh,
-  vT,
-  zAe,
-  H7e,
-  I7e,
-  P7e,
-  TC,
-  Abt,
+  NOT_OWNED_ERROR_CODE,
+  ensureSocketDirsOwned,
+  getDaemonAuthDir,
+  getCredentialFilePath,
+  getTokensFilePath,
+  getRendezvousSocketPath,
+  getPtySocketPath,
+  getSparePtyDir,
+  getSparePtySocketPath,
+  getSpareClaimSocketPath,
+  getPtyPidFilePath,
+  getPtyHostStderrPath,
+  getPtyLateOutputPath,
+  FRAME_KIND_DATA,
+  RING_BUFFER_MAX_BYTES,
+  MAX_FRAME_BYTES,
+  encodeDataFrame,
+  encodeControlFrame,
+  createFrameDecoder,
 } from "./chunk-djserjj5.js";
-import { Aye, JHe, DZt, NWe, W8, sle, xit } from "./chunk-gnmy62vg.js";
+import { areVersionTargetsDifferent, isVersionGreater, satisfiesVersionRequirement, createDecModeTracker, isLowMemory, killPtySocket, pingPtySocket } from "./chunk-gnmy62vg.js";
 import { receiveSpareClaim, bootClaimedSpare } from "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
-import { vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
+import { stripEnvironmentFlags } from "../../03-入口与运行时/Headless-SDK模式/cloud-flag-validation.js";
 import { readStreamLines } from "../../01-核心基础设施/共享小工具-未细化/read-stream-lines.js";
 import { fromJobState, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { randomBytes as Re } from "crypto";
 import { unlinkSync } from "fs";
 import {
@@ -158,7 +158,7 @@ function Se(e, t) {
     m.unref(),
     {
       feed(k) {
-        let v = pt(k.replace(st, "\x00"))
+        let v = stripAnsi(k.replace(st, "\x00"))
           .replace(
             /\r\n?/g,
             `
@@ -199,7 +199,7 @@ var Oe = [50, 100, 250, 500, 1000, 2000],
   Ne = 30,
   dt = 4,
   ct = 1e4,
-  xe = 8 * I7e,
+  xe = 8 * MAX_FRAME_BYTES,
   ht = 50;
 function ae(e, t, r) {
   let {
@@ -256,7 +256,7 @@ function ae(e, t, r) {
       }
       return !0;
     }
-    if (fe < 2 * I7e) (Ce.push(E), (fe += E.length));
+    if (fe < 2 * MAX_FRAME_BYTES) (Ce.push(E), (fe += E.length));
     return !1;
   }
   function ie() {
@@ -272,7 +272,7 @@ function ae(e, t, r) {
     m.emit({ exitCode: E, signal: I, hostStderr: O });
   }
   function ge(E) {
-    let I = Wi(Nh(e), 1048576)
+    let I = Wi(getPtyHostStderrPath(e), 1048576)
       .then((x) => x ?? "")
       .catch(() => "");
     (I.then((x) => {
@@ -291,7 +291,7 @@ function ae(e, t, r) {
     }),
       sigtermThenKill(C ? [-t, C] : [-t], E !== "hung" ? void 0 : q),
       reapDetachedRepl(C, F));
-    let O = Il().length > 0,
+    let O = getLauncherArgv().length > 0,
       L = O
         ? (x, V) =>
             void I.then(
@@ -313,7 +313,7 @@ function ae(e, t, r) {
     if ((L(-1), O)) setTimeout(j, 1000, -1).unref();
   }
   function rt(E) {
-    if (E.kind === zAe) {
+    if (E.kind === FRAME_KIND_DATA) {
       if (!se) {
         let I = v.write(E.payload);
         if (ue) g.emit(I);
@@ -327,13 +327,13 @@ function ae(e, t, r) {
       }
     } else if (E.ctrl.t === "hello") {
       if (G) ((se = !0), v.end(), (ee = ""));
-      else oe(vT(e)).catch(() => {});
+      else oe(getPtyLateOutputPath(e)).catch(() => {});
       if (
         ((G = !0),
         (C = E.ctrl.replPid),
         (J = E.ctrl.version),
         (F = void 0),
-        C > 1 && P() !== "windows")
+        C > 1 && getCurrentPlatform() !== "windows")
       ) {
         let I = C;
         captureProcessStartTimeAsync(I).then((O) => {
@@ -347,7 +347,7 @@ function ae(e, t, r) {
       }
       if (se) ((se = !1), k?.());
     } else if (E.ctrl.t === "exit") j(E.ctrl.code, E.ctrl.signal);
-    else if (E.ctrl.t === "ping") Q(TC({ t: "pong" }));
+    else if (E.ctrl.t === "ping") Q(encodeControlFrame({ t: "pong" }));
     else if (E.ctrl.t === "auth-required")
       if (o)
         (n(
@@ -387,7 +387,7 @@ function ae(e, t, r) {
       }),
       E.once("connect", () => {
         ((I = !0), (D = 0), (B = 0), (_ = E), E.on("drain", ie));
-        let O = Nh(e),
+        let O = getPtyHostStderrPath(e),
           L = `${O}.read`;
         if (
           (rename(O, L)
@@ -403,13 +403,13 @@ ${Y}`,
             })
             .catch(() => {})
             .finally(() => oe(L).catch(() => {})),
-          Q(TC({ t: "pong" })),
+          Q(encodeControlFrame({ t: "pong" })),
           o)
         )
-          Q(TC({ t: "auth", token: o }));
+          Q(encodeControlFrame({ t: "auth", token: o }));
         for (let V of Ce.splice(0)) Q(V);
         fe = 0;
-        let x = Abt(rt, (V) => {
+        let x = createFrameDecoder(rt, (V) => {
           (n(`[bg-pty] frame error: ${V}`, { level: "warn" }), E.destroy());
         });
         E.on("data", x);
@@ -422,11 +422,11 @@ ${Y}`,
       process.kill(t, 0);
     } catch {
       ((w = !0),
-        Wi(vT(e), 8388608)
+        Wi(getPtyLateOutputPath(e), 8388608)
           .then((I) => I ?? "")
           .then((I) => {
             if (!G && I.length > 0) g.emit(I.replaceAll(DAEMON_DETACH_APC, ""));
-            (oe(vT(e)).catch(() => {}), ge("connect"));
+            (oe(getPtyLateOutputPath(e)).catch(() => {}), ge("connect"));
           }));
       return;
     }
@@ -455,18 +455,18 @@ ${Y}`,
           } catch {}
         }
       ((w = !0),
-        Wi(vT(e), 8388608)
+        Wi(getPtyLateOutputPath(e), 8388608)
           .then((O) => O ?? "")
           .then((O) => {
             if (!G && O.length > 0) g.emit(O.replaceAll(DAEMON_DETACH_APC, ""));
-            oe(vT(e)).catch(() => {});
-            let L = Il().length > 0,
+            oe(getPtyLateOutputPath(e)).catch(() => {});
+            let L = getLauncherArgv().length > 0,
               x = (V, Y) => {
                 if (!L) {
                   j(V, Y);
                   return;
                 }
-                Wi(Nh(e), 1048576).then(
+                Wi(getPtyHostStderrPath(e), 1048576).then(
                   (_e) => j(V, Y, Me(_e ?? "")),
                   () => j(V, Y),
                 );
@@ -507,15 +507,15 @@ ${Y}`,
       write: (E) => {
         if (y) return;
         let I = Buffer.from(E, "utf8"),
-          O = I7e - 1;
-        for (let L = 0; L < I.length; L += O) Q(P7e(I.subarray(L, L + O)));
+          O = MAX_FRAME_BYTES - 1;
+        for (let L = 0; L < I.length; L += O) Q(encodeDataFrame(I.subarray(L, L + O)));
       },
-      resize: (E, I) => Q(TC({ t: "resize", cols: E, rows: I })),
+      resize: (E, I) => Q(encodeControlFrame({ t: "resize", cols: E, rows: I })),
       kill: (E) => {
         let I = E === "SIGKILL" ? "SIGKILL" : "SIGTERM",
-          O = Q(TC({ t: "kill", sig: I }));
+          O = Q(encodeControlFrame({ t: "kill", sig: I }));
         if (t <= 1) return;
-        if (P() === "windows" && I === "SIGTERM" && O) {
+        if (getCurrentPlatform() === "windows" && I === "SIGTERM" && O) {
           if (U) clearTimeout(U);
           ((U = setTimeout(
             (L, x) => {
@@ -735,20 +735,20 @@ function JYt() {
         detached: !0,
         windowsHide: !0,
         ...Bs("agent"),
-        ...(P() !== "windows" && { argv0: "claude bg-pty-host" }),
+        ...(getCurrentPlatform() !== "windows" && { argv0: "claude bg-pty-host" }),
       },
       c;
     try {
       c = Bun.spawn(d, {
         ...o,
-        stdio: ["ignore", "ignore", Bun.file(Nh(r.ptySock))],
+        stdio: ["ignore", "ignore", Bun.file(getPtyHostStderrPath(r.ptySock))],
       });
     } catch (g) {
       let m = A(g);
       if (m !== "ENOENT" && m !== "ENOSPC" && m !== "EACCES" && m !== "EROFS")
         throw g;
       n(
-        `bg: ptyHost stderr breadcrumb open failed (${m}) at ${Nh(r.ptySock)} \u2014 spawning with stderr discarded (crash diagnostics degraded): ${l(g)}`,
+        `bg: ptyHost stderr breadcrumb open failed (${m}) at ${getPtyHostStderrPath(r.ptySock)} \u2014 spawning with stderr discarded (crash diagnostics degraded): ${l(g)}`,
         { level: "warn" },
       );
       let { cgroup: k, ...v } = o;
@@ -766,16 +766,16 @@ function JYt() {
 }
 function Ye(e, t, r, s, p, d) {
   if (e.launch.mode === "exec") return e.launch.args.map(Fb);
-  if (t > 1 && r) return yj(["--resume", p ?? s, ...vye(d)]);
-  if (t > 1 && s !== e.sessionId) return yj(["--session-id", s, ...vye(d)]);
+  if (t > 1 && r) return yj(["--resume", p ?? s, ...stripEnvironmentFlags(d)]);
+  if (t > 1 && s !== e.sessionId) return yj(["--session-id", s, ...stripEnvironmentFlags(d)]);
   if (e.launch.mode === "resume")
     return yj([
       ...(e.launch.fork ? ["--session-id", e.sessionId, "--fork-session"] : []),
       "--resume",
       e.launch.transcriptPath ?? e.launch.sessionId,
-      ...vye(e.launch.flagArgs),
+      ...stripEnvironmentFlags(e.launch.flagArgs),
     ]);
-  return yj(vye(e.launch.args));
+  return yj(stripEnvironmentFlags(e.launch.args));
 }
 function Xe(e, t, r, s, p) {
   let d = { ...process.env };
@@ -784,7 +784,7 @@ function Xe(e, t, r, s, p) {
       ...d,
       ...(r && { CLAUDE_BG_AUTH_SNAPSHOT_PATH: r }),
       ...(isHoverRestEnabled() && H("tengu_hover_rest", !1) && { CLAUDE_CODE_HOVER_REST: "1" }),
-      ...(P() === "windows" && { CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT: "1" }),
+      ...(getCurrentPlatform() === "windows" && { CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT: "1" }),
       ...e.env,
       CLAUDE_CODE_SESSION_KIND: "bg",
       CLAUDE_BG_BACKEND: "daemon",
@@ -804,8 +804,8 @@ function Xe(e, t, r, s, p) {
   if (g) o[c ?? "PATH"] = g;
   if (process.env.CLAUDE_CONFIG_DIR)
     o.CLAUDE_CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR;
-  for (let m of nSe) if (!e.env?.[m]) delete o[m];
-  if ((g4(o), Q0e(o), !e.env?.CLAUDE_CODE_ENTRYPOINT)) i9(o);
+  for (let m of NON_INHERITED_ENV_VARS) if (!e.env?.[m]) delete o[m];
+  if ((g4(o), removeBgDispatcherPlanEnvVars(o), !e.env?.CLAUDE_CODE_ENTRYPOINT)) removeGuiHostEntrypoint(o);
   if (e.isolation === "worktree") o.CLAUDE_BG_ISOLATION = "worktree";
   for (let m of le) if (!e.env?.[m]) delete o[m];
   for (let m of Object.keys(o))
@@ -868,16 +868,16 @@ function Xe(e, t, r, s, p) {
   return o;
 }
 function qe(e, t) {
-  let r = process.env[eb];
-  if (t.launch.mode === "exec" || r === void 0) delete e[eb];
-  else e[eb] = r;
+  let r = process.env[PROCESS_WRAPPER_ENV_VAR];
+  if (t.launch.mode === "exec" || r === void 0) delete e[PROCESS_WRAPPER_ENV_VAR];
+  else e[PROCESS_WRAPPER_ENV_VAR] = r;
 }
 async function Ee(e, t) {
-  if (!t || P() !== "macos") return;
-  let r = WAe(e);
+  if (!t || getCurrentPlatform() !== "macos") return;
+  let r = getCredentialFilePath(e);
   try {
     return (
-      await et(jAe(), { recursive: !0, mode: 448 }),
+      await et(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
       await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
@@ -887,11 +887,11 @@ async function Ee(e, t) {
   }
 }
 async function Ae(e, t) {
-  if (P() === "windows") return;
-  let r = GAe(e);
+  if (getCurrentPlatform() === "windows") return;
+  let r = getTokensFilePath(e);
   try {
     return (
-      await et(jAe(), { recursive: !0, mode: 448 }),
+      await et(getDaemonAuthDir(), { recursive: !0, mode: 448 }),
       await writeFile(r, JSON.stringify(t), { mode: 384 }),
       r
     );
@@ -912,10 +912,10 @@ var le = [
   ],
   E8 = (e) => Ie(e.env?.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST),
   Tt = new Map(
-    [...nSe, ...le, ...Jet, ...UU, ...MBe].map((e) => [e.toUpperCase(), e]),
+    [...NON_INHERITED_ENV_VARS, ...le, ...Jet, ...UU, ...MBe].map((e) => [e.toUpperCase(), e]),
   );
 function te(e, t = []) {
-  if (P() !== "windows") return;
+  if (getCurrentPlatform() !== "windows") return;
   let r = new Map(t.map((s) => [s.toUpperCase(), s]));
   for (let s of Object.keys(e)) {
     let p = s.toUpperCase(),
@@ -995,7 +995,7 @@ class qW {
   replProcStart;
   ptyCols = 200;
   ptyRows = 50;
-  decModes = NWe();
+  decModes = createDecModeTracker();
   execTracker;
   execLastLine;
   offData;
@@ -1154,7 +1154,7 @@ class qW {
     if (this.record.outcome) return { respawned: !1, reason: "no-state" };
     if (
       this.record.cliVersion &&
-      JHe(
+      isVersionGreater(
         this.record.cliVersion,
         {
           ISSUES_EXPLAINER:
@@ -1176,7 +1176,7 @@ class qW {
         { respawned: !1, reason: "not-stale" }
       );
     if (
-      Aye(
+      areVersionTargetsDifferent(
         this.record.cliVersion,
         {
           ISSUES_EXPLAINER:
@@ -1241,7 +1241,7 @@ class qW {
   }
   isParkedIdleFork(e) {
     return (
-      (DZt(
+      (satisfiesVersionRequirement(
         this.record.cliVersion,
         ze,
         {
@@ -1348,7 +1348,7 @@ class qW {
         this.isVersionStale &&
         !(
           this.record.cliVersion &&
-          JHe(
+          isVersionGreater(
             this.record.cliVersion,
             {
               ISSUES_EXPLAINER:
@@ -1366,7 +1366,7 @@ class qW {
             }.VERSION,
           )
         ) &&
-        !Aye(
+        !areVersionTargetsDifferent(
           this.record.cliVersion,
           {
             ISSUES_EXPLAINER:
@@ -1396,7 +1396,7 @@ class qW {
       k = isSettled(s) && m.length > 0 && m.every((T) => tt.includes(T)),
       v =
         s.interactiveLineage === !0 &&
-        DZt(
+        satisfiesVersionRequirement(
           this.record.cliVersion,
           ze,
           {
@@ -1617,7 +1617,7 @@ class qW {
         e.launch.mode !== "exec" &&
         (e.launch.restoresTranscript ?? e.launch.mode === "resume")),
       (r.ptySockPath = t.ptySockPath),
-      (r.rvSockPath = x7e(e.short)),
+      (r.rvSockPath = getRendezvousSocketPath(e.short)),
       t.ptyAuth)
     )
       r.ptyAuth = t.ptyAuth;
@@ -1642,7 +1642,7 @@ class qW {
   }
   static buildClaimFrame(e, t, r) {
     let s = getJobDir(e.short),
-      p = Xe(e, s, t, x7e(e.short), r);
+      p = Xe(e, s, t, getRendezvousSocketPath(e.short), r);
     if ((delete p.CLAUDE_BG_PTY_AUTH, e.reattachEnv))
       Object.assign(p, e.reattachEnv);
     (g4(p), qe(p, e));
@@ -1719,7 +1719,7 @@ class qW {
       t.pendingRespawn === "upgrade" &&
         !(
           t.cliVersion &&
-          JHe(
+          isVersionGreater(
             t.cliVersion,
             {
               ISSUES_EXPLAINER:
@@ -1737,7 +1737,7 @@ class qW {
             }.VERSION,
           )
         ) &&
-        !Aye(
+        !areVersionTargetsDifferent(
           t.cliVersion,
           {
             ISSUES_EXPLAINER:
@@ -1821,7 +1821,7 @@ class qW {
       (p.pidPoll = setInterval(
         (d) => {
           if (d.record.outcome || !d.unverifiedSock) return;
-          xit(d.unverifiedSock).then((o) => {
+          pingPtySocket(d.unverifiedSock).then((o) => {
             if (o || d.record.outcome || d.phase.kind !== "spawning") return;
             d.settle("crashed");
           });
@@ -1844,7 +1844,7 @@ class qW {
     return this.sessionIdTakenLatch;
   }
   preInitErrorTail() {
-    let e = pt(this.ring.slice(this.ringSpawnMark).join(""))
+    let e = stripAnsi(this.ring.slice(this.ringSpawnMark).join(""))
       .replace(/\s+/g, " ")
       .trim();
     if (!e) return;
@@ -1873,7 +1873,7 @@ class qW {
     if (
       ((this.ptyCols = e),
       (this.ptyRows = t),
-      P() === "windows" && !this.workerReady)
+      getCurrentPlatform() === "windows" && !this.workerReady)
     ) {
       this.resizeDeferred = !0;
       return;
@@ -1883,7 +1883,7 @@ class qW {
     } catch {}
   }
   signalPtyPgrp() {
-    if (P() === "windows" || !this.record.pid) return;
+    if (getCurrentPlatform() === "windows" || !this.record.pid) return;
     setTimeout(
       (e) => {
         try {
@@ -1939,10 +1939,10 @@ class qW {
       pid: this.record.pid,
       procStart: this.procStart,
       sessionId: this.record.sessionId,
-      rendezvousSock: this.rvSockPath ?? x7e(this.dispatch.short),
+      rendezvousSock: this.rvSockPath ?? getRendezvousSocketPath(this.dispatch.short),
       ptySock: this.record.legacy
         ? void 0
-        : (this.ptySockPath ?? oh(this.dispatch.short)),
+        : (this.ptySockPath ?? getPtySocketPath(this.dispatch.short)),
       messagingSock: this.record.messagingSock,
       cliVersion: this.record.cliVersion,
       startedAt: this.record.startedAt,
@@ -2025,7 +2025,7 @@ class qW {
     )
       (clearTimeout(this.backoffTimer), (this.backoffTimer = null));
     if (this.unverifiedSock) {
-      sle(this.unverifiedSock, this.storageV5).finally(() =>
+      killPtySocket(this.unverifiedSock, this.storageV5).finally(() =>
         this.settle(this.killOutcome),
       );
       return;
@@ -2078,7 +2078,7 @@ class qW {
     let r = this.dispatch,
       s = getJobDir(r.short);
     await ensureJobTmpDir(r.short, this.storageV5).catch(() => {});
-    let p = Pc();
+    let p = getLauncherConfigError();
     if (p) {
       (logEvent("tengu_bg_launcher_worker_refused", { attempt: this.attempt }),
         logFeatureBad("agent_launcher", "worker_refused"),
@@ -2097,7 +2097,7 @@ class qW {
           : this.socketAuth(),
       );
     try {
-      await NJn(dirname(Nh(this.ptySockPath ?? oh(r.short))));
+      await ensureSocketDirsOwned(dirname(getPtyHostStderrPath(this.ptySockPath ?? getPtySocketPath(r.short))));
     } catch (R) {
       if (this.credentials)
         await Promise.all([
@@ -2114,7 +2114,7 @@ class qW {
           d ? ce(d).catch(() => {}) : void 0,
         ]);
       if (this.record.outcome) return;
-      if (A(R) === Y3t) {
+      if (A(R) === NOT_OWNED_ERROR_CODE) {
         let C = `worker socket directory is not owned by this user \u2014 ${l(R)}`;
         this.patch({ state: "crashed", detail: C });
         let F = this.dimNotice(C);
@@ -2126,7 +2126,7 @@ class qW {
       }
       return this.scheduleRespawn(l(R));
     }
-    await ce(Nh(this.ptySockPath ?? oh(r.short))).catch(() => {});
+    await ce(getPtyHostStderrPath(this.ptySockPath ?? getPtySocketPath(r.short))).catch(() => {});
     let c = r.launch.mode === "resume" ? r.launch.sessionId : void 0,
       g = !1,
       m = !1,
@@ -2140,7 +2140,7 @@ class qW {
         (_ = R?.respawnFlags ?? r.respawnFlags),
         (w = R?.cwd ?? r.cwd),
         (y = R?.interactiveLineage === !0));
-      let C = Mh(sN(this.storageV5)),
+      let C = createTranscriptSource(createBackendHandle(this.storageV5)),
         F = await resolveJobTranscript(k, w, R?.linkScanPath, void 0, C);
       if (((g = F.hasMessages), g))
         ((v = F.path), (this.liveTranscriptPath = F.path));
@@ -2190,7 +2190,7 @@ class qW {
       (this.attempt === 1 || (!g && k === r.sessionId))
         ? (r.launch.restoresTranscript ?? D.includes("--resume"))
         : D.includes("--resume");
-    let B = Xe(r, s, d, this.rvSockPath ?? x7e(r.short), this.socketAuth());
+    let B = Xe(r, s, d, this.rvSockPath ?? getRendezvousSocketPath(r.short), this.socketAuth());
     if (this.attempt > 1 && g && !t) {
       if (((B.CLAUDE_CODE_RESUME_INTERRUPTED_TURN = "1"), $e())) {
         if (((B.CLAUDE_CODE_RESUME_PROMPT ??= kt), y))
@@ -2218,13 +2218,13 @@ class qW {
         rows: U,
         cwd: w,
         env: B,
-        ptySock: this.ptySockPath ?? oh(r.short),
+        ptySock: this.ptySockPath ?? getPtySocketPath(r.short),
         short: r.short,
         ptyAuth: this.ptyAuth,
       });
     } catch (R) {
       let C = A(R),
-        F = Il()[0];
+        F = getLauncherArgv()[0];
       if (W(R)) {
         let K = await access(w).then(
           () => !0,
@@ -2275,7 +2275,7 @@ class qW {
       (this.execTracker?.dispose(),
         (this.execTracker = Se(s, this.storageV5)),
         (this.workerReady = !0));
-    if (P() === "windows") writeFile(lG(r.short), String(N.pid)).catch(() => {});
+    if (getCurrentPlatform() === "windows") writeFile(getPtyPidFilePath(r.short), String(N.pid)).catch(() => {});
     (this.wirePty(N),
       this.rv?.close(),
       (this.rv = void 0),
@@ -2321,7 +2321,7 @@ class qW {
   wirePty(e) {
     ((this.pty = e),
       this.transitionTo({ kind: "running" }),
-      (this.decModes = NWe()),
+      (this.decModes = createDecModeTracker()),
       e.onResume?.(() => {
         this.rv?.send({ type: "repaint" });
       }),
@@ -2359,11 +2359,11 @@ class qW {
     if (
       (this.ring.push(e),
       (this.ringBytes += e.length),
-      this.ringBytes > H7e * 1.25 && this.ring.length > 1)
+      this.ringBytes > RING_BUFFER_MAX_BYTES * 1.25 && this.ring.length > 1)
     ) {
       let t = 0,
         r = 0;
-      while (this.ringBytes - r > H7e && t < this.ring.length - 1)
+      while (this.ringBytes - r > RING_BUFFER_MAX_BYTES && t < this.ring.length - 1)
         ((r += this.ring[t].length), t++);
       (this.ring.splice(0, t),
         (this.ringBytes -= r),
@@ -2413,16 +2413,16 @@ class qW {
       c = this.workerReady && s !== void 0 && s >= wt;
     this.lastExitExternalStop = (t !== void 0 || St.has(e ?? -1)) && !p;
     let g = this.workerReady ? void 0 : this.preInitErrorTail(),
-      m = Il()[0],
-      k = r ? al(To(pt(r)), he) || void 0 : void 0,
+      m = getLauncherArgv()[0],
+      k = r ? al(normalizeWhitespace(stripAnsi(r)), he) || void 0 : void 0,
       v =
         m && !this.workerReady && !g && k
           ? `(launch command: \`${m}\` \u2026): ${k}`
           : void 0,
-      _ = !!m && e === 0 && !this.workerReady && s !== void 0 && s < bfe,
+      _ = !!m && e === 0 && !this.workerReady && s !== void 0 && s < FAST_CRASH_WINDOW_MS,
       w = e !== 0 ? readAndClearBgExitCause(getJobDir(this.dispatch.short)) : void 0,
       y = w ? readAndClearBgExitDetail(getJobDir(this.dispatch.short), w) : void 0,
-      D = y ? al(To(pt(y)), he) || void 0 : void 0,
+      D = y ? al(normalizeWhitespace(stripAnsi(y)), he) || void 0 : void 0,
       B = !g && D ? `: ${D}` : "",
       T = d && !!w && w === this.lastExitCause;
     this.lastExitCause = d ? w : void 0;
@@ -2538,7 +2538,7 @@ class qW {
     if (C) return this.settleCwdGone("boot", R);
     if (!this.workerReady && (this.attempt >= 2 || g || v)) {
       let G =
-        !t && W8()
+        !t && isLowMemory()
           ? " \u2014 possibly low memory \u2014 free some up and retry"
           : "";
       return (
@@ -2668,7 +2668,7 @@ class qW {
       return;
     }
     ((this.rv = He(
-      this.rvSockPath ?? x7e(this.dispatch.short),
+      this.rvSockPath ?? getRendezvousSocketPath(this.dispatch.short),
       (e) => {
         if (e.type === "heartbeat") this.lastRvHeartbeat = Date.now();
         else if (e.type === "auth-rejected" || e.type === "reply-rejected")
@@ -2748,7 +2748,7 @@ class qW {
     let t = this.record.pid;
     if (!t || this.record.outcome || this.isKilling || !this.pty) return !1;
     let r = await readLinuxProcState(t);
-    if (!Mhe(r)) return !1;
+    if (!isExitedProcessState(r)) return !1;
     if (
       this.record.outcome ||
       this.isKilling ||
@@ -2902,7 +2902,7 @@ async function Nt() {
   delete process.env.CLAUDE_BG_CLAIM_AUTH;
   let t = a.CLAUDE_BG_SOCKET_TOKENS_PATH;
   if ((delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH, !t)) return e;
-  let r = await RRe(t);
+  let r = await readSocketTokenFile(t);
   if ((await X(t).catch(() => {}), !r?.claimAuth))
     n("[bg-spare] tokens file unreadable; claim gate degraded", {
       level: "warn",
@@ -2911,14 +2911,14 @@ async function Nt() {
 }
 var xt = 2000;
 async function QYt(e) {
-  if (P() === "windows") return null;
-  if (Pc()) return null;
-  if (!(await YE())) {
+  if (getCurrentPlatform() === "windows") return null;
+  if (getLauncherConfigError()) return null;
+  if (!(await isLauncherRunnable())) {
     if (!e.launcherNotRunnableEpisode.logged)
       ((e.launcherNotRunnableEpisode.logged = !0),
         logFeatureBad("agent_launcher", "spare_launcher_not_runnable"),
         n(
-          `bg spare: launcher \`${Il()[0]}\` was deleted or is not executable \u2014 not minting a warm spare until it is restored`,
+          `bg spare: launcher \`${getLauncherArgv()[0]}\` was deleted or is not executable \u2014 not minting a warm spare until it is restored`,
           { level: "warn" },
         ));
     return null;
@@ -2927,15 +2927,15 @@ async function QYt(e) {
     (e.launcherNotRunnableEpisode.logged = !1),
     withFeatureTelemetry("daemon_bg_spare_refill", async () => {
       let t = Re(4).toString("hex"),
-        r = $Jn(t),
-        s = UJn(t),
+        r = getSparePtySocketPath(t),
+        s = getSpareClaimSocketPath(t),
         p = Re(16).toString("hex"),
         d = Re(16).toString("hex");
-      await Pt(Aj(), { recursive: !0, mode: 448 }).catch(() => {});
+      await Pt(getSparePtyDir(), { recursive: !0, mode: 448 }).catch(() => {});
       let o = await Ae(`spare-${t}`, { ptyAuth: p, claimAuth: d });
       (await X(r).catch(() => {}), await X(s).catch(() => {}));
       let { cmd: c, prefixArgs: g } = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 }),
-        m = await Ot(Nh(r), "w").catch(() => null),
+        m = await Ot(getPtyHostStderrPath(r), "w").catch(() => null),
         k = eur("agent"),
         v = k?.(),
         _;
@@ -2955,7 +2955,7 @@ async function QYt(e) {
             s,
           ],
           {
-            cwd: Aj(),
+            cwd: getSparePtyDir(),
             env: Mt(o ? { tokensPath: o } : { ptyAuth: p, claimAuth: d }),
             stdio: ["ignore", "ignore", m?.fd ?? "ignore"],
             detached: !0,
@@ -3013,21 +3013,21 @@ async function QYt(e) {
             if (isHoverRestEnabled() && e.credentials !== void 0)
               e.credentials.discardSpentCredentialFile(o).catch(() => {});
             else X(o).catch(() => {});
-          let N = ((await Wi(Nh(r), 1048576)) ?? "").slice(0, 2000).trim();
+          let N = ((await Wi(getPtyHostStderrPath(r), 1048576)) ?? "").slice(0, 2000).trim();
           if (N.length > 0)
             n(
               `bg spare host pid=${_.pid} exit stderr:
 ${N}`,
               { level: "warn" },
             );
-          (X(Nh(r)).catch(() => {}), X(vT(r)).catch(() => {}));
+          (X(getPtyHostStderrPath(r)).catch(() => {}), X(getPtyLateOutputPath(r)).catch(() => {}));
           let R = B - w.startedAt,
             C =
               !y &&
               !w.claimed &&
               !U &&
-              Il().length > 0 &&
-              (R < xt || (D === 0 && R < bfe));
+              getLauncherArgv().length > 0 &&
+              (R < xt || (D === 0 && R < FAST_CRASH_WINDOW_MS));
           if (U && !w.claimed && !y)
             n(
               `bg spare: host pid=${_.pid} died ${R}ms after spawn while the tool memory cgroup OOM-killed a member \u2014 not attributed to the launcher`,
@@ -3037,7 +3037,7 @@ ${N}`,
             (sigtermThenKill([-_.pid]),
               logFeatureBad("agent_launcher", "spare_fork_or_crash"),
               n(
-                `bg spare: launcher \`${Il()[0]}\` exited ${R}ms after spawn \u2014 it either daemonized instead of calling \`exec\` (launcher contract #1) or crashed at startup. Warm spares are disabled until the background service restarts; sessions still start, without the warm-attach shortcut.`,
+                `bg spare: launcher \`${getLauncherArgv()[0]}\` exited ${R}ms after spawn \u2014 it either daemonized instead of calling \`exec\` (launcher contract #1) or crashed at startup. Warm spares are disabled until the background service restarts; sessions still start, without the warm-attach shortcut.`,
                 { level: "warn" },
               ));
           e.onExit(C);
@@ -3051,8 +3051,8 @@ ${N}`,
 function Mt(e) {
   let t = { ...process.env };
   te(t);
-  for (let r of nSe) delete t[r];
-  if ((g4(t), Q0e(t), i9(t), FBe(t))) {
+  for (let r of NON_INHERITED_ENV_VARS) delete t[r];
+  if ((g4(t), removeBgDispatcherPlanEnvVars(t), removeGuiHostEntrypoint(t), FBe(t))) {
     let r = dke(t);
     if (r) (te(t, [r]), delete t[r]);
     for (let s of UU) delete t[s];
@@ -3061,7 +3061,7 @@ function Mt(e) {
   for (let r of le) delete t[r];
   for (let r of Object.keys(t))
     if (LRt.some((s) => r.startsWith(s))) delete t[r];
-  if (P() === "macos") delete t.CLAUDE_CODE_OAUTH_TOKEN;
+  if (getCurrentPlatform() === "macos") delete t.CLAUDE_CODE_OAUTH_TOKEN;
   return (
     Object.assign(t, {
       CLAUDE_CODE_SESSION_KIND: "bg",
@@ -3100,7 +3100,7 @@ function ZYt(e, t, r, s, p, d) {
         let g = connect(t.ptySock);
         (g.on("error", () => {}),
           g.once("connect", () => {
-            (g.write(TC({ t: "kill", sig: "SIGTERM" })), g.end());
+            (g.write(encodeControlFrame({ t: "kill", sig: "SIGTERM" })), g.end());
           }));
       }),
     o
@@ -3141,17 +3141,17 @@ function Ht(e, t) {
   });
 }
 async function eJt(e, t) {
-  if (P() === "windows") return;
+  if (getCurrentPlatform() === "windows") return;
   let r = new Set();
   for (let d of e.values()) {
     let o = d.rosterEntry().ptySock;
     if (o) r.add(o);
   }
-  let s = await readdir(Aj()).catch(() => []),
+  let s = await readdir(getSparePtyDir()).catch(() => []),
     p = 0;
   for (let d of s) {
     if (!d.endsWith(".pty.sock")) continue;
-    let o = pe(Aj(), d);
+    let o = pe(getSparePtyDir(), d);
     if (r.has(o)) continue;
     p++;
     let c = connect(o);
@@ -3160,7 +3160,7 @@ async function eJt(e, t) {
     }),
       c.once("connect", () => {
         (c.resume(),
-          c.write(TC({ t: "kill", sig: "SIGTERM" })),
+          c.write(encodeControlFrame({ t: "kill", sig: "SIGTERM" })),
           c.end(),
           setTimeout((g) => g.destroy(), 2000, c).unref());
       }));
@@ -3171,11 +3171,11 @@ async function eJt(e, t) {
     );
     if (o) {
       let c = d.slice(0, -o.length);
-      if (!s.includes(c)) X(pe(Aj(), d)).catch(() => {});
+      if (!s.includes(c)) X(pe(getSparePtyDir(), d)).catch(() => {});
     }
     if (d.endsWith(".claim.sock")) {
-      let c = pe(Aj(), `${d.slice(0, -11)}.pty.sock`);
-      if (!r.has(c)) X(pe(Aj(), d)).catch(() => {});
+      let c = pe(getSparePtyDir(), `${d.slice(0, -11)}.pty.sock`);
+      if (!r.has(c)) X(pe(getSparePtyDir(), d)).catch(() => {});
     }
   }
   if (p) t(`bg orphan-spare reap: ${p}`);

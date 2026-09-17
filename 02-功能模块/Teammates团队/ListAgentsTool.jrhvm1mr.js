@@ -10,10 +10,10 @@
 
 // [preload stripped] 原本在此预载 89 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Yb } from "./chunk-sr4920wy.js";
+import { isTeammateContext } from "./peer-target-guard.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { $i, jQn, cbn } from "./chunk-t899nada.js";
+import { LIST_AGENTS_TOOL_NAME, jQn, getListAgentsToolDescription } from "./list-agents-tool-constants.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var h = 1e4,
   d = createLazyValue(() =>
@@ -32,7 +32,7 @@ var h = 1e4,
     c({ listing: s().describe("Formatted list of reachable agents") }),
   ),
   ListAgentsTool = buildTool({
-    name: $i,
+    name: LIST_AGENTS_TOOL_NAME,
     aliases: [jQn],
     searchHint: "list agents you can SendMessage to",
     maxResultSizeChars: h,
@@ -40,7 +40,7 @@ var h = 1e4,
       return "list agents";
     },
     async description() {
-      return cbn();
+      return getListAgentsToolDescription();
     },
     userFacingName() {
       return "ListAgents";
@@ -64,7 +64,7 @@ var h = 1e4,
       return { result: !0 };
     },
     async prompt() {
-      return cbn();
+      return getListAgentsToolDescription();
     },
     renderToolUseMessage() {
       return null;
@@ -83,7 +83,7 @@ var h = 1e4,
             { channel: o, q: l, storageV5: e.storageV5 },
             e.credentials,
           ),
-          i(e, Yb(e)),
+          i(e, isTeammateContext(e)),
         ]);
       return { data: { listing: a(n.peers, u, n) } };
     },

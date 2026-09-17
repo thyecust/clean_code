@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -147,7 +147,7 @@ function ClaudeMdExternalIncludesDialog(Re) {
                     "\u2026 +",
                     T.length,
                     " ",
-                    x(T.length, "import"),
+                    pluralize(T.length, "import"),
                     " not shown.",
                   ],
                 }),

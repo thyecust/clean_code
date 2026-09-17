@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { REFUSE_INPUT_WINDOW_MS } from "../共享小工具-未细化/recent-window.js";
 import { useAnswerRefusalState } from "../共享小工具-未细化/use-answer-refusal-state.js";
-import { x, ln } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, countOccurrences } from "../核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jU, j5, DHn, LHn, NHn } from "./设置-配置.aqbb35ee.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -66,7 +66,7 @@ var N = 20,
 function ee(n, a) {
   let l = Math.max(1, a - Kt);
   return (
-    ln(
+    countOccurrences(
       Vm(n, l, "wrap"),
       `
 `,
@@ -80,11 +80,11 @@ function lt(n, a, l) {
 function te(n, a, l, s, u) {
   let g = l ? `(at most ${N} are listed)` : "(list trimmed to fit the screen)",
     c =
-      (s > 0 ? `, ${s} executing ${x(s, "a command", "commands")}` : "") +
-      (u > 0 ? `, ${u} ${x(u, "sandbox setting")}` : "");
+      (s > 0 ? `, ${s} executing ${pluralize(s, "a command", "commands")}` : "") +
+      (u > 0 ? `, ${u} ${pluralize(u, "sandbox setting")}` : "");
   return a
     ? `\u22EF and ${n} more not shown ${g}${c} \u2014 choose No unless you expected every one of these settings`
-    : `${n} ${x(n, "setting")} not shown ${g}${c} \u2014 choose No unless you expected every one of these settings`;
+    : `${n} ${pluralize(n, "setting")} not shown ${g}${c} \u2014 choose No unless you expected every one of these settings`;
 }
 function ut(n, a, l) {
   if (n.length === 0) return { head: [], tail: [], elided: 0 };
@@ -110,10 +110,10 @@ function ht(n) {
   let a = countMatching(Object.values(n.shellSettings), (g) => g !== void 0),
     l = Object.keys(n.envVars).length,
     s = [];
-  if (a > 0) s.push(`${x(a, "command setting")} \xD7${a}`);
+  if (a > 0) s.push(`${pluralize(a, "command setting")} \xD7${a}`);
   let u = Object.keys(n.sandboxSettings).length;
-  if (u > 0) s.push(`${x(u, "sandbox setting")} \xD7${u}`);
-  if (l > 0) s.push(`${x(l, "env var")} \xD7${l}`);
+  if (u > 0) s.push(`${pluralize(u, "sandbox setting")} \xD7${u}`);
+  if (l > 0) s.push(`${pluralize(l, "env var")} \xD7${l}`);
   if (n.hasHooks) s.push("hooks");
   return s.join(", ");
 }
@@ -171,13 +171,13 @@ function Oe(wn) {
     let j = Q.removedCount;
     A =
       Qe > 0
-        ? `\uFF0B ${Qe} other active ${x(Qe, "setting")} unchanged since your last approval`
+        ? `\uFF0B ${Qe} other active ${pluralize(Qe, "setting")} unchanged since your last approval`
         : null;
     let U;
     if (i[12] !== j)
       ((U =
         j > 0
-          ? `\u2212 ${j} previously approved ${x(j, "setting")} no longer ${j === 1 ? "requires" : "require"} approval`
+          ? `\u2212 ${j} previously approved ${pluralize(j, "setting")} no longer ${j === 1 ? "requires" : "require"} approval`
           : null),
         (i[12] = j),
         (i[13] = U));

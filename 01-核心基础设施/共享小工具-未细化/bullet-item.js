@@ -10,7 +10,7 @@
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { L } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "./chunk-2c9tjhwd.js";
 function BulletItem(R) {
   let h = _(4),
@@ -21,7 +21,7 @@ function BulletItem(R) {
       "aria-hidden": !0,
       width: 2,
       flexShrink: 0,
-      children: e(t, { children: L.bullet }),
+      children: e(t, { children: figures.bullet }),
     })),
       (h[0] = m));
   else m = h[0];

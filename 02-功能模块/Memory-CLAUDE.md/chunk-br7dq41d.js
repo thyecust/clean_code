@@ -16,11 +16,11 @@ import { Tr, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isWorkspacePersistedTrusted, P6, XUe, Gse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { reanchorGitFileWatcher, findCanonicalGitRootUncached, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { ot, pf } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { getSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { relocateBgSessionCwd } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { JYe, ON, Df, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./Memory-CLAUDE.md.vx19drc8.js";
@@ -41,9 +41,9 @@ import {
   U9t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
-import { iM } from "../文件监听-Watch/chunk-mmg1rsp2.js";
+import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
 import { R8, $z } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { Ic } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { escapePromptText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { homedir } from "os";
 import { realpath, stat as j } from "fs/promises";
@@ -74,7 +74,7 @@ function R(e, t) {
 }
 function D(e, t, o) {
   let { relativePattern: c, root: s } = patternWithRoot(e, t),
-    l = relativePath(s ?? Q(), o);
+    l = relativePath(s ?? getCwd(), o);
   if (l === ".." || l.startsWith("../")) return !1;
   let r = c
     .replace(/\/{2,}/g, "/")
@@ -132,7 +132,7 @@ async function validateCdTarget(e, t) {
     c = o;
   }
   let s = zn(c);
-  if (s === Q() && s === he()) return { result: "same", directory: c };
+  if (s === getCwd() && s === he()) return { result: "same", directory: c };
   let l = R({ requestedPath: o, canonicalPath: c }, t);
   if (l.result !== "allowed")
     return { result: "blocked_by_rule", directory: c, check: l };
@@ -142,7 +142,7 @@ function cdRuleRefusalMessage(e, t, o = (s) => s, c) {
   let s = c?.terminalAffordances !== !1,
     l = c?.display ?? ((r) => r);
   if (((e = l(e)), t.result === "blockedByRule")) {
-    let r = l(Er(t.rule.ruleValue)),
+    let r = l(formatPermissionRule(t.rule.ruleValue)),
       d = permissionRuleSourceDisplayString(t.rule.source);
     if (t.rule.ruleValue.ruleContent === void 0)
       return s
@@ -170,7 +170,7 @@ async function N(e, t, o) {
   return bXn(d);
 }
 async function relocateSession(e, t, o, c) {
-  let s = Q(),
+  let s = getCwd(),
     l = he(),
     r = dedupe([l, s]),
     d = dedupe(
@@ -185,7 +185,7 @@ async function relocateSession(e, t, o, c) {
         }
       }),
     );
-  (Yu(t), pu(t), ES(Q()));
+  (Yu(t), pu(t), ES(getCwd()));
   let m = !0;
   try {
     await relocateSessionTranscript(c);
@@ -204,7 +204,7 @@ async function relocateSession(e, t, o, c) {
   }
   if (m)
     try {
-      await relocateBgSessionCwd(Q(), c);
+      await relocateBgSessionCwd(getCwd(), c);
     } catch (p) {
       n(`directory move: bg session state rehome failed (continuing): ${p}`, {
         level: "error",
@@ -228,7 +228,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   try {
-    await y5e(await gV("skills", Q()));
+    await y5e(await gV("skills", getCwd()));
   } catch (p) {
     n(
       `directory move: registering the new directory's skills failed (continuing without them): ${p}`,
@@ -236,7 +236,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   try {
-    await iM.rehome();
+    await skillChangeDetector.rehome();
   } catch (p) {
     n(
       `directory move: re-targeting the skill watcher failed (continuing with the previous watch): ${p}`,
@@ -258,7 +258,7 @@ async function relocateSession(e, t, o, c) {
       { level: "error" },
     );
   }
-  let g = Ic(t),
+  let g = escapePromptText(t),
     w = Na(
       `The session's working directory has changed to ${g} (${o === "cd_command" ? "via /cd" : "by the user"}). The environment block at the start of this conversation still names the ` +
         "previous directory \u2014 that information is stale. All tool calls and " +
@@ -469,7 +469,7 @@ async function handleSetCwdControlRequest(e, t) {
       level: "error",
     });
   }
-  let g = Q();
+  let g = getCwd();
   return {
     kind: "response",
     response: {

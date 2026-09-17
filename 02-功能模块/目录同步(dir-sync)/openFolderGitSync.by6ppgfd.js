@@ -13,13 +13,13 @@ import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Ct, vht, xk, TKn, Fht, jht, pH, tj, $_ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import "../文件同步-Sync/chunk-ht8ydg1v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import "../文件同步-Sync/sync-journal.js";
+import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { Jpt, Zpt, mte, Ybe } from "./chunk-zbxyj64j.js";
 import { I9, Cze, Qan } from "../Git-Worktree/chunk-v967hawf.js";
 import "../文件同步-Sync/chunk-tqwnv5vj.js";
@@ -46,11 +46,11 @@ import {
   V9n,
   qpt,
 } from "./chunk-gbhqtdpn.js";
-import { zpt } from "./chunk-1vkmxx3s.js";
+import { createDirSyncJournalTransport } from "./dir-sync-git-lane.js";
 import "../../01-核心基础设施/共享小工具-未细化/truncate-with-ellipsis.js";
 import "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { sanitizePathSegment, resolveDirSyncRecordLocation } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-record-path.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { mkdir } from "fs/promises";
 import { join as q } from "path";
 var M = new Set();
@@ -70,7 +70,7 @@ function W({ folder: e }) {
       return { ignored: m, unjudged: M, unjudgeable: y };
     },
     trackedHere: async () => new Map(),
-    modesTrusted: async () => P() !== "windows",
+    modesTrusted: async () => getCurrentPlatform() !== "windows",
     filterAttributed: async () => M,
     cleanFilterBlobIds: async () => new Map(),
   };
@@ -677,7 +677,7 @@ async function openFolderGitSync({
         push: j.push,
         recordPath: c.path,
         snapshot: j.snapshot,
-        transport: zpt({ client: D, direct: D }),
+        transport: createDirSyncJournalTransport({ client: D, direct: D }),
         applyDown: gFt({
           gitRoot: t,
           realRoot: a,
@@ -692,7 +692,7 @@ async function openFolderGitSync({
               async () => k,
               (w) =>
                 y(
-                  `When Claude deletes or replaces a file in the cloud, your copy is moved to ${io(w, { maxCodeUnits: 512 })} on this machine, not discarded`,
+                  `When Claude deletes or replaces a file in the cloud, your copy is moved to ${formatSingleLineText(w, { maxCodeUnits: 512 })} on this machine, not discarded`,
                   "info",
                 ),
             ),
@@ -887,7 +887,7 @@ function he(e) {
   return (d, h) => {
     let m = [...d]
         .filter(([, g]) => g > 0)
-        .map(([g, R]) => `${R} ${x(R, "file")} ${me[g]}`),
+        .map(([g, R]) => `${R} ${pluralize(R, "file")} ${me[g]}`),
       y = m.join(", ");
     if (y !== t) {
       if (((t = y), m.length > 0))
@@ -896,7 +896,7 @@ function he(e) {
     if (h !== s) {
       if (((s = h), h > 0))
         e(
-          `${h} ${x(h, "file")} in this folder changed while ${x(h, "it was", "they were")} being read; ${x(h, "it goes", "they go")} up with your next message`,
+          `${h} ${pluralize(h, "file")} in this folder changed while ${pluralize(h, "it was", "they were")} being read; ${pluralize(h, "it goes", "they go")} up with your next message`,
           "info",
         );
     }

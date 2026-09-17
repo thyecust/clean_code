@@ -7,32 +7,32 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { BHt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { wrapInCodeFence } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { K, sn, bB, Prt, kg, HL } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getProcessStartTime, isSameProcessAsync, ownProcStart } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
-  K_,
-  rJ,
-  Q7e,
-  _bn,
-  uGt,
-  Ybt,
-  SK,
-  qQn,
-  mN,
-  eXe,
-  Jbt,
-  zQn,
-} from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+  formatCronSchedule,
+  getScheduledTasksPath,
+  readScheduledTasks,
+  isWorkspaceRestricted,
+  hasScheduledTasks,
+  writeScheduledTasks,
+  deleteScheduledTasks,
+  updateTasksLastFiredAt,
+  DEFAULT_CRON_JITTER_CONFIG,
+  computeRecurringTaskFireTime,
+  computeOneShotTaskFireTime,
+  filterOverdueTasks,
+} from "../后台任务-Shell管理/scheduled-tasks.js";
 import { resolveGitDir, getCommonDir } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
   mkdir as _e,
@@ -236,7 +236,7 @@ function createCronScheduler(r) {
     );
   }
   async function V(o) {
-    let h = _bn(k) ? [] : await Q7e(k),
+    let h = isWorkspaceRestricted(k) ? [] : await readScheduledTasks(k),
       p = z
         ? await z().catch((d) => {
             if (getClaimRegistry().claim("cron_extra_tasks_load_bad"))
@@ -257,11 +257,11 @@ function createCronScheduler(r) {
           (d.createdByProcStart = ownProcStart()),
           (_ = !0));
     if (_)
-      await Ybt(h, k).catch((d) =>
+      await writeScheduledTasks(h, k).catch((d) =>
         n(`[ScheduledTasks] failed to refresh task pids: ${d}`),
       );
     let M = Date.now(),
-      e = zQn(h, M).filter(
+      e = filterOverdueTasks(h, M).filter(
         (d) => !d.recurring && !re.has(d.id) && (!H || H(d)) && te(d),
       );
     if (e.length > 0) {
@@ -275,7 +275,7 @@ function createCronScheduler(r) {
       )
         u(e);
       else t(be(e));
-      (SK(
+      (deleteScheduledTasks(
         e.map((d) => d.id),
         k,
       ).catch((d) => n(`[ScheduledTasks] failed to remove missed tasks: ${d}`)),
@@ -288,15 +288,15 @@ function createCronScheduler(r) {
     let o = Date.now(),
       h = new Set(),
       p = [],
-      _ = fe?.() ?? mN;
+      _ = fe?.() ?? DEFAULT_CRON_JITTER_CONFIG;
     function M(e, d) {
       if (H && !H(e)) return;
       if ((h.add(e.id), D.has(e.id))) return;
       let x = I.get(e.id);
       if (x === void 0) {
         let C = e.recurring
-          ? eXe(e.cron, e.lastFiredAt ?? e.createdAt, e.id, _)
-          : Jbt(e.cron, e.createdAt, e.id, _);
+          ? computeRecurringTaskFireTime(e.cron, e.lastFiredAt ?? e.createdAt, e.id, _)
+          : computeOneShotTaskFireTime(e.cron, e.createdAt, e.id, _);
         if (C === null)
           logFeatureBad("cron_task_fire", "next_fire_unresolvable", {
             recurring: e.recurring ?? !1,
@@ -334,7 +334,7 @@ function createCronScheduler(r) {
           logEvent("tengu_scheduled_task_expired", { taskId: e.id, ageHours: C }));
       }
       if (e.recurring && !ne) {
-        let C = eXe(e.cron, o, e.id, _);
+        let C = computeRecurringTaskFireTime(e.cron, o, e.id, _);
         if (C === null) logFeatureSad("cron_task_fire", "reschedule_unresolvable");
         let pe = C ?? 1 / 0;
         if ((I.set(e.id, pe), !d)) p.push(e.id);
@@ -342,7 +342,7 @@ function createCronScheduler(r) {
       else
         (D.add(e.id),
           I.set(e.id, 1 / 0),
-          SK([e.id], k)
+          deleteScheduledTasks([e.id], k)
             .catch((C) =>
               n(`[ScheduledTasks] failed to remove task ${e.id}: ${C}`),
             )
@@ -351,7 +351,7 @@ function createCronScheduler(r) {
     for (let e of J) if (te(e)) M(e, !1);
     if (p.length > 0) {
       for (let e of p) D.add(e);
-      qQn(p, o, k)
+      updateTasksLastFiredAt(p, o, k)
         .catch((e) => n(`[ScheduledTasks] failed to persist lastFiredAt: ${e}`))
         .finally(() => {
           for (let e of p) D.delete(e);
@@ -390,7 +390,7 @@ function createCronScheduler(r) {
       }, Oe)),
         E.unref?.());
     V(!0).then(W);
-    let h = rJ(k);
+    let h = getScheduledTasksPath(k);
     ((O = o.watch(h, {
       persistent: !1,
       ignoreInitial: !0,
@@ -412,16 +412,16 @@ function createCronScheduler(r) {
     start() {
       if (((L = !1), k !== void 0)) {
         (n(
-          `[ScheduledTasks] scheduler start() \u2014 dir=${k}, hasTasks=${uGt(k)}`,
+          `[ScheduledTasks] scheduler start() \u2014 dir=${k}, hasTasks=${hasScheduledTasks(k)}`,
         ),
           G());
         return;
       }
       if (
         (n(
-          `[ScheduledTasks] scheduler start() \u2014 enabled=${Prt()}, hasTasks=${uGt()}`,
+          `[ScheduledTasks] scheduler start() \u2014 enabled=${Prt()}, hasTasks=${hasScheduledTasks()}`,
         ),
-        !Prt() && (S || z !== void 0 || uGt()))
+        !Prt() && (S || z !== void 0 || hasScheduledTasks()))
       )
         bB(!0);
       if (Prt()) {
@@ -461,8 +461,8 @@ Do NOT execute ${t ? "these prompts" : "this prompt"} yet. First use the AskUser
     S = r.map(
       (
         l,
-      ) => `${`[${K_(l.cron)}, created ${new Date(l.createdAt).toLocaleString()}]`}
-${BHt(l.prompt)}`,
+      ) => `${`[${formatCronSchedule(l.cron)}, created ${new Date(l.createdAt).toLocaleString()}]`}
+${wrapInCodeFence(l.prompt)}`,
     );
   return `${a}
 

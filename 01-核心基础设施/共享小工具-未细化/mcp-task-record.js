@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { rg } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { Dh, Md } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { generateTaskId, createPendingTask } from "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 function formatMcpServerToolLabel(t, r) {
   return `${rg(t) ?? ""}/${rg(r) ?? ""}`;
 }
@@ -23,9 +23,9 @@ function createMcpTaskRecord({
   driveAbortController: p,
   ttlExpiresAt: l,
 }) {
-  let e = Dh("mcp_task");
+  let e = generateTaskId("mcp_task");
   return {
-    ...Md(e, "mcp_task", formatMcpServerToolLabel(t, r), o),
+    ...createPendingTask(e, "mcp_task", formatMcpServerToolLabel(t, r), o),
     type: "mcp_task",
     status: "running",
     serverName: t,

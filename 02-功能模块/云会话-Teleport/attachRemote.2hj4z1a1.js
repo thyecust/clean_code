@@ -21,7 +21,7 @@ import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { Uot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { hit } from "../../01-核心基础设施/共享小工具-未细化/chunk-ctr3zhmb.js";
+import { buildCloudSessionStatusMessage } from "../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
 function de(r) {
   if (!(r instanceof Iu)) return null;
   let e = r.formattedMessage;
@@ -150,7 +150,7 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
     a.catch(() => {});
     let A = wa(e, void 0, { from: "cli", m: "0" }),
       w = isViolinWoodEnabledCached(),
-      P = hit("attach", A, w),
+      P = buildCloudSessionStatusMessage("attach", A, w),
       y = {
         ...D(),
         ...t?.initialStateOverride,

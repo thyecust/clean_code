@@ -12,9 +12,9 @@
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
-import { jk, cCe } from "./chunk-6b13bhw1.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { isInITerm2, getIt2Command, isIt2CliAvailable } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
+import { SwarmPaneError, assertNoControlCharacters } from "./team-file-store.js";
 import { createMutex } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 function d(e) {
   return execFileNoThrow(getIt2Command(), e);
@@ -97,7 +97,7 @@ class g {
               continue;
             }
           }
-          throw new jk(`Failed to create iTerm2 split pane: ${m.stderr}`);
+          throw new SwarmPaneError(`Failed to create iTerm2 split pane: ${m.stderr}`);
         }
         let c = p(m.stdout);
         if (!c)
@@ -117,7 +117,7 @@ class g {
   }
   async sendCommandToPane(e, s, o) {
     try {
-      cCe(s);
+      assertNoControlCharacters(s);
     } catch (i) {
       throw (logFeatureBad("swarm_pane_spawn", "swarm_pane_command_control_chars"), i);
     }
@@ -125,7 +125,7 @@ class g {
     await d(["session", "send", ...t, "\x15"]);
     let r = await d(["session", "run", ...t, s]);
     if (r.code !== 0)
-      throw new jk(`Failed to send command to iTerm2 pane ${e}: ${r.stderr}`);
+      throw new SwarmPaneError(`Failed to send command to iTerm2 pane ${e}: ${r.stderr}`);
   }
   async setPaneBorderColor(e, s, o) {}
   async setPaneTitle(e, s, o, t) {}

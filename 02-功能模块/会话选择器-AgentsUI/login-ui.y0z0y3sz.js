@@ -33,7 +33,7 @@ import "../权限系统/permission-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
@@ -56,10 +56,10 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 export {
   p$n as LOGIN_SUCCESS_ENV_OVERRIDE_WARNING,
   Kz as Login,

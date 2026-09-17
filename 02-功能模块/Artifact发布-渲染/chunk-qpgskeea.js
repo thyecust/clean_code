@@ -10,7 +10,7 @@
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, Xu, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -574,7 +574,7 @@ function Ne(t, e) {
   return (t >= 65520 && t <= 65528) || (t >= 917504 && t <= 921599);
 }
 function Fe(t) {
-  if (t.length > ae || !Wc(t) || new TextEncoder().encode(t).length > ae)
+  if (t.length > ae || !isWellFormed(t) || new TextEncoder().encode(t).length > ae)
     return !1;
   for (let e of t) {
     let n = e.codePointAt(0);
@@ -612,7 +612,7 @@ function Ye(t, e) {
   if (n === _e) return { anchorFileDegraded: !0 };
   let r = () => (k(t, "anchor_file"), { anchorFileDegraded: !0 });
   if (typeof n !== "string") return r();
-  if (!Wc(n)) return r();
+  if (!isWellFormed(n)) return r();
   if (new TextEncoder().encode(n).length > 512) return r();
   for (let u of n) {
     let l = u.codePointAt(0);

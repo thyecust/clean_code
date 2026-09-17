@@ -7,16 +7,16 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Mw, pnt, I2e, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
+import { isNestedGitLabProject, repoDetectionGuards, resolveRemote, detectCurrentRepositoryWithHost } from "../Git-Worktree/git-repository-detection.js";
 import { findGitRoot, getBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   Ds,
@@ -37,7 +37,7 @@ import {
   FLe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { vze, Rze, pI } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import { Oan, Dan, dFt, _ze, Jb, pFt, Lan, Kce } from "../Git-Worktree/chunk-7jshw9s9.js";
+import { LOCAL_DIVERGENCE_DEADLINE_MS, probeLocalDivergence, unservedLayout, failureCause, runProbeGit, countProbeGitOutput, listPathsChangedFromHead, nullOnAbort } from "../Git-Worktree/local-divergence-probe.js";
 import { Xbe } from "../Git-Worktree/chunk-v967hawf.js";
 import { MAX_OVERLAY_BUNDLE_BYTES } from "../云会话-Teleport/overlay-bundle.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
@@ -115,7 +115,7 @@ async function T({
     let f = q2(o ?? LM().id);
     m = createLinkedAbortSignal(t, { timeoutMs: r, refTimer: !0 });
     let p = m,
-      c = await Kce(
+      c = await nullOnAbort(
         G(
           {
             explicitRef: e,
@@ -130,7 +130,7 @@ async function T({
         p.signal,
       ),
       y =
-        c === null || Ct(p.signal) ? k(_ze(t, p.signal, "deadline")) : c.offer;
+        c === null || Ct(p.signal) ? k(failureCause(t, p.signal, "deadline")) : c.offer;
     return {
       key: KHt(y),
       reason: y.reason,
@@ -164,7 +164,7 @@ async function G(
   { explicitRef: e, selfHostedPool: o, onMeasuring: t, folderMaxFiles: s },
   r,
 ) {
-  let l = findGitRoot(Q());
+  let l = findGitRoot(getCwd());
   if (l === null)
     return V(
       { explicitRef: e, selfHostedPool: o, onMeasuring: t, maxFiles: s },
@@ -174,7 +174,7 @@ async function G(
     ? "self_hosted_pool"
     : e !== void 0
       ? "named_revision"
-      : pnt().blocked()
+      : repoDetectionGuards().blocked()
         ? "untrusted_workspace"
         : null;
   if (d !== null)
@@ -183,8 +183,8 @@ async function G(
       facts: null,
       forecast: { kind: "deferred", why: d },
     };
-  let m = a.CCR_FORCE_BUNDLE === !0 ? null : await Pb(),
-    f = m === null || Mw(m) ? null : Do(m.host) ? "github" : "other",
+  let m = a.CCR_FORCE_BUNDLE === !0 ? null : await detectCurrentRepositoryWithHost(),
+    f = m === null || isNestedGitLabProject(m) ? null : isGitHubHost(m.host) ? "github" : "other",
     [p, c] = await Promise.all([
       a.CCR_ENABLE_BUNDLE === !0
         ? Promise.resolve(!0)
@@ -193,9 +193,9 @@ async function G(
     ]);
   if (Ct(r)) return { offer: k("aborted"), facts: null, forecast: null };
   if (c === null) {
-    let v = await Kce(jTe(l), r);
+    let v = await nullOnAbort(jTe(l), r);
     if (v === null) return { offer: k("aborted"), facts: null, forecast: null };
-    if (dFt(v) !== null)
+    if (unservedLayout(v) !== null)
       return {
         offer: O("layout_unserved", e),
         facts: null,
@@ -273,7 +273,7 @@ async function N(e, o, t, s) {
   )
     return e;
   s();
-  let l = await pFt(
+  let l = await countProbeGitOutput(
     t,
     [
       "pack-objects",
@@ -296,26 +296,26 @@ async function N(e, o, t, s) {
 }
 async function I(e) {
   return (
-    (await Jb(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"])).exitCode ===
+    (await runProbeGit(e, ["rev-parse", "-q", "--verify", "HEAD^{commit}"])).exitCode ===
     1
   );
 }
 async function H(e, o) {
-  let [t, s] = await Promise.all([I2e(e), getBranch()]);
+  let [t, s] = await Promise.all([resolveRemote(e), getBranch()]);
   if (t === null) return null;
   return (
-    await Dan({
+    await probeLocalDivergence({
       gitRoot: e,
       remoteName: t.name,
       revision: s,
-      deadlineMs: Oan,
+      deadlineMs: LOCAL_DIVERGENCE_DEADLINE_MS,
       signal: o,
     })
   ).verdict;
 }
 async function U(e, o) {
   let [t, s] = await Promise.all([
-    pFt(
+    countProbeGitOutput(
       e,
       [
         "pack-objects",
@@ -357,7 +357,7 @@ async function U(e, o) {
   };
 }
 async function z(e) {
-  let o = await Lan(e);
+  let o = await listPathsChangedFromHead(e);
   if (o === null) return null;
   let t = await Hk(
     o.paths.map((s) => A(e, s)),
@@ -459,7 +459,7 @@ async function V(
   { explicitRef: e, selfHostedPool: o, onMeasuring: t, maxFiles: s = vze },
   r,
 ) {
-  if (!yde() || !VTe(Q()))
+  if (!yde() || !VTe(getCwd()))
     return {
       offer: { offer: !1, reason: "folder_not_opted_in", line: null },
       facts: null,
@@ -478,7 +478,7 @@ async function V(
       facts: null,
       forecast: { kind: "deferred", why: l },
     };
-  let d = Q();
+  let d = getCwd();
   if (await LLe(d))
     return {
       offer: {

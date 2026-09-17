@@ -12,7 +12,7 @@
 import { Gt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -1283,7 +1283,7 @@ var yt = 10,
       if (r !== void 0 && r.size > n) await unlink(t).catch(() => {});
       return 0;
     }
-    return (await On(t, o, 384), s);
+    return (await writeFileAtomic(t, o, 384), s);
   },
   pe = Symbol("transient-index-read-failure"),
   oe = '{"version"',

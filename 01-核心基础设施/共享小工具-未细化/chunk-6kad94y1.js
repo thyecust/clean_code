@@ -13,7 +13,7 @@ import { b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱�
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { u5t, d5t } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { externalHttp } from "./chunk-yz7dtpc3.js";
+import { externalHttp } from "./external-http.js";
 import { isErrorReportingAllowed } from "./error-reporting-eligibility.js";
 import { randomUUID } from "crypto";
 var c = "https://browser-intake-us5-datadoghq.com/api/v2/logs",

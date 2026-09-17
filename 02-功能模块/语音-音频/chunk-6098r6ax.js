@@ -13,10 +13,10 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { St, U1 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, isNonessentialTrafficRestricted } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getUserAgent, isAnthropicAuthEnabled, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync, checkAndRefreshOAuthTokenIfNeeded, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Ext } from "../../01-核心基础设施/共享小工具-未细化/chunk-jj2wxn4x.js";
+import { checkWebSocketEgress } from "../../01-核心基础设施/共享小工具-未细化/test-egress-guard.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import m from "ws";
 var V = '{"type":"KeepAlive"}',
@@ -34,7 +34,7 @@ function D(e) {
 }
 var N = 1500;
 async function probeVoiceConnectivity() {
-  if (St() || U1()) return "skipped_privacy";
+  if (isEssentialTrafficOnly() || isNonessentialTrafficRestricted()) return "skipped_privacy";
   try {
     let e = await at.get(`${getOauthConfig().BASE_API_URL}/api/hello`, {
         headers: { "User-Agent": getUserAgent() },
@@ -117,7 +117,7 @@ async function connectVoiceStream(e, s, d) {
   }
   let R = getWebSocketTLSOptions(),
     b = { headers: O, proxy: getWebSocketProxyUrl(T), tls: R || void 0 };
-  Ext(T, m);
+  checkWebSocketEgress(T, m);
   let i = new m(T, b),
     f = null,
     y = !1,

@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { x, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { pluralize, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { CS, zrt } from "../../00-第三方库/lodash/lodash.207999qb.js";
@@ -42,18 +42,18 @@ import {
   aL,
   wx,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { BG, Sl } from "./chunk-7s6mt1vg.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { findGitRoot } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { qE, _N, iwt, aJ, Obn } from "./chunk-ajtn749s.js";
-import { aP, DEn } from "../MCP客户端/chunk-3kmsshb6.js";
+import { FRONTMATTER_PATTERN, parseFrontmatterYaml } from "../MCP客户端/chunk-3kmsshb6.js";
 import { pfr } from "../Hooks钩子/chunk-z3433nr6.js";
 import { Pue, Kne, i7n, SMe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Ul, Fre, jI, Y3, Lu, $y } from "./chunk-33bdfgmx.js";
+import { isNonMarketplacePluginSource, hasNonMarketplacePluginSource, getNonMarketplacePluginSource, splitPluginIdOnLastAt, getPluginMarketplace, isEqualIgnoringCase } from "./chunk-33bdfgmx.js";
 import { eer, YXe, JXe, CCe, yqt, Ywt } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { s, T, se, v, c, fe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -63,7 +63,7 @@ import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chu
 function de(e, t, a) {
   if (QPt(e)) return !1;
   if (e.source === t) return !0;
-  return "plugin" in e && e.plugin === a && jI(e.source) === jI(t);
+  return "plugin" in e && e.plugin === a && getNonMarketplacePluginSource(e.source) === getNonMarketplacePluginSource(t);
 }
 function QPt(e) {
   return "orphan" in e && e.orphan === !0;
@@ -75,23 +75,23 @@ function eOt(e, t) {
   return de(e, t.source, t.name);
 }
 function Xe(e, t, a) {
-  if (Fre(e.source)) return !1;
+  if (hasNonMarketplacePluginSource(e.source)) return !1;
   if (e.source === t) return !0;
-  let r = Lu(e.source);
-  return "plugin" in e && e.plugin === a && (r === void 0 || r === Lu(t));
+  let r = getPluginMarketplace(e.source);
+  return "plugin" in e && e.plugin === a && (r === void 0 || r === getPluginMarketplace(t));
 }
 function z8(e, t, a) {
-  return Ul(Lu(t)) ? de(e, t, a) : Xe(e, t, a) && !QPt(e);
+  return isNonMarketplacePluginSource(getPluginMarketplace(t)) ? de(e, t, a) : Xe(e, t, a) && !QPt(e);
 }
 function yUn(e, t) {
   let a = t.filter((k) => z8(e, k.source, k.name)),
-    r = a.length === 1 ? a[0] : a.find((k) => $y(k.source, e.source));
-  if (r) return { name: r.name, marketplace: Lu(r.source) };
+    r = a.length === 1 ? a[0] : a.find((k) => isEqualIgnoringCase(k.source, e.source));
+  if (r) return { name: r.name, marketplace: getPluginMarketplace(r.source) };
   let [o] = a;
   if (o !== void 0) return { name: o.name, marketplace: void 0 };
-  let { name: i, marketplace: f } = Y3(e.source);
+  let { name: i, marketplace: f } = splitPluginIdOnLastAt(e.source);
   if (f !== void 0) return { name: i, marketplace: f };
-  let u = jI(e.source);
+  let u = getNonMarketplacePluginSource(e.source);
   return {
     name: u !== void 0 && "plugin" in e && e.plugin ? e.plugin : i,
     marketplace: u,
@@ -186,7 +186,7 @@ async function rt(e, t) {
         });
         return;
       }
-    } else (await ae().mkdir(Sl()), await On(a, b(e), 384));
+    } else (await ae().mkdir(Sl()), await writeFileAtomic(a, b(e), 384));
     await unlink(je(Sl(), "install-counts-cache.json")).catch(() => {});
   } catch (a) {
     n(`Failed to save plugin catalog cache: ${l(a)}`, { level: "error" });
@@ -1027,7 +1027,7 @@ async function kt(e) {
   };
 }
 function ek(e, t) {
-  return To(cd(up(e), t));
+  return normalizeWhitespace(truncateWithCharCount(stripInvisibleChars(e), t));
 }
 function q(e) {
   return {
@@ -1048,7 +1048,7 @@ function wt(e, t, a, r) {
   let o = [],
     i = [],
     f = r === "project" && a === "agent",
-    u = cs(t).match(aP);
+    u = cs(t).match(FRONTMATTER_PATTERN);
   if (!u) {
     if (!f)
       i.push({
@@ -1058,7 +1058,7 @@ function wt(e, t, a, r) {
       });
     return { success: !0, errors: o, warnings: i, filePath: e, fileType: a };
   }
-  let k = DEn(u[1] || "");
+  let k = parseFrontmatterYaml(u[1] || "");
   if (!k.ok) {
     let p =
       a !== "agent"
@@ -1500,7 +1500,7 @@ async function re(e, t, a) {
         Y(
           u,
           f,
-          `${w} ${x(w, "entry", "entries")} here ${x(w, "is", "are")} ${x(w, "a symlink", "symlinks")} and ${x(w, "was", "were")} not read \u2014 components are read ` +
+          `${w} ${pluralize(w, "entry", "entries")} here ${pluralize(w, "is", "are")} ${pluralize(w, "a symlink", "symlinks")} and ${pluralize(w, "was", "were")} not read \u2014 components are read ` +
             `without following symlinks. ${S}`,
         ),
       );
@@ -1509,7 +1509,7 @@ async function re(e, t, a) {
         Y(
           u,
           f,
-          `${y} ${x(y, "component")} here ${x(y, "was", "were")} not read \u2014 the path is not a ` +
+          `${y} ${pluralize(y, "component")} here ${pluralize(y, "was", "were")} not read \u2014 the path is not a ` +
             `regular file (a symlink, a FIFO, a directory). ${S}`,
         ),
       );
@@ -1518,7 +1518,7 @@ async function re(e, t, a) {
         Y(
           u,
           f,
-          `${p} ${x(p, "file")} here ${x(p, "is", "are")} larger than ${$q} bytes and ${x(p, "was", "were")} not validated.`,
+          `${p} ${pluralize(p, "file")} here ${pluralize(p, "is", "are")} larger than ${$q} bytes and ${pluralize(p, "was", "were")} not validated.`,
         ),
       );
   }
@@ -1804,7 +1804,7 @@ async function e9e(e, t = {}) {
     k = [u];
   if (u.success) k.push(...(await Ce(o)));
   for (let g of k)
-    for (let P of g.warnings) a.push(`${relative(Q(), g.filePath)}: ${P.message}`);
+    for (let P of g.warnings) a.push(`${relative(getCwd(), g.filePath)}: ${P.message}`);
   let C = k.find((g) => !g.success);
   if (C) {
     let g = C.errors.map((P) => `  ${P.path}: ${P.message}`).join(`
@@ -1836,9 +1836,9 @@ ${g}`,
     return {
       ok: !1,
       error:
-        `No version to tag. Set "version" in ${relative(Q(), i)}` +
+        `No version to tag. Set "version" in ${relative(getCwd(), i)}` +
         (y
-          ? ` or in the marketplace entry at ${relative(Q(), y.path)} plugins[${y.entryIndex}].`
+          ? ` or in the marketplace entry at ${relative(getCwd(), y.path)} plugins[${y.entryIndex}].`
           : ".") +
         " Tags are only used for dependency version constraints, which require an explicit semver \u2014 the git-SHA fallback does not need a tag.",
       warnings: a,
@@ -1846,7 +1846,7 @@ ${g}`,
   if (y?.entry.version && p !== void 0 && y.entry.version !== p)
     return {
       ok: !1,
-      error: `Version mismatch: plugin.json says "${p}" but ${relative(Q(), y.path)} plugins[${y.entryIndex}].version says "${y.entry.version}". plugin.json wins at install time, so update the marketplace entry to "${p}" (or remove it) before tagging.`,
+      error: `Version mismatch: plugin.json says "${p}" but ${relative(getCwd(), y.path)} plugins[${y.entryIndex}].version says "${y.entry.version}". plugin.json wins at install time, so update the marketplace entry to "${p}" (or remove it) before tagging.`,
       warnings: a,
     };
   if (Ye.valid(S) === null)

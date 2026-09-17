@@ -15,27 +15,27 @@ import { K, fy } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { NP, ynt, rawPointerPathIsUnsafe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { b, z, Is, Ro, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { fi, Do, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { GITHUB_HOST, isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Yqn, t3, ep, oC, lgt, Lpn, isFileReadDenied } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { n_, jq } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsFilePathForSource, updateSettingsForSourceWithTransform, autoModeConfigSchema } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { qe, tt, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { wTt, nb, findCommandNode, extractCommandArguments, zCe, tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Pl, ll } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { gF } from "../Git-Worktree/chunk-33y3h2sy.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as Be from "fs/promises";
 import { homedir } from "os";
@@ -85,7 +85,7 @@ function lt(e) {
   return !1;
 }
 import { sep as $t } from "path";
-function oe(e, t, r, o, s = P()) {
+function oe(e, t, r, o, s = getCurrentPlatform()) {
   if (o(e)) return !0;
   if (t === r) return !1;
   for (let [l, i] of [
@@ -113,7 +113,7 @@ var jn = 2,
   Mn = 8000,
   xt = 4096,
   Hn = 128000,
-  Nt = new Set([fi, "gitlab.com", "bitbucket.org"]),
+  Nt = new Set([GITHUB_HOST, "gitlab.com", "bitbucket.org"]),
   Fn = new Set([
     ".git",
     "node_modules",
@@ -133,7 +133,7 @@ var jn = 2,
   Un = new Set(["appdata", "application data"]),
   zn = new Set(["library"]);
 async function Lt(e) {
-  let t = e?.platform ?? P(),
+  let t = e?.platform ?? getCurrentPlatform(),
     r = e?.home ?? dt();
   if (r === null) return { repos: [], limit: "home-unreadable" };
   let o = e?.isReadDenied ?? (() => !1),
@@ -544,10 +544,10 @@ var ze = /^(?!\.{1,2}$)[A-Za-z0-9_.][A-Za-z0-9_.-]*$/,
   Gt = /^[\w.][\w ./-]{0,119}$/;
 function ht() {
   let e = subprocessEnv(),
-    t = e.GH_HOST !== void 0 && !_W(e.GH_HOST, fi);
+    t = e.GH_HOST !== void 0 && !isSameHost(e.GH_HOST, GITHUB_HOST);
   return {
     ...e,
-    GH_HOST: fi,
+    GH_HOST: GITHUB_HOST,
     ...(t && { GH_TOKEN: void 0, GITHUB_TOKEN: void 0 }),
     GH_ENTERPRISE_TOKEN: void 0,
     GITHUB_ENTERPRISE_TOKEN: void 0,
@@ -557,7 +557,7 @@ function ve(e) {
   return e.code === 127 || e.code === 4 || (e.code === 1 && e.stderr === "");
 }
 async function Wt(e, t) {
-  if (St() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
+  if (isEssentialTrafficOnly() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
     return et(
       `_Not queryable here (nonessential traffic disabled or policy-restricted). ${gt}_`,
     );
@@ -573,7 +573,7 @@ async function Wt(e, t) {
     return et(
       `_Not queryable here (org/repo not derivable from origin remote \u2014 missing, an unsupported or GHE host, or not a plain owner/repo URL shape). ${gt}_`,
     );
-  if (l !== fi)
+  if (l !== GITHUB_HOST)
     return et(
       `_Not queryable here (origin remote is not github.com \u2014 GHE/other hosts not yet supported). ${gt}_`,
     );
@@ -1042,7 +1042,7 @@ async function P2n(e, t = nt, r, o) {
                 t.allProjects,
                 r,
                 {
-                  projectDirs: [ll(s)],
+                  projectDirs: [getProjectDir(s)],
                   transcriptFiles: i === null ? [] : [L(i, `${K()}.jsonl`)],
                 },
                 void 0,
@@ -1079,7 +1079,7 @@ function $r(e, t) {
     (s.stdout.on("data", (d) => {
       let m = d.toString("utf8");
       ((i = i || m.length > 0),
-        (l += ln(
+        (l += countOccurrences(
           m,
           `
 `,
@@ -1108,7 +1108,7 @@ async function Cr(e, t, r) {
   return Buffer.from(s.value);
 }
 async function gn(e, t, r) {
-  let o = r ? Cr(r.backend, r.key, t) : qt().readRange(e, 0, t + 1);
+  let o = r ? Cr(r.backend, r.key, t) : getFileStorage().readRange(e, 0, t + 1);
   o.catch(() => {});
   let s = await withTimeout(o, $e, "config read timed out"),
     l = s.length > t,
@@ -1253,9 +1253,9 @@ async function Nr(e, t) {
     s = null;
   try {
     s = await gn(
-      L(be(), "CLAUDE.md"),
+      L(getClaudeConfigDir(), "CLAUDE.md"),
       We,
-      t !== void 0 ? { backend: t, key: Ce.state("user-memory") } : void 0,
+      t !== void 0 ? { backend: t, key: STORAGE_KEYS.state("user-memory") } : void 0,
     );
   } catch {
     s = null;
@@ -1435,7 +1435,7 @@ async function Lr(e, t) {
   let r = await pe(t, ["remote", "get-url", "origin"]),
     o = r ? Re(r) : "",
     s = _n(o),
-    i = Ue(r, s === void 0 || Do(s) ? null : s)?.split("/") ?? [],
+    i = Ue(r, s === void 0 || isGitHubHost(s) ? null : s)?.split("/") ?? [],
     [d, m, c] = i.length === 3 ? i : [];
   if (
     d === void 0 ||
@@ -1448,12 +1448,12 @@ async function Lr(e, t) {
       ne,
       "_Org not derivable from origin remote (or unsafe token) \u2014 sibling docs not gathered._",
     );
-  if (St() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
+  if (isEssentialTrafficOnly() || !isPolicyAllowed("allow_auto_mode_sibling_docs"))
     return k(
       ne,
       "_Not queryable here (nonessential traffic disabled or policy-restricted)._",
     );
-  if (!Do(d))
+  if (!isGitHubHost(d))
     return k(
       ne,
       "_Not queryable here (origin remote is not github.com \u2014 GHE/other hosts not yet supported)._",
@@ -1536,7 +1536,7 @@ async function Lr(e, t) {
   );
 }
 function nn(e) {
-  let { toolName: t, ruleContent: r } = Fr(e);
+  let { toolName: t, ruleContent: r } = parsePermissionRule(e);
   return tJe(t, r);
 }
 function wn(e) {
@@ -1614,7 +1614,7 @@ Present but SKIPPED: failed the indirection gate (requires a regular non-symlink
   ].join(`
 `);
 }
-async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(be(), "settings.json"), r) {
+async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(getClaudeConfigDir(), "settings.json"), r) {
   let o = "(no settings file)",
     s = [],
     l = [],
@@ -1626,8 +1626,8 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(be(),
     c = await gn(
       t,
       1e6,
-      r !== void 0 && bt(t) === bt(L(be(), jq.default))
-        ? { backend: r, key: Ce.userSettings() }
+      r !== void 0 && bt(t) === bt(L(getClaudeConfigDir(), jq.default))
+        ? { backend: r, key: STORAGE_KEYS.userSettings() }
         : void 0,
     );
   } catch (_) {
@@ -1643,7 +1643,7 @@ async function Mr(e, t = getSettingsFilePathForSource("userSettings") ?? L(be(),
       let T = E.filter((R) => typeof R === "string"),
         v = T.filter(nn),
         O = T.filter((R) => !nn(R)).filter((R) => {
-          let { toolName: C, ruleContent: N } = Fr(R);
+          let { toolName: C, ruleContent: N } = parsePermissionRule(R);
           return Bt(C, N);
         });
       m = countMatching(v, (R) => !Te(R)) + countMatching(O, (R) => !Te(R));
@@ -1711,7 +1711,7 @@ function Gr(e) {
   return zr.has(e) || /^(python[0-9.]*|pip[0-9]*)$/.test(e);
 }
 async function Wr(e) {
-  let t = ll(e),
+  let t = getProjectDir(e),
     r = [];
   try {
     let u = await M.readdir(t);
@@ -1763,7 +1763,7 @@ async function Wr(e) {
             typeof D.input?.command === "string"
           )
             o.push(
-              ft(
+              beforeFirst(
                 D.input.command,
                 `
 `,
@@ -1787,7 +1787,7 @@ async function Wr(e) {
     d = ge(
       De(i, /(https?:\/\/[^\s"'`]+)/g)
         .map(yn)
-        .filter((u) => u !== null && !Hr.test(u) && !Do(u)),
+        .filter((u) => u !== null && !Hr.test(u) && !isGitHubHost(u)),
     ),
     m = ge(De(i, pn)),
     c = ge(De(i, /-n\s+([a-z][a-z0-9-]{2,})/g)),
@@ -1850,7 +1850,7 @@ async function on(e, t, r) {
       '_NOT GATHERED \u2014 no home directory could be determined. Treat shell history as "not queryable here". Do not read history files yourself._',
     );
   let s = r ?? {
-    platform: P(),
+    platform: getCurrentPlatform(),
     homeDir: o,
     appData: a.APPDATA,
     xdgDataHome: a.XDG_DATA_HOME,
@@ -1998,7 +1998,7 @@ async function an(
   t,
   r,
   o = {
-    projectsDir: Pl(),
+    projectsDir: getProjectsDir(),
     perFileCap: Dr,
     aggregateCap: Tr,
     deadlineMs: Pr,
@@ -2017,10 +2017,10 @@ async function an(
       ke,
       "_NOT GATHERED \u2014 no permission context was available to enforce permissions.deny, so no other project\u2019s transcripts were read._",
     );
-  let l = P(),
+  let l = getCurrentPlatform(),
     i = (H) => isFileReadDenied(H, t),
-    d = qt(),
-    m = s !== void 0 && o.projectsDir === Pl() ? s : void 0,
+    d = getFileStorage(),
+    m = s !== void 0 && o.projectsDir === getProjectsDir() ? s : void 0,
     c = Date.now() + o.deadlineMs,
     p = M.realpath(o.projectsDir).catch(() => o.projectsDir),
     u = (H) => (l === "windows" ? H.toLowerCase() : H),
@@ -2241,7 +2241,7 @@ async function an(
             )
               (N++,
                 le.push(
-                  ft(
+                  beforeFirst(
                     Le.input.command,
                     `
 `,
@@ -2275,27 +2275,27 @@ _Enumeration cap reached \u2014 the ${o.statCap} first-enumerated of ${v} transc
         : "",
       D + O > 0
         ? `
-_${D} ${x(D, "transcript")} and ${O} project ${x(O, "directory", "directories")} could not be enumerated (unreadable, transient error, or past the enumeration cap) \u2014 coverage is partial; treat missing projects as unknown, not empty._`
+_${D} ${pluralize(D, "transcript")} and ${O} project ${pluralize(O, "directory", "directories")} could not be enumerated (unreadable, transient error, or past the enumeration cap) \u2014 coverage is partial; treat missing projects as unknown, not empty._`
         : "",
       I > 0
         ? `
-_Skipped by the read-deny gate: ${I} ${x(I, "transcript")} not read \u2014 a permissions.deny rule covers the path, it is an untrusted network path, or it resolved outside the projects directory._`
+_Skipped by the read-deny gate: ${I} ${pluralize(I, "transcript")} not read \u2014 a permissions.deny rule covers the path, it is an untrusted network path, or it resolved outside the projects directory._`
         : "",
       X > 0
         ? `
-_${X} ${x(X, "transcript")} could not be read (removed mid-gather, or refused as a symlink/hardlink alias)._`
+_${X} ${pluralize(X, "transcript")} could not be read (removed mid-gather, or refused as a symlink/hardlink alias)._`
         : "",
       re > 0
         ? `
-_${re} ${x(re, "transcript")} exceeded the ${Math.round(o.perFileCap / 1048576)} MiB per-file cap \u2014 only the most recent part of each was scanned._`
+_${re} ${pluralize(re, "transcript")} exceeded the ${Math.round(o.perFileCap / 1048576)} MiB per-file cap \u2014 only the most recent part of each was scanned._`
         : "",
       Ne
         ? `
-_Aggregate byte cap reached (${Math.round(o.aggregateCap / 1048576)} MiB) \u2014 remaining ${j} ${x(j, "transcript")} not scanned._`
+_Aggregate byte cap reached (${Math.round(o.aggregateCap / 1048576)} MiB) \u2014 remaining ${j} ${pluralize(j, "transcript")} not scanned._`
         : "",
       _e
         ? `
-_Deadline reached \u2014 remaining ${j} ${x(j, "transcript")} not scanned._`
+_Deadline reached \u2014 remaining ${j} ${pluralize(j, "transcript")} not scanned._`
         : "",
       Dn
         ? `

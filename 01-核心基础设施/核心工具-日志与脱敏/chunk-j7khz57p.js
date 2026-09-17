@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { b, z, Zhe, B1, n } from "./核心工具-日志与脱敏.38sny42z.js";
-import { x, us, Yg } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodePoints, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { QUOTE_HOMOGLYPHS, INVISIBLE_BLANKS, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 function nWn() {
@@ -64,7 +64,7 @@ var K = 3500,
   F = 1500,
   D = 15000,
   L = 30000;
-function xin(r) {
+function sanitizeAndTruncateText(r) {
   return T(d(r).replace(/\s+/g, " ").trim());
 }
 function T(r) {
@@ -74,13 +74,13 @@ function T(r) {
   return (
     e.slice(0, w).join("") +
     `
-\u22EF ${o} ${x(o, "code point")} elided \u22EF
+\u22EF ${o} ${pluralize(o, "code point")} elided \u22EF
 ` +
     e.slice(e.length - F).join("")
   );
 }
 function d(r) {
-  return Array.from(Yg(r), (e) => (isDecisionSurfaceControl(e.codePointAt(0) ?? 0) ? " " : e))
+  return Array.from(toWellFormed(r), (e) => (isDecisionSurfaceControl(e.codePointAt(0) ?? 0) ? " " : e))
     .join("")
     .replace(QUOTE_HOMOGLYPHS, "\xB7")
     .replace(U, "\xB7")
@@ -175,7 +175,7 @@ function oWn(r) {
             { level: "error" },
           );
           let y = d(b(_)).replace(/\s+/g, " "),
-            S = us(y, 50),
+            S = truncateToCodePoints(y, 50),
             O = S.length < y.length ? S + "\u2026" : S;
           if (i >= D) {
             a.push(O);
@@ -188,7 +188,7 @@ function oWn(r) {
         let c = A(Zhe(f), l, p);
         if (i >= D) {
           let _ = d(b(c)).replace(/\s+/g, " "),
-            y = us(_, 50);
+            y = truncateToCodePoints(_, 50);
           a.push(y.length < _.length ? y + "\u2026" : y);
           continue;
         }
@@ -225,15 +225,15 @@ function oWn(r) {
         if (a.length <= g) {
           let m = Math.max(8, Math.floor(L / a.length) - 2),
             E = a.map((c) => {
-              let u = us(c, m);
+              let u = truncateToCodePoints(c, m);
               return u.length < c.length ? u + "\u2026" : u;
             });
           P = `
-\u22EF ${a.length} ${x(a.length, "field")} elided: ${E.join(", ")} \u22EF
+\u22EF ${a.length} ${pluralize(a.length, "field")} elided: ${E.join(", ")} \u22EF
 `;
         } else
           P = `
-\u22EF ${a.length} ${x(a.length, "field")} elided (count exceeds the ${g}-name bound \u2014 refuse) \u22EF
+\u22EF ${a.length} ${pluralize(a.length, "field")} elided (count exceeds the ${g}-name bound \u2014 refuse) \u22EF
 `;
       }
       return `{ ${s.join(", ")} }${P}`;
@@ -293,14 +293,14 @@ function B(r) {
   if (r.length <= 1e5) return T(d(r).replace(/\s{2,}/g, " "));
   let e = 0;
   for (let a of r) e++;
-  let o = d(us(r.slice(0, w * 2 + 1), w)).replace(/\s{2,}/g, " "),
-    t = Array.from(Yg(r.slice(-(F * 2 + 1)))),
+  let o = d(truncateToCodePoints(r.slice(0, w * 2 + 1), w)).replace(/\s{2,}/g, " "),
+    t = Array.from(toWellFormed(r.slice(-(F * 2 + 1)))),
     s = d(t.slice(-F).join("")).replace(/\s{2,}/g, " "),
     i = e - w - F;
   return (
     o +
     `
-\u22EF ${i} ${x(i, "code point")} elided \u22EF
+\u22EF ${i} ${pluralize(i, "code point")} elided \u22EF
 ` +
     s
   );
@@ -340,4 +340,4 @@ function iWn(r) {
     },
   };
 }
-export { nWn, rWn, xin, oWn, zPe, sWn, iWn };
+export { nWn, rWn, sanitizeAndTruncateText, oWn, zPe, sWn, iWn };

@@ -12,7 +12,7 @@ import { Ve, dt, ge, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { pp, BP, jP, Pd, Px, Khe, nZ, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { COMMAND_MESSAGE_TAG, LOCAL_COMMAND_CAVEAT_TAG, TICK_TAG, TASK_NOTIFICATION_TAG, TEAMMATE_MESSAGE_TAG, CHANNEL_SOURCE_OPEN_TAG, FORK_BOILERPLATE_TAG, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   C2,
   JVn,
@@ -35,7 +35,7 @@ import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/ht
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
 import { getTrustedDeviceToken, recoverFromUntrustedDevice } from "./chunk-tyce0p0b.js";
-import { classifyElevatedAuthError } from "./chunk-mxsfy35q.js";
+import { classifyElevatedAuthError } from "./code-session-api.js";
 import { GDt } from "../远程工具执行/chunk-66axrkvh.js";
 import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
 import { drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
@@ -453,8 +453,8 @@ function Pst(e) {
   let t = e.worker_epoch;
   return typeof t === "number" && Number.isSafeInteger(t) && t > 0 ? t : void 0;
 }
-var Je = new RegExp(`<${jP}[\\s>]`, "i"),
-  Ze = new RegExp(`</${jP}>`, "i");
+var Je = new RegExp(`<${TICK_TAG}[\\s>]`, "i"),
+  Ze = new RegExp(`</${TICK_TAG}>`, "i");
 function et(e) {
   return Je.test(e) && Ze.test(e);
 }
@@ -466,9 +466,9 @@ function _e(e) {
     e.startsWith("<bash-stderr") ||
     e.startsWith("<local-command-stdout") ||
     e.startsWith("<local-command-stderr") ||
-    e.startsWith(Khe) ||
-    e.startsWith(`<${Px} `) ||
-    e.startsWith(`<${Px}>`)
+    e.startsWith(CHANNEL_SOURCE_OPEN_TAG) ||
+    e.startsWith(`<${TEAMMATE_MESSAGE_TAG} `) ||
+    e.startsWith(`<${TEAMMATE_MESSAGE_TAG}>`)
   )
     return !0;
   if (aoe(e)) return !0;
@@ -486,13 +486,13 @@ function _e(e) {
   if (et(e)) return !0;
   return (
     e.includes("<bash-input>") ||
-    e.includes(`<${pp}>`) ||
+    e.includes(`<${COMMAND_MESSAGE_TAG}>`) ||
     e.includes("<user-memory-input>") ||
-    e.includes(`<${Pd}`) ||
+    e.includes(`<${TASK_NOTIFICATION_TAG}`) ||
     e.includes("<mcp-resource-update") ||
     e.includes("<mcp-polling-update") ||
-    e.includes(`<${nZ}>`) ||
-    e.includes(`<${BP}>`)
+    e.includes(`<${FORK_BOILERPLATE_TAG}>`) ||
+    e.includes(`<${LOCAL_COMMAND_CAVEAT_TAG}>`)
   );
 }
 function qae(e) {

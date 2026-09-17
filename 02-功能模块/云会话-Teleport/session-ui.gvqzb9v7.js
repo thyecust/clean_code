@@ -16,7 +16,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { Pt, eE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -46,7 +46,7 @@ function I(ao, co) {
 function P(oo) {
   let i = _(17),
     { onDone: eo } = oo,
-    m = U(x),
+    m = useAppStateSelector(x),
     w = tn(),
     L;
   if (i[0] !== m)

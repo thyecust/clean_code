@@ -19,12 +19,12 @@ import { Et, b, z, ae, n } from "../../01-核心基础设施/核心工具-日志
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { L1, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { Cs, Vlr } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
@@ -171,7 +171,7 @@ function Ue({
 }
 var Ae = "https://downloads.claude.ai/claude-code-releases";
 function Pe(e, t) {
-  return L1(e) ? hN.get(e, t) : externalHttp.get(e, t);
+  return isClaudeDownloadsHost(e) ? hN.get(e, t) : externalHttp.get(e, t);
 }
 var Ge = 30000,
   qe = 3;
@@ -865,7 +865,7 @@ function he(e) {
   return !0;
 }
 function rn(e, t) {
-  x0(e, b(t, null, 2));
+  writeFileAtomicSync(e, b(t, null, 2));
 }
 async function nt(e, t) {
   let r = ae(),

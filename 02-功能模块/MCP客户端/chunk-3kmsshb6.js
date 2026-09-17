@@ -7,27 +7,27 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { yEt, SEt } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
+import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { normalizeKeyName, buildKeyNameLookup } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { Ghe } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { normalize } from "path";
-var tA = 5000,
+var FILE_STATE_MAX_ENTRIES = 5000,
   _ = 26214400,
   T = 4096;
 function k(e) {
   return Bun.hash(e).toString(36);
 }
-function NG(e) {
+function isFullFileView(e) {
   if ((e.offset ?? 1) > 1 || e.isPartialView) return !1;
   if (e.limit === void 0) return !0;
   return (
     e.content !== "" &&
-    ln(
+    countOccurrences(
       e.content,
       `
 `,
@@ -36,26 +36,26 @@ function NG(e) {
       e.limit
   );
 }
-function NJ(e) {
-  return e !== void 0 && NG(e) && !e.contentNotInModelContext;
+function isContentInModelContext(e) {
+  return e !== void 0 && isFullFileView(e) && !e.contentNotInModelContext;
 }
-function qH(e, t) {
+function matchesFileStateContent(e, t) {
   if (e.contentHash !== void 0) return e.contentHash === k(t);
   return e.content === t;
 }
-function nA(e) {
+function stripBom(e) {
   return e.charCodeAt(0) === 65279 ? e.slice(1) : e;
 }
-function qy(e) {
-  return nA(e).replaceAll(
+function normalizeFileContent(e) {
+  return stripBom(e).replaceAll(
     `\r
 `,
     `
 `,
   );
 }
-function Ktr(e, t) {
-  return qH(e, qy(t));
+function matchesNormalizedFileStateContent(e, t) {
+  return matchesFileStateContent(e, normalizeFileContent(t));
 }
 class F {
   cache;
@@ -125,17 +125,17 @@ class F {
     this.cache.load(e);
   }
 }
-function DT(e, t = _) {
+function createFileStateCache(e, t = _) {
   return new F(e, t);
 }
-function _Et(e) {
+function fileStateCacheToRecord(e) {
   return Object.fromEntries(e.entries());
 }
-function r$e(e) {
+function listCachedFilePaths(e) {
   return Array.from(e.keys());
 }
-function Woe(e, t) {
-  let r = DT(e.max, e.maxSize),
+function cloneFileStateCache(e, t) {
+  let r = createFileStateCache(e.max, e.maxSize),
     o = e.dump();
   if (t?.stripSeededFromContext) {
     for (let i of o)
@@ -144,8 +144,8 @@ function Woe(e, t) {
   }
   return (r.load(o), r);
 }
-function Xtr(e, t) {
-  let r = Woe(e);
+function mergeFileStateCache(e, t) {
+  let r = cloneFileStateCache(e);
   for (let [o, i] of t.entries()) {
     let a = r.get(o);
     if (!a || i.timestamp > a.timestamp) r.set(o, i);
@@ -214,7 +214,7 @@ var R = [
     "originSessionId",
     "hide-from-slash-command-tool",
   ],
-  V = SEt(R);
+  V = buildKeyNameLookup(R);
 var v = [
     "argument-hint",
     "arguments",
@@ -225,11 +225,11 @@ var v = [
     "paths",
     "settings",
   ],
-  q = new Set(v.map(yEt));
-function zH(e) {
+  q = new Set(v.map(normalizeKeyName));
+function parseYaml(e) {
   return Bun.YAML.parse(e);
 }
-function o$e(e) {
+function stringifyYaml(e) {
   return (
     Bun.YAML.stringify(e, null, 2) +
     `
@@ -258,7 +258,7 @@ function O(e) {
       }
       if (s.startsWith("[") && s.endsWith("]"))
         try {
-          if (Array.isArray(zH(s))) {
+          if (Array.isArray(parseYaml(s))) {
             r.push(o);
             continue;
           }
@@ -294,7 +294,7 @@ function z(e) {
         if (/^["'|>]/.test(d)) return (b(s, r), i);
         let c;
         try {
-          c = zH(d);
+          c = parseYaml(d);
         } catch {
           return i;
         }
@@ -329,14 +329,14 @@ function b(e, t) {
   let a = i.trimEnd().replace(/"(?:[^"\\]|\\.)*"|'(?:[^']|'')*'/g, "");
   if (/^#|[ \t]#/.test(a)) t.push(o);
 }
-var FG = 30,
-  jK = 65536,
-  aP = /^---\s*\n([\s\S]*?)---\s*\n?/,
-  eve = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/;
-function zo(e, t, r) {
+var MAX_FILE_READ_LINES = 30,
+  MAX_FILE_READ_BYTES = 65536,
+  FRONTMATTER_PATTERN = /^---\s*\n([\s\S]*?)---\s*\n?/,
+  STRICT_FRONTMATTER_PATTERN = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(\r?\n|$)/;
+function parseFrontmatter(e, t, r) {
   let o = e;
-  e = nA(e);
-  let i = e.match(aP);
+  e = stripBom(e);
+  let i = e.match(FRONTMATTER_PATTERN);
   if (!i) return { frontmatter: {}, content: o };
   let a = i[1] || "",
     s = e.slice(i[0].length),
@@ -345,7 +345,7 @@ function zo(e, t, r) {
     f,
     d;
   if (r?.quoteLossyValues) {
-    let p = e.match(eve),
+    let p = e.match(STRICT_FRONTMATTER_PATTERN),
       m = p?.[1] ?? "";
     if (a.trim() !== "" || m.trim() !== "") {
       if (p === null || m.trim() !== a.trim())
@@ -360,7 +360,7 @@ function zo(e, t, r) {
       c = `an inline '#' in [${p.unprovableKeys.join(", ")}] cannot be preserved by a rewrite`;
     if (p.text !== null)
       try {
-        let m = l(E(zH(p.text))),
+        let m = l(E(parseYaml(p.text))),
           x = d ?? c ?? w(a, m);
         return {
           frontmatter: m,
@@ -373,7 +373,7 @@ function zo(e, t, r) {
         n(`quoteLossyValues: ${h}${m}`, { level: "warn" });
       }
   }
-  let g = DEn(a);
+  let g = parseFrontmatterYaml(a);
   if (g.ok) u = l(E(g.value));
   else {
     f = g.error;
@@ -392,13 +392,13 @@ function zo(e, t, r) {
     ...(S !== void 0 && { rewriteHazard: S }),
   };
 }
-function DEn(e) {
+function parseFrontmatterYaml(e) {
   try {
-    return { ok: !0, value: zH(e) };
+    return { ok: !0, value: parseYaml(e) };
   } catch {
     try {
       let t = O(e).replace(/^\t+/gm, (r) => "  ".repeat(r.length));
-      return { ok: !0, value: zH(t) };
+      return { ok: !0, value: parseYaml(t) };
     } catch (t) {
       return { ok: !1, error: t instanceof Error ? t.message : String(t) };
     }
@@ -413,7 +413,7 @@ function E(e) {
   if (e && typeof e === "object" && !Array.isArray(e)) return e;
   return {};
 }
-function Dzt(e) {
+function expandPathPatterns(e) {
   return A(e, { results: M, bytes: I });
 }
 function A(e, t) {
@@ -457,7 +457,7 @@ function N(e, t) {
     if (t.bytes < 0 || d > t.results || d * e.length > t.bytes)
       return (
         n(
-          `Brace pattern expansion exceeds the budget; using it unexpanded: ${oe(e, 256)}`,
+          `Brace pattern expansion exceeds the budget; using it unexpanded: ${truncateToCodeUnits(e, 256)}`,
           { level: "warn" },
         ),
         [e]
@@ -466,19 +466,19 @@ function N(e, t) {
   }
   return ((t.results -= r.length), (t.bytes -= r.length * e.length), r);
 }
-function Lzt(e) {
+function parsePositiveInteger(e) {
   if (e === void 0 || e === null) return;
-  let t = typeof e === "number" ? e : tl(String(e));
+  let t = typeof e === "number" ? e : parseConfigInteger(String(e));
   if (Number.isInteger(t) && t > 0) return t;
   return;
 }
-function Mzt(e) {
+function getExperimentalCacheTtl(e) {
   let t = e.experimental;
   if (typeof t !== "object" || t === null) return;
-  let r = Object.entries(t).find(([o]) => yEt(o) === "cachettl")?.[1];
+  let r = Object.entries(t).find(([o]) => normalizeKeyName(o) === "cachettl")?.[1];
   return Ghe.find((o) => o === r);
 }
-function q$(e, t, r) {
+function parseOptionalString(e, t, r) {
   if (e == null) return null;
   if (typeof e === "string") return e.trim() || null;
   if (typeof e === "number" || typeof e === "boolean") return String(e);
@@ -488,17 +488,17 @@ function q$(e, t, r) {
     null
   );
 }
-function Nzt(e) {
+function collectDeclaredFields(e) {
   let t = (r) =>
     r != null && typeof r === "object" && !Array.isArray(r)
       ? Object.keys(r)
       : [];
   return dedupe([...Object.keys(e), ...t(e.experimental)]);
 }
-function dJe(e) {
-  return $G(e) ?? !1;
+function parseBooleanDefaultFalse(e) {
+  return parseOptionalBoolean(e) ?? !1;
 }
-function $G(e) {
+function parseOptionalBoolean(e) {
   if (typeof e === "boolean") return e;
   if (typeof e !== "string" && typeof e !== "number") return;
   let t = String(e);
@@ -507,7 +507,7 @@ function $G(e) {
   return;
 }
 var C = ["bash", "powershell"];
-function Fzt(e, t) {
+function normalizeShellOption(e, t) {
   if (e == null) return;
   let r = String(e).trim().toLowerCase();
   if (r === "") return;
@@ -519,32 +519,32 @@ function Fzt(e, t) {
   return;
 }
 export {
-  tA,
-  NG,
-  NJ,
-  qH,
-  nA,
-  qy,
-  Ktr,
-  DT,
-  _Et,
-  r$e,
-  Woe,
-  Xtr,
-  zH,
-  o$e,
-  FG,
-  jK,
-  aP,
-  eve,
-  zo,
-  DEn,
-  Dzt,
-  Lzt,
-  Mzt,
-  q$,
-  Nzt,
-  dJe,
-  $G,
-  Fzt,
+  FILE_STATE_MAX_ENTRIES,
+  isFullFileView,
+  isContentInModelContext,
+  matchesFileStateContent,
+  stripBom,
+  normalizeFileContent,
+  matchesNormalizedFileStateContent,
+  createFileStateCache,
+  fileStateCacheToRecord,
+  listCachedFilePaths,
+  cloneFileStateCache,
+  mergeFileStateCache,
+  parseYaml,
+  stringifyYaml,
+  MAX_FILE_READ_LINES,
+  MAX_FILE_READ_BYTES,
+  FRONTMATTER_PATTERN,
+  STRICT_FRONTMATTER_PATTERN,
+  parseFrontmatter,
+  parseFrontmatterYaml,
+  expandPathPatterns,
+  parsePositiveInteger,
+  getExperimentalCacheTtl,
+  parseOptionalString,
+  collectDeclaredFields,
+  parseBooleanDefaultFalse,
+  parseOptionalBoolean,
+  normalizeShellOption,
 };

@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 69 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum, fromNumber } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Mxe, mZ } from "./chunk-5ndhfaq9.js";
+import { buildVertexBaseUrl, getVertexRegionForModel } from "./chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { bt, DEFAULT_3P_SONNET_KEY, DEFAULT_VERTEX_OPUS_KEY, getMarketingNameForModel, Rw, nRe, isHostManagedProviderAuth, getConfiguredVertexProjectId, refreshGcpCredentialsIfNeeded } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -130,7 +130,7 @@ async function d(o) {
       r = isHostManagedProviderAuth();
     if (!e && !r) await refreshGcpCredentialsIfNeeded();
     let t = await buildVertexGoogleAuth(e ? { kind: "skip" } : { kind: "default" }, getConfiguredVertexProjectId()),
-      l = mZ(o),
+      l = getVertexRegionForModel(o),
       f = e ? nRe() : void 0;
     return (
       await suppressVertexAuthRejection(
@@ -141,7 +141,7 @@ async function d(o) {
           defaultHeaders: vertexResidualCredentialPins(e ? { wireAuthorization: f } : !1),
           ...Rw,
           timeout: 8000,
-          fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || Mxe(l) }),
+          fetchOptions: c({ url: a.ANTHROPIC_VERTEX_BASE_URL || buildVertexBaseUrl(l) }),
         }),
       ).messages.create({
         model: o,

@@ -12,7 +12,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { gc, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
@@ -30,10 +30,10 @@ import {
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { qe, Bt, tt, Mn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { vo, kD, DC, IT } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Slt, hIe, yIe, o2n, s2n } from "./chunk-66axrkvh.js";
-import { qst } from "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
+import { stageDirSyncNotice } from "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { toHostDescription } from "../../01-核心基础设施/共享小工具-未细化/chunk-hkdjw6ht.js";
 import { INT32_MAX, hasMutualTakeAgreement } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
 import { s, T, O, c, $e, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -266,10 +266,10 @@ function IQt(e, t) {
   return e.startsWith(r) && /^[\\/]/.test(o) ? `~${o}` : e;
 }
 function _e(e, t) {
-  return oe(e.replace(/[\p{Cc}\p{Cf}]/gu, ""), t);
+  return truncateToCodeUnits(e.replace(/[\p{Cc}\p{Cf}]/gu, ""), t);
 }
 function F(e, t) {
-  return oe(
+  return truncateToCodeUnits(
     e.replace(/[\p{Cc}\p{Cf}]/gu, (r) =>
       r ===
         `
@@ -333,12 +333,12 @@ function ke(e) {
 function ue(e) {
   if (typeof e === "string")
     return e.length > xHe
-      ? { content: oe(e, xHe), cut: !0 }
+      ? { content: truncateToCodeUnits(e, xHe), cut: !0 }
       : { content: e, cut: !1 };
   let { blocks: t, cut: r } = e.slice(0, vIt).reduce(
     (o, d) => {
       if (d.type === "text") {
-        let a = oe(d.text, Math.max(0, o.text));
+        let a = truncateToCodeUnits(d.text, Math.max(0, o.text));
         if (a.trim() !== "") o.blocks.push({ ...d, text: a });
         return {
           ...o,
@@ -403,7 +403,7 @@ function Se(e) {
   let { entries: t, cut: r } = Object.entries(e).reduce(
     (o, [d, a]) => {
       if (typeof a !== "string") return (o.entries.push([d, a]), o);
-      let f = oe(a, Math.max(0, o.remaining));
+      let f = truncateToCodeUnits(a, Math.max(0, o.remaining));
       return (
         o.entries.push([d, f]),
         {
@@ -1031,7 +1031,7 @@ async function en(e, t) {
       }),
       p !== null)
     )
-      qst(p);
+      stageDirSyncNotice(p);
     if (g) return;
   }
 }
@@ -1105,7 +1105,7 @@ var tn = [
   E = (e) => (t) => (e.includes(t) ? t : "other"),
   q = (e) =>
     iE(
-      _S(e)
+      sanitizeDeep(e)
         .replace(/[\p{Cc}\p{Cf}]/gu, " ")
         .replace(/:\/\/[^/\s@]*@/g, "://***@"),
       Je,

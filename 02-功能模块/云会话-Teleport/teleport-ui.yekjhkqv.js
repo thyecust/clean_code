@@ -13,8 +13,8 @@ import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isRemoteControlOfferable } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isArtifactConflictLegacy } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { tye } from "../Bridge-RemoteControl/chunk-m1vpawx6.js";
-import { U, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { TeleportResumeWrapper } from "../Bridge-RemoteControl/teleport-resume-ui.js";
+import { useAppStateSelector, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
@@ -34,15 +34,15 @@ import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js"
 import "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import "./teleport-errors.js";
-import { ebe } from "../Artifact发布-渲染/chunk-fx5ekm7e.js";
+import { rehydrateArtifactFrameState } from "../Artifact发布-渲染/chunk-fx5ekm7e.js";
 import "../../01-核心基础设施/共享小工具-未细化/goal-proposal-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js";
 import "../上下文压缩-Compact/chunk-1ntrf0ja.js";
 import { j0t } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ps79w9dv.js";
+import "../../01-核心基础设施/共享小工具-未细化/transcript-replaced-bus.js";
 import { nWe } from "../../01-核心基础设施/共享小工具-未细化/chunk-vm6pzj28.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -52,8 +52,8 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 F();
 function B(b) {
@@ -68,7 +68,7 @@ function retireConversationForTeleportPull(t, r, f) {
         ? a
         : { ...a, sendMessagePins: {} },
     ),
-    ebe(
+    rehydrateArtifactFrameState(
       r,
       {
         frameUrls: {},
@@ -82,7 +82,7 @@ function retireConversationForTeleportPull(t, r, f) {
 function L(W) {
   let i = _(24),
     { onExit: o, context: p, exposure: C } = W,
-    n = Yn(),
+    n = useAppState(),
     T = Cc(),
     x = useSession(),
     A;
@@ -94,7 +94,7 @@ function L(W) {
       (i[3] = A));
   else A = i[3];
   let l = A,
-    c = U(B),
+    c = useAppStateSelector(B),
     D;
   if (i[4] !== c)
     ((D = () => (c || isRemoteControlOfferable()) && H("tengu_teleport_send_to_cloud", !1)),
@@ -148,7 +148,7 @@ function L(W) {
   else ((u = i[18]), (y = i[19]));
   let P;
   if (i[20] !== m || i[21] !== u || i[22] !== y)
-    ((P = e(tye, {
+    ((P = e(TeleportResumeWrapper, {
       onComplete: m,
       onCancel: u,
       onError: y,

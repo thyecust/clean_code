@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { hF } from "../../01-核心基础设施/共享小工具-未细化/chunk-j66gwpg8.js";
+import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import { defineDialog } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var oPe = defineDialog({
   kind: "computer_use_approval",
   payload: createLazyValue(() => qd((e) => typeof e === "object" && e !== null)),
   result: createLazyValue(() => qd((e) => typeof e === "object" && e !== null)),
-  default: { granted: [], denied: [], flags: hF },
+  default: { granted: [], denied: [], flags: DEFAULT_GRANT_FLAGS },
 });
 export { oPe };

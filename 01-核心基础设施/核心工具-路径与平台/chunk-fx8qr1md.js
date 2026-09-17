@@ -14,13 +14,13 @@ import { Np, Ro, Tr, ae, n } from "../核心工具-日志与脱敏/核心工具-
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { findExecutableWindows } from "../共享小工具-未细化/chunk-twnwwsbr.js";
-import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { lv, Ri, fPn, Xie } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
-import { B8t } from "../共享小工具-未细化/chunk-a7cfts2d.js";
+import { RENAME_FALLBACK_ERRNOS, renameWithRetry, renameWithRetrySync, isUnsupportedFsOperationError } from "../安全文件系统(FS加固)/atomic-file-write.js";
+import { detectFileEncoding } from "../共享小工具-未细化/safe-file-read.js";
 import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
 import { xA } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { P } from "./chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "./platform-detection.js";
 import * as x from "path/win32";
 class K {
   shellConfig = null;
@@ -35,7 +35,7 @@ function Pge() {
   return fe.of(B().host);
 }
 function SRt() {
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     let e = _1();
     if (e) ((process.env.SHELL = e), n(`Using bash path: "${e}"`));
     else n("Git Bash not found; BashTool will be unavailable");
@@ -137,7 +137,7 @@ import {
   sep as we,
 } from "path";
 function ot(e, t) {
-  let r = t ?? Q() ?? ae().cwd();
+  let r = t ?? getCwd() ?? ae().cwd();
   if (typeof e !== "string")
     throw TypeError(`Path must be a string, received ${typeof e}`);
   if (typeof r !== "string")
@@ -149,7 +149,7 @@ function ot(e, t) {
   if (i === "~") return zn(U());
   if (i.startsWith("~/")) return zn(he(U(), i.slice(2)));
   let s = i;
-  if (P() === "windows" && i.match(/^\/[a-z]\//i))
+  if (getCurrentPlatform() === "windows" && i.match(/^\/[a-z]\//i))
     try {
       s = Oge(i);
     } catch {
@@ -159,7 +159,7 @@ function ot(e, t) {
   return zn(ge(r, s));
 }
 function Net(e) {
-  let t = pe(Q(), e);
+  let t = pe(getCwd(), e);
   return t.startsWith("..") ? e : t;
 }
 function nL(e) {
@@ -181,7 +181,7 @@ function Gu(e) {
 }
 function y1(e) {
   let t = H(e);
-  if (P() === "windows") return t.replaceAll("\\", "/");
+  if (getCurrentPlatform() === "windows") return t.replaceAll("\\", "/");
   return t;
 }
 function kQ(e) {
@@ -511,7 +511,7 @@ function Far(e) {
   try {
     let t = ae(),
       { resolvedPath: r } = Ro(t, e);
-    return B8t(r);
+    return detectFileEncoding(r);
   } catch (t) {
     if (Rt(t) || Nz(t) || Bp(t))
       n(`detectFileEncoding failed for expected reason: ${A(t)}`, {
@@ -527,7 +527,7 @@ function LU(e) {
 }
 function ve(e) {
   let t = e ? ot(e) : void 0,
-    r = t ? z(Q(), t) : void 0;
+    r = t ? z(getCwd(), t) : void 0;
   return { absolutePath: t, relativePath: r };
 }
 function Ao(e) {
@@ -554,7 +554,7 @@ async function _ie(e) {
 }
 var yx = "Note: your current working directory is";
 async function W6(e) {
-  let t = Q(),
+  let t = getCwd(),
     r = O(t),
     i = e;
   try {
@@ -562,7 +562,7 @@ async function W6(e) {
     i = L(S, basename(e));
   } catch {}
   let s = r === T ? T : r + T,
-    c = P() === "windows" ? (S) => S.toLowerCase() : (S) => S,
+    c = getCurrentPlatform() === "windows" ? (S) => S.toLowerCase() : (S) => S,
     u = c(i);
   if (!u.startsWith(c(s)) || u.startsWith(c(t + T)) || u === c(t)) return;
   let w = z(r, i),
@@ -681,13 +681,13 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
         try {
           (fchmodSync(d, c), n("Applied original permissions to temp file"));
         } catch (g) {
-          if (!Xie(g)) throw g;
+          if (!isUnsupportedFsOperationError(g)) throw g;
           n(`fchmod unsupported on this filesystem: ${g}`);
         }
       try {
         fsyncSync(d);
       } catch (g) {
-        if (!Xie(g)) throw g;
+        if (!isUnsupportedFsOperationError(g)) throw g;
         n(`fsync unsupported on this filesystem: ${g}`);
       }
       S = !0;
@@ -709,12 +709,12 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
     )
       k(r.stagingDir);
     (n(`Renaming ${p} to ${o}`),
-      fPn(p, o, (g, E) => i.renameSync(g, E)),
+      renameWithRetrySync(p, o, (g, E) => i.renameSync(g, E)),
       n(`File ${o} written atomically`));
   } catch (d) {
     n(`Failed to write file atomically: ${d}`, { level: "error" });
     let b = A(d);
-    if ((S && b !== void 0 && lv.has(b)) || (!S && u && b === "EACCES")) {
+    if ((S && b !== void 0 && RENAME_FALLBACK_ERRNOS.has(b)) || (!S && u && b === "EACCES")) {
       let E;
       try {
         E = openSync(
@@ -737,7 +737,7 @@ function Kxn(e, t, r = { encoding: "utf-8" }) {
         try {
           fsyncSync(E);
         } catch (y) {
-          if (!Xie(y)) throw y;
+          if (!isUnsupportedFsOperationError(y)) throw y;
           n(`fsync unsupported on this filesystem: ${y}`);
         }
         closeSync(E);
@@ -832,13 +832,13 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
         try {
           (await d.chmod(c), n("Applied original permissions to temp file"));
         } catch (g) {
-          if (!Xie(g)) throw g;
+          if (!isUnsupportedFsOperationError(g)) throw g;
           n(`fchmod unsupported on this filesystem: ${g}`);
         }
       try {
         await d.sync();
       } catch (g) {
-        if (!Xie(g)) throw g;
+        if (!isUnsupportedFsOperationError(g)) throw g;
         n(`fsync unsupported on this filesystem: ${g}`);
       }
       S = !0;
@@ -858,12 +858,12 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
     )
       k(r.stagingDir);
     (n(`Renaming ${p} to ${o}`),
-      await Ri(p, o, (g, E) => i.rename(g, E)),
+      await renameWithRetry(p, o, (g, E) => i.rename(g, E)),
       n(`File ${o} written atomically`));
   } catch (d) {
     n(`Failed to write file atomically: ${d}`, { level: "error" });
     let b = A(d);
-    if ((S && b !== void 0 && lv.has(b)) || (!S && u && b === "EACCES")) {
+    if ((S && b !== void 0 && RENAME_FALLBACK_ERRNOS.has(b)) || (!S && u && b === "EACCES")) {
       let E;
       try {
         E = await D(
@@ -886,7 +886,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
         try {
           await E.sync();
         } catch (y) {
-          if (!Xie(y)) throw y;
+          if (!isUnsupportedFsOperationError(y)) throw y;
           n(`fsync unsupported on this filesystem: ${y}`);
         }
         await E.close();
@@ -922,7 +922,7 @@ async function wb(e, t, r = { encoding: "utf-8" }) {
 }
 var Pe = new Set(["Public", "Default", "Default User", "All Users"]);
 async function $ar() {
-  let e = P(),
+  let e = getCurrentPlatform(),
     t = ne(),
     r = ae();
   if (e === "macos") return L(t, "Desktop");
@@ -957,7 +957,7 @@ async function X5t(e, t = Dge) {
   }
 }
 function pf(e) {
-  let t = P() === "windows",
+  let t = getCurrentPlatform() === "windows",
     r = Se(e),
     i = t ? /[\\/]+$/ : /\/+$/,
     s = r.length > parse(r).root.length ? r.replace(i, "") : r;

@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { j, B, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { cf, ph, sQ, Hse, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -29,10 +29,10 @@ var t$n = "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
   y =
     "https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md";
 function u() {
-  return b(be(), "cache", "changelog.md");
+  return b(getClaudeConfigDir(), "cache", "changelog.md");
 }
 function p() {
-  return Ce.cache("changelog", "changelog.md");
+  return STORAGE_KEYS.cache("changelog", "changelog.md");
 }
 class v {
   content = null;
@@ -54,14 +54,14 @@ async function n$n(a) {
   } else {
     let r = u();
     try {
-      (await qt().mkdir(dirname(r)), await qt().writeExclusive(r, t.cachedChangelog));
+      (await getFileStorage().mkdir(dirname(r)), await getFileStorage().writeExclusive(r, t.cachedChangelog));
     } catch {}
   }
   await Te(({ cachedChangelog: r, ...e }) => e, a);
 }
 async function YQt(a) {
   if (ke()) return;
-  if (St()) return;
+  if (isEssentialTrafficOnly()) return;
   let t = y,
     r = await externalHttp.get(t);
   if (r.status === 200) {
@@ -69,14 +69,14 @@ async function YQt(a) {
       i = m();
     if (e === i.content) return;
     let o = u();
-    if ((await qt().mkdir(dirname(o)), isHoverRestEnabled() && a)) {
+    if ((await getFileStorage().mkdir(dirname(o)), isHoverRestEnabled() && a)) {
       let s = await a.write(p(), e, { publishDiscipline: "inPlace" });
       if (!s.ok)
         throw (
           n(`fetchAndStoreChangelog: ${s.error.code}`),
           Error("fetchAndStoreChangelog: v5 write failed")
         );
-    } else await qt().write(o, e);
+    } else await getFileStorage().write(o, e);
     i.remember(e);
     let l = Date.now();
     await Te((s) => ({ ...s, changelogLastFetched: l }), a);
@@ -92,7 +92,7 @@ async function tWe(a) {
   }
   let r = u();
   try {
-    let e = await qt().read(r);
+    let e = await getFileStorage().read(r);
     return (t.remember(e), e);
   } catch {
     return (t.remember(""), "");
@@ -112,7 +112,7 @@ function d(a) {
       if (i.length === 0) continue;
       let o = i[0];
       if (!o) continue;
-      let l = ft(o, " - ").trim();
+      let l = beforeFirst(o, " - ").trim();
       if (!l) continue;
       let s = i
         .slice(1)

@@ -10,10 +10,10 @@
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { sessionIdBody } from "../../02-功能模块/权限系统/chunk-ynkf3yy4.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qt } from "./chunk-km6n9zrg.js";
-import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "./file-storage.js";
+import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { b, z, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "./lazy-value.js";
 import { s, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dirname, join as w } from "path";
@@ -23,7 +23,7 @@ var D = 50,
   ),
   u = "device-unbound-creates";
 function d() {
-  return w(be(), "state", `${u}.json`);
+  return w(getClaudeConfigDir(), "state", `${u}.json`);
 }
 async function f(r) {
   let o = await r.readText();
@@ -74,7 +74,7 @@ async function unboundCreateReason(r, o, t) {
 }
 function productionUnboundCreatesDeps(r) {
   let o = isHoverRestEnabled() && r !== void 0 ? r : void 0,
-    t = Ce.state(u);
+    t = STORAGE_KEYS.state(u);
   return {
     readText: async () => {
       if (o) {
@@ -84,7 +84,7 @@ function productionUnboundCreatesDeps(r) {
         return i.found ? i.value : void 0;
       }
       try {
-        return await qt().read(d());
+        return await getFileStorage().read(d());
       } catch (e) {
         if (W(e)) return;
         throw e;
@@ -97,7 +97,7 @@ function productionUnboundCreatesDeps(r) {
         return;
       }
       let i = d();
-      (await qt().mkdir(dirname(i), 448), await qt().atomicWrite(i, e, 384));
+      (await getFileStorage().mkdir(dirname(i), 448), await getFileStorage().atomicWrite(i, e, 384));
     },
     now: () => new Date(),
     retentionCutoff: async () => {

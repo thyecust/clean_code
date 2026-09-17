@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { z7, J$t, d3, Rk, resetSentSkillNames, clearCommandsCache, getSkillToolCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var M = async (C, m) => {
-  let t = Q(),
+  let t = getCwd(),
     d = J$t(m.getMcp().commands),
     s = (o) => z7(o, d),
     n = s(await getSkillToolCommands(t, m.storageV5)),
@@ -30,10 +30,10 @@ var M = async (C, m) => {
   if (l > 0) a.push(`${l} added`);
   if (r > 0) a.push(`${r} removed`);
   let p = a.length > 0 ? a.join(", ") : "no changes",
-    f = Hr() ? " (custom skills are disabled in safe mode)" : "";
+    f = isSafeMode() ? " (custom skills are disabled in safe mode)" : "";
   return {
     type: "text",
-    value: `Reloaded skills: ${e.length} ${x(e.length, "skill")} available (${p})${f}`,
+    value: `Reloaded skills: ${e.length} ${pluralize(e.length, "skill")} available (${p})${f}`,
   };
 };
 export { M as call };

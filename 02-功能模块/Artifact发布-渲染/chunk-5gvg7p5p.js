@@ -9,16 +9,16 @@
 // Version: 2.1.263
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import {
-  e8,
-  Pxt,
-  Oxt,
-  _ur,
-  yur,
-  Sur,
-  bur,
-  oxe,
-  wur,
-  Tur,
+  COWRITTEN_ARTIFACT_HTML_TAG,
+  COWRITTEN_ARTIFACT_HTML_INTRO,
+  COWRITTEN_ARTIFACT_HTML_OUTRO,
+  SLACK_ARTIFACT_HTML_INTRO,
+  SLACK_ARTIFACT_HTML_OUTRO,
+  ARTIFACT_TYPE_PAGE_INTRO,
+  ARTIFACT_TYPE_PAGE_OUTRO,
+  ARTIFACT_FILE_CONTENT_TAG,
+  ARTIFACT_FILE_CONTENT_INTRO,
+  ARTIFACT_FILE_CONTENT_OUTRO,
 } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { u1, ARTIFACT_TOOL_NAME, artifactUrlSubPath, faviconClause, scrubArtifactEnvelopeTags, scrubbedHead } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { ne } from "./chunk-rr78st95.js";
@@ -269,13 +269,13 @@ async function ucn({
 ${_.length > y ? `${scrubbedHead(_, Math.max(0, y - Y.length))}${Y}` : _}`),
         (m = observedWithoutSource(o.agentId, t.slug, e.ver)));
     } else {
-      let h = `${wur}
-<${oxe}>
+      let h = `${ARTIFACT_FILE_CONTENT_INTRO}
+<${ARTIFACT_FILE_CONTENT_TAG}>
 `,
         A = `
-</${oxe}>
+</${ARTIFACT_FILE_CONTENT_TAG}>
 
-${Tur}`,
+${ARTIFACT_FILE_CONTENT_OUTRO}`,
         H = e.role === "reader" && !u ? "all" : "page",
         _ = scrubArtifactEnvelopeTags(e.html, H),
         T = a - (u1 - lht),
@@ -481,12 +481,12 @@ ${_e}`;
     Q = "",
     W = scrubArtifactEnvelopeTags(e.html, "page");
   if (q) {
-    let [s, p] = u ? [_ur, yur] : e.typeLocked && i ? [Sur, bur] : [Pxt, Oxt];
+    let [s, p] = u ? [SLACK_ARTIFACT_HTML_INTRO, SLACK_ARTIFACT_HTML_OUTRO] : e.typeLocked && i ? [ARTIFACT_TYPE_PAGE_INTRO, ARTIFACT_TYPE_PAGE_OUTRO] : [COWRITTEN_ARTIFACT_HTML_INTRO, COWRITTEN_ARTIFACT_HTML_OUTRO];
     ((J = `${s}
-<${e8}>
+<${COWRITTEN_ARTIFACT_HTML_TAG}>
 `),
       (Q = `
-</${e8}>
+</${COWRITTEN_ARTIFACT_HTML_TAG}>
 
 ${p}`));
   }

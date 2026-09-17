@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Gbe } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
+import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
+import { TRUNCATE_MAX_LENGTH } from "../../02-功能模块/权限系统/chunk-z0pt04s8.js";
 function truncateWithEllipsis(r) {
-  return r.length <= Gbe ? r : `${oe(r, Gbe - 1)}\u2026`;
+  return r.length <= TRUNCATE_MAX_LENGTH ? r : `${truncateToCodeUnits(r, TRUNCATE_MAX_LENGTH - 1)}\u2026`;
 }
 export { truncateWithEllipsis };

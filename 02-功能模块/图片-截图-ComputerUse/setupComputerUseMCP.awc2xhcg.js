@@ -12,9 +12,9 @@
 import { s0, UCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { rc } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { WSe } from "./chunk-6842b6x1.js";
-import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
+import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 function setupComputerUseMCP() {
-  let o = WSe(UCt, GSe()).map((e) => rc(s0, e.name));
+  let o = WSe(UCt, getFrozenCoordinateMode()).map((e) => rc(s0, e.name));
   return {
     mcpConfig: {
       [s0]: {

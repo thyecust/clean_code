@@ -9,24 +9,24 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Ia, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { TV, b2t, lH, A2t, S4n, C2t, Ipn, Ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { vh } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { OverflowHint } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
-import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { BulletItem } from "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -415,7 +415,7 @@ https://code.claude.com/docs/en/jetbrains`
             flexDirection: "column",
             children: [
               B.slice(0, 4).map(ao),
-              B.length > 4 && e(vh, { count: B.length - 4, unit: "IDE" }),
+              B.length > 4 && e(OverflowHint, { count: B.length - 4, unit: "IDE" }),
             ],
           }),
         ],
@@ -600,7 +600,7 @@ async function openProjectInSelectedIDE(n, s, m, l) {
     a = h ? await C2t(h, n.name) : null;
   if (!a) {
     l(
-      `Please open the ${m ? "worktree" : "project"} manually in ${ie.bold(n.name)}: ${s}`,
+      `Please open the ${m ? "worktree" : "project"} manually in ${chalk.bold(n.name)}: ${s}`,
     );
     return;
   }
@@ -610,7 +610,7 @@ async function openProjectInSelectedIDE(n, s, m, l) {
     ({ code: g } = await execFileNoThrow("code", [s], w));
   if (g === 0) {
     (logFeatureOk("ide_open_project"),
-      l(`Opened ${m ? "worktree" : "project"} in ${ie.bold(n.name)}`));
+      l(`Opened ${m ? "worktree" : "project"} in ${chalk.bold(n.name)}`));
     return;
   }
   (logFeatureBad("ide_open_project", "ide_open_project_failed"),
@@ -624,7 +624,7 @@ async function cn(n, s, m) {
   } = s;
   if (m?.trim() === "open") {
     let I = Ia(),
-      x = I ? I.worktreePath : Q(),
+      x = I ? I.worktreePath : getCwd(),
       b = (await A2t(!0)).filter((T) => T.isValid);
     if (b.length === 0)
       return (n("No IDEs with Claude Code extension detected."), null);
@@ -642,9 +642,9 @@ async function cn(n, s, m) {
       x = (D) => {
         if (s.onInstallIDEExtension)
           if ((s.onInstallIDEExtension(D), TV(D)))
-            n(`Installed plugin to ${ie.bold(Ng(D))}
-Please ${ie.bold("restart your IDE")} completely for it to take effect`);
-          else n(`Installed extension to ${ie.bold(Ng(D))}`);
+            n(`Installed plugin to ${chalk.bold(Ng(D))}
+Please ${chalk.bold("restart your IDE")} completely for it to take effect`);
+          else n(`Installed extension to ${chalk.bold(Ng(D))}`);
       };
     if (I.length > 1)
       return e(pt, {
@@ -678,8 +678,8 @@ function ft(_n) {
       onDone: v,
     } = _n,
     [S, kn] = d(null),
-    P = U(uo),
-    at = It(),
+    P = useAppStateSelector(uo),
+    at = useSetAppState(),
     ct = C(!0),
     Ut,
     Qt;
@@ -736,7 +736,7 @@ function ft(_n) {
       }
       if (!oe) {
         if (P && P.type === "connected" && L) {
-          Q3(P, po);
+          setMcpClientOnClose(P, po);
           let { clearServerCache: Pn } = import.meta
             .require("../MCP客户端/mcpClientModule.4cyej0np.js")
             .mcpClientModule();
@@ -809,7 +809,7 @@ function ft(_n) {
 }
 function formatWorkspaceFolders(n, s = 100) {
   if (n.length === 0) return "";
-  let m = Q(),
+  let m = getCwd(),
     l = n.slice(0, 2),
     h = n.length > 2,
     a = h ? 3 : 0,

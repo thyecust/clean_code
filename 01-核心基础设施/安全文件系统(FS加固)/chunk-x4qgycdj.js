@@ -11,8 +11,8 @@ import { $M, SYNCED_FILE_WRITE_MODE, T3, Pht, o$, ej, TE } from "../../03-入口
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Jbe } from "../共享小工具-未细化/chunk-37w8v4sh.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { computeContentDigests } from "../共享小工具-未细化/sync-state-schema.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 import { lstat } from "fs/promises";
 import { join as ae } from "path";
@@ -47,7 +47,7 @@ function c3n(e) {
 async function P9(e, r, s, i = null) {
   let o = await o$(e, r, s, i);
   return o.kind === "read"
-    ? { ...Jbe(o.content), content: o.content, mode: o.mode }
+    ? { ...computeContentDigests(o.content), content: o.content, mode: o.mode }
     : null;
 }
 import { close, constants as N, fstat } from "fs";
@@ -730,6 +730,6 @@ async function SO(e, r) {
 import * as Ke from "fs/promises";
 import * as xe from "path";
 function uk(e = {}) {
-  return { fs: Ke, path: xe, platform: () => P(), ...e };
+  return { fs: Ke, path: xe, platform: () => getCurrentPlatform(), ...e };
 }
 export { vze, Rze, pI, a3n, l3n, c3n, P9, Zan, eln, u3n, SO, uk };

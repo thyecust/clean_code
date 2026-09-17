@@ -13,13 +13,13 @@ import { bQ } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Rq, AQ } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
+import { SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH, MAX_CREDENTIAL_BYTES } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { startGuestVitalsEmitter } from "../../02-功能模块/自托管Runner/guest-vitals-emitter.js";
 import { Wi } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 async function startHostedWorkerVitalsEmitter({ sessionId: o, sdkUrl: i }) {
   try {
-    let t = a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ?? Rq;
-    if (!(await Wi(t, AQ))?.trim()) {
+    let t = a.CLAUDE_SESSION_INGRESS_TOKEN_FILE ?? SESSION_INGRESS_TOKEN_WELL_KNOWN_PATH;
+    if (!(await Wi(t, MAX_CREDENTIAL_BYTES))?.trim()) {
       n("[vitals] no session token file on this worker; guest vitals disabled");
       return;
     }

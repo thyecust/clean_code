@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Tie } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { vk, DX, sVn, ajt, tfn, MX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Je } from "../Hooks钩子/chunk-bzqqe6xh.js";
-import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { HooksError } from "../Hooks钩子/chunk-bzqqe6xh.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { defineExportGetters } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -31,7 +31,7 @@ var d = (o) => ({ type: "text", level: "error", value: o });
 import { resolve as z } from "path";
 async function M(o, e, r) {
   let t = z(o, e),
-    a = (s) => new Je(`${t}: ${s}`);
+    a = (s) => new HooksError(`${t}: ${s}`);
   try {
     await ajt(t, a);
     let s = await sVn(t);
@@ -200,7 +200,7 @@ function po(o) {
 }
 var y = "claude-code.d.ts";
 var H = "./claude-code.d.ts-4adb7067.txt.zst";
-var U = Ke(H, import.meta.dirname);
+var U = readEmbeddedAssetSync(H, import.meta.dirname);
 var G = U;
 var uo = (o, e) =>
   `// Written by Claude Code ${o}.
@@ -215,7 +215,7 @@ function outputJsonSchemaOf(o) {
   }
 }
 var ho = async (o, e) => {
-  let r = Q(),
+  let r = getCwd(),
     t = E(r, o.trim() || P),
     a = getToolPermissionContext(e),
     s = po(
@@ -283,11 +283,11 @@ var ho = async (o, e) => {
     Z =
       s.length === 0
         ? `Wrote ${C}: no MCP tools are connected, so it is empty (every mcp__* tool stays loosely typed).`
-        : `Wrote ${C}: ${s.length} MCP ${x(s.length, "tool")} from ${l.size} ${x(l.size, "server")}.`;
+        : `Wrote ${C}: ${s.length} MCP ${pluralize(s.length, "tool")} from ${l.size} ${pluralize(l.size, "server")}.`;
   return {
     type: "text",
     value: [
-      `Wrote ${v}: the plugin API (module 'claude-code', early access: it may change between releases) and ${c.length} built-in ${x(c.length, "tool")}.`,
+      `Wrote ${v}: the plugin API (module 'claude-code', early access: it may change between releases) and ${c.length} built-in ${pluralize(c.length, "tool")}.`,
       Z,
       `Point the plugin's tsconfig.json (or jsconfig.json) at them: "include": ["${relative(r, p) || "."}", "hooks"] with "lib": ["es2023"] and "jsx": "react", "jsxFactory": "h"; the header of ${y} has the whole file. Then \`import type { Register } from "claude-code"\` types register(on, options), and e narrows per tool.`,
     ].join(`

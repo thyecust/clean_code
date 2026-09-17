@@ -14,10 +14,10 @@ import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Eg } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { SEND_USER_FILE_TOOL_NAME, DESCRIPTION, SEND_USER_FILE_TOOL_PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-a5errgr8.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
@@ -87,7 +87,7 @@ var SendUserFileTool = buildTool({
     return y();
   },
   isEnabled() {
-    if (getAPIProvider() !== "firstParty" || St()) return !1;
+    if (getAPIProvider() !== "firstParty" || isEssentialTrafficOnly()) return !1;
     if (!isPolicyAllowed("allow_send_file")) return !1;
     if (!H("tengu_send_user_file", !0)) return !1;
     return (ic() || h()) && !isBriefEnabled();
@@ -116,7 +116,7 @@ var SendUserFileTool = buildTool({
       d = [];
     if (o.length > 0)
       d.push(
-        `${o.length} ${x(o.length, "file")} delivered to user.` +
+        `${o.length} ${pluralize(o.length, "file")} delivered to user.` +
           (l.length > 0
             ? `
 ${l.join(`
@@ -129,19 +129,19 @@ ${l.join(`
 `);
       if (e.rendered_locally)
         d.push(
-          `${r.length} ${x(r.length, "file")} NOT delivered to Remote Control (phone/web) viewers \u2014 only visible in the desktop app on this machine:
+          `${r.length} ${pluralize(r.length, "file")} NOT delivered to Remote Control (phone/web) viewers \u2014 only visible in the desktop app on this machine:
 ` +
             f +
             `
-Tell the user the ${x(r.length, "file is", "files are")} only visible in the desktop app, and why.`,
+Tell the user the ${pluralize(r.length, "file is", "files are")} only visible in the desktop app, and why.`,
         );
       else
         d.push(
-          `${r.length} ${x(r.length, "file")} could NOT be delivered to the user:
+          `${r.length} ${pluralize(r.length, "file")} could NOT be delivered to the user:
 ` +
             f +
             `
-Tell the user the ${x(r.length, "file was", "files were")} not delivered and why.`,
+Tell the user the ${pluralize(r.length, "file was", "files were")} not delivered and why.`,
         );
     }
     return {
@@ -187,7 +187,7 @@ Tell the user the ${x(r.length, "file was", "files were")} not delivered and why
 });
 function h() {
   return (
-    !!a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE || a.CLAUDE_CODE_REMOTE || Eg()
+    !!a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE || a.CLAUDE_CODE_REMOTE || isDesktopHostSession()
   );
 }
 export { SendUserFileTool };

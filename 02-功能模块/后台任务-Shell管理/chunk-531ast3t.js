@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { WT } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { MTe, pjt, isTranscriptPersistenceDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { OAe } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
-import { ny } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-function Lee() {
+import { isCheckinOrigin } from "../../01-核心基础设施/共享小工具-未细化/chunk-6dk85bs6.js";
+import { ny } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+function isAgentsViewAvailable() {
   return ny() && !Nn();
 }
 function p(e, t) {
@@ -31,7 +31,7 @@ function f(e) {
   if (e.isExternalLoading) return { ok: !1, reason: "loading", inFlight: t };
   return { ok: !0, via: p(e.isLoading, e.betweenCalls), inFlight: t };
 }
-function Tut(e, t) {
+function isBetweenCalls(e, t) {
   return !t && !d(e);
 }
 function d(e) {
@@ -42,7 +42,7 @@ function d(e) {
   }
   return !1;
 }
-function hNt(e) {
+function countPartialAssistantChars(e) {
   let t = 0;
   for (let r = e.length - 1; r >= 0; r--) {
     let o = e[r];
@@ -54,7 +54,7 @@ function hNt(e) {
   }
   return t;
 }
-function _Nt(e, t) {
+function getPartialAssistantText(e, t) {
   let r = e.length;
   for (let i = e.length - 1; i >= 0; i--) {
     let s = e[i];
@@ -72,7 +72,7 @@ function _Nt(e, t) {
   }
   return o + (t ?? "");
 }
-function yNt(e) {
+function createHeldScreeningPredicate(e) {
   let t,
     r = !1;
   return (o) => {
@@ -90,10 +90,10 @@ function yNt(e) {
     }
   };
 }
-function SNt(e, t) {
+function countCommandsThatWouldBeLost(e, t) {
   let r = 0;
   for (let o of e) {
-    if (OAe(o)) continue;
+    if (isCheckinOrigin(o)) continue;
     if (
       o.priority === "later" ||
       o.drainOnly === !0 ||
@@ -109,8 +109,8 @@ function SNt(e, t) {
   }
   return r;
 }
-function fjn(e) {
-  return `Still backgrounding after the current tool \u2014 waiting for ${e} running ${x(e, "subagent")} so the work carries over. Press \u2190 again to skip ahead and restart ${e === 1 ? "it" : "them"} from the beginning.`;
+function formatStillBackgroundingMessage(e) {
+  return `Still backgrounding after the current tool \u2014 waiting for ${e} running ${pluralize(e, "subagent")} so the work carries over. Press \u2190 again to skip ahead and restart ${e === 1 ? "it" : "them"} from the beginning.`;
 }
 function a(e) {
   if (e.type !== "user") return !1;
@@ -128,7 +128,7 @@ function g(e) {
   if (e.type === "user") return WT(e);
   return !1;
 }
-function cPe(e) {
+function stripAbortedTurnMessages(e) {
   let t = e.length,
     r = !1;
   while (t > 0) {
@@ -151,15 +151,15 @@ function cPe(e) {
   if (t + o.length === e.length) return e;
   return [...e.slice(0, t), ...o];
 }
-function xGe(e) {
-  let t = cPe(e);
+function getAbortBoundaryUuid(e) {
+  let t = stripAbortedTurnMessages(e);
   for (let r = t.length - 1; r >= 0; r--) {
     let o = t[r].type;
     if (o === "user" || o === "assistant") return t[r].uuid;
   }
   return;
 }
-function mjn(e, t) {
+function isTranscriptUnchangedSinceMark(e, t) {
   if (e === null || e.length < 1 || e.length > t.length) return !1;
   let r = e.length - 1;
   if (t[r]?.uuid !== e.uuid) return !1;
@@ -169,7 +169,7 @@ function mjn(e, t) {
   }
   return !0;
 }
-function Eut(e) {
+function hasPendingUserTurn(e) {
   for (let t = e.length - 1; t >= 0; t--) {
     let r = e[t];
     if (r.type === "user") return !WT(r);
@@ -177,10 +177,10 @@ function Eut(e) {
   }
   return !1;
 }
-function bNt(e) {
+function isBackgroundFork(e) {
   return e.ok && e.via !== "detach";
 }
-function HGe(e) {
+function getBackgroundDecision(e) {
   return f({
     ...e,
     fleetEnabled: ny(),
@@ -188,4 +188,4 @@ function HGe(e) {
     persistenceDisabled: isTranscriptPersistenceDisabled(),
   });
 }
-export { Lee, Tut, hNt, _Nt, yNt, SNt, fjn, cPe, xGe, mjn, Eut, bNt, HGe };
+export { isAgentsViewAvailable, isBetweenCalls, countPartialAssistantChars, getPartialAssistantText, createHeldScreeningPredicate, countCommandsThatWouldBeLost, formatStillBackgroundingMessage, stripAbortedTurnMessages, getAbortBoundaryUuid, isTranscriptUnchangedSinceMark, hasPendingUserTurn, isBackgroundFork, getBackgroundDecision };

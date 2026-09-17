@@ -11,9 +11,9 @@ import { dl } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ku } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { hbe } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
-import { P } from "./chunk-13kdp2ag.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { isAbsolutePath } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
+import { getCurrentPlatform } from "./platform-detection.js";
 import { fileURLToPath, pathToFileURL } from "url";
 var s = { useCwd: !0, useToolMemoryCgroup: !1 },
   ALLOWED_HYPERLINK_SCHEMES = new Set([
@@ -54,7 +54,7 @@ async function openPathInDefaultApp(r) {
 }
 async function f(r) {
   try {
-    let e = P();
+    let e = getCurrentPlatform();
     if (e === "macos") {
       let { code: t } = await execFileNoThrow("open", ["-R", "--", r]);
       return t === 0;
@@ -90,7 +90,7 @@ async function openHyperlink(r) {
     if (e.host !== "") return !1;
     try {
       let t = fileURLToPath(r);
-      if (ku(t) || hbe(t)) return !1;
+      if (ku(t) || isAbsolutePath(t)) return !1;
       return await f(t);
     } catch {
       return !1;
@@ -113,7 +113,7 @@ function isHeadlessEnvironment() {
   return i();
 }
 function i() {
-  return P() === "linux" && !a.DISPLAY && !a.WAYLAND_DISPLAY;
+  return getCurrentPlatform() === "linux" && !a.DISPLAY && !a.WAYLAND_DISPLAY;
 }
 async function openUrlInBrowser(r) {
   try {

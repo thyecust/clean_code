@@ -14,8 +14,8 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { xg } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { spawn } from "child_process";
 import { homedir } from "os";
 import { join as v } from "path";
@@ -114,7 +114,7 @@ To use voice mode, run Claude Code locally instead.`,
       "If WSLg is not available (for example WSL1), run Claude Code in native Windows instead.",
     d = await u("sox");
   if (d && (await u("rec"))) return { available: !0, reason: null };
-  if (P() === "wsl") return { available: !1, reason: t };
+  if (getCurrentPlatform() === "wsl") return { available: !1, reason: t };
   if (!d) {
     let i = await b();
     return {

@@ -7,12 +7,12 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { J7, G9, wO, Q7, Kft, zOe, PF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { VYe, KYe, QTt, ZTt, eEt, XYe, GFe, lEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { statSync } from "fs";
 import { join as me } from "path";
 var Ycn = ["-verbose", "-debug"],
@@ -822,7 +822,7 @@ class Z {
     if (t === void 0) {
       let n = this.list()
         .filter((s) => s !== "")
-        .map((s) => iu(s.slice(1)));
+        .map((s) => escapeRegExp(s.slice(1)));
       ((t = new RegExp(`\\.(${n.join("|")})$`, "i")),
         this.regexByPathext.set(e, t));
     }
@@ -867,8 +867,8 @@ function Ae(e, t) {
   return (o.at(-1) ?? "").toLowerCase();
 }
 function xe(e) {
-  if (P() !== "windows") return null;
-  let t = Q(),
+  if (getCurrentPlatform() !== "windows") return null;
+  let t = getCwd(),
     n = new Set();
   for (let { base: s, stem: o } of I$t(e))
     for (let r of s === o ? [o] : [o, s]) {
@@ -907,7 +907,7 @@ function xft(e) {
     n === "push-location" ||
     n === "pop-location" ||
     n === "new-psdrive" ||
-    (P() === "windows" && (n === "ndr" || n === "mount"))
+    (getCurrentPlatform() === "windows" && (n === "ndr" || n === "mount"))
   );
 }
 function OOe(e) {
@@ -1132,7 +1132,7 @@ function bwe(e, t) {
     o = Ee.has(s),
     r = s.includes("-"),
     c = e.nameType !== "cmdlet";
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     if (c || o) {
       for (let i of e.args)
         if (L(i, !r || e.nameType === "application")) return !1;
@@ -1255,7 +1255,7 @@ function Le(e) {
 }
 function K(e) {
   if (e.length === 0) return !0;
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     for (let u of e) if (L(u)) return !1;
   }
   for (let u of e) if (u.includes("$")) return !1;
@@ -1271,7 +1271,7 @@ function K(e) {
       )
         return !1;
     let f = u.includes("="),
-      g = f ? ft(u, "=") : u;
+      g = f ? beforeFirst(u, "=") : u;
     if (ve.has(g)) return !1;
     if (!f && ee.has(g)) t += 2;
     else t++;
@@ -1316,7 +1316,7 @@ var Y = new Set(QTt.filter((e) => /^-[^-]$/.test(e)).map((e) => e[1])),
 function Oe(e) {
   if (e.length === 0) return !0;
   let t = R(e);
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     for (let r of e) if (L(r)) return !1;
   }
   for (let r of t) if (r.includes("$")) return !1;

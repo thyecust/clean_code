@@ -9,21 +9,21 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Rh } from "./chunk-5jv5fvbn.js";
-import { KY, g_, zI, VI } from "./chunk-djserjj5.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { getVerifiedDaemonLock } from "./daemon-lock.js";
+import { getDaemonRuntimeDir, redactDaemonNonce, getRosterFilePath, getControlSocketPath } from "./chunk-djserjj5.js";
 import { BG_PROTO, rosterKey, readRoster } from "./chunk-7wsy8vxb.js";
 import { controlRequest } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import { tF } from "./chunk-jfk5mpe1.js";
-import { kle, Y0e } from "../权限系统/chunk-3kjwvb3e.js";
+import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../权限系统/chunk-3kjwvb3e.js";
 import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { readFile, stat as f } from "fs/promises";
 async function getBgDaemonStatus(e) {
-  let r = await Rh(1, e).catch(() => null),
+  let r = await getVerifiedDaemonLock(1, e).catch(() => null),
     t = r?.logPath ?? getDaemonLogPath(),
     [n, i, o, a, k, b] = await Promise.all([
       controlRequest({ op: "ping", proto: BG_PROTO }, { timeoutMs: 1000 }).catch((l) => ({
@@ -39,9 +39,9 @@ async function getBgDaemonStatus(e) {
     ]),
     u;
   try {
-    u = VI();
+    u = getControlSocketPath();
   } catch {
-    u = P() === "windows" ? "\\\\.\\pipe\\cc-daemon-*" : "<unavailable>";
+    u = getCurrentPlatform() === "windows" ? "\\\\.\\pipe\\cc-daemon-*" : "<unavailable>";
   }
   let d = null,
     g = null,
@@ -84,10 +84,10 @@ async function getBgDaemonStatus(e) {
           uptimeSec: Math.floor((Date.now() - r.startedAt) / 1000),
         }
       : null,
-    sockDir: P() === "windows" ? "\\\\.\\pipe\\cc-daemon-*" : KY(),
+    sockDir: getCurrentPlatform() === "windows" ? "\\\\.\\pipe\\cc-daemon-*" : getDaemonRuntimeDir(),
     controlSock: u,
     controlReachable: n.ok,
-    controlError: n.ok ? void 0 : g_(n.error),
+    controlError: n.ok ? void 0 : redactDaemonNonce(n.error),
     workersLive: d,
     workersSkewed: g,
     workersRoster: Object.keys(i.workers).length,
@@ -107,11 +107,11 @@ async function S(e) {
     });
     return r?.ok ? { mtimeMs: r.value.mtimeMs } : null;
   }
-  return f(zI()).catch(() => null);
+  return f(getRosterFilePath()).catch(() => null);
 }
 async function v(e, r) {
   if (r && e === getDaemonLogPath()) {
-    let t = await r.statMeta(Ce.state("daemon-log")).catch(() => {
+    let t = await r.statMeta(STORAGE_KEYS.state("daemon-log")).catch(() => {
       return;
     });
     return t?.ok ? { size: t.value.size } : null;
@@ -121,13 +121,13 @@ async function v(e, r) {
 async function y(e, r) {
   let t;
   if (r && e === getDaemonJsonPath()) {
-    let o = await Y0e(r);
+    let o = await readDaemonConfigContent(r);
     if (o.kind !== "text") return 0;
     t = o.text;
   } else
     try {
       let o = await f(e);
-      if (!o.isFile() || o.size > kle) return 0;
+      if (!o.isFile() || o.size > DAEMON_CONFIG_MAX_BYTES) return 0;
       t = await readFile(e, "utf8");
     } catch {
       return 0;
@@ -177,7 +177,7 @@ function formatBgDaemonStatus(e) {
     !e.supervisor && !e.controlReachable && e.workersRoster > 0)
   )
     r.push(
-      `  warning:      supervisor not running but ${e.workersRoster} ${x(e.workersRoster, "worker")} in roster \u2014 running \`claude agents\` restarts the daemon and re-adopts still-running sessions; run \`claude daemon stop --any\` to reap them instead`,
+      `  warning:      supervisor not running but ${e.workersRoster} ${pluralize(e.workersRoster, "worker")} in roster \u2014 running \`claude agents\` restarts the daemon and re-adopts still-running sessions; run \`claude daemon stop --any\` to reap them instead`,
     );
   return r.join(`
 `);

@@ -12,7 +12,7 @@
 import { NON_INHERITED_SESSION_ENV_VARS } from "../../02-功能模块/Workflow编排/session-env-vars.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { receiveSpareClaim, bootClaimedSpare } from "../../01-核心基础设施/共享小工具-未细化/spare-session-claim.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
 import { mkdirSync, unlinkSync, writeFileSync } from "fs";
 import { dirname } from "path";
 var P = "/home/claude/.claude/remote/spare.sock";

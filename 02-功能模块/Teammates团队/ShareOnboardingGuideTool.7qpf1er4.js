@@ -14,7 +14,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { SHARE_ONBOARDING_GUIDE_TOOL_NAME, SHARE_ONBOARDING_GUIDE_TOOL_DESCRIPTION } from "./share-onboarding-guide-tool.js";
-import { zSe, rjn, pon, ojn, fon } from "./chunk-w2g8t42p.js";
+import { zSe, createOnboardingGuide, updateOnboardingGuide, deleteOnboardingGuide, listOnboardingGuides } from "./onboarding-guide-api.js";
 import { s, c, Qe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { readFile, stat as b } from "fs/promises";
 import { join as O } from "path";
@@ -91,7 +91,7 @@ var k = createLazyValue(() =>
               let e = o ?? (await p(t))?.short_code;
               if (!e) return i("No guide found for this org to delete.");
               return (
-                await ojn(e, t),
+                await deleteOnboardingGuide(e, t),
                 { data: { status: "deleted", message: `Guide ${e} deleted.` } }
               );
             } catch (e) {
@@ -101,7 +101,7 @@ var k = createLazyValue(() =>
           if (a === "check")
             try {
               let e = o
-                ? (await fon(t)).find((r) => r.short_code === o)
+                ? (await listOnboardingGuides(t)).find((r) => r.short_code === o)
                 : await p(t);
               if (e) {
                 let r = O(he(), u),
@@ -125,7 +125,7 @@ var k = createLazyValue(() =>
                     `${u} is over ${h / 1024}KB. Trim it before sharing.`,
                   );
                 let w = await readFile(r, "utf8"),
-                  _ = await pon(e.short_code, w, t);
+                  _ = await updateOnboardingGuide(e.short_code, w, t);
                 return g("updated", _.share_url, _.short_code, !1);
               }
             } catch (e) {
@@ -152,11 +152,11 @@ var k = createLazyValue(() =>
             if (a === "update") {
               let r = o ?? (await p(t))?.short_code;
               if (r) {
-                let d = await pon(r, f, t);
+                let d = await updateOnboardingGuide(r, f, t);
                 return g("updated", d.share_url, d.short_code, !0);
               }
             }
-            let e = await rjn(f, void 0, t);
+            let e = await createOnboardingGuide(f, void 0, t);
             return g("created", e.share_url, e.short_code, !1);
           } catch (e) {
             let r = e instanceof Error ? e.message : String(e);
@@ -176,7 +176,7 @@ var k = createLazyValue(() =>
     },
   });
 async function p(t) {
-  let a = await fon(t);
+  let a = await listOnboardingGuides(t);
   if (a.length === 0) return;
   return a.reduce((o, n) => (o.updated_at > n.updated_at ? o : n));
 }

@@ -15,29 +15,29 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { tl } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { bc, getGlobalClaudeFile, env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { OAUTH_GLOBAL_FILE_SUFFIXES, fileSuffixForOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Bt, Mn, Wl } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
-import { jcr, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { fi, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isTempFilePath, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { GITHUB_HOST, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { n_ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot, rL } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { b2, Lg, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gj, $d, ome, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import "../自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../自动更新-安装/chunk-2g5h49pk.js";
@@ -70,7 +70,7 @@ import {
   vNn,
 } from "./chunk-cgmv5fe7.js";
 import { serverToolsValueNamesSelfHostedRunnerTool, sanitizeServerClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/chunk-02q6xmh3.js";
-import { XYt } from "./chunk-vanzsjh3.js";
+import { configureGitGovernedEntries } from "./runner-git-config.js";
 import { startGuestVitalsEmitter } from "./guest-vitals-emitter.js";
 import { appendClaudeCodeArgs } from "../../01-核心基础设施/共享小工具-未细化/claude-code-args.js";
 import { OTEL_DIAG_ERROR_LOG_PREFIX } from "../../01-核心基础设施/共享小工具-未细化/otel-diag-logger.js";
@@ -98,12 +98,12 @@ import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未
 import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
-import { AP, FR, vRe, H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
-import { Zie, wxt, nXt, Lnt, Mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-h1jrnver.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { decodeTokenClaims, getTokenExpiry, createTokenRefreshScheduler, decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
+import { getProcStartTime, getProcParentPid, nXt, getProcState, isExitedProcessState } from "../../01-核心基础设施/共享小工具-未细化/linux-proc-stat.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { execFileSync } from "child_process";
 import { createWriteStream, fchmod } from "fs";
@@ -168,7 +168,7 @@ var ui = 4096,
   Mr = 64;
 function Gr(e, t) {
   if (!Number.isInteger(e.pid) || e.pid <= 1) return Promise.resolve(void 0);
-  let n = P();
+  let n = getCurrentPlatform();
   if (n === "linux" || n === "wsl") {
     let r = li();
     return Promise.resolve(r && Ir(e, r));
@@ -187,7 +187,7 @@ async function Br(e, t) {
     r = new Map(),
     s,
     d = !1,
-    o = P(),
+    o = getCurrentPlatform(),
     c;
   if (o === "macos")
     c = mi([process.pid, ...n.map(([p]) => p)], t).then((p) => {
@@ -205,7 +205,7 @@ async function Br(e, t) {
         let h = await di(`/proc/${p}/stat`, "utf8").catch(() => {
           return;
         });
-        if (h !== void 0 && Zie(h) === i && !Mhe(Lnt(h))) r.set(p, nXt(h));
+        if (h !== void 0 && getProcStartTime(h) === i && !isExitedProcessState(getProcState(h))) r.set(p, nXt(h));
       })));
   else
     c = Ur(n, async ([p, i]) => {
@@ -309,9 +309,9 @@ function li() {
     if (!/^\d+$/.test(n)) continue;
     try {
       let r = readFileSync(`/proc/${n}/stat`, "utf8"),
-        s = wxt(r);
-      if (s === void 0 || Mhe(Lnt(r))) continue;
-      let d = Zie(r);
+        s = getProcParentPid(r);
+      if (s === void 0 || isExitedProcessState(getProcState(r))) continue;
+      let d = getProcStartTime(r);
       t.push({
         pid: Number(n),
         ppid: s,
@@ -451,7 +451,7 @@ var hn = "/tmp",
   ur = "ccr-byoc-standby-checkout.lock.d";
 var Xr = "refs/remotes/prefetch/staging",
   cr = "anthropics/anthropic",
-  lr = fi,
+  lr = GITHUB_HOST,
   Ti = "refs/remotes/prefetch/warm",
   yi = "refs/remotes/origin/warm",
   Yr = 4096;
@@ -658,11 +658,11 @@ async function ts(e = {}) {
 var xi = 1e4,
   ld = 4 * xi;
 function hr(e) {
-  return FR(e.replace(/^sk-ant-[a-z]+-/, ""));
+  return getTokenExpiry(e.replace(/^sk-ant-[a-z]+-/, ""));
 }
 function Kn(e) {
   let t = e.replace(/^sk-ant-[a-z]+-/, ""),
-    n = AP(t);
+    n = decodeTokenClaims(t);
   if (n === null || typeof n !== "object") return null;
   let r = n.act;
   if (r === null || typeof r !== "object") return null;
@@ -671,13 +671,13 @@ function Kn(e) {
 }
 function ns(e) {
   let t = e.replace(/^sk-ant-[a-z]+-/, ""),
-    n = AP(t);
+    n = decodeTokenClaims(t);
   if (n === null || typeof n !== "object") return null;
   let r = n["ccr:spawn_session_id"];
   return typeof r === "string" && r.length > 0 ? r : null;
 }
 function zn({ getAccessToken: e, onRefresh: t, label: n }) {
-  return vRe({
+  return createTokenRefreshScheduler({
     getAccessToken: e,
     onRefresh: t,
     label: n,
@@ -751,7 +751,7 @@ async function bs(e, t) {
           !/^\.config\.json(\.|$)/.test(c) &&
           !/^\.claude(-[a-z-]+)?\.json\./.test(c) &&
           !c.startsWith(".session_ingress_token") &&
-          !jcr(c) &&
+          !isTempFilePath(c) &&
           !b2(c),
       ),
       ks,
@@ -812,7 +812,7 @@ async function bs(e, t) {
   );
 }
 async function Ki(e) {
-  let t = await e.readText([Ce.globalConfig()]);
+  let t = await e.readText([STORAGE_KEYS.globalConfig()]);
   if (!t.ok) throw Error("global config not readable through storage");
   let n = t.value.items[0];
   if (!n?.found) throw Object.assign(Error("ENOENT"), { code: "ENOENT" });
@@ -984,7 +984,7 @@ async function _r(e) {
   });
 }
 async function Vi(e, t) {
-  await On(e, t, 384);
+  await writeFileAtomic(e, t, 384);
 }
 async function ys(e, t) {
   let n = X(e, "hooks"),
@@ -1150,7 +1150,7 @@ async function mr(e, t, n, r, s = Nn) {
         r,
       ),
       await Ln(
-        On(e, t, 384),
+        writeFileAtomic(e, t, 384),
         s,
         "[runner:session] write session-ingress token file",
         r,
@@ -1641,7 +1641,7 @@ async function Os(e, t, n) {
       if ((await qi(Ze, zt, i, h, pn), Se?.toolConfig.gitConfig)) {
         if ((await Vi(nt, ht ?? ""), wt)) {
           await ct(nt + ".lock", { force: !0 }).catch(() => {});
-          for (let [N, I] of XYt(d))
+          for (let [N, I] of configureGitGovernedEntries(d))
             await _r(["config", "--file", nt, "--replace-all", N, I]);
         }
       }
@@ -2095,7 +2095,7 @@ async function Os(e, t, n) {
       if (Rt !== "off" && !wn) logFeatureOk("self_hosted_confine");
       if (
         ($n(Ze, "config dir", $d().replace(/[/\\]$/, ""), [
-          bl(),
+          getClaudeTempDir(),
           ome().replace(/[/\\]$/, ""),
         ]),
         Te.mark("runner_prep_repo_settings_ms"),
@@ -2816,7 +2816,7 @@ function ro(e) {
       CLAUDE_RUNNER_CLAUDE_BIN: process.execPath,
       CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD: "1",
       CLAUDE_CODE_REMOTE_SESSION_ID: s,
-      CLAUDE_CODE_REMOTE_SESSION_UUID: H5(s),
+      CLAUDE_CODE_REMOTE_SESSION_UUID: decodeTaggedId(s),
       CLAUDE_CODE_ACCOUNT_UUID:
         r.environment_variables?.CLAUDE_CODE_ACCOUNT_UUID ?? void 0,
       CLAUDE_CODE_ORGANIZATION_UUID:
@@ -3118,7 +3118,7 @@ function ro(e) {
               D &&
               typeof D === "object" &&
               D.type === "tool_use" &&
-              D.name === Xi
+              D.name === SCHEDULE_WAKEUP_TOOL_NAME
             ) {
               let ue = D.input,
                 Se = Number(ue?.delaySeconds);
@@ -4283,7 +4283,7 @@ async function No(e, t, n) {
       let V;
       try {
         V = await xe(
-          gS(w, n_).then((H) => H.content),
+          readFileWithMetadata(w, n_).then((H) => H.content),
           `readFile ${w}`,
         );
       } catch (H) {
@@ -4335,7 +4335,7 @@ async function No(e, t, n) {
         le = Array.isArray(te?.allow) ? te.allow : [];
       for (let H of le) {
         if (typeof H !== "string") continue;
-        let fe = Fr(H);
+        let fe = parsePermissionRule(H);
         if (![Bt, Mn, Wl].includes(fe.toolName)) continue;
         if (fe.ruleContent === void 0) {
           r.push({
@@ -5171,9 +5171,9 @@ function zo({
   if (m === void 0)
     return {
       eligible: !1,
-      reason: `session named a revision the standby does not prefetch (${oe(b(o.ref), 80)})`,
+      reason: `session named a revision the standby does not prefetch (${truncateToCodeUnits(b(o.ref), 80)})`,
     };
-  if (o.repo.toLowerCase() !== cr || !_W(o.upstreamHost, lr))
+  if (o.repo.toLowerCase() !== cr || !isSameHost(o.upstreamHost, lr))
     return {
       eligible: !1,
       reason: `not the prefetched repository (${o.upstreamHost ?? "unknown host"}/${o.repo})`,
@@ -5293,7 +5293,7 @@ function ta({
         "canonical is not a trusted one-shot prewarm (CLAUDE_RUNNER_TRUST_CANONICAL_PREWARM unset or drain-grace > 0)",
     };
   if (s) return { eligible: !1, reason: "worktree mode (capacity > 1)" };
-  if (d.repo.toLowerCase() !== cr || !_W(d.upstreamHost, lr))
+  if (d.repo.toLowerCase() !== cr || !isSameHost(d.upstreamHost, lr))
     return {
       eligible: !1,
       reason: `not the prefetched repository (${d.upstreamHost ?? "unknown host"}/${d.repo})`,
@@ -5530,7 +5530,7 @@ var ka = 1000,
   sr = 60000;
 function Aa(e, t) {
   if (e === void 0 || e === "") return t;
-  let n = tl(e);
+  let n = parseConfigInteger(e);
   if (Number.isNaN(n) || n < 0 || n > 65535)
     throw Error(
       `SELF_HOSTED_RUNNER_HEALTH_PORT must be an integer in [0, 65535] (0 disables), got: ${b(e)}`,
@@ -5602,7 +5602,7 @@ function Na(e) {
         break;
       case "--capacity":
         if (o) {
-          let c = tl(o);
+          let c = parseConfigInteger(o);
           if (Number.isNaN(c) || c < 1)
             throw Error(`--capacity must be a positive integer, got: ${o}`);
           ((n.capacity = c), s++);
@@ -5672,7 +5672,7 @@ function Na(e) {
         break;
       case "--health-port":
         if (o) {
-          let c = tl(o);
+          let c = parseConfigInteger(o);
           if (Number.isNaN(c) || c < 0 || c > 65535)
             throw Error(
               `--health-port must be an integer in [0, 65535] (0 disables), got: ${o}`,

@@ -13,7 +13,7 @@ import { withTimeout } from "../../01-核心基础设施/共享小工具-未细�
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Is, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Qcr, Bs, exe, SPn, Zcr, SW } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { kRe, sir } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
+import { registerChildProcess, markChildProcessExited } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/共享小工具-未细化/log-error-with-telemetry-message.js";
 import { killProcessTree } from "../../01-核心基础设施/共享小工具-未细化/kill-process-tree.js";
@@ -3461,9 +3461,9 @@ function createLSPClient(e, t) {
           }),
           v.pid)
         )
-          (kRe("lsp", v.pid),
+          (registerChildProcess("lsp", v.pid),
             v.once("close", () => {
-              if (v.pid) sir(v.pid);
+              if (v.pid) markChildProcessExited(v.pid);
             }));
         if (r.stderr)
           ((U = (_) => {

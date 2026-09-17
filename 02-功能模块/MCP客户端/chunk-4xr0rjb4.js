@@ -12,8 +12,8 @@ import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ASt } from "../Hooks钩子/chunk-z3433nr6.js";
 import { vc, Ute, uDe, qte, dgn, Jv } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { zo, q$ } from "./chunk-3kmsshb6.js";
-import { Ul, aN, Bn } from "../插件系统/chunk-33bdfgmx.js";
+import { parseFrontmatter, parseOptionalString } from "./chunk-3kmsshb6.js";
+import { isNonMarketplacePluginSource, isProjectSkillsDirPlugin, splitPluginId } from "../插件系统/chunk-33bdfgmx.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import * as p from "fs/promises";
 import * as m from "path";
@@ -30,8 +30,8 @@ async function getPluginInventory(t, e) {
       lspServers: [],
     };
   }
-  let s = Ul(e),
-    o = Bn(t.source).name || t.name,
+  let s = isNonMarketplacePluginSource(e),
+    o = splitPluginId(t.source).name || t.name,
     r = s ? void 0 : (await Jv(e)).plugins.find((d) => d.name === o);
   if (!r && !s) throw Error(`Plugin ${o} not found in marketplace ${e}`);
   let [a, i, u] = await Promise.all([
@@ -103,8 +103,8 @@ async function w(t, e) {
   } catch (f) {
     return (v(t, f), { alwaysOn: "", onInvoke: "" });
   }
-  let { frontmatter: o, content: r } = zo(s, t, { normalizeKeys: !0 }),
-    a = q$(o.description, e) ?? qte(r, "Skill"),
+  let { frontmatter: o, content: r } = parseFrontmatter(s, t, { normalizeKeys: !0 }),
+    a = parseOptionalString(o.description, e) ?? qte(r, "Skill"),
     i = o.when_to_use != null ? String(o.when_to_use) : void 0;
   return {
     alwaysOn: dgn({ name: e, description: a, whenToUse: i }),
@@ -170,7 +170,7 @@ async function L(t) {
   }
 }
 async function O(t, e) {
-  return aN(t) ? uDe(t, e) : m.join(t.path, e);
+  return isProjectSkillsDirPlugin(t) ? uDe(t, e) : m.join(t.path, e);
 }
 async function C(t) {
   let e = [],
@@ -210,7 +210,7 @@ async function T(t) {
         let f = "";
         try {
           let g = await F(i, E),
-            { frontmatter: c } = zo(g, i);
+            { frontmatter: c } = parseFrontmatter(g, i);
           f = typeof c.name === "string" ? c.name.trim() : "";
         } catch {}
         o(f || m.basename(r), r);

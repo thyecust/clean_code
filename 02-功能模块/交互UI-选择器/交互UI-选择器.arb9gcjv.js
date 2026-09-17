@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { us, Ux, WL } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodePoints, normalizeFullWidthDigits, normalizeIdeographicSpaces } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { getMainLoopModel, fvt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -18,11 +18,11 @@ import { o, t, ct, jr, tn, zye, Un } from "../../01-核心基础设施/ANSI-样�
 import { v9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { Xw, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { DEFAULT_RECENT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { dd, _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -34,19 +34,19 @@ import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未�
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { L_, re, E, vr, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { Z3 } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
-function ui(l = Xw) {
+function ui(l = DEFAULT_RECENT_WINDOW_MS) {
   let s = C(Date.now());
   return re(() => isRecent(s.current, l), [l]);
 }
 function Gm() {
   return C(Date.now()).current;
 }
-function fa(l, s = Xw) {
+function fa(l, s = DEFAULT_RECENT_WINDOW_MS) {
   let a = Un(s, l);
   return { remountKey: a ? "settled" : "held", settled: a };
 }
@@ -58,7 +58,7 @@ function c9e() {
 function $o() {
   let l = C(null),
     { epoch: s, noteAttempt: a } = c9e(),
-    u = re((v = Xw) => l.current !== null && isRecent(l.current, v), []),
+    u = re((v = DEFAULT_RECENT_WINDOW_MS) => l.current !== null && isRecent(l.current, v), []),
     c = re(() => {
       ((l.current = Date.now()), a());
     }, [a]);
@@ -240,14 +240,14 @@ function Zu(l) {
 }
 function ml(l) {
   if (l.length <= Sr) return l;
-  let s = us(l, Sr);
+  let s = truncateToCodePoints(l, Sr);
   if (s === l) return l;
   let a = [...l].length - Sr;
   return s + Zu(a);
 }
 function wr(No, Ns) {
   let Wo = _(17),
-    kn = Ns === void 0 ? Xw : Ns,
+    kn = Ns === void 0 ? DEFAULT_RECENT_WINDOW_MS : Ns,
     Mi = ui(kn),
     Ws;
   if (Wo[0] !== No || Wo[1] !== Mi || Wo[2] !== kn)
@@ -330,7 +330,7 @@ function X8(wf) {
   if (zs !== jo && ut !== null) (Bn(oa), Ke(ra));
   let $e = ut !== null && Te[ut - 1]?.type === "input" ? Te[ut - 1] : null,
     Gs = C(null);
-  (dd(Gs, !sn), Rs("select", !!st && !sn));
+  (dd(Gs, !sn), useActiveOverlay("select", !!st && !sn));
   let Hs;
   if (
     mn[3] !== Je ||
@@ -483,7 +483,7 @@ function X8(wf) {
         }
         return;
       }
-      let tu = Ux(Ce.key);
+      let tu = normalizeFullWidthDigits(Ce.key);
       if (/^[0-9]$/.test(tu)) {
         if ((Ce.preventDefault(), ro?.())) {
           return;
@@ -679,7 +679,7 @@ function fOt(Df) {
   if (du !== Zo && Ye !== null) (Dn(Sa), Me(wa));
   let Pe = Ye && ie[Ye.index - 1]?.type === "input" ? ie[Ye.index - 1] : null,
     xu = C(null);
-  (dd(xu, !un), Rs("multi-select", !!ft && !un));
+  (dd(xu, !un), useActiveOverlay("multi-select", !!ft && !un));
   let hu;
   if (
     ke[13] !== $i ||
@@ -896,7 +896,7 @@ function fOt(Df) {
         !Pe &&
         nr.current === null &&
         uo.current !== null &&
-        WL(he.key) === " "
+        normalizeIdeographicSpaces(he.key) === " "
       ) {
         if ((he.preventDefault(), Kn?.())) {
           return;
@@ -930,7 +930,7 @@ function fOt(Df) {
         }
         return;
       }
-      let Eu = WL(Ux(he.key)).replace("\uFF0C", ",").replace("\u3001", ",");
+      let Eu = normalizeIdeographicSpaces(normalizeFullWidthDigits(he.key)).replace("\uFF0C", ",").replace("\u3001", ",");
       if (/^[0-9, ]$/.test(Eu)) {
         if ((he.preventDefault(), ao.current)) {
           Kn?.();
@@ -1138,7 +1138,7 @@ function mOt(zf) {
     [qf, ul, zn] = qn(),
     [pr, zu] = d(null),
     Gu = C(null);
-  (dd(Gu, !0), Rs("select", !0));
+  (dd(Gu, !0), useActiveOverlay("select", !0));
   let { refuse: al, refuseCharacter: cl } = wr(Gf, Hf),
     Hu;
   if (an[0] !== Ut || an[1] !== al)
@@ -1402,7 +1402,7 @@ function nl(lp) {
     ((Rr =
       Bt &&
       !Qe &&
-      e(t, { "aria-label": "(selected)", color: "success", children: L.tick })),
+      e(t, { "aria-label": "(selected)", color: "success", children: figures.tick })),
       (gn[26] = Qe),
       (gn[27] = Bt),
       (gn[28] = Rr));
@@ -1475,7 +1475,7 @@ function Pr(cp) {
       ((Le = e(t, {
         "aria-hidden": !0,
         color: "suggestion",
-        children: L.pointer,
+        children: figures.pointer,
       })),
         (Ht[1] = Le));
     else Le = Ht[1];
@@ -1487,7 +1487,7 @@ function Pr(cp) {
       ((Le = e(t, {
         "aria-label": "(more below)",
         dimColor: !0,
-        children: L.arrowDown,
+        children: figures.arrowDown,
       })),
         (Ht[2] = Le));
     else Le = Ht[2];
@@ -1499,7 +1499,7 @@ function Pr(cp) {
       ((Le = e(t, {
         "aria-label": "(more above)",
         dimColor: !0,
-        children: L.arrowUp,
+        children: figures.arrowUp,
       })),
         (Ht[3] = Le));
     else Le = Ht[3];
@@ -1508,7 +1508,7 @@ function Pr(cp) {
   if (vp) {
     let Le;
     if (Ht[4] === MEMO_CACHE_SENTINEL)
-      ((Le = e(t, { "aria-hidden": !0, dimColor: !0, children: L.pointer })),
+      ((Le = e(t, { "aria-hidden": !0, dimColor: !0, children: figures.pointer })),
         (Ht[4] = Le));
     else Le = Ht[4];
     return Le;
@@ -1525,7 +1525,7 @@ function vo(Ip) {
   let Wr = _(15),
     { imageId: oc, backgroundColor: gt, isSelected: rc } = Ip,
     Jn = rc === void 0 ? !1 : rc,
-    Nr = Os((Cp) => Cp.storedImagePaths.get(oc) ?? null) ?? null,
+    Nr = useAppStateSelectorUnchecked((Cp) => Cp.storedImagePaths.get(oc) ?? null) ?? null,
     yt = `[Image #${oc}]`,
     ic;
   if (Wr[0] !== Nr)
@@ -1827,7 +1827,7 @@ function Y8(Qp) {
   else ((Ic = me[49]), (Cc = me[50]));
   E(Ic, Cc);
   let Yt = bo === "expanded" ? Xn + 3 : Xn + 4,
-    { columns: Kl } = ks(useTerminalSize()),
+    { columns: Kl } = useVirtualScrollViewportSize(useTerminalSize()),
     zl =
       zr && typeof le.label === "string"
         ? te(le.label) + te(le.labelValueSeparator ?? ", ")
@@ -2137,7 +2137,7 @@ var ii = ({
   hasInkFocus: ae = !0,
 }) => {
   let { focusDirection: K } = zye();
-  Rs("select", !!a.onCancel);
+  useActiveOverlay("select", !!a.onCancel);
   let ee = V(
       () => u.find((U) => U.value === a.focusedValue)?.type === "input",
       [u, a.focusedValue],
@@ -2185,7 +2185,7 @@ var ii = ({
     {
       handleKeyDown: (y) => {
         if (l) return;
-        let U = Ux(y.key),
+        let U = normalizeFullWidthDigits(y.key),
           z = a.getFocusedValue(),
           q = u.find((I) => I.value === z),
           M = q?.type === "input";
@@ -2259,7 +2259,7 @@ var ii = ({
           return;
         }
         if (s !== !0) {
-          if (c && WL(y.key) === " " && z !== void 0) {
+          if (c && normalizeIdeographicSpaces(y.key) === " " && z !== void 0) {
             if (q?.disabled !== !0)
               (y.preventDefault(), a.selectFocusedOption?.(), a.onChange?.(z));
             return;
@@ -2797,7 +2797,7 @@ function Ii(Qm) {
   else ((od = Ue[5]), (rd = Ue[6]));
   E(od, rd);
   let tv = Zt === "compact" && !Ln && !Z.some(zd) && Z.some(Gd),
-    { columns: Co } = ks(useTerminalSize());
+    { columns: Co } = useVirtualScrollViewportSize(useTerminalSize());
   const rs = d9e(Zm, tv ? "compact-vertical" : Zt);
   let sd;
   if (
@@ -3553,7 +3553,7 @@ var Ds = 8,
   Vs = 0.6;
 function d9e(ob, Ud) {
   let _d = Ud === void 0 ? "compact" : Ud,
-    { rows: rb } = ks(useTerminalSize()),
+    { rows: rb } = useVirtualScrollViewportSize(useTerminalSize()),
     ib = _d === "expanded" ? 3 : _d === "compact" ? 1 : 2,
     lb = Math.max(1, Math.floor((rb - Ds) / ib));
   return Math.min(ob, lb);
@@ -3593,13 +3593,13 @@ function Ci(sb) {
     ((wi = e(o, {
       flexShrink: 0,
       children: no
-        ? e(t, { color: "suggestion", children: L.pointer })
+        ? e(t, { color: "suggestion", children: figures.pointer })
         : Ss
-          ? e(t, { dimColor: !0, children: L.arrowDown })
+          ? e(t, { dimColor: !0, children: figures.arrowDown })
           : ws
-            ? e(t, { dimColor: !0, children: L.arrowUp })
+            ? e(t, { dimColor: !0, children: figures.arrowUp })
             : _n && Cs
-              ? e(t, { dimColor: !0, children: L.pointer })
+              ? e(t, { dimColor: !0, children: figures.pointer })
               : e(t, { children: " " }),
     })),
       (Ro[6] = _n),

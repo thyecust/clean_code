@@ -20,10 +20,10 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { dur } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ve, yt, G0, R, dt, ge, l, Ub, Po } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, D0, Tr, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { sot } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { TruncatingOutputBuffer } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { pi, Ad, DCt, Bt, tt, Mn, co, ro, Ut, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { yS, hL, _L, isCurrentDirectoryBareGitRepo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -152,7 +152,7 @@ import {
 import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { s, T, O, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { basename as Ds, dirname as $s } from "path";
 var nn = (e, t, o) => ({
     isError: e !== 0,
@@ -639,7 +639,7 @@ import {
 } from "path";
 function Et(e) {
   if (!e.startsWith("../")) return e;
-  let t = be(yn(Q()));
+  let t = be(yn(getCwd()));
   if (!t) return e;
   let o = "../" + t + "/",
     r = e;
@@ -703,7 +703,7 @@ function be(e) {
 var kn = ["head", "objects", "refs", "hooks"];
 function At(e) {
   let t = ae(),
-    o = Q(),
+    o = getCwd(),
     r = _t(o, e),
     a = D0(t, r) ?? r,
     d = Ro(t, o).resolvedPath,
@@ -799,7 +799,7 @@ function Ct(e) {
 }
 function On(e) {
   let t = ae(),
-    o = Q(),
+    o = getCwd(),
     r = _t(o, e),
     a = An(r) ? r : (D0(t, r) ?? r),
     d = Ro(t, o).resolvedPath,
@@ -1692,7 +1692,7 @@ function Wn(e, t) {
   return "unknown";
 }
 function Fe(e) {
-  if (P() !== "windows") return e;
+  if (getCurrentPlatform() !== "windows") return e;
   return e
     .split(/([/\\])/)
     .map((t, o) => {
@@ -1870,7 +1870,7 @@ function Ee(e, t, o, r) {
       },
     };
   }
-  if (P() === "windows" && /^[a-z]:(?![/\\])/i.test(p))
+  if (getCurrentPlatform() === "windows" && /^[a-z]:(?![/\\])/i.test(p))
     return {
       allowed: !1,
       resolvedPath: p,
@@ -1898,7 +1898,7 @@ function Ee(e, t, o, r) {
         reason: "Variable expansion syntax in paths requires manual approval",
       },
     };
-  if ((P() === "windows" ? /^[a-z0-9]{2,}:/i : /^[a-z0-9]+:/i).test(p))
+  if ((getCurrentPlatform() === "windows" ? /^[a-z0-9]{2,}:/i : /^[a-z0-9]+:/i).test(p))
     return {
       allowed: !1,
       resolvedPath: p,
@@ -2239,7 +2239,7 @@ function lt(e, t, o) {
   };
 }
 function Gn(e, t, o = !1) {
-  let r = Q(),
+  let r = getCwd(),
     a,
     d,
     f = t.blockReadsOutsideWorkingDirectories === !0,
@@ -3787,7 +3787,7 @@ async function Is(e, t, o) {
         behavior: "ask",
         message: `Command argument '${v}' contains a UNC path that could trigger network requests`,
       };
-    if (P() === "windows" && /(?<!:)[\\/]{2,}[^ \t\r\n\f\v\\/]/.test(N))
+    if (getCurrentPlatform() === "windows" && /(?<!:)[\\/]{2,}[^ \t\r\n\f\v\\/]/.test(N))
       return {
         behavior: "ask",
         message: `Command argument '${v}' contains a UNC path that could trigger network requests`,
@@ -3892,7 +3892,7 @@ async function Is(e, t, o) {
           "Compound command runs a native file copier (xcopy/robocopy) and git. The copier can place files at git-internal paths (HEAD, objects/, refs/) that git then treats as repository state.",
       });
   }
-  if (P() === "windows" && x.length > 1) {
+  if (getCurrentPlatform() === "windows" && x.length > 1) {
     let v = new Set();
     for (let V of Xft(d)) for (let K of H$t(V.target)) v.add(K);
     let N = null;
@@ -4015,7 +4015,7 @@ async function Is(e, t, o) {
       if (v.nameType === "application") return !0;
       if (Ef(v.name) === "set-location" && v.args.length > 0) {
         let K = v.args.find((U) => U.length === 0 || !wO.has(U[0]));
-        if (K && Ts(Q(), K) === Q()) return !1;
+        if (K && Ts(getCwd(), K) === getCwd()) return !1;
       }
       return !0;
     }),
@@ -4188,7 +4188,7 @@ async function Yt() {
     o = await Vft(),
     r = H("tengu_brass_sled", !1) ? await dur() : [],
     a =
-      P() === "windows"
+      getCurrentPlatform() === "windows"
         ? "\n   - Exception: the MSVC toolchain (`cl`, `nmake`, `msbuild`) is only on PATH inside a Visual Studio developer shell, so it may be installed even if not listed. Environment changes do NOT persist between commands, so initialize and build in ONE command: `cmd /c '\"C:\\Program Files\\Microsoft Visual Studio\\<year>\\<edition>\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64 && <build command>'`"
         : "",
     d = r.length
@@ -4371,7 +4371,7 @@ var Hs =
 function Qt(e, t, o) {
   if (
     o ||
-    P() !== "windows" ||
+    getCurrentPlatform() !== "windows" ||
     !SandboxManager.isSandboxEnabledInSettings() ||
     !SandboxManager.isPlatformInEnabledList() ||
     !SandboxManager.isStrictSandboxModeConfigured() ||
@@ -4757,7 +4757,7 @@ var Ks =
             },
           };
         }
-        let G = new sot(),
+        let G = new TruncatingOutputBuffer(),
           J = (w.stdout || "").trimEnd();
         G.append(J + Zt);
         let se = St(e.command, w.code, J, w.stderr || ""),
@@ -4796,7 +4796,7 @@ var Ks =
               powershell_edition: fromEnum((await Vft()) ?? "unknown"),
               user_typed_shell_dispatch: d,
               destructive_category: fromEnum(F ?? "none"),
-              destructive_target_scope: fromEnum(Jte(e.command, Q(), F)),
+              destructive_target_scope: fromEnum(Jte(e.command, getCwd(), F)),
               permission_mode: fromEnum(getToolPermissionContext(t).mode),
             }),
             new G0({
@@ -4852,7 +4852,7 @@ var Ks =
             powershell_edition: fromEnum((await Vft()) ?? "unknown"),
             user_typed_shell_dispatch: d,
             destructive_category: fromEnum(F ?? "none"),
-            destructive_target_scope: fromEnum(Jte(e.command, Q(), F)),
+            destructive_target_scope: fromEnum(Jte(e.command, getCwd(), F)),
             permission_mode: fromEnum(getToolPermissionContext(t).mode),
           }),
           {

@@ -13,10 +13,10 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, my, _Z, AHt, Tae } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { iae, ae } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { fileSuffixForOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { hur, I } from "../../00-第三方库/zod/zod.3g334xwq.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 function Hx() {
@@ -86,7 +86,7 @@ async function eae(t, o) {
       size: _.size,
     };
   }
-  if (E.isDirectory && P() === "windows") {
+  if (E.isDirectory && getCurrentPlatform() === "windows") {
     let _ = await Tae(U(t, o.name));
     switch (_.kind) {
       case "junction":
@@ -145,7 +145,7 @@ async function Kl(t) {
   if (
     !E.isDirectory() ||
     E.isSymbolicLink() ||
-    (P() === "windows" && (await _t(t)))
+    (getCurrentPlatform() === "windows" && (await _t(t)))
   ) {
     await cv(t);
     return;
@@ -167,7 +167,7 @@ async function Kl(t) {
     });
 }
 async function cXt(t, o) {
-  let E = P() === "windows" ? 0 : R.O_NOFOLLOW | R.O_NONBLOCK,
+  let E = getCurrentPlatform() === "windows" ? 0 : R.O_NOFOLLOW | R.O_NONBLOCK,
     _ = await ot(t, R.O_WRONLY | R.O_CREAT | R.O_TRUNC | E, 438);
   try {
     await _.writeFile(o, "utf-8");
@@ -229,7 +229,7 @@ function V() {
   return !1;
 }
 function pt() {
-  if (ae().existsSync(S(be(), ".config.json"))) return S(be(), ".config.json");
+  if (ae().existsSync(S(getClaudeConfigDir(), ".config.json"))) return S(getClaudeConfigDir(), ".config.json");
   return dXt();
 }
 function dXt() {
@@ -241,7 +241,7 @@ function getGlobalClaudeFile() {
 }
 async function Rt() {
   try {
-    let { externalHttp: t } = await import("../共享小工具-未细化/chunk-yz7dtpc3.js");
+    let { externalHttp: t } = await import("../共享小工具-未细化/external-http.js");
     return (
       await t.head("http://1.1.1.1", { signal: AbortSignal.timeout(1000) }),
       !0
@@ -327,7 +327,7 @@ async function IPn(t) {
   return !(await iae(resolve(t)));
 }
 async function $nt(t, o) {
-  let E = P() === "windows",
+  let E = getCurrentPlatform() === "windows",
     _ = new Set(t),
     r = E
       ? (process.env.PATHEXT ?? ".COM;.EXE;.BAT;.CMD")

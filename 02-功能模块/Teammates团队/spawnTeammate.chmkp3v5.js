@@ -18,19 +18,19 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { Uge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { _c } from "../权限系统/chunk-e4pfvp7x.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
+import { getExternalPermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
-import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/chunk-0f2h3r35.js";
+import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础设施/共享小工具-未细化/terminal-backend-detection.js";
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
-import { Ift, a4e, Hun, l4e, c4e } from "./chunk-qy9488g9.js";
+import { detectAndGetBackend, getBackendByType, markInProcessFallback, isInProcessEnabled, resetBackendDetection } from "./backend-registry.js";
 import { respawnPaneWithCommand } from "./chunk-x0by9eq8.js";
 import { isCustomAgent, apn, U2, kV, sjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructuredProtocolMessage } from "./chunk-g6nvp9mm.js";
-import { Pc } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { jk, bZn, cCe, vwt, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./chunk-6b13bhw1.js";
+import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
+import { SwarmPaneError, containsControlCharacter, assertNoControlCharacters, supportsPaneKill, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./team-file-store.js";
 import { bj, dYn } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { resolveWrappedClaudeInvocation, applyProcessWrapper } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import "../权限系统/chunk-jsd70b22.js";
@@ -42,15 +42,15 @@ import { Cin } from "./chunk-8jtd54px.js";
 import { spawnInProcessTeammate } from "./chunk-sjd69zy5.js";
 import { CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/ca-trust-env-vars.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
-import "../权限系统/chunk-n4x6jsp3.js";
+import "../权限系统/swarm-permission-poller.js";
 import "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import "./teammate-task-messages.js";
-import { Dh, Md } from "./chunk-mrfx53ye.js";
+import { generateTaskId, createPendingTask } from "./chunk-mrfx53ye.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME, SWARM_TMUX_SESSION_NAME, TMUX_BINARY, PANE_PLACEHOLDER_COMMAND, TEAMMATE_COMMAND_ENV_VAR } from "./chunk-enjekn9t.js";
 function V() {
-  let t = Pc();
+  let t = getLauncherConfigError();
   if (t)
-    throw new jk(
+    throw new SwarmPaneError(
       `${t} \u2014 the teammate is not started unwrapped; fix the launcher setting, then retry`,
     );
   let e = process.env[TEAMMATE_COMMAND_ENV_VAR],
@@ -75,7 +75,7 @@ function J({ planModeRequired: t, permissionMode: e, proactivityLevel: o }) {
     case "plan":
     case "dontAsk":
     case "bubble":
-      return o !== void 0 && apn() ? [`--permission-mode ${_c(i)}`] : [];
+      return o !== void 0 && apn() ? [`--permission-mode ${getExternalPermissionMode(i)}`] : [];
   }
 }
 var oe = [
@@ -270,7 +270,7 @@ async function W(t, e, o, i, c, m) {
     ["name", t],
     ["team_name", e],
   ])
-    if (bZn(d))
+    if (containsControlCharacter(d))
       throw (
         logFeatureBad("subagent_launch", "subagent_teammate_control_chars"),
         Error(
@@ -380,23 +380,23 @@ async function pe(t, e) {
         "Internal error: session team not initialized. This should have happened at startup when agent swarms are enabled.",
       )
     );
-  let E = T || Q();
+  let E = T || getCwd();
   return W(
     c,
     s,
     { agentType: r, model: p, prompt: m, planModeRequired: _, cwd: E },
     e.teammateColors,
     async ({ sanitizedName: w, teammateId: C, teammateColor: h }, k, D) => {
-      let I = await Ift();
+      let I = await detectAndGetBackend();
       if (I.needsIt2Setup && e.requestDialog) {
         let x = await isTmuxAvailable(),
           q = await e.requestDialog(it2SetupDialog, { tmuxAvailable: x });
         if (q === "cancelled")
           throw (
             logFeatureBad("subagent_launch", "subagent_teammate_iterm_cancelled"),
-            new jk("Teammate spawn cancelled - iTerm2 setup required")
+            new SwarmPaneError("Teammate spawn cancelled - iTerm2 setup required")
           );
-        if (q === "installed" || q === "use-tmux") (c4e(), (I = await Ift()));
+        if (q === "installed" || q === "use-tmux") (resetBackendDetection(), (I = await detectAndGetBackend()));
       }
       let P = await isInsideTmux(),
         { paneId: A, isFirstTeammate: U } =
@@ -528,7 +528,7 @@ async function ue(t, e) {
         "Internal error: session team not initialized. This should have happened at startup when agent swarms are enabled.",
       )
     );
-  let E = T || Q();
+  let E = T || getCwd();
   return W(
     c,
     s,
@@ -597,7 +597,7 @@ async function ue(t, e) {
           )
         );
       try {
-        cCe(N);
+        assertNoControlCharacters(N);
       } catch (L) {
         throw (logFeatureBad("subagent_launch", "subagent_teammate_control_chars"), L);
       }
@@ -682,13 +682,13 @@ function te(
     cwd: s,
   },
 ) {
-  let E = Dh("in_process_teammate"),
+  let E = generateTaskId("in_process_teammate"),
     w = `${m.substring(0, 50)}${m.length > 50 ? "..." : ""}`,
     C = new AbortController(),
     h,
-    k = vwt(p) ? () => (h ??= a4e(p).killPane(T, !_)) : void 0,
+    k = supportsPaneKill(p) ? () => (h ??= getBackendByType(p).killPane(T, !_)) : void 0,
     D = {
-      ...Md(E, "in_process_teammate", w, d),
+      ...createPendingTask(E, "in_process_teammate", w, d),
       type: "in_process_teammate",
       status: "running",
       cwd: s,
@@ -739,7 +739,7 @@ async function z(t, e) {
   return W(
     c,
     d,
-    { agentType: r, model: _, prompt: m, planModeRequired: T, cwd: Q() },
+    { agentType: r, model: _, prompt: m, planModeRequired: T, cwd: getCwd() },
     e.teammateColors,
     async ({ sanitizedName: s, teammateId: E, teammateColor: w }, C) => {
       await j(
@@ -801,7 +801,7 @@ async function z(t, e) {
                     color: U,
                     tmuxSessionName: "in-process",
                     tmuxPaneId: "leader",
-                    cwd: Q(),
+                    cwd: getCwd(),
                     spawnedAt: Date.now(),
                   },
                 }
@@ -822,7 +822,7 @@ async function z(t, e) {
                   color: w,
                   tmuxSessionName: "in-process",
                   tmuxPaneId: "in-process",
-                  cwd: Q(),
+                  cwd: getCwd(),
                   spawnedAt: Date.now(),
                 },
               },
@@ -856,9 +856,9 @@ async function ce(t, e, o) {
       logFeatureBad("subagent_launch", "subagent_teammate_protocol_frame_prompt"),
       Error(PROTOCOL_FRAME_PROMPT_ERROR)
     );
-  if (l4e()) return z(t, e);
+  if (isInProcessEnabled()) return z(t, e);
   try {
-    await Ift();
+    await detectAndGetBackend();
   } catch (c) {
     if (getTeammateModeFromSnapshot() !== "auto")
       throw (logFeatureBad("subagent_launch", "subagent_teammate_pane_unavailable"), c);
@@ -866,7 +866,7 @@ async function ce(t, e, o) {
       n(
         `[handleSpawn] No pane backend available, falling back to in-process: ${l(c)}`,
       ),
-      Hun(),
+      markInProcessFallback(),
       _e(e.toolState.get(ne), o),
       z(t, e)
     );

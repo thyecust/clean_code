@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { xN, ne } from "./chunk-rr78st95.js";
@@ -195,12 +195,12 @@ function handoverReadConfirmsResend(e, r, n) {
 function describeHandoverCoverage({ lines: e, unterminated: r, unread: n }) {
   let t = n.reduce((i, [d, o]) => i + o - d + 1, 0);
   return (
-    `${e} ${x(e, "line")}` +
+    `${e} ${pluralize(e, "line")}` +
     (r
       ? `; the last has no trailing newline, so \`wc -l\` reports ${e - 1} \u2014 Read through line ${e} and leave the file as it is`
       : "") +
     (t > 0 && t < e
-      ? `; you have not yet Read ${x(t, "line")} ${n.map(([i, d]) => (i === d ? `${i}` : `${i}-${d}`)).join(", ")}`
+      ? `; you have not yet Read ${pluralize(t, "line")} ${n.map(([i, d]) => (i === d ? `${i}` : `${i}-${d}`)).join(", ")}`
       : "")
   );
 }

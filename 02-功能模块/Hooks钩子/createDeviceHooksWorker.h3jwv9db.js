@@ -13,9 +13,9 @@ import { wCt, eRe, TCt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3
 import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { io, hhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { formatSingleLineText, MAX_LABEL_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { ZM, dpe, eK } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { uit } from "./chunk-y7gz94r8.js";
+import { isPreToolUseHook } from "./hook-template-catalog.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var ee = 65536,
   te = 600,
@@ -134,7 +134,7 @@ function createDeviceHooksWorker(t) {
       if (!r.success)
         return {
           ok: !1,
-          error: `invalid_registration: ${io(r.error.issues[0]?.message ?? "malformed", { maxCodeUnits: J })}`,
+          error: `invalid_registration: ${formatSingleLineText(r.error.issues[0]?.message ?? "malformed", { maxCodeUnits: J })}`,
           outcome: "invalid",
           ...s,
         };
@@ -264,7 +264,7 @@ function createDeviceHooksWorker(t) {
           );
         },
         U = (e, a) => {
-          if (!uit(e) || !_.get(r.instance_id)?.has(e.id)) return;
+          if (!isPreToolUseHook(e) || !_.get(r.instance_id)?.has(e.id)) return;
           let u = {
             matcher: e.matcher,
             hooks: [
@@ -362,7 +362,7 @@ function createDeviceHooksWorker(t) {
         k = {
           instanceId: r.instance_id,
           displayName:
-            io(r.display_name ?? "", { maxCodeUnits: hhe }) || r.instance_id,
+            formatSingleLineText(r.display_name ?? "", { maxCodeUnits: MAX_LABEL_LENGTH }) || r.instance_id,
           epoch: t.workerEpoch,
           leaseExpiresAt: N,
           entries: g,
@@ -447,7 +447,7 @@ function createDeviceHooksWorker(t) {
           s("invalid"),
           {
             kind: "error",
-            error: `invalid_upload: ${io(r.error.issues[0]?.message ?? "malformed", { maxCodeUnits: J })}`,
+            error: `invalid_upload: ${formatSingleLineText(r.error.issues[0]?.message ?? "malformed", { maxCodeUnits: J })}`,
           }
         );
       let c = r.data;

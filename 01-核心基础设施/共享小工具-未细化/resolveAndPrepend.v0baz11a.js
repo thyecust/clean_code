@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 107 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { dIt } from "../../02-功能模块/图片-截图-ComputerUse/chunk-2xnaevpn.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-jpq2fv3g.js";
-import "../../02-功能模块/跨会话消息(UDS)/chunk-qvnte9zp.js";
-import "./chunk-y2pwa8n5.js";
+import "../../02-功能模块/Bridge-RemoteControl/bridge-inbound-origin.js";
+import "../../02-功能模块/跨会话消息(UDS)/peer-file-transfer.js";
+import "./file-transfer-config.js";
 export { dIt as resolveAndPrepend };

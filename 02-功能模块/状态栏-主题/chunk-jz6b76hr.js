@@ -8,9 +8,9 @@
 
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { p5t, yQ, ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { nHn } from "../图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { ChalkInstance, invertText, chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
+import { nHn } from "../图片-截图-ComputerUse/settings-option-values.js";
 class u {
   proc;
   constructor(r = process) {
@@ -91,7 +91,7 @@ var T = {
   c = new Set(Object.keys(T));
 var A = /^\x1b\[([34]8);2;(\d+);(\d+);(\d+)m$/;
 function xYn(r) {
-  if (ie.level >= 3 || r.length === 0) return r;
+  if (chalk.level >= 3 || r.length === 0) return r;
   let i;
   for (let e = 0; e < r.length; e++) {
     let n = r[e],
@@ -143,47 +143,47 @@ var k = /^rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)$/,
     if (i.startsWith("ansi:"))
       switch (i.substring(5)) {
         case "black":
-          return e === "foreground" ? ie.black(r) : ie.bgBlack(r);
+          return e === "foreground" ? chalk.black(r) : chalk.bgBlack(r);
         case "red":
-          return e === "foreground" ? ie.red(r) : ie.bgRed(r);
+          return e === "foreground" ? chalk.red(r) : chalk.bgRed(r);
         case "green":
-          return e === "foreground" ? ie.green(r) : ie.bgGreen(r);
+          return e === "foreground" ? chalk.green(r) : chalk.bgGreen(r);
         case "yellow":
-          return e === "foreground" ? ie.yellow(r) : ie.bgYellow(r);
+          return e === "foreground" ? chalk.yellow(r) : chalk.bgYellow(r);
         case "blue":
-          return e === "foreground" ? ie.blue(r) : ie.bgBlue(r);
+          return e === "foreground" ? chalk.blue(r) : chalk.bgBlue(r);
         case "magenta":
-          return e === "foreground" ? ie.magenta(r) : ie.bgMagenta(r);
+          return e === "foreground" ? chalk.magenta(r) : chalk.bgMagenta(r);
         case "cyan":
-          return e === "foreground" ? ie.cyan(r) : ie.bgCyan(r);
+          return e === "foreground" ? chalk.cyan(r) : chalk.bgCyan(r);
         case "white":
-          return e === "foreground" ? ie.white(r) : ie.bgWhite(r);
+          return e === "foreground" ? chalk.white(r) : chalk.bgWhite(r);
         case "blackBright":
-          return e === "foreground" ? ie.blackBright(r) : ie.bgBlackBright(r);
+          return e === "foreground" ? chalk.blackBright(r) : chalk.bgBlackBright(r);
         case "redBright":
-          return e === "foreground" ? ie.redBright(r) : ie.bgRedBright(r);
+          return e === "foreground" ? chalk.redBright(r) : chalk.bgRedBright(r);
         case "greenBright":
-          return e === "foreground" ? ie.greenBright(r) : ie.bgGreenBright(r);
+          return e === "foreground" ? chalk.greenBright(r) : chalk.bgGreenBright(r);
         case "yellowBright":
-          return e === "foreground" ? ie.yellowBright(r) : ie.bgYellowBright(r);
+          return e === "foreground" ? chalk.yellowBright(r) : chalk.bgYellowBright(r);
         case "blueBright":
-          return e === "foreground" ? ie.blueBright(r) : ie.bgBlueBright(r);
+          return e === "foreground" ? chalk.blueBright(r) : chalk.bgBlueBright(r);
         case "magentaBright":
           return e === "foreground"
-            ? ie.magentaBright(r)
-            : ie.bgMagentaBright(r);
+            ? chalk.magentaBright(r)
+            : chalk.bgMagentaBright(r);
         case "cyanBright":
-          return e === "foreground" ? ie.cyanBright(r) : ie.bgCyanBright(r);
+          return e === "foreground" ? chalk.cyanBright(r) : chalk.bgCyanBright(r);
         case "whiteBright":
-          return e === "foreground" ? ie.whiteBright(r) : ie.bgWhiteBright(r);
+          return e === "foreground" ? chalk.whiteBright(r) : chalk.bgWhiteBright(r);
       }
     if (i.startsWith("#"))
-      return e === "foreground" ? ie.hex(i)(r) : ie.bgHex(i)(r);
+      return e === "foreground" ? chalk.hex(i)(r) : chalk.bgHex(i)(r);
     if (i.startsWith("ansi256")) {
       let n = y.exec(i);
       if (!n) return r;
       let o = Number(n[1]);
-      return e === "foreground" ? ie.ansi256(o)(r) : ie.bgAnsi256(o)(r);
+      return e === "foreground" ? chalk.ansi256(o)(r) : chalk.bgAnsi256(o)(r);
     }
     if (i.startsWith("rgb")) {
       let n = k.exec(i);
@@ -191,18 +191,18 @@ var k = /^rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)$/,
       let o = Number(n[1]),
         g = Number(n[2]),
         t = Number(n[3]);
-      return e === "foreground" ? ie.rgb(o, g, t)(r) : ie.bgRgb(o, g, t)(r);
+      return e === "foreground" ? chalk.rgb(o, g, t)(r) : chalk.bgRgb(o, g, t)(r);
     }
     return r;
   };
 function HNe(r, i) {
   let e = r;
-  if (i.inverse) e = yQ(e);
-  if (i.strikethrough) e = ie.strikethrough(e);
-  if (i.underline) e = ie.underline(e);
-  if (i.italic) e = ie.italic(e);
-  if (i.bold) e = ie.bold(e);
-  if (i.dim) e = ie.dim(e);
+  if (i.inverse) e = invertText(e);
+  if (i.strikethrough) e = chalk.strikethrough(e);
+  if (i.underline) e = chalk.underline(e);
+  if (i.italic) e = chalk.italic(e);
+  if (i.bold) e = chalk.bold(e);
+  if (i.dim) e = chalk.dim(e);
   if (i.color) e = iK(e, i.color, "foreground");
   if (i.backgroundColor) e = iK(e, i.backgroundColor, "background");
   return e;
@@ -214,10 +214,10 @@ function jY(r, i) {
 class f {
   byColorAndLevel = new Map();
   sequenceFor(r) {
-    let i = `${r}|${ie.level}`,
+    let i = `${r}|${chalk.level}`,
       e = this.byColorAndLevel.get(i);
     if (e === void 0)
-      ((e = ft(iK("\x00", r, "background"), "\x00")),
+      ((e = beforeFirst(iK("\x00", r, "background"), "\x00")),
         this.byColorAndLevel.set(i, e));
     return e;
   }
@@ -723,7 +723,7 @@ function V8e(r, i) {
     if (Object.hasOwn(r, n) && Tj(o)) e[n] = o;
   return e;
 }
-var C = a.terminal === "Apple_Terminal" ? new p5t({ level: 2 }) : ie;
+var C = a.terminal === "Apple_Terminal" ? new ChalkInstance({ level: 2 }) : chalk;
 function T3t(r) {
   let i = r.match(/rgb\(\s?(\d+),\s?(\d+),\s?(\d+)\s?\)/);
   if (i) {
@@ -733,7 +733,7 @@ function T3t(r) {
       s = C.rgb(o, g, t)("X");
     return s.slice(0, s.indexOf("X"));
   }
-  if (ie.level === 0) return "";
+  if (chalk.level === 0) return "";
   let e = iK("X", r, "foreground"),
     n = e.indexOf("X");
   return n > 0 ? e.slice(0, n) : "\x1B[35m";

@@ -9,32 +9,32 @@
 // Version: 2.1.263
 import { l } from "./chunk-h4f48kbj.js";
 import { isRecord } from "./is-record.js";
-class Je extends Error {
+class HooksError extends Error {
   name = "HooksError";
 }
-function QMn(r) {
+function getErrorCauseString(r) {
   if (!(r instanceof Error)) return;
   let o = r.cause;
   return typeof o === "string" ? o : void 0;
 }
-function NHt(r, o = "aborted") {
+function formatAbortReason(r, o = "aborted") {
   let { reason: e } = r;
   return e instanceof Error ? e.message : e === void 0 ? o : String(e);
 }
-function pdr(r, o) {
+function assertNextArgumentIsRecord(r, o) {
   if (!isRecord(r))
-    throw new Je(
+    throw new HooksError(
       `${o}: next() takes the event's argument: next(e) passes it on, next({ ...e, x }) rewrites it`,
     );
   return r;
 }
-var fdr = (r) =>
+var isAbortSignal = (r) =>
   typeof r === "object" &&
   r !== null &&
   "aborted" in r &&
   typeof r.addEventListener === "function" &&
   typeof r.removeEventListener === "function";
-var FHt = (r) => new Je(`${r}: its environment was unloaded`);
+var createEnvironmentUnloadedError = (r) => new HooksError(`${r}: its environment was unloaded`);
 import { readFile as rr } from "fs/promises";
 var h = `/** @jsxRuntime classic */
 /** @jsx h */
@@ -48,9 +48,9 @@ var y = {
   ".mjs": "js",
 };
 var E = Object.keys(y);
-var ZMn = (r) => y[E.find((o) => r.endsWith(o)) ?? ""] ?? "js";
+var getLoaderForFileName = (r) => y[E.find((o) => r.endsWith(o)) ?? ""] ?? "js";
 function eNn(r, o) {
-  let e = ZMn(r);
+  let e = getLoaderForFileName(r);
   return e === "js"
     ? o
     : new Bun.Transpiler({ loader: e }).transformSync(
@@ -58,10 +58,10 @@ function eNn(r, o) {
       );
 }
 var tNn = 1048576;
-var mdr = 512;
-var gdr = 8388608;
+var MAX_HOOKS_MODULE_FILES = 512;
+var MAX_HOOKS_MODULE_TOTAL_BYTES = 8388608;
 var c = (r) => (r instanceof Error && "code" in r ? String(r.code) : "EIO");
-var w = (r, o, e) => new Je(`${r}: ${o}: no such file`, { cause: c(e) });
+var w = (r, o, e) => new HooksError(`${r}: ${o}: no such file`, { cause: c(e) });
 async function g(r, o) {
   try {
     return await r;
@@ -69,8 +69,8 @@ async function g(r, o) {
     throw o(e);
   }
 }
-var V = (r, o, e) => new Je(`${r}: ${o}: not readable (${c(e)})`);
-var oNn = (r, o) => new Je(`${r}: ${o} is over ${tNn} bytes and was not read`);
+var V = (r, o, e) => new HooksError(`${r}: ${o}: not readable (${c(e)})`);
+var oNn = (r, o) => new HooksError(`${r}: ${o} is over ${tNn} bytes and was not read`);
 import { lstat as Y, realpath as S } from "fs/promises";
 import { basename as B, isAbsolute as q, relative as G, sep as J } from "path";
 async function sNn(r, o, e) {
@@ -79,9 +79,9 @@ async function sNn(r, o, e) {
     t = await g(S(r), f),
     a = G(p, t);
   if (a === ".." || a.startsWith(`..${J}`) || q(a))
-    throw new Je(`${e}: ${r}: ${t} resolves outside the plugin's folder`);
+    throw new HooksError(`${e}: ${r}: ${t} resolves outside the plugin's folder`);
   let x = await g(Y(t), f);
-  if (!x.isFile()) throw new Je(`${e}: ${r}: not a regular file`);
+  if (!x.isFile()) throw new HooksError(`${e}: ${r}: not a regular file`);
   return { real: t, size: x.size };
 }
 async function iNn(r, o, e) {
@@ -103,10 +103,10 @@ function O(r) {
   for (let e of E) (o.push(`${r}${e}`), o.push(`${r}${or}index${e}`));
   return o;
 }
-var rot = "claude-code";
+var BUILTIN_MODULE_SPECIFIER = "claude-code";
 var nNn = (r, o, e) =>
-  new Je(
-    `${r}: cannot import "${o}" (from ${e}): a hooks module imports its own files by relative path and "${rot}", nothing else`,
+  new HooksError(
+    `${r}: cannot import "${o}" (from ${e}): a hooks module imports its own files by relative path and "${BUILTIN_MODULE_SPECIFIER}", nothing else`,
   );
 import { dirname as b, resolve as _ } from "path";
 var T = (r, o) =>
@@ -125,7 +125,7 @@ async function aNn({ spelled: r, importer: o, root: e, pluginName: p }, f) {
     a = T(o, r),
     x = N(e, a);
   if (x === ".." || x.startsWith(`..${nr}`) || xr(x))
-    throw new Je(`${t} it is outside the plugin's folder (${e})`);
+    throw new HooksError(`${t} it is outside the plugin's folder (${e})`);
   let m = [];
   for (let u of O(a)) {
     let v = f.get(u);
@@ -135,23 +135,23 @@ async function aNn({ spelled: r, importer: o, root: e, pluginName: p }, f) {
       return { file: u, source: n };
     } catch (n) {
       let d = l(n);
-      if (!(n instanceof Je) || !H.some((L) => d.endsWith(L)))
-        throw new Je(`${t} ${A(p, d)}`);
+      if (!(n instanceof HooksError) || !H.some((L) => d.endsWith(L)))
+        throw new HooksError(`${t} ${A(p, d)}`);
       let D = n.cause === void 0;
       m.push(D ? d : `${d} (${String(n.cause)})`);
     }
   }
-  throw new Je(
+  throw new HooksError(
     `${t} no such file under ${e}`,
     m.length === 0 ? void 0 : { cause: m.join("; ") },
   );
 }
-var j = (r, o, e) => new Je(`${r}: ${o} ${e}`);
-var Lmr = (r, o) =>
-  j(r, o, `takes the module over ${gdr} bytes in total and was not read`);
-var Mmr = (r, o) =>
-  j(r, o, `is past the ${mdr} files a hooks module may link and was not read`);
-var $Ht = [
+var j = (r, o, e) => new HooksError(`${r}: ${o} ${e}`);
+var createModuleTotalSizeError = (r, o) =>
+  j(r, o, `takes the module over ${MAX_HOOKS_MODULE_TOTAL_BYTES} bytes in total and was not read`);
+var createModuleFileLimitError = (r, o) =>
+  j(r, o, `is past the ${MAX_HOOKS_MODULE_FILES} files a hooks module may link and was not read`);
+var CORE_OPERATION_EVENT_NAMES = [
   "model.complete",
   "model.classify",
   "model.fork",
@@ -189,7 +189,7 @@ var $Ht = [
   "http.fetch",
   "process.run",
 ];
-var BYt = [
+var BUILTIN_HOOK_EVENT_NAMES = [
   "PreToolUse",
   "tool.call",
   "ui.render",
@@ -210,43 +210,43 @@ var BYt = [
   "turn.step",
   "turn.complete",
   "engine.create",
-  ...$Ht,
+  ...CORE_OPERATION_EVENT_NAMES,
 ];
-var Nje = (r) => BYt.includes(r);
-var Nmr = (r) => $Ht.includes(r);
+var isBuiltinHookEventName = (r) => BUILTIN_HOOK_EVENT_NAMES.includes(r);
+var isCoreOperationEventName = (r) => CORE_OPERATION_EVENT_NAMES.includes(r);
 var I = new Set(
-  BYt.filter((r) => r.includes(".")).map((r) => r.slice(0, r.indexOf("."))),
+  BUILTIN_HOOK_EVENT_NAMES.filter((r) => r.includes(".")).map((r) => r.slice(0, r.indexOf("."))),
 );
 var M = new RegExp(
   String.raw`^[\p{ID_Start}$_][\p{ID_Continue}$\u200C\u200D]*` +
     String.raw`\.[\p{ID_Start}$_][\p{ID_Continue}$\u200C\u200D]*$`,
   "u",
 );
-var UHt = (r) => M.test(r) && !I.has(r.slice(0, r.indexOf(".")));
+var isCustomHookEventName = (r) => M.test(r) && !I.has(r.slice(0, r.indexOf(".")));
 export {
-  NHt,
-  Je,
-  pdr,
-  QMn,
-  fdr,
-  FHt,
-  ZMn,
+  formatAbortReason,
+  HooksError,
+  assertNextArgumentIsRecord,
+  getErrorCauseString,
+  isAbortSignal,
+  createEnvironmentUnloadedError,
+  getLoaderForFileName,
   eNn,
   tNn,
-  mdr,
-  gdr,
-  rot,
+  MAX_HOOKS_MODULE_FILES,
+  MAX_HOOKS_MODULE_TOTAL_BYTES,
+  BUILTIN_MODULE_SPECIFIER,
   nNn,
   rNn,
   oNn,
   sNn,
   iNn,
   aNn,
-  Lmr,
-  Mmr,
-  $Ht,
-  BYt,
-  Nje,
-  Nmr,
-  UHt,
+  createModuleTotalSizeError,
+  createModuleFileLimitError,
+  CORE_OPERATION_EVENT_NAMES,
+  BUILTIN_HOOK_EVENT_NAMES,
+  isBuiltinHookEventName,
+  isCoreOperationEventName,
+  isCustomHookEventName,
 };

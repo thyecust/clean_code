@@ -9,5 +9,5 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 220 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { nJt, Qxe } from "./chunk-aqq8azxz.js";
+import { initializeApp as nJt, initializeTelemetryAfterTrust as Qxe } from "./app-init.js";
 export { nJt as init, Qxe as initializeTelemetryAfterTrust };

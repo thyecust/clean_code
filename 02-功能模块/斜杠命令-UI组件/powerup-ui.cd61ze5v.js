@@ -14,6 +14,6 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-tfspgges.js"
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 var l = async (o) => e(LHe, { onExit: (m) => o(m, { display: "system" }) });
 export { l as call };

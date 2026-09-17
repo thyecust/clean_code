@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { A0 } from "../权限系统/chunk-e4pfvp7x.js";
+import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
 var s = "",
   r = "'worktree'",
@@ -25,7 +25,7 @@ ONLY call this tool when the user has explicitly opted into multi-agent orchestr
 - The user invoked a skill or slash command whose instructions tell you to call Workflow.
 - The user asked you to run a specific named or saved workflow.
 
-For any other task \u2014 even one that would clearly benefit from parallelism \u2014 do NOT call this tool. Use the ${mt} tool (if available) for individual subagents, or briefly describe what a multi-agent workflow could do and how much it would roughly cost, and ask the user whether to run it. Mention they can ask for one with "use a workflow" in a future message to skip the ask.
+For any other task \u2014 even one that would clearly benefit from parallelism \u2014 do NOT call this tool. Use the ${AGENT_TOOL_NAME} tool (if available) for individual subagents, or briefly describe what a multi-agent workflow could do and how much it would roughly cost, and ask the user whether to run it. Mention they can ask for one with "use a workflow" in a future message to skip the ask.
 
 Every script must begin with \`export const meta = {...}\`: a PURE LITERAL (no variables, calls or interpolation) giving the workflow's \`name\`, a one-line \`description\` (shown in the permission dialog) and optionally \`phases\` \u2014 one \`{ title, detail? }\` per phase() call, titles matched exactly. Pass the script inline via \`script\` \u2014 do not Write it to a file first, and do not also set the tool's \`name\` input (that selects a saved workflow); it is plain JavaScript, not TypeScript.
 
@@ -92,7 +92,7 @@ Script body hooks:
 - phase(title: string): void \u2014 start a new phase; subsequent agent() calls are grouped under this title in the progress display
 - args: any \u2014 the value passed as Workflow's \`args\` input, verbatim (undefined if not provided). Pass arrays/objects as actual JSON values in the tool call, NOT as a JSON-encoded string \u2014 \`args: ["a.ts", "b.ts"]\`, not \`args: "[\\"a.ts\\", ...]"\` (a stringified list reaches the script as one string, so \`args.filter\`/\`args.map\` throw). Use this to parameterize named workflows \u2014 e.g. pass a research question, target path, or config object directly instead of via a side-channel file.
 - budget: {total: number|null, spent(): number, remaining(): number} \u2014 the turn's token target from the user's "+500k"-style directive. \`budget.total\` is null if no target was set. \`budget.spent()\` returns output tokens spent this turn across the main loop and all workflows \u2014 the pool is shared, not per-workflow. \`budget.remaining()\` returns \`max(0, total - spent())\`, or \`Infinity\` if no target. The target is a HARD ceiling, not advisory: once \`spent()\` reaches \`total\`, further \`agent()\` calls throw. Use for dynamic loops: \`while (budget.total && budget.remaining() > 50_000) { ... }\`, or static scaling: \`const FLEET = budget.total ? Math.floor(budget.total / 100_000) : 5\`.
-- workflow(nameOrRef: string | {scriptPath: string}, args?: any): Promise<any> \u2014 run another workflow inline as a sub-step and return whatever it returns. Pass a name to invoke a saved workflow (same registry as {name: "..."}), or {scriptPath} to run a script file you Wrote earlier. The child shares this run's concurrency cap, agent counter, abort signal, and token budget \u2014 its agents appear under a "${A0} name" group in /workflows and its tokens count toward budget.spent(). The args param becomes the child's \`args\` global. Nesting is one level only: workflow() inside a child throws. Throws on unknown name / unreadable scriptPath / child syntax error; catch to handle gracefully.
+- workflow(nameOrRef: string | {scriptPath: string}, args?: any): Promise<any> \u2014 run another workflow inline as a sub-step and return whatever it returns. Pass a name to invoke a saved workflow (same registry as {name: "..."}), or {scriptPath} to run a script file you Wrote earlier. The child shares this run's concurrency cap, agent counter, abort signal, and token budget \u2014 its agents appear under a "${LOG_BULLET_GLYPH} name" group in /workflows and its tokens count toward budget.spent(). The args param becomes the child's \`args\` global. Nesting is one level only: workflow() inside a child throws. Throws on unknown name / unreadable scriptPath / child syntax error; catch to handle gracefully.
 
 Subagents are told their final text IS the return value (not a human-facing message), so they return raw data. For structured output, use the schema option \u2014 validation happens at the tool-call layer so the model retries on mismatch.
 Schemas need {type: 'object', properties: {...}} at root and required \u2286 properties; unsatisfiable ones throw at agent().
@@ -182,7 +182,7 @@ Use this tool for multi-step orchestration where control flow should be determin
 
 The tool result includes a runId. To resume after a pause, kill, or script edit, relaunch with Workflow({scriptPath, resumeFromRunId}) \u2014 the longest unchanged prefix of agent() calls returns cached results instantly; the first edited/new call and everything after it runs live. Same script + same args \u2192 100% cache hit. Before diagnosing why a completed workflow returned an empty or unexpected result, Read <transcriptDir>/journal.jsonl \u2014 it records each agent's actual return value; do not assume cached results are non-empty. Date.now()/Math.random()/new Date() are unavailable in scripts (they would break this) \u2014 stamp results after the workflow returns, or pass timestamps via args. Fallback when no journal is available: Read agent-<id>.jsonl files in the transcript directory and hand-author a continuation script.`;
 }
-var i = `Before writing a script, load the \`${$E}\` skill \u2014 the workflow authoring reference: script API and gotchas, resume, the **Ultracode** section, quality patterns, worked examples.`;
+var i = `Before writing a script, load the \`${WORKFLOW_AUTHORING_SKILL_NAME}\` skill \u2014 the workflow authoring reference: script API and gotchas, resume, the **Ultracode** section, quality patterns, worked examples.`;
 function fin(e) {
   return e
     ? `${t}

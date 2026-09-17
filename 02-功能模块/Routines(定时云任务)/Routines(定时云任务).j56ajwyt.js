@@ -10,30 +10,30 @@
 
 // [preload stripped] 原本在此预载 191 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pke, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasStoredOAuthToken, hasOAuthScope } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getRemoteUrl } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { hasDisableClaudeAiConnectors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Mw, Pb, Rx } from "../Git-Worktree/chunk-bk9696gx.js";
+import { isNestedGitLabProject, detectCurrentRepositoryWithHost, parseGitRemote } from "../Git-Worktree/git-repository-detection.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
 import { MM, hne, Q4n, jgn, getMcpServerSignature, shouldSkipClaudeAiFetchForEnterpriseLockdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getSuppressedClaudeAiConnectors } from "../权限系统/chunk-fjrcf22x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
-import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { E$ } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
-import { YJn } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
+import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
+import { SCHEDULE_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function M() {
-  return !St() && isPolicyAllowed("allow_quick_web_setup");
+  return !isEssentialTrafficOnly() && isPolicyAllowed("allow_quick_web_setup");
 }
 var O = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 function z(s) {
@@ -148,12 +148,12 @@ function F({
   let f = s.length === 0 && r !== null;
   if (t > 0)
     c.push(
-      `${t} MCP ${x(t, "server is", "servers are")} configured directly in Claude Code and NOT available to routines (the user can run /mcp to see ${x(t, "it", "them")}). Routines can only use claude.ai connectors${f ? `. As explained above, the claude.ai connector list was not loaded in this session, so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "lockdown" ? `. Loading of claude.ai connectors is disabled in this Claude Code session by the organization's managed MCP configuration, so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "restricted" ? `. claude.ai connectors are not loaded in this Claude Code session (MCP servers are restricted to explicitly passed config here), so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "optout" ? `. Automatic loading of claude.ai connectors is disabled in this Claude Code session (disableClaudeAiConnectors setting or ENABLE_CLAUDEAI_MCP_SERVERS env var), so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one; suggest checking https://claude.ai/customize/connectors.` : r === "safe-mode" ? `. claude.ai connectors are not loaded in this Claude Code session (safe mode), so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "missing-scope" ? `. claude.ai connectors could not be loaded in this Claude Code session (the session's login token does not include the MCP-connectors permission), so ${x(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : " \u2014 to use one of those services in a routine, the user must connect it at https://claude.ai/customize/connectors."}`,
+      `${t} MCP ${pluralize(t, "server is", "servers are")} configured directly in Claude Code and NOT available to routines (the user can run /mcp to see ${pluralize(t, "it", "them")}). Routines can only use claude.ai connectors${f ? `. As explained above, the claude.ai connector list was not loaded in this session, so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "lockdown" ? `. Loading of claude.ai connectors is disabled in this Claude Code session by the organization's managed MCP configuration, so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "restricted" ? `. claude.ai connectors are not loaded in this Claude Code session (MCP servers are restricted to explicitly passed config here), so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "optout" ? `. Automatic loading of claude.ai connectors is disabled in this Claude Code session (disableClaudeAiConnectors setting or ENABLE_CLAUDEAI_MCP_SERVERS env var), so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one; suggest checking https://claude.ai/customize/connectors.` : r === "safe-mode" ? `. claude.ai connectors are not loaded in this Claude Code session (safe mode), so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : r === "missing-scope" ? `. claude.ai connectors could not be loaded in this Claude Code session (the session's login token does not include the MCP-connectors permission), so ${pluralize(t, "this service", "some of these services")} may already have a connector on claude.ai that routines can use \u2014 do not assert that the user must connect one.` : " \u2014 to use one of those services in a routine, the user must connect it at https://claude.ai/customize/connectors."}`,
     );
   if (i > 0) {
     let u = p.length > 0 ? ` (${p.join(", ")})` : "";
     c.push(
-      `Note: ${i} claude.ai ${x(i, "connector")}${u} ${x(i, "is", "are")} not active in this Claude Code session because ${x(i, "a manually-configured server points", "manually-configured servers point")} at the same ${x(i, "service")}. ${x(i, "It remains", "They remain")} connected on claude.ai and available to routines there \u2014 connector details are not listed in this session, so to attach ${x(i, "it", "them")} explicitly the user should manage the routine's connectors at https://claude.ai/code/routines.`,
+      `Note: ${i} claude.ai ${pluralize(i, "connector")}${u} ${pluralize(i, "is", "are")} not active in this Claude Code session because ${pluralize(i, "a manually-configured server points", "manually-configured servers point")} at the same ${pluralize(i, "service")}. ${pluralize(i, "It remains", "They remain")} connected on claude.ai and available to routines there \u2014 connector details are not listed in this session, so to attach ${pluralize(i, "it", "them")} explicitly the user should manage the routine's connectors at https://claude.ai/code/routines.`,
     );
   }
   return c.join(`
@@ -168,8 +168,8 @@ ${s.map((i) => `- ${i}`).join(`
 async function W() {
   let s = await getRemoteUrl();
   if (!s) return null;
-  let t = Rx(s);
-  if (!t || Mw(t)) return null;
+  let t = parseGitRemote(s);
+  if (!t || isNestedGitLabProject(t)) return null;
   return `https://${t.host}/${t.owner}/${t.name}`;
 }
 function q(s) {
@@ -394,7 +394,7 @@ Start by understanding their intent and working through the appropriate workflow
 }
 function registerScheduleRemoteAgentsSkill() {
   registerBundledSkill({
-    name: YJn,
+    name: SCHEDULE_SKILL_NAME,
     menuDescription: "Create and manage routines: cloud agents on a schedule",
     aliases: ["routines"],
     description:
@@ -407,7 +407,7 @@ function registerScheduleRemoteAgentsSkill() {
       isClaudeAISubscriber() &&
       !a.CLAUDE_CODE_REMOTE &&
       isPolicyAllowed("allow_remote_sessions") &&
-      isPolicyAllowed(gM),
+      isPolicyAllowed(ALLOW_ROUTINES_POLICY),
     allowedTools: [E$, ASK_USER_QUESTION_TOOL_NAME, "Bash(date *)"],
     async getPromptForCommand(s, t) {
       if (!hasStoredOAuthToken())
@@ -458,12 +458,12 @@ function registerScheduleRemoteAgentsSkill() {
               ]
             );
           }
-        let e = await Pb();
+        let e = await detectCurrentRepositoryWithHost();
         if (e === null)
           r.push(
             "Not in a git repo \u2014 you'll need to specify a repo URL manually (or skip repos entirely).",
           );
-        else if (Do(e.host)) {
+        else if (isGitHubHost(e.host)) {
           let { hasAccess: l, transient: w } = await Q4n(e.owner, e.name);
           if (!l) {
             h = !0;
@@ -522,7 +522,7 @@ function registerScheduleRemoteAgentsSkill() {
         y = !hasOAuthScope("user:mcp_servers"),
         v = shouldSkipClaudeAiFetchForEnterpriseLockdown()
           ? "lockdown"
-          : M0() || uo()
+          : M0() || isSimpleMode()
             ? "restricted"
             : a.ENABLE_CLAUDEAI_MCP_SERVERS === !1 || hasDisableClaudeAiConnectors()
               ? "optout"
@@ -549,7 +549,7 @@ function registerScheduleRemoteAgentsSkill() {
         if (
           (r.push(
             o > 0
-              ? `No MCP connectors for cloud routines \u2014 ${o} MCP ${x(o, "server")} configured in Claude Code can't be attached to routines (run /mcp to see ${x(o, "it", "them")}); routines can only use claude.ai connectors. ${e}`
+              ? `No MCP connectors for cloud routines \u2014 ${o} MCP ${pluralize(o, "server")} configured in Claude Code can't be attached to routines (run /mcp to see ${pluralize(o, "it", "them")}); routines can only use claude.ai connectors. ${e}`
               : v !== null || g
                 ? `No MCP connectors \u2014 ${e}`
                 : "No MCP connectors \u2014 connect at https://claude.ai/customize/connectors if needed.",
@@ -559,7 +559,7 @@ function registerScheduleRemoteAgentsSkill() {
           let l = u.length,
             w = d.length > 0 ? ` (${d.join(", ")})` : "";
           r.push(
-            `${l} claude.ai ${x(l, "connector")}${w} ${x(l, "is", "are")} not active in this session (${x(l, "a server configured in Claude Code covers", "servers configured in Claude Code cover")} the same ${x(l, "service")}), but ${x(l, "it remains", "they remain")} available to routines on claude.ai.`,
+            `${l} claude.ai ${pluralize(l, "connector")}${w} ${pluralize(l, "is", "are")} not active in this session (${pluralize(l, "a server configured in Claude Code covers", "servers configured in Claude Code cover")} the same ${pluralize(l, "service")}), but ${pluralize(l, "it remains", "they remain")} available to routines on claude.ai.`,
           );
         }
       }

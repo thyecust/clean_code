@@ -8,12 +8,12 @@
 
 // Version: 2.1.263
 import { zn, _Z } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { be, Kur } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, getConfiguredProjectDirName } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { tje } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { gz } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { hashString } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { resolveExecutableSafely } from "../../01-核心基础设施/共享小工具-未细化/chunk-twnwwsbr.js";
-import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import { runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import { randomUUID } from "crypto";
 import { once as C } from "events";
 import { constants, createWriteStream } from "fs";
@@ -261,7 +261,7 @@ function extractFirstPromptFromHead(e) {
       continue;
     try {
       let i = JSON.parse(a),
-        o = Ohe(i, r);
+        o = extractUserPromptText(i, r);
       if (o !== void 0) return o;
     } catch {
       continue;
@@ -273,7 +273,7 @@ function extractFirstPromptFromEntries(e) {
   let n = { commandFallback: "" };
   for (let r of e) {
     if (typeof r !== "object" || r === null) continue;
-    let t = Ohe(r, n);
+    let t = extractUserPromptText(r, n);
     if (t !== void 0) return t;
   }
   return n.commandFallback;
@@ -591,7 +591,7 @@ async function ve(e, n, r) {
     u = !1,
     s = new Set();
   try {
-    let p = await Qo(
+    let p = await runPaginatedScan(
       (l) => t.listEntries({ namespace: "transcript" }, M(l)),
       async (l) => {
         for (let f of l) {
@@ -661,7 +661,7 @@ async function ee(e) {
 }
 var MAX_SANITIZED_LENGTH = 200;
 function Te(e) {
-  return Math.abs(gz(e)).toString(36);
+  return Math.abs(hashString(e)).toString(36);
 }
 function k(e) {
   return e.replace(/[^a-zA-Z0-9]/g, "-");
@@ -711,10 +711,10 @@ function slugCollisionGuardFoldsCase() {
   return !0;
 }
 function getProjectsDir() {
-  return S(be(), "projects");
+  return S(getClaudeConfigDir(), "projects");
 }
 function getProjectKey(e) {
-  return Kur() ?? sanitizePath(e);
+  return getConfiguredProjectDirName() ?? sanitizePath(e);
 }
 function legacyDerivedProjectKey(e) {
   let n = sanitizePath(e);
@@ -772,7 +772,7 @@ async function Le(e, n, r, t) {
     u = !1,
     s = new Set();
   try {
-    let p = await Qo(
+    let p = await runPaginatedScan(
       (l) => a.listEntries({ namespace: "transcript", projectKey: e }, M(l)),
       async (l) => {
         for (let f of l) {
@@ -850,7 +850,7 @@ async function listProjectDirNamesV5(e) {
   try {
     if (
       (
-        await Qo(
+        await runPaginatedScan(
           (c) => n.listEntries({ namespace: "transcript" }, M(c)),
           (c) => {
             for (let u of c) {
@@ -953,7 +953,7 @@ async function resolveSessionFilePath(e, n, r, t) {
     try {
       if (
         (
-          await Qo(
+          await runPaginatedScan(
             (d) =>
               i.backend.listEntries(
                 { namespace: "transcript" },

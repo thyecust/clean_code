@@ -13,9 +13,9 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { xk, pH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import {
@@ -32,8 +32,8 @@ import {
   Gpt,
   qpt,
 } from "../目录同步(dir-sync)/chunk-gbhqtdpn.js";
-import "./chunk-ht8ydg1v.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import "./sync-journal.js";
+import "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { Cze } from "../Git-Worktree/chunk-v967hawf.js";
 import "./chunk-tqwnv5vj.js";
 import "./chunk-eg4wmaq4.js";
@@ -91,7 +91,7 @@ async function D({
       return {
         kind: "refused",
         reason: "busy",
-        detail: `${e.heldBack.length} ${x(e.heldBack.length, "file")} changed while ${x(e.heldBack.length, "it was", "they were")} being read (${y}${e.heldBack.length > E ? ", \u2026" : ""}); let whatever is writing to this folder finish and start again`,
+        detail: `${e.heldBack.length} ${pluralize(e.heldBack.length, "file")} changed while ${pluralize(e.heldBack.length, "it was", "they were")} being read (${y}${e.heldBack.length > E ? ", \u2026" : ""}); let whatever is writing to this folder finish and start again`,
       };
     }
     if (e.stats.bytes > p)
@@ -173,7 +173,7 @@ function v(t) {
   return `Cannot start a cloud session from this folder: ${t}.`;
 }
 function B(t) {
-  return io(t, { maxCodeUnits: 512 });
+  return formatSingleLineText(t, { maxCodeUnits: 512 });
 }
 var M = {
     unreadable: "its files could not all be read",

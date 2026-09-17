@@ -13,7 +13,7 @@ import { VR, Dx, Aje } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -22,25 +22,25 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { Pr, $s, an, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Nae, x0t, H0t } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
+import { shouldOfferTrustBackstop, getRepoHelperSources, getMarketplaceHelperSources } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import {
-  een,
+  getHookSettingsSourceFiles,
   s0e,
   i0e,
-  ten,
-  jb,
-  nen,
-  ren,
-  oen,
-  sen,
-  ien,
-  aen,
-  len,
-} from "../状态栏-主题/chunk-67rzccvb.js";
+  getBashExecutionSourceFiles,
+  formatListWithAnd,
+  getOtelHeadersHelperSourceFiles,
+  getAutoMemoryDirectorySourceFiles,
+  getApiKeyHelperSourceFiles,
+  getAwsCommandSourceFiles,
+  getGcpCommandSourceFiles,
+  getProxyAuthHelperSourceFiles,
+  getDangerousEnvVarSourceFiles,
+} from "../状态栏-主题/trust-dialog-settings.js";
 import { PermissionDialogFrame } from "./permission-dialog.js";
 import { isKbCohesionFixesEnabled } from "../../01-核心基础设施/共享小工具-未细化/kb-cohesion-fixes.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -87,11 +87,11 @@ function TrustDialog(wo) {
   else lt = s[1];
   let xe = lt.length > 0,
     ut;
-  if (s[2] === MEMO_CACHE_SENTINEL) ((ut = een()), (s[2] = ut));
+  if (s[2] === MEMO_CACHE_SENTINEL) ((ut = getHookSettingsSourceFiles()), (s[2] = ut));
   else ut = s[2];
   let Se = ut.length > 0,
     pt;
-  if (s[3] === MEMO_CACHE_SENTINEL) ((pt = ten()), (s[3] = pt));
+  if (s[3] === MEMO_CACHE_SENTINEL) ((pt = getBashExecutionSourceFiles()), (s[3] = pt));
   else pt = s[3];
   let yo = pt,
     j = s0e(),
@@ -99,33 +99,33 @@ function TrustDialog(wo) {
     A = i0e(),
     M = A.sources.length > 0,
     dt;
-  if (s[4] === MEMO_CACHE_SENTINEL) ((dt = oen()), (s[4] = dt));
+  if (s[4] === MEMO_CACHE_SENTINEL) ((dt = getApiKeyHelperSourceFiles()), (s[4] = dt));
   else dt = s[4];
   let De = dt.length > 0,
     ht;
-  if (s[5] === MEMO_CACHE_SENTINEL) ((ht = sen()), (s[5] = ht));
+  if (s[5] === MEMO_CACHE_SENTINEL) ((ht = getAwsCommandSourceFiles()), (s[5] = ht));
   else ht = s[5];
   let He = ht.length > 0,
     ft;
-  if (s[6] === MEMO_CACHE_SENTINEL) ((ft = ien()), (s[6] = ft));
+  if (s[6] === MEMO_CACHE_SENTINEL) ((ft = getGcpCommandSourceFiles()), (s[6] = ft));
   else ft = s[6];
   let ve = ft.length > 0,
     mt;
-  if (s[7] === MEMO_CACHE_SENTINEL) ((mt = nen()), (s[7] = mt));
+  if (s[7] === MEMO_CACHE_SENTINEL) ((mt = getOtelHeadersHelperSourceFiles()), (s[7] = mt));
   else mt = s[7];
   let Te = mt.length > 0,
     gt;
-  if (s[8] === MEMO_CACHE_SENTINEL) ((gt = aen()), (s[8] = gt));
+  if (s[8] === MEMO_CACHE_SENTINEL) ((gt = getProxyAuthHelperSourceFiles()), (s[8] = gt));
   else gt = s[8];
   let je = gt.length > 0,
     wt;
   if (s[9] === MEMO_CACHE_SENTINEL) {
-    let bt = H0t();
-    let yt = x0t(bt);
+    let bt = getMarketplaceHelperSources();
+    let yt = getRepoHelperSources(bt);
     wt = {
       marketplaceHelperSources: bt,
       repoHelperSources: yt,
-      offerBackstop: Nae(yt),
+      offerBackstop: shouldOfferTrustBackstop(yt),
     };
     s[9] = wt;
   } else wt = s[9];
@@ -137,11 +137,11 @@ function TrustDialog(wo) {
     Ae = ko.length > 0,
     G = kt.length > 0,
     Ct;
-  if (s[10] === MEMO_CACHE_SENTINEL) ((Ct = len()), (s[10] = Ct));
+  if (s[10] === MEMO_CACHE_SENTINEL) ((Ct = getDangerousEnvVarSourceFiles()), (s[10] = Ct));
   else Ct = s[10];
   let Pe = Ct.length > 0,
     xt;
-  if (s[11] === MEMO_CACHE_SENTINEL) ((xt = ren()), (s[11] = xt));
+  if (s[11] === MEMO_CACHE_SENTINEL) ((xt = getAutoMemoryDirectorySourceFiles()), (s[11] = xt));
   else xt = s[11];
   let Re = xt.length > 0,
     St;
@@ -354,10 +354,10 @@ function TrustDialog(wo) {
                   "This folder pre-approves ",
                   j.rawCount,
                   " ",
-                  x(j.rawCount, "tool permission"),
+                  pluralize(j.rawCount, "tool permission"),
                   " in",
                   " ",
-                  jb(j.sources),
+                  formatListWithAnd(j.sources),
                   ":",
                 ],
               }),
@@ -365,7 +365,7 @@ function TrustDialog(wo) {
                 children: [
                   "  ",
                   j.rules.length > 0
-                    ? jb(j.rules, 8)
+                    ? formatListWithAnd(j.rules, 8)
                     : "(rule names contain unprintable characters)",
                 ],
               }),
@@ -382,11 +382,11 @@ function TrustDialog(wo) {
                   "This folder adds ",
                   A.rawCount,
                   " ",
-                  x(A.rawCount, "directory", "directories"),
+                  pluralize(A.rawCount, "directory", "directories"),
                   " ",
                   "to the workspace in",
                   " ",
-                  jb(A.sources),
+                  formatListWithAnd(A.sources),
                   ":",
                 ],
               }),
@@ -394,7 +394,7 @@ function TrustDialog(wo) {
                 children: [
                   "  ",
                   A.dirs.length > 0
-                    ? jb(A.dirs, 6)
+                    ? formatListWithAnd(A.dirs, 6)
                     : "(directory names contain unprintable characters)",
                 ],
               }),
@@ -407,7 +407,7 @@ function TrustDialog(wo) {
             children: [
               e(StatusIndicator, { status: "warning", withSpace: !0 }),
               "This folder runs commands to mint HTTP headers (headersHelper), declared in ",
-              jb(kt),
+              formatListWithAnd(kt),
             ],
           }),
         e(t, {

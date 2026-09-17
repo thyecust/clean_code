@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 235 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Vhe, Khe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { h0n } from "../权限系统/chunk-e4pfvp7x.js";
+import { CHANNEL_TAG, CHANNEL_SOURCE_OPEN_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { INBOUND_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { M5 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -22,13 +22,13 @@ import { C2, JOe, omt } from "../../03-入口与运行时/核心应用-Agent循�
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
-import { UA } from "../工具UI渲染/chunk-g4k5jjwt.js";
+import { TruncatedText } from "../工具UI渲染/chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
-var nt = new RegExp(`^<${Vhe}\\s+source="([^"]*)"([^>]*)>\\n?`),
-  f = `</${Vhe}>`,
+var nt = new RegExp(`^<${CHANNEL_TAG}\\s+source="([^"]*)"([^>]*)>\\n?`),
+  f = `</${CHANNEL_TAG}>`,
   w = `
 ${f}`,
   ot = /\buser="([^"]+)"/,
@@ -56,7 +56,7 @@ function V(c) {
   if (s.startsWith(C2)) {
     let n = s.indexOf(`
 `);
-    if (n !== -1 && s.startsWith(Khe, n + 1))
+    if (n !== -1 && s.startsWith(CHANNEL_SOURCE_OPEN_TAG, n + 1))
       ((i = s.slice(0, n)), (s = s.slice(n + 1)));
   }
   let m = nt.exec(s);
@@ -87,7 +87,7 @@ function UserChannelMessage(gt) {
       let z = V(T);
       if (!z) {
         I = b
-          ? e(UA, { text: T.trim() })
+          ? e(TruncatedText, { text: T.trim() })
           : e(o, {
               marginTop: W ? 1 : 0,
               children: e(t, { children: T.trim() }),
@@ -118,7 +118,7 @@ function UserChannelMessage(gt) {
         if (u[14] !== a) ((l = a.trim()), (u[14] = a), (u[15] = l));
         else l = u[15];
         let k;
-        if (u[16] !== l) ((k = e(UA, { text: l })), (u[16] = l), (u[17] = k));
+        if (u[16] !== l) ((k = e(TruncatedText, { text: l })), (u[16] = l), (u[17] = k));
         else k = u[17];
         I = k;
         break bb0;
@@ -132,7 +132,7 @@ function UserChannelMessage(gt) {
         ((E = e(t, {
           "aria-label": "inbound:",
           color: "suggestion",
-          children: h0n,
+          children: INBOUND_ARROW_GLYPH,
         })),
           (u[18] = E));
       else E = u[18];

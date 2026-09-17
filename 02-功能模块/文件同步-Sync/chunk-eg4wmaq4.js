@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { us, Wc, Yg, U0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodePoints, isWellFormed, toWellFormed, ANY_CONTROL_CHAR_REGEX } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { kJ, $Tt, MK } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   Ds,
@@ -28,7 +28,7 @@ import {
   o6t,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { vze } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
-import { DFt, O9 } from "./chunk-ht8ydg1v.js";
+import { isPathEligibleForSync, compareByPath } from "./sync-journal.js";
 import { Vpt, Z9n } from "./chunk-tqwnv5vj.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -54,8 +54,8 @@ function ee(e) {
     $M(e) &&
     !J.test(e) &&
     !e.includes("\\") &&
-    !U0.test(e) &&
-    Wc(e)
+    !ANY_CONTROL_CHAR_REGEX.test(e) &&
+    isWellFormed(e)
   );
 }
 var ne = /[\x00-\x08\x0A-\x1F\x7F-\x9F]/,
@@ -65,7 +65,7 @@ var ne = /[\x00-\x08\x0A-\x1F\x7F-\x9F]/,
   re = /\*\*+/g;
 function w(e) {
   if (e.length > B) return "too_long";
-  if (ne.test(e) || !Wc(e)) return "control_character";
+  if (ne.test(e) || !isWellFormed(e)) return "control_character";
   return (e.match(te)?.length ?? 0) > H || (e.match(re)?.length ?? 0) > j
     ? "too_many_wildcards"
     : null;
@@ -87,7 +87,7 @@ function qbe(e, t) {
 }
 var ie = /[\p{Cc}\p{Cf}]/gu;
 function se(e) {
-  return Yg(e).replace(ie, "\uFFFD");
+  return toWellFormed(e).replace(ie, "\uFFFD");
 }
 var U = ".git";
 function Fan(e) {
@@ -138,7 +138,7 @@ var ce = 120,
   sn = `more wildcards than sync matches safely (more than ${String(H)} "*" runs, or more than ${String(j)} of them "**")`;
 function T(e) {
   let t = se(e),
-    n = us(t, ce);
+    n = truncateToCodePoints(t, ce);
   return '"' + n + (n.length < t.length ? "\u2026" : "") + '"';
 }
 function $an(e) {
@@ -428,7 +428,7 @@ async function Te(e, t, n, r, o) {
       s.push({ path: n === "" ? i.name : n + "/" + i.name, dirent: i });
     }
     if (n !== "" && (await Oe(e, n, s))) return { kind: "nested_repository" };
-    return { kind: "entries", entries: s.toSorted(O9) };
+    return { kind: "entries", entries: s.toSorted(compareByPath) };
   } catch {
     return { kind: "unreadable" };
   }
@@ -454,7 +454,7 @@ function Pe(e, t, n) {
     !e.includes(V) &&
     ee(t) &&
     !(ej() && TE(e)) &&
-    DFt({ path: t }) &&
+    isPathEligibleForSync({ path: t }) &&
     !(n ? Z9n(t) : Vpt(t))
   );
 }
@@ -614,11 +614,11 @@ async function Uan({
   return {
     ok: !0,
     listing: {
-      files: u.flatMap((a) => (a.kind === "file" ? [a.file] : [])).toSorted(O9),
+      files: u.flatMap((a) => (a.kind === "file" ? [a.file] : [])).toSorted(compareByPath),
       skipped: [
         ...i,
         ...u.flatMap((a) => (a.kind === "skip" ? [a.skipped] : [])),
-      ].toSorted(O9),
+      ].toSorted(compareByPath),
       ignoredCount: k,
       ignoredFiles: g.toSorted(),
       ignoredDirectories: h.toSorted(),

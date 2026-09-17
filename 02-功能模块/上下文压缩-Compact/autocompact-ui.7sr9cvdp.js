@@ -18,7 +18,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
 import { tp, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -38,7 +38,7 @@ var y = 1e5,
 function uo(No) {
   let n = _(61),
     { onDone: g, context: no } = No,
-    ro = U(Mo),
+    ro = useAppStateSelector(Mo),
     co = useMainLoopModel(),
     q,
     h,

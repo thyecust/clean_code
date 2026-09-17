@@ -12,18 +12,18 @@
 import { H_ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { mi } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Wf, x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { capitalize, pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { gHn, ts } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { sv, Lw } from "../权限系统/chunk-e4pfvp7x.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { gr, ka, ow, Y2, BM, cw, gmn, _yt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
-import { d_, U, Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useAppStateSession, useAppStateSelector, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -32,8 +32,8 @@ import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共�
 import "../../01-核心基础设施/共享小工具-未细化/clipboard-copy.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-3eztvm1y.js";
-import "../认证-OAuth登录/chunk-7jz937t3.js";
+import "../../01-核心基础设施/共享小工具-未细化/lazy-event-emitters.js";
+import "../认证-OAuth登录/url-and-error-redaction.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import "../插件系统/chunk-rbjz1q03.js";
 import "../插件系统/channel-gate.js";
@@ -41,7 +41,7 @@ import { Vi, jx, Bae, P8 } from "../../03-入口与运行时/会话UI(REPL)/会�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { _p } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { qm, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
@@ -65,7 +65,7 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-4bdjksjf.js"
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
-import { YZ } from "../MCP客户端/chunk-35zjqw7h.js";
+import { formatMcpToggleError } from "../MCP客户端/mcp-error-messages.js";
 import { ErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
@@ -74,16 +74,16 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import "../../01-核心基础设施/共享小工具-未细化/bullet-item.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../MCP客户端/plugin-reload-cache-impact.js";
-import "../MCP客户端/chunk-d7zajrh1.js";
-import { Gle } from "../../01-核心基础设施/共享小工具-未细化/chunk-ey89qg3e.js";
+import "../MCP客户端/skill-doctor-data.js";
+import { getIsMcpServerDisabled } from "../../01-核心基础设施/共享小工具-未细化/mcp-control-handlers.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { classifyMcpServerAuth } from "../../01-核心基础设施/共享小工具-未细化/mcp-hosted-oauth-gate.js";
-import { I4, MIe, Cee, s2, j3e, CSe, W3e } from "../MCP客户端/chunk-k2gczbnj.js";
+import { getMcpServerType, getBlockingMcpServerState, formatServerDisabledHint, formatDisabledElsewhereMessage, formatDisableNotPersistedMessage, formatBulkTogglePersistWarning, formatStaleDisableMessage } from "../MCP客户端/mcp-server-state-messages.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { Nl, re, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -94,7 +94,7 @@ function Nt() {
 }
 function rt({ agentServer: s, onCancel: i, onComplete: l }) {
   let f = re((S, ...T) => l(typeof S === "string" ? Qn(S) : S, ...T), [l]),
-    [u] = cn(),
+    [u] = useTheme(),
     [m, w] = d(!1),
     [b, J] = d(null),
     [X, j] = d(null),
@@ -139,7 +139,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
         (w(!1), (I.current = null));
       }
     }, [s, f]),
-    v = Wf(String(s.name));
+    v = capitalize(String(s.name));
   if (m)
     return r(o, {
       flexDirection: "column",
@@ -249,7 +249,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                   e(N, { children: "Status:" }),
                   r(t, {
                     children: [
-                      getThemeColor("inactive", u)(L.radioOff),
+                      getThemeColor("inactive", u)(figures.radioOff),
                       " not connected (agent-only)",
                     ],
                   }),
@@ -261,7 +261,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
                     e(N, { children: "Auth:" }),
                     r(t, {
                       children: [
-                        getThemeColor("warning", u)(L.triangleUpOutline),
+                        getThemeColor("warning", u)(figures.triangleUpOutline),
                         " may need authentication",
                       ],
                     }),
@@ -463,8 +463,8 @@ function wt({
   onToggleUnusedConnectors: J,
 }) {
   let [X, j, I] = qm(0),
-    { rows: oe } = ks(useTerminalSize()),
-    c = Ma(),
+    { rows: oe } = useVirtualScrollViewportSize(useTerminalSize()),
+    c = useHasVirtualScrollViewport(),
     v = V(() => {
       let a = new Set(s.filter((M) => M.scope === "agent").map((M) => M.name));
       if (a.size === 0) return f;
@@ -602,7 +602,7 @@ function wt({
                   children: [
                     " ",
                     "\xB7 ",
-                    L.radioOff,
+                    figures.radioOff,
                     " hidden \u2014 same URL as your server '",
                     g.duplicateOf,
                     "'",
@@ -675,7 +675,7 @@ function wt({
       e(i9e, {}),
       e(de, {
         title: "Manage MCP servers",
-        subtitle: `${Xt} ${x(Xt, "server")}`,
+        subtitle: `${Xt} ${pluralize(Xt, "server")}`,
         onCancel: We,
         hideInputGuide: !0,
         children: r(o, {
@@ -686,7 +686,7 @@ function wt({
                 paddingLeft: 2,
                 children: r(t, {
                   dimColor: !0,
-                  children: [sv, " ", qt, " more above"],
+                  children: [UP_ARROW_GLYPH, " ", qt, " more above"],
                 }),
               }),
             Jt.map((a) => e(Nl, { children: a.node }, a.key)),
@@ -695,7 +695,7 @@ function wt({
                 paddingLeft: 2,
                 children: r(t, {
                   dimColor: !0,
-                  children: [Lw, " ", Kt, " more below"],
+                  children: [DOWN_ARROW_GLYPH, " ", Kt, " more below"],
                 }),
               }),
             r(o, {
@@ -756,8 +756,8 @@ function wo(qr) {
   else qo = mt[1];
   let to = _p(qo);
   const oo = Ge ? "suggestion" : void 0,
-    no = Ge ? `${L.pointer} ` : "  ",
-    ro = Kr ? L.arrowDown : L.arrowRight;
+    no = Ge ? `${figures.pointer} ` : "  ",
+    ro = Kr ? figures.arrowDown : figures.arrowRight;
   let dt;
   if (mt[2] !== eo)
     ((dt = r(t, { dimColor: !0, children: ["(", eo, ")"] })),
@@ -788,7 +788,7 @@ function wo(qr) {
 function To(Nr) {
   let q = _(62),
     { server: A, isSelected: fe, toolCount: be } = Nr,
-    [R] = cn(),
+    [R] = useTheme(),
     No;
   if (q[0] !== fe)
     ((No = { line: 0, column: 0, active: fe }), (q[0] = fe), (q[1] = No));
@@ -798,7 +798,7 @@ function To(Nr) {
     P;
   if (A.client.type === "disabled") {
     if (q[2] !== R)
-      ((O = getThemeColor("inactive", R)(L.radioOff)),
+      ((O = getThemeColor("inactive", R)(figures.radioOff)),
         (P = "disabled"),
         (q[2] = R),
         (q[3] = O),
@@ -808,7 +808,7 @@ function To(Nr) {
     let Yo = !!A.client.capabilities?.tools;
     if (A.client.discoveryBearerRejected) {
       if (q[5] !== R)
-        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(figures.triangleUpOutline)),
           (P = "connected \xB7 session token rejected"),
           (q[5] = R),
           (q[6] = O),
@@ -816,7 +816,7 @@ function To(Nr) {
       else ((O = q[6]), (P = q[7]));
     } else if (A.client.toolsListError) {
       if (q[8] !== R)
-        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(figures.triangleUpOutline)),
           (P = "connected \xB7 tools fetch failed"),
           (q[8] = R),
           (q[9] = O),
@@ -824,7 +824,7 @@ function To(Nr) {
       else ((O = q[9]), (P = q[10]));
     } else if (Yo && be === 0) {
       if (q[11] !== R)
-        ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
+        ((O = getThemeColor("warning", R)(figures.triangleUpOutline)),
           (P = "connected \xB7 no tools"),
           (q[11] = R),
           (q[12] = O),
@@ -832,15 +832,15 @@ function To(Nr) {
       else ((O = q[12]), (P = q[13]));
     } else if (Yo && be !== void 0) {
       if (q[14] !== R || q[15] !== be)
-        ((O = getThemeColor("success", R)(L.tick)),
-          (P = `connected \xB7 ${be} ${x(be, "tool")}`),
+        ((O = getThemeColor("success", R)(figures.tick)),
+          (P = `connected \xB7 ${be} ${pluralize(be, "tool")}`),
           (q[14] = R),
           (q[15] = be),
           (q[16] = O),
           (q[17] = P));
       else ((O = q[16]), (P = q[17]));
     } else if (q[18] !== R)
-      ((O = getThemeColor("success", R)(L.tick)),
+      ((O = getThemeColor("success", R)(figures.tick)),
         (P = "connected"),
         (q[18] = R),
         (q[19] = O),
@@ -859,7 +859,7 @@ function To(Nr) {
   } else if (A.client.type === "pending") {
     let Be;
     if (q[26] !== R)
-      ((Be = getThemeColor("inactive", R)(L.radioOff)), (q[26] = R), (q[27] = Be));
+      ((Be = getThemeColor("inactive", R)(figures.radioOff)), (q[26] = R), (q[27] = Be));
     else Be = q[27];
     O = Be;
     let { reconnectAttempt: Qo, maxReconnectAttempts: Zo } = A.client;
@@ -867,7 +867,7 @@ function To(Nr) {
     else P = "connecting\u2026";
   } else if (A.client.type === "needs-auth") {
     if (q[28] !== R)
-      ((O = getThemeColor("warning", R)(L.triangleUpOutline)),
+      ((O = getThemeColor("warning", R)(figures.triangleUpOutline)),
         (P = "needs authentication"),
         (q[28] = R),
         (q[29] = O),
@@ -875,14 +875,14 @@ function To(Nr) {
     else ((O = q[29]), (P = q[30]));
   } else if (A.client.errorCode === "UNCONFIGURED") {
     if (q[31] !== R)
-      ((O = getThemeColor("inactive", R)(L.radioOff)),
+      ((O = getThemeColor("inactive", R)(figures.radioOff)),
         (P = "not configured"),
         (q[31] = R),
         (q[32] = O),
         (q[33] = P));
     else ((O = q[32]), (P = q[33]));
   } else if (q[34] !== A.client.errorCode || q[35] !== R)
-    ((O = getThemeColor("error", R)(L.cross)),
+    ((O = getThemeColor("error", R)(figures.cross)),
       (P = A.client.errorCode === "INVALID_CONFIG" ? "config issue" : "failed"),
       (q[34] = A.client.errorCode),
       (q[35] = R),
@@ -890,7 +890,7 @@ function To(Nr) {
       (q[37] = P));
   else ((O = q[36]), (P = q[37]));
   const Be = fe ? "suggestion" : void 0,
-    ao = fe ? `${L.pointer} ` : "  ";
+    ao = fe ? `${figures.pointer} ` : "  ";
   let gt;
   if (q[38] !== Be || q[39] !== ao)
     ((gt = e(t, { color: Be, children: ao })),
@@ -963,7 +963,7 @@ function To(Nr) {
 function Ao(Yr) {
   let ke = _(23),
     { agentServer: Ie, isSelected: we } = Yr,
-    [bt] = cn(),
+    [bt] = useTheme(),
     tn;
   if (ke[0] !== we)
     ((tn = { line: 0, column: 0, active: we }), (ke[0] = we), (ke[1] = tn));
@@ -972,8 +972,8 @@ function Ao(Yr) {
     on;
   if (ke[2] !== Ie.needsAuth || ke[3] !== bt)
     ((on = Ie.needsAuth
-      ? getThemeColor("warning", bt)(L.triangleUpOutline)
-      : getThemeColor("inactive", bt)(L.radioOff)),
+      ? getThemeColor("warning", bt)(figures.triangleUpOutline)
+      : getThemeColor("inactive", bt)(figures.radioOff)),
       (ke[2] = Ie.needsAuth),
       (ke[3] = bt),
       (ke[4] = on));
@@ -981,7 +981,7 @@ function Ao(Yr) {
   let fo = on,
     go = Ie.needsAuth ? "may need auth" : "agent-only";
   const ho = we ? "suggestion" : void 0,
-    Co = we ? `${L.pointer} ` : "  ";
+    Co = we ? `${figures.pointer} ` : "  ";
   let xt;
   if (ke[5] !== ho || ke[6] !== Co)
     ((xt = e(t, { color: ho, children: Co })),
@@ -1050,8 +1050,8 @@ function wn(Ds) {
 function He(fs) {
   let B = _(76),
     { onComplete: K } = fs,
-    Q = U(bn),
-    Po = U(xn),
+    Q = useAppStateSelector(bn),
+    Po = useAppStateSelector(xn),
     Io = Q.clients,
     pn;
   if (B[0] === MEMO_CACHE_SENTINEL) ((pn = { type: "list" }), (B[0] = pn));
@@ -1088,7 +1088,7 @@ function He(fs) {
           .require("../MCP客户端/mcpClientModule.4cyej0np.js")
           .mcpAuthModule();
         let vs = await new ys(Tt.name, Cs).tokens().catch(Rn);
-        let bs = Gi() !== null && Tt.type === "connected";
+        let bs = getSessionAccessToken() !== null && Tt.type === "connected";
         let xs = ts(Tt) && BM(Q.tools, Tt.name).length > 0;
         return Boolean(vs) || bs || xs;
       };
@@ -1392,12 +1392,12 @@ function Ft(oi) {
       (ge[1] = Tn));
   else Tn = ge[1];
   let le = Tn,
-    [Uo] = cn(),
-    kt = Yn(),
+    [Uo] = useTheme(),
+    kt = useAppState(),
     $t = Bae(),
     { storageV5: Dt } = useStorageV5Context(),
     { host: Ot } = useSession(),
-    Et = d_(),
+    Et = useAppStateSession(),
     [ri, ze] = d(!0),
     [Bt, Je] = d(null),
     It,
@@ -1421,8 +1421,8 @@ function Ft(oi) {
               le(`MCP server "${gr(W)}" not found`));
             return;
           }
-          if (MIe(Pn) === "disabled") {
-            let In = Cee(W);
+          if (getBlockingMcpServerState(Pn) === "disabled") {
+            let In = formatServerDisabledHint(W);
             (Je(In), ze(!1), le(In));
             return;
           }
@@ -1521,7 +1521,7 @@ function Ft(oi) {
   if (Bt) {
     let he;
     if (ge[16] !== Uo)
-      ((he = getThemeColor("error", Uo)(L.cross)), (ge[16] = Uo), (ge[17] = he));
+      ((he = getThemeColor("error", Uo)(figures.cross)), (ge[16] = Uo), (ge[17] = he));
     else he = ge[17];
     let $e;
     if (ge[18] !== he)
@@ -1572,7 +1572,7 @@ function Wn(Wi) {
   return Wi.name !== "ide";
 }
 function Xn(Xi) {
-  return I4(Xi) === "needs-approval";
+  return getMcpServerType(Xi) === "needs-approval";
 }
 function Gn(Ji) {
   return Ji.status === "fulfilled";
@@ -1580,9 +1580,9 @@ function Gn(Ji) {
 function Wo(Li) {
   let Ui = _(8),
     { action: qe, target: ee, onComplete: Oe } = Li,
-    Ht = U(Vn),
+    Ht = useAppStateSelector(Vn),
     Ke = P8(),
-    zt = d_(),
+    zt = useAppStateSession(),
     Dn = C(!1),
     On,
     En;
@@ -1604,11 +1604,11 @@ function Wo(Li) {
       let Ve = ee === "all" ? Bn : Bn.filter((_i) => _i.name === ee);
       let Fo = Ve.filter(
         (jo) =>
-          I4(jo) !== "needs-approval" &&
+          getMcpServerType(jo) !== "needs-approval" &&
           (Ae ? jo.type === "disabled" : jo.type !== "disabled"),
       );
-      let Vt = Gle();
-      let Ho = ee === "all" && Vt ? CSe(Ve, Ae, Vt) : null;
+      let Vt = getIsMcpServerDisabled();
+      let Ho = ee === "all" && Vt ? formatBulkTogglePersistWarning(Ve, Ae, Vt) : null;
       if (Fo.length === 0) {
         let Ln = ee !== "all" && Ve.length > 0 && Vt ? Vt(ee) : void 0;
         Oe(
@@ -1621,10 +1621,10 @@ function Wo(Li) {
                 ? `MCP server "${gr(ee)}" is pending approval \u2014 approve it via /mcp first`
                 : Ae && Ln === !0
                   ? Ve.some(ts)
-                    ? W3e(ee)
-                    : s2(ee)
+                    ? formatStaleDisableMessage(ee)
+                    : formatDisabledElsewhereMessage(ee)
                   : !Ae && Ln === !1
-                    ? j3e(ee)
+                    ? formatDisableNotPersistedMessage(ee)
                     : `MCP server "${gr(ee)}" is already ${Ae ? "enabled" : "disabled"}`,
         );
         return;
@@ -1633,7 +1633,7 @@ function Wo(Li) {
         Promise.all(Fo.map((ji) => Ke(ji.name)))
           .then(
             () => Oe(`MCP server "${gr(ee)}" ${Ae ? "enabled" : "disabled"}`),
-            (Fi) => Oe(YZ(Fi, ee, qe, { persistsOffBox: mayHaveRemoteClient(zt) })),
+            (Fi) => Oe(formatMcpToggleError(Fi, ee, qe, { persistsOffBox: mayHaveRemoteClient(zt) })),
           )
           .catch(logError);
         return;

@@ -9,27 +9,27 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 257 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { YX, JX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Hye } from "../权限系统/chunk-sx24y271.js";
+import { AddDirectoryToWorkspaceDialog } from "../权限系统/add-directory-to-workspace.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { addWorkingDirectory, explainAlreadyAccessibleDirectory } from "../../01-核心基础设施/设置-配置/add-working-directory.js";
 import "../../01-核心基础设施/共享小工具-未细化/reload-skills.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 function D(X) {
   let C = _(7),
     { message: g, args: u, onDone: v } = X;
   Un(v, 0);
   let l;
   if (C[0] !== u)
-    ((l = r(t, { dimColor: !0, children: [L.pointer, " /add-dir ", u] })),
+    ((l = r(t, { dimColor: !0, children: [figures.pointer, " /add-dir ", u] })),
       (C[0] = u),
       (C[1] = l));
   else l = C[1];
@@ -51,10 +51,10 @@ async function T(s, a, m) {
     d = getToolPermissionContext(a),
     f = async (n, c = !1) => {
       let A = await addWorkingDirectory(a, n, c);
-      s(`${A} ${ie.dim("\xB7 /permissions to manage")}`);
+      s(`${A} ${chalk.dim("\xB7 /permissions to manage")}`);
     };
   if (!y)
-    return e(Hye, {
+    return e(AddDirectoryToWorkspaceDialog, {
       permissionContext: d,
       onAddDirectory: f,
       onAlreadyAccessible: (n) => {
@@ -73,12 +73,12 @@ async function T(s, a, m) {
       JX(i);
     return e(D, { message: n, args: m ?? "", onDone: () => s(n) });
   }
-  return e(Hye, {
+  return e(AddDirectoryToWorkspaceDialog, {
     directoryPath: i.absolutePath,
     permissionContext: d,
     onAddDirectory: f,
     onCancel: () => {
-      s(`Did not add ${ie.bold(i.absolutePath)} as a working directory.`);
+      s(`Did not add ${chalk.bold(i.absolutePath)} as a working directory.`);
     },
   });
 }

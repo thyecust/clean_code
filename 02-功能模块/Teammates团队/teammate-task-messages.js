@@ -10,14 +10,14 @@
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Yue, nY, Re } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xs } from "./chunk-mrfx53ye.js";
+import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function appendMessageToTaskTranscript(e, a, s) {
   if (s.get(e)?.status !== "running") return;
   s.updateTranscript(e, (t) => ({ ...t, messages: Yue(t.messages, a) }));
 }
 function queueTeammateUserMessage(e, a, s, t) {
   let m = s.get(e);
-  if (!m || xs(m.status)) {
+  if (!m || isTerminalTaskStatus(m.status)) {
     n(`Dropping message for teammate task ${e}: task status is "${m?.status}"`);
     return;
   }

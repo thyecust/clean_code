@@ -83,7 +83,7 @@ import { Ie, po, zn, An, gp, pl, jf, Uxe } from "../../00-第三方库/lodash/lo
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { tl, be, Xur, uo, Hr, xg, NL } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { parseConfigInteger, getClaudeConfigDir, resolveMaxTurns, isSimpleMode, isSafeMode, xg, isInProtectedNamespace } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { bc, ja, env as a, antEnv, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
@@ -120,10 +120,10 @@ import {
   n,
   s8,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { BG_EXIT_CAUSE_SESSION_IN_USE, oje, Kn, rOn, Knt, oOn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { Wf, x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { vu, Ag, gz, St, logError, getInMemoryErrors, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Vd, Hd, UP } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { BG_EXIT_CAUSE_SESSION_IN_USE, isStdinUnusableError, writeToStdout, rOn, peekForStdinData, oOn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { capitalize, pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, hashString, isEssentialTrafficOnly, logError, getInMemoryErrors, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { getEnvEntrypoint, isDesktopHostEntrypoint, isSdkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import {
   Or,
   gse,
@@ -287,10 +287,10 @@ import {
   skn,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureBadAsync, logFeatureSadAsync, withFeatureTelemetry } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import {
   kd,
   jn,
@@ -310,10 +310,10 @@ import {
   getWorktreeCount,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth, formatNumber, formatTokens, formatRelativeTimeAgo } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { mn, Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { hashSha256, isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { cs, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   ea,
@@ -344,7 +344,7 @@ import {
   E0,
 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot, El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Ee, M1, RPn, Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId, addStartupContext, getBootstrapEntry, profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import {
   getSettingsFilePathForSource,
   projectSettingsAliasesUserSettings,
@@ -361,20 +361,20 @@ import {
   getSettingsAfterPluginLoad,
   hasSkipDangerousModePermissionPrompt,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt, up, io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { parsePermissionMode, isPreAskDeny, isRecordableDenial, DP, v_, E1, _c, jlr, Eb } from "../权限系统/chunk-e4pfvp7x.js";
-import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { stripAnsi, stripInvisibleChars, formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { parsePermissionMode, isPreAskDeny, isRecordableDenial, LEFT_ARROW_GLYPH, TREE_CONNECTOR_GLYPHS, isSelectablePermissionMode, getExternalPermissionMode, buildPermissionModeMetadata, parsePermissionModeOrDefault } from "../权限系统/chunk-e4pfvp7x.js";
+import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { getDynamicTeamContext, getAgentId, isTeammate } from "../Teammates团队/chunk-811z9z0t.js";
-import { isProcessProvablyGone, isSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { Qsr, ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { getDynamicTeamContext, getAgentId, isTeammate } from "../Teammates团队/teammate-context.js";
+import { isProcessProvablyGone, isSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
+import { clampColorLevelTo256, chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { Xt, _0, er, Qa, Zkn, dm, THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyApiBackend, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Fhe, L1, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { isAnthropicHost, isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { _ir, jt, kvt, rS, g0, Tir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { air } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qja3ebvp.js";
-import { She, A7t, whe } from "../Git-Worktree/chunk-bk9696gx.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
+import { installMemorySummaryOnExit } from "../../01-核心基础设施/核心工具-进程与信号/sdk-memory-summary.js";
+import { detectCurrentRepository, getCachedRemoteHost, parseGitHubRepository } from "../Git-Worktree/git-repository-detection.js";
 import { getArtifactPublishStubDir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import {
   Bfe,
@@ -408,11 +408,11 @@ import {
   checkReadableInternalPath,
 } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { tA, NG, qy, DT, r$e } from "../MCP客户端/chunk-3kmsshb6.js";
+import { FILE_STATE_MAX_ENTRIES, isFullFileView, normalizeFileContent, createFileStateCache, listCachedFilePaths } from "../MCP客户端/chunk-3kmsshb6.js";
 import { MC, rA } from "../插件系统/chunk-7s6mt1vg.js";
 import { shouldAllowManagedHooksOnly, shouldDisableAllHooksIncludingManaged, updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
-import { Dc } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import { areWorkflowsEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import {
   gnr,
   hnr,
@@ -428,8 +428,8 @@ import {
 import { getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { primePlanSlugCollisions, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Pl, yl, Jtr } from "../Teammates团队/chunk-thxapyam.js";
-import { zy, bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getProjectsDir, getSessionTranscriptPath, collectInProcessTeammateMessages } from "../Teammates团队/transcript-paths.js";
+import { getTempBaseDir, getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import {
   Ds,
   xF,
@@ -820,56 +820,56 @@ import {
   cJ,
   roe,
 } from "../插件系统/chunk-ajtn749s.js";
-import { bd, PH, wK, JS, yN, ufe, ZI, _Xe, yXe } from "../插件系统/chunk-hh8f1qrw.js";
+import { isPluginBlockedByPolicy, getStrictKnownMarketplaces, areSideloadFlagsDisabledByPolicy, areCommandPluginSourcesDisabledByPolicy, COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE, sideloadFlagsBlockedMessage, isSourceDisallowedOrUnverifiable, getPluginSuggestionMarketplaces, isMarketplaceSourceDeclaredByPolicy } from "../插件系统/plugin-source-policy.js";
 import { isCustomizationDisabled } from "../状态栏-主题/chunk-dqyc6kge.js";
-import { f7e, bo } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { redactPromptUnlessEnabled, emitOtelEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { Dj, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import { claimSessionNameAtStartup } from "../跨会话消息(UDS)/chunk-9kzxq41e.js";
 import {
-  XI,
-  Pbt,
+  defaultFullscreenState,
+  getTuiTrialState,
   a1e,
-  F7e,
+  wasFullscreenAutoDisabledForVersion,
   l1e,
-  Ta,
-  kH,
-  Obt,
-  Dbt,
-  WJn,
+  shouldUseFullscreen,
+  getFullscreenReason,
+  fullscreenReasonToMode,
+  isAutoDisabledFullscreenReason,
+  getNoFlickerEnvOverride,
 } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { isArtifactToolEnabled, isPublishToolEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
-import { zr } from "../Teammates团队/chunk-3k2smxfn.js";
-import { Q3 } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { getTeamFilePath, readTeamFileAsync } from "../Teammates团队/chunk-6b13bhw1.js";
-import { v$e, Eo, XH } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { isAgentSwarmsEnabled } from "../Teammates团队/agent-swarms-enablement.js";
+import { setMcpClientOnClose } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { getTeamFilePath, readTeamFileAsync } from "../Teammates团队/team-file-store.js";
+import { USER_INTENT_SETTING_KEYS, resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { Per } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { isKairosCronEnabled } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { Ts, VXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import { recordStartupPhase, consumeStartupTiming } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { reportBridgePermissionMode, reportBridgeModel } from "../权限系统/chunk-1y2g140m.js";
-import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
+import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { getOwnJobShortId, writeStateAtomic, logJobWriteError, readJobState, syncRespawnFlag } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { cliCarriesSessionConfig, cliCarriesForkRestrictedConfig } from "../权限系统/fork-restricted-launch-flags.js";
 import { hw, MYn, Fpe } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { dNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-1kh149yd.js";
-import { collectContextData } from "../上下文压缩-Compact/chunk-40jcpbzh.js";
+import { collectContextData } from "../上下文压缩-Compact/context-usage.js";
 import { xWn, HWn } from "../Artifact发布-渲染/chunk-p1dkvpxj.js";
 import { killAutoReactSubscriptions } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { S4 } from "../会话-历史-恢复/chunk-ybcvb652.js";
+import { generateSessionTitle } from "../会话-历史-恢复/session-title.js";
 import { nO, FleetNudgeStore } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { Yn } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { IIe } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { captureAdmin3PSteeringSnapshot } from "../Bedrock-Vertex/chunk-bnft4099.js";
-import { hLt } from "../../01-核心基础设施/共享小工具-未细化/chunk-drgqeenr.js";
+import { captureAdmin3PSteeringSnapshot } from "../Bedrock-Vertex/apply-3p-default-fallbacks.js";
+import { hLt } from "../../01-核心基础设施/共享小工具-未细化/additional-working-directories.js";
 import { BAn, qJe, O4t, b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { _ee, c3e, fIe, knn } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { o, t, ct, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Lze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import { seedEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { shouldOfferTerminalSetup } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
@@ -895,65 +895,65 @@ import {
 } from "../插件系统/chunk-q8w2zntw.js";
 import { Xae, zst } from "../Skills技能/Skills技能.dpy2ket5.js";
 import { publishPermissionSnapshot } from "../../01-核心基础设施/共享小工具-未细化/publish-permission-snapshot.js";
-import { v3n } from "../权限系统/chunk-8zbmhy8a.js";
+import { applyInheritPermissionMode } from "../权限系统/inherit-permission-mode-flag.js";
 import { printCliError, cliError, cliWarn, exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { bootstrapFetchCanConvergeSlot, fetchBootstrapData } from "../上下文压缩-Compact/chunk-npckj9cm.js";
-import { gnn, dlt, gee, l9, HDt, hnn, _nn } from "../CodeReview/chunk-rp57gfa9.js";
+import { loadUltrareviewQuota, getUltrareviewQuota, getTipLifetimeShownCount, getSessionsSinceTipShown, isUltrareviewAwarenessEnabled, hasRunUltrareview, formatFreeReviewsLeft } from "../CodeReview/ultrareview-tips.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
 import { N9n } from "../自动更新-安装/chunk-548xet6h.js";
 import { Vae, gQt, CHe } from "../Git-Worktree/chunk-xercceag.js";
-import { b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
+import { githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { isWebSetupEnabled } from "../斜杠命令-框架/chunk-a4vej95c.js";
-import { kbe, tpt, tH, xbe, h2, $ce, JPe, B4 } from "../用量额度-限额/chunk-1bfn62xh.js";
-import { Lye, PUn } from "../../01-核心基础设施/设置-配置/chunk-9m8zsynn.js";
-import { R9n, x9n, Z1t } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
-import { iM } from "../文件监听-Watch/chunk-mmg1rsp2.js";
+import { resolvePromptCommandFromUri, setAlwaysDenyCommands, parseSlashCommandInput, resolveSubcommandTarget, getActiveFotwCampaign, hasClaimableFotwCredit, isFotwUpsellPending, getFotwCreditAmount } from "../用量额度-限额/chunk-1bfn62xh.js";
+import { shouldExcludeDefaultTips, getOverrideSpinnerTips } from "../../01-核心基础设施/设置-配置/spinner-tips-override.js";
+import { storeImageBatchToCache, x9n, recordPublishedCatalogFloorVersion } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
 import { ir, mE, $Ie } from "../MCP客户端/chunk-g4gdwpa0.js";
-import { SFt, Sze, Nan } from "../权限系统/chunk-z0pt04s8.js";
-import { zL, uWe } from "../权限系统/chunk-hv6z01db.js";
-import { Y$n, J$n, Hit } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
+import { hasNonEmptyArrayValues, isRestrictiveAgentDefinition, JSON_SCHEMA_UNSUPPORTED_REASON } from "../权限系统/chunk-z0pt04s8.js";
+import { canCycleToAuto, canUseBypassPermissions } from "../权限系统/permission-mode-cycle.js";
+import { getCloudFlagConflictError, isHeadlessCloudRun, truncateAndEscapeValue } from "../../03-入口与运行时/Headless-SDK模式/cloud-flag-validation.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
 import { getDisusedPlugins } from "../插件系统/plugin-disuse.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { Hv } from "../MCP客户端/chunk-k2gczbnj.js";
-import { fut } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
-import { zSe } from "../Teammates团队/chunk-w2g8t42p.js";
-import { Lee } from "../后台任务-Shell管理/chunk-531ast3t.js";
-import { Dv } from "../../01-核心基础设施/共享小工具-未细化/chunk-1rpyafm2.js";
-import { wF } from "../Bridge-RemoteControl/chunk-z5v9hvat.js";
+import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
+import { isComputerUseEnabled } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import { zSe } from "../Teammates团队/onboarding-guide-api.js";
+import { isAgentsViewAvailable } from "../后台任务-Shell管理/chunk-531ast3t.js";
+import { getNonOpenedFrameUrlEntries } from "../../01-核心基础设施/共享小工具-未细化/frame-url-prefixes.js";
+import { reportSessionEffort } from "../Bridge-RemoteControl/bridge-effort-sync.js";
 import { getCooContextProperties } from "../../01-核心基础设施/共享小工具-未细化/coo-context-properties.js";
-import { ube } from "../../01-核心基础设施/共享小工具-未细化/chunk-kv5vaqew.js";
+import { isDesignSyncEnabled } from "../../01-核心基础设施/共享小工具-未细化/design-feature-gates.js";
 import { flushPendingScopeExpansionNotice } from "../../01-核心基础设施/共享小工具-未细化/chunk-jhs1bd0k.js";
-import { tWn } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
+import { tWn } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { i4e, bGn } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
-import { MI, L, dAe, Tre } from "../Teammates团队/chunk-mrfx53ye.js";
-import { aN, Bn, Lu, og } from "../插件系统/chunk-33bdfgmx.js";
-import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
+import { hasActiveAgentTask, figures, isWorkflowSizeGuidelineConfigured, resolveWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
+import { isProjectSkillsDirPlugin, splitPluginId, getPluginMarketplace, parsePluginIdIgnoringReservedMarketplace } from "../插件系统/chunk-33bdfgmx.js";
+import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
 import { VNe, Bg, aJn, XNe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { xJn } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
-import { gD, Fbt } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
-import { Ci } from "../../01-核心基础设施/共享小工具-未细化/chunk-w8hsca1t.js";
-import { Twt } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { getMcpConnectTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
+import { CODE_REVIEW_SKILL_NAME, LOOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
+import { isCoordinatorModeEnabled } from "../../01-核心基础设施/共享小工具-未细化/coordinator-mode.js";
+import { escapeSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { isRemoteSettingsEligible } from "../../01-核心基础设施/共享小工具-未细化/remote-settings-eligibility.js";
 import { areBundledSkillsDisabled } from "../../01-核心基础设施/共享小工具-未细化/disable-bundled-skills.js";
 import { createFieldUpdater } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/chunk-pcxn6gwz.js";
-import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { REMOTE_CONTROL_DISABLED_BY_POLICY_MESSAGE } from "../Bridge-RemoteControl/remote-control-policy-messages.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
-import { Dvt } from "../上下文压缩-Compact/chunk-qbdgst52.js";
-import { gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
+import { getFirstPositionalArg } from "../上下文压缩-Compact/cli-args.js";
+import { readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
 import { s, T, se, v, c, it, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { av } from "../../01-核心基础设施/共享小工具-未细化/chunk-kkf7jbwd.js";
-import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { getGitProvider } from "../../01-核心基础设施/共享小工具-未细化/git-remote-url.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
-import { Wxe, Gxe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
+import { resolveConfigPaths, buildDispatchArgs } from "../../01-核心基础设施/共享小工具-未细化/cli-arg-parsing.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM, MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { constants } from "fs";
@@ -1302,7 +1302,7 @@ async function rc(
   },
   me,
 ) {
-  let Me = yl(),
+  let Me = getSessionTranscriptPath(),
     Se = Pt(),
     [xe, De, Oe, Ae] = await Promise.all([
       U,
@@ -1318,7 +1318,7 @@ async function rc(
       Se ? !1 : getIsGit(),
       Se ? "" : getHead(),
     ]),
-    $e = Jtr(I, O),
+    $e = collectInProcessTeammateMessages(I, O),
     We = { ...xe, ...$e },
     Ye = new Set(Object.keys($e)),
     Ze = 0;
@@ -1408,8 +1408,8 @@ function ac(w) {
   let I = $a(w),
     O = Na(I),
     U = Na(w).slice(0, -6);
-  if ($a(I) !== Pl() || !_n(O) || !_n(U)) return;
-  let V = Ce.transcript(O, U);
+  if ($a(I) !== getProjectsDir() || !isValidPathSegment(O) || !isValidPathSegment(U)) return;
+  let V = STORAGE_KEYS.transcript(O, U);
   return V.namespace === "transcript" && kd(V) === void 0 ? V : void 0;
 }
 async function qg(w, I, O, U) {
@@ -1477,7 +1477,7 @@ async function Yg(w, I, O, U) {
   let V = Date.now() - oc[O],
     te = [],
     ne = 0,
-    me = await Qo(
+    me = await runPaginatedScan(
       (De) =>
         w.listEntries(
           { namespace: "transcript", projectKey: I.projectKey },
@@ -1490,7 +1490,7 @@ async function Yg(w, I, O, U) {
           if (Oe.key.agentId !== void 0 || Oe.key.journal === !0) continue;
           if (Oe.key.projectKey !== I.projectKey) continue;
           if (Oe.key.sessionId === I.sessionId) continue;
-          if (!_n(Oe.key.sessionId) || kd(Oe.key) !== void 0) continue;
+          if (!isValidPathSegment(Oe.key.sessionId) || kd(Oe.key) !== void 0) continue;
           if ((Oe.mtimeMs ?? 0) >= V)
             te.push({
               key: Oe.key,
@@ -1505,7 +1505,7 @@ async function Yg(w, I, O, U) {
     return { transcripts: void 0, droppedThirdParty: 0 };
   if (me.status === "capped")
     n(
-      `recent sessions: listing cut short after ${Uc} pages; keeping what was listed`,
+      `recent sessions: listing cut short after ${DEFAULT_MAX_PAGES} pages; keeping what was listed`,
     );
   te.sort((De, Oe) => Oe.mtimeMs - De.mtimeMs);
   let Me = {},
@@ -1793,7 +1793,7 @@ function Ha(w) {
   }
 }
 async function n6e(w, I, O) {
-  if (St()) return { success: !1 };
+  if (isEssentialTrafficOnly()) return { success: !1 };
   if (!isPolicyAllowed("allow_product_feedback"))
     return { success: !1, failureReason: "policy_blocked" };
   let U = 0;
@@ -2011,20 +2011,20 @@ async function N_e({
       retried_after_too_large: !Ae.success && Ae.payloadTooLarge === !0,
       strip_level: fromNumber(We),
       third_party_transcripts_dropped: fromNumber(De),
-      feedback_id: Ee($e.feedbackId),
-      last_assistant_message_id: Ee(Oe),
-      last_assistant_api_message_id: Ee(xe.latestAssistantAPIMessageId),
-      last_interrupted_assistant_api_message_id: Ee(
+      feedback_id: sanitizeAnalyticsId($e.feedbackId),
+      last_assistant_message_id: sanitizeAnalyticsId(Oe),
+      last_assistant_api_message_id: sanitizeAnalyticsId(xe.latestAssistantAPIMessageId),
+      last_interrupted_assistant_api_message_id: sanitizeAnalyticsId(
         xe.lastInterruptedAssistantAPIMessageId,
       ),
       ...(me && {
-        survey_appearance_id: Ee(me.appearanceId),
+        survey_appearance_id: sanitizeAnalyticsId(me.appearanceId),
         survey_response: fromEnum(me.response),
         survey_type: fromEnum(me.surveyType),
       }),
     }),
       IUe("tengu_bug_report_description", {
-        feedback_id: Ee($e.feedbackId),
+        feedback_id: sanitizeAnalyticsId($e.feedbackId),
         descriptionLength: I.length,
       }));
     let Ye = !Ae.success && Ae.payloadTooLarge === !0;
@@ -2050,7 +2050,7 @@ async function N_e({
 }
 async function fJt(w, I = "feedback.json") {
   let V = `cc-${new Date().toISOString().replace(/[-:]/g, "").replace("T", "-").slice(0, 15)}-${randomBytes(3).toString("hex")}`,
-    te = lc(be(), "feedback-bundles"),
+    te = lc(getClaudeConfigDir(), "feedback-bundles"),
     ne = lc(te, `${V}.zip`);
   try {
     await Zg(te, { recursive: !0, mode: 448 });
@@ -2160,10 +2160,10 @@ function o0t() {
   return w === null ? void 0 : { text: w };
 }
 function py(w) {
-  let I = up(pt(w))
+  let I = stripInvisibleChars(stripAnsi(w))
     .replace(/[\x00-\x1f\x7f-\x9f]/g, "")
     .trim();
-  return truncateToWidth(oe(I, cy), dy);
+  return truncateToWidth(truncateToCodeUnits(I, cy), dy);
 }
 var gc = "(value set by your organization)";
 function Fz(w, I) {
@@ -2200,7 +2200,7 @@ function XHt(w) {
   });
 }
 function xot(w) {
-  return w === mt ? Vh : w;
+  return w === AGENT_TOOL_NAME ? TASK_TOOL_NAME : w;
 }
 var za = "interrupt_receipt_v1",
   Va = "msg_lifecycle_v1",
@@ -2227,7 +2227,7 @@ function Hot() {
       .require("../Bridge-RemoteControl/validateExplicitMessagingSocketPath.knbv811d.js")
       .getUdsMessagingSocketPath()),
     {
-      cwd: Q(),
+      cwd: getCwd(),
       sessionId: K(),
       apiKeySource: getApiKeySourceSafe(),
       betas: Up(),
@@ -2237,7 +2237,7 @@ function Hot() {
       memoryPaths: I,
       messagingSocketPath: O,
       workerEpoch: isViolinWoodEnabledCached() ? a.CLAUDE_CODE_WORKER_EPOCH : void 0,
-      powerShellPath: P() === "windows" ? $Gn() : void 0,
+      powerShellPath: getCurrentPlatform() === "windows" ? $Gn() : void 0,
       footerIndicator: o0t(),
     }
   );
@@ -2276,7 +2276,7 @@ function nHe(w) {
         status: D_e(te.type),
       })),
       model: w.model,
-      permissionMode: _c(w.permissionMode),
+      permissionMode: getExternalPermissionMode(w.permissionMode),
       slash_commands: w.commands
         .filter((te) => te.userInvocable !== !1)
         .map((te) => te.name),
@@ -2330,8 +2330,8 @@ function nHe(w) {
   return V;
 }
 function Pot(w, I) {
-  Ts("init_emit_ms", performance.now() - I, I);
-  let O = VXn();
+  recordStartupPhase("init_emit_ms", performance.now() - I, I);
+  let O = consumeStartupTiming();
   if (O) w.startup_timing = O;
 }
 import { randomUUID as qa } from "crypto";
@@ -2353,9 +2353,9 @@ function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
         : w.findLast((Qt) => Qt.type === "text")?.text || "",
     $e = MEe(w) ? void 0 : V;
   if (Ae)
-    bo("user_prompt", {
+    emitOtelEvent("user_prompt", {
       prompt_length: String(Ae.length),
-      prompt: f7e(Ae),
+      prompt: redactPromptUnlessEnabled(Ae),
       ...($e && { "prompt.id": $e }),
       "message.uuid": Oe,
     });
@@ -2373,7 +2373,7 @@ function hc(w, I, O, U, V, te, ne, me, Me, Se, xe) {
       prompt_length: Ae.length,
       ...(Se && { prompt_source: fromEnum(Se) }),
       ...(Me && { effort_level: fromEnum(Me) }),
-      ...(Nt && { interrupted_message_id: Ee(Nt) }),
+      ...(Nt && { interrupted_message_id: sanitizeAnalyticsId(Nt) }),
     }),
     I.length > 0)
   ) {
@@ -2520,7 +2520,7 @@ async function rHe({
       }),
     );
   if (!xe && to !== !0)
-    tpt(V.setToolPermissionContext, Lt.disallowedTools ?? []);
+    setAlwaysDenyCommands(V.setToolPermissionContext, Lt.disallowedTools ?? []);
   if (Tt === !1) Lt.shouldQuery = !1;
   if (
     !Lt.shouldQuery ||
@@ -2622,7 +2622,7 @@ async function rHe({
     }
   }
   if (
-    (Ts("prompt_submit_hooks_ms", performance.now() - Tn, Tn),
+    (recordStartupPhase("prompt_submit_hooks_ms", performance.now() - Tn, Tn),
     en.proceeds.sessionTitle)
   )
     await applyHookSessionTitle(
@@ -2795,7 +2795,7 @@ async function wy(
   if (Tt === null && I !== "prompt")
     throw Error(`Mode: ${I} requires a string input.`);
   let Kt = V ? Object.values(V).filter(CDe) : [],
-    Hn = V ? await R9n(V, createFieldUpdater(O.setAppState, "storedImagePaths")) : new Map();
+    Hn = V ? await storeImageBatchToCache(V, createFieldUpdater(O.setAppState, "storedImagePaths")) : new Map();
   Rc("query_pasted_image_processing_start");
   let Zt = await Promise.all(
       Kt.map(async (et) => {
@@ -2851,11 +2851,11 @@ async function wy(
         (Lt = { ...tt.effectiveContext, dispatchedOverBridge: !0 }));
   }
   if ($e && !Ae && Tt !== null && Tt.startsWith("/")) {
-    let et = tH(Tt),
+    let et = parseSlashCommandInput(Tt),
       tt = et?.commandName;
-    if (Mu()) {
+    if (isMcpSkillsEnabled()) {
       if (tt) {
-        let Je = kbe(tt, O.options.commands);
+        let Je = resolvePromptCommandFromUri(tt, O.options.commands);
         if (Je) tt = Je.commandName;
       }
     }
@@ -2869,7 +2869,7 @@ async function wy(
       if (Fn) ((He = Fn), (Qe = Ot === -1 ? "" : Je.slice(Ot + 1).trimStart()));
     }
     if (He) {
-      let Je = isSkillOff(He) ? void 0 : xbe(He, Qe),
+      let Je = isSkillOff(He) ? void 0 : resolveSubcommandTarget(He, Qe),
         Ot = Je ? findCommand(Je.targetName, O.options.commands) : void 0,
         nn = Je && Ot && isCommandEnabled(Ot) ? Ot : He;
       if (
@@ -3087,7 +3087,7 @@ function Py({ querySource: w, context: I }) {
                   Oe?.agentType ?? "bg",
                   "",
                   U.filter(($e) => $e.type === "assistant"),
-                  MI(I.taskRegistry.all()),
+                  hasActiveAgentTask(I.taskRegistry.all()),
                   Se,
                   Me,
                 ).catch(($e) => {
@@ -3224,7 +3224,7 @@ function oHe({
       outputStyle: me,
       availableOutputStyles: Me,
     }),
-    Hn = new Fy(),
+    Hn = new AsyncQueue(),
     Zt = [],
     $t = null,
     At = 0,
@@ -3273,7 +3273,7 @@ function oHe({
     tt = 0,
     He = null,
     Qe = !1,
-    Je = DT(tA),
+    Je = createFileStateCache(FILE_STATE_MAX_ENTRIES),
     Ot = [],
     nn = !1,
     Fn = [],
@@ -3737,7 +3737,7 @@ function oHe({
             Ne.type === "system" &&
             Ne.subtype === "local_command" &&
             typeof Ne.content === "string" &&
-            (Ne.content.includes(`<${vu}>`) || Ne.content.includes(`<${Ag}>`))
+            (Ne.content.includes(`<${LOCAL_COMMAND_STDOUT_TAG}>`) || Ne.content.includes(`<${LOCAL_COMMAND_STDERR_TAG}>`))
           ) {
             let Ct = WKe(Ne.content, Ne.uuid, Ne.timestamp, Ne.contextUsage);
             if (Ct)
@@ -3787,7 +3787,7 @@ function oHe({
             (yield It({
               type: "tool_progress",
               tool_use_id: Ne.toolUseID,
-              tool_name: mt,
+              tool_name: AGENT_TOOL_NAME,
               parent_tool_use_id: Ne.parentToolUseID || null,
               elapsed_time_seconds: 0,
               subagent_type: Ne.data.agentType,
@@ -4071,7 +4071,7 @@ function oHe({
                 type: "seed_read_state",
                 path: vt,
                 seed: {
-                  content: qy(ft),
+                  content: normalizeFileContent(ft),
                   timestamp: ze,
                   offset: void 0,
                   limit: void 0,
@@ -4085,7 +4085,7 @@ function oHe({
           let En = Math.floor(Bt.mtimeMs);
           if (En <= ze) {
             let Rn = await Ay(vt, "utf-8"),
-              no = qy(Rn);
+              no = normalizeFileContent(Rn);
             Wo({
               type: "seed_read_state",
               path: vt,
@@ -4220,7 +4220,7 @@ function oHe({
       generateSessionTitle: async (Ke, ze) => {
         if (ze?.persist) Qe = !0;
         let ft = (Mn && !Mn.signal.aborted ? Mn : new AbortController()).signal,
-          vt = await S4(Ke, ft, ze?.credentials);
+          vt = await generateSessionTitle(Ke, ft, ze?.credentials);
         if (vt && ze?.persist)
           try {
             saveAiGeneratedTitle(K(), vt, He?.toolUseContext.storageV5);
@@ -4238,7 +4238,7 @@ function oHe({
       }) => {
         if (isPolicyAllowed("allow_product_feedback"))
           logEvent("tengu_message_rated", {
-            message_uuid: Ee(Ke),
+            message_uuid: sanitizeAnalyticsId(Ke),
             sentiment: fromEnum(ze),
             surface: fromEnum(ft),
             cleared: vt,
@@ -4497,7 +4497,7 @@ function LNn(w) {
   return (I) => {
     let O = I.toolPermissionContext;
     if (typeof w.permission_mode === "string") {
-      let V = Eb(w.permission_mode);
+      let V = parsePermissionModeOrDefault(w.permission_mode);
       if (
         V === "bypassPermissions" &&
         (isBypassPermissionsModeDisabled() || !O.isBypassPermissionsModeAvailable)
@@ -4548,10 +4548,10 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
     me = w.toolPermissionContext.mode,
     Me = w.proactivityLevel !== I.proactivityLevel;
   if (ne !== me) {
-    let De = _c(ne),
-      Oe = _c(me);
+    let De = getExternalPermissionMode(ne),
+      Oe = getExternalPermissionMode(me);
     if (De !== Oe) {
-      let Ae = jlr({
+      let Ae = buildPermissionModeMetadata({
           rule: "first-entry",
           prevMode: ne,
           newMode: me,
@@ -4646,7 +4646,7 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
     } catch (Ae) {
       logError(ge(Ae));
     }
-    (wF(Oe, w),
+    (reportSessionEffort(Oe, w),
       IIe(),
       fde(O.precompute, void 0, "model_switch", void 0, V),
       import("../上下文压缩-Compact/chunk-npckj9cm.js").then(({ fetchBootstrapData: Ae }) =>
@@ -4670,7 +4670,7 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
       effort_level:
         w.sessionEffort.kind === "level" ? String(w.sessionEffort.value) : null,
     }),
-      wF(getMainLoopModel(), w));
+      reportSessionEffort(getMainLoopModel(), w));
     let De = w.sessionEffort;
     if (De.kind !== "level") syncRespawnFlag("--effort", [], null, void 0, V);
     else if (typeof De.value === "string" && $C(De.value))
@@ -4683,13 +4683,13 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
     } catch (Oe) {
       logError(ge(Oe));
     }
-    wF(De, w);
+    reportSessionEffort(De, w);
   }
   if (w.advisorModel !== I.advisorModel)
     (mv("advisor"), syncRespawnFlag("--advisor", [], w.advisorModel ?? null, void 0, V));
   if (U && w.frameUrls !== I.frameUrls && isPublishToolEnabled()) {
-    let De = Dv(w.frameUrls).map(([, Oe]) => Oe);
-    if (De.length > 0 || Dv(I.frameUrls).length > 0)
+    let De = getNonOpenedFrameUrlEntries(w.frameUrls).map(([, Oe]) => Oe);
+    if (De.length > 0 || getNonOpenedFrameUrlEntries(I.frameUrls).length > 0)
       U.notifyMetadataChanged({
         artifacts:
           De.length === 0
@@ -4720,7 +4720,7 @@ function QHt({ newState: w, oldState: I }, O, U, V, te) {
       w.settings !== I.settings)
   )
     U.notifyAutocompactInputsChanged();
-  if (w.verbose !== I.verbose) XH("verbose", w.verbose, V);
+  if (w.verbose !== I.verbose) saveUserIntentSetting("verbose", w.verbose, V);
   if (w.settings !== I.settings) {
     try {
       if (
@@ -4842,7 +4842,7 @@ function Jy(w) {
       DD_SOURCEMAP_GROUP: "darwin",
     }.VERSION,
     host: Fc(),
-    platform: P(),
+    platform: getCurrentPlatform(),
     ownPid: process.pid,
     isGone: isProcessProvablyGone,
   };
@@ -4955,8 +4955,8 @@ var Zy = `Claude Code's fullscreen renderer didn't finish starting last time on 
   eh = `Claude Code's fullscreen renderer has repeatedly failed to start on this machine, so it has been turned off here. Run /tui fullscreen to try it again (this also resets after an update).
 `;
 function YNn(w) {
-  let I = w?.state ?? XI,
-    O = kH(I);
+  let I = w?.state ?? defaultFullscreenState,
+    O = getFullscreenReason(I);
   if (
     O === "env_on" ||
     O === "bg_forced_on" ||
@@ -4973,7 +4973,7 @@ function YNn(w) {
     }, w?.storageV5);
   if (ne.kind === "strike" || ne.kind === "tripped" || ne.kind === "disabled") {
     I.crashAutoOff = !0;
-    let me = Obt(O) === "fullscreen";
+    let me = fullscreenReasonToMode(O) === "fullscreen";
     if (ne.kind !== "disabled") {
       if (
         (logEvent("tengu_fullscreen_crash_auto_off", {
@@ -5061,17 +5061,17 @@ function nh(w) {
     process.on("exit", w.exitHook));
 }
 async function $c(w) {
-  let I = w?.state ?? XI,
+  let I = w?.state ?? defaultFullscreenState,
     O = el();
   if (O.canary.status !== "idle") return O.canary.status === "armed";
   if (!ld() || a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER) return !1;
-  if (!I.crashAutoOff && F7e() && Oc.has(kH(I)))
+  if (!I.crashAutoOff && wasFullscreenAutoDisabledForVersion() && Oc.has(getFullscreenReason(I)))
     ((I.crashAutoOff = !0),
       n(
         "fullscreen disabled: turned off on this machine after repeated failed starts (recorded sticky auto-disable, honoured at REPL mount) \xB7 /tui fullscreen or CLAUDE_CODE_NO_FLICKER=1 to override",
       ));
-  if (!Ta(I)) return !1;
-  if (!Oc.has(kH(I))) return !1;
+  if (!shouldUseFullscreen(I)) return !1;
+  if (!Oc.has(getFullscreenReason(I))) return !1;
   let U = process.pid,
     V = {
       startedAt: Date.now(),
@@ -5089,7 +5089,7 @@ async function $c(w) {
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
       host: Fc(),
-      platform: P(),
+      platform: getCurrentPlatform(),
     },
     te = Et(() =>
       jc(
@@ -5114,7 +5114,7 @@ async function $c(w) {
       storageV5: w?.storageV5,
     }),
     (O.recordMaybeOnDisk = U),
-    Br("fullscreen_canary_arm_start"));
+    profileCheckpoint("fullscreen_canary_arm_start"));
   try {
     await Te(
       (ne) => ({
@@ -5126,7 +5126,7 @@ async function $c(w) {
   } catch (ne) {
     logError(ne);
   } finally {
-    Br("fullscreen_canary_armed");
+    profileCheckpoint("fullscreen_canary_armed");
   }
   return O.canary.status === "armed";
 }
@@ -5199,13 +5199,13 @@ function f0t(w) {
   Hc(l1e, w);
 }
 function yJt(w) {
-  let I = Pbt();
+  let I = getTuiTrialState();
   if (I.upsellImpression !== void 0) return I.upsellImpression;
   let O = Math.min((ee().fullscreenUpsellSeenCount ?? 0) + 1, l1e);
   return ((I.upsellImpression = O), Hc(O, w), O);
 }
 async function Gc(w) {
-  let I = Pbt();
+  let I = getTuiTrialState();
   if (I.persisted || a1e() !== "fullscreen") return !1;
   if (getInitialSettings().tui !== void 0)
     return (
@@ -5214,7 +5214,7 @@ async function Gc(w) {
       ),
       !1
     );
-  if (!Ta())
+  if (!shouldUseFullscreen())
     return (
       n(
         "fullscreen trial: renderer is not fullscreen this session (auto-off) \u2014 not persisting",
@@ -5259,7 +5259,7 @@ async function launchRepl(w, I, O, U) {
   let { AppRoot: V } = await import("../后台任务-Shell管理/chunk-c7mzes79.js"),
     { REPL: te } = await import("../../03-入口与运行时/CLI入口-Commander/REPL.ket689kt.js");
   function ne(Oe) {
-    let Ae = Yn();
+    let Ae = useAppState();
     E(() => {
       return;
     }, [Ae]);
@@ -5292,7 +5292,7 @@ async function launchRepl(w, I, O, U) {
             return parseUserSpecifiedModel(at.mainLoopModelForSession ?? at.mainLoopModel ?? getDefaultMainLoopModelSetting());
           },
           initialPermissionMode: () =>
-            _c(Ae.getState().toolPermissionContext.mode),
+            getExternalPermissionMode(Ae.getState().toolPermissionContext.mode),
           hostOwnsPermissionMode: !0,
           hostOwnsModel: !0,
         }),
@@ -5606,7 +5606,7 @@ async function cJt(w) {
     U = new Set(O),
     V = new Set(),
     { enabled: te } = await ei(w),
-    ne = te.filter(aN);
+    ne = te.filter(isProjectSkillsDirPlugin);
   for (let me of ne) {
     let Me = await GUt(me, [], w);
     if (!Me) continue;
@@ -5642,8 +5642,8 @@ async function sh(w, I) {
     let U = await readJobState(O, I);
     if (!U) return;
     let V = w.length,
-      te = x(V, "server"),
-      ne = x(V, "needs", "need");
+      te = pluralize(V, "server"),
+      ne = pluralize(V, "needs", "need");
     try {
       return (
         await writeStateAtomic(
@@ -5774,23 +5774,23 @@ function Bs() {
   (al(), $V(), Rk.emit());
 }
 function dr() {
-  return _o(be(), LK);
+  return _o(getClaudeConfigDir(), LK);
 }
 function du(w) {
   return _o(dr(), w);
 }
 function cu(w) {
-  return Ce.userConfigDir("skills", au(_o(be(), "skills"), w).split(yh));
+  return STORAGE_KEYS.userConfigDir("skills", au(_o(getClaudeConfigDir(), "skills"), w).split(yh));
 }
 function _h() {
-  return _o(be(), "skills");
+  return _o(getClaudeConfigDir(), "skills");
 }
 async function uu(w) {
   let I = dr();
   if (
     (await sH(
       I,
-      be(),
+      getClaudeConfigDir(),
       { event: "skills_sync_root_refused", phase: "prune", rootLabel: LK },
       { storageV5: w },
     ).catch(() => null)) !== "real"
@@ -5825,7 +5825,7 @@ function xi(w, I) {
   return Q9({
     dir: w,
     trashRoot: Oi(),
-    configHome: be(),
+    configHome: getClaudeConfigDir(),
     failureEvent: "skills_sync_trash_move_failed",
     storageV5: I,
   });
@@ -5834,7 +5834,7 @@ async function JHt(w) {
   if (!Qzn()) return !1;
   let I = await sH(
     dr(),
-    be(),
+    getClaudeConfigDir(),
     { event: "skills_sync_root_refused", phase: "prune", rootLabel: LK },
     { storageV5: w },
   );
@@ -5864,7 +5864,7 @@ async function JHt(w) {
   return te;
 }
 function Oi() {
-  return _o(be(), GYe);
+  return _o(getClaudeConfigDir(), GYe);
 }
 function Fi(w) {
   return _o(w, IN);
@@ -5977,7 +5977,7 @@ async function sl(w, I, O, U) {
       );
     return;
   }
-  await On(Fi(U.root), me);
+  await writeFileAtomic(Fi(U.root), me);
 }
 function ll(w) {
   return _o(w, PN, String(process.pid));
@@ -6025,7 +6025,7 @@ function Mh(w, I) {
     V = h5e({
       skillName: U,
       displayName: void 0,
-      description: Twt(I.description),
+      description: escapeSingleLineText(I.description),
       hasUserSpecifiedDescription: !0,
       markdownContent: "",
       allowedTools: [],
@@ -6075,7 +6075,7 @@ function Mh(w, I) {
 function Ah(w, I) {
   return JUt({
     root: () => I,
-    configHome: be,
+    configHome: getClaudeConfigDir,
     rootLabel: LK,
     event: "skills_sync_root_refused",
     storageV5: w,
@@ -6098,7 +6098,7 @@ async function ou(
     Me = xo(me, w.name),
     Se = _o(ll(me), au(me, Me)),
     xe = _o(
-      zy(),
+      getTempBaseDir(),
       `claude-skill-${process.pid}-${Math.random().toString(36).slice(2)}.zip`,
     );
   try {
@@ -6168,7 +6168,7 @@ async function ou(
       !I.guard.refused() &&
         (await sH(
           me,
-          be(),
+          getClaudeConfigDir(),
           { event: "skills_sync_root_refused", phase: "sweep", rootLabel: LK },
           { checkStagingLeaf: !0, storageV5: U },
         ).catch(() => null)) === "real")
@@ -6208,7 +6208,7 @@ async function Cu(w, I, O) {
     te,
     ne;
   try {
-    ((te = (await gS(U, $4e)).content), (ne = z(te)));
+    ((te = (await readFileWithMetadata(U, $4e)).content), (ne = z(te)));
   } catch {
     return null;
   }
@@ -6301,7 +6301,7 @@ async function Cu(w, I, O) {
       null,
       2,
     );
-    if (Ae !== te) await On(U, Ae).catch(() => {});
+    if (Ae !== te) await writeFileAtomic(U, Ae).catch(() => {});
   } else await $r(U, { force: !0 }).catch(() => {});
   return Se;
 }
@@ -6392,7 +6392,7 @@ async function xh(w, I, O) {
         (await Q9({
           dir: Ae,
           trashRoot: Oi(),
-          configHome: be(),
+          configHome: getClaudeConfigDir(),
           failureEvent: "skills_sync_trash_move_failed",
           storageV5: I,
         }).catch(() => !1)))
@@ -6731,7 +6731,7 @@ async function xh(w, I, O) {
       if (
         (await sH(
           Se.root,
-          be(),
+          getClaudeConfigDir(),
           { event: "skills_sync_root_refused", phase: "sweep", rootLabel: LK },
           { checkStagingLeaf: !0, storageV5: I },
         ).catch(() => null)) === "real"
@@ -6765,7 +6765,7 @@ function Pu(w, I) {
   return XUt({
     root: I,
     trashRoot: Oi(),
-    configHome: be(),
+    configHome: getClaudeConfigDir(),
     events: { refused: "skills_sync_root_refused" },
     storageV5: w,
   });
@@ -6827,7 +6827,7 @@ async function Lae(w, I, O) {
     : I === "disable-all"
       ? "disable all plugins"
       : `${I} plugins`;
-  console.error(ff(`${L.cross} Failed to ${te}: ${l(w)}`));
+  console.error(ff(`${figures.cross} Failed to ${te}: ${l(w)}`));
   let ne = V ?? (U === "not-found" ? "not_found" : U);
   switch (I) {
     case "install":
@@ -6922,30 +6922,30 @@ async function Uh(w, I, O) {
   if (me.length === 0) return "";
   let Me = me.filter((Se) => ne[Se]?.required === !0);
   return (
-    `${me.length} userConfig ${x(me.length, "option")} not yet set` +
+    `${me.length} userConfig ${pluralize(me.length, "option")} not yet set` +
     (Me.length > 0 ? ` (${Me.length} required)` : "") +
     ` \u2014 run /plugin configure ${w} in Claude Code, or pass --config KEY=VALUE.`
   );
 }
 async function Iu(w, I, { yes: O = !1, acceptedCommand: U } = {}) {
   if (typeof I.source !== "object" || I.source.source !== "command") return;
-  if (JS()) {
-    Kn(`${yN}
+  if (areCommandPluginSourcesDisabledByPolicy()) {
+    writeToStdout(`${COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE}
 `);
     return;
   }
-  if (I.source.mode === "link" && P() === "windows") {
-    Kn(`${y1e}
+  if (I.source.mode === "link" && getCurrentPlatform() === "windows") {
+    writeToStdout(`${y1e}
 `);
     return;
   }
   let V = I.source.command,
     te = vC(I.source);
   if (U === te && !afe()) return;
-  let { name: ne, marketplace: me } = Bn(w),
+  let { name: ne, marketplace: me } = splitPluginId(w),
     Me = Vn(ne ?? "", 200),
     Se = Vn(me ?? "", 200);
-  Kn(
+  writeToStdout(
     `"${Me}" is installed by running a command from marketplace "${Se}" on this machine` +
       (U === void 0
         ? ""
@@ -6970,14 +6970,14 @@ async function fl({ yes: w = !1 }) {
     if (!a.CLAUDE_CODE_CHILD_SESSION && !a.CLAUDECODE) return "accepted";
     if (!I)
       return (
-        Kn(`-y/--yes is ignored inside a Claude Code session: run this in your own terminal to accept the command shown above.
+        writeToStdout(`-y/--yes is ignored inside a Claude Code session: run this in your own terminal to accept the command shown above.
 `),
         "unconfirmed"
       );
   }
   if (!I)
     return (
-      Kn(
+      writeToStdout(
         a.CLAUDE_CODE_CHILD_SESSION || a.CLAUDECODE
           ? `Not an interactive terminal, so the command was only displayed, not accepted. Run this in your own terminal (outside the Claude Code session) to confirm the command shown above.
 `
@@ -6987,12 +6987,12 @@ async function fl({ yes: w = !1 }) {
       "unconfirmed"
     );
   return (
-    Kn("Run this command now? [y/N] "),
+    writeToStdout("Run this command now? [y/N] "),
     (await Ou()) ? "accepted" : "declined"
   );
 }
 async function NNn(w, I = {}, O) {
-  let { name: U, marketplace: V } = Bn(w);
+  let { name: U, marketplace: V } = splitPluginId(w);
   if (!U) return null;
   let te = V ?? I.resolvedMarketplace;
   if (!te)
@@ -7007,13 +7007,13 @@ async function NNn(w, I = {}, O) {
   if (await fen(ne, I.scope ?? "user", O)) return null;
   let me = await g0e(ne, void 0, O);
   if (me === null) return null;
-  Kn(`${oOt(me)}
+  writeToStdout(`${oOt(me)}
 `);
   let Me = await fl(I);
   return Me === "accepted" ? me : Me;
 }
 async function FNn(w, I = {}, O) {
-  let { name: U, marketplace: V } = Bn(w);
+  let { name: U, marketplace: V } = splitPluginId(w);
   if (!U) return;
   let te = await Ql(O),
     ne = V,
@@ -7030,7 +7030,7 @@ async function FNn(w, I = {}, O) {
     ((ne = Ye.marketplace), (me = Ye.entry), I.onResolvedMarketplace?.(ne));
   }
   let Me = te[ne];
-  if (ZI(Me?.source)) return;
+  if (isSourceDisallowedOrUnverifiable(Me?.source)) return;
   let Se = `${U}@${ne}`,
     xe = me ? { entry: me } : void 0;
   if (!xe) {
@@ -7052,8 +7052,8 @@ async function FNn(w, I = {}, O) {
   if (await dyt(Se, I.scope ?? "user", O)) {
     if (!We) {
       let Ye = Oe.every((Ze) => Ze.sourceCommand === void 0);
-      Kn(
-        `"${Vn(Bn(Se).name ?? "", 200)}" is already installed, and its marketplace ` +
+      writeToStdout(
+        `"${Vn(splitPluginId(Se).name ?? "", 200)}" is already installed, and its marketplace ` +
           (Ye
             ? "entry now installs it by running a command on this machine that has not been reviewed yet."
             : "has since changed the command that installs it (or how its output is used).") +
@@ -7096,7 +7096,7 @@ async function $Nn(w, I = "user", O, U, V, te, ne) {
         (n(`post-install userConfig step failed: ${De}`, { level: "warn" }),
         O && O.length > 0)
       )
-        Se = `${L.warning} Installed, but --config not applied: ${De}`;
+        Se = `${figures.warning} Installed, but --config not applied: ${De}`;
     }
     return Se
       ? `${me.message}
@@ -7129,7 +7129,7 @@ async function UNn(w, I = "user", O = !1, U = !1, V = !1, te) {
       let Me = await xu(I, te);
       if (U)
         return (
-          Kn(`${L.tick} ${wr(ne.message)}
+          writeToStdout(`${figures.tick} ${wr(ne.message)}
 `),
           (me = !0),
           await Du(Me, I, { dryRun: !1, yes: V, deleteDataDir: !O }, te)
@@ -7144,7 +7144,7 @@ async function UNn(w, I = "user", O = !1, U = !1, V = !1, te) {
       );
       let xe = `(${U ? "prune" : "orphan scan"} failed: ${l(Me)})`;
       if (me) return xe;
-      return `${U ? `${L.tick} ${ne.message}` : ne.message}
+      return `${U ? `${figures.tick} ${ne.message}` : ne.message}
 ${xe}`;
     }
   } catch (ne) {
@@ -7165,14 +7165,14 @@ async function Du(w, I, O, U) {
   if (w.orphans.size === 0)
     return w.autoCount === 0
       ? `Nothing to prune (no auto-installed plugins at ${I} scope).`
-      : `Nothing to prune (${w.autoCount} auto-installed ${x(w.autoCount, "plugin", "plugins")} at ${I} scope, all still needed).`;
+      : `Nothing to prune (${w.autoCount} auto-installed ${pluralize(w.autoCount, "plugin", "plugins")} at ${I} scope, all still needed).`;
   let V = (isHoverRestEnabled() && U !== void 0 ? await Zv(U) : hT()).plugins,
     te = o9e(I),
     ne = [...w.orphans].map((Se) => {
       let xe = V[Se]?.find((De) => De.scope === I && De.projectPath === te);
       return `  ${wr(Se)}${xe?.version ? ` (${wr(xe.version)})` : ""}`;
     }),
-    me = `${w.orphans.size} auto-installed ${x(w.orphans.size, "plugin", "plugins")} no longer needed at ${I} scope:
+    me = `${w.orphans.size} auto-installed ${pluralize(w.orphans.size, "plugin", "plugins")} no longer needed at ${I} scope:
 ${ne.join(`
 `)}`;
   if (O.dryRun)
@@ -7185,7 +7185,7 @@ ${ne.join(`
 Not a TTY \u2014 run \`claude plugin prune${xe} -y\` to remove.`;
     }
     if (
-      (Kn(`${me}
+      (writeToStdout(`${me}
 Remove? [y/N] `),
       !(await Ou()))
     )
@@ -7197,7 +7197,7 @@ Remove? [y/N] `),
       scope: fromEnum(I),
       removed_count: Me.length,
     }),
-    `Removed ${Me.length} auto-installed ${x(Me.length, "plugin", "plugins")}: ${Me.map((Se) => wr(Bn(Se).name)).join(", ")}`
+    `Removed ${Me.length} auto-installed ${pluralize(Me.length, "plugin", "plugins")}: ${Me.map((Se) => wr(splitPluginId(Se).name)).join(", ")}`
   );
 }
 async function Ou() {
@@ -7218,7 +7218,7 @@ async function jNn(w, I, O) {
         ...xy(U.pluginId || w, Xf()),
         scope: fromEnumOpt(U.scope),
       }),
-      `${L.tick} ${U.message}`
+      `${figures.tick} ${U.message}`
     );
   } catch (U) {
     return Lae(U, "disable", w);
@@ -7230,7 +7230,7 @@ async function WNn(w) {
     if (!I.success) throw new Dae(I.message);
     return (
       await logEventAsync("tengu_plugin_disabled_all_cli", {}),
-      `${L.tick} ${I.message}`
+      `${figures.tick} ${I.message}`
     );
   } catch (I) {
     return Lae(I, "disable-all");
@@ -7238,7 +7238,7 @@ async function WNn(w) {
 }
 async function GNn(w, I, { yes: O = !1 } = {}, U) {
   try {
-    Kn(`${wr(`Checking for updates for plugin "${w}" at ${I} scope\u2026`)}
+    writeToStdout(`${wr(`Checking for updates for plugin "${w}" at ${I} scope\u2026`)}
 `);
     let V = await Pye(
         w,
@@ -7246,7 +7246,7 @@ async function GNn(w, I, { yes: O = !1 } = {}, U) {
         {
           explicit: !0,
           onEntryHelperDisclosure: async (ne) => (
-            Kn(`${ne}
+            writeToStdout(`${ne}
 `),
             fl({ yes: O })
           ),
@@ -7269,7 +7269,7 @@ async function GNn(w, I, { yes: O = !1 } = {}, U) {
       throw new Dae(te);
     }
     if (
-      (Kn(`${L.tick} ${te}
+      (writeToStdout(`${figures.tick} ${te}
 `),
       V.outcome === "updated")
     )
@@ -7380,7 +7380,7 @@ async function VNn(w, I, O) {
     if (me.startsWith(".." + jh) || me === "..")
       return { ok: !1, error: `Refusing to write outside ${U}: ${te.relPath}` };
     if ((await Fu(Bh(ne), { recursive: !0 }), O.force))
-      await On(ne, te.contents, te.mode);
+      await writeFileAtomic(ne, te.contents, te.mode);
     else
       try {
         await writeFile(ne, te.contents, { flag: "wx", mode: te.mode });
@@ -7732,8 +7732,8 @@ async function y0t(w, I) {
     if (ne) return { signal: "hosts", host: ne };
   }
   if (w.cwd?.length) {
-    let ne = Q().replaceAll("\\", "/"),
-      me = findGitRoot(Q())?.replaceAll("\\", "/"),
+    let ne = getCwd().replaceAll("\\", "/"),
+      me = findGitRoot(getCwd())?.replaceAll("\\", "/"),
       Me = [ne];
     if (me && ne.startsWith(`${me}/`)) Me.push(ne.slice(me.length + 1));
     for (let Se of w.cwd) {
@@ -7748,7 +7748,7 @@ async function y0t(w, I) {
     }
   }
   let V = I?.readFileState,
-    te = V ? r$e(V) : [];
+    te = V ? listCachedFilePaths(V) : [];
   if (w.filesRead?.length && te.length) {
     let ne = te.find((me) =>
       gl.default.isMatch(me.replaceAll("\\", "/"), w.filesRead, {
@@ -7766,7 +7766,7 @@ async function y0t(w, I) {
             if (!Se.test(De)) continue;
             try {
               let Oe = ne.get(De),
-                Ae = Oe && NG(Oe) ? Oe.content : void 0;
+                Ae = Oe && isFullFileView(Oe) ? Oe.content : void 0;
               if (!Ae) {
                 if ((await uS(De)).size > 524288) continue;
                 Ae = await cS(De, "utf8");
@@ -7881,7 +7881,7 @@ function wJt() {
   return _l() && (ee().pushNotifUpsellSeenCount ?? 0) < pS;
 }
 function _l() {
-  return isBridgeEnabled() && isPushNotificationsEnabled() && fS() && Eo("agentPushNotifEnabled", !1).value !== !0;
+  return isBridgeEnabled() && isPushNotificationsEnabled() && fS() && resolveSetting("agentPushNotifEnabled", !1).value !== !0;
 }
 function l1n(w) {
   ($u("pushNotifUpsellSeenCount", w), logFeatureOk("tips_push_upsell_show"));
@@ -8127,10 +8127,10 @@ async function _1n(w, I, O, U) {
     ));
 }
 function Hu(w) {
-  return typeof w === "string" ? io(w, { maxCodeUnits: 512 }) : void 0;
+  return typeof w === "string" ? formatSingleLineText(w, { maxCodeUnits: 512 }) : void 0;
 }
 function vl(w) {
-  return io(w, { maxCodeUnits: 64 });
+  return formatSingleLineText(w, { maxCodeUnits: 64 });
 }
 var Gu = 32,
   SS = 300000;
@@ -8436,7 +8436,7 @@ function E1n(w) {
     O = [];
   for (let U of i5t) {
     if (xS.has(U)) continue;
-    let te = (v$e.includes(U) ? I[U] : void 0) ?? w[U],
+    let te = (USER_INTENT_SETTING_KEYS.includes(U) ? I[U] : void 0) ?? w[U],
       ne = VD[U];
     if (te === void 0 || OS(te, ne)) continue;
     O.push(U);
@@ -8714,7 +8714,7 @@ function VW() {
 }
 function F_e(w, I, O) {
   if (!I) return w;
-  if (Hr()) return w;
+  if (isSafeMode()) return w;
   if ((O?.strictMcpConfig && I.source !== "flagSettings") || doesEnterpriseMcpConfigExist()) return w;
   let V = agentMcpSpecsToScopedConfigs(I);
   if (Object.keys(V).length === 0) return w;
@@ -8795,7 +8795,7 @@ async function im({
   storageV5: Se,
 }) {
   let xe = dC(I);
-  if (O && !0 && Ci()) {
+  if (O && !0 && isCoordinatorModeEnabled()) {
     let { applyCoordinatorToolFilter: Ze } =
       await import("../../01-核心基础设施/共享小工具-未细化/chunk-1m91n7yv.js");
     xe = Ze(xe);
@@ -8883,7 +8883,7 @@ async function* RJt() {
   try {
     (process.stdin.setEncoding("utf8"), yield* oOn(process.stdin));
   } catch (w) {
-    if (!oje(w)) throw w;
+    if (!isStdinUnusableError(w)) throw w;
     (n(`getInputPrompt: stream-json stdin unreadable: ${l(w)}`, {
       level: "error",
     }),
@@ -8898,7 +8898,7 @@ async function* RJt() {
   }
 }
 async function mm(w, I) {
-  if (!process.stdin.isTTY && Dvt() !== "mcp") {
+  if (!process.stdin.isTTY && getFirstPositionalArg() !== "mcp") {
     if (I === "stream-json") return tm() ?? RJt();
     let O = "",
       U = (te) => {
@@ -8914,7 +8914,7 @@ async function mm(w, I) {
     try {
       (process.stdin.setEncoding("utf8"), process.stdin.on("data", U));
     } catch (te) {
-      if ((process.stdin.off("data", U), !oje(te))) throw te;
+      if ((process.stdin.off("data", U), !isStdinUnusableError(te))) throw te;
       return (
         n(`getInputPrompt: piped stdin unreadable: ${l(te)}`, {
           level: "error",
@@ -8931,7 +8931,7 @@ async function mm(w, I) {
         w
       );
     }
-    let V = await Knt(process.stdin, 3000);
+    let V = await peekForStdinData(process.stdin, 3000);
     if ((process.stdin.off("data", U), V))
       cliWarn(
         "Warning: no stdin data received in 3s, proceeding without it. If piping from a slow command, redirect stdin explicitly: < /dev/null to skip, or wait longer.",
@@ -8977,7 +8977,7 @@ async function fm(w, I) {
       if (!q2(at))
         return {
           ok: !1,
-          error: `Error: --environment expects a self-hosted environment id (ccpool_...), got ${Hit(at)}`,
+          error: `Error: --environment expects a self-hosted environment id (ccpool_...), got ${truncateAndEscapeValue(at)}`,
         };
       if (w.resume || w.continue || O)
         return {
@@ -9106,7 +9106,7 @@ async function fm(w, I) {
       V !== null &&
       me === null &&
       Oe === null &&
-      J$n({
+      isHeadlessCloudRun({
         print: Boolean(w.print),
         initOnly: Boolean(w.initOnly),
         nonInteractive: I.nonInteractive,
@@ -9119,7 +9119,7 @@ async function fm(w, I) {
   if (Ye === "invalid")
     return {
       ok: !1,
-      error: `Error: --forward-home-settings takes true or false, not ${Hit(String(w.forwardHomeSettings))}.`,
+      error: `Error: --forward-home-settings takes true or false, not ${truncateAndEscapeValue(String(w.forwardHomeSettings))}.`,
     };
   let Ze = Ye !== !1,
     Nt = Ye === !0 ? "forward" : null;
@@ -9130,7 +9130,7 @@ async function fm(w, I) {
         "Error: --forward-home-settings says whether this machine's settings go into a cloud session; pass --cloud (a new session, or one to attach to) or --environment",
     };
   if (V !== null) {
-    let at = Y$n({
+    let at = getCloudFlagConflictError({
       print: w.print,
       nonInteractive: I.nonInteractive,
       continue: w.continue,
@@ -9186,7 +9186,7 @@ function ym(w) {
       let ne = O;
       ((O = V),
         logEvent("tengu_session_start", {
-          previous_session_id: Ee(ne),
+          previous_session_id: sanitizeAnalyticsId(ne),
           source: fromEnum(te),
           permissionMode: fromEnum(w.permissionMode),
           dangerouslySkipPermissionsPassed: w.dangerouslySkipPermissionsPassed,
@@ -9361,7 +9361,7 @@ function bm(
   w,
   { dropForEnterpriseMcpConfig: I, dropForSideloadPolicy: O = !1 },
 ) {
-  let U = Hr()
+  let U = isSafeMode()
     ? "safe mode"
     : VW()
       ? "hermetic mode"
@@ -9509,12 +9509,12 @@ async function d_() {
       };
     if (w) {
       let { stdout: te } = await execFileNoThrowWithCwd("git", [...I, `--author=${w}`], {
-        cwd: Q(),
+        cwd: getCwd(),
       });
       U(te);
     }
     if (O.size < 10) {
-      let { stdout: te } = await execFileNoThrowWithCwd(gitExe(), I, { cwd: Q() });
+      let { stdout: te } = await execFileNoThrowWithCwd(gitExe(), I, { cwd: getCwd() });
       U(te);
     }
     let V = Array.from(O.entries())
@@ -9532,7 +9532,7 @@ async function d_() {
 }
 var c_ = 604800000;
 function w1n(w) {
-  let I = Math.abs(gz(w)),
+  let I = Math.abs(hashString(w)),
     U = es().exampleFiles ?? [],
     V = U[I % U.length] ?? "<filepath>",
     te = [
@@ -9596,7 +9596,7 @@ function m_() {
 }
 function f_() {
   if (a.CLAUDE_CODE_SESSION_KIND === "bg" || isTeammate()) return "forwarded_pick";
-  switch (Vd()) {
+  switch (getEnvEntrypoint()) {
     case "sdk-ts":
     case "sdk-py":
       return "sdk_option";
@@ -9663,7 +9663,7 @@ async function y_(w, I) {
     let U = await tD(I),
       V = new Set(
         Object.entries(U.plugins).flatMap(([ne, me]) =>
-          me.length > 0 ? [Lu(ne)] : [],
+          me.length > 0 ? [getPluginMarketplace(ne)] : [],
         ),
       ),
       te = O.filter(([ne]) => V.has(ne));
@@ -9695,7 +9695,7 @@ async function h_(w, I) {
   writeDiagnosticsEvent("info", "marketplaces_sync_starting");
   let te = Rdn.of(w.host),
     ne = await vdn(U),
-    me = PH() !== null && Object.keys(await UF()).length > 0,
+    me = getStrictKnownMarketplaces() !== null && Object.keys(await UF()).length > 0,
     Me = await Iqn({
       host: w.host,
       etag: me ? void 0 : ne?.etag,
@@ -9753,7 +9753,7 @@ function Am({ deferToCleanup: w, storageV5: I }) {
   let O = performance.now(),
     U = l7n(I);
   if (
-    (Br("action_after_plugins_init"),
+    (profileCheckpoint("action_after_plugins_init"),
     U.then(async () => {
       (logEvent("tengu_timer", {
         event: S("plugins_init"),
@@ -9867,7 +9867,7 @@ function G_(w) {
   try {
     let I = new URL(w);
     return (
-      Do(I.hostname) &&
+      isGitHubHost(I.hostname) &&
       /^\/rust-lang\/crates\.io-index(?:\.git)?\/?$/.test(I.pathname)
     );
   } catch {
@@ -10108,7 +10108,7 @@ async function eb(w) {
 async function Fm() {
   try {
     if (Pt()) return null;
-    let w = findGitRoot(Q());
+    let w = findGitRoot(getCwd());
     if (w === null) return null;
     try {
       let V = C_();
@@ -10168,8 +10168,8 @@ function e1n(w, I, { offerBypass: O = !0 } = {}) {
   return gnr(
     w,
     {
-      isAutoModeAvailable: zL(I),
-      isBypassPermissionsModeAvailable: O && uWe(I),
+      isAutoModeAvailable: canCycleToAuto(I),
+      isBypassPermissionsModeAvailable: O && canUseBypassPermissions(I),
     },
     I.proactivityBaseline?.mode,
   );
@@ -10298,7 +10298,7 @@ class Ym {
     );
   }
   async loadMarketplacePluginTips(w) {
-    let I = new Set(_Xe());
+    let I = new Set(getPluginSuggestionMarketplaces());
     if (I.size === 0) return [];
     return this.buildMarketplacePluginTips(
       I,
@@ -10311,7 +10311,7 @@ class Ym {
     for (let V of w) {
       let te = I[V];
       if (!te) continue;
-      if (V !== ig && !yXe(V, te.source)) {
+      if (V !== ig && !isMarketplaceSourceDeclaredByPolicy(V, te.source)) {
         n(
           `Skipping plugin suggestion tips for marketplace "${V}": its registered source is not declared in managed settings (extraKnownMarketplaces or strictKnownMarketplaces)`,
         );
@@ -10379,12 +10379,12 @@ function jm(w) {
 async function Jm(w, I, O, U, V = ig) {
   if (!(await w.getKnownMarketplaces(O.storageV5))[V]) return !1;
   if (_H(`${I}@${V}`)) return !1;
-  if (bd(`${I}@${V}`)) return !1;
+  if (isPluginBlockedByPolicy(`${I}@${V}`)) return !1;
   return (await y0t(U, O)) !== null;
 }
 async function Hm(w, I) {
   try {
-    return (await uX(w, Q(), I)).length > 0;
+    return (await uX(w, getCwd(), I)).length > 0;
   } catch (O) {
     return (n(`hasUserDefined(${w}) failed: ${O}`), !1);
   }
@@ -10411,7 +10411,7 @@ function Il(w) {
     for (let U of I) if (ab.has(U)) return !0;
   }
   if (O) {
-    for (let U of r$e(O)) if (ib.test(U)) return !0;
+    for (let U of listCachedFilePaths(O)) if (ib.test(U)) return !0;
   }
   return !1;
 }
@@ -10419,7 +10419,7 @@ function xl(w) {
   return `available in Claude for Enterprise \xB7 ${formatHyperlink("https://clau.de/enterprise", "Learn more", { themeName: w.theme })}`;
 }
 function Fl(w, I, O) {
-  return w.some((U) => U !== I && l9(U) < O);
+  return w.some((U) => U !== I && getSessionsSinceTipShown(U) < O);
 }
 var db = ["c4e-desktop", "c4e-remote-sessions", "c4e-ultrareview"],
   cb = 5;
@@ -10439,7 +10439,7 @@ function Km(w) {
 var Wm = 10,
   zm = 4;
 function Vm() {
-  return dAe() || !Tre(ee().workflowSizeGuideline).isDefault;
+  return isWorkflowSizeGuidelineConfigured() || !resolveWorkflowSizeGuideline(ee().workflowSizeGuideline).isDefault;
 }
 function qm() {
   let w = hw.bindings ?? MYn();
@@ -10477,32 +10477,32 @@ var Qm = [
       id: "fotw-campaign",
       priority: 4,
       content: async () => {
-        let w = h2();
+        let w = getActiveFotwCampaign();
         if (!w?.command) return "";
-        let I = B4();
+        let I = getFotwCreditAmount();
         if (!I) return "";
         let O = Gs(I.amountMinorUnits, I.currency, "fit"),
           U = w.tipBlurb ? `/${w.command} ${w.tipBlurb}` : `/${w.command}`,
-          V = w.tips?.[gee("fotw-campaign") % w.tips.length] ?? "";
+          V = w.tips?.[getTipLifetimeShownCount("fotw-campaign") % w.tips.length] ?? "";
         if (V) return `${V} Try it for ${O} in usage credits.`;
         return `${w.titleLabel ?? "Feature of the week:"} ${U}. Try it for ${O} in usage credits.`;
       },
       cooldownSessions: 1,
-      isRelevant: async () => $ce(),
+      isRelevant: async () => hasClaimableFotwCredit(),
     },
     {
       id: "fotw-campaign-upsell",
       priority: 4,
       content: async () => {
-        let w = h2();
+        let w = getActiveFotwCampaign();
         if (!w?.command) return "";
-        let I = w.tips?.[gee("fotw-campaign-upsell") % w.tips.length] ?? "";
+        let I = w.tips?.[getTipLifetimeShownCount("fotw-campaign-upsell") % w.tips.length] ?? "";
         if (I) return I;
         let O = w.tipBlurb ? `/${w.command} ${w.tipBlurb}` : `/${w.command}`;
         return `${w.titleLabel ?? "Feature of the week:"} ${O}.`;
       },
       cooldownSessions: 1,
-      isRelevant: async () => JPe(),
+      isRelevant: async () => isFotwUpsellPending(),
     },
     {
       id: "powerup-onboarding",
@@ -10603,9 +10603,9 @@ var Qm = [
       maxLifetimeShows: 5,
       cooldownSessions: 1,
       content: async (w) =>
-        `Running multiple Claude sessions? Press ${getThemeColor("suggestion", w.theme)(DP)} on an empty prompt to see them all in one place`,
+        `Running multiple Claude sessions? Press ${getThemeColor("suggestion", w.theme)(LEFT_ARROW_GLYPH)} on an empty prompt to see them all in one place`,
       isRelevant: async (w) => {
-        if (!Lee()) return !1;
+        if (!isAgentsViewAvailable()) return !1;
         if (isTranscriptPersistenceDisabled()) return !1;
         let I = ee();
         if (I.leftArrowOpensAgents === !1) return !1;
@@ -10696,7 +10696,7 @@ var Qm = [
       content: async () =>
         "Try setting environment variable COLORTERM=truecolor for richer colors",
       cooldownSessions: 30,
-      isRelevant: async () => !a.COLORTERM && ie.level < 3,
+      isRelevant: async () => !a.COLORTERM && chalk.level < 3,
     },
     {
       id: "powershell-tool-env",
@@ -10705,7 +10705,7 @@ var Qm = [
         "Set CLAUDE_CODE_USE_POWERSHELL_TOOL=1 to enable the PowerShell tool (preview)",
       cooldownSessions: 10,
       isRelevant: async () =>
-        P() === "windows" &&
+        getCurrentPlatform() === "windows" &&
         process.env.CLAUDE_CODE_USE_POWERSHELL_TOOL === void 0,
     },
     {
@@ -10751,7 +10751,7 @@ var Qm = [
       cooldownSessions: 0,
       async isRelevant() {
         if (!vVe()) return !1;
-        if (P() !== "macos") return !1;
+        if (getCurrentPlatform() !== "macos") return !1;
         switch (a.terminal) {
           case "vscode":
             return !(await T4n());
@@ -10784,8 +10784,8 @@ var Qm = [
       advertisedCommand: "install-github-app",
       async isRelevant() {
         if (ee().githubActionSetupCount) return !1;
-        let w = A7t(),
-          I = w ? av(w) : null;
+        let w = getCachedRemoteHost(),
+          I = w ? getGitProvider(w) : null;
         return I !== "gitlab" && I !== "bitbucket";
       },
     },
@@ -10837,7 +10837,7 @@ var Qm = [
       content: async () =>
         "Paste images into Claude Code using control+v (not cmd+v!)",
       cooldownSessions: 10,
-      isRelevant: async () => P() === "macos",
+      isRelevant: async () => getCurrentPlatform() === "macos",
     },
     {
       id: "double-esc",
@@ -10976,7 +10976,7 @@ var Qm = [
       isRelevant: async (w) => {
         if (!Il(w)) return !1;
         if (areBundledSkillsDisabled()) return !1;
-        return ube();
+        return isDesignSyncEnabled();
       },
     },
     {
@@ -11016,10 +11016,10 @@ var Qm = [
         `Run ${getThemeColor("suggestion", w.theme)("/web-setup")} to use Claude Code on the web with the GitHub account gh is signed in to`,
       isRelevant: async (w) => {
         if (ke() || !isClaudeAISubscriber() || !isWebSetupEnabled()) return !1;
-        let I = A7t(),
-          O = I ? av(I) : null;
+        let I = getCachedRemoteHost(),
+          O = I ? getGitProvider(I) : null;
         if (O === "gitlab" || O === "bitbucket") return !1;
-        if (gee("web-setup-github") >= zm || l9("web-setup-github") < Wm)
+        if (getTipLifetimeShownCount("web-setup-github") >= zm || getSessionsSinceTipShown("web-setup-github") < Wm)
           return !1;
         if (
           (await vZ.of(w.session.host).getGhAuthStatus()).status !==
@@ -11027,7 +11027,7 @@ var Qm = [
         )
           return !1;
         return (
-          b4.of(w.session.host).peek(w.credentials, w.storageV5) ===
+          githubConnectionStatusStore.of(w.session.host).peek(w.credentials, w.storageV5) ===
           "not_connected"
         );
       },
@@ -11085,7 +11085,7 @@ var Qm = [
       cooldownSessions: 10,
       advertisedCommand: "tui",
       isRelevant: async () =>
-        !Ta() && getInitialSettings().tui === void 0 && !u0t() && !Dbt(kH()),
+        !shouldUseFullscreen() && getInitialSettings().tui === void 0 && !u0t() && !isAutoDisabledFullscreenReason(getFullscreenReason()),
     },
     {
       id: "console-api-key",
@@ -11133,17 +11133,17 @@ var Qm = [
       cooldownSessions: 8,
       content: async (w) => {
         let I = getThemeColor("suggestion", w.theme),
-          O = dlt(),
+          O = getUltrareviewQuota(),
           U =
             O !== null && O.reviews_remaining > 0
-              ? ` \u2014 ${_nn(O.reviews_remaining)}`
+              ? ` \u2014 ${formatFreeReviewsLeft(O.reviews_remaining)}`
               : "";
         return `Run ${I("/ultrareview")} for a cloud-based multi-agent review that finds and verifies bugs in your branch${U}`;
       },
       isRelevant: async (w) => {
-        if (!HDt("startup_tip")) return !1;
-        if (hnn()) return !1;
-        return (gnn(w.credentials), !0);
+        if (!isUltrareviewAwarenessEnabled("startup_tip")) return !1;
+        if (hasRunUltrareview()) return !1;
+        return (loadUltrareviewQuota(w.credentials), !0);
       },
     },
     {
@@ -11191,7 +11191,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
       content: async (w) =>
         `Dynamic workflows let Claude write a script that orchestrates many agents for you. Mention the keyword ${getThemeColor("suggestion", w.theme)("ultracode")} or ask Claude to use a workflow directly.`,
       cooldownSessions: 3,
-      isRelevant: async () => Dc(),
+      isRelevant: async () => areWorkflowsEnabled(),
     },
     {
       id: "workflow-size-prompting",
@@ -11204,7 +11204,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
       },
       cooldownSessions: 5,
       isRelevant: async (w) =>
-        Dc() &&
+        areWorkflowsEnabled() &&
         !Vm() &&
         (w?.toolsUsed?.has(WORKFLOW_TOOL_NAME) ?? !1) &&
         !Gm("workflow-size-prompting"),
@@ -11219,7 +11219,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
       },
       cooldownSessions: 12,
       isRelevant: async (w) =>
-        Dc() &&
+        areWorkflowsEnabled() &&
         !Vm() &&
         !(w?.toolsUsed?.has(WORKFLOW_TOOL_NAME) ?? !1) &&
         !Gm("workflow-size-prompting-ambient"),
@@ -11228,7 +11228,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
       id: "loop-command-nudge",
       providerAgnostic: !0,
       content: async (w) =>
-        `${getThemeColor("suggestion", w.theme)(`/${Fbt}`)} runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling status.`,
+        `${getThemeColor("suggestion", w.theme)(`/${LOOP_SKILL_NAME}`)} runs any prompt on a recurring schedule. Great for monitoring deploys, babysitting PRs, or polling status.`,
       cooldownSessions: 3,
       isRelevant: async () => {
         if (isRunningInRemoteEnvironment()) return !1;
@@ -11245,7 +11245,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
       isRelevant: async () => {
         let w = ee().skillUsage ?? {};
         return Object.keys(w).some((I) => {
-          if (I === gD) return !1;
+          if (I === CODE_REVIEW_SKILL_NAME) return !1;
           return I.toLowerCase()
             .replace(/[^a-z0-9]/g, "")
             .includes("codereview");
@@ -11262,7 +11262,7 @@ ${getThemeColor("suggestion", w.theme)(`/plugin install frontend-design@${ig}`)}
           U = O[0];
         if (!U) return "";
         if (O.length === 1)
-          return `You haven't used the ${ie.bold(U.name)} plugin lately. Disable it with ${I("/plugin")} to free up context and speed up startup.`;
+          return `You haven't used the ${chalk.bold(U.name)} plugin lately. Disable it with ${I("/plugin")} to free up context and speed up startup.`;
         return `You have ${O.length} plugins you haven't used lately. Disable them with ${I("/plugin")} to free up context and speed up startup.`;
       },
       cooldownSessions: 30,
@@ -11332,9 +11332,9 @@ async function CJt(w, I) {
 }
 async function b0t(w) {
   let I = vZ.of(w.session.host),
-    { tips: O, trustedCount: U } = await PUn(w.session.host),
-    V = O.filter((Ae) => l9(Ae.id) >= Ae.cooldownSessions);
-  if (U > 0 && Lye()) return V;
+    { tips: O, trustedCount: U } = await getOverrideSpinnerTips(w.session.host),
+    V = O.filter((Ae) => getSessionsSinceTipShown(Ae.id) >= Ae.cooldownSessions);
+  if (U > 0 && shouldExcludeDefaultTips()) return V;
   let te = [...Qm, ...gb, ...(await I.getMarketplacePluginTips(w.storageV5))],
     ne = getAPIProvider() !== "firstParty" || !isFirstPartyAnthropicBaseUrl(),
     me = te.filter((Ae) => !I.failedTipIds.has(Ae.id)),
@@ -11349,17 +11349,17 @@ async function b0t(w) {
   return [
     ...xe
       .filter((Ae, $e) => De[$e])
-      .filter((Ae) => l9(Ae.id) >= Ae.cooldownSessions)
+      .filter((Ae) => getSessionsSinceTipShown(Ae.id) >= Ae.cooldownSessions)
       .filter(
         (Ae) =>
-          Ae.maxLifetimeShows === void 0 || gee(Ae.id) < Ae.maxLifetimeShows,
+          Ae.maxLifetimeShows === void 0 || getTipLifetimeShownCount(Ae.id) < Ae.maxLifetimeShows,
       ),
     ...V,
   ];
 }
 async function ep(w, I) {
   if (!qVt()) return;
-  if (St()) return;
+  if (isEssentialTrafficOnly()) return;
   try {
     let O = await $F({
         maxRetries: 1,
@@ -11508,7 +11508,7 @@ async function Vi(w) {
   let O = Nl(w),
     U;
   try {
-    U = await qt().readRange(O, 0, ap + 1);
+    U = await getFileStorage().readRange(O, 0, ap + 1);
   } catch (te) {
     if (!W(te))
       n(`[publishedCatalog] cache read failed: ${A(te) ?? "unknown"}`);
@@ -11528,7 +11528,7 @@ async function Vi(w) {
 async function Bl(w) {
   Ks().set(w, null);
   try {
-    await qt().delete(Nl(w));
+    await getFileStorage().delete(Nl(w));
   } catch {}
 }
 function mp(w) {
@@ -11537,7 +11537,7 @@ function mp(w) {
 async function jl(w, I) {
   await Yi(w, I, { verified: !0 });
   try {
-    let O = qt();
+    let O = getFileStorage();
     (await O.mkdir(QN()), await O.atomicWrite(Nl(w), b(I), 384));
   } catch (O) {
     n(`[publishedCatalog] cache write failed: ${A(O) ?? "unknown"}`);
@@ -11857,7 +11857,7 @@ async function Bb(w, I) {
   let ne = await Xl(te, I, void 0, V.rootId);
   if (ne !== void 0) return { ok: !1, reason: ne };
   return (
-    await Z1t(I.cacheKey, te),
+    await recordPublishedCatalogFloorVersion(I.cacheKey, te),
     { ok: !0, entry: { ...w, document: te, rootId: V.rootId, source: I.kind } }
   );
 }
@@ -11885,8 +11885,8 @@ var Gb = "tengu_delegated_quail",
   Kb = { mode: "off" };
 function as({ skipEssentialTrafficGate: w = !1 } = {}) {
   if (po(a.CLAUDE_CODE_MODEL_CATALOG)) return "env_off";
-  if (uo()) return "bare";
-  if (!w && St()) return "essential_traffic";
+  if (isSimpleMode()) return "bare";
+  if (!w && isEssentialTrafficOnly()) return "essential_traffic";
   if (a.ANTHROPIC_UNIX_SOCKET) return "unix_socket";
   if (!isFirstPartyApiBackend()) return "not_first_party";
   if (!isClaudeAISubscriber()) return "not_claude_ai_auth";
@@ -11937,7 +11937,7 @@ function Dp() {
 function Vb() {
   let { accountUuid: w } = Dp();
   if (w === null) return null;
-  return mn(w).slice(0, zb);
+  return hashSha256(w).slice(0, zb);
 }
 function ls() {
   let w = xp(),
@@ -11947,7 +11947,7 @@ function ls() {
 }
 function ur() {
   if (a.CLAUDE_CODE_REMOTE) return "ccr";
-  if (Hd()) return "ccd";
+  if (isDesktopHostEntrypoint()) return "ccd";
   return "cc";
 }
 function ta() {
@@ -12096,10 +12096,10 @@ async function Yb(w) {
   );
 }
 function Lp(w, I) {
-  return L1(w) ? hN.get(w, I) : externalHttp.get(w, I);
+  return isClaudeDownloadsHost(w) ? hN.get(w, I) : externalHttp.get(w, I);
 }
 function Xb(w) {
-  let I = L1(w),
+  let I = isClaudeDownloadsHost(w),
     O = Np(w),
     U = w.toLowerCase().startsWith("https:");
   return (V) => {
@@ -12108,7 +12108,7 @@ function Xb(w) {
       me = Qb(te),
       Me = O !== "" && Np(te) === O,
       Se = U ? me === "https:" : Me || me === "https:";
-    if (!(ne !== "" && (I ? L1(ne) : !Fhe(ne)) && Se && (Me || !jge(ne))))
+    if (!(ne !== "" && (I ? isClaudeDownloadsHost(ne) : !isAnthropicHost(ne)) && Se && (Me || !jge(ne))))
       throw Error(
         "[publishedCatalog] redirect refused: a hop left the host the request was pinned to",
       );
@@ -12306,7 +12306,7 @@ async function sC({ source: w, cached: I, result: O }) {
     Se = await Xl(Me, w, I, V.rootId);
   if (Se !== void 0) return (await Hl(Me), { ok: !1, reason: Se });
   return (
-    await Z1t(w.cacheKey, Me),
+    await recordPublishedCatalogFloorVersion(w.cacheKey, Me),
     { ok: !0, document: Me, rootId: V.rootId }
   );
 }
@@ -12599,7 +12599,7 @@ var qp = M4e + 4096;
 async function _C(w) {
   let I;
   try {
-    I = await qt().readRange(w, 0, qp + 1);
+    I = await getFileStorage().readRange(w, 0, qp + 1);
   } catch (U) {
     if (!W(U)) n(`[servedCatalog] cache read failed: ${A(U) ?? "unknown"}`);
     return;
@@ -12626,7 +12626,7 @@ async function ca(w, I) {
     ),
       ia().set(O, null));
     try {
-      await qt().delete(V);
+      await getFileStorage().delete(V);
     } catch {}
     return;
   }
@@ -12635,7 +12635,7 @@ async function ca(w, I) {
 async function Zl(w, I, O) {
   await ef(da(w, I), O);
   try {
-    let U = qt();
+    let U = getFileStorage();
     (await U.mkdir(QN()), await U.atomicWrite(Zp(w, I), b(O), 384));
   } catch (U) {
     n(`[servedCatalog] cache write failed: ${A(U) ?? "unknown"}`);
@@ -13282,28 +13282,28 @@ function _f(w, I) {
     for (let [Se, xe] of Object.entries(Me))
       for (let De of xe)
         for (let Oe of De.hooks)
-          bo("hook_registered", {
+          emitOtelEvent("hook_registered", {
             hook_event: Se,
             hook_type: Oe.type,
             hook_source: ne,
-            safe_mode: String(Hr()),
+            safe_mode: String(isSafeMode()),
             ...(O && De.matcher && { hook_matcher: De.matcher }),
           });
   }
-  let te = U && !Hr() ? E2() : null;
+  let te = U && !isSafeMode() ? E2() : null;
   for (let ne of w) {
     if (!ne.hooksConfig) continue;
     if (U && !te?.has(ne.source)) continue;
-    let { marketplace: me } = og(ne.repository),
+    let { marketplace: me } = parsePluginIdIgnoringReservedMarketplace(ne.repository),
       Me = jF(BF(ne.name, me, I)) || O;
     for (let [Se, xe] of Object.entries(ne.hooksConfig))
       for (let De of xe)
         for (let Oe of De.hooks)
-          bo("hook_registered", {
+          emitOtelEvent("hook_registered", {
             hook_event: Se,
             hook_type: Oe.type,
             hook_source: "pluginHook",
-            safe_mode: String(Hr()),
+            safe_mode: String(isSafeMode()),
             "plugin.name": Me ? ne.name : US,
             plugin_id_hash: nC(ne.name, me),
             ...(O && De.matcher && { hook_matcher: De.matcher }),
@@ -13328,7 +13328,7 @@ function WC(w, I, O) {
     return (logError(U), Promise.resolve({ clients: [], tools: [], commands: [] }));
   }
 }
-var w0t = () => import.meta.require("../Teammates团队/chunk-811z9z0t.js"),
+var w0t = () => import.meta.require("../Teammates团队/teammate-context.js"),
   zC = () => import.meta.require("../Teammates团队/chunk-5nnwwahg.js"),
   VC = () => import.meta.require("../Teammates团队/chunk-88ybhavr.js"),
   T0t = import.meta.require("../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js"),
@@ -13385,7 +13385,7 @@ async function YC({
   modelProvenance: yn,
 }) {
   try {
-    let on = WJn(),
+    let on = getNoFlickerEnvOverride(),
       $n,
       Kt,
       Hn = {},
@@ -13395,7 +13395,7 @@ async function YC({
       Mn = We === null ? null : _m(We),
       rn = {
         entrypoint: S("claude"),
-        bootstrap_entry: fromEnum(RPn()),
+        bootstrap_entry: fromEnum(getBootstrapEntry()),
         hasInitialPrompt: V,
         hasStdin: te,
         verbose: ne,
@@ -13417,7 +13417,7 @@ async function YC({
         permissionMode: fromEnum(zt),
         proactivityLevel: fromEnumOpt(Qt),
         modeIsBypass: dn,
-        inProtectedNamespace: NL(),
+        inProtectedNamespace: isInProtectedNamespace(),
         ...getCooContextProperties(),
         ...$n,
         apiKeySource: fromEnum(getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).source),
@@ -13426,11 +13426,11 @@ async function YC({
         ...(to && { systemPromptFlag: fromEnum(to) }),
         ...(Tt && { appendSystemPromptFlag: fromEnum(Tt) }),
         ...(on && { noFlickerEnvVar: fromEnum(on) }),
-        rendererEntryPath: fromEnum(kH()),
+        rendererEntryPath: fromEnum(getFullscreenReason()),
         ...Osr(),
         ...Hn,
-        is_simple: uo() || void 0,
-        is_safe_mode: Hr() || void 0,
+        is_simple: isSimpleMode() || void 0,
+        is_safe_mode: isSafeMode() || void 0,
         is_coordinator: T0t?.isCoordinatorMode() ? !0 : void 0,
         autoUpdatesChannel: fromEnum(getInitialSettings().autoUpdatesChannel ?? "latest"),
         ...yn,
@@ -13511,17 +13511,17 @@ async function JC(w, I) {
   (await logEventAsync("tengu_unknown_command_suggestion", {}),
     process.stderr.write(
       [
-        ie.red(L.cross) + ` unknown command "${w}"`,
-        ie.dim(`  ${v_.last} `) +
+        chalk.red(figures.cross) + ` unknown command "${w}"`,
+        chalk.dim(`  ${TREE_CONNECTOR_GLYPHS.last} `) +
           "Did you mean " +
-          ie.bold(`claude ${V}`) +
+          chalk.bold(`claude ${V}`) +
           "?",
         "",
-        ie.dim("Run ") +
-          ie.dim.bold("claude --help") +
-          ie.dim(" to list commands, or ") +
-          ie.dim.bold(`claude -p "${w}"`) +
-          ie.dim(" to send as a prompt."),
+        chalk.dim("Run ") +
+          chalk.dim.bold("claude --help") +
+          chalk.dim(" to list commands, or ") +
+          chalk.dim.bold(`claude -p "${w}"`) +
+          chalk.dim(" to send as a prompt."),
         "",
       ].join(`
 `),
@@ -13537,7 +13537,7 @@ function QC(w) {
   else writeDiagnosticsEvent("info", "prefetch_system_context_skipped_no_trust");
 }
 function E0t(w, I, O) {
-  if (a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER || uo()) return;
+  if (a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER || isSimpleMode()) return;
   if (
     (pVt(),
     hC(w, I, O),
@@ -13560,7 +13560,7 @@ function E0t(w, I, O) {
     !a.CLAUDE_CODE_SKIP_ANTHROPIC_GOOGLE_CLOUD_AUTH
   )
     prefetchGcpCredentialsIfSafe();
-  (pBt(Q(), AbortSignal.timeout(3000), []),
+  (pBt(getCwd(), AbortSignal.timeout(3000), []),
     Por(),
     tor(I),
     Nrr(I),
@@ -13569,16 +13569,16 @@ function E0t(w, I, O) {
     uf({ allowNetwork: !ke() }),
     pf({ allowNetwork: !ke() }));
   let U = iHe(w, I, O);
-  if ((kl.initialize(U, I), !uo() && !Nn() && !Rg())) iM.initialize(U, I);
+  if ((kl.initialize(U, I), !isSimpleMode() && !Nn() && !Rg())) skillChangeDetector.initialize(U, I);
   if (H("tengu_drift_lantern", !1))
     import("./startEventLoopStallDetector.hwq92489.js").then((V) =>
       V.startEventLoopStallDetector(w.host),
     );
-  if (UP()) air(lsr);
+  if (isSdkEntrypoint()) installMemorySummaryOnExit(lsr);
 }
 function A0t(w, I) {
   let O = parseUserSpecifiedModel(KR() ?? getDefaultMainLoopModel()),
-    U = Sf(Q(), vp(O, Up()), bytesPerTokenForModel(O), w);
+    U = Sf(getCwd(), vp(O, Up()), bytesPerTokenForModel(O), w);
   ei(w, I)
     .then(async ({ enabled: V, errors: te }) => {
       let ne = Xf();
@@ -13607,7 +13607,7 @@ function H8(w, I) {
 }
 async function x1n(w, I, O, U, V, te, ne, me, Me) {
   if (
-    (Br("action_handler_start"),
+    (profileCheckpoint("action_handler_start"),
     consumeBridgeMcpCarrierMarker(),
     PGn(me),
     I.deepLinkOrigin && I.prefillB64 !== void 0 && I.prefill === void 0)
@@ -13625,8 +13625,8 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
       (men(I.deepLinkCwdB64),
         Yu(I.deepLinkCwdB64),
         pu(I.deepLinkCwdB64),
-        ES(Q()),
-        o_e(Q()),
+        ES(getCwd()),
+        o_e(getCwd()),
         Gse(),
         LZe(),
         PY(),
@@ -13646,13 +13646,13 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
       );
     }
   if (I.bare) process.env.CLAUDE_CODE_SIMPLE = "1";
-  if (Hr())
+  if (isSafeMode())
     ((process.env.CLAUDE_CODE_SAFE_MODE = "1"),
       (process.env.CLAUDE_CODE_DISABLE_CLAUDE_MDS = "1"),
       logFeatureOk("startup_safe_mode"));
   let Se;
   try {
-    Se = Xur(I.maxTurns);
+    Se = resolveMaxTurns(I.maxTurns);
   } catch (Le) {
     return cliError(l(Le));
   }
@@ -13668,7 +13668,7 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
       await JC(w, O);
   }
   let xe;
-  if (zr() && !ke() && !I.agentId)
+  if (isAgentSwarmsEnabled() && !ke() && !I.agentId)
     try {
       let { initializeSessionTeam: Le } = await import("../Teammates团队/initializeSessionTeam.tnj1ekdv.js");
       xe = await Le(void 0, me);
@@ -13702,7 +13702,7 @@ async function x1n(w, I, O, U, V, te, ne, me, Me) {
     forwardSubagentText: on,
     sessionMirror: $n,
   } = I;
-  if ((Ert(We), I.prefill)) Lze(I.prefill);
+  if ((Ert(We), I.prefill)) seedEarlyInput(I.prefill);
   let Kt,
     Hn = I.agents;
   if (
@@ -13724,7 +13724,7 @@ ${Le}`);
     Mn = getInitialSettings().viewMode,
     rn = Bfe(),
     Lt =
-      I.verbose ?? (Mn ? Mn === "verbose" : rn ? !1 : Eo("verbose", !1).value),
+      I.verbose ?? (Mn ? Mn === "verbose" : rn ? !1 : resolveSetting("verbose", !1).value),
     an = I.print,
     Tn = I.init ?? !1,
     en = I.initOnly ?? !1,
@@ -13747,7 +13747,7 @@ ${Le}`);
   let Qe = dNe() && I.tmux === !0;
   if (Qe) {
     if (!tt) return cliError("Error: --tmux requires --worktree");
-    if (P() === "windows")
+    if (getCurrentPlatform() === "windows")
       return cliError("Error: --tmux is not supported on Windows");
     if (!(await _mn()))
       return cliError(`Error: tmux is not installed.
@@ -13757,7 +13757,7 @@ ${ymn()}`);
   if (Je.parentSessionId) w0t().setCliParentSessionId?.(Je.parentSessionId);
   RLn(Je.agentId);
   let Ot;
-  if (zr()) {
+  if (isAgentSwarmsEnabled()) {
     Ot = Je;
     let Le = Je.agentId || Je.agentName || Je.teamName,
       Ve = Je.agentId && Je.agentName && Je.teamName;
@@ -13884,7 +13884,7 @@ ${ymn()}`);
   }
   let co = I.file;
   if (co && co.length > 0) {
-    let Le = Gi();
+    let Le = getSessionAccessToken();
     if (!Le)
       return cliError(
         "Error: Session token required for file downloads. CLAUDE_CODE_SESSION_ACCESS_TOKEN must be set.",
@@ -13945,7 +13945,7 @@ ${ymn()}`);
     env: process.env,
     settings: getInitialSettings(),
   });
-  if (zr() && Ot?.agentId && Ot?.agentName && Ot?.teamName) {
+  if (isAgentSwarmsEnabled() && Ot?.agentId && Ot?.agentName && Ot?.teamName) {
     let Le = zC().TEAMMATE_SYSTEM_PROMPT_ADDENDUM;
     Gn = Gn
       ? `${Gn}
@@ -13966,11 +13966,11 @@ ${Le}`
       pendingSSHHost: te?.host,
     }),
     zo = async (Le, Ve, st) => {
-      Br(st.before);
+      profileCheckpoint(st.before);
       let Wt = performance.now();
       (await withTimeout(df(), 1500, Le).catch(() => {}),
-        Ts(Ve, performance.now() - Wt, Wt),
-        Br(st.after));
+        recordStartupPhase(Ve, performance.now() - Wt, Wt),
+        profileCheckpoint(st.after));
     },
     Zo = () => {
       if (isRemoteSettingsEligible() && !isRemoteManagedSettingsVerified()) return !0;
@@ -14025,7 +14025,7 @@ ${Le}`
     });
   if (ni) return cliError(`Error: ${ni}`);
   if (
-    (v3n({ inheritPermissionModeCli: zt, resolvedMode: go, storageV5: me }),
+    (applyInheritPermissionMode({ inheritPermissionModeCli: zt, resolvedMode: go, storageV5: me }),
     ILn(go === "bypassPermissions"),
     I.enableAutoMode ||
       at === "auto" ||
@@ -14109,18 +14109,18 @@ ${Cn}`)
       let Cn = Array.from(Vo.values());
       if ((Cm(Cn), process.stderr.isTTY)) {
         let yo = (So) =>
-          pt(So)
+          stripAnsi(So)
             .replace(/[\x00-\x1f\x7f-\x9f]+/g, " ")
             .trim();
-        cliWarn(`Warning: ${Cn.length} ${x(Cn.length, "MCP server")} skipped due to invalid config:
+        cliWarn(`Warning: ${Cn.length} ${pluralize(Cn.length, "MCP server")} skipped due to invalid config:
 ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
 `)}`);
       }
     }
     if (Object.keys(Ve).length > 0) {
       let Cn = Boolean(a.CLAUDE_CODE_REMOTE) || br,
-        yo = wK() && !areMcpConfigsAllSdkType(Ve);
-      if (yo && !Cn) return cliError(ufe(["--mcp-config"]));
+        yo = areSideloadFlagsDisabledByPolicy() && !areMcpConfigsAllSdkType(Ve);
+      if (yo && !Cn) return cliError(sideloadFlagsBlockedMessage(["--mcp-config"]));
       let So = Si(Ve, (ki) => {
           let Qd = { ...ki, scope: "dynamic" };
           return rS(ki) ? kvt(Qd) : Qd;
@@ -14128,7 +14128,7 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
         { configs: Ls, blocked: ao } = filterDynamicMcpServersByPolicy(So);
       if (ao.length > 0)
         cliWarn(
-          `Warning: MCP ${x(ao.length, "server")} blocked by enterprise policy: ${ao.join(", ")}`,
+          `Warning: MCP ${pluralize(ao.length, "server")} blocked by enterprise policy: ${ao.join(", ")}`,
         );
       let qo = ea(Ls, (ki) => ki.type === "sdk"),
         Eg = doesEnterpriseMcpConfigExist() && Cn && !I.strictMcpConfig && areMcpConfigsAllowedWithEnterpriseMcpConfig(qo),
@@ -14143,17 +14143,17 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
       if (ar.length > 0) {
         if (
           (n(
-            `--mcp-config: ${x(ar.length, "server")} ignored (${Ia}): ${ar.join(", ")}`,
+            `--mcp-config: ${pluralize(ar.length, "server")} ignored (${Ia}): ${ar.join(", ")}`,
             { level: "warn" },
           ),
           Ia === "enterprise MCP config")
         )
           cliWarn(
-            `Warning: an enterprise MCP config (managed-mcp.json) is present and has exclusive control over MCP servers; ignoring ${ar.length} MCP ${x(ar.length, "server")} supplied via --mcp-config: ${ar.join(", ")}`,
+            `Warning: an enterprise MCP config (managed-mcp.json) is present and has exclusive control over MCP servers; ignoring ${ar.length} MCP ${pluralize(ar.length, "server")} supplied via --mcp-config: ${ar.join(", ")}`,
           );
         else if (Ia === "disableSideloadFlags policy")
           cliWarn(
-            `Warning: managed setting disableSideloadFlags forbids --mcp-config on this machine; ignoring ${ar.length} server-delivered MCP ${x(ar.length, "server")}: ${ar.join(", ")}`,
+            `Warning: managed setting disableSideloadFlags forbids --mcp-config on this machine; ignoring ${ar.length} server-delivered MCP ${pluralize(ar.length, "server")}: ${ar.join(", ")}`,
           );
       }
       ((Rs = Jd), (gn = { ...gn, ...Jd }));
@@ -14180,7 +14180,7 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
     Yt =
       rr &&
       _r.chrome !== !0 &&
-      ((a.CLAUDE_CODE_ENABLE_CFC !== !0 && Hr()) || We);
+      ((a.CLAUDE_CODE_ENABLE_CFC !== !0 && isSafeMode()) || We);
   if (Qr)
     n(
       "[Claude in Chrome] Skipping chrome wiring: blocked by enterprise MCP config or managed deniedMcpServers policy",
@@ -14194,7 +14194,7 @@ ${Cn.map((So) => `  - ${yo(So.message)}`).join(`
       });
     else cliWarn(`Warning: MCP server blocked by enterprise policy: ${CLAUDE_IN_CHROME_MCP_SERVER_NAME}`);
   else if (rr) {
-    let Le = P();
+    let Le = getCurrentPlatform();
     try {
       logEvent("tengu_claude_in_chrome_setup", { platform: u0(Le) });
       let { mcpConfig: Ve, allowedTools: st, systemPrompt: Wt } = setupClaudeInChrome();
@@ -14237,8 +14237,8 @@ ${Gn}`
         : hgt({ permissionPromptTool: I.permissionPromptTool, sdkUrl: nn }),
     ),
     fae([
-      ...Gxe(
-        Wxe(
+      ...buildDispatchArgs(
+        resolveConfigPaths(
           {
             settings: typeof I.settings === "string" ? I.settings : void 0,
             pluginDir: kL(),
@@ -14270,7 +14270,7 @@ ${Gn}`
         "You cannot dynamically configure MCP servers when an enterprise MCP config is present",
       );
   }
-  if (!ke() && !We && fut())
+  if (!ke() && !We && isComputerUseEnabled())
     try {
       let { setupComputerUseMCP: Le } = await import("../图片-截图-ComputerUse/setupComputerUseMCP.awc2xhcg.js"),
         { mcpConfig: Ve, allowedTools: st } = Le();
@@ -14332,7 +14332,7 @@ ${Gn}`
     let { shouldToolsListOptInToBrief: Le } = import.meta.require(
       "../../01-核心基础设施/共享小工具-未细化/chunk-1p3batyk.js",
     );
-    if (Le(qu($e))) lZ(!0);
+    if (Le(splitToolRuleList($e))) lZ(!0);
   }
   if (ke()) {
     let Le = Bo();
@@ -14356,7 +14356,7 @@ ${Gn}`
   if (Jr) wo = { ...wo, ...Jr };
   let { warnings: wd, overlyBroadBashPermissions: jv } = _d;
   if (
-    (Ts("permission_context_ms", performance.now() - Sd, Sd),
+    (recordStartupPhase("permission_context_ms", performance.now() - Sd, Sd),
     $t !== "json" &&
       $t !== "stream-json" &&
       a.CLAUDE_CODE_SESSION_KIND !== "bg")
@@ -14371,7 +14371,7 @@ ${Gn}`
           let { allowed: Ve, blocked: st } = filterMcpServersByPolicy(Le ?? {});
           if (st.length > 0)
             cliWarn(
-              `Warning: claude.ai MCP ${x(st.length, "server")} blocked by enterprise policy: ${st.join(", ")}`,
+              `Warning: claude.ai MCP ${pluralize(st.length, "server")} blocked by enterprise policy: ${st.join(", ")}`,
             );
           return Ve;
         })
@@ -14384,7 +14384,7 @@ ${Gn}`
   let Ed = Date.now(),
     Sa = { value: void 0 },
     _a = (
-      Ct || uo() || Nn()
+      Ct || isSimpleMode() || Nn()
         ? Promise.resolve({ servers: {} })
         : getClaudeCodeMcpConfigs(gn, { storageV5: me, credentials: Me })
     ).then((Le) => ((Sa.value = Date.now() - Ed), Le)),
@@ -14472,7 +14472,7 @@ ${Gn}`
     );
   let so = await mm(w || "", At ?? "text"),
     zf = typeof so === "string" ? so : null;
-  Br("action_after_input_prompt");
+  profileCheckpoint("action_after_input_prompt");
   let sr;
   if (_Qn({ isNonInteractiveSession: fn, isBgSession: isBgSession() }) && I.jsonSchema) {
     try {
@@ -14483,15 +14483,15 @@ ${Gn}`
     if (typeof sr !== "object" || sr === null || Array.isArray(sr))
       return cliError("Error: --json-schema must be a JSON object");
   }
-  (Br("action_before_setup"), n("[STARTUP] Running setup()..."));
+  (profileCheckpoint("action_before_setup"), n("[STARTUP] Running setup()..."));
   let Vf = Date.now(),
     Ad = performance.now(),
     { setup: qf } = await import("../../03-入口与运行时/CLI入口-Commander/setup.sbdmcpy2.js");
-  Ts("setup_import_ms", performance.now() - Ad, Ad);
+  recordStartupPhase("setup_import_ms", performance.now() - Ad, Ad);
   let Id = I.messagingSocketPath,
-    ii = Q();
+    ii = getCwd();
   try {
-    bl();
+    getClaudeTempDir();
   } catch (Le) {
     return (logError(Le), printCliError(l(Le)), cliErrorAfterAnalyticsFlush());
   }
@@ -14503,8 +14503,8 @@ ${Gn}`
       () => O4t("completed"),
       () => O4t("timed_out"),
     ),
-      Ts("policy_limits_await_ms", performance.now() - Le, Le),
-      Br("action_after_policy_limits_cold_await"));
+      recordStartupPhase("policy_limits_await_ms", performance.now() - Le, Le),
+      profileCheckpoint("action_after_policy_limits_cold_await"));
   }
   let Yf = qf(
     ii,
@@ -14519,7 +14519,7 @@ ${Gn}`
     me,
     Me,
   );
-  if (M3(Me) && !tt && !uo() && !Hr()) ei(me, Me).catch(() => {});
+  if (M3(Me) && !tt && !isSimpleMode() && !isSafeMode()) ei(me, Me).catch(() => {});
   if (!tt) warmCommandSourceCaches(ii, me);
   let Dd = tt ? null : getAgentDefinitionsWithOverrides(ii, me);
   Dd?.catch(() => {});
@@ -14530,9 +14530,9 @@ ${Gn}`
     if (Le instanceof ud) return cliError(Le.message);
     throw Le;
   }
-  (Ts("setup_ms", performance.now() - Od, Od),
+  (recordStartupPhase("setup_ms", performance.now() - Od, Od),
     n(`[STARTUP] setup() completed in ${Date.now() - Vf}ms`),
-    Br("action_after_setup"));
+    profileCheckpoint("action_after_setup"));
   let Po = B(),
     Ca = !!I.replayUserMessages;
   if (
@@ -14550,7 +14550,7 @@ ${Gn}`
   let Kv =
       I.model || a.ANTHROPIC_MODEL || getInitialSettings().model || a.ANTHROPIC_DEFAULT_MODEL,
     xs = I.model,
-    ai = tt ? Q() : ii;
+    ai = tt ? getCwd() : ii;
   if (!yr && TP() && TRe())
     await zo("gb-before-tools", "growthbook_init_ms", {
       before: "before_growthbook_init",
@@ -14563,10 +14563,10 @@ ${Gn}`
   else if (hZn()) Hqn().catch(logError);
   AVn(Po);
   let Fd = tt ? null : getCommands(ai, me);
-  if ((Fd?.catch(() => {}), Zd() && H("tengu_cobalt_thicket", !0))) Qsr(!0);
+  if ((Fd?.catch(() => {}), Zd() && H("tengu_cobalt_thicket", !0))) clampColorLevelTo256(!0);
   n("[STARTUP] Loading commands and agents...");
   let Jf = Date.now();
-  if (M3(Me) && tt && !uo() && !Hr()) ei(me, Me).catch(() => {});
+  if (M3(Me) && tt && !isSimpleMode() && !isSafeMode()) ei(me, Me).catch(() => {});
   let Ld = performance.now(),
     li = await im({
       cwd: ai,
@@ -14577,10 +14577,10 @@ ${Gn}`
       commandsPromise: Fd,
       agentDefsPromise: Dd,
       deferCommands: am(fn),
-      onToolsLoaded: () => Br("action_tools_loaded"),
+      onToolsLoaded: () => profileCheckpoint("action_tools_loaded"),
       storageV5: me,
     });
-  Ts("tools_commands_load_ms", performance.now() - Ld, Ld);
+  recordStartupPhase("tools_commands_load_ms", performance.now() - Ld, Ld);
   let { tools: ci, mainThreadAgentDefinition: hn, commands: Zr } = li,
     { agentDefinitions: pi, cliAgents: Qf, deferredCommandsPromise: Ud } = li;
   if (
@@ -14596,17 +14596,17 @@ ${Gn}`
     return cliError(`--agent '${Zt}' not found. Available agents: ${Le || "(none)"}`);
   }
   if (
-    (M1({ tool_count: ci.length, skill_count: countMatching(Zr, isSkillToolCommand) }),
+    (addStartupContext({ tool_count: ci.length, skill_count: countMatching(Zr, isSkillToolCommand) }),
     Ud?.then(
-      (Le) => M1({ skill_count: countMatching(Le, isSkillToolCommand) }),
+      (Le) => addStartupContext({ skill_count: countMatching(Le, isSkillToolCommand) }),
       () => {},
     ),
     ei(me, Me).then(
-      (Le) => M1({ plugin_count: Le.enabled.length }),
+      (Le) => addStartupContext({ plugin_count: Le.enabled.length }),
       () => {},
     ),
     !hn &&
-      zr() &&
+      isAgentSwarmsEnabled() &&
       Ot?.agentId &&
       Ot?.agentName &&
       Ot?.teamName &&
@@ -14623,7 +14623,7 @@ ${Gn}`
   if (!hn && !Zt && va) ((hn = Rl(pi.activeAgents, va)), PW(hn?.agentType));
   ((wo = G6t(wo, hn, "cliArg")),
     n(`[STARTUP] Commands and agents loaded in ${Date.now() - Jf}ms`),
-    Br("action_commands_loaded"));
+    profileCheckpoint("action_commands_loaded"));
   let Nd;
   if (sr) {
     let Le = eCe(sr);
@@ -14718,7 +14718,7 @@ ${so}`
     !a.CLAUDE_CODE_SKIP_MANTLE_AUTH
   )
     try {
-      let { apply3PDefaultFallbacks: Le } = await import("../Bedrock-Vertex/chunk-bnft4099.js"),
+      let { apply3PDefaultFallbacks: Le } = await import("../Bedrock-Vertex/apply-3p-default-fallbacks.js"),
         { lines: Ve, mantleOverride: st } = await Le({
           pendingUserModel: xs != null ? xs : wa === "inherit" ? void 0 : wa,
         });
@@ -14900,7 +14900,7 @@ ${so}`
   }
   let Ma = H("tengu_cicada_nap_ms", 0),
     gi = ee().startupPrefetchedAt ?? 0;
-  if (!(uo() || (Ma > 0 && Date.now() - gi < Ma))) {
+  if (!(isSimpleMode() || (Ma > 0 && Date.now() - gi < Ma))) {
     let Le =
       gi > 0 ? ` last ran ${Math.round((Date.now() - gi) / 1000)}s ago` : "";
     if (
@@ -14917,7 +14917,7 @@ ${so}`
       (n(
         `Skipping startup prefetches, last ran ${Math.round((Date.now() - gi) / 1000)}s ago`,
       ),
-      !uo() && getAPIProvider() === "firstParty" && bootstrapFetchCanConvergeSlot() && !skn())
+      !isSimpleMode() && getAPIProvider() === "firstParty" && bootstrapFetchCanConvergeSlot() && !skn())
     )
       fetchBootstrapData(me, Me);
     UCn();
@@ -14932,7 +14932,7 @@ ${so}`
       strictMcpConfig: Ct,
       onBlocked: (Le) =>
         cliWarn(
-          `Warning: agent frontmatter MCP ${x(Le.length, "server")} blocked by enterprise policy: ${Le.join(", ")}`,
+          `Warning: agent frontmatter MCP ${pluralize(Le.length, "server")} blocked by enterprise policy: ${Le.join(", ")}`,
         ),
     })),
     Object.keys(gn).length > 0)
@@ -14944,7 +14944,7 @@ ${so}`
   if (hi.length > 0) {
     if (
       (n(
-        `MCP ${x(hi.length, "server")} blocked by enterprise policy before prefetch: ${hi.join(", ")}`,
+        `MCP ${pluralize(hi.length, "server")} blocked by enterprise policy before prefetch: ${hi.join(", ")}`,
         { level: "warn" },
       ),
       hi.includes(CLAUDE_IN_CHROME_MCP_SERVER_NAME))
@@ -14969,8 +14969,8 @@ ${so}`
   }
   if (a.CLAUDE_CODE_REMOTE && H("tengu_mcp_startup_policy_seed", !0))
     wo = mlr(wo, zd);
-  (M1({ mcp_server_count: Object.keys(_i).length }),
-    Br("action_mcp_configs_loaded"));
+  (addStartupContext({ mcp_server_count: Object.keys(_i).length }),
+    profileCheckpoint("action_mcp_configs_loaded"));
   let fg = ym({
     permissionMode: go,
     dangerouslySkipPermissionsPassed: Oe ?? !1,
@@ -14982,7 +14982,7 @@ ${so}`
       Nn() && Object.keys(gn).length > 0
         ? [
             Ht(
-              `MCP ${x(Object.keys(gn).length, "server")} from --mcp-config/agent frontmatter ignored \u2014 MCP runs in the remote workspace: ${Object.keys(gn).join(", ")}`,
+              `MCP ${pluralize(Object.keys(gn).length, "server")} from --mcp-config/agent frontmatter ignored \u2014 MCP runs in the remote workspace: ${Object.keys(gn).join(", ")}`,
               "warning",
             ),
           ]
@@ -15024,7 +15024,7 @@ ${so}`
   else if (I.thinking === "disabled") ((Fo = { type: "disabled" }), (Fs = !0));
   else {
     let Le = process.env.MAX_THINKING_TOKENS
-      ? tl(process.env.MAX_THINKING_TOKENS)
+      ? parseConfigInteger(process.env.MAX_THINKING_TOKENS)
       : I.maxThinkingTokens;
     if (Le !== void 0) {
       if (Le > 0) ((Fo = { type: "enabled", budgetTokens: Le }), (Fs = !0));
@@ -15141,7 +15141,7 @@ ${so}`
           if (st >= 2) logEvent("tengu_concurrent_sessions", { num_sessions: st });
         }));
     }),
-    uo())
+    isSimpleMode())
   );
   else Am({ deferToCleanup: fn, storageV5: me });
   let Pg = en || Tn ? "init" : kn ? "maintenance" : null;
@@ -15263,7 +15263,7 @@ ${so}`
 import { realpath as ZC } from "fs/promises";
 async function H1n(w) {
   try {
-    let I = await She();
+    let I = await detectCurrentRepository();
     if (!I) {
       n("Not in a GitHub repository, skipping path mapping update");
       return;
@@ -15306,7 +15306,7 @@ async function kJt(w, I) {
   try {
     let O = await getRemoteUrlForDir(w);
     if (!O) return !1;
-    let U = whe(O);
+    let U = parseGitHubRepository(O);
     if (!U) return !1;
     return U.toLowerCase() === I.toLowerCase();
   } catch {
@@ -15451,7 +15451,7 @@ function HJt(w, I, O) {
     annotation: `${nv(w, I)}${aHe(w, O)}`,
     detail:
       w.status === "failed" && I.fallback !== null
-        ? `${Wf(PKn(I.fallback))}; starting from the tip of the branch on its remote rather than your checkout's commit, and file sync is off for this session`
+        ? `${capitalize(PKn(I.fallback))}; starting from the tip of the branch on its remote rather than your checkout's commit, and file sync is off for this session`
         : void 0,
   };
 }
@@ -15532,7 +15532,7 @@ function D1n(w) {
     xe = ea(I, (Ae) => Ae.alwaysLoad !== !0),
     De = Object.keys(Se).length > 0;
   async function Oe() {
-    (Br("before_mcp_connect_user"), Br("before_mcp_connect_connector"));
+    (profileCheckpoint("before_mcp_connect_user"), profileCheckpoint("before_mcp_connect_connector"));
     let Ae = Promise.all([
         ...(De
           ? [
@@ -15544,7 +15544,7 @@ function D1n(w) {
             ]
           : []),
         id(me, () => pa(xe, "regular", U, Me, V, te), "--mcp-config servers"),
-      ]).then(() => Br("after_mcp_connect_user")),
+      ]).then(() => profileCheckpoint("after_mcp_connect_user")),
       $e = id(
         me,
         () =>
@@ -15559,7 +15559,7 @@ function D1n(w) {
             }),
           ).then((We) => (We === "superseded" ? [] : We)),
         "claude.ai connectors",
-      ).then(() => Br("after_mcp_connect_connector"));
+      ).then(() => profileCheckpoint("after_mcp_connect_connector"));
     await Promise.all([Ae, $e]);
   }
   return { connect: Oe };
@@ -15680,7 +15680,7 @@ function v0t(w, I) {
               .catch(() => {});
           }),
           (me = "refused"),
-          Rf(Se, { name: O.name, type: "failed", config: xe.config, ...Hv(De) })
+          Rf(Se, { name: O.name, type: "failed", config: xe.config, ...getBlockedServerErrorFields(De) })
         );
       }
       if (!fke(xe, O)) return ((me = "dropped"), Se);
@@ -15728,7 +15728,7 @@ async function qot(w, I, O, U = (V) => v0t(I, V)) {
         Ae = mcpDialBlockCause(De, Oe);
       if (Ae) {
         U({
-          client: { name: De, type: "failed", config: Oe, ...Hv(Ae) },
+          client: { name: De, type: "failed", config: Oe, ...getBlockedServerErrorFields(Ae) },
           tools: [],
           commands: [],
           attemptEpoch: te,
@@ -15773,7 +15773,7 @@ async function id(w, I, O) {
     }
     te = De;
   }
-  let ne = xJn(),
+  let ne = getMcpConnectTimeoutMs(),
     me = Math.max(0, ne - (Date.now() - V));
   if (te.length === 0) return;
   let Me = Af(O);
@@ -15903,7 +15903,7 @@ async function iv(w) {
       for (let me of U.getClients()) {
         if (!V.has(me.name) || !(ts(me) || me.type === "pending")) continue;
         if (me.type === "connected")
-          (Q3(me, void 0),
+          (setMcpClientOnClose(me, void 0),
             Xo()
               .clearServerCache(me.name, me.config)
               .catch(() => {}));
@@ -15956,7 +15956,7 @@ function Rf(w, I) {
   };
 }
 function dd(w) {
-  if (Ws()) Q3(w, void 0);
+  if (Ws()) setMcpClientOnClose(w, void 0);
   (w.cleanup().catch(() => {}),
     Xo()
       .clearServerCache(w.name, w.config)
@@ -16044,7 +16044,7 @@ var ga = eo("bypass", "bypass"),
     managedSettings: ({ managedSettings: w, permissionMode: I }) =>
       xf("managed-settings", Pv(w, U_e(I) !== void 0)),
     mcpConfig: (w, { mcpConfigFlagServers: I }) => Av(I),
-    jsonSchema: eo("unsupported", `--json-schema (${Nan})`),
+    jsonSchema: eo("unsupported", `--json-schema (${JSON_SCHEMA_UNSUPPORTED_REASON})`),
     bare: eo(
       "unsupported",
       "--bare (a cloud session signs in with this machine's claude.ai login, which --bare turns off)",
@@ -16173,7 +16173,7 @@ function pd(w, I) {
     Me === "permissions"
       ? [...kv(O.permissions), ...(te ? ["permissions.defaultMode"] : [])]
       : Me === "hooks"
-        ? SFt(O.hooks)
+        ? hasNonEmptyArrayValues(O.hooks)
           ? ["hooks"]
           : []
         : vv(Me, O[Me])
@@ -16240,7 +16240,7 @@ function Ev(w, I, O) {
         ? U
         : O === null
           ? void 0
-          : Sze(O)
+          : isRestrictiveAgentDefinition(O)
             ? "restricts_resolved"
             : void 0;
   if (V === void 0) return Jn;
@@ -16266,7 +16266,7 @@ function Rv(w) {
       "--agents (its value could not be read to check it for tool restrictions)",
     );
   let U = Object.entries(O)
-    .filter(([, V]) => Sze(V))
+    .filter(([, V]) => isRestrictiveAgentDefinition(V))
     .map(([V]) => Vn(V, 64));
   return U.length > 0
     ? eo(
@@ -16285,7 +16285,7 @@ function Mv(w, I) {
       ? [I]
       : Object.keys(U).filter((te) => te.endsWith(`:${I}`));
   if (V.length === 0) return "invisible";
-  return V.some((te) => Sze(U[te])) ? "restricts" : void 0;
+  return V.some((te) => isRestrictiveAgentDefinition(U[te])) ? "restricts" : void 0;
 }
 function Av(w) {
   let I = Object.entries(w ?? {}),
@@ -16350,7 +16350,7 @@ function M1n(w, I = {}) {
 }
 function Iv(w, I) {
   let O = I.selectedAgentDefinition;
-  if (!O || w.agent || !Sze(O)) return [];
+  if (!O || w.agent || !isRestrictiveAgentDefinition(O)) return [];
   return [
     {
       treat: "refuse",
@@ -16369,7 +16369,7 @@ function fd(w) {
 function xv(w, I) {
   let O = I.appendSystemPrompt ?? w.appendSystemPrompt,
     U = I.systemPrompt ?? w.systemPrompt,
-    V = qu(w.allowedTools ?? []),
+    V = splitToolRuleList(w.allowedTools ?? []),
     te =
       w.thinking === "disabled"
         ? 0
@@ -16433,8 +16433,8 @@ function ya(w) {
     : Boolean(w);
 }
 function U_e(w) {
-  let I = w ? Eb(w) : void 0;
-  return I && E1(I) && I !== "bypassPermissions" ? I : void 0;
+  let I = w ? parsePermissionModeOrDefault(w) : void 0;
+  return I && isSelectablePermissionMode(I) && I !== "bypassPermissions" ? I : void 0;
 }
 function Ff(w) {
   return w ? $Le(w) : "the binding outcome was never reported";

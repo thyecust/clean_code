@@ -10,16 +10,16 @@
 
 // [preload stripped] 原本在此预载 244 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { yf } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getSafeModeExitHint } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Nk, Tj } from "./chunk-jz6b76hr.js";
-import { cn, c4, u4 } from "./chunk-w5jaj6kg.js";
+import { useTheme, useThemeSetting, useCustomThemes } from "./chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { isCustomizationDisabled } from "./chunk-dqyc6kge.js";
-import { twe, D9, Zb, $ze, wln } from "./chunk-q7ekqy5h.js";
+import { getThemesDir, customThemeRef, parseCustomThemeRef, $ze, slugify } from "./custom-themes.js";
 import { zl } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { S0n } from "../权限系统/chunk-e4pfvp7x.js";
+import { FULL_BLOCK_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -28,8 +28,8 @@ import { jx, S6e } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REP
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
-import { KZ } from "./chunk-rhjpq9s2.js";
+import "../Diff引擎/structured-diff.js";
+import { ThemePicker } from "./theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
@@ -46,7 +46,7 @@ function ir(Ir) {
 function mr(Vr) {
   return `No color named "${Vr}"`;
 }
-var ao = S0n + S0n;
+var ao = FULL_BLOCK_GLYPH + FULL_BLOCK_GLYPH;
 function U(Mr) {
   let jr = _(2),
     { value: Ie } = Mr,
@@ -60,8 +60,8 @@ function Ee(Br) {
   let s = _(152),
     { initial: k, defaultBase: Ve, onDone: We, onCancel: ae } = Br,
     { storageV5: de } = useStorageV5Context(),
-    [, Ze] = cn(),
-    { customThemes: He, reloadCustomThemes: Se, setPreviewOverrides: u } = u4(),
+    [, Ze] = useTheme(),
+    { customThemes: He, reloadCustomThemes: Se, setPreviewOverrides: u } = useCustomThemes(),
     eo = k !== void 0 && k.source !== "user",
     [Lo, Ar] = d(k && !eo ? "colors" : "name"),
     [l, wo] = d(k?.name ?? ""),
@@ -270,7 +270,7 @@ function Ee(Br) {
           $ze({ slug: z, name: ke, base: h, overrides: m, source: "user" }, de)
             .then(() => Se())
             .then(() => {
-              Ze(D9(z));
+              Ze(customThemeRef(z));
             })
             .catch((Kr) => {
               n(`[theme] save ${z} failed: ${Kr}`, { level: "warn" });
@@ -314,7 +314,7 @@ function Ee(Br) {
         (s[73] = y));
     else y = s[73];
     let A;
-    if (s[74] === MEMO_CACHE_SENTINEL) ((A = twe()), (s[74] = A));
+    if (s[74] === MEMO_CACHE_SENTINEL) ((A = getThemesDir()), (s[74] = A));
     else A = s[74];
     let oe;
     if (s[75] !== h || s[76] !== z)
@@ -520,7 +520,7 @@ function Ee(Br) {
   if (s[132] !== ye || s[133] !== f)
     ((L =
       ye > 0
-        ? `${ye} ${x(ye, "color")} customized \xB7 ${f}.json`
+        ? `${ye} ${pluralize(ye, "color")} customized \xB7 ${f}.json`
         : `editing ${f}.json`),
       (s[132] = ye),
       (s[133] = f),
@@ -605,7 +605,7 @@ function Ee(Br) {
   return A;
 }
 function uo(c, H) {
-  let Q = wln(c);
+  let Q = slugify(c);
   if (!H.some((j) => j.slug === Q)) return Q;
   for (let j = 2; ; j++) {
     let q = `${Q}-${j}`;
@@ -615,8 +615,8 @@ function uo(c, H) {
 function go(ls) {
   let M = _(25),
     { onDone: W } = ls,
-    [fo, he] = cn(),
-    { customThemes: po } = u4(),
+    [fo, he] = useTheme(),
+    { customThemes: po } = useCustomThemes(),
     cr;
   if (M[0] === MEMO_CACHE_SENTINEL) ((cr = { kind: "picker" }), (M[0] = cr));
   else cr = M[0];
@@ -625,16 +625,16 @@ function go(ls) {
   if (M[1] === MEMO_CACHE_SENTINEL) ((ar = isCustomizationDisabled("themes")), (M[1] = ar));
   else ar = M[1];
   let dr = ar,
-    ho = c4(),
+    ho = useThemeSetting(),
     ur;
-  if (M[2] !== ho) ((ur = Zb(ho)), (M[2] = ho), (M[3] = ur));
+  if (M[2] !== ho) ((ur = parseCustomThemeRef(ho)), (M[2] = ho), (M[3] = ur));
   else ur = M[3];
   let qe = ur;
   if (Qe.kind === "editor") {
     let Z;
     if (M[4] !== W || M[5] !== he)
       ((Z = (fr) => {
-        (he(D9(fr.slug)), W(`Using custom theme "${fr.name}"`));
+        (he(customThemeRef(fr.slug)), W(`Using custom theme "${fr.name}"`));
       }),
         (M[4] = W),
         (M[5] = he),
@@ -663,8 +663,8 @@ function go(ls) {
     ((Z = (Le) => {
       (he(Le),
         W(
-          Zb(Le)
-            ? `Using custom theme "${po.find((as) => D9(as.slug) === Le)?.name ?? Le}"`
+          parseCustomThemeRef(Le)
+            ? `Using custom theme "${po.find((as) => customThemeRef(as.slug) === Le)?.name ?? Le}"`
             : `Theme set to ${Le}`,
         ));
     }),
@@ -681,7 +681,7 @@ function go(ls) {
   let me;
   if (M[17] !== qe)
     ((me = dr
-      ? `Custom themes are disabled in safe mode \u2014 ${yf()} to create or edit them${qe ? `. Your saved theme "${qe}" is a custom theme; selecting a preset here replaces it` : ""}`
+      ? `Custom themes are disabled in safe mode \u2014 ${getSafeModeExitHint()} to create or edit them${qe ? `. Your saved theme "${qe}" is a custom theme; selecting a preset here replaces it` : ""}`
       : ""),
       (M[17] = qe),
       (M[18] = me));
@@ -698,7 +698,7 @@ function go(ls) {
   if (M[21] !== Z || M[22] !== me || M[23] !== Je)
     ((pr = e(Qr, {
       color: "permission",
-      children: e(KZ, {
+      children: e(ThemePicker, {
         onThemeSelect: Z,
         onCustomTheme: Re,
         helpText: me,

@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "./diagnostics-log.js";
-import { Vd } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { getEnvEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { ht } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Voe } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 import { iJ, bGt, wGt, gwt } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
@@ -35,7 +35,7 @@ var g = 30000,
   c =
     "/api/oauth/organizations/:orgUUID/skills/list-skills?include_wiggle_skills=true";
 async function i4e(t = {}) {
-  let r = Vd(),
+  let r = getEnvEntrypoint(),
     s = r ? `${c}&entrypoint=${encodeURIComponent(r)}` : c;
   try {
     let e = await ht.get(s, {
@@ -52,7 +52,7 @@ async function i4e(t = {}) {
   }
 }
 async function bGn(t, r, s, e = {}) {
-  let l = Vd(),
+  let l = getEnvEntrypoint(),
     o = [];
   if (l) o.push(`entrypoint=${encodeURIComponent(l)}`);
   if (s) o.push(`version=${encodeURIComponent(s)}`);

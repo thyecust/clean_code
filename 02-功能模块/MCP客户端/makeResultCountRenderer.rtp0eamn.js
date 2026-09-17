@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 113 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 function makeResultCountRenderer(s) {
   return function (n) {
     let o = n.results.length;
-    return e(ToolResultRow, { children: r(t, { children: [o, " ", x(o, s)] }) });
+    return e(ToolResultRow, { children: r(t, { children: [o, " ", pluralize(o, s)] }) });
   };
 }
 export { makeResultCountRenderer };

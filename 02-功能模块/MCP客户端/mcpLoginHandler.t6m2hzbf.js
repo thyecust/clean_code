@@ -17,7 +17,7 @@ import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-M
 import { i0, pA, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jV, fY, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
-import { CF } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
+import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { V0 } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { formatHyperlink } from "../../01-核心基础设施/共享小工具-未细化/format-hyperlink.js";
@@ -197,7 +197,7 @@ async function mcpLoginHandler(t, e, o, u) {
                     return;
                   }
                   if (!process.stdout.isTTY) return;
-                  (CF(),
+                  (stopCapturingEarlyInput(),
                     (n = createInterface({
                       input: process.stdin,
                       output: process.stdout,

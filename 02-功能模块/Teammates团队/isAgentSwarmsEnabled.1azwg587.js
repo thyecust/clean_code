@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 77 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { zr, z_n } from "./chunk-3k2smxfn.js";
+import { isAgentSwarmsEnabled as zr, z_n } from "./agent-swarms-enablement.js";
 export {
   z_n as captureTeammateModeSnapshotIfEnabled,
   zr as isAgentSwarmsEnabled,

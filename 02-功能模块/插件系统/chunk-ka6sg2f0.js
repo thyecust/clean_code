@@ -9,15 +9,15 @@
 // Version: 2.1.263
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
+import { McpServer } from "../MCP客户端/mcp-server.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { ac, li, jf, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { b, z, n8, hxe, Sh } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ghe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { escapeNonPrintableAscii } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/buffer-coercing-stdio-transport.js";
 import { s, O, se, v, c, $e, Ko, fe, X, k, Hb } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { createHash } from "crypto";
 import { constants } from "fs";
 import T from "path";
@@ -25,15 +25,15 @@ import { open as M } from "fs/promises";
 import Q from "path";
 var N = 120;
 function B(e) {
-  return e.length > N ? `${oe(e, N)}...` : e;
+  return e.length > N ? `${truncateToCodeUnits(e, N)}...` : e;
 }
 function oc(e) {
-  return ghe(b(B(e)));
+  return escapeNonPrintableAscii(b(B(e)));
 }
 function Y0n(e) {
   if (typeof e === "string") return oc(e);
   let t = b(e) ?? String(e);
-  return t.length <= N ? ghe(t) : ghe(b(B(t)));
+  return t.length <= N ? escapeNonPrintableAscii(t) : escapeNonPrintableAscii(b(B(t)));
 }
 async function mm(e, t, r, o = []) {
   let n = Q.resolve(e, t),
@@ -249,7 +249,7 @@ function ie(e) {
 function _(e) {
   if (e === void 0) return "(missing)";
   let t = b(e);
-  return t.length > 80 ? `${oe(t, 77)}...` : t;
+  return t.length > 80 ? `${truncateToCodeUnits(t, 77)}...` : t;
 }
 var L = 32;
 function J0n(e, t = "") {
@@ -310,7 +310,7 @@ async function r7t(e, t, r, o, n = Number.POSITIVE_INFINITY) {
         x = g === void 0 ? "" : typeof g === "string" ? g : b(g);
       a.push(
         x.length > n
-          ? `${oe(x, n)}\u2026 [${x.length - n} more characters omitted]`
+          ? `${truncateToCodeUnits(x, n)}\u2026 [${x.length - n} more characters omitted]`
           : x,
       );
       continue;
@@ -485,7 +485,7 @@ function be(e) {
   let t = 0,
     r = new AbortController(),
     o = { spec: e, signal: r.signal },
-    n = new A1(
+    n = new McpServer(
       { name: `eval-mock/${e.server}`, version: "1" },
       { capabilities: { tools: {} } },
     );
@@ -575,7 +575,7 @@ async function ye(e, t, r, o = "") {
 async function o7t(e) {
   try {
     await mm(T.dirname(e), T.basename(e), "mock fixture");
-    let t = await M(e, constants.O_RDONLY | (P() === "windows" ? 0 : constants.O_NONBLOCK));
+    let t = await M(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
     try {
       let r = await t.stat();
       if (!r.isFile()) return { problem: "is not a regular file" };
@@ -596,7 +596,7 @@ async function o7t(e) {
 var Q0n = 16384,
   I = 16384;
 function K(e) {
-  return e.length > I ? `${oe(e, I)}\u2026[truncated]` : e;
+  return e.length > I ? `${truncateToCodeUnits(e, I)}\u2026[truncated]` : e;
 }
 function we(e) {
   let t = b(e) ?? "";
@@ -608,7 +608,7 @@ async function Z(e, t) {
         constants.O_WRONLY |
         constants.O_APPEND |
         constants.O_CREAT |
-        (P() === "windows" ? 0 : constants.O_NONBLOCK),
+        (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK),
       o = await M(e, r, 384);
     try {
       if (!(await o.stat()).isFile()) return !1;
@@ -654,7 +654,7 @@ function Se(e) {
 var Ee = 4194304;
 async function ve(e) {
   await mm(T.dirname(e), T.basename(e), "mock spec");
-  let t = await M(e, constants.O_RDONLY | (P() === "windows" ? 0 : constants.O_NONBLOCK));
+  let t = await M(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
   try {
     let r = await t.stat();
     if (!r.isFile())

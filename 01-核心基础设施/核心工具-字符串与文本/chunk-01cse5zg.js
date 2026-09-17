@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { x } from "./chunk-1wezmyx2.js";
-import { Xs, oPn, sPn, Ncr } from "../共享小工具-未细化/chunk-xcc43dkx.js";
+import { pluralize } from "./string-utils.js";
+import { getGraphemeSegmenter, getRelativeTimeFormat, getResolvedTimeZone, getNumberFormat } from "../共享小工具-未细化/intl-text-utils.js";
 import { formatFileSize } from "../共享小工具-未细化/chunk-7axvc6rn.js";
 var O = { ambiguousIsNarrow: !0 };
 function te(t) {
@@ -349,7 +349,7 @@ function P(t, e, n) {
       o += l.value;
       continue;
     }
-    for (let { segment: m } of Xs().segment(l.value)) {
+    for (let { segment: m } of getGraphemeSegmenter().segment(l.value)) {
       let d = m.codePointAt(0) > 65535 ? 2 : 1,
         a = m.length > d ? te(m) : 0;
       if (a === 1 || a === 2) {
@@ -426,7 +426,7 @@ function truncateToWidth(t, e) {
   if (e <= 1) return "\u2026";
   let n = 0,
     r = "";
-  for (let { segment: o } of Xs().segment(t)) {
+  for (let { segment: o } of getGraphemeSegmenter().segment(t)) {
     let i = te(o);
     if (n + i > e - 1) break;
     ((r += o), (n += i));
@@ -437,7 +437,7 @@ function truncateStartToWidth(t, e) {
   if (te(t) <= e) return t;
   if (e <= 1) return "\u2026";
   let n = e - 1,
-    r = [...Xs().segment(t)],
+    r = [...getGraphemeSegmenter().segment(t)],
     o = 0,
     i = r.length;
   for (let u = r.length - 1; u >= 0; u--) {
@@ -455,7 +455,7 @@ function truncateToWidthNoEllipsis(t, e) {
   if (e <= 0) return "";
   let n = 0,
     r = "";
-  for (let { segment: o } of Xs().segment(t)) {
+  for (let { segment: o } of getGraphemeSegmenter().segment(t)) {
     let i = te(o);
     if (n + i > e) break;
     ((r += o), (n += i));
@@ -479,7 +479,7 @@ function cxt(t, e) {
   let n = [],
     r = "",
     o = 0;
-  for (let { segment: i } of Xs().segment(t)) {
+  for (let { segment: i } of getGraphemeSegmenter().segment(t)) {
     let u = te(i);
     if (o + u <= e) ((r += i), (o += u));
     else {
@@ -568,7 +568,7 @@ var H = {
   };
 function formatNumber(t) {
   let e = t >= 1000;
-  return Ncr("en-US", e ? H : Y)
+  return getNumberFormat("en-US", e ? H : Y)
     .format(t)
     .toLowerCase();
 }
@@ -603,10 +603,10 @@ function formatRelativeTime(t, e = {}) {
       let d = Math.trunc(c / l);
       if (n === "narrow")
         return c < 0 ? `${Math.abs(d)}${m} ago` : `in ${d}${m}`;
-      return oPn("long", r).format(d, p);
+      return getRelativeTimeFormat("long", r).format(d, p);
     }
   if (n === "narrow") return c <= 0 ? "0s ago" : "in 0s";
-  return oPn(n, "auto").format(0, "second");
+  return getRelativeTimeFormat(n, "auto").format(0, "second");
 }
 function formatRelativeTimeAgo(t, e = {}) {
   let { now: n = new Date(), ...r } = e;
@@ -648,7 +648,7 @@ function formatResetTime(t, e = !1, n = !0, r = !1) {
       o
         .toLocaleString("en-US", s)
         .replace(/[ \u202f]([AP]M)/i, (l, m) => m.toLowerCase()) +
-      (e ? ` (${sPn()})` : "")
+      (e ? ` (${getResolvedTimeZone()})` : "")
     );
   }
   return (
@@ -659,7 +659,7 @@ function formatResetTime(t, e = !1, n = !0, r = !1) {
         hour12: !0,
       })
       .replace(/[ \u202f]([AP]M)/i, (s, p) => p.toLowerCase()) +
-    (e ? ` (${sPn()})` : "")
+    (e ? ` (${getResolvedTimeZone()})` : "")
   );
 }
 function formatResetText(t, e = !1, n = !0, r = !1) {
@@ -668,7 +668,7 @@ function formatResetText(t, e = !1, n = !0, r = !1) {
 }
 function formatOverflowHint(t, e = "line") {
   if (t <= 0) return "";
-  return `\u2026 +${t} ${x(t, e)}`;
+  return `\u2026 +${t} ${pluralize(t, e)}`;
 }
 export {
   te,

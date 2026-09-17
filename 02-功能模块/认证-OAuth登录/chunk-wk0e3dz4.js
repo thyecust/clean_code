@@ -14,7 +14,7 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ra, l, Rt, FA } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { ou, wc, z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Ckn } from "../上下文压缩-Compact/chunk-qbdgst52.js";
+import { getFlagValues } from "../上下文压缩-Compact/cli-args.js";
 import { se, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var rBe = /https?:\/\/[^\s"'<>\\\u2026\x00-\x1f]+/g;
@@ -548,7 +548,7 @@ function P(e) {
   };
 }
 function aBe() {
-  let e = Ckn("--sdk-url"),
+  let e = getFlagValues("--sdk-url"),
     r = e.filter(Boolean).at(-1);
   if (!r) return { status: "absent" };
   if (new Set(e).size > 1)

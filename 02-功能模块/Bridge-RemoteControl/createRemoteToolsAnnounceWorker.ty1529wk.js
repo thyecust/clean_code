@@ -12,7 +12,7 @@
 import { ECt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { io } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { _Ie, Alt, Clt, d2n } from "../远程工具执行/chunk-66axrkvh.js";
 import { j6e } from "./chunk-etbwf1s8.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
@@ -53,7 +53,7 @@ function createRemoteToolsAnnounceWorker(e) {
         let h = o.error.issues[0];
         return a(
           "invalid",
-          `invalid_announce: ${io(`${h?.path.join(".") ?? ""} ${h?.message ?? "malformed"}`, { maxCodeUnits: k })}`,
+          `invalid_announce: ${formatSingleLineText(`${h?.path.join(".") ?? ""} ${h?.message ?? "malformed"}`, { maxCodeUnits: k })}`,
         );
       }
       let s = d2n(o.data);

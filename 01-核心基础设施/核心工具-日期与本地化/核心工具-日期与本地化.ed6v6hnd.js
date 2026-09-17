@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Mge } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { TIME_FORMATS } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { oe, ft, B0, Lz } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Eo } from "../../02-功能模块/上下文压缩-Compact/chunk-mxt9bjz3.js";
-import { VQ, sz } from "../共享小工具-未细化/chunk-xcc43dkx.js";
+import { truncateToCodeUnits, beforeFirst, stripInvisibleCharacters, stripAnsiAndControlChars } from "../核心工具-字符串与文本/string-utils.js";
+import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
+import { withTimeZone, getDateTimeFormat } from "../共享小工具-未细化/intl-text-utils.js";
 var h = new Map();
-function eLt() {
+function getSystemLocale() {
   let t = a.LC_ALL || a.LC_TIME || a.LANG || "";
   if (h.has(t)) return h.get(t);
   let e = F(t);
@@ -21,7 +21,7 @@ function eLt() {
 }
 function F(t) {
   if (!t || t === "C" || t === "POSIX") return;
-  let e = ft(ft(t, "."), "@");
+  let e = beforeFirst(beforeFirst(t, "."), "@");
   if (!e) return;
   let r = e.replaceAll("_", "-");
   try {
@@ -45,7 +45,7 @@ var O = {
   P = { month: "short", calendar: "gregory" },
   I = { month: "long", calendar: "gregory" };
 function y(t, e, { locale: r, timeZone: o }) {
-  let f = sz("en-US", VQ(O, o)).formatToParts(e),
+  let f = getDateTimeFormat("en-US", withTimeZone(O, o)).formatToParts(e),
     n = {};
   for (let T of f) n[T.type] = T.value;
   let u = Number(n.year),
@@ -135,7 +135,7 @@ function _(t, e, r) {
   return (Date.UTC(t, e - 1, r) - Date.UTC(t, 0, 1)) / 86400000 + 1;
 }
 function l(t, e, r, o) {
-  return sz(e, VQ(o, r)).format(t);
+  return getDateTimeFormat(e, withTimeZone(o, r)).format(t);
 }
 function A(t, e, r, o, f, n) {
   let u = Date.UTC(e, r - 1, o, f, Number(n.minute), Number(n.second)),
@@ -146,49 +146,49 @@ function A(t, e, r, o, f, n) {
   return `${g}${String(Math.floor(p / 60)).padStart(2, "0")}${String(p % 60).padStart(2, "0")}`;
 }
 var S = 100;
-function Xnn(t) {
-  return oe(B0(Lz(t)), S);
+function sanitizeTimeFormatPattern(t) {
+  return truncateToCodeUnits(stripInvisibleCharacters(stripAnsiAndControlChars(t)), S);
 }
-function vIe() {
-  let t = Eo("timeFormat", "auto").value,
-    e = Mge.find((f) => f === t);
+function getTimeFormatConfig() {
+  let t = resolveSetting("timeFormat", "auto").value,
+    e = TIME_FORMATS.find((f) => f === t);
   if (e === "24-hour-utc")
     return { kind: "preset", preset: e, timeZone: "UTC" };
   let r = k();
   if (e) return { kind: "preset", preset: e, timeZone: r };
-  let o = Xnn(t);
+  let o = sanitizeTimeFormatPattern(t);
   return o.includes("%")
     ? { kind: "pattern", pattern: o, timeZone: r }
     : { kind: "preset", preset: "auto", timeZone: r };
 }
 function k() {
-  let t = Eo("timeZone", "").value;
+  let t = resolveSetting("timeZone", "").value;
   if (!t) return;
   try {
-    return (sz("en-US", { timeZone: t }), t);
+    return (getDateTimeFormat("en-US", { timeZone: t }), t);
   } catch {
     return;
   }
 }
-function Ynn(t, e, r) {
+function buildTimeFormatIntlOptions(t, e, r) {
   switch (e) {
     case "auto":
-      return VQ(t, r);
+      return withTimeZone(t, r);
     case "12-hour":
-      return VQ({ ...t, hourCycle: "h12" }, r);
+      return withTimeZone({ ...t, hourCycle: "h12" }, r);
     case "24-hour":
     case "24-hour-utc":
-      return VQ({ ...t, hourCycle: "h23" }, r);
+      return withTimeZone({ ...t, hourCycle: "h23" }, r);
   }
 }
-function Flt(t, e, r, o) {
-  let f = sz(r, Ynn(e, t.preset, t.timeZone));
+function formatDateWithPreset(t, e, r, o) {
+  let f = getDateTimeFormat(r, buildTimeFormatIntlOptions(e, t.preset, t.timeZone));
   if (t.preset !== "24-hour-utc") return f.format(o);
   let n = f.formatToParts(o),
     u = n.findLastIndex((s) => s.type === "minute" || s.type === "second");
   return n.map((s, m) => (m === u ? `${s.value}Z` : s.value)).join("");
 }
-function RIe(t, e, r) {
-  return oe(y(t, r, { locale: eLt(), timeZone: e }), S);
+function formatDateWithPattern(t, e, r) {
+  return truncateToCodeUnits(y(t, r, { locale: getSystemLocale(), timeZone: e }), S);
 }
-export { eLt, Xnn, vIe, Ynn, Flt, RIe };
+export { getSystemLocale, sanitizeTimeFormatPattern, getTimeFormatConfig, buildTimeFormatIntlOptions, formatDateWithPreset, formatDateWithPattern };

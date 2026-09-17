@@ -15,12 +15,12 @@ import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Xme, uf, GCt, slugify, jD, eZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ps, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -28,25 +28,25 @@ import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { qNe, $re, abt } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import {
-  tdt,
-  bPe,
-  Uee,
-  qGe,
-  zGe,
-  Ace,
-  f2,
-  Yb,
-  wPe,
-  TPe,
-  EPe,
-  SF,
-} from "../Teammates团队/chunk-sr4920wy.js";
+  SELF_TARGET_REASON,
+  isOwnMessagingSocket,
+  isLikelyOwnMessagingSocket,
+  isImpersonatedTarget,
+  formatImpersonationMessage,
+  formatOwnAddressMessage,
+  isOwnSessionId,
+  isTeammateContext,
+  formatMainSessionNotice,
+  hasCompleteTargetLookup,
+  classifySelfNameMatch,
+  formatOwnSessionMessage,
+} from "../Teammates团队/peer-target-guard.js";
 import { ni, sm, READ_PATH_PROBE, readPermissionDecisionForPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ds, i3, gzn, hzn, x3, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Ae, UAe, z3t, BAe, xSn, mD } from "./chunk-ddtmwhn7.js";
-import { $i } from "../Teammates团队/chunk-t899nada.js";
-import { hO, uI, rOe, Lpt } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
-import { xpt, Ean, Aan } from "./chunk-qvnte9zp.js";
+import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
+import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { readPeerFileBounded, stageLocalPeerFile, sweepStaleSpoolEntries } from "./peer-file-transfer.js";
 import {
   IGe,
   XSe,
@@ -68,11 +68,11 @@ import { basename } from "path";
 var Q = createLazyValue(() =>
     Qe({
       to: s().describe(
-        `Recipient: a peer session name from ${$i}, or an explicit uds:<socket> / bridge:<session id> address`,
+        `Recipient: a peer session name from ${LIST_AGENTS_TOOL_NAME}, or an explicit uds:<socket> / bridge:<session id> address`,
       ),
       files: ai(
         (e) => (typeof e === "string" ? [e] : e),
-        v(s()).min(1).max(uI),
+        v(s()).min(1).max(MAX_TRANSFER_FILE_COUNT),
       ).describe(
         "File paths (absolute or relative to cwd) to send. Always pass an array, even for a single file.",
       ),
@@ -103,7 +103,7 @@ var Q = createLazyValue(() =>
   ge = Ds(ne, (e) => e());
 function ee(e) {
   if (e === void 0 || e === 0) return;
-  return ` (note: ${e} other live ${x(e, "agent now shares", "agents now share")} this name)`;
+  return ` (note: ${e} other live ${pluralize(e, "agent now shares", "agents now share")} this name)`;
 }
 var G = `use ${SEND_MESSAGE_TOOL_NAME} to "${MAIN_CONVERSATION_NAME}" and reference the file as @<path>`,
   ye = {
@@ -111,20 +111,20 @@ var G = `use ${SEND_MESSAGE_TOOL_NAME} to "${MAIN_CONVERSATION_NAME}" and refere
       "target is an elevated-security session unreachable from a cloud session",
     recipient_gate_off:
       "target session reports it cannot receive cross-session messages",
-    self: tdt,
+    self: SELF_TARGET_REASON,
     impersonation:
       "target record advertises this session's own token \u2014 refused as impersonation",
   };
 async function se(e, o, a) {
   let f = uf(e);
   if (f.scheme === "uds") {
-    if (Uee(f.target))
-      return { kind: "refused", reason: "self", message: Ace(e) };
+    if (isLikelyOwnMessagingSocket(f.target))
+      return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
     return { kind: "uds", sock: f.target, label: e, byName: !1 };
   }
   if (f.scheme === "bridge") {
-    if (f2(f.target))
-      return { kind: "refused", reason: "self", message: Ace(e) };
+    if (isOwnSessionId(f.target))
+      return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
     let p = qNe(a.session, f.target, e);
     if (p)
       return { kind: "refused", reason: "unreachable_elevated", message: p };
@@ -153,12 +153,12 @@ async function se(e, o, a) {
   );
   switch (t.kind) {
     case "local-session":
-      if (bPe(t.sock))
-        return { kind: "refused", reason: "self", message: Ace(e) };
-      if (qGe(e, t.sock))
-        return { kind: "refused", reason: "impersonation", message: zGe(e) };
-      if (Uee(t.sock))
-        return { kind: "refused", reason: "self", message: Ace(e) };
+      if (isOwnMessagingSocket(t.sock))
+        return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
+      if (isImpersonatedTarget(e, t.sock))
+        return { kind: "refused", reason: "impersonation", message: formatImpersonationMessage(e) };
+      if (isLikelyOwnMessagingSocket(t.sock))
+        return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
       return {
         kind: "uds",
         sock: t.sock,
@@ -174,8 +174,8 @@ ${wNt}`
         pin: { displayName: t.displayName, kind: "session", id: t.sock },
       };
     case "cloud-session": {
-      if (f2(t.sessionId))
-        return { kind: "refused", reason: "self", message: Ace(e) };
+      if (isOwnSessionId(t.sessionId))
+        return { kind: "refused", reason: "self", message: formatOwnAddressMessage(e) };
       let {
         isRemoteControlPeerUnreachableFromHere: p,
         formatUnreachableElevatedRefusal: b,
@@ -206,9 +206,9 @@ ${wNt}`
       };
     }
     case "ambiguous": {
-      let p = EPe(e);
-      if (p === "categorical" && t.matchedBy === "prefix" && TPe(t))
-        return { kind: "refused", reason: "self", message: SF(e, Yb(a), G) };
+      let p = classifySelfNameMatch(e);
+      if (p === "categorical" && t.matchedBy === "prefix" && hasCompleteTargetLookup(t))
+        return { kind: "refused", reason: "self", message: formatOwnSessionMessage(e, isTeammateContext(a), G) };
       let b = Date.now(),
         k = t.candidates.filter((C) => C.where !== "in-process"),
         _ = k.map((C) => `  ${eZe(C, b)}`).join(`
@@ -232,23 +232,23 @@ Note: '${t.pinnedIdentityClaimedLocally}' was confirmed earlier as a session tha
         message:
           k.length > 0
             ? `'${e}' matches ${k.length} peer session(s). Re-send with the ref:
-${_}${h}${p !== "no" ? wPe(e, Yb(a), G) : ""}`
+${_}${h}${p !== "no" ? formatMainSessionNotice(e, isTeammateContext(a), G) : ""}`
             : `'${e}' matches only agents in this session \u2014 use ${SEND_MESSAGE_TOOL_NAME} and reference the file as @<path> instead.${h}`,
       };
     }
     case "not-found": {
-      let p = EPe(e),
+      let p = classifySelfNameMatch(e),
         b = t.closest.some((w) => slugify(w.name) === slugify(jD(e)?.name ?? e));
-      if (p === "categorical" && !b && TPe(t))
-        return { kind: "refused", reason: "self", message: SF(e, Yb(a), G) };
-      let k = a.options.tools.some((w) => matchesToolName(w, $i)),
+      if (p === "categorical" && !b && hasCompleteTargetLookup(t))
+        return { kind: "refused", reason: "self", message: formatOwnSessionMessage(e, isTeammateContext(a), G) };
+      let k = a.options.tools.some((w) => matchesToolName(w, LIST_AGENTS_TOOL_NAME)),
         _ = t.closest.filter((w) => w.where !== "in-process"),
         h =
           _.length > 0
             ? ` Did you mean: ${_.map((w) => w.name).join(", ")}?`
             : "",
         C = k
-          ? `Use ${$i} to see the sessions you can send files to.`
+          ? `Use ${LIST_AGENTS_TOOL_NAME} to see the sessions you can send files to.`
           : "Check the spelling.",
         d = t.cloudUnavailable
           ? `
@@ -256,11 +256,11 @@ The cloud session list could not be fetched just now, so cloud sessions were not
           : "",
         z = t.bridgeUnavailable
           ? `
-Your account's other sessions (Remote Control and cloud) could not be checked just now, so they were not searched. If '${e}' is one, retry${k ? ` (or run ${$i} first)` : ""}.`
+Your account's other sessions (Remote Control and cloud) could not be checked just now, so they were not searched. If '${e}' is one, retry${k ? ` (or run ${LIST_AGENTS_TOOL_NAME} first)` : ""}.`
           : "",
         M = t.pinnedIdentityClaimedLocally
           ? `
-Note: '${t.pinnedIdentityClaimedLocally}' was confirmed earlier as a session that is NOT on this machine; a session record on this machine now claims that identity, which hides it here \u2014 nothing was sent.${k ? ` ${$i} will not show it while that claim stands.` : ""} A session on this machine impersonating it is suspicious: ask the user.`
+Note: '${t.pinnedIdentityClaimedLocally}' was confirmed earlier as a session that is NOT on this machine; a session record on this machine now claims that identity, which hides it here \u2014 nothing was sent.${k ? ` ${LIST_AGENTS_TOOL_NAME} will not show it while that claim stands.` : ""} A session on this machine impersonating it is suspicious: ask the user.`
           : "",
         B = t.localUnavailable
           ? `
@@ -268,7 +268,7 @@ The sessions on this machine could not be listed just now, so they were not sear
           : "";
       return {
         kind: "refused",
-        message: `No peer session named '${e}' is reachable.${h}${d}${z}${B}${t.searchTruncated ? dPe : ""}${M}${p !== "no" ? wPe(e, Yb(a), G) : ""}
+        message: `No peer session named '${e}' is reachable.${h}${d}${z}${B}${t.searchTruncated ? dPe : ""}${M}${p !== "no" ? formatMainSessionNotice(e, isTeammateContext(a), G) : ""}
 ${C}`,
       };
     }
@@ -303,7 +303,7 @@ function te(e, o, a) {
     {
       ...e,
       message: ps(
-        `${e.message ?? `Send ${a.files.length} ${x(a.files.length, "file")} to '${a.to}'?`} ${oe} (isolatePeerMachines is enabled.)`,
+        `${e.message ?? `Send ${a.files.length} ${pluralize(a.files.length, "file")} to '${a.to}'?`} ${oe} (isolatePeerMachines is enabled.)`,
       ),
     }
   );
@@ -337,7 +337,7 @@ var SendFileTool = buildTool({
     return he();
   },
   isEnabled() {
-    return rOe();
+    return isSendFileEnabled();
   },
   isConcurrencySafe() {
     return !1;
@@ -386,7 +386,7 @@ var SendFileTool = buildTool({
         {
           behavior: "ask",
           message: ps(
-            `Send ${e.files.length} ${x(e.files.length, "file")} to '${e.to}'? SendFile reads file contents.`,
+            `Send ${e.files.length} ${pluralize(e.files.length, "file")} to '${e.to}'? SendFile reads file contents.`,
           ),
           decisionReason: { type: "rule", rule: _ },
         },
@@ -422,7 +422,7 @@ var SendFileTool = buildTool({
         {
           behavior: "ask",
           message: ps(
-            `Send ${e.files.length} ${x(e.files.length, "file")} to '${e.to}'? ${oe}`,
+            `Send ${e.files.length} ${pluralize(e.files.length, "file")} to '${e.to}'? ${oe}`,
           ),
           decisionReason: {
             type: "safetyCheck",
@@ -449,7 +449,7 @@ var SendFileTool = buildTool({
     return { behavior: "allow", updatedInput: e };
   },
   async validateInput({ to: e, files: o }, a) {
-    if (!rOe())
+    if (!isSendFileEnabled())
       return (
         logEvent("tengu_send_file", {
           transport: S("gated_off"),
@@ -459,14 +459,14 @@ var SendFileTool = buildTool({
         }),
         { result: !1, message: Z, errorCode: 9 }
       );
-    let f = GCt(e, $i);
+    let f = GCt(e, LIST_AGENTS_TOOL_NAME);
     if (f !== void 0) return { result: !1, message: f, errorCode: 9 };
     let t = uf(e);
     if (
-      (t.scheme === "uds" && Uee(t.target)) ||
-      (t.scheme === "bridge" && f2(t.target))
+      (t.scheme === "uds" && isLikelyOwnMessagingSocket(t.target)) ||
+      (t.scheme === "bridge" && isOwnSessionId(t.target))
     )
-      return { result: !1, message: Ace(e), errorCode: 9 };
+      return { result: !1, message: formatOwnAddressMessage(e), errorCode: 9 };
     for (let p of o) {
       let b = _Sn(p);
       if (b !== void 0) return b;
@@ -483,14 +483,14 @@ var SendFileTool = buildTool({
     return gzn;
   },
   async prompt() {
-    return hzn(uI, hO / 1048576);
+    return hzn(MAX_TRANSFER_FILE_COUNT, MAX_TRANSFER_SIZE_BYTES / 1048576);
   },
   mapToolResultToToolResultBlockParam(e, o) {
     let a = e.files.filter((t) => t.error !== void 0),
       f = [e.message];
     if (a.length > 0)
       f.push(
-        `${a.length} ${x(a.length, "file")} could NOT be sent:
+        `${a.length} ${pluralize(a.length, "file")} could NOT be sent:
 ` +
           a.map((t) => `  ${t.path}: ${t.error}`).join(`
 `),
@@ -514,7 +514,7 @@ var SendFileTool = buildTool({
       _ = Se(o, e),
       h = o.abortController.signal,
       C = getToolPermissionContext(o);
-    if (!rOe())
+    if (!isSendFileEnabled())
       return (
         logEvent("tengu_send_file", {
           transport: S("gated_off"),
@@ -541,15 +541,15 @@ var SendFileTool = buildTool({
           d = { kind: "refused", reason: "recipient_gate_off", message: E };
       }
     }
-    if (d.kind === "uds" && bPe(d.sock))
-      d = { kind: "refused", reason: "self", message: Ace(t) };
-    else if (d.kind === "uds" && qGe(t, d.sock))
-      d = { kind: "refused", reason: "impersonation", message: zGe(t) };
+    if (d.kind === "uds" && isOwnMessagingSocket(d.sock))
+      d = { kind: "refused", reason: "self", message: formatOwnAddressMessage(t) };
+    else if (d.kind === "uds" && isImpersonatedTarget(t, d.sock))
+      d = { kind: "refused", reason: "impersonation", message: formatImpersonationMessage(t) };
     else if (
-      (d.kind === "uds" && Uee(d.sock)) ||
-      (d.kind === "bridge" && f2(d.sessionId))
+      (d.kind === "uds" && isLikelyOwnMessagingSocket(d.sock)) ||
+      (d.kind === "bridge" && isOwnSessionId(d.sessionId))
     )
-      d = { kind: "refused", reason: "self", message: Ace(t) };
+      d = { kind: "refused", reason: "self", message: formatOwnAddressMessage(t) };
     if (d.kind === "refused")
       return (
         logEvent("tengu_send_file", {
@@ -564,7 +564,7 @@ var SendFileTool = buildTool({
       M = (r) =>
         p?.trim()
           ? p
-          : `Sent you ${r.length} ${x(r.length, "file")}: ${r.join(", ")}`,
+          : `Sent you ${r.length} ${pluralize(r.length, "file")}: ${r.join(", ")}`,
       B = (r, y) => {
         logEvent("tengu_send_file", {
           transport: fromEnum(d.kind),
@@ -605,7 +605,7 @@ var SendFileTool = buildTool({
                 return;
               }
               try {
-                let P = await Ean(g);
+                let P = await stageLocalPeerFile(g);
                 return (
                   (r[R] = { path: g, size: P.file_size, sha256: P.sha256 }),
                   P
@@ -617,7 +617,7 @@ var SendFileTool = buildTool({
             }),
           ),
         );
-      Aan();
+      sweepStaleSpoolEntries();
       let N = y.filter((g) => g !== void 0),
         E = () => {
           for (let g of N) unlink(g.path).catch(() => {});
@@ -640,7 +640,7 @@ var SendFileTool = buildTool({
         return {
           data: {
             success: !0,
-            message: `${N.length} ${x(N.length, "file")} \u2192 ${d.label}${d.identityNote ?? ""}${d.contestedNote ?? ""}`,
+            message: `${N.length} ${pluralize(N.length, "file")} \u2192 ${d.label}${d.identityNote ?? ""}${d.contestedNote ?? ""}`,
             msg_id: g,
             files: r,
           },
@@ -649,7 +649,7 @@ var SendFileTool = buildTool({
         let R = A(g),
           Y = z3t(g);
         if (mD(g)) E();
-        let P = Y ? BAe($i) : R === "EBUSY" ? xSn : "",
+        let P = Y ? BAe(LIST_AGENTS_TOOL_NAME) : R === "EBUSY" ? xSn : "",
           fe = UAe(g) || $Ae(g) ? `: ${l(g)}` : P || ".";
         return w(
           d.byName
@@ -659,7 +659,7 @@ var SendFileTool = buildTool({
         );
       }
     }
-    if (getAPIProvider() !== "firstParty" || St() || !isPolicyAllowed("allow_send_file"))
+    if (getAPIProvider() !== "firstParty" || isEssentialTrafficOnly() || !isPolicyAllowed("allow_send_file"))
       return w(
         "Cross-machine file transfer is unavailable: it uploads file contents through Anthropic servers, which this provider/privacy configuration does not allow. Same-machine (uds:) transfers still work.",
       );
@@ -693,12 +693,12 @@ var SendFileTool = buildTool({
               D[y] = { path: r, error: N };
               return;
             }
-            let E = await xpt(r, hO);
+            let E = await readPeerFileBounded(r, MAX_TRANSFER_SIZE_BYTES);
             if (E === null) {
-              D[y] = { path: r, error: Lpt };
+              D[y] = { path: r, error: FILE_TRANSFER_ERROR_MESSAGE };
               return;
             }
-            let X = mn(E),
+            let X = hashSha256(E),
               g = await ie(
                 E,
                 j[y],
@@ -741,8 +741,8 @@ var SendFileTool = buildTool({
         o.credentials,
       );
     if (!H.ok) {
-      let y = o.options.tools.some((E) => matchesToolName(E, $i))
-          ? ` Call ${$i} to see who is reachable now.`
+      let y = o.options.tools.some((E) => matchesToolName(E, LIST_AGENTS_TOOL_NAME))
+          ? ` Call ${LIST_AGENTS_TOOL_NAME} to see who is reachable now.`
           : "",
         N = de(H.error)
           ? d.byName
@@ -755,7 +755,7 @@ var SendFileTool = buildTool({
     return {
       data: {
         success: !0,
-        message: `${L.length} ${x(L.length, "file")} \u2192 ${d.label}${d.identityNote ?? ""}${d.contestedNote ?? ""}`,
+        message: `${L.length} ${pluralize(L.length, "file")} \u2192 ${d.label}${d.identityNote ?? ""}${d.contestedNote ?? ""}`,
         msg_id: H.msgId,
         files: D,
       },

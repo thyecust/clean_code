@@ -11,7 +11,7 @@ import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { yt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
@@ -20,7 +20,7 @@ import { jn, Pt, getIsGit, getGitState } from "../../01-核心基础设施/安�
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { uV, xO, asSystemPrompt, YO, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -104,7 +104,7 @@ function gt({
     ),
     [Ze, St] = d(null),
     [ie, Ct] = d("session"),
-    ye = U((i) => i.transcripts),
+    ye = useAppStateSelector((i) => i.transcripts),
     vt = useTerminalSize().columns - 4,
     fe = H("tengu_amber_lynx", !1),
     Ft = re(async () => {
@@ -627,7 +627,7 @@ function Gt(u) {
   return s === "" || zt.test(s);
 }
 function Je(u) {
-  let s = kr(u);
+  let s = firstLine(u);
   if (s.length <= 60 && s.length > 5) return s;
   let f = s.slice(0, 60);
   if (s.length > 60) {

@@ -9,14 +9,14 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 206 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { wr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { P2 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { refreshActivePlugins, getPluginReloadCacheImpact, logPluginReloadCacheImpact } from "./plugin-reload-cache-impact.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import { JB } from "../插件系统/chunk-bh1q9esj.js";
+import { resolveMissingDependencies } from "../插件系统/plugin-dependency-resolution.js";
 import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { T, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var S = createLazyValue(() => {
@@ -77,7 +77,7 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
     try {
       let o = await refreshActivePlugins(g, e.storageV5, e.credentials),
         d = "",
-        a = await JB(o.errors, e.storageV5);
+        a = await resolveMissingDependencies(o.errors, e.storageV5);
       if (a.installed.length > 0) {
         let u = t
           ? null
@@ -131,7 +131,7 @@ function C(n, e) {
   return formatCacheWarningText({ added: [], removed: [], lspToolChange: n.lspToolChange });
 }
 function r(n, e) {
-  return `${n} ${x(n, e)}`;
+  return `${n} ${pluralize(n, e)}`;
 }
 function formatCacheWarningText(n) {
   let e = [...n.added, ...n.removed],

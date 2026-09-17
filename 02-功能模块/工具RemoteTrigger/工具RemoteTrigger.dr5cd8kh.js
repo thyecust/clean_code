@@ -15,18 +15,18 @@ import { wa, E$, SJn, bJn, m7e, Xpe, CJn } from "../工具结果持久化/工具
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, cd, To } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { gM } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
-import { jh } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
+import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
+import { isPlainObject } from "../../01-核心基础设施/共享小工具-未细化/chunk-1w1x0pyk.js";
 import { oHn } from "../../01-核心基础设施/共享小工具-未细化/chunk-p3e024j6.js";
 import { s, T, O, se, v, c, Qe, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -90,9 +90,9 @@ var Q = createLazyValue(() =>
   ),
   D = 16000;
 function w(e, r) {
-  let n = To(pt(oe(e, D)));
-  if (e.length <= D) return cd(n, r);
-  let t = oe(n, r);
+  let n = normalizeWhitespace(stripAnsi(truncateToCodeUnits(e, D)));
+  if (e.length <= D) return truncateWithCharCount(n, r);
+  let t = truncateToCodeUnits(n, r);
   return `${t}\u2026 [+${e.length - t.length} chars]`;
 }
 function z(e) {
@@ -295,7 +295,7 @@ function ue(e) {
   for (let d of e.values()) r += d;
   if (r === 0) return;
   let n = [...e.entries()].sort((d, o) => o[1] - d[1]),
-    t = n.slice(0, U).map(([d, o]) => `${oe(d, 40)} \xD7${o}`);
+    t = n.slice(0, U).map(([d, o]) => `${truncateToCodeUnits(d, 40)} \xD7${o}`);
   if (n.length > U) t.push(`${n.length - U} other kind(s)`);
   return `(${r} non-transcript event(s) on this page skipped: ${t.join(", ")})`;
 }
@@ -336,7 +336,7 @@ function F(e, r) {
       continue;
     }
     let I = h.success && h.data.created_at ? `[${h.data.created_at}] ` : "",
-      k = cd(
+      k = truncateWithCharCount(
         R.map((S) => `${I}${S}`).join(`
 `),
         K,
@@ -365,7 +365,7 @@ function F(e, r) {
   if (t.length === 0 && l === 0) f.push("(no transcript events on this page)");
   let _ = [...f, ...t].join(`
 `);
-  if (_.length > r) _ = `${oe(_, Math.max(0, r - 20))}\u2026[truncated]`;
+  if (_.length > r) _ = `${truncateToCodeUnits(_, Math.max(0, r - 20))}\u2026[truncated]`;
   return { text: _, eventsFetched: e.data.length, eventsShown: t.length };
 }
 var de = createLazyValue(() =>
@@ -516,18 +516,18 @@ function ke(e, r) {
 }
 function H(e) {
   let r = e.job_config;
-  if (!jh(r)) return e;
+  if (!isPlainObject(r)) return e;
   let n = r.ccr;
-  if (!jh(n) || !Array.isArray(n.events)) return e;
+  if (!isPlainObject(n) || !Array.isArray(n.events)) return e;
   let t = n.events,
     d = !1,
     o = t.map((l) => {
-      if (!jh(l) || !jh(l.data)) return l;
+      if (!isPlainObject(l) || !isPlainObject(l.data)) return l;
       let { data: f } = l,
         g = f.message;
       if (
         (f.type != null && f.type !== "user") ||
-        !jh(g) ||
+        !isPlainObject(g) ||
         !("content" in g) ||
         (g.role != null && g.role !== "user") ||
         (f.type === "user" && g.role === "user")
@@ -560,7 +560,7 @@ var RemoteTriggerTool = buildTool({
       isClaudeAISubscriber() &&
       !a.CLAUDE_CODE_REMOTE &&
       isPolicyAllowed("allow_remote_sessions") &&
-      isPolicyAllowed(gM)
+      isPolicyAllowed(ALLOW_ROUTINES_POLICY)
     );
   },
   isConcurrencySafe() {
@@ -687,7 +687,7 @@ var RemoteTriggerTool = buildTool({
               filled_event_fields:
                 (o === "create" || o === "update") && R !== _,
               success: S,
-              trigger_id: Ee(
+              trigger_id: sanitizeAnalyticsId(
                 o === "create"
                   ? x?.success
                     ? x.data.id

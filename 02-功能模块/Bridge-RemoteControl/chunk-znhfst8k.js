@@ -20,17 +20,17 @@ import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { getProxyFetchOptions } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Gi, ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
-import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import { getSessionAccessToken, getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
+import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { GGn, Dzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { t6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
-import { $nr, Unr, ase } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { t6n } from "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import { setActivityCallback, clearActivityCallback, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import { SSEParser } from "../../01-核心基础设施/共享小工具-未细化/sse-parser.js";
 import { DRAIN_RESPONSE_TIMEOUT_MS, drainResponseBody } from "../../01-核心基础设施/共享小工具-未细化/drain-response-body.js";
 import { GY } from "./chunk-1yq098a7.js";
 import { createLinkedAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/linked-abort-signal.js";
-import { dQe, fse } from "./chunk-mxsfy35q.js";
-import { FR } from "./chunk-4zd60pbm.js";
+import { classifyResponseSource, isNonOriginSource } from "./code-session-api.js";
+import { getTokenExpiry } from "./chunk-4zd60pbm.js";
 import { pS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { s, O, se, v, c, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
@@ -93,7 +93,7 @@ class VGe {
       ((this.headers = t),
       (this.sessionId = r),
       (this.refreshHeaders = o),
-      (this.getAuthHeaders = p ?? ZD),
+      (this.getAuthHeaders = p ?? getSessionAuthHeaders),
       (this.postUrl = Pe(e)),
       d !== void 0 && d > 0)
     )
@@ -140,7 +140,7 @@ class VGe {
         ...getProxyFetchOptions({ url: t.href }),
       });
       if (!p.ok) {
-        let k = p.status === 403 ? dQe((B) => p.headers.get(B)) : void 0;
+        let k = p.status === 403 ? classifyResponseSource((B) => p.headers.get(B)) : void 0;
         if ((await drainResponseBody(p, { timeoutMs: DRAIN_RESPONSE_TIMEOUT_MS }), d.signal.aborted)) return;
         let M = Date.now(),
           w = this.advanceNonOriginStreak(k, M),
@@ -201,7 +201,7 @@ class VGe {
         writeDiagnosticsEvent("info", "cli_sse_connect_connected", { duration_ms: E }),
         this.reconnectAttempts === 0)
       )
-        Ts("sse_connect_ms", E, e - performance.timeOrigin);
+        recordStartupPhase("sse_connect_ms", E, e - performance.timeOrigin);
       if (this.reconnectAttempts > 0) {
         let k = this.reconnectStartTime
           ? Math.round((Date.now() - this.reconnectStartTime) / 1000)
@@ -243,7 +243,7 @@ class VGe {
   advanceNonOriginStreak(e, t) {
     let r = this.nonOriginPolicy;
     if (r === void 0 || e === void 0) return null;
-    if (!fse(e)) return ((this.nonOriginStreak = null), null);
+    if (!isNonOriginSource(e)) return ((this.nonOriginStreak = null), null);
     let o = this.nonOriginStreak;
     if (o === null || t - o.lastAtMs > r.maxGapMs)
       ((o = { source: e, startedAtMs: t, lastAtMs: t, attempts: 0 }),
@@ -1401,7 +1401,7 @@ class pM {
         r?.streamEventFlushIntervalMs,
         KGe,
       )),
-      (this.getAuthHeaders = r?.getAuthHeaders ?? ZD),
+      (this.getAuthHeaders = r?.getAuthHeaders ?? getSessionAuthHeaders),
       (this.onDiagnostic = r?.onDiagnostic),
       (this.onRequestAuthOk = r?.onRequestAuthOk),
       (this.adoptRefreshedAuth = r?.adoptRefreshedAuth),
@@ -1727,7 +1727,7 @@ class pM {
       this.startHeartbeat(),
       !this.closed)
     )
-      $nr(() => {
+      setActivityCallback(() => {
         this.writeEvent({ type: "keep_alive" });
       });
     if (
@@ -1852,11 +1852,11 @@ class pM {
             ),
             this.escalateEpochMismatch("session_not_found"));
       }
-      let B = T.status === 403 ? dQe((I) => T.headers.get(I)) : void 0,
-        P = this.nonOrigin403Transient && fse(B);
+      let B = T.status === 403 ? classifyResponseSource((I) => T.headers.get(I)) : void 0,
+        P = this.nonOrigin403Transient && isNonOriginSource(B);
       if (T.status === 401 || T.status === 403) {
-        let I = Gi(),
-          D = I ? FR(I) : null;
+        let I = getSessionAccessToken(),
+          D = I ? getTokenExpiry(I) : null;
         if (D !== null && D * 1000 < Date.now())
           (n(
             `CCRClient: session_token expired (exp=${new Date(D * 1000).toISOString()}) \u2014 no refresh was delivered, exiting`,
@@ -2136,8 +2136,8 @@ class pM {
   clampToTokenLifetime(e) {
     if (!this.advertiseHeartbeatProbeSupport || !this.adoptRefreshedAuth)
       return e;
-    let t = Gi(),
-      r = t ? FR(t) : null;
+    let t = getSessionAccessToken(),
+      r = t ? getTokenExpiry(t) : null;
     if (r === null) return e;
     let o = r * 1000 - Date.now() - je;
     if (o >= e) return e;
@@ -3031,7 +3031,7 @@ class pM {
       (this.stopHeartbeat(),
       this.clearProbeBeatTimer(),
       this.unsubscribeIdleTracker?.(),
-      Unr(),
+      clearActivityCallback(),
       this.streamEventTimer)
     )
       (clearTimeout(this.streamEventTimer), (this.streamEventTimer = null));
@@ -3138,7 +3138,7 @@ function mt(e) {
   return;
 }
 function rdt(e) {
-  let t = e?.isTurnRunning ?? (() => ase() > 0),
+  let t = e?.isTurnRunning ?? (() => getMainLoopRefcount() > 0),
     r = Le(),
     o = Date.now();
   return {

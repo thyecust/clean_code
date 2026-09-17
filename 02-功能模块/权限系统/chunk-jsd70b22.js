@@ -16,7 +16,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { Ve, zi, yt, dt, ge, l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { z, Ro, ae, qr, Zhe, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, cd } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits, truncateWithCharCount } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import {
   isAutoClassifierActive,
@@ -93,10 +93,10 @@ import {
   $3,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { ot, kQ, Dge } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { OUTSIDE_READS_BLOCKED_DENY_REASON } from "./chunk-e4pfvp7x.js";
 import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 import { turnAbortControllerOf } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -122,21 +122,21 @@ import { unstripSkillInvocationAllowRules, getToolPermissionContext } from "./ch
 import { FK, bzt, Kk, nme, RD, Wg } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Wh, notePlanFileForgotten, getPlanFilePath, getPlan } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { isTeammateWakeupPrompt, getLastPeerDmSummary } from "../Teammates团队/chunk-g6nvp9mm.js";
-import { KYn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { zs } from "../../01-核心基础设施/共享小工具-未细化/chunk-k2rb4dgd.js";
-import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { sendMcpNotification } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { zs } from "../../01-核心基础设施/共享小工具-未细化/terminal-focus-state.js";
+import { CFC_TOOL_PREFIX } from "../ClaudeinChrome/claude-in-chrome-host.js";
 import { CHANNEL_PERMISSION_REQUEST_METHOD, findChannelEntry } from "../插件系统/channel-gate.js";
-import { I1t } from "../../01-核心基础设施/设置-配置/chunk-ekwet1zd.js";
-import { rWn, xin, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
+import { logShellAllowRulesAdded } from "../../01-核心基础设施/设置-配置/shell-allow-rule-analytics.js";
+import { rWn, sanitizeAndTruncateText, oWn, sWn } from "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
 import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import { gWn } from "../../01-核心基础设施/共享小工具-未细化/chunk-er6a87rc.js";
-import { Fin, M1t } from "../../01-核心基础设施/共享小工具-未细化/chunk-3k9e6gxt.js";
+import { getWsSubprotocols, MAX_SUBPROTOCOLS } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
 import { LAe } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { customSchema, defineDialog, isAsyncIterable } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "../Teammates团队/chunk-enjekn9t.js";
-import { Iie, J6, Ex, gS } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { isNotRegularFileError, isFileTooLargeError, readFileSyncText, readFileWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 async function Pqe(e) {
   let { ctx: r, updatedInput: o, suggestions: t, permissionMode: s } = e,
     k = !1;
@@ -208,7 +208,7 @@ function Uqe(e, r, o, t, s, k, R) {
     permissionMode: _,
     logDecision: d,
     logCancelled() {
-      logEvent("tengu_tool_use_cancelled", { messageID: Ee(c), toolName: Hn(e.name) });
+      logEvent("tengu_tool_use_cancelled", { messageID: sanitizeAnalyticsId(c), toolName: Hn(e.name) });
     },
     persistPermissions(b) {
       if (b.length === 0 || rx(o)) return !1;
@@ -324,7 +324,7 @@ function Uqe(e, r, o, t, s, k, R) {
                 ? stripWholeToolGrantsForAsk([...A], e, getToolPermissionContext(o))
                 : A,
         v = this.persistPermissions(D);
-      (I1t(D),
+      (logShellAllowRulesAdded(D),
         this.logDecision(
           { decision: "accept", source: { type: "user", permanent: v } },
           {
@@ -628,14 +628,14 @@ function Ke(e) {
           }
         : void 0,
     R = ve(e.input.ws, "url"),
-    c = Fin(e.input.ws),
+    c = getWsSubprotocols(e.input.ws),
     _ =
       R !== void 0
         ? {
             url: km(qPe(R), { maxUnits: Rm }),
-            protocols: c?.map((b, p) => (p < M1t ? Oo(Tme(oe(b, BC))) : "")),
-            protocolsWithheld: c?.slice(0, M1t).some((b) => {
-              let p = oe(b, BC);
+            protocols: c?.map((b, p) => (p < MAX_SUBPROTOCOLS ? Oo(Tme(truncateToCodeUnits(b, BC))) : "")),
+            protocolsWithheld: c?.slice(0, MAX_SUBPROTOCOLS).some((b) => {
+              let p = truncateToCodeUnits(b, BC);
               return jd(p) !== p;
             }),
           }
@@ -655,7 +655,7 @@ function Ke(e) {
   };
 }
 function Qe(e, r) {
-  let o = Oo(cse(oe(e, BC)))
+  let o = Oo(cse(truncateToCodeUnits(e, BC)))
     .replace(/\s+/g, " ")
     .trim();
   return YG(o) ? o : r;
@@ -731,9 +731,9 @@ function Ze(e) {
     ((c = `(Network path \u2014 content not previewed: ${o})`), (_ = !0));
   else
     try {
-      c = Ex(o, Dge);
+      c = readFileSyncText(o, Dge);
     } catch (d) {
-      if (J6(d)) c = `(Artifact too large for preview: ${o})`;
+      if (isFileTooLargeError(d)) c = `(Artifact too large for preview: ${o})`;
       else
         c = W(d)
           ? `(File not found: ${o})`
@@ -860,7 +860,7 @@ function io(e, r, o) {
   }
 }
 function Ce(e, r) {
-  return an(r ? e : relative(Q(), e));
+  return an(r ? e : relative(getCwd(), e));
 }
 function ke(e, r) {
   return an(r ? posix.basename(e) : Co(e));
@@ -924,10 +924,10 @@ async function Fo(e) {
       let M = Xo(c.file_path) || Dr(c.file_path);
       if (!M)
         try {
-          ((_ = (await gS(c.file_path, Dge)).content), (d = !0));
+          ((_ = (await readFileWithMetadata(c.file_path, Dge)).content), (d = !0));
         } catch (E) {
-          if (J6(E)) ((d = !0), (w = !0));
-          else if (!W(E) && !Iie(E)) throw E;
+          if (isFileTooLargeError(E)) ((d = !0), (w = !0));
+          else if (!W(E) && !isNotRegularFileError(E)) throw E;
         }
       if (M) ((w = !0), (b = "Write file"), (p = "write to"));
       else
@@ -1151,10 +1151,10 @@ async function xe(e) {
     d = !1;
   if (!s && !k)
     try {
-      ((c = (await gS(t, Dge)).content), (_ = !0));
+      ((c = (await readFileWithMetadata(t, Dge)).content), (_ = !0));
     } catch (x) {
-      if (J6(x)) ((_ = !0), (d = !0));
-      else if (!W(x) && !Iie(x)) throw x;
+      if (isFileTooLargeError(x)) ((_ = !0), (d = !0));
+      else if (!W(x) && !isNotRegularFileError(x)) throw x;
     }
   let w = "",
     b = !1,
@@ -1189,7 +1189,7 @@ async function xe(e) {
         ? { ...e.input }
         : {
             ...e.input,
-            _simulatedSedEdit: { filePath: t, newContent: w, baseHash: mn(c) },
+            _simulatedSedEdit: { filePath: t, newContent: w, baseHash: hashSha256(c) },
           };
   return {
     ...r,
@@ -1215,7 +1215,7 @@ function ro(e) {
   return { completion_type: "str_replace_single", language_name: zDe(e) };
 }
 function ye(e) {
-  return cd(an(e), Mo);
+  return truncateWithCharCount(an(e), Mo);
 }
 var Mo = 160;
 var Mqe = defineDialog({
@@ -1296,7 +1296,7 @@ async function Ie(e) {
     event: fromEnum(e.event),
     completion_type: fromEnum(e.completion_type),
     language_name: await e.metadata.language_name,
-    message_id: Ee(e.metadata.message_id),
+    message_id: sanitizeAnalyticsId(e.metadata.message_id),
     platform: u0(e.metadata.platform),
     ...(e.metadata.hasFeedback !== void 0 && {
       hasFeedback: e.metadata.hasFeedback,
@@ -1318,9 +1318,9 @@ async function ao(e, r, o, t, s) {
     R = ot(e),
     c = "";
   try {
-    c = (await gS(R)).content;
+    c = (await readFileWithMetadata(R)).content;
   } catch (b) {
-    if (!W(b) && !Iie(b)) throw b;
+    if (!W(b) && !isNotRegularFileError(b)) throw b;
   }
   function _() {
     if (o.abortController.signal.aborted || s()) throw new Ve();
@@ -1348,7 +1348,7 @@ async function ao(e, r, o, t, s) {
     if (!w || w.type !== "connected") throw Error("IDE client not available");
     let p = R,
       F = w.config.ideRunningInWindows === !0;
-    if (P() === "wsl" && F && a.WSL_DISTRO_NAME)
+    if (getCurrentPlatform() === "wsl" && F && a.WSL_DISTRO_NAME)
       ((p = await new LAe(a.WSL_DISTRO_NAME).toIDEPath(R)), _());
     let A = await R2t(
         "openDiff",
@@ -1445,10 +1445,10 @@ function $o(e, r) {
       !Dr(t)
     )
       try {
-        s = Ex(t, ITe);
+        s = readFileSyncText(t, ITe);
       } catch (k) {
-        if (J6(k)) return null;
-        if (!W(k) && !Iie(k)) throw k;
+        if (isFileTooLargeError(k)) return null;
+        if (!W(k) && !isNotRegularFileError(k)) throw k;
       }
     return {
       filePath: o.file_path,
@@ -1645,7 +1645,7 @@ function uo(e) {
       r.tool.name,
       s,
       r.toolUseID,
-      xin(qr(I)),
+      sanitizeAndTruncateText(qr(I)),
       t.suggestions,
       t.blockedPath,
       r.tool.requiresUserInteraction?.(),
@@ -1665,7 +1665,7 @@ function uo(e) {
                 t.suppressAlwaysAllowRule === !0
               ? stripWholeToolGrantsForAsk(U.updatedPermissions ?? [], r.tool, getToolPermissionContext(r.toolUseContext))
               : (U.updatedPermissions ?? []);
-        if ((zo(r, B), B.length)) I1t(B);
+        if ((zo(r, B), B.length)) logShellAllowRulesAdded(B);
         (r.logDecision(
           {
             decision: "accept",
@@ -1702,12 +1702,12 @@ function uo(e) {
       let B = {
         request_id: I,
         tool_name: r.tool.name,
-        description: xin(Zhe(o)),
+        description: sanitizeAndTruncateText(Zhe(o)),
         input_preview: oWn(s),
       };
       for (let K of U) {
         if (K.type !== "connected") continue;
-        KYn(K, { method: CHANNEL_PERMISSION_REQUEST_METHOD, params: B }).catch((Y) => {
+        sendMcpNotification(K, { method: CHANNEL_PERMISSION_REQUEST_METHOD, params: B }).catch((Y) => {
           (logFeatureBad(
             "permission_channel_relay",
             "permission_channel_relay_send_failed",
@@ -2132,7 +2132,7 @@ function Pe(e, r, o) {
     let C = t.permissionMode;
     (t.toolUseContext.applyAttributionOp({ kind: "incrementPermissionPrompt" }),
       logEvent("tengu_tool_use_show_permission_request", {
-        messageID: Ee(t.messageId),
+        messageID: sanitizeAnalyticsId(t.messageId),
         toolName: Hn(t.tool.name),
         isMcp: t.tool.isMcp ?? !1,
         decisionReasonType: fromEnumOpt(E.decisionReason?.type),

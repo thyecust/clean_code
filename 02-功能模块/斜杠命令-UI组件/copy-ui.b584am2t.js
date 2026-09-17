@@ -11,16 +11,16 @@
 // [preload stripped] 原本在此预载 243 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { _u } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { os, kr, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString, firstLine, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { USt, z_ } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { getOsc52Utf8PasteWarning, setClipboard } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { bl } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { rre, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -36,7 +36,7 @@ F();
 import { join as we } from "path";
 function Re(q, it) {
   let he =
-    ln(
+    countOccurrences(
       q.code,
       `
 `,
@@ -77,11 +77,11 @@ function tableTokenToMarkdown(n) {
     c = (m, g) => {
       switch (g) {
         case "center":
-          return `:${os("-", m - 2)}:`;
+          return `:${repeatString("-", m - 2)}:`;
         case "right":
-          return `${os("-", m - 1)}:`;
+          return `${repeatString("-", m - 1)}:`;
         case "left":
-          return `:${os("-", m - 1)}`;
+          return `:${repeatString("-", m - 1)}`;
         default:
           return "-".repeat(m);
       }
@@ -132,7 +132,7 @@ function fileExtension(n) {
   return ".txt";
 }
 async function z(n, o) {
-  let a = bl(),
+  let a = getClaudeTempDir(),
     s = we(a, o);
   return (
     await mkdir(a, { recursive: !0, mode: 448 }),
@@ -141,16 +141,16 @@ async function z(n, o) {
   );
 }
 async function v(n, o) {
-  let a = await z_(n);
+  let a = await setClipboard(n);
   if (a) process.stdout.write(a);
   let s =
-      ln(
+      countOccurrences(
         n,
         `
 `,
       ) + 1,
     l = `Copied to clipboard (${n.length} characters, ${s} lines)`,
-    f = USt(n);
+    f = getOsc52Utf8PasteWarning(n);
   try {
     let d = await z(n, o),
       m = f
@@ -168,7 +168,7 @@ Also written to ${d}`;
   }
 }
 function H(n, o) {
-  let a = kr(n);
+  let a = firstLine(n);
   if (te(a) <= o) return a;
   let s = "",
     c = 0,
@@ -186,7 +186,7 @@ function ne(He) {
     se = C("full"),
     { storageV5: U } = useStorageV5Context();
   const E = `${R.length} chars, ${
-    ln(
+    countOccurrences(
       R,
       `
 `,

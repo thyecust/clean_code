@@ -7,29 +7,29 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Wc } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { RLe, T3, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 var _ =
   /^\d{4}-\d{2}-\d{2}[Tt ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[zZ]|[+-]\d{2}:?\d{2})$/;
-function Tot(n) {
+function parseIsoTimestamp(n) {
   return _.test(n) ? Date.parse(n) : Number.NaN;
 }
 import { posix } from "path";
 var x = posix.dirname(RLe),
   p = "/mnt/user-data/working",
   d = posix.join(p, RLe),
-  zHt = 32,
-  Yje = 524288,
-  RNn = 2097152,
-  rJt = 200,
+  MAX_HOME_SEED_FILES = 32,
+  MAX_HOME_SEED_FILE_BYTES = 524288,
+  MAX_HOME_SEED_TOTAL_BYTES = 2097152,
+  MAX_HOME_SEED_PATH_LENGTH = 200,
   E = 237,
   f = 4,
   H = "CLAUDE.md",
-  oJt = "rules",
-  sJt = "output-styles",
-  Jje = "settings.json",
+  RULES_DIR_NAME = "rules",
+  OUTPUT_STYLES_DIR_NAME = "output-styles",
+  SETTINGS_FILE_NAME = "settings.json",
   c = ".md",
   M =
     /[\p{Cc}\p{Cf}\p{Co}\p{Cn}\p{Zl}\p{Zp}\p{Default_Ignorable_Code_Point}\u2800\u{1D159}\u2024-\u2026\u2044\u2215\u2216\u2236\u2571\u2572\u27CB\u27CD\u29F5\u29F8\u29F9\u02D0\u05C3\u0589\uA789\uFE13\uFE52\uFE55\uFE68\uFF0E\uFF0F\uFF1A\uFF3C\uFF61\u3002]|(?!\u0020)\p{Zs}/u,
@@ -52,14 +52,14 @@ function g(n) {
 function l(n) {
   return n.length > c.length && n.endsWith(c);
 }
-function iJt(n) {
+function normalizePathKey(n) {
   return T3(n);
 }
 function F(n) {
-  return l(iJt(n));
+  return l(normalizePathKey(n));
 }
-function Qje(n) {
-  if (n.length > rJt || !Wc(n) || n.normalize("NFC") !== n) return null;
+function getMemoryFileKind(n) {
+  if (n.length > MAX_HOME_SEED_PATH_LENGTH || !isWellFormed(n) || n.normalize("NFC") !== n) return null;
   let e = n.split("/");
   if (!e.every(g)) return null;
   let [t, ...o] = e;
@@ -68,18 +68,18 @@ function Qje(n) {
     r = o.at(-1) ?? "";
   if (!l(r) || i.some(F)) return null;
   if (o.length > f) return null;
-  return t === oJt ? "rule" : t === sJt ? "output_style" : null;
+  return t === RULES_DIR_NAME ? "rule" : t === OUTPUT_STYLES_DIR_NAME ? "output_style" : null;
 }
-function Eot(n) {
-  return Qje(n) !== null;
+function isAllowedMemoryPath(n) {
+  return getMemoryFileKind(n) !== null;
 }
-function VHt(n) {
-  let e = Qje(n);
+function parseMemoryDestination(n) {
+  let e = getMemoryFileKind(n);
   return e === null ? null : { destination: n, kind: e };
 }
 var D = 8,
-  aJt = 256;
-function kNn() {
+  MAX_ETAG_LENGTH = 256;
+function createHomeSeedAnnouncer() {
   let n = [],
     e = 0,
     t = !1,
@@ -89,7 +89,7 @@ function kNn() {
     noteStagedRow(r) {
       if (r.mount_path !== d) return !1;
       let u = r.content_sha256,
-        s = typeof u === "string" && u.length > 0 && u.length <= aJt ? u : null;
+        s = typeof u === "string" && u.length > 0 && u.length <= MAX_ETAG_LENGTH ? u : null;
       if (s === null) {
         if (!o)
           ((o = !0), writeDiagnosticsEvent("warn", "home_seed_stage_without_usable_etag", {}));
@@ -123,4 +123,4 @@ function kNn() {
     announced: { subscribe: i.subscribe },
   };
 }
-export { Tot, zHt, Yje, RNn, rJt, oJt, sJt, Jje, iJt, Qje, Eot, VHt, aJt, kNn };
+export { parseIsoTimestamp, MAX_HOME_SEED_FILES, MAX_HOME_SEED_FILE_BYTES, MAX_HOME_SEED_TOTAL_BYTES, MAX_HOME_SEED_PATH_LENGTH, RULES_DIR_NAME, OUTPUT_STYLES_DIR_NAME, SETTINGS_FILE_NAME, normalizePathKey, getMemoryFileKind, isAllowedMemoryPath, parseMemoryDestination, MAX_ETAG_LENGTH, createHomeSeedAnnouncer };

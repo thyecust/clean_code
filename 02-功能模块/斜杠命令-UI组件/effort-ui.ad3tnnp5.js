@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 243 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { os } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { DA } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { repeatString } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { HELP_FLAGS } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { zC } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { te } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -34,8 +34,8 @@ import { QF } from "../../03-入口与运行时/核心应用-Agent循环/核心�
 import { gw } from "../键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { K1n, g6e, Jot } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { X8 } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -46,7 +46,7 @@ import "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js"
 import { WA, Vx, Sv, Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { olt, onn, K9e, lSe } from "./chunk-d9snm4c7.js";
+import { formatEffortUsageText, parseEffortArgument, formatEffortStatus, runEffortCommand } from "./effort-level.js";
 import { ModelOrEffortSwitchDialog } from "../../01-核心基础设施/共享小工具-未细化/switch-confirm-dialog.js";
 import { TitleWithSubtitle } from "../../01-核心基础设施/共享小工具-未细化/title-with-subtitle.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
@@ -83,25 +83,25 @@ function Ir(Kl) {
 function fn(ul) {
   let { onDone: dl } = ul,
     fl = qf(),
-    ml = U(Cr),
+    ml = useAppStateSelector(Cr),
     gl = useMainLoopModel(),
-    { message: pl } = K9e(fl, gl, ml);
+    { message: pl } = formatEffortStatus(fl, gl, ml);
   return (dl(pl), null);
 }
 async function Q(n, c, l, u, f = !0) {
-  let b = await lSe(n, c, f, u);
+  let b = await runEffortCommand(n, c, f, u);
   l(b.message);
 }
 function mn(bl) {
   let Ee = _(24),
     { args: be, getMessages: Eo, onDone: ve, storageV5: vt } = bl,
     xe = qf(),
-    Po = U(Nr),
+    Po = useAppStateSelector(Nr),
     $e = useMainLoopModel(),
-    xt = It(),
+    xt = useSetAppState(),
     Mn;
   if (Ee[0] !== be || Ee[1] !== $e)
-    ((Mn = onn(be, $e)), (Ee[0] = be), (Ee[1] = $e), (Ee[2] = Mn));
+    ((Mn = parseEffortArgument(be, $e)), (Ee[0] = be), (Ee[1] = $e), (Ee[2] = Mn));
   else Mn = Ee[2];
   let B = Mn,
     wn;
@@ -483,10 +483,10 @@ function go(Ll) {
   let g = _(170),
     { getMessages: Fo, onDone: oe, storageV5: Oe } = Ll,
     Le = qf(),
-    To = U($r),
-    Xo = U(Er),
+    To = useAppStateSelector($r),
+    Xo = useAppStateSelector(Er),
     H = useMainLoopModel(),
-    Re = It(),
+    Re = useSetAppState(),
     _n;
   if (g[0] !== H) ((_n = getSliderGeometry(H)), (g[0] = H), (g[1] = _n));
   else _n = g[1];
@@ -505,7 +505,7 @@ function go(Ll) {
     I = Math.min(Dl, s.levels.length - 1),
     [Y, Jn] = d(null),
     { columns: Gl } = useTerminalSize(),
-    Vl = Ma(),
+    Vl = useHasVirtualScrollViewport(),
     De = s.levels[I].value === "ultracode",
     nt = useReducedMotion(),
     [, _o] = bs(De && !nt && Y === null ? Zo : null),
@@ -697,7 +697,7 @@ function go(Ll) {
   let Dt = Ve;
   const fe = s.width - 6 - 7;
   let lt;
-  if (g[54] !== fe) ((lt = os(" ", fe)), (g[54] = fe), (g[55] = lt));
+  if (g[54] !== fe) ((lt = repeatString(" ", fe)), (g[54] = fe), (g[55] = lt));
   else lt = g[55];
   let Gt = lt;
   const Pt = s.labelStarts.at(-1);
@@ -708,7 +708,7 @@ function go(Ll) {
   let Vt = Pt + rr.label.length;
   const zo = s.width - Vt;
   let lr;
-  if (g[58] !== zo) ((lr = os(" ", zo)), (g[58] = zo), (g[59] = lr));
+  if (g[58] !== zo) ((lr = repeatString(" ", zo)), (g[58] = zo), (g[59] = lr));
   else lr = g[59];
   let ct = lr,
     Ft = s.levels[I].value,
@@ -1123,10 +1123,10 @@ function po(Jl) {
   let q = _(39),
     { getMessages: Ko, onDone: re, storageV5: _e } = Jl,
     eo = qf(),
-    Yo = U(Ar),
-    zl = U(Ir),
+    Yo = useAppStateSelector(Ar),
+    zl = useAppStateSelector(Ir),
     j = useMainLoopModel(),
-    He = It(),
+    He = useSetAppState(),
     mr;
   if (q[0] !== j) ((mr = getSliderGeometry(j)), (q[0] = j), (q[1] = mr));
   else mr = q[1];
@@ -1263,8 +1263,8 @@ function po(Jl) {
   return hr;
 }
 async function il(n, c, l) {
-  if (((l = l?.trim() || ""), DA.includes(l))) {
-    n(olt());
+  if (((l = l?.trim() || ""), HELP_FLAGS.includes(l))) {
+    n(formatEffortUsageText());
     return;
   }
   if (l === "current" || l === "status") return e(fn, { onDone: n });

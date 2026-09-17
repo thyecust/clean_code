@@ -14,7 +14,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { le, Zt, Io, MPn, Xu, cr, nt, hm, Cu } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { bCe, Am, TG, jZn, nP, Nd, Fd } from "./chunk-01ymf0ar.js";
@@ -26,7 +26,7 @@ var Y = "/api/frame/db/agent",
   vF = new RegExp(`^${L}$`),
   U9 = new RegExp(`^${L}(?:/${L}){0,14}$`);
 function kOe(e) {
-  return (ln(e, "/") + 1) % 2 === 1;
+  return (countOccurrences(e, "/") + 1) % 2 === 1;
 }
 function Rft(e) {
   let r = (i) =>

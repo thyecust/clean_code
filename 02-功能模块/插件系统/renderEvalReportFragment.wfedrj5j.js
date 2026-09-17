@@ -9,12 +9,12 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 10 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x, zxe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { AG } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { go, I5t } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { h0e } from "../成本-Token统计/chunk-rnndxh1m.js";
+import { computeMean } from "../成本-Token统计/eval-report.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { relative } from "path";
@@ -172,7 +172,7 @@ function de(e, s, a) {
       ? `<div class="run-error"><span class="chip chip-fail">\u2717 aborted by mock</span> <span class="explanation">${r(e.aborted.server)}/${r(e.aborted.tool)}: ${r(e.aborted.reason)}</span></div>`
       : "",
     p = e.mocks
-      ? `<details class="mocks"><summary>Mocked: ${e.mocks.servers.map((d) => `${r(d.server)}${d.kind === "standalone" ? " (standalone)" : ""} \u2014 ${d.tools.map((f) => `${r(f.tool)}=${f.responder}`).join(", ")}`).join("; ")} \xB7 ${e.mocks.calls.total} ${x(e.mocks.calls.total, "call")}${e.mocks.calls.errors ? `, ${e.mocks.calls.errors} ${x(e.mocks.calls.errors, "tool error")}` : ""}${e.mocks.calls.replay && e.mocks.calls.replay.hits + e.mocks.calls.replay.misses > 0 ? ` \xB7 replay ${e.mocks.calls.replay.hits} hit / ${e.mocks.calls.replay.misses} live` : ""}</summary>${e.mocks.calls.unmocked.length ? `<div class="note">Called but not mocked: ${e.mocks.calls.unmocked.map((d) => `${r(d.tool)} \xD7${d.count}`).join(", ")}</div>` : ""}${e.mocks.warnings.map((d) => `<div class="note">${r(d)}</div>`).join("")}</details>`
+      ? `<details class="mocks"><summary>Mocked: ${e.mocks.servers.map((d) => `${r(d.server)}${d.kind === "standalone" ? " (standalone)" : ""} \u2014 ${d.tools.map((f) => `${r(f.tool)}=${f.responder}`).join(", ")}`).join("; ")} \xB7 ${e.mocks.calls.total} ${pluralize(e.mocks.calls.total, "call")}${e.mocks.calls.errors ? `, ${e.mocks.calls.errors} ${pluralize(e.mocks.calls.errors, "tool error")}` : ""}${e.mocks.calls.replay && e.mocks.calls.replay.hits + e.mocks.calls.replay.misses > 0 ? ` \xB7 replay ${e.mocks.calls.replay.hits} hit / ${e.mocks.calls.replay.misses} live` : ""}</summary>${e.mocks.calls.unmocked.length ? `<div class="note">Called but not mocked: ${e.mocks.calls.unmocked.map((d) => `${r(d.tool)} \xD7${d.count}`).join(", ")}</div>` : ""}${e.mocks.warnings.map((d) => `<div class="note">${r(d)}</div>`).join("")}</details>`
       : "";
   return `<div class="run">
 <div class="run-head">
@@ -235,10 +235,10 @@ ${i ? j("With plugin", "m-accent", e.aggregates.score, e.aggregates.passRate, e.
     m = u + countMatching(y, (o) => o.skippedPaidGraders && o.error === null),
     w = [
       v > 0
-        ? `<span class="flag">\u26A0 ${v} ${x(v, "run")} errored</span>`
+        ? `<span class="flag">\u26A0 ${v} ${pluralize(v, "run")} errored</span>`
         : "",
       m > 0
-        ? `<span class="flag">\u26A0 ${m} ${x(m, "run")} unjudged (cost ceiling)</span>`
+        ? `<span class="flag">\u26A0 ${m} ${pluralize(m, "run")} unjudged (cost ceiling)</span>`
         : "",
     ].join("");
   return `<article class="case${(e.aggregates.delta ?? 0) < 0 ? " case-regressed" : ""}" id="case-${s + 1}">
@@ -446,7 +446,7 @@ function renderEvalReportFragment(e) {
     M = w + countMatching(o, (t) => t.skippedPaidGraders && t.error === null),
     U =
       E + M > 0
-        ? `<div class="banner"><span class="chip-warn">\u26A0 Averages include non-judgments</span><span>${[E > 0 ? `${E} ${x(E, "run")} errored` : "", M > 0 ? `${M} ${x(M, "run")} force-failed at the cost ceiling` : ""].filter(Boolean).join("; ")} \u2014 their scores count toward the averages shown without a complete judgment.</span></div>`
+        ? `<div class="banner"><span class="chip-warn">\u26A0 Averages include non-judgments</span><span>${[E > 0 ? `${E} ${pluralize(E, "run")} errored` : "", M > 0 ? `${M} ${pluralize(M, "run")} force-failed at the cost ceiling` : ""].filter(Boolean).join("; ")} \u2014 their scores count toward the averages shown without a complete judgment.</span></div>`
         : "",
     h = a.filter((t) => t.aggregates.delta !== void 0),
     H =
@@ -456,20 +456,20 @@ function renderEvalReportFragment(e) {
               I = countMatching(h, (_) => (_.aggregates.delta ?? 0) > 0),
               L = countMatching(h, (_) => (_.aggregates.delta ?? 0) < 0),
               X = h.length - I - L;
-            return `<p class="verdict">Plugin effect: <span class="delta ${t}">${g} ${S}${(u * 100).toFixed(1)} pts</span> vs baseline \u2014 improved ${I} \xB7 flat ${X} \xB7 regressed ${L} of ${h.length} ${x(h.length, "case")}.</p>`;
+            return `<p class="verdict">Plugin effect: <span class="delta ${t}">${g} ${S}${(u * 100).toFixed(1)} pts</span> vs baseline \u2014 improved ${I} \xB7 flat ${X} \xB7 regressed ${L} of ${h.length} ${pluralize(h.length, "case")}.</p>`;
           })()
         : "",
     V =
       u !== void 0
         ? (() => {
             let { cls: t, arrow: g, sign: S } = z(u);
-            return `<div class="tile"><span class="label">Ablation \u0394</span><span class="value num ${t}">${g === "\xB7" ? "" : `${g} `}${S}${(u * 100).toFixed(1)}</span><span class="sub">score points vs baseline, ${h.length} of ${a.length} ${x(a.length, "case")}</span></div>`;
+            return `<div class="tile"><span class="label">Ablation \u0394</span><span class="value num ${t}">${g === "\xB7" ? "" : `${g} `}${S}${(u * 100).toFixed(1)}</span><span class="sub">score points vs baseline, ${h.length} of ${a.length} ${pluralize(a.length, "case")}</span></div>`;
           })()
         : "",
     q =
       l.length > 0
         ? `${V}
-<div class="tile"><span class="label">Baseline score</span><span class="value num">${c(h0e(l.map((t) => t.aggregates.scoreWithout ?? 0)))}</span><span class="sub">without the plugin</span></div>`
+<div class="tile"><span class="label">Baseline score</span><span class="value num">${c(computeMean(l.map((t) => t.aggregates.scoreWithout ?? 0)))}</span><span class="sub">without the plugin</span></div>`
         : "",
     W = `<details class="section legend">
 <summary>How to read this report</summary>
@@ -507,7 +507,7 @@ ${i.caseFilter || i.tagFilters?.length ? `<span>filtered: ${[i.caseFilter ? `--c
 </header>
 ${f}${U}
 <section class="tiles">
-<div class="tile hero"><span class="label">Suite score${y ? " \xB7 with plugin" : ""}</span><span class="value">${c(n.overallScore)}${R ? D : ""}</span><span class="sub">mean of per-case scores${R ? ` \xB7 * includes ${m + w} ${x(m + w, "run")} without a complete judgment` : ""}</span></div>
+<div class="tile hero"><span class="label">Suite score${y ? " \xB7 with plugin" : ""}</span><span class="value">${c(n.overallScore)}${R ? D : ""}</span><span class="sub">mean of per-case scores${R ? ` \xB7 * includes ${m + w} ${pluralize(m + w, "run")} without a complete judgment` : ""}</span></div>
 ${q}
 <div class="tile"><span class="label">Cases</span><span class="value num">${n.casesTotal}</span><span class="sub">${n.casesPassed} of ${n.casesTotal} \u2265 ${c(i.threshold)} threshold</span></div>
 <div class="tile"><span class="label">Perfect runs</span><span class="value num">${c(n.overallPassRate)}</span><span class="sub">runs where every grader passed</span></div>
@@ -528,13 +528,13 @@ ${me}`;
 }
 function fe(e) {
   let s = e.cases.some((n) => {
-      let i = h0e(n.arms.with.map((l) => l.score));
+      let i = computeMean(n.arms.with.map((l) => l.score));
       return Math.abs(i - n.aggregates.score) > 0.005;
     }),
     a =
       e.cases.length > 0 &&
       Math.abs(
-        h0e(e.cases.map((n) => n.aggregates.score)) - e.aggregates.overallScore,
+        computeMean(e.cases.map((n) => n.aggregates.score)) - e.aggregates.overallScore,
       ) > 0.005;
   return s || a
     ? ' \xB7 <span class="flag">\u26A0 aggregates in this file do not match values recomputed from its runs</span>'
@@ -555,7 +555,7 @@ ${s}
 `;
 }
 function he(e) {
-  return zxe(
+  return truncateMiddle(
     e,
     ne - N,
     N,

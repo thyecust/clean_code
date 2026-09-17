@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 209 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Dc, vnr } from "../../01-核心基础设施/共享小工具-未细化/chunk-15vfjgmh.js";
+import { areWorkflowsEnabled, shouldSkipWorkflowWarmup } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import "./workflow-script.js";
 import { isWorkflowAuthoringSkillAvailable } from "../../01-核心基础设施/共享小工具-未细化/is-workflow-authoring-skill-available.js";
-import { rte, v1t } from "./chunk-pqyn1fh3.js";
+import { getAllWorkflows, clearWorkflowCaches as v1t } from "./workflow-registry.js";
 import "../../01-核心基础设施/共享小工具-未细化/bundled-workflows.js";
-import { $E } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
+import { WORKFLOW_AUTHORING_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 async function warmWorkflows(o, n) {
-  if (vnr()) return;
-  await rte(o, n);
+  if (shouldSkipWorkflowWarmup()) return;
+  await getAllWorkflows(o, n);
 }
 function m(o) {
   return {
@@ -67,7 +67,7 @@ Phases:
         l = isWorkflowAuthoringSkillAvailable(t?.options?.tools)
           ? `
 
-If the user asks you to modify this workflow or write a new script, load the \`${$E}\` skill first.`
+If the user asks you to modify this workflow or write a new script, load the \`${WORKFLOW_AUTHORING_SKILL_NAME}\` skill first.`
           : "";
       return [
         {
@@ -89,8 +89,8 @@ Invoke: Workflow(${a})${l}`,
   };
 }
 async function getWorkflowCommands(o, n) {
-  if (!Dc()) return [];
-  return (await rte(o, n)).map(m);
+  if (!areWorkflowsEnabled()) return [];
+  return (await getAllWorkflows(o, n)).map(m);
 }
 export {
   getWorkflowCommands,

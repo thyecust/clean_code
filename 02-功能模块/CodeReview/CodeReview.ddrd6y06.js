@@ -17,18 +17,18 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { lit as S, fromEnum, fromEnumOpt, fromEnumArr } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { l, Ub } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { fn, Kke, zie, execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { GIT_HARDENED_ARGS, buildNonInteractiveGitEnv, GIT_SSH_HARDENING_ARGS, execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { gitExe, getBranch, getDefaultBranch } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Do, _W } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { isGitHubHost, isSameHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { ERt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Mw, Pb } from "../Git-Worktree/chunk-bk9696gx.js";
+import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isNestedGitLabProject, detectCurrentRepositoryWithHost } from "../Git-Worktree/git-repository-detection.js";
 import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getBridgeEntitlementBlocker } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
@@ -60,7 +60,7 @@ import {
   Kne,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { DBn } from "./chunk-rp57gfa9.js";
+import { markUltrareviewRun } from "./ultrareview-tips.js";
 import { homedir } from "os";
 import { resolve } from "path";
 var de = createLazyValue(() =>
@@ -167,7 +167,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       {
         ok: !1,
         reason: "not_git_repo",
-        error: `${t} needs a git repository so it can clone your code into a cloud sandbox, but ${Q()} is not inside one. ${he()}`,
+        error: `${t} needs a git repository so it can clone your code into a cloud sandbox, but ${getCwd()} is not inside one. ${he()}`,
       }
     );
   let e = r.trim(),
@@ -183,9 +183,9 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
             outcome: fromEnum(C),
           });
       },
-      R = await Pb(),
-      c = R && Mw(R) ? null : R,
-      B = _W(o?.host, c?.host) || (!!o && !!c && Do(o.host) && Do(c.host));
+      R = await detectCurrentRepositoryWithHost(),
+      c = R && isNestedGitLabProject(R) ? null : R,
+      B = isSameHost(o?.host, c?.host) || (!!o && !!c && isGitHubHost(o.host) && isGitHubHost(c.host));
     if (
       o &&
       (!B ||
@@ -250,7 +250,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           ],
           { timeout: 5000, preserveOutputOnError: !1 },
         ),
-        Do(c.host) && CGn() && !St()
+        isGitHubHost(c.host) && CGn() && !isEssentialTrafficOnly()
           ? $e(c.owner, c.name, d?.accessProbeBudgetMs ?? 5000)
           : null,
       ]);
@@ -278,8 +278,8 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       let C = `${c.owner}/${c.name}`,
         F = `${getOauthConfig().CLAUDE_AI_ORIGIN}/code/onboarding?step=alt-auth`,
         G =
-          !Hd() &&
-          !St() &&
+          !isDesktopHostEntrypoint() &&
+          !isEssentialTrafficOnly() &&
           isPolicyAllowed("allow_remote_sessions") &&
           isPolicyAllowed("allow_quick_web_setup")
             ? `run /web-setup${t.startsWith("/") ? "" : " in Claude Code"} to reuse your GitHub CLI login`
@@ -353,7 +353,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       (
         await execFileNoThrow(
           gitExe(),
-          [...fn, "rev-parse", "--verify", "--quiet", "--end-of-options", s],
+          [...GIT_HARDENED_ARGS, "rev-parse", "--verify", "--quiet", "--end-of-options", s],
           { preserveOutputOnError: !1 },
         )
       ).code === 0,
@@ -472,12 +472,12 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     v = h || (await getDefaultBranch()) || "main",
     X = (await getBranch()) || "HEAD",
     Z = async (s) =>
-      execFileNoThrow(gitExe(), [...fn, "merge-base", s, "HEAD"], { preserveOutputOnError: !1 }),
+      execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, "merge-base", s, "HEAD"], { preserveOutputOnError: !1 }),
     D = `origin/${v}`,
     { stdout: J, code: re } = await Z(D);
   if (re !== 0) ((D = v), ({ stdout: J, code: re } = await Z(D)));
   let W = J.trim(),
-    q = (s) => execFileNoThrow(gitExe(), [...fn, ...s], { preserveOutputOnError: !1 }),
+    q = (s) => execFileNoThrow(gitExe(), [...GIT_HARDENED_ARGS, ...s], { preserveOutputOnError: !1 }),
     ie = `Your checkout has no branches (detached HEAD only), which cloud review can't bundle. Create one first \u2014 \`git checkout -b <name>\` \u2014 then rerun ${t}.`;
   if (re !== 0 || !W) {
     let s = (await q(["rev-parse", "--verify", "--quiet", "HEAD"])).code === 0,
@@ -496,7 +496,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           (await q(["rev-parse", "--verify", "--quiet", v])).code === 0,
         { stdout: F, code: G } = await execFileNoThrow(
           gitExe(),
-          [...fn, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", _e],
+          [...GIT_HARDENED_ARGS, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", _e],
           { preserveOutputOnError: !1, env: { ...process.env, LC_ALL: "C" } },
         );
       if (G === 0) {
@@ -629,7 +629,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   }
   let { stdout: ne, code: k } = await execFileNoThrow(
     gitExe(),
-    [...fn, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", W],
+    [...GIT_HARDENED_ARGS, "diff", "--no-ext-diff", "--no-textconv", "--shortstat", W],
     { preserveOutputOnError: !1, env: { ...process.env, LC_ALL: "C" } },
   );
   if (k === 0 && !ne.trim()) {
@@ -666,7 +666,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       let { stdout: B, code: M } = await execFileNoThrow(
           gitExe(),
           [
-            ...fn,
+            ...GIT_HARDENED_ARGS,
             "-c",
             "core.quotepath=false",
             "diff",
@@ -681,7 +681,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       return {
         ok: !1,
         reason: "local_diff_too_large",
-        error: `Diff is too large for ultrareview: ${b.filesCount.toLocaleString()} ${x(b.filesCount, "file")}, ${c.toLocaleString()} ${x(c, "line")} changed (limits: ${s.toLocaleString()} ${x(s, "file")}, ${R.toLocaleString()} ${x(R, "line")}).${P} Pass a closer base branch (\`${t} <branch>\`) to narrow the scope, or split the change.`,
+        error: `Diff is too large for ultrareview: ${b.filesCount.toLocaleString()} ${pluralize(b.filesCount, "file")}, ${c.toLocaleString()} ${pluralize(c, "line")} changed (limits: ${s.toLocaleString()} ${pluralize(s, "file")}, ${R.toLocaleString()} ${pluralize(R, "line")}).${P} Pass a closer base branch (\`${t} <branch>\`) to narrow the scope, or split the change.`,
       };
     }
   }
@@ -712,7 +712,7 @@ function be(r, t = 3) {
   return ` Largest files: ${e
     .sort((_, E) => E.lines - _.lines)
     .slice(0, t)
-    .map((_) => `${_.path} (${_.lines.toLocaleString()} ${x(_.lines, "line")})`)
+    .map((_) => `${_.path} (${_.lines.toLocaleString()} ${pluralize(_.lines, "line")})`)
     .join(", ")}.`;
 }
 function previewInstructions(r, t = 80) {
@@ -721,15 +721,15 @@ function previewInstructions(r, t = 80) {
 async function ve(r) {
   if (r.startsWith("-") || r.includes(":") || /\s/.test(r)) return "not_found";
   let t = {
-      ...Kke(),
+      ...buildNonInteractiveGitEnv(),
       GIT_SSH_COMMAND: `${a.GIT_SSH_COMMAND || "ssh"} -o BatchMode=yes -o StrictHostKeyChecking=yes`,
       GIT_ALLOW_PROTOCOL: "https:http:ssh",
     },
     d = await execFileNoThrow(
       gitExe(),
       [
-        ...fn,
-        ...zie,
+        ...GIT_HARDENED_ARGS,
+        ...GIT_SSH_HARDENING_ARGS,
         "-c",
         "credential.helper=",
         "-c",
@@ -757,8 +757,8 @@ async function ve(r) {
     await execFileNoThrow(
       gitExe(),
       [
-        ...fn,
-        ...zie,
+        ...GIT_HARDENED_ARGS,
+        ...GIT_SSH_HARDENING_ARGS,
         "-c",
         "credential.helper=",
         "-c",
@@ -779,7 +779,7 @@ async function ye(r) {
   let { stdout: t, code: d } = await execFileNoThrow(
     gitExe(),
     [
-      ...fn,
+      ...GIT_HARDENED_ARGS,
       "for-each-ref",
       "--format=%(refname:short)",
       "--count=2000",
@@ -858,7 +858,7 @@ async function launchRemoteReview(r, t, d, e) {
       });
       let b = k.map((s) => {
         if (s.type === "not_in_git_repo")
-          return `${o} needs a git repository so it can clone your code into a cloud sandbox, but ${Q()} is not inside one. ${he()}`;
+          return `${o} needs a git repository so it can clone your code into a cloud sandbox, but ${getCwd()} is not inside one. ${he()}`;
         if (s.type === "no_git_remote")
           return `${o} needs a GitHub remote so it can clone this repository into the cloud. If this project is not on GitHub yet, run "gh repo create --source=. --push" to create one; if a GitHub repo already exists, run "git remote add origin REPO_URL && git push -u origin HEAD".`;
         return IX(s);
@@ -911,8 +911,8 @@ ${b}`)
     D,
     J;
   if (r.mode === "pr") {
-    let k = await Pb(),
-      b = k && Mw(k) ? null : k;
+    let k = await detectCurrentRepositoryWithHost(),
+      b = k && isNestedGitLabProject(k) ? null : k;
     if (!b)
       return (
         logEvent("tengu_review_remote_precondition_failed", {
@@ -1071,7 +1071,7 @@ ${b}`)
     }),
       logFeatureSad("ultrareview_launch", "no_merge_base_empty_tree_fallback"));
   else logFeatureOk("ultrareview_launch");
-  DBn(t.storageV5);
+  markUltrareviewRun(t.storageV5);
   let W = S3(A.id),
     q = d.trim()
       ? `${d.trim()}
@@ -1112,7 +1112,7 @@ ${k}`,
   };
 }
 function ultrareviewLaunchAcknowledgementNudge(r, t) {
-  return `The output above is already visible to the user. Briefly acknowledge it without repeating the target, URL, or billing note. Findings will arrive via task-notification.${r ? " The user passed --fix: when the findings arrive, apply them to the local working tree." : ""}${t ? ` The user's argument was interpreted as a review note, not a base branch: "${oe(t, njt)}". The cloud review runs its standard pass over the branch diff and does not see the note; when the findings arrive, prioritize and relate them to the user's request.` : ""}`;
+  return `The output above is already visible to the user. Briefly acknowledge it without repeating the target, URL, or billing note. Findings will arrive via task-notification.${r ? " The user passed --fix: when the findings arrive, apply them to the local working tree." : ""}${t ? ` The user's argument was interpreted as a review note, not a base branch: "${truncateToCodeUnits(t, njt)}". The cloud review runs its standard pass over the branch diff and does not see the note; when the findings arrive, prioritize and relate them to the user's request.` : ""}`;
 }
 async function runUltrareviewHeadless(r, t) {
   if (!ZA()) {
@@ -1213,7 +1213,7 @@ ${getReviewDurationNote()} \xB7 Est. cost ${getReviewCostNote()} USD`,
     };
   }
   let E = t.postReview === !0 && !BOe(),
-    w = t.postReview === !0 && !E && e.scope.mode === "pr" && Do(e.scope.host),
+    w = t.postReview === !0 && !E && e.scope.mode === "pr" && isGitHubHost(e.scope.host),
     p = await launchRemoteReview(e.scope, t.context, o.billingNote, {
       skipTaskRegistration: t.skipTaskRegistration,
       invocation: t.invocation,
@@ -1250,11 +1250,11 @@ ${getReviewDurationNote()} \xB7 Est. cost ${getReviewCostNote()} USD`,
   };
 }
 async function ue() {
-  let r = await Pb();
-  return !!r && !Mw(r);
+  let r = await detectCurrentRepositoryWithHost();
+  return !!r && !isNestedGitLabProject(r);
 }
 function he() {
-  return Hd()
+  return isDesktopHostEntrypoint()
     ? "Open your project's repository folder and try again."
     : 'Run "git init" here to create a repository, or cd into an existing one.';
 }
@@ -1262,7 +1262,7 @@ function L() {
   try {
     let r = homedir();
     if (!r) return !1;
-    return ERt(zn(resolve(Q())), zn(resolve(r)));
+    return ERt(zn(resolve(getCwd())), zn(resolve(r)));
   } catch {
     return !1;
   }

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { mp } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { uo, Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 var t = {
     claudeMd: !0,
@@ -49,8 +49,8 @@ var t = {
     keybindings: !1,
   };
 function isCustomizationDisabled(e, s) {
-  if (Hr() && !l[e]) return !0;
-  if (uo() && !s?.explicitlyRequested) return t[e];
+  if (isSafeMode() && !l[e]) return !0;
+  if (isSimpleMode() && !s?.explicitlyRequested) return t[e];
   return !1;
 }
 function isClaudeMdLoadingDisabled() {

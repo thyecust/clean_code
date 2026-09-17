@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { s_ } from "./chunk-p991cddr.js";
+import { utilUtf8Module } from "./chunk-p991cddr.js";
 import { initESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class x {
   marshaller;
@@ -193,7 +193,7 @@ class x {
 }
 var z, EventStreamSerde;
 var M = initESM(() => {
-  z = s_();
+  z = utilUtf8Module();
   EventStreamSerde = x;
 });
 M();

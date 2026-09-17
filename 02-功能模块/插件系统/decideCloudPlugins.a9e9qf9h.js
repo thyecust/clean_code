@@ -12,7 +12,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
@@ -24,7 +24,7 @@ import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心�
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { WZ, v$n, WHe, _ye, yWe, rPt } from "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import { z_e } from "../Hooks钩子/chunk-6wg4v2yj.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { C, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -53,7 +53,7 @@ function B(uo) {
   let h = J,
     b;
   if (c[4] !== f)
-    ((b = f > 0 ? [`${f} plugin ${x(f, "choice")} would be sent`] : []),
+    ((b = f > 0 ? [`${f} plugin ${pluralize(f, "choice")} would be sent`] : []),
       (c[4] = f),
       (c[5] = b));
   else b = c[5];
@@ -62,7 +62,7 @@ function B(uo) {
     ((v =
       P > 0
         ? [
-            `${P} ${f > 0 ? "" : `plugin ${x(P, "choice")} `}would stay on this machine (you are told which, and why, when a session starts)`,
+            `${P} ${f > 0 ? "" : `plugin ${pluralize(P, "choice")} `}would stay on this machine (you are told which, and why, when a session starts)`,
           ]
         : []),
       (c[6] = f),

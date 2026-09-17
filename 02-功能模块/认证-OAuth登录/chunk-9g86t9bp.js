@@ -34,19 +34,19 @@ import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ORe, KD } from "./chunk-wk0e3dz4.js";
-import { hc, Xxn, Uar, IQ, getSecureStorage } from "./chunk-y7b7kf5n.js";
+import { SECURE_STORAGE_READ_FAILED_SENTINEL, withSecureStorageWriteLock, runSecureStorageWriteWithoutLock, invalidateCredentialsCopyCache, getSecureStorage } from "./secure-storage.js";
 import { clearTrustedDeviceTokenCache } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { tqn, yk, xzn, Izn, Pzn, ET } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { clearOrgMemoryCredential } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { zY } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { emitAuthEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { Der, Ler } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { q8t, resetWIFCredentialState } from "./chunk-x3rm9w4b.js";
-import { ZB, l7, b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
+import { getAccountSettings, getGroveConfig, githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { cGn } from "../Artifact发布-渲染/chunk-y8j05azr.js";
 import { Jx } from "../AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
 import { XAn } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { hlt } from "../../01-核心基础设施/设置-配置/chunk-1pbaa558.js";
-import { dIe } from "../../01-核心基础设施/共享小工具-未细化/chunk-v5nz99k6.js";
+import { SUBSCRIPTION_SWITCH_NOTICE_ID } from "../../01-核心基础设施/共享小工具-未细化/announcement-notices.js";
 import { s, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import {
   mkdir,
@@ -453,9 +453,9 @@ async function performLogout({
         if ((await _.delete(p), u && Object.keys(u).length > 0))
           await Q(_, u, p);
       };
-    await Xxn(r).catch((u) => {
+    await withSecureStorageWriteLock(r).catch((u) => {
       if (d) throw u;
-      return (logError(u), Uar(r));
+      return (logError(u), runSecureStorageWriteWithoutLock(r));
     });
   }
   (kW(null),
@@ -479,7 +479,7 @@ async function performLogout({
             ...r.customApiKeyResponses,
             approved: [],
           };
-        let u = dIe;
+        let u = SUBSCRIPTION_SWITCH_NOTICE_ID;
         if (r.seenNotifications?.[u] !== void 0) {
           let { [u]: v, ...H } = r.seenNotifications;
           r.seenNotifications = H;
@@ -514,7 +514,7 @@ async function clearAuthRelatedCaches(
     credentials: f,
   } = {},
 ) {
-  if ((clearOAuthTokenMemos(), isHoverRestEnabled() && f === void 0)) IQ();
+  if ((clearOAuthTokenMemos(), isHoverRestEnabled() && f === void 0)) invalidateCredentialsCopyCache();
   (clearTrustedDeviceTokenCache(),
     gU(),
     Or().providerCache.modelConfigs.clear(),
@@ -527,12 +527,12 @@ async function clearAuthRelatedCaches(
   if (
     (cGn(c.host),
     Der(t, i),
-    b4.of(c.host).clear(),
+    githubConnectionStatusStore.of(c.host).clear(),
     lU(),
     ET(c, "account_change"),
     _q(),
-    l7.cache?.clear?.(),
-    ZB.cache?.clear?.(),
+    getGroveConfig.cache?.clear?.(),
+    getAccountSettings.cache?.clear?.(),
     await hlt(e),
     await XAn(),
     Izn(),
@@ -550,7 +550,7 @@ async function fleetHostLogout({
   credentials: f,
 }) {
   (t("Signing out\u2026"),
-    zY({ action: "logout", success: !0, authMethod: "oauth" }));
+    emitAuthEvent({ action: "logout", success: !0, authMethod: "oauth" }));
   try {
     (await performLogout({ clearOnboarding: !0, storageV5: i, credentials: f }), e());
   } catch (c) {
@@ -581,7 +581,7 @@ async function Q(e, o, t) {
 async function J(e, o) {
   for (let t = 0; t < 2; t++) {
     let i = await (e.readAsyncStrict?.(o) ?? e.readAsync(o));
-    if (i !== hc) return i?.coworkRemoteDevice;
+    if (i !== SECURE_STORAGE_READ_FAILED_SENTINEL) return i?.coworkRemoteDevice;
   }
   logError(
     Error(

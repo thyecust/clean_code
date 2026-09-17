@@ -20,7 +20,7 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { yd } from "../ClaudeinChrome/chunk-hnp84hf6.js";
+import { getClaudeInChromeState } from "../ClaudeinChrome/claude-in-chrome-host.js";
 import { s, T, Jq, Uf, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var I = 50,
   x = 1500,
@@ -45,7 +45,7 @@ function closeSessionTabGroup({
 }) {
   if (a.CLAUDE_CODE_REMOTE_SESSION_ID || !H("tengu_chrome_tab_group_close", !0))
     return Promise.resolve({ status: "disabled" });
-  let r = yd().closesInFlight,
+  let r = getClaudeInChromeState().closesInFlight,
     p = r.get(e);
   if (p && (o || !p.onlyIfEmpty)) return p.promise;
   let t = (p?.promise ?? Promise.resolve())
@@ -63,7 +63,7 @@ async function R({
   clientOverride: l,
   callTimeoutMs: u,
 }) {
-  let r = l ?? yd().bridgeBinding?.socketClient;
+  let r = l ?? getClaudeInChromeState().bridgeBinding?.socketClient;
   if (!r || !r.isConnected())
     return (
       n("[closeSessionTabGroup] bridge not connected, skipping"),
@@ -151,7 +151,7 @@ async function R({
   return { status: "closed", closed: C, failed: d };
 }
 function registerChromeTabGroupCleanup() {
-  let e = yd();
+  let e = getClaudeInChromeState();
   if (e.tabGroupCleanupRegistered) return;
   e.tabGroupCleanupRegistered = !0;
   let o = B().id;

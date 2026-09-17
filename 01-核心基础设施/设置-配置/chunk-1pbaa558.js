@@ -13,7 +13,7 @@ import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.
 import { sleep, withTimeout, withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
 import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
 import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { lit as S } from "../共享小工具-未细化/analytics-fields.js";
@@ -43,8 +43,8 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
-import { qt } from "../共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import {
   Za,
   bke,
@@ -77,21 +77,21 @@ import {
   Bq,
   t2e,
 } from "./设置-配置.aqbb35ee.js";
-import { Uhe } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isHostManagedSettingsEntrypoint } from "../../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { U5t, Tar } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { vvt, mir, gir } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { commitExit } from "../共享小工具-未细化/exit-commit-state.js";
-import { mJn } from "../遥测-OpenTelemetry/chunk-5qbcynds.js";
-import { nU, Cve, lse, KJe, XJe } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { Fy } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
+import { getJwtSubject } from "../遥测-OpenTelemetry/otel-events.js";
+import { computeRetryDelayMs, extractSignatureHeader, writeSignatureSidecar, deleteSignatureSidecars, XJe } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { AsyncQueue } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
 import { I4t, P4t } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import { matchesOAuthBaseUrlHost, resetRemoteSettingsSyncCache, isRemoteSettingsEligible, hasTeamOrEnterpriseSubscription } from "../共享小工具-未细化/remote-settings-eligibility.js";
 import { s, T, se, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 var Te = 5000;
 class Q {
-  updates = new Fy();
+  updates = new AsyncQueue();
   owner;
   constructor(e) {
     this.owner = e;
@@ -331,7 +331,7 @@ var He = "remote-settings-consent.json",
   Be = createLazyValue(() => c({ version: k(L), records: fe(s(), se()) })),
   ze = createLazyValue(() => c({ version: T().gt(L) }));
 function de() {
-  return xe(be(), He);
+  return xe(getClaudeConfigDir(), He);
 }
 function x() {
   return { records: new Map(), newerVersion: !1, unreadable: !0 };
@@ -349,7 +349,7 @@ async function ue(e) {
   if (isHoverRestEnabled() && e !== void 0) {
     let o;
     try {
-      o = await e.readText([{ key: Ce.state(ce), offset: 0, length: I + 1 }]);
+      o = await e.readText([{ key: STORAGE_KEYS.state(ce), offset: 0, length: I + 1 }]);
     } catch (a) {
       return (n(`Remote settings: Consent records unreadable - ${l(a)}`), x());
     }
@@ -367,10 +367,10 @@ async function ue(e) {
     let o = de();
     try {
       if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) {
-        let a = await qt().lstat(o);
+        let a = await getFileStorage().lstat(o);
         if (a !== void 0 && !a.isFile) return x();
       }
-      let r = await qt().readTail(o, I + 1, { noFollow: !0 });
+      let r = await getFileStorage().readTail(o, I + 1, { noFollow: !0 });
       if (r.length > I) return ae();
       t = r.toString("utf8");
     } catch (r) {
@@ -429,12 +429,12 @@ async function ge(e, t, o) {
     ]);
     let E = b({ version: L, records: Object.fromEntries(P) });
     if (isHoverRestEnabled() && o !== void 0) {
-      let C = await o.write(Ce.state(ce), E, { mode: 384 });
+      let C = await o.write(STORAGE_KEYS.state(ce), E, { mode: 384 });
       if (!C.ok)
         n(`Remote settings: Failed to record org consent - ${We(C.error)}`);
       return;
     }
-    await qt().atomicWrite(de(), E, 384);
+    await getFileStorage().atomicWrite(de(), E, 384);
   } catch (r) {
     n(`Remote settings: Failed to record org consent - ${l(r)}`);
   }
@@ -621,7 +621,7 @@ function fIe() {
   return isRemoteSettingsEligible() && !getRemoteManagedSettingsSyncFromCache();
 }
 function knn() {
-  return !Uhe() && isRemoteSettingsEligible() && unverifiedRemoteCacheWithholdsProvisions();
+  return !isHostManagedSettingsEntrypoint() && isRemoteSettingsEligible() && unverifiedRemoteCacheWithholdsProvisions();
 }
 function ye() {
   i5n(async () => {
@@ -735,7 +735,7 @@ function ve(e, t) {
   }
   if (o.protocol !== "https:") return;
   let r = `${o.origin}${o.pathname === "/" ? "" : o.pathname}`,
-    a = mJn(e) ?? "";
+    a = getJwtSubject(e) ?? "";
   return {
     organizationUuid: `${we}${r}#${t}`,
     accountUuid:
@@ -796,7 +796,7 @@ async function it(e, t = {}) {
     if (((r = await Pe(e, !1, t.credentials)), r.success)) return r;
     if (r.skipRetry) return r;
     if (u > a) return r;
-    let p = nU(u);
+    let p = computeRetryDelayMs(u);
     (n(
       `Remote settings: Retry ${u}/${a} after ${p}ms (${H({ errorKind: r.errorKind ?? "unknown_error", ...(r.httpStatus !== void 0 && { httpStatus: r.httpStatus }) })})`,
     ),
@@ -866,7 +866,7 @@ async function Pe(e, t = !1, o) {
           success: !0,
           settings: null,
           checksum: e,
-          signature: Cve(v.headers),
+          signature: extractSignatureHeader(v.headers),
           consentIdentity: u,
         }
       );
@@ -899,7 +899,7 @@ async function Pe(e, t = !1, o) {
         success: !0,
         ...E,
         checksum: P.data.checksum,
-        signature: Cve(v.headers),
+        signature: extractSignatureHeader(v.headers),
         consentIdentity: u,
       }
     );
@@ -993,7 +993,7 @@ async function he(e, t, o) {
   let r = b(e, null, 2),
     a = helperConsentDigest(e);
   if (isHoverRestEnabled() && t !== void 0 && !getRemoteSettingsPathOverride()) {
-    let u = await t.write(Ce.state("remote-settings"), r, {
+    let u = await t.write(STORAGE_KEYS.state("remote-settings"), r, {
       publishDiscipline: "inPlace",
       mode: 384,
       flush: !0,
@@ -1005,10 +1005,10 @@ async function he(e, t, o) {
     if (
       (n("Remote settings: Saved via storage backend"),
       remoteSettingsFileWritten("cache", r),
-      await lse(getSettingsPath(), o),
+      await writeSignatureSidecar(getSettingsPath(), o),
       a !== void 0)
     ) {
-      let p = await t.write(Ce.state(HELPER_CONSENT_STATE_ID), a, {
+      let p = await t.write(STORAGE_KEYS.state(HELPER_CONSENT_STATE_ID), a, {
         publishDiscipline: "inPlace",
         mode: 384,
       });
@@ -1040,7 +1040,7 @@ async function he(e, t, o) {
     return;
   }
   if (isHoverRestEnabled() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("cache", r);
-  if ((await lse(getSettingsPath(), o), a === void 0)) return;
+  if ((await writeSignatureSidecar(getSettingsPath(), o), a === void 0)) return;
   try {
     if ((await writeFile(getHelperConsentPath(), a, { mode: 384 }), isHoverRestEnabled() && !getRemoteSettingsPathOverride()))
       remoteSettingsFileWritten("helperConsent", a);
@@ -1052,7 +1052,7 @@ async function hlt(e) {
   (UDt(), resetRemoteSettingsSyncCache(), Za(), O().detachBarrier()?.());
   let t =
     isHoverRestEnabled() && e !== void 0
-      ? await e.delete(Ce.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : We(o.error)))
+      ? await e.delete(STORAGE_KEYS.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : We(o.error)))
       : await Je(getHelperConsentPath(), { force: !0 }).then(() => {
           return;
         }, l);
@@ -1062,8 +1062,8 @@ async function hlt(e) {
   }
   if (isHoverRestEnabled() && !getRemoteSettingsPathOverride()) remoteSettingsFileWritten("helperConsent", null);
   if (getRemoteSettingsPathOverride()) return;
-  if ((await KJe(getSettingsPath()), isHoverRestEnabled() && e !== void 0)) {
-    if ((await e.delete(Ce.state("remote-settings"))).ok) remoteSettingsFileWritten("cache", null);
+  if ((await deleteSignatureSidecars(getSettingsPath()), isHoverRestEnabled() && e !== void 0)) {
+    if ((await e.delete(STORAGE_KEYS.state("remote-settings"))).ok) remoteSettingsFileWritten("cache", null);
     return;
   }
   try {
@@ -1133,7 +1133,7 @@ async function ct(e) {
     if (d.settings === null && o && o === getRemoteManagedSettingsConsentedBaseline()) {
       (n("Remote settings: Cache still valid (304 Not Modified)"),
         setSessionCache(o, { verified: !0 }),
-        await lse(getSettingsPath(), d.signature));
+        await writeSignatureSidecar(getSettingsPath(), d.signature));
       let _ = A(u);
       if ((await XJe(getSettingsPath(), _), _))
         return { settings: null, fetchSucceeded: !1 };
@@ -1398,7 +1398,7 @@ async function q() {
     ] = await Promise.all([
       import("./getAppliedGlobalConfigEnv.zewdj9m8.js"),
       import("./getCurrentProjectConfig.s8843fs9.js"),
-      import("../../02-功能模块/Bedrock-Vertex/chunk-bnft4099.js"),
+      import("../../02-功能模块/Bedrock-Vertex/apply-3p-default-fallbacks.js"),
     ]);
     if (o()) e();
     else {

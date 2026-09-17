@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Z5t, OBe, tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrowWithCwd } from "./chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import {
   Ct,
   dH,
@@ -82,7 +82,7 @@ async function pe(e, t, { input: r, keepBytes: i, stopPastBytes: s }) {
             bytes: f,
             content: y === null ? null : Buffer.concat(y),
             ...(p && { stopped: !0 }),
-            stderr: oe(m, O),
+            stderr: truncateToCodeUnits(m, O),
           }));
       };
     try {
@@ -204,7 +204,7 @@ async function me(e, t, r, i) {
   return {
     exitCode: l.exitCode,
     stdout: u ? l.stdout : "",
-    stderr: oe(l.stderr, O),
+    stderr: truncateToCodeUnits(l.stderr, O),
     ...(l.maxBufferExceeded && { maxBufferExceeded: !0 }),
   };
 }
@@ -232,7 +232,7 @@ async function AFt(e, t, r, i = {}) {
       u({ exitCode: void 0, stderr: "" });
       return;
     }
-    let m = () => oe(Buffer.concat(d).toString("utf8"), O);
+    let m = () => truncateToCodeUnits(Buffer.concat(d).toString("utf8"), O);
     (p.stdout?.on("data", (b) => {
       if (y) return;
       try {
@@ -1161,7 +1161,7 @@ async function St({
     ok: !0,
     content: _,
     sizeBytes: _.length,
-    sha256: mn(_),
+    sha256: hashSha256(_),
     refs: w,
     omitted: B,
     prerequisites: R,

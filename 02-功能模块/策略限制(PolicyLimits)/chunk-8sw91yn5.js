@@ -10,13 +10,13 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { po, Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { be, uo } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir, isSimpleMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { CLAUDE_AI_INFERENCE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   cU,
   fVt,
@@ -35,14 +35,14 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te, truncateToWidth, truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { ZU, up } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceInvisibleChars, stripInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { getAPIProvider, isFirstPartyAnthropicBaseUrl, isActualFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { nar, mx, rar } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { setComplianceTaints, getComplianceTaints, registerPolicyVerdict } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { MRe, lBe, Qse, cBe, xir, Hir, Iir } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { expandTabs } from "../../01-核心基础设施/共享小工具-未细化/expand-tabs.js";
 import { INVALID_TOOL_NAME_PLACEHOLDER, l1, lkn } from "../对话框-确认UI/对话框-确认UI.4ggnfbtb.js";
 import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Xs } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
 import { join as We } from "path";
@@ -152,7 +152,7 @@ function Q(e) {
       if (t.length <= x) return t;
       let r = [],
         o = "";
-      for (let { segment: i } of Xs().segment(t))
+      for (let { segment: i } of getGraphemeSegmenter().segment(t))
         if (o.length > 0 && o.length + i.length > xe) (r.push(o), (o = i));
         else o += i;
       if (o.length > 0) r.push(o);
@@ -164,7 +164,7 @@ function Q(e) {
 function W(e) {
   let t = "",
     r = 0;
-  for (let { segment: o } of Xs().segment(e)) {
+  for (let { segment: o } of getGraphemeSegmenter().segment(e)) {
     t += o;
     let i = te(t),
       l = i - r;
@@ -176,7 +176,7 @@ function Ce(e) {
   let t = "",
     r = "",
     o = 0;
-  for (let { segment: i } of Xs().segment(e)) {
+  for (let { segment: i } of getGraphemeSegmenter().segment(e)) {
     r += i;
     let l = te(r),
       u = l - o;
@@ -193,11 +193,11 @@ function V(e) {
     t = o;
   }
   if (W(t)) return t;
-  return [...Xs().segment(t)].map(() => "\uFFFD").join("");
+  return [...getGraphemeSegmenter().segment(t)].map(() => "\uFFFD").join("");
 }
 function Ae(e, t) {
   let r = "";
-  for (let { segment: o } of Xs().segment(e)) {
+  for (let { segment: o } of getGraphemeSegmenter().segment(e)) {
     if (r.length + o.length > t) break;
     r += o;
   }
@@ -220,7 +220,7 @@ var Ee = 4 * x * x,
 function Re(e) {
   let t = Ee,
     r = we,
-    o = (i) => [...Xs().segment(i)].length;
+    o = (i) => [...getGraphemeSegmenter().segment(i)].length;
   return e
     .split(
       `
@@ -272,7 +272,7 @@ function JJe(e) {
   return e.replace(ke, "");
 }
 function t5(e) {
-  return ee(JJe(up(e)), !1);
+  return ee(JJe(stripInvisibleChars(e)), !1);
 }
 var Te = /\p{Default_Ignorable_Code_Point}/u,
   Ne = /\p{Cf}/u;
@@ -339,7 +339,7 @@ function lAt(e) {
 }
 var Rm = 200000;
 function Fe(e, t = vve) {
-  return oe(e, t) === e;
+  return truncateToCodeUnits(e, t) === e;
 }
 function aA(e) {
   return (
@@ -348,7 +348,7 @@ function aA(e) {
   );
 }
 function tCn(e) {
-  let t = oe(e, vve),
+  let t = truncateToCodeUnits(e, vve),
     r = t.replace(/\t/g, " ");
   return t === e ? r : `${r}\u2026`;
 }
@@ -473,7 +473,7 @@ function d6(e) {
 var Eme = 48,
   BC = 256;
 function M4t(e) {
-  let t = cse(oe(e, BC)),
+  let t = cse(truncateToCodeUnits(e, BC)),
     r = t.replace(/\s+/g, " ").trim();
   return truncateToWidth(cAt(r, t, e.length > BC), Eme);
 }
@@ -482,12 +482,12 @@ function cAt(e, t, r = !1) {
   return e === t && !o && !r ? e : b(t);
 }
 function ae(e) {
-  let t = cse(oe(e, BC)),
+  let t = cse(truncateToCodeUnits(e, BC)),
     r = t.replace(/\s+/g, " ").trim();
   return cAt(r, t, e.length > BC);
 }
 function n5(e) {
-  return oe(e, BC) === e;
+  return truncateToCodeUnits(e, BC) === e;
 }
 function D$e(e, t) {
   let r = new Map(),
@@ -498,7 +498,7 @@ function D$e(e, t) {
     (f.add(u), r.set(p, f));
   }
   let i = (u) =>
-      b(oe(u, vve)).replace(
+      b(truncateToCodeUnits(u, vve)).replace(
         /[\u007f-\uffff]/g,
         (p) => `\\u${p.charCodeAt(0).toString(16).padStart(4, "0")}`,
       ) + (u.length > vve ? "\u2026" : ""),
@@ -554,7 +554,7 @@ function JG(e) {
   return l1(M4t(t));
 }
 function Rve(e) {
-  return e === "" || te(oe(e, BC)) === 0;
+  return e === "" || te(truncateToCodeUnits(e, BC)) === 0;
 }
 function He(e) {
   return e
@@ -563,11 +563,11 @@ function He(e) {
     .replace(/\b\w/g, (t) => t.toUpperCase());
 }
 function Ynr(e) {
-  let t = oe((e.scope === "claudeai" ? e.displayName : void 0) ?? "", BC),
-    r = oe(e.title ?? "", BC),
-    o = k(oe(e.serverName, BC)),
+  let t = truncateToCodeUnits((e.scope === "claudeai" ? e.displayName : void 0) ?? "", BC),
+    r = truncateToCodeUnits(e.title ?? "", BC),
+    o = k(truncateToCodeUnits(e.serverName, BC)),
     i = d6(t) ? k(t) : YG(o) ? o : "(unnamed server)",
-    l = oe(e.toolName, BC),
+    l = truncateToCodeUnits(e.toolName, BC),
     u = cse(He(l)),
     p = cse(l),
     f = d6(r) ? k(r) : YG(u) ? u : YG(p) ? p : "(unnamed tool)";
@@ -697,7 +697,7 @@ function ce(e) {
   return jd(e) !== e;
 }
 function N4t(e) {
-  let t = cse(oe(e, BC)),
+  let t = cse(truncateToCodeUnits(e, BC)),
     r = t.replace(/\s+/g, " ").trim();
   return cAt(
     r,
@@ -708,7 +708,7 @@ function N4t(e) {
       L(r).startsWith("and ") ||
       L(r).endsWith(" and") ||
       e.length > BC ||
-      jd(oe(e, BC)) !== oe(e, BC),
+      jd(truncateToCodeUnits(e, BC)) !== truncateToCodeUnits(e, BC),
   );
 }
 function Qk(e, t = ae) {
@@ -741,9 +741,9 @@ function dAt(e) {
 }
 function QG(e) {
   if (typeof e !== "string") return null;
-  let t = k(oe(e, BC)).replace(/\t/g, " ");
-  if (!YG(kr(t))) return null;
-  if (le(kr(t))) return null;
+  let t = k(truncateToCodeUnits(e, BC)).replace(/\t/g, " ");
+  if (!YG(firstLine(t))) return null;
+  if (le(firstLine(t))) return null;
   return l1(truncate(t, 24, !0));
 }
 function Qnr(e, ...t) {
@@ -755,7 +755,7 @@ function Ame(e) {
   return /[\u0000-\u001f\u007f-\u009f]/.test(e) || oU(e);
 }
 function z(e) {
-  let t = oe(ZU(e, "").toLowerCase(), 64).trim();
+  let t = truncateToCodeUnits(replaceInvisibleChars(e, "").toLowerCase(), 64).trim();
   return /^[a-z0-9_-]+$/.test(t) ? t : "";
 }
 var eQe = 16;
@@ -797,7 +797,7 @@ var ue = createLazyValue(() =>
       monitoring_notice: c({
         text: s()
           .max(500)
-          .transform((e) => ZU(e, "", { keepEmojiJoiners: !0 })),
+          .transform((e) => replaceInvisibleChars(e, "", { keepEmojiJoiners: !0 })),
         url: s()
           .max(2048)
           .url()
@@ -846,7 +846,7 @@ class PolicyState {
     if (
       ((this.sessionCache = e),
       this.cacheRevision++,
-      nar(r),
+      setComplianceTaints(r),
       K(e?.monitoring_notice ?? null),
       t.length !== r.length || r.some((o) => !t.includes(o)))
     )
@@ -890,7 +890,7 @@ function getPolicyCacheRevision() {
   return g().cacheRevision;
 }
 function getCachePath() {
-  return We(be(), Ve);
+  return We(getClaudeConfigDir(), Ve);
 }
 function isPolicyLimitsEligible() {
   return getPolicyLimitsIneligibleReason() === void 0;
@@ -997,7 +997,7 @@ function isPolicyAllowed(e) {
   if (!t) {
     if (Ye.has(e)) {
       if (isPolicyLimitsEligible()) return !1;
-      if (qe.has(e) && St() && !(e === "allow_product_feedback" && cU()))
+      if (qe.has(e) && isEssentialTrafficOnly() && !(e === "allow_product_feedback" && cU()))
         return !1;
     }
     return !0;
@@ -1014,7 +1014,7 @@ function isPolicyAllowedInResponse(e, t) {
     if (i === t && e.compliance_taints.includes(o)) return !1;
   return !0;
 }
-rar({
+registerPolicyVerdict({
   isPolicyAllowed: (e) => isPolicyAllowed(e),
   policyDenyKind: (e) => policyDenyKind(e),
   policyDeniedReason: (e, t, r) => policyDeniedReason(e, t, r),
@@ -1030,10 +1030,10 @@ function policyDeniedReason(e, t, r, o) {
   if (isPolicyRouteMissing()) return cBe(t);
   if (o !== void 0 && !hasNameableComplianceTaint()) return o;
   if (getResponseFromCache() === null) return Qse(t);
-  return lBe(t, r, mx());
+  return lBe(t, r, getComplianceTaints());
 }
 function hasNameableComplianceTaint() {
-  return MRe(mx()).length > 0;
+  return MRe(getComplianceTaints()).length > 0;
 }
 function policyDenyKind(e) {
   if (isPolicyAllowed(e)) return null;
@@ -1045,7 +1045,7 @@ function policyDeniedHint(e, t) {
   if (r === null) return null;
   if (r === "route_missing") return Iir();
   if (t !== void 0 && !hasNameableComplianceTaint()) return t;
-  return r === "cache_miss" ? Hir() : xir(mx());
+  return r === "cache_miss" ? Hir() : xir(getComplianceTaints());
 }
 function areComplianceTaintsSettled() {
   if (
@@ -1065,7 +1065,7 @@ function areComplianceTaintsSettled() {
     (e?.subscriptionType === "pro" || e?.subscriptionType === "max") &&
     e.scopes?.includes(CLAUDE_AI_INFERENCE_SCOPE) === !0 &&
     getClaudeAIOAuthTokenOrigin() === "store" &&
-    !uo() &&
+    !isSimpleMode() &&
     !getAnthropicApiKeyWithSourceSafe({ skipRetrievingKeyFromApiKeyHelper: !0 }).key &&
     !shouldUseWIFAuth()
   );

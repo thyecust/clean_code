@@ -13,8 +13,8 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { aB } from "./chunk-9ys1bnqr.js";
+import { truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { NONINTERACTIVE_GIT_ENV } from "./git-exec-hardening.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { raceWithTimeout } from "../../01-核心基础设施/共享小工具-未细化/with-timeout.js";
 import { redactSecrets } from "../../01-核心基础设施/共享小工具-未细化/redact-secrets.js";
@@ -697,7 +697,7 @@ async function Oe(e, t, n, r = !1, i = Tt) {
     w = 0,
     T,
     h = [],
-    S = (o) => (o.length <= Te ? o : oe(o, Pe) + "\u2026" + Qu(o, Te - Pe - 1)),
+    S = (o) => (o.length <= Te ? o : truncateToCodeUnits(o, Pe) + "\u2026" + takeLastCodeUnits(o, Te - Pe - 1)),
     m = () => (h.length > 0 ? { attempt_errors: b(h) } : {}),
     g = 0,
     d = 0,
@@ -954,7 +954,7 @@ async function p(e, t, n, r, i = le, s) {
       CLAUDE_CODE_SESSION_ACCESS_TOKEN: void 0,
       ...(u ? { GIT_CONFIG_GLOBAL: "/dev/null" } : void 0),
       GIT_TERMINAL_PROMPT: "0",
-      GCM_INTERACTIVE: aB.GCM_INTERACTIVE,
+      GCM_INTERACTIVE: NONINTERACTIVE_GIT_ENV.GCM_INTERACTIVE,
       LC_ALL: "C",
       GIT_PROGRESS_DELAY: "0",
       ...g7,

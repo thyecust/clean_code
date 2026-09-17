@@ -21,11 +21,11 @@ import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51
 import { js } from "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { resolveAgentColor, CollapsedMessagesHint } from "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { UA } from "../工具UI渲染/chunk-g4k5jjwt.js";
+import { TruncatedText } from "../工具UI渲染/chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import { L } from "./chunk-mrfx53ye.js";
+import { figures } from "./chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var g = "</cross-session-message>",
   B = "peer";
@@ -79,7 +79,7 @@ function UserCrossSessionMessage(se) {
   let m = F;
   if (ae) {
     let n;
-    if (i[7] !== m) ((n = e(UA, { text: m })), (i[7] = m), (i[8] = n));
+    if (i[7] !== m) ((n = e(TruncatedText, { text: m })), (i[7] = m), (i[8] = n));
     else n = i[8];
     return n;
   }
@@ -100,7 +100,7 @@ function UserCrossSessionMessage(se) {
   else x = i[13];
   let H;
   if (i[14] === MEMO_CACHE_SENTINEL)
-    ((H = e(t, { "aria-hidden": !0, children: L.pointer })), (i[14] = H));
+    ((H = e(t, { "aria-hidden": !0, children: figures.pointer })), (i[14] = H));
   else H = i[14];
   let T;
   if (i[15] !== f)

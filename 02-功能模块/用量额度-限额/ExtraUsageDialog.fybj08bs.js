@@ -24,5 +24,5 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 export { WIt as ExtraUsageDialog, fit as PlainAwait };

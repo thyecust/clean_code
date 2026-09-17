@@ -14,7 +14,7 @@ import { sleep, withDeadline } from "../../01-核心基础设施/共享小工具
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import {
   A3,
@@ -32,12 +32,12 @@ import {
   zO,
   Ght,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Zce, Hze, oft, Zbe, cln } from "../文件同步-Sync/chunk-ht8ydg1v.js";
-import { A3n, C3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-37w8v4sh.js";
+import { MAX_ETAG_LENGTH, HALT_REASONS, getResolvedBundleSchema, isSyncableRelativePath, getWithheldCountsSchema } from "../文件同步-Sync/sync-journal.js";
+import { parseSessionSyncState, parseSessionSeedNote } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
 import { STREAMING_TIMING_DEFAULTS } from "../../01-核心基础设施/共享小工具-未细化/chunk-ydn85r3t.js";
 import { Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { s, T, O, v, c, it, $e, Ko, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { watch } from "fs";
 var ce = 50;
@@ -76,7 +76,7 @@ function en(e) {
 function Jpt({
   root: e,
   watch: t = Ke,
-  separator: r = P() === "windows" ? "\\" : "/",
+  separator: r = getCurrentPlatform() === "windows" ? "\\" : "/",
   settleMs: a = ce,
   nowMs: p = Date.now,
 }) {
@@ -797,7 +797,7 @@ async function Fe(e, t, r) {
       throw Error("dir-sync: session record write failed", { cause: a.error });
     return;
   }
-  (await mkdir(dirname(e), { recursive: !0, mode: cn }), await On(e, t, me));
+  (await mkdir(dirname(e), { recursive: !0, mode: cn }), await writeFileAtomic(e, t, me));
 }
 async function Ie(e, t, r) {
   if (e.length > j) throw Error("session record too large to store");
@@ -850,7 +850,7 @@ function f3n(e) {
   }
 }
 var F = createLazyValue(() => s().regex(nn).refine(Mne)),
-  V = createLazyValue(() => s().refine(Zbe)),
+  V = createLazyValue(() => s().refine(isSyncableRelativePath)),
   De = createLazyValue(() =>
     $e([
       c({ head: F(), branch: s().max(Ade).nullable().catch(null) }),
@@ -883,8 +883,8 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
       worktreeCommit: F(),
       indexTree: F(),
       worktreeTree: F(),
-      bundle: oft().nullable(),
-      withheldCounts: cln(),
+      bundle: getResolvedBundleSchema().nullable(),
+      withheldCounts: getWithheldCountsSchema(),
       conflicted: v(s().max(4 * YTe))
         .max(XTe)
         .optional(),
@@ -931,10 +931,10 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
         .refine((e) =>
           e.every((t, r) => r === 0 || t.generation < e[r - 1].generation),
         ),
-      outboundEtag: s().min(1).max(Zce).nullable(),
-      journalEtag: s().min(1).max(Zce).nullable(),
+      outboundEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable(),
+      journalEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable(),
       announcementToken: s().min(1).max(64).nullable().optional(),
-      announcementEtag: s().min(1).max(Zce).nullable().optional(),
+      announcementEtag: s().min(1).max(MAX_ETAG_LENGTH).nullable().optional(),
       acked: v(F()).max($_),
       received: v(
         c({ generation: T().int().positive(), worktreeCommit: F() }),
@@ -970,7 +970,7 @@ var F = createLazyValue(() => s().regex(nn).refine(Mne)),
         .optional(),
       generationSpent: T().int().nonnegative().default(0),
       ended: c({
-        reason: X(Hze).catch("ended_earlier"),
+        reason: X(HALT_REASONS).catch("ended_earlier"),
         line: s().max(2000),
         atMs: T().int().nonnegative(),
         published: O(),
@@ -1049,7 +1049,7 @@ async function mte(e, t, r) {
   if (!f.success) return { kind: "unreadable" };
   switch (f.data.engine) {
     case void 0:
-      return A3n(p, t) !== null || C3n(p, t) !== null
+      return parseSessionSyncState(p, t) !== null || parseSessionSeedNote(p, t) !== null
         ? { kind: "unsupported", engine: "rows" }
         : { kind: "unreadable" };
     case "git": {
@@ -1186,7 +1186,7 @@ function w3n(e, t) {
   if (!ge(t.turn) || (r === void 0 && e.downApplied.length >= C3)) return e;
   let a = t.installed.filter(
       (h) =>
-        Zbe(h.path) &&
+        isSyncableRelativePath(h.path) &&
         (h.blobId === null || (nn.test(h.blobId) && Mne(h.blobId))) &&
         Number.isSafeInteger(h.mode) &&
         h.mode >= 0,
@@ -1194,7 +1194,7 @@ function w3n(e, t) {
     p = new Set(a.map((h) => h.path)),
     f = new Map(e.installedSinceUpload.map((h) => [h.path, h]));
   for (let h of a) (f.delete(h.path), f.set(h.path, { ...h, turn: t.turn }));
-  let d = t.notInstalled.filter((h) => Zbe(h.path)),
+  let d = t.notInstalled.filter((h) => isSyncableRelativePath(h.path)),
     g = t.complete,
     w = [
       ...new Map(
@@ -1231,7 +1231,7 @@ function w3n(e, t) {
   };
 }
 function Sn(e) {
-  let t = e.filter(Zbe).slice(0, Be);
+  let t = e.filter(isSyncableRelativePath).slice(0, Be);
   return { parkedRemovals: t, parkedRemovalsOverflow: t.length !== e.length };
 }
 function tln(e, t, r) {

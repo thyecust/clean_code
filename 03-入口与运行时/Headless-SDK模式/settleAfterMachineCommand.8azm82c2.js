@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 211 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Jmr, MQt, RIt, NQt, FQt } from "../../02-功能模块/远程工具执行/远程工具执行.6bj9ddx2.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
+import "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import "../../02-功能模块/远程工具执行/chunk-66axrkvh.js";
 export {
   NQt as clearForwardToMachine,

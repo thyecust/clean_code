@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { qJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAsset } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 var J = "./hljsBundle.generated.min.js";
 function loadHljsBundleJs() {
-  return qJ(J, import.meta.dirname);
+  return readEmbeddedAsset(J, import.meta.dirname);
 }
 export { loadHljsBundleJs };

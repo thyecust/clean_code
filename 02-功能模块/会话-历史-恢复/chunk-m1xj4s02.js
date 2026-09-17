@@ -8,19 +8,19 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { _n } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment } from "../Teammates团队/storage-keys.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { LITE_READ_BUF_SIZE, validateUuid, readSessionLite } from "./chunk-mkmy4cx2.js";
 import { tE } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { lP } from "../Teammates团队/chunk-thxapyam.js";
-import { hu, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
+import { resolveTranscriptLocator, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { si } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, O, c, it, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
-import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import { runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
+import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
-class Fy {
+class AsyncQueue {
   returned;
   queue = [];
   readResolve;
@@ -74,11 +74,11 @@ class Fy {
 import { readFile } from "fs/promises";
 import { dirname as E, join as D } from "path";
 var C = createLazyValue(() => c({ customTitle: s() }));
-function LSt(e, t) {
+function getSessionTitleSidecarPath(e, t) {
   return D(E(e), t, "custom-title.json");
 }
-async function Cyn(e, t, i) {
-  let n = await N(LSt(e, t), i);
+async function readSessionCustomTitle(e, t, i) {
+  let n = await N(getSessionTitleSidecarPath(e, t), i);
   if (n === void 0) return;
   let r;
   try {
@@ -121,12 +121,12 @@ var P = '"type":"continued-in"',
       message: it({ stop_reason: s().nullish() }).optional(),
     }),
   );
-function MSt(e) {
+function formatContinuedInMessage(e) {
   return e.provable
     ? `Your most recent conversation is running in the background (session ${e.sessionId}). Use \`claude agents\` to find and attach to it, or \`claude --resume\` to pick another session.`
     : `Your most recent conversation moved to a background session (${e.sessionId}) registered from another machine or container, so this one can't tell whether it is still running. Use \`claude --resume\` to pick a session, or add --fork-session to branch off a copy.`;
 }
-function yYn(e, t) {
+function createContinuedInRecord(e, t) {
   return {
     type: "continued-in",
     timestamp: new Date().toISOString(),
@@ -134,7 +134,7 @@ function yYn(e, t) {
     continuedInSessionId: t,
   };
 }
-function vyn(e) {
+function parseContinuedInSessionId(e) {
   if (!e.includes(P)) return;
   let t = e.length;
   while (t > 0) {
@@ -167,20 +167,20 @@ function z(e) {
       t.data.isApiErrorMessage !== !0 &&
       typeof t.data.message?.stop_reason === "string"
     );
-  return isRecord(e) && Ohe(e, { commandFallback: "" }) !== void 0;
+  return isRecord(e) && extractUserPromptText(e, { commandFallback: "" }) !== void 0;
 }
-async function Ryn(e, t, i) {
+async function continuedInSessionExists(e, t, i) {
   let n = _(x(e), `${t}.jsonl`),
-    r = await readSessionLite(n, Mh(hu(n, i)));
-  return r !== null && (await kyn(n, r.head, r.tail, r.size, i));
+    r = await readSessionLite(n, createTranscriptSource(resolveTranscriptLocator(n, i)));
+  return r !== null && (await hasParentUuidEntries(n, r.head, r.tail, r.size, i));
 }
 var h = '"parentUuid":',
   U = 16777216,
   I = 1048576;
-async function kyn(e, t, i, n, r) {
+async function hasParentUuidEntries(e, t, i, n, r) {
   if (t.includes(h) || i.includes(h)) return !0;
   if (n <= LITE_READ_BUF_SIZE) return !1;
-  if (hu(e, r) !== void 0) return !0;
+  if (resolveTranscriptLocator(e, r) !== void 0) return !0;
   try {
     let u = await F(e, y.O_RDONLY | y.O_NOFOLLOW | y.O_NONBLOCK);
     try {
@@ -206,15 +206,15 @@ async function kyn(e, t, i, n, r) {
 import { readdir as q, stat as J } from "fs/promises";
 import { basename, join as b } from "path";
 function X(e) {
-  let t = lP(e);
-  return t !== void 0 && _n(t) ? t : void 0;
+  let t = getProjectKeyFromDir(e);
+  return t !== void 0 && isValidPathSegment(t) ? t : void 0;
 }
-async function SYn(e, t, i, n, r, o) {
+async function listProjectSessions(e, t, i, n, r, o) {
   let u = isHoverRestEnabled() && n !== void 0 ? X(e) : void 0;
   if (n !== void 0 && u !== void 0) {
     let f = new Map();
     try {
-      await Qo(
+      await runPaginatedScan(
         (l) =>
           n.listEntries(
             { namespace: "transcript", projectKey: u },
@@ -289,7 +289,7 @@ async function SYn(e, t, i, n, r, o) {
 }
 import { constants as j } from "fs";
 import { open as Z, readdir as ot, rm as st, stat as at } from "fs/promises";
-async function bYn(e, t, i) {
+async function tryAppendTranscriptEntry(e, t, i) {
   if (isHoverRestEnabled() && i !== void 0) return Q(i, t);
   let n;
   try {
@@ -331,4 +331,4 @@ async function Q({ backend: e, key: t }, i) {
   }
   return !0;
 }
-export { Fy, LSt, Cyn, MSt, yYn, vyn, Ryn, kyn, SYn, bYn };
+export { AsyncQueue, getSessionTitleSidecarPath, readSessionCustomTitle, formatContinuedInMessage, createContinuedInRecord, parseContinuedInSessionId, continuedInSessionExists, hasParentUuidEntries, listProjectSessions, tryAppendTranscriptEntry };

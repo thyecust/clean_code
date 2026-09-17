@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { ym } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Vhe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { CHANNEL_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isClaudeAISubscriber, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -17,7 +17,7 @@ import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCa
 import { go, YRe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { getChannelAllowlist, isChannelsEnabled } from "./chunk-rbjz1q03.js";
 import { hasChannelCapability } from "../../01-核心基础设施/共享小工具-未细化/has-channel-capability.js";
-import { og } from "./chunk-33bdfgmx.js";
+import { parsePluginIdIgnoringReservedMarketplace } from "./chunk-33bdfgmx.js";
 import { s, c, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var ChannelMessageNotificationSchema = createLazyValue(() =>
     c({
@@ -43,10 +43,10 @@ function wrapChannelMessage(e, r, i) {
       { level: "warn" },
     );
   let p = a.map(([l, d]) => ` ${l}="${go(d)}"`).join(""),
-    u = YRe(Vhe, r);
-  return `<${Vhe} source="${go(e)}"${p}>
+    u = YRe(CHANNEL_TAG, r);
+  return `<${CHANNEL_TAG} source="${go(e)}"${p}>
 ${u}
-</${Vhe}>`;
+</${CHANNEL_TAG}>`;
 }
 function g(e, r) {
   let i = [],
@@ -118,7 +118,7 @@ function gateChannelServer(e, r, i, o) {
       reason: `server ${e} not in --channels list for this session`,
     };
   if (t.kind === "plugin") {
-    let p = i ? og(i).marketplace : void 0;
+    let p = i ? parsePluginIdIgnoringReservedMarketplace(i).marketplace : void 0;
     if (p !== t.marketplace)
       return {
         action: "skip",

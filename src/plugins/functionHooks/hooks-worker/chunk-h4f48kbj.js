@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { S, Ln } from "./analytics-fields.js";
+import { fromLiteral, fromSanitizer } from "./analytics-fields.js";
 import { toESM, commonJS } from "./chunk-2c9tjhwd.js";
 var xo = commonJS(function (wo) {
   Object.defineProperty(wo, "__esModule", { value: !0 });
@@ -8744,7 +8744,7 @@ function Jr(e) {
   return w8(A(e));
 }
 function w8(e) {
-  return e && /^[A-Z][A-Z0-9_]{0,63}$/.test(e) ? Ln(e) : void 0;
+  return e && /^[A-Z][A-Z0-9_]{0,63}$/.test(e) ? fromSanitizer(e) : void 0;
 }
 var H_e = "did not become reachable within",
   I_e = "exited before it became reachable",
@@ -8757,47 +8757,47 @@ function WHt(e) {
 function Gw(e) {
   let t = e?.name;
   return typeof t === "string" && /^[A-Z][a-zA-Z]{0,63}$/.test(t)
-    ? Ln(t)
+    ? fromSanitizer(t)
     : void 0;
 }
 function Jg(e) {
   return Jr(e) ?? Gw(e);
 }
 function EZ(e) {
-  return Ln(Jr(e)?.toLowerCase() ?? "other");
+  return fromSanitizer(Jr(e)?.toLowerCase() ?? "other");
 }
 function z0(e) {
   return Gw(e);
 }
 function AZ(e) {
-  return e !== void 0 && /^[A-Z][A-Za-z0-9_]{0,63}$/.test(e) ? Ln(e) : void 0;
+  return e !== void 0 && /^[A-Z][A-Za-z0-9_]{0,63}$/.test(e) ? fromSanitizer(e) : void 0;
 }
 function GHt(e) {
   let t = AZ(e);
-  return t === void 0 ? void 0 : Ln(t.toLowerCase());
+  return t === void 0 ? void 0 : fromSanitizer(t.toLowerCase());
 }
 function hv(e) {
   return typeof e === "string" && /^[A-Z][a-zA-Z]{0,63}$/.test(e)
-    ? Ln(e)
+    ? fromSanitizer(e)
     : void 0;
 }
 function dot(e) {
   return typeof e === "string" && /^[a-z][a-z_]{0,39}$/.test(e)
-    ? Ln(e)
-    : S("unparseable");
+    ? fromSanitizer(e)
+    : fromLiteral("unparseable");
 }
 function Ub(e) {
-  return /^[a-z][a-z0-9_]{0,39}$/.test(e) ? Ln(e) : S("unparseable");
+  return /^[a-z][a-z0-9_]{0,39}$/.test(e) ? fromSanitizer(e) : fromLiteral("unparseable");
 }
 function lNn(e) {
   if (e === void 0) return;
   let t = e.indexOf(":"),
     r = t === -1 ? e : e.slice(0, t);
-  if (!/^[a-z][a-z0-9_]{0,39}$/.test(r)) return S("unparseable");
-  if (t === -1) return Ln(r);
+  if (!/^[a-z][a-z0-9_]{0,39}$/.test(r)) return fromLiteral("unparseable");
+  if (t === -1) return fromSanitizer(r);
   let n = e.slice(t + 1),
     s = w8(n) ?? hv(n) ?? (n === "string" || n === "non-error" ? n : "Error");
-  return Ln(`${r}:${s}`);
+  return fromSanitizer(`${r}:${s}`);
 }
 function cNn(e) {
   return hv(e);
@@ -8805,11 +8805,11 @@ function cNn(e) {
 function pot(e) {
   let t = e?.constructor?.name;
   return typeof t === "string" && /^[A-Za-z][A-Za-z0-9_]{0,39}$/.test(t)
-    ? Ln(t)
-    : S("unparseable");
+    ? fromSanitizer(t)
+    : fromLiteral("unparseable");
 }
 function uNn(e) {
-  return /^[^/\\]+:\d+:\d+$/.test(e) ? Ln(e) : void 0;
+  return /^[^/\\]+:\d+:\d+$/.test(e) ? fromSanitizer(e) : void 0;
 }
 var WW = new Set(["ENOSPC", "EDQUOT", "ENFILE", "EMFILE"]),
   dNn = new Set(["EACCES", "EPERM", "EROFS"]);

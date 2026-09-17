@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { findCommand, j2, L_t, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { ZQ } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { eJ, yQn, SQn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { NG, qH, qy } from "../MCP客户端/chunk-3kmsshb6.js";
+import { isFullFileView, matchesFileStateContent, normalizeFileContent } from "../MCP客户端/chunk-3kmsshb6.js";
 import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/共享小工具-未细化/text-truncation.js";
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -80,7 +80,7 @@ var S = 1024,
     },
     isEnabled() {
       if (a.CLAUDE_CODE_CHILD_SESSION || a.CLAUDECODE) return !1;
-      if (!ZQ() && !a.CLAUDE_CODE_SKILL_PROPOSALS) return !1;
+      if (!isRemoteCoworkEntrypoint() && !a.CLAUDE_CODE_SKILL_PROPOSALS) return !1;
       if (!a.CLAUDE_CODE_REMOTE_ENVIRONMENT_TYPE) return !1;
       if (
         !a.CLAUDE_CODE_SKILL_PROPOSALS &&
@@ -119,7 +119,7 @@ var S = 1024,
           ? `${d} (improves ${truncateForDisplay(collapseNewlines(r.target), 80)})`
           : d;
       });
-      return `Propose ${e.length} ${x(e.length, "skill")}: ${u.join(", ")}`;
+      return `Propose ${e.length} ${pluralize(e.length, "skill")}: ${u.join(", ")}`;
     },
     async validateInput({ proposals: t }, e) {
       let u = t.flatMap((o) =>
@@ -198,17 +198,17 @@ async function C(t, e, u, r) {
     return (await k(t, e)) ? "stale" : "read";
   }
   let d = await k(t, e);
-  if (NG(e)) {
+  if (isFullFileView(e)) {
     if (!d) return "read";
     let p = await y(t);
-    return p === void 0 || qH(e, p) ? "read" : "stale";
+    return p === void 0 || matchesFileStateContent(e, p) ? "read" : "stale";
   }
   let o = await y(t);
   if (o === void 0) return "unread";
-  if (qH(e, o)) return "read";
+  if (matchesFileStateContent(e, o)) return "read";
   let h =
     e.limit !== void 0 &&
-    ln(
+    countOccurrences(
       o,
       `
 `,
@@ -227,7 +227,7 @@ async function k(t, e) {
 async function y(t) {
   try {
     let e = await ae().readFileBytes(t);
-    return qy(e.toString("utf8"));
+    return normalizeFileContent(e.toString("utf8"));
   } catch (e) {
     n(`propose_skills: cannot read ${t}: ${l(e)}`);
     return;

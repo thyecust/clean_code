@@ -12,11 +12,11 @@
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { l_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
-import { zZ } from "./chunk-ktp8xtmy.js";
+import { ShellOutputView } from "./shell-output-view.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 var h = 2,
   d = 160;
@@ -51,7 +51,7 @@ function renderToolUseProgressMessage(
       children: e(t, { dimColor: !0, children: "Running\u2026" }),
     });
   let s = i.data;
-  return e(zZ, {
+  return e(ShellOutputView, {
     fullOutput: s.fullOutput,
     output: s.output,
     elapsedTimeSeconds: s.elapsedTimeSeconds,
@@ -89,8 +89,8 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
   return r(o, {
     flexDirection: "column",
     children: [
-      n !== "" ? e(l_, { content: n, verbose: u }) : null,
-      c.trim() !== "" ? e(l_, { content: c, verbose: u, isError: !0 }) : null,
+      n !== "" ? e(ToolResultContent, { content: n, verbose: u }) : null,
+      c.trim() !== "" ? e(ToolResultContent, { content: c, verbose: u, isError: !0 }) : null,
       n === "" && c.trim() === ""
         ? e(ToolResultRow, {
             height: 1,
@@ -115,7 +115,7 @@ function renderToolResultMessage(l, a, { verbose: u, theme: g, tools: m, style: 
   });
 }
 function renderToolUseErrorMessage(l, { verbose: a, progressMessagesForMessage: u, tools: g }) {
-  return e(Yd, { result: l, verbose: a });
+  return e(ToolErrorMessage, { result: l, verbose: a });
 }
 export {
   renderToolResultMessage,

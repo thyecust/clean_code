@@ -17,14 +17,14 @@ import { B1, n } from "../../01-核心基础设施/核心工具-日志与脱敏/
 import { oy, ee, es, FZe } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { R, l, A, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, mcpNameForAnalytics_GATE_EVALUATED } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOkAsync, logFeatureBadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Lq, qge } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getLocalSettingsValidationErrors, getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { o, t, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
   $v,
@@ -49,7 +49,7 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
-import { QSt } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { listMcpToolsRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
@@ -60,15 +60,15 @@ import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具
 import { V0, Fz, cJt } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { RenderOnceAndExit, renderAndWaitForExit } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { printCliError, cliError, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
-import { HUn } from "./chunk-35zjqw7h.js";
+import { formatMcpConnectionError } from "./mcp-error-messages.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { formatMcpServerNotFoundMessage, formatMcpServerNotFoundMessageWithPendingApproval } from "../../01-核心基础设施/共享小工具-未细化/mcp-server-not-found-message.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { uze, Dbe } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
+import { getLocalSettingsErrorsBlockingWrite, getGatingSettingsErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
 import { Dn, kn, E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { stat as it } from "fs/promises";
@@ -94,7 +94,7 @@ function he(kt) {
   if (T[2] === MEMO_CACHE_SENTINEL) ((Ge = {}), (T[2] = Ge));
   else Ge = T[2];
   let [z, At] = d(Ge),
-    [re] = cn(),
+    [re] = useTheme(),
     { storageV5: G } = useStorageV5Context(),
     Je,
     Ve;
@@ -174,7 +174,7 @@ function he(kt) {
     };
     X = function X(Lt) {
       Re(Lt).catch((Ut) => {
-        (Kn(`
+        (writeToStdout(`
 ${getThemeColor("error", re)(l(Ut))}
 `),
           ce(),
@@ -184,15 +184,15 @@ ${getThemeColor("error", re)(l(Ut))}
     ie = (Ee) => {
       let { importedCount: ke, failures: zt } = Ee;
       if (ke > 0)
-        Kn(`
-${getThemeColor("success", re)(`Successfully imported ${ke} MCP ${x(ke, "server")} to ${W} config.`)}
+        writeToStdout(`
+${getThemeColor("success", re)(`Successfully imported ${ke} MCP ${pluralize(ke, "server")} to ${W} config.`)}
 `);
       else
-        Kn(`
+        writeToStdout(`
 No servers were imported.`);
       (zt.forEach((pe) => {
         let { serverName: qt, reason: Gt } = pe;
-        Kn(`
+        writeToStdout(`
 ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
 `);
       }),
@@ -219,7 +219,7 @@ ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
   const Ee = I.length;
   let pe;
   if (T[26] !== I.length)
-    ((pe = x(I.length, "server")), (T[26] = I.length), (T[27] = pe));
+    ((pe = pluralize(I.length, "server")), (T[26] = I.length), (T[27] = pe));
   else pe = T[27];
   const xe = `Found ${Ee} MCP ${pe} in Claude Desktop.`;
   let fe;
@@ -346,7 +346,7 @@ async function Ie(h, s, v) {
     if (a.type === "connected") {
       if (a.capabilities.tools)
         try {
-          await QSt(a, { timeout: 5000 });
+          await listMcpToolsRaw(a, { timeout: 5000 });
         } catch (f) {
           if (at().isListAuthError(f))
             return { status: "! Needs authentication" };
@@ -355,19 +355,19 @@ async function Ie(h, s, v) {
             issue: lt(f),
           };
         }
-      return { status: `${L.tick} Connected` };
+      return { status: `${figures.tick} Connected` };
     } else if (a.type === "needs-auth")
       return { status: "! Needs authentication" };
     else if (ow(a)) return { status: "- Not configured" };
     else if (a.type === "failed") {
-      let f = HUn(a);
+      let f = formatMcpConnectionError(a);
       return {
-        status: `${L.cross} Failed to connect`,
+        status: `${figures.cross} Failed to connect`,
         ...(f !== "" && { issue: f }),
       };
-    } else return { status: `${L.cross} Failed to connect` };
+    } else return { status: `${figures.cross} Failed to connect` };
   } catch (a) {
-    return { status: `${L.cross} Connection error` };
+    return { status: `${figures.cross} Connection error` };
   }
 }
 async function mcpServeHandler(
@@ -600,7 +600,7 @@ function He(Vr) {
   return nt;
 }
 var Le = "\u23F8 Pending approval (run `claude` to approve)",
-  pt = `${L.cross} Rejected (see disabledMcpjsonServers in settings)`,
+  pt = `${figures.cross} Rejected (see disabledMcpjsonServers in settings)`,
   Ue = "\u2298 Disabled for this project (re-enable via /mcp)";
 async function mcpListHandler(h, s, v) {
   (await logEventAsync("tengu_mcp_list", {}), await V0({ hasDynamicMcpConfig: !1 }));
@@ -823,7 +823,7 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
 async function mcpAddFromDesktopHandler(h, s) {
   try {
     let v = zLe(h.scope),
-      a = P();
+      a = getCurrentPlatform();
     await logEventAsync("tengu_mcp_add", {
       scope: fromEnum(v),
       platform: fromEnum(a),
@@ -892,7 +892,7 @@ async function mcpResetChoicesHandler(h, s) {
         a.enableAllProjectMcpServers !== void 0
       : getLocalSettingsValidationErrors().length > 0
   ) {
-    if (a !== null && uze().length > 0)
+    if (a !== null && getLocalSettingsErrorsBlockingWrite().length > 0)
       return (
         printCliError(
           "Error: Failed to reset project choices: settings.local.json carries validation warnings, and rewriting it would delete the warned entries \u2014 run `claude doctor` to list them, fix them, then re-run (legacy approvals in ~/.claude.json were cleared; local settings were not)",
@@ -956,7 +956,7 @@ async function mcpResetChoicesHandler(h, s) {
         autoApprovedServers: C,
         stillRejectedServers: O,
         pendingCount: j,
-        gatingErrors: Dbe().length,
+        gatingErrors: getGatingSettingsErrors().length,
       };
     }
   } catch (y) {

@@ -126,7 +126,7 @@ import {
   okn,
   skn,
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { NU, tHn } from "../../02-功能模块/图片-截图-ComputerUse/chunk-x87xxkp4.js";
+import { NOTIFICATION_CHANNELS as NU, tHn } from "../../02-功能模块/图片-截图-ComputerUse/settings-option-values.js";
 export {
   emr as CONFIG_CRASH_MARKER_REENQUEUE_DELAYS_MS,
   tmr as CONFIG_LOCK_BOOT_SAVE_RETRY_BUDGET_MS,

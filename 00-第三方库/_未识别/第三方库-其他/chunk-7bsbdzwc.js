@@ -11,17 +11,17 @@ import { he, VR, u_e, ke } from "../../lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "../../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getGlobalClaudeFile } from "../../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ge, l } from "../../@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { _z } from "../../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { writeToStderr } from "../../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logMCPError, logMCPDebug } from "../../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { writeDiagnosticsEvent } from "../../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { jt } from "../../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getAnthropicApiKeyWithSource, hasStoredOAuthToken, getOauthAccountInfo, H, getWorkspacePersistedTrustKey } from "../../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { lke } from "../../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Sn } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { sEt } from "../../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { bM, CO, Mdn } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { swt } from "../../../02-功能模块/插件系统/chunk-ajtn749s.js";
@@ -1178,7 +1178,7 @@ async function zr(e, t) {
             ? (t.declaredIn ?? he())
             : t.scope === "dynamic" && t.agentSource === void 0
               ? he()
-              : be()),
+              : getClaudeConfigDir()),
         scrubCredentialEnv: Fr(t, r),
         env: {
           CLAUDE_CODE_MCP_SERVER_NAME: e,
@@ -1206,7 +1206,7 @@ async function zr(e, t) {
         ),
         ke() && sEt(`mcp headersHelper ${e}`))
       )
-        _z(`MCP server '${Sn(e)}': headersHelper not run \u2014 this workspace has no persisted trust; ${o}.
+        writeToStderr(`MCP server '${replaceControlChars(e)}': headersHelper not run \u2014 this workspace has no persisted trust; ${o}.
 `);
       return (
         logEvent("tengu_mcp_headersHelper_missing_trust", {}),

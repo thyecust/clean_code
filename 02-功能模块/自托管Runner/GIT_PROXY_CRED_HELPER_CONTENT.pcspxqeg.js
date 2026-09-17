@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 23 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  Sdr,
-  Fmr,
-  $mr,
-  XYt,
-  Umr,
-  bdr,
-  wdr,
-  Bmr,
-  jmr,
-  Wmr,
-} from "./chunk-vanzsjh3.js";
+  parseGitVersion as Sdr,
+  configureGitForSigning as Fmr,
+  codeSignArtifacts as $mr,
+  configureGitGovernedEntries as XYt,
+  readGitVersion as Umr,
+  GIT_PROXY_CRED_HELPER_CONTENT as bdr,
+  gitProxyCredHelperPath as wdr,
+  coauthorHookStubs as Bmr,
+  configureGitProxyCredential as jmr,
+  selfHostedRunnerCodeSignMain as Wmr,
+} from "./runner-git-config.js";
 export {
   bdr as GIT_PROXY_CRED_HELPER_CONTENT,
   Bmr as coauthorHookStubs,

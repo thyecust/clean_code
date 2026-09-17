@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Q } from "./chunk-rsr7cnyv.js";
+import { getCwd } from "./cwd-context.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { primeGitRootMemo, seedGitRootMemo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { dedupe } from "./chunk-d16fhdtx.js";
@@ -16,7 +16,7 @@ async function n(o, t, e) {
   return;
 }
 async function primeWorkspaceRoots(o) {
-  for (let t of dedupe([he(), Q()]))
+  for (let t of dedupe([he(), getCwd()]))
     try {
       let e = await primeGitRootMemo(o, t);
       if (e !== void 0) {

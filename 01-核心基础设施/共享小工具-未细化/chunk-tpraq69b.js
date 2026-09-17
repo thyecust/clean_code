@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { fromSanitizer_SANITIZER_OUTPUT_ONLY } from "./analytics-fields.js";
-import { _n } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment } from "../../02-功能模块/Teammates团队/storage-keys.js";
 import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isHoverRestEnabled } from "./chunk-h62vxw7j.js";
 import { ou, We } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -40,14 +40,14 @@ function parseAttachVia(e) {
 import { mkdir } from "fs/promises";
 import { join as c } from "path";
 async function ensureJobDir(e, r) {
-  if (isHoverRestEnabled() && r !== void 0 && _n(e)) {
+  if (isHoverRestEnabled() && r !== void 0 && isValidPathSegment(e)) {
     await i(r, { namespace: "job", jobId: e });
     return;
   }
   await mkdir(getJobDir(e), { recursive: !0 });
 }
 async function ensureJobTmpDir(e, r) {
-  if (isHoverRestEnabled() && r !== void 0 && _n(e)) {
+  if (isHoverRestEnabled() && r !== void 0 && isValidPathSegment(e)) {
     await i(r, s(e));
     return;
   }

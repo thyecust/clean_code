@@ -23,8 +23,8 @@ import {
   isBridgeSafeCommand,
   findBridgeFallback,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { kbe, tH, xbe } from "../用量额度-限额/chunk-1bfn62xh.js";
-import { Mu } from "../MCP客户端/chunk-0mwqsv0r.js";
+import { resolvePromptCommandFromUri, parseSlashCommandInput, resolveSubcommandTarget } from "../用量额度-限额/chunk-1bfn62xh.js";
+import { isMcpSkillsEnabled } from "../MCP客户端/mcp-skills-extension.js";
 function resolveBridgeSlashOverride(l) {
   let { inputString: t, context: n, uuid: r, origin: m } = l,
     a = p(t, n.options.commands);
@@ -86,16 +86,16 @@ function resolveBridgeSlashOverride(l) {
   };
 }
 function p(l, t) {
-  let n = tH(l);
+  let n = parseSlashCommandInput(l);
   if (n === null) return;
   let r = n.commandName;
-  if (Mu()) {
-    let o = kbe(r, t);
+  if (isMcpSkillsEnabled()) {
+    let o = resolvePromptCommandFromUri(r, t);
     if (o) r = o.commandName;
   }
   let m = findCommand(r, t);
   if (!m) return;
-  let a = xbe(m, n.args),
+  let a = resolveSubcommandTarget(m, n.args),
     s = a ? findCommand(a.targetName, t) : void 0,
     e =
       a && s && isCommandEnabled(s)

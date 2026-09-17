@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 var DEFAULT_TEAMMATE_MODE = "in-process";
 class TeammateModeSnapshot {
   captured = null;
@@ -48,7 +48,7 @@ function captureTeammateModeSnapshot() {
     (e.capture(e.cliOverride),
       n(`[TeammateModeSnapshot] Captured from CLI override: ${e.captured}`));
   else
-    (e.capture(Eo("teammateMode", DEFAULT_TEAMMATE_MODE).value),
+    (e.capture(resolveSetting("teammateMode", DEFAULT_TEAMMATE_MODE).value),
       n(`[TeammateModeSnapshot] Captured from config: ${e.captured}`));
 }
 function getTeammateModeFromSnapshot() {

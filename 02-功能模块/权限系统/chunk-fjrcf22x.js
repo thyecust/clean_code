@@ -30,7 +30,7 @@ function u(e, o) {
     },
   };
 }
-function WEt(e, o, s, t) {
+function createCommandRulesGetAppState(e, o, s, t) {
   if (
     !t?.replaceCommandRules &&
     !t?.replaceDenyRules &&
@@ -71,17 +71,17 @@ function WEt(e, o, s, t) {
     return { ...i, toolPermissionContext: r };
   };
 }
-var so = "Skill",
-  uP = "skill__";
-function mme(e) {
+var SKILL_TOOL_NAME = "Skill",
+  SKILL_TOOL_NAME_PREFIX = "skill__";
+function buildSkillToolName(e) {
   return "skill__" + e.replaceAll(":", "__").replace(/[^a-zA-Z0-9_-]/g, "_");
 }
-function fnr(e) {
+function getAliasSkillToolNames(e) {
   let o = [
     ...(e.aliases ?? []),
     ...(e.unqualifiedName != null ? [e.unqualifiedName] : []),
   ];
-  return o.length ? o.map(mme) : void 0;
+  return o.length ? o.map(buildSkillToolName) : void 0;
 }
 var y = {
   allowed_tools: "strip",
@@ -124,7 +124,7 @@ function consentMustDeny(e) {
   return !consentAskCanReachUser(e) || getToolPermissionContext(e).shouldAvoidPermissionPrompts === !0;
 }
 function p(e) {
-  return e === so || e.startsWith(`${so}(`) || e.startsWith(uP);
+  return e === SKILL_TOOL_NAME || e.startsWith(`${SKILL_TOOL_NAME}(`) || e.startsWith(SKILL_TOOL_NAME_PREFIX);
 }
 function C(e) {
   let o = p,
@@ -295,11 +295,11 @@ function applyContextLayers(e, o) {
   };
 }
 export {
-  WEt,
-  so,
-  uP,
-  mme,
-  fnr,
+  createCommandRulesGetAppState,
+  SKILL_TOOL_NAME,
+  SKILL_TOOL_NAME_PREFIX,
+  buildSkillToolName,
+  getAliasSkillToolNames,
   stripWideningPermissionLayers,
   getSuppressedClaudeAiConnectors,
   consentAskCanReachUser,

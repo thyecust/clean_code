@@ -10,30 +10,30 @@
 import { $f, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { R, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { ms } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { getHostStateStore } from "../../01-核心基础设施/共享小工具-未细化/host-state-store.js";
 import {
-  Je,
-  ZMn,
-  eNn,
-  tNn,
-  mdr,
-  gdr,
-  rot,
-  nNn,
-  rNn,
-  oNn,
-  iNn,
-  aNn,
-  Lmr,
-  Mmr,
-  Nje,
-  UHt,
+  HooksError,
+  getSourceLoaderName,
+  transpileHookSource,
+  MAX_SOURCE_BYTES,
+  MAX_LINKED_FILES,
+  MAX_TOTAL_SOURCE_BYTES,
+  CLAUDE_CODE_MODULE_ID,
+  createBadImportError,
+  isRelativeImportPath,
+  createOversizeSourceError,
+  readPluginFile,
+  resolveHookImport,
+  createModuleTooLargeError,
+  createTooManyFilesError,
+  isHookEventName,
+  isPluginEventName,
 } from "./chunk-bzqqe6xh.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
-import { np, $g } from "../插件系统/chunk-33bdfgmx.js";
+import { INLINE_PLUGIN_SOURCE, BUILTIN_PLUGIN_SOURCE } from "../插件系统/chunk-33bdfgmx.js";
 import { Sfe, Fwt } from "../../01-核心基础设施/共享小工具-未细化/chunk-smrdr8gc.js";
 var ESt = "tengu_plugin_hooks_modules";
 var M = () => !1;
@@ -75,7 +75,7 @@ function i3t(e) {
   return { options: t, mcpServers: n };
 }
 function pAe(e) {
-  let o = `@${np}`,
+  let o = `@${INLINE_PLUGIN_SOURCE}`,
     r = e.endsWith(o) ? e.slice(0, -o.length) : "";
   return r !== "" && !r.includes("@") ? [r, e] : [e];
 }
@@ -157,10 +157,10 @@ function ge() {
   };
 }
 var xo = (e, o) => (r, t, n) =>
-  aNn({ spelled: r, importer: t, root: e, pluginName: o }, n);
+  resolveHookImport({ spelled: r, importer: t, root: e, pluginName: o }, n);
 function _({ graph: e, pluginName: o }, r) {
   let t = e.files.get(r);
-  if (t === void 0) throw new Je(`${o}: ${r} was not linked`);
+  if (t === void 0) throw new HooksError(`${o}: ${r} was not linked`);
   return t;
 }
 function ie(e) {
@@ -272,7 +272,7 @@ function vo(e, o, r) {
   let s = Ee(n);
   if (s === void 0)
     throw o(n, `the event name passed to ${r}() is not a string literal`);
-  if (!(s === "*" || Nje(s) || UHt(s))) throw o(n, `"${s}" is not an event`);
+  if (!(s === "*" || isHookEventName(s) || isPluginEventName(s))) throw o(n, `"${s}" is not an event`);
   let u = i.at(-1);
   if (u === void 0) throw o(e, `${r}() takes (event, hook); got no hook`);
   return { event: s, hook: u, matcher: i.length === 2 ? i[0] : void 0 };
@@ -956,16 +956,16 @@ function $r(e, o) {
   return n;
 }
 import { relative as Wr } from "path";
-var Z = (e, o, r) => new Je(`${e}: ${o} does not parse: ${l(r)}`);
+var Z = (e, o, r) => new HooksError(`${e}: ${o} does not parse: ${l(r)}`);
 function Rr(e, o, r) {
   try {
-    return eNn(o, e);
+    return transpileHookSource(o, e);
   } catch (t) {
     throw Z(r, o, t);
   }
 }
 var _e = (e, o) =>
-  ZMn(e) === "js"
+  getSourceLoaderName(e) === "js"
     ? void 0
     : o.split(`
 `);
@@ -995,7 +995,7 @@ function Ue(e) {
   }
   return [...o];
 }
-class me extends Je {
+class me extends HooksError {
   name = "ScanRefusal";
   plugin;
   file;
@@ -1023,7 +1023,7 @@ function Gr(e, o, r) {
       plugin: r,
       file: o,
       line: m,
-      excerpt: c ? `${oe(d, he)}...` : d,
+      excerpt: c ? `${truncateToCodeUnits(d, he)}...` : d,
       construct: u,
     });
   }
@@ -1074,7 +1074,7 @@ async function Yr(e, o, r) {
     p = Buffer.byteLength(e.source, "utf8");
   for (let { file: s, source: f } of i) {
     if (t.has(s)) continue;
-    if (Buffer.byteLength(f, "utf8") > tNn) throw oNn(o, s);
+    if (Buffer.byteLength(f, "utf8") > MAX_SOURCE_BYTES) throw createOversizeSourceError(o, s);
     let u = Rr(f, s, o),
       m = Gr(u, s, o),
       y = Kr(m.program);
@@ -1085,13 +1085,13 @@ async function Yr(e, o, r) {
       );
     let d = new Map();
     for (let c of m.specifiers) {
-      if (c === rot) continue;
-      if (!rNn(c)) throw nNn(o, c, Wr(e.root, s) || s);
+      if (c === CLAUDE_CODE_MODULE_ID) continue;
+      if (!isRelativeImportPath(c)) throw createBadImportError(o, c, Wr(e.root, s) || s);
       let g = await r(c, s, n);
       if (!n.has(g.file)) {
-        if (n.size >= mdr) throw Mmr(o, g.file);
-        if (((p += Buffer.byteLength(g.source, "utf8")), p > gdr))
-          throw Lmr(o, g.file);
+        if (n.size >= MAX_LINKED_FILES) throw createTooManyFilesError(o, g.file);
+        if (((p += Buffer.byteLength(g.source, "utf8")), p > MAX_TOTAL_SOURCE_BYTES))
+          throw createModuleTooLargeError(o, g.file);
         n.set(g.file, g.source);
       }
       (d.set(c, g.file), i.push(g));
@@ -1107,13 +1107,13 @@ function Zr(e, o) {
 }
 var et = (e) => (o, r) =>
   Promise.reject(
-    new Je(
+    new HooksError(
       `${e}: cannot import "${o}" (from ${r}): the module is one text with no files beside it`,
     ),
   );
 async function ee(e, o, r) {
   let t = xe.source(e),
-    n = t ?? (await iNn(e, o, r));
+    n = t ?? (await readPluginFile(e, o, r));
   return {
     source: n,
     graph: await Yr(
@@ -1151,7 +1151,7 @@ import { join as ct } from "path";
 function dt(e, o) {
   return "folder" in o
     ? { path: o.folder, modulePath: ct(o.folder, D) }
-    : { path: $g, modulePath: de(e) };
+    : { path: BUILTIN_PLUGIN_SOURCE, modulePath: de(e) };
 }
 function aYn(e) {
   if (
@@ -1161,7 +1161,7 @@ function aYn(e) {
     xe.register(de(e.name), e.hooksModule.shipped);
 }
 function _j(e) {
-  return e.endsWith(`@${$g}`);
+  return e.endsWith(`@${BUILTIN_PLUGIN_SOURCE}`);
 }
 function ASt(e) {
   return getHostStateStore().builtinPlugins.get(e);
@@ -1172,7 +1172,7 @@ function v8e() {
     r = [];
   for (let [t, n] of getHostStateStore().builtinPlugins) {
     if (n.isAvailable && !n.isAvailable()) continue;
-    let i = `${t}@${$g}`,
+    let i = `${t}@${BUILTIN_PLUGIN_SOURCE}`,
       p = n.enabledFromTrustedSettingsOnly ? a3t(i) : e?.enabledPlugins?.[i],
       s = p !== void 0 ? p === !0 : (n.defaultEnabled ?? !0),
       f = {
@@ -1186,7 +1186,7 @@ function v8e() {
             : { defaultEnabled: n.defaultEnabled }),
           ...(n.userConfig === void 0 ? {} : { userConfig: n.userConfig }),
         },
-        path: $g,
+        path: BUILTIN_PLUGIN_SOURCE,
         source: i,
         repository: i,
         enabled: s,
@@ -1222,7 +1222,7 @@ function ut(e) {
     r = o.get(e);
   if (!r) {
     let { wireSkillFilesExtraction: p } = import.meta.require(
-      "../Skills技能/chunk-1zy5c8mf.js",
+      "../Skills技能/bundled-skills.js",
     );
     ((r = p(e)), o.set(e, r));
   }

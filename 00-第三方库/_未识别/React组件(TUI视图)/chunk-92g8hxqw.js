@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
-import { u_, Ma } from "../../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { VirtualScrollViewportStateContext, useHasVirtualScrollViewport } from "../../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { logFeatureOk, logFeatureSad } from "../../lodash/lodash.0vqzb8ad.js";
 import { te } from "../../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t, Od } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -29,7 +29,7 @@ var WA = 2,
 function Qr(Rt) {
   let oe = _(9),
     { children: G, color: ke } = Rt;
-  if (Ma()) {
+  if (useHasVirtualScrollViewport()) {
     let H;
     if (oe[0] !== G)
       ((H = e(o, {
@@ -349,7 +349,7 @@ function de(on) {
     ((pt = [...ae, ...Ie]), (h[3] = Ie), (h[4] = ae), (h[5] = pt));
   else pt = h[5];
   let Ae = pt,
-    B = De(u_),
+    B = De(VirtualScrollViewportStateContext),
     He = C(null),
     [le, sn] = d(Z ? 2 : 1),
     at;
@@ -447,7 +447,7 @@ function de(on) {
   else ge = h[28];
   let he;
   if (h[29] !== $e || h[30] !== Ke)
-    ((he = e(u_, { value: $e, children: Ke })),
+    ((he = e(VirtualScrollViewportStateContext, { value: $e, children: Ke })),
       (h[29] = $e),
       (h[30] = Ke),
       (h[31] = he));

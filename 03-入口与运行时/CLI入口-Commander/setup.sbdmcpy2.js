@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 182 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { uo, Hr } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSimpleMode, isSafeMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { identity as _m, j, B, K, $p, sn, ES, o_e, ke, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
@@ -19,14 +19,14 @@ import { ud, l, Jr } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.
 import { Et, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { setBgExitCause } from "../../02-功能模块/后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { Ia, isBgSession, getBgJobDir, prefetchApiKeyFromApiKeyHelperIfSafe, Ff, H, Bo, Te, ee, es } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { findCanonicalGitRoot, isLinkedWorktree, getIsGit } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ee, Br } from "./chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId, profileCheckpoint } from "./startup-profiler.js";
 import { getSettingsForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { _setProxyAuthHelperConfig, prefetchProxyAuthFromHelperIfSafe } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
@@ -60,21 +60,21 @@ import {
 import { captureHooksConfigSnapshot, updateHooksConfigSnapshot, updateHooksConfigSnapshotThroughBackend } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
 import { primePlanSlugCollisions, getPlanSlug, getPlansDirectory } from "../../02-功能模块/计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import { qJn } from "../../02-功能模块/终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { Ts } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import { zr, z_n } from "../../02-功能模块/Teammates团队/chunk-3k2smxfn.js";
+import { recordStartupPhase } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
+import { isAgentSwarmsEnabled, z_n } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { hw, NYn } from "../../02-功能模块/键位绑定(Keybindings)/键位绑定(Keybindings).sanfja6a.js";
-import { xPe } from "../../02-功能模块/权限系统/chunk-4tar9p3n.js";
+import { publishInboundAvailability } from "../../02-功能模块/权限系统/cross-session-inbound-gate.js";
 import { o$n } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import "../../02-功能模块/MCP客户端/error-log-sink.js";
 import { initSinks } from "../../01-核心基础设施/共享小工具-未细化/init-sinks.js";
-import { _Oe } from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
+import { loadCustomThemes } from "../../02-功能模块/状态栏-主题/custom-themes.js";
 import "../../02-功能模块/自动更新-安装/chunk-brx72pf1.js";
 import { q4 } from "../../02-功能模块/自动更新-安装/chunk-2g5h49pk.js";
 import { flushAnalyticsSinks } from "../../01-核心基础设施/共享小工具-未细化/chunk-p7jm635c.js";
 import { yOt } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-j86cs2ar.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function X(e, o) {
   let r = !1,
@@ -117,7 +117,7 @@ async function se(e, o) {
   (n(
     "[uds-messaging] Late bind: gate enabled by a GrowthBook refresh after startup",
   ),
-    xPe());
+    publishInboundAvailability());
   let m = r.getUdsStartDegradedCause();
   if (m) logFeatureSad("agents_cross_session_inbox", m, { bind_late: !0 });
   else logFeatureOk("agents_cross_session_inbox", { bind_late: !0 });
@@ -137,7 +137,7 @@ async function W() {
   }
 }
 async function J() {
-  if (P() === "windows") return "unsupported";
+  if (getCurrentPlatform() === "windows") return "unsupported";
   if (!isatty(0) || !isatty(1) || !isatty(2)) return "not_a_tty";
   if (await W()) return "already";
   let e = le();
@@ -147,7 +147,7 @@ async function J() {
   return "acquired";
 }
 function ae() {
-  return P() === "macos"
+  return getCurrentPlatform() === "macos"
     ? ["/usr/lib/libSystem.B.dylib", "libSystem.B.dylib"]
     : ["libc.so.6", "libutil.so.1", "libc.so"];
 }
@@ -275,7 +275,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
   let U = process.version.match(/^v(\d+)\./)?.[1];
   if (!U || parseInt(U) < 22)
     (console.error(
-      ie.bold.red("Error: Claude Code requires Node.js version 22 or higher."),
+      chalk.bold.red("Error: Claude Code requires Node.js version 22 or higher."),
     ),
       process.exit(1));
   if (a.CLAUDE_BG_BACKEND === "daemon") {
@@ -307,7 +307,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
   if (
     (udsEnv.unset("CLAUDE_CODE_MESSAGING_SOCKET"),
     udsEnv.unset("CLAUDE_CODE_MESSAGING_TOKEN"),
-    !uo() || w !== void 0)
+    !isSimpleMode() || w !== void 0)
   )
     if (!isCrossSessionMessagingEnabled())
       if (!Nn()) {
@@ -335,7 +335,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
           d.getUdsStartFailureCause() ?? "bind_failed",
         );
       let b = performance.now() - t;
-      (Ts("setup_uds_messaging_ms", b, t),
+      (recordStartupPhase("setup_uds_messaging_ms", b, t),
         logEvent("tengu_uds_startup_bind", { durationMs: Math.round(b), bound: !!v }));
     }
   if (process.env.CLAUDE_BG_BACKEND === "daemon") {
@@ -348,17 +348,17 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     t(B());
   }
   if (!ke()) {
-    if (zr()) {
+    if (isAgentSwarmsEnabled()) {
       let t = await V(s);
       if (t.status === "restored")
         console.log(
-          ie.yellow(
+          chalk.yellow(
             "Detected an interrupted iTerm2 setup. Your original settings have been restored. You may need to restart iTerm2 for the changes to take effect.",
           ),
         );
       else if (t.status === "failed")
         console.error(
-          ie.red(
+          chalk.red(
             `Failed to restore iTerm2 settings. Please manually restore your original settings with: defaults import com.googlecode.iterm2 ${t.backupPath}.`,
           ),
         );
@@ -367,13 +367,13 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       let t = await yOt(s);
       if (t.status === "restored")
         console.log(
-          ie.yellow(
+          chalk.yellow(
             "Detected an interrupted Terminal.app setup. Your original settings have been restored. You may need to restart Terminal.app for the changes to take effect.",
           ),
         );
       else if (t.status === "failed")
         console.error(
-          ie.red(
+          chalk.red(
             `Failed to restore Terminal.app settings. Please manually restore your original settings with: defaults import com.apple.Terminal ${t.backupPath}.`,
           ),
         );
@@ -385,7 +385,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     pu(e);
   } catch (t) {
     (process.stderr.write(
-      ie.red(`Error: Can't access working directory ${ie.bold(e)}: ${l(t)}
+      chalk.red(`Error: Can't access working directory ${chalk.bold(e)}: ${l(t)}
 `),
     ),
       setBgExitCause("setcwd"),
@@ -395,14 +395,14 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
   if (isHoverRestEnabled() && s !== void 0) await updateHooksConfigSnapshotThroughBackend(s);
   else captureHooksConfigSnapshot();
   if (
-    (Ts("setup_hooks_snapshot_ms", performance.now() - O, O),
+    (recordStartupPhase("setup_hooks_snapshot_ms", performance.now() - O, O),
     writeDiagnosticsEvent("info", "setup_hooks_captured", {
       duration_ms: Math.round(performance.now() - O),
     }),
     !Nn())
   ) {
     let t = performance.now();
-    (j4n(e, s, T), Ts("setup_file_watcher_ms", performance.now() - t, t));
+    (j4n(e, s, T), recordStartupPhase("setup_file_watcher_ms", performance.now() - t, t));
   }
   let G = performance.now();
   if (c) {
@@ -410,7 +410,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       d = await getIsGit();
     if (!t && !d)
       (process.stderr.write(
-        ie.red(`Error: Can only use --worktree in a git repository, but ${ie.bold(e)} is not a git repository. Configure a WorktreeCreate hook in settings.json to use --worktree with other VCS systems.
+        chalk.red(`Error: Can only use --worktree in a git repository, but ${chalk.bold(e)} is not a git repository. Configure a WorktreeCreate hook in settings.json to use --worktree with other VCS systems.
 `),
       ),
         process.exit(1));
@@ -418,15 +418,15 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       b,
       C = null;
     if (d) {
-      if (((C = findCanonicalGitRoot(Q())), !C))
+      if (((C = findCanonicalGitRoot(getCwd())), !C))
         (process.stderr.write(
-          ie.red(`Error: Could not determine the main git repository root.
+          chalk.red(`Error: Could not determine the main git repository root.
 `),
         ),
           process.exit(1));
-      if (isLinkedWorktree(Q())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
+      if (isLinkedWorktree(getCwd())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
       b = _ ? p6t(C, xde(v)) : void 0;
-    } else b = _ ? p6t(Q(), xde(v)) : void 0;
+    } else b = _ ? p6t(getCwd(), xde(v)) : void 0;
     let I;
     try {
       I = await n_t(K(), v, b, {
@@ -438,7 +438,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       });
     } catch (E) {
       (process.stderr.write(
-        ie.red(`Error creating worktree: ${l(E)}
+        chalk.red(`Error creating worktree: ${l(E)}
 `),
       ),
         setBgExitCause("worktree_create"),
@@ -451,12 +451,12 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
       if (E.created)
         ((N = !0),
           console.log(
-            ie.green(`Created tmux session: ${ie.bold(b)}
-To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
+            chalk.green(`Created tmux session: ${chalk.bold(b)}
+To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
           ));
       else
         console.error(
-          ie.yellow(`Warning: Failed to create tmux session: ${E.error}`),
+          chalk.yellow(`Warning: Failed to create tmux session: ${E.error}`),
         );
     }
     try {
@@ -476,7 +476,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       else D = `cannot be entered (${l(E)}).`;
       if (
         (process.stderr.write(
-          ie.red(`Error: worktree directory ${I.worktreePath} ${D}
+          chalk.red(`Error: worktree directory ${I.worktreePath} ${D}
 `),
         ),
         logError(E),
@@ -486,13 +486,13 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       (setBgExitCause(`worktree_chdir:${x}`), await flushAnalyticsSinks(), process.exit(1));
     }
     if (
-      (pu(I.worktreePath), ES(Q()), o_e(Q()), saveWorktreeState(I), PY(), isHoverRestEnabled() && s !== void 0)
+      (pu(I.worktreePath), ES(getCwd()), o_e(getCwd()), saveWorktreeState(I), PY(), isHoverRestEnabled() && s !== void 0)
     )
       await updateHooksConfigSnapshotThroughBackend(s);
     else updateHooksConfigSnapshot();
     (getPlansDirectory.cache.clear?.(),
       primePlanSlugCollisions(s),
-      Ts("setup_worktree_ms", performance.now() - G, G));
+      recordStartupPhase("setup_worktree_ms", performance.now() - G, G));
   } else if (isBgSession() && !Ia()) {
     let t = performance.now();
     try {
@@ -504,14 +504,14 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     } catch (d) {
       n(`[worktree] bg adopt-time reclaim skipped: ${l(d)}`);
     }
-    Ts("setup_bg_worktree_adopt_ms", performance.now() - t, t);
+    recordStartupPhase("setup_bg_worktree_adopt_ms", performance.now() - t, t);
   }
-  if ((writeDiagnosticsEvent("info", "setup_background_jobs_starting"), !uo()));
+  if ((writeDiagnosticsEvent("info", "setup_background_jobs_starting"), !isSimpleMode()));
   (q4(),
     writeDiagnosticsEvent("info", "setup_background_jobs_launched"),
-    Br("setup_before_prefetch"),
+    profileCheckpoint("setup_before_prefetch"),
     writeDiagnosticsEvent("info", "setup_prefetch_starting"));
-  let Y = (ke() && a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) || uo() || Hr();
+  let Y = (ke() && a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) || isSimpleMode() || isSafeMode();
   if (!Y) {
     if (M3(T)) ei(s, T).catch(() => {});
     warmCommandSourceCaches(sn(), s);
@@ -524,7 +524,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
         }),
           t.setupPluginHookHotReload(s, T));
     }),
-    !uo())
+    !isSimpleMode())
   ) {
     if (
       (import("../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then((t) =>
@@ -539,7 +539,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
   }
   (initSinks(),
     logEvent("tengu_started", {
-      trigger_id: Ee(a.CLAUDE_CODE_TRIGGER_ID),
+      trigger_id: sanitizeAnalyticsId(a.CLAUDE_CODE_TRIGGER_ID),
       worktree_flag: c,
       tmux_flag: _,
       in_tmux_worktree: Boolean(a.CLAUDE_CODE_TMUX_SESSION && a.TMUX),
@@ -558,19 +558,19 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
     be({
       isNonInteractiveSession: ke(),
       isRemoteMode: Nn(),
-      isBareMode: uo(),
+      isBareMode: isSimpleMode(),
       exitAfterFirstRender: a.CLAUDE_CODE_EXIT_AFTER_FIRST_RENDER,
       trustAccepted: Bo(),
     }))
   )
     qJn();
-  Br("setup_after_prefetch");
+  profileCheckpoint("setup_after_prefetch");
   {
     let t = performance.now(),
-      d = [_Oe(s), ...(isHoverRestEnabled() && s !== void 0 ? [NYn(hw, s)] : [])];
-    if (!uo()) d.push(o$n(void 0, s));
+      d = [loadCustomThemes(s), ...(isHoverRestEnabled() && s !== void 0 ? [NYn(hw, s)] : [])];
+    if (!isSimpleMode()) d.push(o$n(void 0, s));
     (await Promise.all(d),
-      Ts("setup_release_notes_ms", performance.now() - t, t));
+      recordStartupPhase("setup_release_notes_ms", performance.now() - t, t));
   }
   if (o === "bypassPermissions" || r) {
     if (
@@ -603,7 +603,7 @@ To attach: ${ie.bold(`tmux attach -t ${b}`)}`),
       last_session_fps_low_1_pct: p.lastFpsLow1Pct,
       last_session_graceful_shutdown: p.lastGracefulShutdown ?? !1,
       last_session_version_base: p.lastVersionBase ?? "unknown",
-      last_session_id: Ee(p.lastSessionId),
+      last_session_id: sanitizeAnalyticsId(p.lastSessionId),
       ...p.lastSessionMetrics,
     });
 }

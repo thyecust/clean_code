@@ -8,13 +8,13 @@
 
 // Version: 2.1.263
 import { ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Jo, toCompatSessionId, sessionIdBody, isSelfAddressableSessionId } from "./chunk-ynkf3yy4.js";
+import { getSessionRuntimeState, toCompatSessionId, sessionIdBody, isSelfAddressableSessionId } from "./chunk-ynkf3yy4.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { FT, tRe, updateSessionBridgeId } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { _c } from "./chunk-e4pfvp7x.js";
+import { getExternalPermissionMode } from "./chunk-e4pfvp7x.js";
 import { SAt, bAt } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 function l(e, o) {
-  let t = Jo().dropSenderWriterByHandle;
+  let t = getSessionRuntimeState().dropSenderWriterByHandle;
   if (e !== null && e !== o) {
     let i = t.get(e);
     if (i) bAt(i);
@@ -30,7 +30,7 @@ function l(e, o) {
   }
 }
 function setSdkHostedBridgeHandle(e, o) {
-  let t = Jo(),
+  let t = getSessionRuntimeState(),
     i = a(e),
     r = t.sdkHostedHandle;
   ((t.sdkHostedHandle = i),
@@ -46,10 +46,10 @@ function setSdkHostedBridgeHandle(e, o) {
     l(r, i));
 }
 function getSdkHostedBridgeHandle() {
-  return Jo().sdkHostedHandle;
+  return getSessionRuntimeState().sdkHostedHandle;
 }
 function setReplBridgeHandle(e, o) {
-  let t = Jo(),
+  let t = getSessionRuntimeState(),
     i = a(e),
     r = t.replHandle;
   ((t.replHandle = i),
@@ -68,19 +68,19 @@ function setReplBridgeHandle(e, o) {
   updateSessionBridgeId(s ?? null, o).catch(() => {});
 }
 function getReplBridgeHandle() {
-  return Jo().replHandle;
+  return getSessionRuntimeState().replHandle;
 }
 function retireBridgeHandle(e, o) {
-  let t = Jo();
+  let t = getSessionRuntimeState();
   if ((t.retiredHandles.add(e), t.replHandle === e)) setReplBridgeHandle(null, o);
   if (t.sdkHostedHandle === e) setSdkHostedBridgeHandle(null, o);
 }
 function reportBridgePermissionMode(e, o) {
-  let t = Jo(),
+  let t = getSessionRuntimeState(),
     i = t.replHandle ?? t.sdkHostedHandle;
   if (!i || i.outboundOnly) return;
   if (((t.lastKnownPermissionMode = e), e === "bypassPermissions")) return;
-  let r = _c(e);
+  let r = getExternalPermissionMode(e);
   if (t.lastReportedPermissionMode === r) return;
   ((t.lastReportedPermissionMode = r),
     i.reportMetadata({
@@ -89,7 +89,7 @@ function reportBridgePermissionMode(e, o) {
     }));
 }
 function reseedBridgePermissionMode() {
-  let e = Jo();
+  let e = getSessionRuntimeState();
   if (
     ((e.lastReportedPermissionMode = void 0),
     e.lastKnownPermissionMode !== void 0)
@@ -103,13 +103,13 @@ function setSupervisedBridgeSession(e, o, t) {
       "[bridge] supervised session id refused (not a safe bridge id) \u2014 this child has no Remote Control identity for the peer surface",
       { level: "warn" },
     );
-  ((Jo().supervisedBridgeSession = i
+  ((getSessionRuntimeState().supervisedBridgeSession = i
     ? { bridgeSessionId: e, owner: t, selfTitle: void 0 }
     : null),
     updateSessionBridgeId(i ? toCompatSessionId(e) : null, o).catch(() => {}));
 }
 function adoptSelfBridgeTitleFromRoster(e) {
-  let o = Jo().supervisedBridgeSession;
+  let o = getSessionRuntimeState().supervisedBridgeSession;
   if (o === null || getReplBridgeHandle() !== null || getSdkHostedBridgeHandle() !== null) return;
   o.selfTitle = u(e);
 }
@@ -118,7 +118,7 @@ function u(e) {
 }
 function d(e) {
   let o = walkCredentialKey(),
-    t = Jo(),
+    t = getSessionRuntimeState(),
     i = t.peerIdentityKey;
   if (i !== null && i.host === e && i.credential === o) return i;
   let r = { host: e, credential: o };
@@ -127,7 +127,7 @@ function d(e) {
 function walkCredentialKey() {
   let { sameOwnerAccount: e } = import.meta.require("../认证-OAuth登录/认证-OAuth登录.419zdfz3.js"),
     o = c(),
-    t = Jo(),
+    t = getSessionRuntimeState(),
     i = t.walkCredentialKey;
   if (i !== null && e(i.owner, o)) return i;
   let r = { owner: o };
@@ -155,7 +155,7 @@ async function primePeerIdentityOwner({ refresh: e, credentials: o }) {
   if (!(
     getReplBridgeHandle() !== null ||
     getSdkHostedBridgeHandle() !== null ||
-    Jo().supervisedBridgeSession !== null
+    getSessionRuntimeState().supervisedBridgeSession !== null
   )) {
     let { hasCloudPeerAccess: p } = import.meta.require("../../01-核心基础设施/共享小工具-未细化/hasCloudPeerAccess.debnsz8e.js");
     if (!p()) return;
@@ -181,7 +181,7 @@ function getPeerBridgeIdentity() {
       selfTitle: e.selfTitle,
       live: ic(),
     };
-  let o = Jo().supervisedBridgeSession;
+  let o = getSessionRuntimeState().supervisedBridgeSession;
   return o
     ? {
         key: d(o),
@@ -192,7 +192,7 @@ function getPeerBridgeIdentity() {
     : null;
 }
 function reportBridgeCrossSessionInbound(e) {
-  let o = Jo(),
+  let o = getSessionRuntimeState(),
     t = o.replHandle ?? o.sdkHostedHandle;
   if (!t || t.outboundOnly) return;
   o.lastKnownCrossSessionInbound = e;
@@ -202,7 +202,7 @@ function reportBridgeCrossSessionInbound(e) {
     t.reportMetadata({ cross_session_inbound: i }));
 }
 function reseedBridgeCrossSessionInbound() {
-  let e = Jo();
+  let e = getSessionRuntimeState();
   if (
     ((e.lastReportedCrossSessionInbound = void 0),
     e.lastKnownCrossSessionInbound !== void 0)
@@ -210,14 +210,14 @@ function reseedBridgeCrossSessionInbound() {
     reportBridgeCrossSessionInbound(e.lastKnownCrossSessionInbound);
 }
 function reportBridgeModel(e) {
-  let o = Jo(),
+  let o = getSessionRuntimeState(),
     t = o.replHandle ?? o.sdkHostedHandle;
   if (!t || t.outboundOnly) return;
   if (((o.lastKnownModel = e), o.lastReportedModel === e)) return;
   ((o.lastReportedModel = e), t.reportMetadata({ model: e }));
 }
 function reseedBridgeModel() {
-  let e = Jo();
+  let e = getSessionRuntimeState();
   if (((e.lastReportedModel = void 0), e.lastKnownModel !== void 0))
     reportBridgeModel(e.lastKnownModel);
 }
@@ -241,7 +241,7 @@ function setSelfBridgeTitle(e, o) {
   if (t && sessionIdBody(t.bridgeSessionId) === sessionIdBody(e)) t.selfTitle = u(o);
 }
 function a(e) {
-  return e !== null && Jo().retiredHandles.has(e) ? null : e;
+  return e !== null && getSessionRuntimeState().retiredHandles.has(e) ? null : e;
 }
 export {
   setSdkHostedBridgeHandle,

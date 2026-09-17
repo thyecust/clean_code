@@ -12,40 +12,40 @@ import { Ie, zn, An, pl, ac, li, BL } from "../../00-第三方库/lodash/lodash.
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Wi, si, ownStoredLoginPlanAttributes, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { DW } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isRestrictedMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Zt, cr, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, l, A, Jr, H_e, I_e, WHt, Gw, Jg, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n8, D0, ae, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oje, Knt } from "./chunk-z5vtnzjg.js";
-import { x, oe, Qu, ft, To, Lz } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { isStdinUnusableError, peekForStdinData } from "./chunk-z5vtnzjg.js";
+import { pluralize, truncateToCodeUnits, takeLastCodeUnits, beforeFirst, normalizeWhitespace, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logEvent, logEventAsync } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad, logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { fn, Fo, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { kd, isValidGitSha, findGitRoot, findGitRootVerifyingPositive, gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { $P, gm, mW, i_, oB, truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { quarantineJobTranscript, isTranscriptFileResumeArg, resolveJobTranscript, canonicalizePath } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { q2e, Ri, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { RENAME_CONTENTION_ERRNOS, renameWithRetry, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { $U, $ge, FBe } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { SRt } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { hasSkipDangerousModePermissionPrompt, hasAutoModeOptIn } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { Eir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { provenSameProcessAsync, ownProcStartAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
-import { Lc, QK, zJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-6smvq03f.js";
-import { Gye } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
+import { provenSameProcessAsync, ownProcStartAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
+import { bgSupervisorNoun, bgSupervisorNounCap, daemonHint } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
+import { killIfSameProcess } from "../../01-核心基础设施/共享小工具-未细化/chunk-q8r1ycrr.js";
 import { Itn, nBn, Jye, G0e, Nat, uF } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
-import { cO, r9, Qye, Cv, vv, qat } from "../../01-核心基础设施/共享小工具-未细化/chunk-z3y2y7w9.js";
-import { BSt } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { enableTerminalMode, disableTerminalMode, DISABLE_SYNCHRONIZED_UPDATE, SHOW_CURSOR, HIDE_CURSOR, DISABLE_WIN32_INPUT_MODE } from "../../01-核心基础设施/共享小工具-未细化/terminal-mode-sequences.js";
+import { CLEAR_ITERM2_PROGRESS_SEQUENCE } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import {
   _v,
   z$n,
@@ -58,7 +58,7 @@ import {
   kit,
   LWe,
 } from "./chunk-jfk5mpe1.js";
-import { g_, zre, iG, Tbt, aG, k7e, XY, oh, VI } from "./chunk-djserjj5.js";
+import { redactDaemonNonce, readControlKey, getDispatchDir, ATTACH_JOURNAL_NAMESPACE, getAttachJournalDir, getHostManagedDir, getHostManagedMarkerPath, getPtySocketPath, getControlSocketPath } from "./chunk-djserjj5.js";
 import {
   Are,
   hNe,
@@ -119,9 +119,9 @@ import {
   al,
 } from "./chunk-7wsy8vxb.js";
 import { controlRequest, openDaemonLease, subscribeControl } from "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
-import { Pc, wfe, Gk } from "../../01-核心基础设施/核心工具-进程与信号/chunk-w78brv7j.js";
-import { NWe, W8, sle } from "./chunk-gnmy62vg.js";
-import { Kw, Rh, zWe, XZ, $it } from "./chunk-5jv5fvbn.js";
+import { getLauncherConfigError, getLauncherErrorMessage, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
+import { createDecModeTracker, isLowMemory, killPtySocket } from "./chunk-gnmy62vg.js";
+import { getDaemonLockPath, getVerifiedDaemonLock, stopDaemonLockHolder, describeStopFailure, describeUnknownOriginLock } from "./daemon-lock.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
   Du,
@@ -145,22 +145,22 @@ import {
 import { sendToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { wtn, B0e, ktn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
-import { y4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { relaunchClaudeCode } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { writeStdoutAndDrain, exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { CLAUDE_AGENT } from "../../01-核心基础设施/共享小工具-未细化/chunk-kyy28ene.js";
-import { BZt, jZt, vye } from "../../03-入口与运行时/Headless-SDK模式/chunk-9r4nh249.js";
+import { getBackgroundFlagConflictMessage, hasRemoteBackendFlag, stripEnvironmentFlags } from "../../03-入口与运行时/Headless-SDK模式/cloud-flag-validation.js";
 import { SESSION_LIVE_ELSEWHERE_MESSAGE, listLiveSessionHolders } from "../../01-核心基础设施/共享小工具-未细化/session-live-elsewhere.js";
 import { getDaemonJsonPath, getDaemonLogPath } from "../../01-核心基础设施/共享小工具-未细化/daemon-paths.js";
 import { trySetRawMode } from "../../01-核心基础设施/共享小工具-未细化/try-set-raw-mode.js";
-import { gM, $6n } from "../../01-核心基础设施/共享小工具-未细化/chunk-febx58tg.js";
+import { ALLOW_ROUTINES_POLICY, ROUTINES_POLICY_DENIED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/routines-policy.js";
 import { fromJobState, parseAttachVia, ensureJobDir, ensureJobTmpDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { Og } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
-import { H3n } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
-import { If, sN, Mh } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
+import { getDraftMode } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
+import { getSystemTheme } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
+import { createHoverRestOptions, createBackendHandle, createTranscriptSource } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
 import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { randomUUID as Hi } from "crypto";
 import {
@@ -200,7 +200,7 @@ async function Fn(e, t = {}) {
     s = Date.now() + (t.waitMs ?? 0);
   for (;;)
     try {
-      await Ri(o, r);
+      await renameWithRetry(o, r);
       break;
     } catch (c) {
       if (Date.now() >= s) {
@@ -224,7 +224,7 @@ async function Fn(e, t = {}) {
       );
     if (
       (await Promise.all(
-        _.map((v) => Gye(v.pid, v.startTimeTicks, v.procStart)),
+        _.map((v) => killIfSameProcess(v.pid, v.startTimeTicks, v.procStart)),
       ),
       _.length > 0)
     )
@@ -256,11 +256,11 @@ function Ct(e, t) {
 }
 var Hn = /^[A-Za-z0-9-]{1,64}$/;
 function Gt(e) {
-  return Ze(aG(), `${e}.json`);
+  return Ze(getAttachJournalDir(), `${e}.json`);
 }
 var Wt = 8192;
 function Tt(e) {
-  return Ce.daemon([Tbt, e]);
+  return STORAGE_KEYS.daemon([ATTACH_JOURNAL_NAMESPACE, e]);
 }
 function on(e) {
   return Tt(`${e}.json`);
@@ -283,12 +283,12 @@ async function Tye(e, t, o) {
         if (!(await an(o, e, r, !0))) _v().ownedBeacons.delete(e);
         return;
       }
-      if ((await uo(aG(), { recursive: !0, mode: 448 }), !(await tt()))) {
+      if ((await uo(getAttachJournalDir(), { recursive: !0, mode: 448 }), !(await tt()))) {
         _v().ownedBeacons.delete(e);
         return;
       }
       if (_v().ownedBeacons.get(e) !== r) return;
-      await On(Gt(e), b(r), 384);
+      await writeFileAtomic(Gt(e), b(r), 384);
     }),
     await ho(o));
 }
@@ -308,7 +308,7 @@ function Gn(e, t, o) {
       }
       if (!(await tt())) return;
       if (_v().ownedBeacons.get(e) !== r) return;
-      await On(Gt(e), b(r), 384);
+      await writeFileAtomic(Gt(e), b(r), 384);
     }));
 }
 function ut(e, t, o) {
@@ -334,7 +334,7 @@ function ut(e, t, o) {
     }
     if (!(await tt())) return;
     if (_v().ownedBeacons.get(e) !== r) return;
-    await On(Gt(e), b(r), 384);
+    await writeFileAtomic(Gt(e), b(r), 384);
   });
 }
 async function zx(e, t) {
@@ -349,8 +349,8 @@ async function zx(e, t) {
           if (c.ok) return;
           let d = "telemetryCode" in c.error ? c.error.telemetryCode : void 0;
           if (
-            ((r = d !== void 0 && q2e.has(d)),
-            r && P() === "windows" && s < Mn - 1)
+            ((r = d !== void 0 && RENAME_CONTENTION_ERRNOS.has(d)),
+            r && getCurrentPlatform() === "windows" && s < Mn - 1)
           ) {
             await sleep(Ln);
             continue;
@@ -370,7 +370,7 @@ async function zx(e, t) {
         } catch (s) {
           let c = A(s);
           if (c === "ENOENT") return;
-          if (P() === "windows" && c !== void 0 && q2e.has(c) && r < Mn - 1) {
+          if (getCurrentPlatform() === "windows" && c !== void 0 && RENAME_CONTENTION_ERRNOS.has(c) && r < Mn - 1) {
             await sleep(Ln);
             continue;
           }
@@ -383,14 +383,14 @@ var Mn = 4,
   Ln = 50;
 async function tt(e = !1) {
   try {
-    return (await Ht(aG())).isDirectory();
+    return (await Ht(getAttachJournalDir())).isDirectory();
   } catch (t) {
     return e && A(t) === "ENOENT";
   }
 }
 async function mo(e) {
   try {
-    let t = await Wi(Ze(aG(), e), Wt);
+    let t = await Wi(Ze(getAttachJournalDir(), e), Wt);
     if (t === null) return null;
     return Jn(t);
   } catch {
@@ -435,7 +435,7 @@ async function Kn(e) {
 }
 async function go(e, t) {
   try {
-    let o = await Ht(Ze(aG(), e));
+    let o = await Ht(Ze(getAttachJournalDir(), e));
     return Ct(o.mtimeMs, t);
   } catch {
     return !1;
@@ -449,7 +449,7 @@ async function _o(e) {
   if (!(await tt())) return [];
   let t;
   try {
-    t = await fo(aG());
+    t = await fo(getAttachJournalDir());
   } catch {
     return [];
   }
@@ -458,16 +458,16 @@ async function _o(e) {
   for (let s of t) {
     if (!s.endsWith(".json")) {
       try {
-        let E = await Ht(Ze(aG(), s));
-        if (Ct(E.mtimeMs, o)) await Ut(Ze(aG(), s));
+        let E = await Ht(Ze(getAttachJournalDir(), s));
+        if (Ct(E.mtimeMs, o)) await Ut(Ze(getAttachJournalDir(), s));
       } catch {}
       continue;
     }
     let c = await mo(s);
     if (c === null) {
       try {
-        let E = await Ht(Ze(aG(), s));
-        if (Ct(E.mtimeMs, o)) await Ut(Ze(aG(), s));
+        let E = await Ht(Ze(getAttachJournalDir(), s));
+        if (Ct(E.mtimeMs, o)) await Ut(Ze(getAttachJournalDir(), s));
       } catch {}
       continue;
     }
@@ -481,9 +481,9 @@ async function _o(e) {
       r.push(c);
       continue;
     }
-    let v = Ze(aG(), `${s}.${process.pid}.claimed`);
+    let v = Ze(getAttachJournalDir(), `${s}.${process.pid}.claimed`);
     try {
-      await rename(Ze(aG(), s), v);
+      await rename(Ze(getAttachJournalDir(), s), v);
     } catch {
       continue;
     }
@@ -524,7 +524,7 @@ function qn(e) {
       e.attempt < 1e6
         ? e.attempt + 1
         : 0,
-    gesture_id: Ee(e.gestureId),
+    gesture_id: sanitizeAnalyticsId(e.gestureId),
     surface: fromEnumOpt(
       e.surface === "fleet" || e.surface === "bg_cli" ? e.surface : void 0,
     ),
@@ -543,7 +543,7 @@ async function wo(e) {
     o;
   do {
     let c = await e.listEntries(
-      { namespace: "daemon", relPath: [Tbt] },
+      { namespace: "daemon", relPath: [ATTACH_JOURNAL_NAMESPACE] },
       o === void 0 ? void 0 : { cursor: o },
     );
     if (!c.ok) return [];
@@ -552,7 +552,7 @@ async function wo(e) {
         d.kind !== "key" ||
         d.key.namespace !== "daemon" ||
         d.key.relPath.length !== 2 ||
-        d.key.relPath[0] !== Tbt
+        d.key.relPath[0] !== ATTACH_JOURNAL_NAMESPACE
       )
         continue;
       let _ = d.key.relPath[1];
@@ -639,7 +639,7 @@ function xe(e, t, o) {
     synthetic: !0,
     apc_detach: !1,
     failure_class: fromEnumOpt(t === "error" ? (o ?? "daemon_unavailable") : void 0),
-    gesture_id: Ee(e.gestureId),
+    gesture_id: sanitizeAnalyticsId(e.gestureId),
     attempt: ++e.attempt,
     surface: fromEnumOpt(e.surface),
     daemon_booted: e.daemonBooted,
@@ -778,7 +778,7 @@ async function rt(e, t = {}) {
     d = s,
     _ = c,
     p = bo(),
-    v = await zre(),
+    v = await readControlKey(),
     E = Date.now(),
     k = performance.now(),
     w = t.telemetry?.t0,
@@ -826,7 +826,7 @@ async function rt(e, t = {}) {
         ms: L,
         meaningful_ms: Oe,
         ack_ms: je,
-        gesture_id: Ee(t.telemetry?.gestureId),
+        gesture_id: sanitizeAnalyticsId(t.telemetry?.gestureId),
         attempt: t.telemetry?.attempt,
         via: fromEnumOpt(de),
         tempo: fromEnumOpt(De),
@@ -846,7 +846,7 @@ async function rt(e, t = {}) {
     Ye,
     Ve = s,
     me = c,
-    re = NWe(),
+    re = createDecModeTracker(),
     _e = () =>
       G0e({
         legacyKitty:
@@ -866,22 +866,22 @@ async function rt(e, t = {}) {
             DD_SOURCEMAP_GROUP: "darwin",
           }.VERSION,
       }),
-    wt = P() === "windows" && !wtn(),
+    wt = getCurrentPlatform() === "windows" && !wtn(),
     bt =
-      t.holdScreenOnDisconnect && P() === "windows"
+      t.holdScreenOnDisconnect && getCurrentPlatform() === "windows"
         ? !0
         : "isRaw" in o
           ? Boolean(o.isRaw)
           : !1,
-    Me = P() === "windows",
-    et = Buffer.from(Cv, "ascii"),
-    Nt = Buffer.from(vv, "ascii"),
+    Me = getCurrentPlatform() === "windows",
+    et = Buffer.from(SHOW_CURSOR, "ascii"),
+    Nt = Buffer.from(HIDE_CURSOR, "ascii"),
     st = Me && ktn(),
     At = !1,
     X,
     ue;
   try {
-    ue = connect(VI());
+    ue = connect(getControlSocketPath());
   } catch (U) {
     let L = t.telemetry?.interactive?.reached,
       F =
@@ -896,7 +896,7 @@ async function rt(e, t = {}) {
         ms: Date.now() - E,
         apc_detach: !1,
         failure_class: fromEnum("connect_throw"),
-        gesture_id: Ee(t.telemetry?.gestureId),
+        gesture_id: sanitizeAnalyticsId(t.telemetry?.gestureId),
         attempt: t.telemetry?.attempt,
         surface: fromEnumOpt(t.telemetry?.surface),
         daemon_booted: t.telemetry?.daemonBooted,
@@ -918,14 +918,14 @@ async function rt(e, t = {}) {
         attach_cold: t.telemetry?.interactive?.attachCold,
       }),
       clearTimeout(be),
-      { outcome: "error", msg: g_(l(U)) }
+      { outcome: "error", msg: redactDaemonNonce(l(U)) }
     );
   }
   ue.setTimeout(1e4, () => {
     if (!Le)
       fe(
         "error",
-        `${Lc()} did not respond \u2014 it may be stalled${zJ("restart")}`,
+        `${bgSupervisorNoun()} did not respond \u2014 it may be stalled${daemonHint("restart")}`,
         { failureClass: "ack_timeout" },
       );
   });
@@ -955,7 +955,7 @@ async function rt(e, t = {}) {
         got_ack: Le,
         got_first_frame: Pe,
         ms: Date.now() - E,
-        gesture_id: Ee(t.telemetry?.gestureId),
+        gesture_id: sanitizeAnalyticsId(t.telemetry?.gestureId),
         attempt: t.telemetry?.attempt,
         via: fromEnumOpt(t.telemetry?.interactive?.via ?? de),
         tempo: fromEnumOpt(De),
@@ -1003,14 +1003,14 @@ async function rt(e, t = {}) {
       let no =
         t.alreadyInAlt || (U === "disconnected" && t.holdScreenOnDisconnect);
       r.write(
-        Qye +
-          re.snapshot().map(r9).reverse().join("") +
-          Cv +
-          (P() === "windows" ? qat : "") +
+        DISABLE_SYNCHRONIZED_UPDATE +
+          re.snapshot().map(disableTerminalMode).reverse().join("") +
+          SHOW_CURSOR +
+          (getCurrentPlatform() === "windows" ? DISABLE_WIN32_INPUT_MODE : "") +
           "\x1B[0m\x1B7" +
           oB +
           "\x1B8" +
-          (Jye() ? BSt : "") +
+          (Jye() ? CLEAR_ITERM2_PROGRESS_SEQUENCE : "") +
           (no ? "" : uF()),
       );
     }
@@ -1320,7 +1320,7 @@ async function rt(e, t = {}) {
     if (((Mt = q > 0 ? Buffer.from(I.subarray(I.length - q)) : $e), st))
       (clearTimeout(X),
         (X = setTimeout(() => {
-          if (!Ne && At) r.write(Cv);
+          if (!Ne && At) r.write(SHOW_CURSOR);
         }, Oo)));
   }
   return (
@@ -1397,7 +1397,7 @@ async function rt(e, t = {}) {
         ((_v().tmuxRgbApplied = !0),
           execFileNoThrow("tmux", ["set", "-as", "terminal-features", ",*:RGB"]));
       let q = ((I.op === "attach" ? I.decModes : void 0) ?? [])
-        .map(cO)
+        .map(enableTerminalMode)
         .join("");
       if ((re.feed(q), "ref" in o)) o.ref();
       trySetRawMode(o, !0);
@@ -1419,10 +1419,10 @@ async function rt(e, t = {}) {
       if (
         (r.write(
           t.alreadyInAlt
-            ? vv + G0e({ legacyKitty: G }) + q
+            ? HIDE_CURSOR + G0e({ legacyKitty: G }) + q
             : Nat({ legacyKitty: G }) +
                 q +
-                (Me ? vv : "") +
+                (Me ? HIDE_CURSOR : "") +
                 `
   \x1B[2mAttaching\u2026\x1B[0m
 `,
@@ -1440,7 +1440,7 @@ async function rt(e, t = {}) {
       if ((o.once("end", Dn), nn(), H.length)) Nn(H);
     }),
     ue.on("error", (U) =>
-      fe("error", g_(l(U)), { failureClass: "socket_error" }),
+      fe("error", redactDaemonNonce(l(U)), { failureClass: "socket_error" }),
     ),
     ue.once("close", () => {
       if (!Ne)
@@ -1486,11 +1486,11 @@ function $o() {
     wtSession: !!a.WT_SESSION,
     isVscodeTerm: a.TERM_PROGRAM === "vscode",
     browser: a.BROWSER ?? null,
-    colorLevel: ie.level,
+    colorLevel: chalk.level,
     syncOutput: nBn(),
     editor: a.VISUAL || a.EDITOR || null,
-    systemTheme: H3n(),
-    ...(a.TMUX && { tmuxSocket: ft(a.TMUX, ",") }),
+    systemTheme: getSystemTheme(),
+    ...(a.TMUX && { tmuxSocket: beforeFirst(a.TMUX, ",") }),
   };
 }
 var xo = 7,
@@ -1522,15 +1522,15 @@ async function qt(e) {
     s = r[0];
   if (s === void 0 || !isValidGitSha(s[0])) return;
   return {
-    branch: o.code === 0 ? truncateToWidth(Lz(o.stdout).trim(), No) || null : null,
+    branch: o.code === 0 ? truncateToWidth(stripAnsiAndControlChars(o.stdout).trim(), No) || null : null,
     count: r.length,
     headSha: s[0],
     shortSha: s[0].slice(0, xo),
-    subject: truncateToWidth(Lz(s[1]).trim(), Bo),
+    subject: truncateToWidth(stripAnsiAndControlChars(s[1]).trim(), Bo),
   };
 }
 function bPt(e) {
-  return `${e.count}${ur(e)} unpushed ${x(e.count, "commit")} on ${e.branch ?? "detached HEAD"}`;
+  return `${e.count}${ur(e)} unpushed ${pluralize(e.count, "commit")} on ${e.branch ?? "detached HEAD"}`;
 }
 function wit(e) {
   let t = e.count > 1 ? `, \u2026 and ${e.count - 1}${ur(e)} more` : "";
@@ -1542,7 +1542,7 @@ async function un(e, t) {
   return o.code === 0 && o.stdout.trim() === t;
 }
 async function ln(e, t) {
-  return execFileNoThrowWithCwd(gitExe(), [...fn, ...t], { cwd: e, env: Fo(), maxBuffer: Mo });
+  return execFileNoThrowWithCwd(gitExe(), [...GIT_HARDENED_ARGS, ...t], { cwd: e, env: sanitizeGitEnv(), maxBuffer: Mo });
 }
 function ur(e) {
   return e.count >= lr ? "+" : "";
@@ -1566,7 +1566,7 @@ import {
 } from "fs/promises";
 import { createInterface } from "readline";
 var jo = () =>
-  process.stderr.write(`Starting ${Lc()}\u2026
+  process.stderr.write(`Starting ${bgSupervisorNoun()}\u2026
 `);
 async function Et(e, t) {
   let o = () => {
@@ -1590,7 +1590,7 @@ Installing it as a service keeps the background daemon running across reboot so 
     s)
   ) {
     case "yes": {
-      let c = await wfe();
+      let c = await getLauncherErrorMessage();
       if (c)
         return (
           logFeatureBad("daemon_service_install", "daemon_service_install_launcher"),
@@ -1598,7 +1598,7 @@ Installing it as a service keeps the background daemon running across reboot so 
 `),
           { ok: !1, reason: c, causeCode: "wrapper" }
         );
-      let d = await zWe(t);
+      let d = await stopDaemonLockHolder(t);
       if (
         d.kind === "foreground" ||
         d.kind === "not-stopped" ||
@@ -1623,7 +1623,7 @@ Installing it as a service keeps the background daemon running across reboot so 
             ? `Not installing the background service: a foreground daemon (pid ${d.lock.pid}, started with \`claude daemon run\`) holds the daemon lock and will serve this session. Stop it (Ctrl-C in its terminal or 'claude daemon stop') and re-run to install.`
             : d.kind === "not-stopped"
               ? Ho(d)
-              : `Not installing the background service: ${$it(d.lock.pid)}; it will serve this session. Stop it ('claude daemon stop') and re-run to install.`;
+              : `Not installing the background service: ${describeUnknownOriginLock(d.lock.pid)}; it will serve this session. Stop it ('claude daemon stop') and re-run to install.`;
         return (
           process.stderr.write(`${v}
 `),
@@ -1634,7 +1634,7 @@ Installing it as a service keeps the background daemon running across reboot so 
       if (!_.ok)
         return (
           process.stderr
-            .write(`Service install failed (${_.error}). Falling back to a transient ${Lc()} for now.
+            .write(`Service install failed (${_.error}). Falling back to a transient ${bgSupervisorNoun()} for now.
 `),
           KL({ forceTransient: !0, onStarting: o, spawnIntent: !0 }, t)
         );
@@ -1650,7 +1650,7 @@ Run 'claude daemon uninstall' to undo.
           causeCode: "timeout",
           reason: `service installed but the daemon ${H_e} ${K0 / 1000}s \u2014 check 'claude daemon status'`,
         };
-      let p = await Rh(1, t).catch(() => null);
+      let p = await getVerifiedDaemonLock(1, t).catch(() => null);
       if (p && p.origin !== "service")
         process.stderr
           .write(`note: the installed service has not come up yet \u2014 a temporary background daemon (pid ${p.pid}) is serving this session; check 'claude daemon status'.
@@ -1695,11 +1695,11 @@ async function Uo(e) {
 function Ho(e) {
   switch (e.outcome) {
     case "eperm":
-      return `Not installing the background service: ${XZ(e)}; it will keep serving this session. Stop it from the account that owns it, then re-run to install.`;
+      return `Not installing the background service: ${describeStopFailure(e)}; it will keep serving this session. Stop it from the account that owns it, then re-run to install.`;
     case "unverified":
-      return `Not installing the background service: ${XZ(e)}, and no daemon could be reached. If no daemon is running, delete ${Kw()}; if pid ${e.pid} is a live process you own, stop it yourself \u2014 then re-run to install.`;
+      return `Not installing the background service: ${describeStopFailure(e)}, and no daemon could be reached. If no daemon is running, delete ${getDaemonLockPath()}; if pid ${e.pid} is a live process you own, stop it yourself \u2014 then re-run to install.`;
     case "timed-out":
-      return `Not installing the background service: ${XZ(e)} \u2014 connecting to whichever daemon is available. If this repeats, kill pid ${e.pid} (or run 'claude daemon stop' again), then re-run to install.`;
+      return `Not installing the background service: ${describeStopFailure(e)} \u2014 connecting to whichever daemon is available. If this repeats, kill pid ${e.pid} (or run 'claude daemon stop' again), then re-run to install.`;
   }
 }
 class fr {
@@ -1767,7 +1767,7 @@ import { mkdir as qo, unlink as Yo } from "fs/promises";
 import { join as zo } from "path";
 async function pn(e, t = !1, o = Date.now(), r) {
   let s = _v(),
-    c = s.daemonConfirmedUp && Gk() === "" && Pc() === null;
+    c = s.daemonConfirmedUp && getLauncherCommandString() === "" && getLauncherConfigError() === null;
   if (!c) {
     s.ensureInFlight ??= (
       e.source === "shell"
@@ -1785,9 +1785,9 @@ async function pn(e, t = !1, o = Date.now(), r) {
   }
   let d = openDaemonLease("cli-bg-dispatch");
   try {
-    let _ = iG(),
+    let _ = getDispatchDir(),
       p = zo(_, `${e.short}.json`),
-      v = Ce.daemon(["dispatch", `${e.short}.json`]),
+      v = STORAGE_KEYS.daemon(["dispatch", `${e.short}.json`]),
       E = "ack-timeout",
       k = "no ack",
       w = randomBytes(4).toString("hex");
@@ -1799,7 +1799,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
             op: "dispatch",
             d: { ...e, nonce: w },
             timeoutMs: 5000,
-            auth: await zre(),
+            auth: await readControlKey(),
           },
           { timeoutMs: 6000 },
         );
@@ -1834,9 +1834,9 @@ async function pn(e, t = !1, o = Date.now(), r) {
             break;
           }
         } else
-          await On(p, T, 384).catch(async (D) => {
+          await writeFileAtomic(p, T, 384).catch(async (D) => {
             if (!W(D)) throw D;
-            (await qo(_, { recursive: !0, mode: 448 }), await On(p, T, 384));
+            (await qo(_, { recursive: !0, mode: 448 }), await writeFileAtomic(p, T, 384));
           });
       } catch (T) {
         ((E = "dispatch-write"), (k = l(T)));
@@ -1923,7 +1923,7 @@ function _r(e, t, o, r) {
   );
 }
 function Yt(e, t, o, r) {
-  let s = P(),
+  let s = getCurrentPlatform(),
     c = WHt(t),
     d = t.includes(I_e) || t.includes(" ran but Claude Code never started"),
     _ = /\((exit code \d+|signal SIG[A-Z]+)/.exec(t)?.[1],
@@ -1999,7 +1999,7 @@ function ci(e) {
     SRt(),
     a.SHELL
       ? { cmd: a.SHELL, args: ["-c", e] }
-      : P() === "windows"
+      : getCurrentPlatform() === "windows"
         ? { cmd: a.COMSPEC || "cmd.exe", args: ["/d", "/s", "/c", e] }
         : { cmd: "/bin/sh", args: ["-c", e] }
   );
@@ -2034,8 +2034,8 @@ async function IWe(e, t, o) {
       respawnFlags: t.respawnFlags,
     });
   if ((await writeStateAtomic(s, d, o), a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
-    if (isHoverRestEnabled() && o !== void 0 && _n(r)) (await Rit(o), await kit(o, r));
-    else (await oi(k7e(), { recursive: !0, mode: 448 }), await ii(XY(r), ""));
+    if (isHoverRestEnabled() && o !== void 0 && isValidPathSegment(r)) (await Rit(o), await kit(o, r));
+    else (await oi(getHostManagedDir(), { recursive: !0, mode: 448 }), await ii(getHostManagedMarkerPath(r), ""));
   return { short: r, jobDir: s, state: d };
 }
 async function eF(e, t, o = "shell", r, s, c, d, _) {
@@ -2102,7 +2102,7 @@ async function di(e, t, o, r, s, c, d) {
     He = r?.forkParentSessionId,
     Ue = Cre(k >= 0 ? pe : Ii(pe));
   if (t === "shell") {
-    let me = o ?? Q(),
+    let me = o ?? getCwd(),
       re = yj(pe),
       _e = [
         ...pe.filter((wt, bt) => re[bt] !== wt),
@@ -2129,7 +2129,7 @@ async function di(e, t, o, r, s, c, d) {
     process.stderr
       .write(`warning: --bg manages the session id; ignoring --session-id (use --resume <id> to continue an existing session)
 `);
-  let Oe = O ? vO((await getAgentDefinitionsWithOverrides(o ?? Q(), d)).activeAgents, O) : void 0;
+  let Oe = O ? vO((await getAgentDefinitionsWithOverrides(o ?? getCwd(), d)).activeAgents, O) : void 0;
   if (O && !Oe && t === "shell")
     process.stderr
       .write(`warning: no agent named '${O}' \u2014 spawning with default template
@@ -2175,7 +2175,7 @@ async function di(e, t, o, r, s, c, d) {
           tempo: Ae ? (Ke ? "idle" : "blocked") : void 0,
           needs: Ae && !Ke ? IDLE_NEEDS : void 0,
           sessionId: _,
-          cwd: o ?? Q(),
+          cwd: o ?? getCwd(),
           worktreePath: r?.worktree?.path,
           worktreeBranch: r?.worktree?.branch,
           worktreeHookBased: r?.worktree?.hookBased,
@@ -2210,7 +2210,7 @@ async function di(e, t, o, r, s, c, d) {
       sessionId: _,
       createdAt: Date.now(),
       source: t === "repl" ? "slash" : t,
-      cwd: o ?? Q(),
+      cwd: o ?? getCwd(),
       launch: r?.exec
         ? { mode: "exec", ...ci(r.exec) }
         : K && D !== void 0
@@ -2241,7 +2241,7 @@ async function di(e, t, o, r, s, c, d) {
         ...{},
         ...(a.PATH && { PATH: a.PATH }),
         ...(!r?.exec &&
-          (t === "repl" || (!r?.providerEnv && !o) || o === Q()) &&
+          (t === "repl" || (!r?.providerEnv && !o) || o === getCwd()) &&
           Oi(ve)),
         ...(be && { CLAUDE_BG_ISOLATION: be }),
         ...(je && { CLAUDE_BG_SESSION_PERMISSION_RULES: JSON.stringify(je) }),
@@ -2308,7 +2308,7 @@ async function di(e, t, o, r, s, c, d) {
           op: "dispatch",
           d: { ...qe, nonce: ne.nonce },
           timeoutMs: 5000,
-          auth: await zre(),
+          auth: await readControlKey(),
         },
         { timeoutMs: 6000 },
       );
@@ -2356,7 +2356,7 @@ async function di(e, t, o, r, s, c, d) {
     ne.reason === "daemon-unreachable" && ne.detail ? ne.detail : wi(ne.reason);
   return {
     ok: !1,
-    error: `Couldn't reach the ${Lc()} (${Ve})${zJ("status")}`,
+    error: `Couldn't reach the ${bgSupervisorNoun()} (${Ve})${daemonHint("status")}`,
     reason:
       ne.reason === "daemon-unreachable"
         ? `daemon_unavailable_${_i(ne.detail)}`
@@ -2476,8 +2476,8 @@ async function cgr(e, t) {
       J = _t(N),
       te = J >= 0 ? N.slice(0, J) : N,
       K = te.filter((be, ve) => !D.has(ve));
-    if (jZt(K)) {
-      (process.stderr.write(`${BZt(N)}
+    if (hasRemoteBackendFlag(K)) {
+      (process.stderr.write(`${getBackgroundFlagConflictMessage(N)}
 `),
         (process.exitCode = 1));
       return;
@@ -2520,7 +2520,7 @@ async function cgr(e, t) {
       ));
     return;
   }
-  let d = DW(),
+  let d = isRestrictedMode(),
     _ = zt(d ? ["--restricted", ...e] : e),
     p = await gi(),
     v = p ? kr(_, p) : _,
@@ -2577,7 +2577,7 @@ async function pi({ jobId: e, state: t, prompt: o }, r, s, c) {
     let w = o !== void 0 ? await readJobState(k, c) : null,
       O = o !== void 0 && w !== null && (await ot(k, w, o, c, !0));
     (process.stderr
-      .write(`Couldn't reach the ${Lc()} (${_.reason})${zJ("status")}${O ? ` Your message is saved and will be delivered when session ${e} next starts.` : ""}
+      .write(`Couldn't reach the ${bgSupervisorNoun()} (${_.reason})${daemonHint("status")}${O ? ` Your message is saved and will be delivered when session ${e} next starts.` : ""}
 `),
       await (O ? logFeatureSadAsync : logFeatureBadAsync)("cli_bg_dispatch", "daemon_unavailable"),
       (process.exitCode = 1));
@@ -2648,7 +2648,7 @@ async function gi(e = process.stdin) {
   try {
     (e.setEncoding("utf8"), e.on("data", r));
   } catch (c) {
-    if ((e.off("data", r), !oje(c))) throw c;
+    if ((e.off("data", r), !isStdinUnusableError(c))) throw c;
     return (
       n(`readBgStdin: stdin unreadable: ${l(c)}`, { level: "error" }),
       await logEventAsync("tengu_bg_stdin_unreadable", { error_code: Jg(c) ?? S("none") }),
@@ -2658,7 +2658,7 @@ async function gi(e = process.stdin) {
       ""
     );
   }
-  let s = await Knt(e, 3000);
+  let s = await peekForStdinData(e, 3000);
   if ((e.off("data", r), s)) return "";
   if (o)
     process.stderr.write(`warning: piped stdin exceeds ${gn} bytes, truncated
@@ -2742,9 +2742,9 @@ function wi(e) {
   }
 }
 function rle(e, t, o) {
-  let r = (s, c) => ie.dim("  " + s.padEnd(26) + c);
+  let r = (s, c) => chalk.dim("  " + s.padEnd(26) + c);
   return [
-    `backgrounded \xB7 ${ie.cyan(e)}${o ? ` \xB7 ${o}` : ""}${t ? ie.dim(` ${t}`) : ""}`,
+    `backgrounded \xB7 ${chalk.cyan(e)}${o ? ` \xB7 ${o}` : ""}${t ? chalk.dim(` ${t}`) : ""}`,
     r("claude agents", "list sessions"),
     r(`claude attach ${e}`, "open in this terminal"),
     r(`claude logs ${e}`, "show recent output"),
@@ -2886,7 +2886,7 @@ async function ugr(e, t) {
   if (typeof r === "string")
     return (
       await logFeatureBadAsync("cli_bg_logs", "read_failed"),
-      process.stderr.write(`Couldn't read logs for ${o} \u2014 ${g_(r)}
+      process.stderr.write(`Couldn't read logs for ${o} \u2014 ${redactDaemonNonce(r)}
 `),
       exitAfterAnalyticsFlush(1)
     );
@@ -2913,8 +2913,8 @@ function Ei(e) {
     if (e.includes(RESPAWN_REASON_LEGACY)) return "Migrating job to attachable PTY\u2026";
     return "Session is restarting\u2026";
   }
-  if (e.includes("ESTARTING")) return `${QK()} is starting\u2026`;
-  return `${QK()} is restarting\u2026`;
+  if (e.includes("ESTARTING")) return `${bgSupervisorNounCap()} is starting\u2026`;
+  return `${bgSupervisorNounCap()} is restarting\u2026`;
 }
 async function hn(e, t = {}, o) {
   let r = () =>
@@ -3017,7 +3017,7 @@ async function dgr(e, t) {
       await Promise.race([zx(_.gestureId, t).catch(() => {}), sleep(750)]),
       await logFeatureBadAsync("cli_bg_attach", "daemon_unavailable", p()),
       process.stderr
-        .write(`${C} \u2014 ${Lc()} is unavailable (${N})${zJ("status")}
+        .write(`${C} \u2014 ${bgSupervisorNoun()} is unavailable (${N})${daemonHint("status")}
 `),
       exitAfterAnalyticsFlush(1)
     ),
@@ -3046,7 +3046,7 @@ async function dgr(e, t) {
       T = C?.state === "failed" && !isExecLaunch(C) && C.detail === HOST_DIED_DETAIL,
       D =
         C?.sessionId !== void 0 && Xn(C.sessionId) !== null
-          ? Ee(C.sessionId)
+          ? sanitizeAnalyticsId(C.sessionId)
           : void 0,
       J = D ? { target_session_id: D } : {};
     if (C?.state === "failed" && !N && !T)
@@ -3124,7 +3124,7 @@ async function dgr(e, t) {
       );
   }
   let w = () => {
-      if (P() === "windows" && process.stdin.isTTY) trySetRawMode(process.stdin, !1);
+      if (getCurrentPlatform() === "windows" && process.stdin.isTTY) trySetRawMode(process.stdin, !1);
     },
     O = async () => {
       let C = await readJobStateAfterSettle(getJobDir(s), t);
@@ -3154,7 +3154,7 @@ async function dgr(e, t) {
     if (
       (process.stderr.write(`Reconnecting to ${s}\u2026
 `),
-      P() === "windows" && process.stdin.isTTY)
+      getCurrentPlatform() === "windows" && process.stdin.isTTY)
     )
       (trySetRawMode(process.stdin, !0), process.stdin.ref());
     let N = B0e();
@@ -3192,7 +3192,7 @@ async function dgr(e, t) {
   if (Ai(k, process.stdout.isTTY, process.stdin.isTTY))
     return (
       await logFeatureOkAsync("cli_bg_attach", p()),
-      y4({ args: ["agents"], env: { CLAUDE_AGENTS_SELECT: s } })
+      relaunchClaudeCode({ args: ["agents"], env: { CLAUDE_AGENTS_SELECT: s } })
     );
   if (k.outcome === "detached" && k.msg)
     process.stderr.write(`${k.msg.replace(KICKED_ATTACH_CODE, "")}
@@ -3225,7 +3225,7 @@ async function dgr(e, t) {
           : k.msg?.includes(RESPAWNING_ATTACH_CODE)
             ? "Job is respawning after an upgrade \u2014 try attach again in a moment."
             : k.msg && (RACED_SOCKET_GAP.test(k.msg) || /ESTARTING/.test(k.msg))
-              ? `${QK()} is restarting \u2014 try again in a moment.`
+              ? `${bgSupervisorNounCap()} is restarting \u2014 try again in a moment.`
               : (k.msg ?? "unknown");
     (process.stderr.write(`Couldn't attach to ${s} \u2014 ${J}
 `),
@@ -3270,7 +3270,7 @@ Usage: claude respawn <id>|--all
   let o = await Et(void 0, t);
   if (!o.ok) {
     (process.stderr
-      .write(`Couldn't respawn \u2014 ${Lc()} is unavailable (${o.reason})${zJ("status")}
+      .write(`Couldn't respawn \u2014 ${bgSupervisorNoun()} is unavailable (${o.reason})${daemonHint("status")}
 `),
       await logFeatureBadAsync("cli_bg_respawn", "daemon_unavailable"),
       (process.exitCode = 1));
@@ -3396,12 +3396,12 @@ async function fgr(e, t) {
     (await logEventAsync("tengu_bg_agent_action", {
       action: S("stop"),
       source: S("cli"),
-      jobSessionId: Ee(_?.sessionId) ?? S(""),
+      jobSessionId: sanitizeAnalyticsId(_?.sessionId) ?? S(""),
     }),
     _?.worktreePath)
   )
     process.stdout.write(
-      ie.dim(`  worktree retained at ${_.worktreePath}
+      chalk.dim(`  worktree retained at ${_.worktreePath}
   run 'claude rm ${o}' to remove worktree and job state
 `),
     );
@@ -3478,7 +3478,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
     } = O;
     if (D) {
       if ((await logFeatureSadAsync("cli_bg_rm", "kept_worktree"), K)) {
-        let pe = x(K.count, "it", "them");
+        let pe = pluralize(K.count, "it", "them");
         (process.stdout.write(
           `kept ${k} \u2014 ${wit(K)}
 ` +
@@ -3531,7 +3531,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
   await logEventAsync("tengu_bg_agent_action", {
     action: S("delete"),
     source: S("cli"),
-    jobSessionId: Ee(w?.sessionId) ?? S(""),
+    jobSessionId: sanitizeAnalyticsId(w?.sessionId) ?? S(""),
   });
   let { leftWorktreeDir: C } = O;
   if (C) await logFeatureSadAsync("cli_bg_rm", "worktree_left_in_place");
@@ -3543,7 +3543,7 @@ async function mgr(e, t, o = Tr(process.argv.slice(2))) {
   worktree directory left at ${C} (git no longer recognized it)`
         : w?.worktreePath
           ? `
-  worktree: ${To(w.worktreePath)}`
+  worktree: ${normalizeWhitespace(w.worktreePath)}`
           : "") +
       `
 `,
@@ -3795,7 +3795,7 @@ function Or(e) {
     o = t >= 0 ? e.slice(0, t) : e,
     r = Se(o),
     s = o.filter((d, _) => !r.has(_));
-  if (jZt(s)) return BZt(o);
+  if (hasRemoteBackendFlag(s)) return getBackgroundFlagConflictMessage(o);
   if (
     s.some((d) => {
       let { peeled: _, rest: p } = Je(d);
@@ -3905,7 +3905,7 @@ function Oi(e) {
 }
 function Er(e) {
   return al(
-    pt(e)
+    stripAnsi(e)
       .replace(/[\s\x00-\x1f\x7f-\x9f]+/g, " ")
       .trim(),
     200,
@@ -3983,7 +3983,7 @@ async function EPt(e, t, o, r) {
       let E = (t[v.id].mediaType ?? "image/png").split("/")[1] || "png";
       return `pasted-${v.id}.${E}`;
     },
-    _ = isHoverRestEnabled() && r !== void 0 && _n(o) && s.every((v) => _n(d(v)));
+    _ = isHoverRestEnabled() && r !== void 0 && isValidPathSegment(o) && s.every((v) => isValidPathSegment(d(v)));
   await ensureJobDir(o, _ ? r : void 0);
   let p = e;
   for (let v = s.length - 1; v >= 0; v--) {
@@ -3992,7 +3992,7 @@ async function EPt(e, t, o, r) {
       w = d(E),
       O = En(c, w);
     if (_) {
-      let C = await r.write(Ce.job(o, [w]), Buffer.from(k.content, "base64"), {
+      let C = await r.write(STORAGE_KEYS.job(o, [w]), Buffer.from(k.content, "base64"), {
         publishDiscipline: "inPlace",
       });
       if (!C.ok) {
@@ -4051,12 +4051,12 @@ async function Li(e, t, o, r) {
   } = o;
   if (d) {
     await b_();
-    let J = policyDeniedReason(gM, "Routines", "are", $6n);
+    let J = policyDeniedReason(ALLOW_ROUTINES_POLICY, "Routines", "are", ROUTINES_POLICY_DENIED_MESSAGE);
     if (J) return { ok: !1, error: J };
   }
   n("[PERF:bg-dispatch-start]");
   let v = s.slice(0, 8),
-    E = c ?? Q(),
+    E = c ?? getCwd(),
     k = d ? W_("--routine", d) : W_("--agent", e.name),
     w = [...Qe().extraArgs, ...k, ...Eit(_)],
     O = getJobDir(v);
@@ -4128,7 +4128,7 @@ function HWe() {
 function W$n(e, t, o, r) {
   let s = t ?? Bt(),
     c = s.slice(0, 8),
-    d = o ?? Q(),
+    d = o ?? getCwd(),
     _ = getJobDir(c);
   return qHe(
     c,
@@ -4232,7 +4232,7 @@ class xr {
       }
     }
     if (this.spare || this.ensuring || this.discarded) return;
-    if (W8()) {
+    if (isLowMemory()) {
       logFeatureSad("job_spare_ensure", "low_mem");
       return;
     }
@@ -4241,7 +4241,7 @@ class xr {
     (n(`[PERF:bg-spare-start] ${d}`),
       (this.ensuring = (async () => {
         try {
-          let _ = await canonicalizePath(e, If(s)),
+          let _ = await canonicalizePath(e, createHoverRestOptions(s)),
             p = r;
           if (p === void 0 && o?.agent)
             (clearAgentDefinitionsCache(), (p = await xWe(_, s).catch(() => [])));
@@ -4481,7 +4481,7 @@ async function KHe(e, t, o) {
     K = 0,
     ce = null,
     pe = null,
-    be = Mh(sN(o)),
+    be = createTranscriptSource(createBackendHandle(o)),
     ve = v.daemonUp && !v.alive && !v.present && O === _;
   if (ve) ((ce = RZt(O, o)), (pe = resolveJobTranscript(D, w.cwd, w.linkScanPath, void 0, be)));
   else {
@@ -4611,7 +4611,7 @@ async function KHe(e, t, o) {
         }
       );
   }
-  let ze = vye(He ?? w.respawnFlags),
+  let ze = stripEnvironmentFlags(He ?? w.respawnFlags),
     ye = ge
       ? []
       : ze.length > 0
@@ -4695,7 +4695,7 @@ ${t.initialPrompt}`
   let qe = Date.now(),
     ne;
   try {
-    (await access(XY(e)), (ne = !0));
+    (await access(getHostManagedMarkerPath(e)), (ne = !0));
   } catch (X) {
     if (!W(X))
       return {
@@ -4785,7 +4785,7 @@ ${t.initialPrompt}`
     action: S("respawn"),
     agent: d.template,
     wasSettled: isSettled(d),
-    jobSessionId: Ee(w.sessionId),
+    jobSessionId: sanitizeAnalyticsId(w.sessionId),
   }),
     invalidateJobStateCache(r));
   let Me = (await readJobState(r, o)) ?? w;
@@ -4857,7 +4857,7 @@ function Nr(e) {
 var vWe = "recap.trigger";
 function Xi(e, t) {
   if (isHoverRestEnabled() && t !== void 0) {
-    let o = Ce.job(e, [vWe]);
+    let o = STORAGE_KEYS.job(e, [vWe]);
     if (kd(o) === void 0) {
       t.write(o, "", { publishDiscipline: "inPlace" }).catch(() => {});
       return;
@@ -4929,7 +4929,7 @@ async function VZ(e, t, o, r) {
   return { confirmed: !1, error: d.error };
 }
 async function RZt(e, t) {
-  let o = await sle(oh(e)),
+  let o = await killPtySocket(getPtySocketPath(e)),
     r = !1,
     s = !0,
     c = !1,
@@ -5000,7 +5000,7 @@ function zHe(e, t) {
 var nle = "That session isn't running \u2014 respawn it first",
   TPt = "Can't send \u2014 that session is running in another terminal";
 function Gr() {
-  return `Couldn't reach the ${Lc()} \u2014 it may be restarting. Press Enter to retry`;
+  return `Couldn't reach the ${bgSupervisorNoun()} \u2014 it may be restarting. Press Enter to retry`;
 }
 function kZt(e) {
   return e.startsWith(Gr());
@@ -5008,7 +5008,7 @@ function kZt(e) {
 var Fr =
   " \u2014 your message was saved and will be delivered when the session restarts";
 async function Mr(e, t, o) {
-  if (Og(t) !== "prompt") return !1;
+  if (getDraftMode(t) !== "prompt") return !1;
   invalidateJobStateCache(e);
   let r = await readJobState(e, o);
   if (!r) return !1;
@@ -5038,7 +5038,7 @@ async function VHe(e, t, o, r, s, c) {
   }
   let p = getJobDir(e),
     v = r ?? (await readJobState(p, c)),
-    E = await zre(),
+    E = await readControlKey(),
     k = () => controlRequest({ proto: BG_PROTO, op: "reply", short: e, text: t, auth: E }),
     w = await k(),
     O = 10;
@@ -5055,14 +5055,14 @@ async function VHe(e, t, o, r, s, c) {
     (await sleep(200), (w = await k()));
   }
   if (!w.ok && w.code === "EAUTH") {
-    let T = await zre();
+    let T = await readControlKey();
     if (T && T !== E) ((E = T), (w = await k()));
   }
   let C = !1;
   if (!w.ok && (w.code === "ENOCONN" || w.code === "ETIMEOUT")) {
     let T = await KL({ forceTransient: !0 }, c);
     if (((C = !T.ok), T.ok)) {
-      ((E = (await zre()) ?? E), (w = await k()));
+      ((E = (await readControlKey()) ?? E), (w = await k()));
       for (
         let D = 0;
         !w.ok && (w.code === "ESTARTING" || w.code === "ENOREPLY") && D < 10;
@@ -5085,7 +5085,7 @@ async function VHe(e, t, o, r, s, c) {
         agent: v?.template ?? "unknown",
         wasTerminal: v ? isTerminal(v.state) : !1,
         daemon: !0,
-        jobSessionId: Ee(o?.sessionId ?? v?.sessionId),
+        jobSessionId: sanitizeAnalyticsId(o?.sessionId ?? v?.sessionId),
         ...s?.(),
       }),
         logFeatureOk("job_reply"),
@@ -5283,7 +5283,7 @@ async function xZt(e, t = {}) {
         xe(d, "error"),
         {
           kind: "error",
-          msg: `Couldn't restart the ${Lc()} \u2014 ${C.reason}`,
+          msg: `Couldn't restart the ${bgSupervisorNoun()} \u2014 ${C.reason}`,
         }
       );
     }
@@ -5384,7 +5384,7 @@ async function xZt(e, t = {}) {
         {
           kind: "error",
           orphaned: !0,
-          msg: `${QK()} lost track of this job \u2014 press Enter to respawn it`,
+          msg: `${bgSupervisorNounCap()} lost track of this job \u2014 press Enter to respawn it`,
         }
       );
     }
@@ -5392,13 +5392,13 @@ async function xZt(e, t = {}) {
       return (
         logFeatureBad("job_attach", `job_attach_daemon_start_failed_${v.causeCode}`),
         xe(d, "error"),
-        { kind: "error", msg: `Couldn't start the ${Lc()} \u2014 ${v.reason}` }
+        { kind: "error", msg: `Couldn't start the ${bgSupervisorNoun()} \u2014 ${v.reason}` }
       );
     let k =
       p.msg && r.test(p.msg)
-        ? `${QK()} is still starting \u2014 try again in a moment`
+        ? `${bgSupervisorNounCap()} is still starting \u2014 try again in a moment`
         : p.msg && o.test(p.msg)
-          ? `${QK()} didn't respond after starting \u2014 try again in a moment`
+          ? `${bgSupervisorNounCap()} didn't respond after starting \u2014 try again in a moment`
           : p.msg
             ? `Couldn't attach \u2014 ${p.msg}`
             : "Couldn't attach to that session";
@@ -5429,13 +5429,13 @@ var Zi = {
   Kr = 32,
   $$n = new RegExp(`^[0-9a-f]{${Kr}}$`);
 function Qi(e) {
-  return mn(e).slice(0, Kr);
+  return hashSha256(e).slice(0, Kr);
 }
 function Tit(e, t) {
   let o = Zi[e ?? "remove_failed"],
-    r = t ? To(t) : "";
+    r = t ? normalizeWhitespace(t) : "";
   if (!r) return o;
-  let s = r.length <= 120 ? r : `${oe(r, 40)}\u2026${Qu(r, 79)}`;
+  let s = r.length <= 120 ? r : `${truncateToCodeUnits(r, 40)}\u2026${takeLastCodeUnits(r, 79)}`;
   return `${o} (${s})`;
 }
 async function e4(e, t = {}, o) {
@@ -5606,14 +5606,14 @@ async function e4(e, t = {}, o) {
             ? "identity_changed"
             : "remove_failed"),
           (N = ge.needsForce ? void 0 : ge.errorSummary));
-      else if (ge.outcome === "left_in_place") _ = To(E);
+      else if (ge.outcome === "left_in_place") _ = normalizeWhitespace(E);
     }
     if (k) {
       if (!t.internal)
         logFeatureSad("job_delete", `worktree_kept_${k}`, { had_worktree: !0 });
       return {
         removed: !1,
-        keptWorktree: To(Lz(ce)),
+        keptWorktree: normalizeWhitespace(stripAnsiAndControlChars(ce)),
         keptReason: k,
         ...(N !== void 0 && { keptErrorSummary: N }),
         ...(T !== void 0 && { keptUnpushed: T }),
@@ -5641,12 +5641,12 @@ async function e4(e, t = {}, o) {
       });
     return {
       removed: !1,
-      error: `couldn't remove the session's state directory (${To(l(E))})`,
+      error: `couldn't remove the session's state directory (${normalizeWhitespace(l(E))})`,
       errorCode: "jobdir_rm_failed",
     };
   }
   if (isHoverRestEnabled() && o !== void 0 && kd(xPt(e)) === void 0) await LWe(o, e);
-  else await Ki(XY(e)).catch(() => {});
+  else await Ki(getHostManagedMarkerPath(e)).catch(() => {});
   if ((invalidateJobStateCache(getJobDir(e)), !t.internal))
     if (_)
       logFeatureSad("job_delete", "worktree_left_in_place", {
@@ -5710,7 +5710,7 @@ async function es(e, t, o, r, s) {
   return;
 }
 function zr(e, t) {
-  let o = Q();
+  let o = getCwd();
   if (!isAbsolute(e) || pl(e) || (ac(e, o) && ac(e, t))) return e;
   let r = D0(ae(), e, { surfaceNetworkRaw: !0, anchors: [o, t] });
   if (r === n8) return e;

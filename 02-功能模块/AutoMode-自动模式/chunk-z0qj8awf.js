@@ -13,10 +13,10 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { le, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _5, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { ep, oC, Spn, uTe, Fzn, xr, oR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
@@ -227,7 +227,7 @@ function lLt(o) {
     e.allow = e.allow.filter((r) => {
       if (r === ep) return !0;
       if (r.length > SSe) return !0;
-      let { toolName: c, ruleContent: b } = Fr(r);
+      let { toolName: c, ruleContent: b } = parsePermissionRule(r);
       return !tJe(c, b);
     });
   let w = k - e.allow.length,
@@ -249,7 +249,7 @@ function lLt(o) {
   }
   if (w > 0 && e.notes.length < m7)
     e.notes.push(
-      `Dropped ${w} proposed allow ${x(w, "entry", "entries")} \u2014 too broad for auto mode to honor safely.`,
+      `Dropped ${w} proposed allow ${pluralize(w, "entry", "entries")} \u2014 too broad for auto mode to honor safely.`,
     );
   return { ok: !0, proposal: e, droppedUnsafeAllowCount: w };
 }

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 270 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../../01-核心基础设施/共享小工具-未细化/authentication-status-box.js";
 import "../Bedrock-Vertex/chunk-g6sqdw6w.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
@@ -33,7 +33,7 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import "../认证-OAuth登录/chunk-9g86t9bp.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 export { V8 as ConsoleOAuthFlow };

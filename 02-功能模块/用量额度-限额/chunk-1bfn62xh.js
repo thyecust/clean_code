@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { le, Io, cr, nt, ru } from "../../00-第三方库/zod/zod.3g334xwq.js";
@@ -16,7 +16,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { ht, isClaudeAISubscriber, getOauthAccountInfo, getSubscriptionType, isConsumerSubscriber, Qh, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { mue, Km } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
-function Yqe(e) {
+function parseReplacementMetadata(e) {
   if (
     typeof e === "object" &&
     e !== null &&
@@ -28,7 +28,7 @@ function Yqe(e) {
     return { replacement: e.replacement, partial: e.partial };
   return null;
 }
-function _Wn(e, t) {
+function listServerPromptTemplates(e, t) {
   let r = [],
     a = `${t}:`;
   for (let i of e) {
@@ -43,11 +43,11 @@ function _Wn(e, t) {
   }
   return r;
 }
-function Gin(e) {
+function stripUriTemplateVariables(e) {
   let t = e.indexOf("{");
   return t === -1 ? e : e.slice(0, t);
 }
-function kbe(e, t) {
+function resolvePromptCommandFromUri(e, t) {
   let r = e.indexOf(":");
   if (r <= 0) return null;
   let a = e.slice(0, r),
@@ -85,7 +85,7 @@ function T(e, t) {
   }
   return a === e.length;
 }
-function yWn(e) {
+function isTemplateCompletionPartial(e) {
   let t = b(e.template.uriTemplate),
     r = Object.keys(e.resolvedArgs).length,
     a = 0;
@@ -108,7 +108,7 @@ function b(e) {
       if (i === -1) return (t.push({ type: "literal", value: e.slice(r) }), t);
       let l = e.slice(r + 1, i);
       ((l = l.replace(/^[+#./;?&]/, "").replace(/\*$|:\d+$/, "")),
-        (l = ft(l, ",")),
+        (l = beforeFirst(l, ",")),
         t.push({ type: "variable", name: l }),
         (r = i + 1),
         (a = r));
@@ -154,7 +154,7 @@ function M(e, t) {
   }
   return null;
 }
-function SWn(e, t) {
+function findBestUriTemplateMatch(e, t) {
   let r = null,
     a = [-1, -1, -1];
   for (let i of t) {
@@ -175,7 +175,7 @@ function SWn(e, t) {
   }
   return r;
 }
-function bWn(e, t, r) {
+function buildUriTemplateReplacement(e, t, r) {
   let a = e.slice(0, t.valueStartIndex),
     i = b(t.template.uriTemplate),
     l = -1,
@@ -194,7 +194,7 @@ function bWn(e, t, r) {
     u = c?.type === "literal" ? c.value : "";
   return a + r + u;
 }
-function tpt(e, t, r = "replace") {
+function setAlwaysDenyCommands(e, t, r = "replace") {
   e((a) => {
     let i = a.alwaysDenyRules.command,
       l = r === "union" ? dedupe([...(i ?? []), ...t]) : [...t];
@@ -209,7 +209,7 @@ function tpt(e, t, r = "replace") {
     };
   });
 }
-function tH(e) {
+function parseSlashCommandInput(e) {
   let t = e.trim();
   if (!t.startsWith("/")) return null;
   let { name: r, args: a } = mue(t);
@@ -224,7 +224,7 @@ function tH(e) {
     };
   return { commandName: r, args: a, isMcp: !1 };
 }
-function xbe(e, t) {
+function resolveSubcommandTarget(e, t) {
   if (!e.subcommands) return;
   let r = t.trimStart(),
     a = r.search(/\s/),
@@ -288,7 +288,7 @@ var R = new j(() => new _());
 function A() {
   return R.of(B().host);
 }
-function h2() {
+function getActiveFotwCampaign() {
   let e = Qh(I, null);
   if (e === null || e === void 0) return null;
   let t = A();
@@ -313,8 +313,8 @@ function h2() {
   if (r > t.parsedCampaign.endsAtMs) return null;
   return t.parsedCampaign.campaign;
 }
-function U1t() {
-  return h2()?.command ?? null;
+function getFotwCommand() {
+  return getActiveFotwCampaign()?.command ?? null;
 }
 function E(e) {
   if (!isClaudeAISubscriber()) return "excluded";
@@ -329,7 +329,7 @@ function E(e) {
   return "excluded";
 }
 function p() {
-  let e = h2();
+  let e = getActiveFotwCampaign();
   if (!e) return null;
   let t = getOauthAccountInfo()?.organizationUuid;
   if (!t) return null;
@@ -338,35 +338,35 @@ function p() {
   if (r === "claimant" && D(t, e.feature)) return null;
   return { campaign: e, orgId: t, audience: r };
 }
-function B1t(e) {
-  let t = U1t();
+function isFotwCommand(e) {
+  let t = getFotwCommand();
   return t !== null && e === t;
 }
-function j1t(e) {
-  return B1t(e) && $ce();
+function isClaimableFotwCommand(e) {
+  return isFotwCommand(e) && hasClaimableFotwCredit();
 }
-function $ce() {
+function hasClaimableFotwCredit() {
   let e = p();
   if (!e || e.audience !== "claimant") return !1;
   if (!e.campaign.command) return !1;
   let t = C(e.orgId, e.campaign.feature);
   return t !== null && t.eligible && t.available;
 }
-function JPe() {
+function isFotwUpsellPending() {
   let e = p();
   if (!e || e.audience !== "viewer") return !1;
   if (!e.campaign.command) return !1;
   return !N(e.orgId, e.campaign.feature);
 }
-function B4() {
-  let e = h2(),
+function getFotwCreditAmount() {
+  let e = getActiveFotwCampaign(),
     t = getOauthAccountInfo()?.organizationUuid;
   if (!e || !t) return null;
   let r = C(t, e.feature);
   if (!r || r.amount_minor_units === null || !r.currency) return null;
   return { amountMinorUnits: r.amount_minor_units, currency: r.currency };
 }
-function npt(e) {
+function refreshFotwEligibility(e) {
   let t = A();
   return (
     (t.inFlightEligibilityRefresh ??= O(e)
@@ -438,12 +438,12 @@ function C(e, t) {
   if (Date.now() - a.timestamp > x) return null;
   return a.info;
 }
-async function wWn(e, t) {
-  if (!j1t(e)) return { outcome: "skipped" };
+async function claimFotwCredit(e, t) {
+  if (!isClaimableFotwCommand(e)) return { outcome: "skipped" };
   let r = p();
   if (!r) return { outcome: "skipped" };
   let { campaign: a, orgId: i } = r,
-    l = B4(),
+    l = getFotwCreditAmount(),
     o;
   try {
     o = await ht.post(
@@ -515,9 +515,9 @@ function N(e, t) {
   let r = ee().fotwUpsellFulfilled;
   return Boolean(r?.[e]?.includes(t));
 }
-function TWn(e) {
+function markFotwUpsellFulfilled(e) {
   let t = p();
-  if (!t || t.audience !== "viewer" || !B1t(e)) return;
+  if (!t || t.audience !== "viewer" || !isFotwCommand(e)) return;
   let { orgId: r, campaign: a } = t;
   Te((i) => {
     let l = i.fotwUpsellFulfilled?.[r] ?? [];
@@ -556,24 +556,24 @@ function S(e, t, r, { onlyIfAbsent: a = !1 } = {}) {
   });
 }
 export {
-  Yqe,
-  _Wn,
-  Gin,
-  kbe,
-  yWn,
-  SWn,
-  bWn,
-  tpt,
-  tH,
-  xbe,
-  h2,
-  U1t,
-  B1t,
-  j1t,
-  $ce,
-  JPe,
-  B4,
-  npt,
-  wWn,
-  TWn,
+  parseReplacementMetadata,
+  listServerPromptTemplates,
+  stripUriTemplateVariables,
+  resolvePromptCommandFromUri,
+  isTemplateCompletionPartial,
+  findBestUriTemplateMatch,
+  buildUriTemplateReplacement,
+  setAlwaysDenyCommands,
+  parseSlashCommandInput,
+  resolveSubcommandTarget,
+  getActiveFotwCampaign,
+  getFotwCommand,
+  isFotwCommand,
+  isClaimableFotwCommand,
+  hasClaimableFotwCredit,
+  isFotwUpsellPending,
+  getFotwCreditAmount,
+  refreshFotwEligibility,
+  claimFotwCredit,
+  markFotwUpsellFulfilled,
 };

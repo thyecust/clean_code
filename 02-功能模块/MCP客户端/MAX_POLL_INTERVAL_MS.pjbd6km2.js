@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { K, ze, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -19,16 +19,16 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { mce, rPe, _Ge, $Se } from "./chunk-5wa92x7d.js";
-import { O_, as } from "../认证-OAuth登录/chunk-7jz937t3.js";
+import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
 import { ha, zF, _a, hde, Dy, b3, Kde, xI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getMaxOutputChars, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { collectResourceLinks } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { formatMcpServerToolLabel } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
-import { Md } from "../Teammates团队/chunk-mrfx53ye.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { rG } from "./chunk-tznd4407.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { shortenMcpTaskId } from "./chunk-tznd4407.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var W = 2000,
   MIN_POLL_INTERVAL_MS = 100,
   MAX_POLL_INTERVAL_MS = 60000,
@@ -125,7 +125,7 @@ async function mcpContentToNotificationText(e, s, i, t = hde) {
       u = await Dy(Buffer.from(r, "utf8"), "text/plain", g, void 0, s);
     if ("error" in u) return { text: a };
     t -= u.size;
-    let d = P() === "windows" ? "python" : "python3",
+    let d = getCurrentPlatform() === "windows" ? "python" : "python3",
       c = u.filepath.replaceAll("\\", "/").replaceAll("'", "'\\''"),
       k = te(r)
         ? "use Read to retrieve the portion truncated above"
@@ -135,7 +135,7 @@ async function mcpContentToNotificationText(e, s, i, t = hde) {
       savedHint: `[The complete ${r.length}-character output was saved to ${u.filepath}; ${k}.]`,
     };
   } catch {
-    return { text: oe(r, getMaxOutputChars()) };
+    return { text: truncateToCodeUnits(r, getMaxOutputChars()) };
   }
 }
 var j = 80000;
@@ -214,10 +214,10 @@ function boundMcpStatusMessage(e) {
   if (e === void 0) return;
   let s = e.replace(re, " ").replace(/ {2,}/g, " ").trim();
   if (s === "") return;
-  return s.length > B ? `${oe(s, B)}\u2026 [truncated]` : s;
+  return s.length > B ? `${truncateToCodeUnits(s, B)}\u2026 [truncated]` : s;
 }
 function buildMcpTaskNotification(e) {
-  let i = `MCP task ${rG(e.mcpTaskId)} (${formatMcpServerToolLabel(e.serverName, e.toolName)}) ${e.status}.`,
+  let i = `MCP task ${shortenMcpTaskId(e.mcpTaskId)} (${formatMcpServerToolLabel(e.serverName, e.toolName)}) ${e.status}.`,
     t = boundMcpStatusMessage(e.statusMessage) ?? "no detail",
     r =
       e.status === "completed"
@@ -250,7 +250,7 @@ function ne(e, s) {
 function H(e, s) {
   let t = Math.max(0, Math.floor(e.length * (s / Nt(e).length)));
   for (;;) {
-    let r = oe(e, t);
+    let r = truncateToCodeUnits(e, t);
     if (Nt(r).length + 13 <= s || t === 0) return r + "\u2026 [truncated]";
     t = Math.floor(t * 0.9);
   }
@@ -312,14 +312,14 @@ async function ie({
             mce,
           );
         } catch (l) {
-          n(`mcp task ${o} getTaskResult during input_required: ${O_(l)}`);
+          n(`mcp task ${o} getTaskResult during input_required: ${formatErrorWithCode(l)}`);
         }
       if ((await sleep(O), L({ taskRegistry: s, registryId: a, registered: k }))) {
         (e
           .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
             signal: AbortSignal.timeout(Kde),
           })
-          .catch((l) => n(`mcp task ${o} cancel after kill: ${O_(l)}`)),
+          .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
           x(a, r, I, T, b));
         return;
       }
@@ -330,9 +330,9 @@ async function ie({
         );
         ((_ = 0), E(l.status, l.statusMessage));
       } catch (l) {
-        if ((_++, n(`mcp task ${o} poll failed: ${O_(l)}`), _ >= X)) {
+        if ((_++, n(`mcp task ${o} poll failed: ${formatErrorWithCode(l)}`), _ >= X)) {
           ((d = "failed"),
-            (c = boundMcpStatusMessage(`Task polling failed repeatedly: ${O_(l)}`)),
+            (c = boundMcpStatusMessage(`Task polling failed repeatedly: ${formatErrorWithCode(l)}`)),
             (C = "poll_failed_repeatedly"));
           break;
         }
@@ -349,7 +349,7 @@ async function ie({
         S = await mcpContentToNotificationText(l.content ?? [], r, p);
       } catch (l) {
         ((d = "failed"),
-          (c = boundMcpStatusMessage(`Failed to fetch task result: ${O_(l)}`)),
+          (c = boundMcpStatusMessage(`Failed to fetch task result: ${formatErrorWithCode(l)}`)),
           (C = "result_fetch_failed"));
       }
     if (L({ taskRegistry: s, registryId: a, registered: k })) {
@@ -357,7 +357,7 @@ async function ie({
         .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
           signal: AbortSignal.timeout(Kde),
         })
-        .catch((l) => n(`mcp task ${o} cancel after kill: ${O_(l)}`)),
+        .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
         x(a, r, I, T, b));
       return;
     }
@@ -421,7 +421,7 @@ async function restoreMcpTasks(e) {
       );
       continue;
     }
-    ce(t, e).catch((r) => n(`restoreMcpTasks ${t.taskId}: ${O_(r)}`));
+    ce(t, e).catch((r) => n(`restoreMcpTasks ${t.taskId}: ${formatErrorWithCode(r)}`));
   }
   logFeatureOk("mcp_task_restore");
 }
@@ -442,7 +442,7 @@ async function ce(
   )
     return;
   let a = {
-    ...Md(e.taskId, "mcp_task", formatMcpServerToolLabel(e.serverName, e.toolName), e.toolUseId),
+    ...createPendingTask(e.taskId, "mcp_task", formatMcpServerToolLabel(e.serverName, e.toolName), e.toolUseId),
     type: "mcp_task",
     status: "running",
     serverName: e.serverName,
@@ -465,7 +465,7 @@ async function ce(
     }
     let c = i().find((k) => k.name === e.serverName);
     if (c?.type === "connected") {
-      let k = Yo(c.client);
+      let k = asMcpSdkClient(c.client);
       if (k.getProtocolEra() === "modern") {
         ((u = D(k, e.serverName, "reconnected")),
           (d = "Task could not be resumed"));
@@ -481,7 +481,7 @@ async function ce(
         break;
       }
       try {
-        let T = Yo(
+        let T = asMcpSdkClient(
           (
             await k(c, {
               timeoutMs: Math.max(0, o - Date.now()),
@@ -497,7 +497,7 @@ async function ce(
         g = T;
         break;
       } catch (T) {
-        u = `server '${e.serverName}' failed to connect: ${as(T, c.config)}`;
+        u = `server '${e.serverName}' failed to connect: ${formatConnectionError(T, c.config)}`;
         break;
       }
     }
@@ -561,7 +561,7 @@ async function ce(
           { signal: AbortSignal.timeout(Kde) },
         )
         .catch((c) =>
-          n(`mcp task ${e.mcpTaskId} cancel after kill: ${O_(c)}`),
+          n(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(c)}`),
         ));
     return;
   }

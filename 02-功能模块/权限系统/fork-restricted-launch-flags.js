@@ -7,14 +7,14 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Hr, DW } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode, isRestrictedMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 function foldRestricted(n, e) {
   return e && !n.restricted ? { ...n, restricted: !0 } : n;
 }
 function cliCarriesSessionConfig(n) {
   return (
-    Hr() ||
-    DW() ||
+    isSafeMode() ||
+    isRestrictedMode() ||
     [
       n.permissionMode,
       n.inheritPermissionMode,

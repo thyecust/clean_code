@@ -19,16 +19,16 @@ import { BU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb
 import { toCompatSessionId, sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { isCcrV2SendEventsEnabled, isCcrV2SessionCrudEnabled } from "./chunk-9estzwf5.js";
 import { extractErrorDetail } from "../../01-核心基础设施/共享小工具-未细化/chunk-x4q0245z.js";
-import { classifyElevatedAuthError } from "./chunk-mxsfy35q.js";
+import { classifyElevatedAuthError } from "./code-session-api.js";
 import { cLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { SD } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { createMessageEnvelope } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { isTrustedDeviceGateEnabled, CLOUD_CANNOT_REACH_ELEVATED_HINT, getTrustedDeviceToken, recoverFromUntrustedDevice, untrustedDeviceHint } from "./chunk-tyce0p0b.js";
 import { adoptSelfBridgeTitleFromRoster, getSelfBridgeCompatId, getSelfBridgeTitle } from "../权限系统/chunk-1y2g140m.js";
 import { P3t } from "./chunk-1yq098a7.js";
 import { A7 } from "./chunk-ga43tr2w.js";
 import "./chunk-znhfst8k.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-thdf1760.js";
-import "./chunk-jpq2fv3g.js";
+import "../../01-核心基础设施/共享小工具-未细化/reply-degraded-state.js";
+import "./bridge-inbound-origin.js";
 import "../../01-核心基础设施/共享小工具-未细化/work-secret.js";
 import "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
 import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
@@ -209,7 +209,7 @@ async function postInterClaudeMessage(t, i, u, w, P, k, x) {
   let g = getSelfBridgeCompatId() ?? getRemoteSessionCompatId(),
     m = g ? tRe(g) : "unknown",
     _ = yUe(m, getSelfBridgeTitle() ?? u, i, void 0, kCt(P, g ? FAe(m) : void 0), k),
-    y = SD(),
+    y = createMessageEnvelope(),
     c = {
       ...y,
       type: "user",

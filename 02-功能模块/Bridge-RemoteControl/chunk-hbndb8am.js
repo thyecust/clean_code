@@ -10,7 +10,7 @@
 import { classifyChromeToolError } from "../ClaudeinChrome/chrome-tool-error-classifier.js";
 import { Din, Qdt, Lin, Min, pWn, fWn, qqe, D1t } from "../图片-截图-ComputerUse/chunk-mk8kjx9c.js";
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
+import { McpServer } from "../MCP客户端/mcp-server.js";
 import { Pv, bGe, wGe, qSe, lNt, _ut, TGe } from "../图片-截图-ComputerUse/chunk-csvzwhzk.js";
 import g from "ws";
 function _() {
@@ -1383,7 +1383,7 @@ function njn(e) {
 function aNt(e, n) {
   let { serverName: t, logger: o } = e,
     i = n ?? njn(e),
-    s = new A1(
+    s = new McpServer(
       { name: t, version: "1.0.0" },
       { capabilities: { tools: { listChanged: !0 }, logging: {} } },
     );

@@ -12,19 +12,19 @@ import { An, Dr, Oi } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { R, l, A, WW } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Ro, Tr, ae, Qhe, k_, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Pl } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { sr, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gh, xQ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { $d, bR, normalizeCaseForComparison } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { H5 } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
-import { Glr } from "../../01-核心基础设施/共享小工具-未细化/chunk-a7cfts2d.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { decodeTaggedId } from "../Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { readFileHandleWithMetadata } from "../../01-核心基础设施/共享小工具-未细化/safe-file-read.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function ft(t) {
   if (!j1(t)) return !1;
   if (Xn(t)) return !0;
-  return /^[A-Za-z0-9][A-Za-z0-9_]*$/.test(t) && H5(t) !== void 0;
+  return /^[A-Za-z0-9][A-Za-z0-9_]*$/.test(t) && decodeTaggedId(t) !== void 0;
 }
 function Cbt(t, e = {}) {
   return e.acceptCustomIds ? j1(t) : ft(t);
@@ -154,7 +154,7 @@ function X(t) {
 async function Q3t(t, e, i) {
   let o = new Set(e);
   for (let m of Tr(t)) if (!o.has(m)) throw X(t);
-  let r = P(),
+  let r = getCurrentPlatform(),
     s = r === "windows" ? S.O_RDONLY : S.O_RDONLY | S.O_NOCTTY,
     c = r === "windows" ? s : s | S.O_NOFOLLOW,
     a = async (m, y) => {
@@ -267,7 +267,7 @@ async function ot(t, e, i, o, r = !1) {
     throw u;
   }
   try {
-    return await Glr(a, e, o);
+    return await readFileHandleWithMetadata(a, e, o);
   } finally {
     await a.close();
   }
@@ -291,7 +291,7 @@ async function $k(t, e, i) {
 async function Vt(t, e, i) {
   let o = new Set(e),
     r = dt(t),
-    s = P(),
+    s = getCurrentPlatform(),
     c = () =>
       (i?.leaf === "replace" ? Tr(L(t)).map((O) => T(O, r)) : Tr(t)).every(
         (O) => o.has(O),
@@ -870,7 +870,7 @@ async function ie(t, e, i, o, r) {
       u = s.get(a),
       f;
     try {
-      f = P() === "windows" ? void 0 : await tt(a, { replaceLeaf: !0 });
+      f = getCurrentPlatform() === "windows" ? void 0 : await tt(a, { replaceLeaf: !0 });
       let w = f?.ioPath ?? a;
       if (u === void 0 && t === sr().outputDir)
         u = await Ht(a, w).catch(() => {
@@ -892,7 +892,7 @@ async function ie(t, e, i, o, r) {
   }
 }
 async function ct(t, e, i = 0) {
-  if (P() === "windows")
+  if (getCurrentPlatform() === "windows")
     return (await It(x(t), { recursive: !0 }), yt(t, e.windowsFlags));
   let o = await tt(t, { replaceLeaf: !0 });
   try {
@@ -915,7 +915,7 @@ async function ct(t, e, i = 0) {
           (s ? _.O_CREAT | _.O_EXCL : 0) |
           lt |
           (_.O_NONBLOCK ?? 0),
-        P(),
+        getCurrentPlatform(),
       );
     } catch (a) {
       if (!e.exclusive && A(a) === "EEXIST" && !e.retried)
@@ -939,7 +939,7 @@ async function ct(t, e, i = 0) {
   }
 }
 async function openTaskOutputForRead(t, e = 0) {
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     let o = await Rt(t);
     if (o === null) return null;
     if (o.isSymbolicLink()) {
@@ -967,7 +967,7 @@ async function openTaskOutputForRead(t, e = 0) {
     if (!o.isFile() || (o.nlink !== 1 && e === 0))
       b(t, "not a regular nlink-1 file");
     await i.recheckBeforeWrite();
-    let r = await cG(i.ioPath, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), P());
+    let r = await cG(i.ioPath, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), getCurrentPlatform());
     try {
       await Ft(r, o, t, { registeredIdentity: e > 0 ? Ut(t) : void 0 });
     } catch (s) {
@@ -983,7 +983,7 @@ async function openTaskOutputForRead(t, e = 0) {
 }
 async function Ht(t, e) {
   let i = await ut(e),
-    o = At(i) && resolve(i).startsWith(resolve(Pl()) + Z);
+    o = At(i) && resolve(i).startsWith(resolve(getProjectsDir()) + Z);
   if (!At(i) || (!q(i) && !o))
     return b(
       t,
@@ -1017,7 +1017,7 @@ async function Ct(t, e, i) {
     let s = await realpath(t);
     if (q(s)) return b(i, "output link leads back into the tasks tree");
     ((r = await J(s)),
-      (o = await cG(s, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), P())));
+      (o = await cG(s, _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0), getCurrentPlatform())));
   } catch (s) {
     if (isTaskOutputSwapRefusal(s)) throw s;
     if (A(s) === "ENOENT") return null;
@@ -1060,7 +1060,7 @@ async function Mt(t) {
     let i = await cG(
       e.ioPath,
       _.O_RDONLY | lt | (_.O_NONBLOCK ?? 0),
-      P(),
+      getCurrentPlatform(),
     ).catch((o) => {
       throw Tt(o, t);
     });
@@ -1191,7 +1191,7 @@ async function bindTaskOutputForRead(t) {
         "task output link target removed",
       )
     );
-  let i = P();
+  let i = getCurrentPlatform();
   return {
     ioPath:
       (i === "linux" || i === "wsl") &&
@@ -1220,7 +1220,7 @@ async function tailTaskOutput(t, e) {
 async function unlinkTaskOutput(t) {
   let e = sr().linkedOutputs.get(t);
   if ((sr().linkedOutputs.delete(t), e !== void 0)) Ot.delete(e);
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     await unlink(t);
     return;
   }
@@ -1314,7 +1314,7 @@ async function tt(t, e) {
           return {
             ioPath: `${k}/${N}`,
             canonicalPath: U(i, N),
-            readExisting: (p) => ot(`${k}/${N}`, U(i, N), P(), p),
+            readExisting: (p) => ot(`${k}/${N}`, U(i, N), getCurrentPlatform(), p),
             recheckBeforeWrite: () => {},
             close: async () => {
               if (!et) ((et = !0), y--, await D());

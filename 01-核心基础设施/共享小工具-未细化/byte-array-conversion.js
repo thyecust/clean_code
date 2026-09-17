@@ -7,9 +7,9 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { s_ } from "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
+import { utilUtf8Module } from "../../02-功能模块/Bedrock-Vertex/chunk-p991cddr.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
-var n = toESM(s_()),
+var n = toESM(utilUtf8Module()),
   e =
     typeof Buffer < "u" && Buffer.from
       ? function (r) {

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { hbe, kdt } from "./chunk-kk7p3hsm.js";
+import { isAbsolutePath, isUnsafeFileUrl } from "./chunk-kk7p3hsm.js";
 import { An, ku, NW } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { resolve } from "path";
 import { pathToFileURL } from "url";
@@ -15,9 +15,9 @@ function toLocalFileUrl(n) {
   try {
     let r = NW(n),
       e = NW(resolve(r));
-    if (ku(r) || An(e) || hbe(r) || hbe(e)) return null;
+    if (ku(r) || An(e) || isAbsolutePath(r) || isAbsolutePath(e)) return null;
     let t = pathToFileURL(r);
-    return t.hostname !== "" || kdt(t.href) ? null : t.href;
+    return t.hostname !== "" || isUnsafeFileUrl(t.href) ? null : t.href;
   } catch {
     return null;
   }

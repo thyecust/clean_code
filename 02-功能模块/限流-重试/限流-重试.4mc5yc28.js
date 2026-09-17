@@ -37,7 +37,7 @@ var l = new j(() => ({
 function n() {
   return l.of(B().host);
 }
-function Lle(t, e = Date.now()) {
+function shouldOfferLowPriority(t, e = Date.now()) {
   return (
     isContinuableUsageLimitWall(t) &&
     t.lowPriorityOffer === "treatment" &&
@@ -72,7 +72,7 @@ function f(t) {
       return !0;
   }
 }
-function TBn(t) {
+function trackLowPriorityOffer(t) {
   if (t.lowPriorityOffer === void 0 || !isContinuableUsageLimitWall(t)) return;
   let e = t.resetsAt ?? null;
   if (e === null) return;
@@ -100,7 +100,7 @@ function TBn(t) {
         config_version: I4e(),
       }));
 }
-function rIe(t, e) {
+function trackLowPriorityOfferShown(t, e) {
   let o = t.resetsAt ?? null,
     r = n();
   if (o === null || r.shownWallResetsAt === o) return;
@@ -111,9 +111,9 @@ function rIe(t, e) {
       config_version: I4e(),
     }));
 }
-function B9e(t) {
+function enableLowPriorityMode(t) {
   let e = md();
-  if (Lle(e) && e.resetsAt !== void 0) {
+  if (shouldOfferLowPriority(e) && e.resetsAt !== void 0) {
     if (
       (Jx("low_priority"),
       s(),
@@ -137,13 +137,13 @@ function B9e(t) {
   }
   return "unavailable";
 }
-function j9e(t) {
+function formatLowPriorityEnabledMessage(t) {
   let e = $we(),
     o = e.phase === "active" ? formatResetTime(e.resetsAtSeconds) : void 0,
     r = o ? `until your limit resets at ${o}` : "until your limit resets";
   return `${t === "resumed" ? `Lower-priority mode is back on ${r}` : `Continuing now at lower priority ${r}`}. Your weekly limit still applies, and responses may pause while waiting for spare capacity. Run /${rX} to stop.`;
 }
-function W9e(t = Date.now()) {
+function formatLowPriorityUnavailableMessage(t = Date.now()) {
   if (OUt(t))
     return `${LF().budgetExhaustedCopy}. Lower-priority mode is offered again after your weekly limit resets.`;
   let e = Fte(t);
@@ -151,9 +151,9 @@ function W9e(t = Date.now()) {
     return `Lower-priority mode is taking a break until ${formatResetTime(Math.ceil(e / 1000)) ?? "later"}, after waiting too long for spare capacity. Try /${rX} again then.`;
   return "Lower-priority mode isn't available right now.";
 }
-function EBn() {
+function formatLowPriorityOffMessage() {
   let t = md();
-  return `Lower-priority mode is off. New messages wait for your usage limit as usual${Lle(t) || a(t) ? `; run /${rX} again to turn it back on` : ""}.`;
+  return `Lower-priority mode is off. New messages wait for your usage limit as usual${shouldOfferLowPriority(t) || a(t) ? `; run /${rX} again to turn it back on` : ""}.`;
 }
 function s() {
   let t = n();
@@ -163,4 +163,4 @@ function s() {
       if (D3e(o)) yk("conversation_reset");
     }));
 }
-export { Lle, TBn, rIe, B9e, j9e, W9e, EBn };
+export { shouldOfferLowPriority, trackLowPriorityOffer, trackLowPriorityOfferShown, enableLowPriorityMode, formatLowPriorityEnabledMessage, formatLowPriorityUnavailableMessage, formatLowPriorityOffMessage };

@@ -14,7 +14,7 @@ import { useVoiceStore } from "../../01-核心基础设施/共享小工具-未�
 import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Va } from "../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useTerminalFocus } from "../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
@@ -29,7 +29,7 @@ import { probeVoiceConnectivity, isVoiceStreamAvailable, connectVoiceStream } fr
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { useStoreSelector } from "../../01-核心基础设施/共享小工具-未细化/use-store-selector.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { Mcr } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
+import { getResolvedLanguage } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
 F();
 var w = 1e4,
   I = 3;
@@ -573,7 +573,7 @@ class L {
     }
     let b = getInitialSettings().language,
       D = Ije(b),
-      R = Mcr();
+      R = getResolvedLanguage();
     (logFeatureOk("voice_start"),
       logEvent("tengu_voice_recording_started", {
         focusTriggered: this.#i,
@@ -820,7 +820,7 @@ function useVoice({
     { credentials: V } = useStorageV5Context(),
     C = useClock(),
     b = useVoiceStore(),
-    D = Va(),
+    D = useTerminalFocus(),
     R = {
       onTranscript: e,
       onError: t,

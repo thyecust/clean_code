@@ -8,16 +8,16 @@
 
 // Version: 2.1.263
 import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Yie } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomicWithOptions } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { b, ae } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { A_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-h3avap4w.js";
+import { getSecureStorageDir } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
 import { MAX_CREDENTIAL_FILE_BYTES } from "../../01-核心基础设施/共享小工具-未细化/max-credential-file-bytes.js";
 import { constants } from "fs";
 import { lstat, mkdir, open as p } from "fs/promises";
 import { basename, dirname, isAbsolute, join as _ } from "path";
 function f() {
-  let e = A_();
+  let e = getSecureStorageDir();
   return { storeDir: e, storePath: _(e, ".credentials.json") };
 }
 var k = constants.O_NONBLOCK,
@@ -128,7 +128,7 @@ var y = {
   async writeCredentials(e) {
     let { storeDir: r, storePath: n } = f();
     try {
-      (await ae().mkdir(r), await Yie(n, b(e), { mode: 384, exactMode: 384 }));
+      (await ae().mkdir(r), await writeFileAtomicWithOptions(n, b(e), { mode: 384, exactMode: 384 }));
     } catch (t) {
       return { state: "write-failed", code: A(t) };
     }

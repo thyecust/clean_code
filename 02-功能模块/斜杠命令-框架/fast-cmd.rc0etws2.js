@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 214 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Mr, dU, bse } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { H3e } from "../../01-核心基础设施/设置-配置/chunk-992erern.js";
+import { runFastModeToggle } from "../../01-核心基础设施/设置-配置/fast-mode.js";
 import "../../01-核心基础设施/模型目录-ModelCatalog/chunk-qgx6a5a0.js";
 async function l(a, e) {
   if (!Mr())
@@ -27,7 +27,7 @@ async function l(a, e) {
     };
   return {
     type: "text",
-    value: await H3e(
+    value: await runFastModeToggle(
       e.session,
       o,
       e.getAppState,

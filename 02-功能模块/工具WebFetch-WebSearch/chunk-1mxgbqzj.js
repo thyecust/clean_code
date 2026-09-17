@@ -28,12 +28,12 @@ import {
   clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { bIn } from "../Git-Worktree/chunk-bk9696gx.js";
+import { clearRepositoryCaches } from "../Git-Worktree/git-repository-detection.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { YSn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { globalFileIndexCache, resetFileIndexCache } from "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import { GoalProposalState } from "../../01-核心基础设施/共享小工具-未细化/goal-proposal-state.js";
-import { lWn } from "../权限系统/chunk-n4x6jsp3.js";
+import { clearSwarmPermissions } from "../权限系统/swarm-permission-poller.js";
 function brn(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
   if ((EXn(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), yVn(r), jrt(null), !a))
@@ -71,8 +71,8 @@ function brn(t, r = new Set(), i, o, l, m = !1) {
     WGn(),
     !a)
   )
-    lWn();
-  if ((bIn(), !a)) kVn();
+    clearSwarmPermissions();
+  if ((clearRepositoryCaches(), !a)) kVn();
   if ((eMn(r), clearResolveGitDirCache(), U8n(), Q_t().catch(() => {}), C4n(t), o))
     (o.get(GoalProposalState).clear(),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ WebFetchCache: e }) =>

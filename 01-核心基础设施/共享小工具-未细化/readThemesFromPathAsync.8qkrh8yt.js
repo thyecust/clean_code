@@ -10,18 +10,18 @@
 
 // [preload stripped] 原本在此预载 26 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import {
-  Sln,
-  NFt,
-  bln,
-  twe,
-  D9,
-  Zb,
-  FFt,
-  _Oe,
+  getCustomThemeBase as Sln,
+  getCachedCustomThemes as NFt,
+  getCachedCustomTheme as bln,
+  getThemesDir as twe,
+  customThemeRef as D9,
+  parseCustomThemeRef as Zb,
+  readThemesFromPathAsync as FFt,
+  loadCustomThemes as _Oe,
   $ze,
-  wln,
-  $Ft,
-} from "../../02-功能模块/状态栏-主题/chunk-q7ekqy5h.js";
+  slugify as wln,
+  watchCustomThemes as $Ft,
+} from "../../02-功能模块/状态栏-主题/custom-themes.js";
 export {
   D9 as customThemeRef,
   bln as getCachedCustomTheme,

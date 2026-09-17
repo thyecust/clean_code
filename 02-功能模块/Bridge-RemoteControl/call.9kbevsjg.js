@@ -21,7 +21,7 @@ import { getBridgeAccessToken, getBridgeAccessTokenAsync } from "../../01-核心
 import { getBridgeDisabledReason } from "./chunk-9estzwf5.js";
 import { ndt } from "./chunk-ga43tr2w.js";
 import { PROACTIVE_ENROLLMENT_DISABLED_MESSAGE, isProactiveEnrollmentDisabled, isTrustedDeviceUnenrolled, enrollTrustedDeviceIfNeeded } from "./chunk-tyce0p0b.js";
-import { vAe, Hre } from "./chunk-ct52ffwb.js";
+import { vAe, REMOTE_CONTROL_DISCONNECTED_MESSAGE } from "./remote-control-messages.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -29,8 +29,8 @@ import { useKeybindings } from "../../01-核心基础设施/共享小工具-未�
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { nl } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
-import { U, It } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
-import { Rs } from "../../01-核心基础设施/共享小工具-未细化/chunk-axrnefsa.js";
+import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
+import { useActiveOverlay } from "../../01-核心基础设施/共享小工具-未细化/overlay-registry.js";
 import { removeNotificationFromState } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { R0e } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { REMOTE_CALLOUT_DIALOG } from "../../01-核心基础设施/共享小工具-未细化/remote-callout-dialog.js";
@@ -55,12 +55,12 @@ import "../../01-核心基础设施/设置-配置/chunk-tswdb9jt.js";
 import "../../01-核心基础设施/共享小工具-未细化/standalone-security-dialog.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { N8, Kz } from "./chunk-3b6ct3yp.js";
 import { o6e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { zJt } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import "../权限系统/permission-dialog.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -70,8 +70,8 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ik } from "./chunk-2c3z3wjk.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import { BRIDGE_FAILED_ERROR } from "./remote-control-ui-strings.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -117,7 +117,7 @@ function Or(te) {
     replBridgeError: void 0,
     replBridgeErrorKind: void 0,
     replBridgeSessionGroupingId: void 0,
-    notifications: removeNotificationFromState(te.notifications, ik),
+    notifications: removeNotificationFromState(te.notifications, BRIDGE_FAILED_ERROR),
   };
 }
 function Tr(Lo) {
@@ -140,10 +140,10 @@ var He =
 function ze(_o) {
   let K = _(25),
     { onDone: u, name: Y, sessionGroupingId: x, context: g } = _o,
-    W = It(),
-    Se = U(br),
-    Fe = U(Cr),
-    Pe = U(Rr),
+    W = useSetAppState(),
+    Se = useAppStateSelector(br),
+    Fe = useAppStateSelector(Cr),
+    Pe = useAppStateSelector(Rr),
     [yo, ho] = d(!1),
     [Bo, bo] = d(!1),
     [Le] = d(Er),
@@ -391,11 +391,11 @@ function ze(_o) {
 function Oe(wo) {
   let c = _(69),
     { onDone: Q, sessionGroupingId: ee } = wo;
-  Rs("bridge-disconnect-dialog");
-  let Ve = It(),
-    Io = U(wr),
-    xo = U(Ir),
-    Oo = U(xr),
+  useActiveOverlay("bridge-disconnect-dialog");
+  let Ve = useSetAppState(),
+    Io = useAppStateSelector(wr),
+    xo = useAppStateSelector(Ir),
+    Oo = useAppStateSelector(xr),
     [G, ir] = d(2),
     [j, To] = d(!1),
     [pe, Je] = d(""),
@@ -424,7 +424,7 @@ function Oe(wo) {
     ((dr = function re() {
       (Ve(Or),
         logEvent("tengu_bridge_command", { action: S("disconnect") }),
-        Q(Hre, { display: "system" }));
+        Q(REMOTE_CONTROL_DISCONNECTED_MESSAGE, { display: "system" }));
     }),
       (c[4] = Q),
       (c[5] = Ve),

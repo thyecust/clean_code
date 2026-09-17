@@ -10,11 +10,11 @@
 import { j, B, wDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { join as S } from "path";
 var A = "active-time.json";
 var y = 31536000000,
@@ -23,10 +23,10 @@ function d() {
   return { version: 1, windows: [] };
 }
 function v() {
-  return S(be(), A);
+  return S(getClaudeConfigDir(), A);
 }
 function f() {
-  return Ce.state("active-time-ledger");
+  return STORAGE_KEYS.state("active-time-ledger");
 }
 async function w(t) {
   let e;
@@ -42,7 +42,7 @@ async function w(t) {
     e = r.value;
   } else
     try {
-      e = await qt().read(v());
+      e = await getFileStorage().read(v());
     } catch (i) {
       if (W(i)) return d();
       throw (n(`Failed to read active-time ledger: ${l(i)}`), i);
@@ -104,7 +104,7 @@ class g {
     );
   }
   async doFlush(t, e) {
-    let i = Eo("breakReminder", { enabled: !1 }).value;
+    let i = resolveSetting("breakReminder", { enabled: !1 }).value;
     if (
       ((this.cachedBreakThresholdMs = (i.breakThresholdMinutes ?? DEFAULT_BREAK_THRESHOLD_MINUTES) * 60000),
       this.pendingSeconds <= 0)
@@ -148,8 +148,8 @@ class g {
           return;
         }
       } else {
-        let a = be();
-        (await qt().mkdir(a), await qt().atomicWrite(v(), b(s), 384));
+        let a = getClaudeConfigDir();
+        (await getFileStorage().mkdir(a), await getFileStorage().atomicWrite(v(), b(s), 384));
       }
       this.pendingSeconds -= r;
     } catch (s) {

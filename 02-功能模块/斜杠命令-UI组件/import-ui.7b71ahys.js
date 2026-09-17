@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 253 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { fO, Qw, b3e, Ilt } from "../../01-核心基础设施/设置-配置/chunk-ncbnx9cz.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -20,7 +20,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { lE } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-dhg42t8r.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { wIe, qle, znn } from "../../01-核心基础设施/共享小工具-未细化/chunk-tfx2a5vd.js";
+import { wIe, classifyImportItem, compareImportItems } from "../../01-核心基础设施/共享小工具-未细化/import-items.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -29,7 +29,7 @@ function pt(mt) {
   return mt.result.items.map((Qt) => ({ item: Qt, source: mt.displayName }));
 }
 function lt(Zt, Ht) {
-  return znn(Zt.item, Ht.item);
+  return compareImportItems(Zt.item, Ht.item);
 }
 function ct(Yt) {
   return Yt.result.unmappable;
@@ -48,10 +48,10 @@ function ft(Oe) {
   };
 }
 function gt(At) {
-  return qle(At.item) === "warned";
+  return classifyImportItem(At.item) === "warned";
 }
 function ht(Kt) {
-  return qle(Kt.item) === "project";
+  return classifyImportItem(Kt.item) === "project";
 }
 function yt(zt) {
   return zt.displayName;
@@ -171,8 +171,8 @@ function ke(Xt) {
       }
       logEvent("tengu_import_apply", { imported: K, dry_run: R ? 1 : 0 });
       let Mt = R
-        ? `Dry run \u2014 would import ${K} ${x(K, "item")}:`
-        : `Imported ${K} ${x(K, "item")}:`;
+        ? `Dry run \u2014 would import ${K} ${pluralize(K, "item")}:`
+        : `Imported ${K} ${pluralize(K, "item")}:`;
       let B = [];
       for (const Pt of We) B.push(`  \u26A0 ${Pt}`);
       if (Je.length > 0) {
@@ -187,18 +187,18 @@ function ke(Xt) {
       else if (a.length > 0 && !Xe)
         B.push(
           "",
-          `${a.length} unmapped ${x(a.length, "item")} were skipped (re-run /import to generate the helper skill).`,
+          `${a.length} unmapped ${pluralize(a.length, "item")} were skipped (re-run /import to generate the helper skill).`,
         );
       if (U) {
         let Fe = countMatching(g, gt);
         let Ge = countMatching(g, ht);
         if (Fe > 0)
           B.push(
-            `  \u26A0 ${Fe} warning-flagged ${x(Fe, "item")} held back \u2014 re-run without --yes to review.`,
+            `  \u26A0 ${Fe} warning-flagged ${pluralize(Fe, "item")} held back \u2014 re-run without --yes to review.`,
           );
         if (Ge > 0)
           B.push(
-            `  \u26A0 ${Ge} project-level ${x(Ge, "item")} held back \u2014 re-run without --yes to review.`,
+            `  \u26A0 ${Ge} project-level ${pluralize(Ge, "item")} held back \u2014 re-run without --yes to review.`,
           );
       }
       T([Mt, ...q, ...B]);
@@ -282,7 +282,7 @@ function ke(Xt) {
     const Ie = a.length;
     let se;
     if (s[35] !== a.length)
-      ((se = x(a.length, "item")), (s[35] = a.length), (s[36] = se));
+      ((se = pluralize(a.length, "item")), (s[35] = a.length), (s[36] = se));
     else se = s[36];
     const O = `${Ie} ${se} from ${it} could not be mapped automatically.`;
     let V;
@@ -369,7 +369,7 @@ function ke(Xt) {
   const O = g.length;
   let V;
   if (s[55] !== g.length)
-    ((V = x(g.length, "item")), (s[55] = g.length), (s[56] = V));
+    ((V = pluralize(g.length, "item")), (s[55] = g.length), (s[56] = V));
   else V = s[56];
   const M = `Found ${O} importable ${V} from ${it}.`;
   let ae;

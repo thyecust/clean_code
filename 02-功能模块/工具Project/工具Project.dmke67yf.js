@@ -19,19 +19,19 @@ import { yS, hL, _L, Ahe } from "../../01-核心基础设施/安全文件系统(
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  kce,
-  dbe,
-  d6n,
-  p6n,
-  o1t,
-  Hsn,
-  Isn,
-  f6n,
-  Psn,
-  m6n,
-  g6n,
-  fqe,
-  s1t,
+  hasSessionAccessToken,
+  getProjectDetail,
+  readProjectDoc,
+  readProjectFile,
+  MAX_IN_SESSION_DOWNLOAD_BYTES,
+  downloadProjectFileRaw,
+  createProjectDoc,
+  updateProjectDoc,
+  deleteProjectDoc,
+  searchProjectKnowledgeBase,
+  redactOAuthToken,
+  ProjectsApiError,
+  ensureProjectsAccessToken,
   safeInline,
 } from "../GoogleDrive集成/GoogleDrive集成.f0ersdj8.js";
 import { s, T, O, se, v, c, Qe, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -208,7 +208,7 @@ class w extends Error {
   }
 }
 async function re(e) {
-  let t = await s1t(e);
+  let t = await ensureProjectsAccessToken(e);
   if (!t.ok) {
     let r =
         t.reason === "wrong_provider" ||
@@ -318,7 +318,7 @@ ${n.notice}`
           };
         } catch (d) {
           if (i.aborted) throw new Ve();
-          let n = g6n(l(d), p);
+          let n = redactOAuthToken(l(d), p);
           if (d instanceof w) throw new w(n);
           let o =
               A(d) ??
@@ -459,17 +459,17 @@ async function Y(e, t, r, i) {
 }
 async function ue(e, t, r, i, u, p, d) {
   let n = (f) => {
-      if (f > o1t)
+      if (f > MAX_IN_SESSION_DOWNLOAD_BYTES)
         throw new w(
-          `project_read: "${safeInline(t)}" is ${f} bytes, above the ${o1t}-byte limit for in-session downloads.`,
+          `project_read: "${safeInline(t)}" is ${f} bytes, above the ${MAX_IN_SESSION_DOWNLOAD_BYTES}-byte limit for in-session downloads.`,
         );
     },
-    o = await Hsn(e, r.file_uuid, u, d);
+    o = await downloadProjectFileRaw(e, r.file_uuid, u, d);
   n(o.file_size_bytes);
   let h = Buffer.from(o.content_base64, "base64");
   if (h.byteLength !== o.file_size_bytes) {
     if (
-      ((o = await Hsn(e, r.file_uuid, u, d)),
+      ((o = await downloadProjectFileRaw(e, r.file_uuid, u, d)),
       n(o.file_size_bytes),
       (h = Buffer.from(o.content_base64, "base64")),
       h.byteLength !== o.file_size_bytes)
@@ -508,9 +508,9 @@ async function pe(e, t, r, i, u) {
 async function _e(e, t, r, i, u, p, d) {
   if (p) {
     if (u.aborted) throw new Ve();
-    return (await Psn(e, t, void 0, d), Isn(e, r, i, void 0, d));
+    return (await deleteProjectDoc(e, t, void 0, d), createProjectDoc(e, r, i, void 0, d));
   }
-  return f6n(e, t, i, u, d);
+  return updateProjectDoc(e, t, i, u, d);
 }
 function C(e, t) {
   let r = e.documents.find((i) => i.file_name === t);
@@ -534,10 +534,10 @@ function S(e, t, r) {
   return e;
 }
 async function we(e, t, r, i, u, p) {
-  let d = kce();
+  let d = hasSessionAccessToken();
   switch (e.method) {
     case "project_info": {
-      let n = await dbe(t, i, p);
+      let n = await getProjectDetail(t, i, p);
       return {
         method: "project_info",
         name: n.name,
@@ -571,13 +571,13 @@ async function we(e, t, r, i, u, p) {
     }
     case "project_read": {
       let n = S(e.path, "path", e.method),
-        o = await dbe(t, i, p),
+        o = await getProjectDetail(t, i, p),
         h = C(o, n);
       if (!h) {
         let f = H(o, n);
         if (!f) throw G(o, n);
         if (f.file_kind === "document") {
-          let g = await p6n(t, f.file_uuid, i, p);
+          let g = await readProjectFile(t, f.file_uuid, i, p);
           if (g.file_kind === "document")
             return q(
               n,
@@ -590,7 +590,7 @@ async function we(e, t, r, i, u, p) {
         }
         return ue(t, n, f, r, i, u, p);
       }
-      let _ = await d6n(t, h.uuid, i, p);
+      let _ = await readProjectDoc(t, h.uuid, i, p);
       return q(
         n,
         _.content,
@@ -604,14 +604,14 @@ async function we(e, t, r, i, u, p) {
       let n = S(e.query, "query", e.method),
         o = e.n ?? 5;
       try {
-        let h = await m6n(t, n, o, i, p);
+        let h = await searchProjectKnowledgeBase(t, n, o, i, p);
         return { method: "project_search", rag: !0, hits: ge(h) };
       } catch (h) {
-        if (h instanceof fqe && h.status === 403)
+        if (h instanceof ProjectsApiError && h.status === 403)
           return {
             method: "project_search",
             rag: !1,
-            docs: (await dbe(t, i, p)).documents
+            docs: (await getProjectDetail(t, i, p)).documents
               .map((f) => f.file_name)
               .filter((f) => f !== null),
           };
@@ -624,14 +624,14 @@ async function we(e, t, r, i, u, p) {
           e.local_path !== void 0
             ? await ce(e.local_path)
             : S(e.content, "content", e.method),
-        h = await dbe(t, i, p),
+        h = await getProjectDetail(t, i, p),
         _ = new Set(
           h.documents.map((z) => z.file_name).filter((z) => z !== null),
         ),
         f = ne(n, _);
       ie(h.knowledge_stats, Buffer.byteLength(o, "utf8"));
       let g = C(h, f),
-        y = g ? await _e(t, g.uuid, f, o, i, d, p) : await Isn(t, f, o, i, p);
+        y = g ? await _e(t, g.uuid, f, o, i, d, p) : await createProjectDoc(t, f, o, i, p);
       return {
         method: "project_write",
         path: f,
@@ -645,7 +645,7 @@ async function we(e, t, r, i, u, p) {
     }
     case "project_delete": {
       let n = S(e.path, "path", e.method),
-        o = await dbe(t, i, p),
+        o = await getProjectDetail(t, i, p),
         h = C(o, n);
       if (!h) {
         if (H(o, n))
@@ -655,7 +655,7 @@ async function we(e, t, r, i, u, p) {
         throw G(o, n);
       }
       return (
-        await Psn(t, h.uuid, i, p),
+        await deleteProjectDoc(t, h.uuid, i, p),
         { method: "project_delete", path: n, deleted: !0 }
       );
     }

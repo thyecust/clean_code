@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { isHoverRestEnabled } from "./01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { lit as S } from "./01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { kHt, Wxe, Gxe, sdr, xHt } from "./01-核心基础设施/共享小工具-未细化/chunk-0cy1k3q5.js";
+import { parseDispatchArgs, resolveConfigPaths, buildDispatchArgs, getDaemonCommandArgs, getHandleUriInjectionError } from "./01-核心基础设施/共享小工具-未细化/cli-arg-parsing.js";
 import { getBuildRefName } from "./01-核心基础设施/共享小工具-未细化/build-ref-name.js";
 import { ensureClientAgentEnv } from "./01-核心基础设施/共享小工具-未细化/user-agent.js";
 function et() {
@@ -94,7 +94,7 @@ function Dt(a) {
   };
 }
 async function Lt() {
-  let a = xHt(process.argv);
+  let a = getHandleUriInjectionError(process.argv);
   if (a) (console.error(a), process.exit(1));
   let t = process.argv.slice(2);
   if (
@@ -191,7 +191,7 @@ async function Lt() {
     return;
   }
   {
-    let e = sdr(t);
+    let e = getDaemonCommandArgs(t);
     if (e !== null) {
       m("cli_daemon_path");
       let { ensureFastPathSettingsLoaded: r } =
@@ -330,7 +330,7 @@ async function Lt() {
     }
     return;
   }
-  let l = kHt(t);
+  let l = parseDispatchArgs(t);
   l.config.restricted ||= ["1", "true", "yes", "on"].includes(
     (process.env.CLAUDE_CODE_RESTRICTED ?? "").toLowerCase().trim(),
   );
@@ -548,7 +548,7 @@ async function Lt() {
         let ft = await import("./01-核心基础设施/共享小工具-未细化/AGENT_VIEW_RELAUNCH_ENV_KEY.2qggy62y.js"),
           wt = {
             cwdFilter: l.cwdFilter,
-            dispatchExtraArgs: Gxe(Wxe(l.config, b)),
+            dispatchExtraArgs: buildDispatchArgs(resolveConfigPaths(l.config, b)),
             dispatchDefaults: Z,
             entryChannel: ft.isListReturnRelaunch()
               ? "list_return"

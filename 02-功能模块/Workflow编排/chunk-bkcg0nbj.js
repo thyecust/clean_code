@@ -10,26 +10,26 @@
 import { bh, j, B, K, jc, lje, cje, ke, ic } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Q5, Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { runWithCwdOrDefault, getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromSanitizer_SANITIZER_OUTPUT_ONLY } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, b, t8, z, Is, Ru, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, oe, Qu } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, truncateToCodeUnits, takeLastCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Js, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a, antEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { kd, getBranch, isBranchOnOrigin } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { A0 } from "../权限系统/chunk-e4pfvp7x.js";
-import { Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { LOG_BULLET_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
+import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { kw, fh, mc, archiveRemoteSession, qe, tt, Ut, wl, H, od } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { er } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-q599wyee.js";
-import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/chunk-811z9z0t.js";
+import { getParentSessionId, isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { Xk } from "../权限系统/chunk-t3b7pg2x.js";
-import { so, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
+import { SKILL_TOOL_NAME, getToolPermissionContext, getEffortValue } from "../权限系统/chunk-fjrcf22x.js";
 import { Uh, Rtr, gEn, Ni, UK, readAutoAllowedForMutation } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -123,16 +123,16 @@ import { mbt } from "../../00-第三方库/_未识别/zod(schema校验)/chunk-64
 import { excludeCoordinatorCommsMcpTools } from "../../01-核心基础设施/共享小工具-未细化/chunk-qg9n8r78.js";
 import { registerWorkflowTask, updateWorkflowProgressBatch, completeWorkflowTask, failWorkflowTask, enqueueWorkflowNotification } from "./chunk-va9cgbfs.js";
 import { parseWorkflowScript } from "./workflow-script.js";
-import { Udt, win } from "../../01-核心基础设施/共享小工具-未细化/chunk-gkztysec.js";
+import { DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES, extractToolErrorMessage } from "../../01-核心基础设施/共享小工具-未细化/structured-output-retry-errors.js";
 import { summarizeToolInput } from "../../01-核心基础设施/共享小工具-未细化/summarize-tool-input.js";
 import { getFdRealPath } from "../../01-核心基础设施/共享小工具-未细化/fd-real-path.js";
 import { getWorkflowTranscriptDir, getCurrentProjectKey, writeWorkflowSnapshot } from "./workflow-snapshots.js";
-import { _be, rte, kqe } from "./chunk-pqyn1fh3.js";
-import { xs, Lh } from "../Teammates团队/chunk-mrfx53ye.js";
+import { isWorkflowNameOnlyEnabled, getAllWorkflows, getWorkflowByName } from "./workflow-registry.js";
+import { isTerminalTaskStatus, formatModelRestrictedMessage } from "../Teammates团队/chunk-mrfx53ye.js";
 import { fAe } from "../../00-第三方库/acorn/acorn.pk8w19yv.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MAX_SERIALIZED_ARRAY_ELEMENTS } from "../../01-核心基础设施/共享小工具-未细化/max-serialized-array-elements.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -567,7 +567,7 @@ function Dt(t) {
   return `scriptPath must be a script path this tool returned, or a file you can already read (the working directory or a directory you have added): ${t}`;
 }
 function min(t, l) {
-  let s = resolve(Q(), t),
+  let s = resolve(getCwd(), t),
     m = gEn(t, s);
   if (m !== null) return m;
   return Nn(s, l) ? null : Dt(t);
@@ -581,7 +581,7 @@ function Nn(t, l) {
 async function Ndt(t, l) {
   let s = min(t, l);
   if (s !== null) return { error: s };
-  let m = resolve(Q(), t),
+  let m = resolve(getCwd(), t),
     p = constants.O_RDONLY | yo,
     k;
   try {
@@ -629,8 +629,8 @@ async function Ndt(t, l) {
     await k.close();
   }
 }
-var yo = P() === "windows" ? 0 : constants.O_NONBLOCK,
-  bo = P() === "windows" ? 0 : constants.O_NOFOLLOW;
+var yo = getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK,
+  bo = getCurrentPlatform() === "windows" ? 0 : constants.O_NOFOLLOW;
 import * as Lt from "vm";
 function _t(t) {
   return (
@@ -882,9 +882,9 @@ function pn(
 async function _in(t, l) {
   let s = t.intakeClone(l);
   if (typeof s === "string") {
-    let m = await t.resolveWorkflow(s, Q());
+    let m = await t.resolveWorkflow(s, getCwd());
     if (!m) {
-      let k = (await t.getAllWorkflows(Q())).map((C) => C.name).join(", ");
+      let k = (await t.getAllWorkflows(getCwd())).map((C) => C.name).join(", ");
       throw Error(
         `workflow('${s}'): no workflow with that name. Available: ${k || "(none)"}`,
       );
@@ -899,7 +899,7 @@ async function _in(t, l) {
     "scriptPath" in s &&
     typeof s.scriptPath === "string"
   ) {
-    if (_be())
+    if (isWorkflowNameOnlyEnabled())
       throw Error(
         "workflow({scriptPath}): this session restricts workflows to " +
           "named bundled workflows (CLAUDE_WORKFLOW_NAME_ONLY is set) \u2014 " +
@@ -988,7 +988,7 @@ function bin() {
   let t = new Map();
   return (l) => {
     let s = (t.get(l) ?? 0) + 1;
-    return (t.set(l, s), `${A0} ${l}${s > 1 ? ` #${s}` : ""}`);
+    return (t.set(l, s), `${LOG_BULLET_GLYPH} ${l}${s > 1 ? ` #${s}` : ""}`);
   };
 }
 function Bn(t) {
@@ -1001,7 +1001,7 @@ function Bn(t) {
     if (!E.ok) throw Error(`workflow('${C}'): ${E.error}`);
     let fe = l(C);
     (t.hooks.reservePhase(fe, "child"),
-      t.hooks.log(`${A0} running dynamic workflow ${C}`));
+      t.hooks.log(`${LOG_BULLET_GLYPH} running dynamic workflow ${C}`));
     let O;
     try {
       let J = yin(t, C, fe);
@@ -1027,7 +1027,7 @@ function Bn(t) {
       });
       let ue = await J.settle(E.vmScript.runInContext(J.childCtx, S8(Aqe))),
         pe = J.clone(ue.v);
-      return (t.hooks.log(`${A0} ${C} done`), pe);
+      return (t.hooks.log(`${LOG_BULLET_GLYPH} ${C} done`), pe);
     } catch (J) {
       let N, ue, pe;
       if (O) ({ name: N, message: ue, stack: pe } = O(J));
@@ -1038,7 +1038,7 @@ function Bn(t) {
       let ee = RDe({ name: N, message: ue, stack: pe });
       throw (
         t.hooks.recordFailure(`${fe}: ${ee}`),
-        t.hooks.log(`${A0} ${C} failed: ${ee}`),
+        t.hooks.log(`${LOG_BULLET_GLYPH} ${C} failed: ${ee}`),
         Y1(Jl(ue), N, ee)
       );
     }
@@ -1092,7 +1092,7 @@ function gn(t, l) {
   return {
     kind: "relay",
     userText: m.text,
-    referentTail: s.referentTail === void 0 ? void 0 : Qu(s.referentTail, Vn),
+    referentTail: s.referentTail === void 0 ? void 0 : takeLastCodeUnits(s.referentTail, Vn),
   };
 }
 function hn(t) {
@@ -1200,7 +1200,7 @@ class Cqe {}
 function No(t) {
   let l = getCurrentProjectKey();
   if (l === void 0) return;
-  let s = Ce.journal(l, K(), ["workflows", t]);
+  let s = STORAGE_KEYS.journal(l, K(), ["workflows", t]);
   return kd(s) === void 0 ? s : void 0;
 }
 class en {
@@ -1390,7 +1390,7 @@ function Et(t) {
   if (t == null) return;
   let l = (typeof t === "string" ? t : b(t)).trim();
   if (!l) return;
-  return l.length > qn ? oe(l, qn) + "\u2026" : l;
+  return l.length > qn ? truncateToCodeUnits(l, qn) + "\u2026" : l;
 }
 var Yo = `You are a subagent spawned by a workflow orchestration script. Use the tools available to complete the task.
 
@@ -1420,7 +1420,7 @@ CRITICAL: You MUST call the ${ti} tool exactly once to return your final answer.
     agentType: "workflow-subagent",
     whenToUse: "Internal subagent for workflow script orchestration.",
     tools: ["*"],
-    disallowedTools: [BRIEF_TOOL_NAME, mt, WORKFLOW_TOOL_NAME],
+    disallowedTools: [BRIEF_TOOL_NAME, AGENT_TOOL_NAME, WORKFLOW_TOOL_NAME],
     source: "built-in",
     baseDir: "built-in",
     getSystemPrompt: () => Yo,
@@ -1462,7 +1462,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
   function Oe() {
     return (
       (de ??= (async () => {
-        let A = Q(),
+        let A = getCwd(),
           F = await getBranch(A);
         if (F === "HEAD") return;
         if (await isBranchOnOrigin(F, A)) return F;
@@ -1488,7 +1488,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         s({
           type: "progress",
           toolUseID: "workflow_log",
-          data: { type: "workflow_log", message: `[${A}] ${Lh(F, re)}` },
+          data: { type: "workflow_log", message: `[${A}] ${formatModelRestrictedMessage(F, re)}` },
         }));
     };
   }
@@ -1702,7 +1702,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             );
           let De = _e.length === 0 ? void 0 : dedupe(_e).sort();
           for (let ot of De ?? []) {
-            let { toolName: at, ruleContent: Ze } = Fr(ot);
+            let { toolName: at, ruleContent: Ze } = parsePermissionRule(ot);
             if (at !== qe || Ze === void 0 || Ze === "" || Ze !== Ze.trim())
               throw new R(
                 `agent() opts.bashCommandClamp entry '${ot}' must be a '${qe}(<command or prefix>)' permission rule (tool name case-sensitive, non-empty content with no leading/trailing whitespace inside the parens); it parses to tool '${at}'` +
@@ -1725,7 +1725,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         he =
           L?.label != null
             ? String(L.label).replace(/\s+/g, " ").trim()
-            : oe(ze, 60).replace(/\s+/g, " ").trim(),
+            : truncateToCodeUnits(ze, 60).replace(/\s+/g, " ").trim(),
         Me = L?.phase != null ? String(L.phase) : Xe,
         st = Me != null ? ct(Me) : void 0,
         Ke = L?.stallMs != null ? Number(L.stallMs) : nr,
@@ -1877,14 +1877,14 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       let v = String(be.agentType),
         $e = D.options.agentDefinitions.activeAgents,
         ie = getToolPermissionContext(D),
-        Ee = await filterDispatchableAgents($e, ie, mt),
+        Ee = await filterDispatchableAgents($e, ie, AGENT_TOOL_NAME),
         U = Ee.find((le) => le.agentType === v);
       if (!U) {
         let le = $e.find((nt) => nt.agentType === v),
-          Je = le ? UK(ie, mt, v) : null;
+          Je = le ? UK(ie, AGENT_TOOL_NAME, v) : null;
         if (Je)
           throw Error(
-            `agent({agentType}): '${v}' is denied by permission rule '${mt}(${v})' from ${Je.source}.`,
+            `agent({agentType}): '${v}' is denied by permission rule '${AGENT_TOOL_NAME}(${v})' from ${Je.source}.`,
           );
         if (le && isAgentToolPoolDenied(le, ie))
           throw new R(
@@ -1996,7 +1996,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       for (let ie of Le) {
         let Ee = Dde([ie]);
         if (De.some((le) => Ee.isToolDisallowed(le))) continue;
-        let { toolName: U } = Fr(ie);
+        let { toolName: U } = parsePermissionRule(ie);
         if (U !== U.trim() || /[\s()]/.test(U.trim()))
           throw (
             await sleep(0),
@@ -2066,20 +2066,20 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
                 "any tool \u2014 '*' is not a deny wildcard outside mcp__ server " +
                 "specs. " +
                 (U.toLowerCase().startsWith("skill__")
-                  ? `Use '${so}' to deny every skill tool. `
+                  ? `Use '${SKILL_TOOL_NAME}' to deny every skill tool. `
                   : "Enumerate the tools to deny (e.g. ['Bash', 'Write']), or use 'mcp__*' to deny every MCP server's tools. ") +
                 "Refusing the spawn rather than running it un-narrowed.",
               "agent() opts.disallowedTools wildcard-bearing entry \u2014 spawn refused",
             )
           );
-        if (U === so) continue;
+        if (U === SKILL_TOOL_NAME) continue;
         if (he !== void 0 && U === ti) continue;
         let Ve = U.toLowerCase(),
           ae =
             De.flatMap((le) => [le.name, fS(le)]).find(
               (le) => le.toLowerCase() === Ve,
             ) ??
-            (Ve === so.toLowerCase() ? so : void 0) ??
+            (Ve === SKILL_TOOL_NAME.toLowerCase() ? SKILL_TOOL_NAME : void 0) ??
             (he !== void 0 && Ve === ti.toLowerCase() ? ti : void 0),
           Te = Qmn(U, De, v);
         if (Te?.kind === "declared-server") {
@@ -2204,7 +2204,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         ? `${Sn}
 
 ---
-You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a separate working copy of the repo). Changes you make here do NOT affect the main working directory (\`${hn(Q())}\`) or other agents. Work normally \u2014 the worktree will be cleaned up automatically if you made no changes, or preserved for review if you did.`
+You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a separate working copy of the repo). Changes you make here do NOT affect the main working directory (\`${hn(getCwd())}\`) or other agents. Work normally \u2014 the worktree will be cleaned up automatically if you made no changes, or preserved for review if you did.`
         : Sn,
       pt = 0,
       it = 0,
@@ -2217,7 +2217,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         Ue.agentType,
         at.map((v) => v.name).join(","),
         be?.schema ? b(be.schema) : "",
-        nn ?? Q(),
+        nn ?? getCwd(),
       ].join(`
 `),
       It;
@@ -2323,7 +2323,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         $t,
         Jt,
         Pn = new Set(),
-        Rn = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? Udt,
+        Rn = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES,
         Ot = Date.now(),
         Ht = sw(Ue) ? TX() : void 0;
       try {
@@ -2381,7 +2381,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
                         (Ft.delete(Fe.tool_use_id),
                         Pn.delete(Fe.tool_use_id) && Fe.is_error)
                       )
-                        (Nt++, (Jt = win(Fe.content) ?? Jt));
+                        (Nt++, (Jt = extractToolErrorMessage(Fe.content) ?? Jt));
                     }
                   if ((Cn(), Nt > 0 && Nt >= Rn && kt === void 0)) {
                     let Fe =
@@ -2390,7 +2390,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
                         : ` \u2014 last StructuredOutput error: ${Jt}`;
                     throw new R(
                       `agent({schema}): StructuredOutput retry cap (${Rn}) exceeded \u2014 ` +
-                        `${Nt} failed ${x(Nt, "call")} with no valid output` +
+                        `${Nt} failed ${pluralize(Nt, "call")} with no valid output` +
                         Fe,
                       "Workflow agent({schema}) StructuredOutput retry cap exceeded",
                     );
@@ -2601,7 +2601,7 @@ ${Xwe(Ht)}`;
     }
     function sn(v, $e, ie, Ee) {
       let U = D.session.withProject({ cwd: nn });
-      return Q5(U.project.cwd, () => ho(U, v, $e, ie, Ee));
+      return runWithCwdOrDefault(U.project.cwd, () => ho(U, v, $e, ie, Ee));
     }
     try {
       if (
@@ -2676,8 +2676,8 @@ ${Xwe(Ht)}`;
           v.structured === void 0
         ) {
           let nt = b(v.lastStructuredOutputInput),
-            zt = nt.length > 300 ? oe(nt, 300) + "\u2026" : nt;
-          Je = ` \u2014 ${v.structuredOutputAttempts} StructuredOutput validation ${x(v.structuredOutputAttempts, "failure")} (last input: ${zt})`;
+            zt = nt.length > 300 ? truncateToCodeUnits(nt, 300) + "\u2026" : nt;
+          Je = ` \u2014 ${v.structuredOutputAttempts} StructuredOutput validation ${pluralize(v.structuredOutputAttempts, "failure")} (last input: ${zt})`;
         }
         (s({
           type: "progress",
@@ -2702,7 +2702,7 @@ ${Xwe(Ht)}`;
             v.stalledReason !== "user-retry" &&
             v.structuredOutputAttempts > 0 &&
             v.structured === void 0
-              ? ` \u2014 ${v.structuredOutputAttempts} StructuredOutput validation ${x(v.structuredOutputAttempts, "failure")} on the last attempt`
+              ? ` \u2014 ${v.structuredOutputAttempts} StructuredOutput validation ${pluralize(v.structuredOutputAttempts, "failure")} on the last attempt`
               : "";
         throw Error(
           Te
@@ -3038,7 +3038,7 @@ ${at}`;
         });
       if (Ae > 0)
         V.push(
-          `parallel: ${Ae} ${x(Ae, "slot")} dropped \u2014 token budget exceeded`,
+          `parallel: ${Ae} ${pluralize(Ae, "slot")} dropped \u2014 token budget exceeded`,
         );
       return ee(Qe);
     }),
@@ -3075,7 +3075,7 @@ ${at}`;
         });
       if (se > 0)
         V.push(
-          `pipeline: ${se} ${x(se, "slot")} dropped \u2014 token budget exceeded`,
+          `pipeline: ${se} ${pluralize(se, "slot")} dropped \u2014 token budget exceeded`,
         );
       return ee(be);
     }),
@@ -3177,8 +3177,8 @@ function A1t(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       budget: o,
       abortSignal: r,
       timers: e,
-      resolveWorkflow: (ve, Xe) => kqe(ve, Xe, t.storageV5),
-      getAllWorkflows: (ve) => rte(ve, t.storageV5),
+      resolveWorkflow: (ve, Xe) => getWorkflowByName(ve, Xe, t.storageV5),
+      getAllWorkflows: (ve) => getAllWorkflows(ve, t.storageV5),
       intakeClone: M,
       loadScriptPath: (ve) => Ndt(ve, t),
       childSpawnMemo: () => de.get?.(),
@@ -3417,7 +3417,7 @@ function Rqe(t) {
         de.type === "local_workflow" &&
         de.workflowRunId === s &&
         de.status !== "running" &&
-        !(xs(de.status) && !eh(te))
+        !(isTerminalTaskStatus(de.status) && !eh(te))
       )
         E.taskRegistry.remove(te);
   }

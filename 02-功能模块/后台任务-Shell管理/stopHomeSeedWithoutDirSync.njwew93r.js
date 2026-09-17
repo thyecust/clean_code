@@ -42,13 +42,13 @@ import {
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { pluralize, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { D1, mn, fi } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { Tx, Cke, Fr } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { SHA256_HEX_REGEX, hashSha256, GITHUB_HOST } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { containsWildcard, matchesToolNameGlob, parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { Rp, $Ct, Bt, tt, Mn, co, ro, Wl, Ut } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Js, rc, bie, Ske, XT, NQ } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
@@ -59,22 +59,22 @@ import { isSettingsToCloudEnabled, isSettingsToCloudEnabledCached } from "../../
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import { Cr, Ha } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import {
-  zHt,
-  Yje,
-  RNn,
-  rJt,
-  oJt,
-  sJt,
-  Jje,
-  iJt,
-  Qje,
-  Eot,
-  VHt,
-  aJt,
+  MAX_HOME_SEED_FILES,
+  MAX_HOME_SEED_FILE_BYTES,
+  MAX_HOME_SEED_TOTAL_BYTES,
+  MAX_HOME_SEED_PATH_LENGTH,
+  RULES_DIR_NAME,
+  OUTPUT_STYLES_DIR_NAME,
+  SETTINGS_FILE_NAME,
+  normalizePathKey,
+  getMemoryFileKind,
+  isAllowedMemoryPath,
+  parseMemoryDestination,
+  MAX_ETAG_LENGTH,
 } from "../Memory-CLAUDE.md/chunk-3ehd7vx0.js";
-import { ale, GZt, Z$n } from "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import { isLocalHostname, isLoopbackHostname, isPrivateDomain } from "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, eir } from "../../01-核心基础设施/共享小工具-未细化/chunk-h6f18586.js";
+import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, eir } from "../../01-核心基础设施/共享小工具-未细化/claude-in-chrome-mcp-constants.js";
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -137,7 +137,7 @@ var Yt = 1,
     Qe({
       path: s().min(1).max(hr),
       size: Jt(),
-      sha256: s().regex(D1),
+      sha256: s().regex(SHA256_HEX_REGEX),
       content: ocr(),
     }),
   ),
@@ -152,7 +152,7 @@ var Yt = 1,
     }),
   );
 function Or(e) {
-  let t = e.map(iJt),
+  let t = e.map(normalizePathKey),
     n = new Set(
       t.flatMap((r) =>
         r
@@ -165,9 +165,9 @@ function Or(e) {
 }
 function Tr(e) {
   return (
-    e.length <= zHt &&
-    e.every((t) => t <= Yje) &&
-    e.reduce((t, n) => t + n, 0) <= RNn
+    e.length <= MAX_HOME_SEED_FILES &&
+    e.every((t) => t <= MAX_HOME_SEED_FILE_BYTES) &&
+    e.reduce((t, n) => t + n, 0) <= MAX_HOME_SEED_TOTAL_BYTES
   );
 }
 function yt(e) {
@@ -185,7 +185,7 @@ function yt(e) {
   let d = o.data,
     _ = d.files.filter(Ir);
   if (!Or(_.map((F) => F.path))) return { ok: !1, reason: "malformed" };
-  let h = _.filter((F) => F.size <= Yje);
+  let h = _.filter((F) => F.size <= MAX_HOME_SEED_FILE_BYTES);
   if (!Tr(h.map((F) => F.size))) return { ok: !1, reason: "over_cap" };
   let S = h.map(Lr),
     T = S.filter((F) => F !== null);
@@ -258,12 +258,12 @@ function Nr(e) {
   return !isRecord(e) || (Wr(e.settings) && zr(e.settings));
 }
 function Ir(e) {
-  return Eot(e.path);
+  return isAllowedMemoryPath(e.path);
 }
 function Lr(e) {
   if (e.content.length !== Math.ceil(e.size / 3) * 4) return null;
   let t = Buffer.from(e.content, "base64");
-  return t.length === e.size && mn(t) === e.sha256
+  return t.length === e.size && hashSha256(t) === e.sha256
     ? { path: e.path, content: t, sha256: e.sha256 }
     : null;
 }
@@ -360,7 +360,7 @@ function Jr(e) {
   if (e === tt) return cn;
   if (bie.bashPrefixTools.includes(e)) return qr;
   let t = Js(e);
-  if (t !== null && t.toolName === void 0 && !Tx(e))
+  if (t !== null && t.toolName === void 0 && !containsWildcard(e))
     return [`${rc(t.serverName, "")}*`];
   return [e];
 }
@@ -441,11 +441,11 @@ function lo(e, t) {
     !Ske(e, t).valid
   )
     return "invalid";
-  let { toolName: n, ruleContent: r } = Fr(e);
+  let { toolName: n, ruleContent: r } = parsePermissionRule(e);
   if (!oo.test(n)) return "invalid";
   if (Js(n)?.serverName === Rp)
     return t === "allow" ? "device" : "keep_covers_device_tools";
-  if (r !== void 0 && (un.has(n) || Tx(n))) {
+  if (r !== void 0 && (un.has(n) || containsWildcard(n))) {
     let o = ko(r);
     if (o === "machine" || (o === "home" && t === "allow")) return "rooted";
   }
@@ -558,11 +558,11 @@ var nn = "[A-Za-z0-9_.@*+][A-Za-z0-9_.@*+:~-]*",
     "runuser",
   ]),
   mo = new Set([
-    fi,
+    GITHUB_HOST,
     "gitlab.com",
     "bitbucket.org",
     "ssh.dev.azure.com",
-    `ssh.${fi}`,
+    `ssh.${GITHUB_HOST}`,
     "altssh.gitlab.com",
     "altssh.bitbucket.org",
     "codeberg.org",
@@ -702,14 +702,14 @@ function bo(e, t = !1) {
         (h) =>
           /\d/.test(h) &&
           /^[0-9a-f:*]+$/i.test(h) &&
-          (h.includes("::") || ln(h, ":") >= 2),
+          (h.includes("::") || countOccurrences(h, ":") >= 2),
       ) ||
     _.some((h) => {
       let S = h.replace(/[/:].*$/, "").toLowerCase();
       if (mo.has(S)) return !1;
       return (
         /^[a-z0-9*-]+(?:\.[a-z0-9*-]+)*\.[a-z*][a-z0-9*-]*$/.test(S) ||
-        ale(S.replace(/\*/g, "")) ||
+        isLocalHostname(S.replace(/\*/g, "")) ||
         /^(?:0+|0x[0-9a-f]*)$/.test(S) ||
         (t && S !== "")
       );
@@ -729,7 +729,7 @@ function bo(e, t = !1) {
         d.some(
           (h) => /^[0-9a-fx.*]+$/i.test(h) && /\d/.test(h) && h.includes("*"),
         ))) ||
-    d.some((h) => (o ? ale(h.replace(/\*/g, "")) : GZt(h.replace(/\*/g, ""))))
+    d.some((h) => (o ? isLocalHostname(h.replace(/\*/g, "")) : isLoopbackHostname(h.replace(/\*/g, ""))))
   );
 }
 function So(e) {
@@ -761,11 +761,11 @@ function Ro(e) {
       .replace(/(?::(?:\d+|\*))+$/, "")
       .replace(/\.+$/, "");
   return (
-    ale(n) ||
+    isLocalHostname(n) ||
     (n === "*" && n !== t) ||
     (/^[\[\]0-9a-fx.:*]+$/.test(n) && /[\d:]/.test(n)) ||
     (n.includes("*") && n !== "*" && !/^\*\.[^*]+$/.test(n)) ||
-    (/^\*\./.test(n) && Z$n(n.slice(2)))
+    (/^\*\./.test(n) && isPrivateDomain(n.slice(2)))
   );
 }
 function Eo(e) {
@@ -776,7 +776,7 @@ function Eo(e) {
   );
 }
 function vo(e) {
-  return Tx(e) && Cke(e.replace(/\*{2,}/g, "*"), $r);
+  return containsWildcard(e) && matchesToolNameGlob(e.replace(/\*{2,}/g, "*"), $r);
 }
 function ko(e) {
   let t = e.replace(/^\s+/, "").replace(/^[!#]/, "").trim();
@@ -812,7 +812,7 @@ function Ho(e) {
   );
 }
 function Oo(e, t) {
-  let n = (o) => Jr(Fr(o).toolName).some(t),
+  let n = (o) => Jr(parsePermissionRule(o).toolName).some(t),
     r = e.rules.filter(n);
   if (r.length === 0) return e;
   return {
@@ -873,8 +873,8 @@ function sn(e) {
   return e === "keep" || e === "keep_covers_device_tools";
 }
 function _n(e) {
-  let { toolName: t, ruleContent: n } = Fr(e);
-  return n !== void 0 && (un.has(t) || Tx(t)) && n.trimStart().startsWith("!");
+  let { toolName: t, ruleContent: n } = parsePermissionRule(e);
+  return n !== void 0 && (un.has(t) || containsWildcard(t)) && n.trimStart().startsWith("!");
 }
 function ze(e, t) {
   return countMatching(e, ({ verdict: n }) => n === t);
@@ -944,18 +944,18 @@ function he(e, t) {
 var rt = "ccr-home-seed.json",
   Et = 1,
   No = 4,
-  Pe = zHt * No,
+  Pe = MAX_HOME_SEED_FILES * No,
   Ke = 131072,
   gn = createLazyValue(() =>
     Qe({
       version: k(Et),
       generation: vx().min(1),
       writtenAtMs: vx().min(0),
-      entries: v(Qe({ path: s().min(1).max(rJt), sha256: s().regex(D1) })).max(
+      entries: v(Qe({ path: s().min(1).max(MAX_HOME_SEED_PATH_LENGTH), sha256: s().regex(SHA256_HEX_REGEX) })).max(
         Pe,
       ),
-      settingsSha256: s().regex(D1).nullable(),
-      packEtag: s().min(1).max(aJt).optional(),
+      settingsSha256: s().regex(SHA256_HEX_REGEX).nullable(),
+      packEtag: s().min(1).max(MAX_ETAG_LENGTH).optional(),
     }),
   );
 function vt(e) {
@@ -975,7 +975,7 @@ function hn(e) {
 }
 function Io(e) {
   let t = Rt(e);
-  return { document: e, rendered: t, sha256: mn(t) };
+  return { document: e, rendered: t, sha256: hashSha256(t) };
 }
 function kt({
   pack: e,
@@ -993,7 +993,7 @@ function kt({
     };
   let _ = new Map(
       (r?.entries ?? []).flatMap((F) => {
-        let K = VHt(F.path);
+        let K = parseMemoryDestination(F.path);
         return K === null
           ? []
           : [
@@ -1027,7 +1027,7 @@ function kt({
   };
 }
 function Lo(e) {
-  let t = Qje(e.path);
+  let t = getMemoryFileKind(e.path);
   return t === null ? [] : [{ ...e, kind: t }];
 }
 function Wo(e, t) {
@@ -1429,7 +1429,7 @@ function Hn(e, t) {
           },
         },
         rendered: j,
-        sha256: mn(j),
+        sha256: hashSha256(j),
       },
     };
   }
@@ -2059,18 +2059,18 @@ import {
   sep as Ft,
 } from "path";
 function li(e) {
-  if (e === Jje) return Ce.userSettings();
-  let t = Qje(e),
+  if (e === SETTINGS_FILE_NAME) return STORAGE_KEYS.userSettings();
+  let t = getMemoryFileKind(e),
     [, ...n] = e.split("/");
   switch (t) {
     case null:
       return null;
     case "claude_md":
-      return Ce.state("user-memory");
+      return STORAGE_KEYS.state("user-memory");
     case "rule":
-      return Ce.userConfigDir(oJt, n);
+      return STORAGE_KEYS.userConfigDir(RULES_DIR_NAME, n);
     case "output_style":
-      return Ce.userConfigDir(sJt, n);
+      return STORAGE_KEYS.userConfigDir(OUTPUT_STYLES_DIR_NAME, n);
   }
 }
 function Fn({
@@ -2202,7 +2202,7 @@ function In(e, t) {
 function _i(e, t) {
   let n = pi(e, t);
   if (n === "" || n === ".." || n.startsWith(`..${Nn}`) || isAbsolute(n)) return !1;
-  let r = VHt(n.split(Nn).join("/"));
+  let r = parseMemoryDestination(n.split(Nn).join("/"));
   return r !== null && r.kind !== "output_style";
 }
 async function $n(e) {
@@ -2450,7 +2450,7 @@ async function wi(e, t) {
     );
   let n = Ae(t.configHome, e.path),
     r = await ot(t.homeReal, n);
-  if (r === null || !Eot(r))
+  if (r === null || !isAllowedMemoryPath(r))
     return (
       writeDiagnosticsEvent("warn", "home_seed_destination_refused", {
         reason: "resolved_spelling",
@@ -2540,7 +2540,7 @@ async function vi(e, t) {
   return r.isFile() ? "clear" : "leaf_not_regular";
 }
 async function ki(e, t, n) {
-  let r = await De(Ae(n.configHome, e), Yje);
+  let r = await De(Ae(n.configHome, e), MAX_HOME_SEED_FILE_BYTES);
   switch (r.kind) {
     case "absent":
     case "not_regular":
@@ -2549,7 +2549,7 @@ async function ki(e, t, n) {
     case "unreadable":
       return !0;
     case "read":
-      return t === void 0 || mn(r.content) !== t;
+      return t === void 0 || hashSha256(r.content) !== t;
   }
 }
 async function Wn(e, t) {
@@ -2559,12 +2559,12 @@ async function Wn(e, t) {
       ? "home_unvetted"
       : r === null
         ? "unresolvable"
-        : !Eot(r)
+        : !isAllowedMemoryPath(r)
           ? "resolves_elsewhere"
           : await qn(e.path, t);
   if (o !== "none")
     return (writeDiagnosticsEvent("warn", "home_seed_remove_obstructed", { reason: o }), "failed");
-  let d = await De(n, Yje);
+  let d = await De(n, MAX_HOME_SEED_FILE_BYTES);
   switch (d.kind) {
     case "absent":
       return "gone";
@@ -2580,7 +2580,7 @@ async function Wn(e, t) {
     case "read":
       break;
   }
-  if (mn(d.content) !== e.sha256) return "not_ours";
+  if (hashSha256(d.content) !== e.sha256) return "not_ours";
   try {
     return (await unlink(n), "removed");
   } catch (_) {
@@ -2599,7 +2599,7 @@ async function Ai(e, t, n) {
   };
   if (t === void 0 || (e.settings === null && e.priorSettingsSha256 === null))
     return r;
-  if (Kn(t) !== Jje || !(await Hi(n.homeReal, t)))
+  if (Kn(t) !== SETTINGS_FILE_NAME || !(await Hi(n.homeReal, t)))
     return (
       writeDiagnosticsEvent("warn", "home_seed_settings_path_refused", {}),
       e.settings === null ? { ...r, removeFailed: !0 } : r
@@ -2619,7 +2619,7 @@ async function Ai(e, t, n) {
   let _ =
     d.kind === "absent"
       ? "none"
-      : d.kind === "read" && mn(d.content) === e.priorSettingsSha256
+      : d.kind === "read" && hashSha256(d.content) === e.priorSettingsSha256
         ? "ours"
         : "foreign";
   if (e.settings === null) {
@@ -2901,9 +2901,9 @@ function formatHomeRestoreLine(e) {
     };
   let t = [
       ...(e.denyRules > 0
-        ? [`${e.denyRules} deny ${x(e.denyRules, "rule")}`]
+        ? [`${e.denyRules} deny ${pluralize(e.denyRules, "rule")}`]
         : []),
-      ...(e.askRules > 0 ? [`${e.askRules} ask ${x(e.askRules, "rule")}`] : []),
+      ...(e.askRules > 0 ? [`${e.askRules} ask ${pluralize(e.askRules, "rule")}`] : []),
     ],
     n = e.beforeFirstAsk
       ? ""
@@ -2912,7 +2912,7 @@ function formatHomeRestoreLine(e) {
         : " (from your next message)",
     r =
       e.droppedRules > 0
-        ? ` (${e.droppedRules} ${x(e.droppedRules, "rule")} ${x(e.droppedRules, "was", "were")} left out: too long, too many, or not in a plain form)`
+        ? ` (${e.droppedRules} ${pluralize(e.droppedRules, "rule")} ${pluralize(e.droppedRules, "was", "were")} left out: too long, too many, or not in a plain form)`
         : "";
   return {
     text: `Restored ${t.join(" and ")} from this session\u2019s stored copy of your machine\u2019s settings after this cloud environment was recreated${n}${r}; CLAUDE.md, preferences and allow rules from your machine are not restored in this environment \u2014 a new cloud session started from that machine will have them.`,
@@ -2923,12 +2923,12 @@ function formatHomeAppliedLine(e) {
   let { applied: t } = e,
     n = [
       ...(t.claudeMd ? ["CLAUDE.md"] : []),
-      ...(t.rules > 0 ? [`${t.rules} ${x(t.rules, "rule")}`] : []),
+      ...(t.rules > 0 ? [`${t.rules} ${pluralize(t.rules, "rule")}`] : []),
       ...(t.outputStyles > 0
-        ? [`${t.outputStyles} ${x(t.outputStyles, "output style")}`]
+        ? [`${t.outputStyles} ${pluralize(t.outputStyles, "output style")}`]
         : []),
       ...(t.permissionRules > 0
-        ? [`${t.permissionRules} ${x(t.permissionRules, "permission rule")}`]
+        ? [`${t.permissionRules} ${pluralize(t.permissionRules, "permission rule")}`]
         : []),
       ...t.settingsKeys
         .filter((P) => !(e.outputStyleMissing && P === "outputStyle"))
@@ -2938,14 +2938,14 @@ function formatHomeAppliedLine(e) {
       ...(e.outputStyleMissing ? [Mi] : []),
       ...(t.filesNotApplied > 0
         ? [
-            `${t.filesNotApplied} ${x(t.filesNotApplied, "file")} could not be applied`,
+            `${t.filesNotApplied} ${pluralize(t.filesNotApplied, "file")} could not be applied`,
           ]
         : []),
       ...(t.settingsNotWritten ? ["settings could not be written"] : []),
       ...(t.settingsRefused ? ["settings could not be applied"] : []),
       ...(t.removalsFailed > 0
         ? [
-            `${t.removalsFailed} earlier ${x(t.removalsFailed, "file")} could not be removed`,
+            `${t.removalsFailed} earlier ${pluralize(t.removalsFailed, "file")} could not be removed`,
           ]
         : []),
       ...(t.settingsRemoveFailed
@@ -2954,7 +2954,7 @@ function formatHomeAppliedLine(e) {
     ],
     o = [
       ...(t.filesRemoved > 0
-        ? [`${t.filesRemoved} ${x(t.filesRemoved, "file")}`]
+        ? [`${t.filesRemoved} ${pluralize(t.filesRemoved, "file")}`]
         : []),
       ...(t.settingsRemoved ? ["the forwarded settings"] : []),
     ],
@@ -2969,7 +2969,7 @@ function formatHomeAppliedLine(e) {
     S = t.filesRemoved + (t.settingsRemoved ? 2 : 0);
   return {
     text: d
-      ? `${o.join(" and ")} from your machine ${x(S, "was", "were")} removed${h}${_}`
+      ? `${o.join(" and ")} from your machine ${pluralize(S, "was", "were")} removed${h}${_}`
       : n.length === 0
         ? `Settings from your machine could not be applied: ${r.join("; ")}`
         : e.generation === 1
@@ -3011,7 +3011,7 @@ function startWorkerHomeSeed({
     },
   };
   return Hn(
-    { configHome: n, repoRoot: r, settingsPath: Pi(n, Jje) },
+    { configHome: n, repoRoot: r, settingsPath: Pi(n, SETTINGS_FILE_NAME) },
     {
       verdicts: { subscribe: QVn.subscribe },
       announcements: {
@@ -3038,7 +3038,7 @@ function startWorkerHomeSeed({
       },
       sleep: sleep,
       epochGt1: (a.CLAUDE_CODE_WORKER_EPOCH ?? 1) > 1,
-      outputStyleAvailable: async (_) => Object.hasOwn(await dX(Q(), o), _),
+      outputStyleAvailable: async (_) => Object.hasOwn(await dX(getCwd(), o), _),
       enabled: isSettingsToCloudEnabled,
       enabledNow: isSettingsToCloudEnabledCached,
       limits: {

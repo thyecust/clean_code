@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { oo, parseShortId } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { getTeamName } from "./chunk-811z9z0t.js";
+import { getTeamName } from "./teammate-context.js";
 import {
   FT,
   slugify,
@@ -33,7 +33,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { nr, rMe, $6t, fWt, cgn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { readTeamFileAsync } from "./chunk-6b13bhw1.js";
+import { readTeamFileAsync } from "./team-file-store.js";
 import { DAe, nbt, rbt, i7e, obt, a7e, GNe, jpe } from "../Bridge-RemoteControl/chunk-1yq098a7.js";
 import { MAIN_CONVERSATION_NAME, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -152,7 +152,7 @@ ${wNt}`
       : "",
     t = e.sameNamedSiblings
       ? `
-Note: ${e.sameNamedSiblings} other ${x(e.sameNamedSiblings, `${o} is`, `${o}s are`)} also named '${e.displayName}'${i}`
+Note: ${e.sameNamedSiblings} other ${pluralize(e.sameNamedSiblings, `${o} is`, `${o}s are`)} also named '${e.displayName}'${i}`
       : "";
   return `${s}${t}`;
 }

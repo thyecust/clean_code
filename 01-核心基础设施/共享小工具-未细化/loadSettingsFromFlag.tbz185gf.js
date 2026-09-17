@@ -9,5 +9,5 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 37 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Tdr, tJt } from "./chunk-sn7k2dvd.js";
+import { loadSettingsFromFlag as Tdr, eagerLoadSettings as tJt } from "./eager-load-settings.js";
 export { tJt as eagerLoadSettings, Tdr as loadSettingsFromFlag };

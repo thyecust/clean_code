@@ -12,7 +12,7 @@
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { yt, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -29,8 +29,8 @@ import { Cr } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
-import { xlt, Hlt } from "./chunk-40jcpbzh.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { formatContextLimitWarning, formatContextUsageReport } from "./context-usage.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, T, O, v, c, qd } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var To = 15,
@@ -190,7 +190,7 @@ function Vo(fe, Yo) {
                   dimColor: !0,
                   children: [
                     " ",
-                    L.arrowRight,
+                    figures.arrowRight,
                     " save ~",
                     formatTokens(fe.savingsTokens),
                   ],
@@ -437,7 +437,7 @@ function F(Tn) {
     { count: ae, noun: yo, tokens: Co } = Tn,
     $e;
   if (ho[0] !== ae || ho[1] !== yo)
-    (($e = x(ae, yo)), (ho[0] = ae), (ho[1] = yo), (ho[2] = $e));
+    (($e = pluralize(ae, yo)), (ho[0] = ae), (ho[1] = yo), (ho[2] = $e));
   else $e = ho[2];
   let je;
   if (ho[3] !== Co) ((je = formatTokens(Co)), (ho[3] = Co), (ho[4] = je));
@@ -539,7 +539,7 @@ function ne(xe) {
     Qo = bo.length > 0;
     let le = M.find(gt);
     let oe;
-    if (y[43] !== W) ((oe = xlt(W)), (y[43] = W), (y[44] = oe));
+    if (y[43] !== W) ((oe = formatContextLimitWarning(W)), (y[43] = W), (y[44] = oe));
     else oe = y[44];
     let no = oe;
     Ge =
@@ -1182,7 +1182,7 @@ async function xs(d, i, g) {
           )));
       d(pe, {
         display: "system",
-        metaMessages: [Hlt(q, { skipCollapseStatus: !0 })],
+        metaMessages: [formatContextUsageReport(q, { skipCollapseStatus: !0 })],
       });
     } catch (S) {
       if (yt(S)) return (d(nxt), null);
@@ -1234,7 +1234,7 @@ async function xs(d, i, g) {
   return (
     d(re, {
       display: "system",
-      metaMessages: [Hlt(J, { skipCollapseStatus: U })],
+      metaMessages: [formatContextUsageReport(J, { skipCollapseStatus: U })],
     }),
     null
   );

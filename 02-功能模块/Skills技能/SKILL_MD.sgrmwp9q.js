@@ -7,15 +7,15 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = "./component-schemas-7fabf82f.md.zst";
-var t = Ke(e, import.meta.dirname);
+var t = readEmbeddedAssetSync(e, import.meta.dirname);
 var n = importMetaRequire("./example-plugins-9n8v6pe1.md");
 var o = importMetaRequire("./mcp-servers-chmkz450.md");
 var i = importMetaRequire("./search-strategies-4qam2bp6.md");
 var s = "./SKILL-0e9ec89e.md.zst";
-var r = Ke(s, import.meta.dirname);
+var r = readEmbeddedAssetSync(s, import.meta.dirname);
 var SKILL_MD = r,
   SKILL_FILES = {
     "references/component-schemas.md": t,

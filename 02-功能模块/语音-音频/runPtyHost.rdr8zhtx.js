@@ -10,26 +10,26 @@
 
 // [preload stripped] 原本在此预载 12 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { x0 } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { Nx } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { writeFileAtomicSync } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { parseNumericValue } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { RRe, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { readSocketTokenFile, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
-  Nh,
-  vT,
-  dN,
-  zAe,
-  Ebt,
-  H7e,
-  YY,
-  P7e,
-  TC,
-  Abt,
+  getPtyHostStderrPath,
+  getPtyLateOutputPath,
+  getPtyExecExitPath,
+  FRAME_KIND_DATA,
+  FRAME_KIND_CONTROL,
+  RING_BUFFER_MAX_BYTES,
+  MAX_TERMINAL_DIMENSION,
+  encodeDataFrame,
+  encodeControlFrame,
+  createFrameDecoder,
 } from "../后台任务-Shell管理/chunk-djserjj5.js";
 import { copyEnvWithoutUndefined } from "../../01-核心基础设施/共享小工具-未细化/copy-env-without-undefined.js";
 import { getXdgDataHome } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import {
   appendFileSync,
   createWriteStream,
@@ -77,7 +77,7 @@ async function ne() {
   }
 }
 async function z() {
-  if (P() !== "macos") return;
+  if (getCurrentPlatform() !== "macos") return;
   if (a.CLAUDE_BG_TCC_DISCLAIMED) {
     delete process.env.CLAUDE_BG_TCC_DISCLAIMED;
     return;
@@ -117,18 +117,18 @@ async function runPtyHost(r) {
   delete process.env.CLAUDE_BG_PTY_AUTH;
   let x = process.env.CLAUDE_BG_SOCKET_TOKENS_PATH;
   if (x) {
-    let e = await RRe(x);
+    let e = await readSocketTokenFile(x);
     if (e?.ptyAuth) A = e.ptyAuth;
     else if (!A) await X(o, "tokens-file unreadable; DATA gate fail-open");
     if (c)
       (delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH,
         await N(x).catch(() => {}));
   }
-  if (P() !== "windows")
+  if (getCurrentPlatform() !== "windows")
     try {
       setPriority(0, Math.min(getPriority(0) + 5, 19));
     } catch {}
-  let B = he(H7e),
+  let B = he(RING_BUFFER_MAX_BYTES),
     p = new Set(),
     b = new WeakMap(),
     M = new WeakSet(),
@@ -161,7 +161,7 @@ async function runPtyHost(r) {
       data(e, s) {
         R = !0;
         let i = Buffer.from(s);
-        if ((B.push(i), F?.write(i), p.size)) K(P7e(i));
+        if ((B.push(i), F?.write(i), p.size)) K(encodeDataFrame(i));
       },
     })),
       (d = Bun.spawn([h, ...m], {
@@ -183,8 +183,8 @@ async function runPtyHost(r) {
       case "resize": {
         let s = Number(e.cols),
           i = Number(e.rows);
-        if (s > 0 && s <= YY && i > 0 && i <= YY && !y && !g) {
-          if ((S.resize(s, i), P() !== "windows")) {
+        if (s > 0 && s <= MAX_TERMINAL_DIMENSION && i > 0 && i <= MAX_TERMINAL_DIMENSION && !y && !g) {
+          if ((S.resize(s, i), getCurrentPlatform() !== "windows")) {
             try {
               process.kill(-process.pid, "SIGWINCH");
             } catch {}
@@ -219,7 +219,7 @@ async function runPtyHost(r) {
       e.once("close", () => p.delete(e)),
       w(
         e,
-        TC({
+        encodeControlFrame({
           t: "hello",
           replPid: d.pid,
           version:
@@ -254,27 +254,27 @@ async function runPtyHost(r) {
               : void 0,
         }),
       ));
-    for (let i of B.chunks) w(e, P7e(i));
+    for (let i of B.chunks) w(e, encodeDataFrame(i));
     if (
-      (w(e, TC({ t: "live" })),
+      (w(e, encodeControlFrame({ t: "live" })),
       p.add(e),
       (L = 0),
       b.set(e, { armed: !1, missed: 0 }),
-      w(e, TC({ t: "ping" })),
+      w(e, encodeControlFrame({ t: "ping" })),
       y)
     ) {
-      (w(e, TC({ t: "exit", code: T, signal: U })), e.end());
+      (w(e, encodeControlFrame({ t: "exit", code: T, signal: U })), e.end());
       return;
     }
-    let s = Abt(
+    let s = createFrameDecoder(
       (i) => {
-        if (i.kind === zAe) {
+        if (i.kind === FRAME_KIND_DATA) {
           if (A && !M.has(e)) {
-            if (!H.has(e)) (H.add(e), w(e, TC({ t: "auth-required" })));
+            if (!H.has(e)) (H.add(e), w(e, encodeControlFrame({ t: "auth-required" })));
             return;
           }
           if (!y && !g) {
-            if ((S.write(i.payload), c && P() !== "windows")) {
+            if ((S.write(i.payload), c && getCurrentPlatform() !== "windows")) {
               let u = i.payload.includes(3)
                 ? "SIGINT"
                 : i.payload.includes(28)
@@ -291,12 +291,12 @@ async function runPtyHost(r) {
               }
             }
           }
-        } else if (i.kind === Ebt)
+        } else if (i.kind === FRAME_KIND_CONTROL)
           if (i.ctrl.t === "pong") {
             let u = b.get(e);
             if (u) ((u.armed = !0), (u.missed = 0));
           } else if (i.ctrl.t === "auth") {
-            if ($R(i.ctrl.token, A)) M.add(e);
+            if (timingSafeStringEqual(i.ctrl.token, A)) M.add(e);
           } else V(i.ctrl);
       },
       () => e.destroy(),
@@ -312,8 +312,8 @@ async function runPtyHost(r) {
     C.listen(o),
     C.unref());
   let E, k;
-  if (P() !== "windows") {
-    let e = Nx(process.env.CLAUDE_PTY_HEARTBEAT_MS) || 60000,
+  if (getCurrentPlatform() !== "windows") {
+    let e = parseNumericValue(process.env.CLAUDE_PTY_HEARTBEAT_MS) || 60000,
       s = 3;
     ((k = setInterval(() => {
       if (y) return;
@@ -321,11 +321,11 @@ async function runPtyHost(r) {
         let G = b.get(D);
         if (!G?.armed) continue;
         if ((G.missed++, G.missed >= 3)) (D.destroy(), p.delete(D));
-        else w(D, TC({ t: "ping" }));
+        else w(D, encodeControlFrame({ t: "ping" }));
       }
     }, e)),
       k.unref());
-    let i = Nx(process.env.CLAUDE_PTY_ORPHAN_CHECK_MS) || 2000,
+    let i = parseNumericValue(process.env.CLAUDE_PTY_ORPHAN_CHECK_MS) || 2000,
       u = 30;
     ((E = setInterval(() => {
       if (y) return;
@@ -360,7 +360,7 @@ async function runPtyHost(r) {
         d.kill(e === "SIGHUP" ? "SIGTERM" : e);
       } catch {}
     });
-  if (c && P() !== "windows")
+  if (c && getCurrentPlatform() !== "windows")
     process.on("SIGQUIT", () => {
       if (I === "SIGQUIT") return;
       try {
@@ -376,31 +376,31 @@ async function runPtyHost(r) {
   let U = d.signalCode ?? void 0;
   if (((y = !0), c))
     try {
-      let e = dN(o),
+      let e = getPtyExecExitPath(o),
         s = Buffer.concat(B.chunks).subarray(-4096),
         i = 0;
       while (i < 3 && i < s.length && (s[i] & 192) === 128) i++;
       let u = s.subarray(i).toString("utf8");
-      x0(e, JSON.stringify({ code: T, signal: U, tail: u }), 384);
+      writeFileAtomicSync(e, JSON.stringify({ code: T, signal: U, tail: u }), 384);
     } catch {}
   if (E) clearInterval(E);
   if (k) clearInterval(k);
   if (!g) S.close();
-  if ((F?.close(), c && P() !== "windows")) {
+  if ((F?.close(), c && getCurrentPlatform() !== "windows")) {
     I = "SIGHUP";
     try {
       process.kill(-process.pid, "SIGHUP");
     } catch {}
   }
-  if ((K(TC({ t: "exit", code: T, signal: U })), p.size === 0))
-    await pe(C, c ? () => ae(vT(o), Buffer.concat(B.chunks)) : void 0);
+  if ((K(encodeControlFrame({ t: "exit", code: T, signal: U })), p.size === 0))
+    await pe(C, c ? () => ae(getPtyLateOutputPath(o), Buffer.concat(B.chunks)) : void 0);
   for (let e of p) e.end();
   if (
     (await Promise.race([
       new Promise((e) => C.close(() => e())),
       sleep(2000, void 0, { unref: !0 }),
     ]),
-    P() !== "windows")
+    getCurrentPlatform() !== "windows")
   )
     await N(o).catch(() => {});
   process.exit(T);
@@ -411,7 +411,7 @@ async function pe(r, n, t = 5000) {
   await Promise.race([o, l]);
 }
 function me(r, n, t) {
-  if (r === "SIGTERM" && P() === "windows") return (t.close(), !0);
+  if (r === "SIGTERM" && getCurrentPlatform() === "windows") return (t.close(), !0);
   return (n.kill(r), !1);
 }
 function he(r) {
@@ -477,7 +477,7 @@ function ye(r, n, t) {
 }
 async function X(r, n) {
   try {
-    let t = Nh(r);
+    let t = getPtyHostStderrPath(r);
     (await ce(dirname(t), { recursive: !0 }),
       await appendFile(
         t,
@@ -489,7 +489,7 @@ async function X(r, n) {
 function _(r, n) {
   if (r)
     try {
-      let t = Nh(r);
+      let t = getPtyHostStderrPath(r);
       (mkdirSync(dirname(t), { recursive: !0 }),
         appendFileSync(
           t,

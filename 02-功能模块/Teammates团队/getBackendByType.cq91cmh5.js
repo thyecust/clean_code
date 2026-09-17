@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 79 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { G$t, Ift, a4e, xun, Hun, l4e, c4e } from "./chunk-qy9488g9.js";
+import { ensureBackendsRegistered as G$t, detectAndGetBackend as Ift, getBackendByType as a4e, getCachedDetectionResult as xun, markInProcessFallback as Hun, isInProcessEnabled as l4e, resetBackendDetection as c4e } from "./backend-registry.js";
 import "./chunk-88ybhavr.js";
 export {
   Ift as detectAndGetBackend,

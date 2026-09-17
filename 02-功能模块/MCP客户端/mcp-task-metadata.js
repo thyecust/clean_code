@@ -10,15 +10,15 @@
 import { K, fy, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { lr, le, Zt, nt } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { lP } from "../Teammates团队/chunk-thxapyam.js";
-import { ESn, RJn } from "./chunk-tznd4407.js";
-import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
+import { MAX_MCP_TASK_ID_LENGTH, MCP_TASK_ID_PATTERN } from "./chunk-tznd4407.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { dirname, join as f } from "path";
 var x = /^k[0-9a-z]{8}$/,
   d = 256,
@@ -48,7 +48,7 @@ var x = /^k[0-9a-z]{8}$/,
       .superRefine((t, e) => {
         if (
           t.protocol === "sep2663" &&
-          (t.mcpTaskId.length > ESn || !RJn.test(t.mcpTaskId))
+          (t.mcpTaskId.length > MAX_MCP_TASK_ID_LENGTH || !MCP_TASK_ID_PATTERN.test(t.mcpTaskId))
         )
           e.addIssue({
             code: lr.custom,
@@ -67,16 +67,16 @@ function S(t, e = K(), r) {
   return f(y(e, r), `mcp-task-${t}.meta.json`);
 }
 function k(t = getSessionProjectDir()) {
-  return lP(t);
+  return getProjectKeyFromDir(t);
 }
 function h(t, e, r = K()) {
-  return Ce.sidecar(t, r, ["mcp-tasks", `mcp-task-${e}.meta.json`]);
+  return STORAGE_KEYS.sidecar(t, r, ["mcp-tasks", `mcp-task-${e}.meta.json`]);
 }
 async function writeMcpTaskMetadata(t, e, r) {
   let o = isHoverRestEnabled() && r !== void 0 ? k() : void 0,
     c = K(),
     s = S(t, c);
-  if ((await qt().mkdir(dirname(s)), r && o !== void 0)) {
+  if ((await getFileStorage().mkdir(dirname(s)), r && o !== void 0)) {
     let a = await r.write(h(o, t, c), b(e), { publishDiscipline: "inPlace" });
     if (!a.ok)
       throw (
@@ -85,7 +85,7 @@ async function writeMcpTaskMetadata(t, e, r) {
       );
     return;
   }
-  await qt().write(s, b(e));
+  await getFileStorage().write(s, b(e));
 }
 async function deleteMcpTaskMetadata(t, e, r, o) {
   let c = isHoverRestEnabled() && e !== void 0 ? k(o) : void 0;
@@ -100,7 +100,7 @@ async function deleteMcpTaskMetadata(t, e, r, o) {
   }
   let s = S(t, r, o);
   try {
-    await qt().delete(s);
+    await getFileStorage().delete(s);
   } catch (a) {
     if (Rt(a)) return;
     throw a;
@@ -112,7 +112,7 @@ async function listMcpTaskMetadata(t) {
   let r = y(),
     o;
   try {
-    o = await qt().list(r);
+    o = await getFileStorage().list(r);
   } catch (s) {
     if (Rt(s)) return [];
     throw s;
@@ -121,7 +121,7 @@ async function listMcpTaskMetadata(t) {
   for (let s of o) {
     if (!s.endsWith(".meta.json")) continue;
     try {
-      let a = await qt().read(f(r, s)),
+      let a = await getFileStorage().read(f(r, s)),
         i = T().safeParse(z(a));
       if (!i.success) {
         n(`listMcpTaskMetadata: skipping ${s}: ${String(i.error)}`);
@@ -142,7 +142,7 @@ async function I(t, e) {
       relPath: ["mcp-tasks"],
     },
     o = [],
-    c = await Qo(
+    c = await runPaginatedScan(
       (a) =>
         t.listEntries(r, { cursor: a, skipKeyStats: !0, skipScopeStats: !0 }),
       (a) => {
@@ -163,7 +163,7 @@ async function I(t, e) {
       );
     case "capped":
       throw (
-        n(`listMcpTaskMetadata: list exceeded ${Uc} pages`),
+        n(`listMcpTaskMetadata: list exceeded ${DEFAULT_MAX_PAGES} pages`),
         Error("mcp task metadata list exceeded the page cap")
       );
   }

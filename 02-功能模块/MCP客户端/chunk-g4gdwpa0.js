@@ -11,8 +11,8 @@ import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/open-flags.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
@@ -21,9 +21,9 @@ import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jt, rS, Jse, UR } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { U5 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { hc, getSecureStorage } from "../认证-OAuth登录/chunk-y7b7kf5n.js";
+import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { cq, la, i0, pA } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
   gmt,
@@ -37,7 +37,7 @@ import {
   lWt,
   gT,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Jn } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function De(e) {
   if (e.kind !== "resolved" || !Ws()) return;
@@ -138,7 +138,7 @@ class ke {
   record(e) {
     if (this.recordingOff()) return;
     if (typeof e !== "string" || e === "") return;
-    let t = oe(e, et);
+    let t = truncateToCodeUnits(e, et);
     if (this.seen.has(t)) return;
     if (this.seen.size >= Ne) {
       ((this.incomplete = !0), (this.overflowNotice ??= !0));
@@ -186,7 +186,7 @@ function xe(e) {
 }
 async function N() {
   let e = await cq();
-  if (e === hc) return;
+  if (e === SECURE_STORAGE_READ_FAILED_SENTINEL) return;
   let t = _e(e?.mcpDiscoveryCacheKey);
   if (t) return t;
   let r = randomBytes(Pe).toString("base64"),
@@ -202,7 +202,7 @@ async function N() {
   }
   if (!i) return;
   let o = await cq();
-  if (o === hc) return;
+  if (o === SECURE_STORAGE_READ_FAILED_SENTINEL) return;
   return _e(o?.mcpDiscoveryCacheKey);
 }
 function _e(e) {
@@ -414,7 +414,7 @@ function Ue(e) {
   return;
 }
 function I() {
-  return U(be(), "mcp-discovery-cache");
+  return U(getClaudeConfigDir(), "mcp-discovery-cache");
 }
 async function St(e, t) {
   if (!S7(t)) return !1;
@@ -423,7 +423,7 @@ async function St(e, t) {
 async function Ve(e, t) {
   if (t.type !== "http" && t.type !== "sse") return { kind: "none" };
   let r = await cq();
-  if (r === hc) return { kind: "degenerate" };
+  if (r === SECURE_STORAGE_READ_FAILED_SENTINEL) return { kind: "degenerate" };
   let i = r?.mcpOAuth?.[la(e, t)];
   if (!i) return { kind: "none" };
   let o = i.refreshToken;
@@ -488,7 +488,7 @@ function gE(e) {
   }
 }
 function x(e, t) {
-  return Jn(e, Ge(t));
+  return getMcpServerConfigCacheKey(e, Ge(t));
 }
 async function bt(e, t) {
   return (await _(e, t))?.path;
@@ -539,7 +539,7 @@ function R() {
   return gT().storageV5;
 }
 function ge(e) {
-  return Ce.userConfigDir("mcp-discovery-cache", [basename(e)]);
+  return STORAGE_KEYS.userConfigDir("mcp-discovery-cache", [basename(e)]);
 }
 var Rt = { namespace: "userConfigDir", dir: "mcp-discovery-cache" },
   F = 8388608;
@@ -761,7 +761,7 @@ var Ye = 8;
 async function At(e, t) {
   if (t.type !== "http" && t.type !== "sse") return [];
   let r = await cq();
-  if (r === hc) return hc;
+  if (r === SECURE_STORAGE_READ_FAILED_SENTINEL) return SECURE_STORAGE_READ_FAILED_SENTINEL;
   let i = la(e, t),
     o = r?.mcpOAuth?.[i],
     d = [];
@@ -914,9 +914,9 @@ async function Se(e) {
   try {
     w = await At(r, i);
   } catch {
-    w = hc;
+    w = SECURE_STORAGE_READ_FAILED_SENTINEL;
   }
-  if (w === hc)
+  if (w === SECURE_STORAGE_READ_FAILED_SENTINEL)
     return (
       logMCPDebug(
         r,
@@ -1325,7 +1325,7 @@ function Bt(e, t) {
     o = new Set(),
     d = (p, u) => {
       if (p === i.length) {
-        o.add(Jn(e, u));
+        o.add(getMcpServerConfigCacheKey(e, u));
         return;
       }
       let { prop: h, states: w } = i[p];

@@ -28,8 +28,8 @@ import {
   aBn,
 } from "../跨会话消息(UDS)/chunk-t2esphmv.js";
 import "../Teammates团队/chunk-nhk351pe.js";
-import "../权限系统/chunk-4tar9p3n.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
+import "../权限系统/cross-session-inbound-gate.js";
+import "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
 export {
   iBn as currentSenderClass,
   Vdr as getDefaultUdsSocketPath,

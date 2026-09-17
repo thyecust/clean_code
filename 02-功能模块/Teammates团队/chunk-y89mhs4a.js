@@ -11,7 +11,7 @@ import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isCoworkHostSession, isRepublishInlinePromptEnabled } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { TOOL_SEARCH_TOOL_NAME } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { so, mme } from "../权限系统/chunk-fjrcf22x.js";
+import { SKILL_TOOL_NAME, buildSkillToolName } from "../权限系统/chunk-fjrcf22x.js";
 import { PIN_CORE_BULLET, HEAD_PARAGRAPH, DELIVERABLE_PARAGRAPH, FILE_LOCATION_SENTENCE, langPromptParagraph, FILES_PROMPT_PARAGRAPH, COMMENTS_OFF_SENTENCE, ROOM_PROMPT_PARAGRAPH } from "../Artifact发布-渲染/chunk-pdd7kz7p.js";
 import {
   Iut,
@@ -28,7 +28,7 @@ import {
 } from "../Artifact发布-渲染/chunk-yrjr7v83.js";
 import { FS } from "../Artifact发布-渲染/chunk-qpgskeea.js";
 import { artifactSchemaGates, artifactLiveEditPromptGateOpen, artifactLivePathsSchemaOpen, artifactTypesPromptParagraph, artifactTypeCatalogPromptParagraph } from "../Artifact发布-渲染/chunk-b6k1z7an.js";
-import { pN, JAe, QY } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
+import { ARTIFACT_DESIGN_SKILL_NAME, ARTIFACT_DIAGRAMMING_SKILL_NAME, WORKSHOP_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 var h = null,
   p = null;
 function respell(e, t) {
@@ -60,7 +60,7 @@ var m = [
   ];
 function d(e) {
   let t = new Set(e.map((a) => a.name));
-  return t.has(so) || t.has(mme(pN));
+  return t.has(SKILL_TOOL_NAME) || t.has(buildSkillToolName(ARTIFACT_DESIGN_SKILL_NAME));
 }
 function artifactCorePromptCacheKeyBit(e) {
   if (!FS()) return "";
@@ -86,7 +86,7 @@ function y(e, t, a) {
     return `**Watching for republishes**: in this remote session a watch is a durable wake subscription held by the artifact service, not a live connection: this session is woken with a new turn when the watched artifact is republished elsewhere${e ? ", or when a comment on it is sent to Claude" : ""}; nothing streams in between, so on a wake re-read the artifact before editing. Publishing an artifact starts registering its watch in the background, and the result line says whether that began, was skipped, or was already registered. ${s} Do not claim you are watching an artifact unless a watch result or a publish result's "already registered" line says so \u2014 its "arming" line is not yet a watch.${i}`;
   return `**Watching for republishes**: publishing an artifact starts subscribing this session to its live changes in the background, and the result line says whether that began, was skipped, or was already connected; you are told if it cannot connect, and watches reconnect on their own if the connection drops. A later republish from elsewhere \u2014 another session, or someone saving from a page that can publish new versions of itself \u2014 arrives as a notification telling you to re-read it before editing.${e ? " A comment on a watched artifact that is sent to Claude also wakes this session while that artifact's auto-replies are armed (when comment auto-replies are on for this session, a publish arms them)." : ""} ${s} Watches are session-local, and the user can see and stop them in /tasks. Do not claim you are watching an artifact unless a watch result or a publish result's "already connected" line says so \u2014 its "arming" line is not yet a watch. Only an interactive or SDK main-loop session holds a watch (not a subagent, teammate, background, or print session).${i}`;
 }
-var b = `**Before writing the file \u2014 a skill-instructed \`.md\` included \u2014 you MUST load the \`${pN}\` skill**: it carries the page contract \u2014 author HTML (Markdown only when a loaded skill instructs it), the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 and calibrates how much design investment this particular request warrants; Markdown is never a shortcut past it. The one exception to loading it is a workshop document from the \`${QY}\` skill \u2014 both its lanes carry their own design: skip \`${pN}\` there, and load \`${JAe}\` for a template page's diagrams instead. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
+var b = `**Before writing the file \u2014 a skill-instructed \`.md\` included \u2014 you MUST load the \`${ARTIFACT_DESIGN_SKILL_NAME}\` skill**: it carries the page contract \u2014 author HTML (Markdown only when a loaded skill instructs it), the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 and calibrates how much design investment this particular request warrants; Markdown is never a shortcut past it. The one exception to loading it is a workshop document from the \`${WORKSHOP_SKILL_NAME}\` skill \u2014 both its lanes carry their own design: skip \`${ARTIFACT_DESIGN_SKILL_NAME}\` there, and load \`${ARTIFACT_DIAGRAMMING_SKILL_NAME}\` for a template page's diagrams instead. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
   A = `**Before writing the file**: the page contract below \u2014 author HTML, the publish-time skeleton, the title, which libraries a page may load, browser storage, the size cap, responsive layout, theming and the favicon \u2014 is this tool's own; skills are not available in this session, so read it here. Then write the content to a file (via Write/Edit) and call Artifact with its path. ${FILE_LOCATION_SENTENCE}`,
   _ =
     "**Title**: Set a `<title>` at the top of the HTML \u2014 a name, not a summary: a short noun phrase, typically two to four words, distinctive to this page's subject, never a name plus an appended explainer after a dash or colon. The explanation belongs in the one-sentence `description` parameter. Keep the title stable across redeploys.",

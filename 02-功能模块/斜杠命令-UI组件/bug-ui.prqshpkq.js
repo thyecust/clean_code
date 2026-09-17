@@ -16,7 +16,7 @@ import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-a
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import "../反馈-错误上报/反馈-错误上报.grgh562d.js";
-import "../反馈-错误上报/chunk-rmpn4ety.js";
+import "../反馈-错误上报/feedback-draft-submit.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { uir } from "./chunk-z36ns74j.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getPidDomain } from "./process-record.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { hostname } from "os";
 class o {
   pidSpace = null;
@@ -26,7 +26,7 @@ function ownPidSpace() {
 }
 function ownPidDomain() {
   return (
-    (processIdentity.pidDomain ??= (async () => uir(P()))().catch((n) => {
+    (processIdentity.pidDomain ??= (async () => getPidDomain(getCurrentPlatform()))().catch((n) => {
       throw ((processIdentity.pidDomain = void 0), n);
     })),
     processIdentity.pidDomain
@@ -34,7 +34,7 @@ function ownPidDomain() {
 }
 import { timingSafeEqual } from "crypto";
 import { readFile } from "fs/promises";
-async function RRe(n) {
+async function readSocketTokenFile(n) {
   try {
     let t = z(await readFile(n, "utf8"));
     if (t === null || typeof t !== "object") return;
@@ -48,11 +48,11 @@ async function RRe(n) {
     return;
   }
 }
-function $R(n, t) {
+function timingSafeStringEqual(n, t) {
   if (typeof n !== "string" || !t || n.length === 0) return !1;
   let i = Buffer.from(n),
     r = Buffer.from(t);
   if (i.length !== r.length) return !1;
   return timingSafeEqual(i, r);
 }
-export { processIdentity, ownPidSpace, ownPidDomain, RRe, $R };
+export { processIdentity, ownPidSpace, ownPidDomain, readSocketTokenFile, timingSafeStringEqual };

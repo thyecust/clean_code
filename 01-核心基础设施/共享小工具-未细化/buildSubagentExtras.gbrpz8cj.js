@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 91 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { osn, ssn, Phr, isn } from "../../02-功能模块/Teammates团队/chunk-780k92tm.js";
-import "../../02-功能模块/Teammates团队/chunk-sr4920wy.js";
+import "../../02-功能模块/Teammates团队/peer-target-guard.js";
 export {
   ssn as buildSubagentExtras,
   Phr as formatForModel,

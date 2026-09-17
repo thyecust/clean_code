@@ -11,8 +11,8 @@ import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { R, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x, us, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { pluralize, truncateToCodePoints, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a, udsEnv } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -46,16 +46,16 @@ import {
   m0,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isProcessProvablyGone, getProcessStartTokenLinuxSync, isSameProcessAsync, provenSameProcessAsync, getProcessCreationTimeMsAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ownPidDomain } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
-import { SD, ds } from "../../01-核心基础设施/共享小工具-未细化/chunk-btrgwq6w.js";
+import { createMessageEnvelope, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { getRemoteSessionCompatId } from "../../01-核心基础设施/共享小工具-未细化/remote-session-compat-id.js";
-import { IRe, lir, isSaneEpochMs, jZe, cir, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { MAX_SESSION_RECORD_BYTES, parsePidFromFileName, isSaneEpochMs, toSaneEpochMs, normalizeSessionRecord, isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 function B(e) {
-  if (P() === "windows") return null;
+  if (getCurrentPlatform() === "windows") return null;
   let t = q(e);
   if (t < 0) return null;
   try {
@@ -83,7 +83,7 @@ function HJn(e, t = B) {
   );
 }
 function ybt(e) {
-  if (P() === "windows") return;
+  if (getCurrentPlatform() === "windows") return;
   let t = q(e);
   try {
     let r = t < 0 ? null : Bun.ant.getPeerPid(t);
@@ -225,13 +225,13 @@ var CSn = 256,
   Q = 256,
   ke = 20;
 function vSn(e) {
-  ds().ingress.ownUdsHopToken = e === void 0 ? void 0 : FAe(e);
+  getBridgeHostState().ingress.ownUdsHopToken = e === void 0 ? void 0 : FAe(e);
 }
 function b7e(e) {
-  ds().ingress.ownBridgePeerAddressResolver = e;
+  getBridgeHostState().ingress.ownBridgePeerAddressResolver = e;
 }
 function RSn() {
-  let { ownUdsHopToken: e, ownBridgePeerAddressResolver: t } = ds().ingress,
+  let { ownUdsHopToken: e, ownBridgePeerAddressResolver: t } = getBridgeHostState().ingress,
     r = new Set();
   if (e) r.add(e);
   let d = t?.();
@@ -260,7 +260,7 @@ function PJn(e) {
     d = r ? `@${r} (${t})` : t,
     s =
       e.suppressed > 0
-        ? ` (+${e.suppressed} similar ${x(e.suppressed, "drop")} suppressed)`
+        ? ` (+${e.suppressed} similar ${pluralize(e.suppressed, "drop")} suppressed)`
         : "";
   return `Dropped a peer message from ${d}: ${Ee[e.reason]}.${s}`;
 }
@@ -350,7 +350,7 @@ function kSn({ trailMs: e = Ie } = {}) {
       { level: "warn" },
     ),
       logFeatureSad("peer_loop_guard", S.reason),
-      ds().ingress.messageDropped.emit(v));
+      getBridgeHostState().ingress.messageDropped.emit(v));
   }
   async function k(S = xe) {
     let w = [];
@@ -463,11 +463,11 @@ function ne(e) {
 }
 function Nu(e, t = 120) {
   if (/token/i.test(e)) return "(withheld)";
-  return us(ne(e), t);
+  return truncateToCodePoints(ne(e), t);
 }
 function qI(e) {
   if (/token/i.test(e)) return "(redacted: fragment may carry an auth token)";
-  return us(ne(e), 200);
+  return truncateToCodePoints(ne(e), 200);
 }
 var te = "no_live_inbox",
   re = "ENOINBOX",
@@ -549,10 +549,10 @@ function Ge(e) {
   return e
     .filter($e)
     .slice(0, MAX_FORMER_NAMES)
-    .map(({ name: t, until: r }) => ({ name: oe(t, maxSlugLength), until: r }));
+    .map(({ name: t, until: r }) => ({ name: truncateToCodeUnits(t, maxSlugLength), until: r }));
 }
 function je() {
-  return (ds().outbound.pacer ??= ee(w7e));
+  return (getBridgeHostState().outbound.pacer ??= ee(w7e));
 }
 var Ke = { ok: !0, refund: () => {} };
 function We() {
@@ -566,7 +566,7 @@ function debitPacerForReleasedSend(e) {
   fe(e, (t, r) => t.debit(r));
 }
 function fe(e, t) {
-  let r = ds().outbound.pacer;
+  let r = getBridgeHostState().outbound.pacer;
   if (!r) return;
   let { scheme: d, target: s } = uf(e);
   if (d !== "uds") return;
@@ -585,7 +585,7 @@ async function sendToUdsSocket(
   let p = ownMessagingSocket(),
     k = p ? hU(p) : void 0,
     h = yUe(k, d, t, void 0, kCt(l, k ? FAe(k) : void 0), f),
-    S = SD(),
+    S = createMessageEnvelope(),
     w = {
       ...S,
       type: "user",
@@ -596,7 +596,7 @@ async function sendToUdsSocket(
     },
     _ = me(w),
     y =
-      (k !== void 0 || P() !== "windows") && We()
+      (k !== void 0 || getCurrentPlatform() !== "windows") && We()
         ? je().reserve(Zy(e) ?? e)
         : Ke;
   if (!y.ok)
@@ -625,18 +625,18 @@ async function sendToUdsSocket(
 }
 var le = 200;
 function Xe(e, t) {
-  let r = ds().receipts.outstandingSends;
+  let r = getBridgeHostState().receipts.outstandingSends;
   if (r.length >= le) r.shift();
   r.push({ msgId: e, to: t });
 }
 function ze(e) {
-  let t = ds().receipts.outstandingSends,
+  let t = getBridgeHostState().receipts.outstandingSends,
     r = t.findIndex((d) => d.msgId === e);
   if (r !== -1) t.splice(r, 1);
 }
 function admitReceiptForOutstandingSend(e, t) {
   if (typeof e !== "string") return;
-  let { outstandingSends: r, awaitingTerminal: d } = ds().receipts,
+  let { outstandingSends: r, awaitingTerminal: d } = getBridgeHostState().receipts,
     s = r.findIndex((f) => f.msgId === e);
   if (s !== -1) {
     let [f] = r.splice(s, 1);
@@ -658,7 +658,7 @@ function admitDroppedIdsByDestination(e) {
   let t = new Map();
   if (e.length === 0) return t;
   let r = new Set(e),
-    { outstandingSends: d, awaitingTerminal: s } = ds().receipts;
+    { outstandingSends: d, awaitingTerminal: s } = getBridgeHostState().receipts;
   for (let l of [d, s]) {
     let f = l === s;
     for (let u = 0; u < l.length;) {
@@ -674,12 +674,12 @@ function admitDroppedIdsByDestination(e) {
   return t;
 }
 function sendControlToUdsSocket(e, t, r = {}) {
-  return sendStampedControlToUdsSocket(e, t, SD(), r).then(() => {});
+  return sendStampedControlToUdsSocket(e, t, createMessageEnvelope(), r).then(() => {});
 }
 async function sendStampedControlToUdsSocket(
   e,
   t,
-  r = SD(),
+  r = createMessageEnvelope(),
   { expectPeerPid: d, expectPeerProcStart: s, storageV5: l } = {},
 ) {
   return (
@@ -778,7 +778,7 @@ async function ge(
     p = void 0;
   }
   let k = p !== void 0 ? tRn(p) : "";
-  if (d && !(P() === "windows" && cQ(e) !== void 0)) {
+  if (d && !(getCurrentPlatform() === "windows" && cQ(e) !== void 0)) {
     let S;
     try {
       S = (await lstat(e)).isSymbolicLink();
@@ -807,7 +807,7 @@ async function ge(
         ((E = !0), w(y));
       }),
       _.on("connect", () => {
-        if (s !== void 0 && P() !== "windows") {
+        if (s !== void 0 && getCurrentPlatform() !== "windows") {
           let y = ybt(_);
           if (y === void 0) {
             ((E = !0),
@@ -876,7 +876,7 @@ async function ge(
             return;
           }
         }
-        if ((_.write(h), P() === "macos"))
+        if ((_.write(h), getCurrentPlatform() === "macos"))
           setTimeout(
             (y) => {
               if (!y.destroyed) y.end();
@@ -937,22 +937,22 @@ async function V(e, t, r) {
     s,
     l = He(e, t);
   try {
-    let f = lir(t);
+    let f = parsePidFromFileName(t);
     if (f === null) return null;
     let { pid: u } = f;
     if (!f.canonical) return (unlink(l).catch(() => {}), null);
     s = u;
-    let i = await Wi(l, IRe);
+    let i = await Wi(l, MAX_SESSION_RECORD_BYTES);
     if (i === null) return null;
     d = !0;
     let o = z(i),
-      p = cir(o);
+      p = normalizeSessionRecord(o);
     return {
       sock:
         typeof o.messagingSocketPath === "string" ? o.messagingSocketPath : "",
       cwd: p.cwd,
       startedAt: p.startedAt,
-      ...(jZe(o.nameSince) !== void 0 && { nameSince: jZe(o.nameSince) }),
+      ...(toSaneEpochMs(o.nameSince) !== void 0 && { nameSince: toSaneEpochMs(o.nameSince) }),
       procStart: p.procStart,
       ...(p.procStartFt !== void 0 && { procStartFt: p.procStartFt }),
       name: typeof o.name === "string" ? o.name : void 0,
@@ -976,8 +976,8 @@ async function V(e, t, r) {
       logPath: typeof o.logPath === "string" ? o.logPath : void 0,
       status: p.status,
       waitingFor: typeof o.waitingFor === "string" ? o.waitingFor : void 0,
-      updatedAt: jZe(o.updatedAt),
-      statusUpdatedAt: jZe(o.statusUpdatedAt),
+      updatedAt: toSaneEpochMs(o.updatedAt),
+      statusUpdatedAt: toSaneEpochMs(o.statusUpdatedAt),
       entrypoint: p.entrypoint,
       ...(p.pidDomain !== void 0 && { pidDomain: p.pidDomain }),
       agent: typeof o.agent === "string" ? o.agent : void 0,
@@ -1022,7 +1022,7 @@ async function listRegisteredSessionRecords() {
 }
 function be(e, t, r, d) {
   if (isHoverRestEnabled() && d !== void 0) {
-    d.delete(Ce.session(basename(e)))
+    d.delete(STORAGE_KEYS.session(basename(e)))
       .then((s) => (s.ok && s.value.existed ? reapKeysOfReapedRecord(dirname(e), t, r, d) : void 0))
       .catch(() => {});
     return;

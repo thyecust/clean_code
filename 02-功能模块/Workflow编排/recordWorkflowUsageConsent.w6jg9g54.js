@@ -16,13 +16,13 @@ import { updateSettingsForSource, hasSkipWorkflowUsageWarning } from "../../01-�
 import { sA } from "../权限系统/chunk-t3b7pg2x.js";
 import { getToolPermissionContext, getEffortValue, getUltracodeRequested } from "../权限系统/chunk-fjrcf22x.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
-import { soe } from "../Teammates团队/chunk-eey53z5b.js";
+import { isTeammateWorker } from "../Teammates团队/permission-sync-mailbox.js";
 function workflowNeedsUsageConsentPrompt(e, o) {
   if (e !== WORKFLOW_TOOL_NAME) return !1;
   if (o.options.isNonInteractiveSession) return !1;
   if (getToolPermissionContext(o).shouldAvoidPermissionPrompts) return !1;
   if (isBgSession()) return !1;
-  if (soe()) return !1;
+  if (isTeammateWorker()) return !1;
   if (sA(o.options.mainLoopModel, getEffortValue(o), getUltracodeRequested(o))) return !1;
   return !o.session.workflowUsageConsent.isGranted() && !hasSkipWorkflowUsageWarning();
 }

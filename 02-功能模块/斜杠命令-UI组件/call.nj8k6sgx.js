@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 252 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { j0 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { formatShortText } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Bf } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { MM, hne, jV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -28,14 +28,14 @@ import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js
 import "../状态栏-主题/chunk-jrr487ty.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
-import { bnn, wnn, zBn, Tnn, c7, b4 } from "../Grove-隐私设置/chunk-a4mdm49v.js";
+import { RedactedGitHubToken, importGitHubToken, canPrepareApiRequest, getGitHubAuthSource, getClaudeAiCodeBaseUrl, githubConnectionStatusStore } from "../Grove-隐私设置/chunk-a4mdm49v.js";
 import { sHe } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { SpinnerMessageLine } from "../../01-核心基础设施/共享小工具-未细化/spinner-message-line.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
 import { tryOpenUrlInBrowser } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -65,7 +65,7 @@ async function J() {
   );
 }
 function at(s) {
-  let a = pt(s).split(/\r?\n\r?\n/, 1)[0] ?? "",
+  let a = stripAnsi(s).split(/\r?\n\r?\n/, 1)[0] ?? "",
     R = /^x-oauth-scopes:[ \t]*(.*)$/im.exec(a);
   if (!R) return null;
   let k = R[1]
@@ -75,7 +75,7 @@ function at(s) {
   return k.length === 0 ? null : k;
 }
 async function tt(s) {
-  if (!(await zBn(s))) return { status: "not_signed_in" };
+  if (!(await canPrepareApiRequest(s))) return { status: "not_signed_in" };
   let a = await sHe({ allowNetworkFallbackForOldGh: !0 });
   if (a.status === "not_installed") return { status: "gh_not_installed" };
   if (a.status === "not_authenticated")
@@ -91,7 +91,7 @@ async function tt(s) {
     }),
     k = R.trim();
   if (!k) return { status: "gh_not_authenticated" };
-  return { status: "has_gh_token", token: new bnn(k) };
+  return { status: "has_gh_token", token: new RedactedGitHubToken(k) };
 }
 function et(s, a) {
   switch (s.kind) {
@@ -148,7 +148,7 @@ function ot(Vt) {
             }
             case "gh_not_installed":
             case "gh_not_authenticated": {
-              let M = `${c7()}/onboarding?step=alt-auth`;
+              let M = `${getClaudeAiCodeBaseUrl()}/onboarding?step=alt-auth`;
               if ((await tryOpenUrlInBrowser(M), H.current)) {
                 return;
               }
@@ -161,7 +161,7 @@ function ot(Vt) {
               return;
             }
             case "gh_too_old": {
-              let ht = `${c7()}/onboarding?step=alt-auth`;
+              let ht = `${getClaudeAiCodeBaseUrl()}/onboarding?step=alt-auth`;
               if ((await tryOpenUrlInBrowser(ht), H.current)) {
                 return;
               }
@@ -178,15 +178,15 @@ function ot(Vt) {
                 logEvent("tengu_remote_setup_result", {
                   result: S("gh_check_failed"),
                 }));
-              let dt = j0(O.error).replace(/[.\s]+$/, "");
+              let dt = formatShortText(O.error).replace(/[.\s]+$/, "");
               let qt = dt ? ` (${dt})` : "";
               f(
-                `Couldn't check GitHub CLI login status${qt}. Run \`gh auth status\` to check, or connect GitHub on the web: ${c7()}/onboarding?step=alt-auth`,
+                `Couldn't check GitHub CLI login status${qt}. Run \`gh auth status\` to check, or connect GitHub on the web: ${getClaudeAiCodeBaseUrl()}/onboarding?step=alt-auth`,
               );
               return;
             }
             case "has_gh_token": {
-              let [zt, Kt] = await Promise.all([Tnn(x), J()]);
+              let [zt, Kt] = await Promise.all([getGitHubAuthSource(x), J()]);
               if (H.current) {
                 return;
               }
@@ -223,8 +223,8 @@ function ot(Vt) {
   if (l[7] !== x || l[8] !== K || l[9] !== f || l[10] !== P)
     ((gt = async (Mt, ft) => {
       ct({ name: "uploading" });
-      let v = await wnn(Mt, x);
-      if (v.ok) b4.of(K).markConnected(P);
+      let v = await importGitHubToken(Mt, x);
+      if (v.ok) githubConnectionStatusStore.of(K).markConnected(P);
       if (H.current) {
         return;
       }
@@ -234,7 +234,7 @@ function ot(Vt) {
           error_kind: fromEnum(v.error.kind),
           gh_token_workflow_scope: fromEnum(ft),
         }),
-          f(et(v.error, c7())));
+          f(et(v.error, getClaudeAiCodeBaseUrl())));
         return;
       }
       let Q;
@@ -259,7 +259,7 @@ function ot(Vt) {
           return;
         }
       }
-      let kt = c7();
+      let kt = getClaudeAiCodeBaseUrl();
       if ((await tryOpenUrlInBrowser(kt), H.current)) {
         return;
       }

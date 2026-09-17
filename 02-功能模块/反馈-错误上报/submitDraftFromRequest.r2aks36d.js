@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { G_t, I3, YO } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xye } from "./chunk-rmpn4ety.js";
+import { submitFeedbackDraft } from "./feedback-draft-submit.js";
 async function submitDraftFromRequest({
   draftId: f,
   description: a,
@@ -35,7 +35,7 @@ async function submitDraftFromRequest({
       ...(t != null && t !== "" && { area: t }),
       ...(a && { details: a }),
     },
-    s = await xye({
+    s = await submitFeedbackDraft({
       draft: p,
       includeTranscript: d == null ? !0 : d === !0,
       currentSessionMessages: u,

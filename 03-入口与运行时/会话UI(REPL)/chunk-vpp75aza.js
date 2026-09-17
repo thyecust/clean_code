@@ -11,7 +11,7 @@ import { j, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { Te, ee, es, eu } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
@@ -21,30 +21,30 @@ import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chun
 import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 class T {
   lastLoggedSessionId = null;
   autoOpenPending = !1;
 }
-var TWe = new j(() => new T());
+var ReplDiffPanelStateStore = new j(() => new T());
 var DIFF_SIDEBAR_MIN_COLS = 110,
   DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS = 144,
   DIFF_SIDEBAR_NO_GIT_MESSAGE =
     "The diff panel shows git changes \u2014 the current directory isn\u2019t in a git repository";
 function markReplDiffPanelAutoOpen(o) {
-  TWe.of(o).autoOpenPending = !0;
+  ReplDiffPanelStateStore.of(o).autoOpenPending = !0;
 }
 function consumeReplDiffPanelAutoOpen(o) {
-  let n = TWe.of(o),
+  let n = ReplDiffPanelStateStore.of(o),
     r = n.autoOpenPending;
   return ((n.autoOpenPending = !1), r);
 }
 function clearReplDiffPanelAutoOpen(o) {
-  TWe.of(o).autoOpenPending = !1;
+  ReplDiffPanelStateStore.of(o).autoOpenPending = !1;
 }
 function diffSidebarHasGitRepo() {
-  return findGitRootRecheckingNegative(Q()) !== null;
+  return findGitRootRecheckingNegative(getCwd()) !== null;
 }
 function diffPanelCanMount({
   fullscreen: o,
@@ -111,7 +111,7 @@ function C(o) {
 }
 function M(o) {
   let n = sn(),
-    r = P() === "windows",
+    r = getCurrentPlatform() === "windows",
     i = r ? B.sep : k,
     s = (w) => (r ? w.replaceAll("/", i).toLowerCase() : w),
     l = s(o),
@@ -123,14 +123,14 @@ function M(o) {
 }
 import { isAbsolute as I, win32 as D } from "path";
 function S(o) {
-  if (P() === "windows") return D.isAbsolute(o) && D.parse(o).root.length > 1;
+  if (getCurrentPlatform() === "windows") return D.isAbsolute(o) && D.parse(o).root.length > 1;
   return I(o);
 }
-var bit = Qt(null);
-function Pg(Ue) {
+var ToolResultPreviewWidthContext = Qt(null);
+function TruncatedFilePath(Ue) {
   let h = _(9),
     { filePath: d, children: je } = Ue,
-    b = De(bit),
+    b = De(ToolResultPreviewWidthContext),
     f = je ?? d;
   if (m(d) || (typeof f === "string" && m(f))) {
     let c;
@@ -173,7 +173,7 @@ function L(o) {
   return o.startsWith("~" + U) ? homedir() + o.slice(1) : o;
 }
 export {
-  TWe,
+  ReplDiffPanelStateStore,
   DIFF_SIDEBAR_MIN_COLS,
   DIFF_SIDEBAR_AUTO_OPEN_MIN_COLS,
   DIFF_SIDEBAR_NO_GIT_MESSAGE,
@@ -188,6 +188,6 @@ export {
   closeReplDiffTab,
   getPersistedDiffBaseMode,
   cycleDiffBaseMode,
-  bit,
-  Pg,
+  ToolResultPreviewWidthContext,
+  TruncatedFilePath,
 };

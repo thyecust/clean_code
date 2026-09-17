@@ -18,7 +18,7 @@ import { Mse, NR, EP } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.j
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
 import { resolveApiBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/self-hosted-runner-api.js";
-import { sPe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
+import { ensureFastPathSettingsLoaded } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { spawnSync } from "child_process";
 function l(e) {
   let r = new URL(e).host;
@@ -201,7 +201,7 @@ generates a redacted diagnostic bundle for escalation.
 Any extra args are passed to the underlying Claude Code session.`);
     return;
   }
-  (await sPe(r), initializeAnalyticsSink());
+  (await ensureFastPathSettingsLoaded(r), initializeAnalyticsSink());
   let o = pinStorageV5(r);
   if ((Mse(o), isHoverRestEnabled() && o !== void 0)) {
     (zR({ storageV5: o }), NR(o));

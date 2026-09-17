@@ -16,7 +16,7 @@ import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 F();
 var i = ["\u25D0", "\u25D3", "\u25D1", "\u25D2"],
   b = [
@@ -64,9 +64,9 @@ function O(N) {
       let q = K > y;
       let v;
       let w;
-      if (oe) ((v = L.tick), (w = "green"));
+      if (oe) ((v = figures.tick), (w = "green"));
       else if (Y) ((v = i[R]), (w = "claude"));
-      else ((v = L.circle), (w = void 0));
+      else ((v = figures.circle), (w = void 0));
       return r(
         o,
         {

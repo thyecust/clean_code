@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ci } from "./chunk-w8hsca1t.js";
+import { isCoordinatorModeEnabled } from "./coordinator-mode.js";
 function hasCommsRoledServer(o) {
   return o.some((r) => "role" in r.config && r.config.role === "comms");
 }
@@ -15,7 +15,7 @@ function isCoordinatorCommsMcpTool(o) {
   return o.mcpInfo?.role === "comms";
 }
 function excludeCoordinatorCommsMcpTools(o) {
-  if (Ci()) return o.filter((r) => !isCoordinatorCommsMcpTool(r));
+  if (isCoordinatorModeEnabled()) return o.filter((r) => !isCoordinatorCommsMcpTool(r));
   return o;
 }
 export { hasCommsRoledServer, isCoordinatorCommsMcpTool, excludeCoordinatorCommsMcpTools };

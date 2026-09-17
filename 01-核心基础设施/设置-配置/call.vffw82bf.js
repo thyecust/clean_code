@@ -12,7 +12,7 @@
 import { withTimeout } from "../共享小工具-未细化/async-timeout-utils.js";
 import { oa, Dat, aee, Ttn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { PPn, env as a } from "./chunk-zqr5ctyf.js";
-import { os, x } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { repeatString, pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { Av, iDt, j0e } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -24,11 +24,11 @@ import { getSettingsFilePathForSource, updateSettingsForSource } from "../核心
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { readVSCodeScrollSensitivity } from "../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { FocusableBox } from "../共享小工具-未细化/focusable-box.js";
-import { a9e } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
+import { sanitizeTerminalName } from "../../02-功能模块/通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { tZ } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getPlatformDisplayName } from "../核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function ut() {
@@ -172,14 +172,14 @@ function ae(Rt) {
         saw_scroll_wheel: Ne.current,
         saw_trackpad: Ue.current,
         editor_wheel_sensitivity: A?.sensitivity ?? void 0,
-        term_program: a9e(f.termProgram),
+        term_program: sanitizeTerminalName(f.termProgram),
         term_program_version: Ms(f.termProgramVersion),
       });
       let et = `\`${Gu(getSettingsFilePathForSource("userSettings") ?? "settings.json")}\``;
       k(
         Z
-          ? `Scroll speed reset to auto (${R} ${x(R, "line")} per notch) \xB7 removed from ${et}`
-          : `Scroll speed set to ${c} ${x(c, "line")} per notch \xB7 saved to ${et}`,
+          ? `Scroll speed reset to auto (${R} ${pluralize(R, "line")} per notch) \xB7 removed from ${et}`
+          : `Scroll speed set to ${c} ${pluralize(c, "line")} per notch \xB7 saved to ${et}`,
       );
     }),
       (m[14] = A?.sensitivity),
@@ -229,7 +229,7 @@ function ae(Rt) {
       (m[30] = B));
   else B = m[30];
   let L;
-  if (m[31] !== c) ((L = x(c, "line")), (m[31] = c), (m[32] = L));
+  if (m[31] !== c) ((L = pluralize(c, "line")), (m[31] = c), (m[32] = L));
   else L = m[32];
   let ee;
   if (m[33] !== c || m[34] !== L)
@@ -327,12 +327,12 @@ function W(Kt) {
   return at;
 }
 function Me(n) {
-  if (n < 1) return "\u25AA" + os("\xB7", N - 1);
+  if (n < 1) return "\u25AA" + repeatString("\xB7", N - 1);
   let s = oa(Math.round(n), me, N);
-  return "\u25A0".repeat(s) + os("\xB7", N - s);
+  return "\u25A0".repeat(s) + repeatString("\xB7", N - s);
 }
 function xe(n) {
-  let s = [ct(n), tZ(n.platform)];
+  let s = [ct(n), getPlatformDisplayName(n.platform)];
   if (n.wheelFlood) s.push("high-rate wheel events");
   else if (n.xtermJs) s.push("xterm.js");
   else if (n.wtSession) s.push("Windows Terminal");

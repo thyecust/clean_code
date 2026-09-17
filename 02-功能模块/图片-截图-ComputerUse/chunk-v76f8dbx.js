@@ -8,15 +8,15 @@
 
 // Version: 2.1.263
 import { ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
-import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
+import { McpServer } from "../MCP客户端/mcp-server.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getComputerUseSession, getComputerUseNativeModule } from "./computer-use-session.js";
-import { zcn } from "./chunk-w5bhde2m.js";
+import { createCliExecutor } from "./computer-use-cli-executor.js";
 import { s0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { WSe } from "./chunk-6842b6x1.js";
-import { fut, iNt } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
-import { hF, Y2n } from "../../01-核心基础设施/共享小工具-未细化/chunk-j66gwpg8.js";
-import { s4e, IOe, v$t, Vcn, k$t, Kcn } from "../../01-核心基础设施/共享小工具-未细化/chunk-bvvxxmrb.js";
+import { isComputerUseEnabled, iNt } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import { DEFAULT_GRANT_FLAGS, isKnownAppBundleId } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
+import { IMAGE_TOKEN_BUDGET, fitSizeToTokenBudget, DEFAULT_IMAGE_SCALE, validateImageScale, formatScaleCoordinateFrameNote, scaleImageDimensions } from "../../01-核心基础设施/共享小工具-未细化/image-scaling.js";
 function Sn(e) {
   if (e === "browser" || e === "trading") return "read";
   if (e === "terminal" || e === "shell") return "click";
@@ -1691,8 +1691,8 @@ function Ot(e, o) {
   return { x: i * (o.windowBounds.w / t), y: s * (o.windowBounds.h / r) };
 }
 function Ft(e, o) {
-  let [t, r] = IOe(Math.round(e.w), Math.round(e.h), s4e),
-    [i, s] = Kcn([t, r], o ?? 1);
+  let [t, r] = fitSizeToTokenBudget(Math.round(e.w), Math.round(e.h), IMAGE_TOKEN_BUDGET),
+    [i, s] = scaleImageDimensions([t, r], o ?? 1);
   return o !== void 0 && o < 1
     ? { w: i, h: s, frameW: t, frameH: r }
     : { w: i, h: s };
@@ -2283,7 +2283,7 @@ async function Wo(e, o, t) {
     C = r !== void 0 && r !== 1,
     T =
       C && d.frameWidth !== void 0
-        ? k$t(r, d.frameWidth, d.frameHeight ?? 0)
+        ? formatScaleCoordinateFrameNote(r, d.frameWidth, d.frameHeight ?? 0)
         : void 0,
     D =
       C && d.frameWidth === void 0
@@ -2911,7 +2911,7 @@ async function Ko(e, o, t, r, i) {
   return s;
 }
 function ct(e) {
-  let o = Vcn(e?.scale);
+  let o = validateImageScale(e?.scale);
   return typeof o === "object" && o !== null ? Error(o.error) : o;
 }
 var it = 8,
@@ -3040,7 +3040,7 @@ function Xo(e, o, t, r, i = []) {
       requestedName: f,
       resolved: h,
       didYouMean: y,
-      isSentinel: g ? Y2n(g) : !1,
+      isSentinel: g ? isKnownAppBundleId(g) : !1,
       alreadyGranted: m ? t.has(m) : !1,
       proposedTier: ye(g, h?.displayName ?? f),
     };
@@ -3909,13 +3909,13 @@ async function zt(e, o, t, r) {
 function Yt(e, o, t) {
   if (
     e === void 0 ||
-    e === v$t ||
+    e === DEFAULT_IMAGE_SCALE ||
     o.frameWidth === void 0 ||
     o.frameHeight === void 0
   )
     return;
   if (t === "normalized_0_100") return;
-  return k$t(e, o.frameWidth, o.frameHeight);
+  return formatScaleCoordinateFrameNote(e, o.frameWidth, o.frameHeight);
 }
 async function wn(e, o, t, r) {
   if (o.grants.isEmpty())
@@ -4918,7 +4918,7 @@ function _n(e, o, t) {
   let r = new Set(e.map((u) => u.bundleId)),
     i = [...e, ...t.granted.filter((u) => !r.has(u.bundleId))],
     s = Object.fromEntries(Object.entries(t.flags).filter(([, u]) => u === !0)),
-    a = { ...hF, ...o, ...s };
+    a = { ...DEFAULT_GRANT_FLAGS, ...o, ...s };
   return { apps: i, flags: a };
 }
 var kn = 290000,
@@ -4965,7 +4965,7 @@ function con(e, o, t) {
           );
           let { apps: g } = _n(t.getAllowedApps(), t.getGrantFlags(), w);
           return (
-            t.onAllowedAppsChanged?.(g, { ...hF, ...t.getGrantFlags() }),
+            t.onAllowedAppsChanged?.(g, { ...DEFAULT_GRANT_FLAGS, ...t.getGrantFlags() }),
             w
           );
         }
@@ -5410,7 +5410,7 @@ function con(e, o, t) {
 }
 function X2n(e, o, t) {
   let { serverName: r, logger: i } = e,
-    s = new A1(
+    s = new McpServer(
       { name: r, version: "0.2.0" },
       { capabilities: { tools: {}, logging: {} } },
     ),
@@ -5480,7 +5480,7 @@ function put() {
     (e.hostAdapter = {
       serverName: s0,
       logger: new An(),
-      executor: zcn({
+      executor: createCliExecutor({
         getMouseAnimationEnabled: () => iNt().mouseAnimation,
         getHideBeforeActionEnabled: () => iNt().hideBeforeAction,
       }),
@@ -5492,7 +5492,7 @@ function put() {
           ? { granted: !0 }
           : { granted: !1, accessibility: t, screenRecording: r };
       },
-      isDisabled: () => !fut(),
+      isDisabled: () => !isComputerUseEnabled(),
       getSubGates: iNt,
       getAutoUnhideEnabled: () => !0,
       cropRawPatch: () => null,

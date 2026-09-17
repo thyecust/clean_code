@@ -52,15 +52,15 @@ import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-
 import { Ve, R, l, A, W, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { We, b, z, iae, Xg, Ro, Tr, Sh, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be, Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir, isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { CLAUDE_AI_INFERENCE_SCOPE, CLAUDE_AI_PROFILE_SCOPE } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { Rvt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import {
   bt,
   Ad,
@@ -117,7 +117,7 @@ import {
   ql,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { yi, ms, w0, fS, zRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { KT, Oge, ot, nL, Iq } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { sanitizePath, getProjectsDir, getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import {
@@ -134,9 +134,9 @@ import {
   findRepoRemoteSlug,
   readRepoConfigText,
 } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { _n, Ont, O1, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
-import { Do } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { isValidPathSegment, TEAM_MEMORY_DIR_NAME, getNormalizedNames, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
+import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import {
   S0,
   parseSettingsFile,
@@ -151,42 +151,42 @@ import {
   updateSettingsForSourceWithTransform,
   isAutoModeClassifyAllShellEnabled,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { up, Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripInvisibleChars, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { RESTRICTED_MODE_DENY_REASON, OUTSIDE_READS_BLOCKED_DENY_REASON } from "../权限系统/chunk-e4pfvp7x.js";
 import {
-  Tu,
-  nhe,
-  W5,
-  Tx,
-  Cie,
-  Cke,
-  vie,
-  akt,
-  Fr,
-  Er,
-} from "../工具Bash-Shell/chunk-4pap8y5n.js";
-import { _x } from "../../01-核心基础设施/共享小工具-未细化/chunk-24x3spwe.js";
+  resolveToolNameAlias,
+  expandToolNameAlias,
+  getAliasNamesForToolName,
+  containsWildcard,
+  matchesWildcardPattern,
+  matchesToolNameGlob,
+  escapeGlobSpecials,
+  unescapeGlobSpecials,
+  parsePermissionRule,
+  formatPermissionRule,
+} from "../工具Bash-Shell/permission-rule-parsing.js";
+import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
 import { Xt, _0, dm, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
-import { Gi } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { JJe, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { o$e, FG, jK, zo } from "../MCP客户端/chunk-3kmsshb6.js";
+import { stringifyYaml, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
 import { HEt, ave, lnr } from "../插件系统/chunk-7s6mt1vg.js";
-import { nAt } from "../图表-Mermaid/chunk-743atbtj.js";
+import { isWorkshopFile } from "../图表-Mermaid/chunk-743atbtj.js";
 import { WG } from "../权限系统/chunk-t3b7pg2x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { peekPlanSlug, getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { ll } from "../Teammates团队/chunk-thxapyam.js";
-import { bl, Qoe } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getProjectDir as ll } from "../Teammates团队/transcript-paths.js";
+import { getClaudeTempDir, getChildProcessTmpDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
-import { Z_ } from "../工具ToolSearch/chunk-1m51pqtd.js";
+import { isToolSearchEnabled } from "../工具ToolSearch/tool-search-enablement.js";
 import { normalizePathForComparison } from "../../01-核心基础设施/共享小工具-未细化/chunk-nfcecy7x.js";
-import { mt } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { s, T, O, se, v, c, it, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { toESM, commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -674,7 +674,7 @@ function qer(e) {
 }
 function TTt(e) {
   return (
-    Do(e.host) && e.owner.toLowerCase() === qn && e.name.toLowerCase() === Kn
+    isGitHubHost(e.host) && e.owner.toLowerCase() === qn && e.name.toLowerCase() === Kn
   );
 }
 function Ui() {
@@ -685,10 +685,10 @@ function Ui() {
 }
 function wt() {
   if (a.CLAUDE_CODE_DISABLE_ORG_MEMORY) return !1;
-  if (Hr()) return !1;
+  if (isSafeMode()) return !1;
   if (!H("tengu_haze_glass", !1)) return !1;
   if (process.env.CLAUDE_MEMORY_STORES?.trim()) return !1;
-  if (Gi() !== null) return !1;
+  if (getSessionAccessToken() !== null) return !1;
   if (!isPolicyAllowed("allow_memory_sync")) return !1;
   return Ui() && (isClaudeAISubscriber() || aQ());
 }
@@ -1846,13 +1846,13 @@ var zc = createLazyValue(() =>
   ),
   Gc = createLazyValue(() => c({ entries: fe(s(), se()) }));
 function bs() {
-  return gs(be(), "cache", ys);
+  return gs(getClaudeConfigDir(), "cache", ys);
 }
-var _s = Ce.cache("org-memory-discovery", ys);
+var _s = STORAGE_KEYS.cache("org-memory-discovery", ys);
 async function ws(e) {
   try {
     let t;
-    if (!isHoverRestEnabled() || e === void 0) t = await qt().read(bs());
+    if (!isHoverRestEnabled() || e === void 0) t = await getFileStorage().read(bs());
     else {
       let o = await e.read([_s]);
       if (!o.ok)
@@ -1901,8 +1901,8 @@ async function Ss(e, t, r) {
       if (!p.ok) n(`org-memory-discovery: cache write failed: ${We(p.error)}`);
       return;
     }
-    let d = qt();
-    (await d.mkdir(gs(be(), "cache")),
+    let d = getFileStorage();
+    (await d.mkdir(gs(getClaudeConfigDir(), "cache")),
       await d.atomicWrite(bs(), b({ entries: o })));
   } catch (o) {
     n(`org-memory-discovery: cache write failed: ${l(o)}`);
@@ -2382,7 +2382,7 @@ class vs {
       if (e === this.discoveryGeneration) this.lastPickerData = k;
     };
     if (!wt()) return (settleOrgMemoryDecisionOff("gates_closed"), null);
-    let r = Q(),
+    let r = getCwd(),
       o = oo(),
       d = () => o !== null && e === this.discoveryGeneration && oo() === o,
       p = o === null ? void 0 : (await Hc(this.storageV5))[r];
@@ -2661,9 +2661,9 @@ function Pc() {
 }
 function isMultiStoreSyncAvailable() {
   if (!isAutoMemoryEnabled()) return !1;
-  if (St()) return !1;
+  if (isEssentialTrafficOnly()) return !1;
   if (!isPolicyAllowed("allow_memory_sync")) return !1;
-  return Gi() !== null || Pc() || aQ();
+  return getSessionAccessToken() !== null || Pc() || aQ();
 }
 var tu = { parse: cu };
 function nb() {
@@ -6785,7 +6785,7 @@ function Qs(e) {
 }
 function IK() {
   if (!Ooe()) return !1;
-  if (St()) return !1;
+  if (isEssentialTrafficOnly()) return !1;
   if (!wt()) return !1;
   return es().orgMemoryRead !== !1;
 }
@@ -6923,7 +6923,7 @@ class rn {
         host: "memory",
         timeout: pd,
         validateStatus: () => !0,
-        auth: rRe().auth === "none" ? "none" : Gi() ? "session-jwt" : void 0,
+        auth: rRe().auth === "none" ? "none" : getSessionAccessToken() ? "session-jwt" : void 0,
       }));
   }
   async send(e, t) {
@@ -7338,7 +7338,7 @@ function IFe(e) {
   return {
     trimmed: t,
     lineCount:
-      ln(
+      countOccurrences(
         t,
         `
 `,
@@ -7362,7 +7362,7 @@ var PK =
 function $$(e) {
   let t = "";
   for (let r of JJe(
-    up(
+    stripInvisibleChars(
       e.replace(
         /\r\n?|[\u2028\u2029]/g,
         `
@@ -7393,7 +7393,7 @@ var Od = ["name", "description", "metadata"],
     };
   };
 function PC(e, t, r) {
-  let { frontmatter: o, content: d, rewriteHazard: p } = zo(e, t, r);
+  let { frontmatter: o, content: d, rewriteHazard: p } = parseFrontmatter(e, t, r);
   return {
     frontmatter: Fd(o),
     body: d,
@@ -7405,13 +7405,13 @@ function sEn(e) {
     .split(
       `
 `,
-      FG + 1,
+      MAX_FILE_READ_LINES + 1,
     )
-    .slice(0, FG)
+    .slice(0, MAX_FILE_READ_LINES)
     .reduce(
       (r, o) => {
         let d = Buffer.byteLength(o) + (r.lines.length > 0 ? 1 : 0);
-        if (r.stopped || r.bytes + d > jK) return ((r.stopped = !0), r);
+        if (r.stopped || r.bytes + d > MAX_FILE_READ_BYTES) return ((r.stopped = !0), r);
         return ((r.bytes += d), r.lines.push(o), r);
       },
       { bytes: 0, lines: [], stopped: !1 },
@@ -7441,7 +7441,7 @@ function atr(e, t) {
     },
     d = t.replace(/^\n+/, "");
   return `---
-${o$e(o)}---
+${stringifyYaml(o)}---
 
 ${d}`;
 }
@@ -7781,7 +7781,7 @@ function la(e, t) {
       ...e.map(cEn),
     ],
     J = `${ih},${Ed}`,
-    te = Z_()
+    te = isToolSearchEnabled()
       ? `If the memory tools are deferred, load them with ${TOOL_SEARCH_TOOL_NAME}("select:${J}") before first use. `
       : "",
     ie = D
@@ -7974,7 +7974,7 @@ function U$(e) {
   let t = pa(e);
   if (t?.length !== 2 || t[1] !== "memory") return;
   let r = t[0];
-  return _n(r) ? r : void 0;
+  return isValidPathSegment(r) ? r : void 0;
 }
 function utr(e, t) {
   if (e === "user") {
@@ -7990,8 +7990,8 @@ function NYe(e, t, r) {
   let o = t.endsWith(zt) ? t : t + zt;
   if (!r.startsWith(o)) return;
   let d = r.slice(o.length).split(zt);
-  if (!d.every(_n)) return;
-  let p = Ce.memory(e.projectKey, [...e.baseRelPath, ...d]);
+  if (!d.every(isValidPathSegment)) return;
+  let p = STORAGE_KEYS.memory(e.projectKey, [...e.baseRelPath, ...d]);
   return kd(p) === void 0 ? p : void 0;
 }
 function dtr(e) {
@@ -8010,17 +8010,17 @@ function pa(e) {
 }
 function uEn(e) {
   let t = pa(e);
-  if (t?.length !== 4 || t[1] !== "memory" || t[2] !== Ont) return;
+  if (t?.length !== 4 || t[1] !== "memory" || t[2] !== TEAM_MEMORY_DIR_NAME) return;
   let r = t[0],
     o = t[3];
-  return _n(r) && _n(o) ? { projectKey: r, relPath: [Ont, o] } : void 0;
+  return isValidPathSegment(r) && isValidPathSegment(o) ? { projectKey: r, relPath: [TEAM_MEMORY_DIR_NAME, o] } : void 0;
 }
 async function UCe(e) {
   try {
     if ((Bj() ?? []).length > 0) return !1;
   } catch {}
   try {
-    return !(await readdir(e)).some((r) => O1(r).includes(Ont));
+    return !(await readdir(e)).some((r) => getNormalizedNames(r).includes(TEAM_MEMORY_DIR_NAME));
   } catch (t) {
     return W(t);
   }
@@ -8442,7 +8442,7 @@ class Oa {
 }
 var uf = new j(() => new Oa());
 function Wy() {
-  return (cn(getAutoMemPath(), Ont) + $n).normalize("NFC");
+  return (cn(getAutoMemPath(), TEAM_MEMORY_DIR_NAME) + $n).normalize("NFC");
 }
 function szt(e) {
   return e.scope === "user" ? getAutoMemPath() : (cn(Wy(), e.mount) + $n).normalize("NFC");
@@ -8726,7 +8726,7 @@ These directories already exist \u2014 write to them directly with the Write too
     Se = [];
   for (let le of e) {
     let ge = le.skillsDirs ?? [],
-      Xe = ge.find((Vn) => ft(Vn, "/") === "channel") ?? ge[0];
+      Xe = ge.find((Vn) => beforeFirst(Vn, "/") === "channel") ?? ge[0];
     if (Xe === void 0) continue;
     Se.push(
       xr(d, le.mount, ...Xe.split("/"), "<skill-name>", "SKILL.md").normalize(
@@ -9275,13 +9275,13 @@ function _f(e) {
         e,
       ) + ct
     );
-  return ut(Q(), ".claude", "agent-memory-local", e) + ct;
+  return ut(getCwd(), ".claude", "agent-memory-local", e) + ct;
 }
 function LFe(e, t) {
   let r = ja(e);
   switch (t) {
     case "project":
-      return ut(Q(), ".claude", "agent-memory", r) + ct;
+      return ut(getCwd(), ".claude", "agent-memory", r) + ct;
     case "local":
       return _f(r);
     case "user":
@@ -9291,14 +9291,14 @@ function LFe(e, t) {
 function wf(e) {
   let t = ut(getMemoryBaseDir(), "agent-memory") + ct;
   if (e.startsWith(t)) return t;
-  let r = ut(Q(), ".claude", "agent-memory") + ct;
+  let r = ut(getCwd(), ".claude", "agent-memory") + ct;
   if (e.startsWith(r)) return r;
   if (process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR) {
     let d = ut(process.env.CLAUDE_CODE_REMOTE_MEMORY_DIR, "projects") + ct;
     if (e.includes(ct + "agent-memory-local" + ct) && e.startsWith(d)) return d;
     return null;
   }
-  let o = ut(Q(), ".claude", "agent-memory-local") + ct;
+  let o = ut(getCwd(), ".claude", "agent-memory-local") + ct;
   if (e.startsWith(o)) return o;
   return null;
 }
@@ -9337,9 +9337,9 @@ function LTt(e, t, r, o) {
   );
 }
 function Lf(e, t) {
-  if (t !== "user" || ut(getMemoryBaseDir(), "agent-memory") !== ut(be(), "agent-memory"))
+  if (t !== "user" || ut(getMemoryBaseDir(), "agent-memory") !== ut(getClaudeConfigDir(), "agent-memory"))
     return;
-  return Ce.agentMemory(ja(e), [jl]);
+  return STORAGE_KEYS.agentMemory(ja(e), [jl]);
 }
 async function NFe(e, t) {
   if (t === void 0 || e.memory === void 0 || !isAutoMemoryEnabled()) return;
@@ -9370,13 +9370,13 @@ function zj(e) {
   );
 }
 function vr() {
-  return Ef(getProjectDir(Q()), K(), "workflows", "scripts") + Tf;
+  return Ef(getProjectDir(getCwd()), K(), "workflows", "scripts") + Tf;
 }
 function Af(e, t) {
   return `${vr()}${zj(e)}-${t}.js`;
 }
 function Cf() {
-  let e = getProjectDir(Q());
+  let e = getProjectDir(getCwd());
   return kf(e) === getProjectsDir() ? vf(e) : void 0;
 }
 function NTt(e, t, r, o) {
@@ -9390,10 +9390,10 @@ function NTt(e, t, r, o) {
       try {
         if (
           (await mkdir(d, { recursive: !0, mode: 448 }),
-          isHoverRestEnabled() && o && L !== void 0 && _n(_))
+          isHoverRestEnabled() && o && L !== void 0 && isValidPathSegment(_))
         ) {
           let k = await o.write(
-            Ce.sidecar(L, x, ["workflows", "scripts", _]),
+            STORAGE_KEYS.sidecar(L, x, ["workflows", "scripts", _]),
             r,
             { publishDiscipline: "inPlace", mode: 384 },
           );
@@ -9412,7 +9412,7 @@ function NTt(e, t, r, o) {
   );
 }
 async function Rtr(e) {
-  let t = Rf(Q(), e),
+  let t = Rf(getCwd(), e),
     r = gEn(e, t);
   if (r !== null) return { error: r };
   try {
@@ -9562,7 +9562,7 @@ function G$(e) {
 }
 function BCe(e, t) {
   let r = Ha(e);
-  if (Sn(r) !== r)
+  if (replaceControlChars(r) !== r)
     throw Error("synced item name contains display-hazard characters");
   if (W$(r)) throw Error("synced item name resolves to reserved path");
   if (tb(r).endsWith(ave))
@@ -9592,7 +9592,7 @@ function Yfe(e, t) {
   return Bf(r, t);
 }
 function za(e) {
-  let t = ft(e, ".").replace(/ +$/, "");
+  let t = beforeFirst(e, ".").replace(/ +$/, "");
   return (
     /~\d/.test(e) ||
     /^(con|prn|aux|nul|com[0-9\u00B9\u00B2\u00B3]|lpt[0-9\u00B9\u00B2\u00B3])$/.test(
@@ -9634,7 +9634,7 @@ var qa = `- Fast file pattern matching tool that works with any codebase size
 - Returns matching file paths sorted by modification time
 - Use this tool when you need to find files by name patterns`,
   Uf = `${qa}
-- When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the ${mt} tool instead (if available)`;
+- When you are doing an open ended search that may require multiple rounds of globbing and grepping, use the ${AGENT_TOOL_NAME} tool instead (if available)`;
 var Ka = toESM(kJ(), 1);
 function $Tt(e) {
   return Qa.compileErrorMessage(e);
@@ -14292,7 +14292,7 @@ var VYe = {
             x.slice(1).includes("l")
           )
             _ = !0;
-          if (x.includes("=")) ((p = ft(x, "=")), d++);
+          if (x.includes("=")) ((p = beforeFirst(x, "=")), d++);
           else if (r.has(x)) ((p = x), (d += 2));
           else ((p = x), d++);
         } else {
@@ -14827,7 +14827,7 @@ var ZTt = {
   Rl = /^--?[A-Za-z0-9][\w-]*=/,
   Nm = /(?:^|[^A-Za-z0-9_])[\\/]\?\?(?:[\\/]|$)/;
 function Q_(e, t = !1) {
-  if (P() !== "windows") return !1;
+  if (getCurrentPlatform() !== "windows") return !1;
   if (t && An(e)) return !0;
   if (t && /^-[A-Za-z0-9]/.test(e)) {
     let _ = e.replace(/^(?:-[A-Za-z0-9]+)+/, "");
@@ -14989,7 +14989,7 @@ function GFe(e, t, r, o) {
 }
 import { posix as Ym } from "path";
 function tEt(e) {
-  let t = Fr(Er(e));
+  let t = parsePermissionRule(formatPermissionRule(e));
   return t.toolName === e.toolName && t.ruleContent === e.ruleContent;
 }
 function iP() {
@@ -15006,7 +15006,7 @@ function Szt(e, t) {
   for (let d of Wm) {
     let p = r[d];
     if (p)
-      for (let _ of p) o.push({ source: t, ruleBehavior: d, ruleValue: Fr(_) });
+      for (let _ of p) o.push({ source: t, ruleBehavior: d, ruleValue: parsePermissionRule(_) });
   }
   return o;
 }
@@ -15185,8 +15185,8 @@ function qCe(e) {
 var Hm = w0;
 async function Utr(e, t) {
   if (!Hm.includes(e.source)) return !1;
-  let r = Er(e.ruleValue),
-    o = (d) => Er(Fr(d));
+  let r = formatPermissionRule(e.ruleValue),
+    o = (d) => formatPermissionRule(parsePermissionRule(d));
   try {
     let d = !1;
     if (e.source === "localSettings") {
@@ -15226,13 +15226,13 @@ async function Utr(e, t) {
 async function Dl({ ruleValues: e, ruleBehavior: t }, r, o) {
   if (iP()) return !1;
   if (e.length < 1) return !0;
-  let d = e.map(Er);
+  let d = e.map(formatPermissionRule);
   try {
     let p = await updateSettingsForSourceWithTransform(
       r,
       (_) => {
         let L = _?.permissions?.[t] || [],
-          x = new Set(L.map((E) => Er(Fr(E)))),
+          x = new Set(L.map((E) => formatPermissionRule(parsePermissionRule(E)))),
           k = d.filter((E) => !x.has(E));
         if (k.length === 0) return null;
         return { permissions: { [t]: [...L, ...k] } };
@@ -15253,11 +15253,11 @@ async function Dl({ ruleValues: e, ruleBehavior: t }, r, o) {
   }
 }
 function Vm(e) {
-  let t = Fr(Er(e));
+  let t = parsePermissionRule(formatPermissionRule(e));
   if (
     t.ruleContent !== e.ruleContent ||
     t.toolName === e.toolName ||
-    Tu(e.toolName) !== t.toolName ||
+    resolveToolNameAlias(e.toolName) !== t.toolName ||
     !tEt(t)
   )
     return null;
@@ -15304,11 +15304,11 @@ function gi(e) {
 function et(e) {
   let t;
   try {
-    t = gi(e) ? Er(e) : String(b(e));
+    t = gi(e) ? formatPermissionRule(e) : String(b(e));
   } catch {
     t = "(unprintable value)";
   }
-  return t.length > 200 ? `${oe(t, 200)}\u2026` : t;
+  return t.length > 200 ? `${truncateToCodeUnits(t, 200)}\u2026` : t;
 }
 function bi(e) {
   if (e === null || typeof e !== "object")
@@ -15376,7 +15376,7 @@ function bi(e) {
       let E = [];
       for (let C of x) {
         if (!gi(C)) continue;
-        let D = Fr(Er(C));
+        let D = parsePermissionRule(formatPermissionRule(C));
         if (D.toolName !== C.toolName || D.ruleContent !== C.ruleContent)
           E.push(D);
         else E.push(C);
@@ -15497,7 +15497,7 @@ function Zm(e, t) {
         { ...e, mode: t.mode }
       );
     case "addRules": {
-      let r = t.rules.map((d) => Er(d));
+      let r = t.rules.map((d) => formatPermissionRule(d));
       n(
         `Applying permission update: Adding ${t.rules.length} ${t.behavior} rule(s) to destination '${t.destination}': ${b(r)}`,
       );
@@ -15511,7 +15511,7 @@ function Zm(e, t) {
       };
     }
     case "replaceRules": {
-      let r = t.rules.map((d) => Er(d));
+      let r = t.rules.map((d) => formatPermissionRule(d));
       n(
         `Replacing all ${t.behavior} rules for destination '${t.destination}' with ${t.rules.length} rule(s): ${b(r)}`,
       );
@@ -15526,7 +15526,7 @@ function Zm(e, t) {
         kEn(e, t.directories, t.destination)
       );
     case "removeRules": {
-      let r = t.rules.map((L) => Er(L));
+      let r = t.rules.map((L) => formatPermissionRule(L));
       n(
         `Applying permission update: Removing ${t.rules.length} ${t.behavior} rule(s) from source '${t.destination}': ${b(r)}`,
       );
@@ -15550,7 +15550,7 @@ function Zm(e, t) {
 }
 function Btr(e, t, r, o) {
   let d = (_, L) => {
-      let x = Fr(Er(_));
+      let x = parsePermissionRule(formatPermissionRule(_));
       if (x.ruleContent !== void 0) return !1;
       if (!(t.has(x.toolName) || o(x))) return !1;
       return !r(x, L);
@@ -15572,7 +15572,7 @@ function Btr(e, t, r, o) {
 }
 function jtr(e, t) {
   let r = fS(e);
-  return new Set([r, ...W5(r, t.toolAliases)]);
+  return new Set([r, ...getAliasNamesForToolName(r, t.toolAliases)]);
 }
 function Kk(e, t) {
   let r = e;
@@ -15637,13 +15637,13 @@ async function Xm(e, t) {
       n(
         `Removing ${e.rules.length} ${e.behavior} rule(s) from ${e.destination}`,
       );
-      let r = new Set(e.rules.map(Er)),
+      let r = new Set(e.rules.map(formatPermissionRule)),
         o = e.behavior;
       await updateSettingsForSourceWithTransform(
         e.destination,
         (d) => {
           let _ = (d?.permissions?.[o] || []).filter((L) => {
-            let x = Er(Fr(L));
+            let x = formatPermissionRule(parsePermissionRule(L));
             return !r.has(x);
           });
           return { permissions: { [o]: _ } };
@@ -15686,7 +15686,7 @@ async function Xm(e, t) {
       n(
         `Replacing all ${e.behavior} rules in ${e.destination} with ${e.rules.length} rule(s)`,
       );
-      let r = e.rules.map(Er),
+      let r = e.rules.map(formatPermissionRule),
         o = e.behavior;
       await updateSettingsForSourceWithTransform(e.destination, () => ({ permissions: { [o]: r } }), void 0, t);
       break;
@@ -15699,7 +15699,7 @@ async function RD(e, t) {
 function rme(e, t = "session") {
   let r = toPosixPath(e);
   if (r === "/") return;
-  let o = vie(r, { escapeGlobs: !0 }),
+  let o = escapeGlobSpecials(r, { escapeGlobs: !0 }),
     d = Ym.isAbsolute(r)
       ? `/${o}/**`
       : o.startsWith("\\")
@@ -15743,7 +15743,7 @@ function Jj() {
 function $d() {
   let e = Jj();
   if (e.claudeTempDir !== void 0) return e.claudeTempDir;
-  let t = bl(),
+  let t = getClaudeTempDir(),
     r = ae(),
     o = t;
   try {
@@ -15754,7 +15754,7 @@ function $d() {
 function ome() {
   let e = Jj();
   if (e.childProcessTmpDir !== void 0) return e.childProcessTmpDir;
-  let t = Qoe(),
+  let t = getChildProcessTmpDir(),
     r = ae(),
     o = t;
   try {
@@ -15813,7 +15813,7 @@ function wzt(e) {
   return { requestedMachine: DJ(e).requested, runsOnMachine: void 0 };
 }
 function IT(e) {
-  return oe(e.replace(/[\p{Cc}\p{Cf}]/gu, ""), tp);
+  return truncateToCodeUnits(e.replace(/[\p{Cc}\p{Cf}]/gu, ""), tp);
 }
 function Gtr() {
   return `This call named a machine ("${vo}") but was not forwarded to it; omit the field to run here.`;
@@ -15986,7 +15986,7 @@ function isDangerousPowerShellPermission(e, t) {
   return !1;
 }
 function isDangerousTaskPermission(e, t) {
-  return Tu(e) === mt;
+  return resolveToolNameAlias(e) === AGENT_TOOL_NAME;
 }
 function rp(e) {
   return e === MONITOR_TOOL_NAME;
@@ -16043,7 +16043,7 @@ function ON(e) {
       let d = t[o];
       if (d === void 0) continue;
       for (let p of d) {
-        let _ = Fr(p);
+        let _ = parsePermissionRule(p);
         if (isDangerousClassifierPermission(_.toolName, _.ruleContent)) continue;
         r.push({ source: o, ruleBehavior: "allow", ruleValue: _ });
       }
@@ -16059,7 +16059,7 @@ function rJe(e, t) {
   for (let o of qFe) {
     let d = e[o];
     if (d === void 0) continue;
-    for (let p of d) r.push({ source: o, ruleBehavior: t, ruleValue: Fr(p) });
+    for (let p of d) r.push({ source: o, ruleBehavior: t, ruleValue: parsePermissionRule(p) });
   }
   return r;
 }
@@ -16083,8 +16083,8 @@ function wi(
   let _ = "familyParentToolName" in e ? e.familyParentToolName : void 0;
   if (_ !== void 0 && e.mcpInfo === void 0 && t.ruleValue.toolName === _)
     return !0;
-  if (r && nhe(t.ruleValue.toolName, d).includes(p)) return !0;
-  if (o && Tx(t.ruleValue.toolName) && Cke(t.ruleValue.toolName, p)) return !0;
+  if (r && expandToolNameAlias(t.ruleValue.toolName, d).includes(p)) return !0;
+  if (o && containsWildcard(t.ruleValue.toolName) && matchesToolNameGlob(t.ruleValue.toolName, p)) return !0;
   return zRt(t.ruleValue.toolName, p);
 }
 function zFe(e, t) {
@@ -16156,7 +16156,7 @@ function PT(e, t, r, o) {
     _ = [
       [d, !1],
       ...p.map((x) => [x, !1]),
-      ...W5(d, e.toolAliases).map((x) => [x, !0]),
+      ...getAliasNamesForToolName(d, e.toolAliases).map((x) => [x, !0]),
     ];
   for (let [x, k] of _)
     for (let [E, C] of ah(e, x, o)) {
@@ -16172,7 +16172,7 @@ function PT(e, t, r, o) {
       if (!Object.hasOwn(r, q)) continue;
       let J = ip(r[q]);
       if (J === null) continue;
-      if (Cie(V, J.trim())) return C;
+      if (matchesWildcardPattern(V, J.trim())) return C;
     }
   let L = "familyParentToolName" in t ? t.familyParentToolName : void 0;
   if (L !== void 0 && t.mcpInfo === void 0 && t.toFamilyParentInput !== void 0)
@@ -16383,7 +16383,7 @@ function bp(e) {
 }
 var Oe = st.sep;
 function relativePath(e, t) {
-  if (P() === "windows") {
+  if (getCurrentPlatform() === "windows") {
     let r = KT(e),
       o = KT(t);
     return st.relative(r, o);
@@ -16391,12 +16391,12 @@ function relativePath(e, t) {
   return st.relative(e, t);
 }
 function toPosixPath(e) {
-  if (P() === "windows") return KT(e);
+  if (getCurrentPlatform() === "windows") return KT(e);
   return e;
 }
 function _p() {
   let e = yi.map((t) => getSettingsFilePathForSource(t)).filter((t) => t !== void 0);
-  if (P() === "wsl" && S0()) e.push(Ne(_x, "managed-settings.json"));
+  if (getCurrentPlatform() === "wsl" && S0()) e.push(Ne(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"));
   return e;
 }
 function isClaudeSettingsPath(e) {
@@ -16432,7 +16432,7 @@ function Lp(e) {
   let t = ze(e);
   return t.startsWith(vr()) && t.endsWith(".js");
 }
-function Sp(e, t = Q()) {
+function Sp(e, t = getCwd()) {
   let r = ll(t),
     o = ze(e);
   return o === r || o.startsWith(r + Re);
@@ -16516,8 +16516,8 @@ function isScratchpadDisplayPath(e) {
   );
 }
 function isWorkshopDisplayPath(e) {
-  let t = ze(Zl(e) ? e : yp(Q(), e));
-  return nAt(e) && !RU(t, "", DANGEROUS_FILES_LC);
+  let t = ze(Zl(e) ? e : yp(getCwd(), e));
+  return isWorkshopFile(e) && !RU(t, "", DANGEROUS_FILES_LC);
 }
 function xp(e) {
   let t = [xi(Ne(e, "seed-admin"))];
@@ -16532,11 +16532,11 @@ function xi(e) {
 }
 function ki(e) {
   let t = xi(e);
-  return xp(be()).some((r) => t === r || t.startsWith(r + Re));
+  return xp(getClaudeConfigDir()).some((r) => t === r || t.startsWith(r + Re));
 }
 function Pl(e) {
   let t = normalizeCaseForComparison(ze(e)),
-    r = normalizeCaseForComparison(Ne(be(), "jobs") + Re);
+    r = normalizeCaseForComparison(Ne(getClaudeConfigDir(), "jobs") + Re);
   if (!t.startsWith(r)) return !1;
   let d = t.slice(r.length).split(Re);
   return d.length === 2 && d[1].startsWith("adopt.json");
@@ -16544,7 +16544,7 @@ function Pl(e) {
 function Ri(e) {
   let t = a.CLAUDE_CODE_HOST_CREDS_FILE;
   if (!t) return !1;
-  let o = t.replace(P() === "windows" ? /[\\/]+$/ : /\/+$/, "") || t,
+  let o = t.replace(getCurrentPlatform() === "windows" ? /[\\/]+$/ : /\/+$/, "") || t,
     d = normalizeCaseForComparison(ze(e));
   return Tr(o).some((p) => normalizeCaseForComparison(ze(p)) === d);
 }
@@ -16617,7 +16617,7 @@ function rc(e) {
   if (a.CLAUDE_CODE_SESSION_KIND !== "bg") return !1;
   let t = process.env.CLAUDE_JOB_DIR;
   if (!t) return !1;
-  let r = Ne(be(), "jobs") + Re,
+  let r = Ne(getClaudeConfigDir(), "jobs") + Re,
     o = ze(t);
   if (!o.startsWith(r)) return !1;
   let d = o + Re + "tmp" + Re;
@@ -16707,7 +16707,7 @@ function kp(e, t, r) {
     !vS(o) &&
     !$m(o) &&
     (!$W(o) || Oi(o)) &&
-    lnr(o, HEt(), be(), { maxAgeMs: 5000 })
+    lnr(o, HEt(), getClaudeConfigDir(), { maxAgeMs: 5000 })
   )
     return !0;
   if (isUntrustedUncPath(e, r)) return !0;
@@ -16752,7 +16752,7 @@ function kp(e, t, r) {
 }
 function hasSuspiciousWindowsPathPattern(e, t) {
   if (UW(e)) return !0;
-  if (P() === "windows" || P() === "wsl") {
+  if (getCurrentPlatform() === "windows" || getCurrentPlatform() === "wsl") {
     if (e.indexOf(":", 2) !== -1) return !0;
   }
   if (/~\d/.test(e)) return !0;
@@ -16988,7 +16988,7 @@ function Rp(e, t) {
   return Array.from(d);
 }
 function jr(e) {
-  if (P() !== "windows") return e;
+  if (getCurrentPlatform() !== "windows") return e;
   let t = st.normalize(toPosixPath(e));
   return t.length > 1 && t.endsWith("/") ? t.slice(0, -1) : t;
 }
@@ -16997,7 +16997,7 @@ function normalizePatternsToPath(e, t) {
     o = e.get(null) ?? [],
     d = new Set(o),
     p = jr(t),
-    _ = jr(Q());
+    _ = jr(getCwd());
   for (let L of o) {
     if (!L.replace(/\/+$/, "").includes(Oe)) continue;
     for (let x of Vl(_, L, r))
@@ -17031,7 +17031,7 @@ function Vl(e, t, r) {
     x = st.join(e, ...p.slice(0, L)),
     k = r.get(x);
   if (k === void 0)
-    ((k = jr(Ro(ae(), P() === "windows" ? Oge(x) : x).resolvedPath)),
+    ((k = jr(Ro(ae(), getCurrentPlatform() === "windows" ? Oge(x) : x).resolvedPath)),
       r.set(x, k));
   if (k === x) return [o];
   return [o, { patternRoot: k, pattern: p.slice(L).join(Oe) + d }];
@@ -17045,21 +17045,21 @@ function getFileReadIgnorePatterns(e) {
 }
 function patternWithRootFor(e, t) {
   if (
-    P() === "windows" &&
+    getCurrentPlatform() === "windows" &&
     (e.startsWith("~\\") ||
       (e.startsWith("\\") && e[1] !== "!" && e[1] !== "#"))
   )
     e = e.replaceAll("\\", "/");
   if (e.startsWith(`${Oe}${Oe}`)) {
     let o = e.slice(1);
-    if (P() === "windows" && o.match(/^\/[a-z]\//i)) {
+    if (getCurrentPlatform() === "windows" && o.match(/^\/[a-z]\//i)) {
       let d = o[1]?.toUpperCase() ?? "C",
         p = o.slice(2),
         _ = `${d}:\\`;
       return { relativePattern: p.startsWith("/") ? p : "/" + p, root: _ };
     }
     return { relativePattern: o, root: Oe };
-  } else if (P() === "windows" && e.match(/^[A-Za-z]:[/\\]/)) {
+  } else if (getCurrentPlatform() === "windows" && e.match(/^[A-Za-z]:[/\\]/)) {
     let o = e[0].toUpperCase(),
       d = e.slice(2).replaceAll("\\", "/");
     return {
@@ -17118,7 +17118,7 @@ function Di(e, t) {
     return null;
   let p = e.endsWith("/**") ? "/**" : "",
     _ = e.slice(o.length, e.length - p.length);
-  return o + vie(akt(_)) + p;
+  return o + escapeGlobSpecials(unescapeGlobSpecials(_)) + p;
 }
 function Yr(e, t, r) {
   let o =
@@ -17127,7 +17127,7 @@ function Yr(e, t, r) {
       o !== null
         ? {
             rules: o,
-            key: [t, r, P(), Yn(), be(), q1() ?? "", he()].join("\x00"),
+            key: [t, r, getCurrentPlatform(), Yn(), getClaudeConfigDir(), q1() ?? "", he()].join("\x00"),
           }
         : null;
   if (d !== null) {
@@ -17219,13 +17219,13 @@ function denyRuleMatchingAnywhere(e, t, r) {
 }
 function matchingRuleForInput(e, t, r, o) {
   let d = ot(e);
-  if (P() === "windows" && d.includes("\\")) d = KT(d);
+  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = KT(d);
   let p = Yr(t, r, o),
-    _ = P() === "windows" && o !== "allow",
-    L = d ?? Q(),
+    _ = getCurrentPlatform() === "windows" && o !== "allow",
+    L = d ?? getCwd(),
     x = _ ? normalizeCaseForComparison(L) : L;
   for (let [k, { patternMap: E, getIg: C }] of p.entries()) {
-    let D = k ?? Q(),
+    let D = k ?? getCwd(),
       F = relativePath(_ ? normalizeCaseForComparison(D) : D, x);
     if (!F || !dn.default.isPathValid(F)) continue;
     let V = C().test(F);
@@ -17247,11 +17247,11 @@ function matchingDenyRuleForDirectoryContents(e, t, r) {
   let o = Yr(t, r, "deny");
   if (o.size === 0) return null;
   let d = ot(e);
-  if (P() === "windows" && d.includes("\\")) d = KT(d);
-  let p = P() === "windows",
+  if (getCurrentPlatform() === "windows" && d.includes("\\")) d = KT(d);
+  let p = getCurrentPlatform() === "windows",
     _ = p ? normalizeCaseForComparison(d) : d;
   for (let [L, { patternMap: x }] of o.entries()) {
-    let k = L ?? Q();
+    let k = L ?? getCwd();
     if (relativePath(p ? normalizeCaseForComparison(k) : k, _) !== "") continue;
     let C = x.get("/**") ?? x.get("**");
     if (C !== void 0) return C;
@@ -17260,12 +17260,12 @@ function matchingDenyRuleForDirectoryContents(e, t, r) {
 }
 function matchesPathRule(e, t) {
   let r = ot(t);
-  if (P() === "windows" && r.includes("\\")) r = KT(r);
+  if (getCurrentPlatform() === "windows" && r.includes("\\")) r = KT(r);
   let { relativePattern: o, root: d } = patternWithRoot(e, "session"),
     p = Di(zr(o), !0),
     _ = p === null ? null : Gr(p, !0),
-    L = P() === "windows",
-    x = d ?? Q(),
+    L = getCurrentPlatform() === "windows",
+    x = d ?? getCwd(),
     k = relativePath(L ? normalizeCaseForComparison(x) : x, L ? normalizeCaseForComparison(r) : r);
   if (
     _ !== null &&
@@ -17620,7 +17620,7 @@ function checkWritePermissionForTool(e, t, r, o) {
   if (p.some(Ri)) return Ci;
   if (p.some(Ti)) return Ai;
   let L = (r.alwaysAllowRules.session ?? []).filter((F) => {
-      let V = Fr(F).ruleContent;
+      let V = parsePermissionRule(F).ruleContent;
       return Ip(V) && !p.some((q) => vp(q, V ?? ""));
     }),
     x =
@@ -17755,7 +17755,7 @@ function generateSuggestions(e, t, r, o) {
     : [];
 }
 function normalizeInternalPathRoot(e) {
-  for (let t of [Q(), he(), sn(), be(), getMemoryBaseDir(), Yn()])
+  for (let t of [getCwd(), he(), sn(), getClaudeConfigDir(), getMemoryBaseDir(), Yn()])
     for (let r of getResolvedWorkingDirPaths(t)) {
       if (r === t) continue;
       if (e === r || e.startsWith(r + Re)) return t + e.slice(r.length);
@@ -17860,17 +17860,17 @@ function checkReadableInternalPath(e, t, r, o) {
   if (!k && MFe(d)) return De(t, "Agent memory files are allowed for reading");
   if (!x && isAutoMemPathSafeForCarveout(d) && !(o?.blockOutsideReads && isAutoMemPathFromRepoSettings()))
     return De(t, "auto memory files are allowed for reading");
-  let E = Ne(be(), "tasks") + Re;
+  let E = Ne(getClaudeConfigDir(), "tasks") + Re;
   if (!k && (d === E.slice(0, -1) || d.startsWith(E)))
     return De(t, "Task files are allowed for reading");
-  let C = Ne(be(), "teams") + Re;
+  let C = Ne(getClaudeConfigDir(), "teams") + Re;
   if (!k && (d === C.slice(0, -1) || d.startsWith(C)))
     return De(t, "Team files are allowed for reading");
   if (o?.readBlockFence && !o.restricted) {
-    if (d === Ne(be(), "CLAUDE.md"))
+    if (d === Ne(getClaudeConfigDir(), "CLAUDE.md"))
       return De(t, "The user memory file is allowed for reading");
     for (let F of ["skills", "plugins", "rules", "agents", "commands"]) {
-      let V = Ne(be(), F) + Re;
+      let V = Ne(getClaudeConfigDir(), F) + Re;
       if (d === V.slice(0, -1) || d.startsWith(V))
         return De(t, `User ${F} files are allowed for reading`);
     }
@@ -17906,7 +17906,7 @@ function Up() {
         r.add(normalizeCaseForComparison(t.realpathSync(p)));
       } catch {}
     },
-    d = ot(be());
+    d = ot(getClaudeConfigDir());
   o(Ne(d, "skills"));
   try {
     o(Ne(t.realpathSync(d), "skills"));

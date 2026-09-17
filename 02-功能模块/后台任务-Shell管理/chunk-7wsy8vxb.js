@@ -17,24 +17,24 @@ import { ou, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-�
 import { $U, PRt, ORt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { Yq } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { normalizeComparableText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { QJ, parseUserSpecifiedModel, Xvn, SKt, a0, si, Jh } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { Ri, hW, Xke, On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { renameWithRetry, writeNewFileExclusive, writeNewFileAfterAbsenceCheck, writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { le, Xu, nt, hm } from "../../00-第三方库/zod/zod.3g334xwq.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { zI, YY } from "./chunk-djserjj5.js";
+import { getRosterFilePath, MAX_TERMINAL_DIMENSION } from "./chunk-djserjj5.js";
 import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
-import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { isExitedProcessAsync, isSameProcessAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { resolveAgentColorName } from "../../01-核心基础设施/共享小工具-未细化/agent-color-palette.js";
 import { isUuidShaped } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
 import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../权限系统/fork-restricted-launch-flags.js";
-import { qu } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { splitToolRuleList } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { Cs } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { _ve } from "../权限系统/chunk-t3b7pg2x.js";
-import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/chunk-z36ns74j.js";
+import { isProcessRunning } from "../../01-核心基础设施/共享小工具-未细化/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/共享小工具-未细化/async-serialization.js";
 import { s, T, O, se, v, c, it, $e, Ko, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -455,8 +455,8 @@ var BgDispatchSchema = createLazyValue(() =>
       agent: s().optional(),
       routine: s().optional(),
       seed: c({ intent: s(), name: s().optional() }).optional(),
-      cols: T().int().positive().max(YY).optional(),
-      rows: T().int().positive().max(YY).optional(),
+      cols: T().int().positive().max(MAX_TERMINAL_DIMENSION).optional(),
+      rows: T().int().positive().max(MAX_TERMINAL_DIMENSION).optional(),
     }),
   ),
   TRANSIENT_ATTACH_CODE = /ERESPAWNING|ESTARTING/,
@@ -575,8 +575,8 @@ var RosterSchema = createLazyValue(() =>
         op: k("attach"),
         short: e,
         auth: s().optional(),
-        cols: T().int().min(1).max(YY),
-        rows: T().int().min(1).max(YY),
+        cols: T().int().min(1).max(MAX_TERMINAL_DIMENSION),
+        rows: T().int().min(1).max(MAX_TERMINAL_DIMENSION),
         attachId: s().optional(),
         caps: c({
           imark: O().optional(),
@@ -604,8 +604,8 @@ var RosterSchema = createLazyValue(() =>
         proto: t,
         op: k("resize"),
         short: e,
-        cols: T().int().min(1).max(YY),
-        rows: T().int().min(1).max(YY),
+        cols: T().int().min(1).max(MAX_TERMINAL_DIMENSION),
+        rows: T().int().min(1).max(MAX_TERMINAL_DIMENSION),
         attachId: s().optional(),
       }),
       c({ proto: t, op: k("ensure-spare"), cwd: s() }),
@@ -707,7 +707,7 @@ var It = new Set([
   ]),
   Te = 8388608;
 function rosterKey() {
-  return Ce.daemon(["roster.json"]);
+  return STORAGE_KEYS.daemon(["roster.json"]);
 }
 function Y() {
   return {
@@ -724,7 +724,7 @@ async function readRoster(e, t) {
   }
   let r;
   try {
-    let o = await Et(zI());
+    let o = await Et(getRosterFilePath());
     if (!o.isFile() || o.size > Te) {
       if (!e?.silent)
         if (
@@ -741,10 +741,10 @@ async function readRoster(e, t) {
           o.isFile())
         )
           await me(void 0);
-        else await He(zI(), { recursive: !0, force: !0 }).catch((d) => logError(d));
+        else await He(getRosterFilePath(), { recursive: !0, force: !0 }).catch((d) => logError(d));
       return { ...Y(), parseFailed: !0 };
     }
-    r = z(await _t(zI(), "utf8"));
+    r = z(await _t(getRosterFilePath(), "utf8"));
   } catch (o) {
     if (W(o)) return Y();
     if (!e?.silent)
@@ -811,11 +811,11 @@ async function qe(e, t, r) {
 }
 async function me(e) {
   if (!e) {
-    await rename(zI(), `${zI()}.corrupt.${Date.now()}`).catch((r) => logError(r));
+    await rename(getRosterFilePath(), `${getRosterFilePath()}.corrupt.${Date.now()}`).catch((r) => logError(r));
     return;
   }
   let t = await e
-    .move(rosterKey(), Ce.daemon([`roster.json.corrupt.${Date.now()}`]))
+    .move(rosterKey(), STORAGE_KEYS.daemon([`roster.json.corrupt.${Date.now()}`]))
     .catch(() => {
       return;
     });
@@ -842,7 +842,7 @@ async function Ue(e, t, r, o) {
   return { ...Y(), parseFailed: !0 };
 }
 async function Ke(e, t) {
-  let r = await f3t(zI());
+  let r = await f3t(getRosterFilePath());
   if (r.kind === "refused") {
     if (!t?.silent)
       (logError(Error("roster.json is not a regular file \u2014 removing")),
@@ -851,7 +851,7 @@ async function Ke(e, t) {
           quarantined: 1,
           errCode: S("EFTYPE"),
         }),
-        await Ot(zI()));
+        await Ot(getRosterFilePath()));
     return { roster: { ...Y(), parseFailed: !0 }, inspectFailed: !1 };
   }
   if (r.kind === "error")
@@ -978,9 +978,9 @@ async function Tt(e, t) {
     }
     return;
   }
-  let g = zI();
+  let g = getRosterFilePath();
   (await At(xt(g), { recursive: !0, mode: 448 }).catch(() => {}),
-    await On(g, b(d, null, 2), 384).catch((p) => {
+    await writeFileAtomic(g, b(d, null, 2), 384).catch((p) => {
       let y = A(p);
       if (y && WW.has(y)) {
         n(`[daemon] roster write failed: ${y}`, { level: "error" });
@@ -1118,7 +1118,7 @@ function vre(e, t) {
   ];
 }
 function dyn(e) {
-  let t = qu([e]);
+  let t = splitToolRuleList([e]);
   return t.length === 1 && t[0] === e && bj(e);
 }
 function rK(e, t) {
@@ -1176,7 +1176,7 @@ function isReservedGroupName(e) {
   return Dt.has(e.toLowerCase());
 }
 function sanitizeGroupName(e) {
-  return Yq(e).slice(0, Nt);
+  return normalizeComparableText(e).slice(0, Nt);
 }
 function Ee(e) {
   if (e === void 0) return;
@@ -1466,13 +1466,13 @@ function getOwnJobShortId() {
   return K().slice(0, 8);
 }
 function st(e, t) {
-  return _n(e) ? Ce.job(e, t) : void 0;
+  return isValidPathSegment(e) ? STORAGE_KEYS.job(e, t) : void 0;
 }
 function jobKeyFor(e, t) {
   return SKt(e, t);
 }
 function jobStateKey(e) {
-  return Ce.job(e, [ee]);
+  return STORAGE_KEYS.job(e, [ee]);
 }
 function watchJobDirOnce(e, t) {
   let r = J(getJobDir(e), ee),
@@ -1540,7 +1540,7 @@ async function writeStateAtomic(e, t, r) {
           P !== void 0 ? { code: P } : {},
         );
       }
-    } else await On(J(e, ee), b(C, null, 2), 384);
+    } else await writeFileAtomic(J(e, ee), b(C, null, 2), 384);
   } finally {
     (E.ownStateWriteDepth--, invalidateJobStateCache(e));
   }
@@ -1651,9 +1651,9 @@ async function qt(e, t, r) {
     y = await Wt(t, () =>
       e.read([
         g,
-        Ce.job(o, ["order"]),
-        Ce.job(o, ["stateOrder"]),
-        Ce.job(o, ["group"]),
+        STORAGE_KEYS.job(o, ["order"]),
+        STORAGE_KEYS.job(o, ["stateOrder"]),
+        STORAGE_KEYS.job(o, ["group"]),
       ]),
     );
   if (!y.ok && at(y.error)) {
@@ -1888,7 +1888,7 @@ async function readPinnedJobIds(e) {
   } catch (t) {
     if (W(t))
       return (
-        await On(Q(), b([])).catch((r) => {
+        await writeFileAtomic(Q(), b([])).catch((r) => {
           if (!W(r)) logJobWriteError(r);
         }),
         new Set()
@@ -1897,7 +1897,7 @@ async function readPinnedJobIds(e) {
   }
 }
 async function Xt(e) {
-  let t = await _3t(e, Ce.jobPins(), {
+  let t = await _3t(e, STORAGE_KEYS.jobPins(), {
     cap: V,
     screens: ut(),
     screenKey: Q(),
@@ -2127,9 +2127,9 @@ async function appendRespawnFlag(e, t, r) {
 }
 async function Ne(e, t) {
   await ue(e, { force: !0 });
-  let r = await hW(e, t);
+  let r = await writeNewFileExclusive(e, t);
   try {
-    await Ri(r, e);
+    await renameWithRetry(r, e);
   } catch (o) {
     throw (await ue(r, { force: !0 }).catch(() => {}), o);
   }
@@ -2223,7 +2223,7 @@ function writeJobPinned(e, t, r) {
           if (!W(p)) throw p;
         }),
         invalidateJobStateCache(getJobDir(e)));
-    await On(o, b([...g], null, 2));
+    await writeFileAtomic(o, b([...g], null, 2));
   });
 }
 async function Yt(e, t, r) {
@@ -2235,12 +2235,12 @@ async function Yt(e, t, r) {
       return { write: b([...f], null, 2), result: !0 };
     },
     d = ut(),
-    g = await r.statMeta(Ce.jobPins());
+    g = await r.statMeta(STORAGE_KEYS.jobPins());
   if (g.ok && g.value.size > V) (await ke({ evenRegular: !0 }), d.delete(Q()));
   else if (!g.ok && ve(g.error) !== void 0) (await ke(), d.delete(Q()));
   let p = { publishDiscipline: "atomic", mode: 438 & ~process.umask() },
-    y = await r.updateText(Ce.jobPins(), o, p);
-  if (!y.ok && (await ke())) y = await r.updateText(Ce.jobPins(), o, p);
+    y = await r.updateText(STORAGE_KEYS.jobPins(), o, p);
+  if (!y.ok && (await ke())) y = await r.updateText(STORAGE_KEYS.jobPins(), o, p);
   if (!y.ok)
     throw new R(
       `[jobs] v5 pins update failed: ${y.error.code}`,
@@ -2306,7 +2306,7 @@ async function Zt(e) {
         d.scope.namespace === "job" &&
         d.scope.jobId !== void 0 &&
         d.scope.relPath === void 0 &&
-        _n(d.scope.jobId)
+        isValidPathSegment(d.scope.jobId)
       )
         t.push(d.scope.jobId);
     r = o.value.cursor;
@@ -2476,7 +2476,7 @@ async function adoptRosterOrphans(e, t, r) {
       );
     else
       Fe(C, { recursive: !0 })
-        .then(() => Xke(J(C, "state.json"), b(_), 384))
+        .then(() => writeNewFileAfterAbsenceCheck(J(C, "state.json"), b(_), 384))
         .then(() => logEvent("tengu_bg_roster_orphan_adopted", {}))
         .catch((E) => {
           if (A(E) !== "EEXIST") logJobWriteError(E);

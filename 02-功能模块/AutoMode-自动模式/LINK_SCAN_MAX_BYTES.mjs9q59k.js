@@ -12,13 +12,13 @@
 import { B, K, jc } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withTimeout } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getBgJobRuntimeState } from "../../01-核心基础设施/共享小工具-未细化/bg-job-runtime-state.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { R, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { rZ, We, b, z, qr, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { us, Qu, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodePoints, takeLastCodeUnits, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
@@ -65,11 +65,11 @@ import {
   updateSessionActivity,
   H,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { R3n } from "../权限系统/chunk-8zbmhy8a.js";
-import { aAt } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { reconcileInheritPermissionMode } from "../权限系统/inherit-permission-mode-flag.js";
+import { isMainLoopActive } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import {
   wwe,
   EO,
@@ -83,13 +83,13 @@ import {
   rN,
   oR,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { yl } from "../Teammates团队/chunk-thxapyam.js";
+import { getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
-import { k3n } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
+import { tryConjugateVerbPhrase } from "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import { sendRv, disarmStartupWedgeWatchdog } from "../后台任务-Shell管理/chunk-rh0xpf1w.js";
 import { fromJobState, ensureJobDir } from "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
-import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/monitor-tool-name.js";
 import { appendFile, open as xe } from "fs/promises";
 import { join as Ne } from "path";
@@ -195,7 +195,7 @@ function je(e, r, t) {
 }
 function captureIntent(e, r) {
   if (e.capturedIntent || !r) return e.capturedIntent;
-  return ((e.capturedIntent = us(qr(ce(r)), 500)), e.capturedIntent);
+  return ((e.capturedIntent = truncateToCodePoints(qr(ce(r)), 500)), e.capturedIntent);
 }
 function findLatestRealUserAsk(e) {
   let r = e.findLast(
@@ -212,7 +212,7 @@ function findLatestRealUserAsk(e) {
 }
 function captureLatestAsk(e, r) {
   if (!r) return;
-  e.latestAsk = us(qr(ce(r)), 300);
+  e.latestAsk = truncateToCodePoints(qr(ce(r)), 300);
 }
 function ce(e) {
   let t = e.lastIndexOf("</system-reminder>");
@@ -223,7 +223,7 @@ function markTurnActive(e, r, t) {
   ((e.kicked = !0),
     (e.bridgeWriteChain = e.bridgeWriteChain
       .then(() => ve(r, t, e.storageV5))
-      .then(() => R3n(e.storageV5))
+      .then(() => reconcileInheritPermissionMode(e.storageV5))
       .catch(logJobWriteError)),
     de(e, r));
 }
@@ -259,8 +259,8 @@ function appendTimelineLine(e, r, t) {
     b(t) +
     `
 `;
-  if (e !== void 0 && _n(r)) {
-    e.append(Ce.jobTimeline(r), [{ data: s }])
+  if (e !== void 0 && isValidPathSegment(r)) {
+    e.append(STORAGE_KEYS.jobTimeline(r), [{ data: s }])
       .then((o) => {
         if (!o.ok) {
           let l = o.error;
@@ -351,7 +351,7 @@ async function setPermissionBlock(e, r, t, s) {
     if (w.tempo === "blocked" && w.needs === l) return;
     if (d && f(w)) return;
   } else if (_(w)) return;
-  let k = l ? "blocked" : aAt() ? "active" : "idle";
+  let k = l ? "blocked" : isMainLoopActive() ? "active" : "idle";
   await N(
     o,
     {
@@ -451,7 +451,7 @@ async function pushInFlightProgress(e, r) {
   );
 }
 async function Oe(e, r) {
-  let t = getMaterializedSessionFile() ?? yl(),
+  let t = getMaterializedSessionFile() ?? getSessionTranscriptPath(),
     s = e.linkScanPath && e.linkScanPath !== t ? 0 : (e.linkScanOffset ?? 0),
     o = await scanLinkRecords(t, e.children ?? null, s, r);
   return { transcriptPath: t, prevOffset: s, scan: o };
@@ -619,7 +619,7 @@ Skip generic verbs like fix/add/update. Respond with ONLY the label.${f}`,
       logFeatureSad("job_name", "degenerate_label");
       return;
     }
-    if (Ke.test(d) || ln(C, " ") + 1 > 5) {
+    if (Ke.test(d) || countOccurrences(C, " ") + 1 > 5) {
       logFeatureSad("job_name", "conversational_label");
       return;
     }
@@ -692,7 +692,7 @@ function Ze(e, r) {
               ? c.questions[0].question
               : void 0,
           _ = typeof c?.description === "string" ? c.description : "",
-          w = f ?? k3n(_)?.running ?? (_ || (r?.(d.name, c ?? {}) ?? ""));
+          w = f ?? tryConjugateVerbPhrase(_)?.running ?? (_ || (r?.(d.name, c ?? {}) ?? ""));
         o = w ? al(qr(w).replace(/\s+/g, " ").trim(), Ep) : "";
       }
     }
@@ -835,7 +835,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   if (!f) e.lastMsgCount = A;
   if (!isBgSession() && getOwnJobShortId() !== r) return;
   await ensureJobDir(r, e.storageV5).catch(logJobWriteError);
-  let V = getMaterializedSessionFile() ?? yl(),
+  let V = getMaterializedSessionFile() ?? getSessionTranscriptPath(),
     te = E?.linkScanPath && E.linkScanPath !== V ? 0 : (E?.linkScanOffset ?? 0),
     {
       children: ne,
@@ -923,7 +923,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
           "./src/plugins/functionHooks/hooks-worker/hooks-worker.js",
         DD_SOURCEMAP_GROUP: "darwin",
       }.VERSION,
-      cwd: getBgRelocatedCwd() ?? p?.cwd ?? Q(),
+      cwd: getBgRelocatedCwd() ?? p?.cwd ?? getCwd(),
       ...worktreeOwnershipFields(q, p),
       originCwd: p?.worktreePath ? p.originCwd : (getBgRelocatedCwd() ?? p?.originCwd),
       bridgeSessionId: p?.bridgeSessionId,
@@ -956,7 +956,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
       at: O,
       state: m.state,
       detail: m.detail,
-      text: Qu(C, 4000),
+      text: takeLastCodeUnits(C, 4000),
     }));
   let ge = E?.intent || P;
   if (!E?.name && ge && d === "llm" && !e.nameInFlight) {
@@ -965,7 +965,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
         .map(OI)
         .find(Boolean),
       F = D ? "" : summarizeToolCalls(o),
-      v = us(qr(D ?? (F ? `[calling ${F}]` : "")), 500);
+      v = truncateToCodePoints(qr(D ?? (F ? `[calling ${F}]` : "")), 500);
     ((e.nameInFlight = !0),
       Xe(e, w, ge, v)
         .catch(logJobWriteError)
@@ -982,7 +982,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
     `[classifier] ${m.state} (${Le}) \xB7 ${m.detail}${G ? ` \xB7 needs: ${G}` : ""}`,
   );
 }
-var tt = new Set([Xi, CRON_CREATE_TOOL_NAME, MONITOR_TOOL_NAME]);
+var tt = new Set([SCHEDULE_WAKEUP_TOOL_NAME, CRON_CREATE_TOOL_NAME, MONITOR_TOOL_NAME]);
 function summarizeToolCalls(e) {
   let r = new Map();
   for (let t of e)
@@ -1133,7 +1133,7 @@ function worktreeOwnershipFields(e, r) {
 }
 var LINK_SCAN_MAX_BYTES = 4194304;
 async function scanLinkRecords(e, r, t, s) {
-  let o = hu(e, s);
+  let o = resolveTranscriptLocator(e, s);
   if (o !== void 0) return nt(o, r, t);
   let l;
   try {

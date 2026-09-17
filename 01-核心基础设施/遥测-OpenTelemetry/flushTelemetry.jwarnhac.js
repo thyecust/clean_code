@@ -64,21 +64,21 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Xhe, Et, b, QPn, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { U1, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
+import { isNonessentialTrafficRestricted, logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { tu } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { getSettings_DEPRECATED } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { F3t, qY } from "./chunk-5qbcynds.js";
+import { getGatewayIdentityAttributes, otelContextManager } from "./otel-events.js";
 import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/chunk-x3rm9w4b.js";
 import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
-import { AP } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
+import { decodeTokenClaims } from "../../02-功能模块/Bridge-RemoteControl/chunk-4zd60pbm.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { P, rxe } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform, getWslVersion } from "../核心工具-路径与平台/platform-detection.js";
 import { getClientUserAgent } from "../共享小工具-未细化/user-agent.js";
 import { toESM } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var C = toESM(Ls(), 1);
@@ -1399,7 +1399,7 @@ function Ce(e, t) {
 }
 function yt() {
   if (
-    (C.context.setGlobalContextManager(qY),
+    (C.context.setGlobalContextManager(otelContextManager),
     !a.OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE)
   )
     process.env.OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE = "delta";
@@ -1408,7 +1408,7 @@ function yt() {
 function st() {
   let e = CDn();
   if (e) return e;
-  let t = P(),
+  let t = getCurrentPlatform(),
     r = {
       [U.ATTR_SERVICE_NAME]: "claude-code",
       [U.ATTR_SERVICE_VERSION]: {
@@ -1426,7 +1426,7 @@ function st() {
       }.VERSION,
     };
   if (t === "wsl") {
-    let _ = rxe();
+    let _ = getWslVersion();
     if (_) r["wsl.version"] = _;
   }
   let s = w.resourceFromAttributes(r),
@@ -1436,7 +1436,7 @@ function st() {
       ? { [U.SEMRESATTRS_HOST_ARCH]: i.attributes[U.SEMRESATTRS_HOST_ARCH] }
       : {},
     p = w.resourceFromAttributes(c),
-    u = F3t(),
+    u = getGatewayIdentityAttributes(),
     d = Object.keys(u).length > 0,
     m = w.envDetector.detect().attributes || {},
     O = w.resourceFromAttributes(
@@ -1689,14 +1689,14 @@ function Dt(e) {
   );
 }
 function Bt() {
-  if (U1()) return !1;
+  if (isNonessentialTrafficRestricted()) return !1;
   let e = getSubscriptionType(),
     t = isClaudeAISubscriber() && (e === "enterprise" || e === "team");
   return cge() || t;
 }
 async function initializeTelemetry(e) {
   if (
-    (Br("telemetry_init_start"),
+    (profileCheckpoint("telemetry_init_start"),
     yt(),
     await xt(),
     C.propagation.setGlobalPropagator(new le.W3CTraceContextPropagator()),
@@ -1961,7 +1961,7 @@ function Me(e) {
 function kt(e, t) {
   let r = { send: !1 },
     s = (E) => {
-      let _ = E ? AP(E) : null,
+      let _ = E ? decodeTokenClaims(E) : null,
         R = _ !== null && typeof _ === "object" && "aud" in _ ? _.aud : void 0;
       return (
         R === "claude-gateway" ||

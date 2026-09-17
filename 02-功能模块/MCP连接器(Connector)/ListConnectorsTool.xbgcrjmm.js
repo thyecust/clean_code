@@ -12,7 +12,7 @@
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { xce, C7, Hce, hdt, y6n, pbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js";
+import { getConnectorSchema, isOptInRequired, ConnectorRegistryUnavailableError, markConnectorsEnabledInChat, listConnectors, logConnectorSuggestFailure } from "../../01-核心基础设施/共享小工具-未细化/connector-registry-api.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { LIST_CONNECTORS_TOOL_NAME, DESCRIPTION, PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-9g3yj4km.js";
 import { isFirstPartyRemoteSession } from "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
@@ -27,7 +27,7 @@ var l = createLazyValue(() =>
   ),
   p = createLazyValue(() =>
     c({
-      connectors: v(xce()),
+      connectors: v(getConnectorSchema()),
       opt_in_required: k(!0).optional(),
       message: s().optional(),
     }),
@@ -73,16 +73,16 @@ var ListConnectorsTool = buildTool({
     return {
       async call(r, { signal: n }) {
         try {
-          let o = await y6n(n, e);
-          if (C7(o)) return { data: { connectors: [], ...o } };
+          let o = await listConnectors(n, e);
+          if (isOptInRequired(o)) return { data: { connectors: [], ...o } };
           let a = t(),
-            u = hdt(o, a);
+            u = markConnectorsEnabledInChat(o, a);
           return { data: { connectors: y(u, r.keywords) } };
         } catch (o) {
           if (n.aborted) throw new Ve();
           throw (
-            pbe("list", o),
-            new Hce(
+            logConnectorSuggestFailure("list", o),
+            new ConnectorRegistryUnavailableError(
               "Connector registry is unavailable right now; please try again.",
             )
           );

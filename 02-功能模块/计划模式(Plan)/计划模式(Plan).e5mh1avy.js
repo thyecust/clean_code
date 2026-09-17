@@ -9,21 +9,21 @@
 // Version: 2.1.263
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B, K, sc, ke, g8, _8 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { R, W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, Yhe, Xg, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { qt } from "../../01-核心基础设施/共享小工具-未细化/chunk-km6n9zrg.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { getFileStorage } from "../../01-核心基础设施/共享小工具-未细化/file-storage.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { kd } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { C5t, het, xU } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
-import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { generateAdjectiveVerbNounName, slugifyText, generateAdjectiveNounName } from "../../01-核心基础设施/核心工具-其他/核心工具-其他.myj0fw5d.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import { posix } from "path";
 var { dirname: I, isAbsolute: ne, join: T, normalize: ie } = posix,
   DEFAULT_STAGE_FILE_ROOT = "/mnt/user-data/uploads",
@@ -389,11 +389,11 @@ class X {
     let i = _8(),
       r = i.get(t);
     if (!r) {
-      let s = e ? het(e) : "",
+      let s = e ? slugifyText(e) : "",
         o = !0;
       for (let c = 0; c < le; c++)
         if (
-          ((r = s ? `${s}-${xU()}` : C5t()),
+          ((r = s ? `${s}-${generateAdjectiveNounName()}` : generateAdjectiveVerbNounName()),
           (o = F(r).some((f) => this.primedListing?.listing.has(f) === !0)),
           !o)
         )
@@ -463,7 +463,7 @@ function resetPlanFileCacheToUnknown() {
 async function fe(t) {
   let e = [];
   try {
-    let i = await Qo(
+    let i = await runPaginatedScan(
       (r) =>
         t.listEntries({ namespace: "plan" }, { cursor: r, skipKeyStats: !0 }),
       (r) => {
@@ -483,7 +483,7 @@ async function fe(t) {
       case "capped":
         return (
           n(
-            `primePlanSlugCollisions: v5 list exceeded ${Uc} pages; leaving the listing unprimed`,
+            `primePlanSlugCollisions: v5 list exceeded ${DEFAULT_MAX_PAGES} pages; leaving the listing unprimed`,
           ),
           null
         );
@@ -544,10 +544,10 @@ function C() {
   return getPlansDirectory();
 }
 function P() {
-  return d(be(), "plans");
+  return d(getClaudeConfigDir(), "plans");
 }
 function p(t) {
-  return Ce.plan(t);
+  return STORAGE_KEYS.plan(t);
 }
 function y(t) {
   return t.endsWith(".md") ? t.slice(0, -3) : t;
@@ -587,7 +587,7 @@ class z {
   #t() {
     let e = getInitialSettings().plansDirectory;
     if (e) {
-      let i = Q(),
+      let i = getCwd(),
         r = resolve(i, e);
       if (pe(r, i)) return r;
       n(`plansDirectory must be within project root: ${e}`, { level: "error" });
@@ -628,7 +628,7 @@ function pe(t, e) {
 async function m(t) {
   let e = getPlansDirectory();
   try {
-    await qt().mkdir(e);
+    await getFileStorage().mkdir(e);
   } catch (i) {
     n(`Failed to create plans directory ${e}: ${i}`, { level: "error" });
   }
@@ -636,7 +636,7 @@ async function m(t) {
 }
 async function saveRejectedUltraplan(t, e) {
   if (e && g()) {
-    let r = `${C5t()}-ultraplan`,
+    let r = `${generateAdjectiveVerbNounName()}-ultraplan`,
       s = d(await m(e), `${r}.md`),
       o = await e.write(p(r), t, w);
     if (!o.ok)
@@ -646,8 +646,8 @@ async function saveRejectedUltraplan(t, e) {
       );
     return s;
   }
-  let i = d(await m(), `${C5t()}-ultraplan.md`);
-  return (await qt().write(i, t), i);
+  let i = d(await m(), `${generateAdjectiveVerbNounName()}-ultraplan.md`);
+  return (await getFileStorage().write(i, t), i);
 }
 async function persistPlanEdit(t, e, i) {
   try {
@@ -663,7 +663,7 @@ async function persistPlanEdit(t, e, i) {
         H(t, o.error.code);
         return;
       }
-    } else await qt().write(t, e);
+    } else await getFileStorage().write(t, e);
     notePlanFileWritten(t, e);
   } catch (r) {
     H(t, r instanceof Error ? r.message : String(r));
@@ -794,7 +794,7 @@ async function V(t, e, i) {
   if (i && g()) return ge(i, t, e).catch(logError);
   let r = d(getPlansDirectory(), `${e}.workshop.md`);
   try {
-    await qt().read(r);
+    await getFileStorage().read(r);
     return;
   } catch (o) {
     if (!W(o)) {
@@ -807,7 +807,7 @@ async function V(t, e, i) {
   if (!s || s.content.length === 0 || s.content.length > WORKSHOP_DOC_SNAPSHOT_MAX_CHARS) return;
   try {
     (await m(),
-      await qt().write(r, s.content),
+      await getFileStorage().write(r, s.content),
       n(
         `Workshop doc recovered from file snapshot, ${s.content.length} chars`,
         { level: "info" },
@@ -870,7 +870,7 @@ async function copyPlanForResume(t, e, i) {
   let o = d(getPlansDirectory(), `${r}.md`);
   await V(t, r).catch(logError);
   try {
-    return (await qt().read(o), !0);
+    return (await getFileStorage().read(o), !0);
   } catch (l) {
     if (!W(l)) {
       if (Rt(l))
@@ -892,7 +892,7 @@ async function copyPlanForResume(t, e, i) {
       });
     if (c)
       try {
-        return (await m(), await qt().write(o, c), !0);
+        return (await m(), await getFileStorage().write(o, c), !0);
       } catch (f) {
         if (Rt(f)) return (n(`Plan recovery write failed for ${o}: ${f}`), !1);
         return (logError(f), !1);
@@ -994,7 +994,7 @@ async function copyPlanForFork(t, e, i) {
     return Pe(i, r, l).catch((c) => (logError(c), !1));
   await m();
   try {
-    await qt().copy(d(s, `${r}.workshop.md`), d(s, `${l}.workshop.md`));
+    await getFileStorage().copy(d(s, `${r}.workshop.md`), d(s, `${l}.workshop.md`));
   } catch (c) {
     if (!W(c))
       if (Rt(c)) n(`copyPlanForFork: workshop sibling copy failed: ${c}`);
@@ -1003,7 +1003,7 @@ async function copyPlanForFork(t, e, i) {
     notePlanFileForgotten(d(s, `${l}.workshop.md`));
   }
   try {
-    return (await qt().copy(o, u), !0);
+    return (await getFileStorage().copy(o, u), !0);
   } catch (c) {
     if (W(c)) return !1;
     if (Rt(c)) return (n(`copyPlanForFork: copy failed for ${o}: ${c}`), !1);

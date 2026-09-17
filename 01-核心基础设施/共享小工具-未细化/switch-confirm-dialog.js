@@ -12,7 +12,7 @@ import { Us } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91
 import { $N } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { It } from "./chunk-r3y9qj3r.js";
+import { useSetAppState } from "./app-state-context.js";
 import { useTerminalSize } from "./use-terminal-size.js";
 import { cHe } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { ConfirmPrompt } from "./confirm-prompt.js";
@@ -34,7 +34,7 @@ function ModelOrEffortSwitchDialog(oo) {
       onCancel: i,
     } = oo,
     { columns: y } = useTerminalSize(),
-    C = It(),
+    C = useSetAppState(),
     m = eo === "model",
     k = m ? "Switch model?" : "Change effort level?",
     A = m ? "model" : "effort level",

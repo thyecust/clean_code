@@ -13,13 +13,13 @@ import { aoe } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { _n, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isValidPathSegment, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { We, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { hO, uI } from "../../01-核心基础设施/共享小工具-未细化/chunk-y2pwa8n5.js";
-import { pze, Rpt, kpt, tFt, nFt, rFt } from "../跨会话消息(UDS)/chunk-qvnte9zp.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT } from "../../01-核心基础设施/共享小工具-未细化/file-transfer-config.js";
+import { sanitizePeerFileName, peerFileFailureNote, peerFileCountCapNote, tFt, nFt, rFt } from "../跨会话消息(UDS)/peer-file-transfer.js";
 import { getBridgeAccessToken, getBridgeAccessTokenAsync, getBridgeBaseUrl } from "../../01-核心基础设施/共享小工具-未细化/chunk-203p0p9a.js";
-import { Cce, gsn } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
+import { parseFileAttachments, dropEmptyTextBlocks } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import { Ds, bTe, Vzn, Kzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KNe, iJn } from "./chunk-0dcnsftb.js";
 import { randomUUID } from "crypto";
@@ -41,14 +41,14 @@ async function D(e, s, l, m, p) {
   let r;
   try {
     let o = `${getBridgeBaseUrl()}/api/oauth/files/${encodeURIComponent(e.file_uuid)}/content`;
-    if (typeof e.file_size === "number" && e.file_size > hO)
+    if (typeof e.file_size === "number" && e.file_size > MAX_TRANSFER_SIZE_BYTES)
       return { failure: "download" };
     let b = await at.get(o, {
       headers: { Authorization: `Bearer ${i}` },
       responseType: "arraybuffer",
       timeout: j,
-      maxContentLength: hO,
-      maxBodyLength: hO,
+      maxContentLength: MAX_TRANSFER_SIZE_BYTES,
+      maxBodyLength: MAX_TRANSFER_SIZE_BYTES,
       validateStatus: () => !0,
     });
     if (b.status !== 200)
@@ -56,7 +56,7 @@ async function D(e, s, l, m, p) {
         a(`fetch ${e.file_uuid} failed: status=${b.status}`),
         { failure: "download" }
       );
-    if (((r = Buffer.from(b.data)), r.length > hO))
+    if (((r = Buffer.from(b.data)), r.length > MAX_TRANSFER_SIZE_BYTES))
       return (
         a(`fetch ${e.file_uuid} over size cap (${r.length} bytes)`),
         { failure: "download" }
@@ -78,7 +78,7 @@ async function D(e, s, l, m, p) {
             (o) => (a(`inline ${e.file_uuid} threw: ${o}`), null),
           )
         : null,
-    d = u ? `image.${z[KNe(r)]}` : pze(e.file_name),
+    d = u ? `image.${z[KNe(r)]}` : sanitizePeerFileName(e.file_name),
     h = (
       u ? randomUUID().slice(0, 8) : e.file_uuid.slice(0, 8) || randomUUID().slice(0, 8)
     ).replace(/[^a-zA-Z0-9_-]/g, "_"),
@@ -86,8 +86,8 @@ async function D(e, s, l, m, p) {
     _ = Vzn(h, d),
     c = L(k, _),
     B = K();
-  if (isHoverRestEnabled() && m !== void 0 && _n(B) && _n(_)) {
-    let o = await m.write(Ce.userConfigDir("uploads", [B, _]), r, {
+  if (isHoverRestEnabled() && m !== void 0 && isValidPathSegment(B) && isValidPathSegment(_)) {
+    let o = await m.write(STORAGE_KEYS.userConfigDir("uploads", [B, _]), r, {
       mode: 384,
     });
     if (!o.ok)
@@ -100,7 +100,7 @@ async function D(e, s, l, m, p) {
     }
   if (s && e.sha256 === void 0)
     try {
-      Kzn(await realpath(c), mn(r));
+      Kzn(await realpath(c), hashSha256(r));
     } catch {
       a(`registration skipped for ${c}`);
     }
@@ -132,14 +132,14 @@ async function H(e, s, l, m, p) {
       logFeatureSad("bridge_attachment_resolve", "no_token"),
       i.length > 0)
     ) {
-      let t = i.length - uI,
-        I = t > 0 ? i.slice(0, uI) : i;
+      let t = i.length - MAX_TRANSFER_FILE_COUNT,
+        I = t > 0 ? i.slice(0, MAX_TRANSFER_FILE_COUNT) : i;
       nFt("bridge", I.length, 0);
-      let w = t > 0 ? " " + kpt(t) : "";
+      let w = t > 0 ? " " + peerFileCountCapNote(t) : "";
       return {
         prefix:
           I.map((R) =>
-            Rpt(R.file_name, "it could not be downloaded (not signed in)"),
+            peerFileFailureNote(R.file_name, "it could not be downloaded (not signed in)"),
           ).join(" ") +
           w +
           " ",
@@ -151,14 +151,14 @@ async function H(e, s, l, m, p) {
   }
   let u = [],
     d = e,
-    h = d.length > uI;
+    h = d.length > MAX_TRANSFER_FILE_COUNT;
   if (h) {
     if (
-      (a(`dropping ${d.length - uI} attachment(s) over the ${uI} cap`),
+      (a(`dropping ${d.length - MAX_TRANSFER_FILE_COUNT} attachment(s) over the ${MAX_TRANSFER_FILE_COUNT} cap`),
       i.length > 0)
     )
-      u.push(kpt(d.length - uI));
-    d = d.slice(0, uI);
+      u.push(peerFileCountCapNote(d.length - MAX_TRANSFER_FILE_COUNT));
+    d = d.slice(0, MAX_TRANSFER_FILE_COUNT);
   }
   let k = s && l,
     _ = Ds(4, (t) => D(t, s, k, m, p)),
@@ -181,7 +181,7 @@ async function H(e, s, l, m, p) {
         if (P) F++;
       } else {
         if (t.failure === "digest_mismatch") x = !0;
-        if (P) u.push(Rpt(w.file_name, U[t.failure]));
+        if (P) u.push(peerFileFailureNote(w.file_name, U[t.failure]));
       }
     }),
     v > 0)
@@ -225,12 +225,12 @@ function G(e, s) {
       ? e.trim() === ""
         ? []
         : [{ type: "text", text: e }]
-      : gsn(e);
+      : dropEmptyTextBlocks(e);
   return [...s, ...l];
 }
 async function dIt(e, s, l, m, p) {
   let i = s ?? "",
-    r = Cce(e);
+    r = parseFileAttachments(e);
   if (r.length === 0) return { content: i, inlinedImagePaths: [] };
   let u = l && !(typeof i === "string" && aoe(i)),
     {

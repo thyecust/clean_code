@@ -10,17 +10,17 @@
 
 // [preload stripped] 原本在此预载 253 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { pt } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { l_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
-import "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -37,13 +37,13 @@ import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-elapsed-duration.js";
 import "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-s3mpt973.js";
+import "../../01-核心基础设施/共享小工具-未细化/mcp-tool-base.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
+import "../Diff引擎/structured-diff.js";
 import "../../01-核心基础设施/共享小工具-未细化/resumed-agent-handback.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-use-message-renderers.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-pazpsfq6.js";
-import "../../01-核心基础设施/核心工具-字符串与文本/chunk-0mg59v9m.js";
+import "../../01-核心基础设施/核心工具-字符串与文本/verb-conjugation.js";
 import "../GitHub集成/chunk-bfz9rjjm.js";
 import "../Bridge-RemoteControl/chunk-sc8n0cp3.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
@@ -51,7 +51,7 @@ import { BashToolOutputView } from "../工具Bash-Shell/bash-output-view.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "./chunk-g4k5jjwt.js";
 import "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-400h8hta.js";
+import "../../01-核心基础设施/共享小工具-未细化/private-host-detection.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
@@ -63,7 +63,7 @@ import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
 import "../../01-核心基础设施/核心工具-日期与本地化/核心工具-日期与本地化.ed6v6hnd.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-pvfkaage.js";
+import "../../01-核心基础设施/共享小工具-未细化/slack-send-tool.js";
 import "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -131,7 +131,7 @@ function O(V) {
         if (b[6] !== d || b[7] !== f)
           ((i =
             typeof d === "string"
-              ? e(l_, { content: pt(d), verbose: f })
+              ? e(ToolResultContent, { content: stripAnsi(d), verbose: f })
               : e(ToolResultRow, {
                   children: e(EmptyStateMessage, { children: "No task output available" }),
                 })),
@@ -168,7 +168,7 @@ function O(V) {
       }
       if (a.task_type === "local_agent") {
         let Y = a.result
-          ? ln(
+          ? countOccurrences(
               a.result,
               `
 `,

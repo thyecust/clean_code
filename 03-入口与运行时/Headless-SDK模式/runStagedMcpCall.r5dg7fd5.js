@@ -15,11 +15,11 @@ import { Si } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
-import { pve } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { getPluginToolStagingDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SYNCED_FILE_ROOT, WORKING_FILESTORE_PREFIX, MAX_WORKING_FILE_BYTES, relUnderSyncDir, getSyncedFile, writeLaneRowFromWorker } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Tot } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { parseIsoTimestamp } from "../../02-功能模块/Memory-CLAUDE.md/chunk-3ehd7vx0.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { constants } from "fs";
 import {
@@ -107,7 +107,7 @@ async function ft(e, t) {
   let a = bCt().safeParse(e);
   if (!a.success) return r("tool_error", `invalid request: ${a.error.message}`);
   let i = a.data;
-  if (P() === "windows")
+  if (getCurrentPlatform() === "windows")
     return r("tool_error", "staged mcp_call is not supported on this platform");
   if (i.output_files !== void 0 && i.expires_at === void 0)
     return r(
@@ -115,7 +115,7 @@ async function ft(e, t) {
       "invalid request: expires_at is required when output_files are declared",
     );
   if (i.expires_at !== void 0) {
-    let n = Tot(i.expires_at);
+    let n = parseIsoTimestamp(i.expires_at);
     if (Number.isNaN(n))
       return r(
         "expired",
@@ -192,7 +192,7 @@ async function ft(e, t) {
   let w;
   try {
     let n;
-    if (t.tempRoot === void 0) n = pve();
+    if (t.tempRoot === void 0) n = getPluginToolStagingDir();
     else ((n = t.tempRoot), await mkdir(n, { recursive: !0, mode: 448 }));
     ((w = await mkdtemp(x(n, "plugin-tool-"))),
       await mkdir(x(w, "in"), { mode: 448 }),

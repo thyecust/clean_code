@@ -10,19 +10,19 @@
 
 // [preload stripped] 原本在此预载 276 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ia, isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { IF, due, I3, YO } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-jfk5mpe1.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-xmxjyg29.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-9fpz6abc.js";
 import "../../02-功能模块/后台任务-Shell管理/chunk-gnmy62vg.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-yrv8wzwe.js";
+import "../../01-核心基础设施/共享小工具-未细化/session-env-scrubbing.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { h4 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { handlePromptInputExit } from "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
@@ -37,21 +37,21 @@ import "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js
 import "../../02-功能模块/Wellbeing-使用时长/Wellbeing-使用时长.0s8r3ncd.js";
 import "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import "../../02-功能模块/状态栏-主题/chunk-jrr487ty.js";
-import { Tv } from "../../02-功能模块/Hooks钩子/chunk-22aft7vr.js";
+import { pickRandom } from "../../02-功能模块/Hooks钩子/spinner-store.js";
 import "../../01-核心基础设施/共享小工具-未细化/expanded-content-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-y9z0dpn0.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/chunk-wj93jy9j.js";
 import { r0e } from "../../02-功能模块/反馈-错误上报/反馈-错误上报.grgh562d.js";
-import { YWe } from "../../02-功能模块/反馈-错误上报/chunk-rmpn4ety.js";
+import { discardFeedbackDraft } from "../../02-功能模块/反馈-错误上报/feedback-draft-submit.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../../02-功能模块/Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { vBn } from "../../02-功能模块/后台任务-Shell管理/chunk-nhnqmzyt.js";
+import "../../02-功能模块/Bridge-RemoteControl/remote-control-ui-strings.js";
+import { buildInFlightTaskItems } from "../../02-功能模块/后台任务-Shell管理/background-task-inventory.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-tpraq69b.js";
 import { C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
@@ -67,7 +67,7 @@ function N(me) {
     A;
   if (n[0] !== i || n[1] !== V)
     ((A = async function S() {
-      for (const fe of i) await YWe(fe, "exit_nudge", V).catch(z);
+      for (const fe of i) await discardFeedbackDraft(fe, "exit_nudge", V).catch(z);
     }),
       (n[0] = i),
       (n[1] = V),
@@ -131,7 +131,7 @@ function N(me) {
   const R = i.length;
   let l;
   if (n[17] !== i.length)
-    ((l = x(i.length, "feedback draft")), (n[17] = i.length), (n[18] = l));
+    ((l = pluralize(i.length, "feedback draft")), (n[17] = i.length), (n[18] = l));
   else l = n[18];
   let B;
   if (n[19] !== i.length || n[20] !== l)
@@ -164,12 +164,12 @@ function N(me) {
 }
 var H = ["Goodbye!", "See ya!", "Bye!", "Catch you later!"];
 function L() {
-  return Tv(H) ?? "Goodbye!";
+  return pickRandom(H) ?? "Goodbye!";
 }
 async function Be(s, o) {
   if (isBgSession()) return (s(), HB(), null);
   let m = Ia() !== null,
-    u = vBn(),
+    u = buildInFlightTaskItems(),
     y =
       m || u.length > 0
         ? (g) =>
@@ -196,14 +196,14 @@ async function Be(s, o) {
         messages: [...o.messages],
         renderExitFlow: y,
         onExit: () => {
-          (s(L()), h4(IF(o), { responseStreaming: due(o) }, o.storageV5));
+          (s(L()), handlePromptInputExit(IF(o), { responseStreaming: due(o) }, o.storageV5));
         },
       });
   }
   if (y) return y();
   return (
     s(L()),
-    await h4(IF(o), { responseStreaming: due(o) }, o.storageV5),
+    await handlePromptInputExit(IF(o), { responseStreaming: due(o) }, o.storageV5),
     null
   );
 }

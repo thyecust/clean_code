@@ -9,7 +9,7 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 17 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { K0n, X0n, t7t, n7t } from "./chunk-5ss8pwgq.js";
+import { pinStorageV5FromEnv as K0n, adoptStorageV5EnvPin as X0n, recordHoverRestDecision as t7t, tryCreateV5Backend as n7t } from "./storage-v5-env-pin.js";
 export {
   X0n as adoptStorageV5EnvPin,
   K0n as pinStorageV5FromEnv,

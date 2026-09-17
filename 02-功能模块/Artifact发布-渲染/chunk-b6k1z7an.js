@@ -14,13 +14,13 @@ import { Xn, Lx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { dv, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, Lz } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits, stripAnsiAndControlChars } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yir, bir } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ht, Rp, XC, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { ts, Js } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { Hd } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { isDesktopHostEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { isCancel } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { ASSET_ID_RE, ARTIFACT_SLUG_RE, ARTIFACT_DELETED_NOTE_TAG, uuidSlugFromUrl, DEFAULT_LIST_LIMIT, LIST_LIMIT_MAX } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
@@ -90,12 +90,12 @@ import {
   DB_CLAUSES,
   DB_BATCH_OP,
 } from "./chunk-pdd7kz7p.js";
-import { GI } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { N5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { e9n, t9n, I7, n9n, H9, _pt } from "./chunk-5gz5xvw9.js";
 import { U6n, B6n, j6n, Vsn, endFrameLiveWatchOfDeletedArtifact } from "./chunk-kshc4v5t.js";
 import { Ccn, N9, F9 } from "./chunk-stvynqrz.js";
-import { FE } from "../../01-核心基础设施/共享小工具-未细化/chunk-c822xsqz.js";
+import { ARTIFACT_CAPABILITIES_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/共享小工具-未细化/environment-kind.js";
 import { s, T, O, Uf, se, v, Qe, $e, uW, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -386,8 +386,8 @@ function Lt(e, r, t) {
 var Te = /(?:^|[^A-Za-z_])(url|trigger_id)[ \t]*:|sealed_secret/i;
 function Oe(e) {
   if (Te.test(e)) return;
-  let r = oe(e, Ft),
-    t = r.split(ze).map((b) => Lz(b.replaceAll("\t", " ")).replace(Mt, ""));
+  let r = truncateToCodeUnits(e, Ft),
+    t = r.split(ze).map((b) => stripAnsiAndControlChars(b.replaceAll("\t", " ")).replace(Mt, ""));
   if (t.some((b) => Te.test(b))) return;
   let i = t.findIndex((b) => b.trim() !== "");
   if (i === -1) return;
@@ -404,7 +404,7 @@ function Oe(e) {
     .filter((b, p, w) => b !== Q || w[p - 1] !== Q);
   if (!l.some((b) => b !== Q && b !== ce && !Le.test(b))) return;
   let d = l.join(" ");
-  return d.length > Ce ? `${oe(d, Ce - 3)}...` : d;
+  return d.length > Ce ? `${truncateToCodeUnits(d, Ce - 3)}...` : d;
 }
 function zt(e) {
   let r = "content" in e ? e.content : void 0;
@@ -425,7 +425,7 @@ function zt(e) {
 }
 async function Ue(e, r, t) {
   try {
-    let i = await GI(e, { name: r, arguments: t }, { timeout: 15000 });
+    let i = await invokeMcpToolRaw(e, { name: r, arguments: t }, { timeout: 15000 });
     return { isError: "isError" in i && i.isError === !0, text: zt(i) };
   } catch {
     return null;
@@ -584,7 +584,7 @@ async function Ie(e, r, t, i) {
   if (o && o !== i) return Ge(o);
   if ((H9({ storageV5: r.storageV5 }), ne().durable.stopLatches.isStopped(e)))
     return { outcome: "skipped", reason: "stop_latched" };
-  if (St() || getAPIProvider() !== "firstParty")
+  if (isEssentialTrafficOnly() || getAPIProvider() !== "firstParty")
     return { outcome: "failed", reason: "client_policy" };
   if (t && ne().durable.originatorRefused)
     return { outcome: "failed", reason: "no_originator", latched: !0 };
@@ -1538,7 +1538,7 @@ function lt() {
   return fe(s().min(1).max(64), se())
     .optional()
     .describe(
-      `Runtime capabilities this page declares, as {name: config}. The control plane is the authority on valid names and config shapes. An empty object clears any previously stored declaration; omit the field on a redeploy to carry the stored declaration forward unchanged. Before declaring any capability, load the \`${FE}\` skill for the current contract and per-capability guidance.`,
+      `Runtime capabilities this page declares, as {name: config}. The control plane is the authority on valid names and config shapes. An empty object clears any previously stored declaration; omit the field on a redeploy to carry the stored declaration forward unchanged. Before declaring any capability, load the \`${ARTIFACT_CAPABILITIES_SKILL_NAME}\` skill for the current contract and per-capability guidance.`,
     );
 }
 function Jon(e) {
@@ -1573,7 +1573,7 @@ function Qon(e) {
   return [...t];
 }
 function sr() {
-  return Hd();
+  return isDesktopHostEntrypoint();
 }
 function lr(e) {
   let r = new Map(),

@@ -13,24 +13,24 @@ import { createLazyValue } from "../../01-核心基础设施/共享小工具-未
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, gxe, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ZU } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceInvisibleChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { gm, i_ } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Ri, hW } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { Zsr } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { RRe, $R } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
+import { renameWithRetry, writeNewFileExclusive } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { clampColorLevelForAttacher } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
+import { readSocketTokenFile, timingSafeStringEqual } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
-import { _M, tue } from "../../01-核心基础设施/共享小工具-未细化/chunk-dhg3raay.js";
+import { getPromptInputStore, setPromptInputValue } from "../../01-核心基础设施/共享小工具-未细化/prompt-input-store.js";
 import { writeStateAtomic, logJobWriteError, readJobState, withOwnJobStateWrite, SEED_DETAIL, IDLE_NEEDS, isOverlayNeeds, PRE_BOOT_STATES } from "./chunk-7wsy8vxb.js";
 import { Du, BS, tVn, Jgt, zS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { _ln, Mze } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import { _ln, markDetached } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getInkInstanceRegistry } from "../../01-核心基础设施/共享小工具-未细化/ink-instance-registry.js";
-import { Dze, Lze } from "../../01-核心基础设施/共享小工具-未细化/chunk-t31b4117.js";
-import { Og, Qb } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
-import { cft } from "../../01-核心基础设施/共享小工具-未细化/chunk-28p6k62j.js";
+import { hasEarlyInput, seedEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
+import { getDraftMode, getDraftValue } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
+import { setSystemTheme } from "../../01-核心基础设施/共享小工具-未细化/theme-resolution.js";
 import { s, T, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { unlink } from "fs/promises";
 import { createServer } from "net";
@@ -86,7 +86,7 @@ function D(e) {
     )
     .replaceAll("\t", "    ")
     .split(/\u200C+/)) {
-    let i = ZU(o, "", { keepNewlines: !0 });
+    let i = replaceInvisibleChars(o, "", { keepNewlines: !0 });
     if (i === "") continue;
     if (r !== "" && /\S$/.test(r) && /^\S/.test(i)) t.push("\u200C");
     (t.push(i), (r = i));
@@ -95,9 +95,9 @@ function D(e) {
 }
 async function E(e, t) {
   await _(e, { force: !0 });
-  let r = await hW(e, t, 384);
+  let r = await writeNewFileExclusive(e, t, 384);
   try {
-    await Ri(r, e);
+    await renameWithRetry(r, e);
   } catch (o) {
     throw (await _(r, { force: !0 }).catch(() => {}), o);
   }
@@ -122,7 +122,7 @@ function re(e) {
   if (((u += p.slice(l)), u.trim() === "")) return null;
   return {
     text: u,
-    cursorOffset: oe(u, Math.min(o, u.length)).length,
+    cursorOffset: truncateToCodeUnits(u, Math.min(o, u.length)).length,
     pastedContents: {},
     launchWarning: d,
   };
@@ -210,7 +210,7 @@ class H {
   nativeBrowserEnv;
   pendingInteractiveMarks;
   storageV5;
-  promptInput = _M(V());
+  promptInput = getPromptInputStore(V());
   promptStash = new A(this.promptInput);
   constructor(e, t, r, o, i) {
     ((this.authToken = t),
@@ -313,7 +313,7 @@ class H {
     if (!t || typeof t !== "object") return;
     if ("role" in t) {
       if (this.authToken)
-        if ("auth" in t && $R(t.auth, this.authToken)) {
+        if ("auth" in t && timingSafeStringEqual(t.auth, this.authToken)) {
           if (((this.currentAuthed = !0), !this.gateReported))
             ((this.gateReported = !0), logFeatureOk("bg_rv_gate"));
         } else {
@@ -351,12 +351,12 @@ class H {
   }
   handleAttacherCaps(e) {
     if ((PDn(e.caps), yrt(!0), e.caps)) _ln(Date.now());
-    else Mze();
-    if ((Zsr(e.caps?.colorLevel), !e.caps)) this.restoreNativeBrowserEnv();
+    else markDetached();
+    if ((clampColorLevelForAttacher(e.caps?.colorLevel), !e.caps)) this.restoreNativeBrowserEnv();
     else if (typeof e.caps.browser === "string")
       process.env.BROWSER = e.caps.browser;
     else delete process.env.BROWSER;
-    if (e.caps?.systemTheme) cft(e.caps.systemTheme);
+    if (e.caps?.systemTheme) setSystemTheme(e.caps.systemTheme);
   }
   async waitForInkMount(e) {
     for (let t = 0; !getInkInstanceRegistry().has(process.stdout); t++) {
@@ -482,9 +482,9 @@ class H {
     await unlink(t).catch(() => {});
     let o = D(r);
     if (!o) return;
-    if (!Dze()) Lze(o);
+    if (!hasEarlyInput()) seedEarlyInput(o);
     if (!(await this.waitForInkMount(this.current))) return;
-    if (this.promptInput.getState().value === "") tue(this.promptInput, o);
+    if (this.promptInput.getState().value === "") setPromptInputValue(this.promptInput, o);
   }
 }
 class J {
@@ -516,7 +516,7 @@ async function startRendezvousServer(e) {
   delete process.env.CLAUDE_BG_RV_AUTH;
   let p = a.CLAUDE_BG_SOCKET_TOKENS_PATH;
   if ((delete process.env.CLAUDE_BG_SOCKET_TOKENS_PATH, p)) {
-    let u = await RRe(p);
+    let u = await readSocketTokenFile(p);
     if (u?.rvAuth) d = u.rvAuth;
     await unlink(p).catch(() => {});
   }
@@ -561,11 +561,11 @@ function le(e) {
     n(`[bg-rv] peer reply answered question: ${e.text.slice(0, 80)}`);
     return;
   }
-  let t = Og(e.text);
+  let t = getDraftMode(e.text);
   (BS({
     agentId: ze(),
     mode: t,
-    value: Qb(e.text),
+    value: getDraftValue(e.text),
     priority: "next",
     origin: { kind: "human" },
   }),
@@ -648,7 +648,7 @@ var Y = ".prompt-draft",
 async function me(e, t) {
   let r = e.getState().value;
   if (!r) return;
-  await E(F(t, Y), oe(r, Q));
+  await E(F(t, Y), truncateToCodeUnits(r, Q));
 }
 async function fe(e, t, r) {
   let o = await readJobState(e, r);

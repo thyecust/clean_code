@@ -9,12 +9,12 @@
 // Version: 2.1.263
 import { _ } from "../../react/react.zhnvc798.js";
 import { useVoiceSelector } from "../../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
-import { Va } from "../../../01-核心基础设施/共享小工具-未细化/chunk-k0wct4tn.js";
+import { useTerminalFocus } from "../../../01-核心基础设施/共享小工具-未细化/clock-and-terminal-focus.js";
 import { useClock } from "../../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { useNotificationQueue } from "../../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
-import { yQ, ie } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
-import { cn } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
-import { pt } from "../../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { invertText, chalk } from "../../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
+import { useTheme } from "../../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
+import { stripAnsi } from "../../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { o, t, jr, tn, bs } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { lF } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { NI, nK, Ape, fNe } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
@@ -128,7 +128,7 @@ function rat({ isTerminalFocused: i, canPasteImages: a }) {
 }
 F();
 function ee(i, a, c) {
-  let m = pt(a)
+  let m = stripAnsi(a)
       .split(
         `
 `,
@@ -557,14 +557,14 @@ function ze({
   showCursor: c,
   focus: m,
   terminalFocus: h = !0,
-  invert: l = yQ,
+  invert: l = invertText,
   hidePlaceholderText: s = !1,
 }) {
   let u = void 0;
   if (i) {
     if (s) u = c && m && h ? l(" ") : "";
-    else if (((u = ie.dim(i)), c && m && h))
-      u = i.length > 0 ? l(i[0]) + ie.dim(i.slice(1)) : l(" ");
+    else if (((u = chalk.dim(i)), c && m && h))
+      u = i.length > 0 ? l(i[0]) + chalk.dim(i.slice(1)) : l(" ");
   }
   let f = a.length === 0 && Boolean(i);
   return { renderedPlaceholder: u, showPlaceholder: f };
@@ -580,8 +580,8 @@ function Ut(Kn) {
 }
 function hn(n) {
   let L = _(54),
-    [Xe] = cn(),
-    R = Va(),
+    [Xe] = useTheme(),
+    R = useTerminalFocus(),
     Dt;
   if (L[0] === MEMO_CACHE_SENTINEL) ((Dt = lF()), (L[0] = Dt));
   else Dt = L[0];
@@ -600,7 +600,7 @@ function hn(n) {
   rat(Bt);
   let Ft;
   if (L[4] !== G || L[5] !== R)
-    ((Ft = !R ? jt : G ? () => ie.hex(G.hex)(G.char) : pn ? Ut : yQ),
+    ((Ft = !R ? jt : G ? () => chalk.hex(G.hex)(G.char) : pn ? Ut : invertText),
       (L[4] = G),
       (L[5] = R),
       (L[6] = Ft));
@@ -703,7 +703,7 @@ function hn(n) {
       getPastedContents: n.getPastedContents,
       getInputMode: n.getInputMode,
       inlineGhostText: n.inlineGhostText,
-      dim: ie.dim,
+      dim: chalk.dim,
     }),
       (L[9] = q),
       (L[10] = ge),

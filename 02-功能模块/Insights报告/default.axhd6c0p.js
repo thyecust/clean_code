@@ -12,20 +12,20 @@
 import { vTe, asSystemPrompt, U3, LEe, xr, getSessionIdFromLog, getSessionFilesWithMtime, loadAllLogsFromSessionFile, UY } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Xn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { R, dt, ge, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { We, b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { oe, ft, ln } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { ixe, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits, beforeFirst, countOccurrences } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { LOCAL_COMMAND_TAGS, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getDefaultOpusModel, aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { go } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
-import { Pl } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir } from "../Teammates团队/transcript-paths.js";
 import { createJsonFileStore } from "../../01-核心基础设施/共享小工具-未细化/json-file-store.js";
-import { mt, Vh } from "../工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME, TASK_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
 import { s, T, O, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { Uc, Qo } from "../../01-核心基础设施/共享小工具-未细化/chunk-0hk68fj9.js";
+import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/共享小工具-未细化/paginated-scan.js";
 import {
   mkdir,
   readdir,
@@ -34,7 +34,7 @@ import {
   writeFile,
 } from "fs/promises";
 import { extname, join as q } from "path";
-var Pe = new RegExp(`<(${ixe.join("|")})>[\\s\\S]*?(?:</\\1>|$)`, "g");
+var Pe = new RegExp(`<(${LOCAL_COMMAND_TAGS.join("|")})>[\\s\\S]*?(?:</\\1>|$)`, "g");
 function Me(e) {
   return e.replace(Pe, "").trim();
 }
@@ -69,24 +69,24 @@ function ve(e, t) {
         if (i.has(p)) continue;
         i.add(p);
       }
-      for (let r of ce(l)) o.push(`[User]: ${oe(r, t.userTextChars)}`);
+      for (let r of ce(l)) o.push(`[User]: ${truncateToCodeUnits(r, t.userTextChars)}`);
       continue;
     }
     if (a.type === "user" && a.message) {
       if (a.isCompactSummary) {
         for (let l of ce(a.message.content))
           o.push(
-            `[Summary of earlier conversation]: ${oe(l, t.userTextChars)}`,
+            `[Summary of earlier conversation]: ${truncateToCodeUnits(l, t.userTextChars)}`,
           );
         continue;
       }
       if (!U3(a) || (typeof a.uuid === "string" && i.has(a.uuid))) continue;
       for (let l of ce(a.message.content))
-        o.push(`[User]: ${oe(l, t.userTextChars)}`);
+        o.push(`[User]: ${truncateToCodeUnits(l, t.userTextChars)}`);
     } else if (a.type === "assistant" && a.message) {
       for (let l of ye(a.message.content))
         if (l.type === "text" && typeof l.text === "string")
-          o.push(`[Assistant]: ${oe(l.text, t.assistantTextChars)}`);
+          o.push(`[Assistant]: ${truncateToCodeUnits(l.text, t.assistantTextChars)}`);
         else if (l.type === "tool_use" && typeof l.name === "string")
           o.push(`[Tool: ${l.name}]`);
     }
@@ -216,7 +216,7 @@ var Ae = createLazyValue(() =>
     essential: "Essential",
   };
 function se() {
-  return q(be(), "usage-data");
+  return q(getClaudeConfigDir(), "usage-data");
 }
 function ae() {
   return q(se(), "facets");
@@ -225,13 +225,13 @@ function Ye() {
   return q(se(), "session-meta");
 }
 function ue(e) {
-  return Ce.userConfigDir("usage-data", ["facets", `${e}.json`]);
+  return STORAGE_KEYS.userConfigDir("usage-data", ["facets", `${e}.json`]);
 }
 function Ie(e) {
-  return Ce.userConfigDir("usage-data", ["session-meta", `${e}.json`]);
+  return STORAGE_KEYS.userConfigDir("usage-data", ["session-meta", `${e}.json`]);
 }
 function Ve(e) {
-  return Ce.userConfigDir("usage-data", [e]);
+  return STORAGE_KEYS.userConfigDir("usage-data", [e]);
 }
 async function Je(e, t, o) {
   let i = q(se(), `report-${t}.html`);
@@ -353,7 +353,7 @@ function Qe(e) {
         for (let u of Y)
           if (u.type === "tool_use" && "name" in u) {
             let C = u.name;
-            if (((t[C] = (t[C] || 0) + 1), C === mt || C === Vh)) w = !0;
+            if (((t[C] = (t[C] || 0) + 1), C === AGENT_TOOL_NAME || C === TASK_TOOL_NAME)) w = !0;
             if (C.startsWith("mcp__")) H = !0;
             if (C === "WebSearch") B = !0;
             if (C === "WebFetch") y = !0;
@@ -377,7 +377,7 @@ function Qe(e) {
                 let L = te(S.content);
                 if (L)
                   E +=
-                    ln(
+                    countOccurrences(
                       L,
                       `
 `,
@@ -914,15 +914,15 @@ function lt(e, t) {
     if (o.session_summaries.length < 50)
       o.session_summaries.push({
         id: r.session_id.slice(0, 8),
-        date: ft(r.start_time, "T"),
+        date: beforeFirst(r.start_time, "T"),
         summary: r.summary || r.first_prompt.slice(0, 100),
         goal: g?.underlying_goal,
       });
   }
   if (
     (i.sort(),
-    (o.date_range.start = ft(i[0] ?? "", "T")),
-    (o.date_range.end = ft(i.at(-1) ?? "", "T")),
+    (o.date_range.start = beforeFirst(i[0] ?? "", "T")),
+    (o.date_range.end = beforeFirst(i.at(-1) ?? "", "T")),
     (o.user_response_times = a),
     a.length > 0)
   ) {
@@ -930,7 +930,7 @@ function lt(e, t) {
     ((o.median_response_time = r[Math.floor(r.length / 2)] || 0),
       (o.avg_response_time = a.reduce((g, d) => g + d, 0) / a.length));
   }
-  let p = new Set(i.map((r) => ft(r, "T")));
+  let p = new Set(i.map((r) => beforeFirst(r, "T")));
   return (
     (o.days_active = p.size),
     (o.messages_per_day =
@@ -2145,7 +2145,7 @@ async function xt(e) {
     let l = [];
     switch (
       (
-        await Qo(
+        await runPaginatedScan(
           (f) =>
             e.listEntries(
               { namespace: "transcript" },
@@ -2169,19 +2169,19 @@ async function xt(e) {
         return [];
       case "capped":
         n(
-          `insights: project listing truncated at ${Uc} pages; scanning the ${l.length} projects seen`,
+          `insights: project listing truncated at ${DEFAULT_MAX_PAGES} pages; scanning the ${l.length} projects seen`,
           { level: "warn" },
         );
         break;
     }
     let r = [],
-      g = { pagesLeft: Uc },
+      g = { pagesLeft: DEFAULT_MAX_PAGES },
       d = 0;
     for (let f = 0; f < l.length; f++) {
       let w = l[f];
       switch (
         (
-          await Qo(
+          await runPaginatedScan(
             (x) =>
               e.listEntries(
                 { namespace: "transcript", projectKey: w },
@@ -2201,7 +2201,7 @@ async function xt(e) {
                 if (!j) continue;
                 r.push({
                   sessionId: j,
-                  key: Ce.transcript(w, j),
+                  key: STORAGE_KEYS.transcript(w, j),
                   mtime: P.mtimeMs ?? 0,
                   size: P.size ?? 0,
                 });
@@ -2218,7 +2218,7 @@ async function xt(e) {
         case "capped":
           if (d === 0)
             n(
-              `insights: session listing for project ${w} truncated (the scan's ${Uc}-page session-listing budget is spent); keeping the sessions seen`,
+              `insights: session listing for project ${w} truncated (the scan's ${DEFAULT_MAX_PAGES}-page session-listing budget is spent); keeping the sessions seen`,
               { level: "warn" },
             );
           d++;
@@ -2233,7 +2233,7 @@ async function xt(e) {
       );
     return (r.sort((f, w) => w.mtime - f.mtime), r);
   }
-  let t = Pl(),
+  let t = getProjectsDir(),
     o;
   try {
     o = await readdir(t, { withFileTypes: !0 });

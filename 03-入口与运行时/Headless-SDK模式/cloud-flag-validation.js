@@ -1,0 +1,115 @@
+// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.
+// By using Claude Code, you agree that all code acceptance or rejection decisions you make,
+// and the associated conversations in context, constitute Feedback under Anthropic's Commercial Terms,
+// and may be used to improve Anthropic's products, including training models.
+// You are responsible for reviewing any code suggestions before use.
+
+// (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
+
+// Version: 2.1.263
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { escapeControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
+import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+var s =
+  "To reattach to a cloud session, pass its id: `claude --cloud <session-id>` (find IDs at claude.ai/code).";
+function getCloudFlagConflictError(e) {
+  let n = "--cloud",
+    o = `
+${s}`;
+  if (e.hasPool) ((n = "--environment"), (o = ""));
+  if (e.print && !e.hasPool && !e.isCloudAttach) {
+    if (e.loneWordValue !== void 0)
+      return `Error: --cloud ${truncateAndEscapeValue(e.loneWordValue)} is not a cloud session ID or URL.
+With --print, --cloud sends the prompt to an existing cloud session: pass its ID (session_... or cse_...) or its claude.ai/code URL. To start a new cloud session from a description instead, drop --print.`;
+    return `Error: ${n} cannot be combined with --print.
+Starting a new cloud session with ${n} is interactive only: drop --print, or drop ${n} to run locally. To message an existing cloud session instead, pass its ID: \`claude -p "message" --cloud <session-id>\` (find IDs at claude.ai/code).`;
+  }
+  if (e.nonInteractive && !e.hasPool && !e.isCloudAttach && !e.headlessCloud) {
+    if (e.loneWordValue !== void 0)
+      return `Error: --cloud ${truncateAndEscapeValue(e.loneWordValue)} is not a cloud session ID or URL.
+Without an interactive terminal, --cloud can only send the prompt to an existing cloud session: pass its ID (session_... or cse_...) or its claude.ai/code URL. To start a new cloud session, run from a TTY.`;
+    return `Error: ${n} requires an interactive terminal.
+Non-interactive invocations (piped stdout, --init-only, --sdk-url) run locally and would silently ignore ${n}. Drop ${n}, or run from a TTY.`;
+  }
+  if (e.continue) return `Error: ${n} cannot be combined with --continue.${o}`;
+  if (e.hasConnect || e.hasSSH || e.hasAssistant || e.hasTeleport) {
+    let t = e.hasConnect
+      ? "a cc:// connect URL"
+      : e.hasSSH
+        ? "`claude ssh`"
+        : e.hasAssistant
+          ? "`claude assistant`"
+          : "--teleport";
+    return `Error: ${n} cannot be combined with ${t} \u2014 both select a remote backend; pick one.`;
+  }
+  if (e.resume || e.fromPr) {
+    let t = e.resume ? "--resume" : "--from-pr";
+    return `Error: ${n} cannot be combined with ${t}.${o}`;
+  }
+  return null;
+}
+function isHeadlessCloudRun(e) {
+  return (
+    !e.print &&
+    !e.initOnly &&
+    e.nonInteractive &&
+    !e.hasSdkUrl &&
+    e.inputFormat === "stream-json" &&
+    e.outputFormat === "stream-json"
+  );
+}
+function getBackgroundFlagConflictMessage(e) {
+  if (
+    e.some(
+      (n) =>
+        n === "--environment" ||
+        n.startsWith("--environment=") ||
+        n === "--pool" ||
+        n.startsWith("--pool="),
+    )
+  )
+    return "--bg and --environment are different backends. Use `claude -p '<task>' --environment <id>` directly to start a session on the environment.";
+  return "--bg and --cloud are different backends. Use `claude --cloud '<task>'` directly to start a cloud session.";
+}
+function hasRemoteBackendFlag(e) {
+  if (
+    e.some(
+      (n) =>
+        n === "--environment" ||
+        n.startsWith("--environment=") ||
+        n === "--pool" ||
+        n.startsWith("--pool="),
+    )
+  )
+    return !0;
+  return e.some(
+    (n) =>
+      n === "--cloud" ||
+      n.startsWith("--cloud=") ||
+      n === "--remote" ||
+      n.startsWith("--remote="),
+  );
+}
+function stripEnvironmentFlags(e) {
+  let n = [];
+  for (let o = 0; o < e.length; o++) {
+    let t = e[o];
+    if (t === "--") {
+      for (let i = o; i < e.length; i++) n.push(e[i]);
+      break;
+    }
+    if (t.startsWith("--environment=") || t.startsWith("--pool=")) continue;
+    if (t === "--environment" || t === "--pool") {
+      if (e[o + 1] !== void 0 && !e[o + 1].startsWith("-")) o++;
+      continue;
+    }
+    n.push(t);
+  }
+  return n;
+}
+var a = 100;
+function truncateAndEscapeValue(e) {
+  let n = truncateToCodeUnits(e, a);
+  return escapeControlChars(b(n.length < e.length ? `${n}\u2026` : n));
+}
+export { getCloudFlagConflictError, isHeadlessCloudRun, getBackgroundFlagConflictMessage, hasRemoteBackendFlag, stripEnvironmentFlags, truncateAndEscapeValue };

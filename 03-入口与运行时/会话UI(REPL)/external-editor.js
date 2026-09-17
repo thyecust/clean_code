@@ -13,7 +13,7 @@ import { Jhe, ae, n } from "../../01-核心基础设施/核心工具-日志与�
 import { qR, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { wS, tXt } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { K7, hue, j9, Ng } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { WJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { Td } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { spawn, spawnSync as S } from "child_process";
 import { basename } from "path";
@@ -214,7 +214,7 @@ function U(t) {
 }
 function editTextInExternalEditor(t, e, r) {
   let o = ae(),
-    l = WJ();
+    l = createTempFilePath();
   try {
     let u = e ? j9(t, e) : t,
       p = r ? N(r) + u : u;

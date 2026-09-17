@@ -66,7 +66,7 @@ function E(e) {
 }
 var m = new Set(["EPIPE", "EIO", "ENXIO", "EBADF"]),
   b = new Set(["EISDIR", "ENOTCONN", "ECONNRESET"]);
-function oje(e) {
+function isStdinUnusableError(e) {
   let t =
     e !== null &&
     typeof e === "object" &&
@@ -76,7 +76,7 @@ function oje(e) {
       : void 0;
   return t !== void 0 && (b.has(t) || m.has(t));
 }
-function Vnt(e, t) {
+function handleStreamGoneErrors(e, t) {
   e.on("error", (n) => {
     if (n.code !== void 0 && m.has(n.code)) {
       try {
@@ -87,12 +87,12 @@ function Vnt(e, t) {
   });
 }
 function nOn(e) {
-  (Vnt(process.stdin, (t) => e("stdin", t)),
-    Vnt(process.stdout, (t) => e("stdout", t)),
+  (handleStreamGoneErrors(process.stdin, (t) => e("stdin", t)),
+    handleStreamGoneErrors(process.stdout, (t) => e("stdout", t)),
     process.stdout.on("error", () => {
       o.markErrored();
     }),
-    Vnt(process.stderr));
+    handleStreamGoneErrors(process.stderr));
 }
 function v(e, t, n) {
   if (e.destroyed || e.writableEnded) return !1;
@@ -171,7 +171,7 @@ class a {
   }
 }
 var o = new a();
-function Kn(e) {
+function writeToStdout(e) {
   o.markEverWritten();
   let t = Buffer.byteLength(e);
   if (
@@ -181,7 +181,7 @@ function Kn(e) {
   )
     o.recordQueued(t);
 }
-async function sje(e = 2000, { scaleBudgetToQueue: t = !0 } = {}) {
+async function drainStdoutBeforeExit(e = 2000, { scaleBudgetToQueue: t = !0 } = {}) {
   let n = o.endStdoutOnce();
   if (n === void 0) return;
   let r = Promise.all([n, o.fullyFlushed()]);
@@ -191,7 +191,7 @@ async function sje(e = 2000, { scaleBudgetToQueue: t = !0 } = {}) {
     "stdout drain timeout (exit)",
   ).catch(() => {});
 }
-function fB() {
+function markStdoutDrainExternallyClocked() {
   o.markExternallyClocked();
 }
 function rOn() {
@@ -208,13 +208,13 @@ function bXt() {
 function wXt(e = 2000) {
   return Math.min(w, Math.max(e, Math.ceil((bXt() * 1000) / _)));
 }
-function _z(e) {
+function writeToStderr(e) {
   v(process.stderr, e);
 }
-function Abr(e) {
+function exitWithError(e) {
   (console.error(e), setBgExitCause("exit_with_error"), process.exit(1));
 }
-function Knt(e, t) {
+function peekForStdinData(e, t) {
   let n = e;
   if (n.readableEnded || n.destroyed) return Promise.resolve(!1);
   return new Promise((r) => {
@@ -264,17 +264,17 @@ export {
   setBgExitDetail,
   readAndClearBgExitCause,
   readAndClearBgExitDetail,
-  oje,
-  Vnt,
+  isStdinUnusableError,
+  handleStreamGoneErrors,
   nOn,
-  Kn,
-  sje,
-  fB,
+  writeToStdout,
+  drainStdoutBeforeExit,
+  markStdoutDrainExternallyClocked,
   rOn,
   bXt,
   wXt,
-  _z,
-  Abr,
-  Knt,
+  writeToStderr,
+  exitWithError,
+  peekForStdinData,
   oOn,
 };

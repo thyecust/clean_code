@@ -7,26 +7,26 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Ar, Llr, LP, gkt, w0n } from "../权限系统/chunk-e4pfvp7x.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { CLAUDE_BULLET_GLYPH, RIGHT_ARROW_GLYPH, HORIZONTAL_LINE_GLYPH, PROGRESS_BAR_CELL_GLYPH, getBrailleSpinnerFrames } from "../权限系统/chunk-e4pfvp7x.js";
 import { getMarketingNameForModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { te, truncateToWidth, formatDuration, formatBarElapsed, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { h_ } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
+import { isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { o, t, ko } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
-import { Ma, ks } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport, useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { parseWorkflowScript } from "./workflow-script.js";
 import { useReducedMotion } from "../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Nl, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { xs, L, fw } from "../Teammates团队/chunk-mrfx53ye.js";
+import { isTerminalTaskStatus, figures, sanitizeDisplayName } from "../Teammates团队/chunk-mrfx53ye.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function uye(n, i) {
-  let a = (s) => getMarketingNameForModel(s) ?? fw(s);
-  if (i != null) return `${n == null ? "" : `${a(n)} `}${Llr} ${a(i)}`;
+  let a = (s) => getMarketingNameForModel(s) ?? sanitizeDisplayName(s);
+  if (i != null) return `${n == null ? "" : `${a(n)} `}${RIGHT_ARROW_GLYPH} ${a(i)}`;
   return n != null ? a(n) : "";
 }
 F();
@@ -92,11 +92,11 @@ function ne(Eo) {
     Q;
   bb0: switch (m.state) {
     case "done": {
-      ((J = L.tick), (Q = "success"));
+      ((J = figures.tick), (Q = "success"));
       break bb0;
     }
     case "error": {
-      ((J = L.cross), (Q = "error"));
+      ((J = figures.cross), (Q = "error"));
       break bb0;
     }
     case "start":
@@ -137,7 +137,7 @@ function ne(Eo) {
       const P = m.toolCalls;
       let z;
       if (S[13] !== m.toolCalls)
-        ((z = x(m.toolCalls, "tool")), (S[13] = m.toolCalls), (S[14] = z));
+        ((z = pluralize(m.toolCalls, "tool")), (S[13] = m.toolCalls), (S[14] = z));
       else z = S[14];
       w.push(`${P} ${z}`);
     }
@@ -250,7 +250,7 @@ function Fe(Go) {
       (A[12] = Rn));
   else Rn = A[12];
   let Sn = Rn,
-    $t = Wt ? (E > 0 ? L.cross : L.tick) : "\u27F3",
+    $t = Wt ? (E > 0 ? figures.cross : figures.tick) : "\u27F3",
     Dt = Wt ? (E > 0 ? "error" : "success") : void 0;
   const It = b.kind === "child" ? "permission" : "subtle";
   let Ce;
@@ -366,7 +366,7 @@ function Ue(Uo) {
   const Xo = C.length;
   let De;
   if (W[5] !== C.length)
-    ((De = x(C.length, "agent")), (W[5] = C.length), (W[6] = De));
+    ((De = pluralize(C.length, "agent")), (W[5] = C.length), (W[6] = De));
   else De = W[6];
   let Ie;
   if (W[7] !== $e)
@@ -451,7 +451,7 @@ function iZt(Vo) {
       Ln &&
       e(o, {
         marginBottom: ze || Z.length > 0 ? 1 : 0,
-        children: r(t, { children: [L.pointer, " ", Ln] }),
+        children: r(t, { children: [figures.pointer, " ", Ln] }),
       });
     _e = ze
       ? e(o, {
@@ -518,7 +518,7 @@ var R = 4,
 function Pt(fr) {
   let Fn = _(2),
     Un;
-  if (Fn[0] === MEMO_CACHE_SENTINEL) ((Un = w0n()), (Fn[0] = Un));
+  if (Fn[0] === MEMO_CACHE_SENTINEL) ((Un = getBrailleSpinnerFrames()), (Fn[0] = Un));
   else Un = Fn[0];
   let zt = Un,
     [gr, hr] = d(0),
@@ -546,7 +546,7 @@ function Ct(yr) {
     Ut = Pt(me > 0),
     Ke;
   if (de[3] !== oe)
-    ((Ke = oe > 0 && e(t, { color: "success", children: gkt.repeat(oe) })),
+    ((Ke = oe > 0 && e(t, { color: "success", children: PROGRESS_BAR_CELL_GLYPH.repeat(oe) })),
       (de[3] = oe),
       (de[4] = Ke));
   else Ke = de[4];
@@ -561,7 +561,7 @@ function Ct(yr) {
   if (de[8] !== qe)
     ((He =
       qe > 0 &&
-      e(t, { color: "subtle", dimColor: !0, children: gkt.repeat(qe) })),
+      e(t, { color: "subtle", dimColor: !0, children: PROGRESS_BAR_CELL_GLYPH.repeat(qe) })),
       (de[8] = qe),
       (de[9] = He));
   else He = de[9];
@@ -580,11 +580,11 @@ var mit = 9,
 function qIt(Xt) {
   let Hn = _(9),
     Vn = useTerminalSize(),
-    { rows: I } = ks(Vn),
-    Zt = Ma(),
+    { rows: I } = useVirtualScrollViewportSize(Vn),
+    Zt = useHasVirtualScrollViewport(),
     Jn;
   if (Hn[0] !== Zt || Hn[1] !== Xt || Hn[2] !== I)
-    ((Jn = Zt ? I : h_() ? Math.floor(I / 2) : Xt ? Math.max(hn, I - mit) : I),
+    ((Jn = Zt ? I : isFullscreenActive() ? Math.floor(I / 2) : Xt ? Math.max(hn, I - mit) : I),
       (Hn[0] = Zt),
       (Hn[1] = Xt),
       (Hn[2] = I),
@@ -634,8 +634,8 @@ function VIt(Rr) {
     fe = eo === "failed",
     ro = pe || fe,
     Ht = K ? "permission" : pe ? "success" : fe ? "error" : "subtle",
-    ge = K ? L.pointer : " ",
-    he = pe ? L.tick : fe ? L.cross : String(Sr),
+    ge = K ? figures.pointer : " ",
+    he = pe ? figures.tick : fe ? figures.cross : String(Sr),
     Wr = te(ge) + 1 + te(he) + 1,
     Jt = Math.max(1, be - Wr),
     so;
@@ -731,11 +731,11 @@ function KIt(Dr) {
     ((co = ct !== void 0 ? formatBarElapsed(ct) : void 0), (re[0] = ct), (re[1] = co));
   else co = re[1];
   let uo = co,
-    an = Ir ? ` \xB7 ${L.ellipsis} to view` : "",
+    an = Ir ? ` \xB7 ${figures.ellipsis} to view` : "",
     ln = vr === "failed" ? "error" : "success",
     ut;
   if (re[2] !== ln)
-    ((ut = e(t, { color: ln, children: Ar })), (re[2] = ln), (re[3] = ut));
+    ((ut = e(t, { color: ln, children: CLAUDE_BULLET_GLYPH })), (re[2] = ln), (re[3] = ut));
   else ut = re[3];
   let dt;
   if (re[4] !== at || re[5] !== j)
@@ -792,7 +792,7 @@ function dye(Lr) {
     { name: pn, subtext: fn, stats: ft, width: se } = Lr,
     gt;
   if (V[0] !== se)
-    ((gt = LP.repeat(Math.max(1, se))), (V[0] = se), (V[1] = gt));
+    ((gt = HORIZONTAL_LINE_GLYPH.repeat(Math.max(1, se))), (V[0] = se), (V[1] = gt));
   else gt = V[1];
   let ht;
   if (V[2] !== gt)
@@ -998,11 +998,11 @@ function dZt(n, i, a, s) {
           ? " \xB7 stopped"
           : n.status === "paused"
             ? " \xB7 paused"
-            : xs(n.status)
+            : isTerminalTaskStatus(n.status)
               ? " \xB7 failed"
               : "",
     u = i,
-    c = `${a.doneAgents}/${a.totalAgents} ${x(a.totalAgents, "agent")} \xB7 ${formatBarElapsed(s)}${l}`;
+    c = `${a.doneAgents}/${a.totalAgents} ${pluralize(a.totalAgents, "agent")} \xB7 ${formatBarElapsed(s)}${l}`;
   return {
     name: n.workflowName ?? n.summary ?? n.description,
     subtext: u,

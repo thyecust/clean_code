@@ -9,25 +9,25 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { j } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { os, U0 } from "./chunk-1wezmyx2.js";
+import { repeatString, ANY_CONTROL_CHAR_REGEX } from "./string-utils.js";
 import { CT } from "../../02-功能模块/状态栏-主题/chunk-jz6b76hr.js";
-import { ie } from "../ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../ANSI-样式-布局原语/chalk-ansi.js";
 import { oFe, AG, _u } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { Vl, y0n, $lr } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { ARTIFACT_MARKER_GLYPH, withArtifactMarker, BLOCKQUOTE_BAR_GLYPH } from "../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { isCanonicalArtifactViewerUrl, isDecisionSurfaceControl } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { pt } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
-import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
-import { E7t } from "../../02-功能模块/Git-Worktree/chunk-bk9696gx.js";
+import { stripAnsi } from "../共享小工具-未细化/text-sanitization.js";
+import { getCwd } from "../共享小工具-未细化/cwd-context.js";
+import { getCachedRepositoryHost } from "../../02-功能模块/Git-Worktree/git-repository-detection.js";
 import { te } from "./chunk-01cse5zg.js";
-import { fi, Dnt } from "../共享小工具-未细化/chunk-z5tdbda7.js";
+import { GITHUB_HOST, getCanonicalHostname } from "../共享小工具-未细化/git-host-utils.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Rdt, Wsn, c1t, kdt, Gsn } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
+import { INVISIBLE_CHAR_CLASS_SOURCE, stripLeadingInvisibleChars, isUnsafePath, isUnsafeFileUrl, decodePercentVariants } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
 import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { toLocalFileUrl } from "../共享小工具-未细化/to-local-file-url.js";
 import { formatHyperlink } from "../共享小工具-未细化/format-hyperlink.js";
 import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
-import { av } from "../共享小工具-未细化/chunk-kkf7jbwd.js";
+import { getGitProvider } from "../共享小工具-未细化/git-remote-url.js";
 import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 var z = new Set([
   "iTerm.app",
@@ -64,8 +64,8 @@ function Uit() {
 import { isAbsolute, resolve } from "path";
 var E = `
 `,
-  D = new RegExp(`^[${Rdt}]+`, "u"),
-  V = new RegExp(`(?:^|[^${Rdt}])([${Rdt}]*)$`, "u");
+  D = new RegExp(`^[${INVISIBLE_CHAR_CLASS_SOURCE}]+`, "u"),
+  V = new RegExp(`(?:^|[^${INVISIBLE_CHAR_CLASS_SOURCE}])([${INVISIBLE_CHAR_CLASS_SOURCE}]*)$`, "u");
 function w(e) {
   let t = V.exec(e)?.[1]?.length ?? 0;
   return t === 0 ? e : e.slice(0, e.length - t);
@@ -108,31 +108,31 @@ function VWe(e) {
     s = !1;
   for (let c of t) {
     let u = e.lastIndexOf("\x1B]8;", c.openEnd - 1),
-      m = w(pt(e.slice(0, u))),
+      m = w(stripAnsi(e.slice(0, u))),
       h = l;
     l = c.closeStart;
     let x = isCanonicalArtifactViewerUrl(c.href),
       r = s;
     if (((s = x), !x)) {
-      let g = pt(e.slice(h, u)),
-        T = g.includes(Vl),
+      let g = stripAnsi(e.slice(h, u)),
+        T = g.includes(ARTIFACT_MARKER_GLYPH),
         d = r && w(g) === "";
-      if (!T && !m.endsWith(Vl) && !d) continue;
-    } else if (!m.endsWith(Vl)) continue;
+      if (!T && !m.endsWith(ARTIFACT_MARKER_GLYPH) && !d) continue;
+    } else if (!m.endsWith(ARTIFACT_MARKER_GLYPH)) continue;
     if (x) {
       let g = e.slice(c.openEnd, c.closeStart),
-        T = pt(g).startsWith(`${Vl} `) ? g.indexOf(`${Vl} `) : -1;
+        T = stripAnsi(g).startsWith(`${ARTIFACT_MARKER_GLYPH} `) ? g.indexOf(`${ARTIFACT_MARKER_GLYPH} `) : -1;
       if (T !== -1)
         ((o += e.slice(i, c.openEnd)),
           (o += g.slice(0, T)),
-          (o += g.slice(T + Vl.length + 1)),
+          (o += g.slice(T + ARTIFACT_MARKER_GLYPH.length + 1)),
           (i = c.closeStart));
       else {
         let d = e.slice(i, u),
-          L = `${Vl} `;
+          L = `${ARTIFACT_MARKER_GLYPH} `;
         if (d.endsWith(L)) {
           let b = d.slice(0, -L.length);
-          if (w(pt(o + b)).endsWith(Vl)) ((o += b), (i = u));
+          if (w(stripAnsi(o + b)).endsWith(ARTIFACT_MARKER_GLYPH)) ((o += b), (i = u));
         }
       }
       continue;
@@ -311,10 +311,10 @@ function aE(e, t, n = {}) {
             }),
           )
           .join(""),
-        p = ie.dim($lr);
+        p = chalk.dim(BLOCKQUOTE_BAR_GLYPH);
       return r
         .split(E)
-        .map((f) => (pt(f).trim() ? `${p} ${ie.italic(f)}` : f))
+        .map((f) => (stripAnsi(f).trim() ? `${p} ${chalk.italic(f)}` : f))
         .join(E);
     }
     case "code": {
@@ -326,14 +326,14 @@ function aE(e, t, n = {}) {
             : s && p && s.supportsLanguage(p)
               ? p
               : "plaintext",
-        g = r && !s?.supportsLanguage(r) ? ie.dim(r) + E : "";
+        g = r && !s?.supportsLanguage(r) ? chalk.dim(r) + E : "";
       if (!s) return g + e.text + E;
       return g + s.highlight(e.text, { language: f }) + E;
     }
     case "codespan":
       return getThemeColor("permission", t)(e.text);
     case "em":
-      return ie.italic(
+      return chalk.italic(
         (e.tokens ?? [])
           .map((r) =>
             aE(r, t, {
@@ -349,7 +349,7 @@ function aE(e, t, n = {}) {
           .join(""),
       );
     case "strong":
-      return ie.bold(
+      return chalk.bold(
         (e.tokens ?? [])
           .map((r) =>
             aE(r, t, {
@@ -378,7 +378,7 @@ function aE(e, t, n = {}) {
           }),
         )
         .join("");
-      return Uit() && ie.level > 0 ? ie.strikethrough(r) : `~~${r}~~`;
+      return Uit() && chalk.level > 0 ? chalk.strikethrough(r) : `~~${r}~~`;
     }
     case "heading": {
       let r = (e.tokens ?? [])
@@ -395,7 +395,7 @@ function aE(e, t, n = {}) {
         )
         .join("");
       return (
-        (e.depth === 1 ? ie.bold.italic.underline : ie.bold)(VWe(r)) + E + E
+        (e.depth === 1 ? chalk.bold.italic.underline : chalk.bold)(VWe(r)) + E + E
       );
     }
     case "hr":
@@ -428,12 +428,12 @@ function aE(e, t, n = {}) {
             }),
           )
           .join(""),
-        d = pt(T),
+        d = stripAnsi(T),
         L = isCanonicalArtifactViewerUrl(e.href),
         b = Boolean(d && d !== e.href),
-        y = (R) => R.replace(D, "").startsWith(Vl),
+        y = (R) => R.replace(D, "").startsWith(ARTIFACT_MARKER_GLYPH),
         S = y(d) || y(e.text ?? ""),
-        k = d.includes(Vl) || (e.text ?? "").includes(Vl);
+        k = d.includes(ARTIFACT_MARKER_GLYPH) || (e.text ?? "").includes(ARTIFACT_MARKER_GLYPH);
       if (L && b) {
         let R = Array.from(d)
             .filter((G) => {
@@ -442,13 +442,13 @@ function aE(e, t, n = {}) {
               return !isDecisionSurfaceControl(A);
             })
             .join(""),
-          B = S ? R : y0n(R);
+          B = S ? R : withArtifactMarker(R);
         return formatHyperlink(g, B, { themeName: t, supportsHyperlinks: f }) + r;
       }
       let I = b ? T : f ? e.href : g,
         _ = formatHyperlink(g, I, { themeName: t, supportsHyperlinks: f });
       if (!L && f && b && k) return `${_} (${N(e.href)})${r}`;
-      return (L ? y0n(_) : _) + r;
+      return (L ? withArtifactMarker(_) : _) + r;
     }
     case "list":
       return e.items
@@ -471,8 +471,8 @@ function aE(e, t, n = {}) {
           o,
           i !== null && l?.type === "list" ? { number: i, ...JZt(l) } : null,
         ),
-        p = m + os(" ", te(r) + 1),
-        f = os(" ", Math.min(p.length, YZt)),
+        p = m + repeatString(" ", te(r) + 1),
+        f = repeatString(" ", Math.min(p.length, YZt)),
         g = (e.tokens ?? []).find((b) => b.type !== "space"),
         T =
           g !== void 0 &&
@@ -582,7 +582,7 @@ function aE(e, t, n = {}) {
           );
         },
         f = function (d) {
-          return pt(p(d));
+          return stripAnsi(p(d));
         },
         r = e;
       if (u)
@@ -665,20 +665,20 @@ function J(e) {
     i = decodeURIComponent(i);
   } catch {}
   i = re(i);
-  let l = isAbsolute(i) ? i : resolve(Q(), i),
+  let l = isAbsolute(i) ? i : resolve(getCwd(), i),
     s = toLocalFileUrl(l);
   if (s === null) return null;
   let c = s + o;
-  return kdt(c) ? null : c;
+  return isUnsafeFileUrl(c) ? null : c;
 }
 var ee = /^[a-z][a-z0-9+.-]*:/i;
 function ne(e) {
   let t = J(e);
-  if (t === null || U0.test(t) || D.test(t) || t !== t.trimEnd()) return null;
+  if (t === null || ANY_CONTROL_CHAR_REGEX.test(t) || D.test(t) || t !== t.trimEnd()) return null;
   if (ee.test(t)) return t;
-  let n = Gsn(t),
-    o = n.some((i) => /^file:/i.test(Wsn(i)));
-  return c1t(t, n) || o ? null : t;
+  let n = decodePercentVariants(t),
+    o = n.some((i) => /^file:/i.test(stripLeadingInvisibleChars(i)));
+  return isUnsafePath(t, n) || o ? null : t;
 }
 function re(e, t = isAbsolute) {
   if (/^\/[A-Za-z]:(?=[\\/]|$)/.test(e) && t(e.slice(1))) return e.slice(1);
@@ -766,10 +766,10 @@ function ae(e, t, n = Tf(), o) {
 function ce(e, t, n = Tf()) {
   if (!n) return e;
   if (!e.includes("#")) return e;
-  let o = E7t(),
-    i = o !== null && av(o) === "gitlab";
-  if (!i && o !== null && Y.has(Dnt(o))) return e;
-  let l = o ?? fi,
+  let o = getCachedRepositoryHost(),
+    i = o !== null && getGitProvider(o) === "gitlab";
+  if (!i && o !== null && Y.has(getCanonicalHostname(o))) return e;
+  let l = o ?? GITHUB_HOST,
     s = i ? "/-/issues/" : "/issues/";
   return e.replace(
     X,
@@ -833,7 +833,7 @@ function MPt(e, t, n, o) {
   let i = Math.max(0, n - t);
   if (o === "center") {
     let l = Math.floor(i / 2);
-    return " ".repeat(l) + e + os(" ", i - l);
+    return " ".repeat(l) + e + repeatString(" ", i - l);
   }
   if (o === "right") return " ".repeat(i) + e;
   return e + " ".repeat(i);

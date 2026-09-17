@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { bc } from "../设置-配置/chunk-zqr5ctyf.js";
-import { Il } from "../核心工具-进程与信号/chunk-w78brv7j.js";
+import { getLauncherArgv } from "../核心工具-进程与信号/process-wrapper-launcher.js";
 import { getClaudeVersionsDir, getLocalBinDir } from "./user-directories.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
 import { toESM } from "./chunk-2c9tjhwd.js";
@@ -39,7 +39,7 @@ function getInstalledClaudePath() {
   return a(getLocalBinDir(), "claude");
 }
 function applyProcessWrapper(r) {
-  let e = Il();
+  let e = getLauncherArgv();
   if (e.length === 0 || r.cmd === e[0]) return r;
   return {
     cmd: e[0],

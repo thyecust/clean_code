@@ -10,10 +10,10 @@
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { vJ, HCe, xoe, ICe, PCe } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
 import { yk, Qwe, n3, Hy, Wue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { Joe } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
-import { runBundledSkillSessionResets } from "../../02-功能模块/Skills技能/chunk-1zy5c8mf.js";
+import { listGoalStopHooks } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { runBundledSkillSessionResets } from "../../02-功能模块/Skills技能/bundled-skills.js";
 import { Jx } from "../../02-功能模块/AppState-状态管理/AppState-状态管理.wyzjbwp5.js";
-import { nye } from "./chunk-ps79w9dv.js";
+import { transcriptReplacedBus } from "./transcript-replaced-bus.js";
 function nWe(o, e, r, i) {
   (Jx("conversation_reset"),
     yk("conversation_reset"),
@@ -25,12 +25,12 @@ function nWe(o, e, r, i) {
     HCe(),
     runBundledSkillSessionResets());
   let s = K();
-  for (let t of Joe(o.sessionHooksRegistry, s))
+  for (let t of listGoalStopHooks(o.sessionHooksRegistry, s))
     o.sessionHooksRegistry.remove(s, "Stop", t);
   (r(),
     Wue(),
     Qwe(e),
-    nye.of(i).emit(
+    transcriptReplacedBus.of(i).emit(
       s,
       e.map((t) => t.uuid),
     ),

@@ -14,38 +14,38 @@ import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import { cs, IBe, Wet, vRt, ike, rHn, qar } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { Tf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-gdyh44zt.js";
 import { Zd } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-hm8z9h7j.js";
-import { Pat, Oat, T9e } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { getCurrentKillRingText, getNextKillRingEntry, useKillRing } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { getMainLoopModel, zg, H6, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { ea } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { El } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { execFileNoThrow } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrow } from "../Git-Worktree/git-exec-hardening.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { gi, bs, nk } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { XB, ZOt, R9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
-import { rue, Nze } from "../../01-核心基础设施/共享小工具-未细化/chunk-pw4nttt4.js";
+import { getAttachStampMs, Nze } from "../../01-核心基础设施/共享小工具-未细化/attach-state-tracking.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
-import { U } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
 import { X7, Ka } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useVoiceLevelSmoother, useVoiceSelector } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
-import { nue, mOe } from "../../01-核心基础设施/共享小工具-未细化/chunk-zdf7z1m1.js";
+import { buildDraftText, isBashModeShortcut } from "../../01-核心基础设施/共享小工具-未细化/bash-mode-draft-text.js";
 import { re, De, E, vr, dn, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { lK, Z3, pJn, fJn } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { Xs, Wke, rPn } from "../../01-核心基础设施/共享小工具-未细化/chunk-xcc43dkx.js";
-import { P, mur } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getGraphemeSegmenter, getFirstGrapheme, getWordSegmenter } from "../../01-核心基础设施/共享小工具-未细化/intl-text-utils.js";
+import { getCurrentPlatform, getMacOSMajorVersion } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { randomBytes } from "crypto";
 import {
@@ -275,7 +275,7 @@ async function setupTerminal(e, t, r) {
 var wt =
   'iTerm2 \u2192 Settings \u2192 General \u2192 Selection \u2192 check "Applications in terminal may access clipboard"';
 async function enableITerm2ClipboardAccess(e) {
-  let t = ie.dim(wt);
+  let t = chalk.dim(wt);
   try {
     let { stdout: r, code: s } = await execFileNoThrow("defaults", [
       "read",
@@ -293,7 +293,7 @@ async function enableITerm2ClipboardAccess(e) {
     ]);
     if (o !== 0)
       return `${getThemeColor("warning", e)("Couldn't update iTerm2 clipboard setting.")}${p}${t}${p}${p}`;
-    return `${getThemeColor("success", e)('Enabled "Applications in terminal may access clipboard" in iTerm2')}${p}${ie.dim("Restart iTerm2 for this to take effect. Undo: defaults write com.googlecode.iterm2 AllowClipboardAccess -bool false")}${p}${p}`;
+    return `${getThemeColor("success", e)('Enabled "Applications in terminal may access clipboard" in iTerm2')}${p}${chalk.dim("Restart iTerm2 for this to take effect. Undo: defaults write com.googlecode.iterm2 AllowClipboardAccess -bool false")}${p}${p}`;
   } catch (r) {
     return (
       logError(r),
@@ -339,19 +339,19 @@ No configuration needed. Just use Shift+Enter to add newlines.${Be()}`;
   }
   if (!shouldOfferTerminalSetup()) {
     let o = a.terminal || "your current terminal",
-      l = P(),
+      l = getCurrentPlatform(),
       m = "";
     if (l === "macos")
       m = `   \u2022 macOS: Apple Terminal
 `;
     let c =
         a.LC_TERMINAL === "iTerm2"
-          ? `${p}${p}You appear to be connected from iTerm2 on another machine. For /copy to reach your local clipboard, on that machine open:${p}${ie.dim(wt)}`
+          ? `${p}${p}You appear to be connected from iTerm2 on another machine. For /copy to reach your local clipboard, on that machine open:${p}${chalk.dim(wt)}`
           : "",
       x = `Terminal setup cannot be run from ${o}.
 
 This command configures a convenient Shift+Enter shortcut for multi-line prompts.
-${ie.dim("Note: You can already use backslash (\\\\) + return to add newlines.")}
+${chalk.dim("Note: You can already use backslash (\\\\) + return to add newlines.")}
 
 To set up the shortcut (optional):
 1. Exit tmux/screen temporarily
@@ -360,7 +360,7 @@ ${m}   \u2022 IDE: VSCode, Cursor, Devin Desktop, Zed
    \u2022 Other: Alacritty
 3. Return to tmux/screen - settings will persist
 
-${ie.dim("Note: iTerm2, WezTerm, Ghostty, Kitty, Warp, and Windows Terminal support Shift+Enter natively.")}${c}${Be()}`;
+${chalk.dim("Note: iTerm2, WezTerm, Ghostty, Kitty, Warp, and Windows Terminal support Shift+Enter natively.")}${c}${Be()}`;
     return (e(x), null);
   }
   let s = await setupTerminal(t.session.host, t.options.theme, t.storageV5);
@@ -425,7 +425,7 @@ class xt {
 }
 var vscodeUserDirectories = new j(() => new xt());
 async function Ze(e, t, r) {
-  let s = ie.dim(
+  let s = chalk.dim(
     `For smoother scrolling, set "${ke}": ${Oe} in ${t} settings.`,
   );
   if (Ke()) return `${s}${p}`;
@@ -442,7 +442,7 @@ async function Ze(e, t, r) {
     if (!isRecord(c))
       return `${getThemeColor("warning", r)(`${t} settings.json isn't a JSON object; not modifying it.`)}${p}${s}${p}`;
     if (ke in c)
-      return `${getThemeColor("success", r)(`${t} ${ke} already set; leaving as-is`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`;
+      return `${getThemeColor("success", r)(`${t} ${ke} already set; leaving as-is`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}`;
     let x = rHn(l, ke, Oe);
     if (x === l)
       return `${getThemeColor("warning", r)(`Couldn't update ${t} settings.json.`)}${p}${s}${p}`;
@@ -456,7 +456,7 @@ async function Ze(e, t, r) {
     }
     return (
       await writeFile(o, x, { encoding: "utf-8" }),
-      `${getThemeColor("success", r)(`Set ${t} terminal scroll sensitivity to ${Oe}`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
+      `${getThemeColor("success", r)(`Set ${t} terminal scroll sensitivity to ${Oe}`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
     return (
@@ -469,7 +469,7 @@ async function Ze(e, t, r) {
   }
 }
 async function installVSCodeGpuAccelerationOff(e, t, r) {
-  let s = ie.dim(
+  let s = chalk.dim(
     `To fix garbled text, set "${He}": "${Je}" in ${t} settings (undo: set it back to "auto").`,
   );
   if (Ke()) return (logFeatureSad("terminal_setup_gpu_accel", "remote_ssh"), `${s}${p}`);
@@ -491,7 +491,7 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
     if (c[He] === Je)
       return (
         logFeatureOk("terminal_setup_gpu_accel"),
-        `${getThemeColor("success", r)(`${t} GPU acceleration already off; leaving as-is`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
+        `${getThemeColor("success", r)(`${t} GPU acceleration already off; leaving as-is`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}`
       );
     let x = rHn(l, He, Je);
     if (x === l)
@@ -513,7 +513,7 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
     return (
       await writeFile(o, x, { encoding: "utf-8" }),
       logFeatureOk("terminal_setup_gpu_accel"),
-      `${getThemeColor("success", r)(`Turned off ${t} GPU acceleration to fix garbled text`)}${p}${ie.dim(`Reload the ${t} window to apply. Undo: set "${He}" back to "auto".`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
+      `${getThemeColor("success", r)(`Turned off ${t} GPU acceleration to fix garbled text`)}${p}${chalk.dim(`Reload the ${t} window to apply. Undo: set "${He}" back to "auto".`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
     return (
@@ -528,7 +528,7 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
 }
 async function Qe(e, t = "VSCode", r) {
   if (Ke())
-    return `${getThemeColor("warning", r)(`Cannot install keybindings from a remote ${t} session.`)}${p}${p}${t} keybindings must be installed on your local machine, not the remote server.${p}${p}To install the Shift+Enter keybinding:${p}1. Open ${t} on your local machine (not connected to remote)${p}2. Open the Command Palette (Cmd/Ctrl+Shift+P) \u2192 "Preferences: Open Keyboard Shortcuts (JSON)"${p}3. Add this keybinding (the file must be a JSON array):${p}${p}${ie.dim(`[
+    return `${getThemeColor("warning", r)(`Cannot install keybindings from a remote ${t} session.`)}${p}${p}${t} keybindings must be installed on your local machine, not the remote server.${p}${p}To install the Shift+Enter keybinding:${p}1. Open ${t} on your local machine (not connected to remote)${p}2. Open the Command Palette (Cmd/Ctrl+Shift+P) \u2192 "Preferences: Open Keyboard Shortcuts (JSON)"${p}3. Add this keybinding (the file must be a JSON array):${p}${p}${chalk.dim(`[
   {
     "key": "shift+enter",
     "command": "workbench.action.terminal.sendSequence",
@@ -554,7 +554,7 @@ async function Qe(e, t = "VSCode", r) {
       try {
         await copyFile(o, I);
       } catch {
-        return `${getThemeColor("warning", r)(`Error backing up existing ${t} terminal keybindings. Bailing out.`)}${p}${ie.dim(`See ${ne(o)}`)}${p}${ie.dim(`Backup path: ${ne(I)}`)}${p}`;
+        return `${getThemeColor("warning", r)(`Error backing up existing ${t} terminal keybindings. Bailing out.`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}${chalk.dim(`Backup path: ${ne(I)}`)}${p}`;
       }
     }
     let x = {
@@ -567,7 +567,7 @@ async function Qe(e, t = "VSCode", r) {
         (L) => L.key === x.key && L.command === x.command && L.when === x.when,
       );
     if (T) {
-      let L = ie.dim(`See ${ne(o)}`);
+      let L = chalk.dim(`See ${ne(o)}`);
       if (T.args?.text === x.args.text)
         return `${getThemeColor("success", r)(`${t} terminal Shift+Enter key binding already configured`)}${p}${L}${p}`;
       return `${getThemeColor("warning", r)(`${t} already has a Shift+Enter terminal binding with different args; leaving it as-is.`)}${p}${L}${p}`;
@@ -575,7 +575,7 @@ async function Qe(e, t = "VSCode", r) {
     let R = qar(l, x);
     return (
       await writeFile(o, R, { encoding: "utf-8" }),
-      `${getThemeColor("success", r)(`Installed ${t} terminal Shift+Enter key binding`)}${p}${ie.dim(`See ${ne(o)}`)}${p}`
+      `${getThemeColor("success", r)(`Installed ${t} terminal Shift+Enter key binding`)}${p}${chalk.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (l) {
     throw (
@@ -633,10 +633,10 @@ async function gt(e) {
   return !0;
 }
 async function dr(e, t) {
-  let r = (mur() ?? 0) >= 27,
+  let r = (getMacOSMajorVersion() ?? 0) >= 27,
     s = zg();
   if (r && s)
-    return `${getThemeColor("success", e)("No Terminal.app changes needed.")}${p}${ie.dim("Shift+Return already enters a newline on this macOS version, and screen-reader mode leaves the audible bell setting unchanged.")}${p}`;
+    return `${getThemeColor("success", e)("No Terminal.app changes needed.")}${p}${chalk.dim("Shift+Return already enters a newline on this macOS version, and screen-reader mode leaves the audible bell setting unchanged.")}${p}`;
   try {
     if (!(await ht(t)))
       throw Error(
@@ -686,14 +686,14 @@ async function dr(e, t) {
     if (!s) J.push(getThemeColor("success", e)("- Disabled the audible bell"));
     else
       J.push(
-        ie.dim(
+        chalk.dim(
           "- Left the audible bell setting unchanged (screen-reader mode uses it)",
         ),
       );
     let K = r
-      ? ie.dim("Shift+Return will now enter a newline.")
-      : ie.dim("Option+Enter will now enter a newline.");
-    return `${J.join(p)}${p}${K}${p}${ie.dim("You must restart Terminal.app for changes to take effect.")}${p}`;
+      ? chalk.dim("Shift+Return will now enter a newline.")
+      : chalk.dim("Option+Enter will now enter a newline.");
+    return `${J.join(p)}${p}${K}${p}${chalk.dim("You must restart Terminal.app for changes to take effect.")}${p}`;
   } catch (o) {
     n(
       `Terminal.app setup failed: ${o instanceof Error ? o.message : String(o)}`,
@@ -736,13 +736,13 @@ async function fr(e) {
   try {
     if (m) {
       if (l.includes('mods = "Shift"') && l.includes('key = "Return"'))
-        return `${getThemeColor("success", e)("Alacritty Shift+Enter key binding already configured")}${p}${ie.dim(`See ${ne(o)}`)}${p}`;
+        return `${getThemeColor("success", e)("Alacritty Shift+Enter key binding already configured")}${p}${chalk.dim(`See ${ne(o)}`)}${p}`;
       let x = randomBytes(4).toString("hex"),
         T = `${o}.${x}.bak`;
       try {
         await copyFile(o, T);
       } catch {
-        return `${getThemeColor("warning", e)("Error backing up existing Alacritty config. Bailing out.")}${p}${ie.dim(`See ${ne(o)}`)}${p}${ie.dim(`Backup path: ${ne(T)}`)}${p}`;
+        return `${getThemeColor("warning", e)("Error backing up existing Alacritty config. Bailing out.")}${p}${chalk.dim(`See ${ne(o)}`)}${p}${chalk.dim(`Backup path: ${ne(T)}`)}${p}`;
       }
     } else await mkdir(lr(o), { recursive: !0 });
     let c = l;
@@ -761,7 +761,7 @@ mods = "Shift"
 chars = "\\u001B\\r"
 `),
       await writeFile(o, c, { encoding: "utf-8" }),
-      `${getThemeColor("success", e)("Installed Alacritty Shift+Enter key binding")}${p}${getThemeColor("success", e)("You may need to restart Alacritty for changes to take effect")}${p}${ie.dim(`See ${ne(o)}`)}${p}`
+      `${getThemeColor("success", e)("Installed Alacritty Shift+Enter key binding")}${p}${getThemeColor("success", e)("You may need to restart Alacritty for changes to take effect")}${p}${chalk.dim(`See ${ne(o)}`)}${p}`
     );
   } catch (c) {
     throw (
@@ -783,11 +783,11 @@ function bt(e) {
   );
 }
 async function mr(e) {
-  let t = P() === "linux" ? a.XDG_CONFIG_HOME : void 0,
+  let t = getCurrentPlatform() === "linux" ? a.XDG_CONFIG_HOME : void 0,
     r = t ? Q(t, "zed") : Q(Ge(), ".config", "zed"),
     s = Q(r, "keymap.json"),
-    o = ie.dim(`See ${ne(s)}`),
-    l = ie.dim(
+    o = chalk.dim(`See ${ne(s)}`),
+    l = chalk.dim(
       `To add the binding yourself, add this block to the keymap array in ${ne(s)}:${p}{ "context": "Terminal", "bindings": { "shift-enter": ["terminal::SendText", "\\u001b\\r"] } }`,
     ),
     m = `${getThemeColor("success", e)("Installed Zed Shift+Enter key binding")}${p}${o}${p}`,
@@ -804,7 +804,7 @@ async function mr(e) {
     }
     if (T === null || cs(T).trim() === "")
       return (
-        await On(
+        await writeFileAtomic(
           s,
           b(
             [{ context: "Terminal", bindings: { "shift-enter": et } }],
@@ -870,7 +870,7 @@ async function mr(e) {
         message: `${getThemeColor("warning", e)("Couldn't update your Zed keymap, so it was left unchanged.")}${p}${l}${p}`,
         installed: !1,
       };
-    return (await On(s, _), { message: m, installed: !0 });
+    return (await writeFileAtomic(s, _), { message: m, installed: !0 });
   } catch (T) {
     throw (
       n(
@@ -900,7 +900,7 @@ function COt(
   r,
   s = H("tengu_left_arrow_editing_guard", !0),
   o = Nze(t),
-  l = rue(),
+  l = getAttachStampMs(),
 ) {
   if (r !== !0) return "reject";
   let m = (x) => x !== 0 && x >= l;
@@ -939,7 +939,7 @@ function vOt(e, t, r) {
   }
 }
 function ROt(e, t) {
-  let r = t - rue();
+  let r = t - getAttachStampMs();
   switch (e) {
     case "fire":
       return;
@@ -1112,7 +1112,7 @@ class Zs {
         M = (c ?? !1) && ((J[_]?.endsWithNewline ?? !1) || _ === D.length - 1),
         z = K;
       if (t) {
-        let v = Array.from(Xs().segment(K));
+        let v = Array.from(getGraphemeSegmenter().segment(K));
         if (_ === D.length - 1) {
           let X = Math.min(6, v.length),
             se = v.length - X,
@@ -1126,7 +1126,7 @@ class Zs {
         G = "",
         A = 0,
         Z = !1;
-      for (let { segment: v } of Xs().segment(z)) {
+      for (let { segment: v } of getGraphemeSegmenter().segment(z)) {
         if (Z) {
           G += v;
           continue;
@@ -1138,7 +1138,7 @@ class Zs {
       let oe,
         q = "";
       if (s && _ === D.length - 1 && this.isAtEnd() && s.text.length > 0) {
-        let v = Wke(s.text) || s.text[0];
+        let v = getFirstGrapheme(s.text) || s.text[0];
         oe = e ? r(v) : v;
         let X = s.text.slice(v.length);
         if (X.length > 0) q = s.dim(X);
@@ -1650,7 +1650,7 @@ class $t {
   getGraphemeBoundaries() {
     if (!this.graphemeBoundaries) {
       this.graphemeBoundaries = [];
-      for (let { index: e } of Xs().segment(this.text))
+      for (let { index: e } of getGraphemeSegmenter().segment(this.text))
         this.graphemeBoundaries.push(e);
       this.graphemeBoundaries.push(this.text.length);
     }
@@ -1660,7 +1660,7 @@ class $t {
   getWordBoundaries() {
     if (!this.wordBoundariesCache) {
       this.wordBoundariesCache = [];
-      for (let e of rPn().segment(this.text))
+      for (let e of getWordSegmenter().segment(this.text))
         this.wordBoundariesCache.push({
           start: e.index,
           end: e.index + e.segment.length,
@@ -1718,7 +1718,7 @@ class $t {
     if (e === this.text) return this.offsetAtDisplayWidth(t);
     let r = 0,
       s = 0;
-    for (let { segment: o, index: l } of Xs().segment(e)) {
+    for (let { segment: o, index: l } of getGraphemeSegmenter().segment(e)) {
       let m = te(o);
       if (r + m > t) break;
       ((r += m), (s = l + o.length));
@@ -1991,7 +1991,7 @@ function m9e({
   selectionLinewise: Me = !1,
 }) {
   let ue = gi(),
-    le = T9e();
+    le = useKillRing();
   if (a.terminal === "Apple_Terminal") Et();
   let he = oe,
     ce = q,
@@ -2037,7 +2037,7 @@ function m9e({
                 ? ea(X(), (xe) => xe.type === "text" && xe.unavailable === !0)
                 : void 0,
               k = se?.(),
-              N = k !== void 0 ? nue(e, k) : e,
+              N = k !== void 0 ? buildDraftText(e, k) : e,
               pe = u ? { display: N, pastedContents: u } : N;
             if (k !== void 0) X7(pe, qe, { submitMode: k });
             else X7(pe, qe);
@@ -2097,7 +2097,7 @@ function m9e({
     return (Ae(k, "prepend"), u);
   }
   function Bt() {
-    let u = we(Pat(le.state));
+    let u = we(getCurrentKillRingText(le.state));
     if (u.length > 0) {
       let k = w.offset,
         N = w.insert(u);
@@ -2106,7 +2106,7 @@ function m9e({
     return w;
   }
   function Ht() {
-    let u = Oat(le.state);
+    let u = getNextKillRingEntry(le.state);
     if (!u) return w;
     let { text: k, start: N, length: pe } = u,
       xe = we(k);
@@ -2298,7 +2298,7 @@ function m9e({
     if (u.meta) return jt(u.key);
     if (Er.has(u.name)) return;
     if (k.length === 0) return;
-    if (w.isAtStart() && mOe(k)) return w.insert(k).left();
+    if (w.isAtStart() && isBashModeShortcut(k)) return w.insert(k).left();
     return w.insert(k);
   }
   function zt(u) {
@@ -2417,7 +2417,7 @@ var ot = " \u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588",
   Or = 1.8,
   Lr = 0.15;
 function T0e() {
-  let e = U((M) => shouldReduceMotion(M.settings.prefersReducedMotion)),
+  let e = useAppStateSelector((M) => shouldReduceMotion(M.settings.prefersReducedMotion)),
     t = useVoiceLevelSmoother(),
     r = useVoiceSelector((M) => M.voiceState) === "recording",
     s = useVoiceSelector((M) => M.voiceAudioLevels),
@@ -2453,8 +2453,8 @@ function Fye({
     x = C(!1),
     T = C(!1),
     [R, L] = d(0),
-    I = V(() => P() === "macos", []),
-    D = V(() => P() === "wsl", []);
+    I = V(() => getCurrentPlatform() === "macos", []),
+    D = V(() => getCurrentPlatform() === "wsl", []);
   E(
     () => () => {
       c.current = !1;

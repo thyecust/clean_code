@@ -9,22 +9,22 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import {
-  e8,
-  oxe,
-  sxe,
-  rae,
-  Id,
-  pp,
-  pz,
-  ixe,
-  jP,
-  Mxt,
+  COWRITTEN_ARTIFACT_HTML_TAG,
+  ARTIFACT_FILE_CONTENT_TAG,
+  ARTIFACT_TYPE_INSTRUCTIONS_TAG,
+  ARTIFACT_ORIGIN_NOTES_TAG,
+  COMMAND_NAME_TAG,
+  COMMAND_MESSAGE_TAG,
+  COMMAND_ARGS_TAG,
+  LOCAL_COMMAND_TAGS,
+  TICK_TAG,
+  HARNESS_ENVELOPE_TAGS,
 } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { iu, us, oe, Yg } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp, truncateToCodePoints, truncateToCodeUnits, toWellFormed } from "../核心工具-字符串与文本/string-utils.js";
 import { env as a, antEnv } from "../设置-配置/chunk-zqr5ctyf.js";
-import { mx } from "../共享小工具-未细化/chunk-0ypv8gq2.js";
+import { getComplianceTaints } from "../共享小工具-未细化/compliance-taints-store.js";
 import { BRIEF_ENFORCE_SENTINEL } from "../共享小工具-未细化/chunk-q599wyee.js";
 import { KRe, Cge, Xvt, Yvt, P5t, vq, iar } from "../核心工具-字符串与文本/chunk-3kbr3k57.js";
 import { isLoopbackHostname } from "../共享小工具-未细化/is-loopback-hostname.js";
@@ -290,7 +290,7 @@ var ARTIFACT_TOOL_NAME = "Artifact",
   STALE_GUARD_REJECTION_PREFIX_LEGACY =
     "This session hadn't viewed the live version of this artifact, so the publish was refused.",
   STALE_GUARD_CONTENT_HEADER = (t) => `[Artifact ${t}${STALE_GUARD_CONTENT_HEADER_SUFFIX}`,
-  STALE_GUARD_CONTENT_HEADER_LINE_RE = new RegExp(`\\n\\[Artifact [\\w-]{1,64}${iu(STALE_GUARD_CONTENT_HEADER_SUFFIX)}\\n`),
+  STALE_GUARD_CONTENT_HEADER_LINE_RE = new RegExp(`\\n\\[Artifact [\\w-]{1,64}${escapeRegExp(STALE_GUARD_CONTENT_HEADER_SUFFIX)}\\n`),
   CONFLICT_REJECTION_PREFIX = "Publish refused \u2014 nothing was merged or published:",
   PR_REVIEW_SECURITY_WALL = {
     republishForceRefused: "pr_review_republish_force_refused",
@@ -324,7 +324,7 @@ function artifactPolicyBlockedMessage(t) {
       return lBe(
         "Artifacts",
         "are",
-        mx(),
+        getComplianceTaints(),
         "Artifacts are disabled by your organization's policy. Contact your organization admin to enable them, then retry.",
       );
     case "cache_miss":
@@ -411,7 +411,7 @@ function artifactUrlSubPath(t) {
       t.match(new RegExp(`^https://(?:[a-z0-9-]+\\.)?claude\\.ai${w}`))?.[1] ??
       void 0 ??
       (e
-        ? t.match(new RegExp(`^https?://${iu(new URL(e).host)}${w}`))?.[1]
+        ? t.match(new RegExp(`^https?://${escapeRegExp(new URL(e).host)}${w}`))?.[1]
         : void 0);
   return r === void 0 || r === "" ? void 0 : r;
 }
@@ -432,7 +432,7 @@ function parseArtifactUrlAnyCase(t) {
   let e = canonicalizeArtifactUrlInput(t);
   return parseArtifactUrl(e) ?? M(e.toLowerCase(), !0);
 }
-var ct = new RegExp(`^${iu(ARTIFACT_STUB_URL_PREFIX)}(${g})(?:[/?#]|$)`);
+var ct = new RegExp(`^${escapeRegExp(ARTIFACT_STUB_URL_PREFIX)}(${g})(?:[/?#]|$)`);
 function parseStubArtifactUrl(t) {
   let e = t.match(ct);
   return e?.[1] ? { slug: e[1] } : null;
@@ -718,7 +718,7 @@ function selectorOrJoinerRides(t, e) {
   };
 }
 function sweepResultLine(t, e, { joiners: r } = { joiners: !0 }) {
-  let o = Yg(t),
+  let o = toWellFormed(t),
     i = [],
     u = 0,
     s = !1,
@@ -747,7 +747,7 @@ function sweepResultLine(t, e, { joiners: r } = { joiners: !0 }) {
 function revealPageInvisibles(t) {
   let e = "",
     r = "none";
-  for (let o of Yg(t)) {
+  for (let o of toWellFormed(t)) {
     let i = Ot(o, r);
     ((e += i.shown), (r = i.after));
   }
@@ -789,7 +789,7 @@ function listScopeFrom(t) {
   let e = t.scope;
   return e === "shared" || e === "all" ? e : "mine";
 }
-var D = [e8, oxe, rae, sxe].map((t) => t.replaceAll("-", "_"));
+var D = [COWRITTEN_ARTIFACT_HTML_TAG, ARTIFACT_FILE_CONTENT_TAG, ARTIFACT_ORIGIN_NOTES_TAG, ARTIFACT_TYPE_INSTRUCTIONS_TAG].map((t) => t.replaceAll("-", "_"));
 class W {
   #t;
   #e;
@@ -828,12 +828,12 @@ class W {
             "system_reminder",
             "function_results",
             "transcript",
-            ...Mxt,
-            ...ixe,
-            jP,
-            Id,
-            pp,
-            pz,
+            ...HARNESS_ENVELOPE_TAGS,
+            ...LOCAL_COMMAND_TAGS,
+            TICK_TAG,
+            COMMAND_NAME_TAG,
+            COMMAND_MESSAGE_TAG,
+            COMMAND_ARGS_TAG,
           ]),
         ),
         Xvt(),
@@ -856,7 +856,7 @@ function containsInterruptLiteral(t) {
   return Z.some((e) => t.includes(e));
 }
 var wt = new RegExp(
-  Z.map((t) => `${iu(t.slice(0, 1))}(?=${iu(t.slice(1))})`).join("|"),
+  Z.map((t) => `${escapeRegExp(t.slice(0, 1))}(?=${escapeRegExp(t.slice(1))})`).join("|"),
   "g",
 );
 function markInterruptLiterals(t) {
@@ -870,13 +870,13 @@ function scrubArtifactEnvelopeTags(t, e = "all") {
   return e === "page" ? o : markInterruptLiterals(o);
 }
 function scrubbedHead(t, e, r = "all") {
-  let o = scrubArtifactEnvelopeTags(oe(t, e), r);
-  return o.length > e ? scrubArtifactEnvelopeTags(oe(t, e - 1), r) : o;
+  let o = scrubArtifactEnvelopeTags(truncateToCodeUnits(t, e), r);
+  return o.length > e ? scrubArtifactEnvelopeTags(truncateToCodeUnits(t, e - 1), r) : o;
 }
 function scrubServerLine(t, e) {
   return scrubArtifactEnvelopeTags(
-    us(
-      Array.from(oe(t, e * 4), (r) => (isDecisionSurfaceControl(r.codePointAt(0) ?? 0) ? " " : r))
+    truncateToCodePoints(
+      Array.from(truncateToCodeUnits(t, e * 4), (r) => (isDecisionSurfaceControl(r.codePointAt(0) ?? 0) ? " " : r))
         .join("")
         .replace(INVISIBLE_BLANKS, " ")
         .replace(/\s+/g, " ")

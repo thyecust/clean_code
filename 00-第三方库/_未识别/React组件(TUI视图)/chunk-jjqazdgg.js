@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { v_ } from "../../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { TREE_CONNECTOR_GLYPHS } from "../../../02-功能模块/权限系统/chunk-e4pfvp7x.js";
 import { _ } from "../../react/react.zhnvc798.js";
 import { o, t, pd } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { e, r } from "../../react/react.kwtapczy.js";
@@ -21,7 +21,7 @@ function ie(ue, fe) {
     fe,
   );
 }
-var U = { branch: v_.branch, last: v_.last, pipe: v_.pipe, space: "" };
+var U = { branch: TREE_CONNECTOR_GLYPHS.branch, last: TREE_CONNECTOR_GLYPHS.last, pipe: TREE_CONNECTOR_GLYPHS.pipe, space: "" };
 function Oye(Re) {
   let L = _(7),
     { connectors: h, children: G } = Re,

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { up, Lke, b7t } from "../共享小工具-未细化/chunk-jjr7hzzf.js";
+import { stripInvisibleChars, escapeControlChars, toUnicodeEscape } from "../共享小工具-未细化/text-sanitization.js";
 var C = new Map([
   [
     "a",
@@ -187,7 +187,7 @@ function XRe() {
   return t.invisiblePattern;
 }
 function rxn(u) {
-  return Lke(u).replace(XRe(), b7t);
+  return escapeControlChars(u).replace(XRe(), toUnicodeEscape);
 }
 function Age(u, d) {
   return `(?=([${u}]*))(?:\\${d})`;
@@ -493,7 +493,7 @@ function iar(u) {
   return new RegExp(`[${Jvt}](?!\\\\)(?=${E}(?:${x.join("|")}))`, "giu");
 }
 function vge(u, d) {
-  let e = HU(u, yBe(up(d).replace(XRe(), "")));
+  let e = HU(u, yBe(stripInvisibleChars(d).replace(XRe(), "")));
   if (y(e) === e) return e;
   let a = R(u, !1);
   return e

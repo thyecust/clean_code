@@ -14,10 +14,10 @@ import { sleep } from "../../01-核心基础设施/共享小工具-未细化/asy
 import { logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, z, pB, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Kn } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
+import { writeToStdout } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { Ff, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ddt } from "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
+import { isHumanTurnEvent } from "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import {
   _Cn,
   yCn,
@@ -33,9 +33,9 @@ import {
 } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 import { cs } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { M1 } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { bQ } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
-import { ZD } from "../认证-OAuth登录/chunk-7rf7w8yf.js";
+import { getSessionAuthHeaders } from "../认证-OAuth登录/credential-file-descriptors.js";
 import { getBridgePollIntervalConfig } from "../../01-核心基础设施/共享小工具-未细化/bridge-poll-interval-config.js";
 import {
   BGn,
@@ -53,16 +53,16 @@ import {
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getAttestationFilterPolicy } from "../Bridge-RemoteControl/chunk-tyce0p0b.js";
 import { isProjectsHumanOriginEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { YAn, JAn, ase } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { Ts, jXn } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5j0f24ra.js";
+import { setMainLoopRefcountListener, setNestedChainDropListener, getMainLoopRefcount } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { recordStartupPhase, jXn } from "../../01-核心基础设施/遥测-OpenTelemetry/startup-timing-telemetry.js";
 import { Fae } from "../../03-入口与运行时/Headless-SDK模式/chunk-e4xwwtsb.js";
 import { pE, fSe, d9, h2n } from "./chunk-66axrkvh.js";
 import { asn, VGe, KGe, sbe, Jjn, csn, pM, rdt } from "../Bridge-RemoteControl/chunk-znhfst8k.js";
 import { VW } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
-import { $Jt } from "../../01-核心基础设施/共享小工具-未细化/chunk-ezjdm9sg.js";
+import { TOKEN_FILE_RETRY_DELAYS_MS } from "../../01-核心基础设施/共享小工具-未细化/session-ingress-token.js";
 import { CLOUD_PLUGINS_FORWARDED_SETTING_KEY } from "../插件系统/plugin-forwarding.js";
 import { isUserActivityRequest } from "../../03-入口与运行时/Headless-SDK模式/chunk-yb7jadvp.js";
-import { Xi } from "../Teammates团队/chunk-z2t8b9yc.js";
+import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { getClientPlatform } from "../../01-核心基础设施/共享小工具-未细化/user-agent.js";
 import { createWriteStream, fstatSync } from "fs";
 import { PassThrough } from "stream";
@@ -288,7 +288,7 @@ async function te({
   getAuthHeaders: e,
   rereadMiss: t,
   onDiagnostic: i,
-  delaysMs: s = $Jt,
+  delaysMs: s = TOKEN_FILE_RETRY_DELAYS_MS,
 }) {
   if (Object.keys(e()).length > 0) return !0;
   i?.(`no session auth headers yet, re-reading up to ${s.length} times`);
@@ -460,7 +460,7 @@ class Uz extends Fae {
       }
     (this.transport.setOnData((r) => {
       if ((this.writeInbound(r, "sse"), this.isBridge && this.isDebug))
-        Kn(
+        writeToStdout(
           r.endsWith(`
 `)
             ? r
@@ -568,7 +568,7 @@ class Uz extends Fae {
         );
       })().catch((c) => (logError(c), null))),
         this.hydratePrefetch.then(() => {
-          (Ts("resume_hydrate_fetch_ms", performance.now() - r, r), jXn());
+          (recordStartupPhase("resume_hydrate_fetch_ms", performance.now() - r, r), jXn());
         }));
     }
     let B = {
@@ -657,9 +657,9 @@ class Uz extends Fae {
             );
           } catch {}
       }),
-      YAn((r) => this.sessionState.setMainLoopRefcount(r)),
-      this.sessionState.setMainLoopRefcount(ase()),
-      JAn((r) => this.sessionState.dropNestedBlockedChain(r)),
+      setMainLoopRefcountListener((r) => this.sessionState.setMainLoopRefcount(r)),
+      this.sessionState.setMainLoopRefcount(getMainLoopRefcount()),
+      setNestedChainDropListener((r) => this.sessionState.dropNestedBlockedChain(r)),
       (this.sessionState.onMetadataChanged = (r) => {
         this.ccrClient.reportMetadata(r);
       }),
@@ -821,7 +821,7 @@ class Uz extends Fae {
       this.activityFd.write(e);
       return;
     }
-    Kn(e);
+    writeToStdout(e);
   }
   writeInbound(e, t) {
     if (this.inputStream.destroyed || this.inputStream.writableEnded) {
@@ -838,7 +838,7 @@ class Uz extends Fae {
   recordUserDrivenInbound(e) {
     switch ((super.recordUserDrivenInbound(e), e.type)) {
       case "user":
-        if (ddt(e, "remote-worker", isProjectsHumanOriginEnabled())) this.idleTracker.noteActivity();
+        if (isHumanTurnEvent(e, "remote-worker", isProjectsHumanOriginEnabled())) this.idleTracker.noteActivity();
         return;
       case "control_response":
         if (e.response.subtype === "success") this.idleTracker.noteActivity();
@@ -868,7 +868,7 @@ class Uz extends Fae {
     }
     if ((await this.ccrClient.writeEvent(e), this.isBridge)) {
       if (e.type === "control_request" || this.isDebug)
-        Kn(
+        writeToStdout(
           gre(e) +
             `
 `,
@@ -880,8 +880,8 @@ class Uz extends Fae {
   }
   close() {
     if (
-      (YAn(null),
-      JAn(null),
+      (setMainLoopRefcountListener(null),
+      setNestedChainDropListener(null),
       bAt(this.attestationDropSenderWriter),
       this.keepAliveTimer)
     )
@@ -949,7 +949,7 @@ function ke(e) {
     if (Array.isArray(s)) {
       let d = s.find(
         (o) =>
-          o && typeof o === "object" && o.type === "tool_use" && o.name === Xi,
+          o && typeof o === "object" && o.type === "tool_use" && o.name === SCHEDULE_WAKEUP_TOOL_NAME,
       );
       if (d) {
         let o = d.input;
@@ -961,7 +961,7 @@ function ke(e) {
             content: [
               {
                 type: "tool_use",
-                name: Xi,
+                name: SCHEDULE_WAKEUP_TOOL_NAME,
                 input: { delaySeconds: o?.delaySeconds },
               },
             ],
@@ -1004,15 +1004,15 @@ async function oe(e, t, i, s) {
 }
 function zmr(e, t) {
   return (async () => {
-    if (Object.keys(ZD()).length === 0) return;
+    if (Object.keys(getSessionAuthHeaders()).length === 0) return;
     let i = !1,
       s = {
-        ...csn(bQ(new ie(e)), ZD),
+        ...csn(bQ(new ie(e)), getSessionAuthHeaders),
         onConflict: () => {
           i = !0;
         },
       };
-    M1({ early_hydrate_prefetch: 1 });
+    addStartupContext({ early_hydrate_prefetch: 1 });
     let d = await oe(
       (o) => pM.readInternalEventsFrom(s, o),
       () => pM.readSubagentInternalEventsFrom(s),

@@ -13,12 +13,12 @@ import { B, Dx } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { Bo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { Nae } from "../../01-核心基础设施/设置-配置/chunk-avjbj8nf.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { shouldOfferTrustBackstop } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 function agentsTrustDecision() {
   if (Ie(!1) || Boolean(a.IS_DEMO) || a.CLAUBBIT) return "skip";
-  return Bo() && !Nae() ? "trusted" : "ask";
+  return Bo() && !shouldOfferTrustBackstop() ? "trusted" : "ask";
 }
 async function ensureAgentsWorkspaceTrust(r, i, o) {
   switch (i) {
@@ -51,7 +51,7 @@ async function ensureAgentsWorkspaceTrust(r, i, o) {
             import("./TrustDialog.syp7kdw2.js"),
             import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"),
           ]),
-        p = await n(Q(), o).catch(() => []);
+        p = await n(getCwd(), o).catch(() => []);
       (await t(r, [(k) => e(s, { commands: p, onDone: () => k() })], {
         session: B(),
         storageV5: o,

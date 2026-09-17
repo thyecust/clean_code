@@ -16,11 +16,11 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ht } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { h1, zRe, VRe } from "../../01-核心基础设施/共享小工具-未细化/chunk-0ypv8gq2.js";
+import { isPolicyAllowed, zRe, getPolicyDeniedReason } from "../../01-核心基础设施/共享小工具-未细化/compliance-taints-store.js";
 import { getSessionFeatureCache } from "../Hooks钩子/session-feature-cache.js";
 import { sJ, TGt, pXe, fXe, cJ, roe } from "./chunk-ajtn749s.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { _un, cue } from "../../01-核心基础设施/共享小工具-未细化/chunk-m9kab71c.js";
+import { _un, isPluginSkillToolEnabled } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-gating.js";
 import { i4e } from "../../01-核心基础设施/共享小工具-未细化/chunk-ck2sjz96.js";
 import "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
 import { SEARCH_PLUGINS_TOOL_NAME, SEARCH_SKILLS_TOOL_NAME, SUGGEST_PLUGIN_INSTALL_TOOL_NAME, SUGGEST_SKILLS_TOOL_NAME, LIST_PLUGINS_TOOL_NAME, LIST_SKILLS_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/plugin-skill-tool-names.js";
@@ -45,7 +45,7 @@ var ee = 15000,
   L = "/api/oauth/organizations/:orgUUID/skills/search";
 async function D(e, t, r, o, i) {
   let p = t === L ? "skill_search" : "plugin_search";
-  if (!h1("allow_plugin_skill_search")) {
+  if (!isPolicyAllowed("allow_plugin_skill_search")) {
     let S = zRe("allow_plugin_skill_search");
     throw (
       logFeatureBad(
@@ -59,7 +59,7 @@ async function D(e, t, r, o, i) {
               : "policy_cache_miss",
       ),
       new d(
-        VRe("allow_plugin_skill_search", "Plugin and skill search", "is") ??
+        getPolicyDeniedReason("allow_plugin_skill_search", "Plugin and skill search", "is") ??
           "Plugin and skill search is unavailable right now; please try again.",
       )
     );
@@ -163,7 +163,7 @@ function V(e) {
     get outputSchema() {
       return k();
     },
-    isEnabled: cue,
+    isEnabled: isPluginSkillToolEnabled,
     isConcurrencySafe: () => !0,
     isReadOnly: () => !0,
     description: async () =>
@@ -267,7 +267,7 @@ function W(e) {
     get outputSchema() {
       return k();
     },
-    isEnabled: cue,
+    isEnabled: isPluginSkillToolEnabled,
     isConcurrencySafe: () => !0,
     isReadOnly: () => !0,
     description: async () => e.description,
@@ -368,7 +368,7 @@ var oe = createLazyValue(() =>
     get outputSchema() {
       return ne();
     },
-    isEnabled: cue,
+    isEnabled: isPluginSkillToolEnabled,
     isConcurrencySafe: () => !0,
     isReadOnly: () => !0,
     description: async () =>
@@ -433,7 +433,7 @@ var ue = createLazyValue(() =>
     get outputSchema() {
       return ce();
     },
-    isEnabled: cue,
+    isEnabled: isPluginSkillToolEnabled,
     isConcurrencySafe: () => !0,
     isReadOnly: () => !0,
     description: async () =>

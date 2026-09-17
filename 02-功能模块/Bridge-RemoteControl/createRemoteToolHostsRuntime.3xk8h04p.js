@@ -11,7 +11,7 @@
 // [preload stripped] 原本在此预载 184 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Si, K, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep, fullJitterBackoffMs, raceWithAbortSignal } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { Ve, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { zl, Oa, rc, fS } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
@@ -20,13 +20,13 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ee } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { CAN_USE_TOOL_STREAM_CLOSED_REASON, CAN_USE_TOOL_INVALID_RESULT_REASON, CAN_USE_TOOL_REQUEST_FAILED_REASON } from "../权限系统/chunk-e4pfvp7x.js";
-import { Er } from "../工具Bash-Shell/chunk-4pap8y5n.js";
+import { formatPermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { Tn, Rp, qe, Bt, tt, Mn, co, ro, Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { gc, _b, oS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { isModelDrivenSession } from "../Teammates团队/chunk-811z9z0t.js";
+import { isModelDrivenSession } from "../Teammates团队/teammate-context.js";
 import { getToolPermissionContext, getMainLoopModel, applyContextLayers } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, getToolRemoteExecution } from "../权限系统/chunk-qdy0h5k2.js";
 import {
@@ -95,7 +95,7 @@ import {
 import { V_ } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { PromptScopedAbortController, unwrapAbortReason, shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { isExiting, getNeverResolvingPromise } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
-import { Fy } from "../会话-历史-恢复/chunk-m1xj4s02.js";
+import { AsyncQueue } from "../会话-历史-恢复/chunk-m1xj4s02.js";
 import { h7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   blt,
@@ -115,7 +115,7 @@ import {
   mSe,
   e2,
 } from "../远程工具执行/chunk-66axrkvh.js";
-import { u3e } from "../../01-核心基础设施/共享小工具-未细化/chunk-33vqsej8.js";
+import { isNonDeviceToolName } from "../../01-核心基础设施/共享小工具-未细化/device-passthrough-meta.js";
 import { JBn, gIe, QBn, ZBn, e2n, Hnn, t2n } from "./chunk-qp3gv3vk.js";
 import "./chunk-bm9p9vh6.js";
 import {
@@ -169,16 +169,16 @@ import {
   NQt,
   FQt,
 } from "../远程工具执行/远程工具执行.6bj9ddx2.js";
-import "../AutoMode-自动模式/chunk-15n5gf3t.js";
+import "../AutoMode-自动模式/unattended-serving-consent.js";
 import { j6e } from "./chunk-etbwf1s8.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-c6fa1myp.js";
+import "../../01-核心基础设施/共享小工具-未细化/dir-sync-worker-lane.js";
 import { REMOTE_APPROVAL_MESSAGES } from "./remote-approval-messages.js";
 import { RemoteSessionHostRegistry } from "./remote-session-host-registry.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-d1t6d4k8.js";
+import "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 import { isLocalDisplayOnlyDenialReason } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
 import { toNumber } from "../../01-核心基础设施/共享小工具-未细化/lodash-to-number.js";
-import { tZ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getPlatformDisplayName } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe, asStringArray } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isDeepStrictEqual as go } from "util";
 var hn =
@@ -463,7 +463,7 @@ function Qo(e, o) {
 function En(e, o) {
   let r =
     e === "darwin" || e === "linux" || e === "win32"
-      ? tZ(e)
+      ? getPlatformDisplayName(e)
       : q(e) || "unknown platform";
   return o && q(o) ? `${r} ${q(o)}` : r;
 }
@@ -824,7 +824,7 @@ async function Ue({
         name: s.name,
         ruleMessage:
           P.ruleValue.ruleContent === void 0
-            ? `The rule ${Er(P.ruleValue)} denies this session the bridge that reaches ${s.name}, so its ${e.name} is not forwarded there either.`
+            ? `The rule ${formatPermissionRule(P.ruleValue)} denies this session the bridge that reaches ${s.name}, so its ${e.name} is not forwarded there either.`
             : e.isMcp === !0
               ? `${KCe(e.name, P)} Rules on this tool apply to a forwarded call field by field; one this session cannot check that way (a field the tool does not declare, or a structured value) refuses every forwarded call, and a plain rule on mcp__${Rp} covers every attached machine's tools.`
               : `${KCe(e.name, P)} Rules on the bridge's names apply to a forwarded call field by field, and one this session cannot check that way (a pattern over the command, or the machine field) refuses every forwarded ${e.name}: ${e.name}(\u2026) scopes a rule to commands, ${e.name}(${vo}:\u2026) to one machine, and a plain rule on mcp__${Rp} covers every attached machine whatever it calls itself.`,
@@ -860,7 +860,7 @@ async function Ue({
       (w.matchedAskRule !== void 0 || isAskRuleDrivenReason(w.decisionReason) || v),
     j = [k, R].filter((O) => O !== null);
   if (T || j.length > 0) {
-    let O = j.map((W) => Er(W.ruleValue)).join(", "),
+    let O = j.map((W) => formatPermissionRule(W.ruleValue)).join(", "),
       b = getToolPermissionContext(r);
     if (b.mode === "dontAsk" || b.shouldAvoidPermissionPrompts)
       return {
@@ -1119,9 +1119,9 @@ function Xn(e, o, t, r, s) {
     request_bytes: r.requestBytes,
     response_bytes: r.responseBytes,
     meta_copy: fromEnumOpt(r.metaCopy),
-    call_id: Ee(s.callId),
-    tool_use_id: Ee(s.callId),
-    host_epoch: Ee(s.sentUnderEpoch),
+    call_id: sanitizeAnalyticsId(s.callId),
+    tool_use_id: sanitizeAnalyticsId(s.callId),
+    host_epoch: sanitizeAnalyticsId(s.sentUnderEpoch),
     handle_hash: o.description === void 0 ? void 0 : Tn(o.description.name),
     criteria_version: S(Pnn),
   }),
@@ -1157,8 +1157,8 @@ function Ge(e, o, t, r) {
     tool: Qn(e),
     entry: fromEnum(o),
     outcome: fromEnum(t),
-    call_id: Ee(r),
-    tool_use_id: Ee(r),
+    call_id: sanitizeAnalyticsId(r),
+    tool_use_id: sanitizeAnalyticsId(r),
     criteria_version: S(Pnn),
   }),
     Jn(t));
@@ -1173,11 +1173,11 @@ var At = 32,
   Et = 256,
   Xe = 1e4;
 function Ct(e) {
-  let o = Sn(e.normalize("NFKC"))
+  let o = replaceControlChars(e.normalize("NFKC"))
     .replace(/[<\u2329\u27E8\u27EA\u3008\u300A]/g, "\u2039")
     .replace(/[>\u232A\u27E9\u27EB\u3009\u300B]/g, "\u203A")
     .trim();
-  return oe(jUt(o), WDt);
+  return truncateToCodeUnits(jUt(o), WDt);
 }
 async function so({
   tool: e,
@@ -1975,7 +1975,7 @@ async function Nt({
           },
         }
       );
-    let ie = H.feedback === void 0 ? void 0 : oe(H.feedback, Wle),
+    let ie = H.feedback === void 0 ? void 0 : truncateToCodeUnits(H.feedback, Wle),
       Ne = {
         ask_id: I.ask_id,
         decision: H.decision,
@@ -2825,7 +2825,7 @@ async function zt(e, o, t, r) {
     (a === void 0 ||
       a.status === "offline" ||
       a.protocol.kind === "incompatible") &&
-    u3e(e.mcpInfo?.toolName ?? "") &&
+    isNonDeviceToolName(e.mcpInfo?.toolName ?? "") &&
     r.forget !== void 0 &&
     !r.listingUnavailable(t, s) &&
     r.forget(t)
@@ -2836,7 +2836,7 @@ async function zt(e, o, t, r) {
       return { kind: "error", code: "host_offline", message: RQt() };
     let k = Yt(s),
       p = e.mcpInfo?.toolName ?? e.name;
-    if (k === void 0 || !u3e(p)) return { kind: "local", input: o };
+    if (k === void 0 || !isNonDeviceToolName(p)) return { kind: "local", input: o };
     if (k.status === "offline")
       return {
         kind: "error",
@@ -3210,7 +3210,7 @@ async function ar({
     rTe(e.name, t.getProactivityLevel())
   )
     return { kind: "no_verdict" };
-  let c = oe(
+  let c = truncateToCodeUnits(
       `${o.message}${o.decisionReason === void 0 ? "" : ` [${o.decisionReason}]`}`,
       dr,
     ),
@@ -3297,7 +3297,7 @@ ${k}`,
         cause: fromEnum(U),
         headless: T.shouldAvoidPermissionPrompts === !0,
         duration_ms: Date.now() - w,
-        tool_use_id: Ee(r),
+        tool_use_id: sanitizeAnalyticsId(r),
         ..._,
       }),
       t.abortController.signal.aborted)
@@ -3356,7 +3356,7 @@ ${k}`,
         cause: fromEnum("crashed"),
         headless: getToolPermissionContext(t).shouldAvoidPermissionPrompts === !0,
         duration_ms: Date.now() - w,
-        tool_use_id: Ee(r),
+        tool_use_id: sanitizeAnalyticsId(r),
         ..._,
       }),
       { kind: "no_verdict" }
@@ -3425,7 +3425,7 @@ async function* mr({
     op: { action: "add", ids: [o.id] },
   };
   try {
-    let c = new Fy(),
+    let c = new AsyncQueue(),
       m = s.agentId
         ? () => {}
         : S6t({
@@ -3701,7 +3701,7 @@ function _r(e, o, t) {
 }
 var kr = 500;
 function wr(e) {
-  let o = oe(e, kr);
+  let o = truncateToCodeUnits(e, kr);
   return o.length < e.length ? `${o}\u2026` : o;
 }
 function bo(e) {

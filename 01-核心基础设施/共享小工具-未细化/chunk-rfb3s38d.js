@@ -10,11 +10,11 @@
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 function isCrossSessionMessagingEnabled() {
   let e = a.CLAUDE_CODE_HARBOR_KITE;
   if (e !== void 0) return Ie(e);
-  if (P() === "windows" && !H("tengu_harbor_kite_win", !0)) return !1;
+  if (getCurrentPlatform() === "windows" && !H("tengu_harbor_kite_win", !0)) return !1;
   return H("tengu_harbor_kite", !0);
 }
 function isProjectsHumanOriginEnabled() {

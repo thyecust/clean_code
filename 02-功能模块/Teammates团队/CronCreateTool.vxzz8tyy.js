@@ -12,10 +12,10 @@
 import { bB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import { getTeammateContext } from "./chunk-811z9z0t.js";
+import { getTeammateContext } from "./teammate-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { JI, K_, rJ, nCe, vj, Z7e } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { parseCronExpression, formatCronSchedule, getScheduledTasksPath, createScheduledTask, listScheduledTasks, getNextCronFireTimeMs } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { CRON_CREATE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt } from "../Cron-定时任务/chunk-mk3zm4ew.js";
 import { buildBooleanFromStringSchema } from "../../01-核心基础设施/共享小工具-未细化/boolean-from-string-schema.js";
 import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -68,22 +68,22 @@ var n = 50,
       return buildCronCreatePrompt(isDurableCronEnabled());
     },
     getPath() {
-      return rJ();
+      return getScheduledTasksPath();
     },
     async validateInput(e) {
-      if (!JI(e.cron))
+      if (!parseCronExpression(e.cron))
         return {
           result: !1,
           message: `Invalid cron expression '${e.cron}'. Expected 5 fields: M H DoM Mon DoW.`,
           errorCode: 1,
         };
-      if (Z7e(e.cron, Date.now()) === null)
+      if (getNextCronFireTimeMs(e.cron, Date.now()) === null)
         return {
           result: !1,
           message: `Cron expression '${e.cron}' does not match any calendar date in the next year.`,
           errorCode: 2,
         };
-      if ((await vj()).length >= n)
+      if ((await listScheduledTasks()).length >= n)
         return {
           result: !1,
           message: `Too many scheduled jobs (max ${n}). Cancel one first.`,
@@ -100,10 +100,10 @@ var n = 50,
     },
     async call({ cron: e, prompt: r, recurring: t = !0, durable: a = !1 }) {
       let o = a && isDurableCronEnabled(),
-        i = await nCe(e, r, t, o, getTeammateContext()?.agentId);
+        i = await createScheduledTask(e, r, t, o, getTeammateContext()?.agentId);
       return (
         bB(!0),
-        { data: { id: i, humanSchedule: K_(e), recurring: t, durable: o } }
+        { data: { id: i, humanSchedule: formatCronSchedule(e), recurring: t, durable: o } }
       );
     },
     mapToolResultToToolResultBlockParam(e, r) {

@@ -10,7 +10,7 @@
 function n7e(e) {
   return e;
 }
-function Yo(e) {
+function asMcpSdkClient(e) {
   return e;
 }
-export { n7e, Yo };
+export { n7e, asMcpSdkClient };

@@ -23,7 +23,7 @@ import {
 import { Le, yZ } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
-import { oe } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { truncateToCodeUnits } from "../核心工具-字符串与文本/string-utils.js";
 import { R, l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { lit as S, fromEnum } from "../共享小工具-未细化/analytics-fields.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
@@ -114,25 +114,25 @@ import {
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SXt, fxe, wc, b, Ru, Ro, ae, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { y8 } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { Q } from "../共享小工具-未细化/chunk-rsr7cnyv.js";
+import { isConfigDirPath } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getCwd } from "../共享小工具-未细化/cwd-context.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { rL, wb } from "./chunk-fx8qr1md.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
-import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
+import { execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
 import { findCanonicalGitRoot, dirIsInGitRepo } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Ce } from "../../02-功能模块/Teammates团队/chunk-qe04h4c5.js";
-import { mn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
+import { STORAGE_KEYS } from "../../02-功能模块/Teammates团队/storage-keys.js";
+import { hashSha256 } from "../共享小工具-未细化/git-host-utils.js";
 import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { Br } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
-import { _Rt, yRt, Met, _x, xBe } from "../共享小工具-未细化/chunk-24x3spwe.js";
-import { hRt, qxn } from "./chunk-svk2cp17.js";
-import { ohe, Ex, gS } from "../共享小工具-未细化/chunk-a7cfts2d.js";
+import { profileCheckpoint } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
+import { HKLM_POLICY_REGISTRY_PATH, yRt, SETTINGS_REGISTRY_VALUE_NAME, WSL_MANAGED_SETTINGS_DIR, xBe } from "../共享小工具-未细化/mdm-policy-paths.js";
+import { fireRawRead, getMdmRawReadPromise } from "./mdm-raw-read.js";
+import { decodeBufferText, readFileSyncText, readFileWithMetadata } from "../共享小工具-未细化/safe-file-read.js";
 import { createKeyedSerialQueue } from "../共享小工具-未细化/async-serialization.js";
 import { s, se, v, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { lz } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { mXt, gXt, P } from "./chunk-13kdp2ag.js";
+import { readProcVersionSync, isWslKernelString, getCurrentPlatform } from "./platform-detection.js";
 import { isRecord } from "../共享小工具-未细化/is-record.js";
 import { countMatching, dedupe } from "../共享小工具-未细化/chunk-d16fhdtx.js";
 class at {
@@ -182,7 +182,7 @@ async function Xn(e) {
   if (d && isAbsolute(d)) return Me(d, "git", "ignore");
   return Me(homedir(), ".config", "git", "ignore");
 }
-async function M5t(e, t = Q()) {
+async function M5t(e, t = getCwd()) {
   try {
     if (!(await dirIsInGitRepo(t))) return { written: !1, effective: !1 };
     let r = e.replaceAll("\\", "/"),
@@ -276,7 +276,7 @@ class mt {
     if (this.loadPromise) return;
     this.loadPromise = (async () => {
       let t = Date.now(),
-        o = await (qxn() ?? hRt()),
+        o = await (getMdmRawReadPromise() ?? fireRawRead()),
         { mdm: d, hkcu: _, wslInherits: p } = await ht(o, e);
       this.replace(d, _, p);
       let E = Date.now() - t;
@@ -331,7 +331,7 @@ function vet(e, t, r) {
   te().replace(e, t, r);
 }
 async function oRt(e) {
-  let t = await hRt();
+  let t = await fireRawRead();
   return ht(t, e);
 }
 function $e(e, t, { userWritable: r = !1 } = {}) {
@@ -449,7 +449,7 @@ async function ht(e, t) {
       };
     r.push(...L.errors);
   }
-  let o = `Registry: ${_Rt}\\${Met}`,
+  let o = `Registry: ${HKLM_POLICY_REGISTRY_PATH}\\${SETTINGS_REGISTRY_VALUE_NAME}`,
     d = null;
   if (e.hklmStdout !== null) d = $e(pt(e.hklmStdout) ?? "", o);
   else if (e.hklmUnreadReason !== void 0) r.push(_t(o, e.hklmUnreadReason, !1));
@@ -469,7 +469,7 @@ async function ht(e, t) {
   }
   if (await or(p, t)) return { mdm: E, hkcu: Z, wslInherits: p };
   if (e.hkcuStdout !== null) {
-    let O = $e(pt(e.hkcuStdout) ?? "", `Registry: ${yRt}\\${Met}`, {
+    let O = $e(pt(e.hkcuStdout) ?? "", `Registry: ${yRt}\\${SETTINGS_REGISTRY_VALUE_NAME}`, {
       userWritable: !0,
     });
     if (!_ || O.settings.wslInheritsWindowsSettings === !0) {
@@ -494,15 +494,15 @@ async function ht(e, t) {
   return { mdm: E, hkcu: Z, wslInherits: p };
 }
 async function Se(e, t) {
-  if (isHoverRestEnabled() && t !== void 0) return (await gS(e, n_)).content;
-  return Ex(e, n_);
+  if (isHoverRestEnabled() && t !== void 0) return (await readFileWithMetadata(e, n_)).content;
+  return readFileSyncText(e, n_);
 }
 async function ke(e, t) {
   if (isHoverRestEnabled() && t !== void 0) return await ae().readdir(e);
   return ae().readdirSync(e);
 }
 async function or(e, t) {
-  if (e && (await Et(_x, t))) return !0;
+  if (e && (await Et(WSL_MANAGED_SETTINGS_DIR, t))) return !0;
   return Et(Tb(), t);
 }
 async function St(e, t) {
@@ -514,12 +514,12 @@ async function lxn(e) {
   if (!xBe() || !te().wslInherits) return "";
   let t = [];
   try {
-    t.push(await Se(J(_x, "managed-settings.json"), e));
+    t.push(await Se(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"), e));
   } catch (r) {
     t.push(Ue(r));
   }
   try {
-    let r = J(_x, "managed-settings.d"),
+    let r = J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
       o = (await ke(r, e))
         .filter(
           (d) =>
@@ -563,8 +563,8 @@ async function sr(e) {
     if (!isRecord(E)) return (t.push(I8t(_)), !1);
     return E.wslInheritsWindowsSettings === !0;
   }
-  if (await r(J(_x, "managed-settings.json"))) return { flag: !0, records: t };
-  let o = J(_x, "managed-settings.d"),
+  if (await r(J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json"))) return { flag: !0, records: t };
+  let o = J(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d"),
     d;
   try {
     d = await ke(o, e);
@@ -617,7 +617,7 @@ var Pt = ["-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass"],
     `${We}\\powershell.exe`,
   ];
 function cr() {
-  if (P() !== "windows") return null;
+  if (getCurrentPlatform() !== "windows") return null;
   for (let e of lr) {
     let t = yZ(e);
     if (t === null) {
@@ -724,7 +724,7 @@ function It(e, t) {
   }
 }
 function Nt(e) {
-  return P() === "windows" ? yt.dirname(e.file) : "/";
+  return getCurrentPlatform() === "windows" ? yt.dirname(e.file) : "/";
 }
 function Ct(e) {
   if (e.script != null) {
@@ -742,7 +742,7 @@ function Ct(e) {
   let { path: t } = e;
   if (t == null)
     return { error: "no path or script configured", code: "bad_path" };
-  if (P() !== "windows" || !HHn(t)) return { plan: { file: t, args: [] } };
+  if (getCurrentPlatform() !== "windows" || !HHn(t)) return { plan: { file: t, args: [] } };
   return At({ args: [...Pt, "-Command", _r], ps1Path: t });
 }
 function At(e) {
@@ -2433,11 +2433,11 @@ function ln(e, t) {
     ));
 }
 function wi() {
-  let e = mXt();
-  return e !== void 0 && gXt(e);
+  let e = readProcVersionSync();
+  return e !== void 0 && isWslKernelString(e);
 }
 function nt() {
-  let e = P(),
+  let e = getCurrentPlatform(),
     t = e === "wsl" && !wi() ? "linux" : e;
   switch (t) {
     case "wsl":
@@ -2782,7 +2782,7 @@ var un = 2048;
 function xi(e) {
   let t = E0(e);
   if (t.length <= un) return t;
-  let r = oe(t, un);
+  let r = truncateToCodeUnits(t, un);
   return `${r}\u2026 (+${t.length - r.length} chars not shown; the full output is in the debug log)`;
 }
 async function rt(e, t, r) {
@@ -2882,7 +2882,7 @@ async function ki(e, t, r) {
   return { output: X, warnings: le };
 }
 function Ln() {
-  return P() === "windows" ? "win32" : "posix";
+  return getCurrentPlatform() === "windows" ? "win32" : "posix";
 }
 function Dn(e, t, r, o) {
   if (e.script == null && e.interpreter == null) return Gi(e.path, t, r, o);
@@ -2911,7 +2911,7 @@ function Gi(e, t, r, o) {
   return null;
 }
 async function B5t(e, t, r) {
-  let o = await e.read([{ key: Ce.userSettings(), offset: 0, length: n_ + 1 }]);
+  let o = await e.read([{ key: STORAGE_KEYS.userSettings(), offset: 0, length: n_ + 1 }]);
   if (!o.ok)
     return {
       kind: "failing",
@@ -2921,8 +2921,8 @@ async function B5t(e, t, r) {
   let d = o.value.items[0];
   if (!d.found) return Wi(e.hostFiles, t);
   if (d.totalBytes > n_) return { kind: "oversize" };
-  let _ = mn(d.value),
-    p = r !== void 0 && r.contentHash === _ ? r.parsed : Eke(ohe(d.value), t);
+  let _ = hashSha256(d.value),
+    p = r !== void 0 && r.contentHash === _ ? r.parsed : Eke(decodeBufferText(d.value), t);
   return { kind: "seeded", contentHash: _, size: d.totalBytes, parsed: p };
 }
 async function Wi(e, t) {
@@ -2993,7 +2993,7 @@ async function Ki(e, t, r) {
     parsed:
       r !== void 0 && r.contentHash === o.contentHash
         ? r.parsed
-        : Eke(ohe(o.bytes), t, !0),
+        : Eke(decodeBufferText(o.bytes), t, !0),
   };
 }
 async function ji(e, t, r, o) {
@@ -3003,7 +3003,7 @@ async function ji(e, t, r, o) {
     kind: "seeded",
     contentHash: d.contentHash,
     size: d.size,
-    parsed: Eke(ohe(d.bytes), r, o),
+    parsed: Eke(decodeBufferText(d.bytes), r, o),
   };
 }
 async function Hn(e, t) {
@@ -3019,7 +3019,7 @@ async function Hn(e, t) {
   return {
     kind: "bytes",
     bytes: o.value.value,
-    contentHash: mn(o.value.value),
+    contentHash: hashSha256(o.value.value),
     size: o.value.bytes,
   };
 }
@@ -3227,7 +3227,7 @@ function ot(e) {
   let t;
   try {
     let { resolvedPath: r } = Ro(ae(), e);
-    t = xt(Ex(r, n_), !1);
+    t = xt(readFileSyncText(r, n_), !1);
   } catch (r) {
     if (W(r)) return !1;
     return !0;
@@ -3264,12 +3264,12 @@ function ve(e, t) {
   return e === "userSettings" && basename(t) === jq.default;
 }
 async function Un(e) {
-  let t = await e.read([Ce.userSettings()]);
+  let t = await e.read([STORAGE_KEYS.userSettings()]);
   if (!t.ok) return { kind: "unreadable", code: t.error.code };
   let r = t.value.items[0];
   if (!r.found) return { kind: "absent" };
   if (r.totalBytes > n_) return { kind: "oversize" };
-  let o = ohe(r.value);
+  let o = decodeBufferText(r.value);
   if (!o.trim()) return { kind: "empty" };
   let d = xt(o, !1);
   if (!isRecord(d)) return { kind: "non-object" };
@@ -3330,9 +3330,9 @@ function getSettingsWithErrors() {
   let e = da(),
     t = e.mergedSettings;
   if (t !== null) return t;
-  Br("loadSettingsFromDisk_start");
+  profileCheckpoint("loadSettingsFromDisk_start");
   let r = Plr(D());
-  return (Br("loadSettingsFromDisk_end"), (e.mergedSettings = r), r);
+  return (profileCheckpoint("loadSettingsFromDisk_end"), (e.mergedSettings = r), r);
 }
 function getManagedFileSettingsPresence() {
   for (let e of ZBe(S0())) {
@@ -3516,7 +3516,7 @@ async function Xi(e, t, r, o, d) {
     if (!N) {
       let C = null;
       try {
-        C = (await gS(r)).content;
+        C = (await readFileWithMetadata(r)).content;
       } catch (F) {
         if (!W(F)) throw F;
       }
@@ -3575,7 +3575,7 @@ async function Xi(e, t, r, o, d) {
       `
 `;
     if (_) {
-      let C = await d.write(Ce.userSettings(), w, {
+      let C = await d.write(STORAGE_KEYS.userSettings(), w, {
         publishDiscipline: "followAtomic",
       });
       if (!C.ok)
@@ -3584,7 +3584,7 @@ async function Xi(e, t, r, o, d) {
           "settings storageV5 write failed",
         );
     } else {
-      let C = y8(pe(r));
+      let C = isConfigDirPath(pe(r));
       await wb(r, w, {
         encoding: "utf-8",
         allowSymlink: e === "userSettings" || C,
@@ -3657,7 +3657,7 @@ async function Mn(e) {
   if (!t) return { changed: !1, error: null };
   let r;
   try {
-    r = (await gS(t, n_)).content;
+    r = (await readFileWithMetadata(t, n_)).content;
   } catch (I) {
     if (W(I)) return { changed: !1, error: null };
     let N = new R(
@@ -3701,7 +3701,7 @@ async function Mn(e) {
   if (b(O) === b(_)) return { changed: !1, error: null };
   try {
     tRt(t);
-    let I = y8(pe(t));
+    let I = isConfigDirPath(pe(t));
     return (
       await wb(
         t,
@@ -3969,7 +3969,7 @@ async function rawSettingsKeyPresence(e, t, r) {
       }
       try {
         let { resolvedPath: w } = Ro(ae(), x),
-          C = Ex(w, n_);
+          C = readFileSyncText(w, n_);
         if (!C.trim()) continue;
         let F = xt(C, !1);
         if (F === null || typeof F !== "object" || Array.isArray(F)) p = !0;

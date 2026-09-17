@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { cw, qLe, Bne, getMcpScopeConflicts, isOrganizationProvidedMcpScope, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isRestrictedToPluginOnly } from "../Skills技能/chunk-sapykxw7.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
@@ -85,9 +85,9 @@ function xe(oe, _e) {
     fl.Group,
     {
       children: [
-        e(fl.Node, { color: "warning", children: Sn(oe.message) }),
+        e(fl.Node, { color: "warning", children: replaceControlChars(oe.message) }),
         oe.suggestion &&
-          e(fl.Node, { dimColor: !0, children: Sn(oe.suggestion) }),
+          e(fl.Node, { dimColor: !0, children: replaceControlChars(oe.suggestion) }),
       ],
     },
     `conflict-${_e}`,
@@ -168,9 +168,9 @@ function O(ze) {
                   children: [
                     " ",
                     Ce && `(${h.file}) `,
-                    ce && `[${Sn(ce)}] `,
-                    h.path && h.path !== "" ? `${Sn(h.path)}: ` : "",
-                    Sn(h.message),
+                    ce && `[${replaceControlChars(ce)}] `,
+                    h.path && h.path !== "" ? `${replaceControlChars(h.path)}: ` : "",
+                    replaceControlChars(h.message),
                   ],
                 }),
               ],
@@ -203,9 +203,9 @@ function O(ze) {
                   children: [
                     " ",
                     Je && `(${N.file}) `,
-                    pe && `[${Sn(pe)}] `,
-                    N.path && N.path !== "" ? `${Sn(N.path)}: ` : "",
-                    Sn(N.message),
+                    pe && `[${replaceControlChars(pe)}] `,
+                    N.path && N.path !== "" ? `${replaceControlChars(N.path)}: ` : "",
+                    replaceControlChars(N.message),
                   ],
                 }),
               ],

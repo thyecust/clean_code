@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Cie } from "../../02-功能模块/工具Bash-Shell/chunk-4pap8y5n.js";
+import { matchesWildcardPattern } from "../../02-功能模块/工具Bash-Shell/permission-rule-parsing.js";
 import { parseArtifactUrl, canonicalizeArtifactUrlInput, parseArtifactUrlInput, artifactViewerUrlSpellings, artifactContentOriginUrlFor } from "../核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 var y = /^([A-Za-z][A-Za-z0-9+.-]*):\/\/([^/?#]*)(.*)$/;
 function _(e) {
@@ -35,7 +35,7 @@ function artifactUrlRule(e, n, r, i = "url") {
     let f = parseArtifactUrlInput(l.replace(/\*$/, ""));
     if (f?.slug === n.slug && f.env === n.env) return c;
     let a = new Set([l, _(l)]);
-    for (let m of a) for (let g of o) if (Cie(m, g)) return c;
+    for (let m of a) for (let g of o) if (matchesWildcardPattern(m, g)) return c;
   }
   return null;
 }

@@ -9,9 +9,9 @@
 // Version: 2.1.263
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { Q } from "./chunk-rsr7cnyv.js";
-import { Lc, zJ } from "./chunk-6smvq03f.js";
-import { g_, VI } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
+import { getCwd } from "./cwd-context.js";
+import { bgSupervisorNoun, daemonHint } from "./agent-view-feature-gates.js";
+import { redactDaemonNonce, getControlSocketPath } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 import { BG_PROTO } from "../../02-功能模块/后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { readStreamLines } from "./read-stream-lines.js";
 import { connect } from "net";
@@ -19,9 +19,9 @@ import { StringDecoder } from "string_decoder";
 async function controlRequest(f, a) {
   let r;
   try {
-    r = connect(VI());
+    r = connect(getControlSocketPath());
   } catch (t) {
-    return { ok: !1, code: "ENOCONN", error: g_(l(t)), errno: A(t) };
+    return { ok: !1, code: "ENOCONN", error: redactDaemonNonce(l(t)), errno: A(t) };
   }
   let o = a?.timeoutMs ?? 5000,
     e,
@@ -46,7 +46,7 @@ async function controlRequest(f, a) {
       d({
         ok: !1,
         code: "ENOCONN",
-        error: g_(l(t)),
+        error: redactDaemonNonce(l(t)),
         connected: n,
         errno: A(t),
       }),
@@ -71,7 +71,7 @@ async function controlRequest(f, a) {
       try {
         d(z(C));
       } catch (y) {
-        d({ ok: !1, code: "ENOCONN", error: g_(l(y)), connected: n });
+        d({ ok: !1, code: "ENOCONN", error: redactDaemonNonce(l(y)), connected: n });
       }
     }),
     r.once("close", () => {
@@ -88,14 +88,14 @@ async function controlRequest(f, a) {
   );
 }
 function openDaemonLease(f) {
-  let a = { label: f, cwd: Q(), pid: process.pid },
+  let a = { label: f, cwd: getCwd(), pid: process.pid },
     r = !1,
     o = null,
     e = null,
     s = () => {
       if (r) return;
       try {
-        o = connect(VI());
+        o = connect(getControlSocketPath());
       } catch {
         ((o = null), (e = setTimeout(s, 1000)), e.unref());
         return;
@@ -126,9 +126,9 @@ function openDaemonLease(f) {
 function subscribeControl(f, a, r, o) {
   let e;
   try {
-    e = connect(VI());
+    e = connect(getControlSocketPath());
   } catch (c) {
-    return (queueMicrotask(() => o(g_(l(c)))), () => {});
+    return (queueMicrotask(() => o(redactDaemonNonce(l(c)))), () => {});
   }
   let s = !1,
     u = !1,
@@ -138,10 +138,10 @@ function subscribeControl(f, a, r, o) {
     };
   (e.setTimeout(1e4, () => {
     if (!u)
-      (n(`${Lc()} did not respond \u2014 it may be stalled${zJ("restart")}`),
+      (n(`${bgSupervisorNoun()} did not respond \u2014 it may be stalled${daemonHint("restart")}`),
         e.destroy());
   }),
-    e.on("error", (c) => n(g_(l(c)))),
+    e.on("error", (c) => n(redactDaemonNonce(l(c)))),
     e.on("close", () => n("control socket closed")),
     e.on("connect", () =>
       e.write(

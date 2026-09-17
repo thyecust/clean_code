@@ -9,6 +9,6 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 262 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { OIt, DIt } from "../../01-核心基础设施/设置-配置/chunk-11v2vkwp.js";
+import { GroveDialog as OIt, PrivacySettingsDialog as DIt } from "../../01-核心基础设施/设置-配置/grove-privacy-dialogs.js";
 import "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 export { OIt as GroveDialog, DIt as PrivacySettingsDialog };

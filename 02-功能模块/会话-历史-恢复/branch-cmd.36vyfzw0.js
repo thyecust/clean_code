@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 198 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, he, X1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { ge, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, z } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { iu, ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { getOwnJobShortId, syncJobName } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getProjectKey, buildHistorySuppressionEntry } from "./chunk-mkmy4cx2.js";
@@ -32,9 +32,9 @@ import {
   searchSessionsByCustomTitle,
   primeSessionMessagesCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { ll, yl } from "../Teammates团队/chunk-thxapyam.js";
-import { hu } from "../../01-核心基础设施/共享小工具-未细化/chunk-gyn0kh7v.js";
-import { Ohe } from "../../01-核心基础设施/共享小工具-未细化/chunk-qng0dgw4.js";
+import { getProjectDir, getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
+import { resolveTranscriptLocator } from "../../01-核心基础设施/共享小工具-未细化/hover-rest-transcript.js";
+import { extractUserPromptText } from "../../01-核心基础设施/共享小工具-未细化/user-prompt-text.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
 import { randomUUID } from "crypto";
 import { once as N } from "events";
@@ -47,7 +47,7 @@ var X = 4194304,
 function deriveFirstPrompt(t) {
   let u = { commandFallback: "" },
     d;
-  for (let n of t) if (((d = Ohe(n, u)), d !== void 0)) break;
+  for (let n of t) if (((d = extractUserPromptText(n, u)), d !== void 0)) break;
   return (
     (d ??= u.commandFallback),
     d.replace(/\s+/g, " ").trim().slice(0, 100).trimEnd() ||
@@ -59,14 +59,14 @@ async function createFork(t, u, d, n) {
     p = K(),
     A = isSessionHistorySuppressed() || isSessionHistorySuppressedFor(pinSessionId(p)),
     s = X1(),
-    E = ll(he()),
+    E = getProjectDir(he()),
     l = getTranscriptPathForSession(a),
-    C = getMaterializedSessionFile() ?? yl(),
-    g = hu(C, n);
+    C = getMaterializedSessionFile() ?? getSessionTranscriptPath(),
+    g = resolveTranscriptLocator(C, n);
   if (g !== void 0)
     return Q({
       sourceV5: g,
-      forkKey: Ce.transcript(getProjectKey(he()), a),
+      forkKey: STORAGE_KEYS.transcript(getProjectKey(he()), a),
       forkSessionId: a,
       originalSessionId: p,
       sourceTaintAtEntry: A,
@@ -400,7 +400,7 @@ async function Z(t, u) {
   if ((await searchSessionsByCustomTitle(d, { exact: !0 }, u)).length === 0) return d;
   let a = await searchSessionsByCustomTitle(`${t} (Branch`, void 0, u),
     p = new Set([1]),
-    A = new RegExp(`^${iu(t)} \\(Branch(?: (\\d+))?\\)$`);
+    A = new RegExp(`^${escapeRegExp(t)} \\(Branch(?: (\\d+))?\\)$`);
   for (let E of a) {
     let l = E.customTitle?.match(A);
     if (l)
@@ -440,7 +440,7 @@ async function branchAndResume(t, u, d = {}) {
         has_custom_title: !!E,
       }));
     let v = {
-        date: ft(m.toISOString(), "T"),
+        date: beforeFirst(m.toISOString(), "T"),
         messages: C,
         fullPath: l,
         value: m.getTime(),

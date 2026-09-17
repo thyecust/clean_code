@@ -9,8 +9,8 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 247 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x, oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Vl } from "../权限系统/chunk-e4pfvp7x.js";
+import { pluralize, truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { ARTIFACT_MARKER_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import {
   ASSET_ID_RE,
@@ -34,9 +34,9 @@ import { yw, jg, getShareEntry, ownershipTag, shareAudienceParenthetical } from 
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { xut } from "./chunk-fx5ekm7e.js";
+import { stripRejectNotice } from "./chunk-fx5ekm7e.js";
 import { wte, lwe, FS } from "./chunk-qpgskeea.js";
 import { ROOM_CONSENT_CLAUSE, DB_BATCH_OP, replayedPublishesRemaining, replayedPublishesResetAt, publishesRemainingLine } from "./chunk-pdd7kz7p.js";
 import { Sce, yPe, Mut, Nut, Fut, $ut, dM, artifactLivePathsSchemaOpen } from "./chunk-b6k1z7an.js";
@@ -74,7 +74,7 @@ import {
 import "../Teammates团队/chunk-weg7y2ya.js";
 import "../../01-核心基础设施/共享小工具-未细化/whiteboard-telemetry.js";
 import "../../01-核心基础设施/共享小工具-未细化/chunk-dgth8ahx.js";
-import "../Bridge-RemoteControl/chunk-jpq2fv3g.js";
+import "../Bridge-RemoteControl/bridge-inbound-origin.js";
 import "./chunk-5gvg7p5p.js";
 import "../Teammates团队/chunk-y89mhs4a.js";
 import { ReceivedBytesStatus } from "../../01-核心基础设施/共享小工具-未细化/webfetch-tool-messages.js";
@@ -88,7 +88,7 @@ function R(ee) {
     L = q === void 0 ? "claude" : q,
     M;
   if (D[0] !== L)
-    ((M = e(t, { color: L, children: Vl })), (D[0] = L), (D[1] = M));
+    ((M = e(t, { color: L, children: ARTIFACT_MARKER_GLYPH })), (D[0] = L), (D[1] = M));
   else M = D[1];
   let k;
   if (D[2] !== A || D[3] !== E)
@@ -170,7 +170,7 @@ function renderToolUseMessage(s, m) {
         c = fPe(n),
         f =
           c !== void 0
-            ? `"${sweepAskCopy(oe(c, 200)) ?? ""}"`
+            ? `"${sweepAskCopy(truncateToCodeUnits(c, 200)) ?? ""}"`
             : canonicalArtifactTargetFor(Xb(n), "(unrecognized address)");
       return r(t, {
         children: [
@@ -193,7 +193,7 @@ function renderToolUseMessage(s, m) {
   if (n.action === "list_types") {
     let d =
       typeof n.type_query === "string" && n.type_query !== ""
-        ? sweepAskCopy(oe(n.type_query, 200))
+        ? sweepAskCopy(truncateToCodeUnits(n.type_query, 200))
         : null;
     return r(t, {
       children: [
@@ -409,7 +409,7 @@ function renderToolUseMessage(s, m) {
         "copy ",
         p,
         " ",
-        x(p, "asset"),
+        pluralize(p, "asset"),
         " from",
         " ",
         canonicalArtifactTargetFor(T, "(unrecognized address)"),
@@ -590,18 +590,18 @@ function renderToolResultMessage(s, m, n) {
   if (J(s)) {
     let i = {
         ...s.preview,
-        file: oe(s.preview.file, 4096),
+        file: truncateToCodeUnits(s.preview.file, 4096),
         shots: s.preview.shots
           .slice(0, Mut)
-          .map((a) => ({ ...a, theme: oe(a.theme, 32) })),
+          .map((a) => ({ ...a, theme: truncateToCodeUnits(a.theme, 32) })),
         issues: s.preview.issues.slice(0, Nut),
         widths: s.preview.widths.slice(0, Sce),
-        themes: s.preview.themes.slice(0, 2).map((a) => oe(a, 32)),
+        themes: s.preview.themes.slice(0, 2).map((a) => truncateToCodeUnits(a, 32)),
       },
       l = countMatching(i.shots, (a) => a.error === void 0),
       u = i.issues.length + (i.issuesDropped ?? 0),
       h = (a, c) => {
-        let f = oe(a, c),
+        let f = truncateToCodeUnits(a, c),
           g = sweepAskCopy(f) ?? "";
         return f.length < a.length ? `${g}\u2026` : g;
       },
@@ -626,7 +626,7 @@ function renderToolResultMessage(s, m, n) {
                 ? i.renderError !== void 0
                   ? "browser did not start \u2014 static checks only"
                   : "no issues"
-                : `${u}${i.issuesDropped === yPe ? "+" : ""} ${x(u, "issue")}`,
+                : `${u}${i.issuesDropped === yPe ? "+" : ""} ${pluralize(u, "issue")}`,
               l < i.shots.length && i.renderError === void 0
                 ? ` \xB7 ${l}/${i.shots.length} captured`
                 : "",
@@ -713,7 +713,7 @@ function renderToolResultMessage(s, m, n) {
             ? i
               ? "comment threads could not be read"
               : "no comment threads yet"
-            : `read ${s.threads.length} comment ${x(s.threads.length, "thread")}${i ? " (some could not be read)" : ""}`,
+            : `read ${s.threads.length} comment ${pluralize(s.threads.length, "thread")}${i ? " (some could not be read)" : ""}`,
       }),
     });
   }
@@ -794,7 +794,7 @@ function renderToolResultMessage(s, m, n) {
           : void 0,
       v =
         h !== void 0
-          ? `saved ${h.fileCount} ${x(h.fileCount, "document")} under ${truncatePathMiddle(sweepAskCopy(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
+          ? `saved ${h.fileCount} ${pluralize(h.fileCount, "document")} under ${truncatePathMiddle(sweepAskCopy(h.dir) ?? "(unprintable path)", 1024)}${h.skippedCount > 0 ? ` (${h.skippedCount} skipped)` : ""}`
           : void 0;
     return e(ToolResultRow, {
       children: e(t, {
@@ -802,7 +802,7 @@ function renderToolResultMessage(s, m, n) {
         children:
           i.found === !1
             ? "no such document"
-            : (v ?? `read ${l} ${x(l, "document")}`),
+            : (v ?? `read ${l} ${pluralize(l, "document")}`),
       }),
     });
   }
@@ -817,7 +817,7 @@ function renderToolResultMessage(s, m, n) {
         children: !s.db_write.committed
           ? "database write not committed"
           : i !== void 0
-            ? `database batch ${"fallback" in s.db_write && s.db_write.fallback === "sequential" ? "written one at a time" : "committed"} (${i} ${x(i, "write")})`
+            ? `database batch ${"fallback" in s.db_write && s.db_write.fallback === "sequential" ? "written one at a time" : "committed"} (${i} ${pluralize(i, "write")})`
             : "database write committed",
       }),
     });
@@ -837,7 +837,7 @@ function renderToolResultMessage(s, m, n) {
         typeof i.peers === "number" &&
         Number.isSafeInteger(i.peers) &&
         i.peers >= 0
-          ? `${i.peers} ${x(i.peers, "peer")}`
+          ? `${i.peers} ${pluralize(i.peers, "peer")}`
           : "? peers",
       u = typeof i.reason === "string" ? jg(i.reason, { max: 32 }) : void 0;
     return e(ToolResultRow, {
@@ -879,7 +879,7 @@ function renderToolResultMessage(s, m, n) {
             ? "listed assets (record unreadable)"
             : l === 0
               ? "no assets listed"
-              : `listed ${l} ${x(l, "asset")}${typeof i.next === "string" && i.next !== "" ? " (more follow)" : ""}`,
+              : `listed ${l} ${pluralize(l, "asset")}${typeof i.next === "string" && i.next !== "" ? " (more follow)" : ""}`,
       }),
     });
   }
@@ -894,7 +894,7 @@ function renderToolResultMessage(s, m, n) {
             ? "listed files (record unreadable)"
             : l === 0
               ? "no files listed"
-              : `listed ${l} ${x(l, "file")}`,
+              : `listed ${l} ${pluralize(l, "file")}`,
       }),
     });
   }
@@ -943,7 +943,7 @@ function renderToolResultMessage(s, m, n) {
     return e(ToolResultRow, {
       children: r(t, {
         dimColor: !0,
-        children: ["copied ", i, " ", x(i, "asset"), " into the artifact"],
+        children: ["copied ", i, " ", pluralize(i, "asset"), " into the artifact"],
       }),
     });
   }
@@ -1008,12 +1008,12 @@ function renderToolResultMessage(s, m, n) {
       f = countMatching(c, (p) => p?.connected !== !0),
       g =
         c.length > 0
-          ? ` \xB7 ${c.length} artifact ${x(c.length, "room")} joined${f > 0 ? ` (${f} reconnecting)` : ""}`
+          ? ` \xB7 ${c.length} artifact ${pluralize(c.length, "room")} joined${f > 0 ? ` (${f} reconnecting)` : ""}`
           : "";
     return e(ToolResultRow, {
       children: e(t, {
         dimColor: !0,
-        children: `${i} artifact ${x(i, "watch", "watches")}${l > 0 ? ` \xB7 ${l} with auto-replies paused or stopped` : ""}${a !== "" ? `, ${a}` : ""}${g}`,
+        children: `${i} artifact ${pluralize(i, "watch", "watches")}${l > 0 ? ` \xB7 ${l} with auto-replies paused or stopped` : ""}${a !== "" ? `, ${a}` : ""}${g}`,
       }),
     });
   }
@@ -1043,7 +1043,7 @@ function renderToolResultMessage(s, m, n) {
                 ? (s.verify.dropped ?? 0) > 0 || s.verify.truncated === !0
                   ? "diagnostics captured but none readable (size cap) \u2014 not a clean signal"
                   : "loaded clean: zero diagnostics captured"
-                : `read ${s.verify.entries.length} diagnostic ${x(s.verify.entries.length, "entry", "entries")}`,
+                : `read ${s.verify.entries.length} diagnostic ${pluralize(s.verify.entries.length, "entry", "entries")}`,
       }),
     });
   if ("page_data" in s) {
@@ -1058,7 +1058,7 @@ function renderToolResultMessage(s, m, n) {
       children: e(t, {
         dimColor: !0,
         children: s.page_data.islandPresent
-          ? `read ${s.page_data.entries.length} ${x(s.page_data.entries.length, "entry", "entries")} [${s.page_data.schema}]${i}${l}`
+          ? `read ${s.page_data.entries.length} ${pluralize(s.page_data.entries.length, "entry", "entries")} [${s.page_data.schema}]${i}${l}`
           : `no ${s.page_data.schema} data island on the page${l}`,
       }),
     });
@@ -1072,7 +1072,7 @@ function renderToolResultMessage(s, m, n) {
             ? s.unavailable === !0
               ? "artifact types not available to this account"
               : "no artifact types listed"
-            : `listed ${s.artifact_types.length} artifact ${x(s.artifact_types.length, "type")}`,
+            : `listed ${s.artifact_types.length} artifact ${pluralize(s.artifact_types.length, "type")}`,
       }),
     });
   if ("artifact_type" in s) {
@@ -1085,7 +1085,7 @@ function renderToolResultMessage(s, m, n) {
           "described artifact type",
           " ",
           l !== void 0 ? e(R, { name: l, url: l }) : "(unrecognized address)",
-          ` (${s.artifact_type.files.length} ${x(s.artifact_type.files.length, "file")}${typeof s.artifact_type.files_omitted === "number" && s.artifact_type.files_omitted > 0 ? ` +${s.artifact_type.files_omitted} not shown` : ""}${s.artifact_type.instructions_file ? ", ships instructions" : ""})`,
+          ` (${s.artifact_type.files.length} ${pluralize(s.artifact_type.files.length, "file")}${typeof s.artifact_type.files_omitted === "number" && s.artifact_type.files_omitted > 0 ? ` +${s.artifact_type.files_omitted} not shown` : ""}${s.artifact_type.instructions_file ? ", ships instructions" : ""})`,
         ],
       }),
     });
@@ -1102,7 +1102,7 @@ function renderToolResultMessage(s, m, n) {
             ? s.type_instances?.unavailable === !0
               ? "instance listing not available to this account"
               : "no artifacts of this type listed"
-            : `listed ${i} ${x(i, "artifact")} of this type`,
+            : `listed ${i} ${pluralize(i, "artifact")} of this type`,
       }),
     });
   }
@@ -1117,7 +1117,7 @@ function renderToolResultMessage(s, m, n) {
               : s.scope === "all"
                 ? "no artifacts listed"
                 : "no published artifacts yet"
-            : `listed ${s.artifacts.length} ${x(s.artifacts.length, s.scope !== void 0 ? "artifact" : "published artifact")}`,
+            : `listed ${s.artifacts.length} ${pluralize(s.artifacts.length, s.scope !== void 0 ? "artifact" : "published artifact")}`,
       }),
     });
   if ("opened" in s) {
@@ -1186,7 +1186,7 @@ function renderToolResultMessage(s, m, n) {
 }
 function renderToolUseErrorMessage(s, m) {
   if (typeof s === "string") {
-    let n = xut(s);
+    let n = stripRejectNotice(s);
     if (n.startsWith(STALE_GUARD_REJECTION_PREFIX) || n.startsWith(STALE_GUARD_REJECTION_PREFIX_LEGACY) || n.startsWith(CONFLICT_REJECTION_PREFIX)) {
       let b = m.verbose ? null : STALE_GUARD_CONTENT_HEADER_LINE_RE.exec(n),
         w = s;
@@ -1195,10 +1195,10 @@ function renderToolUseErrorMessage(s, m) {
           l = n.slice(0, b.index + b[0].length - 1);
         w = `${i}${l} (content shown to the model; elided here)`;
       }
-      return e(Yd, { result: revealPageInvisibles(w), verbose: m.verbose, verbatim: !0 });
+      return e(ToolErrorMessage, { result: revealPageInvisibles(w), verbose: m.verbose, verbatim: !0 });
     }
   }
-  return e(Yd, { result: s, verbose: m.verbose });
+  return e(ToolErrorMessage, { result: s, verbose: m.verbose });
 }
 export {
   renderCheckToolUseMessage,

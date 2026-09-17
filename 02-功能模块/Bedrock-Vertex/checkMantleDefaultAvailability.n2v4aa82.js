@@ -31,7 +31,7 @@ import {
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { to, getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { d7 } from "./chunk-bnft4099.js";
+import { isProbeWrittenTierDefault } from "./apply-3p-default-fallbacks.js";
 var M = Object.keys(to).filter((e) => to[e].mantle !== null);
 async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
   if (getAPIProvider() !== "mantle") return [];
@@ -41,7 +41,7 @@ async function checkMantleDefaultAvailability(e = DEFAULT_MANTLE_OPUS_KEY, s) {
   let c = s?.userPinned ?? getUserSpecifiedModelSetting() != null,
     m = a.ANTHROPIC_DEFAULT_OPUS_MODEL,
     o;
-  if (m !== void 0 && !d7("opus")) {
+  if (m !== void 0 && !isProbeWrittenTierDefault("opus")) {
     if (c) return [];
     let t = await E(toProviderWireModelId(m));
     if (

@@ -10,7 +10,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logEvent } from "./analytics-event-queue.js";
 import { fromEnum } from "./analytics-fields.js";
-import { getProcessStartTimeAsync } from "../核心工具-进程与信号/chunk-qjqntsq2.js";
+import { getProcessStartTimeAsync } from "../核心工具-进程与信号/process-identity.js";
 import { killProcessTree } from "./kill-process-tree.js";
 import { readFile } from "fs/promises";
 class n {
@@ -28,18 +28,18 @@ var l = new j(() => new n());
 function f() {
   return l.of(B().host);
 }
-function itn(e) {
+function fireDeadProbeAdoptTick(e) {
   f().fire(e);
 }
 async function y9e(e) {
   return null;
 }
-async function Gye(e, t, r) {
+async function killIfSameProcess(e, t, r) {
   if (r !== void 0) {
     if ((await getProcessStartTimeAsync(e, { skipCache: !0 })) !== r) return;
   } else if (t !== void 0) {
-    if ((itn("kill_gate"), (await y9e(e)) !== t)) return;
+    if ((fireDeadProbeAdoptTick("kill_gate"), (await y9e(e)) !== t)) return;
   } else return;
   await killProcessTree(e, "SIGTERM").catch(() => {});
 }
-export { itn, y9e, Gye };
+export { fireDeadProbeAdoptTick, y9e, killIfSameProcess };

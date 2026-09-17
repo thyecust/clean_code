@@ -14,8 +14,8 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { ja, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { ee } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { wS } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { pQt } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
+import { execFileNoThrow } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { URL_HANDLER_BUNDLE_ID } from "../../02-功能模块/深链接-URL协议/深链接-URL协议.wjw0bmt6.js";
 import { b1n, Wot, Got } from "../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { CUn } from "../../02-功能模块/插件系统/chunk-q8w2zntw.js";
 import { realpath } from "fs/promises";
@@ -389,7 +389,7 @@ async function handleDeepLinkUri(r) {
   return (logFeatureOk("deep_link_handle"), 0);
 }
 async function handleUrlSchemeLaunch() {
-  if (a.__CFBundleIdentifier !== pQt) return null;
+  if (a.__CFBundleIdentifier !== URL_HANDLER_BUNDLE_ID) return null;
   try {
     let { waitForUrlEvent: r } = await import("../../01-核心基础设施/共享小工具-未细化/waitForUrlEvent.2gg81sjj.js"),
       t = r(5000);

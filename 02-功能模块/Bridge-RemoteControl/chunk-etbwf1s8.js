@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
-import { PGt } from "../Teammates团队/chunk-eey53z5b.js";
+import { createToolCallFingerprint } from "../Teammates团队/permission-sync-mailbox.js";
 var a = 256;
 class o {
   callId;
@@ -73,7 +73,7 @@ class o {
   }
   get fingerprint() {
     if (this.#a === void 0 && this.#o !== void 0)
-      this.#a = PGt(this.#o.wireName, this.#o.input);
+      this.#a = createToolCallFingerprint(this.#o.wireName, this.#o.input);
     return this.#a;
   }
   sent(e) {

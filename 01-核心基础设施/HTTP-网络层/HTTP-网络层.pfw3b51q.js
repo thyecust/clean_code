@@ -13,22 +13,22 @@ import { sleep, withTimeout } from "../共享小工具-未细化/async-timeout-u
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
 import { Et, Yhe, b, n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { x, oe, ft } from "../核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { pluralize, truncateToCodeUnits, beforeFirst } from "../核心工具-字符串与文本/string-utils.js";
 import { ja, $nt, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
-import { aB, G2e, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/chunk-9ys1bnqr.js";
-import { fi, gPn } from "../共享小工具-未细化/chunk-z5tdbda7.js";
+import { NONINTERACTIVE_GIT_ENV, applyGitConfigEnv, execFileNoThrow, execFileNoThrowWithCwd } from "../../02-功能模块/Git-Worktree/git-exec-hardening.js";
+import { GITHUB_HOST, GITHUB_SSH_URL_PREFIXES } from "../共享小工具-未细化/git-host-utils.js";
 import { Lft, $s, adn, ldn, eqn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { kIn } from "../安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { c2e, u2e, qlr, zlr, PEM_CERT_BLOCK_RE, getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { Gi } from "../../02-功能模块/认证-OAuth登录/chunk-7rf7w8yf.js";
+import { getSessionAccessToken } from "../../02-功能模块/认证-OAuth登录/credential-file-descriptors.js";
 import { o6 } from "../核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { eqt, Swn } from "../../02-功能模块/Artifact发布-渲染/chunk-01ymf0ar.js";
-import { nU } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
-import { Gdt, qdt, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
+import { computeRetryDelayMs } from "../核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
+import { BASE_CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_BUNDLE_ENV_VARS, CA_BUNDLE_ENV_VARS, SYSTEM_CA_TRUST_ENV_DEFAULTS } from "../共享小工具-未细化/ca-trust-env-vars.js";
 import { decodeProtoFields } from "../共享小工具-未细化/protobuf-decoding.js";
 import { getXdgDataHome } from "../共享小工具-未细化/user-directories.js";
 import { execFile } from "child_process";
@@ -682,7 +682,7 @@ function Vt(t, e, o, r, s) {
       return;
     }
     let c = e.connectBuf.subarray(0, p).toString("utf8"),
-      u = ft(
+      u = beforeFirst(
         c,
         `\r
 `,
@@ -1223,7 +1223,7 @@ function ze(t, e, o, r) {
             `tunnel error before response: ${p.slice(0, 120)}`,
             R(e),
           ));
-      else Ge(t, e, `tunnel error: ${oe(p, 120)}`);
+      else Ge(t, e, `tunnel error: ${truncateToCodeUnits(p, 120)}`);
       D(e);
     }),
     (o.onclose = (s) => {
@@ -1250,7 +1250,7 @@ function ze(t, e, o, r) {
         Ge(
           t,
           e,
-          `tunnel closed (code ${s.code}${s.reason ? `, ${oe(s.reason, 120)}` : ""})`,
+          `tunnel closed (code ${s.code}${s.reason ? `, ${truncateToCodeUnits(s.reason, 120)}` : ""})`,
           s.code,
         );
       D(e);
@@ -1368,13 +1368,13 @@ function fe(t, e, o, r) {
       (n(`[agent-proxy] ws open failed (${u}); attempts exhausted`),
         (e.closed = !0),
         logFeatureBad("agent_proxy_request", "agent_proxy_request_ws_error"));
-      let h = `could not open the WebSocket tunnel to the CCR agent-proxy (${u.slice(0, 120)}) after ${e.wsAttempt} ${x(e.wsAttempt, "attempt")}`;
+      let h = `could not open the WebSocket tunnel to the CCR agent-proxy (${u.slice(0, 120)}) after ${e.wsAttempt} ${pluralize(e.wsAttempt, "attempt")}`;
       (k(t, 502, "Bad Gateway", d ? `${h}. Also: ${d}` : h),
         t.end(),
         E(
           e.ctx,
           "ws_open_failed",
-          `tunnel open failed after ${e.wsAttempt} ${x(e.wsAttempt, "attempt")}: ${u.slice(0, 120)}`,
+          `tunnel open failed after ${e.wsAttempt} ${pluralize(e.wsAttempt, "attempt")}: ${u.slice(0, 120)}`,
           R(e),
         ),
         D(e));
@@ -1770,7 +1770,7 @@ async function _n(t, e, o) {
     "# once the relay process exits. Scrubbed login shells dial direct.",
     `if [ -r ${ut(t.caBundlePath)} ]; then`,
   ];
-  for (let p of [...Gdt, ...qdt]) r.push("  " + ot(p, t.caBundlePath));
+  for (let p of [...BASE_CA_BUNDLE_ENV_VARS, ...SYSTEM_CA_TRUST_BUNDLE_ENV_VARS]) r.push("  " + ot(p, t.caBundlePath));
   for (let [p, c] of Object.entries(SYSTEM_CA_TRUST_ENV_DEFAULTS)) r.push("  " + ot(p, c));
   r.push("fi");
   let s =
@@ -1916,7 +1916,7 @@ async function _gr(t) {
   let m = t?.tokenPath ?? En,
     h = await Un(m),
     { existed: _, token: w } = h;
-  if (!w) w = Gi();
+  if (!w) w = getSessionAccessToken();
   if (!w && !r)
     return (
       n("[agent-proxy] no session token; proxy disabled"),
@@ -1933,7 +1933,7 @@ async function _gr(t) {
     S =
       t?.caBundlePath ??
       (pt()
-        ? I(be(), "ccr", "ca-bundle.crt")
+        ? I(getClaudeConfigDir(), "ccr", "ca-bundle.crt")
         : I(ve(), ".ccr", "ca-bundle.crt")),
     v = t?.systemCaPath
       ? await te(t.systemCaPath, "utf8").catch(() => "")
@@ -2001,7 +2001,7 @@ function bt(t, e) {
   return $s() ? "defer" : null;
 }
 function Bn(t, e) {
-  return Math.min(nU(t - 1, e, ct), ct);
+  return Math.min(computeRetryDelayMs(t - 1, e, ct), ct);
 }
 async function $n(t, e) {
   let { runtime: o, generation: r, opts: s } = t,
@@ -2068,7 +2068,7 @@ async function Tt(t, e) {
         wsUrl: G,
         sessionId: r,
         token: K,
-        getToken: p ? () => K : () => Gi() || K,
+        getToken: p ? () => K : () => getSessionAccessToken() || K,
         selective: T,
         startupProbe: !0,
         limits: {
@@ -2285,22 +2285,22 @@ function ygr() {
       NO_PROXY: t.noProxy,
       no_proxy: t.noProxy,
     };
-  for (let r of Gdt) o[r] = t.caBundlePath;
+  for (let r of BASE_CA_BUNDLE_ENV_VARS) o[r] = t.caBundlePath;
   if (t.hasSystemCa) {
-    for (let r of qdt) o[r] = t.caBundlePath;
+    for (let r of SYSTEM_CA_TRUST_BUNDLE_ENV_VARS) o[r] = t.caBundlePath;
     for (let [r, s] of Object.entries(SYSTEM_CA_TRUST_ENV_DEFAULTS))
       if (process.env[r] === void 0) o[r] = s;
   }
   if (t.javaTrustStorePath)
     o.JAVA_TOOL_OPTIONS = at(t.javaTrustStorePath, a.JAVA_TOOL_OPTIONS);
   if (a.GIT_TERMINAL_PROMPT === void 0)
-    o.GIT_TERMINAL_PROMPT = aB.GIT_TERMINAL_PROMPT;
-  if (a.GIT_ASKPASS === void 0) o.GIT_ASKPASS = aB.GIT_ASKPASS;
-  if (a.GCM_INTERACTIVE === void 0) o.GCM_INTERACTIVE = aB.GCM_INTERACTIVE;
+    o.GIT_TERMINAL_PROMPT = NONINTERACTIVE_GIT_ENV.GIT_TERMINAL_PROMPT;
+  if (a.GIT_ASKPASS === void 0) o.GIT_ASKPASS = NONINTERACTIVE_GIT_ENV.GIT_ASKPASS;
+  if (a.GCM_INTERACTIVE === void 0) o.GCM_INTERACTIVE = NONINTERACTIVE_GIT_ENV.GCM_INTERACTIVE;
   if (Ee()) {
     let r = [["credential.interactive", "false"]];
-    if (Oe()) r.push(...gPn.map((s) => [`url.https://${fi}/.insteadOf`, s]));
-    Object.assign(o, G2e(void 0, r));
+    if (Oe()) r.push(...GITHUB_SSH_URL_PREFIXES.map((s) => [`url.https://${GITHUB_HOST}/.insteadOf`, s]));
+    Object.assign(o, applyGitConfigEnv(void 0, r));
   }
   for (let r of Re)
     if (!r.realCredentialEnv.some((p) => process.env[p]))
@@ -2335,14 +2335,14 @@ async function kn(t, e) {
     );
   let r = [
     gt,
-    `[http "https://${fi}/"]`,
+    `[http "https://${GITHUB_HOST}/"]`,
     `	proxy = http://127.0.0.1:${t}`,
     `	sslCAInfo = ${e}`,
-    `[credential "https://${fi}/"]`,
+    `[credential "https://${GITHUB_HOST}/"]`,
     "\tinteractive = false",
   ];
   if (Oe())
-    r.push(`[url "https://${fi}/"]`, ...gPn.map((u) => `	insteadOf = ${u}`));
+    r.push(`[url "https://${GITHUB_HOST}/"]`, ...GITHUB_SSH_URL_PREFIXES.map((u) => `	insteadOf = ${u}`));
   r.push(Te);
   let s = "";
   try {
@@ -2367,7 +2367,7 @@ async function kn(t, e) {
 `
       : s;
   return (
-    await On(
+    await writeFileAtomic(
       o,
       c +
         r.join(`
@@ -2376,7 +2376,7 @@ async function kn(t, e) {
 `,
       384,
     ),
-    n(`[agent-proxy] governed git: relay routing for ${fi} appended to ${o}`),
+    n(`[agent-proxy] governed git: relay routing for ${GITHUB_HOST} appended to ${o}`),
     !0
   );
 }
@@ -2458,7 +2458,7 @@ done
       `# Hostnames are case-insensitive \u2014 normalize before every compare.
 ` +
       `host="$(printf %s "$host" | tr '[:upper:]' '[:lower:]')"
-if [ -n "$host" ] && [ "$host" != '${fi}' ]; then
+if [ -n "$host" ] && [ "$host" != '${GITHUB_HOST}' ]; then
   exec '${r}' "$@"
 fi
 # A -R/--repo/GH_REPO [HOST/]OWNER/REPO (or URL) carries its own host
@@ -2483,7 +2483,7 @@ elif [ -z "$host" ]; then
   esac
 fi
 rhost="$(printf %s "$rhost" | tr '[:upper:]' '[:lower:]')"
-if [ -n "$rhost" ] && [ "$rhost" != '${fi}' ]; then
+if [ -n "$rhost" ] && [ "$rhost" != '${GITHUB_HOST}' ]; then
   exec '${r}' "$@"
 fi
 # NO_PROXY cleared: an ambient runner-host NO_PROXY covering
@@ -2497,7 +2497,7 @@ exec '${r}' "$@"
 `,
     c = I(o, "gh");
   return (
-    await On(c, p, 493),
+    await writeFileAtomic(c, p, 493),
     Et(() => Ce(c).catch(() => {})),
     n(`[agent-proxy] governed git: gh shim at ${c} -> ${r}`),
     o
@@ -2792,7 +2792,7 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
         continue;
       }
       try {
-        (await Pe(I(o, ".."), { recursive: !0 }), await On(o, Ct(e, _)));
+        (await Pe(I(o, ".."), { recursive: !0 }), await writeFileAtomic(o, Ct(e, _)));
       } catch (w) {
         let T = `ca-bundle write failed (${l(w)})`;
         if (kIn(w)) return { outcome: "retry", detail: T, retryAfter: null };

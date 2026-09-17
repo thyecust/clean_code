@@ -12,7 +12,7 @@ import { lit as S, fromEnum, fromEnumOpt } from "../../01-核心基础设施/共
 import { Za } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Hr } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { getSettingsForSource, parentManagedTierParticipates, getSettings_DEPRECATED, getPolicySettingsLoadErrors, filterFatalPolicyErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { resetSettingsCacheWithBackendRead } from "../../01-核心基础设施/设置-配置/chunk-b536v45y.js";
 import { Bo } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -55,14 +55,14 @@ function a() {
 function l() {
   let t = getSettingsForSource("policySettings");
   if (t?.disableAllHooks === !0) return {};
-  if (t?.allowManagedHooksOnly === !0 || Hr()) return t?.hooks ?? {};
+  if (t?.allowManagedHooksOnly === !0 || isSafeMode()) return t?.hooks ?? {};
   if (isRestrictedToPluginOnly("hooks")) return t?.hooks ?? {};
   let o = getSettings_DEPRECATED();
   if (o.disableAllHooks === !0) return t?.hooks ?? {};
   return o.hooks ?? {};
 }
 function shouldAllowManagedHooksOnly() {
-  return Hr() || shouldAllowManagedHooksOnlyByPolicy();
+  return isSafeMode() || shouldAllowManagedHooksOnlyByPolicy();
 }
 function shouldAllowManagedHooksOnlyByPolicy() {
   let t = getSettingsForSource("policySettings");
@@ -71,7 +71,7 @@ function shouldAllowManagedHooksOnlyByPolicy() {
   return !1;
 }
 function shouldHoldGuardHooksByAdmin() {
-  return Hr() || getSettingsForSource("policySettings")?.allowManagedHooksOnly === !0;
+  return isSafeMode() || getSettingsForSource("policySettings")?.allowManagedHooksOnly === !0;
 }
 function shouldHoldDeviceHooksByPolicy() {
   return shouldHoldGuardHooksByAdmin() || policySettingsUnreadable();
@@ -111,7 +111,7 @@ function getHooksConfigFromSnapshot() {
   if (t.initialHooksConfig === null) (Za(), (t.initialHooksConfig = l()), V1());
   return t.initialHooksConfig;
 }
-function Q$(t, o) {
+function logGoalCleared(t, o) {
   logEvent("tengu_goal_cleared", {
     reason: fromEnum(o),
     iterations: t.iterations,
@@ -120,12 +120,12 @@ function Q$(t, o) {
   });
 }
 import { randomUUID } from "crypto";
-var m$e = 4000,
+var MAX_GOAL_CONDITION_LENGTH = 4000,
   A = new Set(["clear", "stop", "off", "reset", "none", "cancel"]);
-function cve(t) {
+function isGoalClearKeyword(t) {
   return A.has(t.toLowerCase());
 }
-function nAn(t) {
+function findMetGoalStatus(t) {
   for (let o = t.length - 1; o >= 0; o--) {
     let s = t[o];
     if (s?.type !== "attachment" || s.attachment.type !== "goal_status")
@@ -141,9 +141,9 @@ function nAn(t) {
   }
   return null;
 }
-var BEt = (t) =>
+var buildGoalHookPrompt = (t) =>
   `A session-scoped Stop hook is now active with condition: "${t}". Briefly acknowledge the goal, then immediately start (or continue) working toward it \u2014 treat the condition itself as your directive and do not pause to ask the user what to do. The hook will block stopping until the condition holds. It auto-clears once the condition is met \u2014 do not tell the user to run \`/goal clear\` after success; that's only for clearing a goal early.`;
-function Joe(t, o) {
+function listGoalStopHooks(t, o) {
   let s = [];
   for (let e of t.get(o, "Stop").get("Stop") ?? []) {
     if (e.matcher !== "" || e.skillRoot !== void 0) continue;
@@ -155,12 +155,12 @@ var O =
     "/goal is only available in trusted workspaces. Restart, accept the trust dialog, and try again.",
   C =
     "/goal can't run while hooks are restricted (disableAllHooks or allowManagedHooksOnly is set in settings or by policy).";
-function AJe() {
+function getGoalGateError() {
   if (shouldSkipSessionHooksByPolicy()) return { message: C, code: "hooks_gate" };
   if (!ke() && !Bo()) return { message: O, code: "trust_gate" };
   return null;
 }
-function dnr(t, o, s) {
+function setQueuedGoalOrigin(t, o, s) {
   t((e) => ({ ...e, queuedGoalOrigin: { condition: o, origin: s } }));
 }
 function v(t, o) {
@@ -168,14 +168,14 @@ function v(t, o) {
   if (s === void 0 || s.condition !== t) return "user";
   return (o.setAppState((e) => ({ ...e, queuedGoalOrigin: void 0 })), s.origin);
 }
-function uve(t, o, s) {
+function setSessionGoal(t, o, s) {
   let e = s ?? v(t, o),
-    n = AJe();
+    n = getGoalGateError();
   if (n !== null) return (logFeatureSad("goal_set", n.code, { origin: fromEnum(e) }), n.message);
   let r = K(),
     d = o.getAppState().activeGoal;
-  if (d !== void 0) Q$(d, "superseded");
-  for (let p of Joe(o.sessionHooksRegistry, r))
+  if (d !== void 0) logGoalCleared(d, "superseded");
+  for (let p of listGoalStopHooks(o.sessionHooksRegistry, r))
     o.sessionHooksRegistry.remove(r, "Stop", p);
   o.sessionHooksRegistry.add(r, "Stop", "", { type: "prompt", prompt: t });
   let m = {
@@ -187,7 +187,7 @@ function uve(t, o, s) {
   };
   return (
     o.setAppState((p) => ({ ...p, activeGoal: m })),
-    o.applyMessageOp({ type: "append", messages: [Jzt(!1, t)] }),
+    o.applyMessageOp({ type: "append", messages: [createGoalStatusAttachment(!1, t)] }),
     logEvent("tengu_stop_hook_added", {
       promptLength: t.length,
       via: S("goal"),
@@ -197,24 +197,24 @@ function uve(t, o, s) {
     null
   );
 }
-function dve(t) {
+function clearSessionGoal(t) {
   let o = K(),
-    s = Joe(t.sessionHooksRegistry, o);
+    s = listGoalStopHooks(t.sessionHooksRegistry, o);
   if (s.length === 0) return null;
   let e = s[0].prompt;
   for (let r of s) t.sessionHooksRegistry.remove(o, "Stop", r);
   let n = t.getAppState().activeGoal;
-  if (n !== void 0) Q$(n, "user_clear");
+  if (n !== void 0) logGoalCleared(n, "user_clear");
   return (
     t.setAppState((r) =>
       r.activeGoal === void 0 ? r : { ...r, activeGoal: void 0 },
     ),
-    t.applyMessageOp({ type: "append", messages: [Jzt(!0, e)] }),
+    t.applyMessageOp({ type: "append", messages: [createGoalStatusAttachment(!0, e)] }),
     logEvent("tengu_stop_hook_removed", { via: S("goal") }),
     e
   );
 }
-function Jzt(t, o) {
+function createGoalStatusAttachment(t, o) {
   return {
     type: "attachment",
     uuid: randomUUID(),
@@ -238,15 +238,15 @@ export {
   updateHooksConfigSnapshotThroughBackend,
   listProcessHooksConfigSnapshots,
   getHooksConfigFromSnapshot,
-  Q$,
-  m$e,
-  cve,
-  nAn,
-  BEt,
-  Joe,
-  AJe,
-  dnr,
-  uve,
-  dve,
-  Jzt,
+  logGoalCleared,
+  MAX_GOAL_CONDITION_LENGTH,
+  isGoalClearKeyword,
+  findMetGoalStatus,
+  buildGoalHookPrompt,
+  listGoalStopHooks,
+  getGoalGateError,
+  setQueuedGoalOrigin,
+  setSessionGoal,
+  clearSessionGoal,
+  createGoalStatusAttachment,
 };

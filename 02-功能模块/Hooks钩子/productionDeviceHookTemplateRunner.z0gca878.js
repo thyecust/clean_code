@@ -13,12 +13,12 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { b, z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { _4e, O3, v9t, R9t, s_n, GMe, ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { On } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { jJ } from "../../01-核心基础设施/核心工具-路径与平台/chunk-2f8axr19.js";
+import { assertSafeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { $d } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
-import { cye, uit } from "./chunk-y7gz94r8.js";
+import { getHookTemplateById, isPreToolUseHook } from "./hook-template-catalog.js";
 import { spawn } from "child_process";
 import { createHash } from "crypto";
 import { constants } from "fs";
@@ -336,7 +336,7 @@ function re(o) {
       )
         throw Error("unsafe device-hook template directory");
     },
-    writeFileAtomic: (r, e, t) => On(r, e, t),
+    writeFileAtomic: (r, e, t) => writeFileAtomic(r, e, t),
     templateDir: o,
   };
 }
@@ -358,7 +358,7 @@ function productionDeviceHookTemplateRunner(o) {
       let f = await s();
       if (f === null)
         throw Error("no absolute python3 for a device hook template");
-      (await mkdir(r, { recursive: !0, mode: 448 }), jJ(r));
+      (await mkdir(r, { recursive: !0, mode: 448 }), assertSafeTempDir(r));
       let m = l.get(p);
       if (m !== void 0 && !(await oe(await m.catch(() => null), p, a.maxBytes)))
         (l.delete(p), (m = void 0));
@@ -370,7 +370,7 @@ function productionDeviceHookTemplateRunner(o) {
           l.set(p, m),
           m.catch(() => l.delete(p)));
       let y = await m,
-        w = uit(a);
+        w = isPreToolUseHook(a);
       return ne(
         K(f, y, p, a.maxBytes),
         c,
@@ -424,6 +424,6 @@ async function oe(o, r, e) {
   }
 }
 function telemetryTemplateId(o) {
-  return cye(o)?.id ?? "unknown";
+  return getHookTemplateById(o)?.id ?? "unknown";
 }
 export { productionDeviceHookTemplateRunner, telemetryTemplateId };

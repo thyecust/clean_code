@@ -7,19 +7,19 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-var yme = "<!--claude-mermaid-runtime-begin:",
-  hAn = "<!--claude-mermaid-runtime-end-->",
-  d4t = "<!--claude-hljs-runtime-begin:",
-  _An = "<!--claude-hljs-runtime-end-->",
-  QEt = "<!-- chart-runtime -->",
-  p4t = "<!-- /chart-runtime -->";
-var b$e = "/_runtime/mermaid-11.16.1.min.js",
-  Pnr = '<script src="/_runtime/mermaid-11.16.1.min.js">',
-  Onr =
+var MERMAID_RUNTIME_BEGIN_PREFIX = "<!--claude-mermaid-runtime-begin:",
+  MERMAID_RUNTIME_END = "<!--claude-mermaid-runtime-end-->",
+  HLJS_RUNTIME_BEGIN_PREFIX = "<!--claude-hljs-runtime-begin:",
+  HLJS_RUNTIME_END = "<!--claude-hljs-runtime-end-->",
+  CHART_RUNTIME_BEGIN = "<!-- chart-runtime -->",
+  CHART_RUNTIME_END = "<!-- /chart-runtime -->";
+var MERMAID_RUNTIME_URL_PATH = "/_runtime/mermaid-11.16.1.min.js",
+  MERMAID_RUNTIME_SCRIPT_TAG = '<script src="/_runtime/mermaid-11.16.1.min.js">',
+  MERMAID_RUNTIME_SRC_ATTR_PATTERN =
     ' src="/_runtime/mermaid-[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.min\\.js"',
-  VG = "<!-- frame-runtime -->",
-  YK = "<!-- /frame-runtime -->";
-function Dnr(t) {
+  FRAME_RUNTIME_BEGIN = "<!-- frame-runtime -->",
+  FRAME_RUNTIME_END = "<!-- /frame-runtime -->";
+function hasRuntimeSentinel(t) {
   return (
     t.includes("<!--claude-mermaid-runtime-begin:") ||
     t.includes("<!--claude-mermaid-runtime-end-->") ||
@@ -29,9 +29,9 @@ function Dnr(t) {
     t.includes("<!-- /chart-runtime -->")
   );
 }
-function bve(t) {
+function findBundleSafetyIssue(t) {
   if (/<\/script/i.test(t)) return "bundle contains </script";
-  if (m4t(t))
+  if (hasCommentAndScriptTag(t))
     return "bundle contains <!-- together with <script (double-escaped state)";
   if (/<base\s+href="\/_f\//i.test(t))
     return "bundle matches the stale /_f/ base-tag strip regex";
@@ -59,7 +59,7 @@ function bve(t) {
     return "bundle contains a frame-runtime serve sentinel";
   return null;
 }
-var f4t = new Set([
+var TAG_NAME_TERMINATOR_CHARS = new Set([
   " ",
   "\t",
   `
@@ -69,7 +69,7 @@ var f4t = new Set([
   "/",
   ">",
 ]);
-function BN(t) {
+function trimAsciiWhitespace(t) {
   let e = 0,
     n = t.length;
   while (e < n && s(t.charCodeAt(e))) e++;
@@ -79,14 +79,14 @@ function BN(t) {
 function s(t) {
   return t === 32 || t === 9 || t === 10 || t === 12 || t === 13;
 }
-function ZEt(t, e) {
+function removeRanges(t, e) {
   if (!e.length) return t;
   let n = "",
     r = 0;
   for (let [i, o] of e) ((n += t.slice(r, i)), (r = o));
   return n + t.slice(r);
 }
-function m4t(t) {
+function hasCommentAndScriptTag(t) {
   return t.includes("<!--") && /<script/i.test(t);
 }
 var E = /<\/script(?=[\t\n\f\r />])/i,
@@ -100,69 +100,69 @@ function u(t, e) {
   if (o === -1 || /['"]/.test(t.slice(i, o))) return null;
   return { data: r, after: o + 1 };
 }
-function yAn(t) {
+function findScriptCloseTagEnd(t) {
   let e = u(t, E);
-  if (!e || m4t(t.slice(0, e.data))) return -1;
+  if (!e || hasCommentAndScriptTag(t.slice(0, e.data))) return -1;
   return e.after;
 }
-function Lnr(t) {
+function findStyleCloseTag(t) {
   return u(t, m);
 }
 var l = 16,
   a = ' data-id="',
-  eAt = a.length + l + 1,
-  OJe = "(?!-)(?:(?!--)[A-Za-z0-9_-]){16}",
-  _ = new RegExp(`^${OJe}$`),
-  tU = `${a}${OJe}"`;
-function nse(t, e) {
+  DATA_ID_ATTRIBUTE_LENGTH = a.length + l + 1,
+  DATA_ID_VALUE_PATTERN = "(?!-)(?:(?!--)[A-Za-z0-9_-]){16}",
+  _ = new RegExp(`^${DATA_ID_VALUE_PATTERN}$`),
+  DATA_ID_ATTRIBUTE_PATTERN = `${a}${DATA_ID_VALUE_PATTERN}"`;
+function matchDataIdAttribute(t, e) {
   if (!t.startsWith(a, e)) return 0;
   let n = e + a.length,
     r = n + l;
-  return t.charCodeAt(r) === 34 && _.test(t.slice(n, r)) ? eAt : 0;
+  return t.charCodeAt(r) === 34 && _.test(t.slice(n, r)) ? DATA_ID_ATTRIBUTE_LENGTH : 0;
 }
 function p(t, e, n) {
   if (t.startsWith(n, e)) return n.length;
   let r = n.length - 1;
   if (!t.startsWith(n.slice(0, r), e)) return 0;
-  let i = nse(t, e + r);
+  let i = matchDataIdAttribute(t, e + r);
   return i && t.charCodeAt(e + r + i) === 62 ? r + i + 1 : 0;
 }
-function tAt(t, e) {
+function matchScriptOpenTag(t, e) {
   return p(t, e, "<script>");
 }
-function Mnr(t, e) {
+function matchStyleOpenTag(t, e) {
   return p(t, e, "<style>");
 }
 var c = new RegExp(
   '<script src="/_runtime/mermaid-[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.min\\.js"',
   "y",
 );
-function Nnr(t, e) {
+function matchMermaidRuntimeScriptTag(t, e) {
   c.lastIndex = e;
   let n = c.exec(t);
   if (n === null) return null;
   let r = e + n[0].length;
   if (t.charCodeAt(r) === 62) return { len: r + 1 - e, annotated: !1 };
-  let i = nse(t, r);
+  let i = matchDataIdAttribute(t, r);
   return i && t.charCodeAt(r + i) === 62
     ? { len: r + i + 1 - e, annotated: !0 }
     : null;
 }
-function DJe(t) {
-  let e = BN(t);
+function countNestedScriptTags(t) {
+  let e = trimAsciiWhitespace(t);
   if (!e.length) return -1;
   let n = 0;
   while (e.length) {
-    let r = tAt(e, 0);
+    let r = matchScriptOpenTag(e, 0);
     if (!r) return -1;
     if (r > 8) n++;
-    let i = yAn(e.slice(r));
+    let i = findScriptCloseTagEnd(e.slice(r));
     if (i < 0) return -1;
-    e = BN(e.slice(r + i));
+    e = trimAsciiWhitespace(e.slice(r + i));
   }
   return n;
 }
-function rse(t, e) {
+function findTagEnd(t, e) {
   let n = 0,
     r = e;
   while (r < t.length) {
@@ -225,15 +225,15 @@ var g = {
   ".pdf": "application/pdf",
   ".wasm": "application/wasm",
 };
-function GJ(t) {
+function getContentTypeForPath(t) {
   return g[f(extname(t))];
 }
 function f(t) {
   return t.replace(/[A-Z]/g, (e) => e.toLowerCase());
 }
-function c6(t) {
+function normalizeContentType(t) {
   let e = t.indexOf(";");
-  return f(BN(e >= 0 ? t.slice(0, e) : t));
+  return f(trimAsciiWhitespace(e >= 0 ? t.slice(0, e) : t));
 }
 var x = new Set([
     "text/markdown",
@@ -254,76 +254,76 @@ var x = new Set([
     "font/ttf",
     "font/otf",
   ]);
-function SAn(t) {
-  let e = c6(t);
+function isRenderableOrExecutableContentType(t) {
+  let e = normalizeContentType(t);
   return !x.has(e) && !d.has(e);
 }
 var I = /[\u2028\u2029\p{Cf}\p{Default_Ignorable_Code_Point}]/u;
-function jN(t) {
+function sanitizeInvisibleCharacters(t) {
   return Array.from(t, (e) => {
     let n = e.codePointAt(0) ?? 0;
     return n <= 31 || (n >= 127 && n <= 159) || I.test(e) ? " " : e;
   }).join("");
 }
-var g4t = ".workshop.md";
-function bAn(t) {
-  return t.endsWith(g4t);
+var WORKSHOP_MARKDOWN_EXTENSION = ".workshop.md";
+function isWorkshopMarkdownFile(t) {
+  return t.endsWith(WORKSHOP_MARKDOWN_EXTENSION);
 }
-function LJe(t) {
+function isWorkshopHtmlFile(t) {
   return t.endsWith(".workshop.html");
 }
-function nAt(t) {
-  return LJe(t) || bAn(t);
+function isWorkshopFile(t) {
+  return isWorkshopHtmlFile(t) || isWorkshopMarkdownFile(t);
 }
-var ose = new Set([
+var MARKUP_CONTENT_TYPES = new Set([
     "text/html",
     "application/xhtml+xml",
     "application/xml",
     "text/xml",
     "image/svg+xml",
   ]),
-  MJe = new Set([
+  EXECUTABLE_CONTENT_TYPES = new Set([
     "text/javascript",
     "application/javascript",
     "application/wasm",
   ]);
 export {
-  yme,
-  hAn,
-  d4t,
-  _An,
-  QEt,
-  p4t,
-  b$e,
-  Pnr,
-  Onr,
-  VG,
-  YK,
-  Dnr,
-  bve,
-  f4t,
-  BN,
-  ZEt,
-  m4t,
-  yAn,
-  Lnr,
-  eAt,
-  OJe,
-  tU,
-  nse,
-  tAt,
-  Mnr,
-  Nnr,
-  DJe,
-  rse,
-  GJ,
-  c6,
-  SAn,
-  jN,
-  g4t,
-  bAn,
-  LJe,
-  nAt,
-  ose,
-  MJe,
+  MERMAID_RUNTIME_BEGIN_PREFIX,
+  MERMAID_RUNTIME_END,
+  HLJS_RUNTIME_BEGIN_PREFIX,
+  HLJS_RUNTIME_END,
+  CHART_RUNTIME_BEGIN,
+  CHART_RUNTIME_END,
+  MERMAID_RUNTIME_URL_PATH,
+  MERMAID_RUNTIME_SCRIPT_TAG,
+  MERMAID_RUNTIME_SRC_ATTR_PATTERN,
+  FRAME_RUNTIME_BEGIN,
+  FRAME_RUNTIME_END,
+  hasRuntimeSentinel,
+  findBundleSafetyIssue,
+  TAG_NAME_TERMINATOR_CHARS,
+  trimAsciiWhitespace,
+  removeRanges,
+  hasCommentAndScriptTag,
+  findScriptCloseTagEnd,
+  findStyleCloseTag,
+  DATA_ID_ATTRIBUTE_LENGTH,
+  DATA_ID_VALUE_PATTERN,
+  DATA_ID_ATTRIBUTE_PATTERN,
+  matchDataIdAttribute,
+  matchScriptOpenTag,
+  matchStyleOpenTag,
+  matchMermaidRuntimeScriptTag,
+  countNestedScriptTags,
+  findTagEnd,
+  getContentTypeForPath,
+  normalizeContentType,
+  isRenderableOrExecutableContentType,
+  sanitizeInvisibleCharacters,
+  WORKSHOP_MARKDOWN_EXTENSION,
+  isWorkshopMarkdownFile,
+  isWorkshopHtmlFile,
+  isWorkshopFile,
+  MARKUP_CONTENT_TYPES,
+  EXECUTABLE_CONTENT_TYPES,
 };

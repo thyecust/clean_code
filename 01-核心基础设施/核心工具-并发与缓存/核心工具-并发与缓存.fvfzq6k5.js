@@ -15,7 +15,7 @@ import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { writeDiagnosticsEvent } from "../共享小工具-未细化/diagnostics-log.js";
 import { O_NOFOLLOW_NONBLOCK_FLAGS } from "../共享小工具-未细化/open-flags.js";
-import { On } from "../安全文件系统(FS加固)/chunk-h64ek850.js";
+import { writeFileAtomic } from "../安全文件系统(FS加固)/atomic-file-write.js";
 import { Cs, hf } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { s, T, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var H = 30000;
@@ -108,39 +108,39 @@ function de(e) {
 function I(e) {
   if (e.idleTimer !== null) (clearTimeout(e.idleTimer), (e.idleTimer = null));
 }
-function $nr(e) {
+function setActivityCallback(e) {
   let t = p().currentStateOrCreate();
   if (!t) return;
   if (((t.activityCallback = e), t.refcount > 0 && t.heartbeatTimer === null))
     G(t);
 }
-function Unr() {
+function clearActivityCallback() {
   let e = p().currentStateOrNull();
   if (!e) return;
   if (((e.activityCallback = null), e.heartbeatTimer !== null))
     (clearInterval(e.heartbeatTimer), (e.heartbeatTimer = null));
   I(e);
 }
-function Bnr() {
+function sendActivityHeartbeat() {
   let e = p().currentStateOrNull();
   if (e && a.CLAUDE_CODE_REMOTE_SEND_KEEPALIVES) e.activityCallback?.();
 }
-function YAn(e) {
+function setMainLoopRefcountListener(e) {
   p().mainLoopActivityListener = e;
 }
-function JAn(e) {
+function setNestedChainDropListener(e) {
   p().nestedChainDropListener = e;
 }
-function jnr(e) {
+function notifyNestedChainDropped(e) {
   p().nestedChainDropListener?.(e);
 }
-function ase() {
+function getMainLoopRefcount() {
   return p().currentStateOrNull()?.mainLoopRefcount ?? 0;
 }
-function aAt() {
-  return RMn() || ase() > 0;
+function isMainLoopActive() {
+  return RMn() || getMainLoopRefcount() > 0;
 }
-function H$e(e, t) {
+function beginActivity(e, t) {
   let r = p(),
     i = r.currentStateOrCreate();
   if (!i) return;
@@ -171,7 +171,7 @@ function H$e(e, t) {
     });
   }
 }
-function I$e(e, t) {
+function endActivity(e, t) {
   let r = p(),
     i = r.currentStateOrNull();
   if (!i) return;
@@ -186,7 +186,7 @@ function I$e(e, t) {
   if (i.refcount === 0 && i.heartbeatTimer !== null)
     (clearInterval(i.heartbeatTimer), (i.heartbeatTimer = null), de(i));
 }
-function nU(e, t, r = 32000) {
+function computeRetryDelayMs(e, t, r = 32000) {
   let i = Math.min(500 * Math.pow(2, e - 1), r),
     o = Math.round(i + Math.random() * 0.25 * i);
   if (t) {
@@ -226,7 +226,7 @@ var ye = { "managed-settings": 86400, "policy-limits": 86400 },
       ws: s().optional(),
     }),
   );
-function Wnr({ jws: e, ...t }) {
+function verifySignedCacheJws({ jws: e, ...t }) {
   if (!e) return { result: "unsigned" };
   let r = {};
   try {
@@ -384,30 +384,30 @@ var Q = "x-claude-code-signature",
       iat: T(),
     }),
   );
-function P$e(e) {
+function getSignatureSidecarPath(e) {
   return `${e}.signature.json`;
 }
-function VJe(e) {
+function getSignatureIatSidecarPath(e) {
   return `${e}.signature-iat.json`;
 }
-function Cve(e) {
+function extractSignatureHeader(e) {
   let t = e && Q in e ? e[Q] : void 0;
   return typeof t === "string" && t.length > 0 && t.length <= C ? t : void 0;
 }
-async function lse(e, t) {
+async function writeSignatureSidecar(e, t) {
   if (t === void 0) {
-    await x(P$e(e));
+    await x(getSignatureSidecarPath(e));
     return;
   }
   let r = { jws: t, receivedAt: Date.now() };
-  await Pe(P$e(e), r);
+  await Pe(getSignatureSidecarPath(e), r);
 }
-async function KJe(e) {
-  await Promise.all([x(P$e(e)), x(VJe(e))]);
+async function deleteSignatureSidecars(e) {
+  await Promise.all([x(getSignatureSidecarPath(e)), x(getSignatureIatSidecarPath(e))]);
 }
 async function XJe(e, t) {
   if (!t && (await ze(e))) return !1;
-  return (await KJe(e), !0);
+  return (await deleteSignatureSidecars(e), !0);
 }
 async function ze(e) {
   try {
@@ -416,11 +416,11 @@ async function ze(e) {
     return !W(t);
   }
 }
-async function Gnr(e) {
-  return He(P$e(e), Ne());
+async function readStoredSignature(e) {
+  return He(getSignatureSidecarPath(e), Ne());
 }
-async function qnr(e, t) {
-  return ee(VJe(e), t, !1);
+async function readAcceptedSignatureIat(e, t) {
+  return ee(getSignatureIatSidecarPath(e), t, !1);
 }
 async function ee(e, t, r) {
   let i = Oe(),
@@ -458,8 +458,8 @@ async function te(e) {
     return;
   }
 }
-async function znr(e, t, r) {
-  let i = VJe(e),
+async function recordAcceptedSignatureIat(e, t, r) {
+  let i = getSignatureIatSidecarPath(e),
     o = await te(i);
   try {
     for (let u = 0; u < xe; u++) {
@@ -473,7 +473,7 @@ async function znr(e, t, r) {
 }
 async function Me(e, t) {
   try {
-    return (await On(e, b(t), 384), !0);
+    return (await writeFileAtomic(e, b(t), 384), !0);
   } catch (r) {
     return (n(`Signed cache: failed to write ${e} - ${l(r)}`), !1);
   }
@@ -520,25 +520,25 @@ async function He(e, t) {
   return r.kind === "ok" ? r.value : null;
 }
 export {
-  $nr,
-  Unr,
-  Bnr,
-  YAn,
-  JAn,
-  jnr,
-  ase,
-  aAt,
-  H$e,
-  I$e,
-  nU,
-  Wnr,
-  P$e,
-  VJe,
-  Cve,
-  lse,
-  KJe,
+  setActivityCallback,
+  clearActivityCallback,
+  sendActivityHeartbeat,
+  setMainLoopRefcountListener,
+  setNestedChainDropListener,
+  notifyNestedChainDropped,
+  getMainLoopRefcount,
+  isMainLoopActive,
+  beginActivity,
+  endActivity,
+  computeRetryDelayMs,
+  verifySignedCacheJws,
+  getSignatureSidecarPath,
+  getSignatureIatSidecarPath,
+  extractSignatureHeader,
+  writeSignatureSidecar,
+  deleteSignatureSidecars,
   XJe,
-  Gnr,
-  qnr,
-  znr,
+  readStoredSignature,
+  readAcceptedSignatureIat,
+  recordAcceptedSignatureIat,
 };

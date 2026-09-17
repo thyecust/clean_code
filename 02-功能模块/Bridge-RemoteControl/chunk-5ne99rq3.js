@@ -7,8 +7,8 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { Id, vu, Ag, BP, eje } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { COMMAND_NAME_TAG, LOCAL_COMMAND_STDOUT_TAG, LOCAL_COMMAND_STDERR_TAG, LOCAL_COMMAND_CAVEAT_TAG, stripXmlTags } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withTimeout, withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
@@ -21,7 +21,7 @@ import { yt, mi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.
 import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { areBackgroundTasksDisabled, BACKGROUND_TASKS_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
-import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
+import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var sp = "(no content)",
@@ -70,7 +70,7 @@ function Qn(e) {
   let t = e.length > 4096 ? e.slice(0, 4096) : e;
   for (let r = 0; r < 64; r++) {
     let s = Z(t).replace(w, "");
-    if (s === t) return oe(s, 1024);
+    if (s === t) return truncateToCodeUnits(s, 1024);
     t = s;
   }
   return "";
@@ -434,7 +434,7 @@ function arr(e, t) {
     count_bucket: fromEnum(t === 1 ? "1" : t <= 5 ? "2-5" : "6+"),
   });
 }
-var Me = new RegExp(`<${Id}>([^<]*)</${Id}>`);
+var Me = new RegExp(`<${COMMAND_NAME_TAG}>([^<]*)</${COMMAND_NAME_TAG}>`);
 function xe(e, t) {
   let r = Me.exec(e)?.[1];
   if (r === void 0 || r === "") return !1;
@@ -487,7 +487,7 @@ function Ne(e) {
   );
 }
 function lrr(e) {
-  Jo().bridgeStateFramesGate = e;
+  getSessionRuntimeState().bridgeStateFramesGate = e;
 }
 function xme(e) {
   if ((e.type === "user" || e.type === "assistant") && e.isVirtual) return !1;
@@ -507,10 +507,10 @@ function xme(e) {
     (e.type === "system" &&
       (e.subtype === "local_command" ||
         (e.subtype === "compact_boundary" &&
-          (Jo().bridgeStateFramesGate?.() ?? !0))))
+          (getSessionRuntimeState().bridgeStateFramesGate?.() ?? !0))))
   );
 }
-var qe = [`<${Id}>`, `<${vu}>`, `<${Ag}>`, `<${BP}>`];
+var qe = [`<${COMMAND_NAME_TAG}>`, `<${LOCAL_COMMAND_STDOUT_TAG}>`, `<${LOCAL_COMMAND_STDERR_TAG}>`, `<${LOCAL_COMMAND_CAVEAT_TAG}>`];
 function Oe(e) {
   let t = e.message?.content,
     r = Array.isArray(t)
@@ -550,7 +550,7 @@ function crr(e) {
         break;
       }
   if (!r) return;
-  return eje(r) || void 0;
+  return stripXmlTags(r) || void 0;
 }
 function urr(e, t, r, s, d, S) {
   try {
@@ -1562,7 +1562,7 @@ var eVt = { enforce: !1, acceptLevel: "VERIFIED", acceptStatuses: new Set() },
     }),
   );
 function mrr(e) {
-  let t = Jo().attestation,
+  let t = getSessionRuntimeState().attestation,
     r = Je().safeParse(e);
   if (!r.success && !t.malformedConfigReported) {
     t.malformedConfigReported = !0;
@@ -1585,16 +1585,16 @@ function mrr(e) {
   };
 }
 function Dve(e) {
-  Jo().attestation.filterPolicy = e;
+  getSessionRuntimeState().attestation.filterPolicy = e;
 }
 function aQe(e) {
-  Jo().attestation.dropNotifier = e;
+  getSessionRuntimeState().attestation.dropNotifier = e;
 }
 function SAt(e) {
-  Jo().attestation.senderDropWriter = e;
+  getSessionRuntimeState().attestation.senderDropWriter = e;
 }
 function bAt(e) {
-  let t = Jo().attestation;
+  let t = getSessionRuntimeState().attestation;
   if (t.senderDropWriter === e) t.senderDropWriter = void 0;
 }
 var $$e = "[remote-io] warning: ";
@@ -1669,11 +1669,11 @@ function x(e, t, r) {
     }
 }
 function st(e) {
-  let t = Jo().attestation;
+  let t = getSessionRuntimeState().attestation;
   return t.knownInboundRequestIds.has(e) || t.knownOutboundRequestIds.has(e);
 }
 function wAt(e, { automated: t }) {
-  let r = Jo().attestation;
+  let r = getSessionRuntimeState().attestation;
   if ((x(r.knownOutboundRequestIds, ue, e), t))
     x(r.automatedOutboundRequestIds, ue, e);
 }
@@ -1681,22 +1681,22 @@ function ot(e) {
   let t = e.payload?.response;
   if (typeof t !== "object" || t === null) return !1;
   let r = B$e(t);
-  return r !== void 0 && Jo().attestation.automatedOutboundRequestIds.has(r);
+  return r !== void 0 && getSessionRuntimeState().attestation.automatedOutboundRequestIds.has(r);
 }
 var it = 200;
 function TAt(e) {
-  x(Jo().attestation.resolvedPromptRequestIds, it, e);
+  x(getSessionRuntimeState().attestation.resolvedPromptRequestIds, it, e);
 }
 function at(e) {
   let t = e.payload?.response;
   if (typeof t !== "object" || t === null) return !1;
   let r = B$e(t);
-  return r !== void 0 && Jo().attestation.resolvedPromptRequestIds.has(r);
+  return r !== void 0 && getSessionRuntimeState().attestation.resolvedPromptRequestIds.has(r);
 }
 var ut = 60000,
   de = 10;
 function le(e, t) {
-  let r = Jo().attestation;
+  let r = getSessionRuntimeState().attestation;
   if (r.dropNotifier === void 0 && r.senderDropWriter === void 0) return;
   if (r.recentDropEventIds.has(t)) return;
   x(r.recentDropEventIds, rt, t);
@@ -1716,7 +1716,7 @@ function le(e, t) {
     });
 }
 function ce(e) {
-  let t = Jo().attestation;
+  let t = getSessionRuntimeState().attestation;
   if (t.dropNotifier !== void 0)
     try {
       t.dropNotifier(e);
@@ -1738,7 +1738,7 @@ function ce(e) {
 function P(e, t) {
   if (t !== "control_request") return;
   let r = e.payload ? B$e(e.payload) : void 0;
-  if (r !== void 0) x(Jo().attestation.knownInboundRequestIds, nt, r);
+  if (r !== void 0) x(getSessionRuntimeState().attestation.knownInboundRequestIds, nt, r);
   if (pe(e) !== void 0) logFeatureOk("bridge_control_request_attestation");
 }
 var dt = new Set([
@@ -1749,7 +1749,7 @@ var dt = new Set([
 ]);
 function lt(e, t, r) {
   try {
-    let s = Jo().attestation.reportedStrayDropCodes,
+    let s = getSessionRuntimeState().attestation.reportedStrayDropCodes,
       d =
         r === "control_request"
           ? "control_request_other"
@@ -1774,7 +1774,7 @@ function EAt(e) {
   let t = typeof e.payload?.type === "string" ? e.payload.type : e.event_type,
     r = t === "user" || t === "control_response",
     s = _Cn(e.device_attestation_status),
-    d = Jo().attestation.filterPolicy?.() ?? eVt;
+    d = getSessionRuntimeState().attestation.filterPolicy?.() ?? eVt;
   if (yCn(s, d.acceptLevel)) {
     if (r) logFeatureOk("bridge_event_attestation");
     return (P(e, t), !1);

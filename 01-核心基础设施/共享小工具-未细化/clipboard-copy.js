@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { Npe, $St, z_ } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
+import { getClipboardCopyStrategy, probeLinuxClipboardTool, setClipboard } from "../../02-功能模块/终端-剪贴板/终端-剪贴板.e33btqf0.js";
 import { useClock } from "./use-clock.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -36,7 +36,7 @@ function useCopyToClipboard(r) {
         s(null));
     }, []);
   (E(() => {
-    if ((m(), r !== null)) $St();
+    if ((m(), r !== null)) probeLinuxClipboardTool();
   }, [r, m]),
     E(
       () => (
@@ -60,9 +60,9 @@ function useCopyToClipboard(r) {
         (o.current = i.setTimeout(() => {
           ((o.current = null), (l.current = null));
         }, g)));
-      let y = Npe(),
+      let y = getClipboardCopyStrategy(),
         R = a.current;
-      z_(b).then((h) => {
+      setClipboard(b).then((h) => {
         if (!f.current || R !== a.current) return;
         if (h) process.stdout.write(h);
         if ((n.current?.(), (n.current = null), s(y), y === "native"))

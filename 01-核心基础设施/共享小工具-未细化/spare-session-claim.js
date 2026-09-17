@@ -13,13 +13,13 @@ import { z, Yu, JPn } from "../核心工具-日志与脱敏/核心工具-日志�
 import { lU, resetEnvDerivedAuthCaches, qUe, LZe, Gse } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { canonicalizePath } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { Za, MRt, NRt, uke } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { M1 } from "../../03-入口与运行时/CLI入口-Commander/chunk-6rfqqsva.js";
+import { addStartupContext } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { configureGlobalAgents, clearProxyCache } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { Avt } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
-import { $R } from "./chunk-035vf5et.js";
+import { timingSafeStringEqual } from "./chunk-035vf5et.js";
 import { gwn } from "../遥测-OpenTelemetry/chunk-x7kby92q.js";
-import { UXn } from "../遥测-OpenTelemetry/chunk-5j0f24ra.js";
-import { G1n } from "./chunk-ezjdm9sg.js";
+import { markWarmSpareClaimed } from "../遥测-OpenTelemetry/startup-timing-telemetry.js";
+import { waitForSessionIngressToken } from "./session-ingress-token.js";
 import { resetRemoteSettingsSyncCache } from "./remote-settings-eligibility.js";
 import { createServer } from "net";
 function receiveSpareClaim(e, m, o) {
@@ -45,7 +45,7 @@ function receiveSpareClaim(e, m, o) {
               } catch {
                 s = void 0;
               }
-              if (!s || !$R(s.auth, o)) {
+              if (!s || !timingSafeStringEqual(s.auth, o)) {
                 r.destroy();
                 return;
               }
@@ -83,8 +83,8 @@ async function bootClaimedSpare(e, m) {
     Gse(),
     LZe(),
     cOn(),
-    UXn(),
-    M1({ warm_spare_claimed: 1 }),
+    markWarmSpareClaimed(),
+    addStartupContext({ warm_spare_claimed: 1 }),
     Ie(e.env.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
   ) {
     for (let t of Object.keys(process.env))
@@ -97,7 +97,7 @@ async function bootClaimedSpare(e, m) {
     Object.assign(process.env, e.env),
     (process.argv = [process.argv[0], process.argv[1], ...e.argv]),
     JPn(),
-    await G1n(e.argv),
+    await waitForSessionIngressToken(e.argv),
     uLn(),
     resetEnvDerivedAuthCaches(),
     Avt(),

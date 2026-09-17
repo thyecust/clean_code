@@ -16,18 +16,18 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { Tn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mn } from "../../01-核心基础设施/共享小工具-未细化/chunk-z5tdbda7.js";
-import { up, _S } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
+import { stripInvisibleChars, sanitizeDeep } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { jt } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { getOfficialPluginPromptOverrides } from "../插件系统/plugin-prompt-overrides.js";
-import { Fk, JSt, Jn, UNe } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
-import { zo } from "../MCP客户端/chunk-3kmsshb6.js";
-import { Cpt, vpt, I9n, Tan, P9n, O9n, D9n } from "./chunk-wwgqvtfr.js";
-import { oSn } from "../MCP客户端/chunk-0mwqsv0r.js";
-import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
-import { wwt, A1e, C1e, Ewt } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { MAX_SKILL_FILE_BYTES, getMcpSkillBuilders, getMcpServerConfigCacheKey, readMcpResourceRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
+import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
+import { SKILL_FILE_NAME, parseSha256Digest, readCachedMcpSkill, isMcpSkillContentCached, resolveMcpSkillCacheEntry, writeMcpSkillContent, writeMcpSkillCacheMeta } from "./mcp-skill-cache.js";
+import { declaresMcpSkillsExtension } from "../MCP客户端/mcp-skills-extension.js";
+import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
+import { createEmptyCommandMetadata, escapeCommandFrontmatter, escapeOptionalSingleLineText, escapeMultilineText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 import { normalizeMcpName } from "../../01-核心基础设施/共享小工具-未细化/mcp-name-normalization.js";
 import { xA, Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { randomBytes } from "crypto";
@@ -62,7 +62,7 @@ var B = 100,
   q = 20,
   E = 4096;
 function j(e, r, s) {
-  let c = `${e}:${Jn(r.name, r.config)}`,
+  let c = `${e}:${getMcpServerConfigCacheKey(r.name, r.config)}`,
     o = jt().skillsFunnelSeen,
     a = o.has(c) ? "refetch" : "initial";
   (o.add(c),
@@ -77,7 +77,7 @@ function j(e, r, s) {
 class I {
   fetchForClient = xA(
     async (e, r) => {
-      if (!oSn(e.capabilities)) return [];
+      if (!declaresMcpSkillsExtension(e.capabilities)) return [];
       let s = null,
         c = !1,
         o = await H(e, () => {
@@ -85,13 +85,13 @@ class I {
         });
       if (o.length === 0) {
         if (c)
-          (this.invalidate(Jn(e.name, e.config)),
+          (this.invalidate(getMcpServerConfigCacheKey(e.name, e.config)),
             logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"));
         return [];
       }
       (j("parsed_nonempty", e, o.length),
-        logMCPDebug(e.name, `Found ${o.length} ${x(o.length, "skill")} via skills/list`));
-      let a = JSt(),
+        logMCPDebug(e.name, `Found ${o.length} ${pluralize(o.length, "skill")} via skills/list`));
+      let a = getMcpSkillBuilders(),
         p = (d) => {
           if (d === "skill_mcp_claudeai_bearer_rejected") c = !0;
           else s = d;
@@ -106,7 +106,7 @@ class I {
             })
           : h;
       if (c)
-        (this.invalidate(Jn(e.name, e.config)),
+        (this.invalidate(getMcpServerConfigCacheKey(e.name, e.config)),
           (e.discoveryBearerRejected = !0));
       if (s) logFeatureBad("skill_mcp_load", s, { mcp_server_sha12: Tn(e.name) });
       else if (c) logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected");
@@ -118,7 +118,7 @@ class I {
           ));
       return m;
     },
-    (e, r) => Jn(e.name, e.config),
+    (e, r) => getMcpServerConfigCacheKey(e.name, e.config),
     X,
   );
   invalidate(e) {
@@ -166,7 +166,7 @@ async function H(e, r) {
             e.config.type === "claudeai-proxy" && P(t))
           )
             (logFeatureSad("skill_mcp_load", "skill_mcp_claudeai_bearer_rejected"),
-              v().invalidate(Jn(e.name, e.config)),
+              v().invalidate(getMcpServerConfigCacheKey(e.name, e.config)),
               (e.discoveryBearerRejected = !0));
           else logFeatureSad("skill_mcp_load", "skill_mcp_list_failed");
         return [];
@@ -174,7 +174,7 @@ async function H(e, r) {
       if (
         (logMCPDebug(
           e.name,
-          `skills/list page ${p + 1} failed (${l(t)}) \u2014 using ${s.length} ${x(s.length, "entry", "entries")} from prior pages`,
+          `skills/list page ${p + 1} failed (${l(t)}) \u2014 using ${s.length} ${pluralize(s.length, "entry", "entries")} from prior pages`,
         ),
         e.config.type === "claudeai-proxy" && P(t))
       )
@@ -205,12 +205,12 @@ async function H(e, r) {
   if (a !== void 0 || o)
     logMCPDebug(
       e.name,
-      `skills/list: stopped after ${p} ${x(p, "page")} / ${s.length} valid ${x(s.length, "entry", "entries")} with more pending`,
+      `skills/list: stopped after ${p} ${pluralize(p, "page")} / ${s.length} valid ${pluralize(s.length, "entry", "entries")} with more pending`,
     );
   if (c > 0)
     (logMCPDebug(
       e.name,
-      `${c} skills/list ${x(c, "entry", "entries")} skipped (malformed, missing, or oversized fields)`,
+      `${c} skills/list ${pluralize(c, "entry", "entries")} skipped (malformed, missing, or oversized fields)`,
     ),
       logFeatureSad("skill_mcp_load", "skill_mcp_list_entries_dropped"));
   return s;
@@ -219,7 +219,7 @@ function G(e) {
   return typeof e === "string" && e.length > 0 ? e : void 0;
 }
 async function W(e, r, s, c, o) {
-  let a = await I9n(e.name, r, o);
+  let a = await readCachedMcpSkill(e.name, r, o);
   if (a.hit)
     return (
       logMCPDebug(e.name, `Skill '${r.name}' cache hit \u2014 no resources/read`),
@@ -251,7 +251,7 @@ async function Y({
   storageV5: p,
 }) {
   try {
-    let t = (await UNe(e, r, { timeout: Hl() })).contents?.find(
+    let t = (await readMcpResourceRaw(e, r, { timeout: getMcpTimeoutMs() })).contents?.find(
       (_) => "text" in _ && typeof _.text === "string",
     );
     if (!t || !("text" in t))
@@ -260,15 +260,15 @@ async function Y({
         o("skill_mcp_no_text_content"),
         null
       );
-    if (t.text.length > Fk)
+    if (t.text.length > MAX_SKILL_FILE_BYTES)
       return (
-        logMCPDebug(e.name, `Skill resource ${r} exceeds ${Fk / 1e6}MB, skipping`),
+        logMCPDebug(e.name, `Skill resource ${r} exceeds ${MAX_SKILL_FILE_BYTES / 1e6}MB, skipping`),
         o("skill_mcp_content_too_large"),
         null
       );
     let h = String(t.text),
-      m = vpt(a.digest ?? void 0),
-      d = mn(h);
+      m = parseSha256Digest(a.digest ?? void 0),
+      d = hashSha256(h);
     if (m && m !== d)
       return (
         logMCPError(
@@ -294,25 +294,25 @@ async function Y({
 }
 async function Z(e, r, s, c, o) {
   try {
-    let a = vpt(r.digest ?? void 0) ?? c,
+    let a = parseSha256Digest(r.digest ?? void 0) ?? c,
       {
         slug: p,
         slugDir: k,
         keyDir: t,
         alreadyCached: h,
-      } = await P9n(e, r, a, o);
+      } = await resolveMcpSkillCacheEntry(e, r, a, o);
     if (!h)
-      if (isHoverRestEnabled() && o) await O9n(o, p, a, s);
+      if (isHoverRestEnabled() && o) await writeMcpSkillContent(o, p, a, s);
       else {
         let m = b(k, `.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
         await mkdir(m, { recursive: !0 });
         let d = !1;
         try {
-          await writeFile(b(m, Cpt), s);
+          await writeFile(b(m, SKILL_FILE_NAME), s);
           try {
             (await rename(m, t), (d = !0));
           } catch (_) {
-            if (!(await Tan(p, a, t, void 0))) {
+            if (!(await isMcpSkillContentCached(p, a, t, void 0))) {
               let C = A(_);
               if (
                 C !== "EEXIST" &&
@@ -335,7 +335,7 @@ async function Z(e, r, s, c, o) {
           if (!d) await R(m, { recursive: !0, force: !0 }).catch(() => {});
         }
       }
-    await D9n({ slug: p, slugDir: k }, r, a, o);
+    await writeMcpSkillCacheMeta({ slug: p, slugDir: k }, r, a, o);
   } catch (a) {
     logMCPDebug(e, `Failed to cache SKILL.md for '${r.name}': ${l(a)}`);
   }
@@ -347,9 +347,9 @@ function D({
   rawContent: c,
   builders: { createSkillCommand: o, parseSkillFrontmatterFields: a },
 }) {
-  let p = _S(c),
-    { frontmatter: k, content: t } = zo(p, r, { normalizeKeys: !0 }),
-    h = Ewt(t),
+  let p = sanitizeDeep(c),
+    { frontmatter: k, content: t } = parseFrontmatter(p, r, { normalizeKeys: !0 }),
+    h = escapeMultilineText(t),
     m = a(k, h, s),
     d = normalizeMcpName(s);
   if (m.hooks)
@@ -366,8 +366,8 @@ function D({
     L = F(r),
     C = L
       ? {
-          server: up(e.name),
-          uri: up(L),
+          server: stripInvisibleChars(e.name),
+          uri: stripInvisibleChars(L),
           directoryRead: T().serverDeclaresDirectoryRead(e.capabilities),
         }
       : void 0;
@@ -375,9 +375,9 @@ function D({
     logMCPDebug(e.name, `Loaded MCP skill '${d}' from ${r}`),
     o({
       ...m,
-      ...A1e(m),
-      ...wwt(),
-      displayName: C1e(m.displayName),
+      ...escapeCommandFrontmatter(m),
+      ...createEmptyCommandMetadata(),
+      displayName: escapeOptionalSingleLineText(m.displayName),
       skillName: _,
       markdownContent: h,
       source: "mcp",

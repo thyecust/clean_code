@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { Uw, Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { hasValidPathSegments, STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import {
   Le,
   THt,
@@ -33,20 +33,20 @@ import {
   wh,
   $W,
 } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { l, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { kA } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
+import { isTempFileFor } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
 import { j, rE, B, he, Irt } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { z, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { mhe } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { mhe } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { ay, wr, yHn, ott, Al, zt, z6 } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { createStore } from "../../01-核心基础设施/共享小工具-未细化/state-store.js";
 import { Wi } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/共享小工具-未细化/chunk-7axvc6rn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 import { isAbsolute as te } from "path";
 var nve = ".claude-plugin-link",
@@ -64,7 +64,7 @@ var nve = ".claude-plugin-link",
 [mode: link]`;
 import { isAbsolute as ie, join as L, relative as O, sep as U } from "path";
 function E() {
-  return L(be(), "skills");
+  return L(getClaudeConfigDir(), "skills");
 }
 function re(e) {
   let t = O(E(), e);
@@ -73,11 +73,11 @@ function re(e) {
 function F(e) {
   if (!re(e)) return null;
   let t = O(E(), e).split(U);
-  return Uw(t) && L(E(), ...t) === e ? t : null;
+  return hasValidPathSegments(t) && L(E(), ...t) === e ? t : null;
 }
 function jzt(e) {
   let t = F(e);
-  return t === null ? null : Ce.userConfigDir("skills", t);
+  return t === null ? null : STORAGE_KEYS.userConfigDir("skills", t);
 }
 function enr(e) {
   let t = F(e);
@@ -91,7 +91,7 @@ var cP = ".orphaned_at",
   REt = ".gcs-sha",
   xD = ".links_materialized";
 function M() {
-  return k(be(), "plugins", "cache");
+  return k(getClaudeConfigDir(), "plugins", "cache");
 }
 function w(e, t) {
   let i = M();
@@ -106,7 +106,7 @@ function D(e) {
 }
 function HD(e, t) {
   let i = w(e, t);
-  if (i === null || i.length !== 3 || !Uw(i) || D(i[2])) return null;
+  if (i === null || i.length !== 3 || !hasValidPathSegments(i) || D(i[2])) return null;
   let [r, o, u] = i;
   return { marketplace: r, plugin: o, version: u };
 }
@@ -125,26 +125,26 @@ function u$e(e, t) {
 }
 function nnr(e, t) {
   let i = [e.marketplace, e.plugin, e.version];
-  if (t !== M() || !Uw(i) || D(e.version)) return null;
+  if (t !== M() || !hasValidPathSegments(i) || D(e.version)) return null;
   return k(t, ...i);
 }
 function oe(e, t) {
   let i = w(e, t);
-  if (i === null || i.length < 4 || !Uw(i) || D(i[2])) return null;
+  if (i === null || i.length < 4 || !hasValidPathSegments(i) || D(i[2])) return null;
   let [r, o, u, ...d] = i;
-  return Ce.pluginCache(r, o, u, d);
+  return STORAGE_KEYS.pluginCache(r, o, u, d);
 }
 function bJe(e, t) {
   return oe(e, t) ?? jzt(e);
 }
 function BG(e, t) {
-  return A(t) ? Ce.pluginRegistry(e) : null;
+  return A(t) ? STORAGE_KEYS.pluginRegistry(e) : null;
 }
 function Wzt(e, t, i) {
-  return A(i) && Uw([e]) ? Ce.marketplaceCache(e, t) : null;
+  return A(i) && hasValidPathSegments([e]) ? STORAGE_KEYS.marketplaceCache(e, t) : null;
 }
 function A(e) {
-  return e === k(be(), "plugins");
+  return e === k(getClaudeConfigDir(), "plugins");
 }
 function le(e, t) {
   if (!A(t)) return null;
@@ -156,18 +156,18 @@ function le(e, t) {
 }
 function wJe(e, t) {
   let i = le(e, t);
-  if (i === null || i.length < 2 || !Uw(i)) return null;
-  return Ce.marketplaceTree(i[0], i.slice(1));
+  if (i === null || i.length < 2 || !hasValidPathSegments(i)) return null;
+  return STORAGE_KEYS.marketplaceTree(i[0], i.slice(1));
 }
 function rnr(e) {
-  return e === k(be(), "plugins", "asset-cache")
+  return e === k(getClaudeConfigDir(), "plugins", "asset-cache")
     ? { namespace: "pluginAssetCache" }
     : null;
 }
 function kEt(e, t) {
   if (e === t) return t === M() ? { namespace: "pluginCache" } : null;
   let i = w(e, t);
-  if (i === null || i.length > 2 || !Uw(i)) return null;
+  if (i === null || i.length > 2 || !hasValidPathSegments(i)) return null;
   let [r, o] = i;
   return o === void 0
     ? { namespace: "pluginCache", marketplace: r }
@@ -180,7 +180,7 @@ function wR(e) {
 function TJe(e, t) {
   let i = wR(e);
   if (t.has(i)) return !0;
-  for (let r of t) if (kA(i, r)) return !0;
+  for (let r of t) if (isTempFileFor(i, r)) return !0;
   return !1;
 }
 function rve(e) {
@@ -198,7 +198,7 @@ function me() {
 function Sl() {
   let e = a.CLAUDE_CODE_PLUGIN_CACHE_DIR;
   if (e) return Ju(e);
-  return I(be(), me());
+  return I(getClaudeConfigDir(), me());
 }
 function MC() {
   let e = a.CLAUDE_CODE_PLUGIN_SEED_DIR;
@@ -262,8 +262,8 @@ function z$() {
 }
 function HEt() {
   return dedupe([
-    R(be(), "plugins"),
-    R(be(), "cowork_plugins"),
+    R(getClaudeConfigDir(), "plugins"),
+    R(getClaudeConfigDir(), "cowork_plugins"),
     sb(),
     ...MC().map((e) => R(he(), e)),
   ]);
@@ -546,7 +546,7 @@ function W(e) {
 import { resolve as Re } from "path";
 function OEt(e) {
   let t = Re(e).normalize("NFC");
-  return P() === "windows" ? t.toLowerCase() : t;
+  return getCurrentPlatform() === "windows" ? t.toLowerCase() : t;
 }
 function zzt(e, t, i, r) {
   let o = new Map();
@@ -692,7 +692,7 @@ function Ie(e, t) {
   return r ?? { root: void 0, tail: e };
 }
 function t6(e) {
-  switch (P()) {
+  switch (getCurrentPlatform()) {
     case "windows":
       return Pz(Oje(e));
     case "macos":
@@ -702,7 +702,7 @@ function t6(e) {
   }
 }
 function N(e) {
-  if (P() !== "windows") return;
+  if (getCurrentPlatform() !== "windows") return;
   let t = parse(e).root,
     i = (o) => Krt(NW(o)),
     r = i(t);

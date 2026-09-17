@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { qJ } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAsset } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 var D = "./mermaid.min.js";
 var H = `/*! mermaid v11.16.1 | MIT | Copyright (c) 2014 - 2022 Knut Sveidqvist */
 `;
 async function loadMermaidBundleJs() {
-  return H + (await qJ(D, import.meta.dirname));
+  return H + (await readEmbeddedAsset(D, import.meta.dirname));
 }
 export { loadMermaidBundleJs };

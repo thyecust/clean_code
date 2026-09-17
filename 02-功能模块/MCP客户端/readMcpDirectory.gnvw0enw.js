@@ -13,12 +13,12 @@ import { Hee } from "./chunk-5wa92x7d.js";
 import { Go, Ki } from "./chunk-78r8f7dw.js";
 import "../认证-OAuth登录/chunk-3wfaaze4.js";
 import { logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { t7e } from "./chunk-0mwqsv0r.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
-import { Hl } from "../../01-核心基础设施/共享小工具-未细化/chunk-anxypace.js";
+import { MCP_SKILLS_EXTENSION_ID } from "./mcp-skills-extension.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { getMcpTimeoutMs } from "../../01-核心基础设施/共享小工具-未细化/mcp-timeouts.js";
 var a = 20;
 function serverDeclaresDirectoryRead(r) {
-  let e = r?.extensions?.[t7e];
+  let e = r?.extensions?.[MCP_SKILLS_EXTENSION_ID];
   return (
     e != null &&
     typeof e === "object" &&
@@ -37,13 +37,13 @@ async function readMcpDirectory(r, e) {
   do {
     let i;
     try {
-      i = await Yo(r.client).request(
+      i = await asMcpSdkClient(r.client).request(
         {
           method: "resources/directory/read",
           params: { uri: e, ...(o && { cursor: o }) },
         },
         Hee,
-        { timeout: Hl() },
+        { timeout: getMcpTimeoutMs() },
       );
     } catch (n) {
       if (s === 0 || !(n instanceof Ki && n.code === Go.InvalidParams)) throw n;

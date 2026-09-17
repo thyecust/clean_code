@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { cn } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../../02-功能模块/状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, tn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
@@ -18,7 +18,7 @@ var b = 58,
   W = 30;
 function zB() {
   let d = _(39),
-    [L] = cn(),
+    [L] = useTheme(),
     io = tn(),
     { rows: to } = useTerminalSize();
   if (io || to < W) {

@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { withDeadline } from "./async-timeout-utils.js";
-import { uo } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { $5, Sx, tv, MU, Bar } from "./chunk-h3avap4w.js";
+import { isSimpleMode } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { CREDENTIALS_SUFFIX, getKeychainServiceName, getKeychainAccountName, getKeychainState, primeKeychainCache } from "./keychain-access.js";
 import { execFile } from "child_process";
 var s = 1e4,
   KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS = 250,
@@ -19,17 +19,17 @@ function isWindowsCredManagerAvailable() {
   return l === !0;
 }
 function getLastKnown() {
-  return MU().lastKnown;
+  return getKeychainState().lastKnown;
 }
 function setLastKnown(e) {
-  MU().lastKnown = e;
+  getKeychainState().lastKnown = e;
 }
 function a(e) {
   return new Promise((o) => {
     try {
       execFile(
         "security",
-        ["find-generic-password", "-a", tv(), "-w", "-s", e],
+        ["find-generic-password", "-a", getKeychainAccountName(), "-w", "-s", e],
         { encoding: "utf-8", timeout: s, windowsHide: !0 },
         (t, i) => {
           let n = Boolean(t && "killed" in t && t.killed);
@@ -42,14 +42,14 @@ function a(e) {
   });
 }
 function startKeychainPrefetch() {
-  if (r || uo()) return;
-  let e = MU(),
+  if (r || isSimpleMode()) return;
+  let e = getKeychainState(),
     o = e.generation;
   e.legacyApiKeyPrefetch = "pending";
-  let t = a(Sx($5)).then((n) => {
-      if (n) Bar(n.stdout, o, e);
+  let t = a(getKeychainServiceName(CREDENTIALS_SUFFIX)).then((n) => {
+      if (n) primeKeychainCache(n.stdout, o, e);
     }),
-    i = a(Sx()).then((n) => {
+    i = a(getKeychainServiceName()).then((n) => {
       if (n && e.legacyApiKeyPrefetch === "pending") e.legacyApiKeyPrefetch = n;
     });
   r = Promise.all([t, i]).then(() => {});
@@ -59,10 +59,10 @@ async function ensureKeychainPrefetchCompleted(e) {
   await (e === void 0 ? r : withDeadline(r, e));
 }
 function getLegacyApiKeyPrefetchResult() {
-  let e = MU().legacyApiKeyPrefetch;
+  let e = getKeychainState().legacyApiKeyPrefetch;
   return e === "pending" ? null : e;
 }
 function clearLegacyApiKeyPrefetch() {
-  MU().legacyApiKeyPrefetch = null;
+  getKeychainState().legacyApiKeyPrefetch = null;
 }
 export { KEYCHAIN_PREFETCH_FASTPATH_BUDGET_MS, isWindowsCredManagerAvailable, getLastKnown, setLastKnown, startKeychainPrefetch, ensureKeychainPrefetchCompleted, getLegacyApiKeyPrefetchResult, clearLegacyApiKeyPrefetch };

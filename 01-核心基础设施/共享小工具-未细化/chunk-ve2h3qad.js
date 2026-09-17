@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { fi } from "./chunk-z5tdbda7.js";
+import { GITHUB_HOST } from "./git-host-utils.js";
 async function buildGitSessionContext(n, e, t) {
   let u = { revisionGuessUsed: !1 };
   if (!n) return { sources: [], outcomes: [], report: u };
@@ -52,7 +52,7 @@ async function buildGitSessionContext(n, e, t) {
   let m = y(n);
   if (m) {
     let [i, s] = m.split("/");
-    if (i && s) return g(fi, i, s);
+    if (i && s) return g(GITHUB_HOST, i, s);
   }
   return { sources: [], outcomes: [], report: u };
 }

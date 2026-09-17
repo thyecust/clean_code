@@ -11,24 +11,24 @@
 // [preload stripped] 原本在此预载 232 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Ao, yx } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { Yd } from "../../03-入口与运行时/会话UI(REPL)/chunk-sn6am10p.js";
+import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import { JDe, Igt, ide, tLe, Mgt, $4n, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
-import "../语法高亮-Markdown渲染/chunk-mnn6q099.js";
+import "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
+import "../Diff引擎/structured-diff.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
-import { Pg } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
-import { FB, wWe } from "../Diff引擎/chunk-arr1hvsk.js";
+import { TruncatedFilePath } from "../../03-入口与运行时/会话UI(REPL)/chunk-vpp75aza.js";
+import { RejectedToolUseDiff, wWe } from "../Diff引擎/diff-tool-result-render.js";
 import "../../01-核心基础设施/共享小工具-未细化/diff-hunks.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -37,7 +37,7 @@ F();
 function renderToolUseMessage({ file_path: r }, { verbose: s }) {
   if (!r) return null;
   if (r.startsWith(getPlansDirectory())) return "";
-  return e(Pg, { filePath: r, children: s ? r : Ao(r) });
+  return e(TruncatedFilePath, { filePath: r, children: s ? r : Ao(r) });
 }
 function renderToolResultMessage(
   { filePath: r = "", structuredPatch: s, originalFile: i },
@@ -49,7 +49,7 @@ function renderToolResultMessage(
   return e(wWe, {
     filePath: r,
     structuredPatch: s,
-    firstLine: i ? kr(i) : null,
+    firstLine: i ? firstLine(i) : null,
     fileContent: i || void 0,
     style: o,
     verbose: l,
@@ -64,18 +64,18 @@ function renderToolUseRejectedMessage(r, s) {
     c = r.new_string ?? "",
     m = r.replace_all ?? !1;
   if ("edits" in r && r.edits != null)
-    return e(FB, {
+    return e(RejectedToolUseDiff, {
       file_path: o,
       operation: "update",
       firstLine: null,
       verbose: a,
     });
   if (l === "")
-    return e(FB, {
+    return e(RejectedToolUseDiff, {
       file_path: o,
       operation: "write",
       content: c,
-      firstLine: kr(c),
+      firstLine: firstLine(c),
       verbose: a,
     });
   return e(O, {
@@ -103,7 +103,7 @@ function renderToolUseErrorMessage(r, s) {
       children: e(t, { color: "error", children: "Error editing file" }),
     });
   }
-  return e(Yd, { result: r, verbose: i });
+  return e(ToolErrorMessage, { result: r, verbose: i });
 }
 function O(le) {
   let u = _(16),
@@ -127,7 +127,7 @@ function O(le) {
   let [L] = d(S),
     g;
   if (u[5] !== f || u[6] !== p)
-    ((g = e(FB, {
+    ((g = e(RejectedToolUseDiff, {
       file_path: f,
       operation: "update",
       firstLine: null,
@@ -168,7 +168,7 @@ function y(ce) {
     pe[4] !== w ||
     pe[5] !== C
   )
-    ((U = e(FB, {
+    ((U = e(RejectedToolUseDiff, {
       file_path: N,
       operation: "update",
       patch: D,
@@ -210,7 +210,7 @@ async function x(r, s, i, a) {
       });
     return {
       patch: Igt(m, o.lineOffset - 1),
-      firstLine: o.lineOffset === 1 ? kr(o.content) : null,
+      firstLine: o.lineOffset === 1 ? firstLine(o.content) : null,
       fileContent: o.content,
     };
   } catch (o) {

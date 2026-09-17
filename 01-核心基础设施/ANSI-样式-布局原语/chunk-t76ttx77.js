@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { te, $w, rB, sB } from "../核心工具-字符串与文本/chunk-01cse5zg.js";
-import { Xs } from "../共享小工具-未细化/chunk-xcc43dkx.js";
+import { getGraphemeSegmenter } from "../共享小工具-未细化/intl-text-utils.js";
 import { commonJS } from "../共享小工具-未细化/chunk-2c9tjhwd.js";
 var G = commonJS(function (Xe, ue) {
   ue.exports = {
@@ -784,7 +784,7 @@ function k(e) {
     l = i,
     s = () => {
       if (r === "") return;
-      for (let { segment: f } of Xs().segment(r))
+      for (let { segment: f } of getGraphemeSegmenter().segment(r))
         n.push({ type: "char", value: f });
       r = "";
     },

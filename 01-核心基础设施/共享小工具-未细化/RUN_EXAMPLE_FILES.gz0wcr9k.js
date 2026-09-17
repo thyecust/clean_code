@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "./chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "./embedded-text-asset.js";
 import { importMetaRequire } from "./chunk-2c9tjhwd.js";
 var e = importMetaRequire("./cli-40vh1c3p.md");
 var t = "./electron-8035775b.md.zst";
-var a = Ke(t, import.meta.dirname);
+var a = readEmbeddedAssetSync(t, import.meta.dirname);
 var s = importMetaRequire("./library-yywvyb11.md");
 var n = importMetaRequire("./playwright-g4wwbqeh.md");
 var r = importMetaRequire("./server-z4ytjptt.md");

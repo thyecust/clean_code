@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Tkt, Ekt, Klr } from "../../../01-核心基础设施/共享小工具-未细化/chunk-8549txjj.js";
+import { tslibAwaiter, tslibGenerator, tslibValues } from "../../../01-核心基础设施/共享小工具-未细化/tslib-helpers.js";
 import { toUint8Array, isEmptyData, uint32ToBytes, toUint32Array } from "../../../01-核心基础设施/共享小工具-未细化/byte-array-conversion.js";
 import { ta } from "./chunk-mwf4pmq2.js";
 import { hexEncodingModule } from "../../../01-核心基础设施/共享小工具-未细化/hex-encoding-module.js";
@@ -134,8 +134,8 @@ var G = (function () {
       this.crc32.update(toUint8Array(t));
     }),
     (e.prototype.digest = function () {
-      return Tkt(this, void 0, void 0, function () {
-        return Ekt(this, function (t) {
+      return tslibAwaiter(this, void 0, void 0, function () {
+        return tslibGenerator(this, function (t) {
           return [2, uint32ToBytes(this.crc32.digest())];
         });
       });
@@ -154,7 +154,7 @@ var p = (function () {
     (e.prototype.update = function (t) {
       var r, s;
       try {
-        for (var n = Klr(t), o = n.next(); !o.done; o = n.next()) {
+        for (var n = tslibValues(t), o = n.next(); !o.done; o = n.next()) {
           var i = o.value;
           this.checksum = (this.checksum >>> 8) ^ z[(this.checksum ^ i) & 255];
         }

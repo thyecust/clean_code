@@ -15,7 +15,7 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { ARTIFACT_SLUG_RE } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { isActingAsBgJob, getBgJobDir } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { tu } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { ownProcStartMemo, ownProcStartAsync, procIdentityFields } from "../../01-核心基础设施/核心工具-进程与信号/chunk-qjqntsq2.js";
+import { ownProcStartMemo, ownProcStartAsync, procIdentityFields } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 import { ownPidSpace } from "../../01-核心基础设施/共享小工具-未细化/chunk-035vf5et.js";
 import {
   getMaterializedSessionFile,
@@ -33,7 +33,7 @@ import {
   recordArtifactCommentMonitor,
   takeResumedArtifactCommentMonitor,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { yl } from "../Teammates团队/chunk-thxapyam.js";
+import { getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { ne, RTn } from "./chunk-rr78st95.js";
 import { s, T, se, v, c, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -755,7 +755,7 @@ function C(e) {
   }
   if (!t.onFile && currentSessionFileIsFor(n)) t.onFile = !0;
   if (
-    ((t.transcriptPath = D(t, n) ? yl() : getTranscriptPathForSession(n)),
+    ((t.transcriptPath = D(t, n) ? getSessionTranscriptPath() : getTranscriptPathForSession(n)),
     t.unsubscribeMaterialized === void 0)
   )
     t.unsubscribeMaterialized = onSessionFileMaterialized(() => {

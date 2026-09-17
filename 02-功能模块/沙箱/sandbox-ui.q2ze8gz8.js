@@ -11,8 +11,8 @@
 // [preload stripped] 原本在此预载 155 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Bw } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { jn, Pt } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getSettingsFilePathForSource, getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
@@ -34,7 +34,7 @@ import {
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
 import { qp, ss, Jd } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-yhkvt9ba.js";
-import { nit } from "./chunk-ky2g1mjv.js";
+import { runWindowsSandboxInstall } from "./windows-sandbox-install.js";
 import { Sf } from "../../03-入口与运行时/会话UI(REPL)/会话UI(REPL).qs63rzfp.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
 import "../../01-核心基础设施/共享小工具-未细化/background-text.js";
@@ -43,7 +43,7 @@ import { Qr } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getThemeColor } from "../../01-核心基础设施/共享小工具-未细化/theme-color.js";
 import { Dn, kn, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { relative } from "path";
 function ce(Un, Fn) {
@@ -274,7 +274,7 @@ function E(_n) {
   let k = _(26),
     { depCheck: h } = _n,
     me;
-  if (k[0] === MEMO_CACHE_SENTINEL) ((me = P()), (k[0] = me));
+  if (k[0] === MEMO_CACHE_SENTINEL) ((me = getCurrentPlatform()), (k[0] = me));
   else me = k[0];
   let ue = me,
     No = ue === "macos";
@@ -657,7 +657,7 @@ function K(gt) {
 function go(wt) {
   let C = _(24),
     { onComplete: I, currentMode: $e } = wt,
-    [Oo] = cn(),
+    [Oo] = useTheme(),
     { headerFocused: Lo, focusHeader: jo } = Jd(),
     Ge;
   if (C[0] !== Oo)
@@ -1137,7 +1137,7 @@ function Wo(Xt) {
 }
 async function ps(s, u, n) {
   let c = getSettings_DEPRECATED().theme || "light",
-    b = P();
+    b = getCurrentPlatform();
   if (!SandboxManager.isSupportedPlatform()) {
     let a =
         b === "wsl"
@@ -1165,7 +1165,7 @@ async function ps(s, u, n) {
     return (s(a), null);
   }
   let g = n?.trim() || "",
-    w = ft(g, " ");
+    w = beforeFirst(g, " ");
   if (w === "install" && b === "windows" && r3()) {
     if (g !== "install")
       return (
@@ -1177,7 +1177,7 @@ async function ps(s, u, n) {
         ),
         null
       );
-    let a = await nit(u.session.host);
+    let a = await runWindowsSandboxInstall(u.session.host);
     return (
       s(
         getThemeColor(

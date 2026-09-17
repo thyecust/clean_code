@@ -19,7 +19,7 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { pi, bytesPerTokenForModel, kw, mc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { zir } from "./chunk-811z9z0t.js";
+import { runWithTeammateContext } from "./teammate-context.js";
 import {
   Rwe,
   SV,
@@ -57,7 +57,7 @@ import {
   VS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NFe, RD } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { Woe } from "../MCP客户端/chunk-3kmsshb6.js";
+import { cloneFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { UE, mG, WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -86,15 +86,15 @@ import {
   withShutdownReplyInstructions,
 } from "./chunk-g6nvp9mm.js";
 import { evictTaskOutput } from "../后台任务-Shell管理/chunk-x3txegas.js";
-import { removeMemberByAgentId } from "./chunk-6b13bhw1.js";
+import { removeMemberByAgentId } from "./team-file-store.js";
 import { hbt } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { Pqe, Uqe, Bqe, eWn, Tbe, Kdt } from "../权限系统/chunk-jsd70b22.js";
 import { TEAMMATE_SYSTEM_PROMPT_ADDENDUM } from "./chunk-5nnwwahg.js";
 import { buildLocalDisplayOnlyDenialResult } from "../../01-核心基础设施/共享小工具-未细化/local-display-only-denial.js";
-import { Jdt, jqe, Wqe } from "../权限系统/chunk-n4x6jsp3.js";
+import { registerSwarmPermissionCallback, unregisterSwarmPermissionCallback, processMailboxPermissionResponse } from "../权限系统/swarm-permission-poller.js";
 import { appendMessageToTaskTranscript } from "./teammate-task-messages.js";
-import { kT } from "./chunk-z2t8b9yc.js";
-import { v1e, Awt, Cwt } from "./chunk-eey53z5b.js";
+import { TASK_LIST_TOOL_NAME } from "./chunk-z2t8b9yc.js";
+import { v1e, createPermissionRequest, sendPermissionRequestToLeader } from "./permission-sync-mailbox.js";
 import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/send-message-constants.js";
 import { TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
@@ -150,7 +150,7 @@ function Ge(s, e, t, _) {
     let E = await I();
     if (e.signal.aborted) return { behavior: "ask", message: II };
     return new Promise((l) => {
-      let k = Awt({
+      let k = createPermissionRequest({
         toolName: o.name,
         toolUseId: M,
         input: p,
@@ -161,7 +161,7 @@ function Ge(s, e, t, _) {
         workerColor: s.color,
         teamName: s.teamName,
       });
-      (Jdt({
+      (registerSwarmPermissionCallback({
         requestId: k.id,
         toolUseId: M,
         toolName: k.toolName,
@@ -194,7 +194,7 @@ function Ge(s, e, t, _) {
         },
         onUnboundVerdict() {},
       }),
-        Cwt(k, T.storageV5).then((a) => {
+        sendPermissionRequestToLeader(k, T.storageV5).then((a) => {
           if (!a)
             (R(),
               l({
@@ -224,7 +224,7 @@ function Ge(s, e, t, _) {
                     continue;
                   }
                   if (O.subtype === "success")
-                    Wqe({
+                    processMailboxPermissionResponse({
                       requestId: O.request_id,
                       toolUseId: O.tool_use_id,
                       approvedRequest: O.approved_request,
@@ -233,7 +233,7 @@ function Ge(s, e, t, _) {
                       permissionUpdates: O.response?.permission_updates,
                     });
                   else
-                    Wqe({
+                    processMailboxPermissionResponse({
                       requestId: O.request_id,
                       toolUseId: O.tool_use_id,
                       approvedRequest: O.approved_request,
@@ -258,7 +258,7 @@ function Ge(s, e, t, _) {
       e.signal.addEventListener("abort", j, { once: !0 });
       function R() {
         (clearInterval(ee),
-          jqe(k.id),
+          unregisterSwarmPermissionCallback(k.id),
           e.signal.removeEventListener("abort", j));
       }
     });
@@ -630,7 +630,7 @@ ${W}`);
       whenToUse: `In-process teammate: ${e.agentName}`,
       getSystemPrompt: () => ie,
       tools: m?.tools
-        ? dedupe([...m.tools, SEND_MESSAGE_TOOL_NAME, ...(K ? [UE, mG, kT, WE] : [])])
+        ? dedupe([...m.tools, SEND_MESSAGE_TOOL_NAME, ...(K ? [UE, mG, TASK_LIST_TOOL_NAME, WE] : [])])
         : ["*"],
       source: "projectSettings",
       permissionMode: "default",
@@ -755,7 +755,7 @@ ${W}`);
           ...d,
           abortController: M,
           agentId: oo(e.agentId),
-          readFileState: Woe(d.readFileState, { stripSeededFromContext: !0 }),
+          readFileState: cloneFileStateCache(d.readFileState, { stripSeededFromContext: !0 }),
           memorySelector: z2(),
           loadedNestedMemoryPaths: {},
           onCompactEvent: void 0,
@@ -814,7 +814,7 @@ ${W}`);
         $e = !1,
         te = null;
       if (
-        (await zir(T, async () =>
+        (await runWithTeammateContext(T, async () =>
           kw(B, async () => {
             (L(
               t,

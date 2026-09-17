@@ -18,7 +18,7 @@ import { KeybindingHint } from "../../../02-功能模块/键位绑定(Keybinding
 import { ErrorMessage } from "../../../01-核心基础设施/共享小工具-未细化/error-message.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { V, d, F } from "../React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Be(lo) {
@@ -279,7 +279,7 @@ function XL(Ye) {
       (n[61] = yt));
   } else yt = n[61];
   const W = l === k - 1 ? "suggestion" : void 0,
-    Gt = l === k - 1 ? L.pointer : " ";
+    Gt = l === k - 1 ? figures.pointer : " ";
   let xt;
   if (n[72] !== W || n[73] !== Gt)
     ((xt = r(t, { color: W, children: [Gt, " "] })),
@@ -420,7 +420,7 @@ function Et(ao) {
   else Se = w[6];
   let jt = Se;
   const Kt = M ? "suggestion" : void 0,
-    ee = M ? L.pointer : " ";
+    ee = M ? figures.pointer : " ";
   let qe;
   if (w[7] !== Kt || w[8] !== ee)
     ((qe = r(t, { color: Kt, children: [ee, " "] })),
@@ -460,9 +460,9 @@ function Et(ao) {
       ((N = M
         ? r(t, {
             children: [
-              r(t, { dimColor: !0, children: [L.triangleLeft, " "] }),
+              r(t, { dimColor: !0, children: [figures.triangleLeft, " "] }),
               Dt?.label ?? b,
-              r(t, { dimColor: !0, children: [" ", L.triangleRight] }),
+              r(t, { dimColor: !0, children: [" ", figures.triangleRight] }),
             ],
           })
         : e(t, { children: Dt?.label ?? b })),

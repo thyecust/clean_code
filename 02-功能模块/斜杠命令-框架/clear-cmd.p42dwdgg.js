@@ -18,16 +18,16 @@ import "../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js"
 import "../../01-核心基础设施/共享小工具-未细化/session-announcement-state.js";
 import "../工具Glob-Grep-搜索/chunk-57axeagj.js";
 import "../工具WebFetch-WebSearch/chunk-1mxgbqzj.js";
-import { yrn, Srn } from "../工具WebFetch-WebSearch/chunk-rj210cds.js";
+import { clearConversation, hasAgentTaskSurvivingClear } from "../工具WebFetch-WebSearch/clear-conversation.js";
 import "../Teammates团队/agent-lifecycle.js";
-import "../权限系统/chunk-n4x6jsp3.js";
+import "../权限系统/swarm-permission-poller.js";
 var c = async (r, o) => {
   let i = r.trim() || void 0,
     e = K();
   o.dialogStore?.dismissKind(localJsxDialog.kind);
-  for await (let s of yrn({ ...o, clearedSessionTitle: i }))
+  for await (let s of clearConversation({ ...o, clearedSessionTitle: i }))
     o.onQueryEvent?.(s);
-  let a = AR(o.submissionOrigin) && !Srn(o.taskRegistry.all());
+  let a = AR(o.submissionOrigin) && !hasAgentTaskSurvivingClear(o.taskRegistry.all());
   return (
     import("../权限系统/registerChromeTabGroupCleanup.epxd464c.js")
       .then((s) => s.closeSessionTabGroup({ sessionId: e, onlyIfEmpty: !a }))

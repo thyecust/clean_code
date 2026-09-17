@@ -16,23 +16,23 @@ import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方�
 import { cf, ph, r0, sQ, Ms, u0, r1, Te } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { TZ, dt, l, A, Jr, Jg, W, Nz, Rt, Bp, Kd } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { be } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getClaudeConfigDir } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { bc, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { St, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { lv, Ri, Wcr } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-h64ek850.js";
-import { execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
-import { Ce } from "../Teammates团队/chunk-qe04h4c5.js";
+import { isEssentialTrafficOnly, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { RENAME_FALLBACK_ERRNOS, renameWithRetry, PARTIAL_WRITE_ERRNOS } from "../../01-核心基础设施/安全文件系统(FS加固)/atomic-file-write.js";
+import { execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
+import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { getSettingsForSource, getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/chunk-yz7dtpc3.js";
+import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { Pr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { pg } from "../../00-第三方库/_未识别/第三方库-其他/chunk-jm5cswvd.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { toESM } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 import { access as Ae, chmod, writeFile as Me } from "fs/promises";
 import { join as N } from "path";
 function G() {
-  return N(be(), "local");
+  return N(getClaudeConfigDir(), "local");
 }
 function le() {
   return N(G(), "claude");
@@ -392,10 +392,10 @@ function zce(e) {
 }
 var z = 300000;
 function Pe() {
-  return x(be(), ".update.lock");
+  return x(getClaudeConfigDir(), ".update.lock");
 }
 function X() {
-  return Ce.state("update-lock");
+  return STORAGE_KEYS.state("update-lock");
 }
 async function ze(e) {
   let t = X(),
@@ -469,7 +469,7 @@ async function qe(e) {
     if (s === "ENOENT")
       try {
         return (
-          await t.mkdir(be()),
+          await t.mkdir(getClaudeConfigDir()),
           await me(r, `${process.pid}`, { encoding: "utf8", flag: "wx" }),
           !0
         );
@@ -559,7 +559,7 @@ async function Ze() {
   let e = await ke();
   if (!e) return [];
   if (re() === "bun") return [x(e, "claude")];
-  if (P() === "windows") return [x(e, "claude.cmd"), x(e, "claude.exe")];
+  if (getCurrentPlatform() === "windows") return [x(e, "claude.cmd"), x(e, "claude.exe")];
   return [x(e, "bin", "claude")];
 }
 async function $9n() {
@@ -624,7 +624,7 @@ async function Ube(e) {
 var ge = 5000,
   he = 3;
 async function uFt(e) {
-  if (St()) return null;
+  if (isEssentialTrafficOnly()) return null;
   let t = 0;
   try {
     let r = await iFt(
@@ -654,7 +654,7 @@ async function uFt(e) {
   }
 }
 async function Xe(e) {
-  if (St()) return null;
+  if (isEssentialTrafficOnly()) return null;
   try {
     let r = (
       await externalHttp.get(`https://formulae.brew.sh/api/cask/${e}.json`, {
@@ -741,15 +741,15 @@ async function ee(e, t) {
   try {
     await copyFile(e, r);
     try {
-      await Ri(r, t);
+      await renameWithRetry(r, t);
     } catch (o) {
       let s = A(o);
-      if (s === void 0 || !lv.has(s)) throw o;
+      if (s === void 0 || !RENAME_FALLBACK_ERRNOS.has(s)) throw o;
       if (!(await ne(t))) throw o;
       try {
         await copyFile(r, t);
       } catch (c) {
-        if (Wcr.has(A(c) ?? "")) await unlink(t).catch(() => {});
+        if (PARTIAL_WRITE_ERRNOS.has(A(c) ?? "")) await unlink(t).catch(() => {});
         throw c;
       }
       await unlink(r).catch(() => {});
@@ -886,7 +886,7 @@ To fix this issue:
             DD_SOURCEMAP_GROUP: "darwin",
           }.PACKAGE_URL,
       R =
-        P() === "windows" &&
+        getCurrentPlatform() === "windows" &&
         bc() &&
         process.execPath
           .replace(/\\/g, "/")
@@ -1076,12 +1076,12 @@ To fix this issue:
           npm_exit_code: E.code,
           package_manager: fromEnum(s),
           is_bundled_mode: bc(),
-          platform: u0(P()),
+          platform: u0(getCurrentPlatform()),
           windows_self_rename: fromEnum(C),
           stderr_signature: fromEnum(w),
           npm_error_code: nt(_) ?? S("none"),
         }),
-        P() === "windows" &&
+        getCurrentPlatform() === "windows" &&
           /\b(?:claude|cli)\.exe\b/i.test(_) &&
           (/\bEBUSY\b|resource busy or locked/i.test(_) ||
             (/\bEPERM\b|operation not permitted/i.test(_) &&

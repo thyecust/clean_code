@@ -8,8 +8,8 @@
 
 // Version: 2.1.263
 import { H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Axt } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { Eo } from "../上下文压缩-Compact/chunk-mxt9bjz3.js";
+import { isRemoteTriggerEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { resolveSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 var PUSH_NOTIFICATION_TOOL_NAME = "PushNotification";
 var t = "<routine_summary>";
 function isPushNotificationsEnabled() {
@@ -19,7 +19,7 @@ function isInputNeededPushEnabled() {
   return H("tengu_kairos_input_needed_push", !1);
 }
 function isAgentPushNotificationEnabled() {
-  return isPushNotificationsEnabled() && Eo("agentPushNotifEnabled", !1).value;
+  return isPushNotificationsEnabled() && resolveSetting("agentPushNotifEnabled", !1).value;
 }
 var PUSH_NOTIFICATION_TOOL_DESCRIPTION =
     "Send a notification to the user via their terminal and, when Remote Control is connected, also push to their mobile device",
@@ -34,6 +34,6 @@ When the user is actively at the terminal, your output already reaches them \u20
 
 This is a scheduled routine \u2014 the notification is how the run reaches its owner. Wrap the message in ${t} tags: the first sentence becomes the phone banner, the full text becomes the email body.`;
 function getPushNotificationToolPrompt() {
-  return Axt() ? e + o : e;
+  return isRemoteTriggerEntrypoint() ? e + o : e;
 }
 export { PUSH_NOTIFICATION_TOOL_NAME, isPushNotificationsEnabled, isInputNeededPushEnabled, isAgentPushNotificationEnabled, PUSH_NOTIFICATION_TOOL_DESCRIPTION, getPushNotificationToolPrompt };

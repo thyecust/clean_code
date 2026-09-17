@@ -10,9 +10,9 @@
 
 // [preload stripped] 原本在此预载 87 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { getTeammateContext } from "../Teammates团队/chunk-811z9z0t.js";
+import { getTeammateContext } from "../Teammates团队/teammate-context.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { rJ, SK, vj } from "../后台任务-Shell管理/chunk-9d5wk5b9.js";
+import { getScheduledTasksPath, deleteScheduledTasks, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { CRON_DELETE_TOOL_NAME, isKairosCronEnabled, isDurableCronEnabled, CRON_DELETE_DESCRIPTION, buildCronDeletePrompt } from "./chunk-mk3zm4ew.js";
 import { s, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var n = createLazyValue(() => Qe({ id: s().describe("Job ID returned by CronCreate.") })),
@@ -41,10 +41,10 @@ var n = createLazyValue(() => Qe({ id: s().describe("Job ID returned by CronCrea
       return buildCronDeletePrompt(isDurableCronEnabled());
     },
     getPath() {
-      return rJ();
+      return getScheduledTasksPath();
     },
     async validateInput(e) {
-      let r = (await vj()).find((a) => a.id === e.id);
+      let r = (await listScheduledTasks()).find((a) => a.id === e.id);
       if (!r)
         return {
           result: !1,
@@ -61,7 +61,7 @@ var n = createLazyValue(() => Qe({ id: s().describe("Job ID returned by CronCrea
       return { result: !0 };
     },
     async call({ id: e }) {
-      return (await SK([e]), { data: { id: e } });
+      return (await deleteScheduledTasks([e]), { data: { id: e } });
     },
     mapToolResultToToolResultBlockParam(e, t) {
       return {

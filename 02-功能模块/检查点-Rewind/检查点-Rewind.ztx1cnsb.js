@@ -11,12 +11,12 @@
 // [preload stripped] 原本在此预载 68 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { K, ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { RS } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
-import { y8 } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
+import { isConfigDirPath } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
-import { oe } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
-import { fn, Fo, execFileNoThrowWithCwd } from "../Git-Worktree/chunk-9ys1bnqr.js";
+import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../Git-Worktree/git-exec-hardening.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { nke, wb } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
@@ -45,7 +45,7 @@ function b(o) {
     /[\x00-\x1f\x7f-\x9f\u061c\u200b-\u200f\u2028-\u202e\u2066-\u2069\ufeff]+/g,
     " ",
   );
-  return e.length > tt ? `${oe(e, tt)}\u2026` : e;
+  return e.length > tt ? `${truncateToCodeUnits(e, tt)}\u2026` : e;
 }
 var Rt = 1209600;
 async function performRateLimitCheckpoint(o) {
@@ -88,7 +88,7 @@ async function kt(o) {
   if (Pt()) return { committed: !1, skipReason: "remote_workspace" };
   if (!isPolicyAllowed("allow_local_checkpoint_commit"))
     return { committed: !1, skipReason: "policy" };
-  let e = findGitRoot(Q());
+  let e = findGitRoot(getCwd());
   if (e === null) return { committed: !1, skipReason: "not_git" };
   if (isCurrentDirectoryBareGitRepo() !== !1) return { committed: !1, skipReason: "bare_repo" };
   let r = RS(e),
@@ -98,7 +98,7 @@ async function kt(o) {
   let a = K(),
     d = a.slice(0, 8),
     l = `${O}${d}`,
-    c = [...fn],
+    c = [...GIT_HARDENED_ARGS],
     f;
   try {
     let m = await getGitDir(e);
@@ -137,7 +137,7 @@ async function kt(o) {
     for (let t of rt)
       if (t.isSymbolicLink())
         return { committed: !1, skipReason: "gitdir_uncontained" };
-    let w = Fo({
+    let w = sanitizeGitEnv({
       GIT_COMMON_DIR: m,
       GIT_WORK_TREE: e,
       GIT_ALLOW_PROTOCOL: "none",
@@ -184,7 +184,7 @@ async function kt(o) {
     if (G.code !== 0) return { committed: !1, skipReason: "no_head" };
     let L = G.stdout.trim(),
       D = (t, p) =>
-        execFileNoThrowWithCwd(gitExe(), [...fn, ...t], {
+        execFileNoThrowWithCwd(gitExe(), [...GIT_HARDENED_ARGS, ...t], {
           cwd: p.cwd,
           env: w,
           input: p.input,
@@ -253,7 +253,7 @@ async function kt(o) {
     )
       return { committed: !1, skipReason: "too_large" };
     let N = s(e, ".claude"),
-      P = !y8(N),
+      P = !isConfigDirPath(N),
       U = yt({ sessionId: a, ref: l, trigger: o.trigger, todos: o.todos });
     try {
       if (P) await nke(e, N);

@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { Ve, R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { Hl } from "./chunk-anxypace.js";
+import { getMcpTimeoutMs } from "./mcp-timeouts.js";
 import { createLinkedAbortSignal } from "./linked-abort-signal.js";
 function u(i, r, o, n = "connection", a) {
   let e = () =>
@@ -47,7 +47,7 @@ function u(i, r, o, n = "connection", a) {
   });
 }
 async function boundDial(i, r) {
-  let o = r.timeoutMs ?? Hl(),
+  let o = r.timeoutMs ?? getMcpTimeoutMs(),
     { signal: n, cleanup: a } = createLinkedAbortSignal(r.signal, { timeoutMs: o, refTimer: !0 });
   try {
     return await u(i, n, r.serverName, r.context, r.signal);

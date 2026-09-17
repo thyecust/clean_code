@@ -9,6 +9,6 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 217 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { slt, Fgr } from "../Teammates团队/chunk-6878k9n1.js";
-import "../../01-核心基础设施/核心工具-进程与信号/chunk-nvzk8dj1.js";
+import { resolveLauncher as slt, runUpdateCommand as Fgr } from "../Teammates团队/update-command.js";
+import "../../01-核心基础设施/核心工具-进程与信号/session-relaunch.js";
 export { Fgr as call, slt as resolveLauncher };

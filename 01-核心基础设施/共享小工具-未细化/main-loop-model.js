@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { U } from "./chunk-r3y9qj3r.js";
+import { useAppStateSelector } from "./app-state-context.js";
 import { getDefaultMainLoopModelSetting, parseUserSpecifiedModel } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { useFeatureFlagVersion } from "./feature-flag-version.js";
 import { useSettings } from "./use-settings.js";
@@ -21,22 +21,22 @@ function resolveMainLoopModel(o) {
   return parseUserSpecifiedModel(resolveMainLoopModelSetting(o.mainLoopModelForSession, o.mainLoopModel));
 }
 function useMainLoopModelOverride() {
-  let o = U((e) => e.mainLoopModel),
-    n = U((e) => e.mainLoopModelForSession),
+  let o = useAppStateSelector((e) => e.mainLoopModel),
+    n = useAppStateSelector((e) => e.mainLoopModelForSession),
     i = useFeatureFlagVersion(),
     s = useSettings();
   return V(() => Tne(n, o), [n, o, i, s]);
 }
 function useMainLoopModelSetting() {
-  let o = U((e) => e.mainLoopModel),
-    n = U((e) => e.mainLoopModelForSession),
+  let o = useAppStateSelector((e) => e.mainLoopModel),
+    n = useAppStateSelector((e) => e.mainLoopModelForSession),
     i = useFeatureFlagVersion(),
     s = useSettings();
   return V(() => resolveMainLoopModelSetting(n, o), [n, o, i, s]);
 }
 function useMainLoopModel() {
-  let o = U((e) => e.mainLoopModel),
-    n = U((e) => e.mainLoopModelForSession),
+  let o = useAppStateSelector((e) => e.mainLoopModel),
+    n = useAppStateSelector((e) => e.mainLoopModelForSession),
     i = useFeatureFlagVersion(),
     s = useSettings();
   return V(

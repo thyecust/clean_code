@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { P } from "../核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import {
   readdir,
   readlink,
@@ -25,7 +25,7 @@ function normalizePathForComparison(e) {
     .replace(/\u017F/g, "s");
 }
 async function isPathSafeToRemove(e) {
-  if (P() !== "windows") return !0;
+  if (getCurrentPlatform() !== "windows") return !0;
   let t = await realpath(dirname(e)).catch(() => null);
   return !(await c(e, t == null ? null : normalizePathForComparison(u(t, basename(e)))));
 }

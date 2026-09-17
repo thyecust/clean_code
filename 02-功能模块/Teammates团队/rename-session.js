@@ -12,10 +12,10 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { asSystemPrompt, gKe, getLastCacheSafeParams, isMainThreadCacheWarm, runForkedAgent, Re, xr, Na, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { aa, si, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
-import { isTeammate } from "./chunk-811z9z0t.js";
-import { ult } from "../会话-历史-恢复/chunk-ybcvb652.js";
-import { Vle } from "../../01-核心基础设施/共享小工具-未细化/chunk-tc59qdh4.js";
-import { QS } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
+import { isTeammate } from "./teammate-context.js";
+import { collectConversationText } from "../会话-历史-恢复/session-title.js";
+import { updateStandaloneAgentContext } from "../../01-核心基础设施/共享小工具-未细化/standalone-agent-context.js";
+import { escapeMarkupText } from "../../01-核心基础设施/共享小工具-未细化/chunk-339z9efw.js";
 var d =
   'Generate a short kebab-case name (2-4 words) that captures the main topic of this conversation. Use lowercase words separated by hyphens. Examples: "fix-login-bug", "add-auth-feature", "refactor-api-client", "debug-test-failures". Return JSON with a "name" field.';
 function p(t) {
@@ -67,7 +67,7 @@ async function generateSessionName(t, e, a) {
     if (r) return r;
     if (e.aborted) return null;
   }
-  let o = ult(t);
+  let o = collectConversationText(t);
   if (!o) return null;
   try {
     let r = await yC({
@@ -104,8 +104,8 @@ ${o}
   }
 }
 function buildRenameSystemReminder(t, e = t) {
-  let a = QS(t),
-    o = QS(e);
+  let a = escapeMarkupText(t),
+    o = escapeMarkupText(e);
   return Na(
     e === t
       ? `The user named this session "${a}". This may indicate the session's focus or intent.`
@@ -143,7 +143,7 @@ async function performRename(t, e, a) {
         : "That name is empty once invisible characters are removed. Usage: /rename <name>",
     };
   let i = s.name;
-  e.setAppState((m) => Vle(m, { name: i }));
+  e.setAppState((m) => updateStandaloneAgentContext(m, { name: i }));
   let c = si(r),
     u =
       s.outcome === "yielded"

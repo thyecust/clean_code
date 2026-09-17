@@ -12,7 +12,7 @@
 import { zP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ve, R, q0, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { ie } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-jn6xbhjn.js";
+import { chalk } from "../../01-核心基础设施/ANSI-样式-布局原语/chalk-ansi.js";
 import {
   p_,
   Dg,
@@ -33,16 +33,16 @@ import {
   ET,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { zpe } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-5qbcynds.js";
+import { emitCompactionEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { buildCacheSafeParams } from "../权限系统/cache-safe-params.js";
 import { get1MContextSuggestion } from "../../01-核心基础设施/共享小工具-未细化/model-1m-context-suggestion.js";
-import { Mk } from "../../01-核心基础设施/共享小工具-未细化/chunk-rrrsz7e6.js";
+import { appendEndedByModelSuffix } from "../../01-核心基础设施/共享小工具-未细化/ended-by-model.js";
 var H = async (s, e) => {
   let { abortController: n } = e,
     { messages: o } = e;
   if (e.getAppState().endedByModel)
     throw new R(
-      Mk(
+      appendEndedByModelSuffix(
         "Claude ended this conversation. Start a new session (or /clear) to continue.",
       ),
       "Claude ended this conversation",
@@ -171,7 +171,7 @@ async function E(s, e, n) {
         type: "compact_progress",
         event: { type: "compact_end" },
       }),
-      zpe({
+      emitCompactionEvent({
         trigger: "manual",
         success: !r,
         durationMs: performance.now() - o,
@@ -251,7 +251,7 @@ function w(s, e) {
       ...(e ? [e] : []),
       ...(n ? [n] : []),
     ];
-  return ie.dim(
+  return chalk.dim(
     "Compacted " +
       m.join(`
 `),

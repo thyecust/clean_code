@@ -7,13 +7,13 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { lxe } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
+import { AGENT_MESSAGE_TAG } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { go, HU } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 var MAIN_CONVERSATION_NAME = "main";
 function formatAgentMessage(t, r) {
-  return `<${lxe} from="${go(t)}">
-${HU(lxe, r)}
-</${lxe}>`;
+  return `<${AGENT_MESSAGE_TAG} from="${go(t)}">
+${HU(AGENT_MESSAGE_TAG, r)}
+</${AGENT_MESSAGE_TAG}>`;
 }
 var TEAM_LEAD_AGENT_NAME = "team-lead",
   TEAMMATE_NAME_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/,

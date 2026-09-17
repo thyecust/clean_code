@@ -9,18 +9,18 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 134 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { x, kr } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize, firstLine } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { formatDuration, formatTokens } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { Os } from "../../01-核心基础设施/共享小工具-未细化/chunk-r3y9qj3r.js";
+import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { GIt, iZt, KIt, lZt, pWe, $He } from "./chunk-dyq13fbm.js";
 import "./workflow-script.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { wSt } from "../Teammates团队/chunk-mrfx53ye.js";
+import { getSessionStartWorkflowSizeGuideline } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function renderToolUseProgressMessage(a, s) {
   let i = GIt(a.map((l) => l.data));
@@ -119,7 +119,7 @@ function renderToolResultMessage(a) {
     return e(ToolResultRow, {
       children: r(t, {
         color: "error",
-        children: [e(StatusIndicator, { status: "error", withSpace: !0 }), kr(a.error)],
+        children: [e(StatusIndicator, { status: "error", withSpace: !0 }), firstLine(a.error)],
       }),
     });
   if (a.status === "remote_launched")
@@ -156,7 +156,7 @@ function K(he) {
     J;
   if (c[0] !== I) ((J = (ye) => ye.tasks[I]), (c[0] = I), (c[1] = J));
   else J = c[1];
-  let n = Os(J);
+  let n = useAppStateSelectorUnchecked(J);
   if (
     n?.type === "local_workflow" &&
     (n.status === "completed" || n.status === "failed" || n.status === "killed")
@@ -182,7 +182,7 @@ function K(he) {
     if (c[7] !== n.agentCount)
       ((S =
         n.agentCount > 0 &&
-        ` \xB7 ${n.agentCount} ${x(n.agentCount, "agent")}`),
+        ` \xB7 ${n.agentCount} ${pluralize(n.agentCount, "agent")}`),
         (c[7] = n.agentCount),
         (c[8] = S));
     else S = c[8];
@@ -244,7 +244,7 @@ function K(he) {
 function W() {
   let H = _(2),
     oe;
-  if (H[0] === MEMO_CACHE_SENTINEL) ((oe = wSt(ee().workflowSizeGuideline)), (H[0] = oe));
+  if (H[0] === MEMO_CACHE_SENTINEL) ((oe = getSessionStartWorkflowSizeGuideline(ee().workflowSizeGuideline)), (H[0] = oe));
   else oe = H[0];
   let { size: te, isDefault: Se } = oe;
   if (!Se || te === "unrestricted") {

@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 203 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sleep } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
-import { Jo } from "../权限系统/chunk-ynkf3yy4.js";
+import { getSessionRuntimeState } from "../权限系统/chunk-ynkf3yy4.js";
 import { wa } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Et, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
@@ -32,7 +32,7 @@ import {
 import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../远程工具执行/chunk-66axrkvh.js";
 import { w6e, mHe, VJt, kZ, jae } from "../../03-入口与运行时/Headless-SDK模式/chunk-ph7v431y.js";
-import "../../01-核心基础设施/共享小工具-未细化/chunk-cbdr3qdm.js";
+import "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { createWriteStream } from "fs";
 import {
   mkdir,
@@ -52,7 +52,7 @@ var w = null,
   K = 30000,
   G = 3000;
 function z() {
-  let e = Jo();
+  let e = getSessionRuntimeState();
   if (e.historySpoolDir === null)
     ((e.historySpoolDir = b(tmpdir(), `cc-history-prefetch-${process.pid}`)),
       Et(() =>
@@ -70,7 +70,7 @@ function B(e, t, s) {
     });
     return;
   }
-  let r = Jo().historyPrefetchEntries,
+  let r = getSessionRuntimeState().historyPrefetchEntries,
     a = r.get(e);
   if (a && !a.settled) return;
   if (
@@ -166,7 +166,7 @@ async function L(e, t) {
   }
 }
 async function consumePrefetchedHistory(e, t) {
-  let s = Jo().historyPrefetchEntries;
+  let s = getSessionRuntimeState().historyPrefetchEntries;
   if (!s.has(e)) B(e, t);
   let r = s.get(e);
   if ((s.delete(e), !r)) return null;

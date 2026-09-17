@@ -34,15 +34,15 @@ import "../../01-核心基础设施/共享小工具-未细化/progress-bar.js";
 import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import { fbe, Sdt, bdt, FPe, l1t } from "../DesignSync/chunk-aycc6z76.js";
-import { ck } from "./chunk-5bg9xwqx.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import { readDesignOauthTokens, saveDesignOauthTokens, getDesignOauthClientId, isDesignOauthClientConfigured, validateDesignOauthResponse } from "../DesignSync/design-oauth-credentials.js";
+import { OAuthLoginFlow } from "./oauth-login-flow.js";
 import { isHeadlessEnvironment } from "../../01-核心基础设施/核心工具-路径与平台/open-external-url.js";
 import { re, E, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function oe() {
-  return new ck();
+  return new OAuthLoginFlow();
 }
 function ne(Ie) {
   return Ie();
@@ -127,7 +127,7 @@ function DesignLogin(Re) {
     Wt;
   if (g[8] !== et || g[9] !== D || g[10] !== k || g[11] !== Ct)
     ((Wt = async () => {
-      if ((W.current.forEach(ne), W.current.clear(), !FPe())) {
+      if ((W.current.forEach(ne), W.current.clear(), !isDesignOauthClientConfigured())) {
         b({
           state: "error",
           message:
@@ -137,7 +137,7 @@ function DesignLogin(Re) {
       }
       try {
         let Pe = getOauthConfig();
-        let wt = bdt();
+        let wt = getDesignOauthClientId();
         let bt = await D.startOAuthFlow(
           async (Ae) => {
             if ((Ct(), Z(!1), b({ state: "waiting_for_login", url: Ae }), isHeadlessEnvironment()))
@@ -156,7 +156,7 @@ function DesignLogin(Re) {
           return;
         }
         b({ state: "processing" });
-        let z = await l1t(bt, wt);
+        let z = await validateDesignOauthResponse(bt, wt);
         if (!z.ok) {
           b({
             state: "error",
@@ -169,7 +169,7 @@ function DesignLogin(Re) {
           await revokeOAuthToken(z.slot.refreshToken, z.slot.clientId);
           return;
         }
-        let $t = await Sdt(z.slot);
+        let $t = await saveDesignOauthTokens(z.slot);
         if (!$t.success) {
           (await revokeOAuthToken(z.slot.refreshToken, z.slot.clientId),
             b({
@@ -507,7 +507,7 @@ function ut(ze) {
   }
 }
 async function xe(m) {
-  let B = (await fbe()) !== null;
+  let B = (await readDesignOauthTokens()) !== null;
   return e(DesignLogin, { onDone: (a) => m(a), hadExistingCredential: B });
 }
 export { DesignLogin, xe as call };

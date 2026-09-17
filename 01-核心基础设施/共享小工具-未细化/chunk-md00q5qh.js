@@ -8,17 +8,17 @@
 
 // Version: 2.1.263
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { YA } from "../../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js";
-import { Kee, w6n } from "../../02-功能模块/DesignSync/chunk-20rab5yy.js";
+import { DesignSessionState } from "../../02-功能模块/Memory-CLAUDE.md/chunk-9b6sc1gb.js";
+import { postDesignConsent, revokeDesignConsent } from "../../02-功能模块/DesignSync/design-consent-and-grants.js";
 var s = "Usage: /design consent | /design revoke",
   w3e = async (r, e) => {
     let n = r.trim().split(/\s+/).filter(Boolean)[0],
       a = "your Claude Design projects",
-      o = e.toolState.get(YA);
+      o = e.toolState.get(DesignSessionState);
     if (n === "consent")
       try {
         return (
-          await Kee(o, "agent_design_projects", e.credentials),
+          await postDesignConsent(o, "agent_design_projects", e.credentials),
           {
             type: "text",
             value:
@@ -34,7 +34,7 @@ var s = "Usage: /design consent | /design revoke",
     if (n === "revoke")
       try {
         return (
-          await w6n(o, "agent_design_projects", e.credentials),
+          await revokeDesignConsent(o, "agent_design_projects", e.credentials),
           {
             type: "text",
             value:

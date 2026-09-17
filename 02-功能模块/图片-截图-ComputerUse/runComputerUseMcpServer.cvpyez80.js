@@ -11,18 +11,18 @@
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { ListToolsRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
-import "../MCP客户端/chunk-j8556pzt.js";
+import "../MCP客户端/mcp-server.js";
 import { isHoverRestEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-h62vxw7j.js";
 import { w5, NR, EP, x5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { zR, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { initializeAnalyticsSink } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-sink.js";
 import { pinStorageV5 } from "../../01-核心基础设施/共享小工具-未细化/pin-storage-v5.js";
-import { SGe } from "../../01-核心基础设施/设置-配置/chunk-6rz5fqzm.js";
+import { loadFastPathPolicy } from "../../01-核心基础设施/设置-配置/fast-path-policy-loader.js";
 import { getComputerUseNativeModule, runComputerUseNativeCall } from "./computer-use-session.js";
-import "./chunk-w5bhde2m.js";
+import "./computer-use-cli-executor.js";
 import { X2n, put } from "./chunk-v76f8dbx.js";
 import { WSe } from "./chunk-6842b6x1.js";
-import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
+import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
 import { StdioServerTransport } from "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 import "./computer-use-input-native.js";
@@ -132,7 +132,7 @@ async function _() {
 }
 async function createComputerUseMcpServerForCli() {
   let t = put(),
-    e = GSe(),
+    e = getFrozenCoordinateMode(),
     o = X2n(t, e),
     r = await _(),
     s = WSe(t.executor.capabilities, e, r);
@@ -144,7 +144,7 @@ async function createComputerUseMcpServerForCli() {
   );
 }
 async function runComputerUseMcpServer(t) {
-  let e = await SGe(t);
+  let e = await loadFastPathPolicy(t);
   if (e)
     process.stderr.write(`${e}
 `);

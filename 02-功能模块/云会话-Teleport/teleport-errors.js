@@ -12,7 +12,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { getFileStatus, stashToCleanState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { Pr, Kgt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
-import { Ma } from "../../01-核心基础设施/共享小工具-未细化/chunk-4ctm4frf.js";
+import { useHasVirtualScrollViewport } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
@@ -25,7 +25,7 @@ import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import { EmptyStateMessage } from "../../01-核心基础设施/共享小工具-未细化/empty-state-message.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { L } from "../Teammates团队/chunk-mrfx53ye.js";
+import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 F();
@@ -74,7 +74,7 @@ function k({ onStashAndContinue: h, onCancel: m }) {
         marginBottom: 1,
         children: [
           e(yo, {}),
-          r(t, { children: [" Checking git status", L.ellipsis] }),
+          r(t, { children: [" Checking git status", figures.ellipsis] }),
         ],
       }),
     });
@@ -140,7 +140,7 @@ function TeleportError(We) {
     $e = V === void 0 ? !1 : V,
     [q, X] = d(null),
     [G, Z] = d(!1),
-    z = Ma(),
+    z = useHasVirtualScrollViewport(),
     { credentials: H } = useStorageV5Context(),
     j;
   if (c[0] !== H || c[1] !== W || c[2] !== M)

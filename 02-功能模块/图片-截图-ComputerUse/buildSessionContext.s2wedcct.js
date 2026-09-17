@@ -11,17 +11,17 @@
 // [preload stripped] 原本在此预载 76 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
-import "../MCP客户端/chunk-j8556pzt.js";
+import "../MCP客户端/mcp-server.js";
 import { K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { oPe } from "./chunk-1c6fx285.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { UYn, BYn, VSt, jYn, J8e } from "./chunk-b8jsase9.js";
+import { checkComputerUseLock, acquireComputerUseLock, isComputerUseActiveThisTurn, markComputerUseActiveThisTurn, getComputerUseLockOwner } from "./computer-use-lock.js";
 import { getComputerUseSession, registerComputerUseEscapeHotkey } from "./computer-use-session.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
-import "./chunk-w5bhde2m.js";
+import "./computer-use-cli-executor.js";
 import { con, put } from "./chunk-v76f8dbx.js";
-import { GSe } from "../../01-核心基础设施/共享小工具-未细化/chunk-4p4f6hsz.js";
-import { hF } from "../../01-核心基础设施/共享小工具-未细化/chunk-j66gwpg8.js";
+import { getFrozenCoordinateMode } from "../../01-核心基础设施/共享小工具-未细化/computer-use-config.js";
+import { DEFAULT_GRANT_FLAGS } from "../../01-核心基础设施/共享小工具-未细化/app-permission-categories.js";
 import "./computer-use-input-native.js";
 function c(t) {
   return t ? `(${t[0]}, ${t[1]})` : "";
@@ -100,10 +100,10 @@ function p() {
   return getComputerUseSession().currentToolUseContext;
 }
 function l() {
-  return J8e(p().session)?.get();
+  return getComputerUseLockOwner(p().session)?.get();
 }
 function d(t) {
-  J8e(p().session)?.update(t);
+  getComputerUseLockOwner(p().session)?.update(t);
 }
 function h(t) {
   return `Computer use is in use by another Claude session (${t.slice(0, 8)}\u2026). Wait for that session to finish or run /exit there.`;
@@ -112,7 +112,7 @@ function buildSessionContext() {
   return {
     isAborted: () => p().abortController.signal.aborted,
     getAllowedApps: () => l()?.allowedApps ?? [],
-    getGrantFlags: () => l()?.grantFlags ?? hF,
+    getGrantFlags: () => l()?.grantFlags ?? DEFAULT_GRANT_FLAGS,
     getUserDeniedBundleIds: () => [],
     getSelectedDisplayId: () => l()?.selectedDisplayId,
     getDisplayPinnedByModel: () => l()?.displayPinnedByModel ?? !1,
@@ -201,21 +201,21 @@ function buildSessionContext() {
           : { ...e, lastScreenshotDims: t };
       }),
     checkCuLock: async () => {
-      let t = await UYn(getComputerUseSession().currentToolUseContext?.storageV5);
+      let t = await checkComputerUseLock(getComputerUseSession().currentToolUseContext?.storageV5);
       switch (t.kind) {
         case "free":
           return { holder: void 0, isSelf: !1 };
         case "held_by_self":
-          if (VSt()) return { holder: K(), isSelf: !0 };
+          if (isComputerUseActiveThisTurn()) return { holder: K(), isSelf: !0 };
           return { holder: void 0, isSelf: !1 };
         case "blocked":
           return { holder: t.by, isSelf: !1 };
       }
     },
     acquireCuLock: async () => {
-      let t = await BYn(getComputerUseSession().currentToolUseContext?.storageV5);
+      let t = await acquireComputerUseLock(getComputerUseSession().currentToolUseContext?.storageV5);
       if (t.kind === "blocked") throw Error(h(t.by));
-      if (jYn()) {
+      if (markComputerUseActiveThisTurn()) {
         let e = registerComputerUseEscapeHotkey(() => {
           if (getComputerUseSession().callsInFlight === 0) {
             n("[cu-esc] user escape with no CU call in flight; consumed only");
@@ -240,7 +240,7 @@ function _() {
   let t = getComputerUseSession();
   if (t.binding) return t.binding;
   let e = buildSessionContext();
-  return ((t.binding = { ctx: e, dispatch: con(put(), GSe(), e) }), t.binding);
+  return ((t.binding = { ctx: e, dispatch: con(put(), getFrozenCoordinateMode(), e) }), t.binding);
 }
 function getComputerUseMCPToolOverrides(t) {
   let e = async (r, o, s, y, g) => {
@@ -279,7 +279,7 @@ function getComputerUseMCPToolOverrides(t) {
 async function U(t) {
   let e = p(),
     r = e.requestDialog;
-  if (!r) return { granted: [], denied: [], flags: hF };
+  if (!r) return { granted: [], denied: [], flags: DEFAULT_GRANT_FLAGS };
   return r(oPe, t, { signal: e.abortController.signal });
 }
 export { buildSessionContext, getComputerUseMCPToolOverrides };

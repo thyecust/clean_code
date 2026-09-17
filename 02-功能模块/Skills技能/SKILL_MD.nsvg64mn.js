@@ -7,11 +7,11 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Ke } from "../../01-核心基础设施/共享小工具-未细化/chunk-fcskxvsh.js";
+import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { importMetaRequire } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var e = importMetaRequire("./SKILL-s3202xee.md");
 var t = "./template.html-1461d319.txt.zst";
-var a = Ke(t, import.meta.dirname);
+var a = readEmbeddedAssetSync(t, import.meta.dirname);
 var SKILL_MD = { doc: e },
   SKILL_FILES = { doc: { "template.html": a } };
 export { SKILL_FILES, SKILL_MD };

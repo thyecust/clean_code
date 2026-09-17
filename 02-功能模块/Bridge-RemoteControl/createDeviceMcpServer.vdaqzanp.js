@@ -11,13 +11,13 @@
 // [preload stripped] 原本在此预载 8 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { JSONRPCMessageSchema as GR, ListToolsRequestSchema, CallToolRequestSchema } from "../MCP客户端/chunk-tv3jbp8f.js";
 import "../MCP客户端/chunk-98spw152.js";
-import { A1 } from "../MCP客户端/chunk-j8556pzt.js";
+import { McpServer } from "../MCP客户端/mcp-server.js";
 import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { lit as S } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { P } from "../../01-核心基础设施/核心工具-路径与平台/chunk-13kdp2ag.js";
+import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 var g = "claude-code-device",
   u = "get_device_info";
 function v(e) {
@@ -40,7 +40,7 @@ function createDeviceMcpServer(e) {
       let r = o;
       ((o = []), r.forEach((l) => l()));
     },
-    c = new A1(
+    c = new McpServer(
       { name: g, version: e.version },
       { capabilities: { tools: {} } },
     );
@@ -126,7 +126,7 @@ function deviceInfoProbeTool(e) {
     analyticsName: S(u),
     call: async () => {
       let o = {
-        platform: P(),
+        platform: getCurrentPlatform(),
         arch: "arm64",
         claudeCodeVersion: e.version,
         deviceName: e.getDeviceName(),

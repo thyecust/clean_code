@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { l_ } from "../../01-核心基础设施/共享小工具-未细化/chunk-anjm5g41.js";
+import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
 import { Bgt, IEe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -70,13 +70,13 @@ function BashToolOutputView(Y) {
       R = o;
       b = "column";
       if (c[12] !== i || c[13] !== d)
-        ((f = i !== "" ? e(l_, { content: i, verbose: d }) : null),
+        ((f = i !== "" ? e(ToolResultContent, { content: i, verbose: d }) : null),
           (c[12] = i),
           (c[13] = d),
           (c[14] = f));
       else f = c[14];
       v =
-        m.trim() !== "" ? e(l_, { content: m, verbose: d, isError: !0 }) : null;
+        m.trim() !== "" ? e(ToolResultContent, { content: m, verbose: d, isError: !0 }) : null;
     }
     ((c[0] = w),
       (c[1] = O),

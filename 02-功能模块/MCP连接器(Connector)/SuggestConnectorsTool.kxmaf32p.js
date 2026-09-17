@@ -11,9 +11,9 @@
 // [preload stripped] 原本在此预载 81 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { Ve } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { x } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
-import { xce, C7, Hce, _6n, pbe } from "../../01-核心基础设施/共享小工具-未细化/chunk-yjnahe9e.js";
+import { getConnectorSchema, isOptInRequired, ConnectorRegistryUnavailableError, lookupConnectors, logConnectorSuggestFailure } from "../../01-核心基础设施/共享小工具-未细化/connector-registry-api.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import { SUGGEST_CONNECTORS_TOOL_NAME, DESCRIPTION, PROMPT } from "../../01-核心基础设施/共享小工具-未细化/chunk-0mrh424x.js";
 import { isFirstPartyRemoteSession } from "../../01-核心基础设施/共享小工具-未细化/first-party-remote-session.js";
@@ -28,7 +28,7 @@ var n = createLazyValue(() =>
   ),
   a = createLazyValue(() =>
     c({
-      connectors: v(xce()),
+      connectors: v(getConnectorSchema()),
       opt_in_required: k(!0).optional(),
       message: s().optional(),
     }),
@@ -61,14 +61,14 @@ var n = createLazyValue(() =>
       return {
         async call(r, { signal: o }) {
           try {
-            let t = await _6n(r.uuids, o, e);
-            if (C7(t)) return { data: { connectors: [], ...t } };
+            let t = await lookupConnectors(r.uuids, o, e);
+            if (isOptInRequired(t)) return { data: { connectors: [], ...t } };
             return { data: { connectors: t } };
           } catch (t) {
             if (o.aborted) throw new Ve();
             throw (
-              pbe("lookup", t),
-              new Hce(
+              logConnectorSuggestFailure("lookup", t),
+              new ConnectorRegistryUnavailableError(
                 "Connector registry is unavailable right now; please try again.",
               )
             );
@@ -84,7 +84,7 @@ var n = createLazyValue(() =>
       };
     },
     renderToolUseMessage(e) {
-      return x((e.uuids ?? []).length, "uuid");
+      return pluralize((e.uuids ?? []).length, "uuid");
     },
   });
 export { SuggestConnectorsTool };

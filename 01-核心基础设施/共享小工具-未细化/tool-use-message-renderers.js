@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { qe, Bt, tt, Mn, Wl, Ut } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { mt } from "../../02-功能模块/工具Task-Agent调度/chunk-1px84m19.js";
+import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
 var r = null,
   s = null,
   n = null,
@@ -18,7 +18,7 @@ var r = null,
     ui: import.meta.require("../../02-功能模块/Artifact发布-渲染/renderCheckToolUseMessage.zxaexmtx.js"),
   },
   M = [
-    mt,
+    AGENT_TOOL_NAME,
     qe,
     Bt,
     Mn,
@@ -38,7 +38,7 @@ var r = null,
       : []),
   ],
   T = {
-    get [mt]() {
+    get [AGENT_TOOL_NAME]() {
       return import.meta.require("../../02-功能模块/工具Task-Agent调度/renderGroupedAgentToolUse.5y53hkmt.js").renderToolUseMessage;
     },
     get [qe]() {

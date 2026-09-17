@@ -11,7 +11,7 @@ import { l0 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Qs } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { hd, G2, GS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { xs } from "./chunk-mrfx53ye.js";
+import { isTerminalTaskStatus } from "./chunk-mrfx53ye.js";
 function f(r, i) {
   if (Object.hasOwn(r, i)) return r[i];
   return Object.values(r).find(
@@ -23,7 +23,7 @@ function pruneAgentNameRegistry(r, i) {
     [...r].filter(([, t]) => {
       let e = f(i, t);
       if (e === void 0) return !1;
-      if (!xs(e.status)) return !0;
+      if (!isTerminalTaskStatus(e.status)) return !0;
       return (
         GS(e) &&
         "keepaliveReasons" in e &&

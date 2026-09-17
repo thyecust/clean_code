@@ -10,11 +10,11 @@
 
 // [preload stripped] 原本在此预载 98 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { sQ, isUsing3PServices, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { ft } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-1wezmyx2.js";
+import { beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { getSettings_DEPRECATED } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { tWe, Qst, s$n } from "../发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
-import { registerBundledSkill } from "../Skills技能/chunk-1zy5c8mf.js";
+import { registerBundledSkill } from "../Skills技能/bundled-skills.js";
 import { getPluginEvalAvailabilityNotice } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 function v() {
   return import("./SKILL_PROMPT.6yeyjf7j.js");
@@ -89,7 +89,7 @@ ${e.join(`
     n.push(
       `**Settings keys configured (values omitted):** ${C.join(", ")}. To see values, the user can run \`claude config list\` or open \`~/.claude/settings.json\`.`,
     );
-  let y = ft(
+  let y = beforeFirst(
       {
         ISSUES_EXPLAINER:
           "report the issue at https://github.com/anthropics/claude-code/issues",

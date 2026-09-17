@@ -15,7 +15,7 @@ import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
 import { fromEnumOpt } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { setBgExitCause } from "../后台任务-Shell管理/chunk-z5vtnzjg.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
-import { cn } from "../状态栏-主题/chunk-w5jaj6kg.js";
+import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { getUserAgent, isAnthropicAuthEnabled, getUnapprovedCustomApiKey, gatewaySignInScreenConfigured, adminPolicyUnreadable, zg } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
@@ -47,11 +47,11 @@ import { V8 } from "../认证-OAuth登录/chunk-xvt7fc9t.js";
 import "../Bedrock-Vertex/chunk-yvs1a1sd.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
-import "../Diff引擎/chunk-p2gj9dsf.js";
-import { KZ } from "../状态栏-主题/chunk-rhjpq9s2.js";
+import "../Diff引擎/structured-diff.js";
+import { ThemePicker } from "../状态栏-主题/theme-picker.js";
 import "../../01-核心基础设施/共享小工具-未细化/dashed-border-box.js";
 import { LearnMoreLink } from "../../01-核心基础设施/共享小工具-未细化/learn-more-link.js";
-import "../认证-OAuth登录/chunk-dtt2nn79.js";
+import "../认证-OAuth登录/oauth-login-completion.js";
 import "../通知(Notifications)/通知(Notifications).g4xng0pg.js";
 import "../../01-核心基础设施/共享小工具-未细化/titled-border-box.js";
 import "../../01-核心基础设施/共享小工具-未细化/error-message.js";
@@ -62,8 +62,8 @@ import "../../01-核心基础设施/共享小工具-未细化/linkified-text.js"
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { zB } from "../../03-入口与运行时/CLI入口-Commander/chunk-nhpr06js.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import "../Bridge-RemoteControl/chunk-2c3z3wjk.js";
-import "../认证-OAuth登录/chunk-5bg9xwqx.js";
+import "../Bridge-RemoteControl/remote-control-ui-strings.js";
+import "../认证-OAuth登录/oauth-login-flow.js";
 import { ew, Qt, L_, De, E, V, C, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
@@ -350,7 +350,7 @@ function Yt({ host: s, onDone: c }) {
     [m] = d(() => isAnthropicAuthEnabled()),
     [x] = d(() => gatewaySignInScreenConfigured() || adminPolicyUnreadable()),
     u = C(!1),
-    [S, b] = cn(),
+    [S, b] = useTheme(),
     { storageV5: T } = useStorageV5Context();
   E(() => {
     logEvent("tengu_began_setup", { oauthEnabled: m });
@@ -373,7 +373,7 @@ function Yt({ host: s, onDone: c }) {
   let A = useGlobalExitKeybinding(),
     fe = e(o, {
       marginX: 1,
-      children: e(KZ, {
+      children: e(ThemePicker, {
         onThemeSelect: Y,
         showIntroText: !0,
         helpText: "To change this later, run /theme",

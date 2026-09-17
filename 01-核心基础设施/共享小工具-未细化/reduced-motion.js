@@ -7,10 +7,10 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { Os } from "./chunk-r3y9qj3r.js";
+import { useAppStateSelectorUnchecked } from "./app-state-context.js";
 import { shouldReduceMotion } from "./chunk-dsg6bce8.js";
 var NO_ANIMATION_INDEX = -100;
 function useReducedMotion() {
-  return shouldReduceMotion(Os((e) => e.settings.prefersReducedMotion));
+  return shouldReduceMotion(useAppStateSelectorUnchecked((e) => e.settings.prefersReducedMotion));
 }
 export { NO_ANIMATION_INDEX, useReducedMotion };

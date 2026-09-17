@@ -11,14 +11,14 @@ import { bh, K } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { ix } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { Vir } from "./chunk-811z9z0t.js";
+import { buildInProcessTeammateContext } from "./teammate-context.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { bue, cUt, hd, nr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { WE } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { X_ } from "./chunk-g6nvp9mm.js";
-import { Dh, Md } from "./chunk-mrfx53ye.js";
+import { generateTaskId, createPendingTask } from "./chunk-mrfx53ye.js";
 function M(t, o) {
   if (o) return "plan";
   if (t === "plan" || t === "dontAsk") return "default";
@@ -35,7 +35,7 @@ async function spawnInProcessTeammate(t, o) {
     } = t,
     { taskRegistry: A } = o,
     s = ix(e, p),
-    d = Dh("in_process_teammate"),
+    d = generateTaskId("in_process_teammate"),
     c = t.resumableAgentId ?? bh(e);
   n(`[spawnInProcessTeammate] Spawning ${s} (taskId: ${d})`);
   try {
@@ -50,7 +50,7 @@ async function spawnInProcessTeammate(t, o) {
         parentSessionId: a,
         resumableAgentId: c,
       },
-      w = Vir({
+      w = buildInProcessTeammateContext({
         agentId: s,
         agentName: e,
         teamName: p,
@@ -65,7 +65,7 @@ async function spawnInProcessTeammate(t, o) {
     let C =
         t.description ?? `${g.substring(0, 50)}${g.length > 50 ? "..." : ""}`,
       b = {
-        ...Md(d, "in_process_teammate", C, o.toolUseId),
+        ...createPendingTask(d, "in_process_teammate", C, o.toolUseId),
         type: "in_process_teammate",
         status: "running",
         identity: S,

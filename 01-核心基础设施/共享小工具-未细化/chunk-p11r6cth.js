@@ -10,14 +10,14 @@
 function sSe(o) {
   o((e) => (e.prResolvedThisSession ? e : { ...e, prResolvedThisSession: !0 }));
 }
-function dee(o) {
+function markUltrareviewOverageConfirmed(o) {
   o((e) =>
     e.ultrareviewOverageConfirmed
       ? e
       : { ...e, ultrareviewOverageConfirmed: !0 },
   );
 }
-function pee(o) {
+function makeToolPermissionContextSetters(o) {
   let e = (s) =>
     o((t) => {
       let i = typeof s === "function" ? s(t.toolPermissionContext) : s;
@@ -27,4 +27,4 @@ function pee(o) {
     });
   return { setToolPermissionContext: e, setSessionToolPermissionContext: e };
 }
-export { sSe, dee, pee };
+export { sSe, markUltrareviewOverageConfirmed, makeToolPermissionContextSetters };

@@ -46,13 +46,13 @@ import { A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { Bur, WP, iae, Xg, Sh, Yu, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { Q } from "../../01-核心基础设施/共享小工具-未细化/chunk-rsr7cnyv.js";
+import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { reanchorGitFileWatcher, clearIsGitMemo } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getProjectDir } from "../会话-历史-恢复/chunk-mkmy4cx2.js";
-import { Sn } from "../../01-核心基础设施/共享小工具-未细化/chunk-jjr7hzzf.js";
+import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { parsePermissionMode } from "../权限系统/chunk-e4pfvp7x.js";
 import { er, tar, usesFirstPartyModelIds } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { Pl, lP } from "../Teammates团队/chunk-thxapyam.js";
+import { getProjectsDir, getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
   rV,
@@ -144,7 +144,7 @@ async function renameRecordingForSession(e, o) {
   if (!r || t.timestamp === 0) return;
   let s = getProjectDir(he()),
     d = t.key,
-    l = lP(s);
+    l = getProjectKeyFromDir(s);
   if (isHoverRestEnabled() && o !== void 0 && d !== void 0 && l !== void 0) {
     if (t.failed) return;
     let k = K(),
@@ -181,7 +181,7 @@ async function renameRecordingForSession(e, o) {
 }
 async function se(e, o, t) {
   (Bur(await e.move(o, t)),
-    await rmdir(E(Pl(), o.projectKey, o.sessionId)).catch(() => {}));
+    await rmdir(E(getProjectsDir(), o.projectKey, o.sessionId)).catch(() => {}));
 }
 import { dirname as q, resolve, win32 as X } from "path";
 import { realpathSync, statSync } from "fs";
@@ -289,7 +289,7 @@ function Gz(e, o, t, r) {
               ? `${r.sessionCwd} or ${l}`
               : l;
         r.onResolveMiss(
-          Sn(
+          replaceControlChars(
             `This session was running agent '${e}', which is no longer available (no agent by that name in ${c}). ` +
               "Continuing with the default tools and system prompt \u2014 the agent's tool restrictions no longer apply. " +
               "To restore it, re-create the agent, or resume with an explicit --agent <name>.",
@@ -637,7 +637,7 @@ function Se(e, o, t) {
         ),
         null
       );
-    if (!o || Q() === o) return null;
+    if (!o || getCwd() === o) return null;
     if (D(o)) return null;
     if (WP(o))
       return (
@@ -651,7 +651,7 @@ function Se(e, o, t) {
     } catch {
       return null;
     }
-    if ((pu(o), jde(o, hEe(iY)))) ES(Q());
+    if ((pu(o), jde(o, hEe(iY)))) ES(getCwd());
     return (
       PY(),
       rV("resume"),
@@ -723,7 +723,7 @@ function Se(e, o, t) {
       }
     );
   let l = t?.liveLaunchDir ?? iY,
-    c = uWt(Q(), e.worktreePath),
+    c = uWt(getCwd(), e.worktreePath),
     m = jKn(
       e.worktreePath,
       uw(e.originalCwd),
@@ -813,7 +813,7 @@ function Se(e, o, t) {
   }
   return (
     pu(e.worktreePath),
-    ES(Q()),
+    ES(getCwd()),
     VLe({ ...e, liveLaunchAnchor: l }),
     PY(),
     rV("resume"),
@@ -856,7 +856,7 @@ function SQt(e, o) {
       })(),
     })
   )
-    ES(Q());
+    ES(getCwd());
   (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(o), reanchorGitFileWatcher(), getReplBridgeHandle()?.refreshGitBranch?.());
 }
 async function $st(e, o, t) {

@@ -12,7 +12,7 @@ import { K, he, sn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { logMCPError, logMCPDebug } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { executeElicitationHooks, executeElicitationResultHooks, executeNotificationHooks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { jIe } from "./chunk-7gw5rbph.js";
-import { Yo } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
+import { asMcpSdkClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-1ftn6vfs.js";
 function parseRelatedTaskMetadata(e) {
   let t = RelatedTaskMetadataSchema.safeParse(e?.[RELATED_TASK_META_KEY]);
   return t.success ? { taskId: t.data.taskId } : null;
@@ -56,7 +56,7 @@ function handleElicitationRequest({
   requestDialog: s,
   transportErrorState: n,
 }) {
-  return jIe(Yo(e.client), {
+  return jIe(asMcpSdkClient(e.client), {
     serverName: e.name,
     requestDialog: s,
     transportErrorState: e.transportErrorState,
