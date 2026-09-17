@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { H } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeDisplayTextWithoutRedaction } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../../02-功能模块/插件系统/chunk-7s6mt1vg.js";
 var p = [
   "microsoft365.mcp.claude.com",
@@ -43,7 +43,7 @@ function c(e) {
 }
 function a(e, t = {}) {
   let o =
-      `"${gr(e)}" is Anthropic-hosted and doesn't support local OAuth. ` +
+      `"${sanitizeDisplayTextWithoutRedaction(e)}" is Anthropic-hosted and doesn't support local OAuth. ` +
       "Connect it via Settings \u2192 Connectors on claude.ai (requires " +
       "`claude login`), then it'll be available here automatically.",
     r =

@@ -16,7 +16,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { SS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { KGn, Dg, hfn, _fn, EVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isBetaHeaderCapabilityRejected, estimateTokensForMessages, MICROCOMPACT_MIN_TOKENS_SAVED, planToolResultClearing, runKeepRecentMicrocompact } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gre, TSn, tG, nG } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
 function c() {
   return H("tengu_hazel_osprey", !1);
@@ -41,7 +41,7 @@ function E(e) {
   if (e.status !== 400) return !1;
   let t = e.message ?? "";
   return (
-    (t.includes("Unexpected value") && t.includes("anthropic-beta")) || KGn(t)
+    (t.includes("Unexpected value") && t.includes("anthropic-beta")) || isBetaHeaderCapabilityRejected(t)
   );
 }
 function T(e) {
@@ -72,14 +72,14 @@ async function b(e, t, o) {
 Use ${tt} to view${TSn}`;
 }
 async function P(e, t, o, a) {
-  let l = Dg(e),
-    r = await EVn(e, t, {
+  let l = estimateTokensForMessages(e),
+    r = await runKeepRecentMicrocompact(e, t, {
       keepRecent: S,
       persist: (x, R) => b(x, R, o),
       agentId: a,
     }),
     u = r ? r.messages : e,
-    s = Dg(u);
+    s = estimateTokensForMessages(u);
   return (
     n(`[CONTEXT_HINT_REJECT] mc=${!!r} tokensSaved=${r?.tokensSaved ?? 0}`),
     {
@@ -123,7 +123,7 @@ function createContextHintController(e) {
     buildRequestParams(r) {
       if (((a = !1), !t || o)) return null;
       a = !0;
-      let u = _fn(r, S).tokensSaved >= hfn,
+      let u = planToolResultClearing(r, S).tokensSaved >= MICROCOMPACT_MIN_TOKENS_SAVED,
         s = m();
       return {
         beta: kCn,

@@ -14,7 +14,7 @@ import { z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { Tc, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { formatSingleLineText, MAX_LABEL_LENGTH } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { ZM, dpe, eK } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSupportedDeviceHookEvent, HOOK_MATCHER_PATTERN, parseDeviceHookId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isPreToolUseHook } from "./hook-template-catalog.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var ee = 65536,
@@ -27,7 +27,7 @@ function Q(t) {
 function re(t, m) {
   if (t === void 0) return "unknown_template";
   if (!t.digests.some((_) => _.sha256 === m.digest)) return "version_mismatch";
-  if (m.event !== t.event || !ZM(m.event)) return "event_not_allowed";
+  if (m.event !== t.event || !isSupportedDeviceHookEvent(m.event)) return "event_not_allowed";
   return "awaiting_upload";
 }
 function createDeviceHooksWorker(t) {
@@ -214,12 +214,12 @@ function createDeviceHooksWorker(t) {
         p = [],
         F = new Set();
       for (let e of r.hooks) {
-        let a = eK(e.id),
+        let a = parseDeviceHookId(e.id),
           u =
             e.matcher === void 0 ||
             e.matcher === "" ||
             e.matcher === "*" ||
-            dpe.test(e.matcher),
+            HOOK_MATCHER_PATTERN.test(e.matcher),
           T = F.has(e.id);
         if (
           (F.add(e.id),
@@ -227,7 +227,7 @@ function createDeviceHooksWorker(t) {
             a === null ||
             a.instanceId !== r.instance_id ||
             a.event !== e.event ||
-            !ZM(e.event) ||
+            !isSupportedDeviceHookEvent(e.event) ||
             !u)
         ) {
           p.push(e.id);
@@ -374,7 +374,7 @@ function createDeviceHooksWorker(t) {
             return (a === "awaiting_upload" ||
               a === "installed" ||
               E.has(e.template)) &&
-              ZM(u)
+              isSupportedDeviceHookEvent(u)
               ? [
                   {
                     template: e.template,

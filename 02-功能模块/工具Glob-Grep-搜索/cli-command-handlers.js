@@ -22,7 +22,7 @@ import { getBridgeDoctorInfo } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { o, t, w9e } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { exitAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
 import { AppRoot } from "../后台任务-Shell管理/chunk-c7mzes79.js";
-import { Hte, Uun, rUt, tgn, c5e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { resolveCappedConfigInteger, MAX_BASH_OUTPUT_CHARS, DEFAULT_BASH_OUTPUT_CHARS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, DEFAULT_TASK_MAX_OUTPUT_LENGTH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Oae, M_e } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { Mbe } from "../自动更新-安装/chunk-brx72pf1.js";
 import { getBaseRenderOptions } from "../../01-核心基础设施/共享小工具-未细化/base-render-options.js";
@@ -229,13 +229,13 @@ async function doctorHandler(c) {
       for (let s of g) l.push(`- ${u(s.message)}`);
     }
     let y = [
-      { name: "BASH_MAX_OUTPUT_LENGTH", default: rUt, upperLimit: Uun },
-      { name: "TASK_MAX_OUTPUT_LENGTH", default: c5e, upperLimit: tgn },
+      { name: "BASH_MAX_OUTPUT_LENGTH", default: DEFAULT_BASH_OUTPUT_CHARS, upperLimit: MAX_BASH_OUTPUT_CHARS },
+      { name: "TASK_MAX_OUTPUT_LENGTH", default: DEFAULT_TASK_MAX_OUTPUT_LENGTH, upperLimit: TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT },
       { name: "CLAUDE_CODE_MAX_OUTPUT_TOKENS", ...h5("claude-opus-4-6") },
     ]
       .map((s) => ({
         name: s.name,
-        ...Hte(s.name, process.env[s.name], s.default, s.upperLimit),
+        ...resolveCappedConfigInteger(s.name, process.env[s.name], s.default, s.upperLimit),
       }))
       .filter((s) => s.status !== "valid");
     if (y.length > 0) {

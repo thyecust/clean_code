@@ -14,7 +14,7 @@ import { getCanonicalName, H } from "../../02-功能模块/认证-OAuth登录/�
 import { useFeatureFlagValue } from "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t, pd } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { xte } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { resolveModelCapability } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/protobuf-decoding.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../../02-功能模块/语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
@@ -31,7 +31,7 @@ function AssistantNarrationSummaryMessage(N) {
     x;
   if (n[0] !== i)
     ((x = () =>
-      (typeof i === "string" && xte("quizzical_shore", void 0, getCanonicalName(i), i)) ||
+      (typeof i === "string" && resolveModelCapability("quizzical_shore", void 0, getCanonicalName(i), i)) ||
       H("tengu_quizzical_shore", !1)),
       (n[0] = i),
       (n[1] = x));

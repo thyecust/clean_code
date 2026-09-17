@@ -17,7 +17,7 @@ import { z, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { ZA } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { canUseCloudReview } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { CODE_REVIEW_SKILL_NAME } from "../../01-核心基础设施/共享小工具-未细化/bundled-skill-names.js";
 var f = createLazyValue(() =>
   nt({
@@ -119,7 +119,7 @@ function _() {
   return H(h, null) ?? {};
 }
 function isUltrareviewAwarenessEnabled(e) {
-  if (!ZA()) return !1;
+  if (!canUseCloudReview()) return !1;
   if (!isPolicyAllowed("allow_remote_sessions")) return !1;
   return _()[e] === !0;
 }

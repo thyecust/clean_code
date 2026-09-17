@@ -21,7 +21,7 @@ import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { HI, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { CLAUDE_IN_CHROME_URL, CHROME_EXTENSION_RECONNECT_URL, isChromeExtensionInstalled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import { openInChrome } from "./claude-in-chrome-host.js";
 import { invokeMcpToolRaw } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
@@ -320,7 +320,7 @@ function Je(Sn) {
     ((xo = function me(Nn) {
       bb19: switch (Nn) {
         case "install-extension": {
-          (Be(ko), ho(!0), ae(HI));
+          (Be(ko), ho(!0), ae(CLAUDE_IN_CHROME_URL));
           break bb19;
         }
         case "reconnect": {

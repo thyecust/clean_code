@@ -31,7 +31,7 @@ import { readRoster } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { getVerifiedDaemonLock } from "../后台任务-Shell管理/daemon-lock.js";
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "../后台任务-Shell管理/scheduled-tasks.js";
 import { readScheduledStatus } from "../权限系统/chunk-3kjwvb3e.js";
-import { NF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getEnabledModelOptions } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { bgSupervisorNoun } from "../../01-核心基础设施/共享小工具-未细化/agent-view-feature-gates.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -487,7 +487,7 @@ async function yt(n) {
   };
 }
 function Ut() {
-  return NF(!1).map((n) => ({
+  return getEnabledModelOptions(!1).map((n) => ({
     label: n.label,
     value: n.value ?? "",
     description: n.description,

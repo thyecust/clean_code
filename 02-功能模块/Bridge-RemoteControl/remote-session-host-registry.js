@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { pE, Elt } from "../远程工具执行/chunk-66axrkvh.js";
-import { lY, MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DEVICE_LOCAL_TOOL_NAMES, BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 class RemoteSessionHostRegistry {
   #e = new Map();
   #t = new Set();
@@ -16,7 +16,7 @@ class RemoteSessionHostRegistry {
   #o = void 0;
   accept(e, { instanceId: t, now: o, transport: n }) {
     let r = e.host.name,
-      c = e.tools.filter((s) => !lY.has(s.name)).map((s) => s.name),
+      c = e.tools.filter((s) => !DEVICE_LOCAL_TOOL_NAMES.has(s.name)).map((s) => s.name),
       l = [...e.ignored, ...c],
       d = [...this.#e.values()]
         .filter((s) => s.instanceId === t)
@@ -37,7 +37,7 @@ class RemoteSessionHostRegistry {
       };
     }
     let i = this.#e.get(r),
-      u = e.tools.filter((s) => lY.has(s.name)),
+      u = e.tools.filter((s) => DEVICE_LOCAL_TOOL_NAMES.has(s.name)),
       a = Elt((u[0] ?? e.tools[0])?.protocol_versions ?? [pE]),
       p = {
         name: r,
@@ -145,8 +145,8 @@ class RemoteSessionHostRegistry {
       enforcement: "self",
       description: e.description,
       servedTools: e.servedTools,
-      ...(e.plumbing.some((t) => MV.has(t)) && {
-        plumbingTools: new Set(e.plumbing.filter((t) => MV.has(t))),
+      ...(e.plumbing.some((t) => BRIDGE_PLUMBING_TOOL_NAMES.has(t)) && {
+        plumbingTools: new Set(e.plumbing.filter((t) => BRIDGE_PLUMBING_TOOL_NAMES.has(t))),
       }),
       protocol: e.protocol,
       transport: e.transport,

@@ -35,7 +35,7 @@ import { ot, rL } from "../../01-核心基础设施/核心工具-路径与平台
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { getProxyFetchOptions, configureGlobalAgents } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { provenSameProcessAsync, getProcessStartTimeAsync } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { b2, Lg, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isTempScratchName, stripRecursiveGlobSuffix, parseRuleForSandbox, resolvePathPatternForSandboxAt, resolveSandboxFilesystemPathAt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Gj, $d, ome, patternWithRootFor } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { fc } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
@@ -752,7 +752,7 @@ async function bs(e, t) {
           !/^\.claude(-[a-z-]+)?\.json\./.test(c) &&
           !c.startsWith(".session_ingress_token") &&
           !isTempFilePath(c) &&
-          !b2(c),
+          !isTempScratchName(c),
       ),
       ks,
       `[runner:stuck] host config snapshot ${n}`,
@@ -4233,10 +4233,10 @@ async function No(e, t, n) {
       }
     },
     m = (i) => {
-      let h = Lg(i) || Ge;
+      let h = stripRecursiveGlobSuffix(i) || Ge;
       return ot(h, e);
     },
-    p = (i) => Lg(i) || Ge;
+    p = (i) => stripRecursiveGlobSuffix(i) || Ge;
   for (let i of new Set([e, ...t])) {
     let h = X(i, ".claude"),
       L = await xe(

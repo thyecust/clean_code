@@ -12,7 +12,7 @@
 import { logEvent } from "../共享小工具-未细化/analytics-event-queue.js";
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
-import { CXn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { IMPORT_NO_MANUAL_CONFIG_INSTRUCTION } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fO, Qw, b3e, Ilt } from "./chunk-ncbnx9cz.js";
 import { isAutoImportableItem, classifyImportItem } from "../共享小工具-未细化/import-items.js";
 import { countMatching } from "../共享小工具-未细化/chunk-d16fhdtx.js";
@@ -134,7 +134,7 @@ function v(d, p, u, r) {
     o.push(
       "- For per-item selection, \u26A0-flagged items, skills, or project-level items, they run `claude import` from a terminal (opens the checkbox picker).",
       "",
-      CXn,
+      IMPORT_NO_MANUAL_CONFIG_INSTRUCTION,
     ),
     {
       type: "query",

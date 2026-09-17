@@ -17,12 +17,12 @@ import { logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { PROCESS_WRAPPER_ENV_VAR, getLauncherArgv, getLauncherConfigError, isLauncherRunnable } from "./process-wrapper-launcher.js";
 import { flushDiagnostics } from "../共享小工具-未细化/diagnostics-log.js";
 import {
-  Z7,
-  yUt,
-  Eue,
-  xn,
-  Zun,
-  Ht,
+  cleanupTerminalModes,
+  emitScrollTelemetrySummary,
+  flushAnalyticsSinks,
+  gracefulShutdown,
+  claimShutdown,
+  createSystemInfoMessage,
   getMaterializedSessionFile,
   hasRecordedUserPrompt,
   recordTranscript,
@@ -92,7 +92,7 @@ async function recordExitTranscript(e, t, { responseStreaming: o = !1 } = {}, r)
   if (!a || o) return a;
   try {
     if (
-      (await recordTranscript([...e, Ht(jlt[t], "warning")], void 0, void 0, void 0, r),
+      (await recordTranscript([...e, createSystemInfoMessage(jlt[t], "warning")], void 0, void 0, void 0, r),
       t === "relaunch")
     )
       await persistTranscriptLeafCheckpoint(e, r);
@@ -109,7 +109,7 @@ async function recordProcessExitTranscript(e, { responseStreaming: t = !1 } = {}
   }
 }
 async function handlePromptInputExit(e, t = {}, o) {
-  (await recordProcessExitTranscript(e, t, o), await xn(0, "prompt_input_exit"));
+  (await recordProcessExitTranscript(e, t, o), await gracefulShutdown(0, "prompt_input_exit"));
 }
 var p =
     "the automatic continue at the usage-limit reset was cancelled (/rate-limit-options to wait again)",
@@ -164,14 +164,14 @@ async function relaunchClaudeCode(e = {}, t) {
   if (e.args) s = e.args;
   else if (e.freshIfNoTranscript && !(await _(t))) s = a;
   else s = ["--resume", K(), ...a];
-  (Zun(),
-    Z7(),
-    yUt(),
+  (claimShutdown(),
+    cleanupTerminalModes(),
+    emitScrollTelemetrySummary(),
     await Promise.all([
       withTimeout(flushSessionStorage(), 30000, "flush timeout (relaunch)").catch(() => {}),
       withTimeout(gxe(), Xhe, "cleanup timeout")
         .catch(() => {})
-        .then(() => withTimeout(Eue(), 1000, "analytics flush timeout").catch(() => {})),
+        .then(() => withTimeout(flushAnalyticsSinks(), 1000, "analytics flush timeout").catch(() => {})),
     ]),
     e.preSpawn?.());
   let i = { ...process.env };

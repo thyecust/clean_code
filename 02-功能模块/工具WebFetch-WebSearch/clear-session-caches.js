@@ -10,21 +10,21 @@
 import { Vxt, eMn, mv, jrt, pa } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { T5 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  sV,
-  WGn,
-  Sdn,
-  C4n,
-  lfn,
-  dfn,
-  HV,
-  yVn,
-  kVn,
-  pEe,
-  Q_t,
-  U8n,
+  getMemoryCitationTracker,
+  clearLastIngressUuidCache,
+  promptCacheTrackerStore,
+  resetLspDiagnostics,
+  deferredToolLedgerRegistry,
+  getTeleportCacheModule,
+  runPostCompactCleanup,
+  clearPromptCacheBreakState,
+  clearDumpPromptsState,
+  subagentStatsRegistry,
+  reloadDynamicSkills,
+  clearDynamicSkillState,
   resetSentSkillNames,
-  L_n,
-  EXn,
+  reloadMemoryFilesForSession,
+  clearUserContextCache,
   clearCommandsCache,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { clearResolveGitDirCache, clearIsGitMemoFor } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
@@ -36,13 +36,13 @@ import { GoalProposalState } from "../../01-核心基础设施/共享小工具-�
 import { clearSwarmPermissions } from "../权限系统/swarm-permission-poller.js";
 function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
   let a = r.size > 0;
-  if ((EXn(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), yVn(r), jrt(null), !a))
-    lfn.peek(t)?.clear();
-  let s = dfn();
+  if ((clearUserContextCache(t), clearIsGitMemoFor(t), YSn.of(t).clear(), resetFileIndexCache(globalFileIndexCache), clearCommandsCache(), clearPromptCacheBreakState(r), jrt(null), !a))
+    deferredToolLedgerRegistry.peek(t)?.clear();
+  let s = getTeleportCacheModule();
   if (s?.getTeleportCacheState().status === "active")
     s.revertTeleportCache("transcript_cleared");
   if (
-    (HV(t, void 0, i, void 0, void 0, void 0, l),
+    (runPostCompactCleanup(t, void 0, i, void 0, void 0, void 0, l),
     mv("clear"),
     resetSentSkillNames(),
     Vxt(pa()),
@@ -50,10 +50,10 @@ function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
   )
     dropBashPromptSkillListingPin();
   if (
-    (L_n(t, "session_start"),
-    sV.of(t).reset(),
-    Sdn.of(t).clear(),
-    pEe.of(t).reset(),
+    (reloadMemoryFilesForSession(t, "session_start"),
+    getMemoryCitationTracker.of(t).reset(),
+    promptCacheTrackerStore.of(t).clear(),
+    subagentStatsRegistry.of(t).reset(),
     i?.((e) => {
       if (
         e.storedImagePaths.size === 0 &&
@@ -68,12 +68,12 @@ function clearSessionCaches(t, r = new Set(), i, o, l, m = !1) {
         displayedMessageContent: {},
       };
     }),
-    WGn(),
+    clearLastIngressUuidCache(),
     !a)
   )
     clearSwarmPermissions();
-  if ((clearRepositoryCaches(), !a)) kVn();
-  if ((eMn(r), clearResolveGitDirCache(), U8n(), Q_t().catch(() => {}), C4n(t), o))
+  if ((clearRepositoryCaches(), !a)) clearDumpPromptsState();
+  if ((eMn(r), clearResolveGitDirCache(), clearDynamicSkillState(), reloadDynamicSkills().catch(() => {}), resetLspDiagnostics(t), o))
     (o.get(GoalProposalState).clear(),
       import("../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js").then(({ WebFetchCache: e }) =>
         o.get(e).clear(),

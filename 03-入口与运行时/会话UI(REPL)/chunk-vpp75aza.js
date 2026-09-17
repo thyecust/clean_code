@@ -15,7 +15,7 @@ import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cw
 import { findGitRootRecheckingNegative } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { truncatePathMiddle } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { Ame } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
-import { eN } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isReplDiffSidebarEnabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { t, ct } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
@@ -53,7 +53,7 @@ function diffPanelCanMount({
   isMainFocused: i,
   hasGitRepo: s,
 }) {
-  return eN() && o && !r && i && n >= DIFF_SIDEBAR_MIN_COLS && s;
+  return isReplDiffSidebarEnabled() && o && !r && i && n >= DIFF_SIDEBAR_MIN_COLS && s;
 }
 function shouldAutoOpenDiffSidebar(o) {
   let n = ee().diffSidebarOpen;

@@ -18,7 +18,7 @@ import { deviceToolNoticesTo } from "../../01-核心基础设施/共享小工具
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { Ise, RCt, iKt } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isViolinWoodEnabledCached } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
-import { Ht } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createSystemInfoMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { showScreen } from "../../00-第三方库/_未识别/Ink终端渲染器/chunk-cq8x5zt4.js";
 import { Uot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { buildCloudSessionStatusMessage } from "../../01-核心基础设施/共享小工具-未细化/cloud-session-status-message.js";
@@ -285,6 +285,6 @@ View it at ${wa(e, void 0, { from: "cli", m: "0" })}`)
   }
 }
 function le(r) {
-  return Ht(r, "warning");
+  return createSystemInfoMessage(r, "warning");
 }
 export { attachRemote };

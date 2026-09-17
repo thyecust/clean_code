@@ -21,7 +21,7 @@ import { o, t, Un } from "../../01-核心基础设施/ANSI-样式-布局原语/c
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { ui, fa, $o, vs, ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { REFUSE_INPUT_WINDOW_MS } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
-import { TV, b2t, lH, A2t, S4n, C2t, Ipn, Ng } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isJetBrainsIde, isJetBrainsTerminal, isSupportedIdeTerminal, discoverIdeServers, identifyVscodeFork, resolveVscodeCommand, detectRunningIdes, getIdeDisplayName } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { OverflowHint } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
@@ -156,7 +156,7 @@ function ne(_o) {
 function De() {
   let n = ee();
   return (
-    !lH() &&
+    !isSupportedIdeTerminal() &&
     n.autoConnectIde !== !0 &&
     n.hasIdeAutoConnectDialogBeenShown !== !0
   );
@@ -214,7 +214,7 @@ function re(Mo) {
 }
 function Ce() {
   let n = ee();
-  return !lH() && n.autoConnectIde === !0;
+  return !isSupportedIdeTerminal() && n.autoConnectIde === !0;
 }
 function ro(Ke, kt) {
   return ((Ke[kt.name] = (Ke[kt.name] || 0) + 1), Ke);
@@ -238,7 +238,7 @@ function co(Ot) {
   return { label: Ot.name, value: Ot.port.toString() };
 }
 function lo(Xt) {
-  return { label: Ng(Xt), value: Xt };
+  return { label: getIdeDisplayName(Xt), value: Xt };
 }
 function go(An) {
   return An.name === "ide";
@@ -352,7 +352,7 @@ function Pe(dn) {
     ((k =
       V.length === 0
         ? e(EmptyStateMessage, {
-            children: b2t()
+            children: isJetBrainsTerminal()
               ? `No available IDEs detected. Please install the plugin and restart your IDE:
 https://code.claude.com/docs/en/jetbrains`
               : "No available IDEs detected. Make sure your IDE has the Claude Code extension or plugin installed and is running.",
@@ -376,7 +376,7 @@ https://code.claude.com/docs/en/jetbrains`
                       "Note: Only one Claude Code instance can be connected to VS Code at a time.",
                   }),
                 }),
-              !lH() &&
+              !isSupportedIdeTerminal() &&
                 e(o, {
                   marginTop: 1,
                   children: e(t, {
@@ -596,8 +596,8 @@ async function openProjectInSelectedIDE(n, s, m, l) {
     l("No IDE selected.");
     return;
   }
-  let h = S4n(n.name),
-    a = h ? await C2t(h, n.name) : null;
+  let h = identifyVscodeFork(n.name),
+    a = h ? await resolveVscodeCommand(h, n.name) : null;
   if (!a) {
     l(
       `Please open the ${m ? "worktree" : "project"} manually in ${chalk.bold(n.name)}: ${s}`,
@@ -625,7 +625,7 @@ async function cn(n, s, m) {
   if (m?.trim() === "open") {
     let I = Ia(),
       x = I ? I.worktreePath : getCwd(),
-      b = (await A2t(!0)).filter((T) => T.isValid);
+      b = (await discoverIdeServers(!0)).filter((T) => T.isValid);
     if (b.length === 0)
       return (n("No IDEs with Claude Code extension detected."), null);
     return e(ut, {
@@ -636,15 +636,15 @@ async function cn(n, s, m) {
       },
     });
   }
-  let a = await A2t(!0);
-  if (a.length === 0 && s.onInstallIDEExtension && !lH()) {
-    let I = await Ipn(),
+  let a = await discoverIdeServers(!0);
+  if (a.length === 0 && s.onInstallIDEExtension && !isSupportedIdeTerminal()) {
+    let I = await detectRunningIdes(),
       x = (D) => {
         if (s.onInstallIDEExtension)
-          if ((s.onInstallIDEExtension(D), TV(D)))
-            n(`Installed plugin to ${chalk.bold(Ng(D))}
+          if ((s.onInstallIDEExtension(D), isJetBrainsIde(D)))
+            n(`Installed plugin to ${chalk.bold(getIdeDisplayName(D))}
 Please ${chalk.bold("restart your IDE")} completely for it to take effect`);
-          else n(`Installed extension to ${chalk.bold(Ng(D))}`);
+          else n(`Installed extension to ${chalk.bold(getIdeDisplayName(D))}`);
       };
     if (I.length > 1)
       return e(pt, {

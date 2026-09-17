@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { createLazyValue } from "./lazy-value.js";
 import { buildTool } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
-import { _k } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isToolResultTruncated } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatToolInputMessage } from "./slack-send-tool.js";
 import { stripTextBlockMeta } from "./mcp-output-truncation.js";
 import { s, Jq, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -57,9 +57,9 @@ var p = createLazyValue(() => c({}).passthrough()),
     userFacingName: () => "mcp",
     isResultTruncated(e, t) {
       let o = t?.columns;
-      if (typeof e === "string") return _k(e, o);
+      if (typeof e === "string") return isToolResultTruncated(e, o);
       if (Array.isArray(e))
-        return e.some((r) => r.type === "text" && _k(r.text, o));
+        return e.some((r) => r.type === "text" && isToolResultTruncated(r.text, o));
       return !1;
     },
     mapToolResultToToolResultBlockParam(e, t) {

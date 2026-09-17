@@ -16,9 +16,9 @@ import { jn, Ks } from "../安全文件系统(FS加固)/安全文件系统(FS加
 import { updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { stripAnsi } from "./text-sanitization.js";
 import { er } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { K9, tDe, X9, DF, Nwe, vue } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { baseModelSupportsAdvisor, tDe, getAdvisorModelAliases, DF, getAdvisorCreditsNotice, isAdvisorCapableForBaseModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function formatAdvisorConsentHint(t, n = !1) {
-  return `${Nwe(t)} Run /model fable${n ? " in an interactive terminal session" : ""} to review and enable, then set it as the advisor.`;
+  return `${getAdvisorCreditsNotice(t)} Run /model fable${n ? " in an interactive terminal session" : ""} to review and enable, then set it as the advisor.`;
 }
 function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
   let r = Ks(),
@@ -63,7 +63,7 @@ function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
   }
   if (!f) {
     if (DF(e)) return formatAdvisorConsentHint(e, g);
-    let o = [...X9(), "off"].join(", ");
+    let o = [...getAdvisorModelAliases(), "off"].join(", ");
     return `${stripAnsi(renderDefaultModelSetting(e))} cannot be used as an advisor. Valid options: ${o}`;
   }
   if ((a((o) => (o.advisorModel === e ? o : { ...o, advisorModel: e })), r))
@@ -77,10 +77,10 @@ function applyAdvisorModelSetting(t, n, a, l, s = !0, g = !1) {
   let v = stripAnsi(renderDefaultModelSetting(e)),
     u = stripAnsi(renderDefaultModelSetting(n)),
     d = `Advisor set to ${v}${m}`;
-  if (!K9(n))
+  if (!baseModelSupportsAdvisor(n))
     d += `
 Note: the current main model (${u}) does not support the advisor. It will activate when you switch to a supported main model.`;
-  else if (!vue(n, e))
+  else if (!isAdvisorCapableForBaseModel(n, e))
     d += `
 Note: ${v} is less capable than the current main model (${u}), so the advisor will not activate. Choose a more capable advisor, or switch to a smaller main model.`;
   return d;

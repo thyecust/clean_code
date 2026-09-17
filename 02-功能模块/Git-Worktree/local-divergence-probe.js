@@ -14,17 +14,17 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { CONVENTIONAL_DEFAULT_BRANCH_NAMES } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import {
-  Ds,
-  Ct,
-  jTe,
-  zjt,
-  dH,
-  Pne,
-  One,
-  OV,
-  xk,
-  o$,
-  Hk,
+  createConcurrencyLimiter,
+  isSignalAborted,
+  readDirSyncGitPins,
+  withGitNamePins,
+  getDirSyncGitExe,
+  DIR_SYNC_GIT_ARGS,
+  dirSyncGitEnv,
+  partitionSeedPaths,
+  resolveRealPath,
+  readSeedFile,
+  allUnlessAborted,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { pI, SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { computeGitBlobId } from "../../01-核心基础设施/共享小工具-未细化/sync-state-schema.js";
@@ -50,17 +50,17 @@ async function probeLocalDivergence({
   signal: o,
 }) {
   let a = Date.now();
-  if (Ct(o)) return { probedAtMs: a, durationMs: 0, verdict: _("aborted") };
+  if (isSignalAborted(o)) return { probedAtMs: a, durationMs: 0, verdict: _("aborted") };
   let d = Number.isFinite(t) ? Math.max(1, Math.floor(t)) : 1,
     u = createLinkedAbortSignal(o, { timeoutMs: d, refTimer: !0 });
   try {
-    let c = await nullOnAbort(jTe(e), u.signal);
+    let c = await nullOnAbort(readDirSyncGitPins(e), u.signal);
     if (c === null)
       return {
         probedAtMs: a,
         durationMs: Date.now() - a,
         verdict:
-          r === "HEAD" && !Ct(o)
+          r === "HEAD" && !isSignalAborted(o)
             ? { reason: "detached_head", diverged: !0, remote: null }
             : _(failureCause(o, u.signal, "deadline")),
       };
@@ -84,7 +84,7 @@ async function probeLocalDivergence({
       verdict: m.reason === "probe_failed" ? _(failureCause(o, u.signal, m.failure)) : m,
     };
   } catch (c) {
-    if (!Ct(u.signal)) logError(c);
+    if (!isSignalAborted(u.signal)) logError(c);
     return {
       probedAtMs: a,
       durationMs: Date.now() - a,
@@ -140,9 +140,9 @@ async function z(e, i) {
         .join(""),
     ),
     runProbeGit(e, P("HEAD")),
-    xk(e.gitRoot),
+    resolveRealPath(e.gitRoot),
   ]);
-  if (Ct(e.signal))
+  if (isSignalAborted(e.signal))
     return { detail: "deadline or abort during the first reads" };
   let c = t.stdout.trim(),
     s = a.exitCode === 0 ? ee(a.stdout) : null,
@@ -192,7 +192,7 @@ async function L(e, { headSha: i, headRecords: r, realRoot: t }, o) {
             o,
           ]),
     ]);
-  if (Ct(e.signal))
+  if (isSignalAborted(e.signal))
     return { detail: "deadline or abort during the remote reads" };
   let [m, p, f, b] = u.stdout.split(/\r?\n/),
     C = c === null ? r : c.exitCode === 0 ? D(c.stdout) : null;
@@ -220,18 +220,18 @@ async function L(e, { headSha: i, headRecords: r, realRoot: t }, o) {
             null
           ),
         );
-  let N = Ds(
+  let N = createConcurrencyLimiter(
       G,
       async (g) => (
         e.signal.throwIfAborted(),
         [g, k === null ? null : await F(a, t, g, E.get(g), k)]
       ),
     ),
-    M = await Hk(
+    M = await allUnlessAborted(
       y.map((g) => N(g)),
       e.signal,
     );
-  if (M === null || Ct(e.signal))
+  if (M === null || isSignalAborted(e.signal))
     return { detail: "deadline or abort during the digests" };
   let T = new Map(M),
     I = X(i, m, s, b !== "false");
@@ -244,7 +244,7 @@ async function L(e, { headSha: i, headRecords: r, realRoot: t }, o) {
     remote: {
       commit: m,
       tree: p,
-      differingTrackedCount: OV(
+      differingTrackedCount: partitionSeedPaths(
         C.filter((g) => g.status !== "D" && R(g, T)),
         (g) => g.path,
         () => null,
@@ -282,7 +282,7 @@ async function Z(e, i, r) {
       );
     return { ref: t.name, branch: t.branch, remote: o.remote, head: o.head };
   } catch (t) {
-    if (!Ct(e.signal)) logError(t);
+    if (!isSignalAborted(e.signal)) logError(t);
     return null;
   }
 }
@@ -342,12 +342,12 @@ function unservedLayout(e) {
   }
 }
 function failureCause(e, i, r) {
-  return Ct(e) ? "aborted" : Ct(i) ? "deadline" : r;
+  return isSignalAborted(e) ? "aborted" : isSignalAborted(i) ? "deadline" : r;
 }
 async function runProbeGit({ gitRoot: e, signal: i, timeoutMs: r }, t, o) {
   let a = await H(e);
   if (a === null) return { stdout: "" };
-  return execFileNoThrowWithCwd(dH(), S(t), {
+  return execFileNoThrowWithCwd(getDirSyncGitExe(), S(t), {
     cwd: e,
     env: a,
     extendEnv: !1,
@@ -368,7 +368,7 @@ async function countProbeGitOutput(
     c = await H(e);
   if (c === null) return { bytes: d, overLimit: u };
   try {
-    let s = SW(dH(), S(t), {
+    let s = SW(getDirSyncGitExe(), S(t), {
       cwd: e,
       env: c,
       extendEnv: !1,
@@ -392,7 +392,7 @@ async function countProbeGitOutput(
       typeof p.exitCode === "number";
     return { bytes: d, overLimit: u, exitCode: f ? p.exitCode : void 0 };
   } catch (s) {
-    if (!Ct(i))
+    if (!isSignalAborted(i))
       n(`dir-sync: could not run git to count its output (${l(s)})`, {
         level: "error",
       });
@@ -400,9 +400,9 @@ async function countProbeGitOutput(
   }
 }
 async function listPathsChangedFromHead(e) {
-  let [i, r] = await Promise.all([runProbeGit(e, P("HEAD")), xk(e.gitRoot)]),
+  let [i, r] = await Promise.all([runProbeGit(e, P("HEAD")), resolveRealPath(e.gitRoot)]),
     t = i.exitCode === 0 ? D(i.stdout) : null;
-  if (t === null || r === null || Ct(e.signal)) return null;
+  if (t === null || r === null || isSignalAborted(e.signal)) return null;
   let o = t.filter(x);
   await using a =
     o.length === 0
@@ -413,7 +413,7 @@ async function listPathsChangedFromHead(e) {
             null
           ),
         );
-  let d = Ds(
+  let d = createConcurrencyLimiter(
       G,
       async (f) => (
         e.signal.throwIfAborted(),
@@ -424,13 +424,13 @@ async function listPathsChangedFromHead(e) {
       ),
     ),
     u = await nullOnAbort(
-      Hk(
+      allUnlessAborted(
         o.map((f) => d(f)),
         e.signal,
       ),
       e.signal,
     );
-  if (u === null || Ct(e.signal)) return null;
+  if (u === null || isSignalAborted(e.signal)) return null;
   let c = new Map(u),
     s = t.some((f) => f.status === "U"),
     m = t.some((f) => f.status === "A" && f.newId === null),
@@ -444,7 +444,7 @@ async function listPathsChangedFromHead(e) {
             "--ignore-submodules=all",
           ])
         : null;
-  if (Ct(e.signal)) return null;
+  if (isSignalAborted(e.signal)) return null;
   return {
     paths: t.filter((f) => R(f, c)).map((f) => f.path),
     stashBlocked:
@@ -454,18 +454,18 @@ async function listPathsChangedFromHead(e) {
 function S(e) {
   return [
     "--no-optional-locks",
-    ...Pne,
+    ...DIR_SYNC_GIT_ARGS,
     "-c",
     "advice.graftFileDeprecated=false",
     ...e,
   ];
 }
 async function H(e) {
-  let i = await jTe(e),
-    r = i.kind === "pinned" ? zjt(i, { filterDriversOff: !1 }) : null;
+  let i = await readDirSyncGitPins(e),
+    r = i.kind === "pinned" ? withGitNamePins(i, { filterDriversOff: !1 }) : null;
   if (r === null) return null;
   return {
-    ...One(r),
+    ...dirSyncGitEnv(r),
     GIT_GRAFT_FILE: "/dev/null",
     GIT_NO_REPLACE_OBJECTS: "1",
   };
@@ -505,7 +505,7 @@ async function F(e, i, r, t, o) {
     try {
       return computeGitBlobId(await readlink(U(e, r), "buffer"));
     } catch {}
-  let a = await o$(e, i, r, o);
+  let a = await readSeedFile(e, i, r, o);
   return a.kind === "read" ? computeGitBlobId(a.content) : null;
 }
 function ee(e) {

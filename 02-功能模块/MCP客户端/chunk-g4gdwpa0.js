@@ -26,22 +26,22 @@ import { xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js"
 import { SECURE_STORAGE_READ_FAILED_SENTINEL, getSecureStorage } from "../认证-OAuth登录/secure-storage.js";
 import { cq, la, i0, pA } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  gmt,
-  k8n,
-  Ws,
-  AE,
-  pMe,
-  I8n,
-  sgn,
-  ign,
-  lWt,
-  gT,
+  MCP_ACCOUNT_CHANGED_MESSAGE,
+  DISCOVERY_CACHE_DRAIN_TIMEOUT_MS,
+  isDiscoveryCacheEnabled,
+  isDiscoveryCacheUsable,
+  getDiscoveryCacheOffReason,
+  getDiscoveryCacheOffLatch,
+  latchDiscoveryCacheKeyUnavailable,
+  resolveAccountToken,
+  MCP_DISCOVERY_ERAS,
+  getDiscoveryCacheStore,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getMcpServerConfigCacheKey } from "../../01-核心基础设施/共享小工具-未细化/chunk-7wm8t84g.js";
 import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 function De(e) {
-  if (e.kind !== "resolved" || !Ws()) return;
-  let t = gT(),
+  if (e.kind !== "resolved" || !isDiscoveryCacheEnabled()) return;
+  let t = getDiscoveryCacheStore(),
     r = t.lastResolvedAccountToken;
   if (((t.lastResolvedAccountToken = e.token), r === void 0 || r === e.token))
     return;
@@ -81,11 +81,11 @@ function Cct() {
   return ((e.identityTripUnowned = !1), t);
 }
 function ue() {
-  if (!Ws()) return;
-  De(ign());
+  if (!isDiscoveryCacheEnabled()) return;
+  De(resolveAccountToken());
 }
 function y7() {
-  let e = ign();
+  let e = resolveAccountToken();
   return (De(e), e);
 }
 function ir() {
@@ -93,13 +93,13 @@ function ir() {
 }
 function J3e() {
   let e = jt();
-  if (!Ws()) return e.identityEpoch;
+  if (!isDiscoveryCacheEnabled()) return e.identityEpoch;
   return ((e.identityEpoch += 1), e.identityEpoch);
 }
 var Qe = "baseline:rearmed";
 function z2n() {
-  if (!Ws()) return;
-  (J3e(), (gT().lastResolvedAccountToken = Qe));
+  if (!isDiscoveryCacheEnabled()) return;
+  (J3e(), (getDiscoveryCacheStore().lastResolvedAccountToken = Qe));
 }
 function mE(e) {
   return (ue(), e === jt().identityEpoch);
@@ -128,7 +128,7 @@ function FIe(e, t) {
   }
 }
 function rt() {
-  return I8n() !== void 0;
+  return getDiscoveryCacheOffLatch() !== void 0;
 }
 class ke {
   seen = new Set();
@@ -278,17 +278,17 @@ function fe(e, t) {
   }
 }
 function vct(e) {
-  let t = gT();
+  let t = getDiscoveryCacheStore();
   ((t.accountResolver = e), (t.lastResolvedAccountToken = void 0));
 }
 function Rct(e) {
-  gT().eraResolver = e;
+  getDiscoveryCacheStore().eraResolver = e;
 }
 function ut() {
-  return gT().eraResolver();
+  return getDiscoveryCacheStore().eraResolver();
 }
 function kct() {
-  return gT().accountResolver !== void 0;
+  return getDiscoveryCacheStore().accountResolver !== void 0;
 }
 function xh(e) {
   switch (e.type) {
@@ -310,7 +310,7 @@ function kLt(e, t) {
     name: e,
     type: "failed",
     config: t,
-    error: gmt,
+    error: MCP_ACCOUNT_CHANGED_MESSAGE,
     errorCode: "IDENTITY_CHANGED",
   };
 }
@@ -344,7 +344,7 @@ var gt = 384,
       toolsSavedAt: T().optional(),
       consecutiveRefreshFailures: T().int().nonnegative(),
       serverInfo: e.implementation.optional(),
-      negotiatedEra: X(lWt).optional(),
+      negotiatedEra: X(MCP_DISCOVERY_ERAS).optional(),
       capabilities: e.serverCapabilities,
       tools: v(e.tool),
       commands: v(e.prompt),
@@ -402,7 +402,7 @@ function wt(e) {
   return !1;
 }
 function Ue(e) {
-  let t = pMe();
+  let t = getDiscoveryCacheOffReason();
   if (t !== void 0) return t;
   if (Ee()) return "identity-changed";
   if (e.type !== "http" && e.type !== "sse") return "transport";
@@ -481,7 +481,7 @@ function he(e, t, r) {
 var Ct = /^[0-9a-f]{16}\0/;
 function gE(e) {
   let t = `${e}-`,
-    r = gT().filePathMemo;
+    r = getDiscoveryCacheStore().filePathMemo;
   for (let i of r.keys()) {
     if (!i.startsWith(t)) continue;
     if (Ct.test(i.slice(t.length))) r.delete(i);
@@ -494,7 +494,7 @@ async function bt(e, t) {
   return (await _(e, t))?.path;
 }
 async function Qx(e, t) {
-  if (!Ws()) return;
+  if (!isDiscoveryCacheEnabled()) return;
   try {
     return (await _(e, t))?.legToken;
   } catch {
@@ -506,7 +506,7 @@ async function _(e, t) {
     i = ut(),
     o = ft(),
     d = `${r}\x00${o}\x00era:${i}`,
-    p = gT().filePathMemo,
+    p = getDiscoveryCacheStore().filePathMemo,
     u = p.get(d);
   if (u) return u;
   let h = (async () => {
@@ -533,10 +533,10 @@ async function _(e, t) {
   );
 }
 function L() {
-  return gT().storage;
+  return getDiscoveryCacheStore().storage;
 }
 function R() {
-  return gT().storageV5;
+  return getDiscoveryCacheStore().storageV5;
 }
 function ge(e) {
   return STORAGE_KEYS.userConfigDir("mcp-discovery-cache", [basename(e)]);
@@ -578,7 +578,7 @@ function se(e) {
   return e instanceof V;
 }
 async function ce(e, t) {
-  let r = gT().readGateForTest;
+  let r = getDiscoveryCacheStore().readGateForTest;
   if (r) await r;
   if (t) return _t(t, e);
   try {
@@ -673,7 +673,7 @@ async function Hct(e, t, r = Date.now()) {
     K();
     let C = Bt(e, t),
       M = Kt(C),
-      de = gT().admissionPurgedKeySets;
+      de = getDiscoveryCacheStore().admissionPurgedKeySets;
     if (!de.has(M))
       (de.add(M),
         Ft(e, t, C).then((Ze) => {
@@ -745,17 +745,17 @@ async function Hct(e, t, r = Date.now()) {
   return { kind: "stale", entry: D, ageMs: E };
 }
 function Y(e, t, r) {
-  return gT()
+  return getDiscoveryCacheStore()
     .serializeWrite(e, r)
     .catch((i) => {
       logMCPDebug(t, `discovery-cache: write op failed: ${i}`);
     });
 }
 function q(e) {
-  return gT().deleteGenerationByCacheKey.get(e) ?? 0;
+  return getDiscoveryCacheStore().deleteGenerationByCacheKey.get(e) ?? 0;
 }
 function ae(e) {
-  gT().deleteGenerationByCacheKey.set(e, q(e) + 1);
+  getDiscoveryCacheStore().deleteGenerationByCacheKey.set(e, q(e) + 1);
 }
 var Ye = 8;
 async function At(e, t) {
@@ -847,7 +847,7 @@ async function We(e, t, r, i) {
         r,
         "Discovery cache: sealing key unavailable (secure storage unreadable) \u2014 cache off for this process",
       ),
-      sgn(),
+      latchDiscoveryCacheKeyUnavailable(),
       { miss: "key-unavailable" }
     );
   let d = fe(we(o, t), e);
@@ -876,7 +876,7 @@ async function Se(e) {
     context: p,
     label: u,
   } = e;
-  if (pMe() !== void 0)
+  if (getDiscoveryCacheOffReason() !== void 0)
     return (
       logMCPDebug(
         r,
@@ -903,7 +903,7 @@ async function Se(e) {
   let h = await N();
   if (h === void 0)
     return (
-      sgn(),
+      latchDiscoveryCacheKeyUnavailable(),
       logMCPDebug(
         r,
         `Discovery cache ${u} refused: sealing key unavailable (secure storage unreadable) \u2014 cache off for this process`,
@@ -953,7 +953,7 @@ async function Se(e) {
       ),
       { verdict: "terminal", code: "oversize" }
     );
-  if (pMe() !== void 0)
+  if (getDiscoveryCacheOffReason() !== void 0)
     return (
       logMCPDebug(
         r,
@@ -1028,10 +1028,10 @@ async function i2(e, t = 1500) {
   (K(), await Lt(e, t));
 }
 function K() {
-  if (!AE()) return;
-  let e = gT();
+  if (!isDiscoveryCacheUsable()) return;
+  let e = getDiscoveryCacheStore();
   if (e.flushCleanup) return;
-  e.flushCleanup = Et(() => e.drain(k8n));
+  e.flushCleanup = Et(() => e.drain(DISCOVERY_CACHE_DRAIN_TIMEOUT_MS));
 }
 async function Ict(e, t, r, i) {
   let o = i.now ?? Date.now(),
@@ -1309,7 +1309,7 @@ function Ft(e, t, r) {
     let p = [];
     for (let u of r) {
       let h = u;
-      for (let w of lWt) (p.push(P(U(i, he(u, d, w)), e, h)), (h = void 0));
+      for (let w of MCP_DISCOVERY_ERAS) (p.push(P(U(i, he(u, d, w)), e, h)), (h = void 0));
     }
     (await Promise.all(p), (o = !0));
   }).then(() => o);
@@ -1344,7 +1344,7 @@ function Kt(e) {
 }
 async function UIe(e, t) {
   if (t.type !== "http" && t.type !== "sse") return;
-  if (!AE()) return;
+  if (!isDiscoveryCacheUsable()) return;
   (K(), ae(x(e, t)));
   try {
     let r = await _(e, t);
@@ -1354,7 +1354,7 @@ async function UIe(e, t) {
     }
     let i = x(e, t),
       o = I(),
-      d = new Set(lWt.map((u) => U(o, he(i, r.fingerprint, u)))),
+      d = new Set(MCP_DISCOVERY_ERAS.map((u) => U(o, he(i, r.fingerprint, u)))),
       p = [P(r.path, e, i)];
     for (let u of d) if (u !== r.path) p.push(P(u, e, void 0));
     (await Promise.all(p), await Ke(e, t));

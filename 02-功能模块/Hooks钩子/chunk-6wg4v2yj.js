@@ -23,65 +23,65 @@ import { getGlobalClaudeFile, env as a } from "../../01-核心基础设施/设�
 import { ot } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { C_, yi, Ow, parseSettingsFileUncached } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  GOe,
-  iT,
-  Kf,
-  y4e,
-  MGn,
-  sUt,
-  S4e,
-  Gft,
-  Ih,
-  Awe,
-  Y7,
-  Cwe,
-  vwe,
-  iUt,
-  b4e,
-  aUt,
-  jun,
-  NGn,
-  lUt,
+  resolveHookCommandScript,
+  isPathWithin,
+  normalizePathCase,
+  isPathEqualOrWithin,
+  classifyFileLocation,
+  hashFileContents,
+  ROOT_PATH,
+  collectBaseRoots,
+  isAnyPathWithinRoots,
+  resolveReachableRoots,
+  resolvePathAllowingMissing,
+  mergeChildProcessEnv,
+  getHomeDirFromEnv,
+  computeSubprocessEnv,
+  resolveProgramPath,
+  isAliasedFilePath,
+  isStandaloneCommandFlag,
+  resolveLegacyEnvPin,
+  ensureLegacyEnvPin,
   isRemoteToolServingMuted,
   onServingMuteRecheck,
-  pT,
-  $X,
-  Sde,
-  vne,
-  Rht,
-  an,
-  ZM,
-  q7n,
-  dpe,
-  z7n,
-  nAe,
-  C9t,
-  vY,
-  RY,
-  V7n,
-  K7n,
-  WMe,
-  X7n,
-  rAe,
-  Y7n,
-  J7n,
-  Q7n,
-  Zyt,
-  iXn,
-  qMe,
-  aXn,
-  eK,
+  CLOUD_SESSION_CONSENT_MESSAGES,
+  getWriteEntriesForSource,
+  getCommonWriteRoots,
+  getScopedWriteRoots,
+  getAllWriteRoots,
+  sanitizeForDisplay,
+  isSupportedDeviceHookEvent,
+  getUnsupportedHookEventReason,
+  HOOK_MATCHER_PATTERN,
+  isFileEditHookMatcher,
+  isMatchAllHookMatcher,
+  isMatcherSubset,
+  getDeviceHooksConsentFilePath,
+  createConsentStore,
+  subscribeConsentAnnouncements,
+  createEnsureConsent,
+  isConsentStoreInReach,
+  createHookStagingArea,
+  getRealFileSystemAccess,
+  getStagingFileSystemAccess,
+  HOOK_EXECUTION_BACKEND,
+  runHook,
+  REANNOUNCE_DELAY_MS,
+  createInstanceId,
+  getDeviceDisplayName,
+  formatDeviceHookId,
+  parseDeviceHookId,
   d_n,
-  lXn,
-  cXn,
-  wT,
-  hre,
-  iD,
-  tSt,
-  nSt,
-  zMe,
-  pXn,
-  H9t,
+  createDeviceHookRequestServicer,
+  getDefaultHookTimeoutMs,
+  ControlRequestTimeoutError,
+  ControlRequestNotDeliveredError,
+  classifyRemoteControlError,
+  captureHookSettings,
+  createHookSettingsAccessor,
+  UNREGISTER_TIMEOUT_MS,
+  createDeviceHookServingManager,
+  formatScriptHookLabel,
   evaluateHookIfCondition,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
@@ -152,18 +152,18 @@ function re(e) {
       ),
       ["/"]
     );
-  return d.map((r) => Kf(r.replace(/\/+$/, "")) || "/");
+  return d.map((r) => normalizePathCase(r.replace(/\/+$/, "")) || "/");
 }
 function ke(e, o) {
   return (e.length === 1 && e[0] === "/") || o.some((d) => !d.startsWith("/"));
 }
 function Ye(e, o) {
   let d = re(o);
-  return ke(d, e) || e.some((t) => d.some((r) => iT(r, Kf(t))));
+  return ke(d, e) || e.some((t) => d.some((r) => isPathWithin(r, normalizePathCase(t))));
 }
 function ve(e, o) {
   let d = re(o);
-  return ke(d, e) || e.some((t) => d.some((r) => iT(Kf(t), r)));
+  return ke(d, e) || e.some((t) => d.some((r) => isPathWithin(normalizePathCase(t), r)));
 }
 function Qe(e) {
   switch (e.type) {
@@ -177,7 +177,7 @@ function Qe(e) {
     case "mcp_tool":
       return `${e.server}/${e.tool}`;
     case "script":
-      return e.file ?? H9t(e.script ?? "");
+      return e.file ?? formatScriptHookLabel(e.script ?? "");
   }
 }
 function Q(e) {
@@ -197,7 +197,7 @@ async function Se(e, o, d, t = {}) {
       };
   }
   if (e.type !== "command") return { kind: "not_command", hookType: e.type };
-  let k = GOe(e, {
+  let k = resolveHookCommandScript(e, {
     home: d.home,
     projectDir: o.projectDir,
     hookCwd: o.launchDirReal,
@@ -242,8 +242,8 @@ async function Ze(e, o, d, t) {
   let r = t?.get(e);
   if (r) return r;
   let k = (async () => {
-    let R = await MGn(e, o, d),
-      _ = R.realPath === null ? null : await sUt(R.realPath, d);
+    let R = await classifyFileLocation(e, o, d),
+      _ = R.realPath === null ? null : await hashFileContents(R.realPath, d);
     return { located: R, digest: _ };
   })();
   return (t?.set(e, k), k);
@@ -312,12 +312,12 @@ function Re(e) {
         ]),
         E = await M(e.configHome);
       if (
-        (await Awe({
+        (await resolveReachableRoots({
           stickyRoots: R,
           pinnedScopes: d.pinnedScopes,
           pinnedRoots: d.pinnedRoots,
           baseRoots: [
-            ...Gft({ launchDir: e.launchDir, launchDirReal: H }),
+            ...collectBaseRoots({ launchDir: e.launchDir, launchDirReal: H }),
             ...w,
           ],
           reachBaseline: t,
@@ -348,11 +348,11 @@ function Re(e) {
 }
 function en(e) {
   return {
-    realpath: rAe().realpath,
-    commonWriteRoots: () => Sde(e),
-    scopeWriteRoots: (o, d) => vne(e, o, d),
+    realpath: getRealFileSystemAccess().realpath,
+    commonWriteRoots: () => getCommonWriteRoots(e),
+    scopeWriteRoots: (o, d) => getScopedWriteRoots(e, o, d),
     scopeWriteEntries: (o) => {
-      let d = $X(o, e),
+      let d = getWriteEntriesForSource(o, e),
         t = getSettingsFilePathForSource(o);
       if (o === "policySettings" || !t) return d;
       let r = parseSettingsFileUncached(t, o === "flagSettings" ? (MA() ?? d8()) : void 0);
@@ -362,9 +362,9 @@ function en(e) {
             `cloud session reach: the ${o} settings file could not be read or parsed at attach; its write grants are unknown, so every hook counts as in the session's reach`,
             { level: "warn" },
           ),
-          [S4e]
+          [ROOT_PATH]
         );
-      return dedupe([...$X(o, e, r.settings), ...d]);
+      return dedupe([...getWriteEntriesForSource(o, e, r.settings), ...d]);
     },
     scopeSettingsFile: (o) => getSettingsFilePathForSource(o) ?? null,
     addedDirectories: () => mp(),
@@ -412,8 +412,8 @@ var tn = createLazyValue(() =>
   rn = 15000,
   Gae = "unverified_sender";
 function sn(e) {
-  if (e instanceof hre) return { kind: "failed", reason: "post_failed" };
-  if (e instanceof wT) return { kind: "failed", reason: "no_answer" };
+  if (e instanceof ControlRequestNotDeliveredError) return { kind: "failed", reason: "post_failed" };
+  if (e instanceof ControlRequestTimeoutError) return { kind: "failed", reason: "no_answer" };
   if (e instanceof Ve) return { kind: "failed", reason: "aborted" };
   let o = l(e);
   if (o.startsWith("Unsupported control request subtype"))
@@ -808,7 +808,7 @@ function Rst(e) {
             ((w = !0),
               e.onNotice?.(
                 "announce_unverified",
-                pT.announce_unverified(untrustedDeviceHint()),
+                CLOUD_SESSION_CONSENT_MESSAGES.announce_unverified(untrustedDeviceHint()),
               ));
         } else if (x.kind === "retry" && x.reason === "stale_worker_epoch")
           _ = void 0;
@@ -832,7 +832,7 @@ function Rst(e) {
                 coalesceMs:
                   q === void 0 || q === "adopted" || q === "redescribed"
                     ? 0
-                    : Zyt[q],
+                    : REANNOUNCE_DELAY_MS[q],
               }));
           }) ?? R),
         r !== null)
@@ -997,7 +997,7 @@ function Ae(e, o, d, t) {
     R = r.indexOf(`
 `),
     _ = r.startsWith("#!") ? r.slice(2, R === -1 ? void 0 : R) : "",
-    C = Kf(
+    C = normalizePathCase(
       (
         _ +
         `
@@ -1014,7 +1014,7 @@ ${O}
       .flatMap((M) => yn(M, d))
       .find((M) =>
         new RegExp(
-          `(?<![\\w./~$-])${escapeRegExp(Kf(M))}${M.endsWith("/") ? "" : "(?![\\w.-])"}`,
+          `(?<![\\w./~$-])${escapeRegExp(normalizePathCase(M))}${M.endsWith("/") ? "" : "(?![\\w.-])"}`,
         ).test(C),
       );
   if (D !== void 0) return `it names ${D.replace('"', "")}`;
@@ -1070,22 +1070,22 @@ async function In(e, o) {
   } catch {
     return "source_in_sync_root";
   }
-  let k = [t, r].map(Kf),
+  let k = [t, r].map(normalizePathCase),
     _ = [
       ...(d !== void 0 ? [d] : []),
       ...(o.opts.sync?.root !== void 0 ? [o.opts.sync.root] : []),
       ...o.roots.extraReach,
     ]
-      .map((H) => Kf(H.replace(/\/+$/, "")))
-      .filter((H) => k.some((O) => iT(O, H))),
+      .map((H) => normalizePathCase(H.replace(/\/+$/, "")))
+      .filter((H) => k.some((O) => isPathWithin(O, H))),
     C = k.flatMap((H) =>
       _.flatMap((O) =>
-        iT(H, O) ? [H === O ? "" : H.slice(O.length + 1)] : [],
+        isPathWithin(H, O) ? [H === O ? "" : H.slice(O.length + 1)] : [],
       ),
     );
   if (C.length === 0) return null;
-  let D = Kf(o.roots.configHomeReal);
-  if (_.some((H) => H === D || iT(H, D) || H.split("/").includes(".claude")))
+  let D = normalizePathCase(o.roots.configHomeReal);
+  if (_.some((H) => H === D || isPathWithin(H, D) || H.split("/").includes(".claude")))
     return "sync_root_is_config_dir";
   return C.some((H) => !H.split("/").some((O) => O.startsWith(".")))
     ? "source_in_sync_root"
@@ -1133,8 +1133,8 @@ function On(e) {
   if (r === void 0 || r === "") return null;
   if (t.some((C) => /[^\x21-\x7e]/.test(C))) return "unjudgeable";
   if (!r.startsWith("/") || he.test(r)) return "unjudgeable";
-  let k = jun;
-  if (!An.has(Kf(posix.normalize(r))))
+  let k = isStandaloneCommandFlag;
+  if (!An.has(normalizePathCase(posix.normalize(r))))
     return t.slice(1).every(k) ? posix.normalize(r) : "unjudgeable";
   let R = t[1] === "-S" ? t.slice(2) : t.slice(1),
     _ = R[0];
@@ -1152,10 +1152,10 @@ var he = /(?:^|\/)\.\.(?:\/|$)/,
   $n =
     /^\/dev\/(?:null|zero|full|u?random|tty\d*|pts(?:\/.*)?|ptmx|std(?:in|out|err)|fd(?:\/.*)?|dtracehelper|autofs_nowait)$/;
 async function Ne(e, o, d = !1, t = !1) {
-  if (!ZM(e.event))
+  if (!isSupportedDeviceHookEvent(e.event))
     return {
       kind: "held",
-      reason: `event_${(Mn(e.event) ? q7n(e.event) : null) ?? "container_internal"}`,
+      reason: `event_${(Mn(e.event) ? getUnsupportedHookEventReason(e.event) : null) ?? "container_internal"}`,
     };
   let { hook: r } = e;
   if (r.type !== "command" && r.type !== "http")
@@ -1165,7 +1165,7 @@ async function Ne(e, o, d = !1, t = !1) {
       r.cloud === "device" && e.source.source === "local"
         ? ' (Its cloud: "device" mark is not honoured in a file inside the checkout; mark it in your user settings instead.)'
         : "",
-    _ = z7n(e.event, e.matcher);
+    _ = isFileEditHookMatcher(e.event, e.matcher);
   if (d)
     return _
       ? { kind: "held", reason: "after_edit" }
@@ -1243,7 +1243,7 @@ async function Ne(e, o, d = !1, t = !1) {
           };
           break;
         }
-        if ([I, U].some((G) => W.some((x) => y4e(G, x)))) {
+        if ([I, U].some((G) => W.some((x) => isPathEqualOrWithin(G, x)))) {
           B = {
             path: formatSingleLineText(I, { maxCodeUnits: 200 }),
             why: "sits where the cloud session can write on this machine (a sandbox write inlet covers it)",
@@ -1344,11 +1344,11 @@ async function Ne(e, o, d = !1, t = !1) {
           p = `${I.filename} is run in a way the cloud cannot reproduce (arguments, a condition, async or once), so it runs on this machine instead.`;
         else if (
           e.matcher !== void 0 &&
-          !nAe(e.matcher) &&
-          (!We(e.matcher) || !dpe.test(e.matcher))
+          !isMatchAllHookMatcher(e.matcher) &&
+          (!We(e.matcher) || !HOOK_MATCHER_PATTERN.test(e.matcher))
         )
           p = void 0;
-        else if (!C9t(e.matcher, I.matcher))
+        else if (!isMatcherSubset(e.matcher, I.matcher))
           p = `${I.filename} is configured with the matcher "${formatSingleLineText(e.matcher ?? "", { maxCodeUnits: 200 })}" and the cloud runs it on "${I.matcher}", so it runs on this machine instead.`;
         else {
           let q = qe(r.timeout);
@@ -1358,7 +1358,7 @@ async function Ne(e, o, d = !1, t = !1) {
                 template: I.id,
                 digest: S.pinnedTarget.sha256,
                 event: e.event,
-                ...(!nAe(e.matcher) && { matcher: e.matcher }),
+                ...(!isMatchAllHookMatcher(e.matcher) && { matcher: e.matcher }),
                 ...(q !== void 0 && { timeout_s: q }),
               },
               local: {
@@ -1374,8 +1374,8 @@ async function Ne(e, o, d = !1, t = !1) {
               legacyNotice: `${I.filename} is an older copy of ${I.id}; the cloud will run that copy. Update it from dotfiles to get fixes.`,
             }),
             ...(e.matcher !== void 0 &&
-              !nAe(e.matcher) &&
-              !C9t(I.matcher, e.matcher) && {
+              !isMatchAllHookMatcher(e.matcher) &&
+              !isMatcherSubset(I.matcher, e.matcher) && {
                 narrowNotice: `${I.filename} is configured with the matcher "${formatSingleLineText(e.matcher, { maxCodeUnits: 200 })}"; in the cloud it runs on "${I.matcher}" only.`,
               }),
           };
@@ -1406,7 +1406,7 @@ async function Ne(e, o, d = !1, t = !1) {
   if (D !== void 0) return D;
   if (e.matcher !== void 0 && !We(e.matcher))
     return { kind: "held", reason: "over_cap" };
-  if (e.matcher !== void 0 && !nAe(e.matcher) && !dpe.test(e.matcher))
+  if (e.matcher !== void 0 && !isMatchAllHookMatcher(e.matcher) && !HOOK_MATCHER_PATTERN.test(e.matcher))
     return {
       kind: "held",
       reason: "pattern_matcher",
@@ -1624,7 +1624,7 @@ async function nIt(e, o, d) {
           wire: {
             id: "",
             event: W.event,
-            ...(!nAe(W.matcher) && { matcher: W.matcher }),
+            ...(!isMatchAllHookMatcher(W.matcher) && { matcher: W.matcher }),
             kind: z.hook.type,
             ...(N !== void 0 && { timeout_s: N }),
             source: p.source,
@@ -1697,7 +1697,7 @@ async function nIt(e, o, d) {
         C(z.notice),
         t.forwarded.push({
           ...I,
-          wire: { ...I.wire, id: aXn(o.instanceId, W.event, ie) },
+          wire: { ...I.wire, id: formatDeviceHookId(o.instanceId, W.event, ie) },
         }));
     }
   }
@@ -1716,7 +1716,7 @@ async function nIt(e, o, d) {
       if (
         S === void 0 ||
         L === void 0 ||
-        !C9t(getHookTemplateById(S)?.matcher ?? "", p.local.matcher ?? "*")
+        !isMatcherSubset(getHookTemplateById(S)?.matcher ?? "", p.local.matcher ?? "*")
       )
         return !0;
       return (
@@ -1750,7 +1750,7 @@ var Ue = 30000;
 function jn(
   e,
   o,
-  d = async (t) => ({ real: await te(t), aliased: await aUt(t) }),
+  d = async (t) => ({ real: await te(t), aliased: await isAliasedFilePath(t) }),
 ) {
   let t = {
     path: e,
@@ -1780,7 +1780,7 @@ function Ln(e, o = Date.now()) {
 }
 function P6e(e) {
   return (
-    (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), NGn(e, moe()))),
+    (e.legacyConfigFile ??= jn(getGlobalClaudeFile(), resolveLegacyEnvPin(e, moe()))),
     Ln(e.legacyConfigFile),
     e.legacyConfigFile
   );
@@ -1795,7 +1795,7 @@ function oIt(e, o, d = (t) => getSettingsForSource(t)?.env) {
       typeof o.real === "string" &&
       o.real !== "unresolvable" &&
       isAbsolute(o.path) &&
-      !Ih([o.path, o.real], [...e.stickyRoots]);
+      !isAnyPathWithinRoots([o.path, o.real], [...e.stickyRoots]);
   return Object.assign(
     {},
     r ? o.env : {},
@@ -1836,7 +1836,7 @@ function qn(e) {
         }
         e.respond(r.requestId, k.answer);
       } catch (k) {
-        if ((e.logError(k), eK(r.callbackId)?.event === "PreToolUse" && !d))
+        if ((e.logError(k), parseDeviceHookId(r.callbackId)?.event === "PreToolUse" && !d))
           try {
             e.respond(r.requestId, {
               hookSpecificOutput: {
@@ -1876,7 +1876,7 @@ function Be({
   isMuted: _,
 }) {
   let C = () => null,
-    D = X7n(Y7n(), () => [...(C()?.cloudWritableRoots ?? [e]), ...Rht(e)]),
+    D = createHookStagingArea(getStagingFileSystemAccess(), () => [...(C()?.cloudWritableRoots ?? [e]), ...getAllWriteRoots(e)]),
     M = Et(() => D.dispose()),
     H = e;
   te(e).then(
@@ -1886,31 +1886,31 @@ function Be({
     () => {},
   );
   let O = { ...subprocessEnv() };
-  lUt(o, P6e(o).env);
+  ensureLegacyEnvPin(o, P6e(o).env);
   let A = o.senderFor(e),
     F = () => {
       let p = subprocessEnv();
-      return Cwe({
+      return mergeChildProcessEnv({
         attached: O,
         beforeSettings: xC(),
         ownEnv: oIt(A, P6e(o)),
         childrenSee: (S) => Object.hasOwn(p, S),
       });
     },
-    w = lXn({
+    w = createDeviceHookRequestServicer({
       memory: o.servicerFor(e),
       now: Date.now,
       setTimer: sIt,
       trustAccepted: R,
       ...(_ && { isMuted: _ }),
-      pin: rAe(),
+      pin: getRealFileSystemAccess(),
       staging: D,
-      run: (p, S, L) => runWithCwd(S.launchDir, () => Q7n(p, S, J7n, L)),
+      run: (p, S, L) => runWithCwd(S.launchDir, () => runHook(p, S, HOOK_EXECUTION_BACKEND, L)),
       evaluateCondition: (p, S) => evaluateHookIfCondition(p, S, d(), S.cwd),
       parseTarget: (p) => {
         let S = F();
-        return GOe(p, {
-          home: vwe(S),
+        return resolveHookCommandScript(p, {
+          home: getHomeDirFromEnv(S),
           hookCwd: H,
           projectDir: e,
           defaultShell: hD(),
@@ -1918,7 +1918,7 @@ function Be({
         });
       },
       emptyTranscriptPath: () => D.placeholder("cloud-transcript.jsonl"),
-      defaultTimeoutMs: cXn,
+      defaultTimeoutMs: getDefaultHookTimeoutMs,
       onLine: (p, S) => k({ line: p, level: S }),
       telemetry: (p) => {
         let S = Bn(p.outcome);
@@ -1941,11 +1941,11 @@ function Be({
       },
       debug: (p) => n(p),
       logError: logError,
-      extraWritableRoots: () => Rht(e),
+      extraWritableRoots: () => getAllWriteRoots(e),
       hostEnv: F,
-      childEnvironment: (p, S) => iUt(p, S, subprocessEnv()),
-      placePath: Y7,
-      resolveProgram: b4e,
+      childEnvironment: (p, S) => computeSubprocessEnv(p, S, subprocessEnv()),
+      placePath: resolvePathAllowingMissing,
+      resolveProgram: resolveProgramPath,
       defaultShell: () => hD(),
     }),
     E = qn({
@@ -1982,26 +1982,26 @@ function ze({
   onLine: _,
   storageV5: C,
 }) {
-  let D = rAe().openNoFollow,
+  let D = getRealFileSystemAccess().openNoFollow,
     M = te(e).catch(() => e),
     H = findGitRootUncached(e) ?? e,
     O = o.senderFor(e),
     A = { ...subprocessEnv() };
-  lUt(o, P6e(o).env);
+  ensureLegacyEnvPin(o, P6e(o).env);
   let F = () => {
     let w = subprocessEnv();
-    return Cwe({
+    return mergeChildProcessEnv({
       attached: A,
       beforeSettings: xC(),
       ownEnv: oIt(O, P6e(o)),
       childrenSee: (E) => Object.hasOwn(w, E),
     });
   };
-  return pXn({
+  return createDeviceHookServingManager({
     memory: O,
     now: Date.now,
     setTimer: sIt,
-    capture: () => tSt(nSt()),
+    capture: () => captureHookSettings(createHookSettingsAccessor()),
     buildInventory: ({
       captured: w,
       instanceId: E,
@@ -2027,14 +2027,14 @@ function ze({
         {
           realpath: te,
           open: D,
-          home: vwe(W),
+          home: getHomeDirFromEnv(W),
           defaultShell: hD(),
           shellPrefix: rIt(W),
         },
       );
     },
-    mintInstanceId: () => iXn(),
-    displayName: qMe(),
+    mintInstanceId: () => createInstanceId(),
+    displayName: getDeviceDisplayName(),
     cloudSessionId: d,
     launchDir: e,
     launchDirReal: () => M,
@@ -2045,15 +2045,15 @@ function ze({
       return w === null ? null : { root: w, real: await te(w).catch(() => w) };
     },
     servingMuted: R,
-    commonWriteRoots: () => Sde(e),
-    scopeWriteRoots: (w, E) => vne(e, w, E),
-    scopeWriteEntries: (w) => $X(w, e),
+    commonWriteRoots: () => getCommonWriteRoots(e),
+    scopeWriteRoots: (w, E) => getScopedWriteRoots(e, w, E),
+    scopeWriteEntries: (w) => getWriteEntriesForSource(w, e),
     scopeSettingsFile: (w) => getSettingsFilePathForSource(w) ?? null,
     sendRequest: async (w, { timeoutMs: E }) => {
       try {
         return await r(w, { timeoutMs: E, background: !0 });
       } catch (p) {
-        let S = iD(p);
+        let S = classifyRemoteControlError(p);
         if (S === "timeout" || S === "aborted")
           throw Error("timeout: no answer from the cloud worker in time");
         if (S === "disconnected" || S === "not_connected")
@@ -2061,16 +2061,16 @@ function ze({
         throw p;
       }
     },
-    ensureConsent: K7n({
-      deps: RY(C),
+    ensureConsent: createEnsureConsent({
+      deps: createConsentStore(C),
       pin: o.consentPin,
       onNotAsked: (w) => {
         (logEvent("tengu_device_hooks_consent_notice", {}),
           _({ line: Wn(w), level: "info" }));
       },
-      isStoreInReach: (w) => WMe(vY(), w, te),
+      isStoreInReach: (w) => isConsentStoreInReach(getDeviceHooksConsentFilePath(), w, te),
       onUntrustedStore: (w) => {
-        let E = an(vY());
+        let E = sanitizeForDisplay(getDeviceHooksConsentFilePath());
         _({
           line:
             w === "writable"
@@ -2209,15 +2209,15 @@ function Ast(e) {
           D = await R.current();
         if (e.syncElsewhere !== !1) return "unknown";
         let M = [...re(D), ...C];
-        if (M.some((F) => F === S4e || !F.startsWith("/"))) return "unknown";
+        if (M.some((F) => F === ROOT_PATH || !F.startsWith("/"))) return "unknown";
         let H = o.consentPath();
         if (!H.startsWith("/")) return "unknown";
-        let O = await WMe(H, M, o.realpath);
+        let O = await isConsentStoreInReach(H, M, o.realpath);
         if (O === !1) return "outside";
         if (O === "unresolvable") return "unknown";
         let A = [H, await o.realpath(H).catch(() => H)];
-        if (Ih(A, _)) return "in_launch_dir";
-        return Ih(A, [...t.syncRoots]) ? "in_sync_root" : "in_other_root";
+        if (isAnyPathWithinRoots(A, _)) return "in_launch_dir";
+        return isAnyPathWithinRoots(A, [...t.syncRoots]) ? "in_sync_root" : "in_other_root";
       } catch {
         return "unknown";
       }
@@ -2274,14 +2274,14 @@ function vst(e) {
         logError(E);
       }
     }),
-    C = e.registerCleanup(() => R.unregister(zMe)),
+    C = e.registerCleanup(() => R.unregister(UNREGISTER_TIMEOUT_MS)),
     D = e.subscribeSettingsChanges((E) => {
       if (Vn.has(E)) R.settingsChanged();
     }),
     M = k.onStoppedWhileRunning(() =>
       R.requestRegistration("stopped_while_running"),
     ),
-    O = (e.subscribeConsent ?? ((E) => V7n(e.memory.consentAnnounced, E)))(
+    O = (e.subscribeConsent ?? ((E) => subscribeConsentAnnouncements(e.memory.consentAnnounced, E)))(
       (E) => R.consentDecided(E),
     ),
     A = (E) => () => {
@@ -2297,7 +2297,7 @@ function vst(e) {
     callbacks: {
       onForwardedHookCallback: (E) => {
         k.handleForwardedHook(E);
-        let p = eK(E.callbackId)?.instanceId,
+        let p = parseDeviceHookId(E.callbackId)?.instanceId,
           { registeredInstanceId: S, instanceId: L } = R.snapshot();
         if (p !== void 0 && (p === S || p === L)) R.activity();
       },
@@ -2315,7 +2315,7 @@ function vst(e) {
     dispose: () => {
       if (w) return;
       ((w = !0), F(), _(), D(), M(), O(), C());
-      let E = R.unregister(zMe);
+      let E = R.unregister(UNREGISTER_TIMEOUT_MS);
       R.dispose();
       let p = e.registerCleanup(() => E);
       (E.then(p, p), k.dispose());
@@ -2341,8 +2341,8 @@ function kst({ folder: e, attempts: o, lastError: d }) {
   let t = d === void 0 ? void 0 : truncateWithEllipsis(d.replace(/\s+/g, " ").trim());
   return {
     folder: e,
-    title: pT["sync_offline.title"],
-    body: pT["sync_offline.body"],
+    title: CLOUD_SESSION_CONSENT_MESSAGES["sync_offline.title"],
+    body: CLOUD_SESSION_CONSENT_MESSAGES["sync_offline.body"],
     attempts: o,
     ...(t !== void 0 && t !== "" && { lastError: t }),
   };
@@ -2442,7 +2442,7 @@ function xst({
             ));
         },
         (F) => {
-          let w = iD(F);
+          let w = classifyRemoteControlError(F);
           if (
             (n(
               `[remote] The create's ${o} permission mode push was not taken (${w}): ${formatSingleLineText(l(F), { maxCodeUnits: 200 })}`,

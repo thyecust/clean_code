@@ -15,7 +15,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { Tie } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { vk, DX, sVn, ajt, tfn, MX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isPathOutsideRoot, resolveRealpathAllowMissing, openFileForWrite, assertRegularFilePath, assertOpenFileMatchesPath, convertSchemaToJsonSchema } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { HooksError } from "../Hooks钩子/chunk-bzqqe6xh.js";
 import { readEmbeddedAssetSync } from "../../01-核心基础设施/共享小工具-未细化/embedded-text-asset.js";
 import { isRecord } from "../../01-核心基础设施/共享小工具-未细化/is-record.js";
@@ -33,10 +33,10 @@ async function M(o, e, r) {
   let t = z(o, e),
     a = (s) => new HooksError(`${t}: ${s}`);
   try {
-    await ajt(t, a);
-    let s = await sVn(t);
+    await assertRegularFilePath(t, a);
+    let s = await openFileForWrite(t);
     try {
-      (await tfn(s, t, { realRoot: o, refused: a }),
+      (await assertOpenFileMatchesPath(s, t, { realRoot: o, refused: a }),
         await s.truncate(0),
         await s.writeFile(r, "utf8"));
     } finally {
@@ -241,13 +241,13 @@ var ho = async (o, e) => {
       .filter((i) => i.isMcp !== !0)
       .map((i) => ({
         name: i.name,
-        inputSchema: i.inputJSONSchema ?? MX(i.inputSchema),
+        inputSchema: i.inputJSONSchema ?? convertSchemaToJsonSchema(i.inputSchema),
         ...(i.outputSchema !== void 0 && { outputSchema: outputJsonSchemaOf(i.outputSchema) }),
       })),
     l = new Set(s.map((i) => i.name.split("__")[1] ?? i.name)),
-    p = await DX(t),
+    p = await resolveRealpathAllowMissing(t),
     h = await realpath(r).catch(() => r);
-  if (!vk(relative(r, t)) && vk(relative(h, p)))
+  if (!isPathOutsideRoot(relative(r, t)) && isPathOutsideRoot(relative(h, p)))
     return d(
       `Did not write ${y} or ${f}: ${t} resolves outside the project (${p}).`,
     );

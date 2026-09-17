@@ -124,23 +124,23 @@ import { createDecModeTracker, isLowMemory, killPtySocket } from "./chunk-gnmy62
 import { getDaemonLockPath, getVerifiedDaemonLock, stopDaemonLockHolder, describeStopFailure, describeUnknownOriginLock } from "./daemon-lock.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import {
-  Du,
-  vO,
+  parsePastedPlaceholders,
+  findAgentByType,
   getBuiltInAgents,
   isBuiltInAgent,
   getAgentDefinitionsWithOverrides,
   clearAgentDefinitionsCache,
-  oVn,
-  e_t,
-  LKe,
-  Hde,
-  KX,
-  KLe,
-  Pde,
-  r_t,
-  v3,
-  FKe,
-  m6t,
+  formatForkSourceKey,
+  resolveWorktreeCleanupRoot,
+  claudeWorktreeLockPid,
+  mayReleaseWorktreeLock,
+  listRegisteredWorktrees,
+  getAgentWorktreeChanges,
+  IDENTITY_CHANGED_SUMMARY,
+  UNVERIFIED_WORKTREE_SUMMARY,
+  removeAgentWorktree,
+  getDefaultRemoteRef,
+  passesCommitSafetyChecks,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { sendToUdsSocket, listAllLiveSessions } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { wtn, B0e, ktn } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
@@ -2129,7 +2129,7 @@ async function di(e, t, o, r, s, c, d) {
     process.stderr
       .write(`warning: --bg manages the session id; ignoring --session-id (use --resume <id> to continue an existing session)
 `);
-  let Oe = O ? vO((await getAgentDefinitionsWithOverrides(o ?? getCwd(), d)).activeAgents, O) : void 0;
+  let Oe = O ? findAgentByType((await getAgentDefinitionsWithOverrides(o ?? getCwd(), d)).activeAgents, O) : void 0;
   if (O && !Oe && t === "shell")
     process.stderr
       .write(`warning: no agent named '${O}' \u2014 spawning with default template
@@ -2248,7 +2248,7 @@ async function di(e, t, o, r, s, c, d) {
         ...(de && { CLAUDE_BG_MEMORY_TOGGLED_OFF: "1" }),
         ...(Re && {
           CLAUDE_CODE_RESUME_SOURCE_ALIVE: ge
-            ? oVn(ge, De || "1", He)
+            ? formatForkSourceKey(ge, De || "1", He)
             : De || "1",
         }),
       },
@@ -3976,7 +3976,7 @@ async function U$n(e) {
   return Object.fromEntries(r);
 }
 async function EPt(e, t, o, r) {
-  let s = Du(e).filter((v) => t[v.id]?.type === "image");
+  let s = parsePastedPlaceholders(e).filter((v) => t[v.id]?.type === "image");
   if (s.length === 0) return e;
   let c = getJobDir(o),
     d = (v) => {
@@ -5418,7 +5418,7 @@ var Zi = {
       "is locked \u2014 in use by another live session, or locked by hand",
     occupied: "is the working directory of a live Claude Code session",
     remove_failed: "could not be removed",
-    unverified: `${r_t} \u2014 remove the directory manually, or delete from the agents view to discard it`,
+    unverified: `${UNVERIFIED_WORKTREE_SUMMARY} \u2014 remove the directory manually, or delete from the agents view to discard it`,
     shared_record:
       "is also recorded by another finished session \u2014 its files may be that session's work",
     identity_changed:
@@ -5475,10 +5475,10 @@ async function e4(e, t = {}, o) {
       N,
       T,
       D,
-      { dirty: J, gitError: te } = await KLe(E, void 0, {
+      { dirty: J, gitError: te } = await getAgentWorktreeChanges(E, void 0, {
         hookBased: r.worktreeHookBased,
       }),
-      K = e_t(E, r.originCwd) ?? void 0,
+      K = resolveWorktreeCleanupRoot(E, r.originCwd) ?? void 0,
       ce = await realpath(E).catch(() => E),
       pe = Qi(ce);
     p =
@@ -5487,14 +5487,14 @@ async function e4(e, t = {}, o) {
       t.discardUnpushed.worktreeDigest === pe &&
       (await un(ce, t.discardUnpushed.headSha));
     let be = t.force === !0 || p,
-      ve = !te && K ? await KX(K).catch(() => null) : null,
+      ve = !te && K ? await listRegisteredWorktrees(K).catch(() => null) : null,
       je;
     for (let Re of ve ?? [])
       if ((await realpath(Re.worktreePath).catch(() => Re.worktreePath)) === ce) {
         je = Re;
         break;
       }
-    let de = LKe(je?.lockReason);
+    let de = claudeWorktreeLockPid(je?.lockReason);
     if (await Vi(e, ce, E, o))
       ((k = "in_use"),
         n(
@@ -5521,7 +5521,7 @@ async function e4(e, t = {}, o) {
           : `deleteJob: could not verify ${E} against sibling records \u2014 refusing until records are readable`,
         { level: "warn" },
       );
-    } else if (!(await Hde(je?.lockReason)) && !(de !== null && c.has(de)))
+    } else if (!(await mayReleaseWorktreeLock(je?.lockReason)) && !(de !== null && c.has(de)))
       ((k = "live_lock"),
         n(
           `deleteJob: ${E} is locked by a live Claude Code process, or with a reason we did not write (${je?.lockReason}) \u2014 not ours to remove`,
@@ -5551,7 +5551,7 @@ async function e4(e, t = {}, o) {
       !te &&
       K &&
       !p &&
-      !(await m6t(E, await FKe(K), { primaryCheckoutVouches: !0 }))
+      !(await passesCommitSafetyChecks(E, await getDefaultRemoteRef(K), { primaryCheckoutVouches: !0 }))
     ) {
       if ((await Hr(e, ce, E, { includeUnsettled: !1 }, o)) === "claimed")
         ((k = "unpushed_shared"),
@@ -5580,9 +5580,9 @@ async function e4(e, t = {}, o) {
           return;
         })));
     else {
-      let Re = e_t(E, r.originCwd) ?? void 0,
+      let Re = resolveWorktreeCleanupRoot(E, r.originCwd) ?? void 0,
         De = (r.originCwd ? findGitRoot(r.originCwd) : null) ?? void 0,
-        ge = await v3(
+        ge = await removeAgentWorktree(
           E,
           r.worktreeBranch,
           Re,
@@ -5602,7 +5602,7 @@ async function e4(e, t = {}, o) {
       if (ge.outcome === "failed")
         ((k = ge.needsForce
           ? "unverified"
-          : ge.errorSummary === Pde
+          : ge.errorSummary === IDENTITY_CHANGED_SUMMARY
             ? "identity_changed"
             : "remove_failed"),
           (N = ge.needsForce ? void 0 : ge.errorSummary));

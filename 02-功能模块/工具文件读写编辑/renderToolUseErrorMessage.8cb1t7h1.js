@@ -19,7 +19,7 @@ import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
 import { ToolErrorMessage } from "../../03-入口与运行时/会话UI(REPL)/tool-result-display.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import { JDe, Igt, ide, tLe, Mgt, $4n, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DIFF_CONTEXT_LINES, offsetHunkLineNumbers, findActualOldString, matchOldStringQuoteStyle, applyEditToFileContents, readFileContextAroundString, extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
@@ -89,8 +89,8 @@ function renderToolUseRejectedMessage(r, s) {
 }
 function renderToolUseErrorMessage(r, s) {
   let { verbose: i } = s;
-  if (!i && typeof r === "string" && Lr(r, "tool_use_error")) {
-    let a = Lr(r, "tool_use_error");
+  if (!i && typeof r === "string" && extractTagContent(r, "tool_use_error")) {
+    let a = extractTagContent(r, "tool_use_error");
     if (a?.includes("File has not been read yet"))
       return e(ToolResultRow, {
         children: e(t, { dimColor: !0, children: "File must be read first" }),
@@ -189,9 +189,9 @@ function y(ce) {
 }
 async function x(r, s, i, a) {
   try {
-    let o = await $4n(r, s, JDe);
+    let o = await readFileContextAroundString(r, s, DIFF_CONTEXT_LINES);
     if (o === null || o.truncated || o.content === "") {
-      let { patch: M } = Mgt({
+      let { patch: M } = applyEditToFileContents({
         filePath: r,
         fileContents: s,
         oldString: s,
@@ -199,9 +199,9 @@ async function x(r, s, i, a) {
       });
       return { patch: M, firstLine: null, fileContent: void 0 };
     }
-    let l = ide(o.content, s) || s,
-      c = tLe(s, l, i),
-      { patch: m } = Mgt({
+    let l = findActualOldString(o.content, s) || s,
+      c = matchOldStringQuoteStyle(s, l, i),
+      { patch: m } = applyEditToFileContents({
         filePath: r,
         fileContents: o.content,
         oldString: l,
@@ -209,7 +209,7 @@ async function x(r, s, i, a) {
         replaceAll: a,
       });
     return {
-      patch: Igt(m, o.lineOffset - 1),
+      patch: offsetHunkLineNumbers(m, o.lineOffset - 1),
       firstLine: o.lineOffset === 1 ? firstLine(o.content) : null,
       fileContent: o.content,
     };

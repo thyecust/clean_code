@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { isWellFormed } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { RLe, T3, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { SEED_HOME_PACK_PATH, toCaseFoldKey, hasWindowsReservedPathComponent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { writeDiagnosticsEvent } from "../../01-核心基础设施/共享小工具-未细化/diagnostics-log.js";
 var _ =
@@ -17,9 +17,9 @@ function parseIsoTimestamp(n) {
   return _.test(n) ? Date.parse(n) : Number.NaN;
 }
 import { posix } from "path";
-var x = posix.dirname(RLe),
+var x = posix.dirname(SEED_HOME_PACK_PATH),
   p = "/mnt/user-data/working",
-  d = posix.join(p, RLe),
+  d = posix.join(p, SEED_HOME_PACK_PATH),
   MAX_HOME_SEED_FILES = 32,
   MAX_HOME_SEED_FILE_BYTES = 524288,
   MAX_HOME_SEED_TOTAL_BYTES = 2097152,
@@ -40,7 +40,7 @@ function g(n) {
     n === n.trim() &&
     Buffer.byteLength(n, "utf8") <= E &&
     !n.startsWith(".") &&
-    !TE(n) &&
+    !hasWindowsReservedPathComponent(n) &&
     !n.includes("\\") &&
     !M.test(n) &&
     !A.test(n) &&
@@ -53,7 +53,7 @@ function l(n) {
   return n.length > c.length && n.endsWith(c);
 }
 function normalizePathKey(n) {
-  return T3(n);
+  return toCaseFoldKey(n);
 }
 function F(n) {
   return l(normalizePathKey(n));

@@ -30,7 +30,7 @@ import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { areWorkflowsDisabledBySettings, areWorkflowsEnabled, isJadeCompassEnabled } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { nH, eh, Jl, RDe, Epe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAgentStopPending, isTaskLoopSettled, truncateMiddleWithMarker, formatErrorSummary, getParentPromptId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Uh, NTt, ah } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isServerFallbackDiscard } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getProjectKeyFromDir, getProjectDir } from "../Teammates团队/transcript-paths.js";
@@ -255,7 +255,7 @@ function Ee(e) {
 }
 function jr(e) {
   try {
-    return Jl(l(e));
+    return truncateMiddleWithMarker(l(e));
   } catch {
     return "non-stringifiable error";
   }
@@ -695,7 +695,7 @@ async function nr(e, r) {
 ${p.stack}`,
         { level: "error" },
       );
-    return { error: RDe(p), thrown: p };
+    return { error: formatErrorSummary(p), thrown: p };
   }
   let d = t.v;
   if (typeof d === "function")
@@ -904,7 +904,7 @@ function Vr(e) {
       } catch (Oe) {
         (_.delete(D), ie.abort());
         let { name: Re, message: _e } = F(Oe, le),
-          Ie = Jl(_e);
+          Ie = truncateMiddleWithMarker(_e);
         throw (
           w.set(D, { name: Re, message: Ie, rendered: `${Re}: ${Ie}` }),
           o.hooks.log(`${LOG_BULLET_GLYPH} workflow() failed to start: ${Ie}`),
@@ -922,7 +922,7 @@ function Vr(e) {
         throw (
           w.set(D, {
             name: ue.thrown.name,
-            message: Jl(ue.thrown.message),
+            message: truncateMiddleWithMarker(ue.thrown.message),
             rendered: ue.error,
           }),
           o.hooks.log(`${LOG_BULLET_GLYPH} ${de} failed: ${ue.error}`),
@@ -955,8 +955,8 @@ function Vr(e) {
               : typeof we.scriptPath === "string"
                 ? `workflow(${we.scriptPath})`
                 : "workflow()";
-        (o.hooks.recordFailure(`${LOG_BULLET_GLYPH} ${ye}: ${Jl(de)}`),
-          o.hooks.log(`${LOG_BULLET_GLYPH} workflow() failed to start: ${Jl(de)}`));
+        (o.hooks.recordFailure(`${LOG_BULLET_GLYPH} ${ye}: ${truncateMiddleWithMarker(de)}`),
+          o.hooks.log(`${LOG_BULLET_GLYPH} workflow() failed to start: ${truncateMiddleWithMarker(de)}`));
       }
       throw le;
     }
@@ -1347,7 +1347,7 @@ class sr {
   vmErrorInfo;
   logs = [];
   log(e) {
-    if (this.logs.length < Et) this.logs.push(Jl(e));
+    if (this.logs.length < Et) this.logs.push(truncateMiddleWithMarker(e));
   }
   sink;
   killed = !1;
@@ -1621,10 +1621,10 @@ class sr {
         ...this.world
           .read({ topic: "error" }, I)
           .filter(x)
-          .map((E) => Jl(`error: ${b(E.fact)}`)),
-        ...U.map((E) => Jl(`script error: ${E.error ?? ""}`)),
+          .map((E) => truncateMiddleWithMarker(`error: ${b(E.fact)}`)),
+        ...U.map((E) => truncateMiddleWithMarker(`script error: ${E.error ?? ""}`)),
         ...j.map((E) =>
-          Jl(
+          truncateMiddleWithMarker(
             `${LOG_BULLET_GLYPH} ${typeof E.fact.name === "string" ? E.fact.name : typeof E.fact.scriptPath === "string" ? `workflow(${E.fact.scriptPath})` : "workflow()"}: ${E.error ?? ""}`,
           ),
         ),
@@ -2750,7 +2750,7 @@ name: ${e.name}`;
       return Le(e.script);
     },
     async call(e, r, t, d, o) {
-      if (r.agentId !== void 0 && nH(r.agentId))
+      if (r.agentId !== void 0 && isAgentStopPending(r.agentId))
         throw (
           logFeatureBad("subagent_launch", "workflow_spawner_stop_pending"),
           new De(
@@ -2844,7 +2844,7 @@ name: ${e.name}`;
           scriptIsVerbatimBuiltIn: I,
         },
         invokingRequestId: d?.requestId,
-        parentPromptId: Epe(r.messages, r.agentContext),
+        parentPromptId: getParentPromptId(r.messages, r.agentContext),
       };
       if (e.resumeFromRunId) {
         let D = ct(e.resumeFromRunId, r);
@@ -2979,7 +2979,7 @@ function ct(e, r) {
     if (o.type !== "local_workflow" || o.workflowRunId !== e) continue;
     if (o.status === "running")
       return `Workflow ${e} is still running (task ${d}). Stop it first with ${TASK_STOP_TOOL_NAME}({taskId: "${d}"}) before resuming.`;
-    if (!eh(d))
+    if (!isTaskLoopSettled(d))
       return o.status === "paused"
         ? `Workflow ${e} is paused but its run has not exited yet (task ${d}); its agents are being stopped. Resuming now would run two copies of its agents against the same journal \u2014 wait for it to exit.`
         : `Workflow ${e} is not running but its run has not exited yet (task ${d}). Resuming now would run two copies of its agents against the same journal. Run ${TASK_STOP_TOOL_NAME}({taskId: "${d}"}) on it or wait for it to exit.`;

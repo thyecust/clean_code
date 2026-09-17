@@ -21,7 +21,7 @@ import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { FORK_RESTRICTED_LAUNCH_FLAGS_DESCRIPTION } from "../../02-功能模块/权限系统/fork-restricted-launch-flags.js";
-import { _X, tY, isTranscriptPersistenceDisabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { selectEffectivePermissionMode, resolveProactivityLevel, isTranscriptPersistenceDisabled } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -86,8 +86,8 @@ function W(Pe) {
   let G = _(14),
     { onDone: d, prompt: c, seed: w, messages: k } = Pe,
     R = useAppStateSelector(ee),
-    v = useAppStateSelector(_X),
-    I = useAppStateSelector(tY),
+    v = useAppStateSelector(selectEffectivePermissionMode),
+    I = useAppStateSelector(resolveProactivityLevel),
     T = useAppStateSelector(oe),
     S = useAppStateSelector(se),
     L = useAppStateSelector(re),

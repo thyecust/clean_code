@@ -19,7 +19,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { withOAuth401Retry, ICn, prepareApiRequest, ht, getClaudeAIOAuthTokenOrigin, getOauthAccountInfo, isConsumerSubscriber, H, Te, ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { isAxiosError } from "../../00-第三方库/axios/axios.t0fczzmz.js";
-import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var v = 86400000,
   S = 3000,
@@ -226,7 +226,7 @@ An update to our Consumer Terms and Privacy Policy will take effect on October 8
 [ACTION REQUIRED] An update to our Consumer Terms and Privacy Policy has taken effect on October 8, 2025. You must run \`claude\` to review the updated terms.
 
 `),
-        await xn(1));
+        await gracefulShutdown(1));
   }
 }
 class RedactedGitHubToken {

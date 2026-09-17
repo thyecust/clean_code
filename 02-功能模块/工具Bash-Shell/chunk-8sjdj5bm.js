@@ -10,7 +10,7 @@
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { escapeRegExp, beforeFirst } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { J7, G9, wO, Q7, Kft, zOe, PF } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { normalizeDashCharacters, POWERSHELL_COMMAND_ALIASES, PARAMETER_PREFIX_CHARS, isParameterToken, getStatements, isNullRedirectTarget, getCommandSecurityPatterns } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { VYe, KYe, QTt, ZTt, eEt, XYe, GFe, lEt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { statSync } from "fs";
@@ -887,7 +887,7 @@ var Fe = /\.(exe|cmd|bat|com)$/;
 function Ef(e) {
   let t = e.toLowerCase();
   if (!t.includes("\\") && !t.includes("/")) t = t.replace(Fe, "");
-  let n = G9[t];
+  let n = POWERSHELL_COMMAND_ALIASES[t];
   if (n) return n.toLowerCase();
   return t;
 }
@@ -949,7 +949,7 @@ function P$t(e, t) {
   if (!e.trim()) return !1;
   if (!t) return !1;
   if (!t.valid) return !1;
-  let s = PF(t);
+  let s = getCommandSecurityPatterns(t);
   if (
     s.hasScriptBlocks ||
     s.hasSubExpressions ||
@@ -960,7 +960,7 @@ function P$t(e, t) {
     s.hasStopParsing
   )
     return !1;
-  let o = Kft(t);
+  let o = getStatements(t);
   if (o.length === 0) return !1;
   if (o.reduce((c, i) => c + i.commands.length, 0) > 1) {
     if (o.some((i) => i.commands.some((l) => xft(l.name)))) return !1;
@@ -968,7 +968,7 @@ function P$t(e, t) {
   for (let c of o) {
     if (!c || c.commands.length === 0) return !1;
     if (c.redirections.length > 0) {
-      if (c.redirections.some((u) => !u.isMerging && !zOe(u.target))) return !1;
+      if (c.redirections.some((u) => !u.isMerging && !isNullRedirectTarget(u.target))) return !1;
     }
     let i = c.commands[0];
     if (!i) return !1;
@@ -989,7 +989,7 @@ function DOe(e, t, n = "full") {
   let s = n === "full" ? O : H;
   for (let o = 0; o < e.length; o++) {
     let r = e[o];
-    if (!wO.has(r[0])) continue;
+    if (!PARAMETER_PREFIX_CHARS.has(r[0])) continue;
     if (t !== void 0 && t[o + 1] !== void 0 && t[o + 1] !== "Parameter")
       continue;
     let c = r[0] === "-" ? r : "-" + r.slice(1),
@@ -1020,7 +1020,7 @@ function LOe(e, t, n = "full") {
     o = (r) => s(r) || (n === "full" && (r.endsWith("variable") || B(r)));
   for (let r = 0; r < e.length; r++) {
     let c = e[r];
-    if (!wO.has(c[0])) continue;
+    if (!PARAMETER_PREFIX_CHARS.has(c[0])) continue;
     if (t !== void 0 && t[r + 1] !== void 0 && t[r + 1] !== "Parameter")
       continue;
     let i = c[0] === "-" ? c : "-" + c.slice(1),
@@ -1063,7 +1063,7 @@ function h(e) {
   );
 }
 function I(e) {
-  if (e.length === 0 || !(wO.has(e[0]) || e[0] === "/")) return null;
+  if (e.length === 0 || !(PARAMETER_PREFIX_CHARS.has(e[0]) || e[0] === "/")) return null;
   let t = e.indexOf(":", 1);
   if (t <= 0) return null;
   let n = RF(e.slice(t + 1)),
@@ -1169,12 +1169,12 @@ function bwe(e, t) {
   if (n.allowAllFlags) return !0;
   if (!n.safeFlags || n.safeFlags.length === 0)
     return !e.args.some((l, u) => {
-      if (r) return Q7(l, e.elementTypes?.[u + 1]);
+      if (r) return isParameterToken(l, e.elementTypes?.[u + 1]);
       return l.startsWith("-") || !1;
     });
   for (let i = 0; i < e.args.length; i++) {
     let l = e.args[i];
-    if (r ? Q7(l, e.elementTypes?.[i + 1]) : l.startsWith("-") || !1) {
+    if (r ? isParameterToken(l, e.elementTypes?.[i + 1]) : l.startsWith("-") || !1) {
       let f = r ? "-" + l.slice(1) : l;
       if (r || l.startsWith("/")) {
         let d = f.indexOf(":");
@@ -1193,7 +1193,7 @@ function bwe(e, t) {
   return !0;
 }
 function z(e, t) {
-  for (let n of t) if (n.length > 0 && n[0] !== "-" && wO.has(n[0])) return !1;
+  for (let n of t) if (n.length > 0 && n[0] !== "-" && PARAMETER_PREFIX_CHARS.has(n[0])) return !1;
   switch (e) {
     case "git":
       return Le(t);
@@ -1246,7 +1246,7 @@ function te(e, t) {
   return !0;
 }
 function R(e) {
-  return e.map((t) => J7(tw(t.replace(/`[\r\n]+\s*/g, ""))));
+  return e.map((t) => normalizeDashCharacters(tw(t.replace(/`[\r\n]+\s*/g, ""))));
 }
 function Le(e) {
   let t = R(e);
@@ -1387,7 +1387,7 @@ var eun = new Set([
     "new-object",
   ];
 function De(e) {
-  return Object.entries(G9)
+  return Object.entries(POWERSHELL_COMMAND_ALIASES)
     .filter(([, t]) => e.has(t.toLowerCase()))
     .map(([t]) => t);
 }

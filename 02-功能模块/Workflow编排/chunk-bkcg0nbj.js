@@ -35,67 +35,67 @@ import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { unwrapAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { WORKFLOW_TOOL_NAME } from "../../01-核心基础设施/共享小工具-未细化/chunk-7fcxwgtq.js";
 import {
-  Ds,
-  fUt,
-  eh,
-  mUt,
-  VGn,
-  rdn,
-  odn,
-  EUt,
-  k4e,
-  ky,
-  nX,
-  J9,
-  sw,
-  Xwe,
+  createConcurrencyLimiter,
+  registerTaskLoopChain,
+  isTaskLoopSettled,
+  registerAgentController,
+  unregisterAgentController,
+  indentTextLines,
+  indentAndEscapeForwardedTurns,
+  LINE_BREAK_PATTERN,
+  INVISIBLE_CHARS_PATTERN,
+  shouldEnableFindGrepTools,
+  resolveExploreAgentModel,
+  recordRequestUsageAndCost,
+  isBuiltInWebFetchAgent,
+  formatSavedFilesHarnessNote,
   isBuiltInAgent,
-  Jl,
-  RDe,
-  nh,
-  Yte,
-  U2,
-  a3,
+  truncateMiddleWithMarker,
+  formatErrorSummary,
+  isMcpTool,
+  getAllowedAgentTypesFromToolList,
+  getProactivityAdjustedPermissionMode,
+  getTotalTokens,
   isAgentToolPoolDenied,
   agentToolPoolDeniedMessage,
   filterDispatchableAgents,
   filterToolsByDenyRules,
-  p3,
-  _2t,
-  TX,
-  Ek,
-  Ak,
-  qv,
-  bE,
-  BVe,
-  _3,
-  kV,
-  cH,
-  Ujt,
-  uH,
-  FVn,
-  nEe,
-  sj,
-  v3,
-  o_t,
+  formatAgentQuerySource,
+  WORKFLOW_REMOTE_AGENT_TAG,
+  createInitialWebFetchSavedFiles,
+  GlobTool,
+  GrepTool,
+  addKeepaliveReason,
+  removeKeepaliveReason,
+  emitTaskProgress,
+  getNonMainAgentTaskId,
+  getSubagentModelSetting,
+  resolveSubagentModel,
+  buildPatternMatchMarker,
+  sanitizeSubagentText,
+  sanitizeStructuredValue,
+  createAgentWorktree,
+  unlockAgentWorktree,
+  removeAgentWorktree,
+  hasWorktreeChanges,
   awaitRemoteSessionResult,
   teleportToRemote,
   runAgent,
-  Dde,
-  P_t,
-  Qmn,
-  EE,
-  q6t,
-  i8n,
-  e5e,
-  dEe,
-  Lde,
-  z6t,
-  QO,
-  DEe,
-  Re,
-  xr,
-  WEe,
+  createToolDisallowMatcher,
+  getMcpServerSpecNames,
+  classifyMcpToolRule,
+  resolveAgentTools,
+  truncateSanitizedText,
+  classifySubagentSpawn,
+  reviewSubagentHandoff,
+  isTerminalApiErrorMessage,
+  adoptPublishArmsForSubagent,
+  buildProactivityOverrides,
+  buildSessionTools,
+  buildClassifierUnavailableNote,
+  createUserMessage,
+  joinTextBlocks,
+  isMessageFromDifferentModel,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ZAe, ti, eCe } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { of, kme } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
@@ -1035,11 +1035,11 @@ function Bn(t) {
         ((N = J instanceof Error ? J.name : "Error"),
           (ue = J instanceof Error ? J.message : ""),
           (pe = J instanceof Error ? J.stack : void 0));
-      let ee = RDe({ name: N, message: ue, stack: pe });
+      let ee = formatErrorSummary({ name: N, message: ue, stack: pe });
       throw (
         t.hooks.recordFailure(`${fe}: ${ee}`),
         t.hooks.log(`${LOG_BULLET_GLYPH} ${C} failed: ${ee}`),
-        Y1(Jl(ue), N, ee)
+        Y1(truncateMiddleWithMarker(ue), N, ee)
       );
     }
   });
@@ -1073,7 +1073,7 @@ function Zt(t) {
     Co +
     `
 ` +
-    rdn(t)
+    indentTextLines(t)
   );
 }
 var Vn = 2000,
@@ -1098,12 +1098,12 @@ function gn(t, l) {
 function hn(t) {
   return t
     .replace(
-      EUt,
+      LINE_BREAK_PATTERN,
       `
 `,
     )
     .replace(/\n/g, " ")
-    .replace(k4e, "")
+    .replace(INVISIBLE_CHARS_PATTERN, "")
     .replace(/`/g, "");
 }
 function kn(t) {
@@ -1119,7 +1119,7 @@ function yn(t) {
     xo +
     `
 ` +
-    odn(t.userText);
+    indentAndEscapeForwardedTurns(t.userText);
   if (t.referentTail === void 0) return l;
   return (
     l +
@@ -1128,7 +1128,7 @@ function yn(t) {
     Ao +
     `
 ` +
-    odn(t.referentTail)
+    indentAndEscapeForwardedTurns(t.referentTail)
   );
 }
 import { createHash as Ro } from "crypto";
@@ -1449,7 +1449,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     V = [],
     M = new WeakSet();
   function G(A, { log: F }) {
-    let re = Jl(A);
+    let re = truncateMiddleWithMarker(A);
     if ((V.push(re), F))
       s({
         type: "progress",
@@ -1457,7 +1457,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         data: { type: "workflow_log", message: re },
       });
   }
-  let te = Ds(1, nEe),
+  let te = createConcurrencyLimiter(1, createAgentWorktree),
     de;
   function Oe() {
     return (
@@ -1523,11 +1523,11 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     };
   function ge(A) {
     if (A) return A;
-    let F = kV();
+    let F = getSubagentModelSetting();
     return F !== "inherit" ? F : D.options.mainLoopModel;
   }
   function Pe(A, F) {
-    let re = Jl(A),
+    let re = truncateMiddleWithMarker(A),
       Ae = Ct.get(re);
     if (Ae == null)
       ((Ae = { index: ++ve, kind: F, announced: !1, title: re }),
@@ -1557,8 +1557,8 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
   let tn = _t((A) => {
       ((Xe = tot(A)), ct(Xe));
     }),
-    Bt = Ds(Ko, io),
-    Vt = Ds(Go, uo);
+    Bt = createConcurrencyLimiter(Ko, io),
+    Vt = createConcurrencyLimiter(Go, uo);
   async function xt({
     idx: A,
     promptStr: F,
@@ -1593,7 +1593,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
     if (Ne && L === void 0) return !1;
     let je = L
       ? { reason: L }
-      : await i8n({
+      : await classifySubagentSpawn({
           prompt: F,
           schemaJson: Se,
           agentType: se?.agentType != null ? String(se.agentType) : void 0,
@@ -1897,7 +1897,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       }
       let Ve = [...(U.disallowedTools ?? []), ...(bn.disallowedTools ?? [])],
         ae = be.schema ? Qo : Xo,
-        Te = be.schema && !Yte(U.tools) ? [...(U.tools ?? []), ti] : U.tools;
+        Te = be.schema && !getAllowedAgentTypesFromToolList(U.tools) ? [...(U.tools ?? []), ti] : U.tools;
       ze = isBuiltInAgent(U)
         ? {
             ...U,
@@ -1961,27 +1961,27 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           : Ke,
       yt = D.getAppState(),
       gt = getToolPermissionContext(D),
-      At = D.options.tools.filter(nh),
+      At = D.options.tools.filter(isMcpTool),
       ft = { ...gt, mode: Ue.permissionMode ?? "acceptEdits" },
-      bt = QO(ft, excludeCoordinatorCommsMcpTools(yt.mcp.tools.concat(At)), {
+      bt = buildSessionTools(ft, excludeCoordinatorCommsMcpTools(yt.mcp.tools.concat(At)), {
         skipReplFilter: !0,
         skillTools: yt.skillTools,
       }),
-      q = (v) => EE(Ue, v, !1, !1, !1, mc(Se) + 1),
+      q = (v) => resolveAgentTools(Ue, v, !1, !1, !1, mc(Se) + 1),
       _e = (v) => {
-        let $e = filterToolsByDenyRules([Ek, Ak, ...mbt([Ak.name, Ek.name])], ft).filter(
+        let $e = filterToolsByDenyRules([GlobTool, GrepTool, ...mbt([GrepTool.name, GlobTool.name])], ft).filter(
           (ie) => !v.some((Ee) => matchesToolName(Ee, ie.name)),
         );
         return $e.length > 0 ? [...v, ...$e] : v;
       },
       De = bt;
     if (Le !== void 0 && Le.length > 0) {
-      if (ky() && !q(De).resolvedTools.some((ie) => matchesToolName(ie, qe))) De = _e(De);
-      let v = P_t(Ue.mcpServers),
+      if (shouldEnableFindGrepTools() && !q(De).resolvedTools.some((ie) => matchesToolName(ie, qe))) De = _e(De);
+      let v = getMcpServerSpecNames(Ue.mcpServers),
         $e = (ie) => {
           if (ie.length === 0) return;
           let Ee = `mcp__${ie}`,
-            U = Qmn(Ee, De, v);
+            U = classifyMcpToolRule(Ee, De, v);
           if (U === null) return;
           switch (U.kind) {
             case "pool-server":
@@ -1994,7 +1994,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           }
         };
       for (let ie of Le) {
-        let Ee = Dde([ie]);
+        let Ee = createToolDisallowMatcher([ie]);
         if (De.some((le) => Ee.isToolDisallowed(le))) continue;
         let { toolName: U } = parsePermissionRule(ie);
         if (U !== U.trim() || /[\s()]/.test(U.trim()))
@@ -2081,7 +2081,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
             ) ??
             (Ve === SKILL_TOOL_NAME.toLowerCase() ? SKILL_TOOL_NAME : void 0) ??
             (he !== void 0 && Ve === ti.toLowerCase() ? ti : void 0),
-          Te = Qmn(U, De, v);
+          Te = classifyMcpToolRule(U, De, v);
         if (Te?.kind === "declared-server") {
           let le = Js(U);
           if (!(
@@ -2136,7 +2136,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
         );
       }
     }
-    if (he !== void 0 && Dde(Ue.disallowedTools).isToolDisallowed(he))
+    if (he !== void 0 && createToolDisallowMatcher(Ue.disallowedTools).isToolDisallowed(he))
       throw (
         await sleep(0),
         new R(
@@ -2146,7 +2146,7 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
           "agent() schema mode with StructuredOutput denied \u2014 spawn refused",
         )
       );
-    if (ye !== void 0 && ye.length > 0 && ky()) De = _e(De);
+    if (ye !== void 0 && ye.length > 0 && shouldEnableFindGrepTools()) De = _e(De);
     if (ye !== void 0 && ye.length > 0) {
       let v = getToolPermissionContext(D).toolAliases,
         $e = D.options.toolAliases,
@@ -2180,15 +2180,15 @@ function eo(t, l, s, m, p, k, C, I, E, fe, O, J) {
       );
     let ot = De,
       at = he ? [...ot.filter((v) => !matchesToolName(v, ti)), he] : ot,
-      Ze = cH(
-        nX(Ue, D.options.mainLoopModel),
+      Ze = resolveSubagentModel(
+        resolveExploreAgentModel(Ue, D.options.mainLoopModel),
         D.options.mainLoopModel,
         be?.model,
         gt.mode,
       ),
       et = gt.mode === "auto",
       Be = null;
-    if (be?.isolation === "worktree" && sw(Ue))
+    if (be?.isolation === "worktree" && isBuiltInWebFetchAgent(Ue))
       n(
         "[web-fetch agent] isolation:'worktree' ignored; the built-in web-fetch agent always runs as a local agent",
       );
@@ -2325,7 +2325,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
         Pn = new Set(),
         Rn = a.MAX_STRUCTURED_OUTPUT_RETRIES ?? DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES,
         Ot = Date.now(),
-        Ht = sw(Ue) ? TX() : void 0;
+        Ht = isBuiltInWebFetchAgent(Ue) ? createInitialWebFetchSavedFiles() : void 0;
       try {
         (p?.(Ve, ht),
           await kw(ae, async () => {
@@ -2333,13 +2333,13 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
               agentDefinition: Ue,
               promptMessages:
                 vn === null
-                  ? [Re({ content: $e })]
-                  : [Re({ content: vn }), Re({ content: $e })],
+                  ? [createUserMessage({ content: $e })]
+                  : [createUserMessage({ content: vn }), createUserMessage({ content: $e })],
               toolUseContext: cn,
               session: v,
               canUseTool: l,
               isAsync: !1,
-              querySource: p3(Ue.agentType, isBuiltInAgent(Ue)),
+              querySource: formatAgentQuerySource(Ue.agentType, isBuiltInAgent(Ue)),
               spawnedBySkill: D.options.spawnedBySkill ?? D.options.activeSkill,
               spawnedByForkedSkill: D.options.spawnedByForkedSkill,
               availableTools: at,
@@ -2400,9 +2400,9 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
               }
               if (we.type === "assistant") {
                 if (((An = we), Pt?.push(we), !we.isApiErrorMessage)) {
-                  (It?.responded(), (lt = a3(we.message.usage)));
+                  (It?.responded(), (lt = getTotalTokens(we.message.usage)));
                   let Fe = we.message.model;
-                  if (Fe && zt && WEe(we, zt)) nt = Fe;
+                  if (Fe && zt && isMessageFromDifferentModel(we, zt)) nt = Fe;
                 }
                 let Ge = 0;
                 for (let Fe of we.message.content) {
@@ -2443,7 +2443,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
                 durationMs: Tt + Fe,
                 resultPreview: Et(kt),
               }),
-              Lde(Ve, cn),
+              adoptPublishArmsForSubagent(Ve, cn),
               {
                 structured: kt,
                 text: "",
@@ -2528,7 +2528,7 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
       }
       let wt = An,
         On = wt
-          ? xr(
+          ? joinTextBlocks(
               wt.message.content,
               `
 `,
@@ -2536,19 +2536,19 @@ You are running in an isolated git worktree at \`${hn(Be.worktreePath)}\` (a sep
           : "",
         St;
       if (wt?.isApiErrorMessage)
-        St = q6t(uH(On, { prependMarker: !1 }).sanitized);
-      else if (((St = uH(On).sanitized), Ht))
+        St = truncateSanitizedText(sanitizeSubagentText(On, { prependMarker: !1 }).sanitized);
+      else if (((St = sanitizeSubagentText(On).sanitized), Ht))
         St = `${St}
 
-${Xwe(Ht)}`;
+${formatSavedFilesHarnessNote(Ht)}`;
       let dn = wt?.message.usage,
         Mn =
           dn && typeof dn.output_tokens === "number"
             ? dn.output_tokens
             : void 0,
         Gt = Date.now() - Ot,
-        In = pt + (lt || (wt ? a3(wt.message.usage) : 0));
-      if (!dEe(wt)) Lde(Ve, cn);
+        In = pt + (lt || (wt ? getTotalTokens(wt.message.usage) : 0));
+      if (!isTerminalApiErrorMessage(wt)) adoptPublishArmsForSubagent(Ve, cn);
       if (wt?.isApiErrorMessage) {
         let we = St || "API error";
         return (
@@ -2718,11 +2718,11 @@ ${Xwe(Ht)}`;
       }
       let U =
           he && v.structured !== void 0
-            ? FVn(v.structured, { reservedKeys: ["webFetchSavedFiles"] })
+            ? sanitizeStructuredValue(v.structured, { reservedKeys: ["webFetchSavedFiles"] })
             : void 0,
         Ve = getToolPermissionContext(D);
       if (Ve.mode === "auto") {
-        let ae = await e5e({
+        let ae = await reviewSubagentHandoff({
           agentMessages: v.agentMessages ?? [],
           tools: at,
           toolPermissionContext: Ve,
@@ -2735,7 +2735,7 @@ ${Xwe(Ht)}`;
           credentials: D.credentials,
         }).catch((Te) => {
           if (D.abortController.signal.aborted) return null;
-          return (logError(Te), { warning: DEe(""), kind: "unavailable" });
+          return (logError(Te), { warning: buildClassifierUnavailableNote(""), kind: "unavailable" });
         });
         if (ae) {
           if (he) {
@@ -2773,7 +2773,7 @@ ${v.text}`),
             toolUseID: "workflow_log",
             data: {
               type: "workflow_log",
-              message: `[${re}] ${Ujt(U.reportable)} (Matched in the string values or key names of the agent's structured output; neutralized there in place.)`,
+              message: `[${re}] ${buildPatternMatchMarker(U.reportable)} (Matched in the string values or key names of the agent's structured output; neutralized there in place.)`,
             },
           });
         if (v.webFetchSavedFiles) {
@@ -2784,7 +2784,7 @@ ${v.text}`),
               toolUseID: "workflow_log",
               data: {
                 type: "workflow_log",
-                message: `[${re}] ${Xwe(v.webFetchSavedFiles)}${Te ? "" : " (The agent's structured result is not an object, so this record is not attached to it as webFetchSavedFiles \u2014 this log line is its only carrier.)"}`,
+                message: `[${re}] ${formatSavedFilesHarnessNote(v.webFetchSavedFiles)}${Te ? "" : " (The agent's structured result is not an object, so this record is not attached to it as webFetchSavedFiles \u2014 this log line is its only carrier.)"}`,
               },
             }),
             Te)
@@ -2810,9 +2810,9 @@ ${v.text}`),
           hookBased: U,
         } = Be;
         try {
-          if (!U && ie && !(await o_t(v, ie)))
-            await v3(v, $e, Ee, !1, "workflow_tool");
-          else if (Ee) await sj(v, Ee);
+          if (!U && ie && !(await hasWorktreeChanges(v, ie)))
+            await removeAgentWorktree(v, $e, Ee, !1, "workflow_tool");
+          else if (Ee) await unlockAgentWorktree(v, Ee);
         } catch {}
       }
     }
@@ -2875,10 +2875,10 @@ ${v.text}`),
       p?.(Se, Me);
       let Le = getToolPermissionContext(D),
         { proactivityLevel: ye } = D.getAppState(),
-        Mt = U2(Le.mode, ye),
+        Mt = getProactivityAdjustedPermissionMode(Le.mode, ye),
         Ue =
-          se.model || kV() !== "inherit"
-            ? cH(void 0, D.options.mainLoopModel, se.model, Le.mode, ne(re))
+          se.model || getSubagentModelSetting() !== "inherit"
+            ? resolveSubagentModel(void 0, D.options.mainLoopModel, se.model, Le.mode, ne(re))
             : void 0,
         yt = He ? gn(t.messages, t.agentId) : null,
         gt = !He
@@ -2894,10 +2894,10 @@ ${v.text}`),
         At = await teleportToRemote({
           initialMessage: gt,
           source: "workflow_remote_agent",
-          tags: [_2t],
+          tags: [WORKFLOW_REMOTE_AGENT_TAG],
           description: re,
           branchName: await Oe(),
-          ...z6t(lo(Mt), ye),
+          ...buildProactivityOverrides(lo(Mt), ye),
           model: Ue,
           signal: Me.signal,
           onBundleFail: (et) => {
@@ -2919,9 +2919,9 @@ ${v.text}`),
           modelUsage: De,
           toolCalls: ot,
         } = await awaitRemoteSessionResult(ze, Me.signal, D.credentials),
-        at = uH(ft).sanitized;
+        at = sanitizeSubagentText(ft).sanitized;
       for (let [et, Be] of Object.entries(De ?? {}))
-        J9(
+        recordRequestUsageAndCost(
           Be.costUSD,
           {
             ...of,
@@ -2950,7 +2950,7 @@ ${v.text}`),
       }
       if (
         (he("done", {
-          tokens: _e ? a3(_e) : 0,
+          tokens: _e ? getTotalTokens(_e) : 0,
           toolCalls: ot,
           durationMs: Date.now() - L,
           resultPreview: Et(se.schema ? bt : at),
@@ -2959,7 +2959,7 @@ ${v.text}`),
       )
         return ee(bt);
       if (getToolPermissionContext(D).mode === "auto" && at) {
-        let et = await e5e({
+        let et = await reviewSubagentHandoff({
           agentMessages: [],
           tools: t.options.tools,
           toolPermissionContext: getToolPermissionContext(D),
@@ -2972,7 +2972,7 @@ ${v.text}`),
           credentials: D.credentials,
         }).catch((Be) => {
           if (Me.signal.aborted) return null;
-          return (logError(Be), { warning: DEe(""), kind: "unavailable" });
+          return (logError(Be), { warning: buildClassifierUnavailableNote(""), kind: "unavailable" });
         });
         if (et) {
           if (et.kind !== "unavailable") {
@@ -3119,7 +3119,7 @@ function or(t) {
   for (let s of Object.keys(t)) {
     let m = Reflect.get(t, s);
     if (typeof m !== "string") continue;
-    let p = Jl(m);
+    let p = truncateMiddleWithMarker(m);
     if (p !== m) ((l ??= { ...t }), Reflect.set(l, s, p));
   }
   return l ?? t;
@@ -3330,7 +3330,7 @@ ${ee}`,
       logs: k,
       failures: E.hooks.getFailures(),
       durationMs: Date.now() - p,
-      error: RDe({ name: ue, message: pe, stack: ee }),
+      error: formatErrorSummary({ name: ue, message: pe, stack: ee }),
     };
   } finally {
     J?.();
@@ -3417,11 +3417,11 @@ function Rqe(t) {
         de.type === "local_workflow" &&
         de.workflowRunId === s &&
         de.status !== "running" &&
-        !(isTerminalTaskStatus(de.status) && !eh(te))
+        !(isTerminalTaskStatus(de.status) && !isTaskLoopSettled(te))
       )
         E.taskRegistry.remove(te);
   }
-  let r = _3(E.agentId, E.taskRegistry),
+  let r = getNonMainAgentTaskId(E.agentId, E.taskRegistry),
     e = registerWorkflowTask({
       taskId: l,
       script: m,
@@ -3439,8 +3439,8 @@ function Rqe(t) {
       toolUseId: O,
       startTime: t.startTime,
     }),
-    c = fUt(l, e.abortController, { settleRequiresEmptyAgentAssociations: !0 });
-  if (r && !ke()) qv(r, `workflow:${l}`, E.taskRegistry);
+    c = registerTaskLoopChain(l, e.abortController, { settleRequiresEmptyAgentAssociations: !0 });
+  if (r && !ke()) addKeepaliveReason(r, `workflow:${l}`, E.taskRegistry);
   let _ = { ...E, abortController: e.abortController ?? E.abortController },
     T = t.v2Run;
   if (T) E.taskRegistry.update(l, (te) => ({ ...te, v2Run: T }));
@@ -3465,7 +3465,7 @@ function Rqe(t) {
               Bt = Date.now(),
               Vt = !tn || Bt - te >= lr;
             if (Vt) te = Bt;
-            BVe({
+            emitTaskProgress({
               taskId: l,
               toolUseId: O,
               description: ct
@@ -3487,8 +3487,8 @@ function Rqe(t) {
           de.onProgress(ge.data);
         },
         ut = (ge, Pe) => {
-          if (Pe) (e.agentControllers?.set(ge, Pe), mUt(l, ge, Pe));
-          else (e.agentControllers?.delete(ge), VGn(l, ge));
+          if (Pe) (e.agentControllers?.set(ge, Pe), registerAgentController(l, ge, Pe));
+          else (e.agentControllers?.delete(ge), unregisterAgentController(l, ge));
         },
         ne = T
           ? await T.run(
@@ -3666,7 +3666,7 @@ function Rqe(t) {
       if (T && !T.isKilled && T.isActive) T.reopen?.();
       if (t.suppressCompletionNotification)
         (E.taskRegistry.update(l, (ge) => ({ ...ge, notified: !0 })),
-          bE(r, `workflow:${l}`, E.taskRegistry));
+          removeKeepaliveReason(r, `workflow:${l}`, E.taskRegistry));
       else
         enqueueWorkflowNotification({
           taskId: l,
@@ -3714,7 +3714,7 @@ function Rqe(t) {
           t.suppressCompletionNotification)
         )
           (E.taskRegistry.update(l, (ne) => ({ ...ne, notified: !0 })),
-            bE(r, `workflow:${l}`, E.taskRegistry));
+            removeKeepaliveReason(r, `workflow:${l}`, E.taskRegistry));
         else
           enqueueWorkflowNotification({
             taskId: l,

@@ -19,7 +19,7 @@ import { gHn, ts } from "../../01-核心基础设施/设置-配置/设置-配置
 import { isUnattendedBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { UP_ARROW_GLYPH, DOWN_ARROW_GLYPH } from "../权限系统/chunk-e4pfvp7x.js";
 import { getSessionAccessToken } from "../认证-OAuth登录/credential-file-descriptors.js";
-import { gr, ka, ow, Y2, BM, cw, gmn, _yt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeDisplayTextWithoutRedaction, sanitizeDisplayText, isUnconfiguredMcpServer, formatNeedsText, getMcpServerTools, formatMcpScopeLocation, collectAgentMcpServers, getClaudeAiMcpEverConnectedSet } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { useAppStateSession, useAppStateSelector, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
@@ -127,7 +127,7 @@ function rt({ agentServer: s, onCancel: i, onComplete: l }) {
       try {
         (await Nt().performMCPOAuthFlow(s.name, S.config, j, T.signal),
           f(
-            `Authentication successful for ${gr(s.name)}. The server will connect when the agent runs.`,
+            `Authentication successful for ${sanitizeDisplayTextWithoutRedaction(s.name)}. The server will connect when the agent runs.`,
           ));
       } catch (te) {
         if (
@@ -306,11 +306,11 @@ var rn = 12,
 function Mo(s) {
   switch (s) {
     case "project":
-      return { label: "Project MCPs", path: cw(s) };
+      return { label: "Project MCPs", path: formatMcpScopeLocation(s) };
     case "user":
-      return { label: "User MCPs", path: cw(s) };
+      return { label: "User MCPs", path: formatMcpScopeLocation(s) };
     case "local":
-      return { label: "Local MCPs", path: cw(s) };
+      return { label: "Local MCPs", path: formatMcpScopeLocation(s) };
     case "enterprise":
       return { label: "Enterprise MCPs" };
     case "managed":
@@ -475,7 +475,7 @@ function wt({
       return ln(a);
     }, [s]),
     { claudeAiServers: S, unusedClaudeAiServers: T } = V(() => {
-      let a = _yt(),
+      let a = getClaudeAiMcpEverConnectedSet(),
         M = [],
         pe = [];
       for (let g of s) {
@@ -539,7 +539,7 @@ function wt({
     Wt = V(() => {
       let a = b ? void 0 : new Set(T.map((M) => M.name));
       return s.some(
-        (M) => M.client.type === "failed" && !ow(M.client) && !a?.has(M.name),
+        (M) => M.client.type === "failed" && !isUnconfiguredMcpServer(M.client) && !a?.has(M.name),
       );
     }, [s, T, b]),
     Ee = V(() => {
@@ -1064,7 +1064,7 @@ function He(fs) {
     [ko, hs] = d(!1),
     dn;
   if (B[2] !== Po.allAgents)
-    ((dn = gmn(Po.allAgents)), (B[2] = Po.allAgents), (B[3] = dn));
+    ((dn = collectAgentMcpServers(Po.allAgents)), (B[2] = Po.allAgents), (B[3] = dn));
   else dn = B[3];
   let xe = dn,
     un;
@@ -1074,7 +1074,7 @@ function He(fs) {
     $o;
   if (B[6] !== ie || B[7] !== Q.tools) {
     $o = {};
-    for (const fn of ie) $o[fn.name] = BM(Q.tools, fn.name).length;
+    for (const fn of ie) $o[fn.name] = getMcpServerTools(Q.tools, fn.name).length;
     ((B[6] = ie), (B[7] = Q.tools), (B[8] = $o));
   } else $o = B[8];
   let Do = $o,
@@ -1089,7 +1089,7 @@ function He(fs) {
           .mcpAuthModule();
         let vs = await new ys(Tt.name, Cs).tokens().catch(Rn);
         let bs = getSessionAccessToken() !== null && Tt.type === "connected";
-        let xs = ts(Tt) && BM(Q.tools, Tt.name).length > 0;
+        let xs = ts(Tt) && getMcpServerTools(Q.tools, Tt.name).length > 0;
         return Boolean(vs) || bs || xs;
       };
       let Oo = async function Oo() {
@@ -1239,7 +1239,7 @@ function He(fs) {
     case "server-menu": {
       let Z;
       if (B[36] !== Q.tools || B[37] !== y.server.name)
-        ((Z = BM(Q.tools, y.server.name)),
+        ((Z = getMcpServerTools(Q.tools, y.server.name)),
           (B[36] = Q.tools),
           (B[37] = y.server.name),
           (B[38] = Z));
@@ -1416,9 +1416,9 @@ function Ft(oi) {
         try {
           let Pn = kt.getState().mcp.clients.find((si) => si.name === W);
           if (!Pn) {
-            (Je(`MCP server "${gr(W)}" not found`),
+            (Je(`MCP server "${sanitizeDisplayTextWithoutRedaction(W)}" not found`),
               ze(!1),
-              le(`MCP server "${gr(W)}" not found`));
+              le(`MCP server "${sanitizeDisplayTextWithoutRedaction(W)}" not found`));
             return;
           }
           if (getBlockingMcpServerState(Pn) === "disabled") {
@@ -1429,26 +1429,26 @@ function Ft(oi) {
           let ii = await $t(W);
           bb91: switch (ii.client.type) {
             case "connected": {
-              (ze(!1), le(`Successfully reconnected to ${gr(W)}`));
+              (ze(!1), le(`Successfully reconnected to ${sanitizeDisplayTextWithoutRedaction(W)}`));
               break bb91;
             }
             case "needs-auth": {
-              if ((Je(`${gr(W)} requires authentication`), ze(!1), isUnattendedBgSession())) {
+              if ((Je(`${sanitizeDisplayTextWithoutRedaction(W)} requires authentication`), ze(!1), isUnattendedBgSession())) {
                 let ai = await parkCommandUntilAttended(
                   Ot,
-                  Y2(
-                    `authenticate ${gr(W)} \u2014 open this session and run /mcp`,
+                  formatNeedsText(
+                    `authenticate ${sanitizeDisplayTextWithoutRedaction(W)} \u2014 open this session and run /mcp`,
                   ),
                   "MCP authentication needed",
                   Dt,
                 );
                 le(
-                  `${gr(W)} requires authentication. Open this session and run /mcp to authenticate.` +
+                  `${sanitizeDisplayTextWithoutRedaction(W)} requires authentication. Open this session and run /mcp to authenticate.` +
                     (ai ? ' It now shows "needs input" in agent view.' : ""),
                 );
               } else
                 le(
-                  `${gr(W)} requires authentication. Use /mcp to authenticate.`,
+                  `${sanitizeDisplayTextWithoutRedaction(W)} requires authentication. Use /mcp to authenticate.`,
                 );
               break bb91;
             }
@@ -1456,9 +1456,9 @@ function Ft(oi) {
             case "pending":
             case "failed":
             case "disabled": {
-              (Je(`Failed to reconnect to ${gr(W)}`),
+              (Je(`Failed to reconnect to ${sanitizeDisplayTextWithoutRedaction(W)}`),
                 ze(!1),
-                le(`Failed to reconnect to ${gr(W)}`));
+                le(`Failed to reconnect to ${sanitizeDisplayTextWithoutRedaction(W)}`));
               break bb91;
             }
             default:
@@ -1466,15 +1466,15 @@ function Ft(oi) {
         } catch (he) {
           let Lt = he;
           let Ut = Lt instanceof Error ? Lt.message : String(Lt);
-          if ((Je(Ut), ze(!1), Lt instanceof mi)) le(ka(Ut));
+          if ((Je(Ut), ze(!1), Lt instanceof mi)) le(sanitizeDisplayText(Ut));
           else if (mayHaveRemoteClient(Et))
             (n(`mcp reconnect (typed) error for ${Qn(W)}: ${Ut}`, {
               level: "error",
             }),
               le(
-                `Error reconnecting to ${gr(W)} (detail withheld on this connection).`,
+                `Error reconnecting to ${sanitizeDisplayTextWithoutRedaction(W)} (detail withheld on this connection).`,
               ));
-          else le(`Error: ${ka(Ut)}`);
+          else le(`Error: ${sanitizeDisplayText(Ut)}`);
         }
       };
       _o();
@@ -1616,23 +1616,23 @@ function Wo(Li) {
             ? (Ho ??
                 `All MCP servers are already ${Ae ? "enabled" : "disabled"}`)
             : Ve.length === 0
-              ? `MCP server "${gr(ee)}" not found`
+              ? `MCP server "${sanitizeDisplayTextWithoutRedaction(ee)}" not found`
               : Ve.some(Xn)
-                ? `MCP server "${gr(ee)}" is pending approval \u2014 approve it via /mcp first`
+                ? `MCP server "${sanitizeDisplayTextWithoutRedaction(ee)}" is pending approval \u2014 approve it via /mcp first`
                 : Ae && Ln === !0
                   ? Ve.some(ts)
                     ? formatStaleDisableMessage(ee)
                     : formatDisabledElsewhereMessage(ee)
                   : !Ae && Ln === !1
                     ? formatDisableNotPersistedMessage(ee)
-                    : `MCP server "${gr(ee)}" is already ${Ae ? "enabled" : "disabled"}`,
+                    : `MCP server "${sanitizeDisplayTextWithoutRedaction(ee)}" is already ${Ae ? "enabled" : "disabled"}`,
         );
         return;
       }
       if (ee !== "all") {
         Promise.all(Fo.map((ji) => Ke(ji.name)))
           .then(
-            () => Oe(`MCP server "${gr(ee)}" ${Ae ? "enabled" : "disabled"}`),
+            () => Oe(`MCP server "${sanitizeDisplayTextWithoutRedaction(ee)}" ${Ae ? "enabled" : "disabled"}`),
             (Fi) => Oe(formatMcpToggleError(Fi, ee, qe, { persistsOffBox: mayHaveRemoteClient(zt) })),
           )
           .catch(logError);

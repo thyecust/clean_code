@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { $M, SYNCED_FILE_WRITE_MODE, T3, Pht, o$, ej, TE } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSafeRelativePath, SYNCED_FILE_WRITE_MODE, toCaseFoldKey, hasCaseFoldHazard, readSeedFile, isWindowsLikePlatform, hasWindowsReservedPathComponent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { l, A, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { n } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -19,7 +19,7 @@ import { join as ae } from "path";
 var vze = 1e5,
   Rze = 104857600;
 function pI(e) {
-  return $M(e) && !e.includes("\\") && !(ej() && TE(e)) && !Pht(e);
+  return isSafeRelativePath(e) && !e.includes("\\") && !(isWindowsLikePlatform() && hasWindowsReservedPathComponent(e)) && !hasCaseFoldHazard(e);
 }
 async function a3n(e, r) {
   try {
@@ -31,7 +31,7 @@ async function a3n(e, r) {
 }
 function l3n(e) {
   let r = e.flatMap(({ path: i, identity: o }) =>
-      o === null ? [] : [{ path: i, key: `${T3(i)}\x00${o}` }],
+      o === null ? [] : [{ path: i, key: `${toCaseFoldKey(i)}\x00${o}` }],
     ),
     s = r.reduce((i, { key: o }) => i.set(o, (i.get(o) ?? 0) + 1), new Map());
   return new Set(
@@ -45,7 +45,7 @@ function c3n(e) {
     .map((r) => ({ tag: r[0] ?? "", path: r.slice(2) }));
 }
 async function P9(e, r, s, i = null) {
-  let o = await o$(e, r, s, i);
+  let o = await readSeedFile(e, r, s, i);
   return o.kind === "read"
     ? { ...computeContentDigests(o.content), content: o.content, mode: o.mode }
     : null;

@@ -25,7 +25,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { useAppStateSelectorUnchecked } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { PM, ede, _ne, IX, cde, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatPrUrlWithTemplate, GITHUB_APP_INSTALL_URL, checkCloudSessionEligibility, formatCloudSessionEligibilityError, registerRemoteAgentTask, teleportToRemote, subscribeRemoteSessionToPR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-92g8hxqw.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import { createAbortController } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
@@ -84,7 +84,7 @@ async function Je(a, n, { signal: c, onProgress: w }) {
         ? [
             void 0,
             void 0,
-            await _ne({
+            await checkCloudSessionEligibility({
               cwd: h,
               storageV5: n.storageV5,
               credentials: n.credentials,
@@ -94,7 +94,7 @@ async function Je(a, n, { signal: c, onProgress: w }) {
         : await Promise.all([
             getBranch(h),
             getDefaultBranch(h),
-            _ne({ cwd: h, storageV5: n.storageV5, credentials: n.credentials }),
+            checkCloudSessionEligibility({ cwd: h, storageV5: n.storageV5, credentials: n.credentials }),
             hasUnpushedCommits(h),
           ]);
     if (m === void 0 && !f && G === H)
@@ -103,7 +103,7 @@ async function Je(a, n, { signal: c, onProgress: w }) {
         "on_default_branch",
       );
     if (!b.eligible) {
-      let s = b.errors.map(IX).join(`
+      let s = b.errors.map(formatCloudSessionEligibilityError).join(`
 `);
       return O(
         `can't start autofix \u2014
@@ -248,7 +248,7 @@ ${B.join(`
     w?.({ step: "subscribing" });
     let Oe = await subscribeRemoteSessionToPR(j.id, `${W}/${M}`, v);
     if (c.aborted) return (archiveRemoteSession(j.id), ie());
-    cde({
+    registerRemoteAgentTask({
       remoteTaskType: "autofix-pr",
       session: { id: j.id, title: j.title },
       command: Ne,
@@ -266,7 +266,7 @@ ${B.join(`
     if (!Oe.ok)
       se.push(
         Oe.reason === "github_app_not_installed"
-          ? `Autofix is on, but webhook events won't arrive until the Claude GitHub app is installed on ${W}/${M}: ${ede}`
+          ? `Autofix is on, but webhook events won't arrive until the Claude GitHub app is installed on ${W}/${M}: ${GITHUB_APP_INSTALL_URL}`
           : "WARNING: Failed to turn on autofix for this PR",
       );
     if (!f) {
@@ -337,7 +337,7 @@ async function Ke(a, n, c, w) {
   else if (f)
     b.push(
       Y.reason === "github_app_not_installed"
-        ? `Webhook events won't arrive until the Claude GitHub app is installed on this repo. Install it at ${ede}, then retry \u2014 falling back to a 30-minute poll for now.`
+        ? `Webhook events won't arrive until the Claude GitHub app is installed on this repo. Install it at ${GITHUB_APP_INSTALL_URL}, then retry \u2014 falling back to a 30-minute poll for now.`
         : "Couldn't subscribe this session to PR webhooks \u2014 falling back to a 30-minute poll. Check the debug log for [bridge] subscribe-pr.",
     );
   else
@@ -601,7 +601,7 @@ function ye(or) {
                   children: [
                     "PR:",
                     " ",
-                    e(ct, { url: PM(ae.url, Le), children: ae.ref }),
+                    e(ct, { url: formatPrUrlWithTemplate(ae.url, Le), children: ae.ref }),
                   ],
                 }),
             ],

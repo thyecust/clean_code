@@ -25,20 +25,20 @@ import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
 import { relocateBgSessionCwd } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
 import { JYe, ON, Df, relativePath, patternWithRoot, normalizeTrustedSymlink } from "./Memory-CLAUDE.md.vx19drc8.js";
 import {
-  gV,
-  kl,
+  getProjectDirsUpToHome,
+  settingsChangeDetector,
   SandboxManager,
   permissionRuleSourceDisplayString,
-  QBt,
-  pu,
-  y5e,
-  Na,
+  bumpRenderVersions,
+  setSessionCwd,
+  discoverDynamicSkills,
+  wrapSystemReminder,
   relocateSessionTranscript,
-  ZMe,
-  eNe,
-  Ny,
-  bXn,
-  U9t,
+  getGitWorktreeRoots,
+  isInMainRepoOutsideWorktree,
+  getSessionMemoryFiles,
+  buildMemoryPromptSection,
+  loadMemoryFilesForDirectory,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { updateHooksConfigSnapshot } from "../Skills技能/chunk-sapykxw7.js";
 import { skillChangeDetector } from "../文件监听-Watch/skill-change-detector.js";
@@ -159,15 +159,15 @@ function cdRuleRefusalMessage(e, t, o = (s) => s, c) {
 async function N(e, t, o) {
   if (a.CLAUDE_CODE_DISABLE_CLAUDE_MDS) return "";
   let c = new Set();
-  for (let m of await Ny(e, !1, o)) c.add(pf(m.path));
+  for (let m of await getSessionMemoryFiles(e, !1, o)) c.add(pf(m.path));
   let s = [],
     l = t;
   while (l !== parse(l).root) (s.push(l), (l = dirname(l)));
-  let r = ZMe(t),
+  let r = getGitWorktreeRoots(t),
     d = [];
   for (let m of s.reverse())
-    d.push(...(await U9t(m, t, c, { skipProject: eNe(m, r) })));
-  return bXn(d);
+    d.push(...(await loadMemoryFilesForDirectory(m, t, c, { skipProject: isInMainRepoOutsideWorktree(m, r) })));
+  return buildMemoryPromptSection(d);
 }
 async function relocateSession(e, t, o, c) {
   let s = getCwd(),
@@ -185,7 +185,7 @@ async function relocateSession(e, t, o, c) {
         }
       }),
     );
-  (Yu(t), pu(t), ES(getCwd()));
+  (Yu(t), setSessionCwd(t), ES(getCwd()));
   let m = !0;
   try {
     await relocateSessionTranscript(c);
@@ -200,7 +200,7 @@ async function relocateSession(e, t, o, c) {
         { level: "error" },
       );
     }
-    if (C) throw (pu(s), ES(l), p);
+    if (C) throw (setSessionCwd(s), ES(l), p);
   }
   if (m)
     try {
@@ -212,7 +212,7 @@ async function relocateSession(e, t, o, c) {
     }
   Gse();
   try {
-    await kl.rehome();
+    await settingsChangeDetector.rehome();
   } catch (p) {
     n(
       `directory move: re-targeting the settings watcher failed (continuing with the previous watch): ${p}`,
@@ -220,7 +220,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   try {
-    (updateHooksConfigSnapshot(), kl.notifyChange("projectSettings", { prevCwd: l }));
+    (updateHooksConfigSnapshot(), settingsChangeDetector.notifyChange("projectSettings", { prevCwd: l }));
   } catch (p) {
     n(
       `directory move: re-resolving settings and hooks for the new directory failed (continuing): ${p}`,
@@ -228,7 +228,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   try {
-    await y5e(await gV("skills", getCwd()));
+    await discoverDynamicSkills(await getProjectDirsUpToHome("skills", getCwd()));
   } catch (p) {
     n(
       `directory move: registering the new directory's skills failed (continuing without them): ${p}`,
@@ -247,7 +247,7 @@ async function relocateSession(e, t, o, c) {
     clearIsGitMemoFor(e),
     getReplBridgeHandle()?.refreshGitBranch?.(),
     SandboxManager.refreshConfig(),
-    QBt(),
+    bumpRenderVersions(),
     logEvent("tengu_cd_command", { source: fromEnum(o) }));
   let y = "";
   try {
@@ -259,7 +259,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   let g = escapePromptText(t),
-    w = Na(
+    w = wrapSystemReminder(
       `The session's working directory has changed to ${g} (${o === "cd_command" ? "via /cd" : "by the user"}). The environment block at the start of this conversation still names the ` +
         "previous directory \u2014 that information is stale. All tool calls and " +
         `relative paths now resolve from ${g}. Project settings (permission rules, hooks), project MCP servers, and project skills now come from ${g}; its CLAUDE.md, if any, follows below. Environment variables set by the previous directory's ` +
@@ -276,7 +276,7 @@ async function relocateSession(e, t, o, c) {
     );
   }
   let P = v
-    ? Na(
+    ? wrapSystemReminder(
         `Note: ${g} declares project permission rules and/or additional directories in its settings, but they are NOT applied \u2014 the workspace is trusted only through a parent directory's grant, and project-scoped grants require trusting this directory explicitly. Tool calls those rules would have pre-approved will ask for permission.`,
       )
     : "";
@@ -291,13 +291,13 @@ async function relocateSession(e, t, o, c) {
   };
 }
 function reapplyProjectSettingsAfterTrustChange() {
-  (Gse(), updateHooksConfigSnapshot(), kl.notifyChange("projectSettings", { trustFlip: !0 }));
+  (Gse(), updateHooksConfigSnapshot(), settingsChangeDetector.notifyChange("projectSettings", { trustFlip: !0 }));
 }
 function withGatedGrantsApplied(e) {
   if (e.gatedNotice === "") return e.modelMessage;
   return e.modelMessage.replace(
     e.gatedNotice,
-    Na(
+    wrapSystemReminder(
       "The user trusted this directory explicitly: its project permission rules and additional directories are now applied.",
     ),
   );

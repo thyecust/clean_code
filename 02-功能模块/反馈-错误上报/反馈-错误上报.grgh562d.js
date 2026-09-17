@@ -16,7 +16,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { stripInvisibleChars, replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { an, KTe, Z6t, mEe, d5e, p5e, aWt, I3, R8n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay, sanitizeMultilineForDisplay, FEEDBACK_DETAILS_MAX_BYTES, selectRecentRequestIds, FEEDBACK_FAILURE_MODES, FEEDBACK_TASK_CATEGORIES, saveFeedbackDraft, listQueuedFeedbackDrafts, setSessionDraftCount } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { supportsShiftEnter } from "../文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
 import { useSession } from "../../01-核心基础设施/共享小工具-未细化/session-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -36,8 +36,8 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具
 F();
 var De = ["bug", "idea", "missing_capability"],
   tt = { bug: "bug", idea: "idea", missing_capability: "missing capability" },
-  Qe = [void 0, ...d5e],
-  Ze = [void 0, ...p5e];
+  Qe = [void 0, ...FEEDBACK_FAILURE_MODES],
+  Ze = [void 0, ...FEEDBACK_TASK_CATEGORIES];
 function Dt(m) {
   return m === void 0 ? "(none)" : m.replace(/_/g, " ");
 }
@@ -76,11 +76,11 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     U = useSession((n) => n.id),
     ce = b !== void 0,
     X = re(async () => {
-      let { queued: n } = await I3(void 0, K).catch(() => ({
+      let { queued: n } = await listQueuedFeedbackDrafts(void 0, K).catch(() => ({
         queued: [],
         expired: [],
       }));
-      (R8n(countMatching(n, (l) => l.source_session_id === U)), k(n));
+      (setSessionDraftCount(countMatching(n, (l) => l.source_session_id === U)), k(n));
       let a = n.length - (ce ? 0 : 1);
       return (z((l) => Math.min(l, Math.max(0, a))), n);
     }, [U, ce, K]);
@@ -98,7 +98,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     me = ce && T === J.length,
     Oe = J.length + (ce ? 1 : 0),
     Q = J[T],
-    Ke = s ? mEe(s.request_ids).length : 0,
+    Ke = s ? selectRecentRequestIds(s.request_ids).length : 0,
     Z = re(
       (n) => {
         if (n === void 0) y();
@@ -122,11 +122,11 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
           B(null),
           O({
             type: n.type,
-            title: an(n.title),
-            area: an(n.area ?? ""),
+            title: sanitizeForDisplay(n.title),
+            area: sanitizeForDisplay(n.area ?? ""),
             failureMode: n.failure_mode,
             taskCategory: n.task_category,
-            details: KTe(n.details),
+            details: sanitizeMultilineForDisplay(n.details),
           }),
           H(null),
           (Be.current = -1 / 0),
@@ -161,7 +161,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
             f ? f.map((R) => (R.draft_id === n.draft_id ? n : R)) : f,
           ));
         let { transcriptAvailable: a, ...l } = n;
-        return aWt(l, new Date(), K).then((f) => {
+        return saveFeedbackDraft(l, new Date(), K).then((f) => {
           if (!f.success)
             B(
               f.reason === "too_large"
@@ -174,9 +174,9 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     ),
     ge = re(() => {
       if (!s || !u) return s;
-      let n = an(s.title),
-        a = an(s.area ?? ""),
-        l = KTe(s.details),
+      let n = sanitizeForDisplay(s.title),
+        a = sanitizeForDisplay(s.area ?? ""),
+        l = sanitizeMultilineForDisplay(s.details),
         f = u.title === n || u.title.trim() === "" ? s.title : u.title.trim(),
         R = u.area === a ? (s.area ?? "") : u.area.trim(),
         dt =
@@ -336,7 +336,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
           let a = c;
           (O((l) =>
             l && s
-              ? { ...l, [a]: a === "details" ? KTe(s.details) : an(s[a] ?? "") }
+              ? { ...l, [a]: a === "details" ? sanitizeMultilineForDisplay(s.details) : sanitizeForDisplay(s[a] ?? "") }
               : l,
           ),
             H(null),
@@ -545,7 +545,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                 cursorOffset: Me,
                 onChange: (n) => {
                   let a = Buffer.byteLength(n, "utf8");
-                  if (a > Z6t && a >= Buffer.byteLength(u.details, "utf8")) {
+                  if (a > FEEDBACK_DETAILS_MAX_BYTES && a >= Buffer.byteLength(u.details, "utf8")) {
                     B(Te);
                     return;
                   }
@@ -592,10 +592,10 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                             wrap: "wrap",
                             children: [
                               "from ",
-                              an(s.cwd),
+                              sanitizeForDisplay(s.cwd),
                               " \xB7 session",
                               " ",
-                              an(s.source_session_id),
+                              sanitizeForDisplay(s.source_session_id),
                             ],
                           }),
                         }),
@@ -624,14 +624,14 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
                     wrap: "wrap",
                     children: [
                       "Environment info (",
-                      an(s.os),
+                      sanitizeForDisplay(s.os),
                       ", v",
-                      an(s.cli_version),
+                      sanitizeForDisplay(s.cli_version),
                       ",",
                       " ",
-                      an(s.model),
+                      sanitizeForDisplay(s.model),
                       s.effort !== void 0 &&
-                        r(N, { children: [", effort", " ", an(s.effort)] }),
+                        r(N, { children: [", effort", " ", sanitizeForDisplay(s.effort)] }),
                       s.thinking_type !== void 0 &&
                         r(N, {
                           children: [
@@ -722,7 +722,7 @@ function r0e({ messages: m, onDone: y, abortSignal: w, onWriteNew: b }) {
     }),
   });
 }
-var Te = `That edit would push Details past the ${Math.floor(Z6t / 1024)}KB limit. Trim the details first.`;
+var Te = `That edit would push Details past the ${Math.floor(FEEDBACK_DETAILS_MAX_BYTES / 1024)}KB limit. Trim the details first.`;
 function Tt(m, y) {
   return stripInvisibleChars(
     m.replace(
@@ -864,7 +864,7 @@ function Fe(Cn) {
           })
         : I
           ? e(m6e, { value: te, bold: $e, dim: qe, columns: be })
-          : e(t, { bold: $e, dimColor: qe, wrap: "wrap", children: an(te) }),
+          : e(t, { bold: $e, dimColor: qe, wrap: "wrap", children: sanitizeForDisplay(te) }),
     })),
       (ke[7] = $e),
       (ke[8] = be),
@@ -933,7 +933,7 @@ function rt(Tn) {
                 tt[ie.type],
                 "]",
                 " ",
-                an(ie.title),
+                sanitizeForDisplay(ie.title),
                 " ",
                 r(t, {
                   dimColor: !0,
@@ -941,7 +941,7 @@ function rt(Tn) {
                     it(ie.created_at),
                     " \xB7",
                     " ",
-                    an(ie.cwd),
+                    sanitizeForDisplay(ie.cwd),
                     " \xB7",
                     " ",
                     ie.transcriptAvailable

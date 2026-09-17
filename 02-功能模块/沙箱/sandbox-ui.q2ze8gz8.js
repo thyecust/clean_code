@@ -20,9 +20,9 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import {
   checkWindowsSandboxStatusAsync,
-  r3,
-  xDe,
-  L2,
+  isWindowsSandboxEnabled,
+  getSrtWinLaunchConfig,
+  formatWindowsSandboxErrorMessage,
   resolveWindowsTlsTerminateCaSource,
   willSandboxTlsTerminate,
   isInstalledWindowsTlsCaCurrent,
@@ -253,10 +253,10 @@ function Fe(Ho) {
   return { ...Ho, caTrusted: ke, caManaged: Re };
 }
 function He(ot) {
-  return { probeError: L2(l(ot), { omitCcRemedy: !0 }) };
+  return { probeError: formatWindowsSandboxErrorMessage(l(ot), { omitCcRemedy: !0 }) };
 }
 function Ue() {
-  return checkWindowsSandboxStatusAsync({ srtWin: xDe() }).then(Fe).catch(He);
+  return checkWindowsSandboxStatusAsync({ srtWin: getSrtWinLaunchConfig() }).then(Fe).catch(He);
 }
 function Ie(Te) {
   return (
@@ -265,7 +265,7 @@ function Ie(Te) {
   );
 }
 function Oe(tt) {
-  return L2(tt);
+  return formatWindowsSandboxErrorMessage(tt);
 }
 function Le(Pe) {
   return e(t, { color: "error", children: Pe }, Pe);
@@ -1166,7 +1166,7 @@ async function ps(s, u, n) {
   }
   let g = n?.trim() || "",
     w = beforeFirst(g, " ");
-  if (w === "install" && b === "windows" && r3()) {
+  if (w === "install" && b === "windows" && isWindowsSandboxEnabled()) {
     if (g !== "install")
       return (
         s(
@@ -1221,7 +1221,7 @@ async function ps(s, u, n) {
         "error",
         c,
       )(
-        `Error: Unknown subcommand "${w}". Available: ${b === "windows" && r3() ? "install, exclude" : "exclude"}`,
+        `Error: Unknown subcommand "${w}". Available: ${b === "windows" && isWindowsSandboxEnabled() ? "install, exclude" : "exclude"}`,
       );
       return (s(a), null);
     }

@@ -16,16 +16,16 @@ import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细�
 import { Bs } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import { execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import {
-  Ct,
-  dH,
-  xl,
-  Yfn,
-  Pne,
-  One,
-  nn,
-  tj,
-  kKe,
-  qO,
+  isSignalAborted,
+  getDirSyncGitExe,
+  runPinnedGit,
+  withoutGitConfigOverrides,
+  DIR_SYNC_GIT_ARGS,
+  dirSyncGitEnv,
+  GIT_OBJECT_ID_REGEX,
+  CLAUDE_REF_PREFIX,
+  isValidFullGitRefName,
+  isClaudeSessionRef,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { toInteger } from "../../01-核心基础设施/共享小工具-未细化/to-integer.js";
 import { Ha, XXe } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
@@ -86,7 +86,7 @@ async function pe(e, t, { input: r, keepBytes: i, stopPastBytes: s }) {
           }));
       };
     try {
-      let w = spawn(dH(), [...l, ...t], {
+      let w = spawn(getDirSyncGitExe(), [...l, ...t], {
         cwd: u,
         env: D(e, o.pins),
         stdio: [r === void 0 ? "ignore" : "pipe", "pipe", "pipe"],
@@ -127,7 +127,7 @@ async function N(e) {
     s =
       e.hookPins === void 0 ? await ke(e) : { kind: "pins", pins: e.hookPins };
   if (s.kind === "unlisted")
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? { kind: "refused", run: { stdout: "", stderr: "aborted" } }
       : t(`the configuration in force could not be listed (${s.detail})`);
   return {
@@ -175,7 +175,7 @@ function M({ gitDir: e, workTree: t }) {
       "--no-optional-locks",
       `--git-dir=${e}`,
       ...(t === void 0 ? [] : [`--work-tree=${t}`]),
-      ...Pne,
+      ...DIR_SYNC_GIT_ARGS,
       "-c",
       "gc.auto=0",
       "-c",
@@ -189,7 +189,7 @@ function M({ gitDir: e, workTree: t }) {
 async function me(e, t, r, i) {
   let { signal: s, timeoutMs: o } = e,
     { leadingArgs: a, cwd: c } = M(e),
-    l = await execFileNoThrowWithCwd(dH(), [...a, ...t], {
+    l = await execFileNoThrowWithCwd(getDirSyncGitExe(), [...a, ...t], {
       cwd: c,
       env: D(e, i, r.env),
       extendEnv: !1,
@@ -219,7 +219,7 @@ async function AFt(e, t, r, i = {}) {
       y = !1,
       p;
     try {
-      p = spawn(dH(), [...c, ...t], {
+      p = spawn(getDirSyncGitExe(), [...c, ...t], {
         cwd: l,
         env: D(e, s.pins, i.env),
         stdio: [i.input === void 0 ? "ignore" : "pipe", "pipe", "pipe"],
@@ -320,7 +320,7 @@ async function Qe(e, t, r, i) {
   let { signal: s, timeoutMs: o } = e,
     { leadingArgs: a, cwd: c } = M(e);
   return new Promise((l) => {
-    let u = spawn(dH(), [...a, ...t], {
+    let u = spawn(getDirSyncGitExe(), [...a, ...t], {
       cwd: c,
       env: D(e, i),
       stdio: ["ignore", r, "ignore"],
@@ -333,8 +333,8 @@ async function Qe(e, t, r, i) {
   });
 }
 function D({ gitDir: e, commonDir: t }, r, i = {}) {
-  return Yfn(
-    One({
+  return withoutGitConfigOverrides(
+    dirSyncGitEnv({
       GIT_GRAFT_FILE: "/dev/null",
       GIT_NO_REPLACE_OBJECTS: "1",
       GIT_COMMON_DIR: t ?? e,
@@ -345,7 +345,7 @@ function D({ gitDir: e, commonDir: t }, r, i = {}) {
 function Ze(e, t, r) {
   let { signal: i } = e,
     { leadingArgs: s, cwd: o } = M(e);
-  return spawn(dH(), [...s, ...t], {
+  return spawn(getDirSyncGitExe(), [...s, ...t], {
     cwd: o,
     env: D(e, r),
     stdio: ["pipe", "pipe", "ignore"],
@@ -724,7 +724,7 @@ function Mv(e, t) {
 }
 async function yO(e, t) {
   if (t.length === 0) return new Map();
-  if (!t.every(kKe)) return null;
+  if (!t.every(isValidFullGitRefName)) return null;
   let r = await on(e, [
     "for-each-ref",
     "--format=%(objectname) %(refname)",
@@ -742,17 +742,17 @@ async function yO(e, t) {
         let [a = "", c = ""] = o.split(" ");
         return { id: a, name: c };
       });
-  if (s.some((o) => !nn.test(o.id))) return null;
+  if (s.some((o) => !GIT_OBJECT_ID_REGEX.test(o.id))) return null;
   return new Map(s.filter((o) => i.has(o.name)).map((o) => [o.name, o.id]));
 }
 async function Xan(e, t, r, i) {
-  if (!qO(t) || !F(r) || (i.kind === "replace" && !F(i.current))) return !1;
+  if (!isClaudeSessionRef(t) || !F(r) || (i.kind === "replace" && !F(i.current))) return !1;
   return (
     (await on(e, ["update-ref", "--no-deref", t, r, ...ut(i)])).exitCode === 0
   );
 }
 async function K4(e, t) {
-  if (!t.every((i) => qO(i.name) && F(i.id))) return !1;
+  if (!t.every((i) => isClaudeSessionRef(i.name) && F(i.id))) return !1;
   if (t.length === 0) return !0;
   return (
     (
@@ -769,7 +769,7 @@ update ${i.name} ${i.id}
   );
 }
 async function cOe(e, t) {
-  if (!t.every(qO)) return !1;
+  if (!t.every(isClaudeSessionRef)) return !1;
   if (t.length === 0) return !0;
   return (
     (
@@ -796,7 +796,7 @@ function ut(e) {
   }
 }
 function F(e) {
-  return nn.test(e) && !Ve.test(e);
+  return GIT_OBJECT_ID_REGEX.test(e) && !Ve.test(e);
 }
 var be = 512,
   ee = { GIT_NO_LAZY_FETCH: "1" },
@@ -825,7 +825,7 @@ function RFt(e) {
 async function Re(e, t, r, i) {
   if (t.length === 0 || i <= 0 || r?.aborted === !0)
     return { pairs: [], spawns: 0 };
-  let s = await xl(
+  let s = await runPinnedGit(
       e,
       ["hash-object", "--stdin-paths"],
       r,
@@ -863,7 +863,7 @@ async function ve(e, t, r, i, s = _e) {
       ...(i === void 0 ? [] : [i]),
       AbortSignal.timeout(s),
     ]),
-    a = await xl(
+    a = await runPinnedGit(
       e,
       ["check-attr", "-z", "--stdin", ...r],
       o,
@@ -895,7 +895,7 @@ function Yan(e, t) {
   return async (r, i, s) => {
     if (!(t !== void 0 ? t.has(r) : (await te(e, [r], s)).includes(r)))
       return null;
-    let a = await xl(e, ["hash-object", "--stdin", "--path", r], s, we, ee, i, {
+    let a = await runPinnedGit(e, ["hash-object", "--stdin", "--path", r], s, we, ee, i, {
         filterDriversOff: !0,
       }),
       c = a.stdout.trim();
@@ -985,7 +985,7 @@ function Jan(e, { maxHeaderBytes: t = bt } = {}) {
       [p = "", ...m] = (y ? f.slice(1) : f).split(" ");
     return { isPrerequisite: y, id: p, name: m.join(" ") };
   });
-  if (d.some((f) => !nn.test(f.id) || (!f.isPrerequisite && f.name === "")))
+  if (d.some((f) => !GIT_OBJECT_ID_REGEX.test(f.id) || (!f.isPrerequisite && f.name === "")))
     return null;
   return {
     version: a,
@@ -1057,26 +1057,26 @@ async function St({
     t.length === 0 ||
     t.length > Fe ||
     new Set(t).size !== t.length ||
-    !t.every(kKe)
+    !t.every(isValidFullGitRefName)
   )
     return S("arguments", "tips are not distinct plain ref names");
   if (
     r.length > Ee ||
     new Set(r).size !== r.length ||
-    !r.every((k) => nn.test(k))
+    !r.every((k) => GIT_OBJECT_ID_REGEX.test(k))
   )
     return S("arguments", "prerequisites are not distinct object ids");
   if (!(i > 0)) return S("arguments", "maxBytes is not a positive number");
-  if (Ct(e.signal)) return o;
+  if (isSignalAborted(e.signal)) return o;
   let a = await yO(e, t);
   if (a === null || a.size !== t.length)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? o
       : S("tips", "a tip does not resolve to an object id");
   let c = t.map((k) => ({ name: k, id: a.get(k) ?? "" })),
     l = (k) =>
       k === null
-        ? Ct(e.signal)
+        ? isSignalAborted(e.signal)
           ? o
           : S("range", "could not look the prerequisites up")
         : k > 0
@@ -1084,7 +1084,7 @@ async function St({
           : null,
     u = [...new Set(c.map((k) => k.id)), ...r.map((k) => `^${k}`), "--"],
     d = await Pt(e, u);
-  if (Ct(e.signal)) return o;
+  if (isSignalAborted(e.signal)) return o;
   if (d.kind === "failed")
     return l(await re(e, r)) ?? S("range", Mv("rev-list", d.run));
   let f =
@@ -1093,7 +1093,7 @@ async function St({
         : { missingCount: await re(e, r), floorBytes: await Gt(e, u) },
     y = l(f.missingCount);
   if (y !== null) return y;
-  if (Ct(e.signal)) return o;
+  if (isSignalAborted(e.signal)) return o;
   if (f.floorBytes !== null && f.floorBytes > Se * i)
     return { ok: !1, reason: "too_large", sizeBytes: f.floorBytes };
   let p = d.commits,
@@ -1132,7 +1132,7 @@ async function St({
       stopPastBytes: Se * i,
     },
   );
-  if (Ct(e.signal)) return o;
+  if (isSignalAborted(e.signal)) return o;
   if (v.stopped || (v.exitCode === 0 && v.content === null))
     return { ok: !1, reason: "too_large", sizeBytes: v.bytes };
   if (v.exitCode !== 0 || v.content === null)
@@ -1151,12 +1151,12 @@ async function St({
   if (_.length > i) return { ok: !1, reason: "too_large", sizeBytes: _.length };
   let A = await yO(e, t);
   if (A === null)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? o
       : S("header", "could not re-read the tips after packing");
   if (!t.every((k) => A.get(k) === a.get(k)))
-    return Ct(e.signal) ? o : S("header", "a tip moved while packing");
-  if (Ct(e.signal)) return o;
+    return isSignalAborted(e.signal) ? o : S("header", "a tip moved while packing");
+  if (isSignalAborted(e.signal)) return o;
   return {
     ok: !0,
     content: _,
@@ -1212,11 +1212,11 @@ function Ie(e) {
 }
 function Ae(e) {
   return {
-    commits: new Set(e.filter((t) => nn.test(t))),
+    commits: new Set(e.filter((t) => GIT_OBJECT_ID_REGEX.test(t))),
     forkPoints: e
       .filter((t) => t.startsWith("-"))
       .map((t) => t.slice(1))
-      .filter((t) => nn.test(t)),
+      .filter((t) => GIT_OBJECT_ID_REGEX.test(t)),
   };
 }
 async function Tt(e, t, r) {
@@ -1296,10 +1296,10 @@ async function Ot({
   if (
     r.size === 0 ||
     !(o > 0) ||
-    !c.every(kKe) ||
-    !l.every(qO) ||
+    !c.every(isValidFullGitRefName) ||
+    !l.every(isClaudeSessionRef) ||
     new Set(l).size !== l.length ||
-    !i.every((_) => nn.test(_)) ||
+    !i.every((_) => GIT_OBJECT_ID_REGEX.test(_)) ||
     (s !== "all" && !Lt(s.glob))
   )
     return E(
@@ -1314,10 +1314,10 @@ async function Ot({
     y = t.subarray(f.packOffset);
   if (y.length < vt || y.subarray(0, xe.length).toString("latin1") !== xe)
     return { ok: !1, reason: "not_a_bundle" };
-  if (Ct(e.signal)) return a;
+  if (isSignalAborted(e.signal)) return a;
   let p = await $e(e, f.prerequisites);
   if (p === null)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? a
       : E("prerequisites", "could not look the prerequisites up");
   let m = await Me(
@@ -1326,7 +1326,7 @@ async function Ot({
     u,
   );
   if (m === null)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? a
       : E("prerequisites", "could not walk from the prerequisites");
   let R = f.prerequisites.filter((_) => p.includes(_) || m.includes(_));
@@ -1348,7 +1348,7 @@ async function Ot({
     jt(b, w),
     ne(b, (_) => _.startsWith(Ce), { directories: !0, olderThanMs: w }),
     ne(
-      C(e.gitDir, ...tj.split("/").filter(Boolean)),
+      C(e.gitDir, ...CLAUDE_REF_PREFIX.split("/").filter(Boolean)),
       (_) => _.endsWith(".lock"),
       { recursive: !0 },
     ),
@@ -1407,7 +1407,7 @@ async function Ft({
       ],
       { input: r },
     );
-  if (Ct(e.signal)) return u;
+  if (isSignalAborted(e.signal)) return u;
   if (f.exitCode === void 0) return l(E("unpack", Mv("index-pack", f)));
   if (f.exitCode !== 0)
     return (
@@ -1421,7 +1421,7 @@ async function Ft({
     },
     p = await Nt(`${d}.idx`, r.readUInt32BE(8));
   if (p === null)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? u
       : l(E("tips", "could not read the received pack index"));
   let m = dedupe(t.refs.map((g) => g.id));
@@ -1446,7 +1446,7 @@ async function Ft({
       )
       .filter((g) => g !== "");
   if (R.exitCode !== 0 || b.length !== m.length)
-    return Ct(e.signal) ? u : l(E("tips", "could not look the tips up"));
+    return isSignalAborted(e.signal) ? u : l(E("tips", "could not look the tips up"));
   if (!b.every((g) => g === "commit"))
     return (
       n("dir-sync: a tip the header names is not a commit"),
@@ -1454,7 +1454,7 @@ async function Ft({
     );
   let w = await Ut(e, p, c, y.env);
   if (w === null)
-    return Ct(e.signal)
+    return isSignalAborted(e.signal)
       ? u
       : l(E("walk", "could not read the delivered commits"));
   if (w > 0)
@@ -1488,7 +1488,7 @@ async function Ft({
           .filter((P) => P !== "" && !P.startsWith("-")),
       ),
     x = await B("--objects");
-  if (Ct(e.signal)) return u;
+  if (isSignalAborted(e.signal)) return u;
   if (x.exitCode === void 0) return l(E("walk", Mv("rev-list", x)));
   if (x.exitCode !== 0)
     return (
@@ -1500,7 +1500,7 @@ async function Ft({
     k = countMatching([..._], (g) => !p.has(g));
   if (A === 0 && k > 0) {
     let g = await B("--objects-edge-aggressive");
-    if (Ct(e.signal)) return u;
+    if (isSignalAborted(e.signal)) return u;
     if (g.exitCode === void 0) return l(E("walk", Mv("rev-list", g)));
     if (g.exitCode !== 0)
       return (
@@ -1516,7 +1516,7 @@ async function Ft({
       ),
       l({ ok: !1, reason: "unpack_failed", detail: I })
     );
-  if (Ct(e.signal)) return u;
+  if (isSignalAborted(e.signal)) return u;
   try {
     await writeFile(
       `${d}${Yce}`,
@@ -1733,7 +1733,7 @@ async function s3n(e) {
                 `
 `,
               )
-              .filter((c) => nn.test(c)),
+              .filter((c) => GIT_OBJECT_ID_REGEX.test(c)),
           );
         } catch (a) {
           if (W(a)) return new Set();
@@ -1837,7 +1837,7 @@ async function Ut(e, t, r, i) {
         .flatMap((y) => y.split(" ").slice(1)),
     );
   }
-  let u = dedupe(l.filter((d) => nn.test(d) && !t.has(d)));
+  let u = dedupe(l.filter((d) => GIT_OBJECT_ID_REGEX.test(d) && !t.has(d)));
   return (await Me(e, u, r, i))?.length ?? null;
 }
 async function dOe(e, t) {

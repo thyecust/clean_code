@@ -71,17 +71,17 @@ import { uuidSlugFromUrl } from "../../01-核心基础设施/核心工具-常量
 import { reconcileInheritPermissionMode } from "../权限系统/inherit-permission-mode-flag.js";
 import { isMainLoopActive } from "../../01-核心基础设施/核心工具-并发与缓存/核心工具-并发与缓存.fvfzq6k5.js";
 import {
-  wwe,
-  EO,
-  Jgt,
-  $Te,
-  zS,
-  OI,
+  isKnownSlashCommand,
+  isSyntheticPromptText,
+  parseForkSourceAlive,
+  applySessionName,
+  sessionNeedsStore,
+  getAssistantMessageText,
   getMaterializedSessionFile,
   worktreeStateSignals,
-  nN,
-  rN,
-  oR,
+  createCacheControl,
+  usesOneHourPromptCacheTtl,
+  sideQuery,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSessionTranscriptPath } from "../Teammates团队/transcript-paths.js";
 import { CRON_CREATE_TOOL_NAME } from "../Cron-定时任务/chunk-mk3zm4ew.js";
@@ -203,8 +203,8 @@ function findLatestRealUserAsk(e) {
       t.type === "user" &&
       !t.isMeta &&
       typeof t.message.content === "string" &&
-      !EO(t.message.content) &&
-      !wwe(t.message.content, () => !0),
+      !isSyntheticPromptText(t.message.content) &&
+      !isKnownSlashCommand(t.message.content, () => !0),
   );
   return r?.type === "user" && typeof r.message.content === "string"
     ? r.message.content
@@ -229,7 +229,7 @@ function markTurnActive(e, r, t) {
 }
 function de(e, r) {
   if (!isActingAsBgJob()) return;
-  let t = zS.current();
+  let t = sessionNeedsStore.current();
   if (!t?.overlay) return;
   e.bridgeWriteChain = e.bridgeWriteChain
     .then(() => e.inFlight ?? void 0)
@@ -292,7 +292,7 @@ async function ve(e, r, t) {
   if (!o) return;
   if (o.tempo === "active") return;
   if (isSettled(o) && !r) return;
-  let l = zS.current();
+  let l = sessionNeedsStore.current();
   if (
     o.tempo === "blocked" &&
     isOverlayNeeds(o) &&
@@ -384,7 +384,7 @@ async function setWorktreeOwnership(e, r, t) {
 function ensurePermissionBridge(e) {
   if (e.permissionBridgeSubscribed) return () => {};
   e.permissionBridgeSubscribed = !0;
-  let r = zS.subscribe((o) => {
+  let r = sessionNeedsStore.subscribe((o) => {
       if (!isActingAsBgJob()) return;
       let l = getOwnJobShortId();
       e.bridgeWriteChain = e.bridgeWriteChain
@@ -584,7 +584,7 @@ Avoid these (already taken): ${[...l].join(", ")}`
       _ = Ae(),
       [w, k] = Ee(_),
       m = (
-        await oR({
+        await sideQuery({
           querySource: "agent_namer",
           model: _,
           thinking: w,
@@ -654,7 +654,7 @@ Skip generic verbs like fix/add/update. Respond with ONLY the label.${f}`,
         { name: d },
         e.storageV5,
       ),
-        $Te(d, "auto", e.storageV5).catch(logError),
+        applySessionName(d, "auto", e.storageV5).catch(logError),
         logFeatureOk("job_name"));
     })
     .catch(logJobWriteError)),
@@ -740,7 +740,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
             o
               .slice(Be)
               .filter((T) => !T.isApiErrorMessage)
-              .map((T) => OI(T) || re(T))
+              .map((T) => getAssistantMessageText(T) || re(T))
               .filter(Boolean).join(`
 
 `),
@@ -774,7 +774,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
       F = o
         .slice(D)
         .filter((v) => !v.isApiErrorMessage)
-        .map((v) => OI(v) || re(v))
+        .map((v) => getAssistantMessageText(v) || re(v))
         .filter(Boolean).join(`
 
 `);
@@ -844,7 +844,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
     } = await scanLinkRecords(V, E?.children ?? null, te, e.storageV5),
     O = new Date().toISOString(),
     p = (await readJobState(w, e.storageV5)) ?? E,
-    J = Jgt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
+    J = parseForkSourceAlive(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     L = gNe(),
     U =
       Rpe(L.items) === Rpe(p?.fan)
@@ -962,7 +962,7 @@ async function et(e, r, t, s, o, l, d, c, f) {
   if (!E?.name && ge && d === "llm" && !e.nameInFlight) {
     let D = o
         .filter((x) => !x.isApiErrorMessage)
-        .map(OI)
+        .map(getAssistantMessageText)
         .find(Boolean),
       F = D ? "" : summarizeToolCalls(o),
       v = truncateToCodePoints(qr(D ?? (F ? `[calling ${F}]` : "")), 500);
@@ -1030,8 +1030,8 @@ async function classify(e, r) {
         toolSummary: o,
         minsInState: l,
       }),
-      E = nN({
-        ttl: rN("agent_classifier") ? "1h" : void 0,
+      E = createCacheControl({
+        ttl: usesOneHourPromptCacheTtl("agent_classifier") ? "1h" : void 0,
         scope: Vme() ? "global" : void 0,
       }),
       V = Ae(),
@@ -1042,7 +1042,7 @@ async function classify(e, r) {
       m = q + 1;
       let O;
       try {
-        O = await oR({
+        O = await sideQuery({
           querySource: "agent_classifier",
           model: V,
           thinking: te,

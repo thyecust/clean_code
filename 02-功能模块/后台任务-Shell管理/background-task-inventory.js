@@ -12,7 +12,7 @@ import { K, kg } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { truncate, formatDuration } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getSessionProjectDir } from "../MCP客户端/mcp-task-metadata.js";
-import { bp, qDe, Vp, STe, a$, lEe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isLocalBashTask, TASK_TYPE_LABELS, isLiveBackgroundTask, isIdleTeammateTask, isTaskAutoReactArmed, isMonitorTaskLeaseLive } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { parseCronExpression, getNextCronFireDate, formatCronSchedule } from "./scheduled-tasks.js";
 import { gNe } from "./chunk-7wsy8vxb.js";
 import { formatBackgroundTaskSummary } from "../Teammates团队/background-task-summary.js";
@@ -44,11 +44,11 @@ function h(e) {
 function buildBackgroundTaskItems(e, { includeDream: o = !1 } = {}) {
   let n = [];
   for (let t of Object.values(e)) {
-    if (!Vp(t) || t.type === "remote_agent") continue;
+    if (!isLiveBackgroundTask(t) || t.type === "remote_agent") continue;
     if (!o && t.type === "dream") continue;
     if (t.type === "monitor_ws" && t.ambient) continue;
-    if (STe(t)) continue;
-    n.push({ label: qDe[t.type], detail: truncate(t.description, c, !0) });
+    if (isIdleTeammateTask(t)) continue;
+    n.push({ label: TASK_TYPE_LABELS[t.type], detail: truncate(t.description, c, !0) });
   }
   return (n.push(...l()), n);
 }
@@ -68,17 +68,17 @@ function buildInFlightTaskItems() {
   }
   if (o.includes("auto_mode_scan"))
     n.push({
-      label: qDe.auto_mode_scan,
+      label: TASK_TYPE_LABELS.auto_mode_scan,
       detail: "environment scan for /auto-mode-setup",
     });
   return (n.push(...l()), n);
 }
 function S(e) {
-  return e.type === "monitor_ws" && e.ambient === !0 && !a$(e);
+  return e.type === "monitor_ws" && e.ambient === !0 && !isTaskAutoReactArmed(e);
 }
 function d(e) {
   return Object.values(e)
-    .filter(Vp)
+    .filter(isLiveBackgroundTask)
     .filter((o) => o.type !== "remote_agent" && o.type !== "dream")
     .filter((o) => !S(o));
 }
@@ -96,13 +96,13 @@ function T(e) {
   return !0;
 }
 function m(e) {
-  return a$(e) && e.frameLive !== void 0;
+  return isTaskAutoReactArmed(e) && e.frameLive !== void 0;
 }
 function isBgExitHandoffEnabled() {
   return isTaskAdoptionEnabled() && !a.CLAUDE_CODE_DISABLE_BG_EXIT_HANDOFF;
 }
 function p(e) {
-  return a$(e) && lEe(e);
+  return isTaskAutoReactArmed(e) && isMonitorTaskLeaseLive(e);
 }
 function hasCarriedCommentMonitor(e) {
   return Object.values(e).some(p) || f();
@@ -115,7 +115,7 @@ function classifyBackgroundActivity(e, o) {
     t = Object.values(e).filter((i) => T(i) && !(n && m(i)));
   if (t.length === 0)
     return !n && f() ? { kind: "comment_monitor", activeTasks: !1 } : void 0;
-  return { kind: t.every(a$) ? "comment_monitor" : "tasks", activeTasks: !0 };
+  return { kind: t.every(isTaskAutoReactArmed) ? "comment_monitor" : "tasks", activeTasks: !0 };
 }
 function summarizeBackgroundTasks(e) {
   let o = d(e),
@@ -143,7 +143,7 @@ function summarizeBackgroundTasks(e) {
   };
 }
 function g(e) {
-  return bp(e) && e.kind === "monitor" ? "monitor" : e.type;
+  return isLocalBashTask(e) && e.kind === "monitor" ? "monitor" : e.type;
 }
 function summarizeAdoptableTasks(e, o) {
   let n = d(e),

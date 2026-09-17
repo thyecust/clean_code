@@ -57,31 +57,31 @@ import { matchesToolName, findToolByName, buildTool } from "../权限系统/chun
 import { ewt } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
 import { LIST_AGENTS_TOOL_NAME } from "./list-agents-tool-constants.js";
 import {
-  nH,
-  xn,
+  isAgentStopPending,
+  gracefulShutdown,
   isCustomAgent,
-  BS,
-  sne,
-  hd,
-  tde,
-  h2t,
-  Agt,
-  nr,
-  lde,
-  PX,
-  x3,
-  nY,
-  gH,
-  P3,
-  UEe,
-  npe,
-  rpe,
+  enqueueCommand,
+  degradeRestoredHostContexts,
+  isInProcessTeammateTask,
+  isHandbackProvenanceEnabled,
+  formatSubagentHandbackContent,
+  isKnownObserverTask,
+  isLocalAgentTask,
+  enqueueTaskPendingMessage,
+  dropApiInvalidAssistantBlocks,
+  BoundedTtlCache,
+  findTeammateTaskByAgentId,
+  isBridgeEvent,
+  runToolUse,
+  dropUnresolvedToolUseMessages,
+  filterWhitespaceOnlyAssistantMessages,
+  filterOrphanedThinkingMessages,
   readAgentMetadata,
   getCurrentSessionPeerName,
   getCurrentSessionOffBoxPeerName,
   getCurrentSessionPeerNameFor,
   getAgentTranscript,
-  Epe,
+  getParentPromptId,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { Sbt, $Ae, UAe, V3t, dK, BAe, bbt, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
@@ -197,8 +197,8 @@ async function Fe({
     N,
     K = [],
     Y = !1;
-  for await (let X of P3(i, _, q, r, () => new Date().toISOString())) {
-    if (gH(X)) continue;
+  for await (let X of runToolUse(i, _, q, r, () => new Date().toISOString())) {
+    if (isBridgeEvent(X)) continue;
     if (X.message.type === "attachment") {
       if (X.message.attachment.type === "hook_deferred_tool") Y = !0;
       else K.push(X.message);
@@ -290,9 +290,9 @@ async function Xe({
       },
     );
   if (_.abortController.signal.aborted) throw new Ve();
-  if (N) (sne(N.messages), ewt(N.messages));
+  if (N) (degradeRestoredHostContexts(N.messages), ewt(N.messages));
   if (!N || N.messages.length === 0) q = "no_transcript";
-  let K = N ? npe(rpe(UEe(PX(N.messages, { site: "agent_resume" })))) : [],
+  let K = N ? filterWhitespaceOnlyAssistantMessages(filterOrphanedThinkingMessages(dropUnresolvedToolUseMessages(dropApiInvalidAssistantBlocks(N.messages, { site: "agent_resume" })))) : [],
     Y = _bt(_.contentReplacementState, K, N?.contentReplacements ?? []),
     W;
   if (r.customAgentType) {
@@ -514,7 +514,7 @@ function gs(e) {
 }
 var Ye = gs(ke),
   Ms = gs(us);
-class pe extends x3 {}
+class pe extends BoundedTtlCache {}
 function Ne(e) {
   return [e.to, e.message];
 }
@@ -765,9 +765,9 @@ function Ee(e, t) {
   for (let [_, i] of r.agentNameRegistry)
     if (i === t) return { from: _, displayName: _ };
   let d = r.tasks[t];
-  if (hd(d))
+  if (isInProcessTeammateTask(d))
     return { from: d.identity.agentName, displayName: d.identity.agentName };
-  return { from: t, displayName: nr(d) ? d.agentType : t };
+  return { from: t, displayName: isLocalAgentTask(d) ? d.agentType : t };
 }
 var Ie = {
   data: {
@@ -1015,7 +1015,7 @@ async function zs(e, t) {
       r)
     ) {
       let Y = t.getAppState(),
-        W = nY(r, Y.tasks);
+        W = findTeammateTaskByAgentId(r, Y.tasks);
       if (W?.abortController)
         (W.abortController.abort(),
           n(
@@ -1029,7 +1029,7 @@ async function zs(e, t) {
   } else {
     if (r) {
       let Y = t.getAppState(),
-        W = nY(r, Y.tasks);
+        W = findTeammateTaskByAgentId(r, Y.tasks);
       if (W?.abortController)
         return (
           n(
@@ -1047,7 +1047,7 @@ async function zs(e, t) {
         );
     }
     setImmediate(async () => {
-      await xn(0, "other");
+      await gracefulShutdown(0, "other");
     });
   }
   return {
@@ -1613,8 +1613,8 @@ var SendMessageTool = buildTool({
       } = { display: void 0, inlineHandback: void 0, ...e },
       i = (w) => b({ success: !0, message: w });
     if (d) {
-      if (tde()) {
-        let w = h2t(
+      if (isHandbackProvenanceEnabled()) {
+        let w = formatSubagentHandbackContent(
           d.content,
           d.harnessNoteCount,
           d.harnessTailCount,
@@ -1646,7 +1646,7 @@ ${w[0].text}`,
   },
   async call(e, t, p, r) {
     let d = t.agentId;
-    if (d !== void 0 && nH(d))
+    if (d !== void 0 && isAgentStopPending(d))
       throw (
         logFeatureBad("subagent_launch", "send_message_spawner_stop_pending"),
         Error(
@@ -1658,7 +1658,7 @@ ${w[0].text}`,
       de({ route: h, startedAt: _, errorClass: I, ...D });
     }
     let w = isHarborKiteModeEmitEnabled() ? classifyPermissionMode(getToolPermissionContext(t)) : void 0;
-    if (d !== void 0 && Agt(t.session, d))
+    if (d !== void 0 && isKnownObserverTask(t.session, d))
       return (
         i("unresolved", "not_reachable"),
         {
@@ -2024,7 +2024,7 @@ ${w[0].text}`,
       o.kind === "agent-stopped" ||
       o.kind === "agent-evicted"
     ) {
-      if (Agt(t.session, o.agentId))
+      if (isKnownObserverTask(t.session, o.agentId))
         return (i("unresolved", "not_reachable"), Ie);
       let h;
       try {
@@ -2229,7 +2229,7 @@ ${M}`,
         I = o.kind === "mailbox" ? (o.displayName ?? o.recipientName) : e.to;
       if (t.agentId) {
         let E = t.getAppState().tasks[t.agentId];
-        if (nr(E) || t.agentContext?.agentType !== "teammate")
+        if (isLocalAgentTask(E) || t.agentContext?.agentType !== "teammate")
           return (
             i("mailbox", "not_reachable"),
             {
@@ -2364,7 +2364,7 @@ ${M}`,
             }
           );
         return (
-          BS({
+          enqueueCommand({
             mode: "prompt",
             agentId: ze(),
             value: Z,
@@ -2385,7 +2385,7 @@ ${M}`,
       }
       case "agent-live":
         return (
-          lde(o.agentId, Z, t.taskRegistry, { origin: le, isMeta: !0 }),
+          enqueueTaskPendingMessage(o.agentId, Z, t.taskRegistry, { origin: le, isMeta: !0 }),
           i("in_process"),
           {
             data: {
@@ -2414,11 +2414,11 @@ ${M}`,
               toolUseContext: t,
               canUseTool: p,
               invokingRequestId: r?.requestId,
-              parentPromptId: Epe(t.messages, t.agentContext),
+              parentPromptId: getParentPromptId(t.messages, t.agentContext),
             }),
             I = h.inlineHandback !== void 0,
             D = t.getAppState().tasks[o.agentId],
-            M = !nr(D) || !D.ownerAgentId || D.ownerAgentId === ze();
+            M = !isLocalAgentTask(D) || !D.ownerAgentId || D.ownerAgentId === ze();
           return (
             i("resume", void 0, I ? { blockedWait: !0 } : void 0),
             {
@@ -2434,7 +2434,7 @@ ${M}`,
           );
         } catch (h) {
           if (h instanceof y9) {
-            let I = lde(o.agentId, Z, t.taskRegistry, {
+            let I = enqueueTaskPendingMessage(o.agentId, Z, t.taskRegistry, {
               origin: le,
               isMeta: !0,
             });
@@ -2473,7 +2473,7 @@ ${M}`,
         if (D) {
           let S = await D,
             B = S ? t.getAppState().tasks[S] : void 0;
-          if (B && hd(B)) {
+          if (B && isInProcessTeammateTask(B)) {
             let P = await as(B, e.message, e.summary, t, o.agentName, F);
             return (
               i("mailbox", P.data.success ? void 0 : "mailbox_write_failed", {
@@ -2492,7 +2492,7 @@ ${M}`,
               v = E.teamName ?? getTeamName(t.getAppState().teamContext);
             for (let C of Object.values(t.getAppState().tasks))
               if (
-                hd(C) &&
+                isInProcessTeammateTask(C) &&
                 C.status === "running" &&
                 (C.identity.resumableAgentId === h ||
                   (C.identity.agentName === P && C.identity.teamName === v))
@@ -2538,7 +2538,7 @@ ${M}`,
               toolUseContext: t,
               canUseTool: p,
               invokingRequestId: r?.requestId,
-              parentPromptId: Epe(t.messages, t.agentContext),
+              parentPromptId: getParentPromptId(t.messages, t.agentContext),
             }),
             B = S.inlineHandback !== void 0;
           return (

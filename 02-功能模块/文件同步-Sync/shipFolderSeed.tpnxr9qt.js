@@ -16,7 +16,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { formatSingleLineText } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
-import { xk, pH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { resolveRealPath, createPathWithholdClassifier } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { SO, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import {
   $pt,
@@ -68,7 +68,7 @@ async function D({
       peer: new Map(),
       peerHasBlob: () => !1,
       budgetBytes: d,
-      withheldOf: w ?? pH(t, { realRoot: s }),
+      withheldOf: w ?? createPathWithholdClassifier(t, { realRoot: s }),
       ...(g !== void 0 && { signal: g }),
       now: a,
     });
@@ -197,7 +197,7 @@ async function shipFolderSeed({
     );
   };
   try {
-    let a = await xk(t);
+    let a = await resolveRealPath(t);
     if (a === null)
       return g("it could not be resolved on disk", "folder_seed_failed", {
         outcome: S("unresolvable"),

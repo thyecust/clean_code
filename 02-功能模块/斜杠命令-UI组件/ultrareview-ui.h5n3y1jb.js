@@ -16,7 +16,7 @@ import { isExtraUsageAllowed, Te, ee } from "../认证-OAuth登录/认证-OAuth�
 import { isGitHubHost } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { policyDeniedReason } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { POST_IGNORED_NOTE, POST_DISABLED_NOTE, parseUltrareviewArgs, precheckLaunchScope, previewInstructions, checkOverageGate, launchRemoteReview, ultrareviewLaunchAcknowledgementNudge } from "../CodeReview/CodeReview.ddrd6y06.js";
-import { getReviewCostNote, getReviewDurationNote, BOe, Km, q3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getReviewCostNote, getReviewDurationNote, isUltrareviewPostEnabled, canSelfManageUsageCredits, CLAUDE_CODE_ON_WEB_DOCS_URL } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t, ct, bs } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -242,7 +242,7 @@ function ce(go) {
                   dimColor: !0,
                   children: [
                     "More information: ",
-                    e(ct, { url: q3, children: q3 }),
+                    e(ct, { url: CLAUDE_CODE_ON_WEB_DOCS_URL, children: CLAUDE_CODE_ON_WEB_DOCS_URL }),
                   ],
                 }),
               ],
@@ -456,7 +456,7 @@ var $o = async (l, f, b, n) => {
   \u2192 ${s.actionUrl}`
           : "",
         U =
-          s.actionUrl?.includes("/admin-settings/") && isExtraUsageAllowed() && !Km()
+          s.actionUrl?.includes("/admin-settings/") && isExtraUsageAllowed() && !canSelfManageUsageCredits()
             ? `
   Run /usage-credits to request this from your admin.`
             : "";
@@ -466,7 +466,7 @@ var $o = async (l, f, b, n) => {
     case "proceed":
       if (s.kind === "needs-confirm")
         logEvent("tengu_review_overage_dialog_shown", {});
-      let y = !BOe(),
+      let y = !isUltrareviewPostEnabled(),
         v =
           m.mode === "pr" && isGitHubHost(m.host) && g !== !1 && !y
             ? { githubLogin: s.githubLogin ?? null, preferPost: g === !0 }

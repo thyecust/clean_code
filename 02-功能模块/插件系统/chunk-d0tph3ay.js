@@ -22,20 +22,20 @@ import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { H, bq } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Aa, $t, Koe } from "./chunk-7s6mt1vg.js";
 import {
-  TM,
-  GF,
+  isClaudeAiMarketplaceSource,
+  classifyPluginError,
   initExtractMemories,
-  xVn,
-  hH,
-  gl,
-  Ql,
-  CE,
-  eD,
-  hT,
-  Zv,
-  nD,
-  ei,
-  Zf,
+  registerAutoDreamRunner,
+  getDeclaredMarketplaces,
+  getKnownMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  loadCachedMarketplaceCatalog,
+  refreshMarketplace,
+  readInstalledPluginsFile,
+  readInstalledPluginsViaStorage,
+  isInstallationInCurrentScope,
+  loadAllPluginsCacheOnly,
+  clearPluginCache,
   touchSessionTranscript,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _1e, vC, Ui, w1e } from "./chunk-ajtn749s.js";
@@ -66,12 +66,12 @@ function vFn(t) {
   };
 }
 async function F(t) {
-  let e = await gl(t),
-    c = hH(),
+  let e = await getKnownMarketplaces(t),
+    c = getDeclaredMarketplaces(),
     s = new Set();
   for (let [p, o] of Object.entries(e)) {
     if (!isSourceAllowedByPolicy(o.source)) continue;
-    if (TM(o.source) && !w1e()) continue;
+    if (isClaudeAiMarketplaceSource(o.source) && !w1e()) continue;
     if (MQ(p, o, c[p]?.autoUpdate)) s.add(p.toLowerCase());
   }
   return s;
@@ -160,7 +160,7 @@ async function L(t, e, c, s, p) {
   };
 }
 async function cQt(t, e = new Set(), { skipCommandSources: c = !1 } = {}, s) {
-  let p = isHoverRestEnabled() && s !== void 0 ? await Zv(s) : hT(),
+  let p = isHoverRestEnabled() && s !== void 0 ? await readInstalledPluginsViaStorage(s) : readInstalledPluginsFile(),
     o = Object.keys(p.plugins);
   if (o.length === 0)
     return {
@@ -169,7 +169,7 @@ async function cQt(t, e = new Set(), { skipCommandSources: c = !1 } = {}, s) {
       updateFailedCount: 0,
       commandSourceSkipped: [],
     };
-  let { disabled: g } = await ei(s),
+  let { disabled: g } = await loadAllPluginsCacheOnly(s),
     b = new Set(g.map((r) => r.source)),
     k = await Promise.allSettled(
       o.map(async (r) => {
@@ -178,7 +178,7 @@ async function cQt(t, e = new Set(), { skipCommandSources: c = !1 } = {}, s) {
         if (e.has(r)) return null;
         let f = p.plugins[r];
         if (!f || f.length === 0) return null;
-        let P = f.filter(nD);
+        let P = f.filter(isInstallationInCurrentScope);
         if (P.length === 0) return null;
         return L(r, P, b, c ? { skipCommandSources: !0 } : void 0, s);
       }),
@@ -219,10 +219,10 @@ async function I(t) {
         : "Plugin autoupdate: command-source refresh disabled by tengu_plugin_command_source_refresh (still excluding command-sourced plugins from the regular pass)",
     );
   try {
-    let p = isHoverRestEnabled() && t !== void 0 ? await Zv(t) : hT(),
+    let p = isHoverRestEnabled() && t !== void 0 ? await readInstalledPluginsViaStorage(t) : readInstalledPluginsFile(),
       o = new Map();
     for (let [m, a] of Object.entries(p.plugins)) {
-      let y = (a ?? []).filter(nD),
+      let y = (a ?? []).filter(isInstallationInCurrentScope),
         { name: _, marketplace: r } = splitPluginId(m);
       if (y.length === 0 || !_ || !r) continue;
       let d = o.get(r) ?? [];
@@ -230,7 +230,7 @@ async function I(t) {
     }
     let g,
       b = new Set(),
-      k = o.size > 0 ? await Ql(t) : {};
+      k = o.size > 0 ? await getKnownMarketplacesOrEmpty(t) : {};
     for (let [m, a] of o) {
       let y = k[m];
       if (isSourceDisallowedOrUnverifiable(y?.source)) {
@@ -239,7 +239,7 @@ async function I(t) {
             e.commandSourced.add(r);
         continue;
       }
-      let _ = await CE(m, t);
+      let _ = await loadCachedMarketplaceCatalog(m, t);
       if (!_) continue;
       for (let { pluginId: r, name: d, installations: f } of a) {
         let P = _.plugins.find((C) => C.name === d);
@@ -248,7 +248,7 @@ async function I(t) {
         if ((e.commandSourced.add(r), c || s)) continue;
         if (!g)
           ((g = new Set(await checkEnabledPlugins())),
-            (b = new Set((await ei(t)).disabled.map((C) => C.source))));
+            (b = new Set((await loadAllPluginsCacheOnly(t)).disabled.map((C) => C.source))));
         if (!g.has(r) || isPluginBlockedByPolicy(r)) {
           n(
             `Plugin autoupdate: not re-resolving ${r} (disabled or blocked by policy)`,
@@ -376,7 +376,7 @@ function N(t) {
           Array.from(o).map(async (d) => {
             try {
               return (
-                await eD(d, t, void 0, {
+                await refreshMarketplace(d, t, void 0, {
                   disableCredentialHelper: !b,
                   isBackground: !0,
                 }),
@@ -435,8 +435,8 @@ function N(t) {
         )),
         m.length > 0)
       )
-        Zf("autoupdate dep-resolution");
-      let { errors: _ } = await ei(t),
+        clearPluginCache("autoupdate dep-resolution");
+      let { errors: _ } = await loadAllPluginsCacheOnly(t),
         r = await resolveMissingDependencies(
           _.filter((d) => {
             if (d.type !== "dependency-unsatisfied") return !1;
@@ -463,7 +463,7 @@ function N(t) {
       (n(`Plugin autoupdate: failed: ${l(o)}`, { level: "error" }),
         logEvent("tengu_plugin_autoupdate_pass", {
           outcome: S("failed"),
-          error_kind: fromEnum(GF(o)),
+          error_kind: fromEnum(classifyPluginError(o)),
           ...s,
           duration_ms: Date.now() - c,
         }));
@@ -488,7 +488,7 @@ async function q(t) {
 }
 async function dQt(t, e) {
   if (!t.backgroundHousekeeping.claim()) return;
-  if ((initExtractMemories(t), xVn(t), N(e), ld()))
+  if ((initExtractMemories(t), registerAutoDreamRunner(t), N(e), ld()))
     (ensureDeepLinkHandlerRegistered(e), touchSessionTranscript(e), setInterval(touchSessionTranscript, X, e).unref());
   let c = "sentinel-unchecked";
   async function s() {

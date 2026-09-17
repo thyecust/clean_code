@@ -11,10 +11,10 @@ import { VR, M0 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ms } from "./设置-配置.aqbb35ee.js";
 import { getGlobalClaudeFile } from "./chunk-zqr5ctyf.js";
 import { projectSettingsAliasesUserSettings, getSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { ZTe, n7n, Rgn, pC, isMcpServerAllowedByPolicy, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getProjectMcpServerApprovalStatus, findOperatorAuthoredMarketplaceAuth, OPERATOR_SETTINGS_SOURCES, getOperatorDeclaredMarketplaces, isMcpServerAllowedByPolicy, getMcpConfigsByScope, doesEnterpriseMcpConfigExist } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { REn, JYe } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isPluginBlockedByPolicy, areCommandPluginSourcesDisabledByPolicy, isSourceAllowedByPolicy } from "../../02-功能模块/插件系统/plugin-source-policy.js";
-var a = Rgn.filter((e) => e !== "userSettings");
+var a = OPERATOR_SETTINGS_SOURCES.filter((e) => e !== "userSettings");
 function shouldOfferTrustBackstop(e) {
   if (REn()) return !1;
   if (JYe()) return !0;
@@ -60,10 +60,10 @@ function u(e, r) {
     )
   )
     return !0;
-  return n7n({ source: "url", url: r }, e) !== void 0;
+  return findOperatorAuthoredMarketplaceAuth({ source: "url", url: r }, e) !== void 0;
 }
 function p(e) {
-  return Object.hasOwn(pC(), e);
+  return Object.hasOwn(getOperatorDeclaredMarketplaces(), e);
 }
 function i(e) {
   if (M0() || doesEnterpriseMcpConfigExist()) return !1;
@@ -72,7 +72,7 @@ function i(e) {
     ([o, t]) =>
       "headersHelper" in t &&
       !!t.headersHelper &&
-      !(e === "project" && ZTe(o) === "rejected") &&
+      !(e === "project" && getProjectMcpServerApprovalStatus(o) === "rejected") &&
       isMcpServerAllowedByPolicy(o, t),
   );
 }

@@ -27,7 +27,7 @@ import { isInsideTmux, isTmuxAvailable, isInITerm2 } from "../../01-核心基础
 import { getTeammateModeFromSnapshot } from "./chunk-88ybhavr.js";
 import { detectAndGetBackend, getBackendByType, markInProcessFallback, isInProcessEnabled, resetBackendDetection } from "./backend-registry.js";
 import { respawnPaneWithCommand } from "./chunk-x0by9eq8.js";
-import { isCustomAgent, apn, U2, kV, sjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isCustomAgent, apn, getProactivityAdjustedPermissionMode, getSubagentModelSetting, modelAliasMatchesFamily } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { writeToMailbox, clearMailbox, PROTOCOL_FRAME_PROMPT_ERROR, isStructuredProtocolMessage } from "./chunk-g6nvp9mm.js";
 import { getLauncherConfigError } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { SwarmPaneError, containsControlCharacter, assertNoControlCharacters, supportsPaneKill, sanitizeName, sanitizeAgentName, updateTeamFile, removeTeamMember } from "./team-file-store.js";
@@ -63,7 +63,7 @@ function J({ planModeRequired: t, permissionMode: e, proactivityLevel: o }) {
   if (e === void 0) return [];
   let i = e;
   if (t) i = "plan";
-  else if (o !== void 0) i = U2(e, o);
+  else if (o !== void 0) i = getProactivityAdjustedPermissionMode(e, o);
   switch (i) {
     case "bypassPermissions":
       return ["--dangerously-skip-permissions"];
@@ -154,10 +154,10 @@ function re(t, e) {
   if (t === "inherit") return F(e);
   if (t !== void 0) {
     if (!isModelAllowed(t)) return Z(t, e);
-    if (e !== null && sjt(t, e)) return e;
+    if (e !== null && modelAliasMatchesFamily(t, e)) return e;
     return t;
   }
-  let o = kV();
+  let o = getSubagentModelSetting();
   if (o !== "inherit") {
     let i = parseUserSpecifiedModel(o);
     if (isModelAllowed(i)) return i;
@@ -170,7 +170,7 @@ function Z(t, e) {
   return (ie(t, o !== null), o ?? se(e));
 }
 function se(t) {
-  let e = kV();
+  let e = getSubagentModelSetting();
   if (e !== "inherit") {
     let o = parseUserSpecifiedModel(e);
     if (isModelAllowed(o)) return o;
@@ -181,7 +181,7 @@ function se(t) {
 function H(t, e, o = "tool") {
   if (a.CLAUDE_CODE_SUBAGENT_MODEL_FORCE) t = void 0;
   let i = re(t, e),
-    c = kV(),
+    c = getSubagentModelSetting(),
     m = t === void 0 && c !== "inherit" ? c : void 0,
     [r, T] =
       t === "inherit"

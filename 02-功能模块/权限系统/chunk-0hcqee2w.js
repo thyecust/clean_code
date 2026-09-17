@@ -27,7 +27,7 @@ import { containsWildcard, unescapeGlobSpecials, parsePermissionRule, formatPerm
 import { o, t, jr, tn, ko, Od } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { oN, oYn } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
-import { findSafetyCheckReason, an, jM, setPermissionModeWithGuards, getAutoModeUnavailableText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findSafetyCheckReason, sanitizeForDisplay, permissionUpdateSchema, setPermissionModeWithGuards, getAutoModeUnavailableText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   YJe,
   ps,
@@ -343,7 +343,7 @@ function fIt(u, s, n, a) {
         " ",
         a === void 0
           ? r(N, {
-              children: ["in", " ", e(t, { bold: !0, children: an(he()) })],
+              children: ["in", " ", e(t, { bold: !0, children: sanitizeForDisplay(he()) })],
             })
           : r(N, { children: ["on ", e(t, { bold: !0, children: a })] }),
       ],
@@ -408,7 +408,7 @@ function $e(u) {
   for (let n of u) {
     let a;
     try {
-      a = jM().safeParse(n);
+      a = permissionUpdateSchema().safeParse(n);
     } catch {
       return null;
     }
@@ -457,7 +457,7 @@ function qw(u, s) {
   for (let B of l) {
     let y;
     try {
-      y = jM().safeParse(B);
+      y = permissionUpdateSchema().safeParse(B);
     } catch {
       continue;
     }
@@ -2117,7 +2117,7 @@ function _D(u, s) {
         let c = Math.max(24, s.maxLabelWidth),
           A = (w) =>
             `Yes, and don't ask again for ${u.userFacingName} commands in ${w}`,
-          f = an(s.cwd);
+          f = sanitizeForDisplay(s.cwd);
         if (te(A(f)) <= c) return A(f);
         if (f !== s.cwd) return null;
         let T = Gu(s.cwd);

@@ -47,77 +47,77 @@ import { rU } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  Uft,
-  LGn,
-  Bft,
-  oUt,
-  Ewe,
-  yI,
-  Uv,
-  Vft,
-  Gun,
+  isTurnAbortReason,
+  addDisposableAbortListener,
+  getCallerScope,
+  getBashOutputMaxChars,
+  resolveBashOutputMaxChars,
+  TaskOutput,
+  getPowerShellPath,
+  getPowerShellEdition,
+  classifyPowerShellCommand,
   uUt,
-  kwe,
-  G9,
-  qun,
-  hk,
-  UGn,
-  zun,
-  wO,
-  Q7,
-  Vun,
-  Kft,
-  zOe,
-  Xft,
-  PF,
-  Fwe,
-  x4e,
-  kUt,
-  xUt,
-  HUt,
-  _k,
-  $mt,
-  Jte,
+  parsePowerShellCommand,
+  POWERSHELL_COMMAND_ALIASES,
+  getLowercaseCommandNames,
+  getCommandNodes,
+  getVariablesByPathPrefix,
+  containsCommand,
+  PARAMETER_PREFIX_CHARS,
+  isParameterToken,
+  hasAbbreviatedParameter,
+  getStatements,
+  isNullRedirectTarget,
+  getFileRedirections,
+  getCommandSecurityPatterns,
+  getBashDefaultTimeoutMs,
+  getBashMaxTimeoutMs,
+  capTimeoutForAutoBackground,
+  resolveTaskEnding,
+  buildBackgroundTaskMessage,
+  isToolResultTruncated,
+  isRuleDecisionReason,
+  getDestructiveTargetScope,
   SandboxPolicyRefusalError,
   SandboxManager,
-  dT,
-  IDe,
-  Gmt,
-  fzn,
-  jS,
-  tTe,
+  checkPathPermission,
+  isProtectedSystemPath,
+  hasTraversalAfterDirectorySegment,
+  matchesSandboxExcludedCommand,
+  shouldUseSandbox,
+  getDestructiveCommandCategory,
   createPermissionRequestMessage,
   carriesAskRuleIntent,
-  d2t,
-  p2t,
-  f2t,
-  wVe,
-  m2t,
-  sde,
-  DM,
-  vV,
-  L2t,
-  M2t,
-  Ugt,
-  N2t,
-  F2t,
-  $2t,
-  U2t,
-  B2t,
-  Ka,
-  Xne,
-  U6t,
-  B6t,
-  I_t,
-  j6t,
-  W6t,
-  ZKe,
-  Bde,
-  ugn,
-  gWt,
+  gitOperationSchema,
+  emitVcsStateChanges,
+  withSpilledOutputTail,
+  parseGitOperationState,
+  trackGitOperation,
+  getAgentWorktreePath,
+  coerceNumericStringSchema,
+  executeShellCommand,
+  MIN_SLEEP_SECONDS,
+  trimBlankLines,
+  isBase64ImageDataUrl,
+  buildImageToolResultFromDataUrl,
+  resizeImageDataUrlFromOutput,
+  buildBackgroundedCommandMessage,
+  appendShellCwdResetNotice,
+  resetCwdToOriginalIfNeeded,
+  getImageLimitsForModel,
+  startBackgroundShellTask,
+  registerForegroundShellTask,
+  isBackgroundedToDeliverMessage,
+  backgroundShellTask,
+  finishBackgroundShellTask,
+  finalizeForegroundShellTask,
+  getShellResultStatus,
+  extractAndSubmitPluginHints,
+  EXPECTED_TOOL_ERROR_NAMES,
+  claimSandboxAttemptOnce,
   hWt,
-  _Wt,
-  yWt,
+  storeShellOutputToStorage,
+  KNOWN_COMMAND_NAMES,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir, getTaskOutputPath, persistTaskOutputSnapshot } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { ZNe, g7e, Vpe, _7e } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
@@ -289,7 +289,7 @@ function ln(e) {
   return;
 }
 var cn = [
-    ...yWt,
+    ...KNOWN_COMMAND_NAMES,
     "Invoke-WebRequest",
     "winget",
     "choco",
@@ -346,7 +346,7 @@ function Ie(e) {
     if (d !== a && /^['"]/.test(d.trimStart())) return "";
     let { base: f, hadNativeExt: b } = Xe(d);
     if (b) return f;
-    return G9[f]?.toLowerCase() ?? f;
+    return POWERSHELL_COMMAND_ALIASES[f]?.toLowerCase() ?? f;
   });
   for (let a of t) {
     let d = dn.get(a);
@@ -656,7 +656,7 @@ function ze(e) {
 }
 function je(e, t) {
   let o = e;
-  if (((o = RF(o)), o.length > 0 && (wO.has(o[0]) || o[0] === "/"))) {
+  if (((o = RF(o)), o.length > 0 && (PARAMETER_PREFIX_CHARS.has(o[0]) || o[0] === "/"))) {
     let a = o.indexOf(":", 1);
     if (a > 0) o = RF(o.slice(a + 1));
   }
@@ -825,7 +825,7 @@ function Ot(e, t = !1) {
     b = [];
   for (let L = 0; L < e.length; L++) {
     let _ = RF(e[L]);
-    if (_.length === 0 || !wO.has(_[0])) {
+    if (_.length === 0 || !PARAMETER_PREFIX_CHARS.has(_[0])) {
       r.push(e[L]);
       continue;
     }
@@ -903,7 +903,7 @@ function nt(e) {
   for (let o = 0; o < e.args.length; o++) {
     let r = e.args[o] ?? "";
     if (r.length === 0) continue;
-    let d = (wO.has(r[0]) || r[0] === "/" ? "-" + r.slice(1) : r).toLowerCase(),
+    let d = (PARAMETER_PREFIX_CHARS.has(r[0]) || r[0] === "/" ? "-" + r.slice(1) : r).toLowerCase(),
       f = d.indexOf(":", 1),
       b = f > 0 ? d.slice(0, f) : d,
       p = tw(b.replace(/`[\r\n]+\s*/g, "")).toLowerCase();
@@ -931,7 +931,7 @@ function ot(e, t, o) {
       behavior: "passthrough",
       message: "Cannot validate mode for unparsed command",
     };
-  let r = PF(t);
+  let r = getCommandSecurityPatterns(t);
   if (
     r.hasSubExpressions ||
     r.hasScriptBlocks ||
@@ -946,7 +946,7 @@ function ot(e, t, o) {
       message:
         "Command contains subexpressions, script blocks, or member invocations that require approval",
     };
-  let a = Kft(t);
+  let a = getStatements(t);
   if (a.length === 0)
     return {
       behavior: "passthrough",
@@ -1738,7 +1738,7 @@ function $e(e) {
       a = r.indexOf("::");
     if (a >= 0) r = r.slice(a + 2);
     if (((r = Fe(xe(r).replace(/\\/g, "/"))), Pe(r))) r = normalize(r);
-    if (IDe(r)) return !0;
+    if (isProtectedSystemPath(r)) return !0;
   }
   return !1;
 }
@@ -1756,7 +1756,7 @@ function It(e, t) {
     if (a === "") continue;
     let d = Pe(a) ? a : Ce(t, a),
       { resolvedPath: f } = Ro(ae(), d);
-    if (IDe(f)) return f;
+    if (isProtectedSystemPath(f)) return f;
   }
   return null;
 }
@@ -1907,7 +1907,7 @@ function Ee(e, t, o, r) {
         reason: `Path '${d ? e : p}' uses a non-filesystem provider and requires manual approval`,
       },
     };
-  if (Gmt(p)) {
+  if (hasTraversalAfterDirectorySegment(p)) {
     let w = De(p, t, o, r);
     if (w)
       return {
@@ -1982,7 +1982,7 @@ function Ee(e, t, o, r) {
   }
   let x = Pe(p) ? p : Ce(t, p),
     { resolvedPath: y, isCanonical: L } = Ro(ae(), x),
-    _ = dT(y, o, r, L ? [y] : void 0);
+    _ = checkPathPermission(y, o, r, L ? [y] : void 0);
   if (d && _.allowed) return f(y);
   if (d && !_.allowed && _.decisionReason?.type === "safetyCheck")
     return {
@@ -2044,7 +2044,7 @@ function Lt(e) {
     let L = d[y];
     if (!L) continue;
     let _ = f ? f[y + 1] : void 0;
-    if (Q7(L, _)) {
+    if (isParameterToken(L, _)) {
       let w = "-" + L.slice(1),
         C = w.indexOf(":", 1),
         F = (C > 0 ? w.substring(0, C) : w).toLowerCase(),
@@ -2058,7 +2058,7 @@ function Lt(e) {
         } else {
           let E = d[y + 1],
             z = f ? f[y + 2] : void 0;
-          if (E && !Q7(E, z)) ((W = E), x(y + 1), y++);
+          if (E && !isParameterToken(E, z)) ((W = E), x(y + 1), y++);
         }
         if (W) a.push(W);
       } else if (j === "leafOnly") {
@@ -2070,7 +2070,7 @@ function Lt(e) {
         } else {
           let E = d[y + 1],
             z = f ? f[y + 2] : void 0;
-          if (E && !Q7(E, z)) ((W = E), x(y + 1), y++);
+          if (E && !isParameterToken(E, z)) ((W = E), x(y + 1), y++);
         }
         if (W !== void 0)
           if (W.includes("/") || W.includes("\\") || W === "." || W === "..")
@@ -2083,14 +2083,14 @@ function Lt(e) {
         } else {
           let W = d[y + 1],
             E = f ? f[y + 2] : void 0;
-          if (W && !Q7(W, E)) (x(y + 1), y++);
+          if (W && !isParameterToken(W, E)) (x(y + 1), y++);
         }
       else {
         b = !0;
         {
           let W = d[y + 1],
             E = f ? f[y + 2] : void 0;
-          if (W && !Q7(W, E)) a.push(W);
+          if (W && !isParameterToken(W, E)) a.push(W);
         }
         if (C > 0) {
           let W = L.substring(C + 1);
@@ -2172,7 +2172,7 @@ function qn(e, t, o, r) {
             : void 0;
     if (_ !== void 0 && _.includes("$")) return outsideReadsRuntimePathAsk(a);
     if (An(I)) return outsideReadsRuntimePathAsk(a);
-    if (_ === void 0 && Q7(I, x)) continue;
+    if (_ === void 0 && isParameterToken(I, x)) continue;
     for (let w of _ !== void 0 ? [_] : [I]) {
       if (w === "") continue;
       if (w.startsWith("~") && w !== "~" && !/^~[\\/]/.test(w)) return outsideReadsRuntimePathAsk(a);
@@ -2377,7 +2377,7 @@ function Gn(e, t, o = !1) {
         if (!G.allowed && isOutsideReadsBlockedAsk(G.decisionReason))
           d ??= lt(A, G.decisionReason, ie(E) ? G.resolvedPath : void 0);
       }
-      if (W && IDe(B)) return Re(B);
+      if (W && isProtectedSystemPath(B)) return Re(B);
       if (W) {
         let G = It(E, r);
         if (G !== null) return Re(G);
@@ -2465,7 +2465,7 @@ function Gn(e, t, o = !1) {
           if (!B.allowed && isOutsideReadsBlockedAsk(B.decisionReason))
             d ??= lt(A, B.decisionReason, ie(j) ? B.resolvedPath : void 0);
         }
-        if (F && IDe(E)) return Re(E);
+        if (F && isProtectedSystemPath(E)) return Re(E);
         if (F) {
           let B = It(j, r);
           if (B !== null) return Re(B);
@@ -2523,7 +2523,7 @@ function Gn(e, t, o = !1) {
         for (let L of y.redirections) {
           if (L.isMerging) continue;
           if (!L.target) continue;
-          if (zOe(L.target)) continue;
+          if (isNullRedirectTarget(L.target)) continue;
           let {
             allowed: _,
             resolvedPath: w,
@@ -2560,7 +2560,7 @@ function Gn(e, t, o = !1) {
     for (let y of e.redirections) {
       if (y.isMerging) continue;
       if (!y.target) continue;
-      if (zOe(y.target)) continue;
+      if (isNullRedirectTarget(y.target)) continue;
       let {
         allowed: L,
         resolvedPath: _,
@@ -2763,17 +2763,17 @@ function ut(e) {
 }
 var Zn = new Set(["/", "\u2013", "\u2014", "\u2015"]);
 function Me(e, t, o) {
-  if (Vun(e, t, o)) return !0;
+  if (hasAbbreviatedParameter(e, t, o)) return !0;
   let r = {
     ...e,
     args: e.args.map((a) =>
       a.length > 0 && Zn.has(a[0]) ? "-" + a.slice(1) : a,
     ),
   };
-  return Vun(r, t, o);
+  return hasAbbreviatedParameter(r, t, o);
 }
 function Xn(e) {
-  if (zun(e, "Invoke-Expression"))
+  if (containsCommand(e, "Invoke-Expression"))
     return {
       behavior: "ask",
       message:
@@ -2782,7 +2782,7 @@ function Xn(e) {
   return { behavior: "passthrough" };
 }
 function Qn(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     if (t.elementType !== "CommandAst") continue;
     let o = t.elementTypes?.[0];
     if (o !== void 0 && o !== "StringConstant")
@@ -2795,7 +2795,7 @@ function Qn(e) {
   return { behavior: "passthrough" };
 }
 function Jn(e) {
-  for (let t of hk(e))
+  for (let t of getCommandNodes(e))
     if (ut(t.name)) {
       if (Me(t, "-encodedcommand", "-e"))
         return {
@@ -2806,7 +2806,7 @@ function Jn(e) {
   return { behavior: "passthrough" };
 }
 function es(e) {
-  for (let t of hk(e))
+  for (let t of getCommandNodes(e))
     if (ut(t.name))
       return {
         behavior: "ask",
@@ -2842,7 +2842,7 @@ function ns(e) {
         message: "Command downloads and executes remote code",
       };
   }
-  let t = hk(e);
+  let t = getCommandNodes(e);
   if (t.some((o) => Dt(o.name)) && t.some((o) => $t(o.name)))
     return {
       behavior: "ask",
@@ -2851,7 +2851,7 @@ function ns(e) {
   return { behavior: "passthrough" };
 }
 function ss(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (o === "start-bitstransfer")
       return {
@@ -2881,12 +2881,12 @@ function ss(e) {
   return { behavior: "passthrough" };
 }
 function os(e) {
-  if (zun(e, "Add-Type"))
+  if (containsCommand(e, "Add-Type"))
     return { behavior: "ask", message: "Command compiles and loads .NET code" };
   return { behavior: "passthrough" };
 }
 function rs(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     if (t.name.toLowerCase() !== "new-object") continue;
     if (Me(t, "-comobject", "-com"))
       return {
@@ -2947,9 +2947,9 @@ function rs(e) {
   return { behavior: "passthrough" };
 }
 function as(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase(),
-      r = G9[o]?.toLowerCase() ?? o;
+      r = POWERSHELL_COMMAND_ALIASES[o]?.toLowerCase() ?? o;
     if (!eun.has(r)) continue;
     if (Me(t, "-filepath", "-f") || Me(t, "-literalpath", "-l"))
       return {
@@ -2969,9 +2969,9 @@ function as(e) {
   return { behavior: "passthrough" };
 }
 function is(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
-    if ((G9[o]?.toLowerCase() ?? o) !== "foreach-object") continue;
+    if ((POWERSHELL_COMMAND_ALIASES[o]?.toLowerCase() ?? o) !== "foreach-object") continue;
     if (Me(t, "-membername", "-m"))
       return {
         behavior: "ask",
@@ -2992,7 +2992,7 @@ function is(e) {
   return { behavior: "passthrough" };
 }
 function ls(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (o !== "start-process" && o !== "saps" && o !== "start") continue;
     if (Me(t, "-Verb", "-v") && t.args.some((r) => r.toLowerCase() === "runas"))
@@ -3052,8 +3052,8 @@ var Ft = new Set([
   "format-custom",
 ]);
 function cs(e) {
-  if (!PF(e).hasScriptBlocks) return { behavior: "passthrough" };
-  for (let r of hk(e)) {
+  if (!getCommandSecurityPatterns(e).hasScriptBlocks) return { behavior: "passthrough" };
+  for (let r of getCommandNodes(e)) {
     let a = r.name.toLowerCase();
     if (tun.has(a))
       return {
@@ -3063,10 +3063,10 @@ function cs(e) {
       };
   }
   if (
-    hk(e).every((r) => {
+    getCommandNodes(e).every((r) => {
       let a = r.name.toLowerCase();
       if (Ft.has(a)) return !0;
-      let d = G9[a];
+      let d = POWERSHELL_COMMAND_ALIASES[a];
       if (d && Ft.has(d.toLowerCase())) return !0;
       return !1;
     })
@@ -3078,12 +3078,12 @@ function cs(e) {
   };
 }
 function us(e) {
-  if (PF(e).hasSubExpressions)
+  if (getCommandSecurityPatterns(e).hasSubExpressions)
     return { behavior: "ask", message: "Command contains subexpressions $()" };
   return { behavior: "passthrough" };
 }
 function ds(e) {
-  if (PF(e).hasExpandableStrings)
+  if (getCommandSecurityPatterns(e).hasExpandableStrings)
     return {
       behavior: "ask",
       message: "Command contains expandable strings with embedded expressions",
@@ -3091,12 +3091,12 @@ function ds(e) {
   return { behavior: "passthrough" };
 }
 function ms(e) {
-  if (PF(e).hasSplatting)
+  if (getCommandSecurityPatterns(e).hasSplatting)
     return { behavior: "ask", message: "Command uses splatting (@variable)" };
   return { behavior: "passthrough" };
 }
 function ps(e) {
-  if (PF(e).hasStopParsing)
+  if (getCommandSecurityPatterns(e).hasStopParsing)
     return {
       behavior: "ask",
       message: "Command uses stop-parsing token (--%)",
@@ -3104,7 +3104,7 @@ function ps(e) {
   return { behavior: "passthrough" };
 }
 function hs(e) {
-  if (PF(e).hasMemberInvocations)
+  if (getCommandSecurityPatterns(e).hasMemberInvocations)
     return { behavior: "ask", message: "Command invokes .NET methods" };
   return { behavior: "passthrough" };
 }
@@ -3118,7 +3118,7 @@ function fs(e) {
   return { behavior: "passthrough" };
 }
 function gs(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (o === "invoke-item" || o === "ii")
       return {
@@ -3136,7 +3136,7 @@ var ws = new Set([
   "set-scheduledtask",
 ]);
 function bs(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (ws.has(o))
       return {
@@ -3183,15 +3183,15 @@ var ys = new Set([
   "ac",
 ]);
 function vs(e) {
-  let t = UGn(e, "env");
+  let t = getVariablesByPathPrefix(e, "env");
   if (t.length === 0) return { behavior: "passthrough" };
-  for (let o of hk(e))
+  for (let o of getCommandNodes(e))
     if (ys.has(o.name.toLowerCase()))
       return {
         behavior: "ask",
         message: "Command modifies environment variables",
       };
-  if (PF(e).hasAssignments && t.length > 0)
+  if (getCommandSecurityPatterns(e).hasAssignments && t.length > 0)
     return {
       behavior: "ask",
       message: "Command modifies environment variables",
@@ -3199,7 +3199,7 @@ function vs(e) {
   return { behavior: "passthrough" };
 }
 function Ss(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (nun.has(o))
       return {
@@ -3221,7 +3221,7 @@ var Ps = new Set([
   "nv",
 ]);
 function ks(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase(),
       r = o.includes("\\") ? o.slice(o.lastIndexOf("\\") + 1) : o;
     if (Ps.has(r))
@@ -3235,7 +3235,7 @@ function ks(e) {
 }
 var Rs = new Set(["invoke-wmimethod", "iwmi", "invoke-cimmethod", "icim"]);
 function Cs(e) {
-  for (let t of hk(e)) {
+  for (let t of getCommandNodes(e)) {
     let o = t.name.toLowerCase();
     if (Rs.has(o))
       return {
@@ -3332,8 +3332,8 @@ function Es(e) {
 async function Wt(e) {
   let t = e.trim();
   if (!t) return "";
-  let o = await kwe(t);
-  return qun(o)[0] ?? "";
+  let o = await parsePowerShellCommand(t);
+  return getLowercaseCommandNames(o)[0] ?? "";
 }
 function zt(e) {
   return uEt(e);
@@ -3622,7 +3622,7 @@ async function Is(e, t, o) {
       updatedInput: e,
       decisionReason: { type: "other", reason: "Empty command is safe" },
     };
-  let d = await kwe(r),
+  let d = await parsePowerShellCommand(r),
     f = Ht(e, o);
   if (f.behavior === "deny") return f;
   let { matchingDenyRules: b, matchingAskRules: p } = Ae(a, o, "prefix");
@@ -3649,7 +3649,7 @@ async function Is(e, t, o) {
     f.behavior === "allow" &&
     !d.valid &&
     I === null &&
-    Gun(r.split(Swe)[0] ?? "") !== "application"
+    classifyPowerShellCommand(r.split(Swe)[0] ?? "") !== "application"
   )
     return f;
   if (!d.valid) {
@@ -3665,11 +3665,11 @@ async function Is(e, t, o) {
         let ke = X[we],
           Se = Fv(ke);
         if (!Se) continue;
-        if (V === void 0 && !wO.has(ke[0] ?? "") && $e(ke)) V = ke;
+        if (V === void 0 && !PARAMETER_PREFIX_CHARS.has(ke[0] ?? "") && $e(ke)) V = ke;
         if (Ef(Se) === "remove-item") {
           N = !0;
           for (let me of X.slice(we + 1)) {
-            if (wO.has(me[0] ?? "")) continue;
+            if (PARAMETER_PREFIX_CHARS.has(me[0] ?? "")) continue;
             if ($e(me)) return Re(me);
           }
         }
@@ -3768,7 +3768,7 @@ async function Is(e, t, o) {
     /^(?:[\w.]+\\)?(env|hklm|hkcu|function|alias|variable|cert|wsman|registry)::?/i;
   function w(v) {
     let N = v;
-    if (N.length > 0 && (wO.has(N[0]) || N[0] === "/")) {
+    if (N.length > 0 && (PARAMETER_PREFIX_CHARS.has(N[0]) || N[0] === "/")) {
       let V = N.indexOf(":", 1);
       if (V > 0 && (N[0] !== "/" || /^\/[A-Za-z]{1,2}:/.test(N)))
         N = N.substring(V + 1);
@@ -3878,7 +3878,7 @@ async function Is(e, t, o) {
           }
         return !1;
       }),
-      N = Xft(d).some((K) => Le(K.target));
+      N = getFileRedirections(d).some((K) => Le(K.target));
     if (v || N)
       y.push({
         behavior: "ask",
@@ -3894,7 +3894,7 @@ async function Is(e, t, o) {
   }
   if (getCurrentPlatform() === "windows" && x.length > 1) {
     let v = new Set();
-    for (let V of Xft(d)) for (let K of H$t(V.target)) v.add(K);
+    for (let V of getFileRedirections(d)) for (let K of H$t(V.target)) v.add(K);
     let N = null;
     for (let { element: V } of x) {
       if (
@@ -3943,7 +3943,7 @@ async function Is(e, t, o) {
       if (!mt.has(V)) return !1;
       return N.args.flatMap(Ue).some(qe);
     }) ||
-    Xft(d).some((N) => qe(N.target))
+    getFileRedirections(d).some((N) => qe(N.target))
   )
     y.push({
       behavior: "ask",
@@ -3975,7 +3975,7 @@ async function Is(e, t, o) {
         reason: "Command is read-only and safe to execute",
       },
     });
-  if (Xft(d).length > 0)
+  if (getFileRedirections(d).length > 0)
     y.push({
       behavior: "ask",
       message:
@@ -4014,7 +4014,7 @@ async function Is(e, t, o) {
       if (N) return !1;
       if (v.nameType === "application") return !0;
       if (Ef(v.name) === "set-location" && v.args.length > 0) {
-        let K = v.args.find((U) => U.length === 0 || !wO.has(U[0]));
+        let K = v.args.find((U) => U.length === 0 || !PARAMETER_PREFIX_CHARS.has(U[0]));
         if (K && Ts(getCwd(), K) === getCwd()) return !1;
       }
       return !0;
@@ -4116,7 +4116,7 @@ async function Is(e, t, o) {
     if (!Zcn(v) && !pe.has(v) && !le.has(v.text))
       (re.push(v.text), le.add(v.text), Y.add(v.text));
   if (re.length === 0) {
-    if (PF(d).hasScriptBlocks) {
+    if (getCommandSecurityPatterns(d).hasScriptBlocks) {
       let v = {
         behavior: "ask",
         message: createPermissionRequestMessage(Ut),
@@ -4162,10 +4162,10 @@ async function Is(e, t, o) {
   };
 }
 function Ye() {
-  return Fwe();
+  return getBashDefaultTimeoutMs();
 }
 function Be() {
-  return x4e();
+  return getBashMaxTimeoutMs();
 }
 function Ls() {
   if (areBackgroundTasksDisabled()) return null;
@@ -4185,7 +4185,7 @@ function Ns(e) {
 async function Yt() {
   let e = Ls(),
     t = Ms(),
-    o = await Vft(),
+    o = await getPowerShellEdition(),
     r = H("tengu_brass_sled", !1) ? await dur() : [],
     a =
       getCurrentPlatform() === "windows"
@@ -4264,7 +4264,7 @@ Usage notes:
   - The command argument is required.
   - You can specify an optional timeout in milliseconds (up to ${Be()}ms / ${Be() / 60000} minutes). If not specified, commands will timeout after ${Ye()}ms (${Ye() / 60000} minutes).
   - It is very helpful if you write a clear, concise description of what this command does.
-  - If the output exceeds ${Ewe()} characters, output will be truncated before being returned to you.
+  - If the output exceeds ${resolveBashOutputMaxChars()} characters, output will be truncated before being returned to you.
 ${
   e
     ? e +
@@ -4355,7 +4355,7 @@ function Us(e) {
       );
   if (!o) return null;
   let r = parseFloat(o[1]);
-  if (r < L2t) return null;
+  if (r < MIN_SLEEP_SECONDS) return null;
   let a = e
     .trim()
     .slice(t.length)
@@ -4378,11 +4378,11 @@ function Qt(e, t, o) {
     e
   )
     return null;
-  if (!fzn(t)) return Hs;
+  if (!matchesSandboxExcludedCommand(t)) return Hs;
   return getHostCapabilityState().unsandboxedCommandsDisabled ? Gs : null;
 }
 function Ze(e, t) {
-  return jS(
+  return shouldUseSandbox(
     {
       command: e.command,
       dangerouslyDisableSandbox: e.dangerouslyDisableSandbox,
@@ -4396,7 +4396,7 @@ var Ks =
   Jt = createLazyValue(() =>
     Qe({
       command: s().refine(rU, Ks).describe("The PowerShell command to execute"),
-      timeout: DM(T().optional()).describe(
+      timeout: coerceNumericStringSchema(T().optional()).describe(
         `Optional timeout in milliseconds (max ${Be()})`,
       ),
       description: s()
@@ -4462,7 +4462,7 @@ var Ks =
         .describe(
           "True when this backgrounded command is owned by a synchronous subagent and is therefore terminated when that agent gives its final response; absent when the command survives (main loop, async subagents)",
         ),
-      gitOperation: d2t()
+      gitOperation: gitOperationSchema()
         .optional()
         .describe(
           "Structured classification of git/gh operations detected in this command (commit/push/merge/rebase/PR). Client-facing \u2014 lets clients render git activity without re-parsing stdout; not surfaced to the model.",
@@ -4475,7 +4475,7 @@ var Ks =
     searchHint: "execute Windows PowerShell commands",
     enablesCodeExecution: !0,
     get maxResultSizeChars() {
-      return oUt();
+      return getBashOutputMaxChars();
     },
     persistenceThresholdCeiling: hge,
     strict: !0,
@@ -4501,9 +4501,9 @@ var Ks =
       return e.command;
     },
     async preparePermissionMatcher({ command: e }) {
-      let t = await kwe(e);
+      let t = await parsePowerShellCommand(e);
       if (!t.valid) return () => !0;
-      let o = hk(t).flatMap((r) => {
+      let o = getCommandNodes(t).flatMap((r) => {
         let a = [r.name, ...r.args].join(" "),
           d = [Ef(r.name), ...r.args].join(" ");
         return a.toLowerCase() === d ? [a] : [a, d];
@@ -4569,7 +4569,7 @@ var Ks =
         e.dangerouslyDisableSandbox &&
         o.behavior !== "deny" &&
         o.behavior !== "ask" &&
-        !$mt(o.decisionReason) &&
+        !isRuleDecisionReason(o.decisionReason) &&
         !Ze(e) &&
         Ze({ ...e, dangerouslyDisableSandbox: !1 })
       ) {
@@ -4603,7 +4603,7 @@ var Ks =
       y,
     ) {
       if (r) {
-        let C = N2t(t, y);
+        let C = buildImageToolResultFromDataUrl(t, y);
         if (C) return C;
       }
       let L = t;
@@ -4624,7 +4624,7 @@ var Ks =
         _ += "<error>Command was aborted before completion</error>";
       }
       let w = f
-        ? $2t({
+        ? buildBackgroundedCommandMessage({
             backgroundTaskId: f,
             outputPath: getTaskOutputPath(f),
             backgroundedByUser: b,
@@ -4638,11 +4638,11 @@ var Ks =
         return {
           tool_use_id: y,
           type: "tool_result",
-          content: HUt(
+          content: buildBackgroundTaskMessage(
             f,
             [_, w].filter(Boolean).join(`
 `),
-            { backgroundedByUser: b, ending: xUt(x === !0) },
+            { backgroundedByUser: b, ending: resolveTaskEnding(x === !0) },
           ),
         };
       return {
@@ -4675,9 +4675,9 @@ var Ks =
             toolUseId: t.toolUseId,
             toolState: t.toolState,
             agentId: t.agentId,
-            caller: Bft(t),
+            caller: getCallerScope(t),
             agentWorktree: t.agentWorktree,
-            isolationRoot: sde(t),
+            isolationRoot: getAgentWorktreePath(t),
             sessionEnvVars: t.sessionEnvVars,
           }),
           _;
@@ -4702,14 +4702,14 @@ var Ks =
         while (!_.done);
         let w = _.value,
           C = w.code === 0 && !w.stdout && w.stderr && !w.backgroundTaskId,
-          A = await f2t(w.stdout, w.outputFilePath);
+          A = await withSpilledOutputTail(w.stdout, w.outputFilePath);
         if (
           !C &&
           !w.backgroundTaskId &&
-          m2t(t.session.host, e.command, w.code, A).prResolved
+          trackGitOperation(t.session.host, e.command, w.code, A).prResolved
         )
           t.markPrResolvedThisSession();
-        let F = tTe(e.command),
+        let F = getDestructiveCommandCategory(e.command),
           j = unwrapAbortReason(p.signal.reason),
           W = w.interrupted && j === "interrupt",
           E = w.interrupted && isUserInitiatedAbortReason(j);
@@ -4717,12 +4717,12 @@ var Ks =
         let z = "",
           B = t.session.project.cwd;
         if (x) {
-          if (B2t(t.session, getToolPermissionContext(t))) z = U2t("");
+          if (resetCwdToOriginalIfNeeded(t.session, getToolPermissionContext(t))) z = appendShellCwdResetNotice("");
         }
         let q =
           w.backgroundTaskId !== void 0 && DCt(t.agentContext) ? !0 : void 0;
         if (w.backgroundTaskId) {
-          let Y = Bde(w.stdout || "", {
+          let Y = extractAndSubmitPluginHints(w.stdout || "", {
             command: e.command,
             pendingHint: t.session.pendingHint,
             isMainThread: x,
@@ -4761,9 +4761,9 @@ var Ks =
           J = (w.stdout || "").trimEnd();
         G.append(J + Zt);
         let se = St(e.command, w.code, J, w.stderr || ""),
-          ee = M2t(G.toString());
+          ee = trimBlankLines(G.toString());
         if (
-          ((ee = Bde(ee, {
+          ((ee = extractAndSubmitPluginHints(ee, {
             command: e.command,
             pendingHint: t.session.pendingHint,
             isMainThread: x,
@@ -4793,10 +4793,10 @@ var Ks =
                   ? fromEnum(bt(Y) ?? "unextracted")
                   : void 0,
               bash_syntax_shape: fromEnum(vt(e.command)),
-              powershell_edition: fromEnum((await Vft()) ?? "unknown"),
+              powershell_edition: fromEnum((await getPowerShellEdition()) ?? "unknown"),
               user_typed_shell_dispatch: d,
               destructive_category: fromEnum(F ?? "none"),
-              destructive_target_scope: fromEnum(Jte(e.command, getCwd(), F)),
+              destructive_target_scope: fromEnum(getDestructiveTargetScope(e.command, getCwd(), F)),
               permission_mode: fromEnum(getToolPermissionContext(t).mode),
             }),
             new G0({
@@ -4816,20 +4816,20 @@ var Ks =
               te = isHoverRestEnabled() && t.storageV5 !== void 0 ? hL($s(le), Ds(le)) : void 0,
               Te = !0;
             if (isHoverRestEnabled() && t.storageV5 !== void 0 && te !== void 0) {
-              let ve = await _Wt(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());
+              let ve = await storeShellOutputToStorage(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());
               if (((Te = ve === "today"), typeof ve === "number"))
                 ((oe = le), (fe = ve));
             }
             if (Te) ((fe = await persistTaskOutputSnapshot(w.outputFilePath, le, MAX_PERSISTED_OUTPUT_BYTES)), (oe = le));
           } catch {}
-        let ye = Ugt(ee),
+        let ye = isBase64ImageDataUrl(ee),
           re = ee;
         if (ye) {
-          let Y = await F2t(
+          let Y = await resizeImageDataUrlFromOutput(
             ee,
             w.outputFilePath,
             fe,
-            Ka(t.options.mainLoopModel),
+            getImageLimitsForModel(t.options.mainLoopModel),
           );
           if (Y) re = Y;
           else ye = !1;
@@ -4838,9 +4838,9 @@ var Ks =
 `),
           pe;
         if (!C) {
-          let Y = wVe(e.command, A);
+          let Y = parseGitOperationState(e.command, A);
           if (Object.keys(Y).length > 0) pe = Y;
-          p2t(Y, A, { command: e.command, exitCode: w.code, cwd: B });
+          emitVcsStateChanges(Y, A, { command: e.command, exitCode: w.code, cwd: B });
         }
         return (
           logEvent("tengu_powershell_tool_command_executed", {
@@ -4849,10 +4849,10 @@ var Ks =
             stderr_length: de.length,
             exit_code: w.code,
             interrupted: w.interrupted,
-            powershell_edition: fromEnum((await Vft()) ?? "unknown"),
+            powershell_edition: fromEnum((await getPowerShellEdition()) ?? "unknown"),
             user_typed_shell_dispatch: d,
             destructive_category: fromEnum(F ?? "none"),
-            destructive_target_scope: fromEnum(Jte(e.command, getCwd(), F)),
+            destructive_target_scope: fromEnum(getDestructiveTargetScope(e.command, getCwd(), F)),
             permission_mode: fromEnum(getToolPermissionContext(t).mode),
           }),
           {
@@ -4875,7 +4875,7 @@ var Ks =
     },
     isResultTruncated(e, { columns: t }) {
       if (e.isImage) return !1;
-      return _k(e.stdout, t) || _k(e.stderr, t);
+      return isToolResultTruncated(e.stdout, t) || isToolResultTruncated(e.stderr, t);
     },
   });
 async function* Qs({
@@ -4904,14 +4904,14 @@ async function* Qs({
     G = void 0,
     J = void 0,
     se = !1,
-    ee = () => o.signal.aborted && Uft(o.signal.reason, x),
+    ee = () => o.signal.aborted && isTurnAbortReason(o.signal.reason, x),
     oe = null;
   function fe() {
     return new Promise((D) => {
       oe = () => D(null);
     });
   }
-  using ye = LGn(o.signal, () => {
+  using ye = addDisposableAbortListener(o.signal, () => {
     if (!ee()) return;
     let D = oe;
     if (D) ((oe = null), D());
@@ -4919,12 +4919,12 @@ async function* Qs({
   let re = areBackgroundTasksDisabled(),
     de = !re && (await qs(C)),
     pe = !re,
-    Y = kUt({
+    Y = capTimeoutForAutoBackground({
       requestedTimeoutMs: W,
       isMainAgent: b === !0,
       canAutoBackground: de,
     });
-  if (!(await Uv()))
+  if (!(await getPowerShellPath()))
     return {
       stdout: "",
       stderr: "PowerShell is not available on this system.",
@@ -4933,7 +4933,7 @@ async function* Qs({
     };
   let te;
   try {
-    te = await vV(C, o.signal, "powershell", {
+    te = await executeShellCommand(C, o.signal, "powershell", {
       timeout: Y,
       owningAgentId: I,
       caller: x,
@@ -4958,7 +4958,7 @@ async function* Qs({
         code: 145,
         interrupted: !0,
       };
-    if (D instanceof Error && ugn.has(D.name)) throw D;
+    if (D instanceof Error && EXPECTED_TOOL_ERROR_NAMES.has(D.name)) throw D;
     if (Po(D))
       return (
         n(`PowerShellTool: exec spawn failed: ${D}`),
@@ -4979,7 +4979,7 @@ async function* Qs({
       }
     );
   }
-  let Te = te.status !== "killed" ? gWt(Ut, C, w, { useSandbox: t }) : null,
+  let Te = te.status !== "killed" ? claimSandboxAttemptOnce(Ut, C, w, { useSandbox: t }) : null,
     ve = te.result;
   if (Te)
     ve.then((D) => {
@@ -4987,7 +4987,7 @@ async function* Qs({
     }).catch(() => {});
   async function v() {
     return (
-      await Xne(
+      await startBackgroundShellTask(
         {
           command: C,
           description: A || C,
@@ -5001,7 +5001,7 @@ async function* Qs({
   }
   function N(D, Z) {
     if (U) {
-      if (!I_t(U, te, A || C, r, p)) return;
+      if (!backgroundShellTask(U, te, A || C, r, p)) return;
       ((G = U), logEvent(D, { command_type: fromEnum(Ie(C)) }), Z?.(U));
       return;
     }
@@ -5029,7 +5029,7 @@ async function* Qs({
       { stdout: "", stderr: "", code: 0, interrupted: !1, backgroundTaskId: D }
     );
   }
-  yI.startPolling(te.taskOutput.taskId);
+  TaskOutput.startPolling(te.taskOutput.taskId);
   let V = Date.now(),
     K = V + Xt,
     U = void 0,
@@ -5048,8 +5048,8 @@ async function* Qs({
       ]);
       if (X !== null) {
         if (((ne = X), X.backgroundTaskId !== void 0)) {
-          if (j6t(X.backgroundTaskId, X, r))
-            pi(X.backgroundTaskId, ZKe(X), { toolUseId: p, summary: A || C });
+          if (finishBackgroundShellTask(X.backgroundTaskId, X, r))
+            pi(X.backgroundTaskId, getShellResultStatus(X), { toolUseId: p, summary: A || C });
           let Se = { ...X, backgroundTaskId: void 0 },
             { taskOutput: me } = te;
           if (me.stdoutToFile && !me.outputFileRedundant)
@@ -5094,7 +5094,7 @@ async function* Qs({
             code: 0,
             interrupted: !1,
             backgroundTaskId: U,
-            ...(B6t(U, r)
+            ...(isBackgroundedToDeliverMessage(U, r)
               ? { backgroundedToDeliverMessage: !0 }
               : { backgroundedByUser: !0 }),
           };
@@ -5103,7 +5103,7 @@ async function* Qs({
         ke = Math.floor(we / 1000);
       if (!re && !se && G === void 0 && ke >= Xt / 1000) {
         if (!U)
-          U = U6t(
+          U = registerForegroundShellTask(
             {
               command: C,
               description: A || C,
@@ -5131,9 +5131,9 @@ async function* Qs({
     }
   } finally {
     if (
-      (yI.stopPolling(te.taskOutput.taskId), !G && te.status !== "backgrounded")
+      (TaskOutput.stopPolling(te.taskOutput.taskId), !G && te.status !== "backgrounded")
     ) {
-      if (U) W6t(U, ne ? ZKe(ne) : "stopped", r);
+      if (U) finalizeForegroundShellTask(U, ne ? getShellResultStatus(ne) : "stopped", r);
       te.cleanup();
     }
   }

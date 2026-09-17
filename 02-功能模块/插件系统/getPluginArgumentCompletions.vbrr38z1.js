@@ -12,7 +12,7 @@
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { b } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { isPluginBlockedByPolicy } from "./plugin-source-policy.js";
-import { hMe, c$, Ql, CE, Cf, nD, A5e, _H } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getMarketplaceSourceLabel, formatPluginId, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, getInstalledPlugins, isInstallationInCurrentScope, formatVersionLabel, isPluginInstalledInCurrentScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getPluginEditableScopes } from "../../01-核心基础设施/设置-配置/chunk-0y8rdjs7.js";
 import { isSkillDoctorEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 var p = [
@@ -60,8 +60,8 @@ async function getPluginArgumentCompletions(a, n, r) {
       case "enable":
       case "disable":
       case "uninstall": {
-        let s = Cf(),
-          i = Object.entries(s.plugins).filter(([, t]) => t.some(nD));
+        let s = getInstalledPlugins(),
+          i = Object.entries(s.plugins).filter(([, t]) => t.some(isInstallationInCurrentScope));
         if (l === "enable" || l === "disable") {
           let t = getPluginEditableScopes(),
             o = l === "disable";
@@ -69,8 +69,8 @@ async function getPluginArgumentCompletions(a, n, r) {
         }
         let e = i
           .map(([t, o]) => {
-            let u = (o.find(nD) ?? o[0])?.version;
-            return { value: t, description: A5e(u), isFinal: !0 };
+            let u = (o.find(isInstallationInCurrentScope) ?? o[0])?.version;
+            return { value: t, description: formatVersionLabel(u), isFinal: !0 };
           })
           .sort((t, o) => t.value.localeCompare(o.value));
         return c(e, n);
@@ -92,11 +92,11 @@ async function getPluginArgumentCompletions(a, n, r) {
   if (a.length === 2 && (l === "marketplace" || l === "market")) {
     let s = a[1]?.toLowerCase();
     if (s === "remove" || s === "rm" || s === "update") {
-      let i = await Ql(r),
+      let i = await getKnownMarketplacesOrEmpty(r),
         e = Object.entries(i)
           .map(([t, o]) => ({
             value: t,
-            description: hMe(o.source),
+            description: getMarketplaceSourceLabel(o.source),
             isFinal: !0,
           }))
           .sort((t, o) => t.value.localeCompare(o.value));
@@ -117,24 +117,24 @@ class d {
 }
 var g = new j(() => new d());
 async function f(a, n) {
-  let r = await Ql(n),
+  let r = await getKnownMarketplacesOrEmpty(n),
     l = Object.keys(r).sort(),
     s = b(l.map((e) => [e, r[e]?.installLocation, r[e]?.lastUpdated])),
     i = a.get(s);
   if (i === void 0) {
     let e = await Promise.all(
-      l.map(async (t) => ({ name: t, marketplace: await CE(t, n) })),
+      l.map(async (t) => ({ name: t, marketplace: await loadCachedMarketplaceCatalog(t, n) })),
     );
     i = [];
     for (let { name: t, marketplace: o } of e) {
       if (!o) continue;
       for (let u of o.plugins)
-        i.push({ pluginId: c$(u.name, t), description: u.description });
+        i.push({ pluginId: formatPluginId(u.name, t), description: u.description });
     }
     (i.sort((t, o) => t.pluginId.localeCompare(o.pluginId)), a.store(s, i));
   }
   return i
-    .filter((e) => !_H(e.pluginId) && !isPluginBlockedByPolicy(e.pluginId))
+    .filter((e) => !isPluginInstalledInCurrentScope(e.pluginId) && !isPluginBlockedByPolicy(e.pluginId))
     .map((e) => ({
       value: e.pluginId,
       description: e.description,

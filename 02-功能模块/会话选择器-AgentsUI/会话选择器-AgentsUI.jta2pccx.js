@@ -71,36 +71,36 @@ import { ASK_USER_QUESTION_TOOL_NAME } from "../工具Plan-ExitPlanMode/工具Pl
 import {
   isCommandEnabled,
   findCommand,
-  K7,
-  hue,
-  p4e,
-  Du,
-  j9,
-  _ue,
-  f4e,
-  q9,
-  NF,
-  WF,
-  EM,
-  rC,
+  countLineBreaks,
+  formatPastedTextPlaceholder,
+  formatImagePlaceholder,
+  parsePastedPlaceholders,
+  expandPastedContents,
+  MAX_PASTED_TEXT_CHARS,
+  findLatestPasteExpansion,
+  listGitWorktrees,
+  getEnabledModelOptions,
+  buildSkillNameInfo,
+  registerPasteIdCarrier,
+  mintPastedContentId,
   isSkillOff,
-  bgt,
-  n4n,
-  PM,
-  r4n,
-  o4n,
-  s4n,
-  nde,
-  E2t,
-  RVe,
-  Ka,
-  yht,
-  Y2,
-  bmn,
-  YLe,
+  getPullRequestDisplayStatus,
+  fetchPrStatusByUrl,
+  formatPrUrlWithTemplate,
+  fetchPrStatusBatch,
+  persistPrStatusCache,
+  loadPrStatusCache,
+  shouldAutoConnectIde,
+  discoverIde,
+  cancelIdeSearch,
+  getImageLimitsForModel,
+  formatAskUserQuestionNeeds,
+  formatNeedsText,
+  listRepoWorktrees,
+  awaitPolicyColdStart,
   isMcpServerBlockedAtConnectTime,
   loadSameRepoMessageLogs,
-  pSt,
+  EXIT_COMMAND_NAMES,
   builtInCommandNames,
   getBuiltinCommands,
   meetsAvailabilityRequirement,
@@ -261,13 +261,13 @@ function Yu(s) {
     v =
       s.worker_status === "requires_action"
         ? w?.tool_name === ASK_USER_QUESTION_TOOL_NAME
-          ? yht(w.input).text
+          ? formatAskUserQuestionNeeds(w.input).text
           : w?.tool_name === Wh
             ? "approve plan"
             : typeof w?.tool_name === "string" &&
                 typeof w.action_description === "string" &&
                 w.action_description !== ""
-              ? Y2(
+              ? formatNeedsText(
                   `approve ${typeof w.display_tool_name === "string" && w.display_tool_name !== "" ? w.display_tool_name : w.tool_name}: ${w.action_description}`,
                 )
               : "awaiting input"
@@ -804,7 +804,7 @@ function Bi(s, c, m) {
     Uo(s.state.children).some((k) => {
       let w = c?.get(k.href);
       if (w?.state !== "OPEN") return !1;
-      let v = bgt(w);
+      let v = getPullRequestDisplayStatus(w);
       return v === "error" || (v === "warning" && w.review !== "APPROVED");
     })
   )
@@ -1021,10 +1021,10 @@ function Kh() {
     readLogTail: (s, c) => cc(s, c),
     probeFleetTranscript: (s, c) => Mi(s, c),
     scanLoopTranscript: (s, c) => lc(s, c),
-    fetchPrStatusBatch: (s) => r4n(s),
-    fetchPrStatusByUrl: (s) => n4n(s),
-    loadPrStatusCache: (s) => s4n(s),
-    persistPrStatusCache: (s, c) => o4n(s, c),
+    fetchPrStatusBatch: (s) => fetchPrStatusBatch(s),
+    fetchPrStatusByUrl: (s) => fetchPrStatusByUrl(s),
+    loadPrStatusCache: (s) => loadPrStatusCache(s),
+    persistPrStatusCache: (s, c) => persistPrStatusCache(s, c),
     touchFleetViewHeartbeat: (s) => touchFleetViewHeartbeat(s),
     clearFleetViewHeartbeat: (s) => clearFleetViewHeartbeat(s),
     watchJobDirOnce: (s, c) => watchJobDirOnce(s, c),
@@ -2077,13 +2077,13 @@ function Ic(s, c, { pruneTextPastes: m = !1 } = {}) {
   }
   if (!b.some(k)) return;
   let w = new Set();
-  for (let v of c) for (let R of Du(v)) w.add(R.id);
+  for (let v of c) for (let R of parsePastedPlaceholders(v)) w.add(R.id);
   for (let v of b) if (k(v) && !w.has(v.id)) delete s[v.id];
 }
 function $i(s, c, { onMinted: m } = {}) {
   return (b, k) => {
     let w = s(),
-      v = rC(void 0, w);
+      v = mintPastedContentId(void 0, w);
     (m?.(v),
       (w[v] = {
         id: v,
@@ -2094,7 +2094,7 @@ function $i(s, c, { onMinted: m } = {}) {
         dimensions: k?.dimensions,
         sourcePath: k?.sourcePath,
       }),
-      c(new iee(`${p4e(v)} `)));
+      c(new iee(`${formatImagePlaceholder(v)} `)));
   };
 }
 var zh = 90000,
@@ -2201,7 +2201,7 @@ class Oc {
   }
   attachView() {
     if (this.#a++ === 0)
-      ((this.#t = EM(() => [this.#e.query, ...this.#o.values()])),
+      ((this.#t = registerPasteIdCarrier(() => [this.#e.query, ...this.#o.values()])),
         (this.#i = !1),
         (this.#u = Date.now()),
         this.#f.clear());
@@ -2287,7 +2287,7 @@ class Oc {
     this.#d = s;
   };
   mintTextPaste(s) {
-    let c = rC(this.#e.query, this.#r);
+    let c = mintPastedContentId(this.#e.query, this.#r);
     return (
       (this.#d = c),
       (this.#r[c] = { id: c, type: "text", content: s }),
@@ -2367,7 +2367,7 @@ function Ca() {
 async function zi(s, c, m) {
   try {
     let b = he(),
-      k = await q9(b);
+      k = await listGitWorktrees(b);
     return (await loadSameRepoMessageLogs(k, void 0, c ? eb : void 0, m)).flatMap((R) => {
       if (!R.sessionId || !R.fullPath) return [];
       if (s.has(R.sessionId)) return [];
@@ -2496,7 +2496,7 @@ var Jc = {
   };
 function Bc() {
   return [
-    ...NF()
+    ...getEnabledModelOptions()
       .filter((s) => s.value)
       .map((s) => ({
         kind: "model",
@@ -2644,7 +2644,7 @@ function Xi(s) {
   return !1;
 }
 function Zi(s, c) {
-  Z3(Ka(getMainLoopModel()))
+  Z3(getImageLimitsForModel(getMainLoopModel()))
     .then((m) => {
       if (m) s(m);
       else
@@ -2753,7 +2753,7 @@ function Uc(s, c) {
         m.setQuery(""),
         saveJobDraft(J, { q: "", collapsed: [...k.getSnapshot().collapsed] }, R));
     };
-  if (pSt.includes(He)) {
+  if (EXIT_COMMAND_NAMES.includes(He)) {
     (Tt(), A());
     return;
   }
@@ -2827,7 +2827,7 @@ function Uc(s, c) {
             return;
           }
           m.setError(null);
-          let { sanitizedName: Lt, skillNameHash: mt } = WF({
+          let { sanitizedName: Lt, skillNameHash: mt } = buildSkillNameInfo({
             rawName: lt.name,
             canonicalName: lt.name,
             isMcp: !1,
@@ -2886,7 +2886,7 @@ function Uc(s, c) {
     Wt = m.getSnapshot().mode === "bash",
     Je = zt === de && !Wt ? ce : Yi(Wt ? `!${zt}` : zt, Ie, ge, ke);
   if (Je?.intent || Je?.routine || Je?.matched) {
-    let Ve = j9(Je.intent, m.pastes);
+    let Ve = expandPastedContents(Je.intent, m.pastes);
     if (!Je.routine && !Je.matched && Ve.trim().length < ib) {
       (m.setError(null), m.setHint("Too short \u2014 describe the task"));
       return;
@@ -2913,7 +2913,7 @@ function Uc(s, c) {
     let dt = m.getSnapshot().sessionModel,
       Dt = APt(),
       Lt =
-        !Du(Ve).some((fe) => m.pastes[fe.id]?.type === "image") &&
+        !parsePastedPlaceholders(Ve).some((fe) => m.pastes[fe.id]?.type === "image") &&
         Ve.length <= lK &&
         !Ve.includes(`
 `),
@@ -2932,7 +2932,7 @@ function Uc(s, c) {
     let Xt = Je.matched && !Je.exec ? Je.template.name : null,
       jt = Je.matched ? Je.template : kWe(X, lt),
       Jt = m.pastes,
-      st = Je.exec ? j9(Je.exec, Jt) : void 0,
+      st = Je.exec ? expandPastedContents(Je.exec, Jt) : void 0,
       Qt = {
         id: at,
         state: makeInitialState({
@@ -3062,7 +3062,7 @@ function Wc(s, c) {
     v = m.lastMintedPasteId ?? -1,
     R = m.pastes[v];
   if (b && R?.type === "text" && R.content === w) {
-    let W = f4e(m.getSnapshot().query, m.pastes);
+    let W = findLatestPasteExpansion(m.getSnapshot().query, m.pastes);
     if (W?.id === v) {
       (delete m.pastes[v],
         m.setQueryAndCursor(W.expanded, W.cursorOffset),
@@ -3070,10 +3070,10 @@ function Wc(s, c) {
       return;
     }
   }
-  let O = K7(w);
+  let O = countLineBreaks(w);
   if (b && (w.length > lK || O > 2)) {
     let W = m.mintTextPaste(w);
-    if ((k(hue(W, O)), w.length <= _ue)) m.setExpandHintPasteId(W);
+    if ((k(formatPastedTextPlaceholder(W, O)), w.length <= MAX_PASTED_TEXT_CHARS)) m.setExpandHintPasteId(W);
     return;
   }
   k(w);
@@ -3429,7 +3429,7 @@ function ip(s) {
   return /^\d+$/.test(s.id) ? Number(s.id) : void 0;
 }
 function sp(s) {
-  let c = bgt(s);
+  let c = getPullRequestDisplayStatus(s);
   return c === "error" ? "warning" : c;
 }
 var Rb = { error: 3, warning: 2, success: 1 };
@@ -3477,7 +3477,7 @@ function Gn(s, c) {
           sortRank: 0,
         };
       let b = c.get(m.href),
-        k = b ? bgt(b) : void 0;
+        k = b ? getPullRequestDisplayStatus(b) : void 0;
       return {
         row: m,
         prNumber: b?.number ?? ip(m),
@@ -4592,10 +4592,10 @@ function bp(s) {
   let [c, m] = d([]);
   (E(() => {
     if (Pt() || isBgSession()) return;
-    if (!nde()) return;
+    if (!shouldAutoConnectIde()) return;
     let b = !1;
     return (
-      E2t().then(async (k) => {
+      discoverIde().then(async (k) => {
         if (b || !k) return;
         let w = {
           type: k.url.startsWith("ws:") ? "ws-ide" : "sse-ide",
@@ -4605,7 +4605,7 @@ function bp(s) {
           ideRunningInWindows: k.ideRunningInWindows,
           scope: "dynamic",
         };
-        if ((await YLe(), b || isMcpServerBlockedAtConnectTime("ide", w))) return;
+        if ((await awaitPolicyColdStart(), b || isMcpServerBlockedAtConnectTime("ide", w))) return;
         let { clearServerCache: v, connectToServer: R } = import.meta
             .require("../MCP客户端/mcpClientModule.4cyej0np.js")
             .mcpClientModule(),
@@ -4615,7 +4615,7 @@ function bp(s) {
         m([O]);
       }),
       () => {
-        ((b = !0), RVe());
+        ((b = !0), cancelIdeSearch());
       }
     );
   }, []),
@@ -7051,7 +7051,7 @@ function Nd({
         yt("prompt"),
         q(null),
         W.deleteReplyDraft(s.id));
-      let Zt = Du(gt),
+      let Zt = parsePastedPlaceholders(gt),
         Re = {};
       for (let Ke of Zt) {
         let oo = W.pastes[Ke.id];
@@ -7128,7 +7128,7 @@ function Nd({
         (ae(), W.pruneOrphanedPastes());
       };
     }, [W, Ue]),
-    E(() => EM(() => [Ue.current]), [Ue]));
+    E(() => registerPasteIdCarrier(() => [Ue.current]), [Ue]));
   let Tt = $i(() => W.pastes, He, { onMinted: W.noteMintedPaste }),
     { handleKeyDown: zt, handlePaste: Wt } = Fye({
       handleKeyDown: Ut,
@@ -7357,7 +7357,7 @@ function Nd({
                                     children: [
                                       " ",
                                       e(ct, {
-                                        url: PM(ae.row.href, Dt),
+                                        url: formatPrUrlWithTemplate(ae.row.href, Dt),
                                         children: r(t, {
                                           color: ae.isDraft
                                             ? "inactive"
@@ -9407,7 +9407,7 @@ class kg {
         });
       });
     if (!this.#e.repoWorktrees.has(s))
-      bmn(s)
+      listRepoWorktrees(s)
         .then((c) => {
           if (c === null || this.#e.repoWorktrees.has(s)) return;
           this.#a({

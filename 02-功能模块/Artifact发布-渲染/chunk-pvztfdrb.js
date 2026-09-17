@@ -473,17 +473,17 @@ import {
 } from "./chunk-pdd7kz7p.js";
 import {
   SandboxManager,
-  npn,
-  XF,
-  Pjt,
-  Dy,
-  hLe,
+  isInSandboxWriteAllowlist,
+  getWorktreeWriteBlockMessage,
+  getFileExtensionForContentType,
+  persistBinaryContent,
+  buildArtifactFileName,
   convertHtmlToMarkdown,
   applyPromptToMarkdown,
-  WM,
-  Dd,
-  Ld,
-  Xv,
+  getStopGeneration,
+  isSlugStopped,
+  isSlugSwept,
+  isSlugYielded,
   getMaterializedSessionFile,
   getTranscriptPathForSession,
   appendEntryToFileAsync,
@@ -7007,7 +7007,7 @@ var Qu = {
                 "read_db saves only to local directories \u2014 out_dir names a network path or cannot be resolved.",
               errorCode: 17,
             };
-          let q = XF(re.dir, o);
+          let q = getWorktreeWriteBlockMessage(re.dir, o);
           if (q) return { result: !1, message: q, errorCode: 19 };
         }
         return { result: !0 };
@@ -7224,7 +7224,7 @@ var Qu = {
                 "read_db saves only to local directories \u2014 out_dir names a network path or cannot be resolved",
                 "db_read_network_path",
               );
-            let Le = XF(re.dir, o);
+            let Le = getWorktreeWriteBlockMessage(re.dir, o);
             if (Le)
               throw (
                 logFeatureBad("artifact_db_read_save", "outside_worktree"),
@@ -10436,7 +10436,7 @@ function Lb(e) {
     let { allowOnly: t } = SandboxManager.getFsWriteConfig();
     if (t.some(zb)) return !0;
     return (
-      npn(e) ||
+      isInSandboxWriteAllowlist(e) ||
       t.some((o) =>
         Tr(o).some((r) => pathInWorkingPath(e, r, { caseFold: !0, uncShapeParity: !0 })),
       )
@@ -11460,11 +11460,11 @@ var sp = {
         let r = typeof t.url === "string" ? parseArtifactUrl(t.url) : null;
         H9({ storageV5: o.storageV5 });
         let d =
-          r === null || !Dd(r.slug)
+          r === null || !isSlugStopped(r.slug)
             ? null
-            : Xv(r.slug)
+            : isSlugYielded(r.slug)
               ? "yielded"
-              : Ld(r.slug)
+              : isSlugSwept(r.slug)
                 ? "swept"
                 : "killed";
         if (r === null || d === null) {
@@ -11521,7 +11521,7 @@ var sp = {
         let _ = ne(),
           E = _.durable.stopLatches;
         if (o.toolUseId !== void 0)
-          (_.wakes.resumeSights.note(o.toolUseId, r.slug, WM(r.slug)),
+          (_.wakes.resumeSights.note(o.toolUseId, r.slug, getStopGeneration(r.slug)),
             E.noteRelatchAsk(o.toolUseId, r.slug));
         let C = E.isStopped(r.slug)
           ? ", and re-arms the live watch of this artifact (stopped earlier this session)"
@@ -11620,7 +11620,7 @@ var sp = {
             gAt(o.messages) &&
             p1t(o.messages, r.slug) &&
             !N.declined &&
-            !(Dd(r.slug) && !Ld(r.slug)) &&
+            !(isSlugStopped(r.slug) && !isSlugSwept(r.slug)) &&
             !knownNonEditor(r.slug) &&
             !ate(r.slug),
           F = V && (w || d.artifactWatchApproved === !0),
@@ -11701,11 +11701,11 @@ var sp = {
           d = sessionWatchRail(),
           w =
             d === "live" && Zu()
-              ? o !== null && Dd(o.slug) && !Ld(o.slug)
+              ? o !== null && isSlugStopped(o.slug) && !isSlugSwept(o.slug)
                 ? WATCH_PROJECTION_REPLIES_STOPPED
                 : o !== null && repliesConsentDeclined(o.slug)
                   ? WATCH_PROJECTION_REPLIES_DECLINED
-                  : o !== null && Ld(o.slug)
+                  : o !== null && isSlugSwept(o.slug)
                     ? WATCH_PROJECTION_REPLIES_PAUSED
                     : WATCH_PROJECTION_COMMENTS
               : void 0;
@@ -11734,14 +11734,14 @@ var sp = {
           o = typeof e.url === "string" ? parseArtifactUrl(e.url) : null,
           r = o !== null ? getShareEntry(o.slug) : void 0,
           d =
-            o === null || !Dd(o.slug)
+            o === null || !isSlugStopped(o.slug)
               ? "no stop is recorded, so this is a no-op"
-              : Ld(o.slug)
+              : isSlugSwept(o.slug)
                 ? "reverses the stop from the user's Ctrl+C / Stop interrupt, also answering comments sent to Claude since then"
                 : "reverses the user's earlier stop of these replies",
           w =
             o !== null &&
-            Dd(o.slug) &&
+            isSlugStopped(o.slug) &&
             ne().durable.stopLatches.isStopped(o.slug)
               ? "; also resumes watching the artifact, whose watch was stopped earlier in this session"
               : "";
@@ -11764,7 +11764,7 @@ var sp = {
         return "List this session's own artifact watches and their unread-comment counts (read-only).";
       if (t?.action === "resume_replies") {
         let o = typeof t.url === "string" ? parseArtifactUrl(t.url) : null;
-        return o !== null && Ld(o.slug) ? RESUME_ASK_MESSAGE_SWEPT : RESUME_ASK_MESSAGE;
+        return o !== null && isSlugSwept(o.slug) ? RESUME_ASK_MESSAGE_SWEPT : RESUME_ASK_MESSAGE;
       }
       return He("watch.description", t);
     },
@@ -11850,7 +11850,7 @@ var sp = {
           { stopLatches: E, liveDocArmDeclined: C } = ne().durable,
           D = E.recordStop(_.slug),
           I = s9n(_.slug, { storageV5: o.storageV5 }) !== void 0;
-        if (!Xv(_.slug))
+        if (!isSlugYielded(_.slug))
           (Ibe(_.slug, { storageV5: o.storageV5 }),
             import("./chunk-54kz7amv.js").then((re) =>
               re.notifyTakenOverSlugStopped(_.slug),
@@ -12037,7 +12037,7 @@ var sp = {
               },
             },
           };
-        if (!C.autoReact.userDisarmed && N !== WM(_.slug) && Dd(_.slug))
+        if (!C.autoReact.userDisarmed && N !== getStopGeneration(_.slug) && isSlugStopped(_.slug))
           return {
             data: {
               resume_replies: {
@@ -12049,7 +12049,7 @@ var sp = {
             },
           };
         let { publishContext: F } = Dn(o),
-          B = Ld(_.slug),
+          B = isSlugSwept(_.slug),
           ue = await resumeFrameLiveAutoReplies({
             slug: _.slug,
             url: E,
@@ -12608,8 +12608,8 @@ ${STALE_GUARD_CONTENT_HEADER(e)}
                 : "over_cap",
         );
     }
-    let { persistId: Se, editedCopy: Fe } = await handoverPersistTarget(e, q.ver, hLe(e, q.ver)),
-      Le = `${Se}.${Pjt("text/html")}`,
+    let { persistId: Se, editedCopy: Fe } = await handoverPersistTarget(e, q.ver, buildArtifactFileName(e, q.ver)),
+      Le = `${Se}.${getFileExtensionForContentType("text/html")}`,
       Me = r_(SS(), Le),
       Be = r.storageV5,
       xe = isHoverRestEnabled() && Be !== void 0 ? hL(SS(), Le) : void 0,
@@ -12623,7 +12623,7 @@ ${STALE_GUARD_CONTENT_HEADER(e)}
           : (await bA(Me).catch(() => {
               return;
             })) !== void 0,
-      ct = await Dy(
+      ct = await persistBinaryContent(
         Buffer.from(q.html),
         "text/html",
         Se,
@@ -18424,7 +18424,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
               "read_asset saves only to local directories \u2014 out_dir names a network path or cannot be resolved.",
             errorCode: 17,
           };
-        let Ce = XF(be, t);
+        let Ce = getWorktreeWriteBlockMessage(be, t);
         if (Ce) return { result: !1, message: Ce, errorCode: 19 };
       }
       return { result: !0 };
@@ -18471,7 +18471,7 @@ ${VERIFY_PROMPT_PARAGRAPH}`;
               "read_file saves only to local directories \u2014 out_dir names a network path.",
             errorCode: 17,
           };
-        let ke = XF(Ie.dest, t);
+        let ke = getWorktreeWriteBlockMessage(Ie.dest, t);
         if (ke) return { result: !1, message: ke, errorCode: 19 };
       }
       return { result: !0 };
@@ -19814,7 +19814,7 @@ ${B}`,
           "read_file saves only to local directories \u2014 out_dir names a network path",
           "file_read_network_path",
         );
-      let at = XF(Ge, t);
+      let at = getWorktreeWriteBlockMessage(Ge, t);
       if (at)
         throw (
           logFeatureBad("artifact_file_read", "outside_worktree"),
@@ -20237,7 +20237,7 @@ ${B}`,
           "read_asset saves only to local directories \u2014 out_dir names a network path or cannot be resolved",
           "asset_read_network_path",
         );
-      let ze = XF(Ne, t);
+      let ze = getWorktreeWriteBlockMessage(Ne, t);
       if (ze)
         throw (
           logFeatureBad("artifact_asset_read", "outside_worktree"),
@@ -20268,7 +20268,7 @@ ${B}`,
         throw new ArtifactInputError(mt.message, `asset_read_${mt.reason}`);
       ma(p, t, L, Ue, qn(getShareEntry(L.slug)), "assets");
       let zt = `${Ne}${S$t(mt.contentType) ?? ""}`,
-        mr = XF(zt, t);
+        mr = getWorktreeWriteBlockMessage(zt, t);
       if (mr)
         throw (
           logFeatureBad("artifact_asset_read", "outside_worktree"),

@@ -20,7 +20,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { E9e, A9e } from "../../00-第三方库/ink/ink + react-reconciler.5rs3h07b.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
-import { OM, PVe, Ngt, Lr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { computeStructuredPatchFromEdits, openLocalFileForRead, readWholeFileIfSmall, extractTagContent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isScratchpadDisplayPath, isWorkshopDisplayPath } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { getPlansDirectory } from "../计划模式(Plan)/计划模式(Plan).e5mh1avy.js";
 import "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
@@ -325,18 +325,18 @@ function te(yt) {
 async function ge(i, a) {
   try {
     let s = isAbsolute(i) ? i : resolve(getCwd(), i),
-      l = await PVe(s);
+      l = await openLocalFileForRead(s);
     if (l === null) return { type: "create" };
     let f;
     try {
-      f = await Ngt(l);
+      f = await readWholeFileIfSmall(l);
     } finally {
       await l.close();
     }
     if (f === null) return { type: "create" };
     return {
       type: "update",
-      patch: OM({
+      patch: computeStructuredPatchFromEdits({
         filePath: i,
         fileContents: f,
         edits: [{ old_string: f, new_string: a, replace_all: !1 }],
@@ -353,7 +353,7 @@ async function ge(i, a) {
   }
 }
 function renderToolUseErrorMessage(i, { verbose: a }) {
-  if (!a && typeof i === "string" && Lr(i, "tool_use_error"))
+  if (!a && typeof i === "string" && extractTagContent(i, "tool_use_error"))
     return e(ToolResultRow, {
       children: e(t, { color: "error", children: "Error writing file" }),
     });

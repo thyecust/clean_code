@@ -53,7 +53,7 @@ import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCa
 import { externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { Tvt, Yse, c1, Evt } from "./chunk-wk0e3dz4.js";
 import { getSecureStorage } from "./secure-storage.js";
-import { J5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getProactivityBaselineState } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ps } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { getMouseMode, isFullscreenActive } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
 import { getNativeCopyModifierKey } from "../终端-剪贴板/终端-剪贴板.e33btqf0.js";
@@ -825,7 +825,7 @@ function V8({
           Yt.exit();
           let q =
             se !== void 0 && fe !== void 0
-              ? J5n({ proactivityLevel: se, toolPermissionContext: fe })
+              ? getProactivityBaselineState({ proactivityLevel: se, toolPermissionContext: fe })
               : void 0;
           import("./execRelaunch.ewkdrr0a.js").then((X) =>
             X.execRelaunch(q ? { proactivity: q } : {}),

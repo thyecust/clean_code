@@ -25,7 +25,7 @@ import { isCancel, isAxiosError } from "../../00-第三方库/axios/axios.t0fczz
 import { isClaudeDownloadsHost, externalHttp } from "../../01-核心基础设施/共享小工具-未细化/external-http.js";
 import { Cs, Vlr } from "../../00-第三方库/_未识别/第三方库-其他/chunk-8fpdwg2e.js";
 import { getProcessCommand } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
-import { ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hN } from "../插件系统/chunk-ajtn749s.js";
 import { SR, UH, tf } from "../../00-第三方库/_未识别/第三方库-@anthropic-ai-sdk/chunk-k58dgrhz.js";
 import {
@@ -1369,7 +1369,7 @@ async function vt(e) {
 async function wn() {
   if (await yn()) return !0;
   let { executable: e } = Q();
-  return (await re(e)) && !(await vde(e).catch(() => !1));
+  return (await re(e)) && !(await isNpmShimExecutable(e).catch(() => !1));
 }
 async function yn() {
   let { versions: e, executable: t } = Q(),
@@ -1725,7 +1725,7 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
         "failed"
       );
   }
-  if (!(await ULe(e)) && !(await vde(e).catch(() => !1)))
+  if (!(await isNativeInstallerSymlink(e)) && !(await isNpmShimExecutable(e).catch(() => !1)))
     return (
       n(
         `Not replacing ${e}: it was not created by the native installer (not a symlink into a claude/versions/ directory) and is not an npm shim, so this update will not overwrite it. New versions still install under the versions/ directory; remove ${e} and re-run the update to let the installer manage the launcher again.`,
@@ -2094,8 +2094,8 @@ async function oFt() {
     return;
   }
   if (
-    !(await ULe(e.executable)) &&
-    !(await vde(e.executable).catch(() => !1))
+    !(await isNativeInstallerSymlink(e.executable)) &&
+    !(await isNpmShimExecutable(e.executable).catch(() => !1))
   ) {
     (n(
       `Skipping native version cleanup: the launcher at ${e.executable} is externally managed, so the version(s) it needs cannot be determined`,
@@ -2205,7 +2205,7 @@ async function nOe() {
   let e = Q();
   try {
     if (
-      await vde(e.executable).catch((t) => {
+      await isNpmShimExecutable(e.executable).catch((t) => {
         if (W(t)) return !1;
         throw t;
       })
@@ -2214,7 +2214,7 @@ async function nOe() {
         logFeatureOk("native_remove_symlink"));
       return;
     }
-    if (!(await ULe(e.executable))) {
+    if (!(await isNativeInstallerSymlink(e.executable))) {
       (n(
         `Skipping removal of ${e.executable} - not created by the native installer`,
       ),

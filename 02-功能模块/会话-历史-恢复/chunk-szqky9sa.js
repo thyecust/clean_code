@@ -20,25 +20,25 @@ import { Sl } from "../插件系统/chunk-7s6mt1vg.js";
 import { isTempFileName, isValidPathSegment, getNormalizedNames, STORAGE_KEYS, createBridgeSpawnKey } from "../Teammates团队/storage-keys.js";
 import { Nr, H8t, t2e } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import {
-  b2,
-  fue,
-  jOe,
-  Mun,
-  RGn,
-  w2,
-  oH,
-  sH,
-  Q9,
-  x2,
-  gDe,
-  Q4e,
-  Umt,
-  BBt,
-  jBt,
-  sgt,
-  igt,
-  Tmn,
-  Emn,
+  isTempScratchName,
+  LOCKFILE_ACQUIRE_OPTIONS,
+  HistoryFileIntegrityError,
+  scanHistoryFileRange,
+  pruneOldPastes,
+  readFileWithLineRange,
+  resolveSkillBucketId,
+  verifySyncOwnedPath,
+  trashDirectory,
+  hasSyncMarker,
+  removeSyncMarker,
+  BRIDGE_SPAWN_DIR_NAME,
+  getBridgeSpawnRootDir,
+  AUTO_MODE_CLASSIFIER_ERROR_FILENAME,
+  AUTO_MODE_DUMP_FILE_PREFIX,
+  AUTO_MODE_ENV_EDIT_FILE_PREFIX,
+  AUTO_MODE_BUILTINS_FILE_PREFIX,
+  cleanupStaleAgentWorktrees,
+  reapJobWorktreeIfSafe,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { readJobStateFreshOrNull, readPinnedJobIds, isSettled } from "../后台任务-Shell管理/chunk-7wsy8vxb.js";
@@ -107,7 +107,7 @@ var q = 30,
     "custom-title.json",
     "precompact.json",
     "sent-prefix.json",
-    BBt,
+    AUTO_MODE_CLASSIFIER_ERROR_FILENAME,
   ];
 function ue(e) {
   let t = getNormalizedNames(e);
@@ -116,8 +116,8 @@ function ue(e) {
 function ve(e) {
   return (
     Oe.some((t) => e === t || isTempFileFor(e, t)) ||
-    (e.startsWith(jBt) && (e.endsWith(".json") || e.includes(".json.tmp."))) ||
-    (e.startsWith(sgt) && e.endsWith(".md"))
+    (e.startsWith(AUTO_MODE_DUMP_FILE_PREFIX) && (e.endsWith(".json") || e.includes(".json.tmp."))) ||
+    (e.startsWith(AUTO_MODE_ENV_EDIT_FILE_PREFIX) && e.endsWith(".md"))
   );
 }
 async function Ept(e) {
@@ -805,7 +805,7 @@ async function Ke(e, t) {
   let a = t.getTime();
   await Promise.all(
     r
-      .filter((o) => isTempFileFor(o, "history.jsonl") || b2(o))
+      .filter((o) => isTempFileFor(o, "history.jsonl") || isTempScratchName(o))
       .map(async (o) => {
         let f = d(e, o);
         try {
@@ -830,7 +830,7 @@ async function Xe(e) {
         ),
         { entriesPruned: 0, errors: 1 }
       );
-    f = await Mun(t, a, {
+    f = await scanHistoryFileRange(t, a, {
       start: 0,
       end: o.size,
       tail: "defer",
@@ -838,7 +838,7 @@ async function Xe(e) {
     });
   } catch (p) {
     if (W(p)) return { entriesPruned: 0, errors: 0 };
-    if (p instanceof jOe)
+    if (p instanceof HistoryFileIntegrityError)
       return (
         n(
           "History retention prune deferred: history.jsonl changed under the scan",
@@ -856,7 +856,7 @@ async function Xe(e) {
     y = !1;
   try {
     w = await Cs(t, {
-      ...fue,
+      ...LOCKFILE_ACQUIRE_OPTIONS,
       onCompromised: (p) => {
         ((y = !0),
           n(`History retention lock compromised: ${p}`, { level: "error" }));
@@ -883,7 +883,7 @@ async function Xe(e) {
         ),
         { entriesPruned: 0, errors: 0 }
       );
-    let g = await Mun(t, a, {
+    let g = await scanHistoryFileRange(t, a, {
         start: f.consumed,
         end: p.size,
         tail: "judge",
@@ -909,7 +909,7 @@ async function Xe(e) {
       { entriesPruned: D, errors: 0 }
     );
   } catch (p) {
-    if (p instanceof jOe)
+    if (p instanceof HistoryFileIntegrityError)
       return (
         n(
           "History retention prune deferred: history.jsonl changed under the scan",
@@ -977,7 +977,7 @@ async function j(
     P = w ?? d(R, e);
   if (a) {
     if (
-      (await sH(
+      (await verifySyncOwnedPath(
         P,
         R,
         { event: "cleanup_sweep_root_refused", phase: "sweep", rootLabel: e },
@@ -1024,10 +1024,10 @@ async function tt(e) {
     let a = await rt(e);
     if (a !== "unaddressed") return a;
   }
-  let t = Umt(),
+  let t = getBridgeSpawnRootDir(),
     r = await K(t).catch(() => null);
   if (!r) return E();
-  return j(Q4e, {
+  return j(BRIDGE_SPAWN_DIR_NAME, {
     removeEmptyBaseDir: !1,
     maxAgeDays: V,
     baseDir: t,
@@ -1037,7 +1037,7 @@ async function tt(e) {
         o?.ino !== r.ino ||
         o.dev !== r.dev ||
         (await K(a)) === null ||
-        (await A.realpath(a)) !== d(await A.realpath(dirname(t)), Q4e, basename(a))
+        (await A.realpath(a)) !== d(await A.realpath(dirname(t)), BRIDGE_SPAWN_DIR_NAME, basename(a))
       );
     },
   });
@@ -1083,7 +1083,7 @@ async function ge(e, t) {
   let a = getClaudeConfigDir(),
     o = d(a, e);
   if (
-    (await sH(
+    (await verifySyncOwnedPath(
       o,
       a,
       { event: "cleanup_sweep_root_refused", phase: "sweep", rootLabel: e },
@@ -1117,12 +1117,12 @@ async function Se(e, t, r, a) {
   let o = E(),
     f = NS();
   if (f === null) return o;
-  let w = await oH().catch(() => null);
+  let w = await resolveSkillBucketId().catch(() => null);
   if (w === null) return o;
   let y = getClaudeConfigDir(),
     p = d(y, e);
   if (
-    (await sH(
+    (await verifySyncOwnedPath(
       p,
       y,
       { event: "cleanup_sweep_root_refused", phase: "sweep", rootLabel: e },
@@ -1142,7 +1142,7 @@ async function Se(e, t, r, a) {
       !P.isDirectory() ||
       !Foe(P.name) ||
       P.name === w ||
-      !(await x2(p, P.name))
+      !(await hasSyncMarker(p, P.name))
     )
       continue;
     let b = d(p, P.name),
@@ -1158,7 +1158,7 @@ async function Se(e, t, r, a) {
     }
     if (
       (o.filesPastCutoff++,
-      await Q9({
+      await trashDirectory({
         dir: b,
         trashRoot: d(y, t),
         configHome: y,
@@ -1166,7 +1166,7 @@ async function Se(e, t, r, a) {
         storageV5: a,
       }))
     )
-      (await gDe(p, P.name).catch(() => {}), o.messages++);
+      (await removeSyncMarker(p, P.name).catch(() => {}), o.messages++);
     else o.errors++;
   }
   return o;
@@ -1273,7 +1273,7 @@ async function mt() {
   }
   for (let f of o) {
     let w = f.name.startsWith("cc-transcript-") && f.name.endsWith(".txt"),
-      y = f.name.startsWith(igt) && f.name.endsWith(".md");
+      y = f.name.startsWith(AUTO_MODE_BUILTINS_FILE_PREFIX) && f.name.endsWith(".md");
     if (!f.isFile() || (!w && !y)) continue;
     try {
       if (await x(d(a, f.name), e, r, t)) t.messages++;
@@ -1491,7 +1491,7 @@ async function Pt(e) {
           }
           if (!a && (g === null || !isSettled(g))) return !0;
           if (g?.worktreePath && isSettled(g) && o)
-            await Emn({
+            await reapJobWorktreeIfSafe({
               worktreePath: g.worktreePath,
               worktreeBranch: g.worktreeBranch,
               originCwd: g.originCwd,
@@ -1718,7 +1718,7 @@ async function de(e, t, r) {
     if (!f.isFile() || !f.name.endsWith(".md")) continue;
     let w = d(e, f.name);
     try {
-      let { content: y, mtimeMs: p } = await w2(w, 0, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, void 0, {
+      let { content: y, mtimeMs: p } = await readFileWithLineRange(w, 0, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, void 0, {
         truncateOnByteLimit: !0,
       });
       if (!(p < t.getTime())) continue;
@@ -1788,8 +1788,8 @@ async function _an(e) {
   let f = { entriesPruned: 0, errors: 0 },
     w = NS();
   if (w !== null) {
-    await RGn(w, e);
-    let p = await Tmn(w);
+    await pruneOldPastes(w, e);
+    let p = await cleanupStaleAgentWorktrees(w);
     if (p > 0) logEvent("tengu_worktree_cleanup", { removed: p });
     if (
       (await Ke(getClaudeConfigDir(), w),

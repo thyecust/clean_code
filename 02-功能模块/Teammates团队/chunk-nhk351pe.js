@@ -17,7 +17,7 @@ import { Zy } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { truncateToWidth } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { yBt, BS } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getMainThreadQueueLength, enqueueCommand } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isUuidString } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { Nu, qI, dK, uN } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 import { getInboundPolicy, getPeerInboundPolicy, getHeldPeerMessageCount } from "../权限系统/cross-session-inbound-gate.js";
@@ -194,7 +194,7 @@ function P(e = L) {
 function Z() {
   if (((d.debounce = null), !d.idle)) return;
   if ((O(Date.now()), d.subscribers.length === 0)) return;
-  if (yBt() > 0) {
+  if (getMainThreadQueueLength() > 0) {
     P();
     return;
   }
@@ -215,7 +215,7 @@ async function QNt(e) {
       await Promise.all([...i.inflight].map((a) => a.catch(() => {})));
   }
   let t =
-    e === "exited" && i.idle && yBt() === 0 && !i.parkedHoldBack && getHeldPeerMessageCount() === 0
+    e === "exited" && i.idle && getMainThreadQueueLength() === 0 && !i.parkedHoldBack && getHeldPeerMessageCount() === 0
       ? "idle"
       : e;
   if ((O(Date.now()), i.subscribers.length === 0 || i.sendNotice === null))
@@ -261,7 +261,7 @@ async function J(e, i, t, r, o) {
     logFeatureSad("cross_session_notify_idle", "revoked_before_fire");
     return;
   }
-  if (r === "idle" && (!e.idle || yBt() > 0 || getHeldPeerMessageCount() > 0)) {
+  if (r === "idle" && (!e.idle || getMainThreadQueueLength() > 0 || getHeldPeerMessageCount() > 0)) {
     if ((B(t), e.idle)) {
       let l = getHeldPeerMessageCount() > 0;
       ((e.parkedHoldBack = l), P(l ? z : L));
@@ -667,7 +667,7 @@ function H(e, i) {
 }
 function Asn(e) {
   if (e.length === 0) return;
-  BS({
+  enqueueCommand({
     mode: "prompt",
     agentId: ze(),
     value: e.map(re).join(`

@@ -19,25 +19,25 @@ import { Iw } from "../../01-核心基础设施/核心工具-常量与消息/核
 import { rU, isPolicyAllowed } from "../策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  nH,
+  isAgentStopPending,
   isHostAllowedBySandboxNetworkPolicy,
-  pzn,
-  PBt,
-  qmt,
-  jS,
-  sde,
-  vV,
-  qv,
-  bE,
-  JF,
-  qne,
-  R6t,
-  GM,
-  O5n,
-  k6t,
-  Qf,
-  aMe,
-  Xne,
+  getBashCommandClampSurfaceDeny,
+  getBashCommandClampCrashDeny,
+  checkBashCommandPermissions,
+  shouldUseSandbox,
+  getAgentWorktreePath,
+  executeShellCommand,
+  addKeepaliveReason,
+  removeKeepaliveReason,
+  killLocalShellTask,
+  resolveToolUseAgentId,
+  createMonitorEventGate,
+  sendMonitorEventNotification,
+  registerMonitorSocket,
+  isMonitorSocketCurrent,
+  killMonitorTask,
+  isPrivateOrReservedIpAddress,
+  startBackgroundShellTask,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ys } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { formatSubprotocolSuffix, formatSubprotocolList } from "../../01-核心基础设施/共享小工具-未细化/websocket-subprotocols.js";
@@ -78,7 +78,7 @@ async function J(e, t) {
   let o = new URL(e),
     u = z(o.hostname);
   if (Y(u)) {
-    if (aMe(u))
+    if (isPrivateOrReservedIpAddress(u))
       throw new ybe(
         `${u} is in a private, link-local, or cloud-metadata range`,
       );
@@ -92,7 +92,7 @@ async function J(e, t) {
   }
   if (h.length === 0) throw new ybe(`could not resolve ${u}`);
   for (let { address: k } of h)
-    if (aMe(k))
+    if (isPrivateOrReservedIpAddress(k))
       throw new ybe(
         `${u} resolves to ${k}, which is in a private, link-local, or cloud-metadata range`,
       );
@@ -145,15 +145,15 @@ async function Hqe(e, t) {
     { url: M, protocols: k } = e.ws;
   checkWebSocketEgress(M);
   let { toolUseId: P, taskRegistry: p } = o,
-    f = qne(o),
+    f = resolveToolUseAgentId(o),
     r = e.reuseTaskId ?? generateTaskId("monitor_ws"),
-    C = R6t({
+    C = createMonitorEventGate({
       description: u,
       agentId: f,
       taskRef: { id: r },
       killTask: () => {
-        if (!k6t(r, g)) return !1;
-        return (Qf(r, p, { quiet: !0 }), !0);
+        if (!isMonitorSocketCurrent(r, g)) return !1;
+        return (killMonitorTask(r, p, { quiet: !0 }), !0);
       },
     }),
     I = getWebSocketProxyUrl(M),
@@ -167,7 +167,7 @@ async function Hqe(e, t) {
     }),
     E = Date.now(),
     x,
-    _ = () => k6t(r, g),
+    _ = () => isMonitorSocketCurrent(r, g),
     L = Date.now();
   (g.on("open", () => {
     let l = p.all()[r];
@@ -213,12 +213,12 @@ async function Hqe(e, t) {
       if (!d || d.status !== "running" || !_()) return;
       let b = ee(l);
       if (b > N) {
-        (GM(u, `[Dropped ${b}-byte frame (exceeds ${N}); closing]`, r, {
+        (sendMonitorEventNotification(u, `[Dropped ${b}-byte frame (exceeds ${N}); closing]`, r, {
           isHousekeeping: !0,
           agentId: f,
           turnAttribution: "none",
         }),
-          Qf(r, p, { quiet: !0 }));
+          killMonitorTask(r, p, { quiet: !0 }));
         return;
       }
       if (i) {
@@ -257,7 +257,7 @@ async function Hqe(e, t) {
       i?.resume?.());
     let S = p.all()[r];
     if (!e.quietLifecycle && S?.status === "running" && _())
-      GM(u, `[WebSocket upgrade rejected: HTTP ${d}]`, r, {
+      sendMonitorEventNotification(u, `[WebSocket upgrade rejected: HTTP ${d}]`, r, {
         isHousekeeping: !0,
         agentId: f,
         turnAttribution: "none",
@@ -277,7 +277,7 @@ async function Hqe(e, t) {
         (n(`[callWs] socket error: ${l.message}`),
         !e.quietLifecycle && U === void 0)
       )
-        GM(u, `[WebSocket error: ${l.message}]`, r, {
+        sendMonitorEventNotification(u, `[WebSocket error: ${l.message}]`, r, {
           isHousekeeping: !0,
           agentId: f,
           turnAttribution: "none",
@@ -295,13 +295,13 @@ async function Hqe(e, t) {
       } catch {}
       if (!e.quietLifecycle) {
         let b = i.length ? ` ${i.toString("utf8")}` : "";
-        GM(u, `[WebSocket closed: ${l}${b}]`, r, {
+        sendMonitorEventNotification(u, `[WebSocket closed: ${l}${b}]`, r, {
           isHousekeeping: !0,
           agentId: f,
           turnAttribution: "none",
         });
       }
-      Qf(r, p, { quiet: !0, connectionLost: !0 });
+      killMonitorTask(r, p, { quiet: !0, connectionLost: !0 });
     }));
   let V = w
       ? void 0
@@ -309,11 +309,11 @@ async function Hqe(e, t) {
           (l, i, d, b, y, S) => {
             if (l.isKilled()) return;
             if (!S)
-              GM(i, "[Monitor timed out \u2014 re-arm if needed.]", d, {
+              sendMonitorEventNotification(i, "[Monitor timed out \u2014 re-arm if needed.]", d, {
                 isHousekeeping: !0,
                 agentId: b,
               });
-            Qf(d, y, { quiet: !0 });
+            killMonitorTask(d, y, { quiet: !0 });
           },
           h,
           C,
@@ -337,14 +337,14 @@ async function Hqe(e, t) {
         frameLive: { ...e.frameLive, armedAt: Date.now() },
       }),
     };
-  if ((p.register(K), O5n(r, g), qv(f, `monitor:${r}`, p), e.ambient)) {
+  if ((p.register(K), registerMonitorSocket(r, g), addKeepaliveReason(f, `monitor:${r}`, p), e.ambient)) {
     let l = setTimeout(
       (i, d, b, y, S) => {
-        if (i.readyState === 0 && k6t(d, i)) {
+        if (i.readyState === 0 && isMonitorSocketCurrent(d, i)) {
           try {
             y.onLifecycle?.("close", Wdt, Date.now() - S);
           } catch {}
-          Qf(d, b, { quiet: !0, connectionLost: !0 });
+          killMonitorTask(d, b, { quiet: !0, connectionLost: !0 });
         }
       },
       e.handshakeDeadlineMs ?? Z,
@@ -452,8 +452,8 @@ var de = createLazyValue(() =>
   }),
 );
 function pe(e) {
-  let t = qne(e);
-  if (t !== void 0 && nH(t))
+  let t = resolveToolUseAgentId(e);
+  if (t !== void 0 && isAgentStopPending(t))
     throw Error(
       "This agent has been stopped and its stop is still completing; it cannot start monitors.",
     );
@@ -462,27 +462,27 @@ async function fe(e, t, o, u) {
   let { description: h } = t,
     { timeout_ms: w, persistent: M } = q(t),
     { abortController: k, toolUseId: P, taskRegistry: p } = o,
-    f = qne(o),
+    f = resolveToolUseAgentId(o),
     r = {},
-    W = R6t({
+    W = createMonitorEventGate({
       description: h,
       agentId: f,
       taskRef: r,
       killTask: () => {
         if (!r.id) return !1;
-        return (JF(r.id, p), !0);
+        return (killLocalShellTask(r.id, p), !0);
       },
     }),
-    C = await vV(e, k.signal, "bash", {
+    C = await executeShellCommand(e, k.signal, "bash", {
       session: o.session,
       owningAgentId: f,
       preventCwdChanges: !0,
-      shouldUseSandbox: jS({ command: e }),
+      shouldUseSandbox: shouldUseSandbox({ command: e }),
       sandboxAttributionId: P,
       attributionMessageId: u?.message.id,
       onStdout: W.onData,
       agentWorktree: o.agentWorktree,
-      isolationRoot: sde(o),
+      isolationRoot: getAgentWorktreePath(o),
       sessionEnvVars: o.sessionEnvVars,
       storageV5: o.storageV5,
     });
@@ -494,11 +494,11 @@ async function fe(e, t, o, u) {
         "Monitor: pre-spawn error (cwd/argv redacted)",
       );
   }
-  if (C.status === "killed" && f !== void 0 && nH(f))
+  if (C.status === "killed" && f !== void 0 && isAgentStopPending(f))
     throw Error(
       "This agent has been stopped and its stop is still completing; it cannot start monitors.",
     );
-  let I = await Xne(
+  let I = await startBackgroundShellTask(
     {
       command: e,
       description: h,
@@ -509,17 +509,17 @@ async function fe(e, t, o, u) {
     },
     { abortController: k, taskRegistry: p },
   );
-  ((r.id = I.taskId), qv(f, `monitor:${I.taskId}`, p));
+  ((r.id = I.taskId), addKeepaliveReason(f, `monitor:${I.taskId}`, p));
   let D = M
     ? void 0
     : setTimeout(
         (A, g, E, x, _) => {
           if (A.isKilled()) return;
-          (GM(g, "[Monitor timed out \u2014 re-arm if needed.]", E, {
+          (sendMonitorEventNotification(g, "[Monitor timed out \u2014 re-arm if needed.]", E, {
             isHousekeeping: !0,
             agentId: x,
           }),
-            JF(E, _));
+            killLocalShellTask(E, _));
         },
         w,
         W,
@@ -531,7 +531,7 @@ async function fe(e, t, o, u) {
   return (
     C.result.then(() => {
       if (D) clearTimeout(D);
-      (W.finish(), bE(f, `monitor:${I.taskId}`, p));
+      (W.finish(), removeKeepaliveReason(f, `monitor:${I.taskId}`, p));
     }),
     { data: { taskId: I.taskId, timeoutMs: M ? 0 : w, persistent: M } }
   );
@@ -546,7 +546,7 @@ function wsEgressDenyReason(e) {
     };
   let t = new URL(e),
     o = z(t.hostname);
-  if (oe(o) && aMe(o))
+  if (oe(o) && isPrivateOrReservedIpAddress(o))
     return {
       kind: "ssrf",
       host: o,
@@ -593,7 +593,7 @@ var be = {
     maxResultSizeChars: 1e4,
     shouldDefer: !0,
     permissionCheckFailureDecision(e, t) {
-      return PBt(MONITOR_TOOL_NAME, t);
+      return getBashCommandClampCrashDeny(MONITOR_TOOL_NAME, t);
     },
     userFacingName() {
       return "Monitor";
@@ -644,11 +644,11 @@ var be = {
     },
     async checkPermissions(e, t) {
       if (e.ws) {
-        let o = pzn("Monitor websocket", t);
+        let o = getBashCommandClampSurfaceDeny("Monitor websocket", t);
         if (o !== void 0) return o;
         return he(e.ws);
       }
-      return qmt({ ...e, command: e.command }, t);
+      return checkBashCommandPermissions({ ...e, command: e.command }, t);
     },
     async call(e, t, o, u) {
       if ((pe(t), e.ws)) return Hqe({ ...e, ...q(e), ws: e.ws }, WPe(t));

@@ -12,7 +12,7 @@
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import "../后台任务-Shell管理/chunk-rh0xpf1w.js";
-import { IF, xn, flushSessionStorage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getConversationMessages, gracefulShutdown, flushSessionStorage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../../01-核心基础设施/共享小工具-未细化/use-clock.js";
@@ -154,7 +154,7 @@ Learn more at ${D}`,
               isBgSession())
             )
               HB({ broadcast: !0 });
-            await xn(0, "other");
+            await gracefulShutdown(0, "other");
           }, 500));
       }
       T().catch((a) => {
@@ -199,6 +199,6 @@ Learn more at ${D}`,
   });
 }
 async function Q(m, n) {
-  return e(C, { onDone: m, handoff: v(), getTranscript: () => IF(n) });
+  return e(C, { onDone: m, handoff: v(), getTranscript: () => getConversationMessages(n) });
 }
 export { Q as call };

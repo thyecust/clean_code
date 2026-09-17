@@ -11,19 +11,19 @@
 // [preload stripped] 原本在此预载 207 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { isSafeMode } from "../Bedrock-Vertex/chunk-5ndhfaq9.js";
-import { z7, J$t, d3, Rk, resetSentSkillNames, clearCommandsCache, getSkillToolCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { dropShadowedSyncedSkills, filterMcpLoadedCommands, refreshSkillsSyncVetoed, skillsChangedEmitter, resetSentSkillNames, clearCommandsCache, getSkillToolCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getCwd } from "../../01-核心基础设施/共享小工具-未细化/cwd-context.js";
 import { countMatching } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var M = async (C, m) => {
   let t = getCwd(),
-    d = J$t(m.getMcp().commands),
-    s = (o) => z7(o, d),
+    d = filterMcpLoadedCommands(m.getMcp().commands),
+    s = (o) => dropShadowedSyncedSkills(o, d),
     n = s(await getSkillToolCommands(t, m.storageV5)),
     i = new Set(n.map((o) => o.name));
-  (d3(), clearCommandsCache(), resetSentSkillNames());
+  (refreshSkillsSyncVetoed(), clearCommandsCache(), resetSentSkillNames());
   let e = s(await getSkillToolCommands(t, m.storageV5)),
     c = new Set(e.map((o) => o.name));
-  Rk.emit();
+  skillsChangedEmitter.emit();
   let l = countMatching(e, (o) => !i.has(o.name)),
     r = countMatching(n, (o) => !c.has(o.name)),
     a = [];

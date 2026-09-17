@@ -13,7 +13,7 @@ import { G0 } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { shutdownInterruptStamp } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { U5e, Lo, Re, m$, PI, GV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { INNER_TOOL_USE_ID_SUFFIX, BashTool, createUserMessage, prependPrecedingInputBlocks, createInterruptedMessage, createLocalCommandCaveatMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { yS } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
@@ -26,8 +26,8 @@ async function processBashCommand(t, S, e) {
   let h = Bk() && getDefaultShell() === "powershell",
     l = getInitialSettings().respondToBashCommands ?? !0;
   logEvent("tengu_input_bash", { powershell: h, respond: l });
-  let d = Re({
-      content: m$({
+  let d = createUserMessage({
+      content: prependPrecedingInputBlocks({
         inputString: `<bash-input>${t}</bash-input>`,
         precedingInputBlocks: S,
       }),
@@ -44,7 +44,7 @@ async function processBashCommand(t, S, e) {
   try {
     let s = {
         ...e,
-        toolUseId: `${m}${U5e}`,
+        toolUseId: `${m}${INNER_TOOL_USE_ID_SUFFIX}`,
         ...(a.CLAUDE_CODE_SESSION_KIND === void 0 && {
           userTypedShellDispatch: !0,
         }),
@@ -61,7 +61,7 @@ async function processBashCommand(t, S, e) {
       },
       o = null;
     if (h) o = import.meta.require("../工具Bash-Shell/工具Bash-Shell.edt8d0b4.js").PowerShellTool;
-    let y = o ?? Lo,
+    let y = o ?? BashTool,
       r = (
         o
           ? await o.call(
@@ -71,7 +71,7 @@ async function processBashCommand(t, S, e) {
               void 0,
               n,
             )
-          : await Lo.call(
+          : await BashTool.call(
               { command: t, dangerouslyDisableSandbox: !0 },
               s,
               void 0,
@@ -91,9 +91,9 @@ async function processBashCommand(t, S, e) {
         !e.abortController.signal.aborted;
     return {
       messages: [
-        ...(f ? [] : [GV()]),
+        ...(f ? [] : [createLocalCommandCaveatMessage()]),
         d,
-        Re({
+        createUserMessage({
           content: `<bash-stdout>${P}</bash-stdout><bash-stderr>${Nt(T)}</bash-stderr>`,
         }),
       ],
@@ -104,9 +104,9 @@ async function processBashCommand(t, S, e) {
       if (s.interrupted)
         return {
           messages: [
-            GV(),
+            createLocalCommandCaveatMessage(),
             d,
-            PI({
+            createInterruptedMessage({
               toolUse: !1,
               interruptedByShutdown: shutdownInterruptStamp(e.abortController.signal),
             }),
@@ -116,9 +116,9 @@ async function processBashCommand(t, S, e) {
       let o = l && !e.abortController.signal.aborted;
       return {
         messages: [
-          ...(o ? [] : [GV()]),
+          ...(o ? [] : [createLocalCommandCaveatMessage()]),
           d,
-          Re({
+          createUserMessage({
             content: `<bash-stdout>${Nt(s.stdout)}</bash-stdout><bash-stderr>${Nt(s.stderr)}</bash-stderr>`,
           }),
         ],
@@ -128,9 +128,9 @@ async function processBashCommand(t, S, e) {
     let n = l && !e.abortController.signal.aborted;
     return {
       messages: [
-        ...(n ? [] : [GV()]),
+        ...(n ? [] : [createLocalCommandCaveatMessage()]),
         d,
-        Re({
+        createUserMessage({
           content: `<bash-stderr>Command failed: ${Nt(getBashSpawnFailureDetail(s, e.session))}</bash-stderr>`,
         }),
       ],

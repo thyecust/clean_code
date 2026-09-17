@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { createLazyValue } from "./lazy-value.js";
-import { xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { joinTextBlocks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, se, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 var RESUMED_AGENT_REPORT_OMITTED_MESSAGE = "Resumed agent. Its final report is not in this message.",
   RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE =
@@ -17,7 +17,7 @@ function formatResumedAgentResult({ displayName: e, content: n }) {
   return `Resumed agent ${e}. Result:
 
 ${
-  xr(
+  joinTextBlocks(
     n,
     `
 `,

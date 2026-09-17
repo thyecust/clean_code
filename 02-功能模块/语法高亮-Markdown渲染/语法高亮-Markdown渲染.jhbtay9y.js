@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { cne, kpn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { highlightLanguageRegistry, resolveCanonicalLanguageId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { $Zn } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { commonJS } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 var Je = commonJS(function (su, Qe) {
@@ -29685,14 +29685,14 @@ var Gc = {
     let e = Bc();
     return "default" in e && e.default ? e.default : e;
   },
-  resolveId: kpn,
+  resolveId: resolveCanonicalLanguageId,
   loaders: Ec,
   subLanguageDeps: $Zn,
 };
 function jit() {
-  return cne.core(Gc);
+  return highlightLanguageRegistry.core(Gc);
 }
 function BB(e) {
-  return cne.ensureLanguage(e, Gc);
+  return highlightLanguageRegistry.ensureLanguage(e, Gc);
 }
 export { jit, BB };

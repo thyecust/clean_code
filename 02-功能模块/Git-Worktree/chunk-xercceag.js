@@ -55,31 +55,31 @@ import { er, tar, usesFirstPartyModelIds } from "../../01-核心基础设施/模
 import { getProjectsDir, getProjectKeyFromDir } from "../Teammates团队/transcript-paths.js";
 import { worktreeStateStore } from "../../01-核心基础设施/共享小工具-未细化/worktree-state-store.js";
 import {
-  rV,
-  T2,
-  jwe,
-  Mmt,
-  bDe,
-  vO,
+  resetPromptStateAfterInvalidation,
+  createSessionHookRegistry,
+  restoreCostStateFromRecord,
+  isTrustedAgentOrigin,
+  warnUntrustedAgentOrigin,
+  findAgentByType,
   rebuildAgentDefinitions,
   getAgentDefinitionsWithOverrides,
   fileHistoryRestoreStateFromLog,
-  pu,
-  LTe,
+  setSessionCwd,
+  todoItemsSchema,
   logResumeInterruptedTurn,
   removeInterruptedMessage,
-  jKn,
-  U_,
-  VO,
-  uw,
-  VLe,
-  H6t,
-  iY,
-  uWt,
-  hEe,
-  fMe,
-  jde,
-  Ht,
+  evaluateWorktreePinSync,
+  stripControlCharacters,
+  comparePathIdentity,
+  resolveGitRootCandidates,
+  restoreWorktreeSession,
+  hasAgentFrontmatterHooks,
+  initialRealCwd,
+  isSameRealPath,
+  getRequiredCoverageRoots,
+  getCoverageWitnessRoots,
+  isPathCoveringAllRoots,
+  createSystemInfoMessage,
   isTranscriptPersistenceDisabled,
   recordContentReplacement,
   resetSessionFilePointer,
@@ -89,7 +89,7 @@ import {
   restoreSessionMetadata,
   saveMode,
   saveWorktreeState,
-  PY,
+  clearCurrentSessionMemoryFiles,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { fc, w_ } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { getReplBridgeHandle } from "../权限系统/chunk-1y2g140m.js";
@@ -186,17 +186,17 @@ async function se(e, o, t) {
 import { dirname as q, resolve, win32 as X } from "path";
 import { realpathSync, statSync } from "fs";
 function Vae(e) {
-  if (!e || !H6t(e.hooks)) {
+  if (!e || !hasAgentFrontmatterHooks(e.hooks)) {
     yHt(void 0);
     return;
   }
   let o = !isRestrictedToPluginOnly("hooks") || isSourceAdminTrusted(e.source),
-    t = Mmt(e);
+    t = isTrustedAgentOrigin(e);
   if (o && t) {
     yHt(e.hooks);
     return;
   }
-  if (o && !t) bDe(e, "mainThread");
+  if (o && !t) warnUntrustedAgentOrigin(e, "mainThread");
   yHt(void 0);
 }
 class U {
@@ -222,7 +222,7 @@ function ue(e) {
     if (!r || r.type !== "tool_use") continue;
     let s = r.input;
     if (s === null || typeof s !== "object") return [];
-    let d = LTe().safeParse(s.todos);
+    let d = todoItemsSchema().safeParse(s.todos);
     return d.success ? d.data : [];
   }
   return [];
@@ -268,9 +268,9 @@ function Gz(e, o, t, r) {
       { agentDefinition: void 0, agentType: void 0 }
     );
   let s = r?.sessionAgentDefinitions
-      ? vO(r.sessionAgentDefinitions.activeAgents, e)
+      ? findAgentByType(r.sessionAgentDefinitions.activeAgents, e)
       : void 0,
-    d = s ?? vO(t.activeAgents, e);
+    d = s ?? findAgentByType(t.activeAgents, e);
   if (s)
     n(
       `Resume: agent "${e}" restored from the session home set (${r?.sessionCwd ?? "unknown"})`,
@@ -572,10 +572,10 @@ var F =
   "The worktree binding could not be cleared because transcript saving is off";
 function Fst(e, o) {
   if (e.reason === "pin-is-own-launch-tree")
-    return `Error: ${U_(e.message)} The worktree binding is kept.
+    return `Error: ${stripControlCharacters(e.message)} The worktree binding is kept.
 `;
   if (!e.poisoned)
-    return `Error: could not verify worktree ${U_(e.worktreePath)} for this resume, so the resume was aborted rather than continuing without isolation. This is usually transient \u2014 the worktree binding is kept; re-run the command to retry.
+    return `Error: could not verify worktree ${stripControlCharacters(e.worktreePath)} for this resume, so the resume was aborted rather than continuing without isolation. This is usually transient \u2014 the worktree binding is kept; re-run the command to retry.
 `;
   let t =
     o?.bindingCleared === void 0
@@ -583,29 +583,29 @@ function Fst(e, o) {
       : o.bindingCleared
         ? " The worktree binding has been cleared; re-running will continue in the current directory without worktree isolation."
         : ` ${F} for this run, so the same command will be refused again until that is resolved; to continue without the worktree, re-run with --fork-session or start a new conversation.`;
-  return `Error: cannot resume into worktree ${U_(e.worktreePath)}: ${U_(e.message)} This session was not started.${t}
+  return `Error: cannot resume into worktree ${stripControlCharacters(e.worktreePath)}: ${stripControlCharacters(e.message)} This session was not started.${t}
 `;
 }
 function yQt(e, o) {
   let t = o.bindingCleared
     ? "The worktree binding has been cleared."
     : `${F} for this run; a later resume will re-check it.`;
-  return `Notice: the worktree ${U_(e.worktreePath)} for this session no longer exists; continuing in the current directory without worktree isolation. ${t}
+  return `Notice: the worktree ${stripControlCharacters(e.worktreePath)} for this session no longer exists; continuing in the current directory without worktree isolation. ${t}
 `;
 }
 function RHe(e) {
   let o = `${F}; a later --resume will re-check it.`;
   if (e.reason === "worktree-gone")
-    return `Your worktree ${U_(e.worktreePath)} no longer exists, so this session is working in the current directory without worktree isolation. ${isTranscriptPersistenceDisabled() ? o : "The worktree binding has been cleared."}`;
+    return `Your worktree ${stripControlCharacters(e.worktreePath)} no longer exists, so this session is working in the current directory without worktree isolation. ${isTranscriptPersistenceDisabled() ? o : "The worktree binding has been cleared."}`;
   if (e.reason === "pin-is-own-launch-tree")
-    return `Could not re-enter your worktree ${U_(e.worktreePath)}: ${U_(e.message)} The worktree binding is kept.`;
+    return `Could not re-enter your worktree ${stripControlCharacters(e.worktreePath)}: ${stripControlCharacters(e.message)} The worktree binding is kept.`;
   if (e.poisoned) {
     let t = isTranscriptPersistenceDisabled()
       ? `You are working in the current directory without worktree isolation. ${o}`
       : "This session's worktree binding has been cleared; you are working in the current directory without worktree isolation.";
-    return `Did not re-enter your worktree ${U_(e.worktreePath)}: ${U_(e.message)} ${t}`;
+    return `Did not re-enter your worktree ${stripControlCharacters(e.worktreePath)}: ${stripControlCharacters(e.message)} ${t}`;
   }
-  return `Could not verify your worktree ${U_(e.worktreePath)} this time, so this session is working in the current directory without worktree isolation. The worktree binding is kept and a later --resume will retry it. If this keeps happening, the worktree's git metadata may need repair.`;
+  return `Could not verify your worktree ${stripControlCharacters(e.worktreePath)} this time, so this session is working in the current directory without worktree isolation. The worktree binding is kept and a later --resume will retry it. If this keeps happening, the worktree's git metadata may need repair.`;
 }
 function D(e) {
   if (Xo(e) || gp(e) || gp(X.normalize(e)))
@@ -651,10 +651,10 @@ function Se(e, o, t) {
     } catch {
       return null;
     }
-    if ((pu(o), jde(o, hEe(iY)))) ES(getCwd());
+    if ((setSessionCwd(o), isPathCoveringAllRoots(o, getRequiredCoverageRoots(initialRealCwd)))) ES(getCwd());
     return (
-      PY(),
-      rV("resume"),
+      clearCurrentSessionMemoryFiles(),
+      resetPromptStateAfterInvalidation("resume"),
       getPlansDirectory.cache.clear?.(),
       primePlanSlugCollisions(t?.storageV5),
       reanchorGitFileWatcher(),
@@ -722,12 +722,12 @@ function Se(e, o, t) {
         poisoned: !1,
       }
     );
-  let l = t?.liveLaunchDir ?? iY,
-    c = uWt(getCwd(), e.worktreePath),
-    m = jKn(
+  let l = t?.liveLaunchDir ?? initialRealCwd,
+    c = isSameRealPath(getCwd(), e.worktreePath),
+    m = evaluateWorktreePinSync(
       e.worktreePath,
-      uw(e.originalCwd),
-      dedupe([G(l), ...uw(l), G(iY), ...uw(iY)]),
+      resolveGitRootCandidates(e.originalCwd),
+      dedupe([G(l), ...resolveGitRootCandidates(l), G(initialRealCwd), ...resolveGitRootCandidates(initialRealCwd)]),
       { declineSelfOwningPinUnderLiveRoot: !0 },
     );
   if (!m.ok) {
@@ -748,7 +748,7 @@ function Se(e, o, t) {
       if (c) {
         let k = q(e.worktreePath),
           y = z(k) === "present" ? k : e.originalCwd;
-        if (uWt(y, e.worktreePath))
+        if (isSameRealPath(y, e.worktreePath))
           return {
             worktreePath: e.worktreePath,
             reason: m.reason,
@@ -756,14 +756,14 @@ function Se(e, o, t) {
             poisoned: h,
           };
         try {
-          (Yu(y), pu(y));
-          let v = (b) => VO(b, e.worktreePath) === "same",
+          (Yu(y), setSessionCwd(y));
+          let v = (b) => comparePathIdentity(b, e.worktreePath) === "same",
             w = FW(e.worktreePath),
             P = w !== null ? [w] : [],
-            R = [...uw(l), ...P].filter((b) => !v(b));
-          if (jde(y, R, { requireCovered: !0 })) ES(y);
-          (PY(),
-            rV("resume"),
+            R = [...resolveGitRootCandidates(l), ...P].filter((b) => !v(b));
+          if (isPathCoveringAllRoots(y, R, { requireCovered: !0 })) ES(y);
+          (clearCurrentSessionMemoryFiles(),
+            resetPromptStateAfterInvalidation("resume"),
             clearIsGitMemo(),
             getPlansDirectory.cache.clear?.(),
             primePlanSlugCollisions(t?.storageV5),
@@ -812,11 +812,11 @@ function Se(e, o, t) {
     );
   }
   return (
-    pu(e.worktreePath),
+    setSessionCwd(e.worktreePath),
     ES(getCwd()),
-    VLe({ ...e, liveLaunchAnchor: l }),
-    PY(),
-    rV("resume"),
+    restoreWorktreeSession({ ...e, liveLaunchAnchor: l }),
+    clearCurrentSessionMemoryFiles(),
+    resetPromptStateAfterInvalidation("resume"),
     getPlansDirectory.cache.clear?.(),
     primePlanSlugCollisions(t?.storageV5),
     reanchorGitFileWatcher(),
@@ -827,7 +827,7 @@ function Se(e, o, t) {
 function SQt(e, o) {
   let t = Ia();
   if (!t) return;
-  if ((VLe(null), PY(), rV("resume"), t.worktreePath === e)) {
+  if ((restoreWorktreeSession(null), clearCurrentSessionMemoryFiles(), resetPromptStateAfterInvalidation("resume"), t.worktreePath === e)) {
     (getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(o));
     return;
   }
@@ -843,13 +843,13 @@ function SQt(e, o) {
   } catch {
     return;
   }
-  pu(t.originalCwd);
+  setSessionCwd(t.originalCwd);
   let r = t.liveLaunchAnchor;
   if (
     r === void 0 ||
-    jde(t.originalCwd, hEe(r, t.worktreePath), {
+    isPathCoveringAllRoots(t.originalCwd, getRequiredCoverageRoots(r, t.worktreePath), {
       requireCovered: !0,
-      coveredWitnesses: fMe(r, t.worktreePath),
+      coveredWitnesses: getCoverageWitnessRoots(r, t.worktreePath),
       extraCoveredRoots: (() => {
         let s = FW(t.worktreePath);
         return s !== null ? [s] : [];
@@ -863,7 +863,7 @@ async function $st(e, o, t) {
   THe(t.session.host);
   let r;
   if (((r = t.modeApi?.matchSessionMode(e.mode)), r))
-    e.messages.push(Ht(r, "warning"));
+    e.messages.push(createSystemInfoMessage(r, "warning"));
   let { adoptedSessionId: s, effectiveFork: d } = Vre(
     o.sessionIdOverride ?? e.sessionId,
     o.forkSession,
@@ -883,11 +883,11 @@ async function $st(e, o, t) {
     )
       await recordContentReplacement(e.contentReplacements, void 0, t.storageV5);
   } else restoreSessionMetadata(e, { storageV5: t.storageV5 });
-  if ((jwe(e), !d)) {
+  if ((restoreCostStateFromRecord(e), !d)) {
     let f = DZ(worktreeStateStore.of(t.session.host), e.worktreeSession, void 0, {
       storageV5: t.storageV5,
     });
-    if (f) e.messages.push(Ht(RHe(f), "warning"));
+    if (f) e.messages.push(createSystemInfoMessage(RHe(f), "warning"));
     if (isHoverRestEnabled() && t.storageV5 !== void 0) await adoptResumedSessionFileAsync(t.storageV5);
     else adoptResumedSessionFile();
   }
@@ -899,7 +899,7 @@ async function $st(e, o, t) {
       {
         sessionAgentDefinitions: l,
         sessionCwd: e.projectPath,
-        onResolveMiss: (f) => e.messages.push(Ht(f, "warning")),
+        onResolveMiss: (f) => e.messages.push(createSystemInfoMessage(f, "warning")),
       },
     ),
     h = e.permissionMode,
@@ -908,7 +908,7 @@ async function $st(e, o, t) {
     v = null;
   if (d) vHe(e.messages);
   let w = IZ(e.messages, t.initialState.mainLoopModel, (f) =>
-      e.messages.push(Ht(f, "warning")),
+      e.messages.push(createSystemInfoMessage(f, "warning")),
     ),
     P = w ? PZ(e.messages, w, d, t.storageV5, t.credentials) : void 0;
   (OZ(e.messages, d), kHe(e.messages, { fork: d, startup: !0 }));
@@ -951,7 +951,7 @@ async function $st(e, o, t) {
       removeInterruptedMessage(e.messages, e.turnInterruptionState.message),
       (I = { message: e.turnInterruptionState.message }));
   let _ = t.initialState,
-    N = T2();
+    N = createSessionHookRegistry();
   return (
     import.meta.require("../../01-核心基础设施/共享小工具-未细化/chunk-wdns14nh.js").restoreGoalFromTranscript(
       e.messages,

@@ -24,7 +24,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { REFUSE_INPUT_WINDOW_MS, isRecent } from "../../01-核心基础设施/共享小工具-未细化/recent-window.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
-import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
 import { Aot, Cot, vot } from "../输入分发-查询构造/输入分发-查询构造.eerwnvjy.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
@@ -180,7 +180,7 @@ function CdTrustPrompt(ft) {
   let fo = po;
   const Be = k ? "Now in a new directory:" : "Moving to a new directory:";
   let he;
-  if (R[2] !== Xe) ((he = an(Xe)), (R[2] = Xe), (R[3] = he));
+  if (R[2] !== Xe) ((he = sanitizeForDisplay(Xe)), (R[2] = Xe), (R[3] = he));
   else he = R[3];
   let ye;
   if (R[4] !== he)
@@ -194,7 +194,7 @@ function CdTrustPrompt(ft) {
         children: [
           "This directory is part of the repository at",
           " ",
-          e(t, { bold: !0, children: an(fe) }),
+          e(t, { bold: !0, children: sanitizeForDisplay(fe) }),
           ". Trusting it trusts that whole repository, including its other worktrees and subdirectories.",
         ],
       })),
@@ -471,11 +471,11 @@ async function ut(s, a, l) {
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "same": {
-      let i = `Already in ${chalk.bold(an(u.directory))}.`;
+      let i = `Already in ${chalk.bold(sanitizeForDisplay(u.directory))}.`;
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "blocked_by_rule": {
-      let i = cdRuleRefusalMessage(u.directory, u.check, chalk.bold, { display: an });
+      let i = cdRuleRefusalMessage(u.directory, u.check, chalk.bold, { display: sanitizeForDisplay });
       return e(E, { message: i, args: c, onDone: () => s(i) });
     }
     case "ok":
@@ -490,7 +490,7 @@ async function ut(s, a, l) {
         return (
           n(`/cd relocate failed: ${m}`, { level: "error" }),
           s(
-            `Couldn't move to ${chalk.bold(an(h))} \u2014 the directory may no longer exist, or the session couldn't be moved. Staying in ${chalk.bold(an(getCwd()))}.`,
+            `Couldn't move to ${chalk.bold(sanitizeForDisplay(h))} \u2014 the directory may no longer exist, or the session couldn't be moved. Staying in ${chalk.bold(sanitizeForDisplay(getCwd()))}.`,
           ),
           null
         );
@@ -518,8 +518,8 @@ async function ut(s, a, l) {
       else if (m) logFeatureOk("mcp_project_approval_dialog");
       s(
         m?.persistFailed
-          ? `Moved to ${chalk.bold(an(h))}. One or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \u2014 you will be asked again next time.`
-          : `Moved to ${chalk.bold(an(h))}`,
+          ? `Moved to ${chalk.bold(sanitizeForDisplay(h))}. One or more of your MCP server choices could not be saved (check permissions on .claude/settings.local.json) \u2014 you will be asked again next time.`
+          : `Moved to ${chalk.bold(sanitizeForDisplay(h))}`,
         { display: "system", metaMessages: [i] },
       );
     };
@@ -556,7 +556,7 @@ async function ut(s, a, l) {
     ),
     onComplete: w,
     onCancel: () => {
-      s(`Staying in ${chalk.bold(an(getCwd()))}`);
+      s(`Staying in ${chalk.bold(sanitizeForDisplay(getCwd()))}`);
     },
   });
 }

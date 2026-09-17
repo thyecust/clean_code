@@ -33,31 +33,31 @@ import { isPolicyAllowed, policyDeniedReason } from "../策略限制(PolicyLimit
 import { getBridgeEntitlementBlocker } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { b_ } from "../策略限制(PolicyLimits)/chunk-hpw6352m.js";
 import {
-  kte,
+  getReviewBughunterConfig,
   getReviewCostNote,
   getReviewDurationNote,
-  EGn,
-  $Oe,
-  X$t,
-  AGn,
-  CGn,
-  ZA,
-  vGn,
-  BOe,
-  ygt,
-  ede,
-  ZDe,
-  Lgt,
-  njt,
-  WVe,
-  DTe,
-  _ne,
-  IX,
-  cde,
-  S3,
-  FLe,
+  getReviewModelOverride,
+  getReviewClientWaitMinutes,
+  getReviewDiffLimits,
+  isReviewEmptyTreeFallbackEnabled,
+  isReviewGitHubAccessPrecheckEnabled,
+  canUseCloudReview,
+  getCloudReviewBlockReason,
+  isUltrareviewPostEnabled,
+  parseGitHubPullRequestUrl,
+  GITHUB_APP_INSTALL_URL,
+  parseGitNumstat,
+  parseGitShortstat,
+  REVIEW_NOTE_MAX_CHARS,
+  isInsideGitRepository,
+  checkGithubAppInstalled,
+  checkCloudSessionEligibility,
+  formatCloudSessionEligibilityError,
+  registerRemoteAgentTask,
+  getSessionUrl,
+  probeRepositorySize,
   teleportToRemote,
-  Kne,
+  damerauLevenshteinDistance,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { TTt } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { markUltrareviewRun } from "./ultrareview-tips.js";
@@ -158,7 +158,7 @@ function parseUltrareviewArgs(r) {
   };
 }
 async function precheckLaunchScope(r, t = "/code-review ultra", d) {
-  if (!(await WVe()))
+  if (!(await isInsideGitRepository()))
     return (
       logEvent("tengu_review_remote_precondition_failed", {
         reason: S("not_git_repo"),
@@ -171,7 +171,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       }
     );
   let e = r.trim(),
-    o = ygt(e),
+    o = parseGitHubPullRequestUrl(e),
     _ = o?.num.toString() ?? e.match(/^(?:#|PR[\s#]*)(\d+)$/i)?.[1] ?? e;
   if (/^\d+$/.test(_)) {
     let s = (C) => {
@@ -250,7 +250,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
           ],
           { timeout: 5000, preserveOutputOnError: !1 },
         ),
-        isGitHubHost(c.host) && CGn() && !isEssentialTrafficOnly()
+        isGitHubHost(c.host) && isReviewGitHubAccessPrecheckEnabled() && !isEssentialTrafficOnly()
           ? $e(c.owner, c.name, d?.accessProbeBudgetMs ?? 5000)
           : null,
       ]);
@@ -285,7 +285,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
             ? `run /web-setup${t.startsWith("/") ? "" : " in Claude Code"} to reuse your GitHub CLI login`
             : "",
         U = `then re-run ${t} ${_}`,
-        ee = `install the app at ${ede}`,
+        ee = `install the app at ${GITHUB_APP_INSTALL_URL}`,
         se = G && V === 0 ? `${G}, or ${ee}` : `${ee}${G ? `, or ${G}` : ""}`,
         ae =
           I.verdict === "github_not_connected"
@@ -296,7 +296,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
     if (V === 0 && j.trim())
       try {
         let C = z(j),
-          { maxFiles: F, maxLines: G } = X$t(),
+          { maxFiles: F, maxLines: G } = getReviewDiffLimits(),
           U = C.additions + C.deletions;
         if (Number.isFinite(C.changedFiles) && Number.isFinite(U))
           ((M = C.changedFiles), (P = U));
@@ -334,7 +334,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       }
     );
   }
-  let E = await FLe();
+  let E = await probeRepositorySize();
   if (E.tooLarge)
     return (
       logEvent("tengu_review_remote_precondition_failed", {
@@ -484,7 +484,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       R = (await q(["rev-parse", "--is-shallow-repository"])).stdout.trim(),
       c = R === "true",
       B = R === "false",
-      M = s && B && AGn(),
+      M = s && B && isReviewEmptyTreeFallbackEnabled(),
       P = M ? await q(["for-each-ref", "--count=1", "refs/"]) : null,
       j = P !== null && P.stdout.trim() !== "",
       V = P !== null && P.code === 0 && P.stdout.trim() === "";
@@ -515,9 +515,9 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
                 : "It doesn't look like you have any changes to review. Stage or commit them first?",
             }
           );
-        let U = Lgt(F),
+        let U = parseGitShortstat(F),
           ee = U ? U.linesAdded + U.linesRemoved : 0,
-          { maxFiles: se, maxLines: ae } = X$t();
+          { maxFiles: se, maxLines: ae } = getReviewDiffLimits();
         if (U && (U.filesCount > se || ee > ae)) {
           (logEvent("tengu_review_remote_precondition_failed", {
             reason: S("local_diff_too_large"),
@@ -649,9 +649,9 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
       error: `No changes to review: the diff against ${D} (merge-base ${W.slice(0, 7)}) is empty. If you have local edits, stage or commit them first. If your branch was already merged or you meant a different base, ${s}.`,
     };
   }
-  let b = Lgt(ne);
+  let b = parseGitShortstat(ne);
   if (b) {
-    let { maxFiles: s, maxLines: R } = X$t(),
+    let { maxFiles: s, maxLines: R } = getReviewDiffLimits(),
       c = b.linesAdded + b.linesRemoved;
     if (b.filesCount > s || c > R) {
       (logEvent("tengu_review_remote_precondition_failed", {
@@ -704,7 +704,7 @@ async function precheckLaunchScope(r, t = "/code-review ultra", d) {
   );
 }
 function be(r, t = 3) {
-  let { perFileStats: d } = ZDe(r, Number.POSITIVE_INFINITY),
+  let { perFileStats: d } = parseGitNumstat(r, Number.POSITIVE_INFINITY),
     e = [...d.entries()]
       .map(([_, E]) => ({ path: _, lines: E.added + E.removed }))
       .filter((_) => _.lines > 0);
@@ -806,7 +806,7 @@ async function ye(r) {
     E = 3;
   for (let [w, p] of e) {
     if (Math.abs(w.length - r.length) >= E) continue;
-    let N = Kne(r, w);
+    let N = damerauLevenshteinDistance(r, w);
     if (N > 0 && N < E) ((E = N), (_ = p));
   }
   return _;
@@ -843,7 +843,7 @@ var Re = 3;
 async function launchRemoteReview(r, t, d, e) {
   let o = e?.invocation ?? "/code-review ultra",
     _ = (k) => ({ launched: !1, blocks: [{ type: "text", text: k }] }),
-    E = await _ne({
+    E = await checkCloudSessionEligibility({
       allowBundle: !0,
       storageV5: t.storageV5,
       credentials: t.credentials,
@@ -861,7 +861,7 @@ async function launchRemoteReview(r, t, d, e) {
           return `${o} needs a git repository so it can clone your code into a cloud sandbox, but ${getCwd()} is not inside one. ${he()}`;
         if (s.type === "no_git_remote")
           return `${o} needs a GitHub remote so it can clone this repository into the cloud. If this project is not on GitHub yet, run "gh repo create --source=. --push" to create one; if a GitHub repo already exists, run "git remote add origin REPO_URL && git push -u origin HEAD".`;
-        return IX(s);
+        return formatCloudSessionEligibilityError(s);
       }).join(`
 `);
       if (r.mode === "branch" && r.noMergeBase)
@@ -878,14 +878,14 @@ ${b}`)
     }
   }
   let w = "env_011111111111111111111113",
-    p = kte(),
+    p = getReviewBughunterConfig(),
     N = (k, b, s) => {
       if (typeof k !== "number" || !Number.isFinite(k)) return b;
       let R = Math.floor(k);
       if (R <= 0) return b;
       return R > s ? b : R;
     },
-    O = EGn(),
+    O = getReviewModelOverride(),
     T = {
       BUGHUNTER_DRY_RUN: "1",
       AUTOPATCH_ENABLE_ASIMOV: "1",
@@ -894,7 +894,7 @@ ${b}`)
       BUGHUNTER_MAX_DURATION: String(N(p?.max_duration_minutes, 10, 25)),
       BUGHUNTER_AGENT_TIMEOUT: String(N(p?.agent_timeout_seconds, 600, 1800)),
       BUGHUNTER_TOTAL_WALLCLOCK: String(N(p?.total_wallclock_minutes, 22, 27)),
-      BUGHUNTER_RESULT_RELAY_MAX_SEC: String(($Oe() - Re) * 60),
+      BUGHUNTER_RESULT_RELAY_MAX_SEC: String((getReviewClientWaitMinutes() - Re) * 60),
       ...(O && { BUGHUNTER_MODEL: O }),
       ...(process.env.BUGHUNTER_DEV_BUNDLE_B64 && {
         BUGHUNTER_DEV_BUNDLE_B64: process.env.BUGHUNTER_DEV_BUNDLE_B64,
@@ -1039,7 +1039,7 @@ ${b}`)
   }
   let re;
   if (!e?.skipTaskRegistration)
-    re = cde({
+    re = registerRemoteAgentTask({
       remoteTaskType: "ultrareview",
       session: A,
       command: te,
@@ -1072,7 +1072,7 @@ ${b}`)
       logFeatureSad("ultrareview_launch", "no_merge_base_empty_tree_fallback"));
   else logFeatureOk("ultrareview_launch");
   markUltrareviewRun(t.storageV5);
-  let W = S3(A.id),
+  let W = getSessionUrl(A.id),
     q = d.trim()
       ? `${d.trim()}
 `
@@ -1112,11 +1112,11 @@ ${k}`,
   };
 }
 function ultrareviewLaunchAcknowledgementNudge(r, t) {
-  return `The output above is already visible to the user. Briefly acknowledge it without repeating the target, URL, or billing note. Findings will arrive via task-notification.${r ? " The user passed --fix: when the findings arrive, apply them to the local working tree." : ""}${t ? ` The user's argument was interpreted as a review note, not a base branch: "${truncateToCodeUnits(t, njt)}". The cloud review runs its standard pass over the branch diff and does not see the note; when the findings arrive, prioritize and relate them to the user's request.` : ""}`;
+  return `The output above is already visible to the user. Briefly acknowledge it without repeating the target, URL, or billing note. Findings will arrive via task-notification.${r ? " The user passed --fix: when the findings arrive, apply them to the local working tree." : ""}${t ? ` The user's argument was interpreted as a review note, not a base branch: "${truncateToCodeUnits(t, REVIEW_NOTE_MAX_CHARS)}". The cloud review runs its standard pass over the branch diff and does not see the note; when the findings arrive, prioritize and relate them to the user's request.` : ""}`;
 }
 async function runUltrareviewHeadless(r, t) {
-  if (!ZA()) {
-    let T = vGn();
+  if (!canUseCloudReview()) {
+    let T = getCloudReviewBlockReason();
     return (
       logEvent("tengu_review_remote_gate_blocked", {
         reason: fromEnumOpt(T) ?? S("unknown"),
@@ -1212,7 +1212,7 @@ ${getReviewDurationNote()} \xB7 Est. cost ${getReviewCostNote()} USD`,
       billingNote: o.billingNote,
     };
   }
-  let E = t.postReview === !0 && !BOe(),
+  let E = t.postReview === !0 && !isUltrareviewPostEnabled(),
     w = t.postReview === !0 && !E && e.scope.mode === "pr" && isGitHubHost(e.scope.host),
     p = await launchRemoteReview(e.scope, t.context, o.billingNote, {
       skipTaskRegistration: t.skipTaskRegistration,
@@ -1275,7 +1275,7 @@ async function $e(r, t, d) {
     }),
     E = (async () => {
       await checkAndRefreshOAuthTokenIfNeeded();
-      let { linkedAccountAccess: w, httpStatus: p } = await DTe(r, t, o);
+      let { linkedAccountAccess: w, httpStatus: p } = await checkGithubAppInstalled(r, t, o);
       return { verdict: w, httpStatus: p };
     })().catch(
       (w) => (

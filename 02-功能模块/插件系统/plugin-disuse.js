@@ -11,7 +11,7 @@ import { ee } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { MC, $t } from "./chunk-7s6mt1vg.js";
 import { getStrictKnownMarketplaces } from "./plugin-source-policy.js";
-import { Xf, Idn, Cmt, vmt, Odn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getPolicyPluginNames, hasPendingPluginUsage, getPluginUsage, getPluginUsageStaleness, getPluginEnabledVia } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isNonMarketplacePluginSource, splitPluginId } from "./chunk-33bdfgmx.js";
 var d = 14,
   f = 10;
@@ -22,7 +22,7 @@ async function getDisusedPlugins() {
     if (getStrictKnownMarketplaces() !== null) return [];
     let { enabled: s } = await e;
     if (s.length === 0) return [];
-    let u = Xf(),
+    let u = getPolicyPluginNames(),
       l = MC(),
       g = ee().numStartups,
       c = Date.now(),
@@ -30,12 +30,12 @@ async function getDisusedPlugins() {
     for (let t of s) {
       let { marketplace: o } = splitPluginId(t.repository);
       if (!o || isNonMarketplacePluginSource(o)) continue;
-      if (Odn(t, u, l) !== "user-install") continue;
+      if (getPluginEnabledVia(t, u, l) !== "user-install") continue;
       if (p(t)) continue;
-      let i = Cmt(t.repository);
+      let i = getPluginUsage(t.repository);
       if (!i) continue;
-      if (Idn(t.repository)) continue;
-      let { sessionsSinceLastUse: m, daysSinceLastUse: a } = vmt(i, g, c);
+      if (hasPendingPluginUsage(t.repository)) continue;
+      let { sessionsSinceLastUse: m, daysSinceLastUse: a } = getPluginUsageStaleness(i, g, c);
       if (a >= d && m >= f)
         r.push({ pluginId: t.repository, name: t.name, daysSinceLastUse: a });
     }
@@ -51,10 +51,10 @@ async function getDisusedPlugins() {
 }
 function getPluginDaysSinceLastUse(e) {
   if (getStrictKnownMarketplaces() !== null) return null;
-  let s = Cmt(e);
+  let s = getPluginUsage(e);
   if (!s) return null;
-  if (Idn(e)) return 0;
-  return vmt(s, ee().numStartups, Date.now()).daysSinceLastUse;
+  if (hasPendingPluginUsage(e)) return 0;
+  return getPluginUsageStaleness(s, ee().numStartups, Date.now()).daysSinceLastUse;
 }
 function p(e) {
   return Boolean(

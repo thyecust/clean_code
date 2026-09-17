@@ -36,7 +36,7 @@ import { useClock } from "../../01-核心基础设施/共享小工具-未细化/
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useNotificationQueue } from "../../03-入口与运行时/会话UI(REPL)/notification-queue.js";
-import { X7, Ka } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { addHistoryEntry, getImageLimitsForModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useDoublePressConfirm } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useVoiceLevelSmoother, useVoiceSelector } from "../../01-核心基础设施/共享小工具-未细化/voice-state-provider.js";
 import { shouldReduceMotion } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -2039,8 +2039,8 @@ function m9e({
               k = se?.(),
               N = k !== void 0 ? buildDraftText(e, k) : e,
               pe = u ? { display: N, pastedContents: u } : N;
-            if (k !== void 0) X7(pe, qe, { submitMode: k });
-            else X7(pe, qe);
+            if (k !== void 0) addHistoryEntry(pe, qe, { submitMode: k });
+            else addHistoryEntry(pe, qe);
           }
           (t(""), ce(0), L?.());
         }
@@ -2439,7 +2439,7 @@ F();
 import { basename } from "path";
 var _r = 50;
 function Pt() {
-  return Ka(getMainLoopModel());
+  return getImageLimitsForModel(getMainLoopModel());
 }
 function Fye({
   onPaste: e,

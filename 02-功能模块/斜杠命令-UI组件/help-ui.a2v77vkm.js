@@ -15,7 +15,7 @@ import { useKeybinding } from "../../01-核心基础设施/共享小工具-未�
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { useKeybindingDisplayText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-display-text.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import { Sk, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isFeedbackCommandEnabled, formatDescriptionWithSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useVirtualScrollViewportSize } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-state.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import "../../03-入口与运行时/会话UI(REPL)/scroll-box.js";
@@ -197,7 +197,7 @@ function Q(he) {
     d = Ce,
     To;
   if (n[0] !== z.rows)
-    ((To = z.rows >= ho && Sk()), (n[0] = z.rows), (n[1] = To));
+    ((To = z.rows >= ho && isFeedbackCommandEnabled()), (n[0] = z.rows), (n[1] = To));
   else To = n[1];
   let po = To,
     Ho;

@@ -12,20 +12,20 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { ToolResultContent } from "../../01-核心基础设施/共享小工具-未细化/tool-result-content.js";
-import { Bgt, IEe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { SHELL_CWD_RESET_NOTICE_PATTERN, stripSandboxViolations } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ElapsedTimeoutText } from "../../01-核心基础设施/共享小工具-未细化/chunk-493670wv.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { MEMO_CACHE_SENTINEL, EARLY_RETURN_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 function V(n) {
   if (!n.match(/<sandbox_violations>([\s\S]*?)<\/sandbox_violations>/))
     return { cleanedStderr: n };
-  return { cleanedStderr: IEe(n).trim() };
+  return { cleanedStderr: stripSandboxViolations(n).trim() };
 }
 function k(n) {
-  let s = n.match(Bgt);
+  let s = n.match(SHELL_CWD_RESET_NOTICE_PATTERN);
   if (!s) return { cleanedStderr: n, cwdResetWarning: null };
   let u = s[1] ?? null;
-  return { cleanedStderr: n.replace(Bgt, "").trim(), cwdResetWarning: u };
+  return { cleanedStderr: n.replace(SHELL_CWD_RESET_NOTICE_PATTERN, "").trim(), cwdResetWarning: u };
 }
 function BashToolOutputView(Y) {
   let c = _(34),

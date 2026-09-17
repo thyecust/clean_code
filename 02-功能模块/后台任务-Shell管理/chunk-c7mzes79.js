@@ -69,42 +69,42 @@ import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5
 import { userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { cG, $k, evictTaskOutput } from "./chunk-x3txegas.js";
 import {
-  K$t,
-  T2,
-  A2,
-  qGn,
-  rmt,
-  v4e,
-  FF,
-  kl,
-  tVe,
-  lTe,
+  baseEach,
+  createSessionHookRegistry,
+  getPendingWriteTracker,
+  trackPendingWrite,
+  DEFAULT_ATTENTION_BUDGET,
+  DEFAULT_PROACTIVITY_LEVEL,
+  getFallbackModelScope,
+  settingsChangeDetector,
+  isBlockReadsOutsideWorkingDirsConfigured,
+  createInitialAttributionState,
   syncPermissionRulesFromDisk,
-  bp,
-  td,
-  u3,
-  o2t,
-  _a,
-  nr,
-  ght,
-  lw,
-  Kp,
-  $Kn,
-  Xp,
-  Yv,
-  a$,
-  Qf,
-  cEe,
-  P6t,
-  XKe,
-  L6t,
+  isLocalBashTask,
+  isObserverAgent,
+  isAmbientTask,
+  isLocalWorkflowTask,
+  buildTaskNotification,
+  isLocalAgentTask,
+  resolvePromptSuggestionsEnabled,
+  isMcpServerScopedName,
+  isToolFromMcpServer,
+  excludeStalePluginClients,
+  isSlugStopLatched,
+  isMonitorWsTask,
+  isTaskAutoReactArmed,
+  killMonitorTask,
+  getForkedSkillSidecarPaths,
+  writeForkedSkillProvenanceMarker,
+  readForkedSkillScopingFromSidecar,
+  getWindowsDrivePathVariants,
   addDirsAreLauncherNamed,
   isAutoModeDisabledByPolicySettings,
   createDisabledBypassPermissionsContext,
   isAutoModeInUse,
   createDisabledAutoModeContext,
   transitionPlanAutoMode,
-  Ws,
+  isDiscoveryCacheEnabled,
   suppressedConnectorsEqual,
   mcpDialBlockCause,
   isMcpServerDisabled,
@@ -611,7 +611,7 @@ async function serializeAdoptWorkflow(t, o = {}) {
   };
 }
 function isCarriedFrameLiveWatch(t) {
-  return isTaskAdoptionEnabled() && a$(t) && t.frameLive !== void 0;
+  return isTaskAdoptionEnabled() && isTaskAutoReactArmed(t) && t.frameLive !== void 0;
 }
 function carriedFrameLiveSlugs(t) {
   let o = new Set();
@@ -678,14 +678,14 @@ async function serializeAdoptable(t, o) {
       if (D.size > 0) {
         for (let j of Object.values(x.all()))
           if (
-            Yv(j) &&
+            isMonitorWsTask(j) &&
             j.status === "running" &&
             j.frameLive !== void 0 &&
             D.has(j.frameLive.slug)
           )
             I.add(j.id);
       }
-      for (let j of I) Qf(j, x, { quiet: !0 });
+      for (let j of I) killMonitorTask(j, x, { quiet: !0 });
     };
   return {
     payload: {
@@ -948,7 +948,7 @@ async function readAndConsumeAdoptJson(t, o = {}) {
   }
 }
 function recordUnresumedAdopt(t, o, r, s) {
-  let l = A2();
+  let l = getPendingWriteTracker();
   if (o.length === 0 && r.length === 0) {
     l.unresumedAdopt.delete(t);
     return;
@@ -956,12 +956,12 @@ function recordUnresumedAdopt(t, o, r, s) {
   l.unresumedAdopt.set(t, { agents: o, workflows: r, owner: s });
 }
 function takeUnresumedAdopt(t, o) {
-  if (A2().unresumedAdopt.get(t)?.owner !== o)
+  if (getPendingWriteTracker().unresumedAdopt.get(t)?.owner !== o)
     return { agents: [], workflows: [] };
   return drainUnresumedAdopt(t);
 }
 function drainUnresumedAdopt(t) {
-  let o = A2(),
+  let o = getPendingWriteTracker(),
     r = o.unresumedAdopt.get(t);
   return (
     o.unresumedAdopt.delete(t),
@@ -969,7 +969,7 @@ function drainUnresumedAdopt(t) {
   );
 }
 function recordUnresumedFrameLive(t, o, r) {
-  let s = A2();
+  let s = getPendingWriteTracker();
   if (o.length === 0) {
     s.unresumedFrameLive.delete(t);
     return;
@@ -980,22 +980,22 @@ function recordUnresumedFrameLive(t, o, r) {
   });
 }
 function takeUnresumedFrameLive(t, o) {
-  if (A2().unresumedFrameLive.get(t)?.owner !== o) return [];
+  if (getPendingWriteTracker().unresumedFrameLive.get(t)?.owner !== o) return [];
   return drainUnresumedFrameLive(t);
 }
 function drainUnresumedFrameLive(t) {
-  let o = A2(),
+  let o = getPendingWriteTracker(),
     r = o.unresumedFrameLive.get(t);
   return (o.unresumedFrameLive.delete(t), r?.entries ?? []);
 }
 function reparkUnresumedFrameLive(t, o, r) {
-  let s = A2(),
+  let s = getPendingWriteTracker(),
     l = s.unresumedFrameLive.get(t);
   if (o.length === 0 || (l !== void 0 && l.owner !== r)) return;
   s.unresumedFrameLive.set(t, { entries: [...o], owner: r });
 }
 function releaseReparkedFrameLive(t, o, r) {
-  let s = A2(),
+  let s = getPendingWriteTracker(),
     l = s.unresumedFrameLive.get(t);
   if (l === void 0 || l.owner !== r) return;
   let k = l.entries.filter((c) => c.slug !== o);
@@ -1003,11 +1003,11 @@ function releaseReparkedFrameLive(t, o, r) {
   else s.unresumedFrameLive.delete(t);
 }
 function recordExitRetryFrameLive(t, o) {
-  if (o.length > 0) A2().exitRetryFrameLive.set(t, [...o]);
+  if (o.length > 0) getPendingWriteTracker().exitRetryFrameLive.set(t, [...o]);
 }
 function takeExitRetryFrameLive(t) {
   if (t === void 0) return [];
-  let o = A2(),
+  let o = getPendingWriteTracker(),
     r = o.exitRetryFrameLive.get(t) ?? [];
   return (o.exitRetryFrameLive.delete(t), r);
 }
@@ -1159,9 +1159,9 @@ async function qr(t) {
   await rn(r(t.transcriptPath));
   let s = null,
     l,
-    k = cEe(t.transcriptPath);
+    k = getForkedSkillSidecarPaths(t.transcriptPath);
   if (t.forkedSkillName !== void 0) {
-    let c = await XKe(k);
+    let c = await readForkedSkillScopingFromSidecar(k);
     if (c.status !== "valid")
       throw new R(
         `adopted agent ${t.agentId} declares forked-skill ${t.forkedSkillName} but its scoping record is unusable (${c.status})`,
@@ -1172,14 +1172,14 @@ async function qr(t) {
         `adopted agent ${t.agentId} declares forked-skill ${t.forkedSkillName} but its scoping record names a different skill`,
         "adopted forked-skill scoping identity mismatch",
       );
-    s = { parent: k, fork: cEe(o) };
+    s = { parent: k, fork: getForkedSkillSidecarPaths(o) };
   } else {
-    let c = await XKe(k);
+    let c = await readForkedSkillScopingFromSidecar(k);
     switch (c.status) {
       case "absent":
         break;
       case "valid":
-        ((s = { parent: k, fork: cEe(o) }), (l = c.scoping.skillName));
+        ((s = { parent: k, fork: getForkedSkillSidecarPaths(o) }), (l = c.scoping.skillName));
         break;
       case "malformed":
       case "absent-but-marked":
@@ -1198,7 +1198,7 @@ async function qr(t) {
     return { forkedSkillNameFromSidecar: l };
   if ((await mkdir(dirname(o), { recursive: !0 }), s))
     (await unlink(s.fork.provenanceMarker).catch(() => {}),
-      await P6t(s.fork.provenanceMarker, t.forkedSkillName ?? l),
+      await writeForkedSkillProvenanceMarker(s.fork.provenanceMarker, t.forkedSkillName ?? l),
       await unlink(s.fork.scoping).catch(() => {}),
       await copyFile(s.parent.scoping, s.fork.scoping));
   for (let [c, v] of [
@@ -1237,9 +1237,9 @@ async function Yr(t, o) {
     );
   let c = null,
     v,
-    w = cEe(t.transcriptPath);
+    w = getForkedSkillSidecarPaths(t.transcriptPath);
   if (t.forkedSkillName !== void 0) {
-    let W = await XKe(w);
+    let W = await readForkedSkillScopingFromSidecar(w);
     if (W.status !== "valid")
       throw st(
         new R(
@@ -1256,14 +1256,14 @@ async function Yr(t, o) {
         ),
         "ADOPT_SCOPING_MISMATCH",
       );
-    c = { parent: w, fork: cEe(r) };
+    c = { parent: w, fork: getForkedSkillSidecarPaths(r) };
   } else {
-    let W = await XKe(w);
+    let W = await readForkedSkillScopingFromSidecar(w);
     switch (W.status) {
       case "absent":
         break;
       case "valid":
-        ((c = { parent: w, fork: cEe(r) }), (v = W.scoping.skillName));
+        ((c = { parent: w, fork: getForkedSkillSidecarPaths(r) }), (v = W.scoping.skillName));
         break;
       case "malformed":
       case "absent-but-marked":
@@ -1285,7 +1285,7 @@ async function Yr(t, o) {
     return { forkedSkillNameFromSidecar: v, method: "noop" };
   if ((await mkdir(dirname(r), { recursive: !0 }), c))
     (await unlink(c.fork.provenanceMarker).catch(() => {}),
-      await P6t(c.fork.provenanceMarker, t.forkedSkillName ?? v),
+      await writeForkedSkillProvenanceMarker(c.fork.provenanceMarker, t.forkedSkillName ?? v),
       await unlink(c.fork.scoping).catch(() => {}),
       await copyFile(c.parent.scoping, c.fork.scoping));
   let L = await lstat(r).catch(() => {
@@ -1619,7 +1619,7 @@ function emitAdoptWorkflowFailed(t, o, r) {
 }
 function lt(t, o, r, s = ze()) {
   (r.enqueuePendingNotification({
-    value: _a({ taskId: Nt(t), status: "failed", summary: o }),
+    value: buildTaskNotification({ taskId: Nt(t), status: "failed", summary: o }),
     agentId: s,
     mode: "task-notification",
     skipAttachments: !0,
@@ -1650,7 +1650,7 @@ function classifyAdoptLinkFailure(t) {
 }
 function emitAdoptAgentFailed(t, o, r, s) {
   let l =
-      t.parentAgentId !== void 0 && nr(r.get(t.parentAgentId))
+      t.parentAgentId !== void 0 && isLocalAgentTask(r.get(t.parentAgentId))
         ? oo(t.parentAgentId)
         : ze(),
     k = `Background agent "${Nt(t.description ?? t.agentId)}" was checkpointed for the background fork but could not be resumed (${Nt(o)}).`;
@@ -1665,7 +1665,7 @@ function computeAdoptability(t) {
   let o = new Map();
   if (!isTaskAdoptionEnabled()) return o;
   let r = (c) =>
-      nr(c) ? c.parentAgentId : "agentId" in c ? c.agentId : void 0,
+      isLocalAgentTask(c) ? c.parentAgentId : "agentId" in c ? c.agentId : void 0,
     s = new Map();
   for (let c of Object.values(t)) {
     if (c.status !== "running" && c.status !== "pending") continue;
@@ -1676,14 +1676,14 @@ function computeAdoptability(t) {
     }
   }
   let l = (c) => {
-      if (nr(c))
+      if (isLocalAgentTask(c))
         return (
           c.agentType !== "main-session" &&
           c.status === "running" &&
           c.isBackgrounded &&
           c.abortController !== void 0
         );
-      if (bp(c))
+      if (isLocalBashTask(c))
         return (
           c.kind !== "monitor" &&
           c.status === "running" &&
@@ -1691,7 +1691,7 @@ function computeAdoptability(t) {
           c.shellCommand !== null &&
           c.shellCommand.detach !== void 0
         );
-      if (o2t(c))
+      if (isLocalWorkflowTask(c))
         return (
           c.status === "running" &&
           c.v2Run === void 0 &&
@@ -1709,11 +1709,11 @@ function computeAdoptability(t) {
     };
   for (let c of Object.values(t)) {
     if (
-      !(nr(c)
+      !(isLocalAgentTask(c)
         ? c.parentAgentId === void 0
-        : bp(c)
+        : isLocalBashTask(c)
           ? c.agentId === void 0
-          : o2t(c))
+          : isLocalWorkflowTask(c))
     )
       continue;
     let w = [],
@@ -1723,16 +1723,16 @@ function computeAdoptability(t) {
   return o;
 }
 function isAdoptableShellTask(t, o) {
-  return bp(t) && (o.get(t.id) ?? !1);
+  return isLocalBashTask(t) && (o.get(t.id) ?? !1);
 }
 function isAdoptableCron(t, o) {
   return isTaskAdoptionEnabled() && (t.agentId === void 0 || (o.get(t.agentId) ?? !1));
 }
 function isAdoptableAgentTask(t, o) {
-  return nr(t) && (o.get(t.id) ?? !1);
+  return isLocalAgentTask(t) && (o.get(t.id) ?? !1);
 }
 function isAdoptableWorkflowTask(t, o) {
-  return o2t(t) && (o.get(t.id) ?? !1);
+  return isLocalWorkflowTask(t) && (o.get(t.id) ?? !1);
 }
 function isAdoptableTask(t, o) {
   return o.get(t.id) ?? !1;
@@ -1822,8 +1822,8 @@ function aF() {
     replBridgeSkipNextArchive: !1,
     replBridgeSessionGroupingId: void 0,
     toolPermissionContext: { ...createDefaultToolPermissionContext(), mode: o },
-    attentionBudget: rmt,
-    proactivityLevel: v4e,
+    attentionBudget: DEFAULT_ATTENTION_BUDGET,
+    proactivityLevel: DEFAULT_PROACTIVITY_LEVEL,
     agent: void 0,
     agentDefinitions: { activeAgents: [], allAgents: [] },
     skillTools: [],
@@ -1832,7 +1832,7 @@ function aF() {
       trackedFiles: new Set(),
       snapshotSequence: 0,
     },
-    attribution: lTe(),
+    attribution: createInitialAttributionState(),
     mcp: {
       clientsInitialized: !1,
       clients: [],
@@ -1878,7 +1878,7 @@ function aF() {
     artifactPlanPublishConsentPaths: EMPTY_ARTIFACT_PLAN_PUBLISH_CONSENT_PATHS,
     ultrareviewOverageConfirmed: !1,
     thinkingEnabled: JN(),
-    promptSuggestionEnabled: ght(),
+    promptSuggestionEnabled: resolvePromptSuggestionsEnabled(),
     awaySummaryEnabled: isAwaySummaryEnabled(),
     displayedMessageContent: {},
     inbox: { messages: [] },
@@ -2633,7 +2633,7 @@ F();
 function $i(t, o) {
   var r = [];
   return (
-    K$t(t, function (s, l, k) {
+    baseEach(t, function (s, l, k) {
       if (o(s, l, k)) r.push(s);
     }),
     r
@@ -2667,8 +2667,8 @@ function IOt(t, o, r, s) {
       clients: l
         ? t.mcp.clients.map((c) => (c.name === o ? r.client : c))
         : [...t.mcp.clients, r.client],
-      tools: [...t.mcp.tools.filter((c) => !Kp(c, o, k)), ...r.tools],
-      commands: [...t.mcp.commands.filter((c) => !lw(c, o)), ...r.commands],
+      tools: [...t.mcp.tools.filter((c) => !isToolFromMcpServer(c, o, k)), ...r.tools],
+      commands: [...t.mcp.commands.filter((c) => !isMcpServerScopedName(c, o)), ...r.commands],
       resources: r.resources
         ? { ...t.mcp.resources, [o]: r.resources }
         : t.mcp.resources,
@@ -2681,7 +2681,7 @@ function IOt(t, o, r, s) {
 function FUn(t, o, r) {
   if (!t.clients.some((l) => l.name === o && l.type === "connected")) return t;
   let s = Oa(o);
-  return { ...t, tools: [...t.tools.filter((l) => !Kp(l, o, s)), ...r] };
+  return { ...t, tools: [...t.tools.filter((l) => !isToolFromMcpServer(l, o, s)), ...r] };
 }
 function gat(t, o, r) {
   if (!t.mcp.clients.some((l) => l.name === o && l.type === "connected"))
@@ -2691,7 +2691,7 @@ function gat(t, o, r) {
     ...t,
     mcp: {
       ...t.mcp,
-      tools: [...t.mcp.tools.filter((l) => !Kp(l, o, s)), ...r],
+      tools: [...t.mcp.tools.filter((l) => !isToolFromMcpServer(l, o, s)), ...r],
     },
   };
 }
@@ -2703,7 +2703,7 @@ function $Un(t, o, r) {
     if (!s.has(T)) continue;
     let L = l.get(T.name),
       D = Oa(T.name),
-      O = (W) => Kp(W, T.name, D);
+      O = (W) => isToolFromMcpServer(W, T.name, D);
     if (L === void 0) {
       k = {
         ...k,
@@ -2728,7 +2728,7 @@ function $Un(t, o, r) {
       clients: [...k.clients, ...w],
       tools: [
         ...k.tools,
-        ...o.tools.filter((L) => T.some(([D, O]) => Kp(L, D, O))),
+        ...o.tools.filter((L) => T.some(([D, O]) => isToolFromMcpServer(L, D, O))),
       ],
     };
   }
@@ -2746,7 +2746,7 @@ function Gi(t) {
 function $n(t, o, r) {
   return {
     tools: nO(t.tools, (s) => s.name?.startsWith(r)),
-    commands: nO(t.commands, (s) => lw(s, o)),
+    commands: nO(t.commands, (s) => isMcpServerScopedName(s, o)),
     resources: zl(t.resources, o),
     resourceTemplates: zl(t.resourceTemplates, o),
   };
@@ -2794,7 +2794,7 @@ class v0e {
   }
   reconcileConfiguredServers(t, o, r) {
     this.#e.set((s) => {
-      let { stale: l, ...k } = $Kn(s, t, o);
+      let { stale: l, ...k } = excludeStalePluginClients(s, t, o);
       r(l);
       let c = Kn(k, t);
       if (c.length === 0 && l.length === 0) {
@@ -2814,7 +2814,7 @@ class v0e {
     if (r.length === 0) return;
     this.#e.set((s) => {
       let l = r.map((c) => [c, Oa(c)]),
-        k = (c) => l.some(([v, w]) => Kp(c, v, w));
+        k = (c) => l.some(([v, w]) => isToolFromMcpServer(c, v, w));
       return {
         ...s,
         clients: s.clients.flatMap((c) =>
@@ -2825,7 +2825,7 @@ class v0e {
               : [c],
         ),
         tools: nO(s.tools, k),
-        commands: nO(s.commands, (c) => r.some((v) => lw(c, v))),
+        commands: nO(s.commands, (c) => r.some((v) => isMcpServerScopedName(c, v))),
         resources: zl(s.resources, r),
         resourceTemplates: zl(s.resourceTemplates, r),
       };
@@ -2932,7 +2932,7 @@ class v0e {
         }
         if (
           T &&
-          Ws() &&
+          isDiscoveryCacheEnabled() &&
           j !== -1 &&
           getMcpServerConfigCacheKey(D.name, s.clients[j].config) !== getMcpServerConfigCacheKey(D.name, D.config)
         ) {
@@ -2951,7 +2951,7 @@ class v0e {
           de =
             H === void 0
               ? s.commands
-              : [...nO(s.commands, (Q) => lw(Q, D.name)), ...H],
+              : [...nO(s.commands, (Q) => isMcpServerScopedName(Q, D.name)), ...H],
           se =
             W === void 0
               ? s.resources
@@ -3253,7 +3253,7 @@ function wle(t) {
   let o = vr(t);
   E(
     () =>
-      kl.subscribe((r, s) => {
+      settingsChangeDetector.subscribe((r, s) => {
         let l = getSettings_DEPRECATED();
         o(r, l, s);
       }),
@@ -3306,7 +3306,7 @@ function Yn(t) {
     l = s.filter((O) => isAdoptableWorkflowTask(O, r)),
     k = s.filter((O) => isAdoptableAgentTask(O, r)),
     c = drainUnresumedAdopt(o),
-    v = (O) => !ne().autoReact.userDisarmed && !Xp(O.slug),
+    v = (O) => !ne().autoReact.userDisarmed && !isSlugStopLatched(O.slug),
     w = drainUnresumedFrameLive(o),
     T = ns(
       dedupFrameLiveNewest([
@@ -3446,7 +3446,7 @@ function Qn(
       n(`exit handoff: adopt.json write failed: ${x}`, { level: "warn" });
     }
   })();
-  return (qGn(O), O);
+  return (trackPendingWrite(O), O);
 }
 function wat(t, o) {
   let r = Yn(t),
@@ -3466,16 +3466,16 @@ function $t(t, o = new Set()) {
   for (let r of Object.values(t)) {
     if (r.status !== "running" || o.has(r.id)) continue;
     try {
-      if (bp(r)) (r.shellCommand?.kill(), r.shellCommand?.cleanup());
+      if (isLocalBashTask(r)) (r.shellCommand?.kill(), r.shellCommand?.cleanup());
       else if (isExiting()) {
         evictTaskOutput(r.id);
         continue;
       } else if ("abortController" in r) r.abortController?.abort();
-      if (!td(r))
+      if (!isObserverAgent(r))
         pi(r.id, "stopped", {
           toolUseId: r.toolUseId,
           summary: r.description,
-          ambient: u3(r),
+          ambient: isAmbientTask(r),
         });
       evictTaskOutput(r.id);
     } catch (s) {
@@ -3490,7 +3490,7 @@ function Tat(t) {
       logEvent("tengu_refusal_fallback_latch_reset", {
         source: fromEnum(r),
         restored_to_explicit_override: s.restoredToExplicitOverride,
-        model_scope: fromEnum(FF(s.fallbackModel)),
+        model_scope: fromEnum(getFallbackModelScope(s.fallbackModel)),
       }));
   });
 }
@@ -3549,7 +3549,7 @@ function Eat(t, o, r, s, l) {
       if (
         ((T = L.context),
         (v = L.exitedAutoMode),
-        T.blockReadsOutsideWorkingDirectories !== !0 && tVe())
+        T.blockReadsOutsideWorkingDirectories !== !0 && isBlockReadsOutsideWorkingDirsConfigured())
       )
         T = { ...T, blockReadsOutsideWorkingDirectories: !0 };
       let D = isAwaySummaryEnabled();
@@ -3631,7 +3631,7 @@ function stn(t, o, r, s, l = !1, k, c) {
       for (let J of I)
         if (!j.has(J)) {
           if (Wur(J)) continue;
-          let K = L6t(J);
+          let K = getWindowsDrivePathVariants(J);
           if (K.length > 0) {
             j.set(J, K);
             for (let Y of K) if (Y !== J) D.push(Y);
@@ -3722,7 +3722,7 @@ function qt(jp) {
   else ds = te[2];
   let [oe] = d(ds),
     cs;
-  if (te[3] !== tr) ((cs = () => tr ?? T2()), (te[3] = tr), (te[4] = cs));
+  if (te[3] !== tr) ((cs = () => tr ?? createSessionHookRegistry()), (te[3] = tr), (te[4] = cs));
   else cs = te[4];
   let [or] = d(cs),
     [ir] = d(ho),

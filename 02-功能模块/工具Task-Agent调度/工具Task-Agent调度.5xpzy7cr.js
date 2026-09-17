@@ -22,77 +22,77 @@ import { getParentSessionId } from "../Teammates团队/teammate-context.js";
 import { createCommandRulesGetAppState, getToolPermissionContext, getMainLoopModel } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
 import {
-  nH,
-  eh,
-  nX,
-  O2,
-  Nmt,
-  sw,
-  wDe,
+  isAgentStopPending,
+  isTaskLoopSettled,
+  resolveExploreAgentModel,
+  GENERAL_PURPOSE_AGENT,
+  isWebFetchAgentType,
+  isBuiltInWebFetchAgent,
+  WEB_FETCH_AGENT,
   isBuiltInAgent,
   isPluginAgent,
-  Wdn,
-  BS,
-  nh,
+  filterOfferedAgents,
+  enqueueCommand,
+  isMcpTool,
   isForkSubagentEnabled,
   FORK_AGENT,
-  sne,
+  degradeRestoredHostContexts,
   isAgentToolPoolDenied,
   agentToolPoolDeniedMessage,
-  IM,
-  wV,
-  p3,
-  f3,
-  TTe,
-  u4n,
-  p4n,
-  _4n,
-  TX,
-  fT,
-  nr,
-  V2t,
-  Gv,
-  qv,
-  G2,
-  _3,
-  HX,
-  jVe,
-  Vgt,
-  lLe,
-  V4n,
-  CI,
-  RV,
-  yne,
-  cH,
-  MO,
-  PX,
-  wLe,
-  Opr,
-  zX,
-  VO,
-  uw,
-  zne,
-  KKe,
-  K5n,
-  X5n,
+  mergeSkillCommands,
+  isSkillsSyncVetoed,
+  formatAgentQuerySource,
+  formatErrorWithCode,
+  createAgentMetadataReadFallback,
+  findArmedObserverPairing,
+  rearmObserverForResume,
+  createAgentResumedNotification,
+  createInitialWebFetchSavedFiles,
+  TASK_EVICT_GRACE_MS,
+  isLocalAgentTask,
+  getUserStopCount,
+  getKeepaliveReasons,
+  addKeepaliveReason,
+  IDLE_WINDOW_KEEPALIVE_REASON,
+  getNonMainAgentTaskId,
+  releaseSettledKeepalives,
+  appendTaskPendingMessage,
+  appendTaskTranscriptMessage,
+  resolveNotificationTargetAgentId,
+  notifyAgentReparented,
+  markTaskNotified,
+  registerBackgroundAgentTask,
+  getSkillsPersistencePrompt,
+  resolveSubagentModel,
+  getMainThreadSystemPrompt,
+  dropApiInvalidAssistantBlocks,
+  getSkillVerificationCommand,
+  getSpawnProvenance,
+  evaluateWorktreePin,
+  comparePathIdentity,
+  resolveGitRootCandidates,
+  createModelRestrictedSystemMessageHandler,
+  isTransientFileSystemErrorCode,
+  readAgentForkedSkillScoping,
+  readForkedSkillProvenanceName,
   runAgent,
-  EE,
-  k3,
-  iY,
-  QO,
-  Re,
-  UEe,
-  wH,
-  npe,
-  rpe,
-  ope,
+  resolveAgentTools,
+  runAsyncAgent,
+  initialRealCwd,
+  buildSessionTools,
+  createUserMessage,
+  dropUnresolvedToolUseMessages,
+  isExternalMessageOrigin,
+  filterWhitespaceOnlyAssistantMessages,
+  filterOrphanedThinkingMessages,
+  formatMessageForOrigin,
   updateAgentMetadata,
   readAgentMetadata,
   AgentTranscriptFetchError,
   getAgentTranscript,
   getCommands,
   attributionSkillName,
-  VS,
+  buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTaskOutputPath } from "../后台任务-Shell管理/chunk-x3txegas.js";
 import { areBackgroundTasksDisabled } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
@@ -159,7 +159,7 @@ var bt = createLazyValue(() =>
                   "ObserverReport is only available to an observer agent; the main session does not have an observed pairing.",
               },
             };
-          let w = u4n(e.session, c);
+          let w = findArmedObserverPairing(e.session, c);
           if (!w)
             return {
               data: {
@@ -176,10 +176,10 @@ var bt = createLazyValue(() =>
           if (k !== void 0) {
             let E = e.taskRegistry.get(k);
             if (!(
-              nr(E) &&
+              isLocalAgentTask(E) &&
               (E.status === "running" ||
                 (E.status === "completed" &&
-                  [...Gv(E)].some((ne) => ne !== G2)))
+                  [...getKeepaliveReasons(E)].some((ne) => ne !== IDLE_WINDOW_KEEPALIVE_REASON)))
             ))
               return {
                 data: {
@@ -202,7 +202,7 @@ ${p.report}`,
             ),
             G = { kind: "observer", from: H, senderTaskId: c };
           if (k === void 0)
-            BS({
+            enqueueCommand({
               mode: "prompt",
               agentId: ze(),
               value: F,
@@ -212,7 +212,7 @@ ${p.report}`,
               isMeta: !0,
               skipAttachments: !0,
             });
-          else jVe(k, F, e.taskRegistry, { origin: G, isMeta: !0 });
+          else appendTaskPendingMessage(k, F, e.taskRegistry, { origin: G, isMeta: !0 });
           return {
             data: {
               success: !0,
@@ -245,7 +245,7 @@ function won(e) {
     typeof e.input === "object" &&
     e.input !== null &&
     "subagent_type" in e.input &&
-    Nmt(e.input.subagent_type)
+    isWebFetchAgentType(e.input.subagent_type)
   );
 }
 function Ke(e, p) {
@@ -376,17 +376,17 @@ async function _t(
     { taskRegistry: d } = r,
     z = x.mode,
     be = r.agentId;
-  if (be !== void 0 && nH(be))
+  if (be !== void 0 && isAgentStopPending(be))
     throw new Dee(
       "This agent has been stopped and its stop is still completing; it cannot resume other agents.",
     );
-  if (nH(e) || (!eh(e) && isTerminalTaskStatus(d.get(e)?.status ?? "running")))
+  if (isAgentStopPending(e) || (!isTaskLoopSettled(e) && isTerminalTaskStatus(d.get(e)?.status ?? "running")))
     throw new Dee(
       `Agent ${e} is still stopping \u2014 its previous run was stopped but has not exited. Re-run ${TASK_STOP_TOOL_NAME} on it or wait for it to exit before resuming.`,
     );
   let O = d.get(e),
     q = 0;
-  if (nr(O)) {
+  if (isLocalAgentTask(O)) {
     let t = !1;
     if (
       (d.update(e, (i) => {
@@ -398,7 +398,7 @@ async function _t(
       throw new y9(`Agent ${e} is already running or being resumed`);
   }
   let u = () => {
-      (d.update(e, (t) => (t.resuming ? { ...t, resuming: !1 } : t)), HX(e, d));
+      (d.update(e, (t) => (t.resuming ? { ...t, resuming: !1 } : t)), releaseSettledKeepalives(e, d));
     },
     [Ze, o] = await Promise.all([
       getAgentTranscript(oo(e), r.storageV5, { signal: r.abortController.signal }),
@@ -411,7 +411,7 @@ async function _t(
         t instanceof Ou)
       )
         throw t;
-      throw t instanceof AgentTranscriptFetchError || KKe(A(t) ?? CB(t))
+      throw t instanceof AgentTranscriptFetchError || isTransientFileSystemErrorCode(A(t) ?? CB(t))
         ? new d2(l(t))
         : new Ou(l(t));
     });
@@ -425,7 +425,7 @@ async function _t(
         )
       );
   }
-  let S = await K5n(oo(e), r.storageV5),
+  let S = await readAgentForkedSkillScoping(oo(e), r.storageV5),
     ae = "transientRead" in S && S.transientRead ? d2 : Ou;
   if (S.status === "malformed")
     throw (
@@ -437,7 +437,7 @@ async function _t(
     );
   if (
     (S.status === "absent" || S.status === "absent-but-marked") &&
-    nr(O) &&
+    isLocalAgentTask(O) &&
     O.forkedSkillName !== void 0
   )
     throw (
@@ -455,7 +455,7 @@ async function _t(
         `Agent ${e} carries a forked-skill provenance marker but its scoping record is missing; refusing to resume it without the skill's permission scoping.`,
       )
     );
-  if (S.status === "valid" && nr(O)) {
+  if (S.status === "valid" && isLocalAgentTask(O)) {
     if (O.forkedSkillName !== S.scoping.skillName)
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_scoping_mismatch"),
@@ -465,7 +465,7 @@ async function _t(
         )
       );
   } else if (S.status === "valid") {
-    if ((await X5n(oo(e), r.storageV5)) !== S.scoping.skillName)
+    if ((await readForkedSkillProvenanceName(oo(e), r.storageV5)) !== S.scoping.skillName)
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_cold_witness_mismatch"),
         u(),
@@ -485,7 +485,7 @@ async function _t(
         .mcp.commands.filter(
           (_) => _.type === "prompt" && _.loadedFrom === "mcp",
         ),
-      a = [...IM(t, r.getAppState().mcp.commands), ...i].find(
+      a = [...mergeSkillCommands(t, r.getAppState().mcp.commands), ...i].find(
         (_) => _.name === T.skillName && _.type === "prompt",
       );
     if (
@@ -499,7 +499,7 @@ async function _t(
           `Agent ${e} ran as forked skill ${T.skillName}, which no longer resolves to a fork-capable skill; refusing to resume it without its permission scoping.`,
         )
       );
-    if (a.loadedFrom === "syncedSkills" && wV())
+    if (a.loadedFrom === "syncedSkills" && isSkillsSyncVetoed())
       throw (
         logFeatureBad("subagent_launch", "forked_skill_resume_sync_vetoed"),
         u(),
@@ -536,7 +536,7 @@ async function _t(
             : [{ kind: "disallowed_tools", disallowedTools: J }]),
         ]
       : [],
-    Ae = Opr(e),
+    Ae = getSpawnProvenance(e),
     _e =
       Ae !== void 0
         ? { ...r, ...Ae }
@@ -557,10 +557,10 @@ async function _t(
         }
       : _e,
     v = d.get(e),
-    le = nr(v) ? v.result : void 0,
+    le = isLocalAgentTask(v) ? v.result : void 0,
     tt = le?.modelsUsed ?? (le?.resolvedModel ? [le.resolvedModel] : void 0),
-    X = (nr(v) ? v.spawnDepth : o?.spawnDepth) ?? mc(r.agentContext) + 1,
-    rt = nr(v) ? v.startTime : Xe,
+    X = (isLocalAgentTask(v) ? v.spawnDepth : o?.spawnDepth) ?? mc(r.agentContext) + 1,
+    rt = isLocalAgentTask(v) ? v.startTime : Xe,
     P = Ze;
   if (!P) {
     let t = d.getTranscript(e)?.messages;
@@ -578,16 +578,16 @@ async function _t(
         transcriptMissing: !0,
       })
     );
-  (sne(P.messages), ewt(P.messages));
+  (degradeRestoredHostContexts(P.messages), ewt(P.messages));
   let st = k ? [...stripAbortedTurnMessages(P.messages)] : P.messages,
-    I = npe(rpe(UEe(PX(st, { site: "agent_resume" }))));
+    I = filterWhitespaceOnlyAssistantMessages(filterOrphanedThinkingMessages(dropUnresolvedToolUseMessages(dropApiInvalidAssistantBlocks(st, { site: "agent_resume" }))));
   if (k && I.length > 0 && !hasPendingUserTurn(I))
     return (
       d.update(e, (t) => ({
         ...t,
         resuming: !1,
         notified: !0,
-        evictAfter: Date.now() + fT,
+        evictAfter: Date.now() + TASK_EVICT_GRACE_MS,
       })),
       logFeatureOk("subagent_launch"),
       {
@@ -600,11 +600,11 @@ async function _t(
   let nt = _bt(r.contentReplacementState, I, P.contentReplacements),
     ot =
       !o &&
-      ((nr(v) &&
-        (v.agentType === wDe.agentType || v.webFetchSavedFiles !== void 0)) ||
+      ((isLocalAgentTask(v) &&
+        (v.agentType === WEB_FETCH_AGENT.agentType || v.webFetchSavedFiles !== void 0)) ||
         ne === !0 ||
         Ke(r.messages, e)),
-    ue = o?.agentType ?? (ot ? wDe.agentType : void 0),
+    ue = o?.agentType ?? (ot ? WEB_FETCH_AGENT.agentType : void 0),
     M =
       o?.isFork === !0
         ? void 0
@@ -617,46 +617,46 @@ async function _t(
       o?.isFork === !0 ||
       (!M && o?.isFork === void 0 && o?.agentType === FORK_AGENT.agentType),
     D =
-      ue === wDe.agentType && o?.isBuiltIn !== !1
+      ue === WEB_FETCH_AGENT.agentType && o?.isBuiltIn !== !1
         ? M && isBuiltInAgent(M)
           ? M
-          : wDe
+          : WEB_FETCH_AGENT
         : o?.isBuiltIn === !1
           ? M && !isBuiltInAgent(M)
             ? M
-            : O2
-          : (M ?? (N ? FORK_AGENT : O2));
+            : GENERAL_PURPOSE_AGENT
+          : (M ?? (N ? FORK_AGENT : GENERAL_PURPOSE_AGENT));
   if (isAgentToolPoolDenied(D, x))
     throw (
       logFeatureBad("subagent_launch", "subagent_resume_tools_denied"),
       u(),
       new Ou(agentToolPoolDeniedMessage(D.agentType))
     );
-  if ((await Wdn([D])).length !== 1)
+  if ((await filterOfferedAgents([D])).length !== 1)
     throw (
       logFeatureBad("subagent_launch", "subagent_resume_not_offered"),
       u(),
       new Ou(`Agent type '${D.agentType}' is not offered in this session.`)
     );
-  let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || sw(D))),
+  let Z = oe === "inline" || (oe === "reply" && (areBackgroundTasksDisabled() || isBuiltInWebFetchAgent(D))),
     U = (t, i) => {
       let a = Ia(),
         _ = o?.cwd && !WP(o.cwd) ? o.cwd : getCwd(),
-        je = uw(_),
+        je = resolveGitRootCandidates(_),
         ft =
           a !== null &&
           je.length > 0 &&
           (() => {
             let ht = [
               a.worktreePath,
-              ...uw(a.originalCwd),
+              ...resolveGitRootCandidates(a.originalCwd),
               ...(a.liveLaunchAnchor
-                ? [a.liveLaunchAnchor, ...uw(a.liveLaunchAnchor)]
+                ? [a.liveLaunchAnchor, ...resolveGitRootCandidates(a.liveLaunchAnchor)]
                 : []),
-              iY,
-              ...uw(iY),
+              initialRealCwd,
+              ...resolveGitRootCandidates(initialRealCwd),
             ];
-            return je.every((kt) => ht.some((wt) => VO(kt, wt) === "same"));
+            return je.every((kt) => ht.some((wt) => comparePathIdentity(kt, wt) === "same"));
           })(),
         He = i?.telemetryCode ?? "git_worktree_resume_worktree_gone",
         gt = o?.worktreePath ?? `agent ${e}`;
@@ -712,7 +712,7 @@ async function _t(
         o.parentAgentId !== void 0 &&
         (
           await readAgentMetadata(oo(o.parentAgentId), r.storageV5).catch(
-            TTe("resumeAgentBackground (parent)"),
+            createAgentMetadataReadFallback("resumeAgentBackground (parent)"),
           )
         )?.worktreeCleanlyRemoved === !0
       )) ||
@@ -726,7 +726,7 @@ async function _t(
   if (B) {
     let t = he(),
       i = await promises.realpath(t).catch(() => t),
-      a = await zX(B, uw(t), dedupe([i, iY, ...uw(iY)]), {
+      a = await evaluateWorktreePin(B, resolveGitRootCandidates(t), dedupe([i, initialRealCwd, ...resolveGitRootCandidates(initialRealCwd)]), {
         requireWitnessForSelfOwningPins: !0,
         declineSelfOwningPinUnderLiveRoot: !0,
       });
@@ -787,14 +787,14 @@ async function _t(
               )
             : void 0,
           i = Array.from(x.additionalWorkingDirectories.keys()),
-          a = await VS(r.options.tools, r.options.mainLoopModel, i);
-        te = MO({
+          a = await buildDefaultSystemPrompt(r.options.tools, r.options.mainLoopModel, i);
+        te = getMainThreadSystemPrompt({
           mainThreadAgentDefinition: t,
           toolUseContext: r,
           customSystemPrompt: r.options.customSystemPrompt,
           defaultSystemPrompt: a,
           appendSystemPrompt: r.options.appendSystemPrompt,
-          skillsPersistencePrompt: yne(r.options.tools),
+          skillsPersistencePrompt: getSkillsPersistencePrompt(r.options.tools),
         });
       } catch (t) {
         throw (
@@ -816,8 +816,8 @@ async function _t(
       );
   }
   let Oe = getMainLoopModel(r),
-    Pe = cH(
-      nX(b, Oe),
+    Pe = resolveSubagentModel(
+      resolveExploreAgentModel(b, Oe),
       Oe,
       o?.isObserver ? void 0 : N ? "inherit" : o?.model,
       z,
@@ -832,31 +832,31 @@ async function _t(
     );
   let Me = o?.isObserver ? (clampPermissionMode(E, z) ?? z) : void 0,
     Ne = { ...x, mode: Me ?? E ?? o?.spawnMode ?? b.permissionMode ?? z },
-    Fe = r.options.tools.filter(nh),
+    Fe = r.options.tools.filter(isMcpTool),
     Ee = r.getAppState(),
     dt = N
       ? excludeCoordinatorCommsMcpTools(r.options.tools)
-      : QO(Ne, excludeCoordinatorCommsMcpTools(Ee.mcp.tools.concat(Fe)), {
+      : buildSessionTools(Ne, excludeCoordinatorCommsMcpTools(Ee.mcp.tools.concat(Fe)), {
           skipReplFilter: !0,
           skillTools: Ee.skillTools,
         }),
     lt = o?.isObserver
       ? gNt(
-          EE(b, QO(Ne, excludeCoordinatorCommsMcpTools(Fe), { skipReplFilter: !0 }), !0, !1, !1, X)
+          resolveAgentTools(b, buildSessionTools(Ne, excludeCoordinatorCommsMcpTools(Fe), { skipReplFilter: !0 }), !0, !1, !1, X)
             .resolvedTools,
         )
       : dt,
     De = c
-      ? Re({ content: ope(p, c), origin: c, isMeta: !0 })
-      : Re({
-          content: w ? ope(p, void 0, { isMeta: !0 }) : p,
+      ? createUserMessage({ content: formatMessageForOrigin(p, c), origin: c, isMeta: !0 })
+      : createUserMessage({
+          content: w ? formatMessageForOrigin(p, void 0, { isMeta: !0 }) : p,
           ...(w && { isMeta: !0 }),
         }),
-    me = nr(v) ? v.webFetchSavedFiles : void 0,
-    Le = sw(b)
+    me = isLocalAgentTask(v) ? v.webFetchSavedFiles : void 0,
+    Le = isBuiltInWebFetchAgent(b)
       ? me
         ? { dirs: [...me.dirs], paths: [...me.paths] }
-        : TX()
+        : createInitialWebFetchSavedFiles()
       : void 0,
     $e = {
       agentDefinition: b,
@@ -866,13 +866,13 @@ async function _t(
       isAsync: !0,
       preserveToolUseResults: !ke(),
       persistedToolResultFiles: Le,
-      querySource: p3(b.agentType, isBuiltInAgent(b)),
+      querySource: formatAgentQuerySource(b.agentType, isBuiltInAgent(b)),
       spawnedBySkill: de,
       ...(T !== void 0 && { spawnedByForkedSkill: !0 }),
       model: o?.isObserver ? void 0 : N ? "inherit" : o?.model,
       onModelRestricted: o?.isObserver
         ? void 0
-        : zne(de ?? b.agentType, r.appendSystemMessage),
+        : createModelRestrictedSystemMessageHandler(de ?? b.agentType, r.appendSystemMessage),
       override: N ? { systemPrompt: te } : void 0,
       availableTools: lt,
       forkContextMessages: void 0,
@@ -888,16 +888,16 @@ async function _t(
       contentReplacementState: nt,
     },
     W = d.get(e);
-  if (nr(W) && W.stoppedByUser && (!F || (W.userStopCount ?? 0) !== q))
+  if (isLocalAgentTask(W) && W.stoppedByUser && (!F || (W.userStopCount ?? 0) !== q))
     throw (
       u(),
       new uM(
         `Agent ${e} was stopped by the user and won't be resumed. Treat its work as cancelled; only launch a new agent if the user explicitly asks.`,
       )
     );
-  if (!w && !k) Vgt(e, wH(c) ? De : Re({ content: p, origin: c }), d);
+  if (!w && !k) appendTaskTranscriptMessage(e, isExternalMessageOrigin(c) ? De : createUserMessage({ content: p, origin: c }), d);
   we?.();
-  let V = RV({
+  let V = registerBackgroundAgentTask({
     agentId: e,
     ownerAgentId: ze(),
     parentAgentId: o?.parentAgentId,
@@ -915,8 +915,8 @@ async function _t(
     sessionScratch: r.session.sessionScratch,
   });
   Je();
-  let C = c?.kind === "observer-activity" ? void 0 : _3(r.agentId, d),
-    ct = !nr(W) || (W.notified && W.quietlyParked !== !0),
+  let C = c?.kind === "observer-activity" ? void 0 : getNonMainAgentTaskId(r.agentId, d),
+    ct = !isLocalAgentTask(W) || (W.notified && W.quietlyParked !== !0),
     Ce = !1;
   if (C !== void 0) {
     let t = new Set(),
@@ -924,7 +924,7 @@ async function _t(
     while (i !== void 0 && !t.has(i)) {
       t.add(i);
       let a = d.get(i);
-      if (((i = nr(a) ? a.ownerAgentId : void 0), i === e)) {
+      if (((i = isLocalAgentTask(a) ? a.ownerAgentId : void 0), i === e)) {
         Ce = !0;
         break;
       }
@@ -939,18 +939,18 @@ async function _t(
       }),
       !ke())
     )
-      qv(C, `agent:${e}`, d);
-    if (t !== void 0) V4n(e, t, d);
+      addKeepaliveReason(C, `agent:${e}`, d);
+    if (t !== void 0) notifyAgentReparented(e, t, d);
   }
-  let Ie = F && (o?.stoppedByUser === !0 || (nr(O) && O.stoppedByUser === !0));
-  if (Ie || (F && nr(O) && O.status === "killed")) {
+  let Ie = F && (o?.stoppedByUser === !0 || (isLocalAgentTask(O) && O.stoppedByUser === !0));
+  if (Ie || (F && isLocalAgentTask(O) && O.status === "killed")) {
     let t = d.get(e);
     r.messageQueue.enqueuePendingNotification(
-      _4n({
+      createAgentResumedNotification({
         agentId: e,
         description: j,
-        to: lLe({
-          ownerAgentId: nr(t) ? t.ownerAgentId : void 0,
+        to: resolveNotificationTargetAgentId({
+          ownerAgentId: isLocalAgentTask(t) ? t.ownerAgentId : void 0,
           keepaliveReason: `agent:${e}`,
           delivering: !0,
           taskRegistry: d,
@@ -960,21 +960,21 @@ async function _t(
   }
   if (Ie)
     try {
-      if (V2t(d.get(e)) === q) {
+      if (getUserStopCount(d.get(e)) === q) {
         if (
           (await updateAgentMetadata(oo(e), { stoppedByUser: !1 }, r.storageV5),
-          V2t(d.get(e)) !== q)
+          getUserStopCount(d.get(e)) !== q)
         )
           await updateAgentMetadata(oo(e), { stoppedByUser: !0 }, r.storageV5);
       }
     } catch (t) {
       if (Rt(t) || FA(CB(t)))
-        n(`failed to clear stop marker for ${e}: ${f3(t)}`, { level: "warn" });
+        n(`failed to clear stop marker for ${e}: ${formatErrorWithCode(t)}`, { level: "warn" });
       else logError(t);
     }
-  if (G) CI(V.agentId, d);
+  if (G) markTaskNotified(V.agentId, d);
   if (
-    (await p4n({
+    (await rearmObserverForResume({
       observedTaskId: e,
       observedDefinition: b,
       observedName: o?.name ?? b.agentType,
@@ -987,7 +987,7 @@ async function _t(
       toolUseContext: r,
       canUseTool: R,
     }),
-    HX(e, d),
+    releaseSettledKeepalives(e, d),
     o?.name && r.getAppState().agentNameRegistry.get(o.name) === void 0)
   )
     r.agentLifecycle.registerName(o.name, oo(e));
@@ -1003,7 +1003,7 @@ async function _t(
       source: b.source,
       pluginId: isPluginAgent(b) ? parsePluginIdIgnoringReservedMarketplace(b.plugin) : void 0,
       persistedToolResultFiles: Le,
-      spawnedSubagent: nr(v) ? v.spawnedSubagent : void 0,
+      spawnedSubagent: isLocalAgentTask(v) ? v.spawnedSubagent : void 0,
     },
     We = {
       agentId: e,
@@ -1025,7 +1025,7 @@ async function _t(
     pt = c?.kind === "observer-activity" ? () => {} : d.takeConcurrencySlot(),
     Be = kw(We, () =>
       runWithCwdOrDefault(Se.project.cwd, () =>
-        k3({
+        runAsyncAgent({
           taskId: V.agentId,
           abortController: V.abortController,
           makeStream: (t, i, a) =>
@@ -1066,7 +1066,7 @@ async function _t(
                   i = `:${t}`;
                 if (EB().has(i)) return;
                 TB(t, t, "", null);
-                let a = wLe(t);
+                let a = getSkillVerificationCommand(t);
                 if (a)
                   r.applyAttributionOp({
                     kind: "recordVerification",
@@ -1082,7 +1082,7 @@ async function _t(
     try {
       await Be;
       let t = d.get(e),
-        i = nr(t) ? t.result : void 0;
+        i = isLocalAgentTask(t) ? t.result : void 0;
       return {
         agentId: e,
         description: j,
@@ -1098,7 +1098,7 @@ async function _t(
       if (t instanceof Error) Object.defineProperty(t, ge, { value: !0 });
       throw t;
     } finally {
-      d.update(e, (t) => ({ ...t, notified: !0, evictAfter: Date.now() + fT }));
+      d.update(e, (t) => ({ ...t, notified: !0, evictAfter: Date.now() + TASK_EVICT_GRACE_MS }));
     }
   return { agentId: e, description: j, outputFile: getTaskOutputPath(e) };
 }

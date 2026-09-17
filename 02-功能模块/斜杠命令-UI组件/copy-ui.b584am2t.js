@@ -23,7 +23,7 @@ import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { getClaudeTempDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { rre, xr } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { stripAnalysisTags, joinTextBlocks } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { FocusableBox } from "../../01-核心基础设施/共享小工具-未细化/focusable-box.js";
 import { InputGuide } from "../../01-核心基础设施/共享小工具-未细化/input-guide.js";
@@ -55,7 +55,7 @@ function Ae(at) {
 var X = "response.md",
   be = 20;
 function Ce(n) {
-  let o = _u.lexer(rre(n)),
+  let o = _u.lexer(stripAnalysisTags(n)),
     a = [];
   for (let s of o)
     if (s.type === "code") {
@@ -114,7 +114,7 @@ function collectRecentAssistantTexts(n) {
     if (s?.type !== "assistant" || s.isApiErrorMessage) continue;
     let c = s.message.content;
     if (!Array.isArray(c)) continue;
-    let l = xr(
+    let l = joinTextBlocks(
       c,
       `
 

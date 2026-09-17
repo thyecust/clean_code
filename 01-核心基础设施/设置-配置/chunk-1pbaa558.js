@@ -12,7 +12,7 @@ import { Le } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isHoverRestEnabled } from "../共享小工具-未细化/chunk-h62vxw7j.js";
 import { sleep, withTimeout, withDeadline } from "../共享小工具-未细化/async-timeout-utils.js";
 import { getInkInstanceRegistry } from "../共享小工具-未细化/ink-instance-registry.js";
-import { Dte, Pr, $s, kl, i5n } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { emitExitMessage, gracefulShutdownSync, isShuttingDown, settingsChangeDetector, setPolicyColdStartWaiter } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getClaudeConfigDir } from "../../02-功能模块/Bedrock-Vertex/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../共享小工具-未细化/lazy-value.js";
 import { OAUTH_BETA_HEADER, getOauthConfig } from "../../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
@@ -298,8 +298,8 @@ var Oe = "Managed settings were not approved; exiting without applying them.";
 function ie(e) {
   switch (e) {
     case "rejected":
-      if (process.stderr.isTTY && !$s()) (commitExit(), Dte(Oe));
-      return (Pr(1), !1);
+      if (process.stderr.isTTY && !isShuttingDown()) (commitExit(), emitExitMessage(Oe));
+      return (gracefulShutdownSync(1), !1);
     case "deferred_no_consent_surface":
       return !1;
     case "superseded":
@@ -624,7 +624,7 @@ function knn() {
   return !isHostManagedSettingsEntrypoint() && isRemoteSettingsEligible() && unverifiedRemoteCacheWithholdsProvisions();
 }
 function ye() {
-  i5n(async () => {
+  setPolicyColdStartWaiter(async () => {
     if (knn()) await c3e();
     else if (fIe()) await _ee();
   });
@@ -1381,7 +1381,7 @@ async function xnn(e, t, o) {
 }
 function N() {
   try {
-    (markPolicySettingsNotified(), kl.notifyChange("policySettings"));
+    (markPolicySettingsNotified(), settingsChangeDetector.notifyChange("policySettings"));
   } catch (e) {
     logError(e);
   }

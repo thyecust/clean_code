@@ -11,7 +11,7 @@ import { zi, l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { withDeadline } from "../../01-核心基础设施/共享小工具-未细化/async-timeout-utils.js";
 import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { sM, fSe, Tlt, Lnn, f2n, g2n, d9, u7, e2 } from "../远程工具执行/chunk-66axrkvh.js";
-import { MV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { BRIDGE_PLUMBING_TOOL_NAMES } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ServingInstanceGoneError, RequestDeliveryUnknownError, RequestNotDeliveredError } from "../../01-核心基础设施/共享小工具-未细化/request-delivery-errors.js";
 import { logRemoteToolsEvent } from "../../01-核心基础设施/共享小工具-未细化/remote-tools-logger.js";
 function R(e) {
@@ -25,7 +25,7 @@ function BDt(e) {
   return R(d) ? d["anthropic/dirSync"] : void 0;
 }
 async function E(e, t, d, a, u) {
-  if (!MV.has(d)) throw Error("callPlumbing: not a plumbing tool");
+  if (!BRIDGE_PLUMBING_TOOL_NAMES.has(d)) throw Error("callPlumbing: not a plumbing tool");
   if (u.signal.aborted) return { kind: "cancelled" };
   let i = u7(u.deadlineMs),
     o = {

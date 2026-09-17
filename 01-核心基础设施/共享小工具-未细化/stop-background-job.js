@@ -15,7 +15,7 @@ import { logEvent } from "./analytics-event-queue.js";
 import { logFeatureOk } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function s() {
   return a.CLAUDE_JOB_DIR;
 }
@@ -49,7 +49,7 @@ async function stopOwnBackgroundJob(n, e) {
   }
   return (
     logFeatureOk("job_stop_self"),
-    xn(0, "prompt_input_exit", { suppressResumeHint: !0 })
+    gracefulShutdown(0, "prompt_input_exit", { suppressResumeHint: !0 })
   );
 }
 export { stopOwnBackgroundJob };

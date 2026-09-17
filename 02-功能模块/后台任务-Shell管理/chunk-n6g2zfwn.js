@@ -61,66 +61,66 @@ import { BG, Sl, xEt, $t } from "../插件系统/chunk-7s6mt1vg.js";
 import { Td, rtr, otr, HFe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
   getCommandName,
-  z7,
-  sV,
-  Xf,
-  YGn,
-  AO,
-  Rue,
-  pc,
-  xy,
-  GF,
-  ADe,
-  Fmt,
-  ha,
-  bV,
-  md,
-  RM,
-  MDe,
-  egt,
-  mgt,
-  bX,
-  IM,
-  TTe,
-  _a,
-  Yf,
-  qgt,
-  Ygt,
-  ijt,
-  kpr,
-  nfn,
-  eht,
-  Jf,
-  QKn,
-  ZKn,
-  rMe,
-  hH,
-  gl,
-  Ql,
-  dY,
-  Jv,
-  s7n,
-  Cf,
-  tD,
-  SMe,
-  W5e,
-  Lr,
-  wp,
-  Dk,
-  Rf,
-  xr,
-  B_,
-  Ht,
-  $l,
-  JWt,
-  GEe,
-  Pyt,
+  dropShadowedSyncedSkills,
+  getMemoryCitationTracker,
+  getPolicyPluginNames,
+  parseForkedSkillLaunches,
+  isUsageBasedBilling,
+  buildModelOptions,
+  uniqBy,
+  buildPluginTelemetryFieldsFromId,
+  classifyPluginError,
+  collectHookHandlers,
+  getCommandQueueSnapshot,
+  enqueuePendingNotification,
+  isValidUtilizationWindow,
+  getCurrentLimits,
+  getUnifiedRateLimitWindows,
+  haveLimitsBeenObserved,
+  getActiveLimitGrace,
+  sessionEvents,
+  turnEvents,
+  mergeSkillCommands,
+  createAgentMetadataReadFallback,
+  buildTaskNotification,
+  isCompletedWithKeepalive,
+  isBackgroundedSubagentTask,
+  parseForkSourceKey,
+  pluginModuleLoadNotifier,
+  bindTurnAbortController,
+  releaseTurnAbortController,
+  sessionStartPromise,
+  recordModelSwitchIfChanged,
+  toRateLimitMirrorInfo,
+  createRateLimitEventMessage,
+  findNearNameMatches,
+  getDeclaredMarketplaces,
+  getKnownMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  addMarketplace,
+  loadMarketplace,
+  syncDeclaredAutoUpdateToJson,
+  getInstalledPlugins,
+  getInstalledPluginsViaStorage,
+  resolvePluginRenameChain,
+  MODEL_SWITCH_STDOUT_PREFIX,
+  extractTagContent,
+  normalizeMessageBlocks,
+  hasToolResultBlock,
+  getUserMessageText,
+  joinTextBlocks,
+  getMessageContentText,
+  createSystemInfoMessage,
+  isCompactBoundaryMessage,
+  upsertMessageByUuid,
+  getPluginDisplayName,
+  toSingleLineText,
   getTranscriptPathForSession,
   readAgentMetadata,
   canFetchAgentTranscriptsOnDemand,
   loadTranscriptFromFile,
   mergeArtifactCommentMonitorEntries,
-  I9t,
+  executeMessageDisplayHooks,
   hasHookForEvent,
   bridgeAdvertisedCommands,
   toBridgeSlashCommands,
@@ -208,11 +208,11 @@ function nFn() {
   });
 }
 function E6e(e, t, o) {
-  let r = z7(e, [...t, ...o]);
+  let r = dropShadowedSyncedSkills(e, [...t, ...o]);
   if (t.length === 0) return r;
   let s = new Set(r.map((p) => p.name)),
     d = new Set(r.map(getCommandName)),
-    c = pc(t, "name")
+    c = uniqBy(t, "name")
       .filter((p) => !s.has(p.name))
       .map((p) => (p.isMcp && d.has(getCommandName(p)) ? { ...p, isHidden: !0 } : p));
   return [...r, ...c];
@@ -226,7 +226,7 @@ function Gt(e, t, o) {
     if ((t.add(r), !r.events.has("session.start"))) continue;
     (n(`session.start: raised for ${r.name} (loaded later)`),
       Promise.resolve()
-        .then(() => mgt({ only: r.name }).session.start({ cwd: getCwd(), ...o }))
+        .then(() => sessionEvents({ only: r.name }).session.start({ cwd: getCwd(), ...o }))
         .catch((s) => {
           n(`session.start: failed for ${r.name}: ${l(s)}`, { level: "error" });
         }));
@@ -240,18 +240,18 @@ async function jt({ loaded: e, surface: t, interactive: o }) {
       `session.start: raised (surface ${t ?? "none"}, ${o ? "interactive" : "not interactive"})`,
     ));
   let r = new WeakSet($t().loadedModules);
-  ijt.set((s, d) => (d ? Gt(s, r, { surface: t, interactive: o }) : Bt(s, r)));
+  pluginModuleLoadNotifier.set((s, d) => (d ? Gt(s, r, { surface: t, interactive: o }) : Bt(s, r)));
   try {
-    await mgt().session.start({ cwd: getCwd(), surface: t, interactive: o });
+    await sessionEvents().session.start({ cwd: getCwd(), surface: t, interactive: o });
   } catch (s) {
     n(`session.start: failed: ${l(s)}`, { level: "error" });
   }
 }
 function XJt(e) {
-  let t = eht.get();
+  let t = sessionStartPromise.get();
   if (t !== void 0) return t;
   let o = jt(e);
-  return (eht.set(o), o);
+  return (sessionStartPromise.set(o), o);
 }
 import { open as zt } from "fs/promises";
 var qn = 8388608,
@@ -826,7 +826,7 @@ function Zn(e, t, o) {
           }
         : c)([
         ...(ye > 0 ? [buildUnattendedRepliesNotice(ye, { where: ` on ${D}`, stop: "" })] : []),
-        Ht(
+        createSystemInfoMessage(
           lt(D, X, {
             backgroundSession: isBgSession(),
             ui: t.ui,
@@ -909,9 +909,9 @@ function Zn(e, t, o) {
       if (ye.length > 0) te("cannot_run");
       if (U.length > 0 || ye.length > 0)
         c([
-          ...U.map((fe) => Ht(fe, "warning")),
+          ...U.map((fe) => createSystemInfoMessage(fe, "warning")),
           ...(ye.length > 0
-            ? [Ht(tn(ye, I, L(Date.now()), t.ui), "notice")]
+            ? [createSystemInfoMessage(tn(ye, I, L(Date.now()), t.ui), "notice")]
             : []),
         ]);
     },
@@ -1083,7 +1083,7 @@ function Zn(e, t, o) {
               Le(N);
               let pe = Vo();
               c([
-                Ht(
+                createSystemInfoMessage(
                   dt(
                     N.map((be) => artifactViewerUrlFor({ slug: be, env: pe })),
                     oe,
@@ -1365,8 +1365,8 @@ async function ln(e, t, o) {
         : `find it in the ${LIST_AGENTS_TOOL_NAME} listing`;
     if (an(r)) return;
     (logFeatureOk("fork_source_note"),
-      ha({
-        value: _a({
+      enqueuePendingNotification({
+        value: buildTaskNotification({
           body: `
 <${FORK_SOURCE_TAG}>
 This session began as a fork (copy) of another session that is still running: ${I}. The conversation up to ${d} is shared history with it; the two sessions have since diverged, and neither sees the other's new activity. To coordinate with it \u2014 hand results back, ask what it has done since, avoid duplicating its work \u2014 ${E} and message it with ${SEND_MESSAGE_TOOL_NAME}.
@@ -1389,14 +1389,14 @@ function to(e, t) {
       o.prompt.includes(t)
     );
   }
-  return Rf(e)?.includes(t) ?? !1;
+  return getUserMessageText(e)?.includes(t) ?? !1;
 }
 function an(e) {
-  return Fmt().some((t) => typeof t.value === "string" && t.value.includes(e));
+  return getCommandQueueSnapshot().some((t) => typeof t.value === "string" && t.value.includes(e));
 }
 async function _He(e, t, o, r, s) {
   if (isHoverRestEnabled() && s !== void 0) await relinkAdoptedAgentSymlinks({ storageV5: s });
-  let d = Ygt(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
+  let d = parseForkSourceKey(a.CLAUDE_CODE_RESUME_SOURCE_ALIVE),
     c = e;
   if (d !== null) {
     if (d.parentSessionId !== void 0 && d.parentSessionId === K()) return;
@@ -1556,7 +1556,7 @@ function uo(e) {
       T.subtype === "local_command" &&
       typeof T.content === "string"
     ) {
-      for (let k of YGn(T.content))
+      for (let k of parseForkedSkillLaunches(T.content))
         if (!Te(k.agentId) && !s.has(k.agentId))
           s.set(k.agentId, {
             agentId: k.agentId,
@@ -1657,7 +1657,7 @@ async function po({ asyncAgents: e, notifiedTaskIds: t }, o, r, s, d) {
           r !== void 0 &&
           (v.launchedByAgentTool === !0 || v.launchedByForkedSkill === !0) &&
           k !== null &&
-          (await readAgentMetadata(T, d).catch(TTe("resume orphan probe"))) !== null;
+          (await readAgentMetadata(T, d).catch(createAgentMetadataReadFallback("resume orphan probe"))) !== null;
         return { mtimeMs: k, hasMeta: C, fetchable: k === null && canFetchAgentTranscriptsOnDemand() };
       }),
     ),
@@ -1739,8 +1739,8 @@ function mFn(e, t) {
 }
 function xe(e, t, o) {
   let r = pt(e);
-  ha({
-    value: _a({
+  enqueuePendingNotification({
+    value: buildTaskNotification({
       taskId: Nt(e.agentId),
       outputFile: r ? Nt(r) : void 0,
       status: t,
@@ -1774,7 +1774,7 @@ function go(e, t) {
       e === "stopped"
         ? `No completion record was found for ${t.length} background agents from the previous session: ${r}. They may have been stopped, or they may have been running when the previous Claude Code process exited \u2014 either way their transcripts are saved, so their progress is not lost. ${_}`
         : `${t.length} background agents were running when the previous Claude Code process exited and did not complete: ${r}. Their in-process state was lost. ${I}`;
-  ha({
+  enqueuePendingNotification({
     value: `<${TASK_NOTIFICATION_TAG}>
 ${o}
 <${STATUS_TAG}>${e}</${STATUS_TAG}>
@@ -1812,8 +1812,8 @@ function ho({ bgShells: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
     return;
   }
   for (let c of s)
-    (ha({
-      value: _a({
+    (enqueuePendingNotification({
+      value: buildTaskNotification({
         taskId: Nt(c.taskId),
         toolUseId: Nt(c.toolUseId),
         status: "stopped",
@@ -1863,8 +1863,8 @@ function yo({ workflows: e, notifiedTaskIds: t, stoppedTaskIds: o }, r) {
         : ` To pick up where it left off, relaunch with Workflow({scriptPath, resumeFromRunId: "${c.runId}"}) \u2014 completed agent() calls return cached.`,
       I = (c.runId, ""),
       E = `No completion record was found for background workflow${p} from the previous session. It may have been stopped (via the UI or TaskStop \u2014 these leave no transcript marker), or it may have been running when the previous Claude Code process exited.${_}${I}`;
-    (ha({
-      value: _a({
+    (enqueuePendingNotification({
+      value: buildTaskNotification({
         taskId: Nt(c.taskId),
         toolUseId: Nt(c.toolUseId),
         status: "stopped",
@@ -1893,7 +1893,7 @@ function ht(e, t, o, r, s, d) {
       c.length === r.length
         ? `Task ids: ${c.join(", ")}.`
         : `First ${Be} task ids: ${c.join(", ")}.`;
-  ha({
+  enqueuePendingNotification({
     value: `<${TASK_NOTIFICATION_TAG}>
 ${p}
 <${STATUS_TAG}>${e}</${STATUS_TAG}>
@@ -1966,7 +1966,7 @@ function A6e(e, t) {
     let d = o.get(s.agentId);
     if (!d) {
       let p = t[s.agentId];
-      if (!qgt(p) || !Yf(p) || p.finalizing || p.resuming) continue;
+      if (!isBackgroundedSubagentTask(p) || !isCompletedWithKeepalive(p) || p.finalizing || p.resuming) continue;
       ((d = p), o.set(s.agentId, d));
     }
     let c = r.get(s.agentId) ?? [];
@@ -1994,7 +1994,7 @@ function pst(e, t) {
   let o = e.supersedesUuids;
   if (o === void 0 || o.length === 0) return !1;
   if (o.includes(t.uuid)) return !0;
-  return wp([t]).some((r) => o.includes(r.uuid));
+  return normalizeMessageBlocks([t]).some((r) => o.includes(r.uuid));
 }
 function eQt(e) {
   let t = Promise.resolve(),
@@ -2085,7 +2085,7 @@ function tQt(e) {
           if (s.type === "text") t.texts = [...t.texts, s.text];
           else if (s.type === "tool_use")
             t.toolUses = [...t.toolUses, { name: s.name, input: s.input }];
-      } else if (r.type === "user" && Dk(r)) o();
+      } else if (r.type === "user" && hasToolResultBlock(r)) o();
     },
     flush: (r) => {
       if (t.turnId === r) o();
@@ -2105,9 +2105,9 @@ function bt(e, t = Date.now()) {
   );
 }
 function Ao(e) {
-  let t = bV(e.five_hour) ? e.five_hour : void 0,
-    o = bV(e.seven_day) ? e.seven_day : void 0,
-    r = bV(e.seven_day_overage_included)
+  let t = isValidUtilizationWindow(e.five_hour) ? e.five_hour : void 0,
+    o = isValidUtilizationWindow(e.seven_day) ? e.seven_day : void 0,
+    r = isValidUtilizationWindow(e.seven_day_overage_included)
       ? e.seven_day_overage_included
       : void 0;
   if (!t && !o && !r) return;
@@ -2127,8 +2127,8 @@ function Ao(e) {
   };
 }
 function bHe(e) {
-  let t = e.rateLimitGraceActive === !0 ? egt() : null;
-  return ZKn(
+  let t = e.rateLimitGraceActive === !0 ? getActiveLimitGrace() : null;
+  return createRateLimitEventMessage(
     {
       ...e,
       rateLimitGraceActive: t !== null,
@@ -2137,7 +2137,7 @@ function bHe(e) {
         e.overageStatus === void 0 && { overageStatus: t.extraUsageStatus }),
     },
     K(),
-    { includeOverageInUse: !AO(), unifiedWindows: Ao(RM()) },
+    { includeOverageInUse: !isUsageBasedBilling(), unifiedWindows: Ao(getUnifiedRateLimitWindows()) },
   );
 }
 var vo = 30000;
@@ -2147,7 +2147,7 @@ function yFn({ minimumIntervalMs: e = vo, now: t = Date.now } = {}) {
     if (getAPIProvider() === "gateway") return !1;
     let d = t(),
       c = s.resetsAt ?? 0;
-    if (!Qs(md(), s)) return (o.set(c, d), !1);
+    if (!Qs(getCurrentLimits(), s)) return (o.set(c, d), !1);
     if (bt(s, d)) return !1;
     for (let [_] of o) if (_ !== 0 && _ * 1000 <= d) o.delete(_);
     let p = o.get(c);
@@ -2169,7 +2169,7 @@ function un(e, t) {
 }
 function tIt(e, t) {
   if (!isBridgeRateLimitEventEnabled()) return;
-  return un(e, QKn(t.rate_limit_info));
+  return un(e, toRateLimitMirrorInfo(t.rate_limit_info));
 }
 function R6e(e, t) {
   if (!isBridgeRateLimitEventEnabled()) return !1;
@@ -2194,11 +2194,11 @@ function R6e(e, t) {
   return !0;
 }
 function hst() {
-  if (!isBridgeRateLimitEventEnabled() || !MDe()) return;
+  if (!isBridgeRateLimitEventEnabled() || !haveLimitsBeenObserved()) return;
   let e = getReplBridgeHandle() ?? getSdkHostedBridgeHandle();
   if (!e) return;
   Ro();
-  let t = md();
+  let t = getCurrentLimits();
   if (bt(t)) {
     cn(e);
     return;
@@ -2213,8 +2213,8 @@ function cn(e) {
   if (t) e.reportMetadata(t);
 }
 function q_e(e) {
-  if (!MDe()) return;
-  let t = md();
+  if (!haveLimitsBeenObserved()) return;
+  let t = getCurrentLimits();
   if (bt(t)) {
     cn(e);
     return;
@@ -2240,7 +2240,7 @@ function _st({
     permissionMode: t,
     commands: Rg() ? [] : bridgeAdvertisedCommands(o),
     agents: r,
-    skills: IM(s, d),
+    skills: mergeSkillCommands(s, d),
     plugins: [],
     pluginErrors: [],
     pluginWarnings: [],
@@ -2309,7 +2309,7 @@ function St(e) {
   if (um(o) || um(r)) return { recognized: !0 };
   if (Qa(r) || lie(r)) return { recognized: !0 };
   if (isDeploymentVouchedModel(t)) return { recognized: !0 };
-  if (Rue().some((s) => s.value === t)) return { recognized: !0 };
+  if (buildModelOptions().some((s) => s.value === t)) return { recognized: !0 };
   if (/^claude-\S+$/.test(o)) return { recognized: !0 };
   return { recognized: !1, ...To(t) };
 }
@@ -2326,7 +2326,7 @@ function To(e) {
 }
 function kt(e) {
   let t = [...RP, ...kP().models.map((r) => r.id)],
-    [o] = rMe(e.toLowerCase(), t, 1);
+    [o] = findNearNameMatches(e.toLowerCase(), t, 1);
   return o ? { suggestion: o } : {};
 }
 function Ct(e, t) {
@@ -2343,13 +2343,13 @@ function bFn({ messages: e, queriedInProcess: t, activeModel: o }) {
   if (t && e.some((r) => s5(r) || pn(r) !== void 0)) return o;
   for (let r = e.length - 1; r >= 0; r--) {
     let s = e[r];
-    if ($l(s)) return;
-    if (gn(s)?.startsWith(W5e)) {
+    if (isCompactBoundaryMessage(s)) return;
+    if (gn(s)?.startsWith(MODEL_SWITCH_STDOUT_PREFIX)) {
       let c = e[r - 1],
         p = c === void 0 ? null : gn(c),
         _ =
-          p !== null && Lr(p, COMMAND_NAME_TAG)?.trim() === "/model"
-            ? Lr(p, COMMAND_ARGS_TAG)?.trim()
+          p !== null && extractTagContent(p, COMMAND_NAME_TAG)?.trim() === "/model"
+            ? extractTagContent(p, COMMAND_ARGS_TAG)?.trim()
             : void 0;
       return _ ? xo(_) : void 0;
     }
@@ -2464,7 +2464,7 @@ async function wFn(e, t) {
     v = t.getActiveModel(),
     T = t.getConversationModel();
   if (
-    (Jf(t.session, _(), I, "sdk"),
+    (recordModelSwitchIfChanged(t.session, _(), I, "sdk"),
     t.applyModel(c),
     (getMainLoopModel() !== w || parseUserSpecifiedModel(c) !== parseUserSpecifiedModel(v ?? w)) &&
       sQt({ appliedModel: c, previousModel: v ?? w, conversationModel: T }))
@@ -2485,7 +2485,7 @@ function pn(e) {
   return typeof t === "string" && t !== fc ? t : void 0;
 }
 function gn(e) {
-  return e.type === "user" ? B_(e.message?.content) : null;
+  return e.type === "user" ? getMessageContentText(e.message?.content) : null;
 }
 function At(e) {
   return getCanonicalName(er(e));
@@ -2589,7 +2589,7 @@ function KJt(e, t, o) {
   return { missing: r, sourceChanged: s, upToDate: d };
 }
 async function lst(e) {
-  let t = hH();
+  let t = getDeclaredMarketplaces();
   if (Object.keys(t).length === 0)
     return {
       installed: [],
@@ -2601,7 +2601,7 @@ async function lst(e) {
   let o = e?.storageV5,
     r;
   try {
-    r = await gl(o);
+    r = await getKnownMarketplaces(o);
   } catch (w) {
     (n(
       `reconciler: failed to load known_marketplaces.json, treating as empty: ${l(w)}`,
@@ -2662,7 +2662,7 @@ async function lst(e) {
         total: p.length,
       });
       try {
-        let C = await dY(T, void 0, o, v);
+        let C = await addMarketplace(T, void 0, o, v);
         if (k === "install") I.push(v);
         else E.push(v);
         e?.onProgress?.({
@@ -2681,7 +2681,7 @@ async function lst(e) {
     }
   }
   return (
-    await s7n(o),
+    await syncDeclaredAutoUpdateToJson(o),
     { installed: I, updated: E, failed: _, upToDate: s.upToDate, skipped: c }
   );
 }
@@ -2834,20 +2834,20 @@ function Qo(e, t, o) {
   for (let c of Object.keys(e.plugins)) {
     if (!c.endsWith(s)) continue;
     let p = c.slice(0, -s.length),
-      _ = t.renames && SMe(p, t.renames, r)?.kind === "renamed";
+      _ = t.renames && resolvePluginRenameChain(p, t.renames, r)?.kind === "renamed";
     if (!r.has(p) && !_) d.push(c);
   }
   return d;
 }
 async function cst(e) {
   await An(e);
-  let t = isHoverRestEnabled() && e !== void 0 ? await tD(e) : Cf(),
+  let t = isHoverRestEnabled() && e !== void 0 ? await getInstalledPluginsViaStorage(e) : getInstalledPlugins(),
     o = gHe(),
-    r = await Ql(e),
+    r = await getKnownMarketplacesOrEmpty(e),
     s = [];
   for (let d of Object.keys(r))
     try {
-      let c = await Jv(d, e);
+      let c = await loadMarketplace(d, e);
       if (!c.forceRemoveDeletedPlugins) continue;
       let p = Qo(t, c, d);
       for (let _ of p) {
@@ -2870,8 +2870,8 @@ async function cst(e) {
             logEvent("tengu_plugin_delisted_enforcement", {
               outcome: T.success ? S("uninstalled") : S("uninstall-failed"),
               scope: fromEnum(v),
-              ...(!T.success && { error_kind: fromEnum(GF(T.message)) }),
-              ...xy(_, Xf()),
+              ...(!T.success && { error_kind: fromEnum(classifyPluginError(T.message)) }),
+              ...buildPluginTelemetryFieldsFromId(_, getPolicyPluginNames()),
             });
           } catch (T) {
             (n(
@@ -2881,8 +2881,8 @@ async function cst(e) {
               logEvent("tengu_plugin_delisted_enforcement", {
                 outcome: S("uninstall-failed"),
                 scope: fromEnum(v),
-                error_kind: fromEnum(GF(T)),
-                ...xy(_, Xf()),
+                error_kind: fromEnum(classifyPluginError(T)),
+                ...buildPluginTelemetryFieldsFromId(_, getPolicyPluginNames()),
               }));
           }
         }
@@ -2894,7 +2894,7 @@ async function cst(e) {
       }),
         logEvent("tengu_plugin_delisted_enforcement", {
           outcome: S("scan-failed"),
-          error_kind: fromEnum(GF(c)),
+          error_kind: fromEnum(classifyPluginError(c)),
           _PROTO_marketplace_name: d,
           is_official_marketplace: isOfficialMarketplace(d),
         }));
@@ -2927,7 +2927,7 @@ function uFn({
       Z = (async () => {
         let ce = B;
         try {
-          for await (let O of I9t(
+          for await (let O of executeMessageDisplayHooks(
             e,
             {
               turnId: k.turnId,
@@ -3071,7 +3071,7 @@ function uFn({
       ((p.raw += k), v(p));
     },
     entryLanded(k) {
-      Tn(sV.of(e), k, "repl");
+      Tn(getMemoryCitationTracker.of(e), k, "repl");
       let C = p;
       if (C === null || C.apiMessageId !== k.message.id) return;
       if (C.raw === "" || !k.message.content.some((L) => L.type === "text"))
@@ -3136,7 +3136,7 @@ function Z0t(e, t) {
   return { ...e, displayedMessageContent: r };
 }
 async function dFn(e, t, o, r, s, d, c) {
-  Tn(sV.of(e), t, "sdk");
+  Tn(getMemoryCitationTracker.of(e), t, "sdk");
   let p = HFe(t.message.content),
     _ =
       p === t.message.content
@@ -3149,7 +3149,7 @@ async function dFn(e, t, o, r, s, d, c) {
   if (I === "") return _;
   let E;
   try {
-    for await (let v of I9t(
+    for await (let v of executeMessageDisplayHooks(
       e,
       { turnId: o, messageId: Ke(), index: 0, final: !0, delta: I },
       r,
@@ -3417,7 +3417,7 @@ function En(e, t) {
       (s) => s.type === "assistant" && !s.isApiErrorMessage && !s.isVirtual,
     );
     return o?.type === "assistant"
-      ? xr(
+      ? joinTextBlocks(
           o.message.content,
           `
 `,
@@ -3437,10 +3437,10 @@ function Pn(e, t) {
   return o?.type === "assistant" && o.isApiErrorMessage === !0;
 }
 var Fn = (e) =>
-  Ht(
-    `${ADe("turn.complete")
-      .map((t) => GEe(t.name))
-      .join("+")}: ${Pyt(e)}`,
+  createSystemInfoMessage(
+    `${collectHookHandlers("turn.complete")
+      .map((t) => getPluginDisplayName(t.name))
+      .join("+")}: ${toSingleLineText(e)}`,
     "notice",
   );
 var $n = (e, t, o) =>
@@ -3481,10 +3481,10 @@ function Dn(e, t) {
 }
 function ZJt(e) {
   let { turnId: t, transcript: o, span: r, durationMs: s, aborted: d } = e;
-  (nfn(t), e.turnEvents.flushStep(t));
+  (releaseTurnAbortController(t), e.turnEvents.flushStep(t));
   let c = En(o, r),
     p = $n(d, Dn(o, r), Pn(o, r)),
-    _ = bX();
+    _ = turnEvents();
   e.turnEvents.enqueue("turn.complete", () =>
     _.turn
       .complete({ answer: c, durationMs: s, aborted: d, turnId: t, ...p })
@@ -3495,7 +3495,7 @@ import { randomUUID as gr } from "crypto";
 function Hdr(e, t) {
   let o = eQt(e),
     r = tQt((s) => {
-      let d = bX({ signal: t() });
+      let d = turnEvents({ signal: t() });
       o.enqueue("turn.step", () => d.turn.step(s).then(() => []));
     });
   return {
@@ -3511,10 +3511,10 @@ function Hdr(e, t) {
 function nQt(e) {
   let { newMessages: t, input: o, signal: r, abort: s } = e,
     d = e.turnEvents.begin();
-  kpr({ turnId: d, abort: s });
+  bindTurnAbortController({ turnId: d, abort: s });
   let c = t.findLast((E) => E.type === "user" && !E.isMeta),
-    _ = (c && c.type === "user" ? B_(c.message.content) : null) ?? o ?? "",
-    I = bX({ signal: r });
+    _ = (c && c.type === "user" ? getMessageContentText(c.message.content) : null) ?? o ?? "",
+    I = turnEvents({ signal: r });
   return (
     e.turnEvents.enqueue("turn.start", () =>
       I.turn.start({ text: _, turnId: d }).then(() => []),
@@ -3559,7 +3559,7 @@ function Tst(e, t) {
       return [...e, t.message];
     }
     case "append-or-move-by-uuid":
-      return JWt(e, t.message);
+      return upsertMessageByUuid(e, t.message);
     case "remove-uuids-and-append":
       return [...e.filter((o) => !t.excludeUuids.has(o.uuid)), t.message];
     case "update":

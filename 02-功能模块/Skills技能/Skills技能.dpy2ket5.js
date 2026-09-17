@@ -32,25 +32,25 @@ import { getSettingsFilePathForSource } from "../../01-核心基础设施/核心
 import { Xt } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { isGitLabMrTarget, glabMrId, glabMrProjectUrl } from "../Git-Worktree/git-repository-detection.js";
 import {
-  ZA,
-  UOe,
-  Nft,
+  canUseCloudReview,
+  isCloudReviewEnabled,
+  getCloudReviewEntitlementMessage,
   isCommandEnabled,
-  Ndn,
-  Jwe,
-  bk,
+  GUIDE_AGENT_TYPE,
+  getAllowlistedSkillCommands,
+  REPORT_FINDINGS_TOOL_NAME,
   oVe,
-  GDe,
-  e2t,
-  wTe,
-  sC,
-  tKe,
-  hKe,
-  $jt,
-  FV,
+  getBuiltInSkillAvailability,
+  buildPrPrepSuggestion,
+  canPromptUserInSession,
+  escapeShellCommandMarkers,
+  CLAUDE_IN_CHROME_SYSTEM_PROMPT,
+  getSessionAttributionTexts,
+  getPrAttributionText,
+  substituteSkillShellCommands,
   isMcpServerDenied,
   doesEnterpriseMcpConfigExist,
-  HI,
+  CLAUDE_IN_CHROME_URL,
   CHROME_EXTENSION_RECONNECT_URL,
   isClaudeInChromeAllowed,
   hasBaseChromeOfferEligibility,
@@ -60,20 +60,20 @@ import {
   getClaudeInChromeMcpServerConfig,
   setupClaudeInChrome,
   isChromeExtensionInstalled,
-  $5e,
-  jWt,
-  WWt,
-  g7n,
-  PEe,
-  OEe,
-  _re,
-  lSt,
-  B9t,
-  j9t,
-  W9t,
-  AXn,
-  G9t,
-  q9t,
+  logPrWritingGuidanceRendered,
+  buildUntrustedPrTemplateBlock,
+  formatPrBodyGuidance,
+  formatCommitMessageGuidance,
+  getPrSummaryPlaceholder,
+  getPrTestPlanPlaceholder,
+  toShellPermissionRules,
+  stripUnsupportedPowerShellRules,
+  GIT_COMMIT_DISALLOWED_PATTERNS,
+  GIT_PUSH_DISALLOWED_PATTERNS,
+  GH_PR_CREATE_DISALLOWED_PATTERNS,
+  GIT_OUTPUT_FLAG_DISALLOWED_PATTERNS,
+  GIT_CHECKOUT_FORCE_DISALLOWED_PATTERNS,
+  GIT_ADD_FORCE_DISALLOWED_PATTERNS,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Wj, aEn, lEn, PFe, PTt, OC, DK, Dtr } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { parseFrontmatter } from "../MCP客户端/chunk-3kmsshb6.js";
@@ -833,7 +833,7 @@ var yt = 2000,
   $n = 5;
 async function wt(e, t) {
   let o = e.abortController.signal,
-    s = await openInChrome(HI).catch(
+    s = await openInChrome(CLAUDE_IN_CHROME_URL).catch(
       (E) => (
         n(
           `[Claude in Chrome] Install setup failed to open install page: ${E}`,
@@ -1114,7 +1114,7 @@ function Fn(e, t, o) {
     logFeatureOk("chrome_install_upsell", { install_page_opened: o }),
     `Claude in Chrome setup completed: the extension is installed and connected, and the mcp__claude-in-chrome__* browser tools are now available in this session. Continue the user's task using them.
 
-${tKe}`
+${CLAUDE_IN_CHROME_SYSTEM_PROMPT}`
   );
 }
 var Bn =
@@ -1256,7 +1256,7 @@ async function qn(e, t) {
       return (logFeatureSad("chrome_install_upsell", "cancelled"), je);
   }
 }
-var Y = `Browser tools are not available in this session: the Claude in Chrome extension is not set up. The user can install or connect it from ${HI} and manage browser tools with /chrome. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. Do not attempt mcp__claude-in-chrome__* tool calls.`,
+var Y = `Browser tools are not available in this session: the Claude in Chrome extension is not set up. The user can install or connect it from ${CLAUDE_IN_CHROME_URL} and manage browser tools with /chrome. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. Do not attempt mcp__claude-in-chrome__* tool calls.`,
   je =
     "The user declined to install the Claude in Chrome extension for now. Do not suggest it again this session. Continue the task without browser tools (WebFetch and WebSearch cover read-only web content), or ask the user to perform browser steps manually. They can revisit with /chrome.",
   bt =
@@ -1274,7 +1274,7 @@ async function Xn(e) {
   let t = isClaudeInChromeWiredThisSession(),
     o = e.options?.tools?.some((s) => s.name?.startsWith(CFC_TOOL_PREFIX)) ?? !1;
   if (!t) return Be(e);
-  if (o) return tKe;
+  if (o) return CLAUDE_IN_CHROME_SYSTEM_PROMPT;
   if (e.agentId !== void 0 || e.options?.isSkillPreload) return Kn;
   if (zn(e.options?.mcpClients))
     return (
@@ -1284,7 +1284,7 @@ async function Xn(e) {
       Vn
     );
   if (kt()) return Be(e);
-  return tKe;
+  return CLAUDE_IN_CHROME_SYSTEM_PROMPT;
 }
 function Ct({ disabled: e = !1 } = {}) {
   registerBundledSkill({
@@ -1494,12 +1494,12 @@ Return findings as a JSON array of at most ${e} objects:
 
 Ranked most-severe first. If more than ${e} survive, keep the ${e} most
 severe. If nothing survives verification, return \`[]\`. Do not call the
-${bk} tool even if it is available - this review's
+${REPORT_FINDINGS_TOOL_NAME} tool even if it is available - this review's
 output contract is the JSON block above.
 `,
   Rt = (e) => `## Output
 
-Call the ${bk} tool once to report this review's results
+Call the ${REPORT_FINDINGS_TOOL_NAME} tool once to report this review's results
 with \`{level, findings}\`. \`findings\` is at most ${e} entries ranked
 most-severe first; each entry has \`file\`, \`line\`, \`summary\`,
 \`short_summary\` \u2014 the claim compressed to \u226460 characters, no rationale
@@ -1540,7 +1540,7 @@ hunk.
 ${
   e
     ? `Report at most **4 findings**, most-severe first, in one
-${bk} call with \`{level, findings}\` \u2014 each entry has
+${REPORT_FINDINGS_TOOL_NAME} call with \`{level, findings}\` \u2014 each entry has
 \`file\`, \`line\`, \`summary\`, \`short_summary\` (\u226460 characters), and
 \`failure_scenario\`. If nothing qualifies, call it with an empty findings
 array. Do not also print the findings as text.
@@ -1548,7 +1548,7 @@ array. Do not also print the findings as text.
     : `Output at most **4 findings**, most-severe first, one line each:
 \`path/to/file.ext:123 \u2014 what's wrong and the concrete failure\`. If nothing
 qualifies, output exactly \`(none)\`. Do not call the
-${bk} tool even if it is available.
+${REPORT_FINDINGS_TOOL_NAME} tool even if it is available.
 `
 }`,
   Ot = (
@@ -1579,7 +1579,7 @@ hunk.
 ${
   e
     ? `Target **min(files_changed, 4) findings**, most-severe first, reported
-in one ${bk} call with \`{level, findings}\` \u2014 each
+in one ${REPORT_FINDINGS_TOOL_NAME} call with \`{level, findings}\` \u2014 each
 entry has \`file\`, \`line\`, \`summary\`, \`short_summary\` (\u226460 characters),
 and \`failure_scenario\`. If you have fewer, do one more pass focused on the
 largest changed file and on any **removed** code blocks. Call it with an
@@ -1792,7 +1792,7 @@ hunk.
 ${
   e
     ? `Report at most **8 findings**, most-severe first, in one
-${bk} call with \`{level, findings}\` \u2014 each entry has
+${REPORT_FINDINGS_TOOL_NAME} call with \`{level, findings}\` \u2014 each entry has
 \`file\`, \`line\`, \`summary\`, \`short_summary\` (\u226460 characters), and
 \`failure_scenario\`.
 Target at least min(files_changed, 4) findings \u2014 if you see fewer, widen to other hunks in the same diff before stopping. If fewer than 4 genuine findings exist, report what you have. Do not also print the findings as text.
@@ -1945,7 +1945,7 @@ review that target instead. Treat this diff as the review scope.
 
 Review the diff as a careful senior engineer would: read every hunk, open the surrounding files for context as needed (Read, Grep, git log/blame/show), and hunt for correctness issues \u2014 wrong or inverted conditions, off-by-one, null/undefined dereference, missing \`await\`, dropped error handling, removed guards or validations, broken callers of changed functions, races. Prefer real failure modes over style; every finding needs a concrete scenario in which the code misbehaves.
 
-When you are done, submit at most 15 findings via the ${bk} tool, filling its fields as defined \u2014 for each: the file path and start line, a severity, and a comment that states the issue and the concrete scenario in which the code misbehaves. Quality over quantity: include everything you genuinely believe is a real issue, and nothing you don't.
+When you are done, submit at most 15 findings via the ${REPORT_FINDINGS_TOOL_NAME} tool, filling its fields as defined \u2014 for each: the file path and start line, a severity, and a comment that states the issue and the concrete scenario in which the code misbehaves. Quality over quantity: include everything you genuinely believe is a real issue, and nothing you don't.
 
 After the tool call, also restate the findings in your final reply \u2014 one line each, \`file:line \u2014 summary\` \u2014 so they stay visible in sessions that do not render tool output.
 `;
@@ -2042,7 +2042,7 @@ function Zt(e) {
   if (t === "text" || t === "json") return !1;
   return (
     Boolean(a.CLAUDE_CODE_REPORT_FINDINGS) &&
-    Boolean(e.options?.tools?.some((o) => matchesToolName(o, bk)))
+    Boolean(e.options?.tools?.some((o) => matchesToolName(o, REPORT_FINDINGS_TOOL_NAME)))
   );
 }
 var fi = `
@@ -2076,7 +2076,7 @@ not an MR, print the findings to the terminal and note that \`--comment\` was
 ignored.
 `;
 }
-var to = `call ${bk} again with the same findings, each
+var to = `call ${REPORT_FINDINGS_TOOL_NAME} again with the same findings, each
 carrying an \`outcome\`: \`fixed\`, \`no_change_needed\` (the finding was wrong or
 already handled), or \`skipped\` (real but not applied). Do not repeat the
 findings as text`,
@@ -2120,7 +2120,7 @@ async function vi(e) {
   if (!oVe(e.getProactivityLevel())) return "";
   let t = e.options?.tools;
   if (t && !ZY() && !t.some((s) => matchesToolName(s, SKILL_TOOL_NAME))) return "";
-  return (await Jwe(sn(), e.storageV5)).some((s) => s.name === VERIFY_SKILL_NAME) ? bi : "";
+  return (await getAllowlistedSkillCommands(sn(), e.storageV5)).some((s) => s.name === VERIFY_SKILL_NAME) ? bi : "";
 }
 var ue = im,
   ki = new RegExp(`^(${ue.map((e) => e.slice(0, 3)).join("|")})[a-z]*$`, "i");
@@ -2189,16 +2189,16 @@ function Ve({ explicit: e, ultraFallback: t }, o) {
   return e === void 0 && !t ? _i() : void 0;
 }
 function Si() {
-  let e = UOe()
-      ? `; ultra: deep multi-agent review in the cloud${ZA() ? "" : " (requires claude.ai account access)"}`
+  let e = isCloudReviewEnabled()
+      ? `; ultra: deep multi-agent review in the cloud${canUseCloudReview() ? "" : " (requires claude.ai account access)"}`
       : "",
-    t = UOe()
+    t = isCloudReviewEnabled()
       ? " For ultra on a GitHub.com PR target, --post asks to post the finished review\u2019s findings to the PR as a single comment from the user\u2019s GitHub account (not a review; the launch dialog still confirms in interactive sessions, while non-interactive mode posts on the flag alone) and --no-post hides that option."
       : "";
   return `Review the current diff, or a PR number/branch/path target, for correctness bugs and reuse/simplification/efficiency cleanups at the given effort level (low/medium: fewer, high-confidence findings; high\u2192max: broader coverage, may include uncertain findings${e}); with no level given, it reuses the level you typed last. Pass --comment to post findings as inline PR comments, or --fix to apply the findings to the working tree after the review.${t}`;
 }
 function Ti() {
-  return `[${UOe() ? `${ue.join("|")}|ultra` : ue.join("|")}] [--fix] [--comment] [<pr#>|<branch>|<path>]`;
+  return `[${isCloudReviewEnabled() ? `${ue.join("|")}|ultra` : ue.join("|")}] [--fix] [--comment] [<pr#>|<branch>|<path>]`;
 }
 async function Pi(e, t) {
   let o = _e(e),
@@ -2397,14 +2397,14 @@ function Ii({
 `
         : _;
   if (e) {
-    if (!ZA()) {
+    if (!canUseCloudReview()) {
       if (t)
         return C(`(Running a local ${p}-effort review and applying its findings.)
 
 `);
-      if (UOe()) {
+      if (isCloudReviewEnabled()) {
         if (k.options?.isNonInteractiveSession) {
-          let I = Nft();
+          let I = getCloudReviewEntitlementMessage();
           if (I)
             return C(`(${I} Falling back to a local ${p}-effort review.)
 
@@ -2501,13 +2501,13 @@ function no() {
     getPromptForCommand: Pi,
   });
 }
-var io = _re(["git add *", "git status *", "git commit -m *"]),
-  Ri = _re([...q9t, ...B9t]);
+var io = toShellPermissionRules(["git add *", "git status *", "git commit -m *"]),
+  Ri = toShellPermissionRules([...GIT_ADD_FORCE_DISALLOWED_PATTERNS, ...GIT_COMMIT_DISALLOWED_PATTERNS]);
 async function Li(e, t) {
-  let { commit: o } = await hKe(),
-    s = sC(o),
-    d = sC(e.trim()),
-    r = sC(t);
+  let { commit: o } = await getSessionAttributionTexts(),
+    s = escapeShellCommandMarkers(o),
+    d = escapeShellCommandMarkers(e.trim()),
+    r = escapeShellCommandMarkers(t);
   return `## Context
 
 - Current git status: !\`git status\`
@@ -2542,7 +2542,7 @@ Based on the above changes, create a single git commit:
    - Look at the recent commits above to follow this repository's commit message style
    - Summarize the nature of the changes (new feature, enhancement, bug fix, refactoring, test, docs, etc.)
    - Ensure the message accurately reflects the changes and their purpose (i.e. "add" means a wholly new feature, "update" means an enhancement to an existing feature, "fix" means a bug fix, etc.)
-   - Draft a concise (1-2 sentences) commit message that focuses on the "why" rather than the "what"${g7n()}
+   - Draft a concise (1-2 sentences) commit message that focuses on the "why" rather than the "what"${formatCommitMessageGuidance()}
 
 2. Stage the relevant files and create the commit. To ensure good formatting, ALWAYS pass the commit message via a ${Ys() ? "HEREDOC" : "here-string"}:
 ${
@@ -2598,13 +2598,13 @@ function ro() {
     isEnabled: () => r5t(),
     progressMessage: "creating commit",
     async getPromptForCommand(e, t) {
-      let o = await Jwe(sn(), t.storageV5),
-        s = await e2t(GDe(o), "commit_skill", oVe(t.getProactivityLevel())),
+      let o = await getAllowlistedSkillCommands(sn(), t.storageV5),
+        s = await buildPrPrepSuggestion(getBuiltInSkillAvailability(o), "commit_skill", oVe(t.getProactivityLevel())),
         d = await Li(e, s);
       return [
         {
           type: "text",
-          text: await FV(
+          text: await substituteSkillShellCommands(
             d,
             {
               ...t,
@@ -2750,7 +2750,7 @@ Remember that settings are in:
 
 1. Review the user's issue description
 2. The last ${he} lines show the debug file format. Look for [ERROR] and [WARN] entries, stack traces, and failure patterns across the file
-3. Consider launching the ${Ndn} subagent to understand the relevant Claude Code features
+3. Consider launching the ${GUIDE_AGENT_TYPE} subagent to understand the relevant Claude Code features
 4. Explain what you found in plain language
 5. Suggest concrete fixes or next steps
 `,
@@ -3744,7 +3744,7 @@ function Uo() {
     menuDescription:
       "Pair on a whiteboard artifact \u2014 you draw, Claude answers on it",
     description: () => (ze() === "live" ? us : ds),
-    whenToUse: () => (wTe() ? hs : void 0),
+    whenToUse: () => (canPromptUserInSession() ? hs : void 0),
     isEnabled: cs,
     userInvocable: !0,
     files: () =>
@@ -3781,7 +3781,7 @@ function $o() {
     name: PROTOTYPE_SKILL_NAME,
     menuDescription: "Prototype an idea as a working Artifact",
     description: ps,
-    whenToUse: () => (wTe() ? ms : void 0),
+    whenToUse: () => (canPromptUserInSession() ? ms : void 0),
     isEnabled: isPrototypeEnabled,
     userInvocable: !0,
     async getPromptForCommand(e, t) {
@@ -3808,17 +3808,17 @@ var Fo = [
     "gh pr create --title * --body *",
     "gh pr view *",
   ],
-  jo = lSt(_re([...Fo, "git push origin *", "git push -u origin *"]));
+  jo = stripUnsupportedPowerShellRules(toShellPermissionRules([...Fo, "git push origin *", "git push -u origin *"]));
 async function gs() {
-  return lSt(_re([...Fo, ...(await getGitPushShellPatterns())]));
+  return stripUnsupportedPowerShellRules(toShellPermissionRules([...Fo, ...(await getGitPushShellPatterns())]));
 }
-var ys = _re([...AXn, ...G9t, ...j9t, ...W9t]);
+var ys = toShellPermissionRules([...GIT_OUTPUT_FLAG_DISALLOWED_PATTERNS, ...GIT_CHECKOUT_FORCE_DISALLOWED_PATTERNS, ...GIT_PUSH_DISALLOWED_PATTERNS, ...GH_PR_CREATE_DISALLOWED_PATTERNS]);
 function ws(e, t, o, s, d) {
-  let r = sC(d),
-    h = sC(e.trim()),
-    p = sC(o),
+  let r = escapeShellCommandMarkers(d),
+    h = escapeShellCommandMarkers(e.trim()),
+    p = escapeShellCommandMarkers(o),
     w = null,
-    k = jWt(),
+    k = buildUntrustedPrTemplateBlock(),
     v =
       k && Ys()
         ? `
@@ -3856,7 +3856,7 @@ ${w}
 Based on the changes above, open a single pull request:
 
 1. Analyze ALL changes that will be included in the PR (every commit since ${t}, not just the latest), then draft a title and body:
-   - Keep the title short (under 70 characters); put detail in the body${WWt(v ? "embedded_context" : null)}
+   - Keep the title short (under 70 characters); put detail in the body${formatPrBodyGuidance(v ? "embedded_context" : null)}
 
 2. Create a new branch if currently on ${t}, push to remote with -u if needed, then create the PR. To ensure good formatting, ALWAYS pass the body via a ${Ys() ? "HEREDOC" : "here-string"}:
 ${
@@ -3864,10 +3864,10 @@ ${
     ? `\`\`\`
 gh pr create --title "the pr title" --body "$(cat <<'EOF'
 ## Summary
-${PEe()}
+${getPrSummaryPlaceholder()}
 
 ## Test plan
-${OEe()}${
+${getPrTestPlanPlaceholder()}${
         r
           ? `
 
@@ -3880,10 +3880,10 @@ EOF
     : `\`\`\`
 gh pr create --title "the pr title" --body @'
 ## Summary
-${PEe()}
+${getPrSummaryPlaceholder()}
 
 ## Test plan
-${OEe()}${
+${getPrTestPlanPlaceholder()}${
         r
           ? `
 
@@ -3919,19 +3919,19 @@ function Bo() {
     isEnabled: () => r5t(),
     progressMessage: "creating pull request",
     async getPromptForCommand(e, t) {
-      $5e("pr_skill");
+      logPrWritingGuidanceRendered("pr_skill");
       let [o, s] = await Promise.all([
-          Jwe(sn(), t.storageV5),
-          $jt(t.getAppState, t.storageV5),
+          getAllowlistedSkillCommands(sn(), t.storageV5),
+          getPrAttributionText(t.getAppState, t.storageV5),
         ]),
-        d = await e2t(GDe(o), "pr_skill", oVe(t.getProactivityLevel())),
+        d = await buildPrPrepSuggestion(getBuiltInSkillAvailability(o), "pr_skill", oVe(t.getProactivityLevel())),
         r = await getDefaultBranch(),
         h = /^[A-Za-z0-9._/+][A-Za-z0-9._/+-]*$/.test(r) ? r : "main",
         p = ws(e, h, d, o, s);
       return [
         {
           type: "text",
-          text: await FV(
+          text: await substituteSkillShellCommands(
             p,
             {
               ...t,

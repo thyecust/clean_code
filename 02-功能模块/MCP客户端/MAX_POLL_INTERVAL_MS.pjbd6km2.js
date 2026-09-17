@@ -21,7 +21,7 @@ import { Nt } from "../../01-核心基础设施/核心工具-字符串与文本/
 import { mce, rPe, _Ge, $Se } from "./chunk-5wa92x7d.js";
 import { formatErrorWithCode, formatConnectionError } from "../认证-OAuth登录/url-and-error-redaction.js";
 import { getSessionProjectDir, writeMcpTaskMetadata, deleteMcpTaskMetadata, listMcpTaskMetadata } from "./mcp-task-metadata.js";
-import { ha, zF, _a, hde, Dy, b3, Kde, xI } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { enqueuePendingNotification, sanitizeLogValue, buildTaskNotification, MAX_CONTENT_BYTES, persistBinaryContent, formatBinaryContentSavedMessage, MCP_TASK_CANCEL_TIMEOUT_MS, isMcpTasksEnabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getMaxOutputChars, maybeTruncateOutput } from "../../01-核心基础设施/共享小工具-未细化/mcp-output-truncation.js";
 import { collectResourceLinks } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { formatMcpServerToolLabel } from "../../01-核心基础设施/共享小工具-未细化/mcp-task-record.js";
@@ -97,7 +97,7 @@ var Y = createLazyValue(() =>
       description: le().optional(),
     }),
   );
-async function mcpContentToNotificationText(e, s, i, t = hde) {
+async function mcpContentToNotificationText(e, s, i, t = MAX_CONTENT_BYTES) {
   let r;
   if (typeof e === "string") r = e;
   else {
@@ -122,7 +122,7 @@ async function mcpContentToNotificationText(e, s, i, t = hde) {
           "[The portion truncated above was not saved: the per-result persist budget is exhausted.]",
       };
     let g = `mcp-task-result-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      u = await Dy(Buffer.from(r, "utf8"), "text/plain", g, void 0, s);
+      u = await persistBinaryContent(Buffer.from(r, "utf8"), "text/plain", g, void 0, s);
     if ("error" in u) return { text: a };
     t -= u.size;
     let d = getCurrentPlatform() === "windows" ? "python" : "python3",
@@ -180,7 +180,7 @@ async function se(e, s, i) {
           ? { data: t.data.resource.blob, mimeType: t.data.resource.mimeType }
           : { data: t.data.data, mimeType: t.data.mimeType },
     p = (r.data.length * 3) / 4;
-  if (p > hde)
+  if (p > MAX_CONTENT_BYTES)
     return { text: `[${e.type} content too large to save]`, bytesPersisted: 0 };
   if (p > s)
     return {
@@ -189,14 +189,14 @@ async function se(e, s, i) {
     };
   try {
     let a = `mcp-task-result-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      o = await Dy(Buffer.from(r.data, "base64"), r.mimeType, a, void 0, i);
+      o = await persistBinaryContent(Buffer.from(r.data, "base64"), r.mimeType, a, void 0, i);
     if ("error" in o)
       return {
         text: `[${e.type} content (${r.mimeType ?? "unknown type"}) could not be saved to disk: ${o.error}]`,
         bytesPersisted: 0,
       };
     return {
-      text: b3(o.filepath, r.mimeType, o.size, `[${e.type} result] `),
+      text: formatBinaryContentSavedMessage(o.filepath, r.mimeType, o.size, `[${e.type} result] `),
       bytesPersisted: o.size,
     };
   } catch (a) {
@@ -232,7 +232,7 @@ function buildMcpTaskNotification(e) {
 
 ${Nt(e.resultHint)}`
       : "";
-  return _a({
+  return buildTaskNotification({
     taskId: e.registryId,
     status: e.status,
     summary: Nt(i),
@@ -317,7 +317,7 @@ async function ie({
       if ((await sleep(O), L({ taskRegistry: s, registryId: a, registered: k }))) {
         (e
           .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
-            signal: AbortSignal.timeout(Kde),
+            signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS),
           })
           .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
           x(a, r, I, T, b));
@@ -355,7 +355,7 @@ async function ie({
     if (L({ taskRegistry: s, registryId: a, registered: k })) {
       (e
         .request({ method: "tasks/cancel", params: { taskId: o } }, $Se, {
-          signal: AbortSignal.timeout(Kde),
+          signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS),
         })
         .catch((l) => n(`mcp task ${o} cancel after kill: ${formatErrorWithCode(l)}`)),
         x(a, r, I, T, b));
@@ -377,7 +377,7 @@ async function ie({
       },
     })),
       x(a, r, I, T, b),
-      ha(
+      enqueuePendingNotification(
         {
           value: buildMcpTaskNotification({
             registryId: a,
@@ -402,7 +402,7 @@ async function ie({
   }
 }
 async function restoreMcpTasks(e) {
-  if (!xI()) return;
+  if (!isMcpTasksEnabled()) return;
   let s;
   try {
     s = await listMcpTaskMetadata(e.storageV5);
@@ -427,7 +427,7 @@ async function restoreMcpTasks(e) {
 }
 function D(e, s, i) {
   let t = e.getNegotiatedProtocolVersion?.(),
-    r = t === void 0 ? void 0 : zF(t);
+    r = t === void 0 ? void 0 : sanitizeLogValue(t);
   return `server '${s}' ${i} on ${r ? `protocol revision ${r}` : "a modern-era protocol revision"}, which has no tasks support`;
 }
 async function ce(
@@ -535,7 +535,7 @@ async function ce(
       !k)
     )
       return;
-    ha({
+    enqueuePendingNotification({
       value: buildMcpTaskNotification({
         registryId: e.taskId,
         mcpTaskId: e.mcpTaskId,
@@ -558,7 +558,7 @@ async function ce(
         .request(
           { method: "tasks/cancel", params: { taskId: e.mcpTaskId } },
           $Se,
-          { signal: AbortSignal.timeout(Kde) },
+          { signal: AbortSignal.timeout(MCP_TASK_CANCEL_TIMEOUT_MS) },
         )
         .catch((c) =>
           n(`mcp task ${e.mcpTaskId} cancel after kill: ${formatErrorWithCode(c)}`),

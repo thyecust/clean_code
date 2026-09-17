@@ -20,14 +20,14 @@ import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ct
 import { sortByModifiedDesc, logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { jo } from "../../00-第三方库/which-isexe/ isexe.knmpyrza.js";
 import {
-  xn,
-  jwe,
-  Cgt,
-  LX,
-  Jf,
+  gracefulShutdown,
+  restoreCostStateFromRecord,
+  clearObserverPairings,
+  createPrecomputeSidecarReadAheadOptions,
+  recordModelSwitchIfChanged,
   loadConversationForResume,
-  YLe,
-  Ht,
+  awaitPolicyColdStart,
+  createSystemInfoMessage,
   isCustomTitleEnabled,
   recordContentReplacement,
   resetSessionFilePointer,
@@ -261,7 +261,7 @@ import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具
 F();
 import { dirname } from "path";
 function Go() {
-  xn(1);
+  gracefulShutdown(1);
 }
 function Wo() {
   process.exit(0);
@@ -444,7 +444,7 @@ function ResumeConversation({
         forkSession: G ?? !1,
         storageV5: g,
         credentials: Ae,
-        ...LX(x.precompute, g, { forkSession: !!G }),
+        ...createPrecomputeSidecarReadAheadOptions(x.precompute, g, { forkSession: !!G }),
       });
       if (!n)
         throw (
@@ -464,10 +464,10 @@ function ResumeConversation({
         if (B) {
           let Ao = await O8(x.project.originalCwd, [], g);
           (D((Mo) => ({ ...Mo, agentDefinitions: Ao })),
-            n.messages.push(Ht(B, "warning")));
+            n.messages.push(createSystemInfoMessage(B, "warning")));
         }
       }
-      Cgt(x);
+      clearObserverPairings(x);
       let { adoptedSessionId: m, effectiveFork: b } = Vre(n.sessionId, !!G),
         xe = m ? pinSessionId(m) : pinSessionId(K());
       if (m)
@@ -486,22 +486,22 @@ function ResumeConversation({
         )
           await recordContentReplacement(n.contentReplacements, void 0, g);
       }
-      jwe(n);
+      restoreCostStateFromRecord(n);
       let yo = await HZ(s.projectPath, g),
         { agentDefinition: le } = Gz(n.agentSetting, te, no, {
           sessionAgentDefinitions: yo,
           sessionCwd: s.projectPath,
-          onResolveMiss: (l) => n.messages.push(Ht(l, "warning")),
+          onResolveMiss: (l) => n.messages.push(createSystemInfoMessage(l, "warning")),
         });
-      if (le?.mcpServers?.length) await YLe();
+      if (le?.mcpServers?.length) await awaitPolicyColdStart();
       if ((D((l) => ({ ...l, agent: le?.agentType })), b)) vHe(n.messages);
       OZ(n.messages, b);
-      let De = IZ(n.messages, so, (l) => n.messages.push(Ht(l, "warning"))),
+      let De = IZ(n.messages, so, (l) => n.messages.push(createSystemInfoMessage(l, "warning"))),
         X = De ? PZ(n.messages, De, b, g, Ae) : void 0;
       if (X)
         D((l) => {
           if (l.mainLoopModel === X) return l;
-          return (Jf(x, l, X, "resume"), { ...l, mainLoopModel: X });
+          return (recordModelSwitchIfChanged(x, l, X, "resume"), { ...l, mainLoopModel: X });
         });
       kHe(n.messages, { fork: b, startup: !0 });
       {
@@ -530,7 +530,7 @@ function ResumeConversation({
         );
       if (!b) {
         let l = DZ(worktreeStateStore.of(x.host), n.worktreeSession, void 0, { storageV5: g });
-        if (l) n.messages.push(Ht(RHe(l), "warning"));
+        if (l) n.messages.push(createSystemInfoMessage(RHe(l), "warning"));
         if ((resetReplTabToConvo(x.host, D), m))
           if (isHoverRestEnabled() && g !== void 0) await adoptResumedSessionFileAsync(g);
           else adoptResumedSessionFile();

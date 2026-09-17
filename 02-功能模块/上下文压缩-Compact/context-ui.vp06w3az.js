@@ -24,7 +24,7 @@ import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/�
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
 import { fl } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-jjqazdgg.js";
-import { rht, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Cr } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { renderToAnsiText } from "../../01-核心基础设施/共享小工具-未细化/one-shot-render.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -1140,7 +1140,7 @@ function ce() {
   return qd((d) => typeof d === "string");
 }
 function Pt(d, i = []) {
-  return ya(d);
+  return sliceFromLastCompactBoundary(d);
 }
 async function xs(d, i, g) {
   let u = i.presentation === "fullscreen" && g.trim().toLowerCase() !== "all",
@@ -1204,7 +1204,7 @@ async function xs(d, i, g) {
     ue = Pt(C, de),
     se = process.stdout.columns || 80,
     E = h(),
-    B = await rht(
+    B = await analyzeContextUsage(
       ue,
       j,
       async () => E.toolPermissionContext,

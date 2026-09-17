@@ -19,7 +19,7 @@ import { o, t, jr, tn, bs } from "../../../01-核心基础设施/ANSI-样式-布
 import { lF } from "../../ink/ink + react-reconciler.5rs3h07b.js";
 import { NI, nK, Ape, fNe } from "../../../01-核心基础设施/ANSI-样式-布局原语/chunk-t76ttx77.js";
 import { dd, _p, m9e, T0e, Fye } from "../../../02-功能模块/文本编辑-输入缓冲/文本编辑-输入缓冲.vge66r1j.js";
-import { p_ } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getKeybindingChord } from "../../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NO_ANIMATION_INDEX, useReducedMotion } from "../../../01-核心基础设施/共享小工具-未细化/reduced-motion.js";
 import { e, r } from "../../react/react.kwtapczy.js";
 import { getThemeColor } from "../../../01-核心基础设施/共享小工具-未细化/theme-color.js";
@@ -103,7 +103,7 @@ var st = "clipboard-image-hint",
                 l({
                   key: st,
                   kind: "contextual",
-                  text: `Image in clipboard \xB7 ${p_("chat:imagePaste", "Chat", "ctrl+v")} to paste`,
+                  text: `Image in clipboard \xB7 ${getKeybindingChord("chat:imagePaste", "Chat", "ctrl+v")} to paste`,
                   priority: "immediate",
                   timeoutMs: 8000,
                 }));

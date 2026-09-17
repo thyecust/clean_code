@@ -16,17 +16,17 @@ import { o, t, ct, iO } from "./chunk-k8hr56nm.js";
 import { LYt } from "../../02-功能模块/Workflow编排/chunk-0t0sve49.js";
 import { HooksError } from "../../02-功能模块/Hooks钩子/chunk-bzqqe6xh.js";
 import {
-  Uzn,
-  Bzn,
-  jzn,
-  IO,
-  mVe,
-  Apn,
-  WDe,
-  Kue,
-  pgt,
-  gVe,
-  bX,
+  handlePluginInputEvent,
+  handlePluginPressEvent,
+  handlePluginSelectEvent,
+  RENDER_EVENT,
+  heldRenderInput,
+  buildViewportPropsKey,
+  getRenderVersions,
+  hasRenderHookForComponent,
+  terminalViewport,
+  uiRenderCache,
+  turnEvents,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useTerminalSize } from "../共享小工具-未细化/use-terminal-size.js";
 import { useStoreSelector } from "../共享小工具-未细化/use-store-selector.js";
@@ -41,7 +41,7 @@ import { defineExportGetters } from "../共享小工具-未细化/chunk-2c9tjhwd
 F();
 var le = 600;
 function Ke(s, p, i) {
-  let f = mVe(s, p);
+  let f = heldRenderInput(s, p);
   return f !== void 0 && f.component === i.component ? f : i;
 }
 var ue = ["color", "backgroundColor", "borderColor"];
@@ -215,7 +215,7 @@ var S = (s, p) =>
     return;
   });
 var Qit = (s) =>
-  void S(`ui.press ${s.plugin}`, Bzn({ ...s, surface: "terminal" }));
+  void S(`ui.press ${s.plugin}`, handlePluginPressEvent({ ...s, surface: "terminal" }));
 function Re({ plugin: s, handle: p, label: i, hotkey: f, plain: u }) {
   let a = De(JZ),
     m = a !== null && a.plugin === s && a.handle === p;
@@ -419,14 +419,14 @@ function ve(s) {
   return p.current;
 }
 F();
-var Oe = (s, p) => (s ? `${p.component}\x00${p.requestId}\x00` + Apn(p) : "");
+var Oe = (s, p) => (s ? `${p.component}\x00${p.requestId}\x00` + buildViewportPropsKey(p) : "");
 var _e = (s, p) =>
   n(`ui.render (${s.component} ${s.requestId}): site failed: ${l(p)}`, {
     level: "error",
   });
 function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
   let a = u === void 0 ? void 0 : [u],
-    [m, x] = d(() => (s ? gVe.settled(p, a) : void 0)),
+    [m, x] = d(() => (s ? uiRenderCache.settled(p, a) : void 0)),
     c = Oe(s, p);
   return (
     E(() => {
@@ -437,7 +437,7 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
       if (f) return;
       let y = new AbortController();
       return (
-        bX({ signal: y.signal, origin: a })
+        turnEvents({ signal: y.signal, origin: a })
           .ui.render(p)
           .then(
             (g) => {
@@ -455,9 +455,9 @@ function Ne(s, p, { version: i, staticFrame: f, submittedBy: u }) {
     m
   );
 }
-var S0e = () => useStoreSelector(WDe(), (s) => s.get(IO) ?? 0);
+var S0e = () => useStoreSelector(getRenderVersions(), (s) => s.get(RENDER_EVENT) ?? 0);
 function ben(s, p, i) {
-  let f = Kue(s.component),
+  let f = hasRenderHookForComponent(s.component),
     u = De(StaticFrameContext),
     a = Ne(f, s, { version: S0e(), staticFrame: u, submittedBy: i }),
     m = ve(f) || u;
@@ -466,7 +466,7 @@ function ben(s, p, i) {
       o,
       {
         flexDirection: "column",
-        renderEvent: IO,
+        renderEvent: RENDER_EVENT,
         renderComponent: s.component,
       },
       f ? (a ? Pe(a, (c) => p(Ke(a, c, s))) : m ? p(s) : null) : p(s),
@@ -480,7 +480,7 @@ var QL = (s, p, i) => {
   let f = S0e(),
     u = V(p, i);
   return V(() => {
-    let a = pgt.get();
+    let a = terminalViewport.get();
     return {
       surface: "terminal",
       component: s,
@@ -524,8 +524,8 @@ defineExportGetters(La, {
   withHexColors: () => Qe,
 });
 var b0e = (s, p) => `${s}\x00${p}`;
-var wen = (s) => S(`ui.input ${s.plugin}`, Uzn({ ...s, surface: "terminal" }));
-var OUn = (s) => S(`ui.select ${s.plugin}`, jzn({ ...s, surface: "terminal" }));
+var wen = (s) => S(`ui.input ${s.plugin}`, handlePluginInputEvent({ ...s, surface: "terminal" }));
+var OUn = (s) => S(`ui.select ${s.plugin}`, handlePluginSelectEvent({ ...s, surface: "terminal" }));
 function pr() {
   return !1;
 }

@@ -10,7 +10,7 @@
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { S1, Pp } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getRuntimeMainLoopModel } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { gVn, Sjt, bjt, attributionSkillName, dropShadowedFallbackSkills, isFallbackStub } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getSkillUsageStats, getSkillListingCharCounts, collectSkillCommands, attributionSkillName, dropShadowedFallbackSkills, isFallbackStub } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { te, formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { i3e, $Bn } from "../成本-Token统计/chunk-3nwwgatc.js";
@@ -73,7 +73,7 @@ async function collectSkillUsageData(n) {
         })
       : Promise.resolve(new Map());
   c.catch(() => {});
-  let { included: k } = await bjt(n.mcpCommands, n.agentId, n.storageV5).catch(
+  let { included: k } = await collectSkillCommands(n.mcpCommands, n.agentId, n.storageV5).catch(
       (e) => {
         throw new SkillDoctorStageError("skill_set_failed", e);
       },
@@ -82,7 +82,7 @@ async function collectSkillUsageData(n) {
       permissionMode: n.permissionMode,
       mainLoopModel: n.mainLoopModel,
     }),
-    w = Sjt(k, S, n.mainLoopModel),
+    w = getSkillListingCharCounts(k, S, n.mainLoopModel),
     p = await c,
     r = [],
     l = dropShadowedFallbackSkills([...n.commands]),
@@ -110,7 +110,7 @@ async function collectSkillUsageData(n) {
     let s = e.name.lastIndexOf(":"),
       i = s > 0 ? e.name.slice(s + 1) : void 0,
       d = i !== void 0 && M.has(i) && m.get(i) === 1 ? i : void 0,
-      f = gVn(e.name, d ?? e.unqualifiedName);
+      f = getSkillUsageStats(e.name, d ?? e.unqualifiedName);
     r.push({
       name: e.pluginInfo ? Pp(e.name) : e.name,
       source: e.pluginInfo

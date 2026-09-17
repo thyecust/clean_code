@@ -31,27 +31,27 @@ import { useKeybindings } from "../../01-核心基础设施/共享小工具-未�
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import {
-  V9,
-  tX,
-  Cue,
-  DDe,
-  Xmt,
-  Ezn,
-  LBt,
-  kO,
-  JVe,
-  mjt,
-  QVe,
-  cVn,
-  dde,
-  uVn,
-  dVn,
-  pVn,
-  fVn,
-  sfn,
-  ifn,
-  Sre,
-  Gs,
+  requiresUsageCredits,
+  isCreditsOnlyTierSubscription,
+  recordFableOverageConsent,
+  EXTRA_USAGE_HELP_URL,
+  USAGE_SETTINGS_URL,
+  EXTRA_USAGE_ARTICLE_URL,
+  isExtraUsageEnabled,
+  fetchUsageUtilization,
+  getUserFacingErrorMessage,
+  enableOverageBilling,
+  updateOverageSpendLimit,
+  updateAutoReloadSettings,
+  fetchPrepaidBalance,
+  DEFAULT_USD_CREDIT_BUNDLES,
+  fetchAvailableBundles,
+  fetchPaymentMethod,
+  purchaseCredits,
+  previewPurchaseTax,
+  fetchCreditPurchaseStatus,
+  getCurrencySymbol,
+  formatCurrencyAmount,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { ConfirmPrompt } from "../../01-核心基础设施/共享小工具-未细化/confirm-prompt.js";
@@ -445,9 +445,9 @@ function dd(mf) {
   return Math.max(0, mf - 1);
 }
 function fl(s) {
-  if (isFableFamilyOrPinnedModel(getMainLoopModel()) && V9() && !tX()) Cue(s);
+  if (isFableFamilyOrPinnedModel(getMainLoopModel()) && requiresUsageCredits() && !isCreditsOnlyTierSubscription()) recordFableOverageConsent(s);
 }
-var z = Xmt,
+var z = USAGE_SETTINGS_URL,
   gl = "https://www.anthropic.com/legal/consumer-terms",
   pl = 2000,
   bl = 30,
@@ -622,15 +622,15 @@ function vl({
               : 0,
         };
       let [oe, Ae, Be, Mo] = await Promise.all([
-          re ? Promise.resolve(null) : kO(b),
-          dde(b),
-          pVn(b),
-          dVn(b),
+          re ? Promise.resolve(null) : fetchUsageUtilization(b),
+          fetchPrepaidBalance(b),
+          fetchPaymentMethod(b),
+          fetchAvailableBundles(b),
         ]),
         rs = (Mo?.currency ?? Ae?.currency ?? "USD").toUpperCase();
       U(rs);
       let as = Mo?.bundles ?? [];
-      (ie(as.length > 0 ? as : rs === "USD" ? uVn : []),
+      (ie(as.length > 0 ? as : rs === "USD" ? DEFAULT_USD_CREDIT_BUNDLES : []),
         Fe(Mo?.stripe_product_id));
       let Ao = Mo?.expiry_policy_months ?? Ae?.expiry_policy_months ?? null;
       if ((te(Ao), H("tengu_satchel_banjo", !1))) {
@@ -664,7 +664,7 @@ function vl({
         c({ s: "buy_select", pm: Be });
         return;
       }
-      if (!LBt(re)) {
+      if (!isExtraUsageEnabled(re)) {
         c({ s: "not_enabled", pm: Be });
         return;
       }
@@ -692,7 +692,7 @@ function vl({
     (logEvent("tengu_extra_usage_inline_dialog_enable_confirm", {}),
       c({
         s: "enabling",
-        work: mjt(b).then(async (m) => {
+        work: enableOverageBilling(b).then(async (m) => {
           if (
             (logEvent("tengu_extra_usage_inline_dialog_enable_result", { success: m }),
             !m)
@@ -756,7 +756,7 @@ function vl({
       reload_to_cents: re,
       currency: uRe(R),
     });
-    let oe = cVn(m, A, re, R, b),
+    let oe = updateAutoReloadSettings(m, A, re, R, b),
       Ae = m
         ? oe.then(async (Be) => {
             if (Be.ok) await pe(!1);
@@ -797,7 +797,7 @@ function vl({
     }
     let re = A?.local_credit_minor_units ?? m;
     try {
-      let oe = await fVn(
+      let oe = await purchaseCredits(
         A?.id
           ? { kind: "bundle", bundle: A }
           : { kind: "custom", amountCents: m },
@@ -820,8 +820,8 @@ function vl({
           }));
       else c({ s: "error", msg: "Unexpected purchase state" });
     } catch (oe) {
-      let Ae = JVe(oe);
-      if (cc(oe, (Be) => JVe(Be) !== null))
+      let Ae = getUserFacingErrorMessage(oe);
+      if (cc(oe, (Be) => getUserFacingErrorMessage(Be) !== null))
         n(`Extra usage credit purchase failed: ${Ae ?? l(oe)}`, {
           level: "error",
         });
@@ -841,7 +841,7 @@ function vl({
       currency: uRe(R),
     }),
       c({ s: "adjusting" }));
-    let re = await QVe(m, R, b);
+    let re = await updateOverageSpendLimit(m, R, b);
     if (!re.ok) {
       c({
         s: "error",
@@ -854,7 +854,7 @@ function vl({
     s(
       m === null
         ? "Monthly limit set to unlimited"
-        : `Monthly limit updated to ${Gs(m, R, "fit")}`,
+        : `Monthly limit updated to ${formatCurrencyAmount(m, R, "fit")}`,
     );
   }
   let Fo = ad(K),
@@ -901,7 +901,7 @@ function vl({
         message: "Processing payment\u2026 (may take a few seconds)",
       });
     case "buy_success": {
-      let m = `Added ${Gs(a.credit, R)} of usage credits`;
+      let m = `Added ${formatCurrencyAmount(a.credit, R)} of usage credits`;
       return e(Bl, { message: m, onDone: () => (fl(k), v ? v(m) : s(m)) });
     }
     case "buy_polling":
@@ -1134,7 +1134,7 @@ function Dl(Em) {
           "By turning on, you agree to turn on usage credits as defined in our Help Center article:",
           `
 `,
-          DDe,
+          EXTRA_USAGE_HELP_URL,
         ],
       })),
         (He[38] = Yo));
@@ -1299,7 +1299,7 @@ function xl(s, a) {
     }
   }
   if (!c) return null;
-  let g = Gs(c.amountMinorUnits, c.currency),
+  let g = formatCurrencyAmount(c.amountMinorUnits, c.currency),
     x = c.name ? ` \xB7 ${c.name}` : "";
   if (c.expiresMs - a.getTime() < 864000000) {
     let b = rd(a, new Date(c.expiresMs)),
@@ -1317,7 +1317,7 @@ function xl(s, a) {
 function ad(s) {
   if (!H("tengu_satchel_banjo", !1)) return null;
   if (s === null || !Number.isInteger(s) || s <= 0) return null;
-  return `Usage credits are valid for ${s} ${s === 1 ? "month" : "months"}. Learn more: ${Ezn}`;
+  return `Usage credits are valid for ${s} ${s === 1 ? "month" : "months"}. Learn more: ${EXTRA_USAGE_ARTICLE_URL}`;
 }
 function Pl(Mm) {
   let J = _(61),
@@ -1327,7 +1327,7 @@ function Pl(Mm) {
     { usage: le, balance: vn } = Am,
     ku;
   if (J[0] !== ze || J[1] !== le.used_credits)
-    ((ku = le.used_credits !== null ? Gs(le.used_credits, ze) : "\u2014"),
+    ((ku = le.used_credits !== null ? formatCurrencyAmount(le.used_credits, ze) : "\u2014"),
       (J[0] = ze),
       (J[1] = le.used_credits),
       (J[2] = ku));
@@ -1337,7 +1337,7 @@ function Pl(Mm) {
   if (J[3] !== ze || J[4] !== le.monthly_limit)
     ((wu =
       le.monthly_limit !== null
-        ? Gs(le.monthly_limit, ze, "fit")
+        ? formatCurrencyAmount(le.monthly_limit, ze, "fit")
         : "Unlimited"),
       (J[3] = ze),
       (J[4] = le.monthly_limit),
@@ -1353,7 +1353,7 @@ function Pl(Mm) {
   let rr = Du,
     Pu;
   if (J[8] !== vn || J[9] !== ze)
-    ((Pu = vn ? Gs(vn.amount, ze) : "\u2014"),
+    ((Pu = vn ? formatCurrencyAmount(vn.amount, ze) : "\u2014"),
       (J[8] = vn),
       (J[9] = ze),
       (J[10] = Pu));
@@ -1541,7 +1541,7 @@ function Rl(Sm) {
               )
             : 0;
         return {
-          label: Gs(kr.local_credit_minor_units, Io, "fit"),
+          label: formatCurrencyAmount(kr.local_credit_minor_units, Io, "fit"),
           description: Tu > 0 ? `Save ${Tu}%` : void 0,
           value: `p${Vm}`,
         };
@@ -1701,7 +1701,7 @@ function El(Um) {
     ((Uu = () => {
       let Yu = !0;
       return (
-        sfn(Le, W, $r, Mr).then((Xm) => {
+        previewPurchaseTax(Le, W, $r, Mr).then((Xm) => {
           if (Yu) Ym(Xm);
         }),
         () => {
@@ -1728,7 +1728,7 @@ function El(Um) {
       ? [{ label: "Go back", value: "no" }]
       : [
           {
-            label: we ? "Pay (calculating\u2026)" : `Pay ${Gs(on, W)} now`,
+            label: we ? "Pay (calculating\u2026)" : `Pay ${formatCurrencyAmount(on, W)} now`,
             value: "yes",
             disabled: we,
           },
@@ -1778,7 +1778,7 @@ function El(Um) {
       : "Subtotal";
   let An;
   if (q[23] !== Cn || q[24] !== W)
-    ((An = Gs(Cn, W)), (q[23] = Cn), (q[24] = W), (q[25] = An));
+    ((An = formatCurrencyAmount(Cn, W)), (q[23] = Cn), (q[24] = W), (q[25] = An));
   else An = q[25];
   let Tr;
   if (q[26] !== po || q[27] !== An)
@@ -1801,10 +1801,10 @@ function El(Um) {
         children: [
           e(fe, {
             label: `Discount${Ar > 0 ? ` (${Ar}%)` : ""}`,
-            value: `\u2212${Gs(xn, W)}`,
+            value: `\u2212${formatCurrencyAmount(xn, W)}`,
           }),
           go,
-          e(fe, { label: "Subtotal after discount", value: Gs(Le, W) }),
+          e(fe, { label: "Subtotal after discount", value: formatCurrencyAmount(Le, W) }),
         ],
       })),
       (q[29] = Le),
@@ -1828,7 +1828,7 @@ function El(Um) {
         ? e(fe, { label: Ho, value: "\u2014", dim: !0 })
         : e(fe, {
             label: `${Ho} (${kl(kn.tax_rate_pct)})`,
-            value: Gs(kn.tax_minor_units, W),
+            value: formatCurrencyAmount(kn.tax_minor_units, W),
           })),
       (q[35] = W),
       (q[36] = kn),
@@ -1839,7 +1839,7 @@ function El(Um) {
   else Nr = q[40];
   let Sr;
   if (q[41] !== W || q[42] !== we || q[43] !== se || q[44] !== on)
-    ((Sr = we ? "\u2026" : se ? "\u2014" : Gs(on, W)),
+    ((Sr = we ? "\u2026" : se ? "\u2014" : formatCurrencyAmount(on, W)),
       (q[41] = W),
       (q[42] = we),
       (q[43] = se),
@@ -2047,7 +2047,7 @@ function Pn(Jm) {
   useKeybindings(oc, tc);
   let zr;
   if (Ue[3] !== pi || Ue[4] !== bi)
-    ((zr = Gs(pi, bi)), (Ue[3] = pi), (Ue[4] = bi), (Ue[5] = zr));
+    ((zr = formatCurrencyAmount(pi, bi)), (Ue[3] = pi), (Ue[4] = bi), (Ue[5] = zr));
   else zr = Ue[5];
   let Qr;
   if (Ue[6] !== gi || Ue[7] !== zr)
@@ -2259,7 +2259,7 @@ function $l(ef) {
       else ot = ce[29];
       const sn = Me === 0 ? "suggestion" : "inactive";
       let ln;
-      if (ce[30] !== Bn) ((ln = Sre(Bn)), (ce[30] = Bn), (ce[31] = ln));
+      if (ce[30] !== Bn) ((ln = getCurrencySymbol(Bn)), (ce[30] = Bn), (ce[31] = ln));
       else ln = ce[31];
       let un;
       if (ce[32] !== ln)
@@ -2318,7 +2318,7 @@ function $l(ef) {
         Ke.ok &&
         r(t, {
           color: "success",
-          children: ["Monthly limit: ", Gs(Ke.cents, Bn)],
+          children: ["Monthly limit: ", formatCurrencyAmount(Ke.cents, Bn)],
         });
     }
     ((ce[3] = On),
@@ -2532,7 +2532,7 @@ function Ml(af) {
           : me.cents <= ge.cents
             ? "Reload-to must be above threshold"
             : he === "USD" && me.cents - ge.cents < _t
-              ? `Reload must be at least ${Gs(_t, he, "whole")} above threshold`
+              ? `Reload must be at least ${formatCurrencyAmount(_t, he, "whole")} above threshold`
               : "";
       let hc = !bo;
       let Bi = !ge.ok && (Vn.trim() !== "" || Z !== 0) ? ge.error : "";
@@ -2643,7 +2643,7 @@ function Ml(af) {
       else pt = j[59];
       const Si = Bi ? "error" : Z === 0 ? "suggestion" : "inactive";
       let $a;
-      if (j[60] !== he) (($a = Sre(he)), (j[60] = he), (j[61] = $a));
+      if (j[60] !== he) (($a = getCurrencySymbol(he)), (j[60] = he), (j[61] = $a));
       else $a = j[61];
       let Ma;
       if (j[62] !== $a)
@@ -2710,7 +2710,7 @@ function Ml(af) {
       else Dc = j[78];
       const Li = Ti ? "error" : Z === 1 ? "suggestion" : "inactive";
       let Ba;
-      if (j[79] !== he) ((Ba = Sre(he)), (j[79] = he), (j[80] = Ba));
+      if (j[79] !== he) ((Ba = getCurrencySymbol(he)), (j[79] = he), (j[80] = Ba));
       else Ba = j[80];
       let Ta;
       if (j[81] !== Ba)
@@ -2784,10 +2784,10 @@ function Ml(af) {
           color: "success",
           children: [
             "Tops up to ",
-            Gs(me.cents, he),
+            formatCurrencyAmount(me.cents, he),
             " when your balance falls below",
             " ",
-            Gs(ge.cents, he),
+            formatCurrencyAmount(ge.cents, he),
           ],
         });
     }
@@ -2998,7 +2998,7 @@ function os(ff) {
       !G.ok && (gn.trim() !== "" || zi)
         ? G.error
         : pn && yo !== void 0
-          ? `Minimum is ${Gs(yo, fn, "whole")}`
+          ? `Minimum is ${formatCurrencyAmount(yo, fn, "whole")}`
           : ""),
       (xe[2] = zi),
       (xe[3] = pn),
@@ -3031,7 +3031,7 @@ function os(ff) {
     ((Va = e(t, { dimColor: !0, children: Xi })), (xe[15] = Xi), (xe[16] = Va));
   else Va = xe[16];
   let ja;
-  if (xe[17] !== fn) ((ja = Sre(fn)), (xe[17] = fn), (xe[18] = ja));
+  if (xe[17] !== fn) ((ja = getCurrencySymbol(fn)), (xe[17] = fn), (xe[18] = ja));
   else ja = xe[18];
   let La;
   if (xe[19] !== ja)
@@ -3087,7 +3087,7 @@ function os(ff) {
       !pn &&
       r(t, {
         color: "success",
-        children: ["Buys ", Gs(G.cents, fn), " of usage credits"],
+        children: ["Buys ", formatCurrencyAmount(G.cents, fn), " of usage credits"],
       })),
       (xe[34] = pn),
       (xe[35] = fn),
@@ -3167,7 +3167,7 @@ function Al(bf) {
           return;
         }
         try {
-          let Gi = await ifn(ho, vo);
+          let Gi = await fetchCreditPurchaseStatus(ho, vo);
           if (bn) {
             return;
           }

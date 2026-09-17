@@ -26,22 +26,22 @@ import { createDefaultToolPermissionContext, findToolByName, parseToolInput, get
 import { createAbortController, createChildAbortController, userAbortReason } from "../../03-入口与运行时/核心应用-Agent循环/chunk-h3cty6gp.js";
 import { getHostCapabilityState } from "../../01-核心基础设施/共享小工具-未细化/host-capability-state.js";
 import {
-  wmt,
-  Xm,
+  prunePluginsForClosedGate,
+  getCommandQueueInstance,
   hasPermissionsToUseTool,
-  wpn,
-  d3,
-  pu,
-  MX,
-  $_t,
-  dC,
-  m5e,
-  g5e,
-  mWt,
-  pgn,
-  N8n,
-  BWt,
-  Vc,
+  collectErrorOutputLines,
+  refreshSkillsSyncVetoed,
+  setSessionCwd,
+  convertSchemaToJsonSchema,
+  EMPTY_QUEUED_NOTIFICATIONS_REGISTRY,
+  getBuiltinToolsForContext,
+  getToolFeatureName,
+  isToolCallAbortedError,
+  classifyToolCallError,
+  createDynamicSkillState,
+  setDynamicSkillState,
+  REFUSED_TOOL_INPUT_FIELDS,
+  createAssistantMessage,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Cj } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 import { CC } from "../Channel-Slack集成/Channel-Slack集成.wnn25q3j.js";
@@ -58,7 +58,7 @@ import { BufferCoercingStdioServerTransport } from "../../01-核心基础设施/
 import "../../01-核心基础设施/共享小工具-未细化/stdio-server-transport.js";
 import "../../01-核心基础设施/共享小工具-未细化/stdio-message-framing.js";
 var N = new Set([qe, tt, Bt, Mn, ro, co, Wl, Ut]),
-  k = BWt;
+  k = REFUSED_TOOL_INPUT_FIELDS;
 function G(e, m) {
   if (e.properties === void 0 || m.length === 0) return e;
   let d = { ...e.properties };
@@ -69,7 +69,7 @@ function G(e, m) {
   return { ...e, properties: d, required: S };
 }
 async function startMCPServer(e, m, d, S, a) {
-  pu(e);
+  setSessionCwd(e);
   let C = q(m, d, B(), "stdio", S, a),
     L = new BufferCoercingStdioServerTransport();
   (await C.connect(L), Et(() => C.close()));
@@ -91,8 +91,8 @@ function q(e, m, d, S, a, C = "raw") {
     let r = getHostCapabilityState();
     (r.disableBackgroundTasks(), r.disableUnsandboxedCommands());
   }
-  if ((N8n(pgn()), d3(), Nb())) JHt(a).catch(logError);
-  if ((kGt(), HW())) wmt().catch(logError);
+  if ((setDynamicSkillState(createDynamicSkillState()), refreshSkillsSyncVetoed(), Nb())) JHt(a).catch(logError);
+  if ((kGt(), HW())) prunePluginsForClosedGate().catch(logError);
   let H = createFileStateCache(FILE_STATE_MAX_ENTRIES),
     U = new PerClassInstanceRegistry(),
     E = new McpServer(
@@ -121,14 +121,14 @@ function q(e, m, d, S, a, C = "raw") {
     }),
     E.setRequestHandler(ListToolsRequestSchema, async () => {
       let r = createDefaultToolPermissionContext(),
-        R = dC(r, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
+        R = getBuiltinToolsForContext(r, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
           (i) => !isBatchToolDefinition(i),
         ),
         T = p ? R.filter((i) => N.has(i.name)) : R;
       return {
         tools: await Promise.all(
           T.map(async (i) => {
-            let v = MX(i.inputSchema),
+            let v = convertSchemaToJsonSchema(i.inputSchema),
               { remoteExecution: _, ...s } = i;
             return {
               ...s,
@@ -151,7 +151,7 @@ function q(e, m, d, S, a, C = "raw") {
       CallToolRequestSchema,
       async ({ params: { name: r, arguments: R } }, { signal: T }) => {
         let i = createDefaultToolPermissionContext(),
-          v = dC(i, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
+          v = getBuiltinToolsForContext(i, { skipReplFilter: !0, skipSimpleModeFilter: p }).filter(
             (o) => !isBatchToolDefinition(o),
           ),
           _ = p ? v.filter((o) => N.has(o.name)) : v,
@@ -164,7 +164,7 @@ function q(e, m, d, S, a, C = "raw") {
         let F = new D(U),
           x = {
             abortController: I,
-            messageQueue: Xm(),
+            messageQueue: getCommandQueueInstance(),
             session: d,
             agentContext: { agentType: "main", agentId: bh() },
             options: {
@@ -191,7 +191,7 @@ function q(e, m, d, S, a, C = "raw") {
             setToolPermissionContext: () => {},
             setSessionToolPermissionContext: () => {},
             taskRegistry: noopTaskRegistry,
-            queuedNotificationsRegistry: $_t,
+            queuedNotificationsRegistry: EMPTY_QUEUED_NOTIFICATIONS_REGISTRY,
             sessionHooksRegistry: noopSessionHooksRegistry,
             setWebBrowserSlice: () => {},
             setArtifactReadVersion: () => {},
@@ -245,7 +245,7 @@ function q(e, m, d, S, a, C = "raw") {
               { isError: !0, content: [{ type: "text", text: t }] }
             );
           }
-          let A = await s.call(c.data, x, hasPermissionsToUseTool, Vc({ content: [] })),
+          let A = await s.call(c.data, x, hasPermissionsToUseTool, createAssistantMessage({ content: [] })),
             l;
           if (
             ((l ??= { content: [{ type: "text", text: b(A.data) }] }),
@@ -258,24 +258,24 @@ function q(e, m, d, S, a, C = "raw") {
 ${t}`;
             else l.content.push({ type: "text", text: t });
           }
-          return (logFeatureOk(m5e(s.name)), l);
+          return (logFeatureOk(getToolFeatureName(s.name)), l);
         } catch (o) {
           let c =
-            (o instanceof Error ? wpn(o) : [String(o)])
+            (o instanceof Error ? collectErrorOutputLines(o) : [String(o)])
               .filter(Boolean)
               .join(
                 `
 `,
               )
               .trim() || "Error";
-          if (g5e(o)) n(`MCP server tool call '${r}' aborted`);
+          if (isToolCallAbortedError(o)) n(`MCP server tool call '${r}' aborted`);
           else {
-            let { code: u, isSad: A } = mWt(o);
+            let { code: u, isSad: A } = classifyToolCallError(o);
             if (A)
               (n(`MCP server tool call '${r}' failed: ${c}`, {
                 level: "error",
               }),
-                logFeatureSad(m5e(s.name), u));
+                logFeatureSad(getToolFeatureName(s.name), u));
             else {
               let l = ge(o);
               (logError(
@@ -283,7 +283,7 @@ ${t}`;
                   ? l
                   : dt(l, `mcp server tool '${s.name}' threw`),
               ),
-                logFeatureBad(m5e(s.name), u));
+                logFeatureBad(getToolFeatureName(s.name), u));
             }
           }
           return { isError: !0, content: [{ type: "text", text: c }] };

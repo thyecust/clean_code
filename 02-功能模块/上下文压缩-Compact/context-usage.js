@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { Ie } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { xRt } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { hVn, rht, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getContextCategoryKind, analyzeContextUsage, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { formatTokens, formatTokenEstimate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { mayHaveRemoteClient } from "../../01-核心基础设施/共享小工具-未细化/chunk-dajvcsw3.js";
 function formatContextLimitWarning(o) {
@@ -193,9 +193,9 @@ async function collectContextData(o) {
       },
       detail: y,
     } = o,
-    c = ya(t),
+    c = sliceFromLastCompactBoundary(t),
     u = l();
-  return rht(c, i, async () => u.toolPermissionContext, m, T, {
+  return analyzeContextUsage(c, i, async () => u.toolPermissionContext, m, T, {
     session: r,
     toolUseContext: {
       options: {
@@ -236,7 +236,7 @@ function buildContextUsage(o) {
     categories: o.categories.map((t) => ({
       name: t.name,
       tokens: t.tokens,
-      kind: hVn(t),
+      kind: getContextCategoryKind(t),
     })),
     mcp_tools: o.mcpTools.map((t) => ({
       name: t.name,

@@ -16,7 +16,7 @@ import { isEssentialTrafficOnly } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { aa } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { getInitialSettings } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { asSystemPrompt, xr, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { asSystemPrompt, joinTextBlocks, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Td } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { Ew, F$e } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
@@ -81,7 +81,7 @@ async function w({
   let u = o
       ? `Write the title in ${o}. Keep technical terms and code identifiers in their original form.`
       : "Write the title in the predominant language of the session \u2014 a stray word or code token in another language doesn't change it, and neither does the English of these instructions.",
-    d = await yC({
+    d = await runSmallFastModelQuery({
       systemPrompt: asSystemPrompt([r]),
       userPrompt: `<session>
 ${l}
@@ -109,7 +109,7 @@ ${u}`,
         credentials: e,
       },
     }),
-    g = xr(d.message.content),
+    g = joinTextBlocks(d.message.content),
     h = v().safeParse(xt(bx(g), !1));
   return h.success ? h.data.title.trim() || null : null;
 }

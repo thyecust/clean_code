@@ -16,7 +16,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
 import { g6 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { Zgt, nY, Re, Dk, Hyt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { resolveWakeupSource, findTeammateTaskByAgentId, createUserMessage, hasToolResultBlock, createScheduledTaskFireMessage } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useSetAppState, useAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { useTaskRegistry } from "../../01-核心基础设施/共享小工具-未细化/use-task-registry.js";
 import { deleteScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
@@ -88,7 +88,7 @@ function v(o) {
             return { kind: "veto", fireIdx: r, reason: "split_tool_pair" };
       }
       if (
-        !Dk(e) &&
+        !hasToolResultBlock(e) &&
         (e.verifiedSlackHumanTurn === !0 ||
           e.origin !== void 0 ||
           (e.queuePriority !== "later" && e.isMeta !== !0))
@@ -112,7 +112,7 @@ function v(o) {
 }
 function K(o) {
   return {
-    ...Re({
+    ...createUserMessage({
       content: `[${o} prior /loop ${pluralize(o, "wakeup")} found nothing actionable; loop is healthy.]`,
       isMeta: !0,
     }),
@@ -135,7 +135,7 @@ function D(o, r, s, p) {
     e = r ? v(o) : { kind: "none" };
   if (e.kind === "veto") logFeatureSad("loop_noop_fold", e.reason);
   if (e.kind !== "fold")
-    return [...o, Hyt(a, { task: s, uuid: p, ...(r && { cronKind: "loop" }) })];
+    return [...o, createScheduledTaskFireMessage(a, { task: s, uuid: p, ...(r && { cronKind: "loop" }) })];
   let i = e.priorStreak + 1,
     d = S(new Date(e.since)),
     b = o.slice(e.fireIdx).map((_) => _.uuid);
@@ -148,7 +148,7 @@ function D(o, r, s, p) {
     }),
     [
       ...o,
-      Hyt(`${a} \xB7 ${i} no-op ${pluralize(i, "tick")} since ${d}`, {
+      createScheduledTaskFireMessage(`${a} \xB7 ${i} no-op ${pluralize(i, "tick")} since ${d}`, {
         task: s,
         uuid: p,
         cronKind: "loop",
@@ -235,7 +235,7 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
         onFire: (t) => R(t, "schedule_wakeup"),
         onFireTask: (t) => {
           if (t.agentId) {
-            let u = nY(t.agentId, d.getState().tasks);
+            let u = findTeammateTaskByAgentId(t.agentId, d.getState().tasks);
             if (u && !isTerminalTaskStatus(u.status)) {
               queueTeammateUserMessage(u.id, t.prompt, _, { kind: "task-notification" });
               return;
@@ -251,13 +251,13 @@ function useScheduledTasks({ isLoading: o, assistantMode: r, transcript: s, stor
             let u = !a();
             (s.replace((f) => D(f, u, U(t), l)), Ixe(t.prompt), Lrt());
           } else {
-            let u = Hyt(`Running scheduled task (${S(new Date())})`, {
+            let u = createScheduledTaskFireMessage(`Running scheduled task (${S(new Date())})`, {
               task: U(t),
               uuid: l,
             });
             s.replace((f) => [...f, u]);
           }
-          R(t.prompt, Zgt(t), { taskId: t.id, fireId: l });
+          R(t.prompt, resolveWakeupSource(t), { taskId: t.id, fireId: l });
         },
         isLoading: () => a(),
         assistantMode: r,

@@ -7,18 +7,18 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { tp, NM, xV, KVe, ZF, NTe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAutoCompactEnabled, isReactiveCompactEnabled, isAutoCompactWindowOverridden, getAutoCompactWindowSource, getEffectiveContextWindow, getAutoCompactThreshold } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function r(t, e) {
-  let n = tp(),
-    c = ZF(t, e),
-    o = NTe(t, e),
-    a = !(NM() && !xV(t, e));
+  let n = isAutoCompactEnabled(),
+    c = getEffectiveContextWindow(t, e),
+    o = getAutoCompactThreshold(t, e),
+    a = !(isReactiveCompactEnabled() && !isAutoCompactWindowOverridden(t, e));
   return {
     enabled: n,
     effectiveWindow: c,
     threshold: o,
     enforced: a,
-    source: KVe(t, e),
+    source: getAutoCompactWindowSource(t, e),
   };
 }
 function createRemoteAutocompactStateEmitter(t) {

@@ -72,7 +72,7 @@ import { getSettings_DEPRECATED } from "../核心工具-路径与平台/核心�
 import { default as at } from "../../00-第三方库/axios/axios.t0fczzmz.js";
 import { getAPIProvider } from "../模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { getGatewayIdentityAttributes, otelContextManager } from "./otel-events.js";
-import { rw, FGn, Wun, iV } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isDetailedTracingEnabled, logPerfettoTracingInit, isEnhancedTelemetryBetaEnabled, endInteractionSpan } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getResolvedWIFBaseUrlSnapshot } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 import { OtelDiagLogger } from "../共享小工具-未细化/otel-diag-logger.js";
 import { bee } from "../../00-第三方库/_未识别/第三方库-OpenTelemetry/第三方库-OpenTelemetry.fy6ebeyr.js";
@@ -1403,7 +1403,7 @@ function yt() {
     !a.OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE)
   )
     process.env.OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE = "delta";
-  if (rw() && !d_e()) nt();
+  if (isDetailedTracingEnabled() && !d_e()) nt();
 }
 function st() {
   let e = CDn();
@@ -1719,7 +1719,7 @@ async function initializeTelemetry(e) {
     new OtelDiagLogger(),
     a.CLAUDE_CODE_IS_COWORK ? C.DiagLogLevel.WARN : C.DiagLogLevel.ERROR,
   ),
-    FGn());
+    logPerfettoTracingInit());
   let t = [],
     r = Mt(),
     s = r ? ve(a.OTEL_METRICS_EXPORTER) : [];
@@ -1732,7 +1732,7 @@ async function initializeTelemetry(e) {
     t.push(...(await vt(s)));
   if (Bt()) t.push(Dt(e));
   let o = st();
-  if (rw()) {
+  if (isDetailedTracingEnabled()) {
     if (!d_e()) nt();
     let p = new k.MeterProvider({ resource: o, views: [], readers: t });
     return (
@@ -1740,7 +1740,7 @@ async function initializeTelemetry(e) {
       Et(async () => {
         let d = a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? 2000;
         try {
-          iV();
+          endInteractionSpan();
           let m = oHt(),
             O = d_e(),
             E = [p.shutdown()];
@@ -1816,7 +1816,7 @@ async function initializeTelemetry(e) {
         }));
     }
   }
-  if (r && Wun()) {
+  if (r && isEnhancedTelemetryBetaEnabled()) {
     let p = await It();
     if (p.length > 0) {
       let u = p.map(
@@ -1837,7 +1837,7 @@ async function initializeTelemetry(e) {
     Et(async () => {
       let p = a.CLAUDE_CODE_OTEL_SHUTDOWN_TIMEOUT_MS ?? 2000;
       try {
-        iV();
+        endInteractionSpan();
         let u = [i.shutdown()],
           d = oHt();
         if (d) u.push(d.shutdown());

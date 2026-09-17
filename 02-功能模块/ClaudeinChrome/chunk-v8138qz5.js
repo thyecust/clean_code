@@ -21,7 +21,7 @@ import { c2e, u2e } from "../../00-第三方库/https-proxy-agent/https-proxy-ag
 import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
 import { matchesToolName } from "../权限系统/chunk-qdy0h5k2.js";
 import { getClaudeInChromeState, CFC_TOOL_PREFIX, CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "./claude-in-chrome-host.js";
-import { JGn, nTe, Ka, OVn, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { forgetClassifierMetaLines, isAutoApprovableBrowserToolCall, getImageLimitsForModel, setTabsProvider, getCurrentSessionDisplayTitle } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { stripReservedMetaKeys } from "../../01-核心基础设施/共享小工具-未细化/mcp-tool-result-fields.js";
 import { getBrowserToolVerbPhrase } from "../../01-核心基础设施/共享小工具-未细化/browser-tool-verb-phrases.js";
 import { Bg } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
@@ -235,7 +235,7 @@ async function H() {
     return;
   }
 }
-OVn(H);
+setTabsProvider(H);
 var ee = new Set(["image/png", "image/jpeg", "image/gif", "image/webp"]);
 function B(e) {
   return {
@@ -249,7 +249,7 @@ function te(e) {
   return ee.has(t === "image/jpg" ? "image/jpeg" : t);
 }
 async function ne(e, t) {
-  let n = Ka(t),
+  let n = getImageLimitsForModel(t),
     r = [];
   for (let o of e.content ?? [])
     if (o.type === "text") r.push({ type: "text", text: o.text });
@@ -273,7 +273,7 @@ function oe(e) {
   for (let t of e.actions) {
     if (!isRecord(t) || typeof t.name !== "string") continue;
     let n = isRecord(t.input) ? t.input : {};
-    if (YPe.has(t.name) && nTe(t.name, n)) continue;
+    if (YPe.has(t.name) && isAutoApprovableBrowserToolCall(t.name, n)) continue;
     if (
       t.name === "navigate" &&
       typeof n.url === "string" &&
@@ -295,7 +295,7 @@ function re(e) {
     if (!isRecord(t) || typeof t.name !== "string") return !0;
     return (
       t.name === "browser_batch" ||
-      (YPe.has(t.name) && !nTe(t.name, isRecord(t.input) ? t.input : {}))
+      (YPe.has(t.name) && !isAutoApprovableBrowserToolCall(t.name, isRecord(t.input) ? t.input : {}))
     );
   });
 }
@@ -364,8 +364,8 @@ function uon(e) {
     checkPermissions: async (o, s) => {
       let i = s.toolUseId,
         m = YPe.has(e);
-      if (m && nTe(e, o)) return { behavior: "allow", updatedInput: o };
-      let d = (m && !nTe(e, o)) || (e === "browser_batch" && re(o));
+      if (m && isAutoApprovableBrowserToolCall(e, o)) return { behavior: "allow", updatedInput: o };
+      let d = (m && !isAutoApprovableBrowserToolCall(e, o)) || (e === "browser_batch" && re(o));
       if (
         e === "navigate" &&
         typeof o.url === "string" &&
@@ -439,7 +439,7 @@ function uon(e) {
           if (!i) return;
           if (T === void 0) getClaudeInChromeState().resolvedUrlByToolUseId.delete(i);
           else q(i, T);
-          if (h === void 0) JGn(i);
+          if (h === void 0) forgetClassifierMetaLines(i);
         };
       if (b) {
         let c = J(e, o);

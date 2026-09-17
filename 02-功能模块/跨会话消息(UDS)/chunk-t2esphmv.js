@@ -34,7 +34,7 @@ import {
   isRegistrySweepPermitted,
 } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { Vn } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { BS, rzn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { enqueueCommand, flushPeerDropReceipts } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getTempBaseDir } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { isUuidString, getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import {
@@ -373,7 +373,7 @@ async function Je(e, t, i, r, d) {
       skipAttachments: !0,
     };
   if (gatePeerInboundMessage(k) !== "accept") return;
-  (BS(k),
+  (enqueueCommand(k),
     n(
       `[uds-messaging] Routed user message to queue (priority=${p}): ${Nu(E, 80)}`,
     ),
@@ -806,7 +806,7 @@ async function H(e, t, i, { settleHeld: r = !0 } = {}) {
   let d = r ? settleHeldPeerMessagesOnShutdown() : void 0;
   await nn();
   let s = r ? withDeadline(QNt("exited"), en) : void 0;
-  if ((await d, await s, r)) await rzn();
+  if ((await d, await s, r)) await flushPeerDropReceipts();
   try {
     await unlink(t);
   } catch {}

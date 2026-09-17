@@ -10,7 +10,7 @@
 
 // [preload stripped] 原本在此预载 234 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { Sht, Fjt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { splitIntoSanitizedLines, formatMemoryWriteSummary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { replaceControlChars } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
@@ -76,7 +76,7 @@ function h(K) {
 }
 function isResultTruncated(n) {
   if (n?.outcome !== "ok" || typeof n.content !== "string") return !1;
-  let i = Sht(n.content);
+  let i = splitIntoSanitizedLines(n.content);
   return i.length > C || i.some((s) => s.length > E);
 }
 function renderToolResultMessage(n, i, { verbose: s }) {
@@ -85,8 +85,8 @@ function renderToolResultMessage(n, i, { verbose: s }) {
     children: r(o, {
       flexDirection: "column",
       children: [
-        e(t, { children: Fjt(n) }),
-        e(h, { lines: Sht(n.content ?? ""), verbose: s, maxLines: C }),
+        e(t, { children: formatMemoryWriteSummary(n) }),
+        e(h, { lines: splitIntoSanitizedLines(n.content ?? ""), verbose: s, maxLines: C }),
       ],
     }),
   });
@@ -97,7 +97,7 @@ function renderToolUseErrorMessage(n, { verbose: i }) {
     l = s.indexOf(`
 `),
     c = replaceControlChars(l === -1 ? s : s.slice(0, l)),
-    a = l === -1 ? [] : Sht(s.slice(l + 1));
+    a = l === -1 ? [] : splitIntoSanitizedLines(s.slice(l + 1));
   return e(ToolResultRow, {
     children: r(o, {
       flexDirection: "column",

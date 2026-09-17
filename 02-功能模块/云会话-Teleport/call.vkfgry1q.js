@@ -18,7 +18,7 @@ import { useStorageV5Context } from "../../01-核心基础设施/共享小工具
 import { ay } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { getSettingsForSource, updateSettingsForSource } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { y3, LO, LM } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSelfHostedPool, getEnvironmentOrPoolId, getDefaultRemoteEnvironment } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
@@ -42,7 +42,7 @@ import { E, d, F } from "../../00-第三方库/_未识别/React运行时-JSX/Rea
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/共享小工具-未细化/chunk-2c9tjhwd.js";
 F();
 function Ye(Un) {
-  return !y3(Un);
+  return !isSelfHostedPool(Un);
 }
 var v = "Select remote environment",
   Q = "Configure environments at: https://claude.ai/code";
@@ -112,7 +112,7 @@ function fe(fn) {
         return;
       }
       he("updating");
-      let L = k.find((En) => LO(En) === Be);
+      let L = k.find((En) => getEnvironmentOrPoolId(En) === Be);
       if (!L) {
         i("Error: Selected environment not found");
         return;
@@ -128,18 +128,18 @@ function fe(fn) {
           : Promise.resolve({ error: null });
       let bn = updateSettingsForSource(
         "userSettings",
-        { remote: { defaultEnvironmentId: LO(L) } },
+        { remote: { defaultEnvironmentId: getEnvironmentOrPoolId(L) } },
         void 0,
         S,
       );
-      let Nn = y3(L) ? "self-hosted environment" : "remote environment";
+      let Nn = isSelfHostedPool(L) ? "self-hosted environment" : "remote environment";
       Promise.all([yn, bn]).then(() => {
-        let j = LM();
+        let j = getDefaultRemoteEnvironment();
         let Tn =
-          j.id !== void 0 && j.id !== LO(L) && j.source !== void 0
+          j.id !== void 0 && j.id !== getEnvironmentOrPoolId(L) && j.source !== void 0
             ? ` \u2014 note: ${ay(j.source)} settings pin ${j.id}, which takes precedence here`
             : "";
-        i(`Set default ${Nn} to ${chalk.bold(L.name)} (${LO(L)})${Tn}`);
+        i(`Set default ${Nn} to ${chalk.bold(L.name)} (${getEnvironmentOrPoolId(L)})${Tn}`);
       });
     }),
       (s[5] = i),
@@ -261,8 +261,8 @@ function fe(fn) {
   return l;
 }
 function K(o) {
-  let a = LO(o),
-    c = y3(o)
+  let a = getEnvironmentOrPoolId(o),
+    c = isSelfHostedPool(o)
       ? ` \xB7 ${o.alive_runner_count} ${pluralize(o.alive_runner_count, "runner")}`
       : "";
   return {
@@ -316,7 +316,7 @@ function me(Pn) {
     ze;
   if (g[6] !== oe) {
     H = oe.filter(Ye);
-    let De = oe.filter(y3);
+    let De = oe.filter(isSelfHostedPool);
     ze = [
       ...H.map(K),
       ...(De.length > 0
@@ -377,7 +377,7 @@ function me(Pn) {
         ? e(SpinnerMessageLine, { message: "Updating\u2026" })
         : e(ve, {
             options: Te,
-            defaultValue: LO(w),
+            defaultValue: getEnvironmentOrPoolId(w),
             onChange: le,
             onCancel: () => le("cancel"),
             layout: "compact-vertical",

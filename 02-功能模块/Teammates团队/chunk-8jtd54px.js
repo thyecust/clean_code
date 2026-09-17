@@ -21,40 +21,40 @@ import { FU } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb
 import { hA } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { runWithTeammateContext } from "./teammate-context.js";
 import {
-  Rwe,
-  SV,
-  Mg,
+  unregisterPerfettoAgent,
+  createClassifierApprovalsUpdater,
+  estimateContextTokens,
   stripWholeToolGrantsForAsk,
   withoutGrantsForRemoteScope,
   hasPermissionsToUseToolWithSink,
-  n2t,
-  Yue,
-  qzn,
-  fT,
-  $Ve,
-  X2t,
-  Y2t,
-  J2t,
-  iLe,
-  Q2t,
+  MAX_TRANSCRIPT_MESSAGES,
+  appendTranscriptMessage,
+  replaceTranscriptMessage,
+  TASK_EVICT_GRACE_MS,
+  hasOtherActiveAgentTask,
+  createTaskProgressState,
+  updateTaskProgressFromMessage,
+  applyStreamTokenEstimate,
+  snapshotTaskProgress,
+  createActivityDescriptionResolver,
   asSystemPrompt,
-  z2,
-  NTe,
-  oKe,
-  wne,
-  Ajt,
-  Cne,
+  createMemoryRelevanceState,
+  getAutoCompactThreshold,
+  COMPACTION_BLOCKED_BY_HOOK_MESSAGE,
+  compactionResultToMessages,
+  compactConversation,
+  restorePreservedMessages,
   E6t,
-  JLe,
+  hasRunningTasksForAgent,
   runAgent,
-  r8n,
-  II,
-  $3,
-  nhn,
-  Co,
-  Re,
+  resolvePlanApprovalResponse,
+  PERMISSION_DENIED_MESSAGE,
+  PERMISSION_DENIED_PREFIX,
+  getLastApiError,
+  createApiErrorMessage,
+  createUserMessage,
   isLoggableMessage,
-  VS,
+  buildDefaultSystemPrompt,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { NFe, RD } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { cloneFileStateCache } from "../MCP客户端/chunk-3kmsshb6.js";
@@ -105,7 +105,7 @@ function Ge(s, e, t, _) {
     let w = C ?? (await hasPermissionsToUseToolWithSink(o, m, T, d, M, void 0, _));
     if (w.behavior !== "ask") return w;
     let p = w.updatedInput ?? m;
-    if (e.signal.aborted) return { behavior: "ask", message: II };
+    if (e.signal.aborted) return { behavior: "ask", message: PERMISSION_DENIED_MESSAGE };
     let A = getToolPermissionContext(T),
       I = () =>
         o.description(p, {
@@ -125,9 +125,9 @@ function Ge(s, e, t, _) {
           permissionMode: A.mode,
         });
       if (j) return j;
-      if (e.signal.aborted) return { behavior: "ask", message: II };
+      if (e.signal.aborted) return { behavior: "ask", message: PERMISSION_DENIED_MESSAGE };
       let R = await I();
-      if (e.signal.aborted) return { behavior: "ask", message: II };
+      if (e.signal.aborted) return { behavior: "ask", message: PERMISSION_DENIED_MESSAGE };
       let a = Date.now();
       try {
         return await new Promise((D, F) => {
@@ -148,7 +148,7 @@ function Ge(s, e, t, _) {
     if (w.localDisplayOnly || w.forcedByCaller === !0)
       return buildLocalDisplayOnlyDenialResult(o.name, "the teammate mailbox (a static-description wire)");
     let E = await I();
-    if (e.signal.aborted) return { behavior: "ask", message: II };
+    if (e.signal.aborted) return { behavior: "ask", message: PERMISSION_DENIED_MESSAGE };
     return new Promise((l) => {
       let k = createPermissionRequest({
         toolName: o.name,
@@ -186,7 +186,7 @@ function Ge(s, e, t, _) {
         },
         onReject(a, D) {
           R();
-          let F = a ? `${$3}${a}` : II;
+          let F = a ? `${PERMISSION_DENIED_PREFIX}${a}` : PERMISSION_DENIED_MESSAGE;
           l({ behavior: "ask", message: F, contentBlocks: D });
         },
         onRefuse(a) {
@@ -206,7 +206,7 @@ function Ge(s, e, t, _) {
       let ee = setInterval(
           async (a, D, F, B, z, X) => {
             if (a.signal.aborted) {
-              (D(), F({ behavior: "ask", message: II }));
+              (D(), F({ behavior: "ask", message: PERMISSION_DENIED_MESSAGE }));
               return;
             }
             let ie = await readMailbox(B.agentName, B.teamName, X);
@@ -253,7 +253,7 @@ function Ge(s, e, t, _) {
           T.storageV5,
         ),
         j = () => {
-          (R(), l({ behavior: "ask", message: II }));
+          (R(), l({ behavior: "ask", message: PERMISSION_DENIED_MESSAGE }));
         };
       e.signal.addEventListener("abort", j, { once: !0 });
       function R() {
@@ -402,7 +402,7 @@ async function Se(s, e, t, _, o) {
     for (let A of M) {
       let I = isPlanApprovalResponse(A.text);
       if (I && A.from === TEAM_LEAD_AGENT_NAME) {
-        let E = r8n(e, I, t, _);
+        let E = resolvePlanApprovalResponse(e, I, t, _);
         if (E)
           (n(
             `[inProcessRunner] ${s.agentName} applied lead plan_approval_response: approved=${E.approved}`,
@@ -501,12 +501,12 @@ async function Ye(s, e, t, _, o, m, T, d, M, C = !1, w) {
         { type: "new_message", message: R.text, origin: R.origin, from: "user" }
       );
     }
-    let k = s.resumableAgentId !== void 0 && JLe(s.resumableAgentId, o);
+    let k = s.resumableAgentId !== void 0 && hasRunningTasksForAgent(s.resumableAgentId, o);
     if (
       C ||
       (l?.type === "in_process_teammate" && l.awaitingPlanApproval) ||
       E.viewingAgentTaskId === t ||
-      $Ve(E.tasks, t) ||
+      hasOtherActiveAgentTask(E.tasks, t) ||
       k
     )
       p = Date.now();
@@ -517,7 +517,7 @@ async function Ye(s, e, t, _, o, m, T, d, M, C = !1, w) {
       l.evictAfter !== void 0 &&
       ((k && l.evictAfter <= Date.now() + be) || (A && !k))
     )
-      L(t, (R) => ({ ...R, evictAfter: Date.now() + fT }), o);
+      L(t, (R) => ({ ...R, evictAfter: Date.now() + TASK_EVICT_GRACE_MS }), o);
     if (((A = k), e.signal.aborted))
       return (
         n(
@@ -534,7 +534,7 @@ async function Ye(s, e, t, _, o, m, T, d, M, C = !1, w) {
         p = Date.now();
         let a = _().tasks[t];
         if (a?.type === "in_process_teammate" && a.evictAfter !== void 0)
-          L(t, (D) => ({ ...D, evictAfter: Date.now() + fT }), o);
+          L(t, (D) => ({ ...D, evictAfter: Date.now() + TASK_EVICT_GRACE_MS }), o);
         continue;
       }
     } catch (R) {
@@ -601,7 +601,7 @@ async function Je(s) {
   if (p === "replace" && w) ie = w;
   else {
     let H = [
-      ...(await VS(z, X, void 0, { teammate: !0 })).filter((W) => W !== FU),
+      ...(await buildDefaultSystemPrompt(z, X, void 0, { teammate: !0 })).filter((W) => W !== FU),
       TEAMMATE_SYSTEM_PROMPT_ADDENDUM,
     ];
     if (m) {
@@ -672,7 +672,7 @@ ${W}`);
               ),
             })),
             (me = void 0),
-            appendMessageToTaskTranscript(t, Re({ content: V }), a));
+            appendMessageToTaskTranscript(t, createUserMessage({ content: V }), a));
           break;
         case "new_message":
           if (
@@ -690,7 +690,7 @@ ${W}`);
               summary: P.summary,
             })),
               (me = void 0),
-              appendMessageToTaskTranscript(t, Re({ content: V }), a));
+              appendMessageToTaskTranscript(t, createUserMessage({ content: V }), a));
           break;
         case "new_messages":
           (n(
@@ -698,7 +698,7 @@ ${W}`);
           ),
             (V = formatTeammateMessages(P.messages, { recipientIsLead: !1 })),
             (me = void 0),
-            appendMessageToTaskTranscript(t, Re({ content: V }), a));
+            appendMessageToTaskTranscript(t, createUserMessage({ content: V }), a));
           break;
         case "aborted":
           (n(`[inProcessRunner] ${e.agentId} aborted while waiting`),
@@ -726,8 +726,8 @@ ${W}`);
   try {
     a.updateTranscript(t, (v) => {
       let J = v.messages;
-      if (k) for (let ye of k.slice(-n2t)) J = Yue(J, ye);
-      return { ...v, messages: Yue(J, Re({ content: ve })) };
+      if (k) for (let ye of k.slice(-MAX_TRANSCRIPT_MESSAGES)) J = appendTranscriptMessage(J, ye);
+      return { ...v, messages: appendTranscriptMessage(J, createUserMessage({ content: ve })) };
     });
     let P = d.contentReplacementState ? (ee ?? hbt()) : void 0,
       H = CW(),
@@ -745,24 +745,24 @@ ${W}`);
           (r) => ({ ...r, currentWorkAbortController: v, retryWake: W }),
           a,
         ));
-      let J = Re({ content: V, origin: me }),
+      let J = createUserMessage({ content: V, origin: me }),
         ye = [J],
         de = U,
-        Ee = Mg(U, bytesPerTokenForModel(X));
-      if (Ee > NTe(X, E6t(d.options.autoCompactWindow))) {
+        Ee = estimateContextTokens(U, bytesPerTokenForModel(X));
+      if (Ee > getAutoCompactThreshold(X, E6t(d.options.autoCompactWindow))) {
         n(`[inProcessRunner] ${e.agentId} compacting history (${Ee} tokens)`);
         let r = {
           ...d,
           abortController: M,
           agentId: oo(e.agentId),
           readFileState: cloneFileStateCache(d.readFileState, { stripSeededFromContext: !0 }),
-          memorySelector: z2(),
+          memorySelector: createMemoryRelevanceState(),
           loadedNestedMemoryPaths: {},
           onCompactEvent: void 0,
           onRetryStatus: D.setRetryStatus,
         };
         try {
-          let c = await Ajt(
+          let c = await compactConversation(
             U,
             r,
             {
@@ -776,13 +776,13 @@ ${W}`);
             !0,
             { isAutoCompact: !0 },
           );
-          if (((de = wne(c)), P)) P = hbt();
+          if (((de = compactionResultToMessages(c)), P)) P = hbt();
           ((U.length = 0),
             U.push(...de),
             he.clear(),
             a.updateTranscript(t, (N) => ({ ...N, messages: [...de, J] })));
         } catch (c) {
-          if (c instanceof Error && c.message.startsWith(oKe))
+          if (c instanceof Error && c.message.startsWith(COMPACTION_BLOCKED_BY_HOOK_MESSAGE))
             (n(
               `[inProcessRunner] ${e.agentId} compaction blocked by PreCompact hook; continuing uncompacted`,
             ),
@@ -799,11 +799,11 @@ ${W}`);
       }
       let Ue = de.length > 0 ? [...de] : void 0;
       (U.push(J), (ge = void 0), (fe = v.signal.aborted));
-      let le = X2t(),
+      let le = createTaskProgressState(),
         Te = a.get(t);
       if (Te !== void 0 && "progress" in Te && Te.progress !== void 0)
         le.latestInputTokens = Te.progress.tokenCount;
-      let Oe = Q2t(z),
+      let Oe = createActivityDescriptionResolver(z),
         ue = [],
         Pe = d.getAppState().tasks[t],
         Ne =
@@ -849,7 +849,7 @@ ${W}`);
                     a,
                   );
                 },
-                SV(R),
+                createClassifierApprovalsUpdater(R),
               ),
               isAsync: !0,
               canShowPermissionPrompts: I ?? !0,
@@ -869,8 +869,8 @@ ${W}`);
                 extraMetadata: { ...xe, permissionMode: Ne },
               }),
               onStreamTokenEstimate: (c) => {
-                J2t(le, c);
-                let N = iLe(le);
+                applyStreamTokenEstimate(le, c);
+                let N = snapshotTaskProgress(le);
                 L(
                   t,
                   (q) =>
@@ -902,7 +902,7 @@ ${W}`);
                     r.type === "user" ||
                     (r.type === "attachment" && isLoggableMessage(r)))
                 )
-                  (ue.push(r), U.push(r), (te = Cne(U, r, te)));
+                  (ue.push(r), U.push(r), (te = restorePreservedMessages(U, r, te)));
                 $e = !0;
                 break;
               }
@@ -924,8 +924,8 @@ ${W}`);
                 continue;
               }
               if (r.type === "system" && r.subtype === "api_error") continue;
-              (ue.push(r), U.push(r), (te = Cne(U, r, te)), Y2t(le, r, Oe, z));
-              let c = iLe(le);
+              (ue.push(r), U.push(r), (te = restorePreservedMessages(U, r, te)), updateTaskProgressFromMessage(le, r, Oe, z));
+              let c = snapshotTaskProgress(le);
               (L(t, (N) => ({ ...N, progress: c }), a),
                 a.updateTranscript(t, (N) => {
                   let q = N.inProgressToolUseIDs;
@@ -948,7 +948,7 @@ ${W}`);
                   }
                   return {
                     ...N,
-                    messages: qzn(N.messages, r),
+                    messages: replaceTranscriptMessage(N.messages, r),
                     inProgressToolUseIDs: q,
                   };
                 }));
@@ -968,15 +968,15 @@ ${W}`);
           n(
             `[inProcessRunner] ${e.agentId} work interrupted, returning to idle`,
           ));
-        let r = Co({ content: hA });
-        a.updateTranscript(t, (c) => ({ ...c, messages: Yue(c.messages, r) }));
+        let r = createApiErrorMessage({ content: hA });
+        a.updateTranscript(t, (c) => ({ ...c, messages: appendTranscriptMessage(c.messages, r) }));
       }
       Me ||= ue.some(
         (r) =>
           (r.type === "assistant" && !r.isApiErrorMessage) ||
           (r.type === "user" && !r.isMeta),
       );
-      let se = !ae ? nhn(ue) : void 0;
+      let se = !ae ? getLastApiError(ue) : void 0;
       if (((re = se?.isTransient === !0 && !l && Me), !l && !ae)) {
         let r = null;
         try {
@@ -1038,7 +1038,7 @@ ${W}`);
           {
             ...r,
             isIdle: !0,
-            evictAfter: re ? void 0 : Date.now() + fT,
+            evictAfter: re ? void 0 : Date.now() + TASK_EVICT_GRACE_MS,
             onIdleCallbacks: [],
           }
         ),
@@ -1120,7 +1120,7 @@ ${W}`);
       }));
     if ((evictTaskOutput(t), a.evictTerminal(t), !oe))
       pi(t, "completed", { toolUseId: x, summary: e.agentId });
-    if ((Rwe(e.agentId), we))
+    if ((unregisterPerfettoAgent(e.agentId), we))
       logFeatureSad("swarm_in_process_run", "compact_blocked_by_hook");
     else logFeatureOk("swarm_in_process_run");
     return { success: !0, messages: U };
@@ -1187,7 +1187,7 @@ ${W}`);
       );
     }
     return (
-      Rwe(e.agentId),
+      unregisterPerfettoAgent(e.agentId),
       logFeatureBad("swarm_in_process_run", "agent_loop_failed"),
       { success: !1, error: H, messages: U }
     );

@@ -21,7 +21,7 @@ import { qe, Bo, eu } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js
 import { useStorageV5Context } from "../../01-核心基础设施/共享小工具-未细化/storage-v5-context.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
-import { Pr, $s, an, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdownSync, isShuttingDown, sanitizeForDisplay, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { shouldOfferTrustBackstop, getRepoHelperSources, getMarketplaceHelperSources } from "../../01-核心基础设施/设置-配置/marketplace-helper-sources.js";
 import { ui, Gm, fa, $o } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未细化/chunk-dsg6bce8.js";
@@ -217,7 +217,7 @@ function TrustDialog(wo) {
     s[30] !== Ce
   )
     ((At = function c(vo) {
-      if (K.current || $s()) {
+      if (K.current || isShuttingDown()) {
         return;
       }
       if (l() || u()) {
@@ -229,7 +229,7 @@ function TrustDialog(wo) {
           (logFeatureBad("onboarding_trust_dialog", "gated_grants_backstop_declined"), I());
           return;
         }
-        (logFeatureBad("onboarding_trust_dialog", "onboarding_trust_denied"), Pr(1));
+        (logFeatureBad("onboarding_trust_dialog", "onboarding_trust_denied"), gracefulShutdownSync(1));
         return;
       }
       let Pt = VR();
@@ -271,7 +271,7 @@ function TrustDialog(wo) {
     Rt;
   if (s[32] === MEMO_CACHE_SENTINEL)
     ((Rt = () => {
-      ((K.current = !0), Pr(1));
+      ((K.current = !0), gracefulShutdownSync(1));
     }),
       (s[32] = Rt));
   else Rt = s[32];
@@ -291,10 +291,10 @@ function TrustDialog(wo) {
         d();
         return;
       }
-      if (K.current || $s()) {
+      if (K.current || isShuttingDown()) {
         return;
       }
-      ((K.current = !0), Pr(0));
+      ((K.current = !0), gracefulShutdownSync(0));
     }),
       (s[33] = w),
       (s[34] = l),
@@ -319,7 +319,7 @@ function TrustDialog(wo) {
     Ro = 1;
   let ce, le, pe;
   if (s[40] === MEMO_CACHE_SENTINEL)
-    ((ce = e(t, { bold: !0, children: an(ae().cwd()) })),
+    ((ce = e(t, { bold: !0, children: sanitizeForDisplay(ae().cwd()) })),
       (le = r(t, {
         children: [
           "Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project, or work from your team). If not, take a moment to review what",

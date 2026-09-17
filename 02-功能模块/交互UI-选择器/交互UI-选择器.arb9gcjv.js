@@ -28,7 +28,7 @@ import { StatusIndicator } from "../../01-核心基础设施/共享小工具-未
 import { useKeybinding, useKeybindings } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-未细化/chunk-ff1hq6qq.js";
-import { Ka } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getImageLimitsForModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { hn } from "../../00-第三方库/_未识别/React组件(TUI视图)/chunk-tp42fv8j.js";
 import { toLocalFileUrl } from "../../01-核心基础设施/共享小工具-未细化/to-local-file-url.js";
 import { ActionKeybindingHint } from "../../01-核心基础设施/共享小工具-未细化/action-keybinding-hint.js";
@@ -1712,7 +1712,7 @@ function Y8(Qp) {
       if (Nl?.() === !1) {
         return;
       }
-      Z3(Ka(getMainLoopModel())).then((Gr) => {
+      Z3(getImageLimitsForModel(getMainLoopModel())).then((Gr) => {
         if (Gr)
           Wn(Gr.base64, { mediaType: Gr.mediaType, dimensions: Gr.dimensions });
       });

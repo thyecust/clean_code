@@ -16,7 +16,7 @@ import { sn, Nb } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { ae, n } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
-import { findCommand, j2, L_t, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { findCommand, getDefaultFileReadingLimits, isSkillPlaceholderCurrent, getCommands } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ot, bA } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
 import { isRemoteCoworkEntrypoint } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
 import { eJ, yQn, SQn } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
@@ -136,7 +136,7 @@ var S = 1024,
             p?.type !== "prompt" ||
             p.loadedFrom !== "syncedSkills" ||
             !p.skillRoot ||
-            L_t(p)
+            isSkillPlaceholderCurrent(p)
           )
             continue;
           let f = ot(L(p.skillRoot, "SKILL.md")),
@@ -191,7 +191,7 @@ async function C(t, e, u, r) {
   if (e === void 0 || e.contentNotInModelContext || e.isPartialView)
     return "unread";
   if ((e.offset ?? 1) > 1) {
-    let p = j2(),
+    let p = getDefaultFileReadingLimits(),
       f = r.fileReadingLimits?.maxTokens ?? p.maxTokens,
       g = r.fileReadingLimits?.maxSizeBytes ?? p.maxSizeBytes;
     if (!(u > f || u > g)) return "unread";

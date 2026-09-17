@@ -10,15 +10,15 @@
 
 // [preload stripped] 原本在此预载 210 个依赖 chunk；经查它们均已由主入口初始化，已移除。
 import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { EO, f$, dj, Rf, ya } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSyntheticPromptText, isNoContentMessage, isDirectUserMessage, getUserMessageText, sliceFromLastCompactBoundary } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { generateCcrRecap } from "./ccr-recap.js";
 async function S(e) {
   if (
     !e.messages.some(
       (s) =>
-        (s.type === "assistant" && !s.isApiErrorMessage && !f$(s)) ||
+        (s.type === "assistant" && !s.isApiErrorMessage && !isNoContentMessage(s)) ||
         (s.type === "user" && s.isCompactSummary) ||
-        (dj(s) && !EO(Rf(s) ?? "")),
+        (isDirectUserMessage(s) && !isSyntheticPromptText(getUserMessageText(s) ?? "")),
     )
   )
     return null;
@@ -59,7 +59,7 @@ async function S(e) {
       ...(p ? [p] : []),
     ]),
     c = e.messages.at(-1),
-    P = ya(
+    P = sliceFromLastCompactBoundary(
       c?.type === "assistant" && c.message.stop_reason === null
         ? e.messages.slice(0, -1)
         : e.messages,

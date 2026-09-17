@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { dT, dne, CX, H2t, Fpn, Dgt, IVe, $pn, ZDe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { checkPathPermission, createStructuredPatch, GIT_DIFF_COMMAND_TIMEOUT_MS, MAX_DIFF_BYTES, MAX_HUNK_LINES, computeWorkspaceDiff, getDiffBaseRef, getGitTopLevel, parseGitNumstat } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { GIT_HARDENED_ARGS, execFileNoThrowWithCwd } from "./git-exec-hardening.js";
 import { gitExe } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { matchingRuleForInput } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
@@ -50,7 +50,7 @@ function w(t) {
   return ["--literal-pathspecs", ...GIT_HARDENED_ARGS, ...t];
 }
 function E(t) {
-  return { cwd: t, timeout: CX, preserveOutputOnError: !1 };
+  return { cwd: t, timeout: GIT_DIFF_COMMAND_TIMEOUT_MS, preserveOutputOnError: !1 };
 }
 async function et(t, n, i) {
   let { stdout: r, code: e } = await execFileNoThrowWithCwd(
@@ -154,7 +154,7 @@ async function it(t, n) {
     let s = await bindCanonicalPathToHandle(i, r, e);
     if (s === void 0) return { kind: "restricted" };
     if (
-      ((e = s), !dT(e, n, "read").allowed || matchingRuleForInput(e, n, "read", "ask") !== null)
+      ((e = s), !checkPathPermission(e, n, "read").allowed || matchingRuleForInput(e, n, "read", "ask") !== null)
     )
       return { kind: "restricted" };
     if ($z(e, n.trustedNetworkDirectories) !== void 0)
@@ -267,7 +267,7 @@ function ut(t, n, i, r) {
   );
 }
 function ct(t, n, i) {
-  let r = dne("a", "b", t, n, "", "", {
+  let r = createStructuredPatch("a", "b", t, n, "", "", {
     context: 3,
     maxEditLength: Z,
     timeout: i,
@@ -284,7 +284,7 @@ function ct(t, n, i) {
     .filter((e) => e.lines.length > 0);
 }
 function at(t) {
-  let n = Fpn,
+  let n = MAX_HUNK_LINES,
     i = [];
   for (let r of t) {
     if (n <= 0) break;
@@ -294,13 +294,13 @@ function at(t) {
   return i;
 }
 async function buildWorkspaceDiffResponse(t, n, i = q) {
-  let r = await $pn();
+  let r = await getGitTopLevel();
   if (r === null) return { diff: null };
-  let e = await Dgt(t);
+  let e = await computeWorkspaceDiff(t);
   if (e === null) return { diff: null };
-  let s = await $pn();
+  let s = await getGitTopLevel();
   if (s === null || s !== r) return { diff: null };
-  let a = IVe(e),
+  let a = getDiffBaseRef(e),
     l = (u) => ({
       diff: {
         stats: e.stats,
@@ -339,7 +339,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
       { ...E(s), maxBuffer: 1e7 },
     );
     if (u.code !== 0) return l({ hunks: [], skippedLarge: [], restricted: [] });
-    p = new Set(ZDe(u.stdout, Number.POSITIVE_INFINITY).perFileStats.keys());
+    p = new Set(parseGitNumstat(u.stdout, Number.POSITIVE_INFINITY).perFileStats.keys());
   }
   let _ = o ? null : await rt(s, f),
     b = o ? !1 : await st(s),
@@ -358,7 +358,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
     }
     if (
       !y.pathsToCheck.every(
-        (d) => dT(d, n, "read").allowed && matchingRuleForInput(d, n, "read", "ask") === null,
+        (d) => checkPathPermission(d, n, "read").allowed && matchingRuleForInput(d, n, "read", "ask") === null,
       )
     ) {
       S.push(u);
@@ -426,7 +426,7 @@ async function buildWorkspaceDiffResponse(t, n, i = q) {
       (d, k) => d + k.lines.reduce((G, v) => G + v.length + 1, 0),
       0,
     );
-    if (N > H2t || N > M) {
+    if (N > MAX_DIFF_BYTES || N > M) {
       g.push(u);
       continue;
     }

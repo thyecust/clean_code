@@ -23,7 +23,7 @@ import { te } from "./chunk-01cse5zg.js";
 import { GITHUB_HOST, getCanonicalHostname } from "../共享小工具-未细化/git-host-utils.js";
 import { id } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { INVISIBLE_CHAR_CLASS_SOURCE, stripLeadingInvisibleChars, isUnsafePath, isUnsafeFileUrl, decodePercentVariants } from "../共享小工具-未细化/chunk-kk7p3hsm.js";
-import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { stripAnalysisTags } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { toLocalFileUrl } from "../共享小工具-未细化/to-local-file-url.js";
 import { formatHyperlink } from "../共享小工具-未细化/format-hyperlink.js";
 import { getThemeColor } from "../共享小工具-未细化/theme-color.js";
@@ -250,7 +250,7 @@ function KWe(e, t, n = null) {
   return (
     o0e(),
     _u
-      .lexer(rre(e))
+      .lexer(stripAnalysisTags(e))
       .map((o) =>
         aE(o, t, {
           listDepth: 0,

@@ -18,7 +18,7 @@ import { _5, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登�
 import { bx, xt } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { parsePermissionRule } from "../工具Bash-Shell/permission-rule-parsing.js";
 import { tJe } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { ep, oC, Spn, uTe, Fzn, xr, oR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DEFAULTS_SLOT_MARKER, getAutoModeTemplateRules, isTruncatedStopReason, resolveAutoModeClassifierModel, getClassifierFallbackModel, joinTextBlocks, sideQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   N3e,
   OIe,
@@ -65,7 +65,7 @@ var R = ["all", "project"],
   I =
     "Please fix up the formatting of this incorrect JSON: your previous reply could not be parsed as a proposal. Re-emit the same proposal as a single raw JSON object with exactly the six required keys (environment, allow, soft_deny, hard_deny, remove_from_permissions_allow, notes), each an " +
     "array of strings \u2014 no surrounding prose, no code fence, no other keys.";
-async function PIe(o, s, t, i = P2n, a = oR, e, k) {
+async function PIe(o, s, t, i = P2n, a = sideQuery, e, k) {
   let w = OIe(o),
     p;
   try {
@@ -83,7 +83,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
     );
   }
   if (t?.aborted) return { ok: !1, code: "aborted", reason: "Cancelled." };
-  let v = uTe(),
+  let v = resolveAutoModeClassifierModel(),
     r = v.value;
   if (r === "")
     return (
@@ -112,7 +112,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
           credentials: k,
         });
         if (_.stop_reason !== "end_turn") {
-          let P = Spn(_.stop_reason)
+          let P = isTruncatedStopReason(_.stop_reason)
             ? "truncated"
             : _.stop_reason === "refusal"
               ? "refused"
@@ -129,7 +129,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
             },
           };
         }
-        return { ok: !0, text: xr(_.content) };
+        return { ok: !0, text: joinTextBlocks(_.content) };
       } catch (_) {
         if (t?.aborted)
           return {
@@ -153,7 +153,7 @@ async function PIe(o, s, t, i = P2n, a = oR, e, k) {
     u = await S([{ role: "user", content: p }]),
     E = !1;
   if (!u.ok && u.result.code === "api_failed" && !t?.aborted) {
-    let d = Fzn(v);
+    let d = getClassifierFallbackModel(v);
     if (d !== void 0)
       (n(
         "auto-mode-setup propose: primary model failed; retrying on fallback",
@@ -225,7 +225,7 @@ function lLt(o) {
     k = e.allow.length;
   if (e.allow.length <= m7)
     e.allow = e.allow.filter((r) => {
-      if (r === ep) return !0;
+      if (r === DEFAULTS_SLOT_MARKER) return !0;
       if (r.length > SSe) return !0;
       let { toolName: c, ruleContent: b } = parsePermissionRule(r);
       return !tJe(c, b);
@@ -245,7 +245,7 @@ function lLt(o) {
   if (v) return { ok: !1, code: "invalid_proposal", reason: v };
   for (let r of zlt) {
     let c = e[r];
-    if (c.length > 0 && c.every((b) => b === ep)) e[r] = [];
+    if (c.length > 0 && c.every((b) => b === DEFAULTS_SLOT_MARKER)) e[r] = [];
   }
   if (w > 0 && e.notes.length < m7)
     e.notes.push(
@@ -294,7 +294,7 @@ function j(o) {
         : s === "team" || s === "enterprise"
           ? `Claude subscription is ${s} \u2192 lean enterprise`
           : "Claude subscription plan unknown \u2014 no signal",
-    i = oC().environment.map((e) => `- ${e}`).join(`
+    i = getAutoModeTemplateRules().environment.map((e) => `- ${e}`).join(`
 `),
     a = o.scope === "project" ? "just this project" : "all projects";
   return `You transform a mechanically-gathered recon block into a JSON

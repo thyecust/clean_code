@@ -37,7 +37,7 @@ import { getMTLSConfig, getProxyUrl, parseProxyUrl } from "../../00-第三方库
 import { THIRD_PARTY_PROVIDER_LABELS, getAPIProvider, getSecondaryProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { vvt, qZe } from "../认证-OAuth登录/chunk-wk0e3dz4.js";
 import { t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
-import { iDe, pmt, TV, Ppn, Ng, m8e, Ny, g8e } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getLatchedFallbackModelInfo, formatAutoSwitchedModelNote, isJetBrainsIde, resolveIdeClientDisplayName, getIdeDisplayName, getMemoryFileCharLimit, getSessionMemoryFiles, getOversizedMemoryFiles } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getLauncherConfigError, isLauncherRunnable, getLauncherCommandString } from "../../01-核心基础设施/核心工具-进程与信号/process-wrapper-launcher.js";
 import { resolveWrappedClaudeInvocation } from "../../01-核心基础设施/共享小工具-未细化/claude-launcher-invocation.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
@@ -64,8 +64,8 @@ function nUn() {
 function rUn(s, e = null, l) {
   let i = s?.find((o) => o.name === "ide");
   if (e) {
-    let o = Ng(e.ideType),
-      n = TV(e.ideType) ? "plugin" : "extension";
+    let o = getIdeDisplayName(e.ideType),
+      n = isJetBrainsIde(e.ideType) ? "plugin" : "extension";
     if (e.error)
       return [
         {
@@ -104,7 +104,7 @@ function rUn(s, e = null, l) {
           ];
       else return [{ label: "IDE", value: `Installed ${o} ${n}` }];
   } else if (i) {
-    let o = Ppn(i) ?? "IDE";
+    let o = resolveIdeClientDisplayName(i) ?? "IDE";
     if (i.type === "connected")
       return [{ label: "IDE", value: `Connected to ${o} extension` }];
     else
@@ -166,10 +166,10 @@ function oUn(s = [], e) {
 }
 async function sUn(s, e, l) {
   if (isClaudeMdLoadingDisabled()) return [];
-  let i = await Ny(s, !1, e, l),
-    o = g8e(i),
+  let i = await getSessionMemoryFiles(s, !1, e, l),
+    o = getOversizedMemoryFiles(i),
     n = [],
-    u = m8e();
+    u = getMemoryFileCharLimit();
   return (
     o.forEach((p) => {
       let c = Ao(p.path);
@@ -491,8 +491,8 @@ function b() {
 function uUn(s) {
   let e = modelDisplayString(s);
   {
-    let l = iDe();
-    if (l !== void 0) return `${e} (${pmt(modelDisplayString(l.previousModel))})`;
+    let l = getLatchedFallbackModelInfo();
+    if (l !== void 0) return `${e} (${formatAutoSwitchedModelNote(modelDisplayString(l.previousModel))})`;
   }
   return e;
 }

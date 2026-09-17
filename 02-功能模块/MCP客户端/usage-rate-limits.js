@@ -13,23 +13,23 @@ import { b, n } from "../../01-核心基础设施/核心工具-日志与脱敏/�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isClaudeAISubscriber, hasProfileScope, getOauthAccountInfo, getSubscriptionType } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import {
-  Azn,
-  Ymt,
-  VF,
-  lpn,
-  iVe,
-  rne,
-  kO,
-  Rzn,
-  gpn,
-  RM,
-  hpn,
+  isUsageObject,
+  hasUsageUtilizationWindows,
+  getOverageIncludedModels,
+  waitForOverageModelsAllowlist,
+  hasWeeklyScopedModelLimits,
+  getModelWeeklyLimitRows,
+  fetchUsageUtilization,
+  cacheUsageUtilization,
+  getCachedUsageUtilization,
+  getUnifiedRateLimitWindows,
+  getRecentRateLimitWindows,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Ble, a3e } from "../成本-Token统计/chunk-3nwwgatc.js";
 function seedUtilization(e) {
-  let i = RM();
+  let i = getUnifiedRateLimitWindows();
   if (!i.five_hour && !i.seven_day) {
-    let o = gpn(e);
+    let o = getCachedUsageUtilization(e);
     return o
       ? {
           utilization: o.utilization,
@@ -45,7 +45,7 @@ function seedUtilization(e) {
             resets_at: new Date(o.resets_at * 1000).toISOString(),
           }
         : void 0,
-    t = g(hpn().seven_day_overage_included, e);
+    t = g(getRecentRateLimitWindows().seven_day_overage_included, e);
   return {
     utilization: {
       five_hour: s(i.five_hour),
@@ -57,9 +57,9 @@ function seedUtilization(e) {
 }
 function g(e, i) {
   if (!e) return;
-  let s = VF();
+  let s = getOverageIncludedModels();
   if (!s[0]) return;
-  let t = rne(gpn(i)?.utilization.limits, s),
+  let t = getModelWeeklyLimitRows(getCachedUsageUtilization(i)?.utilization.limits, s),
     o = t.length === 1 ? t[0].displayName : s[0];
   return {
     kind: "weekly_scoped",
@@ -88,25 +88,25 @@ async function loadPlanRateLimits(e, i) {
   if (s.status !== "ok" && s.status !== "seeded") return s;
   let t =
     s.status === "seeded" && s.seedSource === "headers"
-      ? hpn().seven_day_overage_included
+      ? getRecentRateLimitWindows().seven_day_overage_included
       : void 0;
   if (t) {
-    await lpn();
+    await waitForOverageModelsAllowlist();
     let o = g(t, e),
       { limits: r, ...d } = s.utilization;
     return { ...s, utilization: o ? { ...d, limits: [o] } : d };
   }
-  if (iVe(s.utilization.limits)) await lpn();
+  if (hasWeeklyScopedModelLimits(s.utilization.limits)) await waitForOverageModelsAllowlist();
   return s;
 }
 async function y(e, i) {
   let s = getOauthAccountInfo()?.accountUuid;
   try {
-    let t = await kO(i);
+    let t = await fetchUsageUtilization(i);
     if (!t) return { status: "empty_response" };
     let o = isClaudeAISubscriber() && hasProfileScope(),
-      r = Azn(t),
-      d = Ymt(t);
+      r = isUsageObject(t),
+      d = hasUsageUtilizationWindows(t);
     if (!r || (o && !d)) {
       n("Usage fetch returned a fieldless or non-object body (in-band error)", {
         level: "error",
@@ -127,7 +127,7 @@ async function y(e, i) {
         responseBody: f(b(t)),
       };
     }
-    if (d) Rzn(t, s, e);
+    if (d) cacheUsageUtilization(t, s, e);
     return { status: "ok", utilization: t };
   } catch (t) {
     if (cc(t)) n(`Failed to load usage data: ${l(t)}`, { level: "error" });
@@ -180,7 +180,7 @@ async function collectUsageData({ includeBehaviors: e = !0, storageV5: i, creden
     u;
   if (r !== null)
     try {
-      u = rne(r.limits, VF()).map((a) => ({
+      u = getModelWeeklyLimitRows(r.limits, getOverageIncludedModels()).map((a) => ({
         display_name: a.displayName,
         utilization: a.limit.utilization ?? null,
         resets_at:

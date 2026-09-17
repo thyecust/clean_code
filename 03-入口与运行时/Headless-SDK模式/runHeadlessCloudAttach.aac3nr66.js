@@ -55,36 +55,36 @@ import { xJe, qEt, zEt } from "../../02-功能模块/权限系统/chunk-t3b7pg2x
 import { Boe, sme, Wg } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import {
-  xn,
-  kl,
-  o3,
+  gracefulShutdown,
+  settingsChangeDetector,
+  pickAllowedToolInputProps,
   isSessionChannelDisabled,
   isRemoteToolServingSwitchOn,
   isRemoteToolServingMuted,
   onServingMuteRecheck,
   remoteToolServingOffReason,
   remoteToolServingPolicyName,
-  pT,
+  CLOUD_SESSION_CONSENT_MESSAGES,
   NO_SYNC_HANDLE_MESSAGE,
   rootLaptopDirSyncRegistry,
   takeLaptopDirSyncSession,
-  lKn,
-  zTe,
-  Dht,
-  Lht,
-  Mht,
-  xKn,
-  HKn,
-  IKn,
-  Xht,
-  $Le,
-  Jht,
+  getCurrentRemoteFileMode,
+  getGitRootRemoteFileMode,
+  getDirSyncPromptRoot,
+  setRemoteFileMode,
+  getDirSyncRoot,
+  SEED_INTERRUPTED_MESSAGE,
+  SEED_CUT_AT_EXIT_MESSAGE,
+  takePendingDirSyncSeed,
+  formatCreatedUnboundNotice,
+  describeUnboundReason,
+  getStoredRemoteHomeSettingsMode,
   teleportToRemote,
-  e_n,
-  RY,
-  wT,
-  iD,
-  rSt,
+  readConsentFromStore,
+  createConsentStore,
+  ControlRequestTimeoutError,
+  classifyRemoteControlError,
+  resolveStandingLapse,
   deviceHooksProcessMemories,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { isViolinWoodEnabled, isViolinWoodEnabledCached, isSettingsToCloudEnabled, isCloudPluginForwardingFlagOn } from "../../01-核心基础设施/共享小工具-未细化/chunk-97crm80y.js";
@@ -657,7 +657,7 @@ function dt(e) {
     let p = d.trigger === "attach";
     if (!d.bound) return se("not_bound", p);
     let _ = e.memory,
-      w = e.consentDeps ?? RY(d.storageV5);
+      w = e.consentDeps ?? createConsentStore(d.storageV5);
     switch (await pn(_.consentPin, w, d.signal, o)) {
       case "declined":
         return se("declined", p, "stored");
@@ -698,7 +698,7 @@ function dt(e) {
         },
         registerCleanup: e.attach?.registerCleanup ?? Et,
         subscribeSettingsChanges:
-          e.attach?.subscribeSettingsChanges ?? ((H) => kl.subscribe(H)),
+          e.attach?.subscribeSettingsChanges ?? ((H) => settingsChangeDetector.subscribe(H)),
         trustAccepted: e.attach?.trustAccepted ?? (() => isWorkspacePersistedTrusted(k)),
         ...(e.attach?.createSession && {
           createSession: e.attach.createSession,
@@ -744,7 +744,7 @@ function ln(e, t, o, r) {
       ...(_ !== void 0 && { message: truncateToCodeUnits(_, 200) }),
     };
   }
-  let p = rSt(t, r);
+  let p = resolveStandingLapse(t, r);
   if (p !== null)
     return { state: "idle", source: "stored", reason: p, message: un[p] };
   return {
@@ -802,7 +802,7 @@ function pn(e, t, o, r) {
         (d = () => {
           (k.clear(), o.removeEventListener("abort", C));
         }),
-        (e.current?.origin === "given" ? e.current.value : e_n(t)).then(_, w));
+        (e.current?.origin === "given" ? e.current.value : readConsentFromStore(t)).then(_, w));
     });
   return (p.then(() => d()), p);
 }
@@ -995,7 +995,7 @@ function gn(e, t) {
     ),
     {
       ...e,
-      updatedInput: o ? e.updatedInput : o3(t.tool_name, t.input),
+      updatedInput: o ? e.updatedInput : pickAllowedToolInputProps(t.tool_name, t.input),
       toolUseID: e.toolUseID ?? t.tool_use_id,
     }
   );
@@ -1038,9 +1038,9 @@ function Re({ folder: e, launchFolder: t, upload: o }) {
   return {
     folder: e,
     ...(t !== e && { launchFolder: t }),
-    title: pT["consent.sync.title"],
-    body: pT["consent.sync.body"],
-    detail: pT["consent.sync.detail"],
+    title: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.title"],
+    body: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.body"],
+    detail: CLOUD_SESSION_CONSENT_MESSAGES["consent.sync.detail"],
     ...(o !== void 0 && { fileCount: o.fileCount }),
     ...(o?.totalBytes !== void 0 && { totalBytes: o.totalBytes }),
   };
@@ -1064,9 +1064,9 @@ var re = defineDialog({
 function ut(e) {
   return {
     machineName: e,
-    title: pT["consent.unattended.title"],
-    body: pT["consent.unattended.body.host"],
-    detail: pT["consent.unattended.detail"],
+    title: CLOUD_SESSION_CONSENT_MESSAGES["consent.unattended.title"],
+    body: CLOUD_SESSION_CONSENT_MESSAGES["consent.unattended.body.host"],
+    detail: CLOUD_SESSION_CONSENT_MESSAGES["consent.unattended.detail"],
     terms: UNATTENDED_SERVING_CONSENT_TERMS,
     version: UNATTENDED_SERVING_CONSENT_VERSION,
   };
@@ -2202,7 +2202,7 @@ class He {
               this.logInterruptReceipt("ok", o, this.announceSweptByWorker(d));
             },
             (d) => {
-              let p = iD(d) === "not_connected";
+              let p = classifyRemoteControlError(d) === "not_connected";
               this.logInterruptReceipt(p ? "not_sent" : "error", o);
             },
           );
@@ -3030,7 +3030,7 @@ function ts(e) {
   return aQt(t) ? "never" : lQt(t) ? "unreliable" : "streams";
 }
 function ns(e) {
-  if (e instanceof wT)
+  if (e instanceof ControlRequestTimeoutError)
     return `the cloud session did not answer ${e.subtype} in time; it may still apply it`;
   let t = l(e);
   if (t.startsWith("[RemoteSessionManager]"))
@@ -4327,7 +4327,7 @@ async function Pt({
         }),
         []
       );
-    let _ = (d.promptRoot ?? Dht)({ staysAttached: !0, surface: "sdk_host" });
+    let _ = (d.promptRoot ?? getDirSyncPromptRoot)({ staysAttached: !0, surface: "sdk_host" });
     if (_ === null) return [];
     let w = (d.launchDirectory ?? he)();
     if (Re({ folder: _, launchFolder: w, upload: void 0 }) === null)
@@ -4368,7 +4368,7 @@ async function Pt({
       I === "not_now")
     )
       return (logFeatureSad("ccr_dir_sync_mode_prompt", "dismissed"), []);
-    if (!(await (d.setRemoteFileMode ?? Lht)(I, o)))
+    if (!(await (d.setRemoteFileMode ?? setRemoteFileMode)(I, o)))
       logFeatureBad("ccr_dir_sync_mode_prompt", "not_written");
     else if (I === "container_sync") logFeatureOk("ccr_dir_sync_mode_prompt");
     else logFeatureSad("ccr_dir_sync_mode_prompt", "declined");
@@ -4436,7 +4436,7 @@ function Ft(e) {
       D = (e.launchDir ?? he)(),
       E = {
         launchDir: D,
-        syncRoot: () => Mht(_.dirSync),
+        syncRoot: () => getDirSyncRoot(_.dirSync),
         syncElsewhere: w ? (_.dirSyncElsewhere ?? "unknown") : !1,
       },
       I = e.reach?.(E) ?? Ast({ ...E, memory: e.reachMemory.reachFor(D) }),
@@ -4654,7 +4654,7 @@ function At({ forwardHomeSettings: e, consentMode: t }) {
       return Os(o.homeSeed, t === void 0 ? "stored" : "host");
     if (!e) return ee("launch_flag");
     if (o.settingsToCloud !== !0) return ee("flag_off");
-    let r = t ?? Jht(),
+    let r = t ?? getStoredRemoteHomeSettingsMode(),
       d = t !== void 0 ? "host" : r === void 0 ? "default" : "stored";
     if (r !== "forward")
       return ee(r === "keep_local" ? "declined" : "no_consent", d);
@@ -4721,7 +4721,7 @@ async function As(e) {
   rootLaptopDirSyncRegistry().retire(e);
 }
 async function We(e) {
-  return (e === void 0 ? lKn() : zTe(e)).catch(() => "unspecified");
+  return (e === void 0 ? getCurrentRemoteFileMode() : getGitRootRemoteFileMode(e)).catch(() => "unspecified");
 }
 function Ut(
   {
@@ -4746,9 +4746,9 @@ function Ut(
     onNotice: (C, k) => n(`[remote-tools] ${C}: ${k}`, { level: "warn" }),
   });
 }
-var Tt = { level: "warning", text: xKn };
+var Tt = { level: "warning", text: SEED_INTERRUPTED_MESSAGE };
 async function xt(e, t, o = {}) {
-  let r = (o.takePendingSeed ?? IKn)();
+  let r = (o.takePendingSeed ?? takePendingDirSyncSeed)();
   if (r === null) return;
   let d = r.state();
   if (d !== "started" && d !== "done") e.abort();
@@ -4776,7 +4776,7 @@ async function xt(e, t, o = {}) {
       if (d !== "arming") return;
       return (
         logFeatureSad("ccr_dir_sync_seed", "cut_at_exit"),
-        { level: "warning", text: HKn }
+        { level: "warning", text: SEED_CUT_AT_EXIT_MESSAGE }
       );
   }
 }
@@ -4880,7 +4880,7 @@ function $t(e) {
 async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
   let p = await js(e, t, o);
   if (p.kind === "refused") {
-    (await logFeatureBadAsync("remote_headless_session", p.code), printCliError(p.message), await xn(1));
+    (await logFeatureBadAsync("remote_headless_session", p.code), printCliError(p.message), await gracefulShutdown(1));
     return;
   }
   let { input: _, policy: w } = p;
@@ -4934,7 +4934,7 @@ async function Qt(e, t, { entry: o, opener: r, features: d = [] }) {
   }).done;
   if (k.message && k.exitCode === 0) Ye(k.message);
   else if (k.message) printCliError(k.message);
-  await xn(k.exitCode);
+  await gracefulShutdown(k.exitCode);
 }
 var ze = 12,
   Qe = 2000,
@@ -5110,7 +5110,7 @@ async function zs(
     U =
       H &&
       e.forwardHomeSettings !== !1 &&
-      (e.homeSettingsConsent ?? Jht()) === "forward",
+      (e.homeSettingsConsent ?? getStoredRemoteHomeSettingsMode()) === "forward",
     Q = zEt({
       gateOn: U,
       permissionModeTyped: e.permissionModeCli !== void 0,
@@ -5616,7 +5616,7 @@ function Js(e) {
       return {
         status: "unbound",
         reason: "session_unbound",
-        message: Xht(e.reason),
+        message: formatCreatedUnboundNotice(e.reason),
       };
     case "not_applicable":
       return $e("session_unbound");
@@ -5625,7 +5625,7 @@ function Js(e) {
   }
 }
 function $e(e) {
-  return { status: "unbound", reason: e, message: $Le(e) };
+  return { status: "unbound", reason: e, message: describeUnboundReason(e) };
 }
 async function eo(e, t, o, r, d) {
   if (!isViolinWoodEnabledCached() || d === void 0) return { handle: void 0, why: "not_looked" };

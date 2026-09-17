@@ -12,11 +12,11 @@
 import { HELP_FLAGS, INFO_SUBCOMMAND_ALIASES } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
 import { renderDefaultModelSetting } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { stripAnsi } from "./text-sanitization.js";
-import { lT, X9 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAdvisorToolEnabled, getAdvisorModelAliases } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyAdvisorModelSetting } from "./advisor-command.js";
 async function u(r, t) {
-  if (!lT()) return { type: "text", value: "The advisor is not available" };
-  let s = `Usage: /advisor <${[...X9(), "off"].join("|")}>`,
+  if (!isAdvisorToolEnabled()) return { type: "text", value: "The advisor is not available" };
+  let s = `Usage: /advisor <${[...getAdvisorModelAliases(), "off"].join("|")}>`,
     o = r.trim().toLowerCase();
   if (!o || INFO_SUBCOMMAND_ALIASES.includes(o) || HELP_FLAGS.includes(o)) {
     let e = t.getAdvisorSetting();

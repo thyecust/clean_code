@@ -32,29 +32,29 @@ import { _setProxyAuthHelperConfig, prefetchProxyAuthFromHelperIfSafe } from "..
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
 import { isExiting } from "../../01-核心基础设施/共享小工具-未细化/exit-commit-state.js";
 import {
-  bUt,
-  $s,
+  markOwnsControllingTerminal,
+  isShuttingDown,
   hasWorktreeCreateHook,
-  j4n,
-  pu,
-  zX,
-  uw,
-  eEe,
-  VLe,
-  p6t,
-  t_t,
-  xde,
-  DKe,
-  Smn,
-  VX,
-  LKe,
-  Ide,
-  NKe,
-  n_t,
-  M3,
-  ei,
+  initializeFileWatcherHooks,
+  setSessionCwd,
+  evaluateWorktreePin,
+  resolveGitRootCandidates,
+  validateWorktreeSlug,
+  restoreWorktreeSession,
+  generateTmuxSessionName,
+  isAgentWorktreeOf,
+  worktreeBranchName,
+  readWorktreeBaseline,
+  createTmuxSessionForWorktree,
+  killTmuxSession,
+  claudeWorktreeLockPid,
+  readWorktreeLockReason,
+  lockClaudeWorktree,
+  createWorktreeForSession,
+  shouldFillPluginLoadWithStore,
+  loadAllPluginsCacheOnly,
   saveWorktreeState,
-  PY,
+  clearCurrentSessionMemoryFiles,
   warmCommandSourceCaches,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { captureHooksConfigSnapshot, updateHooksConfigSnapshot, updateHooksConfigSnapshotThroughBackend } from "../../02-功能模块/Skills技能/chunk-sapykxw7.js";
@@ -79,7 +79,7 @@ import { importMetaRequire } from "../../01-核心基础设施/共享小工具-�
 function X(e, o) {
   let r = !1,
     c = Ff(() => {
-      if (r || $s() || Nn() || !isCrossSessionMessagingEnabled()) return;
+      if (r || isShuttingDown() || Nn() || !isCrossSessionMessagingEnabled()) return;
       return ((r = !0), c(), se(e, o));
     });
   return (Et(async () => c()), c);
@@ -223,14 +223,14 @@ async function oe(e, o) {
   ))
     return null;
   let m = findCanonicalGitRoot(e);
-  if (!m || !isLinkedWorktree(e) || !t_t(e, m)) return null;
+  if (!m || !isLinkedWorktree(e) || !isAgentWorktreeOf(e, m)) return null;
   let _ = basename(e).replaceAll("+", "/");
   try {
-    eEe(_);
+    validateWorktreeSlug(_);
   } catch {
     return null;
   }
-  let S = await zX(e, [], uw(e, m));
+  let S = await evaluateWorktreePin(e, [], resolveGitRootCandidates(e, m));
   if (!S.ok)
     return (
       n(`[worktree] bg boot: not adopting ${e} \u2014 ${S.message}`, {
@@ -238,11 +238,11 @@ async function oe(e, o) {
       }),
       null
     );
-  let k = await NKe(e, m, _, "session");
+  let k = await lockClaudeWorktree(e, m, _, "session");
   if (!k || !(await te(e, m))) {
     if (
       (await sleep(250),
-      (k = await NKe(e, m, _, "session")),
+      (k = await lockClaudeWorktree(e, m, _, "session")),
       k && !(await te(e, m)))
     )
       n(
@@ -255,17 +255,17 @@ async function oe(e, o) {
     originalCwd: m,
     worktreePath: e,
     worktreeName: _,
-    worktreeBranch: xde(_),
-    originalHeadCommit: (await DKe(e)) ?? void 0,
+    worktreeBranch: worktreeBranchName(_),
+    originalHeadCommit: (await readWorktreeBaseline(e)) ?? void 0,
     sessionId: K(),
     hookBased: !1,
     enteredExisting: !1,
   };
-  return (VLe(w), saveWorktreeState(w), w);
+  return (restoreWorktreeSession(w), saveWorktreeState(w), w);
 }
 async function te(e, o) {
   try {
-    return LKe(await Ide(e, o)) === process.pid;
+    return claudeWorktreeLockPid(await readWorktreeLockReason(e, o)) === process.pid;
   } catch {
     return !1;
   }
@@ -286,10 +286,10 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
         : "switched_off";
     switch ((writeDiagnosticsEvent("info", "bg_worker_ctty", { outcome: t }), t)) {
       case "acquired":
-        (bUt(), logFeatureOk("bg_worker_ctty"));
+        (markOwnsControllingTerminal(), logFeatureOk("bg_worker_ctty"));
         break;
       case "already":
-        bUt();
+        markOwnsControllingTerminal();
         break;
       case "failed":
         logFeatureSad("bg_worker_ctty", t);
@@ -382,7 +382,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     }
   }
   try {
-    pu(e);
+    setSessionCwd(e);
   } catch (t) {
     (process.stderr.write(
       chalk.red(`Error: Can't access working directory ${chalk.bold(e)}: ${l(t)}
@@ -402,7 +402,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     !Nn())
   ) {
     let t = performance.now();
-    (j4n(e, s, T), recordStartupPhase("setup_file_watcher_ms", performance.now() - t, t));
+    (initializeFileWatcherHooks(e, s, T), recordStartupPhase("setup_file_watcher_ms", performance.now() - t, t));
   }
   let G = performance.now();
   if (c) {
@@ -424,12 +424,12 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
 `),
         ),
           process.exit(1));
-      if (isLinkedWorktree(getCwd())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), pu(C));
-      b = _ ? p6t(C, xde(v)) : void 0;
-    } else b = _ ? p6t(getCwd(), xde(v)) : void 0;
+      if (isLinkedWorktree(getCwd())) (writeDiagnosticsEvent("info", "worktree_resolved_to_main_repo"), Yu(C), setSessionCwd(C));
+      b = _ ? generateTmuxSessionName(C, worktreeBranchName(v)) : void 0;
+    } else b = _ ? generateTmuxSessionName(getCwd(), worktreeBranchName(v)) : void 0;
     let I;
     try {
-      I = await n_t(K(), v, b, {
+      I = await createWorktreeForSession(K(), v, b, {
         prNumber: k,
         fromCwd: e,
         repoRoot: C ?? void 0,
@@ -447,7 +447,7 @@ async function setup(e, o, r, c, m, _, S, k, w, s, T) {
     logEvent("tengu_worktree_created", { tmux_enabled: _ });
     let N = !1;
     if (_ && b) {
-      let E = await Smn(b, I.worktreePath);
+      let E = await createTmuxSessionForWorktree(b, I.worktreePath);
       if (E.created)
         ((N = !0),
           console.log(
@@ -482,11 +482,11 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
         logError(E),
         N && b)
       )
-        await VX(b);
+        await killTmuxSession(b);
       (setBgExitCause(`worktree_chdir:${x}`), await flushAnalyticsSinks(), process.exit(1));
     }
     if (
-      (pu(I.worktreePath), ES(getCwd()), o_e(getCwd()), saveWorktreeState(I), PY(), isHoverRestEnabled() && s !== void 0)
+      (setSessionCwd(I.worktreePath), ES(getCwd()), o_e(getCwd()), saveWorktreeState(I), clearCurrentSessionMemoryFiles(), isHoverRestEnabled() && s !== void 0)
     )
       await updateHooksConfigSnapshotThroughBackend(s);
     else updateHooksConfigSnapshot();
@@ -513,7 +513,7 @@ To attach: ${chalk.bold(`tmux attach -t ${b}`)}`),
     writeDiagnosticsEvent("info", "setup_prefetch_starting"));
   let Y = (ke() && a.CLAUDE_CODE_SYNC_PLUGIN_INSTALL) || isSimpleMode() || isSafeMode();
   if (!Y) {
-    if (M3(T)) ei(s, T).catch(() => {});
+    if (shouldFillPluginLoadWithStore(T)) loadAllPluginsCacheOnly(s, T).catch(() => {});
     warmCommandSourceCaches(sn(), s);
   }
   if (

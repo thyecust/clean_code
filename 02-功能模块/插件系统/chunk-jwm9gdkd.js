@@ -96,79 +96,79 @@ import {
 } from "./chunk-7s6mt1vg.js";
 import {
   getCommandName,
-  SM,
-  Hwe,
-  Jft,
-  Qft,
-  aT,
-  Zft,
-  Bv,
-  Iwe,
-  VOe,
-  du,
-  vc,
-  gr,
-  ka,
-  wI,
-  ow,
-  WUt,
-  yqn,
-  pDe,
-  xue,
-  Hue,
-  hDe,
-  iBt,
-  zwe,
-  aX,
-  Gte,
-  UF,
-  aBt,
-  Tmt,
-  Emt,
-  xy,
-  _De,
-  jqn,
-  P2,
-  Omt,
-  q4e,
-  TI,
-  zF,
-  an,
-  BM,
-  u6t,
-  jLe,
-  Une,
-  WLe,
-  cw,
-  AE,
-  fu,
-  Cgn,
-  hMe,
-  c$,
-  D3,
-  w5e,
-  e7n,
-  iyt,
-  t7n,
-  hH,
-  T5e,
-  gl,
-  Ql,
-  pw,
-  dY,
-  TEe,
-  Jv,
-  eD,
-  o7n,
-  Cf,
-  A5e,
-  _H,
-  _Me,
-  yMe,
-  Ph,
-  _yt,
-  jV,
-  fY,
+  isMcpbFile,
+  loadMcpServerUserConfig,
+  saveMcpServerUserConfig,
+  loadMcpbBundle,
+  getPluginSource,
+  findPluginById,
+  loadPluginOptions,
+  savePluginOptions,
+  getUnconfiguredPluginOptions,
+  getApiRequestState,
+  estimateTokens,
+  sanitizeDisplayTextWithoutRedaction,
+  sanitizeDisplayText,
+  sanitizeMessageText,
+  isUnconfiguredMcpServer,
+  getPluginChannelsNeedingConfig,
+  getExistingSessionPluginCacheDir,
+  parseMarketplaceSource,
+  listClaudeAiMarketplaces,
+  filterUnconfiguredMarketplaces,
+  formatMarketplaceRowLabel,
+  formatListedAsLabel,
+  formatBrowseOnlyMarketplace,
+  formatMarketplaceScopeLabel,
+  formatMarketplaceSource,
+  readClaudeAiMarketplaceRegistry,
+  isNonInstallableClaudeAiPlugin,
+  formatClaudeAiMarketplaceLabel,
+  addClaudeAiMarketplace,
+  buildPluginTelemetryFieldsFromId,
+  parseEnabledPluginRecords,
+  arePluginSettingsRecordsEqual,
+  formatDependencyCountSuffix,
+  createEnoentError,
+  readLocalMarketplaceFile,
+  MAX_MCP_TEXT_LENGTH,
+  sanitizeLogValue,
+  sanitizeForDisplay,
+  getMcpServerTools,
+  getMcpServerCommands,
+  removeMcpServerTools,
+  removeMcpServerCommands,
+  omitKey,
+  formatMcpScopeLocation,
+  isDiscoveryCacheUsable,
+  refreshPluginState,
+  formatPluginInstallFailures,
+  getMarketplaceSourceLabel,
+  formatPluginId,
+  loadMarketplaces,
+  buildMarketplaceFailureNotice,
+  getMarketplaceUpdateOutcome,
+  getMarketplaceUpdateStatusIcon,
+  formatMarketplaceUpdateSummary,
+  getDeclaredMarketplaces,
+  declareMarketplaceInSettings,
+  getKnownMarketplaces,
+  getKnownMarketplacesOrEmpty,
+  findContainingSeedDir,
+  addMarketplace,
+  removeMarketplace,
+  loadMarketplace,
+  refreshMarketplace,
+  setMarketplaceAutoUpdate,
+  getInstalledPlugins,
+  formatVersionLabel,
+  isPluginInstalledInCurrentScope,
+  isPluginInstalledForUser,
+  installPluginFromMarketplace,
+  loadAllPlugins,
+  getClaudeAiMcpEverConnectedSet,
+  getClaudeAiConnectorsUrl,
+  buildClaudeAiMcpAuthUrl,
   isMcpDialBlockedByPolicy,
   mcpDialBlockCause,
   getMcpConfigByName,
@@ -366,7 +366,7 @@ function Ol({
         R("Please enter a marketplace source");
         return;
       }
-      let xt = await pDe(pt);
+      let xt = await parseMarketplaceSource(pt);
       if (!xt) {
         R(
           "Invalid marketplace source format. Try: owner/repo, https://..., or ./path",
@@ -380,16 +380,16 @@ function Ol({
       R(null);
       try {
         (ze(!0), we(""));
-        let { name: Je, resolvedSource: ae } = await dY(
+        let { name: Je, resolvedSource: ae } = await addMarketplace(
             xt,
             (Lt) => {
               we(Lt);
             },
             K,
           ),
-          { error: Re } = await T5e(Je, { source: ae }, "userSettings", K);
+          { error: Re } = await declareMarketplaceInSettings(Je, { source: ae }, "userSettings", K);
         if (Re) throw Re;
-        (fu(K, se),
+        (refreshPluginState(K, se),
           logEvent("tengu_marketplace_added", {
             _PROTO_marketplace_name: Je,
             source_type: fromEnum(xt.source),
@@ -398,15 +398,15 @@ function Ol({
           }));
         let Mt = [];
         try {
-          Mt = (await resolveMissingDependencies((await Ph(K, se)).errors, K)).installed;
+          Mt = (await resolveMissingDependencies((await loadAllPlugins(K, se)).errors, K)).installed;
         } catch (Lt) {
           n(`marketplace add: dep auto-resolve skipped: ${l(Lt)}`, {
             level: "warn",
           });
         }
-        if (Mt.length > 0) fu(K, se);
+        if (Mt.length > 0) refreshPluginState(K, se);
         if ((await j(), we(""), ze(!1), q))
-          Q(`Successfully added marketplace: ${Je}${P2(Mt)}`);
+          Q(`Successfully added marketplace: ${Je}${formatDependencyCountSuffix(Mt)}`);
         else I({ type: "browse-marketplace", targetMarketplace: Je });
       } catch (Je) {
         let ae = ge(Je);
@@ -664,12 +664,12 @@ function yh(lh) {
   );
 }
 async function ns(a, k, v) {
-  let { enabled: b, disabled: w } = await Ph(k, v);
-  return Zft([...b, ...w], a);
+  let { enabled: b, disabled: w } = await loadAllPlugins(k, v);
+  return findPluginById([...b, ...w], a);
 }
 async function ph(a, k) {
   return (
-    Object.keys(await VOe(a, k)).length > 0 || (await WUt(a, k)).length > 0
+    Object.keys(await getUnconfiguredPluginOptions(a, k)).length > 0 || (await getPluginChannelsNeedingConfig(a, k)).length > 0
   );
 }
 async function $a(a, k, v, b) {
@@ -841,25 +841,25 @@ function Tr(yC) {
   if (mi[0] !== Cr || mi[1] !== ro || mi[2] !== ti || mi[3] !== Vl)
     ((Fy = async function Ta() {
       let jd = [];
-      let Uy = await VOe(ro, Cr);
+      let Uy = await getUnconfiguredPluginOptions(ro, Cr);
       if (Object.keys(Uy).length > 0)
         jd.push({
           key: "top-level",
           title: `Configure ${sd(ro)}`,
           subtitle: "Plugin options",
           schema: Uy,
-          load: () => Bv(ti, Cr),
-          save: (hC) => Iwe(ti, hC, ro.manifest.userConfig, Vl),
+          load: () => loadPluginOptions(ti, Cr),
+          save: (hC) => savePluginOptions(ti, hC, ro.manifest.userConfig, Vl),
         });
-      let kC = await WUt(ro, Cr);
+      let kC = await getPluginChannelsNeedingConfig(ro, Cr);
       for (const Pr of kC)
         jd.push({
           key: `channel:${Pr.server}`,
           title: `Configure ${Pr.displayName}`,
           subtitle: `Plugin: ${sd(ro)}`,
           schema: Pr.configSchema,
-          load: async () => (await Hwe(ti, Pr.server, Cr)) ?? void 0,
-          save: (bC) => Jft(ti, Pr.server, bC, Pr.configSchema, Vl),
+          load: async () => (await loadMcpServerUserConfig(ti, Pr.server, Cr)) ?? void 0,
+          save: (bC) => saveMcpServerUserConfig(ti, Pr.server, bC, Pr.configSchema, Vl),
         });
       return jd;
     }),
@@ -2153,7 +2153,7 @@ async function Kp({
         }));
       continue;
     }
-    let tt = await yMe({
+    let tt = await installPluginFromMarketplace({
       pluginId: we.pluginId,
       entry: we.entry,
       marketplaceName: we.marketplaceName,
@@ -2166,7 +2166,7 @@ async function Kp({
         (tt.installedDisabledByDefault ? K : se).push(we.entry.name);
     } else (X++, B.push({ name: we.entry.name, reason: tt.error }));
   }
-  fu(I);
+  refreshPluginState(I);
   let Fe = q > 0 && Q ? await Q(fe) : "reload-required";
   (v(new Set()), b(new Set()));
   let ze =
@@ -2185,7 +2185,7 @@ async function Kp({
             ? ` ${xe === 1 ? "Plugin is" : "Plugins are"} now active.`
             : " Run /reload-plugins to activate.";
     w(`\u2713 Installed ${q} ${pluralize(q, "plugin")}.${we}${ze}`);
-  } else if (q === 0) R(`Failed to install: ${Cgn(B, !0)}`);
+  } else if (q === 0) R(`Failed to install: ${formatPluginInstallFailures(B, !0)}`);
   else {
     let we =
       Fe === "load-failed"
@@ -2198,7 +2198,7 @@ async function Kp({
               : " Successfully installed plugins are now active."
             : " Run /reload-plugins to activate successfully installed plugins.";
     w(
-      `\u2713 Installed ${q} of ${q + X} plugins. Failed: ${Cgn(B, !1)}.${we}${ze}`,
+      `\u2713 Installed ${q} of ${q + X} plugins. Failed: ${formatPluginInstallFailures(B, !1)}.${we}${ze}`,
     );
   }
   A({ type: "menu" });
@@ -2216,7 +2216,7 @@ async function zp({
   storageV5: j,
 }) {
   (v(!0), b(null));
-  let q = await yMe({
+  let q = await installPluginFromMarketplace({
     pluginId: a.pluginId,
     entry: a.entry,
     marketplaceName: a.marketplaceName,
@@ -2587,7 +2587,7 @@ function cc({
       let ie = !1;
       async function kt() {
         try {
-          let $t = await gl(R),
+          let $t = await getKnownMarketplaces(R),
             Dt;
           if (b && w && !isNonMarketplacePluginSource(b)) {
             tt(`Checking ${b} for new plugins\u2026`);
@@ -2599,17 +2599,17 @@ function cc({
                   `Couldn't refresh marketplace "${b}" (${me.errorMessage}) \u2014 showing the cached catalog.`,
                 ));
           }
-          let { marketplaces: _t, failures: Ot } = await D3($t, R);
+          let { marketplaces: _t, failures: Ot } = await loadMarketplaces($t, R);
           if (ie) return;
           let bt = [];
           for (let { name: me, config: Ge, data: wt } of _t)
             if (wt) {
-              let st = countMatching(wt.plugins, (Bt) => _H(c$(Bt.name, me)));
+              let st = countMatching(wt.plugins, (Bt) => isPluginInstalledInCurrentScope(formatPluginId(Bt.name, me)));
               bt.push({
                 name: me,
                 totalPlugins: wt.plugins.length,
                 installedCount: st,
-                source: hMe(Ge.source),
+                source: getMarketplaceSourceLabel(Ge.source),
               });
             }
           (bt.sort((me, Ge) => {
@@ -2619,7 +2619,7 @@ function cc({
           }),
             se(bt));
           let te = countMatching(_t, (me) => me.data !== null),
-            Ee = w5e(Ot, te);
+            Ee = buildMarketplaceFailureNotice(Ot, te);
           if (Ee)
             if (Ee.type === "warning")
               it(Ee.message + ". Showing available marketplaces.");
@@ -2641,19 +2641,19 @@ function cc({
               if (b && Ge !== b) continue;
               let st = wt?.plugins.find((xn) => xn.name === w);
               if (!st) continue;
-              let Bt = c$(st.name, Ge);
+              let Bt = formatPluginId(st.name, Ge);
               me = {
                 entry: st,
                 marketplaceName: Ge,
                 pluginId: Bt,
-                isInstalled: _Me(Bt),
+                isInstalled: isPluginInstalledForUser(Bt),
               };
               break;
             }
             if (ie) return;
             if (me) {
               let Ge = me.pluginId;
-              if (_Me(Ge)) {
+              if (isPluginInstalledForUser(Ge)) {
                 let st = await buildMissingDependencyNotice(Ge, R),
                   Bt = await $a(Ge, st, R, A);
                 if (ie) return;
@@ -2701,18 +2701,18 @@ function cc({
       async function $t(Dt) {
         (xe(!0), tt("Loading\u2026"));
         try {
-          let _t = await Jv(Dt, R);
+          let _t = await loadMarketplace(Dt, R);
           if (ie) return;
           if (!_t) throw Error(`Failed to load marketplace: ${Dt}`);
           let Ot = [];
           for (let bt of _t.plugins) {
-            let te = c$(bt.name, Dt);
+            let te = formatPluginId(bt.name, Dt);
             if (isPluginBlockedByPolicy(te)) continue;
             Ot.push({
               entry: bt,
               marketplaceName: Dt,
               pluginId: te,
-              isInstalled: _Me(te),
+              isInstalled: isPluginInstalledForUser(te),
             });
           }
           try {
@@ -3029,7 +3029,7 @@ function cc({
                           dimColor: !0,
                           children: " [Community Managed]",
                         }),
-                      aBt(ie.entry) &&
+                      isNonInstallableClaudeAiPlugin(ie.entry) &&
                         e(t, {
                           dimColor: !0,
                           children: " [not installable on claude.ai yet]",
@@ -3230,19 +3230,19 @@ function dc({
     let Ve = !1;
     async function ne() {
       try {
-        let Ce = await gl(A),
-          { marketplaces: ke, failures: Oe } = await D3(Ce, A);
+        let Ce = await getKnownMarketplaces(A),
+          { marketplaces: ke, failures: Oe } = await loadMarketplaces(Ce, A);
         if (Ve) return;
         let ie = [];
         for (let { name: te, data: Ee } of ke)
           if (Ee)
             for (let me of Ee.plugins) {
-              let Ge = c$(me.name, te);
+              let Ge = formatPluginId(me.name, te);
               ie.push({
                 entry: me,
                 marketplaceName: te,
                 pluginId: Ge,
-                isInstalled: _H(Ge),
+                isInstalled: isPluginInstalledInCurrentScope(Ge),
               });
             }
         let kt = ie.filter((te) => !te.isInstalled && !isPluginBlockedByPolicy(te.pluginId));
@@ -3292,7 +3292,7 @@ function dc({
         se(Dt);
         let _t = Object.keys(Ce).length;
         if (kt.length === 0) {
-          let te = await e7n({
+          let te = await getMarketplaceUpdateOutcome({
             configuredMarketplaceCount: _t,
             failedMarketplaceCount: Oe.length,
           });
@@ -3300,14 +3300,14 @@ function dc({
           if (
             te === "all-plugins-installed" &&
             ie.length > 0 &&
-            ie.every((Ee) => Ee.isInstalled && !_Me(Ee.pluginId)) &&
+            ie.every((Ee) => Ee.isInstalled && !isPluginInstalledForUser(Ee.pluginId)) &&
             !ie.some((Ee) => isPluginBlockedByPolicy(Ee.pluginId))
           )
             te = "all-plugins-project-installed";
           Gt(te);
         }
         let Ot = countMatching(ke, (te) => te.data !== null),
-          bt = w5e(Oe, Ot);
+          bt = buildMarketplaceFailureNotice(Oe, Ot);
         if (bt)
           if (bt.type === "warning")
             Xn(
@@ -3330,14 +3330,14 @@ function dc({
               else if (xn === "refreshed") wt = !0;
               if (xn !== "refreshed") continue;
               try {
-                let ci = (await Jv(st, A)).plugins.find((io) => io.name === R);
+                let ci = (await loadMarketplace(st, A)).plugins.find((io) => io.name === R);
                 if (ci) {
-                  let io = c$(ci.name, st);
+                  let io = formatPluginId(ci.name, st);
                   ((te = {
                     entry: ci,
                     marketplaceName: st,
                     pluginId: io,
-                    isInstalled: _H(io),
+                    isInstalled: isPluginInstalledInCurrentScope(io),
                   }),
                     (Ee = !0),
                     logFeatureOk("plugin_install_catalog_refresh"));
@@ -3367,7 +3367,7 @@ function dc({
             );
           }
           if (te)
-            if (_Me(te.pluginId)) {
+            if (isPluginInstalledForUser(te.pluginId)) {
               let st = await buildMissingDependencyNotice(te.pluginId, A),
                 Bt = await $a(te.pluginId, st, A, Q);
               if (Ve) return;
@@ -3565,7 +3565,7 @@ function dc({
                           dimColor: !0,
                           children: " [Community Managed]",
                         }),
-                      aBt(Ve.entry) &&
+                      isNonInstallableClaudeAiPlugin(Ve.entry) &&
                         e(t, {
                           dimColor: !0,
                           children: " [not installable on claude.ai yet]",
@@ -4043,17 +4043,17 @@ function wc({
     E(() => {
       async function ne() {
         try {
-          let Ce = await gl(I),
-            { enabled: ke, disabled: Oe } = await Ph(I, j),
+          let Ce = await getKnownMarketplaces(I),
+            { enabled: ke, disabled: Oe } = await loadAllPlugins(I, j),
             ie = [...ke, ...Oe],
-            { marketplaces: kt, failures: $t } = await D3(Ce, I),
-            Dt = await xue(j).catch(() => null);
+            { marketplaces: kt, failures: $t } = await loadMarketplaces(Ce, I),
+            Dt = await listClaudeAiMarketplaces(j).catch(() => null);
           ((Fe.current = Dt),
-            K({ ...Hue(Dt, Ce), browseOnly: Dt?.browseOnly ?? [] }));
-          let _t = im(kt, $t, ie, await UF());
+            K({ ...filterUnconfiguredMarketplaces(Dt, Ce), browseOnly: Dt?.browseOnly ?? [] }));
+          let _t = im(kt, $t, ie, await readClaudeAiMarketplaceRegistry());
           X(_t);
           let Ot = countMatching(kt, (te) => te.data !== null),
-            bt = w5e($t, Ot);
+            bt = buildMarketplaceFailureNotice($t, Ot);
           if (bt)
             if (bt.type === "warning") ae(bt.message);
             else throw Error(bt.message);
@@ -4111,7 +4111,7 @@ function wc({
                 (nn) => {
                   let Oo = { ...nn?.enabledPlugins };
                   for (let Co of Tt.installedPlugins) {
-                    let Po = c$(Co.name, Tt.name);
+                    let Po = formatPluginId(Co.name, Tt.name);
                     Oo[Po] = !1;
                   }
                   return { enabledPlugins: Oo };
@@ -4119,7 +4119,7 @@ function wc({
                 void 0,
                 I,
               );
-            (await TEe(Tt.name, void 0, I, j),
+            (await removeMarketplace(Tt.name, void 0, I, j),
               ie++,
               logEvent("tengu_marketplace_removed", {
                 marketplace_name: Tt.name,
@@ -4129,7 +4129,7 @@ function wc({
           }
           if (Tt.pendingUpdate) {
             try {
-              await eD(Tt.name, I, (nn) => {
+              await refreshMarketplace(Tt.name, I, (nn) => {
                 We(nn);
               });
             } catch (nn) {
@@ -4185,15 +4185,15 @@ function wc({
             "plugin" in En && typeof En.plugin === "string" ? [En.plugin] : [],
           );
         }
-        if ((fu(I, j), await R(), !Wt.current)) return;
-        let wt = await gl(I),
-          { enabled: st, disabled: Bt } = await Ph(I, j);
+        if ((refreshPluginState(I, j), await R(), !Wt.current)) return;
+        let wt = await getKnownMarketplaces(I),
+          { enabled: st, disabled: Bt } = await loadAllPlugins(I, j);
         if (!Wt.current) return;
         let xn = [...st, ...Bt],
-          { marketplaces: si, failures: ci } = await D3(wt, I);
+          { marketplaces: si, failures: ci } = await loadMarketplaces(wt, I);
         if (!Wt.current) return;
-        K((Tt) => ({ ...Tt, ...Hue(Fe.current, wt) }));
-        let io = im(si, ci, xn, await UF());
+        K((Tt) => ({ ...Tt, ...filterUnconfiguredMarketplaces(Fe.current, wt) }));
+        let io = im(si, ci, xn, await readClaudeAiMarketplaceRegistry());
         if ((X(io), tt((Tt) => Math.min(Tt, io.length)), ke && Be)) {
           let Tt = io.find((nn) => nn.name === Be.name);
           if (Tt) Ct(Tt);
@@ -4201,7 +4201,7 @@ function wc({
         let wo = [];
         if (Oe > 0 || kt.length > 0 || $t.length > 0 || te > 0 || Ee > 0)
           wo.push(
-            t7n({
+            formatMarketplaceUpdateSummary({
               updatedCount: Oe,
               updatedPluginCount: _t,
               deferredPluginCount: Ot,
@@ -4225,7 +4225,7 @@ function wc({
         }
         if (ie > 0) wo.push(`Removed ${ie} ${pluralize(ie, "marketplace")}`);
         if (wo.length > 0) {
-          let nn = `${iyt({ failedCount: $t.length + Ee, updatedCount: Oe + ie, policyRefusedCount: kt.length }) ?? figures.warning} ${wo.join(", ")}`;
+          let nn = `${getMarketplaceUpdateStatusIcon({ failedCount: $t.length + Ee, updatedCount: Oe + ie, policyRefusedCount: kt.length }) ?? figures.warning} ${wo.join(", ")}`;
           if (ke) Mt(nn);
           else {
             if (!Wt.current) return;
@@ -4274,7 +4274,7 @@ function wc({
     yn = async (ne) => {
       let Ce = !ne.autoUpdate;
       try {
-        (await o7n(ne.name, Ce, I),
+        (await setMarketplaceAutoUpdate(ne.name, Ce, I),
           X((ke) =>
             ke.map((Oe) =>
               Oe.name === ne.name ? { ...Oe, autoUpdate: Ce } : Oe,
@@ -4334,7 +4334,7 @@ function wc({
           else if (Ce)
             a({
               type: "add-marketplace",
-              claudeAiListing: { name: Ce.name, source: Gte(Ce.source) },
+              claudeAiListing: { name: Ce.name, source: formatMarketplaceSource(Ce.source) },
             });
           else if (ke) (fe(ke), ae(null), at("confirm-add-claudeai"));
           else {
@@ -4407,13 +4407,13 @@ function wc({
   async function Cn(ne) {
     (xt(!0), ae(null));
     try {
-      let { name: Ce } = await Emt(ne, {
-        configured: await gl(I),
+      let { name: Ce } = await addClaudeAiMarketplace(ne, {
+        configured: await getKnownMarketplaces(I),
         credentials: j,
       });
       if (
         (logEvent("tengu_marketplace_added", { source_type: S("claudeai") }),
-        fu(I, j),
+        refreshPluginState(I, j),
         await R(),
         !Wt.current)
       )
@@ -4494,7 +4494,7 @@ function wc({
           r(t, {
             dimColor: !0,
             children: [
-              wr(iBt(se.name, se.displayName) ?? ""),
+              wr(formatListedAsLabel(se.name, se.displayName) ?? ""),
               " ",
               "on claude.ai",
             ],
@@ -4893,7 +4893,7 @@ function wc({
                       r(t, {
                         dimColor: !0,
                         children: [
-                          wr(Gte(ne.source)),
+                          wr(formatMarketplaceSource(ne.source)),
                           ` \xB7 available from claude.ai${ne.scope ? ` (${ne.scope})` : ""}`,
                           !Ut() && " \xB7 Enter to add",
                         ],
@@ -4933,9 +4933,9 @@ function wc({
                       r(t, {
                         dimColor: !0,
                         children: [
-                          `hosted on claude.ai (${aX(ne.scope)})`,
+                          `hosted on claude.ai (${formatMarketplaceScopeLabel(ne.scope)})`,
                           ne.displayName !== ne.name &&
-                            ` \xB7 ${wr(iBt(ne.name, ne.displayName) ?? "")}`,
+                            ` \xB7 ${wr(formatListedAsLabel(ne.name, ne.displayName) ?? "")}`,
                           !Ut() && " \xB7 Enter to add",
                         ],
                       }),
@@ -4954,7 +4954,7 @@ function wc({
                 paddingLeft: 4,
                 children: r(t, {
                   dimColor: !0,
-                  children: [wr(zwe(ne)), " ", "\xB7 browse on claude.ai"],
+                  children: [wr(formatBrowseOnlyMarketplace(ne)), " ", "\xB7 browse on claude.ai"],
                 }),
               },
               `claudeai-browse:${ne.name}`,
@@ -5099,14 +5099,14 @@ function rm(cE) {
   return Vk;
 }
 function im(a, k, v, b) {
-  let w = hH();
+  let w = getDeclaredMarketplaces();
   return a
     .map(({ name: A, config: Q, data: I }) => {
       let j = v.filter((B) => B.source.endsWith(`@${A}`)),
-        q = hMe(Q.source),
+        q = getMarketplaceSourceLabel(Q.source),
         X;
       if (Q.source.source === "claudeai") {
-        q = Tmt(b[A]);
+        q = formatClaudeAiMarketplaceLabel(b[A]);
         let B =
           I === null
             ? 0
@@ -5547,7 +5547,7 @@ function Rm({
     [Re, Mt] = d(null),
     [Lt, We] = d(!1),
     [nt, at] = d(!1),
-    Be = xe || Re || (nt ? jV() : null),
+    Be = xe || Re || (nt ? getClaudeAiConnectorsUrl() : null),
     { copiedVia: Ct, copy: pe } = useCopyToClipboard(Be),
     [tn, Rt] = d(""),
     [sn, St] = d(0),
@@ -5566,10 +5566,10 @@ function Rm({
         let te = await yt(a.name, { discardDiscovery: !1 }),
           Ee = te.client.type === "connected";
         if ((logEvent("tengu_claudeai_mcp_auth_completed", { success: Ee }), Ee))
-          I(`Authentication successful. Connected to ${gr(a.name)}.`);
+          I(`Authentication successful. Connected to ${sanitizeDisplayTextWithoutRedaction(a.name)}.`);
         else if (te.client.type === "needs-auth")
           I(
-            `Tried reconnecting, but ${gr(a.name)} is still unauthorized. Make sure the browser sign-in completed, then try again from /mcp.`,
+            `Tried reconnecting, but ${sanitizeDisplayTextWithoutRedaction(a.name)} is still unauthorized. Make sure the browser sign-in completed, then try again from /mcp.`,
           );
         else {
           let me = te.client.type === "failed" ? getMcpClientFailureDetail(te.client) : "";
@@ -5579,14 +5579,14 @@ function Rm({
                 level: "error",
               });
             I(
-              `Tried reconnecting to ${gr(a.name)}, but the connection failed${me ? " (detail withheld on this connection)" : ""}. Restart Claude Code to retry.`,
+              `Tried reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)}, but the connection failed${me ? " (detail withheld on this connection)" : ""}. Restart Claude Code to retry.`,
             );
           } else {
-            let Ge = me ? ka(me) : "";
+            let Ge = me ? sanitizeDisplayText(me) : "";
             I(
               Ge
-                ? `Tried reconnecting to ${gr(a.name)}, but the connection failed: ${Ge}`
-                : `Tried reconnecting to ${gr(a.name)}, but the connection failed. Restart Claude Code to retry.`,
+                ? `Tried reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)}, but the connection failed: ${Ge}`
+                : `Tried reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)}, but the connection failed. Restart Claude Code to retry.`,
             );
           }
         }
@@ -5605,9 +5605,9 @@ function Rm({
                 ? { ...st, type: "needs-auth" }
                 : st,
             ),
-            me = jLe(te.mcp.tools, a.name),
-            Ge = Une(te.mcp.commands, a.name),
-            wt = WLe(te.mcp.resources, a.name);
+            me = removeMcpServerTools(te.mcp.tools, a.name),
+            Ge = removeMcpServerCommands(te.mcp.commands, a.name),
+            wt = omitKey(te.mcp.resources, a.name);
           return {
             ...te,
             mcp: {
@@ -5620,7 +5620,7 @@ function Rm({
           };
         }),
         logEvent("tengu_claudeai_mcp_clear_auth_completed", {}),
-        I(`Disconnected from ${gr(a.name)}.`),
+        I(`Disconnected from ${sanitizeDisplayTextWithoutRedaction(a.name)}.`),
         We(!1),
         at(!1));
     }, [a.name, a.config, a.scope, ze, I]);
@@ -5653,13 +5653,13 @@ function Rm({
         return;
       }
       if (nt) fn();
-      else (at(!0), tryOpenUrlInBrowser(jV()));
+      else (at(!0), tryOpenUrlInBrowser(getClaudeAiConnectorsUrl()));
     }
     if (te.key === "c" && !te.ctrl && !te.meta && Be)
       (te.preventDefault(), pe(Be));
   }
   let Xn = capitalize(String(a.name)),
-    un = u6t(Fe.commands, a.name).length,
+    un = getMcpServerCommands(Fe.commands, a.name).length,
     Gt = P8(),
     Cn = re(() => {
       let te = mcpDialBlockCause(a.name, a.client.config);
@@ -5676,7 +5676,7 @@ function Rm({
     it = re(async () => {
       if (Cn()) return;
       let te =
-        (a.config.type === "claudeai-proxy" ? fY(a.config) : null) ?? jV();
+        (a.config.type === "claudeai-proxy" ? buildClaudeAiMcpAuthUrl(a.config) : null) ?? getClaudeAiConnectorsUrl();
       (Mt(te), ae(!0), logEvent("tengu_claudeai_mcp_auth_started", {}), await tryOpenUrlInBrowser(te));
     }, [a.config, Cn]),
     Ve = re(() => {
@@ -5721,12 +5721,12 @@ function Rm({
         if (Ge.client.type === "connected") {
           if (me) await Yr().revokeReplacedServerTokens(a.name, te.config, me);
           let wt = zn
-            ? `Authentication successful. Reconnected to ${gr(a.name)}.`
-            : `Authentication successful. Connected to ${gr(a.name)}.`;
+            ? `Authentication successful. Reconnected to ${sanitizeDisplayTextWithoutRedaction(a.name)}.`
+            : `Authentication successful. Connected to ${sanitizeDisplayTextWithoutRedaction(a.name)}.`;
           I(wt);
         } else if (Ge.client.type === "needs-auth")
           I(
-            `Got new credentials, but ${gr(a.name)} rejected them on reconnect. Try re-authenticating, or restart Claude Code if it persists.`,
+            `Got new credentials, but ${sanitizeDisplayTextWithoutRedaction(a.name)} rejected them on reconnect. Try re-authenticating, or restart Claude Code if it persists.`,
           );
         else {
           logMCPDebug(a.name, "Reconnection failed after authentication");
@@ -5737,14 +5737,14 @@ function Rm({
                 level: "error",
               });
             I(
-              `Got new credentials, but reconnecting to ${gr(a.name)} failed${wt ? " (detail withheld on this connection)" : ""}. Restart Claude Code to retry.`,
+              `Got new credentials, but reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)} failed${wt ? " (detail withheld on this connection)" : ""}. Restart Claude Code to retry.`,
             );
           } else {
-            let st = wt ? ka(wt) : "";
+            let st = wt ? sanitizeDisplayText(wt) : "";
             I(
               st
-                ? `Got new credentials, but reconnecting to ${gr(a.name)} failed: ${st}`
-                : `Got new credentials, but reconnecting to ${gr(a.name)} failed. Restart Claude Code to retry.`,
+                ? `Got new credentials, but reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)} failed: ${st}`
+                : `Got new credentials, but reconnecting to ${sanitizeDisplayTextWithoutRedaction(a.name)} failed. Restart Claude Code to retry.`,
             );
           }
         }
@@ -5765,7 +5765,7 @@ function Rm({
           logEvent("tengu_mcp_auth_config_clear", {}));
         let te = { ...a.config, scope: a.scope },
           Ee = ir();
-        if (AE())
+        if (isDiscoveryCacheUsable())
           await i2(
             Oc()
               .dropDiscoveryEntry(a.name, te)
@@ -5778,9 +5778,9 @@ function Rm({
                 ? { ...xn, type: "failed" }
                 : xn,
             ),
-            wt = jLe(me.mcp.tools, a.name),
-            st = Une(me.mcp.commands, a.name),
-            Bt = WLe(me.mcp.resources, a.name);
+            wt = removeMcpServerTools(me.mcp.tools, a.name),
+            st = removeMcpServerCommands(me.mcp.commands, a.name),
+            Bt = omitKey(me.mcp.resources, a.name);
           return {
             ...me,
             mcp: {
@@ -5792,7 +5792,7 @@ function Rm({
             },
           };
         }),
-          I(`Authentication cleared for ${gr(a.name)}.`));
+          I(`Authentication cleared for ${sanitizeDisplayTextWithoutRedaction(a.name)}.`));
       }
     };
   if (B) {
@@ -5980,7 +5980,7 @@ function Rm({
                       ],
                     }),
                     e(CopyFallbackNotice, { via: Ct }),
-                    e(ct, { url: jV() }),
+                    e(ct, { url: getClaudeAiConnectorsUrl() }),
                   ],
                 }),
                 r(o, {
@@ -6146,7 +6146,7 @@ function Rm({
                       e(N, { children: "Issue:" }),
                       e(t, {
                         dimColor: !0,
-                        children: wI(
+                        children: sanitizeMessageText(
                           a.client.type === "failed" && a.client.displayDetail
                             ? `${a.client.error} ${a.client.displayDetail}`
                             : a.client.error,
@@ -6181,7 +6181,7 @@ function Rm({
                       e(N, { children: "Protocol:" }),
                       e(t, {
                         dimColor: !0,
-                        children: zF(a.client.negotiatedProtocolVersion),
+                        children: sanitizeLogValue(a.client.negotiatedProtocolVersion),
                       }),
                     ],
                   }),
@@ -6203,7 +6203,7 @@ function Rm({
                 r(Vi.Row, {
                   children: [
                     e(N, { children: "Config location:" }),
-                    e(t, { dimColor: !0, children: cw(a.scope) }),
+                    e(t, { dimColor: !0, children: formatMcpScopeLocation(a.scope) }),
                   ],
                 }),
               ],
@@ -6381,7 +6381,7 @@ function sit({
       }
     }, [a.client.type, a.name, X, b, A, Q]),
     fe = capitalize(String(a.name)),
-    Fe = u6t(j.commands, a.name).length,
+    Fe = getMcpServerCommands(j.commands, a.name).length,
     ze = [];
   if (a.client.type !== "disabled" && k > 0)
     ze.push({ label: "View tools", value: "tools" });
@@ -6454,7 +6454,7 @@ function sit({
                     e(N, { children: "Protocol:" }),
                     e(t, {
                       dimColor: !0,
-                      children: zF(a.client.negotiatedProtocolVersion),
+                      children: sanitizeLogValue(a.client.negotiatedProtocolVersion),
                     }),
                   ],
                 }),
@@ -6471,7 +6471,7 @@ function sit({
                   e(N, { children: "Config location:" }),
                   e(t, {
                     dimColor: !0,
-                    children: cw(getMcpConfigByName(a.name)?.scope ?? "dynamic"),
+                    children: formatMcpScopeLocation(getMcpConfigByName(a.name)?.scope ?? "dynamic"),
                   }),
                 ],
               }),
@@ -6660,13 +6660,13 @@ function sWe(v$) {
         children: [
           e(t, { bold: !0, children: "Description:" }),
           e(t, { wrap: "wrap", children: truncateWithCharCount(Ga, Fm) }),
-          Ga.length > TI &&
+          Ga.length > MAX_MCP_TEXT_LENGTH &&
             r(t, {
               dimColor: !0,
               children: [
                 "The model receives only about the first",
                 " ",
-                TI,
+                MAX_MCP_TEXT_LENGTH,
                 " characters.",
               ],
             }),
@@ -6780,7 +6780,7 @@ function iWe(q$) {
     }
     let Ci;
     if (wi[1] !== Hm || wi[2] !== Yo.name)
-      ((Ci = BM(Hm, Yo.name).sort(Db)),
+      ((Ci = getMcpServerTools(Hm, Yo.name).sort(Db)),
         (wi[1] = Hm),
         (wi[2] = Yo.name),
         (wi[3] = Ci));
@@ -6931,7 +6931,7 @@ function Gm() {
     E(() => {
       let b = !1;
       return (
-        Nb(du(), a).then((w) => {
+        Nb(getApiRequestState(), a).then((w) => {
           if (!b && w) v(w);
         }),
         () => {
@@ -6947,21 +6947,21 @@ import { join as Fb, resolve, sep as Ub } from "path";
 async function Jm(a, k) {
   let v = Fb(k.path, "..", ".claude-plugin", "marketplace.json");
   if (isHoverRestEnabled() && a !== void 0 && (await Vb(a, k))) {
-    let b = await q4e(a, "workspace", v);
-    if ("absent" in b) throw Omt(v);
+    let b = await readLocalMarketplaceFile(a, "workspace", v);
+    if ("absent" in b) throw createEnoentError(v);
     return b.text;
   }
   return _b(v, "utf-8");
 }
 async function Vb(a, k) {
-  let v = yqn();
+  let v = getExistingSessionPluginCacheDir();
   if (Ym(Sl(), k.path) || (v !== null && Ym(v, k.path))) return !1;
   let b = getNonMarketplacePluginSource(k.source);
   if (b !== void 0) return b === INLINE_PLUGIN_SOURCE;
   let w = getPluginMarketplace(k.source);
   if (w === void 0) return !1;
-  let R = (await Ql(a))[w];
-  return R !== void 0 && Om(R.source) && pw(R.installLocation) === void 0;
+  let R = (await getKnownMarketplacesOrEmpty(a))[w];
+  return R !== void 0 && Om(R.source) && findContainingSeedDir(R.installLocation) === void 0;
 }
 function Ym(a, k) {
   let v = resolve(a),
@@ -8369,7 +8369,7 @@ function Tg(Sg) {
   return il;
 }
 async function gx(a, k, v) {
-  let w = (await Jv(k, v))?.plugins.find((R) => R.name === a);
+  let w = (await loadMarketplace(k, v))?.plugins.find((R) => R.name === a);
   if (w && typeof w.source === "string")
     return `Local plugins cannot be updated remotely. To update, modify the source at: ${w.source}`;
   return null;
@@ -8477,7 +8477,7 @@ function pu({
     [St, Wt] = d(0),
     [Ut, zn] = d([]),
     [yt, Yn] = d([]),
-    fn = Xm(_De, jqn),
+    fn = Xm(parseEnabledPluginRecords, arePluginSettingsRecordsEqual),
     [yn, Xn] = d(!0),
     [un, Gt] = d(0),
     [Cn, it] = d(() => new Set()),
@@ -8540,7 +8540,7 @@ function pu({
       if (T.type === "disabled") return "disabled";
       if (T.type === "pending") return "pending";
       if (T.type === "needs-auth") return "needs-auth";
-      if (ow(T)) return "unconfigured";
+      if (isUnconfiguredMcpServer(T)) return "unconfigured";
       return "failed";
     },
     Bt = V(() => {
@@ -8624,7 +8624,7 @@ function pu({
         });
       }
       let Ae = [],
-        Ye = _yt();
+        Ye = getClaudeAiMcpEverConnectedSet();
       for (let qe of q) {
         if (qe.name === "ide") continue;
         if (qe.name.startsWith("plugin:")) continue;
@@ -8689,7 +8689,7 @@ function pu({
             skillRoot: Ke.skillRoot,
             allowedTools: Ke.allowedTools,
             lockSource: va,
-            tokenEstimate: vc(
+            tokenEstimate: estimateTokens(
               [Ke.name, Ke.description, Ke.whenToUse].filter(Boolean).join(" "),
             ),
             usage: (() => {
@@ -8846,7 +8846,7 @@ function pu({
       (T, Z) => {
         if (Z === null || !Co.has(Z)) return;
         (logFeatureOk("cli_plugin_disuse_review"),
-          logEvent("tengu_plugin_disuse_review_action", { action: fromEnum(T), ...xy(Z) }),
+          logEvent("tengu_plugin_disuse_review_action", { action: fromEnum(T), ...buildPluginTelemetryFieldsFromId(Z) }),
           Po((oe) => {
             if (!oe.has(Z)) return oe;
             let le = new Map(oe);
@@ -8921,9 +8921,9 @@ function pu({
         le = !1;
       if (oe)
         le =
-          (typeof oe === "string" && SM(oe)) ||
+          (typeof oe === "string" && isMcpbFile(oe)) ||
           (Array.isArray(oe) &&
-            oe.some((ce) => typeof ce === "string" && SM(ce)));
+            oe.some((ce) => typeof ce === "string" && isMcpbFile(ce)));
       if (!le)
         try {
           let ce = await Jm(I, pe.plugin),
@@ -8935,9 +8935,9 @@ function pu({
           if (Qe?.mcpServers) {
             let Ae = Qe.mcpServers;
             le =
-              (typeof Ae === "string" && SM(Ae)) ||
+              (typeof Ae === "string" && isMcpbFile(Ae)) ||
               (Array.isArray(Ae) &&
-                Ae.some((Ye) => typeof Ye === "string" && SM(Ye)));
+                Ae.some((Ye) => typeof Ye === "string" && isMcpbFile(Ye)));
           }
         } catch (ce) {
           n(`Failed to read raw marketplace.json: ${ce}`);
@@ -8959,7 +8959,7 @@ function pu({
       async function Z() {
         if (!T) Xn(!0);
         try {
-          let { enabled: oe, disabled: le } = await Ph(I, j),
+          let { enabled: oe, disabled: le } = await loadAllPlugins(I, j),
             ce = fx([...oe, ...le]),
             He = {};
           for (let Ye of ce) {
@@ -8968,7 +8968,7 @@ function pu({
             He[ot].push(Ye);
           }
           let gt = [],
-            Qe = _De();
+            Qe = parseEnabledPluginRecords();
           for (let [Ye, ot] of Object.entries(He)) {
             let eo = countMatching(ot, (Pn) => {
                 let $l = s9e(Pn.source);
@@ -9095,7 +9095,7 @@ function pu({
               (ke(!1), Re("confirm-project-uninstall"));
               return;
             }
-            let Ye = Cf().plugins[le],
+            let Ye = getInstalledPlugins().plugins[le],
               eo = !Ye || Ye.length <= 1 ? await onr(le) : null;
             if (eo) {
               (ke(!1), Re({ type: "confirm-data-cleanup", size: eo }));
@@ -9134,7 +9134,7 @@ function pu({
           }
         }
         if (
-          (fu(I, j),
+          (refreshPluginState(I, j),
           ne((Ye) => {
             if (!Ye.has(le)) return Ye;
             let ot = new Map(Ye);
@@ -9143,7 +9143,7 @@ function pu({
           T === "disable" || T === "uninstall")
         )
           En(T, Rt);
-        let He = p0e(le, pe.plugin.manifest, _De());
+        let He = p0e(le, pe.plugin.manifest, parseEnabledPluginRecords());
         if (T !== "uninstall" && T !== "update" && He) {
           (ke(!1), Re({ type: "plugin-options" }));
           return;
@@ -9175,7 +9175,7 @@ function pu({
         let Z = pe.plugin.manifest.userConfig;
         if (Z && Object.keys(Z).length > 0)
           Re({ type: "configuring-options", schema: Z });
-        else k(`Plugin "${aT(pe.plugin)}" declares no userConfig options.`);
+        else k(`Plugin "${getPluginSource(pe.plugin)}" declares no userConfig options.`);
         return;
       }
       ny(T);
@@ -9216,7 +9216,7 @@ function pu({
                       ie(Ae.message));
                     return;
                   }
-                  fu(I, j);
+                  refreshPluginState(I, j);
                 } catch (Ae) {
                   (ne((Ye) => {
                     let ot = new Map(Ye);
@@ -9249,7 +9249,7 @@ function pu({
                       ie(Ae.message));
                     return;
                   }
-                  if ((fu(I, j), ce)) En("disable", oe);
+                  if ((refreshPluginState(I, j), ce)) En("disable", oe);
                 } catch (Ae) {
                   (ne((Ye) => {
                     let ot = new Map(Ye);
@@ -9424,10 +9424,10 @@ function pu({
             try {
               let Qe = pe.plugin.manifest.mcpServers,
                 Ae = null;
-              if (typeof Qe === "string" && SM(Qe)) Ae = Qe;
+              if (typeof Qe === "string" && isMcpbFile(Qe)) Ae = Qe;
               else if (Array.isArray(Qe)) {
                 for (let eo of Qe)
-                  if (typeof eo === "string" && SM(eo)) {
+                  if (typeof eo === "string" && isMcpbFile(eo)) {
                     Ae = eo;
                     break;
                   }
@@ -9437,7 +9437,7 @@ function pu({
                 return;
               }
               let Ye = Rt,
-                ot = await Qft(Ae, pe.plugin.path, Ye, void 0, void 0, !0, I);
+                ot = await loadMcpbBundle(Ae, pe.plugin.path, Ye, void 0, void 0, !0, I);
               if ("status" in ot && ot.status === "needs-config")
                 (ba(ot), Re("configuring"));
               else ie("Failed to load MCPB for configuration");
@@ -9518,7 +9518,7 @@ function pu({
                       I,
                     ),
                       (le = !0));
-                fu(I, j);
+                refreshPluginState(I, j);
               }
               if (le) (await v(), ke(!1), Re("plugin-list"));
               else (ke(!1), ie(oe.message));
@@ -9554,7 +9554,7 @@ function pu({
               (ke(!1), ie(`Failed to write settings: ${oe.message}`));
               return;
             }
-            (fu(I, j),
+            (refreshPluginState(I, j),
               En("disable", Z),
               Ot(
                 `${figures.tick} Disabled ${sd(pe.plugin)} in .claude/settings.local.json. Run /reload-plugins to apply.`,
@@ -9570,7 +9570,7 @@ function pu({
         (async () => {
           try {
             let oe = he(),
-              le = (Cf().plugins[Z] ?? []).some(
+              le = (getInstalledPlugins().plugins[Z] ?? []).some(
                 (He) => He.scope === "project" && He.projectPath === oe,
               ),
               ce;
@@ -9598,7 +9598,7 @@ function pu({
               }
               ce = `Removed ${sd(pe.plugin)} from .claude/settings.json`;
             }
-            (fu(I, j),
+            (refreshPluginState(I, j),
               En("uninstall", Z),
               Ot(`${figures.tick} ${ce}. Run /reload-plugins to apply.`));
           } catch (oe) {
@@ -9619,7 +9619,7 @@ function pu({
       try {
         let He = await r4(Z, oe, ce, I);
         if (!He.success) throw Error(He.message);
-        (fu(I, j), En("uninstall", Z));
+        (refreshPluginState(I, j), En("uninstall", Z));
         let gt = ce ? "" : " \xB7 data preserved";
         Ot(`${figures.tick} ${He.message}${gt}`);
       } catch (He) {
@@ -9723,10 +9723,10 @@ function pu({
         title: `Configure ${sd(pe.plugin)}`,
         subtitle: "Plugin options",
         configSchema: ae.schema,
-        load: () => Bv(T, j),
+        load: () => loadPluginOptions(T, j),
         onSave: async (Z) => {
           try {
-            (await Iwe(T, Z, ae.schema, I), fu(I, j));
+            (await savePluginOptions(T, Z, ae.schema, I), refreshPluginState(I, j));
             let oe = Object.keys(Z).length > 0;
             if (oe) v();
             k(
@@ -9754,10 +9754,10 @@ function pu({
       try {
         let ce = pe.plugin.manifest.mcpServers,
           He = null;
-        if (typeof ce === "string" && SM(ce)) He = ce;
+        if (typeof ce === "string" && isMcpbFile(ce)) He = ce;
         else if (Array.isArray(ce)) {
           for (let gt of ce)
-            if (typeof gt === "string" && SM(gt)) {
+            if (typeof gt === "string" && isMcpbFile(gt)) {
               He = gt;
               break;
             }
@@ -9766,7 +9766,7 @@ function pu({
           (ie("No MCPB file found"), Re("plugin-details"));
           return;
         }
-        (await Qft(He, pe.plugin.path, T, void 0, le, void 0, I),
+        (await loadMcpbBundle(He, pe.plugin.path, T, void 0, le, void 0, I),
           ie(null),
           ba(null),
           Re("plugin-details"),
@@ -10306,7 +10306,7 @@ function pu({
   }
   if (typeof ae === "object" && ae.type === "mcp-detail") {
     let T = ae.client,
-      Z = BM(X, T.name).length,
+      Z = getMcpServerTools(X, T.name).length,
       oe = () => {
         Re({ type: "mcp-tools", client: T });
       },
@@ -11575,7 +11575,7 @@ function Ev(SN) {
   return SN.workerInventory?.plugins ?? null;
 }
 function Mv(vN) {
-  return an(vN);
+  return sanitizeForDisplay(vN);
 }
 function $v(KN) {
   return KN.plugins.errors;
@@ -11626,10 +11626,10 @@ function kd(tN) {
   if (eS[0] !== ua || eS[1] !== Hu)
     ((tS = () => {
       let Yg = async function Yg() {
-        let oS = await gl(Hu);
+        let oS = await getKnownMarketplaces(Hu);
         let zg = Object.keys(oS);
-        let iS = await xue().catch(wv);
-        let { available: Wg, hosted: Gg } = Hue(iS, oS);
+        let iS = await listClaudeAiMarketplaces().catch(wv);
+        let { available: Wg, hosted: Gg } = filterUnconfiguredMarketplaces(iS, oS);
         let Qg = iS?.browseOnly ?? [];
         if (
           zg.length === 0 &&
@@ -11647,14 +11647,14 @@ function kd(tN) {
             wl.push("From claude.ai:");
           for (const Ku of Wg)
             wl.push(
-              `  \u2022 ${wr(Ku.name)} (available from claude.ai${Ku.scope ? `, ${Ku.scope}` : ""} \u2014 not added) \xB7 ${wr(Gte(Ku.source))}`,
+              `  \u2022 ${wr(Ku.name)} (available from claude.ai${Ku.scope ? `, ${Ku.scope}` : ""} \u2014 not added) \xB7 ${wr(formatMarketplaceSource(Ku.source))}`,
             );
           for (const rS of Gg)
             wl.push(
-              `  \u2022 ${wr(hDe(rS))} \u2014 hosted on claude.ai, ${aX(rS.scope)} \xB7 not added`,
+              `  \u2022 ${wr(formatMarketplaceRowLabel(rS))} \u2014 hosted on claude.ai, ${formatMarketplaceScopeLabel(rS.scope)} \xB7 not added`,
             );
           for (const nN of Qg)
-            wl.push(`  \u2022 ${wr(zwe(nN))} (browse on claude.ai)`);
+            wl.push(`  \u2022 ${wr(formatBrowseOnlyMarketplace(nN))} (browse on claude.ai)`);
           ua(
             wl.join(`
 `),
@@ -11692,7 +11692,7 @@ function xd(rN) {
     lS[4] !== da
   )
     ((sS = () => {
-      let uS = Cf();
+      let uS = getInstalledPlugins();
       let dS = Object.keys(uS.plugins).sort();
       if (dS.length === 0) {
         da("No plugins installed. Use `/plugin install` to install a plugin.");
@@ -11726,7 +11726,7 @@ function xd(rN) {
           Cl.find((dN) => dN.source === Mi) ?? zu.find((pN) => pN.source === Mi)
         )?.manifest.version;
         for (const Xg of uS.plugins[Mi] ?? []) {
-          let fS = A5e(Xg.version, mN);
+          let fS = formatVersionLabel(Xg.version, mN);
           let gN = fS ? `${fS}, ${Xg.scope}` : Xg.scope;
           (pS.push(`  \u2022 ${Mi} (${gN}) ${cN}${uN}`), mS++);
         }
@@ -12038,8 +12038,8 @@ function Td(CN) {
     ((CS = () => {
       (async () => {
         try {
-          let BN = await gl(ai);
-          let { failures: AN } = await D3(BN, ai);
+          let BN = await getKnownMarketplaces(ai);
+          let { failures: AN } = await loadMarketplaces(BN, ai);
           wS(AN);
         } catch {}
       })();
@@ -12090,7 +12090,7 @@ function Td(CN) {
         case "remove-extra-marketplace": {
           let NN = fo.sources.map(Fv).join(", ");
           (Jf(fo.name, fo.sources, ai),
-            fu(ai, Zg),
+            refreshPluginState(ai, Zg),
             $N((Tl) => ({
               ...Tl,
               plugins: {
@@ -12114,8 +12114,8 @@ function Td(CN) {
         case "remove-installed-marketplace": {
           (async () => {
             try {
-              (await TEe(fo.name, void 0, ai, Zg),
-                fu(ai, Zg),
+              (await removeMarketplace(fo.name, void 0, ai, Zg),
+                refreshPluginState(ai, Zg),
                 wS((FN) => FN.filter((UN) => UN.name !== fo.name)),
                 nf(`${figures.tick} Removed marketplace "${fo.name}"`),
                 SS());

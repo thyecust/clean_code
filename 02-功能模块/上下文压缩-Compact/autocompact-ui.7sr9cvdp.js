@@ -21,7 +21,7 @@ import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/feature-flag-version.js";
 import { useMainLoopModel } from "../../01-核心基础设施/共享小工具-未细化/main-loop-model.js";
-import { tp, qS, dLe } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAutoCompactEnabled, resolveAutoCompactWindow, isUserConfiguredWindowSource } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { applyAutoCompactWindow } from "./chunk-5ed8c210.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
@@ -49,9 +49,9 @@ function uo(No) {
     vo,
     P;
   if (n[0] !== ro || n[1] !== co) {
-    ({ window: P, configured: h, source: a } = qS(co, ro));
+    ({ window: P, configured: h, source: a } = resolveAutoCompactWindow(co, ro));
     let z;
-    if (n[10] === MEMO_CACHE_SENTINEL) ((z = tp()), (n[10] = z));
+    if (n[10] === MEMO_CACHE_SENTINEL) ((z = isAutoCompactEnabled()), (n[10] = z));
     else z = n[10];
     Q = z;
     q = h > P;
@@ -66,7 +66,7 @@ function uo(No) {
             : a === "model-default"
               ? "default for this model"
               : "auto";
-    vo = !dLe(a) ? c : Math.min(b, Math.max(v, Math.round(h / y) * y));
+    vo = !isUserConfiguredWindowSource(a) ? c : Math.min(b, Math.max(v, Math.round(h / y) * y));
     ((n[0] = ro),
       (n[1] = co),
       (n[2] = q),

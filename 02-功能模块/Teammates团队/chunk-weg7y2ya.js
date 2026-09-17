@@ -10,7 +10,7 @@
 import { ke } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { fromEnum } from "../../01-核心基础设施/共享小工具-未细化/analytics-fields.js";
 import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { _3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getNonMainAgentTaskId } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { derivePublishContextFrom, makeMainObservedVersionReader } from "../Artifact发布-渲染/chunk-01ymf0ar.js";
 import { ne } from "../Artifact发布-渲染/chunk-rr78st95.js";
 import { maybeSubscribeFrameLive, isSocketHoldingPublishContext } from "../Artifact发布-渲染/chunk-kshc4v5t.js";
@@ -66,7 +66,7 @@ function adoptSubagentPublishArms(n) {
   });
   if (i === "subagent" && e.agentId !== void 0) {
     let o =
-      _3(e.agentId, e.taskRegistry) === e.agentId ||
+      getNonMainAgentTaskId(e.agentId, e.taskRegistry) === e.agentId ||
       !ne().live.finishedSubagentAdopters.has(e.agentId);
     for (let a of s)
       if (o) stageSubagentPublishArm(e.agentId, a);

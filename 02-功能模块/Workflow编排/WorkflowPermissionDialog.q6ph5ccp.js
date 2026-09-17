@@ -17,7 +17,7 @@ import { Hn } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import { an } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sanitizeForDisplay } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import { CodeBlock } from "../语法高亮-Markdown渲染/code-block.js";
 import "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
@@ -360,7 +360,7 @@ function on(n) {
             " ",
             "in",
             " ",
-            e(t, { bold: !0, children: an(he()) }),
+            e(t, { bold: !0, children: sanitizeForDisplay(he()) }),
           ],
         });
       },

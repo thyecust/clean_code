@@ -26,7 +26,7 @@ import { Tb, Xge, lL } from "../../01-核心基础设施/设置-配置/设置-�
 import { S0 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { WSL_MANAGED_SETTINGS_DIR } from "../../01-核心基础设施/共享小工具-未细化/mdm-policy-paths.js";
 import { getKeychainAccountName } from "../../01-核心基础设施/共享小工具-未细化/keychain-access.js";
-import { Jqn, isScrubOnlySandboxMode, SandboxManager, ULe, vde } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getRipgrepStatus, isScrubOnlySandboxMode, SandboxManager, isNativeInstallerSymlink, isNpmShimExecutable } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { L9n, pte, Fbe, Gce, kan, M9n, $9n } from "./chunk-548xet6h.js";
 import { getLocalBinDir } from "../../01-核心基础设施/共享小工具-未细化/user-directories.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
@@ -471,7 +471,7 @@ async function fe(e) {
       y = homedir(),
       d = g(y, ".local", "bin"),
       u = g(getLocalBinDir(), "claude");
-    if (!(await ULe(u)) && !(await vde(u).catch(() => !1)))
+    if (!(await isNativeInstallerSymlink(u)) && !(await isNpmShimExecutable(u).catch(() => !1)))
       t.push({
         issue: `${u} was not created by the native installer (it is not a symlink into the versions/ directory), so auto-update leaves it untouched.`,
         fix: `If you put a launcher wrapper there on purpose, this is expected \u2014 new versions still install under $XDG_DATA_HOME/claude/versions, your launcher decides what runs, and automatic version cleanup is disabled on this machine (the installer cannot tell which version your launcher needs, so it keeps them all). To let Claude Code manage the launcher again, remove ${u} and run \`claude update\`.`,
@@ -759,7 +759,7 @@ async function Mbe({ probeKeychain: e = !1, storageV5: t } = {}) {
         fix: "Run `claude install` to switch to the native installer (no sudo)\nOr reinstall with a sudo-free npm (e.g. via nvm)\nOr `npm config set prefix ~/.npm-global`, add ~/.npm-global/bin to PATH, then reinstall",
       });
   }
-  let c = Jqn(),
+  let c = getRipgrepStatus(),
     R = {
       working: c.working ?? !0,
       mode: c.mode,

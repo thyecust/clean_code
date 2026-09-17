@@ -18,7 +18,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import "../../01-核心基础设施/共享小工具-未细化/queued-message-context.js";
 import "../../01-核心基础设施/共享小工具-未细化/use-hyperlink-support.js";
 import "../语法高亮-Markdown渲染/语法高亮-Markdown渲染.jhbtay9y.js";
-import { C2, JOe, omt } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { EXTERNAL_MESSAGE_PREFIX, getExternalSourceWarning, EXTERNAL_MESSAGE_REPLY_HINT } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import "../../01-核心基础设施/核心工具-字符串与文本/chunk-5mzs51m4.js";
 import "../语法高亮-Markdown渲染/chunk-wj93jy9j.js";
@@ -35,16 +35,16 @@ ${f}`,
   J = [
     `
 
-${JOe(!1)}${omt}`,
+${getExternalSourceWarning(!1)}${EXTERNAL_MESSAGE_REPLY_HINT}`,
     `
 
-${JOe(!1)}`,
+${getExternalSourceWarning(!1)}`,
     `
 
-${JOe(!0)}${omt}`,
+${getExternalSourceWarning(!0)}${EXTERNAL_MESSAGE_REPLY_HINT}`,
     `
 
-${JOe(!0)}`,
+${getExternalSourceWarning(!0)}`,
   ];
 function Q(c) {
   let i = c.lastIndexOf(":");
@@ -53,7 +53,7 @@ function Q(c) {
 function V(c) {
   let i = "",
     s = c;
-  if (s.startsWith(C2)) {
+  if (s.startsWith(EXTERNAL_MESSAGE_PREFIX)) {
     let n = s.indexOf(`
 `);
     if (n !== -1 && s.startsWith(CHANNEL_SOURCE_OPEN_TAG, n + 1))
@@ -102,7 +102,7 @@ function UserChannelMessage(gt) {
         if (J.includes(xt)) P = P.slice(0, H);
       }
       let rt = M5(L);
-      if (g === `${C2}${rt} while you were working:` || g === `${C2}${rt}:`)
+      if (g === `${EXTERNAL_MESSAGE_PREFIX}${rt} while you were working:` || g === `${EXTERNAL_MESSAGE_PREFIX}${rt}:`)
         g = "";
       let j = P.slice(dt.length);
       let et = j.trimEnd();

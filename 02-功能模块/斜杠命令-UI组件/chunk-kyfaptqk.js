@@ -19,7 +19,7 @@ import { aa, H } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { jn, Pt, getIsGit, getGitState } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
 import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useKeybinding } from "../../01-核心基础设施/共享小工具-未细化/keybinding-hooks.js";
-import { uV, xO, asSystemPrompt, YO, yC } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getFeedbackDisabledReason, isAuthenticationErrorMessage, asSystemPrompt, isSendFeedbackEnabled, runSmallFastModelQuery } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
@@ -149,7 +149,7 @@ function gt({
         else if (i.failureReason === "auth_error")
           I("Couldn't send feedback: not signed in. Run /login, then retry.");
         else if (i.failureReason === "policy_blocked")
-          I(uV(ee) ?? "Feedback is disabled by your organization's policy.");
+          I(getFeedbackDisabledReason(ee) ?? "Feedback is disabled by your organization's policy.");
         else {
           let oe = i.statusCode
             ? ` (server returned ${i.statusCode})`
@@ -576,7 +576,7 @@ ${qr(f)}
 }
 async function ft(u, s, f) {
   try {
-    let m = await yC({
+    let m = await runSmallFastModelQuery({
         systemPrompt: asSystemPrompt([
           "Generate a concise, technical issue title (max 80 chars) for a public GitHub issue based on this bug report for Claude Code.",
           "Claude Code is an agentic coding CLI based on the Anthropic API.",
@@ -608,7 +608,7 @@ async function ft(u, s, f) {
         m.message.content[0]?.type === "text"
           ? m.message.content[0].text
           : "Bug Report";
-    if (xO(S)) return Je(u);
+    if (isAuthenticationErrorMessage(S)) return Je(u);
     if (Gt(S)) return Je(u);
     return S;
   } catch (m) {
@@ -756,7 +756,7 @@ function kt(Gn) {
   return Wt;
 }
 async function ggr(u, s, f) {
-  if (YO() && !f?.trim() && !z1n()) return e(kt, { onDone: u, context: s });
+  if (isSendFeedbackEnabled() && !f?.trim() && !z1n()) return e(kt, { onDone: u, context: s });
   return LPt(u, s, f);
 }
 export { jdr, LPt, ggr };

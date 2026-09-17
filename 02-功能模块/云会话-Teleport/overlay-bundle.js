@@ -14,7 +14,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
-import { Ct, nn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isSignalAborted, GIT_OBJECT_ID_REGEX } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { runProbeGit } from "../Git-Worktree/local-divergence-probe.js";
 import { Jan, dOe, i3n } from "../Git-Worktree/chunk-v967hawf.js";
 var MAX_OVERLAY_BUNDLE_BYTES = 20971520,
@@ -43,9 +43,9 @@ async function createOverlayBundle({
   return (T(c, Date.now() - l), c);
 }
 async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
-  if (!nn.test(r)) return s("arguments", "prerequisite is not an object id");
+  if (!GIT_OBJECT_ID_REGEX.test(r)) return s("arguments", "prerequisite is not an object id");
   if (!(o > 0)) return s("arguments", "maxBytes is not a positive number");
-  if (Ct(t)) return { ok: !1, reason: "aborted" };
+  if (isSignalAborted(t)) return { ok: !1, reason: "aborted" };
   let l = {
       gitRoot: e,
       signal: t ?? new AbortController().signal,
@@ -53,15 +53,15 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
     },
     c = await runProbeGit(l, ["rev-parse", "-q", "--verify", "HEAD"]),
     a = c.stdout.trim();
-  if (c.exitCode !== 0 || !nn.test(a))
-    return Ct(t)
+  if (c.exitCode !== 0 || !GIT_OBJECT_ID_REGEX.test(a))
+    return isSignalAborted(t)
       ? { ok: !1, reason: "aborted" }
       : s("head", "HEAD does not resolve");
   let [b, m] = await Promise.all([
     runProbeGit(l, ["rev-list", "--count", `${r}..${a}`, "--"]),
     runProbeGit(l, ["merge-base", "--is-ancestor", r, a]),
   ]);
-  if (Ct(t)) return { ok: !1, reason: "aborted" };
+  if (isSignalAborted(t)) return { ok: !1, reason: "aborted" };
   if (m.exitCode === 1) return { ok: !1, reason: "not_ancestor" };
   let _ = /^\d+$/.test(b.stdout.trim()) ? Number(b.stdout.trim()) : null;
   if (b.exitCode !== 0 || _ === null || m.exitCode !== 0)
@@ -78,14 +78,14 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
     `^${r}`,
     "--",
   ]);
-  if (Ct(t)) return { ok: !1, reason: "aborted" };
+  if (isSignalAborted(t)) return { ok: !1, reason: "aborted" };
   let v = /^\d+$/.test(p.stdout.trim()) ? Number(p.stdout.trim()) : null;
   if (p.exitCode === 0 && v !== null && v > R * o)
     return { ok: !1, reason: "too_large", sizeBytes: v, aheadCount: _ };
   let k = createTempFilePath("ccr-overlay", ".bundle");
   try {
     let O = await runProbeGit(l, ["bundle", "create", "--quiet", k, `^${r}`, w, "--"]);
-    if (Ct(t)) return { ok: !1, reason: "aborted" };
+    if (isSignalAborted(t)) return { ok: !1, reason: "aborted" };
     if (O.exitCode !== 0)
       return s("bundle_create", x("bundle create", O.exitCode));
     let d = await dOe(k, o);
@@ -105,7 +105,7 @@ async function D({ gitRoot: e, prerequisiteSha: r, maxBytes: o, signal: t }) {
         "header",
         "the bundle does not carry exactly HEAD at the id read before packing",
       );
-    if (Ct(t)) return { ok: !1, reason: "aborted" };
+    if (isSignalAborted(t)) return { ok: !1, reason: "aborted" };
     return {
       ok: !0,
       content: d.content,

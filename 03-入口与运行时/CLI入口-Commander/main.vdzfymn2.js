@@ -198,39 +198,39 @@ import "../../01-核心基础设施/核心工具-路径与平台/temp-directory.
 import { isScrubEnabled } from "../../01-核心基础设施/核心工具-进程与信号/chunk-ckrdhhqd.js";
 import { goe, dR } from "../../01-核心基础设施/遥测-OpenTelemetry/chunk-x7kby92q.js";
 import {
-  X7,
-  q9,
-  Dte,
-  Eue,
-  SUt,
-  Qun,
-  xn,
-  Pr,
-  rmt,
-  lT,
-  kl,
+  addHistoryEntry,
+  listGitWorktrees,
+  emitExitMessage,
+  flushAnalyticsSinks,
+  shutdownCoordinators,
+  markStartupActionStarted,
+  gracefulShutdown,
+  gracefulShutdownSync,
+  DEFAULT_ATTENTION_BUDGET,
+  isAdvisorToolEnabled,
+  settingsChangeDetector,
   SandboxManager,
-  ep,
-  lTe,
+  DEFAULTS_SLOT_MARKER,
+  createInitialAttributionState,
   syncPermissionRulesFromDisk,
-  Yzn,
-  ggt,
-  wX,
-  pu,
-  VVe,
-  pLe,
-  LX,
-  ght,
-  hht,
+  PERMISSION_PROMPTS_TARGETS,
+  PERMISSION_PROMPTS_NONE,
+  isPermissionPromptsDisabled,
+  setSessionCwd,
+  parseAutoCompactWindowSetting,
+  isPrecomputeCompactionEnabledByDefault,
+  createPrecomputeSidecarReadAheadOptions,
+  resolvePromptSuggestionsEnabled,
+  isPromptSuggestionEnabled,
   loadConversationForResume,
-  Dht,
-  Yht,
-  NKn,
-  FKn,
-  cw,
-  zLe,
-  UKn,
-  BKn,
+  getDirSyncPromptRoot,
+  formatUnboundNotice,
+  isSettingsModeForwardable,
+  shouldPromptForRemoteHomeSettingsMode,
+  formatMcpScopeLocation,
+  normalizeMcpScope,
+  normalizeMcpTransportType,
+  parseMcpHeaders,
   processMessagesForTeleportResume,
   checkOutTeleportedSessionBranch,
   validateSessionRepository,
@@ -241,35 +241,35 @@ import {
   getAutoModeUnavailableNotification,
   verifyAutoModeGateAccess,
   getAutoModeEnabledState,
-  M3,
-  ei,
-  Zf,
+  shouldFillPluginLoadWithStore,
+  loadAllPluginsCacheOnly,
+  clearPluginCache,
   addMcpConfig,
   getClaudeCodeMcpConfigs,
   isClaudeInChromeAllowed,
   shouldSuppressChromeOffer,
   setupClaudeInChrome,
-  Re,
-  Ht,
+  createUserMessage,
+  createSystemInfoMessage,
   TranscriptFileFormatError,
   loadTranscriptFromFile,
   saveMode,
   getSessionIdFromLog,
   searchSessionsByCustomTitle,
   getSessionEndHookTimeoutMs,
-  lD,
-  gpe,
-  Ny,
-  nR,
-  h8e,
-  wXn,
-  j_,
-  ET,
-  DY,
-  F_n,
-  vXn,
-  RXn,
-  kXn,
+  loadMemoryFileWithIncludes,
+  loadRulesDirMemoryFiles,
+  getSessionMemoryFiles,
+  clearMemoryFilesForSession,
+  getExternalInstructionIncludes,
+  shouldShowExternalIncludesDialog,
+  getSystemContext,
+  invalidateUserContext,
+  isImportCommandEnabled,
+  CLAUDE_IMPORT_NOT_AVAILABLE_MESSAGE,
+  CLAUDE_IMPORT_CONFIG_ERROR_MESSAGE,
+  resolveImportCommandAction,
+  parseImportCommandArgs,
   getCommands,
   filterCommandsForHeadless,
 } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
@@ -2526,8 +2526,8 @@ Usage: claude mcp add <name> <command> [args...]`);
           cliError(`Error: Command is required when server name is provided.
 Usage: claude mcp add <name> <command> [args...]`);
         try {
-          let L = zLe(D.scope),
-            W = UKn(D.transport);
+          let L = normalizeMcpScope(D.scope),
+            W = normalizeMcpTransportType(D.transport);
           if (D.xaa && !SP())
             cliError(
               "Error: --xaa requires CLAUDE_CODE_ENABLE_XAA=1 in your environment",
@@ -2561,7 +2561,7 @@ Usage: claude mcp add <name> <command> [args...]`);
           ) {
             let q = W === "sse" ? "SSE" : "HTTP";
             if (!N) return cliErrorAfterAnalyticsFlush(`Error: URL is required for ${q} transport.`);
-            let J = D.header ? BKn(D.header) : void 0,
+            let J = D.header ? parseMcpHeaders(D.header) : void 0,
               X = D.callbackPort ? parseConfigInteger(D.callbackPort) : void 0;
             if (X !== void 0 && (!Number.isInteger(X) || X <= 0 || X > 65535))
               return cliErrorAfterAnalyticsFlush(
@@ -2627,7 +2627,7 @@ Warning: The command "${q}" looks like a URL, but is being interpreted as a stdi
                 .write(`Added stdio MCP server ${T} with command: ${q} ${I.join(" ")} to ${L} config
 `));
           }
-          return cliOkAfterAnalyticsFlush(`File modified: ${cw(L)}`);
+          return cliOkAfterAnalyticsFlush(`File modified: ${formatMcpScopeLocation(L)}`);
         } catch (L) {
           return cliErrorAfterAnalyticsFlush(l(L));
         }
@@ -3629,7 +3629,7 @@ async function io(v, k, O, R, T) {
         ? " It happened while the fullscreen renderer was starting, so the next launch will use the classic renderer (CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1 forces that any time)."
         : "";
     if (
-      (Dte(
+      (emitExitMessage(
         `Claude Code exited after an unrecoverable interface error (${D.message}).${I}`,
       ),
       isBgSession() || isSupervisedMode())
@@ -3638,10 +3638,10 @@ async function io(v, k, O, R, T) {
     try {
       reportError(D, "unhandled_rejection");
     } catch {}
-    await xn(1, "other");
+    await gracefulShutdown(1, "other");
     return;
   }
-  (await SUt.of(O.host).runBeforeInteractiveShutdown(), await xn(0));
+  (await shutdownCoordinators.of(O.host).runBeforeInteractiveShutdown(), await gracefulShutdown(0));
 }
 var na = 2000,
   Mn = "GB post-onboarding init";
@@ -3660,7 +3660,7 @@ async function Hn(v, k, O, R, T, x, U, D, N, I) {
         Dx(!0),
         qUe({ preservePendingExposures: !0 }),
         df().catch((j) => logError(ge(j))),
-        j_(v),
+        getSystemContext(v),
         null
       ),
       In(N, W),
@@ -3748,8 +3748,8 @@ function ia(
     () => {
       if (a.CLAUBBIT) return null;
       if ((Dx(!0), W)) {
-        if ((Zf("post-trust: re-discover project @skills-dir plugins"), M3(N)))
-          ei(D, N).catch(() => {});
+        if ((clearPluginCache("post-trust: re-discover project @skills-dir plugins"), shouldFillPluginLoadWithStore(N)))
+          loadAllPluginsCacheOnly(D, N).catch(() => {});
       }
       if ((qUe({ preservePendingExposures: !0 }), L.hasCompletedOnboarding))
         return (df().catch((j) => logError(ge(j))), null);
@@ -3757,7 +3757,7 @@ function ia(
     },
     () => {
       if (a.CLAUBBIT) return null;
-      return (j_(v), null);
+      return (getSystemContext(v), null);
     },
     (j) =>
       a.CLAUBBIT
@@ -3766,8 +3766,8 @@ function ia(
             I.mcpApprovalSkipWarning = V;
           })(j),
     async (j) => {
-      if (a.CLAUBBIT || !(await wXn(v, D))) return null;
-      let V = h8e(await Ny(v, !0, D, N)),
+      if (a.CLAUBBIT || !(await shouldShowExternalIncludesDialog(v, D))) return null;
+      let V = getExternalInstructionIncludes(await getSessionMemoryFiles(v, !0, D, N)),
         { ClaudeMdExternalIncludesDialog: q } =
           await import("../../02-功能模块/Memory-CLAUDE.md/ClaudeMdExternalIncludesDialog.5tp7a8xn.js");
       return e(q, {
@@ -3801,7 +3801,7 @@ function ia(
             return;
           }
           (logEvent("tengu_grove_policy_exited", {}),
-            Pr(0),
+            gracefulShutdownSync(0),
             (I.onboardingShown = !1),
             (I.claudeInChromeAccepted = !1),
             j("stop"));
@@ -4381,7 +4381,7 @@ function zn(v, k) {
   function W(j) {
     return (
       N(() => logFeatureSad("ccr_create_checklist", "cancelled")),
-      Rr(v, O1n(j), { exitCode: 130, beforeExit: () => xn(130) })
+      Rr(v, O1n(j), { exitCode: 130, beforeExit: () => gracefulShutdown(130) })
     );
   }
   function K(j) {
@@ -5051,8 +5051,8 @@ async function Sa() {
   let v = new Set(),
     k = es().hasClaudeMdExternalIncludesApproved || !1;
   return [
-    ...(await lD(_Q("Managed"), "Managed", v, k)),
-    ...(await gpe({
+    ...(await loadMemoryFileWithIncludes(_Q("Managed"), "Managed", v, k)),
+    ...(await loadRulesDirMemoryFiles({
       rulesDir: eBe(),
       type: "Managed",
       processedPaths: v,
@@ -5069,7 +5069,7 @@ function vi(v) {
         let x = T ? await O : await Ci();
         if (x === k) return;
         if (((k = x), T)) return;
-        (nR(v), ET(v, "policy_refresh"));
+        (clearMemoryFilesForSession(v), invalidateUserContext(v, "policy_refresh"));
       } catch (x) {
         logError(x);
       }
@@ -5134,7 +5134,7 @@ async function bi(v, k) {
     } = v;
   if ((HDn(Ve ?? "text"), ut)) {
     if ((rje(!0), dR(), initializeTelemetryAfterTrust(v.storageV5), isViolinWoodEnabledCached() && !isSimpleMode()))
-      kl.initialize(iHe(yt, v.storageV5, v.credentials), v.storageV5, {
+      settingsChangeDetector.initialize(iHe(yt, v.storageV5, v.credentials), v.storageV5, {
         machineServesSession: !0,
       });
     let { runHeadlessCloudAttach: Ce, runHeadlessCloudCreate: Ye } =
@@ -5215,7 +5215,7 @@ async function bi(v, k) {
 `),
         process.stdout.write(`View: ${gt}
 `));
-    await xn(0);
+    await gracefulShutdown(0);
     return;
   }
   if (Bt !== null) {
@@ -5309,7 +5309,7 @@ async function bi(v, k) {
 `),
         process.stdout.write(`Resume with: claude --teleport ${me.id}
 `));
-    await xn(0);
+    await gracefulShutdown(0);
     return;
   }
   if (Ve === "stream-json" || Ve === "json") rje(!0);
@@ -5330,7 +5330,7 @@ async function bi(v, k) {
           );
   (He?.catch(() => {}), profileCheckpoint("before_validateForceLoginOrg"));
   let ho = await validateForceLoginOrg(v.credentials);
-  if (!ho.valid) return (printCliError(ho.message), await Eue(), cliError());
+  if (!ho.valid) return (printCliError(ho.message), await flushAnalyticsSinks(), cliError());
   let _o = qe ? [] : Le ? Le.then(filterCommandsForHeadless) : filterCommandsForHeadless(ce);
   if (_o instanceof Promise) _o.catch(() => {});
   let Fo = aF(),
@@ -5344,9 +5344,9 @@ async function bi(v, k) {
       ultracode: i4t(k.effort),
       autoCompactWindow: R,
       ...(Mr() && { fastMode: NAt(je ?? null) }),
-      ...(lT() && j && { advisorModel: j }),
+      ...(isAdvisorToolEnabled() && j && { advisorModel: j }),
       ...(k.promptSuggestions !== void 0 && {
-        promptSuggestionEnabled: k.promptSuggestions && hht(),
+        promptSuggestionEnabled: k.promptSuggestions && isPromptSuggestionEnabled(),
       }),
       ...(mo && {
         teamContext: mo.teamContext,
@@ -5417,7 +5417,7 @@ async function bi(v, k) {
         outputFormat: Ve,
         jsonSchema: x,
         permissionPromptToolName: k.permissionPromptTool,
-        permissionPrompts: wX(k.permissionPrompts) ? ggt : void 0,
+        permissionPrompts: isPermissionPromptsDisabled(k.permissionPrompts) ? PERMISSION_PROMPTS_NONE : void 0,
         permissionModeSuppliedOnInvocation:
           v.permissionModeSuppliedOnInvocation,
         storageV5: v.storageV5,
@@ -5490,11 +5490,11 @@ var ka = {
     baseSettled: () => !fIe(),
     refuse: (v) => {
       let k = isExiting();
-      if ((commitExit(), Dte(v), k)) {
+      if ((commitExit(), emitExitMessage(v), k)) {
         setTimeout(Ir, ba()).unref();
         return;
       }
-      xn(1, "other", { suppressResumeHint: !0 }).then(Ir, Ir);
+      gracefulShutdown(1, "other", { suppressResumeHint: !0 }).then(Ir, Ir);
     },
   },
   Oa = new Set(["install", "update", "rollback", "forward-home-settings"]);
@@ -5547,20 +5547,20 @@ function ki(v) {
     if (V?.kind === "violation") return cliError(V.message);
     let q = V?.kind === "applied" ? V : void 0,
       J = [...Ei(I.getOptionValue("pluginDir")), ...(q?.pluginDirs ?? [])];
-    if (J.length > 0) (krt(J), Zf("preAction: --plugin-dir inline plugins"));
+    if (J.length > 0) (krt(J), clearPluginCache("preAction: --plugin-dir inline plugins"));
     let X = [
       ...Ei(I.getOptionValue("pluginDirNoMcp")),
       ...(q?.pluginDirsNoMcp ?? []),
     ];
     if (X.length > 0)
-      (xrt(X), Zf("preAction: --plugin-dir-no-mcp inline plugins"));
+      (xrt(X), clearPluginCache("preAction: --plugin-dir-no-mcp inline plugins"));
     let ce = I.getOptionValue("pluginUrl");
     if (
       Array.isArray(ce) &&
       ce.length > 0 &&
       ce.every((oe) => typeof oe === "string")
     )
-      (wLn(ce), Zf("preAction: --plugin-url inline plugins"));
+      (wLn(ce), clearPluginCache("preAction: --plugin-url inline plugins"));
     (await Ra(R), profileCheckpoint("preAction_after_migrations"));
     let Me = L.parent?.name() === "auth";
     if (isForceRemoteSettingsRefreshConfigured() && !Me) {
@@ -5614,7 +5614,7 @@ function ki(v) {
     let fe = checkVersionPolicyForCommand(L);
     if (fe) return cliError(fe);
     if (
-      (kl.subscribe((oe) => {
+      (settingsChangeDetector.subscribe((oe) => {
         if (oe === "policySettings") qe();
       }),
       profileCheckpoint("preAction_after_remote_settings"),
@@ -5625,11 +5625,11 @@ function ki(v) {
       let oe = I.getOptionValue("addDir");
       if (Array.isArray(oe) && oe.every((je) => typeof je === "string")) Hz(oe);
       (Edr(),
-        ei(R, T).catch(() => {}),
+        loadAllPluginsCacheOnly(R, T).catch(() => {}),
         (O = !0),
         profileCheckpoint("preAction_after_plugin_early_kick"));
     }
-    (recordStartupPhase("pre_action_ms", performance.now() - W, W), Qun(L === k));
+    (recordStartupPhase("pre_action_ms", performance.now() - W, W), markStartupActionStarted(L === k));
   });
   let D = k
       .name("claude")
@@ -5866,7 +5866,7 @@ function ki(v) {
           "--permission-prompts <target>",
           'Who answers permission prompts with --print: "host" (the SDK host or --permission-prompt-tool) or "none" (nobody: anything that would prompt is denied automatically; the permission mode still decides everything else)',
         )
-          .choices(Yzn)
+          .choices(PERMISSION_PROMPTS_TARGETS)
           .default("host"),
       )
       .addOption(
@@ -6193,7 +6193,7 @@ function ki(v) {
         "--autocompact <auto|tokens>",
         "Auto-compact window size (auto, or 100k\u20131M tokens)",
       ).argParser((I) => {
-        let L = VVe(I);
+        let L = parseAutoCompactWindowSetting(I);
         if (L === void 0)
           throw new Ft(
             "It must be 'auto', or between 100k and 1M (e.g. 500k, 200000, or 200 as shorthand)",
@@ -6480,7 +6480,7 @@ function Fa() {
     O = 0;
   for (let R of ["allow", "soft_deny", "hard_deny", "environment"])
     for (let T of v?.[R] ?? []) {
-      if (T === ep) continue;
+      if (T === DEFAULTS_SLOT_MARKER) continue;
       ((k[R] += countMatching(
         T.split(`
 `),
@@ -6531,7 +6531,7 @@ async function Na(v, k) {
     prefers_reduced_motion: getInitialSettings().prefersReducedMotion ?? !1,
     precompute_compaction_setting_enabled: resolveSetting(
       "precomputeCompactionEnabled",
-      pLe(),
+      isPrecomputeCompactionEnabledByDefault(),
     ).value,
     theme: resolveSetting("theme", "dark").value,
     set_env_var_count: U.length,
@@ -6577,19 +6577,19 @@ async function Hw(v) {
     process.exit(U ?? 1);
   }
   {
-    let T = kXn(process.argv.slice(2));
+    let T = parseImportCommandArgs(process.argv.slice(2));
     if (T !== null) {
       let { enableConfigs: x } = await import("../../01-核心基础设施/设置-配置/getCurrentProjectConfig.s8843fs9.js"),
         U;
       try {
-        (await x(isHoverRestEnabled() ? v?.backend : void 0), (U = DY()));
+        (await x(isHoverRestEnabled() ? v?.backend : void 0), (U = isImportCommandEnabled()));
       } catch {
         U = void 0;
       }
-      let D = RXn(T, U);
+      let D = resolveImportCommandAction(T, U);
       if (D.kind === "rewrite")
         process.argv = [process.argv[0], process.argv[1], ...D.argv];
-      else return cliError(D.kind === "config-error" ? vXn : F_n);
+      else return cliError(D.kind === "config-error" ? CLAUDE_IMPORT_CONFIG_ERROR_MESSAGE : CLAUDE_IMPORT_NOT_AVAILABLE_MESSAGE);
     }
   }
   (ni({ interactivity: { kind: "detect" } }),
@@ -6610,7 +6610,7 @@ async function Ba(v, k, O) {
         import("../../01-核心基础设施/设置-配置/showInvalidConfigDialog.5p4s79qd.js").then((V) => V.showInvalidConfigDialog(j)),
       runOnboarding: (j) => ja(j),
       handleInvalidSettings: (j, V) =>
-        Ln(j, { settingsErrors: V, onExit: () => Pr(1) }),
+        Ln(j, { settingsErrors: V, onExit: () => gracefulShutdownSync(1) }),
       runInteractiveSession: (j, V) => $a(j, V, v, k),
       pendingConnect: v,
       pendingSSH: k,
@@ -6853,7 +6853,7 @@ ${Le ? "--rc and --project ignored." : "--rc flag ignored."}`);
       ));
   }
   let co = await validateForceLoginOrg(oe);
-  if (!co.valid) await Ne(De, co.message, () => Eue());
+  if (!co.valid) await Ne(De, co.message, () => flushAnalyticsSinks());
   return {
     root: De,
     getFpsMetrics: Tt,
@@ -7002,7 +7002,7 @@ async function $a(v, k, O, R) {
       sessionNoticesPoll: { pendingDeliveryUuids: [] },
       settings: getInitialSettings(),
       tasks: {},
-      attentionBudget: rmt,
+      attentionBudget: DEFAULT_ATTENTION_BUDGET,
       proactivityLevel: co,
       transcripts: {},
       taskDecorations: {},
@@ -7098,9 +7098,9 @@ async function $a(v, k, O, R) {
         trackedFiles: new Set(),
         snapshotSequence: 0,
       },
-      attribution: lTe(),
+      attribution: createInitialAttributionState(),
       thinkingEnabled: nr,
-      promptSuggestionEnabled: ght(),
+      promptSuggestionEnabled: resolvePromptSuggestionsEnabled(),
       awaySummaryEnabled: isAwaySummaryEnabled(),
       displayedMessageContent: {},
       inbox: { messages: [] },
@@ -7110,7 +7110,7 @@ async function $a(v, k, O, R) {
       pendingWorkerRequest: null,
       pendingSandboxRequest: null,
       initialMessage: Ue
-        ? { message: Re({ content: String(Ue) }) }
+        ? { message: createUserMessage({ content: String(Ue) }) }
         : k.replyOnResume
           ? { replay: !0 }
           : null,
@@ -7120,7 +7120,7 @@ async function $a(v, k, O, R) {
       autoCompactWindow: L,
       activeOverlays: new Set(),
       fastMode: NAt(fo),
-      ...(lT() && U && { advisorModel: U }),
+      ...(isAdvisorToolEnabled() && U && { advisorModel: U }),
       teamContext: gt,
       teammateColors: Ho?.teammateColors ?? {
         assignments: new Map(),
@@ -7133,7 +7133,7 @@ async function $a(v, k, O, R) {
         .require("../../01-核心基础设施/共享小工具-未细化/chunk-hkbpxv9z.js")
         .getDefaultWebBrowserState(),
     };
-  if (Ue && le === null) X7(String(Ue), ae);
+  if (Ue && le === null) addHistoryEntry(String(Ue), ae);
   let Lo = _o ? [...Kt, _o] : Kt;
   (Te((_e) => ({ ..._e, numStartups: (_e.numStartups ?? 0) + 1 }), ae),
     setImmediate(
@@ -7205,7 +7205,7 @@ async function $a(v, k, O, R) {
           replyOnResume: !!k.replyOnResume,
           storageV5: ae,
           credentials: He,
-          ...LX(Se.precompute, ae, { forkSession: !!k.forkSession }),
+          ...createPrecomputeSidecarReadAheadOptions(Se.precompute, ae, { forkSession: !!k.forkSession }),
           onNewestRunningInBackground: (lt) => {
             Ct = lt;
           },
@@ -7264,12 +7264,12 @@ async function $a(v, k, O, R) {
       if (!_e) await logEventAsync("tengu_continue", { success: !1 });
       logError(dt(ge(ve), "continue/resume launchRepl failed"));
       let Oe = ge(ve).message;
-      (Dte(
+      (emitExitMessage(
         _e
           ? `Claude Code exited: startup failed after restoring the previous session (${Oe}).`
           : `Claude Code exited: could not continue the previous session (${Oe}). Run claude --resume to pick a session, or start a new one.`,
       ),
-        await xn(1, "other"));
+        await gracefulShutdown(1, "other"));
       return;
     }
   } else if (k.resume || k.fromPr || Xe || x !== null) {
@@ -7296,7 +7296,7 @@ async function $a(v, k, O, R) {
     if (x !== null || Xe) {
       await b_();
       let ne = A8();
-      if (ne) return await Ne(se, `Error: ${ne}`, () => xn(1));
+      if (ne) return await Ne(se, `Error: ${ne}`, () => gracefulShutdown(1));
     }
     if (x !== null) {
       let ne = Bot(x),
@@ -7308,7 +7308,7 @@ async function $a(v, k, O, R) {
           return await Ne(
             se,
             "Error: --environment with --cloud <description> cannot also take piped stdin. Pass the task as the description, or drop --cloud.",
-            () => xn(1),
+            () => gracefulShutdown(1),
           );
       }
       let de = !Z && x.length > 0,
@@ -7320,14 +7320,14 @@ async function $a(v, k, O, R) {
         return await Ne(
           se,
           "Error: Attaching to an existing cloud session is not enabled for your account.",
-          () => xn(1),
+          () => gracefulShutdown(1),
         );
       if (!ze && !de && Je === null)
         return await Ne(
           se,
           `Error: --cloud requires a description.
 Usage: claude --cloud "your task description"`,
-          () => xn(1),
+          () => gracefulShutdown(1),
         );
       let xt,
         ht = [],
@@ -7366,7 +7366,7 @@ Usage: claude --cloud "your task description"`,
           return await Ne(
             se,
             `Couldn't attach to cloud session: ${l(Ko)}`,
-            () => xn(1),
+            () => gracefulShutdown(1),
           );
         }
         let [
@@ -7387,7 +7387,7 @@ Usage: claude --cloud "your task description"`,
             credentials: He,
             host: Ro,
           }),
-          await xn(0)
+          await gracefulShutdown(0)
         );
       } else {
         logEvent("tengu_remote_create_session", {
@@ -7400,7 +7400,7 @@ Usage: claude --cloud "your task description"`,
           return (
             n(`--remote auth setup failed: ${l(Ze)}`, { level: "error" }),
             await Ne(se, `Error: ${l(Ze) || "Failed to authenticate"}`, () =>
-              xn(1),
+              gracefulShutdown(1),
             )
           );
         }
@@ -7416,7 +7416,7 @@ Usage: claude --cloud "your task description"`,
               `
 `,
           );
-        let Ro = nt ? Dht({ staysAttached: ze }) : null;
+        let Ro = nt ? getDirSyncPromptRoot({ staysAttached: ze }) : null;
         if (Ro !== null) {
           let { decideSyncOffer: Ze } = await import("../../02-功能模块/文件同步-Sync/decideSyncOffer.g6z70q9p.js");
           if (
@@ -7445,10 +7445,10 @@ Usage: claude --cloud "your task description"`,
         let oo = nt && (await isSettingsToCloudEnabled().catch(() => !1));
         if (
           oo &&
-          FKn({ staysAttached: ze, launchMayForward: Le, hostConsent: qe })
+          shouldPromptForRemoteHomeSettingsMode({ staysAttached: ze, launchMayForward: Le, hostConsent: qe })
         )
           await Yn(se, { configHome: getClaudeConfigDir(), storageV5: ae });
-        let zo = NKn({
+        let zo = isSettingsModeForwardable({
             settingsToCloudEnabled: oo,
             launchMayForward: Le,
             hostConsent: qe,
@@ -7573,7 +7573,7 @@ Usage: claude --cloud "your task description"`,
               ct.failMessage
                 ? `Error: ${ct.failMessage}`
                 : "Error: Unable to create cloud session",
-              () => xn(1),
+              () => gracefulShutdown(1),
             )
           );
         }
@@ -7637,7 +7637,7 @@ Usage: claude --cloud "your task description"`,
           for (let Ze of ct.notices)
             process.stdout.write(`${Ze}
 `);
-          (await xn(0), process.exit(0));
+          (await gracefulShutdown(0), process.exit(0));
         }
         ((xt = kt.id), (eo = kt.homeSeed), (ar = kt.withheldInitialMessage));
       }
@@ -7697,9 +7697,9 @@ Usage: claude --cloud "your task description"`,
         },
         Gr = wa(xt, void 0, { from: "cli", m: "0" }),
         qr = buildCloudSessionStatusMessage("create", Gr, isViolinWoodEnabledCached()),
-        Yr = Yo ? [Ht(Yo.text, Yo.level)] : [],
-        Kr = ht.map((nt) => Ht(nt, "warning")),
-        Jr = de ? Re({ content: x, uuid: Qe }) : null,
+        Yr = Yo ? [createSystemInfoMessage(Yo.text, Yo.level)] : [],
+        Kr = ht.map((nt) => createSystemInfoMessage(nt, "warning")),
+        Jr = de ? createUserMessage({ content: x, uuid: Qe }) : null,
         dr = Z
           ? Tt
             ? "--permission-mode is ignored when attaching \u2014 the session keeps its current mode (shift+tab to change it)"
@@ -7708,7 +7708,7 @@ Usage: claude --cloud "your task description"`,
             ? `--permission-mode ${ue} is not forwarded \u2014 the cloud session uses its default mode`
             : void 0,
         Oo = ot?.notice,
-        cr = Go !== void 0 && Wo === void 0 ? Yht(Go) : void 0,
+        cr = Go !== void 0 && Wo === void 0 ? formatUnboundNotice(Go) : void 0,
         Ui = {
           ...me,
           initialMessage: R1n(de && Je !== null && ao, me.initialMessage),
@@ -7809,7 +7809,7 @@ Usage: claude --cloud "your task description"`,
         (logEvent("tengu_teleport_interactive_mode", {}),
           n("selectAndResumeTeleportTask: Starting teleport flow..."));
         let ne = await jn(se);
-        if (!ne) (await xn(0), process.exit(0));
+        if (!ne) (await gracefulShutdown(0), process.exit(0));
         let { branchError: Z } = await checkOutTeleportedSessionBranch(ne.branch);
         ve = processMessagesForTeleportResume(ne.log, Z, ne.environmentKind);
       } else if (typeof Xe === "string") {
@@ -7828,7 +7828,7 @@ Usage: claude --cloud "your task description"`,
                 rawRemoteUrl: Z.rawRemoteUrl ?? "",
               }))
             )
-              await xn(0);
+              await gracefulShutdown(0);
           }
           if (Z.status === "mismatch" || Z.status === "not_in_repo") {
             logEvent(
@@ -7847,8 +7847,8 @@ Usage: claude --cloud "your task description"`,
                   initialPaths: xt,
                   storageV5: ae,
                 });
-                if (ht) (Yu(ht), pu(ht), ES(ht), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(ae));
-                else await xn(0);
+                if (ht) (Yu(ht), setSessionCwd(ht), ES(ht), getPlansDirectory.cache.clear?.(), primePlanSlugCollisions(ae));
+                else await gracefulShutdown(0);
               } else {
                 let ht = Fe,
                   vt = "";
@@ -7889,7 +7889,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
         } catch (ne) {
           let Z = ne instanceof Iu;
           if (!Z) logError(dt(ge(ne), "teleport direct resume failed"));
-          await Ne(se, Z ? ne.message : l(ne), () => xn(1));
+          await Ne(se, Z ? ne.message : l(ne), () => gracefulShutdown(1));
         }
       }
     }
@@ -7915,7 +7915,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
                 replyOnResume: !!k.replyOnResume,
                 storageV5: ae,
                 credentials: He,
-                ...LX(Se.precompute, ae, {
+                ...createPrecomputeSidecarReadAheadOptions(Se.precompute, ae, {
                   forkSession: !!k.forkSession,
                   expectedSessionId: de ?? void 0,
                 }),
@@ -7967,7 +7967,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             await Ne(
               se,
               `Unable to load transcript from file: ${k.resume}`,
-              () => xn(1),
+              () => gracefulShutdown(1),
             );
           }
         }
@@ -7988,7 +7988,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             replyOnResume: !!k.replyOnResume,
             storageV5: ae,
             credentials: He,
-            ...LX(Se.precompute, ae, { forkSession: !!k.forkSession }),
+            ...createPrecomputeSidecarReadAheadOptions(Se.precompute, ae, { forkSession: !!k.forkSession }),
           });
         if (!Qe) {
           logEvent("tengu_session_resumed", {
@@ -7997,7 +7997,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
             failure_reason: S("not_found_explicit_id"),
           });
           let Fe = `No conversation found with session ID: ${ne}`;
-          return (n(Fe, { level: "error" }), await Ne(se, Fe, () => xn(1)));
+          return (n(Fe, { level: "error" }), await Ne(se, Fe, () => gracefulShutdown(1)));
         }
         Z = "processing_error";
         let ue = We?.fullPath ?? Qe.fullPath;
@@ -8119,7 +8119,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           storageV5: ae,
           credentials: He,
         }),
-        await xn(0, "other", { suppressResumeHint: !0 })
+        await gracefulShutdown(0, "other", { suppressResumeHint: !0 })
       );
     } else
       await Kn(
@@ -8132,7 +8132,7 @@ Couldn't parse your git remote: ${Z.rawRemoteUrl}`;
           storageV5: ae,
           credentials: He,
         },
-        q9(he()),
+        listGitWorktrees(he()),
         {
           ...Vo,
           initialSearchQuery: Zt,

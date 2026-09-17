@@ -13,7 +13,7 @@ import { pluralize } from "../../01-核心基础设施/核心工具-字符串与
 import { createLazyValue } from "../../01-核心基础设施/共享小工具-未细化/lazy-value.js";
 import { wr } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { jn, Ks } from "../../01-核心基础设施/安全文件系统(FS加固)/安全文件系统(FS加固).gbme4p3n.js";
-import { P2 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatDependencyCountSuffix } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { refreshActivePlugins, getPluginReloadCacheImpact, logPluginReloadCacheImpact } from "./plugin-reload-cache-impact.js";
 import { parseThinClientReply } from "../../01-核心基础设施/共享小工具-未细化/parse-thin-client-reply.js";
 import { resolveMissingDependencies } from "../插件系统/plugin-dependency-resolution.js";
@@ -90,10 +90,10 @@ ${r(o.error_count, "error")} during load. Run /plugin on the remote for details.
             });
         if (((i = u === null ? null : C(u, s)), u !== null && i !== null))
           ((h = u),
-            (d = `${P2(a.installed)} installed but not applied`),
+            (d = `${formatDependencyCountSuffix(a.installed)} installed but not applied`),
             g.markNeedsRefresh());
         else
-          ((d = `${P2(a.installed)} resolved`),
+          ((d = `${formatDependencyCountSuffix(a.installed)} resolved`),
             (o = await refreshActivePlugins(g, e.storageV5, e.credentials)));
       }
       let p = `Reloaded: ${[r(o.enabled_count, "plugin"), r(o.command_count + o.skill_count, "skill"), r(o.agent_count, "agent"), r(o.hook_count, "hook"), ...(s ? [] : [r(o.mcp_count, "plugin MCP server")]), r(o.lsp_count, "plugin LSP server")].join(" \xB7 ")}${d}`;

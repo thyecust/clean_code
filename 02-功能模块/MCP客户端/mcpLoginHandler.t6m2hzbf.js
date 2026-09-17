@@ -15,7 +15,7 @@ import { logFeatureOkAsync, logFeatureBadAsync, logFeatureSadAsync } from "../..
 import { l } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
 import { i0, pA, getClaudeAIOAuthTokens, getClaudeAIOAuthTokensAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { jV, fY, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getClaudeAiConnectorsUrl, buildClaudeAiMcpAuthUrl, getAllMcpConfigs, isMcpServerDisabled } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Aa } from "../插件系统/chunk-7s6mt1vg.js";
 import { stopCapturingEarlyInput } from "../../01-核心基础设施/共享小工具-未细化/early-input-capture.js";
 import { exitAfterAnalyticsFlush, cliErrorAfterAnalyticsFlush, cliOkAfterAnalyticsFlush } from "../../01-核心基础设施/共享小工具-未细化/chunk-4f55jpqh.js";
@@ -97,7 +97,7 @@ async function mcpLoginHandler(t, e, o, u) {
     r = classifyMcpServerAuth(t, a);
   switch (r.kind) {
     case "claudeai-proxy": {
-      let i = fY(r.config);
+      let i = buildClaudeAiMcpAuthUrl(r.config);
       if (!i)
         return (
           await logFeatureBadAsync("cli_mcp_login", "claudeai_no_auth_url"),
@@ -265,7 +265,7 @@ async function mcpLogoutHandler(t, e, o) {
         await logFeatureSadAsync("cli_mcp_logout", "claudeai_proxy"),
         cliOkAfterAnalyticsFlush(
           `"${t}" is a claude.ai connector \u2014 its credentials live on claude.ai, not this machine. ` +
-            `Disconnect it at ${formatHyperlink(jV())}`,
+            `Disconnect it at ${formatHyperlink(getClaudeAiConnectorsUrl())}`,
         )
       );
     case "unsupported-transport":

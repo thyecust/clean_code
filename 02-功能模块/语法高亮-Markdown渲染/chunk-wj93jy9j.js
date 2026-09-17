@@ -19,7 +19,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { te, dp } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-01cse5zg.js";
 import { stripAnsi } from "../../01-核心基础设施/共享小工具-未细化/text-sanitization.js";
 import { hasMouseObserved, subscribeMouseObserved } from "../终端环境探测(TUI-tmux)/终端环境探测(TUI-tmux).5pkb0sjc.js";
-import { rre } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { stripAnalysisTags } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getSyntaxHighlightAdapter } from "../../01-核心基础设施/共享小工具-未细化/syntax-highlight-adapter.js";
 import {
   VWe,
@@ -644,7 +644,7 @@ function lt({
     P = At(subscribeMouseObserved, hasMouseObserved),
     { markdownTokens: B } = ree(),
     N = V(() => {
-      let R = m && !f ? rre(s) : s,
+      let R = m && !f ? stripAnalysisTags(s) : s,
         D = vt(S ? null : B, R, f),
         d = [],
         b = "",
@@ -876,7 +876,7 @@ function ft(s) {
 }
 function XZt({ children: s, hideTrailingLine: i = !1 }) {
   o0e();
-  let l = rre(s),
+  let l = stripAnalysisTags(s),
     a = C(at()).current;
   if (!l.startsWith(a.frozenSource)) Object.assign(a, at());
   let f = l.substring(a.frozenSource.length);

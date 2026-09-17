@@ -18,7 +18,7 @@ import { logError } from "../Bedrock-Vertex/chunk-27ncq5fr.js";
 import { isTeamLead } from "../Teammates团队/teammate-context.js";
 import { EZn, AZn, zE, VE, Wk, CZn, RC } from "../Teammates团队/chunk-g6nvp9mm.js";
 import { Qt, re, De, E, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
-import { h3 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { hasTaskListTools } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 F();
 import { watch } from "fs";
 var g = 5000,
@@ -286,7 +286,7 @@ var TasksV2StoreContext = Qt(null),
 function c() {
   let e = De(TasksV2StoreContext),
     s = useAppStateSelector((i) => i.teamContext);
-  if (!(h3() && !Nn() && (!s || isTeamLead(s)))) return null;
+  if (!(hasTaskListTools() && !Nn() && (!s || isTeamLead(s)))) return null;
   if (!e)
     throw ReferenceError(
       "useTasksV2 cannot be called outside of a TasksV2StoreContext provider (mounted by <AppStateProvider />)",

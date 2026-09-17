@@ -13,22 +13,22 @@ import { IZe, nc } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { hashSha256 } from "../../01-核心基础设施/共享小工具-未细化/git-host-utils.js";
 import { DANGEROUS_FILES_LC } from "../Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
 import {
-  Vfn,
-  r$,
+  getSeedFilePath,
+  checkSeedPath,
   MAX_WORKING_FILE_BYTES,
   relUnderSyncDir,
   escapesSyncRoot,
   shouldIgnore,
   SYNCED_FILE_WRITE_MODE,
-  T3,
-  E3,
-  WX,
-  A3,
-  qTe,
-  OLe,
-  ej,
-  TE,
-  Lne,
+  toCaseFoldKey,
+  normalizeUnicodeForm,
+  isSensitivePathAnySpelling,
+  DEPENDENCY_DIR_NAMES,
+  getFileSkipReason,
+  isUnderDependencyDir,
+  isWindowsLikePlatform,
+  hasWindowsReservedPathComponent,
+  looksLikeWindowsShortName,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { P9, Zan, eln, u3n, uk } from "../../01-核心基础设施/安全文件系统(FS加固)/chunk-x4qgycdj.js";
 import { o3n } from "../Git-Worktree/chunk-v967hawf.js";
@@ -86,8 +86,8 @@ function Wan(e, t, r) {
       let p = u(l);
       return (
         Buffer.byteLength(x.basename(p), "utf8") <= Se &&
-        r$(p) === null &&
-        !(ej() && TE(p))
+        checkSeedPath(p) === null &&
+        !(isWindowsLikePlatform() && hasWindowsReservedPathComponent(p))
       );
     });
   return f === void 0 ? null : u(f);
@@ -105,7 +105,7 @@ function Eze(e) {
   return t.slice(0, -1).map((r, a) => t.slice(0, a + 1).join("/"));
 }
 function j(e, t) {
-  let r = T3(t);
+  let r = toCaseFoldKey(t);
   if (!e.has(r)) e.set(r, t);
 }
 function Q9n(e, t) {
@@ -126,13 +126,13 @@ function Q9n(e, t) {
   for (let s of r) (j(a, s), c(s));
   return e.toSorted().reduce(
     (s, d) => {
-      let u = T3(d),
+      let u = toCaseFoldKey(d),
         f = a.get(u),
         l = i.get(u),
         p = Eze(d)
           .filter((m) => !o.has(m))
           .map((m) => {
-            let L = T3(m);
+            let L = toCaseFoldKey(m);
             return { held: i.get(L) ?? a.get(L) };
           })
           .find(({ held: m }) => m !== void 0),
@@ -213,7 +213,7 @@ async function Le(e, t, r, a) {
 }
 async function Ne(e) {
   try {
-    return qTe(await lstat(e)) !== null ? "refused" : "present";
+    return getFileSkipReason(await lstat(e)) !== null ? "refused" : "present";
   } catch {
     return "absent";
   }
@@ -245,7 +245,7 @@ function aOe(e, t) {
   return r.includes(Oe) || (t === "file" && Ie.has(r.at(-1) ?? ""));
 }
 var Pe = new Set(
-  [...IZe, ...A3]
+  [...IZe, ...DEPENDENCY_DIR_NAMES]
     .filter((e) => e.startsWith(".") || e.length > 8)
     .map((e) =>
       e
@@ -270,7 +270,7 @@ function Z9n(e) {
 }
 function lOe(e, t, r, a = !1) {
   let i = t === "/" ? e : e.split(t).join("/"),
-    o = dedupe([i.replace(Ce, ""), E3(i)]);
+    o = dedupe([i.replace(Ce, ""), normalizeUnicodeForm(i)]);
   return (
     De.test(e) ||
     shouldIgnore(i) ||
@@ -285,15 +285,15 @@ function lOe(e, t, r, a = !1) {
           c === i &&
           s.slice(0, -1).every((d) => {
             let u = nc(d);
-            return !A3.has(u) || u === d;
+            return !DEPENDENCY_DIR_NAMES.has(u) || u === d;
           })
         ) &&
-          OLe(s.map(nc).join("/"))) ||
+          isUnderDependencyDir(s.map(nc).join("/"))) ||
         s.some(EFt) ||
         (r === "file" && nc(s.at(-1) ?? "") === "head") ||
         (r === "file" ? s.slice(0, -1) : s).some((d) => ge(d) !== null) ||
         (r === "file" && s.slice(-1).some(Gan)) ||
-        (getCurrentPlatform() === "wsl" && Lne(c))
+        (getCurrentPlatform() === "wsl" && looksLikeWindowsShortName(c))
       );
     })
   );
@@ -312,11 +312,11 @@ async function Kpt(e, t, r, a = !1) {
   } catch {
     return "place";
   }
-  if (lOe(r, "/", "file", a) || WX(r)) return "name";
+  if (lOe(r, "/", "file", a) || isSensitivePathAnySpelling(r)) return "name";
   return (await he(i, e, t, a ? r : null)) ? "place" : null;
 }
 function Xce(e) {
-  return dedupe([e, E3(e)]).some((t) => {
+  return dedupe([e, normalizeUnicodeForm(e)]).some((t) => {
     let r = nc(t.split("/").at(-1) ?? "");
     return DANGEROUS_FILES_LC.has(r) || Fe.has(xe(r) ?? "");
   });
@@ -369,7 +369,7 @@ function q(e, t, r = null) {
   return (
     escapesSyncRoot(e) ||
     lOe(e, D, t, r !== null && e.split(D).join("/") === r) ||
-    (t === "file" && WX(e))
+    (t === "file" && isSensitivePathAnySpelling(e))
   );
 }
 async function zan(e) {
@@ -503,7 +503,7 @@ async function e3n({
 }) {
   let f = s.host ?? uk(),
     l = i,
-    p = Ye(f, s.writeFile ?? ((y, _, N, E, we) => u3n(f, E, y, _, N, WX, we))),
+    p = Ye(f, s.writeFile ?? ((y, _, N, E, we) => u3n(f, E, y, _, N, isSensitivePathAnySpelling, we))),
     S = 0,
     m = !1,
     L = !1,
@@ -540,10 +540,10 @@ async function e3n({
   )
     return h("failed");
   if (await he(w.abs, t, r, O)) return h("failed", null, { refused: !0 });
-  if (WX(e.path)) return h("failed", null, { credentialRefused: !0 });
+  if (isSensitivePathAnySpelling(e.path)) return h("failed", null, { credentialRefused: !0 });
   let g = await (s.fetchContent !== void 0
     ? s.fetchContent(e, d)
-    : s.client.getLaneFile(Vfn(e.path), d, e.size));
+    : s.client.getLaneFile(getSeedFilePath(e.path), d, e.size));
   if (g.kind !== "ok" && g.kind !== "not_found") {
     let { status: y, laneLost: _ } = $e(g);
     return h(y, null, { laneLost: _ });

@@ -21,7 +21,7 @@ import { DotSeparatedList } from "../../01-核心基础设施/共享小工具-�
 import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小工具-未细化/exit-keybinding-hooks.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { useAppStateSelector, useSetAppState } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
-import { xn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { gracefulShutdown } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ve } from "../交互UI-选择器/交互UI-选择器.arb9gcjv.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { WWe, KZt } from "../语法高亮-Markdown渲染/chunk-hqp2e8nr.js";
@@ -234,7 +234,7 @@ function ThemePicker(Bt) {
           (s(), fe?.());
         }
       : async () => {
-          (s(), await xn(0));
+          (s(), await gracefulShutdown(0));
         }),
       (i[46] = s),
       (i[47] = fe),

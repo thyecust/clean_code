@@ -43,7 +43,7 @@ import { authLostEmitter } from "../../01-核心基础设施/共享小工具-未
 import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
 import { SP, yU, cq, la } from "./认证-OAuth登录.419zdfz3.js";
 import { Pu, FIe, gE } from "../MCP客户端/chunk-g4gdwpa0.js";
-import { Rde, QTe, Fg } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { McpCredentialStoreUnavailableError, MCP_DOWNSTREAM_UNREACHABLE_CODES, getMcpServerBaseUrl } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { renderOAuthCallbackPage, buildOAuthCallbackUrl, pickOAuthCallbackPort } from "../../01-核心基础设施/共享小工具-未细化/oauth-callback.js";
 import { redactHeaders, redactSearchParams, redactParamValue, redactUrl, formatMcpSdkError, rethrowFetchError } from "./url-and-error-redaction.js";
 import { getCachedIdpIdToken, clearIdpIdToken, getIdpClientSecret, discoverOidc, acquireIdpIdToken } from "./xaa-idp-auth.js";
@@ -360,7 +360,7 @@ ${t.message}`
     return "discovery_failed";
   if (t instanceof LS) return "dcr_rejected";
   let n = A(t) ?? A(t instanceof Error ? t.cause : void 0);
-  if (n && QTe.has(n)) return "network_failed";
+  if (n && MCP_DOWNSTREAM_UNREACHABLE_CODES.has(n)) return "network_failed";
   return "sdk_auth_failed";
 }
 var fe = 5;
@@ -793,7 +793,7 @@ function be(e, t, r, n) {
   let d = n ? "mutate_rejected" : "storage_write_failed",
     p = n ? l(n) : (r?.warning ?? "storage write failed");
   logMCPDebug(e, `Token persist failed: ${p}`);
-  let o = Fg(t);
+  let o = getMcpServerBaseUrl(t);
   logEvent("tengu_mcp_oauth_token_persist_failed", {
     transportType: fromEnum(t.type),
     ...(o && { mcpServerBaseUrl: o }),
@@ -945,7 +945,7 @@ async function whr(e, t, r, n, d) {
       isOAuthFlow: !0,
       authMethod: S("xaa"),
       transportType: fromEnum(t.type),
-      ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+      ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
     }),
       await tt(e, t, r, n, d?.skipBrowserOpen));
     return;
@@ -972,7 +972,7 @@ async function whr(e, t, r, n, d) {
     flowAttemptId: sanitizeAnalyticsId(E),
     isOAuthFlow: !0,
     transportType: fromEnum(t.type),
-    ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+    ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
   });
   let M = !1;
   try {
@@ -1224,7 +1224,7 @@ async function whr(e, t, r, n, d) {
       (logEvent("tengu_mcp_oauth_flow_success", {
         flowAttemptId: sanitizeAnalyticsId(E),
         transportType: fromEnum(t.type),
-        ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+        ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
       }),
         logFeatureOk("mcp_oauth_flow"));
     } else
@@ -1310,7 +1310,7 @@ async function whr(e, t, r, n, d) {
       error_code: I,
       http_status: fromNumberOpt(j),
       transportType: fromEnum(t.type),
-      ...(Fg(t) && { mcpServerBaseUrl: Fg(t) }),
+      ...(getMcpServerBaseUrl(t) && { mcpServerBaseUrl: getMcpServerBaseUrl(t) }),
     });
     let B = formatMcpSdkError(O, t.url);
     throw B === l(O) ? O : Error(B, { cause: O });
@@ -1419,7 +1419,7 @@ class X3e {
           this.serverName,
           "Credential store read failed; not reporting credentials as absent",
         ),
-        new Rde(this.serverName)
+        new McpCredentialStoreUnavailableError(this.serverName)
       );
     return e;
   }
@@ -2183,7 +2183,7 @@ class X3e {
   async _doRefresh(e) {
     this._presented.record(e);
     let t = 3,
-      r = Fg(this.serverConfig),
+      r = getMcpServerBaseUrl(this.serverConfig),
       n = (d, p) => {
         logEvent(
           d === "success"
@@ -2327,7 +2327,7 @@ class X3e {
             ));
           return;
         }
-        let _ = o instanceof Rde,
+        let _ = o instanceof McpCredentialStoreUnavailableError,
           h =
             o instanceof Error &&
             /timeout|timed out|etimedout|econnreset/i.test(o.message),

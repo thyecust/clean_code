@@ -39,7 +39,7 @@ import { de } from "../../00-第三方库/_未识别/React组件(TUI视图)/chun
 import { KeybindingScope } from "../../01-核心基础设施/共享小工具-未细化/keybinding-scope.js";
 import { KeybindingHint } from "../键位绑定(Keybindings)/keybinding-display.js";
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
-import { Efn, Djt, Ljt, an, Na, qMe, QMe, Ny, nR } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isAutoDreamAvailable, isAutoDreamEnabled, readAutoMemLastConsolidatedAt, sanitizeForDisplay, wrapSystemReminder, getDeviceDisplayName, isSyntheticMemoryFilePath, getSessionMemoryFiles, clearMemoryFilesForSession } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { useAppStateSelector } from "../../01-核心基础设施/共享小工具-未细化/app-state-context.js";
 import "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
 import {
@@ -117,7 +117,7 @@ F();
 import { writeFile } from "fs/promises";
 F();
 function qo(Zn, er) {
-  return e(t, { wrap: "truncate-end", children: an(Zn) || " " }, er);
+  return e(t, { wrap: "truncate-end", children: sanitizeForDisplay(Zn) || " " }, er);
 }
 var Wo = 65536,
   Go = createLazyValue(() =>
@@ -160,8 +160,8 @@ async function eo(w, b) {
           : [
               {
                 path: k.path,
-                shownPath: an(k.path),
-                type: an(k.type),
+                shownPath: sanitizeForDisplay(k.path),
+                type: sanitizeForDisplay(k.type),
                 tokens: k.tokens,
                 userScope: k.type === "User",
               },
@@ -169,7 +169,7 @@ async function eo(w, b) {
       ),
     };
   } catch (M) {
-    return { kind: "unreadable", reason: an(l(M)) };
+    return { kind: "unreadable", reason: sanitizeForDisplay(l(M)) };
   }
 }
 async function Zt(w, b, M) {
@@ -194,7 +194,7 @@ async function Zt(w, b, M) {
       kind: "unreadable",
       reason: R.startsWith("read denied")
         ? "the cloud session only shows a terminal the files inside its workspace, and this one isn't"
-        : an(R),
+        : sanitizeForDisplay(R),
     };
   }
 }
@@ -204,7 +204,7 @@ function Vo(w) {
 }
 function ot(w, b) {
   return w === "sentFromHere"
-    ? `User files were sent from ${qMe()} at launch \u2014 edit ${b === void 0 ? "them under ~/.claude" : Vo(b)} there; changes apply to the next cloud session, or when this machine re-attaches.`
+    ? `User files were sent from ${getDeviceDisplayName()} at launch \u2014 edit ${b === void 0 ? "them under ~/.claude" : Vo(b)} there; changes apply to the next cloud session, or when this machine re-attaches.`
     : "This file is in the cloud session's own ~/.claude (not from this machine) and can't be opened from here.";
 }
 function _t(zn) {
@@ -392,7 +392,7 @@ function Rt(Vn) {
           (!bt.userScope
             ? ""
             : et === "sentFromHere"
-              ? ` \xB7 sent from ${qMe()} at launch`
+              ? ` \xB7 sent from ${getDeviceDisplayName()} at launch`
               : " \xB7 the session's own ~/.claude, not sent from here"),
       })),
         (We[6] = et),
@@ -774,18 +774,18 @@ function mn(w, b, M, k, R, P = !1) {
       return null;
     case "pending":
       if (ke(M))
-        return Na(
+        return wrapSystemReminder(
           `This session is no longer connected to ${Ve(M.project)} (a re-pick in /memory is still being applied). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale. Call ${ih} with no arguments to check what, if anything, is connected before relying on the memory tools again.`,
         );
       return b === "off"
         ? null
-        : Na(
+        : wrapSystemReminder(
             `The user picked a project's shared memory in /memory and the connection is still being set up; nothing is connected yet. Before relying on the ${ze} tools, call ${ih} with no arguments: once it lists connected stores, read your teammates' shared memories and save new shared learnings through those tools as their prompts describe. Your personal memory directory, if your system prompt names one, is unaffected either way.`,
           );
     case "disconnected":
     case "unavailable":
       if (!ke(M)) return null;
-      return Na(
+      return wrapSystemReminder(
         `This session is no longer connected to ${Ve(M.project)} (${w === "disconnected" ? "the user turned it off in /memory" : P ? "the project the user re-picked is no longer available, so the pick was cleared and nothing connected" : "reconnecting to the re-picked project failed"}). Any connected memory store list or shared memory index your system prompt may carry, and any ${ze} results earlier in this conversation, are stale, and nothing is connected for the memory tools to serve until the user reconnects in /memory (${ih} with no arguments reports what, if anything, is connected whenever you need to re-check). If the user asks you to remember something, use your personal memory directory if your system prompt names one; otherwise explain that project memory is disconnected for this session.`,
       );
     case "switched":
@@ -799,7 +799,7 @@ function mn(w, b, M, k, R, P = !1) {
             ? `Every connected store is read-only in this session: ${$a} calls are refused.`
             : `Save new shared memories in \`${B.id}\` under \`${B.projectDir}\` and keep its index \`${B.indexPath}\` current, as the ${$a} tool prompt describes. Private memories belong in your personal memory directory, if your system prompt names one; the shared stores are for what teammates should also see. Never save secrets, credentials or other sensitive data to the shared stores.`;
       return [
-        Na(
+        wrapSystemReminder(
           [
             `The project memory connected to this session has changed: ${P ? `the project the user picked in /memory is no longer available, so ${Ve(k.project)} is connected instead` : k.project.kind === "default" ? "the user picked a project in /memory, and the default project memory is what is now connected" : `the user picked ${Ve(k.project)} in /memory`}.${W}`,
             "",
@@ -899,7 +899,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     P = $Z.of(w.host),
     j = rt.of(w),
     { storageV5: W, credentials: V } = useStorageV5Context(),
-    B = kn(Ny(w, !1, W, V)),
+    B = kn(getSessionMemoryFiles(w, !1, W, V)),
     I = isAutoMemoryEnabled() || isSafeMode(),
     Ce = isAutoMemoryEnabled() && !isSafeMode(),
     { mounts: z, picker: Ie } = Ce
@@ -943,7 +943,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     wo = [
       ...B.filter(
         (S) =>
-          S.type !== "AutoMem" && S.type !== "AutoMemPinned" && !QMe(S.path),
+          S.type !== "AutoMem" && S.type !== "AutoMemPinned" && !isSyntheticMemoryFilePath(S.path),
       ).map((S) => ({ ...S, exists: !0 })),
       ...(ho ? [] : [{ path: mt, type: "User", content: "", exists: !1 }]),
       ...(yo ? [] : [{ path: Ke, type: "Project", content: "", exists: !1 }]),
@@ -1053,7 +1053,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     pt = P.memorySelectorLastPath,
     Co = pt && ut.some((S) => S.value === pt) ? pt : ut[0]?.value || "",
     [Oe, It] = d(isAutoMemoryEnabled),
-    [Tt, vo] = d(Djt),
+    [Tt, vo] = d(isAutoDreamEnabled),
     [Xe, Ro] = d(isAutoMemoryDisabledForCurrentMainLoopModel);
   E(
     () =>
@@ -1064,7 +1064,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     [Xe],
   );
   let Oo = Xe && !Oe,
-    [ye] = d(() => Oe && Efn()),
+    [ye] = d(() => Oe && isAutoDreamAvailable()),
     Lt = useAppStateSelector((S) =>
       Object.values(S.tasks).some(
         (H) => H.type === "dream" && H.status === "running",
@@ -1073,7 +1073,7 @@ function lo({ session: w, onSelect: b, onCancel: M, onProjectSwitch: k }) {
     [ft, _o] = d(null);
   E(() => {
     if (!ye) return;
-    Ljt(void 0, W).then(_o);
+    readAutoMemLastConsolidatedAt(void 0, W).then(_o);
   }, [ye, Lt, W]);
   let Nt = Lt
       ? "running"
@@ -1500,9 +1500,9 @@ var si = async (w, b) => {
     });
   }
   return (
-    nR(b.session),
+    clearMemoryFilesForSession(b.session),
     rt.of(b.session).reset(),
-    await Ny(b.session, !1, b.storageV5, b.credentials),
+    await getSessionMemoryFiles(b.session, !1, b.storageV5, b.credentials),
     e(bn, { session: b.session, onDone: w })
   );
 };

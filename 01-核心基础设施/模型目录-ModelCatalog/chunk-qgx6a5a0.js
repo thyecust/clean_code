@@ -51,25 +51,25 @@ import { getRelativeSettingsFilePathForSource } from "../设置-配置/设置-�
 import { getSettingsForSource, getEffectiveSettingSource, updateSettingsForSource } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { RP, um, er, kP, Qa, QD, getAPIProvider, usesFirstPartyModelIds, isFirstPartyAnthropicBaseUrl } from "./模型目录-ModelCatalog.3msq3jt8.js";
 import {
-  Aue,
-  OF,
-  tX,
+  isFableUsageCreditsRequired,
+  isUsageCreditsExempt,
+  isCreditsOnlyTierSubscription,
   Mwe,
   ZGn,
-  mdn,
-  iDe,
-  pmt,
-  Tne,
-  e$,
-  iKe,
-  aKe,
-  zv,
-  ffn,
-  Jf,
-  eg,
-  tre,
-  GWt,
-  oR,
+  isModelUsableInPicker,
+  getLatchedFallbackModelInfo,
+  formatAutoSwitchedModelNote,
+  getSessionModelOverride,
+  getEffectiveSessionModel,
+  resolveModelForPermissionMode,
+  getConfiguredSessionModel,
+  getActiveModelForState,
+  runPreModelSwitchHooks,
+  recordModelSwitchIfChanged,
+  formatInlineCode,
+  SET_MODEL_PREFIX,
+  CURRENT_MODEL_PREFIX,
+  sideQuery,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { _i, tCn, Oo } from "../../02-功能模块/策略限制(PolicyLimits)/chunk-8sw91yn5.js";
 import { ib, mve, Ya } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
@@ -82,7 +82,7 @@ function b(e, t, n) {
     s = r.includes("opus-4-6"),
     u = r.includes("sonnet-4-6");
   if (t && af(e)) return !0;
-  if ((r.includes("fable") || isPinnedFableModel(o)) && !OF() && (Aue() || tX())) return !0;
+  if ((r.includes("fable") || isPinnedFableModel(o)) && !isUsageCreditsExempt() && (isFableUsageCreditsRequired() || isCreditsOnlyTierSubscription())) return !0;
   if (!tc(r)) return !1;
   if (i && n) return !1;
   return s || u;
@@ -125,7 +125,7 @@ async function Yle(e, t) {
     let d = n.toLowerCase();
     if (RP.includes(d)) return { valid: !0 };
     if (n === a.ANTHROPIC_CUSTOM_MODEL_OPTION) return { valid: !0 };
-    if (mdn(n) && getCuratedModelPicker()?.picker.options.some((c) => c.model.trim() === n))
+    if (isModelUsableInPicker(n) && getCuratedModelPicker()?.picker.options.some((c) => c.model.trim() === n))
       return { valid: !0 };
     if (k().has(n)) return { valid: !0 };
   }
@@ -145,7 +145,7 @@ async function Yle(e, t) {
     return { valid: !1, error: `Model '${n}' not found`, notFound: !0 };
   try {
     return (
-      await oR({
+      await sideQuery({
         model: n,
         max_tokens: 1,
         maxRetries: 0,
@@ -396,7 +396,7 @@ async function ySe(e, t, n) {
 }
 async function P_(e, t, n, o, r = {}) {
   let i = t(),
-    s = zv(i),
+    s = getActiveModelForState(i),
     u = L(i, n);
   if (u.length === 0)
     return { decision: "proceed", skipConfirm: !1, messages: [] };
@@ -405,7 +405,7 @@ async function P_(e, t, n, o, r = {}) {
     m = !1,
     p = !0;
   for (let S of u) {
-    let M = await ffn(
+    let M = await runPreModelSwitchHooks(
       e,
       { ...S, requestedModel: n, source: o },
       { signal: r.signal },
@@ -415,7 +415,7 @@ async function P_(e, t, n, o, r = {}) {
     if (M.decision === "ask") ((m = !0), (c ??= M.reason));
     else p = p && M.skipConfirm;
   }
-  if (zv(t()) !== s) {
+  if (getActiveModelForState(t()) !== s) {
     if (r.revalidating)
       return {
         decision: "block",
@@ -431,14 +431,14 @@ async function P_(e, t, n, o, r = {}) {
     : { decision: "proceed", skipConfirm: p, messages: d };
 }
 function L(e, t) {
-  let n = aKe(e),
+  let n = getConfiguredSessionModel(e),
     o = e.toolPermissionContext.mode,
     r = [o, o === "plan" ? "default" : "plan"],
     i = new Set(),
     s = [];
   for (let u of r) {
-    let d = iKe(n, u),
-      c = iKe(t, u),
+    let d = resolveModelForPermissionMode(n, u),
+      c = resolveModelForPermissionMode(t, u),
       m = `${d}\x00${c}`;
     if (d !== c && !i.has(m)) (i.add(m), s.push({ fromModel: d, toModel: c }));
   }
@@ -465,14 +465,14 @@ function I3e(e, t, n, o, r, i, s, u) {
   let d = n().fastMode;
   if (
     (Cz(),
-    Jf(e, n(), t, i),
+    recordModelSwitchIfChanged(e, n(), t, i),
     o((p) => ({ ...p, mainLoopModel: t, mainLoopModelForSession: null })),
     r)
   )
     kIe(t, u);
   if (s !== void 0) logFeatureSad("model_switch", "family_alias_stepped_down");
   else logFeatureOk("model_switch");
-  let c = `${tre}${eg(Zg(t))}${r ? " and saved as your default for new sessions" : " for this session only"}`,
+  let c = `${SET_MODEL_PREFIX}${formatInlineCode(Zg(t))}${r ? " and saved as your default for new sessions" : " for this session only"}`,
     m = Mr() ? db(t, d) : !!d;
   if (Mr()) {
     if ((QH(), m !== !!d)) (o((p) => ({ ...p, fastMode: m })), pb(d, m));
@@ -526,7 +526,7 @@ function Qnn(e) {
 }
 function h(e, t, n) {
   return `${chalk.dim(`
-     ${e}`)}${eg(t)}${chalk.dim(n)}`;
+     ${e}`)}${formatInlineCode(t)}${chalk.dim(n)}`;
 }
 function _(e) {
   let t = renderModelSetting(e.model);
@@ -575,23 +575,23 @@ function nLt(e, t, n, o, r) {
   let i = jc();
   if (i === 0 || i === o) return !1;
   return (
-    er(t2(e)) !== er(t2(e$({ mainLoopModel: t, mainLoopModelForSession: n })))
+    er(t2(e)) !== er(t2(getEffectiveSessionModel({ mainLoopModel: t, mainLoopModelForSession: n })))
   );
 }
 function P3e(e) {
-  let t = eg(Zg(e.mainLoopModel)),
+  let t = formatInlineCode(Zg(e.mainLoopModel)),
     n = Ya(e),
     o = n !== void 0 ? ` (effort: ${n})` : "",
-    r = Tne(e.mainLoopModelForSession, e.mainLoopModel);
+    r = getSessionModelOverride(e.mainLoopModelForSession, e.mainLoopModel);
   if (r !== null)
-    return `${GWt}${eg(Zg(r))} (this session only)${o}
+    return `${CURRENT_MODEL_PREFIX}${formatInlineCode(Zg(r))} (this session only)${o}
 Base model: ${t}`;
   let i = "";
   {
-    let s = iDe();
-    if (s !== void 0) i = ` (${pmt(eg(Zg(s.previousModel)))})`;
+    let s = getLatchedFallbackModelInfo();
+    if (s !== void 0) i = ` (${formatAutoSwitchedModelNote(formatInlineCode(Zg(s.previousModel)))})`;
   }
-  return `${GWt}${t}${i}${o}`;
+  return `${CURRENT_MODEL_PREFIX}${t}${i}${o}`;
 }
 function rLt(e) {
   let t = e ?? getDefaultMainLoopModelSetting();

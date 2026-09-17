@@ -15,7 +15,7 @@ import { o, t } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk
 import { useKeybindingChordText } from "../../01-核心基础设施/共享小工具-未细化/use-keybinding-chord-text.js";
 import { KeybindingHint } from "../../02-功能模块/键位绑定(Keybindings)/keybinding-display.js";
 import { VirtualScrollViewportContext } from "../../01-核心基础设施/共享小工具-未细化/virtual-scroll-viewport-context.js";
-import { IEe, Lr } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { stripSandboxViolations, extractTagContent } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ToolResultRow } from "../../01-核心基础设施/共享小工具-未细化/tool-result-row.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { Qt, De, F } from "../../00-第三方库/_未识别/React运行时-JSX/React运行时-JSX.j03jpdbn.js";
@@ -139,7 +139,7 @@ function ToolErrorMessage(Bo) {
       let E = (
         L
           ? stripAnsi(R)
-          : IEe(stripAnsi(Lr(R, "tool_use_error") ?? R)).replace(/<\/?error>/g, "")
+          : stripSandboxViolations(stripAnsi(extractTagContent(R, "tool_use_error") ?? R)).replace(/<\/?error>/g, "")
       ).trim();
       if (!f && !L && E.includes("InputValidationError: "))
         m = "Invalid tool parameters";

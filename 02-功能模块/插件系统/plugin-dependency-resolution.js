@@ -12,7 +12,7 @@ import { n } from "../../01-核心基础设施/核心工具-日志与脱敏/核�
 import { ive } from "./chunk-7s6mt1vg.js";
 import { aJ, noe, lJ, yD } from "./chunk-ajtn749s.js";
 import { isSourceAllowedByPolicy } from "./plugin-source-policy.js";
-import { Kwe, P2, Vqn, Zne, Ql, CE, Qv, C5e, ei } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { getEnabledPluginIdsForSource, formatDependencyCountSuffix, formatUnresolvedDependenciesNotice, findSettingsDeclaredEntryAuth, getKnownMarketplacesOrEmpty, loadCachedMarketplaceCatalog, findPluginEntry, installPluginWithDependencies, loadAllPluginsCacheOnly } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { splitPluginId, getSettingsSourceForScope } from "./chunk-33bdfgmx.js";
 import { dedupe } from "../../01-核心基础设施/共享小工具-未细化/chunk-d16fhdtx.js";
 var k = ["user", "project", "local"];
@@ -27,8 +27,8 @@ async function resolveMissingDependencies(a, r) {
   }
   if (t.size === 0)
     return { installed: [], stillUnresolved: [], marketplaceMissing: [] };
-  let s = await Ql(r),
-    f = k.map((e) => [e, Kwe(getSettingsSourceForScope(e))]),
+  let s = await getKnownMarketplacesOrEmpty(r),
+    f = k.map((e) => [e, getEnabledPluginIdsForSource(getSettingsSourceForScope(e))]),
     g = [],
     i = [],
     d = [];
@@ -53,7 +53,7 @@ async function resolveMissingDependencies(a, r) {
         break;
       }
       if (!p) continue;
-      if ((await CE(p, r))?.allowCrossMarketplaceDependenciesOn?.includes(u)) {
+      if ((await loadCachedMarketplaceCatalog(p, r))?.allowCrossMarketplaceDependenciesOn?.includes(u)) {
         y = !0;
         break;
       }
@@ -66,7 +66,7 @@ async function resolveMissingDependencies(a, r) {
       continue;
     }
     try {
-      let o = await Qv(e, r);
+      let o = await findPluginEntry(e, r);
       if (!o) {
         i.push(e);
         continue;
@@ -80,7 +80,7 @@ async function resolveMissingDependencies(a, r) {
             entry: o.entry,
             archiveUrl: p.url,
             marketplaceSource: lJ(e, s),
-            trustedSettingsEntryAuth: Zne(yD(e), o.entry.name),
+            trustedSettingsEntryAuth: findSettingsDeclaredEntryAuth(yD(e), o.entry.name),
           }).entry,
         )
       ) {
@@ -91,7 +91,7 @@ async function resolveMissingDependencies(a, r) {
         continue;
       }
       let m = v(c, f),
-        S = await C5e({
+        S = await installPluginWithDependencies({
           pluginId: e,
           entry: o.entry,
           scope: m ?? "user",
@@ -120,7 +120,7 @@ async function resolveMissingDependencies(a, r) {
   return { installed: g, stillUnresolved: i, marketplaceMissing: d };
 }
 async function getDependencyErrorsForPlugin(a, r) {
-  let { errors: t } = await ei(r);
+  let { errors: t } = await loadAllPluginsCacheOnly(r);
   return t.filter(ive).filter((s) => s.source === a);
 }
 async function buildMissingDependencyNotice(a, r) {
@@ -129,7 +129,7 @@ async function buildMissingDependencyNotice(a, r) {
   let { installed: s, marketplaceMissing: f } = await resolveMissingDependencies(t, r),
     g = new Set(s),
     i = dedupe(t.map((d) => d.dependency)).filter((d) => !g.has(d));
-  return { suffix: `${P2(s)}${Vqn(i, f)}`, changed: s.length > 0 };
+  return { suffix: `${formatDependencyCountSuffix(s)}${formatUnresolvedDependenciesNotice(i, f)}`, changed: s.length > 0 };
 }
 function v(a, r) {
   for (let [t, s] of r) for (let f of a) if (s.has(f)) return t;

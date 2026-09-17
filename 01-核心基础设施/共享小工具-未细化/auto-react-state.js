@@ -11,7 +11,7 @@ import { dl, VP, ODn, DDn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.j
 import { pluralize } from "../核心工具-字符串与文本/string-utils.js";
 import { isBgSession } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { EYe, ne, hTt } from "../../02-功能模块/Artifact发布-渲染/chunk-rr78st95.js";
-import { lV, WM, Dd, Xp, Ld } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { createInformationalSystemMessage, getStopGeneration, isSlugStopped, isSlugStopLatched, isSlugSwept } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 function isUserPresent() {
   if (!isBgSession()) return !0;
   return dl() !== null && ODn();
@@ -38,14 +38,14 @@ function getBootingAutoReactArmSlugs() {
       t.stopLatches.isStopped(o)
     )
       continue;
-    if (!Dd(o) || (s.freshPublish && Ld(o) && s.stopGeneration === WM(o)))
+    if (!isSlugStopped(o) || (s.freshPublish && isSlugSwept(o) && s.stopGeneration === getStopGeneration(o)))
       i.add(o);
   }
   return i;
 }
 function* u() {
   for (let e of ne().live.supervisors.values())
-    if (!e.stopped && e.autoReactWiring !== void 0 && !Xp(e.slug)) yield e;
+    if (!e.stopped && e.autoReactWiring !== void 0 && !isSlugStopLatched(e.slug)) yield e;
 }
 function hasLiveAutoReactSupervision(e) {
   let { live: t } = ne();
@@ -106,7 +106,7 @@ function drainUnattendedReplies() {
   return { total: n, bySlug: t };
 }
 function buildUnattendedRepliesNotice(e, { where: t, stop: n }) {
-  return lV(
+  return createInformationalSystemMessage(
     `Claude auto-replied to ${e} ${pluralize(e, "comment")}${t} while you were away.${n}`,
     "notice",
   );

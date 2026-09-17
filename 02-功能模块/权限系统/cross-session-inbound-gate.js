@@ -17,7 +17,7 @@ import { Nr, k8t } from "../../01-核心基础设施/设置-配置/设置-配置
 import { getSettingsForSource, getSettingsWithErrors } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { PERMISSION_MODES } from "./chunk-e4pfvp7x.js";
 import { isCrossSessionMessagingEnabled } from "../../01-核心基础设施/共享小工具-未细化/chunk-rfb3s38d.js";
-import { R4e, Dwe, Xdn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { MCP_SEND_MESSAGE_ORIGIN, SLACK_BOT_ORIGIN, enqueueReportingAdmission } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { getBridgeHostState } from "../../01-核心基础设施/共享小工具-未细化/bridge-state-containers.js";
 import { Nu } from "../跨会话消息(UDS)/chunk-ddtmwhn7.js";
 function isHarborKiteModeEmitEnabled() {
@@ -265,8 +265,8 @@ function A(e) {
   let o;
   if (e.priority === "later") {
     let { priority: s, ...t } = e;
-    o = Xdn(t, { receipt: "caller" });
-  } else o = Xdn(e, { receipt: "caller" });
+    o = enqueueReportingAdmission(t, { receipt: "caller" });
+  } else o = enqueueReportingAdmission(e, { receipt: "caller" });
   if (!o.admitted)
     return (
       getBridgeHostState().inbound.sendPeerReceipt?.(e, "dropped", {
@@ -342,7 +342,7 @@ function uqe(e) {
   return "ungated";
 }
 function isCrossSessionIngress({ ingressOrigin: e, inboundOrigin: o, envelopePeer: s = !1 }) {
-  return s || (uqe(e) !== "ungated" && !j(e)) || o === R4e;
+  return s || (uqe(e) !== "ungated" && !j(e)) || o === MCP_SEND_MESSAGE_ORIGIN;
 }
 function j(e) {
   return (
@@ -350,7 +350,7 @@ function j(e) {
     e.kind === "peer" &&
     !("hostInjected" in e && e.hostInjected === !0) &&
     "inbound_origin" in e &&
-    e.inbound_origin === Dwe
+    e.inbound_origin === SLACK_BOT_ORIGIN
   );
 }
 function gateInboundMessageByOrigin(e, o) {

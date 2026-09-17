@@ -15,7 +15,7 @@ import { stripAnsi, formatSingleLineText, MAX_DESCRIPTION_LENGTH, MARKDOWN_SYNTA
 import { iy, gc } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
 import { getClaimRegistry } from "../../01-核心基础设施/共享小工具-未细化/host-claim-registry.js";
 import { IT } from "../../02-功能模块/Memory-CLAUDE.md/Memory-CLAUDE.md.vx19drc8.js";
-import { sDe, b6t, createAttachmentMessage, Vc, Re, wH } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { formatRefusalFallbackSwitchMessage, deserializeCompactMetadata, createAttachmentMessage, createAssistantMessage, createUserMessage, isExternalMessageOrigin } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { xZ, Pst } from "../../02-功能模块/Bridge-RemoteControl/chunk-x379yyxb.js";
 import { isSameRemoteAutocompactState } from "../../01-核心基础设施/共享小工具-未细化/remote-autocompact-state.js";
 import { AGENT_TOOL_NAME } from "../../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
@@ -173,7 +173,7 @@ function I(e) {
     level: "info",
     uuid: p(e.uuid),
     timestamp: new Date().toISOString(),
-    compactMetadata: b6t(e.compact_metadata),
+    compactMetadata: deserializeCompactMetadata(e.compact_metadata),
   };
 }
 function w6e(e) {
@@ -354,7 +354,7 @@ function kZ(e, s) {
       if (Array.isArray(t) && t.some((d) => d.type === "tool_result"))
         return {
           type: "message",
-          message: Re({
+          message: createUserMessage({
             content: t,
             toolUseResult: e.tool_use_result,
             uuid: e.uuid,
@@ -362,7 +362,7 @@ function kZ(e, s) {
           }),
         };
       if (e.parent_tool_use_id) return { type: "ignored" };
-      if (e.isSynthetic && !wH(e.origin)) return { type: "ignored" };
+      if (e.isSynthetic && !isExternalMessageOrigin(e.origin)) return { type: "ignored" };
       let a =
         t === iy ||
         (Array.isArray(t) &&
@@ -371,7 +371,7 @@ function kZ(e, s) {
         if (typeof t === "string" || Array.isArray(t))
           return {
             type: "message",
-            message: Re({
+            message: createUserMessage({
               content: t,
               toolUseResult: e.tool_use_result,
               uuid: e.uuid,
@@ -414,7 +414,7 @@ function kZ(e, s) {
               e.scope !== "local" &&
               typeof e.original_model === "string" &&
               typeof e.fallback_model === "string"
-                ? sDe(
+                ? formatRefusalFallbackSwitchMessage(
                     e.original_model,
                     e.fallback_model,
                     e.api_refusal_category ?? null,
@@ -536,7 +536,7 @@ function kZ(e, s) {
         let t = p(e.uuid);
         return {
           type: "message",
-          message: Vc({ content: stripAnsi(e.content), uuid: () => t }),
+          message: createAssistantMessage({ content: stripAnsi(e.content), uuid: () => t }),
         };
       }
       return (

@@ -27,14 +27,14 @@ import { getLocalSettingsValidationErrors, getSettingsForSource, updateSettingsF
 import { useTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { o, t, J0 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import {
-  $v,
-  xn,
-  wI,
-  ow,
-  cw,
-  qLe,
-  zLe,
-  ZTe,
+  mapWithConcurrency,
+  gracefulShutdown,
+  sanitizeMessageText,
+  isUnconfiguredMcpServer,
+  formatMcpScopeLocation,
+  formatMcpScopeDescription,
+  normalizeMcpScope,
+  getProjectMcpServerApprovalStatus,
   isMcpServerAllowedByPolicy,
   addMcpConfig,
   removeMcpConfig,
@@ -178,7 +178,7 @@ function he(kt) {
 ${getThemeColor("error", re)(l(Ut))}
 `),
           ce(),
-          xn());
+          gracefulShutdown());
       });
     };
     ie = (Ee) => {
@@ -197,7 +197,7 @@ ${getThemeColor("error", re)(`Could not import ${qt}: ${Gt}`)}
 `);
       }),
         ce(),
-        xn());
+        gracefulShutdown());
     };
     ((T[17] = ne),
       (T[18] = ce),
@@ -336,9 +336,9 @@ function lt(h) {
           ? ` (at ${v.path.join(".")})`
           : "",
       m = s.length > 1 ? ` (+${s.length - 1} more)` : "";
-    return wI(a + f + m);
+    return sanitizeMessageText(a + f + m);
   }
-  return wI(l(h));
+  return sanitizeMessageText(l(h));
 }
 async function Ie(h, s, v) {
   try {
@@ -358,7 +358,7 @@ async function Ie(h, s, v) {
       return { status: `${figures.tick} Connected` };
     } else if (a.type === "needs-auth")
       return { status: "! Needs authentication" };
-    else if (ow(a)) return { status: "- Not configured" };
+    else if (isUnconfiguredMcpServer(a)) return { status: "- Not configured" };
     else if (a.type === "failed") {
       let f = formatMcpConnectionError(a);
       return {
@@ -454,7 +454,7 @@ async function mcpRemoveHandler(h, s, v, a) {
   try {
     let M = oy(s, getSettingsMcpConfigByName(s) ?? void 0);
     if (v.scope) {
-      let g = zLe(v.scope);
+      let g = normalizeMcpScope(v.scope);
       (await logEventAsync("tengu_mcp_delete", { name: mcpNameForAnalytics_GATE_EVALUATED(s, M), scope: fromEnum(g) }),
         m(g),
         await removeMcpConfig(s, g, a),
@@ -477,7 +477,7 @@ async function mcpRemoveHandler(h, s, v, a) {
         let c = getSettingsMcpConfigByName(s)?.scope;
         if (c && isOrganizationProvidedMcpScope(c))
           return cliErrorAfterAnalyticsFlush(
-            `MCP server "${s}" is provided by your organization (${c === "managed" ? "managed settings" : cw("enterprise")}) and cannot be removed locally.`,
+            `MCP server "${s}" is provided by your organization (${c === "managed" ? "managed settings" : formatMcpScopeLocation("enterprise")}) and cannot be removed locally.`,
           );
         let w = [
           ...Object.keys(g.mcpServers ?? {}),
@@ -499,7 +499,7 @@ async function mcpRemoveHandler(h, s, v, a) {
         (process.stderr.write(`MCP server "${s}" exists in multiple scopes:
 `),
           b.forEach((w) => {
-            process.stderr.write(`  - ${qLe(w)} (${cw(w)})
+            process.stderr.write(`  - ${formatMcpScopeDescription(w)} (${formatMcpScopeLocation(w)})
 `);
           }));
         let c = b
@@ -534,7 +534,7 @@ Specify a scope with -s to remove from a specific one.
       flexDirection: "column",
       children: [
         r(t, { children: ["Removed MCP server ", k, " from ", i, " config"] }),
-        r(t, { children: ["File modified: ", cw(i)] }),
+        r(t, { children: ["File modified: ", formatMcpScopeLocation(i)] }),
       ],
     }),
   );
@@ -625,11 +625,11 @@ async function mcpListHandler(h, s, v) {
         ],
       }),
     ),
-      await xn(0));
+      await gracefulShutdown(0));
     return;
   }
   let y = Be(a),
-    i = $v(
+    i = mapWithConcurrency(
       Object.entries(a),
       async ([k, M]) => {
         let g = f.has(k)
@@ -663,7 +663,7 @@ async function mcpListHandler(h, s, v) {
     }),
   ),
     await h.waitUntilExit(),
-    await xn(0));
+    await gracefulShutdown(0));
 }
 async function mcpGetHandler(h, s, v, a) {
   (await logEventAsync("tengu_mcp_get", { name: mcpNameForAnalytics_GATE_EVALUATED(s, oy(s, getSettingsMcpConfigByName(s) ?? void 0)) }),
@@ -696,7 +696,7 @@ async function mcpGetHandler(h, s, v, a) {
     g = Be({ [s]: i })[s] ?? i,
     C = [
       `${s}:`,
-      `  Scope: ${qLe(i.scope)}`,
+      `  Scope: ${formatMcpScopeDescription(i.scope)}`,
       `  Status: ${M.status}`,
       ...(M.issue ? [`  Issue: ${M.issue}`] : []),
     ];
@@ -744,7 +744,7 @@ async function mcpGetHandler(h, s, v, a) {
     i.scope === "local" ||
     i.scope === "enterprise"
   )
-    b = `To remove this server, edit ${cw(i.scope)}`;
+    b = `To remove this server, edit ${formatMcpScopeLocation(i.scope)}`;
   else if (i.scope === "managed")
     b =
       "This server is provided by your organization's managed settings and cannot be removed locally.";
@@ -757,12 +757,12 @@ async function mcpGetHandler(h, s, v, a) {
 `),
       }),
     ),
-    await xn(0));
+    await gracefulShutdown(0));
 }
 async function mcpAddJsonHandler(h, s, v, a, f) {
   let m, y;
   try {
-    m = zLe(a.scope);
+    m = normalizeMcpScope(a.scope);
     let i = xt(v, !1);
     if (i === null)
       n("mcp add-json: user-provided JSON was empty, invalid, or null", {
@@ -822,7 +822,7 @@ async function mcpAddJsonHandler(h, s, v, a, f) {
 }
 async function mcpAddFromDesktopHandler(h, s) {
   try {
-    let v = zLe(h.scope),
+    let v = normalizeMcpScope(h.scope),
       a = getCurrentPlatform();
     await logEventAsync("tengu_mcp_add", {
       scope: fromEnum(v),
@@ -943,7 +943,7 @@ async function mcpResetChoicesHandler(h, s) {
         j = 0;
       for (let b of i) {
         if (y && !k.has(b)) continue;
-        let c = ZTe(b);
+        let c = getProjectMcpServerApprovalStatus(b);
         if (c === "approved") {
           if (isMcpServerDisabled(b)) continue;
           let w = M[b];

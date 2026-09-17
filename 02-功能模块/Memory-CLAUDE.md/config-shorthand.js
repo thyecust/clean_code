@@ -20,7 +20,7 @@ import { readUnattendedServingConsent } from "../AutoMode-自动模式/unattende
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { areWorkflowsAvailable } from "../../01-核心基础设施/共享小工具-未细化/workflow-feature-gates.js";
 import { createDefaultToolPermissionContext } from "../权限系统/chunk-qdy0h5k2.js";
-import { uT, ATe, e$ } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DEFAULT_OUTPUT_STYLE_NAME, hasConnectedIdeClient, getEffectiveSessionModel } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { Qn } from "../Bridge-RemoteControl/chunk-5ne99rq3.js";
 import { ensurePolicyLimitsLoadedForDiagnostic } from "../Bridge-RemoteControl/chunk-9estzwf5.js";
 import { isPushNotificationsEnabled } from "../Bridge-RemoteControl/push-notification-tool.js";
@@ -304,20 +304,20 @@ function c(n, o) {
     settingsData: e,
     storageV5: n.storageV5,
     themeSetting: s.theme,
-    currentOutputStyle: e?.outputStyle || uT,
+    currentOutputStyle: e?.outputStyle || DEFAULT_OUTPUT_STYLE_NAME,
     currentLanguage: e?.language,
     externalIncludesApproved: !1,
     thinkingEnabled: t.thinkingEnabled,
     verbose: t.verbose,
     mainLoopModel: t.mainLoopModel,
-    currentModel: e$(t),
+    currentModel: getEffectiveSessionModel(t),
     isFastMode: Mr() ? t.fastMode : !1,
     promptSuggestionEnabled: t.promptSuggestionEnabled,
     awaySummaryEnabled: t.awaySummaryEnabled,
     showDefaultViewPicker: C,
     pushTogglesVisible: isPushNotificationsEnabled() && !isEssentialTrafficOnly() && hasStoredOAuthToken(),
     crossSessionInboxRowVisible: !1,
-    isConnectedToIde: ATe(n.options.mcpClients),
+    isConnectedToIde: hasConnectedIdeClient(n.options.mcpClients),
     inAppSelection: !0,
     isFileCheckpointingAvailable: !a.CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING,
     workflowsToggleable: l,

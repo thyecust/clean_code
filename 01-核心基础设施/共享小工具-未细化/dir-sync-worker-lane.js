@@ -12,7 +12,7 @@ import { validateBridgeId } from "../../02-功能模块/权限系统/chunk-ynkf3
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { writeDiagnosticsEvent } from "./diagnostics-log.js";
 import { isViolinWoodEnabled } from "./chunk-97crm80y.js";
-import { CV, ZVn } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { DirSyncNoticeStore, publishSeedVerdict } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { dirname, join as t } from "path";
 var DEFAULT_BEFORE_TURN_CAP_MS = 1e4;
 function getDirSyncWorkerSessionFile(e) {
@@ -24,7 +24,7 @@ function getDirSyncWorkerSessionFile(e) {
   }
 }
 function announceDirSyncVerdict(e) {
-  let n = ZVn(e, (r) => {
+  let n = publishSeedVerdict(e, (r) => {
     writeDiagnosticsEvent("error", "dir_sync_lane_verdict_listener_threw", {
       verdict: e,
       rejected: !0,
@@ -53,14 +53,14 @@ function announceDirSyncVerdict(e) {
   }
 }
 function stageDirSyncNotice(e) {
-  CV.of(B()).stage(e);
+  DirSyncNoticeStore.of(B()).stage(e);
 }
 function markDirSyncCopyCleared(e) {
-  CV.of(B()).markCopyCleared(e);
+  DirSyncNoticeStore.of(B()).markCopyCleared(e);
 }
 async function isDirSyncEnabled() {
   let e = await isViolinWoodEnabled();
-  if (e) CV.of(B()).openGate();
+  if (e) DirSyncNoticeStore.of(B()).openGate();
   return e;
 }
 export { DEFAULT_BEFORE_TURN_CAP_MS, getDirSyncWorkerSessionFile, announceDirSyncVerdict, stageDirSyncNotice, markDirSyncCopyCleared, isDirSyncEnabled };

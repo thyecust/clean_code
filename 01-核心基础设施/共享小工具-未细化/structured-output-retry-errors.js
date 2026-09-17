@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { truncateToCodeUnits, normalizeWhitespace, stripInvisibleCharacters } from "../核心工具-字符串与文本/string-utils.js";
 import { logError } from "../../02-功能模块/Bedrock-Vertex/chunk-27ncq5fr.js";
-import { g2t, uH } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { LINE_BREAK_REGEX, sanitizeSubagentText } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { ti } from "../提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 var DEFAULT_MAX_STRUCTURED_OUTPUT_RETRIES = 5,
   STRUCTURED_OUTPUT_RETRACTED_MESSAGE =
@@ -34,7 +34,7 @@ function extractToolErrorMessage(t) {
       .replace(/^<tool_use_error>/, "")
       .replace(/<\/tool_use_error>$/, "")
       .replace(
-        g2t,
+        LINE_BREAK_REGEX,
         `
 `,
       )
@@ -44,11 +44,11 @@ function extractToolErrorMessage(t) {
       )
       .map(stripInvisibleCharacters).join(`
 `),
-    o = uH(n, { prependMarker: !1 }).sanitized,
+    o = sanitizeSubagentText(n, { prependMarker: !1 }).sanitized,
     u = normalizeWhitespace(o);
   if (u.length === 0) return;
   let s = u.length > d ? truncateToCodeUnits(u, d) + "\u2026" : u;
-  return uH(s, { prependMarker: !1 }).sanitized;
+  return sanitizeSubagentText(s, { prependMarker: !1 }).sanitized;
 }
 function findLastStructuredOutputError(t, r) {
   try {

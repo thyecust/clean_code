@@ -33,11 +33,11 @@ import { useGlobalExitKeybinding } from "../../01-核心基础设施/共享小�
 import { useTerminalSize } from "../../01-核心基础设施/共享小工具-未细化/use-terminal-size.js";
 import { jp, Xd } from "../Vim模式/Vim模式.nnewe0gf.js";
 import {
-  Tgt,
-  VDe,
-  PX,
+  PR_URL_REGEX,
+  parsePrUrl,
+  dropApiInvalidAssistantBlocks,
   dropRetractedMessages,
-  Pk,
+  getBuiltinToolDefinitions,
   getFirstMeaningfulUserMessageTextContent,
   saveCustomTitle,
   getSessionIdFromLog,
@@ -82,7 +82,7 @@ function pt(mo) {
     j = Ue ?? z,
     qn;
   if (R[4] !== j.messages)
-    ((qn = PX(dropRetractedMessages(j.messages), { site: "preview" })),
+    ((qn = dropApiInvalidAssistantBlocks(dropRetractedMessages(j.messages), { site: "preview" })),
       (R[4] = j.messages),
       (R[5] = qn));
   else qn = R[5];
@@ -92,7 +92,7 @@ function pt(mo) {
   else zn = R[7];
   let At = zn,
     Vn;
-  if (R[8] === MEMO_CACHE_SENTINEL) ((Vn = Pk()), (R[8] = Vn));
+  if (R[8] === MEMO_CACHE_SENTINEL) ((Vn = getBuiltinToolDefinitions()), (R[8] = Vn));
   else Vn = R[8];
   let bo = Vn,
     Xn;
@@ -500,8 +500,8 @@ function bn({ before: s, match: u, after: l }, f) {
   return chalk.dim(s) + f(u) + chalk.dim(l);
 }
 function Wr(s) {
-  return s.replace(new RegExp(Tgt.source + '[^,\\s"]*', "g"), (u) => {
-    let l = VDe(u);
+  return s.replace(new RegExp(PR_URL_REGEX.source + '[^,\\s"]*', "g"), (u) => {
+    let l = parsePrUrl(u);
     return l ? `PR #${l.prNumber} ${l.prRepository}` : u;
   });
 }

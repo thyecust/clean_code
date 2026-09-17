@@ -13,26 +13,26 @@ import { Np, Tc, Is, k_, n } from "../../01-核心基础设施/核心工具-日�
 import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import {
-  uV,
-  eWt,
-  tWt,
-  u5e,
-  nWt,
-  sY,
-  rWt,
-  oWt,
-  mEe,
-  y8n,
-  S8n,
-  b8n,
-  sWt,
-  H3,
-  ngn,
-  iWt,
-  q_t,
-  uMe,
-  V_t,
-  yT,
+  getFeedbackDisabledReason,
+  FEEDBACK_CLI_VERSION_MAX_CHARS,
+  FEEDBACK_OS_MAX_CHARS,
+  sanitizeFeedbackDraftTitle,
+  sanitizeFeedbackDraftDetails,
+  sanitizeFeedbackDraftField,
+  sanitizeFeedbackDraftModel,
+  sanitizeOptionalFeedbackDraftArea,
+  selectRecentRequestIds,
+  toFeedbackFailureMode,
+  toFeedbackTaskCategory,
+  toFeedbackThinkingType,
+  sanitizeOptionalFeedbackDraftEffort,
+  toFeedbackCount,
+  resolveFeedbackDraftTranscriptPath,
+  transcriptCorroboratesDraftIdentity,
+  deleteFeedbackDraft,
+  dismissFeedbackNoticeForDraft,
+  decrementSessionDraftCount,
+  prepareApiMessages,
 } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { logEvent } from "../../01-核心基础设施/共享小工具-未细化/analytics-event-queue.js";
 import { logFeatureOk, logFeatureBad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
@@ -123,20 +123,20 @@ function W(e) {
   return `transcript_truncated: ${s.join("; ")} (trimmed client-side to fit the upload size limit)`;
 }
 function V(e, s = "panel") {
-  let k = mEe(e.request_ids),
-    c = oWt(e.area),
-    t = y8n(e.failure_mode),
-    b = S8n(e.task_category),
-    h = sWt(e.effort),
-    w = b8n(e.thinking_type),
-    m = H3(e.thinking_budget),
-    l = H3(e.message_count),
-    p = H3(e.assistant_turn_count),
-    g = H3(e.subagent_count);
+  let k = selectRecentRequestIds(e.request_ids),
+    c = sanitizeOptionalFeedbackDraftArea(e.area),
+    t = toFeedbackFailureMode(e.failure_mode),
+    b = toFeedbackTaskCategory(e.task_category),
+    h = sanitizeOptionalFeedbackDraftEffort(e.effort),
+    w = toFeedbackThinkingType(e.thinking_type),
+    m = toFeedbackCount(e.thinking_budget),
+    l = toFeedbackCount(e.message_count),
+    p = toFeedbackCount(e.assistant_turn_count),
+    g = toFeedbackCount(e.subagent_count);
   return [
-    `[${e.type}] ${u5e(e.title)}`,
+    `[${e.type}] ${sanitizeFeedbackDraftTitle(e.title)}`,
     "",
-    nWt(e.details),
+    sanitizeFeedbackDraftDetails(e.details),
     "",
     "---",
     s === "card_send_as_is"
@@ -149,9 +149,9 @@ function V(e, s = "panel") {
     `draft_id: ${e.draft_id}`,
     `drafted_at: ${e.created_at}`,
     `source_session_id: ${e.source_session_id}`,
-    `model: ${rWt(e.model)}`,
-    `cli_version: ${sY(e.cli_version, eWt)}`,
-    `os: ${sY(e.os, tWt)}`,
+    `model: ${sanitizeFeedbackDraftModel(e.model)}`,
+    `cli_version: ${sanitizeFeedbackDraftField(e.cli_version, FEEDBACK_CLI_VERSION_MAX_CHARS)}`,
+    `os: ${sanitizeFeedbackDraftField(e.os, FEEDBACK_OS_MAX_CHARS)}`,
     ...(h !== void 0 ? [`effort: ${h}`] : []),
     ...(w !== void 0
       ? [`thinking: ${w}${m !== void 0 ? ` (budget ${m})` : ""}`]
@@ -226,9 +226,9 @@ async function submitFeedbackDraft({
     l = [],
     p;
   if (s && e.transcript_ref) {
-    let _ = await ngn(e);
+    let _ = await resolveFeedbackDraftTranscriptPath(e);
     if (m) {
-      if (((l = yT(k)), _ !== null))
+      if (((l = prepareApiMessages(k)), _ !== null))
         try {
           let { content: R, bytesRead: B, bytesTotal: M } = await k_(_, tHe),
             o = R;
@@ -252,7 +252,7 @@ async function submitFeedbackDraft({
             o.indexOf(`
 `) + 1,
           );
-        if (!iWt(o, e))
+        if (!transcriptCorroboratesDraftIdentity(o, e))
           n(
             "draft transcript withheld from feedback submit: identity_not_corroborated",
           );
@@ -270,7 +270,7 @@ async function submitFeedbackDraft({
         }
       } catch {}
   }
-  let g = mEe(e.request_ids).at(-1) ?? null,
+  let g = selectRecentRequestIds(e.request_ids).at(-1) ?? null,
     C = {
       latestAssistantMessageId: g,
       latestAssistantAPIMessageId: null,
@@ -290,7 +290,7 @@ async function submitFeedbackDraft({
     r = await n6e(D, b, w);
   if (r.success) {
     try {
-      await q_t(e.draft_id, h);
+      await deleteFeedbackDraft(e.draft_id, h);
     } catch (_) {
       (n(
         `feedbackDrafts: post-submit draft delete failed: ${_ instanceof Error ? _.name : "unknown"}`,
@@ -298,8 +298,8 @@ async function submitFeedbackDraft({
       ),
         logEvent("tengu_feedback_draft_delete_failed", { phase: S("post_submit") }));
     }
-    if (m) V_t();
-    if (t !== "card_send_as_is") uMe(e.draft_id);
+    if (m) decrementSessionDraftCount();
+    if (t !== "card_send_as_is") dismissFeedbackNoticeForDraft(e.draft_id);
     return (
       logEvent("tengu_feedback_draft_submitted", {
         type: fromEnum(e.type),
@@ -341,7 +341,7 @@ async function submitFeedbackDraft({
   if (r.failureReason === "policy_blocked")
     return {
       success: !1,
-      error: uV() ?? "Feedback is disabled by your organization's policy.",
+      error: getFeedbackDisabledReason() ?? "Feedback is disabled by your organization's policy.",
     };
   return {
     success: !1,
@@ -349,9 +349,9 @@ async function submitFeedbackDraft({
   };
 }
 async function discardFeedbackDraft(e, s, k) {
-  let c = await q_t(e.draft_id, k);
-  if ((uMe(e.draft_id), !c)) return;
-  if (e.source_session_id === K()) V_t();
+  let c = await deleteFeedbackDraft(e.draft_id, k);
+  if ((dismissFeedbackNoticeForDraft(e.draft_id), !c)) return;
+  if (e.source_session_id === K()) decrementSessionDraftCount();
   logEvent("tengu_feedback_draft_discarded", {
     type: fromEnum(e.type),
     trigger: fromEnum(e.trigger),
