@@ -8870,11 +8870,11 @@ function Vm(t, s, c = "wrap") {
   return t;
 }
 import {
-  closeSync as cp,
-  constants as Vc,
+  closeSync,
+  constants,
   fstatSync,
-  openSync as $0,
-  writeSync as eS,
+  openSync,
+  writeSync,
 } from "fs";
 var tS = 4194304,
   nS = 25,
@@ -8899,7 +8899,7 @@ function lS() {
   }
   let c;
   try {
-    c = $0(t, Vc.O_WRONLY | Vc.O_NONBLOCK | Vc.O_NOCTTY | s);
+    c = openSync(t, constants.O_WRONLY | constants.O_NONBLOCK | constants.O_NOCTTY | s);
   } catch (m) {
     return { reason: `open_${A(m) ?? "failed"}` };
   }
@@ -8912,7 +8912,7 @@ function lS() {
     f = `fstat_${A(m) ?? "failed"}`;
   }
   try {
-    cp(c);
+    closeSync(c);
   } catch {}
   return { reason: f };
 }
@@ -8987,7 +8987,7 @@ function QOt() {
 }
 function hp(t, s) {
   try {
-    return eS(t, s);
+    return writeSync(t, s);
   } catch (c) {
     if (A(c) === "EAGAIN") return 0;
     throw c;
@@ -9107,7 +9107,7 @@ function yp(t) {
     Aa.delete(process.stdout),
     process.off("exit", t.onExit));
   try {
-    cp(t.fd);
+    closeSync(t.fd);
   } catch {}
   ks(t);
 }
@@ -9283,11 +9283,7 @@ function hf(t, { include: s, exclude: c } = {}) {
   return t;
 }
 import {
-  closeSync as Ox,
-  constants as _g,
-  openSync as wx,
   readSync,
-  writeSync as $d,
 } from "fs";
 var yS = function () {
     return globalObject.Date.now();
@@ -18127,22 +18123,21 @@ function Jd(t, s) {
     };
   };
 }
-import { writeSync as Ui } from "fs";
 function rDt() {
   try {
     if (
-      (Ui(1, RESET_CHARSET_SEQUENCE),
-      Ui(1, DISABLE_MODIFY_OTHER_KEYS),
-      Ui(1, KITTY_KEYBOARD_POP),
-      Ui(1, DISABLE_FOCUS_EVENTS),
-      Ui(1, DISABLE_THEME_REPORTS),
-      Ui(1, DISABLE_BRACKETED_PASTE),
-      Ui(1, SHOW_CURSOR),
-      Ui(1, "\x1B7" + RESET_SCROLL_REGION + "\x1B8"),
+      (writeSync(1, RESET_CHARSET_SEQUENCE),
+      writeSync(1, DISABLE_MODIFY_OTHER_KEYS),
+      writeSync(1, KITTY_KEYBOARD_POP),
+      writeSync(1, DISABLE_FOCUS_EVENTS),
+      writeSync(1, DISABLE_THEME_REPORTS),
+      writeSync(1, DISABLE_BRACKETED_PASTE),
+      writeSync(1, SHOW_CURSOR),
+      writeSync(1, "\x1B7" + RESET_SCROLL_REGION + "\x1B8"),
       Jye())
     )
-      Ui(1, CLEAR_ITERM2_PROGRESS_SEQUENCE);
-    if (isTabStatusEnabled()) Ui(1, wrapOscForMultiplexer(RESET_TAB_STATUS_SEQUENCE));
+      writeSync(1, CLEAR_ITERM2_PROGRESS_SEQUENCE);
+    if (isTabStatusEnabled()) writeSync(1, wrapOscForMultiplexer(RESET_TAB_STATUS_SEQUENCE));
   } catch (t) {
     if (Po(t))
       logForDebugging(`restoreTerminalModes writeSync failed: ${t}`, { level: "error" });
@@ -19417,7 +19412,7 @@ ${re}`
     ) {
       let s = this.frontFrame.cursor.x - this.displayCursor.x,
         c = this.frontFrame.cursor.y - this.displayCursor.y;
-      if (s !== 0 || c !== 0) $d(1, moveCursorBy(s, c));
+      if (s !== 0 || c !== 0) writeSync(1, moveCursorBy(s, c));
       this.displayCursor = null;
     }
     ((this.isUnmounted = !0),
@@ -19771,10 +19766,10 @@ ${re}`
         if (this.altScreenActive) {
           let s =
             this.modes.reset("altScreen") + this.modes.reset("background");
-          if (s) $d(1, s);
+          if (s) writeSync(1, s);
           this.altScreenActive = !1;
         }
-        ($d(1, DISABLE_MOUSE_TRACKING), this.drainStdin(), rDt());
+        (writeSync(1, DISABLE_MOUSE_TRACKING), this.drainStdin(), rDt());
       } catch (s) {
         if (Po(s))
           logForDebugging(`unmount terminal cleanup writeSync failed: ${s}`, {
@@ -19902,7 +19897,7 @@ function B0e(t = process.stdin) {
     m = -1;
   try {
     if (!f) c.setRawMode?.(!0);
-    m = wx("/dev/tty", _g.O_RDONLY | _g.O_NONBLOCK);
+    m = openSync("/dev/tty", constants.O_RDONLY | constants.O_NONBLOCK);
     let y = Buffer.alloc(1024);
     for (let b = 0; b < 64; b++) {
       let S = readSync(m, y, 0, y.length, null);
@@ -19913,7 +19908,7 @@ function B0e(t = process.stdin) {
   } finally {
     if (m >= 0)
       try {
-        Ox(m);
+        closeSync(m);
       } catch {}
     if (!f)
       try {

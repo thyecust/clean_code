@@ -1527,7 +1527,7 @@ class al {
 function et(e) {
   return new al(e);
 }
-import { randomUUID as ym } from "crypto";
+import { randomUUID } from "crypto";
 var Hs,
   Tm =
     typeof ((Hs =
@@ -1537,7 +1537,7 @@ var Hs,
       ? void 0
       : Hs.randomUUID) === "function"
       ? globalThis.crypto.randomUUID.bind(globalThis.crypto)
-      : ym;
+      : randomUUID;
 function Bn() {
   return Tm();
 }
@@ -1864,7 +1864,7 @@ function zs(e) {
 import * as $r from "http";
 import * as Br from "https";
 import * as Bo from "zlib";
-import { Transform as _m } from "stream";
+import { Transform } from "stream";
 class Ot extends Error {
   constructor(e) {
     super(e);
@@ -1891,7 +1891,7 @@ function ul(e) {
 function hl(e) {
   return e && typeof e.byteLength === "number";
 }
-class Gs extends _m {
+class Gs extends Transform {
   _transform(e, t, r) {
     (this.push(e), (this.loadedBytes += e.length));
     try {
@@ -2517,7 +2517,7 @@ function oa(e = {}) {
 function zo(e) {
   return typeof e.stream === "function";
 }
-import { Readable as ia } from "stream";
+import { Readable } from "stream";
 function wl() {
   return tslibAsyncGenerator(this, arguments, function* () {
     let t = this.getReader();
@@ -2537,18 +2537,18 @@ function $m(e) {
   if (!e.values) e.values = wl.bind(e);
 }
 function vl(e) {
-  if (e instanceof ReadableStream) return ($m(e), ia.fromWeb(e));
+  if (e instanceof ReadableStream) return ($m(e), Readable.fromWeb(e));
   else return e;
 }
 function Bm(e) {
-  if (e instanceof Uint8Array) return ia.from(Buffer.from(e));
+  if (e instanceof Uint8Array) return Readable.from(Buffer.from(e));
   else if (zo(e)) return vl(e.stream());
   else return vl(e);
 }
 async function kl(e) {
   return function () {
     let t = e.map((r) => (typeof r === "function" ? r() : r)).map(Bm);
-    return ia.from(
+    return Readable.from(
       (function () {
         return tslibAsyncGenerator(this, arguments, function* () {
           var r, n, o, i;
@@ -10365,8 +10365,7 @@ function vh({ clientCapabilities: e, managedIdentityIdParams: t, system: r }) {
     disableInternalRetries: r?.disableInternalRetries || !1,
   };
 }
-import { randomUUID as iy } from "crypto";
-var Za = { randomUUID: iy };
+var Za = { randomUUID: randomUUID };
 import { randomFillSync } from "crypto";
 var is = new Uint8Array(256),
   os = is.length;
@@ -13953,7 +13952,7 @@ class Sc {
     });
   }
 }
-import { readFile as sC } from "fs/promises";
+import { readFile } from "fs/promises";
 var Lr = "WorkloadIdentityCredential",
   aC = ["AZURE_TENANT_ID", "AZURE_CLIENT_ID", "AZURE_FEDERATED_TOKEN_FILE"],
   Po = z(Lr);
@@ -14007,7 +14006,7 @@ class Hr {
         `${Lr}: is unavailable. Invalid file path provided ${this.federatedTokenFilePath}.`,
       );
     if (!this.azureFederatedTokenFileContent) {
-      let t = (await sC(this.federatedTokenFilePath, "utf8")).trim();
+      let t = (await readFile(this.federatedTokenFilePath, "utf8")).trim();
       if (!t)
         throw new R(
           `${Lr}: is unavailable. No content on the file ${this.federatedTokenFilePath}.`,
@@ -14707,7 +14706,6 @@ class xc {
   }
 }
 import { createHash, createPrivateKey } from "crypto";
-import { readFile as gC } from "fs/promises";
 var Oo = "ClientCertificateCredential",
   tm = z(Oo);
 class Mc {
@@ -14776,7 +14774,7 @@ class Mc {
 }
 async function yC(e, t) {
   let { certificate: r, certificatePath: n } = e,
-    o = r || (await gC(n, "utf8")),
+    o = r || (await readFile(n, "utf8")),
     i = t ? o : void 0,
     s =
       /(-+BEGIN CERTIFICATE-+)(\n\r?|\r\n?)([A-Za-z0-9+/\n\r]+=*)(\n\r?|\r\n?)(-+END CERTIFICATE-+)/g,

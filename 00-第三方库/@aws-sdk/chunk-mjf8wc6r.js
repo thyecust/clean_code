@@ -651,7 +651,7 @@ class w {
     });
   }
 }
-import { Readable as R } from "stream";
+import { Readable } from "stream";
 async function* N(e) {
   let t = !1,
     r = !1,
@@ -682,7 +682,7 @@ class jtt {
     return this.universalMarshaller.deserialize(r, t);
   }
   serialize(e, t) {
-    return R.from(this.universalMarshaller.serialize(e, t));
+    return Readable.from(this.universalMarshaller.serialize(e, t));
   }
 }
 export {

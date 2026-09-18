@@ -1161,7 +1161,7 @@ function vRt(e, i) {
   }
   return e;
 }
-import { open as me, readFile, stat as de } from "fs/promises";
+import { open, readFile, stat } from "fs/promises";
 var Get = "__unparsedToolInput";
 function qet(e) {
   if (typeof e !== "object" || e === null || Array.isArray(e)) return !1;
@@ -1308,9 +1308,9 @@ function Nge(e) {
 }
 var P = 104857600;
 async function ake(e) {
-  let { size: i } = await de(e);
+  let { size: i } = await stat(e);
   if (i <= P) return Nge(await readFile(e));
-  await using r = await me(e, "r");
+  await using r = await open(e, "r");
   let t = Buffer.allocUnsafe(P),
     l = 0,
     s = i - P;

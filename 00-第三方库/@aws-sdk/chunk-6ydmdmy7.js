@@ -154,11 +154,11 @@ import {
   createHash,
   createPrivateKey,
   createPublicKey,
-  sign as de,
+  sign,
 } from "crypto";
 import { promises } from "fs";
 import { homedir } from "os";
-import { dirname, join as H } from "path";
+import { dirname, join } from "path";
 class w {
   profileData;
   init;
@@ -324,10 +324,10 @@ class w {
   getTokenFilePath() {
     let e =
         process.env.AWS_LOGIN_CACHE_DIRECTORY ??
-        H(homedir(), ".aws", "login", "cache"),
+        join(homedir(), ".aws", "login", "cache"),
       r = Buffer.from(this.loginSession, "utf8"),
       t = createHash("sha256").update(r).digest("hex");
-    return H(e, `${t}.json`);
+    return join(e, `${t}.json`);
   }
   derToRawSignature(e) {
     let r = 2;
@@ -391,7 +391,7 @@ class w {
         d = Buffer.from(JSON.stringify(l)).toString("base64url"),
         c = Buffer.from(JSON.stringify(a)).toString("base64url"),
         m = `${d}.${c}`,
-        h = de("sha256", Buffer.from(m), o),
+        h = sign("sha256", Buffer.from(m), o),
         E = this.derToRawSignature(h).toString("base64url");
       return `${m}.${E}`;
     } catch (o) {

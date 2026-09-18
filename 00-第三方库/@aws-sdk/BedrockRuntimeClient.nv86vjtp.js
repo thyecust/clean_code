@@ -287,9 +287,9 @@ var J = {
   },
 };
 var m = toESM(R_());
-import { PassThrough, pipeline, Readable as tt } from "stream";
-import { Transform as Ye } from "stream";
-class L extends Ye {
+import { PassThrough, pipeline, Readable } from "stream";
+import { Transform } from "stream";
+class L extends Transform {
   priorSignature;
   messageSigner;
   eventStreamCodec;
@@ -351,7 +351,7 @@ class b {
   async handle(e, t, n = {}) {
     let o = t.request,
       { body: s, query: r } = o;
-    if (!(s instanceof tt))
+    if (!(s instanceof Readable))
       throw Error("Eventstream payload must be a Readable stream.");
     let i = s;
     o.body = new PassThrough({ objectMode: !0 });

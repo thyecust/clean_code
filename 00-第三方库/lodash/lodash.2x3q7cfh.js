@@ -27,9 +27,8 @@ import {
 import { getNormalizedRealCwd, STARTUP_REAL_CWD, STARTUP_CWD, isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
 import { defineExportGetters } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { homedir } from "os";
-import { sep as cn } from "path";
-import { randomUUID as i8 } from "crypto";
-import { randomUUID as An } from "crypto";
+import { sep } from "path";
+import { randomUUID } from "crypto";
 import { createHash, randomBytes } from "crypto";
 function identity(e) {
   return e;
@@ -83,7 +82,7 @@ function qxt() {
 function sOn(e) {
   if (e.toLowerCase().endsWith(".jsonl"))
     return {
-      sessionId: An(),
+      sessionId: randomUUID(),
       ingressUrl: null,
       isUrl: !1,
       jsonlFile: e,
@@ -3938,7 +3937,7 @@ function un() {
 function Ei(e = getNormalizedRealCwd()) {
   return OXt({
     host: un(),
-    id: qxt() ?? i8(),
+    id: qxt() ?? randomUUID(),
     project: { originalCwd: e, projectRoot: e, cwd: e },
   });
 }
@@ -3992,7 +3991,7 @@ function aOn(e = {}) {
     t.sessionScratch.replacePendingBranchLinks(),
     t.sessionScratch.replaceChromeAvailabilityStagesLogged(r));
   let i = hn(),
-    s = i8();
+    s = randomUUID();
   return (
     t.costLedger.scopeTo(s),
     t.update({ id: s, ...(e.setCurrentAsParent && { parentId: o }) }),
@@ -4748,7 +4747,7 @@ function G1() {
 }
 function Di(e) {
   for (let [t, o] of n().host.launchOptions.restrictedWorkspaceRoots())
-    if (e === t || e.startsWith(t.endsWith(cn) ? t : t + cn)) return o;
+    if (e === t || e.startsWith(t.endsWith(sep) ? t : t + sep)) return o;
   return null;
 }
 function GDn(e) {
@@ -5644,7 +5643,7 @@ function kMn(e) {
   n().surfaceCapabilities.replaceMainLoopStatus(e);
 }
 export {
-  i8,
+  randomUUID as i8,
   identity,
   oo,
   j1,
