@@ -9889,5 +9889,19 @@
   "tier": 2,
   "kb": 5.2,
   "confidence": "high"
+ },
+ "shell-utils.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/shell-utils.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 6.8,
+  "confidence": "high"
+ },
+ "utils.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/utils.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 0.5,
+  "confidence": "high"
  }
 }

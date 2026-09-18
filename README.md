@@ -468,6 +468,19 @@ bun .analysis/move/check-lazy-base.mjs   两类懒加载的解析基准
 | 5 | **索引一致**：`file-map.json` 每条 path 在磁盘上、每个主树 `.js` 都有记录 | 索引与实际脱节。**实测已经脱节过一次** —— 某条记录的 path 指向一个早已改名的文件，而改名后的文件在索引里没有记录 |
 | 6 | **懒加载基准**：`importMetaRequire("./x")` 按**捕获 `import.meta.require` 的模块所在目录**解析；`readEmbeddedAsset*("./x", …)` 按**引用方目录**解析 | 第 2 类检查的正则 `import\.meta\.require\(` 匹配不到 `importMetaRequire(`；`"./x"` 是普通字符串字面量，根本不是 import 说明符 |
 
+第 5 类失败时会把**下一步命令**直接打出来，因为两类脱节的修法正好相反 ——
+「磁盘有、索引无」要**补录**，「索引有、磁盘无」要**改 path**，照错的那条做只会把索引改得更烂：
+
+```
+bun .analysis/move/add-index.mjs <新文件...>   # 归属沿用目标目录多数票 · --dry 预览 · --module/--tier 覆盖
+```
+
+为什么需要它：`sync-index.mjs` 只按 plan 的 moves 改**已有**条目的 path（反查不到就跳过），
+整条链上原先**没有「新增条目」的入口**。2026-09-18 从 `execution-core.js` 抠出
+`shell-utils.js` / `utils.js` 时就漏了这两条 —— 工具链一声不吭，直到 CI 拦下。
+`check-index.mjs` 与 `add-index.mjs` 共用 `lib.mjs` 的 `shouldHaveIndex`，
+同一个判据不会出现「刚补录完闸门仍说缺」。
+
 搬一个文件不用手写 plan：根目录的 `mv.mjs` 把 `<源> <目标>` 拼成 plan 后，
 把上面这一整套按顺序跑完（move → verify → 三道静态闸门），退出码即结论。
 

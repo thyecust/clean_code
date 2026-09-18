@@ -1,5 +1,26 @@
 import { getBashParserModule } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
 
+var WZt = new Set([
+  "<",
+  ">",
+  ">>",
+  "<<",
+  "<<-",
+  "<<<",
+  "<&",
+  ">&",
+  "&>",
+  "&>>",
+  ">|",
+  ">&-",
+  "<&-",
+  "file_descriptor",
+  "heredoc_start",
+  "heredoc_body",
+  "heredoc_content",
+  "heredoc_end",
+]);
+
 var M9e = new Set(["program", "list", "pipeline"]),
   HZt = new Set([
     "&&",

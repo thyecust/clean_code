@@ -1,6 +1,6 @@
 # 模块文件索引
 
-## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 6 个文件 · 8.37 MB</sub>
+## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 8 个文件 · 8.38 MB</sub>
 
 - [`03-入口与运行时/核心应用-Agent循环/execution-core.js`](../03-入口与运行时/核心应用-Agent循环/execution-core.js) — 4863.8 KB
 - [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 1866.0 KB
@@ -8,6 +8,8 @@
 - [`03-入口与运行时/核心应用-Agent循环/standalone-tools.js`](../03-入口与运行时/核心应用-Agent循环/standalone-tools.js) — 854.2 KB
 - [`03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js`](../03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js) — 49.0 KB
 - [`03-入口与运行时/核心应用-Agent循环/hook-helper.js`](../03-入口与运行时/核心应用-Agent循环/hook-helper.js) — 29.4 KB
+- [`03-入口与运行时/核心应用-Agent循环/shell-utils.js`](../03-入口与运行时/核心应用-Agent循环/shell-utils.js) — 6.8 KB
+- [`03-入口与运行时/核心应用-Agent循环/utils.js`](../03-入口与运行时/核心应用-Agent循环/utils.js) — 0.5 KB
 
 ## 认证 / OAuth 登录  <sub>02-功能模块 · 51 个文件 · 1.59 MB</sub>
 
