@@ -577,7 +577,6 @@ import {
   isShuttingDown,
   registerBeforeInteractiveShutdown,
   shiftAttentionBudget,
-  PROACTIVITY_LEVELS,
   nextProactivityLevel,
   previousProactivityLevel,
   extractTextContent,
@@ -745,21 +744,16 @@ import {
   isAskRuleDrivenReason,
   findSafetyCheckReason,
   NOTIFICATION_DELAY_MS,
-  noticesStore,
   pluginNoticesModule,
-  heldRenderInput,
   heldRenderInputModule,
   installUiLogSink,
   RENDER_INVALIDATE_THROTTLE_MS,
   bumpRenderVersions,
   hasRenderHookForComponent,
   createValueCell,
-  findFirstEngineRef,
   terminalViewport,
   desktopRendererModule,
-  uiRenderCache,
   renderEngineModule,
-  turnEvents,
   HookEvents,
   isInProcessTeammateTask,
   computeTeammateStateKey,
@@ -1592,7 +1586,7 @@ import { getClaudeAiBaseUrl, buildClaudeAiSessionUrl, createInitialContentReplac
 import { isAgentSwarmsEnabled } from "../../02-功能模块/Teammates团队/agent-swarms-enablement.js";
 import { isTrustedDeviceGateEnabled } from "../../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js";
 import { isInsideTmux } from "../../02-功能模块/终端环境探测-TUI-tmux/terminal-backend-detection.js";
-import { CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL, isTrackedClaudeInChromeTabId } from "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
+import { CLAUDE_IN_CHROME_DOMAIN_RULE_TOOL } from "../../02-功能模块/浏览器集成-ClaudeinChrome/claude-in-chrome-host.js";
 import { setReplBridgeHandle, getReplBridgeHandle, reportBridgePermissionMode, reportBridgeCrossSessionInbound, reportBridgeModel, ownBridgePeerAddress } from "../../02-功能模块/权限系统/chunk-1y2g140m.js";
 import { isFromCurrentAgent, isCheckinOrigin, isCurrentAgentTaskNotification, normalizeTaskNotificationOrigin, resolveQueueOrigin, resolveQueueMode, shouldSkipAttachments } from "../../01-核心基础设施/核心工具-未归类/chunk-6dk85bs6.js";
 import { AsyncQueue, createContinuedInRecord } from "../../02-功能模块/会话-历史-恢复/chunk-m1xj4s02.js";
@@ -2096,18 +2090,11 @@ import {
   gateChannelServer,
 } from "../../02-功能模块/插件系统/channel-gate.js";
 import {
-  FocusedPress,
-  InputFields,
   pressFromTerminal,
   listWindow,
-  SelectFields,
-  useRenderVersion,
-  useRenderDrawing,
   fieldKey,
   inputFromTerminal,
   selectFromTerminal,
-  useRenderHook,
-  useRenderInput,
   ansiPrimitives,
   jA,
 } from "../../01-核心基础设施/ANSI-样式-布局原语/chunk-v7hyg861.js";
@@ -2162,9 +2149,7 @@ import {
   markVerifiedSlackHumanTurn,
   resolveMessageUuid,
   completeTurn,
-  createTurnEventTail,
   turnEventTailModule,
-  createTurnStep,
   turnStepModule,
   beginTurn,
   buildRateLimitEventMessage,

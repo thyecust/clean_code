@@ -40,10 +40,9 @@ import { s, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { execFile } from "child_process";
 import { randomUUID } from "crypto";
-import { createReadStream, realpathSync } from "fs";
+import { realpathSync } from "fs";
 import {
   mkdir,
-  readdir,
   readFile,
   rm,
   writeFile,

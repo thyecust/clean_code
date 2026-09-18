@@ -105,7 +105,7 @@ function cycleDiffBaseMode(o, n) {
 F();
 import { homedir } from "os";
 import { isAbsolute, sep } from "path";
-import { resolve, win32 } from "path";
+import { win32 } from "path";
 function C(o) {
   return hasUnsupportedDisplayCharacters(M(o));
 }

@@ -68,7 +68,6 @@ import {
   FILE_STATE_MAX_ENTRIES,
   MAX_FILE_READ_BYTES,
   MAX_FILE_READ_LINES,
-  STRICT_FRONTMATTER_PATTERN,
   cloneFileStateCache,
   collectDeclaredFields,
   createFileStateCache,
@@ -91,7 +90,6 @@ import {
 import {
   $p,
   AMn,
-  AS,
   AYt,
   Art,
   Axe,
@@ -329,29 +327,19 @@ import {
   MANIFEST_FILE_NAME,
   MAX_MEMORY_FILE_BYTES,
   MAX_MEMORY_FILE_READ_LINES,
-  MAX_MEMORY_FILE_SYNC_BYTES,
   MAX_MEMORY_INDEX_BYTES,
-  MAX_MEMORY_INDEX_LINES,
   MEMORY_CITATION_FEATURE_FLAG,
-  MEMORY_FRONTMATTER_FORMAT,
   MEMORY_INDEX_FILE_NAME,
-  MEMORY_LIST_TOOL_NAME,
-  MEMORY_PAUSED_MESSAGE,
   MEMORY_READ_TOOL_NAME,
   MEMORY_TYPES,
   MEMORY_WRITE_TOOL_NAME,
-  NON_ASCII_PATH,
   NUMERIC_COMPARISON_OPERATORS,
   NUMERIC_LITERAL_REGEX,
-  NotFoundError,
   PARSE_ABORTED,
   PERMISSION_RULE_SOURCES,
-  PLUGINS_TRASH_DIR_PATH,
   POSIX_SHELL_COMMANDS,
   PROCESS_WRAPPER_COMMANDS,
   PYRIGHT_SAFE_FLAGS,
-  PathTraversalError,
-  PermanentError,
   READ_NUMERIC_FLAGS,
   READ_PATH_PROBE,
   READ_VALUE_FLAGS,
@@ -362,15 +350,11 @@ import {
   SHELL_OPTION_LETTERS,
   SHELL_OPTION_NAMES,
   SHELL_SPECIAL_VARIABLES,
-  STAGING_DIR_NAME,
-  STALE_MEMORY_WARNING,
   SYNCED_DIR_NAME,
-  SYNCED_PLUGINS_DIR_PATH,
   TOOL_SEARCH_TOOL_NAME,
   TRASH_DIR_NAME,
   UNESCAPED_BACKTICK_OR_DOLLAR_REGEX,
   UNESCAPED_QUOTE_REGEX,
-  UnavailableError,
   VARIABLE_MODIFYING_BUILTINS,
   VARIABLE_TARGET_BUILTINS,
   VOLATILE_SHELL_VARIABLES,
@@ -384,12 +368,10 @@ import {
   applyPermissionUpdate,
   applyPermissionUpdates,
   areCommandFlagsSafe,
-  assertSafePathKey,
   buildCommandPrefixAllowUpdate,
   buildDirectoryReadRuleUpdate,
   buildExactCommandAllowUpdate,
   buildMemorySystemPrompt,
-  buildSkillBucketId,
   buildStaticAutoMemoryPrompt,
   canUseTeamMemoryStorage,
   checkEditableInternalPath,
@@ -405,8 +387,6 @@ import {
   collectRulesForBehavior,
   compiledPathRulePattern,
   containsRuntimePlaceholder,
-  createOrgMemoryBackend,
-  denyFoldVariantPaths,
   denyRuleMatchingAnywhere,
   doesRuleMatchTool,
   extractCommandArguments,
@@ -431,34 +411,22 @@ import {
   getBashFirstSteerMode,
   getBashParserModule,
   getCanonicalNameKey,
-  getDefaultMachineName,
   getEffectivePermissionRules,
-  getFileReadIgnorePatterns,
   getGitTrackedSettingsSources,
-  getGlobToolDescription,
   getHostContextFields,
   getHostRoutingSchemaFields,
   getMachineForwardingDisabledMessage,
   getMachineNotForwardedMessage,
-  getMarketplaceIdFileName,
-  getMemoryDirPrefix,
   getMemoryMetadataValue,
   getMemoryProjectKey,
-  getMemoryStoreDescription,
-  getMemoryStoreId,
   getMemoryStoresFromEnv,
   getModelForPrompt,
-  getOrgIdFromBucketId,
-  getOrgMemoryConnectionStatus,
   getOrgMemoryDecision,
-  getOrgMemoryStores,
   getPathCacheStore,
   getResolvedChildProcessTmpDir,
   getResolvedClaudeTempDir,
   getResolvedWorkingDirPaths,
   getScratchpadDir,
-  getSyncMarkerPath,
-  getSyncedItemPathForGeneration,
   getWillowTernOverride,
   hasDockerConnectionFlag,
   hasOrgMemoryDecisionRunStarted,
@@ -482,13 +450,9 @@ import {
   isFirstTimeForKey,
   isFocusModeEnabled,
   isGaultKestrelEnabled,
-  isGitDirectoryName,
-  isHiddenPathSegment,
   isLarchCisternEnabled,
   isLinkedWorktreeFastPathEnabled,
   isManagedPermissionRulesOnlyEnabled,
-  isMemoryAccessModeTools,
-  isMemoryStoreWritable,
   isModelInGrowthBookRoster,
   isMonorepoRuledOut,
   isMultiStoreSyncAvailable,
@@ -505,8 +469,6 @@ import {
   isTeamMemoryPath,
   isThriftySonicEnabled,
   isUntrustedUncPath,
-  isUuidString,
-  isValidMachineName,
   isValidMarketplaceId,
   isWillowTernEnabled,
   isWindowsNetworkPath,
@@ -519,41 +481,31 @@ import {
   mtr,
   nodeIgnoreModule,
   normalizeCaseForComparison,
-  normalizeInternalPathRoot,
   normalizeMemoryPath,
-  normalizePatternsToPath,
   outsideReadBlocked,
   parseCommand,
   parseCommandRaw,
   parseMemoryDocument,
   parseShellCommand,
-  parseSyncClaimKey,
   pathInAllowedWorkingPath,
   pathInWorkingPath,
   persistPermissionUpdates,
   ptr,
   readAutoAllowedForMutation,
   readPrimedAgentMemory,
-  redactSkillBucketId,
   requiresPreReadGuard,
   resolveEffectiveCommand,
   resolveLeanPrompt,
   resolvePreReadLineDropped,
-  resolveRealPathSafely,
-  resolveSyncedItemPath,
   rootPathForSource,
   sanitizeMachineName,
   sanitizeTextContent,
-  serializeMemoryDocument,
-  setMemoryMetadata,
   setSharedMemoryServedViaTools,
   shouldClassifyAllShellCommands,
   shouldDropPreReadLine,
   shouldServeStoneShellPrompt,
   shouldUseLeanPrompt,
-  sortMemoryStores,
   splitNonEmptyLines,
-  stripGenerationSuffix,
   stripMemoryTags,
   stripMemoryTagsFromContentBlocks,
   stripTrailingDotsAndSpaces,
@@ -581,7 +533,6 @@ import {
   Bve,
   CACHE_DIAGNOSIS_BETA,
   CLAUDE_DESKTOP_MCP_SERVER_NAMES,
-  CLOUD_GATEWAY_SESSION_EXPIRED_MESSAGE,
   COMPUTER_USE_MCP_SERVER_NAME,
   CONTEXT_MANAGEMENT_BETA,
   COUNT_TOKENS_SUPPORTED_BETAS,
@@ -622,10 +573,8 @@ import {
   REDACT_THINKING_BETA,
   REMOTE_DEVICES_MCP_SERVER_NAME,
   REMOTE_DEVICE_TOOL_NAMES,
-  RESERVED_DIRECTORY_NAMES_LC,
   SERVER_SIDE_FALLBACK_BETA,
   SERVER_SIDE_FALLBACK_CATEGORY_BETA,
-  SESSION_ID_HEADER_NAME,
   STANDARD_CONTEXT_WINDOW_TOKENS,
   STRUCTURED_OUTPUTS_BETA,
   SUBAGENT_STEER_DELEGATION_PROMPT,
@@ -642,7 +591,6 @@ import {
   areExperimentalBetasAllowed,
   asModelId,
   atisPin,
-  authState,
   bQe,
   buildAgentId,
   buildAvailabilityFallbackChain,
@@ -653,7 +601,6 @@ import {
   canDisableThinking,
   canUseExperimentalBetas,
   checkAndRefreshOAuthTokenIfNeeded,
-  checkAndRefreshOAuthTokenIfNeededWithOutcome,
   checkGate_CACHED_OR_BLOCKING,
   checkHasTrustDialogAccepted,
   claimAgentInvocation,
@@ -681,7 +628,6 @@ import {
   effectiveModeForTool,
   eligible1mSuffixTarget as sq,
   emitTaskNotification,
-  encodeHeaderValue,
   enforcementDefaultOpusModel,
   enqueueSdkEvent,
   enterFastModeCooldown,
@@ -696,43 +642,33 @@ import {
   getAgentDepth,
   getAnthropicApiKey,
   getAnthropicApiKeyWithSource,
-  getAnthropicApiKeyWithSourceSafe,
-  getAnthropicBetaHeaderPin,
-  getApiKeyFromApiKeyHelper,
   getApiKeyHelperLastFailure,
   getAuthHeadersAsync,
   getAuthTokenSource,
-  getAuthenticatedAccountInfo,
-  getAuthorizationHeaderPin,
   getAutoMemEntrypoint,
   getAutoMemPath,
   getAutoMemPathState,
   getAutoModeFastModeBreakerReason,
   getAwsRegion,
-  getAwsRegionOrDefault,
   getBackgroundAgentId,
   getBedrockExtraBodyParamsBetas,
   getBetaByHeader,
   getBetaHeaders,
-  getBgTakeover,
   getCachedAutoCompactWindows,
   getCachedClientData,
   getCachedGitRoot,
   getCachedThinkingBudgetDefaults,
   getCanonicalName,
   getCatalogModels,
-  getClaudeAIOAuthTokenOriginAsync,
   getClaudeAIOAuthTokens,
   getClaudeAiUserDefaultModelDescription,
   getClientDataAtis,
   getConfiguredAwsAuthRefresh,
   getConfiguredGcpAuthRefresh,
-  getConfiguredVertexProjectId,
   getCostBasis,
   getCuratedModelPicker,
   getCurrentProjectConfig,
   getCurrentWorktreeSession,
-  getDefaultAwsProviderChain,
   getDefaultFableModel,
   getDefaultHaikuModel,
   getDefaultMainLoopModel,
@@ -780,7 +716,6 @@ import {
   getOAuthHeaders,
   getOauthAccountInfo,
   getOfferedModelAliasMap,
-  getOrCreateUserID,
   getOrganizationUUID,
   getOverageBillingOverride,
   getOwnValue,
@@ -795,7 +730,6 @@ import {
   getQuerySourcePrefix,
   getRateLimitTier,
   getRegisteredSessionName,
-  getRequestAtis,
   getRuntimeMainLoopModel,
   getSanitizedQuerySource,
   getSanitizedToolName,
@@ -819,7 +753,6 @@ import {
   getToolSearchReminderConfig,
   getToolSourceFields,
   getTurnAttributionKey,
-  getUserAgent,
   getUserClaudeRulesDir,
   getUserSpecifiedModelSetting,
   getWebFetchUserAgent,
@@ -829,20 +762,15 @@ import {
   handleFastModeOverageRejection,
   handleOAuth401Error,
   hasAnthropicApiKeyAuth,
-  hasAutoMemPathOverride,
-  hasCustomApiKeyHeader,
   hasDedicatedSmallFastModel,
   hasDefaultModelOptionLabel,
   hasFreshGrowthBookFeatures,
   hasLongContextSuffix,
   hasProfileScope,
-  hasReservedPathSegment,
   hasStoredOAuthToken,
   hasStructuredOutputsBeta,
   hasUltrathinkTrigger,
   hashForTelemetry,
-  hostManagedAwsSdkCredentials,
-  hostManagedNoCredsError,
   httpClient,
   initializeGrowthBook,
   inlineSkillModelOverride,
@@ -856,7 +784,6 @@ import {
   isApiKeyHelperTheActiveCredential,
   isAutoClassifierActive,
   isAutoMemPath,
-  isAutoMemPathSafeForCarveout,
   isAutoMemoryEnabled,
   isAutoModeActive,
   isAutoModeCircuitBroken,
@@ -877,7 +804,6 @@ import {
   isDelegatedObservationAgent,
   isEmptyInputRepairEnabled,
   isEmptyObject,
-  isEnterprisePAYGSubscriber,
   isEnterpriseSubscriber,
   isEntitlementOverlayUnavailable,
   isEnvDefaultModelGoverning,
@@ -921,7 +847,6 @@ import {
   isNonCustomFableModel,
   isNonCustomMythosModel,
   isNonCustomOpusModel,
-  isOAuthRefreshKnownDeadAsync,
   isOfferedModelRow,
   isOpus1mContextAvailable,
   isOpus1mMergeEnabled,
@@ -936,7 +861,6 @@ import {
   isRecognizedModel,
   isReservedMcpServerName,
   isReservedRecipientName,
-  isSchemaDescFixesEnabled,
   isServedCatalogSuppressed,
   isSkillModelSupportedInAutoMode,
   isSonnet1mContextAvailable,
@@ -958,7 +882,6 @@ import {
   isWIFDispatchAuth,
   isWorkspaceMcpToolName,
   isWorkspacePersistedTrusted,
-  isWorktreeIsolationUnavailableFor,
   lacks1mContextSupport,
   latchConversationAtis,
   logFastModeToggled,
@@ -979,7 +902,6 @@ import {
   normalizeThinkingConfigDisplay,
   otelApiModule,
   otelCoreModule,
-  padBodyWithRandomWhitespace,
   parseMcpToolName,
   parsePeerAddress,
   parseUserSpecifiedModel,
@@ -993,9 +915,6 @@ import {
   recordAgentWorktreeRemoval,
   recordAgentWorktreeSpawn,
   recordSteerPromptModel,
-  refreshAndGetAwsCredentials,
-  refreshGatewayCredentialIfNeeded,
-  refreshGcpCredentialsIfNeeded,
   registerModelSteerFloor,
   releaseTerminalEmitClaim,
   renderDefaultModelSetting,
@@ -1004,7 +923,6 @@ import {
   reportEventSignerLoadFailure,
   resetAuthFailureTracking,
   resetSubagentSteerLatch,
-  resolveAwsRegion,
   resolveContextWindowBelief,
   resolveDefaultMainLoopModelSetting,
   resolveFastModeForModel,
@@ -1049,10 +967,8 @@ import {
   toProviderWireModelId,
   toolDefinitionCache,
   updateSessionName,
-  validateRequestHeaders,
   whenSessionRegistered,
   withOAuth401Retry,
-  withRateLimitHeaders,
   withServedCatalogSuppressed,
   withholdBetasIfHipaaTainted,
   withholdCredentialsForMisroutedHost,
@@ -1077,7 +993,6 @@ import {
 import {
   EOL,
   constants as Zys,
-  constants as wns,
   homedir,
   release,
   tmpdir,
@@ -1098,28 +1013,18 @@ import {
   BASE_URL_ENV_VARS,
   CLAUDE_AI_MARKETPLACE_SCOPES,
   CONTROL_OR_BIDI_CHARS_PATTERN,
-  CUSTOMIZATION_SURFACES,
   ClaudeAiProxyMcpServerSchema,
-  EMPTY_KEY_SET,
   ENV_VAR_PLACEHOLDER_RE,
   GUARD_HOOK_EVENTS,
   HOOK_EVENT_NAMES,
-  HooksConfigError,
   HooksSettingsSchema,
   HttpMcpServerSchema,
   INVALID_PAIR_MARKER,
-  INVALID_PLUGIN_NAME_CHARS_PATTERN,
-  INVISIBLE_CHARS_PATTERN as llr,
-  MAX_FETCHED_BINARIES,
-  MAX_PLUGIN_FILE_BYTES,
   MAX_TIMER_DELAY_MS,
   MERGE_PAIR_SUPPRESSOR_MARKER,
   NON_HOOK_TOP_LEVEL_KEYS,
-  NON_HOOK_TOP_LEVEL_KEYS_EXTENDED,
   PROJECT_LOCAL_SETTINGS_SOURCES,
   PROJECT_SCOPED_SETTINGS_SOURCE_SET,
-  RESERVED_MARKETPLACE_NAMES,
-  SECRET_TOKEN_ENV_VARS,
   SETTINGS_FILENAMES,
   SETTINGS_SOURCE_ORDER,
   SLOT_COLLISION_MARKER,
@@ -1135,29 +1040,15 @@ import {
   containsHookMatcher,
   declaresGuardHook,
   describeSettingsSource,
-  formatDisplayText,
-  formatQuotedDisplayText,
   getEnabledSettingsSources,
   getFullToolName,
-  getHooksJsonSchema,
   getHostSettingsStore,
-  getInstalledPluginsV1Schema,
-  getInstalledPluginsV2Schema,
-  getKnownMarketplacesSchema,
-  getLspServerConfigSchema,
   getManagedSettingsDirPath,
   getManagedSettingsDropInDir,
-  getMarketplaceNameSchema,
-  getMarketplaceSchema,
   getMcpToolPrefix,
   getMockRemoteSettingsFixturePath,
-  getMonitorsSchema,
-  getPluginIdSchema,
-  getPluginManifestSchema,
   getRelativeSettingsFilePathForSource,
-  getReservedMarketplaceNameError as gke,
   getSettingsPath,
-  getSettingsSchema,
   getValueAtPath,
   hasAttributionOverrides,
   hasMisplacedGuardHooks,
@@ -1165,37 +1056,24 @@ import {
   isAdminPolicyOrigin,
   isConnectedMcpServer,
   isEvalPolicySnapshotOnly,
-  isHookMatcher,
-  isLocalMarketplaceSource,
   isMemoryApiEnvVar,
   isNetworkAutomountPath,
   isPlainObjectRecord,
-  isReservedMarketplaceName,
   isSameMcpServerName,
   isServerCommandEntry,
   isServerNameEntry,
   isServerUrlEntry,
   isSettingsSourceEnabled,
   isSyntheticSecretName,
-  isValidPluginName,
   lastArrayElement,
-  normalizeHooksConfig,
   olr,
   omitBy,
   omitObjectKeys,
   parseMcpToolName as Js,
-  parsePluginBinaries,
-  parsePluginScopedServerName,
   pickBy,
-  removeInvisibleChars,
   resolveLocalSettingsStoreRoot,
-  sanitizeForDisplay as wr,
   sanitizeInlineText,
-  setPluginSettingsBase,
-  shallowMergeSettingsMaps,
   sliceArrayRange,
-  toDisplayText,
-  toErrorMessage,
   toJsonSchema,
   validateHookFilePathPattern,
   validateHooksConfig,
@@ -1230,22 +1108,16 @@ import {
   getRespelledEnvVarsAndLostCredentials,
   getRetiredPolicyHelperPaths,
   getRuleAnchorRootForSource,
-  getScrubbedEnvVarNames,
-  getSecuritySensitiveSetting,
   getSettingsFilePathForSource,
   getSettingsForSource,
-  getSettingsForSourceWriteSeed,
   getSettingsWithErrors,
   getSettings_DEPRECATED,
   getUseAutoModeDuringPlan,
   getWslInheritsWindowsSettings,
   hasVouchedSkipDangerousModePermissionPrompt,
-  isCredentialPrefixedEnvVar,
-  isGitConfigOrProxyVar,
   isPathGitIgnored,
   isPolicyHelperArmedFromUserWritableSettings,
   loadMdmSettingsFromOs,
-  looksLikeSecret,
   parseSettingsFile,
   projectSettingsAliasesUserSettings,
   readRepoDirSettingsFresh,
@@ -1254,7 +1126,6 @@ import {
   reseedUserSettingsFile,
   updateSettingsForSource,
   updateSettingsForSourceWithTransform,
-  wouldEnvValueBeScrubbed,
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 
 import {
@@ -1301,37 +1172,17 @@ import {
   formatPluginError,
   getAllPluginRootDirs,
   getErrorPluginId,
-  getInstallationPreferenceSchema,
-  getMarketplaceCacheScope,
-  getPluginAttributionFromEnv,
   getPluginCacheDir,
   getPluginDataDir,
-  getPluginRegistryFileScope,
   getPluginRegistryState,
   getPluginSeedDirs,
   getPluginsDir,
   getResolvedPluginsDir,
-  isNodeModulesDirName,
-  isPluginVersionCacheScope,
-  isReservedOrTempName,
   isSignificantPluginError,
   isValidPluginId,
-  isWithinMaxAge,
-  markPluginCommandProducerDirDenied,
   parseAttributionMap,
-  parsePluginCacheDirScope,
   parsePluginCachePath,
-  readPluginAttributionSidecar,
-  resolvePathStorageScope,
-  toComparableName,
-  toMarketplaceTreeScope,
   toNormalizedPathKey,
-  toPathSafeSegment,
-  toPluginAssetCacheScope,
-  toPluginVersionCachePath,
-  toPluginVersionCacheScope,
-  toUserSkillsStorageKey,
-  toUserSkillsStorageScope,
 } from "../../02-功能模块/插件系统/plugin-system-core.js";
 
 import {
@@ -1365,7 +1216,6 @@ import {
   NO_VISIBLE_OUTPUT_MESSAGE,
   OPERATION_STOPPED_BY_HOOK_MESSAGE,
   OUTPUT_MAX_CHARS_CEILING,
-  OUTPUT_MAX_CHARS_FLOOR,
   PERMISSION_DENIED_RETRY_MESSAGE,
   STRUCTURED_OUTPUT_ENFORCE_TAG,
   TOOL_CALL_NOT_COMPLETED_MARKER,
@@ -1373,7 +1223,6 @@ import {
   TOOL_USE_SUMMARY_MAX_CHARS,
   USER_REFUSED_ACTION_MARKER,
   USER_REJECTED_TOOL_USE_MARKER,
-  artifactLeadScrubPattern,
   artifactViewerUrlFor,
   formatHookFeedbackMessage,
   getArtifactEnvironment,
@@ -1418,14 +1267,12 @@ import {
   MarkdownLexer,
   WEB_FETCH_TOOL_NAME,
   clearAutoReactNoticePending,
-  getArm64TargetTriple,
   getSafeReadOpenFlags,
   hasSessionAccessToken,
   isArtifactToolEnabled,
   isPlanPrototypeOfferEnabled,
   isProxyAllowlistBlocked,
   isProxyAllowlistBlockedError,
-  stripBinaryTargetSuffix,
 } from "../../02-功能模块/制品发布-Artifact/chunk-01ymf0ar.js";
 
 import {
@@ -1446,7 +1293,6 @@ import {
   RS,
   XR,
   Xo,
-  _Z,
   ac,
   gp,
   isObject as Fm,
@@ -1519,16 +1365,12 @@ import {
   MAX_TRACKED_CONTEXT_SECTIONS,
   PROPOSE_SKILLS_TOOL_NAME,
   QUOTE_AND_COPYRIGHT_RULES,
-  READ_NOTIFICATIONS_TOOL_DESCRIPTION,
-  READ_NOTIFICATIONS_TOOL_NAME,
-  READ_NOTIFICATIONS_TOOL_PROMPT,
   READ_TOOL_CAT_N_FORMAT_DETAIL,
   READ_TOOL_CAT_N_FORMAT_NOTE,
   READ_TOOL_DESCRIPTION,
   READ_TOOL_OFFSET_LIMIT_NOTE,
   READ_TOOL_TARGETED_RANGE_NOTE,
   REFRESH_MCP_TOOLS_TOOL_NAME,
-  REFRESH_MCP_TOOLS_TOOL_PROMPT,
   REPL_ONLY_TOOL_NAMES,
   REPL_REGISTERED_TOOL_UI_TABLE_KEY,
   REPORTING_OUTCOMES_PROMPT,
@@ -1546,7 +1388,6 @@ import {
   TRUNCATED_PARTIAL_VIEW_PREFIX,
   WAIT_FOR_MCP_SERVERS_TOOL_NAME,
   WEB_SEARCH_TOOL_NAME,
-  buildGrepToolPrompt,
   buildReadToolPrompt,
   buildWebFetchContentPrompt,
   buildWebFetchToolPrompt,
@@ -1566,12 +1407,9 @@ import {
   getMaxConcurrentSubagents,
   getMaxWebSearchesPerSession,
   getPreferredShellToolName,
-  getPrompt,
-  getRefreshMcpToolsDescription,
   getReplVariant,
   getSeededFileUnchangedMessage,
   getSessionDate,
-  getWaitForMcpServersDescription,
   getWebFetchCacheTtlMs,
   hasReplContextForAgent,
   hasReplMcpRouting,
@@ -1602,7 +1440,6 @@ import {
   TASK_LIST_TOOL_NAME,
   TASK_STOP_TOOL_NAME,
   TASK_STOP_TOOL_PROMPT,
-  buildScheduleWakeupPrompt,
 } from "../../02-功能模块/Teammates团队/chunk-z2t8b9yc.js";
 
 import {
@@ -1634,9 +1471,7 @@ import {
   configureGlobalAgents,
   disableKeepAlive,
   getConfiguredProxyAuthHelper,
-  getMTLSConfig,
   getNoProxy,
-  getProxyAuthFromHelper,
   getProxyFetchOptions,
   getProxyUrl,
   getUsableProxyUrl,
@@ -1703,9 +1538,6 @@ import {
   ENTER_PLAN_MODE_TOOL_NAME,
   MORE_QUESTIONS_REQUESTED_MESSAGE,
   MORE_QUESTIONS_REQUESTED_PREFIX,
-  PREVIEW_NOTES_BY_RENDERER,
-  escapeQuotedText,
-  formatScalarValue,
 } from "../../02-功能模块/工具Plan-ExitPlanMode/工具Plan-ExitPlanMode.5cgce7xv.js";
 
 import { CRON_CREATE_TOOL_NAME } from "../../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
@@ -1738,9 +1570,7 @@ import {
 import {
   AD,
   ATn,
-  Aer,
   Bl,
-  Bqt,
   CJ,
   CTn,
   Cer,
@@ -1757,7 +1587,6 @@ import {
   gTt,
   jqt,
   koe,
-  pTt,
   tf,
   ver,
   wYe,
@@ -1770,11 +1599,7 @@ import {
   DEFAULT_MAX_PDF_PAGES_PER_READ,
   DEFAULT_REQUEST_BYTE_LIMIT,
   FIRST_PARTY_MAX_IMAGE_BASE64_BYTES,
-  GIT_ROOT_NEGATIVE_RESULT,
-  LINK_MISDIRECTED_TELEMETRY_CODE,
-  LINK_UNVERIFIED_TELEMETRY_CODE,
   LONG_CONTEXT_MAX_MEDIA_BLOCKS,
-  MAX_BINARY_CONTENT_BYTES,
   MAX_PDF_ATTACHMENT_BYTES,
   MAX_PDF_ATTACHMENT_PAGES,
   MAX_PDF_PAGES_FOR_WHOLE_READ,
@@ -1804,7 +1629,6 @@ import {
   getGitPushShellPatterns,
   getGitRepoCache,
   getGithubRepo,
-  getHeadForDir,
   getIsGit,
   getPdfPageCount,
   getRemoteTransport,
@@ -1820,12 +1644,10 @@ import {
   isBranchOnOrigin,
   isCurrentDirectoryBareGitRepo,
   isLinkedWorktree,
-  isLinkedWorktreeUncached,
   isLocalHost,
   isRemoteActive,
   isValidGitSha,
   listExtractedPdfPageNames,
-  memoizeInMap,
   normalizeGitRemoteUrl,
   pointerFileIsSuspect,
   rawPointerPathIsUnsafe,
@@ -1837,7 +1659,6 @@ import {
   resolveRef,
   validateStorageKey,
   validateStorageScope,
-  writeBytesExclusiveHardened,
 } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 
 import {
@@ -1852,16 +1673,13 @@ import {
 
 import {
   PLUGIN_HOOKS_MODULES_FLAG,
-  TRUSTED_PLUGIN_SETTINGS_SOURCES,
   createMapStore,
   describeFunctionHooksFlagSource,
   expandPluginConfigKeys,
   getBuiltinPluginSkillNames,
   getBuiltinPluginSkills,
-  getPluginConfigFromSettings,
   isBuiltinPluginId,
   isFunctionHooksEnabled,
-  listBuiltinPlugins,
   loadHooksModuleGraph,
 } from "../../02-功能模块/Hooks钩子/chunk-z3433nr6.js";
 
@@ -1879,17 +1697,13 @@ import {
   GIT_COMMAND_TIMEOUT_MS,
   GIT_HARDENED_ARGS,
   GIT_HARDENED_ARGS_STRICT,
-  GIT_SSH_HARDENING_ARGS,
   GIT_UPLOAD_PACK_ARG,
   buildNonInteractiveGitEnv,
   execFileNoThrow,
   execFileNoThrowWithCwd,
-  getGitInvocationForDirectory,
   getNonInteractiveGitEnvOverrides,
   hardenGitInvocation,
-  prepareGitCwdEnv,
   sanitizeGitEnv,
-  shouldUseHttpsForGitRemotes,
 } from "../../02-功能模块/工作树-Git/git-exec-hardening.js";
 
 import {
@@ -1910,10 +1724,6 @@ import {
 
 import {
   BRIEF_TOOL_NAME,
-  BRIEF_TOOL_PROMPT,
-  DESCRIPTION,
-  LEGACY_BRIEF_TOOL_NAME,
-  PEWTER_OWL_TOOL_PROMPT,
 } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 
 import {
@@ -1983,34 +1793,19 @@ import {
 import { WORKFLOW_TOOL_NAME } from "../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js";
 
 import {
-  BUILTIN_PLUGIN_SOURCE,
   INLINE_PLUGIN_SOURCE,
   SKILLS_DIR_PLUGIN_SOURCE,
   SYNCED_PLUGIN_SOURCE,
-  findPluginEnablementEntry,
-  getPluginMarketplace,
-  isEqualIgnoringCase,
-  isFirstPartyPlugin,
-  isNonMarketplaceOrBuiltinPluginSource,
-  isNonMarketplacePluginSource,
   isOfficialMarketplace,
-  isProjectSkillsDirPlugin,
   normalizeLookupKey,
-  normalizePluginId,
   parsePluginIdIgnoringReservedMarketplace,
-  parsePluginSettingsRecords,
-  resolvePluginEnabledFromEntries,
-  splitPluginId,
 } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 
 import {
   CLEANUP_DRAIN_TIMEOUT_MS,
-  REMOTE_LINK_TELEMETRY_CODE,
   SOURCE_NOT_REGULAR_TELEMETRY_CODE,
   SOURCE_OUTSIDE_TELEMETRY_CODE,
   SOURCE_SHARED_TELEMETRY_CODE,
-  SOURCE_TOO_LARGE_TELEMETRY_CODE,
-  TOO_LARGE_TELEMETRY_CODE,
   UNVERIFIED_ANCESTRY_SENTINEL,
   changeWorkingDirectory,
   createErrorResult,
@@ -2024,12 +1819,10 @@ import {
   getDebugLogPath,
   getFsSurface,
   getMinDebugLogLevel,
-  getRealPath,
   getTelemetryCode,
   hasNetworkPathSpelling,
   isByteViewUnsupportedFailure,
   isDebugMode,
-  isDebugToStdErr,
   isStorageError,
   isStoreFencedFailure,
   isUnsupportedFailure,
@@ -2056,7 +1849,7 @@ import {
   testAndSetResolvedPath,
 } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 
-import { createJitteredBackoffDelay } from "../../01-核心基础设施/核心工具-并发与缓存/jittered-backoff-delay.js";
+import "../../01-核心基础设施/核心工具-并发与缓存/jittered-backoff-delay.js";
 
 import {
   createPendingTask,
@@ -2098,16 +1891,7 @@ import {
 } from "../../02-功能模块/权限系统/chunk-t3b7pg2x.js";
 
 import {
-  COLON_CHARS_CLASS,
-  OPEN_BRACKET_CHARS_CLASS,
   TAG_DELIMITER_CHARS,
-  WHITESPACE_CHARS_CLASS,
-  buildChannelSourceTagPattern,
-  buildCharClassCaptureBackref,
-  buildConfusableTagScrubPattern,
-  buildLatinLetterConfusableClass,
-  buildModelLayerTagPattern,
-  buildNonPrintingCaptureBackref,
   escapeHtmlAttribute,
   escapeHtmlText,
   neutralizeClosingTags,
@@ -2143,7 +1927,6 @@ import {
   FINISHED_TASK_LABEL,
   FORKED_SKILL_LAUNCH_TAG,
   FORK_BOILERPLATE_TAG,
-  HARNESS_ENVELOPE_TAGS,
   LOCAL_COMMAND_STDERR_TAG,
   LOCAL_COMMAND_STDOUT_TAG,
   LOCAL_COMMAND_TAGS,
@@ -2168,7 +1951,6 @@ import {
   isNonessentialTrafficRestricted,
   logError,
   logMCPDebug,
-  logMCPError,
 } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
 
 import {
@@ -2184,7 +1966,6 @@ import {
   isUserDrivenOrUnstampedOrigin,
   isVerifiedRelayHumanTurn,
   logHumanOriginPresumed,
-  replaceInvisibleCharsWithSpace,
 } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
 
 import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
@@ -2205,7 +1986,6 @@ import {
   realpath,
   rename,
   rm,
-  rmdir,
   stat,
   statfs,
   symlink,
@@ -2214,7 +1994,6 @@ import {
   writeFile,
 } from "fs/promises";
 
-import { StringDecoder } from "string_decoder";
 
 import {
   PassThrough,
@@ -2226,7 +2005,6 @@ import {
   A,
   AZ,
   Bp,
-  Bx,
   CB,
   EZ,
   FA,
@@ -2249,7 +2027,6 @@ import {
   XP,
   Xl,
   YP,
-  YR,
   cNn,
   cc,
   dt,
@@ -2259,7 +2036,6 @@ import {
   hNn,
   hv,
   l,
-  mNn,
   mi,
   pNn,
   q0,
@@ -2323,7 +2099,6 @@ import {
 } from "../../01-核心基础设施/核心工具-进程与信号/chunk-h3cty6gp.js";
 
 import {
-  buildVertexBaseUrl,
   getClaudeConfigDir,
   getSafeModeExitHint,
   getVertexRegionForModel,
@@ -2332,11 +2107,8 @@ import {
   isSimpleMode,
   isSupervisedMode,
   parseConfigInteger,
-  parseConfigIntegerOrDefault,
   parseNumericValue,
-  parseRegionName,
   shouldMaintainProjectWorkingDir,
-  xg,
 } from "../../01-核心基础设施/设置-配置/chunk-5ndhfaq9.js";
 
 import {
@@ -2348,7 +2120,6 @@ import {
   bindTaskOutputForRead,
   bindTaskOutputPath,
   evictTaskOutput,
-  getTaskOutput,
   getTaskOutputDelta,
   getTaskOutputDir,
   getTaskOutputPath,
@@ -2369,7 +2140,6 @@ import {
   releaseConvergentTaskOutputBinding,
   rethrowWithUserFacingPath,
   tailTaskOutput,
-  taskOutputDirExclusions,
   unlinkTaskOutput,
 } from "../../02-功能模块/后台任务-Shell管理/task-output.js";
 
@@ -2391,7 +2161,6 @@ import {
   truncateMiddle,
   truncateToCodePoints,
   truncateToCodeUnits,
-  truncateToUtf8Bytes,
   truncateWithCharCount,
 } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 
@@ -2423,19 +2192,13 @@ import {
   antEnv,
   env as a,
   getDefaultGlobalClaudeFilePath,
-  getDirentFileInfo,
   getGlobalClaudeFile,
   isBunStandaloneExecutable,
   isRunningWithBun,
   normalizePathEntry,
   normalizeShellNameForAnalytics,
-  overwriteFileContents,
-  removeDirectoryRecursive,
-  removePathRecursively,
   resolveCommandInPath,
-  resolveExecutablePath,
   resolveExecutablePathAsync,
-  tryRemoveFileOrEmptyDirectory,
 } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 
 import {
@@ -2542,8 +2305,6 @@ import {
   isDesktopHostSession,
   isHostManagedSettingsEntrypoint,
   isRemoteCoworkEntrypoint,
-  isRemoteEntrypoint,
-  isSdkEntrypoint,
   isSlackEntrypoint,
   isTeamsEntrypoint,
   isThinClientSession,
@@ -2563,8 +2324,6 @@ import {
 import {
   STORAGE_KEYS,
   createSubagentsDirTranscriptKey,
-  hasValidPathSegments,
-  isSameStorageKey,
   isValidPathSegment,
 } from "../../02-功能模块/Teammates团队/storage-keys.js";
 
@@ -2601,16 +2360,12 @@ import {
 } from "./hook-helper.js";
 
 import {
-  armedRunnerShedsName,
-  childScrubbedCredentialKeys,
   enforceScriptCaps,
   getConfiguredBwrapPath,
   getConfiguredSocatPath,
-  isChildScrubbedCredentialFamily,
   isScrubEnabled,
   isScrubSandboxAvailable,
   scrubSandboxConfig,
-  shouldScrubSubprocessEnv,
   subprocessEnv,
 } from "../../01-核心基础设施/核心工具-进程与信号/subprocess-env-scrub.js";
 
@@ -2637,10 +2392,8 @@ import {
   CWD_NOTE_PREFIX,
   DEFAULT_MAX_FILE_READ_BYTES,
   PERFORCE_READ_ONLY_MESSAGE,
-  SymlinkReadRefusedError,
   SymlinkWriteRefusedError,
   addLineNumbers,
-  applyLineEndings,
   canonicalizePathForComparison,
   containsPathTraversal,
   convertUnixPathToWindows,
@@ -2659,7 +2412,6 @@ import {
   getSuggestedPathOutsideCwd,
   isFileSizeWithinLimit,
   isJupyterNotebookPath,
-  isPerforceModeEnabled,
   isReadOnlyFileMode,
   isSamePath,
   pathExists,
@@ -2669,7 +2421,6 @@ import {
   takeApprovedPathForRead,
   takeApprovedPathForWrite,
   throwStagingDirTamperedError,
-  toCwdRelativePath,
   withPathLock,
   wrapShellScriptWithBash,
   writeTextContent,
@@ -2692,10 +2443,6 @@ import {
   quotePowerShellLiteral,
   readImageDimensions,
   resizeImageForApiLimits,
-  resolveAttachmentUploadLane,
-  resolveAttachmentsForUpload,
-  shouldRenderAttachmentsLocally,
-  validateAttachments,
 } from "../../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
 
 import {
@@ -2707,7 +2454,6 @@ import {
   getTempBaseDir,
 } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 
-import { getSecureStorage } from "../../02-功能模块/认证-OAuth登录/secure-storage.js";
 
 import {
   externalHttp,
@@ -2724,9 +2470,7 @@ import {
   formatSingleLineText,
   normalizeComparableText,
   replaceControlChars,
-  sanitizeDeep,
   stripAnsi,
-  stripInvisibleChars,
 } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
 
 import {
@@ -2776,7 +2520,6 @@ import {
   URL as WDt,
   URL as ize,
   fileURLToPath,
-  pathToFileURL,
 } from "url";
 
 import { createServer as NAr, request } from "https";
@@ -2849,7 +2592,6 @@ import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工�
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 
 import {
-  FileSystemStorage,
   getFileStorage,
 } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 
@@ -2935,75 +2677,23 @@ import {
 import {
   RENAME_FALLBACK_ERRNOS,
   assertFileDoesNotExist,
-  buildTempFilePath,
-  isTempFileFor,
   renameWithRetry,
-  retryOnTransientError,
   writeFileAtomic,
-  writeFileAtomicSync,
   writeNewFileAfterAbsenceCheck,
   writeNewFileExclusive,
 } from "../../01-核心基础设施/安全文件系统-FS加固/atomic-file-write.js";
 
 import {
-  MAX_PLUGIN_ARCHIVE_BYTES,
-  PLUGIN_CONTENT_MARKERS,
-  PLUGIN_TEMP_CLONE_SUFFIX,
-  PLUGIN_TEMP_EXTRACT_SUFFIX,
-  PluginSourceError,
-  buildTempPluginDirName,
-  canSyncPluginsFromClaudeAi,
-  classifyLinkFarm,
-  classifyNetworkErrorKind,
-  downloadOrganizationPlugin,
-  downloadPluginArchive,
-  ensurePluginsOAuthScope,
   getCcrSessionId,
-  getCommandSource,
-  getMarketplaceNameFromPluginId,
-  getSourceCommandKey,
   hasClaudeAiAccountAuth,
-  hasPluginContentEntries,
-  installFromCommandSource,
-  isLinkFarmDiverged,
-  isLinkModeSource,
-  isLiveLinkFarm,
-  isPluginCommandSourceRefreshEnabled,
-  isPluginsSyncTierInPlay,
-  isPluginsSyncVetoed,
-  isReservedPluginEntry,
-  isSameOrigin,
   isSessionRefsSyncEnabled,
   isSyncSettingVetoed,
-  logPluginRemoteFetch,
-  pruneReservedEntries,
-  readLinkFarmTarget,
-  relinkPluginFarm,
-  resolveArchiveAuth,
-  resolvePluginRoot,
-  sanitizePluginHeaders,
-  shouldIncludeSyncedPlugins,
 } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 
 import {
-  isFileTooLargeError,
   readFileSyncWithMetadata,
-  readFileWithMetadata,
 } from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
 
-import {
-  COMMAND_PLUGIN_SOURCES_DISABLED_MESSAGE,
-  areCommandPluginSourcesDisabledByPolicy,
-  areLocalPluginDirsAllowedByPolicy,
-  areSideloadFlagsDisabledByPolicy,
-  canonicalFetchSourceUrl,
-  getStrictKnownMarketplaces,
-  isMarketplaceRestrictionPolicyActive,
-  isSourceAllowedByPolicy,
-  isSourceDisallowedOrUnverifiable,
-  isSourceInBlocklist,
-  sideloadFlagsBlockedMessage,
-} from "../../02-功能模块/插件系统/plugin-source-policy.js";
 
 import {
   Cmr,
@@ -3026,7 +2716,6 @@ import {
   isSameProcessAsync,
   ownProcStartAsync,
   procIdentityFields,
-  procIdentityOf,
 } from "../../01-核心基础设施/核心工具-进程与信号/process-identity.js";
 
 import {
@@ -3043,17 +2732,14 @@ import { isProcessRunning } from "../../02-功能模块/守护服务-Daemon/proc
 import {
   buildAttributionHeader,
   getResponseFromCache,
-  hasClaudeAIOAuthInferenceScope,
   hasNameableComplianceTaint,
   hasNoControlCharacters,
   hasUnsupportedDisplayCharacters,
   isPolicyAllowed,
-  isPolicyEnforced,
   policyDeniedReason,
   prepareDisplayText,
   replaceLineBreaks,
   sanitizePlainText,
-  sanitizeTextForDisplay,
   sanitizeUntrustedText,
   tryFormatShortLabel,
 } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
@@ -3089,12 +2775,11 @@ import {
   getRosterFilePath,
 } from "../../02-功能模块/后台任务-Shell管理/chunk-djserjj5.js";
 
-import { logErrorWithTelemetryMessage } from "../../01-核心基础设施/遥测-OpenTelemetry/log-error-with-telemetry-message.js";
+import "../../01-核心基础设施/遥测-OpenTelemetry/log-error-with-telemetry-message.js";
 
 import { resolveSetting } from "../../02-功能模块/上下文压缩-Compact/resolve-user-intent-setting.js";
 
 import {
-  BACKUP_FILE_NAME_PATTERN_WITH_LEGACY,
   LITE_READ_BUF_SIZE,
   PROGRAMMATIC_ENTRYPOINTS,
   buildHistorySuppressionEntry,
@@ -3122,19 +2807,14 @@ import {
   peekPreSettingsEnvSnapshot,
 } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 
-import { isAnthropicHostedEnvironment } from "../../01-核心基础设施/核心工具-未归类/environment-kind.js";
 
 import {
   getResolvedWIFBaseUrlSnapshot,
-  getWIFCredentials,
   getWIFTokenCache,
   invalidateWIFToken,
 } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 
 import {
-  checkFetchEgress,
-  checkRedirectEgress,
-  getRequestMethodAndUrl,
   runGuardedFetch,
 } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
 
@@ -3169,7 +2849,6 @@ import {
 
 import {
   getToolSearchMode,
-  isModelVersionAtLeast,
   isStandardToolSearchMode,
   isToolSearchEnabled as Z_,
   isToolSearchSupportedModel,
@@ -3292,7 +2971,7 @@ import {
   removeMemberByAgentId,
 } from "../../02-功能模块/Teammates团队/team-file-store.js";
 
-import { isBriefEnabled } from "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
+import "../../01-核心基础设施/核心工具-未归类/chunk-1p3batyk.js";
 
 import { isPewterOwlTool } from "../../01-核心基础设施/核心工具-未归类/chunk-0qtt3z52.js";
 
@@ -3330,12 +3009,8 @@ import {
   getBridgeTokenOverride,
 } from "../../02-功能模块/远程控制-Bridge/chunk-203p0p9a.js";
 
-import {
-  scheduleDynamicWakeup,
-  stopLoopWakeups,
-} from "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
+import "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 
 import {
   getActiveKeybindings,
@@ -3343,19 +3018,13 @@ import {
   isKeybindingCustomizationEnabled,
   keybindingStore,
   logKeybindingFallbackUsed,
-  sanitizeSingleLineDisplayText,
 } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 
-import {
-  formatDurationMs as y7e,
-  sanitizeMcpTaskId,
-} from "../../02-功能模块/MCP客户端/mcp-task-id.js";
+import "../../02-功能模块/MCP客户端/mcp-task-id.js";
 
-import { splitGraphemes } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 
 import {
   MAX_SKILL_FILE_BYTES,
-  getMcpServerConfigCacheKey,
   readMcpResourceRaw,
 } from "../../02-功能模块/MCP客户端/chunk-7wm8t84g.js";
 
@@ -3381,7 +3050,6 @@ import {
   clearComputerUseActiveThisTurn,
   getComputerUseLockOwner,
   isComputerUseActiveThisTurn,
-  isNonRegularPathErrno,
 } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-lock.js";
 
 import { unregisterComputerUseEscapeHotkey } from "../../02-功能模块/图片-截图-ComputerUse/computer-use-session.js";
