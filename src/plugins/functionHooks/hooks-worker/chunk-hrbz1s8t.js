@@ -31,7 +31,7 @@ function v(r) {
 }
 import * as b from "fs/promises";
 import * as m from "path";
-import { randomUUID as Y } from "crypto";
+import { randomUUID } from "crypto";
 var E = 493,
   Q = 420;
 async function tt(r) {
@@ -82,7 +82,7 @@ async function B(r, t, e) {
 }
 async function F(r, t) {
   let e = m.dirname(r),
-    i = m.join(e, `.tmp-${process.pid}-${Y()}`),
+    i = m.join(e, `.tmp-${process.pid}-${randomUUID()}`),
     n;
   try {
     ((n = await b.open(i, "wx", Q)),
@@ -123,11 +123,11 @@ function O(r, t) {
 import * as y from "fs/promises";
 import * as q from "fs";
 import * as p from "path";
-import { execFile as rt } from "child_process";
-import { promisify as it } from "util";
-import { Readable as nt } from "stream";
-import { pipeline as st } from "stream/promises";
-var ot = it(rt);
+import { execFile } from "child_process";
+import { promisify } from "util";
+import { Readable } from "stream";
+import { pipeline } from "stream/promises";
+var ot = promisify(execFile);
 async function at(r) {
   let { client: t, sessionId: e } = r;
   if (!t || !e) return async () => {};
@@ -253,7 +253,7 @@ function ft(r) {
 async function C(r, t) {
   let e = p.join(t, `.skill-archive-${process.pid}-${Date.now()}`);
   if (!r.body) throw new AnthropicError("skill download response had no body");
-  await st(nt.fromWeb(r.body), q.createWriteStream(e));
+  await pipeline(Readable.fromWeb(r.body), q.createWriteStream(e));
   let i = p.join(p.dirname(t), `.skill-stage-${process.pid}-${Date.now()}`);
   try {
     let n = await ut(e, 4),

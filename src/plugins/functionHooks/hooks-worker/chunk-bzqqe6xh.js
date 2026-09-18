@@ -35,7 +35,7 @@ var isAbortSignal = (r) =>
   typeof r.addEventListener === "function" &&
   typeof r.removeEventListener === "function";
 var createEnvironmentUnloadedError = (r) => new HooksError(`${r}: its environment was unloaded`);
-import { readFile as rr } from "fs/promises";
+import { readFile } from "fs/promises";
 var h = `/** @jsxRuntime classic */
 /** @jsx h */
 /** @jsxFrag Fragment */
@@ -71,16 +71,16 @@ async function g(r, o) {
 }
 var V = (r, o, e) => new HooksError(`${r}: ${o}: not readable (${c(e)})`);
 var createModuleFileSizeError = (r, o) => new HooksError(`${r}: ${o} is over ${MAX_HOOKS_MODULE_FILE_BYTES} bytes and was not read`);
-import { lstat as Y, realpath as S } from "fs/promises";
-import { basename as B, isAbsolute as q, relative as G, sep as J } from "path";
+import { lstat, realpath } from "fs/promises";
+import { basename, isAbsolute, relative, sep } from "path";
 async function resolvePluginModuleFile(r, o, e) {
-  let p = await g(S(o), (m) => V(e, B(o), m)),
+  let p = await g(realpath(o), (m) => V(e, basename(o), m)),
     f = (m) => w(e, r, m),
-    t = await g(S(r), f),
-    a = G(p, t);
-  if (a === ".." || a.startsWith(`..${J}`) || q(a))
+    t = await g(realpath(r), f),
+    a = relative(p, t);
+  if (a === ".." || a.startsWith(`..${sep}`) || isAbsolute(a))
     throw new HooksError(`${e}: ${r}: ${t} resolves outside the plugin's folder`);
-  let x = await g(Y(t), f);
+  let x = await g(lstat(t), f);
   if (!x.isFile()) throw new HooksError(`${e}: ${r}: not a regular file`);
   return { real: t, size: x.size };
 }
@@ -88,19 +88,18 @@ async function readPluginModuleFile(r, o, e) {
   let { real: p, size: f } = await resolvePluginModuleFile(r, o, e);
   if (f > MAX_HOOKS_MODULE_FILE_BYTES) throw createModuleFileSizeError(e, r);
   try {
-    return await rr(p, "utf8");
+    return await readFile(p, "utf8");
   } catch (t) {
     throw w(e, r, t);
   }
 }
-import { sep as or } from "path";
 function O(r) {
   let o = [r];
   if (r.endsWith(".js")) {
     let e = r.slice(0, -3);
     o.push(`${e}.ts`, `${e}.tsx`);
   }
-  for (let e of E) (o.push(`${r}${e}`), o.push(`${r}${or}index${e}`));
+  for (let e of E) (o.push(`${r}${e}`), o.push(`${r}${sep}index${e}`));
   return o;
 }
 var BUILTIN_MODULE_SPECIFIER = "claude-code";
@@ -108,9 +107,9 @@ var createDisallowedImportError = (r, o, e) =>
   new HooksError(
     `${r}: cannot import "${o}" (from ${e}): a hooks module imports its own files by relative path and "${BUILTIN_MODULE_SPECIFIER}", nothing else`,
   );
-import { dirname as b, resolve as _ } from "path";
+import { dirname, resolve } from "path";
 var T = (r, o) =>
-  [".", "..", "./", "../"].includes(o) ? _(b(r), o, "index") : _(b(r), o);
+  [".", "..", "./", "../"].includes(o) ? resolve(dirname(r), o, "index") : resolve(dirname(r), o);
 var isRelativeModuleSpecifier = (r) =>
   r === "." || r === ".." || r.startsWith("./") || r.startsWith("../");
 var H = [
@@ -118,13 +117,12 @@ var H = [
   "not a regular file",
   "resolves outside the plugin's folder",
 ];
-import { isAbsolute as xr, relative as N, sep as nr } from "path";
 var A = (r, o) => (o.startsWith(`${r}: `) ? o.slice(`${r}: `.length) : o);
 async function resolveHooksModuleImport({ spelled: r, importer: o, root: e, pluginName: p }, f) {
-  let t = `${p}: cannot import "${r}" (from ${N(e, o) || o}):`,
+  let t = `${p}: cannot import "${r}" (from ${relative(e, o) || o}):`,
     a = T(o, r),
-    x = N(e, a);
-  if (x === ".." || x.startsWith(`..${nr}`) || xr(x))
+    x = relative(e, a);
+  if (x === ".." || x.startsWith(`..${sep}`) || isAbsolute(x))
     throw new HooksError(`${t} it is outside the plugin's folder (${e})`);
   let m = [];
   for (let u of O(a)) {

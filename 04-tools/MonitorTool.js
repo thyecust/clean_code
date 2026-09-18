@@ -46,9 +46,8 @@ import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDes
 import { MONITOR_TOOL_NAME } from "../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
 import { s, T, O, v, c, Qe } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { isIP as oe } from "net";
+import { isIP } from "net";
 import { lookup } from "dns/promises";
-import { isIP as Y } from "net";
 import F from "ws";
 class MonitorWsPreconditionError extends Error {
   constructor(e) {
@@ -77,7 +76,7 @@ function z(e) {
 async function J(e, t) {
   let o = new URL(e),
     u = z(o.hostname);
-  if (Y(u)) {
+  if (isIP(u)) {
     if (isPrivateOrReservedIpAddress(u))
       throw new MonitorWsPreconditionError(
         `${u} is in a private, link-local, or cloud-metadata range`,
@@ -546,7 +545,7 @@ function wsEgressDenyReason(e) {
     };
   let t = new URL(e),
     o = z(t.hostname);
-  if (oe(o) && isPrivateOrReservedIpAddress(o))
+  if (isIP(o) && isPrivateOrReservedIpAddress(o))
     return {
       kind: "ssrf",
       host: o,

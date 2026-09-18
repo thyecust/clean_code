@@ -633,7 +633,7 @@ var H = buildTool({
     return formatToolUseInput(e);
   },
 });
-import { open as me } from "fs/promises";
+import { open } from "fs/promises";
 var M = 65536,
   de = createLazyValue(() =>
     Qe({
@@ -674,7 +674,7 @@ var M = 65536,
     },
     async call({ log_path: e, bytes: t = M }) {
       try {
-        let r = await me(e, "r");
+        let r = await open(e, "r");
         try {
           let { size: o } = await r.stat(),
             n = Math.max(0, o - t),

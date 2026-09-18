@@ -37,8 +37,8 @@ import {
 import { s, T, O, se, v, c, Qe, Ko, fe, X, k } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { constants } from "fs";
-import { open as J, realpath, stat as U } from "fs/promises";
-import { join as K, sep as F, resolve } from "path";
+import { open, realpath, stat } from "fs/promises";
+import { join, sep, resolve } from "path";
 function D(e) {
   if (!isRecord(e) || typeof e.force !== "boolean") return null;
   let t = { ...e };
@@ -361,7 +361,7 @@ function ie(e, t) {
 }
 var W = 26214400;
 async function ce(e) {
-  let t = (_) => (_.endsWith(F) ? _ : _ + F),
+  let t = (_) => (_.endsWith(sep) ? _ : _ + sep),
     r = resolve(he()),
     i = resolve(r, e);
   if (i !== r && !i.startsWith(t(r)))
@@ -388,7 +388,7 @@ async function ce(e) {
     o = 536870912,
     h;
   try {
-    h = await J(u, constants.O_RDONLY | d | o | n);
+    h = await open(u, constants.O_RDONLY | d | o | n);
   } catch (_) {
     let f = A(_);
     if (f === "ENOENT")
@@ -407,7 +407,7 @@ async function ce(e) {
       g,
       y;
     try {
-      ((g = await realpath(i)), (y = await U(g, { bigint: !0 })));
+      ((g = await realpath(i)), (y = await stat(g, { bigint: !0 })));
     } catch {
       throw Error("project_write: local_path was replaced during the upload.");
     }
@@ -439,7 +439,7 @@ async function de(e, t, r, i) {
   let u = (o) => o.replace(/[^a-zA-Z0-9-]/g, "_"),
     p = getToolResultsDirForSession(r),
     d = `project-doc-${u(e)}.txt`,
-    n = K(p, d);
+    n = join(p, d);
   if ((await ensureToolResultsDirectory(p, i), await Y(i, p, d, t))) return n;
   return (await writeBytesExclusiveHardened(n, Buffer.from(t, "utf8"), 384), n);
 }
@@ -501,7 +501,7 @@ async function pe(e, t, r, i, u) {
         .replace(/^\.+/, "") || "file",
     n = getToolResultsDirForSession(i),
     o = `project-file-${e}-${d}`,
-    h = K(n, o);
+    h = join(n, o);
   if ((await ensureToolResultsDirectory(n, u), await Y(u, n, o, r))) return h;
   return (await writeBytesExclusiveHardened(h, r, 384), h);
 }
