@@ -193,39 +193,70 @@ export function plan(src, { file = "", exclude = null } = {}) {
   }
 
   // ---- 5. specifier / 整条声明的删除
-  for (const [decl, delSet] of declDeletes) {
-    const brace = decl.specifiers.filter((s) => s.type === "ImportSpecifier");
-    const keep = brace.filter((s) => !delSet.has(s));
-    if (keep.length === 0) {
-      if (decl.specifiers.every((s) => s.type === "ImportSpecifier")) {
-        edits.push(wholeDeclDelete(src, decl));
-      } else {
-        // 还有 default / namespace specifier —— 保留一个空子句 `import d, {} from "m"`
-        const braceStart = src.lastIndexOf("{", brace[0].range[0]);
-        const braceEnd = src.indexOf("}", brace[brace.length - 1].range[1]) + 1;
-        edits.push({ start: braceStart, end: braceEnd, text: "{}" });
-      }
-      continue;
-    }
-    // 连续段一起删；只在 specifier 列表**内部**找逗号
-    let i = 0;
-    while (i < brace.length) {
-      if (!delSet.has(brace[i])) {
-        i++;
-        continue;
-      }
-      let j = i;
-      while (j + 1 < brace.length && delSet.has(brace[j + 1])) j++;
-      if (j < brace.length - 1) {
-        edits.push({ start: brace[i].range[0], end: brace[j + 1].range[0], text: "" });
-      } else {
-        edits.push({ start: brace[i - 1].range[1], end: brace[j].range[1], text: "" });
-      }
-      i = j + 1;
-    }
-  }
+  for (const [decl, delSet] of declDeletes) edits.push(...deleteSpecifiers(src, decl, delSet, "alias"));
 
   return { edits, records, groups: winners, skipped, ast, sm, moduleScope };
+}
+
+/**
+ * 删除一条 import 声明里指定的 specifier，产出编辑集。两个模式共用。
+ *
+ * `mode` 只在「花括号里的具名 specifier 被删光」时起作用：
+ *   `"alias"`        —— 别名收敛用。还有 default/namespace 就留空子句 `import d, {} from "m"`；
+ *                       否则整条删。
+ *   `"unused-delete"`—— 未使用清理用，且已判定删掉整条不改变求值顺序。整条删。
+ *   `"unused-bare"`  —— 未使用清理用，且删掉会挪动目标模块的求值位置。降级成
+ *                       `import "m";`（求值位置、次数、顺序完全保留，只去掉死绑定）。
+ *
+ * 逗号**只在 specifier 列表内部**吞：跨出花括号会写出 `import D {a as X} from "m"`。
+ */
+export function deleteSpecifiers(src, decl, delSet, mode = "alias") {
+  const edits = [];
+  const brace = decl.specifiers.filter((s) => s.type === "ImportSpecifier");
+  const keep = brace.filter((s) => !delSet.has(s));
+  const keptOthers = decl.specifiers.filter((s) => s.type !== "ImportSpecifier" && !delSet.has(s));
+  const rawSource = src.slice(decl.source.range[0], decl.source.range[1]);
+  const semi = src[decl.range[1] - 1] === ";" ? ";" : "";
+
+  if (keep.length === 0) {
+    if (keptOthers.length > 0) {
+      // 还有 default / namespace 留着 —— 声明本身要留住（模块照旧被加载），
+      // 把 `, { … }` 整段换成 `from`：`import D, {X} from "m"` → `import D from "m"`
+      const parts = keptOthers.map((o) => src.slice(o.range[0], o.range[1]));
+      edits.push({ start: decl.range[0], end: decl.range[1], text: `import ${parts.join(", ")} from ${rawSource}${semi}` });
+      return edits;
+    }
+    if (mode === "unused-bare") {
+      edits.push({ start: decl.range[0], end: decl.range[1], text: `import ${rawSource}${semi}` });
+      return edits;
+    }
+    if (mode === "unused-delete" || decl.specifiers.every((s) => s.type === "ImportSpecifier")) {
+      edits.push(wholeDeclDelete(src, decl));
+      return edits;
+    }
+    const braceStart = src.lastIndexOf("{", brace[0].range[0]);
+    const braceEnd = src.indexOf("}", brace[brace.length - 1].range[1]) + 1;
+    edits.push({ start: braceStart, end: braceEnd, text: "{}" });
+    return edits;
+  }
+
+  // 连续段一起删
+  let i = 0;
+  while (i < brace.length) {
+    if (!delSet.has(brace[i])) {
+      i++;
+      continue;
+    }
+    let j = i;
+    while (j + 1 < brace.length && delSet.has(brace[j + 1])) j++;
+    if (j < brace.length - 1) {
+      edits.push({ start: brace[i].range[0], end: brace[j + 1].range[0], text: "" });
+    } else {
+      edits.push({ start: brace[i - 1].range[1], end: brace[j].range[1], text: "" });
+    }
+    i = j + 1;
+  }
+  return edits;
 }
 
 export { wholeDeclDelete };

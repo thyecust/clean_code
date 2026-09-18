@@ -10,9 +10,9 @@ import { join } from "node:path";
 import { ROOT, walk, shortPath } from "../rename/paths.mjs";
 import { analyze } from "../rename/lib.mjs";
 import { exportNames } from "../rename/snapshot.mjs";
-import { WORK } from "./run.mjs";
+import { WORK, BACKUP } from "./run.mjs";
 
-const backupDir = join(WORK, "backup");
+const backupDir = BACKUP;
 const backed = new Set();
 if (existsSync(backupDir)) {
   for (const name of readdirSync(backupDir)) backed.add(name.replace(/__/g, "/"));
