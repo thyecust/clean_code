@@ -20,6 +20,22 @@ mkdirSync(WORK, { recursive: true });
 /** `.analysis` 与依赖目录都不是被改造的树的一部分。 */
 export const SKIP = new Set(["node_modules", "_source", ".git", ".analysis"]);
 
+/** 索引覆盖的五个主分区（`04-tools` 于 2026-09-18 成为独立工具分区时加入）。 */
+export const MAIN_TREES = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时", "04-tools"];
+
+/**
+ * 该不该有索引条目：主树下的 `.js`，`*.original.js` 除外（REPLACED.md 记录的原件）。
+ * `cli.js`（真入口）与 `src/plugins/functionHooks/hooks-worker/`（自带依赖的独立
+ * bundle，故意重复主树的 basename）本来就不在索引里。
+ *
+ * `check-index.mjs`（判定磁盘有、索引无）与 `add-index.mjs`（补录）必须用**同一个**
+ * 判据 —— 两份各写一遍就会出现「补录了但闸门仍说缺」这种自相矛盾的状态。
+ */
+export function shouldHaveIndex(absPath, root = ROOT) {
+  return absPath.endsWith(".js") && !absPath.endsWith(".original.js") &&
+    MAIN_TREES.some((t) => absPath.startsWith(join(root, t) + "/"));
+}
+
 /** 全树遍历：**所有**文件，不只 .js —— 搬家要连随行资源一起搬。 */
 export function walkAll(dir, out = []) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {

@@ -7,7 +7,7 @@
 // modules.md 是纯派生产物（内容完全由 file-map 决定），整篇重新生成。
 
 import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { ROOT } from "./lib.mjs";
 
 const fmPath = () => join(ROOT, "_index/file-map.json");
@@ -53,6 +53,54 @@ export function patchEntry(text, key, { path, module: mod, tier, confidence }) {
   if (confidence) { const m = sub(/^[ \t]*"confidence": "[^"]*"$/m, `  "confidence": "${confidence}"`, "confidence"); if (m) miss.push(m); }
 
   return { text: text.slice(0, at) + block + text.slice(stop), ok: miss.length === 0, why: miss.join("；") };
+}
+
+/**
+ * 给索引**新增**一条记录（拆 chunk、新写文件之后补录用）。
+ *
+ * 与 `patchEntry` 的分工：那个改已有条目的 path/module/tier，这个**造键**。
+ * 键取文件名 —— 那批拆分产物（`execution-core.js` / `hook-helper.js` / `shell-utils.js` …）
+ * 都是这么建的；而 dumper 留下的 591 条 `chunk-xxxx.js` 键是「稳定 chunk id」，
+ * 早就不随文件名变（见 patchEntry 的说明）。新文件没有这段历史，用文件名最直接。
+ *
+ * 仍是**文本插入**（与 patchEntry 同理：整体 `JSON.stringify` 会把 dumper 写的
+ * `1.0` / `15.0` 压成 `1` / `15`，产生 ~170 行假差异）。插在末尾：既有键序是
+ * dumper 的原序（既非字典序也非目录序），追加不扰动它，每次新增的 diff 也集中在文件尾。
+ */
+export function addEntry(text, key, { path, module: mod, tier, kb, confidence = "high" }) {
+  if (text.includes(`"${key}": {`)) return { text, ok: false, why: `键 ${key} 已存在` };
+  const marker = "\n }\n}";
+  const at = text.lastIndexOf(marker);
+  if (at < 0) return { text, ok: false, why: "找不到末尾的 ` }\\n}` 结构" };
+  const block =
+    ` "${key}": {\n` +
+    `  "path": "${path}",\n` +
+    `  "module": "${mod}",\n` +
+    `  "tier": ${tier},\n` +
+    `  "kb": ${kb},\n` +
+    `  "confidence": "${confidence}"\n` +
+    ` }`;
+  return { text: text.slice(0, at) + "\n },\n" + block + "\n}", ok: true, why: "" };
+}
+
+/**
+ * 目录 → 归属：取该目录在索引里**已有多数票**（与 move.mjs §4、sync-index.mjs 同规则）。
+ * 目录在索引里一条都没有时返回 null，由调用方决定是报错还是显式指定。
+ *
+ * 多数票用 **NUL 拼键**（move.mjs / sync-index.mjs 同款）：模块名里本来就有空格
+ * （「核心应用 / Agent 循环」），拿空格当分隔符会把 module 和 tier 切开。
+ */
+export function specForDir(fileMap, destDir) {
+  const tally = new Map();
+  for (const v of Object.values(fileMap)) {
+    if (dirname(v.path) !== destDir) continue;
+    const k = `${v.module}\0${v.tier}`;
+    tally.set(k, (tally.get(k) ?? 0) + 1);
+  }
+  if (!tally.size) return null;
+  const [k] = [...tally].sort((a, b) => b[1] - a[1])[0];
+  const [module, tier] = k.split("\0");
+  return { module, tier: Number(tier) };
 }
 
 /** 路径 → 键。索引的键不是文件名，所以要反查。 */
