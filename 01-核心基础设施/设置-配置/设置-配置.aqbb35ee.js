@@ -760,7 +760,7 @@ var nt = [
     restrictive: !0,
   },
   { path: ["autoMode", "classifyAllShell"], restrictive: !0 },
-  ...[],
+  
   { path: ["worktree", "bgIsolation"], restrictive: "worktree" },
   { path: ["enableArtifact"], restrictive: !1 },
   { path: ["enableWorkflows"], restrictive: !1 },
@@ -777,7 +777,7 @@ var nt = [
   { path: ["remoteControlAtStartup"], restrictive: !1 },
   { path: ["remoteTools", "allowUnattendedServing"], restrictive: !1 },
   { path: ["autoContinueAtUsageLimit"], restrictive: !1 },
-  ...[],
+  
   { path: ["attribution", "sessionUrl"], restrictive: !1 },
   { path: ["crossSessionInbound"], restrictive: ["refuse", "hold"] },
   {

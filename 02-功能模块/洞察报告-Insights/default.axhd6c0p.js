@@ -1056,7 +1056,7 @@ RESPOND WITH ONLY A VALID JSON OBJECT:
 Include 3 opportunities. Think BIG - autonomous workflows, parallel agents, iterating against tests.`,
     maxTokens: 8192,
   },
-  ...[],
+  
   {
     name: "fun_ending",
     prompt: `Analyze this Claude Code usage data and find a memorable moment.

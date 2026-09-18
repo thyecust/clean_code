@@ -26091,48 +26091,9 @@ function Kse(e) {
   return e.type === "ERROR" || e.children.some(Kse);
 }
 
-var M9e = new Set(["program", "list", "pipeline"]),
-  HZt = new Set([
-    "&&",
-    "||",
-    "|",
-    ";",
-    "&",
-    "|&",
-    `
-`,
-  ]),
-  Ox = 1e4,
+var Ox = 1e4,
   VXr = 65536,
   KXr = 16;
-
-function Lm(e) {
-  if (!e) return [];
-  if (e.length > Ox) return [e];
-  let t = getBashParserModule().parse(e);
-  if (!t) return [e];
-  let r = [],
-    o = (d) => {
-      if (HZt.has(d.type) || d.type === "comment") return;
-      if (d.type === "redirected_statement") {
-        for (let p of d.children) if (!p.type.endsWith("_redirect")) o(p);
-        return;
-      }
-      if (M9e.has(d.type)) {
-        for (let p of d.children) o(p);
-        return;
-      }
-      r.push(d.text);
-    };
-  return (
-    o(
-      t.type === "ERROR" && t.children[0]?.type === "program"
-        ? t.children[0]
-        : t,
-    ),
-    r
-  );
-}
 
 function jZt(e) {
   if (!e || e.length > Ox) return [];
@@ -26170,36 +26131,6 @@ function D9e(e) {
   if (!/^\$\{[ \t\n|]/.test(t)) return null;
   let r = t.endsWith("}") ? t.length - 1 : t.length;
   return t.slice(2, r).trim().replace(/^\|/, "").replace(/;$/, "").trim();
-}
-
-function Yse(e) {
-  if (!e || e.length > Ox) return null;
-  let t = getBashParserModule().parse(e);
-  if (!t) return null;
-  let r = [],
-    o = !0,
-    d = (p) => {
-      if (!o) return;
-      if (HZt.has(p.type) || p.type === "comment") return;
-      if (p.type === "redirected_statement") {
-        for (let _ of p.children) if (!_.type.endsWith("_redirect")) d(_);
-        return;
-      }
-      if (M9e.has(p.type)) {
-        for (let _ of p.children) d(_);
-        return;
-      }
-      if (p.type === "negated_command") {
-        for (let _ of p.children) if (_.type !== "!") d(_);
-        return;
-      }
-      if (p.type === "command" || p.type === "variable_assignment") {
-        r.push(p.text);
-        return;
-      }
-      o = !1;
-    };
-  return (d(t), o ? r : null);
 }
 
 function vy(e) {
@@ -26252,20 +26183,6 @@ var WZt = new Set([
   "heredoc_end",
 ]);
 
-function F9e(e) {
-  if (e.type.endsWith("_redirect")) {
-    let t = e.children.filter((p) => !WZt.has(p.type)),
-      r = e.children.some((p) => p.type === ">&-" || p.type === "<&-"),
-      o =
-        !r &&
-        e.children.some((p) => p.type === ">&" || p.type === "<&") &&
-        t.some((p) => qse(p).startsWith("-")),
-      d = e.type === "heredoc_redirect" || r || o ? 0 : 1;
-    if (t.length > d) return !0;
-  }
-  return e.children.some(F9e);
-}
-
 function $9e(e) {
   if (e.type === "heredoc_redirect") {
     let r = e.children.find((d) => d.type === "heredoc_start")?.text ?? "";
@@ -26288,7 +26205,7 @@ function GZt(e, t) {
   let r = getBashParserModule().parse(e);
   if (!r || Kse(r)) return !0;
   let o = (_) =>
-      F9e(_) ||
+      hasSuspiciousRedirection(_) ||
       $9e(_) ||
       N9e(_) ||
       L9e(_) ||
@@ -26426,7 +26343,7 @@ function Ive(e) {
       ))
   )
     return !0;
-  if (N9e(t) || L9e(t) || F9e(t) || $9e(t)) return !0;
+  if (N9e(t) || L9e(t) || hasSuspiciousRedirection(t) || $9e(t)) return !0;
   let o = findCommandNode(t, null);
   if (!o) return !0;
   for (let d of o.children) {
@@ -26437,160 +26354,12 @@ function Ive(e) {
   return !1;
 }
 
-function qse(e) {
-  switch (e.type) {
-    case "raw_string":
-      return e.text.slice(1, -1);
-    case "string":
-      return e.text.slice(1, -1).replace(/\\([$`"\\\n])/g, (t, r) =>
-        r ===
-        `
-`
-          ? ""
-          : r,
-      );
-    case "word":
-      return e.text.replace(/\\([\s\S])/g, (t, r) =>
-        r ===
-        `
-`
-          ? ""
-          : r,
-      );
-    default:
-      return e.text;
-  }
-}
-
-function parseShellCommandRedirections(e) {
-  let t = {
-    commandWithoutRedirections: e,
-    redirections: [],
-    hasDangerousRedirection: !1,
-    dangerousRedirectionReason: void 0,
-  };
-  if (!e || e.length > Ox) return t;
-  let r = getBashParserModule().parse(e);
-  if (!r) return t;
-  let o = [],
-    d = !1,
-    p,
-    _ = (I) => {
-      if (I.type === "file_redirect") {
-        let D = null,
-          N = !1,
-          F = null,
-          U = 0;
-        for (let ue of I.children)
-          if (ue.type === ">" || ue.type === "&>" || ue.type === ">|") D = ">";
-          else if (ue.type === ">>" || ue.type === "&>>" || ue.type === ">>|")
-            D = ">>";
-          else if (ue.type === ">&") ((D = ">"), (N = !0));
-          else if (ue.type === "<&") {
-            let de = I.children.filter(
-              (_e) => _e !== ue && _e.type !== "file_descriptor",
-            );
-            if (de.length > 1 || de.some((_e) => qse(_e).startsWith("-"))) {
-              if (((d = !0), p !== "network_device")) p = "shell_expansion";
-            }
-            return;
-          } else if (ue.type === ">&-" || ue.type === "<&-") {
-            if (
-              I.children.filter(
-                (_e) => _e !== ue && _e.type !== "file_descriptor",
-              ).length > 0
-            ) {
-              if (((d = !0), p !== "network_device")) p = "shell_expansion";
-            }
-            return;
-          } else if (ue.type === "<") {
-            let de = I.children.filter(
-              (Se) => Se !== ue && Se.type !== "file_descriptor",
-            );
-            if (de.length > 1) {
-              if (((d = !0), p !== "network_device")) p = "shell_expansion";
-              return;
-            }
-            let _e = de[0];
-            if (_e) {
-              let Se = qse(_e);
-              if (/^\/dev\/(tcp|udp)\//.test(Se))
-                ((d = !0), (p = "network_device"));
-            }
-            return;
-          } else if (ue.type !== "file_descriptor") ((F = ue), U++);
-        if (!D || !F) return;
-        if (U > 1) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        if (N && qse(F).startsWith("-")) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        if (F.type === "number" && F.children.length === 0 && N) return;
-        if (!(
-          (F.type === "word" && F.children.length === 0) ||
-          (F.type === "number" && F.children.length === 0) ||
-          F.type === "raw_string" ||
-          (F.type === "string" &&
-            !F.children.some(
-              (ue) => ue.type !== "string_content" && ue.type !== '"',
-            ))
-        )) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        let re = qse(F);
-        if (/^~|[*?[]/.test(re)) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        if (re.startsWith("!") || re.startsWith("=")) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        if (N && !/^[A-Za-z0-9./_-]+$/.test(re)) {
-          if (((d = !0), p !== "network_device")) p = "shell_expansion";
-          return;
-        }
-        if (/^\/dev\/(tcp|udp)\//.test(re)) {
-          ((d = !0), (p = "network_device"));
-          return;
-        }
-        o.push({ target: re, operator: D });
-        return;
-      }
-      for (let D of I.children) _(D);
-    };
-  _(r);
-  let E = [],
-    C = (I) => {
-      if (I.type === "comment") return;
-      if (I.type === "redirected_statement") {
-        for (let D of I.children) if (!D.type.endsWith("_redirect")) C(D);
-        return;
-      }
-      if (M9e.has(I.type)) {
-        for (let D of I.children) C(D);
-        return;
-      }
-      E.push(I.text);
-    };
-  return (
-    C(
-      r.type === "ERROR" && r.children[0]?.type === "program"
-        ? r.children[0]
-        : r,
-    ),
-    {
-      commandWithoutRedirections: E.length > 0 ? E.join(" ") : e,
-      redirections: o,
-      hasDangerousRedirection: d,
-      dangerousRedirectionReason: p,
-    }
-  );
-}
+import {
+  parseShellCommandRedirections,
+  extractCommandSegments,
+  extractCommandSegmentsStrict,
+  hasSuspiciousRedirection,
+} from "./shell-utils.js";
 
 function U9e(e) {
   return e.replace(/`[^`\n]+`/g, (t, r) => {
@@ -26799,7 +26568,7 @@ function dU(e, t, r) {
 
 var REFUSED_TOOL_INPUT_FIELDS = [
   "dangerouslyDisableSandbox",
-  ...[],
+  
   "run_in_background",
   "_simulatedSedEdit",
 ];
@@ -36719,7 +36488,7 @@ async function jro(e, t, r, o, d) {
 
 async function vsn(e, t) {
   let r = new Set();
-  for (let o of Lm(t)) {
+  for (let o of extractCommandSegments(t)) {
     let d = o.trim(),
       p = await Iae(e, d);
     if (!p?.commandPrefix) continue;
@@ -37201,7 +36970,7 @@ var ioo = [
   "GIT_CONFIG_PARAMETERS",
   "CLAUDE_EFFORT",
   "CLAUDE_CODE_INVOKED_SKILLS",
-  ...[],
+  
 ];
 
 class Usn {
@@ -46387,7 +46156,7 @@ function Gcn(e) {
 }
 
 function Ket(e, t) {
-  let r = Lm(e.command),
+  let r = extractCommandSegments(e.command),
     o;
   for (let d of r) {
     let p = Kcn(d);
@@ -46796,7 +46565,7 @@ function mtt(e) {
   if (!e.includes("$") || !/\brm(?:dir)?\b/i.test(e)) return null;
   e = e.replace(/[\uE000-\uF8FF]/g, "");
   let t = !Jfo.test(Xcn(e, !0)) && !Zfo.test(Xcn(e, !1)),
-    r = Lm(e);
+    r = extractCommandSegments(e);
   for (let o of r) {
     let d = ott(o, t, 0, !0);
     if (d !== null) return d;
@@ -48266,7 +48035,7 @@ function ele(e, t, r, o, d, p) {
   if (N.behavior === "deny") return N;
   let F = p
       ? p.map((De) => _po(De, t, r, o))
-      : Lm(e.command).map((De) => ypo(De, t, r, o)),
+      : extractCommandSegments(e.command).map((De) => ypo(De, t, r, o)),
     U = F.find((De) => De.behavior === "deny");
   if (U !== void 0) return U;
   if (_ !== void 0) return _;
@@ -48395,7 +48164,9 @@ function ele(e, t, r, o, d, p) {
     }
   let xe;
   if (r.blockReadsOutsideWorkingDirectories === !0) {
-    let De = p ? p.map((He) => He.argv) : Lm(e.command).map((He) => nun(He));
+    let De = p
+      ? p.map((He) => He.argv)
+      : extractCommandSegments(e.command).map((He) => nun(He));
     for (let He of De) {
       let je = mpo(He, t, r) ?? ppo(He, t, r);
       if (je?.behavior === "deny") return je;
@@ -49678,7 +49449,9 @@ function dun(e) {
   let t = e.length > Ox ? null : getBashParserModule()?.parse(e),
     r = t ? analyzeCommandAst(e, t) : void 0;
   return (
-    r?.kind === "simple" ? r.commands.map((d) => d.argv) : Lm(e).map(vy)
+    r?.kind === "simple"
+      ? r.commands.map((d) => d.argv)
+      : extractCommandSegments(e).map(vy)
   ).some((d) => xpo(hun(d)));
 }
 
@@ -50148,7 +49921,7 @@ function jpo(e) {
 }
 
 function nle(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   for (let o of t) {
     let d = o.trim(),
       p = jpo(d),
@@ -50587,7 +50360,7 @@ async function Ypo(e, t, r, o, d, p, _) {
     else {
       ((U = !1), (V = !1));
       for (let ue of t)
-        for (let de of Lm(ue)) {
+        for (let de of extractCommandSegments(ue)) {
           let _e = de.trim();
           if (d.isNormalizedCdCommand(_e)) U = !0;
           if (d.isNormalizedGitCommand(_e)) V = !0;
@@ -50608,7 +50381,8 @@ async function Ypo(e, t, r, o, d, p, _) {
     }
     if (U && V) {
       let ue = [];
-      for (let _e of t) for (let Se of Lm(_e)) ue.push(Se.trim());
+      for (let _e of t)
+        for (let Se of extractCommandSegments(_e)) ue.push(Se.trim());
       if (!(_ ? await _(ue) : !1)) {
         let _e = {
           type: "other",
@@ -50711,7 +50485,7 @@ function kun(e, t) {
       behavior: "passthrough",
       message: "DontAsk mode is handled in main permission flow",
     };
-  let r = Lm(e.command),
+  let r = extractCommandSegments(e.command),
     o = !1;
   for (let d of r) {
     let p = emo(d, t);
@@ -51310,7 +51084,8 @@ function ole(
   }
   let N = new Map();
   if (r === "prefix" && !d) {
-    for (let F of D) if (!N.has(F)) N.set(F, Lm(F).length > 1);
+    for (let F of D)
+      if (!N.has(F)) N.set(F, extractCommandSegments(F).length > 1);
   }
   return Array.from(t.entries())
     .filter(([F]) => {
@@ -51373,7 +51148,7 @@ function zL(e, t, r, { skipCompoundCheck: o = !1, astCommand: d } = {}) {
   return { matchingDenyRules: _, matchingAskRules: C, matchingAllowRules: D };
 }
 
-async function pmo(e, t) {
+async function verifyCommandsAgainstAllowRules(e, t) {
   if (t.length === 0) return null;
   let r = { span: e.command.trim(), group: t[0] ?? [], kind: "unverifiable" },
     o = await parseCommandRaw(e.command);
@@ -51382,7 +51157,7 @@ async function pmo(e, t) {
     ? analyzeCommandAst(e.command, o)
     : { kind: "simple", commands: [], bareAssignmentNames: [] };
   if (d.kind === "too-complex") return r;
-  let p = Yse(e.command);
+  let p = extractCommandSegmentsStrict(e.command);
   if (p === null || p.length === 0) return r;
   let _ = dedupe([...p, ...d.commands.map((E) => E.text)]);
   for (let E of t) {
@@ -51797,7 +51572,7 @@ function _mo(e, t, r) {
   if (/\$\{[\s|]/.test(e.command.replace(/['"\\]/g, ""))) return null;
   if (/\$\{![A-Za-z_0-9]/.test(e.command.replace(/['"\\]/g, ""))) return null;
   if (/\/proc\/.*\/environ/.test(e.command.replace(/['"\\]/g, ""))) return null;
-  let o = Yse(e.command);
+  let o = extractCommandSegmentsStrict(e.command);
   if (o === null || o.length === 0) return null;
   let d;
   for (let p of o) {
@@ -52319,7 +52094,7 @@ async function xmo(e, t, r) {
   if (o?.behavior === "deny") return o;
   if (collectRulesByContentForTool(t, BashTool, "deny").size > 0) {
     let _ = new Set([
-      ...Lm(e.command),
+      ...extractCommandSegments(e.command),
       ...(r && r !== PARSE_ABORTED ? O9e(r) : []),
     ]);
     for (let E of _) {
@@ -52393,7 +52168,7 @@ async function Amo(e, t, r) {
   for (let _ of [e.text, ...o]) {
     let E;
     try {
-      E = Lm(_);
+      E = extractCommandSegments(_);
     } catch {
       E = [_];
     }
@@ -52477,7 +52252,7 @@ function oyn(e) {
   return !1;
 }
 
-function Pun(e, t, r) {
+function refineAskPermissionDecision(e, t, r) {
   if (e.behavior !== "ask" || carriesAskRuleIntent(e)) return e;
   if (
     collectRulesByContentForTool(r, BashTool, "ask").size === 0 &&
@@ -52486,7 +52261,7 @@ function Pun(e, t, r) {
     return e;
   let o = new Set([
       t.command,
-      ...Lm(t.command),
+      ...extractCommandSegments(t.command),
       ...(e.decisionReason?.type === "subcommandResults"
         ? e.decisionReason.reasons.keys()
         : []),
@@ -52513,7 +52288,7 @@ function Pun(e, t, r) {
 async function checkBashCommandPermissions(e, t, r) {
   let o = getToolPermissionContext(t).bashCommandClamps;
   if (o !== void 0 && o.length > 0) {
-    let E = await pmo(e, o);
+    let E = await verifyCommandsAgainstAllowRules(e, o);
     if (E !== null)
       return (
         logEvent("tengu_bash_command_clamp_denied", { groupCount: o.length }),
@@ -52535,7 +52310,7 @@ async function checkBashCommandPermissions(e, t, r) {
   }
   let d = await Pmo(e, t, r);
   if (d.behavior !== "allow" || !e.command.includes("&"))
-    return Pun(d, e, getToolPermissionContext(t));
+    return refineAskPermissionDecision(d, e, getToolPermissionContext(t));
   if (
     d.decisionReason?.type === "other" &&
     d.decisionReason.reason === SANDBOX_AUTO_ALLOW_REASON
@@ -52550,7 +52325,7 @@ async function checkBashCommandPermissions(e, t, r) {
     classifierApprovable: !1,
     circuitBreaker: "backgroundOperator",
   };
-  return Pun(
+  return refineAskPermissionDecision(
     {
       behavior: "ask",
       decisionReason: _,
@@ -52978,7 +52753,7 @@ function tO(e) {
 }
 
 function b9(e) {
-  return Lm(e).some((t) => tO(t.trim()));
+  return extractCommandSegments(e).some((t) => tO(t.trim()));
 }
 
 var Imo = /^(LD_|DYLD_|PATH$)/;
@@ -52988,7 +52763,7 @@ function Mmo(e) {
   if (r.length === 0) return !1;
   let o;
   try {
-    o = Lm(e);
+    o = extractCommandSegments(e);
   } catch {
     o = [e];
   }
@@ -55351,22 +55126,7 @@ Latest blocked action: ${t}`,
   };
 }
 
-function isAskRuleDrivenReason(e) {
-  if (e?.type === "rule" && e.rule.ruleBehavior === "ask") return !0;
-  if (e?.type === "subcommandResults") {
-    for (let t of e.reasons.values())
-      if (t.behavior === "ask" && isAskRuleDrivenReason(t.decisionReason))
-        return !0;
-  }
-  return !1;
-}
-
-function carriesAskRuleIntent(e) {
-  return (
-    isAskRuleDrivenReason(e.decisionReason) ||
-    e.matchedAskRule?.ruleBehavior === "ask"
-  );
-}
+import { isAskRuleDrivenReason, carriesAskRuleIntent } from "./utils.js";
 
 function isServerPolicyAskReason(e) {
   return (
@@ -95886,7 +95646,7 @@ async function* runAgent({
             pRn(Cn);
           },
         },
-        ...[],
+        
         {
           name: "propagateNestedMemory",
           run: () => {
@@ -108164,7 +107924,7 @@ function getBuiltinToolDefinitions() {
     D2n,
     SkillTool,
     enterPlanModeTool,
-    ...[],
+    
     DesignSyncTool,
     ...(e ? [e] : []),
     ProjectsTool,
@@ -108205,7 +107965,7 @@ function getBuiltinToolDefinitions() {
     ...(Pdt() ? [Pdt()] : []),
     ...(y6n ? [y6n] : []),
     ...(_6n ? [_6n()] : []),
-    ...[],
+    
     listMcpResourcesTool,
     readMcpResourceTool,
     readMcpResourceDirTool,
@@ -126478,7 +126238,7 @@ var $Zo = (e, t, r) => ({
   ]);
 
 function UZo(e) {
-  let t = jZo(Lm(e).at(-1) || e);
+  let t = jZo(extractCommandSegments(e).at(-1) || e);
   if (t === "git") {
     let o = HZo(e);
     if (o === "diff" || o === "grep")
@@ -126489,7 +126249,7 @@ function UZo(e) {
 }
 
 function HZo(e) {
-  let o = (Lm(e).at(-1) || e).trim().split(/\s+/);
+  let o = (extractCommandSegments(e).at(-1) || e).trim().split(/\s+/);
   if (o[0] !== "git") return;
   for (let d = 1; d < o.length; d++) {
     let p = o[d];
@@ -126521,7 +126281,7 @@ function KZo(e) {
   if (/[|<>]/.test(e)) return [];
   let t;
   try {
-    t = Lm(e);
+    t = extractCommandSegments(e);
   } catch {
     return [];
   }
@@ -127450,7 +127210,7 @@ var Dpe = `
   ]);
 
 function Mes(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   if (t.length === 0) return { isSearch: !1, isRead: !1, isList: !1 };
   let r = !1,
     o = !1,
@@ -127473,7 +127233,7 @@ function Mes(e) {
 }
 
 function Oes(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   if (t.length === 0) return !1;
   let r = !1;
   for (let o of t) {
@@ -127539,7 +127299,7 @@ function hnr(e) {
 }
 
 function Npe(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   if (t.length === 0) return S("other");
   for (let r of t) {
     let o = beforeFirst(r, " "),
@@ -127638,7 +127398,7 @@ var Fes = createLazyValue(() =>
 );
 
 function $es(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   if (t.length === 0) return !0;
   let r = t[0]?.trim().split(/\s+/)[0];
   if (!r) return !0;
@@ -127646,7 +127406,7 @@ function $es(e) {
 }
 
 function Bes(e) {
-  let t = Lm(e);
+  let t = extractCommandSegments(e);
   if (t.length === 0) return null;
   let r = t[0]?.trim() ?? "",
     o = /^sleep\s+(\d+(?:\.\d*)?)\s*$/.exec(r);
@@ -128989,20 +128749,6 @@ function YUe(e, t, r, o = "Skill") {
   };
 }
 
-function Yes(e) {
-  let t = e.directoryRead
-    ? ` Call ${READ_MCP_RESOURCE_DIR_TOOL_NAME} on "${e.uri}" or a subdirectory URI to list its contents.`
-    : "";
-  return (
-    `This skill is served by MCP server "${e.server}" at ${e.uri}. ` +
-    `To read a supporting file this skill references by a relative path \u2014 for example "templates/invoice.md" \u2014 call ${READ_MCP_RESOURCE_TOOL_NAME} with server "${e.server}" and uri "${e.uri}/templates/invoice.md".${t}`
-  );
-}
-
-function HUe(e) {
-  return e;
-}
-
 function createSkillCommand({
   skillName: e,
   displayName: t,
@@ -129037,12 +128783,21 @@ function createSkillCommand({
   serverAttribution: vt,
 }) {
   if (ue && _.length > 0) {
-    let ut = HUe(ue);
+    let ut = ue;
     _ = _.map((Wt) => Wt.replace(/\$\{CLAUDE_SKILL_DIR\}/g, () => ut));
   }
   if (_.length > 0) {
-    let ut = HUe(sn());
+    let ut = sn();
     _ = _.map((Wt) => Wt.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, () => ut));
+  }
+  function Yes(e) {
+    let t = e.directoryRead
+      ? ` Call ${READ_MCP_RESOURCE_DIR_TOOL_NAME} on "${e.uri}" or a subdirectory URI to list its contents.`
+      : "";
+    return (
+      `This skill is served by MCP server "${e.server}" at ${e.uri}. ` +
+      `To read a supporting file this skill references by a relative path \u2014 for example "templates/invoice.md" \u2014 call ${READ_MCP_RESOURCE_TOOL_NAME} with server "${e.server}" and uri "${e.uri}/templates/invoice.md".${t}`
+    );
   }
   return {
     type: "prompt",
@@ -129101,12 +128856,12 @@ ${d}`
         )),
         ue)
       ) {
-        let tn = HUe(ue);
+        let tn = ue;
         en = en.replaceAll("${CLAUDE_SKILL_DIR}", () => tn);
       }
       if (!isModelInvocable({ loadedFrom: _e })) {
         {
-          let tn = HUe(sn());
+          let tn = sn();
           en = en.replace(/\$\{CLAUDE_PROJECT_DIR\}/g, () => tn);
         }
         en = en.replace(/\$\{CLAUDE_SESSION_ID\}/g, K());
@@ -139931,12 +139686,6 @@ var els = new Set([
   READ_MCP_RESOURCE_DIR_TOOL_NAME,
 ]);
 
-function tls() {
-  return import.meta.require(
-    "../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js",
-  );
-}
-
 var nls = /[\u2028\u2029\u0085]/g;
 
 function yZ(e) {
@@ -140274,9 +140023,11 @@ ${OS(It.ask.text)}`,
       tn.type === "attachment" &&
       tn.attachment.type === "teammate_mailbox"
     ) {
-      let dn = tls().formatTeammateMessages(tn.attachment.messages, {
-        recipientIsLead: tn.attachment.recipientIsLead ?? !1,
-      });
+      let dn = import.meta
+        .require("../../02-功能模块/Teammates团队/chunk-g6nvp9mm.js")
+        .formatTeammateMessages(tn.attachment.messages, {
+          recipientIsLead: tn.attachment.recipientIsLead ?? !1,
+        });
       if (dn)
         (en(void 0),
           p.push({ role: "user", content: [{ type: "text", text: OS(dn) }] }));
@@ -146152,7 +145903,7 @@ function Wds() {
     ...(f1e ? [f1e] : []),
     Qwt,
     zlr,
-    ...[],
+    
     ...Fds,
     Gcr,
     ...(Udr ? [Udr] : []),
@@ -146164,7 +145915,7 @@ function Wds() {
     ...(PTt ? [PTt] : []),
     ...(MTt ? [MTt] : []),
     ...Edr,
-    ...[],
+    
   ];
 }
 
@@ -146978,8 +146729,8 @@ function xfr() {
             "Briefly explain what sandbox restriction likely caused the failure. Be sure to mention that the user can use the `/sandbox` command to manage restrictions.",
             "This goes through the permission gate (a user prompt, or the auto-mode classifier when auto mode is active)",
           ],
-          ...[],
-          ...[],
+          
+          
           "Treat each command you execute with `dangerouslyDisableSandbox: true` individually. Even if you have recently run a command with this setting, you should default to running future commands within the sandbox.",
           "Do not suggest adding sensitive paths like ~/.bashrc, ~/.zshrc, ~/.ssh/*, or credential files to the sandbox allowlist.",
         ]
@@ -147832,8 +147583,8 @@ async function Pfs(e, t, r, o, d, p, _) {
       wf("skill_listing", () => getSkillListingAttachments(F)),
       wf("plan_mode", () => jfs(e, d, t, _)),
       wf("plan_mode_exit", () => Wfs(d, t)),
-      ...[],
-      ...[],
+      
+      
       wf("auto_mode", () => Gfs(d, t)),
       wf("auto_mode_exit", () => zfs(d, t)),
       wf("todo_reminders", de),
@@ -147852,7 +147603,7 @@ async function Pfs(e, t, r, o, d, p, _) {
         : []),
       wf("agent_pending_messages", async () => Dfs(t)),
       wf("critical_system_reminder", () => Promise.resolve(Qfs(t))),
-      ...[],
+      
       ...(U &&
       e === null &&
       !_?.isRegularUserPrompt &&
@@ -150792,7 +150543,7 @@ function Jps(e) {
 }
 
 function Zps(e) {
-  return Yse(e) ?? void 0;
+  return extractCommandSegmentsStrict(e) ?? void 0;
 }
 
 var $1e = "hook-agent-";
@@ -168055,7 +167806,7 @@ export {
   LQt,
   LSP_TOOL_NAME,
   Lbt,
-  Lm,
+  extractCommandSegments as Lm,
   Lnn,
   Lnt,
   LocalAgentTask,

@@ -2807,7 +2807,7 @@ async function spawnBackgroundFork(w, I, ne, me, pe, be, xe, Ae, Oe, He) {
       ...(Zt !== void 0 ? ["--effort", Zt] : []),
       "--permission-mode",
       me,
-      ...[],
+      
       ...buildCarriableFlagPair("--agent", yn.agent),
       ...buildCarriableFlagPair("--agents", yn.agents),
       ...buildCarriableFlagPair("--name", He?.keepParent ? void 0 : He?.workerName),

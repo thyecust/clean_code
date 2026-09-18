@@ -1848,7 +1848,7 @@ var Go = [
   J({ matches: (e) => e === enterPlanModeTool, dialog: ENTER_PLAN_MODE_PERMISSION_DIALOG, build: buildBasePermissionDescriptor }),
   J({ matches: (e) => e === exitPlanModeTool, dialog: EXIT_PLAN_MODE_PERMISSION_DIALOG, build: to }),
   J({ matches: (e) => e === SkillTool, dialog: SKILL_PERMISSION_DIALOG, build: eo }),
-  ...[],
+  
   J({ matches: (e) => e.name === POWERSHELL_TOOL_NAME, dialog: POWERSHELL_PERMISSION_DIALOG, build: oo }),
   J({ matches: (e) => e === Qo, dialog: MONITOR_PERMISSION_DIALOG, build: Ke }),
   ...(fo !== null && go !== null

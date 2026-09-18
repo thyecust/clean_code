@@ -18554,7 +18554,7 @@ function won(e) {
   return !1;
 }
 async function buildCommandPrefixesForCommandLine(e, t, r) {
-  let o = Lm(t);
+  let o = extractCommandSegments(t);
   if (o.length <= 1) {
     let E = await Iae(e, t);
     return E?.commandPrefix ? [E.commandPrefix] : [];
@@ -48470,7 +48470,7 @@ async function cds(e, t) {
         type: "stdio",
         allowed_origins: [
           "chrome-extension://fcoeoabgfenejglbffodgkkbkcdhcgfn/",
-          ...[],
+          
         ],
       },
       d = jsonStringify(o, null, 2),
@@ -50518,7 +50518,7 @@ var a_s = new Set([
   "bash_progress",
   "powershell_progress",
   "mcp_progress",
-  ...[],
+  
   "repl_tool_call",
   "tool_heartbeat",
   "agent_api_retry",

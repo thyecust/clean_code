@@ -12,5 +12,5 @@
 export {
   AWS_ACCESS_KEY_ID_ENV_VAR as ENV_KEY,
   AWS_SECRET_ACCESS_KEY_ENV_VAR as ENV_SECRET,
-  fromEnv as fromEnv,
+  fromEnv,
 } from "../../02-功能模块/模型接入-Bedrock-Vertex/aws-credential-provider-node.js";
