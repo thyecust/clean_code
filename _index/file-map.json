@@ -8928,7 +8928,14 @@
   "path": "03-入口与运行时/核心应用-Agent循环/execution-core.js",
   "module": "核心应用 / Agent 循环",
   "tier": 3,
-  "kb": 5671.7,
+  "kb": 4863.8,
+  "confidence": "high"
+ },
+ "standalone-tools.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/standalone-tools.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 854.2,
   "confidence": "high"
  },
  "createTranscriptParser.Ryr.js": {
