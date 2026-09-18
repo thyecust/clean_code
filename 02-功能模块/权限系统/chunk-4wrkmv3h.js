@@ -37,7 +37,7 @@ import { subprocessEnv } from "../../01-核心基础设施/核心工具-进程�
 import { GIT_HARDENING_ARGS } from "../工作树-Git/git-operations.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import * as Be from "fs/promises";
+import * as fsPromises from "fs/promises";
 import { homedir } from "os";
 import {
   dirname,
@@ -147,7 +147,7 @@ async function Lt(e) {
     u = !1,
     h = new AbortController(),
     _ = async () => {
-      let w = await Be.realpath(r).catch((D) => (isNotFoundError(D) ? r : null));
+      let w = await fsPromises.realpath(r).catch((D) => (isNotFoundError(D) ? r : null));
       if (w === null) {
         p = "home-unreadable";
         return;
@@ -170,7 +170,7 @@ async function Lt(e) {
         O++;
         let R;
         try {
-          R = await Be.readdir(D, { withFileTypes: !0 });
+          R = await fsPromises.readdir(D, { withFileTypes: !0 });
         } catch {
           if (D === w) {
             p = "home-unreadable";
@@ -294,7 +294,7 @@ function ut(e, t, r) {
 }
 async function Ot(e, t, r, o) {
   try {
-    let s = await Be.realpath(e);
+    let s = await fsPromises.realpath(e);
     if (!ut(s, t, r) || o(s) || o(join(s, "config"))) return "refused";
     return "allowed";
   } catch (s) {
@@ -363,7 +363,6 @@ function Ze(e) {
   return e.replace(/\n$/, "");
 }
 import { spawn } from "child_process";
-import * as M from "fs/promises";
 function Qe(e) {
   return e.includes("*");
 }
@@ -1356,7 +1355,7 @@ async function jr(e) {
           try {
             let C = R.split("/");
             for (let N = 1; N <= C.length; N++)
-              if ((await M.lstat(join(e, ...C.slice(0, N)))).isSymbolicLink())
+              if ((await fsPromises.lstat(join(e, ...C.slice(0, N)))).isSymbolicLink())
                 return;
             return R;
           } catch {
@@ -1557,7 +1556,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
     ),
     l;
   try {
-    l = await M.lstat(t);
+    l = await fsPromises.lstat(t);
   } catch {
     return "";
   }
@@ -1569,7 +1568,7 @@ Present but ${u} \u2014 skipped. Tell the user; do not read or rewrite this file
     );
   let i;
   try {
-    i = await M.lstat(r);
+    i = await fsPromises.lstat(r);
   } catch {
     return "";
   }
@@ -1707,13 +1706,13 @@ async function Wr(e) {
   let t = getProjectDir(e),
     r = [];
   try {
-    let u = await M.readdir(t);
+    let u = await fsPromises.readdir(t);
     r = (
       await Promise.all(
         u
           .filter((_) => _.endsWith(".jsonl"))
           .map(async (_) => {
-            let w = await M.stat(join(t, _));
+            let w = await fsPromises.stat(join(t, _));
             return { path: join(t, _), mtime: w.mtimeMs, size: w.size };
           }),
       )
@@ -1737,7 +1736,7 @@ async function Wr(e) {
     }
     let _ = "";
     try {
-      _ = await M.readFile(u, "utf8");
+      _ = await fsPromises.readFile(u, "utf8");
     } catch {
       continue;
     }
@@ -1887,7 +1886,7 @@ async function Kr(e, t, r) {
     l = new Set(),
     i = !1,
     d = performance.now() + _t(e.platform) - 50,
-    m = await M.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
+    m = await fsPromises.realpath(e.homeDir).catch((p) => (isNotFoundError(p) ? e.homeDir : null));
   if (m === null) return { words: [], filesRead: [], partial: !0 };
   if (isNetworkPath(m)) return { words: [], filesRead: [], partial: !0, networkHome: !0 };
   let c = (p) => isFileReadDenied(p, t);
@@ -1900,7 +1899,7 @@ async function Kr(e, t, r) {
       i = !0;
       continue;
     }
-    let u = await M.realpath(p.path).catch((v) => (isNotFoundError(v) ? p.path : null));
+    let u = await fsPromises.realpath(p.path).catch((v) => (isNotFoundError(v) ? p.path : null));
     if (u === null) {
       i = !0;
       continue;
@@ -2015,7 +2014,7 @@ async function an(
     d = getFileStorage(),
     m = s !== void 0 && o.projectsDir === getProjectsDir() ? s : void 0,
     c = Date.now() + o.deadlineMs,
-    p = M.realpath(o.projectsDir).catch(() => o.projectsDir),
+    p = fsPromises.realpath(o.projectsDir).catch(() => o.projectsDir),
     u = (H) => (l === "windows" ? H.toLowerCase() : H),
     h = new Set((r?.projectDirs ?? []).map(u)),
     _ = new Set((r?.transcriptFiles ?? []).map(u)),
@@ -2185,7 +2184,7 @@ async function an(
         ((_e = !0), (j = R.length - H));
         break;
       }
-      let we = await Promise.race([M.realpath(ie).catch(() => null), ot]);
+      let we = await Promise.race([fsPromises.realpath(ie).catch(() => null), ot]);
       if (we === ce) {
         ((_e = !0), (j = R.length - H));
         break;

@@ -3432,9 +3432,8 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import Xe from "path";
+import path from "path";
 import { open } from "fs/promises";
-import * as vt from "path";
 import { constants } from "fs";
 function getSafeReadOpenFlags() {
   return constants.O_RDONLY | getNoFollowOpenFlags();
@@ -3483,8 +3482,8 @@ async function isExistingDirectory(e) {
 }
 async function checkContainedDirectory(e, t) {
   let r = e;
-  for (let _ of vt.relative(e, t).split(vt.sep).filter(Boolean)) {
-    r = vt.join(r, _);
+  for (let _ of path.relative(e, t).split(path.sep).filter(Boolean)) {
+    r = path.join(r, _);
     let w;
     try {
       w = await lstat(r);
@@ -3500,8 +3499,8 @@ async function checkContainedDirectory(e, t) {
     realpath(t).catch(() => null),
   ]);
   if (o === null || d === null) return "refused";
-  let p = vt.relative(o, d);
-  return !p.startsWith("..") && !vt.isAbsolute(p) ? "ok" : "refused";
+  let p = path.relative(o, d);
+  return !p.startsWith("..") && !path.isAbsolute(p) ? "ok" : "refused";
 }
 async function readOptionalFileContent(e) {
   let t = await readTextFileCapped(e);
@@ -3545,8 +3544,8 @@ async function $o(e, t, r) {
       err: `not an artifact slug: ${d}`,
     };
   let p = `${ARTIFACT_STUB_URL_PREFIX}${d}`,
-    _ = Xe.join(e, d),
-    w = Xe.dirname(e),
+    _ = path.join(e, d),
+    w = path.dirname(e),
     E = await lstat(w).catch(() => null);
   if (E === null || !E.isDirectory() || (await realpath(w).catch(() => null)) !== w)
     return {
@@ -3555,22 +3554,22 @@ async function $o(e, t, r) {
       version: null,
       err: "the stub publish directory is not inside a real directory",
     };
-  (await ei(e), await ei(_), await writeFileExclusive(Xe.join(_, "index.html"), t));
+  (await ei(e), await ei(_), await writeFileExclusive(path.join(_, "index.html"), t));
   for (let [V, J] of [
     ["thumbnail.img", r.thumbnail],
     ["thumbnail_dark.img", r.thumbnailDark],
   ])
-    if (J !== void 0) await writeFileExclusive(Xe.join(_, V), J);
-    else await rm(Xe.join(_, V), { recursive: !0, force: !0 });
-  let R = Xe.join(_, "files");
+    if (J !== void 0) await writeFileExclusive(path.join(_, V), J);
+    else await rm(path.join(_, V), { recursive: !0, force: !0 });
+  let R = path.join(_, "files");
   await ei(R);
   let C = await realpath(R),
     M = [],
-    D = (V) => V === C || V.startsWith(C + Xe.sep),
+    D = (V) => V === C || V.startsWith(C + path.sep),
     F = async (V) => {
-      let J = Xe.resolve(R, V);
-      if (!J.startsWith(R + Xe.sep)) return null;
-      if (hasReservedPathSegment(J, R + Xe.sep, DANGEROUS_FILES_LC))
+      let J = path.resolve(R, V);
+      if (!J.startsWith(R + path.sep)) return null;
+      if (hasReservedPathSegment(J, R + path.sep, DANGEROUS_FILES_LC))
         return (
           M.push({
             path: V,
@@ -3579,7 +3578,7 @@ async function $o(e, t, r) {
           }),
           null
         );
-      for (let U = Xe.dirname(J); ; U = Xe.dirname(U))
+      for (let U = path.dirname(J); ; U = path.dirname(U))
         try {
           return D(await realpath(U)) ? J : null;
         } catch (te) {
@@ -3588,7 +3587,7 @@ async function $o(e, t, r) {
     },
     I = async (V) => {
       try {
-        return D(await realpath(Xe.dirname(V)));
+        return D(await realpath(path.dirname(V)));
       } catch (J) {
         if (W(J)) return "absent";
         throw J;
@@ -3617,7 +3616,7 @@ async function $o(e, t, r) {
     try {
       let J = await F(V.path);
       if (J === null) continue;
-      if ((await mkdir(Xe.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
+      if ((await mkdir(path.dirname(J), { recursive: !0 }), (await I(J)) !== !0))
         continue;
       await writeFileExclusive(J, V.content);
     } catch (J) {
@@ -3659,14 +3658,14 @@ async function $o(e, t, r) {
     publishedAtMs: Date.now(),
   };
   return (
-    await writeFileExclusive(Xe.join(_, "manifest.json"), jsonStringify(ue, null, 2)),
+    await writeFileExclusive(path.join(_, "manifest.json"), jsonStringify(ue, null, 2)),
     { url: p, slug: d, version: "1", err: null }
   );
 }
 async function readArtifactStubFavicon(e, t) {
   if (!ARTIFACT_SLUG_RE.test(t)) return;
   try {
-    let r = await readOptionalFileContent(Xe.join(e, t, "manifest.json")),
+    let r = await readOptionalFileContent(path.join(e, t, "manifest.json")),
       o = r === void 0 ? void 0 : jsonParse(r);
     return isRecord(o) ? o.favicon : void 0;
   } catch {

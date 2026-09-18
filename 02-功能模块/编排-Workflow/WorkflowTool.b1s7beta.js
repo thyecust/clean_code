@@ -681,7 +681,7 @@ class pr {
   }
 }
 var tr = ["user", "model", "stop", "runaway", "pause"];
-import * as Mr from "vm";
+import * as vm from "vm";
 async function nr(e, r) {
   let t;
   try {
@@ -855,7 +855,7 @@ function Vr(e) {
         (e.registerTimers(_e),
           (H = createChildWorkflowVmContext(o, de, ye, _e)),
           (le = H.errorInfo),
-          _e.bindVMInvoke(Mr.runInContext("(fn => { fn() })", H.childCtx)));
+          _e.bindVMInvoke(vm.runInContext("(fn => { fn() })", H.childCtx)));
         for (let [Me, Ae] of [
           ["parallel", o.hooks.parallel],
           ["pipeline", o.hooks.pipeline],
@@ -973,7 +973,6 @@ function Vr(e) {
   }
   return { workflow: U, cut: B };
 }
-import * as Ke from "vm";
 function Ct(e) {
   return Array.isArray(e);
 }
@@ -1012,7 +1011,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     } = e.vmBoundary,
     { vmContext: F, hooks: B } = e,
     U = makeVmErrorExtractor(F),
-    j = Ke.runInContext("(p => { p.then(undefined, () => {}) })", F),
+    j = vm.runInContext("(p => { p.then(undefined, () => {}) })", F),
     J = { by: "script", in: t, memo: "chain" },
     N = J;
   function ne(P, C) {
@@ -1026,7 +1025,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
   }
   let q = { in: t },
     Y = (P, C) => (xt(C) ? q : { in: P.in }),
-    be = Ke.runInContext(
+    be = vm.runInContext(
       "(() => { const freeze = Object.freeze; return (put, read, on, retract, agent, workflow) => freeze({ put, read, on, retract, agent, workflow }) })()",
       F,
     );
@@ -1165,7 +1164,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
     });
   }
   let Ae = wrapAsyncHostFunction(async (P) => P),
-    Fe = Ke.runInContext(
+    Fe = vm.runInContext(
       "(() => { const P = Promise; return () => new P(() => {}) })()",
       F,
     );
@@ -1317,7 +1316,7 @@ function gr(e, r, t, d, { scopeSignal: o, inheritedSpawnMemo: a } = {}) {
       enumerable: !0,
       configurable: !1,
     }),
-    Ke.runInContext("delete globalThis.eval", F),
+    vm.runInContext("delete globalThis.eval", F),
     {
       as(P, C) {
         return ne({ by: P, in: t, memo: "none" }, C);

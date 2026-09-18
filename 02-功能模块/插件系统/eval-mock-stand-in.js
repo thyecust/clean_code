@@ -20,9 +20,8 @@ import { s, O, se, v, c, $e, Ko, fe, X, k, Hb } from "../../00-第三方库/zod/
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { createHash } from "crypto";
 import { constants } from "fs";
-import T from "path";
+import path from "path";
 import { open } from "fs/promises";
-import Q from "path";
 var N = 120;
 function B(e) {
   return e.length > N ? `${truncateToCodeUnits(e, N)}...` : e;
@@ -36,7 +35,7 @@ function formatValueForDisplay(e) {
   return t.length <= N ? escapeNonPrintableAscii(t) : escapeNonPrintableAscii(jsonStringify(B(t)));
 }
 async function assertPathIsLocal(e, t, r, o = []) {
-  let n = Q.resolve(e, t),
+  let n = path.resolve(e, t),
     i = formatForDisplay(t),
     a = [e, ...o];
   if ((jf(t) && !li(t)) || (jf(n) && !li(n)))
@@ -65,7 +64,6 @@ async function assertPathIsLocal(e, t, r, o = []) {
       "plugin eval: a repo-authored path links to a network-reaching path \u2014 refusing it",
     );
 }
-import C from "path";
 var ee = 8192,
   H = 50000000,
   te = /^[is]*$/;
@@ -330,7 +328,7 @@ async function renderPromptTemplate(e, t, r, o, n = Number.POSITIVE_INFINITY) {
       i ??= f;
       continue;
     }
-    let h = C.resolve(r, u);
+    let h = path.resolve(r, u);
     if (!le(r, h)) {
       i ??= `{{file:${u}}} names a path outside the mock's directory`;
       continue;
@@ -349,8 +347,8 @@ async function renderPromptTemplate(e, t, r, o, n = Number.POSITIVE_INFINITY) {
   return { ok: !0, text: d.join("") };
 }
 function le(e, t) {
-  let r = C.relative(e, t);
-  return r !== "" && !r.startsWith("..") && !C.isAbsolute(r);
+  let r = path.relative(e, t);
+  return r !== "" && !r.startsWith("..") && !path.isAbsolute(r);
 }
 function q(e) {
   let t = 0;
@@ -574,7 +572,7 @@ async function ye(e, t, r, o = "") {
 }
 async function readMockFixtureFile(e) {
   try {
-    await assertPathIsLocal(T.dirname(e), T.basename(e), "mock fixture");
+    await assertPathIsLocal(path.dirname(e), path.basename(e), "mock fixture");
     let t = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
     try {
       let r = await t.stat();
@@ -653,7 +651,7 @@ function Se(e) {
 }
 var Ee = 4194304;
 async function ve(e) {
-  await assertPathIsLocal(T.dirname(e), T.basename(e), "mock spec");
+  await assertPathIsLocal(path.dirname(e), path.basename(e), "mock spec");
   let t = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
   try {
     let r = await t.stat();
