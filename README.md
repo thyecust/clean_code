@@ -468,6 +468,23 @@ bun .analysis/move/check-lazy-base.mjs   两类懒加载的解析基准
 | 5 | **索引一致**：`file-map.json` 每条 path 在磁盘上、每个主树 `.js` 都有记录 | 索引与实际脱节。**实测已经脱节过一次** —— 某条记录的 path 指向一个早已改名的文件，而改名后的文件在索引里没有记录 |
 | 6 | **懒加载基准**：`importMetaRequire("./x")` 按**捕获 `import.meta.require` 的模块所在目录**解析；`readEmbeddedAsset*("./x", …)` 按**引用方目录**解析 | 第 2 类检查的正则 `import\.meta\.require\(` 匹配不到 `importMetaRequire(`；`"./x"` 是普通字符串字面量，根本不是 import 说明符 |
 
+搬一个文件不用手写 plan：根目录的 `mv.mjs` 把 `<源> <目标>` 拼成 plan 后，
+把上面这一整套按顺序跑完（move → verify → 三道静态闸门），退出码即结论。
+
+```
+bun mv "02-功能模块/自托管Runner/SELF_HOSTED_RUNNER_TOOLS.54hpaec5.js" \
+       "04-tools/SelfHostedRunnerTools.js"    # 加 --full 追加运行时那两道
+bun mv --revert                               # 按 manifest 反转，原样撤销上一次
+```
+
+`--dry` 只校验 + 预演 · `--module`/`--tier` 覆盖目标目录的索引归属（缺省沿用文件
+原来的 module/tier）· 支持多对 `<源> <目标>` 与目录搬家。它**不实现任何路径重写逻辑** ——
+三条解析基准的判定继续只有 `move.mjs` 那一份实现。
+
+运行时那两道 （`--help` 的行数与 md5、退出路径）做的是**前后 A/B**，不跟硬编码的
+期望值比：mv 不该改变 CLI 的可观测行为，所以「搬之前」就是这次搬家的正确参照。
+硬编码 md5 在任何一次有意的内容改动后都会误报，那种假警报最后只会让人忽略这道闸门。
+
 第 6 类那 4 个「已知缺失」的资源（`mermaid.min.js` 等）在本仓库里**从未存在过** ——
 只有加载器引用它们，git 里没有新增记录，是打包产物把它们留在了外部。检查要求这个集合不变。
 
