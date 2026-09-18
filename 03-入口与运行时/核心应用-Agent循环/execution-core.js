@@ -84390,9 +84390,6 @@ async function isInsideBareGitRepository(e) {
   }
 }
 
-var gUo = `${FILES_API_BETA.header},${OAUTH_AUTH_BETA.header}`,
-  hUo = "2023-06-01";
-
 function y$n() {
   return (
     process.env.ANTHROPIC_BASE_URL ||
@@ -84415,6 +84412,8 @@ function iF(e) {
 }
 
 function _$n(e) {
+  const hUo = "2023-06-01";
+  const gUo = `${FILES_API_BETA.header},${OAUTH_AUTH_BETA.header}`;
   return {
     Authorization: `Bearer ${e.oauthToken}`,
     "anthropic-version": hUo,
@@ -84630,8 +84629,6 @@ var GIT_OBJECT_ID_REGEX = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/,
 var G7 = "refs/seed/stash",
   eQ = "refs/seed/root",
   hct = "refs/seed/",
-  $Uo = 7200000,
-  BUo = 65536,
   UUo = /^refs\/seed\/(\d+)-[0-9a-f]{16}\/(?:stash|root)$/;
 
 function T$n(e = Date.now()) {
@@ -84643,6 +84640,7 @@ function v$n(e, t = Date.now()) {
   return e.filter((r) => {
     if (r === G7 || r === eQ) return !0;
     let o = UUo.exec(r);
+    const $Uo = 7200000;
     return o !== null && Math.abs(t - Number(o[1])) > $Uo;
   });
 }
@@ -84704,6 +84702,7 @@ class x$n extends Transform {
     for (;;) {
       let e = this.pending.indexOf(10);
       if (e < 0) {
+        const BUo = 65536;
         if (this.pending.length > BUo)
           throw Error("bundle header line too long");
         return;
@@ -84765,9 +84764,7 @@ class x$n extends Transform {
   }
 }
 
-var GUo = 8,
-  P$n = 1048576,
-  zUo = 536870912;
+var P$n = 1048576;
 
 async function stageChangedPaths(e, t, r, o, d = {}) {
   let p = r.find((re) => !isSafeRelativePath(re));
@@ -84777,6 +84774,7 @@ async function stageChangedPaths(e, t, r, o, d = {}) {
       tooLarge: !1,
       momentary: !1,
     };
+  const GUo = 8;
   let _ = 0,
     E = null,
     C = collectGitAttributesPaths(r),
@@ -85005,6 +85003,7 @@ function collectGitAttributesPaths(e) {
 var bct = new Set(["ENAMETOOLONG", "ENOTDIR", "EISDIR", "EINVAL", "ELOOP"]);
 
 async function VUo(e, t) {
+  const zUo = 536870912;
   let r = join(e, t),
     o = "darwin",
     d =
@@ -85116,9 +85115,7 @@ function oHo(e) {
     .digest("hex");
 }
 
-var sHo = 1048576,
-  iHo = 67108864,
-  O$n = 536870912,
+var O$n = 536870912,
   GIT_STASH_IDENTITY_ENV = {
     GIT_AUTHOR_NAME: "git stash",
     GIT_AUTHOR_EMAIL: "git@stash",
@@ -85137,6 +85134,7 @@ async function B$n(e, t, r = {}) {
     F = cHo(_.inspection);
   if (F.length > 0)
     return { kind: "refused", refused: F, decidedOn: "listing" };
+  const iHo = 67108864;
   let U = r.leaveOutUncommittedCredentialFiles
       ? await uHo(C, _.inspection, p, (De) => r.alsoLeaveOut?.(De) ?? !1)
       : [],
@@ -85440,13 +85438,12 @@ async function seedIndexFromTreePaths(e, t, r, o) {
   );
 }
 
-var aHo = 16384;
-
 function chunkPathsForArgv(e) {
   return e.reduce(
     (t, r) => {
       let o = Buffer.byteLength(r) + 1,
         d = t.slices.at(-1);
+      var aHo = 16384;
       if (d !== void 0 && d.length > 0 && t.bytes + o <= aHo)
         return (d.push(r), { slices: t.slices, bytes: t.bytes + o });
       return (t.slices.push([r]), { slices: t.slices, bytes: o });
@@ -85756,7 +85753,7 @@ async function yHo(e, t) {
 async function H$n(
   e,
   { path: t, status: r, oldMode: o, newMode: d, oldId: p, newId: _ },
-  E = sHo,
+  E = 1048576,
   C,
 ) {
   if (
