@@ -13,7 +13,11 @@ const { sm, moduleScope } = analyze(src);
 const defs = new Map(), imports = new Map(), declBound = new Map();
 for (const v of moduleScope.variables) {
   const d = v.defs[0]; if (!d) continue;
-  if (d.type === "ImportBinding") { imports.set(v.name, { spec: d.parent?.source?.value, imported: d.node.imported?.name ?? v.name }); continue; }
+  if (d.type === "ImportBinding") {
+    const k = d.node?.type === "ImportNamespaceSpecifier" ? "ns" : d.node?.type === "ImportDefaultSpecifier" ? "def" : "named";
+    imports.set(v.name, { kind: k, spec: d.parent?.source?.value, imported: d.node.imported?.name ?? v.name });
+    continue;
+  }
   const stmt = d.type === "Variable" ? d.parent : d.node;
   if (!stmt || stmt.start === undefined) continue;
   defs.set(v.name, { stmt, start: stmt.start, end: stmt.end });
@@ -22,6 +26,7 @@ for (const v of moduleScope.variables) {
 const origFree = new Set([...sm.globalScope.through].map((r) => r.identifier.name));
 const spans = [...defs].map(([n, d]) => ({ n, ...d })).sort((a, b) => a.start - b.start);
 const find = (p) => { let lo = 0, hi = spans.length - 1, best = null; while (lo <= hi) { const m = (lo + hi) >> 1; if (spans[m].start <= p) { best = spans[m]; lo = m + 1; } else hi = m - 1; } return best && p <= best.end ? best.n : null; };
+const writes = new Map();   // 模块级绑定 -> 它被赋值的地方（不含自己的声明）
 const refs = new Map();
 for (const sc of sm.scopes) for (const r of sc.references) {
   if (!r.resolved || r.resolved.scope !== moduleScope) continue;
@@ -30,6 +35,10 @@ for (const sc of sm.scopes) for (const r of sc.references) {
   if (imports.has(to) || from === to) continue;
   if (!refs.has(from)) refs.set(from, new Set());
   refs.get(from).add(to);
+  if (r.isWrite && r.isWrite()) {
+    if (!writes.has(to)) writes.set(to, new Set());
+    writes.get(to).add(from);          // from = 赋值所在的顶层声明（可能是 null）
+  }
 }
 const freeOf = (t) => { try { return [...analyze(t + "\n").sm.globalScope.through].map((r) => r.identifier.name); } catch { return null; } };
 
@@ -69,6 +78,17 @@ const build = () => {
   return { moveTexts, chunkEdits, split, stmts: byStmt.size };
 };
 
+// 变量必须跟它的**赋值点**一起搬：否则 chunk 里会留下「给 import 赋值」
+const pullSetters = () => {
+  const add = [];
+  for (const n of closure) for (const from of writes.get(n) ?? []) {
+    if (from === null) continue;
+    if (closure.has(from)) continue;
+    add.push(from);                    // 把 setter 也拉进闭包
+  }
+  return add;
+};
+
 // 不动点：对**实际搬走的文本**找自由名（不是整条语句 —— 那会漏掉留在 chunk 的兄弟声明符）
 const forceExt = new Set();   // 不动点直接看到、但「按引用方归属」没收到的 import
 let built = build();
@@ -78,6 +98,8 @@ for (let iter = 0; iter < 12; iter++) {
   const need = [...new Set(free)].filter((n) => defs.has(n) && !closure.has(n));
   const needExt = [...new Set(free)].filter((n) => imports.has(n) && !forceExt.has(n));
   if (needExt.length) { console.log(`  [不动点 ${iter + 1}] 补进 import ${needExt.length} 个: ${needExt.slice(0, 8).join(", ")}`); needExt.forEach((n) => forceExt.add(n)); }
+  const setters = pullSetters();
+  if (setters.length) { console.log(`  [不动点 ${iter + 1}] 拉进 setter ${setters.length} 个: ${setters.slice(0, 6).join(", ")}`); expand(setters); built = build(); continue; }
   if (!need.length) break;
   console.log(`  [不动点 ${iter + 1}] 补进闭包 ${need.length} 个: ${need.slice(0, 8).join(", ")}`);
   expand(need);
@@ -106,9 +128,15 @@ const expBlock = src.slice(src.lastIndexOf("export {"));
 for (const n of closure) if (new RegExp(`^\\s*${n},?$`, "m").test(expBlock)) back.add(n);
 
 for (const n of forceExt) ext.set(n, imports.get(n));
-const bySpec = new Map();
-for (const [ln, im] of ext) { if (!bySpec.has(im.spec)) bySpec.set(im.spec, []); bySpec.get(im.spec).push(im.imported === ln ? ln : `${im.imported} as ${ln}`); }
-const importLines = [...bySpec].map(([spec, names]) => `import { ${names.sort().join(", ")} } from "${spec}";`);
+const bySpec = new Map(), nsLines = [], defLines = [];
+for (const [ln, im] of ext) {
+  if (!im) continue;
+  if (im.kind === "ns") { nsLines.push(`import * as ${ln} from "${im.spec}";`); continue; }
+  if (im.kind === "def") { defLines.push(`import ${ln} from "${im.spec}";`); continue; }
+  if (!bySpec.has(im.spec)) bySpec.set(im.spec, []);
+  bySpec.get(im.spec).push(im.imported === ln ? ln : `${im.imported} as ${ln}`);
+}
+const importLines = [...nsLines.sort(), ...defLines.sort(), ...[...bySpec].map(([spec, names]) => `import { ${names.sort().join(", ")} } from "${spec}";`)];
 const header = [
   "// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.",
   "// By using Claude Code, you agree that all code acceptance or rejection decisions you make,",
@@ -132,6 +160,17 @@ console.log(`\n闭包 ${closure.size} 个绑定 → ${moveTexts.join("").length 
 console.log(`外部 import ${ext.size} · 回引 ${back.size} · 新文件 ${(newFile.length / 1048576).toFixed(2)} MB · chunk ${(chunkText.length / 1048576).toFixed(2)} MB`);
 if (DUMP) { writeFileSync("/tmp/new-piece.js", newFile); writeFileSync("/tmp/new-chunk.js", chunkText); console.log("dry → /tmp/new-piece.js, /tmp/new-chunk.js"); }
 let fatal = false;
+// 专查：chunk 里不许出现「给 import 赋值」（ESM 硬错误，运行到才炸）
+{
+  const assigned = new Set();
+  const { sm: sm2, moduleScope: ms2 } = analyze(chunkText);
+  const sp = [], seen2 = new Set();
+  for (const v of ms2.variables) { const d = v.defs[0]; if (!d) continue; if (d.type === "ImportBinding") { seen2.add(v.name); continue; } const st = d.type === "Variable" ? d.parent : d.node; if (st && st.start !== undefined) sp.push({ n: v.name, start: st.start, end: st.end }); }
+  for (const sc of sm2.scopes) for (const r of sc.references) if (r.isWrite && r.isWrite() && r.resolved && r.resolved.scope === ms2) assigned.add(r.resolved.name);
+  const bad = [...assigned].filter((n) => seen2.has(n));
+  if (bad.length) { console.log(`  !! chunk 里有 ${bad.length} 个「给 import 赋值」: ${bad.slice(0, 8).join(", ")}`); fatal = true; }
+  else console.log(`  chunk 没有「给 import 赋值」✓`);
+}
 for (const [tag, text] of [[OUT, newFile], ["余下 chunk", chunkText]]) {
   const free = freeOf(text);
   if (free === null) { console.log(`解析 ${tag}: **失败**`); fatal = true; continue; }

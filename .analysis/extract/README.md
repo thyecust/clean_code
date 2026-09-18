@@ -38,6 +38,24 @@ import、chunk 要回引多少。**先用它探路**，闭包里带环或闭包�
 现在不动点改为对 `moveTexts` 实际拼出来的文本做分析，并顺带把「直接看到但按引用方
 归属没收到的 import」收进 import 列表。
 
+## 跑起来才会暴露的三类错误（都由 5 MB 那次撞出来）
+
+1. **`Cannot assign to import "X"`** —— 模块级可变槽：声明在一处、赋值在别处
+   （`var gpt = null;` … `function set(e){ gpt = e; }`）。声明被搬走、赋值留在原地 →
+   ESM 里给 import 赋值是硬错误。**修法**：变量跟赋值点一起搬 —— 扫所有 `isWrite()`
+   的模块级引用，把赋值点所在的顶层声明也拉进闭包（那次拉了 50 个 setter）。
+   并加了静态检查：chunk 里不许出现「给 import 赋值」。
+2. **`Export named 'X' not found in module 'node:path'`** —— 命名空间导入
+   （`import * as BC from "path"`）被当成具名导入生成成 `import { BC } from "path"`。
+   **修法**：区分 `ns` / `def` / `named` 三种形态。
+3. **`export 'X' not found in './新模块.js'`** —— 某个绑定在两个文件里**同时消失**。
+   已知特征：`SEED_CUT_AT_EXIT_MESSAGE` 是某条多声明符 `var` 的**续行声明符**
+   （原文件 119778 行 `  SEED_CUT_AT_EXIT_MESSAGE =`）。**未定位**。怀疑仍在
+   `build()` 的声明符拆分路径上（`isIn` 判定为真、但文本没进 `moveTexts`）。
+
+**三道静态检查全绿、`--help` 仍然是 0 行** —— 这就是这一节的教训：5 MB 量级的搬移，
+静态检查必须配一次真实运行，`bun cli.js --help` 的 md5 是最便宜的那道。
+
 ## 静态自检不够：5 MB 级的抽取仍会在运行时坏掉
 
 把 `dge` 的闭包（10,008 个绑定 / 5.35 MB）抽成 `execution-core.js` 后，两个文件都
