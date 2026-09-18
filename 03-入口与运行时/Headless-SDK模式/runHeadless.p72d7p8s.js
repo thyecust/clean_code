@@ -1258,8 +1258,8 @@ function Pc(e, t) {
   }
   return { ok: !0 };
 }
-import { open as f_, realpath as cd } from "fs/promises";
-import { dirname, join as p_ } from "path";
+import { open, realpath } from "fs/promises";
+import { dirname, join } from "path";
 class Tc {
   #e = new WeakMap();
   mark(e, t) {
@@ -2245,7 +2245,7 @@ function Bs(e) {
   }
   return { ...e, scope: "dynamic" };
 }
-import { randomUUID as zp } from "crypto";
+import { randomUUID } from "crypto";
 function iu() {
   let e,
     t = new Set(),
@@ -2312,7 +2312,6 @@ function bl(e, t) {
     };
   });
 }
-import { randomUUID as Ml } from "crypto";
 var jp = {
   onStreamEvent: () => [],
   onTombstone: () => [],
@@ -2458,7 +2457,7 @@ function Cl(e) {
     event: { type: "content_block_stop", index: e },
     session_id: K(),
     parent_tool_use_id: null,
-    uuid: Ml(),
+    uuid: randomUUID(),
   };
 }
 function _i(e, t, o) {
@@ -2478,14 +2477,14 @@ function _i(e, t, o) {
       },
       session_id: K(),
       parent_tool_use_id: null,
-      uuid: Ml(),
+      uuid: randomUUID(),
     },
     {
       type: "stream_event",
       event: { type: "message_stop" },
       session_id: K(),
       parent_tool_use_id: null,
-      uuid: Ml(),
+      uuid: randomUUID(),
     },
   ];
 }
@@ -3711,7 +3710,7 @@ function Lu(e) {
       parent_tool_use_id: null,
       origin: Qe?.origin,
     });
-    let Ei = zp(),
+    let Ei = randomUUID(),
       Ao = new Map(),
       zt = () => e.refreshTools?.() ?? Vo,
       Gs = {
@@ -4315,7 +4314,6 @@ function ca(e) {
   return o;
 }
 import { AsyncLocalStorage } from "async_hooks";
-import { join as Zp } from "path";
 class Bu {
   async snapshot(e, t) {
     return t;
@@ -4331,7 +4329,7 @@ function Il() {
   return eg.getStore() ?? tg;
 }
 function Ol() {
-  return Zp(getCurrentProjectTempDir(), K());
+  return join(getCurrentProjectTempDir(), K());
 }
 function Hu(e) {
   let t = a.CLAUDE_CODE_EXIT_AFTER_STOP_DELAY,
@@ -4377,7 +4375,7 @@ function Hu(e) {
     },
   };
 }
-import { cwd as Ca } from "process";
+import { cwd } from "process";
 function ua(e) {
   let t = getDecisionReasonText(e.decisionReason),
     o =
@@ -4389,7 +4387,6 @@ function ua(e) {
     decideLocation: "ask-path",
   };
 }
-import { randomUUID as ng } from "crypto";
 function qu(e, t, o, d, _, E) {
   let I = new SandboxClassifierVerdictCache(),
     O;
@@ -4421,7 +4418,7 @@ function $u(e) {
   return async (t) => (
     e.emitPermissionDenied(
       SANDBOX_NETWORK_ACCESS_TOOL_NAME,
-      ng(),
+      randomUUID(),
       void 0,
       ua({
         behavior: "ask",
@@ -4431,7 +4428,7 @@ function $u(e) {
     !1
   );
 }
-import { randomBytes, randomUUID as Wu } from "crypto";
+import { randomBytes } from "crypto";
 var Vu = 1200000,
   sg = 600,
   ig = 2048,
@@ -4646,7 +4643,7 @@ function Pg(
     messageQueue: v,
     priority: C,
     ccrTurnId: re,
-    noteUuid: Wu(),
+    noteUuid: randomUUID(),
     reach: "reached",
     pendingEntry: null,
     unsubscribeSettle: null,
@@ -4777,7 +4774,7 @@ function Yu({ messageQueue: e, noteUuid: t }) {
 }
 function Xu(e, t, o) {
   let { messageQueue: d, ccrTurnId: _ } = e;
-  ((e.noteUuid = Wu()),
+  ((e.noteUuid = randomUUID()),
     d.enqueue({
       mode: "prompt",
       agentId: ze(),
@@ -5475,8 +5472,7 @@ function pm(e) {
     }),
     (asMcpSdkClient(t.client).onerror = createNotificationChannelErrorHandler("notification_channel_error", "ccd_session")));
 }
-import { randomUUID as tr } from "crypto";
-import { realpath as zg, stat as Qg } from "fs/promises";
+import { stat } from "fs/promises";
 function gm(e, t, o, d) {
   if (e === t)
     return {
@@ -5504,13 +5500,13 @@ async function _m(e) {
     [...e.values()].map(async (t) => {
       if (await hasUnverifiableAncestryWithAnchor(t.path, wz()))
         return { source: t.source, resolved: t.path };
-      let o = await zg(t.path).catch(() => t.path);
+      let o = await realpath(t.path).catch(() => t.path);
       return { source: t.source, resolved: Uxe(t.path, o, wz()) ? t.path : o };
     }),
   );
 }
 async function hm(e) {
-  return (await Qg(e)).isDirectory()
+  return (await stat(e)).isDirectory()
     ? { allowed: !0 }
     : { allowed: !1, reason: "is not a directory" };
 }
@@ -5585,7 +5581,6 @@ function Sm({
   };
 }
 import { readFile } from "fs/promises";
-import { join as Gl } from "path";
 async function Yg() {
   try {
     let e = await readFile(getPluginZipCacheMarketplacesFile(), "utf-8"),
@@ -5611,13 +5606,13 @@ async function Jg(e, t) {
   let d = await Zg(t);
   if (d !== null) {
     let _ = getMarketplaceFileName(e);
-    await writeFileAtomicWithMkdir(Gl(o, _), d);
+    await writeFileAtomicWithMkdir(join(o, _), d);
   }
 }
 async function Zg(e) {
   let t = [
-    Gl(e, ".claude-plugin", "marketplace.json"),
-    Gl(e, "marketplace.json"),
+    join(e, ".claude-plugin", "marketplace.json"),
+    join(e, "marketplace.json"),
     e,
   ];
   for (let o of t)
@@ -6419,7 +6414,7 @@ function nf(e) {
   return { admitted: !0 };
 }
 import { homedir, userInfo } from "os";
-import { isAbsolute, join as u_ } from "path";
+import { isAbsolute } from "path";
 function rf() {
   try {
     return userInfo().homedir;
@@ -6429,7 +6424,7 @@ function rf() {
 }
 function m_(e, t) {
   let o = e.HOME !== void 0 && isAbsolute(e.HOME) ? e.HOME : t();
-  return u_(o, ".claude").normalize("NFC");
+  return join(o, ".claude").normalize("NFC");
 }
 function sf(e) {
   if (!e.managedCloudWorker) return { start: !1, reason: "not_managed" };
@@ -6752,7 +6747,7 @@ function V_(e, t) {
         type: "command_lifecycle",
         command_uuid: d,
         state: _,
-        uuid: tr(),
+        uuid: randomUUID(),
         session_id: K(),
       }));
   };
@@ -8123,7 +8118,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
   }
   function Vo() {
     if (!isSdkBridgeStateAnnounceEnabled()) return;
-    Vs(Ro(getExternalPermissionMode(v().toolPermissionContext.mode), tr()));
+    Vs(Ro(getExternalPermissionMode(v().toolPermissionContext.mode), randomUUID()));
   }
   if (
     (setSdkQueueEnqueueListener(() => {
@@ -8193,7 +8188,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         }));
     }));
   function _o(p) {
-    let T = tr();
+    let T = randomUUID();
     return (
       Ct.enqueue({
         type: "system",
@@ -8293,7 +8288,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       Ct.enqueue({
         type: "active_goal",
         value: r ? serializeActiveGoal(r) : null,
-        uuid: tr(),
+        uuid: randomUUID(),
         session_id: K(),
       });
     };
@@ -8308,7 +8303,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             enforced: r.enforced,
             source: r.source,
           },
-          uuid: tr(),
+          uuid: randomUUID(),
           session_id: K(),
         });
       }),
@@ -8345,7 +8340,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         isAuthenticating: T.isAuthenticating,
         output: T.output,
         error: T.error,
-        uuid: tr(),
+        uuid: randomUUID(),
         session_id: K(),
       });
     });
@@ -8396,7 +8391,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       builtin_tool_calls: x - r - L,
     };
   }
-  let ao = extractReadFilesFromMessages(E, Ca(), FILE_STATE_MAX_ENTRIES),
+  let ao = extractReadFilesFromMessages(E, cwd(), FILE_STATE_MAX_ENTRIES),
     ho = Promise.withResolvers();
   if (isResumeFrameSeedEligible()) {
     if (
@@ -8449,7 +8444,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       mode: "prompt",
       agentId: ze(),
       value: X.message.message.content,
-      uuid: X.message.isMeta ? tr() : (X.message.uuid ?? tr()),
+      uuid: X.message.isMeta ? randomUUID() : (X.message.uuid ?? randomUUID()),
       isMeta: X.message.isMeta,
       origin: resolveQueueOrigin(X.message),
       skipAttachments: shouldSkipAttachments(X.message),
@@ -9613,7 +9608,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           }),
           ...(T?.compactError !== void 0 && { compact_error: T.compactError }),
           session_id: K(),
-          uuid: tr(),
+          uuid: randomUUID(),
         };
         (Vs(x), Ct.enqueue(x));
       },
@@ -9621,7 +9616,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     Ga = (p) => ({
       ...p,
       commands: () => ps(),
-      cwd: () => Ca(),
+      cwd: () => cwd(),
       tools: Wa,
       mcpClients: Va,
       appendSystemPrompt: () => w.appendSystemPrompt,
@@ -9938,7 +9933,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 status: r.status,
                 name: "name" in r ? r.name : void 0,
                 error: "error" in r ? r.error : void 0,
-                uuid: tr(),
+                uuid: randomUUID(),
                 session_id: K(),
               })
           : void 0),
@@ -10006,7 +10001,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     );
   async function zi(p = {}) {
     let { agentDefinitions: T } = await refreshActivePlugins(ut, w.storageV5, w.credentials, p);
-    ((Rs = filterCommandsForHeadless(await getCommands(Ca(), w.storageV5))), (ja = !0));
+    ((Rs = filterCommandsForHeadless(await getCommands(cwd(), w.storageV5))), (ja = !0));
     let x = cr.filter((r) => r.source === "flagSettings");
     ((cr = [...T.allAgents, ...x]),
       Ji(),
@@ -10355,7 +10350,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
       if (tn) return !1;
       return (
         (tn = !0),
-        U.enqueue({ mode: "prompt", agentId: ze(), value: Of, uuid: tr() }),
+        U.enqueue({ mode: "prompt", agentId: ze(), value: Of, uuid: randomUUID() }),
         Ar(),
         !0
       );
@@ -11028,7 +11023,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       let We = {
                           type: "prompt_suggestion",
                           suggestion: Ze.suggestion,
-                          uuid: tr(),
+                          uuid: randomUUID(),
                           session_id: K(),
                         },
                         ft = {
@@ -11396,7 +11391,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   mode: "prompt",
                   agentId: ze(),
                   value: gr,
-                  uuid: tr(),
+                  uuid: randomUUID(),
                   skipAttachments: !0,
                 }),
                   Ar());
@@ -11522,7 +11517,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         mode: "prompt",
         agentId: ze(),
         value: getResumePrompt(),
-        uuid: tr(),
+        uuid: randomUUID(),
         isMeta: !0,
       }),
       Ar());
@@ -11612,7 +11607,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           mode: "prompt",
           agentId: ze(),
           value: r,
-          uuid: tr(),
+          uuid: randomUUID(),
           priority: "later",
           isMeta: !0,
           skipSlashCommands: !0,
@@ -11724,7 +11719,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           subtype: "control_request_progress",
           request_id: p.request_id,
           ...T,
-          uuid: tr(),
+          uuid: randomUUID(),
           session_id: K(),
         }));
     },
@@ -11740,7 +11735,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
     };
   async function hp(p, T) {
     try {
-      let x = await cd(getCwd()),
+      let x = await realpath(getCwd()),
         r,
         L;
       try {
@@ -11762,7 +11757,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
           yp[de.reason],
         );
       try {
-        L = await cd(r);
+        L = await realpath(r);
       } catch {
         throw new R(
           "register_repo_root: target path could not be resolved",
@@ -11837,7 +11832,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
         T.reload_claude_md)
       ) {
         clearMemoryFilesForSession(e);
-        let Ye = p_(L, "CLAUDE.md");
+        let Ye = join(L, "CLAUDE.md");
         if (!ws.includes(Ye)) ws.push(Ye);
       }
       if (T.reload_skills) await reloadSkills();
@@ -12561,7 +12556,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                         value: ie,
                         mode: "prompt",
                         agentId: ze(),
-                        uuid: tr(),
+                        uuid: randomUUID(),
                         isMeta: !0,
                         shouldQuery: !1,
                         skipSlashCommands: !0,
@@ -13319,7 +13314,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       isCanonicalPathContained: Ae,
                       readHandleBounded: Le,
                     } = await import("../../02-功能模块/输入分发-查询构造/输入分发-查询构造.eerwnvjy.js"),
-                    pe = await f_(D, ie);
+                    pe = await open(D, ie);
                   try {
                     let _e = await pe.stat({ bigint: !0 }),
                       He = Math.floor(Number(_e.mtimeMs)),
@@ -13330,7 +13325,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                       He <= r.request.mtime
                     ) {
                       let Ze = await Le(pe, 10485760, _e.size),
-                        We = await cd(D),
+                        We = await realpath(D),
                         ft = await Me(pe, _e, We),
                         Pn =
                           ft !== void 0 &&
@@ -13425,7 +13420,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 cr = [...D.agentDefinitions.allAgents, ...F];
                 let ue = [],
                   [ie, Me, Ae] = await Promise.allSettled([
-                    getCommands(Ca(), w.storageV5),
+                    getCommands(cwd(), w.storageV5),
                     Us(Qd(), "reload_plugins"),
                     loadAllPluginsCacheOnly(w.storageV5, w.credentials),
                   ]);
@@ -15273,7 +15268,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                                     state: Ke,
                                     detail: tt,
                                     bridge_epoch: Me,
-                                    uuid: tr(),
+                                    uuid: randomUUID(),
                                     session_id: K(),
                                   }));
                               },
@@ -15542,7 +15537,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                 },
                 session_id: St,
                 parent_tool_use_id: null,
-                uuid: tr(),
+                uuid: randomUUID(),
                 timestamp: new Date().toISOString(),
                 isReplay: !0,
               }),
@@ -15559,7 +15554,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
             },
             session_id: St,
             parent_tool_use_id: null,
-            uuid: tr(),
+            uuid: randomUUID(),
             timestamp: new Date().toISOString(),
             isReplay: !0,
           });
@@ -15592,7 +15587,7 @@ function _y(e, t, o, d, _, E, I, O, v, C, re, B, w, X, te, ye, N, fe, le, xe) {
                   },
                   session_id: St,
                   parent_tool_use_id: null,
-                  uuid: tr(),
+                  uuid: randomUUID(),
                   timestamp: new Date().toISOString(),
                   isReplay: !0,
                 }));
@@ -16271,7 +16266,7 @@ async function Cy(e, t, o, d, _, E, I, O, v, C, re, B, w, X) {
         isAuthenticating: xe.isAuthenticating,
         output: xe.output,
         error: xe.error,
-        uuid: tr(),
+        uuid: randomUUID(),
         session_id: K(),
       });
   }

@@ -28,7 +28,7 @@ function getSpawnTimestampMs() {
   }
   return;
 }
-import { dirname, join as q } from "path";
+import { dirname, join } from "path";
 function sanitizeAnalyticsId(t) {
   if (t == null) return;
   return /^[A-Za-z0-9_-]{1,128}$/.test(t) ? fromSanitizer_SANITIZER_OUTPUT_ONLY(t) : S("nonconforming");
@@ -283,10 +283,10 @@ function H(t) {
     logForDebugging(U(t)));
 }
 function rt() {
-  return q(getClaudeConfigDir(), "startup-perf", `${K()}.txt`);
+  return join(getClaudeConfigDir(), "startup-perf", `${K()}.txt`);
 }
 function ot() {
-  return q(getClaudeConfigDir(), "startup-perf", `${K()}.json`);
+  return join(getClaudeConfigDir(), "startup-perf", `${K()}.json`);
 }
 function W({ firstEmitPhases: t, startupContext: o }, { late: s }) {
   let _ = getPerformance().getEntriesByType("mark");

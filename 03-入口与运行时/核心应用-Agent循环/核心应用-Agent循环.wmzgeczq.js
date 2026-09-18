@@ -5095,19 +5095,19 @@ var T5t = commonJS(function (X6e) {
 });
 
 import { $9n, $P, $Pe, $Tn, $Tt, $We, $it, $lr, $nn, $nt, $pt, $wt, $z, $ze, A$, A0e, A1n, A3t, A4, A5t, A9n, AHn, AL, API_KEY_ORG_DISABLED_UNSET_MESSAGE, API_KEY_ORG_DISABLED_UPDATE_MESSAGE, ATt, AUTHENTICATE_TOOL_NAME, AUTO_DEFAULT_NUDGE_DIALOG_KIND, AUTO_MODE_BUILTINS_FILE_PREFIX, AUTO_MODE_CLASSIFIER_ERROR_FILENAME, AUTO_MODE_DUMP_FILE_PREFIX, AUTO_MODE_ENV_EDIT_FILE_PREFIX, AZo, AgentTranscriptFetchError, Air, Ake, Ant, AutoModeScanTask, Ave, Awt, B8e, BEt, BRIDGE_PLUMBING_TOOL_NAMES, BRIDGE_SPAWN_DIR_NAME, BU, BUILT_IN_OUTPUT_STYLES, BWe, BXo, BZ, BashTool, Bit, BoundedTtlCache, Bpt, Bse, BuilderGitProbes, Bwt, Bze, C$, C0, C1n, C3t, C9, C9n, CANONICAL_MANIFEST_RELPATH, CCR_NEEDS_APPROVAL_ERROR_CODE, CDn, CFe, CLAUDE_CODE_ON_WEB_DOCS_URL, CLAUDE_DESIGN_LIST_OPERATION, CLAUDE_DESIGN_TOOL_DESCRIPTION, CLAUDE_DESIGN_TOOL_NAME, CLAUDE_IN_CHROME_SYSTEM_PROMPT, CLOUD_SESSION_CONSENT_MESSAGES, COMMAND_PREFIX_DEPTH_OVERRIDES, COMPACTION_BLOCKED_BY_HOOK_MESSAGE, COMPLETE_AUTHENTICATION_TOOL_NAME, COST_THRESHOLD_DIALOG_KIND, CREDIT_BALANCE_TOO_LOW_MESSAGE, CXe, CZ, Cee, Cfr, Cke, ClaudeAiMarketplaceError, CommandSpecStore, CompactionError, Crt, Cst, Cur, Cut, Cwt, D8, DE, DEFAULT_BASH_OUTPUT_CHARS, DEFAULT_COMMAND_PRIORITY, DEFAULT_OUTPUT_STYLE_NAME, DEFAULT_SEED_ROW_BUDGET, DEFAULT_SUPPORT_ARTICLE_URL, DEFAULT_TASK_MAX_OUTPUT_LENGTH, DEPENDENCY_DIR_NAMES, DEVICE_LOCAL_TOOL_NAMES, DIALOG_EXPIRY_MS, DIFF_CONTEXT_LINES, DIR_SYNC_GIT_ARGS, DZr, Dbt, DirSyncNoticeStore, Dkn, DreamTask, Dwt, Dx, E2e, E2n, E4, E6t, ECe, EEt, EFFORT_MEDIUM_NUDGE_DIALOG_KIND, EG, EHe, EMPTY_MESSAGES, EMPTY_TRANSCRIPT, ENGINE_DISABLED_BY_ENV_MESSAGE, ENGINE_UNSUPPORTED_MESSAGE, ENTRY_APPEND_POLICY, EPe, ERe, EW, EXPECTED_ABSENT_TOOL_NAMES, EXPECTED_TOOL_ERROR_NAMES, EXTERNAL_MESSAGE_PREFIX, EXTERNAL_MESSAGE_REPLY_HINT, EXTRA_DIALOG_KIND, EXTRA_USAGE_ARTICLE_URL, Efr, Eje, Ele, Err, Ert, Eve, F1n, FABLE_HIGH_LOAD_MESSAGE, FABLE_OVERAGE_CONSENT_DIALOG, FABLE_SUPPORT_ARTICLE_URL, FAn, FBn, FEEDBACK_CLI_VERSION_MAX_CHARS, FEEDBACK_DETAILS_MAX_BYTES, FEEDBACK_DRAFT_TYPES, FEEDBACK_FAILURE_MODES, FEEDBACK_NOTICE_MIN_TERMINAL_ROWS, FEEDBACK_NOTICE_PREVIEW_MAX_ROWS, FEEDBACK_OS_MAX_CHARS, FEEDBACK_TASK_CATEGORIES, FETCHED_CONTENT_CHAR_BUDGET, FFo, FH, FILE_EDIT_TOOL_NAMES, FILE_READ_CHUNK_BYTES, FIe, FORK_AGENT, FSn, FULLSCREEN_UPSELL_DIALOG_KIND, Fan, Fbt, FileEditTool, Fle, Flr, Fnn, Fv, Fwt, Fze, GA, GATEWAY_AUTH_ERROR_MESSAGE, GBn, GENERAL_PURPOSE_AGENT, GEt, GH_PR_CREATE_DISALLOWED_PATTERNS, GITHUB_APP_INSTALL_URL, GIT_ADD_FORCE_DISALLOWED_PATTERNS, GIT_ATTRIBUTE_FILTER_REGEX, GIT_CHECKOUT_FORCE_DISALLOWED_PATTERNS, GIT_COMMIT_DISALLOWED_PATTERNS, GIT_DIFF_COMMAND_TIMEOUT_MS, GIT_DIR_ENTRY_NAMES, GIT_OBJECT_ID_REGEX, GIT_OUTPUT_FLAG_DISALLOWED_PATTERNS, GIT_PATHSPEC_ENV, GIT_PUSH_DISALLOWED_PATTERNS, GIT_STASH_IDENTITY_ENV, GIT_USAGE_EXIT_CODE, GN, GNe, GSn, GYr, Gb, Git, Gje, Gjn, GlobTool, Gmo, GrepTool, Gwt, Gz, H6, H8, H8e, HBn, HEARTH_AGENT_ORIGIN, HQe, HSn, HXo, Hae, Hce, Hct, Hhe, Hkn, Hnn, Hoe, Hp, Hpe, Hq, Hve, Hw, Hwt, Hz, Hze, I7, IAn, IDENTITY_CHANGED_SUMMARY, IDLE_WINDOW_KEEPALIVE_REASON, IE, IGo, IMPORT_NO_MANUAL_CONFIG_INSTRUCTION, INNER_TOOL_USE_ID_SUFFIX, INVALID_API_KEY_MESSAGE, INVISIBLE_CHARS_PATTERN, INe, ITn, IZ, Iae, Ice, Ift, Ike, Ikt, Iln, Ime, InProcessTeammateTask, Int, Irt, Iwr, Iwt, J0, J3, JBe, JEt, JHe, JI, JPe, JUe, JUn, Jct, Jhe, Jme, Jmr, Jnt, Jpe, Jtr, Jwt, K3, K8e, K8r, KCt, KEt, KHe, KILLED_TASK_EVICT_DELAY_MS, KL, KNOWN_COMMAND_NAMES, KNe, KPe, KQn, KUn, KWe, Ki, Knt, Krt, Ktt, Kwt, L$, L0e, L1n, L9, LHe, LINE_BREAK_PATTERN, LINE_BREAK_REGEX, LIST_MCP_RESOURCES_TOOL_NAME, LOCKFILE_ACQUIRE_OPTIONS, LOW_PRIORITY_COMMAND_NAME, LOe, LP, LQt, LSP_TOOL_NAME, Lbt, Lm, Lnn, Lnt, LocalAgentTask, LocalShellTask, Lpt, Lrt, Lv, Lwt, Lze, M1n, M6n, MAIN_AGENT_KEY, MANAGED_HOOKS_TIER, MANIFEST_IDENTITY_READ_RELPATHS, MARKDOWN_SUBDIRS, MAX_BASH_OUTPUT_CHARS, MAX_CONTENT_BYTES, MAX_DIFF_BYTES, MAX_HUNK_LINES, MAX_INCLUDED_FILES, MAX_NOTEBOOK_FILE_BYTES, MAX_PLUGIN_ACTIVITY_FEATURES, MAX_PROXY_FAILURE_HISTORY, MAX_READABLE_FILE_BYTES, MAX_SEED_TOTAL_BYTES, MAX_SERVED_CATALOG_BYTES, MAX_SYNC_MANIFEST_BYTES, MCP_ACCOUNT_CHANGED_MESSAGE, MCP_BLOCKED_BY_POLICY_MESSAGE, MCP_DISABLED_BY_CONNECTORS_SETTING_MESSAGE, MCP_DISABLED_IN_MCP_MESSAGE, MCP_DOWNSTREAM_UNREACHABLE_CODES, MCP_NOT_APPROVED_MESSAGE, MCP_SEND_MESSAGE_ORIGIN, MCP_SETTINGS_SCOPES, MCP_SETTINGS_SCOPE_SET, MCo, MFo, MICROCOMPACT_MIN_TOKENS_SAVED, MID_TURN_BOUND_THREAD_MESSAGES_PREFIX, MID_TURN_BOUND_THREAD_MESSAGE_PREFIX, MID_TURN_USER_MESSAGE_PREFIX, MIN_SLEEP_SECONDS, MNe, MODEL_SELECTOR_SURFACES, MXe, MaxFileReadTokenExceededError, Mcn, McpAuthError, McpCredentialStoreUnavailableError, McpResponseSchemaError, McpSessionExpiredError, McpToolCallError, Mdt, Men, Mkn, Mnt, Mp, Mwt, N0e, N9, NAME_NOT_TEXT, NOTES_ONLY_ANSWER, NOT_ENOUGH_MESSAGES_TO_COMPACT, NOT_LOGGED_IN_MESSAGE, NO_CONTENT_MESSAGE_TEXTS, NO_SYNC_HANDLE_MESSAGE, NQt, NSn, Nie, Njt, NotebookEditTool, Nrt, Nyr, Nze, OAUTH_TOKEN_REVOKED_MESSAGE, OBSERVER_REF_TAIL_SCAN_BYTES, OCo, OE, OFo, ONE_HOUR_TTL_MS, OPERATOR_SETTINGS_SOURCES, OPUS_5_SUPPORT_ARTICLE_URL, OPUS_HIGH_LOAD_MESSAGE, ORG_OVERAGE_DISABLED_REASONS, OUTPUT_STYLE_SECTION_NAME, O_, Oft, Ont, P$, P0e, P1n, P4, PENDING_BRIDGE_SESSION, PERMISSION_CHECK_CRASHED_REASON, PERMISSION_DENIED_MESSAGE, PERMISSION_DENIED_PREFIX, PFe, PGo, PLAN_REJECTED_MESSAGE, PLUGIN_MANIFEST_ERROR_CODES, PLUGIN_MANIFEST_RELPATHS, PREAMBLE_TOOL_USE_ID_MARKER, PROMPT_TOO_LONG_MESSAGE, PR_URL_REGEX, PZ, Pbo, Pce, Pft, Pkt, Pnt, Prt, Pur, Put, Pve, Pwt, Pxe, Pz, Q1, Q2n, Q6, Q9n, QEt, QHe, QN, QP, QPe, QUEUED_NOTIFICATIONS_CAPABILITY, Qb, Qlt, Qnt, Qrt, Qtr, Qwt, Qx, R1n, R6n, R7, R8e, READ_MCP_RESOURCE_DIR_TOOL_NAME, READ_MCP_RESOURCE_TOOL_NAME, REFUSED_TOOL_INPUT_FIELDS, REMOTE_DEVICES_SERVER_NAME, RENDER_EVENT, RENDER_INVALIDATE_THROTTLE_MS, REPORT_FINDINGS_TOOL_NAME, REQUEST_TIMED_OUT_MESSAGE, RESTRICTED_SESSION_CLOUD_REFUSAL, RESUME_RETURN_DIALOG_KIND, REVIEW_NOTE_MAX_CHARS, RGo, RJ, Rce, ReadTool, Ree, RemoteAgentTask, RemoteToolCallRegistry, Rrt, Rur, Rut, Rve, Rwt, SEED_CUT_AT_EXIT_MESSAGE, SEED_INTERRUPTED_MESSAGE, SEND_FILE_TOOL_DESCRIPTION, SEND_FILE_TOOL_NAME, SESSION_END_HOOK_TIMEOUT_MS_DEFAULT, SEt, SF, SHELL_CWD_RESET_NOTICE_PATTERN, SHOW_ONBOARDING_ROLE_PICKER_TOOL_NAME, SL, SLACK_BOT_ORIGIN, SPn, STOP_HOOK_SUMMARY_MIN_DURATION_MS, STt, SWITCH_MODELS_ON_FLAG_LABEL, SYNC_RECORD_REMOVED_MESSAGE, SYNC_RECORD_UNREADABLE_MESSAGE, SandboxManager, SandboxPolicyRefusalError, SandboxUnavailableForShellError, Sbt, Ses, Sft, She, Sie, Sit, Sj, SkillTool, Skn, Sle, Sme, Sot, Swt, SyncOwnedRootRefusedError, T2e, T4, T9, TASK_EVICT_GRACE_MS, TASK_MAX_OUTPUT_LENGTH_UPPER_LIMIT, TASK_TYPE_LABELS, TC, TCt, TG, THIRD_PARTY_PLUGIN_LABEL, TK, TPe, TaskOutput, Toe, ToolHostRegistry, ToolSearchDescriptionCache, ToolSearchTool, Trt, Twt, Ty, U1e, U1n, U7, U8o, UBn, ULTRAPLAN_CHOICE_DIALOG, ULTRAPLAN_CHOICE_DIALOG_KIND, ULTRAPLAN_LAUNCH_DIALOG, UNVERIFIED_WORKTREE_SUMMARY, UPGRADE_COMMAND, USAGE_CREDITS_COMMAND, USAGE_SETTINGS_URL, USER_REJECTED_TOOL_USE_MESSAGE, USER_REJECTED_TOOL_USE_PREFIX, UUID_PREFIX_LENGTH, UUn, UWe, UXo, UZ, UZn, Uae, Uct, Unt, V1n, V3, V8e, VAt, VELLUM_ANCHOR_FLAG, VHe, VHn, VJn, VL, VPe, VSn, VZr, Vat, Vbt, Vle, Vln, Vnt, Vtn, Vtt, Vwt, Vz, WBn, WI, WINDOWS_SANDBOX_USER_NAME, WMt, WORKFLOW_REMOTE_AGENT_TAG, WWe, Wdr, WebFetchCache, WebFetchTool, WebFetchTransportError, Wgs, WindowsSandboxError, Wjn, WorktreeIsolationError, WriteTool, Wrt, Wwt, Wz, X0, X3, XBe, XG, XHe, XPe, XSn, XW, Xbt, Xce, Xkt, Xme, Xnt, Xqr, Xrt, Xtr, Xwt, Y9n, YEt, YFe, YHe, YOn, YPe, YSn, YUe, Ybn, Ybt, Yct, Yk, Ytn, Ywt, Z0, ZEt, ZHe, ZIe, ZIt, ZL, ZN, ZPt, ZSe, ZSt, ZUn, ZYr, Zcr, Znr, Znt, Zp, Zrt, Ztr, _$n, _0, _2, _7, _He, _Re, _Tt, _Un, _We, _Ze, _bt, _es, _it, _le, _me, _ot, a$o, a1e, a8, a9, aFe, aI, aPe, aQe, aRe, aSn, aTt, ace, act, activatePlanAutoMode, addDisposableAbortListener, addHistoryEntry, addKeepaliveReason, addSandboxAllowWriteDirectory, addUsageTotals, adoptPublishArmsForSubagent, aee, agentMcpSource, agentToolPoolDeniedMessage, agentTranscriptExists, agentWorktreeSlug, ake, anchoredPluginCachePath, announcedAsync, aot, appendAutoMemoryReminder, appendEntryToFileAsync, appendShellCwdResetNotice, applyEditToFileContents, applyEditsToFileContents, applyHookSessionTitle, applyPendingInvalidations, applyPermissionRulesToPermissionContext, applyPromptToMarkdown, applyResolvedSessionName, applySessionName, applySessionNameAndTitle, applySkillPromptHook, applyStreamTokenEstimate, applyToolResultClearing, applyTranscriptProgress, aq, areLinkedWorktreesServed, areStagedCopiesIntact, art, asSystemPrompt, askUserQuestionTool, assertOpenFileMatchesPath, assertRegularFilePath, attributionSkillName, awaitMemoryPrefetchBlocking, awaitPendingSkillDownload, awaitPolicyColdStart, b$e, b$n, b0, b8, b8r, bEt, bIe, bQ, bSt, bTt, backgroundShellTask, baseModelSupportsAdvisor, bes, bie, bit, bme, bmr, boe, bot, bridgeSessionForPulledWindow, bridgeSessionsForPulledRow, bse, buildAutoModeClassifierDenialMessage, buildAutoModeNoVerdictMessage, buildAutoModeUnavailableMessage, buildBackgroundTaskMessage, buildBackgroundedCommandMessage, buildChildMessage, buildChildSessionEnv, buildClassifierUnavailableNote, buildCommandPrefixFromArgs, buildCommandRuleSuggestions, buildCommandTags, buildCredentialBlankLists, buildDefaultSystemPrompt, buildForkedMessages, buildGitConfigEnv, buildImageToolResultFromDataUrl, buildModelOptions, buildPastedContentKey, buildPatternMatchMarker, buildPluginTelemetryFields, buildPluginTelemetryFieldsFromId, buildProactivityOverrides, buildReplayLogFromMessages, buildServerAttribution, buildSessionTools, buildSkillNameInfo, buildSkillScopedVariantNote, buildSkillSourceFields, buildTaskNotification, buildTeammateParallelismHint, buildUntrustedPrTemplateBlock, buildVertexGoogleAuth, buildViewportPropsKey, buildWorktreeNotice, builderGit, builtInCommandNames, bumpRenderVersions, bumpSlugEpoch, cEn, cF, cI, cSe, cTt, cW, cWe, cacheDirHasPluginContentStrict, cachePlugin, canFetchAgentTranscriptsOnDemand, canPromptUserInSession, canSelfManageUsageCredits, canUseCloudReview, canonicalizePathForMaskSweep, capTimeoutForAutoBackground, capitalizeFirst, carriesAskRuleIntent, cgs, checkAncestorSymlinks, checkBashCommandPermissions, checkCloudSessionEligibility, checkGithubAppInstalled, checkPathPermission, checkRuleBasedPermissions, chunkPathsForArgv, claimSandboxAttemptOnce, claimTaskNotification, classifyErrorReason, classifyMcpErrorSource, classifyStatusCodeError, classifyToolCallError, classifyWindowsSandboxLaunchExit, cleanMessagesForLogging, cleanupTerminalModes, cleanupWorktree, clearCommandMemoizationCaches, clearCommandsCache, clearGoalIdleCheckinCount, clearMemoryFilesForSession, clearMessageUsage, clearOccupantForReplace, clearPendingGoalCheckinTimer, clearSentSkillNamesForAgent, clearSessionMessagesCache, clearWorktreeFromAgentMetadata, coerceNumericStringSchema, collectAddDirEnabledPlugins, collectAsyncIterable, collectErrorOutputLines, collectGitAttributesPaths, collectHookHandlers, collectReplIds, commandStateStore, commandsMemoKey, compactConversation, compactionResultToMessages, comparePathIdentity, computeContextTokenCount, computeStructuredPatchFromContents, computeStructuredPatchFromEdits, computeSubprocessEnv, consentHostEntry, consultPermissionRequestHooksForUnpromptableAsk, consumePrecomputedCompact, contentHasToolResult, contextBudgetTracker, convertHtmlToMarkdown, convertSchemaToJsonSchema, copyPluginToVersionedCache, countMessageTokens, cpt, createActivityDescriptionResolver, createAgentMetadataReadFallback, createAgentWorktree, createAnthropicClient, createApiErrorMessage, createAssistantMessage, createAttachmentMessage, createCacheControl, createCacheSafeParams, createClassifierApprovalsUpdater, createCommandQueue, createConcurrencyLimiter, createDefaultRemoteEnvironment, createDynamicSkillState, createEnoentError, createErrorToolResult, createHardenedGitRunner, createHookAdditionalContext, createImageBlockFromFile, createInformationalSystemMessage, createInitialDenialTracking, createInitialWebFetchSavedFiles, createInterruptedMessage, createLocalCommandMessage, createMemoryRelevanceState, createModelRestrictedNotificationHandler, createModelRestrictedSystemMessageHandler, createPathWithholdClassifier, createPermissionRequestMessage, createPluginFromPath, createProgressMessage, createSettingsChangeDetector, createSkillCommand, createStructuredPatch, createSubagentContext, createSyncLandingContext, createSyncMarker, createSystemInfoMessage, createTaskProgressState, createTaskRegistry, createToolDisallowMatcher, createToolUseMessage, createTurnDurationMessage, createUserMessage, createValueCell, createWorktreeForSession, cst, cwe, cwt, d3e, dF, dG, dI, dIe, dL, dO, dP, dTt, dU, dWo, dZt, damerauLevenshteinDistance, decrementSessionDraftCount, defaultBuilderGitProbes, deferredToolLedgerRegistry, deleteFeedbackDraft, deleteRemoteAgentMetadata, denyEntryCovers, describeMarketplaceLoadFailure, detectWorktreeGitCommonDir, dge, didPromptScreenChange, diffLines, dirSyncGitEnv, discardPrecomputedCompact, discoverDynamicSkills, dispatchStreamEvent, displaySkillsDirPath, djn, dle, dlt, doesEnterpriseMcpConfigExist, dq, drainTaskPendingMessages, dropShadowedBundledSkills, dropShadowedFallbackSkills, dropShadowedSyncedSkills, drt, dst, dut, dwe, dye, e4, eBo, eF, eHn, eI, eIt, eTt, eWe, eb, ege, eje, ekn, emitAutoReactStopNotification, emitHookMetrics, emitScrollTelemetrySummary, emitSkillActivatedEvent, emitTaskProgress, emitVcsStateChanges, emptyServerMap, endCacheHeartbeatEpisode, endLowPriorityIfResetExpired, endLowPriorityMode, enqueueClassifiedCall, enqueueCommand, enqueuePendingNotification, enqueuePollEvent, enqueueReportingAdmission, ensureBridgeSpawnRootDir, ensurePersistentWindowsCa, ensurePluginSyncBucketRoot, ensureSidecarDirFor, ensureSyncRootReady, ensureWebFetchToolAvailable, enterExistingWorktreeForSession, enterPlanModeTool, entryDeclaredComponentPaths, entryDeclaresComponents, eot, ert, escapeForkedSkillLaunchTag, escapeShellCommandMarkers, estimateContextTokens, estimateTokens, estimateTokensForContent, estimateTokensForMessages, estimateTokensFromCharCount, estimateTokensFromText, eue, eut, evaluateWorktreePin, evictCachedVersionDir, exceeds200kTokens, excludeDirectoryPaths, executeCwdChangedHooks, executeExtractMemories, executeFileChangedHooks, executeHooks, executeHooksOutsideREPL, executeInstructionsLoadedHooks, executePermissionDeniedHooks, executePermissionRequestHooks, executePostCompactHooks, executePostToolBatchHooks, executePostToolHooks, executePostToolUseFailureHooks, executePreCompactHooks, executePreToolHooks, executeSessionEndHooks, executeSessionStartHooks, executeShellCommand, executeStopFailureHooks, executeStopHooks, executeSubagentStartHooks, executeTaskCompletedHooks, executeTaskCreatedHooks, executeTeammateIdleHooks, executeUserPromptSubmitHooks, executeWorktreeCreateHook, executeWorktreeRemoveHook, exitPlanModeTool, exitTwoMeansMissingScript, expandEnvVars, expandPluginPathVariables, extractAndSubmitPluginHints, extractDiscoveredToolNames, extractMarkdownTitle, extractMcpbArchive, extractRemoteReviewOutput, extractResultText, extractTagContent, extractTextContent, extractZipFile, f1e, f8, fEn, fFe, fHe, fIe, fO, fR, fW, fYe, fce, fct, fetchOverageStatus, fetchRemoteEnvironments, fetchSelfHostedPools, fetchUsageUtilization, ffr, fileHistoryEnabled, fileHistoryTrackEdit, filterAgentsByMcpRequirements, filterDispatchableAgents, filterDuplicateMemoryAttachments, filterIncompleteToolCalls, filterMcpLoadedCommands, filterMcpServersByPolicy, filterOfferedAgents, filterOrphanedThinkingMessages, filterOutWebFetchAgent, filterSkillCommandsByAllowlist, filterToolsByDenyRules, filterToolsForRemoteDevice, filterWhitespaceOnlyAssistantMessages, finalizeCompaction, finalizeForegroundShellTask, findActualOldString, findCachedPluginEntry, findClosestName, findCommand, findContainingSeedDir, findDangerousClassifierPermissions, findLastAssistantMessage, findLastCompactBoundaryIndex, findLastNonSyntheticAssistantMessage, findMatchingDomainRule, findNearNameMatches, findResumedThinkingGroupRanges, findSafetyCheckReason, findSettingsDeclaredEntryAuth, findSkillContentSource, findSkillShellCommands, findTeammateTaskByAgentId, findTrustedMarketplaceAuth, findUltracodeMentions, findUltraplanMentions, finishBackgroundShellTask, finishClassifierCheck, fkn, flushAnalyticsSinks, flushAppendEntryQueues, flushPeerDropReceipts, flushSessionStorageAtExit, fme, forkPointUuidOf, formatAgentQuerySource, formatBinaryContentSavedMessage, formatBranchWithSubject, formatBroadSafeguardsFlaggedMessage, formatCapabilityRejected, formatCloudSessionEligibilityError, formatDurationAsClockTime, formatErrorWithCode, formatHookLabel, formatMemoryManifest, formatMemoryWriteSummary, formatMessageForOrigin, formatMultiSelectAnswer, formatNeedsText, formatPrBodyGuidance, formatPreStopActivityDetail, formatRefusalCategoryDetails, formatRefusalFallbackSwitchMessage, formatRestartUncertaintyMessage, formatSafeguardsFlaggedMessage, formatSavedFilesHarnessNote, formatShortHash, formatSubagentHandbackContent, formatSupportArticleHint, formatToolDisplayName, formatTrustKeyJson, formatUnreadableSettingsSuffix, formatWindowsSandboxErrorMessage, formatZodValidationError, fse, fye, g2, g4, g8, gAe, gF, gFn, gW, generateFileAttachment, generatePromptSuggestion, getAbortedToolResult, getAccountEpoch, getAdvisorModelAliases, getAdvisorModelFromSettings, getAgentListingDeltaAttachment, getAgentToolInputSchema, getAgentToolUserFacingBackgroundColor, getAgentToolUserFacingName, getAgentWorktreeChanges, getAgentWorktreePath, getAllOutputStyles, getAllWriteRoots, getAllowedAgentTypesFromToolList, getAllowlistedSkillCommands, getApiRequestState, getAssistantMessageText, getAttachmentMessages, getAutoCompactStatus, getAutoCompactThreshold, getAutoCompactWindowSource, getAutoModeUnavailableNotification, getAutoModeUnavailableReason, getBashCommandClampCrashDeny, getBashDefaultTimeoutMs, getBashMaxTimeoutMs, getBashOutputMaxChars, getBridgeSessionRows, getBridgeSpawnRootDir, getBuiltInSkillAvailability, getBuiltinCommands, getBuiltinToolDefinitions, getBuiltinTools, getBuiltinToolsForContext, getCachedPassesEligibility, getCachedReferrerReward, getCallerScope, getCommand, getCommandContext, getCommandDisplayInfo, getCommandName, getCommandQueueInstance, getCommands, getCommonWriteRoots, getConfiguredAdvisorModel, getConfiguredOutputStyleName, getConnectedIdeClient, getConnectedIdeDisplayName, getCoverageWitnessRoots, getCumulativeDroppedTokens, getCurrentLimits, getCurrentSessionAgentName, getCurrentSessionBridge, getCurrentSessionTitle, getCurrentTraceparent, getCurrentTurnAbort, getDefaultFileReadingLimits, getDefaultRemoteEnvironment, getDefaultRemoteRef, getDeferredToolLedger, getDeferredToolsDelta, getDeferredToolsDeltaAttachment, getDestructiveCommandCategory, getDestructiveTargetScope, getDiagnosticSeverityGlyph, getDirSyncCopyCleared, getDirSyncGitExe, getDiscoveryCacheOffReason, getDiscoveryCacheStore, getDispatchableAgents, getDontAskModeDeniedMessage, getEffectiveContextWindow, getEffectiveFilesystemPolicy, getEnabledModelOptions, getEnabledPluginBinPaths, getEnabledPluginsBySettingsSource, getEnterpriseMcpFilePath, getExternalSourceWarning, getFallbackModelScope, getFeedbackDisabledReason, getFeedbackDraftsSetting, getFileExtensionForContentType, getFileSeedTimestamp, getFindGrepToolNames, getFirstMeaningfulUserMessageTextContent, getForkedSkillSidecarPaths, getGitRootRemoteFileMode, getGitWorktreeRoots, getHearthResolvedRowsMode, getHomeDirFromEnv, getHookCgroupOptions, getHttpStatusText, getIdeDisplayName, getImageLimitsForModel, getInProcessTeammateTasks, getInstalledPlugins, getInstalledPluginsViaStorage, getJsonArrayLength, getKeepaliveReasons, getKeybindingChord, getKnownMarketplaces, getKnownMarketplacesOrEmpty, getLastAssistantTotalTokens, getLastCacheSafeParams, getLastMessageUsage, getLatchedFallbackModelInfo, getLiveAgentControllers, getLowPriorityConfigVersion, getLowPriorityResetAtMs, getLspServerManager, getLspServerManagerStatus, getMainThreadSystemPrompt, getMarkdownFiles, getMarketplaceTrustedRoots, getMarketplacesDir, getMaxBundleBytes, getMcpClients, getMcpConfigByName, getMcpConfigsByScope, getMcpDroppedToolsDeltaAttachment, getMcpInstructionsDeltaAttachment, getMcpServerApprovalStatus, getMcpServerSpecNames, getMcpSkillCommands, getMemoryCitationTracker, getMemoryStoreSkillCommands, getMessageContentLength, getMessageContentText, getMessagesAfterUuid, getModelMaxOutputTokens, getNodeEnv, getNonBlockableHookErrorMessage, getNonMainAgentTaskId, getObserverPairing, getOperatorDeclaredMarketplaces, getOrphanedVersionGlobExclusions, getParentPromptId, getPendingWriteTracker, getPermissionPromptUnavailableMessage, getPersistenceSuppressionCause, getPluginCommands, getPluginDisplayName, getPluginIdHash, getPluginNameFields, getPluginScope, getPluginSkills, getPluginSource, getPluginSyncBucketDir, getPolicyPluginEntries, getPolicyPluginNames, getPowerShellCommandArgs, getPowerShellPath, getPrAttributionText, getPrSummaryPlaceholder, getPrTestPlanPlaceholder, getPreToolHookBlockingMessage, getProactivityAdjustedPermissionMode, getProactivityLevel, getProjectDirsUpToHome, getProjectMcpServerApprovalStatus, getPromptAnnouncementAttachments, getPromptScreenSnapshot, getPullRequestStatusStore, getQueuedCommandAttachments, getRateLimitActionHint, getRateLimitDisplayInfo, getRenderVersions, getRequiredCoverageRoots, getReservedMarketplaceNameError, getReviewBughunterConfig, getReviewClientWaitMinutes, getReviewCostNote, getReviewDurationNote, getSandboxInstructionsAttachments, getScopedWriteRoots, getServerAttributionFields, getSessionAttributionTexts, getSessionEndHookTimeoutMs, getSessionMemoryFiles, getSessionSidecarDir, getSessionUrl, getShellResultStatus, getSkillDirCommands, getSkillInvocationBlockReason, getSkillListingAttachments, getSkillListingCharBudget, getSkillListingDescription, getSkillListingMaxDescChars, getSkillNameHash, getSkillOverride, getSkillToolCommands, getSkillUsageScore, getSkillVerificationCommand, getSkillsPersistencePrompt, getSkillsSyncState, getSourceCloneUrl, getStatusPageHint, getStopHookMessage, getSubagentModelSetting, getSystemContext, getTaskAgentIds, getTaskCompletedHookMessage, getTaskCreatedHookMessage, getTaskIdFromOutputPath, getTaskTypeHandler, getTeamArtifactAuthor, getTeamArtifactTipAnalytics, getTeammateIdleHookMessage, getTeleportCacheModule, getToolCallRemoteHost, getToolFeatureName, getToolUseDisplayInfo, getTotalTokens, getTotalTokensReminderMode, getTranscriptWriterDegraded, getTwoTokenCommandPrefix, getURLMarkdownContent, getUltraplanPromptInfo, getUserContext, getUserDialogTimeoutMs, getUserMessageText, getUserPromptSubmitHookBlockingMessage, getUserType, getVersionedCachePath, getVersionedZipCachePath, getWorkshopPlanPins, getWorktreeWriteBlockMessage, getWriteEntriesForSource, gfe, gin, gitExeOnPath, gitOperationSchema, gle, gme, gor, gracefulShutdownSync, guardHookUpdatedInput, gve, gwt, gyr, hEt, hSe, hTt, hU, hWt, hYe, hardenedSpawnEnv, hasAgentFrontmatterHooks, hasAutoModeClassifierDenyRules, hasCommand, hasCompatibilityVariantLetter, hasCustomAuthorizationHeader, hasFableOverageConsent, hasHookForEvent, hasImageContent, hasInstructionsLoadedHook, hasLspServerManagerEverConnected, hasMultipleContentBlocks, hasPerfettoRecorder, hasPermissionsToUseTool, hasPermissionsToUseToolWithSink, hasReachedMaxBudget, hasRequiredMcpServers, hasRunningTasksForAgent, hasSubstantiveText, hasSyncMarker, hasTaskEverBeenRegistered, hasTaskListTools, hasToolResultBlock, hasTraversalAfterDirectorySegment, hasUnreadableGitEntry, hasUserConfigReference, hasUserPromptSubmitHooks, hasVoiceAuth, hasWorkshopActiveAttachment, hasWorktreeChanges, hasWorktreeCreateHook, hasWorktreeRemoveHook, hbt, hie, highlightLanguageRegistry, hle, hms, hookOutputSchema, hookUpdatedInputSatisfiesInteraction, hor, i$o, i7e, i8, i9, iEt, iF, iSn, iTt, iW, iYe, iae, ifs, igr, ile, indentAndEscapeForwardedTurns, indentTextLines, inferWakeupSource, initializeFileWatcherHooks, initializeLspServerManager, inlineSetBeforeLatch, installHostCredentials, invalidateSkillDirCaches, invalidateUserContext, irt, isAdvisorCapableForBaseModel, isAdvisorModelPendingCreditsConsent, isAdvisorToolEnabled, isAgentExemptFromCascadeStop, isAgentParkedOnKeepalive, isAgentProgressMessage, isAgentStopPending, isAgentToolPoolDenied, isAliasedFilePath, isAmbientTask, isAnyPathWithinRoots, isApiErrorCarrierMessage, isArtifactFetchEnabled, isAskRuleDrivenReason, isAuthenticationErrorMessage, isAutoCompactEnabled, isAutoCompactWindowOverridden, isAutoModeConsentFlowEnabled, isAutoModeGateEnabled, isAutoReactDisarmedForSlug, isAutoReactNotification, isBackgroundedSubagentTask, isBackgroundedToDeliverMessage, isBareGitRepoLayout, isBase64ImageDataUrl, isBlockReadsOutsideWorkingDirsConfigured, isBridgeEvent, isBuiltInAgent, isBuiltInWebFetchAgent, isBuiltInWebFetchAgentType, isBuiltinPermissionsTemplateEnabled, isCacheHeartbeatEnabled, isChainOnAllowActive, isChainParticipant, isCheckoutLayoutSupported, isClaudeAiMarketplaceSource, isClaudeInChromeAllowed, isCloudReviewEnabled, isCommandEnabled, isCompactPairWithheldFromRemote, isCompactionMessage, isCompletedWithKeepalive, isCreditsOnlyTierSubscription, isCurrentAgentCommand, isCyberOrBioCategory, isDescendantAgentTask, isDesktopCommandEnabled, isDetailedTracingEnabled, isDirSyncEnabled, isDirSyncPullSupported, isDirectUserMessage, isDiscoveryCacheEnabled, isEditableCommand, isEmptyUserMessage, isEnhancedTelemetryBetaEnabled, isExcludedMemoryPath, isExpandedSettingsUiEnabled, isExtraUsageEnabled, isFableBlockedByUsageCredits, isFableUsageCreditsRequired, isFallbackStub, isFeedbackCommandEnabled, isFeedbackDraftRelayEnabled, isFileReadDenied, isFirstPartyApiCustomer, isFolderEligibleForDirSync, isFolderSyncEnabled, isForeignToBinding, isForkSubagentEnabled, isGeneratedFile, isGitAttributesPath, isGitAvailable, isGitDirectoryAtPath, isHandbackProvenanceEnabled, isHumanUserMessage, isIdleAmberFinchEnabled, isImportCommandEnabled, isInForkChild, isInMainRepoOutsideWorktree, isInProcessTeammateTask, isInSandboxWriteAllowlist, isInlineNotificationCommand, isInsideBareGitRepository, isInsideGitRepository, isInstallationInCurrentScope, isJetBrainsIde, isJetBrainsTerminal, isKnownContentBlockType, isKnownObserverTask, isLinearBrookEnabled, isLiveBackgroundTask, isLiveBridgeSuppressed, isLocalAgentTask, isLocalBashTask, isLocalCommandMessage, isLoggableMessage, isLowPriorityActive, isLowPriorityModeEnabled, isLspEnabled, isMainThreadCommand, isMainThreadPromptCommand, isMcpRpcTracingEnabled, isMcpServerAllowedByPolicy, isMcpServerDenied, isMcpTool, isMemoryFileAccess, isMemoryRecallBlockingEnabled, isMessageFromDifferentModel, isMisleadingConsentHost, isModelFallbackBlock, isModelUsableInPicker, isMonitorTask, isMonitorWsTask, isNoContentMessage, isNonSubstantiveMessage, isNotebookDocument, isObserverAgent, isOfficialMarketplacePlugin, isOfficialPluginScope, isOnCaseInsensitiveFs, isOrganizationProvidedMcpScope, isOtherBlockingDialogShowing, isOverageBillingEnabledFromCache, isPassiveCommand, isPathCoveringAllRoots, isPathEqualOrWithin, isPathGitWouldWrite, isPathOutsideRoot, isPathUnderManagedWorktreesDir, isPathWithin, isPersistedWorkspaceTrusted, isPingEvent, isPluginAgent, isPluginArchivePath, isPluginZipCacheEnabled, isPoppableCommand, isPreapprovedUrl, isPrecautionarySuppressionHeld, isPrecautionarySuppressionHeldFor, isPrecomputeCompactionEnabledByDefault, isPrivateOrReservedIpAddress, isProcessKillEscalationEnabled, isPromptCachingEnabledForModel, isProtectedSystemPath, isReactiveCompactEnabled, isRecallVisiblePath, isRefusalFallbackEnabled, isRemoteEgressSuppressedFor, isRemoteToolForwardingEnabled, isRemoteToolForwardingEnabledCached, isRemoteToolForwardingSwitchOn, isReplDiffSidebarEnabled, isReplVerboseEnabled, isRowForeignToBridgeSession, isRuleDecisionReason, isSafeRelativePath, isSameAttributesSnapshot, isSameRealPath, isSandboxOverrideUnderReadBlock, isSandboxSettingOverriddenByPolicy, isScrubOnlySandboxMode, isSelfHostedPoolId, isSendFeedbackEnabled, isSensitiveCommandInput, isSensitivePath, isSensitivePathVariant, isServerPolicyAskReason, isSessionHistorySuppressed, isSessionHistorySuppressedFor, isSessionLimitResetEnabled, isSessionTeleported, isShuttingDown, isSignalAborted, isSkillExcludedFromModel, isSkillPlaceholderCurrent, isSkillToolCommand, isSkillsSyncTierInPlay, isSkillsSyncVetoed, isSlashCommandEntry, isSlugStopLatched, isSlugSwept, isStandaloneCommandFlag, isSubagentTask, isSubsetOf, isSupportedIdeTerminal, isSyntheticMemoryFilePath, isSyntheticMessage, isSyntheticPromptText, isTaskLoopSettled, isTempScratchName, isTerminalApiErrorMessage, isThinkingOnlyWithoutSignature, isToolCallAbortedError, isToolDroppedByDenyRules, isToolFromMcpServer, isToolResultTruncated, isToolSearchEnabled, isToolSearchToolAvailable, isTranscriptPersistenceDisabled, isTruncatedStopReason, isTrustedAgentOrigin, isTrustedBuiltinPlugin, isTurnAbortReason, isUltraplanEnabled, isUltrareviewPostEnabled, isUnconfiguredMcpServer, isUsageBasedBilling, isUsageCreditsExempt, isUserConfiguredWindowSource, isValidAdvisorModel, isValidAdvisorModelString, isValidEtag, isValidPrUrl, isValidUtilizationWindow, isVoiceModeAllowed, isVoiceModeAvailable, isVscodeTerminal, isWebFetchAgentEnabled, isWebFetchAgentType, isWindowsSandboxEnabled, isWindowsShortNameAlias, isWithin, iwe, iye, iyn, iyr, j$n, j1n, j7t, jBn, jXe, jYr, jct, jgs, jjn, joinTextBlocks, jpe, jwt, jz, k0e, k7, k8, kF, kTt, kZe, keepWorktree, kes, kfr, khs, killAgentProcessGroups, killAllLiveShellCommands, killInProcessTeammate, killLocalAgentTask, killLocalShellTask, killMonitorTask, killTmuxSession, kle, kot, krt, kwt, l1e, l2n, lEn, lEt, lFe, lI, lK, lL, lQe, lTt, lUe, lUn, lW, laptopDirSyncRegistries, layoutStillHolds, lce, lee, lgs, lhr, linkSessionToPR, listMcpResourcesTool, listPeerSessions, listQueuedFeedbackDrafts, listRegisteredWorktrees, lkn, lnr, loadAllPlugins, loadAllPluginsCacheOnly, loadCachedMarketplaceCatalog, loadClaudeAiMarketplace, loadLivePeerSessions, loadMemoryFileWithIncludes, loadMemoryFilesForDirectory, loadPeerRoster, loadPluginHooks, loadPluginLspServers, loadPluginManifest, loadPluginOptions, loadRulesDirMemoryFiles, loadSkillsAsPlugins, loadedIndexExclusions, lockClaudeWorktree, logPrWritingGuidanceRendered, logPrecomputedCompactDiscarded, logPromptSuggestionSuppressed, looksLikeGitDirEntries, looksLikeWindowsShortName, lor, lot, lspDiagnosticsService, lxt, lyr, m4, m7, mFe, mSe, mSn, mTt, mW, mYe, makeBlockUuid, mapKeys, mapWithConcurrency, markContextRecentlyCompacted, markTaskNotified, markTaskStoppedByUser, matchOldStringQuoteStyle, mayReleaseWorktreeLock, mce, mct, meetsAvailabilityRequirement, mergeChildProcessEnv, mergeCustomInstructions, mergeSkillCommands, mergeStreamingUsage, mergeTranscriptProgress, mergeUsagePreferLatest, messageHasVisibleContent, met, min, mintPastedContentId, mkn, mle, mo, modelAliasMatchesFamily, mve, n1e, nBo, nCe, nFe, nKe, nQe, nWe, narrationStateStore, newScreenMemo, nke, nkn, nnn, normalizeErrorForTelemetry, normalizeMessageBlocks, normalizePathCase, normalizeWindowsPathComponent, not, noticesStore, notifyAutoReactHumanTurnObserver, nwe, o0e, o7t, oBo, oIe, oJt, oQt, oTt, oWe, oce, oee, okn, olo, onTaskLoopSettled, onn, onr, openFileForWrite, opt, orphanMarkerCoordsV5, oue, out, ox, oye, p1, p1n, p5, p7, p7t, pFe, pL, pQ, pXt, pYe, parseAutoCompactWindowSetting, parseCustomHeadersFromEnv, parseDiagnosticsFiles, parseDiffTreeRawOutput, parseEnabledPluginRecords, parseFallbackUsage, parseGitOperationState, parseGitVersion, parseHookOutput, parseHttpHookOutput, parseJsonWithSchema, parseMcpConfig, parseMcpConfigFromFilePath, parseNotebookCellIndex, parsePastedPlaceholders, parsePrUrl, parseReportWithHarnessNotes, parseRuleForSandbox, parseSedInPlaceCommand, parseSessionSource, parseShellCommandRedirections, parseSlashCommandInput, parseTaskStatusMessage, parseValidRows, pauseAutoRepliesForSlug, pce, pde, permissionRuleSourceDisplayString, permissionUpdateSchema, persistBinaryContent, persistHookOutput, persistWorktreeSession, pickAllowedToolInputProps, pinSessionId, pinnedTempRoot, pjn, pluginModuleLoadNotifier, pme, posixCovers, postUltrareviewFindings, prepareApiMessages, prepareContextForPlanMode, prepareForkedCommandContext, privateAdminDir, probeRepositorySize, promptCacheTrackerStore, prt, q7t, q8e, qA, qB, qBn, qEt, qNe, qP, qPe, qSt, qat, qgr, qk, qlt, qrt, qsr, qtn, queryAndGetAssistantMessage, qwt, qz, r2n, r4, r9, rBo, rHn, rJt, PollTool, rPe, rPn, rRe, rTe, rTt, rWe, rbt, reAppendSessionMetadata, reAppendSessionMetadataAfterCompaction, reAppendSessionMetadataAtExit, reachRootsOf, readAgentMetadata, readClaudeAiMarketplaceRegistry, readDirSyncGitPins, readFileTextOrNull, readFileWithLineRange, readGitInfoAttributesFile, readGitLayout, readInstalledPluginsFile, readInstalledPluginsViaStorage, readLastObserverRef, readLocalMarketplaceFile, readMcpResourceDirTool, readMcpResourceTool, readPluginLspConfig, readSmallFile, readTranscriptTailV5, readWorktreeBaseline, readWorktreeLockReason, recallVisibleTeamMounts, recordContentReplacement, recordConversationEditKind, recordFableOverageConsent, recordForkContextRef, recordHistoryEntries, recordObserverRef, recordPluginActivity, recordQueryProfileMark, recordQueueOperation, recordRequestUsageAndCost, recordSidechainTranscript, recordSkillInvocation, recordTranscript, redactSecrets, ree, refreshServerTools, refreshSkillsSyncVetoed, refreshSummonArmForSlug, refusalFallbackPromptDialog, refuseWorktreeInEvalChild, registerAgentController, registerBackgroundAgentTask, registerEnvHookNotifier, registerForegroundShellTask, registerForeignConversationProbe, registerPasteIdCarrier, registerPerfettoAgent, registerRemoteAgentTask, registerTaskLoopChain, reinitializeLspServerManager, releaseOwnWorktreeLock, releaseSettledKeepalives, reloadMemoryFilesForSession, relocateSessionTranscript, removeAgentWorktree, removeClaudeAiCatalogCache, removeCommandsByFilter, removeDangerousPermissions, removeFreshCopyUnlessInUse, removeKeepaliveReason, removeRemoteAgentMetadata, removeSandboxAllowWriteDirectory, replaceLastTextBlock, reportCascadeStopSpared, reportRelocateSessionTranscriptFailure, requireVersionParentContained, requiresUsageCredits, rescreenCachedPluginTree, resetCwdToOriginalIfNeeded, resetMemoryRelevanceState, resetPromptStateAfterInvalidation, resetSentSkillNames, resetWakeState, resizeImageDataUrlFromOutput, resolveAdvisorModel, resolveAgentTools, resolveAutoCompactWindow, resolveAutoModeClassifierModel, resolveBashOutputMaxChars, resolveCanonicalLanguageId, resolveCappedConfigInteger, resolveExistingWorktreeTarget, resolveExploreAgentModel, resolveFeedbackDraftTranscriptPath, resolveGitRootCandidates, resolveHookCommandScript, resolveIdeClientDisplayName, resolveIncludePath, resolveInstallPathGitSha, resolveLanguageNameFromPath, resolveManagedWorktreePath, resolveModelCapability, resolveNotificationTargetAgentId, resolvePathAllowingMissing, resolvePathPatternForSandbox, resolvePathPatternForSandboxAt, resolvePluginRelativePath, resolvePluginRenameChain, resolvePluginVersion, resolvePolicyPluginAccess, resolveProgramPath, resolvePromptSource, resolveRealpathAllowMissing, resolveRetractedMessages, resolveSandboxDenyReadEntry, resolveSandboxFilesystemPath, resolveSandboxFilesystemPathAt, resolveSkillBucketId, resolveSubagentModel, resolveTaskEnding, resolveToolByName, resolveToolUseAgentId, resolveTrustedBuiltinPluginId, resolveWindowsTlsTerminateCaSource, restateEnvironmentAfterCompact, restateModelIdentityAfterCompact, restoreDangerousPermissions, restorePreservedMessages, reviewSubagentHandoff, rkn, rln, rlo, rootLaptopDirSyncRegistry, ror, rrt, runAgent, runAgentTurn, runAsyncAgent, runAutoModeClassifier, runCallerSpecifiedModelQuery, runCompaction, runForkedAgent, runPinnedGit, runPostCompactCleanup, runPromptSubmitPipeline, runRipgrepSearch, runSessionStartHooks, runSmallFastModelQuery, runToolUse, runUltraplanCommand, runUserPromptSubmitHooks, runUserPromptSubmitHooksForSession, rut, rv, rvn, rwe, ryr, s$o, s3e, s9, sIt, sJt, sQ, sTt, sU, safeHookCwd, sandboxExportsChildTmpDir, sandboxReadBlockApplies, sanitizeDisplayText, sanitizeFeedbackDraftDetails, sanitizeFeedbackDraftField, sanitizeFeedbackDraftModel, sanitizeFeedbackDraftTitle, sanitizeOptionalFeedbackDraftArea, sanitizeOptionalFeedbackDraftEffort, sanitizeSubagentText, sanitizeToolInput, sanitizeTypeTag, saveAgentName, saveAiGeneratedTitle, saveCacheSafeParams, saveCustomTitle, saveFeedbackDraft, saveWorktreeState, scanMemoryFiles, scanMemoryHeaders, sce, seedIndexFromTreePaths, selectRecentRequestIds, sendMonitorEventNotification, sessionIdExists, sessionNeedsStore, sessionStartPromise, setLatchChangedAt, setSessionCwd, setTabsProvider, settingsChangeDetector, shippedCommandNames, shouldAllowManagedSandboxDomainsOnly, shouldDeferLspServerManagerStart, shouldEnableFindGrepTools, shouldForceSandboxOn, shouldInjectMemoryFile, shouldPlanUseAutoMode, shouldRunSkillInBackground, shouldShowUpgradeCommand, shouldSkipAttachments, shouldSpareAgentFromCascadeStop, shouldSyncSkills, shouldUseSandbox, shouldUseTodoTools, shutdownCoordinators, shutdownLspServerManager, sideQuery, skillEntrySchema, skillsChangedEmitter, skillsSyncManifestSchema, skn, sle, sliceFromLastCompactBoundary, snapshotTaskProgress, snn, someInFlightDrainCommand, spawnForkedSkillAgent, spelledFrom, splitCommandArgs, splitIntoSanitizedLines, srt, stageChangedPaths, stageIndexRemovals, startBackgroundShellTask, startKillEscalation, startRelevantMemoryPrefetch, startToolHeartbeatTimer, statLocalMarketplacePath, stopObserver, stopSlug, stopTask, stopWorkerCheckin, storeShellOutputToStorage, strictArchivePresent, strictCacheAddressable, stripConfinedHookApproval, stripControlCharacters, stripDangerousPermissionsForAutoMode, stripEnvVarsFromCommandPrefix, stripRecursiveGlobSuffix, stripSandboxViolations, stripThinkingBlocks, stripUltraplanKeyword, stripUnsupportedPowerShellRules, subagentStatsRegistry, subscribeBlockingDialog, substituteSkillShellCommands, suppressVertexAuthRejection, swe, sxt, syn, t1e, t3t, tBo, tEt, tFn, tIe, tIt, tPn, tT, tTt, tU, tYe, tan, teleportToRemote, throwAgentWorktreeNotGitRefusal, throwIfCompactionBlockedByHook, tke, tkn, tkt, tlt, toFeedbackCount, toFullCaseFoldKey, toOptionalStringArray, toSdkOutputMessages, toShellPermissionRules, toSingleLineText, toSubagentProgressMessages, todoItemsSchema, tot, trackGitOperation, trackProcessSweep, transcriptCorroboratesDraftIdentity, transcriptExitHooksLatches, transcriptStamp, trashDirectory, trimBlankLines, trt, truncateDisplayName, truncateMiddleWithMarker, truncateOtelContent, truncateSanitizedText, tut, uFe, uI, uIe, uSe, uTt, uhr, uiRenderCache, uk, uniqBy, unlockAgentWorktree, unmarkBeforeArchiving, unregisterPerfettoAgent, unvouchBeforeDependencyStep, updateAgentMetadata, updateTaskProgressFromMessage, upperFirst, upsertMessageByUuid, userPromptSubmitHooksKey, usesOneHourPromptCacheTtl, uwn, v1, v1e, v1n, v9n, vCe, vEt, vFe, vK, vPe, vTt, vXe, validatePluginManifest, validateUserConfig, validateWorktreeSlug, vce, vdr, verifySyncOwnedPath, versionParentContained, versionParentState, vertexResidualCredentialPins, vkn, vlr, vpe, vrt, vut, vve, vwt, w9, wFn, wG, wHe, wPe, wQ, waitForHookOpsDelivered, waitForInactive, warnUntrustedAgentOrigin, wdr, wee, wes, wie, withDisallowedToolsDenyRules, withGitNamePins, withHookStderr, withSpilledOutputTail, withoutGitConfigOverrides, withoutGrantsForRemoteScope, worktreeBranchName, worktreeStateSignals, wpt, wrapSystemReminder, writeAgentMetadata, writeFileAtomicWithMkdir, writeForkedSkillProvenanceMarker, writeHydratedAgentTranscript, writeRemoteAgentMetadata, wve, x0e, x1, x3t, x9n, xK, xUo, xkt, xot, xrt, xst, xwt, y$, y$n, y1e, y2, y2e, y3e, yEt, yHe, yQ, yU, ybt, yes, yit, ykn, yme, ynt, yot, yse, yve, yw, z0e, zBn, zEt, zPe, zSn, zXt, zct, zdr, zer, znt, ztt, zwt, zz } from "./execution-core.js";
-import { lstat as c_r, readdir as Vxt } from "fs/promises";
+import { lstat, readdir } from "fs/promises";
 import {
-  basename as u_r,
-  isAbsolute as d_r,
-  join as eM,
-  relative as ebr,
-  resolve as qxt,
-  sep as tbr,
+  basename,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
 } from "path";
-import { StringDecoder as Wyr } from "string_decoder";
-import { Readable as Gyr } from "stream";
-import { createReadStream as zyr, fstat } from "fs";
-import { stat as Vyr, readFile as Kyr } from "fs/promises";
+import { StringDecoder } from "string_decoder";
+import { Readable } from "stream";
+import { createReadStream, fstat } from "fs";
+import { stat, readFile } from "fs/promises";
 function n_r(e, t, r, o) {
   var d = -1,
     p = e == null ? 0 : e.length;
@@ -5160,13 +5160,13 @@ var a_r = Hxt(
   partition = a_r;
 function isRecallCorpusFile(e) {
   let t = getAutoMemPath(),
-    r = ebr(t, e);
+    r = relative(t, e);
   return (
-    r.endsWith(".md") && !r.startsWith("..") && !d_r(r) && Gje(r, loadedIndexExclusions(), recallVisibleTeamMounts(t))
+    r.endsWith(".md") && !r.startsWith("..") && !isAbsolute(r) && Gje(r, loadedIndexExclusions(), recallVisibleTeamMounts(t))
   );
 }
-import { types as Txt } from "util";
-import { writeSync as HZ } from "fs";
+import { types } from "util";
+import { writeSync } from "fs";
 function trackPendingWrite(e) {
   getPendingWriteTracker().track(e);
 }
@@ -5222,7 +5222,7 @@ function updateCacheHeartbeatWorkKind(e, t) {
   }
 }
 import { statfs } from "fs/promises";
-import { dirname as xbr } from "path";
+import { dirname } from "path";
 function unregisterAgentController(e, t) {
   let { loopsByTaskId: r } = Gb(),
     o = r.get(e);
@@ -5254,46 +5254,30 @@ function trackScrollPinnedState(e, t = Date.now(), r = lW) {
         (r.unpinnedSince = null));
   } else if (r.unpinnedSince === null) r.unpinnedSince = t;
 }
-import { randomBytes as Kys } from "crypto";
+import { randomBytes } from "crypto";
 import {
-  closeSync as $ge,
-  createReadStream as Yys,
-  constants as n4,
-  fstatSync as QCt,
-  openSync as Uge,
-  readSync as LZ,
-  writeSync as Xhr,
+  closeSync,
+  constants,
+  fstatSync,
+  openSync,
+  readSync,
 } from "fs";
 import {
-  copyFile as Ehr,
-  appendFile as zCt,
-  open as vj,
-  link as Xys,
-  lstat as Qys,
-  mkdir as Ij,
-  readdir as Pj,
-  readFile as Mj,
-  lutimes as Jys,
-  realpath as Qhr,
-  rename as t4,
-  rm as Thr,
-  stat as Vx,
-  unlink as ZCt,
-  utimes as Jhr,
-  writeFile as Zhr,
+  copyFile,
+  appendFile,
+  open,
+  link,
+  mkdir,
+  lutimes,
+  realpath,
+  rename,
+  rm,
+  unlink,
+  utimes,
+  writeFile,
 } from "fs/promises";
 import { constants as Zys } from "os";
-import {
-  basename as $Z,
-  dirname as kv,
-  isAbsolute as e_s,
-  join as Wp,
-  relative as t_s,
-  sep as vhr,
-} from "path";
-import { createInterface as n_s } from "readline";
-import { StringDecoder as nyr } from "string_decoder";
-import { sep as Bbr } from "path";
+import { createInterface } from "readline";
 async function initRepoCheckoutTracking(e) {
   getSessionRuntimeState().repoCheckouts.onMetadataChanged = e;
   for (let [, t] of nWe()) await addWatchedRepo(t);
@@ -5460,7 +5444,6 @@ class GAt {
   }
 }
 var qws = new j(() => new GAt());
-import { sep as Zbr } from "path";
 async function listGitWorktrees(e) {
   let t = Date.now(),
     { stdout: r, code: o } = await execFileNoThrowWithCwd(
@@ -5498,7 +5481,7 @@ async function listGitWorktrees(e) {
     worktree_count: p.length,
     success: !0,
   });
-  let _ = p.find((C) => e === C || e.startsWith(C + Zbr)),
+  let _ = p.find((C) => e === C || e.startsWith(C + sep)),
     E = p.filter((C) => C !== _).sort((C, I) => C.localeCompare(I));
   return _ ? [_, ...E] : E;
 }
@@ -5527,9 +5510,8 @@ var SEs = createLazyValue(() =>
     cronCreate: O(),
   }),
 );
-import { randomUUID as Qw } from "crypto";
-import { randomUUID as eSr } from "crypto";
-import { release, type as rSr, version } from "os";
+import { randomUUID } from "crypto";
+import { release, type, version } from "os";
 function setAgentProxyNote(e) {
   VAt().setNote(e);
 }
@@ -5541,25 +5523,9 @@ function jRt(e) {
   return _We(new MarkdownLexer({ gfm: !1 }).lex(e));
 }
 import {
-  basename as ngs,
-  dirname as RZ,
-  extname as rgs,
-  isAbsolute as V1e,
-  join as ak,
-  parse as ogs,
-  relative as qmr,
+  extname,
+  parse,
 } from "path";
-import { readdir as akr, stat as lkr } from "fs/promises";
-import { basename as ckr, join as xWe } from "path";
-import {
-  basename as wPt,
-  isAbsolute as TPt,
-  join as vPt,
-  resolve as Ckr,
-  sep as xkr,
-} from "path";
-import { realpath as Pkr } from "fs/promises";
-import { join as xPt, resolve as APt, sep as RWe } from "path";
 async function Ikr(e) {
   let t;
   try {
@@ -5570,21 +5536,21 @@ async function Ikr(e) {
     return !1;
   }
   if (e === t) return !0;
-  return e.startsWith(t + RWe);
+  return e.startsWith(t + sep);
 }
 async function RPt(e) {
   if ((assertSafePathKey(e), isExcludedMemoryPath(e)))
     throw new PathTraversalError(`Key targets an excluded personal-memory subtree: "${e}"`);
   let t = Hhe(),
-    r = xPt(t, e),
-    o = APt(r);
+    r = join(t, e),
+    o = resolve(r);
   if (!o.startsWith(t))
     throw new PathTraversalError(`Key escapes personal memory directory: "${e}"`);
   let d = await resolveRealPathSafely(o);
   if (!(await Ikr(d)))
     throw new PathTraversalError(`Key escapes personal memory directory via symlink: "${e}"`);
   for (let p of await Mkr())
-    if (d === p || d.startsWith(p + RWe))
+    if (d === p || d.startsWith(p + sep))
       throw new PathTraversalError(
         `Key resolves into an excluded subtree (${m4.join("/, ")}/): "${e}"`,
       );
@@ -5592,24 +5558,19 @@ async function RPt(e) {
 }
 async function Mkr() {
   let e = m4.map((r) =>
-      r === "team" ? getTeamMemoryDir().replace(/[/\\]+$/, "") : xPt(getAutoMemPath(), r),
+      r === "team" ? getTeamMemoryDir().replace(/[/\\]+$/, "") : join(getAutoMemPath(), r),
     ),
     t = [];
   for (let r of e)
     try {
-      t.push(await Pkr(r));
+      t.push(await realpath(r));
     } catch {}
   return t;
 }
-import { stat as ums } from "fs/promises";
-import { homedir as dms, tmpdir as fms } from "os";
-import { isDeepStrictEqual as _mr } from "util";
-import { basename as pms, isAbsolute as wj } from "path";
-import { spawn as xvt } from "child_process";
-import { randomUUID as bF } from "crypto";
-import { readdir as LPt, readFile as OPt, writeFile as Okr } from "fs/promises";
-import { join as Vhe } from "path";
-import { AsyncLocalStorage as Nkr } from "async_hooks";
+import { homedir, tmpdir } from "os";
+import { isDeepStrictEqual } from "util";
+import { spawn } from "child_process";
+import { AsyncLocalStorage } from "async_hooks";
 function IWe(e, t) {
   let r = !1;
   for (let o of e) {
@@ -5829,12 +5790,10 @@ function Vkr() {
     logForDebugging(`tool cgroup: mcp release recheck skipped (${e})`);
   }
 }
-import { realpath as _wr } from "fs/promises";
-import { isAbsolute as bwr } from "path";
-import { posix as S4 } from "path";
+import { posix } from "path";
 function iwr(e) {
   return (
-    S4.isAbsolute(e) &&
+    posix.isAbsolute(e) &&
     !ZPt.test(e) &&
     !BWe.test(e) &&
     !tIt.test(e) &&
@@ -5851,15 +5810,15 @@ async function classifyFileLocation(e, t, r) {
   }
   if (!iwr(o)) return { location: "elsewhere", realPath: null };
   if (
-    S4.isAbsolute(t.configHomeReal) &&
-    eIt.some((_) => isPathWithin($We(o), $We(S4.join(t.configHomeReal, _))))
+    posix.isAbsolute(t.configHomeReal) &&
+    eIt.some((_) => isPathWithin($We(o), $We(posix.join(t.configHomeReal, _))))
   )
     return { location: "elsewhere", realPath: null };
   let p = [
     ["in_checkout", t.launchDirReal],
     ["in_config_home", t.configHomeReal],
   ]
-    .filter(([, _]) => S4.isAbsolute(_) && isPathWithin(o, _))
+    .filter(([, _]) => posix.isAbsolute(_) && isPathWithin(o, _))
     .sort(([, _], [, E]) => E.length - _.length)[0];
   return { location: p ? p[0] : "elsewhere", realPath: o };
 }
@@ -5968,23 +5927,13 @@ async function resolveReachableRoots({
     }
   }
 }
-import { constants as fwr } from "fs";
 import {
-  access as pwr,
-  lstat as cIt,
-  open as uIt,
-  readlink as mwr,
-  realpath as gwr,
-  stat as jWe,
+  access,
+  readlink,
 } from "fs/promises";
-import { userInfo as hwr } from "os";
+import { userInfo } from "os";
 import {
-  basename as dIt,
-  delimiter as See,
-  dirname as fIt,
-  isAbsolute as kee,
-  join as HWe,
-  resolve as ywr,
+  delimiter,
 } from "path";
 function resolveLegacyEnvPin(e, t) {
   return e.legacyEnvPin === void 0 ? t : (e.legacyEnvPin ?? void 0);
@@ -5993,7 +5942,7 @@ function ensureLegacyEnvPin(e, t) {
   if (e.legacyEnvPin === void 0) e.legacyEnvPin = t ?? null;
   return e.legacyEnvPin ?? void 0;
 }
-import { createHash as wwr } from "crypto";
+import { createHash } from "crypto";
 function SIt(e, t) {
   if (!isDetailedTracingEnabled() || !E4()) return;
   let { content: r, truncated: o } = truncateOtelContent(`[USER PROMPT]
@@ -6125,8 +6074,6 @@ function JWe(e) {
   if (e.length > ZIt || !e.includes("<claude-code-hint")) return !1;
   return Iwr.test(e);
 }
-import { readlink as Lwr, realpath as tMt, stat as Fwr } from "fs/promises";
-import { join as rye } from "path";
 function getResolvedPowerShellPath() {
   return getShellConfig().resolvedPowerShellPath;
 }
@@ -6141,8 +6088,6 @@ async function getPowerShellEdition() {
     ? "core"
     : "desktop";
 }
-import { mkdir as lEr } from "fs/promises";
-import { join as sMt } from "path";
 import { join as cEr } from "path/posix";
 var Uwr = 5000;
 function Hwr() {
@@ -6975,9 +6920,7 @@ function getCommandSecurityPatterns(e) {
     }
   return t;
 }
-import { createHash as c2e } from "crypto";
-import { chmod as bEr, writeFile as u2e } from "fs/promises";
-import { dirname as SEr, join as O$ } from "path";
+import { chmod } from "fs/promises";
 async function pEr(e) {
   let { McpbManifestSchema: t } = await import("../../02-功能模块/MCP客户端/McpbManifestSchema.5cjd12av.js"),
     r = t.safeParse(e);
@@ -7011,27 +6954,25 @@ async function t2e(e) {
   let t = new TextDecoder().decode(e);
   return mEr(t);
 }
-import { isAbsolute as gEr, normalize as hEr } from "path";
-import { homedir as _Er } from "os";
-import { join as R4 } from "path";
+import { normalize } from "path";
 function lMt(e) {
   let t = e?.platform ?? getCurrentPlatform(),
-    r = e?.homedir ?? _Er(),
+    r = e?.homedir ?? homedir(),
     o = e?.env ?? process.env,
     d = {
       HOME: r,
-      DESKTOP: R4(r, "Desktop"),
-      DOCUMENTS: R4(r, "Documents"),
-      DOWNLOADS: R4(r, "Downloads"),
+      DESKTOP: join(r, "Desktop"),
+      DOCUMENTS: join(r, "Documents"),
+      DOWNLOADS: join(r, "Downloads"),
     };
   switch (t) {
     case "windows": {
       let p = o.USERPROFILE || r;
       return {
         HOME: r,
-        DESKTOP: R4(p, "Desktop"),
-        DOCUMENTS: R4(p, "Documents"),
-        DOWNLOADS: R4(p, "Downloads"),
+        DESKTOP: join(p, "Desktop"),
+        DOCUMENTS: join(p, "Documents"),
+        DOWNLOADS: join(p, "Downloads"),
       };
     }
     case "linux":
@@ -7066,11 +7007,11 @@ function cMt(e) {
   return e.startsWith("http://") || e.startsWith("https://");
 }
 function uMt(e) {
-  return O$(e, ".mcpb-cache");
+  return join(e, ".mcpb-cache");
 }
 function wEr(e, t) {
-  let r = c2e("md5").update(t).digest("hex").substring(0, 8);
-  return O$(e, `${r}.metadata.json`);
+  let r = createHash("md5").update(t).digest("hex").substring(0, 8);
+  return join(e, `${r}.metadata.json`);
 }
 function dMt(e, t) {
   return createJsonFileStore(wEr(e, t), () => kEr().nullable(), {
@@ -7216,7 +7157,7 @@ async function EEr(e, t, r) {
     if (
       (logPluginRemoteFetch("mcpb", e, "success", performance.now() - o),
       (d = !0),
-      await u2e(t, Buffer.from(E)),
+      await writeFile(t, Buffer.from(E)),
       logForDebugging(`Downloaded ${E.length} bytes to ${t}`),
       r)
     )
@@ -7239,8 +7180,8 @@ async function TEr(e, t, r, o) {
     p = Object.entries(e).filter(([E]) => !E.endsWith("/")),
     _ = p.length;
   for (let [E, C] of p) {
-    let I = O$(t, E),
-      D = SEr(I);
+    let I = join(t, E),
+      D = dirname(I);
     if (D !== t) await getFsSurface().mkdir(D);
     if (
       E.endsWith(".json") ||
@@ -7252,10 +7193,10 @@ async function TEr(e, t, r, o) {
       E.endsWith(".yaml")
     ) {
       let U = new TextDecoder().decode(C);
-      await u2e(I, U, "utf-8");
-    } else await u2e(I, Buffer.from(C));
+      await writeFile(I, U, "utf-8");
+    } else await writeFile(I, Buffer.from(C));
     let F = r[E];
-    if (F && F & 73) await bEr(I, F & 511).catch(() => {});
+    if (F && F & 73) await chmod(I, F & 511).catch(() => {});
     if ((d++, o && d % 10 === 0)) o(`Extracted ${d}/${_} files`);
   }
   if ((logForDebugging(`Extracted ${d} files to ${t}`), o))
@@ -7278,7 +7219,7 @@ async function vEr(e, t) {
     return !0;
   }
   if (!cMt(e)) {
-    let p = O$(t, e),
+    let p = join(t, e),
       _;
     try {
       _ = await r.stat(p);
@@ -7306,7 +7247,7 @@ async function loadMcpbBundle(e, t, r, o, d, p, _, E) {
   let D = await pMt(I, e);
   if (D && !(await vEr(e, t))) {
     logForDebugging(`Using cached MCPB from ${D.extractedPath} (hash: ${D.contentHash})`);
-    let xe = O$(D.extractedPath, "manifest.json"),
+    let xe = join(D.extractedPath, "manifest.json"),
       Oe;
     try {
       Oe = await C.readFile(xe, { encoding: "utf-8" });
@@ -7353,10 +7294,10 @@ async function loadMcpbBundle(e, t, r, o, d, p, _, E) {
   }
   let N, F, U;
   if (cMt(e)) {
-    let xe = c2e("md5").update(e).digest("hex").substring(0, 8);
-    ((F = O$(I, `${xe}.mcpb`)), (N = await EEr(e, F, o)));
+    let xe = createHash("md5").update(e).digest("hex").substring(0, 8);
+    ((F = join(I, `${xe}.mcpb`)), (N = await EEr(e, F, o)));
   } else {
-    let xe = O$(t, e);
+    let xe = join(t, e);
     if (o) o(`Loading ${e}...`);
     try {
       ((N = await C.readFileBytes(xe)),
@@ -7370,7 +7311,7 @@ async function loadMcpbBundle(e, t, r, o, d, p, _, E) {
       throw Oe;
     }
   }
-  let V = c2e("sha256").update(N).digest("hex").substring(0, 16);
+  let V = createHash("sha256").update(N).digest("hex").substring(0, 16);
   if ((logForDebugging(`MCPB content hash: ${V}`), o)) o("Extracting MCPB archive...");
   let re = await extractMcpbArchive(Buffer.from(N)),
     ue = A4(N),
@@ -7395,7 +7336,7 @@ async function loadMcpbBundle(e, t, r, o, d, p, _, E) {
     );
     throw (logError(xe), xe);
   }
-  let Se = O$(I, V);
+  let Se = join(I, V);
   if (
     (await TEr(re, Se, ue, o),
     _e.user_config && Object.keys(_e.user_config).length > 0)
@@ -7614,7 +7555,6 @@ function vMt(e) {
   let { pendingUsage: t } = tM();
   for (let r of t.keys()) if (e.has(r.toLowerCase())) t.delete(r);
 }
-import { sep as UMt } from "path";
 var CMt = new Set([
     "plugin command source printed a network path",
     "plugin command source path resolves to a network path",
@@ -7643,7 +7583,6 @@ var CMt = new Set([
     "plugin command source declined at the prompt",
   ]),
   PLUGIN_UPDATE_REFUSED_PREFIX = "plugin update refused during cli update: ";
-import { createHash as REr } from "crypto";
 function AMt(e, t) {
   dye().firstPartyPlugins.set(e, t);
 }
@@ -7773,7 +7712,7 @@ function getPluginEnabledVia(e, t, r) {
     e.installationPreference === "auto_install"
   )
     return "admin-install";
-  if (r.some((o) => e.path.startsWith(o.endsWith(UMt) ? o : o + UMt)))
+  if (r.some((o) => e.path.startsWith(o.endsWith(sep) ? o : o + sep)))
     return "seed-mount";
   return "user-install";
 }
@@ -8082,92 +8021,56 @@ function installDeviceHooks(e, t, r, o) {
 function removeDeviceHooks(e, t) {
   VMt((r) => !qMt(r, e, t), {});
 }
-import { isAbsolute as _js, sep as V8t } from "path";
-import { homedir as yye } from "os";
 import * as dk from "path";
 import * as TW from "fs";
 import * as KMt from "fs";
-import { realpathSync as oKr } from "fs";
-import { homedir as sKr } from "os";
-import { isAbsolute as v3e, resolve as iKr } from "path";
+import { realpathSync } from "fs";
 var pTr;
 function QMt(e) {
   pTr ??= e;
 }
-import { Agent as KAr, createServer as YAr } from "http";
+import { Agent, createServer as YAr } from "http";
 import { request as mze } from "http";
-import { request as jDt } from "https";
-import { connect as XAr, isIP as QAr } from "net";
+import { request } from "https";
+import { connect, isIP } from "net";
 import { URL as WDt } from "url";
-import { sign as tAr, X509Certificate as nAr } from "crypto";
+import { sign, X509Certificate } from "crypto";
 import {
-  mkdtempSync as gDt,
-  readFileSync as XGe,
+  mkdtempSync,
+  readFileSync,
   writeFileSync,
 } from "fs";
-import { rm as rAr } from "fs/promises";
-import { tmpdir as hDt } from "os";
-import { join as Qee, dirname as dDt } from "path";
 import { rootCertificates } from "tls";
-import { PassThrough, Readable as SDt } from "stream";
-import { createServer as NAr, request as LAr } from "https";
-import { connect as FAr, isIP as LDt } from "net";
+import { PassThrough } from "stream";
+import { createServer as NAr } from "https";
 import { unlink as $Ar } from "fs";
-import { tmpdir as BAr } from "os";
-import { join as UAr } from "path";
-import { Transform as gAr } from "stream";
-import { isIP as bAr } from "net";
+import { Transform } from "stream";
 import { createSecureContext } from "tls";
-import { BlockList, connect as xDt, isIP as QW } from "net";
+import { BlockList } from "net";
 import { connect as EAr } from "tls";
 import { URL as ize } from "url";
-import { createHash as AAr, createHmac } from "crypto";
+import { createHmac } from "crypto";
 import ZAr from "net";
 import tRr from "net";
-import { createServer as cRr, connect as YDt } from "net";
-import { join as uRr } from "path";
-import { tmpdir as dRr } from "os";
-import { unlink as XDt } from "fs/promises";
-import { randomBytes as hRr, randomUUID as yRr } from "crypto";
-import { randomUUID as SRr } from "crypto";
+import { createServer } from "net";
 import * as oP from "fs";
-import { tmpdir as kRr } from "os";
-import { join as tNt } from "path";
-import { randomUUID as ERr } from "crypto";
-import { spawnSync as vRr } from "child_process";
+import { spawnSync } from "child_process";
 import * as Vze from "fs";
-import { randomBytes as CPr } from "crypto";
-import { randomBytes as FRr } from "crypto";
 import * as zd from "fs";
-import { spawn as hNt } from "child_process";
-import { tmpdir as xze } from "os";
-import $h, { join as yNt } from "path";
-import { spawn as CRr } from "child_process";
-import { text as cNt } from "stream/consumers";
+import $h, {} from "path";
+import { text } from "stream/consumers";
 import { existsSync } from "fs";
-import { dirname as ORr, join as ote } from "path";
-import { fileURLToPath as DRr } from "url";
-import { join as sP, dirname as xRr } from "path";
-import { fileURLToPath as ARr } from "url";
+import { fileURLToPath } from "url";
 import * as D_e from "fs";
 import { execSync } from "child_process";
-import { homedir as PRr } from "os";
-import { spawn as zRr } from "child_process";
 import * as uE from "path";
-import { randomBytes as oPr } from "crypto";
-import { mkdtempSync as sPr, rmSync as iPr } from "fs";
-import { createServer as aPr } from "net";
-import { tmpdir as lPr } from "os";
-import { join as LNt, posix as cPr } from "path";
-import { createInterface as uPr } from "readline";
+import { rmSync } from "fs";
 import * as mS from "fs";
 import * as HNt from "net";
 import * as NS from "path";
-import { spawn as dPr, spawnSync as fPr } from "child_process";
-import { once as pPr } from "events";
-import { fileURLToPath as mPr } from "url";
+import { once } from "events";
 function gPr() {
-  let e = NS.dirname(mPr(import.meta.url));
+  let e = NS.dirname(fileURLToPath(import.meta.url));
   return NS.resolve(e, "..", "..");
 }
 var hPr = { x64: "x64", arm64: "arm64" },
@@ -8255,42 +8158,18 @@ async function installWindowsSandboxAsync(e = {}) {
   let o = await checkWindowsSandboxStatusAsync({ sublayerGuid: e.sublayerGuid, srtWin: t });
   return r.status === 10 ? { ...o, cancelled: !0 } : o;
 }
-import { isIP as vPr } from "net";
 import { EOL } from "os";
-import { dirname as xPr } from "path";
 import {
-  accessSync as rVr,
+  accessSync,
   chmodSync,
-  closeSync as $N,
-  constants as yE,
-  fstatSync as OSe,
-  lstatSync as RP,
+  lstatSync,
   mkdirSync,
-  openSync as KB,
-  readFileSync as c3e,
-  readSync as h3t,
-  readdirSync as oVr,
-  readlinkSync as PP,
-  realpathSync as rk,
-  rmSync as y3t,
+  readdirSync,
+  readlinkSync,
   rmdirSync,
-  statSync as a0,
-  unlinkSync as iVr,
+  statSync,
+  unlinkSync,
 } from "fs";
-import { isIP as BN } from "net";
-import { homedir as rG } from "os";
-import {
-  basename as hoe,
-  dirname as bg,
-  isAbsolute as ASe,
-  join as I_,
-  relative as aVr,
-  resolve as el,
-  sep as Wk,
-} from "path";
-import { mkdir as vLt } from "fs/promises";
-import { homedir as aIr } from "os";
-import { dirname as lIr, join as cIr } from "path";
 var Q6e = rs(() => o5t());
 function _qr(e) {
   let { CelScalar: t, celFunc: r, listType: o } = e;
@@ -8314,37 +8193,24 @@ var bqr = rs(() => {
   return e.celEnv({ funcs: [...t, ..._qr(e)] });
 });
 import * as v5t from "os";
-import { join as lSe } from "path";
 function R5t(e, t) {
   let r = uSe(`domain:${e}`),
     o = uSe(`domain:${t}`);
   return r.includes("*") ? A5t(r, o) : r === o;
 }
-import { dirname as Tqr, join as J6e } from "path";
 import { watch } from "fs";
-import { realpath as P5t, stat as h2 } from "fs/promises";
 import * as P_ from "path";
 function getSrtWinLaunchConfig() {
   return { exe: process.execPath, prependArgs: [Nze] };
 }
-import { sep as pSe } from "path";
-import { execFile as Oqr, spawn as o3e } from "child_process";
-import { constants as n3e, realpathSync as Dqr, statSync as Nqr } from "fs";
-import {
-  open as Lqr,
-  readlink as Fqr,
-  stat as r3e,
-  access as $qr,
-} from "fs/promises";
-import { homedir as Bqr } from "os";
+import { execFile } from "child_process";
 import * as Bb from "path";
-import { StringDecoder as Uqr } from "string_decoder";
 async function streamRipgrepSearch(e, t, r, o) {
   let { rgPath: d, rgArgs: p, argv0: _ } = rv();
   return new Promise((E, C) => {
     let I = _2(t, d);
     hSe(e, t, I);
-    let D = o3e(d, [...p, ...e, t], {
+    let D = spawn(d, [...p, ...e, t], {
         argv0: _,
         cwd: I,
         signal: r,
@@ -8354,7 +8220,7 @@ async function streamRipgrepSearch(e, t, r, o) {
         ...Bs("helper"),
       }),
       N = (ue) => (ue.endsWith("\r") ? ue.slice(0, -1) : ue),
-      F = new Uqr("utf8"),
+      F = new StringDecoder("utf8"),
       U = "";
     D.stdout?.on("data", (ue) => {
       let _e = (U + F.write(ue)).split(`
@@ -8409,7 +8275,6 @@ function getRipgrepStatus() {
     working: qB().status?.working ?? null,
   };
 }
-import { openSync as Zqr } from "fs";
 var CUs = createLazyValue(() =>
   c({
     host: s().min(1),
@@ -8439,18 +8304,18 @@ function isInstalledWindowsTlsCaCurrent(e) {
       t.source === "trustedPair"
         ? (t.caCertPath ?? null)
         : t.source === "managed"
-          ? I_(Hze(), "ca", "cert.pem")
+          ? join(Hze(), "ca", "cert.pem")
           : null;
     if (r === null) return !0;
-    let o = KB(r, "r"),
+    let o = openSync(r, "r"),
       d;
     try {
-      let p = OSe(o);
+      let p = fstatSync(o);
       if (!p.isFile() || p.size > dVr) return !0;
       let _ = Buffer.alloc(p.size);
-      (h3t(o, _, 0, _.length, 0), (d = _.toString("utf8")));
+      (readSync(o, _, 0, _.length, 0), (d = _.toString("utf8")));
     } finally {
-      $N(o);
+      closeSync(o);
     }
     return XW(d) === e;
   } catch {
@@ -8508,8 +8373,7 @@ function addToExcludedCommands(e, t) {
     { commandPattern: r, settingsSource: o }
   );
 }
-import { hostname as uKr } from "os";
-import { dirname as dKr, join as fKr } from "path";
+import { hostname } from "os";
 var pYt = createLazyValue(() =>
     c({
       version: k(1),
@@ -8523,7 +8387,7 @@ function fYt() {
   return STORAGE_KEYS.state(mYt);
 }
 function getDeviceHooksConsentFilePath() {
-  return fKr(getClaudeConfigDir(), "state", `${mYt}.json`);
+  return join(getClaudeConfigDir(), "state", `${mYt}.json`);
 }
 async function readConsentFromStore(e) {
   try {
@@ -8578,10 +8442,10 @@ function createConsentStore(e) {
         return;
       }
       let r = getDeviceHooksConsentFilePath();
-      (await getFileStorage().mkdir(dKr(r)), await getFileStorage().atomicWrite(r, t, 384));
+      (await getFileStorage().mkdir(dirname(r)), await getFileStorage().atomicWrite(r, t, 384));
     },
     now: () => new Date(),
-    hostname: uKr,
+    hostname: hostname,
   };
 }
 function gYt() {
@@ -8672,13 +8536,6 @@ async function isConsentStoreInReach(e, t, r) {
   }
 }
 import { devNull } from "os";
-import {
-  basename as USe,
-  delimiter as m8t,
-  dirname as $4r,
-  isAbsolute as W3e,
-  resolve as HSe,
-} from "path";
 var gKr =
   /[\x00-\x1f\x7f-\x9f\u061c\u2028\u2029\u202a-\u202e\u2066-\u2069\p{Co}\p{Cn}]/gu;
 function sanitizeForDisplay(e) {
@@ -8859,17 +8716,9 @@ function x3e(e) {
     t.permissionDecision === "deny"
   );
 }
-import { constants as A3e } from "fs";
 import {
-  lstat as bKr,
-  mkdtemp as SKr,
-  open as kKr,
-  realpath as bYt,
-  rm as wKr,
-  unlink as EKr,
-  writeFile as TKr,
+  mkdtemp,
 } from "fs/promises";
-import { basename as vKr, join as R3e } from "path";
 async function kYt(e, t) {
   let r;
   try {
@@ -8891,7 +8740,7 @@ async function kYt(e, t) {
 }
 var CKr = "claude-device-hooks-";
 function _Yt(e) {
-  let t = vKr(e).replace(/[^A-Za-z0-9._-]/g, "_");
+  let t = basename(e).replace(/[^A-Za-z0-9._-]/g, "_");
   return t === "" || t === "." || t === ".." ? "hook" : t;
 }
 function createHookStagingArea(e, t) {
@@ -8903,7 +8752,7 @@ function createHookStagingArea(e, t) {
     E = () => {
       if (p) return Promise.reject(Error("device hook staging is disposed"));
       return (r ??= (async () => {
-        let I = await e.mkdtemp(R3e(e.tmpBase(), CKr)),
+        let I = await e.mkdtemp(join(e.tmpBase(), CKr)),
           D = await e.realpath(I);
         if (_([D, I]))
           throw (
@@ -8929,7 +8778,7 @@ function createHookStagingArea(e, t) {
     async stage(I, D, N) {
       let F = await C();
       d += 1;
-      let U = R3e(F, `${I.slice(0, 16)}-${d}-${_Yt(N)}`);
+      let U = join(F, `${I.slice(0, 16)}-${d}-${_Yt(N)}`);
       await e.writeFileExclusive(U, D, 448);
       let V = !1;
       return {
@@ -8945,7 +8794,7 @@ function createHookStagingArea(e, t) {
         N = o.get(D);
       if (N === void 0)
         ((N = (async () => {
-          let U = R3e(await C(), D);
+          let U = join(await C(), D);
           return (await e.writeFileExclusive(U, Buffer.alloc(0), 384), U);
         })().catch((U) => {
           throw (o.delete(D), U);
@@ -8978,24 +8827,22 @@ function P3e(e, t, r) {
 }
 function getRealFileSystemAccess() {
   return {
-    realpath: bYt,
-    openNoFollow: (e) => kKr(e, A3e.O_RDONLY | A3e.O_NOFOLLOW | A3e.O_NONBLOCK),
-    lstat: bKr,
+    realpath: realpath,
+    openNoFollow: (e) => open(e, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK),
+    lstat: lstat,
   };
 }
 function getStagingFileSystemAccess() {
   return {
     tmpBase: getTempBaseDir,
-    mkdtemp: SKr,
-    realpath: bYt,
-    writeFileExclusive: (e, t, r) => TKr(e, t, { mode: r, flag: "wx" }),
-    unlink: EKr,
-    rm: (e) => wKr(e, { recursive: !0, force: !0 }),
+    mkdtemp: mkdtemp,
+    realpath: realpath,
+    writeFileExclusive: (e, t, r) => writeFile(e, t, { mode: r, flag: "wx" }),
+    unlink: unlink,
+    rm: (e) => rm(e, { recursive: !0, force: !0 }),
   };
 }
-import { randomBytes as LKr } from "crypto";
 import { lookup } from "dns";
-import { isIP as $Yt } from "net";
 var HOOK_EXECUTION_BACKEND = { execCommand: execCommandHookForDevice, execHttp: Toe },
   qKr = [
     ["safe.bareRepository", "explicit"],
@@ -9269,8 +9116,6 @@ function GYt(e, t) {
       }
     : {};
 }
-import { randomBytes as d4r } from "crypto";
-import { hostname as f4r } from "os";
 var KKr = 2,
   HEARTBEAT_FRAME = '{"type":"hb"}',
   HANDSHAKE_TIMEOUT_MS = 15000,
@@ -9454,7 +9299,7 @@ var p4r = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/,
   h4r = 8,
   y4r = 64,
   _4r = 9999,
-  XYt = { hostname: f4r, randomHex: (e) => d4r(e).toString("hex") };
+  XYt = { hostname: hostname, randomHex: (e) => randomBytes(e).toString("hex") };
 function createInstanceId(e = XYt) {
   return `dev-${e.randomHex(h4r)}`;
 }
@@ -9763,8 +9608,6 @@ function d8t(e, t, r, o) {
   };
   return { input: { ...E, cloud_session: C }, untranslated: d.untranslated };
 }
-import { readlink as v4r, realpath as C4r } from "fs/promises";
-import { posix as jN } from "path";
 var T4r = /\u2028|\u2029/g;
 function stringifyJsonSafe(e) {
   return jsonStringify(e).replace(T4r, (t) => (t === "\u2028" ? "\\u2028" : "\\u2029"));
@@ -9966,8 +9809,8 @@ function productionForwarderTimer(e, t) {
   let r = setTimeout(e, t);
   return (r.unref(), { clear: () => clearTimeout(r) });
 }
-var I4r = (e) => C4r(e),
-  M4r = (e) => v4r(e),
+var I4r = (e) => realpath(e),
+  M4r = (e) => readlink(e),
   O4r = 40;
 async function D4r(e, t, r) {
   let o = "tool_calls" in e && Array.isArray(e.tool_calls) ? e.tool_calls : [e],
@@ -9992,30 +9835,30 @@ function N4r(e, t) {
   if (o === void 0) return null;
   let d = r,
     p = d[o];
-  return typeof p === "string" && jN.isAbsolute(p)
+  return typeof p === "string" && posix.isAbsolute(p)
     ? { fields: d, member: o, value: p }
     : null;
 }
 async function L4r({ fields: e, member: t, value: r }, o) {
-  let d = jN.normalize(r),
+  let d = posix.normalize(r),
     p = [];
   for (let _ = 0; _ <= O4r; _++)
     try {
       let E = await o.realpath(d),
-        C = p.length === 0 ? E : jN.join(E, ...p);
+        C = p.length === 0 ? E : posix.join(E, ...p);
       if (C !== r) e[t] = C;
       return !0;
     } catch {
       let E = await o.readlink(d).catch(() => null);
       if (E !== null) {
-        let I = jN.dirname(d),
+        let I = posix.dirname(d),
           D = await o.realpath(I).catch(() => I);
-        ((d = jN.normalize(jN.join(jN.resolve(D, E), ...p))), (p = []));
+        ((d = posix.normalize(posix.join(posix.resolve(D, E), ...p))), (p = []));
         continue;
       }
-      let C = jN.dirname(d);
+      let C = posix.dirname(d);
       if (C === d) return !0;
-      (p.unshift(jN.basename(d)), (d = C));
+      (p.unshift(posix.basename(d)), (d = C));
     }
   return !1;
 }
@@ -10126,8 +9969,8 @@ function A8t(e, t) {
     }
   let r =
     t?.kind === "script"
-      ? USe(t.rawPath)
-      : USe(e.command.trim().split(/\s+/)[0] ?? "");
+      ? basename(t.rawPath)
+      : basename(e.command.trim().split(/\s+/)[0] ?? "");
   return formatSingleLineText(r, { maxCodeUnits: 64 }) || "hook";
 }
 function R8t(e, t, r) {
@@ -10155,7 +9998,7 @@ function Z4r(e, t) {
     o = (_, E, C, I) => {
       if (r.length > Roe || I > G4r) return;
       if (typeof E === "string") {
-        if (C && E !== "" && !W3e(E)) r.push(_);
+        if (C && E !== "" && !isAbsolute(E)) r.push(_);
         return;
       }
       if (Array.isArray(E)) {
@@ -10181,7 +10024,7 @@ function Z4r(e, t) {
           (jSe(I) || i8t(I) || HN(D)) &&
           typeof N === "string" &&
           N !== "" &&
-          !W3e(N) &&
+          !isAbsolute(N) &&
           N.length <= 4096 &&
           !/\p{Cc}/u.test(N)
         )
@@ -10215,16 +10058,16 @@ async function BSe(e, t) {
     if (o.length > W4r) return null;
     try {
       let d = await t.realpath(r);
-      return o.length === 0 ? d : HSe(d, ...o);
+      return o.length === 0 ? d : resolve(d, ...o);
     } catch (d) {
       if (A(d) !== "ENOENT") return null;
       let p = await t
           .lstat(r)
           .then((E) => E.isSymbolicLink())
           .catch(() => !1),
-        _ = $4r(r);
+        _ = dirname(r);
       if (p || _ === r) return null;
-      (o.unshift(USe(r)), (r = _));
+      (o.unshift(basename(r)), (r = _));
     }
   }
 }
@@ -10235,7 +10078,7 @@ async function k8t(e, t, r, o) {
       e.map(async (_) => {
         let E = G3e(t, _);
         if (typeof E !== "string" || E === "") return null;
-        let C = W3e(E) ? E : HSe(t.cwd, E);
+        let C = isAbsolute(E) ? E : resolve(t.cwd, E);
         return d(await BSe(C, o)) ? null : _;
       }),
     )
@@ -10537,7 +10380,7 @@ function createDeviceHookRequestServicer(e) {
           repinned: en,
         };
       try {
-        let dn = await e.staging.stage(Wt, ut, USe(He.path));
+        let dn = await e.staging.stage(Wt, ut, basename(He.path));
         return {
           kind: "run",
           hook: P3e(Me, xe.site, dn.path),
@@ -10930,9 +10773,9 @@ function createDeviceHookRequestServicer(e) {
               ...e.extraWritableRoots(),
             ]
               .filter((ui) => ui.startsWith("/"))
-              .map((ui) => normalizePathCase(HSe(ui))),
+              .map((ui) => normalizePathCase(resolve(ui))),
             Rs = await e.childEnvironment(Xs, bs),
-            di = (ui) => Xs.some((ba) => isPathWithin(normalizePathCase(HSe(ui)), ba)),
+            di = (ui) => Xs.some((ba) => isPathWithin(normalizePathCase(resolve(ui)), ba)),
             ga = o5r(bs.CLAUDE_CODE_SHELL_PREFIX ?? "", {
               home: bs.HOME,
               launchDir: Me.frame.launchDir,
@@ -10971,9 +10814,9 @@ function createDeviceHookRequestServicer(e) {
               Wo === void 0 || Wo === ""
                 ? { ...vl, extra: { ...vl.extra, PATH: WWe } }
                 : vl,
-            Ai = new Set((hs.extra.PATH ?? "").split(m8t)),
+            Ai = new Set((hs.extra.PATH ?? "").split(delimiter)),
             ls = (bs.PATH ?? "")
-              .split(m8t)
+              .split(delimiter)
               .filter((ui) => ui !== "" && !Ai.has(ui));
           if (hs.omit.length > 0)
             e.debug(
@@ -11497,8 +11340,6 @@ function createControlResponseError(e) {
       : `subtype ${typeof e.subtype === "string" ? "unrecognized" : typeof e.subtype}`;
   return Error(`Malformed control_response from worker (${t})`);
 }
-import { realpathSync as s5r } from "fs";
-import { resolve as i5r } from "path";
 function a5r(e, t) {
   try {
     return e.realpath(t);
@@ -11557,7 +11398,7 @@ function captureHookSettings(e) {
       if (_ === "localSettings" && e.isLocalSettingsGitTracked())
         return (d.push({ source: E, reason: "repo_provenance" }), []);
       if (C !== null && _ !== "flagSettings") {
-        let D = a5r(e, i5r(C));
+        let D = a5r(e, resolve(C));
         if (o.has(D)) return [];
         o.add(D);
       }
@@ -11587,7 +11428,7 @@ function createHookSettingsAccessor() {
       isLocalSettingsGitTracked({ onIndeterminate: "untracked" })
     ),
     flagSettingsInline: () => MA() !== void 0,
-    realpath: s5r,
+    realpath: realpathSync,
     policyUnreadable: () => filterFatalPolicyErrors(getPolicySettingsLoadErrors()).length > 0 || (m_e() && parentManagedTierParticipates()),
     hooksSkippedForTrust: () => !isWorkspacePersistedTrusted(),
     flagPatchHasHooks: () => {
@@ -13024,9 +12865,6 @@ function q8t(e, t, r) {
   let d = r();
   return (e.set(t, d), d);
 }
-import { resolve as A5r } from "path";
-import { homedir as E5r } from "os";
-import { isAbsolute as T5r, join as v5r } from "path";
 function listConfiguredHooks(e) {
   let t = [];
   if (getSettingsForSource("policySettings")?.allowManagedHooksOnly !== !0) {
@@ -13035,7 +12873,7 @@ function listConfiguredHooks(e) {
     for (let E of p) {
       let C = getSettingsFilePathForSource(E);
       if (C) {
-        let D = A5r(C);
+        let D = resolve(C);
         if (_.has(D)) continue;
         _.add(D);
       }
@@ -13168,13 +13006,8 @@ function formatErrorSummary({ name: e, message: t, stack: r }, o = 5) {
 `),
   );
 }
-import { join as WXt } from "path";
-import { createHash as SXt } from "crypto";
-import { constants as kXt, createReadStream as W5r } from "fs";
-import { open as G5r, stat as z5r } from "fs/promises";
-import { createInterface as q5r } from "readline";
 async function pruneLinesFromFile(e, t, r, { fileMode: o = "default", beforeWrite: d } = {}) {
-  let p = q5r({ input: W5r(e, { encoding: "utf8" }), crlfDelay: 1 / 0 }),
+  let p = createInterface({ input: createReadStream(e, { encoding: "utf8" }), crlfDelay: 1 / 0 }),
     _ = [],
     E = 0;
   try {
@@ -13187,7 +13020,7 @@ async function pruneLinesFromFile(e, t, r, { fileMode: o = "default", beforeWrit
   }
   if (r !== "filter" || E === 0) return E;
   d?.();
-  let C = o === "preserve" ? (await z5r(e)).mode & 511 : void 0;
+  let C = o === "preserve" ? (await stat(e)).mode & 511 : void 0;
   return (
     await writeFileAtomicWithOptions(
       e,
@@ -13238,10 +13071,10 @@ async function scanHistoryFileRange(
     },
     V = 0,
     re = Buffer.alloc(0),
-    ue = SXt("sha256"),
+    ue = createHash("sha256"),
     de;
   try {
-    de = await G5r(e, kXt.O_RDONLY | kXt.O_NOFOLLOW | O_NONBLOCK);
+    de = await open(e, constants.O_RDONLY | constants.O_NOFOLLOW | O_NONBLOCK);
   } catch (ve) {
     let Me = A(ve);
     if (Me === "ELOOP" || Me === "ENXIO")
@@ -13257,7 +13090,7 @@ async function scanHistoryFileRange(
     )
       throw new HistoryFileIntegrityError("history.jsonl changed between its screen and the scan");
     if (_ !== void 0) {
-      let xe = SXt("sha256"),
+      let xe = createHash("sha256"),
         Oe = 0;
       while (Oe < _.bytes) {
         let Ne = Buffer.alloc(Math.min(vXt, _.bytes - Oe)),
@@ -13343,8 +13176,6 @@ function isCommandImmediate(e, t, r) {
   let o = e?.immediate;
   return typeof o === "function" ? o(t, r) : o === !0;
 }
-import { createHash as Q5r } from "crypto";
-import { join as eke } from "path";
 async function pruneOldPastes(e, t) {
   if (t !== void 0) return n6r(t, e.getTime());
   let r = getFileStorage(),
@@ -13358,7 +13189,7 @@ async function pruneOldPastes(e, t) {
   let p = e.getTime();
   for (let _ of d) {
     if (!_.endsWith(".txt") && !_.includes(".txt.tmp.")) continue;
-    let E = eke(o, _);
+    let E = join(o, _);
     try {
       if ((await r.stat(E)).mtimeMs < p)
         (await r.delete(E), logForDebugging(`Cleaned up old paste: ${E}`));
@@ -13403,7 +13234,7 @@ async function r6r(e, t) {
   }
   for (let d of o) {
     if (!d.includes(".txt.tmp.")) continue;
-    let p = eke(e, d);
+    let p = join(e, d);
     try {
       if ((await r.stat(p)).mtimeMs < t)
         (await r.delete(p), logForDebugging(`Cleaned up old paste staging file: ${p}`));
@@ -13554,7 +13385,6 @@ function a7t(e) {
 function getSlashCommandSubmitter() {
   return i7t.registered();
 }
-import { randomUUID as S6r } from "crypto";
 function shouldProcessQueuedCommand(e, t) {
   let r = e.origin?.kind;
   if (r === "task-notification" || r === "auto-continuation" || r === "plugin")
@@ -13593,14 +13423,7 @@ function hasPoppableCommand(e, t) {
   return e.getCommandQueue().some((r) => isPoppableCommand(r, t));
 }
 a7t((e, t) => enqueueCommand({ agentId: ze(), mode: "prompt", value: `/${e}`, origin: t }));
-import { isAbsolute as Mds, relative as Ods, sep as wTt } from "path";
-import { randomUUID as Ras } from "crypto";
-import { basename as Pas, dirname as Ias, join as Mas } from "path";
 var DEFAULTS_SLOT_MARKER = "$defaults";
-import { randomUUID as gZ } from "crypto";
-import { isDeepStrictEqual as Uss } from "util";
-import { createHash as Hss } from "crypto";
-import { join as zos } from "path";
 function getReviewModelOverride() {
   let e = getReviewBughunterConfig()?.model;
   return typeof e === "string" && e.length > 0 ? e : void 0;
@@ -13659,78 +13482,17 @@ function a3r() {
   }
 }
 registerPerTurnEffortCapabilityResolver(i3r);
-import { basename as Los } from "path";
-import {
-  lstat as m3r,
-  readdir as g3r,
-  readFile as h3r,
-  realpath as GYe,
-  stat as Tke,
-} from "fs/promises";
-import { homedir as y3r } from "os";
-import { dirname as _3r, join as VN, resolve as XYe, sep as b3r } from "path";
 function oU(e) {
   let t = q7t(e);
   if (t === null) return e === void 0 ? void 0 : [];
   if (t.includes("*")) return;
   return t;
 }
-import { basename as Nos } from "path";
-import { constants as Lrs, createWriteStream as Frs } from "fs";
+import { createWriteStream } from "fs";
 import {
-  copyFile as OSt,
-  lstat as dD,
-  mkdir as $rs,
-  readFile as vme,
-  readdir as HK,
-  readlink as Brs,
-  realpath as Xw,
-  rm as cZ,
-  stat as LK,
-  symlink as dsr,
+  symlink,
 } from "fs/promises";
-import {
-  basename as py,
-  dirname as Sb,
-  isAbsolute as AHe,
-  join as dd,
-  relative as qx,
-  resolve as wg,
-  sep as zC,
-} from "path";
-import { Readable as Urs } from "stream";
-import { pipeline as Hrs } from "stream/promises";
-import { constants as bG, createWriteStream as V7t } from "fs";
-import {
-  copyFile as v3r,
-  lstat as ZYe,
-  open as JYe,
-  readlink as C3r,
-} from "fs/promises";
-import { join as x3r } from "path";
-import { pipeline as eQt } from "stream/promises";
-import { createHash as w8r } from "crypto";
-import { createReadStream as E8r } from "fs";
-import { mkdir as T8r, rm as v8r } from "fs/promises";
-import { dirname as C8r, join as uJt } from "path";
-import {
-  lstat as W3r,
-  mkdir as G3r,
-  readdir as z3r,
-  rm as aQt,
-} from "fs/promises";
-import { dirname as q3r, join as x8e } from "path";
-import { randomBytes as R3r } from "crypto";
-import {
-  chmod as P3r,
-  lstat as I3r,
-  readdir as M3r,
-  readFile as O3r,
-  rm as D3r,
-  stat as N3r,
-  writeFile as L3r,
-} from "fs/promises";
-import { dirname as nQt, join as YN } from "path";
+import { pipeline } from "stream/promises";
 function getPluginZipCacheDir() {
   if (!isPluginZipCacheEnabled()) return;
   let e = a.CLAUDE_CODE_PLUGIN_CACHE_DIR;
@@ -13739,17 +13501,17 @@ function getPluginZipCacheDir() {
 function getPluginZipCacheMarketplacesFile() {
   let e = getPluginZipCacheDir();
   if (!e) throw Error("Plugin zip cache is not enabled");
-  return YN(e, "known_marketplaces.json");
+  return join(e, "known_marketplaces.json");
 }
 function getPluginZipCacheMarketplacesDir() {
   let e = getPluginZipCacheDir();
   if (!e) throw Error("Plugin zip cache is not enabled");
-  return YN(e, "marketplaces");
+  return join(e, "marketplaces");
 }
 function getPluginZipCachePluginsDir() {
   let e = getPluginZipCacheDir();
   if (!e) throw Error("Plugin zip cache is not enabled");
-  return YN(e, "plugins");
+  return join(e, "plugins");
 }
 function getExistingSessionPluginCacheDir() {
   let e = oQt();
@@ -13757,13 +13519,11 @@ function getExistingSessionPluginCacheDir() {
 }
 function getMarketplaceFileName(e) {
   let t = e.replace(/[^a-zA-Z0-9\-_]/g, "-");
-  return YN("marketplaces", `${t}.json`);
+  return join("marketplaces", `${t}.json`);
 }
 function isMarketplaceSourceInstallable(e) {
   return ["github", "git", "url", "settings"].includes(e.source);
 }
-import { lstat as Rke, readdir as B3r } from "fs/promises";
-import { dirname as U3r, join as H3r } from "path";
 var j3r = 0xffffffffffffffffn;
 function iQt(e) {
   return e === 0n || e === j3r;
@@ -13772,9 +13532,9 @@ async function isSameFile(e, t) {
   if (e === t) return !0;
   try {
     let [r, o, d] = await Promise.all([
-      Rke(e, { bigint: !0 }),
-      Rke(t, { bigint: !0 }),
-      Rke(U3r(e), { bigint: !0 }),
+      lstat(e, { bigint: !0 }),
+      lstat(t, { bigint: !0 }),
+      lstat(dirname(e), { bigint: !0 }),
     ]);
     if (iQt(r.ino) || iQt(o.ino) || (r.dev === d.dev && r.ino === d.ino))
       return toCaseFoldedName(e) === toCaseFoldedName(t);
@@ -13790,21 +13550,18 @@ function createLiveFileChecker(e) {
     if (o === void 0) return "not-live";
     if (await isSameFile(r, o)) return "live";
     try {
-      return (await Rke(o), "not-live");
+      return (await lstat(o), "not-live");
     } catch {
       return "indeterminate";
     }
   };
 }
 function uQt() {
-  return x8e(
+  return join(
     getTempBaseDir(),
     `claude-plugin-${process.pid}-${Math.random().toString(36).slice(2)}.zip`,
   );
 }
-import { mkdir as g8r } from "fs/promises";
-import { dirname as h8r, join as nJt } from "path";
-import { join as HYr } from "path";
 var dQt = createLazyValue(() =>
     c({
       title: s().nullish(),
@@ -13983,8 +13740,6 @@ function getModelSelectorSurface(e, t) {
   let o = e.model_selector_state?.find((d) => d.id === t);
   return { surface: t, config: r, ...(o && { state: o }) };
 }
-import { homedir as oYr } from "os";
-import { resolve as sYr } from "path";
 async function parseMarketplaceSource(e) {
   let t = e.trim(),
     r = getFsSurface(),
@@ -14056,7 +13811,7 @@ async function parseMarketplaceSource(e) {
     t.startsWith("~") ||
     p
   ) {
-    let _ = sYr(t.startsWith("~") ? t.replace(/^~/, oYr()) : t),
+    let _ = resolve(t.startsWith("~") ? t.replace(/^~/, homedir()) : t),
       E;
     try {
       E = await r.stat(_);
@@ -14098,23 +13853,8 @@ function aYr(e) {
   return hostnameEquals(e, iYr);
 }
 import {
-  lstat as Hke,
-  mkdir as hQt,
-  mkdtemp as lYr,
-  rename as cYr,
-  rm as uYr,
-  rmdir as dYr,
-  stat as fYr,
-  writeFile as pYr,
+  rmdir,
 } from "fs/promises";
-import {
-  basename as mYr,
-  dirname as P8e,
-  isAbsolute as yQt,
-  join as Y3,
-  relative as ose,
-  sep as M8e,
-} from "path";
 function makeLandingRefusedError(e) {
   return new SyncOwnedRootRefusedError(`landing_${e}`);
 }
@@ -14185,7 +13925,7 @@ function getLandingFailureMessage(e) {
   }
 }
 async function removeSyncMarker(e, t) {
-  await uYr(getSyncMarkerPath(e, t), { force: !0 });
+  await rm(getSyncMarkerPath(e, t), { force: !0 });
 }
 function mergeKeyedRowsPreferFirst(e, t, r, o, d = []) {
   let p = new Map();
@@ -14219,20 +13959,6 @@ function omitKeys(e, t) {
   for (let [d, p] of Object.entries(e ?? {})) if (!r.has(d)) o[d] = p;
   return o;
 }
-import {
-  lstat as F8e,
-  readdir as $8e,
-  rename as lse,
-  rm as zA,
-  rmdir as xQt,
-  lutimes as PYr,
-} from "fs/promises";
-import {
-  basename as ewe,
-  dirname as IYr,
-  join as Ax,
-  relative as MYr,
-} from "path";
 import { monitorEventLoopDelay } from "perf_hooks";
 function mergeAndUniqByKey(e, t, r, o) {
   let d = o === void 0 ? void 0 : new Map(t.map((p) => [r(p), p]));
@@ -14359,14 +14085,14 @@ async function dse(e, t, r) {
   );
 }
 function twe(e) {
-  return Ax(e, STAGING_DIR_NAME, String(process.pid));
+  return join(e, STAGING_DIR_NAME, String(process.pid));
 }
 function FQt(e, t) {
   return validateSyncedItemName(t, e);
 }
 function Zke(e, t) {
   try {
-    return ewe(TG(e, t));
+    return basename(TG(e, t));
   } catch {
     return t.name;
   }
@@ -14380,7 +14106,7 @@ async function LYr(e, t) {
     return;
   }
   try {
-    let d = await F8e(o).catch(() => null);
+    let d = await lstat(o).catch(() => null);
     if (d !== null && !d.isFile())
       if (d.isDirectory())
         await trashDirectory({
@@ -14389,7 +14115,7 @@ async function LYr(e, t) {
           configHome: getClaudeConfigDir(),
           failureEvent: "plugins_sync_trash_move_failed",
         });
-      else await zA(o, { force: !0 });
+      else await rm(o, { force: !0 });
     if (isValidPluginId(r)) {
       let p = t.marketplaceName !== void 0 && isValidMarketplaceName(t.marketplaceName);
       if (t.marketplaceName !== void 0 && !p)
@@ -14405,7 +14131,7 @@ async function LYr(e, t) {
       await writeFileAtomic(o, _);
     } else
       (writeDiagnosticsEvent("warn", "plugins_sync_sidecar_invalid_id"),
-        await zA(o, { force: !0 }));
+        await rm(o, { force: !0 }));
   } catch {
     writeDiagnosticsEvent("warn", "plugins_sync_sidecar_write_failed");
   }
@@ -14433,7 +14159,7 @@ async function D8e(e, t) {
 async function AQt(e, t, r) {
   try {
     let o = TG(e, t);
-    return ewe(o) === ewe(r) || (await isSameFile(o, r));
+    return basename(o) === basename(r) || (await isSameFile(o, r));
   } catch {
     return !1;
   }
@@ -14475,7 +14201,7 @@ var $Yr = 4;
 async function PQt(e, t, r, o, d, p) {
   let _ = t.root,
     E = FQt(_, r.name),
-    C = Ax(twe(_), MYr(_, E)),
+    C = join(twe(_), relative(_, E)),
     I = uQt();
   try {
     if (t.guard.refused()) return LANDING_ROOT_REFUSED;
@@ -14503,7 +14229,7 @@ async function PQt(e, t, r, o, d, p) {
           ve++;
           try {
             return (
-              await lse(re, getSyncedItemPathForGeneration(r.name, Me, _)),
+              await rename(re, getSyncedItemPathForGeneration(r.name, Me, _)),
               { ok: !0, generation: Me }
             );
           } catch (xe) {
@@ -14526,7 +14252,7 @@ async function PQt(e, t, r, o, d, p) {
         );
       }
       try {
-        return (await lse(re, E), { ok: !0, generation: 1 });
+        return (await rename(re, E), { ok: !0, generation: 1 });
       } catch (Se) {
         let ve = A(Se);
         if (!isDisplaceBlockedErrorCode(ve))
@@ -14548,12 +14274,12 @@ async function PQt(e, t, r, o, d, p) {
       }
       let _e;
       if (de) {
-        _e = Ax(
+        _e = join(
           twe(_),
           `.replaced-${process.pid}-${Math.random().toString(36).slice(2)}`,
         );
         try {
-          await lse(E, _e);
+          await rename(E, _e);
         } catch (Se) {
           return (
             writeDiagnosticsEvent("warn", "plugins_sync_occupant_displace_failed", {
@@ -14572,12 +14298,12 @@ async function PQt(e, t, r, o, d, p) {
       )
         return LANDING_DISPLACE_BLOCKED;
       try {
-        await lse(re, E);
+        await rename(re, E);
       } catch (Se) {
         let ve =
           _e === void 0
             ? !1
-            : await lse(_e, E).then(
+            : await rename(_e, E).then(
                 () => !0,
                 () => !1,
               );
@@ -14591,7 +14317,7 @@ async function PQt(e, t, r, o, d, p) {
       }
       if (_e !== void 0)
         e.pendingTrashRemovals.push(
-          zA(_e, { recursive: !0, force: !0 }).catch(() => {}),
+          rm(_e, { recursive: !0, force: !0 }).catch(() => {}),
         );
       return { ok: !0, generation: 1 };
     } finally {
@@ -14599,7 +14325,7 @@ async function PQt(e, t, r, o, d, p) {
     }
   } finally {
     if (
-      (await zA(I, { force: !0 }).catch(() => {}),
+      (await rm(I, { force: !0 }).catch(() => {}),
       !t.guard.refused() &&
         (await verifySyncOwnedPath(
           _,
@@ -14608,7 +14334,7 @@ async function PQt(e, t, r, o, d, p) {
           { checkStagingLeaf: !0 },
         ).catch(() => null)) === "real")
     )
-      await zA(C, { recursive: !0, force: !0 }).catch(() => {});
+      await rm(C, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
 var BYr = 500;
@@ -14745,7 +14471,7 @@ async function U8e(e, t) {
         Oe.map(async (un) => {
           if (!Ne.has(un.pluginId)) return !1;
           try {
-            return !(await F8e(TG(ue, un))).isDirectory();
+            return !(await lstat(TG(ue, un))).isDirectory();
           } catch {
             return !0;
           }
@@ -14767,7 +14493,7 @@ async function U8e(e, t) {
       (await Promise.all(r.pendingTrashRemovals.splice(0)),
       (await N8e(re)) === null)
     )
-      await zA(twe(ue), { recursive: !0, force: !0 }).catch(() => {});
+      await rm(twe(ue), { recursive: !0, force: !0 }).catch(() => {});
     let vt = new Set(Se?.staleDirs ?? []),
       ut = await W8e(
         ue,
@@ -14799,7 +14525,7 @@ async function U8e(e, t) {
         (await L8e(re, _e.plugins, r.removalsDeferredHere), await OQt(), Se)
       ) {
         let kn = new Date();
-        await PYr(nwe(ue), kn, kn).catch(() => {});
+        await lutimes(nwe(ue), kn, kn).catch(() => {});
       }
       return (
         writeDiagnosticsEvent("info", "plugins_sync_no_changes", {
@@ -14963,7 +14689,7 @@ async function U8e(e, t) {
           phase: S("head"),
           duration_ms: Date.now() - o,
         }));
-      let de = formatPathWithTilde(Ax(getClaudeConfigDir(), "plugins"));
+      let de = formatPathWithTilde(join(getClaudeConfigDir(), "plugins"));
       (r.syncErrors.push({
         type: "generic-error",
         source: `${SYNCED_PLUGIN_SOURCE}[root]`,
@@ -14995,7 +14721,7 @@ async function U8e(e, t) {
               { checkStagingLeaf: !0 },
             ).catch(() => null)) === "real"
           )
-            await zA(V, { recursive: !0, force: !0 }).catch(() => {});
+            await rm(V, { recursive: !0, force: !0 }).catch(() => {});
         });
       r.pendingTrashRemovals.push(de);
     }
@@ -15043,7 +14769,7 @@ async function j8e(e, t, r) {
     configHome: getClaudeConfigDir(),
     failureEvent: "plugins_sync_trash_move_failed",
   });
-  if (d) await zA(o + ATTRIBUTION_SIDECAR_SUFFIX, { force: !0 }).catch(() => {});
+  if (d) await rm(o + ATTRIBUTION_SIDECAR_SUFFIX, { force: !0 }).catch(() => {});
   return d;
 }
 async function W8e(e, t, r) {
@@ -15063,7 +14789,7 @@ async function z8e() {
     return null;
   let r;
   try {
-    r = await $8e(e, { withFileTypes: !0 });
+    r = await readdir(e, { withFileTypes: !0 });
   } catch {
     return null;
   }
@@ -15079,7 +14805,7 @@ async function UQt(e) {
   for (let r of e)
     if (
       await trashDirectory({
-        dir: Ax(LP(), r),
+        dir: join(LP(), r),
         trashRoot: sU(),
         configHome: getClaudeConfigDir(),
         failureEvent: "plugins_sync_trash_move_failed",
@@ -15108,9 +14834,9 @@ async function prunePluginsForClosedGate() {
     r = 0;
   for (let o of e.buckets) {
     let d = getPluginSyncBucketDir(o);
-    await zA(Ax(d, MARKETPLACES_FILE_NAME), { force: !0 }).catch(() => {});
-    for (let V of await $8e(d).catch(() => []))
-      if (isMarketplaceIdFileName(V)) await zA(Ax(d, V), { force: !0 }).catch(() => {});
+    await rm(join(d, MARKETPLACES_FILE_NAME), { force: !0 }).catch(() => {});
+    for (let V of await readdir(d).catch(() => []))
+      if (isMarketplaceIdFileName(V)) await rm(join(d, V), { force: !0 }).catch(() => {});
     let p = await HQt(o);
     if (!p) continue;
     let { round: _, manifest: E } = p,
@@ -15136,15 +14862,15 @@ async function prunePluginsForClosedGate() {
           { staleDirs: F, removedPluginIds: D },
         ).catch(() => {}));
     else
-      (await zA(nwe(C), { force: !0 }).catch(() => {}),
-        await xQt(C).then(
+      (await rm(nwe(C), { force: !0 }).catch(() => {}),
+        await rmdir(C).then(
           () => removeSyncMarker(LP(), o),
           () => {},
         ));
   }
   return (
     (t += await UQt(e.strays)),
-    await xQt(LP()).catch(() => {}),
+    await rmdir(LP()).catch(() => {}),
     writeDiagnosticsEvent("info", "plugins_sync_pruned_for_closed_gate", { moved: t, retained: r }),
     t > 0
   );
@@ -15198,7 +14924,7 @@ async function L8e(e, t, r) {
         ...[...d.plugins, ...t.map(({ name: I }) => ({ name: I }))].flatMap(
           (I) => {
             try {
-              return [ewe(TG(o, I))];
+              return [basename(TG(o, I))];
             } catch {
               return [];
             }
@@ -15209,7 +14935,7 @@ async function L8e(e, t, r) {
     ),
     _;
   try {
-    _ = await $8e(o, { withFileTypes: !0 });
+    _ = await readdir(o, { withFileTypes: !0 });
   } catch {
     return 0;
   }
@@ -15237,13 +14963,13 @@ async function L8e(e, t, r) {
   for (let I of E)
     if (
       await trashDirectory({
-        dir: Ax(o, I),
+        dir: join(o, I),
         trashRoot: sU(),
         configHome: getClaudeConfigDir(),
         failureEvent: "plugins_sync_trash_move_failed",
       })
     )
-      (C++, await zA(Ax(o, I) + ATTRIBUTION_SIDECAR_SUFFIX, { force: !0 }).catch(() => {}));
+      (C++, await rm(join(o, I) + ATTRIBUTION_SIDECAR_SUFFIX, { force: !0 }).catch(() => {}));
   if (C > 0) writeDiagnosticsEvent("info", "plugins_sync_orphan_dir_trashed", { count: C });
   return C;
 }
@@ -15353,7 +15079,7 @@ var qQt = 2,
     }),
   );
 function VQt(e) {
-  return HYr(e, MARKETPLACES_FILE_NAME);
+  return join(e, MARKETPLACES_FILE_NAME);
 }
 async function readClaudeAiCatalogCache(e) {
   let t = await readFileTextOrNull(VQt(e), null);
@@ -15512,8 +15238,6 @@ function formatMarketplaceSource(e) {
     ? `${e.repo}${e.ref ? `@${e.ref}` : ""}`
     : `${e.url}${e.ref ? `#${e.ref}` : ""}`;
 }
-import { rm as JYr } from "fs/promises";
-import { join as QQt } from "path";
 function formatCatalogStatusMessage(e) {
   switch (e.kind) {
     case "fresh":
@@ -15544,7 +15268,7 @@ registerWriteQueueDrain(() => iJt.drain());
 function pse(e) {
   let t = rJt();
   return iJt.run(t, async () => {
-    await g8r(h8r(t), { recursive: !0 });
+    await mkdir(dirname(t), { recursive: !0 });
     let r;
     try {
       r = await Cs(t, {
@@ -15729,14 +15453,6 @@ async function cJt(e, t) {
     return { ...r, [e]: { ...o, autoUpdate: t } };
   });
 }
-import {
-  isAbsolute as P8r,
-  join as I8r,
-  relative as M8r,
-  resolve as O8r,
-  sep as D8r,
-} from "path";
-import { join as mJt } from "path";
 function j8r(e) {
   let t = getPluginMarketplace(normalizePluginId(e));
   return !isNonMarketplacePluginSource(t) && t !== BUILTIN_PLUGIN_SOURCE;
@@ -15773,18 +15489,7 @@ function hJt(e) {
   if (e === !1) return "false";
   return e === !0 ? "true" : "other";
 }
-import { dirname as y9e, sep as G9r } from "path";
-import { randomBytes as F9r } from "crypto";
-import {
-  lstat as VP,
-  readdir as QY,
-  rm as $9r,
-  rmdir as m9e,
-  unlink as pve,
-} from "fs/promises";
-import { basename as QJt, dirname as JJt, join as XY } from "path";
-import { AsyncLocalStorage as z8r } from "async_hooks";
-var N5s = new z8r();
+var N5s = new AsyncLocalStorage();
 class _Jt {
   logged = !1;
   claim() {
@@ -15798,53 +15503,6 @@ var Y8r =
 function SJt(e, t) {
   return isAsideName(e) || (t ? K8r.test(e) : Y8r.test(e));
 }
-import { constants as s9e } from "fs";
-import {
-  lstat as dy,
-  mkdir as d9r,
-  readdir as KY,
-  open as f9r,
-  readlink as bwe,
-  realpath as RG,
-  lutimes as p9r,
-  rm as zY,
-  rmdir as m9r,
-  writeFile as Swe,
-} from "fs/promises";
-import {
-  basename as g9r,
-  dirname as Tse,
-  isAbsolute as f9e,
-  join as Y_,
-  parse as ywe,
-  relative as h0,
-  resolve as VJt,
-  sep as DG,
-} from "path";
-import {
-  lstatSync as X8r,
-  readdirSync as Q8r,
-  realpathSync as wJt,
-  unlinkSync as J8r,
-} from "fs";
-import {
-  lstat as GY,
-  mkdir as wse,
-  readFile as Z8r,
-  readdir as RJt,
-  realpath as pwe,
-  rm as PJt,
-  rmdir as IJt,
-  unlink as e9r,
-} from "fs/promises";
-import {
-  basename as o9e,
-  dirname as CG,
-  isAbsolute as MJt,
-  join as wS,
-  relative as AG,
-  sep as mwe,
-} from "path";
 function k9e(e, t) {
   let r = splitPluginId(e),
     o = splitPluginId(t);
@@ -16118,32 +15776,6 @@ function markGitUnavailable() {
   getPluginRegistryState().gitAvailable = Promise.resolve(!1);
 }
 import { constants as wns } from "os";
-import {
-  basename as Xrr,
-  dirname as Ens,
-  join as KJ,
-  resolve as Tns,
-  sep as vns,
-} from "path";
-import { lstat as crr, writeFile as Its } from "fs/promises";
-import {
-  basename as yK,
-  dirname as rHe,
-  isAbsolute as SK,
-  join as Zg,
-  relative as ebt,
-  resolve as PS,
-  sep as urr,
-} from "path";
-import { stat as J9r } from "fs/promises";
-import {
-  basename as Z9r,
-  dirname as Wse,
-  isAbsolute as cZt,
-  join as eXr,
-} from "path";
-import { stat as K9r } from "fs/promises";
-import { isAbsolute as Y9r, resolve as aZt, sep as X9r } from "path";
 function _ve(e) {
   return e === "location-refused"
     ? `its marketplace's recorded location ${UNTRUSTED_PATH_REASON}`
@@ -16199,12 +15831,6 @@ async function loadLocalMarketplace(e, t, r, o, d, p, _) {
     localMarketplaceSpace: _,
   });
 }
-import { lstat as Kpt, readdir as Wnr, unlink as fts } from "fs/promises";
-import { join as mK, resolve as pts, sep as Fnr } from "path";
-import { basename as fZt, dirname as pZt } from "path";
-import { basename as DXr } from "path";
-import { basename as uXr } from "path";
-import { join as gZt } from "path";
 var _Zt = 1048576,
   bZt = ["user", "project", "local"];
 async function SZt(e, t, r, o, d, p, _) {
@@ -16237,7 +15863,7 @@ async function kZt(e, t, r, o, d, p, _, E) {
     let { frontmatter: D, content: N } = parseFrontmatter(I, e, { normalizeKeys: !0 }),
       F =
         (D.name != null ? String(D.name) : void 0) ||
-        uXr(e).replace(/\.md$/, ""),
+        basename(e).replace(/\.md$/, ""),
       V = [t, ...r, F].join(":"),
       re =
         parseOptionalString(D.description, V) ??
@@ -16813,7 +16439,6 @@ Guidelines:
     color: "orange",
     getSystemPrompt: () => CXr(),
   };
-import { sep as xXr } from "path";
 function findAgentByType(e, t) {
   return e.find((r) => r.agentType === t && !isBuiltInWebFetchAgent(r));
 }
@@ -17293,7 +16918,7 @@ function HXr(e, t, r, o, d) {
         `Agent file ${e} has invalid maxTurns '${xe}'. Must be a positive integer.`,
       );
     let Ne = getExperimentalCacheTtl(r),
-      De = DXr(e, ".md"),
+      De = basename(e, ".md"),
       He = oU(r.tools);
     if (isAutoMemoryEnabled() && V && He !== void 0) {
       let on = new Set(He);
@@ -17375,17 +17000,6 @@ function HXr(e, t, r, o, d) {
     return (logForDebugging(`Error parsing agent from ${e}: ${_}`, { level: "error" }), null);
   }
 }
-import { realpath as lts } from "fs/promises";
-import { basename as zJ, dirname as mF, join as XUe } from "path";
-import { realpath as $pe } from "fs/promises";
-import {
-  basename as qUe,
-  dirname as pK,
-  isAbsolute as Gpt,
-  join as xh,
-  sep as VE,
-  relative as Cnr,
-} from "path";
 function refreshSkillsSyncEnabled() {
   refreshSkillsSyncVetoed();
   let e = jXr() && !Nb();
@@ -17400,7 +17014,6 @@ function jXr() {
 function isSkillsSyncDisabledBySettings() {
   return isSyncSettingDisabledBySettings(Pve);
 }
-import { basename as WXr, join as GXr } from "path";
 var MCP_PROTOCOL_VERSION_2025_11_25 = "2025-11-25",
   MCP_PROTOCOL_VERSION_2026_07_28 = "2026-07-28",
   REOPEN_REFETCH_REASON = "reopen_refetch",
@@ -17420,10 +17033,6 @@ function formatRemainingArgNames(e, t) {
   if (r.length === 0) return;
   return r.map((o) => `[${o}]`).join(" ");
 }
-import { readdir as t7r, readFile as h7s, realpath as n7r } from "fs/promises";
-import { basename as r7r, join as VG } from "path";
-import { randomUUID as ynr } from "crypto";
-import { basename as Ees, dirname as Tes, relative as ves } from "path";
 function setAgentProxyStatusUrl(e) {
   Hve().statusUrl = e;
 }
@@ -17718,17 +17327,6 @@ function registerVscodeNotificationHandlers(e, t) {
         }));
   }
 }
-import { homedir as Zse, tmpdir as v7r } from "os";
-import {
-  basename as C7r,
-  dirname as Gve,
-  isAbsolute as x7r,
-  join as A0,
-  relative as A7r,
-} from "path";
-import { lstatSync as N7r, realpathSync as L7r } from "fs";
-import { homedir as F7r } from "os";
-import { isAbsolute as W9e, join as $7r } from "path";
 function isSessionChannelDisabled() {
   return antEnv.CLAUDE_CODE_REMOTE_TOOLS_SESSION_CHANNEL === !1;
 }
@@ -17770,17 +17368,17 @@ function j7r() {
 }
 function launchedFromHome(e = he()) {
   let t = normalizePathCase,
-    r = F7r(),
+    r = homedir(),
     o = getClaudeConfigDir(),
     d = getSecureStorageDir();
-  if (!W9e(r) || !W9e(o) || !W9e(d)) return !0;
+  if (!isAbsolute(r) || !isAbsolute(o) || !isAbsolute(d)) return !0;
   let p = realpathOrSpelling(e),
     _ = e === p ? [e] : [e, p],
     E = _.map((V) => findGitRootUncached(V)).filter((V) => V !== null);
   if (
     E.some((V) => {
       try {
-        return N7r($7r(V, ".git")).isSymbolicLink();
+        return lstatSync(join(V, ".git")).isSymbolicLink();
       } catch {
         return !1;
       }
@@ -17803,7 +17401,7 @@ function launchedFromHome(e = he()) {
 }
 function realpathOrSpelling(e) {
   try {
-    return L7r(e);
+    return realpathSync(e);
   } catch {
     return e;
   }
@@ -17812,7 +17410,6 @@ function remoteToolServingPolicyName() {
   let e = antEnv.CLAUDE_CODE_REMOTE_TOOLS_POLICY;
   return e === void 0 || e === "parity" ? "parity" : "interim";
 }
-import { createHash as W7r } from "crypto";
 function createAgentResumedNotification({ agentId: e, description: t, to: r }) {
   return {
     value: buildTaskNotification({
@@ -17830,12 +17427,10 @@ function createAgentResumedNotification({ agentId: e, description: t, to: r }) {
     ...(r === ze() && { passive: !0 }),
   };
 }
-import { dirname as G7r } from "path";
 function removeWebFetchSavedFile(e, t) {
   if (!e) return;
   e.paths = e.paths.filter((r) => r !== t);
 }
-import { isAbsolute as nlo, normalize as Nan, sep as Lan } from "path";
 function parseCommandTitleComment(e) {
   let t = e.indexOf(`
 `),
@@ -17863,12 +17458,8 @@ function K7r(e) {
   }
   return !1;
 }
-import { isAbsolute as lxe, sep as meo } from "path";
-import { realpath as DQr } from "fs/promises";
 import { createConnection } from "net";
-import { basename as Ren, join as LQr, sep as Jve, resolve as eCe } from "path";
-import { homedir as RQr, platform } from "os";
-import { join as _E } from "path";
+import { platform } from "os";
 var PQr = "claude-code-jetbrains-plugin",
   Ten = {
     pycharm: ["PyCharm"],
@@ -17888,38 +17479,38 @@ var PQr = "claude-code-jetbrains-plugin",
     androidstudio: ["AndroidStudio"],
   };
 function IQr(e) {
-  let t = RQr(),
+  let t = homedir(),
     r = [],
     o = Ten[e.toLowerCase()];
   if (!o) return r;
-  let d = a.APPDATA || _E(t, "AppData", "Roaming"),
-    p = a.LOCALAPPDATA || _E(t, "AppData", "Local");
+  let d = a.APPDATA || join(t, "AppData", "Roaming"),
+    p = a.LOCALAPPDATA || join(t, "AppData", "Local");
   switch (platform()) {
     case "darwin":
       if (
         (r.push(
-          _E(t, "Library", "Application Support", "JetBrains"),
-          _E(t, "Library", "Application Support"),
+          join(t, "Library", "Application Support", "JetBrains"),
+          join(t, "Library", "Application Support"),
         ),
         e.toLowerCase() === "androidstudio")
       )
-        r.push(_E(t, "Library", "Application Support", "Google"));
+        r.push(join(t, "Library", "Application Support", "Google"));
       break;
     case "win32":
       if (
-        (r.push(_E(d, "JetBrains"), _E(p, "JetBrains"), _E(d)),
+        (r.push(join(d, "JetBrains"), join(p, "JetBrains"), join(d)),
         e.toLowerCase() === "androidstudio")
       )
-        r.push(_E(p, "Google"));
+        r.push(join(p, "Google"));
       break;
     case "linux":
       r.push(
-        _E(t, ".config", "JetBrains"),
-        _E(t, ".local", "share", "JetBrains"),
+        join(t, ".config", "JetBrains"),
+        join(t, ".local", "share", "JetBrains"),
       );
-      for (let _ of o) r.push(_E(t, "." + _));
+      for (let _ of o) r.push(join(t, "." + _));
       if (e.toLowerCase() === "androidstudio")
-        r.push(_E(t, ".config", "Google"));
+        r.push(join(t, ".config", "Google"));
       break;
     default:
       break;
@@ -17940,12 +17531,12 @@ async function MQr(e) {
         for (let I of E) {
           if (!C.test(I.name)) continue;
           if (!I.isDirectory() && !I.isSymbolicLink()) continue;
-          let D = _E(_, I.name);
+          let D = join(_, I.name);
           if (platform() === "linux") {
             t.push(D);
             continue;
           }
-          let N = _E(D, "plugins");
+          let N = join(D, "plugins");
           try {
             (await r.stat(N), t.push(N));
           } catch {}
@@ -17958,7 +17549,7 @@ async function MQr(e) {
 async function OQr(e) {
   let t = await MQr(e);
   for (let r of t) {
-    let o = _E(r, PQr);
+    let o = join(r, PQr);
     try {
       return (await getFsSurface().stat(o), !0);
     } catch {}
@@ -18014,7 +17605,7 @@ async function findIdeLockfiles() {
             return (
               await Promise.all(
                 d.map(async (_) => {
-                  let E = LQr(r, _.name);
+                  let E = join(r, _.name);
                   try {
                     let C = await getFsSurface().stat(E);
                     return { path: E, mtime: C.mtime };
@@ -18063,7 +17654,7 @@ async function Ien(e) {
         )
         .map((N) => N.trim());
     }
-    let C = e.split(Jve).pop();
+    let C = e.split(sep).pop();
     if (!C) return null;
     let I = C.replace(".lock", "");
     return {
@@ -18120,12 +17711,12 @@ async function BQr() {
     o.windowsUserProfile ??= $Qr();
     let d = await o.windowsUserProfile,
       p = d ? convertWindowsPathToWsl(d) : null;
-    if (p) e.push(eCe(p, ".claude", "ide"));
+    if (p) e.push(resolve(p, ".claude", "ide"));
   }
   let t = new Set(),
     r = [];
   for (let o of e) {
-    let d = await DQr(o).catch(() => eCe(o));
+    let d = await realpath(o).catch(() => resolve(o));
     if (t.has(d)) continue;
     (t.add(d), r.push(o));
   }
@@ -18233,24 +17824,24 @@ async function discoverIdeServers(e) {
           let V = U;
           if (getCurrentPlatform() === "wsl" && C.runningInWindows && a.WSL_DISTRO_NAME) {
             if (!isPathInWslDistro(U, a.WSL_DISTRO_NAME)) continue;
-            let ue = eCe(V).normalize("NFC");
-            if (o === ue || o.startsWith(ue + Jve)) {
+            let ue = resolve(V).normalize("NFC");
+            if (o === ue || o.startsWith(ue + sep)) {
               I = !0;
               break;
             }
             V = await new WslPathConverter(a.WSL_DISTRO_NAME).toLocalPath(U);
           }
-          let re = eCe(V).normalize("NFC");
+          let re = resolve(V).normalize("NFC");
           if (getCurrentPlatform() === "windows") {
             let ue = o.replace(/^[a-zA-Z]:/, (_e) => _e.toUpperCase()),
               de = re.replace(/^[a-zA-Z]:/, (_e) => _e.toUpperCase());
-            if (ue === de || ue.startsWith(de + Jve)) {
+            if (ue === de || ue.startsWith(de + sep)) {
               I = !0;
               break;
             }
             continue;
           }
-          if (o === re || o.startsWith(re + Jve)) {
+          if (o === re || o.startsWith(re + sep)) {
             I = !0;
             break;
           }
@@ -18433,7 +18024,7 @@ async function resolveVscodeCommand(e, t) {
   let o = Dx();
   o.vscodeCommandByParentProcess ??= zQr();
   let d = await o.vscodeCommandByParentProcess;
-  if (d && r.includes(Ren(d)))
+  if (d && r.includes(basename(d)))
     try {
       return (await getFsSurface().stat(d), d);
     } catch {}
@@ -18593,14 +18184,11 @@ function isIdeOnboardingShown() {
     t = runtimeEnvironment.terminal || "unknown";
   return e.hasIdeOnboardingBeenShown?.[t] === !0;
 }
-import { randomUUID as tJr } from "crypto";
 function resetLspDiagnostics(e) {
   k8.of(e).resetAll();
 }
 import * as eL from "path";
-import { pathToFileURL as sie } from "url";
-import { readFile as oie } from "fs/promises";
-import { join as rJr, relative as Ken, resolve as eXe, sep as Yen } from "path";
+import { pathToFileURL } from "url";
 function findLspExtensionConflicts(e) {
   let t = [],
     r = new Map();
@@ -18628,15 +18216,12 @@ function findLspExtensionConflicts(e) {
   return t;
 }
 import * as etn from "path";
-import { pathToFileURL as lJr } from "url";
-import { fileURLToPath as pJr } from "url";
-import { sep as stn } from "path";
 function isPathWithinDir(e, t) {
-  let r = t.endsWith(stn) ? t : t + stn;
+  let r = t.endsWith(sep) ? t : t + sep;
   if (getCurrentPlatform() === "windows") return e.toLowerCase().startsWith(r.toLowerCase());
   return e.startsWith(r);
 }
-import { win32 as bJr } from "path";
+import { win32 } from "path";
 function mXe(e, t) {
   let r;
   for (r = 0; r < e.length && r < t.length; r++)
@@ -19196,26 +18781,7 @@ function offsetHunkLineNumbers(e, t) {
     newStart: r.newStart + t,
   }));
 }
-import { createHash as sZr } from "crypto";
-import { constants as F0 } from "fs";
-import {
-  chmod as iZr,
-  copyFile as NXe,
-  link as aZr,
-  lstat as JG,
-  mkdir as LXe,
-  open as xCe,
-  realpath as gie,
-  stat as A8,
-  unlink as FXe,
-} from "fs/promises";
-import {
-  dirname as ZG,
-  isAbsolute as Gtn,
-  join as P8,
-  relative as $Xe,
-} from "path";
-import { inspect as lZr } from "util";
+import { inspect } from "util";
 function reduceFileHistoryState(e, t, r) {
   switch (t.kind) {
     case "track":
@@ -19343,7 +18909,7 @@ async function cZr(e, t, r) {
             `FileHistory: failed to delete evicted backup ${_}: ${E.error.code}`,
             { level: "error" },
           );
-      } else await FXe(yU(_, o));
+      } else await unlink(yU(_, o));
     } catch (E) {
       if (!W(E))
         logForDebugging(`FileHistory: failed to delete evicted backup ${_}: ${E}`, {
@@ -19381,7 +18947,7 @@ async function fileHistoryMakeSnapshot(e, t, r, o) {
             if (!ACe(F)) throw Error("FileHistory: no usable next version");
             let U;
             try {
-              U = await A8(C);
+              U = await stat(C);
             } catch (re) {
               if (!W(re)) throw re;
             }
@@ -19562,7 +19128,7 @@ async function dZr(e, t) {
       }
       if (C === null) {
         try {
-          (await FXe(_), logForDebugging(`FileHistory: [Rewind] Deleted ${_}`), r.push(_));
+          (await unlink(_), logForDebugging(`FileHistory: [Rewind] Deleted ${_}`), r.push(_));
         } catch (D) {
           let N = A(D);
           if (N === "ENOTDIR" || N === "ELOOP" || N === "EISDIR") {
@@ -19577,7 +19143,7 @@ async function dZr(e, t) {
             continue;
           }
           if (N === "EPERM") {
-            let F = await JG(_).catch(() => {
+            let F = await lstat(_).catch(() => {
               return;
             });
             if (F !== void 0 && !F.isFile()) {
@@ -19619,13 +19185,13 @@ async function ztn(e, t, r) {
     d = r ?? null;
   if (!d)
     try {
-      d = await A8(e);
+      d = await stat(e);
     } catch (_) {
       if (!W(_)) return !0;
     }
   let p = null;
   try {
-    p = await A8(o);
+    p = await stat(o);
   } catch (_) {
     if (!W(_)) return !0;
   }
@@ -19681,7 +19247,7 @@ function hZr(e, t) {
 async function yZr(e, t) {
   let r = (o) => ({ verdict: "refused", detail: o });
   try {
-    let o = await JG(e);
+    let o = await lstat(e);
     if (o.isSymbolicLink()) return r("destination is a symlink");
     if (!o.isFile()) return r("destination is not a regular file");
     if (o.nlink > 1) return r(`destination is hard-linked (nlink=${o.nlink})`);
@@ -19692,34 +19258,34 @@ async function yZr(e, t) {
     if (!W(o)) throw o;
   }
   if (t !== void 0) {
-    let o = ZG(e),
+    let o = dirname(e),
       d;
     try {
-      d = await gie(o);
+      d = await realpath(o);
     } catch (_) {
       let E = A(_);
       if (E === "ELOOP" || E === "ENOTDIR")
         return r(`parent path does not resolve (${E})`);
       if (!W(_)) throw _;
       try {
-        if ((await JG(o)).isSymbolicLink())
+        if ((await lstat(o)).isSymbolicLink())
           return r("parent directory is a dangling symlink");
       } catch (I) {
         if (!W(I)) throw I;
       }
       let C = o;
       for (;;) {
-        let I = ZG(C);
+        let I = dirname(C);
         if (I === C) break;
         C = I;
         try {
-          await JG(C);
+          await lstat(C);
         } catch (D) {
           if (!W(D)) throw D;
           continue;
         }
-        d = await gie(C)
-          .then((D) => P8(D, $Xe(C, o)))
+        d = await realpath(C)
+          .then((D) => join(D, relative(C, o)))
           .catch((D) => {
             if (W(D)) return;
             throw D;
@@ -19728,7 +19294,7 @@ async function yZr(e, t) {
       }
     }
     if (d !== t) return r(`parent directory moved (${d} != ${t})`);
-    let p = await A8(o).catch((_) => {
+    let p = await stat(o).catch((_) => {
       if (W(_)) return;
       throw _;
     });
@@ -19748,7 +19314,7 @@ async function _Zr(e, t, r) {
     ),
     p;
   try {
-    p = await A8(o);
+    p = await stat(o);
   } catch (I) {
     if (W(I))
       return (
@@ -19761,11 +19327,11 @@ async function _Zr(e, t, r) {
     throw I;
   }
   if (!p.isFile()) return d("backup source is not a regular file");
-  let _ = F0.O_NONBLOCK ?? 0,
-    E = F0.O_NOFOLLOW ?? 0,
+  let _ = constants.O_NONBLOCK ?? 0,
+    E = constants.O_NOFOLLOW ?? 0,
     C;
   try {
-    C = await xCe(o, F0.O_RDONLY | _ | E);
+    C = await open(o, constants.O_RDONLY | _ | E);
   } catch (I) {
     let D = A(I);
     if (D === "ELOOP" || D === "EMLINK")
@@ -19775,9 +19341,9 @@ async function _Zr(e, t, r) {
   try {
     if (!(await C.stat()).isFile())
       return d("backup source is not a regular file");
-    let D = F0.O_NOFOLLOW ?? 0,
-      N = F0.O_NONBLOCK ?? 0,
-      F = F0.O_WRONLY | F0.O_CREAT | D | N,
+    let D = constants.O_NOFOLLOW ?? 0,
+      N = constants.O_NONBLOCK ?? 0,
+      F = constants.O_WRONLY | constants.O_CREAT | D | N,
       U = (_e) => {
         let Se = A(_e);
         return Se === "ELOOP" || Se === "EMLINK";
@@ -19790,7 +19356,7 @@ async function _Zr(e, t, r) {
       ue = p.mode & 511,
       de;
     try {
-      de = await xCe(e, F, ue);
+      de = await open(e, F, ue);
     } catch (_e) {
       if (U(_e)) return d("destination became a symlink (O_NOFOLLOW)");
       if (V(_e)) return d("destination became a FIFO (ENXIO)");
@@ -19806,14 +19372,14 @@ async function _Zr(e, t, r) {
           return d("parent chain changed before directory creation");
       }
       try {
-        await LXe(ZG(e), { recursive: !0 });
+        await mkdir(dirname(e), { recursive: !0 });
       } catch (Se) {
         if (re(Se) || A(Se) === "EEXIST")
           return d(`destination path was changed during restore (${A(Se)})`);
         throw Se;
       }
       try {
-        de = await xCe(e, F, ue);
+        de = await open(e, F, ue);
       } catch (Se) {
         if (U(Se)) return d("destination became a symlink (O_NOFOLLOW)");
         if (V(Se)) return d("destination became a FIFO (ENXIO)");
@@ -19829,13 +19395,13 @@ async function _Zr(e, t, r) {
         return d(`destination is hard-linked (nlink=${_e.nlink})`);
       if (r !== void 0) {
         if (
-          (await gie(ZG(e)).catch(() => {
+          (await realpath(dirname(e)).catch(() => {
             return;
           })) !== r
         )
           return d("parent directory changed during restore");
       }
-      let Se = await JG(e, { bigint: !0 }).catch(() => {
+      let Se = await lstat(e, { bigint: !0 }).catch(() => {
         return;
       });
       if (
@@ -19891,8 +19457,8 @@ function Ktn(e, t) {
   return;
 }
 function RCe(e) {
-  if (Gtn(e)) return e;
-  return P8(he(), e);
+  if (isAbsolute(e)) return e;
+  return join(he(), e);
 }
 function fileHistoryRestoreStateFromLog(e, t) {
   if (!fileHistoryEnabled()) return;
@@ -19910,10 +19476,10 @@ function fileHistoryRestoreStateFromLog(e, t) {
 }
 async function bZr(e, t, r, o) {
   let d = yU(e, t),
-    p = P8(r, e),
+    p = join(r, e),
     _;
   try {
-    _ = await JG(d);
+    _ = await lstat(d);
   } catch (E) {
     if (W(E))
       logForDebugging(
@@ -19925,7 +19491,7 @@ async function bZr(e, t, r, o) {
   if (!_.isFile())
     throw Error("FileHistory: backup source is not a regular file");
   try {
-    await aZr(d, p);
+    await link(d, p);
   } catch (E) {
     let C = A(E);
     if (C === "EEXIST") return;
@@ -19942,7 +19508,7 @@ async function bZr(e, t, r, o) {
       { level: "error" },
     );
     try {
-      await NXe(d, p);
+      await copyFile(d, p);
     } catch (I) {
       if (Rt(I))
         throw (logForDebugging(`FileHistory: copy fallback failed for ${d}: ${I}`), I);
@@ -19984,8 +19550,8 @@ async function copyFileHistoryForResume(e, t, r) {
     return;
   }
   try {
-    let E = P8(getClaudeConfigDir(), "file-history", _);
-    await LXe(E, { recursive: !0 });
+    let E = join(getClaudeConfigDir(), "file-history", _);
+    await mkdir(E, { recursive: !0 });
     let C = 0;
     if (
       (await Promise.allSettled(
@@ -20055,9 +19621,9 @@ async function SZr(e, t) {
 }
 async function R8(e, t) {
   try {
-    let r = F0.O_NONBLOCK ?? 0,
-      o = t?.noFollow ? (F0.O_NOFOLLOW ?? 0) : 0,
-      d = await xCe(e, F0.O_RDONLY | r | o);
+    let r = constants.O_NONBLOCK ?? 0,
+      o = t?.noFollow ? (constants.O_NOFOLLOW ?? 0) : 0,
+      d = await open(e, constants.O_RDONLY | r | o);
     try {
       if (!(await d.stat()).isFile()) return null;
       return await d.readFile({ encoding: "utf-8" });
@@ -20070,12 +19636,8 @@ async function R8(e, t) {
 }
 var kZr = !1;
 function Wtn(e) {
-  if (kZr) console.error(lZr(e, !1, 5));
+  if (kZr) console.error(inspect(e, !1, 5));
 }
-import { createHash as Xtn } from "crypto";
-import { homedir as wZr } from "os";
-import { access as RZr, lstat as Jtn, readFile as PZr } from "fs/promises";
-import { dirname as IZr, join as HXe, relative as MZr, sep as OZr } from "path";
 async function computeWorkspaceDiff(e, t, r = "auto") {
   if (!(await getIsGit())) return null;
   if (await enn()) return null;
@@ -20122,7 +19684,7 @@ async function NZr(e) {
   await Promise.all(
     Array.from(e.perFileStats, async ([o, d]) => {
       try {
-        let p = await Jtn(HXe(t, o));
+        let p = await lstat(join(t, o));
         if (Math.max(p.mtimeMs, p.ctimeMs) < r) d.preSession = !0;
       } catch {}
     }),
@@ -20352,7 +19914,7 @@ async function enn() {
     await Promise.all(
       ["MERGE_HEAD", "REBASE_HEAD", "CHERRY_PICK_HEAD", "REVERT_HEAD"].map(
         (o) =>
-          RZr(HXe(e, o))
+          access(join(e, o))
             .then(() => !0)
             .catch(() => !1),
       ),
@@ -20443,7 +20005,7 @@ async function HZr(e, t, r = !1) {
     C = await Promise.all(
       p.slice(0, DZr).map(async (N) => {
         try {
-          let F = await Jtn(HXe(_, N));
+          let F = await lstat(join(_, N));
           return {
             filePath: N,
             preSession: Math.max(F.mtimeMs, F.ctimeMs) < E,
@@ -20527,7 +20089,6 @@ function isRemoteExecutableToolUse(e, t, r) {
   if (d === void 0) return !1;
   return (getToolRemoteExecution(d).supported && hasRequestedMachine(o.input)) || d.mcpInfo?.serverName === REMOTE_DEVICES_MCP_SERVER_NAME;
 }
-import { resolve as ceo } from "path";
 function convertHunksToEdits(e) {
   return e.map((t) => {
     let r = [],
@@ -20545,10 +20106,7 @@ function convertHunksToEdits(e) {
     };
   });
 }
-import { readdir as Aso, readFile as Rso } from "fs/promises";
 import * as wC from "path";
-import { posix as Pso, win32 as Iso } from "path";
-import { randomUUID as ano } from "crypto";
 function N8(e, t) {
   return typeof e === "string" && e.trim() !== "" ? e : t;
 }
@@ -20635,7 +20193,6 @@ function Unn(e, { resetsAtSeconds: t, entry: r, resumed: o, now: d }) {
     $nn(e, { phase: "active", resetsAtSeconds: t, acceptedAtMs: d }),
     e.events.emit({ type: "accepted", entry: r }));
 }
-import { randomUUID as Beo } from "crypto";
 function showBlockingDialog(e) {
   appStateStore.onScreenBlockingDialog.setState((t) =>
     t.surfaceMounted && t.kind === e ? t : { surfaceMounted: !0, kind: e },
@@ -20836,12 +20393,8 @@ function createGzipRequestBodyFetch(e, t) {
   };
 }
 setRequestBodyGzipPlanner(gAe);
-import { createHash as ion, randomUUID as Eno } from "crypto";
-import { mkdir as aon, readFile as lon, writeFile as con } from "fs/promises";
-import { dirname as uon, join as don } from "path";
-import { normalize as Lno, posix as bon, win32 as Son } from "path";
 function wAe(e) {
-  let t = e.split(Son.sep).join(bon.sep);
+  let t = e.split(win32.sep).join(posix.sep);
   if (t.includes(".jsonl") || (t.includes("projects") && t.includes("*.jsonl")))
     return "session_transcript";
   return null;
@@ -20852,7 +20405,7 @@ function getMemoryScopeForPath(e) {
   return null;
 }
 function jQe(e) {
-  let t = Lno(e),
+  let t = normalize(e),
     r = pL(t);
   if (
     isAutoMemoryEnabled() &&
@@ -20907,15 +20460,6 @@ function won(e) {
     return !0;
   return !1;
 }
-import { spawn as Uoo } from "child_process";
-import { closeSync as sin, constants as Hoo } from "fs";
-import { mkdir as joo, realpath as iin, stat as ain } from "fs/promises";
-import { homedir as Woo } from "os";
-import { dirname as qJe, isAbsolute as din, resolve as fin } from "path";
-import { homedir as yro } from "os";
-import { basename as kC, isAbsolute as _ro } from "path";
-import { basename as W8, posix as TAe } from "path";
-import { accessSync as Goo } from "fs";
 async function buildCommandPrefixesForCommandLine(e, t, r) {
   let o = Lm(t);
   if (o.length <= 1) {
@@ -20954,25 +20498,15 @@ function Wro(e) {
   }
   return r.slice(0, Math.max(1, o)).join(" ");
 }
-import { sep as Mae } from "path";
-import { isAbsolute as noo, join as roo } from "path";
-import { access as Ooo } from "fs/promises";
-import { join as ein } from "path";
 import { join as ZAe } from "path/posix";
 import { basename as Doo, isAbsolute as Noo } from "path/win32";
-import { execFile as loo } from "child_process";
-import { mkdir as coo, stat as uoo } from "fs/promises";
 import * as XAe from "os";
-import { join as zAe } from "path";
 function hoo(e) {
   return "";
 }
 function yoo() {
   return null;
 }
-import { randomBytes as voo } from "crypto";
-import { realpath as Ksn } from "fs/promises";
-import { isAbsolute as Coo, join as JAe, sep as xoo } from "path";
 var Aoo = "tengu_sl_gate_config";
 var Roo = { enabled: !1, enforce: !1, everywhere: !1, python_leg: "on" };
 function Poo() {
@@ -20991,12 +20525,11 @@ function Poo() {
 function Ioo() {
   return !1;
 }
-import { isAbsolute as Boo } from "path";
 function resetShellProviderCache() {
   getShellConfig().shellConfig = null;
 }
 async function Zoo(e, t, r) {
-  let o = din(e) ? e : fin(r || getFsSurface().cwd(), e),
+  let o = isAbsolute(e) ? e : resolve(r || getFsSurface().cwd(), e),
     d = await t.hostFiles.realPath(pathSpaces.workspace(o));
   if (!d.ok) return o;
   if (!d.value.found) throw min(o);
@@ -21023,12 +20556,6 @@ function resolveNotebookCellSource(e, t) {
     source: Array.isArray(p.source) ? p.source.join("") : p.source,
   };
 }
-import { basename as win, dirname as Ein, parse as gso, sep as NU } from "path";
-import { isAbsolute as Tso, relative as vso } from "path";
-import { isDeepStrictEqual as kso } from "util";
-import { sep as Cso } from "path";
-import { basename as qso, isAbsolute as Vso, sep as Kso } from "path";
-import { open as Gso } from "fs/promises";
 async function readFileContextAroundString(e, t, r = 3) {
   let o = await openLocalFileForRead(e);
   if (o === null) return null;
@@ -21041,7 +20568,7 @@ async function readFileContextAroundString(e, t, r = 3) {
 async function openLocalFileForRead(e) {
   if (Xo(e) || Dr(e)) return null;
   try {
-    return await Gso(e, "r");
+    return await open(e, "r");
   } catch (t) {
     if (W(t)) return null;
     throw t;
@@ -21146,32 +20673,9 @@ async function zso(e, t, r, o, d, p) {
     { bytesRead: de } = await e.read(ue, 0, re, C);
   return { content: Lin(ue, de), lineOffset: N, truncated: !1 };
 }
-import {
-  basename as nio,
-  dirname as rio,
-  isAbsolute as Win,
-  join as oio,
-  relative as sio,
-  sep as jin,
-} from "path";
-import { realpath as Hin } from "fs/promises";
-import {
-  dirname as Zso,
-  isAbsolute as dZe,
-  join as eio,
-  normalize as pZe,
-  relative as fZe,
-  sep as J8,
-} from "path";
 function clearOrphanedVersionGlobCache() {
   getPluginRegistryState().orphanedVersionGlobExclusions = null;
 }
-import { basename as hio } from "path";
-import { sep as kz } from "path";
-import { randomUUID as Pio } from "crypto";
-import { extname as Iio } from "path";
-import { readFile as Gio } from "fs/promises";
-import { join as zio } from "path";
 var Dio = 2500,
   Yin = /^\s*\S+ has not been authenticated with glab\s*$/m;
 class Jin {
@@ -21791,7 +21295,7 @@ query { rateLimit{cost remaining resetAt} ${N.join(" ")} }`,
     { statuses: t, rateLimit: o, unbatched: r }
   );
 }
-var uan = () => zio(getClaudeConfigDir(), "gh-pr-status-cache.json"),
+var uan = () => join(getClaudeConfigDir(), "gh-pr-status-cache.json"),
   dan = STORAGE_KEYS.state("gh-pr-status-cache");
 function persistPrStatusCache(e, t) {
   let r = {};
@@ -21858,7 +21362,7 @@ async function loadPrStatusCache(e) {
     return ian(o);
   }
   try {
-    let t = await Gio(uan(), "utf8");
+    let t = await readFile(uan(), "utf8");
     return ian(t);
   } catch {
     return new Map();
@@ -22024,7 +21528,6 @@ function collapseBackgroundCompletions(e, t) {
   }
   return r;
 }
-import { basename as Xao } from "path";
 var Qao = 200;
 function getFrontmatterDescription(e) {
   try {
@@ -22037,7 +21540,7 @@ function getFrontmatterDescription(e) {
   }
 }
 function getMemoryFileDisplayName(e, t) {
-  let r = Xao(e);
+  let r = basename(e);
   if (r === MEMORY_INDEX_FILE_NAME) return "memory index";
   if (t !== void 0) return t;
   let o = normalizeWhitespace(stripAnsi(r).replace(/\.md$/, "").replace(/[-_]+/g, " "));
@@ -23410,13 +22913,11 @@ function registerResumedAgentTask(e, t) {
     };
   t.register(o);
 }
-import { randomBytes as cZo } from "crypto";
 var bindTurnAbortController = i9.bind;
 var releaseTurnAbortController = i9.release;
 function resolveWakeupSource(e) {
   return e.kind === "loop" ? "loop_wakeup" : "schedule_wakeup";
 }
-import { randomUUID as fco } from "crypto";
 var Aco =
   "the prompt did not go through prompt.submit (a command, bash mode, an input that did not query, or a failed pass)";
 var hasPluginHooksChanged = (e, t) => e.plugins !== t.plugins;
@@ -23434,7 +22935,6 @@ function createDisposableSubmission(e) {
     },
   };
 }
-import { randomUUID as _uo } from "crypto";
 function fet(e) {
   e.refreshContext();
 }
@@ -23522,25 +23022,9 @@ function getDecisionReasonText(e) {
       return e.reason;
   }
 }
-import {
-  isAbsolute as vcn,
-  posix as Pcn,
-  relative as Ccn,
-  resolve as Icn,
-} from "path";
 function getDestructiveCommandWarning(e) {
   return Mcn(e)?.warning ?? null;
 }
-import { realpath as tmo, stat as nmo } from "fs/promises";
-import {
-  dirname as rmo,
-  isAbsolute as KU,
-  normalize as Oz,
-  resolve as _9,
-  sep as omo,
-} from "path";
-import { homedir as Dcn } from "os";
-import { dirname as Lcn, isAbsolute as Met, resolve as Oet } from "path";
 function markAutoModeOutsideReadPromptSeen(e) {
   saveGlobalConfig(
     (t) =>
@@ -23592,23 +23076,6 @@ async function enableBlockReadsOutsideWorkingDirs(e) {
     { error: null, sandboxRefreshed: !0 }
   );
 }
-import {
-  basename as iun,
-  dirname as tle,
-  isAbsolute as yPe,
-  parse as aun,
-  posix as Epo,
-  relative as _Pe,
-  resolve as Itt,
-  sep as GL,
-} from "path";
-import { homedir as Vfo } from "os";
-import {
-  isAbsolute as JA,
-  normalize as Kfo,
-  resolve as Zcn,
-  sep as Yfo,
-} from "path";
 function isShellWrapperCommand(e) {
   let t = vPe(e.trim()).split(/\s+/),
     r = 0;
@@ -23723,8 +23190,6 @@ class uyn {
 }
 var fBi = new j(() => new uyn());
 var pBi = new RegExp(`[${Bmo}]+`, "g");
-import { appendFile as Hmo } from "fs/promises";
-import { join as jmo } from "path";
 function buildSendFileToolPrompt(e, t) {
   return `Send files to another Claude Code session \u2014 a peer session on this machine, or a Remote Control / cloud session on another machine. The receiving Claude gets the files on its own filesystem with @path references, plus your message.
 
@@ -24133,8 +23598,6 @@ defineExportGetters(heldRenderInputModule, {
   ledgersByTree: () => zPe,
 });
 var heldRenderInput = (e, t) => Wz.get(e)?.of(t)?.input;
-import { join as Ort, resolve as i_o } from "path";
-import { relative as l_o, resolve as c_o } from "path";
 function installUiLogSink(e) {
   let t = getPluginRegistryState();
   t.uiLogSink = e;
@@ -24686,8 +24149,6 @@ function getActiveLimitGrace() {
 function isCredentialErrorMessage(e) {
   return [INVALID_API_KEY_MESSAGE, lEn, cEn, fEn].some((t) => e.startsWith(`${t} \xB7 `));
 }
-import { open as qSo } from "fs/promises";
-import { isAbsolute as VSo } from "path";
 function isAutoCompactDisabledByUserSetting() {
   if (ITn()) return !1;
   let e = resolveSetting("autoCompactEnabled", !0);
@@ -25078,8 +24539,6 @@ async function ensureOverageBillingEnabled({ skipLiveCheck: e = !1, credentials:
   if (o) N9(null, r);
   return o;
 }
-import { isDeepStrictEqual as lCn } from "util";
-import { isDeepStrictEqual as s7 } from "util";
 var Vsa = createLazyValue(() =>
   c({
     version: k(1),
@@ -25140,37 +24599,8 @@ function clearUserContextCache(e) {
   if (!t) return;
   (t.byId.clear(), xst(e));
 }
-import {
-  dirname as GCo,
-  isAbsolute as zCo,
-  join as qCo,
-  relative as VCo,
-  resolve as IPn,
-  sep as KCo,
-} from "path";
-import { randomUUID as ZRn } from "crypto";
-import { randomUUID as qCn } from "crypto";
-import { mkdir as Pwo, writeFile as VCn } from "fs/promises";
-import { join as Iwo, resolve as Mwo } from "path";
-import { constants as rit } from "fs";
-import { open as iTo, readdir as aTo, realpath as lTo } from "fs/promises";
-import { join as bAn } from "path";
-import { constants as Xle } from "fs";
-import {
-  lstat as wxn,
-  open as Exn,
-  realpath as Yle,
-  stat as Txn,
-} from "fs/promises";
-import {
-  basename as yxn,
-  dirname as Jwo,
-  extname as Zwo,
-  sep as Pst,
-} from "path";
-import { join as Kwo } from "path";
 function getUploadsDirectory() {
-  return Kwo(getClaudeConfigDir(), "uploads", K());
+  return join(getClaudeConfigDir(), "uploads", K());
 }
 function buildUploadFileName(e, t) {
   return `${e}-${Xwo(t)}`;
@@ -25199,9 +24629,9 @@ function cacheFileHash(e, t) {
 function hxn(e) {
   return DXt().get(e);
 }
-var vxn = Xle.O_NOFOLLOW,
-  eEo = Xle.O_NONBLOCK,
-  tEo = Xle.O_DIRECTORY,
+var vxn = constants.O_NOFOLLOW,
+  eEo = constants.O_NONBLOCK,
+  tEo = constants.O_DIRECTORY,
   Cxn = 10485760;
 async function nEo(e) {
   let t = [{ path: getUploadsDirectory(), kind: "attachments" }];
@@ -25325,10 +24755,10 @@ async function oEo(e, t, r) {
         logForDebugging(`[chrome file_upload] registered attachment digest mismatch: ${E}`),
         { error: _xn(E) }
       );
-    let N = await Yle(getUploadsDirectory()).catch(() => {
+    let N = await realpath(getUploadsDirectory()).catch(() => {
         return;
       }),
-      F = N !== void 0 && Jwo(C) === N ? gxn(yxn(C)) : yxn(C);
+      F = N !== void 0 && dirname(C) === N ? gxn(basename(C)) : basename(C);
     d.push({ data: D.buf.toString("base64"), name: F, mimeType: dEo(C) });
   }
   let { paths: p, ..._ } = e;
@@ -25432,7 +24862,7 @@ function Sxn(e) {
 async function aEo(e, t) {
   let { absPath: r, absChain: o } = Axn(e, t),
     d = t.trustedNetworkDirectories,
-    p = await Yle(r),
+    p = await realpath(r),
     _ = new Set([...o, ...expandPathAliases(p)]);
   for (let E of _) {
     if (isUntrustedUncPath(E, d) || isUntrustedAutomountPath(E, d))
@@ -25448,28 +24878,28 @@ async function aEo(e, t) {
   }
   Rxn(_, t);
   for (let E of await nEo(t)) {
-    let C = await wxn(E.path).catch(() => null);
+    let C = await lstat(E.path).catch(() => null);
     if (C === null || C.isSymbolicLink() || !C.isDirectory()) continue;
-    let I = await Exn(E.path, Xle.O_RDONLY | tEo | vxn).catch(() => null);
+    let I = await open(E.path, constants.O_RDONLY | tEo | vxn).catch(() => null);
     if (I === null) continue;
     let D;
     try {
       let N = await I.stat();
       if (!N.isDirectory()) continue;
-      let F = await Yle(E.path).catch(() => {
+      let F = await realpath(E.path).catch(() => {
         return;
       });
       if (F === void 0) continue;
-      let U = await Txn(F).catch(() => null);
+      let U = await stat(F).catch(() => null);
       if (U === null || U.ino !== N.ino || U.dev !== N.dev) continue;
       D = F;
     } finally {
       await I.close();
     }
-    if (p === D || p.startsWith(D + Pst)) {
+    if (p === D || p.startsWith(D + sep)) {
       if (E.kind === "staging") {
-        let F = await Yle(getClaudeConfigDir()).catch(() => getClaudeConfigDir());
-        if (D === F || D.startsWith(F + Pst) || F.startsWith(D + Pst)) continue;
+        let F = await realpath(getClaudeConfigDir()).catch(() => getClaudeConfigDir());
+        if (D === F || D.startsWith(F + sep) || F.startsWith(D + sep)) continue;
         return { realPath: p };
       }
       let N = hxn(p);
@@ -25518,19 +24948,19 @@ async function lEo(e, t) {
 }
 async function verifyHandleBinding(e, t, r) {
   let d =
-    (await Yle(t).catch(() => null)) === t
-      ? await Txn(t).catch(() => null)
+    (await realpath(t).catch(() => null)) === t
+      ? await stat(t).catch(() => null)
       : null;
   if (d === null || d.ino !== r.ino || d.dev !== r.dev) return "moved";
   return "ok";
 }
 async function cEo(e, t, r) {
-  let o = await wxn(t).catch(() => null);
+  let o = await lstat(t).catch(() => null);
   if (o === null || !o.isFile())
     return { error: `Cannot upload "${e}": not a regular file.` };
   let d;
   try {
-    d = await Exn(t, Xle.O_RDONLY | vxn | eEo);
+    d = await open(t, constants.O_RDONLY | vxn | eEo);
   } catch (p) {
     return {
       error: `Cannot upload "${e}": failed to open file (${p instanceof Error ? p.message : String(p)}).`,
@@ -25593,29 +25023,8 @@ var uEo = {
   ".webm": "video/webm",
 };
 function dEo(e) {
-  return uEo[Zwo(e).toLowerCase()] ?? "application/octet-stream";
+  return uEo[extname(e).toLowerCase()] ?? "application/octet-stream";
 }
-import { randomUUID as _Eo } from "crypto";
-import {
-  link as bEo,
-  lstat as zxn,
-  mkdir as Wst,
-  open as SEo,
-  readdir as u0e,
-  readFile as d0e,
-  stat as f0e,
-  unlink as Gst,
-  utimes as kEo,
-  writeFile as Nst,
-} from "fs/promises";
-import {
-  dirname as wEo,
-  join as IC,
-  relative as Lst,
-  resolve as d7,
-  sep as QL,
-} from "path";
-import { StringDecoder as mEo } from "string_decoder";
 var pEo = 200;
 function c7(e = {}) {
   let t = e.yieldBudgetMs ?? pEo,
@@ -25687,7 +25096,7 @@ class Jle extends Error {
   }
 }
 async function* Dxn(e, t, r = Ist, o, d = Mst) {
-  let p = new mEo("utf8"),
+  let p = new StringDecoder("utf8"),
     _ = "",
     E = 0,
     C = Date.now() + d,
@@ -25999,7 +25408,7 @@ async function l0e(e, t, r) {
     p = IEo(r, e),
     _ =
       r !== void 0 && p !== void 0 ? { storageV5: r, manifestKey: p } : void 0;
-  if (_ === void 0) await Wst(e.mountDir, { recursive: !0 });
+  if (_ === void 0) await mkdir(e.mountDir, { recursive: !0 });
   if (o.state === "absent" && e.scope !== "user") {
     (await MEo(e, d, _?.manifestKey, _?.storageV5),
       (e.manifestSeenThisSession = !0));
@@ -26018,10 +25427,10 @@ async function l0e(e, t, r) {
     e.manifestSeenThisSession = !0;
     return;
   }
-  (await writeFileAtomic(IC(e.mountDir, aO), d), (e.manifestSeenThisSession = !0));
+  (await writeFileAtomic(join(e.mountDir, aO), d), (e.manifestSeenThisSession = !0));
 }
 function Vst(e, t, r, o) {
-  return isHoverRestEnabled() && e !== void 0 && t !== void 0 ? resolveMemoryStorageKey(t, r, IC(r, o)) : void 0;
+  return isHoverRestEnabled() && e !== void 0 && t !== void 0 ? resolveMemoryStorageKey(t, r, join(r, o)) : void 0;
 }
 function IEo(e, t) {
   return Vst(e, t.v5MemoryBase, t.mountDir, aO);
@@ -26054,12 +25463,12 @@ async function MEo(e, t, r, o) {
       return;
     i0e();
   }
-  let d = IC(e.mountDir, aO),
-    p = IC(e.mountDir, `${aO}.${_Eo()}.stage`);
+  let d = join(e.mountDir, aO),
+    p = join(e.mountDir, `${aO}.${randomUUID()}.stage`);
   try {
-    await Nst(p, t);
+    await writeFile(p, t);
     try {
-      await bEo(p, d);
+      await link(p, d);
       return;
     } catch (E) {
       if (A(E) === "EEXIST") {
@@ -26079,14 +25488,14 @@ async function MEo(e, t, r, o) {
     }
     await writeFileAtomic(d, t);
   } finally {
-    await Gst(p).catch(() => {});
+    await unlink(p).catch(() => {});
   }
 }
 async function NH(e, t, r) {
   let o;
   try {
-    let _ = IC(e, aO);
-    if (!(await zxn(_)).isFile()) return { state: "torn" };
+    let _ = join(e, aO);
+    if (!(await lstat(_)).isFile()) return { state: "torn" };
     let E = Vst(t, r, e, aO);
     if (t !== void 0 && E !== void 0) {
       let C = await t.read([E]);
@@ -26094,7 +25503,7 @@ async function NH(e, t, r) {
       let I = C.value.items[0];
       if (!I.found) return { state: "absent" };
       o = Buffer.from(I.value).toString("utf8");
-    } else o = await d0e(_, "utf8");
+    } else o = await readFile(_, "utf8");
   } catch (_) {
     return A(_) === "ENOENT" ? { state: "absent" } : { state: "torn" };
   }
@@ -26125,8 +25534,8 @@ async function DEo(e, t) {
   if (e.basisLoaded) return null;
   let r;
   try {
-    let E = IC(e.mountDir, h0e);
-    if (!(await zxn(E)).isFile()) return null;
+    let E = join(e.mountDir, h0e);
+    if (!(await lstat(E)).isFile()) return null;
     let C = Kst(t, e);
     if (t !== void 0 && C !== void 0) {
       let I = await t.read([{ key: C, offset: 0, length: s0e + 1 }]);
@@ -26142,7 +25551,7 @@ async function DEo(e, t) {
         );
       r = Buffer.from(D).toString("utf8");
     } else {
-      let I = await SEo(E, "r");
+      let I = await open(E, "r");
       try {
         let { size: D } = await I.stat(),
           N = Buffer.alloc(Math.min(D, s0e) + 1),
@@ -26214,7 +25623,7 @@ async function c0e(e, t) {
           `basis write failed: ${describeStorageError(d.error)}`,
           "memory-sync basis write failed",
         );
-    } else await writeFileAtomic(IC(e.mountDir, h0e), r);
+    } else await writeFileAtomic(join(e.mountDir, h0e), r);
     e.lastPersistedBasisBody = r;
   } catch (r) {
     logForDebugging(`multi-store-sync[${e.mountName}]: basis write failed: ${l(r)}`, {
@@ -26230,7 +25639,7 @@ async function tce(e, t) {
     return;
   }
   try {
-    await Gst(IC(e.mountDir, h0e));
+    await unlink(join(e.mountDir, h0e));
   } catch {}
 }
 function Zxn(e, t) {
@@ -26247,7 +25656,7 @@ async function NEo(e, t) {
   async function r(o, d) {
     let p;
     try {
-      p = await u0e(o, { withFileTypes: !0 });
+      p = await readdir(o, { withFileTypes: !0 });
     } catch (C) {
       return A(C) !== "ENOENT";
     }
@@ -26265,7 +25674,7 @@ async function NEo(e, t) {
           .filter((C) => C.isDirectory() && !C.name.startsWith("."))
           .map((C) => {
             let I = d ? `${d}/${C.name}` : C.name;
-            return t && t(I) ? !1 : r(IC(o, C.name), I);
+            return t && t(I) ? !1 : r(join(o, C.name), I);
           }),
       )
     ).some(Boolean);
@@ -26292,7 +25701,7 @@ async function y0e(e, t, r, o, d, p, _) {
   async function ue(de) {
     let _e;
     try {
-      _e = await u0e(de, { withFileTypes: !0 });
+      _e = await readdir(de, { withFileTypes: !0 });
     } catch (Se) {
       let ve = A(Se);
       if (ve === "ENOENT") {
@@ -26307,11 +25716,11 @@ async function y0e(e, t, r, o, d, p, _) {
     }
     await Promise.all(
       _e.map(async (Se) => {
-        let ve = IC(de, Se.name);
+        let ve = join(de, Se.name);
         if (Se.isDirectory()) {
           if (Se.name.startsWith(".")) return;
           if (t) {
-            let Me = Lst(e, ve).split(QL).join("/");
+            let Me = relative(e, ve).split(sep).join("/");
             if (t(Me)) return;
           }
           (await ue(ve), await re.maybeYield());
@@ -26319,10 +25728,10 @@ async function y0e(e, t, r, o, d, p, _) {
         }
         if (!Se.isFile() || !o0e(Se.name)) return;
         await re.runBounded(async () => {
-          let Me = "/" + Lst(e, ve).split(QL).join("/");
+          let Me = "/" + relative(e, ve).split(sep).join("/");
           I.add(Me);
           try {
-            let xe = await f0e(ve);
+            let xe = await stat(ve);
             if (xe.size > mR) {
               (N.push({ path: Me, size: xe.size }),
                 logForDebugging(`multi-store-sync: skipping oversized ${Me} (${xe.size}B)`, {
@@ -26335,7 +25744,7 @@ async function y0e(e, t, r, o, d, p, _) {
               C.set(Me, Oe);
               return;
             }
-            let Ne = await d0e(ve, "utf8"),
+            let Ne = await readFile(ve, "utf8"),
               De = hashSha256(Ne);
             (FEo(p, Me, xe.mtimeMs, xe.ctimeMs, xe.size, De, V),
               C.set(Me, nAn(Me, Ne, De, _, D)));
@@ -26476,7 +25885,7 @@ async function BEo(e, t, r, o) {
     if (V.some((De) => !Ne.has((De.relPath ?? []).join("/")))) C = !1;
   }
   if (U.length === 0 && r.manifestSeen) {
-    let Oe = resolveMemoryStorageKey(r.base, e, IC(e, aO)),
+    let Oe = resolveMemoryStorageKey(r.base, e, join(e, aO)),
       Ne = Oe === void 0 ? void 0 : await r.storageV5.statMeta(Oe);
     if (Ne === void 0 || !Ne.ok)
       ((C = !1), (I = Ne === void 0 || Ne.error.code === "NotFound"));
@@ -26575,7 +25984,7 @@ async function JL(e, t) {
     o =
       e.scope === "user"
         ? await RPt(r)
-        : await resolveTeamMemoryKey(IC(e.mountName, r).split(QL).join("/"));
+        : await resolveTeamMemoryKey(join(e.mountName, r).split(sep).join("/"));
   if (!o.normalize("NFC").startsWith(e.mountDir))
     throw new PathTraversalError(`path escapes mount ${e.mountName}: ${t}`);
   return o;
@@ -26587,7 +25996,7 @@ function _0e(e, t, r) {
 }
 async function nce(e, t, r) {
   let o = _0e(e, t, r);
-  if (o === void 0) return f0e(r);
+  if (o === void 0) return stat(r);
   let d = await o.backend.statMeta(o.key);
   if (!d.ok)
     throw Object.assign(
@@ -26606,7 +26015,7 @@ async function nce(e, t, r) {
 }
 async function rAn(e, t, r) {
   let o = _0e(e, t, r);
-  if (o === void 0) return d0e(r, "utf8");
+  if (o === void 0) return readFile(r, "utf8");
   let d = await o.backend.readText([o.key]);
   if (!d.ok)
     throw Object.assign(
@@ -26668,19 +26077,19 @@ async function Xst(e, t, r, o, d) {
       await I();
       return;
     }
-  } else await Wst(wEo(p), { recursive: !0 });
+  } else await mkdir(dirname(p), { recursive: !0 });
   if (_ === void 0)
     try {
-      await Nst(p, r, { encoding: "utf8", flag: "wx" });
+      await writeFile(p, r, { encoding: "utf8", flag: "wx" });
     } catch (C) {
       if (A(C) !== "EEXIST") throw C;
-      await Nst(p, r, "utf8");
+      await writeFile(p, r, "utf8");
       return;
     }
   if ($st(e)) return;
   let E = new Date(o);
   if (!Number.isNaN(E.getTime()) && E.getTime() <= Date.now())
-    await kEo(p, E, E).catch(() => {});
+    await utimes(p, E, E).catch(() => {});
 }
 function oAn(e) {
   return e.size === 0 && Date.now() - e.mtimeMs > CEo;
@@ -26748,7 +26157,7 @@ async function uAn(e, t, r) {
           ),
           { cause: p.error },
         );
-    } else await Gst(o);
+    } else await unlink(o);
   } catch (o) {
     if (o instanceof PathTraversalError) {
       logForDebugging(
@@ -26818,7 +26227,7 @@ function UEo(e) {
 }
 async function pAn(e) {
   try {
-    return (await u0e(e, { withFileTypes: !0 })).some(
+    return (await readdir(e, { withFileTypes: !0 })).some(
       (r) => r.name !== aO && !(r.name.startsWith(".") && r.isFile()),
     )
       ? "occupied"
@@ -26828,7 +26237,7 @@ async function pAn(e) {
   }
 }
 async function mAn(e) {
-  let t = await u0e(e, { withFileTypes: !0 });
+  let t = await readdir(e, { withFileTypes: !0 });
   for (let r of t) {
     if (r.name === aO) continue;
     if (r.name.startsWith(".")) {
@@ -26836,7 +26245,7 @@ async function mAn(e) {
       return !1;
     }
     if (r.isDirectory()) {
-      if (!(await mAn(IC(e, r.name)))) return !1;
+      if (!(await mAn(join(e, r.name)))) return !1;
     } else if (!r.isFile()) return !1;
   }
   return !0;
@@ -26886,7 +26295,7 @@ async function HEo(e, t) {
     if (I === void 0) return { outcome: "mismatch" };
     let D = _.entries.get(C)?.sha256;
     if (D === void 0) {
-      let N = IC(e.mountDir, C.replace(/^\/+/, "")),
+      let N = join(e.mountDir, C.replace(/^\/+/, "")),
         F = o !== void 0 ? resolveMemoryStorageKey(o.base, e.mountDir, N) : void 0;
       if (r && o !== void 0 && F !== void 0) {
         let U = await o.storageV5.read([
@@ -26898,8 +26307,8 @@ async function HEo(e, t) {
         D = hashSha256(Buffer.from(V.value).toString("utf8"));
       } else
         try {
-          if ((await f0e(N)).size > Zle) return { outcome: "mismatch" };
-          D = hashSha256(await d0e(N, "utf8"));
+          if ((await stat(N)).size > Zle) return { outcome: "mismatch" };
+          D = hashSha256(await readFile(N, "utf8"));
         } catch {
           return { outcome: "mismatch" };
         }
@@ -27477,7 +26886,7 @@ class Zst {
   take(e, t) {
     if (this.pending.size === 0) return null;
     if (e !== void 0) {
-      let o = d7(e),
+      let o = resolve(e),
         d = [];
       for (let [p, _] of this.pending) {
         if (!XEo(p, _, o)) continue;
@@ -27512,9 +26921,9 @@ function LH(e) {
 }
 function XEo(e, t, r) {
   if (e === r) return !0;
-  if (!e.endsWith(QL) || !r.startsWith(e)) return !1;
+  if (!e.endsWith(sep) || !r.startsWith(e)) return !1;
   if (t.excludeKey) {
-    let o = Lst(e, r).split(QL).join("/");
+    let o = relative(e, r).split(sep).join("/");
     if (t.excludeKey(o)) return !1;
   }
   return !0;
@@ -27537,7 +26946,7 @@ var eit = {
 function QEo(e, t) {
   let r = /^[a-z0-9_]{1,40}$/.test(t) ? t : "sync_error",
     o = eit[t];
-  e.notices.queue(d7(e.mountDir) + QL, {
+  e.notices.queue(resolve(e.mountDir) + sep, {
     text:
       o !== void 0
         ? `Memory sync is paused for one of your memory stores (${r}): ${o} Affected memory writes are NOT being persisted to shared memory and will be lost when this session's machine is recycled.`
@@ -27546,7 +26955,7 @@ function QEo(e, t) {
   });
 }
 function JEo(e, t) {
-  e.notices.queue(d7(e.mountDir) + QL, {
+  e.notices.queue(resolve(e.mountDir) + sep, {
     text:
       t > 0
         ? `Memory sync recovered for a previously-paused memory store: ${t} pending local change(s) were pushed to shared memory.`
@@ -27555,7 +26964,7 @@ function JEo(e, t) {
   });
 }
 function yAn(e, t) {
-  e.notices.queue(d7(e.mountDir) + QL, {
+  e.notices.queue(resolve(e.mountDir) + sep, {
     text:
       `Memory sync restored ${t} memory file(s) that were empty (0 bytes) on this machine from shared memory \u2014 an empty file is never synced over a memory's shared content.` +
       (Yxn(e)
@@ -27565,7 +26974,7 @@ function yAn(e, t) {
   });
 }
 function ZEo(e, t) {
-  e.notices.queue(d7(e.mountDir) + QL, {
+  e.notices.queue(resolve(e.mountDir) + sep, {
     text: `Memory sync did NOT delete anything from shared memory this cycle: ${t} synced memory files went missing from this session's disk at once, which almost always means the local memory folder was wiped rather than deliberately cleared. Shared memory is unchanged and the missing files will be restored on the next sync. If you really do intend to remove that many memories, delete them in smaller batches.`,
     excludeKey: e.excludeKey,
   });
@@ -27573,7 +26982,7 @@ function ZEo(e, t) {
 async function u7(e, t, r) {
   try {
     let o = await JL(e, t);
-    e.notices.queue(d7(o), { text: r });
+    e.notices.queue(resolve(o), { text: r });
   } catch (o) {
     logForDebugging(
       `multi-store-sync[${e.mountName}]: dropping conflict notice for unresolvable path (${l(o)})`,
@@ -27948,7 +27357,7 @@ async function rce(e, t, r) {
             return;
           }
         } else {
-          (await f0e(je), re.delete(De.path), V++);
+          (await stat(je), re.delete(De.path), V++);
           return;
         }
       } catch {}
@@ -28099,7 +27508,7 @@ async function sTo(e, t, r) {
         return;
       }
       try {
-        await Wst(I.mountDir, { recursive: !0 });
+        await mkdir(I.mountDir, { recursive: !0 });
         let F = I.scope === "user" ? [] : ["team", I.mountName];
         if ((await checkPathContainment(I.mountDir, ...F)) === "escape") {
           (logForDebugging(
@@ -28452,7 +27861,7 @@ async function uTo(e, t, r, o, d) {
   } else {
     let D;
     try {
-      D = await aTo(e, { withFileTypes: !0 });
+      D = await readdir(e, { withFileTypes: !0 });
     } catch (N) {
       if (!W(N)) t(r.mount, `readdir failed for ${e} (${A(N) ?? "unknown"})`);
       return { commands: [], truncated: !1 };
@@ -28477,7 +27886,7 @@ async function uTo(e, t, r, o, d) {
       t(r.mount, `unsafe or symlinked skill folder in ${e}`);
       continue;
     }
-    let N = bAn(e, D.name, "SKILL.md"),
+    let N = join(e, D.name, "SKILL.md"),
       F;
     if (o && d) {
       let _e = await fTo(
@@ -28504,7 +27913,7 @@ async function uTo(e, t, r, o, d) {
     } else {
       let _e;
       try {
-        _e = await lTo(N);
+        _e = await realpath(N);
       } catch (Se) {
         let ve = A(Se);
         if (ve !== "ENOENT" && ve !== "ENOTDIR")
@@ -28516,7 +27925,7 @@ async function uTo(e, t, r, o, d) {
         continue;
       }
       try {
-        let Se = await iTo(N, rit.O_RDONLY | rit.O_NOFOLLOW | rit.O_NONBLOCK);
+        let Se = await open(N, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let ve = await Se.stat();
           if ((await verifyHandleBinding(Se, _e, ve)) === "moved") {
@@ -28552,7 +27961,7 @@ async function uTo(e, t, r, o, d) {
         skillName: ue,
         markdownContent: re,
         source: "memoryStore",
-        baseDir: bAn(e, D.name),
+        baseDir: join(e, D.name),
         loadedFrom: "memoryStore",
         ...createEmptyCommandMetadata(),
         ...escapeCommandFrontmatter(de),
@@ -29516,9 +28925,6 @@ async function analyzeContextUsage(e, t, r, o, d, p) {
     apiUsage: Wt,
   };
 }
-import { mkdir as _vo, rm as bvo } from "fs/promises";
-import { join as Svo } from "path";
-import { randomUUID as tvo } from "crypto";
 function fRn(e, t) {
   if (MXe(e, t)) vCe(QP);
   yit();
@@ -29540,7 +28946,6 @@ function clearPromptCacheBreakState(e) {
   } else (t.previousStateBySource.clear(), (t.hydrationAttempted = !1));
   if (!r) ZL();
 }
-import { readFile as mRn } from "fs/promises";
 async function Mvo() {
   return null;
 }
@@ -29578,9 +28983,7 @@ function buildCompactedMessages(e, t) {
         : [...r, ...e.summaryMessages];
   return [e.boundaryMarker, ...o, ...e.attachments, ...e.hookResults];
 }
-import { randomUUID as jvo } from "crypto";
 import { STATUS_CODES } from "http";
-import { join as wRn } from "path";
 function buildArtifactFileName(e, t) {
   let r = (o) => o.replace(/[^\w-]/g, "");
   return `artifact-${r(e).slice(0, 8)}-${r(t)}`;
@@ -29727,9 +29130,6 @@ Additional Instructions:
 ${e}`;
   return ((o += rPn), o);
 }
-import { readFileSync as $Co, statSync as BCo } from "fs";
-import { unlink as fPn } from "fs/promises";
-import { join as mPn } from "path";
 async function HCo(e) {
   let t = await openFileReadOnlyHardened(e);
   if (!t.ok) return { ok: !1, reason: "absent" };
@@ -29756,7 +29156,7 @@ async function HCo(e) {
 }
 async function CPn(e, t, r) {
   let o = t ?? getSessionSidecarDir(e),
-    d = mPn(o, $it),
+    d = join(o, $it),
     p = getSidecarKeyForPath(d);
   for (let _ of [d, SPn(o)]) {
     let E;
@@ -29792,7 +29192,7 @@ async function JCo(e, t, r, o) {
   let d;
   if (t.transcriptPath !== void 0) {
     if (!ZCo(t.transcriptPath)) return;
-    d = qCo(GCo(IPn(t.transcriptPath)), e);
+    d = join(dirname(resolve(t.transcriptPath)), e);
   }
   let p = await CPn(e, d, o).catch(() => ({ ok: !1, reason: "absent" }));
   if (!p.ok && p.reason === "absent") {
@@ -29812,8 +29212,8 @@ function createPrecomputeSidecarReadAheadOptions(e, t, r) {
   return { onSessionResolved: (d) => JCo(o ?? d.sessionId, d, e, t) };
 }
 function ZCo(e) {
-  let t = VCo(getProjectsDir(), IPn(e));
-  return t !== "" && t !== ".." && !t.startsWith(`..${KCo}`) && !zCo(t);
+  let t = relative(getProjectsDir(), resolve(e));
+  return t !== "" && t !== ".." && !t.startsWith(`..${sep}`) && !isAbsolute(t);
 }
 function logManualPrecomputedCompactConsumed(e, t, r) {
   if (!k7()) return;
@@ -29840,7 +29240,6 @@ function logManualPrecomputedCompactConsumed(e, t, r) {
       }),
   });
 }
-import { randomUUID as oxo } from "crypto";
 function isPromptCacheWarm(e, t = Date.now()) {
   if (!isPromptCachingEnabledForModel(rt())) return !1;
   let r = findLastNonSyntheticAssistantMessage(e)?.timestamp,
@@ -29853,71 +29252,7 @@ function zit(e) {
   let t = MOn() ?? 0;
   return { context_tokens: t, prompt_cache_warm: isPromptCacheWarm([]), ...Git(e, t) };
 }
-import { dirname as sPo, join as iPo, relative as kMn } from "path";
-import { lstat as hat, mkdir as YRo, readdir as XRo } from "fs/promises";
-import { dirname as QRo, resolve as JRo } from "path";
-import { relative as mat } from "path";
-import { relative as wAo, resolve as EAo } from "path";
 import Xxo from "path";
-import { realpath as oAo } from "fs/promises";
-import { realpath as Jxo } from "fs/promises";
-import {
-  dirname as Zxo,
-  join as eAo,
-  relative as tAo,
-  resolve as nAo,
-} from "path";
-import { constants as VH } from "fs";
-import { open as pIn } from "fs/promises";
-import { open as bAo } from "fs/promises";
-import { lstat as mAo } from "fs/promises";
-import { lstat as hAo } from "fs/promises";
-import { relative as yAo } from "path";
-import { stat as tat } from "fs/promises";
-import { dirname as gIn, join as nat, relative as hIn } from "path";
-import { lstat as xAo, readlink as AAo } from "fs/promises";
-import { dirname as RAo, relative as PAo, resolve as IAo } from "path";
-import { stat as OAo } from "fs/promises";
-import { homedir as JAo } from "os";
-import { relative as xIn } from "path";
-import { relative as NAo, resolve as LAo } from "path";
-import { dirname as AIn, join as RIn, relative as PIn } from "path";
-import { posix as cRo, win32 as uRo } from "path";
-import { lstat as iRo, readlink as aRo } from "fs/promises";
-import { relative as gRo } from "path";
-import { realpath as pRo } from "fs/promises";
-import { isAbsolute as _Ro, relative as KIn } from "path";
-import { tmpdir as qIn } from "os";
-import { realpath as SRo } from "fs/promises";
-import { relative as kRo, resolve as wRo } from "path";
-import { join as TRo } from "path";
-import { dirname as QIn, join as CRo, relative as JIn } from "path";
-import { relative as PRo, resolve as IRo } from "path";
-import { isAbsolute as ORo, posix as DRo, sep as dat } from "path";
-import { delimiter as HRo } from "path";
-import { dirname as ZRo, join as _at, parse as ePo, sep as tPo } from "path";
-import { isAbsolute as hPo, win32 as yPo } from "path";
-import { isAbsolute as DPo, join as NPo, normalize as LPo } from "path";
-import { mkdtemp as pIo, rm as mIo, writeFile as gIo } from "fs/promises";
-import { tmpdir as hIo } from "os";
-import { join as f0n } from "path";
-import { randomUUID as nIo } from "crypto";
-import { readFile as IIo } from "fs/promises";
-import { spawn as CIo } from "child_process";
-import { randomUUID as _Mo } from "crypto";
-import { stat as IMo } from "fs/promises";
-import {
-  isAbsolute as MMo,
-  join as OMo,
-  relative as X0n,
-  sep as SOe,
-} from "path";
-import {
-  basename as q0n,
-  extname as EMo,
-  posix as _Oe,
-  sep as V0n,
-} from "path";
 var xMo = [
     "/test/",
     "/tests/",
@@ -29938,8 +29273,8 @@ var xMo = [
     /\.snap$/i,
   ];
 function isTestFile(e) {
-  let t = _Oe.sep + e.split(V0n).join(_Oe.sep).replace(/^\/+/, ""),
-    r = q0n(e);
+  let t = posix.sep + e.split(sep).join(posix.sep).replace(/^\/+/, ""),
+    r = basename(e);
   for (let o of xMo) if (t.includes(o)) return !0;
   for (let o of AMo) if (o.test(r)) return !0;
   return !1;
@@ -29950,7 +29285,7 @@ function LMo() {
 function kOe(e) {
   let t = getFsSurface(),
     r = R7();
-  if (!MMo(e)) return e;
+  if (!isAbsolute(e)) return e;
   let o = e,
     d = r;
   try {
@@ -29959,8 +29294,8 @@ function kOe(e) {
   try {
     d = t.realpathSync(r);
   } catch {}
-  if (o.startsWith(d + SOe) || o === d) return X0n(d, o).replaceAll(SOe, "/");
-  if (e.startsWith(r + SOe) || e === r) return X0n(r, e).replaceAll(SOe, "/");
+  if (o.startsWith(d + sep) || o === d) return relative(d, o).replaceAll(sep, "/");
+  if (e.startsWith(r + sep) || e === r) return relative(r, e).replaceAll(sep, "/");
   return e;
 }
 function createInitialAttributionState() {
@@ -30064,8 +29399,6 @@ function applyAttributionOp(e, t) {
 }
 var NOTIFICATION_PRIORITY_IMMEDIATE = "immediate";
 var NOTIFICATION_TIMEOUT_MS = 4000;
-import { randomUUID as E0o } from "crypto";
-import { extname as $0o } from "path";
 function U0o(e) {
   if (e.type === "classifier") return "classifier";
   switch (e.type) {
@@ -30268,7 +29601,6 @@ var REMOTE_CONTROL_REPL_TAG = "remote-control-repl",
   REMOTE_CONTROL_SDK_TAG = "remote-control-sdk",
   REMOTE_CONTROL_AUTO_TAG = "remote-control-auto",
   CCR_MIRROR_TAG = "ccr-mirror";
-import { createHash as $Oo } from "crypto";
 function K0o(e) {
   if (!e || typeof e !== "object") return;
   let t = "error" in e ? e.error : e;
@@ -30377,7 +29709,6 @@ async function recordCreatedPullRequest(e) {
     return { ok: !1, kind: o, status: d };
   }
 }
-import { randomUUID as JOn } from "crypto";
 function isSelfHostedPool(e) {
   return e?.kind === "self_hosted_pool";
 }
@@ -30492,11 +29823,7 @@ async function qOo(e) {
     (e.taskRegistry.register(d), initTaskOutput(r.taskId), CDn(r.taskId, e));
   }
 }
-import { randomBytes as eDo, randomUUID as ADn } from "crypto";
-import { isDeepStrictEqual as vDo } from "util";
-import { randomUUID as aF } from "crypto";
 import { stripVTControlCharacters } from "util";
-import { randomUUID as IDo } from "crypto";
 function buildSessionEventsRequest(e, t, r, o) {
   if ((validateBridgeId(t, "sessionId"), !o))
     return { url: `${e}/v1/sessions/${t}/events`, body: { events: r } };
@@ -30506,13 +29833,11 @@ function buildSessionEventsRequest(e, t, r, o) {
     body: {
       events: r.map((p) => ({
         payload:
-          typeof p.uuid === "string" && p.uuid ? p : { ...p, uuid: IDo() },
+          typeof p.uuid === "string" && p.uuid ? p : { ...p, uuid: randomUUID() },
       })),
     },
   };
 }
-import { randomUUID as zDo } from "crypto";
-import { join as qDo, relative as VDo } from "path";
 class eNn {
   counts = void 0;
   sender = void 0;
@@ -30840,7 +30165,7 @@ function tNo(e) {
           : typeof t.skillDir === "string"
             ? t.skillDir
             : void 0;
-    if (r) return { ...e, attachment: { ...t, displayPath: VDo(getCwd(), r) } };
+    if (r) return { ...e, attachment: { ...t, displayPath: relative(getCwd(), r) } };
   }
   return e;
 }
@@ -30942,7 +30267,7 @@ function vNn(e, t, r, o) {
           !Ke.message.id &&
           Ke.requestId === void 0
         )
-          return ((_ += 1), { ...Ke, message: { ...Ke.message, id: zDo() } });
+          return ((_ += 1), { ...Ke, message: { ...Ke.message, id: randomUUID() } });
         return Ke;
       });
     if (_ > 0)
@@ -31434,7 +30759,7 @@ async function cNo(e, t) {
   let r = createTranscriptSource(createBackendHandle(t));
   for (let o of await listGitWorktrees(he()))
     for (let d of await findProjectDirs(o, r)) {
-      let p = await getLastSessionLog(e, qDo(d, `${e}.jsonl`), t);
+      let p = await getLastSessionLog(e, join(d, `${e}.jsonl`), t);
       if (p) return (logEvent("tengu_resume_worktree_fallback", {}), p);
     }
   return null;
@@ -31454,8 +30779,6 @@ function wNn(e) {
 function ENn(e) {
   return e.apiError === "dlp_request_denied" ? "dlp_denied" : "refusal";
 }
-import { resolve as Ict } from "path";
-import { realpath as vBo } from "fs/promises";
 function takeLaptopDirSyncSession(e) {
   return rootLaptopDirSyncRegistry().take(e);
 }
@@ -31465,89 +30788,19 @@ function isDirSyncFastForwardEnabled() {
 function isDirSyncStreamingEnabled() {
   return !po(a.CLAUDE_CODE_DIR_SYNC_STREAM);
 }
-import { lstat as fFn, open as t$o, realpath as pFn } from "fs/promises";
-import {
-  isAbsolute as n$o,
-  join as mFn,
-  relative as r$o,
-  sep as o$o,
-} from "path";
-import {
-  lstat as Wx,
-  mkdir as VNn,
-  mkdtemp as LNo,
-  open as Clt,
-  readdir as $ce,
-  realpath as Rq,
-  rm as xlt,
-  stat as FNo,
-  symlink as $No,
-  writeFile as Elt,
-} from "fs/promises";
-import {
-  lstatSync as QNn,
-  readdirSync as JNn,
-  readlinkSync as ZNn,
-  realpathSync as eLn,
-} from "fs";
-import { homedir as tLn, tmpdir as BNo, userInfo as UNo } from "os";
-import {
-  basename as SNe,
-  delimiter as vq,
-  dirname as Qk,
-  isAbsolute as pI,
-  join as Pu,
-  parse as HNo,
-  sep as Cq,
-} from "path";
-import { statSync as PNo } from "fs";
-import { basename as INo, join as pNe } from "path";
-import { constants as Mce } from "fs";
-import {
-  access as yNo,
-  lstat as _lt,
-  open as _No,
-  readlink as bNo,
-  realpath as SNo,
-  stat as kNo,
-} from "fs/promises";
-import { homedir as $Nn } from "os";
-import {
-  dirname as wNo,
-  isAbsolute as HOe,
-  join as lO,
-  parse as ENo,
-  relative as TNo,
-  resolve as FOe,
-  sep as NR,
-} from "path";
-import { constants as FR } from "fs";
-import {
-  link as YLo,
-  lstat as ILn,
-  mkdir as Mlt,
-  open as ANe,
-  readdir as XLo,
-  realpath as L7,
-  rename as QLo,
-  unlink as Ilt,
-  writeFile as JLo,
-} from "fs/promises";
-import { posix as ZLo } from "path";
-import { posix as mI } from "path";
 var ME = ".ccr-seed",
   SEED_UNSUPPORTED_HTTP_STATUS = 501,
-  SEED_MANIFEST_PATH = mI.join(ME, "manifest.json"),
-  ZVa = mI.join(ME, "ready.json"),
-  SEED_LAPTOP_JOURNAL_PATH = mI.join(ME, "laptop.json"),
-  SEED_WORKER_JOURNAL_PATH = mI.join(ME, "worker.json"),
-  SEED_HOME_PACK_PATH = mI.join(ME, "home", "pack.json"),
-  SEED_HOME_READY_PATH = mI.join(ME, "home", "ready.json"),
-  SEED_LAPTOP_BUNDLE_PATH = mI.join(ME, "objects", "laptop.bundle"),
-  SEED_WORKER_BUNDLE_PATH = mI.join(ME, "objects", "worker.bundle"),
+  SEED_MANIFEST_PATH = posix.join(ME, "manifest.json"),
+  ZVa = posix.join(ME, "ready.json"),
+  SEED_LAPTOP_JOURNAL_PATH = posix.join(ME, "laptop.json"),
+  SEED_WORKER_JOURNAL_PATH = posix.join(ME, "worker.json"),
+  SEED_HOME_PACK_PATH = posix.join(ME, "home", "pack.json"),
+  SEED_HOME_READY_PATH = posix.join(ME, "home", "ready.json"),
+  SEED_LAPTOP_BUNDLE_PATH = posix.join(ME, "objects", "laptop.bundle"),
+  SEED_WORKER_BUNDLE_PATH = posix.join(ME, "objects", "worker.bundle"),
   MAX_LANE_FILE_BYTES = 20971520,
   MAX_DIRECT_BUNDLE_BYTES = 503316480,
-  vLn = mI.join(ME, "overlay.bundle"),
+  vLn = posix.join(ME, "overlay.bundle"),
   MAX_SEED_ROWS = 256,
   SEED_RESERVED_ROWS = 4,
   ULo = 2,
@@ -31563,7 +30816,7 @@ function stripWorkingPrefix(e) {
   return o === "" ? null : o;
 }
 function getSeedFilePath(e) {
-  return mI.join(ME, "files", e);
+  return posix.join(ME, "files", e);
 }
 function WLo(e) {
   return isSafeRelativePath(e) && !e.includes("\\") && !e.includes("\x00") && isWellFormed(e);
@@ -31571,7 +30824,7 @@ function WLo(e) {
 function checkSeedPath(e) {
   if (!WLo(e) || ANY_CONTROL_CHAR_REGEX.test(e) || /%2f|%5c/i.test(e))
     return "unsupported_characters";
-  let t = mI.join(CLn, getSeedFilePath(e));
+  let t = posix.join(CLn, getSeedFilePath(e));
   return Buffer.byteLength(t, "utf8") > TNe ? "too_long" : null;
 }
 var rowStagedBus = rE(() => vNe().rowStaged),
@@ -31699,7 +30952,7 @@ var {
     normalize: eFo,
     relative: F7,
     sep: RNe,
-  } = ZLo,
+  } = posix,
   SYNCED_FILE_ROOT = "/mnt/user-data/working",
   WORKING_FILESTORE_PREFIX = "/working",
   MAX_WORKING_FILE_BYTES = 26214400,
@@ -31975,8 +31228,8 @@ async function getSyncedFile(e) {
   }
 }
 async function Llt(e, t, r) {
-  let o = await L7(e),
-    d = await L7(CNe(t)),
+  let o = await realpath(e),
+    d = await realpath(CNe(t)),
     p = F7(o, d);
   if (escapesSyncRoot(p)) {
     let E = Error("dest parent escaped working sync dir");
@@ -31992,7 +31245,7 @@ async function Llt(e, t, r) {
     throw ((E.code = "WORKING_DEST_REFUSED"), E);
   }
   try {
-    if ((await ILn(t)).isSymbolicLink()) {
+    if ((await lstat(t)).isSymbolicLink()) {
       let C = Error("dest is a symlink");
       throw ((C.code = "WORKING_DEST_SYMLINK"), C);
     }
@@ -32002,14 +31255,14 @@ async function Llt(e, t, r) {
 }
 var SYNCED_FILE_WRITE_MODE = 384;
 async function writeUnderSyncDir(e, t, r, o = "replace", d) {
-  await Mlt(e).catch((C) => {
+  await mkdir(e).catch((C) => {
     if (A(C) !== "EEXIST") throw C;
   });
-  let p = await L7(e),
+  let p = await realpath(e),
     _ = CNe(t);
   for (;;)
     try {
-      let C = await L7(_),
+      let C = await realpath(_),
         I = F7(p, C);
       if (escapesSyncRoot(I)) {
         let D = Error("dest ancestor escaped working sync dir");
@@ -32030,7 +31283,7 @@ async function writeUnderSyncDir(e, t, r, o = "replace", d) {
       if (I === _) break;
       _ = I;
     }
-  (await Mlt(CNe(t), { recursive: !0 }), await Llt(e, t, d));
+  (await mkdir(CNe(t), { recursive: !0 }), await Llt(e, t, d));
   let E = `${t}.${process.hrtime.bigint().toString(36)}.tmp`;
   try {
     await assertFileDoesNotExist(E);
@@ -32038,15 +31291,15 @@ async function writeUnderSyncDir(e, t, r, o = "replace", d) {
     throw (PLn(C), C);
   }
   try {
-    await JLo(E, r, { mode: SYNCED_FILE_WRITE_MODE, flag: "wx" });
+    await writeFile(E, r, { mode: SYNCED_FILE_WRITE_MODE, flag: "wx" });
   } catch (C) {
-    throw (PLn(C), await Ilt(E).catch(() => {}), C);
+    throw (PLn(C), await unlink(E).catch(() => {}), C);
   }
   try {
-    if (o === "create_only") (await YLo(E, t), await Ilt(E));
-    else await QLo(E, t);
+    if (o === "create_only") (await link(E, t), await unlink(E));
+    else await rename(E, t);
   } catch (C) {
-    throw (await Ilt(E).catch(() => {}), C);
+    throw (await unlink(E).catch(() => {}), C);
   }
 }
 function PLn(e) {
@@ -32089,7 +31342,7 @@ async function stageSyncedFile(e, t, r) {
       }
       let E = null;
       try {
-        let U = await ANe(d, FR.O_RDONLY | FR.O_NOFOLLOW | FR.O_NONBLOCK);
+        let U = await open(d, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let V = await U.stat();
           if (V.isFile()) {
@@ -32159,7 +31412,7 @@ async function stageSyncedFile(e, t, r) {
       }
       let F = null;
       try {
-        let U = await ANe(d, FR.O_RDONLY | FR.O_NOFOLLOW | FR.O_NONBLOCK);
+        let U = await open(d, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let V = await U.stat();
           if (V.isFile()) {
@@ -32232,14 +31485,14 @@ async function pFo(e, t) {
   let d = l1(e, t),
     p;
   try {
-    p = await L7(d);
+    p = await realpath(d);
   } catch (V) {
     if (W(V)) return !0;
     throw V;
   }
   let _;
   try {
-    _ = await L7(e);
+    _ = await realpath(e);
   } catch {
     return !1;
   }
@@ -32248,7 +31501,7 @@ async function pFo(e, t) {
     return (logFeatureSad("ccr_synced_file_push", "symlink_escape"), !0);
   let C;
   try {
-    let V = await ANe(d, FR.O_RDONLY | FR.O_NOFOLLOW | FR.O_NONBLOCK);
+    let V = await open(d, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
     try {
       let re = await V.stat();
       if (!re.isFile()) return !0;
@@ -32347,7 +31600,7 @@ async function startSyncedFileSyncer(e) {
   t.armLateStart(null);
   for (let de = 1; ; de++)
     try {
-      await Mlt(e);
+      await mkdir(e);
       break;
     } catch (_e) {
       let Se = A(_e);
@@ -32396,7 +31649,7 @@ async function startSyncedFileSyncer(e) {
         let He = _e.shift(),
           je;
         try {
-          je = await XLo(l1(e, He), { withFileTypes: !0 });
+          je = await readdir(l1(e, He), { withFileTypes: !0 });
         } catch (Ke) {
           (writeDiagnosticsEvent("warn", "working_scan_readdir_failed", {
             code: A(Ke) ?? "unknown",
@@ -32419,7 +31672,7 @@ async function startSyncedFileSyncer(e) {
           if (!Ke.isFile()) continue;
           let vt;
           try {
-            vt = (await ILn(l1(e, ct))).mtimeMs;
+            vt = (await lstat(l1(e, ct))).mtimeMs;
           } catch {
             continue;
           }
@@ -32533,7 +31786,7 @@ async function writeLaneRowFromWorker(e, t, r, o) {
         C = !1;
       try {
         await Llt(e, _);
-        let I = await ANe(_, FR.O_RDONLY | FR.O_NOFOLLOW | FR.O_NONBLOCK);
+        let I = await open(_, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let D = await I.stat();
           if (D.isFile() && D.size <= MAX_WORKING_FILE_BYTES && E !== void 0) {
@@ -32573,7 +31826,6 @@ async function writeLaneRowFromWorker(e, t, r, o) {
     return { ok: !0, etag: p.content_sha256 };
   });
 }
-import { isAbsolute as mFo } from "path";
 function toCaseFoldKey(e) {
   return e.normalize("NFC").toLowerCase().normalize("NFC");
 }
@@ -32615,13 +31867,6 @@ function waitForAbort(e) {
     e.addEventListener("abort", () => t(), { once: !0 });
   });
 }
-import { realpath as Ult, stat as BFo } from "fs/promises";
-import {
-  dirname as nFn,
-  isAbsolute as lFn,
-  join as UFo,
-  sep as Blt,
-} from "path";
 function getSeedInventoryVersion(e) {
   return e.overlay !== void 0 ||
     (e.removed?.length ?? 0) > 0 ||
@@ -32656,7 +31901,7 @@ function partitionSeedPaths(e, t, r = () => null, o = () => !1) {
 }
 async function resolveRealPath(e) {
   try {
-    return await pFn(e);
+    return await realpath(e);
   } catch {
     return null;
   }
@@ -32679,7 +31924,7 @@ function getFileSkipReason(e) {
 }
 async function d$o(e, t) {
   try {
-    let r = await fFn(mFn(e, t)),
+    let r = await lstat(join(e, t)),
       o = getFileSkipReason(r);
     if (o !== null) return { kind: "skip", skipped: { path: t, reason: o } };
     return { kind: "candidate", candidate: { path: t, size: r.size } };
@@ -32688,7 +31933,7 @@ async function d$o(e, t) {
   }
 }
 function f$o(e) {
-  return e === "" || e === ".." || e.startsWith(`..${o$o}`) || n$o(e);
+  return e === "" || e === ".." || e.startsWith(`..${sep}`) || isAbsolute(e);
 }
 function isUnderDependencyDir(e) {
   return e
@@ -32715,13 +31960,13 @@ async function readSeedFile(e, t, r, o = null) {
     if (o !== null && o.backend !== "by_name") return await m$o(o, r);
     if (o?.rootOnly && r.includes("/"))
       return { kind: "skip", skipped: { path: r, reason: "unreadable" } };
-    let d = mFn(e, r),
-      p = await fFn(d, { bigint: !0 }),
+    let d = join(e, r),
+      p = await lstat(d, { bigint: !0 }),
       _ = getFileSkipReason(p);
     if (_ !== null) return { kind: "skip", skipped: { path: r, reason: _ } };
-    if (f$o(r$o(t, await pFn(d))))
+    if (f$o(relative(t, await realpath(d))))
       return { kind: "skip", skipped: { path: r, reason: "outside_root" } };
-    let E = await t$o(d, getSafeReadOpenFlags());
+    let E = await open(d, getSafeReadOpenFlags());
     try {
       let C = await E.stat({ bigint: !0 });
       if (C.dev !== p.dev || C.ino !== p.ino)
@@ -33148,23 +32393,13 @@ function jlt(e) {
 function $7(e, t) {
   logEvent("tengu_home_seed_first_send_wait", { held_ms: e, release: fromEnum(t) });
 }
-import { realpathSync as x$o } from "fs";
-import { lstat as A$o } from "fs/promises";
-import { homedir as yFn } from "os";
-import {
-  isAbsolute as Wlt,
-  parse as _Fn,
-  relative as bFn,
-  resolve as Uce,
-  sep as SFn,
-} from "path";
 async function getCurrentRemoteFileMode() {
   if (!(await isViolinWoodEnabled()) || INe(he())) return "unspecified";
   return Hce(getCurrentProjectConfig().remoteFileMode) ?? "unspecified";
 }
 async function getDirectoryRemoteFileMode(e, { flagKnownOn: t = !1 } = {}) {
   if ((!t && !(await isViolinWoodEnabled())) || INe(e)) return "unspecified";
-  let r = toForwardSlashPath(zn(Uce(e)));
+  let r = toForwardSlashPath(zn(resolve(e)));
   return Hce(getGlobalConfig().projects?.[r]?.remoteFileMode) ?? "unspecified";
 }
 function getDirSyncPromptRoot({
@@ -33184,7 +32419,7 @@ function getDirSyncPromptRoot({
   let _ = findCanonicalGitRoot(he()),
     E =
       _ === null && t
-        ? wFn(Uce(he()), qlt({ folder: Uce(he()), home: r, configHome: o }))
+        ? wFn(resolve(he()), qlt({ folder: resolve(he()), home: r, configHome: o }))
         : null;
   if (E?.kind === "refused") return (p(fromEnum(E.reason)), null);
   let C = _ ?? (E?.kind === "folder" ? E.path : null);
@@ -33334,9 +32569,6 @@ async function anyPromiseSettled(...e) {
     t
   );
 }
-import { posix as NFn } from "path";
-import { createHash as Xlt, randomUUID as M$o } from "crypto";
-import { Readable as xFn } from "stream";
 var MAX_DIRECT_SYNC_BYTES = MAX_DIRECT_BUNDLE_BYTES,
   O$o =
     /^\/\.synced\/incoming\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
@@ -33458,14 +32690,14 @@ function DFn(e) {
   return Buffer.from(e.replaceAll("-", ""), "hex");
 }
 function Ylt(e, t) {
-  return Xlt("sha256")
+  return createHash("sha256")
     .update(DFn(e))
     .update(Buffer.of(1))
     .update(t)
     .digest("hex");
 }
 function z$o(e) {
-  return Xlt("sha256").update(DFn(e)).update(Buffer.of(0));
+  return createHash("sha256").update(DFn(e)).update(Buffer.of(0));
 }
 async function uploadObjectDirect({
   client: e,
@@ -33643,7 +32875,7 @@ async function q$o(e, t, r, o) {
       stalled: E.fired() && !isSignalAborted(r),
     });
   try {
-    let N = xFn.from(
+    let N = Readable.from(
         K$o(d, t, (U) => {
           if (((I = U), U === t.length)) E.relax(computeTransferStallMs(t.length, o));
           else E.touch();
@@ -33703,7 +32935,7 @@ async function q$o(e, t, r, o) {
   }
 }
 function V$o(e) {
-  let t = "ccr-sync-object-" + M$o(),
+  let t = "ccr-sync-object-" + randomUUID(),
     r = Buffer.from(
       "--" +
         t +
@@ -33802,7 +33034,7 @@ function Y$o(e) {
   }
 }
 function X$o(e) {
-  return { content: null, received: 0, plain: Xlt("sha256"), inline: z$o(e) };
+  return { content: null, received: 0, plain: createHash("sha256"), inline: z$o(e) };
 }
 async function Q$o(e, t, r, o, d) {
   let { plain: p, inline: _ } = d;
@@ -33906,7 +33138,7 @@ function vFn(e) {
   throw Error("unreadable response body");
 }
 function CFn(e) {
-  if (e instanceof xFn) e.destroy();
+  if (e instanceof Readable) e.destroy();
 }
 function LFn(e) {
   let t = rBo / nBo;
@@ -33931,9 +33163,9 @@ function FFn(e) {
   );
 }
 function cBo(e) {
-  if (e !== NFn.normalize(e) || e.includes("\\") || e.includes("\x00"))
+  if (e !== posix.normalize(e) || e.includes("\\") || e.includes("\x00"))
     return !1;
-  return !NFn.isAbsolute(e) && (e === ME || e.startsWith(`${ME}/`));
+  return !posix.isAbsolute(e) && (e === ME || e.startsWith(`${ME}/`));
 }
 function zce(e) {
   if (cBo(e)) return !1;
@@ -34350,7 +33582,6 @@ function UFn(e, t) {
   let r = tBo * 2 ** e * (0.5 + Math.random() / 2);
   return sleep(r, t);
 }
-import { join as ONe, relative as yBo, sep as _Bo } from "path";
 function isWindowsLikePlatform() {
   let e = getCurrentPlatform();
   return e === "windows" || e === "wsl";
@@ -34365,7 +33596,6 @@ function hasWindowsReservedPathComponent(e) {
         t.includes(":") || t.endsWith(".") || t.endsWith(" ") || fBo.test(t),
     );
 }
-import { join as mBo } from "path";
 function takePendingDirSyncSeed() {
   return act().take();
 }
@@ -34441,16 +33671,6 @@ var MAX_HELD_BASES = 2;
 function describeBundleFailure(e) {
   return e.kind === "too_large" ? Hq.repository_too_large : fct[e.why];
 }
-import { lstat as dUo, realpath as fUo } from "fs/promises";
-import { dirname as g$n, join as pUo } from "path";
-import {
-  lstat as eBn,
-  open as THo,
-  stat as W$n,
-  unlink as kct,
-} from "fs/promises";
-import { join as tBn, resolve as vHo } from "path";
-import { randomUUID as mUo } from "crypto";
 import * as W7 from "fs/promises";
 import * as BC from "path";
 function gct(e) {
@@ -34557,13 +33777,6 @@ function parseFileIdSpecs(e) {
   }
   return t;
 }
-import { mkdtemp as TUo, open as vUo, rm as CUo } from "fs/promises";
-import { join as k$n } from "path";
-import { randomBytes as MUo } from "crypto";
-import { createReadStream as OUo, createWriteStream as DUo } from "fs";
-import { unlink as NUo } from "fs/promises";
-import { Transform as LUo } from "stream";
-import { pipeline as FUo } from "stream/promises";
 function isNonZeroObjectId(e) {
   return !xUo.test(e);
 }
@@ -34601,28 +33814,6 @@ function parseLsTreeOutput(e) {
 function parseLsTreeFiles(e) {
   return parseLsTreeOutput(e).files;
 }
-import { createHash as Sct, randomBytes as KUo } from "crypto";
-import {
-  lstat as qce,
-  mkdtemp as YUo,
-  open as L$n,
-  readdir as XUo,
-  readFile as QUo,
-  readlink as JUo,
-  rm as F$n,
-  unlink as ZUo,
-} from "fs/promises";
-import { join as cO } from "path";
-import { createHash as A$n } from "crypto";
-import { constants as yct } from "fs";
-import {
-  lstat as $Ne,
-  mkdir as HUo,
-  open as R$n,
-  readlink as jUo,
-  unlink as _ct,
-} from "fs/promises";
-import { dirname as WUo, join as tQ } from "path";
 async function getSkipWorktreePaths(e, t, r) {
   return (await j$n(e, t, r))?.skipWorktree ?? null;
 }
@@ -35294,9 +34485,9 @@ async function interruptRemoteSession(e, t = 1e4) {
         [
           {
             type: "control_request",
-            request_id: aF(),
+            request_id: randomUUID(),
             request: CANCEL_QUEUED_INTERRUPT_REQUEST,
-            uuid: aF(),
+            uuid: randomUUID(),
           },
         ],
         isCcrV2SendEventsEnabled(),
@@ -35335,51 +34526,9 @@ function subscribeRemoteSessionToPR(e, t, r) {
     getTrustedDeviceToken: getTrustedDeviceToken,
   });
 }
-import { homedir as j1o } from "os";
-import {
-  copyFile as rUn,
-  lstat as Yw,
-  mkdir as $ct,
-  readdir as Qce,
-  readFile as eFe,
-  readlink as Dct,
-  realpath as Sp,
-  rm as oUn,
-  stat as Wq,
-  symlink as W1o,
-  unlink as Yce,
-  utimes as G1o,
-} from "fs/promises";
-import {
-  basename as d1,
-  dirname as UR,
-  isAbsolute as Jce,
-  join as Gg,
-  relative as QBn,
-  resolve as Jb,
-  sep as lF,
-  win32 as tFe,
-} from "path";
 function vBn() {
   setRepoDetectionGuards({ trustProbe: checkHasTrustDialogAccepted });
 }
-import {
-  closeSync as x1o,
-  fstatSync as A1o,
-  lstatSync as iQ,
-  openSync as R1o,
-  readSync as P1o,
-  readdirSync as OBn,
-  realpathSync as I1o,
-} from "fs";
-import { lstat as aQ, open as M1o, readdir as DBn } from "fs/promises";
-import {
-  basename as O1o,
-  dirname as YNe,
-  isAbsolute as NBn,
-  join as Kw,
-  resolve as LBn,
-} from "path";
 function evaluateWorktreePinSync(e, t, r = [], o) {
   let d = xBn(e),
     p = N1o(e),
@@ -35393,18 +34542,18 @@ function evaluateWorktreePinSync(e, t, r = [], o) {
   return GNe(e, d, p, C, _, E, N, I, D);
 }
 function xBn(e) {
-  return { entry: BBn(Kw(e, ".git")), ids: F1o(e) };
+  return { entry: BBn(join(e, ".git")), ids: F1o(e) };
 }
 function BBn(e) {
   try {
-    return (iQ(e), "present");
+    return (lstatSync(e), "present");
   } catch (t) {
     return dO(t);
   }
 }
 function N1o(e) {
   try {
-    return iQ(e).isSymbolicLink();
+    return lstatSync(e).isSymbolicLink();
   } catch {
     return !1;
   }
@@ -35478,7 +34627,7 @@ function B1o(e) {
 }
 function H1o(e) {
   try {
-    return (iQ(e), !1);
+    return (lstatSync(e), !1);
   } catch (t) {
     let r = A(t);
     return r === "ENOENT" || r === "ENOTDIR";
@@ -35486,15 +34635,15 @@ function H1o(e) {
 }
 function RBn(e) {
   try {
-    if (!iQ(Kw(e, "gitdir")).isFile()) return null;
-    let t = R1o(Kw(e, "gitdir"), "r");
+    if (!lstatSync(join(e, "gitdir")).isFile()) return null;
+    let t = openSync(join(e, "gitdir"), "r");
     try {
-      if (A1o(t).size > sQ) return null;
+      if (fstatSync(t).size > sQ) return null;
       let r = Buffer.alloc(sQ),
-        o = P1o(t, r, 0, sQ, 0);
+        o = readSync(t, r, 0, sQ, 0);
       return r.toString("utf-8", 0, o).trim();
     } finally {
-      x1o(t);
+      closeSync(t);
     }
   } catch {
     return null;
@@ -35505,7 +34654,7 @@ function IBn(e) {
     r = [],
     o;
   try {
-    o = OBn(e);
+    o = readdirSync(e);
   } catch (d) {
     if (dO(d) !== "absent") r.push("(git dir unreadable)");
     o = [];
@@ -35513,12 +34662,12 @@ function IBn(e) {
   if (o.length > KNe) (r.push("(over-cap top-level entries)"), (o = []));
   for (let d of o)
     try {
-      if (iQ(Kw(e, d)).isSymbolicLink()) t.push(d);
+      if (lstatSync(join(e, d)).isSymbolicLink()) t.push(d);
     } catch (p) {
       if (dO(p) !== "absent") r.push(d);
     }
   return (
-    KBn(Kw(e, "refs"), "refs", 0, t, r, { entries: KNe }),
+    KBn(join(e, "refs"), "refs", 0, t, r, { entries: KNe }),
     { symlinks: t, unexaminable: r }
   );
 }
@@ -35533,7 +34682,7 @@ function KBn(e, t, r, o, d, p) {
   }
   let _;
   try {
-    _ = OBn(e);
+    _ = readdirSync(e);
   } catch (E) {
     if (dO(E) !== "absent") d.push(`${t} (unreadable)`);
     return;
@@ -35543,10 +34692,10 @@ function KBn(e, t, r, o, d, p) {
       d.push(`${t} (too many entries to examine)`);
       return;
     }
-    let C = Kw(e, E),
+    let C = join(e, E),
       I = `${t}/${E}`;
     try {
-      let D = iQ(C);
+      let D = lstatSync(C);
       if (D.isSymbolicLink()) o.push(I);
       else if (D.isDirectory()) KBn(C, I, r + 1, o, d, p);
     } catch (D) {
@@ -35558,7 +34707,7 @@ function restoreWorktreeSession(e) {
   setCurrentWorktreeSession(e);
 }
 function generateTmuxSessionName(e, t) {
-  return `${d1(e)}_${t}`.replace(/[/.]/g, "_");
+  return `${basename(e)}_${t}`.replace(/[/.]/g, "_");
 }
 function resolveWorktreeCleanupRoot(e, t) {
   let r = findCanonicalGitRoot(e);
@@ -35566,7 +34715,7 @@ function resolveWorktreeCleanupRoot(e, t) {
   return (t ? findCanonicalGitRoot(t) : null) ?? r;
 }
 function isAgentWorktreeOf(e, t) {
-  return Jb(UR(e)) === Jb(cF(t));
+  return resolve(dirname(e)) === resolve(cF(t));
 }
 function parsePRReference(e) {
   let t = e.match(
@@ -35618,13 +34767,13 @@ async function listRepoWorktrees(e) {
   if (r === null) return null;
   let o;
   try {
-    o = zn(await Sp(t));
+    o = zn(await realpath(t));
   } catch {
     return null;
   }
   let d = {};
   for (let p of r.slice(1)) {
-    let _ = d1(p.worktreePath),
+    let _ = basename(p.worktreePath),
       E = p.worktreeBranch ?? "";
     if (
       p.prunable === !0 ||
@@ -35642,13 +34791,13 @@ async function listRepoWorktrees(e) {
       continue;
     let C;
     try {
-      C = zn(await Sp(p.worktreePath));
+      C = zn(await realpath(p.worktreePath));
     } catch {
       continue;
     }
     if (
       Xce(C) ||
-      !OE(C).startsWith(OE(`${o}${lF}`)) ||
+      !OE(C).startsWith(OE(`${o}${sep}`)) ||
       Nct.test(C.slice(o.length))
     )
       continue;
@@ -35715,7 +34864,7 @@ async function ojo(e, t) {
     !E ||
     d.some((N) => N.startsWith("-")) ||
     (E !== "HEAD" && !E.startsWith("refs/heads/")) ||
-    Jb(e, p) === Jb(e, _)
+    resolve(e, p) === resolve(e, _)
   )
     return null;
   let [C, I] = await Promise.all([
@@ -35765,7 +34914,7 @@ async function cleanupStaleAgentWorktrees(e) {
   let r = cF(t),
     o;
   try {
-    o = await Qce(r);
+    o = await readdir(r);
   } catch {
     return (await pQ(t), 0);
   }
@@ -35775,11 +34924,11 @@ async function cleanupStaleAgentWorktrees(e) {
     E = 0;
   for (let C of o) {
     if (!yUn(C)) continue;
-    let I = Gg(r, C);
+    let I = join(r, C);
     if (p === I) continue;
     let D;
     try {
-      D = (await Wq(I)).mtimeMs;
+      D = (await stat(I)).mtimeMs;
     } catch {
       continue;
     }
@@ -35818,7 +34967,7 @@ async function reapJobWorktreeIfSafe(e) {
   if (!_ || !isAgentWorktreeOf(t, _)) return !1;
   let E;
   try {
-    E = (await Wq(t)).mtimeMs;
+    E = (await stat(t)).mtimeMs;
   } catch {
     return !1;
   }
@@ -35831,13 +34980,13 @@ async function reapJobWorktreeIfSafe(e) {
       ),
       !1
     );
-  let C = await Sp(t).catch(() => t),
+  let C = await realpath(t).catch(() => t),
     I = getCurrentWorktreeSession()?.worktreePath;
-  if (I && C === (await Sp(I).catch(() => I))) return !1;
+  if (I && C === (await realpath(I).catch(() => I))) return !1;
   let D = await listRegisteredWorktrees(_).catch(() => null),
     N;
   for (let F of D ?? [])
-    if (C === (await Sp(F.worktreePath).catch(() => F.worktreePath))) {
+    if (C === (await realpath(F.worktreePath).catch(() => F.worktreePath))) {
       N = F;
       break;
     }
@@ -35868,14 +35017,14 @@ async function sjo(e) {
       ),
     ),
     r = getCurrentWorktreeSession()?.worktreePath,
-    o = r === void 0 ? void 0 : normalizePathForComparison(Jb(await Sp(r).catch(() => r))),
+    o = r === void 0 ? void 0 : normalizePathForComparison(resolve(await realpath(r).catch(() => r))),
     d = 0;
   for (let p of t) {
-    if (o !== void 0 && normalizePathForComparison(Jb(p.worktreePath)) === o) continue;
+    if (o !== void 0 && normalizePathForComparison(resolve(p.worktreePath)) === o) continue;
     if (Xce(p.worktreePath)) continue;
     if (!tUn(p.lockReason)) continue;
     if (
-      !(await Yw(Gg(p.worktreePath, ".git")).then(
+      !(await lstat(join(p.worktreePath, ".git")).then(
         () => !0,
         () => !1,
       ))
@@ -35889,12 +35038,12 @@ async function sjo(e) {
     }
     let E;
     try {
-      E = await Sp(p.worktreePath);
+      E = await realpath(p.worktreePath);
     } catch {
       continue;
     }
     if (Xce(E)) continue;
-    if (o !== void 0 && normalizePathForComparison(Jb(E)) === o) continue;
+    if (o !== void 0 && normalizePathForComparison(resolve(E)) === o) continue;
     let I = (
       await listRegisteredWorktrees(e).catch(
         (D) => (
@@ -35988,7 +35137,7 @@ async function execIntoTmuxWorktree(e, t, r) {
     } catch (Ke) {
       return { handled: !1, error: `Error: ${l(Ke)}` };
     }
-    ((C = d1(findCanonicalGitRoot(getCwd()) ?? getCwd())), console.log(`Using worktree via hook: ${E}`));
+    ((C = basename(findCanonicalGitRoot(getCwd()) ?? getCwd())), console.log(`Using worktree via hook: ${E}`));
   } else {
     let Ke = getCwd(),
       ct = findCanonicalGitRoot(Ke);
@@ -35997,7 +35146,7 @@ async function execIntoTmuxWorktree(e, t, r) {
         handled: !1,
         error: "Error: --worktree requires a git repository",
       };
-    ((C = d1(ct)), (E = lUn(ct, d)));
+    ((C = basename(ct)), (E = lUn(ct, d)));
     try {
       let vt = await Hct(
         ct,
@@ -36161,8 +35310,6 @@ ${Ke("\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u
   return { handled: !0 };
 }
 var getSpawnProvenance = (e) => getPluginRegistryState().spawnProvenance.get(e);
-import { randomUUID as DHn } from "crypto";
-import { basename as l2o, join as c2o, resolve as NHn, sep as EQ } from "path";
 var ujo = 50,
   djo = 1e4,
   fjo = 3000;
@@ -36349,7 +35496,6 @@ async function* yjo(e, t, r, o) {
     mjo(),
   );
 }
-import { randomUUID as Zce } from "crypto";
 function EUn(e) {
   return e
     .replace(
@@ -36443,7 +35589,7 @@ function deserializeTranscriptMessages(e) {
                 content: t.local_command_source,
                 level: "info",
                 timestamp: t.timestamp ?? new Date().toISOString(),
-                uuid: t.uuid ?? Zce(),
+                uuid: t.uuid ?? randomUUID(),
                 isMeta: !1,
               },
             ];
@@ -36453,8 +35599,8 @@ function deserializeTranscriptMessages(e) {
         return [
           {
             type: "assistant",
-            message: t.message.id ? t.message : { ...t.message, id: Zce() },
-            uuid: t.uuid ?? Zce(),
+            message: t.message.id ? t.message : { ...t.message, id: randomUUID() },
+            uuid: t.uuid ?? randomUUID(),
             requestId: void 0,
             timestamp: t.timestamp ?? new Date().toISOString(),
             ...(t.resumed_from_incomplete_thinking === !0 && {
@@ -36476,7 +35622,7 @@ function deserializeTranscriptMessages(e) {
           {
             type: "user",
             message: t.message,
-            uuid: t.uuid ?? Zce(),
+            uuid: t.uuid ?? randomUUID(),
             timestamp: t.timestamp ?? new Date().toISOString(),
             isMeta: t.isSynthetic,
             ...(t.is_virtual === !0 && { isVirtual: !0 }),
@@ -36906,7 +36052,7 @@ function createRateLimitEventMessage(e, t, r = {}) {
   return {
     type: "rate_limit_event",
     rate_limit_info: o,
-    uuid: Zce(),
+    uuid: randomUUID(),
     session_id: t,
   };
 }
@@ -37421,7 +36567,6 @@ function deletePrefixedSetEntries(e, t) {
   for (let r of e) if (r.startsWith(`${t}:`)) e.delete(r);
 }
 import { promises } from "fs";
-import { dirname as Ijo, join as Mjo } from "path";
 var Ojo = [
     "model",
     "system",
@@ -37454,7 +36599,7 @@ function Bjo(e, t, r) {
     return;
   }
   promises
-    .mkdir(Ijo(e), { recursive: !0 })
+    .mkdir(dirname(e), { recursive: !0 })
     .then(() =>
       promises.appendFile(
         e,
@@ -37469,9 +36614,6 @@ function resolveAutoCompactWindowSetting(e, t) {
   if (e === void 0) return t;
   return e === "auto" ? void 0 : e;
 }
-import { createHash as yWo, randomBytes as _Wo } from "crypto";
-import { dirname as bWo, join as sue, parse as SWo } from "path";
-import { join as Hjo } from "path";
 async function IUn(e, t, r, o, d) {
   try {
     logForDebugging(`Loading MCP servers from MCPB: ${t}`);
@@ -37631,7 +36773,7 @@ async function discoverPluginMcpServers(e, t = [], r, o, { readOnlyListing: d = 
 }
 async function Xct(e, t, r, { confine: o = !1 } = {}) {
   let d = getFsSurface(),
-    p = Hjo(e.path, t);
+    p = join(e.path, t);
   if (o) {
     let C = await resolvePluginRelativePath(e, t);
     if (C === null) return null;
@@ -38210,7 +37352,6 @@ function buildClaudeAiMcpAuthUrl(e) {
     d = encodeURIComponent(a.CLAUDE_CODE_ENTRYPOINT || "cli");
   return `${r}/api/organizations/${t}/mcp/start-auth/${o}?product_surface=${d}`;
 }
-import { join as uWo } from "path";
 function isRetryableMcpFailure(e) {
   if (e.type !== "failed") return !1;
   let t = e.config.type ?? "";
@@ -38309,7 +37450,7 @@ function formatMcpScopeLocation(e) {
     case "user":
       return getGlobalClaudeFile();
     case "project":
-      return uWo(getCwd(), ".mcp.json");
+      return join(getCwd(), ".mcp.json");
     case "local":
       return `${getGlobalClaudeFile()} [project: ${getCwd()}]`;
     case "dynamic":
@@ -38470,11 +37611,11 @@ function getMcpServerBaseUrl(e) {
   return DE(normalizeMcpServerUrl(e));
 }
 async function zUn(e) {
-  let t = sue(getCwd(), ".mcp.json");
+  let t = join(getCwd(), ".mcp.json");
   await writeFileAndFlush(t, jsonStringify(e, null, 2), {
     encoding: "utf-8",
     mode: 420,
-    stagingDir: sue(getCwd(), ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
+    stagingDir: join(getCwd(), ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
   });
 }
 function unwrapCcrProxyUrl(e) {
@@ -38859,7 +38000,7 @@ function userScopeMcpServerExists(e) {
   return getGlobalConfig().mcpServers?.[e] !== void 0;
 }
 async function readRawMcpJsonServersFromCwd() {
-  let e = sue(getCwd(), ".mcp.json"),
+  let e = join(getCwd(), ".mcp.json"),
     t;
   try {
     let o = await readBoundedFileWithFs(getFsSurface(), e, oue);
@@ -39076,7 +38217,7 @@ function verifyBridgeCarrierPrompt(e) {
     (a.unset("CLAUDE_CODE_BRIDGE_PROMPT_SHA256"),
     t === void 0
       ? !bridgeCarrierState.isBridgeCarrierChild
-      : yWo("sha256").update(e).digest("hex") === t.toLowerCase())
+      : createHash("sha256").update(e).digest("hex") === t.toLowerCase())
   )
     return e.toString("utf8");
   logForDebugging(
@@ -39270,7 +38411,6 @@ function isSlugSweptOrYielded(e) {
   let { wakes: t } = getArtifactState();
   return t.orphanedSweptSlugs.has(e) || t.yieldedSlugs.has(e);
 }
-import { randomUUID as qWo } from "crypto";
 function formatAutoReplyPostedSummary(e, t = 1) {
   return t === 1
     ? `Auto-replied to comment thread on Artifact: ${e}`
@@ -39339,7 +38479,7 @@ function XWo(e) {
 (${r.droppedDetails} earlier ${r.droppedDetails === 1 ? "notice" : "notices"} in this burst omitted \u2014 newest ${uHn} kept.)`
         : "";
   r.queue.enqueuePendingNotification({
-    uuid: qWo(),
+    uuid: randomUUID(),
     value: buildTaskNotification({
       taskType:
         r.family === "artifact-changed"
@@ -39784,14 +38924,11 @@ function isPermissionPromptsDisabled(e) {
 function resolvePermissionPromptTarget({ permissionPromptTool: e, sdkUrl: t }) {
   return t ? "stdio" : e;
 }
-import { relative as M2o, resolve as GHn } from "path";
-import { stat as x2o } from "fs/promises";
-import { dirname as A2o, resolve as WHn } from "path";
 async function validateWorkingDirectory(e, t) {
   if (!e) return { resultType: "emptyPath" };
   let r;
   try {
-    r = WHn(resolvePath(e));
+    r = resolve(resolvePath(e));
   } catch (p) {
     let _ = q0(p, "Path contains null bytes");
     if (!_) logError(Error("validateDirectoryForWorkspace: expandPath threw"));
@@ -39800,7 +38937,7 @@ async function validateWorkingDirectory(e, t) {
   if (Xo(e) || (await hasUnverifiableAncestryWithAnchor(r, wz())))
     return { resultType: "networkPath", directoryPath: e, absolutePath: r };
   try {
-    if (!(await x2o(r)).isDirectory())
+    if (!(await stat(r)).isDirectory())
       return { resultType: "notADirectory", directoryPath: e, absolutePath: r };
   } catch (p) {
     if (!Rt(p))
@@ -39821,7 +38958,7 @@ async function validateWorkingDirectory(e, t) {
         directoryPath: e,
         absolutePath: r,
         workingDir: p,
-        isExactMatch: WHn(p) === r,
+        isExactMatch: resolve(p) === r,
         isOriginalCwd: p === d,
       };
   return { resultType: "success", absolutePath: r };
@@ -39841,7 +38978,7 @@ function formatDirectoryValidationMessage(e) {
     case "networkPath":
       return `${chalk.bold(e.directoryPath)} is a network path, which cannot be added as a working directory. On Windows, map the share to a drive letter and pass it at launch with --add-dir (a drive letter added mid-session does not yet carry remote-read trust).`;
     case "notADirectory": {
-      let t = A2o(e.absolutePath);
+      let t = dirname(e.absolutePath);
       return `${chalk.bold(e.directoryPath)} is not a directory. Did you mean to add the parent directory ${chalk.bold(t)}?`;
     }
     case "alreadyInWorkingDirectory": {
@@ -40035,7 +39172,7 @@ function parseBaseToolsFromCLI(e) {
 }
 function L2o({ processPwd: e, originalCwd: t }) {
   let { resolvedPath: r, isSymlink: o } = resolvePathInfo(getFsSurface(), e);
-  return o ? r === GHn(t) : !1;
+  return o ? r === resolve(t) : !1;
 }
 function initialPermissionModeFromCLI({
   permissionModeCli: e,
@@ -40308,7 +39445,7 @@ async function initializeToolPermissionContext({
   }
   let { repoOnly: Dn } = getDeclaredAndRepoOnlyDirectories((un) => {
       try {
-        return [GHn(resolvePath(un))];
+        return [resolve(resolvePath(un))];
       } catch {
         return [];
       }
@@ -40797,7 +39934,6 @@ ${r}`
 function resolveProactivityLevel(e) {
   return p1n(e.proactivityLevel);
 }
-import { randomUUID as gGo } from "crypto";
 function getSubagentStats(e) {
   if (!e) return;
   try {
@@ -41074,9 +40210,6 @@ function pruneStaleSkillEntries(e) {
   for (let d of o.keys()) if (!e.has(d)) o.delete(d);
   return t;
 }
-import { randomUUID as WGo } from "crypto";
-import { lstat as Eut, mkdir as VGo, readFile as X1n } from "fs/promises";
-import { basename as KGo, dirname as Q1n, join as YGo, sep as Y1n } from "path";
 var qGo = new Set(["EBUSY", "EMFILE", "ENFILE", "EAGAIN", "EINTR"]);
 function isTransientFileSystemErrorCode(e) {
   if (e === void 0) return !1;
@@ -41130,9 +40263,9 @@ async function readForkedSkillScopingFromSidecar(e, t) {
   if (t && r) return rjn(t, r);
   let o;
   try {
-    let d = await Eut(e.scoping);
+    let d = await lstat(e.scoping);
     if (!d.isFile() || d.size > Tut) return { status: "malformed" };
-    o = await X1n(e.scoping, "utf-8");
+    o = await readFile(e.scoping, "utf-8");
   } catch (d) {
     if (W(d)) return await JGo(e.provenanceMarker);
     return { status: "malformed", ...afe(isTransientFileSystemErrorCode(A(d))) };
@@ -41168,7 +40301,7 @@ async function rjn(e, t) {
 }
 async function JGo(e) {
   try {
-    return (await Eut(e), { status: "absent-but-marked" });
+    return (await lstat(e), { status: "absent-but-marked" });
   } catch (t) {
     return W(t)
       ? { status: "absent" }
@@ -41185,9 +40318,9 @@ async function readForkedSkillProvenanceName(e, t) {
   } else {
     let { provenanceMarker: _ } = vut(e);
     try {
-      let E = await Eut(_);
+      let E = await lstat(_);
       if (!E.isFile() || E.size > Tut) return;
-      r = await X1n(_, "utf-8");
+      r = await readFile(_, "utf-8");
     } catch {
       return;
     }
@@ -41201,15 +40334,6 @@ async function readForkedSkillProvenanceName(e, t) {
   let p = V1n().safeParse(d);
   return p.success ? p.data.skillName : void 0;
 }
-import {
-  mkdir as uzo,
-  readFile as ajn,
-  stat as ljn,
-  unlink as dzo,
-  utimes as fzo,
-  writeFile as cjn,
-} from "fs/promises";
-import { join as pzo } from "path";
 function fjn(e, t) {
   let [r = "", o = ""] = e.split(`
 `),
@@ -41229,7 +40353,7 @@ async function readAutoMemLastConsolidatedAt(e = getAutoMemPath(), t) {
     return fjn(d, p).lastConsolidatedAt;
   }
   try {
-    return (await ljn(Rut(e))).mtimeMs;
+    return (await stat(Rut(e))).mtimeMs;
   } catch {
     return 0;
   }
@@ -41244,7 +40368,7 @@ async function mzo(e, t) {
     d,
     p;
   try {
-    let [E, C] = await Promise.all([ljn(o), ajn(o, "utf8")]);
+    let [E, C] = await Promise.all([stat(o), readFile(o, "utf8")]);
     d = E.mtimeMs;
     let I = parseInt(C.trim(), 10);
     p = Number.isFinite(I) ? I : void 0;
@@ -41258,10 +40382,10 @@ async function mzo(e, t) {
         null
       );
   }
-  (await uzo(e, { recursive: !0 }), await cjn(o, String(process.pid)));
+  (await mkdir(e, { recursive: !0 }), await writeFile(o, String(process.pid)));
   let _;
   try {
-    _ = await ajn(o, "utf8");
+    _ = await readFile(o, "utf8");
   } catch {
     return null;
   }
@@ -41352,9 +40476,7 @@ function stopAllObserverTasks(e) {
     if (isObserverAgent(t) && t.status === "running")
       getTaskTypeHandler(t.type)?.kill(t.id, e.taskRegistry, e.setAppState, "system");
 }
-import { inspect as bqo } from "util";
 import * as pWn from "vm";
-import { randomUUID as Mjn } from "crypto";
 function reportGitSessionContext(e) {
   if (e.branchDropped && e.warnMessage) {
     if (
@@ -41608,12 +40730,7 @@ function clearSessionTeleported(e) {
   getSessionRuntimeState().teleportedSessionIds.delete(sessionIdBody(e));
 }
 import * as rWn from "vm";
-import { types as Nzo } from "util";
-import { isAbsolute as Qzo, resolve as Jzo } from "path";
-import { types as Xjn } from "util";
 import * as Jq from "vm";
-import { randomUUID as Bzo } from "crypto";
-import { randomUUID as Yzo } from "crypto";
 function createIsolationLatch(e = null, t) {
   if (e) t?.(e);
   return { current: e, onLatch: t };
@@ -41714,24 +40831,6 @@ var IWn = "TestingPermission",
       return { type: "tool_result", content: String(e), tool_use_id: t };
     },
   });
-import { join as yVo } from "path";
-import { randomBytes as rVo } from "crypto";
-import { constants as Vut } from "fs";
-import {
-  lstat as nV,
-  mkdir as oVo,
-  open as Qut,
-  readdir as $Wn,
-  unlink as sVo,
-} from "fs/promises";
-import {
-  dirname as Jut,
-  join as O$e,
-  relative as iVo,
-  resolve as Kut,
-  sep as Yut,
-} from "path";
-import { createHash as FVo } from "crypto";
 function o2n(e) {
   let t = r2n().safeParse(e);
   return t.success &&
@@ -41748,8 +40847,6 @@ function u2n(e) {
     ? { filePath: dF(t.data.path), content: t.data.content ?? "" }
     : null;
 }
-import { randomUUID as uKo } from "crypto";
-import { basename as fdt, dirname as pdt, join as vfe } from "path";
 function toFeedbackFailureMode(e) {
   return e !== void 0 && FEEDBACK_FAILURE_MODES.includes(e) ? e : void 0;
 }
@@ -41821,8 +40918,6 @@ function setSessionDraftCount(e) {
   );
 }
 import * as Sdt from "path";
-import { pathToFileURL as NKo } from "url";
-import { relative as OKo } from "path";
 function GKo() {
   let e = getKeybindingChord("app:toggleTranscript", "Global", "ctrl+o");
   return chalk.dim(`(${e} to expand)`);
@@ -41936,17 +41031,13 @@ function isAccountTokenUnresolved(e) {
   return e.kind !== "resolved";
 }
 var MCP_DISCOVERY_ERAS = ["legacy", "modern"];
-import { resolve as oGn, sep as y4o } from "path";
-import { realpath as E4o } from "fs/promises";
-import { realpathSync as w4o } from "fs";
 var initialRealCwd = (() => {
   try {
-    return w4o(process.cwd());
+    return realpathSync(process.cwd());
   } catch {
     return process.cwd();
   }
 })();
-import { homedir as T4o } from "os";
 function enableWizardOperatorTools() {
   zDn(!0);
 }
@@ -42083,7 +41174,6 @@ function stripTrailingInvokeSuffixFromArgs(e, t, r, o, d, p) {
 function setLocalWriteListener(e) {
   M6n.of(B()).listener = e;
 }
-import { createHash as Y5o } from "crypto";
 var clearCacheSafeParams = () => x1.set(void 0);
 function r3n(e) {
   let { toolUseContext: t, querySource: r } = e;
@@ -42098,21 +41188,6 @@ function r3n(e) {
 function installCacheSafeParamsCapture(e) {
   if (x1.once()) e(r3n);
 }
-import { resolve as T6o } from "path";
-import { readFile as H6o } from "fs/promises";
-import { mkdir as F6o } from "fs/promises";
-import { dirname as $6o } from "path";
-import { join as N6o } from "path";
-import { createHash as O6o } from "crypto";
-import { utimes as B6o } from "fs/promises";
-import { basename as X8o, dirname as Q8o, join as J8o } from "path";
-import { extname as t9o } from "path";
-import { relative as l9o } from "path";
-import { basename as f9o } from "path";
-import { basename as m9o } from "path";
-import { basename as h9o } from "path";
-import { basename as P9o } from "path";
-import { randomUUID as K9o } from "crypto";
 async function pluginHooksUnknownCause(e) {
   let t = getPluginRegistryState();
   if (
@@ -42538,7 +41613,6 @@ async function partialCompactConversation(e, t, r, o, d) {
       }));
   }
 }
-import { randomUUID as D9n } from "crypto";
 function resolveAllowedModel(e) {
   if (e == null) return null;
   if (isUnservedFamilySpelling(e)) return null;
@@ -42609,7 +41683,7 @@ async function runPreModelSwitchHooks(e, t, r = {}) {
     for await (let N of executeHooks({
       session: e,
       hookInput: p,
-      toolUseID: D9n(),
+      toolUseID: randomUUID(),
       matchQuery: isRecognizedModelKey(_) ? _ : void 0,
       sessionHooks: sessionHooksRegistryStore.of(e).registry,
       signal: r.signal,
@@ -42684,7 +41758,7 @@ function runPostModelSwitchHooks(e, t, r = {}) {
       for await (let N of executeHooks({
         session: e,
         hookInput: C,
-        toolUseID: D9n(),
+        toolUseID: randomUUID(),
         matchQuery: isRecognizedModelKey(hookModelMatchKey(t.toModel)) ? hookModelMatchKey(t.toModel) : void 0,
         sessionHooks: sessionHooksRegistryStore.of(e).registry,
         timeoutMs: r.timeoutMs ?? N3e,
@@ -42870,7 +41944,6 @@ function stopNarration(e) {
     (t.lastLine = null),
     t.sink?.(void 0));
 }
-import { randomUUID as l7o } from "crypto";
 function registerTurnContextObserver(e) {
   KQn.of(B().host).register(e);
 }
@@ -43009,8 +42082,6 @@ function logQueryProfileReport() {
   }
   logForDebugging(e);
 }
-import { readdir as Q7o } from "fs/promises";
-import { basename as MJn, dirname as dpt, join as J7o } from "path";
 function cJn() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_onyx_plover", null);
 }
@@ -43024,7 +42095,6 @@ function isAutoDreamEnabled() {
   if (e !== void 0) return e;
   return cJn()?.enabled === !0;
 }
-import { basename as U7o, sep as mJn } from "path";
 function pJn(e, t, r, o) {
   let d = isBashToolAvailable(),
     p = d ? BASH_TOOL_NAME : POWERSHELL_TOOL_NAME,
@@ -43233,7 +42303,7 @@ function createAutoMemCanUseTool(e) {
         let E = checkReadPermissionForTool(t, r, p);
         if (E.behavior === "deny") {
           let C = t.getPath?.(r),
-            I = expandPathAliases(e).map((N) => (N.endsWith(mJn) ? N : N + mJn));
+            I = expandPathAliases(e).map((N) => (N.endsWith(sep) ? N : N + sep));
           if (
             !(
               C !== void 0 &&
@@ -43371,7 +42441,7 @@ function initExtractMemories(e) {
       )
         logForDebugging(`[extractMemories] memories saved: ${He.join(", ")}`);
       else logForDebugging("[extractMemories] no memories saved this run");
-      let vt = He.filter((Wt) => U7o(Wt) !== MEMORY_INDEX_FILE_NAME),
+      let vt = He.filter((Wt) => basename(Wt) !== MEMORY_INDEX_FILE_NAME),
         ut = countMatching(vt, isWithinTeamMemoryDir);
       if (
         (logEvent("tengu_extract_memories_extraction", {
@@ -43819,7 +42889,7 @@ async function sQo(e, t) {
     }
   }
   try {
-    let r = await Q7o(J7o(e, "logs"), { recursive: !0 });
+    let r = await readdir(join(e, "logs"), { recursive: !0 });
     return countMatching(r, (o) => o.endsWith(".md"));
   } catch (r) {
     if (!Rt(r)) logForDebugging(`[autoDream] countDailyLogs: ${l(r)}`);
@@ -43827,8 +42897,8 @@ async function sQo(e, t) {
   }
 }
 function iQo(e) {
-  let t = MJn(dpt(e));
-  if (MJn(e) !== "memory" || dpt(dpt(e)) !== Pl() || !isValidPathSegment(t)) return;
+  let t = basename(dirname(e));
+  if (basename(e) !== "memory" || dirname(dirname(e)) !== Pl() || !isValidPathSegment(t)) return;
   return { namespace: "memory", projectKey: t, relPath: ["logs"] };
 }
 function isPromptSuggestionVisible(e) {
@@ -43899,15 +42969,6 @@ function logPromptSuggestionOutcome(e, t, r, o) {
     ...!1,
   });
 }
-import { homedir as BQo } from "os";
-import { stat as EJo } from "fs/promises";
-import {
-  basename as BZn,
-  dirname as _Jo,
-  resolve as Tpt,
-  sep as bJo,
-} from "path";
-import { basename as YQo, resolve as CZn } from "path";
 var KQo = 0.8,
   TZn = 0.7;
 function RUe({
@@ -43954,9 +43015,9 @@ function PUe(e) {
 }
 async function xZn(e) {
   if (!isAutoMemoryEnabled()) return null;
-  let t = CZn(e).normalize("NFC"),
-    r = t === CZn(getAutoMemEntrypoint()).normalize("NFC"),
-    o = !r && YQo(t) === MEMORY_INDEX_FILE_NAME && isAgentMemoryPath(t);
+  let t = resolve(e).normalize("NFC"),
+    r = t === resolve(getAutoMemEntrypoint()).normalize("NFC"),
+    o = !r && basename(t) === MEMORY_INDEX_FILE_NAME && isAgentMemoryPath(t);
   if (!r && !o) return null;
   let d = process.env.CLAUDE_COWORK_MEMORY_INDEX_CONTENT,
     p = r ? XQo() : void 0,
@@ -43993,18 +43054,11 @@ async function xZn(e) {
 function XQo() {
   return tryGetMemoryStoresFromEnv()?.find((e) => e.scope === "user" && e.promptIndex === MEMORY_INDEX_FILE_NAME);
 }
-import { readdir as QQo } from "fs/promises";
-import {
-  basename as JQo,
-  dirname as ZQo,
-  relative as eJo,
-  sep as tJo,
-} from "path";
 var nJo = /^(.*\D)-(\d{1,2})\.md$/,
   AZn = 300;
 async function RZn(e, t) {
   if (!isMemoryRecallEnabled() || !isRecallCorpusFile(e)) return null;
-  let r = eJo(getAutoMemPath(), e).replaceAll(tJo, "/"),
+  let r = relative(getAutoMemPath(), e).replaceAll(sep, "/"),
     o;
   try {
     o = await readFileWithLineRange(e, 0, MAX_MEMORY_FILE_READ_LINES, MAX_MEMORY_FILE_BYTES, void 0, { truncateOnByteLimit: !0 });
@@ -44027,14 +43081,14 @@ async function RZn(e, t) {
         : `The memory file at ${r} is ${d.sizeDesc}, approaching the ${d.capDesc} recall limit. Keep it to one fact under ${d.targetDesc}: summarize rather than append, and split distinct facts into their own files.`,
     };
   }
-  let p = JQo(e),
+  let p = basename(e),
     [, _, E] = p.match(nJo) ?? [];
   if (_ !== void 0 && E !== void 0 && Number(E) >= 2) {
     let I = String(Number(E) - 1),
       D = [`${_}.md`, `${_}-${I}.md`, `${_}-${I.padStart(E.length, "0")}.md`],
       N = [];
     try {
-      N = await QQo(ZQo(e));
+      N = await readdir(dirname(e));
     } catch {}
     if (D.some((F) => N.includes(F)))
       return {
@@ -44059,16 +43113,15 @@ async function RZn(e, t) {
     };
   return null;
 }
-import { join as oJo, resolve as PZn } from "path";
 async function IZn(e, t) {
   let r = tryGetMemoryStoresFromEnv();
   if (r === null) return null;
-  let o = normalizePathForCompare(PZn(e)),
+  let o = normalizePathForCompare(resolve(e)),
     d = r.find(
       (I) =>
         I.scope === "team" &&
         I.promptIndex !== void 0 &&
-        normalizePathForCompare(PZn(oJo(t, I.mount, ...I.promptIndex.split("/")))) === o,
+        normalizePathForCompare(resolve(join(t, I.mount, ...I.promptIndex.split("/")))) === o,
     );
   if (d === void 0 || d.promptIndex === void 0) return null;
   let p;
@@ -44095,13 +43148,6 @@ async function IZn(e, t) {
     ...(C && { lineCount: _.lineCount, lineCap: MAX_MEMORY_INDEX_LINES }),
   });
 }
-import { mkdir as iJo, rm as aJo, stat as DZn } from "fs/promises";
-import {
-  isAbsolute as NZn,
-  join as Ept,
-  relative as UJ,
-  sep as Rpe,
-} from "path";
 function OZn(e) {
   wpt.of(B().host).enqueue(e);
 }
@@ -44128,7 +43174,7 @@ function hJo(e, t) {
 }
 function OUe(e) {
   let t = getAutoMemPath(),
-    r = UJ(t, e).replaceAll(Rpe, "/");
+    r = relative(t, e).replaceAll(sep, "/");
   if (r === "" || r.startsWith("..")) return null;
   let o = r.split("/");
   if (JI(o[0]) === "team") return "team";
@@ -44141,7 +43187,7 @@ function DUe() {
 var LZn =
   /^(no_oauth|server_unavailable|http_\d{3}|team_memory_(too_many_entries|entry_too_large|group_acl_denied|group_acl_unconfigured|feature_unavailable)|mount_dir_(foreign_partition|unmanifested_nonempty|unreadable)|malformed_response|list_page_limit|store_full|content_too_large|content_secret|invalid_path|store_archived|auth|forbidden|timeout|network|conflict|parse|aborted|unknown)$/;
 function yJo(e, t = {}) {
-  let r = UJ(getAutoMemPath(), e).replaceAll(Rpe, "/");
+  let r = relative(getAutoMemPath(), e).replaceAll(sep, "/");
   if (r === "" || r.startsWith("..")) return !1;
   let o = r.split("/");
   if (JI(o[0]) === "team") {
@@ -44261,12 +43307,12 @@ class FZn {
         (d) => (e.scope === "team" || d.scope === "user") && qst(d) && !m0e(d),
       )
       .sort((d, p) => +(p.scope === e.scope) - +(d.scope === e.scope))
-      .map((d) => escapePromptText(Ept(d.mountDir, d.writeDir ?? "")));
+      .map((d) => escapePromptText(join(d.mountDir, d.writeDir ?? "")));
     if (t.length === 0) return null;
     let r = escapePromptText(e.mountDir),
       o = t.some((d) => {
-        let p = UJ(d, r);
-        return p === "" || (!p.startsWith("..") && !NZn(p));
+        let p = relative(d, r);
+        return p === "" || (!p.startsWith("..") && !isAbsolute(p));
       });
     return `save it under ${t.join(" or ")} instead${o ? ` (anywhere except under ${r})` : ""}`;
   }
@@ -44364,7 +43410,7 @@ class FZn {
   async startFileWatcher(e) {
     if (this.started) return;
     ((this.started = !0),
-      await iJo(e, { recursive: !0 }).catch((o) =>
+      await mkdir(e, { recursive: !0 }).catch((o) =>
         logForDebugging(`memory-watcher: mkdir ${e} failed: ${l(o)}`, { level: "warn" }),
       ));
     let t = (o) => {
@@ -44500,9 +43546,9 @@ class FZn {
     let t = getAutoMemPath(),
       r = getMemoryProjectKey(t);
     if (r === void 0) return;
-    let o = UJ(t, e);
-    if (o === "" || o.startsWith("..") || NZn(o)) return;
-    let d = o.split(Rpe);
+    let o = relative(t, e);
+    if (o === "" || o.startsWith("..") || isAbsolute(o)) return;
+    let d = o.split(sep);
     return d.every(isValidPathSegment) ? STORAGE_KEYS.memory(r, d) : void 0;
   }
   teamMountScope(e) {
@@ -44520,7 +43566,7 @@ class FZn {
       let o = await t.statMeta(r);
       return o.ok || o.error.code !== "NotFound";
     }
-    return DZn(e).then(
+    return stat(e).then(
       () => !0,
       (o) => A(o) !== "ENOENT",
     );
@@ -44532,7 +43578,7 @@ class FZn {
       let o = await t.statMeta(r);
       if (o.ok) return o.value.size;
     }
-    return (await DZn(e)).size;
+    return (await stat(e)).size;
   }
   async reapMountDir(e) {
     let t = this.storageV5,
@@ -44554,7 +43600,7 @@ class FZn {
           { level: "warn" },
         );
     }
-    await aJo(e.mountDir, { recursive: !0, force: !0 });
+    await rm(e.mountDir, { recursive: !0, force: !0 });
   }
   async getPersistenceWarning(e) {
     let t = OUe(e);
@@ -44562,12 +43608,12 @@ class FZn {
     if (!this.scopeActive(t)) {
       if (t === "team") {
         let E = getTeamMemoryDir(),
-          C = UJ(E, e);
+          C = relative(E, e);
         if (C !== "" && !C.startsWith("..")) {
-          let I = C.split(Rpe).slice(0, -1),
+          let I = C.split(sep).slice(0, -1),
             D = E;
           for (let N of I)
-            if (((D = Ept(D, N)), await this.manifestPresent(Ept(D, MEMORY_SYNC_STATE_FILE_NAME))))
+            if (((D = join(D, N)), await this.manifestPresent(join(D, MEMORY_SYNC_STATE_FILE_NAME))))
               return a.CLAUDE_MEMORY_STORES
                 ? "This file's directory belongs to a synced project memory store that is not mounted in this session. The write was saved locally but is NOT being synced, and a future session with the store mounted will overwrite it with server content. Move the content out of this directory to keep it."
                 : "This file's directory is a leftover local copy of a project memory store that is no longer synced. The write was saved locally only: it is not shared with the project and memory recall does not read this directory. Move the content into your memory directory to keep using it.";
@@ -44579,9 +43625,9 @@ class FZn {
       o = null,
       d = null;
     for (let E of r?.stores ?? []) {
-      let C = UJ(E.mountDir, e);
+      let C = relative(E.mountDir, e);
       if (C !== "" && !C.startsWith("..")) {
-        ((o = E), (d = "/" + C.split(Rpe).join("/")));
+        ((o = E), (d = "/" + C.split(sep).join("/")));
         break;
       }
     }
@@ -44930,14 +43976,14 @@ function SJo(e, t) {
   }
 }
 function HZn(e) {
-  return e.endsWith(".md") && cW(e) && BZn(e) !== MEMORY_INDEX_FILE_NAME;
+  return e.endsWith(".md") && cW(e) && basename(e) !== MEMORY_INDEX_FILE_NAME;
 }
 function kJo(e) {
   if (HZn(e)) return "topic";
-  let t = normalizePathForCompare(Tpt(Hhe()));
-  if (!normalizePathForCompare(Tpt(e)).startsWith(t + bJo)) return "other";
+  let t = normalizePathForCompare(resolve(Hhe()));
+  if (!normalizePathForCompare(resolve(e)).startsWith(t + sep)) return "other";
   if (!cW(e)) return "reserved";
-  return BZn(e) === MEMORY_INDEX_FILE_NAME && normalizePathForCompare(Tpt(_Jo(e))) === t ? "entrypoint" : "other";
+  return basename(e) === MEMORY_INDEX_FILE_NAME && normalizePathForCompare(resolve(dirname(e))) === t ? "entrypoint" : "other";
 }
 async function $Zn(e, t, r, o) {
   if (!HZn(r)) return;
@@ -45108,8 +44154,6 @@ function registerSessionFileAccessHooks() {
     ],
   });
 }
-import { isDeepStrictEqual as FJo } from "util";
-import { randomUUID as $Jo } from "crypto";
 var BJo = /\b(?:use|spend)\s+(\d+(?:\.\d+)?)\s*(k|m|b)\s*tokens?\b/i,
   Xdc = new RegExp(BJo.source, "gi");
 function isNegativePrompt(e) {
@@ -45215,7 +44259,7 @@ var uZo = {
   },
   $er = "0123456789abcdefghijklmnopqrstuvwxyz";
 function dZo() {
-  let e = cZo(8),
+  let e = randomBytes(8),
     t = "s";
   for (let r = 0; r < 8; r++) t += $er[e[r] % $er.length];
   return t;
@@ -45505,7 +44549,6 @@ function matchCodeIndexingToolByServerName(e) {
   for (let { pattern: t, tool: r } of AZo) if (t.test(e)) return r;
   return;
 }
-import { realpath as NZo } from "fs/promises";
 async function buildPrPrepSuggestion(e, t, r) {
   if (!r) return "";
   let o = les(e);
@@ -45554,7 +44597,6 @@ function formatCommitMessageGuidance() {
    - One idea per sentence; one fact per bullet; define project- or team-specific shorthand the first time it appears
    - Short beats complete: after one pass the reader should know what the change does and what to check`;
 }
-import { randomBytes as ges } from "crypto";
 function applySedEdit(e, t) {
   let r = "";
   if (t.flags.includes("g")) r += "g";
@@ -45580,7 +44622,7 @@ function applySedEdit(e, t) {
       .replace(Ses, "|")
       .replace(kes, "(")
       .replace(wes, ")");
-  let p = `___ESCAPED_AMPERSAND_${ges(8).toString("hex")}___`,
+  let p = `___ESCAPED_AMPERSAND_${randomBytes(8).toString("hex")}___`,
     _ = t.replacement
       .replace(/\\\//g, "/")
       .replace(/\\&/g, p)
@@ -45596,9 +44638,9 @@ function applySedEdit(e, t) {
 function getSettingsSourcePath(e, t) {
   switch (e) {
     case "policySettings":
-      return xh(getManagedSettingsDirPath(), ".claude", t);
+      return join(getManagedSettingsDirPath(), ".claude", t);
     case "userSettings":
-      return xh(getClaudeConfigDir(), t);
+      return join(getClaudeConfigDir(), t);
     case "projectSettings":
       return `.claude/${t}`;
     case "plugin":
@@ -45753,16 +44795,16 @@ async function sweepOrphanedPluginVersions(e) {
         if (
           N > -yts &&
           N < Gnr &&
-          !$nr(o.keys, toCaseFoldedPath(mK(t, C) + Fnr)) &&
-          !$nr(o.keys, toCaseFoldedPath($b(mK(t, C), { foldCase: !0 }) + Fnr))
+          !$nr(o.keys, toCaseFoldedPath(join(t, C) + sep)) &&
+          !$nr(o.keys, toCaseFoldedPath($b(join(t, C), { foldCase: !0 }) + sep))
         )
           continue;
       }
-      let D = mK(t, C);
+      let D = join(t, C);
       for (let N of await Vpt(D, e, t, d)) {
-        let F = mK(D, N);
+        let F = join(D, N);
         for (let U of await Vpt(F, e, t, d)) {
-          let V = mK(F, U);
+          let V = join(F, U);
           if (o.keys.has(toCaseFoldedPath(V)) || o.keys.has(toCaseFoldedPath($b(V, { foldCase: !0 }))))
             continue;
           let re = LINKING_STAGING_DIR_PATTERN.exec(U);
@@ -45778,7 +44820,7 @@ async function sweepOrphanedPluginVersions(e) {
   }
 }
 function Ypt(e) {
-  return mK(e, ORPHANED_AT_MARKER_FILENAME);
+  return join(e, ORPHANED_AT_MARKER_FILENAME);
 }
 async function bts(e, t) {
   if (await QN(e)) return;
@@ -45792,7 +44834,7 @@ async function bts(e, t) {
     return;
   }
   try {
-    await fts(r);
+    await unlink(r);
   } catch (d) {
     if (A(d) === "ENOENT") return;
     logForDebugging(`Failed to remove .orphaned_at: ${e}: ${d}`);
@@ -45822,7 +44864,7 @@ function znr(e, t) {
     d = new Set();
   for (let p of Object.values(e.plugins))
     for (let _ of p) {
-      let E = pts(he(), _.installPath);
+      let E = resolve(he(), _.installPath);
       if (!o.has(E)) (o.add(E), r.push(_.installPath));
       d.add(toCaseFoldedPath(E));
       let C = toWslCompanionPath(_.installPath, t);
@@ -45860,7 +44902,7 @@ async function wts(e, t, r) {
     d = E.value.mtimeMs;
   } else
     try {
-      let _ = await Kpt(o);
+      let _ = await lstat(o);
       if (!_.isFile()) {
         await markVersionOrphaned(e, r);
         return;
@@ -45894,9 +44936,9 @@ async function wts(e, t, r) {
 async function Unr(e) {
   let t;
   try {
-    if (!(await Kpt(e)).isDirectory()) return;
+    if (!(await lstat(e)).isDirectory()) return;
     if (getCurrentPlatform() === "windows" && (await Tae(e)).kind !== "directory") return;
-    t = await Wnr(e, { withFileTypes: !0 });
+    t = await readdir(e, { withFileTypes: !0 });
   } catch (r) {
     logForDebugging(`Failed to re-check dir before removal: ${e}: ${r}`);
     return;
@@ -45961,13 +45003,13 @@ async function Vpt(e, t, r, o) {
 }
 async function Ets(e) {
   try {
-    let t = await Wnr(e, { withFileTypes: !0 }),
+    let t = await readdir(e, { withFileTypes: !0 }),
       r = [];
     for (let o of t)
       try {
         if ((await tryGetDirentFileInfo(e, o))?.isDirectory) r.push(o.name);
       } catch (d) {
-        logForDebugging(`Orphan sweep: skipping ${mK(e, o.name)}: ${l(d)}`, {
+        logForDebugging(`Orphan sweep: skipping ${join(e, o.name)}: ${l(d)}`, {
           level: "warn",
         });
       }
@@ -45980,7 +45022,7 @@ async function Tts(e, t) {
   if (!(t === 1 || isProcessRunning(t))) return !1;
   let r;
   try {
-    r = (await Kpt(e)).mtimeMs;
+    r = (await lstat(e)).mtimeMs;
   } catch (d) {
     let p = A(d);
     return p !== "ENOENT" && p !== "ENOTDIR";
@@ -46118,22 +45160,13 @@ function vts(e, t) {
     ? ` (${r} \u2014 see Errors; ${o} more in the debug log)`
     : ` (${r} \u2014 see Errors)`;
 }
-import {
-  chmod as Cts,
-  mkdir as qnr,
-  readFile as xts,
-  rename as Xpt,
-  rm as Qpt,
-  writeFile as Vnr,
-} from "fs/promises";
-import { dirname as Knr, join as Jpt, resolve as Ynr, sep as Ats } from "path";
 var Xnr =
     "https://downloads.claude.ai/claude-code-releases/plugins/claude-plugins-official",
   Qnr = "marketplaces/claude-plugins-official/";
 async function fetchOfficialMarketplaceFromGcs(e, t, r) {
-  let o = Ynr(t),
-    d = Ynr(e);
-  if (d !== o && !d.startsWith(o + Ats))
+  let o = resolve(t),
+    d = resolve(e);
+  if (d !== o && !d.startsWith(o + sep))
     return (
       logForDebugging(
         `fetchOfficialMarketplaceFromGcs: refusing path outside cache dir: ${e}`,
@@ -46154,8 +45187,8 @@ async function fetchOfficialMarketplaceFromGcs(e, t, r) {
     });
     if (((E = String(D.data).trim()), !E))
       throw Error("latest pointer returned empty body");
-    let N = Jpt(e, GCS_SHA_FILENAME),
-      F = isHoverRestEnabled() && r !== void 0 ? toMarketplaceTreeScope(N, Knr(t)) : null;
+    let N = join(e, GCS_SHA_FILENAME),
+      F = isHoverRestEnabled() && r !== void 0 ? toMarketplaceTreeScope(N, dirname(t)) : null;
     if (
       (r !== void 0 && F !== null
         ? await r.readText([F]).then(
@@ -46165,7 +45198,7 @@ async function fetchOfficialMarketplaceFromGcs(e, t, r) {
             },
             () => null,
           )
-        : await xts(N, "utf8").then(
+        : await readFile(N, "utf8").then(
             (Me) => Me.trim(),
             () => null,
           )) === E
@@ -46180,34 +45213,34 @@ async function fetchOfficialMarketplaceFromGcs(e, t, r) {
     let ue = await extractMcpbArchive(re),
       de = A4(re),
       _e = `${e}.staging`;
-    (await Qpt(_e, { recursive: !0, force: !0 }),
-      await qnr(_e, { recursive: !0 }));
+    (await rm(_e, { recursive: !0, force: !0 }),
+      await mkdir(_e, { recursive: !0 }));
     for (let [Me, xe] of Object.entries(ue)) {
       if (!Me.startsWith(Qnr)) continue;
       let Oe = Me.slice(Qnr.length);
       if (!Oe || Oe.endsWith("/")) continue;
-      let Ne = Jpt(_e, Oe);
-      (await qnr(Knr(Ne), { recursive: !0 }), await Vnr(Ne, xe));
+      let Ne = join(_e, Oe);
+      (await mkdir(dirname(Ne), { recursive: !0 }), await writeFile(Ne, xe));
       let De = de[Me];
-      if (De && De & 73) await Cts(Ne, De & 511).catch(() => {});
+      if (De && De & 73) await chmod(Ne, De & 511).catch(() => {});
     }
-    await Vnr(Jpt(_e, GCS_SHA_FILENAME), E);
+    await writeFile(join(_e, GCS_SHA_FILENAME), E);
     let Se = `${e}.backup`;
-    await Qpt(Se, { recursive: !0, force: !0 }).catch(() => {});
+    await rm(Se, { recursive: !0, force: !0 }).catch(() => {});
     let ve = !1;
     try {
-      (await Xpt(e, Se), (ve = !0));
+      (await rename(e, Se), (ve = !0));
     } catch (Me) {
       if (A(Me) !== "ENOENT") throw Me;
     }
     try {
-      await Xpt(_e, e);
+      await rename(_e, e);
     } catch (Me) {
-      if (ve) await Xpt(Se, e).catch(() => {});
+      if (ve) await rename(Se, e).catch(() => {});
       throw Me;
     }
     return (
-      await Qpt(Se, { recursive: !0, force: !0 }).catch(() => {}),
+      await rm(Se, { recursive: !0, force: !0 }).catch(() => {}),
       (_ = "updated"),
       E
     );
@@ -46266,10 +45299,10 @@ function frr(e, t, r) {
   return o !== d && wh(d, o, { alreadyComparable: !0 }) ? "inside" : "outside";
 }
 async function prr(e, t, r, o, d) {
-  let p = ebt(e, t),
+  let p = relative(e, t),
     _ =
-      p !== "" && !p.startsWith("..") && !SK(p) ? p.split(/[\\/]/)[0] : void 0,
-    E = ebt($b(e), $b(t, { knownNotSuspect: !0 })).split(/[\\/]/)[0],
+      p !== "" && !p.startsWith("..") && !isAbsolute(p) ? p.split(/[\\/]/)[0] : void 0,
+    E = relative($b(e), $b(t, { knownNotSuspect: !0 })).split(/[\\/]/)[0],
     C = dedupe([_, E].filter((V) => V !== void 0 && V !== "" && V !== ".."));
   if (C.length === 0) return;
   let I = d ?? (await getKnownMarketplaces(o)),
@@ -46292,7 +45325,7 @@ function kK(e) {
   if (toComparableName(e) === ".git") return !1;
   return !(
     e === "" ||
-    e !== yK(e) ||
+    e !== basename(e) ||
     /[\\/]/.test(e) ||
     pl(e) ||
     (getCurrentPlatform() === "windows" &&
@@ -46337,7 +45370,7 @@ async function Dts(e, t, r, { knownAlready: o, ownEntry: d, selfKey: p } = {}) {
     `Clearing stale case-variant marketplace directory ${jsonStringify(_)} (unregistered) before publishing ${jsonStringify(t)}`,
     { level: "warn" },
   ),
-    await removeDirectoryRecursive(Zg(e, _)));
+    await removeDirectoryRecursive(join(e, _)));
 }
 async function bbt(e, t, r, { known: o, isSelf: d = () => !1 } = {}) {
   let p = await uHe(e, t);
@@ -46355,9 +45388,9 @@ function lHe(e, t, r) {
     let d = [o, `${o}.json`, `${o}.bak`],
       p = Object.hasOwn(e, o) ? e[o] : iHe(o, t);
     if (p !== void 0 && typeof p.installLocation === "string") {
-      let _ = ebt(r, PS(he(), p.installLocation)),
+      let _ = relative(r, resolve(he(), p.installLocation)),
         E =
-          _ !== "" && !_.startsWith("..") && !SK(_)
+          _ !== "" && !_.startsWith("..") && !isAbsolute(_)
             ? _.split(/[\\/]/)[0]
             : void 0;
       if (E !== void 0 && kK(E) && !d.includes(E)) d.push(E, `${E}.bak`);
@@ -46427,7 +45460,7 @@ async function Fts(e, t, r) {
 }
 async function uHe(e, t) {
   try {
-    return await crr(Zg(e, t), { bigint: !0 });
+    return await lstat(join(e, t), { bigint: !0 });
   } catch (r) {
     let o = A(r);
     if (o === "ENOENT" || o === "ENOTDIR") return;
@@ -46440,7 +45473,7 @@ async function dHe(e, t, r, o, d = (p) => [p]) {
     for (let _ of d(p)) {
       if (_ === t) continue;
       try {
-        let E = await crr(Zg(e, _), { bigint: !0 });
+        let E = await lstat(join(e, _), { bigint: !0 });
         if (
           r.ino !== 0n && E.ino !== 0n
             ? E.dev === r.dev && E.ino === r.ino
@@ -46464,7 +45497,7 @@ async function $ts(e, t, r) {
     return;
   }
   let o = getMarketplacesDir(),
-    d = Zg(o, e),
+    d = join(o, e),
     p = async (E) =>
       qJ(E, t, r) ??
       (await Lts(o, E, t, r)) ??
@@ -46478,7 +45511,7 @@ async function $ts(e, t, r) {
     return;
   }
   if ((await removeDirectoryRecursive(d), (await p(`${e}.bak`)) === void 0)) await removeDirectoryRecursive(`${d}.bak`);
-  if ((await p(`${e}.json`)) === void 0) await tryRemoveFileOrEmptyDirectory(Zg(o, `${e}.json`));
+  if ((await p(`${e}.json`)) === void 0) await tryRemoveFileOrEmptyDirectory(join(o, `${e}.json`));
 }
 function clearMarketplaceCaches() {
   let e = getPluginRegistryState();
@@ -46577,7 +45610,7 @@ async function Zts(e, t, r = new Map()) {
     return;
   }
   let C = getFsSurface(),
-    I = Zg(_, "..");
+    I = join(_, "..");
   (await C.mkdir(I), writeFileAtomicSync(_, jsonStringify(p.data, null, 2)));
 }
 var $rr = createKeyedSerialQueue();
@@ -46588,7 +45621,7 @@ registerWriteQueueDrain(ens);
 async function updateKnownMarketplaces(e, t) {
   let r = gme();
   return $rr.run(r, async () => {
-    await getFsSurface().mkdir(Zg(r, ".."));
+    await getFsSurface().mkdir(join(r, ".."));
     let d,
       p = !1;
     try {
@@ -46675,7 +45708,7 @@ async function syncSeedMarketplaces(e) {
   return !1;
 }
 async function tns(e) {
-  let t = Zg(e, "known_marketplaces.json");
+  let t = join(e, "known_marketplaces.json");
   try {
     let r = await getFsSurface().readFile(t, { encoding: "utf-8" }),
       o = getKnownMarketplacesSchema().safeParse(jsonParse(r));
@@ -46696,8 +45729,8 @@ async function tns(e) {
   }
 }
 async function nns(e, t, r) {
-  let o = Zg(e, "marketplaces", t),
-    d = Zg(e, "marketplaces", `${t}.json`);
+  let o = join(e, "marketplaces", t),
+    d = join(e, "marketplaces", `${t}.json`);
   for (let p of [o, d])
     try {
       return (
@@ -46784,7 +45817,7 @@ async function abt(e, t, r) {
 }
 async function trr(e, t, r, o, d) {
   if (o && o.length > 0) return;
-  let p = Zg(e, ".gitmodules");
+  let p = join(e, ".gitmodules");
   if (
     !(await abt(d, p, () =>
       getFsSurface()
@@ -47096,7 +46129,7 @@ async function _O(e, t, r, o, d, p, _) {
     )
       return;
     if (a.CLAUDE_CODE_PLUGIN_KEEP_MARKETPLACE_ON_FAILURE) {
-      let Se = Zg(t, ".claude-plugin", "marketplace.json");
+      let Se = join(t, ".claude-plugin", "marketplace.json");
       if (
         await abt(r, Se, () =>
           E.stat(Se).then(
@@ -47115,11 +46148,11 @@ async function _O(e, t, r, o, d, p, _) {
     logForDebugging(`git pull failed, will re-clone: ${_e.stderr}`, { level: "warn" });
   } else logForDebugging(`sparse-checkout reconcile requires re-clone: ${I.stderr}`);
   let D = `${t}.bak`,
-    N = `${yK(t)}.bak`,
-    { owner: F } = await bbt(rHe(t), N, r, { isSelf: (de) => de === yK(t) });
+    N = `${basename(t)}.bak`,
+    { owner: F } = await bbt(dirname(t), N, r, { isSelf: (de) => de === basename(t) });
   if (F !== void 0)
     throw new R(
-      `Cannot fetch marketplace ${jsonStringify(yK(t))}: the directory it would use as its backup (${D}) is the registered marketplace ${jsonStringify(F)}'s directory. Remove or rename that marketplace first (claude plugin marketplace remove).`,
+      `Cannot fetch marketplace ${jsonStringify(basename(t))}: the directory it would use as its backup (${D}) is the registered marketplace ${jsonStringify(F)}'s directory. Remove or rename that marketplace first (claude plugin marketplace remove).`,
       "marketplace backup path is another marketplace clone",
     );
   let U = !1;
@@ -47127,7 +46160,7 @@ async function _O(e, t, r, o, d, p, _) {
     await E.rename(D, t);
   } catch (de) {
     if (!W(de)) {
-      let _e = Zg(t, ".claude-plugin", "marketplace.json");
+      let _e = join(t, ".claude-plugin", "marketplace.json");
       if (
         !(await abt(r, _e, () =>
           E.stat(_e).then(
@@ -47273,7 +46306,7 @@ async function jrr(e, t, r, o) {
   let d = getFsSurface(),
     p = await Tbt(e, r, o);
   Jk(o, "Saving marketplace to cache");
-  let _ = Zg(t, "..");
+  let _ = join(t, "..");
   (await d.mkdir(_), writeFileAtomicSync(t, jsonStringify(p, null, 2)));
 }
 function dns(e) {
@@ -47283,9 +46316,9 @@ function dns(e) {
       : e.source === "npm"
         ? e.package.replace("@", "").replaceAll("/", "-")
         : e.source === "file"
-          ? yK(e.path).replace(".json", "")
+          ? basename(e.path).replace(".json", "")
           : e.source === "directory"
-            ? yK(e.path)
+            ? basename(e.path)
             : buildTempPluginDirName("git")
   ).replace(/[^a-zA-Z0-9\-_]/g, "-");
   return r === "" ? buildTempPluginDirName("unknown") : r;
@@ -47310,7 +46343,7 @@ async function fns(e, t, r, o, d, p, _, E, C) {
   await nbt(d, I.name, e, { known: E, selfKey: C });
   let N = getMarketplaceCacheScope(I.name, "catalog", getPluginsDir());
   if (N === null) return { declined: I };
-  let F = Zg(d, I.name);
+  let F = join(d, I.name);
   Jk(p, "Saving marketplace to cache");
   let U = () =>
       e.write(N, r, {
@@ -47378,7 +46411,7 @@ async function Abt(e, t, r, o, d, p) {
   try {
     switch (e.source) {
       case "url": {
-        if (((I = Zg(E, `${V}.json`)), isHoverRestEnabled() && r !== void 0)) {
+        if (((I = join(E, `${V}.json`)), isHoverRestEnabled() && r !== void 0)) {
           let xe = await Tbt(
               e.url,
               await resolveMarketplaceHeaders(e, {
@@ -47410,11 +46443,11 @@ async function Abt(e, t, r, o, d, p) {
       case "github": {
         let xe = `git@${GITHUB_HOST}:${e.repo}.git`,
           Oe = `https://github.com/${e.repo}.git`;
-        if (((I = Zg(E, V)), (N = !0), shouldUseHttpsForGitRemotes())) {
+        if (((I = join(E, V)), (N = !0), shouldUseHttpsForGitRemotes())) {
           (Jk(t, `Cloning via HTTPS: ${Oe}`),
             await Brr(I, Oe),
             await _O(Oe, I, r, e.ref, e.sparsePaths, t, { skipLfs: e.skipLfs }),
-            (D = Zg(I, e.path || ".claude-plugin/marketplace.json")));
+            (D = join(I, e.path || ".claude-plugin/marketplace.json")));
           break;
         }
         let Ne = null;
@@ -47480,36 +46513,36 @@ async function Abt(e, t, r, o, d, p) {
           }
         }
         if (Ne) throw Ne;
-        D = Zg(I, e.path || ".claude-plugin/marketplace.json");
+        D = join(I, e.path || ".claude-plugin/marketplace.json");
         break;
       }
       case "git": {
-        ((I = Zg(E, V)),
+        ((I = join(E, V)),
           (N = !0),
           await _O(e.url, I, r, e.ref, e.sparsePaths, t, {
             skipLfs: e.skipLfs,
           }),
-          (D = Zg(I, e.path || ".claude-plugin/marketplace.json")));
+          (D = join(I, e.path || ".claude-plugin/marketplace.json")));
         break;
       }
       case "npm":
         throw Error("NPM marketplace sources not yet implemented");
       case "file": {
-        let xe = PS(e.path);
-        ((D = xe), (I = rHe(rHe(xe))), (N = !1));
+        let xe = resolve(e.path);
+        ((D = xe), (I = dirname(dirname(xe))), (N = !1));
         break;
       }
       case "directory": {
-        let xe = PS(e.path);
-        ((D = Zg(xe, ".claude-plugin", "marketplace.json")),
+        let xe = resolve(e.path);
+        ((D = join(xe, ".claude-plugin", "marketplace.json")),
           (I = xe),
           (N = !1));
         break;
       }
       case "settings": {
         if (
-          ((I = Zg(E, e.name)),
-          (D = Zg(I, ".claude-plugin", "marketplace.json")),
+          ((I = join(E, e.name)),
+          (D = join(I, ".claude-plugin", "marketplace.json")),
           (N = !1),
           !kK(e.name))
         )
@@ -47527,7 +46560,7 @@ async function Abt(e, t, r, o, d, p) {
           null,
           2,
         );
-        await _.mkdir(rHe(D));
+        await _.mkdir(dirname(D));
         let Oe = isHoverRestEnabled() && r !== void 0 ? getMarketplaceCacheScope(e.name, "manifest", getPluginsDir()) : null;
         if (isHoverRestEnabled() && r !== void 0 && Oe !== null) {
           let Ne = await r.write(Oe, xe, { publishDiscipline: "inPlace" });
@@ -47539,7 +46572,7 @@ async function Abt(e, t, r, o, d, p) {
           F = xe;
           break;
         }
-        await Its(D, xe);
+        await writeFile(D, xe);
         break;
       }
       default:
@@ -47574,12 +46607,12 @@ async function Abt(e, t, r, o, d, p) {
         `Marketplace name ${jsonStringify(de.name)} is not a plain directory name; refusing to cache it`,
         "marketplace name is not a plain directory name",
       );
-    let Se = Zg(E, de.name);
+    let Se = join(E, de.name);
     if (I !== Se && !isLocalMarketplaceSource(e))
-      await nbt(E, de.name, r, { ownEntry: yK(I), known: p, selfKey: C });
-    let ve = PS(Se),
-      Me = PS(E);
-    if (!ve.startsWith(Me + urr))
+      await nbt(E, de.name, r, { ownEntry: basename(I), known: p, selfKey: C });
+    let ve = resolve(Se),
+      Me = resolve(E);
+    if (!ve.startsWith(Me + sep))
       throw Error(
         `Marketplace name '${de.name}' resolves to a path outside the cache directory`,
       );
@@ -47622,7 +46655,7 @@ Technical details: ${Ne}`);
 function irr(e, t) {
   return {
     source: e,
-    installLocation: isLocalMarketplaceSource(e) ? e.path : Zg(getMarketplacesDir(), t),
+    installLocation: isLocalMarketplaceSource(e) ? e.path : join(getMarketplacesDir(), t),
     lastUpdated: new Date().toISOString(),
   };
 }
@@ -47635,7 +46668,7 @@ function lrr(e) {
 }
 async function addMarketplace(e, t, r, o) {
   let d = e;
-  if (isLocalMarketplaceSource(e) && !SK(e.path)) d = { ...e, path: PS(e.path) };
+  if (isLocalMarketplaceSource(e) && !isAbsolute(e.path)) d = { ...e, path: resolve(e.path) };
   if (!isSourceAllowedByPolicy(d)) {
     if (isSourceInBlocklist(d))
       throw Error(
@@ -47717,7 +46750,7 @@ Tip: The shorthand "${d.repo}" assumes github.com. ` +
     let N =
         isHoverRestEnabled() && r !== void 0 ? fme(E.name, D.source, D.installLocation) : null,
       F = isHoverRestEnabled() && r !== void 0 ? fme(E.name, d, C) : null,
-      U = F === null && PS(D.installLocation) === PS(C);
+      U = F === null && resolve(D.installLocation) === resolve(C);
     if (isHoverRestEnabled() && r !== void 0 && N !== null && !Qs(N, F) && !U) {
       let V = await r.delete(N);
       if (!V.ok)
@@ -47730,7 +46763,7 @@ Tip: The shorthand "${d.repo}" assumes github.com. ` +
       let V = getMarketplacesDir(),
         re = classifyPathTrust(D.installLocation),
         ue = re.absolute,
-        de = PS(he(), C),
+        de = resolve(he(), C),
         _e = re.suspect ? "outside" : frr(V, ue, de);
       if (_e === "same");
       else if (_e === "inside" && (await prr(V, ue, E.name, r, p)) === void 0)
@@ -47910,7 +46943,7 @@ function loadMarketplace(e, t) {
         );
       return C;
     }
-    if ((Wrr(e, _), isLocalMarketplaceSource(_.source) && !SK(_.source.path))) {
+    if ((Wrr(e, _), isLocalMarketplaceSource(_.source) && !isAbsolute(_.source.path))) {
       let C = buildCliCommand("plugin marketplace remove", e);
       throw dt(
         Error(
@@ -48087,7 +47120,7 @@ function refreshMarketplace(e, t, r, o) {
 }
 async function Grr(e, t, r, o) {
   let d = getMarketplacesDir(),
-    p = PS(he(), t);
+    p = resolve(he(), t);
   if (classifyPathTrust(t).suspect || frr(d, p, d) !== "inside") {
     let E = buildCliCommand("plugin marketplace remove", e);
     throw Error(
@@ -48323,16 +47356,6 @@ async function syncDeclaredAutoUpdateToJson(e) {
   }
 }
 var pHe = toESM(pg(), 1);
-import { createHash as yns } from "crypto";
-import { mkdtemp as _ns, readFile as bns, rm as Sns } from "fs/promises";
-import {
-  isAbsolute as Vrr,
-  join as Pbt,
-  relative as Krr,
-  resolve as Mbt,
-  sep as Obt,
-} from "path";
-import { pathToFileURL as kns } from "url";
 function getMarketplaceSourceUrl(e) {
   if (!e) return null;
   switch (e.source) {
@@ -48341,7 +47364,7 @@ function getMarketplaceSourceUrl(e) {
     case "git":
       return e.url;
     case "directory":
-      return kns(e.path).href;
+      return pathToFileURL(e.path).href;
     default:
       return null;
   }
@@ -48365,9 +47388,9 @@ async function resolveVersionRange(e, t, r, o) {
     return (logForDebugging(`resolveVersionRange: rejected unsafe URL ${formatDisplayText(e, 200)}`), null);
   let d = o?.get(e);
   if (d === void 0)
-    ((d = _ns(Pbt(getTempBaseDir(), "claude-lsremote-"))
+    ((d = mkdtemp(join(getTempBaseDir(), "claude-lsremote-"))
       .then((D) => {
-        let N = () => Sns(D, { recursive: !0, force: !0 }).catch(() => {}),
+        let N = () => rm(D, { recursive: !0, force: !0 }).catch(() => {}),
           F;
         try {
           F = getGitInvocationForDirectory(D);
@@ -48425,7 +47448,7 @@ async function resolveVersionRange(e, t, r, o) {
   return C.find((D) => D.version === I) ?? null;
 }
 function Cns() {
-  return KJ(getPluginsDir(), "installed_plugins_v2.json");
+  return join(getPluginsDir(), "installed_plugins_v2.json");
 }
 function clearInstalledPluginsCache() {
   let e = getPluginRegistryState();
@@ -48524,7 +47547,7 @@ async function mHe(e) {
     }
     for (let E of Object.values(e.plugins))
       for (let C of E) {
-        o.add(toCaseFoldedPath(Tns(he(), C.installPath)));
+        o.add(toCaseFoldedPath(resolve(he(), C.installPath)));
         let I = classifyPathTrust(C.installPath);
         if (!I.suspect)
           o.add(toCaseFoldedPath($b(I.absolute, { foldCase: !0, knownNotSuspect: !0 })));
@@ -48536,14 +47559,14 @@ async function mHe(e) {
     for (let E of _) {
       let C = E.name;
       if (PLUGIN_TEMP_DIR_PATTERN.test(C)) continue;
-      let I = KJ(r, C);
+      let I = join(r, C);
       try {
         if (!(await tryGetDirentFileInfo(r, E))?.isDirectory) continue;
         let D = await t.readdir(I),
           N = !1;
         for (let V of D) {
           if (!(await tryGetDirentFileInfo(I, V))?.isDirectory) continue;
-          let re = KJ(I, V.name),
+          let re = join(I, V.name),
             ue = await t.readdir(re);
           for (let de of ue)
             if (de.name.endsWith(".zip") || (await tryGetDirentFileInfo(re, de))?.isDirectory) {
@@ -48553,7 +47576,7 @@ async function mHe(e) {
           if (N) break;
         }
         if (N) continue;
-        let F = (V) => o.has(V) || p.some((re) => re.startsWith(V + vns));
+        let F = (V) => o.has(V) || p.some((re) => re.startsWith(V + sep));
         if (!(F(toCaseFoldedPath(I)) || F(toCaseFoldedPath($b(I, { foldCase: !0 })))))
           (await removeDirectoryRecursive(I), logForDebugging(`Cleaned up legacy cache directory: ${C}`));
       } catch (D) {
@@ -48812,7 +47835,7 @@ async function hHe(e) {
 var gHe = 65536;
 async function Zrr(e, t, r) {
   let o = getFsSurface(),
-    d = KJ(e, ".claude-plugin", "plugin.json"),
+    d = join(e, ".claude-plugin", "plugin.json"),
     p = isHoverRestEnabled() && r !== void 0 ? parsePluginCachePath(e, anchoredPluginCachePath()) : null;
   if (isHoverRestEnabled() && r !== void 0 && p) {
     let _ = await r.read([
@@ -49119,7 +48142,7 @@ async function $ns(e) {
               continue;
             }
         } else {
-          let ct = Ens(getVersionedCachePath(de, "x")),
+          let ct = dirname(getVersionedCachePath(de, "x")),
             vt;
           try {
             vt = (await getFsSurface().readdir(ct))
@@ -49135,8 +48158,8 @@ async function $ns(e) {
             continue;
           }
           let ut = Oe.version ? getVersionedCachePath(de, Oe.version) : void 0,
-            Wt = ut && vt.includes(Xrr(ut)) ? ut : KJ(ct, vt[0]),
-            en = Xrr(Wt);
+            Wt = ut && vt.includes(basename(ut)) ? ut : join(ct, vt[0]),
+            en = basename(Wt);
           He = Wt;
           let tn = typeof Oe.source === "string" || getSourceCloneUrl(Oe.source) !== null;
           Ke = tn ? await hHe(Wt) : void 0;
@@ -49198,31 +48221,6 @@ function wor(e, t) {
     .filter((o) => o !== "")
     .slice(-MAX_PRODUCER_PATH_HISTORY);
 }
-import { createHash as Mor, randomBytes as Uns } from "crypto";
-import { constants as Eor } from "fs";
-import {
-  copyFile as Tor,
-  link as Hns,
-  lstat as WR,
-  mkdir as Lor,
-  open as kHe,
-  readdir as $or,
-  realpath as Cor,
-  rename as xor,
-  rm as qI,
-  utimes as jns,
-} from "fs/promises";
-import { isAbsolute as Wns, join as Sv, relative as Gns } from "path";
-import { readdir as _rs } from "fs/promises";
-import { randomBytes as Srs } from "crypto";
-import { lstat as RSt, lutimes as krs, rm as wrs } from "fs/promises";
-import {
-  basename as Ers,
-  dirname as wme,
-  join as ISt,
-  resolve as ASt,
-  sep as PSt,
-} from "path";
 function Trs() {
   return new Date().toISOString();
 }
@@ -50262,8 +49260,8 @@ function Ars(e) {
   return { aside: r, remove: !d };
 }
 async function Rrs(e, t) {
-  let r = Ers(e);
-  if (e !== ISt(wme(t), r) || !isAsideName(r)) {
+  let r = basename(e);
+  if (e !== join(dirname(t), r) || !isAsideName(r)) {
     logForDebugging(
       `A publish that stood named a set-aside at ${e}; it is not an aside name beside the published version, so it is left in place`,
       { level: "debug" },
@@ -50272,8 +49270,8 @@ async function Rrs(e, t) {
   }
   try {
     let [o, d] = await Promise.all([
-      RSt(e, { bigint: !0 }),
-      RSt(t, { bigint: !0 }),
+      lstat(e, { bigint: !0 }),
+      lstat(t, { bigint: !0 }),
     ]);
     if (!(
       o.isDirectory() &&
@@ -50340,7 +49338,7 @@ function lsr(e, t) {
 }
 async function csr(e) {
   try {
-    await wrs(ISt(e, ORPHANED_AT_MARKER_FILENAME), { force: !0 });
+    await rm(join(e, ORPHANED_AT_MARKER_FILENAME), { force: !0 });
   } catch (t) {
     logForDebugging(
       `Could not drop a stray orphan marker from the staged plugin: ${t instanceof Error ? t.message : String(t)}`,
@@ -50391,14 +49389,14 @@ async function Ors(e, t, r, o, d) {
     let D = await versionParentState(t);
     if (D === "refused") await p("before move", D);
   }
-  if ((await getFsSurface().mkdir(wme(t)), r.strictCache)) await p();
+  if ((await getFsSurface().mkdir(dirname(t)), r.strictCache)) await p();
   let _;
   if (!r.strictCache || (await clearOccupantForReplace(t, r.pluginId, r.version)) === "recurse") {
     let D = mve(t);
     try {
       (await renameWithRetry(t, D), (_ = D));
       let N = new Date();
-      await krs(D, N, N).catch(() => {});
+      await lutimes(D, N, N).catch(() => {});
     } catch (N) {
       if (Mrs(N))
         (logForDebugging(
@@ -50409,16 +49407,16 @@ async function Ors(e, t, r, o, d) {
       else if (!qk(N)) throw N;
     }
   }
-  let E = e.endsWith(PSt) ? e : e + PSt,
+  let E = e.endsWith(sep) ? e : e + sep,
     C = t.startsWith(E),
     I = e;
   try {
     if (C) {
-      let D = ISt(
-        wme(e),
-        `.claude-plugin-temp-${Date.now()}-${Srs(4).toString("hex")}`,
+      let D = join(
+        dirname(e),
+        `.claude-plugin-temp-${Date.now()}-${randomBytes(4).toString("hex")}`,
       );
-      (await renameWithRetry(e, D), await getFsSurface().mkdir(wme(t)), (I = D));
+      (await renameWithRetry(e, D), await getFsSurface().mkdir(dirname(t)), (I = D));
     }
     if (r.strictCache) await p("during move");
     await renameWithRetry(I, t);
@@ -50442,10 +49440,10 @@ async function Drs(e, t, r, o, d) {
       );
     }
   if (r && (await versionParentState(t)) === "refused") return !1;
-  if ((await getFsSurface().mkdir(wme(t)), r)) {
+  if ((await getFsSurface().mkdir(dirname(t)), r)) {
     if (!(await versionParentContained(t))) return !1;
     if (
-      await RSt(t).then(
+      await lstat(t).then(
         () => !0,
         (_) => {
           if (qk(_)) return !1;
@@ -50477,7 +49475,7 @@ async function syncedPluginMintedName(e, t) {
         { noTelemetry: !0 },
         t,
       ),
-      p = d === null || py(d) === "SKILL.md";
+      p = d === null || basename(d) === "SKILL.md";
     return qsr(o.name, p, !0) ? void 0 : o.name;
   } catch {
     return;
@@ -50738,7 +49736,6 @@ function isAutoModeClassifierDumpEntry(e) {
     e.type === "auto-mode-classifier-system"
   );
 }
-import { createHash as Jis } from "crypto";
 var HHe = 2097152;
 function Zis(e, t) {
   let r = e.get(t);
@@ -50761,7 +49758,6 @@ async function Gar(
 function forgetClassifierMetaLines(e) {
   xkt().forget(e);
 }
-import { isAbsolute as tas, resolve as nas } from "path";
 function getAutoModeTemplateRules() {
   return {
     allow: WHe("user_allow_rules_to_replace"),
@@ -50896,7 +49892,6 @@ function isVoiceEnabled(e) {
 function hasExplicitVoiceSetting(e) {
   return e.voice?.enabled !== void 0 || e.voiceEnabled !== void 0;
 }
-import { stat as qcs } from "fs/promises";
 function waitForActive(e, t) {
   return Zcr(e, !0, t);
 }
@@ -51116,38 +50111,28 @@ async function prefetchPassesEligibility(e, t) {
   if (isEssentialTrafficOnly()) return;
   getPassesEligibility(e, t);
 }
-import {
-  chmod as pdr,
-  mkdir as gdr,
-  readFile as ydr,
-  writeFile as _dr,
-} from "fs/promises";
-import { homedir as ads } from "os";
-import { join as XK } from "path";
-import { lstat as rdr, readlink as Yus, realpath as Xus } from "fs/promises";
-import { dirname as Qus, join as Jus, resolve as Zus, sep as tdr } from "path";
-var eds = tdr + Jus("claude", "versions") + tdr;
+var eds = sep + join("claude", "versions") + sep;
 async function isNativeInstallerSymlink(e) {
   if (getCurrentPlatform() === "windows") return !0;
   try {
-    return await sdr(e, await rdr(e));
+    return await sdr(e, await lstat(e));
   } catch (t) {
     return W(t);
   }
 }
 async function sdr(e, t) {
   if (!t.isSymbolicLink()) return !1;
-  let r = await Yus(e);
-  return Zus(Qus(e), r).includes(eds);
+  let r = await readlink(e);
+  return resolve(dirname(e), r).includes(eds);
 }
 async function isNpmShimExecutable(e) {
-  let t = await Xus(e);
+  let t = await realpath(e);
   return t.endsWith(".js") || t.includes("node_modules");
 }
 async function idr(e) {
   if (getCurrentPlatform() === "windows") return !0;
   try {
-    let t = await rdr(e);
+    let t = await lstat(e);
     if (!t.isSymbolicLink()) return !1;
     return (await sdr(e, t)) || (await isNpmShimExecutable(e));
   } catch (t) {
@@ -51155,9 +50140,6 @@ async function idr(e) {
     throw t;
   }
 }
-import { readdir as adr } from "fs/promises";
-import { homedir as tds } from "os";
-import { join as Kme } from "path";
 var CLAUDE_IN_CHROME_URL = "https://claude.ai/chrome",
   nds = "fcoeoabgfenejglbffodgkkbkcdhcgfn";
 function rds() {
@@ -51207,7 +50189,7 @@ var ods = ["chrome", "brave", "arc", "edge", "chromium", "vivaldi", "opera"],
     },
   };
 function ldr() {
-  let e = tds(),
+  let e = homedir(),
     t = [];
   for (let r of ods) {
     let o = sds[r],
@@ -51222,14 +50204,14 @@ function ldr() {
       case "win32": {
         if (o.windows.path.length > 0) {
           let p = o.windows.useRoaming
-            ? Kme(e, "AppData", "Roaming")
-            : Kme(e, "AppData", "Local");
-          t.push({ browser: r, path: Kme(p, ...o.windows.path) });
+            ? join(e, "AppData", "Roaming")
+            : join(e, "AppData", "Local");
+          t.push({ browser: r, path: join(p, ...o.windows.path) });
         }
         continue;
       }
     }
-    if (d && d.length > 0) t.push({ browser: r, path: Kme(e, ...d) });
+    if (d && d.length > 0) t.push({ browser: r, path: join(e, ...d) });
   }
   return t;
 }
@@ -51243,7 +50225,7 @@ async function ids(e, t) {
   for (let { browser: o, path: d } of e) {
     let p = [];
     try {
-      p = await adr(d, { withFileTypes: !0 });
+      p = await readdir(d, { withFileTypes: !0 });
     } catch (E) {
       if (Rt(E)) continue;
       throw E;
@@ -51256,10 +50238,10 @@ async function ids(e, t) {
       t?.(`[Claude in Chrome] Found ${o} profiles: ${_.join(", ")}`);
     for (let E of _)
       for (let C of r) {
-        let I = Kme(d, E, "Extensions", C);
+        let I = join(d, E, "Extensions", C);
         try {
           return (
-            await adr(I),
+            await readdir(I),
             t?.(`[Claude in Chrome] Extension ${C} found in ${o} ${E}`),
             { isInstalled: !0, browser: o }
           );
@@ -51385,9 +50367,9 @@ function setupClaudeInChrome(e) {
 }
 function lds() {
   if (getCurrentPlatform() === "windows") {
-    let t = ads(),
-      r = a.APPDATA || XK(t, "AppData", "Local");
-    return [XK(r, "Claude Code", "ChromeNativeHost")];
+    let t = homedir(),
+      r = a.APPDATA || join(t, "AppData", "Local");
+    return [join(r, "Claude Code", "ChromeNativeHost")];
   }
   return getAllNativeMessagingHostsDirs().map(({ path: t }) => t);
 }
@@ -51412,15 +50394,15 @@ async function cds(e, t) {
       p = !1,
       _ = !1;
     for (let E of r) {
-      let C = XK(E, mdr),
+      let C = join(E, mdr),
         I = !1,
-        D = await ydr(C, "utf-8").catch((N) => ((I = W(N)), null));
+        D = await readFile(C, "utf-8").catch((N) => ((I = W(N)), null));
       if (!I) p = !0;
       if (D === d) continue;
       try {
         if (
-          (await gdr(E, { recursive: !0 }),
-          await _dr(C, d),
+          (await mkdir(E, { recursive: !0 }),
+          await writeFile(C, d),
           logForDebugging(`[Claude in Chrome] Installed native host manifest at: ${C}`),
           I)
         )
@@ -51430,7 +50412,7 @@ async function cds(e, t) {
       }
     }
     if (getCurrentPlatform() === "windows") {
-      let E = XK(r[0], mdr);
+      let E = join(r[0], mdr);
       uds(E);
     }
     if (_ && !p && !t?.skipReconnectAutoOpen)
@@ -51472,11 +50454,11 @@ function uds(e) {
 }
 async function dds(e) {
   let t = getCurrentPlatform(),
-    r = XK(getClaudeConfigDir(), "chrome"),
+    r = join(getClaudeConfigDir(), "chrome"),
     o =
       t === "windows"
-        ? XK(r, "chrome-native-host.bat")
-        : XK(r, "chrome-native-host"),
+        ? join(r, "chrome-native-host.bat")
+        : join(r, "chrome-native-host"),
     d =
       t === "windows"
         ? `@echo off
@@ -51489,17 +50471,17 @@ ${e.map((_) => `"${_.replaceAll("%", "%%")}"`).join(" ")}
 # Generated by Claude Code - do not edit manually
 exec ${jo(e)}
 `;
-  if ((await ydr(o, "utf-8").catch(() => null)) === d) {
+  if ((await readFile(o, "utf-8").catch(() => null)) === d) {
     if (t !== "windows")
-      await pdr(o, 493).catch((_) =>
+      await chmod(o, 493).catch((_) =>
         logForDebugging(`[Claude in Chrome] Could not repair wrapper exec bit: ${_}`, {
           level: "error",
         }),
       );
     return o;
   }
-  if ((await gdr(r, { recursive: !0 }), await _dr(o, d), t !== "windows"))
-    await pdr(o, 493);
+  if ((await mkdir(r, { recursive: !0 }), await writeFile(o, d), t !== "windows"))
+    await chmod(o, 493);
   return (
     logForDebugging(`[Claude in Chrome] Created Chrome native host wrapper script: ${o}`),
     o
@@ -51837,7 +50819,6 @@ function getBridgeSessionListing(e) {
   if (isCrossSessionMessagingEnabled()) return getWarmBridgeSessionListing(e);
   return;
 }
-import { basename as sfs } from "path";
 function cfs(e) {
   return Efr(e.name);
 }
@@ -51864,15 +50845,6 @@ function getPeerMentionSuggestions(e, t, r = Date.now()) {
   }
   return o;
 }
-import { readdir as Yfr, stat as Xfr } from "fs/promises";
-import {
-  dirname as avt,
-  isAbsolute as vfs,
-  parse as M1e,
-  relative as SD,
-  resolve as cvt,
-  sep as zfr,
-} from "path";
 function svt(e) {
   let t = isInProcessTeammateTask(e) ? e : void 0,
     r = !t && isLocalAgentTask(e) ? e : void 0;
@@ -51903,8 +50875,6 @@ function buildTranscriptView({
     isLoading: _ ? _.status === "running" && !_.isIdle : r,
   };
 }
-import { randomUUID as Qfr } from "crypto";
-import { relative as Sfs } from "path";
 function evictSentSkillNames(e) {
   let t = CZ();
   for (let r of t.sentSkillNames.values()) for (let o of e) r.delete(o);
@@ -51918,8 +50888,6 @@ function seedSentSkillNames(e) {
   if (t.resumeSeedNames === null) t.resumeSeedNames = new Set();
   for (let r of e) t.resumeSeedNames.add(r);
 }
-import { randomUUID as Ups } from "crypto";
-import { randomUUID as tmr } from "crypto";
 function formatAskUserQuestionNeeds(e) {
   let t = typeof e === "object" && e !== null ? e : void 0,
     r = Array.isArray(t?.questions) ? t.questions : [],
@@ -52116,7 +51084,6 @@ async function executeNotificationHooks(
     credentials: d,
   });
 }
-import { randomUUID as Tvt } from "crypto";
 async function* executeSetupHooks(e, t, r, o = Jd, d, p, _) {
   let E = { ...createBaseHookInput(e, getCwd()), hook_event_name: "Setup", trigger: t };
   beginActivity("hook_exec", U1e);
@@ -52124,7 +51091,7 @@ async function* executeSetupHooks(e, t, r, o = Jd, d, p, _) {
     yield* executeHooks({
       session: e,
       hookInput: E,
-      toolUseID: Tvt(),
+      toolUseID: randomUUID(),
       matchQuery: t,
       signal: r,
       timeoutMs: o,
@@ -52136,9 +51103,6 @@ async function* executeSetupHooks(e, t, r, o = Jd, d, p, _) {
     endActivity("hook_exec", U1e);
   }
 }
-import { randomUUID as sms } from "crypto";
-import { randomUUID as Cvt } from "crypto";
-import { randomUUID as ims } from "crypto";
 async function* executeUserPromptExpansionHooks(e, t, r, o, d, p, _) {
   let E = _.agentId ?? _.session.id;
   if (!hasHookForEvent("UserPromptExpansion", _.sessionHooksRegistry, E)) return;
@@ -52154,13 +51118,12 @@ async function* executeUserPromptExpansionHooks(e, t, r, o, d, p, _) {
   yield* executeHooks({
     session: _.session,
     hookInput: C,
-    toolUseID: ims(),
+    toolUseID: randomUUID(),
     signal: _.abortController.signal,
     timeoutMs: Jd,
     toolUseContext: _,
   });
 }
-import { isAbsolute as ams, resolve as lms } from "path";
 async function flushPendingAsyncRewakeHooks() {
   let e = bmr();
   if (e.size === 0) return;
@@ -52200,7 +51163,7 @@ async function execCommandHookForDevice({
     d,
     p,
     _,
-    bF(),
+    randomUUID(),
     void 0,
     void 0,
     void 0,
@@ -52314,7 +51277,7 @@ async function executeStatusLineCommand(e, t, r, o = !1) {
         e.project,
         t.cwd,
         r,
-        bF(),
+        randomUUID(),
       );
     if (C.aborted) return;
     let I = C.stderr.trim();
@@ -52379,7 +51342,7 @@ async function executeFileSuggestionCommand(e, t, r, o = 5000) {
         e.project,
         t.cwd,
         p,
-        bF(),
+        randomUUID(),
       );
     if (C.aborted || C.status !== 0) return [];
     return C.stdout
@@ -52432,7 +51395,6 @@ async function shouldShowExternalIncludesDialog(e, t) {
     return !1;
   return hasExternalInstructionIncludes(await getSessionMemoryFiles(e, !0, t));
 }
-import { isAbsolute as ghs, sep as Cgr, relative as hhs } from "path";
 function isExternalSourceMessage(e) {
   return (
     e.startsWith(CHANNEL_SOURCE_OPEN_TAG) ||
@@ -52476,7 +51438,6 @@ function parseForkedSkillLaunches(e) {
   }
   return t;
 }
-import { isDeepStrictEqual as yhs } from "util";
 var MAX_AUDIO_TRANSCRIPT_CODE_UNITS = 300;
 function formatInlineCode(e) {
   let t = e.replace(/\r\n?|\n/g, " ");
@@ -52512,7 +51473,6 @@ function Zgs(e) {
 function formatModelSwitchOutput(e, t) {
   return Zgs(e) ? Kgs(e, t) : e;
 }
-import { isDeepStrictEqual as Tj } from "util";
 function getNoApprovalSurfaceDeniedMessage(e) {
   return (
     "Permission for this tool use was denied. It requires approval, and this session has no approval surface \u2014 nobody can answer a permission prompt here \u2014 so it was denied automatically. The action was NOT performed; do not claim it succeeded, and do not retry it: this action, and anything else that requires approval, will be denied the same way for the rest of this session. " +
@@ -53149,7 +52109,7 @@ function createPermissionRetryMessage(e) {
     level: "info",
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
   };
 }
 function createBridgeStatusMessage(e, t) {
@@ -53161,7 +52121,7 @@ function createBridgeStatusMessage(e, t) {
     upgradeNudge: t,
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
   };
 }
 function createCloudSessionStatusMessage(e, t, r) {
@@ -53174,7 +52134,7 @@ function createCloudSessionStatusMessage(e, t, r) {
     level: "notice",
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
   };
 }
 var bys = 200;
@@ -53185,7 +52145,7 @@ function createScheduledTaskFireMessage(e, t) {
     content: e,
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: t.uuid ?? Qw(),
+    uuid: t.uuid ?? randomUUID(),
     taskId: t.task.id,
     cron: t.task.cron,
     prompt: formatTruncatedText(t.task.prompt, bys),
@@ -53205,7 +52165,7 @@ function createAwaySummaryMessage(e) {
     subtype: "away_summary",
     content: e,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     isMeta: !1,
   };
 }
@@ -53215,7 +52175,7 @@ function dUe(e) {
     subtype: "memory_saved",
     writtenPaths: e,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     isMeta: !1,
   };
 }
@@ -53224,7 +52184,7 @@ function createAgentsKilledMessage() {
     type: "system",
     subtype: "agents_killed",
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     isMeta: !1,
   };
 }
@@ -53385,8 +52345,6 @@ function ghr(e) {
   }
   return;
 }
-import { mkdir as Oys, rm as Dys } from "fs/promises";
-import { dirname as Nys } from "path";
 var Lys = 262144,
   yhr = 2097152;
 async function* streamTranscriptLinesBackward(e, t) {
@@ -53452,7 +52410,6 @@ async function* streamTranscriptLinesBackward(e, t) {
     ((r = C.seq), (o = Buffer.from(C.data)), (d = yhr));
   }
 }
-import { sep as $ys } from "path";
 function isSyncedTranscriptEntry(e) {
   return (
     typeof e === "object" &&
@@ -53512,7 +52469,7 @@ var l_s = /^r[0-9a-z]{8}$/,
 async function listRemoteAgentMetadata(e) {
   let t = iyr();
   if (isHoverRestEnabled() && e !== void 0) {
-    let d = getSidecarKeyForMetadataPath(Wp(t, "probe.meta.json"));
+    let d = getSidecarKeyForMetadataPath(join(t, "probe.meta.json"));
     if (d !== void 0 && d.namespace === "sidecar")
       return u_s(e, {
         namespace: "sidecar",
@@ -53523,7 +52480,7 @@ async function listRemoteAgentMetadata(e) {
   }
   let r;
   try {
-    r = await Pj(t, { withFileTypes: !0 });
+    r = await readdir(t, { withFileTypes: !0 });
   } catch (d) {
     if (Rt(d)) return [];
     throw d;
@@ -53532,7 +52489,7 @@ async function listRemoteAgentMetadata(e) {
   for (let d of r) {
     if (!d.isFile() || !d.name.endsWith(".meta.json")) continue;
     try {
-      let p = await Mj(Wp(t, d.name), "utf-8"),
+      let p = await readFile(join(t, d.name), "utf-8"),
         _ = syr().safeParse(jsonParse(p));
       if (!_.success) {
         logForDebugging(`listRemoteAgentMetadata: skipping ${d.name}: ${String(_.error)}`);
@@ -53605,8 +52562,8 @@ function isCustomTitleEnabled() {
 }
 var ixt = ".session-aliases";
 function cyr(e, t) {
-  if (!isHoverRestEnabled() || t === void 0 || kv(e) !== Pl()) return;
-  let r = $Z(e),
+  if (!isHoverRestEnabled() || t === void 0 || dirname(e) !== Pl()) return;
+  let r = basename(e),
     o = STORAGE_KEYS.sessionAliases(r),
     d = { namespace: "transcript", projectKey: r };
   return validateStorageKey(o) === void 0 && validateStorageScope(d) === void 0
@@ -53641,7 +52598,7 @@ async function d_s(e, t, r) {
     if (!p.ok) {
       let _ = gyr(p.error);
       if (Rt(_)) {
-        logForDebugging(`recordSessionAlias: mkdir failed for ${Wp(r, ixt)}: ${_}`);
+        logForDebugging(`recordSessionAlias: mkdir failed for ${join(r, ixt)}: ${_}`);
         return;
       }
       logError(_);
@@ -53665,7 +52622,7 @@ async function recordSessionAlias(e, t) {
         logForDebugging(`recordSessionAlias: realpath failed for ${e}: ${describeStorageError(E.error)}`, {
           level: isUnsupportedFailure(E.error) ? "debug" : "error",
         });
-    } else r = zn(await Qhr(e));
+    } else r = zn(await realpath(e));
   } catch (E) {
     if (!W(E))
       logForDebugging(`recordSessionAlias: realpath failed for ${e}: ${E}`, {
@@ -53684,10 +52641,10 @@ async function recordSessionAlias(e, t) {
     }
     return;
   }
-  let _ = Wp(d, ixt);
+  let _ = join(d, ixt);
   try {
     if (
-      (await Mj(_, "utf8"))
+      (await readFile(_, "utf8"))
         .split(
           `
 `,
@@ -53705,7 +52662,7 @@ async function recordSessionAlias(e, t) {
       return;
     }
     try {
-      await Ij(kv(_), { recursive: !0, mode: 448 });
+      await mkdir(dirname(_), { recursive: !0, mode: 448 });
     } catch (C) {
       if (Rt(C)) {
         logForDebugging(`recordSessionAlias: mkdir failed for ${_}: ${C}`);
@@ -53716,7 +52673,7 @@ async function recordSessionAlias(e, t) {
     }
   }
   try {
-    await zCt(
+    await appendFile(
       _,
       o +
         `
@@ -53755,9 +52712,9 @@ async function uyr(e, t) {
     } catch (d) {
       return (logForDebugging(`readSessionAliases: read threw via storage: ${d}`), []);
     }
-  let o = Wp(getProjectDir(e), ixt);
+  let o = join(getProjectDir(e), ixt);
   try {
-    let d = await Mj(o, "utf8");
+    let d = await readFile(o, "utf8");
     return dedupe(
       d
         .split(
@@ -53982,7 +52939,7 @@ function adoptResumedSessionFile() {
     t = getSessionTranscriptPath();
   e.setSessionFile(t);
   let r = new Date();
-  Jhr(t, r, r).catch(() => {});
+  utimes(t, r, r).catch(() => {});
   try {
     e.reAppendSessionMetadata(!0);
   } catch (o) {
@@ -54021,7 +52978,7 @@ function hyr(e, t) {
     }
   }
   let r = new Date();
-  Jhr(e, r, r).catch(() => {});
+  utimes(e, r, r).catch(() => {});
 }
 function beginTranscriptRelocationForTesting() {
   Ki().beginTranscriptRelocation();
@@ -54084,7 +53041,7 @@ function sealTornTranscriptTail(e) {
   Ki().sealTornTailOnNextAppend(e ?? getTranscriptPathForSession(K()));
 }
 async function yyr(e) {
-  let t = await vj(e, n4.O_RDONLY | O_NONBLOCK);
+  let t = await open(e, constants.O_RDONLY | O_NONBLOCK);
   try {
     if ((await t.stat()).isFile()) return t;
   } catch (r) {
@@ -54099,7 +53056,7 @@ async function transcriptFileHasContentEntry(e, t) {
   try {
     if (((o = await yyr(e)), o === null)) return !1;
     let d = Buffer.allocUnsafe(r),
-      p = new nyr("utf8"),
+      p = new StringDecoder("utf8"),
       _ = "";
     for (;;) {
       let { bytesRead: E } = await o.read(d, 0, r, null);
@@ -54147,7 +53104,7 @@ async function R_s(e, t) {
   try {
     if (((o = await yyr(e)), o === null)) return !1;
     let d = Buffer.allocUnsafe(65536),
-      p = new nyr("utf8"),
+      p = new StringDecoder("utf8"),
       _ = "",
       E = t;
     for (;;) {
@@ -54276,7 +53233,7 @@ async function P_s(e, t, r) {
   };
 }
 function byr(e) {
-  return Wp(getSessionSidecarDir(e), "ccr-tip.json");
+  return join(getSessionSidecarDir(e), "ccr-tip.json");
 }
 function I_s(e) {
   return getSessionSidecarDir(e) + ".ccr-tip.json";
@@ -54303,7 +53260,7 @@ async function M_s(e, t) {
     }
   else
     try {
-      o = await Mj(e, "utf-8");
+      o = await readFile(e, "utf-8");
     } catch (d) {
       return W(d) ? "absent" : null;
     }
@@ -55007,7 +53964,7 @@ function uxt(e, t, r) {
 async function loadTranscriptFromFile(e, t) {
   let r = isHoverRestEnabled() && t !== void 0 ? resolveTranscriptLocator(e, t) : void 0;
   if (e.endsWith(".jsonl")) {
-    let E = r ? void 0 : await Vx(e),
+    let E = r ? void 0 : await stat(e),
       C = await loadTranscriptFile(e, r && { storageV5: r });
     if (C.servedBy === "absent")
       throw Object.assign(
@@ -55109,13 +54066,13 @@ async function loadTranscriptFromFile(e, t) {
       sessionHistorySuppressed: cn.has(kn) ? !0 : void 0,
     };
   }
-  let o = await Vx(e);
+  let o = await stat(e);
   if (o.size > 268435456)
     throw new TranscriptFileFormatError(
       `Transcript file too large to load as JSON (${o.size} bytes)`,
       "too_large",
     );
-  let d = await Mj(e, { encoding: "utf-8" }),
+  let d = await readFile(e, { encoding: "utf-8" }),
     p;
   try {
     p = jsonParse(d);
@@ -55352,10 +54309,10 @@ async function scanTranscriptForSuppression(e, t, r) {
   return "clean";
 }
 function isOwnTranscriptFile(e, t) {
-  return e !== void 0 && t != null && $Z(t) === `${e}.jsonl`;
+  return e !== void 0 && t != null && basename(t) === `${e}.jsonl`;
 }
 function getDerivedTranscriptPathForSession(e) {
-  return Wp(getProjectDir(he()), `${e}.jsonl`);
+  return join(getProjectDir(he()), `${e}.jsonl`);
 }
 function matchesHistorySuppressionLine(e, t = {}) {
   if (!e.includes('"history-suppression"')) return !1;
@@ -55960,7 +54917,7 @@ async function getLastSessionLog(e, t, r) {
   return sessionLogFromTranscriptLoad(e, o, {
     path: d,
     modifiedAt: async () =>
-      p !== void 0 ? new Date(p.mtimeMs) : (await Vx(d)).mtime,
+      p !== void 0 ? new Date(p.mtimeMs) : (await stat(d)).mtime,
   });
 }
 async function sessionLogFromTranscriptLoad(e, t, r) {
@@ -56134,7 +55091,7 @@ async function cbs(e, t) {
     o = isHoverRestEnabled() && t ? await Aje(t) : void 0;
   if (t && o !== void 0) {
     let D = await Promise.all(
-        o.map((U) => Khr(Wp(r, U), e, { backend: t, projectKey: U })),
+        o.map((U) => Khr(join(r, U), e, { backend: t, projectKey: U })),
       ),
       N = new Map();
     for (let U of D.flat()) {
@@ -56152,11 +55109,11 @@ async function cbs(e, t) {
   }
   let d;
   try {
-    d = await Pj(r, { withFileTypes: !0 });
+    d = await readdir(r, { withFileTypes: !0 });
   } catch {
     return [];
   }
-  let p = d.filter((D) => D.isDirectory()).map((D) => Wp(r, D.name)),
+  let p = d.filter((D) => D.isDirectory()).map((D) => join(r, D.name)),
     E = (await Promise.all(p.map((D) => Khr(D, e)))).flat(),
     C = new Map();
   for (let D of E) {
@@ -56176,15 +55133,15 @@ async function loadAllProjectsMessageLogsProgressive(e, t = Rje, r) {
   let o = Pl(),
     d = isHoverRestEnabled() && r ? await Aje(r) : void 0,
     p;
-  if (d !== void 0) p = d.map((D) => Wp(o, D));
+  if (d !== void 0) p = d.map((D) => join(o, D));
   else {
     let D;
     try {
-      D = await Pj(o, { withFileTypes: !0 });
+      D = await readdir(o, { withFileTypes: !0 });
     } catch {
       return { logs: [], allStatLogs: [], nextIndex: 0 };
     }
-    p = D.filter((N) => N.isDirectory()).map((N) => Wp(o, N.name));
+    p = D.filter((N) => N.isDirectory()).map((N) => join(o, N.name));
   }
   let _ = await Promise.all(p.map((D) => getSessionFilesLite(D, e, void 0, r))),
     E = Lge(_.flat()),
@@ -56252,17 +55209,17 @@ async function Iyr(e, t, r) {
         await Promise.all(
           en
             .filter((tn) => tn.startsWith(ut))
-            .map((tn) => getSessionFilesLite(Wp(o, tn), t, void 0, r)),
+            .map((tn) => getSessionFilesLite(join(o, tn), t, void 0, r)),
         )
       ).flat();
     else
       try {
-        let tn = await Pj(o, { withFileTypes: !0 });
+        let tn = await readdir(o, { withFileTypes: !0 });
         Wt = (
           await Promise.all(
             tn
               .filter((dn) => dn.isDirectory() && dn.name.startsWith(ut))
-              .map((dn) => getSessionFilesLite(Wp(o, dn.name), t, void 0, r)),
+              .map((dn) => getSessionFilesLite(join(o, dn.name), t, void 0, r)),
           )
         ).flat();
       } catch (tn) {
@@ -56290,7 +55247,7 @@ async function Iyr(e, t, r) {
   else {
     let De;
     try {
-      De = await Pj(o, { withFileTypes: !0 });
+      De = await readdir(o, { withFileTypes: !0 });
     } catch (He) {
       logForDebugging(
         `Failed to read projects dir ${o}, falling back to current project: ${He}`,
@@ -56305,7 +55262,7 @@ async function Iyr(e, t, r) {
     Se = [];
   if (I === void 0) {
     let De = getProjectDir(d),
-      He = $Z(De);
+      He = basename(De);
     (re.add(U ? He.toLowerCase() : He), Se.push({ projectDir: De, wtPath: d }));
   }
   for (let De of ue) {
@@ -56315,10 +55272,10 @@ async function Iyr(e, t, r) {
       if (
         He === Ke ||
         (ct !== void 0
-          ? He.startsWith(ct + "-") && (await dirBelongsToProject(Wp(o, De), je, U, createTranscriptSource(createBackendHandle(r))))
+          ? He.startsWith(ct + "-") && (await dirBelongsToProject(join(o, De), je, U, createTranscriptSource(createBackendHandle(r))))
           : Ke.length < MAX_SANITIZED_LENGTH && He.startsWith(Ke + "-"))
       ) {
-        (re.add(He), Se.push({ projectDir: Wp(o, De), wtPath: je }));
+        (re.add(He), Se.push({ projectDir: join(o, De), wtPath: je }));
         break;
       }
   }
@@ -56346,7 +55303,7 @@ async function Iyr(e, t, r) {
               logForDebugging(
                 `/resume: worktree path not resolved through the storage backend (${describeStorageError(je.error)}); using it as registered`,
               );
-          } else He = zn(await Qhr(De));
+          } else He = zn(await realpath(De));
         } catch {}
         return XCt(He, getProjectDir(De), t, !0, Oe, r);
       }),
@@ -56379,14 +55336,14 @@ async function Oyr(e, t) {
   else {
     let E;
     try {
-      E = await Pj(r, { withFileTypes: !0 });
+      E = await readdir(r, { withFileTypes: !0 });
     } catch {
       return [];
     }
     o = E.filter((C) => C.isDirectory()).map((C) => C.name);
   }
   let p = createConcurrencyLimiter(ubs, async (E) => {
-    let C = Wp(r, E),
+    let C = join(r, E),
       D = [...(await getSessionFilesWithMtime(C, e)).values()].sort((F, U) => U.mtime - F.mtime)[0];
     if (!D) return null;
     let N = Buffer.allocUnsafe(LITE_READ_BUF_SIZE);
@@ -56728,14 +55685,14 @@ async function Dyr(e, t) {
   }
 }
 async function mbs(e, t) {
-  let r = $Z(e);
-  if (kv(e) !== Pl() || !isValidPathSegment(r)) return;
+  let r = basename(e);
+  if (dirname(e) !== Pl() || !isValidPathSegment(r)) return;
   let o = await Dyr(t, r);
   if (o === void 0) return;
   let d = new Map();
   for (let [p, _] of o)
     d.set(p, {
-      path: Wp(e, `${p}.jsonl`),
+      path: join(e, `${p}.jsonl`),
       mtime: _.mtimeMs,
       ctime: _.createdMs ?? _.mtimeMs,
       size: _.size ?? 0,
@@ -56748,22 +55705,22 @@ async function getSessionFilesWithMtime(e, t) {
   let o = new Map(),
     d;
   try {
-    d = await Pj(e, { withFileTypes: !0 });
+    d = await readdir(e, { withFileTypes: !0 });
   } catch {
     return o;
   }
   let p = [];
   for (let _ of d) {
     if (!_.isFile() || !_.name.endsWith(".jsonl")) continue;
-    let E = Xn($Z(_.name, ".jsonl"));
+    let E = Xn(basename(_.name, ".jsonl"));
     if (!E) continue;
-    p.push({ sessionId: E, filePath: Wp(e, _.name) });
+    p.push({ sessionId: E, filePath: join(e, _.name) });
   }
   return (
     await Promise.all(
       p.map(async ({ sessionId: _, filePath: E }) => {
         try {
-          let C = await Vx(E);
+          let C = await stat(E);
           o.set(_, {
             path: E,
             mtime: C.mtime.getTime(),
@@ -56859,7 +55816,7 @@ async function gbs(e, t, r) {
   return o === void 0
     ? void 0
     : Array.from(o, ([d, p]) => ({
-        path: Wp(e, `${d}.jsonl`),
+        path: join(e, `${d}.jsonl`),
         mtime: p.mtimeMs,
         key: p.key,
       }));
@@ -57189,7 +56146,7 @@ async function Lyr(e, t, r) {
       null
     );
   let p = (F) => F,
-    _ = o.projectPath !== void 0 && p(kv(e.fullPath)) === p(getProjectDir(o.projectPath)),
+    _ = o.projectPath !== void 0 && p(dirname(e.fullPath)) === p(getProjectDir(o.projectPath)),
     E =
       o.relocatedCwd ??
       (_ || e.projectPath === void 0
@@ -57291,7 +56248,7 @@ async function enrichLogs(e, t, r, o) {
 function emitExitMessage(e) {
   try {
     (cleanupTerminalModes(),
-      HZ(
+      writeSync(
         2,
         `
 ${stripAnsiControlCharacters(e)}

@@ -822,8 +822,7 @@ function se(e, t, o) {
 }
 var hn =
   "Hooks from this machine are not used in cloud sessions yet: run /hooks in claude on this machine to decide.";
-import { randomUUID as _t } from "crypto";
-import { randomUUID as mn } from "crypto";
+import { randomUUID } from "crypto";
 var fn = new Set([
   "answered",
   "failed_host_error",
@@ -920,7 +919,7 @@ class be {
     let p = new AbortController();
     this.inFlight.set(t, p);
     let _ = this.reaskGeneration.get(t),
-      w = _ === void 0 ? t : `${t}-reask-${_}-${mn()}`;
+      w = _ === void 0 ? t : `${t}-reask-${_}-${randomUUID()}`;
     if (_ === void 0) this.askedOfHost.add(t);
     else this.derivedIds.add(w);
     let C = () => this.inFlight.get(t) === p && this.inFlight.delete(t),
@@ -1101,7 +1100,6 @@ function ct({ io: e, declaredKinds: t, clock: o }) {
     return (C("answered"), { answer: I.data, answered: !0 });
   };
 }
-import { randomUUID as _n } from "crypto";
 var vn = 250,
   Cn = 1000,
   kn = 1000,
@@ -1498,7 +1496,7 @@ class Ae {
         seq: this.deltaSeq,
         changed: d,
         cloud_session: t,
-        uuid: _n(),
+        uuid: randomUUID(),
         session_id: this.stamped,
       }));
   }
@@ -1996,7 +1994,6 @@ class Te {
       this.ports.emit(buildInformationalSystemMessage(this.ports.stampedSessionId(), e, o)));
   }
 }
-import { randomUUID as zn } from "crypto";
 function W(e, t, o) {
   return withDeadline(t, o, (r, d) => e.setTimeout(r, d));
 }
@@ -2235,7 +2232,7 @@ class He {
             type: "command_lifecycle",
             command_uuid: r,
             state: "cancelled",
-            uuid: zn(),
+            uuid: randomUUID(),
             session_id: this.ports.stampedSessionId(),
           });
         } catch (d) {
@@ -3493,7 +3490,7 @@ class It {
       p = {
         kind: "message",
         content: r,
-        uuid: t ?? _t(),
+        uuid: t ?? randomUUID(),
         ...((d === "now" || d === "next" || d === "later") && { priority: d }),
       };
     if (this.outbound.submit(p) === "new" && !this.closing)
@@ -3516,7 +3513,7 @@ class It {
         kind: "bash",
         command: o,
         ...(r !== void 0 && { cwd: r }),
-        uuid: t ?? _t(),
+        uuid: t ?? randomUUID(),
       }),
       !0
     );
