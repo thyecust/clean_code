@@ -48,16 +48,16 @@ var ht = toESM(pg(), 1);
 import { constants } from "fs";
 import {
   access,
-  chmod as sn,
+  chmod,
   copyFile,
   mkdir,
-  readdir as be,
+  readdir,
   readlink,
   realpath,
   rename,
-  rm as ke,
+  rm,
   rmdir,
-  stat as K,
+  stat,
   symlink,
   unlink,
   utimes,
@@ -66,20 +66,18 @@ import {
 import { homedir } from "os";
 import { randomBytes } from "crypto";
 import {
-  basename as _t,
+  basename,
   delimiter,
   dirname,
-  join as V,
+  join,
   resolve,
 } from "path";
-import { createHash as Re } from "crypto";
+import { createHash } from "crypto";
 import { createReadStream, createWriteStream } from "fs";
-import { chmod as It, rm as Mt } from "fs/promises";
-import { join as Ft } from "path";
-import { Readable as Dt, Transform as je } from "stream";
+import { Readable, Transform } from "stream";
 import { pipeline } from "stream/promises";
 import { createZstdDecompress } from "zlib";
-import { createHash as $t, createPublicKey, verify } from "crypto";
+import { createPublicKey, verify } from "crypto";
 function Oe() {
   return `-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAp28rSV5I8HmK8CK9GixB
@@ -148,7 +146,7 @@ function Ue({
   } catch {
     throw new ManifestSignatureError(r, "key_mismatch");
   }
-  let v = $t("sha256")
+  let v = createHash("sha256")
     .update(w.export({ type: "spki", format: "der" }))
     .digest("hex");
   if (_ !== v) throw new ManifestSignatureError(r, "key_mismatch");
@@ -306,17 +304,17 @@ async function We(e, t, r, d = {}, p) {
           signal: S.signal,
           ...d,
         }),
-        N = Re("sha256"),
-        L = p ? Re("sha256") : void 0,
+        N = createHash("sha256"),
+        L = p ? createHash("sha256") : void 0,
         G = L ?? N,
-        ne = new je({
+        ne = new Transform({
           transform(U, O, q) {
             (C(), G.update(U), q(null, U));
           },
         });
       if (((x = createWriteStream(r, { highWaterMark: 4194304 })), x.on("drain", C), p)) {
         let U = 0,
-          O = new je({
+          O = new Transform({
             transform(q, J, ie) {
               if (((U += q.length), U > p.decompressedSize)) {
                 ie(
@@ -351,7 +349,7 @@ async function We(e, t, r, d = {}, p) {
         );
       return (
         (I = !0),
-        await It(r, 493),
+        await chmod(r, 493),
         { checksumRetried: _, dropRetried: w }
       );
     } catch (D) {
@@ -365,11 +363,11 @@ async function We(e, t, r, d = {}, p) {
             { cause: D },
           )
         : D;
-      if (isAxiosError(N) && N.response?.data instanceof Dt) N.response.data.destroy();
+      if (isAxiosError(N) && N.response?.data instanceof Readable) N.response.data.destroy();
       if (x && !I) {
         let q = x;
         (await new Promise((J) => q.close(() => J())),
-          await Mt(r, { force: !0 }).catch((J) =>
+          await rm(r, { force: !0 }).catch((J) =>
             logForDebugging(
               `Failed to remove partial download: ${J instanceof Error ? J.message : String(J)}`,
               { level: "error" },
@@ -612,7 +610,7 @@ async function Gt(e, t, r, { authConfig: d, signaturePolicy: p }) {
         : void 0,
     G = `${r}/${e}/${_}/${w}`;
   await o.mkdir(t);
-  let ne = Ft(t, w),
+  let ne = join(t, w),
     Y = L !== void 0,
     U = Y ? `${G}.zst` : G;
   try {
@@ -704,7 +702,7 @@ function et(e) {
   return t !== void 0 && (SR.has(t) || t === "ETIMEDOUT");
 }
 async function ye(e) {
-  let t = Re("sha256");
+  let t = createHash("sha256");
   return (await pipeline(createReadStream(e), t), t.digest("hex"));
 }
 async function ve(e, t) {
@@ -804,8 +802,7 @@ async function Ce(e, t) {
         await sleep(1000));
     }
 }
-import { lstat, readdir as Zt } from "fs/promises";
-import { basename as Jt, join as en } from "path";
+import { lstat } from "fs/promises";
 function de() {
   return !po(void 0);
 }
@@ -869,7 +866,7 @@ function rn(e, t) {
 }
 async function nt(e, t) {
   let r = getFsSurface(),
-    d = Jt(e);
+    d = basename(e);
   if (he(t)) {
     let o = ue(t);
     return (logForDebugging(`Cannot acquire lock for ${d} - held by PID ${o?.pid}`), null);
@@ -926,7 +923,7 @@ async function ot(e) {
     r = 0,
     d;
   try {
-    d = (await Zt(e)).filter((p) => p.endsWith(".lock"));
+    d = (await readdir(e)).filter((p) => p.endsWith(".lock"));
   } catch (p) {
     if (W(p)) return 0;
     return (
@@ -937,7 +934,7 @@ async function ot(e) {
     );
   }
   for (let p of d) {
-    let o = en(e, p);
+    let o = join(e, p);
     try {
       if ((await lstat(o)).isDirectory())
         (t.rmSync(o, { recursive: !0, force: !0 }),
@@ -979,14 +976,14 @@ function Q() {
     t = getBinaryName(e);
   return {
     versions: getClaudeVersionsDir(),
-    staging: V(getXdgCacheHome(), "claude", "staging"),
-    locks: V(getXdgStateHome(), "claude", "locks"),
-    executable: V(getLocalBinDir(), t),
+    staging: join(getXdgCacheHome(), "claude", "staging"),
+    locks: join(getXdgStateHome(), "claude", "locks"),
+    executable: join(getLocalBinDir(), t),
   };
 }
 async function re(e) {
   try {
-    let t = await K(e);
+    let t = await stat(e);
     if (!t.isFile() || t.size === 0) return !1;
     return (t.mode & constants.S_IXUSR) !== 0;
   } catch {
@@ -1005,19 +1002,19 @@ async function Le(e) {
     throw Error(
       `Invalid version string "${e}": contains path-unsafe characters`,
     );
-  let p = V(t.versions, e);
+  let p = join(t.versions, e);
   try {
     await writeFile(p, "", { encoding: "utf8", flag: "wx" });
   } catch (o) {
     if (A(o) !== "EEXIST") throw o;
     try {
-      if ((await K(p)).size === 0) {
+      if ((await stat(p)).size === 0) {
         let _ = new Date();
         await utimes(p, _, _);
       }
     } catch {}
   }
-  return { stagingPath: V(t.staging, e), installPath: p };
+  return { stagingPath: join(t.staging, e), installPath: p };
 }
 async function wt(e, t, r = 0) {
   let d = Q(),
@@ -1130,7 +1127,7 @@ async function yt(e, t, r) {
     let o = `${t}.tmp.${process.pid}.${Date.now()}.${p}`;
     try {
       if (
-        (await copyFile(e, o), await sn(o, 493), r !== void 0 && (await ye(o)) !== r)
+        (await copyFile(e, o), await chmod(o, 493), r !== void 0 && (await ye(o)) !== r)
       )
         throw new StagedBinaryChecksumError();
       return (
@@ -1160,8 +1157,8 @@ async function yt(e, t, r) {
 }
 async function pn(e, t, r) {
   try {
-    let d = V(e, "node_modules", "@anthropic-ai"),
-      o = (await be(d)).find((v) => v.startsWith("claude-cli-native-"));
+    let d = join(e, "node_modules", "@anthropic-ai"),
+      o = (await readdir(d)).find((v) => v.startsWith("claude-cli-native-"));
     if (!o)
       throw (
         logEvent("tengu_native_install_package_failure", {
@@ -1170,9 +1167,9 @@ async function pn(e, t, r) {
         }),
         Error("Could not find platform-specific native package")
       );
-    let _ = V(d, o, "cli");
+    let _ = join(d, o, "cli");
     try {
-      await K(_);
+      await stat(_);
     } catch {
       throw (
         logEvent("tengu_native_install_package_failure", {
@@ -1184,7 +1181,7 @@ async function pn(e, t, r) {
     }
     let { attempts: w } = await yt(_, t, r);
     return (
-      await ke(e, { recursive: !0, force: !0 }),
+      await rm(e, { recursive: !0, force: !0 }),
       logEvent("tengu_native_install_package_success", { install_attempts: w }),
       { moveRetried: w > 1 }
     );
@@ -1216,9 +1213,9 @@ async function gn(e, t, r) {
   try {
     let d = getPlatform(),
       p = getBinaryName(d),
-      o = V(e, p);
+      o = join(e, p);
     try {
-      await K(o);
+      await stat(o);
     } catch (w) {
       throw (
         logEvent("tengu_native_install_binary_failure", {
@@ -1231,7 +1228,7 @@ async function gn(e, t, r) {
     }
     let { attempts: _ } = await yt(o, t, r);
     return (
-      await ke(e, { recursive: !0, force: !0 }),
+      await rm(e, { recursive: !0, force: !0 }),
       logEvent("tengu_native_install_binary_success", { install_attempts: _ }),
       { moveRetried: _ > 1 }
     );
@@ -1345,7 +1342,7 @@ async function ut(
   if (M !== "updated" && !(await re(_))) {
     let C = !1;
     try {
-      (await K(o), (C = !0));
+      (await stat(o), (C = !0));
     } catch {}
     throw (
       logFeatureBad("update_apply", "update_apply_native_symlink_failed"),
@@ -1379,7 +1376,7 @@ async function yn() {
       realpath(e).catch(() => e),
       realpath(dirname(t)).catch(() => dirname(t)),
     ]),
-    _ = V(o, _t(t));
+    _ = join(o, basename(t));
   if (p !== e || _ !== t) d.push({ versions: p, executable: _ });
   return d.some((w) => vn(process.execPath, { ...w, isWindows: !1 }));
 }
@@ -1635,11 +1632,11 @@ async function $n(e, t, { expectedChecksum: r } = {}) {
       await mkdir(w, { recursive: !0 });
       let v;
       try {
-        v = await K(e);
+        v = await stat(e);
       } catch {}
       if (v)
         try {
-          let I = await K(t);
+          let I = await stat(t);
           if (v.size === I.size && (r === void 0 || (await ve(e, r))))
             return "noop";
         } catch {}
@@ -1913,8 +1910,8 @@ async function Rn(e) {
   return null;
 }
 function we(e, t) {
-  let r = _t(t);
-  return V(e.locks, `${r}.lock`);
+  let r = basename(t);
+  return join(e.locks, `${r}.lock`);
 }
 async function lockCurrentVersion() {
   let e = Q();
@@ -2009,7 +2006,7 @@ async function cleanupOldVersions() {
   if (getPlatform().startsWith("win32")) {
     let o = dirname(e.executable);
     try {
-      let _ = await be(o),
+      let _ = await readdir(o),
         w = 0;
       for (let v of _) {
         let S = /^claude\.exe\.(?:old\.(\d+)|new\.\d+\.(\d+)\.[0-9a-f]+)$/.exec(
@@ -2017,8 +2014,8 @@ async function cleanupOldVersions() {
         );
         if (!S) continue;
         try {
-          let F = V(o, v);
-          if (Number(S[1] ?? S[2]) >= t || (await K(F)).mtime.getTime() >= t)
+          let F = join(o, v);
+          if (Number(S[1] ?? S[2]) >= t || (await stat(F)).mtime.getTime() >= t)
             continue;
           (await unlink(F), w++);
         } catch {}
@@ -2029,13 +2026,13 @@ async function cleanupOldVersions() {
     }
   }
   try {
-    let o = await be(e.staging),
+    let o = await readdir(e.staging),
       _ = 0;
     for (let w of o) {
-      let v = V(e.staging, w);
+      let v = join(e.staging, w);
       try {
-        if ((await K(v)).mtime.getTime() < t)
-          (await ke(v, { recursive: !0, force: !0 }),
+        if ((await stat(v)).mtime.getTime() < t)
+          (await rm(v, { recursive: !0, force: !0 }),
             _++,
             logForDebugging(`Cleaned up old staging directory: ${w}`));
       } catch {}
@@ -2054,7 +2051,7 @@ async function cleanupOldVersions() {
   }
   let r;
   try {
-    r = await be(e.versions);
+    r = await readdir(e.versions);
   } catch (o) {
     if (!W(o))
       (logForDebugging(`Failed to readdir versions directory: ${o}`),
@@ -2065,16 +2062,16 @@ async function cleanupOldVersions() {
   let d = [],
     p = 0;
   for (let o of r) {
-    let _ = V(e.versions, o);
+    let _ = join(e.versions, o);
     if (/\.tmp\.\d+\.\d+(\.\d+)?$/.test(o)) {
       try {
-        if ((await K(_)).mtime.getTime() < t)
+        if ((await stat(_)).mtime.getTime() < t)
           (await unlink(_), p++, logForDebugging(`Cleaned up orphaned temp install file: ${o}`));
       } catch {}
       continue;
     }
     try {
-      let w = await K(_);
+      let w = await stat(_);
       if (!w.isFile()) continue;
       if (w.size > 0 && (w.mode & 73) === 0) continue;
       d.push({
@@ -2111,7 +2108,7 @@ async function cleanupOldVersions() {
     if (w) _.add(w);
     else if (getPlatform().startsWith("win32"))
       try {
-        let E = await K(e.executable);
+        let E = await stat(e.executable);
         for (let x of d) if (x.size === E.size) _.add(x.resolvedPath);
       } catch {}
     for (let E of d) {
@@ -2159,7 +2156,7 @@ async function cleanupOldVersions() {
             let x = !0,
               M = await wt(E.path, async () => {
                 if (E.size === 0) {
-                  let C = await K(E.path);
+                  let C = await stat(E.path);
                   if (C.size > 0 || C.mtime.getTime() >= t) {
                     x = !1;
                     return;
@@ -2282,21 +2279,21 @@ async function xn(e) {
       }
     }
     if (getPlatform().startsWith("win32")) {
-      let o = V(r, "claude.cmd"),
-        _ = V(r, "claude.ps1"),
-        w = V(r, "claude");
+      let o = join(r, "claude.cmd"),
+        _ = join(r, "claude.ps1"),
+        w = join(r, "claude");
       if (await p(o, "bin script")) d = !0;
       if (await p(_, "PowerShell script")) d = !0;
       if (await p(w, "bin executable")) d = !0;
     } else {
-      let o = V(r, "bin", "claude");
+      let o = join(r, "bin", "claude");
       if (await p(o, "bin symlink")) d = !0;
     }
     if (d) {
       logForDebugging(`Successfully removed ${e} manually`);
       let o = getPlatform().startsWith("win32")
-        ? V(r, "node_modules", e)
-        : V(r, "lib", "node_modules", e);
+        ? join(r, "node_modules", e)
+        : join(r, "lib", "node_modules", e);
       return {
         success: !0,
         warning: `${e} executables removed, but node_modules directory was left intact for safety. You may manually delete it later at: ${o}`,
@@ -2399,9 +2396,9 @@ async function cleanupNpmInstallations() {
       if ((r++, w.warning)) t.push(w.warning);
     } else if (w.error) (e.push(w.error), (d = !0));
   }
-  let _ = V(homedir(), ".claude", "local");
+  let _ = join(homedir(), ".claude", "local");
   try {
-    (await ke(_, { recursive: !0 }),
+    (await rm(_, { recursive: !0 }),
       r++,
       logForDebugging(`Removed local installation at ${_}`));
   } catch (w) {

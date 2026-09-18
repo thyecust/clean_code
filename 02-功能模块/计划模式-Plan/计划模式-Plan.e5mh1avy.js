@@ -44,9 +44,9 @@ import { lstat, readdir } from "fs/promises";
 import {
   basename,
   dirname,
-  join as d,
+  join,
   resolve,
-  sep as U,
+  sep,
 } from "path";
 var EXIT_PLAN_MODE_TOOL_NAME_ALIAS = "ExitPlanMode",
   EXIT_PLAN_MODE_TOOL_NAME = "ExitPlanMode";
@@ -544,7 +544,7 @@ function C() {
   return getPlansDirectory();
 }
 function P() {
-  return d(getClaudeConfigDir(), "plans");
+  return join(getClaudeConfigDir(), "plans");
 }
 function p(t) {
   return STORAGE_KEYS.plan(t);
@@ -555,7 +555,7 @@ function y(t) {
 var w = { publishDiscipline: "inPlace" };
 async function N(t) {
   try {
-    let e = await lstat(d(getPlansDirectory(), `${t}.md`));
+    let e = await lstat(join(getPlansDirectory(), `${t}.md`));
     return { ...w, mode: e.mode & 511 };
   } catch {
     return w;
@@ -612,14 +612,14 @@ var G = new j(() => new z()),
     },
   );
 function pe(t, e) {
-  if (t !== e && !t.startsWith(e + U)) return !1;
+  if (t !== e && !t.startsWith(e + sep)) return !1;
   if (resolveSymlinkAncestrySync(getFsSurface(), t) !== void 0) return !1;
   let i = RS(e);
   if (i === null) return !1;
   let r = t;
   for (;;) {
     let s = RS(r);
-    if (s !== null) return s === i || s.startsWith(i + U);
+    if (s !== null) return s === i || s.startsWith(i + sep);
     let o = dirname(r);
     if (o === r) return !1;
     r = o;
@@ -637,7 +637,7 @@ async function m(t) {
 async function saveRejectedUltraplan(t, e) {
   if (e && g()) {
     let r = `${generateAdjectiveVerbNounName()}-ultraplan`,
-      s = d(await m(e), `${r}.md`),
+      s = join(await m(e), `${r}.md`),
       o = await e.write(p(r), t, w);
     if (!o.ok)
       throw new R(
@@ -646,7 +646,7 @@ async function saveRejectedUltraplan(t, e) {
       );
     return s;
   }
-  let i = d(await m(), `${generateAdjectiveVerbNounName()}-ultraplan.md`);
+  let i = join(await m(), `${generateAdjectiveVerbNounName()}-ultraplan.md`);
   return (await getFileStorage().write(i, t), i);
 }
 async function persistPlanEdit(t, e, i) {
@@ -675,12 +675,12 @@ function H(t, e) {
 function getPlanFilePath(t) {
   let e = K(),
     i = getPlanSlug(e);
-  if ((planFiles().markPlanPathServed(e), !t)) return d(getPlansDirectory(), `${i}.md`);
-  return d(getPlansDirectory(), `${i}-agent-${t}.md`);
+  if ((planFiles().markPlanPathServed(e), !t)) return join(getPlansDirectory(), `${i}.md`);
+  return join(getPlansDirectory(), `${i}-agent-${t}.md`);
 }
 function getPlanWorkshopDocPath() {
   let t = getPlanSlug(K());
-  return d(getPlansDirectory(), `${t}.workshop.md`);
+  return join(getPlansDirectory(), `${t}.workshop.md`);
 }
 async function D(t, e, i) {
   let r = await t.read([p(e)]);
@@ -792,7 +792,7 @@ function Y(t) {
 async function V(t, e, i) {
   if (getCloudEnvironmentKind() === null) return;
   if (i && g()) return ge(i, t, e).catch(logError);
-  let r = d(getPlansDirectory(), `${e}.workshop.md`);
+  let r = join(getPlansDirectory(), `${e}.workshop.md`);
   try {
     await getFileStorage().read(r);
     return;
@@ -843,7 +843,7 @@ async function ge(t, e, i) {
     return;
   let c = E(e.messages, "workshop");
   if (!c || c.content.length === 0 || c.content.length > WORKSHOP_DOC_SNAPSHOT_MAX_CHARS) return;
-  let f = d(getPlansDirectory(), r),
+  let f = join(getPlansDirectory(), r),
     k = !1;
   try {
     await m(t);
@@ -867,7 +867,7 @@ async function copyPlanForResume(t, e, i) {
   if (!r) return !1;
   let s = e ?? K();
   if ((setPlanSlug(s, r), i && g())) return Fe(i, t, r).catch((l) => (logError(l), !1));
-  let o = d(getPlansDirectory(), `${r}.md`);
+  let o = join(getPlansDirectory(), `${r}.md`);
   await V(t, r).catch(logError);
   try {
     return (await getFileStorage().read(o), !0);
@@ -963,7 +963,7 @@ async function Fe(t, e, i) {
       level: "info",
     });
   if (c) {
-    let f = d(getPlansDirectory(), r),
+    let f = join(getPlansDirectory(), r),
       k = !1;
     try {
       await m(t);
@@ -987,20 +987,20 @@ async function copyPlanForFork(t, e, i) {
   let r = Y(t);
   if (!r) return !1;
   let s = getPlansDirectory(),
-    o = d(s, `${r}.md`),
+    o = join(s, `${r}.md`),
     l = getPlanSlug(e),
-    u = d(s, `${l}.md`);
+    u = join(s, `${l}.md`);
   if ((planFiles().exemptSlugFromRevalidation(e, l), i && g()))
     return Pe(i, r, l).catch((c) => (logError(c), !1));
   await m();
   try {
-    await getFileStorage().copy(d(s, `${r}.workshop.md`), d(s, `${l}.workshop.md`));
+    await getFileStorage().copy(join(s, `${r}.workshop.md`), join(s, `${l}.workshop.md`));
   } catch (c) {
     if (!W(c))
       if (Rt(c)) logForDebugging(`copyPlanForFork: workshop sibling copy failed: ${c}`);
       else logError(c);
   } finally {
-    notePlanFileForgotten(d(s, `${l}.workshop.md`));
+    notePlanFileForgotten(join(s, `${l}.workshop.md`));
   }
   try {
     return (await getFileStorage().copy(o, u), !0);
@@ -1013,7 +1013,7 @@ async function copyPlanForFork(t, e, i) {
   }
 }
 async function Pe(t, e, i) {
-  let r = d(getPlansDirectory(), `${i}.workshop.md`),
+  let r = join(getPlansDirectory(), `${i}.workshop.md`),
     s;
   try {
     await m(t);
@@ -1031,7 +1031,7 @@ async function Pe(t, e, i) {
     if (s !== void 0) notePlanFileWritten(r, s);
     else notePlanFileForgotten(r);
   }
-  let o = d(getPlansDirectory(), `${i}.md`),
+  let o = join(getPlansDirectory(), `${i}.md`),
     l;
   try {
     let u = await t.read([p(e)]);

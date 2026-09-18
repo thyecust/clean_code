@@ -748,7 +748,7 @@ function createLazyDirSyncStreamer(e, t) {
     },
   };
 }
-import { lstat, mkdir, open as dn } from "fs/promises";
+import { lstat, mkdir, open } from "fs/promises";
 import { dirname } from "path";
 var j = 67108864,
   me = 384,
@@ -776,7 +776,7 @@ async function Oe(e, t) {
   try {
     let r = await lstat(e, { bigint: !0 });
     if (!r.isFile()) return { kind: "unreadable" };
-    let a = await dn(e, getSafeReadOpenFlags());
+    let a = await open(e, getSafeReadOpenFlags());
     try {
       let p = await a.stat({ bigint: !0 });
       if (p.dev !== r.dev || p.ino !== r.ino || !p.isFile() || p.size > j)

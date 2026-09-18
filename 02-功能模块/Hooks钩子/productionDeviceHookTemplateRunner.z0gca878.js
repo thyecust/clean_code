@@ -22,9 +22,9 @@ import { getHookTemplateById, isPreToolUseHook } from "./hook-template-catalog.j
 import { spawn } from "child_process";
 import { createHash } from "crypto";
 import { constants } from "fs";
-import { lstat, mkdir, open as J, realpath } from "fs/promises";
+import { lstat, mkdir, open, realpath } from "fs/promises";
 import { homedir } from "os";
-import { join as x } from "path";
+import { join } from "path";
 var U = ["/usr/bin/python3", "/usr/local/bin/python3", "/bin/python3"],
   I = 86,
   V = () =>
@@ -52,7 +52,7 @@ async function G(o) {
 }
 async function W(o, r, e) {
   await e.mkdir(e.templateDir, 448);
-  let t = x(e.templateDir, `${o}.py`);
+  let t = join(e.templateDir, `${o}.py`);
   return (await e.writeFileAtomic(t, r, 384), t);
 }
 function K(o, r, e, t = 262144) {
@@ -342,7 +342,7 @@ function re(o) {
 }
 function productionDeviceHookTemplateRunner(o) {
   let r = getResolvedClaudeTempDir(),
-    e = re(x(r, "device-hook-templates", String(process.pid))),
+    e = re(join(r, "device-hook-templates", String(process.pid))),
     t,
     s = () => (
       (t ??= G(e).then((a) => {
@@ -364,7 +364,7 @@ function productionDeviceHookTemplateRunner(o) {
         (l.delete(p), (m = void 0));
       if (m === void 0)
         ((m = (async () => (
-          await e.mkdir(x(r, "device-hook-templates"), 448),
+          await e.mkdir(join(r, "device-hook-templates"), 448),
           W(p, k, e)
         ))()),
           l.set(p, m),
@@ -411,7 +411,7 @@ async function oe(o, r, e) {
   if (o === null) return !1;
   let t;
   try {
-    t = await J(o, constants.O_RDONLY | constants.O_NONBLOCK | constants.O_NOFOLLOW);
+    t = await open(o, constants.O_RDONLY | constants.O_NONBLOCK | constants.O_NOFOLLOW);
     let s = await t.stat();
     if (!s.isFile() || s.size > e) return !1;
     let l = Buffer.alloc(s.size),

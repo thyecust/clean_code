@@ -78,7 +78,7 @@ import { CLAUDE_IN_CHROME_MCP_SERVER_NAME, CLAUDE_IN_CHROME_FILE_UPLOAD_TOOL_NAM
 import { s, ocr, vx, O, se, v, c, Qe, fe, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { join as Pi } from "path";
+import { join } from "path";
 var Yt = 1,
   Xt = 2147483648,
   ht = 8388608,
@@ -2002,61 +2002,50 @@ function Tt(e) {
   return e.retryable ? "transport" : "rejected";
 }
 import {
-  lstat as zn,
-  open as gi,
-  realpath as Ue,
+  lstat,
+  open,
+  realpath,
   unlink,
 } from "fs/promises";
 import {
-  basename as Kn,
-  dirname as Ct,
-  join as xe,
-  resolve as Un,
-  sep as Ln,
+  basename,
+  dirname,
+  resolve,
+  sep,
 } from "path";
-import { realpath as Jo, stat as Qo } from "fs/promises";
+import { stat } from "fs/promises";
 import {
-  basename as On,
-  dirname as Tn,
-  join as ei,
-  relative as ti,
-  sep as ni,
+  relative,
 } from "path";
 async function ri(e) {
   try {
-    return (await Qo(e), !0);
+    return (await stat(e), !0);
   } catch {
     return !1;
   }
 }
 async function ot(e, t) {
   try {
-    let n = Tn(t),
+    let n = dirname(t),
       r = [];
     while (!(await ri(n))) {
-      r.unshift(On(n));
-      let h = Tn(n);
+      r.unshift(basename(n));
+      let h = dirname(n);
       if (h === n) return null;
       n = h;
     }
-    let o = await Jo(n),
-      d = ei(o, ...r, On(t)),
-      _ = ti(e, d);
+    let o = await realpath(n),
+      d = join(o, ...r, basename(t)),
+      _ = relative(e, d);
     if (_ === "" || _.startsWith("..")) return null;
-    return _.split(ni).join("/");
+    return _.split(sep).join("/");
   } catch {
     return null;
   }
 }
-import { lstat as oi, mkdir, realpath as Mt } from "fs/promises";
+import { mkdir } from "fs/promises";
 import {
-  basename as ii,
-  dirname as it,
-  join as si,
   posix,
-  relative as st,
-  resolve as xn,
-  sep as Ft,
 } from "path";
 function li(e) {
   if (e === SETTINGS_FILE_NAME) return STORAGE_KEYS.userSettings();
@@ -2088,14 +2077,14 @@ function Fn({
     return _(h, S, T);
   };
   if (!t || e === void 0) return o(Dn);
-  let d = xn(n);
+  let d = resolve(n);
   return o(async (_, h, S) => {
-    if (xn(_) !== d)
+    if (resolve(_) !== d)
       throw ue(
         Error("destination names a config home the backend does not address"),
         "HOME_DEST_HOME_MISMATCH",
       );
-    let T = st(_, h).split(Ft).join(posix.sep),
+    let T = relative(_, h).split(sep).join(posix.sep),
       P = li(T);
     if (P === null) return Dn(_, h, S);
     await di(_, h);
@@ -2120,7 +2109,7 @@ function Dn(e, t, n) {
   return writeUnderSyncDir(e, t, n, "replace");
 }
 async function di(e, t) {
-  if (shouldIgnore(st(e, t)))
+  if (shouldIgnore(relative(e, t)))
     throw ue(
       Error("destination name is one the lane writer ignores"),
       "HOME_DEST_IGNORED",
@@ -2128,21 +2117,21 @@ async function di(e, t) {
   await mkdir(e).catch((o) => {
     if (A(o) !== "EEXIST") throw o;
   });
-  let n = await Mt(e);
-  (await ui(n, it(t)), await mkdir(it(t), { recursive: !0 }));
-  let r = await Mt(it(t));
+  let n = await realpath(e);
+  (await ui(n, dirname(t)), await mkdir(dirname(t), { recursive: !0 }));
+  let r = await realpath(dirname(t));
   if (!Cn({ path: r, directory: n }))
     throw ue(
       Error("destination parent escaped the config home"),
       "HOME_DEST_PARENT_ESCAPE",
     );
-  if (shouldIgnore(st(n, si(r, ii(t)))))
+  if (shouldIgnore(relative(n, join(r, basename(t)))))
     throw ue(
       Error("destination resolves to a name the lane writer ignores"),
       "HOME_DEST_IGNORED",
     );
   try {
-    let o = await oi(t);
+    let o = await lstat(t);
     if (o.isSymbolicLink())
       throw ue(Error("destination is a symlink"), "HOME_DEST_SYMLINK");
     if (o.isDirectory())
@@ -2160,13 +2149,13 @@ async function ui(e, t) {
   let n = t;
   for (;;)
     try {
-      let r = await Mt(n);
+      let r = await realpath(n);
       if (!Cn({ path: r, directory: e }))
         throw ue(
           Error("destination ancestor escaped the config home"),
           "HOME_DEST_PARENT_ESCAPE",
         );
-      if (shouldIgnore(st(e, r)))
+      if (shouldIgnore(relative(e, r)))
         throw ue(
           Error(
             "destination ancestor resolves to a name the lane writer ignores",
@@ -2176,23 +2165,23 @@ async function ui(e, t) {
       return;
     } catch (r) {
       if (A(r) !== "ENOENT") throw r;
-      let o = it(n);
+      let o = dirname(n);
       if (o === n) throw r;
       n = o;
     }
 }
 function Cn({ path: e, directory: t }) {
-  return e === t || e.startsWith(t.endsWith(Ft) ? t : t + Ft);
+  return e === t || e.startsWith(t.endsWith(sep) ? t : t + sep);
 }
 function ue(e, t) {
   return ((e.code = t), e);
 }
-import { isAbsolute, join as mi, relative as pi, sep as Nn } from "path";
+import { isAbsolute } from "path";
 function In(e, t) {
   try {
     return getMemoryFileIncludePaths(
       t.content.toString("utf8"),
-      mi(e, ...t.path.split("/")),
+      join(e, ...t.path.split("/")),
       "User",
     ).every((n) => _i(e, n));
   } catch {
@@ -2200,17 +2189,17 @@ function In(e, t) {
   }
 }
 function _i(e, t) {
-  let n = pi(e, t);
-  if (n === "" || n === ".." || n.startsWith(`..${Nn}`) || isAbsolute(n)) return !1;
-  let r = parseMemoryDestination(n.split(Nn).join("/"));
+  let n = relative(e, t);
+  if (n === "" || n === ".." || n.startsWith(`..${sep}`) || isAbsolute(n)) return !1;
+  let r = parseMemoryDestination(n.split(sep).join("/"));
   return r !== null && r.kind !== "output_style";
 }
 async function $n(e) {
-  let t = await De(xe(e, rt), Ke);
+  let t = await De(join(e, rt), Ke);
   return t.kind === "read" ? vt(t.content) : null;
 }
 async function jn(e) {
-  let t = await De(xe(e, rt), Ke);
+  let t = await De(join(e, rt), Ke);
   if (t.kind === "absent") return "absent";
   return t.kind === "read" && vt(t.content) !== null ? "valid" : "invalid";
 }
@@ -2228,7 +2217,7 @@ function je(e) {
 }
 async function De(e, t) {
   try {
-    let n = await gi(e, getSafeReadOpenFlags());
+    let n = await open(e, getSafeReadOpenFlags());
     try {
       let r = await n.stat();
       if (!r.isFile()) return { kind: "not_regular" };
@@ -2257,10 +2246,10 @@ function Vn({ storageV5: e, configHome: t }) {
   };
 }
 async function bi(e, t, n = SYNCED_FILE_ROOT) {
-  let r = Un(e),
+  let r = resolve(e),
     o;
   try {
-    o = await zn(r);
+    o = await lstat(r);
   } catch (T) {
     return { ok: !1, reason: W(T) ? "missing" : "unresolvable" };
   }
@@ -2268,7 +2257,7 @@ async function bi(e, t, n = SYNCED_FILE_ROOT) {
   if (!o.isDirectory()) return { ok: !1, reason: "not_directory" };
   let d, _;
   try {
-    ((d = await Ue(r)), (_ = await Ue(t)));
+    ((d = await realpath(r)), (_ = await realpath(t)));
   } catch {
     return { ok: !1, reason: "unresolvable" };
   }
@@ -2278,7 +2267,7 @@ async function bi(e, t, n = SYNCED_FILE_ROOT) {
     writeDiagnosticsEvent("info", "home_under_cwd_no_worktree", {});
   let h;
   try {
-    h = await Ue(n);
+    h = await realpath(n);
   } catch (T) {
     if (!je(A(T))) return { ok: !1, reason: "unresolvable" };
     h = null;
@@ -2294,20 +2283,20 @@ async function bi(e, t, n = SYNCED_FILE_ROOT) {
   return { ok: !0, real: d };
 }
 async function Yn(e) {
-  for (let t = e; ; t = Ct(t)) {
-    if ((await $e(xe(t, ".git"))) !== "absent") return !0;
-    if (Ct(t) === t) return !1;
+  for (let t = e; ; t = dirname(t)) {
+    if ((await $e(join(t, ".git"))) !== "absent") return !0;
+    if (dirname(t) === t) return !1;
   }
 }
 async function $e(e) {
   try {
-    return await zn(e);
+    return await lstat(e);
   } catch (t) {
     return je(A(t)) ? "absent" : "unverifiable";
   }
 }
 function at({ path: e, directory: t }) {
-  return e === t || e.startsWith(t.endsWith(Ln) ? t : t + Ln);
+  return e === t || e.startsWith(t.endsWith(sep) ? t : t + sep);
 }
 async function Xn(e, t, n) {
   let r = await Promise.resolve()
@@ -2331,7 +2320,7 @@ async function Xn(e, t, n) {
         reason: o.reason,
       }
     );
-  let d = { configHome: Un(t.configHome), homeReal: o.real, deps: n },
+  let d = { configHome: resolve(t.configHome), homeReal: o.real, deps: n },
     _ = [];
   for (let w of e.removals) _.push({ removal: w, result: await Wn(w, d) });
   let h = [];
@@ -2434,7 +2423,7 @@ async function Xn(e, t, n) {
   };
 }
 function Ae(e, t) {
-  return xe(e, ...t.split("/"));
+  return join(e, ...t.split("/"));
 }
 async function Si(e, t, n) {
   let r = await wi(e, n);
@@ -2491,7 +2480,7 @@ async function Ri(e, t) {
 }
 async function Ee(e) {
   try {
-    return (await Ue(e.configHome)) === e.homeReal && !(await Yn(e.homeReal));
+    return (await realpath(e.configHome)) === e.homeReal && !(await Yn(e.homeReal));
   } catch {
     return !1;
   }
@@ -2523,7 +2512,7 @@ async function qn(e, t) {
     if (d === "unverifiable") return "ancestor_unverifiable";
     if (d.isSymbolicLink()) return "ancestor_is_symlink";
     if (!d.isDirectory()) return "parent_not_directory";
-    let _ = await $e(xe(o, ".git"));
+    let _ = await $e(join(o, ".git"));
     if (_ === "unverifiable") return "ancestor_unverifiable";
     if (_ !== "absent") return "ancestor_in_worktree";
   }
@@ -2599,7 +2588,7 @@ async function Ai(e, t, n) {
   };
   if (t === void 0 || (e.settings === null && e.priorSettingsSha256 === null))
     return r;
-  if (Kn(t) !== SETTINGS_FILE_NAME || !(await Hi(n.homeReal, t)))
+  if (basename(t) !== SETTINGS_FILE_NAME || !(await Hi(n.homeReal, t)))
     return (
       writeDiagnosticsEvent("warn", "home_seed_settings_path_refused", {}),
       e.settings === null ? { ...r, removeFailed: !0 } : r
@@ -2675,7 +2664,7 @@ async function Ai(e, t, n) {
 }
 async function Hi(e, t) {
   try {
-    return (await Ue(Ct(t))) === e && Kn(t) !== "";
+    return (await realpath(dirname(t))) === e && basename(t) !== "";
   } catch {
     return !1;
   }
@@ -2686,7 +2675,7 @@ async function Oi(e, t) {
       writeDiagnosticsEvent("warn", "home_seed_sidecar_write_failed", { code: "home_unvetted" }),
       !1
     );
-  let n = xe(e.configHome, rt),
+  let n = join(e.configHome, rt),
     r = await lt(n);
   if (r !== null && r !== "leaf_absent")
     return (writeDiagnosticsEvent("warn", "home_seed_sidecar_write_refused", { reason: r }), !1);
@@ -3011,7 +3000,7 @@ function startWorkerHomeSeed({
     },
   };
   return Hn(
-    { configHome: n, repoRoot: r, settingsPath: Pi(n, SETTINGS_FILE_NAME) },
+    { configHome: n, repoRoot: r, settingsPath: join(n, SETTINGS_FILE_NAME) },
     {
       verdicts: { subscribe: seedVerdictStore.subscribe },
       announcements: {

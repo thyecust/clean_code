@@ -54,13 +54,12 @@ import {
   readFile,
   writeFile,
 } from "fs/promises";
-import { homedir as Ge, platform as Le } from "os";
-import { dirname as lr, join as Q } from "path";
+import { homedir, platform } from "os";
+import { dirname, join } from "path";
 import { pathToFileURL } from "url";
-import { platform as er } from "os";
 function shouldOfferTerminalSetup() {
   return (
-    (er() === "darwin" && a.terminal === "Apple_Terminal") ||
+    (platform() === "darwin" && a.terminal === "Apple_Terminal") ||
     a.terminal === "vscode" ||
     a.terminal === "cursor" ||
     a.terminal === "windsurf" ||
@@ -68,9 +67,7 @@ function shouldOfferTerminalSetup() {
     a.terminal === "zed"
   );
 }
-import { stat as mt } from "fs/promises";
-import { homedir as tr } from "os";
-import { join as rr } from "path";
+import { stat } from "fs/promises";
 async function nr(e, t) {
   await saveGlobalConfig(
     (r) => ({
@@ -92,7 +89,7 @@ function ir() {
   };
 }
 function Se() {
-  return rr(tr(), "Library", "Preferences", "com.apple.Terminal.plist");
+  return join(homedir(), "Library", "Preferences", "com.apple.Terminal.plist");
 }
 async function ht(e) {
   let t = Se(),
@@ -101,7 +98,7 @@ async function ht(e) {
     let { code: s } = await execFileNoThrow("defaults", ["export", "com.apple.Terminal", t]);
     if (s !== 0) return null;
     try {
-      await mt(t);
+      await stat(t);
     } catch {
       return null;
     }
@@ -121,7 +118,7 @@ async function checkAndRestoreTerminalBackup(e) {
   if (!t) return { status: "no_backup" };
   if (!r) return (await $e(e), { status: "no_backup" });
   try {
-    await mt(r);
+    await stat(r);
   } catch {
     return (await $e(e), { status: "no_backup" });
   }
@@ -144,38 +141,37 @@ async function checkAndRestoreTerminalBackup(e) {
     );
   }
 }
-import { homedir as sr } from "os";
-import { dirname as Qr, join as ge, resolve } from "path";
+import { resolve } from "path";
 function or() {
   let e = a.SHELL || "",
-    t = sr(),
-    r = ge(t, ".claude");
+    t = homedir(),
+    r = join(t, ".claude");
   if (e.endsWith("/zsh") || e.endsWith("/zsh.exe")) {
-    let s = ge(r, "completion.zsh");
+    let s = join(r, "completion.zsh");
     return {
       name: "zsh",
-      rcFile: ge(t, ".zshrc"),
+      rcFile: join(t, ".zshrc"),
       cacheFile: s,
       completionLine: `[[ -f "${s}" ]] && source "${s}"`,
       shellFlag: "zsh",
     };
   }
   if (e.endsWith("/bash") || e.endsWith("/bash.exe")) {
-    let s = ge(r, "completion.bash");
+    let s = join(r, "completion.bash");
     return {
       name: "bash",
-      rcFile: ge(t, ".bashrc"),
+      rcFile: join(t, ".bashrc"),
       cacheFile: s,
       completionLine: `[ -f "${s}" ] && source "${s}"`,
       shellFlag: "bash",
     };
   }
   if (e.endsWith("/fish") || e.endsWith("/fish.exe")) {
-    let s = a.XDG_CONFIG_HOME || ge(t, ".config"),
-      o = ge(r, "completion.fish");
+    let s = a.XDG_CONFIG_HOME || join(t, ".config"),
+      o = join(r, "completion.fish");
     return {
       name: "fish",
-      rcFile: ge(s, "fish", "config.fish"),
+      rcFile: join(s, "fish", "config.fish"),
       cacheFile: o,
       completionLine: `[ -f "${o}" ] && source "${o}"`,
       shellFlag: "fish",
@@ -306,7 +302,7 @@ function isShiftEnterKeyBindingInstalled() {
 }
 var yt = ["vscode", "cursor", "windsurf", "alacritty", "zed"];
 function supportsShiftEnter() {
-  if (a.terminal === "Apple_Terminal" && Le() === "darwin") return !0;
+  if (a.terminal === "Apple_Terminal" && platform() === "darwin") return !0;
   if (a.terminal && a.terminal in ve) return !0;
   return yt.includes(a.terminal ?? "") && isShiftEnterKeyBindingInstalled();
 }
@@ -319,7 +315,7 @@ function markBackslashReturnUsed(e) {
 }
 async function call(e, t, r) {
   if (
-    Le() === "darwin" &&
+    platform() === "darwin" &&
     a.__CFBundleIdentifier === "com.googlecode.iterm2" &&
     (a.terminal === "iTerm.app" ||
       a.terminal === "tmux" ||
@@ -374,7 +370,7 @@ async function readVSCodeScrollSensitivity(e) {
   let t = cr();
   if (!t || Ke()) return null;
   try {
-    let r = await readFile(Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json"), {
+    let r = await readFile(join(await vscodeUserDirectories.of(e).pathFor(t), "settings.json"), {
         encoding: "utf-8",
       }),
       s = ike(r),
@@ -405,13 +401,13 @@ class xt {
   pathFor = rs(
     async (e) => {
       let t = (r) =>
-        Q(
-          Ge(),
-          Le() === "win32"
-            ? Q("AppData", "Roaming", r, "User")
-            : Le() === "darwin"
-              ? Q("Library", "Application Support", r, "User")
-              : Q(".config", r, "User"),
+        join(
+          homedir(),
+          platform() === "win32"
+            ? join("AppData", "Roaming", r, "User")
+            : platform() === "darwin"
+              ? join("Library", "Application Support", r, "User")
+              : join(".config", r, "User"),
         );
       if (e === "VSCode") return t("Code");
       if (e === "Devin Desktop") {
@@ -420,7 +416,7 @@ class xt {
       }
       return t(e);
     },
-    (e) => `${e}:${Ge()}`,
+    (e) => `${e}:${homedir()}`,
   );
 }
 var vscodeUserDirectories = new j(() => new xt());
@@ -429,7 +425,7 @@ async function Ze(e, t, r) {
     `For smoother scrolling, set "${ke}": ${Oe} in ${t} settings.`,
   );
   if (Ke()) return `${s}${p}`;
-  let o = Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
+  let o = join(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
   try {
     let l = "{}",
       m = !1;
@@ -473,7 +469,7 @@ async function installVSCodeGpuAccelerationOff(e, t, r) {
     `To fix garbled text, set "${He}": "${Je}" in ${t} settings (undo: set it back to "auto").`,
   );
   if (Ke()) return (logFeatureSad("terminal_setup_gpu_accel", "remote_ssh"), `${s}${p}`);
-  let o = Q(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
+  let o = join(await vscodeUserDirectories.of(e).pathFor(t), "settings.json");
   try {
     let l = "{}",
       m = !1;
@@ -537,7 +533,7 @@ async function Qe(e, t = "VSCode", r) {
   }
 ]`)}${p}`;
   let s = await vscodeUserDirectories.of(e).pathFor(t),
-    o = Q(s, "keybindings.json");
+    o = join(s, "keybindings.json");
   try {
     await mkdir(s, { recursive: !0 });
     let l = "[]",
@@ -715,11 +711,11 @@ async function dr(e, t) {
 async function fr(e) {
   let r = [],
     s = a.XDG_CONFIG_HOME;
-  if (s) r.push(Q(s, "alacritty", "alacritty.toml"));
-  else r.push(Q(Ge(), ".config", "alacritty", "alacritty.toml"));
-  if (Le() === "win32") {
+  if (s) r.push(join(s, "alacritty", "alacritty.toml"));
+  else r.push(join(homedir(), ".config", "alacritty", "alacritty.toml"));
+  if (platform() === "win32") {
     let c = a.APPDATA;
-    if (c) r.push(Q(c, "alacritty", "alacritty.toml"));
+    if (c) r.push(join(c, "alacritty", "alacritty.toml"));
   }
   let o = null,
     l = "",
@@ -744,7 +740,7 @@ async function fr(e) {
       } catch {
         return `${getThemeColor("warning", e)("Error backing up existing Alacritty config. Bailing out.")}${p}${chalk.dim(`See ${ne(o)}`)}${p}${chalk.dim(`Backup path: ${ne(T)}`)}${p}`;
       }
-    } else await mkdir(lr(o), { recursive: !0 });
+    } else await mkdir(dirname(o), { recursive: !0 });
     let c = l;
     if (
       l &&
@@ -784,8 +780,8 @@ function bt(e) {
 }
 async function mr(e) {
   let t = getCurrentPlatform() === "linux" ? a.XDG_CONFIG_HOME : void 0,
-    r = t ? Q(t, "zed") : Q(Ge(), ".config", "zed"),
-    s = Q(r, "keymap.json"),
+    r = t ? join(t, "zed") : join(homedir(), ".config", "zed"),
+    s = join(r, "keymap.json"),
     o = chalk.dim(`See ${ne(s)}`),
     l = chalk.dim(
       `To add the binding yourself, add this block to the keymap array in ${ne(s)}:${p}{ "context": "Terminal", "bindings": { "shift-enter": ["terminal::SendText", "\\u001b\\r"] } }`,

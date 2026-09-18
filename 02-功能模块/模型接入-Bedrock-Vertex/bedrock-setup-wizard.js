@@ -1404,13 +1404,13 @@ function mr(kc) {
 F();
 import { readFile } from "fs/promises";
 import { homedir } from "os";
-import { join as Mt } from "path";
+import { join } from "path";
 async function hr() {
   let n = new Set(),
     s = homedir();
   for (let { path: l, re: c } of [
-    { path: Mt(s, ".aws", "config"), re: /^\[(?:profile\s+)?([^\]]+)\]/gm },
-    { path: Mt(s, ".aws", "credentials"), re: /^\[([^\]]+)\]/gm },
+    { path: join(s, ".aws", "config"), re: /^\[(?:profile\s+)?([^\]]+)\]/gm },
+    { path: join(s, ".aws", "credentials"), re: /^\[([^\]]+)\]/gm },
   ])
     try {
       for (let f of (await readFile(l, "utf8")).matchAll(c)) {

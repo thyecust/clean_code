@@ -14,13 +14,13 @@ import { getCurrentWorkingDirectory, logDirectories, dateToFilename, attachError
 import { reportError } from "../../01-核心基础设施/HTTP-网络层/error-tracking-report.js";
 import { emitInternalErrorEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/otel-events.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
-import { dirname, join as a } from "path";
+import { dirname, join } from "path";
 var f = dateToFilename(new Date());
 function c() {
-  return a(logDirectories.errors(), f + ".jsonl");
+  return join(logDirectories.errors(), f + ".jsonl");
 }
 function g(e) {
-  return a(logDirectories.mcpLogs(e), f + ".jsonl");
+  return join(logDirectories.mcpLogs(e), f + ".jsonl");
 }
 function u(e) {
   let r = createStringBatchWriter(e);

@@ -15,8 +15,8 @@ import { l, W } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
 import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { GIT_HARDENED_ARGS, sanitizeGitEnv, execFileNoThrowWithCwd } from "../工作树-Git/git-exec-hardening.js";
 import { getGitRepoCache, findGitRootRecheckingNegative, gitExe, getGitDir } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { lstat, open as w } from "fs/promises";
-import { join as c, resolve } from "path";
+import { lstat, open } from "fs/promises";
+import { join, resolve } from "path";
 var d = 1e4;
 async function withCollectTimeout(e, t = d) {
   let r = new AbortController();
@@ -55,7 +55,7 @@ async function O(e, t) {
     k(e, t),
     v(e),
     D(r),
-    h(c(e, ".gitmodules")),
+    h(join(e, ".gitmodules")),
     P(e),
   ]);
   return {
@@ -128,11 +128,11 @@ var m = [
   ["sequencer", "cherry-pick"],
 ];
 async function D(e) {
-  let r = (await Promise.all(m.map(([i]) => h(c(e, i))))).indexOf(!0);
+  let r = (await Promise.all(m.map(([i]) => h(join(e, i))))).indexOf(!0);
   return r === -1 ? null : m[r][1];
 }
 async function P(e) {
-  let t = c(e, ".gitattributes");
+  let t = join(e, ".gitattributes");
   try {
     if (!(await lstat(t)).isFile()) return !1;
   } catch (i) {
@@ -141,7 +141,7 @@ async function P(e) {
   }
   let r;
   try {
-    r = await w(t, "r");
+    r = await open(t, "r");
     let { buffer: i, bytesRead: o } = await r.read(
       Buffer.alloc(65536),
       0,

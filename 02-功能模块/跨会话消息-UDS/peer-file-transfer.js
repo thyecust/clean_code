@@ -24,9 +24,9 @@ import { randomUUID } from "crypto";
 import {
   lstat,
   mkdir,
-  open as B,
+  open,
   readdir,
-  stat as N,
+  stat,
   unlink,
   writeFile,
 } from "fs/promises";
@@ -34,7 +34,7 @@ import {
   basename,
   dirname,
   isAbsolute,
-  join as F,
+  join,
   resolve,
 } from "path";
 var Y = RECEIVED_FILES_MAX_AGE_DAYS * 24 * 60 * 60 * 1000,
@@ -75,14 +75,14 @@ function emitPeerFileReceiveTelemetry(t, e, r) {
 }
 async function readPeerFileBounded(t, e) {
   try {
-    let o = await N(t);
+    let o = await stat(t);
     if (!o.isFile() || o.size > e) return null;
   } catch {
     return null;
   }
   let r;
   try {
-    r = await B(t, "r");
+    r = await open(t, "r");
   } catch {
     return null;
   }
@@ -102,7 +102,7 @@ function injectPeerFilePrefix(t, e) {
   return r ? r[0] + e + t.slice(r[0].length) : e + t;
 }
 function peerTransferSpoolDir() {
-  return F(getClaudeConfigDir(), k);
+  return join(getClaudeConfigDir(), k);
 }
 function G() {
   return getUploadsDirectory();
@@ -129,7 +129,7 @@ async function stageLocalPeerFile(t) {
     o = peerTransferSpoolDir();
   await mkdir(o, { recursive: !0, mode: 448 });
   let a = basename(t),
-    l = F(o, `${r.slice(0, 8)}-${randomUUID().slice(0, 8)}-${sanitizePeerFileName(a)}`);
+    l = join(o, `${r.slice(0, 8)}-${randomUUID().slice(0, 8)}-${sanitizePeerFileName(a)}`);
   return (
     await writeFile(l, e, { mode: 384 }),
     {
@@ -147,9 +147,9 @@ async function sweepStaleSpoolEntries() {
     let e = await readdir(t),
       r = Date.now() - Y;
     for (let o of e.slice(0, 200)) {
-      let a = F(t, o);
+      let a = join(t, o);
       try {
-        let l = await N(a);
+        let l = await stat(a);
         if (l.isFile() && l.mtimeMs < r) await unlink(a);
       } catch {}
     }
@@ -203,7 +203,7 @@ async function materializeLocalPeerFiles(t) {
       d("it failed integrity verification");
       continue;
     }
-    let E = F(
+    let E = join(
       a,
       `${p.sha256.slice(0, 8)}-${randomUUID().slice(0, 8)}-${sanitizePeerFileName(p.file_name)}`,
     );

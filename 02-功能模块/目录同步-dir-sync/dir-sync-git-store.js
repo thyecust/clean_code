@@ -27,7 +27,7 @@ import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js
 import { s, T, se, v, c, uW, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { createHash as _t } from "crypto";
+import { createHash } from "crypto";
 var Ie = {
     file: "100644",
     executable: "100755",
@@ -50,7 +50,7 @@ function isValidObjectId(e, t) {
 }
 function J(e, t, r) {
   return {
-    id: _t(r).update(`${e} ${t.length}\x00`).update(t).digest("hex"),
+    id: createHash(r).update(`${e} ${t.length}\x00`).update(t).digest("hex"),
     type: e,
     body: t,
   };
@@ -484,11 +484,10 @@ function ae(e, t, r, a) {
     e.delete(o);
   }
 }
-import { createHash as He } from "crypto";
-import { promisify as Ye } from "util";
+import { promisify } from "util";
 import {
-  deflate as vt,
-  deflateSync as zt,
+  deflate,
+  deflateSync,
   inflate,
   inflateSync,
 } from "zlib";
@@ -506,8 +505,8 @@ var $e = "PACK",
   Ut = 16384,
   te = 512,
   Ge = 8388608,
-  Kt = Ye(vt),
-  Xt = Ye(inflate);
+  Kt = promisify(deflate),
+  Xt = promisify(inflate);
 async function buildPackfile(e, t) {
   let r = new Set(),
     a = e.filter((l) => (r.has(l.id) ? !1 : Boolean(r.add(l.id)))),
@@ -516,7 +515,7 @@ async function buildPackfile(e, t) {
     o.writeUInt32BE(We, 4),
     o.writeUInt32BE(a.length, 8));
   let d = [o],
-    i = He(t).update(o);
+    i = createHash(t).update(o);
   for (let [l, h] of a.entries()) {
     if (l % te === te - 1) await de();
     let y = "deflated" in h ? h.size : h.body.length,
@@ -544,7 +543,7 @@ async function Vt(e, t, r, a) {
   let d = e.readUInt32BE(8);
   if (d > a) return L("over_budget", `${d} objects is more than the budget`);
   let i = e.length - o,
-    l = He(t);
+    l = createHash(t);
   for (let f = 0; f < i; f += Ge)
     (l.update(e.subarray(f, Math.min(i, f + Ge))), await de());
   if (!l.digest().equals(e.subarray(i)))
@@ -750,25 +749,23 @@ function rn(e, t, r) {
 }
 async function on(e) {
   let t = { chunkSize: Math.min(Ut, Math.max(Ve, e.length)) };
-  return e.length < Xe ? zt(e, t) : await Kt(e, t);
+  return e.length < Xe ? deflateSync(e, t) : await Kt(e, t);
 }
 function de() {
   return new Promise((e) => setImmediate(e));
 }
 import { randomBytes } from "crypto";
 import {
-  link as an,
+  link,
   lstat,
-  mkdir as ln,
-  open as ie,
+  mkdir,
+  open,
   readdir,
   realpath,
-  rm as dn,
+  rm,
   unlink,
 } from "fs/promises";
-import { join as ee } from "path";
-import { promisify as cn } from "util";
-import { deflate as un, deflateSync as fn } from "zlib";
+import { join } from "path";
 var Re = "store",
   nt = /^([A-Za-z0-9][A-Za-z0-9_-]{0,127})\.(\d{6,12})-([0-9a-f]{8})\.seg$/,
   rt = 1,
@@ -792,9 +789,9 @@ var Re = "store",
   wn = ".dropped-",
   kn = 384,
   En = 448,
-  _n = cn(un);
+  _n = promisify(deflate);
 function Tn(e, t) {
-  return ot.test(t) ? ee(e, t, Re) : null;
+  return ot.test(t) ? join(e, t, Re) : null;
 }
 async function openDirSyncObjectStore({
   root: e,
@@ -812,8 +809,8 @@ async function openDirSyncObjectStore({
   let i;
   try {
     if (
-      (await ln(d, { recursive: !0, mode: En }),
-      (i = ee(await realpath(e), t, Re)),
+      (await mkdir(d, { recursive: !0, mode: En }),
+      (i = join(await realpath(e), t, Re)),
       (await realpath(d)) !== i)
     )
       return {
@@ -1239,7 +1236,7 @@ async function xn(e, t) {
   let o = [],
     d = new Map();
   for (let i of r) {
-    let l = ee(a, i, Re),
+    let l = join(a, i, Re),
       h,
       y;
     try {
@@ -1267,7 +1264,7 @@ async function xn(e, t) {
     }
     let g = [];
     for (let p of h) {
-      let f = ee(l, p);
+      let f = join(l, p);
       try {
         let u = await lstat(f, { bigint: !0 }),
           E = oe(u);
@@ -1310,7 +1307,7 @@ async function Fn(e) {
     );
     await Promise.all(
       t.map((r) =>
-        dn(ee(e, r.name), { recursive: !0, force: !0 }).catch(() => {
+        rm(join(e, r.name), { recursive: !0, force: !0 }).catch(() => {
           return;
         }),
       ),
@@ -1325,10 +1322,10 @@ async function Pn(e, t, r, a) {
       "-" +
       randomBytes(4).toString("hex") +
       ".seg",
-    d = ee(e, o),
+    d = join(e, o),
     i;
   try {
-    i = await ie(d, "wx", kn);
+    i = await open(d, "wx", kn);
   } catch (l) {
     return (
       logForDebugging("dir-sync object store: cannot create a segment: " + String(l)),
@@ -1505,7 +1502,7 @@ function Qe(e, t) {
 async function ct(e) {
   while (e.paths[0] !== void 0)
     try {
-      let t = await ie(e.paths[0], getSafeReadOpenFlags());
+      let t = await open(e.paths[0], getSafeReadOpenFlags());
       if (oe(await t.stat({ bigint: !0 })) !== e.inode)
         return (
           await t.close().catch(() => {
@@ -1563,12 +1560,12 @@ function In(e, t) {
 async function An(e, t) {
   let r = e.paths[0];
   if (r === void 0) return !1;
-  let a = ee(t, e.name);
+  let a = join(t, e.name);
   try {
-    let o = await ie(r, getSafeReadOpenFlags());
+    let o = await open(r, getSafeReadOpenFlags());
     try {
       if (oe(await o.stat({ bigint: !0 })) !== e.inode) return !1;
-      await an(r, a);
+      await link(r, a);
     } finally {
       await o.close().catch(() => {
         return;
@@ -1604,7 +1601,7 @@ function oe(e) {
 }
 async function Dn(e) {
   try {
-    let t = await ie(e, getSafeReadOpenFlags());
+    let t = await open(e, getSafeReadOpenFlags());
     try {
       await t.sync();
     } finally {
@@ -1617,11 +1614,11 @@ async function ue(e, t) {
   return r.ok && r.consumed === e.length ? r.data : null;
 }
 async function ut(e) {
-  return e.length < hn ? fn(e) : await _n(e);
+  return e.length < hn ? deflateSync(e) : await _n(e);
 }
 async function Nn(e) {
   try {
-    let t = await ie(e, "r");
+    let t = await open(e, "r");
     try {
       await t.sync();
     } finally {
@@ -1629,7 +1626,6 @@ async function Nn(e) {
     }
   } catch {}
 }
-import { mkdir as vn, open as zn } from "fs/promises";
 import { dirname } from "path";
 var xe = 1,
   mt = 262144,
@@ -1710,7 +1706,7 @@ async function loadStatCache(e, { maxEntries: t = mt } = {}) {
           (o = jsonStringify({ version: xe, entries: a })));
       try {
         return (
-          await vn(dirname(e), { recursive: !0, mode: Hn }),
+          await mkdir(dirname(e), { recursive: !0, mode: Hn }),
           await writeFileAtomic(e, o, Gn),
           !0
         );
@@ -1722,7 +1718,7 @@ async function loadStatCache(e, { maxEntries: t = mt } = {}) {
 }
 async function Wn(e) {
   try {
-    let t = await zn(e, getSafeReadOpenFlags());
+    let t = await open(e, getSafeReadOpenFlags());
     try {
       let r = await t.stat();
       if (!r.isFile() || r.size > pt) return [];
@@ -2341,20 +2337,19 @@ function St(e) {
   if (e === "unreadable" || e === "changed") return "unreadable";
   return null;
 }
-import { join as Pe } from "path";
 var TRASH_DIR_NAME = "trash",
   hr = "stat-cache.json";
 async function resolveDirSyncStoreRoot(e, t) {
   return br(getProjectDir(await canonicalizePath(e, createHoverRestOptions(t))));
 }
 function br(e) {
-  return Pe(e, CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME);
+  return join(e, CLOUD_SNAPSHOTS_DIR_NAME, FOLDER_SYNC_DIR_NAME);
 }
 function getDirSyncSessionDir(e, t) {
-  return Pe(e, sanitizePathSegment(toInfraSessionId(t)));
+  return join(e, sanitizePathSegment(toInfraSessionId(t)));
 }
 function getStatCachePath(e) {
-  return Pe(e, hr);
+  return join(e, hr);
 }
 export {
   isValidObjectId,

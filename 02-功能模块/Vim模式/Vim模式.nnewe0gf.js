@@ -4919,7 +4919,7 @@ function wo({
 }
 F();
 import { homedir } from "os";
-import { join as Yu } from "path";
+import { join } from "path";
 function Xu(Qp) {
   return Qp.autoUpdaterResult;
 }
@@ -4935,7 +4935,7 @@ function Li(l, b) {
     case "winget": {
       let x = process.env.LOCALAPPDATA;
       return [
-        x ? Yu(x, "Microsoft", "WindowsApps", "winget.exe") : "winget",
+        x ? join(x, "Microsoft", "WindowsApps", "winget.exe") : "winget",
         "upgrade",
         "--id",
         "Anthropic.ClaudeCode",

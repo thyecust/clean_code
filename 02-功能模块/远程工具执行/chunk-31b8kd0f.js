@@ -66,7 +66,7 @@ import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js"
 import { getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 import { createWriteStream, fstatSync } from "fs";
 import { PassThrough } from "stream";
-import { URL as ie } from "url";
+import { URL } from "url";
 function isSubagentSkipOnDeltaEnabled() {
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_ccr_subagent_skip_on_delta", !1);
 }
@@ -325,9 +325,8 @@ async function te({
     !1
   );
 }
-import { URL as ye } from "url";
 function re(e, t = {}, i = {}) {
-  let s = normalizeUrlSchemeToHttp(new ye(e.href));
+  let s = normalizeUrlSchemeToHttp(new URL(e.href));
   return (
     (s.pathname = s.pathname.replace(/\/$/, "") + "/worker/events/stream"),
     new SSETransport(s, t, i)
@@ -413,7 +412,7 @@ class RemoteIO extends StructuredIO {
   }) {
     let T = new PassThrough({ encoding: "utf8" });
     super(T, i, s);
-    ((this.inputStream = T), (this.url = normalizeUrlSchemeToHttp(new ie(e))));
+    ((this.inputStream = T), (this.url = normalizeUrlSchemeToHttp(new URL(e))));
     let A = o(),
       F = { "anthropic-client-platform": getClientPlatform(), ...A };
     if (Object.keys(A).length === 0)
@@ -1007,7 +1006,7 @@ function startEarlyHydrateReads(e, t) {
     if (Object.keys(getSessionAuthHeaders()).length === 0) return;
     let i = !1,
       s = {
-        ...createSessionReadSourceBase(normalizeUrlSchemeToHttp(new ie(e)), getSessionAuthHeaders),
+        ...createSessionReadSourceBase(normalizeUrlSchemeToHttp(new URL(e)), getSessionAuthHeaders),
         onConflict: () => {
           i = !0;
         },

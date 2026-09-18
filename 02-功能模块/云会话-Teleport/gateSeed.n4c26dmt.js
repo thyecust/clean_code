@@ -37,12 +37,12 @@ import { createWriteStream } from "fs";
 import {
   mkdir,
   readFile,
-  rm as O,
-  stat as x,
+  rm,
+  stat,
   unlink,
 } from "fs/promises";
 import { tmpdir } from "os";
-import { join as b } from "path";
+import { join } from "path";
 import { pipeline } from "stream/promises";
 var w = null,
   k = DEFAULT_HISTORY_PAGE_SIZE,
@@ -54,11 +54,11 @@ var w = null,
 function z() {
   let e = getSessionRuntimeState();
   if (e.historySpoolDir === null)
-    ((e.historySpoolDir = b(tmpdir(), `cc-history-prefetch-${process.pid}`)),
+    ((e.historySpoolDir = join(tmpdir(), `cc-history-prefetch-${process.pid}`)),
       registerCleanup(() =>
         e.historySpoolDir === null
           ? void 0
-          : O(e.historySpoolDir, { recursive: !0, force: !0 }).catch(() => {}),
+          : rm(e.historySpoolDir, { recursive: !0, force: !0 }).catch(() => {}),
       ));
   return e.historySpoolDir;
 }
@@ -81,7 +81,7 @@ function B(e, t, s) {
   )
     return;
   let u = z(),
-    i = b(u, `${e}.${Date.now()}.json`),
+    i = join(u, `${e}.${Date.now()}.json`),
     p = performance.now(),
     d = { path: i, written: Promise.resolve(null), settled: !1, pageSize: k },
     S = (async () => {
@@ -148,7 +148,7 @@ function B(e, t, s) {
 async function L(e, t) {
   let s;
   try {
-    s = (await x(t)).size;
+    s = (await stat(t)).size;
   } catch (r) {
     if (!W(r)) logForDebugging(`[historyPrefetch] stat ${t} failed: ${l(r)}`);
     return { skip: "gone" };

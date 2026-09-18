@@ -453,7 +453,7 @@ var pn = class {
   }
 };
 import { randomUUID } from "crypto";
-import { Readable as Cr } from "stream";
+import { Readable } from "stream";
 import { pathToFileURL } from "url";
 var dr = MAX_MCP_HTTP_BODY_BYTES,
   mn = "without an SSE event boundary";
@@ -2376,7 +2376,7 @@ var connectToServer = lct(
         X = () => {
           if (t.type === "stdio" || !t.type) {
             let D = O;
-            if (D.stderr instanceof Cr)
+            if (D.stderr instanceof Readable)
               ((Oe = D.stderr),
                 (De = (_) => {
                   if (Fe.length < 67108864)

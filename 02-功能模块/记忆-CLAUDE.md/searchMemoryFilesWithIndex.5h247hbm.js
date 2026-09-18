@@ -16,8 +16,8 @@ import { writeFileAtomic } from "../../01-核心基础设施/安全文件系统-
 import { getSafeReadOpenFlags } from "../制品发布-Artifact/chunk-01ymf0ar.js";
 import { xA, lz, Ycr } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { lstat as Bn, realpath as me } from "fs/promises";
-import { resolve, sep as _e } from "path";
+import { lstat, realpath } from "fs/promises";
+import { resolve, sep } from "path";
 var re = (e) => e === "a" || e === "e" || e === "i" || e === "o" || e === "u",
   se = (e, t) => {
     let n = e[t];
@@ -798,13 +798,11 @@ var Re = {
       .slice(0, n);
   };
 import {
-  lstat as Me,
-  open as Sn,
+  open,
   readdir,
-  realpath as ne,
-  stat as wn,
+  stat,
 } from "fs/promises";
-import { join as X, sep as Fn } from "path";
+import { join } from "path";
 var j = Symbol("transient-read-failure"),
   En = (e) => {
     let t = e?.code;
@@ -818,7 +816,7 @@ var j = Symbol("transient-read-failure"),
   },
   A = (e) => (En(e) ? "structural" : Pn(e) ? "permission" : "other"),
   lt = async (e, t) => {
-    let n = await Sn(e, getSafeReadOpenFlags());
+    let n = await open(e, getSafeReadOpenFlags());
     try {
       let o = await n.stat();
       if (!o.isFile())
@@ -826,15 +824,15 @@ var j = Symbol("transient-read-failure"),
       if (t?.maxBytes !== void 0 && o.size > t.maxBytes)
         throw Object.assign(Error("exceeds the read cap"), { code: "EFBIG" });
       if (t?.withinReal !== void 0) {
-        let s = await ne(e).catch((i) => {
+        let s = await realpath(e).catch((i) => {
           if (A(i) === "structural") return;
           throw i;
         });
-        if (s === void 0 || !s.startsWith(t.withinReal + Fn))
+        if (s === void 0 || !s.startsWith(t.withinReal + sep))
           throw Object.assign(Error("resolves outside the store root"), {
             code: "ENOTREG",
           });
-        let r = await wn(s).catch((i) => {
+        let r = await stat(s).catch((i) => {
           if (A(i) === "structural") return;
           throw i;
         });
@@ -858,22 +856,22 @@ var j = Symbol("transient-read-failure"),
   },
   fe = Symbol("not-a-regular-file"),
   ft = async (e, t, n) =>
-    Me(X(e, t)).then(
+    lstat(join(e, t)).then(
       (o) => !o.isFile() || (n !== void 0 && o.size > n),
       (o) => A(o) === "structural",
     ),
   pt = async (e, t) => {
     if (!(await ft(e, t))) return !1;
-    return ne(e).then(
+    return realpath(e).then(
       () => !0,
       () => !1,
     );
   },
   mt = async (e, t, n, o = C) => {
     if (e.pathToId.get(n) === void 0) return !1;
-    let r = await ne(t).catch(() => j);
+    let r = await realpath(t).catch(() => j);
     if (typeof r !== "string") return !1;
-    let i = await lt(X(t, n), {
+    let i = await lt(join(t, n), {
       withinReal: r,
       maxBytes: o.maxFileBytes,
     }).catch((l) => (ut(l) ? fe : A(l) === "structural" ? void 0 : j));
@@ -885,7 +883,7 @@ var j = Symbol("transient-read-failure"),
     }
     if (i.byteLength > o.maxFileBytes) return N(e, n);
     let a = new TextDecoder().decode(i),
-      c = await Me(X(t, n)).catch(() => {
+      c = await lstat(join(t, n)).catch(() => {
         return;
       });
     return (
@@ -946,7 +944,7 @@ var j = Symbol("transient-read-failure"),
       r = [""];
     while (r.length > 0) {
       let f = r.pop(),
-        m = await readdir(X(e, f), { withFileTypes: !0 }).catch((g) => {
+        m = await readdir(join(e, f), { withFileTypes: !0 }).catch((g) => {
           if (f === "") {
             if (W(g)) return ((s = !0), []);
             throw g;
@@ -977,7 +975,7 @@ var j = Symbol("transient-read-failure"),
       a = new Set(),
       c = await Promise.allSettled(
         i.map(async (f) => {
-          let m = await Me(X(e, f)).catch((g) => {
+          let m = await lstat(join(e, f)).catch((g) => {
             switch (A(g)) {
               case "structural":
                 return;
@@ -1046,7 +1044,7 @@ var An = (e, t, n = new Set(), o = new Set(), s) => {
     });
     if (r === void 0) return s;
     if (r.rootMissing && e.docs.size > 0) return s;
-    let i = await ne(t).catch((y) => (A(y) === "structural" ? void 0 : j));
+    let i = await realpath(t).catch((y) => (A(y) === "structural" ? void 0 : j));
     if (i === j) return s;
     let a = An(e, r.files, r.skipped, r.skippedSubtrees, (y) => De(y, n)),
       c = [],
@@ -1059,7 +1057,7 @@ var An = (e, t, n = new Set(), o = new Set(), s) => {
     );
     let h =
         l.length === 0 ||
-        (await ne(t).then(
+        (await realpath(t).then(
           () => !0,
           () => !1,
         ))
@@ -1078,7 +1076,7 @@ var An = (e, t, n = new Set(), o = new Set(), s) => {
         T = !0;
         break;
       }
-      let P = await lt(X(t, y.path), {
+      let P = await lt(join(t, y.path), {
         withinReal: i,
         maxBytes: n.maxFileBytes,
       }).catch((J) => (ut(J) ? fe : A(J) === "structural" ? void 0 : j));
@@ -1133,9 +1131,7 @@ var _ = async (e, t = {}) => {
   }));
   n?.("memory_recall_select", e, { via_index: !0, ...t });
 };
-import { join as _n } from "path";
-import { lstat as Tn, open as Dn, unlink } from "fs/promises";
-import { sep as zn } from "path";
+import { unlink } from "fs/promises";
 var yt = 10,
   kn = (e) => {
     let t = [...e.docs.keys()].sort((r, i) => r - i),
@@ -1235,7 +1231,7 @@ var yt = 10,
         typeof s !== "string" ||
         s.length === 0 ||
         s.startsWith("/") ||
-        (zn === "\\" && (s.includes("\\") || /^[A-Za-z]:/.test(s))) ||
+        (sep === "\\" && (s.includes("\\") || /^[A-Za-z]:/.test(s))) ||
         s.includes("\x00") ||
         s.split("/").some((d) => d === ".." || d === "" || d === ".")
       )
@@ -1277,7 +1273,7 @@ var yt = 10,
       s = Buffer.byteLength(o);
     if (s > n) {
       _("index_persist_skipped_oversized");
-      let r = await Tn(t).catch(() => {
+      let r = await lstat(t).catch(() => {
         return;
       });
       if (r !== void 0 && r.size > n) await unlink(t).catch(() => {});
@@ -1290,7 +1286,7 @@ var yt = 10,
   Oe = 67108864,
   ke = Symbol("index-file-oversized"),
   xt = async (e) => {
-    let t = await Dn(e, getSafeReadOpenFlags());
+    let t = await open(e, getSafeReadOpenFlags());
     try {
       let n = await t.stat();
       if (!n.isFile())
@@ -1358,7 +1354,7 @@ var yt = 10,
   };
 var Ln = ".bm25-index.json",
   Ft = async (e, t = C, n, o = !0) => {
-    let s = _n(e, Ln),
+    let s = join(e, Ln),
       r = o ? await wt(s) : { index: void 0, pathOwned: !1 },
       i = r.index ?? ee(),
       a = await gt(i, e, t, n),
@@ -1532,9 +1528,9 @@ ${vt(e.slice(n), !1)}`;
       : {
           ...C,
           excludePaths: new Set(
-            [...e.excluded].map((o) => o.split(_e).join("/")),
+            [...e.excluded].map((o) => o.split(sep).join("/")),
           ),
-          excludePrefixes: e.excludedPrefixes.map((o) => o.split(_e).join("/")),
+          excludePrefixes: e.excludedPrefixes.map((o) => o.split(sep).join("/")),
         }),
     excludeLog: t,
     isRecallVisible: n,
@@ -1634,7 +1630,7 @@ var Mt = new Gt(() => new Dt()),
             ? T
             : T.filter((F) => !i(F.path))
           : T.filter((F) => (i === void 0 || !i(F.path)) && c(F.path)),
-      P = await me(n).catch(() => {
+      P = await realpath(n).catch(() => {
         return;
       }),
       v = resolve(n),
@@ -1645,7 +1641,7 @@ var Mt = new Gt(() => new Dt()),
           let M = u.index.pathToId.get(F.path),
             O = M === void 0 ? void 0 : u.index.docs.get(M),
             L = resolve(n, F.path),
-            U = await me(L).catch((ye) =>
+            U = await realpath(L).catch((ye) =>
               A(ye) === "structural" ? void 0 : he,
             );
           if (U === void 0) {
@@ -1653,11 +1649,11 @@ var Mt = new Gt(() => new Dt()),
             return [];
           }
           if (U === he) return [];
-          if (!U.startsWith((P ?? v) + _e)) {
+          if (!U.startsWith((P ?? v) + sep)) {
             if (P !== void 0) E.push(F.path);
             return [];
           }
-          let Z = await Bn(L).catch((ye) =>
+          let Z = await lstat(L).catch((ye) =>
             A(ye) === "structural" ? void 0 : he,
           );
           if (Z === he) return [];
@@ -1675,7 +1671,7 @@ var Mt = new Gt(() => new Dt()),
     if (R.length > 0 || E.length > 0) {
       let F = await Promise.all(
           R.map(async (O) =>
-            (await me(resolve(n, O)).then(
+            (await realpath(resolve(n, O)).then(
               () => !1,
               (L) => A(L) === "structural",
             ))
@@ -1683,7 +1679,7 @@ var Mt = new Gt(() => new Dt()),
               : void 0,
           ),
         ),
-        M = await me(n).catch(() => {
+        M = await realpath(n).catch(() => {
           return;
         });
       if (M !== void 0 && M === P) {

@@ -28,14 +28,14 @@ import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 import { homedir } from "os";
-import { join as L } from "path";
+import { join } from "path";
 function H(ce, pe) {
   return e(BulletItem, { children: e(Text, { dimColor: !0, children: ce }) }, pe);
 }
 function N() {
   let y = a.platform === "win32",
     m = homedir();
-  if (y) return L(m, ".local", "bin", "claude.exe").replaceAll("/", "\\");
+  if (y) return join(m, ".local", "bin", "claude.exe").replaceAll("/", "\\");
   return "~/.local/bin/claude";
 }
 function k(ie) {

@@ -153,7 +153,7 @@ import { buildBooleanFromStringSchema } from "../../01-核心基础设施/核心
 import { isMonitorToolEnabled } from "../工具Monitor/monitor-tool-description.js";
 import { s, T, O, c, Qe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
-import { basename as Ds, dirname as $s } from "path";
+import { basename, dirname } from "path";
 var nn = (e, t, o) => ({
     isError: e !== 0,
     message: e !== 0 ? `Command failed with exit code ${e}` : void 0,
@@ -626,20 +626,17 @@ function St(e, t, o, r) {
   let b = o.trim() !== "" || r.trim() !== "";
   return ((f === "exe" && b ? rn.get(d) : void 0) ?? on.get(d) ?? nn)(t, o, r);
 }
-import { resolve as Ts } from "path";
-import { homedir as bn } from "os";
+import { resolve } from "path";
+import { homedir } from "os";
 import {
-  basename as yn,
-  dirname as Pt,
-  isAbsolute as vn,
+  isAbsolute,
   posix,
   relative,
-  resolve as _t,
-  sep as Je,
+  sep,
 } from "path";
 function Et(e) {
   if (!e.startsWith("../")) return e;
-  let t = be(yn(getCwd()));
+  let t = be(basename(getCwd()));
   if (!t) return e;
   let o = "../" + t + "/",
     r = e;
@@ -668,7 +665,7 @@ function je(e, t) {
     (o = o.replaceAll("\\", "/")),
     o === "~" || o.startsWith("~/"))
   )
-    o = (bn() + o.slice(1)).replaceAll("\\", "/");
+    o = (homedir() + o.slice(1)).replaceAll("\\", "/");
   let r = "";
   if (/^[A-Za-z]:\//.test(o)) ((r = o.slice(0, 2)), (o = o.slice(2)));
   if (
@@ -704,10 +701,10 @@ var kn = ["head", "objects", "refs", "hooks"];
 function At(e) {
   let t = getFsSurface(),
     o = getCwd(),
-    r = _t(o, e),
+    r = resolve(o, e),
     a = resolveSymlinkTargetSync(t, r) ?? r,
     d = resolvePathInfo(t, o).resolvedPath,
-    f = d.endsWith(Je) ? d : d + Je,
+    f = d.endsWith(sep) ? d : d + sep,
     b = be(a),
     p = be(d),
     I = be(f);
@@ -800,20 +797,20 @@ function Ct(e) {
 function On(e) {
   let t = getFsSurface(),
     o = getCwd(),
-    r = _t(o, e),
+    r = resolve(o, e),
     a = An(r) ? r : (resolveSymlinkTargetSync(t, r) ?? r),
     d = resolvePathInfo(t, o).resolvedPath,
     f = be(a);
   if (be(d) === f) return !0;
   let b = resolvePathInfo(t, he()).resolvedPath,
     p = relative(b, d);
-  if (p === ".." || p.startsWith(".." + Je) || vn(p)) return !1;
+  if (p === ".." || p.startsWith(".." + sep) || isAbsolute(p)) return !1;
   let I = be(b),
     x = d;
   for (;;) {
     if (be(x) === f) return !0;
-    if (be(x) === I || x === Pt(x)) return !1;
-    x = Pt(x);
+    if (be(x) === I || x === dirname(x)) return !1;
+    x = dirname(x);
   }
 }
 function Ot(e, t = !1) {
@@ -1065,12 +1062,8 @@ function ot(e, t, o) {
     decisionReason: { type: "mode", mode: "acceptEdits" },
   };
 }
-import { homedir as Dn } from "os";
 import {
-  dirname as $n,
-  isAbsolute as Pe,
   normalize,
-  resolve as Ce,
 } from "path";
 var rt = 5,
   it = {
@@ -1728,7 +1721,7 @@ function He(e) {
 }
 function xe(e) {
   if (e === "~" || e.startsWith("~/") || e.startsWith("~\\"))
-    return Dn() + e.slice(1);
+    return homedir() + e.slice(1);
   return e;
 }
 function $e(e) {
@@ -1737,7 +1730,7 @@ function $e(e) {
     let r = o,
       a = r.indexOf("::");
     if (a >= 0) r = r.slice(a + 2);
-    if (((r = Fe(xe(r).replace(/\\/g, "/"))), Pe(r))) r = normalize(r);
+    if (((r = Fe(xe(r).replace(/\\/g, "/"))), isAbsolute(r))) r = normalize(r);
     if (isProtectedSystemPath(r)) return !0;
   }
   return !1;
@@ -1754,7 +1747,7 @@ function It(e, t) {
   for (let r of o) {
     let a = Fe(xe(r).replace(/\\/g, "/"));
     if (a === "") continue;
-    let d = Pe(a) ? a : Ce(t, a),
+    let d = isAbsolute(a) ? a : resolve(t, a),
       { resolvedPath: f } = resolvePathInfo(getFsSurface(), d);
     if (isProtectedSystemPath(f)) return f;
   }
@@ -1777,7 +1770,7 @@ function Re(e) {
 function De(e, t, o, r) {
   if (!e || e.includes("\x00")) return null;
   let a = xe(Fe(e)),
-    d = Pe(a) ? a : Ce(t, a),
+    d = isAbsolute(a) ? a : resolve(t, a),
     { resolvedPath: f } = resolvePathInfo(getFsSurface(), d),
     b = r === "read" ? "read" : "edit";
   for (let p of expandPathAliases(f)) {
@@ -1917,7 +1910,7 @@ function Ee(e, t, o, r) {
       };
     return {
       allowed: !1,
-      resolvedPath: Ce(t, p),
+      resolvedPath: resolve(t, p),
       decisionReason: {
         type: "other",
         reason:
@@ -1937,7 +1930,7 @@ function Ee(e, t, o, r) {
         },
       };
     if (containsPathTraversal(p)) {
-      let W = Pe(p) ? p : Ce(t, p),
+      let W = isAbsolute(p) ? p : resolve(t, p),
         { resolvedPath: E } = resolvePathInfo(getFsSurface(), W),
         z = r === "read" ? "read" : "edit";
       for (let B of expandPathAliases(E)) {
@@ -1961,7 +1954,7 @@ function Ee(e, t, o, r) {
       };
     }
     let w = Bn(p),
-      C = Pe(w) ? w : Ce(t, w),
+      C = isAbsolute(w) ? w : resolve(t, w),
       { resolvedPath: A } = resolvePathInfo(getFsSurface(), C),
       j = matchingRuleForInput(A, o, r === "read" ? "read" : "edit", "deny");
     if (j !== null)
@@ -1980,7 +1973,7 @@ function Ee(e, t, o, r) {
       },
     };
   }
-  let x = Pe(p) ? p : Ce(t, p),
+  let x = isAbsolute(p) ? p : resolve(t, p),
     { resolvedPath: y, isCanonical: L } = resolvePathInfo(getFsSurface(), x),
     _ = checkPathPermission(y, o, r, L ? [y] : void 0);
   if (d && _.allowed) return f(y);
@@ -2177,16 +2170,16 @@ function qn(e, t, o, r) {
       if (w === "") continue;
       if (w.startsWith("~") && w !== "~" && !/^~[\\/]/.test(w)) return outsideReadsRuntimePathAsk(a);
       let C = xe(w);
-      if (r && !Pe(C)) return outsideReadsRuntimePathAsk(a);
+      if (r && !isAbsolute(C)) return outsideReadsRuntimePathAsk(a);
       let A = w,
         F = Fx(C);
       if (F !== -1) {
         let z = C.slice(0, F);
-        A = /[\\/]$/.test(z) ? z : $n(z);
+        A = /[\\/]$/.test(z) ? z : dirname(z);
       }
       let j = xe(A);
       if (An(j)) return outsideReadsRuntimePathAsk(a);
-      let W = Pe(j) ? j : Ce(t, j);
+      let W = isAbsolute(j) ? j : resolve(t, j);
       if (!getFsSurface().existsSync(W)) continue;
       let E = Ee(A, t, o, "read");
       if (E.allowed) continue;
@@ -2350,7 +2343,7 @@ function Gn(e, t, o = !1) {
         let z = normalizeCaseForComparison(r);
         for (let B of L) {
           let q = xe(Fe(B)).replace(/\\/g, "/"),
-            G = Pe(q) ? Ce(q) : Ce(r, q),
+            G = isAbsolute(q) ? resolve(q) : resolve(r, q),
             J = normalizeCaseForComparison(G);
           if (J === z || z.startsWith(J + "/") || z.startsWith(J + "\\")) {
             a ??= {
@@ -2362,7 +2355,7 @@ function Gn(e, t, o = !1) {
         }
       }
     }
-    if (o && b(A, _) && L.some((E) => !Pe(xe(E)))) d ??= outsideReadsRuntimePathAsk(A);
+    if (o && b(A, _) && L.some((E) => !isAbsolute(xe(E)))) d ??= outsideReadsRuntimePathAsk(A);
     for (let E of L) {
       if (W && $e(E)) return Re(E);
       let { allowed: z, resolvedPath: B, decisionReason: q } = Ee(E, r, t, _);
@@ -4015,7 +4008,7 @@ async function Is(e, t, o) {
       if (v.nameType === "application") return !0;
       if (getCanonicalCommandName(v.name) === "set-location" && v.args.length > 0) {
         let K = v.args.find((U) => U.length === 0 || !PARAMETER_PREFIX_CHARS.has(U[0]));
-        if (K && Ts(getCwd(), K) === getCwd()) return !1;
+        if (K && resolve(getCwd(), K) === getCwd()) return !1;
       }
       return !0;
     }),
@@ -4813,7 +4806,7 @@ var Ks =
             let Y = getToolResultsDirForSession(t.session);
             await ensureToolResultsDirectory(Y, t.storageV5);
             let le = buildToolResultFilePath(Y, w.outputTaskId, !1),
-              te = isHoverRestEnabled() && t.storageV5 !== void 0 ? getSidecarKeyForToolResultFile($s(le), Ds(le)) : void 0,
+              te = isHoverRestEnabled() && t.storageV5 !== void 0 ? getSidecarKeyForToolResultFile(dirname(le), basename(le)) : void 0,
               Te = !0;
             if (isHoverRestEnabled() && t.storageV5 !== void 0 && te !== void 0) {
               let ve = await storeShellOutputToStorage(t.storageV5, te, w.outputFilePath, MAX_PERSISTED_OUTPUT_BYTES, getTaskOutputRootDir());

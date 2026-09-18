@@ -18,7 +18,7 @@ import { getFeatureValue_CACHED_MAY_BE_STALE, checkGate_CACHED_OR_BLOCKING } fro
 import { isViolinWoodEnabled, isViolinWoodEnabledCached } from "../目录同步-dir-sync/chunk-97crm80y.js";
 import { s, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { homedir, hostname } from "os";
-import { dirname, join as y } from "path";
+import { dirname, join } from "path";
 function a(e) {
   return e
     .trim()
@@ -59,7 +59,7 @@ var UNATTENDED_SERVING_CONSENT_VERSION = 1,
     }),
   );
 function g() {
-  return y(homedir(), ".claude", "state", E);
+  return join(homedir(), ".claude", "state", E);
 }
 function unattendedServingMachineName(e = hostname()) {
   return formatSingleLineLabel(a(e));

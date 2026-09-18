@@ -33,7 +33,7 @@ import { C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { mkdir } from "fs/promises";
 F();
-import { join as we } from "path";
+import { join } from "path";
 function Re(q, it) {
   let he =
     countOccurrences(
@@ -133,7 +133,7 @@ function fileExtension(n) {
 }
 async function z(n, o) {
   let a = getClaudeTempDir(),
-    s = we(a, o);
+    s = join(a, o);
   return (
     await mkdir(a, { recursive: !0, mode: 448 }),
     await writeFileAndFlush(s, n, { encoding: "utf-8" }),

@@ -59,7 +59,7 @@ function m() {
     } catch {}
   return null;
 }
-import { Buffer as _ } from "buffer";
+import { Buffer } from "buffer";
 import { isAbsolute } from "path";
 var g = ESCAPE_CHARACTER + String.fromCharCode(CONTROL_INTRODUCER_CODES.OSC),
   S = ESCAPE_CHARACTER + "\\";
@@ -242,7 +242,7 @@ async function W(t) {
 }
 var h = 76;
 async function setClipboard(t) {
-  let e = _.from(t, "utf8").toString("base64");
+  let e = Buffer.from(t, "utf8").toString("base64");
   if (!p()) N(t);
   await W(t);
   let o = getTerminalMultiplexer(),
@@ -519,7 +519,7 @@ function formatTabStatus(t) {
   return formatOscSequence(OSC_CODES.TAB_STATUS, e.join(";"));
 }
 function q(t) {
-  let e = _.from(JSON.stringify(t)).toString("base64");
+  let e = Buffer.from(JSON.stringify(t)).toString("base64");
   return formatOscSequence(OSC_CODES.ITERM2_PROPRIETARY, `SetProfileProperty=Initial Text=${e}`);
 }
 var ft = q("");

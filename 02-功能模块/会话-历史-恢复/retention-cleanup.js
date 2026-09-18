@@ -77,7 +77,7 @@ import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
 import { homedir, tmpdir } from "os";
-import { basename, dirname, join as d } from "path";
+import { basename, dirname, join } from "path";
 var ce = 3,
   le = 3,
   V = 1;
@@ -86,7 +86,7 @@ import {
   mkdir,
   realpath,
   rename,
-  rm as Yt,
+  rm,
 } from "fs/promises";
 async function K(e) {
   let t;
@@ -236,7 +236,7 @@ async function pe(e, t, r) {
     for (let f of o)
       try {
         if (Ne(f.name) < t)
-          if ((await getFsSurface().unlink(d(e, f.name)), r)) a.messages++;
+          if ((await getFsSurface().unlink(join(e, f.name)), r)) a.messages++;
           else a.errors++;
       } catch (w) {
         logForDebugging(`Failed to clean up file ${f.name} in ${e}: ${w}`, {
@@ -267,7 +267,7 @@ async function je() {
     }
     let w = f
       .filter((y) => y.isDirectory() && y.name.startsWith("mcp-logs-"))
-      .map((y) => d(a, y.name));
+      .map((y) => join(a, y.name));
     for (let y of w) ((o = F(o, await pe(y, t, !0))), await O(y, e));
   } catch (f) {
     if (W(f));
@@ -304,11 +304,11 @@ async function O(e, t) {
 var re = [ARCHIVE_SYNC_DIR_NAME, FOLDER_SYNC_DIR_NAME];
 async function Me(e, t, r, a) {
   try {
-    for (let p of re) await he(d(e, p), t, r, a);
+    for (let p of re) await he(join(e, p), t, r, a);
     let o = (await r.readdir(e)).filter((p) => !re.includes(p.name)),
       f = null;
     for (let p of o) {
-      let g = d(e, p.name),
+      let g = join(e, p.name),
         D =
           (await se(p, g, r)) === "directory"
             ? await J(g, r, { requireCompleteWalk: !0 })
@@ -320,7 +320,7 @@ async function Me(e, t, r, a) {
       (
         await Promise.all(
           re.map((p) =>
-            r.lstat(d(e, p)).then(
+            r.lstat(join(e, p)).then(
               (g) => g.isDirectory(),
               (g) => {
                 if (W(g)) return !1;
@@ -331,7 +331,7 @@ async function Me(e, t, r, a) {
         )
       ).includes(!0)
     ) {
-      for (let p of o) await r.rm(d(e, p.name), { recursive: !0, force: !0 });
+      for (let p of o) await r.rm(join(e, p.name), { recursive: !0, force: !0 });
       if (o.length > 0) a.messages++;
       return;
     }
@@ -344,20 +344,20 @@ async function he(e, t, r, a) {
   if (!(await G(e, r))) return;
   let o = await r.readdir(e).catch(() => []);
   for (let f of o) {
-    let w = await se(f, d(e, f.name), r).catch((p) => {
+    let w = await se(f, join(e, f.name), r).catch((p) => {
       if (!W(p)) a.errors++;
       return "other";
     });
     if (w === "file") {
       try {
-        if (await x(d(e, f.name), t, r, a)) a.messages++;
+        if (await x(join(e, f.name), t, r, a)) a.messages++;
       } catch {
         a.errors++;
       }
       continue;
     }
     if (w !== "directory") continue;
-    let y = d(e, f.name);
+    let y = join(e, f.name);
     try {
       if (
         ((await J(y, r, { requireCompleteWalk: !0 })) ?? (await we(y, r))) <
@@ -401,7 +401,7 @@ async function Z(e, t, r, a, o = {}) {
       return [];
     });
   for (let y of w) {
-    let p = d(e, y.name);
+    let p = join(e, y.name);
     if (y.isDirectory()) await Z(p, t, r, a, o);
     else if (f !== void 0 && !f(y.name));
     else if (y.isFile())
@@ -426,7 +426,7 @@ async function J(e, t, { requireCompleteWalk: r = !1 } = {}) {
       return [];
     });
   for (let f of o) {
-    let w = d(e, f.name),
+    let w = join(e, f.name),
       y = r
         ? await se(f, w, t).catch((p) => {
             if (W(p)) return "other";
@@ -506,7 +506,7 @@ async function Be() {
             ? (extractFieldFromFirstEntryStrict(b, "sessionId") ?? extractFieldFromLastEntryStrict(B, "sessionId"))
             : void 0;
           if (Y !== void 0 && Te(Y)) {
-            let L = d(dirname(D), `${Y}${X}`);
+            let L = join(dirname(D), `${Y}${X}`);
             if (L !== te(D)) {
               if ((await fe(L, a, e)) === "release-now") return !1;
             }
@@ -515,7 +515,7 @@ async function Be() {
         };
   for (let D of o) {
     if (!D.isDirectory()) continue;
-    let R = d(r, D.name),
+    let R = join(r, D.name),
       P;
     try {
       P = await a.readdir(R);
@@ -550,7 +550,7 @@ async function Be() {
           !k.name.includes(".jsonl.superseded-")
         )
           continue;
-        let I = d(R, k.name);
+        let I = join(R, k.name);
         try {
           if (
             await x(I, e, a, t, void 0, k.name.endsWith(".jsonl") ? g : void 0)
@@ -560,22 +560,22 @@ async function Be() {
               let N = k.name.slice(0, -6);
               if (ue(N)) {
                 if (
-                  (await a.unlink(d(R, `${N}.ccr-tip.json`)).catch(() => {}),
-                  await a.unlink(d(R, `${N}.precompact.json`)).catch(() => {}),
+                  (await a.unlink(join(R, `${N}.ccr-tip.json`)).catch(() => {}),
+                  await a.unlink(join(R, `${N}.precompact.json`)).catch(() => {}),
                   b.push(te(I)),
                   await a
-                    .rm(d(R, N), { recursive: !0, force: !0 })
+                    .rm(join(R, N), { recursive: !0, force: !0 })
                     .catch(() => {
                       t.errors++;
                     }),
                   f !== null)
                 ) {
-                  let Y = d(f, D.name),
+                  let Y = join(f, D.name),
                     L = await a.lstat(Y).catch(() => null);
                   if (L?.isDirectory()) {
                     if (
                       (await a
-                        .rm(d(Y, N), { recursive: !0, force: !0 })
+                        .rm(join(Y, N), { recursive: !0, force: !0 })
                         .catch(() => {
                           t.errors++;
                         }),
@@ -591,7 +591,7 @@ async function Be() {
           if (!W(N)) t.errors++;
         }
       } else if (k.isDirectory()) {
-        let I = d(R, k.name);
+        let I = join(R, k.name);
         if (k.name === "bagel") {
           let C = await J(I, a);
           if (C !== null && C < e.getTime())
@@ -611,18 +611,18 @@ async function Be() {
           if (C !== null && C.mtime < e) await O(I, a);
           continue;
         }
-        let N = d(I, TOOL_RESULTS_DIR_NAME);
+        let N = join(I, TOOL_RESULTS_DIR_NAME);
         if (await G(N, a)) {
           let C = await a.readdir(N).catch(() => []);
           for (let U of C)
             if (U.isFile())
               try {
-                if (await x(d(N, U.name), e, a, t)) t.messages++;
+                if (await x(join(N, U.name), e, a, t)) t.messages++;
               } catch {
                 t.errors++;
               }
             else if (U.isDirectory()) {
-              let Q = d(N, U.name),
+              let Q = join(N, U.name),
                 ie;
               try {
                 ie = await a.readdir(Q);
@@ -632,7 +632,7 @@ async function Be() {
               for (let oe of ie) {
                 if (!oe.isFile()) continue;
                 try {
-                  if (await x(d(Q, oe.name), e, a, t)) t.messages++;
+                  if (await x(join(Q, oe.name), e, a, t)) t.messages++;
                 } catch {
                   t.errors++;
                 }
@@ -646,18 +646,18 @@ async function Be() {
           if (!C.isFile() || !(ve(C.name) || parseRecordingStampFromFileName(C.name) !== void 0)) continue;
           if (C.name === "custom-title.json" && B.has(k.name)) continue;
           try {
-            if (await x(d(I, C.name), e, a, t)) t.messages++;
+            if (await x(join(I, C.name), e, a, t)) t.messages++;
           } catch {
             t.errors++;
           }
         }
-        let L = d(I, "mcp-tasks");
+        let L = join(I, "mcp-tasks");
         if (await G(L, a)) {
           for (let C of await a.readdir(L).catch(() => [])) {
             let U = C.name.endsWith(".json") || C.name.includes(".json.tmp.");
             if (!C.isFile() || !U) continue;
             try {
-              if (await x(d(L, C.name), e, a, t)) t.messages++;
+              if (await x(join(L, C.name), e, a, t)) t.messages++;
             } catch {
               t.errors++;
             }
@@ -666,7 +666,7 @@ async function Be() {
         }
         if (!B.has(k.name))
           for (let C of ["subagents", "workflows", "remote-agents"]) {
-            let U = d(I, C);
+            let U = join(I, C);
             if (await G(U, a)) await Z(U, e, a, t);
           }
         await O(I, a);
@@ -694,7 +694,7 @@ async function v(e, t, r = !0, a) {
   for (let D of g) {
     if (!D.isFile() || !y(D.name)) continue;
     try {
-      if (await x(d(e, D.name), o, p, f, w)) f.messages++;
+      if (await x(join(e, D.name), o, p, f, w)) f.messages++;
     } catch {
       f.errors++;
     }
@@ -706,7 +706,7 @@ async function Le() {
   let e = E(),
     t = getCutoffDate();
   if (t === null) return e;
-  let r = d(getClaudeConfigDir(), "hfi-auth.json");
+  let r = join(getClaudeConfigDir(), "hfi-auth.json");
   try {
     if (await x(r, t, getFsSurface(), e)) e.messages++;
   } catch (a) {
@@ -720,7 +720,7 @@ async function Ue() {
   let e = E(),
     t = getCutoffDate();
   if (t === null) return e;
-  let r = d(getClaudeConfigDir(), "cache", "team-discovery.json");
+  let r = join(getClaudeConfigDir(), "cache", "team-discovery.json");
   try {
     if (await x(r, t, getFsSurface(), e)) e.messages++;
   } catch (a) {
@@ -744,7 +744,7 @@ async function He() {
   let e = E(),
     t = getCutoffDate();
   if (t === null) return e;
-  let r = d(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
+  let r = join(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
   try {
     if (await x(r, t, getFsSurface(), e)) e.messages++;
   } catch (a) {
@@ -759,7 +759,7 @@ async function Ye() {
   let e = E(),
     t = getCutoffDate();
   if (t === null) return e;
-  let r = d(getClaudeConfigDir(), "state", "device-unbound-creates.json");
+  let r = join(getClaudeConfigDir(), "state", "device-unbound-creates.json");
   try {
     if (await x(r, t, getFsSurface(), e)) e.messages++;
   } catch (a) {
@@ -807,7 +807,7 @@ async function Ke(e, t) {
     r
       .filter((o) => isTempFileFor(o, "history.jsonl") || isTempScratchName(o))
       .map(async (o) => {
-        let f = d(e, o);
+        let f = join(e, o);
         try {
           let w = await A.lstat(f);
           if (w.isFile() && w.mtimeMs < a) await A.unlink(f);
@@ -816,7 +816,7 @@ async function Ke(e, t) {
   );
 }
 async function Xe(e) {
-  let t = d(getClaudeConfigDir(), "history.jsonl"),
+  let t = join(getClaudeConfigDir(), "history.jsonl"),
     r = e.getTime(),
     a = (p) => ze(p, r) || Ge(p),
     o,
@@ -925,7 +925,7 @@ async function Xe(e) {
   }
 }
 async function Je() {
-  let e = d(getClaudeConfigDir(), "mcp-discovery-cache"),
+  let e = join(getClaudeConfigDir(), "mcp-discovery-cache"),
     t = await v(e, (f) => f.endsWith(".json") || f.includes(".json.tmp."), !1),
     r = getCutoffDate();
   if (r === null) return t;
@@ -938,7 +938,7 @@ async function Je() {
   }
   for (let f of o) {
     if (!f.isDirectory() || !f.name.endsWith(".json.lock")) continue;
-    let w = d(e, f.name);
+    let w = join(e, f.name);
     try {
       if ((await a.stat(w)).mtime < r) (await a.rmdir(w), t.messages++);
     } catch {
@@ -948,7 +948,7 @@ async function Je() {
   return (await O(e, a), t);
 }
 async function qe(e) {
-  let t = d(getClaudeConfigDir(), "plans");
+  let t = join(getClaudeConfigDir(), "plans");
   try {
     if (e !== void 0)
       return await v(t, (r) => r.endsWith(".md") || r.includes(".md.tmp."));
@@ -974,7 +974,7 @@ async function j(
   if (p === null) return g;
   let D = getFsSurface(),
     R = getClaudeConfigDir(),
-    P = w ?? d(R, e);
+    P = w ?? join(R, e);
   if (a) {
     if (
       (await verifySyncOwnedPath(
@@ -994,7 +994,7 @@ async function j(
   }
   for (let _ of b) {
     if (!_.isDirectory() || t?.has(_.name)) continue;
-    let B = d(P, _.name);
+    let B = join(P, _.name);
     try {
       if ((await D.stat(B)).mtime < p) {
         if (await r?.(B)) continue;
@@ -1037,7 +1037,7 @@ async function tt(e) {
         o?.ino !== r.ino ||
         o.dev !== r.dev ||
         (await K(a)) === null ||
-        (await A.realpath(a)) !== d(await A.realpath(dirname(t)), BRIDGE_SPAWN_DIR_NAME, basename(a))
+        (await A.realpath(a)) !== join(await A.realpath(dirname(t)), BRIDGE_SPAWN_DIR_NAME, basename(a))
       );
     },
   });
@@ -1081,7 +1081,7 @@ async function ge(e, t) {
   let r = E();
   if (getCutoffDate() === null) return r;
   let a = getClaudeConfigDir(),
-    o = d(a, e);
+    o = join(a, e);
   if (
     (await verifySyncOwnedPath(
       o,
@@ -1101,8 +1101,8 @@ async function ge(e, t) {
     if (!y.isDirectory() || !isSkillBucketId(y.name)) continue;
     r = F(
       r,
-      await j(d(e, "*", STAGING_DIR_NAME), {
-        baseDir: d(o, y.name, STAGING_DIR_NAME),
+      await j(join(e, "*", STAGING_DIR_NAME), {
+        baseDir: join(o, y.name, STAGING_DIR_NAME),
         refuseRedirectedRoot: !0,
         storageV5: t,
       }),
@@ -1120,7 +1120,7 @@ async function Se(e, t, r, a) {
   let w = await resolveSkillBucketId().catch(() => null);
   if (w === null) return o;
   let y = getClaudeConfigDir(),
-    p = d(y, e);
+    p = join(y, e);
   if (
     (await verifySyncOwnedPath(
       p,
@@ -1145,10 +1145,10 @@ async function Se(e, t, r, a) {
       !(await hasSyncMarker(p, P.name))
     )
       continue;
-    let b = d(p, P.name),
+    let b = join(p, P.name),
       _;
     try {
-      _ = (await D.lstat(d(b, MANIFEST_FILE_NAME)).catch(() => D.lstat(b))).mtime;
+      _ = (await D.lstat(join(b, MANIFEST_FILE_NAME)).catch(() => D.lstat(b))).mtime;
     } catch {
       continue;
     }
@@ -1160,7 +1160,7 @@ async function Se(e, t, r, a) {
       (o.filesPastCutoff++,
       await trashDirectory({
         dir: b,
-        trashRoot: d(y, t),
+        trashRoot: join(y, t),
         configHome: y,
         failureEvent: r,
         storageV5: a,
@@ -1187,7 +1187,7 @@ async function lt(e) {
   );
 }
 async function ut() {
-  let e = d(getPluginsDir(), "store"),
+  let e = join(getPluginsDir(), "store"),
     t = await v(e, (a) => a.endsWith(".json") || a.includes(".json.tmp."), !1),
     r = getCutoffDate();
   if (r !== null) await he(e, r, getFsSurface(), t);
@@ -1198,7 +1198,7 @@ async function pt() {
     t = E();
   if (e === null) return t;
   let r = getFsSurface(),
-    a = d(getClaudeConfigDir(), MCP_SKILL_ARCHIVES_DIR_NAME),
+    a = join(getClaudeConfigDir(), MCP_SKILL_ARCHIVES_DIR_NAME),
     o;
   try {
     o = await r.readdir(a);
@@ -1207,7 +1207,7 @@ async function pt() {
   }
   for (let f of o) {
     if (!f.isDirectory()) continue;
-    let w = d(a, f.name),
+    let w = join(a, f.name),
       y = (await readMcpSkillCacheMeta(w))?.cacheKey ?? null,
       p;
     try {
@@ -1218,7 +1218,7 @@ async function pt() {
     }
     for (let g of p) {
       if (!g.isDirectory() || g.name === y) continue;
-      let D = d(w, g.name);
+      let D = join(w, g.name);
       try {
         if ((await r.stat(D)).mtime < e)
           (await r.rm(D, { recursive: !0, force: !0 }), t.messages++);
@@ -1236,16 +1236,16 @@ async function pt() {
   return (await O(a, r), t);
 }
 async function dt() {
-  let e = d(getClaudeConfigDir(), "usage-data"),
+  let e = join(getClaudeConfigDir(), "usage-data"),
     t = await v(
-      d(e, "facets"),
+      join(e, "facets"),
       (r) => r.endsWith(".json") || r.includes(".json.tmp."),
     );
   return (
     (t = F(
       t,
       await v(
-        d(e, "session-meta"),
+        join(e, "session-meta"),
         (r) => r.endsWith(".json") || r.includes(".json.tmp."),
       ),
     )),
@@ -1276,7 +1276,7 @@ async function mt() {
       y = f.name.startsWith(AUTO_MODE_BUILTINS_FILE_PREFIX) && f.name.endsWith(".md");
     if (!f.isFile() || (!w && !y)) continue;
     try {
-      if (await x(d(a, f.name), e, r, t)) t.messages++;
+      if (await x(join(a, f.name), e, r, t)) t.messages++;
     } catch {
       t.errors++;
     }
@@ -1294,7 +1294,7 @@ async function ht() {
   } catch {
     return e;
   }
-  let o = d(a, "speculation"),
+  let o = join(a, "speculation"),
     f;
   try {
     f = await r.lstat(o);
@@ -1313,26 +1313,26 @@ async function ht() {
   return (await O(o, r), e);
 }
 async function wt() {
-  let e = d(getClaudeConfigDir(), "shares"),
+  let e = join(getClaudeConfigDir(), "shares"),
     t = await j("shares");
   return ((t = F(t, await v(e, ".zip", !1))), await O(e, getFsSurface()), t);
 }
 async function yt() {
-  let e = d(getClaudeConfigDir(), "telemetry"),
+  let e = join(getClaudeConfigDir(), "telemetry"),
     t = await v(e, ".json", !1),
     r = getCutoffDate();
   if (r === null) return t;
-  let a = d(e, "runs"),
+  let a = join(e, "runs"),
     o = getFsSurface();
   if ((await G(e, o)) && (await G(a, o)))
     await Z(a, r, o, t, { entryMatcher: (f) => f.endsWith(".json") });
   return (await O(e, getFsSurface()), t);
 }
 function gt() {
-  return v(d(getClaudeConfigDir(), "dump-prompts"), ".jsonl", !0, ce);
+  return v(join(getClaudeConfigDir(), "dump-prompts"), ".jsonl", !0, ce);
 }
 function St() {
-  return v(d(getClaudeConfigDir(), "shell-snapshots"), ".sh");
+  return v(join(getClaudeConfigDir(), "shell-snapshots"), ".sh");
 }
 async function Dt() {
   let e = getCutoffDate(),
@@ -1342,19 +1342,19 @@ async function Dt() {
     a = getTeamsDir();
   for (let o of await r.readdir(a).catch(() => [])) {
     if (!o.isDirectory()) continue;
-    let f = d(a, o.name, "inboxes");
+    let f = join(a, o.name, "inboxes");
     if (await G(f, r)) {
       for (let w of await r.readdir(f).catch(() => [])) {
         if (!w.isFile() || !w.name.endsWith(".json")) continue;
         try {
-          if (await x(d(f, w.name), e, r, t)) t.messages++;
+          if (await x(join(f, w.name), e, r, t)) t.messages++;
         } catch {
           t.errors++;
         }
       }
       await O(f, r);
     }
-    await O(d(a, o.name), r);
+    await O(join(a, o.name), r);
   }
   return t;
 }
@@ -1378,13 +1378,13 @@ async function kt(e, t = tmpdir()) {
       /^[0-9a-f]{16}$/.test(y)
     )
       continue;
-    let p = d(t, w.name);
+    let p = join(t, w.name);
     try {
       let g = await K(p);
       if (g === null) continue;
       let D = await a.readdir(p);
       if (D.length !== 1 || D[0].name !== "stderr.log") continue;
-      let R = d(p, "stderr.log"),
+      let R = join(p, "stderr.log"),
         P = await a.lstat(R);
       if (!P.isFile()) continue;
       if (!(P.mtime < e)) {
@@ -1408,26 +1408,26 @@ async function kt(e, t = tmpdir()) {
 }
 async function Pt(e) {
   let t = getClaudeConfigDir(),
-    r = await v(d(t, "jobs", "settled"), ".json");
-  ((r = F(r, await v(d(t, "daemon", "dispatch", "rejected"), ".json"))),
-    (r = F(r, await v(d(t, "daemon", "dispatch"), ".json", !1))),
-    (r = F(r, await v(d(t, "daemon", "auth"), ".json"))));
+    r = await v(join(t, "jobs", "settled"), ".json");
+  ((r = F(r, await v(join(t, "daemon", "dispatch", "rejected"), ".json"))),
+    (r = F(r, await v(join(t, "daemon", "dispatch"), ".json", !1))),
+    (r = F(r, await v(join(t, "daemon", "auth"), ".json"))));
   try {
-    let p = d(t, "daemon", "host-managed"),
+    let p = join(t, "daemon", "host-managed"),
       g = getFsSurface(),
       D = getCutoffDate();
     if (D)
       for (let R of await g.readdir(p)) {
         if (!R.isFile()) continue;
         try {
-          await g.lstat(d(t, "jobs", R.name));
+          await g.lstat(join(t, "jobs", R.name));
         } catch (P) {
           if (!W(P)) {
             r.errors++;
             continue;
           }
           try {
-            if (await x(d(p, R.name), D, g, r)) r.messages++;
+            if (await x(join(p, R.name), D, g, r)) r.messages++;
           } catch (b) {
             if (!W(b)) r.errors++;
           }
@@ -1443,7 +1443,7 @@ async function Pt(e) {
   let w = !1,
     y = !1;
   try {
-    let p = d(t, "daemon", "roster.json"),
+    let p = join(t, "daemon", "roster.json"),
       g = await getFsSurface().lstat(p);
     if (!g.isFile() || g.size > 8388608) throw Error("not a regular file");
     let D = await getFsSurface().readFile(p, { encoding: "utf-8" }),
@@ -1506,23 +1506,23 @@ async function Pt(e) {
   ) {
     r = F(r, await kt(o));
     let p = getFsSurface();
-    for (let D of [d(t, "daemon.log"), d(t, "daemon.log.1")])
+    for (let D of [join(t, "daemon.log"), join(t, "daemon.log.1")])
       try {
         if (await x(D, o, p, r)) r.messages++;
       } catch (R) {
         if (!W(R)) r.errors++;
       }
-    let g = d(t, "daemon", "roster.json");
+    let g = join(t, "daemon", "roster.json");
     try {
       if ((await p.lstat(g)).mtime < o && !y && (w || a))
         (await p.unlink(g), r.messages++);
     } catch (D) {
       if (!W(D)) r.errors++;
     }
-    for (let D of await p.readdir(d(t, "daemon")).catch(() => [])) {
+    for (let D of await p.readdir(join(t, "daemon")).catch(() => [])) {
       if (!D.isFile() || !D.name.startsWith("roster.json.corrupt.")) continue;
       try {
-        if (await x(d(t, "daemon", D.name), o, p, r)) r.messages++;
+        if (await x(join(t, "daemon", D.name), o, p, r)) r.messages++;
       } catch {
         r.errors++;
       }
@@ -1531,14 +1531,14 @@ async function Pt(e) {
   return (await sweepStaleJobDrafts(), r);
 }
 function _t() {
-  return v(d(getClaudeConfigDir(), "backups"), "", !1);
+  return v(join(getClaudeConfigDir(), "backups"), "", !1);
 }
 async function Et() {
   let e = getCutoffDate(),
     t = E();
   if (e === null) return t;
   let r = getFsSurface(),
-    a = d(getClaudeConfigDir(), "debug"),
+    a = join(getClaudeConfigDir(), "debug"),
     o;
   try {
     o = await r.readdir(a);
@@ -1548,7 +1548,7 @@ async function Et() {
   for (let f of o) {
     if (f.name === "latest" || !f.isFile()) continue;
     try {
-      if (await x(d(a, f.name), e, r, t)) t.messages++;
+      if (await x(join(a, f.name), e, r, t)) t.messages++;
     } catch {
       t.errors++;
     }
@@ -1556,20 +1556,20 @@ async function Et() {
   return t;
 }
 async function Ct() {
-  return v(d(getClaudeConfigDir(), "feedback-bundles"), ".zip");
+  return v(join(getClaudeConfigDir(), "feedback-bundles"), ".zip");
 }
 async function Ot() {
   return v(
-    d(getClaudeConfigDir(), "feedback", "drafts"),
+    join(getClaudeConfigDir(), "feedback", "drafts"),
     (e) => e.endsWith(".json") || e.includes(".json.tmp."),
     !0,
     30,
   );
 }
 async function vt() {
-  let e = await v(d(getClaudeConfigDir(), "traces"), ".json"),
-    t = await v(d(getClaudeConfigDir(), "startup-perf"), ".txt"),
-    r = await v(d(getClaudeConfigDir(), "startup-perf"), ".json");
+  let e = await v(join(getClaudeConfigDir(), "traces"), ".json"),
+    t = await v(join(getClaudeConfigDir(), "startup-perf"), ".txt"),
+    r = await v(join(getClaudeConfigDir(), "startup-perf"), ".json");
   return F(F(e, t), r);
 }
 var bt = 86400000,
@@ -1625,7 +1625,7 @@ async function reapStaleHousekeepingStagingFiles(e, t) {
     r
       .filter((o) => xt.some((f) => isTempFileFor(o, f)))
       .map(async (o) => {
-        let f = d(e, o);
+        let f = join(e, o);
         try {
           let w = await A.lstat(f);
           if (w.isFile() && w.mtimeMs < a) await A.unlink(f);
@@ -1639,7 +1639,7 @@ async function At() {
   if (e === null) return t;
   let r = getFsSurface();
   for (let a of ["todos", "statsig", "logs"]) {
-    let o = d(getClaudeConfigDir(), a),
+    let o = join(getClaudeConfigDir(), a),
       f;
     try {
       f = await r.readdir(o);
@@ -1647,7 +1647,7 @@ async function At() {
       continue;
     }
     for (let w of f) {
-      let y = d(o, w.name);
+      let y = join(o, w.name);
       try {
         if (!((await r.stat(y)).mtime < e)) continue;
         if (w.isDirectory()) await r.rm(y, { recursive: !0, force: !0 });
@@ -1665,7 +1665,7 @@ async function Nt() {
   let e = E(),
     t = getCutoffDate();
   if (t === null) return e;
-  let r = d(getMemoryBaseDir(), "projects"),
+  let r = join(getMemoryBaseDir(), "projects"),
     a = getFsSurface(),
     o = await a.lstat(r).catch((w) => {
       if (!W(w)) e.errors++;
@@ -1678,7 +1678,7 @@ async function Nt() {
   });
   for (let w of f) {
     if (!w.isDirectory()) continue;
-    let y = d(r, w.name, "tiny_memory"),
+    let y = join(r, w.name, "tiny_memory"),
       p = await a.lstat(y).catch((g) => {
         if (!W(g)) e.errors++;
         return null;
@@ -1692,14 +1692,14 @@ async function jt() {
   let t = E(),
     r = getCutoffDate();
   if (r === null) return t;
-  let a = d(getMemoryBaseDir(), "projects"),
+  let a = join(getMemoryBaseDir(), "projects"),
     o = getFsSurface(),
     f = await o.readdir(a).catch(() => []);
   for (let w of f) {
     if (!w.isDirectory()) continue;
-    t = F(t, await de(d(a, w.name, "memory", "proposals"), r, o));
+    t = F(t, await de(join(a, w.name, "memory", "proposals"), r, o));
   }
-  return F(t, await de(d(getAutoMemPath(), "proposals"), r, o));
+  return F(t, await de(join(getAutoMemPath(), "proposals"), r, o));
 }
 var Mt = "skill-proposal";
 async function de(e, t, r) {
@@ -1716,7 +1716,7 @@ async function de(e, t, r) {
   });
   for (let f of o) {
     if (!f.isFile() || !f.name.endsWith(".md")) continue;
-    let w = d(e, f.name);
+    let w = join(e, f.name);
     try {
       let { content: y, mtimeMs: p } = await readFileWithLineRange(w, 0, MAX_FILE_READ_LINES, MAX_FILE_READ_BYTES, void 0, {
         truncateOnByteLimit: !0,

@@ -11,16 +11,16 @@ import { sanitizePath, getProjectKey, getProjectDir, canonicalizePath } from "..
 import { STORAGE_KEYS } from "../Teammates团队/storage-keys.js";
 import { validateStorageKey, DIR_SYNC_RECORD_FILE_SUFFIX } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { createHoverRestOptions } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
-import { join as a } from "path";
+import { join } from "path";
 function sanitizePathSegment(e) {
   return /^[A-Za-z0-9_-]{1,128}$/.test(e) ? e : sanitizePath(e);
 }
 async function getDirSyncRecordPath(e, t, n) {
-  return a(getProjectDir(await canonicalizePath(e, createHoverRestOptions(n))), getDirSyncRecordFileName(t));
+  return join(getProjectDir(await canonicalizePath(e, createHoverRestOptions(n))), getDirSyncRecordFileName(t));
 }
 async function resolveDirSyncRecordLocation(e, t, n) {
   let r = await canonicalizePath(e, createHoverRestOptions(n)),
-    c = a(getProjectDir(r), getDirSyncRecordFileName(t)),
+    c = join(getProjectDir(r), getDirSyncRecordFileName(t)),
     o = getProjectKey(r),
     i = n === void 0 ? void 0 : getDirSyncRecordKey(o, t);
   return {

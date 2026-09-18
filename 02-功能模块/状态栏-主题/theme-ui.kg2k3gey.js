@@ -39,7 +39,7 @@ import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jp
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 F();
-import { sep as lo } from "path";
+import { sep } from "path";
 function ir(Ir) {
   return Ir;
 }
@@ -320,7 +320,7 @@ function Ee(Br) {
     if (s[75] !== h || s[76] !== z)
       ((oe = r(Text, {
         dimColor: !0,
-        children: ["based on ", h, " \xB7 saved to ", A, lo, z, ".json"],
+        children: ["based on ", h, " \xB7 saved to ", A, sep, z, ".json"],
       })),
         (s[75] = h),
         (s[76] = z),

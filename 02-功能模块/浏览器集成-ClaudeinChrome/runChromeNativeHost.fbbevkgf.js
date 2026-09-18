@@ -24,7 +24,7 @@ import {
 } from "fs/promises";
 import { createServer } from "net";
 import { platform } from "os";
-import { join as I } from "path";
+import { join } from "path";
 var _ = "1.0.0",
   v = 1048576,
   C = void 0;
@@ -82,7 +82,7 @@ class k {
           try {
             process.kill(r, 0);
           } catch {
-            (await unlink(I(e, s)).catch(() => {}),
+            (await unlink(join(e, s)).catch(() => {}),
               n(`Removed stale socket for PID ${r}`));
           }
         }

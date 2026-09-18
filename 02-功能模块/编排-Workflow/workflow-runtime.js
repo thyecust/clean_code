@@ -560,7 +560,7 @@ var acornWalkModule = commonJS(function (qt, Un) {
       (t.simple = l));
   });
 });
-import { open as $n, realpath } from "fs/promises";
+import { open, realpath } from "fs/promises";
 import { constants } from "fs";
 import { resolve } from "path";
 function Dt(t) {
@@ -585,7 +585,7 @@ async function readWorkflowScriptFileHardened(t, l) {
     p = constants.O_RDONLY | yo,
     k;
   try {
-    k = await $n(m, p);
+    k = await open(m, p);
   } catch (C) {
     return {
       error: W(C)
@@ -599,7 +599,7 @@ async function readWorkflowScriptFileHardened(t, l) {
     let I = await getFdRealPath(k.fd),
       E = I ?? (await realpath(m));
     if (I === null) {
-      let J = await $n(E, p | bo);
+      let J = await open(E, p | bo);
       try {
         let N = await J.stat({ bigint: !0 });
         if (N.ino !== C.ino || N.dev !== C.dev || N.nlink !== 1n)
@@ -828,7 +828,7 @@ ${s}
     );
   }
 }
-import { createHash as sr } from "crypto";
+import { createHash } from "crypto";
 import * as jt from "vm";
 import * as Qt from "vm";
 function pn(
@@ -1131,9 +1131,8 @@ function yn(t) {
     indentAndEscapeForwardedTurns(t.referentTail)
   );
 }
-import { createHash as Ro } from "crypto";
 import { appendFile, mkdir, readFile } from "fs/promises";
-import { dirname, join as $o } from "path";
+import { dirname, join } from "path";
 var Do = "v2";
 function zn(t) {
   let l = new Map(),
@@ -1187,7 +1186,7 @@ function Fo(t) {
   return jsonStringify(m(l));
 }
 function Jn(t, l, s) {
-  let m = Ro("sha256")
+  let m = createHash("sha256")
     .update(s)
     .update("\x00")
     .update(t)
@@ -1208,7 +1207,7 @@ class en {
   storageV5;
   dirReady = !1;
   constructor(t, l) {
-    this.path = $o(getWorkflowTranscriptDir(t), "journal.jsonl");
+    this.path = join(getWorkflowTranscriptDir(t), "journal.jsonl");
     let s = l === void 0 ? void 0 : No(t);
     this.storageV5 =
       l === void 0 || s === void 0 ? void 0 : { backend: l, key: s };
@@ -3761,7 +3760,7 @@ async function adoptWorkflowRun(t) {
       "workflow was checkpointed without a content pin; resume via the Workflow tool",
       "adopted workflow missing scriptSha256",
     );
-  if (sr("sha256").update(I).digest("hex") !== t.scriptSha256)
+  if (createHash("sha256").update(I).digest("hex") !== t.scriptSha256)
     throw new R(
       "script content changed since it was approved; resume via the Workflow tool to re-approve",
       "adopted workflow scriptSha256 mismatch",

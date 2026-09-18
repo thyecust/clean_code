@@ -31,8 +31,8 @@ import { createEmptyCommandMetadata, escapeCommandFrontmatter, escapeOptionalSin
 import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
 import { xA, Jke } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { randomBytes } from "crypto";
-import { mkdir, rename, rm as R, writeFile } from "fs/promises";
-import { join as b } from "path";
+import { mkdir, rename, rm, writeFile } from "fs/promises";
+import { join } from "path";
 function F(e) {
   if (!e.endsWith("/SKILL.md")) return;
   let r = e.slice(0, -9);
@@ -304,11 +304,11 @@ async function Z(e, r, s, c, o) {
     if (!h)
       if (isHoverRestEnabled() && o) await writeMcpSkillContent(o, p, a, s);
       else {
-        let m = b(k, `.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
+        let m = join(k, `.tmp-${process.pid}-${randomBytes(4).toString("hex")}`);
         await mkdir(m, { recursive: !0 });
         let d = !1;
         try {
-          await writeFile(b(m, SKILL_FILE_NAME), s);
+          await writeFile(join(m, SKILL_FILE_NAME), s);
           try {
             (await rename(m, t), (d = !0));
           } catch (_) {
@@ -326,13 +326,13 @@ async function Z(e, r, s, c, o) {
                 e,
                 `Replacing ${t}, which has no SKILL.md, with the fetched copy`,
               ),
-                await R(t, { recursive: !0, force: !0 }),
+                await rm(t, { recursive: !0, force: !0 }),
                 await rename(m, t),
                 (d = !0));
             }
           }
         } finally {
-          if (!d) await R(m, { recursive: !0, force: !0 }).catch(() => {});
+          if (!d) await rm(m, { recursive: !0, force: !0 }).catch(() => {});
         }
       }
     await writeMcpSkillCacheMeta({ slug: p, slugDir: k }, r, a, o);

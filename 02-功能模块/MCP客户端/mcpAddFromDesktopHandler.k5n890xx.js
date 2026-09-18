@@ -71,9 +71,9 @@ import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { stat as it } from "fs/promises";
+import { stat } from "fs/promises";
 F();
-import { cwd as ct } from "process";
+import { cwd } from "process";
 F();
 function ot(Wt) {
   logForDebugging(`Failed to read existing MCP configs for Desktop import: ${l(Wt)}`, {
@@ -374,13 +374,13 @@ async function mcpServeHandler(
   { debug: h, verbose: s, transport: v, port: a, resultFormat: f },
   m,
 ) {
-  let y = ct(),
+  let y = cwd(),
     i = "stdio",
     k = "raw";
   await logEventAsync("tengu_mcp_start", { transport: fromEnum("stdio") });
   let M = 0;
   try {
-    await it(y);
+    await stat(y);
   } catch (g) {
     if (Rt(g))
       return (

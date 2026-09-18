@@ -242,7 +242,7 @@ import { getGraphemeSegmenter, countGraphemes, splitGraphemes } from "../../01-�
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { randomUUID as pu } from "crypto";
+import { randomUUID } from "crypto";
 import { resolve } from "path";
 function qu() {
   return !1;
@@ -551,7 +551,7 @@ function ic(s, c) {
   if (c < 3600000) return 900000;
   return 1800000;
 }
-import { stat as Ah } from "fs/promises";
+import { stat } from "fs/promises";
 async function Mi(s, c) {
   let m = resolveTranscriptLocator(s, c);
   if (m !== void 0) {
@@ -564,7 +564,7 @@ async function Mi(s, c) {
       ? { kind: "refused" }
       : { kind: "unreadable", code: w.code };
   }
-  return { kind: "present", mtimeMs: (await Ah(s)).mtimeMs };
+  return { kind: "present", mtimeMs: (await stat(s)).mtimeMs };
 }
 async function sc(s, c, m) {
   let b = resolveTranscriptLocator(s, m);
@@ -582,7 +582,7 @@ async function sc(s, c, m) {
   }
   return readTailBytes(s, c);
 }
-import { open as Th } from "fs/promises";
+import { open } from "fs/promises";
 var Dh = 7,
   Fh = 1048576,
   ya = 16,
@@ -596,7 +596,7 @@ async function lc(s, c) {
   if (b.has(c)) return null;
   b.add(c);
   try {
-    let k = await Th(c, "r");
+    let k = await open(c, "r");
     try {
       let { size: w, ino: v } = await k.stat(),
         R = m.get(c);
@@ -676,7 +676,7 @@ async function lc(s, c) {
 function dc(s, c) {
   for (let m of s.scanStates.keys()) if (!c.has(m)) s.scanStates.delete(m);
 }
-import { join as Jh } from "path";
+import { join } from "path";
 function Bh(s) {
   try {
     let c = jsonParse(s);
@@ -728,7 +728,7 @@ function Nt(s) {
     .trim();
 }
 function Li(s) {
-  return Jh(getProjectDir(s.cwd), `${s.sessionId}.jsonl`);
+  return join(getProjectDir(s.cwd), `${s.sessionId}.jsonl`);
 }
 async function cc(s, c) {
   try {
@@ -2352,11 +2352,8 @@ class Oc {
 function ji(s, c) {
   return (s.editor ??= new Oc(c));
 }
-import { randomUUID as Vb } from "crypto";
-import { stat as Ub } from "fs/promises";
-import { isAbsolute as Wb } from "path";
-import { randomUUID as nb } from "crypto";
-import { basename as rb } from "path";
+import { isAbsolute } from "path";
+import { basename } from "path";
 var eb = 200;
 function qi() {
   return Ca() && isPastSessionsExperimentEnabled();
@@ -2391,7 +2388,6 @@ async function zi(s, c, m) {
     return null;
   }
 }
-import { isAbsolute as tb } from "path";
 function Yi(s, c, m = {}, b = []) {
   let k = s.trim();
   if (isAgentViewBashModeEnabled() && k.startsWith("!")) {
@@ -2436,7 +2432,7 @@ function xa(s) {
   if (/\s/.test(c)) return null;
   if (/^https?:\/\//.test(c)) return ANY_CONTROL_CHAR_REGEX.test(c) ? null : c;
   let m = Ju(c);
-  return tb(m) ? toLocalFileUrl(m) : null;
+  return isAbsolute(m) ? toLocalFileUrl(m) : null;
 }
 function Fc(s) {
   let c = [];
@@ -2906,7 +2902,7 @@ function Uc(s, c) {
             fe.name.endsWith(`:${Je.template.name}`),
         )
       ) {
-        m.setError(`@${Je.template.name} isn't available in ${rb(Ye)}`);
+        m.setError(`@${Je.template.name} isn't available in ${basename(Ye)}`);
         return;
       }
     }
@@ -2926,7 +2922,7 @@ function Uc(s, c) {
         Ye === Dt.cwd &&
         areDefaultsEqual(Dt.defaults, X) &&
         Lt,
-      Gt = mt ? Dt.sessionId : nb(),
+      Gt = mt ? Dt.sessionId : randomUUID(),
       at = Gt.slice(0, 8);
     ((k.followId = at), m.beginProgrammaticChange());
     let Xt = Je.matched && !Je.exec ? Je.template.name : null,
@@ -4044,7 +4040,7 @@ function dp({
   };
 }
 function Kb(s) {
-  return Wb(s) && !my(s) && !Xo(s) && !jf(s);
+  return isAbsolute(s) && !my(s) && !Xo(s) && !jf(s);
 }
 var ja =
     "Press enter again to restart this session fresh \u2014 it has no saved " +
@@ -4199,7 +4195,7 @@ async function mp(s, c, m) {
       de = A;
     else
       try {
-        if (!(await Ub(c.cwd)).isDirectory()) de = A;
+        if (!(await stat(c.cwd)).isDirectory()) de = A;
       } catch {
         de = A;
       }
@@ -4301,7 +4297,7 @@ function cs(s, c) {
     w.restartOfferedJobId === c.id &&
     !isExecLaunch(c.state);
   if (w.restartOfferedJobId === c.id) w.restartOfferedJobId = null;
-  let j = Vb();
+  let j = randomUUID();
   (claimAttachBeacon(j, "fleet", R).catch(() => {}), w.arm(c.id, j), A(null));
   let ne = w.nextRespawnAttempt(),
     se = w.getWarming(c.id);
@@ -4586,7 +4582,6 @@ function hp(s, c, m, b, k, w) {
   ];
 }
 F();
-import { basename as jy } from "path";
 F();
 function bp(s) {
   let [c, m] = d([]);
@@ -4809,7 +4804,6 @@ function rl(yC) {
 }
 F();
 F();
-import { basename as Hp } from "path";
 function iw(jC) {
   return !Wo(jC);
 }
@@ -4914,7 +4908,7 @@ function ks(HC) {
           ? xp === IDLE_NEEDS
             ? Ip
               ? Nt(Ip)
-              : Hp(wt.state.cwd) || wt.state.cwd
+              : basename(wt.state.cwd) || wt.state.cwd
             : Nt(xp)
           : Nt(wt.state.detail ?? "")
         : qn === "success"
@@ -9634,7 +9628,7 @@ function Cg({
     { allRepos: Ae, worktreeBranches: Be } = V(() => {
       let T = { ...no };
       for (let De of fe ? fe.split("\x00") : []) {
-        let Kt = jy(De);
+        let Kt = basename(De);
         if (Kt && !/\s/.test(Kt) && T[Kt] === void 0) T[Kt] = De;
       }
       let Oe = {};
@@ -10615,7 +10609,7 @@ async function mountFleetView(s, c) {
     let le = Ie.jobs?.find((Fe) => Fe.id === K);
     if (le) {
       let Fe = performance.now(),
-        pe = pu();
+        pe = randomUUID();
       (claimAttachBeacon(pe, "fleet", c?.storageV5).catch(() => {}),
         (be = {
           type: "open",
@@ -10725,7 +10719,7 @@ async function mountFleetView(s, c) {
     let yt = Date.now(),
       qe;
     if (le.respawnResult === void 0 && le.gestureId === void 0)
-      ((qe = pu()), claimAttachBeacon(qe, "fleet", c?.storageV5).catch(() => {}));
+      ((qe = randomUUID()), claimAttachBeacon(qe, "fleet", c?.storageV5).catch(() => {}));
     let ve =
       le.respawnResult ??
       (await wn(
@@ -10747,7 +10741,7 @@ async function mountFleetView(s, c) {
         process.stdout.write(formatOscSequence(OSC_CODES.SET_TITLE_AND_ICON, So(le.job.state, !0))));
       let xe = Date.now(),
         nt = {
-          gestureId: le.gestureId ?? qe ?? pu(),
+          gestureId: le.gestureId ?? qe ?? randomUUID(),
           attempt: 0,
           t0: le.gestureT0,
           surface: "fleet",

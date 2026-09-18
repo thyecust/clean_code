@@ -57,7 +57,7 @@ import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { re, L9, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { basename, sep as fn } from "path";
+import { basename, sep } from "path";
 F();
 F();
 function pt(mo) {
@@ -622,7 +622,7 @@ function SessionLogPicker({
           Be(a.length > 1),
           g(a),
           nt(a[0] ?? null));
-        let b = a.filter((m) => U === m || U.startsWith(m + fn));
+        let b = a.filter((m) => U === m || U.startsWith(m + sep));
         (b.sort((m, k) => k.length - m.length), rt(b[0] ?? null), q(!0));
       })
       .catch(() => {
@@ -654,7 +654,7 @@ function SessionLogPicker({
           if (m === void 0) return !1;
           let k = null;
           for (let y of c)
-            if (m === y || m.startsWith(y + fn)) {
+            if (m === y || m.startsWith(y + sep)) {
               if (k === null || y.length > k.length) k = y;
             }
           if (k === null) return m === a;
@@ -1183,14 +1183,14 @@ function Ar(s) {
   );
 }
 import { lstat } from "fs/promises";
-import { posix, sep as qr, win32 as zr } from "path";
+import { posix, win32 } from "path";
 function getShellCommandSeparator() {
   return getCurrentPlatform() === "windows" ? ";" : "&&";
 }
 async function buildCrossProjectResumeCommand(s, u, l) {
   let f = he();
   if (!u || !s.projectPath || s.projectPath === f) return null;
-  if (l.some((x) => s.projectPath === x || s.projectPath.startsWith(x + qr)))
+  if (l.some((x) => s.projectPath === x || s.projectPath.startsWith(x + sep)))
     return null;
   if (!An(s.projectPath) && !jf(s.projectPath) && !(await Vr(s.projectPath)))
     return null;
@@ -1200,7 +1200,7 @@ async function buildCrossProjectResumeCommand(s, u, l) {
 }
 async function Vr(s) {
   let u = getCurrentPlatform() === "windows",
-    { parse: l, sep: f } = u ? zr : posix,
+    { parse: l, sep: f } = u ? win32 : posix,
     h = u ? l(s).root.replaceAll("/", f) : l(s).root,
     T = s
       .slice(l(s).root.length)

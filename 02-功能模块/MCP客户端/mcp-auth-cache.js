@@ -52,9 +52,9 @@ var MCP_URL_ELICITATION_DIALOG = defineDialog({
   result: createLazyValue(() => qd((t) => typeof t === "object" && t !== null)),
   default: { action: "cancel" },
 });
-import { join as L } from "path";
+import { join } from "path";
 function getMcpNeedsAuthCachePath() {
-  return L(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
+  return join(getClaudeConfigDir(), "mcp-needs-auth-cache.json");
 }
 function getMcpNeedsAuthCacheStateKey() {
   return STORAGE_KEYS.state("mcp-needs-auth-cache");

@@ -72,13 +72,13 @@ async function g(r, o) {
 var V = (r, o, e) => new HooksError(`${r}: ${o}: not readable (${c(e)})`);
 var createOversizeSourceError = (r, o) => new HooksError(`${r}: ${o} is over ${MAX_SOURCE_BYTES} bytes and was not read`);
 import { lstat, realpath } from "fs/promises";
-import { basename, isAbsolute as q, relative as G, sep as J } from "path";
+import { basename, isAbsolute, relative, sep } from "path";
 async function resolvePluginFile(r, o, e) {
   let p = await g(realpath(o), (m) => V(e, basename(o), m)),
     f = (m) => w(e, r, m),
     t = await g(realpath(r), f),
-    a = G(p, t);
-  if (a === ".." || a.startsWith(`..${J}`) || q(a))
+    a = relative(p, t);
+  if (a === ".." || a.startsWith(`..${sep}`) || isAbsolute(a))
     throw new HooksError(`${e}: ${r}: ${t} resolves outside the plugin's folder`);
   let x = await g(lstat(t), f);
   if (!x.isFile()) throw new HooksError(`${e}: ${r}: not a regular file`);
@@ -93,14 +93,13 @@ async function readPluginFile(r, o, e) {
     throw w(e, r, t);
   }
 }
-import { sep as or } from "path";
 function O(r) {
   let o = [r];
   if (r.endsWith(".js")) {
     let e = r.slice(0, -3);
     o.push(`${e}.ts`, `${e}.tsx`);
   }
-  for (let e of E) (o.push(`${r}${e}`), o.push(`${r}${or}index${e}`));
+  for (let e of E) (o.push(`${r}${e}`), o.push(`${r}${sep}index${e}`));
   return o;
 }
 var CLAUDE_CODE_MODULE_ID = "claude-code";
@@ -118,13 +117,12 @@ var H = [
   "not a regular file",
   "resolves outside the plugin's folder",
 ];
-import { isAbsolute as xr, relative as N, sep as nr } from "path";
 var A = (r, o) => (o.startsWith(`${r}: `) ? o.slice(`${r}: `.length) : o);
 async function resolveHookImport({ spelled: r, importer: o, root: e, pluginName: p }, f) {
-  let t = `${p}: cannot import "${r}" (from ${N(e, o) || o}):`,
+  let t = `${p}: cannot import "${r}" (from ${relative(e, o) || o}):`,
     a = T(o, r),
-    x = N(e, a);
-  if (x === ".." || x.startsWith(`..${nr}`) || xr(x))
+    x = relative(e, a);
+  if (x === ".." || x.startsWith(`..${sep}`) || isAbsolute(x))
     throw new HooksError(`${t} it is outside the plugin's folder (${e})`);
   let m = [];
   for (let u of O(a)) {

@@ -107,11 +107,11 @@ function q(e) {
 import {
   lstat,
   readdir,
-  stat as Ue,
+  stat,
   unlink,
 } from "fs/promises";
 import { connect } from "net";
-import { basename, dirname, join as He } from "path";
+import { basename, dirname, join } from "path";
 var MAX_MESSAGE_CHARS = 1048576;
 import { randomBytes } from "crypto";
 var _e = randomBytes(32);
@@ -935,7 +935,7 @@ async function L(e) {
 async function V(e, t, r) {
   let d = !1,
     s,
-    l = He(e, t);
+    l = join(e, t);
   try {
     let f = parsePidFromFileName(t);
     if (f === null) return null;
@@ -1002,7 +1002,7 @@ async function V(e, t, r) {
     if (r?.rejectTornLiveRecord && d && s !== void 0 && isProcessRunning(s)) {
       if (!r.isReread) return (await sleep(TORN_RECORD_REREAD_DELAY_MS), V(e, t, { ...r, isReread: !0 }));
       let [f, u] = await Promise.all([
-        Ue(l).then(
+        stat(l).then(
           (i) => i.mtimeMs,
           () => {
             return;

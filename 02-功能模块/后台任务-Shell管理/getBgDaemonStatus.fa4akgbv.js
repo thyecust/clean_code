@@ -21,7 +21,7 @@ import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../权限系�
 import { getDaemonJsonPath, getDaemonLogPath } from "../守护服务-Daemon/daemon-paths.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { readFile, stat as f } from "fs/promises";
+import { readFile, stat } from "fs/promises";
 async function getBgDaemonStatus(e) {
   let r = await getVerifiedDaemonLock(1, e).catch(() => null),
     t = r?.logPath ?? getDaemonLogPath(),
@@ -107,7 +107,7 @@ async function S(e) {
     });
     return r?.ok ? { mtimeMs: r.value.mtimeMs } : null;
   }
-  return f(getRosterFilePath()).catch(() => null);
+  return stat(getRosterFilePath()).catch(() => null);
 }
 async function v(e, r) {
   if (r && e === getDaemonLogPath()) {
@@ -116,7 +116,7 @@ async function v(e, r) {
     });
     return t?.ok ? { size: t.value.size } : null;
   }
-  return f(e).catch(() => null);
+  return stat(e).catch(() => null);
 }
 async function y(e, r) {
   let t;
@@ -126,7 +126,7 @@ async function y(e, r) {
     t = o.text;
   } else
     try {
-      let o = await f(e);
+      let o = await stat(e);
       if (!o.isFile() || o.size > DAEMON_CONFIG_MAX_BYTES) return 0;
       t = await readFile(e, "utf8");
     } catch {

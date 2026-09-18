@@ -36,11 +36,11 @@ import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操�
 var P = toESM(nodeIgnoreModule(), 1);
 import {
   lstat,
-  open as q,
+  open,
   opendir,
   realpath,
 } from "fs/promises";
-import { join as p } from "path";
+import { join } from "path";
 var D = 8,
   x = 4096,
   W = 2000,
@@ -95,8 +95,8 @@ function createNestedRepositoryCheck(e) {
     n = (r) => {
       let o = t.get(r);
       if (o === void 0) {
-        let s = p(e, r);
-        ((o = lstat(p(s, U)).then(
+        let s = join(e, r);
+        ((o = lstat(join(s, U)).then(
           () => !0,
           () => isGitDirectoryAtPath(s),
         )),
@@ -156,7 +156,7 @@ function rootIgnoreRefusalClause(e) {
   }
 }
 async function readRootIgnoreLines(e) {
-  let t = p(e, ae),
+  let t = join(e, ae),
     n;
   try {
     n = await lstat(t, { bigint: !0 });
@@ -168,7 +168,7 @@ async function readRootIgnoreLines(e) {
   if (n.nlink !== 1n) return m("linked");
   if (n.size > BigInt(F)) return m("too_large");
   try {
-    let r = await q(t, getSafeReadOpenFlags());
+    let r = await open(t, getSafeReadOpenFlags());
     try {
       let o = await r.stat({ bigint: !0 });
       if (!o.isFile() || o.dev !== n.dev || o.ino !== n.ino || o.nlink !== 1n)
@@ -418,10 +418,10 @@ function z(e) {
 }
 async function Te(e, t, n, r, o) {
   try {
-    if (n !== "" && (await realpath(p(e, n))) !== p(t, n))
+    if (n !== "" && (await realpath(join(e, n))) !== join(t, n))
       return { kind: "unreadable" };
     let s = [];
-    for await (let i of await opendir(p(e, n))) {
+    for await (let i of await opendir(join(e, n))) {
       if (r.remaining <= 0 || isSignalAborted(o)) return { kind: "too_many" };
       if ((r.remaining--, n !== "" && i.name === U))
         return { kind: "nested_repository" };
@@ -445,7 +445,7 @@ async function Oe(e, t, n) {
     isSymbolicLink: s.isSymbolicLink(),
     typeKnown: s.isFile() || s.isDirectory() || s.isSymbolicLink(),
   }));
-  return o.every((s) => s.typeKnown) ? looksLikeGitDirEntries(o) : isGitDirectoryAtPath(p(e, t));
+  return o.every((s) => s.typeKnown) ? looksLikeGitDirEntries(o) : isGitDirectoryAtPath(join(e, t));
 }
 var V = "\uFFFD";
 function Pe(e, t, n) {
@@ -470,7 +470,7 @@ async function We(e, { path: t, dirent: n }) {
   )
     return "other";
   try {
-    let r = await lstat(p(e, t));
+    let r = await lstat(join(e, t));
     return r.isSymbolicLink()
       ? "symlink"
       : r.isDirectory()
@@ -513,7 +513,7 @@ function Be({ path: e, dirent: t }, n, r, o) {
 async function He(e, t) {
   try {
     let n = Date.now(),
-      r = await lstat(p(e, t));
+      r = await lstat(join(e, t));
     if (r.isDirectory())
       return {
         kind: "skip",

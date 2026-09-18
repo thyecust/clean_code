@@ -36,7 +36,7 @@ import { s, T, v, c, X, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { hostname } from "os";
-import { dirname, join as hn } from "path";
+import { dirname, join } from "path";
 var mn = createLazyValue(() =>
     c({
       version: k(1),
@@ -50,7 +50,7 @@ function De() {
   return STORAGE_KEYS.state(xe);
 }
 function getCloudPluginsConsentPath() {
-  return hn(getClaudeConfigDir(), "state", `${xe}.json`);
+  return join(getClaudeConfigDir(), "state", `${xe}.json`);
 }
 async function Ne(e) {
   let t;

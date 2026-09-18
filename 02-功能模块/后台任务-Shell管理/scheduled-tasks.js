@@ -229,12 +229,12 @@ function parseScheduleInput(e) {
 import { randomUUID } from "crypto";
 import { readFileSync } from "fs";
 import { mkdir } from "fs/promises";
-import { join as S } from "path";
+import { join } from "path";
 var FIVE_MINUTES_MS = 300000,
   P = /^\*\/\d+ \* \* \* \*$/,
-  v = S(".claude", "scheduled_tasks.json");
+  v = join(".claude", "scheduled_tasks.json");
 function getScheduledTasksPath(e) {
-  return S(e ?? sn(), v);
+  return join(e ?? sn(), v);
 }
 async function readScheduledTasks(e) {
   let s = getFsSurface(),
@@ -304,9 +304,9 @@ function hasScheduledTasks(e) {
 }
 async function writeScheduledTasks(e, s) {
   let r = s ?? sn(),
-    t = !isConfigDirPath(S(r, ".claude"));
-  if (t) await assertDirChainReal(r, S(r, ".claude"));
-  await mkdir(S(r, ".claude"), { recursive: !0 });
+    t = !isConfigDirPath(join(r, ".claude"));
+  if (t) await assertDirChainReal(r, join(r, ".claude"));
+  await mkdir(join(r, ".claude"), { recursive: !0 });
   let i = { tasks: e.map(({ durable: a, ...o }) => o) };
   await writeFileAndFlush(
     getScheduledTasksPath(r),
@@ -317,7 +317,7 @@ async function writeScheduledTasks(e, s) {
       encoding: "utf-8",
       allowSymlink: !t,
       checkParentDir: t,
-      stagingDir: S(r, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
+      stagingDir: join(r, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME),
     },
   );
 }

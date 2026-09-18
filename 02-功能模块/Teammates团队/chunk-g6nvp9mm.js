@@ -33,7 +33,7 @@ import { s, O, se, v, c, it, Ko, fe, X, k } from "../../00-第三方库/zod/zod.
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { join as Re } from "path";
+import { join } from "path";
 var CROSS_SESSION_MESSAGE_PREFIX = "Another Claude session sent a message",
   pe = `${CROSS_SESSION_MESSAGE_PREFIX} while you were working:`,
   ge = `${CROSS_SESSION_MESSAGE_PREFIX}:`,
@@ -271,7 +271,6 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import { join as Q } from "path";
 function setLeaderTeamName(e) {
   if (getBridgeHostState().taskList.leaderTeamName === e) return;
   ((getBridgeHostState().taskList.leaderTeamName = e), L());
@@ -314,7 +313,7 @@ var q = {
   onCompromised: (e) => logError(e),
 };
 function Xe(e) {
-  return Q(getTaskListDir(e), HIGH_WATER_MARK_FILE_NAME);
+  return join(getTaskListDir(e), HIGH_WATER_MARK_FILE_NAME);
 }
 async function ue(e, t) {
   if (t) {
@@ -407,7 +406,7 @@ async function resetTaskList(e, t) {
       }
       for (let p of _)
         if (p.endsWith(".json") && !p.startsWith(".")) {
-          let T = Q(r, p);
+          let T = join(r, p);
           try {
             await unlink(T);
           } catch {}
@@ -428,10 +427,10 @@ function sanitizeStorageId(e) {
   return e.replace(/[^a-zA-Z0-9_-]/g, "-");
 }
 function getTaskListDir(e) {
-  return Q(getClaudeConfigDir(), "tasks", sanitizeStorageId(e));
+  return join(getClaudeConfigDir(), "tasks", sanitizeStorageId(e));
 }
 function B(e, t) {
-  return Q(getTaskListDir(e), `${sanitizeStorageId(t)}.json`);
+  return join(getTaskListDir(e), `${sanitizeStorageId(t)}.json`);
 }
 function J(e, t) {
   return STORAGE_KEYS.task(sanitizeStorageId(e), sanitizeStorageId(t));
@@ -796,7 +795,7 @@ async function addTaskDependency(e, t, r, o) {
 }
 async function Te(e, t) {
   await ensureTaskListStorage(e, t);
-  let r = Q(getTaskListDir(e), ".lock");
+  let r = join(getTaskListDir(e), ".lock");
   try {
     await writeFile(r, "", { flag: "wx" });
   } catch {}
@@ -1080,8 +1079,8 @@ function getInboxPath(e, t) {
   let r = t || getTeamName() || "default",
     o = sanitizeStorageId(r),
     i = sanitizeStorageId(e),
-    d = Re(getTeamsDir(), o, "inboxes"),
-    u = Re(d, `${i}.json`);
+    d = join(getTeamsDir(), o, "inboxes"),
+    u = join(d, `${i}.json`);
   return (
     logForDebugging(`[TeammateMailbox] getInboxPath: agent=${e}, team=${r}, fullPath=${u}`),
     u
@@ -1090,7 +1089,7 @@ function getInboxPath(e, t) {
 async function Ft(e) {
   let t = e || getTeamName() || "default",
     r = sanitizeStorageId(t),
-    o = Re(getTeamsDir(), r, "inboxes");
+    o = join(getTeamsDir(), r, "inboxes");
   (await getFileStorage().mkdir(o), logForDebugging(`[TeammateMailbox] Ensured inbox directory: ${o}`));
 }
 function W(e, t) {

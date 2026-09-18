@@ -16,7 +16,7 @@ import { buildAgentArtifactKey, getArtifactState } from "./chunk-rr78st95.js";
 import { observationStamp, observedWithoutSource, compareArtifactVersions } from "./chunk-01ymf0ar.js";
 import { estimateTokensForContent, getDefaultFileReadingLimits, removeWebFetchSavedFile } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createHash } from "crypto";
-import { readFile, stat as G, unlink } from "fs/promises";
+import { readFile, stat, unlink } from "fs/promises";
 function versionHeldBy(e, r, n) {
   return (
     e.ver === r && (e.observers === void 0 || Object.hasOwn(e.observers, n))
@@ -345,7 +345,7 @@ function Q(e, r, n, t, i) {
 }
 async function X(e, r, n) {
   try {
-    return (await G(e)).size === r &&
+    return (await stat(e)).size === r &&
       createHash("sha256")
         .update(await readFile(e))
         .digest("hex") === n

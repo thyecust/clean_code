@@ -38,7 +38,7 @@ function parseAttachVia(e) {
   return typeof e === "string" && d.has(e) ? e : void 0;
 }
 import { mkdir } from "fs/promises";
-import { join as c } from "path";
+import { join } from "path";
 async function ensureJobDir(e, r) {
   if (isHoverRestEnabled() && r !== void 0 && isValidPathSegment(e)) {
     await i(r, { namespace: "job", jobId: e });
@@ -51,7 +51,7 @@ async function ensureJobTmpDir(e, r) {
     await i(r, s(e));
     return;
   }
-  await mkdir(c(getJobDir(e), "tmp"), { recursive: !0 });
+  await mkdir(join(getJobDir(e), "tmp"), { recursive: !0 });
 }
 function s(e) {
   return { namespace: "job", jobId: e, relPath: ["tmp"] };

@@ -162,23 +162,22 @@ import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { createKeyedSerialQueue } from "../../01-核心基础设施/核心工具-并发与缓存/async-serialization.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { randomUUID as Hi } from "crypto";
+import { randomUUID } from "crypto";
 import {
-  lstat as Wr,
-  readdir as Gi,
+  lstat,
+  readdir,
   realpath,
-  rm as Ji,
-  unlink as Ki,
-  writeFile as qi,
+  rm,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import {
   isAbsolute,
-  join as Rn,
+  join,
   normalize,
   relative,
 } from "path";
-import { readFile, unlink as oo } from "fs/promises";
-import { join as io } from "path";
+import { readFile } from "fs/promises";
 var so = 250,
   ao = 604800000,
   co = 256,
@@ -195,7 +194,7 @@ var so = 250,
     }),
   );
 async function Fn(e, t = {}) {
-  let o = io(e, "adopt.json"),
+  let o = join(e, "adopt.json"),
     r = `${o}.reap.${process.pid}`,
     s = Date.now() + (t.waitMs ?? 0);
   for (;;)
@@ -236,19 +235,14 @@ async function Fn(e, t = {}) {
       { found: !0, reaped: 0 }
     );
   } finally {
-    await oo(r).catch(() => {});
+    await unlink(r).catch(() => {});
   }
 }
-import { randomUUID as bo } from "crypto";
 import { connect } from "net";
 import {
-  lstat as Ht,
-  mkdir as uo,
-  readdir as fo,
+  mkdir,
   rename,
-  unlink as Ut,
 } from "fs/promises";
-import { join as Ze } from "path";
 var Un = 900000,
   sn = 86400000;
 function Ct(e, t) {
@@ -256,7 +250,7 @@ function Ct(e, t) {
 }
 var Hn = /^[A-Za-z0-9-]{1,64}$/;
 function Gt(e) {
-  return Ze(getAttachJournalDir(), `${e}.json`);
+  return join(getAttachJournalDir(), `${e}.json`);
 }
 var Wt = 8192;
 function Tt(e) {
@@ -283,7 +277,7 @@ async function claimAttachBeacon(e, t, o) {
         if (!(await an(o, e, r, !0))) getBackgroundSupervisorState().ownedBeacons.delete(e);
         return;
       }
-      if ((await uo(getAttachJournalDir(), { recursive: !0, mode: 448 }), !(await tt()))) {
+      if ((await mkdir(getAttachJournalDir(), { recursive: !0, mode: 448 }), !(await tt()))) {
         getBackgroundSupervisorState().ownedBeacons.delete(e);
         return;
       }
@@ -365,7 +359,7 @@ async function releaseAttachBeacon(e, t) {
       if (!(await tt())) return;
       for (let r = 0; ; r++)
         try {
-          await Ut(o);
+          await unlink(o);
           return;
         } catch (s) {
           let c = A(s);
@@ -383,14 +377,14 @@ var Mn = 4,
   Ln = 50;
 async function tt(e = !1) {
   try {
-    return (await Ht(getAttachJournalDir())).isDirectory();
+    return (await lstat(getAttachJournalDir())).isDirectory();
   } catch (t) {
     return e && A(t) === "ENOENT";
   }
 }
 async function mo(e) {
   try {
-    let t = await readBoundedFile(Ze(getAttachJournalDir(), e), Wt);
+    let t = await readBoundedFile(join(getAttachJournalDir(), e), Wt);
     if (t === null) return null;
     return Jn(t);
   } catch {
@@ -435,7 +429,7 @@ async function Kn(e) {
 }
 async function go(e, t) {
   try {
-    let o = await Ht(Ze(getAttachJournalDir(), e));
+    let o = await lstat(join(getAttachJournalDir(), e));
     return Ct(o.mtimeMs, t);
   } catch {
     return !1;
@@ -449,7 +443,7 @@ async function _o(e) {
   if (!(await tt())) return [];
   let t;
   try {
-    t = await fo(getAttachJournalDir());
+    t = await readdir(getAttachJournalDir());
   } catch {
     return [];
   }
@@ -458,16 +452,16 @@ async function _o(e) {
   for (let s of t) {
     if (!s.endsWith(".json")) {
       try {
-        let E = await Ht(Ze(getAttachJournalDir(), s));
-        if (Ct(E.mtimeMs, o)) await Ut(Ze(getAttachJournalDir(), s));
+        let E = await lstat(join(getAttachJournalDir(), s));
+        if (Ct(E.mtimeMs, o)) await unlink(join(getAttachJournalDir(), s));
       } catch {}
       continue;
     }
     let c = await mo(s);
     if (c === null) {
       try {
-        let E = await Ht(Ze(getAttachJournalDir(), s));
-        if (Ct(E.mtimeMs, o)) await Ut(Ze(getAttachJournalDir(), s));
+        let E = await lstat(join(getAttachJournalDir(), s));
+        if (Ct(E.mtimeMs, o)) await unlink(join(getAttachJournalDir(), s));
       } catch {}
       continue;
     }
@@ -481,13 +475,13 @@ async function _o(e) {
       r.push(c);
       continue;
     }
-    let v = Ze(getAttachJournalDir(), `${s}.${process.pid}.claimed`);
+    let v = join(getAttachJournalDir(), `${s}.${process.pid}.claimed`);
     try {
-      await rename(Ze(getAttachJournalDir(), s), v);
+      await rename(join(getAttachJournalDir(), s), v);
     } catch {
       continue;
     }
-    (await Ut(v).catch(() => {}), qn(c));
+    (await unlink(v).catch(() => {}), qn(c));
   }
   return r;
 }
@@ -777,7 +771,7 @@ async function rt(e, t = {}) {
     c = "rows" in r ? r.rows || 30 : 30,
     d = s,
     _ = c,
-    p = bo(),
+    p = randomUUID(),
     v = await readControlKey(),
     E = Date.now(),
     k = performance.now(),
@@ -1547,22 +1541,9 @@ async function ln(e, t) {
 function ur(e) {
   return e.count >= lr ? "+" : "";
 }
-import { randomUUID as Bt } from "crypto";
 import {
   access,
-  readdir as xi,
-  rm as Qt,
-  stat as Bi,
-  writeFile as Ni,
-} from "fs/promises";
-import { join as En } from "path";
-import { randomUUID as vr } from "crypto";
-import {
-  lstat as ri,
-  mkdir as oi,
-  readdir as Xt,
-  rm as bn,
-  writeFile as ii,
+  stat,
 } from "fs/promises";
 import { createInterface } from "readline";
 var jo = () =>
@@ -1763,8 +1744,6 @@ function gr(e) {
   return e.map(Jo).join(", ");
 }
 import { randomBytes } from "crypto";
-import { mkdir as qo, unlink as Yo } from "fs/promises";
-import { join as zo } from "path";
 async function pn(e, t = !1, o = Date.now(), r) {
   let s = getBackgroundSupervisorState(),
     c = s.daemonConfirmedUp && getLauncherCommandString() === "" && getLauncherConfigError() === null;
@@ -1786,7 +1765,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
   let d = openDaemonLease("cli-bg-dispatch");
   try {
     let _ = getDispatchDir(),
-      p = zo(_, `${e.short}.json`),
+      p = join(_, `${e.short}.json`),
       v = STORAGE_KEYS.daemon(["dispatch", `${e.short}.json`]),
       E = "ack-timeout",
       k = "no ack",
@@ -1836,7 +1815,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
         } else
           await writeFileAtomic(p, T, 384).catch(async (D) => {
             if (!W(D)) throw D;
-            (await qo(_, { recursive: !0, mode: 448 }), await writeFileAtomic(p, T, 384));
+            (await mkdir(_, { recursive: !0, mode: 448 }), await writeFileAtomic(p, T, 384));
           });
       } catch (T) {
         ((E = "dispatch-write"), (k = l(T)));
@@ -1867,7 +1846,7 @@ async function pn(e, t = !1, o = Date.now(), r) {
       if (C.ok && C.op === "await-ack")
         return hr(e, C.pid, C.messagingSock, o, C.via);
       if (isHoverRestEnabled() && r !== void 0) await r.delete(v).catch(() => {});
-      else await Yo(p).catch(() => {});
+      else await unlink(p).catch(() => {});
       let N = "code" in C ? C.code : void 0;
       if (N === "ECWDGONE" && "error" in C) return _r(C.error, e.source, o, w);
       if (N === "EALIVE") E = "short-alive";
@@ -2035,13 +2014,13 @@ async function preSeedReplBgJob(e, t, o) {
     });
   if ((await writeStateAtomic(s, d, o), a.CLAUDE_CODE_PROVIDER_MANAGED_BY_HOST))
     if (isHoverRestEnabled() && o !== void 0 && isValidPathSegment(r)) (await ensureHostManagedScope(o), await writeHostManagedMarker(o, r));
-    else (await oi(getHostManagedDir(), { recursive: !0, mode: 448 }), await ii(getHostManagedMarkerPath(r), ""));
+    else (await mkdir(getHostManagedDir(), { recursive: !0, mode: 448 }), await writeFile(getHostManagedMarkerPath(r), ""));
   return { short: r, jobDir: s, state: d };
 }
 async function spawnBgSession(e, t, o = "shell", r, s, c, d, _) {
   let p = Or(e);
   if (p) return { ok: !1, error: p, reason: "gate_blocked" };
-  let v = t ?? vr(),
+  let v = t ?? randomUUID(),
     E = d ?? v.slice(0, 8),
     k = getJobDir(E);
   return trackJobPromise(
@@ -2063,7 +2042,7 @@ async function spawnBgSession(e, t, o = "shell", r, s, c, d, _) {
       } catch (w) {
         if (o !== "fleet" && o !== "spare")
           if (_) await Dr(_, E);
-          else await bn(k, { recursive: !0, force: !0 }).catch(() => {});
+          else await rm(k, { recursive: !0, force: !0 }).catch(() => {});
         return {
           ok: !1,
           error: `Couldn't start the session \u2014 ${l(w)}`,
@@ -2330,7 +2309,7 @@ async function di(e, t, o, r, s, c, d) {
   }
   if (Ne)
     if (d) await Dr(d, p);
-    else await bn(v, { recursive: !0, force: !0 }).catch(() => {});
+    else await rm(v, { recursive: !0, force: !0 }).catch(() => {});
   if (ne.reason === "short-alive")
     return {
       ok: !1,
@@ -2429,7 +2408,7 @@ async function fi(e, t) {
     return o.ok || o.error.code !== "NotFound";
   }
   try {
-    return (await Xt(getJobDir(e))).includes("state.json");
+    return (await readdir(getJobDir(e))).includes("state.json");
   } catch (o) {
     return !W(o);
   }
@@ -2826,11 +2805,11 @@ async function kn(e) {
 }
 async function Dr(e, t) {
   let o = getJobDir(t),
-    r = await ri(o).catch(() => {
+    r = await lstat(o).catch(() => {
       return;
     });
   if (r === void 0 || !r.isDirectory()) {
-    await bn(o, { recursive: !0, force: !0 }).catch(() => {});
+    await rm(o, { recursive: !0, force: !0 }).catch(() => {});
     return;
   }
   await e.deleteScope({ namespace: "job", jobId: t }).catch(() => {});
@@ -2851,7 +2830,7 @@ Usage: ${t}
     (process.stderr.write(`Usage: ${t}
 `),
       process.exit(1));
-  let c = (r ? ((await kn(r)) ?? []) : await Xt(getJobsDir()).catch(() => []))
+  let c = (r ? ((await kn(r)) ?? []) : await readdir(getJobsDir()).catch(() => []))
     .filter((d) => SHORT_RE.test(d))
     .filter((d) => d.startsWith(e));
   if (c.length === 1) return c[0];
@@ -2996,7 +2975,7 @@ async function attachHandler(e, t) {
       t,
     ),
     c = 0,
-    d = vr(),
+    d = randomUUID(),
     _ = {
       gestureId: d,
       attempt: 0,
@@ -3309,7 +3288,7 @@ Usage: claude respawn <id>|--all
     else await logFeatureBadAsync("cli_bg_respawn", "spawn_failed");
     return;
   }
-  let s = (t ? ((await kn(t)) ?? []) : await Xt(getJobsDir()).catch(() => []))
+  let s = (t ? ((await kn(t)) ?? []) : await readdir(getJobsDir()).catch(() => []))
     .filter((_) => SHORT_RE.test(_))
     .filter((_) => _.startsWith(e));
   if (s.length !== 1) {
@@ -3451,7 +3430,7 @@ async function rmHandler(e, t, o = Tr(process.argv.slice(2))) {
     (process.stderr.write(`${c ?? ""}${Sr}`), process.exit(1));
   let p = Rr(d);
   if (p) process.stderr.write(p);
-  let E = (t ? ((await kn(t)) ?? []) : await Xt(getJobsDir()).catch(() => []))
+  let E = (t ? ((await kn(t)) ?? []) : await readdir(getJobsDir()).catch(() => []))
     .filter((N) => SHORT_RE.test(N))
     .filter((N) => N.startsWith(r));
   if (E.length !== 1)
@@ -3953,7 +3932,7 @@ async function listCustomAgents(e, t) {
 async function findChildRepos(e) {
   let t;
   try {
-    t = await xi(e, { withFileTypes: !0 });
+    t = await readdir(e, { withFileTypes: !0 });
   } catch {
     return {};
   }
@@ -3965,9 +3944,9 @@ async function findChildRepos(e) {
           !/\s/.test(s.name),
       )
       .map(async (s) => {
-        let c = En(e, s.name);
+        let c = join(e, s.name);
         try {
-          return (await Bi(En(c, ".git")), [s.name, c]);
+          return (await stat(join(c, ".git")), [s.name, c]);
         } catch {
           return null;
         }
@@ -3990,7 +3969,7 @@ async function materializePastedImages(e, t, o, r) {
     let E = s[v],
       k = t[E.id],
       w = d(E),
-      O = En(c, w);
+      O = join(c, w);
     if (_) {
       let C = await r.write(STORAGE_KEYS.job(o, [w]), Buffer.from(k.content, "base64"), {
         publishDiscipline: "inPlace",
@@ -4010,7 +3989,7 @@ async function materializePastedImages(e, t, o, r) {
           )
         );
       }
-    } else await Ni(O, k.content, { encoding: "base64" });
+    } else await writeFile(O, k.content, { encoding: "base64" });
     p = p.slice(0, E.index) + O + p.slice(E.index + E.match.length);
   }
   return p;
@@ -4038,7 +4017,7 @@ function formatDispatchDefaultFlags(e) {
   ];
 }
 function dispatchAgentJob(e, t, o, r) {
-  let s = o?.sessionId ?? Bt();
+  let s = o?.sessionId ?? randomUUID();
   return trackJobPromise(s.slice(0, 8), Li(e, t, { ...o, sessionId: s }, r));
 }
 async function Li(e, t, o, r) {
@@ -4084,7 +4063,7 @@ async function Li(e, t, o, r) {
       ));
   } catch (J) {
     return (
-      await Qt(O, { recursive: !0, force: !0 }).catch(() => {}),
+      await rm(O, { recursive: !0, force: !0 }).catch(() => {}),
       invalidateJobStateCache(O),
       logFeatureBad("fleet_view_dispatch", "state_write_failed", {
         errno: Jr(J) ?? S("unknown"),
@@ -4110,7 +4089,7 @@ async function Li(e, t, o, r) {
       );
     if (!D) await killJob(v, void 0, void 0, r).catch(() => {});
     return (
-      await Qt(O, { recursive: !0, force: !0 }).catch(() => {}),
+      await rm(O, { recursive: !0, force: !0 }).catch(() => {}),
       invalidateJobStateCache(O),
       (Nr(T.reason) ? logFeatureSad : logFeatureBad)("fleet_view_dispatch", T.reason ?? "spawn_failed"),
       { ok: !1, error: T.error, reason: T.reason }
@@ -4126,7 +4105,7 @@ function isAgentViewBashModeEnabled() {
   return !0;
 }
 function dispatchExecJob(e, t, o, r) {
-  let s = t ?? Bt(),
+  let s = t ?? randomUUID(),
     c = s.slice(0, 8),
     d = o ?? getCwd(),
     _ = getJobDir(c);
@@ -4149,7 +4128,7 @@ function dispatchExecJob(e, t, o, r) {
           ));
       } catch (v) {
         return (
-          await Qt(_, { recursive: !0, force: !0 }).catch(() => {}),
+          await rm(_, { recursive: !0, force: !0 }).catch(() => {}),
           invalidateJobStateCache(_),
           logFeatureBad("fleet_view_dispatch_exec", "state_write_failed", {
             errno: Jr(v) ?? S("unknown"),
@@ -4175,7 +4154,7 @@ function dispatchExecJob(e, t, o, r) {
           );
         return (
           await killJob(c, void 0, void 0, r).catch(() => {}),
-          await Qt(_, { recursive: !0, force: !0 }).catch(() => {}),
+          await rm(_, { recursive: !0, force: !0 }).catch(() => {}),
           invalidateJobStateCache(_),
           (p.reason === "cwd_gone" ? logFeatureSad : logFeatureBad)(
             "fleet_view_dispatch_exec",
@@ -4236,7 +4215,7 @@ class xr {
       logFeatureSad("job_spare_ensure", "low_mem");
       return;
     }
-    let c = Bt(),
+    let c = randomUUID(),
       d = c.slice(0, 8);
     (logForDebugging(`[PERF:bg-spare-start] ${d}`),
       (this.ensuring = (async () => {
@@ -4469,8 +4448,8 @@ async function respawnJob(e, t, o) {
     N = w.cliVersion !== void 0 || C,
     T = w.sessionIdTaken === !0 && !N,
     D = T
-      ? Bt()
-      : (w.resumeSessionId ?? (Xn(w.sessionId) !== null ? w.sessionId : Bt()));
+      ? randomUUID()
+      : (w.resumeSessionId ?? (Xn(w.sessionId) !== null ? w.sessionId : randomUUID()));
   if (T)
     logForDebugging(
       `bg: respawn of ${e} \u2014 session id was taken by another conversation; starting under a fresh id`,
@@ -4863,7 +4842,7 @@ function Xi(e, t) {
       return;
     }
   }
-  qi(Rn(getJobDir(e), RECAP_TRIGGER_FILE), "").catch(() => {});
+  writeFile(join(getJobDir(e), RECAP_TRIGGER_FILE), "").catch(() => {});
 }
 async function killJob(e, t, o, r) {
   if (t?.backend === "peer") return { confirmed: !0 };
@@ -5190,7 +5169,7 @@ async function attachJob(e, t = {}) {
       gateStdinUntilFirstFrame: t.gateStdinUntilFirstFrame,
     },
     c = { ...s, holdingFrame: !0, gateStdinUntilFirstFrame: !1 },
-    d = t.gesture ?? { gestureId: Hi(), attempt: 0, interactive: {} },
+    d = t.gesture ?? { gestureId: randomUUID(), attempt: 0, interactive: {} },
     _ = !t.alreadyInAlt,
     p = await rt(e, {
       ...s,
@@ -5627,7 +5606,7 @@ async function deleteJob(e, t = {}, o) {
   let v = r?.fan?.some((E) => E.kind === "shell" && E.doneAt === void 0) ?? !1;
   await Fn(getJobDir(e), { waitMs: v ? 4000 : 0 });
   try {
-    await Ji(getJobDir(e), { recursive: !0, force: !0 });
+    await rm(getJobDir(e), { recursive: !0, force: !0 });
   } catch (E) {
     if (
       (invalidateJobStateCache(getJobDir(e)),
@@ -5646,7 +5625,7 @@ async function deleteJob(e, t = {}, o) {
     };
   }
   if (isHoverRestEnabled() && o !== void 0 && validateStorageKey(getHostManagedMarkerKey(e)) === void 0) await deleteHostManagedMarker(o, e);
-  else await Ki(getHostManagedMarkerPath(e)).catch(() => {});
+  else await unlink(getHostManagedMarkerPath(e)).catch(() => {});
   if ((invalidateJobStateCache(getJobDir(e)), !t.internal))
     if (_)
       logFeatureSad("job_delete", "worktree_left_in_place", {
@@ -5689,7 +5668,7 @@ function jr(e, t) {
   return o.split(/[/\\]/, 1)[0] !== ".." && !isAbsolute(o);
 }
 async function Ur(e) {
-  return Wr(e).then(
+  return lstat(e).then(
     () => "present",
     (t) => (W(t) || A(t) === "ENOTDIR" ? "gone" : "unreadable"),
   );
@@ -5718,7 +5697,7 @@ function zr(e, t) {
   return realpath(e).catch(() => e);
 }
 async function Xr(e) {
-  return Wr(Rn(e, "state.json")).then(
+  return lstat(join(e, "state.json")).then(
     () => "present",
     (t) => (W(t) ? "missing" : "unreadable"),
   );
@@ -5726,13 +5705,13 @@ async function Xr(e) {
 async function Hr(e, t, o, { includeUnsettled: r }, s) {
   let c;
   try {
-    c = await Gi(getJobsDir(), { withFileTypes: !0 });
+    c = await readdir(getJobsDir(), { withFileTypes: !0 });
   } catch (d) {
     return W(d) ? null : "unreadable";
   }
   for (let d of c) {
     if (!d.isDirectory() || d.name === e) continue;
-    let _ = Rn(getJobsDir(), d.name),
+    let _ = join(getJobsDir(), d.name),
       p = await readJobState(_, s);
     if (p === null) {
       if ((await Xr(_)) === "missing") continue;

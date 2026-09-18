@@ -46,7 +46,7 @@ import { validateUntrustedPath, getUntrustedPathReason } from "../输入分发-�
 import { escapePromptText } from "../../01-核心基础设施/核心工具-未归类/chunk-339z9efw.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { homedir } from "os";
-import { realpath, stat as j } from "fs/promises";
+import { realpath, stat } from "fs/promises";
 import { dirname, parse } from "path";
 var _ = "Cd";
 function R(e, t) {
@@ -118,7 +118,7 @@ async function E(e) {
 async function validateCdTarget(e, t) {
   let o = resolvePath(e);
   try {
-    if (!(await j(o)).isDirectory())
+    if (!(await stat(o)).isDirectory())
       return { result: "not_a_directory", path: o, parent: dirname(o) };
   } catch (r) {
     if (!Rt(r))

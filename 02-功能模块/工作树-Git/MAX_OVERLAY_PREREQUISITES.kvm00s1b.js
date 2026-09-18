@@ -181,7 +181,7 @@ function z(e) {
   return t !== void 0 && t !== "unspecified" && t !== "unset";
 }
 import { lstat, readdir, readlink } from "fs/promises";
-import { join as K } from "path";
+import { join } from "path";
 var J = 8,
   W = "120000",
   Q = new Set(["100644", "100755"]),
@@ -189,7 +189,7 @@ var J = 8,
 async function Ke(e, t, r, i) {
   try {
     for (let s of te(t)) if (!(await r(s))) return "gone";
-    if (!(await lstat(K(e, t))).isFile()) return "other";
+    if (!(await lstat(join(e, t))).isFile()) return "other";
     return (await qe(i, t)) ? "file" : "gone";
   } catch (o) {
     let s = A(o);
@@ -201,7 +201,7 @@ function Ye(e) {
   return (r) => {
     let i = t.get(r);
     if (i !== void 0) return i;
-    let o = readdir(r === "" ? e : K(e, r)).then(
+    let o = readdir(r === "" ? e : join(e, r)).then(
       (s) => new Set(s.map((u) => u.normalize("NFC"))),
     );
     return (t.set(r, o), o);
@@ -242,7 +242,7 @@ function De(e) {
   return (r) => {
     let i = t.get(r);
     if (i !== void 0) return i;
-    let o = lstat(K(e, r)).then((s) => s.isDirectory());
+    let o = lstat(join(e, r)).then((s) => s.isDirectory());
     return (t.set(r, o), o);
   };
 }
@@ -381,7 +381,7 @@ async function Pe(e, t, r) {
   let i = new Map(),
     o = async (s) => {
       try {
-        let u = await lstat(K(e, s), { bigint: !0 });
+        let u = await lstat(join(e, s), { bigint: !0 });
         return u.isFile() && u.ino !== 0n
           ? `${u.dev}:${u.ino}:${u.size}:${u.mtimeNs}:${u.ctimeNs}`
           : null;
@@ -480,7 +480,7 @@ async function Te(e, t) {
   let i = r.stdout.split("\x00").filter((u) => u !== ""),
     o = createConcurrencyLimiter(J, (u) =>
       isSafePortablePath(u)
-        ? lstat(K(e, u)).then(
+        ? lstat(join(e, u)).then(
             (f) => f.isFile(),
             () => !1,
           )
@@ -601,7 +601,7 @@ async function Fe(e, t, r, i, o, s) {
       if (!u(p)) return b;
       if (p.oldMode === W) {
         if (!(await g(p.path))) return b;
-        let R = await readlink(K(e, p.path), "buffer").catch(() => null);
+        let R = await readlink(join(e, p.path), "buffer").catch(() => null);
         if (R !== null) {
           let k =
             getCurrentPlatform() === "windows"

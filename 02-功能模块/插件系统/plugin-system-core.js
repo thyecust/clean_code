@@ -48,32 +48,32 @@ import { s, se, v, c, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { isAbsolute as te } from "path";
+import { isAbsolute } from "path";
 var PLUGIN_LINK_MARKER_FILENAME = ".claude-plugin-link",
   getPluginLinkMarkerSchema = createLazyValue(() =>
     c({
       target: s()
         .min(1)
         .max(4096)
-        .refine((e) => te(e), { message: "must be an absolute path" })
+        .refine((e) => isAbsolute(e), { message: "must be an absolute path" })
         .refine((e) => !$W(e) && !li(e), { message: "must be a local path" })
         .refine((e) => !AB(e), { message: "must be canonical" }),
     }),
   ),
   LINK_MODE_COMMAND_SUFFIX = `
 [mode: link]`;
-import { isAbsolute as ie, join as L, relative as O, sep as U } from "path";
+import { join, relative, sep } from "path";
 function E() {
-  return L(getClaudeConfigDir(), "skills");
+  return join(getClaudeConfigDir(), "skills");
 }
 function re(e) {
-  let t = O(E(), e);
-  return t !== "" && t !== ".." && !t.startsWith(`..${U}`) && !ie(t);
+  let t = relative(E(), e);
+  return t !== "" && t !== ".." && !t.startsWith(`..${sep}`) && !isAbsolute(t);
 }
 function F(e) {
   if (!re(e)) return null;
-  let t = O(E(), e).split(U);
-  return hasValidPathSegments(t) && L(E(), ...t) === e ? t : null;
+  let t = relative(E(), e).split(sep);
+  return hasValidPathSegments(t) && join(E(), ...t) === e ? t : null;
 }
 function toUserSkillsStorageKey(e) {
   let t = F(e);
@@ -85,21 +85,20 @@ function toUserSkillsStorageScope(e) {
     ? null
     : { namespace: "userConfigDir", dir: "skills", relPath: t };
 }
-import { isAbsolute as T, join as k, relative as H, sep as C } from "path";
 var ORPHANED_AT_MARKER_FILENAME = ".orphaned_at",
   IN_USE_MARKER_FILENAME = ".in_use",
   GCS_SHA_FILENAME = ".gcs-sha",
   LINKS_MATERIALIZED_MARKER_FILENAME = ".links_materialized";
 function M() {
-  return k(getClaudeConfigDir(), "plugins", "cache");
+  return join(getClaudeConfigDir(), "plugins", "cache");
 }
 function w(e, t) {
   let i = M();
   if (t !== i) return null;
-  let r = H(i, e);
-  if (r === "" || r === ".." || r.startsWith(`..${C}`) || T(r)) return null;
-  let o = r.split(C);
-  return k(i, ...o) === e ? o : null;
+  let r = relative(i, e);
+  if (r === "" || r === ".." || r.startsWith(`..${sep}`) || isAbsolute(r)) return null;
+  let o = r.split(sep);
+  return join(i, ...o) === e ? o : null;
 }
 function D(e) {
   return e.endsWith(".zip");
@@ -126,7 +125,7 @@ function toPluginVersionCacheScope(e, t) {
 function toPluginVersionCachePath(e, t) {
   let i = [e.marketplace, e.plugin, e.version];
   if (t !== M() || !hasValidPathSegments(i) || D(e.version)) return null;
-  return k(t, ...i);
+  return join(t, ...i);
 }
 function oe(e, t) {
   let i = w(e, t);
@@ -144,15 +143,15 @@ function getMarketplaceCacheScope(e, t, i) {
   return A(i) && hasValidPathSegments([e]) ? STORAGE_KEYS.marketplaceCache(e, t) : null;
 }
 function A(e) {
-  return e === k(getClaudeConfigDir(), "plugins");
+  return e === join(getClaudeConfigDir(), "plugins");
 }
 function le(e, t) {
   if (!A(t)) return null;
-  let i = k(t, "marketplaces"),
-    r = H(i, e);
-  if (r === "" || r === ".." || r.startsWith(`..${C}`) || T(r)) return null;
-  let o = r.split(C);
-  return k(i, ...o) === e ? o : null;
+  let i = join(t, "marketplaces"),
+    r = relative(i, e);
+  if (r === "" || r === ".." || r.startsWith(`..${sep}`) || isAbsolute(r)) return null;
+  let o = r.split(sep);
+  return join(i, ...o) === e ? o : null;
 }
 function toMarketplaceTreeScope(e, t) {
   let i = le(e, t);
@@ -160,7 +159,7 @@ function toMarketplaceTreeScope(e, t) {
   return STORAGE_KEYS.marketplaceTree(i[0], i.slice(1));
 }
 function toPluginAssetCacheScope(e) {
-  return e === k(getClaudeConfigDir(), "plugins", "asset-cache")
+  return e === join(getClaudeConfigDir(), "plugins", "asset-cache")
     ? { namespace: "pluginAssetCache" }
     : null;
 }
@@ -186,8 +185,8 @@ function isReservedOrTempName(e, t) {
 function isNodeModulesDirName(e) {
   return toComparableName(e) === "node_modules";
 }
-import { readdir, rm as de, stat as ce } from "fs/promises";
-import { delimiter, join as I } from "path";
+import { readdir, rm, stat } from "fs/promises";
+import { delimiter } from "path";
 var pe = "plugins",
   K = "cowork_plugins";
 function me() {
@@ -198,7 +197,7 @@ function me() {
 function getPluginsDir() {
   let e = a.CLAUDE_CODE_PLUGIN_CACHE_DIR;
   if (e) return Ju(e);
-  return I(getClaudeConfigDir(), me());
+  return join(getClaudeConfigDir(), me());
 }
 function getPluginSeedDirs() {
   let e = a.CLAUDE_CODE_PLUGIN_SEED_DIR;
@@ -216,7 +215,7 @@ function toMarketplaceNameKey(e) {
   return toPathSafeSegment(toComparableName(e.normalize("NFKC"))).toLowerCase();
 }
 function getPluginDataDir(e) {
-  return I(getPluginsDir(), "data", toPathSafeSegment(e));
+  return join(getPluginsDir(), "data", toPathSafeSegment(e));
 }
 function ensurePluginDataDir(e) {
   let t = getPluginDataDir(e);
@@ -227,11 +226,11 @@ async function getPluginDataDirSize(e) {
     i = 0,
     r = async (o) => {
       for (let u of await readdir(o, { withFileTypes: !0 })) {
-        let d = I(o, u.name);
+        let d = join(o, u.name);
         if (u.isDirectory()) await r(d);
         else
           try {
-            i += (await ce(d)).size;
+            i += (await stat(d)).size;
           } catch {}
       }
     };
@@ -247,25 +246,25 @@ async function getPluginDataDirSize(e) {
 async function removePluginDataDir(e) {
   let t = getPluginDataDir(e);
   try {
-    await de(t, { recursive: !0, force: !0 });
+    await rm(t, { recursive: !0, force: !0 });
   } catch (i) {
     logForDebugging(`Failed to delete plugin data dir ${t}: ${l(i)}`, { level: "warn" });
   }
 }
-import { join as fe, resolve as R } from "path";
+import { resolve } from "path";
 var PLUGIN_CACHE_DIR_NAME = "cache";
 function getResolvedPluginsDir() {
-  return R(he(), getPluginsDir());
+  return resolve(he(), getPluginsDir());
 }
 function getPluginCacheDir() {
-  return fe(getResolvedPluginsDir(), PLUGIN_CACHE_DIR_NAME);
+  return join(getResolvedPluginsDir(), PLUGIN_CACHE_DIR_NAME);
 }
 function getAllPluginRootDirs() {
   return dedupe([
-    R(getClaudeConfigDir(), "plugins"),
-    R(getClaudeConfigDir(), "cowork_plugins"),
+    resolve(getClaudeConfigDir(), "plugins"),
+    resolve(getClaudeConfigDir(), "cowork_plugins"),
     getResolvedPluginsDir(),
-    ...getPluginSeedDirs().map((e) => R(he(), e)),
+    ...getPluginSeedDirs().map((e) => resolve(he(), e)),
   ]);
 }
 function isValidCliNameToken(e) {
@@ -543,9 +542,8 @@ function ve(e) {
 function W(e) {
   return e.map((t) => `"${t}"`).join(" and ");
 }
-import { resolve as Re } from "path";
 function toNormalizedPathKey(e) {
-  let t = Re(e).normalize("NFC");
+  let t = resolve(e).normalize("NFC");
   return getCurrentPlatform() === "windows" ? t.toLowerCase() : t;
 }
 function parseAttributionMap(e, t, i, r) {
@@ -639,7 +637,7 @@ function getPluginAttributionFromEnv(e) {
     G(i, "CLAUDE_CODE_PLUGIN_ATTRIBUTION entry"),
   ).get(toNormalizedPathKey(e));
 }
-import { normalize, parse, resolve as q, sep as De } from "path";
+import { normalize, parse } from "path";
 var UNTRUSTED_PATH_REASON =
   "is network-shaped, carries a dot segment or link component, or could not be classified";
 function classifyPathTrust(e, { trustedRoots: t = [] } = {}) {
@@ -647,7 +645,7 @@ function classifyPathTrust(e, { trustedRoots: t = [] } = {}) {
     { absolute: r, root: o, tail: u } = i;
   if (i.dotSegmentInTail) return { absolute: r, suspect: !0 };
   if (o !== void 0) {
-    let g = q(he(), o);
+    let g = resolve(he(), o);
     return { absolute: r, suspect: vHt(g, u) };
   }
   let d = i.networkShapedUnvouched || Bxe(r);
@@ -662,7 +660,7 @@ function Ae(e, t) {
       dotSegmentInTail: !1,
       networkShapedUnvouched: !0,
     };
-  let i = q(he(), e),
+  let i = resolve(he(), e),
     { root: r, tail: o } = Ie(e, t);
   return {
     absolute: i,
@@ -684,7 +682,7 @@ function Ie(e, t) {
       if (d === "" || d === ".") continue;
       let g;
       if (i === d) g = "";
-      else if (i.startsWith(d + De) || i.startsWith(d + "/"))
+      else if (i.startsWith(d + sep) || i.startsWith(d + "/"))
         g = e.slice(e.length - (i.length - d.length));
       if (g !== void 0 && (r === void 0 || g.length < r.tail.length))
         r = { root: o, tail: g };
@@ -810,7 +808,6 @@ function clearPluginWorkflowsCache() {
   getPluginRegistryState().workflows = void 0;
 }
 import { readFileSync, statSync } from "fs";
-import { isAbsolute as Q, join as Te, resolve as Z } from "path";
 function isWithinMaxAge(e, t, i = Date.now()) {
   return Number.isFinite(e) && Math.abs(i - e) < t;
 }
@@ -840,7 +837,7 @@ function collectPluginCommandProducerDirs(e) {
   for (let u of new Set(e)) {
     let d;
     try {
-      let p = Te(u, "installed_plugins.json"),
+      let p = join(u, "installed_plugins.json"),
         b = statSync(p);
       if (!b.isFile() || b.size > je) continue;
       let y = readFileSync(p, "utf8");
@@ -912,12 +909,12 @@ function isPluginCommandProducerDir(e, t, i, { maxAgeMs: r = 0 } = {}) {
   if (o.commandProducerDirsComparable.length === 0) return !1;
   if (
     o.commandProducerDirsNeedCanonicalCandidate &&
-    jxe(Q(e) ? e : Z(e), { allowLocalWsl: !0 })
+    jxe(isAbsolute(e) ? e : resolve(e), { allowLocalWsl: !0 })
   )
     return !0;
   let d = o.commandProducerDirsNeedCanonicalCandidate
     ? $b(e, { foldCase: !0, knownNotSuspect: !0 })
-    : Z(e).normalize("NFC").toLowerCase();
+    : resolve(e).normalize("NFC").toLowerCase();
   return o.commandProducerDirsComparable.some((g) =>
     wh(g, d, { alreadyComparable: !0 }),
   );
@@ -940,7 +937,7 @@ function ne(e, t) {
   let i =
     PYt(e, { exactDots: !0 }) ?? (t === void 0 ? void 0 : IYt(e, t.prefix));
   if (i !== void 0) return i;
-  if (Q(e)) return !THt(e) && (!Ww(e) || CHt(e)) ? e : void 0;
+  if (isAbsolute(e)) return !THt(e) && (!Ww(e) || CHt(e)) ? e : void 0;
   return OYt(e, { exactDots: !0 });
 }
 export {

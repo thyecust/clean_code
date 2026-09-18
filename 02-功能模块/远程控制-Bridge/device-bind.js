@@ -17,7 +17,7 @@ import { isViolinWoodEnabled } from "../目录同步-dir-sync/chunk-97crm80y.js"
 import { launchedFromHome } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { registerDevice, DeviceLimitReachedError, DeviceRegistrationUnavailableError, clearCachedDeviceRegistration, buildDefaultDeviceDisplayName } from "../设备注册-Cowork/设备注册-Cowork.9r92qaht.js";
 import { compareAccountUuids, getHostAccountUuidFromEnv, isEgressAllowed } from "../设备注册-Cowork/chunk-d4kaq0ds.js";
-import { sign as v } from "crypto";
+import { sign } from "crypto";
 var DEVICE_REGISTRY_KID_PREFIX = "creg_",
   m = Buffer.from("anthropic.ccr.create_session_bind.v1", "utf8");
 function l(e) {
@@ -43,7 +43,7 @@ function p(e, t, r, a) {
 function B(e, t, r, a) {
   let c = Date.now(),
     o = p(e, t, r, c),
-    d = v("sha256", o, { key: a, dsaEncoding: "ieee-p1363" });
+    d = sign("sha256", o, { key: a, dsaEncoding: "ieee-p1363" });
   return {
     deviceUUID: r,
     kid: DEVICE_REGISTRY_KID_PREFIX + r,

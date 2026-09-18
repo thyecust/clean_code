@@ -33,8 +33,8 @@ import { parseAccountOnHoldApiError, isNoRefreshAvailableError, getAuthPrecedenc
 import { Cs } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 import { getFederationCacheDir } from "../../01-核心基础设施/核心工具-未归类/federation-cache-dir.js";
 import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
-import { mkdir, readFile, stat as F } from "fs/promises";
-import { join as b } from "path";
+import { mkdir, readFile, stat } from "fs/promises";
+import { join } from "path";
 import { dirname } from "path";
 var P = { "fail-closed": 5, "fail-open": 15 };
 function E(e, t, r) {
@@ -379,7 +379,7 @@ async function K(e, t) {
   try {
     await mkdir(o, { recursive: !0, mode: 448 });
     {
-      let d = await F(o),
+      let d = await stat(o),
         m = d.mode & 511;
       if (m & 63)
         return (
@@ -414,6 +414,6 @@ async function K(e, t) {
       hashSha256(s),
     ]),
   );
-  return b(o, `${c}.json`);
+  return join(o, `${c}.json`);
 }
 export { withCredentialsLock, getResolvedWIFBaseUrlSnapshot, getWIFCredentials, invalidateWIFToken, getWIFTokenCache, isWIFTransientExchangeError, resetWIFCredentialState };

@@ -89,7 +89,7 @@ function getPluginEnabledFromTrustedSettings(e) {
   }
   return r;
 }
-import { join as fo } from "path";
+import { join } from "path";
 var ze = "scripts/bundle-builtin-hooks-module.ts";
 var Ze = (e, o) =>
   new R(
@@ -98,13 +98,13 @@ var Ze = (e, o) =>
   );
 var D = "hooks/register.ts";
 var de = (e) => `builtin:${e}/${D}`;
-import { resolve as oo } from "path";
-var C = () => oo(import.meta.dirname, "../../../../../..");
-import { dirname, relative as io, resolve as so, sep as ao } from "path";
+import { resolve } from "path";
+var C = () => resolve(import.meta.dirname, "../../../../../..");
+import { dirname, relative, sep } from "path";
 var ue = "builtin-hooks-module:";
 var po = (e, o) =>
-  io(C(), so(dirname(e), o.slice(ue.length)))
-    .split(ao)
+  relative(C(), resolve(dirname(e), o.slice(ue.length)))
+    .split(sep)
     .join("/");
 var te = "builtin-hooks-module";
 var In = {
@@ -115,7 +115,7 @@ var In = {
       namespace: te,
     })),
       e.onLoad({ filter: /.*/, namespace: te }, async (o) => {
-        let r = Bun.spawn([process.execPath, "--smol", fo(C(), ze), o.path], {
+        let r = Bun.spawn([process.execPath, "--smol", join(C(), ze), o.path], {
             cwd: C(),
             stdout: "pipe",
             stderr: "pipe",
@@ -955,7 +955,6 @@ function $r(e, o) {
   for (let [i, p] of r) if (!t.has(i)) n.set(i, [...p].sort());
   return n;
 }
-import { relative as Wr } from "path";
 var Z = (e, o, r) => new HooksError(`${e}: ${o} does not parse: ${l(r)}`);
 function Rr(e, o, r) {
   try {
@@ -1086,7 +1085,7 @@ async function Yr(e, o, r) {
     let d = new Map();
     for (let c of m.specifiers) {
       if (c === CLAUDE_CODE_MODULE_ID) continue;
-      if (!isRelativeImportPath(c)) throw createBadImportError(o, c, Wr(e.root, s) || s);
+      if (!isRelativeImportPath(c)) throw createBadImportError(o, c, relative(e.root, s) || s);
       let g = await r(c, s, n);
       if (!n.has(g.file)) {
         if (n.size >= MAX_LINKED_FILES) throw createTooManyFilesError(o, g.file);
@@ -1147,10 +1146,9 @@ async function loadHooksModuleGraph(e, o, r) {
     scan: T(n, r),
   };
 }
-import { join as ct } from "path";
 function dt(e, o) {
   return "folder" in o
-    ? { path: o.folder, modulePath: ct(o.folder, D) }
+    ? { path: o.folder, modulePath: join(o.folder, D) }
     : { path: BUILTIN_PLUGIN_SOURCE, modulePath: de(e) };
 }
 function registerBuiltinPlugin(e) {

@@ -18,9 +18,9 @@ import { execFileNoThrow } from "../工作树-Git/git-exec-hardening.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { spawn } from "child_process";
 import { homedir } from "os";
-import { join as v } from "path";
-var V = v(homedir(), ".cache", "coder-audio", "port"),
-  M = v(homedir(), ".cache", "coder-audio", "token");
+import { join } from "path";
+var V = join(homedir(), ".cache", "coder-audio", "port"),
+  M = join(homedir(), ".cache", "coder-audio", "token");
 class g {
   audioNapi = null;
   audioNapiPromise = null;

@@ -24,13 +24,12 @@ import { defineExportGetters } from "../../01-核心基础设施/内嵌资源与
 var N = {};
 defineExportGetters(N, { call: () => ho, default: () => N, outputJsonSchemaOf: () => outputJsonSchemaOf });
 import { mkdir, realpath } from "fs/promises";
-import { relative, resolve as E } from "path";
+import { relative, resolve } from "path";
 var P = ".claude/types";
 var f = "claude-code-mcp.d.ts";
 var d = (o) => ({ type: "text", level: "error", value: o });
-import { resolve as z } from "path";
 async function M(o, e, r) {
-  let t = z(o, e),
+  let t = resolve(o, e),
     a = (s) => new HooksError(`${t}: ${s}`);
   try {
     await assertRegularFilePath(t, a);
@@ -216,7 +215,7 @@ function outputJsonSchemaOf(o) {
 }
 var ho = async (o, e) => {
   let r = getCwd(),
-    t = E(r, o.trim() || P),
+    t = resolve(r, o.trim() || P),
     a = getToolPermissionContext(e),
     s = po(
       await Promise.all(
@@ -278,8 +277,8 @@ var ho = async (o, e) => {
     let w = await M(p, i.name, i.text);
     if (w !== void 0) return w;
   }
-  let v = E(p, y),
-    C = E(p, f),
+  let v = resolve(p, y),
+    C = resolve(p, f),
     Z =
       s.length === 0
         ? `Wrote ${C}: no MCP tools are connected, so it is empty (every mcp__* tool stays loosely typed).`

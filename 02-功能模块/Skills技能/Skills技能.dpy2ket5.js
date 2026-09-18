@@ -180,7 +180,7 @@ function registerBuiltinPlugins() {
     tn(import.meta.require("./SKILL_MD.1bkj5m4h.js")).registerPlugin();
 }
 import { access } from "fs/promises";
-import { join as rn } from "path";
+import { join } from "path";
 var et = 5000,
   an = 5000,
   ln = 5000,
@@ -222,7 +222,7 @@ async function Pe(e) {
   if (e == null) return null;
   let t = getBundledSkillExtractDir(ARTIFACT_CAPABILITIES_SKILL_NAME);
   try {
-    return (await Promise.all(e.files.map((o) => access(rn(t, o)))), e);
+    return (await Promise.all(e.files.map((o) => access(join(t, o)))), e);
   } catch {
     return null;
   }

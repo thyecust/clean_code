@@ -15,7 +15,7 @@ import {
   unlinkSync,
   writeFileSync,
 } from "fs";
-import { join as c } from "path";
+import { join } from "path";
 var y = "exit-cause",
   BG_EXIT_CAUSE_SESSION_IN_USE = "session_in_use",
   h = "exit-detail",
@@ -24,7 +24,7 @@ function setBgExitCause(e, t) {
   let n = t ?? process.env.CLAUDE_JOB_DIR;
   if (!n) return;
   try {
-    writeFileSync(c(n, y), e);
+    writeFileSync(join(n, y), e);
   } catch {}
 }
 function setBgExitDetail(e, t, n) {
@@ -33,17 +33,17 @@ function setBgExitDetail(e, t, n) {
   if (!r || !i) return;
   try {
     writeFileSync(
-      c(r, h),
+      join(r, h),
       `${e}
 ${i.slice(0, P)}`,
     );
   } catch {}
 }
 function readAndClearBgExitCause(e) {
-  return E(c(e, y));
+  return E(join(e, y));
 }
 function readAndClearBgExitDetail(e, t) {
-  let n = E(c(e, h));
+  let n = E(join(e, h));
   if (!n) return;
   let r = n.indexOf(`
 `);

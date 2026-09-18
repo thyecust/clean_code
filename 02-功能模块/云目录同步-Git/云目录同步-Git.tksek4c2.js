@@ -181,42 +181,35 @@ import { createHoverRestOptions } from "../../01-核心基础设施/核心工具
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { countMatching, dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import {
-  lstat as al,
+  lstat,
   mkdtemp,
   readFile,
-  realpath as lh,
-  rm as dh,
-  unlink as rl,
-  writeFile as uh,
+  realpath,
+  rm,
+  unlink,
+  writeFile,
 } from "fs/promises";
 import { tmpdir } from "os";
 import {
-  dirname as ll,
-  isAbsolute as dl,
-  join as Gr,
-  relative as fh,
-  resolve as hh,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
 } from "path";
-import { createHash as es, randomBytes as ts } from "crypto";
-import { constants as rn } from "fs";
+import { createHash, randomBytes } from "crypto";
+import { constants } from "fs";
 import {
-  lstat as Dn,
-  mkdir as Un,
-  open as Or,
-  readdir as no,
-  rename as Wl,
-  rm as wn,
-  stat as Ul,
+  mkdir,
+  open,
+  readdir,
+  rename,
+  stat,
   utimes,
-  writeFile as vo,
 } from "fs/promises";
 import {
-  basename as zl,
-  dirname as To,
-  isAbsolute as ns,
-  join as ce,
-  relative as Kl,
-  sep as ql,
+  basename,
+  sep,
 } from "path";
 var rs = [
     "core.autocrlf",
@@ -257,8 +250,8 @@ async function Vl(e, t) {
     );
   if (
     !(await ls([
-      ce(s.workTree, ".gitattributes"),
-      ce(s.commonDir, "info", "attributes"),
+      join(s.workTree, ".gitattributes"),
+      join(s.commonDir, "info", "attributes"),
     ]))
   )
     return se("unreadable_path", "an attributes file is not a regular file");
@@ -288,7 +281,7 @@ async function Vl(e, t) {
     N = R !== null && R.startsWith("refs/heads/") ? R.slice(11) : null,
     C;
   try {
-    let O = await Ql(e.sideRoot, To(a));
+    let O = await Ql(e.sideRoot, dirname(a));
     if (O !== null) return se("git_error", O);
     C = await rd(`${a}.lock`);
   } catch (O) {
@@ -318,14 +311,14 @@ async function Jl(e, t, r) {
     { real: f, headSha: p, branch: y, started: w } = t,
     k = reachRootsOf(s),
     _ = {
-      objectsDir: ce(s.commonDir, "objects"),
+      objectsDir: join(s.commonDir, "objects"),
       ...(k !== void 0 && { reachRoots: k }),
       objectFormat: t.format === "sha256" ? "sha256" : "sha1",
       settings: ud(t.settings),
       signal: d,
       probes: r,
     },
-    E = ce(a, "..", "attrs.git"),
+    E = join(a, "..", "attrs.git"),
     R = (await Yi(a, _)) ?? (await Yi(E, { ..._, attributes: null }));
   if (R !== null) return se("git_error", R);
   let N = createHardenedGitRunner(
@@ -341,10 +334,10 @@ async function Jl(e, t, r) {
       r,
     ),
     C = new Date();
-  await utimes(ce(a, "HEAD"), C, C).catch(() => {});
-  let O = ce(a, `run-${process.pid}-${ts(6).toString("hex")}`),
-    D = ce(O, "index"),
-    pe = { GIT_SHALLOW_FILE: ce(O, "shallow") },
+  await utimes(join(a, "HEAD"), C, C).catch(() => {});
+  let O = join(a, `run-${process.pid}-${randomBytes(6).toString("hex")}`),
+    D = join(O, "index"),
+    pe = { GIT_SHALLOW_FILE: join(O, "shallow") },
     re = (ge, le, J) => N(ge, { ...pe, ...le }, J),
     te = (ge, le, J) =>
       re(
@@ -353,8 +346,8 @@ async function Jl(e, t, r) {
         J,
       );
   try {
-    (await td(a), await Un(O, { recursive: !0, mode: 448 }));
-    let ge = await Ao(ce(s.commonDir, "shallow"), pe.GIT_SHALLOW_FILE);
+    (await td(a), await mkdir(O, { recursive: !0, mode: 448 }));
+    let ge = await Ao(join(s.commonDir, "shallow"), pe.GIT_SHALLOW_FILE);
     if (ge.kind === "failed")
       return se("git_error", `the shallow file cannot be used: ${ge.why}`);
     let le = await fd(s.gitDir, D, a);
@@ -454,8 +447,8 @@ async function Jl(e, t, r) {
           return se("unreadable_path", "an attributes file lies beyond a link");
     }
     let sn = [
-      ...jt.map((I) => ce(s.workTree, I)),
-      ce(s.commonDir, "info", "attributes"),
+      ...jt.map((I) => join(s.workTree, I)),
+      join(s.commonDir, "info", "attributes"),
     ];
     if (!(await ls(sn)))
       return se("unreadable_path", "an attributes file is not a regular file");
@@ -479,8 +472,8 @@ async function Jl(e, t, r) {
             _t,
             {
               commit: I,
-              indexPath: ce(O, `attrs-${he}.index`),
-              objectsDir: ce(O, `attrs-${he}.objects`),
+              indexPath: join(O, `attrs-${he}.index`),
+              objectsDir: join(O, `attrs-${he}.objects`),
             },
             lt,
           ),
@@ -552,8 +545,8 @@ async function Jl(e, t, r) {
     let Tt = await excludeDirectoryPaths(s.workTree, tt),
       me = new Set(Tt),
       At = Tt.filter((I) => !St.has(I) && !Ut.has(I)),
-      xe = ce(O, "stage");
-    await Un(xe, { recursive: !0, mode: 448 });
+      xe = join(O, "stage");
+    await mkdir(xe, { recursive: !0, mode: 448 });
     let nt = await stageChangedPaths(s.workTree, xe, At, e.byteCap, e.stageHooks);
     if ("refused" in nt)
       return se(
@@ -748,34 +741,34 @@ async function Jl(e, t, r) {
   } catch (ge) {
     return se("git_error", l(ge));
   } finally {
-    await wn(O, { recursive: !0, force: !0 }).catch(() => {});
-    let ge = await no(a).catch(() => []);
+    await rm(O, { recursive: !0, force: !0 }).catch(() => {});
+    let ge = await readdir(a).catch(() => []);
     await Promise.all(
       ge
         .filter((le) => /^sharedindex\.[0-9a-f]{40,64}$/.test(le))
-        .map((le) => wn(ce(a, le), { force: !0 }).catch(() => {})),
+        .map((le) => rm(join(a, le), { force: !0 }).catch(() => {})),
     );
   }
 }
 async function Ql(e, t) {
-  let r = Kl(e, t);
-  if (r.startsWith("..") || ns(r))
+  let r = relative(e, t);
+  if (r.startsWith("..") || isAbsolute(r))
     return "the side repository is not under its root";
   try {
-    await Un(To(e), { recursive: !0 });
+    await mkdir(dirname(e), { recursive: !0 });
   } catch (a) {
     return l(a);
   }
   let o = process.getuid?.(),
-    s = To(e);
-  for (let a of [zl(e), ...r.split(ql)].filter(Boolean)) {
-    s = ce(s, a);
+    s = dirname(e);
+  for (let a of [basename(e), ...r.split(sep)].filter(Boolean)) {
+    s = join(s, a);
     try {
-      let f = await Dn(s);
+      let f = await lstat(s);
       if (f.isDirectory()) {
         if (o !== void 0 && f.uid !== o) return `${s} belongs to another user`;
         if (o !== void 0 && (f.mode & 63) !== 0) {
-          let p = await Or(s, rn.O_RDONLY | rn.O_DIRECTORY | rn.O_NOFOLLOW);
+          let p = await open(s, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
           try {
             await p.chmod(448);
           } finally {
@@ -784,16 +777,16 @@ async function Ql(e, t) {
         }
         continue;
       }
-      await wn(s, { recursive: !0, force: !0 });
+      await rm(s, { recursive: !0, force: !0 });
     } catch (f) {
       if (A(f) !== "ENOENT") return l(f);
     }
     try {
-      await Un(s, { mode: 448 });
+      await mkdir(s, { mode: 448 });
     } catch (f) {
       if (A(f) !== "EEXIST") return l(f);
     }
-    let d = await Dn(s).catch(() => null);
+    let d = await lstat(s).catch(() => null);
     if (d === null || !d.isDirectory() || (o !== void 0 && d.uid !== o))
       return `${s} is not a plain directory of ours`;
   }
@@ -801,18 +794,18 @@ async function Ql(e, t) {
 }
 var Zl = /^run-([0-9]+)-[0-9a-f]{12}$/;
 async function td(e) {
-  let t = await no(e).catch(() => []);
+  let t = await readdir(e).catch(() => []);
   await Promise.all(
     t.map(async (r) => {
       let o = Zl.exec(r)?.[1];
       if (o === void 0) return;
-      let s = ce(e, r),
-        a = await Dn(s).then(
+      let s = join(e, r),
+        a = await lstat(s).then(
           (d) => Date.now() - d.mtimeMs,
           () => 0,
         );
       if (a >= is || (a >= ss && !as(Number(o))))
-        await wn(s, { recursive: !0, force: !0 }).catch(() => {});
+        await rm(s, { recursive: !0, force: !0 }).catch(() => {});
     }),
   );
 }
@@ -823,28 +816,28 @@ async function rd(e) {
   let t = await od(),
     r = async () => {
       if ((await xr(e, 128).catch(() => "")) === t)
-        await wn(e, { force: !0 }).catch(() => {});
+        await rm(e, { force: !0 }).catch(() => {});
     };
   for (let o = 0; o < 3; o++)
     try {
-      return (await vo(e, t, { flag: "wx", mode: 384 }), { release: r });
+      return (await writeFile(e, t, { flag: "wx", mode: 384 }), { release: r });
     } catch (s) {
       if (A(s) !== "EEXIST") throw s;
       let [a, d] = await Promise.all([
         xr(e, 128).catch(() => ""),
-        Dn(e).then(
+        lstat(e).then(
           (p) => Date.now() - p.mtimeMs,
           () => 1 / 0,
         ),
       ]);
       if (d < is && ((d >= 0 && d < ss) || (await id(a)))) return null;
-      let f = `${e}.stale.${process.pid}.${ts(4).toString("hex")}`;
+      let f = `${e}.stale.${process.pid}.${randomBytes(4).toString("hex")}`;
       try {
-        await Wl(e, f);
+        await rename(e, f);
       } catch (p) {
         if (A(p) !== "ENOENT") return null;
       }
-      await wn(f, { recursive: !0, force: !0 }).catch(() => {});
+      await rm(f, { recursive: !0, force: !0 }).catch(() => {});
     }
   return null;
 }
@@ -876,7 +869,7 @@ async function Yi(e, t) {
   if (t.objectFormat !== "sha1" && t.objectFormat !== "sha256")
     return `unsupported object format ${t.objectFormat}`;
   if (
-    !ns(t.objectsDir) ||
+    !isAbsolute(t.objectsDir) ||
     /[\r\n]/.test(t.objectsDir) ||
     /^["#]/.test(t.objectsDir)
   )
@@ -886,51 +879,51 @@ async function Yi(e, t) {
 `,
     s = t.attributes === void 0 ? Yl : t.attributes,
     a = [
-      [ce(e, "config"), r],
-      ...(s === null ? [] : [[ce(e, "info", "attributes"), s]]),
-      [ce(e, "objects", "info", "alternates"), o],
+      [join(e, "config"), r],
+      ...(s === null ? [] : [[join(e, "info", "attributes"), s]]),
+      [join(e, "objects", "info", "alternates"), o],
     ],
     f = (
       await Promise.all([
-        ...(s === null ? [Jn(ce(e, "info", "attributes"))] : []),
-        Jn(ce(e, "commondir")),
-        Jn(ce(e, "gitdir")),
+        ...(s === null ? [Jn(join(e, "info", "attributes"))] : []),
+        Jn(join(e, "commondir")),
+        Jn(join(e, "gitdir")),
       ])
     ).some(Boolean),
     p = (N) =>
-      no(N).catch((C) =>
+      readdir(N).catch((C) =>
         ["ENOENT", "ENOTDIR"].includes(A(C) ?? "") ? [] : null,
       ),
     [y, w] = await Promise.all([
-      p(ce(e, "objects", "pack")),
-      p(ce(e, "objects")),
+      p(join(e, "objects", "pack")),
+      p(join(e, "objects")),
     ]),
-    k = (y ?? []).map((N) => [ce(e, "objects", "pack", N), "pack"]),
+    k = (y ?? []).map((N) => [join(e, "objects", "pack", N), "pack"]),
     _ = (w ?? [])
       .filter((N) => /^[0-9a-f]{2}$/i.test(N))
-      .map((N) => [ce(e, "objects", N), "directory"]);
+      .map((N) => [join(e, "objects", N), "directory"]);
   if (y === null || w === null)
     return "the side repository could not be inspected (its object directories could not be listed)";
   let E = await Xi([
       [e, "directory"],
       ..._,
       ...k,
-      [ce(e, "info"), "directory"],
-      [ce(e, "objects"), "directory"],
-      [ce(e, "objects", "info"), "directory"],
-      [ce(e, "objects", "pack"), "directory"],
-      [ce(e, "refs"), "directory"],
-      [ce(e, "HEAD"), "file"],
+      [join(e, "info"), "directory"],
+      [join(e, "objects"), "directory"],
+      [join(e, "objects", "info"), "directory"],
+      [join(e, "objects", "pack"), "directory"],
+      [join(e, "refs"), "directory"],
+      [join(e, "HEAD"), "file"],
       ...a.map(([N]) => [N, "file"]),
     ]),
-    R = Xl.test(await xr(ce(e, "HEAD"), 256).catch(() => ""));
+    R = Xl.test(await xr(join(e, "HEAD"), 256).catch(() => ""));
   if (E && !f && R && (await Vi(a))) return null;
   try {
-    let N = await xr(ce(e, "config"), 4096).catch(() => null),
+    let N = await xr(join(e, "config"), 4096).catch(() => null),
       C =
         N !== null &&
         /^\tobjectformat = sha256$/m.test(N) === (t.objectFormat === "sha256");
-    if (E && C && (await Jn(ce(e, "HEAD")))) {
+    if (E && C && (await Jn(join(e, "HEAD")))) {
       if (
         (await Promise.all(
           [
@@ -938,22 +931,22 @@ async function Yi(e, t) {
             "config.worktree",
             "commondir",
             "gitdir",
-            ce("info", "grafts"),
-            ce("info", "attributes"),
-          ].map((re) => wn(ce(e, re), { recursive: !0, force: !0 })),
+            join("info", "grafts"),
+            join("info", "attributes"),
+          ].map((re) => rm(join(e, re), { recursive: !0, force: !0 })),
         ),
         !R)
       )
-        (await wn(ce(e, "HEAD"), { force: !0 }),
-          await vo(
-            ce(e, "HEAD"),
+        (await rm(join(e, "HEAD"), { force: !0 }),
+          await writeFile(
+            join(e, "HEAD"),
             `ref: refs/heads/main
 `,
             { mode: 384, flag: "wx" },
           ));
     } else {
-      (await wn(e, { recursive: !0, force: !0 }),
-        await Un(e, { recursive: !0, mode: 448 }));
+      (await rm(e, { recursive: !0, force: !0 }),
+        await mkdir(e, { recursive: !0, mode: 448 }));
       let re = await builderGit(
         e,
         [
@@ -976,28 +969,28 @@ async function Yi(e, t) {
       );
       if (re.code !== 0) return st(re.stderr) || "git init failed";
     }
-    (await Un(ce(e, "info"), { recursive: !0 }),
-      await Un(ce(e, "objects", "info"), { recursive: !0 }));
+    (await mkdir(join(e, "info"), { recursive: !0 }),
+      await mkdir(join(e, "objects", "info"), { recursive: !0 }));
     for (let [re, te] of a)
-      (await wn(re, { force: !0 }),
-        await vo(re, te, {
+      (await rm(re, { force: !0 }),
+        await writeFile(re, te, {
           mode: 384,
           flag:
             getCurrentPlatform() === "windows"
               ? "wx"
-              : rn.O_WRONLY | rn.O_CREAT | rn.O_EXCL | rn.O_NOFOLLOW,
+              : constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW,
         }));
     let [D, ...pe] = await Promise.all([
       Xi([
         [e, "directory"],
-        [ce(e, "info"), "directory"],
-        [ce(e, "objects"), "directory"],
-        [ce(e, "objects", "info"), "directory"],
+        [join(e, "info"), "directory"],
+        [join(e, "objects"), "directory"],
+        [join(e, "objects", "info"), "directory"],
         ...a.map(([re]) => [re, "file"]),
       ]),
-      ...(s === null ? [Jn(ce(e, "info", "attributes"))] : []),
-      Jn(ce(e, "commondir")),
-      Jn(ce(e, "gitdir")),
+      ...(s === null ? [Jn(join(e, "info", "attributes"))] : []),
+      Jn(join(e, "commondir")),
+      Jn(join(e, "gitdir")),
     ]);
     return D && !pe.some(Boolean) && (await Vi(a))
       ? null
@@ -1040,9 +1033,9 @@ async function ls(e) {
     await Promise.all(
       e.map(async (s) => {
         try {
-          let a = await Dn(s);
+          let a = await lstat(s);
           if (!a.isSymbolicLink()) return a.isFile();
-          return r && (await Ul(s)).isFile();
+          return r && (await stat(s)).isFile();
         } catch (a) {
           let d = A(a);
           return d === "ENOENT" || d === "ENOTDIR";
@@ -1056,7 +1049,7 @@ async function Xi(e) {
     await Promise.all(
       e.map(async ([r, o]) => {
         try {
-          let s = await Dn(r);
+          let s = await lstat(r);
           return o === "directory"
             ? s.isDirectory()
             : s.isFile() && (o === "pack" || s.nlink === 1);
@@ -1069,7 +1062,7 @@ async function Xi(e) {
 }
 async function Jn(e) {
   try {
-    return (await Dn(e), !0);
+    return (await lstat(e), !0);
   } catch (t) {
     return A(t) !== "ENOENT";
   }
@@ -1086,7 +1079,7 @@ async function Vi(e) {
   }
 }
 async function ad(e, t) {
-  let r = await Or(e, "r");
+  let r = await open(e, "r");
   try {
     let o = [],
       s = 0;
@@ -1102,12 +1095,12 @@ async function ad(e, t) {
   }
 }
 async function xr(e, t) {
-  if (getCurrentPlatform() === "windows" && !(await Dn(e)).isFile()) return "";
-  let r = await Or(
+  if (getCurrentPlatform() === "windows" && !(await lstat(e)).isFile()) return "";
+  let r = await open(
     e,
     getCurrentPlatform() === "windows"
       ? "r"
-      : rn.O_RDONLY | rn.O_NOFOLLOW | (rn.O_NONBLOCK ?? 0),
+      : constants.O_RDONLY | constants.O_NOFOLLOW | (constants.O_NONBLOCK ?? 0),
   );
   try {
     let o = Buffer.alloc(t),
@@ -1176,18 +1169,18 @@ function ud(e) {
 var cd = 268435456;
 async function fd(e, t, r) {
   try {
-    let o = await Ao(ce(e, "index"), t);
+    let o = await Ao(join(e, "index"), t);
     if (o.kind === "failed") return `could not copy the index: ${o.why}`;
   } catch (o) {
     return `could not copy the index: ${l(o)}`;
   }
   try {
-    let o = (await no(e)).filter((s) =>
+    let o = (await readdir(e)).filter((s) =>
       /^sharedindex\.[0-9a-f]{40,64}$/.test(s),
     );
     for (let s of o)
-      for (let a of [ce(r, s), ce(t, "..", s)])
-        (await wn(a, { recursive: !0, force: !0 }), await Ao(ce(e, s), a));
+      for (let a of [join(r, s), join(t, "..", s)])
+        (await rm(a, { recursive: !0, force: !0 }), await Ao(join(e, s), a));
   } catch {}
   return null;
 }
@@ -1201,16 +1194,16 @@ async function Ao(e, t) {
       throw a;
     };
   if (getCurrentPlatform() === "windows") {
-    let a = await Dn(e).catch(r);
+    let a = await lstat(e).catch(r);
     if (a === null) return { kind: "absent" };
     if (!a.isFile())
       return { kind: "failed", why: "not a single regular file" };
   }
-  let s = await Or(
+  let s = await open(
     e,
     getCurrentPlatform() === "windows"
       ? "r"
-      : rn.O_RDONLY | rn.O_NOFOLLOW | (rn.O_NONBLOCK ?? 0),
+      : constants.O_RDONLY | constants.O_NOFOLLOW | (constants.O_NONBLOCK ?? 0),
   )
     .catch(r)
     .catch(o);
@@ -1222,7 +1215,7 @@ async function Ao(e, t) {
       return { kind: "failed", why: "not a single regular file" };
     if (a.size > cd)
       return { kind: "failed", why: "larger than an index can be" };
-    let d = await Or(t, "wx", 384);
+    let d = await open(t, "wx", 384);
     try {
       let f = Buffer.allocUnsafe(Math.max(1, Math.min(a.size, 1048576))),
         p = 0;
@@ -1325,7 +1318,7 @@ async function Zi(e, t, r, o) {
       return null;
     let w = await gd(e, r.commit, r.indexPath, a);
     if (w === null || w === "old_git") return w;
-    await Un(r.objectsDir, { recursive: !0, mode: 448 });
+    await mkdir(r.objectsDir, { recursive: !0, mode: 448 });
     let k = {
       GIT_INDEX_FILE: r.indexPath,
       GIT_OBJECT_DIRECTORY: r.objectsDir,
@@ -1438,7 +1431,7 @@ async function gd(e, t, r, o) {
             : ([D, `${D}\r`].find((te) => {
                 let ge = Buffer.from(te, "utf8");
                 return (
-                  es(pe)
+                  createHash(pe)
                     .update(`blob ${ge.length}\x00`)
                     .update(ge)
                     .digest("hex") === E
@@ -1489,7 +1482,7 @@ async function yd(e) {
 async function ds(e, t, r) {
   let o = t.length === 64 ? "sha256" : "sha1",
     s = (_, E, R) =>
-      es(o).update(`${_} ${E.length}\x00`).update(E).digest("hex") === R,
+      createHash(o).update(`${_} ${E.length}\x00`).update(E).digest("hex") === R,
     a = await e(
       ["cat-file", "--batch"],
       void 0,
@@ -1563,8 +1556,6 @@ async function ds(e, t, r) {
   }
   return k;
 }
-import { lstat as bd, mkdir as _d, stat as kd } from "fs/promises";
-import { dirname as cs, join as Sd } from "path";
 var Ir = 90000,
   Ed = "writer-locks",
   Pd = 448;
@@ -1577,7 +1568,7 @@ function Rd(e, t, r = !1) {
     : { kind: "lost", reason: e };
 }
 function fs(e, t) {
-  return Sd(cs(e), Ed, `${sanitizePathSegment(t)}.writer`);
+  return join(dirname(e), Ed, `${sanitizePathSegment(t)}.writer`);
 }
 async function acquireGitSyncWriterLock({ recordPath: e, lockPath: t, onLost: r, staleMs: o = Ir }) {
   let s,
@@ -1601,7 +1592,7 @@ async function acquireGitSyncWriterLock({ recordPath: e, lockPath: t, onLost: r,
         r(E));
     },
     k = async () => (
-      await _d(cs(t), { recursive: !0, mode: Pd }),
+      await mkdir(dirname(t), { recursive: !0, mode: Pd }),
       Cs(e, {
         realpath: !1,
         retries: 0,
@@ -1614,7 +1605,7 @@ async function acquireGitSyncWriterLock({ recordPath: e, lockPath: t, onLost: r,
       if (a || d) return;
       let R = p || Date.now() - f > o;
       ((p = !1), (f = Date.now()));
-      let N = await bd(t).then(
+      let N = await lstat(t).then(
           () => "present",
           (O) => (W(O) ? "absent" : "unknown"),
         ),
@@ -1659,21 +1650,13 @@ async function acquireGitSyncWriterLock({ recordPath: e, lockPath: t, onLost: r,
 }
 async function vd(e, t) {
   let r = Date.now(),
-    o = await kd(e).then(
+    o = await stat(e).then(
       (s) => s.mtimeMs,
       () => r - t,
     );
   return Math.min(Math.max(r + 1000, o + t + 1), r + t);
 }
-import { randomUUID as Td } from "crypto";
-import { constants as Co } from "fs";
-import {
-  lstat as lr,
-  open as oo,
-  readdir as Ad,
-  unlink as ar,
-} from "fs/promises";
-import { join as ro } from "path";
+import { randomUUID } from "crypto";
 var Cd = "claude: fast-forward to the cloud session",
   Od = "claude: undo the fast-forward (the index could not follow)",
   xd = /^[A-Za-z0-9._\/-]+$/,
@@ -1771,12 +1754,12 @@ async function _s({
       "bad_arguments",
       "the branch or the commits are not named as git names them",
     );
-  let w = ro(t, "index"),
-    k = ro(t, "index.lock"),
-    _ = ro(t, bs + Td()),
+  let w = join(t, "index"),
+    k = join(t, "index.lock"),
+    _ = join(t, bs + randomUUID()),
     E = Fd(k);
   try {
-    let K = await lr(k, { bigint: !0 }),
+    let K = await lstat(k, { bigint: !0 }),
       ee = E.findIndex((Ge) => so(Ge, K));
     if (!(K.isFile() && K.nlink === 1n && ee !== -1) || !(await hs(k)))
       return V("index_busy", "another git process holds the index lock");
@@ -1787,7 +1770,7 @@ async function _s({
   }
   let R, N, C;
   try {
-    C = await oo(k, "wx");
+    C = await open(k, "wx");
   } catch (K) {
     return A(K) === "EEXIST"
       ? V("index_busy", "another git process holds the index lock")
@@ -1800,13 +1783,13 @@ async function _s({
   } catch {
     return (
       await C.close().catch(() => {}),
-      await ar(k).catch(() => {}),
+      await unlink(k).catch(() => {}),
       V("git_error", "the index lock could not be taken")
     );
   }
   let O = async () => {
       try {
-        let K = await lr(k, { bigint: !0 });
+        let K = await lstat(k, { bigint: !0 });
         if (K.isFile() && K.nlink === 1n && ws(K, R)) return ((N = K), "ours");
         return "not_ours";
       } catch (K) {
@@ -1831,11 +1814,11 @@ async function _s({
     }),
     le = registerCleanup(async () => {
       if ((await ge, re)) {
-        let K = await lr(k, { bigint: !0 }).catch(() => null);
+        let K = await lstat(k, { bigint: !0 }).catch(() => null);
         if (K !== null && K.isFile() && K.nlink === 1n && so(ys(N), K))
-          await ar(k).catch(() => {});
+          await unlink(k).catch(() => {});
       }
-      await ar(_).catch(() => {});
+      await unlink(_).catch(() => {});
     }),
     J = [],
     fe = () => y([...J, "update-ref", "--no-deref", "-m", Od, r, o, s]);
@@ -1949,7 +1932,7 @@ async function _s({
         Oo(E, N);
       else Dd(E, N);
     }
-    if ((await ar(_).catch(() => {}), te(), !re)) le();
+    if ((await unlink(_).catch(() => {}), te(), !re)) le();
   }
 }
 async function Md(e, t) {
@@ -1963,7 +1946,7 @@ async function hs(e) {
   for (let t of [0, 50, 100, 200]) {
     await sleep(t);
     try {
-      return (await ar(e), !0);
+      return (await unlink(e), !0);
     } catch (r) {
       if (A(r) === "ENOENT") return !0;
     }
@@ -1976,10 +1959,10 @@ async function Gd(e, t) {
     s;
   try {
     try {
-      let a = await lr(e, { bigint: !0 });
+      let a = await lstat(e, { bigint: !0 });
       if (!a.isFile()) return !1;
       if (
-        ((r = await oo(e, getSafeReadOpenFlags())),
+        ((r = await open(e, getSafeReadOpenFlags())),
         (s = await r.stat({ bigint: !0 })),
         !s.isFile() || !ks(a, s))
       )
@@ -1988,7 +1971,7 @@ async function Gd(e, t) {
       return A(a) === "ENOENT";
     }
     return (
-      (o = await oo(t, Co.O_WRONLY | Co.O_CREAT | Co.O_EXCL, 384)),
+      (o = await open(t, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL, 384)),
       await o.writeFile(await r.readFile()),
       await o.utimes(s.atime, s.mtime),
       !0
@@ -2002,9 +1985,9 @@ async function Gd(e, t) {
 async function Hd(e) {
   let t = null;
   try {
-    let r = await lr(e, { bigint: !0 });
+    let r = await lstat(e, { bigint: !0 });
     if (!r.isFile()) return null;
-    t = await oo(e, getSafeReadOpenFlags());
+    t = await open(e, getSafeReadOpenFlags());
     let o = await t.stat({ bigint: !0 });
     return o.isFile() && ks(r, o) ? await t.readFile() : null;
   } catch {
@@ -2014,15 +1997,15 @@ async function Hd(e) {
   }
 }
 async function Ud(e) {
-  let t = await Ad(e).catch(() => []),
+  let t = await readdir(e).catch(() => []),
     r = Date.now() - $d;
   await Promise.all(
     t
       .filter((o) => o.startsWith(bs))
       .map(async (o) => {
-        let s = ro(e, o),
-          a = await lr(s).catch(() => null);
-        if (a !== null && a.mtimeMs < r) await ar(s).catch(() => {});
+        let s = join(e, o),
+          a = await lstat(s).catch(() => null);
+        if (a !== null && a.mtimeMs < r) await unlink(s).catch(() => {});
       }),
   );
 }
@@ -2118,17 +2101,6 @@ async function Kd(e, t, r, o) {
 function V(e, t) {
   return { kind: "waiting", reason: e, detail: t };
 }
-import { resolve as au } from "path";
-import { createHash as qd } from "crypto";
-import { constants as ao } from "fs";
-import {
-  lstat as Nr,
-  open as Yd,
-  readdir as Ts,
-  realpath as Xd,
-  stat as Vd,
-} from "fs/promises";
-import { basename as As, dirname as No, join as yn } from "path";
 var Jd = 200,
   Ss = 8,
   Qd = 60000,
@@ -2154,7 +2126,7 @@ async function Fo(e, t) {
       Promise.all(
         Es.map(async ([a, d]) => {
           try {
-            return (await Nr(yn(e, a)), d);
+            return (await lstat(join(e, a)), d);
           } catch (f) {
             return A(f) === "ENOENT" ? null : void 0;
           }
@@ -2207,14 +2179,14 @@ async function Os({
     _ =
       !(
         w(p) ||
-        (w(y) && w(await f("core.bare", ["--file", yn(r, "config.worktree")])))
+        (w(y) && w(await f("core.bare", ["--file", join(r, "config.worktree")])))
       ) &&
       (await Rs(r)) !== d &&
       (await Ps(r, o)),
-    E = yn(r, "worktrees"),
+    E = join(r, "worktrees"),
     R;
   try {
-    R = await Ts(E);
+    R = await readdir(E);
   } catch (C) {
     let O = A(C);
     if (O !== "ENOENT" && O !== "ENOTDIR") return null;
@@ -2223,8 +2195,8 @@ async function Os({
   if (_ === void 0) return null;
   let N = await Promise.all(
     R.map(async (C) => {
-      let O = yn(E, C),
-        D = await Nr(O, { bigint: !0 }).catch((te) => {
+      let O = join(E, C),
+        D = await lstat(O, { bigint: !0 }).catch((te) => {
           let ge = A(te);
           return ge === "ENOENT" || ge === "ENOTDIR" ? null : void 0;
         });
@@ -2233,15 +2205,15 @@ async function Os({
         return null;
       let pe = await Ps(O, o);
       if (pe !== !0) return pe === !1 ? null : void 0;
-      let re = await readBoundedTextFile(yn(O, "gitdir"));
+      let re = await readBoundedTextFile(join(O, "gitdir"));
       return re.kind === "text" && re.text.trim().endsWith(".git")
-        ? No(re.text.trim())
+        ? dirname(re.text.trim())
         : O;
     }),
   );
   if (N.includes(void 0)) return null;
   return [
-    ...(_ ? [As(r) === ".git" ? No(r) : r] : []),
+    ...(_ ? [basename(r) === ".git" ? dirname(r) : r] : []),
     ...N.filter((C) => typeof C === "string"),
   ];
 }
@@ -2249,13 +2221,13 @@ async function Ps(e, t) {
   let r = t.slice(11),
     o = [
       ["HEAD", [`ref: ${t}`]],
-      [yn("rebase-merge", "head-name"), [t]],
-      [yn("rebase-apply", "head-name"), [t]],
+      [join("rebase-merge", "head-name"), [t]],
+      [join("rebase-apply", "head-name"), [t]],
       ["BISECT_START", [t, r]],
     ],
     s = await Promise.all(
       o.map(async ([a, d]) => {
-        let f = await readBoundedTextFile(yn(e, a));
+        let f = await readBoundedTextFile(join(e, a));
         return f.kind === "absent"
           ? !1
           : f.kind === "text"
@@ -2267,7 +2239,7 @@ async function Ps(e, t) {
 }
 async function Rs(e) {
   try {
-    let t = await Vd(e, { bigint: !0 });
+    let t = await stat(e, { bigint: !0 });
     return t.ino === 0n ? null : `${t.dev}:${t.ino}`;
   } catch {
     return null;
@@ -2310,7 +2282,7 @@ async function Do(e, t, r, o) {
     k = (J) => {
       let fe = w.get(J);
       if (fe !== void 0) return fe;
-      let K = Ts(J).then(
+      let K = readdir(J).then(
         (ee) => ee.map((ye) => ye.normalize("NFC")),
         (ee) => (["ENOENT", "ENOTDIR"].includes(A(ee) ?? "") ? [] : null),
       );
@@ -2318,21 +2290,21 @@ async function Do(e, t, r, o) {
     },
     _ = await Promise.all(
       t.map(async (J) => {
-        let fe = yn(e, J.path);
+        let fe = join(e, J.path);
         if (await ou(e, J.path, y)) return !1;
         let K;
         try {
-          K = await Nr(fe);
+          K = await lstat(fe);
         } catch (ee) {
           return (
             J.kind === "removed" && ["ENOENT", "ENOTDIR"].includes(A(ee) ?? "")
           );
         }
         if (J.kind === "removed") {
-          let ee = await k(No(fe));
+          let ee = await k(dirname(fe));
           if (ee === null) return !1;
           return (
-            !ee.includes(As(fe).normalize("NFC")) ||
+            !ee.includes(basename(fe).normalize("NFC")) ||
             (K.isDirectory() && J.old?.mode !== "160000")
           );
         }
@@ -2345,7 +2317,7 @@ async function Do(e, t, r, o) {
     ),
     E = countMatching(_, (J) => !J);
   if (E > 0 || a.length === 0) return E;
-  let R = await Xd(e).catch(() => null);
+  let R = await realpath(e).catch(() => null);
   if (R === null) return null;
   await using N = await openTreeAnchor(createFileSystemHost(), { gitRoot: e, realRoot: R });
   if (N.rootOnly) return null;
@@ -2356,7 +2328,7 @@ async function Do(e, t, r, o) {
     O = createConcurrencyLimiter(Ss, (J) =>
       vs(C, () =>
         nu(
-          yn(e, J.path),
+          join(e, J.path),
           J.blobId.length === 64 ? "sha256" : "sha1",
           { anchor: N, rel: J.path },
           C,
@@ -2418,12 +2390,12 @@ async function nu(e, t, r, o) {
   let s = null;
   try {
     let a =
-      r === void 0 ? await Nr(e, { bigint: !0 }) : await r.anchor.lstat(r.rel);
+      r === void 0 ? await lstat(e, { bigint: !0 }) : await r.anchor.lstat(r.rel);
     if (!a.isFile()) return null;
     s =
       r === void 0
-        ? await Yd(e, getSafeReadOpenFlags())
-        : await r.anchor.open(r.rel, ao.O_RDONLY | ao.O_NONBLOCK);
+        ? await open(e, getSafeReadOpenFlags())
+        : await r.anchor.open(r.rel, constants.O_RDONLY | constants.O_NONBLOCK);
     let d = await s.stat({ bigint: !0 });
     if (
       !d.isFile() ||
@@ -2433,7 +2405,7 @@ async function nu(e, t, r, o) {
       d.ino !== a.ino
     )
       return null;
-    let f = qd(t).update(`blob ${d.size}\x00`),
+    let f = createHash(t).update(`blob ${d.size}\x00`),
       p = 0n;
     for await (let y of s.createReadStream({ autoClose: !1 })) {
       if (o?.aborted) return null;
@@ -2452,7 +2424,7 @@ async function ru(e, t, r) {
   try {
     let s = await e.anchor.lstat(e.rel);
     if (!s.isFile() || s.size > BigInt(t)) return null;
-    o = await e.anchor.open(e.rel, ao.O_RDONLY | ao.O_NONBLOCK);
+    o = await e.anchor.open(e.rel, constants.O_RDONLY | constants.O_NONBLOCK);
     let a = await o.stat({ bigint: !0 });
     if (
       !a.isFile() ||
@@ -2558,7 +2530,7 @@ async function ou(e, t, r) {
     let a = o.slice(0, s).join("/"),
       d = r.get(a);
     if (d === void 0)
-      ((d = Nr(yn(e, a)).then(
+      ((d = lstat(join(e, a)).then(
         (f) => f.isSymbolicLink(),
         () => !1,
       )),
@@ -2567,8 +2539,6 @@ async function ou(e, t, r) {
   }
   return !1;
 }
-import { readdir as iu, unlink as su } from "fs/promises";
-import { join as Ls } from "path";
 var Fs = 104857600;
 async function Bs({
   side: e,
@@ -2624,8 +2594,8 @@ async function Bs({
   return "present";
 }
 async function $s(e) {
-  let t = Ls(e, "objects", "pack"),
-    r = await iu(t).catch((o) => {
+  let t = join(e, "objects", "pack"),
+    r = await readdir(t).catch((o) => {
       if (!W(o))
         logForDebugging(`dir-sync: could not list ${t} for delivery records: ${l(o)}`);
       return [];
@@ -2634,7 +2604,7 @@ async function $s(e) {
     r
       .filter((o) => o.startsWith(INCOMING_PACK_PREFIX) && o.endsWith(DELIVERED_IDS_SUFFIX))
       .map((o) =>
-        su(Ls(t, o)).catch((s) => {
+        unlink(join(t, o)).catch((s) => {
           if (!W(s)) logForDebugging(`dir-sync: could not remove a delivery record: ${l(s)}`);
         }),
       ),
@@ -2754,7 +2724,7 @@ async function fu({
     return V("detached", "the last upload went from a detached HEAD");
   let ye = K.stdout.trim(),
     Ge = ee.stdout.trim(),
-    at = au(e, fe.stdout.trim());
+    at = resolve(e, fe.stdout.trim());
   if (ye !== "refs/heads/" + a)
     return V(
       "branch_switched",
@@ -3158,10 +3128,8 @@ function cn(e) {
     .join(", ");
   return e.length > 3 ? `${t} and ${e.length - 3} more` : t;
 }
-import { createHash as Cu } from "crypto";
-import { lstat as fr, readdir as Ou } from "fs/promises";
 import { devNull } from "os";
-import { join as Tn, posix } from "path";
+import { posix } from "path";
 var dr = ".claude-cloud-trash",
   Ks = 384,
   pu = 448,
@@ -3243,11 +3211,9 @@ function Su(e, t) {
             .replace(/\uFFFD+$/, "");
   return `${o}${f}${a}`;
 }
-import { lstat as Eu, readdir as Pu } from "fs/promises";
-import { join as Ys } from "path";
 async function Ru(e) {
   try {
-    return (await Pu(e, { withFileTypes: !0 })).reduce((t, r) => {
+    return (await readdir(e, { withFileTypes: !0 })).reduce((t, r) => {
       let o = r.name.normalize("NFC");
       return t.set(o, (t.get(o) ?? !0) && r.isDirectory());
     }, new Map());
@@ -3258,7 +3224,7 @@ async function Ru(e) {
 }
 async function vu(e) {
   try {
-    return (await Eu(e)).isDirectory() ? "directory" : "other";
+    return (await lstat(e)).isDirectory() ? "directory" : "other";
   } catch (t) {
     let r = A(t);
     return r === "ENOENT" || r === "ENOTDIR" ? "gone" : "unreadable";
@@ -3282,9 +3248,9 @@ function Xs(e) {
       let y = p.get(f.normalize("NFC"));
       if (y === void 0) return "other";
       if (d === a.length - 1) return "exact";
-      let w = y ? "directory" : await vu(Ys(s, f));
+      let w = y ? "directory" : await vu(join(s, f));
       if (w !== "directory") return w === "unreadable" ? "unknown" : "other";
-      s = Ys(s, f);
+      s = join(s, f);
     }
     return "exact";
   };
@@ -3872,7 +3838,7 @@ async function Qu({
       continue;
     }
     let Pt = await re
-      .trash(Tn(o, m), m, $e.sha256, Le, { trackedHere: De(m) })
+      .trash(join(o, m), m, $e.sha256, Le, { trackedHere: De(m) })
       .catch(() => "refused");
     if (Pt === "trashed")
       (ne.trashed.push({ path: m, mode: Pe }),
@@ -4042,7 +4008,7 @@ async function Qu({
       tr = !0;
     if (Jt) {
       let pn = await re
-        .trash(Tn(o, m), m, He.sha256, Le, { trackedHere: De(m) })
+        .trash(join(o, m), m, He.sha256, Le, { trackedHere: De(m) })
         .catch(() => "refused");
       if (pn === "kept_changed") {
         (ne.skippedDown.push(m), ae.push(m));
@@ -4540,10 +4506,10 @@ async function fc(e, t) {
 async function hc(e, t) {
   let r = t.filter((f) => GIT_OBJECT_ID_REGEX.test(f));
   if (r.length === 0) return new Set();
-  let o = Tn(e.gitDir, "objects"),
+  let o = join(e.gitDir, "objects"),
     s = await Promise.all(
       r.map((f) =>
-        fr(Tn(o, f.slice(0, 2), f.slice(2))).then(
+        lstat(join(o, f.slice(0, 2), f.slice(2))).then(
           () => !0,
           (p) => {
             let y = A(p);
@@ -4607,8 +4573,8 @@ async function mc(e, t, r) {
 async function pc(e, t) {
   let r = async (p) => {
       try {
-        if ((await fr(Tn(e, p))).isSymbolicLink()) return "beyond";
-        return (await fr(Tn(e, p, ".git")), "beyond");
+        if ((await lstat(join(e, p))).isSymbolicLink()) return "beyond";
+        return (await lstat(join(e, p, ".git")), "beyond");
       } catch (y) {
         let w = A(y);
         return w === "ENOENT" || w === "ENOTDIR"
@@ -4684,7 +4650,7 @@ async function zo(
 }
 async function Wo(e, t) {
   try {
-    let r = await fr(Tn(e, t));
+    let r = await lstat(join(e, t));
     return r.isFile() ? normalizeFileMode(r.mode) : null;
   } catch {
     return null;
@@ -4692,7 +4658,7 @@ async function Wo(e, t) {
 }
 async function oa(e, t) {
   try {
-    return (await fr(Tn(e, t)), !1);
+    return (await lstat(join(e, t)), !1);
   } catch (r) {
     let o = A(r);
     return o === "ENOENT" || o === "ENOTDIR";
@@ -4706,7 +4672,7 @@ async function gc(e, t, r, o, s) {
     y = ` (${CONFLICTED_COPY_MARKER} `,
     w;
   try {
-    w = await Ou(Tn(e, a === "." ? "" : a));
+    w = await readdir(join(e, a === "." ? "" : a));
   } catch {
     return !1;
   }
@@ -4754,14 +4720,14 @@ async function wc(e, t, r, o, s, a, d) {
 }
 async function bc(e, t) {
   try {
-    return !(await fr(Tn(e, t))).isFile();
+    return !(await lstat(join(e, t))).isFile();
   } catch {
     return null;
   }
 }
 function _c(e, t) {
   return e.length === 64
-    ? Cu("sha256").update(`blob ${t.length}\x00`).update(t).digest("hex")
+    ? createHash("sha256").update(`blob ${t.length}\x00`).update(t).digest("hex")
     : computeGitBlobId(t);
 }
 function ia(e, t) {
@@ -4806,20 +4772,16 @@ function la(e) {
   let t = e & 61440;
   return (t === 0 ? 32768 : t) | normalizeFileMode(e);
 }
-import { dirname as Ac } from "path";
-import { randomBytes as Sc } from "crypto";
-import { lstat as Ec, mkdir as Pc, open as pa, rm as Rc } from "fs/promises";
-import { join as ma } from "path";
 var vc = 1048576,
   Tc = /^[0-9a-f]{40}(?:[0-9a-f]{24})?$/;
 async function ga(e, t) {
   let r = await Ko(e);
   if (r.kind === "irregular") return r;
-  let o = ma(t, "shallow-pins", Sc(8).toString("hex"));
-  await Pc(o, { recursive: !0, mode: 448 });
-  let s = ma(o, "shallow");
+  let o = join(t, "shallow-pins", randomBytes(8).toString("hex"));
+  await mkdir(o, { recursive: !0, mode: 448 });
+  let s = join(o, "shallow");
   if (r.kind === "boundary") {
-    let a = await pa(s, "wx", 256);
+    let a = await open(s, "wx", 256);
     try {
       await a.writeFile(r.bytes);
     } finally {
@@ -4837,13 +4799,13 @@ async function ga(e, t) {
             d.kind === "boundary" &&
             d.bytes.equals(r.bytes);
     },
-    release: () => Rc(o, { recursive: !0, force: !0 }),
+    release: () => rm(o, { recursive: !0, force: !0 }),
   };
 }
 async function Ko(e) {
   let t = null;
   if (getCurrentPlatform() === "windows") {
-    let o = await Ec(e, { bigint: !0 }).catch((s) =>
+    let o = await lstat(e, { bigint: !0 }).catch((s) =>
       A(s) === "ENOENT" ? null : "unreadable",
     );
     if (o === null) return { kind: "absent" };
@@ -4855,7 +4817,7 @@ async function Ko(e) {
   }
   let r;
   try {
-    r = await pa(e, getSafeReadOpenFlags());
+    r = await open(e, getSafeReadOpenFlags());
   } catch (o) {
     let s = A(o);
     return s === "ENOENT"
@@ -5555,7 +5517,7 @@ function Ra({ gitDir: e, timeoutMs: t, checkoutShallowFile: r }) {
       let d = await readAlternatesLender(s.gitDir),
         f = a ?? (d.kind === "lender" ? d.shallowFile : null);
       if (f === null) return { kind: "nothing_to_pin" };
-      let p = await ga(f, Ac(s.gitDir));
+      let p = await ga(f, dirname(s.gitDir));
       return "kind" in p
         ? {
             kind: "refused",
@@ -5980,7 +5942,6 @@ function Ma(e, t) {
   }
   return r;
 }
-import { randomUUID as oi } from "crypto";
 class ui extends Error {
   cause;
   constructor(e) {
@@ -6697,7 +6658,7 @@ function createGitDirSyncEngine({
       if ((T.announcementEtag ?? null) === null) {
         let Se =
           requiresAnnouncement(T.start) && (T.announcementToken ?? null) === null
-            ? { ...T, announcementToken: oi() }
+            ? { ...T, announcementToken: randomUUID() }
             : T;
         if (Se !== T) await Ee(Se);
         let H = await Pa(Se, v, c);
@@ -7807,7 +7768,7 @@ function createGitDirSyncEngine({
       be.sent.length === 0 &&
       (be.announcementToken ?? null) === null
     ) {
-      ((H = { ...be, announcementToken: oi() }), await Ee(H));
+      ((H = { ...be, announcementToken: randomUUID() }), await Ee(H));
       let X = Q(),
         ke = await Ea(H, Se, X);
       if (ke !== H) ((H = ke), (kn = Q()), (Dt = X), await Ee(H));
@@ -8534,7 +8495,7 @@ function createGitDirSyncEngine({
     },
     ...(tt !== void 0 && { inScope: tt }),
     turnOpen: () => $n > 0,
-    instance: oi(),
+    instance: randomUUID(),
     nowMs: Q,
   });
   if (w === "send") {
@@ -9110,39 +9071,23 @@ function createGitDirSyncEngine({
     releaseInstalls: (c) => et.streaming.releaseInstalls(c),
   };
 }
-import { createHash as Hf } from "crypto";
-import { constants as Ja } from "fs";
 import {
-  link as Wf,
-  lstat as zn,
-  mkdir as fi,
-  realpath as po,
-  rename as Qa,
-  unlink as Uf,
+  link,
 } from "fs/promises";
-import {
-  basename as hi,
-  dirname as mr,
-  isAbsolute as mi,
-  join as fn,
-  relative as Zn,
-  resolve as ci,
-  sep as Kn,
-} from "path";
 var Br = 448,
   Mr = 100;
 async function jf(e, t) {
   for (let r = 0; r < Mr; r++) {
-    let o = fn(e, r === 0 ? t : t + "." + String(r)),
-      s = await zn(o).catch((a) => (A(a) === "ENOENT" ? null : void 0));
+    let o = join(e, r === 0 ? t : t + "." + String(r)),
+      s = await lstat(o).catch((a) => (A(a) === "ENOENT" ? null : void 0));
     if (s === void 0) return null;
-    if (s === null) return (await fi(o, { mode: Br }), o);
+    if (s === null) return (await mkdir(o, { mode: Br }), o);
     if (s.isDirectory()) return o;
   }
   return null;
 }
 function Za(e, t = !1) {
-  if (e.length === 0 || mi(e) || e.includes("\\")) return !1;
+  if (e.length === 0 || isAbsolute(e) || e.includes("\\")) return !1;
   let r = e.split("/");
   return (
     r.every((o, s) => {
@@ -9162,8 +9107,8 @@ async function el(e, t) {
   let r = t.split("/").slice(0, -1),
     o = e;
   for (let s of r) {
-    o = fn(o, s);
-    let a = await zn(o).catch((d) => (A(d) === "ENOENT" ? null : void 0));
+    o = join(o, s);
+    let a = await lstat(o).catch((d) => (A(d) === "ENOENT" ? null : void 0));
     if (a === null) return !1;
     if (
       a === void 0 ||
@@ -9176,23 +9121,23 @@ async function el(e, t) {
   return !1;
 }
 async function zf(e, t, r = null) {
-  let o = await po(t).catch(() => null);
+  let o = await realpath(t).catch(() => null);
   if (o === null) return !0;
-  let s = Zn(e, o),
-    a = s.split(Kn).join("/");
+  let s = relative(e, o),
+    a = s.split(sep).join("/");
   return (
     s !== "" &&
-    !s.startsWith(".." + Kn) &&
+    !s.startsWith(".." + sep) &&
     s !== ".." &&
-    !mi(s) &&
+    !isAbsolute(s) &&
     Za(a, r !== null && a === r)
   );
 }
 async function Kf(e, t, r) {
   if (await el(e, r)) return !1;
-  let o = mr(r),
-    s = await po(fn(e, o)).catch(() => null);
-  return s !== null && s === (o === "." ? t : fn(t, o));
+  let o = dirname(r),
+    s = await realpath(join(e, o)).catch(() => null);
+  return s !== null && s === (o === "." ? t : join(t, o));
 }
 async function tl(e, t) {
   let r = e;
@@ -9203,37 +9148,37 @@ async function tl(e, t) {
   return r;
 }
 function pi(e, t) {
-  let r = Zn(t, e);
+  let r = relative(t, e);
   if (r === "" || !mo(r)) return !1;
-  let o = Zn(e, t);
+  let o = relative(e, t);
   if (mo(o)) return !0;
-  return o.split(Kn).some((s) => segmentScopeSkip(s, !0) !== null);
+  return o.split(sep).some((s) => segmentScopeSkip(s, !0) !== null);
 }
 function mo(e) {
-  return e === ".." || e.startsWith(".." + Kn) || mi(e);
+  return e === ".." || e.startsWith(".." + sep) || isAbsolute(e);
 }
 function jn(e, t) {
-  let r = Zn(e, t);
+  let r = relative(e, t);
   return r !== "" && !mo(r) ? r : null;
 }
 async function qf(e, t) {
   let r = e;
-  for (let o of t.split(Kn)) {
-    r = fn(r, o);
-    let s = await zn(r).catch((a) => (A(a) === "ENOENT" ? null : void 0));
+  for (let o of t.split(sep)) {
+    r = join(r, o);
+    let s = await lstat(r).catch((a) => (A(a) === "ENOENT" ? null : void 0));
     if (s === null) return !0;
     if (s === void 0 || s.isSymbolicLink() || !s.isDirectory()) return !1;
   }
   return !0;
 }
 function Yf(e, t, r) {
-  return e === null ? jn(t, r) === null : r === fn(t, e);
+  return e === null ? jn(t, r) === null : r === join(t, e);
 }
 async function Xf(e) {
   for (let t = 0; t < Mr; t++) {
     let r = t === 0 ? e : e + "." + String(t);
     if (
-      !(await zn(r).then(
+      !(await lstat(r).then(
         () => !0,
         (s) => A(s) !== "ENOENT",
       ))
@@ -9246,12 +9191,12 @@ async function nl({ root: e, trashDir: t, file: r, through: o }) {
   let s = { path: r.path, sha256: r.sha256, trackedHere: r.trackedHere === !0 },
     a = s.trackedHere;
   if (!Za(s.path, a)) return "refused";
-  let d = ci(e),
-    f = ci(t),
+  let d = resolve(e),
+    f = resolve(t),
     p = await resolveRealPath(e);
   if (p === null) return "stayed";
   if (!pi(d, f)) return "refused";
-  if ((await el(e, s.path)) || !(await zf(p, fn(e, s.path), a ? s.path : null)))
+  if ((await el(e, s.path)) || !(await zf(p, join(e, s.path), a ? s.path : null)))
     return "stayed";
   return o.side === "laptop" ? Vf(o.anchor, e, p, d, f, s) : ih(e, p, d, f, r);
 }
@@ -9264,7 +9209,7 @@ async function Jf(e, t, r, o, s, a) {
   if (d === null) return "refused";
   if (e.realRoot !== r) return "stayed";
   if (!(await isDestinationAllowed(t, r, a.path, a.trackedHere))) return "refused";
-  let f = d.split(Kn).join("/");
+  let f = d.split(sep).join("/");
   try {
     if ((await e.mkdirp(f, Br), f === dr || f.startsWith(dr + "/")))
       await e
@@ -9282,8 +9227,8 @@ async function Jf(e, t, r, o, s, a) {
         (_) => (A(_) === "ENOENT" ? "moved" : "stayed"),
       );
     if (p.sha256 !== a.sha256) return "stayed";
-    let y = await Qf(e, f, mr(a.path)),
-      w = y === null ? null : await eh(e, y + "/" + hi(a.path));
+    let y = await Qf(e, f, dirname(a.path)),
+      w = y === null ? null : await eh(e, y + "/" + basename(a.path));
     if (w === null) return "stayed";
     if (!(await e.lstat(a.path)).isFile()) return "stayed";
     await e.rename(a.path, w);
@@ -9356,11 +9301,11 @@ async function th(e, t, r, o, s, a) {
       );
     if (d.sha256 !== a.sha256) return "stayed";
     if (await nh(r, s)) return "unreachable";
-    await fi(s, { recursive: !0, mode: Br });
+    await mkdir(s, { recursive: !0, mode: Br });
     let f = await resolveRealPath(s);
     if (f === null) return "stayed";
     if (jn(r, f) !== null || !pi(r, f)) return "unreachable";
-    let p = await tl(f, mr(a.path));
+    let p = await tl(f, dirname(a.path));
     if (p === null) return "stayed";
     await using y = await e.holdOutside(p);
     if (
@@ -9370,7 +9315,7 @@ async function th(e, t, r, o, s, a) {
       jn(r, y.realPath) !== null
     )
       return "stayed";
-    let w = await oh(y.realPath, hi(a.path));
+    let w = await oh(y.realPath, basename(a.path));
     if (w === null) return "stayed";
     if (!(await e.lstat(a.path)).isFile()) return "stayed";
     if ((await e.lstat("")).dev !== (await y.handle.stat({ bigint: !0 })).dev)
@@ -9409,14 +9354,14 @@ async function th(e, t, r, o, s, a) {
   }
 }
 async function nh(e, t) {
-  let r = ci(t).split(Kn),
-    o = r[0] === "" ? Kn : r[0];
+  let r = resolve(t).split(sep),
+    o = r[0] === "" ? sep : r[0];
   for (let s of r.slice(1)) {
-    o = fn(o, s);
-    let a = await po(o).catch((f) => (A(f) === "ENOENT" ? null : void 0));
+    o = join(o, s);
+    let a = await realpath(o).catch((f) => (A(f) === "ENOENT" ? null : void 0));
     if (a === void 0) return !0;
     if (a === null) return !1;
-    let d = Zn(e, a);
+    let d = relative(e, a);
     if (d === "" || !mo(d)) return !0;
   }
   return !1;
@@ -9426,12 +9371,12 @@ async function rh(e, t, r, o) {
   if (s === null) return "other";
   if (s.isDirectory()) return "directory";
   if (!s.isFile() || s.size > BigInt(MAX_WORKING_FILE_BYTES)) return "other";
-  let a = await e.openIn(t, r, Ja.O_RDONLY | Ja.O_NONBLOCK).catch(() => null);
+  let a = await e.openIn(t, r, constants.O_RDONLY | constants.O_NONBLOCK).catch(() => null);
   if (a === null) return "other";
   try {
     let d = await a.stat({ bigint: !0 });
     if (!d.isFile() || d.ino !== s.ino || d.dev !== s.dev) return "other";
-    let f = Hf("sha256");
+    let f = createHash("sha256");
     for await (let p of a.createReadStream({ autoClose: !1 })) f.update(p);
     return f.digest("hex") === o ? "judged" : "other";
   } catch {
@@ -9443,7 +9388,7 @@ async function rh(e, t, r, o) {
 async function oh(e, t) {
   for (let r = 0; r < Mr; r++) {
     let o = r === 0 ? t : t + "." + String(r),
-      s = await zn(fn(e, o)).then(
+      s = await lstat(join(e, o)).then(
         () => !0,
         (a) => (A(a) === "ENOENT" ? !1 : null),
       );
@@ -9453,10 +9398,10 @@ async function oh(e, t) {
   return null;
 }
 async function ih(e, t, r, o, s) {
-  let a = fn(e, s.path),
+  let a = join(e, s.path),
     d = jn(r, o);
   if (d !== null && !(await qf(r, d))) return "stayed";
-  let f = await fi(o, { recursive: !0, mode: Br }).then(
+  let f = await mkdir(o, { recursive: !0, mode: Br }).then(
     () => resolveRealPath(o),
     () => null,
   );
@@ -9464,33 +9409,33 @@ async function ih(e, t, r, o, s) {
   try {
     let p = await readFileWithDigests(e, t, s.path);
     if (p === null)
-      return zn(a).then(
+      return lstat(a).then(
         () => "stayed",
         (_) => (A(_) === "ENOENT" ? "moved" : "stayed"),
       );
     if (p.sha256 !== s.sha256) return "stayed";
-    let y = await tl(o, mr(s.path)),
-      w = y === null ? null : await Xf(fn(y, hi(s.path)));
+    let y = await tl(o, dirname(s.path)),
+      w = y === null ? null : await Xf(join(y, basename(s.path)));
     if (
       w === null ||
-      (await po(mr(w)).catch(() => null)) !== fn(f, Zn(o, mr(w)))
+      (await realpath(dirname(w)).catch(() => null)) !== join(f, relative(o, dirname(w)))
     )
       return "stayed";
-    if (!(await zn(a)).isFile()) return "stayed";
-    await Qa(a, w);
-    let k = await readFileWithDigests(o, f, Zn(o, w));
+    if (!(await lstat(a)).isFile()) return "stayed";
+    await rename(a, w);
+    let k = await readFileWithDigests(o, f, relative(o, w));
     if (k !== null && k.sha256 === s.sha256) return "moved";
     if (!(await Kf(e, t, s.path))) return "stayed";
-    if ((await zn(w)).isDirectory())
+    if ((await lstat(w)).isDirectory())
       return (
-        await Qa(w, a).catch(() => {
+        await rename(w, a).catch(() => {
           return;
         }),
         "stayed"
       );
     return (
-      await Wf(w, a).then(
-        () => Uf(w),
+      await link(w, a).then(
+        () => unlink(w),
         () => {
           return;
         },
@@ -9515,11 +9460,11 @@ function ph(e, t = go) {
             ? s.detail
             : `the checkout's git directory is not where git keeps it (${s.misplaced})`,
       };
-    return ((r = Gr(yi(e, s.layout.commonDir), "shallow")), r);
+    return ((r = join(yi(e, s.layout.commonDir), "shallow")), r);
   };
 }
 function yi(e, t) {
-  return dl(t) ? t : hh(e, t);
+  return isAbsolute(t) ? t : resolve(e, t);
 }
 async function armGitSession({
   sessionId: e,
@@ -9542,12 +9487,12 @@ async function armGitSession({
   for (;;) {
     if (k === p && s?.aborted) throw new Ve();
     if ((await writeGitSessionRecord(k, w), k === p)) return { recordPath: p, record: w };
-    if (s?.aborted) throw (await rl(k).catch(() => {}), new Ve());
+    if (s?.aborted) throw (await unlink(k).catch(() => {}), new Ve());
     try {
       return (await renameWithRetry(k, p), { recordPath: p, record: w });
     } catch (_) {
       let E = A(_);
-      if ((await rl(k).catch(() => {}), E === void 0 || !RENAME_FALLBACK_ERRNOS.has(E))) throw _;
+      if ((await unlink(k).catch(() => {}), E === void 0 || !RENAME_FALLBACK_ERRNOS.has(E))) throw _;
       k = p;
     }
   }
@@ -9581,7 +9526,7 @@ async function openLaptopGitSync({
     _ = getSideGitDirPath(getProjectDir(k)),
     E = { gitDir: _, timeoutMs: DEFAULT_GIT_TIMEOUT_MS },
     R = await getDirSyncRecordPath(t, e, y),
-    N = await lh(t),
+    N = await realpath(t),
     C = createSyncedFileLaneClient({ sessionId: e, credentials: a });
   return createGitDirSyncEngine({
     sessionId: e,
@@ -9779,15 +9724,15 @@ async function Rh(e, t, r) {
   if (o.kind !== "read" || !isCheckoutLayoutSupported(o.layout.checkout))
     throw Error("the checkout has no plain, readable git directory");
   let s = yi(e, o.layout.commonDir),
-    a = Gr(s, mh, sanitizePathSegment(t)),
-    d = fh(s, a);
-  if (d.startsWith("..") || dl(d))
+    a = join(s, mh, sanitizePathSegment(t)),
+    d = relative(s, a);
+  if (d.startsWith("..") || isAbsolute(d))
     throw Error("the session trash would leave the git directory");
   return { commonDir: s, trashDir: a };
 }
 async function vh({ commonDir: e, trashDir: t }) {
-  for (let r of [e, ll(t), t]) {
-    let o = await al(r).catch((s) => {
+  for (let r of [e, dirname(t), t]) {
+    let o = await lstat(r).catch((s) => {
       if (W(s)) return null;
       throw s;
     });
@@ -9944,7 +9889,7 @@ function Ah({
       let ye = await os({
         gitRoot: e,
         layout: _.layout,
-        sideRoot: ll(r),
+        sideRoot: dirname(r),
         sideGitDir: r,
         pinCommit: fe,
         basis: d,
@@ -10091,17 +10036,17 @@ function Ih(e) {
   };
 }
 async function Nh(e) {
-  let t = Gr(e, "shallow"),
+  let t = join(e, "shallow"),
     r = async () => {
-      let d = await al(t).catch((f) => (W(f) ? null : "irregular"));
+      let d = await lstat(t).catch((f) => (W(f) ? null : "irregular"));
       if (d === null) return null;
       if (d === "irregular" || !d.isFile() || d.size > Lh) return "irregular";
       return readFile(t).catch(() => "irregular");
     },
     o = await r(),
-    s = await mkdtemp(Gr(tmpdir(), "claude-shallow-")),
-    a = Gr(s, "shallow");
-  if (Buffer.isBuffer(o)) await uh(a, o, { mode: 384 });
+    s = await mkdtemp(join(tmpdir(), "claude-shallow-")),
+    a = join(s, "shallow");
+  if (Buffer.isBuffer(o)) await writeFile(a, o, { mode: 384 });
   return {
     env: { GIT_SHALLOW_FILE: a },
     unchanged: async () => {
@@ -10110,7 +10055,7 @@ async function Nh(e) {
         ? d === null
         : Buffer.isBuffer(o) && Buffer.isBuffer(d) && o.equals(d);
     },
-    release: () => dh(s, { recursive: !0, force: !0 }),
+    release: () => rm(s, { recursive: !0, force: !0 }),
   };
 }
 var Lh = 1048576;

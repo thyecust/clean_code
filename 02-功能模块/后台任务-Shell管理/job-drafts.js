@@ -18,15 +18,15 @@ import { jobDraftStore, readJobDraftText, getJobsDir } from "./chunk-7wsy8vxb.js
 import { readBoundedFile } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { createHash } from "crypto";
-import { mkdir, readdir, rm as w, unlink } from "fs/promises";
-import { join as p } from "path";
+import { mkdir, readdir, rm, unlink } from "fs/promises";
+import { join } from "path";
 var l = 86400000,
   d = 8388608;
 function f(t) {
   return createHash("sha256").update(t).digest("hex").slice(0, 8);
 }
 function n(t) {
-  return p(getJobsDir(), `.draft-${f(t)}`);
+  return join(getJobsDir(), `.draft-${f(t)}`);
 }
 function u(t) {
   return jsonStringify({ ...t, ts: Date.now() });
@@ -100,14 +100,14 @@ async function sweepStaleJobDrafts() {
       t
         .filter((e) => e.startsWith(".draft-"))
         .map(async (e) => {
-          let a = p(getJobsDir(), e),
+          let a = join(getJobsDir(), e),
             i = await readBoundedFile(a, d);
           if (i !== null)
             try {
               let o = g().safeParse(jsonParse(i));
               if (o.success && r - o.data.ts <= l) return;
             } catch {}
-          await w(a, { recursive: !0, force: !0 }).catch(() => {});
+          await rm(a, { recursive: !0, force: !0 }).catch(() => {});
         }),
     );
   });

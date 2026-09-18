@@ -91,8 +91,8 @@ import { fromJobState, ensureJobDir } from "../守护服务-Daemon/chunk-tpraq69
 import { resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { SCHEDULE_WAKEUP_TOOL_NAME } from "../Teammates团队/chunk-z2t8b9yc.js";
 import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
-import { appendFile, open as xe } from "fs/promises";
-import { join as Ne } from "path";
+import { appendFile, open } from "fs/promises";
+import { join } from "path";
 function re(e) {
   let r = e.message.content;
   if (!Array.isArray(r)) return "";
@@ -284,7 +284,7 @@ function appendTimelineLine(e, r, t) {
       .catch(logJobWriteError);
     return;
   }
-  appendFile(Ne(getJobDir(r), "timeline.jsonl"), s, "utf-8").catch(logJobWriteError);
+  appendFile(join(getJobDir(r), "timeline.jsonl"), s, "utf-8").catch(logJobWriteError);
 }
 async function ve(e, r, t) {
   let s = getJobDir(e),
@@ -1137,7 +1137,7 @@ async function scanLinkRecords(e, r, t, s) {
   if (o !== void 0) return nt(o, r, t);
   let l;
   try {
-    l = await xe(e, "r");
+    l = await open(e, "r");
   } catch {
     return { children: r, linkScanOffset: t };
   }

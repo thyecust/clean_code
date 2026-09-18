@@ -29,14 +29,14 @@ import { createJsonFileStore } from "../../01-核心基础设施/文件存储-�
 import { s, T, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 F();
-import { join as V } from "path";
+import { join } from "path";
 var q = createLazyValue(() => c({ number: T(), title: s(), closedAt: s() })),
   L = createLazyValue(() => v(q())),
   W = 5000,
   Q = 86400000,
   X = 30;
 function B() {
-  return createJsonFileStore(V(getClaudeConfigDir(), "cache", "my-closed-issues.json"), L, {
+  return createJsonFileStore(join(getClaudeConfigDir(), "cache", "my-closed-issues.json"), L, {
     defaultValue: () => [],
     ensureDir: !0,
   });

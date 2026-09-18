@@ -18,8 +18,8 @@ import { createJsonFileStore } from "../../01-核心基础设施/文件存储-�
 import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
-import { readFile, stat as v } from "fs/promises";
-import { join as f } from "path";
+import { readFile, stat } from "fs/promises";
+import { join } from "path";
 var MCP_SKILL_ARCHIVES_DIR_NAME = "mcp-skill-archives",
   p = "meta.json",
   SKILL_FILE_NAME = "SKILL.md",
@@ -33,7 +33,7 @@ var MCP_SKILL_ARCHIVES_DIR_NAME = "mcp-skill-archives",
     }),
   );
 function S() {
-  return f(getClaudeConfigDir(), MCP_SKILL_ARCHIVES_DIR_NAME);
+  return join(getClaudeConfigDir(), MCP_SKILL_ARCHIVES_DIR_NAME);
 }
 function g(e, t) {
   return STORAGE_KEYS.userConfigDir(MCP_SKILL_ARCHIVES_DIR_NAME, [e, t, SKILL_FILE_NAME]);
@@ -42,7 +42,7 @@ function w(e) {
   return STORAGE_KEYS.userConfigDir(MCP_SKILL_ARCHIVES_DIR_NAME, [e, p]);
 }
 function C(e) {
-  return createJsonFileStore(f(e, p), () => k().nullable(), {
+  return createJsonFileStore(join(e, p), () => k().nullable(), {
     defaultValue: null,
     ensureDir: !0,
   });
@@ -107,7 +107,7 @@ async function L(e, t, i) {
 }
 async function readCachedMcpSkill(e, t, i) {
   let r = y(e, t.name, t.uri),
-    o = f(S(), r),
+    o = join(S(), r),
     l = { hit: !1, slugDir: o },
     a,
     d = parseSha256Digest(t.digest ?? void 0);
@@ -125,9 +125,9 @@ async function readCachedMcpSkill(e, t, i) {
       ? { hit: !0, cacheKey: a, skillMd: Buffer.from(h.value).toString("utf8") }
       : l;
   }
-  let D = f(o, a);
+  let D = join(o, a);
   try {
-    let u = await readFile(f(D, SKILL_FILE_NAME), "utf8");
+    let u = await readFile(join(D, SKILL_FILE_NAME), "utf8");
     return { hit: !0, cacheKey: a, skillMd: u };
   } catch {
     return l;
@@ -136,14 +136,14 @@ async function readCachedMcpSkill(e, t, i) {
 async function isMcpSkillContentCached(e, t, i, r) {
   return r
     ? (await r.statMeta(g(e, t))).ok
-    : v(f(i, SKILL_FILE_NAME))
+    : stat(join(i, SKILL_FILE_NAME))
         .then((o) => o.isFile())
         .catch(() => !1);
 }
 async function resolveMcpSkillCacheEntry(e, t, i, r) {
   let o = y(e, t.name, t.uri),
-    l = f(S(), o),
-    a = f(l, i),
+    l = join(S(), o),
+    a = join(l, i),
     d = await isMcpSkillContentCached(o, i, a, r);
   if (d) logMCPDebug(e, `Skill '${t.name}' content unchanged \u2014 reusing ${a}`);
   return { slug: o, slugDir: l, keyDir: a, alreadyCached: d };

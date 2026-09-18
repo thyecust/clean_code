@@ -31,7 +31,7 @@ import { isRunningFromLocalInstall, localInstallExists, detectCurrentShell, getS
 import { getLocalBinDir } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getBuildRefName } from "../../01-核心基础设施/核心工具-其他/build-ref-name.js";
-import { join as J } from "path";
+import { join } from "path";
 var Q = createLazyValue(() =>
   nt({
     timestamp: le(),
@@ -44,7 +44,7 @@ var Q = createLazyValue(() =>
   }),
 );
 function T() {
-  return J(getClaudeConfigDir(), ".last-update-result.json");
+  return join(getClaudeConfigDir(), ".last-update-result.json");
 }
 function O() {
   return STORAGE_KEYS.state("last-update-result");
@@ -88,7 +88,7 @@ async function readUpdateResult(e) {
     return null;
   }
 }
-import { readFile as Y } from "fs/promises";
+import { readFile } from "fs/promises";
 function Z(e, t) {
   return t.includes(e.id) || e.idLike.some((i) => t.includes(i));
 }
@@ -197,7 +197,7 @@ var te = new j(
   () =>
     new E({
       platform: getCurrentPlatform,
-      readOsRelease: () => Y("/etc/os-release", "utf8"),
+      readOsRelease: () => readFile("/etc/os-release", "utf8"),
       execFileNoThrow: execFileNoThrow,
       execPath: () => process.execPath || process.argv[0] || "",
     }),
@@ -235,15 +235,15 @@ function K() {
 function getPackageManager() {
   return x().getPackageManager();
 }
-import { lstat, readFile as ie, realpath } from "fs/promises";
+import { lstat, realpath } from "fs/promises";
 import { homedir } from "os";
 import { stripVTControlCharacters } from "util";
-import { delimiter, join as g, posix, win32 as A } from "path";
+import { delimiter, posix, win32 } from "path";
 function re() {
   let e = process.argv[1] || "",
     t = process.execPath || process.argv[0] || "";
   if (getCurrentPlatform() === "windows")
-    ((e = e.split(A.sep).join(posix.sep)), (t = t.split(A.sep).join(posix.sep)));
+    ((e = e.split(win32.sep).join(posix.sep)), (t = t.split(win32.sep).join(posix.sep)));
   return [e, t];
 }
 async function ce() {
@@ -305,8 +305,8 @@ async function ue() {
     } catch {}
     try {
       return (
-        await getFsSurface().stat(g(homedir(), ".local/bin/claude")),
-        g(homedir(), ".local/bin/claude")
+        await getFsSurface().stat(join(homedir(), ".local/bin/claude")),
+        join(homedir(), ".local/bin/claude")
       );
     } catch {}
     return "native";
@@ -328,7 +328,7 @@ function de() {
 async function pe() {
   let e = getFsSurface(),
     t = [],
-    i = g(homedir(), ".claude", "local");
+    i = join(homedir(), ".claude", "local");
   if (await localInstallExists()) t.push({ type: "npm-local", path: i });
   let r = ["@anthropic-ai/claude-code"];
   if (
@@ -378,7 +378,7 @@ async function pe() {
   if (s.code === 0 && s.stdout) {
     let o = s.stdout.trim(),
       y = getCurrentPlatform() === "windows",
-      d = y ? g(o, "claude") : g(o, "bin", "claude"),
+      d = y ? join(o, "claude") : join(o, "bin", "claude"),
       u = !1;
     try {
       (await e.stat(d), (u = !0));
@@ -391,7 +391,7 @@ async function pe() {
       if (!p) {
         let c = !1;
         for (let R of r) {
-          let v = y ? g(o, "node_modules", R) : g(o, "lib", "node_modules", R);
+          let v = y ? join(o, "node_modules", R) : join(o, "lib", "node_modules", R);
           try {
             (await e.stat(v), (c = !0));
             break;
@@ -401,18 +401,18 @@ async function pe() {
       }
     } else
       for (let p of r) {
-        let c = y ? g(o, "node_modules", p) : g(o, "lib", "node_modules", p);
+        let c = y ? join(o, "node_modules", p) : join(o, "lib", "node_modules", p);
         try {
           (await e.stat(c), t.push({ type: "npm-global-orphan", path: c }));
         } catch {}
       }
   }
-  let l = g(homedir(), ".local", "bin", "claude");
+  let l = join(homedir(), ".local", "bin", "claude");
   try {
     (await e.stat(l), t.push({ type: "native", path: l }));
   } catch {}
   if (getGlobalConfig().installMethod === "native") {
-    let o = g(homedir(), ".local", "share", "claude");
+    let o = join(homedir(), ".local", "share", "claude");
     try {
       if ((await e.stat(o), !t.some((y) => y.type === "native")))
         t.push({ type: "native", path: o });
@@ -423,10 +423,10 @@ async function pe() {
 function me(e, t) {
   let i = getCurrentPlatform() === "windows",
     r = t;
-  if (i) r = t.split(A.sep).join(posix.sep).toLowerCase();
+  if (i) r = t.split(win32.sep).join(posix.sep).toLowerCase();
   return e.some((s) => {
     let l = s;
-    if (i) l = s.split(A.sep).join(posix.sep).toLowerCase();
+    if (i) l = s.split(win32.sep).join(posix.sep).toLowerCase();
     let h = l.replace(/\/+$/, ""),
       o = s.replace(/[/\\]+$/, "");
     return h === r || o === "~/.local/bin" || o === "$HOME/.local/bin";
@@ -438,7 +438,7 @@ async function fe(e) {
   if (getCurrentPlatform() === "wsl" && getWslInheritsWindowsSettings()) i.unshift(WSL_MANAGED_SETTINGS_DIR);
   for (let o of i)
     try {
-      let y = await ie(g(o, "managed-settings.json"), "utf-8"),
+      let y = await readFile(join(o, "managed-settings.json"), "utf-8"),
         d = jsonParse(y),
         u =
           d && typeof d === "object" ? d.strictPluginOnlyCustomization : void 0;
@@ -469,8 +469,8 @@ async function fe(e) {
   if (e === "native") {
     let o = (a.PATH || "").split(delimiter),
       y = homedir(),
-      d = g(y, ".local", "bin"),
-      u = g(getLocalBinDir(), "claude");
+      d = join(y, ".local", "bin"),
+      u = join(getLocalBinDir(), "claude");
     if (!(await isNativeInstallerSymlink(u)) && !(await isNpmShimExecutable(u).catch(() => !1)))
       t.push({
         issue: `${u} was not created by the native installer (it is not a symlink into the versions/ directory), so auto-update leaves it untouched.`,
@@ -478,7 +478,7 @@ async function fe(e) {
       });
     if (!me(o, d))
       if (getCurrentPlatform() === "windows") {
-        let c = d.split(posix.sep).join(A.sep);
+        let c = d.split(posix.sep).join(win32.sep);
         t.push({
           issue: `Native installation exists but ${c} is not in your PATH`,
           fix: "Add it by opening: System Properties \u2192 Environment Variables \u2192 Edit User PATH \u2192 New \u2192 Add the path above. Then restart your terminal.",

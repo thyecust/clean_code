@@ -500,7 +500,7 @@ function escapeLogValue(e) {
     )
     .join("");
 }
-import { createServer as Me } from "http";
+import { createServer } from "http";
 var te = [1, 2.5, 5, 10, 20, 40, 80, 160, 320, 640, 1280];
 function createDurationHistogram() {
   return { buckets: te.map(() => 0), count: 0, sum: 0 };
@@ -707,7 +707,7 @@ function be(e) {
   return;
 }
 function startMetricsServer(e, n, o) {
-  let u = Me((t, s) => {
+  let u = createServer((t, s) => {
     if (t.method === "POST" && t.url === "/v1/metrics") {
       let p = t.socket.remoteAddress;
       if (p !== "127.0.0.1" && p !== "::1" && p !== "::ffff:127.0.0.1") {
@@ -792,9 +792,9 @@ function startMetricsServer(e, n, o) {
   );
 }
 import { randomBytes, timingSafeEqual } from "crypto";
-import { open as Ve } from "fs/promises";
+import { open } from "fs/promises";
 import { resolve } from "path";
-import { createServer as We, connect as Xe } from "net";
+import { createServer as We, connect } from "net";
 import { connect as Ge } from "tls";
 var ge = ["https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY"],
   PROXY_AUTHORIZATION_COMMAND_ENV_VAR = "SELF_HOSTED_RUNNER_PROXY_AUTHORIZATION_COMMAND",
@@ -858,7 +858,7 @@ function it(e) {
         let p,
           m = !1,
           v = (async () => {
-            let _ = await Ve(n.path, "r");
+            let _ = await open(n.path, "r");
             try {
               let T = Buffer.alloc(me + 1),
                 { bytesRead: E } = await _.read(T, 0, T.length, 0);
@@ -1127,7 +1127,7 @@ async function pt(e) {
               servername: ft(u) ? void 0 : u,
               ...e.upstreamTls,
             })
-          : Xe({ host: u, port: r });
+          : connect({ host: u, port: r });
         m(S);
         let L = o ? "secureConnect" : "connect",
           C = (P) => {},
@@ -1845,8 +1845,8 @@ function rejectOrchestratorProxyAuthorization(e, n = process.env) {
 }
 import { spawn } from "child_process";
 import { constants } from "fs";
-import { access, stat as ye } from "fs/promises";
-import { join as Oe } from "path";
+import { access, stat } from "fs/promises";
+import { join } from "path";
 var ce = 5000;
 function Ne() {
   return {
@@ -1872,9 +1872,9 @@ function assertFeatureSupportedOnPlatform(e, n = "darwin") {
 }
 async function resolveHookExecutable(e, n) {
   if (!e) return null;
-  let o = Oe(e, n);
+  let o = join(e, n);
   try {
-    if (!(await raceWithTimeout(ye(o), ce, `stat ${o}`)).isFile()) return null;
+    if (!(await raceWithTimeout(stat(o), ce, `stat ${o}`)).isFile()) return null;
     return (await raceWithTimeout(access(o, constants.X_OK), ce, `access ${o}`), o);
   } catch {
     return null;
@@ -1987,7 +1987,7 @@ async function runCheckoutHook(e) {
   });
   let r;
   try {
-    r = await raceWithTimeout(ye(e.checkoutPath), ce, `stat ${e.checkoutPath}`);
+    r = await raceWithTimeout(stat(e.checkoutPath), ce, `stat ${e.checkoutPath}`);
   } catch (t) {
     if (W(t))
       throw new CheckoutHookFailedError(
@@ -2006,7 +2006,7 @@ async function runCheckoutHook(e) {
   if (process.env.CLAUDE_RUNNER_SKIP_GIT_VERIFY !== "1")
     try {
       await raceWithTimeout(
-        ye(Oe(e.checkoutPath, ".git")),
+        stat(join(e.checkoutPath, ".git")),
         ce,
         `stat ${e.checkoutPath}/.git`,
       );
