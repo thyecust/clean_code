@@ -68612,15 +68612,14 @@ function Rvo(e, t) {
   return r;
 }
 
-function XAn(e) {
-  return joinSafe(
-    e.sections.map((t) =>
-      concatSafe(fromEnum(t.name), S(":"), fromNumber(t.len)),
-    ),
-  );
-}
-
 function Pvo(e, t) {
+  function XAn(e) {
+    return joinSafe(
+      e.sections.map((t) =>
+        concatSafe(fromEnum(t.name), S(":"), fromNumber(t.len)),
+      ),
+    );
+  }
   if (!e?.messagesHistoryChanged || e.firstChangedMessageIndex !== 0 || !t)
     return {};
   let r = e.prevMsg0Shape,
@@ -73763,13 +73762,6 @@ async function resolveRealpathAllowMissing(e) {
     }
 }
 
-async function fIn(e, t) {
-  let r = getCurrentPlatform();
-  return r === "linux" || r === "wsl"
-    ? realpath(`/proc/self/fd/${e.fd}`)
-    : resolveRealpathAllowMissing(t);
-}
-
 var Xit = (e) =>
   `one of ${e} hard links to the same file, whose other names the checks do not see`;
 
@@ -73816,12 +73808,6 @@ async function bR(e) {
   }
 }
 
-var Jit = 65536;
-
-var yce = 4194304;
-
-var Zit = yce;
-
 async function assertRegularFilePath(e, t) {
   let r = await bR(lstat(e));
   if (r === void 0 || r.isFile()) return;
@@ -73841,6 +73827,12 @@ async function assertOpenFileMatchesPath(
   if (!p.isFile())
     throw o(`the open landed on ${nOe(p)}; $.fs opens regular files only`);
   if (p.nlink > 1) throw o(`the open landed on ${Xit(p.nlink)}`);
+  async function fIn(e, t) {
+    let r = getCurrentPlatform();
+    return r === "linux" || r === "wsl"
+      ? realpath(`/proc/self/fd/${e.fd}`)
+      : resolveRealpathAllowMissing(t);
+  }
   let _ = await bR(fIn(e, t));
   if (_ === void 0)
     throw o(
@@ -73872,9 +73864,11 @@ async function SAo(e, t) {
     let d = [],
       p = 0;
     for (;;) {
+      const Jit = 65536;
       let _ = Buffer.alloc(Jit),
         { bytesRead: E } = await o.read(_, 0, Jit, p);
       if (E === 0) break;
+      const Zit = 4194304;
       if (((p += E), p > Zit))
         throw r(`the file is over the ${Zit}-byte limit`);
       d.push(_.subarray(0, E));
@@ -74416,6 +74410,7 @@ async function yat(
         if (typeof e.text !== "string")
           throw new HooksError(`${t}: $.fs.writeFile takes the text to write`);
         let F = Buffer.byteLength(e.text, "utf8");
+        const yce = 4194304;
         if (F > yce) throw N(`${F} bytes is over the ${yce}-byte limit`);
         let U = (await ERo(E, r)) ?? (await xRo(E, I));
         if (U !== void 0) throw N(U);
@@ -85709,6 +85704,7 @@ async function readGitInfoAttributesFile(e) {
 
 async function mHo(e, t) {
   if (t.length === 0) return [];
+  var gHo = ["filter", "working-tree-encoding", "ident"];
   let r = await e(
     ["check-attr", "-z", "--stdin", ...gHo],
     void 0,
@@ -85725,8 +85721,6 @@ async function mHo(e, t) {
     ),
   );
 }
-
-var gHo = ["filter", "working-tree-encoding", "ident"];
 
 async function hHo(e, t, r) {
   let o = r.filter((_) => _.kind === "symlink"),
@@ -85811,29 +85805,27 @@ async function H$n(
   }
 }
 
-var _Ho = /^ccr-seed-([0-9]+)-[0-9a-f]{12}\.index(?:\.lock)?$/,
-  bHo = 600000;
-
 async function SHo(e) {
   try {
     await Promise.all(
       (await readdir(e)).map(async (t) => {
+        const _Ho = /^ccr-seed-([0-9]+)-[0-9a-f]{12}\.index(?:\.lock)?$/;
         let r = _Ho.exec(t)?.[1];
         if (r === void 0) return;
         let o = join(e, t);
+        function kHo(e) {
+          try {
+            return (process.kill(e, 0), !0);
+          } catch (t) {
+            return A(t) === "EPERM";
+          }
+        }
+        const bHo = 600000;
         if (Date.now() - (await lstat(o)).mtimeMs > bHo && !kHo(Number(r)))
           await rm(o, { force: !0 });
       }),
     );
   } catch {}
-}
-
-function kHo(e) {
-  try {
-    return (process.kill(e, 0), !0);
-  } catch (t) {
-    return A(t) === "EPERM";
-  }
 }
 
 async function excludeDirectoryPaths(e, t) {
