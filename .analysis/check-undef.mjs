@@ -47,27 +47,29 @@ const GLOBALS = new Set([
 // 既存债务：每一条都**不是**「允许这样写」，而是「已经这样了、还没修」。
 // 修好一条就删一条 —— 这个 Map 应该在收敛过程中变短，不该变长。
 //
-// 三类：
-//   A 会抛 ReferenceError：定义处被改名，调用处没跟上（跟 `yr` 同源）
-//   B 静默行为差异：`typeof X == "object" && X && !X.nodeType` 这种 freeExports
-//     探测，`typeof` 对未声明变量不抛错，于是探测恒为假 —— 不崩，但行为不对
-//   C bundle 固有：tslib 的 helper 之类，用 `typeof` 守卫着，是编译输出的常态
+// 2026-09-19 修掉 6 个（各处的「真名」都是从 git 历史里挖出来的：改动提交的 diff 里
+// `-  mkdir as vLt,` 这种删除行就是映射）：
+//   vLt / joo → mkdir、lkr / nmo → stat（别名去混淆那次删了 import，漏改调用）
+//   Mb → parseShortId、va → getClientUserAgent（同名 import 已在新名字下，漏改调用）
+//   extractCommandSegments（by hand 手工加的调用没带 import）
+// 剩下的是三类：
+//   A 不可达：能抛 ReferenceError，但那段代码到不了
+//   B 静默失效：被 try/catch 吞掉，或 `typeof X == "object"` 这类探测恒为假
+//   C bundle 固有：编译输出本来就长这样
 const KNOWN = new Map(Object.entries({
-  // A —— 会抛
-  "extractCommandSegments": ["03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"],
-  "Mb": ["03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js"],
-  "vLt": ["03-入口与运行时/核心应用-Agent循环/execution-core.js"],
-  "joo": ["03-入口与运行时/核心应用-Agent循环/execution-core.js"],
-  "lkr": ["03-入口与运行时/核心应用-Agent循环/execution-core.js"],
-  "nmo": ["03-入口与运行时/核心应用-Agent循环/execution-core.js"],
+  // A —— 不可达
+  // 原始 dump（08cfb319 init）里就没有这个 import，非本项目改名所致；语义待考
   "fmt": ["03-入口与运行时/会话UI-REPL/会话UI-REPL.qs63rzfp.js"],
+  // `function R(P)` 声明在 `return l.filter(...).map(...)` 之后，且全文没有调用点
   "y": ["01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js"],
   "T": ["01-核心基础设施/UI组件-TUI/React组件(TUI视图).ym1wn9mq.js"],
-  "a": ["01-核心基础设施/遥测-OpenTelemetry/chunk-p7jm635c.js"],
+  // 在 `return null;` 之后 —— 整个 switch 是死代码
   "t": ["02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"],
   "r": ["02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"],
-  "va": ["02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js"],
   // B —— 静默失效
+  "a": ["01-核心基础设施/遥测-OpenTelemetry/chunk-p7jm635c.js"],
+  // lodash 的 CommonJS 探测：`typeof X == "object" && X && !X.nodeType && X`，
+  // `typeof` 对未声明变量不抛错，于是恒为假（ESM 里 module/exports 本就不存在）
   "U": ["00-第三方库/lodash/lodash.2x3q7cfh.js"],
   "H": ["00-第三方库/lodash/lodash.2x3q7cfh.js"],
   "Ut": ["01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js"],
