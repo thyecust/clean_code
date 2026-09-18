@@ -132,7 +132,7 @@ function main() {
       }
       writeFileSync(f, p.next);
     }
-    if (mode === "unused") report.push({ file: short(f), records: p.records });
+    report.push({ file: short(f), records: p.records });
   }
 
   // 报告

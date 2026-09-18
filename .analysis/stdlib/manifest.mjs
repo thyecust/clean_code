@@ -13,6 +13,7 @@ import { join } from "node:path";
 import { ROOT } from "../rename/paths.mjs";
 import { plan } from "./plan.mjs";
 import { buildGraph, planUnused } from "./unused.mjs";
+import { planMerge } from "./merge.mjs";
 import { applyEdits } from "./verify.mjs";
 import { WORK, BACKUP } from "./run.mjs";
 
@@ -42,6 +43,7 @@ for (const name of readdirSync(backupDir).sort()) {
   for (const [mode, p] of [
     ["aliases", plan(before, { file: rel })],
     ["unused", planUnused(before, { file: join(ROOT, rel), graph })],
+    ["merge", planMerge(before, { file: join(ROOT, rel) })],
   ]) {
     if (!p.edits.length) continue;
     const { next, edits } = applyEdits(before, p.edits);

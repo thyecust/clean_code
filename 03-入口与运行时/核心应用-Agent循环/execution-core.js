@@ -1688,9 +1688,7 @@ import {
   stripWideningPermissionLayers,
 } from "../../02-功能模块/权限系统/chunk-fjrcf22x.js";
 
-import {
-  BRIEF_TOOL_NAME,
-} from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
+import { BRIEF_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/chunk-q599wyee.js";
 
 import {
   AsyncEvalDispatcher,
@@ -1960,12 +1958,7 @@ import {
   writeFile,
 } from "fs/promises";
 
-
-import {
-  PassThrough,
-  Readable,
-  Transform,
-} from "stream";
+import { PassThrough, Readable, Transform } from "stream";
 
 import {
   A,
@@ -2420,7 +2413,6 @@ import {
   getTempBaseDir,
 } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 
-
 import {
   externalHttp,
   isAnthropicHost,
@@ -2475,34 +2467,15 @@ import {
 
 import { connect as EAr, createSecureContext, rootCertificates } from "tls";
 
-import {
-  BlockList,
-  connect,
-  createServer,
-  isIP,
-} from "net";
+import { BlockList, connect, createServer, isIP } from "net";
 
-import {
-  URL as WDt,
-  URL as ize,
-  fileURLToPath,
-} from "url";
+import { URL as WDt, URL as ize, fileURLToPath } from "url";
 
 import { createServer as NAr, request } from "https";
 
-import {
-  Agent,
-  STATUS_CODES,
-  createServer as YAr,
-  request as mze,
-} from "http";
+import { Agent, STATUS_CODES, createServer as YAr, request as mze } from "http";
 
-import {
-  execFile,
-  execSync,
-  spawn,
-  spawnSync,
-} from "child_process";
+import { execFile, execSync, spawn, spawnSync } from "child_process";
 
 import { text } from "stream/consumers";
 
@@ -2557,9 +2530,7 @@ import { createLinkedAbortSignal } from "../../01-核心基础设施/核心工�
 
 import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
 
-import {
-  getFileStorage,
-} from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
+import { getFileStorage } from "../../01-核心基础设施/文件存储-原子写入/file-storage.js";
 
 import { Cs, hf } from "../../00-第三方库/graceful-fs/chunk-8fpdwg2e.js";
 
@@ -2636,9 +2607,7 @@ import {
   runPaginatedScan,
 } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 
-import {
-  pipeline,
-} from "stream/promises";
+import { pipeline } from "stream/promises";
 
 import {
   RENAME_FALLBACK_ERRNOS,
@@ -2656,10 +2625,7 @@ import {
   isSyncSettingVetoed,
 } from "../../02-功能模块/插件系统/chunk-ajtn749s.js";
 
-import {
-  readFileSyncWithMetadata,
-} from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
-
+import { readFileSyncWithMetadata } from "../../01-核心基础设施/安全文件系统-FS加固/safe-file-read.js";
 
 import {
   Cmr,
@@ -2773,16 +2739,13 @@ import {
   peekPreSettingsEnvSnapshot,
 } from "../../01-核心基础设施/遥测-OpenTelemetry/settings-env-application.js";
 
-
 import {
   getResolvedWIFBaseUrlSnapshot,
   getWIFTokenCache,
   invalidateWIFToken,
 } from "../../02-功能模块/认证-OAuth登录/wif-credentials.js";
 
-import {
-  runGuardedFetch,
-} from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
+import { runGuardedFetch } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
 
 import { getLocalBinDir } from "../../01-核心基础设施/核心工具-路径与平台/user-directories.js";
 
@@ -2794,11 +2757,7 @@ import {
 
 import { basename as Doo, isAbsolute as Noo } from "path/win32";
 
-import {
-  inspect,
-  isDeepStrictEqual,
-  types,
-} from "util";
+import { inspect, isDeepStrictEqual, types } from "util";
 
 import {
   getArtifactState,
@@ -2977,7 +2936,6 @@ import {
 
 import "../../02-功能模块/语音-音频/loop-wakeup-scheduler.js";
 
-
 import {
   getActiveKeybindings,
   getKeybindingDisplayText,
@@ -2987,7 +2945,6 @@ import {
 } from "../../02-功能模块/键位绑定-Keybindings/键位绑定-Keybindings.sanfja6a.js";
 
 import "../../02-功能模块/MCP客户端/mcp-task-id.js";
-
 
 import {
   MAX_SKILL_FILE_BYTES,
@@ -3130,7 +3087,9 @@ async function readFileWithLineRange(e, t = 0, r, o, d, p) {
     );
   if (I.isFile() && I.size < Yyr) {
     if (!_ && o !== void 0 && I.size > o) throw new sW(I.size, o);
-    let D = C ? await C.readFile({ signal: d }) : await readFile(e, { signal: d });
+    let D = C
+      ? await C.readFile({ signal: d })
+      : await readFile(e, { signal: d });
     if (!_ && o !== void 0) {
       if (D.length > o) throw new sW(D.length, o);
     }
@@ -3909,7 +3868,9 @@ function loadedIndexExclusions() {
   for (let o of e) {
     for (let p of o.skillsDirs ?? []) {
       let _ = p.split("/");
-      r.push((o.scope === "user" ? join(..._) : join("team", o.mount, ..._)) + sep);
+      r.push(
+        (o.scope === "user" ? join(..._) : join("team", o.mount, ..._)) + sep,
+      );
     }
     if (o.promptIndex === void 0) continue;
     let d = o.promptIndex.split("/");
@@ -7439,7 +7400,8 @@ async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
         )
       );
     },
-    p = async (D) => (await Promise.all(D.split(delimiter).map(d))).some(Boolean),
+    p = async (D) =>
+      (await Promise.all(D.split(delimiter).map(d))).some(Boolean),
     _ = async (D) =>
       (
         await Promise.all(
@@ -7602,7 +7564,8 @@ async function w$(e, t, r, o = 0) {
     D =
       normalizePathCase(C) === "/usr/bin/env" ||
       normalizePathCase(C) === "/bin/env";
-  if (normalizePathCase(basename(C)) === "env" && !D) return "program_unresolved";
+  if (normalizePathCase(basename(C)) === "env" && !D)
+    return "program_unresolved";
   if (D) {
     let F = E.slice(1).flatMap((ue) => ue.split(/[ \t]+/)),
       U = F[0] === "-S" ? F.slice(1) : F,
@@ -12384,7 +12347,12 @@ function rNt(e, t, r, o = process.env) {
         );
         continue;
       }
-      d[_.name] = r.registerWithSentinel(`${O_e}${_.name}`, I_e(randomUUID()), E, C);
+      d[_.name] = r.registerWithSentinel(
+        `${O_e}${_.name}`,
+        I_e(randomUUID()),
+        E,
+        C,
+      );
       continue;
     }
     if (_.extract === void 0) {
@@ -12662,7 +12630,14 @@ function Tze() {
         "@anthropic-ai",
         "sandbox-runtime",
       ),
-      join(t, ".npm", "lib", "node_modules", "@anthropic-ai", "sandbox-runtime"),
+      join(
+        t,
+        ".npm",
+        "lib",
+        "node_modules",
+        "@anthropic-ai",
+        "sandbox-runtime",
+      ),
       join(
         t,
         ".npm-global",
@@ -15863,7 +15838,9 @@ async function FPr(e, t, r = !1) {
     try {
       let _ = Fh() === "windows" ? (ma.windows?.proxyPortRange ?? Oze) : void 0;
       MB =
-        ma.network.httpProxyPort !== void 0 ? void 0 : randomBytes(16).toString("hex");
+        ma.network.httpProxyPort !== void 0
+          ? void 0
+          : randomBytes(16).toString("hex");
       let C =
           ma.network.httpProxyPort === void 0 ||
           ma.network.socksProxyPort === void 0
@@ -16792,7 +16769,8 @@ function createSettingsChangeDetector(e) {
         if (!di || di.isDirectory()) return !1;
         let ga = path.normalize(Rs);
         if (So.has(ga)) return !1;
-        if (eo && ga.startsWith(eo + path.sep) && ga.endsWith(".json")) return !1;
+        if (eo && ga.startsWith(eo + path.sep) && ga.endsWith(".json"))
+          return !1;
         return !0;
       },
       ignorePermissionErrors: !0,
@@ -17992,7 +17970,8 @@ function RSe(e, t) {
         (r.add(E), r.add(C));
         let N = R3t(C);
         if (N === null) return null;
-        if ((r.add(N.path), r.add(join(N.path, basename(E))), N.exists)) D = N.path;
+        if ((r.add(N.path), r.add(join(N.path, basename(E))), N.exists))
+          D = N.path;
       }
       if (I !== void 0) {
         let N = PSe(D, I);
@@ -18196,7 +18175,15 @@ function l3e(e) {
 
 function vSe(e) {
   try {
-    return (closeSync(openSync(dirname(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)), !0);
+    return (
+      closeSync(
+        openSync(
+          dirname(e),
+          constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW,
+        ),
+      ),
+      !0
+    );
   } catch (t) {
     let r = A(t);
     return r !== "ELOOP" && r !== "ENOTDIR";
@@ -18222,7 +18209,8 @@ function D3t() {
         (unlinkSync(t), l3e(t), (r = !0));
       } else
         try {
-          (closeSync(openSync(t, constants.O_RDONLY | constants.O_DIRECTORY)), (r = !0));
+          (closeSync(openSync(t, constants.O_RDONLY | constants.O_DIRECTORY)),
+            (r = !0));
         } catch {
           try {
             if (!vSe(t)) continue;
@@ -18244,7 +18232,10 @@ function D3t() {
       }
     }
     try {
-      let o = openSync(t, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
+      let o = openSync(
+        t,
+        constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW,
+      );
       try {
         let d = fstatSync(o);
         recordFileIdentity(t, d.dev, d.ino, o);
@@ -19225,7 +19216,12 @@ function _oe(e) {
           let bm;
           try {
             try {
-              bm = openSync(Fs, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+              bm = openSync(
+                Fs,
+                constants.O_RDONLY |
+                  constants.O_NOFOLLOW |
+                  constants.O_NONBLOCK,
+              );
             } catch (kh) {
               let Cy = A(kh);
               if (Cy === "ELOOP")
@@ -20032,7 +20028,11 @@ function k3e(e, t, r = !1) {
     }
     for (let _ of t) {
       let E =
-        p === "~" ? homedir() : p.startsWith("~/") ? join(homedir(), p.slice(2)) : resolve(_, p);
+        p === "~"
+          ? homedir()
+          : p.startsWith("~/")
+            ? join(homedir(), p.slice(2))
+            : resolve(_, p);
       o.add(E);
       let C = R3t(E);
       if (C === null) {
@@ -20221,7 +20221,8 @@ function detectWorktreeGitCommonDir(e) {
     let C = readFileSync(join(p, "gitdir"), { encoding: "utf8" }).trim();
     if (ac(C, e)) return null;
     if (rawPointerPathIsUnsafe(C, p, e)) return null;
-    if (realpathSync(resolve(p, C)) !== join(realpathSync(e), ".git")) return null;
+    if (realpathSync(resolve(p, C)) !== join(realpathSync(e), ".git"))
+      return null;
     return E;
   } catch {
     return null;
@@ -26850,7 +26851,9 @@ var R7r = rs(() => {
   aen = rs(() => {
     let e = [
       ...R7r(),
-      ...ZN([join(homedir(), ".claude", "state", "unattended-serving-consent.json")]),
+      ...ZN([
+        join(homedir(), ".claude", "state", "unattended-serving-consent.json"),
+      ]),
       ...ZN(
         g8().flatMap((t) =>
           [getControlKeyPath(), getPipeKeyPath(), getRosterFilePath()].map(
@@ -32782,7 +32785,10 @@ function SAe() {
 
 async function vno(e, t, r) {
   if (!SAe()) return await r();
-  let o = createHash("sha1").update(jsonStringify(e)).digest("hex").slice(0, 12),
+  let o = createHash("sha1")
+      .update(jsonStringify(e))
+      .digest("hex")
+      .slice(0, 12),
     d = join(
       a.CLAUDE_CODE_TEST_FIXTURES_ROOT ?? getCwd(),
       `fixtures/${t}-${o}.json`,
@@ -33834,7 +33840,8 @@ function mae(e, t, r) {
         (C.some((N) => /^(?:ln|link|cp|mv|mkfifo|mknod)$/.test(N)) &&
           p.some((N) => qw(MJe(N, t)))) ||
         (C.some((N) => /^(?:ln|link|cp|mv)$/.test(N)) &&
-          (_ || p.some((N) => /^(?:\/|\.\.)(?:\/|$)/.test(posix.normalize(N)))))),
+          (_ ||
+            p.some((N) => /^(?:\/|\.\.)(?:\/|$)/.test(posix.normalize(N)))))),
         (t.inputAssembled ||= t.deviceLinked),
         (t.allExported ||=
           C.some((N) => /^(?:set|shopt|setopt)$/.test(N)) &&
@@ -37815,7 +37822,10 @@ function Qsn() {
       await materializeFileMap(t, e, {
         mode: (d) => (d.startsWith("bin/") ? 448 : 384),
       });
-      let [r, o] = await Promise.all([realpath(t), realpath(getResolvedClaudeTempDir())]);
+      let [r, o] = await Promise.all([
+        realpath(t),
+        realpath(getResolvedClaudeTempDir()),
+      ]);
       if (r !== t || !r.startsWith(o + sep))
         throw Error("carrier dir resolves outside the claude temp root");
       ((Dae = t), logFeatureOk("bash_sl_gate"));
@@ -39155,7 +39165,8 @@ function yso(e) {
     o = e.indexOf(`${sep}.claude${sep}rules${sep}`);
   if (o >= 0) r = t.endsWith(".md") ? e.slice(0, o) : void 0;
   else if (t === "CLAUDE.md" || t === "CLAUDE.local.md") {
-    if (((r = dirname(e)), t === "CLAUDE.md" && basename(r) === ".claude")) r = dirname(r);
+    if (((r = dirname(e)), t === "CLAUDE.md" && basename(r) === ".claude"))
+      r = dirname(r);
   }
   return r !== void 0 && r !== parse(r).root ? r : void 0;
 }
@@ -40097,7 +40108,9 @@ async function jso(e) {
                   .filter((xo) => xo.endsWith(".jpg"))
                   .sort();
                 return Promise.all(
-                  Br.map((xo) => readFile(path.join(Cn.data.file.outputDir, xo))),
+                  Br.map((xo) =>
+                    readFile(path.join(Cn.data.file.outputDir, xo)),
+                  ),
                 );
               })(),
         At = (
@@ -40612,7 +40625,10 @@ var WriteTool = buildTool({
       d = resolvePath(r),
       p = getWorktreeWriteBlockMessage(d, t);
     if (p) return { result: !1, message: p, errorCode: 7 };
-    if (t.agentId && /^(REPORT|SUMMARY|FINDINGS|ANALYSIS).*\.md$/i.test(basename(d)))
+    if (
+      t.agentId &&
+      /^(REPORT|SUMMARY|FINDINGS|ANALYSIS).*\.md$/i.test(basename(d))
+    )
       return (
         logEvent("tengu_subagent_md_report_blocked", {
           contentBytes: Buffer.byteLength(o),
@@ -46598,7 +46614,9 @@ This command changes directories before the removal, so the relative glob target
         containsRuntimePlaceholder(F) ||
         N.startsWith("~") ||
         An(N) ||
-        (!isAbsolute(N) && /(^|[\\/])\.\.([\\/]|$)/.test(N) && /[\\/]\*$/.test(F)) ||
+        (!isAbsolute(N) &&
+          /(^|[\\/])\.\.([\\/]|$)/.test(N) &&
+          /[\\/]\*$/.test(F)) ||
         (e === "rmdir" &&
           /[\\/]\*$/.test(F) &&
           t.some((ue) => /^--p/.test(ue) || /^-[a-z]*p/.test(ue))) ||
@@ -47928,7 +47946,8 @@ function hpo(e, t, r, o, d, p) {
     de = U.map((xe) => PE(xe, r, o, C)),
     _e = V.map((xe) => PE(xe, r, o, "read")),
     Se = (xe) =>
-      !containsRuntimePlaceholder(xe) && (!d || isAbsolute(xe) || xe.startsWith("~")),
+      !containsRuntimePlaceholder(xe) &&
+      (!d || isAbsolute(xe) || xe.startsWith("~")),
     ve =
       ue.find(
         (xe, Oe) =>
@@ -48483,7 +48502,8 @@ function oun(e, t) {
   let r = [],
     o = Ju(e);
   if (o !== e) r.push({ path: o, cwdIndependent: !0 });
-  if (!e.startsWith("~")) r.push({ path: resolve(t, e), cwdIndependent: isAbsolute(e) });
+  if (!e.startsWith("~"))
+    r.push({ path: resolve(t, e), cwdIndependent: isAbsolute(e) });
   return r;
 }
 
@@ -68142,7 +68162,10 @@ function ZL() {
             return;
           }
           if (e.latestQueuedPersist !== o) return;
-          (await mkdir(getResolvedClaudeTempDir(), { recursive: !0, mode: 448 }),
+          (await mkdir(getResolvedClaudeTempDir(), {
+            recursive: !0,
+            mode: 448,
+          }),
             assertSafeTempDir(getResolvedClaudeTempDir()),
             await writeFileAtomic(r, o.payload));
         })
@@ -73899,7 +73922,9 @@ async function CAo(e, t) {
 }
 
 async function bIn(e, t, r = []) {
-  let o = (await bR(lstat(e)))?.isSymbolicLink() ? await bR(readlink(e)) : void 0;
+  let o = (await bR(lstat(e)))?.isSymbolicLink()
+    ? await bR(readlink(e))
+    : void 0;
   return (
     o !== void 0 &&
     !isPathOutsideRoot(
@@ -74135,16 +74160,17 @@ async function VIn() {
     ...new Map(
       (
         await Promise.all(
-          (getCurrentPlatform() === "windows" ? [tmpdir()] : [tmpdir(), "/tmp"]).map(
-            async (e) => {
-              let t = await Sce(e);
-              if (t === void 0) return [];
-              return [
-                { root: e, realRoot: t },
-                { root: t, realRoot: t },
-              ];
-            },
-          ),
+          (getCurrentPlatform() === "windows"
+            ? [tmpdir()]
+            : [tmpdir(), "/tmp"]
+          ).map(async (e) => {
+            let t = await Sce(e);
+            if (t === void 0) return [];
+            return [
+              { root: e, realRoot: t },
+              { root: t, realRoot: t },
+            ];
+          }),
         )
       )
         .flat()
@@ -74223,11 +74249,14 @@ var eMn = async (e, t, r) =>
   ).some((o) => !isPathOutsideRoot(relative(o, e)));
 
 function nMn(e, t) {
-  let r = posix.normalize(t.replace(/\\/g, "/"))
+  let r = posix
+      .normalize(t.replace(/\\/g, "/"))
       .split("/")
       .filter((d) => d !== "" && d !== ".."),
     o = sep + normalizeCaseForComparison(r.join(sep));
-  return !isAbsolute(t) && r.length > 0 && (e.endsWith(o) || e.includes(o + sep));
+  return (
+    !isAbsolute(t) && r.length > 0 && (e.endsWith(o) || e.includes(o + sep))
+  );
 }
 
 var LRo = ["KUBECONFIG"];
@@ -80206,7 +80235,9 @@ async function jNn(e, t) {
       }
       let F = await open(
         D,
-        N ? constants.O_RDONLY : constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
+        N
+          ? constants.O_RDONLY
+          : constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
       ).catch((U) => {
         let V = A(U) ?? "";
         return ["ENOENT", "ENOTDIR"].includes(V)
@@ -81273,8 +81304,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
       He = () => rm(De, { recursive: !0, force: !0 }).catch(() => {});
     return { kind: "made", path: De, dispose: He, [Symbol.asyncDispose]: He };
   } catch (Ne) {
-    if (Oe !== null)
-      await rm(Oe, { recursive: !0, force: !0 }).catch(() => {});
+    if (Oe !== null) await rm(Oe, { recursive: !0, force: !0 }).catch(() => {});
     return bv(l(Ne));
   }
 }
@@ -81449,7 +81479,8 @@ function hardenedSpawnEnv(e, t) {
 var oLo = delimiter;
 
 function sLo(e, t) {
-  if (e === "GIT_EXEC_PATH") return t.includes(delimiter) ? [t, ...t.split(delimiter)] : [t];
+  if (e === "GIT_EXEC_PATH")
+    return t.includes(delimiter) ? [t, ...t.split(delimiter)] : [t];
   if (e === "DEVELOPER_DIR" || e === "GIT_TEXTDOMAINDIR") return [t];
   if (getCurrentPlatform() === "windows") return t.split(delimiter);
   if (e === "LD_PRELOAD") return t.split(/[\s:]+/).filter((r) => r !== "");
@@ -81617,7 +81648,13 @@ function pLn(e) {
 }
 
 function Dq(e, t, r, o = SLo) {
-  if (!isAbsolute(e) || Nce(e) || e.startsWith("\\\\?\\") || t(e) || t.beneath(e))
+  if (
+    !isAbsolute(e) ||
+    Nce(e) ||
+    e.startsWith("\\\\?\\") ||
+    t(e) ||
+    t.beneath(e)
+  )
     return !0;
   let { root: d } = parse(e),
     p = e
@@ -81933,7 +81970,9 @@ function MLo(e) {
 }
 
 function OLo(e, t) {
-  return dedupe([e, t].flatMap((r) => [dirname(r), MLo(dirname(r))])).join(delimiter);
+  return dedupe([e, t].flatMap((r) => [dirname(r), MLo(dirname(r))])).join(
+    delimiter,
+  );
 }
 
 async function Lce(e, t) {
@@ -82971,7 +83010,9 @@ function Glt(e, t) {
 
 function Bq(e, t, r) {
   let o = relative(Glt(e, r), Glt(t, r));
-  return o === "" || (o !== ".." && !o.startsWith(".." + sep) && !isAbsolute(o));
+  return (
+    o === "" || (o !== ".." && !o.startsWith(".." + sep) && !isAbsolute(o))
+  );
 }
 
 function I$o(e, { home: t, configHome: r, foldCase: o = !1 }) {
@@ -84615,7 +84656,12 @@ async function C$n(e, t, r, o) {
   let d = new x$n(r);
   try {
     return (
-      await pipeline(createReadStream(e), d, createWriteStream(t, { flags: "wx" }), { signal: o }),
+      await pipeline(
+        createReadStream(e),
+        d,
+        createWriteStream(t, { flags: "wx" }),
+        { signal: o },
+      ),
       { ok: !0, sizeBytes: d.outputBytes }
     );
   } catch (p) {
@@ -84966,7 +85012,11 @@ var bct = new Set(["ENAMETOOLONG", "ENOTDIR", "EISDIR", "EINVAL", "ELOOP"]);
 async function VUo(e, t) {
   let r = join(e, t),
     o = "darwin",
-    d = constants.O_RDONLY | zUo | (constants.O_NONBLOCK ?? 0) | (constants.O_NOCTTY ?? 0),
+    d =
+      constants.O_RDONLY |
+      zUo |
+      (constants.O_NONBLOCK ?? 0) |
+      (constants.O_NOCTTY ?? 0),
     p;
   try {
     p = await open(r, d);
@@ -85065,7 +85115,10 @@ var eHo =
   };
 
 function oHo(e) {
-  return createHash("sha1").update(`blob ${e.length}\x00`).update(e).digest("hex");
+  return createHash("sha1")
+    .update(`blob ${e.length}\x00`)
+    .update(e)
+    .digest("hex");
 }
 
 var sHo = 1048576,
@@ -89662,11 +89715,16 @@ function GNe(e, t, r, o, d, p, _, E = !1, C = !1) {
       `its git metadata (common dir ${I.commonDir}) could not be safely compared`,
     );
   if (F === "distinct") {
-    let U = comparePathIdentity(dirname(I.gitDir), join(I.commonDir, "worktrees")),
+    let U = comparePathIdentity(
+        dirname(I.gitDir),
+        join(I.commonDir, "worktrees"),
+      ),
       V =
         I.backPointer !== null &&
-        comparePathIdentity(resolve(I.gitDir, I.backPointer), join(e, ".git")) ===
-          "same";
+        comparePathIdentity(
+          resolve(I.gitDir, I.backPointer),
+          join(e, ".git"),
+        ) === "same";
     if (U !== "same" || !V)
       return {
         ok: !1,
@@ -89860,7 +89918,11 @@ function zBn(e, t) {
   if (r.length !== 3) return null;
   if (r.some((d) => /[\u0000-\u001f\u007f-\u009f]/.test(d))) return null;
   let o = r[2];
-  return { gitDir: r[0], topLevel: r[1], commonDir: isAbsolute(o) ? o : resolve(e, o) };
+  return {
+    gitDir: r[0],
+    topLevel: r[1],
+    commonDir: isAbsolute(o) ? o : resolve(e, o),
+  };
 }
 
 var sQ = 65536;
@@ -90968,7 +91030,9 @@ async function Z1o(e, t) {
         );
         continue;
       }
-      (await mkdir(dirname(V), { recursive: !0 }), await copyFile(U, V), D.push(F));
+      (await mkdir(dirname(V), { recursive: !0 }),
+        await copyFile(U, V),
+        D.push(F));
     } catch (re) {
       logForDebugging(`Failed to copy ${F} to worktree: ${l(re)}`, {
         level: "warn",
@@ -91367,7 +91431,9 @@ async function resolveExistingWorktreeTarget(
     );
   let _, E, C;
   try {
-    ((_ = await realpath(resolve(d, e))), (E = await realpath(p)), (C = await realpath(d)));
+    ((_ = await realpath(resolve(d, e))),
+      (E = await realpath(p)),
+      (C = await realpath(d)));
   } catch (ue) {
     throw new WorktreeIsolationError(`Cannot enter worktree: ${e}: ${l(ue)}`);
   }
@@ -91426,7 +91492,10 @@ async function resolveExistingWorktreeTarget(
       Me = null;
     if (Se)
       try {
-        if (((ve = await realpath(Se)), pointerFileIsSuspect(join(ve, "gitdir"), ve)))
+        if (
+          ((ve = await realpath(Se)),
+          pointerFileIsSuspect(join(ve, "gitdir"), ve))
+        )
           throw Error("gitdir back-link is a symlink");
         let xe = (await readFile(join(ve, "gitdir"), "utf-8")).trim();
         if (!ac(xe, _) && !rawPointerPathIsUnsafe(xe, ve, _))
@@ -91435,7 +91504,8 @@ async function resolveExistingWorktreeTarget(
     if (
       !ve ||
       !Me ||
-      normalizePathForComparison(dirname(ve)) !== normalizePathForComparison(_e) ||
+      normalizePathForComparison(dirname(ve)) !==
+        normalizePathForComparison(_e) ||
       normalizePathForComparison(Me) !==
         normalizePathForComparison(join(_, ".git"))
     )
@@ -91681,7 +91751,8 @@ async function cleanupWorktree(e, t) {
           let V = await realpath(o).catch(() => o);
           for (let re of U)
             if (
-              V === (await realpath(re.worktreePath).catch(() => re.worktreePath))
+              V ===
+              (await realpath(re.worktreePath).catch(() => re.worktreePath))
             ) {
               D = !1;
               break;
@@ -91996,7 +92067,11 @@ async function cQ(e, t, r, o) {
   if (E(D)) return d("network path (UNC or automount)");
   if (r !== void 0 && D !== r) return d(IDENTITY_CHANGED_SUMMARY);
   let N = dirname(D);
-  if (N === D || basename(N) !== "worktrees" || basename(dirname(N)) !== ".claude")
+  if (
+    N === D ||
+    basename(N) !== "worktrees" ||
+    basename(dirname(N)) !== ".claude"
+  )
     return d("not directly under a .claude/worktrees directory");
   if (await findGitRootVerifyingPositive(D))
     return d("still resolves to a repository");
@@ -92021,7 +92096,8 @@ async function cQ(e, t, r, o) {
         needsForce: !0,
       }
     );
-  if ((await realpath(D).catch(() => null)) !== D) return d(IDENTITY_CHANGED_SUMMARY);
+  if ((await realpath(D).catch(() => null)) !== D)
+    return d(IDENTITY_CHANGED_SUMMARY);
   if (!(await isPathSafeToRemove(D)))
     return (
       logForDebugging(
@@ -104163,7 +104239,7 @@ function _fe(e) {
   return typeof e === "object" && e !== null && Jjn.has(e);
 }
 
-function Ch(e, t, r) {
+function defineManagedGlobal(e, t, r) {
   try {
     Object.defineProperty(e, t, {
       value: r,
@@ -104560,7 +104636,7 @@ function S$e(e, t) {
   return r && "value" in r ? r.value : void 0;
 }
 
-function eWn(e, t, r, o, d, p, _, E, C) {
+function injectSandboxGlobals(e, t, r, o, d, p, _, E, C) {
   let I = {
     __proto__: null,
     log: t.fn(r.log),
@@ -104569,14 +104645,16 @@ function eWn(e, t, r, o, d, p, _, E, C) {
     error: t.fn(r.error),
     warn: t.fn(r.warn),
   };
-  Ch(e, "console", I);
-  for (let [F, U] of Object.entries(o)) Ch(e, F, t.asyncData(U));
-  for (let [F, U] of Object.entries(d)) Ch(e, F, t.asyncDataN(U));
+  defineManagedGlobal(e, "console", I);
+  for (let [F, U] of Object.entries(o))
+    defineManagedGlobal(e, F, t.asyncData(U));
+  for (let [F, U] of Object.entries(d))
+    defineManagedGlobal(e, F, t.asyncDataN(U));
   let D = vm.runInContext(
     '(f) => { try { if (typeof f === "function") f() } catch {} }',
     e,
   );
-  (Ch(
+  (defineManagedGlobal(
     e,
     "setTimeout",
     t.fn((F, U) => {
@@ -104587,7 +104665,7 @@ function eWn(e, t, r, o, d, p, _, E, C) {
       return (E.add(V), V);
     }),
   ),
-    Ch(
+    defineManagedGlobal(
       e,
       "clearTimeout",
       t.fn((F) => {
@@ -104595,7 +104673,7 @@ function eWn(e, t, r, o, d, p, _, E, C) {
         (clearTimeout(F), E.delete(F));
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "setInterval",
       t.fn((F, U) => {
@@ -104606,7 +104684,7 @@ function eWn(e, t, r, o, d, p, _, E, C) {
         return (E.add(V), V);
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "clearInterval",
       t.fn((F) => {
@@ -104614,17 +104692,17 @@ function eWn(e, t, r, o, d, p, _, E, C) {
         (clearInterval(F), E.delete(F));
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "atob",
       t.fn((F) => atob(t.toStr(F))),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "btoa",
       t.fn((F) => btoa(t.toStr(F))),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "shQuote",
       t.fn((F) => `'${t.toStr(F).replaceAll("'", "'\\''")}'`),
@@ -104646,7 +104724,7 @@ function eWn(e, t, r, o, d, p, _, E, C) {
     let { displayName: _e } = tWn(ue, ["displayName"]),
       Se = t.toStr(U),
       ve = _e == null ? void 0 : t.toStr(_e);
-    (Ch(e, F, t.asyncDataVM(re)),
+    (defineManagedGlobal(e, F, t.asyncDataVM(re)),
       p.set(F, {
         name: F,
         description: Se,
@@ -104655,8 +104733,8 @@ function eWn(e, t, r, o, d, p, _, E, C) {
         displayName: ve,
       }));
   });
-  (Ch(e, "registerTool", N),
-    Ch(
+  (defineManagedGlobal(e, "registerTool", N),
+    defineManagedGlobal(
       e,
       "unregisterTool",
       t.fn((F) => {
@@ -104670,13 +104748,13 @@ function eWn(e, t, r, o, d, p, _, E, C) {
         return !0;
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "listTools",
       t.fn(() => t.clone([...p.keys()])),
     ),
-    lqo(e, t, C, I.log),
-    Ch(
+    injectReplTools(e, t, C, I.log),
+    defineManagedGlobal(
       e,
       "getTool",
       t.fn((F) => {
@@ -104718,7 +104796,7 @@ function tWn(e, t) {
 var iqo = /^(pr|issue|run|workflow|release|label|cache)\b/,
   aqo = /(^|\s)(-R|--repo\b)/;
 
-function lqo(e, t, r, o) {
+function injectReplTools(e, t, r, o) {
   function d(D) {
     let N = t.toStr(D);
     return isAbsolute(N) ? N : resolve(r.cwd, N);
@@ -104765,12 +104843,12 @@ ${ue}`,
     ].filter(Boolean).join(`
 `);
   }
-  (Ch(
+  (defineManagedGlobal(
     e,
     "sh",
     t.asyncDataN((D, N) => I(t.toStr(D), N)),
   ),
-    Ch(
+    defineManagedGlobal(
       e,
       "gh",
       t.asyncDataN((D) => {
@@ -104783,7 +104861,7 @@ ${ue}`,
         return I(`gh ${N}`);
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "cat",
       t.asyncDataN(async (D, N, F) => {
@@ -104798,7 +104876,7 @@ ${ue}`,
         return E(V, "content") || E(U, "error");
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "rg",
       t.asyncDataN(async (D, N, F) => {
@@ -104821,7 +104899,7 @@ ${ue}`,
         return E(V, "content") || E(V, "error");
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "rgf",
       t.asyncDataN(async (D, N, F) => {
@@ -104836,7 +104914,7 @@ ${ue}`,
         return Array.isArray(U.filenames) ? U.filenames : [];
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "gl",
       t.asyncDataN(async (D, N) => {
@@ -104844,7 +104922,7 @@ ${ue}`,
         return Array.isArray(F.filenames) ? F.filenames : [];
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "put",
       t.asyncDataN(async (D, N) => {
@@ -104853,15 +104931,15 @@ ${ue}`,
         return U ? `[error] ${U}` : "";
       }),
     ),
-    Ch(
+    defineManagedGlobal(
       e,
       "chdir",
       t.fn((D) => {
         r.cwd = d(D);
       }),
     ),
-    Ch(e, "log", o),
-    Ch(
+    defineManagedGlobal(e, "log", o),
+    defineManagedGlobal(
       e,
       "str",
       t.fn((D, N, F) => {
@@ -104878,8 +104956,8 @@ function cqo(e) {
 
 function k$e(e, t) {
   if (((e.helperState.cwd = getCwd()), t !== void 0)) e.helperState.repo = t;
-  (Ch(e.vmContext, "REPO", e.helperState.repo ?? ""),
-    Ch(e.vmContext, "o", e.sealers.clone({})));
+  (defineManagedGlobal(e.vmContext, "REPO", e.helperState.repo ?? ""),
+    defineManagedGlobal(e.vmContext, "o", e.sealers.clone({})));
 }
 
 function w$e(e, t) {
@@ -104918,7 +104996,7 @@ function E$e(e, t, r, o, d, p) {
       p,
     ),
     V = Lut(N.stringify, t, d);
-  (eWn(D, N, F, U, V, _, E, C, I),
+  (injectSandboxGlobals(D, N, F, U, V, _, E, C, I),
     Object.keys(D).forEach((re) => E.add(re)),
     Qjn.forEach((re) => E.add(re)));
   try {
@@ -104964,7 +105042,7 @@ function nWn(e, t, r, o, d, p, _) {
       _,
     ),
     C = Lut(e.sealers.stringify, r, p);
-  eWn(
+  injectSandboxGlobals(
     e.vmContext,
     e.sealers,
     e.console,
@@ -105158,7 +105236,7 @@ async function _qo(e, t) {
     p = r.map((_) => [_, S$e(e.vmContext, _)]);
   try {
     (r.forEach((D) => {
-      Ch(e.vmContext, D, e.sealers.asyncDataPropagate(o[D]));
+      defineManagedGlobal(e.vmContext, D, e.sealers.asyncDataPropagate(o[D]));
     }),
       k$e(e));
     let _ = o$e(t.code),
@@ -105209,7 +105287,7 @@ async function _qo(e, t) {
   } finally {
     (p.forEach(([_, E]) => {
       try {
-        Ch(e.vmContext, _, E);
+        defineManagedGlobal(e.vmContext, _, E);
       } catch {}
     }),
       e.console.clear());
@@ -114290,7 +114368,9 @@ var g9o = (e) => `${basename(e)} changed; restart to apply`;
 
 function y9o(e, t) {
   let r = t === void 0 ? "nothing to unload" : `${Hfe(t, e)} unloaded`;
-  return `${basename(e.manifest)} changed \u2014 names no hooks module now; ` + r;
+  return (
+    `${basename(e.manifest)} changed \u2014 names no hooks module now; ` + r
+  );
 }
 
 function _9o(e, t) {
@@ -121544,7 +121624,8 @@ function Ipt(e, t, { stamp: r, ...o }) {
     let d = ice(e),
       p = new Map();
     for (let E of t.entries)
-      if (!p.has(E.name) && !isDeepStrictEqual(d.entries.get(E.name), E)) p.set(E.name, E);
+      if (!p.has(E.name) && !isDeepStrictEqual(d.entries.get(E.name), E))
+        p.set(E.name, E);
     let _ = [...t.nameOnlyAnnouncements].filter(
       (E) => !d.nameOnlyAnnouncements.has(E),
     );
@@ -130444,7 +130525,8 @@ function getPluginCommands(e) {
                               }
                             }
                         }
-                        if (!de) de = `${E.name}:${basename(N).replace(/\.md$/, "")}`;
+                        if (!de)
+                          de = `${E.name}:${basename(N).replace(/\.md$/, "")}`;
                         let Se = _e
                             ? {
                                 ...re,
@@ -148751,7 +148833,11 @@ async function rps(e, t) {
             return (logFeatureBad("input_file_at_mention", "denied"), null);
           let I = resolvePath(_);
           if (isFileReadDenied(I, o)) {
-            if (isAbsolute(_) || _.startsWith("~") || /(^|[\\/])\.\.([\\/]|$)/.test(_))
+            if (
+              isAbsolute(_) ||
+              _.startsWith("~") ||
+              /(^|[\\/])\.\.([\\/]|$)/.test(_)
+            )
               logFeatureBad("input_file_at_mention", "denied");
             return null;
           }
@@ -153352,7 +153438,9 @@ async function Oms(e, t, r = new Set()) {
 
 async function Ivt(e, t, r) {
   if (isHoverRestEnabled() && t !== void 0) {
-    let o = await t.hostFiles.stat(r(isAbsolute(e) ? e : K8t(getFsSurface().cwd(), e)));
+    let o = await t.hostFiles.stat(
+      r(isAbsolute(e) ? e : K8t(getFsSurface().cwd(), e)),
+    );
     if (o.ok)
       return o.value.kind === "absent"
         ? "absent"
@@ -153620,7 +153708,9 @@ function $ms(e, t, r, o) {
   let d = (p, _) =>
     p.some((E) =>
       (getSettingsForSource(E)?.hooks?.[t] ?? []).some(
-        (C) => (C.matcher ?? "") === _ && C.hooks.some((I) => isDeepStrictEqual(I, e)),
+        (C) =>
+          (C.matcher ?? "") === _ &&
+          C.hooks.some((I) => isDeepStrictEqual(I, e)),
       ),
     );
   return !r.some((p) => d(o, p));
@@ -157469,7 +157559,9 @@ function _gr(e, t) {
 }
 
 function bgr(e, t, r) {
-  return Object.keys(e).every((o) => r.includes(o) || isDeepStrictEqual(e[o], t[o]));
+  return Object.keys(e).every(
+    (o) => r.includes(o) || isDeepStrictEqual(e[o], t[o]),
+  );
 }
 
 function fhs(e, t) {
@@ -157490,7 +157582,9 @@ function phs(e, t, r) {
     typeof t.command !== "string" ||
     !Object.keys(t).every((d) => Object.hasOwn(e, d) || t[d] === void 0) ||
     !Object.keys(e).every(
-      (d) => Object.hasOwn(t, d) && (d === "command" || isDeepStrictEqual(fhs(d, e[d]), t[d])),
+      (d) =>
+        Object.hasOwn(t, d) &&
+        (d === "command" || isDeepStrictEqual(fhs(d, e[d]), t[d])),
     )
   )
     return !1;
@@ -163593,7 +163687,8 @@ function ayr(e) {
 async function writeRemoteAgentMetadata(e, t, r) {
   let o = ayr(e);
   if (
-    (await mkdir(dirname(o), { recursive: !0 }), isHoverRestEnabled() && r !== void 0)
+    (await mkdir(dirname(o), { recursive: !0 }),
+    isHoverRestEnabled() && r !== void 0)
   ) {
     let d = getSidecarKeyForMetadataPath(o);
     if (d !== void 0) {
@@ -165675,7 +165770,8 @@ function ox(e) {
 
 function pyr(e) {
   let t = relative(Pl(), e);
-  if (t === "" || t === ".." || t.startsWith(`..${sep}`) || isAbsolute(t)) return;
+  if (t === "" || t === ".." || t.startsWith(`..${sep}`) || isAbsolute(t))
+    return;
   let r = t.split(sep);
   return e === join(Pl(), ...r) ? r : void 0;
 }
@@ -166062,7 +166158,9 @@ async function relocateSessionTranscript(e) {
       await flushAppendEntryQueues(),
       await mkdir(o, { recursive: !0, mode: 448 }));
     let E = createHoverRestOptions(e),
-      C = (await canonicalizePath(dirname(p), E)) === (await canonicalizePath(o, E));
+      C =
+        (await canonicalizePath(dirname(p), E)) ===
+        (await canonicalizePath(o, E));
     if (!C)
       try {
         let [de, _e] = await Promise.all([
@@ -166446,7 +166544,8 @@ function Bhr(e, t) {
   try {
     r.appendFileSync(e, o, { mode: 384 });
   } catch {
-    (r.mkdirSync(dirname(e), { mode: 448 }), r.appendFileSync(e, o, { mode: 384 }));
+    (r.mkdirSync(dirname(e), { mode: 448 }),
+      r.appendFileSync(e, o, { mode: 384 }));
   }
   getOrCreateSessionTranscriptStore().fireMirror(e, [t]);
 }
