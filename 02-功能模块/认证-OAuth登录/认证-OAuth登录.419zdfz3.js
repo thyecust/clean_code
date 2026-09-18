@@ -12024,7 +12024,7 @@ var MAIN_THREAD_QUERY_SOURCES = {
     "hook_prompt",
     "side_question",
     "web_search_tool",
-    ...[],
+    
     "web_fetch_apply",
     "repl_sampling",
     "auto_mode",
@@ -32376,7 +32376,7 @@ var epe = "https://http-intake.logs.us5.datadoghq.com/api/v2/logs",
     "userType",
     "version",
     "versionBase",
-    ...[],
+    
   ];
 function bc(e) {
   return e.replace(/[A-Z]/g, (t) => `_${t.toLowerCase()}`);

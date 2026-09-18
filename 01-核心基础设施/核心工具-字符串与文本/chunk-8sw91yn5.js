@@ -971,8 +971,8 @@ var Ge = [
     ["zdr", "allow_local_checkpoint_commit"],
     ["hipaa", "allow_mycelium"],
     ["zdr", "allow_mycelium"],
-    ...[],
-    ...[],
+    
+    
   ],
   Ye = new Set([
     "allow_product_feedback",
@@ -987,7 +987,7 @@ var Ge = [
     "allow_send_file",
     "allow_heap_dump",
     "allow_local_checkpoint_commit",
-    ...[],
+    
     "allow_usage_transcript_scan",
     "allow_skill_doctor_transcript_scan",
   ]),

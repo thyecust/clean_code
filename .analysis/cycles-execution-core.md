@@ -99,7 +99,7 @@ trackGitOperation                  出  27 / 入   1   第 40561 行  function t
 第  50026 行  FunctionName buildCommandRuleSuggestions
 第  50064 行  FunctionName amo
 第  50595 行  FunctionName zL
-第  50616 行  FunctionName pmo
+第  50616 行  FunctionName verifyCommandsAgainstAllowRules(
 第  50669 行  Variable     CPe
 第  50892 行  Variable     Oun
 第  50969 行  FunctionName vun

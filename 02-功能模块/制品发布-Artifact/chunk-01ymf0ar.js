@@ -1700,7 +1700,7 @@ var FRAME_FAMILY_BOOT = S("boot"),
     ...bt(FRAME_FAMILY_SUBSCRIPTIONS, ["POST /subscribe/{slug}", "POST /unsubscribe/{slug}"]),
     ...bt(S("delete"), ["DELETE /{slug}"]),
     ...bt(S("favorites"), ["POST /favorite/{slug}", "DELETE /favorite/{slug}"]),
-    ...[],
+    
   ].sort((e, t) => Ds(e) - Ds(t));
 function bt(e, t) {
   return t.map((r) => {
