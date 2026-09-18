@@ -9,20 +9,20 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 200 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { sleep } from "../../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
-import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { Ve, R, l, Ps } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { j, B, dZ } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { isHoverRestEnabled } from "../../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
-import { jsonStringify, jsonParse } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { hashForTelemetry, httpClient, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { isFirstPartyAnthropicHost } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { CLAUDE_DESIGN_TOOL_NAME, CLAUDE_DESIGN_LIST_OPERATION, CLAUDE_DESIGN_TOOL_DESCRIPTION, hasHookForEvent } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { sleep } from "../01-核心基础设施/核心工具-并发与缓存/async-timeout-utils.js";
+import { getOauthConfig } from "../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { Ve, R, l, Ps } from "../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { j, B, dZ } from "../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { isHoverRestEnabled } from "../01-核心基础设施/核心工具-路径与平台/chunk-h62vxw7j.js";
+import { jsonStringify, jsonParse } from "../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { truncateToCodeUnits } from "../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { env as a } from "../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { hashForTelemetry, httpClient, isHostManagedProviderAuth, getAuthTokenSource, getClaudeAIOAuthTokens, handleOAuth401Error, getClaudeAIOAuthTokensAsync, getAuthTokenSourceAsync } from "../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { isFirstPartyAnthropicHost } from "../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { getToolPermissionContext } from "../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { CLAUDE_DESIGN_TOOL_NAME, CLAUDE_DESIGN_LIST_OPERATION, CLAUDE_DESIGN_TOOL_DESCRIPTION, hasHookForEvent } from "../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import {
   DesignSessionState,
   deletePlansForProject,
@@ -40,7 +40,7 @@ import {
   resolvePlanTargets,
   checkPlanApproval,
   extractPlanToken,
-} from "../记忆-CLAUDE.md/chunk-9b6sc1gb.js";
+} from "../02-功能模块/记忆-CLAUDE.md/chunk-9b6sc1gb.js";
 import {
   isDesignConsentBit,
   getDesignConsentPrompt,
@@ -53,13 +53,13 @@ import {
   checkDesignProjectGrant,
   recordDesignProjectGrant,
   createDesignGrantWatcher,
-} from "../设计同步/design-consent-and-grants.js";
-import { isDesignSyncEnabled, isDesignGrantWatchEnabled } from "../设计同步/design-feature-gates.js";
-import "../设计同步/design-oauth-credentials.js";
-import "../认证-OAuth登录/oauth-login-flow.js";
-import { setServerApprovalWatchProvider } from "../../01-核心基础设施/核心工具-未归类/server-approval-watch-provider.js";
-import { s, O, se, v, c, Qe, it, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
+} from "../02-功能模块/设计同步/design-consent-and-grants.js";
+import { isDesignSyncEnabled, isDesignGrantWatchEnabled } from "../02-功能模块/设计同步/design-feature-gates.js";
+import "../02-功能模块/设计同步/design-oauth-credentials.js";
+import "../02-功能模块/认证-OAuth登录/oauth-login-flow.js";
+import { setServerApprovalWatchProvider } from "../01-核心基础设施/核心工具-未归类/server-approval-watch-provider.js";
+import { s, O, se, v, c, Qe, it, fe } from "../00-第三方库/zod/zod.5ef0bk11.js";
+import { getClientPlatform } from "../01-核心基础设施/HTTP-网络层/user-agent.js";
 function N(e) {
   return Buffer.byteLength(e, "utf8");
 }

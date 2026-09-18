@@ -7,17 +7,17 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { R, ge } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { omitBy } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
-import { checkWebSocketEgress } from "../../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
-import { TOOL_USE_SUMMARY_MAX_CHARS } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { hasNoControlCharacters, isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { env as a } from "../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { R, ge } from "../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { logForDebugging } from "../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { omitBy } from "../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { truncate } from "../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { getWebSocketTLSOptions, getWebSocketProxyUrl } from "../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
+import { checkWebSocketEgress } from "../01-核心基础设施/HTTP-网络层/test-egress-guard.js";
+import { TOOL_USE_SUMMARY_MAX_CHARS } from "../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { hasNoControlCharacters, isPolicyAllowed } from "../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 import {
   isAgentStopPending,
   isHostAllowedBySandboxNetworkPolicy,
@@ -38,14 +38,14 @@ import {
   killMonitorTask,
   isPrivateOrReservedIpAddress,
   startBackgroundShellTask,
-} from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isBashToolAvailable } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
-import { formatSubprotocolSuffix, formatSubprotocolList } from "../../01-核心基础设施/核心工具-其他/websocket-subprotocols.js";
-import { generateTaskId, createPendingTask } from "../Teammates团队/chunk-mrfx53ye.js";
-import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "./monitor-tool-description.js";
-import { MONITOR_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
-import { s, T, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
+} from "../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isBashToolAvailable } from "../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
+import { formatSubprotocolSuffix, formatSubprotocolList } from "../01-核心基础设施/核心工具-其他/websocket-subprotocols.js";
+import { generateTaskId, createPendingTask } from "../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
+import { getMonitorPushNotificationHint, isMonitorToolEnabled, getMonitorToolDescription, MONITOR_WS_SOURCE_HELP } from "../02-功能模块/工具Monitor/monitor-tool-description.js";
+import { MONITOR_TOOL_NAME } from "../01-核心基础设施/核心工具-未归类/monitor-tool-name.js";
+import { s, T, O, v, c, Qe } from "../00-第三方库/zod/zod.5ef0bk11.js";
+import { countMatching } from "../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { isIP as oe } from "net";
 import { lookup } from "dns/promises";
 import { isIP as Y } from "net";

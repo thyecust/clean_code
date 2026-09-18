@@ -9,10 +9,10 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { getCcrSessionConfig } from "../../01-核心基础设施/核心工具-未归类/ccr-session-config.js";
-import { s, se, c, it } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { getCcrSessionConfig } from "../01-核心基础设施/核心工具-未归类/ccr-session-config.js";
+import { s, se, c, it } from "../00-第三方库/zod/zod.5ef0bk11.js";
 var o = "enable__mcp__claude-in-chrome",
   n = "enable__mcp__remote-devices__Claude_Browser",
   r =

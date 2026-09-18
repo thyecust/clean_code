@@ -9,13 +9,13 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 86 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getTeammateContext } from "../Teammates团队/teammate-context.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { formatCronSchedule, listScheduledTasks } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { CRON_LIST_TOOL_NAME, isKairosCronEnabled, isDurableCronEnabled, CRON_LIST_DESCRIPTION, buildCronListPrompt } from "./chunk-mk3zm4ew.js";
-import { s, O, v, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { truncate } from "../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { getTeammateContext } from "../02-功能模块/Teammates团队/teammate-context.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { formatCronSchedule, listScheduledTasks } from "../02-功能模块/后台任务-Shell管理/scheduled-tasks.js";
+import { CRON_LIST_TOOL_NAME, isKairosCronEnabled, isDurableCronEnabled, CRON_LIST_DESCRIPTION, buildCronListPrompt } from "../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
+import { s, O, v, c, Qe } from "../00-第三方库/zod/zod.5ef0bk11.js";
 var n = createLazyValue(() => Qe({})),
   a = createLazyValue(() =>
     c({

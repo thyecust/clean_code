@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 231 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { dbBatchPayloadsForConsent as Ion, dbBatchFileSpellings as Pon, publishInputJoinsRoom as kut, ArtifactTool as lk, artifactLegacyHost as MS, artifactRuleTargetInput as MGe } from "./chunk-pvztfdrb.js";
-import "./chunk-fx5ekm7e.js";
-import "../Teammates团队/chunk-y89mhs4a.js";
-import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
-import "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
-import "../远程控制-Bridge/bridge-inbound-origin.js";
-import "../Teammates团队/chunk-weg7y2ya.js";
-import "./artifact-read-for-model.js";
-import "./chunk-x29r16ke.js";
-import "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
+import { dbBatchPayloadsForConsent as Ion, dbBatchFileSpellings as Pon, publishInputJoinsRoom as kut, ArtifactTool as lk, artifactLegacyHost as MS, artifactRuleTargetInput as MGe } from "../02-功能模块/制品发布-Artifact/chunk-pvztfdrb.js";
+import "../02-功能模块/制品发布-Artifact/chunk-fx5ekm7e.js";
+import "../02-功能模块/Teammates团队/chunk-y89mhs4a.js";
+import "../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import "../02-功能模块/浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
+import "../02-功能模块/远程控制-Bridge/bridge-inbound-origin.js";
+import "../02-功能模块/Teammates团队/chunk-weg7y2ya.js";
+import "../02-功能模块/制品发布-Artifact/artifact-read-for-model.js";
+import "../02-功能模块/制品发布-Artifact/chunk-x29r16ke.js";
+import "../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
 export {
   lk as ArtifactTool,
   MS as artifactLegacyHost,

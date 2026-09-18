@@ -9,24 +9,24 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 175 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { oo, parseShortId, ze, Dxe } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { Ve, yt, R, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { jsonStringify, jsonParse, logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { truncateToCodeUnits } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
-import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { sessionIdBody } from "../权限系统/chunk-ynkf3yy4.js";
-import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { logFeatureOk, logFeatureBad, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { getCwd } from "../../01-核心基础设施/核心工具-未归类/cwd-context.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { isDesktopHostSession } from "../运行宿主探测/运行宿主探测.ysz9apmz.js";
-import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { PERMISSION_MODES } from "../权限系统/chunk-e4pfvp7x.js";
-import { neutralizeOpeningTags } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
+import { oo, parseShortId, ze, Dxe } from "../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { fromEnum } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { env as a } from "../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { Ve, yt, R, l, A } from "../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { jsonStringify, jsonParse, logForDebugging } from "../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { truncateToCodeUnits } from "../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { AGENT_MESSAGE_TAG, isEssentialTrafficOnly } from "../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
+import { getAPIProvider } from "../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { sessionIdBody } from "../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { normalizeSingleLineText } from "../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { logFeatureOk, logFeatureBad, logFeatureSad } from "../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { getCwd } from "../01-核心基础设施/核心工具-未归类/cwd-context.js";
+import { truncate } from "../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { isDesktopHostSession } from "../02-功能模块/运行宿主探测/运行宿主探测.ysz9apmz.js";
+import { hasIsolatePeerMachines } from "../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { PERMISSION_MODES } from "../02-功能模块/权限系统/chunk-e4pfvp7x.js";
+import { neutralizeOpeningTags } from "../01-核心基础设施/核心工具-字符串与文本/chunk-3kbr3k57.js";
 import {
   isAutoClassifierActive,
   sanitizeDisplayName,
@@ -48,14 +48,14 @@ import {
   formatCandidateSummary,
   findMemberByName,
   getFeatureValue_CACHED_MAY_BE_STALE,
-} from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "./teammate-context.js";
-import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../远程控制-Bridge/chunk-1yq098a7.js";
-import { sanitizeTextForDisplay, sanitizePlainText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
-import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { matchesToolName, findToolByName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { scrubRestoredTranscriptMetadata } from "../通道集成-Slack/通道集成-Slack.wnn25q3j.js";
-import { LIST_AGENTS_TOOL_NAME } from "./list-agents-tool-constants.js";
+} from "../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { getAgentId, getAgentName, getTeamName, isTeammate, getTeammateColor, isTeamLead } from "../02-功能模块/Teammates团队/teammate-context.js";
+import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../02-功能模块/远程控制-Bridge/chunk-1yq098a7.js";
+import { sanitizeTextForDisplay, sanitizePlainText } from "../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import { getToolPermissionContext } from "../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { matchesToolName, findToolByName, buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { scrubRestoredTranscriptMetadata } from "../02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js";
+import { LIST_AGENTS_TOOL_NAME } from "../02-功能模块/Teammates团队/list-agents-tool-constants.js";
 import {
   isAgentStopPending,
   gracefulShutdown,
@@ -82,15 +82,15 @@ import {
   getCurrentSessionPeerNameFor,
   getAgentTranscript,
   getParentPromptId,
-} from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../跨会话消息-UDS/chunk-rfb3s38d.js";
-import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../跨会话消息-UDS/chunk-ddtmwhn7.js";
-import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "./chunk-g6nvp9mm.js";
-import { isAgentSwarmsEnabled } from "./agent-swarms-enablement.js";
-import { getMaxSubagentSpawnDepth } from "../../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
-import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../权限系统/chunk-1y2g140m.js";
-import { readTeamFileAsync, updateTeamFile } from "./team-file-store.js";
-import { restoreContentReplacementState } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
+} from "../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isCrossSessionMessagingEnabled, CROSS_SESSION_MESSAGING_DISABLED_MESSAGE } from "../02-功能模块/跨会话消息-UDS/chunk-rfb3s38d.js";
+import { DEFAULT_PEER_GUARD_LIMITS, isMessageTooLargeError, isSenderPacedError, isRegistryUnreadableRefusal, classifySendFailure, formatStaleSocketHint, formatBusySocketHint, UdsSendRefusedError } from "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import { getCleanMessageSplit, repairSendMessageInput, writeToMailbox, createShutdownRequestMessage, createShutdownApprovedMessage, createShutdownRejectedMessage, isStructuredProtocolMessage, markMessagesAsReadByPredicate } from "../02-功能模块/Teammates团队/chunk-g6nvp9mm.js";
+import { isAgentSwarmsEnabled } from "../02-功能模块/Teammates团队/agent-swarms-enablement.js";
+import { getMaxSubagentSpawnDepth } from "../01-核心基础设施/核心工具-未归类/max-subagent-spawn-depth.js";
+import { primePeerIdentityOwner, getPeerBridgeIdentity } from "../02-功能模块/权限系统/chunk-1y2g140m.js";
+import { readTeamFileAsync, updateTeamFile } from "../02-功能模块/Teammates团队/team-file-store.js";
+import { restoreContentReplacementState } from "../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
 import {
   SELF_TARGET_REASON,
   isOwnMessagingSocket,
@@ -105,12 +105,12 @@ import {
   hasCompleteTargetLookup,
   classifySelfNameMatch,
   formatOwnSessionMessage,
-} from "./peer-target-guard.js";
-import { resolveSendMessagePin } from "../../01-核心基础设施/核心工具-未归类/send-message-pins.js";
-import { isHarborKiteModeEmitEnabled, classifyPermissionMode } from "../权限系统/cross-session-inbound-gate.js";
-import { isResumedInlineError, ResumeAgentStateError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentReply } from "../工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
-import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../会话-历史-恢复/resumed-agent-handback.js";
-import { getPlanApprovalPermissionMode } from "../../01-核心基础设施/核心工具-未归类/plan-approval-permission-mode.js";
+} from "../02-功能模块/Teammates团队/peer-target-guard.js";
+import { resolveSendMessagePin } from "../01-核心基础设施/核心工具-未归类/send-message-pins.js";
+import { isHarborKiteModeEmitEnabled, classifyPermissionMode } from "../02-功能模块/权限系统/cross-session-inbound-gate.js";
+import { isResumedInlineError, ResumeAgentStateError, AgentStoppedByUserError, AgentResumeInProgressError, AgentStillStoppingError, resumeAgentReply } from "../02-功能模块/工具Task-Agent调度/工具Task-Agent调度.5xpzy7cr.js";
+import { RESUMED_AGENT_REPORT_OMITTED_MESSAGE, RESUMED_AGENT_REPORT_FOLLOWS_JSON_MESSAGE, formatResumedAgentResult, parseHandbackDisplayText } from "../02-功能模块/会话-历史-恢复/resumed-agent-handback.js";
+import { getPlanApprovalPermissionMode } from "../01-核心基础设施/核心工具-未归类/plan-approval-permission-mode.js";
 import {
   checkCrossSessionSendPermission,
   pinSendMessageRecipient,
@@ -127,17 +127,17 @@ import {
   SESSION_LIST_TRUNCATED_NOTE,
   SESSION_LIST_TRUNCATED_LABEL,
   resolveMessageRecipient,
-} from "./message-recipient-resolution.js";
-import { wakeTeammateTask } from "./teammate-task-messages.js";
-import { buildBooleanFromStringSchema, parseStringBoolean } from "../../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
-import { getRemoteSessionCompatId } from "../../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
-import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
-import { AGENT_TOOL_NAME } from "../工具Task-Agent调度/agent-tool-constants.js";
-import { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME } from "./chunk-enjekn9t.js";
-import { normalizeMcpName } from "../MCP客户端/mcp-name-normalization.js";
-import { s, O, c, $e, Ko, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { countGraphemes, splitGraphemes } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
-import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+} from "../02-功能模块/Teammates团队/message-recipient-resolution.js";
+import { wakeTeammateTask } from "../02-功能模块/Teammates团队/teammate-task-messages.js";
+import { buildBooleanFromStringSchema, parseStringBoolean } from "../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
+import { getRemoteSessionCompatId } from "../01-核心基础设施/核心工具-未归类/remote-session-compat-id.js";
+import { SEND_MESSAGE_TOOL_NAME, SEND_MESSAGE_SUMMARY_MAX_LENGTH } from "../01-核心基础设施/核心工具-未归类/send-message-constants.js";
+import { AGENT_TOOL_NAME } from "../02-功能模块/工具Task-Agent调度/agent-tool-constants.js";
+import { MAIN_CONVERSATION_NAME, formatAgentMessage, TEAM_LEAD_AGENT_NAME } from "../02-功能模块/Teammates团队/chunk-enjekn9t.js";
+import { normalizeMcpName } from "../02-功能模块/MCP客户端/mcp-name-normalization.js";
+import { s, O, c, $e, Ko, k } from "../00-第三方库/zod/zod.5ef0bk11.js";
+import { countGraphemes, splitGraphemes } from "../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
+import { isRecord } from "../01-核心基础设施/核心工具-类型与数值/is-record.js";
 var Be = /^local_[0-9a-f-]{8,}$/,
   xe = "ccd_session_mgmt",
   Le = "send_message",
@@ -316,9 +316,9 @@ async function Xe({
       { level: "warn" },
     );
   let { spawnInProcessTeammate: X } = import.meta.require(
-      "./chunk-sjd69zy5.js",
+      "../02-功能模块/Teammates团队/chunk-sjd69zy5.js",
     ),
-    { startInProcessTeammate: se } = import.meta.require("./startInProcessTeammate.k24hqy5t.js"),
+    { startInProcessTeammate: se } = import.meta.require("../02-功能模块/Teammates团队/startInProcessTeammate.k24hqy5t.js"),
     U = await X(
       {
         name: i,
@@ -1364,7 +1364,7 @@ var SendMessageTool = buildTool({
           let {
             isRemoteControlPeerUnreachableFromHere: _,
             formatUnreachableElevatedRefusal: i,
-          } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js");
+          } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
           if (d.via === "remote-control" && _())
             return (
               de({
@@ -1793,7 +1793,7 @@ ${w[0].text}`,
             postInterClaudeMessage: M,
             isLikelyStaleBridgeError: E,
             classifyBridgeSendError: S,
-          } = import.meta.require("../远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+          } = import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
           B = formatUnreachablePeerRefusal(t.session, h.target, e.to);
         if (B)
           return (
@@ -1889,10 +1889,10 @@ ${w[0].text}`,
             }
           );
         let { sendToUdsSocket: M, ownMessagingSocket: E } = import.meta.require(
-            "../跨会话消息-UDS/chunk-ddtmwhn7.js",
+            "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js",
           ),
           { subscribeToPeerIdle: S, idleSubscriptionLines: B } =
-            import.meta.require("./subscribeToPeerIdle.tk67nd8x.js"),
+            import.meta.require("../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js"),
           { notify: P, refusedForPrincipal: v } = ve(e, t),
           x = e.message.trim().length > 0,
           C = Qe({
@@ -1999,7 +1999,7 @@ ${w[0].text}`,
       o.kind !== "not-found"
     ) {
       let { idleSelfTargetMessage: h } = import.meta.require(
-        "./subscribeToPeerIdle.tk67nd8x.js",
+        "../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js",
       );
       return (
         i("unresolved", "invalid_target"),
@@ -2582,11 +2582,11 @@ ${M}`,
       }
       case "local-session": {
         let { sendToUdsSocket: h, ownMessagingSocket: I } = import.meta.require(
-            "../跨会话消息-UDS/chunk-ddtmwhn7.js",
+            "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js",
           ),
           D = getCurrentSessionPeerName(),
           { subscribeToPeerIdle: M, idleSubscriptionLines: E } =
-            import.meta.require("./subscribeToPeerIdle.tk67nd8x.js"),
+            import.meta.require("../02-功能模块/Teammates团队/subscribeToPeerIdle.tk67nd8x.js"),
           { notify: S, refusedForPrincipal: B } = ve(e, t),
           P = Qe({
             input: e,
@@ -2701,11 +2701,11 @@ ${V.display}`
             postInterClaudeMessage: D,
             isLikelyStaleBridgeError: M,
             classifyBridgeSendError: E,
-          } = import.meta.require("../远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+          } = import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
           {
             isRemoteControlPeerUnreachableFromHere: S,
             formatUnreachableElevatedRefusal: B,
-          } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js");
+          } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
         if (o.via === "remote-control" && S())
           return (
             i("bridge", "bridge_auth", { via: I }),

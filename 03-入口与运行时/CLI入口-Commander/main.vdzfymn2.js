@@ -383,7 +383,7 @@ import { INSTALLABLE_SCOPES, ALL_PLUGIN_SCOPES } from "../../02-功能模块/插
 import { migrateChangelogFromConfig, PLUGIN_SUBCOMMAND_SPECS } from "../../02-功能模块/发布日志-Changelog/发布日志-Changelog.2nyyps5n.js";
 import { setSessionPromptLaunchWarning } from "../../01-核心基础设施/核心工具-未归类/prompt-input-store.js";
 import "../../02-功能模块/上下文压缩-Compact/context-usage.js";
-import "../../02-功能模块/工具Monitor/工具Monitor.981fw9dy.js";
+import "../../04-tools/MonitorTool.js";
 import "../../02-功能模块/制品发布-Artifact/chunk-qpgskeea.js";
 import "../../02-功能模块/制品发布-Artifact/artifact-reply-yield.js";
 import "../../02-功能模块/制品发布-Artifact/chunk-p1dkvpxj.js";

@@ -30,9 +30,9 @@ for (const [key, v] of Object.entries(fm)) {
   if (!existsSync(join(ROOT, v.path))) bad(`路径不存在: ${v.path}（键 ${key}）`);
 }
 
-// 索引只覆盖四个主分区：`cli.js`（真入口）与 `src/plugins/functionHooks/hooks-worker/`
-// （自带依赖的独立 bundle）本来就不在其中。
-const MAIN_TREES = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时"];
+// 索引覆盖五个主分区（`04-tools` 于 2026-09-18 成为独立工具分区时加入）：`cli.js`（真入口）
+// 与 `src/plugins/functionHooks/hooks-worker/`（自带依赖的独立 bundle）本来就不在其中。
+const MAIN_TREES = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时", "04-tools"];
 const disk = walkAll(ROOT).filter(
   (p) => p.endsWith(".js") && !p.endsWith(".original.js") &&
     MAIN_TREES.some((t) => p.startsWith(join(ROOT, t) + "/")),
