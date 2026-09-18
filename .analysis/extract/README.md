@@ -15,6 +15,14 @@ SRC=execution-core.js OUT=standalone-tools.js SEEDS=a,b,c node .analysis/extract
 `closure-report.mjs`：只报告不落盘 —— 种子数量、闭包大小、闭包里有没有环、需要哪些外部
 import、chunk 要回引多少。**先用它探路**，闭包里带环或闭包占掉大半个文件时就别抽。
 
+`cycles-report.mjs`：把整个文件的环（强连通分量）全列出来，供人工规划怎么解开。给每个环
+的成员、一条最短环（带行号、代码、急切性）、内部急切边、枢纽节点、**删掉哪个节点能让这个
+环解体**，以及贪心的最小反馈点集。`SRC=` 指定源文件，`REPORT=` 指定输出。
+
+```bash
+SRC=execution-core.js node .analysis/extract/cycles-report.mjs
+```
+
 ## 必须知道的三件事
 
 1. **引用要按作用域解析**，只保留 `resolved.scope === 模块作用域` 的。按名字文本匹配会把
