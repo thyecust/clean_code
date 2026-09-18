@@ -8921,8 +8921,22 @@
   "path": "03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js",
   "module": "核心应用 / Agent 循环",
   "tier": 3,
-  "kb": 7420.9,
+  "kb": 7362.6,
   "confidence": "medium"
+ },
+ "createTranscriptParser.Ryr.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 49,
+  "confidence": "high"
+ },
+ "hook-helper.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/hook-helper.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 80.8,
+  "confidence": "high"
  },
  "bundled-cjs-libraries.js": {
   "path": "03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js",
