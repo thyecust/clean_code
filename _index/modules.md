@@ -1,8 +1,9 @@
 # 模块文件索引
 
-## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 4 个文件 · 8.21 MB</sub>
+## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 5 个文件 · 8.33 MB</sub>
 
-- [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 7351.7 KB
+- [`03-入口与运行时/核心应用-Agent循环/execution-core.js`](../03-入口与运行时/核心应用-Agent循环/execution-core.js) — 5671.7 KB
+- [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 1866.0 KB
 - [`03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js`](../03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js) — 913.1 KB
 - [`03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js`](../03-入口与运行时/核心应用-Agent循环/createTranscriptParser.Ryr.js) — 49.0 KB
 - [`03-入口与运行时/核心应用-Agent循环/hook-helper.js`](../03-入口与运行时/核心应用-Agent循环/hook-helper.js) — 29.4 KB
