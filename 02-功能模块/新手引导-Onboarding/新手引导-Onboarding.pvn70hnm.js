@@ -27,7 +27,7 @@ import { Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { pickRandom } from "../Hooks钩子/spinner-store.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { splitTextForShimmer } from "../远程控制-Bridge/remote-control-ui-strings.js";
-import { V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();

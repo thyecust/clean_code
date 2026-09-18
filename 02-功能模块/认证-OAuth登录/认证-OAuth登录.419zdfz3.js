@@ -315,7 +315,6 @@ import {
 } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { DEFAULT_MAX_PAGES, runPaginatedScan } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 import { cB } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
-import { isLoopbackHostname } from "../../01-核心基础设施/核心工具-路径与平台/is-loopback-hostname.js";
 import { getCurrentPlatform, getWslVersion, getLinuxDistroInfo, detectVersionControlSystems } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { getClientUserAgent, getClientPlatform } from "../../01-核心基础设施/HTTP-网络层/user-agent.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";

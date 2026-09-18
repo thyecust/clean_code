@@ -203,7 +203,6 @@ async function hasParentUuidEntries(e, t, i, n, r) {
   }
 }
 import { readdir, stat } from "fs/promises";
-import { basename } from "path";
 function X(e) {
   let t = getProjectKeyFromDir(e);
   return t !== void 0 && isValidPathSegment(t) ? t : void 0;
@@ -286,7 +285,6 @@ async function listProjectSessions(e, t, i, n, r, o) {
     )
   ).filter((f) => f !== null);
 }
-import { rm } from "fs/promises";
 async function tryAppendTranscriptEntry(e, t, i) {
   if (isHoverRestEnabled() && i !== void 0) return Q(i, t);
   let n;

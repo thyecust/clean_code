@@ -23,7 +23,6 @@ import { jo } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { getBranch } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { getStringWidth, truncateToWidth, formatRelativeTimeAgo, formatLogMetadata } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
 import { listGitWorktrees } from "./chunk-mkmy4cx2.js";
-import { Fuse } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
 import { applyForegroundColor } from "../状态栏-主题/chunk-jz6b76hr.js";
 import { useResolvedTheme } from "../状态栏-主题/chunk-w5jaj6kg.js";
 import { useTerminalFocus } from "../../01-核心基础设施/终端与时钟/clock-and-terminal-focus.js";
@@ -54,7 +53,7 @@ import { SpinnerMessageLine } from "../../01-核心基础设施/UI组件-TUI/spi
 import { WA, Qr } from "../../01-核心基础设施/UI组件-TUI/chunk-92g8hxqw.js";
 import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { re, L9, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { L9, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { basename, sep } from "path";

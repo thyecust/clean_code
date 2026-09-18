@@ -104,8 +104,6 @@ import { reclaimSessionNameOnResume } from "../跨会话消息-UDS/chunk-9kzxq41
 import { CLAUDE_AGENT } from "../../01-核心基础设施/核心工具-未归类/chunk-kyy28ene.js";
 import { dedupe } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import {
-  appendFile,
-  readdir,
   rename,
   rmdir,
 } from "fs/promises";

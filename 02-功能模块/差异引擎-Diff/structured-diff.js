@@ -18,7 +18,7 @@ import { diffWordsWithSpace } from "../../03-入口与运行时/核心应用-Age
 import { truncateCodeLine, formatTruncationNotice, getDiffHunkRenderer } from "../语法高亮-Markdown渲染/syntax-highlight-renderer.js";
 import { useSettings } from "../../01-核心基础设施/核心工具-未归类/use-settings.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { Yl, V, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Yl, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 F();
 F();
 function ke(He, Ae) {

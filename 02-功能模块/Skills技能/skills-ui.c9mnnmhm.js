@@ -71,7 +71,7 @@ import "../MCP客户端/skill-doctor-data.js";
 import "../../01-核心基础设施/核心工具-未归类/mcp-control-handlers.js";
 import "../MCP客户端/mcp-hosted-oauth-gate.js";
 import "../../01-核心基础设施/核心工具-日志与脱敏/chunk-j7khz57p.js";
-import { re, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 function et(ss) {

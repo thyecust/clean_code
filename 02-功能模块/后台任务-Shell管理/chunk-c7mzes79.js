@@ -158,7 +158,7 @@ import { PluginStateStore } from "../插件系统/plugin-state-store.js";
 import { getBlockedServerErrorFields } from "../MCP客户端/mcp-server-state-messages.js";
 import { getWorkflowTranscriptDir } from "../编排-Workflow/workflow-snapshots.js";
 import { getAutoReactWiredSlugs, getBootingAutoReactArmSlugs, disposeSupervisors, MAX_UNATTENDED_REPLIES, drainUnattendedReplies } from "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
-import { Qt, re, De, E, vr, dn, V, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, re, De, E, vr, dn, C, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { asMcpSdkClient } from "../MCP客户端/mcp-client-type-casts.js";
 import { createFieldAccessor, createStore } from "../../01-核心基础设施/文件存储-原子写入/state-store.js";
 import { isBypassPermissionsModeDisabled } from "../权限系统/bypass-permissions-mode-policy.js";

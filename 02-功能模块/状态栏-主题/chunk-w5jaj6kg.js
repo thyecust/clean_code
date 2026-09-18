@@ -15,7 +15,7 @@ import { getThemeStore, getCachedCustomThemes, parseCustomThemeRef, loadCustomTh
 import { resolveSetting, saveUserIntentSetting } from "../上下文压缩-Compact/resolve-user-intent-setting.js";
 import { e } from "../../00-第三方库/react/react.kwtapczy.js";
 import { resolveSystemTheme, subscribeSystemThemeChange } from "../../01-核心基础设施/UI组件-TUI/theme-resolution.js";
-import { Qt, re, De, E, V, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Qt, De, E, d, At, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 var be = () => De(m4),
