@@ -213328,7 +213328,7 @@ async function executePostCompactHooks(e, t, r, o, d = Jd) {
         : void 0,
   };
 }
-async function __n(
+async function executeConfigChangeHooks(
   e,
   t,
   r,
@@ -238691,7 +238691,7 @@ export {
   unregisterHookOutputWriter,
   executePreCompactHooks,
   executePostCompactHooks,
-  __n,
+  executeConfigChangeHooks,
   executeDirectoryAddedHooks,
   executeElicitationHooks,
   executeElicitationResultHooks,

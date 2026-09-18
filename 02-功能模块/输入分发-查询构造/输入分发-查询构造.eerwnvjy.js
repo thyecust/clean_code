@@ -769,7 +769,7 @@ import {
   titleCacheStillOn,
   cacheHookSessionTitle,
   loadAllSubagentTranscriptsFromDisk,
-  __n,
+  executeConfigChangeHooks,
   executeStopHooks,
   MANAGED_HOOKS_TIER,
   getStopHookMessage,
@@ -9566,7 +9566,7 @@ async function km(w) {
     });
 }
 function createConfigChangeHookGate(w, I, O) {
-  return (U, V) => __n(w, U, V, { storageV5: I, credentials: O }).then(hasBlockingResult);
+  return (U, V) => executeConfigChangeHooks(w, U, V, { storageV5: I, credentials: O }).then(hasBlockingResult);
 }
 function u_(w) {
   let I = getCanonicalName(w, { identity: !0 });
