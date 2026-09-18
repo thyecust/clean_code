@@ -8561,35 +8561,6 @@ function cW(e) {
   let o = t.slice(r.length).replaceAll(RWe, "/");
   return !isExcludedMemoryPath(o);
 }
-var PPt = {
-    ArtifactComments: "Artifact",
-    ArtifactData: "Artifact",
-    ArtifactCheck: "Artifact",
-  },
-  IPt = {
-    Artifact: {
-      comments: "ArtifactComments",
-      reply: "ArtifactComments",
-      resolve: "ArtifactComments",
-      watch: "ArtifactComments",
-      unwatch: "ArtifactComments",
-      status: "ArtifactComments",
-      resume_replies: "ArtifactComments",
-      read_db: "ArtifactData",
-      write_db: "ArtifactData",
-      verify: "ArtifactCheck",
-      preview: "ArtifactCheck",
-    },
-  };
-function Ghe(e) {
-  return Object.hasOwn(PPt, e) ? PPt[e] : void 0;
-}
-function MPt(e, t) {
-  if (!Object.hasOwn(IPt, e)) return;
-  let r = t?.action,
-    o = IPt[e];
-  return typeof r === "string" && Object.hasOwn(o, r) ? o[r] : void 0;
-}
 import { stat as ums } from "fs/promises";
 import { homedir as dms, tmpdir as fms } from "os";
 import { isDeepStrictEqual as _mr } from "util";
@@ -9002,27 +8973,6 @@ function VPt() {
 function createSessionHookRegistry() {
   return new zPt();
 }
-var Zhe = new Set([
-  "Notification",
-  "SessionStart",
-  "SessionEnd",
-  "Setup",
-  "StopFailure",
-  "SubagentStart",
-  "PostToolUseFailure",
-  "PostCompact",
-  "PostModelSwitch",
-  "PermissionDenied",
-  "WorktreeCreate",
-  "WorktreeRemove",
-  "InstructionsLoaded",
-  "CwdChanged",
-  "FileChanged",
-  "DirectoryAdded",
-  "MessageDisplay",
-  "StatusLine",
-  "FileSuggestion",
-]);
 function getHookCgroupOptions(e) {
   return Zhe.has(e) ? Bs("hooks") : {};
 }
@@ -9044,17 +8994,6 @@ function isMcpServerUsedByHooks(e) {
   return !1;
 }
 var zkr = 64;
-class KPt {
-  servers = [];
-  unsubscribe = void 0;
-  clear() {
-    ((this.servers = []), this.unsubscribe?.(), (this.unsubscribe = void 0));
-  }
-}
-var qkr = new j(() => new KPt());
-function DWe() {
-  return bi(qkr);
-}
 function trackMcpServerProcess(e, t, r = Sxt) {
   try {
     let o = DWe();
@@ -9084,31 +9023,6 @@ function Vkr() {
   } catch (e) {
     logForDebugging(`tool cgroup: mcp release recheck skipped (${e})`);
   }
-}
-function YPt(e, t) {
-  if (Zhe.has(t)) return;
-  try {
-    let r = DWe();
-    if (!r.servers.some((o) => o.name === e)) return;
-    (NWe(r),
-      (r.servers = r.servers.filter((o) => {
-        if (o.name !== e) return !0;
-        let d = bxt(o.pid, o.starttime, o.fs);
-        return (
-          logForDebugging(
-            `tool cgroup: mcp server backing a ${t} hook was still capped at fire time; ${d ? "released now" : "release refused"}`,
-          ),
-          !d
-        );
-      })));
-  } catch (r) {
-    logForDebugging(`tool cgroup: mcp release at hook fire skipped (${r})`);
-  }
-}
-function NWe(e) {
-  e.servers = e.servers.filter(
-    (t) => t.fs.readStarttime(t.pid) === t.starttime,
-  );
 }
 import { realpath as _wr } from "fs/promises";
 import { isAbsolute as bwr } from "path";
@@ -12797,14 +12711,6 @@ function getPolicyPluginNames() {
   let e = getPolicyPluginEntries();
   return e ? new Set(e.map((t) => t.name)) : null;
 }
-function getPolicyEnabledPluginIds() {
-  let e = getSettingsForSource("policySettings")?.enabledPlugins;
-  if (!e) return null;
-  let t = new Set();
-  for (let [r, o] of Object.entries(e))
-    if (o === !0 && r.includes("@")) t.add(r);
-  return t.size > 0 ? t : null;
-}
 function getPolicyPluginEntries() {
   let e = getSettingsForSource("policySettings")?.enabledPlugins;
   if (!e) return null;
@@ -12837,24 +12743,6 @@ function resolvePolicyPluginAccess(e, t, r) {
 function aye() {
   return { prepend: [], append: [] };
 }
-function D$(e) {
-  if (isCustomizationDisabled("hooks")) return [];
-  let t = LL()?.[e] ?? [];
-  if (shouldDisableAllHooksIncludingManaged())
-    return t.filter((p) => !("pluginRoot" in p) && !("deviceOwner" in p));
-  let r = shouldAllowManagedHooksOnly(),
-    o = r && !isSafeMode() ? getPolicyEnabledPluginIds() : null,
-    d = areDeviceHooksStoodDown();
-  return [
-    ...(getHooksConfigFromSnapshot()?.[e] ?? []),
-    ...(r ? [] : (yae()?.[e] ?? [])),
-    ...t.filter(
-      (p) =>
-        !(r && "pluginRoot" in p && !o?.has(p.pluginId)) &&
-        !(d && "deviceOwner" in p),
-    ),
-  ];
-}
 function g2e() {
   return !isCustomizationDisabled("hooks") && !shouldDisableAllHooksIncludingManaged() && !isSafeMode();
 }
@@ -12865,43 +12753,10 @@ function mMt(e) {
 function h2e(e) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(e.map((t) => (getBetaByHeader(t) ? t : "custom")).join(","));
 }
-function kW(e) {
-  return fromSanitizer_SANITIZER_OUTPUT_ONLY(jsonStringify(Object.fromEntries(e)));
-}
-class gMt {
-  pendingUsage = new Map();
-  flushTimer = null;
-  exitFlushesInFlight = [];
-  flushStorageV5 = void 0;
-}
-var hMt = new j(() => new gMt());
-class yMt {
-  flushers = null;
-  exitFlushRegistered = !1;
-}
-var I4 = new yMt();
-var AEr = 60000;
 function _Mt(e) {
   I4.flushers = e;
   let t = tM();
   if (t.pendingUsage.size > 0) bMt(t, e);
-}
-function tM() {
-  return hMt.of(B().host);
-}
-function recordPluginUsage(e) {
-  let t = Date.now(),
-    r = tM(),
-    o = r.pendingUsage.get(e);
-  if (o) (o.count++, (o.lastUsedAt = t));
-  else r.pendingUsage.set(e, { count: 1, lastUsedAt: t });
-  if (I4.flushers) bMt(r, I4.flushers);
-}
-function bMt(e, t) {
-  if (!I4.exitFlushRegistered)
-    ((I4.exitFlushRegistered = !0), process.on("exit", t.flushAtExit));
-  if (!e.flushTimer)
-    ((e.flushTimer = setTimeout(t.flush, AEr)), e.flushTimer.unref?.());
 }
 function SMt(e) {
   tM().exitFlushesInFlight.push(e);
@@ -13946,12 +13801,6 @@ var eTr = createLazyValue(() => X(["allow", "deny", "ask", "defer"])),
     let e = c({ async: k(!0), asyncTimeout: T().optional() });
     return $e([e, tTr()]);
   });
-function qb(e) {
-  return !("async" in e && e.async === !0);
-}
-function JR(e) {
-  return "async" in e && e.async === !0;
-}
 var nTr = [
     "PreToolUse",
     "PostToolUse",
@@ -14042,14 +13891,6 @@ function isMatcherSubset(e, t) {
       .map((d) => resolveToolNameAlias(d.trim()))
       .filter(Boolean);
   return o.length > 0 && o.every((d) => r.has(d));
-}
-function C2e(e) {
-  return (
-    typeof e === "object" &&
-    e !== null &&
-    "deviceOwner" in e &&
-    typeof e.deviceOwner === "string"
-  );
 }
 function qMt(e, t, r) {
   if (!C2e(e) || e.deviceOwner !== t) return !1;
@@ -27017,11 +26858,6 @@ function Eoe(e, t) {
     .replaceAll("*", ".*");
   return new RegExp(`^${I}$`).test(r.pathname + r.search);
 }
-var Jd = 600000,
-  D3e = 30000,
-  NOTIFICATION_DELAY_MS = 6000,
-  N3e = 30000,
-  OYt = 5000;
 import { lookup } from "dns";
 import { isIP as $Yt } from "net";
 function isPrivateOrReservedIpAddress(e) {
@@ -31366,43 +31202,6 @@ function Q8t(e, t) {
 function K3e(e, t) {
   throw Error("script hooks are not available in this build");
 }
-var x5r = 60;
-function formatScriptHookLabel(e) {
-  let t =
-      escapeInvisibleCharacters(e)
-        .split(
-          `
-`,
-        )
-        .map((d) => d.trim())
-        .find((d) => d.length > 0) ?? "",
-    r = truncateToCodeUnits(t, x5r),
-    o =
-      r.length < t.length ||
-      e.trim().includes(`
-`);
-  return `script: ${r}${o ? "\u2026" : ""}`;
-}
-function formatHookTarget(e) {
-  switch (e.type) {
-    case "command":
-      return e.args ? [e.command, ...e.args].join(" ") : e.command;
-    case "prompt":
-      return e.prompt;
-    case "agent":
-      return e.prompt;
-    case "http":
-      return e.url;
-    case "mcp_tool":
-      return `${e.server}/${e.tool}`;
-    case "script":
-      return e.file !== void 0 ? escapeAllControlCharacters(e.file) : formatScriptHookLabel(e.script ?? "");
-    case "callback":
-      return "callback";
-    case "function":
-      return "function";
-  }
-}
 function formatHookLabel(e) {
   return escapeAllControlCharacters("statusMessage" in e && e.statusMessage ? e.statusMessage : formatHookTarget(e));
 }
@@ -31527,88 +31326,6 @@ function V6(e) {
     return truncateToCodeUnits(e, J8t);
   }
 }
-var R5r = new Set([0, 1, 2, 9, 99, 777]),
-  P5r = 4096;
-function I5r(e) {
-  let t = "";
-  for (let r = 0; r < e.length; r++) {
-    let o = e.charCodeAt(r);
-    if (o >= 32 && o !== 127 && !(o >= 128 && o <= 159)) t += e[r];
-  }
-  return t;
-}
-function M5r(e) {
-  if (/^4;[0-4](;(100|\d{1,2})?)?$/.test(e)) return !0;
-  return !/^[\s\u180e\u200b]*[+-]?\p{Nd}/u.test(e);
-}
-function O5r(e) {
-  if (e.length === 0) return null;
-  if (Buffer.byteLength(e, "utf8") > P5r) return null;
-  let t = [],
-    r = 0;
-  while (r < e.length) {
-    let o = e[r];
-    if (o === BELL_CHARACTER) {
-      (t.push({ kind: "bel" }), r++);
-      continue;
-    }
-    if (o !== ESCAPE_CHARACTER || e[r + 1] !== "]") return null;
-    let d = r + 2,
-      p = -1,
-      _ = 0;
-    while (d < e.length) {
-      if (e[d] === BELL_CHARACTER) {
-        ((p = d), (_ = 1));
-        break;
-      }
-      if (e[d] === ESCAPE_CHARACTER && e[d + 1] === "\\") {
-        ((p = d), (_ = 2));
-        break;
-      }
-      if (e[d] === ESCAPE_CHARACTER) return null;
-      d++;
-    }
-    if (p === -1) return null;
-    let E = e.slice(r + 2, p),
-      C = E.indexOf(";"),
-      I = C === -1 ? E : E.slice(0, C),
-      D = C === -1 ? "" : E.slice(C + 1);
-    if (!/^\d+$/.test(I)) return null;
-    let N = Number(I);
-    if (!R5r.has(N)) return null;
-    let F = I5r(D);
-    if (N === 9 && !M5r(F)) return null;
-    (t.push({ kind: "osc", ps: N, payload: F }), (r = p + _));
-  }
-  return t;
-}
-function Z3e(e) {
-  let t = O5r(e);
-  if (t === null) return null;
-  return t
-    .map((r) => (r.kind === "bel" ? BELL_CHARACTER : wrapOscForMultiplexer(formatOscSequence(r.ps, r.payload))))
-    .join("");
-}
-class lXt {
-  writers = [];
-  register(e) {
-    this.writers.push(e);
-  }
-  unregister(e) {
-    let t = this.writers.lastIndexOf(e);
-    if (t >= 0) this.writers.splice(t, 1);
-  }
-  reset() {
-    this.writers.length = 0;
-  }
-  write(e) {
-    this.writers.at(-1)?.(e);
-  }
-}
-var D5r = new j(() => new lXt());
-function KSe() {
-  return D5r.of(B().host);
-}
 function registerHookOutputWriter(e) {
   if (e === null) {
     KSe().reset();
@@ -31618,9 +31335,6 @@ function registerHookOutputWriter(e) {
 }
 function unregisterHookOutputWriter(e) {
   KSe().unregister(e);
-}
-function eYe(e) {
-  KSe().write(e);
 }
 var N5r = ["SessionStart", "Setup"];
 class fXt {
@@ -83903,14 +83617,6 @@ async function* Kgo({
     )?.made;
   (yield* E()?.yields ?? [], yield* V?.yields ?? [], yield Zbn(N));
 }
-var unt = new Set([
-    "PreToolUse",
-    "PostToolUse",
-    "PostToolUseFailure",
-    "PermissionRequest",
-    "PermissionDenied",
-  ]),
-  Xgo = new Set([...unt, "PostToolBatch"]);
 function nO(e, t, r) {
   let o = e?.agentId ?? r,
     d = e?.agentContext;
@@ -212837,94 +212543,6 @@ function tms(e) {
     return e(t, r, ...o);
   };
 }
-function nms(e, t) {
-  let r = (d) => {
-      let p = t;
-      for (let _ of d.split(".")) {
-        if (p == null || typeof p !== "object") return;
-        p = p[_];
-      }
-      return p;
-    },
-    o = (d) => {
-      if (typeof d === "string")
-        return d.replace(/\$\{([a-zA-Z_][a-zA-Z0-9_.]*)\}/g, (p, _) => {
-          let E = r(_);
-          if (E === void 0 || E === null) return "";
-          return typeof E === "object" ? jsonStringify(E) : String(E);
-        });
-      if (Array.isArray(d)) return d.map(o);
-      if (d !== null && typeof d === "object") {
-        let p = {};
-        for (let [_, E] of Object.entries(d)) p[_] = o(E);
-        return p;
-      }
-      return d;
-    };
-  return o(e);
-}
-async function wvt(e, t, r, o, d, p = Jd) {
-  YPt(e.server, t);
-  let _ = o ?? DL();
-  if (_ === void 0) {
-    let F = `mcp_tool hooks are not available for the '${t}' hook event (no MCP client context)`;
-    return (
-      logForDebugging(`Hooks: mcp_tool hook skipped \u2014 ${F}`, { level: "warn" }),
-      { ok: !1, body: "", error: F }
-    );
-  }
-  let E = _.find((F) => F.name === e.server);
-  if (!E || !isConnectedMcpServer(E)) {
-    let F = `MCP server '${e.server}' not connected`;
-    return (
-      logForDebugging(`Hooks: mcp_tool hook skipped \u2014 ${F}`, { level: "warn" }),
-      { ok: !1, body: "", error: F }
-    );
-  }
-  let C = e.input ? nms(e.input, r) : {},
-    I = e.timeout ? e.timeout * 1000 : p,
-    { signal: D, cleanup: N } = createLinkedAbortSignal(d, { timeoutMs: I });
-  try {
-    logForDebugging(
-      `Hooks: mcp_tool calling ${e.server}/${e.tool} with ${Object.keys(C).length} arg(s)`,
-    );
-    let F = Lx();
-    if (!F) {
-      N();
-      let ue = `MCP server '${e.server}' not connected`;
-      return (
-        logForDebugging(`Hooks: mcp_tool hook skipped \u2014 ${ue}`, { level: "warn" }),
-        { ok: !1, body: "", error: ue }
-      );
-    }
-    let U = await F(E, {
-        signal: d,
-        timeoutMs: Math.min(I, getMcpTimeoutMs()),
-        context: "mcp_tool hook",
-      }),
-      V = await invokeMcpToolRaw(
-        U,
-        { name: e.tool, arguments: C },
-        { signal: D, timeout: I },
-      );
-    N();
-    let re = Array.isArray(V.content)
-      ? V.content.map((ue) => (ue.type === "text" ? ue.text : `[${ue.type}]`))
-          .join(`
-`)
-      : "";
-    if (V.isError)
-      return { ok: !1, body: re, error: re || "MCP tool returned an error" };
-    return { ok: !0, body: re };
-  } catch (F) {
-    if ((N(), D.aborted)) return { ok: !1, body: "", aborted: !0 };
-    let U = l(F);
-    return (
-      logForDebugging(`Hooks: mcp_tool hook error: ${U}`, { level: "error" }),
-      { ok: !1, body: "", error: U }
-    );
-  }
-}
 var Evt = "Hook JSON output validation failed \u2014 ",
   rms = new Set(["async", "hookEventName", "behavior"]);
 function rmr(e) {
@@ -213975,12 +213593,373 @@ function fmr({
     !0
   );
 }
-function shouldSkipHookDueToTrust() {
-  return !isProjectScopeTrustAccepted();
-}
-var _ms = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,255}$/;
 
-import { createBaseHookInput, executeHooksOutsideREPL } from './hook-helper.js';
+import { Amr, Bmr, C2e, D$, D3e, DWe, Ghe, H1e, I4, JR, Jd, KSe, Lmr, Mmr, N3e, NOTIFICATION_DELAY_MS, NWe, OYt, Tmr, Umr, W1e, Wmr, Xgo, Z3e, Zhe, bMt, createBaseHookInput, eYe, formatHookTarget, formatScriptHookLabel, getMaterializedSessionFile, getPolicyEnabledPluginIds, getTranscriptPathForSession, jmr, kW, qb, recordPluginUsage, shouldSkipHookDueToTrust, tM, vmr, wvt, z1e } from "./hook-helper.js";
+
+async function executeHooksOutsideREPL({ // todo
+  session: e,
+  sessionHooks: t,
+  getAppState: r,
+  hookInput: o,
+  matchQuery: d,
+  signal: p,
+  timeoutMs: _ = Jd,
+  storageV5: E,
+  credentials: C,
+}) {
+  let I = o.hook_event_name,
+    D = d ? `${I}:${d}` : I;
+  if (gmr(I, p)) await getNeverResolvingPromise();
+  if (shouldDisableAllHooksIncludingManaged())
+    logForDebugging(
+      `Policy disableAllHooks: skipping configured hooks for ${D} (SDK callback hooks still run)`,
+    );
+  if (shouldSkipHookDueToTrust())
+    return (
+      logForDebugging(`Skipping ${D} hook execution - workspace trust not accepted`),
+      []
+    );
+  let N = r?.(),
+    F = await Wmr(t, e.id, I, o, void 0, {
+      getToolAliases: () => N?.toolPermissionContext.toolAliases,
+    });
+  if (F.length === 0) return [];
+  if (p?.aborted) return [];
+  let U = F.filter((Se) => !Bmr(Se));
+  if (U.length > 0) {
+    let Se = Umr(U),
+      ve = jmr(U),
+      Me = countMatching(U, (xe) => xe.matcherIsMatchAll);
+    logEvent("tengu_run_hook", {
+      hookName: Gmr(I, d),
+      numCommands: U.length,
+      numMatchAllMatchers: Me,
+      numSpecificMatchers: U.length - Me,
+      hookTypeCounts: kW(ve),
+      ...(Se && { pluginHookCounts: kW(Se) }),
+    });
+  }
+  let V;
+  try {
+    V = jsonStringify(o);
+  } catch (Se) {
+    return (logError(Se), logFeatureBad(hookFeature(I), "hook_input_stringify_failed"), []);
+  } // good
+  let re,
+    ue = !1,
+    de = F.map(
+      async ({ hook: Se, pluginRoot: ve, pluginId: Me, skillRoot: xe }, Oe) => {
+        if (Se.type === "callback") {
+          let vt = Se.timeout ? Se.timeout * 1000 : _,
+            { signal: ut, cleanup: Wt } = createLinkedAbortSignal(p, { timeoutMs: vt });
+          try {
+            let en = bF(),
+              tn = await Se.callback(o, en, ut, Oe);
+            if ((Wt?.(), JR(tn)))
+              return (
+                logForDebugging(
+                  `${D} [callback] returned async response, returning empty output`,
+                ),
+                { command: "callback", succeeded: !0, output: "", blocked: !1 }
+              );
+            let dn =
+                I === "WorktreeCreate" &&
+                qb(tn) &&
+                tn.hookSpecificOutput?.hookEventName === "WorktreeCreate"
+                  ? tn.hookSpecificOutput.worktreePath
+                  : tn.systemMessage || "",
+              cn = qb(tn) && tn.decision === "block";
+            return (
+              H1e(tn, D),
+              logForDebugging(`${D} [callback] completed successfully`),
+              { command: "callback", succeeded: !0, output: dn, blocked: cn }
+            );
+          } catch (en) {
+            if ((Wt?.(), yt(en))) {
+              let dn = en instanceof zi || !!p?.aborted;
+              if (dn)
+                (logForDebugging(
+                  en instanceof zi
+                    ? `${D} [callback] cancelled (control stream closed)`
+                    : `${D} [callback] cancelled`,
+                ),
+                  (ue = !0));
+              else
+                (logForDebugging(`${D} [callback] timed out`, { level: "error" }),
+                  (re ??= "hook_callback_timeout"));
+              return {
+                command: "callback",
+                succeeded: !1,
+                output: "",
+                blocked: !1,
+                ...(dn && { cancelled: !0 }),
+              };
+            }
+            let tn = en instanceof Error ? en.message : String(en);
+            return (
+              logForDebugging(`${D} [callback] failed to run: ${tn}`, { level: "error" }),
+              (re ??= "hook_callback_failed"),
+              { command: "callback", succeeded: !1, output: tn, blocked: !1 }
+            );
+          }
+        }
+        if (Se.type === "prompt")
+          return (
+            (re ??= "hook_type_unsupported"),
+            {
+              command: Se.prompt,
+              succeeded: !1,
+              output: "Prompt stop hooks are not yet supported outside REPL",
+              blocked: !1,
+            }
+          );
+        if (Se.type === "mcp_tool") {
+          let vt = `${Se.server}/${Se.tool}`;
+          try {
+            let ut = await wvt(Se, I, o, r?.().mcp.clients, p, _);
+            if (ut.aborted)
+              return (
+                (re ??= "hook_cancelled"),
+                {
+                  command: vt,
+                  succeeded: !1,
+                  output: "Hook cancelled",
+                  blocked: !1,
+                  ...(p?.aborted && { cancelled: !0 }),
+                }
+              );
+            if (ut.error || !ut.ok)
+              return (
+                (re ??= "hook_mcp_tool_failed"),
+                {
+                  command: vt,
+                  succeeded: !1,
+                  output: ut.error || "MCP tool returned an error",
+                  blocked: !1,
+                }
+              );
+            let { json: Wt, validationError: en } = parseHookOutput(ut.body);
+            if (en) throw Error(en);
+            let tn = Wt && qb(Wt) ? Wt : void 0,
+              dn = tn?.decision === "block";
+            if (tn) emitHookMetrics(tn.metrics, Me, I);
+            return (
+              H1e(Wt, D),
+              {
+                command: vt,
+                succeeded: !0,
+                output: dn ? tn?.reason || "" : ut.body,
+                blocked: dn,
+                watchPaths:
+                  tn?.hookSpecificOutput &&
+                  "watchPaths" in tn.hookSpecificOutput
+                    ? tn.hookSpecificOutput.watchPaths
+                    : void 0,
+                systemMessage: tn?.systemMessage,
+              }
+            );
+          } catch (ut) {
+            let Wt = ut instanceof Error ? ut.message : String(ut);
+            return (
+              logForDebugging(`${D} [${vt}] failed to run: ${Wt}`, { level: "error" }),
+              (re ??= "hook_mcp_exec_failed"),
+              { command: vt, succeeded: !1, output: Wt, blocked: !1 }
+            );
+          }
+        }
+        if (Se.type === "agent")
+          return (
+            (re ??= "hook_type_unsupported"),
+            {
+              command: Se.prompt,
+              succeeded: !1,
+              output: "Agent stop hooks are not yet supported outside REPL",
+              blocked: !1,
+            }
+          );
+        if (Se.type === "function")
+          return (
+            logError(
+              Error(
+                `Function hook reached executeHooksOutsideREPL for ${I}. Function hooks should only be used in REPL context (Stop hooks).`,
+              ),
+            ),
+            (re ??= "hook_type_unsupported"),
+            {
+              command: "function",
+              succeeded: !1,
+              output:
+                "Internal error: function hook executed outside REPL context",
+              blocked: !1,
+            }
+          );
+        if (Se.type === "http")
+          try {
+            let vt = await Toe(Se, I, V, p, _);
+            if (vt.aborted)
+              return (
+                logForDebugging(`${D} [${Se.url}] cancelled`),
+                (re ??= "hook_cancelled"),
+                {
+                  command: Se.url,
+                  succeeded: !1,
+                  output: "Hook cancelled",
+                  blocked: !1,
+                  ...(p?.aborted && { cancelled: !0 }),
+                }
+              );
+            if (vt.error || !vt.ok) {
+              let dn = vt.error || `HTTP ${vt.statusCode} from ${Se.url}`;
+              return (
+                logForDebugging(`${D} [${Se.url}] failed: ${dn}`, { level: "error" }),
+                (re ??= "hook_http_request_failed"),
+                { command: Se.url, succeeded: !1, output: dn, blocked: !1 }
+              );
+            }
+            let { json: ut, validationError: Wt } = parseHttpHookOutput(vt.body);
+            if (Wt) throw Error(Wt);
+            if (ut && !JR(ut))
+              logForDebugging(`Parsed JSON output from HTTP hook: ${jsonStringify(ut)}`, {
+                level: "verbose",
+              });
+            if (ut && qb(ut)) emitHookMetrics(ut.metrics, Me, I);
+            H1e(ut, D);
+            let en = ut && qb(ut) && ut.decision === "block",
+              tn = en
+                ? (ut && qb(ut) && ut.reason) || ""
+                : I === "WorktreeCreate"
+                  ? ut &&
+                    qb(ut) &&
+                    ut.hookSpecificOutput?.hookEventName === "WorktreeCreate"
+                    ? ut.hookSpecificOutput.worktreePath
+                    : ""
+                  : vt.body;
+            return {
+              command: Se.url,
+              succeeded: !0,
+              output: tn,
+              blocked: !!en,
+              systemMessage: ut && qb(ut) ? ut.systemMessage : void 0,
+            };
+          } catch (vt) {
+            let ut = vt instanceof Error ? vt.message : String(vt);
+            return (
+              logForDebugging(`${D} [${Se.url}] failed to run: ${ut}`, { level: "error" }),
+              (re ??= "hook_http_exec_failed"),
+              { command: Se.url, succeeded: !1, output: ut, blocked: !1 }
+            );
+          }
+        let Ne = Se.timeout ? Se.timeout * 1000 : _,
+          De = formatHookTarget(Se),
+          { signal: He, cleanup: je } = createLinkedAbortSignal(p, { timeoutMs: Ne }),
+          Ke = !1,
+          ct = !1;
+        try {
+          let vt =
+              Se.type === "script" ? K3e(Se, I) : { hook: Se, env: void 0 },
+            ut = await dge(
+              vt.hook,
+              I,
+              D,
+              V,
+              parseSessionSource(o),
+              e.project,
+              Se.type === "script" ? e.project.projectRoot : o.cwd,
+              He,
+              bF(),
+              Oe,
+              ve,
+              Me,
+              xe,
+              Se.type === "script",
+              vt.env,
+              void 0,
+              E,
+              C,
+            );
+          ((Ke =
+            Se.type !== "script" ||
+            Emr(ut) ||
+            (ut.aborted === !0 && p?.aborted === !0)),
+            (ct = ut.status === 2 && !ut.backgrounded));
+          let Wt = !Ke && Se.type === "script" && GUARD_HOOK_EVENTS.has(I);
+          if ((je?.(), ut.aborted))
+            return (
+              logForDebugging(`${D} [${De}] cancelled`),
+              (re ??= "hook_cancelled"),
+              {
+                command: De,
+                succeeded: !1,
+                output: "Hook cancelled",
+                blocked: Wt,
+                ...(p?.aborted && { cancelled: !0 }),
+              }
+            );
+          if ((logForDebugging(`${D} [${De}] completed with status ${ut.status}`), !Ke))
+            return (
+              (re ??= "hook_did_not_run"),
+              {
+                command: De,
+                succeeded: !1,
+                output: `script hook did not run (${j1e(ut)})${ut.stderr.trim() ? `: ${ut.stderr.trim()}` : ""}`,
+                blocked: Wt,
+              }
+            );
+          let { json: en, validationError: tn } = parseHookOutput(wmr(ut));
+          if (tn && ut.status !== 2) throw Error(withHookStderr(tn, ut.status, ut.stderr));
+          if (en && !JR(en))
+            logForDebugging(`Parsed JSON output from hook: ${jsonStringify(en)}`, { level: "verbose" });
+          if (en && qb(en)) emitHookMetrics(en.metrics, Me, I);
+          H1e(en, D);
+          let dn = en && qb(en) && en.decision === "block",
+            cn = ut.status === 2 || !!dn || Wt,
+            It = dn
+              ? (en && qb(en) && en.reason) || ut.stderr || ""
+              : ut.status === 0
+                ? ut.stdout || ""
+                : ut.stderr || "",
+            Dn =
+              en &&
+              qb(en) &&
+              en.hookSpecificOutput &&
+              "watchPaths" in en.hookSpecificOutput
+                ? en.hookSpecificOutput.watchPaths
+                : void 0,
+            gn = en && qb(en) ? en.systemMessage : void 0;
+          if (ut.status !== 0 && !cn) re ??= "hook_nonzero_exit";
+          return {
+            command: De,
+            succeeded: ut.status === 0,
+            output: It,
+            blocked: cn,
+            watchPaths: Dn,
+            systemMessage: gn,
+          };
+        } catch (vt) {
+          je?.();
+          let ut = vt instanceof Error ? vt.message : String(vt);
+          return (
+            logForDebugging(`${D} [${De}] failed to run: ${ut}`, { level: "error" }),
+            (re ??= "hook_exec_failed"),
+            {
+              command: De,
+              succeeded: !1,
+              output: ut,
+              blocked: GUARD_HOOK_EVENTS.has(I) && (ct || (!Ke && Se.type === "script")),
+            }
+          );
+        }
+      },
+    ),
+    _e = await Promise.all(de);
+  if (gmr(I, p)) await getNeverResolvingPromise();
+  if (re) logFeatureBad(hookFeature(I), re);
+  else if (ue) logFeatureSad(hookFeature(I), "hook_cancelled");
+  else logFeatureOk(hookFeature(I));
+  for (let Se of new Set(F.map((ve) => ve.pluginId))) if (Se) recordPluginUsage(Se);
+  return _e;
+}
+
 
 function Smr(e) {
   let t = jsonParse(e),
@@ -214930,14 +214909,6 @@ async function evaluateHookIfCondition(e, t, r, o) {
     return d.patternMatcher !== void 0 && d.patternMatcher(p.ruleContent);
   });
 }
-function Tms(e, t, r) {
-  if (!(t ? /^[a-zA-Z0-9_|, -]+$/ : /^[a-zA-Z0-9_|]+$/).test(e)) return;
-  return e
-    .split(t ? /[|,]/ : "|")
-    .map((d) => d.trim())
-    .filter(Boolean)
-    .flatMap((d) => expandToolNameAlias(resolveToolNameAlias(d), r));
-}
 function hookMatcherMatches(e, t, r) {
   let o = vmr(e);
   return (
@@ -214952,180 +214923,6 @@ function hookMatcherMatches(e, t, r) {
       "tool_input" in e ? e.tool_input : void 0,
     )
   );
-}
-function Tmr(e, t) {
-  if (e !== "PreModelSwitch" && e !== "PostModelSwitch") return t;
-  let r = t.replace(/\[[12]m\](?=\s*(?:[|,]|$))/gi, "");
-  return r.trim() === "" ? t : r;
-}
-function vmr(e) {
-  switch (e.hook_event_name) {
-    case "PreToolUse":
-    case "PostToolUse":
-    case "PostToolUseFailure":
-    case "PermissionRequest":
-    case "PermissionDenied":
-      return e.tool_name;
-    case "UserPromptExpansion":
-      return e.command_name;
-    case "SessionStart":
-      return e.source;
-    case "Setup":
-      return e.trigger;
-    case "PreCompact":
-    case "PostCompact":
-      return e.trigger;
-    case "PreModelSwitch": {
-      let t = hookModelMatchKey(e.to_model);
-      return isRecognizedModelKey(t) ? t : void 0;
-    }
-    case "PostModelSwitch": {
-      let t = hookModelMatchKey(e.to_model);
-      return isRecognizedModelKey(t) ? t : void 0;
-    }
-    case "Notification":
-      return e.notification_type;
-    case "SessionEnd":
-      return e.reason;
-    case "StopFailure":
-      return e.error;
-    case "SubagentStart":
-      return e.agent_type;
-    case "SubagentStop":
-      return e.agent_type;
-    case "TeammateIdle":
-    case "TaskCreated":
-    case "TaskCompleted":
-      return;
-    case "Elicitation":
-      return e.mcp_server_name;
-    case "ElicitationResult":
-      return e.mcp_server_name;
-    case "ConfigChange":
-      return e.source;
-    case "DirectoryAdded":
-      return e.source;
-    case "InstructionsLoaded":
-      return e.load_reason;
-    case "FileChanged":
-      return pms(e.file_path);
-    default:
-      return;
-  }
-}
-var Amr = new Set([
-  "PreToolUse",
-  "PostToolUse",
-  "PostToolUseFailure",
-  "PermissionRequest",
-  "PermissionDenied",
-  "UserPromptExpansion",
-  "SessionStart",
-  "SessionEnd",
-  "Setup",
-  "PreCompact",
-  "PostCompact",
-  "PreModelSwitch",
-  "PostModelSwitch",
-  "Notification",
-  "SubagentStart",
-  "SubagentStop",
-  "Elicitation",
-  "ElicitationResult",
-  "ConfigChange",
-  "InstructionsLoaded",
-  "DirectoryAdded",
-]);
-function vms(e) {
-  if (!/^[a-zA-Z0-9_|, -]+$/.test(e)) return !1;
-  return e
-    .split(/[|,]/)
-    .map((t) => t.trim())
-    .some((t) => t.startsWith("mcp__") && !t.slice(5).includes("__"));
-}
-function Cms(e, t) {
-  if (!t || !unt.has(e)) return;
-  let r = zLn();
-  if (r.has(t) || !vms(t)) return;
-  r.add(t);
-  let o =
-    t
-      .split(/[|,]/)
-      .map((d) => d.trim())
-      .find((d) => d.startsWith("mcp__") && !d.slice(5).includes("__")) ?? t;
-  logForDebugging(
-    `Hook matcher \`${o}\` matches no tool (it is compared as an exact string). To match all tools from this server, use \`${o}__.*\`. See CHANGELOG v2.1.195.`,
-    { level: "warn" },
-  );
-}
-var xms = /^\^?(?:\((?:\?:)?)?\^?\w+\$?(?:\|\^?\w+\$?)*\)?\$?$/;
-function Ams(e, t) {
-  let r = t === void 0 ? void 0 : findToolByName(t, e);
-  if (r !== void 0)
-    return r.mcpInfo === void 0 ? r.familyParentToolName : void 0;
-  return Ghe(e);
-}
-function Rmr(e, t, r) {
-  let o = [],
-    d = Ams(e, t);
-  if (d !== void 0) o.push(d);
-  let p = t === void 0 ? void 0 : findToolByName(t, e);
-  if (p !== void 0) {
-    if (p.mcpInfo === void 0) o.push(...(p.hookMatcherFamilyNames?.(r) ?? []));
-  } else {
-    let _ = MPt(e, r);
-    if (_ !== void 0) o.push(_);
-  }
-  return o;
-}
-function Mmr(e, t, r, o, d, p) {
-  if (!t || t === "*") return !0;
-  let _ = Tms(t, r, o),
-    E = Rmr(e, d, p);
-  if (_ !== void 0) return _.includes(e) || E.some((C) => _.includes(C));
-  try {
-    let C = new RegExp(t);
-    if (C.test(e)) return !0;
-    if (xms.test(t) && E.some((I) => C.test(I))) return !0;
-    for (let I of getBuiltinLegacyToolNames(e)) if (C.test(I)) return !0;
-    for (let I of getAliasNamesForToolName(e, o)) if (C.test(I)) return !0;
-    return !1;
-  } catch {
-    return (logForDebugging(`Invalid regex pattern in hook matcher: ${t}`), !1);
-  }
-}
-async function Rms(e, t) {
-  let r = await Lmr(e, t);
-  if (r === void 0) return;
-  let { names: o, patternMatcher: d } = r;
-  return (p) => {
-    let _ = parsePermissionRule(p);
-    if (!o.includes(resolveToolNameAlias(_.toolName))) return !1;
-    if (!_.ruleContent) return !0;
-    return d ? d(_.ruleContent) : !1;
-  };
-}
-async function Lmr(e, t) {
-  if (
-    e.hook_event_name !== "PreToolUse" &&
-    e.hook_event_name !== "PostToolUse" &&
-    e.hook_event_name !== "PostToolUseFailure" &&
-    e.hook_event_name !== "PermissionRequest" &&
-    e.hook_event_name !== "PermissionDenied"
-  )
-    return;
-  let r = resolveToolNameAlias(e.tool_name),
-    o = t && findToolByName(t, e.tool_name),
-    d = o?.inputSchema.safeParse(e.tool_input),
-    p =
-      d?.success && o?.preparePermissionMatcher
-        ? await o.preparePermissionMatcher(d.data)
-        : void 0;
-  return {
-    names: [r, ...Rmr(r, t, e.tool_input)],
-    patternMatcher: p,
-    judgeable: d?.success === !0,
-  };
 }
 function Pms(e) {
   return (
@@ -215491,43 +215288,6 @@ function Nms(e, t, r) {
     projectDir: t,
   };
 }
-function Ej(e) {
-  switch (e.type) {
-    case "command":
-      return `command\x00${e.shell ?? getPreferredShellToolName()}\x00${e.command}\x00${jsonStringify(e.args ?? null)}\x00${e.if ?? ""}`;
-    case "http":
-      return `http\x00${e.url}\x00${e.if ?? ""}`;
-    case "mcp_tool":
-      return `mcp_tool\x00${e.server}\x00${e.tool}\x00${jsonStringify(e.input ?? {})}\x00${e.if ?? ""}`;
-    case "script":
-      return `script\x00${jsonStringify(e.script ?? null)}\x00${jsonStringify(e.file ?? null)}\x00${e.if ?? ""}`;
-    default:
-      return;
-  }
-}
-function Lms(e, t) {
-  if (
-    e.type === "callback" ||
-    e.type === "function" ||
-    t.type === "callback" ||
-    t.type === "function"
-  )
-    return e === t;
-  let r = Ej(e);
-  return r !== void 0 ? r === Ej(t) : _mr(e, t);
-}
-function Fms(e, t, r, o) {
-  if (e.type === "callback" || e.type === "function") return;
-  let d = Ej(e);
-  if (d === void 0) return;
-  for (let p of [...o].reverse())
-    for (let _ of getSettingsForSource(p)?.hooks?.[t] ?? []) {
-      if (!r.includes(_.matcher ?? "")) continue;
-      let E = _.hooks.find((C) => Ej(C) === d);
-      if (E !== void 0) return E;
-    }
-  return;
-}
 function $ms(e, t, r, o) {
   let d = (p, _) =>
     p.some((E) =>
@@ -215603,29 +215363,6 @@ function jms(e, t) {
     }
   );
 }
-function Bmr(e) {
-  return e.hook.type === "callback" && e.hook.internal === !0;
-}
-function xZ(e, t) {
-  return `${e.pluginRoot ?? e.skillRoot ?? ""}\x00${t}`;
-}
-function z1e(e) {
-  let t = e.lastIndexOf("@");
-  if (t <= 0) return !1;
-  let r = e.slice(t + 1);
-  if (isOfficialMarketplace(r)) return !0;
-  return !1;
-}
-function Umr(e) {
-  let t = e.filter((o) => o.pluginId);
-  if (t.length === 0) return;
-  let r = new Map();
-  for (let o of t) {
-    let d = pluginIdForAnalytics_GATE_EVALUATED(o.pluginId, z1e(o.pluginId));
-    r.set(d, (r.get(d) ?? 0) + 1);
-  }
-  return r;
-}
 function Wms(e) {
   if (!z1e(e)) return !1;
   let t = e.lastIndexOf("@"),
@@ -215667,39 +215404,7 @@ function emitHookMetrics(e, t, r) {
       hook_event: r,
     }));
 }
-function jmr(e) {
-  let t = new Map();
-  for (let r of e) {
-    let o = fromEnum(r.hook.type);
-    t.set(o, (t.get(o) ?? 0) + 1);
-  }
-  return t;
-}
 var MANAGED_HOOKS_TIER = { managedHooksOnly: !0 };
-function qms(e, t) {
-  let r = new Set((getSettingsForSource("policySettings")?.hooks?.[t] ?? []).map((o) => stableStringify(o)));
-  return e.filter((o) => !r.has(stableStringify(o)));
-}
-function W1e(e, t, r, o) {
-  if (o?.managedHooksOnly) {
-    let E = getSettingsForSource("policySettings");
-    if (E?.disableAllHooks === !0) return [];
-    return [...(E?.hooks?.[r] ?? [])];
-  }
-  let d = o?.managedHooksExcluded ? qms(D$(r), r) : [...D$(r)],
-    p = typeof t === "string" ? [t] : t;
-  if (e === void 0 || shouldSkipSessionHooksByPolicy()) return d;
-  for (let E of p) {
-    let C = e.get(E, r).get(r);
-    if (C) d.push(...C);
-  }
-  let _ = p[0];
-  if (_ !== void 0) {
-    let E = e.getFunctionHooks(_, r).get(r);
-    if (E) d.push(...E);
-  }
-  return d;
-}
 var Vms = new j(() => ({ tokens: new WeakMap(), next: 0, host: bF() }));
 function userPromptSubmitHooksKey(e) {
   let t = Vms.of(e.session.host);
@@ -215728,211 +215433,6 @@ function hasHookForEvent(e, t, r) {
   if (d && d.length > 0) return !0;
   if (t === void 0) return !1;
   return (typeof r === "string" ? [r] : r).some((_) => t.has(_, e));
-}
-async function Wmr(e, t, r, o, d, p) {
-  try {
-    let _ = W1e(e, t, r, p),
-      E = vmr(o),
-      C = Amr.has(o.hook_event_name);
-    for (let je of _) Cms(r, je.matcher);
-    (logForDebugging(`Getting matching hook commands for ${r} with query: ${E}`, {
-      level: "verbose",
-    }),
-      logForDebugging(`Found ${_.length} hook matchers in settings`, { level: "verbose" }));
-    let I = p?.getToolAliases?.(),
-      N = (
-        E
-          ? _.filter(
-              (je) =>
-                !je.matcher ||
-                Mmr(
-                  E,
-                  Tmr(r, je.matcher),
-                  C,
-                  I,
-                  d,
-                  "tool_input" in o ? o.tool_input : void 0,
-                ),
-            )
-          : _
-      ).flatMap((je) => {
-        let Ke = "pluginRoot" in je ? je.pluginRoot : void 0,
-          ct = "pluginId" in je ? je.pluginId : void 0,
-          vt = "skillRoot" in je ? je.skillRoot : void 0,
-          ut = Ke
-            ? "pluginName" in je
-              ? `plugin:${je.pluginName}`
-              : "plugin"
-            : vt
-              ? "skillName" in je
-                ? `skill:${je.skillName}`
-                : "skill"
-              : "settings",
-          Wt = !je.matcher || je.matcher === "*" || je.matcher === ".*",
-          en = C2e(je);
-        return je.hooks.map((tn) => ({
-          hook: tn,
-          pluginRoot: Ke,
-          pluginId: ct,
-          skillRoot: vt,
-          hookSource: ut,
-          matcherIsMatchAll: Wt,
-          ...(p?.recordMatchers && { matcherTexts: [je.matcher ?? ""] }),
-          ...(en && { deviceForwarded: en }),
-        }));
-      });
-    if (
-      N.every(
-        (je) => je.hook.type === "callback" || je.hook.type === "function",
-      )
-    )
-      return N;
-    let F = (je) => je.if ?? "",
-      U = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "command").map((je) => [
-            xZ(je, Ej(je.hook) ?? ""),
-            je,
-          ]),
-        ).values(),
-      ),
-      V = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "prompt").map((je) => [
-            xZ(je, `${je.hook.prompt}\x00${F(je.hook)}`),
-            je,
-          ]),
-        ).values(),
-      ),
-      re = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "agent").map((je) => [
-            xZ(je, `${je.hook.prompt}\x00${F(je.hook)}`),
-            je,
-          ]),
-        ).values(),
-      ),
-      ue = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "http").map((je) => [
-            xZ(je, Ej(je.hook) ?? ""),
-            je,
-          ]),
-        ).values(),
-      ),
-      de = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "mcp_tool").map((je) => [
-            xZ(je, Ej(je.hook) ?? ""),
-            je,
-          ]),
-        ).values(),
-      ),
-      _e = Array.from(
-        new Map(
-          N.filter((je) => je.hook.type === "script").map((je) => [
-            xZ(je, Ej(je.hook) ?? ""),
-            je,
-          ]),
-        ).values(),
-      ),
-      Se = N.filter((je) => je.hook.type === "callback"),
-      ve = N.filter((je) => je.hook.type === "function"),
-      Me = (je) => {
-        if (p?.recordMatchers !== !0) return je;
-        try {
-          let Ke = dedupe(
-              N.filter(
-                (vt) =>
-                  vt.pluginRoot === je.pluginRoot &&
-                  vt.skillRoot === je.skillRoot &&
-                  Lms(vt.hook, je.hook),
-              ).flatMap((vt) => vt.matcherTexts ?? []),
-            ),
-            ct =
-              je.pluginRoot === void 0 && je.skillRoot === void 0
-                ? Fms(je.hook, r, Ke, p.ownSources ?? [])
-                : void 0;
-          return { ...je, matcherTexts: Ke, hook: ct ?? je.hook };
-        } catch (Ke) {
-          return (
-            logForDebugging(
-              `Hooks: could not establish whose settings define a hook (${l(Ke)}); treating it as the project's`,
-            ),
-            { ...je, matcherTexts: [] }
-          );
-        }
-      },
-      xe = [
-        ...U.map(Me),
-        ...V,
-        ...re,
-        ...ue.map(Me),
-        ...de.map(Me),
-        ..._e.map(Me),
-        ...Se,
-        ...ve,
-      ],
-      Ne = xe.some(
-        (je) =>
-          (je.hook.type === "command" ||
-            je.hook.type === "prompt" ||
-            je.hook.type === "agent" ||
-            je.hook.type === "http" ||
-            je.hook.type === "mcp_tool" ||
-            je.hook.type === "script") &&
-          je.hook.if,
-      )
-        ? await Rms(o, d)
-        : void 0,
-      De = xe.filter((je) => {
-        if (
-          je.hook.type !== "command" &&
-          je.hook.type !== "prompt" &&
-          je.hook.type !== "agent" &&
-          je.hook.type !== "http" &&
-          je.hook.type !== "mcp_tool" &&
-          je.hook.type !== "script"
-        )
-          return !0;
-        let Ke = je.hook.if;
-        if (!Ke) return !0;
-        if (!Ne)
-          return (
-            logForDebugging(
-              `Hook if condition "${Ke}" cannot be evaluated for non-tool event ${o.hook_event_name}`,
-            ),
-            !1
-          );
-        if (Ne(Ke)) return !0;
-        return (
-          logForDebugging(`Skipping hook due to if condition "${Ke}" not matching`),
-          !1
-        );
-      }),
-      He =
-        r === "SessionStart" || r === "Setup"
-          ? De.filter((je) => {
-              if (je.hook.type === "http")
-                return (
-                  logForDebugging(
-                    `Skipping HTTP hook ${je.hook.url} \u2014 HTTP hooks are not supported for ${r}`,
-                  ),
-                  !1
-                );
-              return !0;
-            })
-          : De;
-    return (
-      logForDebugging(
-        `Matched ${He.length} unique hooks for query "${E || "no match query"}" (${N.length} before deduplication)`,
-        { level: "verbose" },
-      ),
-      He
-    );
-  } catch {
-    return [];
-  }
 }
 function getPreToolHookBlockingMessage(e, t) {
   return `${e} hook error: ${t.blockingError}`;
@@ -217554,15 +217054,6 @@ async function safeHookCwd(e, t) {
   return r;
 }
 var Yms = new j(() => new Set());
-function H1e(e, t) {
-  if (!e || !qb(e) || !e.terminalSequence) return;
-  let r = Z3e(e.terminalSequence);
-  if (r !== null) eYe(r);
-  else
-    logForDebugging(
-      `Hook ${t} returned a terminalSequence that was rejected by the allowlist (only OSC 0/1/2/9/99/777 and BEL are permitted, and OSC 9 bodies may not begin with a digit unless in the 9;4 progress form)`,
-    );
-}
 function hasBlockingResult(e) {
   return e.some((t) => t.blocked);
 }
@@ -226104,16 +225595,8 @@ var a_s = new Set([
 function isEphemeralToolProgress(e) {
   return typeof e === "string" && a_s.has(e);
 }
-function getMaterializedSessionFile() {
-  return Xd().project?.sessionFile ?? null;
-}
 function hasRecordedUserPrompt() {
   return Xd().project?.currentSessionLastPrompt !== void 0;
-}
-function getTranscriptPathForSession(e) {
-  if (e === K()) return getMaterializedSessionFile() ?? getSessionTranscriptPath();
-  let t = getProjectDir(he());
-  return Wp(t, `${e}.jsonl`);
 }
 function txt(e) {
   return getAgentTranscriptPath(e).replace(/\.jsonl$/, ".meta.json");
