@@ -115,7 +115,7 @@ import { getClaimRegistry } from "../../01-核心基础设施/核心工具-未�
 import { e, r } from "../react/react.kwtapczy.js";
 import { trySetRawMode } from "../../02-功能模块/终端环境探测-TUI-tmux/try-set-raw-mode.js";
 import { toNumber } from "../../01-核心基础设施/核心工具-类型与数值/lodash-to-number.js";
-import { Cln, Uze, Qt, vln, V, F } from "../react/React运行时-JSX.j03jpdbn.js";
+import { Cln, Uze, Qt, vln, F } from "../react/React运行时-JSX.j03jpdbn.js";
 import { expandTabs } from "../../01-核心基础设施/核心工具-字符串与文本/expand-tabs.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";
 import { getCurrentPlatform } from "../../01-核心基础设施/核心工具-路径与平台/platform-detection.js";

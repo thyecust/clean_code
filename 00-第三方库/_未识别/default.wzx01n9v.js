@@ -132,7 +132,6 @@ async function S() {
   );
 }
 import te from "process";
-import { execFileSync } from "child_process";
 var se = promisify(execFile);
 async function W(e, { humanReadableOutput: r = !0, signal: o } = {}) {
   if (te.platform !== "darwin") throw Error("macOS only");
