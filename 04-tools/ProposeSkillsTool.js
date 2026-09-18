@@ -25,7 +25,7 @@ import { isFullFileView, matchesFileStateContent, normalizeFileContent } from ".
 import { collapseNewlines, truncateForDisplay } from "../01-核心基础设施/核心工具-字符串与文本/text-truncation.js";
 import { s, T, v, c, X } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { join as L } from "path";
+import { join } from "path";
 var S = 1024,
   _ = createLazyValue(() =>
     c({
@@ -139,7 +139,7 @@ var S = 1024,
             isSkillPlaceholderCurrent(p)
           )
             continue;
-          let f = resolvePath(L(p.skillRoot, "SKILL.md")),
+          let f = resolvePath(join(p.skillRoot, "SKILL.md")),
             g = await C(f, e.readFileState.get(f), p.contentLength, e);
           if (g === "unread") r.push(`${h} (${f})`);
           else if (g === "stale") d.push(`${h} (${f})`);

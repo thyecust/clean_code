@@ -25,8 +25,8 @@ import { DESIGN_SYNC_TOOL_NAME, DESIGN_SYNC_TOOL_DESCRIPTION, isDesignSyncPolicy
 import { s, T, O, v, c, Qe, Ko, X, k } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { countMatching } from "../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
 import { constants } from "fs";
-import { open as pe, realpath, stat as he } from "fs/promises";
-import { extname, sep as Z, resolve } from "path";
+import { open, realpath, stat } from "fs/promises";
+import { extname, sep, resolve } from "path";
 var le = "anthropic.omelette.api.v1alpha.OmeletteService";
 async function I(e, t, r, o) {
   let i = await httpClient.post(`/${le}/${e}`, r, {
@@ -679,7 +679,7 @@ var DesignSyncTool = buildTool({
         A = await Promise.all(
           f.map(async (z) => {
             try {
-              return (await he(resolve(g, z)), !0);
+              return (await stat(resolve(g, z)), !0);
             } catch {
               return !1;
             }
@@ -862,7 +862,7 @@ async function Se(e, t) {
     throw Error(
       "write_files with localPath requires a plan finalized with localDir. Re-run finalize_plan with the bundle directory.",
     );
-  let o = (_) => (_.endsWith(Z) ? _ : _ + Z),
+  let o = (_) => (_.endsWith(sep) ? _ : _ + sep),
     i = resolve(t),
     d = resolve(i, e.localPath);
   if (d !== i && !d.startsWith(o(i)))
@@ -875,7 +875,7 @@ async function Se(e, t) {
       "write_files: localPath resolves outside the directory approved at finalize_plan.",
     );
   let u = constants.O_NOFOLLOW,
-    g = await pe(a, constants.O_RDONLY | u),
+    g = await open(a, constants.O_RDONLY | u),
     p;
   try {
     let _ = await g.stat();
