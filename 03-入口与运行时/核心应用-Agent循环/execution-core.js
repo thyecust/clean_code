@@ -12,51 +12,17 @@
 
 // Version: 2.1.263
 
-import * as BC from "path";
+import path from "path";
 
-import * as D_e from "fs";
+import * as fs from "fs";
 
-import * as HNt from "net";
+import net from "net";
 
-import * as Jq from "vm";
-
-import * as NS from "path";
-
-import * as P_ from "path";
-
-import * as TW from "fs";
-
-import * as Vze from "fs";
+import * as vm from "vm";
 
 import * as W7 from "fs/promises";
 
-import * as XAe from "os";
-
-import * as dk from "path";
-
-import * as mS from "fs";
-
-import * as oP from "fs";
-
-import * as pWn from "vm";
-
-import * as rWn from "vm";
-
-import * as uE from "path";
-
-import * as v5t from "os";
-
-import * as wC from "path";
-
-import * as zd from "fs";
-
-import $h from "path";
-
-import Xxo from "path";
-
-import ZAr from "net";
-
-import tRr from "net";
+import * as os from "os";
 
 import {
   commonJS,
@@ -9517,7 +9483,7 @@ function Y$(e) {
 }
 
 function bye(e) {
-  let t = dk.win32.toNamespacedPath(e);
+  let t = path.win32.toNamespacedPath(e);
   return /^[\\/]{2}[?.][\\/]unc[\\/]/i.test(t);
 }
 
@@ -9526,8 +9492,8 @@ function stripRecursiveGlobSuffix(e) {
 }
 
 function N4(e, t) {
-  let r = dk.normalize(e),
-    o = dk.normalize(t);
+  let r = path.normalize(e),
+    o = path.normalize(t);
   if (o === r) return !1;
   if (r.startsWith("/tmp/") && o === "/private" + r) return !1;
   if (r.startsWith("/var/") && o === "/private" + r) return !1;
@@ -9567,21 +9533,21 @@ function G_(e) {
   if (Fh() === "windows") {
     if (((e = Y$(cTr(e))), /^[a-z]:/.test(e)))
       e = e[0].toUpperCase() + e.slice(1);
-    if (bye(e) && !K$(e)) return dk.win32.normalize(e);
+    if (bye(e) && !K$(e)) return path.win32.normalize(e);
   }
   if (Fh() !== "windows" && e.endsWith("/") && e !== "/" && !XMt(e))
     e = e.replace(/\/+$/, "") || "/";
   let r = lTr(e);
   if (r !== e);
-  else if (e.startsWith("./") || e.startsWith("../")) r = dk.resolve(t, e);
-  else if (!dk.isAbsolute(e)) r = dk.resolve(t, e);
+  else if (e.startsWith("./") || e.startsWith("../")) r = path.resolve(t, e);
+  else if (!path.isAbsolute(e)) r = path.resolve(t, e);
   if (XMt(r)) {
     let o = Fh() === "windows" ? /[*?]/ : /[*?[\]]/,
       d = r.split(o)[0];
     if (d && d !== "/") {
-      let p = d.endsWith("/") ? d.slice(0, -1) : dk.dirname(d);
+      let p = d.endsWith("/") ? d.slice(0, -1) : path.dirname(d);
       try {
-        let _ = TW.realpathSync(p);
+        let _ = fs.realpathSync(p);
         if (!N4(p, _)) {
           let E = r.slice(p.length);
           return _ + E;
@@ -9591,7 +9557,7 @@ function G_(e) {
     return r;
   }
   try {
-    let o = TW.realpathSync(r);
+    let o = fs.realpathSync(r);
     if (N4(r, o));
     else r = o;
   } catch {}
@@ -9609,8 +9575,8 @@ function gx() {
     "/dev/autofs_nowait",
     "/tmp/claude",
     "/private/tmp/claude",
-    dk.join(e, ".npm/_logs"),
-    dk.join(e, ".claude/debug"),
+    path.join(e, ".npm/_logs"),
+    path.join(e, ".claude/debug"),
   ];
 }
 
@@ -9788,16 +9754,16 @@ function ND(e, t = {}) {
     d = o.split(/[*?[\]]/)[0];
   if (!d || d === "/")
     return (mo(`[Sandbox] Glob pattern too broad, skipping: ${e}`), []);
-  let p = d.endsWith("/") ? d.slice(0, -1) : dk.dirname(d);
-  if (!TW.existsSync(p))
+  let p = d.endsWith("/") ? d.slice(0, -1) : path.dirname(d);
+  if (!fs.existsSync(p))
     return (mo(`[Sandbox] Base directory for glob does not exist: ${p}`), []);
   let _ = new RegExp(Dee(o), t.caseInsensitive ? "i" : ""),
     E = [];
   try {
-    let C = TW.readdirSync(p, { recursive: !0, withFileTypes: !0 });
+    let C = fs.readdirSync(p, { recursive: !0, withFileTypes: !0 });
     for (let I of C) {
       let D = I.parentPath ?? I.path ?? p,
-        N = dk.join(D, I.name);
+        N = path.join(D, I.name);
       if (_.test(r(N))) E.push(N);
     }
   } catch (C) {
@@ -11620,7 +11586,7 @@ var qDt = ((e) => (
 function zDt(e, t) {
   if (e.command !== "connect") return t("COMMAND_NOT_SUPPORTED");
   e.socket.on("error", () => {});
-  let r = tRr.createConnection({ host: e.destAddress, port: e.destPort });
+  let r = net.createConnection({ host: e.destAddress, port: e.destPort });
   r.setNoDelay();
   let o = !1;
   return (
@@ -11657,7 +11623,7 @@ var nRr = class {
   constructor() {
     ((this.supportedCommands = new Set(["connect"])),
       (this.connectionHandler = zDt),
-      (this.server = ZAr.createServer((e) => {
+      (this.server = net.createServer((e) => {
         (e.setNoDelay(), this._handleConnection(e));
       })));
   }
@@ -12249,20 +12215,20 @@ class Sze {
   }
   write(e, t) {
     if (this.dir === void 0)
-      this.dir = oP.mkdtempSync(join(tmpdir(), "srt-credmask-"));
+      this.dir = fs.mkdtempSync(join(tmpdir(), "srt-credmask-"));
     let r = this.byKey.get(e);
     if (r === void 0)
       ((r = join(this.dir, `${this.byKey.size}.fake`)), this.byKey.set(e, r));
     return (
-      oP.rmSync(r, { force: !0 }),
-      oP.writeFileSync(r, t, { mode: 384 }),
+      fs.rmSync(r, { force: !0 }),
+      fs.writeFileSync(r, t, { mode: 384 }),
       r
     );
   }
   dispose() {
     if (this.dir !== void 0)
       try {
-        oP.rmSync(this.dir, { recursive: !0, force: !0 });
+        fs.rmSync(this.dir, { recursive: !0, force: !0 });
       } catch (e) {
         mo(`MaskedFileStore cleanup failed: ${e}`, { level: "error" });
       }
@@ -12281,14 +12247,14 @@ function nNt(e, t, r, o) {
     let E = G_(_.path),
       C;
     try {
-      if (oP.statSync(E).isDirectory()) {
+      if (fs.statSync(E).isDirectory()) {
         mo(
           `[credential-mask] Skipping masked file entry that resolves to a directory: ${_.path} \u2014 use mode "deny" for directories.`,
           { level: "warn" },
         );
         continue;
       }
-      let V = oP.readFileSync(E);
+      let V = fs.readFileSync(E);
       if (
         ((C = V.toString("utf8")), Buffer.byteLength(C, "utf8") !== V.length)
       ) {
@@ -12755,7 +12721,7 @@ function vze(e) {
 
 function MRr(e) {
   if (e) {
-    if (D_e.existsSync(e))
+    if (fs.existsSync(e))
       return (
         mo(
           `[SeccompFilter] Using apply-seccomp binary from explicit path: ${e}`,
@@ -12774,11 +12740,11 @@ function MRr(e) {
     );
   mo(`[SeccompFilter] Looking for apply-seccomp binary for architecture: ${t}`);
   for (let r of IRr("apply-seccomp"))
-    if (D_e.existsSync(r))
+    if (fs.existsSync(r))
       return (mo(`[SeccompFilter] Found apply-seccomp binary: ${r} (${t})`), r);
   for (let r of Tze()) {
     let o = join(r, "vendor", "seccomp", t, "apply-seccomp");
-    if (D_e.existsSync(o))
+    if (fs.existsSync(o))
       return (
         mo(
           `[SeccompFilter] Found apply-seccomp binary in global install: ${o} (${t})`,
@@ -12849,13 +12815,13 @@ function LRr(e) {
 var Aze = 3;
 
 function Cze(e, t) {
-  let r = e.split($h.sep),
+  let r = e.split(path.sep),
     o = "";
   for (let d of r) {
     if (!d) continue;
-    let p = o + $h.sep + d;
+    let p = o + path.sep + d;
     try {
-      if (zd.lstatSync(p).isSymbolicLink()) {
+      if (fs.lstatSync(p).isSymbolicLink()) {
         if (t.some((C) => p.startsWith(C + "/") || p === C)) return p;
       }
     } catch {
@@ -12872,38 +12838,38 @@ function _Nt(e) {
   let t = e;
   for (let r = 0; r < $Rr; r++) {
     try {
-      return zd.realpathSync(t);
+      return fs.realpathSync(t);
     } catch {}
     let o = t,
       d = [],
       p = null;
     while (p === null) {
-      let C = $h.dirname(o);
+      let C = path.dirname(o);
       if (C === o) return null;
-      (d.unshift($h.basename(o)), (o = C));
+      (d.unshift(path.basename(o)), (o = C));
       try {
-        p = zd.realpathSync(o);
+        p = fs.realpathSync(o);
       } catch {}
     }
-    let _ = $h.join(p, d[0]),
+    let _ = path.join(p, d[0]),
       E = null;
     try {
-      E = zd.readlinkSync(_);
+      E = fs.readlinkSync(_);
     } catch {}
-    if (E === null) return $h.join(p, ...d);
-    t = $h.join($h.resolve($h.dirname(_), E), ...d.slice(1));
+    if (E === null) return path.join(p, ...d);
+    t = path.join(path.resolve(path.dirname(_), E), ...d.slice(1));
   }
   return null;
 }
 
 function BRr(e) {
-  let t = e.split($h.sep),
+  let t = e.split(path.sep),
     r = "";
   for (let o of t) {
     if (!o) continue;
-    let d = r + $h.sep + o;
+    let d = r + path.sep + o;
     try {
-      let p = zd.statSync(d);
+      let p = fs.statSync(d);
       if (p.isFile() || p.isSymbolicLink()) return !0;
     } catch {
       break;
@@ -12914,12 +12880,12 @@ function BRr(e) {
 }
 
 function URr(e) {
-  let t = e.split($h.sep),
+  let t = e.split(path.sep),
     r = "";
   for (let o of t) {
     if (!o) continue;
-    let d = r + $h.sep + o;
-    if (!zd.existsSync(d)) return d;
+    let d = r + path.sep + o;
+    if (!fs.existsSync(d)) return d;
     r = d;
   }
   return e;
@@ -12931,17 +12897,17 @@ async function HRr(e = { command: "rg" }, t = Aze, r = !1, o) {
     _ = o ?? p.signal,
     E = _ye(),
     C = [
-      ...Oee.map((U) => $h.resolve(d, U)),
-      ...E.map((U) => $h.resolve(d, U)),
+      ...Oee.map((U) => path.resolve(d, U)),
+      ...E.map((U) => path.resolve(d, U)),
     ],
-    I = $h.resolve(d, ".git"),
+    I = path.resolve(d, ".git"),
     D = !1;
   try {
-    D = zd.statSync(I).isDirectory();
+    D = fs.statSync(I).isDirectory();
   } catch {}
   if (D) {
-    if ((C.push($h.resolve(d, ".git/hooks")), !r))
-      C.push($h.resolve(d, ".git/config"));
+    if ((C.push(path.resolve(d, ".git/hooks")), !r))
+      C.push(path.resolve(d, ".git/config"));
   }
   let N = [];
   for (let U of Oee) N.push("--iglob", U);
@@ -12968,18 +12934,18 @@ async function HRr(e = { command: "rg" }, t = Aze, r = !1, o) {
     mo(`[Sandbox] ripgrep scan failed: ${U}`);
   }
   for (let U of F) {
-    let V = $h.resolve(d, U),
+    let V = path.resolve(d, U),
       re = !1;
     for (let ue of [...E, ".git"]) {
       let de = M2e(ue),
-        _e = V.split($h.sep),
+        _e = V.split(path.sep),
         Se = _e.findIndex((ve) => M2e(ve) === de);
       if (Se !== -1) {
         if (ue === ".git") {
-          let ve = _e.slice(0, Se + 1).join($h.sep);
-          if (U.includes(".git/hooks")) C.push($h.join(ve, "hooks"));
-          else if (U.includes(".git/config")) C.push($h.join(ve, "config"));
-        } else C.push(_e.slice(0, Se + 1).join($h.sep));
+          let ve = _e.slice(0, Se + 1).join(path.sep);
+          if (U.includes(".git/hooks")) C.push(path.join(ve, "hooks"));
+          else if (U.includes(".git/config")) C.push(path.join(ve, "config"));
+        } else C.push(_e.slice(0, Se + 1).join(path.sep));
         re = !0;
         break;
       }
@@ -13013,13 +12979,13 @@ function $_e(e) {
   } else xB = 0;
   for (let t of F_e)
     try {
-      let r = zd.statSync(t);
+      let r = fs.statSync(t);
       if (r.isFile() && r.size === 0)
-        (zd.unlinkSync(t),
+        (fs.unlinkSync(t),
           mo(`[Sandbox Linux] Cleaned up bwrap mount point (file): ${t}`));
       else if (r.isDirectory()) {
-        if (zd.readdirSync(t).length === 0)
-          (zd.rmdirSync(t),
+        if (fs.readdirSync(t).length === 0)
+          (fs.rmdirSync(t),
             mo(`[Sandbox Linux] Cleaned up bwrap mount point (dir): ${t}`));
       }
     } catch {}
@@ -13028,7 +12994,7 @@ function $_e(e) {
 
 function kNt(e) {
   try {
-    return (zd.accessSync(e, zd.constants.X_OK), !0);
+    return (fs.accessSync(e, fs.constants.X_OK), !0);
   } catch {
     return !1;
   }
@@ -13105,7 +13071,7 @@ async function TNt(e, t, r) {
     if (!C.pid || C.killed || !I.pid || I.killed)
       throw Error("Linux bridge process died unexpectedly");
     try {
-      if (zd.existsSync(p) && zd.existsSync(D)) {
+      if (fs.existsSync(p) && fs.existsSync(D)) {
         mo(`Linux bridges ready after ${F + 1} attempts`);
         break;
       }
@@ -13166,7 +13132,7 @@ function WRr(e, t, r, o, d, p) {
 
 function L_e(e) {
   try {
-    if (zd.lstatSync(e).isSymbolicLink()) return zd.realpathSync(e);
+    if (fs.lstatSync(e).isSymbolicLink()) return fs.realpathSync(e);
   } catch {}
   return e;
 }
@@ -13194,7 +13160,7 @@ function wNt(e, t, r, o, d, p, _) {
         continue;
       }
       try {
-        let F = zd.realpathSync(N),
+        let F = fs.realpathSync(N),
           U = N.replace(/\/+$/, "");
         if (F !== U && N4(N, F)) {
           mo(
@@ -13217,12 +13183,12 @@ function wNt(e, t, r, o, d, p, _) {
     }
   for (let N of o)
     if (C(N)) {
-      if (!zd.existsSync(N)) {
+      if (!fs.existsSync(N)) {
         mo(`[Sandbox Linux] Skipping non-existent read allow path: ${N}`);
         continue;
       }
       try {
-        let F = zd.realpathSync(N),
+        let F = fs.realpathSync(N),
           U = N.replace(/\/+$/, "");
         if (F !== U && N4(N, F)) {
           mo(
@@ -13267,7 +13233,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
       if (ct === void 0) {
         ct = [Ke];
         try {
-          let vt = zd.realpathSync(Ke);
+          let vt = fs.realpathSync(Ke);
           if (vt !== Ke) ct.push(vt);
         } catch {}
         U.set(Ke, ct);
@@ -13295,12 +13261,12 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
         mo(`[Sandbox Linux] Skipping /dev path: ${Kn}`);
         continue;
       }
-      if (!zd.existsSync(Kn)) {
+      if (!fs.existsSync(Kn)) {
         mo(`[Sandbox Linux] Skipping non-existent write path: ${Kn}`);
         continue;
       }
       try {
-        let hn = zd.realpathSync(Kn),
+        let hn = fs.realpathSync(Kn),
           At = Kn.replace(/\/+$/, "");
         if (hn !== At && N4(Kn, hn)) {
           mo(
@@ -13323,7 +13289,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
         for (let hn of I) {
           Cn.push(hn);
           try {
-            let At = zd.realpathSync(hn);
+            let At = fs.realpathSync(hn);
             if (At !== hn) Cn.push(At);
           } catch {}
         }
@@ -13334,24 +13300,24 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
           for (let Fn of e.denyOnly || [])
             if (G_(Fn) === "/")
               try {
-                for (let Yn of zd.readdirSync("/"))
+                for (let Yn of fs.readdirSync("/"))
                   if (!At.has(Yn)) hn.push("/" + Yn);
               } catch {}
             else hn.push(Fn);
-          if (zd.existsSync("/etc/ssh/ssh_config.d"))
+          if (fs.existsSync("/etc/ssh/ssh_config.d"))
             hn.push("/etc/ssh/ssh_config.d");
           for (let Fn of hn) {
             let Yn = G_(Fn),
               Qr = !1;
             try {
-              Qr = zd.statSync(Yn).isDirectory();
+              Qr = fs.statSync(Yn).isDirectory();
             } catch {
               continue;
             }
             if (!Qr) continue;
             Kn.push(Yn);
             try {
-              let Br = zd.realpathSync(Yn);
+              let Br = fs.realpathSync(Yn);
               if (Br !== Yn) Kn.push(Br);
             } catch {}
           }
@@ -13381,7 +13347,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
       if (Cze(hn, I)) continue;
       let At = !1;
       try {
-        At = zd.statSync(hn).isDirectory();
+        At = fs.statSync(hn).isDirectory();
       } catch {
         continue;
       }
@@ -13438,22 +13404,22 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
         );
         continue;
       }
-      if (!zd.existsSync(hn)) {
+      if (!fs.existsSync(hn)) {
         if (BRr(hn)) {
           mo(
             `[Sandbox Linux] Skipping deny path with file ancestor (cannot create paths under a file): ${hn}`,
           );
           continue;
         }
-        let Yn = $h.dirname(hn);
-        while (Yn !== "/" && !zd.existsSync(Yn)) Yn = $h.dirname(Yn);
+        let Yn = path.dirname(hn);
+        while (Yn !== "/" && !fs.existsSync(Yn)) Yn = path.dirname(Yn);
         let Qr = vt(Yn) || vt(hn),
           Br = cn.filter((ss) => Yn === ss || Yn.startsWith(ss + "/")),
           xo = Br.length > 0 && !Br.some(dn);
         if (Qr && !xo) {
           let ss = URr(hn);
           if (ss !== hn) {
-            let qs = zd.mkdtempSync($h.join(tmpdir(), "claude-empty-"));
+            let qs = fs.mkdtempSync(path.join(tmpdir(), "claude-empty-"));
             (D.push("--ro-bind", qs, ss),
               F.set(ss, Kn),
               F_e.add(ss),
@@ -13497,7 +13463,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
       }
       let hn;
       try {
-        hn = !zd.statSync(Kn).isDirectory();
+        hn = !fs.statSync(Kn).isDirectory();
       } catch (At) {
         if (At?.code === "ENOENT" || At?.code === "ENOTDIR") hn = !1;
         else hn = !0;
@@ -13543,7 +13509,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
       wn = new Set(),
       un = (Cn) => {
         try {
-          return (zd.statSync(Cn), "present");
+          return (fs.statSync(Cn), "present");
         } catch (Kn) {
           return Kn?.code === "ENOENT" || Kn?.code === "ENOTDIR"
             ? "absent"
@@ -13552,12 +13518,12 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
       },
       kn = new Set();
     for (let Cn of [...It, ...Dn]) {
-      let Kn = $h.dirname(Cn);
+      let Kn = path.dirname(Cn);
       while (Kn !== "/" && vt(Kn)) {
         if (kn.has(Kn)) break;
         if ((kn.add(Kn), !ut(Kn) && !gn(Kn) && !Qt(Kn) && un(Kn) !== "absent"))
           wn.add(Kn);
-        Kn = $h.dirname(Kn);
+        Kn = path.dirname(Kn);
       }
     }
     let on = new Map(),
@@ -13565,7 +13531,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
         let Kn = on.get(Cn);
         if (Kn === void 0) {
           try {
-            Kn = zd.lstatSync(Cn).isSymbolicLink();
+            Kn = fs.lstatSync(Cn).isSymbolicLink();
           } catch (hn) {
             if (hn?.code === "ENOENT" || hn?.code === "ENOTDIR") Kn = null;
             else
@@ -13616,19 +13582,19 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
     xe = new Set(["proc", "dev", "sys"]);
   for (let Ke of e?.denyOnly || [])
     if (G_(Ke) === "/") {
-      for (let ct of zd.readdirSync("/")) if (!xe.has(ct)) ue.push("/" + ct);
+      for (let ct of fs.readdirSync("/")) if (!xe.has(ct)) ue.push("/" + ct);
     } else ue.push(Ke);
-  if (e && zd.existsSync("/etc/ssh/ssh_config.d"))
+  if (e && fs.existsSync("/etc/ssh/ssh_config.d"))
     ue.push("/etc/ssh/ssh_config.d");
   let Oe = ue
     .map((Ke) => G_(Ke))
     .sort((Ke, ct) => Ke.split("/").length - ct.split("/").length);
   for (let Ke of Oe) {
-    if (!zd.existsSync(Ke)) {
+    if (!fs.existsSync(Ke)) {
       mo(`[Sandbox Linux] Skipping non-existent read deny path: ${Ke}`);
       continue;
     }
-    if (zd.statSync(Ke).isDirectory()) {
+    if (fs.statSync(Ke).isDirectory()) {
       Me.push(Ke);
       let vt = V(Ke);
       Se.push(vt[vt.length - 1]);
@@ -13777,7 +13743,7 @@ async function vNt(e) {
         "[Sandbox Linux] Skipping seccomp filter - allowAllUnixSockets is enabled",
       );
     if (je && tn)
-      if (zd.existsSync(je))
+      if (fs.existsSync(je))
         (en.push("--bind", je, je),
           en.push("--setenv", "SRT_OBSERVE_SOCK", je),
           en.push("--setenv", "SRT_ENCODED_CMD", Jx(r ?? t)));
@@ -13796,11 +13762,11 @@ async function vNt(e) {
     }
     if (o) {
       if ((en.push("--unshare-net"), d && p)) {
-        if (!zd.existsSync(d))
+        if (!fs.existsSync(d))
           throw Error(
             `Linux HTTP bridge socket does not exist: ${d}. The bridge process may have died. Try reinitializing the sandbox.`,
           );
-        if (!zd.existsSync(p))
+        if (!fs.existsSync(p))
           throw Error(
             `Linux SOCKS bridge socket does not exist: ${p}. The bridge process may have died. Try reinitializing the sandbox.`,
           );
@@ -13924,10 +13890,10 @@ function Rze(e) {
 function qRr(e = !1) {
   let t = process.cwd(),
     r = [];
-  for (let o of Oee) (r.push(uE.resolve(t, o)), r.push(`**/${o}`));
-  for (let o of _ye()) (r.push(uE.resolve(t, o)), r.push(`**/${o}/**`));
-  if ((r.push(uE.resolve(t, ".git/hooks")), r.push("**/.git/hooks/**"), !e))
-    (r.push(uE.resolve(t, ".git/config")), r.push("**/.git/config"));
+  for (let o of Oee) (r.push(path.resolve(t, o)), r.push(`**/${o}`));
+  for (let o of _ye()) (r.push(path.resolve(t, o)), r.push(`**/${o}/**`));
+  if ((r.push(path.resolve(t, ".git/hooks")), r.push("**/.git/hooks/**"), !e))
+    (r.push(path.resolve(t, ".git/config")), r.push("**/.git/config"));
   return [...new Set(r)];
 }
 
@@ -14002,7 +13968,7 @@ function YRr(e) {
 function RNt(e) {
   let t = e.split(/[*?[\]]/)[0];
   if (!t || t === "/") return "/";
-  return t.endsWith("/") ? t.slice(0, -1) : uE.dirname(t);
+  return t.endsWith("/") ? t.slice(0, -1) : path.dirname(t);
 }
 
 function XRr(e, t) {
@@ -14051,10 +14017,10 @@ function YD(e, t, r, o) {
 
 function H_e(e) {
   let t = [],
-    r = uE.dirname(e);
+    r = path.dirname(e);
   while (r !== "/" && r !== ".") {
     t.push(r);
-    let o = uE.dirname(r);
+    let o = path.dirname(r);
     if (o === r) break;
     r = o;
   }
@@ -14072,15 +14038,15 @@ function JRr(e) {
   let t = new Map();
   for (let d of e) {
     if (Of(d)) continue;
-    let p = uE.dirname(d),
-      _ = uE.dirname(p);
+    let p = path.dirname(d),
+      _ = path.dirname(p);
     if (_ === p || p === d || _ === "/") continue;
     let E = t.get(_);
     if (!E) ((E = new Map()), t.set(_, E));
-    let C = uE.basename(p),
+    let C = path.basename(p),
       I = E.get(C);
     if (!I) ((I = new Set()), E.set(C, I));
-    I.add(uE.basename(d));
+    I.add(path.basename(d));
   }
   let r = new Set(),
     o = [];
@@ -14101,7 +14067,7 @@ function JRr(e) {
       )
         continue;
       o.push(E);
-      for (let I of E.names) for (let D of E.leaves) r.add(uE.join(d, I, D));
+      for (let I of E.names) for (let D of E.leaves) r.add(path.join(d, I, D));
     }
   }
   return { groups: o, rest: e.filter((d) => !r.has(d)) };
@@ -14736,12 +14702,12 @@ var Oze = [60080, 60089],
 function Dze(e) {
   let t = process.env.SystemRoot ?? "C:\\Windows",
     r = {
-      exe: NS.win32.join(t, "System32", "cmd.exe"),
+      exe: path.win32.join(t, "System32", "cmd.exe"),
       args: ["/d", "/s", "/c"],
     };
   if (e === void 0 || e === null) return r;
   if (typeof e === "object") {
-    if (!NS.win32.isAbsolute(e.exe))
+    if (!path.win32.isAbsolute(e.exe))
       throw new WindowsSandboxError(
         "bin_shell_invalid",
         `binShell.exe must be an absolute path (got ${JSON.stringify(e.exe)})`,
@@ -14753,9 +14719,9 @@ function Dze(e) {
       );
     return e;
   }
-  let o = NS.win32.basename(e),
+  let o = path.win32.basename(e),
     d = o.toLowerCase(),
-    p = NS.win32.isAbsolute(e);
+    p = path.win32.isAbsolute(e);
   if (!p && e !== o)
     throw new WindowsSandboxError(
       "bin_shell_invalid",
@@ -14780,7 +14746,7 @@ function Dze(e) {
       return {
         exe: p
           ? e
-          : NS.win32.join(
+          : path.win32.join(
               t,
               "System32",
               "WindowsPowerShell",
@@ -14808,7 +14774,7 @@ function dP(e) {
       "srt_win_not_found",
       "no srt-win path configured; set windows.srtWin.path (e.g. to the exported VENDORED_SRT_WIN_EXE constant for the packaged binary)",
     );
-  if (!mS.existsSync(e.path))
+  if (!fs.existsSync(e.path))
     throw new WindowsSandboxError(
       "srt_win_not_found",
       `windows.srtWin.path is set to '${e.path}' but the file does not exist`,
@@ -14980,7 +14946,7 @@ async function VNt(e = {}) {
   if (!t) {
     let [o, d] = e.proxyPortRange ?? Oze;
     for (let p = 0; p < 5; p++) {
-      let _ = HNt.createServer();
+      let _ = net.createServer();
       (_.listen(0, "127.0.0.1"), await once(_, "listening"));
       let E = _.address().port;
       if (E < o || E > d) {
@@ -15071,7 +15037,7 @@ function bPr(e, t) {
 function Hze() {
   let e = process.env.ProgramData;
   if (!e) throw Error("ProgramData is not set");
-  return NS.win32.join(e, "sandbox-runtime");
+  return path.win32.join(e, "sandbox-runtime");
 }
 
 async function ensurePersistentWindowsCa(e = {}) {
@@ -15081,29 +15047,29 @@ async function ensurePersistentWindowsCa(e = {}) {
       `ensurePersistentWindowsCa: sandbox user is not provisioned (user=${t.provisioned}, cred=${t.credPresent}). Run \`npx sandbox-runtime windows-install\` first.`,
     );
   let r = e.dir ? void 0 : Hze();
-  if (r && !mS.existsSync(r))
+  if (r && !fs.existsSync(r))
     throw Error(
       `ensurePersistentWindowsCa: state directory ${r} does not exist. Run \`npx sandbox-runtime windows-install\` first.`,
     );
-  let o = e.dir ?? NS.win32.join(r, "ca"),
-    d = NS.join(o, "ca.json"),
-    p = NS.join(o, "cert.pem"),
-    _ = NS.join(o, "key.pem"),
+  let o = e.dir ?? path.win32.join(r, "ca"),
+    d = path.join(o, "ca.json"),
+    p = path.join(o, "cert.pem"),
+    _ = path.join(o, "key.pem"),
     E = (e.regenerateWithinDays ?? 30) * 24 * 60 * 60 * 1000,
     C = (ue, de) => {
       let _e = `${ue}.tmp.${process.pid}`;
-      (mS.writeFileSync(_e, de), mS.renameSync(_e, ue));
+      (fs.writeFileSync(_e, de), fs.renameSync(_e, ue));
     },
     I = async (ue, de, _e, Se) => {
       (C(p, ue), C(_, de));
       let ve = Se || t.caCertThumb !== _e;
       if (ve) {
-        let Me = NS.join(o, `.trust.${process.pid}.${Date.now()}.pem`);
-        mS.writeFileSync(Me, ue);
+        let Me = path.join(o, `.trust.${process.pid}.${Date.now()}.pem`);
+        fs.writeFileSync(Me, ue);
         try {
           await _Pr(Me, { srtWin: e.srtWin });
         } finally {
-          mS.rmSync(Me, { force: !0 });
+          fs.rmSync(Me, { force: !0 });
         }
       }
       return (
@@ -15124,7 +15090,7 @@ async function ensurePersistentWindowsCa(e = {}) {
     D = () => {
       let ue;
       try {
-        ue = JSON.parse(mS.readFileSync(d, "utf8"));
+        ue = JSON.parse(fs.readFileSync(d, "utf8"));
       } catch (_e) {
         mo(
           `[Sandbox Windows] persistent CA ca.json unreadable (${_e.message})`,
@@ -15158,13 +15124,13 @@ async function ensurePersistentWindowsCa(e = {}) {
         { level: "warn" },
       );
   }
-  mS.mkdirSync(o, { recursive: !0 });
+  fs.mkdirSync(o, { recursive: !0 });
   try {
     let ue = Date.now() - 300000;
-    for (let de of mS.readdirSync(o)) {
+    for (let de of fs.readdirSync(o)) {
       if (!de.includes(".tmp.") && !de.startsWith(".trust.")) continue;
-      let _e = NS.join(o, de);
-      if (mS.statSync(_e).mtimeMs < ue) mS.rmSync(_e, { force: !0 });
+      let _e = path.join(o, de);
+      if (fs.statSync(_e).mtimeMs < ue) fs.rmSync(_e, { force: !0 });
     }
   } catch {}
   let N = nze({ cn: "sandbox-runtime persistent CA" });
@@ -15193,7 +15159,7 @@ function jze(e, t) {
     }
     let _ = p ? ND(d, { caseInsensitive: !0 }) : [d];
     for (let E of _) {
-      if (!mS.statSync(E, { throwIfNoEntry: !1 })) {
+      if (!fs.statSync(E, { throwIfNoEntry: !1 })) {
         if (t?.mode === "deny" && !p)
           r.add(/[\\/]$/.test(o) && !/[\\/]$/.test(E) ? E + "\\" : E);
         continue;
@@ -16512,13 +16478,13 @@ async function eqe() {
     } = TA.linuxBridge;
     if ((await Promise.all([cLt(o, "HTTP"), cLt(d, "SOCKS")]), t))
       try {
-        (Vze.rmSync(t, { force: !0 }), mo("Cleaned up HTTP socket"));
+        (fs.rmSync(t, { force: !0 }), mo("Cleaned up HTTP socket"));
       } catch (p) {
         mo(`HTTP socket cleanup error: ${p}`, { level: "error" });
       }
     if (r)
       try {
-        (Vze.rmSync(r, { force: !0 }), mo("Cleaned up SOCKS socket"));
+        (fs.rmSync(r, { force: !0 }), mo("Cleaned up SOCKS socket"));
       } catch (p) {
         mo(`SOCKS socket cleanup error: ${p}`, { level: "error" });
       }
@@ -16636,7 +16602,7 @@ async function ensureBridgeSpawnRootDir() {
 function cSe() {
   let e = [join(getClaudeConfigDir(), "ide")];
   if (a.CLAUDE_CONFIG_DIR)
-    e.push(join(v5t.homedir(), ".claude", "ide").normalize("NFC"));
+    e.push(join(os.homedir(), ".claude", "ide").normalize("NFC"));
   if (getCurrentPlatform() === "wsl") {
     let t = a.USERPROFILE ? convertWindowsPathToWsl(a.USERPROFILE) : null;
     if (t) e.push(join(t, ".claude", "ide"));
@@ -16813,7 +16779,7 @@ function createSettingsChangeDetector(e) {
     );
     for (let [Rs, di] of Ke)
       logForDebugging(
-        `Settings file ${di} is a symlink to ${Rs}; also watching ${P_.dirname(Rs)} so atomic-save edits to the target are detected`,
+        `Settings file ${di} is a symlink to ${Rs}; also watching ${path.dirname(Rs)} so atomic-save edits to the target are detected`,
       );
     let bs = RT.watch(as, {
       persistent: !0,
@@ -16824,9 +16790,9 @@ function createSettingsChangeDetector(e) {
         if (di && !di.isFile() && !di.isDirectory()) return !0;
         if (Rs.split(/[/\\]/).some((rl) => rl === ".git")) return !0;
         if (!di || di.isDirectory()) return !1;
-        let ga = P_.normalize(Rs);
+        let ga = path.normalize(Rs);
         if (So.has(ga)) return !1;
-        if (eo && ga.startsWith(eo + P_.sep) && ga.endsWith(".json")) return !1;
+        if (eo && ga.startsWith(eo + path.sep) && ga.endsWith(".json")) return !1;
         return !0;
       },
       ignorePermissionErrors: !0,
@@ -16854,21 +16820,21 @@ function createSettingsChangeDetector(e) {
       await Ir,
       await Promise.all(
         [...Zr]
-          .filter((So) => as.has(P_.dirname(So)))
+          .filter((So) => as.has(path.dirname(So)))
           .map(async (So) => {
             if (!re && (await un(So))) hn(So);
           }),
       ));
   }
   function cn(Zr) {
-    let Ir = P_.dirname(Zr);
+    let Ir = path.dirname(Zr);
     if (!vt.has(Ir))
       try {
         let as = watch(Ir, (So, eo) => {
           for (let vr of ct)
             if (
-              P_.dirname(vr) === Ir &&
-              (eo === null || eo === P_.basename(vr))
+              path.dirname(vr) === Ir &&
+              (eo === null || eo === path.basename(vr))
             )
               It(vr);
         });
@@ -17057,7 +17023,7 @@ function createSettingsChangeDetector(e) {
     else hn(Ir);
   }
   function Kn(Zr) {
-    return Ke.get(P_.normalize(Zr)) ?? Zr;
+    return Ke.get(path.normalize(Zr)) ?? Zr;
   }
   function hn(Zr) {
     if (re) return;
@@ -17118,7 +17084,7 @@ function createSettingsChangeDetector(e) {
       (logForDebugging(`Detected deletion of ${Ir}`),
       getCurrentPlatform() === "macos")
     )
-      D?.add(P_.dirname(Zr));
+      D?.add(path.dirname(Zr));
     Yn(Ir, as);
   }
   function Yn(Zr, Ir, as = d) {
@@ -17230,7 +17196,7 @@ var settingsChangeDetector = createSettingsChangeDetector();
 function Pqr(e) {
   if (!isHoverRestEnabled() || e === void 0) return;
   let t = getSettingsFilePathForSource("userSettings");
-  return t !== void 0 && P_.basename(t) === SETTINGS_FILENAMES.default
+  return t !== void 0 && path.basename(t) === SETTINGS_FILENAMES.default
     ? t
     : void 0;
 }
@@ -17256,7 +17222,7 @@ async function I5t(e) {
   if (C) (p.push(C), _.add(C));
   let I = new Set();
   for (let re of p) {
-    let ue = P_.dirname(re);
+    let ue = path.dirname(re);
     if (!t.has(ue)) t.set(ue, new Set());
     if ((t.get(ue).add(re), !r.has(ue) && !I.has(ue)))
       try {
@@ -17264,17 +17230,17 @@ async function I5t(e) {
       } catch {
         if (_.has(re))
           try {
-            if ((await stat(P_.dirname(ue))).isDirectory()) I.add(ue);
+            if ((await stat(path.dirname(ue))).isDirectory()) I.add(ue);
           } catch {}
       }
     try {
       let de = await realpath(re);
       if (de === re) continue;
       let _e = await realpath(ue),
-        Se = P_.dirname(de);
-      if (P_.join(_e, P_.basename(re)) === de) continue;
+        Se = path.dirname(de);
+      if (path.join(_e, path.basename(re)) === de) continue;
       let ve = Se === _e,
-        Me = ve ? P_.join(ue, P_.basename(de)) : de;
+        Me = ve ? path.join(ue, path.basename(de)) : de;
       if (coe(Me) !== void 0) continue;
       if ((o.set(Me, re), d.add(ue), ve)) t.get(ue).add(Me);
       else {
@@ -17336,15 +17302,15 @@ function Iqr(e) {
 }
 
 function coe(e) {
-  let t = P_.normalize(e),
+  let t = path.normalize(e),
     r = getManagedSettingsDropInDir();
-  if (t.startsWith(r + P_.sep)) return "policySettings";
+  if (t.startsWith(r + path.sep)) return "policySettings";
   let o = SETTINGS_SOURCE_ORDER.find(
     (p) => getSettingsFilePathForSource(p) === t,
   );
   if (o) return o;
   let d = getLegacyLocalSettingsFilePath();
-  if (d && P_.normalize(d) === t) return "localSettings";
+  if (d && path.normalize(d) === t) return "localSettings";
   return;
 }
 
@@ -37411,7 +37377,7 @@ function jJe(e) {
     : e.includes("bash")
       ? ".bashrc"
       : ".profile";
-  return join(XAe.homedir(), t);
+  return join(os.homedir(), t);
 }
 
 function _oo(e) {
@@ -37653,7 +37619,7 @@ ${U}`);
                     },
                   );
                   let ue = re?.signal
-                    ? XAe.constants.signals[re.signal]
+                    ? os.constants.signals[re.signal]
                     : void 0;
                   (logEvent("tengu_shell_snapshot_failed", {
                     stderr_length: V?.length || 0,
@@ -39370,7 +39336,7 @@ function Oso(e) {
 var Dso = String.fromCharCode(8239);
 
 function Nso(e) {
-  let t = wC.basename(e),
+  let t = path.basename(e),
     r = /^(.+)([ \u202F])(AM|PM)(\.png)$/,
     o = t.match(r);
   if (!o) return;
@@ -39670,7 +39636,7 @@ var ReadTool = buildTool({
     )
       return { result: !1, message: FILE_DIR_DENIED_MESSAGE, errorCode: 1 };
     if (An(d)) return { result: !0 };
-    let E = wC.extname(d).toLowerCase();
+    let E = path.extname(d).toLowerCase();
     if (isBinaryFileExtension(d) && !isImageOrPdfPath(d))
       return {
         result: !1,
@@ -39809,7 +39775,7 @@ async function Bso(
       hasMaxTokens: E.maxTokens !== void 0,
       hasMaxSizeBytes: E.maxSizeBytes !== void 0,
     });
-  let F = wC.extname(e).toLowerCase().slice(1),
+  let F = path.extname(e).toLowerCase().slice(1),
     U = resolvePath(e);
   if (isJupyterNotebookPath(U)) ((t = 1), (r = void 0));
   let V = _.get(U);
@@ -39911,7 +39877,7 @@ async function Bso(
             ...ve,
             resolvedFilePath: Oe,
             approvedPaths: C.map((je) =>
-              wC.join(wC.dirname(je), wC.basename(Oe)),
+              path.join(path.dirname(je), path.basename(Oe)),
             ),
           });
         } catch (je) {
@@ -40131,7 +40097,7 @@ async function jso(e) {
                   .filter((xo) => xo.endsWith(".jpg"))
                   .sort();
                 return Promise.all(
-                  Br.map((xo) => readFile(wC.join(Cn.data.file.outputDir, xo))),
+                  Br.map((xo) => readFile(path.join(Cn.data.file.outputDir, xo))),
                 );
               })(),
         At = (
@@ -40448,7 +40414,7 @@ async function createImageBlockFromFile(
 }
 
 async function Wso(e, t, r) {
-  if (r === void 0 && wC.dirname(t) !== getCurrentToolResultsDir())
+  if (r === void 0 && path.dirname(t) !== getCurrentToolResultsDir())
     throw new R(
       `PDF extraction directory is outside the session tool-results store: ${t}`,
       "pdf extraction dir outside tool-results",
@@ -40481,13 +40447,13 @@ async function Wso(e, t, r) {
       let I = await e.read([STORAGE_KEYS.sidecar(p, _, [...E, C])]);
       if (!I.ok)
         throw new R(
-          `Failed to read extracted PDF page: ${I.error.code} (${wC.join(t, C)})`,
+          `Failed to read extracted PDF page: ${I.error.code} (${path.join(t, C)})`,
           "pdf extraction page read failed",
         );
       let D = I.value.items[0];
       if (D === void 0 || !D.found)
         throw new R(
-          `Extracted PDF page disappeared during read: ${wC.join(t, C)}`,
+          `Extracted PDF page disappeared during read: ${path.join(t, C)}`,
           "pdf extraction page missing",
         );
       return Buffer.from(D.value);
@@ -73754,7 +73720,7 @@ var nOe = (e) =>
         ? "a socket"
         : "a device";
 
-var isPathOutsideRoot = (e, t = Xxo) =>
+var isPathOutsideRoot = (e, t = path) =>
   e === ".." ||
   e.startsWith(`..${t.sep}`) ||
   e.startsWith("../") ||
@@ -84471,7 +84437,7 @@ async function wUo(e, t, r, o) {
       }
     );
   let C = `----FormBoundary${randomUUID()}`,
-    I = EUo(BC.basename(t)),
+    I = EUo(path.basename(t)),
     D = [];
   (D.push(
     Buffer.from(`--${C}\r
@@ -104243,7 +104209,7 @@ function hfe(e) {
 }
 
 function nqo(e) {
-  let t = Jq.runInContext(
+  let t = vm.runInContext(
       `(() => {
       // Capture intrinsics in closure NOW (literal-eval time, pre-user-code).
       // Global identifiers inside these function bodies resolve at CALL time
@@ -104606,7 +104572,7 @@ function eWn(e, t, r, o, d, p, _, E, C) {
   Ch(e, "console", I);
   for (let [F, U] of Object.entries(o)) Ch(e, F, t.asyncData(U));
   for (let [F, U] of Object.entries(d)) Ch(e, F, t.asyncDataN(U));
-  let D = Jq.runInContext(
+  let D = vm.runInContext(
     '(f) => { try { if (typeof f === "function") f() } catch {} }',
     e,
   );
@@ -104926,13 +104892,13 @@ function E$e(e, t, r, o, d, p) {
     E = new Set(),
     C = new Set(),
     I = { cwd: getCwd(), repo: void 0 },
-    D = Jq.createContext(
+    D = vm.createContext(
       { __proto__: null },
       { codeGeneration: { strings: !0, wasm: !1 } },
     ),
     N = nqo(D),
     F = eqo(N);
-  (Jq.runInContext(
+  (vm.runInContext(
     `Promise.prototype.toString = function () {
       throw new TypeError(
         "REPL: unawaited Promise coerced to string. Shorthand results used " +
@@ -104956,7 +104922,7 @@ function E$e(e, t, r, o, d, p) {
     Object.keys(D).forEach((re) => E.add(re)),
     Qjn.forEach((re) => E.add(re)));
   try {
-    Jq.runInContext("Object.getOwnPropertyNames(globalThis)", D).forEach((ue) =>
+    vm.runInContext("Object.getOwnPropertyNames(globalThis)", D).forEach((ue) =>
       E.add(ue),
     );
   } catch {
@@ -105196,7 +105162,7 @@ async function _qo(e, t) {
     }),
       k$e(e));
     let _ = o$e(t.code),
-      C = new rWn.Script(_, {
+      C = new vm.Script(_, {
         filename: "repl-replay.js",
         importModuleDynamically: () => {
           throw makePlainError("import() is not available in REPL code.");
@@ -105966,7 +105932,7 @@ async function Uut(e, t, r, o, d, p) {
   }
   try {
     let ut = o$e(I),
-      en = new pWn.Script(ut, {
+      en = new vm.Script(ut, {
         filename: "repl-tool-code.js",
         importModuleDynamically: () => {
           throw makePlainError("import() is not available in REPL code.");
