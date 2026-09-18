@@ -52,13 +52,13 @@ import { hookModelMatchKey, isProjectScopeTrustAccepted, isRecognizedModelKey } 
 
 import { expandToolNameAlias, getAliasNamesForToolName, getBuiltinLegacyToolNames, parsePermissionRule, resolveToolNameAlias } from "../../02-功能模块/权限系统/permission-rule-parsing.js";
 
-import { basename as pms, join as Wp } from "path";
+import { basename, join } from "path";
 
 import { findToolByName } from "../../02-功能模块/权限系统/chunk-qdy0h5k2.js";
 
 import { getPreferredShellToolName } from "../../01-核心基础设施/提示词-SystemPrompt/提示词-SystemPrompt.bt5gmcr2.js";
 
-import { isDeepStrictEqual as _mr } from "util";
+import { isDeepStrictEqual } from "util";
 
 import { isOfficialMarketplace } from "../../02-功能模块/插件系统/chunk-33bdfgmx.js";
 
@@ -611,7 +611,7 @@ function vmr(e) {
     case "InstructionsLoaded":
       return e.load_reason;
     case "FileChanged":
-      return pms(e.file_path);
+      return basename(e.file_path);
     default:
       return;
   }
@@ -775,7 +775,7 @@ function Lms(e, t) {
   )
     return e === t;
   let r = Ej(e);
-  return r !== void 0 ? r === Ej(t) : _mr(e, t);
+  return r !== void 0 ? r === Ej(t) : isDeepStrictEqual(e, t);
 }
 
 
@@ -1088,7 +1088,7 @@ function getMaterializedSessionFile() {
 function getTranscriptPathForSession(e) {
   if (e === K()) return getMaterializedSessionFile() ?? getSessionTranscriptPath();
   let t = getProjectDir(he());
-  return Wp(t, `${e}.jsonl`);
+  return join(t, `${e}.jsonl`);
 }
 
 

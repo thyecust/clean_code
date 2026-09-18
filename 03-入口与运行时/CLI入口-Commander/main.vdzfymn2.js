@@ -4449,14 +4449,14 @@ async function Kn(v, k, O, R) {
     N,
   );
 }
-import { posix, win32 as Qn } from "path";
+import { posix, win32 } from "path";
 import { types } from "util";
 var pa = 1000;
 function ua() {
   let v = process.argv[1] || "",
     k = process.execPath || process.argv[0] || "";
   if (getCurrentPlatform() === "windows")
-    ((v = v.split(Qn.sep).join(posix.sep)), (k = k.split(Qn.sep).join(posix.sep)));
+    ((v = v.split(win32.sep).join(posix.sep)), (k = k.split(win32.sep).join(posix.sep)));
   let O = [v, k],
     R = [
       "/build-ant/",

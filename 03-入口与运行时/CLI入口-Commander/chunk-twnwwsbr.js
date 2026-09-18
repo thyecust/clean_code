@@ -12,7 +12,7 @@ import { AHt } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { execFileSync } from "child_process";
 import { lstatSync } from "fs";
-import { join as w } from "path";
+import { join } from "path";
 function E() {
   return !1;
 }
@@ -58,7 +58,7 @@ function findExecutableWindows(e, t = !1) {
       n.forget(e);
     }
   let c = a.SYSTEMROOT || "C:\\Windows",
-    d = w(c, "System32", "where.exe");
+    d = join(c, "System32", "where.exe");
   try {
     let i = execFileSync(d, [e], {
         stdio: "pipe",

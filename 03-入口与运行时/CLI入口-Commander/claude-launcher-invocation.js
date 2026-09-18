@@ -13,11 +13,11 @@ import { getClaudeVersionsDir, getLocalBinDir } from "../../01-核心基础设�
 import { pg } from "../../00-第三方库/semver/chunk-jm5cswvd.js";
 import { toESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 var o = toESM(pg(), 1);
-import { readdir, stat as p } from "fs/promises";
-import { join as a, sep as f } from "path";
+import { readdir, stat } from "fs/promises";
+import { join, sep } from "path";
 function isRunningInstalledBinary() {
   if (!isBunStandaloneExecutable()) return !1;
-  let r = getClaudeVersionsDir() + f;
+  let r = getClaudeVersionsDir() + sep;
   return process.execPath.startsWith(r);
 }
 function resolveWrappedClaudeInvocation(r = {}) {
@@ -36,7 +36,7 @@ function resolveClaudeInvocation(r = {}) {
   return { cmd: process.execPath, prefixArgs: [e], target: e };
 }
 function getInstalledClaudePath() {
-  return a(getLocalBinDir(), "claude");
+  return join(getLocalBinDir(), "claude");
 }
 function applyProcessWrapper(r) {
   let e = getLauncherArgv();
@@ -59,9 +59,9 @@ async function findInstalledVersionBinary() {
     .filter((n) => !/\.tmp\.\d+\.\d+(\.\d+)?$/.test(n) && o.valid(n))
     .sort(o.rcompare);
   for (let n of t) {
-    let i = a(r, n);
+    let i = join(r, n);
     try {
-      let s = await p(i);
+      let s = await stat(i);
       if (s.isFile() && s.size > 0) return i;
     } catch {}
   }

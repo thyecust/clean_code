@@ -25,9 +25,9 @@ import { constants } from "fs";
 import {
   mkdir,
   mkdtemp,
-  open as nt,
+  open,
   realpath,
-  rm as H,
+  rm,
   writeFile,
 } from "fs/promises";
 import { posix } from "path";
@@ -198,7 +198,7 @@ async function ft(e, t) {
       await mkdir(x(w, "in"), { mode: 448 }),
       await mkdir(x(w, "out"), { mode: 448 }));
   } catch (n) {
-    if (w !== void 0) await H(w, { recursive: !0, force: !0 }).catch(() => {});
+    if (w !== void 0) await rm(w, { recursive: !0, force: !0 }).catch(() => {});
     let s = A(n);
     return (
       writeDiagnosticsEvent("warn", "ptc_staging_unavailable", { code: s ?? "temp_dir_refused" }),
@@ -284,7 +284,7 @@ async function ft(e, t) {
       let E = MAX_WORKING_FILE_BYTES,
         M;
       try {
-        let m = await nt(c, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+        let m = await open(c, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
         try {
           let T = await m.stat();
           if (!T.isFile())
@@ -346,7 +346,7 @@ async function ft(e, t) {
       }
     );
   } finally {
-    await H(O, { recursive: !0, force: !0 }).catch(() => {});
+    await rm(O, { recursive: !0, force: !0 }).catch(() => {});
   }
 }
 export { runStagedMcpCall };

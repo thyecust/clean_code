@@ -32,7 +32,7 @@ import { getManagedSettingsStatus, isManagedSettingsFetchInProgress, formatManag
 import { getAutoUpdatesChannel } from "../../02-功能模块/自动更新-安装/auto-updates-channel.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
 import { getSettingsWithMcpErrors } from "../../01-核心基础设施/设置-配置/chunk-xy3cbvd8.js";
-import { cwd as k } from "process";
+import { cwd } from "process";
 import { stripVTControlCharacters } from "util";
 import { createInterface } from "readline";
 function confirmYesNo(c, d = process.stdin) {
@@ -321,7 +321,7 @@ async function installHandler(c, d, n) {
 `),
       process.exit(0));
   let { setup: f } = await import("./setup.sbdmcpy2.js");
-  await f(k(), "default", !1, !1, void 0, !1, void 0, void 0, void 0, n);
+  await f(cwd(), "default", !1, !1, void 0, !1, void 0, void 0, void 0, n);
   let { install: l } = await import("../../02-功能模块/自动更新-安装/install.914sz9hm.js");
   await new Promise((m) => {
     let p = [];

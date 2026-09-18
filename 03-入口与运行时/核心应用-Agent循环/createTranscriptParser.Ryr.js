@@ -20,8 +20,8 @@ import { Ie, Le, rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { isByteViewUnsupportedFailure, jsonParse, jsonParseUntraced, logForDebugging, startSlowOperationSpan } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { validateStorageKey } from "../../01-核心基础设施/安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { countMatching } from "../../01-核心基础设施/核心工具-数组与集合/chunk-d16fhdtx.js";
-import { closeSync as $ge, openSync as Uge, readSync as LZ } from "fs";
-import { open as vj, readFile as Mj, stat as Vx } from "fs/promises";
+import { closeSync, openSync, readSync } from "fs";
+import { open, readFile, stat } from "fs/promises";
 import { isEndConversationDisabled } from "../../01-核心基础设施/核心工具-未归类/ended-by-model.js";
 import { sanitizeLoneSurrogates } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
 import { normalizeDeclaredDialogKinds } from "../../02-功能模块/远程控制-Bridge/chunk-5ne99rq3.js";
@@ -31,7 +31,7 @@ import { A, Bp, Kd, Rt, l, vB } from "../../00-第三方库/@anthropic-ai/sdk/sd
 import { Nge } from "../../00-第三方库/jsonc-parser/jsonc-parser.aa158d2j.js";
 import { createRealPathResolver, createTranscriptSource, resolveTranscriptLocator } from "../../01-核心基础设施/核心工具-未归类/hover-rest-transcript.js";
 import { STORAGE_KEYS, isValidPathSegment } from "../../02-功能模块/Teammates团队/storage-keys.js";
-import { basename as $Z, dirname as kv, join as Wp } from "path";
+import { basename, dirname, join } from "path";
 import { getProjectDir, getProjectsDir as Pl } from "../../02-功能模块/Teammates团队/transcript-paths.js";
 
 var Vbr = new Set(["user", "assistant", "attachment", "system"]);
@@ -730,13 +730,13 @@ function jhr(e) {
 
 function J_s(e, t) {
   let d = Buffer.allocUnsafe(1048576),
-    p = Uge(e, "r"),
+    p = openSync(e, "r"),
     _ = Buffer.allocUnsafe(65536);
   function E(C, I) {
     let D = -1,
       N = 0;
     while (N < t) {
-      let F = LZ(p, d, 0, Math.min(1048576, t - N), N);
+      let F = readSync(p, d, 0, Math.min(1048576, t - N), N);
       if (F === 0) break;
       let U = 0;
       while (U < F) {
@@ -746,7 +746,7 @@ function J_s(e, t) {
           if (I === void 0 || I(D)) {
             let re = N + V - D;
             if (re > _.length) _ = Buffer.allocUnsafe(re);
-            (LZ(p, _, 0, re, D), C(_, 0, re, D));
+            (readSync(p, _, 0, re, D), C(_, 0, re, D));
           }
           D = -1;
         } else if (V > U) {
@@ -761,10 +761,10 @@ function J_s(e, t) {
     if (D >= 0 && (I === void 0 || I(D))) {
       let F = t - D;
       if (F > _.length) _ = Buffer.allocUnsafe(F);
-      (LZ(p, _, 0, F, D), C(_, 0, F, D));
+      (readSync(p, _, 0, F, D), C(_, 0, F, D));
     }
   }
-  return { scan: E, close: () => $ge(p) };
+  return { scan: E, close: () => closeSync(p) };
 }
 
 
@@ -979,7 +979,7 @@ function ebs(e, t, r, o, d) {
 
 async function nbs(e, t) {
   if (t === 0) return !0;
-  let r = await vj(e, "r");
+  let r = await open(e, "r");
   try {
     let o = Buffer.alloc(1),
       { bytesRead: d } = await r.read(o, 0, 1, t - 1);
@@ -1020,15 +1020,15 @@ function sbs(e, t, r) {
 
 function Ayr(e, t) {
   if (t.length === 0) return [];
-  let r = Uge(e, "r");
+  let r = openSync(e, "r");
   try {
     return t.map(({ offset: o, length: d }) => {
       if (o < 0 || d <= 0) return null;
       let p = Buffer.allocUnsafe(d);
-      return LZ(r, p, 0, d, o) < d ? null : p;
+      return readSync(r, p, 0, d, o) < d ? null : p;
     });
   } finally {
-    $ge(r);
+    closeSync(r);
   }
 }
 
@@ -1626,7 +1626,7 @@ async function loadTranscriptFile(e, t) {
   }
   try {
     if (!_) {
-      let { size: I } = await Vx(e);
+      let { size: I } = await stat(e);
       if (I > SKIP_PRECOMPACT_THRESHOLD) {
         let D = ebs(e, I, o, r.dropPreBoundaryEntries, t?.keepAllLeaves ?? !1),
           N = rbs(e, D.lastAttributionOffset, D.lastAttributionLength);
@@ -1641,7 +1641,7 @@ async function loadTranscriptFile(e, t) {
         return r.finish();
       }
     }
-    let E = await Mj(e),
+    let E = await readFile(e),
       C = yje(Whr(E));
     if (
       (r.setTailTorn(E.length > 0 && E.at(-1) !== 10),
@@ -1689,11 +1689,11 @@ async function abs(e, t) {
   if (!isValidPathSegment(e)) return;
   let r = fy();
   if (r !== null) {
-    let C = $Z(r);
-    if (kv(r) !== Pl() || !isValidPathSegment(C)) return;
+    let C = basename(r);
+    if (dirname(r) !== Pl() || !isValidPathSegment(C)) return;
     let I = FZ(STORAGE_KEYS.transcript(C, e));
     if (I === void 0) return;
-    return { key: I, path: Wp(r, `${e}.jsonl`) };
+    return { key: I, path: join(r, `${e}.jsonl`) };
   }
   let o = he(),
     d = getProjectKey(o),
@@ -1735,16 +1735,16 @@ async function abs(e, t) {
       isKeySegment: isValidPathSegment,
       realWorkspacePath: createRealPathResolver(t),
     };
-    for (let de of U) if (await dirBelongsToProject(Wp(Pl(), de), o, !1, createTranscriptSource(ue))) p.push(de);
+    for (let de of U) if (await dirBelongsToProject(join(Pl(), de), o, !1, createTranscriptSource(ue))) p.push(de);
   }
   for (let C of p) {
     let I = FZ(STORAGE_KEYS.transcript(C, e));
     if (I === void 0) continue;
     if ((await t.stat(I)).ok)
-      return { key: I, path: Wp(Pl(), C, `${e}.jsonl`) };
+      return { key: I, path: join(Pl(), C, `${e}.jsonl`) };
   }
   let E = FZ(STORAGE_KEYS.transcript(d, e));
-  return E === void 0 ? void 0 : { key: E, path: Wp(Pl(), d, `${e}.jsonl`) };
+  return E === void 0 ? void 0 : { key: E, path: join(Pl(), d, `${e}.jsonl`) };
 }
 
 
@@ -1752,12 +1752,12 @@ async function lbs(e) {
   let t = fy(),
     r = he(),
     o = `${e}.jsonl`,
-    d = Wp(t ?? getProjectDir(r), o);
+    d = join(t ?? getProjectDir(r), o);
   if (t !== null) return d;
   for (let p of await findProjectDirs(r)) {
-    let _ = Wp(p, o);
+    let _ = join(p, o);
     try {
-      return (await Vx(_), _);
+      return (await stat(_), _);
     } catch {}
   }
   return d;

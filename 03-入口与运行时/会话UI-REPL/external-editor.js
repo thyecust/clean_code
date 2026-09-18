@@ -15,7 +15,7 @@ import { wS, tXt } from "../../00-第三方库/which-isexe/isexe.knmpyrza.js";
 import { countLineBreaks, formatPastedTextPlaceholder, expandPastedContents, getIdeDisplayName } from "../核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { createTempFilePath } from "../../01-核心基础设施/核心工具-路径与平台/temp-directory.js";
 import { stripMemoryTags } from "../../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { spawn, spawnSync as S } from "child_process";
+import { spawn, spawnSync } from "child_process";
 import { basename } from "path";
 function O(t) {
   return !!resolveExecutablePath(t);
@@ -84,8 +84,8 @@ function openFileInEditor(t, e) {
     {
       let c = [...u, ...(s ? [`+${e}`, t] : [t])],
         m = tXt();
-      if (((f = S(l, c, { ...i, ...m })), f.error && m.cgroup !== void 0))
-        f = S(l, c, i);
+      if (((f = spawnSync(l, c, { ...i, ...m })), f.error && m.cgroup !== void 0))
+        f = spawnSync(l, c, i);
     }
     if (f.error)
       return (logForDebugging(`editor spawn failed: ${f.error}`, { level: "error" }), !1);
@@ -124,7 +124,6 @@ function getEditorDisplayName() {
   let e = w(t);
   return e && e.length <= 8 ? e : void 0;
 }
-import { spawnSync as x } from "child_process";
 var D = { code: "code -w", subl: "subl --wait" };
 function editFileInExternalEditor(t) {
   let e = getFsSurface(),
@@ -149,10 +148,10 @@ function editFileInExternalEditor(t) {
     {
       let c = tXt();
       if (
-        ((i = x(d, [...s, t], { stdio: "inherit", ...c })),
+        ((i = spawnSync(d, [...s, t], { stdio: "inherit", ...c })),
         i.error && c.cgroup !== void 0)
       )
-        i = x(d, [...s, t], { stdio: "inherit" });
+        i = spawnSync(d, [...s, t], { stdio: "inherit" });
     }
     if (i.error || i.signal || (i.status !== null && i.status !== 0)) {
       let c = getIdeDisplayName(o);

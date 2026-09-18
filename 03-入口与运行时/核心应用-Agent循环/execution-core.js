@@ -570,7 +570,7 @@ import {
 
 import { YGe, picomatchModule } from "./bundled-cjs-libraries.js";
 
-import { AsyncLocalStorage as Nkr } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks";
 
 import {
   ADVISOR_TOOL_BETA,
@@ -1059,499 +1059,30 @@ import {
 } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 
 import {
-  basename as C7r,
-  basename as Ees,
-  basename as INo,
-  basename as KGo,
-  basename as Los,
-  basename as Nos,
-  basename as O1o,
-  basename as P9o,
-  basename as Pas,
-  basename as QJt,
-  basename as Ren,
-  basename as SNe,
-  basename as W8,
-  basename as WXr,
-  basename as X8o,
-  basename as Z9r,
-  basename as ckr,
-  basename as d1,
-  basename as dIt,
-  basename as f9o,
-  basename as fZt,
-  basename as fdt,
-  basename as g9r,
-  basename as h9o,
-  basename as hio,
-  basename as hoe,
-  basename as iun,
-  basename as kC,
-  basename as l2o,
-  basename as m9o,
-  basename as mYr,
-  basename as ngs,
-  basename as nio,
-  basename as o9e,
-  basename as py,
-  basename as q0n,
-  basename as qUe,
-  basename as qso,
-  basename as r7r,
-  basename as sfs,
-  basename as u_r,
-  basename as wPt,
-  basename as win,
-  basename as zJ,
-  delimiter as HRo,
-  delimiter as See,
-  delimiter as vq,
-  dirname as $6o,
-  dirname as AIn,
-  dirname as C8r,
-  dirname as CG,
-  dirname as Ein,
-  dirname as G7r,
-  dirname as Gve,
-  dirname as IYr,
-  dirname as IZr,
-  dirname as Ias,
-  dirname as JJt,
-  dirname as Jut,
-  dirname as Lcn,
-  dirname as Nys,
-  dirname as ORr,
-  dirname as P8e,
-  dirname as Q1n,
-  dirname as Q8o,
-  dirname as QIn,
-  dirname as QRo,
-  dirname as Qk,
-  dirname as RAo,
-  dirname as RZ,
-  dirname as Sb,
-  dirname as Tes,
-  dirname as Tqr,
-  dirname as Tse,
-  dirname as UR,
-  dirname as WUo,
-  dirname as Wse,
-  dirname as YNe,
-  dirname as ZG,
-  dirname as ZRo,
-  dirname as Zso,
-  dirname as Zxo,
-  dirname as _3r,
-  dirname as avt,
-  dirname as bWo,
-  dirname as bg,
-  dirname as dDt,
-  dirname as fIt,
-  dirname as g$n,
-  dirname as gIn,
-  dirname as kv,
-  dirname as lIr,
-  dirname as mF,
-  dirname as nFn,
-  dirname as nQt,
-  dirname as pK,
-  dirname as pZt,
-  dirname as pdt,
-  dirname as q3r,
-  dirname as qJe,
-  dirname as rio,
-  dirname as rmo,
-  dirname as sPo,
-  dirname as tle,
-  dirname as uon,
-  dirname as wNo,
-  dirname as xPr,
-  dirname as xRr,
-  dirname as xbr,
-  dirname as y9e,
-  extname as $0o,
-  extname as EMo,
-  extname as Iio,
-  extname as rgs,
-  extname as t9o,
-  isAbsolute as AHe,
-  isAbsolute as ASe,
-  isAbsolute as Boo,
-  isAbsolute as DPo,
-  isAbsolute as Gpt,
-  isAbsolute as Gtn,
-  isAbsolute as HOe,
-  isAbsolute as JA,
-  isAbsolute as Jce,
-  isAbsolute as KU,
-  isAbsolute as MJt,
-  isAbsolute as Mds,
-  isAbsolute as Met,
-  isAbsolute as NBn,
-  isAbsolute as ORo,
-  isAbsolute as P8r,
-  isAbsolute as Qzo,
-  isAbsolute as SK,
-  isAbsolute as T5r,
-  isAbsolute as TPt,
-  isAbsolute as Tso,
-  isAbsolute as V1e,
-  isAbsolute as VSo,
-  isAbsolute as Vrr,
-  isAbsolute as Vso,
-  isAbsolute as Win,
-  isAbsolute as Wlt,
-  isAbsolute as Wns,
-  isAbsolute as Y9r,
-  isAbsolute as _Ro,
-  isAbsolute as _ro,
-  isAbsolute as ams,
-  isAbsolute as bwr,
-  isAbsolute as cZt,
-  isAbsolute as dZe,
-  isAbsolute as din,
-  isAbsolute as e_s,
-  isAbsolute as f9e,
-  isAbsolute as gEr,
-  isAbsolute as ghs,
-  isAbsolute as hPo,
-  isAbsolute as kee,
-  isAbsolute as lFn,
-  isAbsolute as lxe,
-  isAbsolute as mFo,
-  isAbsolute as nlo,
-  isAbsolute as noo,
-  isAbsolute as pI,
-  isAbsolute as tas,
-  isAbsolute as v3e,
-  isAbsolute as vcn,
-  isAbsolute as vfs,
-  isAbsolute as wj,
-  isAbsolute as x7r,
-  isAbsolute as yPe,
-  isAbsolute as yQt,
-  join as A0,
-  join as Ax,
-  join as CRo,
-  join as GXr,
-  join as Gg,
-  join as H3r,
-  join as HWe,
-  join as I8r,
-  join as I_,
-  join as Iwo,
-  join as J6e,
-  join as J8o,
-  join as JAe,
-  join as KJ,
-  join as Kw,
-  join as LNt,
-  join as Mas,
-  join as Mjo,
-  join as N6o,
-  join as NPo,
-  join as O$e,
-  join as OMo,
-  join as ONe,
-  join as Ort,
-  join as P8,
-  join as Pbt,
-  join as Pu,
-  join as QQt,
-  join as Qee,
-  join as RIn,
-  join as Sv,
-  join as Svo,
-  join as TRo,
-  join as UAr,
-  join as VG,
-  join as VN,
-  join as Vhe,
-  join as WXt,
-  join as Wp,
-  join as XUe,
-  join as XY,
-  join as Y3,
-  join as YGo,
-  join as YN,
-  join as Y_,
-  join as Zg,
-  join as _at,
-  join as ak,
-  join as c2o,
-  join as cIr,
-  join as cO,
-  join as dd,
-  join as don,
-  join as eAo,
-  join as eM,
-  join as eXr,
-  join as ein,
-  join as eio,
-  join as eke,
-  join as f0n,
-  join as gZt,
-  join as iPo,
-  join as jmo,
-  join as k$n,
-  join as lO,
-  join as lSe,
-  join as mBo,
-  join as mJt,
-  join as mPn,
-  join as nJt,
-  join as nat,
-  join as oio,
-  join as ote,
-  join as pNe,
-  join as pUo,
-  join as pzo,
-  join as rJr,
-  join as roo,
-  join as rye,
-  join as sMt,
-  join as sP,
-  join as sue,
-  join as tBn,
-  join as tNt,
-  join as tQ,
-  join as uJt,
-  join as uRr,
-  join as v5r,
-  join as vPt,
-  join as vfe,
-  join as wRn,
-  join as wS,
-  join as x3r,
-  join as x8e,
-  join as xWe,
-  join as xh,
-  join as yNt,
-  join as yVo,
-  join as zAe,
-  join as zos,
-  normalize as Kfo,
-  normalize as LPo,
-  normalize as Nan,
-  normalize as Oz,
-  normalize as hEr,
-  normalize as pZe,
-  parse as ENo,
-  parse as HNo,
-  parse as M1e,
-  parse as SWo,
-  parse as _Fn,
-  parse as aun,
-  parse as ePo,
-  parse as gso,
-  parse as ogs,
-  parse as ywe,
-  posix as DRo,
-  posix as Epo,
-  posix as Pcn,
-  posix as Pso,
-  posix as S4,
-  posix as TAe,
-  posix as _Oe,
-  posix as bon,
-  posix as cPr,
-  posix as cRo,
-  relative as $Xe,
-  relative as A7r,
-  relative as AG,
-  relative as Ccn,
-  relative as Cnr,
-  relative as Gns,
-  relative as JIn,
-  relative as KIn,
-  relative as Ken,
-  relative as Krr,
-  relative as M2o,
-  relative as M8r,
-  relative as MZr,
-  relative as NAo,
-  relative as OKo,
-  relative as Ods,
-  relative as PAo,
-  relative as PIn,
-  relative as PRo,
-  relative as QBn,
-  relative as SD,
-  relative as Sfs,
-  relative as TNo,
-  relative as _Pe,
-  relative as aVr,
-  relative as bFn,
-  relative as fZe,
-  relative as gRo,
-  relative as h0,
-  relative as hIn,
-  relative as hhs,
-  relative as iVo,
-  relative as kMn,
-  relative as kRo,
-  relative as l9o,
-  relative as l_o,
-  relative as mat,
-  relative as ose,
-  relative as qmr,
-  relative as qx,
-  relative as sio,
-  relative as tAo,
-  relative as t_s,
-  relative as ves,
-  relative as vso,
-  relative as wAo,
-  relative as xIn,
-  relative as yAo,
-  relative as yBo,
-  resolve as APt,
-  resolve as ASt,
-  resolve as Ckr,
-  resolve as EAo,
-  resolve as FOe,
-  resolve as IAo,
-  resolve as IRo,
-  resolve as Icn,
-  resolve as Ict,
-  resolve as Itt,
-  resolve as JRo,
-  resolve as Jb,
-  resolve as Jzo,
-  resolve as Kut,
-  resolve as LAo,
-  resolve as LBn,
-  resolve as Mbt,
-  resolve as Mwo,
-  resolve as NHn,
-  resolve as O8r,
-  resolve as Oet,
-  resolve as PS,
-  resolve as T6o,
-  resolve as Uce,
-  resolve as VJt,
-  resolve as XYe,
-  resolve as Zcn,
-  resolve as _9,
-  resolve as aZt,
-  resolve as c_o,
-  resolve as ceo,
-  resolve as cvt,
-  resolve as eXe,
-  resolve as el,
-  resolve as fin,
-  resolve as iKr,
-  resolve as i_o,
-  resolve as lms,
-  resolve as nAo,
-  resolve as nas,
-  resolve as oGn,
-  resolve as qxt,
-  resolve as vHo,
-  resolve as wRo,
-  resolve as wg,
-  resolve as ywr,
-  sep as $ys,
-  sep as Bbr,
-  sep as Blt,
-  sep as Cgr,
-  sep as Cq,
-  sep as Cso,
-  sep as D8r,
-  sep as DG,
-  sep as EQ,
-  sep as G9r,
-  sep as GL,
-  sep as J8,
-  sep as Kso,
-  sep as Lan,
-  sep as M8e,
-  sep as Mae,
-  sep as NR,
-  sep as NU,
-  sep as OZr,
-  sep as Obt,
-  sep as PSt,
-  sep as RWe,
-  sep as SFn,
-  sep as V0n,
-  sep as V8t,
-  sep as VE,
-  sep as Wk,
-  sep as X9r,
-  sep as Y1n,
-  sep as Yen,
-  sep as Yfo,
-  sep as Yut,
-  sep as _Bo,
-  sep as b3r,
-  sep as dat,
-  sep as jin,
-  sep as kz,
-  sep as lF,
-  sep as meo,
-  sep as mwe,
-  sep as omo,
-  sep as pSe,
-  sep as tPo,
-  sep as tbr,
-  sep as urr,
-  sep as vhr,
-  sep as wTt,
-  sep as xXr,
-  sep as xkr,
-  sep as xoo,
-  sep as y4o,
-  sep as zC,
-  sep as zfr,
-  win32 as Iso,
-  win32 as Son,
-  win32 as bJr,
-  win32 as tFe,
-  win32 as uRo,
-  win32 as yPo,
+  basename,
+  delimiter,
+  dirname,
+  extname,
+  isAbsolute,
+  join,
+  normalize,
+  parse,
+  posix,
+  relative,
+  resolve,
+  sep,
+  win32,
 } from "path";
 
 import {
   EOL,
   constants as Zys,
   constants as wns,
-  homedir as $Nn,
-  homedir as BQo,
-  homedir as Dcn,
-  homedir as E5r,
-  homedir as JAo,
-  homedir as PRr,
-  homedir as T4o,
-  homedir as Vfo,
-  homedir as Woo,
-  homedir as Zse,
-  homedir as aIr,
-  homedir as dms,
-  homedir as j1o,
-  homedir as rG,
-  homedir as sKr,
-  homedir as tLn,
-  homedir as wZr,
-  homedir as y3r,
-  homedir as yFn,
-  homedir as yro,
-  homedir as yye,
+  homedir,
   release,
-  tmpdir as BAr,
-  tmpdir as BNo,
-  tmpdir as dRr,
-  tmpdir as fms,
-  tmpdir as hDt,
-  tmpdir as hIo,
-  tmpdir as kRr,
-  tmpdir as lPr,
-  tmpdir as qIn,
-  tmpdir as v7r,
-  tmpdir as xze,
-  type as rSr,
-  userInfo as UNo,
-  userInfo as hwr,
+  tmpdir,
+  type,
+  userInfo,
   version,
 } from "os";
 
@@ -1727,85 +1258,12 @@ import {
 } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 
 import {
-  X509Certificate as nAr,
-  createHash as $Oo,
-  createHash as A$n,
-  createHash as AAr,
-  createHash as Hss,
-  createHash as O6o,
-  createHash as Q5r,
-  createHash as REr,
-  createHash as Sct,
-  createHash as W7r,
-  createHash as Xtn,
-  createHash as Y5o,
-  createHash as ion,
-  createHash as sZr,
-  createHash as w8r,
-  createHash as wwr,
-  createHash as yns,
+  X509Certificate,
+  createHash,
   createHmac,
-  randomBytes as CPr,
-  randomBytes as F9r,
-  randomBytes as FRr,
-  randomBytes as KUo,
-  randomBytes as Kys,
-  randomBytes as LKr,
-  randomBytes as MUo,
-  randomBytes as R3r,
-  randomBytes as Uns,
-  randomBytes as _Wo,
-  randomBytes as eDo,
-  randomBytes as hRr,
-  randomBytes as oPr,
-  randomBytes as rVo,
-  randomBytes as voo,
-  randomUUID as $Jo,
-  randomUUID as ADn,
-  randomUUID as Beo,
-  randomUUID as Bzo,
-  randomUUID as Cvt,
-  randomUUID as DHn,
-  randomUUID as E0o,
-  randomUUID as ERr,
-  randomUUID as Eno,
-  randomUUID as JOn,
-  randomUUID as K9o,
-  randomUUID as Mjn,
-  randomUUID as Pio,
-  randomUUID as Qfr,
-  randomUUID as Qw,
-  randomUUID as Ras,
-  randomUUID as S6r,
-  randomUUID as SRr,
-  randomUUID as Tvt,
-  randomUUID as Ups,
-  randomUUID as WGo,
-  randomUUID as Yzo,
-  randomUUID as ZRn,
-  randomUUID as _Mo,
-  randomUUID as _uo,
-  randomUUID as aF,
-  randomUUID as ano,
-  randomUUID as bF,
-  randomUUID as eSr,
-  randomUUID as fco,
-  randomUUID as gGo,
-  randomUUID as gZ,
-  randomUUID as jvo,
-  randomUUID as l7o,
-  randomUUID as mUo,
-  randomUUID as nIo,
-  randomUUID as oxo,
-  randomUUID as qCn,
-  randomUUID as sms,
-  randomUUID as tJr,
-  randomUUID as tmr,
-  randomUUID as tvo,
-  randomUUID as uKo,
-  randomUUID as yRr,
-  randomUUID as ynr,
-  sign as tAr,
+  randomBytes,
+  randomUUID,
+  sign,
 } from "crypto";
 
 import {
@@ -2494,76 +1952,32 @@ import {
 } from "../../02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js";
 
 import {
-  accessSync as Goo,
-  accessSync as rVr,
+  accessSync,
   chmodSync,
-  closeSync as $N,
-  closeSync as $ge,
-  closeSync as sin,
-  constants as Eor,
-  constants as Hoo,
-  constants as Lrs,
-  constants as Mce,
-  constants as VH,
-  constants as Vut,
-  constants as bG,
-  constants as fwr,
-  constants as n3e,
-  constants as n4,
-  constants as s9e,
-  constants as yE,
-  constants as yct,
-  createReadStream as E8r,
-  createReadStream as OUo,
-  createReadStream as Yys,
-  createReadStream as zyr,
-  createWriteStream as DUo,
-  createWriteStream as Frs,
-  createWriteStream as V7t,
+  closeSync,
+  constants,
+  createReadStream,
+  createWriteStream,
   existsSync,
   fstat,
-  fstatSync as OSe,
-  fstatSync as QCt,
-  lstatSync as QNn,
-  lstatSync as RP,
-  lstatSync as X8r,
+  fstatSync,
+  lstatSync,
   mkdirSync,
-  mkdtempSync as gDt,
-  mkdtempSync as sPr,
-  openSync as KB,
-  openSync as Uge,
-  openSync as Zqr,
-  readFileSync as $Co,
-  readFileSync as XGe,
-  readFileSync as c3e,
-  readSync as LZ,
-  readSync as h3t,
-  readdirSync as JNn,
-  readdirSync as Q8r,
-  readdirSync as oVr,
-  readlinkSync as PP,
-  readlinkSync as ZNn,
-  realpathSync as Dqr,
-  realpathSync as I1o,
-  realpathSync as eLn,
-  realpathSync as oKr,
-  realpathSync as rk,
-  realpathSync as wJt,
-  realpathSync as x$o,
-  rmSync as iPr,
-  rmSync as y3t,
+  mkdtempSync,
+  openSync,
+  readFileSync,
+  readSync,
+  readdirSync,
+  readlinkSync,
+  realpathSync,
+  rmSync,
   rmdirSync,
-  statSync as BCo,
-  statSync as Nqr,
-  statSync as PNo,
-  statSync as a0,
+  statSync,
   unlink as $Ar,
-  unlinkSync as J8r,
-  unlinkSync as iVr,
+  unlinkSync,
   watch,
   writeFileSync,
-  writeSync as HZ,
-  writeSync as Xhr,
+  writeSync,
 } from "fs";
 
 import { WORKFLOW_TOOL_NAME } from "../../02-功能模块/编排-Workflow/chunk-7fcxwgtq.js";
@@ -2776,253 +2190,36 @@ import {
 import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 
 import {
-  access as Ooo,
-  access as pwr,
-  access as yNo,
-  appendFile as Hmo,
-  appendFile as zCt,
-  copyFile as Ehr,
-  copyFile as rUn,
-  link as Xys,
-  lstat as $Ne,
-  lstat as A$o,
-  lstat as Qys,
-  lstat as Wx,
-  lstat as Yw,
-  lstat as ZYe,
-  lstat as _lt,
-  lstat as aQ,
-  lstat as cIt,
-  lstat as c_r,
-  lstat as dD,
-  lstat as dUo,
-  lstat as dy,
-  lstat as eBn,
-  lstat as hAo,
-  lstat as hat,
-  lstat as iRo,
-  lstat as m3r,
-  lstat as mAo,
-  lstat as nV,
-  lstat as qce,
-  lstat as xAo,
-  lutimes as Jys,
-  lutimes as p9r,
-  mkdir as $ct,
-  mkdir as $rs,
-  mkdir as F6o,
-  mkdir as G3r,
-  mkdir as HUo,
-  mkdir as Ij,
-  mkdir as LXe,
-  mkdir as Lor,
-  mkdir as Oys,
-  mkdir as Pwo,
-  mkdir as T8r,
-  mkdir as VGo,
-  mkdir as VNn,
-  mkdir as YRo,
-  mkdir as _vo,
-  mkdir as aon,
-  mkdir as coo,
-  mkdir as hQt,
-  mkdir as lEr,
-  mkdir as oVo,
-  mkdtemp as LNo,
-  mkdtemp as TUo,
-  mkdtemp as YUo,
-  mkdtemp as lYr,
-  mkdtemp as pIo,
-  open as Clt,
-  open as JYe,
-  open as L$n,
-  open as Lqr,
-  open as M1o,
-  open as Qut,
-  open as R$n,
-  open as THo,
-  open as _No,
-  open as bAo,
-  open as f9r,
-  open as kHe,
-  open as pIn,
-  open as qSo,
-  open as uIt,
-  open as vUo,
-  open as vj,
-  readFile as H6o,
-  readFile as IIo,
-  readFile as Kyr,
-  readFile as Mj,
-  readFile as O3r,
-  readFile as OPt,
-  readFile as PZr,
-  readFile as QUo,
-  readFile as Rso,
-  readFile as Z8r,
-  readFile as bns,
-  readFile as eFe,
-  readFile as h3r,
-  readFile as lon,
-  readFile as oie,
-  readFile as vme,
-  readdir as $Wn,
-  readdir as $ce,
-  readdir as $or,
-  readdir as Aso,
-  readdir as B3r,
-  readdir as DBn,
-  readdir as HK,
-  readdir as KY,
-  readdir as LPt,
-  readdir as M3r,
-  readdir as Pj,
-  readdir as QY,
-  readdir as Qce,
-  readdir as RJt,
-  readdir as Vxt,
-  readdir as XRo,
-  readdir as XUo,
-  readdir as Yfr,
-  readdir as _rs,
-  readdir as akr,
-  readdir as g3r,
-  readdir as t7r,
-  readdir as z3r,
-  readlink as AAo,
-  readlink as Brs,
-  readlink as C3r,
-  readlink as Dct,
-  readlink as Fqr,
-  readlink as JUo,
-  readlink as Lwr,
-  readlink as aRo,
-  readlink as bNo,
-  readlink as bwe,
-  readlink as jUo,
-  readlink as mwr,
-  realpath as $pe,
-  realpath as Cor,
-  realpath as E4o,
-  realpath as GYe,
-  realpath as Hin,
-  realpath as Jxo,
-  realpath as Ksn,
-  realpath as NZo,
-  realpath as P5t,
-  realpath as RG,
-  realpath as Rq,
-  realpath as SNo,
-  realpath as SRo,
-  realpath as Sp,
-  realpath as Ult,
-  realpath as Xw,
-  realpath as _wr,
-  realpath as fUo,
-  realpath as gie,
-  realpath as gwr,
-  realpath as iin,
-  realpath as lts,
-  realpath as n7r,
-  realpath as oAo,
-  realpath as pRo,
-  realpath as pwe,
-  realpath as tMt,
-  realpath as tmo,
-  realpath as vBo,
-  rename as cYr,
-  rename as t4,
-  rename as xor,
-  rm as $9r,
-  rm as CUo,
-  rm as D3r,
-  rm as Dys,
-  rm as F$n,
-  rm as JYr,
-  rm as PJt,
-  rm as Thr,
-  rm as aQt,
-  rm as bvo,
-  rm as cZ,
-  rm as mIo,
-  rm as oUn,
-  rm as qI,
-  rm as rAr,
-  rm as v8r,
-  rm as xlt,
-  rm as zY,
-  rmdir as IJt,
-  rmdir as dYr,
-  rmdir as m9e,
-  rmdir as m9r,
-  stat as A8,
-  stat as BFo,
-  stat as EJo,
-  stat as FNo,
-  stat as Fwr,
-  stat as IMo,
-  stat as J9r,
-  stat as K9r,
-  stat as LK,
-  stat as N3r,
-  stat as OAo,
-  stat as Tke,
-  stat as Vx,
-  stat as Vyr,
-  stat as W$n,
-  stat as Wq,
-  stat as Xfr,
-  stat as ain,
-  stat as fYr,
-  stat as h2,
-  stat as jWe,
-  stat as kNo,
-  stat as qcs,
-  stat as tat,
-  stat as ums,
-  stat as uoo,
+  access,
+  appendFile,
+  copyFile,
+  link,
+  lstat,
+  lutimes,
+  mkdir,
+  mkdtemp,
+  open,
+  readFile,
+  readdir,
+  readlink,
+  realpath,
+  rename,
+  rm,
+  rmdir,
+  stat,
   statfs,
-  symlink as $No,
-  symlink as W1o,
-  symlink as dsr,
-  unlink as FXe,
-  unlink as NUo,
-  unlink as XDt,
-  unlink as Yce,
-  unlink as ZCt,
-  unlink as ZUo,
-  unlink as _ct,
-  unlink as dzo,
-  unlink as e9r,
-  unlink as fPn,
-  unlink as kct,
-  unlink as pve,
-  unlink as sVo,
-  utimes as B6o,
-  utimes as G1o,
-  utimes as fzo,
-  utimes as jns,
-  writeFile as Elt,
-  writeFile as L3r,
-  writeFile as Okr,
-  writeFile as Swe,
-  writeFile as VCn,
-  writeFile as Zhr,
-  writeFile as cjn,
-  writeFile as con,
-  writeFile as gIo,
-  writeFile as pYr,
+  symlink,
+  unlink,
+  utimes,
+  writeFile,
 } from "fs/promises";
 
-import { StringDecoder as Wyr } from "string_decoder";
+import { StringDecoder } from "string_decoder";
 
 import {
   PassThrough,
-  Readable as Gyr,
-  Readable as SDt,
-  Readable as Urs,
-  Transform as gAr,
-  Transform as LUo,
+  Readable,
+  Transform,
 } from "stream";
 
 import {
@@ -3570,62 +2767,39 @@ import { connect as EAr, createSecureContext, rootCertificates } from "tls";
 
 import {
   BlockList,
-  connect as FAr,
-  connect as XAr,
-  connect as YDt,
-  connect as xDt,
-  createServer as aPr,
-  createServer as cRr,
-  isIP as $Yt,
-  isIP as BN,
-  isIP as LDt,
-  isIP as QAr,
-  isIP as QW,
-  isIP as bAr,
-  isIP as vPr,
+  connect,
+  createServer,
+  isIP,
 } from "net";
 
 import {
   URL as WDt,
   URL as ize,
-  fileURLToPath as ARr,
-  fileURLToPath as DRr,
-  fileURLToPath as pJr,
-  pathToFileURL as NKo,
-  pathToFileURL as lJr,
-  pathToFileURL as sie,
+  fileURLToPath,
+  pathToFileURL,
 } from "url";
 
-import { createServer as NAr, request as LAr, request as jDt } from "https";
+import { createServer as NAr, request } from "https";
 
 import {
-  Agent as KAr,
+  Agent,
   STATUS_CODES,
   createServer as YAr,
   request as mze,
 } from "http";
 
 import {
-  execFile as Oqr,
-  execFile as loo,
+  execFile,
   execSync,
-  spawn as CIo,
-  spawn as CRr,
-  spawn as Uoo,
-  spawn as dPr,
-  spawn as hNt,
-  spawn as o3e,
-  spawn as xvt,
-  spawn as zRr,
-  spawnSync as fPr,
-  spawnSync as vRr,
+  spawn,
+  spawnSync,
 } from "child_process";
 
-import { text as cNt } from "stream/consumers";
+import { text } from "stream/consumers";
 
-import { createInterface as n_s, createInterface as uPr } from "readline";
+import { createInterface } from "readline";
 
-import { once as pPr } from "events";
+import { once } from "events";
 
 import { getSecureStorageDir } from "../../02-功能模块/认证-OAuth登录/keychain-access.js";
 
@@ -3755,9 +2929,7 @@ import {
 } from "../../01-核心基础设施/核心工具-其他/paginated-scan.js";
 
 import {
-  pipeline as FUo,
-  pipeline as Hrs,
-  pipeline as eQt,
+  pipeline,
 } from "stream/promises";
 
 import {
@@ -3977,19 +3149,9 @@ import {
 import { basename as Doo, isAbsolute as Noo } from "path/win32";
 
 import {
-  inspect as bqo,
-  isDeepStrictEqual as FJo,
-  isDeepStrictEqual as Tj,
-  isDeepStrictEqual as Uss,
-  isDeepStrictEqual as _mr,
-  isDeepStrictEqual as kso,
-  isDeepStrictEqual as lCn,
-  isDeepStrictEqual as s7,
-  isDeepStrictEqual as vDo,
-  isDeepStrictEqual as yhs,
-  types as Nzo,
-  types as Txt,
-  types as Xjn,
+  inspect,
+  isDeepStrictEqual,
+  types,
 } from "util";
 
 import {
@@ -4325,7 +3487,7 @@ async function readFileWithLineRange(e, t = 0, r, o, d, p) {
   let _ = p?.truncateOnByteLimit ?? !1,
     E = p?.maxSelectedBytes,
     C = p?.handle,
-    I = C ? await C.stat() : await Vyr(e);
+    I = C ? await C.stat() : await stat(e);
   if (E !== void 0 && I.isFile() && I.size <= E) E = void 0;
   if (I.isDirectory())
     throw Object.assign(
@@ -4334,7 +3496,7 @@ async function readFileWithLineRange(e, t = 0, r, o, d, p) {
     );
   if (I.isFile() && I.size < Yyr) {
     if (!_ && o !== void 0 && I.size > o) throw new sW(I.size, o);
-    let D = C ? await C.readFile({ signal: d }) : await Kyr(e, { signal: d });
+    let D = C ? await C.readFile({ signal: d }) : await readFile(e, { signal: d });
     if (!_ && o !== void 0) {
       if (D.length > o) throw new sW(D.length, o);
     }
@@ -4562,7 +3724,7 @@ function t_r(e, t, r, o, d, p, _, E, C) {
     let N = {
       stream: C
         ? Wje(C.handle, C.positional, E)
-        : zyr(e, {
+        : createReadStream(e, {
             encoding: "utf8",
             highWaterMark: 524288,
             ...(E ? { signal: E } : void 0),
@@ -5113,17 +4275,17 @@ function loadedIndexExclusions() {
   for (let o of e) {
     for (let p of o.skillsDirs ?? []) {
       let _ = p.split("/");
-      r.push((o.scope === "user" ? eM(..._) : eM("team", o.mount, ..._)) + tbr);
+      r.push((o.scope === "user" ? join(..._) : join("team", o.mount, ..._)) + sep);
     }
     if (o.promptIndex === void 0) continue;
     let d = o.promptIndex.split("/");
-    t.add(o.scope === "user" ? eM(...d) : eM("team", o.mount, ...d));
+    t.add(o.scope === "user" ? join(...d) : join("team", o.mount, ...d));
   }
   return { excluded: t, excludedPrefixes: r };
 }
 
 function recallVisibleTeamMounts(e) {
-  if (qxt(e) !== qxt(getAutoMemPath())) return null;
+  if (resolve(e) !== resolve(getAutoMemPath())) return null;
   let t = new Set();
   try {
     for (let r of getMemoryStoresFromEnv() ?? [])
@@ -5144,7 +4306,7 @@ function Gje(e, t, r) {
     e.endsWith(".md") &&
     (t
       ? !t.excluded.has(e) && !t.excludedPrefixes.some((o) => e.startsWith(o))
-      : u_r(e) !== "MEMORY.md") &&
+      : basename(e) !== "MEMORY.md") &&
     isRecallVisiblePath(e, r)
   );
 }
@@ -5172,7 +4334,7 @@ async function scanMemoryHeaders(e, t, r = {}, o) {
   return (
     await Promise.allSettled(
       E.map(async (I) => {
-        let D = eM(e, I),
+        let D = join(e, I),
           { content: N, mtimeMs: F } = await readFileWithLineRange(
             D,
             0,
@@ -5221,15 +4383,15 @@ async function scanMemoryFiles(e, t, r) {
 }
 
 async function obr(e, t) {
-  return t ? await Xxt(e, "") : await Vxt(e, { recursive: !0 });
+  return t ? await Xxt(e, "") : await readdir(e, { recursive: !0 });
 }
 
 async function Xxt(e, t) {
-  let r = await Vxt(eM(e, t), { withFileTypes: !0 });
+  let r = await readdir(join(e, t), { withFileTypes: !0 });
   return (
     await Promise.all(
       r.map(async (d) => {
-        let p = t ? eM(t, d.name) : d.name,
+        let p = t ? join(t, d.name) : d.name,
           _ = await ibr(e, p, d);
         if (_ === "directory") return await Xxt(e, p).catch(sbr);
         return _ === "file" ? [p] : [];
@@ -5254,7 +4416,7 @@ async function ibr(e, t, r) {
     r.isSocket()
   )
     return "other";
-  let o = await c_r(eM(e, t)).catch((d) => {
+  let o = await lstat(join(e, t)).catch((d) => {
     if (W(d)) return null;
     throw d;
   });
@@ -5281,7 +4443,7 @@ async function lbr(e, t, r) {
       );
     for (let _ of p.value.items) {
       if (_.key.namespace !== "memory" || (r && _.viaSymlink === !0)) continue;
-      o.push({ relativePath: eM(..._.key.relPath), key: _.key });
+      o.push({ relativePath: join(..._.key.relPath), key: _.key });
     }
     d = p.value.cursor;
   } while (d !== void 0);
@@ -5339,7 +4501,7 @@ async function ubr(e, t, r, o, d) {
     await Promise.allSettled(
       C.map(async (D) => {
         o.throwIfAborted();
-        let N = eM(r, D.relativePath),
+        let N = join(r, D.relativePath),
           F = await e.read([{ key: D.key, offset: 0, length: abr }]);
         if ((o.throwIfAborted(), !F.ok))
           throw new R(
@@ -5959,7 +5121,7 @@ var Ibr = 5000;
 
 async function Mbr(e) {
   try {
-    let t = xbr(e),
+    let t = dirname(e),
       r = await statfs(t, { bigint: !0 }),
       o = (r.bavail * r.bsize) / (1024n * 1024n),
       d =
@@ -6623,7 +5785,7 @@ function CAt() {
 }
 
 function xAt(e) {
-  for (let [t, r] of nWe()) if (e === r || e.startsWith(r + Bbr)) return t;
+  for (let [t, r] of nWe()) if (e === r || e.startsWith(r + sep)) return t;
   return;
 }
 
@@ -6898,7 +6060,7 @@ function mhe(e) {
   return {
     type: "api_system",
     message: { role: "system", content: e },
-    uuid: eSr(),
+    uuid: randomUUID(),
     timestamp: new Date().toISOString(),
   };
 }
@@ -7024,7 +6186,7 @@ function iRt() {
 
 function aWe() {
   if (a.platform === "win32") return `${version()} ${release()}`;
-  return `${rSr()} ${release()}`;
+  return `${type()} ${release()}`;
 }
 
 async function lWe({ cwd: e, additionalWorkingDirectories: t }) {
@@ -7495,7 +6657,7 @@ async function kkr(e) {
         o = !0;
         return;
       }
-      let C = await akr(p, { withFileTypes: !0 }).catch((I) => {
+      let C = await readdir(p, { withFileTypes: !0 }).catch((I) => {
         if (E > 0) return [];
         throw I;
       });
@@ -7505,7 +6667,7 @@ async function kkr(e) {
           return;
         }
         let D = _ === "" ? I.name : `${_}/${I.name}`;
-        if (I.isDirectory() && !bkr(I.name)) await d(xWe(p, I.name), D, E + 1);
+        if (I.isDirectory() && !bkr(I.name)) await d(join(p, I.name), D, E + 1);
         else if (I.isFile() && /\.md$/i.test(I.name) && !Skr(I.name)) t.push(D);
       }
     };
@@ -7521,7 +6683,7 @@ async function kkr(e) {
   }
 }
 
-var wkr = (e) => ckr(e).replace(/\.md$/i, ""),
+var wkr = (e) => basename(e).replace(/\.md$/i, ""),
   _Pt = (e, t) => {
     let r = e.replace(/\s+/g, " ").trim();
     return r.length > t ? truncateToCodeUnits(r, t - 1) + "\u2026" : r;
@@ -7537,7 +6699,7 @@ var wkr = (e) => ckr(e).replace(/\.md$/i, ""),
     return t === void 0 || t === "---" ? null : t;
   },
   Tkr = async (e, t, r) => {
-    let o = xWe(e, t),
+    let o = join(e, t),
       { content: d } = await readFileWithLineRange(o, 0, ukr, dkr, void 0, {
         truncateOnByteLimit: !0,
       }),
@@ -7563,7 +6725,7 @@ async function SPt(e, t = AWe) {
       await mapWithConcurrency(
         o,
         async (ue) => {
-          let de = await lkr(xWe(e, ue)).catch(() => null);
+          let de = await lkr(join(e, ue)).catch(() => null);
           return de && de.size <= fkr ? { rel: ue, mtimeMs: de.mtimeMs } : null;
         },
         { concurrency: yPt },
@@ -7685,19 +6847,19 @@ class CPt {
       r = e.trim();
     if (t === null || r === "" || r.split(/[\\/]/).includes("..")) return EPt;
     let o = /\.md$/i.test(r) ? r : `${r}.md`,
-      d = S$(TPt(o) ? o : vPt(t.memoryDir, o)),
-      p = t.memoryDirKey + xkr;
+      d = S$(isAbsolute(o) ? o : join(t.memoryDir, o)),
+      p = t.memoryDirKey + sep;
     if (!d.startsWith(p)) return EPt;
     let _ = this.statusForKey(d);
     if (_.resolved || /[\\/]/.test(r)) return _;
-    let E = wPt(d),
+    let E = basename(d),
       C = new Set(
         [
           ...t.bodyKeys,
           ...t.listedKeys,
           ...this.surfacedKeys,
           ...this.accessedKeys.keys(),
-        ].filter((I) => I.startsWith(p) && wPt(I) === E),
+        ].filter((I) => I.startsWith(p) && basename(I) === E),
       );
     return C.size === 1 ? this.statusForKey([...C][0]) : _;
   }
@@ -7734,15 +6896,15 @@ function Rkr(e, t) {
     .map((r) => r[1].trim())
     .filter(
       (r) =>
-        !TPt(r) &&
+        !isAbsolute(r) &&
         !/^[a-z][a-z0-9+.-]*:/i.test(r) &&
         !r.split(/[\\/]/).includes(".."),
     )
-    .map((r) => vPt(t, r));
+    .map((r) => join(t, r));
 }
 
 function S$(e) {
-  return Ckr(e).normalize("NFC").toLowerCase();
+  return resolve(e).normalize("NFC").toLowerCase();
 }
 
 function Hhe() {
@@ -7750,10 +6912,10 @@ function Hhe() {
 }
 
 function cW(e) {
-  let t = APt(e).normalize("NFC").toLowerCase(),
+  let t = resolve(e).normalize("NFC").toLowerCase(),
     r = Hhe().normalize("NFC").toLowerCase();
   if (!t.startsWith(r)) return !1;
-  let o = t.slice(r.length).replaceAll(RWe, "/");
+  let o = t.slice(r.length).replaceAll(sep, "/");
   return !isExcludedMemoryPath(o);
 }
 
@@ -7784,7 +6946,7 @@ function $Pt() {
 }
 
 async function PWe() {
-  let e = Vhe(getClaudeConfigDir(), "session-env", K());
+  let e = join(getClaudeConfigDir(), "session-env", K());
   return (await getFsSurface().mkdir(e), e);
 }
 
@@ -7813,7 +6975,7 @@ async function UPt(e, t) {
 
 async function HPt(e, t) {
   let r = e.toLowerCase();
-  return Vhe(await PWe(), `${r}-hook-${t}.sh`);
+  return join(await PWe(), `${r}-hook-${t}.sh`);
 }
 
 async function jPt(e) {
@@ -7844,7 +7006,7 @@ async function jPt(e) {
   }
   try {
     let t = await PWe(),
-      r = await LPt(t);
+      r = await readdir(t);
     await Promise.all(
       r
         .filter(
@@ -7853,7 +7015,7 @@ async function jPt(e) {
               o.startsWith("cwdchanged-hook-")) &&
             _4.test(o),
         )
-        .map((o) => Okr(Vhe(t, o), "")),
+        .map((o) => writeFile(join(t, o), "")),
     );
   } catch (t) {
     if (A(t) !== "ENOENT")
@@ -7873,7 +7035,7 @@ async function WPt(e) {
     d = a.CLAUDE_ENV_FILE;
   if (d)
     try {
-      let _ = (await OPt(d, "utf8")).trim();
+      let _ = (await readFile(d, "utf8")).trim();
       if (_)
         (o.push(_),
           logForDebugging(
@@ -7929,11 +7091,11 @@ async function WPt(e) {
   }
   try {
     let _ = await PWe(),
-      C = (await LPt(_)).filter((I) => _4.test(I)).sort(NPt);
+      C = (await readdir(_)).filter((I) => _4.test(I)).sort(NPt);
     for (let I of C) {
-      let D = Vhe(_, I);
+      let D = join(_, I);
       try {
-        let N = (await OPt(D, "utf8")).trim();
+        let N = (await readFile(D, "utf8")).trim();
         if (N) o.push(N);
       } catch (N) {
         if (A(N) !== "ENOENT")
@@ -7979,7 +7141,7 @@ function NPt(e, t) {
   return _ - E;
 }
 
-var Lkr = new Nkr(),
+var Lkr = new AsyncLocalStorage(),
   Fkr = !1;
 
 function MWe() {
@@ -8176,7 +7338,7 @@ function FWe(e, t, r, o = { form: "shell", start: t.start, end: t.end }) {
     kind: "script",
     interpreter: e,
     rawPath: t.text,
-    resolvedPath: S4.resolve(r.hookCwd, _ === "" ? d : `${_}/${d}`),
+    resolvedPath: posix.resolve(r.hookCwd, _ === "" ? d : `${_}/${d}`),
     site: o,
   };
 }
@@ -8254,7 +7416,7 @@ function resolveHookCommandScript(e, t) {
   if (o.args !== void 0) {
     let V =
         o.command.startsWith("/") && !tye.test(o.command)
-          ? S4.normalize(o.command)
+          ? posix.normalize(o.command)
           : o.command,
       re = V.startsWith("/") ? V.slice(0, V.lastIndexOf("/")) : null,
       ue =
@@ -8571,22 +7733,22 @@ async function resolvePathAllowingMissing(e) {
   let t = "";
   for (let r = e; ;)
     try {
-      let o = await gwr(r);
-      if (!kee(o)) return "unreadable";
-      return HWe(o, t);
+      let o = await realpath(r);
+      if (!isAbsolute(o)) return "unreadable";
+      return join(o, t);
     } catch (o) {
       let d = A(o);
       if (d !== "ENOENT" && d !== "ENOTDIR") return "unreadable";
       if (
-        await cIt(r).then(
+        await lstat(r).then(
           (_) => _.isSymbolicLink(),
           () => !1,
         )
       )
         return "unreadable";
-      let p = fIt(r);
+      let p = dirname(r);
       if (p === r) return "absent";
-      ((t = HWe(dIt(r), t)), (r = p));
+      ((t = join(basename(r), t)), (r = p));
     }
 }
 
@@ -8608,7 +7770,7 @@ function mergeChildProcessEnv({
 function getHomeDirFromEnv(e) {
   if (e.HOME) return e.HOME;
   try {
-    return hwr().homedir;
+    return userInfo().homedir;
   } catch {
     return "/";
   }
@@ -8622,7 +7784,7 @@ function wee(e) {
 
 async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
   let o = async (D) => {
-      if (!kee(D)) return !1;
+      if (!isAbsolute(D)) return !1;
       let N = await resolvePathAllowingMissing(D);
       return (
         N !== "unreadable" &&
@@ -8633,7 +7795,7 @@ async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
       );
     },
     d = async (D) => {
-      if (!kee(D)) return !1;
+      if (!isAbsolute(D)) return !1;
       let N = await resolvePathAllowingMissing(D);
       return (
         N === "unreadable" ||
@@ -8643,11 +7805,11 @@ async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
         )
       );
     },
-    p = async (D) => (await Promise.all(D.split(See).map(d))).some(Boolean),
+    p = async (D) => (await Promise.all(D.split(delimiter).map(d))).some(Boolean),
     _ = async (D) =>
       (
         await Promise.all(
-          D.split(See).map(async (N) => ((await o(N)) ? [N] : [])),
+          D.split(delimiter).map(async (N) => ((await o(N)) ? [N] : [])),
         )
       ).flat(),
     E = new Set(aIt),
@@ -8658,8 +7820,8 @@ async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
     if (N === void 0) continue;
     if (E.has(D)) {
       let F = await _(N);
-      if (D === "PATH") C.PATH = F.length > 0 ? F.join(See) : WWe;
-      else if (F.length > 0) C[D] = F.join(See);
+      if (D === "PATH") C.PATH = F.length > 0 ? F.join(delimiter) : WWe;
+      else if (F.length > 0) C[D] = F.join(delimiter);
       else I.push(D);
     } else if (lIt(D)) I.push(D);
     else if (await p(N)) I.push(D);
@@ -8671,23 +7833,23 @@ async function computeSubprocessEnv(e, t = subprocessEnv(), r = t) {
 }
 
 async function resolveProgramPath(e, t, r, o = 0) {
-  for (let d of t.split(See)) {
-    if (!kee(d)) return "in_reach";
-    let p = HWe(d, e);
+  for (let d of t.split(delimiter)) {
+    if (!isAbsolute(d)) return "in_reach";
+    let p = join(d, e);
     if (
-      !(await pwr(p, fwr.X_OK).then(
+      !(await access(p, constants.X_OK).then(
         () => !0,
         () => !1,
       ))
     ) {
       if (
-        await cIt(p).then(
+        await lstat(p).then(
           (D) => D.isSymbolicLink(),
           () => !1,
         )
       ) {
-        let D = await mwr(p).then(
-            (F) => ywr(fIt(p), F),
+        let D = await readlink(p).then(
+            (F) => resolve(dirname(p), F),
             () => {
               return;
             },
@@ -8713,7 +7875,7 @@ async function resolveProgramPath(e, t, r, o = 0) {
     let C =
       E === "absent"
         ? void 0
-        : await jWe(E).catch((I) =>
+        : await stat(E).catch((I) =>
             I.code === "ENOENT" || I.code === "ENOTDIR" ? void 0 : "unreadable",
           );
     if (C === "unreadable") return "in_reach";
@@ -8730,7 +7892,7 @@ async function resolveProgramPath(e, t, r, o = 0) {
 }
 
 async function isAliasedFilePath(e) {
-  let t = await jWe(e).catch((r) =>
+  let t = await stat(e).catch((r) =>
     r.code === "ENOENT" || r.code === "ENOTDIR" ? "absent" : "unreadable",
   );
   if (t === "absent") return !1;
@@ -8738,7 +7900,7 @@ async function isAliasedFilePath(e) {
 }
 
 async function GWe(e) {
-  let t = await uIt(e, "r").catch(() => {
+  let t = await open(e, "r").catch(() => {
     return;
   });
   if (t === void 0) return !1;
@@ -8780,7 +7942,7 @@ async function w$(e, t, r, o = 0) {
   let p =
     d === "absent"
       ? "absent"
-      : await jWe(d).catch((F) =>
+      : await stat(d).catch((F) =>
           F.code === "ENOENT" || F.code === "ENOTDIR" ? "absent" : void 0,
         );
   if (p === void 0) return "unreadable";
@@ -8800,13 +7962,13 @@ async function w$(e, t, r, o = 0) {
       .replace(/^[ \t]+|[ \t]+$/g, "")
       .split(/[ \t]+/),
     C = E[0];
-  if (C === void 0 || !kee(C)) return "shebang_in_reach";
+  if (C === void 0 || !isAbsolute(C)) return "shebang_in_reach";
   if (E.some((F) => /[^\x21-\x7e]/.test(F))) return "program_unresolved";
   let I = isStandaloneCommandFlag,
     D =
       normalizePathCase(C) === "/usr/bin/env" ||
       normalizePathCase(C) === "/bin/env";
-  if (normalizePathCase(dIt(C)) === "env" && !D) return "program_unresolved";
+  if (normalizePathCase(basename(C)) === "env" && !D) return "program_unresolved";
   if (D) {
     let F = E.slice(1).flatMap((ue) => ue.split(/[ \t]+/)),
       U = F[0] === "-S" ? F.slice(1) : F,
@@ -8837,7 +7999,7 @@ async function w$(e, t, r, o = 0) {
 }
 
 async function mIt(e, t) {
-  let r = await uIt(e, "r").catch(() => {
+  let r = await open(e, "r").catch(() => {
     return;
   });
   if (r === void 0) return;
@@ -8852,8 +8014,8 @@ async function mIt(e, t) {
 
 async function gIt(e, t) {
   let r = getGlobalClaudeFile();
-  if (e === void 0 || !bwr(r)) return;
-  let o = await _wr(r).catch(() => {
+  if (e === void 0 || !isAbsolute(r)) return;
+  let o = await realpath(r).catch(() => {
     return;
   });
   if (
@@ -8915,7 +8077,7 @@ function isDetailedTracingEnabled() {
 }
 
 function qWe(e) {
-  return wwr("sha256").update(e).digest("hex").slice(0, 12);
+  return createHash("sha256").update(e).digest("hex").slice(0, 12);
 }
 
 function Ewr(e) {
@@ -9685,7 +8847,7 @@ function C4(e) {
 
 async function x4(e) {
   try {
-    return (await Fwr(e)).isFile() ? e : null;
+    return (await stat(e)).isFile() ? e : null;
   } catch {
     return null;
   }
@@ -9694,7 +8856,7 @@ async function x4(e) {
 async function $wr(e) {
   let t;
   try {
-    t = await Lwr(e);
+    t = await readlink(e);
   } catch {
     return null;
   }
@@ -9705,13 +8867,13 @@ async function Bwr() {
   let e = await resolveExecutablePathAsync("pwsh");
   if (e) {
     if (getCurrentPlatform() === "linux") {
-      let r = await tMt(e).catch(() => e);
+      let r = await realpath(e).catch(() => e);
       if (e.startsWith("/snap/") || r.startsWith("/snap/")) {
         let o =
           (await x4("/opt/microsoft/powershell/7/pwsh")) ??
           (await x4("/usr/bin/pwsh"));
         if (o) {
-          let d = await tMt(o).catch(() => o);
+          let d = await realpath(o).catch(() => o);
           if (!o.startsWith("/snap/") && !d.startsWith("/snap/"))
             return (
               logFeatureSad("shell_powershell_detect", "snap_workaround"),
@@ -9727,11 +8889,11 @@ async function Bwr() {
       o = a.LOCALAPPDATA,
       d = a.USERPROFILE,
       p =
-        (r ? await x4(rye(r, "PowerShell", "7", "pwsh.exe")) : null) ??
+        (r ? await x4(join(r, "PowerShell", "7", "pwsh.exe")) : null) ??
         (o
-          ? await $wr(rye(o, "Microsoft", "WindowsApps", "pwsh.exe"))
+          ? await $wr(join(o, "Microsoft", "WindowsApps", "pwsh.exe"))
           : null) ??
-        (d ? await x4(rye(d, ".dotnet", "tools", "pwsh.exe")) : null);
+        (d ? await x4(join(d, ".dotnet", "tools", "pwsh.exe")) : null);
     if (p)
       return (
         logFeatureSad("shell_powershell_detect", "windows_fallback_path"),
@@ -9747,7 +8909,7 @@ async function Bwr() {
   if (getCurrentPlatform() === "windows") {
     let r = a.SYSTEMROOT ?? "C:\\Windows",
       o = await x4(
-        rye(r, "System32", "WindowsPowerShell", "v1.0", "powershell.exe"),
+        join(r, "System32", "WindowsPowerShell", "v1.0", "powershell.exe"),
       );
     if (o)
       return (
@@ -9845,14 +9007,14 @@ function aMt(e) {
       t = o.useSandbox ? o.sandboxTmpDir : void 0;
       let d;
       if (o.useSandbox && o.sandboxTmpDir)
-        d = (getCurrentPlatform() === "windows" ? sMt : cEr)(
+        d = (getCurrentPlatform() === "windows" ? join : cEr)(
           o.sandboxTmpDir,
           `claude-pwd-ps-${o.id}`,
         );
       else {
         let D = getClaudeTempDir();
-        (await lEr(D, { recursive: !0, mode: 448 }).catch(() => {}),
-          (d = sMt(D, `claude-pwd-ps-${o.id}`)));
+        (await mkdir(D, { recursive: !0, mode: 448 }).catch(() => {}),
+          (d = join(D, `claude-pwd-ps-${o.id}`)));
       }
       let _ = `
 ; $_ec = if ($null -ne $LASTEXITCODE) { $LASTEXITCODE } elseif ($?) { 0 } else { 1 }
@@ -10717,13 +9879,13 @@ function N4(e, t) {
 }
 
 function lTr(e) {
-  if (e === "~") return yye();
-  if (e.startsWith("~/")) return yye() + e.slice(1);
+  if (e === "~") return homedir();
+  if (e.startsWith("~/")) return homedir() + e.slice(1);
   return e;
 }
 
 function cTr(e) {
-  let t = yye(),
+  let t = homedir(),
     r = /^[A-Za-z]:/.test(t) ? t.slice(0, 2) : "",
     o = r ? t.slice(2) : t;
   return e
@@ -10769,7 +9931,7 @@ function G_(e) {
 }
 
 function gx() {
-  let e = yye();
+  let e = homedir();
   return [
     "/dev/stdout",
     "/dev/stderr",
@@ -11010,7 +10172,7 @@ function ZGe(e, t) {
 }
 
 function _Dt(e, t) {
-  return tAr("sha256", Buffer.from(e, "binary"), t).toString("binary");
+  return sign("sha256", Buffer.from(e, "binary"), t).toString("binary");
 }
 
 function eze(e) {
@@ -11033,11 +10195,11 @@ function eze(e) {
 }
 
 async function bDt(e) {
-  let t = new Set([dDt(e.trustBundlePath)]);
-  if (e.ephemeral) t.add(dDt(e.certPath));
+  let t = new Set([dirname(e.trustBundlePath)]);
+  if (e.ephemeral) t.add(dirname(e.certPath));
   for (let r of t)
     try {
-      await rAr(r, { recursive: !0, force: !0 });
+      await rm(r, { recursive: !0, force: !0 });
     } catch (o) {
       mo(`[mitm-ca] cleanup failed: ${o.message}`, { level: "warn" });
     }
@@ -11048,12 +10210,12 @@ function cAr(e, t, r) {
     d = process.env.NODE_EXTRA_CA_CERTS;
   if (d)
     try {
-      o.push(XGe(d, "utf8").trim());
+      o.push(readFileSync(d, "utf8").trim());
     } catch {}
   for (let _ of r ?? []) {
     let E;
     try {
-      E = XGe(_, "utf8");
+      E = readFileSync(_, "utf8");
     } catch (I) {
       let D = I.code ?? String(I);
       mo(`[mitm-ca] extraCaCertPaths: cannot read ${_} (${D}); skipping`, {
@@ -11071,7 +10233,7 @@ function cAr(e, t, r) {
     }
     o.push(...C);
   }
-  let p = Qee(e, "trust-bundle.crt");
+  let p = join(e, "trust-bundle.crt");
   return (
     writeFileSync(
       p,
@@ -11151,7 +10313,7 @@ function dAr(e, t, r) {
 }
 
 function tze(e, t, r, o, d) {
-  let p = gDt(Qee(hDt(), "srt-ca-"));
+  let p = mkdtempSync(join(tmpdir(), "srt-ca-"));
   return {
     certPath: d.certPath,
     keyPath: d.keyPath,
@@ -11199,7 +10361,7 @@ function nze(e = {}) {
 }
 
 function XW(e) {
-  return new nAr(e).fingerprint.replace(/:/g, "").toUpperCase();
+  return new X509Certificate(e).fingerprint.replace(/:/g, "").toUpperCase();
 }
 
 function r_e(e, t) {
@@ -11235,9 +10397,9 @@ function r_e(e, t) {
 
 function fAr(e) {
   let { certPem: t, keyPem: r, cert: o, key: d } = nze(),
-    p = gDt(Qee(hDt(), "srt-ca-")),
-    _ = Qee(p, "ca.crt"),
-    E = Qee(p, "ca.key");
+    p = mkdtempSync(join(tmpdir(), "srt-ca-")),
+    _ = join(p, "ca.crt"),
+    E = join(p, "ca.key");
   return (
     writeFileSync(_, t, { mode: 420 }),
     writeFileSync(E, r, { mode: 384 }),
@@ -11254,7 +10416,7 @@ function fAr(e) {
 function pDt(e, t, r) {
   let o;
   try {
-    o = XGe(e, "utf8");
+    o = readFileSync(e, "utf8");
   } catch (d) {
     let p = d.code ?? String(d);
     throw Error(`${r}: cannot read ${e} (${p})`);
@@ -11295,9 +10457,9 @@ async function s_e(e, t, r, o, d, p) {
   if (!D || I) {
     let U = new PassThrough();
     (U.on("error", () => {}), t.pipe(U));
-    let V = SDt.toWeb(U),
+    let V = Readable.toWeb(U),
       [re, ue] = V.tee();
-    ((E = re), (C = SDt.fromWeb(ue)));
+    ((E = re), (C = Readable.fromWeb(ue)));
     let de = C;
     (de.on("error", () => {}),
       t.on("error", (_e) => {
@@ -11390,7 +10552,7 @@ function l_e(e, t, r, o) {
 function yAr(e) {
   let t = Math.max(...e.map((o) => o.sentinel.length)),
     r;
-  return new gAr({
+  return new Transform({
     transform(o, d, p) {
       let _ = Buffer.isBuffer(o) ? o : Buffer.from(o, d),
         E = r?.length ? Buffer.concat([r, _]) : _,
@@ -11476,7 +10638,7 @@ function vDt(e, t) {
 }
 
 function kAr(e) {
-  return bAr(e) !== 0 ? { type: 7, ip: e } : { type: 2, value: e };
+  return isIP(e) !== 0 ? { type: 7, ip: e } : { type: 2, value: e };
 }
 
 function wAr(e, t) {
@@ -11534,7 +10696,7 @@ function vAr(e) {
     if (o !== -1) {
       let E = r.slice(0, o),
         C = r.slice(o + 1),
-        I = QW(E);
+        I = isIP(E);
       if (I && C !== "" && /^\d+$/.test(C)) {
         let D = Number(C),
           N = I === 6 ? 128 : 32;
@@ -11551,7 +10713,7 @@ function vAr(e) {
       p = /^\[([^\]]+)\](?::\d+)?$/.exec(d);
     if (p) d = p[1];
     if (d.startsWith("*.")) d = d.slice(1);
-    let _ = QW(d);
+    let _ = isIP(d);
     if (!_) {
       let E = d.lastIndexOf(":");
       if (E !== -1 && /^\d+$/.test(d.slice(E + 1))) d = d.slice(0, E);
@@ -11568,7 +10730,7 @@ function vAr(e) {
 function ete(e, t) {
   let r = rP(t.toLowerCase().replace(/\.$/, ""));
   if (r === "localhost") return !0;
-  let o = QW(r);
+  let o = isIP(r);
   if (o) {
     if (CAr.check(r, o === 6 ? "ipv6" : "ipv4")) return !0;
   }
@@ -11607,7 +10769,7 @@ function lze(e) {
     );
   if (!Number.isInteger(r) || r < 1 || r > 65535)
     return Promise.reject(Error(`Invalid destination port: ${r}`));
-  let d = QW(o) === 6 ? `[${o}]:${r}` : `${o}:${r}`;
+  let d = isIP(o) === 6 ? `[${o}]:${r}` : `${o}:${r}`;
   return new Promise((p, _) => {
     let E = e.dial(),
       C = !1,
@@ -11676,8 +10838,8 @@ function d_e(e, t, r) {
     readyEvent: p ? "secureConnect" : "connect",
     dial: () =>
       p
-        ? EAr({ host: o, port: d, ...(QW(o) ? {} : { servername: o }) })
-        : xDt(d, o),
+        ? EAr({ host: o, port: d, ...(isIP(o) ? {} : { servername: o }) })
+        : connect(d, o),
   });
 }
 
@@ -11723,14 +10885,14 @@ function e5(e) {
   if (!e || e.length > 255) return !1;
   let t = rP(e);
   if (t.includes("%")) return !1;
-  if (QW(t)) return !0;
+  if (isIP(t)) return !0;
   return /^[A-Za-z0-9._-]+$/.test(t);
 }
 
 function Lb(e) {
   try {
     let t = rP(e),
-      r = QW(t) === 6 ? `[${t}]` : t,
+      r = isIP(t) === 6 ? `[${t}]` : t,
       o = new ize(`http://${r}/`).hostname;
     return rP(o).replace(/\.$/, "");
   } catch {
@@ -11740,7 +10902,7 @@ function Lb(e) {
 
 function f_e(e, t, r = ADt) {
   return new Promise((o, d) => {
-    let p = xDt(t, e),
+    let p = connect(t, e),
       _ = !1,
       E = (C) => {
         if (_) return;
@@ -11916,7 +11078,7 @@ function NDt(e) {
 }
 
 function fze(e) {
-  return AAr("sha256").update(e).digest("hex");
+  return createHash("sha256").update(e).digest("hex");
 }
 
 function g_e(e, t) {
@@ -12024,7 +11186,7 @@ function HDt(e, t, r, o, d, p, _, E, C = BDt) {
       F());
   }),
     D.listen(N, () => {
-      let U = FAr({ path: N });
+      let U = connect({ path: N });
       (U.on("error", (V) => {
         (mo(`[tls-terminate] inner loopback failed: ${V.message}`, {
           level: "error",
@@ -12123,7 +11285,7 @@ async function WAr(e, t, r, o, d, p, _, E = BDt) {
       }
       ((ue = fze(U)), (D["content-length"] = String(U.length)));
     }
-    let de = LDt(p.hostname) === 6 ? `[${p.hostname}]` : p.hostname,
+    let de = isIP(p.hostname) === 6 ? `[${p.hostname}]` : p.hostname,
       _e = p.port === 443 ? de : `${de}:${p.port}`;
     try {
       N.apply(D, _e, ue);
@@ -12144,14 +11306,14 @@ async function WAr(e, t, r, o, d, p, _, E = BDt) {
     D["transfer-encoding"] === void 0
   )
     D["transfer-encoding"] = "chunked";
-  let re = LAr(
+  let re = request(
     {
       host: p.hostname,
       port: p.port,
       path: C,
       method: o.method,
       headers: D,
-      ...(LDt(p.hostname) ? {} : { servername: p.hostname }),
+      ...(isIP(p.hostname) ? {} : { servername: p.hostname }),
       ...(p.upstreamCA ? { ca: p.upstreamCA } : {}),
       agent: !1,
     },
@@ -12224,7 +11386,7 @@ function zAr(e) {
 var qAr = 0;
 
 function VAr() {
-  return UAr(BAr(), `srt-tt-${process.pid}-${(qAr++).toString(36)}.sock`);
+  return join(tmpdir(), `srt-tt-${process.pid}-${(qAr++).toString(36)}.sock`);
 }
 
 function GDt(e) {
@@ -12396,7 +11558,7 @@ Connection blocked by network allowlist`));
           if (Oe)
             (mo(`Routing CONNECT ${xe}:${ve} through MITM proxy at ${Oe}`),
               (De = await lze({
-                dial: () => XAr({ path: Oe }),
+                dial: () => connect({ path: Oe }),
                 readyEvent: "connect",
                 destHost: xe,
                 destPort: ve,
@@ -12491,7 +11653,7 @@ Connection blocked by network allowlist`));
         }
         if (o.socket.destroyed) return;
         let D = Lb(E) ?? E,
-          N = (QAr(D) === 6 ? `[${D}]` : D) + (_.port ? `:${_.port}` : ""),
+          N = (isIP(D) === 6 ? `[${D}]` : D) + (_.port ? `:${_.port}` : ""),
           F = { ...kB(o.headers), host: N };
         e.mutateHeadersPlaintext?.(F, D);
         let U = l_e(e.getBodySubstitutionsPlaintext, o, F, D),
@@ -12544,7 +11706,7 @@ Connection blocked by network allowlist`));
         let Se;
         if (V) {
           mo(`Routing HTTP ${o.method} ${D}:${C} through MITM proxy at ${V}`);
-          let ve = new KAr({ socketPath: V });
+          let ve = new Agent({ socketPath: V });
           Se = mze(
             { agent: ve, path: ue, method: o.method, headers: F },
             (Me) => {
@@ -12562,7 +11724,7 @@ Connection blocked by network allowlist`));
           let ve = rP(re.hostname),
             Me = Number(re.port) || (re.protocol === "https:" ? 443 : 80),
             xe = cze(re);
-          Se = (re.protocol === "https:" ? jDt : mze)(
+          Se = (re.protocol === "https:" ? request : mze)(
             {
               hostname: ve,
               port: Me,
@@ -12582,7 +11744,7 @@ Connection blocked by network allowlist`));
             },
           );
         } else
-          Se = (_.protocol === "https:" ? jDt : mze)(
+          Se = (_.protocol === "https:" ? request : mze)(
             {
               hostname: D,
               port: C,
@@ -13130,7 +12292,7 @@ var fRr = new Set([4, 5]),
   mRr = 0;
 
 function gRr() {
-  return uRr(dRr(), `srt-mux-${process.pid}-${(mRr++).toString(36)}.sock`);
+  return join(tmpdir(), `srt-mux-${process.pid}-${(mRr++).toString(36)}.sock`);
 }
 
 function QDt(e) {
@@ -13147,7 +12309,7 @@ function QDt(e) {
         C.destroy());
       return;
     }
-    let I = o ? YDt(o) : YDt(d, "127.0.0.1");
+    let I = o ? connect(o) : connect(d, "127.0.0.1");
     (I.on("error", (D) => {
       let N = D.code ?? "ERR";
       if (
@@ -13166,7 +12328,7 @@ mux backend dial failed (${N})
       C.pipe(I),
       I.pipe(C));
   }
-  let E = cRr((C) => {
+  let E = createServer((C) => {
     (p.add(C),
       C.once("close", () => p.delete(C)),
       C.on("error", (D) => mo(`mux: client socket error: ${D.message}`)));
@@ -13194,7 +12356,7 @@ mux backend dial failed (${N})
     async listenHttpBackend() {
       if (!r) {
         let I = gRr();
-        (await XDt(I).catch(() => {}),
+        (await unlink(I).catch(() => {}),
           await new Promise((D, N) => {
             (e.httpServer.once("error", N),
               e.httpServer.listen(I, () => {
@@ -13226,7 +12388,7 @@ mux backend dial failed (${N})
         await new Promise((C) => e.httpServer.close(() => C())),
         o)
       )
-        (await XDt(o).catch(() => {}), (o = void 0));
+        (await unlink(o).catch(() => {}), (o = void 0));
       d = void 0;
     },
     unref() {
@@ -13239,11 +12401,11 @@ var rte = "fake_value_",
   JDt = "abcdefghijklmnopqrstuvwxyz0123456789_-";
 
 function _Rr(e) {
-  let t = rte + yRr(),
+  let t = rte + randomUUID(),
     r = Buffer.byteLength(e) - t.length;
   if (r <= 0) return t;
   let o = t;
-  for (let d of hRr(r)) o += JDt[d % JDt.length];
+  for (let d of randomBytes(r)) o += JDt[d % JDt.length];
   return o;
 }
 
@@ -13419,10 +12581,10 @@ class Sze {
   }
   write(e, t) {
     if (this.dir === void 0)
-      this.dir = oP.mkdtempSync(tNt(kRr(), "srt-credmask-"));
+      this.dir = oP.mkdtempSync(join(tmpdir(), "srt-credmask-"));
     let r = this.byKey.get(e);
     if (r === void 0)
-      ((r = tNt(this.dir, `${this.byKey.size}.fake`)), this.byKey.set(e, r));
+      ((r = join(this.dir, `${this.byKey.size}.fake`)), this.byKey.set(e, r));
     return (
       oP.rmSync(r, { force: !0 }),
       oP.writeFileSync(r, t, { mode: 384 }),
@@ -13510,7 +12672,7 @@ function nNt(e, t, r, o) {
             return (
               V++,
               _.decode === "jwt"
-                ? r.registerWithSentinel(_e, I_e(SRr()), ue, I)
+                ? r.registerWithSentinel(_e, I_e(randomUUID()), ue, I)
                 : r.register(_e, ue, I)
             );
           },
@@ -13588,7 +12750,7 @@ function rNt(e, t, r, o = process.env) {
         );
         continue;
       }
-      d[_.name] = r.registerWithSentinel(`${O_e}${_.name}`, I_e(ERr()), E, C);
+      d[_.name] = r.registerWithSentinel(`${O_e}${_.name}`, I_e(randomUUID()), E, C);
       continue;
     }
     if (_.extract === void 0) {
@@ -13787,7 +12949,7 @@ function lNt(e, t, r) {
 
 function KD(e) {
   if (typeof globalThis.Bun < "u") return globalThis.Bun.which(e);
-  let t = vRr("which", [e], {
+  let t = spawnSync("which", [e], {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "ignore"],
     timeout: 1000,
@@ -13808,15 +12970,15 @@ function vx(e) {
 
 async function uNt(e, t, r, o = { command: "rg" }) {
   let { command: d, args: p = [], argv0: _ } = o,
-    E = CRr(d, [...p, ...e, t], {
+    E = spawn(d, [...p, ...e, t], {
       argv0: _,
       signal: r,
       timeout: 1e4,
       windowsHide: !0,
     }),
     [C, I, D] = await Promise.all([
-      cNt(E.stdout),
-      cNt(E.stderr),
+      text(E.stdout),
+      text(E.stderr),
       new Promise((N, F) => {
         (E.on("close", N), E.on("error", F));
       }),
@@ -13844,13 +13006,13 @@ function Tze() {
       timeout: 5000,
       stdio: ["pipe", "pipe", "ignore"],
     }).trim();
-    if (r) e.push(sP(r, "@anthropic-ai", "sandbox-runtime"));
+    if (r) e.push(join(r, "@anthropic-ai", "sandbox-runtime"));
   } catch {}
-  let t = PRr();
+  let t = homedir();
   return (
     e.push(
-      sP("/usr", "lib", "node_modules", "@anthropic-ai", "sandbox-runtime"),
-      sP(
+      join("/usr", "lib", "node_modules", "@anthropic-ai", "sandbox-runtime"),
+      join(
         "/usr",
         "local",
         "lib",
@@ -13858,7 +13020,7 @@ function Tze() {
         "@anthropic-ai",
         "sandbox-runtime",
       ),
-      sP(
+      join(
         "/opt",
         "homebrew",
         "lib",
@@ -13866,8 +13028,8 @@ function Tze() {
         "@anthropic-ai",
         "sandbox-runtime",
       ),
-      sP(t, ".npm", "lib", "node_modules", "@anthropic-ai", "sandbox-runtime"),
-      sP(
+      join(t, ".npm", "lib", "node_modules", "@anthropic-ai", "sandbox-runtime"),
+      join(
         t,
         ".npm-global",
         "lib",
@@ -13911,9 +13073,9 @@ function dNt() {
 function IRr(e) {
   let t = dNt();
   if (!t) return [];
-  let r = xRr(ARr(import.meta.url)),
-    o = sP("vendor", "seccomp", t, e);
-  return [sP(r, o), sP(r, "..", "..", o), sP(r, "..", o)];
+  let r = dirname(fileURLToPath(import.meta.url)),
+    o = join("vendor", "seccomp", t, e);
+  return [join(r, o), join(r, "..", "..", o), join(r, "..", o)];
 }
 
 function vze(e) {
@@ -13947,7 +13109,7 @@ function MRr(e) {
     if (D_e.existsSync(r))
       return (mo(`[SeccompFilter] Found apply-seccomp binary: ${r} (${t})`), r);
   for (let r of Tze()) {
-    let o = sP(r, "vendor", "seccomp", t, "apply-seccomp");
+    let o = join(r, "vendor", "seccomp", t, "apply-seccomp");
     if (D_e.existsSync(o))
       return (
         mo(
@@ -13982,13 +13144,13 @@ function NRr(e) {
       level: "warn",
     });
   }
-  let t = ORr(DRr(import.meta.url)),
-    r = ote("vendor", "java-proxy-agent", pNt),
+  let t = dirname(fileURLToPath(import.meta.url)),
+    r = join("vendor", "java-proxy-agent", pNt),
     o = [
-      ote(t, r),
-      ote(t, "..", "..", r),
-      ote(t, "..", r),
-      ...Tze().map((d) => ote(d, r)),
+      join(t, r),
+      join(t, "..", "..", r),
+      join(t, "..", r),
+      ...Tze().map((d) => join(d, r)),
     ];
   for (let d of o) if (existsSync(d)) return d;
   return (
@@ -14221,15 +13383,15 @@ function ENt(e) {
 
 async function TNt(e, t, r) {
   let o = r ?? "socat",
-    d = FRr(8).toString("hex"),
-    p = yNt(xze(), `claude-http-${d}.sock`),
-    _ = yNt(xze(), `claude-socks-${d}.sock`),
+    d = randomBytes(8).toString("hex"),
+    p = join(tmpdir(), `claude-http-${d}.sock`),
+    _ = join(tmpdir(), `claude-socks-${d}.sock`),
     E = [
       `UNIX-LISTEN:${p},fork,reuseaddr`,
       `TCP:localhost:${e},keepalive,keepidle=10,keepintvl=5,keepcnt=3`,
     ];
   mo(`Starting HTTP bridge: ${o} ${E.join(" ")}`);
-  let C = hNt(o, E, { stdio: "ignore" });
+  let C = spawn(o, E, { stdio: "ignore" });
   if (
     (C.on("error", (F) => {
       mo(`HTTP bridge process error: ${F}`, { level: "error" });
@@ -14252,7 +13414,7 @@ async function TNt(e, t, r) {
     ];
     if (
       (mo(`Starting SOCKS bridge: ${o} ${F.join(" ")}`),
-      (I = hNt(o, F, { stdio: "ignore" })),
+      (I = spawn(o, F, { stdio: "ignore" })),
       I.on("error", (U) => {
         mo(`SOCKS bridge process error: ${U}`, { level: "error" });
       }),
@@ -14623,7 +13785,7 @@ async function GRr(e, t, r, o, d = { command: "rg" }, p = Aze, _ = !1, E) {
         if (Qr && !xo) {
           let ss = URr(hn);
           if (ss !== hn) {
-            let qs = zd.mkdtempSync($h.join(xze(), "claude-empty-"));
+            let qs = zd.mkdtempSync($h.join(tmpdir(), "claude-empty-"));
             (D.push("--ro-bind", qs, ss),
               F.set(ss, Kn),
               F_e.add(ss),
@@ -15749,7 +14911,7 @@ function DNt(e) {
 function NNt(e, t, r = (o) => o) {
   let o = /CMD64_(.+?)_END/,
     d = /Sandbox:\s+(.+)$/,
-    p = zRr("log", [
+    p = spawn("log", [
       "stream",
       "--predicate",
       `(eventMessage ENDSWITH "${CNt}")`,
@@ -15805,12 +14967,12 @@ function FNt(e, t) {
       ignoreViolations: d,
       resolveCommandText: p = (de) => de,
     } = t,
-    _ = sPr(LNt(lPr(), "srt-obs-")),
-    E = LNt(_, `s${oPr(4).toString("hex")}.sock`),
+    _ = mkdtempSync(join(tmpdir(), "srt-obs-")),
+    E = join(_, `s${randomBytes(4).toString("hex")}.sock`),
     C = (de, _e) =>
       de === _e || de.startsWith(_e.endsWith("/") ? _e : _e + "/"),
     I = (de) => {
-      let _e = cPr.normalize(de);
+      let _e = posix.normalize(de);
       if (o.some((Se) => C(_e, Se))) return !0;
       return !r.some((Se) => C(_e, Se));
     },
@@ -15843,9 +15005,9 @@ function FNt(e, t) {
       N = de;
     }),
     U = E,
-    V = aPr((de) => {
+    V = createServer((de) => {
       let _e,
-        Se = uPr({ input: de });
+        Se = createInterface({ input: de });
       (Se.on("line", (ve) => {
         if (!ve) return;
         let Me;
@@ -15884,7 +15046,7 @@ function FNt(e, t) {
         for (let de of re) de.destroy();
         V.close();
         try {
-          iPr(_, { recursive: !0, force: !0 });
+          rmSync(_, { recursive: !0, force: !0 });
         } catch {}
       },
     }
@@ -15988,7 +15150,7 @@ function dP(e) {
 
 function ste(e, t = {}) {
   let { exe: r, prependArgs: o } = t.srtWin ?? dP(),
-    d = fPr(r, [...o, ...e], {
+    d = spawnSync(r, [...o, ...e], {
       encoding: "utf8",
       windowsHide: !0,
       timeout: t.timeoutMs ?? 15000,
@@ -16020,7 +15182,7 @@ function Lze(e, t = {}) {
   let { exe: r, prependArgs: o } = t.srtWin ?? dP(),
     d = t.timeoutMs ?? 15000;
   return new Promise((p, _) => {
-    let E = dPr(r, [...o, ...e], { windowsHide: !0 }),
+    let E = spawn(r, [...o, ...e], { windowsHide: !0 }),
       C = !1,
       I =
         d > 0
@@ -16151,7 +15313,7 @@ async function VNt(e = {}) {
     let [o, d] = e.proxyPortRange ?? Oze;
     for (let p = 0; p < 5; p++) {
       let _ = HNt.createServer();
-      (_.listen(0, "127.0.0.1"), await pPr(_, "listening"));
+      (_.listen(0, "127.0.0.1"), await once(_, "listening"));
       let E = _.address().port;
       if (E < o || E > d) {
         ((r = _), (t = `127.0.0.1:${E}`));
@@ -16684,7 +15846,7 @@ function oN(e, t) {
   let r = e.toLowerCase();
   if (t === "*") return !0;
   if (t.startsWith("*.")) {
-    if (vPr(rP(r))) return !1;
+    if (isIP(rP(r))) return !1;
     let o = t.substring(2).toLowerCase();
     return r.endsWith("." + o);
   }
@@ -17025,7 +16187,7 @@ async function FPr(e, t, r = !1) {
     }
     try {
       let C = jPr(e);
-      if (Vb) C.grantRead.push(xPr(Vb.trustBundlePath));
+      if (Vb) C.grantRead.push(dirname(Vb.trustBundlePath));
       if (!E.sid)
         throw Error(
           "sandbox user SID missing from `srt-win user status` (provisioned but in an inconsistent state)",
@@ -17067,7 +16229,7 @@ async function FPr(e, t, r = !1) {
     try {
       let _ = Fh() === "windows" ? (ma.windows?.proxyPortRange ?? Oze) : void 0;
       MB =
-        ma.network.httpProxyPort !== void 0 ? void 0 : CPr(16).toString("hex");
+        ma.network.httpProxyPort !== void 0 ? void 0 : randomBytes(16).toString("hex");
       let C =
           ma.network.httpProxyPort === void 0 ||
           ma.network.socksProxyPort === void 0
@@ -17786,7 +16948,7 @@ var Am = {
 var h3e = toESM(picomatchModule(), 1);
 
 var BRIDGE_SPAWN_DIR_NAME = "bridge-spawn",
-  uIr = cIr(aIr(), ".claude", BRIDGE_SPAWN_DIR_NAME);
+  uIr = join(homedir(), ".claude", BRIDGE_SPAWN_DIR_NAME);
 
 function getBridgeSpawnRootDir() {
   return uIr;
@@ -17794,7 +16956,7 @@ function getBridgeSpawnRootDir() {
 
 async function ensureBridgeSpawnRootDir() {
   let e = getBridgeSpawnRootDir();
-  await vLt(lIr(e), { recursive: !0 });
+  await vLt(dirname(e), { recursive: !0 });
   try {
     await vLt(e, { mode: 448 });
   } catch (t) {
@@ -17804,12 +16966,12 @@ async function ensureBridgeSpawnRootDir() {
 }
 
 function cSe() {
-  let e = [lSe(getClaudeConfigDir(), "ide")];
+  let e = [join(getClaudeConfigDir(), "ide")];
   if (a.CLAUDE_CONFIG_DIR)
-    e.push(lSe(v5t.homedir(), ".claude", "ide").normalize("NFC"));
+    e.push(join(v5t.homedir(), ".claude", "ide").normalize("NFC"));
   if (getCurrentPlatform() === "wsl") {
     let t = a.USERPROFILE ? convertWindowsPathToWsl(a.USERPROFILE) : null;
-    if (t) e.push(lSe(t, ".claude", "ide"));
+    if (t) e.push(join(t, ".claude", "ide"));
     try {
       let o = getFsSurface().readdirSync("/mnt/c/Users");
       for (let d of o) {
@@ -17821,7 +16983,7 @@ function cSe() {
           d.name === "All Users"
         )
           continue;
-        e.push(lSe("/mnt/c/Users", d.name, ".claude", "ide"));
+        e.push(join("/mnt/c/Users", d.name, ".claude", "ide"));
       }
     } catch (r) {
       if (Rt(r))
@@ -17884,11 +17046,11 @@ var P6 = ".credentials.json",
   e3e = `.claude${OAUTH_GLOBAL_FILE_SUFFIXES[0]}.json`;
 
 function dSe() {
-  let e = Tqr(getGlobalClaudeFile());
+  let e = dirname(getGlobalClaudeFile());
   return [
-    ...OAUTH_GLOBAL_FILE_SUFFIXES.map((t) => J6e(e, `.claude${t}.json`)),
-    J6e(getClaudeConfigDir(), Z6e),
-    J6e(getSecureStorageDir(), P6),
+    ...OAUTH_GLOBAL_FILE_SUFFIXES.map((t) => join(e, `.claude${t}.json`)),
+    join(getClaudeConfigDir(), Z6e),
+    join(getSecureStorageDir(), P6),
   ];
 }
 
@@ -18065,7 +17227,7 @@ function createSettingsChangeDetector(e) {
   async function It(Zr) {
     if (!ct.has(Zr)) return;
     try {
-      if (!(await h2(Zr)).isDirectory()) return;
+      if (!(await stat(Zr)).isDirectory()) return;
     } catch {
       return;
     }
@@ -18111,10 +17273,10 @@ function createSettingsChangeDetector(e) {
   }
   async function un(Zr) {
     try {
-      let Ir = await h2(Zr);
+      let Ir = await stat(Zr);
       while (!0) {
         if ((await sleep(t), re)) return !1;
-        let as = await h2(Zr);
+        let as = await stat(Zr);
         if (as.size === Ir.size && as.mtimeMs === Ir.mtimeMs)
           return as.isFile();
         Ir = as;
@@ -18430,17 +17592,17 @@ async function I5t(e) {
     if (!t.has(ue)) t.set(ue, new Set());
     if ((t.get(ue).add(re), !r.has(ue) && !I.has(ue)))
       try {
-        if ((await h2(ue)).isDirectory()) r.add(ue);
+        if ((await stat(ue)).isDirectory()) r.add(ue);
       } catch {
         if (_.has(re))
           try {
-            if ((await h2(P_.dirname(ue))).isDirectory()) I.add(ue);
+            if ((await stat(P_.dirname(ue))).isDirectory()) I.add(ue);
           } catch {}
       }
     try {
-      let de = await P5t(re);
+      let de = await realpath(re);
       if (de === re) continue;
-      let _e = await P5t(ue),
+      let _e = await realpath(ue),
         Se = P_.dirname(de);
       if (P_.join(_e, P_.basename(re)) === de) continue;
       let ve = Se === _e,
@@ -18461,7 +17623,7 @@ async function I5t(e) {
   let N = null,
     F = getManagedSettingsDropInDir();
   try {
-    if ((await h2(F)).isDirectory()) (r.add(F), (N = F), d.add(F));
+    if ((await stat(F)).isDirectory()) (r.add(F), (N = F), d.add(F));
   } catch {}
   let U = getCurrentPlatform() === "macos",
     V = new Set();
@@ -18474,7 +17636,7 @@ async function I5t(e) {
     let de = !1;
     for (let _e of ue)
       try {
-        if ((await h2(_e)).isFile()) V.add(_e);
+        if ((await stat(_e)).isFile()) V.add(_e);
         else de = !0;
       } catch {
         de = !0;
@@ -18587,7 +17749,7 @@ function a3t() {
 async function c3t() {
   if (!a3t()) return;
   try {
-    return Zqr("/proc/self/exe", eVr);
+    return openSync("/proc/self/exe", eVr);
   } catch (e) {
     let t = new R(
       `sandbox: failed to open /proc/self/exe for the embedded apply-seccomp helper: ${l(e)}`,
@@ -18661,7 +17823,7 @@ function denyEntryCovers(e, t, r) {
   let o = t;
   for (;;) {
     if (S3t(o, e, r)) return !0;
-    let d = bg(o);
+    let d = dirname(o);
     if (d === o) return !1;
     o = d;
   }
@@ -18710,7 +17872,7 @@ function resolvePathPatternForSandboxAt(e, t) {
       p = !(
         getCurrentPlatform() === "windows" && /^(?:[A-Za-z]:[\\/]|\\\\)/.test(d)
       );
-    return el(t, (p ? "./" : "") + xSe(d));
+    return resolve(t, (p ? "./" : "") + xSe(d));
   }
   let r = xSe(e),
     o = /^(?:[\\/]|~[\\/]|~$|[A-Za-z]:)/.exec(r)?.[0] ?? "";
@@ -18740,7 +17902,7 @@ function S2(e) {
 
 function w3t(e) {
   try {
-    return a0(e).isDirectory();
+    return statSync(e).isDirectory();
   } catch {
     return !1;
   }
@@ -18748,7 +17910,7 @@ function w3t(e) {
 
 function lVr(e) {
   try {
-    return RP(e).isDirectory();
+    return lstatSync(e).isDirectory();
   } catch {
     return !1;
   }
@@ -18881,7 +18043,7 @@ function shouldAllowManagedSandboxDomainsOnly() {
 var _3e = /^[1-9][0-9]{0,4}$/;
 
 function yoe(e) {
-  if (BN(e) === 6) return !1;
+  if (isIP(e) === 6) return !1;
   let t = Lb(e);
   return t !== void 0 && t !== e.toLowerCase();
 }
@@ -18889,7 +18051,7 @@ function yoe(e) {
 function mVr(e, t) {
   if (e.length === 0 || e.length > 255) return !1;
   if (t.includes("%")) return !1;
-  if (BN(t) !== 0) return !0;
+  if (isIP(t) !== 0) return !0;
   return /^[A-Za-z0-9._-]+$/.test(t);
 }
 
@@ -18917,7 +18079,7 @@ function _Vr(e) {
   let t = hVr(e);
   if (t === void 0) return !0;
   if (!mVr(e, t)) return !0;
-  if (BN(t) !== 0) return !1;
+  if (isIP(t) !== 0) return !1;
   if (yVr(t)) return !0;
   return yoe(t.replace(/\.$/, ""));
 }
@@ -18938,13 +18100,13 @@ function v3t(e) {
   if (!/^\d{1,5}$/.test(r)) return;
   let d = Number(r);
   if (d < 1 || d > 65535 || o === "") return;
-  if (o.endsWith(":") && BN(o) !== 6) return;
+  if (o.endsWith(":") && isIP(o) !== 6) return;
   return { host: o, port: d };
 }
 
 function bVr(e) {
   let t = [];
-  if (BN(e) === 6) t.push(`[${e}]`);
+  if (isIP(e) === 6) t.push(`[${e}]`);
   let r = v3t(e);
   if (r !== void 0) t.push(`[${r.host}]:${r.port}`);
   return t.length > 0 ? t : [e];
@@ -18979,7 +18141,7 @@ function SVr(e) {
     _3e.test(o) &&
     Number(o) <= 65535 &&
     r !== "" &&
-    !(r.endsWith(":") && BN(r) !== 6) &&
+    !(r.endsWith(":") && isIP(r) !== 6) &&
     d !== -1 &&
     r.indexOf(":", d + 1) !== -1
   )
@@ -18988,7 +18150,7 @@ function SVr(e) {
 }
 
 function kVr(e) {
-  return BN(e) === 6 ? `[${e}]` : e;
+  return isIP(e) === 6 ? `[${e}]` : e;
 }
 
 function consentHostEntry(e) {
@@ -19010,7 +18172,7 @@ function A3t(e) {
     if (yoe(t)) return [];
     let r = SVr(t);
     if (r !== t) return [r];
-    if (BN(t) === 6 && v3t(t) !== void 0) return [];
+    if (isIP(t) === 6 && v3t(t) !== void 0) return [];
     return [t];
   });
 }
@@ -19049,14 +18211,14 @@ function wVr(e) {
 function sv(e) {
   let t;
   try {
-    t = PP(e);
+    t = readlinkSync(e);
   } catch {
     return (Hp().denyLiteralSymlinkCandidates.push(e), e);
   }
   let r;
   try {
     return (
-      (r = rk(e)),
+      (r = realpathSync(e)),
       Hp().symlinkedDenyScrubPaths.push({
         literal: e,
         resolved: r,
@@ -19066,15 +18228,15 @@ function sv(e) {
       r
     );
   } catch {
-    let o = DSe(e, t) ?? el(bg(e), t);
+    let o = DSe(e, t) ?? resolve(dirname(e), t);
     for (let d = 0; d < 8; d++) {
       let p;
       try {
-        p = PP(o);
+        p = readlinkSync(o);
       } catch {
         break;
       }
-      o = el(bg(o), p);
+      o = resolve(dirname(o), p);
     }
     return (
       Hp().symlinkedDenyScrubPaths.push({
@@ -19089,12 +18251,12 @@ function sv(e) {
 }
 
 function EVr(e, t, r, o) {
-  let d = rG(),
+  let d = homedir(),
     p = [
-      { file: el(d, ".gitconfig"), parse: !0 },
-      { file: el(e, "git", "config"), parse: !0 },
-      { file: el(e, "git", "ignore"), parse: !1 },
-      { file: el(e, "git", "attributes"), parse: !1 },
+      { file: resolve(d, ".gitconfig"), parse: !0 },
+      { file: resolve(e, "git", "config"), parse: !0 },
+      { file: resolve(e, "git", "ignore"), parse: !1 },
+      { file: resolve(e, "git", "attributes"), parse: !1 },
     ],
     _ = new Set(),
     E = [];
@@ -19126,15 +18288,15 @@ function EVr(e, t, r, o) {
 }
 
 function TVr(e, t, r) {
-  if (e === "~" || e.startsWith("~/")) return el(r, `./${e.slice(2)}`);
-  return e.startsWith("~") ? null : el(bg(t), e);
+  if (e === "~" || e.startsWith("~/")) return resolve(r, `./${e.slice(2)}`);
+  return e.startsWith("~") ? null : resolve(dirname(t), e);
 }
 
 function vVr(e) {
   try {
-    let t = a0(e);
+    let t = statSync(e);
     if (!t.isFile() || t.size > 1048576) return null;
-    let r = c3e(e, "utf8");
+    let r = readFileSync(e, "utf8");
     return r.includes("\x00") ? null : r;
   } catch {
     return null;
@@ -19155,19 +18317,19 @@ function CVr(e) {
 }
 
 function xVr(e) {
-  let t = e.split(Wk).filter(Boolean);
+  let t = e.split(sep).filter(Boolean);
   for (let r = 1; r <= t.length; r++) {
-    let o = Wk + t.slice(0, r).join(Wk),
+    let o = sep + t.slice(0, r).join(sep),
       d;
     try {
-      d = PP(o);
+      d = readlinkSync(o);
     } catch (_) {
       let E = A(_);
       if (E === "EINVAL") continue;
       return E === "ENOENT" || E === "ENOTDIR" ? void 0 : null;
     }
-    let p = PSe(bg(o), d);
-    return p === null ? null : { link: o, next: I_(p, ...t.slice(r)) };
+    let p = PSe(dirname(o), d);
+    return p === null ? null : { link: o, next: join(p, ...t.slice(r)) };
   }
   return;
 }
@@ -19175,7 +18337,7 @@ function xVr(e) {
 function RSe(e, t) {
   if (getCurrentPlatform() === "windows") return null;
   let r = new Set();
-  if (t !== null) (r.add(t), r.add(bg(t)));
+  if (t !== null) (r.add(t), r.add(dirname(t)));
   let o = new Set(),
     d = [e],
     p = S3e;
@@ -19183,10 +18345,10 @@ function RSe(e, t) {
     if (o.has(_)) continue;
     if (--p < 0) return null;
     o.add(_);
-    for (let E = _, C = bg(_); E !== C; E = C, C = bg(C)) {
+    for (let E = _, C = dirname(_); E !== C; E = C, C = dirname(C)) {
       let I;
       try {
-        I = PP(E);
+        I = readlinkSync(E);
       } catch (N) {
         let F = A(N);
         if (F !== "EINVAL" && F !== "ENOENT" && F !== "ENOTDIR") return null;
@@ -19196,7 +18358,7 @@ function RSe(e, t) {
         (r.add(E), r.add(C));
         let N = R3t(C);
         if (N === null) return null;
-        if ((r.add(N.path), r.add(I_(N.path, hoe(E))), N.exists)) D = N.path;
+        if ((r.add(N.path), r.add(join(N.path, basename(E))), N.exists)) D = N.path;
       }
       if (I !== void 0) {
         let N = PSe(D, I);
@@ -19212,15 +18374,15 @@ function PSe(e, t) {
   let r = t.split("/"),
     o = r.findIndex((p) => p !== ".." && p !== "." && p !== ""),
     d = o !== -1 && r.indexOf("..", o) !== -1;
-  if (ASe(t)) return r.includes("..") ? null : el(t);
+  if (isAbsolute(t)) return r.includes("..") ? null : resolve(t);
   if (d || e === void 0) return null;
-  return el(e, t);
+  return resolve(e, t);
 }
 
 function DSe(e, t) {
   let r;
   try {
-    r = rk(bg(e));
+    r = realpathSync(dirname(e));
   } catch {
     return null;
   }
@@ -19228,12 +18390,12 @@ function DSe(e, t) {
   for (let d = 0; d < 8 && o !== null; d++) {
     let p;
     try {
-      p = PP(o);
+      p = readlinkSync(o);
     } catch {
       return o;
     }
     try {
-      r = rk(bg(o));
+      r = realpathSync(dirname(o));
     } catch {
       return null;
     }
@@ -19244,7 +18406,7 @@ function DSe(e, t) {
 
 function AVr(e) {
   try {
-    return rk(e);
+    return realpathSync(e);
   } catch {
     return null;
   }
@@ -19254,16 +18416,16 @@ var S3e = 32;
 
 function R3t(e) {
   let t = [];
-  for (let r = e; ; r = bg(r))
+  for (let r = e; ; r = dirname(r))
     try {
-      let o = rk(r);
+      let o = realpathSync(r);
       return t.length === 0
         ? { path: o, exists: !0 }
-        : { path: I_(o, ...t), exists: !1 };
+        : { path: join(o, ...t), exists: !1 };
     } catch (o) {
       let d = A(o);
-      if ((d !== "ENOENT" && d !== "ENOTDIR") || bg(r) === r) return null;
-      t.unshift(hoe(r));
+      if ((d !== "ENOENT" && d !== "ENOTDIR") || dirname(r) === r) return null;
+      t.unshift(basename(r));
     }
 }
 
@@ -19275,15 +18437,15 @@ function canonicalizePathForMaskSweep(e) {
   for (;;) {
     if (ac(r, Bw()) || rawPointerPathIsUnsafe(r, Bw())) break;
     try {
-      r = rk(r);
+      r = realpathSync(r);
       break;
     } catch {
-      let o = bg(r);
+      let o = dirname(r);
       if (o === r) break;
-      (t.push(hoe(r)), (r = o));
+      (t.push(basename(r)), (r = o));
     }
   }
-  return t.length === 0 ? r : I_(r, ...t.reverse());
+  return t.length === 0 ? r : join(r, ...t.reverse());
 }
 
 var RVr = ["/etc", "/tmp", "/var"];
@@ -19291,11 +18453,11 @@ var RVr = ["/etc", "/tmp", "/var"];
 function m3t(e, t) {
   let { osLinkedRootRealpaths: r } = F3t();
   return RVr.some((o) => {
-    if (e !== o && !e.startsWith(o + Wk)) return !1;
+    if (e !== o && !e.startsWith(o + sep)) return !1;
     let d = r.get(o);
     if (d === void 0) {
       try {
-        d = rk(o);
+        d = realpathSync(o);
       } catch {
         d = o;
       }
@@ -19308,23 +18470,23 @@ function m3t(e, t) {
 function PVr(e) {
   let t;
   try {
-    t = PP(e);
+    t = readlinkSync(e);
   } catch {
     return (Hp().denyLiteralSymlinkCandidates.push(e), [e]);
   }
   let r;
   try {
-    r = rk(e);
+    r = realpathSync(e);
   } catch {
-    r = DSe(e, t) ?? el(bg(e), t);
+    r = DSe(e, t) ?? resolve(dirname(e), t);
     for (let o = 0; o < 8; o++) {
       let d;
       try {
-        d = PP(r);
+        d = readlinkSync(r);
       } catch {
         break;
       }
-      r = el(bg(r), d);
+      r = resolve(dirname(r), d);
     }
   }
   return [r, e];
@@ -19335,11 +18497,11 @@ function f3e(e, t) {
   if (r !== "linux" && r !== "wsl") return !0;
   let o = t.get(e);
   if (o !== void 0) return o;
-  let d = bg(e),
+  let d = dirname(e),
     p = d === e,
     _ = !0;
   try {
-    rVr(e, yE.W_OK);
+    accessSync(e, constants.W_OK);
   } catch (E) {
     switch (A(E)) {
       case "EROFS":
@@ -19351,7 +18513,7 @@ function f3e(e, t) {
       case "EACCES":
       case "EPERM":
         try {
-          _ = a0(e).uid === process.getuid?.();
+          _ = statSync(e).uid === process.getuid?.();
         } catch {
           _ = !p && f3e(d, t);
         }
@@ -19370,9 +18532,9 @@ function NN(e) {
   if (t.length === 0 || /^[A-Za-z]:$/.test(r)) return e;
   if (/^[\\/]{2}/.test(r) || BL(t)) return t;
   try {
-    if (!a0(t).isDirectory()) return t;
+    if (!statSync(t).isDirectory()) return t;
   } catch {}
-  return t + Wk;
+  return t + sep;
 }
 
 function M6(e, t) {
@@ -19380,27 +18542,27 @@ function M6(e, t) {
 }
 
 function a3e(e) {
-  return el(e, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME);
+  return resolve(e, ".claude", ATOMIC_WRITE_STAGING_DIR_NAME);
 }
 
 function P3t(e = !0) {
   let t = new Set();
   if ((t.add(a3e(he())), e)) t.add(a3e(Bw()));
   (t.add(a3e(sn())),
-    t.add(el(getClaudeConfigDir(), ATOMIC_WRITE_STAGING_DIR_NAME)));
+    t.add(resolve(getClaudeConfigDir(), ATOMIC_WRITE_STAGING_DIR_NAME)));
   let r = getSettingsFilePathForSource("localSettings");
-  if (r) t.add(I_(bg(r), ATOMIC_WRITE_STAGING_DIR_NAME));
+  if (r) t.add(join(dirname(r), ATOMIC_WRITE_STAGING_DIR_NAME));
   return [...t];
 }
 
 function l3e(e) {
-  (mkdirSync(bg(e), { recursive: !0 }),
+  (mkdirSync(dirname(e), { recursive: !0 }),
     mkdirSync(e, { recursive: !0, mode: 448 }));
 }
 
 function vSe(e) {
   try {
-    return ($N(KB(bg(e), yE.O_RDONLY | yE.O_DIRECTORY | yE.O_NOFOLLOW)), !0);
+    return (closeSync(openSync(dirname(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)), !0);
   } catch (t) {
     let r = A(t);
     return r !== "ELOOP" && r !== "ENOTDIR";
@@ -19421,12 +18583,12 @@ function D3t() {
     if (!vSe(t)) continue;
     let r = !1;
     try {
-      if (!RP(t).isDirectory()) {
+      if (!lstatSync(t).isDirectory()) {
         if (!vSe(t)) continue;
-        (iVr(t), l3e(t), (r = !0));
+        (unlinkSync(t), l3e(t), (r = !0));
       } else
         try {
-          ($N(KB(t, yE.O_RDONLY | yE.O_DIRECTORY)), (r = !0));
+          (closeSync(openSync(t, constants.O_RDONLY | constants.O_DIRECTORY)), (r = !0));
         } catch {
           try {
             if (!vSe(t)) continue;
@@ -19448,12 +18610,12 @@ function D3t() {
       }
     }
     try {
-      let o = KB(t, yE.O_RDONLY | yE.O_DIRECTORY | yE.O_NOFOLLOW);
+      let o = openSync(t, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW);
       try {
-        let d = OSe(o);
+        let d = fstatSync(o);
         recordFileIdentity(t, d.dev, d.ino, o);
       } catch (d) {
-        throw ($N(o), d);
+        throw (closeSync(o), d);
       }
     } catch (o) {
       if (r)
@@ -19557,10 +18719,10 @@ function _oe(e) {
     },
     re = new Map(),
     ue = (Rn, Ar, _o) => {
-      let Hs = f3e(bg(Rn), re);
+      let Hs = f3e(dirname(Rn), re);
       if (!Hs)
         try {
-          (RP(Rn), (Hs = !0));
+          (lstatSync(Rn), (Hs = !0));
         } catch (ys) {
           Hs = !Rt(ys);
         }
@@ -19580,34 +18742,34 @@ function _oe(e) {
     U.push(NN(getManagedSettingsDropInDir())),
     getCurrentPlatform() === "wsl")
   )
-    (U.push(I_(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json")),
-      U.push(I_(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d")));
+    (U.push(join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.json")),
+      U.push(join(WSL_MANAGED_SETTINGS_DIR, "managed-settings.d")));
   let Me = Bw(),
     xe = he();
   if (Me !== xe)
-    (U.push(sv(el(Me, ".claude", "settings.json"))),
-      U.push(sv(el(Me, ".claude", "settings.local.json"))));
-  if ((V(el(xe, ".claude", "skills"), !0, !0), Me !== xe))
-    V(el(Me, ".claude", "skills"), !0, !0);
-  if ((V(el(xe, ".claude", "hooks"), !0, !0), Me !== xe))
-    V(el(Me, ".claude", "hooks"), !0, !0);
-  (U.push(NN(el(getClaudeConfigDir(), "local"))),
+    (U.push(sv(resolve(Me, ".claude", "settings.json"))),
+      U.push(sv(resolve(Me, ".claude", "settings.local.json"))));
+  if ((V(resolve(xe, ".claude", "skills"), !0, !0), Me !== xe))
+    V(resolve(Me, ".claude", "skills"), !0, !0);
+  if ((V(resolve(xe, ".claude", "hooks"), !0, !0), Me !== xe))
+    V(resolve(Me, ".claude", "hooks"), !0, !0);
+  (U.push(NN(resolve(getClaudeConfigDir(), "local"))),
     U.push(...P3t().map(NN)),
-    V(el(getClaudeConfigDir(), "jobs"), !0, !0));
-  let Oe = el(getClaudeConfigDir(), "seed-admin");
+    V(resolve(getClaudeConfigDir(), "jobs"), !0, !0));
+  let Oe = resolve(getClaudeConfigDir(), "seed-admin");
   if (isViolinWoodEnabledCached())
     try {
       mkdirSync(Oe, { recursive: !0, mode: 448 });
     } catch {}
-  (V(Oe, !1, !0), V(el(getClaudeConfigDir(), "daemon"), !0, !0));
+  (V(Oe, !1, !0), V(resolve(getClaudeConfigDir(), "daemon"), !0, !0));
   {
     let Rn = getBridgeSpawnRootDir(),
       Ar = Rn;
     try {
-      Ar = rk(Rn);
+      Ar = realpathSync(Rn);
     } catch {
       try {
-        Ar = el(rk(bg(Rn)), BRIDGE_SPAWN_DIR_NAME);
+        Ar = resolve(realpathSync(dirname(Rn)), BRIDGE_SPAWN_DIR_NAME);
       } catch {}
     }
     (V(Rn, !0, !0), de.push(NN(Ar)));
@@ -19645,11 +18807,11 @@ function _oe(e) {
     ...Ne,
     "backups",
   ]) {
-    let Ar = sv(el(getClaudeConfigDir(), Rn));
+    let Ar = sv(resolve(getClaudeConfigDir(), Rn));
     U.push(De.has(Rn) ? Ar : NN(Ar));
   }
-  V(el(getClaudeConfigDir(), "loop.md"), !1);
-  let He = el(getClaudeConfigDir(), "cowork_plugins");
+  V(resolve(getClaudeConfigDir(), "loop.md"), !1);
+  let He = resolve(getClaudeConfigDir(), "cowork_plugins");
   V(He, !1, !0);
   let je = peekTaskOutputDir();
   if (sYt(getResolvedClaudeTempDir(), je)) (V(je, !1, !0), (g3e = je));
@@ -19661,14 +18823,14 @@ function _oe(e) {
       ),
       logFeatureSad("sandbox_exec", "task_output_deny_skipped"));
   let Ke = getResolvedPluginsDir();
-  if (Ke !== el(getClaudeConfigDir(), "plugins") && Ke !== He && !CSe(Ke))
+  if (Ke !== resolve(getClaudeConfigDir(), "plugins") && Ke !== He && !CSe(Ke))
     ue(Ke, !1, !0);
   for (let Rn of getPluginSeedDirs()) {
-    let Ar = el(he(), Rn);
+    let Ar = resolve(he(), Rn);
     if (!CSe(Ar)) ue(Ar, !1, !0);
   }
   for (let Rn of collectPluginCommandProducerDirs(getAllPluginRootDirs()))
-    if (ASe(Rn) && !CSe(el(Rn))) ue(el(Rn), !1, !0);
+    if (isAbsolute(Rn) && !CSe(resolve(Rn))) ue(resolve(Rn), !1, !0);
   let ct = getActivePolicyHelperPath(),
     vt = new Set(
       [
@@ -19679,38 +18841,38 @@ function _oe(e) {
         ...getRetiredPolicyHelperPaths(),
       ]
         .filter((Rn) => !BL(Rn) && !isNetworkAutomountPath(Rn))
-        .map((Rn) => el(Rn)),
+        .map((Rn) => resolve(Rn)),
     );
   for (let Rn of vt) {
     if (CSe(Rn)) continue;
     if (getCurrentPlatform() === "windows")
       try {
-        RP(Rn);
+        lstatSync(Rn);
       } catch (Ar) {
         if (Rt(Ar)) continue;
       }
     ue(Rn, !1);
   }
   for (let Rn of ["mcp-skill-archives", "mcp-discovery-cache", "shares"])
-    V(el(getClaudeConfigDir(), Rn), !1, !0);
+    V(resolve(getClaudeConfigDir(), Rn), !1, !0);
   for (let Rn of [
     "remote-settings-helper-consent",
     "remote-settings-consent.json",
   ])
-    V(el(getClaudeConfigDir(), Rn), !1);
+    V(resolve(getClaudeConfigDir(), Rn), !1);
   let ut = getMockRemoteSettingsFixturePath(),
-    Wt = ut !== void 0 ? el(ut) : void 0;
+    Wt = ut !== void 0 ? resolve(ut) : void 0;
   for (let Rn of new Set([
-    el(getClaudeConfigDir(), "remote-settings.json"),
-    el(getSettingsPath()),
+    resolve(getClaudeConfigDir(), "remote-settings.json"),
+    resolve(getSettingsPath()),
     ...(Wt !== void 0 ? [Wt] : []),
   ])) {
     let Ar = !1,
       _o = !1;
     try {
-      let Hs = RP(Rn);
+      let Hs = lstatSync(Rn);
       ((Ar = Hs.isCharacterDevice()),
-        (_o = Hs.isSymbolicLink() && a0(Rn).isCharacterDevice()));
+        (_o = Hs.isSymbolicLink() && statSync(Rn).isCharacterDevice()));
     } catch {}
     if (_o) U.push(Rn);
     else if (!Ar) ue(Rn, !1);
@@ -19718,10 +18880,10 @@ function _oe(e) {
       (ue(getSignatureSidecarPath(Rn), !1),
         ue(getSignatureIatSidecarPath(Rn), !1));
   }
-  V(el(getClaudeConfigDir(), "state"), !1, !0);
-  let en = el(rG(), ".claude", "state");
-  if (en !== el(getClaudeConfigDir(), "state")) V(en, !1, !0);
-  for (let Rn of dSe()) U.push(sv(el(Rn)));
+  V(resolve(getClaudeConfigDir(), "state"), !1, !0);
+  let en = resolve(homedir(), ".claude", "state");
+  if (en !== resolve(getClaudeConfigDir(), "state")) V(en, !1, !0);
+  for (let Rn of dSe()) U.push(sv(resolve(Rn)));
   let tn = getProfileStoreDenyPaths();
   if (tn !== null) {
     for (let Rn of tn.dirs) {
@@ -19742,41 +18904,41 @@ function _oe(e) {
   {
     let Rn = new Set();
     for (let Ar of cSe()) {
-      let _o = el(Ar);
+      let _o = resolve(Ar);
       try {
-        _o = rk(_o);
+        _o = realpathSync(_o);
       } catch {}
       if (Rn.has(_o)) continue;
       (Rn.add(_o), de.push(NN(_o)), U.push(NN(_o)));
     }
   }
   let dn = (Rn, Ar = !0, _o = V) => {
-    (_o(el(Rn, ".claude", "launch.json"), Ar),
-      _o(el(Rn, ".claude", "workflows"), Ar, !0),
-      _o(el(Rn, ".claude", "routines"), Ar, !0),
-      _o(el(Rn, ".claude", "output-styles"), !1, !0),
-      _o(el(Rn, ".claude", "scheduled_tasks.json"), Ar),
-      _o(el(Rn, ".claude", "loop.md"), !1),
-      _o(el(Rn, ".mcp.json"), !1));
+    (_o(resolve(Rn, ".claude", "launch.json"), Ar),
+      _o(resolve(Rn, ".claude", "workflows"), Ar, !0),
+      _o(resolve(Rn, ".claude", "routines"), Ar, !0),
+      _o(resolve(Rn, ".claude", "output-styles"), !1, !0),
+      _o(resolve(Rn, ".claude", "scheduled_tasks.json"), Ar),
+      _o(resolve(Rn, ".claude", "loop.md"), !1),
+      _o(resolve(Rn, ".mcp.json"), !1));
   };
   dn(xe);
   {
-    let Rn = el(rG()),
+    let Rn = resolve(homedir()),
       Ar = RS(Rn) ?? Rn,
       _o = Ar.normalize("NFC"),
       Hs =
         canonicalizePathForComparison(Ar) ===
           canonicalizePathForComparison(Rn) &&
         canonicalizePathForComparison(_o) ===
-          canonicalizePathForComparison(el(rG()).normalize("NFC")),
+          canonicalizePathForComparison(resolve(homedir()).normalize("NFC")),
       ys = (nl) => {
         (dn(nl, !1, ue),
-          ue(el(nl, ".claude", "skills"), !1, !0),
-          ue(el(nl, ".claude", "commands"), !1, !0),
-          ue(el(nl, ".claude", "agents"), !1, !0),
-          ue(el(nl, ".claude", "hooks"), !1, !0),
-          ue(el(nl, ".claude", "settings.json"), !1),
-          ue(el(nl, ".claude", "settings.local.json"), !1));
+          ue(resolve(nl, ".claude", "skills"), !1, !0),
+          ue(resolve(nl, ".claude", "commands"), !1, !0),
+          ue(resolve(nl, ".claude", "agents"), !1, !0),
+          ue(resolve(nl, ".claude", "hooks"), !1, !0),
+          ue(resolve(nl, ".claude", "settings.json"), !1),
+          ue(resolve(nl, ".claude", "settings.local.json"), !1));
       },
       ws = !1,
       _s = sn();
@@ -19787,15 +18949,15 @@ function _oe(e) {
       ) {
         if (((ws = !0), Hs)) break;
       }
-      let nl = bg(_s);
+      let nl = dirname(_s);
       if (nl === _s) break;
       _s = nl;
     }
     let _u = (nl) => {
       let Fs = nl;
       for (;;) {
-        ue(el(Fs, ".mcp.json"), !1);
-        let _f = bg(Fs);
+        ue(resolve(Fs, ".mcp.json"), !1);
+        let _f = dirname(Fs);
         if (_f === Fs) break;
         Fs = _f;
       }
@@ -19811,22 +18973,22 @@ function _oe(e) {
       ys(Nl);
   }
   if (Me !== xe) {
-    let Rn = xe.endsWith(Wk) ? xe : xe + Wk,
+    let Rn = xe.endsWith(sep) ? xe : xe + sep,
       Ar = Me;
     while (Ar !== xe) {
       dn(Ar);
-      let _o = bg(Ar);
-      if (_o === Ar || !(_o + Wk).startsWith(Rn)) break;
+      let _o = dirname(Ar);
+      if (_o === Ar || !(_o + sep).startsWith(Rn)) break;
       Ar = _o;
     }
   }
-  if ((U.push(el(xe, ".mcp.json")), Me !== xe)) {
-    let Rn = xe.endsWith(Wk) ? xe : xe + Wk,
+  if ((U.push(resolve(xe, ".mcp.json")), Me !== xe)) {
+    let Rn = xe.endsWith(sep) ? xe : xe + sep,
       Ar = Me;
     while (Ar !== xe) {
-      U.push(el(Ar, ".mcp.json"));
-      let _o = bg(Ar);
-      if (_o === Ar || !(_o + Wk).startsWith(Rn)) break;
+      U.push(resolve(Ar, ".mcp.json"));
+      let _o = dirname(Ar);
+      if (_o === Ar || !(_o + sep).startsWith(Rn)) break;
       Ar = _o;
     }
   }
@@ -19835,7 +18997,7 @@ function _oe(e) {
     It = /(?:\/\*\*|\/)+$/,
     Dn = (Rn) => {
       try {
-        return [resolvePath(Rn, cn).replace(It, "") || Wk];
+        return [resolvePath(Rn, cn).replace(It, "") || sep];
       } catch {
         return [];
       }
@@ -19854,8 +19016,8 @@ function _oe(e) {
     En = (Rn) => {
       if (!on) return;
       try {
-        if (!RP(bg(Rn)).isDirectory()) return;
-        $N(KB(Rn, "wx"));
+        if (!lstatSync(dirname(Rn)).isDirectory()) return;
+        closeSync(openSync(Rn, "wx"));
       } catch {}
     },
     $n = new Set(),
@@ -19868,40 +19030,40 @@ function _oe(e) {
           return;
         }
         try {
-          (a0(ys), U.push(sv(ys)));
+          (statSync(ys), U.push(sv(ys)));
         } catch {
           if ((t.bareGitRepoScrubPaths.push(ys), un)) U.push(ys);
         }
       };
-      if ((V(I_(Rn, "hooks"), !0, !0), U.push(sv(I_(Rn, "config"))), kn))
-        t.bareGitRepoScrubPaths.push(I_(Rn, "config.lock"));
-      else U.push(sv(I_(Rn, "config.lock")));
-      let _o = I_(Rn, "config.worktree");
+      if ((V(join(Rn, "hooks"), !0, !0), U.push(sv(join(Rn, "config"))), kn))
+        t.bareGitRepoScrubPaths.push(join(Rn, "config.lock"));
+      else U.push(sv(join(Rn, "config.lock")));
+      let _o = join(Rn, "config.worktree");
       (En(_o),
         U.push(sv(_o)),
-        Ar(I_(Rn, "config.worktree.lock")),
-        Ar(I_(Rn, "commondir")));
-      let Hs = I_(Rn, "worktrees");
+        Ar(join(Rn, "config.worktree.lock")),
+        Ar(join(Rn, "commondir")));
+      let Hs = join(Rn, "worktrees");
       try {
-        for (let ys of oVr(Hs, { withFileTypes: !0 })) {
+        for (let ys of readdirSync(Hs, { withFileTypes: !0 })) {
           if (!ys.isDirectory() && !ys.isSymbolicLink()) continue;
-          let ws = I_(Hs, ys.name, "config.worktree");
+          let ws = join(Hs, ys.name, "config.worktree");
           (En(ws),
             U.push(sv(ws)),
-            Ar(I_(Hs, ys.name, "config.worktree.lock")),
-            U.push(sv(I_(Hs, ys.name, "commondir"))));
+            Ar(join(Hs, ys.name, "config.worktree.lock")),
+            U.push(sv(join(Hs, ys.name, "commondir"))));
         }
       } catch {}
     },
     Cn = new Set([xe, Me]);
   for (let Rn of [xe, ...gn]) {
-    let Ar = Rn.endsWith(Wk) ? Rn : Rn + Wk;
-    if ((Me + Wk).startsWith(Ar)) {
+    let Ar = Rn.endsWith(sep) ? Rn : Rn + sep;
+    if ((Me + sep).startsWith(Ar)) {
       let _o = Me;
       for (;;) {
         if ((Cn.add(_o), _o === Rn)) break;
-        let Hs = bg(_o);
-        if (Hs === _o || !(Hs + Wk).startsWith(Ar)) break;
+        let Hs = dirname(_o);
+        if (Hs === _o || !(Hs + sep).startsWith(Ar)) break;
         _o = Hs;
       }
     }
@@ -19909,31 +19071,31 @@ function _oe(e) {
   for (let Rn of Cn) {
     let Ar = !0;
     for (let Hs of Qt) {
-      let ys = el(Rn, Hs);
+      let ys = resolve(Rn, Hs);
       try {
-        (a0(ys), U.push(ys));
+        (statSync(ys), U.push(ys));
       } catch {
         if (((Ar = !1), t.bareGitRepoScrubPaths.push(ys), un)) U.push(ys);
       }
     }
     if (Ar) ur(Rn);
     for (let Hs of wn) {
-      let ys = el(Rn, Hs);
+      let ys = resolve(Rn, Hs);
       try {
-        let ws = a0(ys);
+        let ws = statSync(ys);
         if ((U.push(ys), Hs === "config" && ws.isFile()))
-          if (kn) t.bareGitRepoScrubPaths.push(el(Rn, "config.lock"));
-          else U.push(el(Rn, "config.lock"));
+          if (kn) t.bareGitRepoScrubPaths.push(resolve(Rn, "config.lock"));
+          else U.push(resolve(Rn, "config.lock"));
       } catch {}
     }
-    let _o = el(Rn, ".git");
+    let _o = resolve(Rn, ".git");
     try {
-      let Hs = RP(_o);
+      let Hs = lstatSync(_o);
       if (Hs.isFile()) U.push(_o);
       else if (Hs.isDirectory()) ur(_o);
       else
         try {
-          if (a0(_o).isDirectory()) ur(_o);
+          if (statSync(_o).isDirectory()) ur(_o);
         } catch {}
     } catch {
       if ((t.bareGitRepoScrubPaths.push(_o), un)) U.push(_o);
@@ -19949,16 +19111,16 @@ function _oe(e) {
   N.push(...gn);
   for (let Rn of gn)
     try {
-      let Ar = el(Rn, ".mcp.json");
+      let Ar = resolve(Rn, ".mcp.json");
       if (getCurrentPlatform() === "macos") {
         V(Ar, !1);
         try {
-          let _o = rk(Rn);
-          if (_o !== Rn) V(el(_o, ".mcp.json"), !1);
+          let _o = realpathSync(Rn);
+          if (_o !== Rn) V(resolve(_o, ".mcp.json"), !1);
         } catch {}
         continue;
       }
-      if (rk(Rn) !== Rn) continue;
+      if (realpathSync(Rn) !== Rn) continue;
       ue(Ar, !1);
     } catch {
       continue;
@@ -19968,23 +19130,23 @@ function _oe(e) {
     let Ar = O6(Rn),
       _o = lVr(Ar);
     if (_o) (At.push(Ar), N.push(Ar));
-    (U.push(sv(el(Ar, ".claude", "settings.json"))),
-      U.push(sv(el(Ar, ".claude", "settings.local.json"))));
+    (U.push(sv(resolve(Ar, ".claude", "settings.json"))),
+      U.push(sv(resolve(Ar, ".claude", "settings.local.json"))));
     for (let ys of ["skills", "agents", "commands", "hooks"])
-      V(el(Ar, ".claude", ys), !0, !0);
+      V(resolve(Ar, ".claude", ys), !0, !0);
     dn(Ar);
-    let Hs = el(Ar, ".git");
+    let Hs = resolve(Ar, ".git");
     if (!_o) {
       U.push(Hs);
       continue;
     }
     try {
-      let ys = RP(Hs);
+      let ys = lstatSync(Hs);
       if (ys.isFile()) U.push(Hs);
       else if (ys.isDirectory()) ur(Hs);
       else
         try {
-          if (a0(Hs).isDirectory()) ur(Hs);
+          if (statSync(Hs).isDirectory()) ur(Hs);
         } catch {}
     } catch (ys) {
       let ws = A(ys);
@@ -20100,7 +19262,7 @@ function _oe(e) {
             }
             for (let Cy = zg; ;) {
               if (kh(Cy)) return !0;
-              let Jw = bg(Cy);
+              let Jw = dirname(Cy);
               if (Jw === Cy) return !1;
               Cy = Jw;
             }
@@ -20128,9 +19290,9 @@ function _oe(e) {
     }
     let _s = getClaudeConfigDir(),
       _u =
-        a.XDG_CONFIG_HOME && ASe(a.XDG_CONFIG_HOME)
+        a.XDG_CONFIG_HOME && isAbsolute(a.XDG_CONFIG_HOME)
           ? a.XDG_CONFIG_HOME
-          : el(rG(), ".config"),
+          : resolve(homedir(), ".config"),
       ff,
       Nl = EVr(
         _u,
@@ -20144,13 +19306,13 @@ function _oe(e) {
       ...Nl,
       getResolvedClaudeTempDir(),
       F,
-      el(_s, "shell-snapshots"),
-      el(_s, "session-env"),
-      el(_s, "skills"),
-      el(_s, "plugins"),
-      el(_s, "rules"),
-      el(_s, "agents"),
-      el(_s, "commands"),
+      resolve(_s, "shell-snapshots"),
+      resolve(_s, "session-env"),
+      resolve(_s, "skills"),
+      resolve(_s, "plugins"),
+      resolve(_s, "rules"),
+      resolve(_s, "agents"),
+      resolve(_s, "commands"),
     ]) {
       if (ws(nl)) {
         logForDebugging(
@@ -20245,7 +19407,7 @@ function _oe(e) {
       let Hs = _o;
       for (;;) {
         if (rl(Hs, Rn) && $o(Ar, Hs)) return !0;
-        let ys = bg(Hs);
+        let ys = dirname(Hs);
         if (ys === Hs) return !1;
         if (((Hs = ys), !Of(Ar) && !di(Ar, Hs))) return !1;
       }
@@ -20429,7 +19591,7 @@ function _oe(e) {
           let bm;
           try {
             try {
-              bm = KB(Fs, yE.O_RDONLY | yE.O_NOFOLLOW | yE.O_NONBLOCK);
+              bm = openSync(Fs, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
             } catch (kh) {
               let Cy = A(kh);
               if (Cy === "ELOOP")
@@ -20444,7 +19606,7 @@ function _oe(e) {
                 zg = `could not be probed (${Cy ?? "unknown error"}) \u2014 an unprobed mask may be silently skipped at wrap time, so the probe fails closed`;
             }
             if (bm !== void 0) {
-              let kh = OSe(bm);
+              let kh = fstatSync(bm);
               if (kh.isDirectory())
                 zg =
                   'resolves to a directory \u2014 whole-file masking has no meaning for a directory; use mode "deny" for directories';
@@ -20460,7 +19622,7 @@ function _oe(e) {
                   jr;
                 try {
                   for (;;) {
-                    let oa = h3t(bm, Jw, wv, Cy + 1 - wv, null);
+                    let oa = readSync(bm, Jw, wv, Cy + 1 - wv, null);
                     if (oa <= 0) break;
                     if (((wv += oa), wv > Cy)) break;
                   }
@@ -20482,7 +19644,7 @@ function _oe(e) {
               }
             }
           } finally {
-            if (bm !== void 0) $N(bm);
+            if (bm !== void 0) closeSync(bm);
           }
         }
         if (zg !== void 0) {
@@ -20555,7 +19717,7 @@ function _oe(e) {
         );
       if (_s.mode === "mask") {
         let c_ = [Bw(), ...N].find((zg) => {
-          let bm = stripRecursiveGlobSuffix(el(Bw(), zg)).replace(bs, "");
+          let bm = stripRecursiveGlobSuffix(resolve(Bw(), zg)).replace(bs, "");
           if (Of(bm)) return !1;
           let kh = canonicalizePathForMaskSweep(bm);
           return di(bm, Fs) || di(bm, nl) || di(kh, Fs) || di(kh, nl);
@@ -21028,7 +20190,7 @@ function _oe(e) {
   let Os = new Set();
   for (let Rn of Zb)
     try {
-      Os.add(rk(Rn));
+      Os.add(realpathSync(Rn));
     } catch {}
   let jf = {
     network: oh,
@@ -21115,9 +20277,9 @@ function removeSandboxAllowWriteDirectory(e) {
 
 function MVr() {
   for (let e of Hp().bareGitRepoScrubPaths) {
-    let t = e.slice(e.lastIndexOf(Wk) + 1);
+    let t = e.slice(e.lastIndexOf(sep) + 1);
     try {
-      (y3t(e, { recursive: t !== "HEAD" && t !== ".git" }),
+      (rmSync(e, { recursive: t !== "HEAD" && t !== ".git" }),
         logForDebugging(`[Sandbox] scrubbed planted bare-repo file: ${e}`));
     } catch {}
   }
@@ -21138,7 +20300,7 @@ function OVr() {
       I,
       D = null;
     try {
-      let F = RP(d);
+      let F = lstatSync(d);
       ((D = F), (C = F.isSymbolicLink()));
     } catch (F) {
       if (A(F) === "ENOENT") continue;
@@ -21147,11 +20309,11 @@ function OVr() {
     let N;
     if (C)
       try {
-        if (((N = rk(d)), N === p)) continue;
+        if (((N = realpathSync(d)), N === p)) continue;
       } catch {
         I = null;
         try {
-          let F = PP(d);
+          let F = readlinkSync(d);
           I = DSe(d, F);
         } catch {}
         if (E && I !== null && I === p && FVr(RSe(d, null), _)) continue;
@@ -21183,7 +20345,7 @@ function OVr() {
     }
     try {
       if (
-        (y3t(d, { recursive: !0, force: !0 }),
+        (rmSync(d, { recursive: !0, force: !0 }),
         logForDebugging(
           `[Sandbox] scrubbed replaced symlinked-deny path: ${d}`,
         ),
@@ -21232,11 +20394,11 @@ function k3e(e, t, r = !1) {
     let p = stripRecursiveGlobSuffix(d);
     if (Of(p)) {
       let _ = p.split(/[*?[\]]/)[0] ?? "";
-      p = _.endsWith("/") ? _.replace(/\/+$/, "") || "/" : bg(_);
+      p = _.endsWith("/") ? _.replace(/\/+$/, "") || "/" : dirname(_);
     }
     for (let _ of t) {
       let E =
-        p === "~" ? rG() : p.startsWith("~/") ? I_(rG(), p.slice(2)) : el(_, p);
+        p === "~" ? homedir() : p.startsWith("~/") ? join(homedir(), p.slice(2)) : resolve(_, p);
       o.add(E);
       let C = R3t(E);
       if (C === null) {
@@ -21369,23 +20531,23 @@ function BVr() {
     if (r.has(p)) continue;
     let _;
     try {
-      _ = PP(p);
+      _ = readlinkSync(p);
     } catch {
       continue;
     }
     let E;
     try {
-      E = rk(p);
+      E = realpathSync(p);
     } catch {
-      E = DSe(p, _) ?? el(bg(p), _);
+      E = DSe(p, _) ?? resolve(dirname(p), _);
       for (let C = 0; C < 8; C++) {
         let I;
         try {
-          I = PP(E);
+          I = readlinkSync(E);
         } catch {
           break;
         }
-        E = el(bg(E), I);
+        E = resolve(dirname(E), I);
       }
     }
     r.set(p, E);
@@ -21408,24 +20570,24 @@ function BVr() {
 }
 
 function detectWorktreeGitCommonDir(e) {
-  let t = I_(e, ".git");
+  let t = join(e, ".git");
   try {
     if (pointerFileIsSuspect(t, e)) return null;
-    let o = c3e(t, { encoding: "utf8" }).match(/^gitdir:\s*(.+)$/m);
+    let o = readFileSync(t, { encoding: "utf8" }).match(/^gitdir:\s*(.+)$/m);
     if (!o?.[1]) return null;
     let d = o[1].trim();
     if (ac(d, e)) return null;
     if (rawPointerPathIsUnsafe(d, e)) return null;
-    let p = el(e, d),
-      _ = bg(p);
-    if (hoe(_) !== "worktrees") return null;
-    let E = bg(_);
-    if (!hoe(E).endsWith(".git")) return null;
-    if (pointerFileIsSuspect(I_(p, "gitdir"), p)) return null;
-    let C = c3e(I_(p, "gitdir"), { encoding: "utf8" }).trim();
+    let p = resolve(e, d),
+      _ = dirname(p);
+    if (basename(_) !== "worktrees") return null;
+    let E = dirname(_);
+    if (!basename(E).endsWith(".git")) return null;
+    if (pointerFileIsSuspect(join(p, "gitdir"), p)) return null;
+    let C = readFileSync(join(p, "gitdir"), { encoding: "utf8" }).trim();
     if (ac(C, e)) return null;
     if (rawPointerPathIsUnsafe(C, p, e)) return null;
-    if (rk(el(p, C)) !== I_(rk(e), ".git")) return null;
+    if (realpathSync(resolve(p, C)) !== join(realpathSync(e), ".git")) return null;
     return E;
   } catch {
     return null;
@@ -21763,7 +20925,7 @@ function XVr() {
         for (let _ of p.injectHosts ?? []) {
           let E = _.indexOf(":");
           if (E === -1 || _.indexOf(":", E + 1) === -1) continue;
-          if (BN(_) === 6 && Lb(_) === _.toLowerCase()) continue;
+          if (isIP(_) === 6 && Lb(_) === _.toLowerCase()) continue;
           r.add(_);
         }
     }
@@ -22112,12 +21274,12 @@ function CSe(e) {
 var g3t = 2097152;
 
 function sYt(e, t) {
-  let r = aVr(e, t);
-  if (r.startsWith("..") || ASe(r)) return !1;
-  let o = r.split(Wk).filter(Boolean);
+  let r = relative(e, t);
+  if (r.startsWith("..") || isAbsolute(r)) return !1;
+  let o = r.split(sep).filter(Boolean);
   if (getCurrentPlatform() === "linux" || getCurrentPlatform() === "wsl") {
     let p,
-      _ = () => KB(e, g3t | yE.O_DIRECTORY | yE.O_NOFOLLOW);
+      _ = () => openSync(e, g3t | constants.O_DIRECTORY | constants.O_NOFOLLOW);
     try {
       try {
         p = _();
@@ -22125,9 +21287,9 @@ function sYt(e, t) {
         if (A(C) !== "ENOENT") return !1;
         (mkdirSync(e, { recursive: !0, mode: 448 }), (p = _()));
       }
-      let E = OSe(p);
+      let E = fstatSync(p);
       if (process.getuid !== void 0 && E.uid !== process.getuid())
-        return ($N(p), !1);
+        return (closeSync(p), !1);
       if ((E.mode & 18) !== 0) chmodSync(`/proc/self/fd/${p}`, 448);
     } catch {
       return !1;
@@ -22141,26 +21303,26 @@ function sYt(e, t) {
         }
         let C;
         try {
-          C = KB(
+          C = openSync(
             `/proc/self/fd/${p}/${E}`,
-            g3t | yE.O_DIRECTORY | yE.O_NOFOLLOW,
+            g3t | constants.O_DIRECTORY | constants.O_NOFOLLOW,
           );
         } catch {
           return !1;
         }
-        ($N(p), (p = C));
+        (closeSync(p), (p = C));
       }
-      return PP(`/proc/self/fd/${p}`) === t;
+      return readlinkSync(`/proc/self/fd/${p}`) === t;
     } catch {
       return !1;
     } finally {
-      $N(p);
+      closeSync(p);
     }
   }
   let d = e.replace(/[\\/]+$/, "");
   try {
     mkdirSync(d, { recursive: !0, mode: 448 });
-    let p = RP(d);
+    let p = lstatSync(d);
     if (
       !p.isDirectory() ||
       (getCurrentPlatform() !== "windows" &&
@@ -22174,21 +21336,21 @@ function sYt(e, t) {
     return !1;
   }
   for (let p of o) {
-    d = I_(d, p);
+    d = join(d, p);
     try {
       mkdirSync(d, { mode: 448 });
     } catch (_) {
       if (A(_) !== "EEXIST") return !1;
     }
     try {
-      let _ = RP(d);
+      let _ = lstatSync(d);
       if (!_.isDirectory() || _.isSymbolicLink()) return !1;
     } catch {
       return !1;
     }
   }
   try {
-    return rk(t) === t;
+    return realpathSync(t) === t;
   } catch {
     return !1;
   }
@@ -22197,7 +21359,7 @@ function sYt(e, t) {
 var aKr = /[*?[\]{}]/;
 
 function iYt(e) {
-  if (!v3e(e)) return null;
+  if (!isAbsolute(e)) return null;
   let t = e.split("/"),
     r = t.findIndex((p) => aKr.test(p)),
     d = (r === -1 ? t : t.slice(0, r)).join("/").replace(/\/+$/, "");
@@ -22205,11 +21367,11 @@ function iYt(e) {
 }
 
 function aYt(e) {
-  return e.replace(/^~(?=$|\/)/, sKr());
+  return e.replace(/^~(?=$|\/)/, homedir());
 }
 
 function lYt(e, t) {
-  let r = e.startsWith("~") || v3e(e) ? e : iKr(t, e),
+  let r = e.startsWith("~") || isAbsolute(e) ? e : resolve(t, e),
     o = iYt(aYt(r)),
     d;
   try {
@@ -22220,8 +21382,8 @@ function lYt(e, t) {
   let p = [o, d].filter((E) => E !== null),
     _ = p.flatMap((E) => {
       try {
-        let C = oKr(E);
-        return v3e(C) ? [C] : [];
+        let C = realpathSync(E);
+        return isAbsolute(C) ? [C] : [];
       } catch {
         return [];
       }
@@ -22324,7 +21486,7 @@ function IYt(e) {
   return DKr.has(e.toUpperCase());
 }
 
-var UN = `zzwildcard${LKr(8).toString("hex")}zz`;
+var UN = `zzwildcard${randomBytes(8).toString("hex")}zz`;
 
 function FSe(e, t) {
   let r = e.replaceAll("*", UN),
@@ -22406,7 +21568,7 @@ function Eoe(e, t) {
 }
 
 function isPrivateOrReservedIpAddress(e) {
-  let t = $Yt(e);
+  let t = isIP(e);
   if (t === 4) return BYt(e);
   if (t === 6) return $Kr(e);
   return !1;
@@ -22494,7 +21656,7 @@ function UKr(e) {
 
 function UYt(e, t, r) {
   let o = "all" in t && t.all === !0,
-    d = $Yt(e);
+    d = isIP(e);
   if (d !== 0) {
     if (isPrivateOrReservedIpAddress(e)) {
       r(DYt(e, e), "");
@@ -22709,7 +21871,7 @@ async function Toe(e, t, r, o, d = Jd, p) {
 }
 
 function K8t(e, t) {
-  return e.endsWith(V8t) ? e + t : e + V8t + t;
+  return e.endsWith(sep) ? e + t : e + sep + t;
 }
 
 var Y8t = "CLAUDE_SCRIPT_HOOK_ACK",
@@ -22727,8 +21889,8 @@ function X8t(e) {
       `script hook: ${t}`,
       "script hook: file spelling cannot be anchored",
     );
-  if (T5r(e) || C5r.some((r) => e.startsWith(r))) return e;
-  if (e === "~" || /^~[\\/]/.test(e)) return v5r(E5r(), e.slice(2));
+  if (isAbsolute(e) || C5r.some((r) => e.startsWith(r))) return e;
+  if (e === "~" || /^~[\\/]/.test(e)) return join(homedir(), e.slice(2));
   return `\${CLAUDE_PROJECT_DIR}/${e}`;
 }
 
@@ -23392,11 +22554,11 @@ function PXt() {
 }
 
 function tke() {
-  return eke(getClaudeConfigDir(), J5r);
+  return join(getClaudeConfigDir(), J5r);
 }
 
 function IXt(e) {
-  return Q5r("sha256").update(e).digest("hex").slice(0, 16);
+  return createHash("sha256").update(e).digest("hex").slice(0, 16);
 }
 
 var e6r = /^[0-9a-f]{16}$/;
@@ -23406,7 +22568,7 @@ function MXt(e) {
 }
 
 function OXt(e) {
-  return (MXt(e), eke(tke(), `${e}.txt`));
+  return (MXt(e), join(tke(), `${e}.txt`));
 }
 
 function NXt(e) {
@@ -23686,7 +22848,7 @@ class QXt {
     let t = this.pendingEntries.slice(),
       r = new Set(t.map((C) => `${C.timestamp}\x00${C.sessionId ?? ""}`));
     for (let C = t.length - 1; C >= 0; C--) yield t[C];
-    let o = WXt(getClaudeConfigDir(), "history.jsonl"),
+    let o = join(getClaudeConfigDir(), "history.jsonl"),
       d = !1,
       p = !1,
       _ = !1,
@@ -23889,7 +23051,7 @@ class QXt {
       }
     let r;
     try {
-      let o = WXt(getClaudeConfigDir(), "history.jsonl");
+      let o = join(getClaudeConfigDir(), "history.jsonl");
       (await getFileStorage().append(o, "", 384),
         (r = await Cs(o, {
           ...LOCKFILE_ACQUIRE_OPTIONS,
@@ -24710,7 +23872,7 @@ function createCommandQueue(e) {
         mode: "poll-event",
         agentId: ze(),
         priority: Ai ? "next" : "later",
-        uuid: S6r(),
+        uuid: randomUUID(),
         isMeta: !0,
         timestamp: new Date().toISOString(),
         pollEvent: {
@@ -26156,7 +25318,7 @@ function GA(e) {
 
 async function S3r(e) {
   try {
-    let t = await m3r(e, { bigint: !0 });
+    let t = await lstat(e, { bigint: !0 });
     if (t.dev === 0n && t.ino === 0n) return null;
     return `${t.dev}:${t.ino}`;
   } catch {
@@ -26176,7 +25338,7 @@ function k3r(e) {
     return t;
   let d = canonicalizePathForComparison(t),
     p = canonicalizePathForComparison(r);
-  if (d !== p && d.startsWith(p + b3r)) return r;
+  if (d !== p && d.startsWith(p + sep)) return r;
   return t;
 }
 
@@ -26186,26 +25348,26 @@ function Cke(e, t) {
 }
 
 async function getProjectDirsUpToHome(e, t) {
-  let r = XYe(y3r()).normalize("NFC"),
+  let r = resolve(homedir()).normalize("NFC"),
     o = k3r(t),
-    d = XYe(t),
+    d = resolve(t),
     p = [];
   while (!0) {
     if (canonicalizePathForComparison(d) === canonicalizePathForComparison(r))
       break;
     if (
-      (p.push(VN(d, ".claude", e)),
+      (p.push(join(d, ".claude", e)),
       o &&
         canonicalizePathForComparison(d) === canonicalizePathForComparison(o))
     )
       break;
-    let C = _3r(d);
+    let C = dirname(d);
     if (C === d) break;
     d = C;
   }
   let _ = await Promise.all(
       p.map((C) =>
-        Tke(C).then(
+        stat(C).then(
           () => ({ claudeSubdir: C, exists: !0 }),
           (I) => ({ claudeSubdir: C, exists: !1, error: I }),
         ),
@@ -26238,13 +25400,13 @@ function getMarkdownFiles(e, t, r) {
 
 async function w3r(e, t, r) {
   let o = Date.now(),
-    d = VN(getClaudeConfigDir(), e),
-    p = VN(getManagedSettingsDirPath(), ".claude", e),
+    d = join(getClaudeConfigDir(), e),
+    p = join(getManagedSettingsDirPath(), ".claude", e),
     _ = await getProjectDirsUpToHome(e, t),
     E = new Set(
       await Promise.all(
         _.map(async (Ne) =>
-          canonicalizePathForComparison(await GYe(Ne).catch(() => Ne)),
+          canonicalizePathForComparison(await realpath(Ne).catch(() => Ne)),
         ),
       ),
     ),
@@ -26253,8 +25415,8 @@ async function w3r(e, t, r) {
         ? dedupe(
             await Promise.all(
               mp().map(async (Ne) => {
-                let De = VN(XYe(Ne), ".claude", e);
-                return await GYe(De).catch(() => De);
+                let De = join(resolve(Ne), ".claude", e);
+                return await realpath(De).catch(() => De);
               }),
             ),
           ).filter((Ne) => !E.has(canonicalizePathForComparison(Ne)))
@@ -26262,9 +25424,9 @@ async function w3r(e, t, r) {
     I = findGitRoot(t),
     D = findCanonicalGitRoot(t);
   if (I && D && D !== I) {
-    let Ne = canonicalizePathForComparison(VN(I, ".claude", e));
+    let Ne = canonicalizePathForComparison(join(I, ".claude", e));
     if (!_.some((He) => canonicalizePathForComparison(He) === Ne)) {
-      let He = VN(D, ".claude", e);
+      let He = join(D, ".claude", e);
       if (!_.includes(He)) _.push(He);
     }
   }
@@ -26356,7 +25518,7 @@ async function E3r(e, t) {
   async function p(E, C) {
     if (E.isSymbolicLink()) {
       try {
-        let I = await Tke(C);
+        let I = await stat(C);
         await d(I, E.name, C);
       } catch (I) {
         let D = I instanceof Error ? I.message : String(I);
@@ -26369,12 +25531,12 @@ async function E3r(e, t) {
   async function _(E) {
     if (t.aborted) return;
     try {
-      let C = await Tke(E, { bigint: !0 });
+      let C = await stat(E, { bigint: !0 });
       if (C.isDirectory()) {
         let I =
           C.dev !== void 0 && C.ino !== void 0
             ? `${C.dev}:${C.ino}`
-            : await GYe(E);
+            : await realpath(E);
         if (o.has(I)) {
           logForDebugging(
             `Skipping already visited directory (circular symlink): ${E}`,
@@ -26389,10 +25551,10 @@ async function E3r(e, t) {
       return;
     }
     try {
-      let C = await g3r(E, { withFileTypes: !0 });
+      let C = await readdir(E, { withFileTypes: !0 });
       for (let I of C) {
         if (t.aborted) break;
-        let D = VN(E, I.name);
+        let D = join(E, I.name);
         try {
           await p(I, D);
         } catch (N) {
@@ -26438,7 +25600,7 @@ async function hG(e, t) {
       p.map(async (E) => {
         try {
           let C = await readBoundedFileWithFs(
-            { stat: Tke, readFile: h3r },
+            { stat: stat, readFile: readFile },
             E,
             tse,
           );
@@ -26473,7 +25635,7 @@ async function hG(e, t) {
 }
 
 async function T3r(e, t) {
-  let r = VN(getClaudeConfigDir(), e),
+  let r = join(getClaudeConfigDir(), e),
     o = [],
     d = await runPaginatedScan(
       (_) =>
@@ -26492,7 +25654,7 @@ async function T3r(e, t) {
             E.key.dir === e &&
             E.key.relPath.at(-1)?.endsWith(".md") === !0
           )
-            o.push({ key: E.key, filePath: VN(r, ...E.key.relPath) });
+            o.push({ key: E.key, filePath: join(r, ...E.key.relPath) });
       },
     );
   switch (d.status) {
@@ -26729,8 +25891,8 @@ function mZt(e) {
 }
 
 function lXr(e) {
-  let t = pZt(e);
-  if (fZt(e) === "agents" && fZt(t) === ".claude") return pZt(t);
+  let t = dirname(e);
+  if (basename(e) === "agents" && basename(t) === ".claude") return dirname(t);
   return e;
 }
 
@@ -26807,7 +25969,7 @@ async function a8(e, t, r = {}) {
         await Promise.all(
           D.map((N) =>
             N.isFile() && N.name.toLowerCase().endsWith(".md")
-              ? t(gZt(C, N.name), I)
+              ? t(join(C, N.name), I)
               : void 0,
           ),
         );
@@ -26815,7 +25977,7 @@ async function a8(e, t, r = {}) {
       }
       await Promise.all(
         D.map((N) => {
-          let F = gZt(C, N.name);
+          let F = join(C, N.name);
           if (N.isDirectory()) return E(F, [...I, N.name]);
           if (N.isFile() && N.name.toLowerCase().endsWith(".md"))
             return t(F, I);
@@ -27212,7 +26374,7 @@ var P9e = new Map();
 
 async function LZt(e) {
   try {
-    let t = await readFileTextOrNull(GXr(e, MANIFEST_FILE_NAME), null);
+    let t = await readFileTextOrNull(join(e, MANIFEST_FILE_NAME), null);
     if (t === null) return P9e;
     let r = parseJsonWithSchema(t, skillsSyncManifestSchema(), null);
     if (r === null) return P9e;
@@ -27221,7 +26383,7 @@ async function LZt(e) {
     for (let p of parseValidRows(skillEntrySchema(), r.skills)) {
       let _;
       try {
-        _ = toCaseFoldedName(WXr(validateSyncedItemName(p.name, e)));
+        _ = toCaseFoldedName(basename(validateSyncedItemName(p.name, e)));
       } catch {
         continue;
       }
@@ -28019,14 +27181,14 @@ var oen = T7r;
 function g8() {
   return dedupe([
     getClaudeConfigDir(),
-    A0(Zse(), ".claude"),
+    join(homedir(), ".claude"),
     getSecureStorageDir(),
   ]);
 }
 
 function ien() {
   return [
-    Zse(),
+    homedir(),
     getClaudeConfigDir(),
     getSecureStorageDir(),
     getDefaultGlobalClaudeFilePath(),
@@ -28038,14 +27200,14 @@ function ien() {
 
 var R7r = rs(() => {
     let e = g8(),
-      t = dedupe([Gve(getDefaultGlobalClaudeFilePath()), Zse()]);
+      t = dedupe([dirname(getDefaultGlobalClaudeFilePath()), homedir()]);
     return ZN([
       ...dSe(),
-      ...e.map((r) => A0(r, P6)),
+      ...e.map((r) => join(r, P6)),
       ...t.flatMap((r) =>
-        OAUTH_GLOBAL_FILE_SUFFIXES.map((o) => A0(r, `.claude${o}.json`)),
+        OAUTH_GLOBAL_FILE_SUFFIXES.map((o) => join(r, `.claude${o}.json`)),
       ),
-      ...e.map((r) => A0(r, Z6e)),
+      ...e.map((r) => join(r, Z6e)),
       ...(a.CLAUDE_CODE_HOST_CREDS_FILE
         ? [len(a.CLAUDE_CODE_HOST_CREDS_FILE)]
         : []),
@@ -28054,7 +27216,7 @@ var R7r = rs(() => {
   aen = rs(() => {
     let e = [
       ...R7r(),
-      ...ZN([A0(Zse(), ".claude", "state", "unattended-serving-consent.json")]),
+      ...ZN([join(homedir(), ".claude", "state", "unattended-serving-consent.json")]),
       ...ZN(
         g8().flatMap((t) =>
           [getControlKeyPath(), getPipeKeyPath(), getRosterFilePath()].map(
@@ -28066,19 +27228,19 @@ var R7r = rs(() => {
     return uniqBy(
       [
         ...e.flatMap((t) =>
-          sen(C7r(t)).flatMap((r) => [
-            { literal: A0(Gve(t), r), tail: "" },
-            { literal: A0(Gve(t), r), tail: ".*" },
+          sen(basename(t)).flatMap((r) => [
+            { literal: join(dirname(t), r), tail: "" },
+            { literal: join(dirname(t), r), tail: ".*" },
           ]),
         ),
         ...ZN([
           ...g8().flatMap((t) => [
-            A0(t, "backups"),
+            join(t, "backups"),
             jve(t, getDaemonAuthDir()),
             jve(t, getDispatchDir()),
           ]),
           ...(getCurrentPlatform() === "macos"
-            ? [A0(Zse(), "Library", "Keychains")]
+            ? [join(homedir(), "Library", "Keychains")]
             : []),
         ]).map((t) => ({ literal: t, tail: "/**" })),
         ...ZN(g8().map((t) => jve(t, getSessionsDir()))).flatMap((t) =>
@@ -28101,8 +27263,8 @@ var R7r = rs(() => {
 
 function P7r() {
   return dedupe(
-    [v7r(), a.TMPDIR, "/tmp", "/var/tmp"]
-      .filter((e) => e !== void 0 && x7r(e))
+    [tmpdir(), a.TMPDIR, "/tmp", "/var/tmp"]
+      .filter((e) => e !== void 0 && isAbsolute(e))
       .map(len),
   );
 }
@@ -28116,7 +27278,7 @@ function ZN(e) {
 }
 
 function jve(e, t) {
-  return A0(e, A7r(getClaudeConfigDir(), t));
+  return join(e, relative(getClaudeConfigDir(), t));
 }
 
 function I7r() {
@@ -28140,7 +27302,7 @@ var M7r = rs(
       new RegExp(
         `^(?:${dedupe(
           e.map(({ literal: t, tail: r }) =>
-            (r === "" || r === ".*" ? Gve(t) : t).replaceAll("\\", "/"),
+            (r === "" || r === ".*" ? dirname(t) : t).replaceAll("\\", "/"),
           ),
         )
           .map(oen)
@@ -28606,7 +27768,7 @@ function getIdeDisplayName(e) {
   let r = Aen[e.toLowerCase().trim()];
   if (r) return r;
   let o = beforeFirst(e, " "),
-    d = o ? Ren(o).toLowerCase() : null;
+    d = o ? basename(o).toLowerCase() : null;
   if (d) {
     let p = Aen[d];
     if (p) return p;
@@ -29957,13 +29119,13 @@ function computeStructuredPatchFromEdits({
 
 function EZr(e) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(
-    Xtn("sha256").update(e).digest("hex").slice(0, 16),
+    createHash("sha256").update(e).digest("hex").slice(0, 16),
   );
 }
 
 function TZr(e) {
   return fromSanitizer_SANITIZER_OUTPUT_ONLY(
-    Xtn("sha256").update(e).digest("hex"),
+    createHash("sha256").update(e).digest("hex"),
   );
 }
 
@@ -29972,7 +29134,7 @@ var vZr = 102400,
   xZr =
     /[/\\]\.claude[/\\](?:skills[/\\]([^/\\]+)[/\\]SKILL\.md|commands[/\\]([^/\\]+)\.md)$/;
 
-function AZr(e, t = wZr()) {
+function AZr(e, t = homedir()) {
   let r = xZr.exec(e);
   if (r?.index === void 0) return {};
   let o = r[1] ?? r[2];
@@ -30020,9 +29182,9 @@ var bie = [
 var UXe = 3000;
 
 async function OCe(e) {
-  let t = findGitRoot(IZr(e));
+  let t = findGitRoot(dirname(e));
   if (!t) return null;
-  let r = MZr(t, e).split(OZr).join("/"),
+  let r = relative(t, e).split(sep).join("/"),
     o = getCachedRepository(),
     { code: d } = await execFileNoThrowWithCwd(
       gitExe(),
@@ -30119,7 +29281,7 @@ async function WZr(e) {
 async function GZr(e, t) {
   try {
     if (!(await isFileSizeWithinLimit(t, MAX_DIFF_BYTES))) return null;
-    let o = (await PZr(t, "utf-8")).split(`
+    let o = (await readFile(t, "utf-8")).split(`
 `);
     if (o.length > 0 && o.at(-1) === "") o.pop();
     let d = o.length,
@@ -30980,7 +30142,7 @@ function Enn(e, t) {
     (!An(e.file_path) || Oi(e.file_path)) &&
     !gp(e.file_path) &&
     !Dr(e.file_path) &&
-    !Dr(ceo(e.file_path))
+    !Dr(resolve(e.file_path))
   )
     try {
       r = VXe(e.file_path);
@@ -31209,7 +30371,7 @@ var FileEditTool = buildTool({
         (logEvent("tengu_edit_tool_not_read_hypothetical", {
           wouldHaveResult: vnn(r7e(N, d, o)),
           isPartialView: F?.isPartialView === !0,
-          isFilePathAbsolute: lxe(r),
+          isFilePathAbsolute: isAbsolute(r),
           guardSkipped: Se,
           modelBucket: _e,
           servedCall: t.remoteCall !== void 0,
@@ -31224,7 +30386,7 @@ var FileEditTool = buildTool({
           behavior: "ask",
           message:
             "File has not been read yet. Read it first before writing to it.",
-          meta: { isFilePathAbsolute: String(lxe(r)) },
+          meta: { isFilePathAbsolute: String(isAbsolute(r)) },
           errorCode: 6,
         };
     }
@@ -31269,7 +30431,7 @@ var FileEditTool = buildTool({
         behavior: "ask",
         message: `String to replace not found in file.
 String: ${d}${de}`,
-        meta: { isFilePathAbsolute: String(lxe(r)) },
+        meta: { isFilePathAbsolute: String(isAbsolute(r)) },
         errorCode: 8,
       };
     }
@@ -31280,7 +30442,7 @@ String: ${d}${de}`,
         behavior: "ask",
         message: `Found ${re} matches of the string to replace, but replace_all is false. To replace all occurrences, set replace_all to true. To replace only one occurrence, please provide more context to uniquely identify the instance.
 String: ${d}`,
-        meta: { isFilePathAbsolute: String(lxe(r)), actualOldString: V },
+        meta: { isFilePathAbsolute: String(isAbsolute(r)), actualOldString: V },
         errorCode: 9,
       };
     let ue = lnn(_, U, () => (o ? U.replaceAll(V, p) : U.replace(V, p)));
@@ -31476,7 +30638,7 @@ async function geo(e, t, r) {
           },
         );
       }));
-  if ((dU(V, ue, _e), V.endsWith(`${meo}CLAUDE.md`)))
+  if ((dU(V, ue, _e), V.endsWith(`${sep}CLAUDE.md`)))
     logEvent("tengu_write_claudemd", {});
   (pie(Se, r.message.model),
     JP({ operation: "edit", tool: "FileEditTool", filePath: V }),
@@ -31804,7 +30966,7 @@ async function Wnn(e) {
     parkTimeoutMs: _,
   } = e;
   if (d.aborted) return { result: r.default, source: "local" };
-  let E = Beo(),
+  let E = randomUUID(),
     C = new AbortController(),
     I = () => C.abort(d.reason);
   d.addEventListener("abort", I, { once: !0 });
@@ -33986,21 +33148,21 @@ function SAe() {
 
 async function vno(e, t, r) {
   if (!SAe()) return await r();
-  let o = ion("sha1").update(jsonStringify(e)).digest("hex").slice(0, 12),
-    d = don(
+  let o = createHash("sha1").update(jsonStringify(e)).digest("hex").slice(0, 12),
+    d = join(
       a.CLAUDE_CODE_TEST_FIXTURES_ROOT ?? getCwd(),
       `fixtures/${t}-${o}.json`,
     );
   try {
-    return jsonParse(await lon(d, { encoding: "utf8" }));
+    return jsonParse(await readFile(d, { encoding: "utf8" }));
   } catch (_) {
     if (A(_) !== "ENOENT") throw _;
   }
   if (!fon()) throw Error(pon("Fixture", d));
   let p = await r();
   return (
-    await aon(uon(d), { recursive: !0 }),
-    await con(d, jsonStringify(p, null, 2), { encoding: "utf8" }),
+    await mkdir(dirname(d), { recursive: !0 }),
+    await writeFile(d, jsonStringify(p, null, 2), { encoding: "utf8" }),
     p
   );
 }
@@ -34019,15 +33181,15 @@ async function kAe(e, t) {
       r.map((_) => _.message.content),
       CQe,
     ),
-    d = don(
+    d = join(
       a.CLAUDE_CODE_TEST_FIXTURES_ROOT ?? getCwd(),
-      `fixtures/${o.map((_) => ion("sha1").update(jsonStringify(_)).digest("hex").slice(0, 6)).join("-")}.json`,
+      `fixtures/${o.map((_) => createHash("sha1").update(jsonStringify(_)).digest("hex").slice(0, 6)).join("-")}.json`,
     );
   try {
-    let _ = jsonParse(await lon(d, { encoding: "utf8" }));
+    let _ = jsonParse(await readFile(d, { encoding: "utf8" }));
     return (
       _.output.forEach(Cno),
-      _.output.map((E, C) => son(E, Pno, C, Eno()))
+      _.output.map((E, C) => son(E, Pno, C, randomUUID()))
     );
   } catch (_) {
     if (A(_) !== "ENOENT") throw _;
@@ -34037,8 +33199,8 @@ async function kAe(e, t) {
 ${jsonStringify(o, null, 2)}`);
   let p = await t();
   return (
-    await aon(uon(d), { recursive: !0 }),
-    await con(
+    await mkdir(dirname(d), { recursive: !0 }),
+    await writeFile(
       d,
       jsonStringify(
         { input: o, output: p.map((_, E) => son(_, CQe, E)) },
@@ -34426,7 +33588,7 @@ function isLocalBashTask(e) {
 var HQe = !1;
 
 function Fno(e) {
-  return e.split(Son.sep).join(bon.sep);
+  return e.split(win32.sep).join(posix.sep);
 }
 
 function pL(e) {
@@ -34739,7 +33901,7 @@ function Yon(e) {
     } catch {
       t = "/dev/stdin";
     }
-  let o = TAe.normalize(t).toLowerCase();
+  let o = posix.normalize(t).toLowerCase();
   return o === "-" ||
     (r && o.includes("%")) ||
     (/^(?:\/|(?:\.\.\/)+)(?:dev|proc)(?:\/|$)/.test(o) &&
@@ -35010,7 +34172,7 @@ function mae(e, t, r) {
           return U?.kind === "literal" ? U.text : N.text.replace(/["'\\]/g, "");
         }),
         _ = o.some((N, F) => Yb.has(N.type) && d[F]?.kind !== "literal"),
-        E = W8(p[0] ?? ""),
+        E = basename(p[0] ?? ""),
         C = p
           .slice(
             0,
@@ -35018,7 +34180,7 @@ function mae(e, t, r) {
               ? p.length
               : 1,
           )
-          .map((N) => W8(N)),
+          .map((N) => basename(N)),
         I = C.findIndex((N) => /^(?:cd|chdir|pushd|popd)$/.test(N));
       if (I !== -1) {
         let N = C.slice(0, I).every((V) => IJe.has(V) || /^-[p-]*$/.test(V)),
@@ -35029,8 +34191,8 @@ function mae(e, t, r) {
             !N || /^(?:~[-+0-9]|[-+])/.test(F) || _
               ? ".."
               : /^[\/~]/.test(F) || !t.cwd.startsWith("/")
-                ? TAe.normalize(F)
-                : TAe.normalize(`${t.cwd}/${F}`);
+                ? posix.normalize(F)
+                : posix.normalize(`${t.cwd}/${F}`);
         ((t.opaqueCwd ||= /^\.\.(?:\/|$)/.test(U) || qw(U)),
           (t.cwd = /^[\/~]/.test(U) ? U : t.cwd));
       }
@@ -35038,7 +34200,7 @@ function mae(e, t, r) {
         (C.some((N) => /^(?:ln|link|cp|mv|mkfifo|mknod)$/.test(N)) &&
           p.some((N) => qw(MJe(N, t)))) ||
         (C.some((N) => /^(?:ln|link|cp|mv)$/.test(N)) &&
-          (_ || p.some((N) => /^(?:\/|\.\.)(?:\/|$)/.test(TAe.normalize(N)))))),
+          (_ || p.some((N) => /^(?:\/|\.\.)(?:\/|$)/.test(posix.normalize(N)))))),
         (t.inputAssembled ||= t.deviceLinked),
         (t.allExported ||=
           C.some((N) => /^(?:set|shopt|setopt)$/.test(N)) &&
@@ -35053,9 +34215,9 @@ function mae(e, t, r) {
         if (F) rsn(t, F[1], !oI(N) || !xae(F[2]) || nsn.test(F[2]));
       }
       let D = p.some((N) =>
-        /^(?:read|getopts|mapfile|readarray|printf)$/.test(W8(N)),
+        /^(?:read|getopts|mapfile|readarray|printf)$/.test(basename(N)),
       );
-      if (D || p.some((N) => W8(N) === "unset")) {
+      if (D || p.some((N) => basename(N) === "unset")) {
         let N = p.some((F) =>
           /^(?:mapfile|readarray|-[a-zA-Z]*[aA]\w*)$/.test(F),
         );
@@ -35951,7 +35113,7 @@ function isn(e, t, r) {
 }
 
 function i_(e) {
-  let t = W8(e.replace(/\\/g, "/"))
+  let t = basename(e.replace(/\\/g, "/"))
       .toLowerCase()
       .replace(/\.(?:exe|bat|cmd|com)$/, ""),
     r = t.replace(/([a-z])-?\d[\d.]*$/, "$1");
@@ -36721,7 +35883,7 @@ function Bon(e, t, r) {
     if (
       !t.simple &&
       en.kind === "literal" &&
-      en.text.split(/\s+/).some((tn) => Ux.test(W8(tn)))
+      en.text.split(/\s+/).some((tn) => Ux.test(basename(tn)))
     )
       return fae;
     if (V.length === ut + 1 && en.kind === "literal" && oI(Wt)) V.push(en.text);
@@ -37308,14 +36470,14 @@ function _sn(e, t, r, o) {
         return _(Me, `Run git directly with literal arguments from ${o}.`);
       let xe = U[_e]
         ? Se.argv.find((tn, dn) => {
-            let cn = kC(tn).toLowerCase();
+            let cn = basename(tn).toLowerCase();
             return cn === "." ? dn === 0 : bsn.has(cn);
           })
         : void 0;
       if (xe !== void 0)
         return _(
-          `runs ${kC(xe)} before a git command, whose string payload can't be verified to leave the worktree alone`,
-          `Run the git command directly, without ${kC(xe)}, from ${o}.`,
+          `runs ${basename(xe)} before a git command, whose string payload can't be verified to leave the worktree alone`,
+          `Run the git command directly, without ${basename(xe)}, from ${o}.`,
         );
       let Oe = hsn(Se);
       if ("opaque" in Oe)
@@ -37499,36 +36661,36 @@ var Aro = new Set(["xargs", "parallel"]),
 
 function Pro(e) {
   if (e.length === 0) return null;
-  let t = e.some((d) => Ux.test(kC(d))),
-    r = (d) => e.some((p) => kC(p).toLowerCase() === d),
+  let t = e.some((d) => Ux.test(basename(d))),
+    r = (d) => e.some((p) => basename(p).toLowerCase() === d),
     o = e.find((d, p) => {
-      let _ = kC(d).toLowerCase();
+      let _ = basename(d).toLowerCase();
       return _ === "." ? p === 0 : bsn.has(_);
     });
-  if (t && e.some((d) => Aro.has(kC(d).toLowerCase())))
+  if (t && e.some((d) => Aro.has(basename(d).toLowerCase())))
     return "feeds git its arguments from stdin at runtime (xargs/parallel), so the repository it targets cannot be verified";
   if (t && r("find") && e.some((d) => Rro.has(d)))
     return "changes directory per match (find -execdir/-okdir) before running git, so its repository cannot be verified";
   if (o !== void 0) {
     if (e.filter((p) => p !== o).length > 0)
-      return `runs a string through ${kC(o)}, which can't be verified to stay inside the worktree`;
+      return `runs a string through ${basename(o)}, which can't be verified to stay inside the worktree`;
   }
   return null;
 }
 
 function Iro(e) {
-  return vro.has(kC(e.argv[0] ?? "").toLowerCase());
+  return vro.has(basename(e.argv[0] ?? "").toLowerCase());
 }
 
 function Mro(e) {
   let t = [];
-  for (let [r, o] of e.entries()) if (Ux.test(kC(o))) t.push(r);
+  for (let [r, o] of e.entries()) if (Ux.test(basename(o))) t.push(r);
   return t;
 }
 
 function Ssn(e) {
   return e.findIndex((t) => {
-    let r = kC(t);
+    let r = basename(t);
     return Ux.test(r);
   });
 }
@@ -37560,23 +36722,23 @@ function Dro(e) {
     E = p === -1 ? [] : d.slice(p + 1),
     C = p !== -1 || _.some((D) => D !== "-" && D.startsWith("-")),
     I = [..._.filter((D) => D === "-" || !D.startsWith("-")), ...E];
-  if (I.length === 0) return C ? void 0 : yro();
+  if (I.length === 0) return C ? void 0 : homedir();
   if (I.length > 1 || I[0] === "-") return;
   return I[0];
 }
 
 function hsn(e) {
   let t = Ssn(e.argv),
-    r = Tro.has(kC(e.argv[0] ?? "").toLowerCase()),
+    r = Tro.has(basename(e.argv[0] ?? "").toLowerCase()),
     o = t !== -1 ? t : r ? e.argv.length : 0,
     d = e.envVars.map((F) => ({ ...F, fromOperand: !1 })),
     p = [],
     _ = e.argv.slice(1, o),
-    E = kC(e.argv[0] ?? "").toLowerCase() === "env",
+    E = basename(e.argv[0] ?? "").toLowerCase() === "env",
     C = null,
     I = -1;
   for (let [F, U] of _.entries()) {
-    if (kC(U).toLowerCase() === "env") {
+    if (basename(U).toLowerCase() === "env") {
       E = !0;
       continue;
     }
@@ -37705,7 +36867,7 @@ function Pae(e, t, r, o) {
     (o && Fx(e) !== -1)
   )
     return null;
-  if (r && !_ro(e)) return null;
+  if (r && !isAbsolute(e)) return null;
   let d = resolvePath(e, t);
   if (psn(d) || msn(d)) return null;
   return d;
@@ -38160,11 +37322,11 @@ class Dsn {
 
 var CommandSpecStore = new j(() => new Dsn());
 
-var Zro = `${Mae}worktrees${Mae}`,
+var Zro = `${sep}worktrees${sep}`,
   eoo = [
-    `${Mae}config.worktree`,
-    `${Mae}config.worktree.lock`,
-    `${Mae}commondir`,
+    `${sep}config.worktree`,
+    `${sep}config.worktree.lock`,
+    `${sep}commondir`,
   ];
 
 function too(e) {
@@ -38239,7 +37401,7 @@ function ooo() {
       if (!He.matcher) continue;
       for (let je of He.matcher.split("|").map((Ke) => Ke.trim())) {
         if (!je) continue;
-        Oe.push(noo(je) ? je : roo(t, je));
+        Oe.push(isAbsolute(je) ? je : join(t, je));
       }
     }
     let Ne = dedupe([...Oe, ...r]),
@@ -38465,7 +37627,7 @@ var qAe = 1e4,
 function HJe(e, t, r = [], o = []) {
   let d = r.length > 0 ? `${r.join(" ")} \${1+"$@"}` : '${1+"$@"}',
     p = getCurrentPlatform() === "windows",
-    _ = zAe(getLocalBinDir(), p ? "claude.exe" : "claude"),
+    _ = join(getLocalBinDir(), p ? "claude.exe" : "claude"),
     E = p ? convertWindowsPathToUnix(_) : _,
     C =
       o.length > 0
@@ -38581,7 +37743,7 @@ function jJe(e) {
     : e.includes("bash")
       ? ".bashrc"
       : ".profile";
-  return zAe(XAe.homedir(), t);
+  return join(XAe.homedir(), t);
 }
 
 function _oo(e) {
@@ -38761,18 +37923,18 @@ var Wsn = async (e, t) => {
             );
           let _ = Date.now(),
             E = Math.random().toString(36).substring(2, 8),
-            C = zAe(getClaudeConfigDir(), "shell-snapshots");
+            C = join(getClaudeConfigDir(), "shell-snapshots");
           logForDebugging(`Snapshots directory: ${C}`);
           let I = xon(K()),
-            D = zAe(
+            D = join(
               C,
               `snapshot-${r}-${_}-${E}${I !== void 0 ? `-${I}` : ""}.sh`,
             );
-          await coo(C, { recursive: !0 });
+          await mkdir(C, { recursive: !0 });
           let N = await Soo(e, D, p, t);
           (logForDebugging(`Creating snapshot at: ${D}`),
             logForDebugging(`Execution timeout: ${qAe}ms`),
-            loo(
+            execFile(
               e,
               ["-c", "-l", N],
               {
@@ -38835,7 +37997,7 @@ ${U}`);
                 } else {
                   let re;
                   try {
-                    re = (await uoo(D)).size;
+                    re = (await stat(D)).size;
                   } catch {}
                   if (re !== void 0)
                     (logForDebugging(
@@ -38983,7 +38145,7 @@ function Qsn() {
     (Ysn ??= (async () => {
       let e = Moo();
       if (e === null) return;
-      let t = JAe(
+      let t = join(
         getResolvedClaudeTempDir(),
         ZMt,
         typeof {
@@ -39014,13 +38176,13 @@ function Qsn() {
               DD_SOURCEMAP_GROUP: "darwin",
             }.VERSION
           : "dev",
-        voo(16).toString("hex"),
+        randomBytes(16).toString("hex"),
       );
       await materializeFileMap(t, e, {
         mode: (d) => (d.startsWith("bin/") ? 448 : 384),
       });
-      let [r, o] = await Promise.all([Ksn(t), Ksn(getResolvedClaudeTempDir())]);
-      if (r !== t || !r.startsWith(o + xoo))
+      let [r, o] = await Promise.all([realpath(t), realpath(getResolvedClaudeTempDir())]);
+      if (r !== t || !r.startsWith(o + sep))
         throw Error("carrier dir resolves outside the claude temp root");
       ((Dae = t), logFeatureOk("bash_sl_gate"));
     })().catch((e) => {
@@ -39043,9 +38205,9 @@ function Zsn() {
   if (Dae === null) return (Qsn(), null);
   let t = e.python_leg === "on" || (e.python_leg === "containers" && zJe());
   return Nee(
-    `case "$('unalias' 'bq' 2>/dev/null; 'command' -v 'bq' 2>/dev/null)" in /*) export PATH=${jo([JAe(Dae, "bin")])}"\${PATH:+:$PATH}";; esac` +
+    `case "$('unalias' 'bq' 2>/dev/null; 'command' -v 'bq' 2>/dev/null)" in /*) export PATH=${jo([join(Dae, "bin")])}"\${PATH:+:$PATH}";; esac` +
       (t
-        ? `; export PYTHONPATH=${jo([JAe(Dae, "site")])}"\${PYTHONPATH:+:$PYTHONPATH}"`
+        ? `; export PYTHONPATH=${jo([join(Dae, "site")])}"\${PYTHONPATH:+:$PYTHONPATH}"`
         : ""),
   );
 }
@@ -39112,7 +38274,7 @@ async function rin(e, t) {
       let C = await o;
       if (C)
         try {
-          await Ooo(C);
+          await access(C);
         } catch {
           if (
             (logForDebugging(
@@ -39136,8 +38298,8 @@ async function rin(e, t) {
           F && D ? convertWindowsPathToUnix(E.sandboxTmpDir) : E.sandboxTmpDir,
         V = F ? ZAe(U, `cwd-${E.id}`) : ZAe(N, `claude-${E.id}-cwd`),
         re = F
-          ? (D ? ein : ZAe)(E.sandboxTmpDir, `cwd-${E.id}`)
-          : ein(I, `claude-${E.id}-cwd`),
+          ? (D ? join : ZAe)(E.sandboxTmpDir, `cwd-${E.id}`)
+          : join(I, `claude-${E.id}-cwd`),
         ue = Vsn(_),
         de = qsn(ue),
         _e = zsn(ue, de);
@@ -39258,7 +38420,7 @@ async function oin(e, t, r) {
       return;
     }
   }
-  if (!Boo(t)) {
+  if (!isAbsolute(t)) {
     logForDebugging("shell cwd read-back is not an absolute path; ignoring", {
       level: "warn",
     });
@@ -39298,7 +38460,7 @@ var zoo = 1800000,
 
 async function KJe(e) {
   try {
-    return (Goo(e, Hoo.X_OK), !0);
+    return (accessSync(e, constants.X_OK), !0);
   } catch (t) {
     let { code: r } = await execFileNoThrow(e, ["--version"], {
       timeout: 1000,
@@ -39465,17 +38627,17 @@ async function executeShellCommand(e, t, r, o) {
     );
   let Qt = !1;
   try {
-    await iin(gn);
+    await realpath(gn);
   } catch (So) {
     Qt = W(So);
   }
   if (Qt) {
-    let So = [he(), Woo(), getTempBaseDir()],
+    let So = [he(), homedir(), getTempBaseDir()],
       eo = null,
       vr = -1;
     for (let [bs, Xs] of So.entries())
       try {
-        ((eo = await iin(Xs)), (vr = bs));
+        ((eo = await realpath(Xs)), (vr = bs));
         break;
       } catch {}
     if (eo === null)
@@ -39698,7 +38860,7 @@ async function executeShellCommand(e, t, r, o) {
     }
     as = I ? await c3t() : void 0;
     let So = _e ? Bs(Se) : {},
-      eo = Uoo(Qr, Br, {
+      eo = spawn(Qr, Br, {
         ...So,
         env: eso({
           shellType: r,
@@ -39768,7 +38930,7 @@ async function executeShellCommand(e, t, r, o) {
       } catch {}
     if (as !== void 0)
       try {
-        sin(as);
+        closeSync(as);
       } catch {}
     if (eo.stdout && U)
       eo.stdout.on("data", (di) => {
@@ -39833,7 +38995,7 @@ ${di.stdout}`,
       } catch {}
     if (as !== void 0)
       try {
-        sin(as);
+        closeSync(as);
       } catch {}
     if ((Zr.clear(), logForDebugging(`Shell exec error: ${l(So)}`), pNn(So))) {
       let eo =
@@ -39864,7 +39026,7 @@ ${di.stdout}`,
 }
 
 function Joo(e, t) {
-  let r = din(e) ? e : fin(t || getFsSurface().cwd(), e);
+  let r = isAbsolute(e) ? e : resolve(t || getFsSurface().cwd(), e);
   try {
     return getFsSurface().realpathSync(r);
   } catch (o) {
@@ -39954,9 +39116,9 @@ async function nso(e) {
     let r = YJe(t),
       o = !1;
     try {
-      (await ain(qJe(r)).catch(async (d) => {
+      (await stat(dirname(r)).catch(async (d) => {
         if (A(d) !== "ENOENT") throw d;
-        await ain(qJe(qJe(r)));
+        await stat(dirname(dirname(r)));
       }),
         (o = !0),
         await joo(r, { recursive: !0, mode: 448 }));
@@ -40343,7 +39505,7 @@ function kin(e, t) {
 }
 
 function Fae(e, t) {
-  return e.startsWith(t.endsWith(NU) ? t : t + NU);
+  return e.startsWith(t.endsWith(sep) ? t : t + sep);
 }
 
 function hso(e) {
@@ -40354,21 +39516,21 @@ function hso(e) {
 }
 
 function yso(e) {
-  let t = win(e),
+  let t = basename(e),
     r,
-    o = e.indexOf(`${NU}.claude${NU}rules${NU}`);
+    o = e.indexOf(`${sep}.claude${sep}rules${sep}`);
   if (o >= 0) r = t.endsWith(".md") ? e.slice(0, o) : void 0;
   else if (t === "CLAUDE.md" || t === "CLAUDE.local.md") {
-    if (((r = Ein(e)), t === "CLAUDE.md" && win(r) === ".claude")) r = Ein(r);
+    if (((r = dirname(e)), t === "CLAUDE.md" && basename(r) === ".claude")) r = dirname(r);
   }
-  return r !== void 0 && r !== gso(r).root ? r : void 0;
+  return r !== void 0 && r !== parse(r).root ? r : void 0;
 }
 
 function _so(e) {
   if (e === getMemoryPath("User")) return STORAGE_KEYS.state("user-memory");
-  let t = getUserClaudeRulesDir() + NU;
+  let t = getUserClaudeRulesDir() + sep;
   if (e.startsWith(t)) {
-    let o = e.slice(t.length).split(NU);
+    let o = e.slice(t.length).split(sep);
     return o.every(isValidPathSegment)
       ? STORAGE_KEYS.userConfigDir("rules", o)
       : void 0;
@@ -40376,7 +39538,7 @@ function _so(e) {
   let r = getAutoMemPath();
   if (e.startsWith(r)) {
     let o = getMemoryProjectKey(r),
-      d = e.slice(r.length).split(NU);
+      d = e.slice(r.length).split(sep);
     return o !== void 0 && d.every(isValidPathSegment)
       ? STORAGE_KEYS.memory(o, d)
       : void 0;
@@ -40487,7 +39649,7 @@ function xin(e, t) {
 }
 
 function getTaskIdFromOutputPath(e) {
-  let t = `${getTaskOutputDir()}${Cso}`,
+  let t = `${getTaskOutputDir()}${sep}`,
     r = ".output";
   if (e.startsWith(t) && e.endsWith(".output")) {
     let o = e.slice(t.length, -7);
@@ -40552,7 +39714,7 @@ function Nso(e) {
 function Lso(e) {
   let t = getClaudeConfigDir();
   if (!e.startsWith(t)) return null;
-  let r = e.split(Iso.sep).join(Pso.sep);
+  let r = e.split(win32.sep).join(posix.sep);
   if (r.includes("/projects/") && r.endsWith(".jsonl"))
     return "session_transcript";
   return null;
@@ -41297,11 +40459,11 @@ async function jso(e) {
                 Cn.data.v5SidecarScope,
               )
             : await (async () => {
-                let Br = (await Aso(Cn.data.file.outputDir))
+                let Br = (await readdir(Cn.data.file.outputDir))
                   .filter((xo) => xo.endsWith(".jpg"))
                   .sort();
                 return Promise.all(
-                  Br.map((xo) => Rso(wC.join(Cn.data.file.outputDir, xo))),
+                  Br.map((xo) => readFile(wC.join(Cn.data.file.outputDir, xo))),
                 );
               })(),
         At = (
@@ -41816,7 +40978,7 @@ var WriteTool = buildTool({
       d = resolvePath(r),
       p = getWorktreeWriteBlockMessage(d, t);
     if (p) return { result: !1, message: p, errorCode: 7 };
-    if (t.agentId && /^(REPORT|SUMMARY|FINDINGS|ANALYSIS).*\.md$/i.test(qso(d)))
+    if (t.agentId && /^(REPORT|SUMMARY|FINDINGS|ANALYSIS).*\.md$/i.test(basename(d)))
       return (
         logEvent("tengu_subagent_md_report_blocked", {
           contentBytes: Buffer.byteLength(o),
@@ -41875,7 +41037,7 @@ var WriteTool = buildTool({
           wouldHaveResult:
             D && Math.floor(I) > D.timestamp ? S("errorCode3") : S("success"),
           isPartialView: D?.isPartialView === !0,
-          isFilePathAbsolute: Vso(r),
+          isFilePathAbsolute: isAbsolute(r),
           guardSkipped: V,
           modelBucket: U,
           servedCall: t.remoteCall !== void 0,
@@ -42028,7 +41190,7 @@ async function Jso({ file_path: e, content: t }, r, o) {
           },
         );
       }));
-  if ((dU(N, ue ? null : V, t), N.endsWith(`${Kso}CLAUDE.md`)))
+  if ((dU(N, ue ? null : V, t), N.endsWith(`${sep}CLAUDE.md`)))
     logEvent("tengu_write_claudemd", {});
   let _e;
   if (a.CLAUDE_CODE_REMOTE && !ue) {
@@ -43024,10 +42186,10 @@ function ulo(e, t) {
 function dlo(e, t) {
   if (e !== WRITE_TOOL_NAME && e !== EDIT_TOOL_NAME) return !1;
   let r = r9(t);
-  if (r === void 0 || !nlo(r)) return !1;
-  let o = Nan(alo()()),
-    d = o.endsWith(Lan) ? o : o + Lan;
-  return !Nan(r).startsWith(d) && ilo()(r);
+  if (r === void 0 || !isAbsolute(r)) return !1;
+  let o = normalize(alo()()),
+    d = o.endsWith(sep) ? o : o + sep;
+  return !normalize(r).startsWith(d) && ilo()(r);
 }
 
 function resolveToolByName(e, t) {
@@ -44974,7 +44136,7 @@ var createHookAdditionalContext = (e, t = "UserPromptSubmit") =>
     type: "hook_additional_context",
     content: [...e],
     hookName: t,
-    toolUseID: `hook-${fco()}`,
+    toolUseID: `hook-${randomUUID()}`,
     hookEvent: "UserPromptSubmit",
   });
 
@@ -45339,7 +44501,7 @@ function qln({
 var Vln = {
   "tool.call": (e) => ({
     ...e,
-    tool_use_id: e.tool_use_id ?? `toolu_${_uo().replace(/-/g, "")}`,
+    tool_use_id: e.tool_use_id ?? `toolu_${randomUUID().replace(/-/g, "")}`,
   }),
   "tool.describe": (e) => e,
   "prompt.submit": (e) => e,
@@ -46281,7 +45443,7 @@ var xcn =
 
 function mfo(e, t) {
   if (!xcn.test(e)) return t;
-  let r = t.startsWith("/") ? Pcn.resolve : Icn,
+  let r = t.startsWith("/") ? posix.resolve : resolve,
     o = t,
     d = e,
     p = !1;
@@ -46432,17 +45594,17 @@ function yfo(e, t, r) {
       ? "outside_cwd"
       : "unknown";
   let o = Eet.test(e) || e.startsWith("\\\\");
-  if (!vcn(e) && !o) {
+  if (!isAbsolute(e) && !o) {
     if (r === null) return "unknown";
     if (r.startsWith("~")) return "outside_cwd";
-    let d = r.startsWith("/") ? Pcn.resolve(r, e) : Icn(r, e);
-    if (!Ccn(t, d).startsWith("..")) return "cwd";
+    let d = r.startsWith("/") ? posix.resolve(r, e) : resolve(r, e);
+    if (!relative(t, d).startsWith("..")) return "cwd";
     if (Rcn(d)) return "tmp";
     return "outside_cwd";
   }
   if (!o || Eet.test(t) || t.startsWith("\\\\")) {
-    let d = Ccn(t, e);
-    if (d === "" || (!d.startsWith("..") && !vcn(d))) return "cwd";
+    let d = relative(t, e);
+    if (d === "" || (!d.startsWith("..") && !isAbsolute(d))) return "cwd";
   }
   if (Rcn(e)) return "tmp";
   return "outside_cwd";
@@ -46762,11 +45924,11 @@ function checkPathPermission(e, t, r, o) {
 function Cfo(e, t, r, o) {
   let d = getFsSurface(),
     p = vfo(e),
-    _ = Met(p) ? p : Oet(t, p),
-    E = Met(e) ? e : Oet(t, e);
+    _ = isAbsolute(p) ? p : resolve(t, p),
+    E = isAbsolute(e) ? e : resolve(t, e);
   for (;;) {
     let { resolvedPath: C, isCanonical: I } = resolvePathInfo(d, E),
-      D = Lcn(E);
+      D = dirname(E);
     if (I || E === _ || D === E)
       return {
         ...checkPathPermission(C, r, o, I ? [C] : void 0),
@@ -46789,16 +45951,16 @@ function isProtectedSystemPath(e) {
     p = d === "/" ? d : d.replace(/\/$/, "");
   if (p === "/") return !0;
   if (xfo.test(p)) return !0;
-  let _ = o(Dcn().replace(/[\\/]+/g, "/")).replace(/\/$/, "");
+  let _ = o(homedir().replace(/[\\/]+/g, "/")).replace(/\/$/, "");
   if (normalizeCaseForComparison(p) === normalizeCaseForComparison(_))
     return !0;
-  let E = Rfo(Dcn());
+  let E = Rfo(homedir());
   if (
     E !== _ &&
     normalizeCaseForComparison(p) === normalizeCaseForComparison(E)
   )
     return !0;
-  if (Lcn(p) === "/") return !0;
+  if (dirname(p) === "/") return !0;
   if (Afo.test(p)) return !0;
   return !1;
 }
@@ -46893,7 +46055,7 @@ function PE(e, t, r, o) {
       };
     return Cfo(d, t, r, o);
   }
-  let p = Met(d) ? d : Oet(t, d),
+  let p = isAbsolute(d) ? d : resolve(t, d),
     { resolvedPath: _, isCanonical: E } = resolvePathInfo(getFsSurface(), p);
   return { ...checkPathPermission(_, r, o, E ? [_] : void 0), resolvedPath: _ };
 }
@@ -47774,15 +46936,15 @@ function h9(e, t, r, o, d) {
     );
   for (let D of _) {
     let N = Ju(D),
-      F = JA(N) ? N : Zcn(r, N),
+      F = isAbsolute(N) ? N : resolve(r, N),
       U = F;
     for (let ue = ""; ue !== U;) {
       ue = U;
       let de = U.replace(/([\\/]\*+)+[\\/]*$/, "") || "/";
-      if (de !== U) U = /[\\/]/.test(de) ? Kfo(de) : de;
+      if (de !== U) U = /[\\/]/.test(de) ? normalize(de) : de;
     }
     let V = U !== F;
-    if (d && V && !JA(N) && /[\\/]\*$/.test(F))
+    if (d && V && !isAbsolute(N) && /[\\/]\*$/.test(F))
       return HL(
         e,
         `Dangerous ${e} operation detected: '${F}'
@@ -47791,8 +46953,8 @@ This command changes directories before the removal, so the relative glob target
         `on statically-unresolvable target: ${F}`,
       );
     let re = U;
-    if (!JA(N)) {
-      let ue = /[\\/]$/.test(r) ? r : r + Yfo;
+    if (!isAbsolute(N)) {
+      let ue = /[\\/]$/.test(r) ? r : r + sep;
       if (U.startsWith(ue)) re = U.slice(ue.length);
       else if (U === r) re = "";
     }
@@ -47802,11 +46964,11 @@ This command changes directories before the removal, so the relative glob target
         containsRuntimePlaceholder(F) ||
         N.startsWith("~") ||
         An(N) ||
-        (!JA(N) && /(^|[\\/])\.\.([\\/]|$)/.test(N) && /[\\/]\*$/.test(F)) ||
+        (!isAbsolute(N) && /(^|[\\/])\.\.([\\/]|$)/.test(N) && /[\\/]\*$/.test(F)) ||
         (e === "rmdir" &&
           /[\\/]\*$/.test(F) &&
           t.some((ue) => /^--p/.test(ue) || /^-[a-z]*p/.test(ue))) ||
-        (!JA(N) && /\*[\\/]+$/.test(N) && /[\\/]\*$/.test(F)))
+        (!isAbsolute(N) && /\*[\\/]+$/.test(N) && /[\\/]\*$/.test(F)))
     )
       return HL(
         e,
@@ -48452,7 +47614,7 @@ var cpo = new Set([
   WL = {
     cd: (e) => {
       let t = vh(e);
-      if (t.length === 0) return e.at(-1) === "-" ? ["-"] : [Vfo()];
+      if (t.length === 0) return e.at(-1) === "-" ? ["-"] : [homedir()];
       return [t[0]];
     },
     ls: (e) => {
@@ -48747,7 +47909,7 @@ var cpo = new Set([
       let t = 0,
         r = "",
         o = (C) => {
-          r = JA(Ju(C)) || C.startsWith("~") ? C : Jcn(r, C);
+          r = isAbsolute(Ju(C)) || C.startsWith("~") ? C : Jcn(r, C);
         };
       while (t < e.length && e[t].startsWith("-")) {
         let C = e[t];
@@ -48758,7 +47920,7 @@ var cpo = new Set([
         }
       }
       let d = (C) =>
-          r === "" || JA(Ju(C)) || C.startsWith("~") ? C : Jcn(r, C),
+          r === "" || isAbsolute(Ju(C)) || C.startsWith("~") ? C : Jcn(r, C),
         p = e.slice(t + 1);
       if (e[t] === "grep") {
         let C = utt(p, upo);
@@ -49132,7 +48294,7 @@ function hpo(e, t, r, o, d, p) {
     de = U.map((xe) => PE(xe, r, o, C)),
     _e = V.map((xe) => PE(xe, r, o, "read")),
     Se = (xe) =>
-      !containsRuntimePlaceholder(xe) && (!d || JA(xe) || xe.startsWith("~")),
+      !containsRuntimePlaceholder(xe) && (!d || isAbsolute(xe) || xe.startsWith("~")),
     ve =
       ue.find(
         (xe, Oe) =>
@@ -49192,7 +48354,7 @@ function hpo(e, t, r, o, d, p) {
   if (
     d &&
     C === "read" &&
-    E.some((xe) => !JA(Ju(xe))) &&
+    E.some((xe) => !isAbsolute(Ju(xe))) &&
     (I || (e !== "cd" && btt(o)))
   ) {
     let xe = mPe(e, E, r, o, C);
@@ -49370,7 +48532,7 @@ function Zae(e) {
 function bpo(e, t, r, o) {
   let p = e
     .filter((_) => _.target !== "/dev/null")
-    .filter((_) => !o || JA(_.target) || _.target.startsWith("~"))
+    .filter((_) => !o || isAbsolute(_.target) || _.target.startsWith("~"))
     .map((_) => PE(_.target, t, r, "create"))
     .find((_) => !_.allowed && _.decisionReason?.type === "rule");
   if (p?.decisionReason !== void 0)
@@ -49613,7 +48775,7 @@ function Spo(e, t, r, o) {
   let d;
   for (let p of e) {
     if (Stt(p)) continue;
-    if (Fx(p) !== -1 || (o && !JA(p) && !p.startsWith("~"))) {
+    if (Fx(p) !== -1 || (o && !isAbsolute(p) && !p.startsWith("~"))) {
       for (let D of oun(p, t)) {
         if (!D.cwdIndependent && o) continue;
         for (let N of expandPathAliases(D.path)) {
@@ -49687,7 +48849,7 @@ function oun(e, t) {
   let r = [],
     o = Ju(e);
   if (o !== e) r.push({ path: o, cwdIndependent: !0 });
-  if (!e.startsWith("~")) r.push({ path: Zcn(t, e), cwdIndependent: JA(e) });
+  if (!e.startsWith("~")) r.push({ path: resolve(t, e), cwdIndependent: isAbsolute(e) });
   return r;
 }
 
@@ -51305,7 +50467,7 @@ function Hpo(e) {
 var pun = [/^head$/, /^objects(?:\/|$)/, /^refs(?:\/|$)/, /^hooks(?:\/|$)/];
 
 function Ptt(e) {
-  let t = Epo.normalize(e.replace(/\/+/g, "/"));
+  let t = posix.normalize(e.replace(/\/+/g, "/"));
   return (
     (t = t
       .replace(/^\.?\//, "")
@@ -51375,31 +50537,31 @@ function y9(e, t) {
   let r = getFsSurface();
   if ((!Xo(e) || !0) && !Dr(e) && /(^|[/\\])\.\.(?:[/\\]|$)/.test(e)) {
     let F = /\/+/,
-      U = yPe(e) ? aun(e).root : "",
-      V = U ? aun(Itt(t, e)).root : t,
+      U = isAbsolute(e) ? parse(e).root : "",
+      V = U ? parse(resolve(t, e)).root : t,
       re = (U ? e.slice(U.length) : e).split(F),
       ue = V;
     for (let de = 0; de < re.length; de++) {
       let _e = re[de];
       if (_e === "" || _e === ".") continue;
       if (_e === "..") {
-        ue = tle(ue);
+        ue = dirname(ue);
         continue;
       }
-      if (((ue = ue.endsWith(GL) ? ue + _e : ue + GL + _e), Dr(ue))) break;
+      if (((ue = ue.endsWith(sep) ? ue + _e : ue + sep + _e), Dr(ue))) break;
       try {
         if (r.lstatSync(ue).isSymbolicLink() && re.slice(de + 1).includes(".."))
           return !0;
       } catch {}
     }
   }
-  let o = Itt(t, e),
+  let o = resolve(t, e),
     d = gun(r, o).normalize("NFC"),
     p = (resolveSymlinkTargetSync(r, t) ?? t).normalize("NFC");
   function _(F) {
-    let U = _Pe(F, d);
-    if (U === "" || U.startsWith(".." + GL) || yPe(U)) return !1;
-    let V = U.split(GL)
+    let U = relative(F, d);
+    if (U === "" || U.startsWith(".." + sep) || isAbsolute(U)) return !1;
+    let V = U.split(sep)
       .join("/")
       .toLowerCase()
       .replace(/\u0131/g, "i")
@@ -51407,14 +50569,14 @@ function y9(e, t) {
     return pun.some((re) => re.test(V));
   }
   if (_(p)) return !0;
-  if (!_Pe(p, d).startsWith(".." + GL)) return !1;
+  if (!relative(p, d).startsWith(".." + sep)) return !1;
   let C = he(),
     I = (resolveSymlinkTargetSync(r, C) ?? C).normalize("NFC"),
-    D = _Pe(I, d);
-  if (D === "" || D.startsWith(".." + GL) || yPe(D)) return !1;
+    D = relative(I, d);
+  if (D === "" || D.startsWith(".." + sep) || isAbsolute(D)) return !1;
   let N = p;
-  do if (((N = tle(N)), _(N))) return !0;
-  while (N !== I && N !== tle(N));
+  do if (((N = dirname(N)), _(N))) return !0;
+  while (N !== I && N !== dirname(N));
   return !1;
 }
 
@@ -51423,7 +50585,7 @@ function Gpo(e, t) {
   for (let r = 1; r < e.length; r++) {
     let o = e[r],
       d = e[r - 1];
-    if ((o === "/" || o === GL) && d !== "/" && d !== GL) {
+    if ((o === "/" || o === sep) && d !== "/" && d !== sep) {
       if (bPe(e.slice(0, r), t)) return !0;
     }
   }
@@ -51435,13 +50597,13 @@ function zpo(e, t) {
   if (r === t.toLowerCase()) return !0;
   let o = getFsSurface(),
     d = (resolveSymlinkTargetSync(o, he()) ?? he()).normalize("NFC"),
-    p = _Pe(d, t);
-  if (p === ".." || p.startsWith(".." + GL) || yPe(p)) return !1;
+    p = relative(d, t);
+  if (p === ".." || p.startsWith(".." + sep) || isAbsolute(p)) return !1;
   let _ = t;
   for (;;) {
     if (_.toLowerCase() === r) return !0;
-    if (_ === d || _ === tle(_)) return !1;
-    _ = tle(_);
+    if (_ === d || _ === dirname(_)) return !1;
+    _ = dirname(_);
   }
 }
 
@@ -51499,7 +50661,7 @@ function SPe(e, t) {
           let V = getFsSurface(),
             re = (resolveSymlinkTargetSync(V, t) ?? t).normalize("NFC");
           for (let ue of U) {
-            let de = Itt(t, ue),
+            let de = resolve(t, ue),
               _e = gun(V, de).normalize("NFC");
             if (zpo(_e, re)) {
               N = !0;
@@ -51513,12 +50675,12 @@ function SPe(e, t) {
         if (D) return !0;
         for (let U of F) {
           if (Fx(U) !== -1 || containsRuntimePlaceholder(U)) return !0;
-          let V = iun(U);
+          let V = basename(U);
           if (V === "." || V === "..") return !0;
           if (U.startsWith("~")) {
             let re = Ju(U);
             if (re.startsWith("~")) return !0;
-            if (y9(iun(re), t) || y9(V, t)) return !0;
+            if (y9(basename(re), t) || y9(V, t)) return !0;
           } else if (y9(V, t)) return !0;
         }
       }
@@ -52668,7 +51830,7 @@ function gmo(e, t, r, o) {
       return outsideReadsRuntimePathAsk(e);
     let p = Ju(d);
     if (An(p) || Fx(p) !== -1) return outsideReadsRuntimePathAsk(e);
-    let _ = KU(p) ? p : _9(r, p);
+    let _ = isAbsolute(p) ? p : resolve(r, p);
     if (!getFsSurface().existsSync(_)) continue;
     let E = PE(d, r, o, "read");
     if (E.allowed) continue;
@@ -52786,17 +51948,17 @@ function ymo(e, t, r, o, d) {
         return outsideReadsRuntimePathAsk(C);
       let V = Ju(U);
       if (An(V)) return outsideReadsRuntimePathAsk(C);
-      if (o && !KU(V)) return outsideReadsRuntimePathAsk(C);
+      if (o && !isAbsolute(V)) return outsideReadsRuntimePathAsk(C);
       let re = U,
         ue = Fx(V);
       if (ue !== -1) {
         if (V.split(/[\\/]+/).some((Me) => _tt(Me)))
           return outsideReadsRuntimePathAsk(C);
         let ve = V.slice(0, ue);
-        re = ve.endsWith("/") ? ve : rmo(ve);
+        re = ve.endsWith("/") ? ve : dirname(ve);
       }
       let de = Ju(re),
-        _e = KU(de) ? de : _9(t, de);
+        _e = isAbsolute(de) ? de : resolve(t, de);
       if (!getFsSurface().existsSync(_e)) continue;
       let Se = PE(re, t, r, "read");
       if (Se.allowed) continue;
@@ -53242,7 +52404,7 @@ function Tmo(e, t, r) {
   if (containsRuntimePlaceholder(o)) return null;
   if (o.startsWith("-")) return null;
   if (!Hun(o)) return null;
-  if (!KU(o) && o.split(/[\\/]/).includes("..")) return null;
+  if (!isAbsolute(o) && o.split(/[\\/]/).includes("..")) return null;
   if (getCurrentPlatform() === "windows" && !nyn(o, t)) return null;
   if (/[*?[\]]/.test(o)) return null;
   let { allowed: d, resolvedPath: p } = PE(o, t, r, "read");
@@ -53359,8 +52521,8 @@ function Run(e, t, r) {
       if (re) [p, d] = [d, re.dir];
       else if (V) {
         if (D === "pushd") _.push(d);
-        if (((p = d), o.add(_9(t, Ju(F))), d !== void 0))
-          ((d = _9(d, Ju(F))), o.add(d));
+        if (((p = d), o.add(resolve(t, Ju(F))), d !== void 0))
+          ((d = resolve(d, Ju(F))), o.add(d));
       } else {
         if (D === "pushd") _.push(d);
         ((E = !0), (p = d), (d = void 0));
@@ -53388,7 +52550,7 @@ function Run(e, t, r) {
 
 function Hun(e) {
   return (
-    KU(e) ||
+    isAbsolute(e) ||
     e.startsWith("./") ||
     e.startsWith("../") ||
     e === "." ||
@@ -53414,7 +52576,7 @@ async function tyn(e, t, r) {
     return !1;
   if (getCurrentPlatform() === "windows" && !nyn(e, t)) return !1;
   {
-    let p = KU(e),
+    let p = isAbsolute(e),
       _ = !1;
     for (let E of e.split(/[\\/]/)) {
       if (E === "" || E === ".") continue;
@@ -53425,7 +52587,7 @@ async function tyn(e, t, r) {
       _ = !0;
     }
   }
-  let o = KU(e) ? e : _9(t, e),
+  let o = isAbsolute(e) ? e : resolve(t, e),
     d = await Ntt(o);
   if (d === null) return !1;
   return d === r;
@@ -53475,7 +52637,7 @@ async function Ntt(e) {
       return null;
     return `${r.dev}:${r.ino}`;
   }
-  return await tmo(e).catch(() => null);
+  return await realpath(e).catch(() => null);
 }
 
 function ryn(e, t) {
@@ -53849,18 +53011,18 @@ async function Pmo(e, t, r) {
             let { resolvedPath: hn } = resolvePathInfo(getFsSurface(), Kn);
             return hn === Kn ? [Kn] : [Kn, hn];
           })
-          .map((Kn) => Oz(Kn)),
+          .map((Kn) => normalize(Kn)),
       ).map((Kn) => ({
         exact: normalizeCaseForComparison(Kn),
-        prefix: normalizeCaseForComparison(/[\\/]$/.test(Kn) ? Kn : Kn + omo),
+        prefix: normalizeCaseForComparison(/[\\/]$/.test(Kn) ? Kn : Kn + sep),
       })),
       un = (Kn) => {
-        let hn = normalizeCaseForComparison(Oz(Kn));
+        let hn = normalizeCaseForComparison(normalize(Kn));
         return wn.some((At) => hn === At.exact || hn.startsWith(At.prefix));
       },
       on = !/[;|\n&]/.test(e.command.replace(/&&/g, "")),
       { resolvedPath: En } = resolvePathInfo(getFsSurface(), U),
-      $n = dedupe([Oz(U), Oz(En)]),
+      $n = dedupe([normalize(U), normalize(En)]),
       ur = [];
     for (let Kn of _) {
       let [hn, ...At] = _v(Kn.argv),
@@ -53887,13 +53049,13 @@ async function Pmo(e, t, r) {
           ) {
             xo = !0;
             for (let qs of $n) {
-              let ko = KU(Br) ? Oz(Br) : _9(qs, Br),
+              let ko = isAbsolute(Br) ? normalize(Br) : resolve(qs, Br),
                 { resolvedPath: Ur } = resolvePathInfo(getFsSurface(), ko);
               if (!un(ko) || !un(Ur)) {
                 xo = !1;
                 break;
               }
-              ss.push(Oz(ko), Oz(Ur));
+              ss.push(normalize(ko), normalize(Ur));
             }
           }
           if (((on &&= xo), xo)) {
@@ -54368,10 +53530,10 @@ class dyn {
     if (this.logPath === void 0)
       this.logPath =
         process.env.AUTOMODE_DECISION_LOG === "1"
-          ? jmo(getCwd(), ".automode_decisions.jsonl")
+          ? join(getCwd(), ".automode_decisions.jsonl")
           : null;
     if (!this.logPath) return;
-    Hmo(
+    appendFile(
       this.logPath,
       `${jsonStringify({ ts: Date.now(), ...e })}
 `,
@@ -59046,21 +58208,21 @@ function nIe(e, t) {
   let r = [e.manifest.hooks ?? []]
     .flat()
     .filter((o) => typeof o === "string")
-    .map((o) => i_o(t, o));
+    .map((o) => resolve(t, o));
   return dedupe([
-    Ort(t, ".claude-plugin", "plugin.json"),
-    Ort(t, "plugin.json"),
-    Ort(t, "hooks", "hooks.json"),
+    join(t, ".claude-plugin", "plugin.json"),
+    join(t, "plugin.json"),
+    join(t, "hooks", "hooks.json"),
     ...r,
   ]);
 }
 
 function u_o(e, t) {
-  let r = t.map((o) => c_o(o));
+  let r = t.map((o) => resolve(o));
   return e
     .filter((o) => o.modulePath !== void 0)
     .flatMap((o) => {
-      let d = r.find((p) => l_o(p, o.path) === "");
+      let d = r.find((p) => relative(p, o.path) === "");
       if (d === void 0) return [];
       return [{ name: o.name, root: d, manifests: nIe(o, d) }];
     });
@@ -63321,10 +62483,10 @@ function $9() {
 
 async function sTn() {
   let e = a.CLAUDE_CODE_HOST_CREDS_FILE;
-  if (!e || !VSo(e)) return null;
+  if (!e || !isAbsolute(e)) return null;
   let t;
   try {
-    t = await qSo(e, "r");
+    t = await open(e, "r");
     let r = await t.stat();
     if (r.size > 65536) return null;
     if (getCurrentPlatform() !== "windows") {
@@ -65786,12 +64948,12 @@ function Xvn(e, t) {
         ? { part: "tool", id: F, kind: "added", next: re.body }
         : { part: "tool", id: F, kind: "removed", prev: V };
       if (!p(ue)) return d;
-    } else if (!s7(V, re.body)) {
+    } else if (!isDeepStrictEqual(V, re.body)) {
       D ||= !U.deferred;
       let ue = re.body,
         de =
           [...Object.keys(V), ...Object.keys(ue)].find(
-            (_e) => !s7(l_(V, _e), l_(ue, _e)),
+            (_e) => !isDeepStrictEqual(l_(V, _e), l_(ue, _e)),
           ) ?? "?";
       if (
         !p({
@@ -65825,7 +64987,7 @@ function Xvn(e, t) {
     let U = r.system[F],
       V = o.system[F],
       re = U === void 0 ? "added" : V === void 0 ? "removed" : "changed";
-    if (re !== "changed" || !s7(U, V)) {
+    if (re !== "changed" || !isDeepStrictEqual(U, V)) {
       if (!p({ part: "system", index: F, kind: re, prev: U, next: V }))
         return d;
     }
@@ -65833,7 +64995,7 @@ function Xvn(e, t) {
   for (let F = 0; F < r.messages.length; F++) {
     let U = r.messages[F],
       V = o.messages[F];
-    if (V !== void 0 && s7(U, V)) continue;
+    if (V !== void 0 && isDeepStrictEqual(U, V)) continue;
     let re = {
       part: "message",
       index: F,
@@ -65888,7 +65050,7 @@ function lwo(e, t) {
     let C = o.get(p);
     if (C === void 0)
       d.push({ part: "cache", at: _, kind: "dropped", prev: E, next: void 0 });
-    else if (!s7(E, C.marker))
+    else if (!isDeepStrictEqual(E, C.marker))
       d.push({
         part: "cache",
         at: _,
@@ -65941,7 +65103,7 @@ function cwo(e, t) {
     ["deferred_tools", eCn(e), eCn(t)],
     ...tCn.map((o) => [o, e.envelope[o], t.envelope[o]]),
   ]
-    .filter(([, o, d]) => !s7(o, d))
+    .filter(([, o, d]) => !isDeepStrictEqual(o, d))
     .map(([o, d, p]) => ({
       part: "envelope",
       id: o,
@@ -66337,10 +65499,10 @@ function Gle(e, t, r) {
 }
 
 function gwo(e, t) {
-  if (lCn(e, t)) return !0;
+  if (isDeepStrictEqual(e, t)) return !0;
   if (!("strict" in e) || "strict" in t) return !1;
   let { strict: r, ...o } = e;
-  return lCn(o, t);
+  return isDeepStrictEqual(o, t);
 }
 
 function yCn(e, t, r, o, d) {
@@ -66972,7 +66134,7 @@ function zCn(e) {
 function Owo(e) {
   if (e?.startsWith("file:")) {
     let t = e.slice(5);
-    return t ? { mode: "file", dir: Mwo(t) } : { mode: "disabled" };
+    return t ? { mode: "file", dir: resolve(t) } : { mode: "disabled" };
   }
   return Ie(e) ? { mode: "inline" } : { mode: "disabled" };
 }
@@ -66996,10 +66158,10 @@ function XCn() {
 
 async function Nwo(e, t, r) {
   try {
-    await VCn(t, r);
+    await writeFile(t, r);
   } catch (o) {
     if (!W(o)) throw o;
-    (await Pwo(e, { recursive: !0 }), await VCn(t, r));
+    (await mkdir(e, { recursive: !0 }), await writeFile(t, r));
   }
 }
 
@@ -67009,9 +66171,9 @@ function JCn(e, t, r) {
   let d = jsonStringify(t);
   if (o.mode === "file") {
     let E = e === "api_request_body" ? "request" : "response",
-      C = r.request_id ?? qCn(),
-      I = /^[A-Za-z0-9_-]+$/.test(C) ? C : qCn(),
-      D = Iwo(o.dir, `${I}.${E}.json`);
+      C = r.request_id ?? randomUUID(),
+      I = /^[A-Za-z0-9_-]+$/.test(C) ? C : randomUUID(),
+      D = join(o.dir, `${I}.${E}.json`);
     (Nwo(o.dir, D, d).catch((N) =>
       logForDebugging(`OTEL raw body file write failed: ${N}`, {
         level: "error",
@@ -69049,7 +68211,7 @@ function dvo(e) {
   return uvo(e) ? fromEnum(e) : S("other");
 }
 
-var fvo = tvo();
+var fvo = randomUUID();
 
 function pvo(e) {
   return hashForTelemetry(`${fvo}
@@ -69221,7 +68383,7 @@ function eRn() {
 function tRn() {
   let e = Xn(K());
   if (e === null) return null;
-  return Svo(getResolvedClaudeTempDir(), `cache-break-state-${e}.json`);
+  return join(getResolvedClaudeTempDir(), `cache-break-state-${e}.json`);
 }
 
 var kvo = { "": !0, none: !0, tool_based: !0, system_prompt: !0 },
@@ -69342,11 +68504,11 @@ function ZL() {
         .then(async () => {
           if (o.action === "remove") {
             (assertSafeTempDir(getResolvedClaudeTempDir()),
-              await bvo(r, { force: !0 }));
+              await rm(r, { force: !0 }));
             return;
           }
           if (e.latestQueuedPersist !== o) return;
-          (await _vo(getResolvedClaudeTempDir(), { recursive: !0, mode: 448 }),
+          (await mkdir(getResolvedClaudeTempDir(), { recursive: !0, mode: 448 }),
             assertSafeTempDir(getResolvedClaudeTempDir()),
             await writeFileAtomic(r, o.payload));
         })
@@ -70639,7 +69801,7 @@ async function qvo(e) {
     "deny"
   )
     return { outcome: "suppressed_deny_rule" };
-  let I = p(t, { url: r.url, prompt: o }, d, _, jvo(), {
+  let I = p(t, { url: r.url, prompt: o }, d, _, randomUUID(), {
       behavior: "ask",
       message: `${t.name} was denied by this session's URL provenance check. Approve to allow fetching this URL.`,
       suggestions: e.suggestions,
@@ -72422,7 +71584,7 @@ async function prepareForkedCommandContext(e, t, r, o, d) {
               },
               null,
               [],
-              { now: () => new Date().toISOString(), uuid: () => ZRn() },
+              { now: () => new Date().toISOString(), uuid: () => randomUUID() },
               r.messages,
               "repl_main_thread",
               { planSlugSeed: t, inputMentionsOnly: !0 },
@@ -72638,7 +71800,7 @@ function createSubagentContext(e, t) {
     precomputeSourceKey: t?.precomputeSourceKey,
     teammateContext: t?.teammateContext ?? e.teammateContext,
     queryTracking: {
-      chainId: ZRn(),
+      chainId: randomUUID(),
       depth: (e.queryTracking?.depth ?? -1) + 1,
     },
     fileReadingLimits: e.fileReadingLimits,
@@ -73630,7 +72792,7 @@ var Fit = 2,
   $it = "precompact.json";
 
 function b7(e) {
-  return mPn(getSessionSidecarDir(e), $it);
+  return join(getSessionSidecarDir(e), $it);
 }
 
 function gPn(e) {
@@ -73682,13 +72844,13 @@ function vPn(e) {
 
 function UCo(e) {
   try {
-    if (BCo(e).size > _7) return { ok: !1, reason: "too_large" };
+    if (statSync(e).size > _7) return { ok: !1, reason: "too_large" };
   } catch {
     return { ok: !1, reason: "absent" };
   }
   let t;
   try {
-    t = $Co(e, "utf8");
+    t = readFileSync(e, "utf8");
   } catch {
     return { ok: !1, reason: "absent" };
   }
@@ -73717,8 +72879,8 @@ async function W0e(e, t) {
     o = gPn(e),
     d = isHoverRestEnabled() && t !== void 0 ? getSidecarKeyForPath(r) : void 0;
   if (t !== void 0 && d) await t.delete(d).catch(() => {});
-  else await fPn(r).catch(() => {});
-  await fPn(o).catch(() => {});
+  else await unlink(r).catch(() => {});
+  await unlink(o).catch(() => {});
 }
 
 function xPn(e, t) {
@@ -74494,7 +73656,7 @@ async function sxo(e) {
       level: "info",
       isMeta: !0,
       timestamp: new Date().toISOString(),
-      uuid: oxo(),
+      uuid: randomUUID(),
       snapshotFiles: t,
     };
     if (
@@ -74935,19 +74097,19 @@ async function resolveRealpathAllowMissing(e) {
     r = "";
   for (;;)
     try {
-      let o = await Jxo(t);
-      return r === "" ? o : nAo(o, r);
+      let o = await realpath(t);
+      return r === "" ? o : resolve(o, r);
     } catch {
-      let o = Zxo(t);
+      let o = dirname(t);
       if (o === t) return e;
-      ((r = eAo(tAo(o, t), r)), (t = o));
+      ((r = join(relative(o, t), r)), (t = o));
     }
 }
 
 async function fIn(e, t) {
   let r = getCurrentPlatform();
   return r === "linux" || r === "wsl"
-    ? oAo(`/proc/self/fd/${e.fd}`)
+    ? realpath(`/proc/self/fd/${e.fd}`)
     : resolveRealpathAllowMissing(t);
 }
 
@@ -74970,20 +74132,20 @@ function rOe(e) {
         ? "r+"
         : "w"
     : r
-      ? VH.O_RDONLY | VH.O_NOFOLLOW | VH.O_NONBLOCK
-      : VH.O_WRONLY |
-        VH.O_CREAT |
-        (o ? 0 : VH.O_TRUNC) |
-        VH.O_NOFOLLOW |
-        VH.O_NONBLOCK;
+      ? constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK
+      : constants.O_WRONLY |
+        constants.O_CREAT |
+        (o ? 0 : constants.O_TRUNC) |
+        constants.O_NOFOLLOW |
+        constants.O_NONBLOCK;
 }
 
 async function openFileForWrite(e) {
   try {
-    return await pIn(e, rOe("write"));
+    return await open(e, rOe("write"));
   } catch (t) {
     if (getCurrentPlatform() === "windows" && A(t) === "ENOENT")
-      return pIn(e, "wx");
+      return open(e, "wx");
     throw t;
   }
 }
@@ -75004,7 +74166,7 @@ var yce = 4194304;
 var Zit = yce;
 
 async function assertRegularFilePath(e, t) {
-  let r = await bR(mAo(e));
+  let r = await bR(lstat(e));
   if (r === void 0 || r.isFile()) return;
   if (r.isSymbolicLink())
     throw Object.assign(Error("a symbolic link at the checked path"), {
@@ -75028,13 +74190,13 @@ async function assertOpenFileMatchesPath(
       "after the open, the kernel has no name for the handle",
       `/proc/self/fd/${e.fd}`,
     );
-  if (isPathOutsideRoot(yAo(r, _)))
+  if (isPathOutsideRoot(relative(r, _)))
     throw o(`after the open, the path resolves outside ${d}`, _);
   if (p.ino === 0)
     throw o(
       "the volume gives the file no identity, so the open cannot be proved",
     );
-  let E = await bR(hAo(t));
+  let E = await bR(lstat(t));
   if (E === void 0 || E.dev !== p.dev || E.ino !== p.ino)
     throw o("the open landed on a file the check did not see");
   if (_ !== t)
@@ -75047,7 +74209,7 @@ async function assertOpenFileMatchesPath(
 async function SAo(e, t) {
   let { refused: r } = t;
   await assertRegularFilePath(e, r);
-  let o = await bAo(e, rOe("read"));
+  let o = await open(e, rOe("read"));
   try {
     await assertOpenFileMatchesPath(o, e, t);
     let d = [],
@@ -75074,8 +74236,8 @@ function eat(e, t, { event: r, root: o }) {
       `${e}: $.fs.${r}: ${t}: a name ending in a dot or a space is not a file name on Windows`,
     );
   let d = o ?? getCwd(),
-    p = EAo(d, t);
-  if (isPathOutsideRoot(wAo(d, p))) {
+    p = resolve(d, t);
+  if (isPathOutsideRoot(relative(d, p))) {
     let _ = tOe.has(r)
       ? "the project and not an absolute path under the temp directory"
       : "the project";
@@ -75085,31 +74247,31 @@ function eat(e, t, { event: r, root: o }) {
 }
 
 async function CAo(e, t) {
-  let r = gIn(e);
-  while (!isPathOutsideRoot(hIn(t, r))) {
-    if ((await bR(tat(nat(r, "HEAD"))))?.isFile()) {
+  let r = dirname(e);
+  while (!isPathOutsideRoot(relative(t, r))) {
+    if ((await bR(stat(join(r, "HEAD"))))?.isFile()) {
       if (
-        ((await bR(tat(nat(r, "objects"))))?.isDirectory()
-          ? await bR(tat(nat(r, "refs")))
+        ((await bR(stat(join(r, "objects"))))?.isDirectory()
+          ? await bR(stat(join(r, "refs")))
           : void 0
         )?.isDirectory()
       )
-        return `${hIn(t, r) || "."} is a git directory (it holds HEAD, objects and refs), the repository's metadata, and is not written by plugins`;
+        return `${relative(t, r) || "."} is a git directory (it holds HEAD, objects and refs), the repository's metadata, and is not written by plugins`;
     }
     if (r === t) break;
-    r = gIn(r);
+    r = dirname(r);
   }
   return;
 }
 
 async function bIn(e, t, r = []) {
-  let o = (await bR(xAo(e)))?.isSymbolicLink() ? await bR(AAo(e)) : void 0;
+  let o = (await bR(lstat(e)))?.isSymbolicLink() ? await bR(readlink(e)) : void 0;
   return (
     o !== void 0 &&
     !isPathOutsideRoot(
-      PAo(
+      relative(
         normalizeCaseForComparison(
-          await resolveRealpathAllowMissing(IAo(RAo(e), o, ...r)),
+          await resolveRealpathAllowMissing(resolve(dirname(e), o, ...r)),
         ),
         normalizeCaseForComparison(t),
       ),
@@ -75118,7 +74280,7 @@ async function bIn(e, t, r = []) {
 }
 
 async function DAo(e) {
-  let t = await bR(OAo(e));
+  let t = await bR(stat(e));
   return t !== void 0 && t.isFile() && t.nlink > 1
     ? `it is ${Xit(t.nlink)}, and is not read or written by plugins`
     : void 0;
@@ -75126,8 +74288,8 @@ async function DAo(e) {
 
 async function FAo(e, t) {
   return isPathOutsideRoot(
-    NAo(
-      normalizeCaseForComparison(await resolveRealpathAllowMissing(LAo(t))),
+    relative(
+      normalizeCaseForComparison(await resolveRealpathAllowMissing(resolve(t))),
       normalizeCaseForComparison(e),
     ),
   )
@@ -75213,9 +74375,9 @@ var CIn =
   "ssh, fish, launchd, the desktop session, systemd, aws, kubectl, docker, gpg, npm, bun, rustup, maven or gradle";
 
 async function ZAo(e, t) {
-  let r = await resolveRealpathAllowMissing(JAo());
-  if (isPathOutsideRoot(xIn(t, r))) return;
-  let o = xIn(r, e);
+  let r = await resolveRealpathAllowMissing(homedir());
+  if (isPathOutsideRoot(relative(t, r))) return;
+  let o = relative(r, e);
   if (isPathOutsideRoot(o)) return;
   let d = T7(o),
     p = d.map(normalizeCaseForComparison);
@@ -75227,14 +74389,14 @@ async function ZAo(e, t) {
 
 async function eRo(e, t) {
   let r = [...WAo.map((d) => [d]), ...rat],
-    o = AIn(e);
-  while (!isPathOutsideRoot(PIn(t, o))) {
+    o = dirname(e);
+  while (!isPathOutsideRoot(relative(t, o))) {
     for (let d of r)
       for (let p of d.keys())
-        if (await bIn(RIn(o, ...d.slice(0, p + 1)), e, d.slice(p + 1)))
-          return `${PIn(t, RIn(o, ...d))}, the project's own configuration, links to it and is not written by plugins`;
+        if (await bIn(join(o, ...d.slice(0, p + 1)), e, d.slice(p + 1)))
+          return `${relative(t, join(o, ...d))}, the project's own configuration, links to it and is not written by plugins`;
     if (o === t) break;
-    o = AIn(o);
+    o = dirname(o);
   }
   return;
 }
@@ -75253,13 +74415,13 @@ var NIn = new Set(["EINVAL", "UNKNOWN", "ENOTSUP"]);
 
 async function FIn(e) {
   try {
-    return { link: await aRo(e) };
+    return { link: await readlink(e) };
   } catch (t) {
     if (Qit(t)) return "absent";
     let r = A(t);
     if (!NIn.has(r)) throw t;
     if (r === "EINVAL") return "entry";
-    let o = await bR(iRo(e));
+    let o = await bR(lstat(e));
     if (o === void 0) return "absent";
     if (o.isSymbolicLink()) throw t;
     return "entry";
@@ -75268,7 +74430,7 @@ async function FIn(e) {
 
 async function sOe(e, { root: t, place: r }, o) {
   let d = getCurrentPlatform() === "windows",
-    p = d ? uRo : cRo,
+    p = d ? win32 : posix,
     _ = d ? /[\\/]/ : /\//,
     E = (N) => N.split(_).filter((F) => F !== "" && F !== "."),
     C = E(p.relative(t, e)),
@@ -75315,7 +74477,7 @@ async function fRo(e, t) {
 
 async function Sce(e) {
   try {
-    return await pRo(e);
+    return await realpath(e);
   } catch {
     return;
   }
@@ -75327,7 +74489,7 @@ async function BIn(e) {
   if (e === void 0)
     return { root: t, realRoot: r, realSession: r, place: "the project" };
   let o = await Sce(e);
-  return o !== void 0 && !isPathOutsideRoot(gRo(r, o))
+  return o !== void 0 && !isPathOutsideRoot(relative(r, o))
     ? { root: e, realRoot: o, realSession: r, place: "the project" }
     : { root: t, realRoot: r, realSession: r, place: "the project" };
 }
@@ -75339,7 +74501,7 @@ async function VIn() {
     ...new Map(
       (
         await Promise.all(
-          (getCurrentPlatform() === "windows" ? [qIn()] : [qIn(), "/tmp"]).map(
+          (getCurrentPlatform() === "windows" ? [tmpdir()] : [tmpdir(), "/tmp"]).map(
             async (e) => {
               let t = await Sce(e);
               if (t === void 0) return [];
@@ -75360,11 +74522,11 @@ async function VIn() {
 async function YIn(e, t, r) {
   let o = await BIn(r);
   if (
-    !(tOe.has(e) && typeof t === "string" && _Ro(t)) ||
-    !isPathOutsideRoot(KIn(o.root, t))
+    !(tOe.has(e) && typeof t === "string" && isAbsolute(t)) ||
+    !isPathOutsideRoot(relative(o.root, t))
   )
     return o;
-  let p = (await VIn()).find((_) => !isPathOutsideRoot(KIn(_.root, t)));
+  let p = (await VIn()).find((_) => !isPathOutsideRoot(relative(_.root, t)));
   if (p === void 0) return o;
   return { ...p, realSession: o.realSession, place: "the temp directory" };
 }
@@ -75383,23 +74545,23 @@ async function lat(e, t) {
 
 async function ERo(e, t) {
   for (let { pluginName: r, pluginRoot: o } of t) {
-    let d = wRo(o);
-    if (!isPathOutsideRoot(kRo(await SRo(d).catch(() => d), e)))
+    let d = resolve(o);
+    if (!isPathOutsideRoot(relative(await realpath(d).catch(() => d), e)))
       return `it is inside plugin ${r}, whose hooks module the engine loads from there`;
   }
   return;
 }
 
-var XIn = TRo(".claude-plugin", "marketplace.json");
+var XIn = join(".claude-plugin", "marketplace.json");
 
 async function xRo(e, t) {
-  let r = QIn(e);
-  while (!isPathOutsideRoot(JIn(t, r))) {
+  let r = dirname(e);
+  while (!isPathOutsideRoot(relative(t, r))) {
     for (let o of PLUGIN_MANIFEST_RELPATHS)
-      if (await pathExists(CRo(r, o)))
-        return `it is inside a plugin folder (${JIn(t, r) || "."}, by its ${o}), whose hooks module the engine loads from there once the plugin is enabled`;
+      if (await pathExists(join(r, o)))
+        return `it is inside a plugin folder (${relative(t, r) || "."}, by its ${o}), whose hooks module the engine loads from there once the plugin is enabled`;
     if (r === t) break;
-    r = QIn(r);
+    r = dirname(r);
   }
   return;
 }
@@ -75420,18 +74582,18 @@ function RRo(e) {
 var eMn = async (e, t, r) =>
   (
     await Promise.all(
-      dedupe(r.map((o) => IRo(o, t))).map(async (o) =>
+      dedupe(r.map((o) => resolve(o, t))).map(async (o) =>
         normalizeCaseForComparison(await resolveRealpathAllowMissing(o)),
       ),
     )
-  ).some((o) => !isPathOutsideRoot(PRo(o, e)));
+  ).some((o) => !isPathOutsideRoot(relative(o, e)));
 
 function nMn(e, t) {
-  let r = DRo.normalize(t.replace(/\\/g, "/"))
+  let r = posix.normalize(t.replace(/\\/g, "/"))
       .split("/")
       .filter((d) => d !== "" && d !== ".."),
-    o = dat + normalizeCaseForComparison(r.join(dat));
-  return !ORo(t) && r.length > 0 && (e.endsWith(o) || e.includes(o + dat));
+    o = sep + normalizeCaseForComparison(r.join(sep));
+  return !isAbsolute(t) && r.length > 0 && (e.endsWith(o) || e.includes(o + sep));
 }
 
 var LRo = ["KUBECONFIG"];
@@ -75464,7 +74626,7 @@ var jRo = (e) =>
   BRo.flatMap((t) => {
     let r = e[t];
     if (r === void 0) return [];
-    return (LRo.includes(t) ? r.split(HRo) : [r]).flatMap((o) =>
+    return (LRo.includes(t) ? r.split(delimiter) : [r]).flatMap((o) =>
       o === "" ? [] : [{ variable: t, path: o }],
     );
   });
@@ -75507,7 +74669,7 @@ async function gat(
       place: D,
     } = _ ?? (await YIn(r, t, p)),
     N = eat(e, t, { event: r, root: E }),
-    F = mat(E, N),
+    F = relative(E, N),
     U = r === "writeFile",
     V = U || r === "readFile",
     re = (Me) => qRo(Me) ?? (U ? (KAo(Me) ?? RRo(Me)) : void 0),
@@ -75541,11 +74703,11 @@ async function gat(
     await _e(sOe(N, { root: E, place: D }, ue)),
     de(V ? await _e(DAo(N)) : void 0, N));
   let Se = await resolveRealpathAllowMissing(N),
-    ve = mat(C, Se);
+    ve = relative(C, Se);
   return (
     de(isPathOutsideRoot(ve) ? `it resolves outside ${D}` : void 0, Se),
     de(re(ve), Se),
-    de(re(mat(I, Se)), Se),
+    de(re(relative(I, Se)), Se),
     de(
       U
         ? await _e(
@@ -75594,7 +74756,7 @@ async function yat(
         if (F > yce) throw N(`${F} bytes is over the ${yce}-byte limit`);
         let U = (await ERo(E, r)) ?? (await xRo(E, I));
         if (U !== void 0) throw N(U);
-        (await YRo(QRo(E), { recursive: !0 }),
+        (await mkdir(dirname(E), { recursive: !0 }),
           await assertRegularFilePath(E, N));
         let V = await openFileForWrite(E);
         try {
@@ -75612,27 +74774,27 @@ async function yat(
         return;
       }
       case "exists": {
-        let F = await hat(E).then(
+        let F = await lstat(E).then(
           () => !0,
           () => !1,
         );
         return (await lat(E, N), F);
       }
       case "stat": {
-        let F = await hat(E);
+        let F = await lstat(E);
         return (
           await lat(E, N),
           { kind: WIn(F), size: F.size, mtimeMs: F.mtimeMs }
         );
       }
       case "listDir": {
-        let F = await XRo(E, { withFileTypes: !0 }),
+        let F = await readdir(E, { withFileTypes: !0 }),
           U = [];
         for (let V of F) {
           let re = 0;
           if (V.isFile())
             try {
-              re = (await hat(JRo(E, V.name))).size;
+              re = (await lstat(resolve(E, V.name))).size;
             } catch {
               re = 0;
             }
@@ -75684,7 +74846,7 @@ async function nPo(e, t, r = he()) {
   let d = he(),
     p = [],
     _ = r;
-  while (_ !== ePo(_).root) (p.push(_), (_ = ZRo(_)));
+  while (_ !== parse(_).root) (p.push(_), (_ = dirname(_)));
   let E = getGitWorktreeRoots(d),
     C = getCurrentProjectConfig().hasClaudeMdExternalIncludesApproved ?? !1,
     I = new Set(),
@@ -75692,13 +74854,13 @@ async function nPo(e, t, r = he()) {
   for (let N of p.reverse()) {
     if (isInMainRepoOutsideWorktree(N, E)) continue;
     for (let F of e) {
-      if (N.startsWith(d + tPo) && (await fRo(_at(N, F), d))) {
+      if (N.startsWith(d + sep) && (await fRo(join(N, F), d))) {
         logForDebugging(
-          `$.fs.ancestors (${t}): ${_at(N, F)} links out of the project; skipped`,
+          `$.fs.ancestors (${t}): ${join(N, F)} links out of the project; skipped`,
         );
         continue;
       }
-      let V = await loadMemoryFileWithIncludes(_at(N, F), "Project", I, C);
+      let V = await loadMemoryFileWithIncludes(join(N, F), "Project", I, C);
       if (V.length > 0)
         D.push({
           dir: N,
@@ -75720,13 +74882,13 @@ async function nPo(e, t, r = he()) {
 async function EMn(e, t) {
   let r = he();
   if (t === void 0) return r;
-  let o = iPo(r, kMn(r, eat(e, t, { event: "ancestors", root: r }))),
-    d = o === r ? r : sPo(o),
+  let o = join(r, relative(r, eat(e, t, { event: "ancestors", root: r }))),
+    d = o === r ? r : dirname(o),
     p = (E) => new HooksError(`${e}: $.fs.ancestors: ${t} refused: ${E}`);
   if (
     (await sOe(d, { root: r, place: "the project" }, p),
     isPathOutsideRoot(
-      kMn(
+      relative(
         await resolveRealpathAllowMissing(r),
         await resolveRealpathAllowMissing(d),
       ),
@@ -75803,7 +74965,7 @@ function _Po(e) {
   for (let o of t) {
     if (typeof o !== "string" || !o.toLowerCase().endsWith(".md"))
       return `takes names, each a .md file name (${JSON.stringify(o)})`;
-    if (hPo(o) || yPo.isAbsolute(o) || o.split(/[\\/]/).includes(".."))
+    if (isAbsolute(o) || win32.isAbsolute(o) || o.split(/[\\/]/).includes(".."))
       return `takes names, each relative with no ".." (${o})`;
   }
   return;
@@ -75918,17 +75080,17 @@ var OMn = (e) => ({
 });
 
 function dOe(e, t) {
-  let r = LPo(t);
+  let r = normalize(t);
   if (
     t.trim() === "" ||
-    DPo(t) ||
+    isAbsolute(t) ||
     r.startsWith("..") ||
     r.split(/[\\/]/).includes("..")
   )
     throw new HooksError(
       `$.audio.play: asset must be a path inside the plugin's directory (got ${jsonStringify(t)})`,
     );
-  return NPo(e, r);
+  return join(e, r);
 }
 
 var C7 = 26214400;
@@ -76048,7 +75210,7 @@ function e0n() {
   }
   return {
     mint: (o, d, p) => {
-      let _ = `auth_${nIo().replace(/-/g, "")}`;
+      let _ = `auth_${randomUUID().replace(/-/g, "")}`;
       return (e.set(_, { plugin: o, headers: d, host: p }), r(o, _), _);
     },
     resolve: (o, d) => {
@@ -76236,14 +75398,14 @@ async function yIo(e, t) {
       cleanup: async () => {},
     };
   let o = await hOe(r, t),
-    d = await pIo(f0n(hIo(), "claude-audio-")),
-    p = f0n(d, `clip.${o.extension}`);
+    d = await mkdtemp(join(tmpdir(), "claude-audio-")),
+    p = join(d, `clip.${o.extension}`);
   return (
-    await gIo(p, o.bytes),
+    await writeFile(p, o.bytes),
     {
       file: p,
       what: `${p} (${o.bytes.byteLength} bytes)`,
-      cleanup: () => mIo(d, { recursive: !0, force: !0 }).catch(() => {}),
+      cleanup: () => rm(d, { recursive: !0, force: !0 }).catch(() => {}),
     }
   );
 }
@@ -76300,7 +75462,7 @@ var y0n = 4;
 
 var _0n = ({ command: e, args: t, label: r, what: o, signal: d }) =>
   new Promise((p, _) => {
-    let E = CIo(e, t, {
+    let E = spawn(e, t, {
       stdio: "ignore",
       windowsHide: !0,
       cwd: void 0,
@@ -76365,7 +75527,7 @@ async function S0n(e, { request: t, pluginName: r, signal: o }) {
   else if (E.asset !== void 0) {
     let N = await wat(t, E.asset, r);
     try {
-      C = D({ bytes: new Uint8Array(await IIo(N)), mime: g0n(N) });
+      C = D({ bytes: new Uint8Array(await readFile(N)), mime: g0n(N) });
     } catch (F) {
       throw new HooksError(
         `$.audio.play: could not read ${E.asset} in ${r}'s directory: ${l(F)}`,
@@ -76711,7 +75873,7 @@ function G0n({ text: e, attachments: t }, r, o = [r]) {
   logForDebugging(
     `$.prompt.submit (${r}): ` + jsonStringify(truncateToCodeUnits(e, j0n)),
   );
-  let d = _Mo(),
+  let d = randomUUID(),
     p = Udo(d, o);
   return (
     enqueueCommand({
@@ -76835,9 +75997,9 @@ var TMo = new Set([
   ];
 
 function isGeneratedFile(e) {
-  let t = _Oe.sep + e.split(V0n).join(_Oe.sep).replace(/^\/+/, ""),
-    r = q0n(e).toLowerCase(),
-    o = EMo(e).toLowerCase();
+  let t = posix.sep + e.split(sep).join(posix.sep).replace(/^\/+/, ""),
+    r = basename(e).toLowerCase(),
+    o = extname(e).toLowerCase();
   if (TMo.has(r)) return !0;
   if (z0n.has(o)) return !0;
   let d = r.split(".");
@@ -76977,7 +76139,7 @@ async function tOn(e, t, r = { staged: !0 }) {
   let F = await Promise.all(
     t.map(async (ue) => {
       if (await K0n(ue, o)) return { type: "generated", file: ue };
-      let de = OMo(o, ue),
+      let de = join(o, ue),
         _e = N.get(ue),
         Se = e[0].surface,
         ve = 0,
@@ -76990,7 +76152,7 @@ async function tOn(e, t, r = { staged: !0 }) {
         }
       else
         try {
-          let De = await IMo(de);
+          let De = await stat(de);
           if (_e) ((ve = _e.claudeContribution), (Me = 0));
           else {
             let He = await J0n(ue, r);
@@ -77363,7 +76525,7 @@ var SOn = (e, t) => ({ result: e, text: t, isError: !0 });
 
 var T0o = (e, t) => ({
   type: "tool_use",
-  id: `toolu_plugin_${E0o().replace(/-/g, "")}`,
+  id: `toolu_plugin_${randomUUID().replace(/-/g, "")}`,
   name: e,
   input: t,
   caller: bOn,
@@ -77604,7 +76766,7 @@ function resolveCanonicalLanguageId(e) {
 }
 
 async function resolveLanguageNameFromPath(e) {
-  let t = $0o(e).slice(1);
+  let t = extname(e).slice(1);
   if (!t) return "unknown";
   let r = t.toLowerCase(),
     o = resolveCanonicalLanguageId(r);
@@ -78281,7 +77443,7 @@ function nDn(e, t, r) {
         events: [
           {
             data: {
-              uuid: JOn(),
+              uuid: randomUUID(),
               session_id: "",
               type: "user",
               parent_tool_use_id: null,
@@ -78612,7 +77774,7 @@ async function postUltrareviewFindings(e, t, r, o) {
       }
     );
   let d = AbortSignal.timeout(rOo),
-    p = JOn(),
+    p = randomUUID(),
     _ = pOo(e, t, p);
   if (_ === null)
     return (
@@ -79597,7 +78759,7 @@ async function VOo({
 }
 
 function KOo(e, t) {
-  return `remote_${$Oo("sha256").update(`${e}\x00${t}`).digest("hex").slice(0, 32)}`;
+  return `remote_${createHash("sha256").update(`${e}\x00${t}`).digest("hex").slice(0, 32)}`;
 }
 
 function vDn(e) {
@@ -80414,12 +79576,12 @@ function MDn(e) {
     logFeatureOk("agent_intent_forward", { turns: t.length, chars: r }),
     t.map((o) => ({
       type: "attachment",
-      uuid: ADn(),
+      uuid: randomUUID(),
       timestamp: o.timestamp,
       attachment: {
         type: "queued_command",
         prompt: o.text,
-        source_uuid: ADn(),
+        source_uuid: randomUUID(),
         origin: { kind: "unclassified" },
         timestamp: o.timestamp,
         isMeta: !0,
@@ -80447,7 +79609,7 @@ function ODn(e) {
 }
 
 function DDn() {
-  return eDo(16).toString("hex");
+  return randomBytes(16).toString("hex");
 }
 
 function getSubagentModelSetting() {
@@ -80747,7 +79909,7 @@ function EDo(e, t) {
 
 async function CDo(e) {
   let { tool: t, raised: r, rewritten: o, context: d } = e;
-  if (vDo(r, o)) return null;
+  if (isDeepStrictEqual(r, o)) return null;
   let p = await checkRuleBasedPermissions(t, o, d);
   if (p === null || p.behavior === "deny") return p;
   return qDn(await checkRuleBasedPermissions(t, r, d), p) ? null : p;
@@ -81185,12 +80347,12 @@ function fNe(e, t, r, o = process.env) {
       : [
           ...(p ? [p] : []),
           ...(getCurrentPlatform() === "windows" ? [] : ["/etc/gitconfig"]),
-          ...(r === null ? [] : [`${r}${NR}etc${NR}gitconfig`]),
+          ...(r === null ? [] : [`${r}${sep}etc${sep}gitconfig`]),
         ],
     I = getEnvVarCaseInsensitive(o, "PROGRAMDATA"),
     D =
       !E && getCurrentPlatform() === "windows" && I
-        ? [`${I}${NR}Git${NR}config`]
+        ? [`${I}${sep}Git${sep}config`]
         : [];
   return [
     ...e.filter((N) => N !== ""),
@@ -81198,8 +80360,8 @@ function fNe(e, t, r, o = process.env) {
     ...D,
     ...(d ? [d] : []),
     ...Oce(o).flatMap((N) => [
-      `${_ || `${N}${NR}.config`}${NR}git${NR}config`,
-      `${N}${NR}.gitconfig`,
+      `${_ || `${N}${sep}.config`}${sep}git${sep}config`,
+      `${N}${sep}.gitconfig`,
     ]),
   ].map((N) => spelledFrom(t, N));
 }
@@ -81216,7 +80378,7 @@ function BNn() {
     getClaudeTempDir(),
     getChildProcessTmpDir(),
     ...gx().map((e) =>
-      e === "~" || e.startsWith("~/") ? lO($Nn(), e.slice(1)) : e,
+      e === "~" || e.startsWith("~/") ? join(homedir(), e.slice(1)) : e,
     ),
   ]);
 }
@@ -81229,17 +80391,17 @@ function Oce(e = process.env) {
     [
       t,
       getCurrentPlatform() === "windows" && r && o ? `${r}${o}` : void 0,
-      $Nn(),
+      homedir(),
     ].filter((d) => Boolean(d)),
   );
 }
 
 async function D7(e, t, r) {
-  let o = t.GIT_DIR ?? lO(r, ".git"),
+  let o = t.GIT_DIR ?? join(r, ".git"),
     d = t.GIT_COMMON_DIR ?? o,
-    p = (U) => SNo(U).catch((V) => (A(V) === "ENOENT" ? U : null)),
+    p = (U) => realpath(U).catch((V) => (A(V) === "ENOENT" ? U : null)),
     _ = await Promise.all(
-      [[r, FOe(e)], [o], [d]].map(async (U) => [
+      [[r, resolve(e)], [o], [d]].map(async (U) => [
         ...U,
         ...(await Promise.all(U.map(p))),
       ]),
@@ -81251,7 +80413,7 @@ async function D7(e, t, r) {
   if (N.includes(null)) return null;
   let F = await Promise.all(
     dedupe(N.filter((U) => U !== null)).map((U) =>
-      kNo(U).then(
+      stat(U).then(
         (V) => {
           let re = HNn(V);
           return re === void 0 ? [] : [[re, U]];
@@ -81267,11 +80429,11 @@ async function D7(e, t, r) {
     fixed: dedupe([
       ...C.flatMap((U) => [
         U,
-        lO(U, "config"),
-        lO(U, "config.worktree"),
-        lO(U, "commondir"),
+        join(U, "config"),
+        join(U, "config.worktree"),
+        join(U, "commondir"),
       ]),
-      ...I.flatMap((U) => [U, lO(U, "config"), lO(U, "worktrees")]),
+      ...I.flatMap((U) => [U, join(U, "config"), join(U, "worktrees")]),
     ]),
   };
 }
@@ -81306,7 +80468,7 @@ function xNo(e) {
 }
 
 async function ANo(e) {
-  return yNo(e, Mce.W_OK).then(
+  return access(e, constants.W_OK).then(
     () => !0,
     (t) => !["EACCES", "EROFS", "EPERM"].includes(A(t) ?? ""),
   );
@@ -81324,27 +80486,27 @@ async function wq(e, t, r = RNo, o = { secondNames: !0 }) {
     _ = (V) => t.fixed.includes(V),
     E = (V) => d(V) && !p(V) && !_(V),
     C = (V) => V === "ENOENT" || V === "ENOTDIR";
-  if (!HOe(e) || Nce(e) || e.includes("\uFFFD")) return !0;
+  if (!isAbsolute(e) || Nce(e) || e.includes("\uFFFD")) return !0;
   let I = getCurrentPlatform() === "windows";
-  if (I && e !== FOe(e)) return wq(FOe(e), t, r, o);
-  let { root: D } = ENo(e),
+  if (I && e !== resolve(e)) return wq(resolve(e), t, r, o);
+  let { root: D } = parse(e),
     N = e
       .slice(D.length)
-      .split(NR === "/" ? /\/+/ : /[\\/]+/)
+      .split(sep === "/" ? /\/+/ : /[\\/]+/)
       .filter((V) => V !== "" && V !== "."),
     F = D,
     U = !1;
   for (let [V, re] of N.entries()) {
     if (re === "..") {
       if (U) return !0;
-      F = wNo(F);
+      F = dirname(F);
       continue;
     }
-    let ue = lO(F, re);
+    let ue = join(F, re);
     if (E(ue)) return !0;
     let de;
     switch (
-      await _lt(ue).then(
+      await lstat(ue).then(
         (Se) => {
           let ve = HNn(Se);
           return (
@@ -81377,9 +80539,9 @@ async function wq(e, t, r = RNo, o = { secondNames: !0 }) {
         ((U = de !== void 0 && de !== ue), (F = de ?? ue));
         break;
       case "absent":
-        return E(FOe(ue, ...N.slice(V + 1)));
+        return E(resolve(ue, ...N.slice(V + 1)));
       case "link": {
-        let Se = await bNo(ue).catch(() => null);
+        let Se = await readlink(ue).catch(() => null);
         if (Se === null || r === 0) return null;
         let ve = I ? /^[A-Za-z]:/.exec(ue)?.[0] : void 0;
         if (I && /^[A-Za-z]:(?![\\/])/.test(Se)) return !0;
@@ -81387,7 +80549,7 @@ async function wq(e, t, r = RNo, o = { secondNames: !0 }) {
           ve !== void 0 && /^[\\/](?![\\/])/.test(Se) ? `${ve}${Se}` : Se;
         if (Me.includes("\uFFFD")) return !0;
         let xe = [spelledFrom(F, Me), ...N.slice(V + 1)];
-        return wq(xe.join(NR), t, r - 1, o);
+        return wq(xe.join(sep), t, r - 1, o);
       }
       case "entry":
         ((U = de !== void 0 && de !== ue), (F = de ?? ue));
@@ -81402,15 +80564,15 @@ async function jNn(e, t) {
   let r = async (D) => {
       let N = getCurrentPlatform() === "windows";
       if (N) {
-        let U = await _lt(D).then(
+        let U = await lstat(D).then(
           (V) => (V.isSymbolicLink() ? "refuse" : null),
           () => null,
         );
         if (U !== null) return U;
       }
-      let F = await _No(
+      let F = await open(
         D,
-        N ? Mce.O_RDONLY : Mce.O_RDONLY | Mce.O_NOFOLLOW | Mce.O_NONBLOCK,
+        N ? constants.O_RDONLY : constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
       ).catch((U) => {
         let V = A(U) ?? "";
         return ["ENOENT", "ENOTDIR"].includes(V)
@@ -81437,8 +80599,8 @@ async function jNn(e, t) {
       let N = await wq(D, t);
       return N === null ? "unread" : N ? "refuse" : !0;
     },
-    d = lO(e, ".git"),
-    p = await _lt(d).then(
+    d = join(e, ".git"),
+    p = await lstat(d).then(
       (D) => D,
       (D) => (["ENOENT", "ENOTDIR"].includes(A(D) ?? "") ? null : "unread"),
     );
@@ -81458,7 +80620,7 @@ async function jNn(e, t) {
     let F = await o(_);
     if (F !== !0) return F;
   }
-  let E = await r(lO(_, "commondir"));
+  let E = await r(join(_, "commondir"));
   if (E === "refuse" || E === "unread") return E;
   if (E === "absent") return { GIT_DIR: _, GIT_COMMON_DIR: _ };
   if (p.isDirectory()) return "refuse_common";
@@ -81468,17 +80630,17 @@ async function jNn(e, t) {
 }
 
 function spelledFrom(e, t) {
-  return HOe(t) ? t : `${e}${NR}${t}`;
+  return isAbsolute(t) ? t : `${e}${sep}${t}`;
 }
 
 function isWithin(e, t) {
-  if (!HOe(t)) return !1;
+  if (!isAbsolute(t)) return !1;
   let r = getCurrentPlatform(),
     o = r === "macos" || r === "windows",
     d = (E) => (o ? E.normalize("NFC").toLowerCase() : E),
-    p = TNo(d(e), d(t)),
-    _ = p === ".." || p.startsWith(`..${NR}`) || p.startsWith("../");
-  return p === "" || (!_ && !HOe(p));
+    p = relative(d(e), d(t)),
+    _ = p === ".." || p.startsWith(`..${sep}`) || p.startsWith("../");
+  return p === "" || (!_ && !isAbsolute(p));
 }
 
 var blt = ["projectSettings", "localSettings"],
@@ -81530,13 +80692,13 @@ function GNn(e) {
     [
       ...blt.map((d) => getSettingsFilePathForSource(d)),
       getLegacyLocalSettingsFilePath(),
-      pNe(e.workTree, ".claude", "settings.json"),
-      pNe(e.workTree, ".claude", "settings.local.json"),
+      join(e.workTree, ".claude", "settings.json"),
+      join(e.workTree, ".claude", "settings.local.json"),
       ...(t === void 0 ? [r] : []),
     ].filter((d) => d !== void 0),
   ).some((d) => {
     try {
-      if (!PNo(d).isFile()) return !0;
+      if (!statSync(d).isFile()) return !0;
     } catch (p) {
       return A(p) !== "ENOENT";
     }
@@ -81594,10 +80756,10 @@ function wlt() {
   if (t === void 0) return e;
   let r = NNo(t);
   if (r === void 0) return e;
-  let o = INo(getClaudeTempDir()),
-    d = pNe(r, o),
+  let o = basename(getClaudeTempDir()),
+    d = join(r, o),
     p =
-      Buffer.byteLength(d) <= MAX_TMP_DIR_PATH_BYTES ? d : pNe(zNn(t) ?? r, o);
+      Buffer.byteLength(d) <= MAX_TMP_DIR_PATH_BYTES ? d : join(zNn(t) ?? r, o);
   return dedupe([...e, d, p]);
 }
 
@@ -81692,7 +80854,7 @@ async function readGitLayout(
   } = {},
 ) {
   let p = d.screenMemo === void 0 ? new BuilderGitProbes("operation") : d,
-    _ = await Rq(e).catch(() => e);
+    _ = await realpath(e).catch(() => e);
   if (o) {
     if ((await kLn()).some((_e) => isWithin(_e, _) || isWithin(_e, e)))
       return {
@@ -81738,8 +80900,8 @@ async function readGitLayout(
     U === null ||
     V === null ||
     re === null ||
-    !pI(U) ||
-    !pI(re)
+    !isAbsolute(U) ||
+    !isAbsolute(re)
   )
     return {
       kind: "failed",
@@ -81753,14 +80915,14 @@ async function readGitLayout(
     };
   if (firstLine(V) === "--path-format=absolute")
     return { kind: "tampered", misplaced: "old_git", gitDir: U, commonDir: V };
-  if (!pI(V))
+  if (!isAbsolute(V))
     return {
       kind: "tampered",
       misplaced: "common_dir",
       gitDir: U,
       commonDir: V,
     };
-  if ((await jx(Pu(V, "reftable"))) !== "absent")
+  if ((await jx(join(V, "reftable"))) !== "absent")
     return { kind: "tampered", misplaced: "reftable", gitDir: U, commonDir: V };
   if (await rLn(V))
     return {
@@ -82025,7 +81187,7 @@ async function qNo(e, t, r) {
     if (D !== void 0) return D === null ? null : { contributes: D };
     let N = await Promise.all(
       _.map(async (U) =>
-        !Nce(U) && (await FNo(U).catch(() => null))?.isFile() ? U : null,
+        !Nce(U) && (await stat(U).catch(() => null))?.isFile() ? U : null,
       ),
     );
     if (((E += countMatching(N, o)), E > MAX_INCLUDED_FILES))
@@ -82061,10 +81223,10 @@ function YNn(e, t, r) {
     d = /^~[^/]*\//.exec(e);
   if (d !== null)
     return Oce(hardenedSpawnEnv(void 0)).map((_) =>
-      spelledFrom(o, `${_}${Cq}${e.slice(d[0].length)}`),
+      spelledFrom(o, `${_}${sep}${e.slice(d[0].length)}`),
     );
   let p = resolveIncludePath(e, t, o);
-  return pI(p) ? [p] : [];
+  return isAbsolute(p) ? [p] : [];
 }
 
 function VNo(e, t) {
@@ -82075,10 +81237,10 @@ function resolveIncludePath(e, t, r) {
   let o = /^~([^/]*)\//.exec(e);
   if (o !== null)
     return o[1] === "" || o[1] === KNo()
-      ? `${tLn()}${Cq}${e.slice(o[0].length)}`
+      ? `${homedir()}${sep}${e.slice(o[0].length)}`
       : e;
-  if (pI(e) || e.startsWith("%(prefix)/")) return e;
-  return `${t.startsWith("file:") ? Qk(spelledFrom(r, t.slice(5))) : r}${Cq}${e}`;
+  if (isAbsolute(e) || e.startsWith("%(prefix)/")) return e;
+  return `${t.startsWith("file:") ? dirname(spelledFrom(r, t.slice(5))) : r}${sep}${e}`;
 }
 
 var NAME_NOT_TEXT =
@@ -82086,7 +81248,7 @@ var NAME_NOT_TEXT =
 
 function KNo() {
   try {
-    return UNo().username;
+    return userInfo().username;
   } catch {
     return null;
   }
@@ -82096,20 +81258,20 @@ async function layoutStillHolds(e, t) {
   let { gitDir: r, commonDir: o } = e,
     [d, p, _, E, ...C] = await Promise.all([
       Rlt(r),
-      jx(Pu(o, "refs")),
-      jx(Pu(o, "objects")),
-      jx(Pu(o, "reftable")),
+      jx(join(o, "refs")),
+      jx(join(o, "objects")),
+      jx(join(o, "reftable")),
       Lce(o, ["packed-refs"]),
       Lce(r, ["logs", "HEAD"]),
       ...["info", "pack"].map((D) =>
-        jx(Pu(o, "objects", D)).then((N) =>
+        jx(join(o, "objects", D)).then((N) =>
           N === "directory" ? "absent" : "other",
         ),
       ),
       YNo(o).then((D) => (D ? "absent" : "other")),
       rLn(o).then((D) => (D ? "other" : "absent")),
       XNo(o).then((D) => (D ? "absent" : "other")),
-      jx(Pu(r, "HEAD")).then((D) => (D === "file" ? "absent" : "other")),
+      jx(join(r, "HEAD")).then((D) => (D === "file" ? "absent" : "other")),
       ...t.map((D) => Lce(o, D.split("/"))),
       ...t.map((D) => Lce(o, ["logs", ...D.split("/")])),
     ]),
@@ -82138,12 +81300,12 @@ function parseGitVersion(e) {
 
 async function YNo(e) {
   let t = async (r) => {
-    let o = await $ce(r).catch((p) => (A(p) === "ENOENT" ? [] : null));
+    let o = await readdir(r).catch((p) => (A(p) === "ENOENT" ? [] : null));
     if (o === null) return !1;
     return (
       await Promise.all(
         o.map((p) =>
-          Wx(Pu(r, p)).then(
+          lstat(join(r, p)).then(
             (_) =>
               _.isFile() || (p === "multi-pack-index.d" && _.isDirectory())
                 ? "file"
@@ -82155,14 +81317,14 @@ async function YNo(e) {
     ).every((p) => p !== "other");
   };
   try {
-    let r = await $ce(Pu(e, "objects")),
-      o = await Promise.all(r.map((_) => jx(Pu(e, "objects", _))));
+    let r = await readdir(join(e, "objects")),
+      o = await Promise.all(r.map((_) => jx(join(e, "objects", _))));
     if (!o.every((_) => _ === "directory" || _ === "file" || _ === "absent"))
       return !1;
     let d = r.filter(
       (_, E) => o[E] === "directory" && /^(?:pack|[0-9a-f]{2})$/i.test(_),
     );
-    return (await Promise.all(d.map((_) => t(Pu(e, "objects", _))))).every(
+    return (await Promise.all(d.map((_) => t(join(e, "objects", _))))).every(
       Boolean,
     );
   } catch {
@@ -82173,7 +81335,7 @@ async function YNo(e) {
 async function nLn(e) {
   let t = async (..._) => {
       try {
-        let E = await Wx(Pu(e, "objects", ..._), { bigint: !0 });
+        let E = await lstat(join(e, "objects", ..._), { bigint: !0 });
         return `${E.dev}:${E.ino}:${E.ctimeNs}:${E.mtimeNs}:${E.size}`;
       } catch {
         return "absent";
@@ -82194,7 +81356,7 @@ async function rLn(e) {
       ["alternates", "http-alternates"].map(async (r) => {
         let o = await Lce(e, ["objects", "info", r]);
         if (o !== "file") return o !== "absent";
-        let d = await Wx(Pu(e, "objects", "info", r)).catch(() => null);
+        let d = await lstat(join(e, "objects", "info", r)).catch(() => null);
         return !(d !== null && d.isFile() && d.nlink === 1 && d.size === 0);
       }),
     )
@@ -82203,16 +81365,16 @@ async function rLn(e) {
 
 async function XNo(e) {
   let t = async (o) => {
-    let d = await $ce(o).catch((_) => (A(_) === "ENOENT" ? [] : null));
+    let d = await readdir(o).catch((_) => (A(_) === "ENOENT" ? [] : null));
     if (d === null) return !1;
     return (
       await Promise.all(
         d.map(async (_) => {
-          let E = await jx(Pu(o, _));
+          let E = await jx(join(o, _));
           return E === "file" || E === "absent"
             ? !0
             : E === "directory"
-              ? t(Pu(o, _))
+              ? t(join(o, _))
               : !1;
         }),
       )
@@ -82221,11 +81383,11 @@ async function XNo(e) {
   return (
     await Promise.all(
       ["heads", "tags", "remotes"].map(async (o) => {
-        let d = await jx(Pu(e, "refs", o));
+        let d = await jx(join(e, "refs", o));
         return (
           d === "absent" ||
           d === "file" ||
-          (d === "directory" && (await t(Pu(e, "refs", o))))
+          (d === "directory" && (await t(join(e, "refs", o))))
         );
       }),
     )
@@ -82234,7 +81396,7 @@ async function XNo(e) {
 
 async function jx(e) {
   try {
-    let t = await Wx(e);
+    let t = await lstat(e);
     return t.isDirectory()
       ? "directory"
       : t.isFile() && t.nlink === 1
@@ -82248,7 +81410,7 @@ async function jx(e) {
 
 async function QNo(e) {
   try {
-    let t = await Wx(Pu(e, ".git"), { bigint: !0 });
+    let t = await lstat(join(e, ".git"), { bigint: !0 });
     return t.isDirectory() ? `${t.dev}:${t.ino}` : "not_a_directory";
   } catch (t) {
     let r = A(t);
@@ -82286,7 +81448,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
         "--show-origin",
         "--no-includes",
         "--file",
-        Pu(t.commonDir, "config"),
+        join(t.commonDir, "config"),
         "--list",
       ]),
       d([
@@ -82318,7 +81480,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
 `,
       )
       .join(""),
-    D = (await jx(Pu(t.commonDir, "config"))) !== "absent";
+    D = (await jx(join(t.commonDir, "config"))) !== "absent";
   if (_.code !== 0 && D)
     return bv("could not read the repository configuration");
   let N = t.checkout === "linked" ? !1 : await PLo(e, t, r, o);
@@ -82330,14 +81492,14 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
         "--show-origin",
         "--no-includes",
         "--file",
-        Pu(t.gitDir, "config.worktree"),
+        join(t.gitDir, "config.worktree"),
         "--list",
       ])
     : null;
   if (
     F !== null &&
     F.code !== 0 &&
-    (await jx(Pu(t.gitDir, "config.worktree"))) !== "absent"
+    (await jx(join(t.gitDir, "config.worktree"))) !== "absent"
   )
     return bv("could not read the per-worktree configuration");
   let U = [
@@ -82350,7 +81512,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
       }))
       .filter(({ key: Ne, value: De }) => JNo.has(Ne) && ZNo.test(De)),
     V = Alt(
-      await readSmallFile(Pu(t.gitDir, "HEAD")).catch(() => {
+      await readSmallFile(join(t.gitDir, "HEAD")).catch(() => {
         return;
       }),
     );
@@ -82363,7 +81525,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
     )
   )
     return bv("HEAD is not a branch or an object id");
-  let re = (await $ce(t.gitDir).catch(() => [])).filter((Ne) =>
+  let re = (await readdir(t.gitDir).catch(() => [])).filter((Ne) =>
     /^sharedindex\.[0-9a-f]{40,64}$/.test(Ne),
   );
   if (re.length > eLo)
@@ -82372,7 +81534,7 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
     (
       await Promise.all(
         re.map((Ne) =>
-          Wx(Pu(t.gitDir, Ne)).then(
+          lstat(join(t.gitDir, Ne)).then(
             (De) => (De.isFile() ? De.size : 0),
             () => 0,
           ),
@@ -82382,9 +81544,9 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
   )
     return bv("the sharedindex files in the git dir are too large to copy");
   let _e = getCurrentPlatform() === "windows" ? "junction" : void 0,
-    Se = Qk(t.commonDir),
+    Se = dirname(t.commonDir),
     ve = getClaudeConfigDir();
-  if (!pI(ve))
+  if (!isAbsolute(ve))
     return bv(
       "the configuration home (CLAUDE_CONFIG_DIR) is not an absolute path",
       "placement",
@@ -82394,9 +81556,9 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
       "where your own settings are found (CLAUDE_CONFIG_DIR, the HOME it defaults from, or the cowork settings switch) changed after Claude Code started: set it in the shell, not a settings file, and restart",
       "placement",
     );
-  let Me = Pu(await Rq(ve).catch(() => ve), "seed-admin");
+  let Me = join(await realpath(ve).catch(() => ve), "seed-admin");
   if (
-    [Me, Pu(ve, "seed-admin")].some(
+    [Me, join(ve, "seed-admin")].some(
       (Ne) =>
         isWithin(t.workTree, Ne) || isWithin(Se, Ne) || isWithin(t.gitDir, Ne),
     )
@@ -82407,8 +81569,8 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
     );
   let Oe;
   try {
-    await VNn(Me, { recursive: !0, mode: 448 });
-    let Ne = await Wx(Me);
+    await mkdir(Me, { recursive: !0, mode: 448 });
+    let Ne = await lstat(Me);
     if (
       !Ne.isDirectory() ||
       (Ne.uid !== process.getuid?.() && Ne.uid !== 0) ||
@@ -82418,8 +81580,8 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
     let De = reachRootsOf(t),
       He = () => aLn(De === void 0 ? void 0 : wNe(De), o.screenMemo);
     (await nLo(Me, He),
-      (Oe = await LNo(
-        Pu(
+      (Oe = await mkdtemp(
+        join(
           Me,
           `claude-seed-admin-${process.pid}-${await sLn(process.pid, He)}-`,
         ),
@@ -82431,8 +81593,8 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
     let Ne = { left: XNn + 2 * oLn };
     if (
       (await Promise.all([
-        Elt(
-          Pu(Oe, "config"),
+        writeFile(
+          join(Oe, "config"),
           [
             "[core]",
             `	repositoryformatversion = ${C === "sha256" ? 1 : 0}`,
@@ -82454,43 +81616,43 @@ async function privateAdminDir(e, t, r, o = defaultBuilderGitProbes()) {
 `),
           { flag: "wx", mode: 384 },
         ),
-        Elt(
-          Pu(Oe, "HEAD"),
+        writeFile(
+          join(Oe, "HEAD"),
           V +
             `
 `,
           { flag: "wx", mode: 384 },
         ),
-        Tlt(Pu(t.gitDir, "index"), Pu(Oe, "index"), Ne),
+        Tlt(join(t.gitDir, "index"), join(Oe, "index"), Ne),
         ...["objects", "info"].map((je) =>
-          $No(Pu(t.commonDir, je), Pu(Oe, je), _e),
+          symlink(join(t.commonDir, je), join(Oe, je), _e),
         ),
-        VNn(Pu(Oe, "refs"), { mode: 448 }),
-        Elt(Pu(Oe, "packed-refs"), I, { flag: "wx", mode: 384 }),
-        Tlt(Pu(t.commonDir, "shallow"), Pu(Oe, "shallow"), Ne),
-        ...re.map((je) => Tlt(Pu(t.gitDir, je), Pu(Oe, je), Ne)),
+        mkdir(join(Oe, "refs"), { mode: 448 }),
+        writeFile(join(Oe, "packed-refs"), I, { flag: "wx", mode: 384 }),
+        Tlt(join(t.commonDir, "shallow"), join(Oe, "shallow"), Ne),
+        ...re.map((je) => Tlt(join(t.gitDir, je), join(Oe, je), Ne)),
       ]),
       r?.aborted)
     )
       throw Error("aborted");
     let De = Oe,
-      He = () => xlt(De, { recursive: !0, force: !0 }).catch(() => {});
+      He = () => rm(De, { recursive: !0, force: !0 }).catch(() => {});
     return { kind: "made", path: De, dispose: He, [Symbol.asyncDispose]: He };
   } catch (Ne) {
     if (Oe !== null)
-      await xlt(Oe, { recursive: !0, force: !0 }).catch(() => {});
+      await rm(Oe, { recursive: !0, force: !0 }).catch(() => {});
     return bv(l(Ne));
   }
 }
 
 async function Tlt(e, t, r) {
   if (getCurrentPlatform() === "windows") {
-    let d = await Wx(e).catch(() => null);
+    let d = await lstat(e).catch(() => null);
     if (d !== null && !d.isFile()) throw Error("not a regular file");
   }
   let o;
   try {
-    o = await Clt(e, getSafeReadOpenFlags());
+    o = await open(e, getSafeReadOpenFlags());
   } catch (d) {
     if (A(d) === "ENOENT") return;
     throw d;
@@ -82501,7 +81663,7 @@ async function Tlt(e, t, r) {
     if (d.size > oLn) throw Error("larger than an index or refs file gets");
     if (((r.left -= d.size), r.left < 0))
       throw Error("the files to copy grew past what a git dir holds");
-    let p = await Clt(t, "wx", 384);
+    let p = await open(t, "wx", 384);
     try {
       let _ = Buffer.allocUnsafe(1048576),
         E = 0;
@@ -82530,17 +81692,17 @@ async function nLo(e, t) {
   try {
     let r = Date.now();
     await Promise.all(
-      (await $ce(e)).map(async (o) => {
+      (await readdir(e)).map(async (o) => {
         let d = /^claude-seed-admin-([0-9]+)-([0-9a-z]*)-/.exec(o);
         if (d === null && !o.startsWith("claude-seed-stage-")) return;
-        let p = Pu(e, o);
-        if (r - (await Wx(p)).mtimeMs < tLo) return;
+        let p = join(e, o);
+        if (r - (await lstat(p)).mtimeMs < tLo) return;
         if (d !== null && rLo(Number(d[1]))) {
           if (d[2] === "") return;
           let _ = await sLn(Number(d[1]), t);
           if (_ === "" || _ === d[2]) return;
         }
-        await xlt(p, { recursive: !0, force: !0 });
+        await rm(p, { recursive: !0, force: !0 });
       }),
     );
   } catch {}
@@ -82614,7 +81776,7 @@ function hardenedSpawnEnv(e, t) {
     C = ELo(getEnvVarCaseInsensitive(r, "PATHEXT")),
     I = new Map(),
     D = (V, re) =>
-      !pI(V) ||
+      !isAbsolute(V) ||
       lLo(re, V) ||
       _(t?.loaders, `loader:${re}`, V, () =>
         re === "GIT_EXEC_PATH"
@@ -82650,12 +81812,12 @@ function hardenedSpawnEnv(e, t) {
   };
 }
 
-var oLo = vq;
+var oLo = delimiter;
 
 function sLo(e, t) {
-  if (e === "GIT_EXEC_PATH") return t.includes(vq) ? [t, ...t.split(vq)] : [t];
+  if (e === "GIT_EXEC_PATH") return t.includes(delimiter) ? [t, ...t.split(delimiter)] : [t];
   if (e === "DEVELOPER_DIR" || e === "GIT_TEXTDOMAINDIR") return [t];
-  if (getCurrentPlatform() === "windows") return t.split(vq);
+  if (getCurrentPlatform() === "windows") return t.split(delimiter);
   if (e === "LD_PRELOAD") return t.split(/[\s:]+/).filter((r) => r !== "");
   if (e === "LD_LIBRARY_PATH") return t.split(/[:;]/);
   return t.split(":");
@@ -82680,7 +81842,7 @@ function pinnedTempRoot() {
   if (r === "windows") {
     let d =
       getEnvVarCaseInsensitive(e, "TEMP") ?? getEnvVarCaseInsensitive(e, "TMP");
-    return d !== void 0 && d !== "" ? d : BNo();
+    return d !== void 0 && d !== "" ? d : tmpdir();
   }
   let o =
     r === "macos"
@@ -82743,21 +81905,21 @@ function cLn(e, t) {
 }
 
 function uLn(e) {
-  return SNe(e).toLowerCase() === ".git" ? Qk(e) : e;
+  return basename(e).toLowerCase() === ".git" ? dirname(e) : e;
 }
 
 function fLn(e) {
-  let t = tLn(),
+  let t = homedir(),
     r = (o) => {
-      let d = Qk(o);
+      let d = dirname(o);
       return d === o || isWithin(d, t) ? [] : [d, ...r(d)];
     };
-  return r(e).filter((o) => gLo(Pu(o, ".git")));
+  return r(e).filter((o) => gLo(join(o, ".git")));
 }
 
 function gLo(e) {
   try {
-    return QNn(e, { throwIfNoEntry: !1 }) !== void 0;
+    return lstatSync(e, { throwIfNoEntry: !1 }) !== void 0;
   } catch {
     return !1;
   }
@@ -82765,12 +81927,12 @@ function gLo(e) {
 
 function Oq(e, t = [], r = 0) {
   try {
-    return Pu(NW(eLn.native(e)), ...t);
+    return join(NW(realpathSync.native(e)), ...t);
   } catch {
     let o = r < hLo ? _Lo(e) : null;
     if (o !== null) return Oq(o, t, r + 1);
-    let d = Qk(e);
-    return d === e ? Pu(e, ...t) : Oq(d, [SNe(e), ...t], r);
+    let d = dirname(e);
+    return d === e ? join(e, ...t) : Oq(d, [basename(e), ...t], r);
   }
 }
 
@@ -82784,9 +81946,9 @@ function bNe(e, t, r = t) {
 
 function _Lo(e) {
   try {
-    let t = ZNn(e);
-    if (pI(t)) return t;
-    return Pu(eLn(Qk(e)), t);
+    let t = readlinkSync(e);
+    if (isAbsolute(t)) return t;
+    return join(realpathSync(dirname(e)), t);
   } catch {
     return null;
   }
@@ -82796,19 +81958,19 @@ function bLo(e, t, r) {
   let o = pLn(t),
     d = new Map();
   return e
-    .split(vq)
+    .split(delimiter)
     .map((p) => normalizePathEntry(p))
-    .filter((p) => p !== "" && pI(p) && Fce(p, o, r, d))
-    .join(vq);
+    .filter((p) => p !== "" && isAbsolute(p) && Fce(p, o, r, d))
+    .join(delimiter);
 }
 
 function Fce(e, t, r, o = new Map()) {
   if (Dq(e, t, o)) return !1;
   let d = Oq(e);
   return r.every((p) => {
-    let _ = Pu(e, p),
+    let _ = join(e, p),
       E = o.get(_) ?? mLn(_);
-    if ((o.set(_, E), E === "missing")) return !t(_) && !t(Pu(d, p));
+    if ((o.set(_, E), E === "missing")) return !t(_) && !t(join(d, p));
     if (E !== "opaque" && E.link === null) return !t(_) && !t(Oq(_));
     return !Dq(_, t, o);
   });
@@ -82821,16 +81983,16 @@ function pLn(e) {
 }
 
 function Dq(e, t, r, o = SLo) {
-  if (!pI(e) || Nce(e) || e.startsWith("\\\\?\\") || t(e) || t.beneath(e))
+  if (!isAbsolute(e) || Nce(e) || e.startsWith("\\\\?\\") || t(e) || t.beneath(e))
     return !0;
-  let { root: d } = HNo(e),
+  let { root: d } = parse(e),
     p = e
       .slice(d.length)
-      .split(Cq === "/" ? /\/+/ : /[\\/]+/)
+      .split(sep === "/" ? /\/+/ : /[\\/]+/)
       .filter((C) => C !== "" && C !== "."),
     _ = d;
   for (let [C, I] of p.entries()) {
-    _ = I === ".." ? Qk(_) : Pu(_, I);
+    _ = I === ".." ? dirname(_) : join(_, I);
     let D = r.get(_);
     if (D === void 0 && t(_)) return !0;
     let N = D ?? mLn(_);
@@ -82840,13 +82002,13 @@ function Dq(e, t, r, o = SLo) {
       return (
         t(F) ||
         t.beneath(F) ||
-        p.slice(C + 1).some((U, V) => t(Pu(_, ...p.slice(C + 1, C + 2 + V))))
+        p.slice(C + 1).some((U, V) => t(join(_, ...p.slice(C + 1, C + 2 + V))))
       );
     }
     if (N.link !== null) {
       if (o === 0) return !0;
-      let F = pI(N.link) ? N.link : `${Qk(_)}${Cq}${N.link}`;
-      return Dq([F, ...p.slice(C + 1)].join(Cq), t, r, o - 1);
+      let F = isAbsolute(N.link) ? N.link : `${dirname(_)}${sep}${N.link}`;
+      return Dq([F, ...p.slice(C + 1)].join(sep), t, r, o - 1);
     }
   }
   let E = Oq(e);
@@ -82857,10 +82019,10 @@ var SLo = 40;
 
 function mLn(e) {
   try {
-    let t = QNn(e, { throwIfNoEntry: !1 });
+    let t = lstatSync(e, { throwIfNoEntry: !1 });
     if (t === void 0) return "missing";
     if (!t.isSymbolicLink()) return { link: null };
-    let r = ZNn(e);
+    let r = readlinkSync(e);
     return { link: NW(r.replace(/^\\\?\?\\/, "\\\\?\\")) };
   } catch (t) {
     return A(t) === "ENOTDIR" ? "missing" : "opaque";
@@ -82917,7 +82079,7 @@ function _Ln(e, t, r, o) {
 
 function TLo(e) {
   try {
-    let t = JNn(e, { withFileTypes: !0 })
+    let t = readdirSync(e, { withFileTypes: !0 })
       .filter((r) => getCurrentPlatform() === "windows" || !r.isFile())
       .map((r) => r.name);
     return t.length > bLn ? null : t;
@@ -82928,18 +82090,18 @@ function TLo(e) {
 }
 
 function vLo(e, t, r) {
-  return [e, Pu(e, "Contents", "Developer")].some((o) => {
+  return [e, join(e, "Contents", "Developer")].some((o) => {
     if (Dq(o, t, r)) return !0;
-    let d = Dq(Pu(o, "Toolchains"), t, r) ? null : CLo(Pu(o, "Toolchains")),
-      p = d === null ? null : [o, ...d.map((_) => Pu(o, "Toolchains", _))];
+    let d = Dq(join(o, "Toolchains"), t, r) ? null : CLo(join(o, "Toolchains")),
+      p = d === null ? null : [o, ...d.map((_) => join(o, "Toolchains", _))];
     return (
       p === null ||
-      !Fce(Pu(o, "usr", "lib"), t, ["libxcrun.dylib"], r) ||
-      !Fce(Pu(o, "usr", "bin"), t, ["xcrun", "xcodebuild"], r) ||
+      !Fce(join(o, "usr", "lib"), t, ["libxcrun.dylib"], r) ||
+      !Fce(join(o, "usr", "bin"), t, ["xcrun", "xcodebuild"], r) ||
       p.some(
         (_) =>
-          !Fce(Pu(_, "usr", "bin"), t, ["git"], r) ||
-          hLn(Pu(_, "usr", "libexec", "git-core"), t, r),
+          !Fce(join(_, "usr", "bin"), t, ["git"], r) ||
+          hLn(join(_, "usr", "libexec", "git-core"), t, r),
       )
     );
   });
@@ -82947,7 +82109,7 @@ function vLo(e, t, r) {
 
 function CLo(e) {
   try {
-    let t = JNn(e);
+    let t = readdirSync(e);
     return t.length > bLn ? null : t;
   } catch (t) {
     let r = A(t);
@@ -82994,13 +82156,13 @@ function bv(e, t = "setup") {
 
 async function kLn() {
   let e = wlt(),
-    t = await Promise.all(e.map((r) => Rq(r).catch(() => r)));
+    t = await Promise.all(e.map((r) => realpath(r).catch(() => r)));
   return dedupe([...e, ...t]);
 }
 
 async function ALo(e) {
-  let t = Pu(e, ".git"),
-    r = await Wx(t).catch(() => null);
+  let t = join(e, ".git"),
+    r = await lstat(t).catch(() => null);
   if (r === null || r.isDirectory()) return { kind: "not_file" };
   if (!r.isFile() || r.nlink !== 1) return { kind: "refuse", why: "git_file" };
   let o = Alt(
@@ -83010,22 +82172,22 @@ async function ALo(e) {
     ),
     d = o === null ? void 0 : /^gitdir: (.+)$/s.exec(o)?.[1];
   if (d === void 0 || bNe(d, e)) return { kind: "refuse", why: "git_file" };
-  let p = await Rq(spelledFrom(e, d)).catch(() => null);
+  let p = await realpath(spelledFrom(e, d)).catch(() => null);
   if (p === null) return { kind: "refuse", why: "admin_dir" };
-  if (SNe(Qk(p)) !== "worktrees")
+  if (basename(dirname(p)) !== "worktrees")
     return { kind: "refuse", why: "git_file", adminDir: p };
-  let _ = Qk(Qk(p));
+  let _ = dirname(dirname(p));
   if (Plt(await Rlt(p), p) !== _)
     return { kind: "refuse", why: "common_dir", adminDir: p };
   let E = Alt(
-    await readSmallFile(Pu(p, "gitdir")).catch(() => {
+    await readSmallFile(join(p, "gitdir")).catch(() => {
       return;
     }),
   );
   if (
     (E === null || bNe(E, p, e)
       ? null
-      : await Rq(spelledFrom(p, E)).catch(() => null)) !== t
+      : await realpath(spelledFrom(p, E)).catch(() => null)) !== t
   )
     return { kind: "refuse", why: "back_link", adminDir: p };
   if (!(await wLn(_, e)))
@@ -83037,8 +82199,8 @@ async function RLo(e, t, r, o) {
   let d = (N) => ({ kind: "linked_worktree", detail: N });
   if (bNe(t, e) || bNe(r, e)) return d("admin_dir");
   let [p, _] = await Promise.all([
-    Rq(t).catch(() => null),
-    Rq(r).catch(() => null),
+    realpath(t).catch(() => null),
+    realpath(r).catch(() => null),
   ]);
   if (p === null || _ === null)
     return {
@@ -83049,13 +82211,13 @@ async function RLo(e, t, r, o) {
     n1(p),
     n1(o.adminDir),
     n1(_),
-    n1(Qk(Qk(p))),
+    n1(dirname(dirname(p))),
   ]);
   if (E !== null && E === I) return { kind: "git_file" };
   if (
     E === null ||
     C !== E ||
-    SNe(Qk(p)) !== "worktrees" ||
+    basename(dirname(p)) !== "worktrees" ||
     I === null ||
     D !== I
   )
@@ -83072,7 +82234,7 @@ function Alt(e) {
 }
 
 async function wLn(e, t) {
-  let r = e.split(Cq).filter((_) => _ !== ""),
+  let r = e.split(sep).filter((_) => _ !== ""),
     o = r.at(-1) ?? "",
     d = (_) => _.toLowerCase() === ".git" || _.toLowerCase().endsWith(".git");
   if (!d(o) || r.slice(0, -1).some(d)) return !1;
@@ -83086,7 +82248,7 @@ async function PLo(e, t, r, o) {
     [
       "config",
       "--file",
-      Pu(t.commonDir, "config"),
+      join(t.commonDir, "config"),
       "--bool",
       "--default=false",
       "extensions.worktreeConfig",
@@ -83103,14 +82265,14 @@ async function ILo(e, t, r, o) {
       [
         "config",
         "--file",
-        Pu(t.commonDir, "config"),
+        join(t.commonDir, "config"),
         "--bool",
         "--default=false",
         "extensions.worktreeConfig",
       ],
       { hardened: !0, layout: t, signal: r, probes: o },
     ),
-    Wx(Pu(t.gitDir, "config.worktree")).then(
+    lstat(join(t.gitDir, "config.worktree")).then(
       (_) =>
         _.isFile() && _.nlink === 1 && _.size === 0 ? "absent" : "standing",
       (_) => {
@@ -83125,7 +82287,7 @@ async function ILo(e, t, r, o) {
 
 async function n1(e) {
   try {
-    let t = await Wx(e, { bigint: !0 });
+    let t = await lstat(e, { bigint: !0 });
     return `${t.dev}:${t.ino}`;
   } catch {
     return null;
@@ -83137,24 +82299,24 @@ function MLo(e) {
 }
 
 function OLo(e, t) {
-  return dedupe([e, t].flatMap((r) => [Qk(r), MLo(Qk(r))])).join(vq);
+  return dedupe([e, t].flatMap((r) => [dirname(r), MLo(dirname(r))])).join(delimiter);
 }
 
 async function Lce(e, t) {
   let r = e;
   for (let o of t.slice(0, -1)) {
-    r = Pu(r, o);
+    r = join(r, o);
     let d = await jx(r);
     if (d !== "directory") return d === "absent" ? "absent" : "other";
   }
-  return jx(Pu(r, t.at(-1)));
+  return jx(join(r, t.at(-1)));
 }
 
 var DLo = 4096;
 
 async function Rlt(e) {
   try {
-    let t = await readSmallFile(Pu(e, "commondir"));
+    let t = await readSmallFile(join(e, "commondir"));
     return t === void 0 ? void 0 : t.replace(/\r?\n$/, "");
   } catch (t) {
     return A(t) === "ENOENT" ? null : void 0;
@@ -83162,8 +82324,8 @@ async function Rlt(e) {
 }
 
 async function readSmallFile(e) {
-  if (getCurrentPlatform() === "windows" && !(await Wx(e)).isFile()) return;
-  let t = await Clt(e, getSafeReadOpenFlags());
+  if (getCurrentPlatform() === "windows" && !(await lstat(e)).isFile()) return;
+  let t = await open(e, getSafeReadOpenFlags());
   try {
     let r = await t.stat();
     if (!r.isFile() || r.size > DLo) return;
@@ -83179,7 +82341,7 @@ function Plt(e, t) {
   if (e === void 0) return;
   let r =
     e === null ? "." : e.length > 1 && e.endsWith("/") ? e.slice(0, -1) : e;
-  return r === "." ? t : r === "../.." ? Qk(Qk(t)) : r;
+  return r === "." ? t : r === "../.." ? dirname(dirname(t)) : r;
 }
 
 function vlt(e) {
@@ -83190,7 +82352,7 @@ function vlt(e) {
 function NLo({ gitDir: e, commonDir: t, workTree: r, adminDir: o }) {
   return o === void 0
     ? { GIT_DIR: e, GIT_COMMON_DIR: t, GIT_WORK_TREE: r }
-    : { GIT_DIR: o, GIT_WORK_TREE: r, GIT_INDEX_FILE: Pu(o, "index") };
+    : { GIT_DIR: o, GIT_WORK_TREE: r, GIT_INDEX_FILE: join(o, "index") };
 }
 
 var ELn = String.raw`^(include|includeif\..*)\.path$`,
@@ -83307,7 +82469,7 @@ var gFo = [".ssh", ".aws", ".azure", ".gnupg", ".kube", ".docker"],
 function isSensitivePath(e) {
   let t = wFo(e),
     r = `/${t.join("/")}`;
-  if (mFo(e) && (j9e(e) || (r !== e && j9e(r)))) return !0;
+  if (isAbsolute(e) && (j9e(e) || (r !== e && j9e(r)))) return !0;
   let o = t.map((p, _) => TFo(p, { leadingDot: _ === t.length - 1 })),
     d = o.at(-1) ?? [];
   return (
@@ -83530,7 +82692,7 @@ function buildGitConfigEnv(e) {
 }
 
 async function zFo(e) {
-  let t = await Ult(e).catch(() => null);
+  let t = await realpath(e).catch(() => null);
   if (t === null)
     return (
       logForDebugging(
@@ -83564,7 +82726,7 @@ async function zFo(e) {
     );
   let p = await D7(e, d, t),
     _ = p === null ? null : await wq(r, p, void 0, { secondNames: !1 }),
-    E = _ === !1 ? await Ult(r).catch(() => null) : null;
+    E = _ === !1 ? await realpath(r).catch(() => null) : null;
   if (_ === null || (_ === !1 && E === null))
     return (
       logForDebugging(
@@ -83798,7 +82960,7 @@ async function KFo(e, t, r) {
     )
   )
     return null;
-  let D = I?.code === 0 ? nFn(nFn(I.stdout.trim())) : null,
+  let D = I?.code === 0 ? dirname(dirname(I.stdout.trim())) : null,
     N = await p([]);
   if (N === null) return null;
   if ("unexpandable" in N) return { kind: "unexpandable" };
@@ -83834,7 +82996,7 @@ async function KFo(e, t, r) {
       Oe = await wq(xe, F, void 0, { secondNames: !1 });
     if (Oe !== !1)
       return Oe === null ? null : { kind: "contributes", file: xe };
-    let Ne = await Ult(xe).catch(() => null);
+    let Ne = await realpath(xe).catch(() => null);
     if (Ne === null) return null;
     let De = [xe, Ne].find((He) => F.roots.some((je) => isWithin(je, He)));
     if (De !== void 0) return { kind: "contributes", file: De };
@@ -83891,7 +83053,7 @@ async function YFo(e, t, r) {
     if (C !== void 0) return C === null ? null : { contributes: C };
     let I = await Promise.all(
       _.map((F) =>
-        BFo(F).then(
+        stat(F).then(
           (U) => (U.isFile() ? F : null),
           (U) => {
             let V = A(U);
@@ -83933,13 +83095,13 @@ function aFn(e, t, r, o, d) {
   let p = /^~[^/]*\//.exec(e);
   return (
     p !== null
-      ? Oce(d).map((E) => `${E}${Blt}${e.slice(p[0].length)}`)
+      ? Oce(d).map((E) => `${E}${sep}${e.slice(p[0].length)}`)
       : e.startsWith("%(prefix)/")
-        ? [...(o === null ? [] : [`${o}${Blt}${e.slice(10)}`]), `.${Blt}${e}`]
+        ? [...(o === null ? [] : [`${o}${sep}${e.slice(10)}`]), `.${sep}${e}`]
         : [e]
   )
     .map((E) => resolveIncludePath(E, t, r))
-    .filter((E) => lFn(E));
+    .filter((E) => isAbsolute(E));
 }
 
 function XFo(e, t) {
@@ -84126,9 +83288,9 @@ function MNe(e, t = {}) {
 
 function zlt(e, t = {}, r = findCanonicalGitRoot(e) ?? e) {
   let o = r === e ? [B7(e)] : [B7(e), B7(r)];
-  if (o.some((I) => I === _Fn(I).root || Flt(I))) return "folder_is_root";
-  let d = Wlt(t.home ?? yFn()),
-    p = Wlt(t.configHome ?? getClaudeConfigDir()),
+  if (o.some((I) => I === parse(I).root || Flt(I))) return "folder_is_root";
+  let d = isAbsolute(t.home ?? homedir()),
+    p = isAbsolute(t.configHome ?? getClaudeConfigDir()),
     { home: _, configHome: E, foldCase: C } = qlt({ ...t, folder: o[0] });
   for (let I of o) {
     if (d && Bq(I, _, C)) return "folder_is_home";
@@ -84160,7 +83322,7 @@ function wFn(
   if (_ !== null) return { kind: "refused", reason: _ };
   if (d) return { kind: "refused", reason: "folder_is_root" };
   if (Bq(t, e, o)) {
-    let E = bFn(p(t), p(e)).split(SFn);
+    let E = relative(p(t), p(e)).split(sep);
     if (E.some((C) => C.startsWith(".")))
       return { kind: "refused", reason: "folder_hidden_under_home" };
     if (P$o.has((E[0] ?? "").toLowerCase()))
@@ -84174,12 +83336,12 @@ function Glt(e, t) {
 }
 
 function Bq(e, t, r) {
-  let o = bFn(Glt(e, r), Glt(t, r));
-  return o === "" || (o !== ".." && !o.startsWith(".." + SFn) && !Wlt(o));
+  let o = relative(Glt(e, r), Glt(t, r));
+  return o === "" || (o !== ".." && !o.startsWith(".." + sep) && !isAbsolute(o));
 }
 
 function I$o(e, { home: t, configHome: r, foldCase: o = !1 }) {
-  if (e === _Fn(e).root) return "folder_is_root";
+  if (e === parse(e).root) return "folder_is_root";
   if (Bq(e, t, o)) return "folder_is_home";
   if (Bq(e, r, o) || Bq(r, e, o)) return "folder_holds_config";
   return null;
@@ -84188,15 +83350,15 @@ function I$o(e, { home: t, configHome: r, foldCase: o = !1 }) {
 function B7(e) {
   let t = (r) => r.normalize("NFC");
   try {
-    return t(x$o.native(e));
+    return t(realpathSync.native(e));
   } catch {
-    return t(Uce(e));
+    return t(resolve(e));
   }
 }
 
 function qlt({
   folder: e,
-  home: t = yFn(),
+  home: t = homedir(),
   configHome: r = getClaudeConfigDir(),
 } = {}) {
   let o = { home: B7(t), configHome: B7(r) };
@@ -84213,7 +83375,7 @@ function isFolderEligibleForDirSync(e, t = {}) {
 }
 
 async function hasUnreadableGitEntry(e) {
-  return A$o(Uce(e, ".git")).then(
+  return lstat(resolve(e, ".git")).then(
     () => !0,
     (t) => !["ENOENT", "ENOTDIR"].includes(A(t) ?? ""),
   );
@@ -84301,7 +83463,7 @@ function KFn(e, t) {
     o = qFn(t, toFullCaseFoldKey);
   return (d) =>
     e.some((p) => {
-      let _ = tct(mBo(p, d));
+      let _ = tct(join(p, d));
       return r(_) || o(toFullCaseFoldKey(_));
     });
 }
@@ -84372,7 +83534,7 @@ function SBo(e, { rules: t, complete: r }) {
         d.some((de) => matchingRuleForInput(ue, re, "read", de) !== null),
       ),
     I = e.map((V) => {
-      let re = yBo(V, E).split(_Bo).join("/"),
+      let re = relative(V, E).split(sep).join("/"),
         ue =
           re === "" || re.startsWith("..") ? 0 : countOccurrences(re, "/") + 1;
       return {
@@ -84386,19 +83548,19 @@ function SBo(e, { rules: t, complete: r }) {
       let ve = ue > 0 ? _e.split("/") : [];
       return ve.length > ue &&
         toFullCaseFoldKey(ve.slice(0, ue).join("/")) === de
-        ? [ONe(V, re, Se(ve.slice(ue).join("/")))]
+        ? [join(V, re, Se(ve.slice(ue).join("/")))]
         : [];
     },
     N = (V) =>
       I.flatMap((re) => {
-        let ue = ONe(re.root, V);
+        let ue = join(re.root, V);
         return [ue, ...D(re, V, (de) => de).filter((de) => de !== ue)];
       }),
     F = (V) =>
       I.flatMap((re) => [
         ...D(re, V, toFullCaseFoldKey),
-        ONe(re.root, toFullCaseFoldKey(V)),
-        toFullCaseFoldKey(ONe(re.root, V)),
+        join(re.root, toFullCaseFoldKey(V)),
+        toFullCaseFoldKey(join(re.root, V)),
       ]),
     U = (V) => {
       let re = F(V);
@@ -85130,7 +84292,7 @@ async function WBo(e, t) {
 function a$n(e = oct()) {
   return {
     withholdFor: async (t) => {
-      let r = await vBo(t).catch(() => null);
+      let r = await realpath(t).catch(() => null);
       if (r === null) return () => !0;
       let o = createPathWithholdClassifier(t, { realRoot: r, readRules: e });
       return (d) => {
@@ -85537,7 +84699,7 @@ async function isGitDirectoryAtPath(e) {
       GIT_DIR_ENTRY_NAMES.objects,
       GIT_DIR_ENTRY_NAMES.refs,
     ].map((r) =>
-      dUo(pUo(e, r)).then(
+      lstat(join(e, r)).then(
         (o) => ({
           name: r,
           isDirectory: o.isDirectory(),
@@ -85551,10 +84713,10 @@ async function isGitDirectoryAtPath(e) {
 }
 
 async function isInsideBareGitRepository(e) {
-  let t = await fUo(e).catch(() => e);
-  for (let r = t; ; r = g$n(r)) {
+  let t = await realpath(e).catch(() => e);
+  for (let r = t; ; r = dirname(r)) {
     if (await isGitDirectoryAtPath(r)) return !0;
-    if (g$n(r) === r) return !1;
+    if (dirname(r) === r) return !1;
   }
 }
 
@@ -85640,7 +84802,7 @@ async function wUo(e, t, r, o) {
         reason: "too_large",
       }
     );
-  let C = `----FormBoundary${mUo()}`,
+  let C = `----FormBoundary${randomUUID()}`,
     I = EUo(BC.basename(t)),
     D = [];
   (D.push(
@@ -85756,17 +84918,17 @@ class UploadNonRetriableError extends Error {
 }
 
 async function w$n(e, t = getTempBaseDir(), r = "out.bundle") {
-  let o = await TUo(k$n(t, `${e}-`));
+  let o = await mkdtemp(join(t, `${e}-`));
   return {
-    path: k$n(o, r),
-    dispose: () => CUo(o, { recursive: !0, force: !0 }).catch(() => {}),
+    path: join(o, r),
+    dispose: () => rm(o, { recursive: !0, force: !0 }).catch(() => {}),
   };
 }
 
 async function E$n(e, t) {
   let r;
   try {
-    r = await vUo(e, getSafeReadOpenFlags());
+    r = await open(e, getSafeReadOpenFlags());
   } catch (o) {
     return { kind: "unreadable", detail: String(o) };
   }
@@ -85803,7 +84965,7 @@ var G7 = "refs/seed/stash",
   UUo = /^refs\/seed\/(\d+)-[0-9a-f]{16}\/(?:stash|root)$/;
 
 function T$n(e = Date.now()) {
-  let t = `${e}-${MUo(8).toString("hex")}`;
+  let t = `${e}-${randomBytes(8).toString("hex")}`;
   return { stash: `${hct}${t}/stash`, root: `${hct}${t}/root` };
 }
 
@@ -85819,16 +84981,16 @@ async function C$n(e, t, r, o) {
   let d = new x$n(r);
   try {
     return (
-      await FUo(OUo(e), d, DUo(t, { flags: "wx" }), { signal: o }),
+      await pipeline(createReadStream(e), d, createWriteStream(t, { flags: "wx" }), { signal: o }),
       { ok: !0, sizeBytes: d.outputBytes }
     );
   } catch (p) {
-    if (A(p) !== "EEXIST") await NUo(t).catch(() => {});
+    if (A(p) !== "EEXIST") await unlink(t).catch(() => {});
     return { ok: !1, error: l(p) };
   }
 }
 
-class x$n extends LUo {
+class x$n extends Transform {
   labels;
   outputBytes = 0;
   state = "signature";
@@ -85983,11 +85145,11 @@ async function stageChangedPaths(e, t, r, o, d = {}) {
                 tooLarge: !0,
                 momentary: !1,
               };
-            let _e = tQ(t, re);
-            await HUo(WUo(_e), { recursive: !0 });
+            let _e = join(t, re);
+            await mkdir(dirname(_e), { recursive: !0 });
             let Se;
             try {
-              Se = await R$n(_e, "wx", de.executable ? 493 : 420);
+              Se = await open(_e, "wx", de.executable ? 493 : 420);
             } catch (ve) {
               if (A(ve) === "EEXIST")
                 return {
@@ -85999,7 +85161,7 @@ async function stageChangedPaths(e, t, r, o, d = {}) {
             }
             try {
               let ve = await de.handle.stat({ bigint: !0 }),
-                Me = A$n("sha256"),
+                Me = createHash("sha256"),
                 xe = Buffer.allocUnsafe(Math.min(de.size, P$n)),
                 Oe = 0;
               while (Oe < de.size) {
@@ -86029,14 +85191,14 @@ async function stageChangedPaths(e, t, r, o, d = {}) {
               )
                 return (
                   await Se.close(),
-                  await _ct(_e).catch(() => {}),
+                  await unlink(_e).catch(() => {}),
                   { kind: "changed", path: re }
                 );
-              let De = await $Ne(tQ(e, re)).catch(() => null);
+              let De = await lstat(join(e, re)).catch(() => null);
               if (De !== null && De.isFile() && De.nlink > 1)
                 return (
                   await Se.close(),
-                  await _ct(_e).catch(() => {}),
+                  await unlink(_e).catch(() => {}),
                   { kind: "hardlinked", path: re }
                 );
               if (
@@ -86048,7 +85210,7 @@ async function stageChangedPaths(e, t, r, o, d = {}) {
               )
                 return (
                   await Se.close(),
-                  await _ct(_e).catch(() => {}),
+                  await unlink(_e).catch(() => {}),
                   { kind: "changed", path: re }
                 );
               await Se.utimes(de.atime, de.mtime);
@@ -86104,7 +85266,7 @@ async function areStagedCopiesIntact(e, t) {
     await Promise.all(
       t.map(async (o) => {
         if (o.kind === "absent")
-          return $Ne(tQ(e, o.path)).then(
+          return lstat(join(e, o.path)).then(
             () => !1,
             (d) => {
               let p = A(d);
@@ -86113,7 +85275,7 @@ async function areStagedCopiesIntact(e, t) {
           );
         if (o.kind !== "file") return !0;
         try {
-          let d = await $Ne(tQ(e, o.path), { bigint: !0 });
+          let d = await lstat(join(e, o.path), { bigint: !0 });
           return (
             d.isFile() &&
             d.nlink === 1n &&
@@ -86136,7 +85298,7 @@ function I$n(e) {
 }
 
 async function qUo(e, t, r) {
-  let o = A$n("sha256"),
+  let o = createHash("sha256"),
     d = Buffer.allocUnsafe(Math.min(t + 1, P$n)),
     p = 0;
   for (;;) {
@@ -86168,18 +85330,18 @@ function collectGitAttributesPaths(e) {
 var bct = new Set(["ENAMETOOLONG", "ENOTDIR", "EISDIR", "EINVAL", "ELOOP"]);
 
 async function VUo(e, t) {
-  let r = tQ(e, t),
+  let r = join(e, t),
     o = "darwin",
-    d = yct.O_RDONLY | zUo | (yct.O_NONBLOCK ?? 0) | (yct.O_NOCTTY ?? 0),
+    d = constants.O_RDONLY | zUo | (constants.O_NONBLOCK ?? 0) | (constants.O_NOCTTY ?? 0),
     p;
   try {
-    p = await R$n(r, d);
+    p = await open(r, d);
   } catch (_) {
     let E = A(_);
     if (E === "ENOENT" || E === "ENOTDIR") return { kind: "absent" };
     if (E === "ELOOP" || E === "EMLINK" || E === "EFTYPE")
       try {
-        let C = await jUo(r, { encoding: "buffer" }),
+        let C = await readlink(r, { encoding: "buffer" }),
           I = await checkAncestorSymlinks(e, t);
         return I === "clear"
           ? { kind: "symlink", target: C }
@@ -86241,9 +85403,9 @@ function M$n(e) {
 async function checkAncestorSymlinks(e, t) {
   let r = e;
   for (let o of M$n(t).slice(0, -1)) {
-    r = tQ(r, o);
+    r = join(r, o);
     try {
-      if ((await $Ne(r)).isSymbolicLink()) return "symlink";
+      if ((await lstat(r)).isSymbolicLink()) return "symlink";
     } catch (d) {
       let p = A(d);
       if (p === "ENOENT" || p === "ENOTDIR") return "clear";
@@ -86269,7 +85431,7 @@ var eHo =
   };
 
 function oHo(e) {
-  return Sct("sha1").update(`blob ${e.length}\x00`).update(e).digest("hex");
+  return createHash("sha1").update(`blob ${e.length}\x00`).update(e).digest("hex");
 }
 
 var sHo = 1048576,
@@ -86318,9 +85480,9 @@ async function B$n(e, t, r = {}) {
     );
   if (ve.length === 0 && N === D) return { kind: "none", leftOut: U };
   await SHo(E);
-  let xe = cO(
+  let xe = join(
       t.adminDir ?? E,
-      `ccr-seed-${process.pid}-${KUo(6).toString("hex")}.index`,
+      `ccr-seed-${process.pid}-${randomBytes(6).toString("hex")}.index`,
     ),
     Oe = null,
     Ne = [];
@@ -86354,8 +85516,8 @@ async function B$n(e, t, r = {}) {
         await excludeDirectoryPaths(C, dedupe(ve.map(({ path: cn }) => cn)))
       ).filter(Ke);
     if (ct.length > 0) {
-      let cn = await YUo(
-        cO(t.adminDir ?? getTempBaseDir(), "claude-seed-stage-"),
+      let cn = await mkdtemp(
+        join(t.adminDir ?? getTempBaseDir(), "claude-seed-stage-"),
       );
       Oe = cn;
       let It = await stageChangedPaths(
@@ -86549,7 +85711,7 @@ async function B$n(e, t, r = {}) {
   } finally {
     await Promise.all(
       [xe, `${xe}.lock`, ...(Oe === null ? [] : [Oe])].map((De) =>
-        F$n(De, { recursive: !0, force: !0 }).catch(() => {}),
+        rm(De, { recursive: !0, force: !0 }).catch(() => {}),
       ),
     );
   }
@@ -86819,11 +85981,11 @@ var GIT_ATTRIBUTE_FILTER_REGEX =
   /(^|\s)[-!]?(?:filter|working-tree-encoding|ident)(=|\s|$)/;
 
 async function readGitInfoAttributesFile(e) {
-  let t = cO(e, "info", "attributes");
+  let t = join(e, "info", "attributes");
   try {
-    if (getCurrentPlatform() === "windows" && !(await qce(t)).isFile())
+    if (getCurrentPlatform() === "windows" && !(await lstat(t)).isFile())
       return { kind: "unreadable", bytes: null };
-    let r = await L$n(t, getSafeReadOpenFlags());
+    let r = await open(t, getSafeReadOpenFlags());
     try {
       let o = await r.stat();
       if (!o.isFile() || o.size > rHo)
@@ -86903,7 +86065,7 @@ async function yHo(e, t) {
   if (t.includes("\uFFFD") || (await checkAncestorSymlinks(e, t)) !== "clear")
     return !0;
   try {
-    return !(await qce(cO(e, t))).isDirectory();
+    return !(await lstat(join(e, t))).isDirectory();
   } catch (r) {
     let o = A(r);
     return o !== "ENOENT" && o !== "ENOTDIR";
@@ -86925,21 +86087,21 @@ async function H$n(
   )
     return !1;
   if ((await checkAncestorSymlinks(e, t)) !== "clear") return !1;
-  let I = cO(e, t);
+  let I = join(e, t);
   if (d === $$n)
     try {
-      return oHo(Buffer.from(await JUo(I))) === p;
+      return oHo(Buffer.from(await readlink(I))) === p;
     } catch {
       return !1;
     }
   if (!tHo.includes(d)) return !1;
   try {
-    if (!(await qce(I)).isFile()) return !1;
-    let D = await L$n(I, getSafeReadOpenFlags());
+    if (!(await lstat(I)).isFile()) return !1;
+    let D = await open(I, getSafeReadOpenFlags());
     try {
       let N = await D.stat();
       if (!N.isFile() || N.nlink !== 1 || N.size > E) return !1;
-      let F = Sct("sha1").update(`blob ${N.size}\x00`),
+      let F = createHash("sha1").update(`blob ${N.size}\x00`),
         U = Buffer.allocUnsafe(Math.min(N.size, 1048576)),
         V = 0;
       while (V < N.size) {
@@ -86968,12 +86130,12 @@ var _Ho = /^ccr-seed-([0-9]+)-[0-9a-f]{12}\.index(?:\.lock)?$/,
 async function SHo(e) {
   try {
     await Promise.all(
-      (await XUo(e)).map(async (t) => {
+      (await readdir(e)).map(async (t) => {
         let r = _Ho.exec(t)?.[1];
         if (r === void 0) return;
-        let o = cO(e, t);
-        if (Date.now() - (await qce(o)).mtimeMs > bHo && !kHo(Number(r)))
-          await F$n(o, { force: !0 });
+        let o = join(e, t);
+        if (Date.now() - (await lstat(o)).mtimeMs > bHo && !kHo(Number(r)))
+          await rm(o, { force: !0 });
       }),
     );
   } catch {}
@@ -86989,7 +86151,7 @@ function kHo(e) {
 
 async function excludeDirectoryPaths(e, t) {
   let r = createConcurrencyLimiter(BNe, async (o) =>
-    (await checkAncestorSymlinks(e, o)) === "clear" && (await wHo(cO(e, o)))
+    (await checkAncestorSymlinks(e, o)) === "clear" && (await wHo(join(e, o)))
       ? []
       : [o],
   );
@@ -86998,7 +86160,7 @@ async function excludeDirectoryPaths(e, t) {
 
 async function wHo(e) {
   try {
-    return (await qce(e)).isDirectory();
+    return (await lstat(e)).isDirectory();
   } catch {
     return !1;
   }
@@ -87040,11 +86202,11 @@ async function EHo(e, t, r, o, d) {
     I = new Set(
       e.entries.flatMap((de) => (de.kind === "changed" ? [de.path] : [])),
     ),
-    D = await Promise.all(E.map((de) => N$n(cO(o, de))));
-  await Promise.all(E.map((de) => ZUo(cO(o, de)).catch(() => {})));
+    D = await Promise.all(E.map((de) => N$n(join(o, de))));
+  await Promise.all(E.map((de) => unlink(join(o, de)).catch(() => {})));
   let N = await d(C);
   if ("refused" in N) return N;
-  let F = await Promise.all(E.map((de) => N$n(cO(o, de)))),
+  let F = await Promise.all(E.map((de) => N$n(join(o, de)))),
     U = new Set(
       N.copies.flatMap((de) => (de.kind === "file" ? [de.path] : [])),
     ),
@@ -87110,8 +86272,8 @@ async function j$n(e, t, r) {
 
 async function N$n(e) {
   try {
-    return Sct("sha1")
-      .update(await QUo(e))
+    return createHash("sha1")
+      .update(await readFile(e))
       .digest("hex");
   } catch (t) {
     let r = A(t);
@@ -87144,8 +86306,8 @@ var PHo =
 
 async function OHo(e) {
   try {
-    if (!(await eBn(e)).isFile()) return null;
-    let t = await THo(e, getSafeReadOpenFlags());
+    if (!(await lstat(e)).isFile()) return null;
+    let t = await open(e, getSafeReadOpenFlags());
     try {
       let r = await t.stat();
       if (!r.isFile() || r.size > MHo) return null;
@@ -87223,7 +86385,7 @@ async function LHo(e, t, r = null, o = defaultBuilderGitProbes()) {
       (await C(["rev-parse", "--verify", "--quiet", "HEAD^{commit}"]))
         .exitCode === 1,
     N = D ? "unborn_cut" : "cut",
-    F = await OHo(vHo(e, E ?? tBn(".git", "shallow")));
+    F = await OHo(resolve(e, E ?? join(".git", "shallow")));
   if (F === null) return N;
   for (let U of F) {
     if (D) {
@@ -87350,7 +86512,7 @@ async function FHo(e, t, r) {
           error: `git bundle create ${o ? uO(ct.join(" "), !0) : ct.join(" ")} failed (${ut.code}): ${uO(ut.stderr, o)}`,
           failReason: "git_error",
         };
-      let { size: Wt } = await W$n(t);
+      let { size: Wt } = await stat(t);
       if (Wt <= r.maxBytes) {
         let en = r.hasStash
           ? await z$n(
@@ -87544,7 +86706,7 @@ async function FHo(e, t, r) {
         : `git bundle create for the squashed root failed (${He.code}): ${uO(He.stderr, o)}`,
       failReason: "git_error",
     };
-  let { size: je } = await W$n(t);
+  let { size: je } = await stat(t);
   if (je <= r.maxBytes) {
     let Ke = await z$n(
       e,
@@ -87687,8 +86849,8 @@ async function sBn(e, t) {
 }
 
 async function HHo(e) {
-  let t = tBn(e, ".git"),
-    r = await eBn(t).catch(() => null);
+  let t = join(e, ".git"),
+    r = await lstat(t).catch(() => null);
   if (r?.isSymbolicLink()) return "symlink";
   if (!r?.isFile()) return "other";
   let o = await readSmallFile(t).catch(() => {
@@ -88580,12 +87742,12 @@ async function Rct(e, t) {
   } finally {
     if (tn !== "") {
       try {
-        await kct(tn);
+        await unlink(tn);
       } catch {
         logForDebugging(`[gitBundle] Could not delete ${tn} (non-fatal)`);
       }
-      (await kct(`${tn}.lock`).catch(() => {}),
-        await kct(`${tn}.relabelled`).catch(() => {}));
+      (await unlink(`${tn}.lock`).catch(() => {}),
+        await unlink(`${tn}.relabelled`).catch(() => {}));
     }
     if ((await en?.dispose(), !_e || (await layoutStillHolds(_e, D))))
       for (let dn of D)
@@ -88847,7 +88009,7 @@ function gBn(e) {
       type: "event",
       data: {
         type: "control_request",
-        request_id: `set-thinking-${aF()}`,
+        request_id: `set-thinking-${randomUUID()}`,
         request: {
           subtype: "set_max_thinking_tokens",
           ...(e.thinking.maxThinkingTokens !== void 0 && {
@@ -88864,7 +88026,7 @@ function gBn(e) {
       type: "event",
       data: {
         type: "control_request",
-        request_id: `set-mode-${aF()}`,
+        request_id: `set-mode-${randomUUID()}`,
         request: {
           subtype: "set_permission_mode",
           mode: e.permissionMode,
@@ -88877,7 +88039,7 @@ function gBn(e) {
       type: "event",
       data: {
         type: "control_request",
-        request_id: `apply-flag-settings-${aF()}`,
+        request_id: `apply-flag-settings-${randomUUID()}`,
         request: {
           subtype: "apply_flag_settings",
           settings: { viewMode: "focus" },
@@ -88890,7 +88052,7 @@ function gBn(e) {
       type: "event",
       data: {
         type: "control_request",
-        request_id: `apply-flag-settings-${aF()}`,
+        request_id: `apply-flag-settings-${randomUUID()}`,
         request: {
           subtype: "apply_flag_settings",
           settings: { advisorModel: r },
@@ -88906,7 +88068,7 @@ function gBn(e) {
     t.push({
       type: "event",
       data: {
-        uuid: e.initialMessageUuid ?? aF(),
+        uuid: e.initialMessageUuid ?? randomUUID(),
         session_id: "",
         type: "user",
         parent_tool_use_id: null,
@@ -88929,7 +88091,7 @@ function hBn(e) {
 function TBn(e) {
   return {
     type: "control_request",
-    request_id: `rename-session-${aF()}`,
+    request_id: `rename-session-${randomUUID()}`,
     request: { subtype: "rename_session", title: e },
   };
 }
@@ -89644,11 +88806,11 @@ async function teleportToRemote(e) {
         !dn &&
         !e.agentId &&
         isFolderSyncEnabled() &&
-        isFolderEligibleForDirSync(Ict(o)) &&
+        isFolderEligibleForDirSync(resolve(o)) &&
         (await p()) &&
         (await jce(o, e.dirSyncConsent).catch(() => !1)) &&
-        !(await isInsideBareGitRepository(Ict(o)))
-          ? Ict(o)
+        !(await isInsideBareGitRepository(resolve(o)))
+          ? resolve(o)
           : null,
       wn =
         e.seedDirSync === !0 &&
@@ -90265,7 +89427,7 @@ async function teleportToRemote(e) {
         e.deferInitialMessage === !0 &&
         t !== null &&
         (wn || Qt !== null || It !== null)
-          ? { content: t, uuid: e.initialMessageUuid ?? aF() }
+          ? { content: t, uuid: e.initialMessageUuid ?? randomUUID() }
           : void 0,
       rl = gBn({
         initialMessage: ga ? null : t,
@@ -90866,10 +90028,10 @@ function GNe(e, t, r, o, d, p, _, E = !1, C = !1) {
       `its git metadata (common dir ${I.commonDir}) could not be safely compared`,
     );
   if (F === "distinct") {
-    let U = comparePathIdentity(YNe(I.gitDir), Kw(I.commonDir, "worktrees")),
+    let U = comparePathIdentity(dirname(I.gitDir), join(I.commonDir, "worktrees")),
       V =
         I.backPointer !== null &&
-        comparePathIdentity(LBn(I.gitDir, I.backPointer), Kw(e, ".git")) ===
+        comparePathIdentity(resolve(I.gitDir, I.backPointer), join(e, ".git")) ===
           "same";
     if (U !== "same" || !V)
       return {
@@ -90884,7 +90046,7 @@ function GNe(e, t, r, o, d, p, _, E = !1, C = !1) {
 }
 
 function FBn(e, t, r) {
-  let o = O1o(r.commonDir) === ".git" ? YNe(r.commonDir) : null;
+  let o = basename(r.commonDir) === ".git" ? dirname(r.commonDir) : null;
   return dedupe([...t, ...(o !== null ? [o] : [])]);
 }
 
@@ -90899,13 +90061,13 @@ function hI(e, t) {
 }
 
 async function CBn(e) {
-  let [t, r] = await Promise.all([$Bn(Kw(e, ".git")), L1o(e)]);
+  let [t, r] = await Promise.all([$Bn(join(e, ".git")), L1o(e)]);
   return { entry: t, ids: r };
 }
 
 async function $Bn(e) {
   try {
-    return (await aQ(e), "present");
+    return (await lstat(e), "present");
   } catch (t) {
     return dO(t);
   }
@@ -90913,7 +90075,7 @@ async function $Bn(e) {
 
 async function D1o(e) {
   try {
-    return (await aQ(e)).isSymbolicLink();
+    return (await lstat(e)).isSymbolicLink();
   } catch {
     return !1;
   }
@@ -91008,7 +90170,7 @@ function jBn(e) {
   if (ok(e).canonical === null) return null;
   let t;
   try {
-    let o = I1o.native(e, { encoding: "buffer" });
+    let o = realpathSync.native(e, { encoding: "buffer" });
     if (((t = o.toString("utf8")), !Buffer.from(t, "utf8").equals(o)))
       return null;
   } catch {
@@ -91016,8 +90178,8 @@ function jBn(e) {
   }
   let r = [];
   for (let o = t; ;) {
-    r.push(Kw(o, ".git"), Kw(o, "HEAD"));
-    let d = YNe(o);
+    r.push(join(o, ".git"), join(o, "HEAD"));
+    let d = dirname(o);
     if (d === o) return r;
     o = d;
   }
@@ -91025,7 +90187,7 @@ function jBn(e) {
 
 async function U1o(e) {
   try {
-    return (await aQ(e), !1);
+    return (await lstat(e), !1);
   } catch (t) {
     let r = A(t);
     return r === "ENOENT" || r === "ENOTDIR";
@@ -91049,7 +90211,7 @@ function GBn(e, t) {
   return {
     gitDir: r[0],
     topLevel: e,
-    commonDir: NBn(o) ? o : Kw(e, o),
+    commonDir: isAbsolute(o) ? o : join(e, o),
     isBare: !0,
   };
 }
@@ -91064,15 +90226,15 @@ function zBn(e, t) {
   if (r.length !== 3) return null;
   if (r.some((d) => /[\u0000-\u001f\u007f-\u009f]/.test(d))) return null;
   let o = r[2];
-  return { gitDir: r[0], topLevel: r[1], commonDir: NBn(o) ? o : LBn(e, o) };
+  return { gitDir: r[0], topLevel: r[1], commonDir: isAbsolute(o) ? o : resolve(e, o) };
 }
 
 var sQ = 65536;
 
 async function ABn(e) {
   try {
-    if (!(await aQ(Kw(e, "gitdir"))).isFile()) return null;
-    let r = await M1o(Kw(e, "gitdir"), "r");
+    if (!(await lstat(join(e, "gitdir"))).isFile()) return null;
+    let r = await open(join(e, "gitdir"), "r");
     try {
       if ((await r.stat()).size > sQ) return null;
       let o = Buffer.alloc(sQ),
@@ -91094,7 +90256,7 @@ async function PBn(e) {
     r = [],
     o;
   try {
-    o = await DBn(e);
+    o = await readdir(e);
   } catch (d) {
     if (dO(d) !== "absent") r.push("(git dir unreadable)");
     o = [];
@@ -91104,13 +90266,13 @@ async function PBn(e) {
     await Promise.all(
       o.map(async (d) => {
         try {
-          if ((await aQ(Kw(e, d))).isSymbolicLink()) t.push(d);
+          if ((await lstat(join(e, d))).isSymbolicLink()) t.push(d);
         } catch (p) {
           if (dO(p) !== "absent") r.push(d);
         }
       }),
     ),
-    await VBn(Kw(e, "refs"), "refs", 0, t, r, { entries: KNe }),
+    await VBn(join(e, "refs"), "refs", 0, t, r, { entries: KNe }),
     { symlinks: t, unexaminable: r }
   );
 }
@@ -91126,7 +90288,7 @@ async function VBn(e, t, r, o, d, p) {
   }
   let _;
   try {
-    _ = await DBn(e);
+    _ = await readdir(e);
   } catch (E) {
     if (dO(E) !== "absent") d.push(`${t} (unreadable)`);
     return;
@@ -91136,10 +90298,10 @@ async function VBn(e, t, r, o, d, p) {
       d.push(`${t} (too many entries to examine)`);
       return;
     }
-    let C = Kw(e, E),
+    let C = join(e, E),
       I = `${t}/${E}`;
     try {
-      let D = await aQ(C);
+      let D = await lstat(C);
       if (D.isSymbolicLink()) o.push(I);
       else if (D.isDirectory()) await VBn(C, I, r + 1, o, d, p);
     } catch (D) {
@@ -91174,7 +90336,7 @@ function comparePathIdentity(e, t) {
 
 function MBn(e, t) {
   let r = FW(e);
-  return r !== null && Kce(r, YNe(t)) === "same";
+  return r !== null && Kce(r, dirname(t)) === "same";
 }
 
 function XBn(e, t) {
@@ -91282,34 +90444,34 @@ function validateWorktreeSlug(e) {
 function q1o(e) {
   return (
     containsPathTraversal(e) ||
-    Jce(e) ||
+    isAbsolute(e) ||
     e.split(/[/\\]/).some((t) => /^\.\.[ .]*$/.test(t))
   );
 }
 
 async function Bct(e, t) {
-  let r = UR(e);
+  let r = dirname(e);
   for (;;)
     try {
-      let o = await Sp(r);
+      let o = await realpath(r);
       if (
         normalizePathForComparison(o) !== normalizePathForComparison(t) &&
         !normalizePathForComparison(o).startsWith(
-          normalizePathForComparison(t + lF),
+          normalizePathForComparison(t + sep),
         )
       )
         return !0;
       break;
     } catch (o) {
       if (A(o) !== "ENOENT") return !0;
-      if ((await Yw(r).catch((_) => (A(_) === "ENOENT" ? null : _))) != null)
+      if ((await lstat(r).catch((_) => (A(_) === "ENOENT" ? null : _))) != null)
         return !0;
-      let p = UR(r);
+      let p = dirname(r);
       if (p === r) return !0;
       r = p;
     }
   try {
-    if ((await Yw(e)).isSymbolicLink()) return !0;
+    if ((await lstat(e)).isSymbolicLink()) return !0;
   } catch (o) {
     if (A(o) !== "ENOENT") return !0;
   }
@@ -91319,7 +90481,7 @@ async function Bct(e, t) {
 async function V1o(e, t, r) {
   let o;
   try {
-    o = await Sp(t);
+    o = await realpath(t);
   } catch (d) {
     logForDebugging(
       `Skipping symlinkDirectories: realpath(${t}) failed: ${l(d)}`,
@@ -91339,8 +90501,8 @@ async function V1o(e, t, r) {
       );
       continue;
     }
-    let p = Gg(e, d),
-      _ = Gg(t, d);
+    let p = join(e, d),
+      _ = join(t, d);
     if (await Bct(_, o)) {
       logForDebugging(
         `Skipping symlink for "${d}": destination escapes worktree via committed symlink`,
@@ -91349,7 +90511,7 @@ async function V1o(e, t, r) {
       continue;
     }
     try {
-      await Yw(p);
+      await lstat(p);
     } catch (E) {
       if (W(E))
         logForDebugging(
@@ -91363,7 +90525,7 @@ async function V1o(e, t, r) {
       continue;
     }
     try {
-      (await W1o(p, _, "dir"),
+      (await symlink(p, _, "dir"),
         logForDebugging(
           `Symlinked ${d} from main repository to worktree to avoid disk bloat`,
         ));
@@ -91378,7 +90540,7 @@ async function V1o(e, t, r) {
 }
 
 function cF(e) {
-  return Gg(e, ".claude", "worktrees");
+  return join(e, ".claude", "worktrees");
 }
 
 function aUn(e) {
@@ -91390,15 +90552,15 @@ function worktreeBranchName(e) {
 }
 
 function lUn(e, t) {
-  return Gg(cF(e), aUn(t));
+  return join(cF(e), aUn(t));
 }
 
 async function Fct(e, t) {
-  let r = [Gg(e, ".claude"), cF(e), t];
+  let r = [join(e, ".claude"), cF(e), t];
   for (let o of r) {
     let d;
     try {
-      d = await Yw(o);
+      d = await lstat(o);
     } catch (p) {
       if (W(p)) continue;
       throw (
@@ -91427,17 +90589,17 @@ async function Fct(e, t) {
 async function nFe(e, t) {
   if (pl(e) || pl(t)) return { component: e, kind: "unverifiable" };
   ((e = zn(e)), (t = zn(t)));
-  let r = (p) => !p || p === ".." || p.startsWith(`..${lF}`) || Jce(p),
-    o = QBn(t, e);
+  let r = (p) => !p || p === ".." || p.startsWith(`..${sep}`) || isAbsolute(p),
+    o = relative(t, e);
   if (r(o)) {
-    if (((o = QBn(OE(t), OE(e))), r(o))) return null;
+    if (((o = relative(OE(t), OE(e))), r(o))) return null;
   }
   let d = t;
-  for (let p of o.split(lF)) {
-    d = Gg(d, p);
+  for (let p of o.split(sep)) {
+    d = join(d, p);
     let _;
     try {
-      _ = await Yw(d);
+      _ = await lstat(d);
     } catch (E) {
       if (W(E)) return null;
       return { component: d, kind: "unverifiable" };
@@ -91451,13 +90613,13 @@ var Uct = "CLAUDE_BASE";
 
 async function hQ(e) {
   try {
-    if (pointerFileIsSuspect(Gg(e, ".git"), e)) return null;
-    let t = (await eFe(Gg(e, ".git"), "utf-8")).trim();
+    if (pointerFileIsSuspect(join(e, ".git"), e)) return null;
+    let t = (await readFile(join(e, ".git"), "utf-8")).trim();
     if (!t.startsWith("gitdir:")) return null;
     let r = t.slice(7).trim();
     if (ac(r, e)) return null;
     if (rawPointerPathIsUnsafe(r, e)) return null;
-    return Jb(e, r);
+    return resolve(e, r);
   } catch {
     return null;
   }
@@ -91471,11 +90633,11 @@ async function cUn(e, t) {
     );
     return;
   }
-  let o = Gg(r, Uct);
+  let o = join(r, Uct);
   try {
     let d = !1;
     try {
-      let _ = await Yw(o);
+      let _ = await lstat(o);
       d = !_.isFile() || _.nlink !== 1;
     } catch {}
     let p = await writeNewFileExclusive(o, t);
@@ -91484,11 +90646,11 @@ async function cUn(e, t) {
         await renameWithRetry(p, o);
       } catch (_) {
         if (getCurrentPlatform() === "windows" && A(_) === "EEXIST")
-          (await Yce(o), await renameWithRetry(p, o));
+          (await unlink(o), await renameWithRetry(p, o));
         else throw _;
       }
     } catch (_) {
-      throw (await Yce(p).catch(() => {}), _);
+      throw (await unlink(p).catch(() => {}), _);
     }
     if (d)
       (logFeatureSad(
@@ -91507,7 +90669,7 @@ async function readWorktreeBaseline(e) {
   let t = await hQ(e);
   if (!t) return null;
   try {
-    let r = (await eFe(Gg(t, Uct), "utf-8")).trim();
+    let r = (await readFile(join(t, Uct), "utf-8")).trim();
     return isValidGitSha(r) ? r : null;
   } catch {
     return null;
@@ -91571,22 +90733,22 @@ async function J1o(e, t, r) {
   if (!o) return;
   let d = !1;
   try {
-    await Qce(o);
+    await readdir(o);
   } catch (C) {
     d = W(C);
   }
   if (!d) return;
   let p = await resolveGitDir(e);
   if (p) {
-    let C = zn(Jb(UR(o))),
-      I = zn(Jb(Gg(p, "worktrees"))),
-      D = await Sp(p).then(
-        (N) => zn(Gg(N, "worktrees")),
+    let C = zn(resolve(dirname(o))),
+      I = zn(resolve(join(p, "worktrees"))),
+      D = await realpath(p).then(
+        (N) => zn(join(N, "worktrees")),
         () => null,
       );
     if (C !== I && C !== D)
       throw new WorktreeIsolationError(
-        `Orphaned worktree dir at ${t} is registered to a different repository (under ${UR(o)}, expected under ${Gg(p, "worktrees")}) \u2014 refusing to self-heal. Remove ${t} manually if it has no work to keep.`,
+        `Orphaned worktree dir at ${t} is registered to a different repository (under ${dirname(o)}, expected under ${join(p, "worktrees")}) \u2014 refusing to self-heal. Remove ${t} manually if it has no work to keep.`,
       );
   }
   let _ = await execFileNoThrowWithCwd(
@@ -91634,7 +90796,7 @@ async function J1o(e, t, r) {
   }
   await Fct(e, t);
   try {
-    (await oUn(t, { recursive: !0, force: !0 }),
+    (await rm(t, { recursive: !0, force: !0 }),
       logForDebugging(
         `[worktree] removed orphaned worktree directory at ${t}`,
       ));
@@ -91658,10 +90820,10 @@ async function Hct(e, t, r) {
     let de = await hQ(o),
       _e = await resolveGitDir(e);
     if (de && _e) {
-      let xe = Gg(_e, "worktrees"),
+      let xe = join(_e, "worktrees"),
         [Oe, Ne] = await Promise.all([
-          Wq(UR(de)).catch(() => null),
-          Wq(xe).catch((He) => (W(He) ? "enoent" : null)),
+          stat(dirname(de)).catch(() => null),
+          stat(xe).catch((He) => (W(He) ? "enoent" : null)),
         ]);
       if (
         Oe !== null &&
@@ -91674,7 +90836,7 @@ async function Hct(e, t, r) {
             "git_worktree_resume_foreign_repo",
           ),
           new WorktreeIsolationError(
-            `The worktree directory at ${o} belongs to a different repository (registered under ${UR(de)}, expected under ${xe}). Remove that directory or choose a different worktree name.`,
+            `The worktree directory at ${o} belongs to a different repository (registered under ${dirname(de)}, expected under ${xe}). Remove that directory or choose a different worktree name.`,
           )
         );
     }
@@ -91693,7 +90855,7 @@ async function Hct(e, t, r) {
       );
     let ve = await readWorktreeBaseline(o),
       Me = new Date();
-    if ((await G1o(o, Me, Me).catch(() => {}), !p && !r?.prNumber)) {
+    if ((await utimes(o, Me, Me).catch(() => {}), !p && !r?.prNumber)) {
       let xe = await Q1o(e, o, d, _, ve);
       if (xe)
         return {
@@ -91721,7 +90883,7 @@ async function Hct(e, t, r) {
   if (
     E !== void 0 &&
     p1.test(E) &&
-    (await Qce(o).then(
+    (await readdir(o).then(
       (de) => de.length === 0,
       (de) => W(de),
     )) &&
@@ -91733,7 +90895,7 @@ async function Hct(e, t, r) {
         [...GIT_HARDENED_ARGS, "worktree", "prune"],
         { cwd: e, env: sanitizeGitEnv() },
       ));
-  await $ct(cF(e), { recursive: !0 });
+  await mkdir(cF(e), { recursive: !0 });
   let C = buildNonInteractiveGitEnv(),
     I,
     D = null;
@@ -91790,7 +90952,7 @@ async function Hct(e, t, r) {
       Me = _e ? await resolveRef(_e, `refs/remotes/origin/${Se}`) : null;
     if (Me && _e) {
       ((I = ve), (D = Me));
-      let xe = await Wq(Gg(_e, "FETCH_HEAD")).then(
+      let xe = await stat(join(_e, "FETCH_HEAD")).then(
         (Oe) => Oe.mtimeMs,
         () => 0,
       );
@@ -91886,12 +91048,12 @@ async function Hct(e, t, r) {
           },
         );
       else if (
-        await Dct(o).then(
+        await readlink(o).then(
           () => !1,
           (Se) => A(Se) === "EINVAL" || W(Se),
         )
       )
-        await Yce(Gg(o, ".git")).catch(() => {});
+        await unlink(join(o, ".git")).catch(() => {});
     }
     throw new WorktreeIsolationError(
       `Failed to create worktree: ${truncateMiddleWithMarker(de)}`,
@@ -91913,17 +91075,17 @@ async function Hct(e, t, r) {
           { cwd: e, env: sanitizeGitEnv() },
         ));
     else if (
-      await Dct(o).then(
+      await readlink(o).then(
         () => !1,
         (_e) => A(_e) === "EINVAL" || W(_e),
       )
     )
-      await Yce(Gg(o, ".git")).catch(() => {});
+      await unlink(join(o, ".git")).catch(() => {});
     throw new WorktreeIsolationError(de);
   };
   try {
-    let [de, _e] = await Promise.all([Sp(o), Sp(e)]),
-      Se = Gg(cF(_e), d1(o));
+    let [de, _e] = await Promise.all([realpath(o), realpath(e)]),
+      Se = join(cF(_e), basename(o));
     if (OE(de) !== OE(Se))
       (logFeatureBad(
         "git_worktree_create",
@@ -91956,12 +91118,12 @@ async function Hct(e, t, r) {
           },
         );
       else if (
-        await Dct(o).then(
+        await readlink(o).then(
           () => !1,
           (Ke) => A(Ke) === "EINVAL" || W(Ke),
         )
       )
-        await Yce(Gg(o, ".git")).catch(() => {});
+        await unlink(join(o, ".git")).catch(() => {});
       throw (await pQ(e), new WorktreeIsolationError(je));
     };
     if (
@@ -92041,7 +91203,7 @@ async function Hct(e, t, r) {
 async function Z1o(e, t) {
   let r;
   try {
-    r = await eFe(Gg(e, ".worktreeinclude"), "utf-8");
+    r = await readFile(join(e, ".worktreeinclude"), "utf-8");
   } catch {
     return [];
   }
@@ -92143,7 +91305,7 @@ async function Z1o(e, t) {
   let D = [],
     N;
   try {
-    N = await Sp(t);
+    N = await realpath(t);
   } catch (F) {
     return (
       logForDebugging(
@@ -92156,10 +91318,10 @@ async function Z1o(e, t) {
     );
   }
   for (let F of C) {
-    let U = Gg(e, F),
-      V = Gg(t, F);
+    let U = join(e, F),
+      V = join(t, F);
     try {
-      if ((await Yw(U)).isSymbolicLink()) {
+      if ((await lstat(U)).isSymbolicLink()) {
         logForDebugging(`Skipping symlink in .worktreeinclude: ${F}`, {
           level: "warn",
         });
@@ -92172,7 +91334,7 @@ async function Z1o(e, t) {
         );
         continue;
       }
-      (await $ct(UR(V), { recursive: !0 }), await rUn(U, V), D.push(F));
+      (await mkdir(dirname(V), { recursive: !0 }), await copyFile(U, V), D.push(F));
     } catch (re) {
       logForDebugging(`Failed to copy ${F} to worktree: ${l(re)}`, {
         level: "warn",
@@ -92187,22 +91349,22 @@ async function Z1o(e, t) {
 }
 
 async function ejo(e, t, r) {
-  if (resolveLocalSettingsStoreRoot(t, findCanonicalGitRoot) !== Jb(t)) {
+  if (resolveLocalSettingsStoreRoot(t, findCanonicalGitRoot) !== resolve(t)) {
     logForDebugging(
       `Skipping settings.local.json copy into ${t}: it resolves localSettings to the canonical repo root, so a copy would become a stale, revocation-resurrecting legacy overlay`,
     );
     return;
   }
   let o = getRelativeSettingsFilePathForSource("localSettings"),
-    d = Gg(e, o);
+    d = join(e, o);
   try {
-    if ((await Yw(d)).isSymbolicLink()) {
+    if ((await lstat(d)).isSymbolicLink()) {
       logForDebugging(`Skipping symlinked settings.local.json: ${d}`, {
         level: "warn",
       });
       return;
     }
-    let _ = Gg(t, o);
+    let _ = join(t, o);
     if (r == null || (await Bct(_, r))) {
       logForDebugging(
         "Skipping settings.local.json copy: destination escapes worktree via committed symlink",
@@ -92210,8 +91372,8 @@ async function ejo(e, t, r) {
       );
       return;
     }
-    (await $ct(UR(_), { recursive: !0 }),
-      await rUn(d, _),
+    (await mkdir(dirname(_), { recursive: !0 }),
+      await copyFile(d, _),
       logForDebugging(`Copied settings.local.json to worktree: ${_}`));
   } catch (p) {
     if (A(p) !== "ENOENT")
@@ -92222,15 +91384,15 @@ async function ejo(e, t, r) {
 }
 
 async function jct(e, t) {
-  let r = await Sp(t).catch(() => null);
+  let r = await realpath(t).catch(() => null);
   await ejo(e, t, r);
-  let o = Gg(e, ".husky"),
+  let o = join(e, ".husky"),
     d = await resolveGitDir(e),
     p = d ? ((await getCommonDir(d)) ?? d) : null,
     _ = p ? await readGitConfigFileValue(p, "core", null, "hooksPath") : null,
     E = null;
   if (_) {
-    if (((E = Jce(_) ? _ : Jb(e, _)), _ !== E)) {
+    if (((E = isAbsolute(_) ? _ : resolve(e, _)), _ !== E)) {
       let { code: D, stderr: N } = await execFileNoThrowWithCwd(
         gitExe(),
         [...GIT_HARDENED_ARGS, "config", "core.hooksPath", E],
@@ -92296,12 +91458,12 @@ async function releaseOwnWorktreeLock(e, t) {
 }
 
 async function readWorktreeLockReason(e, t) {
-  let r = normalizePathForComparison(Jb(await Sp(e).catch(() => e)));
+  let r = normalizePathForComparison(resolve(await realpath(e).catch(() => e)));
   for (let o of await listRegisteredWorktrees(t))
     if (
       r ===
       normalizePathForComparison(
-        Jb(await Sp(o.worktreePath).catch(() => o.worktreePath)),
+        resolve(await realpath(o.worktreePath).catch(() => o.worktreePath)),
       )
     )
       return o.lockReason;
@@ -92532,12 +91694,12 @@ async function listRegisteredWorktrees(e) {
 }
 
 function JNe(e, t) {
-  let r = tFe.normalize(e);
+  let r = win32.normalize(e);
   return dQ(r) || isWindowsNetworkPath(r, !0) || ac(e, t);
 }
 
 function Xce(e) {
-  let t = tFe.normalize(e);
+  let t = win32.normalize(e);
   return dQ(t) || isWindowsNetworkPath(t, !0) || Dr(e);
 }
 
@@ -92554,13 +91716,13 @@ async function resolveExistingWorktreeTarget(
   e,
   { requireManagedLocation: t, requireCwdInsideRepo: r = !1 },
 ) {
-  let o = tFe.normalize(e);
+  let o = win32.normalize(e);
   if (dQ(o) || isWindowsNetworkPath(o, !0))
     throw new WorktreeIsolationError(
       `Cannot enter worktree: ${e} is a UNC network path.`,
     );
   let d = getCwd();
-  if (XR(e, d) || XR(Jb(d, e), d))
+  if (XR(e, d) || XR(resolve(d, e), d))
     throw new WorktreeIsolationError(
       `Cannot enter worktree: ${e} is a network automount path.`,
     );
@@ -92571,7 +91733,7 @@ async function resolveExistingWorktreeTarget(
     );
   let _, E, C;
   try {
-    ((_ = await Sp(Jb(d, e))), (E = await Sp(p)), (C = await Sp(d)));
+    ((_ = await realpath(resolve(d, e))), (E = await realpath(p)), (C = await realpath(d)));
   } catch (ue) {
     throw new WorktreeIsolationError(`Cannot enter worktree: ${e}: ${l(ue)}`);
   }
@@ -92598,7 +91760,7 @@ async function resolveExistingWorktreeTarget(
   if (
     r &&
     !normalizePathForComparison(C).startsWith(
-      normalizePathForComparison(E + lF),
+      normalizePathForComparison(E + sep),
     )
   )
     throw new WorktreeIsolationError(
@@ -92610,7 +91772,7 @@ async function resolveExistingWorktreeTarget(
     let ue = cF(E),
       de;
     try {
-      de = await Sp(ue);
+      de = await realpath(ue);
     } catch {
       throw new WorktreeIsolationError(
         `Cannot enter worktree: ${ue} does not exist, so ${e} cannot be a worktree managed by Claude Code.`,
@@ -92620,28 +91782,28 @@ async function resolveExistingWorktreeTarget(
       throw new WorktreeIsolationError(
         `Cannot enter worktree: ${ue} resolves to ${de}; the managed worktrees directory must not be a symlink.`,
       );
-    if (!OE(_).startsWith(OE(ue + lF)))
+    if (!OE(_).startsWith(OE(ue + sep)))
       throw new WorktreeIsolationError(
         `Cannot enter worktree: ${e} is not under ${ue}. Switching from this session is limited to worktrees managed by Claude Code (created under .claude/worktrees/ of this repository).`,
       );
-    let _e = Gg(E, ".git", "worktrees"),
+    let _e = join(E, ".git", "worktrees"),
       Se = await hQ(_),
       ve = null,
       Me = null;
     if (Se)
       try {
-        if (((ve = await Sp(Se)), pointerFileIsSuspect(Gg(ve, "gitdir"), ve)))
+        if (((ve = await realpath(Se)), pointerFileIsSuspect(join(ve, "gitdir"), ve)))
           throw Error("gitdir back-link is a symlink");
-        let xe = (await eFe(Gg(ve, "gitdir"), "utf-8")).trim();
+        let xe = (await readFile(join(ve, "gitdir"), "utf-8")).trim();
         if (!ac(xe, _) && !rawPointerPathIsUnsafe(xe, ve, _))
-          Me = await Sp(Jb(ve, xe));
+          Me = await realpath(resolve(ve, xe));
       } catch {}
     if (
       !ve ||
       !Me ||
-      normalizePathForComparison(UR(ve)) !== normalizePathForComparison(_e) ||
+      normalizePathForComparison(dirname(ve)) !== normalizePathForComparison(_e) ||
       normalizePathForComparison(Me) !==
-        normalizePathForComparison(Gg(_, ".git"))
+        normalizePathForComparison(join(_, ".git"))
     )
       throw new WorktreeIsolationError(
         `Cannot enter worktree: ${e} is not a linked worktree of ${p}.`,
@@ -92651,15 +91813,15 @@ async function resolveExistingWorktreeTarget(
     N = null;
   if (D !== null && isLinkedWorktree(_))
     try {
-      N = await Sp(D);
+      N = await realpath(D);
     } catch {}
-  let F = N !== null && N.startsWith(E + lF) ? N : p,
+  let F = N !== null && N.startsWith(E + sep) ? N : p,
     U = F === p ? E : F,
     V = await listRegisteredWorktrees(F),
     re;
   for (let ue of V)
     try {
-      if ((await Sp(ue.worktreePath)) === _) {
+      if ((await realpath(ue.worktreePath)) === _) {
         re = ue;
         break;
       }
@@ -92697,7 +91859,7 @@ async function enterExistingWorktreeForSession(e, t, r) {
     I = C;
   try {
     let F = findCanonicalGitRoot(p);
-    if (F !== null && (await Sp(F)) === C) I = void 0;
+    if (F !== null && (await realpath(F)) === C) I = void 0;
   } catch {}
   let D = await evaluateWorktreePin(_, [], resolveGitRootCandidates(p, C));
   if (!D.ok)
@@ -92706,7 +91868,7 @@ async function enterExistingWorktreeForSession(e, t, r) {
       new WorktreeIsolationError(D.message)
     );
   if (o && !o.enteredExisting && !o.hookBased) {
-    let F = await Sp(o.worktreePath).catch(() => o.worktreePath);
+    let F = await realpath(o.worktreePath).catch(() => o.worktreePath);
     if (_ !== F)
       await releaseOwnWorktreeLock(
         o.worktreePath,
@@ -92717,7 +91879,7 @@ async function enterExistingWorktreeForSession(e, t, r) {
     originalCwd: d,
     preEnterOriginalCwd: p,
     worktreePath: _,
-    worktreeName: d1(_),
+    worktreeName: basename(_),
     worktreeBranch: E,
     sessionId: e,
     enteredExisting: !0,
@@ -92729,15 +91891,15 @@ async function enterExistingWorktreeForSession(e, t, r) {
 
 async function resolveManagedWorktreePath(e) {
   try {
-    let t = tFe.normalize(e);
+    let t = win32.normalize(e);
     if (dQ(t) || isWindowsNetworkPath(t, !0)) return null;
     let r = getCwd();
-    if (XR(e, r) || XR(Jb(r, e), r)) return null;
+    if (XR(e, r) || XR(resolve(r, e), r)) return null;
     let o = findCanonicalGitRoot(r);
     if (!o) return null;
-    let d = await Sp(Jb(r, e)),
-      p = await Sp(o),
-      _ = await Sp(r),
+    let d = await realpath(resolve(r, e)),
+      p = await realpath(o),
+      _ = await realpath(r),
       E = $L(d);
     if (
       (dQ(d) || isWindowsNetworkPath(d, !0)) &&
@@ -92748,8 +91910,8 @@ async function resolveManagedWorktreePath(e) {
       return null;
     if (XR(d, p) && XR(d, _)) return null;
     let C = cF(p),
-      I = await Sp(C).catch(() => null),
-      D = I !== null && OE(I) === OE(C) && OE(d).startsWith(OE(C + lF));
+      I = await realpath(C).catch(() => null),
+      D = I !== null && OE(I) === OE(C) && OE(d).startsWith(OE(C + sep));
     return { targetReal: d, managed: D };
   } catch {
     return null;
@@ -92760,8 +91922,8 @@ async function isPathUnderManagedWorktreesDir(e) {
   try {
     let t = findCanonicalGitRoot(getCwd());
     if (!t) return !1;
-    let r = cF(await Sp(t));
-    return OE(e).startsWith(OE(r + lF));
+    let r = cF(await realpath(t));
+    return OE(e).startsWith(OE(r + sep));
   } catch {
     return !1;
   }
@@ -92769,7 +91931,7 @@ async function isPathUnderManagedWorktreesDir(e) {
 
 function Gct(e, t) {
   if (!hasNetworkPathSpelling(e)) return e;
-  return FW(t) ?? j1o();
+  return FW(t) ?? homedir();
 }
 
 async function keepWorktree(e) {
@@ -92848,7 +92010,7 @@ async function cleanupWorktree(e, t) {
         I = await readWorktreeLockReason(o, E);
       } catch (U) {
         if (
-          await Yw(o).then(
+          await lstat(o).then(
             () => !0,
             () => !1,
           )
@@ -92882,10 +92044,10 @@ async function cleanupWorktree(e, t) {
         let U = await listRegisteredWorktrees(E).catch(() => null);
         if (U != null) {
           D = !0;
-          let V = await Sp(o).catch(() => o);
+          let V = await realpath(o).catch(() => o);
           for (let re of U)
             if (
-              V === (await Sp(re.worktreePath).catch(() => re.worktreePath))
+              V === (await realpath(re.worktreePath).catch(() => re.worktreePath))
             ) {
               D = !1;
               break;
@@ -92911,7 +92073,7 @@ async function cleanupWorktree(e, t) {
       );
       if (
         N !== 0 &&
-        (await Yw(o).then(
+        (await lstat(o).then(
           () => !0,
           () => !1,
         ))
@@ -92947,7 +92109,7 @@ async function cleanupWorktree(e, t) {
 async function ZBn(e, t) {
   let r = !1;
   try {
-    r = (await Wq(e)).isDirectory();
+    r = (await stat(e)).isDirectory();
   } catch {}
   if (!r)
     throw (
@@ -93075,8 +92237,8 @@ async function dUn(e) {
     ),
     r = t.stdout.trim();
   if (t.code !== 0 || !r) return !1;
-  let o = Jb(await Sp(r).catch(() => r)),
-    d = Jb(await Sp(e).catch(() => e));
+  let o = resolve(await realpath(r).catch(() => r)),
+    d = resolve(await realpath(e).catch(() => e));
   if (o === d) return !1;
   return getCurrentPlatform() === "windows"
     ? normalizePathForComparison(o) !== normalizePathForComparison(d)
@@ -93166,7 +92328,7 @@ async function cQ(e, t, r, o) {
       }),
       { outcome: "removed" }
     );
-  if (!Jce(e)) return d("path is not absolute");
+  if (!isAbsolute(e)) return d("path is not absolute");
   let _ = getCwd(),
     E = (re) => JNe(re, _);
   if (E(e)) return d("network path (UNC or automount)");
@@ -93181,7 +92343,7 @@ async function cQ(e, t, r, o) {
   if (C !== void 0 && pl(C)) return d("unverifiable symlinked ancestor");
   let I;
   try {
-    I = await Yw(e);
+    I = await lstat(e);
   } catch (re) {
     if (!W(re) && A(re) !== "ENOTDIR")
       return d(`cannot stat the directory (${A(re) ?? "unknown error"})`);
@@ -93195,16 +92357,16 @@ async function cQ(e, t, r, o) {
     );
   }
   if (!I.isDirectory()) return d("not a directory");
-  let D = await Sp(e).catch(() => null);
+  let D = await realpath(e).catch(() => null);
   if (D === null) return d("could not canonicalize the path");
   if (E(D)) return d("network path (UNC or automount)");
   if (r !== void 0 && D !== r) return d(IDENTITY_CHANGED_SUMMARY);
-  let N = UR(D);
-  if (N === D || d1(N) !== "worktrees" || d1(UR(N)) !== ".claude")
+  let N = dirname(D);
+  if (N === D || basename(N) !== "worktrees" || basename(dirname(N)) !== ".claude")
     return d("not directly under a .claude/worktrees directory");
   if (await findGitRootVerifyingPositive(D))
     return d("still resolves to a repository");
-  let F = await Qce(D).catch(() => null);
+  let F = await readdir(D).catch(() => null);
   if (F === null) return d("unreadable directory");
   if (F.length > 0 && t !== "job_delete_force")
     return (
@@ -93225,7 +92387,7 @@ async function cQ(e, t, r, o) {
         needsForce: !0,
       }
     );
-  if ((await Sp(D).catch(() => null)) !== D) return d(IDENTITY_CHANGED_SUMMARY);
+  if ((await realpath(D).catch(() => null)) !== D) return d(IDENTITY_CHANGED_SUMMARY);
   if (!(await isPathSafeToRemove(D)))
     return (
       logForDebugging(
@@ -93234,10 +92396,10 @@ async function cQ(e, t, r, o) {
       ),
       { outcome: "failed", errorSummary: pUn }
     );
-  if ((await Sp(D).catch((re) => (W(re) ? D : null))) !== D)
+  if ((await realpath(D).catch((re) => (W(re) ? D : null))) !== D)
     return d(IDENTITY_CHANGED_SUMMARY);
   return (
-    await oUn(D, { recursive: !0, force: !0 }),
+    await rm(D, { recursive: !0, force: !0 }),
     logForDebugging(`Removed agent worktree with no git root at: ${e}`),
     p()
   );
@@ -93254,7 +92416,7 @@ async function removeAgentWorktree(
   { storageV5: E, credentials: C } = {},
 ) {
   if (o) {
-    if (!Jce(e) || pl(e) || JNe(e, getCwd())) return cQ(e, d, p, !0);
+    if (!isAbsolute(e) || pl(e) || JNe(e, getCwd())) return cQ(e, d, p, !0);
     let de = e;
     if (p !== void 0) {
       let Se = getCwd(),
@@ -93269,7 +92431,7 @@ async function removeAgentWorktree(
         return cQ(e, d, p, !0);
       let Me;
       try {
-        Me = await Yw(e);
+        Me = await lstat(e);
       } catch (Oe) {
         if (W(Oe) || A(Oe) === "ENOTDIR") return cQ(e, d, p, !0);
         return {
@@ -93307,7 +92469,7 @@ async function removeAgentWorktree(
           );
       }
       if (d !== "job_delete_force") {
-        let Oe = await Qce(e).catch(() => null);
+        let Oe = await readdir(e).catch(() => null);
         if (Oe === null)
           return { outcome: "failed", errorSummary: "unreadable directory" };
         if (Oe.length > 0)
@@ -93332,7 +92494,7 @@ async function removeAgentWorktree(
       }
       let xe;
       try {
-        xe = await Sp(e);
+        xe = await realpath(e);
       } catch (Oe) {
         if (W(Oe) || A(Oe) === "ENOTDIR") return cQ(e, d, p, !0);
         return {
@@ -93430,7 +92592,7 @@ async function removeAgentWorktree(
   }
   let U = !1;
   if (p !== void 0) {
-    let de = await Sp(e).catch((_e) =>
+    let de = await realpath(e).catch((_e) =>
       W(_e) || A(_e) === "ENOTDIR" ? null : void 0,
     );
     if (de === null) U = !0;
@@ -93464,7 +92626,7 @@ async function removeAgentWorktree(
   );
   if (
     re !== 0 &&
-    (await Yw(e).then(
+    (await lstat(e).then(
       () => !0,
       () => !1,
     ))
@@ -93539,7 +92701,7 @@ async function pQ(e) {
     if (!r || (await readGitConfigFileValue(r, mUn, null, gUn)) === null)
       return;
     try {
-      if ((await Yw(Gg(r, "config.worktree"))).size > 0) return;
+      if ((await lstat(join(r, "config.worktree"))).size > 0) return;
     } catch (p) {
       if (!W(p) && A(p) !== "ENOTDIR") return;
     }
@@ -93550,7 +92712,7 @@ async function pQ(e) {
         continue;
       }
       if (
-        (await Yw(p.worktreePath).then(
+        (await lstat(p.worktreePath).then(
           () => !1,
           (E) => W(E) || A(E) === "ENOTDIR",
         )) &&
@@ -93718,7 +92880,7 @@ async function zct(e) {
 async function SUn(e) {
   let t = await hQ(e);
   try {
-    return (await (t ? Wq(t) : Yw(Gg(e, ".git"))), !1);
+    return (await (t ? stat(t) : lstat(join(e, ".git"))), !1);
   } catch (r) {
     return W(r) || A(r) === "ENOTDIR";
   }
@@ -94120,7 +93282,7 @@ function RUn(e) {
 }
 
 function $jo(e) {
-  return Mjo(getClaudeConfigDir(), "dump-prompts", `${e ?? K()}.jsonl`);
+  return join(getClaudeConfigDir(), "dump-prompts", `${e ?? K()}.jsonl`);
 }
 
 function Ujo(e, t, r, o, d) {
@@ -94426,7 +93588,7 @@ function DE(e) {
 }
 
 function getEnterpriseMcpFilePath() {
-  return sue(getManagedSettingsDirPath(), "managed-mcp.json");
+  return join(getManagedSettingsDirPath(), "managed-mcp.json");
 }
 
 function emptyServerMap() {
@@ -94521,7 +93683,7 @@ function YUn(e) {
     );
 }
 
-var Gq = `zzadminwc${_Wo(8).toString("hex")}zz`,
+var Gq = `zzadminwc${randomBytes(8).toString("hex")}zz`,
   wWo = "zzenvsubzz";
 
 function nut(e) {
@@ -94939,9 +94101,9 @@ function ZUn(e, { expandVars: t = !0 } = {}) {
         p = [],
         _ = he(),
         E = _;
-      while (E !== SWo(E).root) (p.push(E), (E = bWo(E)));
+      while (E !== parse(E).root) (p.push(E), (E = dirname(E)));
       for (let C of p.reverse()) {
-        let I = sue(C, ".mcp.json"),
+        let I = join(C, ".mcp.json"),
           { config: D, errors: N } = parseMcpConfigFromFilePath({
             filePath: I,
             expandVars: t,
@@ -96132,20 +95294,20 @@ async function g2o(e, t, r, o) {
 }
 
 function h2o(e, t) {
-  let r = `${EQ}.claude${EQ}worktrees${EQ}`,
+  let r = `${sep}.claude${sep}worktrees${sep}`,
     o = e.indexOf(r);
   if (o < 0) {
-    if (t && e.startsWith(t + EQ)) return null;
+    if (t && e.startsWith(t + sep)) return null;
     return e;
   }
   let d = e.slice(0, o),
     p = e.slice(o + r.length),
-    _ = p.indexOf(EQ);
+    _ = p.indexOf(sep);
   if (_ < 0) return null;
   let E = p.slice(_ + 1),
-    C = c2o(d, E),
-    I = NHn(d);
-  if (!NHn(C).startsWith(I + EQ)) return null;
+    C = join(d, E),
+    I = resolve(d);
+  if (!resolve(C).startsWith(I + sep)) return null;
   return C;
 }
 
@@ -96390,7 +95552,7 @@ async function* runAgent({
       type: "hook_additional_context",
       content: ls,
       hookName: "SubagentStart",
-      toolUseID: DHn(),
+      toolUseID: randomUUID(),
       hookEvent: "SubagentStart",
     });
     At.push(Rn);
@@ -96807,7 +95969,7 @@ async function* runAgent({
         }
         if (Rn.type !== "start" && Rn.type !== "end") return;
         if (Rn.type === "start")
-          ((oc = DHn()),
+          ((oc = randomUUID()),
             na.push({
               type: "api_metrics",
               event: { type: "start", ttftMs: Rn.ttftMs, id: oc },
@@ -97041,7 +96203,7 @@ async function* runAgent({
                 return;
               }
               for (let Hs of Object.keys(Ou.loadedNestedMemoryPaths ?? {})) {
-                if (!["CLAUDE.md", "CLAUDE.local.md"].includes(l2o(Hs)))
+                if (!["CLAUDE.md", "CLAUDE.local.md"].includes(basename(Hs)))
                   continue;
                 let ys = h2o(Hs, Oe);
                 if (ys === null) continue;
@@ -97396,7 +96558,7 @@ function fFe(e) {
   if (SETTINGS_SOURCE_ORDER.includes(e)) {
     let t = getSettingsFilePathForSource(e);
     if (t) {
-      let r = M2o(getCwd(), t);
+      let r = relative(getCwd(), t);
       return r.length < t.length ? r : t;
     }
   }
@@ -99500,7 +98662,7 @@ var bGo = "Fork started \u2014 processing in background";
 function buildForkedMessages(e, t) {
   let r = {
       ...t,
-      uuid: gGo(),
+      uuid: randomUUID(),
       message: { ...t.message, content: [...t.message.content] },
     },
     o = t.message.content.filter((_) => _.type === "tool_use");
@@ -101964,7 +101126,7 @@ function createInformationalSystemMessage(e, t) {
     content: e,
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: WGo(),
+    uuid: randomUUID(),
     level: t,
   };
 }
@@ -102043,13 +101205,13 @@ function J1n(e) {
 
 function Cut(e) {
   let t = fy() ?? getProjectDir(he());
-  if (Q1n(t) !== Pl()) return;
-  let r = KGo(t),
+  if (dirname(t) !== Pl()) return;
+  let r = basename(t),
     o = K(),
-    d = YGo(t, o) + Y1n,
+    d = join(t, o) + sep,
     p = getAgentTranscriptPath(e);
   if (!p.startsWith(d)) return;
-  let _ = p.slice(d.length).split(Y1n),
+  let _ = p.slice(d.length).split(sep),
     E = _.at(-1);
   if (
     E === void 0 ||
@@ -102101,7 +101263,7 @@ async function tjn(e, t, r) {
     return;
   }
   let d = vut(e);
-  (await VGo(Q1n(d.scoping), { recursive: !0 }),
+  (await mkdir(dirname(d.scoping), { recursive: !0 }),
     await writeForkedSkillProvenanceMarker(d.provenanceMarker, t.skillName),
     await writeFileAtomic(d.scoping, jsonStringify(t)));
 }
@@ -103226,7 +102388,7 @@ var ujn = ".consolidate-lock",
   djn = 3600000;
 
 function Rut(e) {
-  return pzo(e, ujn);
+  return join(e, ujn);
 }
 
 function Put(e) {
@@ -103249,12 +102411,12 @@ async function gzo(e, t, r) {
   let d = Rut(e);
   try {
     if (t === 0) {
-      await dzo(d);
+      await unlink(d);
       return;
     }
-    await cjn(d, "");
+    await writeFile(d, "");
     let p = t / 1000;
-    await fzo(d, p, p);
+    await utimes(d, p, p);
   } catch (p) {
     logForDebugging(
       `[autoDream] rollback failed: ${l(p)} \u2014 next trigger delayed to minHours`,
@@ -104280,7 +103442,7 @@ async function* runUserPromptSubmitHooksForSession(e, t, r, o, d, p) {
   yield* executeHooks({
     session: e,
     hookInput: _,
-    toolUseID: Mjn(),
+    toolUseID: randomUUID(),
     timeoutMs: D3e,
     sessionHooks: t,
     storageV5: d,
@@ -104305,7 +103467,7 @@ async function* executeUserPromptSubmitHooks(e, t, r, o, d = {}) {
   yield* executeHooks({
     session: r.session,
     hookInput: _,
-    toolUseID: Mjn(),
+    toolUseID: randomUUID(),
     signal: r.abortController.signal,
     timeoutMs: D3e,
     toolUseContext: r,
@@ -104670,7 +103832,7 @@ function $zo(e, t) {
 
 function m$e(e) {
   if (e === null || typeof e !== "object") return e;
-  if (Nzo.isProxy(e)) return e;
+  if (types.isProxy(e)) return e;
   let t = Object.getOwnPropertyDescriptor(e, "value");
   return t && "value" in t ? t.value : e;
 }
@@ -104743,7 +103905,7 @@ function getProactivityLevel({ getProactivityLevel: e }) {
 function Lut(e, t, r) {
   function o(p, _) {
     return async (E, C) => {
-      let I = `repl_${Bzo()}`,
+      let I = `repl_${randomUUID()}`,
         D = {
           prompt:
             typeof E === "string"
@@ -104950,7 +104112,7 @@ function Fut(e, t, r, o, d, p) {
 
 function Xzo(e, t, r, o, d, p, _, E) {
   let C = async (I, D) => {
-    let N = D?.toolUseID ?? `repl_${Yzo()}`,
+    let N = D?.toolUseID ?? `repl_${randomUUID()}`,
       F = e.isMcp === !0 && MQ(),
       U = (de) => {
         if (
@@ -105657,7 +104819,7 @@ function nqo(e) {
   function d(C, I = new WeakMap(), D = !0) {
     if (typeof C === "function") return;
     if (C === null || typeof C !== "object") return C;
-    if (Xjn.isProxy(C)) return;
+    if (types.isProxy(C)) return;
     let N = I.get(C);
     if (N !== void 0) return N;
     if (
@@ -105904,7 +105066,7 @@ var rqo = "Read",
 
 function tWn(e, t) {
   let r = {};
-  if (e === null || typeof e !== "object" || Xjn.isProxy(e)) return r;
+  if (e === null || typeof e !== "object" || types.isProxy(e)) return r;
   for (let o of t) {
     let d = Object.getOwnPropertyDescriptor(e, o);
     if (!d || !("value" in d)) continue;
@@ -105925,7 +105087,7 @@ var iqo = /^(pr|issue|run|workflow|release|label|cache)\b/,
 function lqo(e, t, r, o) {
   function d(D) {
     let N = t.toStr(D);
-    return Qzo(N) ? N : Jzo(r.cwd, N);
+    return isAbsolute(N) ? N : resolve(r.cwd, N);
   }
   function p(D, N) {
     let F = S$e(e, D);
@@ -106534,7 +105696,7 @@ function Hut(e, t) {
   let r = Tqo(e);
   if (r !== void 0) return r;
   try {
-    return bqo(e, { colors: !1, depth: t, customInspect: !1 });
+    return inspect(e, { colors: !1, depth: t, customInspect: !1 });
   } catch {
     return "[non-serializable value]";
   }
@@ -108071,7 +107233,7 @@ var b4o =
               result: !1,
               message:
                 `EnterWorktree cannot create a worktree from a subagent with a cwd override (isolation: "worktree" or explicit cwd) \u2014 it would mutate the parent session's process-wide working directory. ` +
-                (o != null && r !== o && r.startsWith(o + y4o)
+                (o != null && r !== o && r.startsWith(o + sep)
                   ? "To switch this agent into an existing worktree managed by Claude Code (under .claude/worktrees/ of this repository), call EnterWorktree with `path`. To work in any other directory, spawn an Agent with `cwd` set to it."
                   : "To work in a different directory (including a worktree), spawn an Agent with `cwd` set to it."),
               errorCode: 1,
@@ -108094,7 +107256,7 @@ var b4o =
               behavior: "allow",
               updatedInput: { ...t, path: r.targetReal },
             };
-          let o = oGn(getCwd(), t.path),
+          let o = resolve(getCwd(), t.path),
             d = (I) => sGn(I).replace(b4o, "\uFFFD"),
             p = d(o),
             _ = r ? d(r.targetReal) : null,
@@ -108167,7 +107329,7 @@ var b4o =
             r = await enterExistingWorktreeForSession(
               K(),
               t.path,
-              (await isPathUnderManagedWorktreesDir(oGn(getCwd(), t.path)))
+              (await isPathUnderManagedWorktreesDir(resolve(getCwd(), t.path)))
                 ? { requireManagedLocation: !0, storageV5: e.storageV5 }
                 : { storageV5: e.storageV5 },
             );
@@ -108407,13 +107569,13 @@ async function cGn(e, t, r, o, d, p, _) {
     let V = I;
     if (!V)
       try {
-        await E4o(t);
+        await realpath(t);
       } catch (re) {
         V = W(re);
       }
     if (!V) throw U;
     ((C = !0), (E = ""));
-    for (let re of [d, T4o(), getTempBaseDir()])
+    for (let re of [d, homedir(), getTempBaseDir()])
       try {
         (setSessionCwd(re, e), (E = re));
         break;
@@ -112314,7 +111476,7 @@ function Q5o(e) {
 function Gdt(e, t) {
   let o = [4, 7, 20].map((_) => e[_] || "0").join(""),
     d = `${X5o}${o}${t}`;
-  return Y5o("sha256").update(d).digest("hex").slice(0, 3);
+  return createHash("sha256").update(d).digest("hex").slice(0, 3);
 }
 
 function Q6n(e) {
@@ -112853,7 +112015,7 @@ function c3n(e, t, r) {
 async function v6o({ argv: e, init: t }, r, { signal: o, cwd: d } = {}) {
   let [p = "", ..._] = e,
     E = d ?? getCwd(),
-    C = t?.cwd === void 0 ? E : T6o(E, t.cwd),
+    C = t?.cwd === void 0 ? E : resolve(E, t.cwd),
     I = Math.min(t?.timeoutMs ?? l3n, wce),
     D = `${Ydt} (${r})`,
     N = FMn(o, I),
@@ -112963,21 +112125,21 @@ function p3n(e) {
   if (I6o.test(e) && !x6o.test(e) && e.length <= d3n && e !== "." && e !== "..")
     return `${e}.json`;
   let r = e.replace(/[^a-zA-Z0-9_-]/g, "_"),
-    o = O6o("sha256").update(e).digest("hex").slice(0, A6o);
+    o = createHash("sha256").update(e).digest("hex").slice(0, A6o);
   return `${r.slice(0, d3n) || "plugin"}-${o}.json`;
 }
 
-var mBe = (e) => N6o(getPluginsDir(), "store", p3n(e));
+var mBe = (e) => join(getPluginsDir(), "store", p3n(e));
 
 async function m3n(e) {
   let t = mBe(e);
-  return (await F6o($6o(t), { recursive: !0 }), t);
+  return (await mkdir(dirname(t), { recursive: !0 }), t);
 }
 
 async function U6o(e, t) {
   let r = new Date();
   try {
-    await B6o(t, r, r);
+    await utimes(t, r, r);
   } catch (o) {
     logForDebugging(`$.store (${e}): could not touch ${t}: ${l(o)}`, {
       level: "warn",
@@ -112990,7 +112152,7 @@ var h3n = {
     let t = mBe(e),
       r;
     try {
-      r = await H6o(t, "utf8");
+      r = await readFile(t, "utf8");
     } catch (d) {
       if (A(d) === "ENOENT") return {};
       throw new HooksError(`${e}: store file ${t} is unreadable (${l(d)})`);
@@ -115428,15 +114590,15 @@ function K8o({ limit: e, gapMs: t, quietMs: r }, o) {
 var DYn = ["node_modules", ".git"];
 
 function NYn(e, t) {
-  let r = X8o(e),
+  let r = basename(e),
     o = r.startsWith(".") && r !== ".claude-plugin",
-    d = e === t || e === J8o(Q8o(t), "latest");
+    d = e === t || e === join(dirname(t), "latest");
   return DYn.includes(r) || o || r.endsWith(".log") || d;
 }
 
 var LYn = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"];
 
-var n9o = (e) => LYn.includes(t9o(e));
+var n9o = (e) => LYn.includes(extname(e));
 
 var gft = 400;
 
@@ -115474,7 +114636,7 @@ function Ufe(e, t, r) {
     : r;
 }
 
-var Hfe = (e, t) => (e === void 0 ? "none" : l9o(t.root, e));
+var Hfe = (e, t) => (e === void 0 ? "none" : relative(t.root, e));
 
 function LBe(e) {
   let t = e.events.length,
@@ -115487,14 +114649,14 @@ function p9o(e, t, r) {
   let o = Hfe(t.before, e),
     d = Hfe(t.now, e),
     p = o === d ? `${d} unchanged` : `${o} \u2192 ${d}`;
-  return `${f9o(e.manifest)} changed \u2014 reloaded (modules: ${p}; ${LBe(r)})`;
+  return `${basename(e.manifest)} changed \u2014 reloaded (modules: ${p}; ${LBe(r)})`;
 }
 
-var g9o = (e) => `${m9o(e)} changed; restart to apply`;
+var g9o = (e) => `${basename(e)} changed; restart to apply`;
 
 function y9o(e, t) {
   let r = t === void 0 ? "nothing to unload" : `${Hfe(t, e)} unloaded`;
-  return `${h9o(e.manifest)} changed \u2014 names no hooks module now; ` + r;
+  return `${basename(e.manifest)} changed \u2014 names no hooks module now; ` + r;
 }
 
 function _9o(e, t) {
@@ -115651,7 +114813,7 @@ async function KYn(e) {
         d.path,
         d.source,
         d.enabled ?? !0,
-        P9o(d.path),
+        basename(d.path),
         zYn,
       ),
       E = VYn(_);
@@ -115763,7 +114925,7 @@ function i9n() {
     t;
   function r() {
     if (!t) {
-      let o = { port: 0, secret: K9o() },
+      let o = { port: 0, secret: randomUUID() },
         d = Bun.serve({
           hostname: "127.0.0.1",
           port: 0,
@@ -119133,7 +118295,7 @@ function YXn(e) {
   return {
     type: "attachment",
     attachment: e,
-    uuid: l7o(),
+    uuid: randomUUID(),
     timestamp: new Date().toISOString(),
   };
 }
@@ -122086,7 +121248,7 @@ async function GQo(e) {
     permission_mode: e.mode,
     platform: getCurrentPlatform(),
     live_cwd: t(getCwd()),
-    home_dir: t(BQo().normalize("NFC")),
+    home_dir: t(homedir().normalize("NFC")),
     rule_roots: Object.fromEntries(
       PERMISSION_RULE_SOURCES.map((U) => [U, t(rootPathForSource(U))]),
     ),
@@ -122498,7 +121660,7 @@ async function OJo(e) {
       let I = await r.source.backend.stat(r.source.key);
       if (!I.ok) return { promptCount: 0, memoryAccessCount: 0 };
       o = I.value.size;
-    } else o = (await EJo(t)).size;
+    } else o = (await stat(t)).size;
     let p = (await readTranscriptForLoad(t, o, r)).postBoundaryBuf,
       _ = Nge(p).filter((I) => isRecord(I)),
       E = _.findLastIndex(
@@ -122748,7 +121910,7 @@ function Ipt(e, t, { stamp: r, ...o }) {
     let d = ice(e),
       p = new Map();
     for (let E of t.entries)
-      if (!p.has(E.name) && !FJo(d.entries.get(E.name), E)) p.set(E.name, E);
+      if (!p.has(E.name) && !isDeepStrictEqual(d.entries.get(E.name), E)) p.set(E.name, E);
     let _ = [...t.nameOnlyAnnouncements].filter(
       (E) => !d.nameOnlyAnnouncements.has(E),
     );
@@ -122813,7 +121975,7 @@ function ser() {
   return {
     callModel: $Q,
     autocompact: Rft,
-    uuid: $Jo,
+    uuid: randomUUID,
     now: () => new Date().toISOString(),
   };
 }
@@ -127485,7 +126647,7 @@ function FZo(e) {
 async function storeShellOutputToStorage(e, t, r, o, d) {
   let { handle: p, size: _ } = await openVerifiedTaskOutput(r, o);
   await p.close();
-  let E = await NZo(d).catch(() => {
+  let E = await realpath(d).catch(() => {
     return;
   });
   if (E === void 0)
@@ -129406,7 +128568,7 @@ ${I}`;
           let Kn = buildToolResultFilePath(Cn, Se.outputTaskId, !1),
             hn =
               isHoverRestEnabled() && t.storageV5 !== void 0
-                ? getSidecarKeyForToolResultFile(Tes(Kn), Ees(Kn))
+                ? getSidecarKeyForToolResultFile(dirname(Kn), basename(Kn))
                 : void 0,
             At = !0;
           if (isHoverRestEnabled() && t.storageV5 !== void 0 && hn !== void 0) {
@@ -129509,7 +128671,7 @@ ${I}`;
           let Kn = getCwd(),
             hn = 5,
             At = Cn.slice(0, 5)
-              .map((Qr) => ves(Kn, Qr) || Qr)
+              .map((Qr) => relative(Kn, Qr) || Qr)
               .join(", "),
             Fn = Cn.length > 5 ? ` and ${Cn.length - 5} more` : "",
             Yn = j3t(READ_TOOL_NAME, t.options.tools);
@@ -129901,7 +129063,7 @@ async function substituteSkillShellCommands(e, t, r, o) {
         : isBashToolAvailable()
           ? BashTool
           : _nr(),
-    _ = t.toolUseId ?? `${ynr()}${INNER_TOOL_USE_ID_SUFFIX}`;
+    _ = t.toolUseId ?? `${randomUUID()}${INNER_TOOL_USE_ID_SUFFIX}`;
   return (
     await Promise.all(
       findSkillShellCommands(e).map(async ({ raw: E, command: C }, I) => {
@@ -129942,7 +129104,7 @@ async function substituteSkillShellCommands(e, t, r, o) {
             U = await persistMappedToolResult(
               p,
               F,
-              ynr(),
+              randomUUID(),
               getToolResultsDirForSession(D.session),
               D.storageV5,
             ),
@@ -130025,7 +129187,7 @@ function qes(e) {
 
 async function Ves(e) {
   try {
-    return await $pe(e);
+    return await realpath(e);
   } catch {
     return null;
   }
@@ -130272,7 +129434,7 @@ async function Xes(e, t, r, o) {
   try {
     let d = await readBoundedFileWithFs(
       e,
-      xh(t, ".claude-plugin", "plugin.json"),
+      join(t, ".claude-plugin", "plugin.json"),
       MAX_SKILL_FILE_BYTES,
     );
     if (d === null)
@@ -130356,7 +129518,7 @@ async function Qes(e, t, r) {
     _ = new Set();
   {
     let I = `@${SKILLS_DIR_PLUGIN_SOURCE}`;
-    if (t === "userSettings" && e === xh(getClaudeConfigDir(), "skills")) {
+    if (t === "userSettings" && e === join(getClaudeConfigDir(), "skills")) {
       let N = getInitialSettings().enabledPlugins;
       for (let F in N)
         if (N[F] === !1 && F.endsWith(I)) _.add(F.slice(0, -I.length));
@@ -130366,8 +129528,8 @@ async function Qes(e, t, r) {
     C = await Promise.all(
       d.map(async (I) => {
         try {
-          let D = xh(e, I),
-            N = xh(D, "SKILL.md");
+          let D = join(e, I),
+            N = join(D, "SKILL.md");
           if (_.size > 0) {
             let xe = STORAGE_KEYS.userConfigDir("skills", [
                 I,
@@ -130507,7 +129669,7 @@ async function Qes(e, t, r) {
         } catch (D) {
           return (
             logForDebugging(
-              `[skills] failed to parse ${xh(e, I, "SKILL.md")}: ${D}`,
+              `[skills] failed to parse ${join(e, I, "SKILL.md")}: ${D}`,
               {
                 level: "error",
               },
@@ -130527,7 +129689,7 @@ async function Qes(e, t, r) {
 
 async function dK(e, t, r = "skills", o) {
   if (o !== void 0) {
-    if (t === "userSettings" && e === xh(getClaudeConfigDir(), "skills"))
+    if (t === "userSettings" && e === join(getClaudeConfigDir(), "skills"))
       return Qes(e, t, o);
     logForDebugging(
       `[skills] storageV5 handed in for non-user base ${e}: falling back to the raw scan`,
@@ -130579,8 +129741,8 @@ async function dK(e, t, r = "skills", o) {
   {
     let N = `@${SKILLS_DIR_PLUGIN_SOURCE}`;
     if (
-      (t === "userSettings" && e === xh(getClaudeConfigDir(), "skills")) ||
-      (t === "projectSettings" && e === xh(he(), ".claude", "skills"))
+      (t === "userSettings" && e === join(getClaudeConfigDir(), "skills")) ||
+      (t === "projectSettings" && e === join(he(), ".claude", "skills"))
     ) {
       let U = getInitialSettings().enabledPlugins;
       for (let V in U)
@@ -130598,8 +129760,8 @@ async function dK(e, t, r = "skills", o) {
             ),
             null
           );
-        let F = xh(e, N.name),
-          U = xh(F, "SKILL.md");
+        let F = join(e, N.name),
+          U = join(F, "SKILL.md");
         if (I.size > 0) {
           let Ne = await Xes(d, F, N.name, I.has(N.name));
           if ("skip" in Ne) return ((_ = "skill_load_read_failed"), null);
@@ -130684,7 +129846,7 @@ async function dK(e, t, r = "skills", o) {
       } catch (F) {
         return (
           logForDebugging(
-            `[skills] failed to parse ${xh(e, N.name, "SKILL.md")}: ${F}`,
+            `[skills] failed to parse ${join(e, N.name, "SKILL.md")}: ${F}`,
             {
               level: "error",
             },
@@ -130703,13 +129865,13 @@ async function dK(e, t, r = "skills", o) {
 }
 
 function zpt(e) {
-  return /^skill\.md$/i.test(qUe(e));
+  return /^skill\.md$/i.test(basename(e));
 }
 
 function Jes(e) {
   let t = new Map();
   for (let o of e) {
-    let d = pK(o.filePath),
+    let d = dirname(o.filePath),
       p = t.get(d) ?? [];
     (p.push(o), t.set(d, p));
   }
@@ -130720,7 +129882,7 @@ function Jes(e) {
       let _ = p[0];
       if (p.length > 1)
         logForDebugging(
-          `Multiple skill files found in ${o}, using ${qUe(_.filePath)}`,
+          `Multiple skill files found in ${o}, using ${basename(_.filePath)}`,
         );
       r.push(_);
     } else r.push(...d);
@@ -130729,23 +129891,23 @@ function Jes(e) {
 }
 
 function Pnr(e, t) {
-  let r = t.endsWith(VE) ? t.slice(0, -1) : t;
-  if (!e.startsWith(r + VE)) return "";
+  let r = t.endsWith(sep) ? t.slice(0, -1) : t;
+  if (!e.startsWith(r + sep)) return "";
   let o = e.slice(r.length + 1);
-  return o ? o.split(VE).join(":") : "";
+  return o ? o.split(sep).join(":") : "";
 }
 
 function Zes(e, t) {
-  let r = pK(e),
-    o = pK(r),
-    d = qUe(r),
+  let r = dirname(e),
+    o = dirname(r),
+    d = basename(r),
     p = Pnr(o, t);
   return p ? `${p}:${d}` : d;
 }
 
 function ets(e, t) {
-  let r = qUe(e),
-    o = pK(e),
+  let r = basename(e),
+    o = dirname(e),
     d = r.replace(/\.md$/, ""),
     p = Pnr(o, t);
   return p ? `${p}:${d}` : d;
@@ -130763,7 +129925,7 @@ async function nts(e, t, r) {
         getMarkdownFiles("commands", e, r),
         Promise.all(
           t.map((I) => {
-            let D = xh(I, ".claude", "commands");
+            let D = join(I, ".claude", "commands");
             return hG(D, r).then((N) =>
               N.map((F) => ({ ...F, baseDir: D, source: "projectSettings" })),
             );
@@ -130782,7 +129944,7 @@ async function nts(e, t, r) {
       source: U,
     } of _)
       try {
-        let re = zpt(D) ? pK(D) : void 0,
+        let re = zpt(D) ? dirname(D) : void 0,
           ue = tts({
             baseDir: I,
             filePath: D,
@@ -130842,7 +130004,7 @@ async function Mnr(e) {
     isCustomizationDisabled("skills")
   )
     return null;
-  let t = xh(getClaudeConfigDir(), "skills");
+  let t = join(getClaudeConfigDir(), "skills");
   if (e !== void 0) return rts(t, e);
   let r;
   try {
@@ -130861,7 +130023,7 @@ async function Mnr(e) {
       if (isSyncOwnedRootName(E.name)) return null;
       if (p.has(E.name)) return null;
       try {
-        return await $pe(xh(t, E.name, "SKILL.md"));
+        return await realpath(join(t, E.name, "SKILL.md"));
       } catch {
         return null;
       }
@@ -130895,7 +130057,7 @@ async function rts(e, t) {
         if (D.found && D.totalBytes > MAX_SKILL_FILE_BYTES) return null;
       }
       try {
-        return await $pe(xh(e, C, "SKILL.md"));
+        return await realpath(join(e, C, "SKILL.md"));
       } catch {
         return null;
       }
@@ -130913,8 +130075,8 @@ function getSkillDirCommands(e, t) {
 }
 
 async function ots(e, t) {
-  let r = xh(getClaudeConfigDir(), "skills"),
-    o = xh(getManagedSettingsDirPath(), ".claude", "skills"),
+  let r = join(getClaudeConfigDir(), "skills"),
+    o = join(getManagedSettingsDirPath(), ".claude", "skills"),
     d = await getProjectDirsUpToHome("skills", e);
   logForDebugging(
     `Loading skills from: managed=${o}, user=${r}, project=[${d.join(", ")}]`,
@@ -130931,7 +130093,7 @@ async function ots(e, t) {
   if (isSimpleMode())
     return (
       await Promise.all(
-        p.map((De) => dK(xh(De, ".claude", "skills"), "projectSettings")),
+        p.map((De) => dK(join(De, ".claude", "skills"), "projectSettings")),
       )
     )
       .flat()
@@ -130945,9 +130107,9 @@ async function ots(e, t) {
       : Promise.resolve([]),
     isSettingsSourceEnabled("userSettings") && !_ && !Nb() && Gse()
       ? resolveSkillBucketId().then(async (Ne) =>
-          Ne === null || !(await hasSyncMarker(xh(r, SYNCED_DIR_NAME), Ne))
+          Ne === null || !(await hasSyncMarker(join(r, SYNCED_DIR_NAME), Ne))
             ? []
-            : dK(xh(r, SYNCED_DIR_NAME, Ne), "userSettings", "syncedSkills"),
+            : dK(join(r, SYNCED_DIR_NAME, Ne), "userSettings", "syncedSkills"),
         )
       : Promise.resolve([]),
     E
@@ -130955,7 +130117,7 @@ async function ots(e, t) {
       : Promise.resolve([]),
     E
       ? Promise.all(
-          p.map((Ne) => dK(xh(Ne, ".claude", "skills"), "projectSettings")),
+          p.map((Ne) => dK(join(Ne, ".claude", "skills"), "projectSettings")),
         )
       : Promise.resolve([]),
     _ ? Promise.resolve([]) : nts(e, E ? p : [], t),
@@ -131072,9 +130234,9 @@ function jpe() {
 function Lpe(e) {
   return toCaseFoldedName(
     e
-      .split(VE)
+      .split(sep)
       .map((t) => stripTrailingDotsAndSpaces(t))
-      .join(VE),
+      .join(sep),
   );
 }
 
@@ -131083,7 +130245,7 @@ var sts = new j(() => rs(its));
 async function its(e) {
   let t = async (p) => {
       try {
-        let _ = await $pe(p);
+        let _ = await realpath(p);
         return _ === p ? [p] : [p, _];
       } catch {
         return [p];
@@ -131093,18 +130255,18 @@ async function its(e) {
     o = new Set(),
     d = new Set();
   for (let p of r) {
-    for (let _ of await t(xh(p, "skills"))) o.add(_);
-    for (let _ of await t(xh(p, "plugins"))) d.add(_);
+    for (let _ of await t(join(p, "skills"))) o.add(_);
+    for (let _ of await t(join(p, "plugins"))) d.add(_);
   }
   return {
-    skillsBasePrefixesFolded: [...o].map((p) => Lpe(p) + VE),
+    skillsBasePrefixesFolded: [...o].map((p) => Lpe(p) + sep),
     syncOwnedPrefixes: [
       ...[...o].flatMap((p) => [
-        xh(p, SYNCED_DIR_NAME) + VE,
-        xh(p, TRASH_DIR_NAME) + VE,
-        xh(p, ".staging") + VE,
+        join(p, SYNCED_DIR_NAME) + sep,
+        join(p, TRASH_DIR_NAME) + sep,
+        join(p, ".staging") + sep,
       ]),
-      ...[...d].map((p) => xh(p, SYNCED_DIR_NAME) + VE),
+      ...[...d].map((p) => join(p, SYNCED_DIR_NAME) + sep),
     ].map(Lpe),
   };
 }
@@ -131112,27 +130274,27 @@ async function its(e) {
 async function ats(e, t, r, o) {
   if (isCustomizationDisabled("skills")) return [];
   let d = getFsSurface(),
-    p = r.endsWith(VE) ? r.slice(0, -1) : r,
+    p = r.endsWith(sep) ? r.slice(0, -1) : r,
     _ = [],
     { syncOwnedPrefixes: E, skillsBasePrefixesFolded: C } =
       await sts.of(e)(getClaudeConfigDir()),
-    I = getCurrentPlatform() === "windows" ? [...C, Lpe(p) + VE] : C;
+    I = getCurrentPlatform() === "windows" ? [...C, Lpe(p) + sep] : C;
   for (let D of t) {
-    let N = pK(D),
-      F = Lpe(N) + VE;
+    let N = dirname(D),
+      F = Lpe(N) + sep;
     if (E.some((U) => F.startsWith(U))) continue;
     if (
       I.some(
         (U) =>
           F.startsWith(U) &&
           F.slice(U.length)
-            .split(VE)
+            .split(sep)
             .some((V) => /~\d/.test(V)),
       )
     )
       continue;
-    while (N.startsWith(p + VE)) {
-      let U = xh(N, ".claude", "skills");
+    while (N.startsWith(p + sep)) {
+      let U = join(N, ".claude", "skills");
       if (!zx().dynamicSkillDirs.has(U)) {
         zx().dynamicSkillDirs.add(U);
         try {
@@ -131146,9 +130308,9 @@ async function ats(e, t, r, o) {
           }
           let re = U;
           try {
-            re = await $pe(U);
+            re = await realpath(U);
           } catch {}
-          if (E.some((ue) => (Lpe(re) + VE).startsWith(ue))) {
+          if (E.some((ue) => (Lpe(re) + sep).startsWith(ue))) {
             logForDebugging(
               `[skills] Skipped sync-owned skills dir (resolved): ${U}`,
             );
@@ -131157,7 +130319,7 @@ async function ats(e, t, r, o) {
           _.push(U);
         } catch {}
       }
-      let V = pK(N);
+      let V = dirname(N);
       if (V === N) break;
       N = V;
     }
@@ -131189,8 +130351,8 @@ async function discoverDynamicSkills(e, t = {}) {
       E = (C) => {
         let I = C.type === "prompt" ? (C.skillRoot ?? "") : "";
         return e.some((D) => {
-          let N = Cnr(D, I);
-          return N === "" || (!N.startsWith("..") && !Gpt(N));
+          let N = relative(D, I);
+          return N === "" || (!N.startsWith("..") && !isAbsolute(N));
         });
       };
     for (let [C, I] of d.dynamicSkills)
@@ -131236,8 +130398,8 @@ function Snr(e, t) {
       .default()
       .add(filterCompilableIgnorePatterns(d.paths, "skill_paths"));
     for (let _ of e) {
-      let E = Gpt(_) ? Cnr(t, _) : _;
-      if (!E || E.startsWith("..") || Gpt(E)) continue;
+      let E = isAbsolute(_) ? relative(t, _) : _;
+      if (!E || E.startsWith("..") || isAbsolute(E)) continue;
       if (p.ignores(E)) {
         (zx().dynamicSkills.set(WUe(d), d),
           zx().conditionalSkills.delete(o),
@@ -131281,20 +130443,20 @@ async function M8(e, t, r, o) {
 var F1 = 1048576;
 
 function qpt(e) {
-  return /^skill\.md$/i.test(zJ(e));
+  return /^skill\.md$/i.test(basename(e));
 }
 
 function cts(e, t, r) {
   if (qpt(e)) {
-    let d = mF(e),
-      p = mF(d),
-      _ = zJ(d),
+    let d = dirname(e),
+      p = dirname(d),
+      _ = basename(d),
       E = p.startsWith(t) ? p.slice(t.length).replace(/^[/\\]/, "") : "",
       C = E ? E.split(/[/\\]/).join(":") : "";
     return C ? `${r}:${C}:${_}` : `${r}:${_}`;
   } else {
-    let d = mF(e),
-      p = zJ(e).replace(/\.md$/, ""),
+    let d = dirname(e),
+      p = basename(e).replace(/\.md$/, ""),
       _ = d.startsWith(t) ? d.slice(t.length).replace(/^[/\\]/, "") : "",
       E = _ ? _.split(/[/\\]/).join(":") : "";
     return E ? `${r}:${E}:${p}` : `${r}:${p}`;
@@ -131345,7 +130507,7 @@ async function uts(e, t, r) {
 function dts(e) {
   let t = new Map();
   for (let o of e) {
-    let d = mF(o.filePath),
+    let d = dirname(o.filePath),
       p = t.get(d) ?? [];
     (p.push(o), t.set(d, p));
   }
@@ -131356,7 +130518,7 @@ function dts(e) {
       let _ = p[0];
       if (p.length > 1)
         logForDebugging(
-          `Multiple skill files found in ${o}, using ${zJ(_.filePath)}`,
+          `Multiple skill files found in ${o}, using ${basename(_.filePath)}`,
         );
       r.push(_);
     } else r.push(...d);
@@ -131381,7 +130543,7 @@ function Gpe(e, t, r, o, d, p, _ = { isSkillMode: !1 }) {
     let { frontmatter: E, content: C } = t,
       I = parseOptionalString(E.description, e),
       D = I ?? extractMarkdownTitle(C, p ? "Plugin skill" : "Plugin command"),
-      F = mF(t.filePath),
+      F = dirname(t.filePath),
       U = (gn) => {
         let Qt = expandPluginPathVariables(gn, { path: d, source: r });
         if (_.isSkillMode) Qt = Qt.replace(/\$\{CLAUDE_SKILL_DIR\}/g, () => F);
@@ -131490,7 +130652,7 @@ function Gpe(e, t, r, o, d, p, _ = { isSkillMode: !1 }) {
       aliases: De,
       async getPromptForCommand(gn, Qt) {
         let wn = _.isSkillMode
-          ? `Base directory for this skill: ${mF(t.filePath)}
+          ? `Base directory for this skill: ${dirname(t.filePath)}
 
 ${C}`
           : C;
@@ -131641,14 +130803,14 @@ function getPluginCommands(e) {
                             E.commandsMetadata,
                           ))
                             if (Oe.source) {
-                              let Ne = XUe(E.path, Oe.source);
+                              let Ne = join(E.path, Oe.source);
                               if (N === Ne) {
                                 ((de = `${E.name}:${xe}`), (_e = Oe));
                                 break;
                               }
                             }
                         }
-                        if (!de) de = `${E.name}:${zJ(N).replace(/\.md$/, "")}`;
+                        if (!de) de = `${E.name}:${basename(N).replace(/\.md$/, "")}`;
                         let Se = _e
                             ? {
                                 ...re,
@@ -131666,7 +130828,7 @@ function getPluginCommands(e) {
                             : re,
                           ve = {
                             filePath: N,
-                            baseDir: mF(N),
+                            baseDir: dirname(N),
                             frontmatter: Se,
                             content: yO(
                               getHostStateStore().skillContentIntern,
@@ -131770,7 +130932,7 @@ async function Nnr(e, t, r, o, d, p) {
   let _ = getFsSurface(),
     E = [],
     C = Mee(),
-    I = XUe(e, "SKILL.md"),
+    I = join(e, "SKILL.md"),
     D = null;
   try {
     if (((D = await readBoundedFileWithFs(_, I, F1)), D === null))
@@ -131795,12 +130957,12 @@ async function Nnr(e, t, r, o, d, p) {
         }),
         V = typeof F.name === "string" ? F.name.trim() : "",
         ue = (
-          (V.startsWith(`${t}:`) ? V.slice(t.length + 1) : V) || zJ(e)
+          (V.startsWith(`${t}:`) ? V.slice(t.length + 1) : V) || basename(e)
         ).replace(/[^a-zA-Z0-9_-]/g, "-"),
         de = `${t}:${ue}`,
         _e = {
           filePath: I,
-          baseDir: mF(I),
+          baseDir: dirname(I),
           frontmatter: F,
           content: yO(getHostStateStore().skillContentIntern, I, U),
         },
@@ -131830,8 +130992,8 @@ async function Nnr(e, t, r, o, d, p) {
     await Promise.all(
       N.map(async (F) => {
         if (!F.isDirectory() && !F.isSymbolicLink()) return;
-        let U = XUe(e, F.name),
-          V = XUe(U, "SKILL.md"),
+        let U = join(e, F.name),
+          V = join(U, "SKILL.md"),
           re;
         try {
           let ue = await readBoundedFileWithFs(_, V, F1);
@@ -131858,7 +131020,7 @@ async function Nnr(e, t, r, o, d, p) {
             _e = `${t}:${F.name.replace(/[^a-zA-Z0-9_-]/g, "-")}`,
             Se = {
               filePath: V,
-              baseDir: mF(V),
+              baseDir: dirname(V),
               frontmatter: ue,
               content: yO(getHostStateStore().skillContentIntern, V, de),
             },
@@ -131988,7 +131150,7 @@ function getPluginSkills(e) {
           Promise.all(
             E.map(async (F) => {
               try {
-                return await lts(F.filePath);
+                return await realpath(F.filePath);
               } catch {
                 return null;
               }
@@ -132090,9 +131252,9 @@ async function getEnabledPluginBinPaths(e) {
   let { enabled: t } = await loadAllPluginsCacheOnly(e);
   return t
     .filter((r) => !r.isBuiltin && r.path)
-    .map((r) => dd(r.path, "bin"))
+    .map((r) => join(r.path, "bin"))
     .filter((r) => {
-      if (zC !== "\\" && /[:"'$`\\\n\r]/.test(r))
+      if (sep !== "\\" && /[:"'$`\\\n\r]/.test(r))
         return (
           logForDebugging(
             `Dropping plugin bin path with shell metacharacters: ${r}`,
@@ -132136,7 +131298,7 @@ async function Zsr(e, t, r) {
     let { frontmatter: p, content: _ } = parseFrontmatter(d, e, {
         normalizeKeys: !0,
       }),
-      E = Nos(e, ".md"),
+      E = basename(e, ".md"),
       C = (p.name != null ? String(p.name) : void 0) || E,
       I = `${t}:${C}`,
       D =
@@ -132245,7 +131407,7 @@ async function Fos(e, t) {
         }) => {
           try {
             tU("output-style", p);
-            let D = Los(d).replace(/\.md$/, ""),
+            let D = basename(d).replace(/\.md$/, ""),
               N = (p.name != null ? String(p.name) : void 0) || D,
               F =
                 parseOptionalString(p.description, D) ??
@@ -133185,7 +132347,7 @@ If you made code changes in a worktree you entered, commit before finishing \u20
 
 This session runs as a background job. The user may be chatting with you live or may have stepped away to check results later \u2014 respond naturally either way, and don't refer to yourself as "a background agent."
 
-Use \`$CLAUDE_JOB_DIR/tmp\` (\`${zos(e, "tmp")}\`) for any temporary files (scripts, query files, intermediate outputs) instead of \`/tmp\` \u2014 parallel bg jobs share \`/tmp\` and clobber each other's files. This directory already exists and is cleaned up when the job is deleted, so anything the user should keep belongs somewhere durable instead.
+Use \`$CLAUDE_JOB_DIR/tmp\` (\`${join(e, "tmp")}\`) for any temporary files (scripts, query files, intermediate outputs) instead of \`/tmp\` \u2014 parallel bg jobs share \`/tmp\` and clobber each other's files. This directory already exists and is cleaned up when the job is deleted, so anything the user should keep belongs somewhere durable instead.
 
 ${r}${o}
 
@@ -133327,7 +132489,7 @@ function Kss(e, t, r, o, d) {
   e.comparedRecordedSchemas.add(t);
   let p = { toolName: getSanitizedToolName(t.name), isMcp: d };
   if (!o) logFeatureSad("prompt_snapshot_tool_replay", "strict_mismatch", p);
-  else if (Uss(r.input_schema, t.input_schema))
+  else if (isDeepStrictEqual(r.input_schema, t.input_schema))
     logFeatureOk("prompt_snapshot_tool_replay", p);
   else logFeatureSad("prompt_snapshot_tool_replay", "schema_differs", p);
 }
@@ -133504,7 +132666,7 @@ function yir(e) {
   logEvent("tengu_sysprompt_block", {
     length: r?.length ?? 0,
     hash: r
-      ? sanitizeAnalyticsId(Hss("sha256").update(r).digest("hex"))
+      ? sanitizeAnalyticsId(createHash("sha256").update(r).digest("hex"))
       : S(""),
   });
 }
@@ -134782,7 +133944,7 @@ function Lar(e) {
 
 function $ar(e, t) {
   let r = isDefaultProviderEndpoint(),
-    o = r ? gZ() : void 0,
+    o = r ? randomUUID() : void 0,
     d =
       e && (r || Ie(process.env.CLAUDE_CODE_PROPAGATE_TRACEPARENT))
         ? QWe(e)
@@ -136395,7 +135557,7 @@ async function* Har(e, t, r, o, d, p) {
         Rn !== void 0)
       )
         nnt(Rn);
-      if (((Rn = jf ? gZ() : void 0), Rn !== void 0)) {
+      if (((Rn = jf ? randomUUID() : void 0), Rn !== void 0)) {
         if ((bbn(Rn), qf !== void 0)) dbn(Rn, Rir(qf));
       }
       let xp = {
@@ -137796,7 +136958,7 @@ async function* Har(e, t, r, o, d, p) {
               p.activeMcpTool,
             ),
             type: "assistant",
-            uuid: gZ(),
+            uuid: randomUUID(),
             timestamp: new Date().toISOString(),
             isAbortedMidStream: !0,
             ...void 0,
@@ -138188,7 +137350,7 @@ async function* Har(e, t, r, o, d, p) {
                     p.activeMcpTool,
                   ),
                   type: "assistant",
-                  uuid: gZ(),
+                  uuid: randomUUID(),
                   timestamp: new Date().toISOString(),
                   ...!1,
                   ...(Se && { advisorModel: Se }),
@@ -139335,7 +138497,7 @@ async function* Har(e, t, r, o, d, p) {
             p.activeMcpTool,
           ),
           type: "assistant",
-          uuid: gZ(),
+          uuid: randomUUID(),
           timestamp: new Date().toISOString(),
           ...!1,
           ...(Se && { advisorModel: Se }),
@@ -139529,7 +138691,7 @@ async function* Har(e, t, r, o, d, p) {
             p.activeMcpTool,
           ),
           type: "assistant",
-          uuid: gZ(),
+          uuid: randomUUID(),
           timestamp: new Date().toISOString(),
           ...!1,
           ...(Se && { advisorModel: Se }),
@@ -140488,7 +139650,7 @@ async function rlr(e, t, r, o = ras) {
     let re = (Se) => {
       let ve = cas(Se);
       if (ve === void 0) return C;
-      return tas(ve) ? ve : nas(C, ve);
+      return isAbsolute(ve) ? ve : resolve(C, ve);
     };
     for (let Se of _) {
       let ve = re(Se.optsSpan),
@@ -140945,9 +140107,9 @@ function Xkt(e) {
   if (isTranscriptPersistenceDisabled()) return null;
   let t = K(),
     r = getSessionSidecarDir(t);
-  return Pas(r) !== t || getProjectKeyFromDir(Ias(r)) === void 0
+  return basename(r) !== t || getProjectKeyFromDir(dirname(r)) === void 0
     ? null
-    : Mas(r, e);
+    : join(r, e);
 }
 
 async function plr(e, t, r, o, d, p, _) {
@@ -142578,7 +141740,7 @@ async function Ils(
 
 async function Mls(e, t) {
   let r = Date.now(),
-    o = Ras(),
+    o = randomUUID(),
     d =
       t.promptTokensEstimate !== void 0
         ? ` promptTokensEst=${t.promptTokensEstimate}`
@@ -145066,7 +144228,7 @@ function eur(e) {
 }
 
 async function Kcs(e, t) {
-  return qcs(getTranscriptPathForSession(e)).then(
+  return stat(getTranscriptPathForSession(e)).then(
     () => !0,
     () => !1,
   );
@@ -147586,13 +146748,13 @@ async function getCommands(e, t) {
 
 function Kds(e, t) {
   if (e.type !== "prompt" || !e.skillRoot) return null;
-  let r = `${wTt}.claude${wTt}`,
+  let r = `${sep}.claude${sep}`,
     o = e.skillRoot.lastIndexOf(r);
   if (o === -1) return null;
   let d = e.skillRoot.slice(0, o),
-    p = Ods(t, d);
-  if (!p || p.startsWith("..") || Mds(p)) return null;
-  return p.split(wTt).join("/");
+    p = relative(t, d);
+  if (!p || p.startsWith("..") || isAbsolute(p)) return null;
+  return p.split(sep).join("/");
 }
 
 function NTt(e, t) {
@@ -147918,7 +147080,7 @@ function lfs(e, t, r = Date.now()) {
       D.add(`${F.kind}\x00${F.id}\x00${yr(F.name)}`);
   for (let F of t.sessions)
     if (!F.name && F.cwd) {
-      let U = normalizeSessionName(sfs(F.cwd)),
+      let U = normalizeSessionName(basename(F.cwd)),
         V = U && `session\x00${F.sock}\x00${yr(U)}`;
       if (V && !I.has(V)) D.add(V);
     }
@@ -148543,7 +147705,7 @@ async function Gfr(
         tn = vt
           .filter(
             (dn) =>
-              isRecallVisiblePath(Sfs(r, dn.path), Wt) &&
+              isRecallVisiblePath(relative(r, dn.path), Wt) &&
               !en.has(dn.path) &&
               !p.has(dn.path) &&
               !I?.(dn.path),
@@ -149225,7 +148387,7 @@ function Dfs(e) {
     r.map((o) => ({
       type: "queued_command",
       prompt: o.text,
-      source_uuid: Qfr(),
+      source_uuid: randomUUID(),
       origin: o.origin,
       isMeta: o.isMeta,
     }))
@@ -149820,13 +148982,13 @@ async function Zfs(e, t) {
       lineEnd: e.lineStart + e.lineCount - 1,
       filename: e.filePath,
       content: e.text,
-      displayPath: SD(getCwd(), e.filePath),
+      displayPath: relative(getCwd(), e.filePath),
     },
   ];
 }
 
 function eps(e, t) {
-  let r = avt(cvt(e));
+  let r = dirname(resolve(e));
   if (!r.startsWith(t))
     try {
       let E = getFsSurface().realpathSync(r);
@@ -149834,14 +148996,14 @@ function eps(e, t) {
     } catch {}
   let o = [],
     d = r;
-  while (d !== t && d !== M1e(d).root) {
+  while (d !== t && d !== parse(d).root) {
     if (d.startsWith(t)) o.push(d);
-    d = avt(d);
+    d = dirname(d);
   }
   o.reverse();
   let p = [];
   d = t;
-  while (d !== M1e(d).root) (p.push(d), (d = avt(d)));
+  while (d !== parse(d).root) (p.push(d), (d = dirname(d)));
   p.reverse();
   let _ = getGitWorktreeRoots(t);
   return {
@@ -149865,7 +149027,7 @@ async function lvt(e, t, r) {
           type: "nested_memory",
           path: p.path,
           content: p,
-          displayPath: SD(getCwd(), p.path),
+          displayPath: relative(getCwd(), p.path),
         }),
         t.loadedNestedMemoryPaths)
       )
@@ -149955,14 +149117,14 @@ async function rps(e, t) {
             return (logFeatureBad("input_file_at_mention", "denied"), null);
           let I = resolvePath(_);
           if (isFileReadDenied(I, o)) {
-            if (vfs(_) || _.startsWith("~") || /(^|[\\/])\.\.([\\/]|$)/.test(_))
+            if (isAbsolute(_) || _.startsWith("~") || /(^|[\\/])\.\.([\\/]|$)/.test(_))
               logFeatureBad("input_file_at_mention", "denied");
             return null;
           }
           try {
-            if ((await Xfr(I)).isDirectory())
+            if ((await stat(I)).isDirectory())
               try {
-                let F = await Yfr(I, { withFileTypes: !0 }),
+                let F = await readdir(I, { withFileTypes: !0 }),
                   U = 1000,
                   V = F.length > 1000,
                   re = F.slice(0, 1000).map((de) => de.name);
@@ -149977,7 +149139,7 @@ async function rps(e, t) {
                     type: "directory",
                     path: I,
                     content: ue,
-                    displayPath: SD(getCwd(), I),
+                    displayPath: relative(getCwd(), I),
                   }
                 );
               } catch {
@@ -150487,7 +149649,7 @@ async function gps(e) {
     return [];
   await discoverDynamicSkills(r).catch(() => {});
   let o = sn(),
-    d = o.endsWith(zfr) ? o : o + zfr,
+    d = o.endsWith(sep) ? o : o + sep,
     p = await getSkillToolCommands(sn(), e.storageV5);
   if (e.agentId === void 0) p = filterSkillCommandsByAllowlist(p, K1());
   let _ = new Map();
@@ -150497,17 +149659,17 @@ async function gps(e) {
     C = await Promise.all(
       r.map(async (I) => {
         try {
-          let N = (await Yfr(I, { withFileTypes: !0 }))
+          let N = (await readdir(I, { withFileTypes: !0 }))
               .filter((U) => U.isDirectory() || U.isSymbolicLink())
               .map((U) => U.name),
             F = await Promise.all(
               N.map(async (U) => {
                 try {
-                  await Xfr(cvt(I, U, "SKILL.md"));
+                  await stat(resolve(I, U, "SKILL.md"));
                 } catch {
                   return null;
                 }
-                let V = _.get(cvt(I, U));
+                let V = _.get(resolve(I, U));
                 if (!V || !isValidName(V)) return null;
                 return V;
               }),
@@ -150520,7 +149682,7 @@ async function gps(e) {
     );
   for (let { skillDir: I, skillNames: D } of C) {
     if (D.length === 0) continue;
-    let N = SD(o, I);
+    let N = relative(o, I);
     if (UNSAFE_CHARS_PATTERN.test(N) || !I.startsWith(d)) continue;
     E.push({
       type: "dynamic_skill",
@@ -150758,7 +149920,7 @@ async function* getAttachmentMessages(e, t, r, o, d, p, _, E) {
 }
 
 async function Eps(e) {
-  let t = M1e(e).ext.toLowerCase();
+  let t = parse(e).ext.toLowerCase();
   if (!isPdfFile(t)) return null;
   try {
     let [r, o] = await Promise.all([
@@ -150778,7 +149940,7 @@ async function Eps(e) {
           filename: e,
           pageCount: d,
           fileSize: r.size,
-          displayPath: SD(getCwd(), e),
+          displayPath: relative(getCwd(), e),
         }
       );
   } catch {}
@@ -150795,7 +149957,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
       getDefaultFileReadingLimits().maxSizeBytes,
     ))
   ) {
-    let I = M1e(e).ext.toLowerCase();
+    let I = parse(e).ext.toLowerCase();
     if (!isPdfFile(I))
       try {
         let D = await getFsSurface().stat(e);
@@ -150829,7 +149991,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
         return {
           type: "already_read_file",
           filename: e,
-          displayPath: SD(getCwd(), e),
+          displayPath: relative(getCwd(), e),
           content: {
             type: "text",
             file: {
@@ -150861,7 +150023,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
         return {
           type: "compact_file_reference",
           filename: e,
-          displayPath: SD(getCwd(), e),
+          displayPath: relative(getCwd(), e),
         };
       if (isFileReadDenied(e, getToolPermissionContext(t))) return null;
       try {
@@ -150878,7 +150040,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
           filename: e,
           content: U.data,
           truncated: !0,
-          displayPath: SD(getCwd(), e),
+          displayPath: relative(getCwd(), e),
         };
       } catch {
         if ((logEvent(o, {}), d === "at-mention"))
@@ -150895,7 +150057,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
         return {
           type: "already_read_file",
           filename: e,
-          displayPath: SD(getCwd(), e),
+          displayPath: relative(getCwd(), e),
           content: F.data,
         };
       }
@@ -150907,7 +150069,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
         type: "file",
         filename: e,
         content: F.data,
-        displayPath: SD(getCwd(), e),
+        displayPath: relative(getCwd(), e),
       };
     } catch (F) {
       if (
@@ -150927,7 +150089,7 @@ async function generateFileAttachment(e, t, r, o, d, p) {
 
 function createAttachmentMessage(
   e,
-  t = { now: () => new Date().toISOString(), uuid: () => Qfr() },
+  t = { now: () => new Date().toISOString(), uuid: () => randomUUID() },
 ) {
   let r = gvt(e);
   return {
@@ -151385,7 +150547,7 @@ function fpr() {
 }
 
 async function ppr(e, t, r, o, d, p, _, E, C) {
-  let I = E || `hook-${Ups()}`,
+  let I = E || `hook-${randomUUID()}`,
     D = r === "Stop" || r === "SubagentStop";
   try {
     let N = D
@@ -151927,7 +151089,7 @@ function Zps(e) {
 var $1e = "hook-agent-";
 
 async function nmr(e, t, r, o, d, p, _, E) {
-  let C = _ || `hook-${tmr()}`,
+  let C = _ || `hook-${randomUUID()}`,
     I = p.remoteCall !== void 0,
     D = p.agentId
       ? getAgentTranscriptPath(p.agentId)
@@ -151972,7 +151134,7 @@ When done, return your result using the ${STRUCTURED_OUTPUT_TOOL_NAME} tool with
         ]),
         Ke = e.model ?? getSmallFastModel(),
         ct = 50,
-        vt = oo(`${$1e}${tmr()}`),
+        vt = oo(`${$1e}${randomUUID()}`),
         ut = CW(),
         Wt = {
           ...p,
@@ -152596,7 +151758,7 @@ async function* executeSessionStartHooks(
     yield* executeHooks({
       session: e,
       hookInput: U,
-      toolUseID: Tvt(),
+      toolUseID: randomUUID(),
       matchQuery: t,
       signal: _,
       timeoutMs: E,
@@ -152619,7 +151781,7 @@ async function* executeSubagentStartHooks(e, t, r, o, d = Jd, p, _, E) {
   yield* executeHooks({
     session: e.session,
     hookInput: C,
-    toolUseID: Tvt(),
+    toolUseID: randomUUID(),
     matchQuery: r,
     signal: o,
     timeoutMs: d,
@@ -152796,7 +151958,7 @@ async function* executeStopHooks(
     session: p.session,
     hookInput: ue,
     extendedHookInput: de,
-    toolUseID: sms(),
+    toolUseID: randomUUID(),
     signal: t,
     timeoutMs: r,
     toolUseContext: p,
@@ -152817,7 +151979,7 @@ async function* executeTeammateIdleHooks(e, t, r, o, d = Jd, p) {
   yield* executeHooks({
     session: p.session,
     hookInput: _,
-    toolUseID: Cvt(),
+    toolUseID: randomUUID(),
     signal: o,
     timeoutMs: d,
     toolUseContext: p,
@@ -152837,7 +151999,7 @@ async function* executeTaskCreatedHooks(e, t, r, o, d, p, _, E = Jd, C) {
   yield* executeHooks({
     session: C.session,
     hookInput: I,
-    toolUseID: Cvt(),
+    toolUseID: randomUUID(),
     signal: _,
     timeoutMs: E,
     toolUseContext: C,
@@ -152857,7 +152019,7 @@ async function* executeTaskCompletedHooks(e, t, r, o, d, p, _, E = Jd, C) {
   yield* executeHooks({
     session: C.session,
     hookInput: I,
-    toolUseID: Cvt(),
+    toolUseID: randomUUID(),
     signal: _,
     timeoutMs: E,
     toolUseContext: C,
@@ -152905,8 +152067,8 @@ async function executeWorktreeCreateHook(
       "WorktreeCreate hook failed (stderr redacted)",
     );
   }
-  if (ams(_)) return { worktreePath: _ };
-  return { worktreePath: lms(await safeHookCwd(d.cwd, e.project), _) };
+  if (isAbsolute(_)) return { worktreePath: _ };
+  return { worktreePath: resolve(await safeHookCwd(d.cwd, e.project), _) };
 }
 
 function cms(e) {
@@ -153132,7 +152294,7 @@ async function executeHooksOutsideREPL({
               timeoutMs: vt,
             });
           try {
-            let en = bF(),
+            let en = randomUUID(),
               tn = await Se.callback(o, en, ut, Oe);
             if ((Wt?.(), JR(tn)))
               return (
@@ -153362,7 +152524,7 @@ async function executeHooksOutsideREPL({
               e.project,
               Se.type === "script" ? e.project.projectRoot : o.cwd,
               He,
-              bF(),
+              randomUUID(),
               Oe,
               ve,
               Me,
@@ -154112,7 +153274,7 @@ async function dge(e, t, r, o, d, p, _, E, C, I, D, N, F, U, V, re, ue, de) {
     un = hpr(),
     kn;
   if (vt)
-    kn = xvt(vt[0], vt[1], {
+    kn = spawn(vt[0], vt[1], {
       env: cn,
       cwd: gn,
       detached: Qt,
@@ -154125,7 +153287,7 @@ async function dge(e, t, r, o, d, p, _, E, C, I, D, N, F, U, V, re, ue, de) {
       throw Error(
         `Hook "${e.command}" has shell: 'powershell' but no PowerShell executable (pwsh or powershell) was found on PATH. Install PowerShell, or remove "shell": "powershell" to use bash.`,
       );
-    kn = xvt(So, getPowerShellCommandArgs(en), {
+    kn = spawn(So, getPowerShellCommandArgs(en), {
       env: cn,
       cwd: gn,
       detached: Qt,
@@ -154140,7 +153302,7 @@ async function dge(e, t, r, o, d, p, _, E, C, I, D, N, F, U, V, re, ue, de) {
       );
     let eo = xe ? So : !0;
     if (xe && So) prependDirectoryToPathEnv(cn, So);
-    kn = xvt(en, [], {
+    kn = spawn(en, [], {
       env: cn,
       cwd: gn,
       shell: eo,
@@ -154509,7 +153671,7 @@ async function Mms(e, t, r) {
       return ve !== "absent" && ve !== void 0 && ve.directory;
     },
     Se =
-      !wj(de) ||
+      !isAbsolute(de) ||
       isAnyPathWithinRoots([de, await $mr(de)].map(normalizePathCase), E) ||
       !(await _e())
         ? "/"
@@ -154556,7 +153718,7 @@ async function Oms(e, t, r = new Set()) {
 
 async function Ivt(e, t, r) {
   if (isHoverRestEnabled() && t !== void 0) {
-    let o = await t.hostFiles.stat(r(wj(e) ? e : K8t(getFsSurface().cwd(), e)));
+    let o = await t.hostFiles.stat(r(isAbsolute(e) ? e : K8t(getFsSurface().cwd(), e)));
     if (o.ok)
       return o.value.kind === "absent"
         ? "absent"
@@ -154570,7 +153732,7 @@ async function Ivt(e, t, r) {
       ? "absent"
       : void 0;
   }
-  return ums(e).then(
+  return stat(e).then(
     (o) => ({ file: o.isFile(), directory: o.isDirectory(), nlink: o.nlink }),
     (o) => (o.code === "ENOENT" || o.code === "ENOTDIR" ? "absent" : void 0),
   );
@@ -154650,7 +153812,7 @@ async function Dms(e, t, r) {
         (r.mcpPath === N ? void 0 : await w$(re, r.mcpPath, r.roots));
     if (D.interpreter !== null) {
       if (
-        (wj(I.stdio.command)
+        (isAbsolute(I.stdio.command)
           ? await p(I.stdio.command, "program")
           : await Promise.all([F(N), F(r.mcpPath)]).then(([de, _e]) =>
               de === void 0 ||
@@ -154663,7 +153825,7 @@ async function Dms(e, t, r) {
             )) !== void 0
       )
         return { held: "unreadable", cause: "program_in_reach" };
-      let ue = wj(I.stdio.command) ? await U(I.stdio.command) : void 0;
+      let ue = isAbsolute(I.stdio.command) ? await U(I.stdio.command) : void 0;
       if (ue !== void 0)
         return ue === "unreadable"
           ? { held: "unreadable" }
@@ -154684,13 +153846,13 @@ async function Dms(e, t, r) {
   }
   if (o.type === "script") {
     let I = resolveWrappedClaudeInvocation({ pinToCurrentBinary: !0 });
-    if (!wj(I.cmd)) return { held: "unreadable" };
+    if (!isAbsolute(I.cmd)) return { held: "unreadable" };
     let D = [];
     for (let V of I.prefixArgs) {
       let re = V.indexOf("="),
         ue = V.startsWith("-") && re !== -1 ? V.slice(re + 1) : void 0;
-      if (wj(V)) D.push(V);
-      else if (ue !== void 0 && wj(ue)) D.push(ue);
+      if (isAbsolute(V)) D.push(V);
+      else if (ue !== void 0 && isAbsolute(ue)) D.push(ue);
       else if (!/^(?:-[A-Za-z0-9]|--[A-Za-z][\w-]*)$/.test(V))
         return { held: "unreadable" };
     }
@@ -154764,7 +153926,7 @@ async function Dms(e, t, r) {
       o.args !== void 0
         ? E.hook.command
         : E.hook.command.trim().split(/[ \t]+/, 1)[0];
-    if (F !== void 0 && wj(F)) {
+    if (F !== void 0 && isAbsolute(F)) {
       let V = await p(F, "program");
       if (V !== void 0)
         return {
@@ -154824,7 +153986,7 @@ function $ms(e, t, r, o) {
   let d = (p, _) =>
     p.some((E) =>
       (getSettingsForSource(E)?.hooks?.[t] ?? []).some(
-        (C) => (C.matcher ?? "") === _ && C.hooks.some((I) => _mr(I, e)),
+        (C) => (C.matcher ?? "") === _ && C.hooks.some((I) => isDeepStrictEqual(I, e)),
       ),
     );
   return !r.some((p) => d(o, p));
@@ -154950,7 +154112,7 @@ function emitHookMetrics(e, t, r) {
 
 var MANAGED_HOOKS_TIER = { managedHooksOnly: !0 };
 
-var Vms = new j(() => ({ tokens: new WeakMap(), next: 0, host: bF() }));
+var Vms = new j(() => ({ tokens: new WeakMap(), next: 0, host: randomUUID() }));
 
 function userPromptSubmitHooksKey(e) {
   let t = Vms.of(e.session.host);
@@ -155006,7 +154168,7 @@ function getNonBlockableHookErrorMessage(e, t, r = e) {
   return createAttachmentMessage({
     type: "hook_non_blocking_error",
     hookName: r,
-    toolUseID: bF(),
+    toolUseID: randomUUID(),
     hookEvent: e,
     stderr: t.blockingError,
     stdout: "",
@@ -155305,7 +154467,7 @@ async function* ymr({
         parentToolUseID: o,
         toolUseID: o,
         timestamp: new Date().toISOString(),
-        uuid: bF(),
+        uuid: randomUUID(),
       },
     };
   let dn = Date.now(),
@@ -155453,7 +154615,7 @@ async function* ymr({
         { signal: qs, cleanup: ko } = createLinkedAbortSignal(p, {
           timeoutMs: ss,
         }),
-        Ur = bF(),
+        Ur = randomUUID(),
         Zr = Date.now(),
         Ir = formatHookLabel(hn),
         as = At ?? Yn,
@@ -156657,8 +155819,8 @@ async function* ymr({
 
 async function safeHookCwd(e, t) {
   if (await pathExists(e)) return e;
-  let r = fms();
-  for (let d of [t.originalCwd, t.projectRoot, dms()])
+  let r = tmpdir();
+  for (let d of [t.originalCwd, t.projectRoot, homedir()])
     if (d !== e && (await pathExists(d))) {
       r = d;
       break;
@@ -156980,7 +156142,7 @@ function dgs(e) {
 }
 
 function Jmr(e, t, r, o) {
-  let d = rgs(t).toLowerCase();
+  let d = extname(t).toLowerCase();
   if (d && !ugs.has(d))
     return (
       logForDebugging(`Skipping non-text file in @include: ${t}`),
@@ -157289,7 +156451,7 @@ function kgs(e, t) {
               !C.match(/^[#%^&*()]+/) &&
               C.match(/^[a-zA-Z0-9._-]/)))
         ) {
-          let N = resolvePath(C, RZ(t));
+          let N = resolvePath(C, dirname(t));
           r.add(N);
         }
       }
@@ -157336,7 +156498,7 @@ function Egs(e) {
     if (!o.startsWith("/")) continue;
     let d = o.search(/[*?{[]/),
       p = d === -1 ? o : o.slice(0, d),
-      _ = RZ(p);
+      _ = dirname(p);
     try {
       let { resolvedPath: E } = resolvePathInfo(t, _);
       if ((An(E) && !Oi(E)) || Dr(E) || vS(E) || $m(E) || gp(E)) continue;
@@ -157421,13 +156583,13 @@ async function loadRulesDirMemoryFiles({
       throw _e;
     }
     for (let _e of de) {
-      let Se = ak(e, _e.name),
+      let Se = join(e, _e.name),
         {
           resolvedPath: ve,
           isSymlink: Me,
           isCanonical: xe,
         } = resolvePathInfo(I, Se),
-        Oe = ak(C ?? e, _e.name);
+        Oe = join(C ?? e, _e.name);
       if (Oe !== ve && rgr(Oe, t)) continue;
       if ((An(ve) && !Oi(ve)) || Dr(ve) || vS(ve) || $m(ve) || gp(ve)) continue;
       let Ne = Me ? await vgs(I, ve, t, _) : null,
@@ -157438,11 +156600,11 @@ async function loadRulesDirMemoryFiles({
           !Me &&
           xe &&
           isValidPathSegment(_e.name) &&
-          ve === ak(getUserClaudeRulesDir(), ...re.relPath, _e.name)
+          ve === join(getUserClaudeRulesDir(), ...re.relPath, _e.name)
             ? [...re.relPath, _e.name]
             : void 0;
       if (De) {
-        if (V !== void 0 && ve !== ak(V, _e.name) && !U && !PZ(ve)) continue;
+        if (V !== void 0 && ve !== join(V, _e.name) && !U && !PZ(ve)) continue;
         ue.push(
           ...(await loadRulesDirMemoryFiles({
             rulesDir: ve,
@@ -157457,7 +156619,7 @@ async function loadRulesDirMemoryFiles({
           })),
         );
       } else if (He && _e.name.endsWith(".md")) {
-        if (V !== void 0 && ve !== ak(V, _e.name) && !U && !PZ(ve)) continue;
+        if (V !== void 0 && ve !== join(V, _e.name) && !U && !PZ(ve)) continue;
         let Ke = await loadMemoryFileWithIncludes(
           ve,
           t,
@@ -157674,16 +156836,16 @@ async function Cgs(e, t, r, o, d, p) {
   let re = [],
     ue = he(),
     de = ue;
-  while (de !== ogs(de).root) (re.push(de), (de = RZ(de)));
+  while (de !== parse(de).root) (re.push(de), (de = dirname(de)));
   let _e = getGitWorktreeRoots(ue);
   for (let Me of re.reverse()) {
     let xe = isInMainRepoOutsideWorktree(Me, _e);
     if (nF("projectSettings") && !xe) {
-      let Oe = ak(Me, "CLAUDE.md");
+      let Oe = join(Me, "CLAUDE.md");
       E.push(...(await loadMemoryFileWithIncludes(Oe, "Project", C, D)));
-      let Ne = ak(Me, ".claude", "CLAUDE.md");
+      let Ne = join(Me, ".claude", "CLAUDE.md");
       E.push(...(await loadMemoryFileWithIncludes(Ne, "Project", C, D)));
-      let De = ak(Me, ".claude", "rules");
+      let De = join(Me, ".claude", "rules");
       E.push(
         ...(await loadRulesDirMemoryFiles({
           rulesDir: De,
@@ -157696,18 +156858,18 @@ async function Cgs(e, t, r, o, d, p) {
       );
     }
     if (nF("localSettings")) {
-      let Oe = ak(Me, "CLAUDE.local.md");
+      let Oe = join(Me, "CLAUDE.local.md");
       E.push(...(await loadMemoryFileWithIncludes(Oe, "Local", C, D)));
     }
   }
   if (Ie(a.CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD)) {
     let Me = mp();
     for (let xe of Me) {
-      let Oe = ak(xe, "CLAUDE.md");
+      let Oe = join(xe, "CLAUDE.md");
       E.push(...(await loadMemoryFileWithIncludes(Oe, "Project", C, D)));
-      let Ne = ak(xe, ".claude", "CLAUDE.md");
+      let Ne = join(xe, ".claude", "CLAUDE.md");
       E.push(...(await loadMemoryFileWithIncludes(Ne, "Project", C, D)));
-      let De = ak(xe, ".claude", "rules");
+      let De = join(xe, ".claude", "rules");
       if (
         (E.push(
           ...(await loadRulesDirMemoryFiles({
@@ -157721,7 +156883,7 @@ async function Cgs(e, t, r, o, d, p) {
         ),
         nF("localSettings"))
       ) {
-        let He = ak(xe, "CLAUDE.local.md");
+        let He = join(xe, "CLAUDE.local.md");
         E.push(...(await loadMemoryFileWithIncludes(He, "Local", C, D)));
       }
     }
@@ -157959,17 +157121,17 @@ async function loadMemoryFilesForDirectory(
   let d = [],
     p = nF("projectSettings") && !o;
   if (p) {
-    let _ = ak(e, "CLAUDE.md");
+    let _ = join(e, "CLAUDE.md");
     d.push(...(await loadMemoryFileWithIncludes(_, "Project", r, !1)));
-    let E = ak(e, ".claude", "CLAUDE.md");
+    let E = join(e, ".claude", "CLAUDE.md");
     d.push(...(await loadMemoryFileWithIncludes(E, "Project", r, !1)));
   }
   if (nF("localSettings")) {
-    let _ = ak(e, "CLAUDE.local.md");
+    let _ = join(e, "CLAUDE.local.md");
     d.push(...(await loadMemoryFileWithIncludes(_, "Local", r, !1)));
   }
   if (p) {
-    let _ = ak(e, ".claude", "rules"),
+    let _ = join(e, ".claude", "rules"),
       E = new Set(r);
     (d.push(
       ...(await loadRulesDirMemoryFiles({
@@ -157988,7 +157150,7 @@ async function loadMemoryFilesForDirectory(
 
 async function dpr(e, t, r) {
   if (a.CLAUDE_CODE_DISABLE_CLAUDE_MDS || !nF("projectSettings")) return [];
-  let o = ak(e, ".claude", "rules");
+  let o = join(e, ".claude", "rules");
   return Y1e(t, o, "Project", r, !1);
 }
 
@@ -158001,16 +157163,16 @@ async function Y1e(e, t, r, o, d, p) {
       conditionalRule: !0,
       storageV5: p,
     }),
-    E = r === "Project" ? RZ(RZ(t)) : he(),
-    C = V1e(e) ? qmr(E, e) : e;
-  if (V1e(e) && (!C || C.startsWith("..") || V1e(C))) {
-    let I = RZ(e),
+    E = r === "Project" ? dirname(dirname(t)) : he(),
+    C = isAbsolute(e) ? relative(E, e) : e;
+  if (isAbsolute(e) && (!C || C.startsWith("..") || isAbsolute(C))) {
+    let I = dirname(e),
       { resolvedPath: D } = resolvePathInfo(getFsSurface(), I);
-    if (D !== I) C = qmr(E, ak(D, ngs(e)));
+    if (D !== I) C = relative(E, join(D, basename(e)));
   }
   return _.filter((I) => {
     if (!I.globs || I.globs.length === 0) return !1;
-    if (!C || C.startsWith("..") || V1e(C)) return !1;
+    if (!C || C.startsWith("..") || isAbsolute(C)) return !1;
     return Ymr.default()
       .add(filterCompilableIgnorePatterns(I.globs, "claudemd_rule_globs"))
       .ignores(C);
@@ -158595,7 +157757,7 @@ function J1e(e, t) {
 
 function uhs(e, t, r, o) {
   if (!isPlainObject(r)) return !1;
-  if (Tj(t, r)) return !0;
+  if (isDeepStrictEqual(t, r)) return !0;
   let d = e.inputSchema.safeParse(t),
     p = e.inputSchema.safeParse(r);
   if (!d.success || !p.success || !J1e(t, d.data)) return !1;
@@ -158604,7 +157766,7 @@ function uhs(e, t, r, o) {
     { [e.entryFieldName]: I, ...D } = t,
     { [e.entryFieldName]: N, ...F } = r;
   return (
-    Tj(D, F) &&
+    isDeepStrictEqual(D, F) &&
     E.length === C.length &&
     E.every((U, V) => wgr(_.name, U, C[V], o))
   );
@@ -158623,7 +157785,7 @@ function dhs(e, t) {
 
 function wgr(e, t, r, o) {
   if (!isPlainObject(r)) return !1;
-  if (Tj(t, r)) return !0;
+  if (isDeepStrictEqual(t, r)) return !0;
   switch (e) {
     case BASH_TOOL_NAME:
       return phs(t, r, o);
@@ -158646,12 +157808,12 @@ function wgr(e, t, r, o) {
         SL(t.offset) === r.offset
       );
     case EXIT_PLAN_MODE_TOOL_NAME:
-      return Tj(t, pickAllowedToolInputProps(e, r));
+      return isDeepStrictEqual(t, pickAllowedToolInputProps(e, r));
     case TASK_OUTPUT_TOOL_NAME:
       return (
         Object.keys(t).every((d) => chs.has(d)) &&
         countMatching(Sgr, (d) => Object.hasOwn(t, d)) <= 1 &&
-        Tj(
+        isDeepStrictEqual(
           {
             task_id: t.task_id ?? t.agentId ?? t.bash_id ?? "",
             block: t.block ?? !0,
@@ -158673,7 +157835,7 @@ function _gr(e, t) {
 }
 
 function bgr(e, t, r) {
-  return Object.keys(e).every((o) => r.includes(o) || Tj(e[o], t[o]));
+  return Object.keys(e).every((o) => r.includes(o) || isDeepStrictEqual(e[o], t[o]));
 }
 
 function fhs(e, t) {
@@ -158694,7 +157856,7 @@ function phs(e, t, r) {
     typeof t.command !== "string" ||
     !Object.keys(t).every((d) => Object.hasOwn(e, d) || t[d] === void 0) ||
     !Object.keys(e).every(
-      (d) => Object.hasOwn(t, d) && (d === "command" || Tj(fhs(d, e[d]), t[d])),
+      (d) => Object.hasOwn(t, d) && (d === "command" || isDeepStrictEqual(fhs(d, e[d]), t[d])),
     )
   )
     return !1;
@@ -158725,7 +157887,7 @@ function mhs(e, t) {
     typeof C !== "string" ||
     typeof I !== "string" ||
     parseStringBoolean(_) !== D ||
-    !Tj(E, N)
+    !isDeepStrictEqual(E, N)
   )
     return !1;
   let F = typeof E.file_path === "string" && rz(E.file_path) ? [p] : [p, sz(p)];
@@ -159048,7 +158210,7 @@ function Ggr({
     speed: null,
   },
   now: D = () => new Date().toISOString(),
-  uuid: N = Qw,
+  uuid: N = randomUUID,
 }) {
   return {
     type: "assistant",
@@ -159212,7 +158374,7 @@ function createUserMessage({
     isVirtual: E,
     isCompactSummary: C,
     summarizeMetadata: I,
-    uuid: ue || (je ? je() : Qw()),
+    uuid: ue || (je ? je() : randomUUID()),
     timestamp: de ?? (He ? He() : new Date().toISOString()),
     toolUseResult: D,
     classifierMetaLines: Ke,
@@ -159267,7 +158429,7 @@ function createProgressMessage({
   parentToolUseID: t,
   data: r,
   now: o = () => new Date().toISOString(),
-  uuid: d = Qw,
+  uuid: d = randomUUID,
 }) {
   return {
     type: "progress",
@@ -159959,7 +159121,7 @@ var jhs = `${SYSTEM_NOTIFICATION_HEADER} This ${GET_TASK_TOOL_NAME} result was d
 
 function zhs(e, t) {
   let r = createAssistantMessage({ content: [e], uuid: () => mB("call", t) });
-  return { ...r, message: { ...r.message, id: Qw() } };
+  return { ...r, message: { ...r.message, id: randomUUID() } };
 }
 
 function qhs(e, t, r, o, d, p) {
@@ -161737,10 +160899,10 @@ ${e.content}`,
     },
     dynamic_skill: (e) => {
       let t = sn(),
-        r = t.endsWith(Cgr) ? t : t + Cgr;
-      if (!e.skillDir || !ghs(e.skillDir) || !e.skillDir.startsWith(r))
+        r = t.endsWith(sep) ? t : t + sep;
+      if (!e.skillDir || !isAbsolute(e.skillDir) || !e.skillDir.startsWith(r))
         return [];
-      let o = hhs(t, e.skillDir);
+      let o = relative(t, e.skillDir);
       if (UNSAFE_CHARS_PATTERN.test(o)) return [];
       let d = e.skillNames.filter(isValidName);
       if (d.length === 0) return [];
@@ -162075,7 +161237,7 @@ function gvt(e) {
     if (t === void 0) return {};
     if (e.type !== "queued_command") return { rendered: t };
     let r = Ugr(DZ(e, { inHumanTurn: !0 }));
-    return r === void 0 || yhs(r, t)
+    return r === void 0 || isDeepStrictEqual(r, t)
       ? { rendered: t }
       : { rendered: t, renderedInHumanTurn: r };
   } catch (t) {
@@ -162963,7 +162125,7 @@ function HJn(e, t, r, o, d, p, _, E, C, I, D) {
     hasOutput: p,
     level: _,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     toolUseID: E,
     hookLabel: C,
     totalDurationMs: I,
@@ -162982,7 +162144,7 @@ function createTurnDurationMessage(e, t, r, o, d) {
     pendingBackgroundAgentCount: o,
     pendingWorkflowCount: d,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     isMeta: !1,
   };
 }
@@ -162997,7 +162159,7 @@ function createLocalCommandMessage(e, t) {
     content: e,
     level: "info",
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     isMeta: !1,
     ...(t?.contextUsage !== void 0 && { contextUsage: t.contextUsage }),
   };
@@ -163010,7 +162172,7 @@ function lce(e, t, r, o, d) {
     content: "Conversation compacted",
     isMeta: !1,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
     level: "info",
     compactMetadata: {
       trigger: e,
@@ -163033,7 +162195,7 @@ function H9(e, t, r, o, d) {
     maxRetries: o,
     source: d,
     timestamp: new Date().toISOString(),
-    uuid: Qw(),
+    uuid: randomUUID(),
   };
 }
 
@@ -163578,7 +162740,7 @@ function Ner(e, t) {
     type: "tool_use_summary",
     summary: e,
     precedingToolUseIds: t,
-    uuid: Qw(),
+    uuid: randomUUID(),
     timestamp: new Date().toISOString(),
   };
 }
@@ -164267,7 +163429,7 @@ async function hhr(e, t, r, o) {
         return;
       }
     }
-    (await Oys(Nys(d), { recursive: !0, mode: 448 }),
+    (await mkdir(dirname(d), { recursive: !0, mode: 448 }),
       await writeFileAtomic(d, jsonStringify({ customTitle: r }), 384));
   } catch (p) {
     logForDebugging(`writeSessionTitleSidecar: ${l(p)}`, { level: "error" });
@@ -164290,7 +163452,7 @@ async function BCt(e, t, r) {
         return;
       }
     }
-    await Dys(getSessionTitleSidecarPath(e, t), { force: !0 });
+    await rm(getSessionTitleSidecarPath(e, t), { force: !0 });
   } catch (o) {
     logForDebugging(`deleteSessionTitleSidecar: ${l(o)}`, { level: "error" });
   }
@@ -164514,7 +163676,7 @@ function khr(e, t) {
       }));
 }
 
-function whr(e, t, r, o = $ys, d = []) {
+function whr(e, t, r, o = sep, d = []) {
   let p = (D) => (D.endsWith(".jsonl") ? `${D.slice(0, -6)}${o}` : null),
     _ = r === null ? null : p(r);
   if (r !== null) {
@@ -164696,7 +163858,7 @@ async function nxt(e, t) {
     }
   }
   try {
-    let r = await Mj(e, "utf-8");
+    let r = await readFile(e, "utf-8");
     return jsonParse(r);
   } catch (r) {
     if (Rt(r)) return null;
@@ -164726,7 +163888,7 @@ async function oyr(e, t, r) {
         cause: E.error,
       });
   } else
-    (await Ij(kv(e), { recursive: !0 }),
+    (await mkdir(dirname(e), { recursive: !0 }),
       await writeFileAtomic(e, jsonStringify(o)));
   let _ = e.replace(/\.meta\.json$/, ".jsonl");
   getOrCreateSessionTranscriptStore().fireMirror(_, [
@@ -164787,17 +163949,17 @@ async function readAgentMetadata(e, t) {
 
 function iyr() {
   let e = fy() ?? getProjectDir(he());
-  return Wp(e, K(), "remote-agents");
+  return join(e, K(), "remote-agents");
 }
 
 function ayr(e) {
-  return Wp(iyr(), `remote-agent-${e}.meta.json`);
+  return join(iyr(), `remote-agent-${e}.meta.json`);
 }
 
 async function writeRemoteAgentMetadata(e, t, r) {
   let o = ayr(e);
   if (
-    (await Ij(kv(o), { recursive: !0 }), isHoverRestEnabled() && r !== void 0)
+    (await mkdir(dirname(o), { recursive: !0 }), isHoverRestEnabled() && r !== void 0)
   ) {
     let d = getSidecarKeyForMetadataPath(o);
     if (d !== void 0) {
@@ -164811,7 +163973,7 @@ async function writeRemoteAgentMetadata(e, t, r) {
       return;
     }
   }
-  await Zhr(o, jsonStringify(t));
+  await writeFile(o, jsonStringify(t));
 }
 
 async function deleteRemoteAgentMetadata(e, t) {
@@ -164828,7 +163990,7 @@ async function deleteRemoteAgentMetadata(e, t) {
     }
   }
   try {
-    await ZCt(r);
+    await unlink(r);
   } catch (o) {
     if (Rt(o)) return;
     throw o;
@@ -164845,7 +164007,7 @@ async function removeRemoteAgentMetadata(e, t) {
 
 function sessionIdExists(e) {
   let t = fy() ?? getProjectDir(he()),
-    r = Wp(t, `${e}.jsonl`),
+    r = join(t, `${e}.jsonl`),
     o = getFsSurface();
   try {
     return (o.statSync(r), !0);
@@ -165180,21 +164342,21 @@ class sessionTranscriptStore {
     if (isTranscriptPersistenceDisabled()) return;
     let t;
     try {
-      t = Uge(e, n4.O_WRONLY | n4.O_APPEND);
+      t = openSync(e, constants.O_WRONLY | constants.O_APPEND);
     } catch {
       return;
     }
     try {
-      let { size: r } = QCt(t);
+      let { size: r } = fstatSync(t);
       if (r > 0)
-        Xhr(
+        writeSync(
           t,
           `
 `,
           void 0,
         );
     } finally {
-      $ge(t);
+      closeSync(t);
     }
     this.tornTailToSeal = null;
   }
@@ -165740,7 +164902,7 @@ ${D}`));
       return this.removeByUuidV5(r, o, t);
     try {
       let d = 0,
-        p = await vj(e, "r+");
+        p = await open(e, "r+");
       try {
         let { size: I } = await p.stat();
         if (((d = I), I === 0)) return;
@@ -165775,7 +164937,7 @@ ${D}`));
         );
         return;
       }
-      let E = (await Mj(e, { encoding: "utf-8" })).split(`
+      let E = (await readFile(e, { encoding: "utf-8" })).split(`
 `),
         C = E.filter((I) => {
           if (!I.trim()) return !0;
@@ -165786,7 +164948,7 @@ ${D}`));
           }
         });
       if (C.length === E.length) return;
-      await Zhr(
+      await writeFile(
         e,
         C.join(`
 `),
@@ -165955,11 +165117,11 @@ ${D}`));
     let d = o !== void 0 ? ox(e) : void 0;
     if (isHoverRestEnabled() && o !== void 0 && d !== void 0)
       return this.performCompactTranscriptV5(o, d, e);
-    let p = `${e}.compact.tmp.${Kys(4).toString("hex")}`,
+    let p = `${e}.compact.tmp.${randomBytes(4).toString("hex")}`,
       _ = !1,
       E = !1;
     try {
-      let C = await Vx(e);
+      let C = await stat(e);
       if (C.size < xhr) return;
       let I = 4096,
         D = [
@@ -165968,7 +165130,7 @@ ${D}`));
           [Math.max(0, C.size - I), Math.min(I, C.size)],
         ],
         N = async () => {
-          let Me = await vj(e, "r");
+          let Me = await open(e, "r");
           try {
             let xe = [];
             for (let [Oe, Ne] of D) {
@@ -166001,8 +165163,8 @@ ${D}`));
         }
       }
       let V = () =>
-          n_s({
-            input: Yys(e, { encoding: "utf8", end: C.size - 1 }),
+          createInterface({
+            input: createReadStream(e, { encoding: "utf8", end: C.size - 1 }),
             crlfDelay: 1 / 0,
           }),
         re = await MCt(V());
@@ -166014,7 +165176,7 @@ ${D}`));
         return;
       }
       let ue = NCt(re.plan),
-        de = await vj(p, "w", 384),
+        de = await open(p, "w", 384),
         _e = "",
         Se = 0,
         ve = async (Me) => {
@@ -166036,7 +165198,7 @@ ${D}`));
           Me++;
         }
         ((Se += Buffer.byteLength(_e, "utf8")), await de.write(_e), t?.());
-        let xe = await Vx(e);
+        let xe = await stat(e);
         if (xe.ino !== C.ino || xe.size < C.size || (await U())) {
           logEvent("tengu_transcript_compact_failed", {
             reason: S("source_changed"),
@@ -166045,7 +165207,7 @@ ${D}`));
         }
         if (xe.size > C.size) {
           let Oe = Buffer.alloc(xe.size - C.size),
-            Ne = await vj(e, "r"),
+            Ne = await open(e, "r"),
             De = 0;
           try {
             while (De < Oe.length) {
@@ -166065,7 +165227,7 @@ ${D}`));
           ((Se += De), await de.write(Oe.subarray(0, De)));
         }
         if (
-          (await de.sync(), r?.(), (await Vx(e)).ino !== C.ino || (await U()))
+          (await de.sync(), r?.(), (await stat(e)).ino !== C.ino || (await U()))
         ) {
           logEvent("tengu_transcript_compact_failed", {
             reason: S("source_changed"),
@@ -166104,7 +165266,7 @@ ${D}`));
           level: "warn",
         }));
     } finally {
-      if (!_) await ZCt(p).catch(() => {});
+      if (!_) await unlink(p).catch(() => {});
     }
   }
   async performCompactTranscriptV5(e, t, r) {
@@ -166566,7 +165728,7 @@ ${ve}`),
         if (p.error.code === "NotFound") return null;
       } catch {}
     try {
-      return (await Vx(o), this.existingSessionFiles.set(e, o), o);
+      return (await stat(o), this.existingSessionFiles.set(e, o), o);
     } catch (p) {
       if (Rt(p)) return null;
       throw p;
@@ -166848,7 +166010,7 @@ async function agentTranscriptExists(e, t) {
       if (r !== void 0 && (await t.stat(r)).ok) return !0;
     } catch {}
   try {
-    return (await Vx(getAgentTranscriptPath(e)), !0);
+    return (await stat(getAgentTranscriptPath(e)), !0);
   } catch {
     return !1;
   }
@@ -166878,10 +166040,10 @@ function ox(e) {
 }
 
 function pyr(e) {
-  let t = t_s(Pl(), e);
-  if (t === "" || t === ".." || t.startsWith(`..${vhr}`) || e_s(t)) return;
-  let r = t.split(vhr);
-  return e === Wp(Pl(), ...r) ? r : void 0;
+  let t = relative(Pl(), e);
+  if (t === "" || t === ".." || t.startsWith(`..${sep}`) || isAbsolute(t)) return;
+  let r = t.split(sep);
+  return e === join(Pl(), ...r) ? r : void 0;
 }
 
 function p_s(e) {
@@ -167090,10 +166252,10 @@ async function _je(e, t, r, o, d) {
     return I === !1 ? "skipped" : I === "torn" ? "direct-torn" : "direct";
   }
   try {
-    await zCt(e, t, { mode: 384 });
+    await appendFile(e, t, { mode: 384 });
   } catch {
-    (await Ij(kv(e), { recursive: !0, mode: 448 }),
-      await zCt(e, t, { mode: 384 }));
+    (await mkdir(dirname(e), { recursive: !0, mode: 448 }),
+      await appendFile(e, t, { mode: 384 }));
   }
   if (_) p.project?.tornTailSealLanded(e);
   return "direct";
@@ -167102,7 +166264,7 @@ async function _je(e, t, r, o, d) {
 async function __s(e, t, r) {
   let o;
   try {
-    o = await vj(e, n4.O_RDWR | n4.O_APPEND);
+    o = await open(e, constants.O_RDWR | constants.O_APPEND);
   } catch (d) {
     let p = A(d);
     if (p === "ENOENT" || p === "ENOTDIR") return !1;
@@ -167229,7 +166391,7 @@ async function relocateSessionTranscript(e) {
     ((d.currentSessionRelocatedCwd = he()), $p(r, "cd", o));
     return;
   }
-  let _ = Wp(o, `${r}.jsonl`);
+  let _ = join(o, `${r}.jsonl`);
   if (p === _) {
     $p(r, "cd", o);
     let E = he();
@@ -167264,14 +166426,14 @@ async function relocateSessionTranscript(e) {
   try {
     (await d.flush(),
       await flushAppendEntryQueues(),
-      await Ij(o, { recursive: !0, mode: 448 }));
+      await mkdir(o, { recursive: !0, mode: 448 }));
     let E = createHoverRestOptions(e),
-      C = (await canonicalizePath(kv(p), E)) === (await canonicalizePath(o, E));
+      C = (await canonicalizePath(dirname(p), E)) === (await canonicalizePath(o, E));
     if (!C)
       try {
         let [de, _e] = await Promise.all([
-          Vx(kv(p), { bigint: !0 }),
-          Vx(o, { bigint: !0 }),
+          stat(dirname(p), { bigint: !0 }),
+          stat(o, { bigint: !0 }),
         ]);
         C = de.dev === _e.dev && de.ino === _e.ino;
       } catch (de) {
@@ -167289,7 +166451,7 @@ async function relocateSessionTranscript(e) {
       if (W(de)) {
         if (I !== void 0)
           throw (
-            await t4(I, _).catch((_e) => {
+            await rename(I, _).catch((_e) => {
               logForDebugging(
                 `relocateSessionTranscript: could not restore set-aside destination after ENOENT move: ${_e}`,
                 { level: "warn" },
@@ -167301,7 +166463,7 @@ async function relocateSessionTranscript(e) {
           (U = !1));
       } else {
         if (I !== void 0)
-          await t4(I, _).catch((_e) => {
+          await rename(I, _).catch((_e) => {
             logForDebugging(
               `relocateSessionTranscript: could not restore set-aside destination after failed move: ${_e}`,
               { level: "warn" },
@@ -167310,8 +166472,8 @@ async function relocateSessionTranscript(e) {
         throw de;
       }
     }
-    let V = Wp(kv(p), r),
-      re = Wp(o, r),
+    let V = join(dirname(p), r),
+      re = join(o, r),
       ue = !0;
     try {
       await $hr(V, re, t, F ? { fromScope: Ohr(D), toScope: Ohr(N) } : void 0);
@@ -167364,7 +166526,7 @@ function reportRelocateSessionTranscriptFailure(e, t) {
 async function qCt(e) {
   let t = `${e}.superseded-${Date.now()}`;
   try {
-    await t4(e, t);
+    await rename(e, t);
   } catch (o) {
     if (W(o)) return;
     throw o;
@@ -167374,7 +166536,7 @@ async function qCt(e) {
   );
   if (!r()) {
     let o = new Date();
-    await Jys(t, o, o).catch((d) => {
+    await lutimes(t, o, o).catch((d) => {
       logForDebugging(
         `relocateSessionTranscript: could not refresh the set-aside's mtime at ${t} (it ages from its old clock): ${d}`,
         { level: "warn" },
@@ -167447,7 +166609,7 @@ async function $hr(e, t, r, o) {
           `renameWithFallbacks: a scope move stood with its set-aside leftover stranded; left in place at ${_.leftover ?? "(unnamed)"}`,
           { level: "warn" },
         ),
-        (await Qys(e).catch(() => {
+        (await lstat(e).catch(() => {
           return;
         })) !== void 0)
       )
@@ -167460,13 +166622,13 @@ async function $hr(e, t, r, o) {
     throw myr(p.error);
   }
   async function d(p, _) {
-    await Ij(_, { recursive: !0, mode: 448 });
-    for (let E of await Pj(p, { withFileTypes: !0 }))
-      if (E.isDirectory()) await d(Wp(p, E.name), Wp(_, E.name));
-      else await Ehr(Wp(p, E.name), Wp(_, E.name));
+    await mkdir(_, { recursive: !0, mode: 448 });
+    for (let E of await readdir(p, { withFileTypes: !0 }))
+      if (E.isDirectory()) await d(join(p, E.name), join(_, E.name));
+      else await copyFile(join(p, E.name), join(_, E.name));
   }
   try {
-    await t4(e, t);
+    await rename(e, t);
     return;
   } catch (p) {
     let _ = A(p);
@@ -167475,16 +166637,16 @@ async function $hr(e, t, r, o) {
         return;
       });
       try {
-        await t4(e, t);
+        await rename(e, t);
       } catch (C) {
-        if (E !== void 0) await t4(E, t).catch(() => {});
+        if (E !== void 0) await rename(E, t).catch(() => {});
         throw C;
       }
       return;
     }
     if (_ === "EXDEV") {
       try {
-        await Ehr(e, t);
+        await copyFile(e, t);
       } catch (E) {
         let C = A(E);
         if (C === "EISDIR" || C === "ENOTSUP" || C === "EPERM") {
@@ -167493,13 +166655,13 @@ async function $hr(e, t, r, o) {
             await d(e, t);
           } catch (D) {
             if (I !== void 0)
-              (await Thr(t, { recursive: !0, force: !0 }).catch(() => {}),
-                await t4(I, t).catch(() => {}));
+              (await rm(t, { recursive: !0, force: !0 }).catch(() => {}),
+                await rename(I, t).catch(() => {}));
             throw D;
           }
         } else throw E;
       }
-      await Thr(e, { recursive: !0, force: !0 });
+      await rm(e, { recursive: !0, force: !0 });
       return;
     }
     throw p;
@@ -167521,7 +166683,7 @@ async function lxt(e, t) {
       return;
     }
   }
-  await Ij(e, { recursive: !0, mode: 448 });
+  await mkdir(e, { recursive: !0, mode: 448 });
 }
 
 function r4(e, t) {
@@ -167531,11 +166693,11 @@ function r4(e, t) {
 }
 
 function getSessionSidecarDir(e) {
-  return Wp(kv(getTranscriptPathForSession(e)), e);
+  return join(dirname(getTranscriptPathForSession(e)), e);
 }
 
 async function ensureSidecarDirFor(e) {
-  await Ij(kv(e), { recursive: !0, mode: 448 });
+  await mkdir(dirname(e), { recursive: !0, mode: 448 });
 }
 
 async function writeHydratedAgentTranscript(e, t, r, o) {
@@ -167557,14 +166719,14 @@ async function writeHydratedAgentTranscript(e, t, r, o) {
     );
   let d = getAgentTranscriptPath(oo(e));
   try {
-    await lxt(kv(d), r);
+    await lxt(dirname(d), r);
     let p = createTranscriptSource(r4(d, r));
     if (o?.createOnly) {
       if (p) return "exists";
       let _ = await writeNewFileExclusive(d, jsonlJoin(t), 384);
       try {
         (await assertFileDoesNotExist(d),
-          await Xys(_, d).catch(async (E) => {
+          await link(_, d).catch(async (E) => {
             let C = A(E);
             if (C !== "EPERM" && C !== "ENOSYS" && C !== "EOPNOTSUPP") throw E;
             await writeNewFileAfterAbsenceCheck(d, jsonlJoin(t), 384);
@@ -167573,7 +166735,7 @@ async function writeHydratedAgentTranscript(e, t, r, o) {
         if (A(E) === "EEXIST") return "exists";
         throw E;
       } finally {
-        await ZCt(_).catch(() => {});
+        await unlink(_).catch(() => {});
       }
     } else if (p) await writeEntriesToJsonlFile(d, t, p);
     else await writeFileAtomic(d, jsonlJoin(t), 384);
@@ -167650,7 +166812,7 @@ function Bhr(e, t) {
   try {
     r.appendFileSync(e, o, { mode: 384 });
   } catch {
-    (r.mkdirSync(kv(e), { mode: 448 }), r.appendFileSync(e, o, { mode: 384 }));
+    (r.mkdirSync(dirname(e), { mode: 448 }), r.appendFileSync(e, o, { mode: 384 }));
   }
   getOrCreateSessionTranscriptStore().fireMirror(e, [t]);
 }
@@ -167663,14 +166825,14 @@ function KCt(e, t, r) {
 `,
     d;
   try {
-    d = Uge(e, n4.O_RDWR | n4.O_APPEND);
+    d = openSync(e, constants.O_RDWR | constants.O_APPEND);
   } catch (p) {
     let _ = A(p);
     if (_ === "ENOENT" || _ === "ENOTDIR") return;
     throw p;
   }
   try {
-    let { size: p } = QCt(d);
+    let { size: p } = fstatSync(d);
     if (p === 0) return;
     let _ = !tbs(d, p);
     if (_ && r !== void 0) t = r;
@@ -167687,12 +166849,12 @@ function KCt(e, t, r) {
       C = void 0,
       I = 0;
     while (I < E.length) {
-      let D = Xhr(d, E, I, E.length - I, C);
+      let D = writeSync(d, E, I, E.length - I, C);
       if (D <= 0) throw Error("appendEntryToExistingFileSync: short write");
       if (((I += D), C !== void 0)) C += D;
     }
   } finally {
-    $ge(d);
+    closeSync(d);
   }
   getOrCreateSessionTranscriptStore().fireMirror(e, [t]);
 }
@@ -167700,18 +166862,18 @@ function KCt(e, t, r) {
 function K_s(e) {
   let t;
   try {
-    t = Uge(e, "r");
-    let r = QCt(t),
+    t = openSync(e, "r");
+    let r = fstatSync(t),
       o = Math.max(0, r.size - LITE_READ_BUF_SIZE),
       d = Buffer.allocUnsafe(Math.min(LITE_READ_BUF_SIZE, r.size - o)),
-      p = LZ(t, d, 0, d.length, o);
+      p = readSync(t, d, 0, d.length, o);
     return d.toString("utf8", 0, p);
   } catch {
     return "";
   } finally {
     if (t !== void 0)
       try {
-        $ge(t);
+        closeSync(t);
       } catch {}
   }
 }
@@ -167785,7 +166947,7 @@ async function Y_s(e, t) {
     );
   let r;
   try {
-    r = await vj(e, "r");
+    r = await open(e, "r");
     let o = await r.stat(),
       d = Math.max(0, o.size - LITE_READ_BUF_SIZE),
       p = Math.min(LITE_READ_BUF_SIZE, o.size - d);
@@ -168083,7 +167245,7 @@ function saveWorktreeState(e, t) {
 
 function tbs(e, t) {
   let r = Buffer.alloc(1);
-  return LZ(e, r, 0, 1, t - 1) === 1 && r[0] === 10;
+  return readSync(e, r, 0, 1, t - 1) === 1 && r[0] === 10;
 }
 
 function clearSessionMessagesCache() {
@@ -168261,7 +167423,7 @@ class Byr {
         else r = e;
         let o = getPendingResumeWorktreeName(),
           d = o ? `--worktree ${o} ` : "";
-        (HZ(
+        (writeSync(
           1,
           chalk.dim(`
 Resume this session with:
@@ -168415,12 +167577,12 @@ claude ${d}--resume ${r}
             cleanupTerminalModes());
           try {
             for (let E of this.recentUncaught)
-              HZ(
+              writeSync(
                 2,
                 `Uncaught exception (loop): ${E.name}: ${E.message}${E.topFrame ? ` at ${E.topFrame}` : ""}
 `,
               );
-            HZ(
+            writeSync(
               2,
               `Uncaught exception loop detected (${this.uncaughtCount} in ${kxt}ms) \u2014 forcing shutdown
 `,
@@ -168529,7 +167691,7 @@ claude ${d}--resume ${r}
     )
       return;
     try {
-      HZ(
+      writeSync(
         2,
         `Claude Code could not start: ${e ?? "<unknown>"}
 `,
@@ -168697,7 +167859,7 @@ claude ${d}--resume ${r}
       r?.finalMessage)
     )
       try {
-        HZ(
+        writeSync(
           2,
           r.finalMessage +
             `
@@ -168777,7 +167939,7 @@ function Abs(e) {
   let t = e;
   for (let r = 0; r < 128; r++) {
     if (t === null) return !1;
-    if (Txt.isProxy(t)) return !0;
+    if (types.isProxy(t)) return !0;
     t = Object.getPrototypeOf(t);
   }
   return !0;
@@ -168785,7 +167947,7 @@ function Abs(e) {
 
 function wxt(e, t) {
   if (e === null || typeof e !== "object") return;
-  if (Txt.isProxy(e)) return;
+  if (types.isProxy(e)) return;
   let r = Object.getOwnPropertyDescriptor(e, t);
   return r && "value" in r && typeof r.value === "string" ? r.value : void 0;
 }
@@ -168795,7 +167957,7 @@ function Rbs(e, t) {
   let r = e;
   for (let o = 0; o < 128; o++) {
     if (r === null) return;
-    if (Txt.isProxy(r)) return;
+    if (types.isProxy(r)) return;
     let d = Object.getOwnPropertyDescriptor(r, t);
     if (d)
       return "value" in d && typeof d.value === "string" ? d.value : void 0;
