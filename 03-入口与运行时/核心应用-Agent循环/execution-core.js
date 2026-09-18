@@ -6320,7 +6320,7 @@ async function SPt(e, t = AWe) {
       await mapWithConcurrency(
         o,
         async (ue) => {
-          let de = await lkr(join(e, ue)).catch(() => null);
+          let de = await stat(join(e, ue)).catch(() => null);
           return de && de.size <= fkr ? { rel: ue, mtimeMs: de.mtimeMs } : null;
         },
         { concurrency: yPt },
@@ -16567,9 +16567,9 @@ function getBridgeSpawnRootDir() {
 
 async function ensureBridgeSpawnRootDir() {
   let e = getBridgeSpawnRootDir();
-  await vLt(dirname(e), { recursive: !0 });
+  await mkdir(dirname(e), { recursive: !0 });
   try {
-    await vLt(e, { mode: 448 });
+    await mkdir(e, { mode: 448 });
   } catch (t) {
     if (A(t) !== "EEXIST") throw t;
   }
@@ -38534,7 +38534,7 @@ async function nso(e) {
         await stat(dirname(dirname(r)));
       }),
         (o = !0),
-        await joo(r, { recursive: !0, mode: 448 }));
+        await mkdir(r, { recursive: !0, mode: 448 }));
     } catch (d) {
       let p = A(d);
       if (!o && p === "ENOENT") continue;
@@ -52061,7 +52061,7 @@ async function Ntt(e) {
       if (/[ .]$/.test(d)) return null;
       if (d.includes(":") && !(o === 0 && /^[A-Za-z]:$/.test(d))) return null;
     }
-    let r = await nmo(e, { bigint: !0 }).catch(() => null);
+    let r = await stat(e, { bigint: !0 }).catch(() => null);
     if (r === null || r.ino === 0n || r.ino === 0xffffffffffffffffn)
       return null;
     return `${r.dev}:${r.ino}`;
