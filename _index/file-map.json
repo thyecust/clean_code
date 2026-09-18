@@ -8921,8 +8921,15 @@
   "path": "03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js",
   "module": "核心应用 / Agent 循环",
   "tier": 3,
-  "kb": 7729.3,
+  "kb": 7420.9,
   "confidence": "medium"
+ },
+ "bundled-cjs-libraries.js": {
+  "path": "03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js",
+  "module": "核心应用 / Agent 循环",
+  "tier": 3,
+  "kb": 913.1,
+  "confidence": "high"
  },
  "chunk-wnn25q3j.js": {
   "path": "02-功能模块/通道集成-Slack/通道集成-Slack.wnn25q3j.js",

@@ -1,8 +1,9 @@
 # 模块文件索引
 
-## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 1 个文件 · 7.55 MB</sub>
+## 核心应用 / Agent 循环  <sub>03-入口与运行时 · 2 个文件 · 8.14 MB</sub>
 
-- [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 7729.3 KB
+- [`03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js`](../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js) — 7420.9 KB
+- [`03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js`](../03-入口与运行时/核心应用-Agent循环/bundled-cjs-libraries.js) — 913.1 KB
 
 ## 认证 / OAuth 登录  <sub>02-功能模块 · 51 个文件 · 1.59 MB</sub>
 
