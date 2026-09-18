@@ -2776,33 +2776,17 @@ import {
 import { formatFileSize } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-7axvc6rn.js";
 
 import {
-  access as $qr,
   access as Ooo,
   access as pwr,
   access as yNo,
   appendFile as Hmo,
   appendFile as zCt,
-  chmod as P3r,
-  chmod as iZr,
   copyFile as Ehr,
-  copyFile as NXe,
-  copyFile as OSt,
-  copyFile as Tor,
   copyFile as rUn,
-  copyFile as v3r,
-  link as Hns,
   link as Xys,
   lstat as $Ne,
   lstat as A$o,
-  lstat as F8e,
-  lstat as GY,
-  lstat as Hke,
-  lstat as I3r,
-  lstat as JG,
   lstat as Qys,
-  lstat as VP,
-  lstat as W3r,
-  lstat as WR,
   lstat as Wx,
   lstat as Yw,
   lstat as ZYe,
@@ -2841,13 +2825,9 @@ import {
   mkdir as _vo,
   mkdir as aon,
   mkdir as coo,
-  mkdir as d9r,
   mkdir as hQt,
-  mkdir as joo,
   mkdir as lEr,
   mkdir as oVo,
-  mkdir as vLt,
-  mkdir as wse,
   mkdtemp as LNo,
   mkdtemp as TUo,
   mkdtemp as YUo,
@@ -2997,10 +2977,7 @@ import {
   stat as h2,
   stat as jWe,
   stat as kNo,
-  stat as lkr,
-  stat as nmo,
   stat as qcs,
-  stat as r3e,
   stat as tat,
   stat as ums,
   stat as uoo,
@@ -3044,8 +3021,8 @@ import {
   Readable as Gyr,
   Readable as SDt,
   Readable as Urs,
-  Transform as LUo,
   Transform as gAr,
+  Transform as LUo,
 } from "stream";
 
 import {
@@ -85692,12 +85669,13 @@ user_data\r
   let N = Buffer.concat(D);
   try {
     return await b$n(`Upload file ${t}`, async (F) => {
-      if (o?.signal?.aborted) throw new sF("Upload canceled", "canceled");
+      if (o?.signal?.aborted)
+        throw new UploadNonRetriableError("Upload canceled", "canceled");
       let U = (V) => {
         if (F >= j7)
           throw (
             logEvent("tengu_file_upload_failed", { error_type: S("server") }),
-            new sF(`${V} after ${j7} attempts`, "server")
+            new UploadNonRetriableError(`${V} after ${j7} attempts`, "server")
           );
         return { done: !1, error: V };
       };
@@ -85723,30 +85701,37 @@ user_data\r
         if (V.status === 401)
           throw (
             logEvent("tengu_file_upload_failed", { error_type: S("auth") }),
-            new sF("Authentication failed: invalid or missing API key", "auth")
+            new UploadNonRetriableError(
+              "Authentication failed: invalid or missing API key",
+              "auth",
+            )
           );
         if (V.status === 403)
           throw (
             logEvent("tengu_file_upload_failed", {
               error_type: S("forbidden"),
             }),
-            new sF("Access denied for upload", "forbidden")
+            new UploadNonRetriableError("Access denied for upload", "forbidden")
           );
         if (V.status === 413)
           throw (
             logEvent("tengu_file_upload_failed", { error_type: S("size") }),
-            new sF("File too large for upload", "too_large")
+            new UploadNonRetriableError(
+              "File too large for upload",
+              "too_large",
+            )
           );
         return U(`status ${V.status}`);
       } catch (V) {
-        if (V instanceof sF) throw V;
-        if (at.isCancel(V)) throw new sF("Upload canceled", "canceled");
+        if (V instanceof UploadNonRetriableError) throw V;
+        if (at.isCancel(V))
+          throw new UploadNonRetriableError("Upload canceled", "canceled");
         if (at.isAxiosError(V)) return { done: !1, error: V.message };
         throw V;
       }
     });
   } catch (F) {
-    if (F instanceof sF)
+    if (F instanceof UploadNonRetriableError)
       return { path: t, error: F.message, success: !1, reason: F.reason };
     return (
       logEvent("tengu_file_upload_failed", { error_type: S("network") }),
@@ -85761,7 +85746,7 @@ function EUo(e) {
   );
 }
 
-class sF extends Error {
+class UploadNonRetriableError extends Error {
   reason;
   constructor(e, t) {
     super(e);
