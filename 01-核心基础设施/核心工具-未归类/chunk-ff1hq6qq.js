@@ -11,7 +11,7 @@ import { _ } from "../../00-第三方库/react/react.zhnvc798.js";
 import { Text } from "../ANSI-样式-布局原语/chunk-k8hr56nm.js";
 import { useClock } from "../终端与时钟/use-clock.js";
 import { N, e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { ew, Nl, L_, re, E, vr, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { ew, L_, re, E, vr, C, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { EARLY_RETURN_SENTINEL } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();
 F();

@@ -91,11 +91,7 @@ import {
   sep,
 } from "path";
 import {
-  link,
   lstat,
-  readlink,
-  realpath,
-  unlink,
 } from "fs/promises";
 var Vt = new Set(["ENOENT", "ENOTDIR"]),
   Yt = new Set([

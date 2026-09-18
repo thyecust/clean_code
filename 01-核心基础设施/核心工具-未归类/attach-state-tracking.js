@@ -9,7 +9,7 @@
 // Version: 2.1.263
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { sleep } from "../核心工具-并发与缓存/async-timeout-utils.js";
-import { isDaemonBgWorker } from "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import "../../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
 class r {
   stampMs = 0;
   detachedSinceLastAttach = !1;

@@ -7,7 +7,7 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import { j, B, he, z1 } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { j, B, he } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { Ie, po } from "../../00-第三方库/lodash/lodash.207999qb.js";
 import { getBridgeCarrierEnvVarsToScrub, BG_DISPATCHER_ENV_VARS } from "../../02-功能模块/认证-OAuth登录/chunk-wk0e3dz4.js";
 import { resolveExecutablePath, env as a } from "../设置-配置/chunk-zqr5ctyf.js";
@@ -33,7 +33,7 @@ import {
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { findCanonicalGitRoot } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
 import { pickBy, isMemoryApiEnvVar, SECRET_TOKEN_ENV_VARS, getHostManagedEnvVarsToStrip, resolveLocalSettingsStoreRoot } from "../设置-配置/设置-配置.aqbb35ee.js";
-import { getChildProcessTmpDir } from "../核心工具-路径与平台/temp-directory.js";
+import "../核心工具-路径与平台/temp-directory.js";
 import { id, noProxyUnion } from "../../00-第三方库/https-proxy-agent/https-proxy-agent + undici.1t3vmhtr.js";
 import { getFederationCacheDir } from "../核心工具-未归类/federation-cache-dir.js";
 import { homedir } from "os";
