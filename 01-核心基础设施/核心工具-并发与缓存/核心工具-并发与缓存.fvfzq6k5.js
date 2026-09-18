@@ -196,8 +196,8 @@ function computeRetryDelayMs(e, t, r = 32000) {
   return o;
 }
 import { constants } from "fs";
-import { lstat, open as Re, unlink } from "fs/promises";
-import { verify, X509Certificate as U } from "crypto";
+import { lstat, open, unlink } from "fs/promises";
+import { verify, X509Certificate } from "crypto";
 var ye = { "managed-settings": 86400, "policy-limits": 86400 },
   pe = 300,
   C = 16384,
@@ -280,7 +280,7 @@ function Ce(
   let oe = h.at(-1),
     E;
   for (let f of D) {
-    let M = new U(f.pem);
+    let M = new X509Certificate(f.pem);
     if (V(oe, M)) {
       E = { root: f, certificate: M };
       break;
@@ -349,7 +349,7 @@ function V(e, t) {
   return t.ca && Boolean(e.checkIssued(t)) && e.verify(t.publicKey);
 }
 function X(e) {
-  let t = new U(e);
+  let t = new X509Certificate(e);
   if (t.raw.length !== e.length)
     throw Error("trailing bytes after x5c certificate DER");
   return t;
@@ -481,7 +481,7 @@ async function Me(e, t) {
 async function Pe(e, t) {
   try {
     if (O_NOFOLLOW_NONBLOCK_FLAGS === 0 && (await Be(e))) return;
-    let r = await Re(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | O_NOFOLLOW_NONBLOCK_FLAGS, 384);
+    let r = await open(e, constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | O_NOFOLLOW_NONBLOCK_FLAGS, 384);
     try {
       await r.writeFile(jsonStringify(t), { encoding: "utf-8" });
     } finally {

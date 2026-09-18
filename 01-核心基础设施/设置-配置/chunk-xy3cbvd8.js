@@ -18,12 +18,12 @@ import { getProviderState, getModelCatalogCacheDir } from "../../02-功能模块
 import { getSettingsFilePathForSource, getLocalSettingsValidationErrors, getSettingsWithErrors } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
 import { formatMcpScopeLocation, MCP_SETTINGS_SCOPES, getMcpConfigsByScope } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
 import { s, T, c, fe, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { mkdir, open as I } from "fs/promises";
-import { join as d } from "path";
+import { mkdir, open } from "fs/promises";
+import { join } from "path";
 var g = "image-cache",
   x = 200;
 function f() {
-  return d(getClaudeConfigDir(), g, K());
+  return join(getClaudeConfigDir(), g, K());
 }
 async function O() {
   let e = f();
@@ -31,7 +31,7 @@ async function O() {
 }
 function p(e, t) {
   let r = t.split("/")[1] || "png";
-  return d(f(), `${e}.${r}`);
+  return join(f(), `${e}.${r}`);
 }
 function setImageCachePath(e, t) {
   if (e.type !== "image") return null;
@@ -63,7 +63,7 @@ async function h(e) {
   try {
     await O();
     let t = p(e.id, e.mediaType || "image/png"),
-      r = await I(t, "w", 384);
+      r = await open(t, "w", 384);
     try {
       (await r.writeFile(e.content, { encoding: "base64" }),
         await r.datasync());
@@ -88,7 +88,7 @@ function u(e, t, r) {
 }
 async function cleanupStaleImageCacheDirs() {
   let e = getFsSurface(),
-    t = d(getClaudeConfigDir(), g),
+    t = join(getClaudeConfigDir(), g),
     r = K();
   try {
     let o;
@@ -99,7 +99,7 @@ async function cleanupStaleImageCacheDirs() {
     }
     for (let i of o) {
       if (i.name === r) continue;
-      let a = d(t, i.name);
+      let a = join(t, i.name);
       try {
         (await e.rm(a, { recursive: !0, force: !0 }),
           logForDebugging(`Cleaned up old image cache: ${a}`));
@@ -110,7 +110,6 @@ async function cleanupStaleImageCacheDirs() {
     } catch {}
   } catch {}
 }
-import { join as _ } from "path";
 var PUBLISHED_FLOOR_FILE_NAME = "published-floor.json",
   y = 1,
   R = 32,
@@ -129,7 +128,7 @@ var PUBLISHED_FLOOR_FILE_NAME = "published-floor.json",
     }),
   );
 function F() {
-  return _(getModelCatalogCacheDir(), PUBLISHED_FLOOR_FILE_NAME);
+  return join(getModelCatalogCacheDir(), PUBLISHED_FLOOR_FILE_NAME);
 }
 function l() {
   return getProviderState().publishedCatalogFloorMarks;

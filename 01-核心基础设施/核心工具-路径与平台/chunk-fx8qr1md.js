@@ -125,16 +125,16 @@ var convertWindowsPathToUnix = xA(
     (e) => e,
     500,
   );
-import { homedir as U } from "os";
+import { homedir } from "os";
 import {
-  dirname as Z,
-  extname as ue,
-  isAbsolute as me,
-  join as he,
-  normalize as H,
-  relative as pe,
-  resolve as ge,
-  sep as we,
+  dirname,
+  extname,
+  isAbsolute,
+  join,
+  normalize,
+  relative,
+  resolve,
+  sep,
 } from "path";
 function resolvePath(e, t) {
   let r = t ?? getCwd() ?? getFsSurface().cwd();
@@ -145,9 +145,9 @@ function resolvePath(e, t) {
   if (e.includes("\x00") || r.includes("\x00"))
     throw Error("Path contains null bytes");
   let i = e.trim();
-  if (!i) return zn(H(r));
-  if (i === "~") return zn(U());
-  if (i.startsWith("~/")) return zn(he(U(), i.slice(2)));
+  if (!i) return zn(normalize(r));
+  if (i === "~") return zn(homedir());
+  if (i.startsWith("~/")) return zn(join(homedir(), i.slice(2)));
   let s = i;
   if (getCurrentPlatform() === "windows" && i.match(/^\/[a-z]\//i))
     try {
@@ -155,37 +155,37 @@ function resolvePath(e, t) {
     } catch {
       s = i;
     }
-  if (me(s)) return zn(H(s));
-  return zn(ge(r, s));
+  if (isAbsolute(s)) return zn(normalize(s));
+  return zn(resolve(r, s));
 }
 function toCwdRelativePath(e) {
-  let t = pe(getCwd(), e);
+  let t = relative(getCwd(), e);
   return t.startsWith("..") ? e : t;
 }
 function getContainingDirectory(e) {
   let t = resolvePath(e);
-  if (ku(t)) return Z(t);
+  if (ku(t)) return dirname(t);
   try {
     if (getFsSurface().statSync(t).isDirectory()) return t;
   } catch {}
-  return Z(t);
+  return dirname(t);
 }
 function containsPathTraversal(e) {
   return /(?:^|[\\/])\.\.(?:[\\/]|$)/.test(e);
 }
 function formatPathWithTilde(e) {
-  let t = U();
+  let t = homedir();
   if (e === t) return "~";
-  if (e.startsWith(t + we)) return "~" + e.slice(t.length);
+  if (e.startsWith(t + sep)) return "~" + e.slice(t.length);
   return e;
 }
 function toForwardSlashPath(e) {
-  let t = H(e);
+  let t = normalize(e);
   if (getCurrentPlatform() === "windows") return t.replaceAll("\\", "/");
   return t;
 }
 function isJupyterNotebookPath(e) {
-  return ue(e).toLowerCase() === ".ipynb";
+  return extname(e).toLowerCase() === ".ipynb";
 }
 import { randomBytes } from "crypto";
 import {
@@ -200,23 +200,14 @@ import {
 } from "fs";
 import {
   lstat,
-  open as D,
+  open,
   readlink,
   realpath,
-  stat as re,
+  stat,
 } from "fs/promises";
-import { homedir as ne } from "os";
 import {
   basename,
-  dirname as O,
-  extname as J,
-  isAbsolute as M,
-  join as L,
-  normalize as Se,
   parse,
-  relative as z,
-  resolve as Y,
-  sep as T,
 } from "path";
 var ATOMIC_WRITE_STAGING_DIR_NAME = ".cc-writes";
 class ie {
@@ -246,7 +237,7 @@ function G() {
   return $e.of(B().host);
 }
 function q(e) {
-  return Y(e);
+  return resolve(e);
 }
 function recordFileIdentity(e, t, r, i) {
   G().record(e, t, r, i);
@@ -280,26 +271,26 @@ function oe(e, t, r, i) {
   let s = `${t}${r}`;
   if (!e) return s;
   let o = G().identity(e);
-  if (i && O(t) !== O(e)) return (k(e), s);
+  if (i && dirname(t) !== dirname(e)) return (k(e), s);
   let c = constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW;
   try {
-    closeSync(openSync(O(e), c));
+    closeSync(openSync(dirname(e), c));
   } catch (w) {
     let p = A(w);
     if (p === "ELOOP" || p === "ENOTDIR") {
       if (o)
         throwStagingDirTamperedError(
-          `Staging dir parent ${O(e)} is ${p} but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
+          `Staging dir parent ${dirname(e)} is ${p} but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
         );
       if (i) return s;
       throw new SymlinkWriteRefusedError(
-        `Refusing to stage atomic write under non-directory parent: ${O(e)}`,
+        `Refusing to stage atomic write under non-directory parent: ${dirname(e)}`,
       );
     }
     if (!W(w)) throw w;
     if (o)
       throwStagingDirTamperedError(
-        `Staging dir parent ${O(e)} is absent but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
+        `Staging dir parent ${dirname(e)} is absent but a sandboxed command established ${e} \u2014 refusing sibling fallback`,
       );
     return s;
   }
@@ -328,7 +319,7 @@ function oe(e, t, r, i) {
   } finally {
     closeSync(u);
   }
-  return L(e, `${basename(t)}${r}`);
+  return join(e, `${basename(t)}${r}`);
 }
 class SymlinkWriteRefusedError extends Error {
   constructor(e) {
@@ -343,17 +334,17 @@ class SymlinkReadRefusedError extends Error {
   }
 }
 async function assertDirChainReal(e, t) {
-  let r = z(e, t);
-  if (r === "" || r.startsWith("..") || M(r))
+  let r = relative(e, t);
+  if (r === "" || r.startsWith("..") || isAbsolute(r))
     throw new R(
       `assertDirChainReal: dir must be strictly inside base (rel: ${r})`,
       "assertDirChainReal: dir must be strictly inside base",
     );
   let i = e;
-  for (let s of r.split(T)) {
-    i = L(i, s);
+  for (let s of r.split(sep)) {
+    i = join(i, s);
     try {
-      await (await D(i, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)).close();
+      await (await open(i, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)).close();
     } catch (o) {
       let c = A(o);
       if (c === "ELOOP" || c === "ENOTDIR")
@@ -392,7 +383,7 @@ function takeApprovedPathForRead(e, t) {
 }
 async function pathExists(e) {
   try {
-    return (await re(e), !0);
+    return (await stat(e), !0);
   } catch {
     return !1;
   }
@@ -527,23 +518,23 @@ function expandLeadingTabs(e) {
 }
 function ve(e) {
   let t = e ? resolvePath(e) : void 0,
-    r = t ? z(getCwd(), t) : void 0;
+    r = t ? relative(getCwd(), t) : void 0;
   return { absolutePath: t, relativePath: r };
 }
 function formatPathForDisplay(e) {
   let { relativePath: t } = ve(e);
   if (t && !t.startsWith("..")) return t;
-  let r = ne();
-  if (e.startsWith(r + T)) return "~" + e.slice(r.length);
+  let r = homedir();
+  if (e.startsWith(r + sep)) return "~" + e.slice(r.length);
   return e;
 }
 async function findSimilarFile(e) {
   let t = getFsSurface();
   try {
-    let r = O(e),
-      i = basename(e, J(e)),
+    let r = dirname(e),
+      i = basename(e, extname(e)),
       c = (await t.readdir(r)).filter(
-        (u) => basename(u.name, J(u.name)) === i && L(r, u.name) !== e,
+        (u) => basename(u.name, extname(u.name)) === i && join(r, u.name) !== e,
       )[0];
     if (c) return c.name;
     return;
@@ -555,20 +546,20 @@ async function findSimilarFile(e) {
 var CWD_NOTE_PREFIX = "Note: your current working directory is";
 async function getSuggestedPathOutsideCwd(e) {
   let t = getCwd(),
-    r = O(t),
+    r = dirname(t),
     i = e;
   try {
-    let S = await realpath(O(e));
-    i = L(S, basename(e));
+    let S = await realpath(dirname(e));
+    i = join(S, basename(e));
   } catch {}
-  let s = r === T ? T : r + T,
+  let s = r === sep ? sep : r + sep,
     c = getCurrentPlatform() === "windows" ? (S) => S.toLowerCase() : (S) => S,
     u = c(i);
-  if (!u.startsWith(c(s)) || u.startsWith(c(t + T)) || u === c(t)) return;
-  let w = z(r, i),
-    p = L(t, w);
+  if (!u.startsWith(c(s)) || u.startsWith(c(t + sep)) || u === c(t)) return;
+  let w = relative(r, i),
+    p = join(t, w);
   try {
-    return (await re(p), p);
+    return (await stat(p), p);
   } catch {
     return;
   }
@@ -631,17 +622,17 @@ function writeFileSyncAndFlush(e, t, r = { encoding: "utf-8" }) {
   if (r.allowSymlink)
     try {
       let d = i.readlinkSync(e);
-      ((o = M(d) ? d : Y(resolvePathInfo(i, O(e)).resolvedPath, d)),
+      ((o = isAbsolute(d) ? d : resolve(resolvePathInfo(i, dirname(e)).resolvedPath, d)),
         logForDebugging(`Writing through symlink: ${e} -> ${o}`));
     } catch {}
   else {
     if (r.checkParentDir)
       try {
-        closeSync(openSync(O(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
+        closeSync(openSync(dirname(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW));
       } catch (d) {
         let b = A(d);
         if (b === "ELOOP" || b === "ENOTDIR")
-          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${O(e)}`);
+          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${dirname(e)}`);
       }
     try {
       let d = i.lstatSync(e);
@@ -676,7 +667,7 @@ function writeFileSyncAndFlush(e, t, r = { encoding: "utf-8" }) {
       b = !1,
       v;
     try {
-      if (O(p) !== O(o)) k(r.stagingDir);
+      if (dirname(p) !== dirname(o)) k(r.stagingDir);
       if ((writeFileSync(d, t, { encoding: r.encoding }), u && c !== void 0))
         try {
           (fchmodSync(d, c), logForDebugging("Applied original permissions to temp file"));
@@ -705,7 +696,7 @@ function writeFileSyncAndFlush(e, t, r = { encoding: "utf-8" }) {
     if (b) throw v;
     if (
       (logForDebugging(`Temp file written successfully, size: ${t.length} bytes`),
-      O(p) !== O(o))
+      dirname(p) !== dirname(o))
     )
       k(r.stagingDir);
     (logForDebugging(`Renaming ${p} to ${o}`),
@@ -780,19 +771,19 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
   if (r.allowSymlink)
     try {
       let d = await readlink(e);
-      ((o = M(d) ? d : Y(await realpath(O(e)), d)),
+      ((o = isAbsolute(d) ? d : resolve(await realpath(dirname(e)), d)),
         logForDebugging(`Writing through symlink: ${e} -> ${o}`));
     } catch {}
   else {
     if (r.checkParentDir)
       try {
         await (
-          await D(O(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)
+          await open(dirname(e), constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)
         ).close();
       } catch (d) {
         let b = A(d);
         if (b === "ELOOP" || b === "ENOTDIR")
-          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${O(e)}`);
+          throw new SymlinkWriteRefusedError(`Refusing to write into symlinked directory: ${dirname(e)}`);
       }
     try {
       let d = await lstat(e);
@@ -819,7 +810,7 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
     ((c = r.mode), logForDebugging(`Setting permissions for new file: ${c.toString(8)}`));
   try {
     logForDebugging(`Writing to temp file: ${p}`);
-    let d = await D(
+    let d = await open(
         p,
         constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | s,
         !u && r.mode !== void 0 ? r.mode : void 0,
@@ -827,7 +818,7 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
       b = !1,
       v;
     try {
-      if (O(p) !== O(o)) k(r.stagingDir);
+      if (dirname(p) !== dirname(o)) k(r.stagingDir);
       if ((await d.writeFile(t, { encoding: r.encoding }), u && c !== void 0))
         try {
           (await d.chmod(c), logForDebugging("Applied original permissions to temp file"));
@@ -854,7 +845,7 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
     if (b) throw v;
     if (
       (logForDebugging(`Temp file written successfully, size: ${t.length} bytes`),
-      O(p) !== O(o))
+      dirname(p) !== dirname(o))
     )
       k(r.stagingDir);
     (logForDebugging(`Renaming ${p} to ${o}`),
@@ -866,7 +857,7 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
     if ((S && b !== void 0 && RENAME_FALLBACK_ERRNOS.has(b)) || (!S && u && b === "EACCES")) {
       let E;
       try {
-        E = await D(
+        E = await open(
           o,
           constants.O_WRONLY | constants.O_CREAT | constants.O_TRUNC | s,
           !u && r.mode !== void 0 ? r.mode : void 0,
@@ -923,9 +914,9 @@ async function writeFileAndFlush(e, t, r = { encoding: "utf-8" }) {
 var Pe = new Set(["Public", "Default", "Default User", "All Users"]);
 async function getDesktopPath() {
   let e = getCurrentPlatform(),
-    t = ne(),
+    t = homedir(),
     r = getFsSurface();
-  if (e === "macos") return L(t, "Desktop");
+  if (e === "macos") return join(t, "Desktop");
   if (e === "windows") {
     let s = a.USERPROFILE ? a.USERPROFILE.replaceAll("\\", "/") : null;
     if (s) {
@@ -936,7 +927,7 @@ async function getDesktopPath() {
       let c = await r.readdir("/mnt/c/Users");
       for (let u of c) {
         if (Pe.has(u.name)) continue;
-        let w = L("/mnt/c/Users", u.name, "Desktop");
+        let w = join("/mnt/c/Users", u.name, "Desktop");
         if (await pathExists(w)) return w;
       }
     } catch (o) {
@@ -945,7 +936,7 @@ async function getDesktopPath() {
       });
     }
   }
-  let i = L(t, "Desktop");
+  let i = join(t, "Desktop");
   if (await pathExists(i)) return i;
   return t;
 }
@@ -958,7 +949,7 @@ async function isFileSizeWithinLimit(e, t = DEFAULT_MAX_FILE_READ_BYTES) {
 }
 function canonicalizePathForComparison(e) {
   let t = getCurrentPlatform() === "windows",
-    r = Se(e),
+    r = normalize(e),
     i = t ? /[\\/]+$/ : /\/+$/,
     s = r.length > parse(r).root.length ? r.replace(i, "") : r;
   return t ? s.replaceAll("/", "\\").toLowerCase() : s;

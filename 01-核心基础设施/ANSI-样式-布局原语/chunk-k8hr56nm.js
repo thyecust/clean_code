@@ -100,7 +100,7 @@ function useRenderCaches() {
   if (r) return r;
   return ((s.current ??= ze()), s.current);
 }
-import { Stream as fo } from "stream";
+import { Stream } from "stream";
 import { writeSync } from "fs";
 function co() {
   if (!process.stdout.isTTY) return;
@@ -198,7 +198,7 @@ async function $e({
   );
 }
 var ho = (r = {}) => {
-    if (r instanceof fo) return { stdout: r, stdin: process.stdin };
+    if (r instanceof Stream) return { stdout: r, stdin: process.stdin };
     return r;
   },
   bo = (r, s) => {

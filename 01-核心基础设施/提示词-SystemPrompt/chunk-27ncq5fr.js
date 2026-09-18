@@ -163,7 +163,7 @@ function u(t, { suffix: e = "nodejs" } = {}) {
   if (p.platform === "win32") return L(t);
   return U(t);
 }
-import { join as m } from "path";
+import { join } from "path";
 function hashString(t) {
   let e = 0;
   for (let r = 0; r < t.length; r++) e = ((e << 5) - e + t.charCodeAt(r)) | 0;
@@ -190,12 +190,12 @@ function getCurrentWorkingDirectory() {
   }
 }
 function d() {
-  return m(O.cache, E(getCurrentWorkingDirectory()));
+  return join(O.cache, E(getCurrentWorkingDirectory()));
 }
 var logDirectories = {
   baseLogs: () => d(),
-  errors: () => m(d(), "errors"),
-  mcpLogs: (t) => m(d(), `mcp-logs-${E(t)}`),
+  errors: () => join(d(), "errors"),
+  mcpLogs: (t) => join(d(), `mcp-logs-${E(t)}`),
 };
 var f = /<([a-z][\w-]*)(?:\s[^>]*)?>[\s\S]*?<\/\1>\n?/g;
 function stripXmlTagsOrFallback(t) {

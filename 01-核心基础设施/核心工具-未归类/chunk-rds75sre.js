@@ -16,14 +16,14 @@ import { jsonStringify, jsonParse, logForDebugging } from "../核心工具-日�
 import { getClaudeConfigDir } from "../设置-配置/chunk-5ndhfaq9.js";
 import { createLazyValue } from "../核心工具-并发与缓存/lazy-value.js";
 import { s, v, c, k } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { dirname, join as w } from "path";
+import { dirname, join } from "path";
 var D = 50,
   y = createLazyValue(() =>
     c({ version: k(1), sessions: v(c({ id: s(), reason: s(), at: s() })) }),
   ),
   u = "device-unbound-creates";
 function d() {
-  return w(getClaudeConfigDir(), "state", `${u}.json`);
+  return join(getClaudeConfigDir(), "state", `${u}.json`);
 }
 async function f(r) {
   let o = await r.readText();

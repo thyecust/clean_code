@@ -22,7 +22,7 @@ import {
   openSync,
 } from "fs";
 import { tmpdir } from "os";
-import { join as d } from "path";
+import { join } from "path";
 function getTempBaseDir() {
   let e = a.CLAUDE_CODE_TMPDIR;
   if (e) return e;
@@ -98,7 +98,7 @@ function h(e) {
       "The temp directory is unavailable in a diskless session: nothing is created, verified or written under the shared per-uid temp root",
     );
   let r = `claude-${process.getuid?.() ?? 0}`,
-    t = d(getTempBaseDir(), r);
+    t = join(getTempBaseDir(), r);
   if (t !== e.ensured) {
     if (typeof process.getuid === "function")
       (mkdirSync(t, { recursive: !0, mode: 448 }), assertSafeTempDir(t));
@@ -113,7 +113,7 @@ function h(e) {
 function getPluginToolStagingDir() {
   let e = getClaudeTempDir();
   (mkdirSync(e, { recursive: !0, mode: 448 }), assertSafeTempDir(e));
-  let r = d(e, "plugin-tool-staging");
+  let r = join(e, "plugin-tool-staging");
   return (mkdirSync(r, { recursive: !0, mode: 448 }), assertSafeTempDir(r), r);
 }
 function getChildProcessTmpDir() {
@@ -123,7 +123,7 @@ function getChildProcessTmpDir() {
   let t = "/tmp",
     i = e.childProcessTmpDirMemo;
   if (i?.forDir === r) return i.result;
-  let n = d(t, `claude-${process.getuid?.() ?? 0}`),
+  let n = join(t, `claude-${process.getuid?.() ?? 0}`),
     o = n;
   try {
     (mkdirSync(n, { recursive: !0, mode: 448 }), assertSafeTempDir(n));
@@ -136,6 +136,6 @@ function createTempFilePath(e = "claude-prompt", r = ".md", t) {
   let i = t?.contentHash
     ? createHash("sha256").update(t.contentHash).digest("hex").slice(0, 16)
     : randomUUID();
-  return d(getClaudeTempDir(), `${e}-${i}${r}`);
+  return join(getClaudeTempDir(), `${e}-${i}${r}`);
 }
 export { getTempBaseDir, MAX_TMP_DIR_PATH_BYTES, assertSafeTempDir, getClaudeTempDir, getPluginToolStagingDir, getChildProcessTmpDir, createTempFilePath };

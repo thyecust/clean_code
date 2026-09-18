@@ -27,7 +27,7 @@ import { MAX_SKILL_FILE_BYTES } from "../../02-功能模块/MCP客户端/chunk-7
 import { s, T, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
 import { countMatching } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
-import { join as Ae } from "path";
+import { join } from "path";
 import {
   copyFile,
   lstat,
@@ -36,27 +36,26 @@ import {
   readFile,
   readlink,
   realpath,
-  rm as we,
-  stat as He,
+  rm,
+  stat,
   writeFile,
 } from "fs/promises";
-import { homedir as Ke, userInfo } from "os";
+import { homedir, userInfo } from "os";
 import {
-  basename as oe,
-  dirname as ce,
+  basename,
+  dirname,
   isAbsolute,
-  join as V,
   parse,
   relative,
   resolve,
-  sep as le,
+  sep,
 } from "path";
 function ke(e) {
-  return isAbsolute(e) || e === ".." || e.startsWith(".." + le);
+  return isAbsolute(e) || e === ".." || e.startsWith(".." + sep);
 }
 var We = 10485760;
 async function R(e) {
-  if ((await He(e)).size > We)
+  if ((await stat(e)).size > We)
     throw Error("file exceeds IMPORT_MAX_FILE_BYTES; refusing to load");
   return readFile(e, "utf8");
 }
@@ -139,10 +138,10 @@ async function _e(e, t) {
 async function U(e, t) {
   let r = me(e, t);
   if (r === null) return null;
-  let a = relative(e, r).split(le),
+  let a = relative(e, r).split(sep),
     o = e;
   for (let u of a) {
-    o = V(o, u);
+    o = join(o, u);
     let d;
     try {
       d = await lstat(o);
@@ -189,7 +188,7 @@ function B() {
     return !0;
   }
   if (!e) return !0;
-  return resolve(Ke()) !== resolve(e);
+  return resolve(homedir()) !== resolve(e);
 }
 function X(e) {
   return An(e);
@@ -197,16 +196,16 @@ function X(e) {
 async function Ee(e) {
   let t = parse(e).root,
     r = t,
-    a = relative(t, e).split(le),
+    a = relative(t, e).split(sep),
     o = 0;
   while (a.length > 0) {
     let u = a.shift(),
-      d = V(r, u),
+      d = join(r, u),
       p;
     try {
       p = await lstat(d);
     } catch (f) {
-      if (W(f)) return V(d, ...a);
+      if (W(f)) return join(d, ...a);
       return null;
     }
     if (p.isSymbolicLink()) {
@@ -218,9 +217,9 @@ async function Ee(e) {
         return null;
       }
       if (X(f)) return null;
-      let k = isAbsolute(f) ? f : V(ce(d), f),
+      let k = isAbsolute(f) ? f : join(dirname(d), f),
         h = resolve(k, ...a);
-      ((r = parse(h).root), (a = relative(r, h).split(le)));
+      ((r = parse(h).root), (a = relative(r, h).split(sep)));
       continue;
     }
     r = d;
@@ -231,11 +230,11 @@ async function pe(e, t, r, a, o, u) {
   if (u) {
     if ((await U(u, e)) === null)
       return {
-        skipped: `${oe(e)}: target is (or is under) a symlink \u2014 refusing project-scope write`,
+        skipped: `${basename(e)}: target is (or is under) a symlink \u2014 refusing project-scope write`,
       };
     if ((await U(u, t)) === null)
       return {
-        skipped: `${oe(e)}: source is (or is under) a symlink \u2014 refusing project-scope read`,
+        skipped: `${basename(e)}: source is (or is under) a symlink \u2014 refusing project-scope read`,
       };
   }
   let d = `<!-- imported-from: ${a} -->`,
@@ -243,14 +242,14 @@ async function pe(e, t, r, a, o, u) {
   try {
     if (((p = await R(e)), p.includes(d)))
       return {
-        skipped: `${oe(e)}: already imported (marker present; not re-synced)`,
+        skipped: `${basename(e)}: already imported (marker present; not re-synced)`,
       };
   } catch (S) {
     if (!W(S)) throw S;
   }
-  if (o) return `would append ${oe(t)} \u2192 \`${e}\``;
+  if (o) return `would append ${basename(t)} \u2192 \`${e}\``;
   let f = r ?? (await R(t));
-  await mkdir(ce(e), { recursive: !0 });
+  await mkdir(dirname(e), { recursive: !0 });
   let k = p
     ? `${p}${
         p.endsWith(`
@@ -269,17 +268,17 @@ ${f.trimEnd()}
     { encoding: "utf8", allowSymlink: !0 },
   );
   let h =
-    ce(t) !== ce(e) && /(?:^|\s)@(?![/~@])(?:[^\s\\]|\\ )+/.test(f)
+    dirname(t) !== dirname(e) && /(?:^|\s)@(?![/~@])(?:[^\s\\]|\\ )+/.test(f)
       ? " \u2014 note: relative @imports in this file now resolve against the new location; convert them to absolute paths if they stop working"
       : "";
-  return `appended ${oe(t)} \u2192 \`${e}\`${h}`;
+  return `appended ${basename(t)} \u2192 \`${e}\`${h}`;
 }
 async function Se(e, t) {
   await mkdir(t, { recursive: !0 });
   let r = await readdir(e, { withFileTypes: !0 });
   for (let a of r) {
-    let o = V(e, a.name),
-      u = V(t, a.name);
+    let o = join(e, a.name),
+      u = join(t, a.name);
     if (a.isDirectory()) await Se(o, u);
     else if (a.isFile()) await copyFile(o, u);
   }
@@ -329,8 +328,8 @@ async function writeImportFallbackSkill(e, t) {
       skipped:
         "fallback skill: the user-scope write root has been redirected \u2014 review the unmapped items manually",
     };
-  let o = Ae(r, "skills", "import-to-claude-code"),
-    u = Ae(o, "SKILL.md");
+  let o = join(r, "skills", "import-to-claude-code"),
+    u = join(o, "SKILL.md");
   if (t.dryRun) return `would write \`${u}\``;
   let d = "";
   try {
@@ -382,8 +381,6 @@ Relevant Claude Code config locations:
   let N = k.length > 0 ? " (merged with existing sections)" : "";
   return `wrote \`${u}\`${N}`;
 }
-import { homedir as et } from "os";
-import { basename as Z, dirname as tt, join as b } from "path";
 function Qe(e) {
   return Bun.TOML.parse(e);
 }
@@ -470,13 +467,13 @@ var at = new Set([
   "workflows",
 ]);
 function Le(e) {
-  return e.homeDir ?? b(et(), ".codex");
+  return e.homeDir ?? join(homedir(), ".codex");
 }
 async function ct(e, t, r) {
   let a = t === "user" ? "~/.codex/config.toml" : ".codex/config.toml",
     o;
   try {
-    o = await ge(b(e, "config.toml"));
+    o = await ge(join(e, "config.toml"));
   } catch {
     return (
       r.push({
@@ -536,7 +533,7 @@ async function ze(e, t, r, a, o) {
   if (!u) return;
   let { config: d, extraKeys: p } = u,
     f = getClaudeConfigDir(),
-    k = (...y) => b(r, ".claude", ...y),
+    k = (...y) => join(r, ".claude", ...y),
     h = te(d.mcp_servers, "[mcp_servers]", t, o);
   for (let [y, C] of Object.entries(h)) {
     let I = nt().safeParse(C);
@@ -591,7 +588,7 @@ async function ze(e, t, r, a, o) {
       ...(F && { warning: F }),
       async apply({ dryRun: z, storageV5: M }) {
         let A = t === "user" ? "user" : "project";
-        if (A === "project" && (await U(r, b(r, ".mcp.json"))) === null)
+        if (A === "project" && (await U(r, join(r, ".mcp.json"))) === null)
           return {
             skipped: `${g}: .mcp.json is (or is under) a symlink \u2014 refusing project-scope write`,
           };
@@ -628,7 +625,7 @@ async function ze(e, t, r, a, o) {
           if (I) return `would set permissions.defaultMode=${y}`;
           if (
             t === "project" &&
-            (await U(r, b(r, ".claude", "settings.json"))) === null
+            (await U(r, join(r, ".claude", "settings.json"))) === null
           )
             return {
               skipped:
@@ -660,7 +657,7 @@ async function ze(e, t, r, a, o) {
     }
     let w = I.data,
       g = K(y),
-      j = t === "user" ? b(f, "agents") : k("agents"),
+      j = t === "user" ? join(f, "agents") : k("agents"),
       F = Array.isArray(w.tools) && w.tools.length > 0,
       z = `---
 ${stringifyYaml({ name: g, description: de(w.description || `Subagent imported from Codex (${g}).`) })}---
@@ -679,7 +676,7 @@ ${w.instructions ?? ""}
           "Codex tool restrictions dropped (tool names differ); the imported agent has access to all Claude Code tools. Review before enabling.",
       }),
       async apply({ dryRun: M }) {
-        let A = b(j, `${g}.md`);
+        let A = join(j, `${g}.md`);
         if (t === "project" && (await U(r, A)) === null)
           return {
             skipped: `${g}: target is under a symlink \u2014 refusing project-scope write`,
@@ -721,8 +718,8 @@ ${w.instructions ?? ""}
       });
       continue;
     }
-    let g = K(Z(w)),
-      j = t === "user" ? b(f, "skills", g) : k("skills", g);
+    let g = K(basename(w)),
+      j = t === "user" ? join(f, "skills", g) : k("skills", g);
     a.push({
       id: `codex:${t}:skill:${I.path}`,
       kind: "skill",
@@ -744,7 +741,7 @@ ${w.instructions ?? ""}
           };
         let z;
         try {
-          z = await lstat(b(L, "SKILL.md"));
+          z = await lstat(join(L, "SKILL.md"));
         } catch {
           return { skipped: `${g}: no SKILL.md at \`${L}\`` };
         }
@@ -758,7 +755,7 @@ ${w.instructions ?? ""}
           };
         let M;
         try {
-          M = await R(b(L, "SKILL.md"));
+          M = await R(join(L, "SKILL.md"));
         } catch {
           return { skipped: `${g}: SKILL.md could not be read` };
         }
@@ -800,10 +797,10 @@ ${w.instructions ?? ""}
         if (F) return `would copy \`${L}\` \u2192 \`${j}\``;
         try {
           (await Se(L, j),
-            await we(b(j, "SKILL.md"), { force: !0 }),
-            await writeFile(b(j, "SKILL.md"), M, "utf8"));
+            await rm(join(j, "SKILL.md"), { force: !0 }),
+            await writeFile(join(j, "SKILL.md"), M, "utf8"));
         } catch (q) {
-          throw (await we(j, { recursive: !0, force: !0 }).catch(() => {}), q);
+          throw (await rm(j, { recursive: !0, force: !0 }).catch(() => {}), q);
         }
         return `copied skill \u2192 \`${j}\``;
       },
@@ -867,15 +864,15 @@ async function dt(e, t, r, a, o) {
     d.push(
       {
         id: "codex:user:instructions",
-        src: b(e, "AGENTS.md"),
-        target: b(u, "CLAUDE.md"),
+        src: join(e, "AGENTS.md"),
+        target: join(u, "CLAUDE.md"),
         label: "AGENTS.md",
         scope: "user",
       },
       {
         id: "codex:user:override",
-        src: b(e, "AGENTS.override.md"),
-        target: b(u, "CLAUDE.md"),
+        src: join(e, "AGENTS.override.md"),
+        target: join(u, "CLAUDE.md"),
         label: "AGENTS.override.md",
         scope: "user",
       },
@@ -884,16 +881,16 @@ async function dt(e, t, r, a, o) {
     d.push(
       {
         id: "codex:project:instructions",
-        src: b(t, "AGENTS.md"),
-        target: b(t, "CLAUDE.md"),
+        src: join(t, "AGENTS.md"),
+        target: join(t, "CLAUDE.md"),
         label: "AGENTS.md",
         scope: "project",
         containIn: t,
       },
       {
         id: "codex:project:override",
-        src: b(t, "AGENTS.override.md"),
-        target: b(t, "CLAUDE.local.md"),
+        src: join(t, "AGENTS.override.md"),
+        target: join(t, "CLAUDE.local.md"),
         label: "AGENTS.override.md",
         scope: "project",
         containIn: t,
@@ -924,22 +921,22 @@ async function dt(e, t, r, a, o) {
   }
 }
 async function ut(e, t, r) {
-  let a = b(e, "prompts"),
+  let a = join(e, "prompts"),
     o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
     u = getClaudeConfigDir();
   for (let d of o) {
     if (!d.isFile()) continue;
     let p = d.name;
     if (!p.endsWith(".md")) continue;
-    let f = b(a, p),
-      k = b(u, "commands", K(Z(p, ".md")) + ".md"),
+    let f = join(a, p),
+      k = join(u, "commands", K(basename(p, ".md")) + ".md"),
       h;
     try {
       h = await R(f);
     } catch {
       r.push({
         scope: "user",
-        label: `Command /${Z(p, ".md")}`,
+        label: `Command /${basename(p, ".md")}`,
         reason: "Could not read. Review it manually.",
       });
       continue;
@@ -947,7 +944,7 @@ async function ut(e, t, r) {
     if (ue(h)) {
       r.push({
         scope: "user",
-        label: `Command /${Z(p, ".md")}`,
+        label: `Command /${basename(p, ".md")}`,
         reason:
           "Contains a `` !`\u2026` `` or ```! shell-exec marker (inert in Codex, live in Claude Code). Port it manually.",
       });
@@ -955,21 +952,21 @@ async function ut(e, t, r) {
     }
     let S = ne(h, []);
     if (S !== null) {
-      r.push({ scope: "user", label: `Command /${Z(p, ".md")}`, reason: S });
+      r.push({ scope: "user", label: `Command /${basename(p, ".md")}`, reason: S });
       continue;
     }
     t.push({
       id: `codex:user:prompt:${p}`,
       kind: "command",
       scope: "user",
-      label: `Command /${Z(p, ".md")}`,
+      label: `Command /${basename(p, ".md")}`,
       description: `\u2192 ${k}`,
       fingerprint: h,
       async apply({ dryRun: N }) {
         if (await _(k))
-          return { skipped: `${Z(p, ".md")}: \`${k}\` already exists` };
+          return { skipped: `${basename(p, ".md")}: \`${k}\` already exists` };
         if (N) return `would copy \`${f}\` \u2192 \`${k}\``;
-        await mkdir(tt(k), { recursive: !0 });
+        await mkdir(dirname(k), { recursive: !0 });
         let y = h.trimStart().startsWith("---")
           ? `
 `
@@ -995,11 +992,11 @@ var Me = {
       r = e.cwd ?? he();
     if (e.homeDir === void 0 && B()) return !0;
     return (
-      (await _(b(t, "config.toml"))) ||
-      (await _(b(t, "AGENTS.md"))) ||
-      (await _(b(t, "prompts"))) ||
-      ((await U(r, b(r, ".codex", "config.toml"))) !== null &&
-        (await _(b(r, ".codex", "config.toml"))))
+      (await _(join(t, "config.toml"))) ||
+      (await _(join(t, "AGENTS.md"))) ||
+      (await _(join(t, "prompts"))) ||
+      ((await U(r, join(r, ".codex", "config.toml"))) !== null &&
+        (await _(join(r, ".codex", "config.toml"))))
     );
   },
   async scan(e) {
@@ -1020,9 +1017,9 @@ var Me = {
       });
     let d = u ? "project" : e.scope;
     if (d !== "project") (await ze(t, "user", r, a, o), await ut(t, a, o));
-    if (d !== "user" && b(r, ".codex") !== t) {
-      let p = b(r, ".codex");
-      if ((await U(r, b(p, "config.toml"))) !== null)
+    if (d !== "user" && join(r, ".codex") !== t) {
+      let p = join(r, ".codex");
+      if ((await U(r, join(p, "config.toml"))) !== null)
         await ze(p, "project", r, a, o);
       else
         o.push({
@@ -1035,8 +1032,6 @@ var Me = {
     return (await dt(t, r, d, a, o), { items: a, unmappable: o });
   },
 };
-import { homedir as mt } from "os";
-import { basename as pt, join as E } from "path";
 var ft = createLazyValue(() =>
   c({
     httpUrl: s().optional(),
@@ -1068,7 +1063,7 @@ var ht = createLazyValue(() =>
   ),
   yt = createLazyValue(() => c({ prompt: s(), description: s().optional() }));
 function Re(e) {
-  return e.homeDir ?? E(mt(), ".gemini");
+  return e.homeDir ?? join(homedir(), ".gemini");
 }
 function wt(e) {
   let t = e.replaceAll("{{args}}", "$ARGUMENTS"),
@@ -1164,7 +1159,7 @@ function wt(e) {
   return { body: o, hasShellExec: a.length > 0 };
 }
 async function kt(e, t, r) {
-  let a = E(e, "settings.json"),
+  let a = join(e, "settings.json"),
     o;
   try {
     o = await R(a);
@@ -1243,7 +1238,7 @@ async function kt(e, t, r) {
     });
 }
 async function bt(e, t, r) {
-  let a = E(e, "commands"),
+  let a = join(e, "commands"),
     o = await readdir(a, { withFileTypes: !0 }).catch(() => []),
     u = getClaudeConfigDir(),
     d = o.filter((p) => p.isDirectory()).map((p) => p.name);
@@ -1257,10 +1252,10 @@ async function bt(e, t, r) {
     if (!p.isFile()) continue;
     let f = p.name;
     if (!f.endsWith(".toml")) continue;
-    let k = E(a, f),
-      h = pt(f, ".toml"),
+    let k = join(a, f),
+      h = basename(f, ".toml"),
       S = K(h),
-      N = E(u, "commands", `${S}.md`),
+      N = join(u, "commands", `${S}.md`),
       y;
     try {
       y = await ge(k);
@@ -1302,7 +1297,7 @@ async function bt(e, t, r) {
       async apply({ dryRun: F }) {
         if (await _(N)) return { skipped: `${S}: \`${N}\` already exists` };
         if (F) return `would write \`${N}\``;
-        await mkdir(E(u, "commands"), { recursive: !0 });
+        await mkdir(join(u, "commands"), { recursive: !0 });
         let L = {
             ...(j && { description: de(j) }),
             ...(w && {
@@ -1340,14 +1335,14 @@ async function St(e, t, r, a, o) {
     d = [
       {
         id: "gemini:user:instructions",
-        src: E(e, "GEMINI.md"),
-        target: E(u, "CLAUDE.md"),
+        src: join(e, "GEMINI.md"),
+        target: join(u, "CLAUDE.md"),
         scope: "user",
       },
       {
         id: "gemini:project:instructions",
-        src: E(t, "GEMINI.md"),
-        target: E(t, "CLAUDE.md"),
+        src: join(t, "GEMINI.md"),
+        target: join(t, "CLAUDE.md"),
         scope: "project",
         containIn: t,
       },
@@ -1378,8 +1373,8 @@ async function St(e, t, r, a, o) {
   }
   if (r === "user") return;
   if (
-    (await U(t, E(t, ".gemini"))) !== null &&
-    (await _(E(t, ".gemini", "system.md")))
+    (await U(t, join(t, ".gemini"))) !== null &&
+    (await _(join(t, ".gemini", "system.md")))
   )
     o.push({
       scope: "project",
@@ -1387,7 +1382,7 @@ async function St(e, t, r, a, o) {
       reason:
         "Gemini system.md replaces the system prompt; Claude Code output-styles augment it. Review and add as an output-style manually if wanted.",
     });
-  if (await _(E(t, "gemini-extension.json")))
+  if (await _(join(t, "gemini-extension.json")))
     o.push({
       scope: "project",
       label: "gemini-extension.json",
@@ -1403,11 +1398,11 @@ var Te = {
       r = e.cwd ?? he();
     if (e.homeDir === void 0 && B()) return !0;
     return (
-      (await _(E(t, "settings.json"))) ||
-      (await _(E(t, "GEMINI.md"))) ||
-      (await _(E(t, "commands"))) ||
-      (await _(E(r, "GEMINI.md"))) ||
-      (await _(E(r, ".gemini")))
+      (await _(join(t, "settings.json"))) ||
+      (await _(join(t, "GEMINI.md"))) ||
+      (await _(join(t, "commands"))) ||
+      (await _(join(r, "GEMINI.md"))) ||
+      (await _(join(r, ".gemini")))
     );
   },
   async scan(e) {
@@ -1430,9 +1425,9 @@ var Te = {
     if (d !== "project") (await kt(t, a, o), await bt(t, a, o));
     if (
       d !== "user" &&
-      E(r, ".gemini") !== t &&
-      (await U(r, E(r, ".gemini"))) !== null &&
-      (await _(E(r, ".gemini", "settings.json")))
+      join(r, ".gemini") !== t &&
+      (await U(r, join(r, ".gemini"))) !== null &&
+      (await _(join(r, ".gemini", "settings.json")))
     )
       o.push({
         scope: "project",
