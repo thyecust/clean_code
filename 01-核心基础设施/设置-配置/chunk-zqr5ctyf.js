@@ -210,7 +210,6 @@ function nt(t, o) {
 }
 import {
   access,
-  readFile,
   readlink,
 } from "fs/promises";
 import { homedir } from "os";

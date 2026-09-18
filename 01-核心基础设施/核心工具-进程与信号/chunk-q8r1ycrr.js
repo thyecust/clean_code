@@ -12,7 +12,6 @@ import { logEvent } from "../遥测-OpenTelemetry/analytics-event-queue.js";
 import { fromEnum } from "../遥测-OpenTelemetry/analytics-fields.js";
 import { getProcessStartTimeAsync } from "./process-identity.js";
 import { killProcessTree } from "./kill-process-tree.js";
-import { readFile } from "fs/promises";
 class n {
   firedSites = new Set();
   fire(e) {

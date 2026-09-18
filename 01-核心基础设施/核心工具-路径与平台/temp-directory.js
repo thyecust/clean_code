@@ -21,7 +21,6 @@ import {
   mkdirSync,
   openSync,
 } from "fs";
-import { tmpdir } from "os";
 import { join } from "path";
 function getTempBaseDir() {
   let e = a.CLAUDE_CODE_TMPDIR;
