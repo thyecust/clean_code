@@ -1837,7 +1837,7 @@ var fo = null,
   De = import.meta.require("../编排-Workflow/WorkflowTool.b1s7beta.js").WorkflowTool,
   ho = import.meta.require("../编排-Workflow/workflowPermissionDialog.pk0trr3f.js").workflowPermissionDialog,
   bo = import.meta.require("../编排-Workflow/recordWorkflowUsageConsent.w6jg9g54.js"),
-  Qo = import.meta.require("../工具Monitor/工具Monitor.981fw9dy.js").MonitorTool,
+  Qo = import.meta.require("../../04-tools/MonitorTool.js").MonitorTool,
   ko =
     "The request this approval was for had already been withdrawn; the answer applied to nothing.";
 function J(e) {

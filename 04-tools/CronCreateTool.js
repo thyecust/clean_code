@@ -9,16 +9,16 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 84 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { bB } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { truncate } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { getTeammateContext } from "./teammate-context.js";
-import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { parseCronExpression, formatCronSchedule, getScheduledTasksPath, createScheduledTask, listScheduledTasks, getNextCronFireTimeMs } from "../后台任务-Shell管理/scheduled-tasks.js";
-import { CRON_CREATE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt } from "../定时任务-Cron/chunk-mk3zm4ew.js";
-import { buildBooleanFromStringSchema } from "../../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
-import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { bB } from "../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { truncate } from "../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { getTeammateContext } from "../02-功能模块/Teammates团队/teammate-context.js";
+import { getToolPermissionContext } from "../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { parseCronExpression, formatCronSchedule, getScheduledTasksPath, createScheduledTask, listScheduledTasks, getNextCronFireTimeMs } from "../02-功能模块/后台任务-Shell管理/scheduled-tasks.js";
+import { CRON_CREATE_TOOL_NAME, DEFAULT_MAX_AGE_DAYS, isKairosCronEnabled, isDurableCronEnabled, buildCronCreateDescription, buildDurableParamDescription, buildCronCreatePrompt } from "../02-功能模块/定时任务-Cron/chunk-mk3zm4ew.js";
+import { buildBooleanFromStringSchema } from "../01-核心基础设施/核心工具-类型与数值/boolean-from-string-schema.js";
+import { s, O, c, Qe } from "../00-第三方库/zod/zod.5ef0bk11.js";
 var n = 50,
   l = createLazyValue(() =>
     Qe({

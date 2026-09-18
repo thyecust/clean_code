@@ -9,15 +9,15 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 224 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME, ArtifactInputError } from "../../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH, VERIFY_PROMPT_PARAGRAPH } from "./chunk-pdd7kz7p.js";
-import { ARTIFACT_ACTION_FAMILIES, toFamilyParentInput, fromFamilyParentInput } from "./chunk-qpgskeea.js";
-import "./chunk-x29r16ke.js";
-import { isArtifactVerifyEnabled, isArtifactPreviewEnabled, isArtifactAddonToolEnabled } from "./chunk-01jnk0v2.js";
-import "../浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
-import { artifactSchemaGates } from "./chunk-b6k1z7an.js";
-import "./chunk-fx5ekm7e.js";
+import { ARTIFACT_TOOL_NAME, ARTIFACT_COMMENTS_TOOL_NAME, ARTIFACT_DATA_TOOL_NAME, ARTIFACT_CHECK_TOOL_NAME, ArtifactInputError } from "../01-核心基础设施/核心工具-常量与消息/核心工具-常量与消息.602x2b1z.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { PREVIEW_PROMPT_PARAGRAPH, commentsPromptParagraphs, DB_PROMPT_PARAGRAPH, VERIFY_PROMPT_PARAGRAPH } from "../02-功能模块/制品发布-Artifact/chunk-pdd7kz7p.js";
+import { ARTIFACT_ACTION_FAMILIES, toFamilyParentInput, fromFamilyParentInput } from "../02-功能模块/制品发布-Artifact/chunk-qpgskeea.js";
+import "../02-功能模块/制品发布-Artifact/chunk-x29r16ke.js";
+import { isArtifactVerifyEnabled, isArtifactPreviewEnabled, isArtifactAddonToolEnabled } from "../02-功能模块/制品发布-Artifact/chunk-01jnk0v2.js";
+import "../02-功能模块/浏览器集成-ClaudeinChrome/claude-browser-mcp-server.js";
+import { artifactSchemaGates } from "../02-功能模块/制品发布-Artifact/chunk-b6k1z7an.js";
+import "../02-功能模块/制品发布-Artifact/chunk-fx5ekm7e.js";
 import {
   artifactCommentsInputSchema,
   artifactDataInputSchema,
@@ -28,14 +28,14 @@ import {
   mapDecisionUpdatedInput,
   artifactLegacyHost,
   artifactRuleTargetInput,
-} from "./chunk-pvztfdrb.js";
-import "../Teammates团队/chunk-weg7y2ya.js";
-import "../../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
-import "../../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
-import "../远程控制-Bridge/bridge-inbound-origin.js";
-import { getCommentsUnavailableNote, buildWatchRepublishesParagraph } from "./artifact-prompt-paragraphs.js";
-import "./artifact-read-for-model.js";
-import { respell } from "../Teammates团队/chunk-y89mhs4a.js";
+} from "../02-功能模块/制品发布-Artifact/chunk-pvztfdrb.js";
+import "../02-功能模块/Teammates团队/chunk-weg7y2ya.js";
+import "../01-核心基础设施/遥测-OpenTelemetry/whiteboard-telemetry.js";
+import "../01-核心基础设施/核心工具-未归类/chunk-dgth8ahx.js";
+import "../02-功能模块/远程控制-Bridge/bridge-inbound-origin.js";
+import { getCommentsUnavailableNote, buildWatchRepublishesParagraph } from "../02-功能模块/制品发布-Artifact/artifact-prompt-paragraphs.js";
+import "../02-功能模块/制品发布-Artifact/artifact-read-for-model.js";
+import { respell } from "../02-功能模块/Teammates团队/chunk-y89mhs4a.js";
 var l = {
     comments: [
       [/action:? "comments"/g, 'action "read"'],

@@ -110,7 +110,7 @@ const newPath = (p) => fileMap.get(p) ?? p;
 // 不参与判定：`src/plugins/functionHooks/hooks-worker/`（自带依赖的独立 bundle，
 // 本来就与主树重名 —— 见 README 的旁注）与 `*.original.js`（REPLACED.md 记的原件）。
 {
-  const MAIN = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时", "cli.js"];
+  const MAIN = ["00-第三方库", "01-核心基础设施", "02-功能模块", "03-入口与运行时", "04-tools", "cli.js"];
   const inMain = (p) => MAIN.some((t) => p === join(ROOT, t) || p.startsWith(join(ROOT, t) + sep));
   const seen = new Map();
   for (const p of allFiles) {

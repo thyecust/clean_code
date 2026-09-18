@@ -9,24 +9,24 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 74 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { ze, ke, YLn, JLn, Nn } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
-import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { logFeatureOk, logFeatureSad } from "../../00-第三方库/lodash/lodash.0vqzb8ad.js";
-import { isBgSession } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { R } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { logError } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
-import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { isGoalClearKeyword, getGoalGateError } from "../Skills技能/chunk-sapykxw7.js";
-import { GOAL_PROPOSAL_DIALOG } from "./goal-proposal-dialog.js";
-import { sanitizePlainText } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { isProposeGoalEnabled } from "./propose-goal-feature-gate.js";
-import { GoalProposalState } from "./goal-proposal-state.js";
-import { collapseNewlines, truncateForDisplay } from "../../01-核心基础设施/核心工具-字符串与文本/text-truncation.js";
-import { PROPOSE_GOAL_TOOL_NAME, PROPOSE_GOAL_MAX_CONDITION_CHARS, PROPOSE_GOAL_TOOL_DESCRIPTION, PROPOSE_GOAL_TOOL_PROMPT } from "./propose-goal-tool.js";
-import { s, O, c, Qe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+import { ze, ke, YLn, JLn, Nn } from "../00-第三方库/lodash/lodash.2x3q7cfh.js";
+import { logEvent } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { logFeatureOk, logFeatureSad } from "../00-第三方库/lodash/lodash.0vqzb8ad.js";
+import { isBgSession } from "../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { R } from "../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { logError } from "../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
+import { getModelProposedGoalsSettingParsed, getModelProposedGoalsSetting } from "../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { isGoalClearKeyword, getGoalGateError } from "../02-功能模块/Skills技能/chunk-sapykxw7.js";
+import { GOAL_PROPOSAL_DIALOG } from "../02-功能模块/目标模式-Goal/goal-proposal-dialog.js";
+import { sanitizePlainText } from "../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { isProposeGoalEnabled } from "../02-功能模块/目标模式-Goal/propose-goal-feature-gate.js";
+import { GoalProposalState } from "../02-功能模块/目标模式-Goal/goal-proposal-state.js";
+import { collapseNewlines, truncateForDisplay } from "../01-核心基础设施/核心工具-字符串与文本/text-truncation.js";
+import { PROPOSE_GOAL_TOOL_NAME, PROPOSE_GOAL_MAX_CONDITION_CHARS, PROPOSE_GOAL_TOOL_DESCRIPTION, PROPOSE_GOAL_TOOL_PROMPT } from "../02-功能模块/目标模式-Goal/propose-goal-tool.js";
+import { s, O, c, Qe } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { randomUUID } from "crypto";
 var T = createLazyValue(() =>
     Qe({

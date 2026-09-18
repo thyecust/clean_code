@@ -9,24 +9,24 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 187 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { Dr } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
-import { lit as S, fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { Ve, l, A } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
-import { logForDebugging } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { pluralize } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { isEssentialTrafficOnly } from "../../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
-import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { normalizeSingleLineText } from "../../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
-import { resolvePath } from "../../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
-import { hashSha256 } from "../../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
-import { hasIsolatePeerMachines } from "../../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { getAPIProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { sanitizeTextForDisplay, isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
-import { getToolPermissionContext } from "../权限系统/chunk-fjrcf22x.js";
-import { matchesToolName, buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../远程控制-Bridge/chunk-1yq098a7.js";
+import { Dr } from "../00-第三方库/lodash/lodash.207999qb.js";
+import { logEvent } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { lit as S, fromEnum } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { Ve, l, A } from "../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
+import { logForDebugging } from "../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { pluralize } from "../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { isEssentialTrafficOnly } from "../01-核心基础设施/提示词-SystemPrompt/chunk-27ncq5fr.js";
+import { findLastPeerHopChain, parsePeerAddress, validateMessageTarget, slugify, parseAgentDisplayName, formatCandidateSummary } from "../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { normalizeSingleLineText } from "../01-核心基础设施/设置-配置/设置-配置.aqbb35ee.js";
+import { resolvePath } from "../01-核心基础设施/核心工具-路径与平台/chunk-fx8qr1md.js";
+import { hashSha256 } from "../01-核心基础设施/核心工具-路径与平台/git-host-utils.js";
+import { hasIsolatePeerMachines } from "../01-核心基础设施/核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
+import { getAPIProvider } from "../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { sanitizeTextForDisplay, isPolicyAllowed } from "../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import { getToolPermissionContext } from "../02-功能模块/权限系统/chunk-fjrcf22x.js";
+import { matchesToolName, buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { formatUnreachablePeerRefusal, formatCannotReceiveRefusal, isPeerInboundUnconfirmed } from "../02-功能模块/远程控制-Bridge/chunk-1yq098a7.js";
 import {
   SELF_TARGET_REASON,
   isOwnMessagingSocket,
@@ -40,13 +40,13 @@ import {
   hasCompleteTargetLookup,
   classifySelfNameMatch,
   formatOwnSessionMessage,
-} from "../Teammates团队/peer-target-guard.js";
-import { findMatchingDenyRule, findMatchingAskRule, READ_PATH_PROBE, readPermissionDecisionForPath } from "../记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
-import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
-import { isMessageTooLargeError, isSenderPacedError, isInboxGoneError, formatStaleSocketHint, BUSY_PIPE_RETRY_HINT, isRetryableSendError } from "./chunk-ddtmwhn7.js";
-import { LIST_AGENTS_TOOL_NAME } from "../Teammates团队/list-agents-tool-constants.js";
-import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
-import { readPeerFileBounded, stageLocalPeerFile, sweepStaleSpoolEntries } from "./peer-file-transfer.js";
+} from "../02-功能模块/Teammates团队/peer-target-guard.js";
+import { findMatchingDenyRule, findMatchingAskRule, READ_PATH_PROBE, readPermissionDecisionForPath } from "../02-功能模块/记忆-CLAUDE.md/记忆-CLAUDE.md.vx19drc8.js";
+import { createConcurrencyLimiter, SEND_FILE_TOOL_NAME, SEND_FILE_TOOL_DESCRIPTION, buildSendFileToolPrompt, BoundedTtlCache, getCurrentSessionPeerNameFor } from "../03-入口与运行时/核心应用-Agent循环/核心应用-Agent循环.wmzgeczq.js";
+import { isMessageTooLargeError, isSenderPacedError, isInboxGoneError, formatStaleSocketHint, BUSY_PIPE_RETRY_HINT, isRetryableSendError } from "../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js";
+import { LIST_AGENTS_TOOL_NAME } from "../02-功能模块/Teammates团队/list-agents-tool-constants.js";
+import { MAX_TRANSFER_SIZE_BYTES, MAX_TRANSFER_FILE_COUNT, isSendFileEnabled, FILE_TRANSFER_ERROR_MESSAGE } from "../01-核心基础设施/核心工具-未归类/file-transfer-config.js";
+import { readPeerFileBounded, stageLocalPeerFile, sweepStaleSpoolEntries } from "../02-功能模块/跨会话消息-UDS/peer-file-transfer.js";
 import {
   checkCrossSessionSendPermission,
   pinSendMessageRecipient,
@@ -58,11 +58,11 @@ import {
   buildRemoteSessionReachabilityNotes,
   SESSION_LIST_TRUNCATED_NOTE,
   resolveMessageRecipient,
-} from "../Teammates团队/message-recipient-resolution.js";
-import { IMAGE_FILE_EXTENSION_PATTERN, getMediaTypeFromPath, validateAttachmentPath } from "../图片-截图-ComputerUse/chunk-0dcnsftb.js";
-import { SEND_MESSAGE_TOOL_NAME } from "../../01-核心基础设施/核心工具-未归类/send-message-constants.js";
-import { MAIN_CONVERSATION_NAME } from "../Teammates团队/chunk-enjekn9t.js";
-import { s, T, O, v, c, Qe, ai } from "../../00-第三方库/zod/zod.5ef0bk11.js";
+} from "../02-功能模块/Teammates团队/message-recipient-resolution.js";
+import { IMAGE_FILE_EXTENSION_PATTERN, getMediaTypeFromPath, validateAttachmentPath } from "../02-功能模块/图片-截图-ComputerUse/chunk-0dcnsftb.js";
+import { SEND_MESSAGE_TOOL_NAME } from "../01-核心基础设施/核心工具-未归类/send-message-constants.js";
+import { MAIN_CONVERSATION_NAME } from "../02-功能模块/Teammates团队/chunk-enjekn9t.js";
+import { s, T, O, v, c, Qe, ai } from "../00-第三方库/zod/zod.5ef0bk11.js";
 import { realpath, unlink } from "fs/promises";
 import { basename } from "path";
 var Q = createLazyValue(() =>
@@ -179,7 +179,7 @@ ${PREVIOUSLY_USED_NAME_NOTE}`
       let {
         isRemoteControlPeerUnreachableFromHere: p,
         formatUnreachableElevatedRefusal: b,
-      } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js");
+      } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js");
       if (t.via === "remote-control" && p())
         return {
           kind: "refused",
@@ -529,7 +529,7 @@ var SendFileTool = buildTool({
       let {
           isRemoteControlPeerUnreachableFromHere: r,
           formatUnreachableElevatedRefusal: y,
-        } = import.meta.require("../远程控制-Bridge/chunk-tyce0p0b.js"),
+        } = import.meta.require("../02-功能模块/远程控制-Bridge/chunk-tyce0p0b.js"),
         N =
           formatUnreachablePeerRefusal(o.session, _.sessionId, _.label) ??
           (_.via === "remote-control" && r() ? y(_.label) : void 0);
@@ -625,7 +625,7 @@ var SendFileTool = buildTool({
       if (h.aborted) throw (E(), new Ve());
       if (N.length === 0)
         return w(`No files could be staged for transfer to ${d.label}.`, r);
-      let { sendToUdsSocket: X } = import.meta.require("./chunk-ddtmwhn7.js");
+      let { sendToUdsSocket: X } = import.meta.require("../02-功能模块/跨会话消息-UDS/chunk-ddtmwhn7.js");
       try {
         let { msgId: g } = await X(
           d.sock,
@@ -679,7 +679,7 @@ var SendFileTool = buildTool({
         (b = F.input.files),
         (U = b.map((r) => resolvePath(r))),
         (j = U.map((r) => basename(r))));
-    let { uploadBytesToBridgeStore: ie } = await import("../远程控制-Bridge/uploadBytesToBridgeStore.rrjdccq9.js"),
+    let { uploadBytesToBridgeStore: ie } = await import("../02-功能模块/远程控制-Bridge/uploadBytesToBridgeStore.rrjdccq9.js"),
       D = Array(U.length),
       ae = await Promise.all(
         U.map((r, y) =>
@@ -730,7 +730,7 @@ var SendFileTool = buildTool({
     if (L.length === 0)
       return w(`No files could be uploaded for transfer to ${d.label}.`, D);
     let { postInterClaudeMessage: le, isLikelyStaleBridgeError: de } =
-        import.meta.require("../远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
+        import.meta.require("../02-功能模块/远程控制-Bridge/listBridgePeerSessions.g159fp6a.js"),
       H = await le(
         d.sessionId,
         M(L.map((r) => r.file_name)),

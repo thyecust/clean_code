@@ -9,27 +9,27 @@
 // Version: 2.1.263
 
 // [preload stripped] 原本在此预载 71 个依赖 chunk；经查它们均已由主入口初始化，已移除。
-import { toInfraSessionId } from "../权限系统/chunk-ynkf3yy4.js";
-import { getOauthConfig } from "../认证-OAuth登录/chunk-9g2q4bjq.js";
-import { buildClaudeAiSessionUrl, REMOTE_TRIGGER_TOOL_NAME, REMOTE_TRIGGER_TOOL_DESCRIPTION, REMOTE_TRIGGER_TOOL_PROMPT, resolvePersistenceThreshold, CCR_TRIGGERS_BETA_HEADER, parseTriggerTimestamp } from "../工具结果持久化/工具结果持久化.jj43r39n.js";
-import { logEvent } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
-import { fromEnum } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
-import { jsonStringify } from "../../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
-import { truncateToCodeUnits, truncateWithCharCount, normalizeWhitespace } from "../../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
-import { createLazyValue } from "../../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
-import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
-import { httpClient, isClaudeAISubscriber } from "../认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
-import { formatRelativeTime } from "../../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
-import { sanitizeAnalyticsId } from "../../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
-import { stripAnsi } from "../../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
-import { isFirstPartyProvider } from "../../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
-import { isPolicyAllowed } from "../../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
-import { buildTool } from "../权限系统/chunk-qdy0h5k2.js";
-import { ALLOW_ROUTINES_POLICY } from "../../01-核心基础设施/核心工具-未归类/routines-policy.js";
-import { isPlainObject } from "../../01-核心基础设施/核心工具-未归类/chunk-1w1x0pyk.js";
-import { createCoercedZodString } from "../../01-核心基础设施/核心工具-类型与数值/zod-helpers.js";
-import { s, T, O, se, v, c, Qe, $e, fe, X } from "../../00-第三方库/zod/zod.5ef0bk11.js";
-import { isRecord } from "../../01-核心基础设施/核心工具-类型与数值/is-record.js";
+import { toInfraSessionId } from "../02-功能模块/权限系统/chunk-ynkf3yy4.js";
+import { getOauthConfig } from "../02-功能模块/认证-OAuth登录/chunk-9g2q4bjq.js";
+import { buildClaudeAiSessionUrl, REMOTE_TRIGGER_TOOL_NAME, REMOTE_TRIGGER_TOOL_DESCRIPTION, REMOTE_TRIGGER_TOOL_PROMPT, resolvePersistenceThreshold, CCR_TRIGGERS_BETA_HEADER, parseTriggerTimestamp } from "../02-功能模块/工具结果持久化/工具结果持久化.jj43r39n.js";
+import { logEvent } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-event-queue.js";
+import { fromEnum } from "../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
+import { jsonStringify } from "../01-核心基础设施/核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
+import { truncateToCodeUnits, truncateWithCharCount, normalizeWhitespace } from "../01-核心基础设施/核心工具-字符串与文本/string-utils.js";
+import { createLazyValue } from "../01-核心基础设施/核心工具-并发与缓存/lazy-value.js";
+import { env as a } from "../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { httpClient, isClaudeAISubscriber } from "../02-功能模块/认证-OAuth登录/认证-OAuth登录.419zdfz3.js";
+import { formatRelativeTime } from "../01-核心基础设施/核心工具-字符串与文本/ansi-text-utils.js";
+import { sanitizeAnalyticsId } from "../03-入口与运行时/CLI入口-Commander/startup-profiler.js";
+import { stripAnsi } from "../01-核心基础设施/核心工具-字符串与文本/text-sanitization.js";
+import { isFirstPartyProvider } from "../01-核心基础设施/模型目录-ModelCatalog/模型目录-ModelCatalog.3msq3jt8.js";
+import { isPolicyAllowed } from "../01-核心基础设施/核心工具-字符串与文本/chunk-8sw91yn5.js";
+import { buildTool } from "../02-功能模块/权限系统/chunk-qdy0h5k2.js";
+import { ALLOW_ROUTINES_POLICY } from "../01-核心基础设施/核心工具-未归类/routines-policy.js";
+import { isPlainObject } from "../01-核心基础设施/核心工具-未归类/chunk-1w1x0pyk.js";
+import { createCoercedZodString } from "../01-核心基础设施/核心工具-类型与数值/zod-helpers.js";
+import { s, T, O, se, v, c, Qe, $e, fe, X } from "../00-第三方库/zod/zod.5ef0bk11.js";
+import { isRecord } from "../01-核心基础设施/核心工具-类型与数值/is-record.js";
 var q = createLazyValue(() => c({ data: v(se()), next_cursor: s().nullish() })),
   Y = 800,
   K = 4000,
