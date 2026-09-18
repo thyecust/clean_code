@@ -243,7 +243,7 @@ function normalizeSettingsAliases(e, t) {
 function Yt(e) {
   return `"${e.alias}" and "${e.canonical}" are the same setting; keep only "${e.canonical}"`;
 }
-import { join as ar } from "path";
+import { join } from "path";
 import { isAbsolute } from "path";
 var fa = createLazyValue(() =>
     c({
@@ -1747,7 +1747,7 @@ function Ke(e) {
     escaped: t,
   };
 }
-import { posix as Us, win32 as zs } from "path";
+import { posix, win32 } from "path";
 var ENV_VAR_PLACEHOLDER_RE = String.raw`\$\{([A-Za-z_][A-Za-z0-9_]*)(?::-[^}]*)?\}`;
 function containsEnvVarPlaceholder(e) {
   return new RegExp(ENV_VAR_PLACEHOLDER_RE).test(e);
@@ -2042,7 +2042,6 @@ function shouldRefetchMcpServer(e, t) {
     e.type === "needs-auth"
   );
 }
-import { posix as Jl, win32 as Xl } from "path";
 import { isIPv4, isIPv6 } from "net";
 var Ga = new Set([
     "metadata.google.internal",
@@ -4251,7 +4250,7 @@ function ds() {
   };
 }
 function ss(e) {
-  return Jl.isAbsolute(e) || Xl.isAbsolute(e);
+  return posix.isAbsolute(e) || win32.isAbsolute(e);
 }
 var us = /[^\x20-\x7E]| {4,}/;
 function En() {
@@ -6454,7 +6453,7 @@ function isNormalizedPath(e, t, o = {}) {
     if (o.rejectDriveRelative) {
       if (!/^[A-Za-z]:\\/.test(r) && !i && /^(\\|[A-Za-z]:)/.test(r)) return !1;
     }
-    if (zs.normalize(r) !== r) return !1;
+    if (win32.normalize(r) !== r) return !1;
     let d = r.split("\\");
     if (d.some((p) => p === "." || p === "..")) return !1;
     if (
@@ -6471,7 +6470,7 @@ function isNormalizedPath(e, t, o = {}) {
   }
   if (o.rejectNetworkRoot && isNetworkAutomountPath(e)) return !1;
   if (o.rejectMagicLinkRoot && isKernelMagicLinkPath(e)) return !1;
-  if (Us.normalize(e) !== e) return !1;
+  if (posix.normalize(e) !== e) return !1;
   if (e.split("/").some((r) => r === "." || r === "..")) return !1;
   if (/\/{2}/.test(e)) return !1;
   return !e.endsWith("/") || e === "/";
@@ -6571,7 +6570,7 @@ function id(e) {
       message:
         "path must not contain control, line/paragraph-separator, or invisible (default-ignorable) characters",
     })
-    .refine((r) => (t === "win32" ? zs : Us).isAbsolute(r), {
+    .refine((r) => (t === "win32" ? win32 : posix).isAbsolute(r), {
       message: "path must be absolute",
     })
     .refine(
@@ -9074,7 +9073,7 @@ var SETTINGS_FILENAME = "remote-settings.json",
   Nt = 2097152,
   HELPER_CONSENT_STATE_ID = "remote-settings-helper-consent";
 function getHelperConsentPath() {
-  return ar(getClaudeConfigDir(), HELPER_CONSENT_STATE_ID);
+  return join(getClaudeConfigDir(), HELPER_CONSENT_STATE_ID);
 }
 function lr(e) {
   if (
@@ -9239,7 +9238,7 @@ function Ud(e) {
   return e && isEvalPolicySnapshotOnly() ? { ...extractManagedSettings(e), managedSourcesBehavior: "merge" } : e;
 }
 function getSettingsPath() {
-  return getRemoteSettingsPathOverride() ?? ar(getClaudeConfigDir(), SETTINGS_FILENAME);
+  return getRemoteSettingsPathOverride() ?? join(getClaudeConfigDir(), SETTINGS_FILENAME);
 }
 function getMockRemoteSettingsValue() {
   return;
@@ -10154,7 +10153,6 @@ var USER_PROJECT_LOCAL_SETTINGS_SOURCES = ["userSettings", "projectSettings", "l
   PROJECT_LOCAL_SETTINGS_SOURCES = ["projectSettings", "localSettings"],
   PROJECT_SCOPED_SETTINGS_SOURCE_SET = new Set(PROJECT_LOCAL_SETTINGS_SOURCES),
   HOOK_SETTINGS_SOURCE_ORDER = ["localSettings", "projectSettings", "userSettings"];
-import { join as xu } from "path";
 class Ur {
   managedFilePath = void 0;
   dropInDir = void 0;
@@ -10163,7 +10161,7 @@ class Ur {
   }
   getDropInDir() {
     return (
-      (this.dropInDir ??= xu(getManagedSettingsDirPath(), "managed-settings.d")),
+      (this.dropInDir ??= join(getManagedSettingsDirPath(), "managed-settings.d")),
       this.dropInDir
     );
   }
@@ -10513,7 +10511,7 @@ var ig = Vt(function (e, t) {
   }),
   pickObjectKeys = ig;
 import { homedir } from "os";
-import { dirname, join as ye, resolve } from "path";
+import { dirname, resolve } from "path";
 function hasAttributionOverrides(e) {
   return e !== void 0 && (e.commit !== void 0 || e.pr !== void 0);
 }
@@ -11490,7 +11488,7 @@ function resolveEnabledSettingsSources(e) {
   );
 }
 function Mg() {
-  return ye(getManagedSettingsDirPath(), "managed-settings.json");
+  return join(getManagedSettingsDirPath(), "managed-settings.json");
 }
 function readManagedFileSettings(e) {
   if (getCurrentPlatform() === "wsl" && e.wslInherits?.()) {
@@ -11512,14 +11510,14 @@ function Fn(e, t) {
     r = {},
     i = !1,
     { settings: d, errors: u } = parseSettingsFileCached(
-      ye(e, "managed-settings.json"),
+      join(e, "managed-settings.json"),
       t,
       void 0,
       !0,
     );
   if ((o.push(...u), d && Object.keys(d).length > 0))
     ((r = mergeWith(r, d, settingsMergeCustomizer)), (i = !0));
-  let p = ye(e, "managed-settings.d");
+  let p = join(e, "managed-settings.d");
   try {
     let g = t.folderListingForPolicyWalk(p),
       h;
@@ -11532,7 +11530,7 @@ function Fn(e, t) {
         .sort()),
         t.noteWalkListing(p, h));
     for (let f of h) {
-      let { settings: y, errors: _ } = parseSettingsFileCached(ye(p, f), t, void 0, !0);
+      let { settings: y, errors: _ } = parseSettingsFileCached(join(p, f), t, void 0, !0);
       if ((o.push(..._), y && Object.keys(y).length > 0))
         ((r = mergeWith(r, y, settingsMergeCustomizer)), (i = !0));
     }
@@ -11816,13 +11814,13 @@ function Ug(e) {
   let t = getFsSurface(),
     o = null;
   try {
-    o = t.lstatSync(ye(e, ".claude")).uid;
+    o = t.lstatSync(join(e, ".claude")).uid;
   } catch (r) {
     if (!W(r)) throw r;
   }
   return {
     rootUid: t.statSync(e).uid,
-    gitEntryUid: t.lstatSync(ye(e, ".git")).uid,
+    gitEntryUid: t.lstatSync(join(e, ".git")).uid,
     claudeEntryUid: o,
   };
 }
@@ -11881,10 +11879,10 @@ function Fg(e) {
 function resolveSettingsFilePathForSource(e, t) {
   switch (e) {
     case "userSettings":
-      return ye(resolveSettingsSourceRootDir(e, t), Fg(t));
+      return join(resolveSettingsSourceRootDir(e, t), Fg(t));
     case "projectSettings":
     case "localSettings":
-      return ye(resolveSettingsSourceRootDir(e, t), getRelativeSettingsFilePathForSource(e));
+      return join(resolveSettingsSourceRootDir(e, t), getRelativeSettingsFilePathForSource(e));
     case "policySettings":
       return Mg();
     case "flagSettings":
@@ -11894,14 +11892,14 @@ function resolveSettingsFilePathForSource(e, t) {
 function getRelativeSettingsFilePathForSource(e) {
   switch (e) {
     case "projectSettings":
-      return ye(".claude", "settings.json");
+      return join(".claude", "settings.json");
     case "localSettings":
-      return ye(".claude", "settings.local.json");
+      return join(".claude", "settings.local.json");
   }
 }
 function resolveLegacyLocalSettingsFilePath(e) {
   if (resolveLocalSettingsStoreRoot(e.cwd, e.canonicalGitRoot) === resolve(e.cwd)) return;
-  return ye(resolve(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
+  return join(resolve(e.cwd), getRelativeSettingsFilePathForSource("localSettings"));
 }
 function getSettingsForSourceCached(e, t) {
   let o = t.store.perSource.get(e);

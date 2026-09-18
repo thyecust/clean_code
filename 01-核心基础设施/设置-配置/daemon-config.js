@@ -20,7 +20,7 @@ import { DAEMON_CONFIG_MAX_BYTES, readDaemonConfigContent } from "../../02-功�
 import { getDaemonJsonPath } from "../../02-功能模块/守护服务-Daemon/daemon-paths.js";
 import { s, v, c, $e } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getCurrentPlatform } from "../核心工具-路径与平台/platform-detection.js";
-import { stat as C } from "fs/promises";
+import { stat } from "fs/promises";
 import { basename, dirname, normalize } from "path";
 function x(r) {
   return $e([r, v(r)])
@@ -42,7 +42,7 @@ async function loadDaemonConfig(r, o) {
     t = e.raw;
   } else
     try {
-      let e = await C(r).catch((d) =>
+      let e = await stat(r).catch((d) =>
         A(d) === "ENOENT" ? null : Promise.reject(d),
       );
       if (e && (!e.isFile() || e.size > DAEMON_CONFIG_MAX_BYTES))

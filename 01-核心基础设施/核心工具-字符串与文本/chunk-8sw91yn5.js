@@ -45,7 +45,7 @@ import { s, O, se, v, c, fe } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter } from "../核心工具-日期与本地化/intl-text-utils.js";
 import { countMatching, dedupe } from "../核心工具-数组与集合/chunk-d16fhdtx.js";
 import { readFileSync } from "fs";
-import { join as We } from "path";
+import { join } from "path";
 function buildAttributionHeader(e, t, r, o, i) {
   let l = getAPIProvider();
   if (
@@ -890,7 +890,7 @@ function getPolicyCacheRevision() {
   return g().cacheRevision;
 }
 function getCachePath() {
-  return We(getClaudeConfigDir(), Ve);
+  return join(getClaudeConfigDir(), Ve);
 }
 function isPolicyLimitsEligible() {
   return getPolicyLimitsIneligibleReason() === void 0;

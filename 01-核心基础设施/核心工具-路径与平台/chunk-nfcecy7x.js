@@ -17,7 +17,7 @@ import {
   rmdir,
   unlink,
 } from "fs/promises";
-import { basename, dirname, join as u, sep as b } from "path";
+import { basename, dirname, join, sep } from "path";
 function normalizePathForComparison(e) {
   return e
     .toLowerCase()
@@ -27,7 +27,7 @@ function normalizePathForComparison(e) {
 async function isPathSafeToRemove(e) {
   if (getCurrentPlatform() !== "windows") return !0;
   let t = await realpath(dirname(e)).catch(() => null);
-  return !(await c(e, t == null ? null : normalizePathForComparison(u(t, basename(e)))));
+  return !(await c(e, t == null ? null : normalizePathForComparison(join(t, basename(e)))));
 }
 async function c(e, t) {
   try {
@@ -57,7 +57,7 @@ async function c(e, t) {
           : await realpath(e)
               .then((o) => normalizePathForComparison(o))
               .catch(() => null);
-      if (i == null || (i !== t && !i.startsWith(t + b)))
+      if (i == null || (i !== t && !i.startsWith(t + sep)))
         return (
           logForDebugging(
             `[worktree] refusing to enumerate unremovable entry before removal: ${e}`,
@@ -78,7 +78,7 @@ async function c(e, t) {
   let a = !1;
   for (let r of l)
     if (r.isSymbolicLink() || r.isDirectory())
-      a = (await c(u(e, r.name), t)) || a;
+      a = (await c(join(e, r.name), t)) || a;
   return a;
 }
 export { normalizePathForComparison, isPathSafeToRemove };

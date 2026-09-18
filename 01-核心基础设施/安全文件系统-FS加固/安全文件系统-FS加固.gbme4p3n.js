@@ -29,27 +29,23 @@ import { Ku } from "../../00-第三方库/lru-cache/lru-cache.8crev50p.js";
 import { formatFileSize } from "../核心工具-字符串与文本/chunk-7axvc6rn.js";
 import {
   closeSync,
-  constants as eo,
+  constants,
   fstatSync,
-  lstatSync as no,
+  lstatSync,
   openSync,
   readlinkSync,
   readSync,
-  statSync as io,
+  statSync,
   unwatchFile,
 } from "fs";
-import { readdir as ao, readFile as le, stat as Mt } from "fs/promises";
-import { constants as br } from "fs";
+import { readdir, readFile, stat } from "fs/promises";
 import * as T from "fs/promises";
 import { randomUUID } from "crypto";
-import { constants as ut } from "fs";
 import {
   mkdir,
-  open as ar,
-  readdir as cr,
-  readFile as lr,
+  open,
 } from "fs/promises";
-import { basename as ur, dirname as dr, join as dt } from "path";
+import { basename, dirname, join } from "path";
 var FIRST_PARTY_MAX_IMAGE_BASE64_BYTES = 10485760;
 var DEFAULT_MAX_IMAGE_RAW_BYTES = 512000;
 var Ut = {
@@ -90,22 +86,15 @@ var DEFAULT_IMAGE_LIMITS = {
   MEDIA_BYTE_CAP_FOR_DEFAULT_ENDPOINT = DEFAULT_REQUEST_BYTE_LIMIT - 8388608,
   MEDIA_BYTE_CAP_SAFETY_MARGIN = 10485760;
 import {
-  basename as Jn,
-  dirname as Zn,
-  isAbsolute as Qn,
-  join as pe,
-  relative as er,
-  sep as it,
+  isAbsolute,
+  relative,
+  sep,
 } from "path";
-import { basename as ot, dirname as st } from "path";
-import { constants as Ie } from "fs";
 import {
-  link as Ko,
-  lstat as Zt,
-  open as ke,
+  link,
+  lstat,
   readlink,
-  realpath as Go,
-  stat as Ho,
+  realpath,
   unlink,
 } from "fs/promises";
 var Vt = new Set(["ENOENT", "ENOTDIR"]),
@@ -141,14 +130,14 @@ async function ee(e) {
 }
 var DEFAULT_OPEN_FILE_MODE = 384;
 async function Qt(e, t, r = DEFAULT_OPEN_FILE_MODE) {
-  let o = await ee(Zt(e));
+  let o = await ee(lstat(e));
   if (!o.ok && o.error.kind !== "absent") return createErrorResult(o.error);
   if (o.ok && !o.value.isFile()) return createErrorResult(tn(e, o.value));
-  return ee(ke(e, t | O_NOFOLLOW_NONBLOCK_FLAGS, r));
+  return ee(open(e, t | O_NOFOLLOW_NONBLOCK_FLAGS, r));
 }
 async function openFileReadOnlyHardened(e) {
-  if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) return Qt(e, Ie.O_RDONLY);
-  return en(e, await ee(ke(e, Ie.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS)));
+  if (O_NOFOLLOW_NONBLOCK_FLAGS === 0) return Qt(e, constants.O_RDONLY);
+  return en(e, await ee(open(e, constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS)));
 }
 function en(e, t) {
   return !t.ok && t.error.kind === "fs" && isErrnoCode(t.error.error, "ELOOP")
@@ -939,15 +928,15 @@ function getSidecarKeyForMetadataPath(e) {
   return e.endsWith(".meta.json") ? getSidecarKeyForPath(e) : void 0;
 }
 function getSidecarKeyForPath(e) {
-  let t = ot(e);
+  let t = basename(e);
   if (isJsonlFileName(t)) return;
   let r = getProjectsDir(),
     o = [t],
-    s = st(e);
+    s = dirname(e);
   while (s !== r && o.length <= qn + 1) {
-    let b = st(s);
+    let b = dirname(s);
     if (b === s) return;
-    (o.unshift(ot(s)), (s = b));
+    (o.unshift(basename(s)), (s = b));
   }
   if (s !== r || o.length < 3) return;
   let [i, a, ...u] = o;
@@ -957,14 +946,14 @@ function getSidecarKeyForPath(e) {
 }
 var TOOL_RESULTS_DIR_NAME = "tool-results";
 function getToolResultsDirForSession(e) {
-  return pe(getProjectDir(e.root.project.originalCwd), e.root.id, TOOL_RESULTS_DIR_NAME);
+  return join(getProjectDir(e.root.project.originalCwd), e.root.id, TOOL_RESULTS_DIR_NAME);
 }
 function getCurrentToolResultsDir() {
   return getToolResultsDirForSession({ root: { id: K(), project: { originalCwd: he() } } });
 }
 function getSidecarKeyForToolResultFile(e, t) {
-  if (Jn(e) !== TOOL_RESULTS_DIR_NAME || !isValidPathSegment(t)) return;
-  return getSidecarKeyForPath(pe(e, t));
+  if (basename(e) !== TOOL_RESULTS_DIR_NAME || !isValidPathSegment(t)) return;
+  return getSidecarKeyForPath(join(e, t));
 }
 function nr(e) {
   let t = getSidecarKeyForToolResultFile(e, "probe");
@@ -1000,11 +989,11 @@ async function or(e, t) {
 }
 async function at(e, t) {
   let r = getProjectsDir(),
-    o = er(r, t);
-  if (o === "" || o === ".." || o.startsWith(".." + it) || Qn(o)) return;
+    o = relative(r, t);
+  if (o === "" || o === ".." || o.startsWith(".." + sep) || isAbsolute(o)) return;
   let s = r;
-  for (let i of o.split(it)) {
-    s = pe(s, i);
+  for (let i of o.split(sep)) {
+    s = join(s, i);
     let a = await e.lstat(s);
     if (a === void 0) return;
     if (a.isSymbolicLink || !a.isDirectory) return s;
@@ -1021,7 +1010,7 @@ async function assertSafeDirectoryPath(e, t) {
 }
 async function writeBytesExclusiveHardened(e, t, r) {
   let o = getFileStorage();
-  await assertSafeDirectoryPath(Zn(e), o);
+  await assertSafeDirectoryPath(dirname(e), o);
   for (let s = 1; ; s++) {
     if (s > 1) await ct(o, e);
     else await removeSymlinkAtWriteTarget(e, o);
@@ -1066,7 +1055,7 @@ async function readPdfAttachment(e) {
           message: `PDF file exceeds maximum allowed size of ${formatFileSize(MAX_PDF_ATTACHMENT_BYTES)}.`,
         },
       };
-    let s = await lr(e);
+    let s = await readFile(e);
     if (!s.subarray(0, 5).toString("ascii").startsWith("%PDF-"))
       return {
         success: !1,
@@ -1105,8 +1094,8 @@ async function getPdfPageCount(e) {
   return isNaN(s) ? null : s;
 }
 function me(e) {
-  let t = e === "win32" ? 0 : (ut.O_NONBLOCK ?? 0);
-  return ut.O_RDONLY | t;
+  let t = e === "win32" ? 0 : (constants.O_NONBLOCK ?? 0);
+  return constants.O_RDONLY | t;
 }
 class gt {
   available = void 0;
@@ -1134,7 +1123,7 @@ async function mr() {
 }
 async function extractPdfPageImages(e, t, r) {
   try {
-    let o = await ar(e, me("darwin")),
+    let o = await open(e, me("darwin")),
       s = await o.stat().finally(() => o.close());
     if (!s.isFile())
       return {
@@ -1168,10 +1157,10 @@ async function extractPdfPageImages(e, t, r) {
         },
       };
     let u = randomUUID(),
-      m = dt(getCurrentToolResultsDir(), `pdf-${u}`),
+      m = join(getCurrentToolResultsDir(), `pdf-${u}`),
       b = r === void 0 ? void 0 : mt(m);
     await mkdir(m, { recursive: !0 });
-    let S = dt(m, "page"),
+    let S = join(m, "page"),
       p = ["-jpeg", "-r", "100"];
     if (t?.firstPage) p.push("-f", String(t.firstPage));
     if (t?.lastPage && t.lastPage !== 1 / 0) p.push("-l", String(t.lastPage));
@@ -1274,7 +1263,7 @@ async function extractPdfPageImages(e, t, r) {
           },
         };
       E = C.names;
-    } else E = (await cr(m)).filter((de) => de.endsWith(".jpg")).sort();
+    } else E = (await readdir(m)).filter((de) => de.endsWith(".jpg")).sort();
     if (E.length === 0)
       return {
         success: !1,
@@ -1326,12 +1315,12 @@ function ge(e) {
 var pt = "ListCapExceeded";
 function mt(e) {
   let t = getCurrentToolResultsDir();
-  if (dr(e) !== t)
+  if (dirname(e) !== t)
     throw new R(
       `PDF extraction directory is outside the session tool-results store: ${e}`,
       "pdf extraction dir outside tool-results",
     );
-  return { projectKey: getProjectKey(he()), sessionId: K(), relPath: [TOOL_RESULTS_DIR_NAME, ur(e)] };
+  return { projectKey: getProjectKey(he()), sessionId: K(), relPath: [TOOL_RESULTS_DIR_NAME, basename(e)] };
 }
 async function listExtractedPdfPageNames(e, t, r) {
   let o = r ?? mt(t),
@@ -1403,7 +1392,7 @@ async function readFileHardened(e, t, r) {
   let o = r?.fromTail === !0 ? "unreadable" : null,
     s;
   try {
-    let i = r?.noFollow ? (br.O_NOFOLLOW ?? 0) : 0;
+    let i = r?.noFollow ? (constants.O_NOFOLLOW ?? 0) : 0;
     s = await T.open(e, me("darwin") | i);
     let a = await s.stat();
     if (!a.isFile()) return o;
@@ -1485,12 +1474,7 @@ function ye(e, t) {
   return e.toString("utf8");
 }
 import {
-  dirname as Re,
-  isAbsolute as co,
-  join as _,
-  relative as lo,
-  resolve as D,
-  sep as ie,
+  resolve,
 } from "path";
 var yt = {
   ccr: {
@@ -1565,28 +1549,10 @@ function createRemoteTransport(e, t, r, o) {
 import { createHash } from "crypto";
 import {
   accessSync,
-  constants as Ar,
-  lstatSync as _t,
   readFileSync,
   realpathSync,
-  statSync as It,
 } from "fs";
-import {
-  lstat as Fr,
-  open as hi,
-  readFile as yi,
-  realpath as bi,
-  stat as Si,
-} from "fs/promises";
 import { homedir } from "os";
-import {
-  basename as oe,
-  dirname as G,
-  isAbsolute as Se,
-  join as P,
-  resolve as N,
-  sep as k,
-} from "path";
 var Er = new Set([
   ".png",
   ".jpg",
@@ -1687,11 +1653,9 @@ function isBinaryFileExtension(e) {
   let t = e.slice(e.lastIndexOf(".")).toLowerCase();
   return Er.has(t);
 }
-import { open as Rr } from "fs/promises";
-import { join as wr } from "path";
 async function readGitConfigFileValue(e, t, r, o) {
   try {
-    let s = await Rr(wr(e, "config"), "r");
+    let s = await open(join(e, "config"), "r");
     try {
       let a = Buffer.allocUnsafe(1e6),
         u = 0;
@@ -1918,13 +1882,13 @@ function getGitRepoCache() {
 }
 function Rt(e, t) {
   try {
-    let r = _t(e);
+    let r = lstatSync(e);
     if (r.isSymbolicLink()) {
       let o = readLinkTextSafe(e);
       if (o === null) return !1;
       if (ac(o, t)) return !1;
       if (rawPointerPathIsUnsafe(o, t)) return !1;
-      let s = It(e);
+      let s = statSync(e);
       return s.isDirectory() || s.isFile();
     }
     return r.isDirectory() || r.isFile();
@@ -1935,11 +1899,11 @@ function Rt(e, t) {
 function kt(e) {
   let t = Date.now();
   writeDiagnosticsEvent("info", "find_git_root_started");
-  let r = N(e),
-    o = r.substring(0, r.indexOf(k) + 1) || k,
+  let r = resolve(e),
+    o = r.substring(0, r.indexOf(sep) + 1) || sep,
     s = 0;
   while (r !== o) {
-    let i = P(r, ".git");
+    let i = join(r, ".git");
     if ((s++, Rt(i, r)))
       return (
         writeDiagnosticsEvent("info", "find_git_root_completed", {
@@ -1949,11 +1913,11 @@ function kt(e) {
         }),
         zn(r)
       );
-    let a = G(r);
+    let a = dirname(r);
     if (a === r) break;
     r = a;
   }
-  if ((s++, Rt(P(o, ".git"), o)))
+  if ((s++, Rt(join(o, ".git"), o)))
     return (
       writeDiagnosticsEvent("info", "find_git_root_completed", {
         duration_ms: Date.now() - t,
@@ -1980,15 +1944,15 @@ function findGitRootUncached(e) {
   return t === GIT_ROOT_NEGATIVE_RESULT ? null : t;
 }
 async function findGitRootThroughBackendUncached(e, t) {
-  let r = N(t),
-    o = r.substring(0, r.indexOf(k) + 1) || k;
+  let r = resolve(t),
+    o = r.substring(0, r.indexOf(sep) + 1) || sep;
   for (;;) {
-    let s = await e.stat(pathSpaces.workspace(P(r, ".git")), { follow: !1 });
+    let s = await e.stat(pathSpaces.workspace(join(r, ".git")), { follow: !1 });
     if (!s.ok || s.value.kind === "link") return;
     if (s.value.kind === "directory" || s.value.kind === "file")
       return { gitRoot: zn(r), entry: s.value.kind };
     if (r === o) return { gitRoot: null };
-    let i = G(r);
+    let i = dirname(r);
     r = i === r ? o : i;
   }
 }
@@ -2001,7 +1965,7 @@ async function findGitRootVerifyingPositive(e) {
   let t = findGitRootRecheckingNegative(e);
   if (t === null) return null;
   try {
-    return (await Fr(P(t, ".git")), t);
+    return (await lstat(join(t, ".git")), t);
   } catch (r) {
     let o = r?.code;
     if (o !== "ENOENT" && o !== "ENOTDIR") return t;
@@ -2010,7 +1974,7 @@ async function findGitRootVerifyingPositive(e) {
 }
 function Ee(e) {
   try {
-    return xt(e, readFileSync(P(e, ".git"), "utf-8"));
+    return xt(e, readFileSync(join(e, ".git"), "utf-8"));
   } catch {
     return e;
   }
@@ -2022,26 +1986,26 @@ function xt(e, t) {
     let o = r.slice(7).trim();
     if (ac(o, e)) return e;
     if (rawPointerPathIsUnsafe(o, e)) return e;
-    let s = N(e, o);
-    if (pointerFileIsSuspect(P(s, "commondir"), s)) return e;
-    let i = readFileSync(P(s, "commondir"), "utf-8").trim();
+    let s = resolve(e, o);
+    if (pointerFileIsSuspect(join(s, "commondir"), s)) return e;
+    let i = readFileSync(join(s, "commondir"), "utf-8").trim();
     if (ac(i, s)) return e;
     if (rawPointerPathIsUnsafe(i, s)) return e;
-    let a = N(s, i);
-    if (N(G(s)) !== P(a, "worktrees")) return e;
-    if (pointerFileIsSuspect(P(s, "gitdir"), s)) return e;
-    let u = readFileSync(P(s, "gitdir"), "utf-8").trim();
+    let a = resolve(s, i);
+    if (resolve(dirname(s)) !== join(a, "worktrees")) return e;
+    if (pointerFileIsSuspect(join(s, "gitdir"), s)) return e;
+    let u = readFileSync(join(s, "gitdir"), "utf-8").trim();
     if (ac(u, e)) return e;
     if (rawPointerPathIsUnsafe(u, s, e)) return e;
-    if (realpathSync(N(s, u)) !== P(realpathSync(e), ".git")) return e;
-    if (oe(a) !== ".git") return zn(a);
-    return zn(G(a));
+    if (realpathSync(resolve(s, u)) !== join(realpathSync(e), ".git")) return e;
+    if (basename(a) !== ".git") return zn(a);
+    return zn(dirname(a));
   } catch {
     return e;
   }
 }
 async function Lr(e, t) {
-  let r = await e.readText(pathSpaces.workspace(P(t, ".git")));
+  let r = await e.readText(pathSpaces.workspace(join(t, ".git")));
   if (!r.ok || !r.value.found) return;
   return xt(t, r.value.value);
 }
@@ -2112,8 +2076,8 @@ function isLinkedWorktreeUncached(e) {
 async function getGitWorktreeName(e) {
   if (isRemoteActive()) return null;
   let t = await resolveGitDir(e);
-  if (!t || oe(t) === ".git" || oe(G(t)) !== "worktrees") return null;
-  return oe(t);
+  if (!t || basename(t) === ".git" || basename(dirname(t)) !== "worktrees") return null;
+  return basename(t);
 }
 var RAW_BLOB_DIFF_FLAGS = ["--no-ext-diff", "--no-textconv"];
 function gitExe() {
@@ -2257,7 +2221,7 @@ var getRemoteUrl = async () => getCachedRemoteUrl(),
     if (e === null) return null;
     try {
       let t = homedir();
-      if (t && e === zn(N(t))) return null;
+      if (t && e === zn(resolve(t))) return null;
     } catch {}
     return getCachedRemoteUrl();
   },
@@ -2316,7 +2280,7 @@ async function getGitPresenceForAnalytics() {
   };
 }
 function Br(e) {
-  for (let t of [P(e, ".git", "config"), P(e, "config")])
+  for (let t of [join(e, ".git", "config"), join(e, "config")])
     try {
       if (readPositionIsUnsafe(t, e)) continue;
       return readFileSync(t, "utf-8");
@@ -2341,14 +2305,14 @@ function readRepoConfigText(e) {
   try {
     let t = !0;
     try {
-      _t(P(e, ".git"));
+      lstatSync(join(e, ".git"));
     } catch (s) {
       if (!W(s)) return null;
       t = !1;
     }
-    let r = t ? P(e, ".git", "config") : P(e, "config");
+    let r = t ? join(e, ".git", "config") : join(e, "config");
     if (readPositionIsUnsafe(r, e)) return null;
-    let o = It(r);
+    let o = statSync(r);
     if (!o.isFile() || o.size > Hr) return null;
     return readFileSync(r, "utf-8");
   } catch {
@@ -2475,16 +2439,16 @@ var Ur = 4096;
 function wt(e, t, r) {
   let o = /\/+/,
     s = t.split(o),
-    i = s[0] === "" ? k : s[0] + k,
+    i = s[0] === "" ? sep : s[0] + sep,
     a = 0;
   for (let u = 1; u < s.length; u++) {
     let m = s[u];
     if (m === "" || m === ".") continue;
     if (m === "..") {
-      i = G(i);
+      i = dirname(i);
       continue;
     }
-    let b = i.endsWith(k) ? i + m : i + k + m;
+    let b = i.endsWith(sep) ? i + m : i + sep + m;
     if (r !== void 0 ? XR(b, r) : Dr(b)) return null;
     let S;
     try {
@@ -2506,8 +2470,8 @@ function wt(e, t, r) {
     if (An(p)) return null;
     if (r !== void 0 ? XR(p, r) : Dr(p)) return null;
     let c = p.split(o);
-    if (Se(p))
-      (s.splice(0, u + 1, ...c), (i = c[0] === "" ? k : c[0] + k), (u = 0));
+    if (isAbsolute(p))
+      (s.splice(0, u + 1, ...c), (i = c[0] === "" ? sep : c[0] + sep), (u = 0));
     else (s.splice(u, 1, ...c), u--);
   }
   return i;
@@ -2520,7 +2484,7 @@ function isCurrentDirectoryBareGitRepo() {
     r = realpathSync.native(r);
   } catch {}
   r = r.normalize("NFC").toLowerCase();
-  let o = r.endsWith(k) ? r : r + k,
+  let o = r.endsWith(sep) ? r : r + sep,
     s = (c) => {
       let d = c.toLowerCase();
       return d === r || d.startsWith(o);
@@ -2542,15 +2506,15 @@ function isCurrentDirectoryBareGitRepo() {
   }
   function a(c, d) {
     if (!d && s(c)) return !0;
-    for (let w of c.split(d ? /[\\/]+/ : k))
+    for (let w of c.split(d ? /[\\/]+/ : sep))
       if (w.toLowerCase() === ".git") return !1;
     return !0;
   }
   function u(c) {
     try {
-      let d = e.lstatSync(P(c, "HEAD"));
+      let d = e.lstatSync(join(c, "HEAD"));
       if (!d.isFile() || d.size > 4096) return !1;
-      let w = readFileSync(P(c, "HEAD"), "utf8").slice(0, 255);
+      let w = readFileSync(join(c, "HEAD"), "utf8").slice(0, 255);
       return (
         /^ref:[ \t]*refs\//.test(w) ||
         /^[0-9a-f]{40}([0-9a-f]{24})?[ \t\n\r]*$/.test(w)
@@ -2561,7 +2525,7 @@ function isCurrentDirectoryBareGitRepo() {
   }
   function m(c) {
     try {
-      let d = P(c, "HEAD"),
+      let d = join(c, "HEAD"),
         w = e.lstatSync(d);
       if (!w.isFile() || w.size > 4096) return !1;
       let E = readFileSync(d, "utf8").slice(0, 255);
@@ -2571,12 +2535,12 @@ function isCurrentDirectoryBareGitRepo() {
       )
         return !1;
       for (let I of ["objects", "refs"]) {
-        let F = P(c, I);
+        let F = join(c, I);
         if (!e.statSync(F).isDirectory()) return !1;
-        accessSync(F, Ar.X_OK);
+        accessSync(F, constants.X_OK);
       }
       try {
-        return (e.statSync(P(c, "commondir")), !1);
+        return (e.statSync(join(c, "commondir")), !1);
       } catch {}
       return !0;
     } catch {
@@ -2585,12 +2549,12 @@ function isCurrentDirectoryBareGitRepo() {
   }
   function b(c) {
     try {
-      let d = e.lstatSync(P(c, "HEAD"));
+      let d = e.lstatSync(join(c, "HEAD"));
       if (d.isFile() || d.isSymbolicLink()) return !0;
     } catch {}
     for (let d of ["objects", "refs"])
       try {
-        return (e.statSync(P(c, d)), !0);
+        return (e.statSync(join(c, d)), !0);
       } catch {}
     return !1;
   }
@@ -2610,29 +2574,29 @@ function isCurrentDirectoryBareGitRepo() {
       return u(E.canonical) ? "trusted" : "none";
     };
     try {
-      let w = e.lstatSync(P(c, ".git"));
+      let w = e.lstatSync(join(c, ".git"));
       if (w.isSymbolicLink()) {
         let E;
         try {
-          E = e.readlinkSync(P(c, ".git"));
+          E = e.readlinkSync(join(c, ".git"));
         } catch {
           return "plantable";
         }
-        return d(Se(E) ? E : c + k + E);
+        return d(isAbsolute(E) ? E : c + sep + E);
       }
       if (w.isFile()) {
         if (w.size > Ur) return "oversized";
         try {
-          let E = readFileSync(P(c, ".git"), "utf8");
+          let E = readFileSync(join(c, ".git"), "utf8");
           if (E.includes("\x00")) return "plantable";
           if (!E.startsWith("gitdir: ")) return "none";
           let I = E.slice(8).replace(/[\r\n]+$/, "");
-          return d(Se(I) ? I : c + k + I);
+          return d(isAbsolute(I) ? I : c + sep + I);
         } catch {
           return "none";
         }
       }
-      if (w.isDirectory()) return m(P(c, ".git")) ? "trusted" : "none";
+      if (w.isDirectory()) return m(join(c, ".git")) ? "trusted" : "none";
     } catch {}
     return "none";
   }
@@ -2650,7 +2614,7 @@ function isCurrentDirectoryBareGitRepo() {
   for (;;) {
     if (b(p))
       return (logFeatureSad("git_bare_repo_gate", "bare_indicators"), "bare-indicators");
-    let c = G(p);
+    let c = dirname(p);
     if (c === p) break;
     switch (S(c)) {
       case "trusted":
@@ -2682,8 +2646,6 @@ function watchFileSafely(e, t, r) {
   }
   return o;
 }
-import { open as zr } from "fs/promises";
-import { join as Vr } from "path";
 var At = 65536,
   Yr = 4096,
   H = 10,
@@ -2710,7 +2672,7 @@ async function Lt(e, t) {
     F = 0,
     C;
   try {
-    ((i = await zr(Vr(e, "packed-refs"), "r")),
+    ((i = await open(join(e, "packed-refs"), "r")),
       (a = (await i.stat()).size),
       (m = a));
     while (u < m) {
@@ -2760,22 +2722,22 @@ function clearResolveGitDirCache() {
   getGitRepoCache().gitDirByCwd.clear();
 }
 async function resolveGitDir(e) {
-  let t = D(e ?? getCwd()),
+  let t = resolve(e ?? getCwd()),
     r = getGitRepoCache().gitDirByCwd,
     o = r.get(t);
   if (o !== void 0) return o;
   let s = findGitRoot(t);
   if (!s) return (r.set(t, null), null);
-  let i = _(s, ".git");
+  let i = join(s, ".git");
   try {
-    if ((await Mt(i)).isFile()) {
+    if ((await stat(i)).isFile()) {
       let u = await readFileHardened(i, ue, { sniffEncoding: !0, withBytes: !0 });
       if (u === null || u.truncated) return (r.set(t, null), null);
       let m = u.content.trim();
       if (m.startsWith("gitdir:")) {
         let b = m.slice(7).trim();
         if (ac(b, s)) return (r.set(t, null), null);
-        let S = D(s, b);
+        let S = resolve(s, b);
         if (V(b, s)) return (r.set(t, null), null);
         return (r.set(t, S), S);
       }
@@ -2787,7 +2749,7 @@ async function resolveGitDir(e) {
 }
 function Nt(e) {
   try {
-    let t = no(e);
+    let t = lstatSync(e);
     if (t.isSymbolicLink()) return "symlink";
     return t.isFile() ? "file" : t.isDirectory() ? "dir" : "other";
   } catch (t) {
@@ -2811,8 +2773,8 @@ function pointerFileIsSuspect(e, t) {
   return r === "symlink" || r === "other";
 }
 function readPositionIsUnsafe(e, t) {
-  let r = lo(t, e);
-  if (r === "" || r.startsWith("..") || co(r)) return !0;
+  let r = relative(t, e);
+  if (r === "" || r.startsWith("..") || isAbsolute(r)) return !0;
   return !J(e, t);
 }
 function uo(e, t) {
@@ -2831,27 +2793,27 @@ function J(e, t, r = 40, o = t) {
     let m = a[u];
     if (m === "" || m === ".") continue;
     if (m === "..") {
-      i = Re(i);
+      i = dirname(i);
       continue;
     }
-    if (((i = _(i, m)), XR(i, o) || hZ(i))) return !1;
+    if (((i = join(i, m)), XR(i, o) || hZ(i))) return !1;
     let b = Nt(i);
     if (b === "other") return !1;
     if (b === "symlink") {
       let S = readLinkTextSafe(i);
       if (S === null) return !1;
-      if (uo(S, Re(i))) return !1;
-      let p = Kt.test(S) ? S : Re(i) + ie + S,
-        c = a.slice(u + 1).join(ie),
-        d = c ? (po.test(p) ? p + c : p + ie + c) : p;
+      if (uo(S, dirname(i))) return !1;
+      let p = Kt.test(S) ? S : dirname(i) + sep + S,
+        c = a.slice(u + 1).join(sep),
+        d = c ? (po.test(p) ? p + c : p + sep + c) : p;
       return J(d, t, r - 1, o);
     }
   }
   return !0;
 }
 function V(e, t, r = t) {
-  if (!J(Kt.test(e) ? e : t + ie + e, t, void 0, r)) return !0;
-  return !J(D(t, e), t, void 0, r);
+  if (!J(Kt.test(e) ? e : t + sep + e, t, void 0, r)) return !0;
+  return !J(resolve(t, e), t, void 0, r);
 }
 function rawPointerPathIsUnsafe(e, t, r = t) {
   return V(e, t, r);
@@ -2861,8 +2823,8 @@ function isValidGitSha(e) {
 }
 async function z(e) {
   try {
-    if (readPositionIsUnsafe(_(e, "HEAD"), e)) return null;
-    let t = (await le(_(e, "HEAD"), "utf-8")).trim();
+    if (readPositionIsUnsafe(join(e, "HEAD"), e)) return null;
+    let t = (await readFile(join(e, "HEAD"), "utf-8")).trim();
     if (t.startsWith("ref:")) {
       let r = t.slice(4).trim();
       if (r.startsWith("refs/heads/")) {
@@ -2890,8 +2852,8 @@ async function resolveRef(e, t, r = 5) {
 }
 async function Dt(e, t, r) {
   try {
-    if (readPositionIsUnsafe(_(e, t), e)) return null;
-    let o = (await le(_(e, t), "utf-8")).trim();
+    if (readPositionIsUnsafe(join(e, t), e)) return null;
+    let o = (await readFile(join(e, t), "utf-8")).trim();
     if (o.startsWith("ref:")) {
       let s = o.slice(4).trim();
       if (!CS(s)) return null;
@@ -2900,14 +2862,14 @@ async function Dt(e, t, r) {
     if (!isValidGitSha(o)) return null;
     return o;
   } catch {}
-  if (readPositionIsUnsafe(_(e, "packed-refs"), e)) return null;
+  if (readPositionIsUnsafe(join(e, "packed-refs"), e)) return null;
   return Lt(e, t);
 }
 var ue = 65536;
 async function getCommonDir(e) {
   try {
-    if (pointerFileIsSuspect(_(e, "commondir"), e)) return null;
-    let t = await readFileHardened(_(e, "commondir"), ue, {
+    if (pointerFileIsSuspect(join(e, "commondir"), e)) return null;
+    let t = await readFileHardened(join(e, "commondir"), ue, {
       sniffEncoding: !0,
       withBytes: !0,
     });
@@ -2915,15 +2877,15 @@ async function getCommonDir(e) {
     let r = t.content.trim();
     if (ac(r, e)) return null;
     if (V(r, e)) return null;
-    return D(e, r);
+    return resolve(e, r);
   } catch {
     return null;
   }
 }
 async function Bt(e, t, r) {
   try {
-    if (readPositionIsUnsafe(_(e, t), e)) return null;
-    let o = (await le(_(e, t), "utf-8")).trim();
+    if (readPositionIsUnsafe(join(e, t), e)) return null;
+    let o = (await readFile(join(e, t), "utf-8")).trim();
     if (o.startsWith("ref:")) {
       let s = o.slice(4).trim();
       if (s.startsWith(r)) {
@@ -2971,18 +2933,18 @@ class Ht {
     let r = await getCommonDir(this.gitDir);
     if (e !== this.generation) return;
     ((this.commonDir = r),
-      this.watchPath(_(this.gitDir, "HEAD"), this.gitDir, () => {
+      this.watchPath(join(this.gitDir, "HEAD"), this.gitDir, () => {
         this.onHeadChanged();
       }),
       this.watchPath(
-        _(this.commonDir ?? this.gitDir, "config"),
+        join(this.commonDir ?? this.gitDir, "config"),
         this.commonDir ?? this.gitDir,
         () => {
           this.invalidate();
         },
       ),
       this.watchPath(
-        _(this.commonDir ?? this.gitDir, "refs", "remotes", "origin", "HEAD"),
+        join(this.commonDir ?? this.gitDir, "refs", "remotes", "origin", "HEAD"),
         this.commonDir ?? this.gitDir,
         () => {
           this.invalidate();
@@ -3001,7 +2963,7 @@ class Ht {
       t = await z(this.gitDir);
     if (e !== this.generation) return;
     let r = this.commonDir ?? this.gitDir,
-      o = t?.type === "branch" ? _(r, "refs", "heads", t.name) : null;
+      o = t?.type === "branch" ? join(r, "refs", "heads", t.name) : null;
     if (o === this.branchRefPath) return;
     if (this.branchRefPath) {
       for (let { path: s, listener: i } of this.watchedFiles)
@@ -3074,7 +3036,7 @@ class Ht {
     let t = await resolveGitDir(e);
     if (!t) return;
     if (this.repoWatchers.has(e)) return;
-    let r = _(t, "HEAD");
+    let r = join(t, "HEAD");
     if (readPositionIsUnsafe(r, t)) return;
     let o = watchFileSafely(r, { interval: Ot }, () => {
       this.repoBranches.delete(e);
@@ -3153,7 +3115,7 @@ async function yo() {
   return t.sha;
 }
 async function ce(e) {
-  if (readPositionIsUnsafe(_(e, "config"), e)) return null;
+  if (readPositionIsUnsafe(join(e, "config"), e)) return null;
   return (
     (await readGitConfigFileValue(e, "remote", "origin", "pushurl")) ||
     (await readGitConfigFileValue(e, "remote", "origin", "url"))
@@ -3226,13 +3188,13 @@ async function getHeadForDir(e) {
 async function readWorktreeHeadSha(e) {
   let t;
   try {
-    if (pointerFileIsSuspect(_(e, ".git"), e)) return null;
-    let o = (await le(_(e, ".git"), "utf-8")).trim();
+    if (pointerFileIsSuspect(join(e, ".git"), e)) return null;
+    let o = (await readFile(join(e, ".git"), "utf-8")).trim();
     if (!o.startsWith("gitdir:")) return null;
     let s = o.slice(7).trim();
     if (ac(s, e)) return null;
     if (V(s, e)) return null;
-    t = D(e, s);
+    t = resolve(e, s);
   } catch {
     return null;
   }
@@ -3259,35 +3221,35 @@ function getRemoteUrlForDirSync(e) {
   return o && o !== t ? Tt(o) : null;
 }
 function Eo(e) {
-  let t = D(e),
+  let t = resolve(e),
     r = getGitRepoCache().gitDirByCwd.get(t);
   if (r !== void 0) return r;
   let o = findGitRoot(t);
   if (!o) return null;
-  let s = _(o, ".git");
+  let s = join(o, ".git");
   try {
-    if (!io(s).isFile()) return s;
+    if (!statSync(s).isFile()) return s;
     let i = we(s, ue)?.trim();
     if (i === void 0 || !i.startsWith("gitdir:"))
       return i === void 0 ? null : s;
     let a = i.slice(7).trim();
-    return ac(a, o) || V(a, o) ? null : D(o, a);
+    return ac(a, o) || V(a, o) ? null : resolve(o, a);
   } catch {
     return null;
   }
 }
 function Ro(e) {
   try {
-    if (pointerFileIsSuspect(_(e, "commondir"), e)) return null;
-    let t = we(_(e, "commondir"), ue)?.trim();
-    return t === void 0 || ac(t, e) || V(t, e) ? null : D(e, t);
+    if (pointerFileIsSuspect(join(e, "commondir"), e)) return null;
+    let t = we(join(e, "commondir"), ue)?.trim();
+    return t === void 0 || ac(t, e) || V(t, e) ? null : resolve(e, t);
   } catch {
     return null;
   }
 }
 var wo = 1e6;
 function Tt(e) {
-  let t = _(e, "config");
+  let t = join(e, "config");
   if (readPositionIsUnsafe(t, e)) return null;
   let r = we(t, wo, { keepWholeLines: !0 });
   if (r === void 0) return null;
@@ -3296,7 +3258,7 @@ function Tt(e) {
 function we(e, t, { keepWholeLines: r = !1 } = {}) {
   let o;
   try {
-    o = openSync(e, eo.O_RDONLY | O_NONBLOCK_FLAG);
+    o = openSync(e, constants.O_RDONLY | O_NONBLOCK_FLAG);
     let s = fstatSync(o);
     if (!s.isFile() || s.size > t) return;
     let i = Buffer.allocUnsafe(t),
@@ -3328,8 +3290,8 @@ async function isShallowClone() {
   if (!e) return !1;
   let t = (await getCommonDir(e)) ?? e;
   try {
-    if (readPositionIsUnsafe(_(t, "shallow"), t)) return !1;
-    return (await Mt(_(t, "shallow")), !0);
+    if (readPositionIsUnsafe(join(t, "shallow"), t)) return !1;
+    return (await stat(join(t, "shallow")), !0);
   } catch {
     return !1;
   }
@@ -3339,8 +3301,8 @@ async function getWorktreeCountFromFs() {
     let e = await resolveGitDir();
     if (!e) return 0;
     let t = (await getCommonDir(e)) ?? e;
-    if (readPositionIsUnsafe(_(t, "worktrees"), t)) return 1;
-    return (await ao(_(t, "worktrees"))).length + 1;
+    if (readPositionIsUnsafe(join(t, "worktrees"), t)) return 1;
+    return (await readdir(join(t, "worktrees"))).length + 1;
   } catch {
     return 1;
   }

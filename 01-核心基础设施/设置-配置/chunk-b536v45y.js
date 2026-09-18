@@ -27,7 +27,7 @@ import {
   projectSettingsAliasesUserSettings,
   getSettingsWithErrors,
 } from "../核心工具-路径与平台/核心工具-路径与平台.bt5mxc9p.js";
-import { basename, dirname, join as f } from "path";
+import { basename, dirname, join } from "path";
 var b = 3,
   x = 8;
 function v() {
@@ -345,17 +345,17 @@ async function B(t, e) {
   let i = getManagedSettingsDirs(getWslInheritsWindowsSettings()),
     r = e.policyWalkCount,
     a = i.map((c) =>
-      createPolicySettingsSeedSource(t, f(c, "managed-settings.json"), "managed settings", e),
+      createPolicySettingsSeedSource(t, join(c, "managed-settings.json"), "managed settings", e),
     ),
     [o, g] = await Promise.all([
-      Promise.all(i.map((c) => listSettingsDropInFileNames(s, f(c, "managed-settings.d")))),
+      Promise.all(i.map((c) => listSettingsDropInFileNames(s, join(c, "managed-settings.d")))),
       Promise.all(a.map((c) => c.read())),
     ]),
     d = { listings: [], unlisted: [], layers: [...a], walksAtReadStart: r },
     u = [];
   for (let [c, S] of i.entries()) {
     let p = o[c],
-      m = f(S, "managed-settings.d");
+      m = join(S, "managed-settings.d");
     if (p.kind === "failing") {
       (logForDebugging(
         `settingsPrime: ${m} not listed through the backend (backend listing failed: ${p.code}${p.failureClass ? ` (${p.failureClass})` : ""}); the folder read serves`,
@@ -372,7 +372,7 @@ async function B(t, e) {
     }
     d.listings.push({ dir: m, names: p.names });
     for (let D of p.names)
-      u.push(createPolicySettingsSeedSource(t, f(m, D), "managed settings drop-in", e));
+      u.push(createPolicySettingsSeedSource(t, join(m, D), "managed settings drop-in", e));
   }
   return (
     d.layers.push(...u),
@@ -405,8 +405,8 @@ function P(t, e, s) {
     return;
   }
   let i = getManagedSettingsDirs(getWslInheritsWindowsSettings()).map((r) => ({
-    dropInDir: f(r, "managed-settings.d"),
-    basePath: f(r, "managed-settings.json"),
+    dropInDir: join(r, "managed-settings.d"),
+    basePath: join(r, "managed-settings.json"),
   }));
   if (
     i.some(({ basePath: r, dropInDir: a }) => e.walkReadManagedFileIn(r, a))
@@ -492,7 +492,7 @@ function C(t, e, s, i, r) {
 function H(t, e) {
   for (let s of [...t.managedFileReads.keys()])
     (t.managedFileReads.delete(s), t.unseedParsedFile(s, "policySettings", e));
-  for (let s of getManagedSettingsDirs(getWslInheritsWindowsSettings())) t.clearFolderListing(f(s, "managed-settings.d"), e);
+  for (let s of getManagedSettingsDirs(getWslInheritsWindowsSettings())) t.clearFolderListing(join(s, "managed-settings.d"), e);
 }
 function I(t, e, s) {
   for (let a of e.unlisted) t.clearFolderListing(a, s);
@@ -591,8 +591,8 @@ async function E(t, e) {
   }
   let [r, a, o] = await Promise.allSettled([
       i.stat(pathSpaces.workspace(s)),
-      i.stat(pathSpaces.workspace(f(s, ".git")), { follow: !1 }),
-      i.stat(pathSpaces.workspace(f(s, ".claude")), { follow: !1 }),
+      i.stat(pathSpaces.workspace(join(s, ".git")), { follow: !1 }),
+      i.stat(pathSpaces.workspace(join(s, ".claude")), { follow: !1 }),
     ]),
     g = y(r),
     d = y(a),

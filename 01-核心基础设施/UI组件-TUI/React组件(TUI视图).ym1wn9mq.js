@@ -4108,9 +4108,9 @@ function hC({ questions: l }) {
     ],
   });
 }
-import { isAbsolute as TC } from "path";
+import { isAbsolute } from "path";
 function RI(gn) {
-  let DX = TC(gn.path) && gn.pathValidated && !ku(gn.path);
+  let DX = isAbsolute(gn.path) && gn.pathValidated && !ku(gn.path);
   return r(
     Box,
     {
@@ -6061,13 +6061,13 @@ var b4 = createLazyValue(() =>
   uv([nt({ file_path: le().min(1) }), nt({ notebook_path: le().min(1) })]),
 );
 F();
-import { basename as yU, sep as RU } from "path";
+import { basename, sep } from "path";
 function ym() {
   if (ke()) return !1;
   return getFeatureValue_CACHED_MAY_BE_STALE("tengu_coordinator_panel", !0);
 }
 F();
-import { relative as bw } from "path";
+import { relative } from "path";
 function wD(Y4, V4) {
   return Y4 + V4.diagnostics.length;
 }
@@ -6105,7 +6105,7 @@ function UD(Op, fileIndex) {
           children: [
             e(Text, {
               bold: !0,
-              children: bw(
+              children: relative(
                 getCwd(),
                 Op.uri.replace("file://", "").replace("_claude_fs_right:", ""),
               ),
@@ -6190,16 +6190,12 @@ import {
   readdir,
   readFile,
   realpath,
-  stat as LD,
+  stat,
   utimes,
 } from "fs/promises";
 import {
-  basename as vD,
-  isAbsolute as ID,
-  join as Yy,
+  join,
   normalize,
-  relative as Cw,
-  sep as Wa,
 } from "path";
 var DD = 16,
   xw = "surveyRating";
@@ -6225,9 +6221,9 @@ var Vy = 1e4,
   FD = 4 * Vy,
   _w = 262144;
 function Xy(l, f) {
-  let g = Cw(l, f);
+  let g = relative(l, f);
   if (g === "" || g.startsWith("..")) return !0;
-  return isExcludedMemoryPath(g.split(Wa).join("/"));
+  return isExcludedMemoryPath(g.split(sep).join("/"));
 }
 async function $D(l) {
   let f = [],
@@ -6276,7 +6272,7 @@ async function WD(l) {
     let T = g.pop(),
       y;
     try {
-      y = await readdir(Yy(l, T), { withFileTypes: !0 });
+      y = await readdir(join(l, T), { withFileTypes: !0 });
     } catch {
       continue;
     }
@@ -6296,19 +6292,19 @@ async function WD(l) {
 async function qD(l, f, g) {
   if (!l.endsWith(".md")) return null;
   let T = (S) => isAutoMemPath(S) && !isWithinTeamMemoryDir(S) && !Xy(f, S);
-  if (ID(l)) {
+  if (isAbsolute(l)) {
     let S = normalize(l);
     return T(S) ? S : null;
   }
-  if (l.includes("/") || l.includes(Wa)) {
-    let S = normalize(Yy(f, l));
+  if (l.includes("/") || l.includes(sep)) {
+    let S = normalize(join(f, l));
     return T(S) ? S : null;
   }
   let y = await g();
   if (y.truncated) return null;
-  let R = y.files.filter((S) => vD(S) === l);
+  let R = y.files.filter((S) => basename(S) === l);
   if (R.length !== 1) return null;
-  let k = normalize(Yy(f, R[0]));
+  let k = normalize(join(f, R[0]));
   return T(k) ? k : null;
 }
 function Bp(l) {
@@ -6395,10 +6391,10 @@ function HD(l, f, g) {
 function GD(l, f, g) {
   return (
     l.endsWith(".md") &&
-    l.startsWith(f + Wa) &&
-    !l.startsWith(g + Wa) &&
+    l.startsWith(f + sep) &&
+    !l.startsWith(g + sep) &&
     !isWithinTeamMemoryDir(l) &&
-    !Xy(f + Wa, l)
+    !Xy(f + sep, l)
   );
 }
 async function zD(l, f, g, T) {
@@ -6407,13 +6403,13 @@ async function zD(l, f, g, T) {
     try {
       let [S, P, A] = await Promise.all([realpath(f), resolveAutoMemPath(), resolveAutoMemPath("team")]);
       if (S !== f || !GD(f, P, A)) return !1;
-      y = Cw(P, f).split(Wa);
+      y = relative(P, f).split(sep);
     } catch {
       return !1;
     }
     let R, k;
     try {
-      let S = await LD(f);
+      let S = await stat(f);
       if (S.size > _w) return !1;
       ((R = S.mtime), (k = S.atime));
     } catch {
@@ -9206,7 +9202,7 @@ function Cf(Pee) {
   }
   switch (w.type) {
     case "directory": {
-      const q = w.displayPath + RU;
+      const q = w.displayPath + sep;
       let Z;
       if (X[12] !== q)
         ((Z = r(ge, {
@@ -9566,7 +9562,7 @@ function Cf(Pee) {
                           dimColor: !0,
                           children: e(TruncatedFilePath, {
                             filePath: xk.path,
-                            children: yU(xk.path),
+                            children: basename(xk.path),
                           }),
                         }),
                       }),
@@ -10484,7 +10480,6 @@ function ge(Gee) {
   return hj;
 }
 F();
-import { basename as CN } from "path";
 F();
 function Lk(l, f) {
   let g = useClock(),
@@ -10841,7 +10836,7 @@ function KF(bN) {
           children: [
             e(Text, { "aria-hidden": !0, children: "  \u23BF  " }),
             "Recalled ",
-            CN(bN.path),
+            basename(bN.path),
           ],
         }),
         e(Box, {
@@ -12579,7 +12574,6 @@ function $b({
   return S(A, { shouldAnimate: y && O, tools: f, addMargin: R });
 }
 F();
-import { basename as OA } from "path";
 function l$(une) {
   return une.cloudSessionSync;
 }
@@ -13868,7 +13862,7 @@ function Kx(Gse) {
   else ((B$ = id[2]), (j$ = id[3]));
   const AA = !Ex;
   let vx;
-  if (id[4] !== vs) ((vx = OA(vs)), (id[4] = vs), (id[5] = vx));
+  if (id[4] !== vs) ((vx = basename(vs)), (id[4] = vs), (id[5] = vx));
   else vx = id[5];
   let Ix;
   if (id[6] !== vs || id[7] !== vx)

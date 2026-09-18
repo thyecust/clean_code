@@ -10,7 +10,7 @@
 import { importMetaRequire } from "../内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
-import { dirname, join as f } from "path";
+import { dirname, join } from "path";
 var r = null;
 function u(e) {
   return (
@@ -29,7 +29,7 @@ function o() {
     if (process.env.MODIFIERS_NODE_PATH)
       e = importMetaRequire(process.env.MODIFIERS_NODE_PATH);
     else {
-      let i = f(
+      let i = join(
         dirname(fileURLToPath(import.meta.url)),
         "..",
         "modifiers-napi",

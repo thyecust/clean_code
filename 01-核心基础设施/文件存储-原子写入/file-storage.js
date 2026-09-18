@@ -17,10 +17,10 @@ import {
   copyFile,
   lstat,
   mkdir,
-  open as u,
+  open,
   readdir,
   readFile,
-  stat as S,
+  stat,
   unlink,
   writeFile,
 } from "fs/promises";
@@ -63,7 +63,7 @@ class FileSystemStorage {
     return copyFile(r, e);
   }
   async stat(r) {
-    return { mtimeMs: (await S(r)).mtimeMs };
+    return { mtimeMs: (await stat(r)).mtimeMs };
   }
   async lstat(r) {
     try {
@@ -89,7 +89,7 @@ class FileSystemStorage {
   }
   async readRange(r, e, t) {
     (a("readRange", "offset", e), a("readRange", "length", t));
-    let n = await u(r, "r");
+    let n = await open(r, "r");
     try {
       return await c(n, e, t);
     } finally {
@@ -99,7 +99,7 @@ class FileSystemStorage {
   async readTail(r, e, t) {
     a("readTail", "maxBytes", e);
     let n = t?.noFollow ? constants.O_RDONLY | O_NOFOLLOW_NONBLOCK_FLAGS : "r",
-      i = await u(r, n);
+      i = await open(r, n);
     try {
       let s = await i.stat();
       if (t?.noFollow && !s.isFile())

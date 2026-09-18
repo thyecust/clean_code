@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { realpathSync } from "fs";
-import { cwd as c } from "process";
+import { cwd } from "process";
 function o(n) {
   return n.normalize("NFC");
 }
@@ -20,7 +20,7 @@ function getNormalizedRealCwd() {
     typeof realpathSync === "function"
   )
     try {
-      let e = c();
+      let e = cwd();
       try {
         n = o(realpathSync(e));
       } catch {

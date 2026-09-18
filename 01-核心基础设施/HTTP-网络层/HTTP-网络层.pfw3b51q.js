@@ -35,14 +35,14 @@ import { execFile } from "child_process";
 import { constants, statSync } from "fs";
 import {
   access,
-  mkdir as Pe,
-  readFile as te,
-  stat as mt,
-  unlink as Ce,
-  writeFile as Ae,
+  mkdir,
+  readFile,
+  stat,
+  unlink,
+  writeFile,
 } from "fs/promises";
-import { homedir as ve, tmpdir } from "os";
-import { delimiter, join as I, parse } from "path";
+import { homedir, tmpdir } from "os";
+import { delimiter, join, parse } from "path";
 function Ne(t) {
   return;
 }
@@ -1494,15 +1494,10 @@ function D(t) {
   t.ws = void 0;
 }
 import {
-  mkdir as _e,
-  readFile as it,
   realpath,
   rename,
-  unlink as z,
-  writeFile as ee,
 } from "fs/promises";
-import { homedir as tt } from "os";
-import { dirname, join as U } from "path";
+import { dirname } from "path";
 var J = "changeit",
   fn = /[\s'"]/,
   nt = "# >>> ccr-agent-proxy (managed by Claude Code) >>>",
@@ -1516,9 +1511,9 @@ function at(t, e) {
 async function st(t) {
   let e = [],
     o = { failureCodes: e },
-    r = U(t.stateDir, "agent-proxy-ca.crt");
+    r = join(t.stateDir, "agent-proxy-ca.crt");
   try {
-    (await _e(t.stateDir, { recursive: !0 }), await ee(r, t.ccrCa, "utf8"));
+    (await mkdir(t.stateDir, { recursive: !0 }), await writeFile(r, t.ccrCa, "utf8"));
   } catch (c) {
     return (
       logForDebugging(
@@ -1538,7 +1533,7 @@ async function st(t) {
           logForDebugging("[agent-proxy] no keytool found; skipping JVM truststore");
           return;
         }
-        let c = await gn(s, r, U(t.stateDir, "java-truststore.p12"), e);
+        let c = await gn(s, r, join(t.stateDir, "java-truststore.p12"), e);
         if (!c) return;
         if (fn.test(c)) {
           (logForDebugging(
@@ -1560,12 +1555,12 @@ async function st(t) {
         }
         await yn(
           r,
-          t.nssDbDirs ?? [U(tt(), ".pki", "nssdb"), U(getXdgDataHome(), "pki", "nssdb")],
+          t.nssDbDirs ?? [join(homedir(), ".pki", "nssdb"), join(getXdgDataHome(), "pki", "nssdb")],
           p,
           e,
         );
       })(),
-      hn(t.caBundlePath, t.botoConfigPath ?? U(tt(), ".boto"), e),
+      hn(t.caBundlePath, t.botoConfigPath ?? join(homedir(), ".boto"), e),
       _n(t, t.profileDPath ?? "/etc/profile.d/ccr-agent-proxy-ca.sh", e).then(
         (c) => {
           o.profileDPath = c;
@@ -1588,7 +1583,7 @@ async function rt(t, e) {
 async function pn() {
   let t = [
       await resolveExecutablePathAsync("keytool"),
-      a.JAVA_HOME ? U(a.JAVA_HOME, "bin", "keytool") : void 0,
+      a.JAVA_HOME ? join(a.JAVA_HOME, "bin", "keytool") : void 0,
     ],
     e;
   for (let o of t) {
@@ -1604,8 +1599,8 @@ async function pn() {
 async function lt(t) {
   let e = dirname(dirname(t));
   for (let o of [
-    U(e, "lib", "security", "cacerts"),
-    U(e, "jre", "lib", "security", "cacerts"),
+    join(e, "lib", "security", "cacerts"),
+    join(e, "jre", "lib", "security", "cacerts"),
   ]) {
     let r = await realpath(o).catch(() => {
       return;
@@ -1622,7 +1617,7 @@ async function gn(t, e, o, r) {
     return;
   }
   let p = `${o}.tmp`;
-  await z(p).catch(() => {});
+  await unlink(p).catch(() => {});
   let c = await V(t, [
     "-importkeystore",
     "-noprompt",
@@ -1642,7 +1637,7 @@ async function gn(t, e, o, r) {
       level: "warn",
     }),
       r.push("java_truststore_seed_failed"),
-      await z(p).catch(() => {}));
+      await unlink(p).catch(() => {}));
     return;
   }
   let u = await V(t, [
@@ -1665,12 +1660,12 @@ async function gn(t, e, o, r) {
       level: "warn",
     }),
       r.push("java_truststore_import_failed"),
-      await z(p).catch(() => {}));
+      await unlink(p).catch(() => {}));
     return;
   }
   try {
     await rename(p, o).catch(async () => {
-      (await ee(o, await it(p)), await z(p).catch(() => {}));
+      (await writeFile(o, await readFile(p)), await unlink(p).catch(() => {}));
     });
   } catch (d) {
     (logForDebugging(`[agent-proxy] could not move JVM truststore into place: ${l(d)}`, {
@@ -1690,7 +1685,7 @@ ${ye}
 `,
     s;
   try {
-    s = await it(e, "utf8");
+    s = await readFile(e, "utf8");
   } catch (h) {
     if (!W(h)) {
       (logForDebugging(`[agent-proxy] could not read ${e}: ${l(h)}`),
@@ -1713,7 +1708,7 @@ ${r}`
       : r;
   if (m === s) return;
   try {
-    (await ee(e, m, "utf8"),
+    (await writeFile(e, m, "utf8"),
       logForDebugging(`[agent-proxy] wrote Bazel trust block to ${e}`));
   } catch (h) {
     (logForDebugging(`[agent-proxy] could not write ${e}: ${l(h)}`),
@@ -1723,7 +1718,7 @@ ${r}`
 async function yn(t, e, o, r) {
   for (let s of e) {
     if (
-      !(await _e(s, { recursive: !0 }).then(
+      !(await mkdir(s, { recursive: !0 }).then(
         () => !0,
         (m) => (logForDebugging(`[agent-proxy] could not create NSS dir ${s}: ${l(m)}`), !1),
       ))
@@ -1748,7 +1743,7 @@ async function hn(t, e, o) {
 ca_certificates_file = ${t}
 `;
   try {
-    (await ee(e, r, { flag: "wx", mode: 420 }),
+    (await writeFile(e, r, { flag: "wx", mode: 420 }),
       logForDebugging(`[agent-proxy] wrote ${e} for gsutil trust`));
   } catch (s) {
     if (A(s) === "EEXIST") return;
@@ -1758,7 +1753,7 @@ ca_certificates_file = ${t}
 }
 async function _n(t, e, o) {
   if (!t.hasSystemCa) {
-    await z(e).catch(() => {});
+    await unlink(e).catch(() => {});
     return;
   }
   let r = [
@@ -1780,8 +1775,8 @@ async function _n(t, e, o) {
 `;
   try {
     return (
-      await _e(dirname(e), { recursive: !0 }),
-      await ee(e, s, { mode: 420 }),
+      await mkdir(dirname(e), { recursive: !0 }),
+      await writeFile(e, s, { mode: 420 }),
       logForDebugging(`[agent-proxy] wrote ${e} for login-shell trust`),
       e
     );
@@ -1933,10 +1928,10 @@ async function initAgentProxy(t) {
     S =
       t?.caBundlePath ??
       (pt()
-        ? I(getClaudeConfigDir(), "ccr", "ca-bundle.crt")
-        : I(ve(), ".ccr", "ca-bundle.crt")),
+        ? join(getClaudeConfigDir(), "ccr", "ca-bundle.crt")
+        : join(homedir(), ".ccr", "ca-bundle.crt")),
     v = t?.systemCaPath
-      ? await te(t.systemCaPath, "utf8").catch(() => "")
+      ? await readFile(t.systemCaPath, "utf8").catch(() => "")
       : await Fn(),
     L = await Yn(v, S),
     O = L
@@ -2059,10 +2054,10 @@ async function Tt(t, e) {
       N
     );
   let M = N.ccrCa;
-  if (!w) await Vn(O?.awsConfigPath ?? I(ve(), ".aws", "config"));
+  if (!w) await Vn(O?.awsConfigPath ?? join(homedir(), ".aws", "config"));
   try {
     let G = d.replace(/^http/, "ws") + AGENT_PROXY_PATH + "/ws",
-      X = I(m, "..", "README.md"),
+      X = join(m, "..", "README.md"),
       K = p ?? c ?? "",
       P = await Ke({
         wsUrl: G,
@@ -2148,7 +2143,7 @@ async function Tt(t, e) {
       (logForDebugging(`[agent-proxy] enabled on 127.0.0.1:${P.port}`),
       logFeatureOk("agent_proxy_init", { attempts: e }),
       setAgentProxyNote(xe(m, void 0)),
-      Ae(X, Gn(P.port, m), "utf8")
+      writeFile(X, Gn(P.port, m), "utf8")
         .then(() => {
           if (o.state !== H) return;
           setAgentProxyNote(xe(m, X));
@@ -2181,7 +2176,7 @@ async function Tt(t, e) {
         ccrCa: M,
         caBundlePath: m,
         hasSystemCa: H.hasSystemCa ?? !1,
-        stateDir: I(m, ".."),
+        stateDir: join(m, ".."),
         ...(O?.toolTrust ?? {}),
       })
         .then((C) => {
@@ -2189,7 +2184,7 @@ async function Tt(t, e) {
           if (C.javaTrustStorePath) H.javaTrustStorePath = C.javaTrustStorePath;
           if (C.profileDPath) {
             let ie = C.profileDPath;
-            registerCleanup(() => Ce(ie).catch(() => {}));
+            registerCleanup(() => unlink(ie).catch(() => {}));
           }
           if (C.failureCodes.length > 0)
             H.toolTrustFailureCodes = C.failureCodes;
@@ -2202,7 +2197,7 @@ async function Tt(t, e) {
             logFeatureSad("agent_proxy_tool_trust", "setup_threw"));
         });
     if (u)
-      await Ce(u).catch(() => {
+      await unlink(u).catch(() => {
         logForDebugging("[agent-proxy] token file unlink failed", { level: "warn" });
       });
     return { outcome: "ok" };
@@ -2346,7 +2341,7 @@ async function kn(t, e) {
   r.push(Te);
   let s = "";
   try {
-    s = await te(o, "utf8");
+    s = await readFile(o, "utf8");
   } catch (u) {
     if (!W(u)) throw u;
   }
@@ -2384,9 +2379,9 @@ async function Nn(t, e) {
   let o = (a.PATH ?? "").split(delimiter);
   for (let r of o) {
     if (!r || r === e) continue;
-    let s = I(r, t);
+    let s = join(r, t);
     try {
-      if ((await access(s, constants.X_OK), (await mt(s)).isFile())) return s;
+      if ((await access(s, constants.X_OK), (await stat(s)).isFile())) return s;
     } catch {}
   }
   return;
@@ -2404,7 +2399,7 @@ async function Dn() {
   return dt.filter((e) => t.has(e));
 }
 async function In(t, e) {
-  let o = I(e, "..", "bin"),
+  let o = join(e, "..", "bin"),
     r = await withTimeout(Nn("gh", o), xt, "gh PATH probe timed out");
   if (!r) {
     logForDebugging("[agent-proxy] governed git: gh not found on PATH; skipping gh shim");
@@ -2417,7 +2412,7 @@ async function In(t, e) {
     );
     return;
   }
-  await Pe(o, { recursive: !0, mode: 448 });
+  await mkdir(o, { recursive: !0, mode: 448 });
   let s = `http://127.0.0.1:${t}`,
     p =
       `#!/bin/sh
@@ -2495,10 +2490,10 @@ SSL_CERT_FILE='${e}' \\
 GH_TOKEN='${PLACEHOLDER_CREDENTIAL_VALUE}' GITHUB_TOKEN='${PLACEHOLDER_CREDENTIAL_VALUE}' \\
 exec '${r}' "$@"
 `,
-    c = I(o, "gh");
+    c = join(o, "gh");
   return (
     await writeFileAtomic(c, p, 493),
-    registerCleanup(() => Ce(c).catch(() => {})),
+    registerCleanup(() => unlink(c).catch(() => {})),
     logForDebugging(`[agent-proxy] governed git: gh shim at ${c} -> ${r}`),
     o
   );
@@ -2540,7 +2535,7 @@ var Ln = [
 function Hn() {
   let t = parse(tmpdir()).root;
   try {
-    let e = ve();
+    let e = homedir();
     if (e && statSync(e).isDirectory()) return e;
     return t;
   } catch {
@@ -2565,7 +2560,7 @@ async function Mn() {
   return [...t];
 }
 function Gn(t, e) {
-  let o = I(e, ".."),
+  let o = join(e, ".."),
     r = `http://127.0.0.1:${t}`;
   return `# Claude Code agent proxy
 
@@ -2668,7 +2663,7 @@ administrator or Anthropic support so the policy or tooling can be fixed.
 }
 async function Un(t) {
   try {
-    return { existed: !0, token: (await te(t, "utf8")).trim() || null };
+    return { existed: !0, token: (await readFile(t, "utf8")).trim() || null };
   } catch (e) {
     if (W(e)) return { existed: !1, token: null };
     return (
@@ -2683,7 +2678,7 @@ async function Un(t) {
 async function Fn(t = ht) {
   for (let e of t)
     try {
-      return await te(e, "utf8");
+      return await readFile(e, "utf8");
     } catch {}
   return "";
 }
@@ -2698,9 +2693,9 @@ async function Yn(t, e) {
     o.add(c);
     let u;
     try {
-      let h = await mt(c);
+      let h = await stat(c);
       if (!h.isFile() || h.size > Wn) continue;
-      u = await te(c, "utf8");
+      u = await readFile(c, "utf8");
     } catch (h) {
       if (!W(h))
         logForDebugging(
@@ -2742,7 +2737,7 @@ var Xn = [
 async function jn(t, e) {
   for (let { dir: o, name: r, refresh: s } of e)
     try {
-      await Ae(I(o, r), t, "utf8");
+      await writeFile(join(o, r), t, "utf8");
       let p = await new Promise((c) => {
         execFile(
           s[0],
@@ -2792,7 +2787,7 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
         continue;
       }
       try {
-        (await Pe(I(o, ".."), { recursive: !0 }), await writeFileAtomic(o, Ct(e, _)));
+        (await mkdir(join(o, ".."), { recursive: !0 }), await writeFileAtomic(o, Ct(e, _)));
       } catch (w) {
         let T = `ca-bundle write failed (${l(w)})`;
         if (isRetryableFsError(w)) return { outcome: "retry", detail: T, retryAfter: null };
@@ -2811,8 +2806,8 @@ async function Kn(t, e, o, { budgetMs: r, tries: s }) {
 }
 async function Vn(t) {
   try {
-    (await Pe(I(t, ".."), { recursive: !0, mode: 448 }),
-      await Ae(
+    (await mkdir(join(t, ".."), { recursive: !0, mode: 448 }),
+      await writeFile(
         t,
         `[default]
 s3 =

@@ -9,27 +9,27 @@
 // Version: 2.1.263
 import { env as a } from "../设置-配置/chunk-zqr5ctyf.js";
 import { homedir } from "os";
-import { join as o } from "path";
+import { join } from "path";
 function r(e) {
   return { env: e?.env ?? process.env, home: e?.homedir ?? a.HOME ?? homedir() };
 }
 function getXdgStateHome(e) {
   let { env: n, home: t } = r(e);
-  return n.XDG_STATE_HOME ?? o(t, ".local", "state");
+  return n.XDG_STATE_HOME ?? join(t, ".local", "state");
 }
 function getXdgCacheHome(e) {
   let { env: n, home: t } = r(e);
-  return n.XDG_CACHE_HOME ?? o(t, ".cache");
+  return n.XDG_CACHE_HOME ?? join(t, ".cache");
 }
 function getXdgDataHome(e) {
   let { env: n, home: t } = r(e);
-  return n.XDG_DATA_HOME ?? o(t, ".local", "share");
+  return n.XDG_DATA_HOME ?? join(t, ".local", "share");
 }
 function getClaudeVersionsDir(e) {
-  return o(getXdgDataHome(e), "claude", "versions");
+  return join(getXdgDataHome(e), "claude", "versions");
 }
 function getLocalBinDir(e) {
   let { home: n } = r(e);
-  return o(n, ".local", "bin");
+  return join(n, ".local", "bin");
 }
 export { getXdgStateHome, getXdgCacheHome, getXdgDataHome, getClaudeVersionsDir, getLocalBinDir };

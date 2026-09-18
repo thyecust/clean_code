@@ -12,14 +12,14 @@ import { isHoverRestEnabled } from "../核心工具-路径与平台/chunk-h62vxw
 import { pathSpaces } from "../核心工具-日志与脱敏/核心工具-日志与脱敏.38sny42z.js";
 import { getProjectsDir } from "../../02-功能模块/会话-历史-恢复/chunk-mkmy4cx2.js";
 import { validateStorageKey } from "../安全文件系统-FS加固/安全文件系统-FS加固.gbme4p3n.js";
-import { isAbsolute as g, sep as a } from "path";
+import { isAbsolute, sep } from "path";
 function l(e) {
   let n = process.cwd();
-  return n.endsWith(a) ? n + e : n + a + e;
+  return n.endsWith(sep) ? n + e : n + sep + e;
 }
 function createRealPathResolver(e) {
   return (n) =>
-    e.hostFiles.realPath(pathSpaces.workspace(n === "" || g(n) ? n : l(n)), {
+    e.hostFiles.realPath(pathSpaces.workspace(n === "" || isAbsolute(n) ? n : l(n)), {
       native: !0,
     });
 }
@@ -29,10 +29,8 @@ function createHoverRestOptions(e) {
 import {
   basename,
   dirname,
-  isAbsolute as S,
-  join as p,
+  join,
   relative,
-  sep as f,
 } from "path";
 function resolveTranscriptLocator(e, n) {
   if (!isHoverRestEnabled() || n === void 0) return;
@@ -41,16 +39,16 @@ function resolveTranscriptLocator(e, n) {
   if (dirname(t) !== getProjectsDir()) return;
   let r = basename(t),
     o = basename(e, ".jsonl");
-  if (e !== p(getProjectsDir(), r, `${o}.jsonl`)) return;
+  if (e !== join(getProjectsDir(), r, `${o}.jsonl`)) return;
   let i = STORAGE_KEYS.transcript(r, o);
   return validateStorageKey(i) === void 0 ? { backend: n, key: i } : void 0;
 }
 function resolveSubagentTranscriptLocator(e, n) {
   if (!isHoverRestEnabled() || n === void 0) return;
   let t = relative(getProjectsDir(), e);
-  if (t === "" || t === ".." || t.startsWith(`..${f}`) || S(t)) return;
-  let r = t.split(f);
-  if (e !== p(getProjectsDir(), ...r)) return;
+  if (t === "" || t === ".." || t.startsWith(`..${sep}`) || isAbsolute(t)) return;
+  let r = t.split(sep);
+  if (e !== join(getProjectsDir(), ...r)) return;
   let o = r.at(-1);
   if (
     r.length < 4 ||

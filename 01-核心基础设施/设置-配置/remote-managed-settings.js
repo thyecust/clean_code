@@ -312,13 +312,13 @@ function ie(e) {
 }
 import { createHash } from "crypto";
 import {
-  open as Ke,
+  open,
   readFile,
-  rm as Je,
+  rm,
   unlink,
   writeFile,
 } from "fs/promises";
-import { join as xe } from "path";
+import { join } from "path";
 var He = "remote-settings-consent.json",
   ce = "remote-settings-consent",
   L = 1,
@@ -331,7 +331,7 @@ var He = "remote-settings-consent.json",
   Be = createLazyValue(() => c({ version: k(L), records: fe(s(), se()) })),
   ze = createLazyValue(() => c({ version: T().gt(L) }));
 function de() {
-  return xe(getClaudeConfigDir(), He);
+  return join(getClaudeConfigDir(), He);
 }
 function x() {
   return { records: new Map(), newerVersion: !1, unreadable: !0 };
@@ -1026,7 +1026,7 @@ async function he(e, t, o) {
   }
   try {
     let u = getSettingsPath(),
-      p = await Ke(u, "w", 384);
+      p = await open(u, "w", 384);
     try {
       (await p.writeFile(r, { encoding: "utf-8" }), await p.datasync());
     } finally {
@@ -1053,7 +1053,7 @@ async function clearRemoteManagedSettings(e) {
   let t =
     isHoverRestEnabled() && e !== void 0
       ? await e.delete(STORAGE_KEYS.state(HELPER_CONSENT_STATE_ID)).then((o) => (o.ok ? void 0 : describeStorageError(o.error)))
-      : await Je(getHelperConsentPath(), { force: !0 }).then(() => {
+      : await rm(getHelperConsentPath(), { force: !0 }).then(() => {
           return;
         }, l);
   if (t !== void 0) {
