@@ -570,7 +570,7 @@ var de = globalThis.process,
   { onExit: cz, load: fi, unload: pi } = Wn(V(de) ? new et(de) : new Je());
 var In = toESM(_xt(), 1);
 import { Buffer as No } from "buffer";
-import Mo from "path";
+import path from "path";
 import De from "child_process";
 import se from "process";
 function be(e) {
@@ -586,7 +586,6 @@ function be(e) {
   return e;
 }
 import Z from "process";
-import L from "path";
 import { fileURLToPath } from "url";
 function Y(e = {}) {
   let { env: t = process.env, platform: r = "darwin" } = e;
@@ -605,22 +604,22 @@ var Cr = ({
     addExecPath: s = !0,
   } = {}) => {
     let c = e instanceof URL ? fileURLToPath(e) : e,
-      d = L.resolve(c),
+      d = path.resolve(c),
       l = [];
     if (r) Er(l, d);
     if (s) wr(l, o, d);
-    return [...l, t].join(L.delimiter);
+    return [...l, t].join(path.delimiter);
   },
   Er = (e, t) => {
     let r;
     while (r !== t)
-      (e.push(L.join(t, "node_modules/.bin")),
+      (e.push(path.join(t, "node_modules/.bin")),
         (r = t),
-        (t = L.resolve(t, "..")));
+        (t = path.resolve(t, "..")));
   },
   wr = (e, t, r) => {
     let o = t instanceof URL ? fileURLToPath(t) : t;
-    e.push(L.resolve(r, o, ".."));
+    e.push(path.resolve(r, o, ".."));
   },
   Kt = ({ env: e = Z.env, ...t } = {}) => {
     e = { ...e };
@@ -1637,7 +1636,7 @@ var Do = 1e8,
       }),
       (r.env = Uo(r)),
       (r.stdio = Yt(r)),
-      se.platform === "win32" && Mo.basename(e, ".exe") === "cmd")
+      se.platform === "win32" && path.basename(e, ".exe") === "cmd")
     )
       t.unshift("/q");
     return { file: e, args: t, options: r, parsed: o };

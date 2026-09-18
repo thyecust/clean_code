@@ -1861,8 +1861,8 @@ function zs(e) {
   if (e instanceof be) return !0;
   return er(e) && e.name === "RestError";
 }
-import * as $r from "http";
-import * as Br from "https";
+import http from "http";
+import https from "https";
 import * as Bo from "zlib";
 import { Transform } from "stream";
 class Ot extends Error {
@@ -2033,7 +2033,7 @@ class fl {
         e.requestOverrides,
       );
     return new Promise((c, l) => {
-      let d = i ? $r.request(a, c) : Br.request(a, c);
+      let d = i ? http.request(a, c) : https.request(a, c);
       if (
         (d.once("error", (u) => {
           var m;
@@ -2070,18 +2070,18 @@ class fl {
     var r;
     let n = e.disableKeepAlive;
     if (t) {
-      if (n) return $r.globalAgent;
+      if (n) return http.globalAgent;
       if (!this.cachedHttpAgent)
-        this.cachedHttpAgent = new $r.Agent({ keepAlive: !0 });
+        this.cachedHttpAgent = new http.Agent({ keepAlive: !0 });
       return this.cachedHttpAgent;
     } else {
-      if (n && !e.tlsSettings) return Br.globalAgent;
+      if (n && !e.tlsSettings) return https.globalAgent;
       let o = (r = e.tlsSettings) !== null && r !== void 0 ? r : Sm,
         i = this.cachedHttpsAgents.get(o);
       if (i && i.options.keepAlive === !n) return i;
       return (
         Ve.info("No cached TLS Agent exist, creating a new Agent"),
-        (i = new Br.Agent(Object.assign({ keepAlive: !n }, o))),
+        (i = new https.Agent(Object.assign({ keepAlive: !n }, o))),
         this.cachedHttpsAgents.set(o, i),
         i
       );
@@ -9963,8 +9963,6 @@ class jt {
     return t;
   }
 }
-import Wa from "http";
-import Eh from "https";
 /*! @azure/msal-node v3.8.1 2025-10-29 */ class _o {
   constructor(e, t) {
     ((this.proxyUrl = e || ""), (this.customAgentOptions = t || {}));
@@ -9991,7 +9989,7 @@ var Ch = (e, t, r, n, o, i) => {
         path: s.hostname,
         headers: c,
       };
-    if (o && Object.keys(o).length) l.agent = new Wa.Agent(o);
+    if (o && Object.keys(o).length) l.agent = new http.Agent(o);
     let d = "";
     if (r === J.POST) {
       let m = n?.body || "";
@@ -10009,7 +10007,7 @@ Connection: close\r
       `\r
 `;
     return new Promise((m, p) => {
-      let y = Wa.request(l);
+      let y = http.request(l);
       if (i)
         y.on("timeout", () => {
           (y.destroy(), p(Error("Request time out")));
@@ -10072,13 +10070,13 @@ Connection: close\r
       a = new URL(e),
       c = r?.headers || {},
       l = { method: t, headers: c, ...Io.urlToHttpOptions(a) };
-    if (n && Object.keys(n).length) l.agent = new Eh.Agent(n);
+    if (n && Object.keys(n).length) l.agent = new https.Agent(n);
     if (i) l.headers = { ...l.headers, "Content-Length": s.length };
     else if (o) l.timeout = o;
     return new Promise((d, u) => {
       let m;
-      if (l.protocol === "http:") m = Wa.request(l);
-      else m = Eh.request(l);
+      if (l.protocol === "http:") m = http.request(l);
+      else m = https.request(l);
       if (i) m.write(s);
       if (o)
         m.on("timeout", () => {
@@ -10444,13 +10442,12 @@ var tc = ay;
     return Me.base64Decode(t);
   }
 }
-import cy from "crypto";
+import crypto from "crypto";
 /*! @azure/msal-node v3.8.1 2025-10-29 */ class vr {
   sha256(e) {
-    return cy.createHash(yh.SHA256).update(e).digest();
+    return crypto.createHash(yh.SHA256).update(e).digest();
   }
 }
-import ly from "crypto";
 /*! @azure/msal-node v3.8.1 2025-10-29 */ class rc {
   constructor() {
     this.hashUtils = new vr();
@@ -10464,7 +10461,7 @@ import ly from "crypto";
     let e = [],
       t = 256 - (256 % ji.CV_CHARSET.length);
     while (e.length <= gh) {
-      let n = ly.randomBytes(1)[0];
+      let n = crypto.randomBytes(1)[0];
       if (n >= t) continue;
       let o = n % ji.CV_CHARSET.length;
       e.push(ji.CV_CHARSET[o]);
@@ -11430,12 +11427,11 @@ var Of = toESM(Pf(), 1);
     this.storage.clear();
   }
 }
-import PE from "http";
 /*! @azure/msal-node v3.8.1 2025-10-29 */ class gc {
   async listenForAuthCode(e, t) {
     if (this.server) throw te.createLoopbackServerAlreadyExistsError();
     return new Promise((r, n) => {
-      ((this.server = PE.createServer((o, i) => {
+      ((this.server = http.createServer((o, i) => {
         let s = o.url;
         if (!s) {
           (i.end(t || "Error occurred loading redirectUrl"),
@@ -14251,7 +14247,7 @@ function Ln(e, t) {
 function Ss(e) {
   return e.replace(/\/.default$/, "");
 }
-import dC from "child_process";
+import child_process from "child_process";
 function wc(e, t) {
   if (!t.match(/^[0-9a-zA-Z-._ ]+$/)) {
     let r = Error(
@@ -14272,7 +14268,7 @@ var Ze = z("AzureCliCredential"),
       if (r) i = ["--subscription", `"${r}"`];
       return new Promise((s, a) => {
         try {
-          dC.execFile(
+          child_process.execFile(
             "az",
             [
               "account",
@@ -14392,7 +14388,6 @@ class vc {
     return { token: r, expiresOnTimestamp: n, tokenType: "Bearer" };
   }
 }
-import uC from "child_process";
 var Zt = z("AzureDeveloperCliCredential"),
   jf = {
     getSafeWorkingDir() {
@@ -14403,7 +14398,7 @@ var Zt = z("AzureDeveloperCliCredential"),
       if (t) n = ["--tenant-id", t];
       return new Promise((o, i) => {
         try {
-          uC.execFile(
+          child_process.execFile(
             "azd",
             [
               "auth",
@@ -14505,11 +14500,10 @@ class kc {
     );
   }
 }
-import * as Yf from "child_process";
 var Wf = {
   execFile(e, t, r) {
     return new Promise((n, o) => {
-      Yf.execFile(e, t, r, (i, s, a) => {
+      child_process.execFile(e, t, r, (i, s, a) => {
         if (Buffer.isBuffer(s)) s = s.toString("utf8");
         if (Buffer.isBuffer(a)) a = a.toString("utf8");
         if (a || i) o(a ? Error(a) : i);

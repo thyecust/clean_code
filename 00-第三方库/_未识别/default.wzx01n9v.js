@@ -7,31 +7,26 @@
 // (c) Anthropic PBC. All rights reserved. Use is subject to the Legal Agreements outlined here: https://code.claude.com/docs/en/legal-and-compliance.
 
 // Version: 2.1.263
-import N from "process";
+import process from "process";
 import { Buffer } from "buffer";
 import z from "path";
 import { fileURLToPath } from "url";
 import { promisify } from "util";
 import D from "child_process";
-import he, { constants } from "fs/promises";
-import I from "process";
-import O, {} from "fs/promises";
-import T from "process";
+import fsPromises, { constants } from "fs/promises";
 import Y from "os";
-import j from "fs";
-import K from "fs";
-import M from "fs";
+import fs from "fs";
 var h;
 function G() {
   try {
-    return (M.statSync("/.dockerenv"), !0);
+    return (fs.statSync("/.dockerenv"), !0);
   } catch {
     return !1;
   }
 }
 function X() {
   try {
-    return M.readFileSync("/proc/self/cgroup", "utf8").includes("docker");
+    return fs.readFileSync("/proc/self/cgroup", "utf8").includes("docker");
   } catch {
     return !1;
   }
@@ -43,7 +38,7 @@ function x() {
 var y,
   q = () => {
     try {
-      return (K.statSync("/run/.containerenv"), !0);
+      return (fs.statSync("/run/.containerenv"), !0);
     } catch {
       return !1;
     }
@@ -53,13 +48,13 @@ function p() {
   return y;
 }
 var L = () => {
-    if (T.platform !== "linux") return !1;
+    if (process.platform !== "linux") return !1;
     if (Y.release().toLowerCase().includes("microsoft")) {
       if (p()) return !1;
       return !0;
     }
     try {
-      return j
+      return fs
         .readFileSync("/proc/version", "utf8")
         .toLowerCase()
         .includes("microsoft")
@@ -69,7 +64,7 @@ var L = () => {
       return !1;
     }
   },
-  c = T.env.__IS_WSL_TEST__ ? L : L();
+  c = process.env.__IS_WSL_TEST__ ? L : L();
 var Q = (() => {
     let r;
     return async function () {
@@ -77,10 +72,10 @@ var Q = (() => {
       let o = "/etc/wsl.conf",
         n = !1;
       try {
-        (await O.access(o, constants.F_OK), (n = !0));
+        (await fsPromises.access(o, constants.F_OK), (n = !0));
       } catch {}
       if (!n) return "/mnt/";
-      let t = await O.readFile(o, { encoding: "utf8" }),
+      let t = await fsPromises.readFile(o, { encoding: "utf8" }),
         s = /(?<!#.*)root\s*=\s*(?<mountPoint>.*)/g.exec(t);
       if (!s) return "/mnt/";
       return (
@@ -94,7 +89,7 @@ var Q = (() => {
     `${await Q()}c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe`,
   v = async () => {
     if (c) return V();
-    return `${I.env.SYSTEMROOT || I.env.windir || String.raw`C:\Windows`}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;
+    return `${process.env.SYSTEMROOT || process.env.windir || String.raw`C:\Windows`}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`;
   };
 function m(e, r, o) {
   let n = (t) =>
@@ -114,12 +109,10 @@ function m(e, r, o) {
     e
   );
 }
-import E from "process";
 import { execFile } from "child_process";
-import ee from "process";
 var oe = promisify(execFile);
 async function S() {
-  if (ee.platform !== "darwin") throw Error("macOS only");
+  if (process.platform !== "darwin") throw Error("macOS only");
   let { stdout: e } = await oe("defaults", [
     "read",
     "com.apple.LaunchServices/com.apple.launchservices.secure",
@@ -131,10 +124,9 @@ async function S() {
     )?.groups.id ?? "com.apple.Safari"
   );
 }
-import te from "process";
 var se = promisify(execFile);
 async function W(e, { humanReadableOutput: r = !0, signal: o } = {}) {
-  if (te.platform !== "darwin") throw Error("macOS only");
+  if (process.platform !== "darwin") throw Error("macOS only");
   let n = r ? [] : ["-ss"],
     t = {};
   if (o) t.signal = o;
@@ -180,11 +172,11 @@ var ue = promisify(execFile),
   de = (e) =>
     e.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (r) => r.toUpperCase());
 async function B() {
-  if (E.platform === "darwin") {
+  if (process.platform === "darwin") {
     let e = await S();
     return { name: await P(e), id: e };
   }
-  if (E.platform === "linux") {
+  if (process.platform === "linux") {
     let { stdout: e } = await ue("xdg-mime", [
         "query",
         "default",
@@ -193,13 +185,13 @@ async function B() {
       r = e.trim();
     return { name: de(r.replace(/.desktop$/, "").replace("-", " ")), id: r };
   }
-  if (E.platform === "win32") return A();
+  if (process.platform === "win32") return A();
   throw Error("Only macOS, Linux, and Windows are supported");
 }
 var ye = promisify(D.execFile),
   F = z.dirname(fileURLToPath(import.meta.url)),
   k = z.join(F, "xdg-open"),
-  { platform: u, arch: H } = N;
+  { platform: u, arch: H } = process;
 async function ve() {
   let e = await v(),
     r = String.raw`(Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice").ProgId`,
@@ -312,10 +304,10 @@ var _ = async (e, r) => {
         let i = !F || F === "/",
           a = !1;
         try {
-          (await he.access(k, constants.X_OK), (a = !0));
+          (await fsPromises.access(k, constants.X_OK), (a = !0));
         } catch {}
         n =
-          (N.versions.electron ?? (u === "android" || i || !a))
+          (process.versions.electron ?? (u === "android" || i || !a))
             ? "xdg-open"
             : k;
       }
