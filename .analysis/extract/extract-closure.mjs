@@ -2,13 +2,14 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { analyze } from "/Users/game-netease/clean_code/.analysis/rename/lib.mjs";
 const D = "/Users/game-netease/clean_code/03-入口与运行时/核心应用-Agent循环/";
 const CH = "核心应用-Agent循环.wmzgeczq.js";
+const SRC = process.env.SRC || CH;
 const OUT = process.env.OUT || "execution-core.js";
 const SEEDS = (process.env.SEEDS || "dge").split(",");
 const APPLY = process.argv.includes("--apply");
 const DUMP = process.argv.includes("--dump");
 const GLOBALS = new Set(["Set","Map","Error","String","Promise","Array","Object","Math","Boolean","RegExp","Date","Buffer","Number","JSON","Symbol","WeakMap","Intl","Uint8Array","Uint16Array","Uint32Array","Float64Array","DataView","ArrayBuffer","encodeURIComponent","decodeURIComponent","parseInt","parseFloat","isNaN","console","process","globalThis","setTimeout","setInterval","clearInterval","clearTimeout","setImmediate","structuredClone","URL","URLSearchParams","AbortController","AbortSignal","TextEncoder","TextDecoder","performance","queueMicrotask","MutationObserver","jQuery","localStorage","navigator","document","window","self","global","escape","unescape","Worker","QuotaExceededError","AsyncIterator","__values","BigInt","NaN","Infinity","DOMException","TypeError","RangeError","SyntaxError","ReferenceError","AggregateError","WeakRef","btoa","atob","Request","Response","Headers","FormData","fetch","Blob","File","crypto","TextDecoderStream","ReadableStream","WritableStream","TransformStream"]);
 
-const src = readFileSync(D + CH, "utf8");
+const src = readFileSync(D + SRC, "utf8");
 const { sm, moduleScope } = analyze(src);
 const defs = new Map(), imports = new Map(), declBound = new Map();
 for (const v of moduleScope.variables) {
@@ -43,15 +44,17 @@ for (const sc of sm.scopes) for (const r of sc.references) {
 const freeOf = (t) => { try { return [...analyze(t + "\n").sm.globalScope.through].map((r) => r.identifier.name); } catch { return null; } };
 
 const closure = new Set();
+// 被源文件写、闭包内只读的模块级可变槽：留在源文件，新文件 import 读（ESM live binding 是实时的）
+const evicted = new Set();
 const expand = (names) => {
   const q = [...names];
-  while (q.length) { const v = q.pop(); if (closure.has(v) || !defs.has(v)) continue; closure.add(v); for (const w of refs.get(v) ?? []) if (!closure.has(w)) q.push(w); }
+  while (q.length) { const v = q.pop(); if (closure.has(v) || evicted.has(v) || !defs.has(v)) continue; closure.add(v); for (const w of refs.get(v) ?? []) if (!closure.has(w) && !evicted.has(w)) q.push(w); }
   for (let r = 0; r < 30; r++) {
     const grow = [];
     for (const [decl, ns] of declBound) { if (!decl.id || decl.id.type === "Identifier") continue; if (ns.some((n) => closure.has(n))) grow.push(...ns); }
-    const q2 = grow.filter((n) => defs.has(n) && !closure.has(n));
+    const q2 = grow.filter((n) => defs.has(n) && !closure.has(n) && !evicted.has(n));
     if (!q2.length) break;
-    while (q2.length) { const v = q2.pop(); if (closure.has(v)) continue; closure.add(v); for (const w of refs.get(v) ?? []) if (!closure.has(w)) q2.push(w); }
+    while (q2.length) { const v = q2.pop(); if (closure.has(v) || evicted.has(v)) continue; closure.add(v); for (const w of refs.get(v) ?? []) if (!closure.has(w) && !evicted.has(w)) q2.push(w); }
   }
 };
 expand(SEEDS.filter((s) => defs.has(s)));
@@ -78,28 +81,43 @@ const build = () => {
   return { moveTexts, chunkEdits, split, stmts: byStmt.size };
 };
 
-// 变量必须跟它的**赋值点**一起搬：否则 chunk 里会留下「给 import 赋值」
-const pullSetters = () => {
+// 模块级可变槽的方向判据。
+// 源文件写它、闭包内只读 -> **剔除**它（留在源文件，新文件 import 读，ESM live binding 是实时的）。
+// 两边都写 -> 真正的双向共享可变状态，静态拆不开，直接失败。
+// 注意：把 setter 拉进闭包是**反的**，setter 往往是主干函数，一拉就雪崩（实测 840 -> 10204）。
+const evictWritten = () => {
   const add = [];
-  for (const n of closure) for (const from of writes.get(n) ?? []) {
-    if (from === null) continue;
-    if (closure.has(from)) continue;
-    add.push(from);                    // 把 setter 也拉进闭包
+  for (const n of closure) {
+    if (evicted.has(n)) continue;
+    const ws = writes.get(n);
+    if (!ws) continue;
+    const outW = [...ws].filter((f) => f !== null && !closure.has(f));
+    if (!outW.length) continue;
+    const inW = [...ws].filter((f) => closure.has(f));
+    if (inW.length) { console.log(`!! 可变槽 ${n} 两边都写：闭包内 ${inW.join(",")} / 源文件 ${outW.join(",")}`); process.exit(1); }
+    add.push(n);
   }
   return add;
+};
+// 剔除后闭包要重算（只服务被剔除者的成员应随之退出）
+const rebuild = () => {
+  closure.clear();
+  for (const n of evicted) closure.delete(n);
+  expand(SEEDS.filter((s) => defs.has(s)));
+  for (const n of evicted) closure.delete(n);
 };
 
 // 不动点：对**实际搬走的文本**找自由名（不是整条语句 —— 那会漏掉留在 chunk 的兄弟声明符）
 const forceExt = new Set();   // 不动点直接看到、但「按引用方归属」没收到的 import
 let built = build();
-for (let iter = 0; iter < 12; iter++) {
+for (let iter = 0; iter < 24; iter++) {
   const free = freeOf(built.moveTexts.join("\n;\n"));
   if (free === null) { console.log("!! 搬移文本解析失败"); process.exit(1); }
-  const need = [...new Set(free)].filter((n) => defs.has(n) && !closure.has(n));
+  const need = [...new Set(free)].filter((n) => defs.has(n) && !closure.has(n) && !evicted.has(n));
   const needExt = [...new Set(free)].filter((n) => imports.has(n) && !forceExt.has(n));
   if (needExt.length) { console.log(`  [不动点 ${iter + 1}] 补进 import ${needExt.length} 个: ${needExt.slice(0, 8).join(", ")}`); needExt.forEach((n) => forceExt.add(n)); }
-  const setters = pullSetters();
-  if (setters.length) { console.log(`  [不动点 ${iter + 1}] 拉进 setter ${setters.length} 个: ${setters.slice(0, 6).join(", ")}`); expand(setters); built = build(); continue; }
+  const ev = evictWritten();
+  if (ev.length) { console.log(`  [不动点 ${iter + 1}] 剔除被源文件写的可变槽 ${ev.length} 个: ${ev.slice(0, 8).join(", ")}`); ev.forEach((n) => evicted.add(n)); rebuild(); built = build(); continue; }
   if (!need.length) break;
   console.log(`  [不动点 ${iter + 1}] 补进闭包 ${need.length} 个: ${need.slice(0, 8).join(", ")}`);
   expand(need);
@@ -137,6 +155,8 @@ for (const [ln, im] of ext) {
   bySpec.get(im.spec).push(im.imported === ln ? ln : `${im.imported} as ${ln}`);
 }
 const importLines = [...nsLines.sort(), ...defLines.sort(), ...[...bySpec].map(([spec, names]) => `import { ${names.sort().join(", ")} } from "${spec}";`)];
+// 被剔除的可变槽：新文件从源文件 import（live binding，源文件那边的赋值会实时反映过来）
+if (evicted.size) importLines.push(`import { ${[...evicted].sort().join(", ")} } from "./${SRC}";`);
 const header = [
   "// Claude Code is a Beta product per Anthropic's Commercial Terms of Service.",
   "// By using Claude Code, you agree that all code acceptance or rejection decisions you make,",
@@ -151,14 +171,26 @@ const header = [
 const backSorted = [...back].sort();
 const newFile = [...header, ...importLines, "", ...moveTexts, "", `export { ${backSorted.join(", ")} };`, ""].join("\n\n");
 
-let chunkText = src;
+const esc = (n) => n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+let chunkText = src;   // 源文件（去掉搬走的部分后）
 for (const e of [...chunkEdits].sort((a, b) => b.start - a.start)) chunkText = chunkText.slice(0, e.start) + e.text + chunkText.slice(e.end + 1);
+// 被剔除的可变槽留在源文件里，源文件必须 export 它们（新文件 import 读 live binding）
+if (evicted.size) {
+  const i = chunkText.lastIndexOf("export {");
+  const j = chunkText.indexOf("}", i);
+  const cur = chunkText.slice(i, j);
+  const miss = [...evicted].filter((n) => !new RegExp(`(^|[\\s,{])${esc(n)}([\\s,}]|$)`).test(cur));
+  if (miss.length) {
+    console.log(`  源文件 export 块补 ${miss.length} 个被剔除的可变槽: ${miss.join(", ")}`);
+    chunkText = chunkText.slice(0, j) + (cur.trimEnd().endsWith("{") ? " " : ", ") + miss.join(", ") + chunkText.slice(j);
+  }
+}
 const at = chunkEdits.reduce((m, e) => Math.min(m, e.start), Infinity);
 chunkText = chunkText.slice(0, at) + `\nimport { ${backSorted.join(", ")} } from "./${OUT}";\n` + chunkText.slice(at);
 
 console.log(`\n闭包 ${closure.size} 个绑定 → ${moveTexts.join("").length / 1048576 >= 1 ? (moveTexts.join("").length / 1048576).toFixed(2) + " MB" : (moveTexts.join("").length / 1024).toFixed(0) + " KB"} / ${stmts} 条语句（拆分 ${split}）`);
 console.log(`外部 import ${ext.size} · 回引 ${back.size} · 新文件 ${(newFile.length / 1048576).toFixed(2)} MB · chunk ${(chunkText.length / 1048576).toFixed(2)} MB`);
-if (DUMP) { writeFileSync("/tmp/new-piece.js", newFile); writeFileSync("/tmp/new-chunk.js", chunkText); console.log("dry → /tmp/new-piece.js, /tmp/new-chunk.js"); }
+if (DUMP) { writeFileSync("/tmp/new-piece.js", newFile); writeFileSync("/tmp/new-src.js", chunkText); console.log("dry → /tmp/new-piece.js, /tmp/new-src.js"); }
 let fatal = false;
 // 专查：chunk 里不许出现「给 import 赋值」（ESM 硬错误，运行到才炸）
 {
@@ -178,5 +210,19 @@ for (const [tag, text] of [[OUT, newFile], ["余下 chunk", chunkText]]) {
   if (bad.length) { console.log(`  !! ${tag} 新增自由标识符 ${bad.length} 个: ${bad.slice(0, 12).join(", ")}`); fatal = true; }
   else console.log(`解析 ${tag}: 通过，无新增自由标识符 ✓`);
 }
+// 专查：新文件顶层急切读被剔除的可变槽 —— 新文件先于源文件求值，那时 var 还是 undefined
+if (evicted.size) {
+  try {
+    const joined = moveTexts.join("\n;\n") + "\n";
+    const eager = new Set();
+    const { sm: smJ } = analyze(joined);
+    for (const sc of smJ.scopes) for (const r of sc.references) {
+      if (!r.resolved || !evicted.has(r.resolved.name)) continue;
+      if (r.from.type === "module" || r.from.type === "global") eager.add(r.resolved.name);
+    }
+    if (eager.size) { console.log(`  !! 新文件顶层急切读被剔除的可变槽 ${eager.size} 个: ${[...eager].slice(0, 10).join(", ")}`); fatal = true; }
+    else console.log(`  新文件顶层没有急切读被剔除的 ${evicted.size} 个可变槽 ✓`);
+  } catch (e) { console.log("  !! 急切性自检失败:", e.message.split("\n")[0].slice(0, 80)); fatal = true; }
+}
 if (fatal) { console.log("\n**自检未通过，不落盘**"); process.exit(1); }
-if (APPLY) { writeFileSync(D + OUT, newFile); writeFileSync(D + CH, chunkText); console.log("已落盘"); }
+if (APPLY) { writeFileSync(D + OUT, newFile); writeFileSync(D + SRC, chunkText); console.log("已落盘"); }
