@@ -12,36 +12,44 @@ import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ROOT, walk } from "../rename/paths.mjs";
 import { plan } from "./plan.mjs";
-import { check, applyEdits } from "./verify.mjs";
+import { check, applyEdits, roundTrip } from "./verify.mjs";
+import { buildGraph, planUnused, checkUnused } from "./unused.mjs";
 import { splice } from "../rename/engine.mjs";
 
 export const HERE = dirname(fileURLToPath(import.meta.url));
 export const WORK = process.env.STD_WORK || join(HERE, ".work");
+export const BACKUP = join(WORK, "backup");
+mkdirSync(WORK, { recursive: true });
 export const short = (f) => (f.startsWith(ROOT) ? f.slice(ROOT.length + 1) : f);
 
-/** 规划 + 校验，失败时逐组回退重试。返回最终方案与重试记录。 */
-export function planVerified(f, src, maxRounds = 6) {
+/** 规划 + 校验，失败时逐条回退重试。两种模式（aliases / unused）共用。 */
+export function planVerified(f, src, { mode = "aliases", graph = null, maxRounds = 6 } = {}) {
   const exclude = new Set();
   const rolled = [];
+  const doPlan = (ex) => (mode === "unused" ? planUnused(src, { file: f, graph, exclude: ex }) : plan(src, { file: short(f), exclude: ex }));
+  const doCheck = (nx, p, edits) =>
+    // 两种模式都要把 **applyEdits 之后**（带 `was`）的编辑集交给校验：往返检查靠 `was` 还原原文
+    mode === "unused" ? checkUnused(src, nx, { ...p, edits }, { roundTrip }) : check(src, nx, { edits, groups: p.groups });
+
   for (let round = 0; round <= maxRounds; round++) {
-    const p = plan(src, { file: short(f), exclude });
+    const p = doPlan(exclude);
     if (!p.edits.length) return { ...p, rolled };
     const { next, edits } = applyEdits(src, p.edits);
-    const errs = check(src, next, { edits, groups: p.groups });
+    const errs = doCheck(next, p, edits);
     if (!errs.length) return { ...p, edits, next, rolled };
     if (round === maxRounds) return { ...p, fatal: errs, rolled };
-    // 从失败信息里点名变量，映射回组；点名不出来就砍掉最大的那个组
+    // 从失败信息里点名变量，映射回条目；点名不出来就砍掉最大的那条
     const named = new Set();
     for (const e of errs) {
-      for (const g of p.groups) {
-        const names = [g.name, ...g.items.map((it) => it.sp.local.name)];
-        if (names.some((n) => new RegExp(`(^|[^\\w$])${n}([^\\w$]|$)`).test(e))) named.add(g.norm + "\0" + g.name);
+      for (const r of p.records) {
+        const names = mode === "unused" ? r.removed : [r.imported, ...r.aliases];
+        if (names.some((n) => new RegExp(`(^|[^\\w$])${n}([^\\w$]|$)`).test(e))) named.add(mode === "unused" ? r.removed.join(",") : r.source + "\0" + r.imported);
       }
     }
     if (!named.size) {
-      const big = [...p.groups].sort((a, b) => b.items.length - a.items.length)[0];
+      const big = [...(p.records ?? [])].sort((a, b) => (b.aliases?.length ?? b.removed?.length ?? 0) - (a.aliases?.length ?? a.removed?.length ?? 0))[0];
       if (!big) return { ...p, fatal: errs, rolled };
-      named.add(big.norm + "\0" + big.name);
+      named.add(mode === "unused" ? big.removed.join(",") : big.source + "\0" + big.imported);
     }
     for (const k of named) {
       if (exclude.has(k)) continue;
@@ -54,11 +62,17 @@ export function planVerified(f, src, maxRounds = 6) {
 function main() {
   const argv = process.argv.slice(2);
   const write = argv.includes("--write");
+  const modeArg = argv.find((a) => a.startsWith("--mode="));
+  const mode = modeArg ? modeArg.slice(7) : "aliases";
   const onlyIdx = argv.indexOf("--only");
   const only = onlyIdx >= 0 ? argv[onlyIdx + 1] : null;
   const listIdx = argv.indexOf("--only-list");
   let onlyList = null;
   if (listIdx >= 0) onlyList = new Set(readFileSync(argv[listIdx + 1], "utf8").split("\n").map((s) => s.trim()).filter(Boolean));
+
+  // 求值顺序判据要整棵树的急切图；建立在**改动前**源码上（备份∪当前树），
+  // 所以分批落盘时每一批拿到的都是同一张图。
+  const graph = mode === "unused" ? buildGraph(BACKUP) : null;
 
   let files = walk(ROOT);
   if (only) files = files.filter((f) => short(f).includes(only));
@@ -69,6 +83,7 @@ function main() {
   let nEdits = 0;
   let nFiles = 0;
   let nFatal = 0;
+  let nRemoved = 0;
   const statusCount = new Map();
   const editsOut = [];
 
@@ -76,12 +91,16 @@ function main() {
     const src = readFileSync(f, "utf8");
     let p;
     try {
-      p = planVerified(f, src);
+      p = planVerified(f, src, { mode, graph });
     } catch (e) {
       report.push({ file: short(f), error: e.message });
       continue;
     }
-    for (const r of p.records ?? []) statusCount.set(r.status, (statusCount.get(r.status) ?? 0) + 1);
+    for (const r of p.records ?? []) {
+      const k = mode === "unused" ? r.mode : r.status;
+      statusCount.set(k, (statusCount.get(k) ?? 0) + 1);
+      if (mode === "unused") nRemoved += r.removed.length;
+    }
     if (p.fatal) {
       nFatal++;
       report.push({ file: short(f), fatal: p.fatal.slice(0, 6) });
@@ -90,27 +109,29 @@ function main() {
     if (!p.edits?.length) continue;
     nFiles++;
     nEdits += p.edits.length;
-    byFile.set(short(f), { edits: p.edits.length, groups: p.groups.length, rolled: p.rolled.length });
+    byFile.set(short(f), { edits: p.edits.length, groups: p.records.length, rolled: p.rolled.length });
     editsOut.push({ path: short(f), edits: p.edits });
     if (write) {
-      const backup = join(WORK, "backup", short(f).split("/").join("__"));
+      const backup = join(BACKUP, short(f).split("/").join("__"));
       if (!existsSync(backup)) {
         mkdirSync(dirname(backup), { recursive: true });
         writeFileSync(backup, src);
       }
       writeFileSync(f, p.next);
     }
+    if (mode === "unused") report.push({ file: short(f), records: p.records });
   }
 
   // 报告
   const sorted = [...byFile].sort((a, b) => b[1].edits - a[1].edits);
-  console.log(`${write ? "已落盘" : "dry-run"}：${files.length} 个文件里 ${nFiles} 个有改动，共 ${nEdits} 处编辑`);
-  console.log("组状态分布：", [...statusCount].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}=${v}`).join(" · "));
+  console.log(`${write ? "已落盘" : "dry-run"} [${mode}]：${files.length} 个文件里 ${nFiles} 个有改动，共 ${nEdits} 处编辑`);
+  if (mode === "unused") console.log(`删除的 import specifier：${nRemoved} 个`);
+  console.log("分布：", [...statusCount].sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k}=${v}`).join(" · "));
   if (nFatal) console.log(`⚠ 校验彻底失败的文件：${nFatal}`);
   console.log("\n改动最重的 15 个文件：");
-  for (const [f, m] of sorted.slice(0, 15)) console.log(`  ${String(m.edits).padStart(6)} 编辑 / ${String(m.groups).padStart(4)} 组  ${f}`);
+  for (const [f, m] of sorted.slice(0, 15)) console.log(`  ${String(m.edits).padStart(6)} 编辑 / ${String(m.groups).padStart(4)} 条  ${f}`);
 
-  writeFileSync(join(WORK, write ? "report.after.json" : "report.dry.json"), JSON.stringify({ nFiles, nEdits, byFile: Object.fromEntries(sorted), statusCount: Object.fromEntries(statusCount), report }, null, 1));
+  writeFileSync(join(WORK, write ? `report.after.${mode}.json` : `report.dry.${mode}.json`), JSON.stringify({ mode, nFiles, nEdits, nRemoved, byFile: Object.fromEntries(sorted), statusCount: Object.fromEntries(statusCount), report }, null, 1));
 
   if (write) {
     // manifest 累加：分批落盘时，restore.mjs 需要一份覆盖全部批次的完整记录

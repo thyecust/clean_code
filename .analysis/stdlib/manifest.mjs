@@ -11,16 +11,19 @@
 import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { ROOT } from "../rename/paths.mjs";
-import { splice } from "../rename/engine.mjs";
 import { plan } from "./plan.mjs";
+import { buildGraph, planUnused } from "./unused.mjs";
 import { applyEdits } from "./verify.mjs";
-import { WORK } from "./run.mjs";
+import { WORK, BACKUP } from "./run.mjs";
 
-const backupDir = join(WORK, "backup");
+const backupDir = BACKUP;
 if (!existsSync(backupDir)) {
   console.error("没有备份目录，无法重建");
   process.exit(1);
 }
+
+// 求值顺序判据需要改动前的图 —— 从备份重建，与 run.mjs 同一招
+const graph = buildGraph(backupDir);
 
 const entries = [];
 const bad = [];
@@ -33,19 +36,25 @@ for (const name of readdirSync(backupDir).sort()) {
     continue;
   }
   const cur = readFileSync(curPath, "utf8");
-  const p = plan(before, { file: rel });
-  if (!p.edits.length) {
-    bad.push(`${rel}: 备份重规划出 0 处编辑`);
+  // 两轮（别名收敛 / 未使用清理）的编辑都可能落在同一个备份上，所以两种规划都试一遍，
+  // 谁能让「备份 + 编辑 == 当前文件」成立就用谁。都不成立才是真问题。
+  let picked = null;
+  for (const [mode, p] of [
+    ["aliases", plan(before, { file: rel })],
+    ["unused", planUnused(before, { file: join(ROOT, rel), graph })],
+  ]) {
+    if (!p.edits.length) continue;
+    const { next, edits } = applyEdits(before, p.edits);
+    if (next === cur) {
+      picked = { mode, edits };
+      break;
+    }
+  }
+  if (!picked) {
+    bad.push(`${rel}: 备份 + 编辑 ≠ 当前文件（两种规划都对不上）`);
     continue;
   }
-  const { next, edits } = applyEdits(before, p.edits);
-  if (next !== cur) {
-    let i = 0;
-    while (i < next.length && next[i] === cur[i]) i++;
-    bad.push(`${rel}: 备份+编辑 ≠ 当前文件（首差 @${i}）`);
-    continue;
-  }
-  entries.push({ path: rel, edits: edits.map((e) => ({ start: e.start, end: e.end, text: e.text, was: e.was })) });
+  entries.push({ path: rel, edits: picked.edits.map((e) => ({ start: e.start, end: e.end, text: e.text, was: e.was })) });
 }
 
 if (bad.length) {
@@ -72,4 +81,4 @@ writeFileSync(
   ),
 );
 console.log(`manifest 重建完成 → ${mpath}（${entries.length} 个文件 / ${entries.reduce((n, e) => n + e.edits.length, 0)} 处编辑，逐文件断言通过）`);
-void splice;
+
