@@ -16,13 +16,7 @@
 
 // Version: 2.1.263
 
-import * as Bb from "path";
-
-import * as Sdt from "path";
-
-import * as eL from "path";
-
-import * as etn from "path";
+import * as path from "path";
 
 import { AS, B, DL, Frt, GOn, Gt, K, QDn, Qs, RW, TLn, VXt, a_e, dLn, dMn, h_e, hae, he, j, j1, kL, ke, mp, nYt, ns, oo, pHt, pa, sn, tHt, uMn, xL, xxe, yB, y_e, ym, zP } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 
@@ -1186,7 +1180,7 @@ async function ySe(e, t) {
       if (!N.isCanonical) throw d();
       return N.resolvedPath;
     },
-    E = !Bb.isAbsolute(rv().rgPath),
+    E = !path.isAbsolute(rv().rgPath),
     C = () => {
       throw new SymlinkReadRefusedError(
         `Refusing to search ${e}: ripgrep was found only by name on PATH, and a search outside the working directory cannot apply your Read deny rules in that configuration. Install ripgrep at an absolute path or search under the working directory.`,
@@ -1291,7 +1285,7 @@ async function ySe(e, t) {
           `Cannot search ${e}: the directory is not traversable (no execute permission).`,
         );
       }
-    if (N.isDirectory() && Bb.isAbsolute(rv().rgPath))
+    if (N.isDirectory() && path.isAbsolute(rv().rgPath))
       return {
         lexical: e,
         canonical: V,
@@ -1337,19 +1331,19 @@ async function ySe(e, t) {
 
 function Q5t(e, t) {
   if (!t.isDirectory && e === t.target) return t.lexical;
-  if (Bb.isAbsolute(e)) {
+  if (path.isAbsolute(e)) {
     for (let r of [t.target, t.canonical]) {
-      let o = r.endsWith(Bb.sep) ? r : r + Bb.sep;
+      let o = r.endsWith(path.sep) ? r : r + path.sep;
       if (e.startsWith(o) && r !== t.lexical)
-        return Bb.join(t.lexical, e.slice(o.length));
+        return path.join(t.lexical, e.slice(o.length));
     }
     return e;
   }
   if (t.relativeOutput) {
     let r = e.startsWith("./") ? e.slice(2) : e;
     return r === "." || r === ""
-      ? t.lexical + (e.endsWith("/") ? Bb.sep : "")
-      : Bb.join(t.lexical, r);
+      ? t.lexical + (e.endsWith("/") ? path.sep : "")
+      : path.join(t.lexical, r);
   }
   return e;
 }
@@ -1396,12 +1390,12 @@ function foe(e, t, r) {
   if (t.isDirectory)
     for (let _ of new Set([...o, t.canonical, t.lexical]))
       for (let [E, C] of e) {
-        let I = Bb.relative(E ?? getCwd(), _);
+        let I = path.relative(E ?? getCwd(), _);
         if (
           I === "" ||
           I === ".." ||
-          I.startsWith(`..${Bb.sep}`) ||
-          Bb.isAbsolute(I)
+          I.startsWith(`..${path.sep}`) ||
+          path.isAbsolute(I)
         )
           continue;
         let D = I.replaceAll("\\", "/"),
@@ -1470,14 +1464,14 @@ function Kqr(e) {
 
 function _2(e, t) {
   let r = getCwd();
-  if (!Bb.isAbsolute(e) || !Bb.isAbsolute(t)) return r;
+  if (!path.isAbsolute(e) || !path.isAbsolute(t)) return r;
   try {
     if (pathInWorkingPath(e, r)) {
       let d = e.slice(0, r.length);
       if (
         d !== r &&
         d.toLowerCase() === r.toLowerCase() &&
-        (e.length === r.length || e[r.length] === Bb.sep || e[r.length] === "/")
+        (e.length === r.length || e[r.length] === path.sep || e[r.length] === "/")
       )
         return d;
       return r;
@@ -1485,7 +1479,7 @@ function _2(e, t) {
   } catch {
     return r;
   }
-  let o = Bb.resolve(e);
+  let o = path.resolve(e);
   try {
     if (statSync(o).isDirectory()) return o;
   } catch {}
@@ -1796,7 +1790,7 @@ async function runRipgrepSearch(e, t, r, o) {
 
 
 async function Qqr(e, t, r) {
-  if (Bb.resolve(e) === Bb.resolve(homedir())) return;
+  if (path.resolve(e) === path.resolve(homedir())) return;
   try {
     let o,
       d = null;
@@ -7826,7 +7820,7 @@ function ttn(e, t) {
             }.VERSION,
           },
           initializationOptions: t.initializationOptions ?? {},
-          workspaceFolders: [{ uri: Oe, name: etn.basename(xe) }],
+          workspaceFolders: [{ uri: Oe, name: path.basename(xe) }],
           rootPath: xe,
           rootUri: Oe,
           capabilities: {
@@ -8152,7 +8146,7 @@ function ntn(e, t) {
     }
   }
   function F(xe) {
-    let Oe = eL.extname(xe).toLowerCase(),
+    let Oe = path.extname(xe).toLowerCase(),
       Ne = o.get(Oe);
     if (!Ne || Ne.length === 0) return;
     let De = Ne[0];
@@ -8179,7 +8173,7 @@ function ntn(e, t) {
   async function V(xe, Oe, Ne) {
     let De = await U(xe);
     if (!De) return;
-    let He = pathToFileURL(eL.resolve(xe)).href;
+    let He = pathToFileURL(path.resolve(xe)).href;
     if (d.get(He) === De.name) C(He, De.name);
     try {
       return await De.sendRequest(Oe, Ne);
@@ -8201,12 +8195,12 @@ function ntn(e, t) {
   async function de(xe, Oe) {
     let Ne = await U(xe);
     if (!Ne) return;
-    let De = pathToFileURL(eL.resolve(xe)).href;
+    let De = pathToFileURL(path.resolve(xe)).href;
     if (d.get(De) === Ne.name) {
       (C(De, Ne.name), logForDebugging(`LSP: File already open, skipping didOpen for ${xe}`));
       return;
     }
-    let He = eL.extname(xe).toLowerCase(),
+    let He = path.extname(xe).toLowerCase(),
       je = Ne.config.extensionToLanguage[He] || "plaintext";
     try {
       let Ke = E(De);
@@ -8224,7 +8218,7 @@ function ntn(e, t) {
   async function _e(xe, Oe) {
     let Ne = F(xe);
     if (!Ne || Ne.state !== "running") return de(xe, Oe);
-    let De = pathToFileURL(eL.resolve(xe)).href;
+    let De = pathToFileURL(path.resolve(xe)).href;
     if (d.get(De) !== Ne.name) return de(xe, Oe);
     C(De, Ne.name);
     try {
@@ -8245,7 +8239,7 @@ function ntn(e, t) {
   async function Se(xe) {
     let Oe = F(xe);
     if (!Oe || Oe.state !== "running") return;
-    let Ne = pathToFileURL(eL.resolve(xe)).href;
+    let Ne = pathToFileURL(path.resolve(xe)).href;
     if (d.get(Ne) !== Oe.name) return;
     try {
       (await Oe.sendNotification("textDocument/didSave", {
@@ -8258,7 +8252,7 @@ function ntn(e, t) {
     }
   }
   function ve(xe) {
-    let Oe = pathToFileURL(eL.resolve(xe)).href,
+    let Oe = pathToFileURL(path.resolve(xe)).href,
       Ne = d.get(Oe);
     if (Ne === void 0) return !1;
     let De = r.get(Ne);
@@ -20040,12 +20034,12 @@ var kdt = buildTool({
           if (D === void 0)
             return (
               logForDebugging(
-                `No LSP server available for file type ${Sdt.extname(o)} for operation ${t.operation} on file ${t.filePath}`,
+                `No LSP server available for file type ${path.extname(o)} for operation ${t.operation} on file ${t.filePath}`,
               ),
               {
                 data: {
                   operation: t.operation,
-                  result: `No LSP server available for file type: ${Sdt.extname(o)}`,
+                  result: `No LSP server available for file type: ${path.extname(o)}`,
                   filePath: t.filePath,
                 },
               }

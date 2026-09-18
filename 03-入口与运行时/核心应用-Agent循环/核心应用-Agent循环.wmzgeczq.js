@@ -6184,13 +6184,13 @@ function QMt(e) {
   pTr ??= e;
 }
 import { fileURLToPath } from "url";
-import * as NS from "path";
+import * as path from "path";
 function gPr() {
-  let e = NS.dirname(fileURLToPath(import.meta.url));
-  return NS.resolve(e, "..", "..");
+  let e = path.dirname(fileURLToPath(import.meta.url));
+  return path.resolve(e, "..", "..");
 }
 var hPr = { x64: "x64", arm64: "arm64" },
-  pOs = NS.join(
+  pOs = path.join(
     gPr(),
     "vendor",
     "srt-win",
@@ -31760,7 +31760,6 @@ function describeBundleFailure(e) {
   return e.kind === "too_large" ? Hq.repository_too_large : fct[e.why];
 }
 import * as W7 from "fs/promises";
-import * as BC from "path";
 function gct(e) {
   logForDebugging(`[files-api] ${e}`, { level: "error" });
 }
@@ -31796,18 +31795,18 @@ async function _Uo(e, t) {
   );
 }
 function bUo(e, t, r) {
-  let o = BC.normalize(r);
+  let o = path.normalize(r);
   if (o.startsWith(".."))
     return (
       gct(`Invalid file path: ${r}. Path must not traverse above workspace`),
       null
     );
-  let d = BC.join(e, t, "uploads"),
-    _ = [BC.join(e, t, "uploads") + BC.sep, BC.sep + "uploads" + BC.sep].find(
+  let d = path.join(e, t, "uploads"),
+    _ = [path.join(e, t, "uploads") + path.sep, path.sep + "uploads" + path.sep].find(
       (C) => o.startsWith(C),
     ),
     E = _ ? o.slice(_.length) : o;
-  return BC.join(d, E);
+  return path.join(d, E);
 }
 async function SUo(e, t) {
   let { fileId: r, relativePath: o } = e,
@@ -31821,7 +31820,7 @@ async function SUo(e, t) {
     };
   try {
     let p = await _Uo(r, t),
-      _ = BC.dirname(d);
+      _ = path.dirname(d);
     return (
       await W7.mkdir(_, { recursive: !0 }),
       await W7.writeFile(d, p),
