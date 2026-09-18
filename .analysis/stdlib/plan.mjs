@@ -40,6 +40,11 @@ function rec(g, status, extra = {}) {
 /**
  * 整条 import 声明删除。向前吃掉行首缩进、向后吃掉行尾换行——但**只在两端确实全是
  * 空白时**才吃，否则会把同一行的下一条语句一起删掉。
+ *
+ * 再多吃一行紧跟的空行：本树的 import 之间普遍隔着一个空行，不连带吃掉的话，
+ * 删掉一串重复导入会留下一串连续空行（`execution-core.js` 合并 `path` 那组时就是 4 行连空）。
+ * 只吃**紧邻**的一行，所以相邻两次删除不会抢同一行（前一次吃到的那行，后一次的
+ * 起点在它之后）。
  */
 function wholeDeclDelete(src, decl) {
   let start = decl.range[0];
@@ -48,7 +53,12 @@ function wholeDeclDelete(src, decl) {
   let end = decl.range[1];
   let p = end;
   while (p < src.length && (src[p] === " " || src[p] === "\t" || src[p] === "\r")) p++;
-  if (src[p] === "\n") end = p + 1;
+  if (src[p] === "\n") {
+    end = p + 1;
+    let q = end;
+    while (q < src.length && (src[q] === " " || src[q] === "\t" || src[q] === "\r")) q++;
+    if (src[q] === "\n") end = q + 1; // 紧跟的那一行也是空的 → 一起删
+  }
   return { start, end, text: "" };
 }
 

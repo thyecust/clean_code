@@ -14,6 +14,7 @@ import { ROOT, walk } from "../rename/paths.mjs";
 import { plan } from "./plan.mjs";
 import { check, applyEdits, roundTrip } from "./verify.mjs";
 import { buildGraph, planUnused, checkUnused } from "./unused.mjs";
+import { planMerge, checkMerge } from "./merge.mjs";
 import { splice } from "../rename/engine.mjs";
 
 export const HERE = dirname(fileURLToPath(import.meta.url));
@@ -26,10 +27,19 @@ export const short = (f) => (f.startsWith(ROOT) ? f.slice(ROOT.length + 1) : f);
 export function planVerified(f, src, { mode = "aliases", graph = null, maxRounds = 6 } = {}) {
   const exclude = new Set();
   const rolled = [];
-  const doPlan = (ex) => (mode === "unused" ? planUnused(src, { file: f, graph, exclude: ex }) : plan(src, { file: short(f), exclude: ex }));
+  const doPlan = (ex) =>
+    mode === "unused"
+      ? planUnused(src, { file: f, graph, exclude: ex })
+      : mode === "merge"
+        ? planMerge(src, { file: f, exclude: ex })
+        : plan(src, { file: short(f), exclude: ex });
+  // 三种模式都要把 **applyEdits 之后**（带 `was`）的编辑集交给校验：往返检查靠 `was` 还原原文
   const doCheck = (nx, p, edits) =>
-    // 两种模式都要把 **applyEdits 之后**（带 `was`）的编辑集交给校验：往返检查靠 `was` 还原原文
-    mode === "unused" ? checkUnused(src, nx, { ...p, edits }, { roundTrip }) : check(src, nx, { edits, groups: p.groups });
+    mode === "unused"
+      ? checkUnused(src, nx, { ...p, edits }, { roundTrip })
+      : mode === "merge"
+        ? checkMerge(src, nx, { ...p, edits }, { roundTrip })
+        : check(src, nx, { edits, groups: p.groups });
 
   for (let round = 0; round <= maxRounds; round++) {
     const p = doPlan(exclude);
@@ -42,14 +52,16 @@ export function planVerified(f, src, { mode = "aliases", graph = null, maxRounds
     const named = new Set();
     for (const e of errs) {
       for (const r of p.records) {
-        const names = mode === "unused" ? r.removed : [r.imported, ...r.aliases];
-        if (names.some((n) => new RegExp(`(^|[^\\w$])${n}([^\\w$]|$)`).test(e))) named.add(mode === "unused" ? r.removed.join(",") : r.source + "\0" + r.imported);
+        const names = mode === "unused" ? r.removed : r.bindings ?? [r.imported, ...r.aliases];
+        if (names.some((n) => new RegExp(`(^|[^\\w$])${n}([^\\w$]|$)`).test(e)))
+          named.add(r.key ?? (mode === "unused" ? r.removed.join(",") : r.source + "\0" + r.imported));
       }
     }
     if (!named.size) {
-      const big = [...(p.records ?? [])].sort((a, b) => (b.aliases?.length ?? b.removed?.length ?? 0) - (a.aliases?.length ?? a.removed?.length ?? 0))[0];
+      const size = (r) => r.bindings?.length ?? r.aliases?.length ?? r.removed?.length ?? 0;
+      const big = [...(p.records ?? [])].sort((a, b) => size(b) - size(a))[0];
       if (!big) return { ...p, fatal: errs, rolled };
-      named.add(mode === "unused" ? big.removed.join(",") : big.source + "\0" + big.imported);
+      named.add(big.key ?? (mode === "unused" ? big.removed.join(",") : big.source + "\0" + big.imported));
     }
     for (const k of named) {
       if (exclude.has(k)) continue;
@@ -73,6 +85,7 @@ function main() {
   // 求值顺序判据要整棵树的急切图；建立在**改动前**源码上（备份∪当前树），
   // 所以分批落盘时每一批拿到的都是同一张图。
   const graph = mode === "unused" ? buildGraph(BACKUP) : null;
+  if (!["aliases", "unused", "merge"].includes(mode)) { console.error(`未知 --mode=${mode}`); process.exit(1); }
 
   let files = walk(ROOT);
   if (only) files = files.filter((f) => short(f).includes(only));
@@ -97,7 +110,7 @@ function main() {
       continue;
     }
     for (const r of p.records ?? []) {
-      const k = mode === "unused" ? r.mode : r.status;
+      const k = mode === "aliases" ? r.status : r.mode ?? r.status;
       statusCount.set(k, (statusCount.get(k) ?? 0) + 1);
       if (mode === "unused") nRemoved += r.removed.length;
     }
