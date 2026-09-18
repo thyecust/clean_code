@@ -630,7 +630,7 @@ async function readWorkflowScriptFileHardened(t, l) {
 }
 var yo = getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK,
   bo = getCurrentPlatform() === "windows" ? 0 : constants.O_NOFOLLOW;
-import * as Lt from "vm";
+import * as vm from "vm";
 function _t(t) {
   return (
     Object.setPrototypeOf(t, null),
@@ -665,7 +665,7 @@ var To =
       globalThis.Date = ShimDate;
     })()`;
 function Yt(t) {
-  Lt.runInContext(So, t);
+  vm.runInContext(So, t);
 }
 var DEFAULT_WORKFLOW_SYNC_TIMEOUT_MS = 30000;
 function makeVmTimers(t) {
@@ -708,7 +708,7 @@ var X = "__wRg$",
   _o = "{put, read, on, retract, agent, workflow}",
   jn = `${X}resolve`;
 function Xt(t) {
-  Lt.runInContext(
+  vm.runInContext(
     `Object.defineProperty(globalThis, ${jsonStringify(jn)}, {
       value: Promise.resolve.bind(Promise),
       writable: false, enumerable: false, configurable: false,
@@ -810,7 +810,7 @@ ${t}
       k = `((${X} => ((${X}a${m}) => async () => {'use strict';
 ${s}
 })(${X}it => ({[Symbol.asyncIterator](){const ${X}ai = ${X}it[Symbol.asyncIterator];if (${X}ai != null && typeof ${X}ai !== 'function') throw new TypeError('@@asyncIterator is not a function');const ${X}i = ${X}ai != null ? ${X}ai.call(${X}it) : ${X}it[Symbol.iterator]();if (${X}i === null || (typeof ${X}i !== 'object' && typeof ${X}i !== 'function')) throw new TypeError('Iterator is not an object');const ${X}nxt = ${X}i.next;if (typeof ${X}nxt !== 'function') throw new TypeError('Iterator.next is not a function');const ${X}ret = ${X}i.return;const ${X}thr = ${X}i.throw;const ${X}w = s => ${X}(s).then(s => { if (s === null || (typeof s !== 'object' && typeof s !== 'function')) throw new TypeError('Iterator result is not an object'); const done = s.done; return ${X}(s.value).then(value => ({value, done})) });return {next:v=>${X}w(${X}nxt.call(${X}i,v)),return:v=>${X}w(typeof ${X}ret==='function'?${X}ret.call(${X}i,v):{value:v,done:true}),throw:e=>typeof ${X}thr==='function'?${X}w(${X}thr.call(${X}i,e)):${X}(typeof ${X}ret==='function'?${X}ret.call(${X}i):undefined).then(()=>{throw new TypeError('The iterator does not provide a throw method')})}}})${p}))(${jn}))()`,
-      C = new Lt.Script(k, {
+      C = new vm.Script(k, {
         filename: "workflow.js",
         importModuleDynamically: () => {
           throw makePlainError("import() is not available in workflow scripts.");
@@ -828,8 +828,6 @@ ${s}
   }
 }
 import { createHash } from "crypto";
-import * as jt from "vm";
-import * as Qt from "vm";
 function pn(
   t,
   l = {
@@ -938,7 +936,7 @@ function createChildWorkflowVmContext(t, l, s, m = t.timers) {
       log: wrapSyncHostFunction((e) => t.hooks.log(p + toDisplayString(e))),
       console: pn((e) => t.hooks.log(p + e), k),
     },
-    I = Qt.createContext(C, { codeGeneration: { strings: !1, wasm: !1 } });
+    I = vm.createContext(C, { codeGeneration: { strings: !1, wasm: !1 } });
   (Yt(I), hardenVmIntrinsics(I), Xt(I));
   let E = makeVmErrorExtractor(I),
     fe = makeVmAwait(I),
@@ -947,7 +945,7 @@ function createChildWorkflowVmContext(t, l, s, m = t.timers) {
     N = makeVmSanitizers(I),
     { vmToStr: ue, vmOwnString: pe, vmStringify: ee } = makeVmStringUtils(I);
   ((k.sanitize = N.sanitize), (k.toStr = ue));
-  let d = Qt.runInContext(
+  let d = vm.runInContext(
       '(o => { try { const s = o && typeof o === "object" ? o.schema : undefined; return s && typeof s === "object" ? s : undefined } catch { return undefined } })',
       I,
     ),
@@ -3151,7 +3149,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     }),
     r = t.abortController?.signal,
     e = makeVmTimers(r),
-    c = jt.createContext(
+    c = vm.createContext(
       {
         __proto__: null,
         log: wrapSyncHostFunction(pe.log),
@@ -3165,7 +3163,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
     );
   (Yt(c), hardenVmIntrinsics(c), Xt(c));
   let { vmToStr: _, vmStringify: T, vmOwnString: V } = makeVmStringUtils(c);
-  e.bindVMInvoke(jt.runInContext("(fn => { fn() })", c));
+  e.bindVMInvoke(vm.runInContext("(fn => { fn() })", c));
   let M = makeVmClone(c),
     G = makeVmAwait(c),
     te = makeVmApply(c),
@@ -3202,7 +3200,7 @@ function createWorkflowVmHarness(t, l, s, m, p, k, C, I, E, fe, O, J, N) {
       value:
         ve === void 0
           ? void 0
-          : jt.runInContext(`JSON.parse(${JSON.stringify(ve)})`, c),
+          : vm.runInContext(`JSON.parse(${JSON.stringify(ve)})`, c),
       writable: !0,
       enumerable: !0,
       configurable: !0,

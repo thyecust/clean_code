@@ -223,7 +223,7 @@ function fo(e, t) {
   }
   return e;
 }
-import Tt from "path";
+import path from "path";
 var uc = 40,
   dc = 16384,
   Kn = 49152,
@@ -407,9 +407,9 @@ async function ji(e, t, r, i) {
 }
 async function Fi(e, t = []) {
   let r = Object.create(null),
-    i = Tt.dirname(Tt.dirname(e));
+    i = path.dirname(path.dirname(e));
   try {
-    await assertPathIsLocal(i, Tt.relative(i, e), "mock replay recordings");
+    await assertPathIsLocal(i, path.relative(i, e), "mock replay recordings");
   } catch {
     return r;
   }
@@ -422,7 +422,7 @@ async function Fi(e, t = []) {
   let u = o.filter((d) => yo.test(d));
   if (u.length > mo)
     t.push(
-      `mocks: ${Tt.basename(Tt.dirname(e))}/${Tt.basename(e)} holds ${u.length} recordings; only the first ${mo} are pinned for replay \u2014 prune ones no case reaches any more`,
+      `mocks: ${path.basename(path.dirname(e))}/${path.basename(e)} holds ${u.length} recordings; only the first ${mo} are pinned for replay \u2014 prune ones no case reaches any more`,
     );
   for (let d of u.slice(0, mo)) {
     let p = await Ui(e, d);
@@ -432,9 +432,9 @@ async function Fi(e, t = []) {
 }
 async function Ui(e, t) {
   try {
-    let r = Tt.dirname(Tt.dirname(e));
-    await assertPathIsLocal(r, Tt.relative(r, Tt.join(e, t)), "mock replay recording");
-    let i = await openFileReadOnlyHardened(Tt.join(e, t));
+    let r = path.dirname(path.dirname(e));
+    await assertPathIsLocal(r, path.relative(r, path.join(e, t)), "mock replay recording");
+    let i = await openFileReadOnlyHardened(path.join(e, t));
     if (!i.ok) return null;
     let o = i.value;
     try {
@@ -463,12 +463,9 @@ var Or = ".replay",
   yo = /^[A-Za-z0-9_-]+-[0-9a-f]{64}\.json$/,
   mo = 2000;
 import Um from "os";
-import Ee from "path";
 import { stat } from "fs/promises";
-import Je from "path";
 import { open } from "fs/promises";
 import { constants } from "fs";
-import Ve from "path";
 var _o = "TODO: describe what the agent should do",
   bo = "TODO: describe what a successful response looks like",
   Gi = `---
@@ -677,8 +674,8 @@ var Sc = 1048576,
     "env",
   ]);
 async function ts(e) {
-  let t = Ve.join(e, "prompt.md"),
-    r = Ve.join(e, "graders"),
+  let t = path.join(e, "prompt.md"),
+    r = path.join(e, "graders"),
     [i, o] = await Promise.all([Zi(t), Ac(r)]);
   if (i === null && o.length === 0) return null;
   let u = { top: {}, execution: {}, graders: [] };
@@ -691,7 +688,7 @@ async function ts(e) {
       else if (qi.has(E)) u.execution[E] = _;
       else
         throw new R(
-          `${Ve.relative(e, t)}: unknown frontmatter key "${E}" (expected one of: ${[...Ji, ...qi].join(", ")})`,
+          `${path.relative(e, t)}: unknown frontmatter key "${E}" (expected one of: ${[...Ji, ...qi].join(", ")})`,
           "prompt.md: unknown frontmatter key",
         );
   }
@@ -700,7 +697,7 @@ async function ts(e) {
     let h = await Zi(p);
     if (h === null)
       throw new R(
-        `${Ve.basename(p)} vanished from ${Ve.basename(Ve.dirname(p))}/ while being read; try again`,
+        `${path.basename(p)} vanished from ${path.basename(path.dirname(p))}/ while being read; try again`,
         "graders/: entry vanished during read",
       );
     d.push(h);
@@ -710,10 +707,10 @@ async function ts(e) {
       w = d[p],
       { fm: E, body: _, hadFrontmatter: S } = Ar(w, h);
     if (!S) continue;
-    let C = Ve.basename(h, ".md");
+    let C = path.basename(h, ".md");
     if (typeof E.type !== "string")
       throw new R(
-        `${Ve.relative(e, h)}: frontmatter must include "type:" (regex | tool_order | tool_used | file_exists | llm | baseline)`,
+        `${path.relative(e, h)}: frontmatter must include "type:" (regex | tool_order | tool_used | file_exists | llm | baseline)`,
         "grader .md: frontmatter missing type",
       );
     u.graders.push(Cc(C, E, _.trim()));
@@ -728,7 +725,7 @@ async function ts(e) {
   return u;
 }
 function rs(e, t, r) {
-  let i = e ?? { schema_version: zi, name: Ve.basename(r) },
+  let i = e ?? { schema_version: zi, name: path.basename(r) },
     o = { ...i, ...t.top },
     u =
       typeof i.execution === "object" && i.execution !== null
@@ -758,7 +755,7 @@ function Ar(e, t) {
   if (!r) {
     if (/^---\s*\n/.test(e))
       throw new R(
-        `${Ve.basename(t)}: unterminated frontmatter (opening "---" with no closing "---")`,
+        `${path.basename(t)}: unterminated frontmatter (opening "---" with no closing "---")`,
         "prose .md: unterminated frontmatter",
       );
     return { fm: {}, body: e, hadFrontmatter: !1 };
@@ -768,7 +765,7 @@ function Ar(e, t) {
     i = parseYaml(r[1] ?? "");
   } catch (o) {
     throw new R(
-      `${Ve.basename(t)}: invalid YAML frontmatter: ${o instanceof Error ? o.message : String(o)}`,
+      `${path.basename(t)}: invalid YAML frontmatter: ${o instanceof Error ? o.message : String(o)}`,
       "prose .md: invalid YAML frontmatter",
     );
   }
@@ -776,7 +773,7 @@ function Ar(e, t) {
     return { fm: {}, body: e.slice(r[0].length), hadFrontmatter: !0 };
   if (typeof i !== "object" || Array.isArray(i))
     throw new R(
-      `${Ve.basename(t)}: frontmatter must be a YAML object`,
+      `${path.basename(t)}: frontmatter must be a YAML object`,
       "prose .md: frontmatter not a YAML object",
     );
   return { fm: i, body: e.slice(r[0].length), hadFrontmatter: !0 };
@@ -785,7 +782,7 @@ async function Pt(e, t, r) {
   return (await Oc(e, t, r))?.toString("utf8") ?? null;
 }
 async function Oc(e, t, r) {
-  await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), r);
+  await assertPathIsLocal(path.dirname(e), path.basename(e), r);
   let i;
   try {
     i = await open(e, constants.O_RDONLY | (getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK));
@@ -794,7 +791,7 @@ async function Oc(e, t, r) {
       if (await os(e))
         throw Object.assign(
           new R(
-            `${Ve.basename(e)} is a symbolic link whose target does not exist \u2014 not read`,
+            `${path.basename(e)} is a symbolic link whose target does not exist \u2014 not read`,
             `${r}: dangling symbolic link`,
           ),
           { code: "ENOENT" },
@@ -804,7 +801,7 @@ async function Oc(e, t, r) {
     let u = A(o);
     throw Object.assign(
       new R(
-        `${Ve.basename(e)} is unreadable (${u ?? "unknown error"})`,
+        `${path.basename(e)} is unreadable (${u ?? "unknown error"})`,
         `${r}: unreadable`,
       ),
       { code: u },
@@ -815,7 +812,7 @@ async function Oc(e, t, r) {
     if (!o.isFile())
       throw Object.assign(
         new R(
-          `${Ve.basename(e)} is not a regular file`,
+          `${path.basename(e)} is not a regular file`,
           `${r}: not a regular file`,
         ),
         { code: o.isDirectory() ? "EISDIR" : void 0 },
@@ -823,7 +820,7 @@ async function Oc(e, t, r) {
     let u = o.size;
     if (u > t)
       throw new R(
-        `${Ve.basename(e)} is ${u} bytes (cap: ${t})`,
+        `${path.basename(e)} is ${u} bytes (cap: ${t})`,
         `${r}: over size cap`,
       );
     let d = Buffer.allocUnsafe(Math.min(u, t) + 1),
@@ -835,7 +832,7 @@ async function Oc(e, t, r) {
     }
     if (p !== u)
       throw new R(
-        `${Ve.basename(e)} changed while being read (vetted at ${u} bytes, read ${p > u ? "more" : String(p)}); try again`,
+        `${path.basename(e)} changed while being read (vetted at ${u} bytes, read ${p > u ? "more" : String(p)}); try again`,
         `${r}: changed during read`,
       );
     return d.subarray(0, p);
@@ -849,27 +846,27 @@ async function Zi(e) {
 async function Ac(e) {
   let t;
   try {
-    (await assertPathIsLocal(Ve.dirname(e), Ve.basename(e), "graders/"),
+    (await assertPathIsLocal(path.dirname(e), path.basename(e), "graders/"),
       (t = await readdir(e, { withFileTypes: !0 })));
   } catch (o) {
     if (W(o)) {
       if (await os(e))
         throw new R(
-          `${Ve.basename(e)}/ is a symbolic link whose target does not exist`,
+          `${path.basename(e)}/ is a symbolic link whose target does not exist`,
           "graders/: dangling symbolic link",
         );
       return [];
     }
     if (A(o) === "ENOTDIR")
       throw new R(
-        `${Ve.basename(e)} is not a directory`,
+        `${path.basename(e)} is not a directory`,
         "graders/: not a directory",
       );
     if (o instanceof R) throw o;
     let u = A(o);
     throw Object.assign(
       new R(
-        `${Ve.basename(e)}/ is unreadable (${u ?? "unknown error"})`,
+        `${path.basename(e)}/ is unreadable (${u ?? "unknown error"})`,
         "graders/: unreadable",
       ),
       { code: u },
@@ -878,12 +875,12 @@ async function Ac(e) {
   let r = t.filter((o) => o.name.endsWith(".md"));
   if (r.length > es)
     throw new R(
-      `${Ve.basename(e)}/ has ${r.length} .md entries (cap: ${es})`,
+      `${path.basename(e)}/ has ${r.length} .md entries (cap: ${es})`,
       "graders/: over file-count cap",
     );
   let i = [];
   for (let o of r) {
-    let u = Ve.join(e, o.name);
+    let u = path.join(e, o.name);
     if ((await getFileEntryKind(o, u, "other")) !== "dir") i.push(u);
   }
   return (i.sort(), i);
@@ -939,14 +936,14 @@ async function ds(e, t = ko()) {
     i = new Set(),
     o = [];
   for (let d of e) {
-    let p = Je.resolve(d);
+    let p = path.resolve(d);
     if (i.has(p)) continue;
     i.add(p);
     let h = t.layers.get(p);
     if (!h)
       ((h = (async () => {
         let _ = [];
-        return { raw: await xc(Je.join(d, "mocks"), _), notes: _ };
+        return { raw: await xc(path.join(d, "mocks"), _), notes: _ };
       })()),
         t.layers.set(p, h));
     let { raw: w, notes: E } = await h;
@@ -967,7 +964,7 @@ async function ds(e, t = ko()) {
     }
     for (let h of new Set(p.tools.values())) {
       if (h.kind !== "agent") continue;
-      let w = Je.join(Je.dirname(Je.dirname(h.sourceFile)), Or, d),
+      let w = path.join(path.dirname(path.dirname(h.sourceFile)), Or, d),
         E = t.pins.get(w);
       if (E === void 0) {
         let _ = [];
@@ -987,7 +984,7 @@ async function xc(e, t) {
   let r = new Map(),
     i;
   try {
-    (await assertPathIsLocal(Je.dirname(e), Je.basename(e), "mocks/"),
+    (await assertPathIsLocal(path.dirname(e), path.basename(e), "mocks/"),
       (i = fs(await readdir(e, { withFileTypes: !0 }))));
   } catch (o) {
     if (W(o)) {
@@ -1019,9 +1016,9 @@ async function xc(e, t) {
     );
   for (let o of i) {
     if (o.name.startsWith(".")) continue;
-    let u = await getFileEntryKind(o, Je.join(e, o.name), "unknown");
+    let u = await getFileEntryKind(o, path.join(e, o.name), "unknown");
     if (u !== "dir" && u !== "symlink" && u !== "unknown") continue;
-    let d = await Mc(Je.join(e, o.name), o.name, t);
+    let d = await Mc(path.join(e, o.name), o.name, t);
     if (d !== null) r.set(o.name, d);
   }
   return r;
@@ -1044,7 +1041,7 @@ async function Eo(e) {
 async function Mc(e, t, r) {
   let i;
   try {
-    (await assertPathIsLocal(Je.dirname(e), t, `mocks/${formatForDisplay(t)}/`),
+    (await assertPathIsLocal(path.dirname(e), t, `mocks/${formatForDisplay(t)}/`),
       (i = fs(await readdir(e, { withFileTypes: !0 }))));
   } catch (p) {
     if (W(p) || (A(p) === "ENOTDIR" && (await Eo(e))))
@@ -1073,14 +1070,14 @@ async function Mc(e, t, r) {
     u = null,
     d = new Map();
   for (let p of i) {
-    let h = Je.join(e, p.name);
+    let h = path.join(e, p.name);
     if (p.name === us) {
       d = await Fc(h, t);
       continue;
     }
     if (p.name.startsWith(".") || !p.name.endsWith(".md") || p.isDirectory())
       continue;
-    let w = Je.basename(p.name, ".md");
+    let w = path.basename(p.name, ".md");
     if (p.name !== nn && !vo.test(w))
       throw new R(
         `mocks/${t}/${formatForDisplay(p.name)}: name responder files after the tool (letters, digits, "_" and "-" only), e.g. list_issues.md`,
@@ -1118,7 +1115,7 @@ async function Mc(e, t, r) {
   return { dir: e, toolFiles: o, serverAgent: u, listings: d };
 }
 async function jc(e, t, r) {
-  let i = `mocks/${r}/${Je.basename(e)}`,
+  let i = `mocks/${r}/${path.basename(e)}`,
     o,
     u;
   try {
@@ -1144,7 +1141,7 @@ async function jc(e, t, r) {
     let C = lintExpectSpec(E);
     if (C.length > 0) throw new R(`${i}: ${C[0]}`, "mocks: invalid expect");
   }
-  if (w.tools !== void 0 && Je.basename(e) !== nn)
+  if (w.tools !== void 0 && path.basename(e) !== nn)
     throw new R(
       `${i}: \`tools:\` belongs in ${nn} (a <tool>.md answers the tool it is named after)`,
       "mocks: tools outside _server.md",
@@ -1256,7 +1253,7 @@ function Uc(e, t, r) {
       let p = i.get(d);
       if (p !== void 0 && p !== o.responder)
         r.push(
-          `mocks: ${Je.relative(Je.dirname(Je.dirname(o.responder.sourceFile)), o.responder.sourceFile)} will not see ${d} \u2014 answered by ${Je.relative(Je.dirname(Je.dirname(Je.dirname(Je.dirname(p.sourceFile)))), p.sourceFile)}, so its abort_when does not cover that tool`,
+          `mocks: ${path.relative(path.dirname(path.dirname(o.responder.sourceFile)), o.responder.sourceFile)} will not see ${d} \u2014 answered by ${path.relative(path.dirname(path.dirname(path.dirname(path.dirname(p.sourceFile)))), p.sourceFile)}, so its abort_when does not cover that tool`,
         );
     }
   let u = new Map(t.flatMap((d) => [...d.listings]));
@@ -1267,24 +1264,22 @@ function Uc(e, t, r) {
       /\b(abort|fail)\b[^.]{0,40}\b(eval|run)\b/i.test(d.prompt)
     )
       r.push(
-        `mocks: ${e}/${Je.basename(d.sourceFile)} mentions failing the run in its prose but has no abort_when: \u2014 only abort_when can abort`,
+        `mocks: ${e}/${path.basename(d.sourceFile)} mentions failing the run in its prose but has no abort_when: \u2014 only abort_when can abort`,
       );
   return { dirName: e, tools: i, listings: u, recordings: {} };
 }
 function ps(e, t, r) {
-  let i = Je.basename(t);
+  let i = path.basename(t);
   if (e instanceof R && e.message.startsWith(i) && !e.message.startsWith(r))
     return new R(`${r}${e.message.slice(i.length)}`, e.telemetryMessage);
   return e;
 }
 import { readlink } from "fs/promises";
-import Ue from "path";
-import Gc from "path";
 function we(e, t, r = Hc) {
   let i = r(e),
     o = r(t);
   return (
-    Gc.relative(i, o) !== "" &&
+    path.relative(i, o) !== "" &&
     wh(i, o, { alreadyComparable: !0, foldCase: !1 })
   );
 }
@@ -1322,14 +1317,14 @@ function Nr(e) {
   let t = e.trim();
   if (t === "") return { ok: !1, error: "must not be empty" };
   let r = t.replaceAll("\\", "/");
-  if (Ue.isAbsolute(t) || Ue.posix.isAbsolute(r) || /^[A-Za-z]:/.test(t))
+  if (path.isAbsolute(t) || path.posix.isAbsolute(r) || /^[A-Za-z]:/.test(t))
     return {
       ok: !1,
       error:
         "must be a relative path inside the plugin (e.g. quality/evals), not absolute",
     };
-  let o = Ue.normalize(r)
-    .split(Ue.sep)
+  let o = path.normalize(r)
+    .split(path.sep)
     .filter((h) => h !== "" && h !== ".");
   if (o.length === 0)
     return {
@@ -1367,7 +1362,7 @@ function Nr(e) {
       ok: !1,
       error: `must not pass through ${formatForDisplay(p)}, which case discovery always skips`,
     };
-  return { ok: !0, dir: o.join(Ue.sep), segments: o };
+  return { ok: !0, dir: o.join(path.sep), segments: o };
 }
 var To = [...PLUGIN_CONTENT_SUBDIRS, "bin"],
   bs = new Set(To),
@@ -1578,7 +1573,7 @@ async function jr(e) {
     if (t.kind === "absent") return [];
     if (t.kind === "broken") return [];
     throw new R(
-      `plugin eval: cannot read the plugin manifest (${escapeUntrustedText(Ue.relative(e, t.manifestPath))}${t.code ? `: ${t.code}` : ""}) to fence the suites it lists \u2014 refusing to run`,
+      `plugin eval: cannot read the plugin manifest (${escapeUntrustedText(path.relative(e, t.manifestPath))}${t.code ? `: ${t.code}` : ""}) to fence the suites it lists \u2014 refusing to run`,
       "plugin eval: manifest unreadable when building the read fence",
     );
   }
@@ -1630,7 +1625,7 @@ function Yc(e) {
 }
 async function ks(e, t, r) {
   try {
-    await assertPathIsLocal(e, Ue.relative(e, t), r);
+    await assertPathIsLocal(e, path.relative(e, t), r);
     let i = await Pt(t, Lr, r);
     return i === null ? { kind: "fellThrough" } : { kind: "text", text: i };
   } catch (i) {
@@ -1639,7 +1634,7 @@ async function ks(e, t, r) {
     if (o === "EISDIR")
       return {
         kind: "oversize",
-        reason: `${Ue.basename(t)} is a directory, not a file`,
+        reason: `${path.basename(t)} is a directory, not a file`,
       };
     return { kind: "oversize", reason: l(i), code: o };
   }
@@ -1647,16 +1642,16 @@ async function ks(e, t, r) {
 function Jc(e, t, r) {
   return validatePluginManifest(e, t, {
     pluginName:
-      Ue.basename(Ue.dirname(r)) === ".claude-plugin"
-        ? Ue.basename(Ue.dirname(Ue.dirname(r)))
-        : Ue.basename(Ue.dirname(r)),
+      path.basename(path.dirname(r)) === ".claude-plugin"
+        ? path.basename(path.dirname(path.dirname(r)))
+        : path.basename(path.dirname(r)),
     manifestPath: r,
   }).rawCandidate;
 }
 async function $r(e) {
   let t = null;
-  for (let i of [Ue.join(".claude-plugin", "plugin.json"), "plugin.json"]) {
-    let o = Ue.join(e, i),
+  for (let i of [path.join(".claude-plugin", "plugin.json"), "plugin.json"]) {
+    let o = path.join(e, i),
       u = await ks(e, o, "plugin manifest");
     if (u.kind === "fellThrough") continue;
     if (u.kind !== "text")
@@ -1682,13 +1677,13 @@ async function $r(e) {
     t = { manifestPath: o, raw: d, candidates: [{ sourcePath: o, data: p }] };
     break;
   }
-  let r = Ue.join(e, "SKILL.md");
+  let r = path.join(e, "SKILL.md");
   if (t !== null) return { kind: "ok", ...t };
   return { kind: "absent" };
 }
 async function Rs(e) {
   return (
-    (await ks(e, Ue.join(e, "SKILL.md"), "SKILL.md")).kind !== "fellThrough"
+    (await ks(e, path.join(e, "SKILL.md"), "SKILL.md")).kind !== "fellThrough"
   );
 }
 var qc = [
@@ -1773,7 +1768,7 @@ async function hs(e, t) {
   let i = [];
   for (let o of e) {
     let u,
-      d = Ue.join(t, ...o.relative.split("/"));
+      d = path.join(t, ...o.relative.split("/"));
     try {
       await assertPathIsLocal(t, o.relative, "declared component path");
     } catch {
@@ -1784,14 +1779,14 @@ async function hs(e, t) {
     } catch {
       try {
         if (!(await lstat(d)).isSymbolicLink()) continue;
-        u = Ue.resolve(Ue.dirname(d), await readlink(d));
+        u = path.resolve(path.dirname(d), await readlink(d));
       } catch {
         continue;
       }
     }
     let p = we(r, u) ? r : we(t, u) ? t : null;
     if (p === null) continue;
-    let h = Ue.relative(p, u).replaceAll("\\", "/");
+    let h = path.relative(p, u).replaceAll("\\", "/");
     if (h === o.relative) continue;
     let w = Ts(h);
     i.push(
@@ -1814,12 +1809,12 @@ function tu(e, t) {
   return [...i];
 }
 function nu(e, t) {
-  if (Ue.isAbsolute(t) || Ue.posix.isAbsolute(t)) return null;
+  if (path.isAbsolute(t) || path.posix.isAbsolute(t)) return null;
   let r = e.replaceAll("\\", "/"),
     i = r.startsWith("/") ? r : `/${r}`,
-    o = Ue.posix.resolve(i, t);
+    o = path.posix.resolve(i, t);
   if (o === i) return "";
-  let u = Ue.posix.relative(i, o);
+  let u = path.posix.relative(i, o);
   return u === "" || u === ".." || u.startsWith("../") ? null : u;
 }
 function Ts(e) {
@@ -1831,7 +1826,7 @@ function Ts(e) {
 async function Cs(e, t) {
   let r = e.kind === "ok" ? eu(e, t) : [],
     i = [...r, ...(await hs(r, t))],
-    o = await Promise.all(To.map((d) => lstat(Ue.join(t, d)).catch(() => null))),
+    o = await Promise.all(To.map((d) => lstat(path.join(t, d)).catch(() => null))),
     u = To.flatMap((d, p) =>
       o[p]?.isSymbolicLink()
         ? [
@@ -1969,12 +1964,10 @@ import {
   writeFile,
 } from "fs/promises";
 import Fu from "os";
-import ne from "path";
 import {
   readFile,
 } from "fs/promises";
 import { tmpdir, userInfo } from "os";
-import at from "path";
 var Lo =
   "is not owned by you, is writable by other users, is a symlink, or could not be fully examined (see --debug)";
 function er(e) {
@@ -2311,12 +2304,12 @@ async function vu(e, t, r) {
   await Fs(t);
   let i = [
       [e, "dir"],
-      [at.join(e, ".claude-plugin"), "dir-or-absent"],
+      [path.join(e, ".claude-plugin"), "dir-or-absent"],
     ],
     o = [
-      [at.join(e, ".claude-plugin", "plugin.json"), "file"],
-      [at.join(e, "plugin.json"), "file"],
-      [at.join(e, "SKILL.md"), "file"],
+      [path.join(e, ".claude-plugin", "plugin.json"), "file"],
+      [path.join(e, "plugin.json"), "file"],
+      [path.join(e, "SKILL.md"), "file"],
     ];
   if (!(await No(e, i, t, r)) || !(await No(e, o, t, r))) return !1;
   if (r === "core") return !0;
@@ -2348,9 +2341,9 @@ function ku(e) {
 }
 function Ru(e, t) {
   if (e === null) return !1;
-  let r = at.relative(e, t);
+  let r = path.relative(e, t);
   if (r === "") return !0;
-  let i = r.split(at.sep);
+  let i = r.split(path.sep);
   return (
     i.length % 2 === 0 &&
     i.every((o, u) => (u % 2 === 0 ? o.toLowerCase() === "modules" : o !== ""))
@@ -2379,7 +2372,7 @@ async function Su(e, t) {
       return { kind: "problem", problem: r };
     }
     for (let S of _) {
-      let C = at.join(w, S.name);
+      let C = path.join(w, S.name);
       if (Qn(S.name)) {
         let L = await getFileEntryKind(S, C, "unknown");
         if (L === "unknown")
@@ -2416,7 +2409,7 @@ async function Su(e, t) {
             return { kind: "problem", problem: i };
           }
           for (let F of N) {
-            let J = at.join(D, F.name);
+            let J = path.join(D, F.name);
             if (Qn(F.name))
               return {
                 kind: "problem",
@@ -2504,10 +2497,10 @@ async function Ou(e, t, r, i, o) {
 }
 async function Au(e, t, r) {
   let i = (E, _) =>
-    (_ === E || we(E, _)) && at.relative(E, _).split(at.sep).some(Qn);
+    (_ === E || we(E, _)) && path.relative(E, _).split(path.sep).some(Qn);
   if (i(t, e)) return "is a symlink inside repository metadata";
   try {
-    await assertPathIsLocal(t, at.relative(t, e), "in-tree link");
+    await assertPathIsLocal(t, path.relative(t, e), "in-tree link");
   } catch (E) {
     return `is a symlink that is refused: ${l(E)}`;
   }
@@ -2519,11 +2512,11 @@ async function Au(e, t, r) {
   }
   let u =
     "is a symlink that leaves the plugin tree (this plugin was not named, so only its own examined entries may load)";
-  if (at.isAbsolute(o))
+  if (path.isAbsolute(o))
     return "is an absolute symlink (this plugin was not named, so only relative links inside its own tree may load)";
-  let d = at.dirname(e);
+  let d = path.dirname(e);
   for (let E of o.split("/").filter((_) => _.length > 0))
-    if (((d = at.resolve(d, E)), d !== t && !we(t, d)))
+    if (((d = path.resolve(d, E)), d !== t && !we(t, d)))
       return we(d, t)
         ? "is a symlink that routes above the plugin directory"
         : u;
@@ -2545,7 +2538,7 @@ async function Au(e, t, r) {
   if (!we(h, p)) return u;
   let w;
   try {
-    w = await realpath(at.dirname(e));
+    w = await realpath(path.dirname(e));
   } catch (E) {
     return `is a symlink whose directory could not be resolved (${A(E) ?? "unknown error"})`;
   }
@@ -2578,7 +2571,7 @@ async function Gs(e, t, r, i) {
     d = t.modesByDevice.get(u);
   if (d !== void 0) return d;
   let p = typeof process.getuid === "function" ? process.getuid() : -1,
-    h = r ?? (o.isDirectory() ? e : at.dirname(e));
+    h = r ?? (o.isDirectory() ? e : path.dirname(e));
   t.tmpdirDevice ??= await lstat(tmpdir()).then(
     (E) => E.dev,
     () => -1,
@@ -2587,7 +2580,7 @@ async function Gs(e, t, r, i) {
   for (let E of w) {
     let _, S;
     try {
-      ((_ = await mkdtemp(at.join(E, ".claude-eval-modes-"))),
+      ((_ = await mkdtemp(path.join(E, ".claude-eval-modes-"))),
         (S = await open(_, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)));
       let C = await S.stat();
       if (C.dev !== u) continue;
@@ -2610,7 +2603,7 @@ async function Gs(e, t, r, i) {
               Promise.all(
                 D.filter((U) => U.startsWith(".claude-eval-modes-")).map(
                   async (U) => {
-                    let N = at.join(E, U),
+                    let N = path.join(E, U),
                       F = await lstat(N).catch(() => null);
                     if (F !== null && F.mtimeMs < L)
                       await rmdir(N).catch(() => {});
@@ -2628,7 +2621,6 @@ async function Gs(e, t, r, i) {
 import {
   chmod,
 } from "fs/promises";
-import $u from "path";
 var Lu = constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW;
 async function ln(e, { harnessOwned: t = !1 } = {}) {
   if (getCurrentPlatform() === "windows") return;
@@ -2660,7 +2652,7 @@ async function ln(e, { harnessOwned: t = !1 } = {}) {
   } catch {
     return;
   }
-  for (let o of i) await ln($u.join(e, o), { harnessOwned: t });
+  for (let o of i) await ln(path.join(e, o), { harnessOwned: t });
 }
 var Uu = 1048576,
   Hs = 16,
@@ -2677,9 +2669,9 @@ async function Ys(e, t = {}, r = {}) {
     h,
     w = [];
   try {
-    let F = ne.resolve(getCwd(), e);
-    if (((h = await Wo(F)), !p && !Nt(ne.basename(h)))) i.consentRoot ??= h;
-    let J = Nt(ne.basename(F)) ? ne.dirname(F) : F,
+    let F = path.resolve(getCwd(), e);
+    if (((h = await Wo(F)), !p && !Nt(path.basename(h)))) i.consentRoot ??= h;
+    let J = Nt(path.basename(F)) ? path.dirname(F) : F,
       K = await Vu(J);
     if (K.kind !== "ok")
       return {
@@ -2691,8 +2683,8 @@ async function Ys(e, t = {}, r = {}) {
             file: K.segment,
             error:
               K.kind === "climb"
-                ? `${escapeUntrustedText(ne.basename(K.segment))} is a symbolic link to its own parent directory or one above it \u2014 refusing to treat that as the suite`
-                : `${escapeUntrustedText(ne.basename(K.segment))} could not be examined (${K.code}) \u2014 refusing to treat that as the suite`,
+                ? `${escapeUntrustedText(path.basename(K.segment))} is a symbolic link to its own parent directory or one above it \u2014 refusing to treat that as the suite`
+                : `${escapeUntrustedText(path.basename(K.segment))} could not be examined (${K.code}) \u2014 refusing to treat that as the suite`,
           },
         ],
       };
@@ -2701,11 +2693,11 @@ async function Ys(e, t = {}, r = {}) {
     if (W(F) || Rt(F))
       return {
         cases: [],
-        root: ne.resolve(getCwd(), e),
+        root: path.resolve(getCwd(), e),
         suite: null,
         errors: [
           {
-            file: ne.resolve(getCwd(), e),
+            file: path.resolve(getCwd(), e),
             error: W(F)
               ? "no such file or directory (or not readable)"
               : `cannot be read (${A(F) ?? "unknown error"})`,
@@ -2717,17 +2709,17 @@ async function Ys(e, t = {}, r = {}) {
   let E,
     _ = !0,
     S = null;
-  if (Nt(ne.basename(h))) {
-    let F = ne.dirname(h),
+  if (Nt(path.basename(h))) {
+    let F = path.dirname(h),
       J = u && Xe(F, u) ? u : d ? null : (await Ko(F, i)).adopted;
     if (((E = J ?? F), (_ = J !== null), J === null && u && !Xe(F, u))) S = u;
   } else if (u && h !== u && Xe(h, u)) E = u;
   else if (((E = h), u && h !== u && !Xe(h, u))) S = u;
   let C = null;
   if (S !== null && o.length > 0) {
-    let F = Nt(ne.basename(e))
-        ? ne.dirname(ne.resolve(getCwd(), e))
-        : ne.resolve(getCwd(), e),
+    let F = Nt(path.basename(e))
+        ? path.dirname(path.resolve(getCwd(), e))
+        : path.resolve(getCwd(), e),
       J = await Qs(S, F),
       K = J === null ? null : await ea(S, J, o);
     if (K !== null && (pt(K, o, "exact") || pt(o, K, "exact"))) {
@@ -2737,18 +2729,18 @@ async function Ys(e, t = {}, r = {}) {
       }
     }
   }
-  let { caseDirs: L, skipped: D } = await Yu(h, o, u, ne.resolve(getCwd(), e), w),
+  let { caseDirs: L, skipped: D } = await Yu(h, o, u, path.resolve(getCwd(), e), w),
     U = [],
     N = [...D];
   for (let F of L) {
-    let J = ne.join(F, "case.yaml");
+    let J = path.join(F, "case.yaml");
     try {
       let [K, de] = await Promise.all([Ku(J), ts(F)]),
         re = de ? rs(K, de, F) : K,
         V = de && K ? "mixed" : de ? "prose" : "case_yaml",
         ie =
           re === null
-            ? ne.basename(F)
+            ? path.basename(F)
             : typeof re.name === "string" && re.name.length > 0
               ? re.name
               : void 0,
@@ -2798,7 +2790,7 @@ function Hu(e, t) {
 }
 async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
   let h = (S) => an(S, o),
-    w = ne.dirname(t),
+    w = path.dirname(t),
     E = await qs(w, r, o);
   if (
     E.nearest !== null &&
@@ -2813,7 +2805,7 @@ async function Bu(e, t, r, i, o, u, d = null, p = [rt]) {
   if (e.plugins && e.plugins.length > 0) {
     _ = [];
     for (let S of e.plugins) {
-      let C = ne.isAbsolute(S) ? S : ne.resolve(w, S);
+      let C = path.isAbsolute(S) ? S : path.resolve(w, S);
       await assertPathIsLocal(w, S, `case ${formatForDisplay(e.name)}: plugins entry`);
       let L;
       try {
@@ -2885,12 +2877,12 @@ async function Xs(e, t, r) {
     if (o.has(u)) continue;
     o.add(u);
     let d = r !== null && !Xe(u, t) && Xe(u, r) ? r : t,
-      p = ne.basename(u),
+      p = path.basename(u),
       h = null,
       w = !1,
       E = isPluginArchivePath(u);
     for (let _ of E ? [] : MANIFEST_IDENTITY_READ_RELPATHS) {
-      let S = ne.join(u, _),
+      let S = path.join(u, _),
         C = { link: !1 },
         L = await sa(u, _, d, void 0, C);
       if (L !== null) {
@@ -3011,7 +3003,7 @@ async function qs(e, t, r, i = 32) {
       if (w === void 0)
         ((w = (async () => {
           if (!(await Rs(h))) return !1;
-          for (let E of Bo) if (await Ho(ne.join(h, E))) return !1;
+          for (let E of Bo) if (await Ho(path.join(h, E))) return !1;
           return !0;
         })()),
           r.skillFolderProbes.set(h, w));
@@ -3022,10 +3014,10 @@ async function qs(e, t, r, i = 32) {
     p = (h) => ({ nearest: d ?? h, byManifest: h });
   for (let h = 0; h < i; h++) {
     if (Vrt(u)) return p(d);
-    if ((await Ho(ne.join(u, "plugin.json"))) || (await Wu(u))) return p(u);
+    if ((await Ho(path.join(u, "plugin.json"))) || (await Wu(u))) return p(u);
     if (d === null && (await o(u))) d = u;
     if (u === t) return p(d);
-    let w = ne.dirname(u);
+    let w = path.dirname(u);
     if (w === u) return p(d);
     u = w;
   }
@@ -3033,13 +3025,13 @@ async function qs(e, t, r, i = 32) {
 }
 async function Wu(e) {
   try {
-    let t = await lstat(ne.join(e, ".claude-plugin"));
+    let t = await lstat(path.join(e, ".claude-plugin"));
     if (t.isSymbolicLink()) return !0;
     if (!t.isDirectory()) return !1;
   } catch (t) {
     return !Zs(t);
   }
-  return Ho(ne.join(e, ".claude-plugin", "plugin.json"));
+  return Ho(path.join(e, ".claude-plugin", "plugin.json"));
 }
 async function Ho(e) {
   try {
@@ -3074,13 +3066,13 @@ function Nt(e) {
   return Bo.includes(e);
 }
 async function Wo(e) {
-  if (!Nt(ne.basename(e))) return realpath(e);
-  return (await lstat(e), ne.join(await realpath(ne.dirname(e)), ne.basename(e)));
+  if (!Nt(path.basename(e))) return realpath(e);
+  return (await lstat(e), path.join(await realpath(path.dirname(e)), path.basename(e)));
 }
 async function Vu(e) {
   let t = [];
-  for (let i = e; ; i = ne.dirname(i))
-    if ((t.unshift(i), ne.dirname(i) === i)) break;
+  for (let i = e; ; i = path.dirname(i))
+    if ((t.unshift(i), path.dirname(i) === i)) break;
   let r = [];
   for (let i of t) {
     let o, u;
@@ -3110,7 +3102,7 @@ async function Ko(e, t, r = "tree") {
 }
 async function Wr(e, t, r = "tree", i) {
   let o = i ?? (await rr(e, t)),
-    u = ne.dirname(o),
+    u = path.dirname(o),
     d = u === o ? null : await vn(u, null, t);
   if (d === null) return { adopted: null, refused: null, namedOnly: null };
   if (!(await Mo(e, t)) || !(await Mo(d, t)))
@@ -3122,8 +3114,8 @@ async function Wr(e, t, r = "tree", i) {
 async function zu(e, t) {
   try {
     return (
-      await assertPathIsLocal(e, t.join(ne.sep), "eval directory"),
-      await realpath(ne.join(e, ...t))
+      await assertPathIsLocal(e, t.join(path.sep), "eval directory"),
+      await realpath(path.join(e, ...t))
     );
   } catch {
     return null;
@@ -3131,13 +3123,13 @@ async function zu(e, t) {
 }
 async function Qs(e, t) {
   let r = [];
-  for (let i = t; ; i = ne.dirname(i))
-    if ((r.unshift(i), ne.dirname(i) === i)) break;
+  for (let i = t; ; i = path.dirname(i))
+    if ((r.unshift(i), path.dirname(i) === i)) break;
   for (let i of r) {
     let o = await realpath(i).catch(() => null);
     if (o === null) continue;
     if (o === e || Xe(o, e))
-      return [..._t(ne.relative(e, o)), ..._t(ne.relative(i, t))];
+      return [..._t(path.relative(e, o)), ..._t(path.relative(i, t))];
   }
   return null;
 }
@@ -3148,15 +3140,15 @@ async function ea(e, t, r) {
       d = r[o];
     if (u === d) continue;
     if (u.toLowerCase() !== d.toLowerCase()) break;
-    let p = ne.join(e, ...i.slice(0, o));
+    let p = path.join(e, ...i.slice(0, o));
     try {
       await assertPathIsLocal(p, d, "eval directory");
     } catch {
       break;
     }
     let [h, w] = await Promise.all([
-      stat(ne.join(p, u), { bigint: !0 }).catch(() => null),
-      stat(ne.join(p, d), { bigint: !0 }).catch(() => null),
+      stat(path.join(p, u), { bigint: !0 }).catch(() => null),
+      stat(path.join(p, d), { bigint: !0 }).catch(() => null),
     ]);
     if (
       h === null ||
@@ -3171,10 +3163,10 @@ async function ea(e, t, r) {
   return i;
 }
 function _t(e) {
-  return e.split(ne.sep).filter((t) => t !== "");
+  return e.split(path.sep).filter((t) => t !== "");
 }
 async function Yu(e, t, r, i, o = []) {
-  if (Nt(ne.basename(e))) return { caseDirs: [ne.dirname(e)], skipped: [] };
+  if (Nt(path.basename(e))) return { caseDirs: [path.dirname(e)], skipped: [] };
   let u = new Set(),
     d = [],
     p = t.length === 1 && t[0] === rt,
@@ -3187,18 +3179,18 @@ async function Yu(e, t, r, i, o = []) {
       (w = (L) => Ht(_t(L), t)),
       (E = () => !0));
   else if (r !== null && (Xe(e, r) || _ !== null)) {
-    let L = _t(ne.relative(r, e)),
+    let L = _t(path.relative(r, e)),
       D = _ === null ? L : await ea(r, _, t),
-      U = (F) => _t(ne.relative(r, F)),
-      N = (F) => [...D, ..._t(ne.relative(e, F))];
+      U = (F) => _t(path.relative(r, F)),
+      N = (F) => [...D, ..._t(path.relative(e, F))];
     ((h = pt(L, t, "exact") || pt(D, t, "exact")),
       (w = (F) => Pr(U(F), t) || Pr(N(F), t)),
       (E = (F) => pt(t, U(F), "exact") || pt(t, N(F), "exact")));
   } else {
     let L = getCurrentPlatform() === "macos" || getCurrentPlatform() === "windows" ? "folded" : "exact";
     ((h = Ht(_t(e), t, L) || Ht(_t(i), t, L)),
-      (w = (D) => Pr(_t(ne.relative(e, D)), t)),
-      (E = (D) => pt(t, _t(ne.relative(e, D)), "exact")));
+      (w = (D) => Pr(_t(path.relative(e, D)), t)),
+      (E = (D) => pt(t, _t(path.relative(e, D)), "exact")));
   }
   let S = await realpath(e).catch(() => e),
     C = {
@@ -3275,7 +3267,7 @@ async function ta(e, t, r, i, o, u) {
   u.onRoute.add(E);
   try {
     for (let S of w) {
-      let C = ne.join(e, S.name);
+      let C = path.join(e, S.name);
       if (Qn(S.name) || Yn.has(S.name)) {
         if (
           S.name === "mocks" &&
@@ -3298,11 +3290,11 @@ async function ta(e, t, r, i, o, u) {
           u.opensEvalDir(C) ||
           (!u.routeIndependent && u.mayLeadToEvalDir(C))
         )
-          d(`${t}${ne.sep}${S.name}`, C, N);
+          d(`${t}${path.sep}${S.name}`, C, N);
         else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
         continue;
       }
-      let D = ne.join(t, S.name),
+      let D = path.join(t, S.name),
         U = o || u.opensEvalDir(C);
       if (L === "symlink") {
         let N =
@@ -3310,7 +3302,7 @@ async function ta(e, t, r, i, o, u) {
             u.opensEvalDir(C) ||
             (!u.routeIndependent && u.mayLeadToEvalDir(C)),
           F = (K) => {
-            if (N) d(`${t}${ne.sep}${S.name}`, C, K);
+            if (N) d(`${t}${path.sep}${S.name}`, C, K);
             else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${K}`);
           };
         try {
@@ -3367,7 +3359,7 @@ async function ta(e, t, r, i, o, u) {
       if (!U && !u.mayLeadToEvalDir(C)) continue;
       if (Vrt(D) || Vrt(C)) {
         let N = `${S.name} is an automounter map directory \u2014 not scanned (listing it would reach network hosts)`;
-        if (U || !u.routeIndependent) d(`${t}${ne.sep}${S.name}`, C, N);
+        if (U || !u.routeIndependent) d(`${t}${path.sep}${S.name}`, C, N);
         else logForDebugging(`plugin eval: ${escapeUntrustedText(C)}: ${N}`);
         continue;
       }
@@ -3402,18 +3394,18 @@ var Ju = `[core]
 async function ra() {
   let e = getCurrentPlatform() === "macos" ? "/tmp" : Fu.tmpdir(),
     t = getCurrentPlatform() === "macos" ? "e-" : "claude-eval-",
-    r = await realpath(await mkdtemp(ne.join(e, t))),
-    i = ne.join(r, "config"),
-    o = ne.join(r, "home"),
-    u = ne.join(o, "cwd"),
-    d = ne.join(r, "out"),
-    p = ne.join(r, "tmp");
+    r = await realpath(await mkdtemp(path.join(e, t))),
+    i = path.join(r, "config"),
+    o = path.join(r, "home"),
+    u = path.join(o, "cwd"),
+    d = path.join(r, "out"),
+    p = path.join(r, "tmp");
   (await mkdir(u, { recursive: !0 }),
     await mkdir(i, { recursive: !0 }),
     await mkdir(d, { recursive: !0 }),
     await mkdir(p, { recursive: !0, mode: 448 }),
     await writeFile(
-      ne.join(i, ".claude.json"),
+      path.join(i, ".claude.json"),
       jsonStringify({
         hasCompletedOnboarding: !0,
         autoUpdates: !1,
@@ -3421,25 +3413,25 @@ async function ra() {
       }),
     ),
     await writeFile(
-      ne.join(o, ".gitconfig"),
+      path.join(o, ".gitconfig"),
       `[user]
 	name = Plugin Eval
 	email = eval@example.invalid
 `,
     ));
-  let h = ne.join(o, ".git");
+  let h = path.join(o, ".git");
   return (
-    await mkdir(ne.join(h, "objects"), { recursive: !0 }),
-    await mkdir(ne.join(h, "refs", "heads"), { recursive: !0 }),
-    await mkdir(ne.join(h, "hooks"), { recursive: !0 }),
+    await mkdir(path.join(h, "objects"), { recursive: !0 }),
+    await mkdir(path.join(h, "refs", "heads"), { recursive: !0 }),
+    await mkdir(path.join(h, "hooks"), { recursive: !0 }),
     await writeFile(
-      ne.join(h, "HEAD"),
+      path.join(h, "HEAD"),
       `ref: refs/heads/main
 `,
     ),
-    await writeFile(ne.join(h, "config"), Ju),
+    await writeFile(path.join(h, "config"), Ju),
     await writeFile(
-      ne.join(h, "commondir"),
+      path.join(h, "commondir"),
       `.
 `,
     ),
@@ -3461,9 +3453,9 @@ var nr = "a component that could not be inspected",
   oa = "a link that leaves the tree";
 async function sa(e, t, r, i = { hops: 16 }, o = { link: !1 }) {
   let u = e,
-    d = t.split(ne.sep);
+    d = t.split(path.sep);
   for (let [p, h] of d.entries()) {
-    u = ne.join(u, h);
+    u = path.join(u, h);
     let w;
     try {
       if (!(await lstat(u)).isSymbolicLink()) continue;
@@ -3475,10 +3467,10 @@ async function sa(e, t, r, i = { hops: 16 }, o = { link: !1 }) {
     if (Zu(w)) return nr;
     let E = Ks(w);
     if (E !== null) return E;
-    let _ = ne.resolve(ne.dirname(u), w);
+    let _ = path.resolve(path.dirname(u), w);
     if (_ === r || Xe(_, r)) {
       if (--i.hops < 0) return nr;
-      let S = await sa(r, ne.relative(r, _), r, i);
+      let S = await sa(r, path.relative(r, _), r, i);
       if (S !== null) return S;
       if (p !== d.length - 1) return nr;
       continue;
@@ -3504,28 +3496,28 @@ async function ed(e, t) {
   } catch {
     return !1;
   }
-  if (await td(ne.join(e, t))) return !0;
+  if (await td(path.join(e, t))) return !0;
   let r;
   try {
-    r = await readdir(ne.join(e, t), { withFileTypes: !0 });
+    r = await readdir(path.join(e, t), { withFileTypes: !0 });
   } catch {
     return !1;
   }
   for (let i of r.filter((o) => o.isDirectory()).slice(0, 64))
     try {
-      return (await lstat(ne.join(e, t, i.name, "case.yaml")), !0);
+      return (await lstat(path.join(e, t, i.name, "case.yaml")), !0);
     } catch {}
   return !1;
 }
 async function td(e) {
   for (let t of Bo)
     try {
-      return (await lstat(ne.join(e, t)), !0);
+      return (await lstat(path.join(e, t)), !0);
     } catch {}
   return !1;
 }
 import { randomBytes } from "crypto";
-import En, { basename } from "path";
+import { basename } from "path";
 async function ca(e) {
   let t = new Map();
   for (let r of e) {
@@ -3667,13 +3659,13 @@ var Vo = "mocks.json",
   Rn = "mock-recordings";
 function fa(e) {
   let t = randomBytes(6).toString("hex"),
-    r = En.join(e.outDir, "mock-calls.jsonl"),
+    r = path.join(e.outDir, "mock-calls.jsonl"),
     i = {},
     o = [],
     [u, ...d] = e.selfCommand;
   if (u === void 0) throw Error("buildRunMockFiles: empty selfCommand");
   for (let p of e.servers) {
-    let h = En.join(e.outDir, "mocks", `${p.segment}.json`),
+    let h = path.join(e.outDir, "mocks", `${p.segment}.json`),
       w = {
         registeredName: p.registeredName,
         server: p.loaded.dirName,
@@ -3705,7 +3697,7 @@ function fa(e) {
       }));
   }
   return {
-    configPath: En.join(e.outDir, Vo),
+    configPath: path.join(e.outDir, Vo),
     configJson: jsonStringify({ mcpServers: i }),
     stdioConfigs: i,
     specs: o,
@@ -3764,19 +3756,17 @@ function Tn(e) {
   );
 }
 function la(e, t) {
-  return En.join(En.dirname(En.dirname(e.sourceFile)), Or, t);
+  return path.join(path.dirname(path.dirname(e.sourceFile)), Or, t);
 }
-import ud from "path";
 function ma(e) {
   let t = getCwd();
-  return assertPathIsLocal(t, ud.resolve(t, e), "target", [getClaudeConfigDir()]);
+  return assertPathIsLocal(t, path.resolve(t, e), "target", [getClaudeConfigDir()]);
 }
 import {
   unlink,
 } from "fs/promises";
-import pd from "path";
 async function ga(e, t, r) {
-  let i = pd.basename(e),
+  let i = path.basename(e),
     o = () =>
       new R(`${i} is a symlink; use a regular file`, `${r}: symlink refused`),
     u = () =>
@@ -3965,7 +3955,6 @@ import { spawn } from "child_process";
 import {
   rm as Gl,
 } from "fs/promises";
-import br from "path";
 var ya = 300000;
 async function _a(e, t) {
   let r = hasCustomAuthorizationHeader();
@@ -4029,9 +4018,8 @@ async function _a(e, t) {
 import {
   rename,
 } from "fs/promises";
-import Kt from "path";
 function bd(e) {
-  return Kt.join(e.root, "sealed");
+  return path.join(e.root, "sealed");
 }
 async function Ea(e) {
   if (getCurrentPlatform() === "windows")
@@ -4069,8 +4057,8 @@ async function Ea(e) {
       throw Error("home/ or tmp/ is not a real directory");
     (await mkdir(t, { mode: 448 }),
       (r = await open(t, constants.O_RDONLY | constants.O_DIRECTORY | constants.O_NOFOLLOW)),
-      await rename(e.home, Kt.join(t, "home")),
-      await rename(e.tmpDir, Kt.join(t, "tmp")),
+      await rename(e.home, path.join(t, "home")),
+      await rename(e.tmpDir, path.join(t, "tmp")),
       await r.chmod(64),
       await i.chmod(320));
     let w = (N, F) =>
@@ -4085,8 +4073,8 @@ async function Ea(e) {
       [E, _, S, C, L, D] = await Promise.all([
         i.stat().then((N) => N.mode & 511),
         readdir(e.root).then((N) => N.sort().join("\x00")),
-        w(Kt.join(t, "home"), p),
-        w(Kt.join(t, "tmp"), h),
+        w(path.join(t, "home"), p),
+        w(path.join(t, "tmp"), h),
         lstat(e.home).then(
           () => !0,
           () => !1,
@@ -4096,7 +4084,7 @@ async function Ea(e) {
           () => !1,
         ),
       ]),
-      U = [Kt.basename(e.configDir), Kt.basename(e.outDir), Kt.basename(t)]
+      U = [path.basename(e.configDir), path.basename(e.outDir), path.basename(t)]
         .sort()
         .join("\x00");
     if (E !== 320 || _ !== U || !S || !C || L || D)
@@ -4128,7 +4116,6 @@ import {
   symlink,
 } from "fs/promises";
 import Ot from "os";
-import k from "path";
 import { fileURLToPath } from "url";
 var vd = createLazyValue(() =>
     c({
@@ -4271,7 +4258,7 @@ function ri() {
 }
 var vt = ".eval-artifacts";
 function gr(e) {
-  return k.join(e.outDir, "stub-publishes");
+  return path.join(e.outDir, "stub-publishes");
 }
 async function Pd(e, t) {
   let r = gr(e),
@@ -4303,7 +4290,7 @@ async function Pd(e, t) {
   try {
     let o = await Kf(r, t),
       u = new Set(
-        o.flatMap((p) => (p.env === "stub" ? [k.basename(p.payloadDir)] : [])),
+        o.flatMap((p) => (p.env === "stub" ? [path.basename(p.payloadDir)] : [])),
       ),
       d = await lstat(r);
     if (
@@ -4317,7 +4304,7 @@ async function Pd(e, t) {
         "eval: stub publish staging dir changed",
       );
     for (let p of await readdir(r))
-      if (!u.has(p)) await Gt(k.join(r, p), { recursive: !0, force: !0 });
+      if (!u.has(p)) await Gt(path.join(r, p), { recursive: !0, force: !0 });
     return (await Yf(r, o), o);
   } catch (o) {
     throw (
@@ -4342,7 +4329,7 @@ async function Za(e) {
       mocks: p,
       credential: h,
     } = e,
-    w = k.join(r.outDir, "trace.jsonl"),
+    w = path.join(r.outDir, "trace.jsonl"),
     E = await Qa(t),
     _ = await nl(t, E),
     S = await Nd(t, r, i, o, p?.configPath, E, _),
@@ -4390,8 +4377,8 @@ async function Dd(e, t, r, i, o, { addDirs: u, readScope: d }) {
       }
     }
   await If(h, r);
-  for (let J of [k.join(".config", "git"), k.join(".local", "lib"), ...qr])
-    await mkdir(k.join(h.home, J), { recursive: !0 });
+  for (let J of [path.join(".config", "git"), path.join(".local", "lib"), ...qr])
+    await mkdir(path.join(h.home, J), { recursive: !0 });
   await $d(h, w, E, p, r, void 0, { addDirs: u, readScope: d });
   let [U = process.execPath, ...N] = ri(),
     F = [...N, ...t];
@@ -4615,11 +4602,11 @@ async function Nd(e, t, r, i, o, u, d) {
     `${EDIT_TOOL_NAME}(${it(t.outDir)}/**)`,
     ...w.map((S) => `${EDIT_TOOL_NAME}(${it(S)}/**)`),
     ...Kd.flatMap((S) => [
-      `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, S))})`,
-      `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, S))}/**)`,
+      `${EDIT_TOOL_NAME}(${it(path.join(t.cwd, S))})`,
+      `${EDIT_TOOL_NAME}(${it(path.join(t.cwd, S))}/**)`,
     ]),
-    `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, vt))})`,
-    `${EDIT_TOOL_NAME}(${it(k.join(t.cwd, vt))}/**)`,
+    `${EDIT_TOOL_NAME}(${it(path.join(t.cwd, vt))})`,
+    `${EDIT_TOOL_NAME}(${it(path.join(t.cwd, vt))}/**)`,
     ...d.denies,
     ...d.denyPaths.flatMap((S) => [`${EDIT_TOOL_NAME}(${it(S)})`, `${EDIT_TOOL_NAME}(${it(S)}/**)`]),
   ];
@@ -4709,13 +4696,13 @@ async function $d(e, t, r, i, o, u, d) {
       ...D,
       e.operatorConfigDir,
       ...(await Vt(dedupe([...i.pluginDirsUnderTest, i.caseDir]))).map(Fa),
-      k.dirname(e.root),
+      path.dirname(e.root),
       ...zo(),
       Ot.tmpdir(),
       _("XDG_RUNTIME_DIR") ?? process.env.XDG_RUNTIME_DIR ?? "",
       _("CLAUDE_CODE_FEDERATION_CACHE_DIR") ?? "",
       a.CLAUDE_CODE_TMPDIR
-        ? k.join(a.CLAUDE_CODE_TMPDIR, `claude-${process.getuid?.() ?? ""}`)
+        ? path.join(a.CLAUDE_CODE_TMPDIR, `claude-${process.getuid?.() ?? ""}`)
         : "",
       a.CLAUDE_CODE_TMPDIR ?? "",
       a.XDG_CONFIG_HOME ?? "",
@@ -4723,7 +4710,7 @@ async function $d(e, t, r, i, o, u, d) {
       a.XDG_CACHE_HOME ?? "",
       a.XDG_STATE_HOME ?? "",
     ])
-      .filter((I) => I !== "" && k.isAbsolute(I))
+      .filter((I) => I !== "" && path.isAbsolute(I))
       .filter((I) => !qo(I)),
     N = await Vt(U);
   if (N.some(Dn))
@@ -4742,8 +4729,8 @@ async function $d(e, t, r, i, o, u, d) {
       await zt(
         Promise.all(
           (C ?? "")
-            .split(k.delimiter)
-            .filter((I) => k.isAbsolute(I) && (!V(I) || re(I)))
+            .split(path.delimiter)
+            .filter((I) => path.isAbsolute(I) && (!V(I) || re(I)))
             .map((I) => realpath(I).catch(() => null)),
         ),
       )
@@ -4773,11 +4760,11 @@ async function $d(e, t, r, i, o, u, d) {
           Promise.all(
             [...CA_BUNDLE_ENV_VARS, "NODE_EXTRA_CA_CERTS"]
               .map((I) => _(I)?.trim())
-              .filter((I) => !!I && k.isAbsolute(I) && (!V(I) || re(I)))
+              .filter((I) => !!I && path.isAbsolute(I) && (!V(I) || re(I)))
               .map(async (I) =>
-                k.join(
-                  await realpath(k.dirname(I)).catch(() => k.dirname(I)),
-                  k.basename(I),
+                path.join(
+                  await realpath(path.dirname(I)).catch(() => path.dirname(I)),
+                  path.basename(I),
                 ),
               ),
           ),
@@ -4811,8 +4798,8 @@ async function $d(e, t, r, i, o, u, d) {
       process.env.ANTHROPIC_CONFIG_DIR?.trim() ||
       getAnthropicConfigDir() ||
       "",
-    ue = k.join(ja(), "anthropic"),
-    Ie = dedupe([ue, Te].filter((I) => I && k.isAbsolute(I))),
+    ue = path.join(ja(), "anthropic"),
+    Ie = dedupe([ue, Te].filter((I) => I && path.isAbsolute(I))),
     Ne = (
       await Promise.all(
         Ie.map((I) =>
@@ -4828,43 +4815,43 @@ async function $d(e, t, r, i, o, u, d) {
           .filter(([q]) => q.toUpperCase() === I)
           .map(([, q]) => q)
           .filter((q) => q !== void 0)
-          .flatMap((q) => (qd.has(I) ? q.split(k.delimiter) : [q]))
+          .flatMap((q) => (qd.has(I) ? q.split(path.delimiter) : [q]))
           .filter((q) => !(I === "GOENV" && q.trim() === "off")),
       ),
     ee = Ot.homedir(),
     Ye = (I) => I.replace(/^~(?=[\\/]|$)/, ee),
     Le = xa.flatMap(lt).map(Ye);
-  if (Le.some((I) => I && I.trim() !== "" && !k.isAbsolute(I.trim())))
+  if (Le.some((I) => I && I.trim() !== "" && !path.isAbsolute(I.trim())))
     throw ce(
       "a credentials pointer variable (AWS_CONFIG_FILE, GOOGLE_APPLICATION_CREDENTIALS, ANTHROPIC_CONFIG_DIR and the like) holds a relative path",
     );
-  let Ze = (I) => !!I && k.isAbsolute(I),
+  let Ze = (I) => !!I && path.isAbsolute(I),
     Ce = (I, q) => {
       let ke = Ye(We(I)?.trim() || q);
-      if (!k.isAbsolute(ke)) throw ce(`${I} holds a relative path`);
+      if (!path.isAbsolute(ke)) throw ce(`${I} holds a relative path`);
       return ke;
     },
     ve = (I, q) => dedupe([q, Ce(I, q)].filter(Ze)),
     Ke = [
-      ...ve("AWS_CONFIG_FILE", k.join(ee, ".aws", "config")),
-      ...ve("AWS_SHARED_CREDENTIALS_FILE", k.join(ee, ".aws", "credentials")),
+      ...ve("AWS_CONFIG_FILE", path.join(ee, ".aws", "config")),
+      ...ve("AWS_SHARED_CREDENTIALS_FILE", path.join(ee, ".aws", "credentials")),
     ],
-    ot = Ce("CLOUDSDK_CONFIG", k.join(ee, ".config", "gcloud")),
+    ot = Ce("CLOUDSDK_CONFIG", path.join(ee, ".config", "gcloud")),
     Re = (I) => {
       let q = We(I)?.trim();
       if (!q) return [];
       let ke = Ye(q);
-      if (!k.isAbsolute(ke)) throw ce(`${I} holds a relative path`);
+      if (!path.isAbsolute(ke)) throw ce(`${I} holds a relative path`);
       return [ke];
     },
     Ae = [
       ...Re("GOOGLE_APPLICATION_CREDENTIALS"),
       ...Re("CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE"),
-      ...ve("CLOUDSDK_CONFIG", k.join(ee, ".config", "gcloud")).map((I) =>
-        k.join(I, "application_default_credentials.json"),
+      ...ve("CLOUDSDK_CONFIG", path.join(ee, ".config", "gcloud")).map((I) =>
+        path.join(I, "application_default_credentials.json"),
       ),
     ].filter(Ze),
-    Qe = Ce("AZURE_CONFIG_DIR", k.join(ee, ".azure")),
+    Qe = Ce("AZURE_CONFIG_DIR", path.join(ee, ".azure")),
     gt = Re("CLOUDSDK_ROOT_DIR")[0],
     et = ja(),
     Mt = dedupe(
@@ -4873,10 +4860,10 @@ async function $d(e, t, r, i, o, u, d) {
         .filter((I) => !!I)
         .map(Ye),
     );
-  if (Mt.some((I) => !k.isAbsolute(I)))
+  if (Mt.some((I) => !path.isAbsolute(I)))
     throw ce("an npm prefix variable holds a relative path");
   let xe = [
-      ...Re("PGSYSCONFDIR").map((I) => k.join(I, "pg_service.conf")),
+      ...Re("PGSYSCONFDIR").map((I) => path.join(I, "pg_service.conf")),
       "/etc/postgresql-common/pg_service.conf",
       "/etc/pg_service.conf",
       "/usr/local/etc/postgresql/pg_service.conf",
@@ -4896,130 +4883,130 @@ async function $d(e, t, r, i, o, u, d) {
           );
         }
       else if (/^[a-z][a-z0-9+.-]*:\/\//i.test(I)) return [];
-      if (!k.isAbsolute(q))
+      if (!path.isAbsolute(q))
         throw ce("COURSIER_CREDENTIALS holds a relative path");
       return [q];
     },
     Me = [
-      ...ve("DOCKER_CONFIG", k.join(ee, ".docker")).flatMap((I) => [
-        k.join(I, "config.json"),
-        k.join(I, "contexts"),
-        k.join(I, "key.pem"),
+      ...ve("DOCKER_CONFIG", path.join(ee, ".docker")).flatMap((I) => [
+        path.join(I, "config.json"),
+        path.join(I, "contexts"),
+        path.join(I, "key.pem"),
       ]),
-      ...ve("DOCKER_CERT_PATH", k.join(ee, ".docker")).map((I) =>
-        k.join(I, "key.pem"),
+      ...ve("DOCKER_CERT_PATH", path.join(ee, ".docker")).map((I) =>
+        path.join(I, "key.pem"),
       ),
       ...dedupe([
-        k.join(ee, ".config", "gh"),
-        ...ve("GH_CONFIG_DIR", k.join(et, "gh")),
-      ]).map((I) => k.join(I, "hosts.yml")),
-      ...ve("NETRC", k.join(ee, ".netrc")),
-      ...ve("NPM_CONFIG_USERCONFIG", k.join(ee, ".npmrc")),
+        path.join(ee, ".config", "gh"),
+        ...ve("GH_CONFIG_DIR", path.join(et, "gh")),
+      ]).map((I) => path.join(I, "hosts.yml")),
+      ...ve("NETRC", path.join(ee, ".netrc")),
+      ...ve("NPM_CONFIG_USERCONFIG", path.join(ee, ".npmrc")),
       ...ve("NPM_CONFIG_GLOBALCONFIG", "/usr/local/etc/npmrc"),
       "/opt/homebrew/etc/npmrc",
       "/usr/etc/npmrc",
       "/etc/npmrc",
-      ...Mt.map((I) => k.join(I, "etc", "npmrc")),
-      k.join(ee, ".vault-token"),
-      k.join(ee, ".boto"),
+      ...Mt.map((I) => path.join(I, "etc", "npmrc")),
+      path.join(ee, ".vault-token"),
+      path.join(ee, ".boto"),
       "/etc/boto.cfg",
-      k.join(ee, ".s3cfg"),
+      path.join(ee, ".s3cfg"),
       ...(We("BOTO_PATH") ?? "")
-        .split(k.delimiter)
+        .split(path.delimiter)
         .map((I) => I.trim())
         .filter(Boolean)
         .map((I) => {
           let q = Ye(I);
-          if (!k.isAbsolute(q)) throw ce("BOTO_PATH names a relative path");
+          if (!path.isAbsolute(q)) throw ce("BOTO_PATH names a relative path");
           return q;
         }),
-      k.join(et, "sops", "age", "keys.txt"),
-      k.join(ee, ".config", "sops", "age", "keys.txt"),
-      k.join(ee, "Library", "Application Support", "sops", "age", "keys.txt"),
-      k.join(ee, ".vault_pass.txt"),
+      path.join(et, "sops", "age", "keys.txt"),
+      path.join(ee, ".config", "sops", "age", "keys.txt"),
+      path.join(ee, "Library", "Application Support", "sops", "age", "keys.txt"),
+      path.join(ee, ".vault_pass.txt"),
       ...(await wp(We, ee, he())),
       ...(await to(We("GIT_SSH_COMMAND") ?? "", ee)),
-      k.join(ee, ".yarnrc.yml"),
-      k.join(ee, ".yarnrc"),
-      k.join(ee, ".bunfig.toml"),
-      k.join(et, ".bunfig.toml"),
+      path.join(ee, ".yarnrc.yml"),
+      path.join(ee, ".yarnrc"),
+      path.join(ee, ".bunfig.toml"),
+      path.join(et, ".bunfig.toml"),
       ...Re("HF_HOME").flatMap((I) => [
-        k.join(I, "token"),
-        k.join(I, "stored_tokens"),
+        path.join(I, "token"),
+        path.join(I, "stored_tokens"),
       ]),
-      k.join(et, "containers", "auth.json"),
-      ...Re("XDG_RUNTIME_DIR").map((I) => k.join(I, "containers", "auth.json")),
-      ...ve("CARGO_HOME", k.join(ee, ".cargo")).flatMap((I) => [
-        k.join(I, "credentials.toml"),
-        k.join(I, "credentials"),
+      path.join(et, "containers", "auth.json"),
+      ...Re("XDG_RUNTIME_DIR").map((I) => path.join(I, "containers", "auth.json")),
+      ...ve("CARGO_HOME", path.join(ee, ".cargo")).flatMap((I) => [
+        path.join(I, "credentials.toml"),
+        path.join(I, "credentials"),
       ]),
       ...dedupe([
-        k.join(et, "composer"),
-        k.join(ee, ".composer"),
-        ...ve("COMPOSER_HOME", k.join(ee, ".config", "composer")),
-      ]).map((I) => k.join(I, "auth.json")),
-      ...ve("GRADLE_USER_HOME", k.join(ee, ".gradle")).map((I) =>
-        k.join(I, "gradle.properties"),
+        path.join(et, "composer"),
+        path.join(ee, ".composer"),
+        ...ve("COMPOSER_HOME", path.join(ee, ".config", "composer")),
+      ]).map((I) => path.join(I, "auth.json")),
+      ...ve("GRADLE_USER_HOME", path.join(ee, ".gradle")).map((I) =>
+        path.join(I, "gradle.properties"),
       ),
-      k.join(ee, ".m2", "settings.xml"),
-      k.join(ee, ".m2", "settings-security.xml"),
+      path.join(ee, ".m2", "settings.xml"),
+      path.join(ee, ".m2", "settings-security.xml"),
       ...up(We),
-      ...Re("M2_HOME").map((I) => k.join(I, "conf", "settings.xml")),
-      ...Re("MAVEN_HOME").map((I) => k.join(I, "conf", "settings.xml")),
+      ...Re("M2_HOME").map((I) => path.join(I, "conf", "settings.xml")),
+      ...Re("MAVEN_HOME").map((I) => path.join(I, "conf", "settings.xml")),
       ...(Re("LEIN_HOME")[0] !== void 0
         ? Re("LEIN_HOME")
-        : [k.join(ee, ".lein")]
+        : [path.join(ee, ".lein")]
       ).flatMap((I) => [
-        k.join(I, "profiles.clj"),
-        k.join(I, "credentials.clj"),
-        k.join(I, "credentials.clj.gpg"),
+        path.join(I, "profiles.clj"),
+        path.join(I, "credentials.clj"),
+        path.join(I, "credentials.clj.gpg"),
       ]),
       ...Re("BUNDLE_CONFIG"),
       ...Re("BUNDLE_USER_CONFIG"),
-      ...Re("BUNDLE_USER_HOME").map((I) => k.join(I, "config")),
-      k.join(ee, ".bundle", "config"),
-      ...Re("BUNDLE_APP_CONFIG").map((I) => k.join(I, "config")),
+      ...Re("BUNDLE_USER_HOME").map((I) => path.join(I, "config")),
+      path.join(ee, ".bundle", "config"),
+      ...Re("BUNDLE_APP_CONFIG").map((I) => path.join(I, "config")),
       "/usr/local/bundle/config",
-      k.join(ee, ".gem", "credentials"),
-      k.join(ee, ".local", "share", "gem", "credentials"),
+      path.join(ee, ".gem", "credentials"),
+      path.join(ee, ".local", "share", "gem", "credentials"),
       ...[
-        ...ve("HELM_CONFIG_HOME", k.join(et, "helm")),
-        k.join(ee, "Library", "Preferences", "helm"),
+        ...ve("HELM_CONFIG_HOME", path.join(et, "helm")),
+        path.join(ee, "Library", "Preferences", "helm"),
       ].flatMap((I) => [
-        k.join(I, "registry", "config.json"),
-        k.join(I, "repositories.yaml"),
+        path.join(I, "registry", "config.json"),
+        path.join(I, "repositories.yaml"),
       ]),
-      k.join(ee, ".nuget", "NuGet", "NuGet.Config"),
-      k.join(ee, ".config", "NuGet", "NuGet.Config"),
-      k.join(et, "NuGet", "NuGet.Config"),
+      path.join(ee, ".nuget", "NuGet", "NuGet.Config"),
+      path.join(ee, ".config", "NuGet", "NuGet.Config"),
+      path.join(et, "NuGet", "NuGet.Config"),
       ...["KRB5CCNAME", "KRB5_KTNAME", "KRB5_CLIENT_KTNAME"].flatMap((I) =>
         fl(We(I)),
       ),
       ...(await dp(We("KRB5_CONFIG"))),
-      k.join(ee, ".pypirc"),
-      k.join(et, "pypoetry", "auth.toml"),
-      k.join(ee, "Library", "Application Support", "pypoetry", "auth.toml"),
-      k.join(ee, ".condarc"),
+      path.join(ee, ".pypirc"),
+      path.join(et, "pypoetry", "auth.toml"),
+      path.join(ee, "Library", "Application Support", "pypoetry", "auth.toml"),
+      path.join(ee, ".condarc"),
       ...[
         "/etc/conda",
         "/var/lib/conda",
-        k.join(et, "conda"),
-        k.join(ee, ".config", "conda"),
-        k.join(ee, ".conda"),
+        path.join(et, "conda"),
+        path.join(ee, ".config", "conda"),
+        path.join(ee, ".conda"),
       ].flatMap((I) => [
-        k.join(I, ".condarc"),
-        k.join(I, "condarc"),
-        k.join(I, "condarc.d"),
+        path.join(I, ".condarc"),
+        path.join(I, "condarc"),
+        path.join(I, "condarc.d"),
       ]),
       ...Re("CONDARC"),
-      ...Re("POETRY_CONFIG_DIR").map((I) => k.join(I, "auth.toml")),
-      k.join(et, "uv", "uv.toml"),
+      ...Re("POETRY_CONFIG_DIR").map((I) => path.join(I, "auth.toml")),
+      path.join(et, "uv", "uv.toml"),
       ...Re("UV_CONFIG_FILE"),
-      k.join(ee, ".sbt", ".credentials"),
+      path.join(ee, ".sbt", ".credentials"),
       ...Re("SBT_CREDENTIALS"),
-      k.join(ee, ".ivy2", ".credentials"),
-      k.join(et, "coursier", "credentials.properties"),
-      k.join(
+      path.join(ee, ".ivy2", ".credentials"),
+      path.join(et, "coursier", "credentials.properties"),
+      path.join(
         ee,
         "Library",
         "Preferences",
@@ -5027,16 +5014,16 @@ async function $d(e, t, r, i, o, u, d) {
         "credentials.properties",
       ),
       ...Re("COURSIER_CONFIG_DIR").map((I) =>
-        k.join(I, "credentials.properties"),
+        path.join(I, "credentials.properties"),
       ),
       ...ct(),
-      k.join(et, "rclone", "rclone.conf"),
-      k.join(ee, ".config", "rclone", "rclone.conf"),
-      k.join(ee, ".rclone.conf"),
-      k.join(ee, ".pgpass"),
-      k.join(ee, ".pg_service.conf"),
+      path.join(et, "rclone", "rclone.conf"),
+      path.join(ee, ".config", "rclone", "rclone.conf"),
+      path.join(ee, ".rclone.conf"),
+      path.join(ee, ".pgpass"),
+      path.join(ee, ".pg_service.conf"),
       ...(await bp([
-        k.join(ee, ".pg_service.conf"),
+        path.join(ee, ".pg_service.conf"),
         ...Re("PGSERVICEFILE"),
         ...xe,
       ])),
@@ -5046,35 +5033,35 @@ async function $d(e, t, r, i, o, u, d) {
       "/usr/local/etc/wgetrc",
       "/opt/homebrew/etc/wgetrc",
       "/opt/local/etc/wgetrc",
-      k.join(ee, ".postgresql", "postgresql.key"),
-      k.join(ee, ".terraformrc"),
-      k.join(ee, ".terraform.d", "credentials.tfrc.json"),
-      k.join(ee, ".wgetrc"),
-      k.join(et, "curlrc"),
-      k.join(et, "pip", "pip.conf"),
-      k.join(ee, ".pip", "pip.conf"),
-      k.join(ee, "Library", "Application Support", "pip", "pip.conf"),
+      path.join(ee, ".postgresql", "postgresql.key"),
+      path.join(ee, ".terraformrc"),
+      path.join(ee, ".terraform.d", "credentials.tfrc.json"),
+      path.join(ee, ".wgetrc"),
+      path.join(et, "curlrc"),
+      path.join(et, "pip", "pip.conf"),
+      path.join(ee, ".pip", "pip.conf"),
+      path.join(ee, "Library", "Application Support", "pip", "pip.conf"),
       "/etc/pip.conf",
       "/etc/xdg/pip/pip.conf",
-      ...ve("CURL_HOME", ee).map((I) => k.join(I, ".curlrc")),
-      ...(gt && k.isAbsolute(gt) ? [k.join(gt, "properties")] : []),
-      k.join(ee, ".git-credentials"),
-      k.join(ee, ".config", "git", "credentials"),
-      k.join(et, "git", "credentials"),
-      k.join(ee, ".kube", "cache", "kubelogin"),
-      k.join(ee, ".kube", "cache", "oidc-login"),
+      ...ve("CURL_HOME", ee).map((I) => path.join(I, ".curlrc")),
+      ...(gt && path.isAbsolute(gt) ? [path.join(gt, "properties")] : []),
+      path.join(ee, ".git-credentials"),
+      path.join(ee, ".config", "git", "credentials"),
+      path.join(et, "git", "credentials"),
+      path.join(ee, ".kube", "cache", "kubelogin"),
+      path.join(ee, ".kube", "cache", "oidc-login"),
     ].filter(Ze),
-    jt = (_("PATH") ?? "").split(k.delimiter).filter((I) => k.isAbsolute(I)),
+    jt = (_("PATH") ?? "").split(path.delimiter).filter((I) => path.isAbsolute(I)),
     mn = await zt(yp(jt)),
     kr = dedupe(
       [
-        k.join(ee, ".kube", "config"),
-        ...(We("KUBECONFIG") ?? "").split(k.delimiter),
+        path.join(ee, ".kube", "config"),
+        ...(We("KUBECONFIG") ?? "").split(path.delimiter),
       ]
         .map((I) => Ye(I.trim()))
         .filter(Boolean)
         .map((I) => {
-          if (!k.isAbsolute(I)) throw ce("KUBECONFIG names a relative path");
+          if (!path.isAbsolute(I)) throw ce("KUBECONFIG names a relative path");
           return I;
         }),
     ),
@@ -5123,17 +5110,17 @@ async function $d(e, t, r, i, o, u, d) {
       ["GIT_CONFIG_GLOBAL", "GIT_CONFIG_SYSTEM"].flatMap((I) => {
         let q = We(I)?.trim();
         if (!q) return [];
-        if (!k.isAbsolute(q)) throw ce(`${I} holds a relative path`);
+        if (!path.isAbsolute(q)) throw ce(`${I} holds a relative path`);
         return [q];
       }),
     uo = [
-      ...(await pr(k.join(L, ".ssh", "config"), L)),
+      ...(await pr(path.join(L, ".ssh", "config"), L)),
       ...(await pr("/etc/ssh/ssh_config", L, 0, "/etc/ssh")),
       ...(
         await Promise.all(
           dedupe([
-            k.join(L, ".gitconfig"),
-            k.join(et, "git", "config"),
+            path.join(L, ".gitconfig"),
+            path.join(et, "git", "config"),
             ...Gn(),
             ...Op,
           ]).map((I) => Nn(I, L)),
@@ -5153,7 +5140,7 @@ async function $d(e, t, r, i, o, u, d) {
       ...(await Promise.all(Ae.map(za))).flat(),
       ...(
         await Promise.all(
-          ve("CLOUDSDK_CONFIG", k.join(ee, ".config", "gcloud")).map((I) =>
+          ve("CLOUDSDK_CONFIG", path.join(ee, ".config", "gcloud")).map((I) =>
             Rp(I, gt).then(async ({ overrides: q, tokenFiles: ke }) => [
               ...q,
               ...ke,
@@ -5163,7 +5150,7 @@ async function $d(e, t, r, i, o, u, d) {
         )
       ).flat(),
       ...(
-        await Promise.all(ve("AZURE_CONFIG_DIR", k.join(ee, ".azure")).map(Ep))
+        await Promise.all(ve("AZURE_CONFIG_DIR", path.join(ee, ".azure")).map(Ep))
       ).flat(),
     ],
     Qt = dedupe(
@@ -5179,7 +5166,7 @@ async function $d(e, t, r, i, o, u, d) {
         ...kr,
         ...qt,
       ]
-        .filter((I) => !!I && k.isAbsolute(I))
+        .filter((I) => !!I && path.isAbsolute(I))
         .filter((I) => I !== $n),
     ),
     en = xa.filter((I) => !Zd.has(I)).flatMap(lt),
@@ -5189,29 +5176,29 @@ async function $d(e, t, r, i, o, u, d) {
         ...en.map((I) => I.trim()),
         ...Ne,
         ...qt.filter((I) => !Rr.has(I)),
-      ].filter((I) => !!I && k.isAbsolute(I)),
+      ].filter((I) => !!I && path.isAbsolute(I)),
     ),
     B = [],
     Z = new Map();
   for (let [I, q, ke] of [
-    [k.join(L, ".aws"), "AWS (~/.aws)", Ua],
-    [k.join(ee, ".config", "gcloud"), "gcloud (~/.config/gcloud)", Pn],
+    [path.join(L, ".aws"), "AWS (~/.aws)", Ua],
+    [path.join(ee, ".config", "gcloud"), "gcloud (~/.config/gcloud)", Pn],
     [ot, "gcloud (CLOUDSDK_CONFIG)", Pn],
-    [k.join(ee, ".azure"), "Azure CLI (~/.azure)", Pn],
+    [path.join(ee, ".azure"), "Azure CLI (~/.azure)", Pn],
     [Qe, "Azure CLI (AZURE_CONFIG_DIR)", Pn],
     [ue, "Anthropic profile (default)", Pn],
-    [k.join(L, ".ssh"), "SSH (~/.ssh)", Sf],
-    ...ve("GNUPGHOME", k.join(L, ".gnupg")).map((Oe) => [
+    [path.join(L, ".ssh"), "SSH (~/.ssh)", Sf],
+    ...ve("GNUPGHOME", path.join(L, ".gnupg")).map((Oe) => [
       Oe,
       "GnuPG (~/.gnupg, GNUPGHOME)",
       Tf,
     ]),
-    ...ve("DOCKER_CONFIG", k.join(ee, ".docker")).map((Oe) => [
+    ...ve("DOCKER_CONFIG", path.join(ee, ".docker")).map((Oe) => [
       Oe,
       "Docker (~/.docker, DOCKER_CONFIG)",
       Of,
     ]),
-    [k.join(ee, ".kube"), "Kubernetes (~/.kube)", Rf],
+    [path.join(ee, ".kube"), "Kubernetes (~/.kube)", Rf],
     [Te, "Anthropic profile (ANTHROPIC_CONFIG_DIR)", Pn],
     [
       We("CLAUDE_CODE_FEDERATION_CACHE_DIR")?.trim() ?? "",
@@ -5219,7 +5206,7 @@ async function $d(e, t, r, i, o, u, d) {
       Ua,
     ],
   ])
-    if (I && k.isAbsolute(I)) {
+    if (I && path.isAbsolute(I)) {
       let Oe = Z.get(I);
       Z.set(I, {
         label: Oe?.label ?? q,
@@ -5252,8 +5239,8 @@ async function $d(e, t, r, i, o, u, d) {
       if (j.has(I)) {
         for (let Oe of [I, ke])
           if (Oe !== null && Oe !== "absent") {
-            let At = k.dirname(Oe);
-            if (k.dirname(At) !== k.parse(At).root) pe.push(At);
+            let At = path.dirname(Oe);
+            if (path.dirname(At) !== path.parse(At).root) pe.push(At);
           }
       }
       continue;
@@ -5266,10 +5253,10 @@ async function $d(e, t, r, i, o, u, d) {
     ) {
       if ((pe.push(I), ke !== null && ke !== I)) {
         pe.push(ke);
-        let Oe = k.dirname(ke);
+        let Oe = path.dirname(ke);
         if (
           j.has(I) &&
-          k.dirname(Oe) !== k.parse(Oe).root &&
+          path.dirname(Oe) !== path.parse(Oe).root &&
           !N.some((At) => we(At, Oe))
         )
           pe.push(Oe);
@@ -5295,18 +5282,18 @@ async function $d(e, t, r, i, o, u, d) {
           e.outDir,
           ...(await Vt(dedupe([...i.pluginDirsUnderTest, i.caseDir]))),
           ...J.denyPaths,
-          k.join(e.home, ".config", "git"),
-          k.join(e.home, ".local", "lib"),
+          path.join(e.home, ".config", "git"),
+          path.join(e.home, ".local", "lib"),
           ...dedupe(
             qr.flatMap((I) => [
-              k.join(e.home, I),
-              k.join(e.home, k.dirname(I)),
+              path.join(e.home, I),
+              path.join(e.home, path.dirname(I)),
             ]),
           ),
-          ...Wd.map((I) => k.join(e.home, ".git", I)),
-          k.join(e.cwd, vt),
-          ...DANGEROUS_DIRECTORIES.filter((I) => I !== ".git").map((I) => k.join(e.home, I)),
-          ...DANGEROUS_FILES.map((I) => k.join(e.home, I)),
+          ...Wd.map((I) => path.join(e.home, ".git", I)),
+          path.join(e.cwd, vt),
+          ...DANGEROUS_DIRECTORIES.filter((I) => I !== ".git").map((I) => path.join(e.home, I)),
+          ...DANGEROUS_FILES.map((I) => path.join(e.home, I)),
         ].map(sr),
         denyRead: [
           ...N,
@@ -5317,7 +5304,7 @@ async function $d(e, t, r, i, o, u, d) {
           ...B,
           e.configDir,
           e.outDir,
-          ...qr.map((I) => k.join(e.home, I)),
+          ...qr.map((I) => path.join(e.home, I)),
           ...K,
         ].map(sr),
         allowRead: dedupe(
@@ -5354,7 +5341,7 @@ async function $d(e, t, r, i, o, u, d) {
       mode: "deny",
     }));
   }
-  await writeFile(k.join(e.configDir, "settings.json"), jsonStringify(Se, null, 2), {
+  await writeFile(path.join(e.configDir, "settings.json"), jsonStringify(Se, null, 2), {
     flag: "wx",
   });
 }
@@ -5379,16 +5366,16 @@ async function Ld(e) {
   return t;
 }
 async function xd(e) {
-  let t = k.dirname(e),
-    r = [k.basename(e)];
+  let t = path.dirname(e),
+    r = [path.basename(e)];
   for (;;)
     try {
-      return k.join(await realpath(t), ...r);
+      return path.join(await realpath(t), ...r);
     } catch (i) {
       let o = A(i);
-      if ((o !== "ENOENT" && o !== "ENOTDIR") || t === k.parse(t).root)
+      if ((o !== "ENOENT" && o !== "ENOTDIR") || t === path.parse(t).root)
         return e;
-      (r.unshift(k.basename(t)), (t = k.dirname(t)));
+      (r.unshift(path.basename(t)), (t = path.dirname(t)));
     }
 }
 async function Qa(e) {
@@ -5478,7 +5465,7 @@ async function nl(e, t) {
     o = (j, B) => we(j, B),
     u = (j, B) => j === B || o(j, B),
     d = async (j) => (
-      await assertPathIsLocal(k.dirname(j), k.basename(j), r),
+      await assertPathIsLocal(path.dirname(j), path.basename(j), r),
       realpath(j).catch((B) => {
         let Z = A(B);
         if (Z === "ENOENT") return j;
@@ -5497,7 +5484,7 @@ async function nl(e, t) {
       ),
     h = dt,
     w = (j, B) => {
-      let Z = j.split(k.sep);
+      let Z = j.split(path.sep);
       return (
         Z.length >= B.length &&
         B.every((ae, te) => h(Z[Z.length - B.length + te]) === h(ae))
@@ -5530,7 +5517,7 @@ async function nl(e, t) {
     },
     D = (j, B) => {
       throw new R(
-        `${r}: cannot list "${formatForDisplay(k.relative(B, j) || ".")}" under a plugin or eval directory \u2014 make it readable or remove it`,
+        `${r}: cannot list "${formatForDisplay(path.relative(B, j) || ".")}" under a plugin or eval directory \u2014 make it readable or remove it`,
         "eval directory unlistable",
       );
     },
@@ -5541,7 +5528,7 @@ async function nl(e, t) {
       for (let te = ae.pop(); te !== void 0; te = ae.pop()) {
         let ut = (await L(te.dir, te.dir === j)) ?? D(te.dir, j);
         for (let je of ut) {
-          let pe = k.join(te.dir, je.name),
+          let pe = path.join(te.dir, je.name),
             Se = await getFileEntryKind(je, pe, "unknown");
           if (Se !== "dir" && Se !== "symlink" && Se !== "unknown") continue;
           if (++Z > dn || te.depth >= 12) return [j];
@@ -5557,12 +5544,12 @@ async function nl(e, t) {
     K = (j, B) => {
       let Z;
       for (
-        let ae = k.dirname(j);
+        let ae = path.dirname(j);
         B.some((te) => u(te, ae));
-        ae = k.dirname(ae)
+        ae = path.dirname(ae)
       ) {
         if (_(ae)) Z = ae;
-        if (ae === k.dirname(ae)) break;
+        if (ae === path.dirname(ae)) break;
       }
       return Z;
     },
@@ -5570,9 +5557,9 @@ async function nl(e, t) {
     re = K(e.caseDir, J),
     V = re === void 0 ? void 0 : await d(re),
     ie = dedupe([de, V].filter((j) => j !== void 0)).filter((j) => u(j, N)),
-    _e = k.dirname(N),
+    _e = path.dirname(N),
     He = () => {
-      for (let j = k.dirname(N); j !== k.dirname(j); j = k.dirname(j))
+      for (let j = path.dirname(N); j !== path.dirname(j); j = path.dirname(j))
         if (_(j)) return j;
       return;
     },
@@ -5604,7 +5591,7 @@ async function nl(e, t) {
           `${r}: the case directory has more than one entry named "${j}" up to letter case \u2014 keep exactly one`,
           "eval case has case-variant duplicates of a reserved directory",
         );
-      let Z = k.join(N, B[0] ?? j),
+      let Z = path.join(N, B[0] ?? j),
         ae = await lstat(Z).catch((te) => {
           if (A(te) === "ENOENT") return null;
           throw ht(r, te);
@@ -5618,12 +5605,12 @@ async function nl(e, t) {
     },
     Ne = await Ie("graders"),
     De = await Ie("mocks"),
-    We = (j, B) => B === j || B.startsWith(j.endsWith(k.sep) ? j : j + k.sep),
+    We = (j, B) => B === j || B.startsWith(j.endsWith(path.sep) ? j : j + path.sep),
     lt = () => {
-      let j = k.resolve(e.caseDir);
+      let j = path.resolve(e.caseDir);
       for (let B = 0; B < 64; B++) {
-        if (Ht(j.split(k.sep), i, ei() ? "folded" : "exact")) return j;
-        let Z = k.dirname(j);
+        if (Ht(j.split(path.sep), i, ei() ? "folded" : "exact")) return j;
+        let Z = path.dirname(j);
         if (Z === j) break;
         j = Z;
       }
@@ -5632,16 +5619,16 @@ async function nl(e, t) {
     ee = await Promise.all(
       (e.graders ?? []).flatMap((j) => {
         if (j.type !== "baseline") return [];
-        let B = k.resolve(N, j.baseline_file);
+        let B = path.resolve(N, j.baseline_file);
         if (
-          k.isAbsolute(j.baseline_file) ||
+          path.isAbsolute(j.baseline_file) ||
           An(j.baseline_file) ||
           Dr(j.baseline_file) ||
           An(B) ||
           Dr(B) ||
           ![e.caseDir, N, ge, lt(), ...e.pluginDirsUnderTest]
             .filter((Z) => Z !== null)
-            .some((Z) => We(k.resolve(Z), B))
+            .some((Z) => We(path.resolve(Z), B))
         )
           throw new R(
             `${r}: a baseline grader's baseline_file must be a relative path inside the suite or the plugin under test`,
@@ -5689,9 +5676,9 @@ async function nl(e, t) {
     gt = (j) => (fn(j, "plugin entry"), it(j)),
     et = [];
   for (let j of [...e.pluginDirs, ...e.pluginDirsUnderTest]) {
-    let B = k.resolve(j),
+    let B = path.resolve(j),
       Z = await d(j);
-    if (B !== k.resolve(Z) && !et.some((ae) => ae.lexical === B))
+    if (B !== path.resolve(Z) && !et.some((ae) => ae.lexical === B))
       et.push({ canonical: Z, lexical: B });
   }
   let Mt = (j) => {
@@ -5709,7 +5696,7 @@ async function nl(e, t) {
             fn(j, "plugin entry");
           return B;
         }
-        let Z = k.dirname(B);
+        let Z = path.dirname(B);
         if (Z === B) return (fn(j, "plugin entry"), B);
         B = Z;
       }
@@ -5717,7 +5704,7 @@ async function nl(e, t) {
     Me = (j) => {
       let B = ct(j);
       for (let Z of Mt(B)) {
-        let ae = `tree:${k.normalize(Z)}`;
+        let ae = `tree:${path.normalize(Z)}`;
         if (xe.has(ae)) continue;
         (xe.add(ae),
           Ae.push(`${READ_TOOL_NAME}(${gt(Z)})`, `${READ_TOOL_NAME}(${gt(Z)}/**)`),
@@ -5731,7 +5718,7 @@ async function nl(e, t) {
       }
       let B = j;
       for (let Z of Mt(B)) {
-        let ae = `file:${k.normalize(Z)}`;
+        let ae = `file:${path.normalize(Z)}`;
         if (xe.has(ae)) continue;
         (xe.add(ae), Ae.push(`${READ_TOOL_NAME}(${gt(Z)})`), Qe.push(Z));
       }
@@ -5748,7 +5735,7 @@ async function nl(e, t) {
               `${r}: the eval directory holds more than ${dn} entries \u2014 move large fixtures out of it`,
               "eval suite too large to screen",
             );
-          let pe = k.join(te, je.name);
+          let pe = path.join(te, je.name);
           if (!Z && Ze.some((q) => u(q, pe))) continue;
           let Se = await getFileEntryKind(je, pe, "unknown");
           if (Se === "unknown")
@@ -5772,7 +5759,7 @@ async function nl(e, t) {
             if (!ke.isDirectory()) {
               if ((jt(pe), ke.nlink > 1))
                 throw new R(
-                  `${r}: "${formatForDisplay(k.relative(j, pe))}" under the eval directory links to a file with ${ke.nlink} names \u2014 case definitions must not be reachable by another name`,
+                  `${r}: "${formatForDisplay(path.relative(j, pe))}" under the eval directory links to a file with ${ke.nlink} names \u2014 case definitions must not be reachable by another name`,
                   "eval suite links to hard-linked file",
                 );
               jt(q);
@@ -5787,7 +5774,7 @@ async function nl(e, t) {
           else if (Se === "file" && (await p(pe)) > 1)
             throw new R(
               I
-                ? `${r}: "${formatForDisplay(k.relative(j, pe))}" inside an add_dir has more than one hard link \u2014 fixtures must be plain copies`
+                ? `${r}: "${formatForDisplay(path.relative(j, pe))}" inside an add_dir has more than one hard link \u2014 fixtures must be plain copies`
                 : `${r}: "${formatForDisplay(je.name)}" under the eval directory has more than one hard link \u2014 case definitions must not be reachable by another name`,
               I
                 ? "eval add_dir file hard-linked"
@@ -5827,11 +5814,11 @@ async function nl(e, t) {
         let ut = (await L(te, te === j)) ?? D(te, j);
         if (te !== j || !F.includes(j))
           for (let je of await jr(te)) {
-            let pe = k.join(te, ...je),
+            let pe = path.join(te, ...je),
               Se = await d(pe);
             if (Se !== pe && !F.some((q) => u(q, Se)) && B === "plugin")
               throw new R(
-                `${r}: ${formatForDisplay(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
+                `${r}: ${formatForDisplay(path.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
                 "eval nested suite link escapes plugin",
               );
             let I = (q) => !u(ge, q) || Ze.some((ke) => u(ke, q));
@@ -5851,7 +5838,7 @@ async function nl(e, t) {
                 : `${r}: a checkout sharing the plugin's repository holds more than ${dn} entries to check for eval directories \u2014 run from a standalone clone`,
               "eval plugin too large to screen",
             );
-          let pe = k.join(te, je.name);
+          let pe = path.join(te, je.name);
           if (C(je.name)) {
             Gn(pe);
             for (let I of await Da(te, r, Ye, (q) => Le.add(q))) Gn(I);
@@ -5889,7 +5876,7 @@ async function nl(e, t) {
             let I = await d(pe);
             if (B === "plugin" && !F.some((q) => u(q, I)))
               throw new R(
-                `${r}: ${formatForDisplay(k.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
+                `${r}: ${formatForDisplay(path.relative(j, pe))} is an eval-directory link that points outside the plugin \u2014 remove it`,
                 "eval suite link leaves the plugin",
               );
             if (!F.some((q) => u(q, I))) Me(I);
@@ -5928,7 +5915,7 @@ async function nl(e, t) {
               "eval fence: manifest scan budget exceeded",
             );
           for (let ut of await Zf(te.dir, r)) {
-            let je = k.basename(ut);
+            let je = path.basename(ut);
             if (!C(je) && !S(je, "node_modules"))
               ae.push({ dir: ut, depth: te.depth + 1 });
           }
@@ -5965,8 +5952,8 @@ async function nl(e, t) {
   }
   for (let j of e.pluginDirs) {
     let B = await d(j),
-      Z = k.resolve(j),
-      ae = (te) => (Z === k.resolve(B) ? [te] : [te, Z + te.slice(B.length)]);
+      Z = path.resolve(j),
+      ae = (te) => (Z === path.resolve(B) ? [te] : [te, Z + te.slice(B.length)]);
     if (!u(B, ge)) {
       ot.push(...ae(B));
       continue;
@@ -5976,7 +5963,7 @@ async function nl(e, t) {
       if (ut === null) break;
       let je;
       for (let pe of ut) {
-        let Se = k.join(te, pe.name);
+        let Se = path.join(te, pe.name);
         if (u(Se, ge)) {
           je = Se;
           continue;
@@ -5998,23 +5985,23 @@ async function nl(e, t) {
   e.pluginDirsUnderTest.forEach((j, B) => {
     let Z = F[B] ?? j;
     if (u(Z, ge)) {
-      let ae = k.join(j, k.relative(Z, ge));
+      let ae = path.join(j, path.relative(Z, ge));
       if (ae !== ge) Me(ae);
     }
   });
-  let qt = k.relative(ge, N).split(k.sep),
-    Qt = k.resolve(e.caseDir).split(k.sep);
+  let qt = path.relative(ge, N).split(path.sep),
+    Qt = path.resolve(e.caseDir).split(path.sep);
   if (
     qt.length < Qt.length &&
     qt.every((j, B) => h(j) === h(Qt[Qt.length - qt.length + B] ?? ""))
   ) {
-    let j = Qt.slice(0, Qt.length - qt.length).join(k.sep);
+    let j = Qt.slice(0, Qt.length - qt.length).join(path.sep);
     if (j !== ge && j !== "") Me(j);
   }
   if (ei()) {
     let j = i,
-      B = ge.split(k.sep).slice(0, -j.length).join(k.sep),
-      Z = k.join(B || k.sep, ...j);
+      B = ge.split(path.sep).slice(0, -j.length).join(path.sep),
+      Z = path.join(B || path.sep, ...j);
     if (Z !== ge && w(ge, j)) Me(Z);
   }
   await mn(ge);
@@ -6023,7 +6010,7 @@ async function nl(e, t) {
   for (let j = en.pop(); j !== void 0; j = en.pop()) {
     let B = (await L(j, j === ge)) ?? D(j, ge);
     for (let Z of B) {
-      let ae = k.join(j, Z.name);
+      let ae = path.join(j, Z.name);
       if (ve(ae)) continue;
       let te = await getFileEntryKind(Z, ae, "unknown");
       if (te === "dir" && Ke(ae)) en.push(ae);
@@ -6032,7 +6019,7 @@ async function nl(e, t) {
     }
   }
   for (let j of Te) {
-    if (j.split(k.sep).some((B) => C(B)))
+    if (j.split(path.sep).some((B) => C(B)))
       throw new R(
         `${r}: an add_dirs entry points into version-control metadata \u2014 point it at the fixtures themselves`,
         "eval add_dir inside vcs dir",
@@ -6050,7 +6037,7 @@ async function nl(e, t) {
           Z(ge, B) &&
           !Ze.some((te) => Z(te, B)) &&
           !gn.has(B) &&
-          !B.split(k.sep).some((te) => C(te))
+          !B.split(path.sep).some((te) => C(te))
         ) &&
         (dt(j) === dt(B) || we(B, j, dt))
       )
@@ -6061,10 +6048,10 @@ async function nl(e, t) {
     }
   }
   return {
-    readRoots: dedupe(ot.map((j) => k.normalize(j))),
-    readFiles: dedupe(Re.map((j) => k.normalize(j))),
+    readRoots: dedupe(ot.map((j) => path.normalize(j))),
+    readFiles: dedupe(Re.map((j) => path.normalize(j))),
     denies: Ae,
-    denyPaths: dedupe(Qe.map((j) => k.normalize(j))),
+    denyPaths: dedupe(Qe.map((j) => path.normalize(j))),
   };
 }
 var dn = 20000,
@@ -6079,33 +6066,33 @@ async function Da(e, t = "plugin eval", r = [], i) {
         "eval vcs metadata unresolvable",
       );
     },
-    u = async (D) => (await assertPathIsLocal(k.dirname(D), k.basename(D), t), realpath(D).catch(o)),
+    u = async (D) => (await assertPathIsLocal(path.dirname(D), path.basename(D), t), realpath(D).catch(o)),
     d = (await u(e)) ?? e,
-    p = [k.join(d, ".git")],
-    h = async (D, U) => (await assertPathIsLocal(D, U, t), realpath(k.resolve(D, U)).catch(o)),
+    p = [path.join(d, ".git")],
+    h = async (D, U) => (await assertPathIsLocal(D, U, t), realpath(path.resolve(D, U)).catch(o)),
     w = (D) => {
       if ([d, ...r].every((U) => D !== U && !we(U, D) && !we(D, U))) p.push(D);
       else if (D !== d && !we(D, d)) i?.(D);
     },
     E = async (D, U = 0) => {
       await S(D, ".git");
-      let N = k.join(D, "objects"),
-        F = (await ir(k.join(N, "info", "alternates"), 4096)) ?? "";
+      let N = path.join(D, "objects"),
+        F = (await ir(path.join(N, "info", "alternates"), 4096)) ?? "";
       for (let K of F.split(`
 `)) {
         let de = K.trim();
         if (!de || de.startsWith("#")) continue;
         let re = await h(N, de);
         if (re === null) continue;
-        if ((p.push(re), k.basename(re) === "objects")) {
-          let V = k.dirname(re);
-          if ((p.push(V), k.basename(V) === ".git")) w(k.dirname(V));
+        if ((p.push(re), path.basename(re) === "objects")) {
+          let V = path.dirname(re);
+          if ((p.push(V), path.basename(V) === ".git")) w(path.dirname(V));
           if (U < 5) await E(V, U + 1);
         }
       }
       let J = [];
       try {
-        J = await readdir(k.join(D, "worktrees"), { withFileTypes: !0 });
+        J = await readdir(path.join(D, "worktrees"), { withFileTypes: !0 });
       } catch (K) {
         if (A(K) !== "ENOENT" && A(K) !== "ENOTDIR") throw ht(t, K);
       }
@@ -6115,26 +6102,26 @@ async function Da(e, t = "plugin eval", r = [], i) {
           "eval plugin git dir has too many worktrees",
         );
       for (let K of J) {
-        let de = k.join(D, "worktrees", K.name),
-          re = ((await ir(k.join(de, "gitdir"), 4096)) ?? "").trim();
+        let de = path.join(D, "worktrees", K.name),
+          re = ((await ir(path.join(de, "gitdir"), 4096)) ?? "").trim();
         if (re) {
           let V = await h(de, re);
-          if (V !== null) w(k.dirname(V));
+          if (V !== null) w(path.dirname(V));
         }
       }
     },
     _ = {
-      ".git": ["objects", k.join("objects", "pack"), "lfs"],
+      ".git": ["objects", path.join("objects", "pack"), "lfs"],
       ".hg": ["store"],
       ".sl": ["store"],
       ".svn": ["pristine"],
-      ".jj": ["repo", k.join("repo", "store")],
+      ".jj": ["repo", path.join("repo", "store")],
       ".bzr": ["repository"],
       _darcs: ["patches", "pristine.hashed", "inventories"],
     },
     S = async (D, U, N) => {
       for (let F of N ?? _[U] ?? []) {
-        let J = await u(k.join(D, F));
+        let J = await u(path.join(D, F));
         if (J === null) continue;
         if (J !== D && !we(D, J)) {
           p.push(J);
@@ -6151,11 +6138,11 @@ async function Da(e, t = "plugin eval", r = [], i) {
               `${t}: a version-control store holds too many top-level entries to examine \u2014 refusing to run`,
               "eval fence: vcs store too large to screen",
             );
-          let V = await getFileEntryKind(re, k.join(J, re.name), "unknown");
+          let V = await getFileEntryKind(re, path.join(J, re.name), "unknown");
           if (V === "unknown")
             throw ht(t, Error("unclassifiable version-control store entry"));
           if (V !== "symlink") continue;
-          let ie = await u(k.join(J, re.name));
+          let ie = await u(path.join(J, re.name));
           if (ie !== null && !we(D, ie)) p.push(ie);
         }
       }
@@ -6163,9 +6150,9 @@ async function Da(e, t = "plugin eval", r = [], i) {
     C = async (D, U) => {
       let N, F;
       if (U === ".hg" || U === ".sl")
-        ((N = k.join(D, "sharedpath")), (F = (re) => k.dirname(re)));
+        ((N = path.join(D, "sharedpath")), (F = (re) => path.dirname(re)));
       else if (U === ".jj")
-        ((N = k.join(D, "repo")), (F = (re) => k.dirname(k.dirname(re))));
+        ((N = path.join(D, "repo")), (F = (re) => path.dirname(path.dirname(re))));
       else return;
       if (
         !(await lstat(N).then(
@@ -6187,15 +6174,15 @@ async function Da(e, t = "plugin eval", r = [], i) {
       let U = (await ir(D, 4096)) ?? "",
         N = /^gitdir:\s*(.+)$/m.exec(U);
       if (!N?.[1]) return !1;
-      let F = await h(k.dirname(D), N[1].trim());
+      let F = await h(path.dirname(D), N[1].trim());
       if (F === null) return !1;
       (p.push(F), await E(F));
-      let J = ((await ir(k.join(F, "commondir"), 4096)) ?? "").trim();
+      let J = ((await ir(path.join(F, "commondir"), 4096)) ?? "").trim();
       if (J) {
         let K = await h(F, J);
-        if (K !== null) (p.push(K), await E(K), w(k.dirname(K)));
+        if (K !== null) (p.push(K), await E(K), w(path.dirname(K)));
       }
-      return lstat(k.join(F, "HEAD")).then(
+      return lstat(path.join(F, "HEAD")).then(
         () => !0,
         (K) => {
           if (A(K) === "ENOENT") return !1;
@@ -6206,7 +6193,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
   for (let D = d; ;) {
     let U = !1;
     for (let F of rl) {
-      let J = await u(k.join(D, F));
+      let J = await u(path.join(D, F));
       if (J === null) continue;
       if ((p.push(J), await S(J, F), F !== ".git")) {
         await C(J, F);
@@ -6221,7 +6208,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
       else
         (await E(J),
           (U =
-            (await lstat(k.join(J, "HEAD")).then(
+            (await lstat(path.join(J, "HEAD")).then(
               () => !0,
               (de) => {
                 if (A(de) === "ENOENT") return !1;
@@ -6230,7 +6217,7 @@ async function Da(e, t = "plugin eval", r = [], i) {
             )) || U));
     }
     if (U && D !== d) break;
-    let N = k.dirname(D);
+    let N = path.dirname(D);
     if (N === D) break;
     D = N;
   }
@@ -6241,7 +6228,7 @@ async function ir(e, t) {
   if (!r.ok) {
     if (r.error.kind === "absent") return null;
     throw new R(
-      `git metadata file "${k.basename(e)}" is not a plain readable file`,
+      `git metadata file "${path.basename(e)}" is not a plain readable file`,
       "eval metadata file unreadable or not plain",
     );
   }
@@ -6250,12 +6237,12 @@ async function ir(e, t) {
     let o = await i.stat();
     if (!o.isFile())
       throw new R(
-        `git metadata file "${k.basename(e)}" is not a regular file`,
+        `git metadata file "${path.basename(e)}" is not a regular file`,
         "eval metadata file is not a regular file",
       );
     if (o.size > t)
       throw new R(
-        `git metadata file "${k.basename(e)}" is larger than ${t} bytes`,
+        `git metadata file "${path.basename(e)}" is larger than ${t} bytes`,
         "eval metadata file too large",
       );
     return (await i.readFile()).toString("utf8");
@@ -6278,11 +6265,11 @@ async function Na(e) {
   if (t.some((i) => Jo(i.name))) return !0;
   let r = 0;
   for (let i of t) {
-    let o = k.join(e, i.name);
+    let o = path.join(e, i.name);
     if ((await getFileEntryKind(i, o, "other")) !== "dir" || ++r > 200) continue;
     for (let u of ol)
       try {
-        return (await lstat(k.join(o, u)), !0);
+        return (await lstat(path.join(o, u)), !0);
       } catch {}
   }
   return !1;
@@ -6426,7 +6413,7 @@ function zd(e) {
   for (let r of e.split(`
 `)) {
     let [i, o, u, d] = r.split(" ");
-    if (o === void 0 || u === void 0 || !k.posix.isAbsolute(o)) continue;
+    if (o === void 0 || u === void 0 || !path.posix.isAbsolute(o)) continue;
     let p = beforeFirst(u, ".");
     if (
       Ma.has(u) ||
@@ -6464,7 +6451,7 @@ async function Yd(e) {
 }
 function ja() {
   let e = process.env.XDG_CONFIG_HOME?.trim();
-  return e && k.isAbsolute(e) ? e : k.join(Ot.homedir(), ".config");
+  return e && path.isAbsolute(e) ? e : path.join(Ot.homedir(), ".config");
 }
 var Xd = [
     "/var/run/secrets",
@@ -6493,10 +6480,10 @@ function Dn(e) {
   return /[*?[\]]/.test(e);
 }
 function qo(e) {
-  return k.dirname(e) === e;
+  return path.dirname(e) === e;
 }
 function Fa(e) {
-  let t = k.dirname(e);
+  let t = path.dirname(e);
   return qo(t) ? e : t;
 }
 async function Vt(e) {
@@ -6773,9 +6760,9 @@ async function Qr(e, t) {
 }
 async function ci(e, t, r, i) {
   await assertPathIsLocal(e, t, r);
-  let o = k.resolve(e, t),
-    u = await realpath(e).catch(() => k.resolve(e)),
-    d = k.resolve(u, t);
+  let o = path.resolve(e, t),
+    u = await realpath(e).catch(() => path.resolve(e)),
+    d = path.resolve(u, t);
   if (d !== u && !we(u, d))
     throw new R(
       `${r}: path "${t}" escapes the ${i} (\`..\` or an absolute path) \u2014 it must name something inside it`,
@@ -6992,14 +6979,14 @@ function bf(e) {
   return pf.some((r) => t.startsWith(r));
 }
 var qr = [
-  k.join(".aws", "sso"),
-  k.join(".aws", "cli", "cache"),
-  k.join(".aws", "boto", "cache"),
+  path.join(".aws", "sso"),
+  path.join(".aws", "cli", "cache"),
+  path.join(".aws", "boto", "cache"),
 ];
 async function ur(e) {
-  return k.join(
-    await realpath(k.dirname(e)).catch(() => k.dirname(e)),
-    k.basename(e),
+  return path.join(
+    await realpath(path.dirname(e)).catch(() => path.dirname(e)),
+    path.basename(e),
   );
 }
 async function vf(e) {
@@ -7012,10 +6999,10 @@ async function vf(e) {
     }
   }
   let t = await readlink(e).catch(() => null);
-  return t === null ? null : k.resolve(k.dirname(await ur(e)), t);
+  return t === null ? null : path.resolve(path.dirname(await ur(e)), t);
 }
 async function di(e) {
-  for (let t = e, r = k.dirname(t); t !== r; t = r, r = k.dirname(t)) {
+  for (let t = e, r = path.dirname(t); t !== r; t = r, r = path.dirname(t)) {
     try {
       await lstat(t);
     } catch (o) {
@@ -7027,10 +7014,10 @@ async function di(e) {
       let o = await readlink(t).catch(() => null);
       return o === null
         ? "unresolvable"
-        : k.join(k.resolve(k.dirname(await ur(t)), o), k.relative(t, e));
+        : path.join(path.resolve(path.dirname(await ur(t)), o), path.relative(t, e));
     }
     if (i === $n) return ur(e);
-    return i === k.resolve(t) ? "absent" : k.join(i, k.relative(t, e));
+    return i === path.resolve(t) ? "absent" : path.join(i, path.relative(t, e));
   }
   return "absent";
 }
@@ -7114,7 +7101,7 @@ async function Af(e, t, r) {
     for (let w of h) {
       if (++d > kf) throw i("is too large to check for symbolic links");
       if (r.has(w.name)) continue;
-      let E = k.join(p, w.name),
+      let E = path.join(p, w.name),
         _ = await getFileEntryKind(w, E, "unknown");
       if (_ === "symlink") throw i("holds a symbolic link inside it");
       if (_ === "unknown") {
@@ -7130,7 +7117,7 @@ async function Af(e, t, r) {
       if (_ === "dir") u.push(E);
     }
   }
-  return o === k.resolve(e) ? null : o;
+  return o === path.resolve(e) ? null : o;
 }
 async function If(e, t) {
   if (
@@ -7144,7 +7131,7 @@ async function If(e, t) {
   )
     return;
   for (let i of qr) {
-    let o = k.join(Ot.homedir(), i);
+    let o = path.join(Ot.homedir(), i);
     if (
       !(await stat(o).then(
         (d) => d.isDirectory(),
@@ -7152,8 +7139,8 @@ async function If(e, t) {
       ))
     )
       continue;
-    let u = k.join(e.home, i);
-    await mkdir(k.dirname(u), { recursive: !0 });
+    let u = path.join(e.home, i);
+    await mkdir(path.dirname(u), { recursive: !0 });
     try {
       await symlink(o, u, "junction");
     } catch (d) {
@@ -7177,7 +7164,7 @@ async function Nf(e) {
     );
   let r = (t && extractManagedSettings(t)) ?? {},
     i = { ...expandMcpPolicyPredicates(r), managedSourcesBehavior: "merge" },
-    o = k.join(e.configDir, fi),
+    o = path.join(e.configDir, fi),
     u = jsonStringify(i);
   try {
     await writeFile(o, u, { mode: 384, flag: "wx" });
@@ -7221,8 +7208,8 @@ async function $f(e) {
       cleanup: async () => {},
     };
   await Pp();
-  let r = await mkdtemp(k.join(Ot.tmpdir(), sl)),
-    i = k.join(r, "snapshot.json");
+  let r = await mkdtemp(path.join(Ot.tmpdir(), sl)),
+    i = path.join(r, "snapshot.json");
   try {
     await writeFile(
       i,
@@ -7264,10 +7251,10 @@ function Mf(e, t, r, i, o = !1) {
     CLAUDE_CONFIG_DIR: t.configDir,
     HOME: t.home,
     USERPROFILE: t.home,
-    XDG_CONFIG_HOME: k.join(t.home, ".config"),
-    XDG_DATA_HOME: k.join(t.home, ".local", "share"),
-    XDG_CACHE_HOME: k.join(t.home, ".cache"),
-    XDG_STATE_HOME: k.join(t.home, ".local", "state"),
+    XDG_CONFIG_HOME: path.join(t.home, ".config"),
+    XDG_DATA_HOME: path.join(t.home, ".local", "share"),
+    XDG_CACHE_HOME: path.join(t.home, ".cache"),
+    XDG_STATE_HOME: path.join(t.home, ".local", "state"),
     TMPDIR: t.tmpDir,
     TMP: t.tmpDir,
     TEMP: t.tmpDir,
@@ -7282,8 +7269,8 @@ function Mf(e, t, r, i, o = !1) {
     let D = /^[A-Za-z]:/.test(t.home) ? t.home.slice(0, 2) : "";
     ((u.HOMEDRIVE = D),
       (u.HOMEPATH = t.home.slice(D.length)),
-      (u.APPDATA = k.join(t.home, "AppData", "Roaming")),
-      (u.LOCALAPPDATA = k.join(t.home, "AppData", "Local")));
+      (u.APPDATA = path.join(t.home, "AppData", "Roaming")),
+      (u.LOCALAPPDATA = path.join(t.home, "AppData", "Local")));
   }
   let d = new Set(Object.keys(u).map((D) => D.toUpperCase())),
     p = { ...subprocessEnv() };
@@ -7319,16 +7306,16 @@ function Mf(e, t, r, i, o = !1) {
     S = new Set(Object.keys(E).map((D) => D.toUpperCase())),
     C = {
       ...(!w && {
-        AWS_SHARED_CREDENTIALS_FILE: k.join(_, ".aws", "credentials"),
-        AWS_CONFIG_FILE: k.join(_, ".aws", "config"),
+        AWS_SHARED_CREDENTIALS_FILE: path.join(_, ".aws", "credentials"),
+        AWS_CONFIG_FILE: path.join(_, ".aws", "config"),
         CLOUDSDK_CONFIG:
           getCurrentPlatform() === "windows"
-            ? k.join(
-                process.env.APPDATA ?? k.join(_, "AppData", "Roaming"),
+            ? path.join(
+                process.env.APPDATA ?? path.join(_, "AppData", "Roaming"),
                 "gcloud",
               )
-            : k.join(_, ".config", "gcloud"),
-        AZURE_CONFIG_DIR: k.join(_, ".azure"),
+            : path.join(_, ".config", "gcloud"),
+        AZURE_CONFIG_DIR: path.join(_, ".azure"),
       }),
     };
   for (let [D, U] of Object.entries(C)) if (!S.has(D)) E[D] = U;
@@ -7466,8 +7453,8 @@ async function Kf(e, t) {
     );
   let i = [];
   for (let o of r) {
-    let u = k.join(e, o),
-      d = k.join(u, "manifest.json"),
+    let u = path.join(e, o),
+      d = path.join(u, "manifest.json"),
       p = new R(
         `a corroborated artifact publish's payload is not a real directory holding a regular manifest (or is over ${Ha} bytes)`,
         "eval: stub publish manifest unreadable",
@@ -7529,8 +7516,8 @@ async function Yf(e, t) {
     throw d;
   });
   if (r === null || !r.isDirectory()) return;
-  let i = k.join(e, "publishes.json"),
-    o = k.join(e, Vf);
+  let i = path.join(e, "publishes.json"),
+    o = path.join(e, Vf);
   if (
     (await ln(o, { harnessOwned: !0 }),
     await Gt(o, { recursive: !0, force: !0 }),
@@ -7544,9 +7531,9 @@ async function Yf(e, t) {
   if (u && u.env === "stub") {
     await mkdir(o);
     for (let d of ["index.html", "manifest.json"]) {
-      let p = await cl(k.join(u.payloadDir, d), zf);
+      let p = await cl(path.join(u.payloadDir, d), zf);
       if (p === null) continue;
-      await writeFileExclusive(k.join(o, d), p);
+      await writeFileExclusive(path.join(o, d), p);
     }
   }
 }
@@ -7713,7 +7700,7 @@ async function Zf(e, t) {
   }
   let i = [];
   for (let o of r) {
-    let u = k.join(e, o.name),
+    let u = path.join(e, o.name),
       d = await getFileEntryKind(o, u, "unknown");
     if (d === "unknown") throw ht(t, Error("unclassifiable directory entry"));
     if (d === "dir") i.push(u);
@@ -7729,9 +7716,9 @@ function Qf(e) {
   return t;
 }
 async function ep(e, t) {
-  let r = k.join(e, "configs"),
-    i = t?.trim() || (await bt(k.join(e, "active_config")))?.trim();
-  if (i && (k.isAbsolute(i) || i.split(/[\\/]/).includes("..")))
+  let r = path.join(e, "configs"),
+    i = t?.trim() || (await bt(path.join(e, "active_config")))?.trim();
+  if (i && (path.isAbsolute(i) || i.split(/[\\/]/).includes("..")))
     throw ce(
       "the selected Anthropic profile name leaves the configs directory",
     );
@@ -7740,7 +7727,7 @@ async function ep(e, t) {
   for (let p = u.pop(); p !== void 0; p = u.pop()) {
     let h;
     try {
-      h = await readdir(k.join(r, p), { withFileTypes: !0 });
+      h = await readdir(path.join(r, p), { withFileTypes: !0 });
     } catch (w) {
       let E = A(w);
       if (p === "" && (E === "ENOENT" || E === "ENOTDIR")) return [];
@@ -7750,11 +7737,11 @@ async function ep(e, t) {
       );
     }
     for (let w of h) {
-      let E = k.join(p, w.name),
-        _ = await getFileEntryKind(w, k.join(r, E), "unknown");
+      let E = path.join(p, w.name),
+        _ = await getFileEntryKind(w, path.join(r, E), "unknown");
       if (_ === "symlink") {
         if (
-          ((_ = await stat(k.join(r, E)).then(
+          ((_ = await stat(path.join(r, E)).then(
             (C) => (C.isDirectory() ? "dir" : C.isFile() ? "file" : "other"),
             (C) => {
               let L = A(C);
@@ -7771,7 +7758,7 @@ async function ep(e, t) {
       if (_ !== "dir" && _ !== "file")
         throw ce("a profile configs entry is not a regular file");
       if (_ === "dir") {
-        if (E.split(k.sep).length > tp)
+        if (E.split(path.sep).length > tp)
           throw ce("profile configs nest too deeply to enumerate");
         u.push(E);
       } else if (w.name.toLowerCase().endsWith(".json")) o.push(E);
@@ -7780,7 +7767,7 @@ async function ep(e, t) {
   let d = [];
   for (let p of o) {
     let h = p.slice(0, -5),
-      w = await bt(k.join(r, p)),
+      w = await bt(path.join(r, p)),
       E = void 0;
     if (w !== null)
       try {
@@ -7795,7 +7782,7 @@ async function ep(e, t) {
       );
     let S = _.data.authentication,
       C = S?.credentials_path;
-    d.push(C === void 0 ? k.join(e, "credentials", `${h}.json`) : Ln(C));
+    d.push(C === void 0 ? path.join(e, "credentials", `${h}.json`) : Ln(C));
     let L = S?.identity_token?.path;
     if (typeof L === "string") d.push(Ln(L));
   }
@@ -7912,7 +7899,7 @@ async function sp(e) {
       d.tokenFile,
       d["token-file"],
     ])
-      if (_) o.push(k.resolve(k.dirname(e), _));
+      if (_) o.push(path.resolve(path.dirname(e), _));
     let p = d.exec ?? null,
       h = d["auth-provider"] ?? null,
       w = [],
@@ -7935,7 +7922,7 @@ async function sp(e) {
         )
       )
         continue;
-      if (k.isAbsolute(S)) u.push(S);
+      if (path.isAbsolute(S)) u.push(S);
       else if (/^(?:~|\.\.?)\//.test(S) || /-(?:file|path|dir)$/i.test(_))
         throw ce(
           "a kubeconfig exec plugin names a credential file by a relative path",
@@ -7979,22 +7966,22 @@ async function cp() {
     throw ce("the account name for %u could not be determined");
   return r;
 }
-async function pr(e, t, r = 0, i = k.join(t, ".ssh")) {
+async function pr(e, t, r = 0, i = path.join(t, ".ssh")) {
   let o = await bt(e);
   if (o === null) return [];
   if (r > 16)
     throw ce(
       "ssh_config Include / ProxyCommand -F chains nest too deeply (a cycle?)",
     );
-  let u = k.join(t, ".ssh"),
+  let u = path.join(t, ".ssh"),
     d = async (w, E = u) => {
       let _ = await pl(w, t);
-      if (k.isAbsolute(_)) return _;
+      if (path.isAbsolute(_)) return _;
       if (E === null)
         throw ce(
           "an ssh_config names a key file by a relative path (resolved against whatever directory ssh runs in)",
         );
-      return k.join(E, _);
+      return path.join(E, _);
     },
     p = (w) => [...w.matchAll(/"([^"]*)"|(\S+)/g)].map((E) => E[1] ?? E[2]),
     h = [];
@@ -8018,9 +8005,9 @@ async function pr(e, t, r = 0, i = k.join(t, ".ssh")) {
     for (let C of p(S)) {
       let L = await d(C, i);
       if (!Dn(L)) h.push(...(await pr(L, t, r + 1, i)));
-      else if (!Dn(k.dirname(L))) {
-        let D = k.dirname(L),
-          U = ap(k.basename(L)),
+      else if (!Dn(path.dirname(L))) {
+        let D = path.dirname(L),
+          U = ap(path.basename(L)),
           N;
         try {
           N = await readdir(D);
@@ -8031,9 +8018,9 @@ async function pr(e, t, r = 0, i = k.join(t, ".ssh")) {
             `an ssh_config Include directory could not be read (${K ?? "unreadable"})`,
           );
         }
-        let F = k.basename(L).startsWith(".");
+        let F = path.basename(L).startsWith(".");
         N = N.filter((J) => U.test(J) && (F || !J.startsWith(".")));
-        for (let J of N) h.push(...(await pr(k.join(D, J), t, r + 1, i)));
+        for (let J of N) h.push(...(await pr(path.join(D, J), t, r + 1, i)));
       } else
         throw ce(
           "an ssh_config Include pattern with a wildcard directory cannot be followed",
@@ -8045,7 +8032,7 @@ async function pr(e, t, r = 0, i = k.join(t, ".ssh")) {
 function up(e) {
   let t = [],
     r = (u) => {
-      if (!k.isAbsolute(u))
+      if (!path.isAbsolute(u))
         throw ce(
           "a JVM build tool argument names a settings store by a relative path",
         );
@@ -8069,9 +8056,9 @@ function up(e) {
     }
   }
   let o = (u) => [
-    k.join(u, ".credentials"),
-    k.join(u, "1.0", "credentials.sbt"),
-    k.join(u, "1.0", "plugins", "credentials.sbt"),
+    path.join(u, ".credentials"),
+    path.join(u, "1.0", "credentials.sbt"),
+    path.join(u, "1.0", "plugins", "credentials.sbt"),
   ];
   for (let u of ml) {
     let d = normalizeDefineArgs(i(u).map(stripJavaOptionPrefix)).flatMap((p) => {
@@ -8099,7 +8086,7 @@ function up(e) {
         if (C && !/^-{1,2}sbt-boot/.test(h)) {
           let L = r(C);
           t.push(
-            ...(/^-{1,2}ivy/.test(h) ? [k.join(L, ".credentials")] : o(L)),
+            ...(/^-{1,2}ivy/.test(h) ? [path.join(L, ".credentials")] : o(L)),
           );
         }
         continue;
@@ -8109,17 +8096,17 @@ function up(e) {
       let _ = E[1].toLowerCase();
       if (_ === "maven.repo.local" || _ === "sbt.boot.directory") continue;
       let S = r(E[2]);
-      if (_ === "gradle.user.home") t.push(k.join(S, "gradle.properties"));
-      else if (_ === "maven.home") t.push(k.join(S, "conf", "settings.xml"));
+      if (_ === "gradle.user.home") t.push(path.join(S, "gradle.properties"));
+      else if (_ === "maven.home") t.push(path.join(S, "conf", "settings.xml"));
       else if (_ === "sbt.global.base") t.push(...o(S));
-      else if (_ === "sbt.ivy.home") t.push(k.join(S, ".credentials"));
+      else if (_ === "sbt.ivy.home") t.push(path.join(S, ".credentials"));
       else if (_ === "user.home")
         t.push(
-          k.join(S, ".m2", "settings.xml"),
-          k.join(S, ".m2", "settings-security.xml"),
-          k.join(S, ".gradle", "gradle.properties"),
-          k.join(S, ".ivy2", ".credentials"),
-          ...o(k.join(S, ".sbt")),
+          path.join(S, ".m2", "settings.xml"),
+          path.join(S, ".m2", "settings-security.xml"),
+          path.join(S, ".gradle", "gradle.properties"),
+          path.join(S, ".ivy2", ".credentials"),
+          ...o(path.join(S, ".sbt")),
         );
       else t.push(S);
     }
@@ -8128,10 +8115,10 @@ function up(e) {
 }
 async function dp(e) {
   let t = (e?.trim() || "/etc/krb5.conf")
-    .split(k.delimiter)
+    .split(path.delimiter)
     .map((d) => d.trim())
     .filter(Boolean);
-  if (t.some((d) => !k.isAbsolute(d)))
+  if (t.some((d) => !path.isAbsolute(d)))
     throw ce("KRB5_CONFIG holds a relative path");
   let r = String(process.getuid?.() ?? ""),
     i = [],
@@ -8148,7 +8135,7 @@ async function dp(e) {
           S = /^(include|includedir)\s+(.+)$/i.exec(_);
         if (S) {
           let U = S[2].trim();
-          if (!k.isAbsolute(U))
+          if (!path.isAbsolute(U))
             throw ce("a krb5.conf include names a relative path");
           if (S[1].toLowerCase() === "include") await u(U, p + 1);
           else {
@@ -8162,7 +8149,7 @@ async function dp(e) {
             }
             for (let F of N.sort())
               if (/^[A-Za-z0-9_-]+$/.test(F) || F.endsWith(".conf"))
-                await u(k.join(U, F), p + 1);
+                await u(path.join(U, F), p + 1);
           }
           continue;
         }
@@ -8197,9 +8184,9 @@ function fl(e) {
   if (i !== "FILE" && i !== "WRFILE" && i !== "DIR") return [];
   let u = !1;
   if (i === "DIR" && o.startsWith(":")) ((o = o.slice(1)), (u = !0));
-  if (!k.isAbsolute(o))
+  if (!path.isAbsolute(o))
     throw ce("a Kerberos ticket cache / keytab is named by a relative path");
-  return u ? [o, k.dirname(o)] : [o];
+  return u ? [o, path.dirname(o)] : [o];
 }
 async function fp(e, t, r) {
   if (!e?.trim()) return { stores: [], programs: [] };
@@ -8212,30 +8199,30 @@ async function fp(e, t, r) {
     if (p === "" || p === "off" || p === "netrc") continue;
     if (p === "git") {
       let h = d[1];
-      if (!h || !k.isAbsolute(h))
+      if (!h || !path.isAbsolute(h))
         throw ce("GOAUTH names a git directory by a relative path");
-      (o.push(h), i.push(...(await Nn(k.join(h, "config"), t))));
-      let w = k.join(h, ".git"),
+      (o.push(h), i.push(...(await Nn(path.join(h, "config"), t))));
+      let w = path.join(h, ".git"),
         E = await bt(w),
         _ = E === null ? null : /^gitdir:\s*(.+?)\s*$/m.exec(E),
         S = [w];
       if (_ !== null) {
-        let C = k.resolve(h, _[1]),
-          L = await bt(k.join(C, "commondir"));
-        S.splice(0, 1, C, ...(L === null ? [] : [k.resolve(C, L.trim())]));
+        let C = path.resolve(h, _[1]),
+          L = await bt(path.join(C, "commondir"));
+        S.splice(0, 1, C, ...(L === null ? [] : [path.resolve(C, L.trim())]));
       }
       for (let C of S)
         i.push(
-          ...(await Nn(k.join(C, "config"), t)),
-          ...(await Nn(k.join(C, "config.worktree"), t)),
+          ...(await Nn(path.join(C, "config"), t)),
+          ...(await Nn(path.join(C, "config.worktree"), t)),
         );
       continue;
     }
-    if (k.isAbsolute(p)) o.push(p);
-    else if (p.includes("/") || p.includes(k.sep))
+    if (path.isAbsolute(p)) o.push(p);
+    else if (p.includes("/") || p.includes(path.sep))
       throw ce("GOAUTH names a credential helper by a relative path");
-    else o.push(...r.map((h) => k.join(h, p)));
-    o.push(...d.slice(1).filter((h) => k.isAbsolute(h)));
+    else o.push(...r.map((h) => path.join(h, p)));
+    o.push(...d.slice(1).filter((h) => path.isAbsolute(h)));
   }
   return { stores: i, programs: o };
 }
@@ -8303,7 +8290,7 @@ async function Nn(e, t, r = 0, i) {
     let C = S[1].toLowerCase();
     if (C === "path" && (w === "include" || w === "includeif")) {
       let D = p(d(S[2])),
-        U = k.isAbsolute(D) ? D : k.resolve(e === null ? t : k.dirname(e), D);
+        U = path.isAbsolute(D) ? D : path.resolve(e === null ? t : path.dirname(e), D);
       h.push(...(await Nn(U, t, r + 1)));
       continue;
     }
@@ -8313,13 +8300,13 @@ async function Nn(e, t, r = 0, i) {
     ) {
       let D = p(d(S[2]));
       if (D === "") continue;
-      if (k.isAbsolute(D)) h.push(D);
+      if (path.isAbsolute(D)) h.push(D);
       else throw ce(`a gitconfig http.${S[1]} is a relative path`);
       continue;
     }
     if (C === "signingkey" && w === "user") {
       let D = p(d(S[2]));
-      if (k.isAbsolute(D)) h.push(D.replace(/\.pub$/, ""));
+      if (path.isAbsolute(D)) h.push(D.replace(/\.pub$/, ""));
       continue;
     }
     if (C === "sshcommand" && w === "core") {
@@ -8335,14 +8322,14 @@ async function Nn(e, t, r = 0, i) {
       let U = L[D],
         N = /^--?[A-Za-z][\w-]*=(.*)$/s.exec(U)?.[1],
         F = p(N ?? U);
-      if (k.isAbsolute(F)) {
+      if (path.isAbsolute(F)) {
         h.push(F);
         continue;
       }
       let J = /^(?:--file|-f)$/.test(U);
       if (J || /^--file=/.test(U)) {
         let K = J ? p(L[D + 1] ?? "") : F;
-        if (!k.isAbsolute(K))
+        if (!path.isAbsolute(K))
           throw ce(
             "a gitconfig credential helper names its file by a relative path",
           );
@@ -8386,7 +8373,7 @@ async function to(e, t, r = 0) {
     d = async (w) => {
       if (!w || w.toLowerCase() === "none" || w === "/dev/null") return;
       let E = await pl(w, t);
-      if (!k.isAbsolute(E))
+      if (!path.isAbsolute(E))
         throw ce(
           "an ssh command names an identity or configuration file by a relative path",
         );
@@ -8497,7 +8484,7 @@ async function wp(e, t, r) {
     o = (w) => {
       let E = w.trim().replace(/^~(?=\/|$)/, t);
       if (!E || E === "prompt" || E.startsWith("prompt_")) return;
-      if (!k.isAbsolute(E))
+      if (!path.isAbsolute(E))
         throw ce("an Ansible vault password source is a relative path");
       i.push(E);
     },
@@ -8510,16 +8497,16 @@ async function wp(e, t, r) {
     d = e("ANSIBLE_VAULT_IDENTITY_LIST");
   if (d) u(d);
   let p = e("ANSIBLE_CONFIG")?.trim();
-  if (p !== void 0 && p !== "" && !k.isAbsolute(p))
+  if (p !== void 0 && p !== "" && !path.isAbsolute(p))
     throw ce("ANSIBLE_CONFIG holds a relative path");
   let h = await stat(r).then(
     (w) => (w.mode & 2) !== 0,
     () => !0,
   );
   for (let w of [
-    ...(p ? [p, k.join(p, "ansible.cfg")] : []),
-    ...(h ? [] : [k.join(r, "ansible.cfg")]),
-    k.join(t, ".ansible.cfg"),
+    ...(p ? [p, path.join(p, "ansible.cfg")] : []),
+    ...(h ? [] : [path.join(r, "ansible.cfg")]),
+    path.join(t, ".ansible.cfg"),
     "/etc/ansible/ansible.cfg",
   ]) {
     let E = await bt(w);
@@ -8605,7 +8592,7 @@ async function yp(e) {
         o === "secret-tool" ||
         o === "kwallet-query"
       )
-        t.push(k.join(r, o));
+        t.push(path.join(r, o));
   }
   return t;
 }
@@ -8628,7 +8615,7 @@ async function bp(e) {
     for (let o of i.split(/\r?\n/)) {
       let u = /^\s*(sslkey|passfile)\s*=\s*(.+?)\s*$/i.exec(o);
       if (!u) continue;
-      if (k.isAbsolute(u[2])) t.push(u[2]);
+      if (path.isAbsolute(u[2])) t.push(u[2]);
       else throw ce(`a pg_service.conf ${u[1]} is a relative path`);
     }
   }
@@ -8685,7 +8672,7 @@ async function za(e) {
   return i;
 }
 async function Ep(e) {
-  let t = await bt(k.join(e, "service_principal_entries.json"));
+  let t = await bt(path.join(e, "service_principal_entries.json"));
   if (t === null) return [];
   let r;
   try {
@@ -8720,7 +8707,7 @@ var kp = createLazyValue(() =>
 async function Rp(e, t) {
   let r;
   try {
-    r = (await readdir(k.join(e, "configurations"))).filter((u) =>
+    r = (await readdir(path.join(e, "configurations"))).filter((u) =>
       u.startsWith("config_"),
     );
   } catch (u) {
@@ -8734,9 +8721,9 @@ async function Rp(e, t) {
   let i = [],
     o = [];
   for (let u of [
-    ...(t && k.isAbsolute(t) ? [k.join(t, "properties")] : []),
-    k.join(e, "properties"),
-    ...r.map((d) => k.join(e, "configurations", d)),
+    ...(t && path.isAbsolute(t) ? [path.join(t, "properties")] : []),
+    path.join(e, "properties"),
+    ...r.map((d) => path.join(e, "configurations", d)),
   ]) {
     let d = await bt(u);
     if (d === null) continue;
@@ -8816,7 +8803,7 @@ var Op = [
   "/Applications/Xcode.app/Contents/Developer/usr/share/git-core/gitconfig",
 ];
 function Ln(e) {
-  if (!k.isAbsolute(e)) throw ce("it names a token file by a relative path");
+  if (!path.isAbsolute(e)) throw ce("it names a token file by a relative path");
   return e;
 }
 var Ap = 8,
@@ -8843,7 +8830,7 @@ async function Pp() {
     e
       .filter((r) => r.startsWith(sl))
       .map(async (r) => {
-        let i = k.join(Ot.tmpdir(), r);
+        let i = path.join(Ot.tmpdir(), r);
         try {
           let o = await lstat(i);
           if (o.isDirectory() && o.mtimeMs < t)
@@ -8894,7 +8881,6 @@ function Lp(e) {
     e === "not_contains" || (e.startsWith("count:") && Number(e.slice(6)) === 0)
   );
 }
-import Fn from "path";
 function Mp(e) {
   return e.arm === void 0 && e.type === "tool_used" && e.tool === SKILL_TOOL_NAME;
 }
@@ -9411,22 +9397,21 @@ async function Zp(e, t, r) {
 }
 var Qp = getCurrentPlatform() === "windows" ? 0 : constants.O_NONBLOCK;
 function em(e) {
-  let t = Fn.resolve("/eval-run-base"),
-    r = Fn.resolve(t, e.replaceAll("\\", "/")),
-    i = Fn.relative(Fn.join(t, vt), r);
+  let t = path.resolve("/eval-run-base"),
+    r = path.resolve(t, e.replaceAll("\\", "/")),
+    i = path.relative(path.join(t, vt), r);
   if (i === "") return ".";
-  return i.startsWith("..") || Fn.isAbsolute(i)
+  return i.startsWith("..") || path.isAbsolute(i)
     ? null
-    : i.split(Fn.sep).join("/");
+    : i.split(path.sep).join("/");
 }
-import wr from "path";
 function nm(e, t, r) {
   if (r.length > 0) {
     let i = null,
-      o = wr.resolve(e);
+      o = path.resolve(e);
     while (Xe(o, t) && o !== t) {
       if (Ht(_t(o), r)) i = o;
-      let u = wr.dirname(o);
+      let u = path.dirname(o);
       if (u === o) break;
       o = u;
     }
@@ -9435,13 +9420,13 @@ function nm(e, t, r) {
   return t;
 }
 function rm(e, t) {
-  let r = wr.dirname(e);
+  let r = path.dirname(e);
   if (!Xe(r, t)) return [e];
   let i = [],
     o = r;
   for (;;) {
     i.push(o);
-    let u = wr.dirname(o);
+    let u = path.dirname(o);
     if (u === o || !Xe(u, t)) break;
     o = u;
   }
@@ -9532,7 +9517,7 @@ async function Il(e, t, r, i) {
         );
       if (w.length > 0) throw new io(w);
     }
-    (await mkdir(wr.join(r.outDir, "mocks"), { recursive: !0 }),
+    (await mkdir(path.join(r.outDir, "mocks"), { recursive: !0 }),
       await Promise.all([
         writeFile(d.configPath, d.configJson, { mode: 384 }),
         ...d.specs.map((h) => writeFile(h.path, h.json, { mode: 384 })),
@@ -9577,7 +9562,6 @@ function Pl(e) {
 }
 import { rm as Nl } from "fs/promises";
 import { createServer } from "net";
-import $l from "path";
 var am = createLazyValue(() =>
     c({ token: s(), registeredName: s(), tool: s(), input: fe(s(), se()) }),
   ),
@@ -9587,11 +9571,11 @@ var am = createLazyValue(() =>
   _i = 16384;
 async function jl({ credentials: e }) {
   let t = new Map(),
-    r = getCurrentPlatform() === "windows" ? null : await mkdtemp($l.join(tmpdir(), "cc-eval-agent-")),
+    r = getCurrentPlatform() === "windows" ? null : await mkdtemp(path.join(tmpdir(), "cc-eval-agent-")),
     i =
       r === null
         ? `\\\\?\\pipe\\cc-eval-agent-${randomBytes(8).toString("hex")}`
-        : $l.join(r, "s"),
+        : path.join(r, "s"),
     o = new Set(),
     u = createServer((d) => {
       (o.add(d), d.once("close", () => o.delete(d)), dm(d, t));
@@ -10436,7 +10420,7 @@ function Sm(e, t) {
       );
 }
 function Hl(e, t) {
-  let r = br.relative(e, t.caseDir);
+  let r = path.relative(e, t.caseDir);
   return r === "" ? "." : r;
 }
 async function Tm(e, t, r, i, o, u, d, p, h) {
@@ -10669,8 +10653,8 @@ async function Tm(e, t, r, i, o, u, d, p, h) {
     );
   } finally {
     (C?.agentRun?.dispose(),
-      await Gl(br.join(_.outDir, Vo), { force: !0 }).catch(() => {}),
-      await Gl(br.join(_.configDir, fi), { force: !0 }).catch(() => {}));
+      await Gl(path.join(_.outDir, Vo), { force: !0 }).catch(() => {}),
+      await Gl(path.join(_.configDir, fi), { force: !0 }).catch(() => {}));
     let D = S && i.keepFailedRuns && !i.signal.aborted;
     if (i.keepTemp || D) {
       let U = await Ea(_).then(
@@ -10754,7 +10738,7 @@ function Un() {
 }
 async function Bl(e, t, r) {
   let i = vt.toLowerCase(),
-    o = await lstat(br.join(e, vt)).then(
+    o = await lstat(path.join(e, vt)).then(
       (u) =>
         r === "run" && u.isFile() && u.size === 0 ? "placeholder" : "present",
       (u) => {
@@ -10784,7 +10768,7 @@ var Om = 32,
   Am = 200000;
 async function Yl(e, t, r, i, o = { count: 0 }) {
   if (i > Om) throw Un();
-  let u = br.join(e, t),
+  let u = path.join(e, t),
     d = await lstat(u, { bigint: !0 }).catch(() => null);
   if (
     d === null ||
@@ -10946,7 +10930,7 @@ function Mm(e, t, r) {
   };
 }
 async function ic(e, t) {
-  if (e.includes(Ee.sep) || e.includes("/")) return { kind: "path", root: e };
+  if (e.includes(path.sep) || e.includes("/")) return { kind: "path", root: e };
   let r = parsePluginId(e);
   if (!r && e.includes("@")) return { kind: "path", root: e };
   if (r && r.marketplace !== SKILLS_DIR_PLUGIN_SOURCE) {
@@ -11264,18 +11248,18 @@ Terminated \u2014 finishing up\u2026
           : u && K.value.source === "flag"
             ? de
             : K.value.segments,
-      ot = Ke.join(Ee.sep),
+      ot = Ke.join(path.sep),
       Re = [
         ...(Ze === null ? Ke : []),
         "results",
         ue.started_at.replace(/[:.]/g, "-"),
       ],
-      Ae = t.outputDir ?? Ee.join(Ce, ...Re);
+      Ae = t.outputDir ?? path.join(Ce, ...Re);
     if (u && t.outputDir === void 0) {
       let xe = await Os(Ce, Re);
       if (xe !== void 0)
         Ge(
-          `Warning: results are written under ${Ee.join(Ce, ot)}: ${xe} \u2014 files written there may be loaded as plugin components; pass --output-dir to write elsewhere`,
+          `Warning: results are written under ${path.join(Ce, ot)}: ${xe} \u2014 files written there may be loaded as plugin components; pass --output-dir to write elsewhere`,
         );
     }
     let Qe = escapeControlAndInvisibleChars(jsonStringify(Le.result, void 0, 2)),
@@ -11295,7 +11279,7 @@ Terminated \u2014 finishing up\u2026
             );
         } else await mkdir(Ae, { recursive: !0 });
         await pn(
-          Ee.join(Ae, "aggregate-result.json"),
+          path.join(Ae, "aggregate-result.json"),
           `${Qe}
 `,
           t.outputDir === void 0,
@@ -11304,7 +11288,7 @@ Terminated \u2014 finishing up\u2026
           await Qm(Ae, ue, t.outputDir === void 0);
         } catch (ct) {
           Ge(
-            `warning: agent-mock recordings not written \u2014 adopt nothing from ${Ee.join(Ae, Rn)}: ${l(ct).replace(/[\r\n]+/g, " ")}`,
+            `warning: agent-mock recordings not written \u2014 adopt nothing from ${path.join(Ae, Rn)}: ${l(ct).replace(/[\r\n]+/g, " ")}`,
           );
         }
       } catch (ct) {
@@ -11464,15 +11448,15 @@ async function Xl(e) {
       let J = L(d),
         K =
           i.report !== void 0
-            ? Ee.resolve(getCwd(), i.report)
+            ? path.resolve(getCwd(), i.report)
             : _
-              ? Ee.join(p, "report.html")
+              ? path.join(p, "report.html")
               : null,
         de = K !== null ? D(d, J) : "";
       if (((t = "publish"), K !== null))
         try {
           if (i.report === void 0 && h) await h();
-          else await mkdir(Ee.dirname(K), { recursive: !0 });
+          else await mkdir(path.dirname(K), { recursive: !0 });
           (await pn(K, de, i.report === void 0 && i.outputDir === void 0),
             Ge(`Report: ${K}`),
             (r = !0));
@@ -11568,8 +11552,8 @@ async function Zl(e, { result: t, valid: r }, i) {
         process.stdout.write(o, (p) => (p ? d(p) : u()));
       });
     else {
-      let u = Ee.resolve(getCwd(), e);
-      (await mkdir(Ee.dirname(u), { recursive: !0 }), await pn(u, o, !1));
+      let u = path.resolve(getCwd(), e);
+      (await mkdir(path.dirname(u), { recursive: !0 }), await pn(u, o, !1));
     }
     return !0;
   } catch (o) {
@@ -11627,7 +11611,7 @@ async function pluginEvalInitHandler(e, t = {}) {
     p === null &&
     t.evalDir === void 0 &&
     !Vrt(d) &&
-    (await lstat(Ee.join(d, rt)).catch(() => null))?.isDirectory() !== !0 &&
+    (await lstat(path.join(d, rt)).catch(() => null))?.isDirectory() !== !0 &&
     !(await Vm(d))
   )
     return (
@@ -11701,9 +11685,9 @@ async function pluginEvalInitHandler(e, t = {}) {
     process.stderr
       .write(`No TTY available \u2014 writing a blank template. Re-run in a terminal for the authoring interview.
 `);
-  let _ = Ee.join(d, E.value.dir, o.caseName),
-    S = Ee.join(_, "prompt.md"),
-    C = Ee.join(_, "graders", "criteria.md"),
+  let _ = path.join(d, E.value.dir, o.caseName),
+    S = path.join(_, "prompt.md"),
+    C = path.join(_, "graders", "criteria.md"),
     L = !1,
     D = [];
   try {
@@ -11711,11 +11695,11 @@ async function pluginEvalInitHandler(e, t = {}) {
       await Er(d, E.value.segments, D),
       await mkdir(_, { mode: 493 }),
       (L = !0),
-      await mkdir(Ee.join(_, "graders"), { mode: 493 }),
+      await mkdir(path.join(_, "graders"), { mode: 493 }),
       await pn(S, Gi, !0),
       await pn(C, Bi, !0),
       process.stdout
-        .write(`Created ${Ee.relative(d, S)} and ${Ee.relative(d, C)}
+        .write(`Created ${path.relative(d, S)} and ${path.relative(d, C)}
 `),
       await logFeatureOkAsync("cli_plugin_eval_init"),
       exitAfterAnalyticsFlush(0)
@@ -11775,7 +11759,7 @@ async function ec(e) {
     await gracefulShutdown(e === "SIGTERM" ? 143 : 130));
 }
 async function Wm(e, t, r) {
-  let i = Ee.resolve(getCwd(), e);
+  let i = path.resolve(getCwd(), e);
   await (t === void 0 ? assertPathIsLocal(getCwd(), e, "target") : ma(e));
   try {
     i = await Wo(i);
@@ -11786,7 +11770,7 @@ async function Wm(e, t, r) {
       });
     return {
       targetDir: i,
-      targetIsCaseFile: !t && Nt(Ee.basename(i)),
+      targetIsCaseFile: !t && Nt(path.basename(i)),
       pluginRoot: t ? i : null,
       untrustedManifestDir: null,
       targetResolved: !1,
@@ -11802,12 +11786,12 @@ async function Wm(e, t, r) {
       targetResolved: !0,
       enclosingVerdict: null,
     };
-  let o = Nt(Ee.basename(i)),
-    u = o ? Ee.dirname(i) : i;
+  let o = Nt(path.basename(i)),
+    u = o ? path.dirname(i) : i;
   if (!o) r.consentRoot ??= u;
   let d = await rr(u, r),
-    p = Ee.resolve(await or(r), e),
-    h = o ? Ee.dirname(p) : p,
+    p = path.resolve(await or(r), e),
+    h = o ? path.dirname(p) : p,
     w = null;
   if (h !== u) {
     let _ = await vn(h, await rr(h, r), r, Number.POSITIVE_INFINITY);
@@ -11864,7 +11848,7 @@ async function Er(e, t, r, { vetOwnership: i = null, create: o = !0 } = {}) {
     }),
     p = e;
   for (let h of t) {
-    if (((p = Ee.join(p, h)), o))
+    if (((p = path.join(p, h)), o))
       try {
         (await mkdir(p, { mode: 493 }), r.push(p));
       } catch (w) {
@@ -11905,7 +11889,7 @@ async function Km(e, t, r, i) {
 async function Vm(e) {
   for (let t of PLUGIN_CONTENT_MARKERS) {
     if (t === ".claude-plugin") continue;
-    if ((await lstat(Ee.join(e, t)).catch(() => null)) !== null) return !0;
+    if ((await lstat(path.join(e, t)).catch(() => null)) !== null) return !0;
   }
   return !1;
 }
@@ -11929,26 +11913,26 @@ async function sc(e, t) {
   try {
     (await assertPathIsLocal(
       e,
-      t.segments.join(Ee.sep),
+      t.segments.join(path.sep),
       t.source === "flag" ? "--eval-dir" : "the manifest's experimental.evals",
     ),
-      (r = await realpath(Ee.join(e, ...t.segments))));
+      (r = await realpath(path.join(e, ...t.segments))));
   } catch (d) {
     if (d instanceof R) throw d;
     return t;
   }
-  let i = Ee.relative(e, r),
-    o = i.split(Ee.sep);
+  let i = path.relative(e, r),
+    o = i.split(path.sep);
   if (
     !we(e, r) ||
     o.length !== t.segments.length ||
     o.some((d, p) => d.toLowerCase() !== t.segments[p].toLowerCase())
   )
     return t;
-  if (i === t.segments.join(Ee.sep)) return t;
+  if (i === t.segments.join(path.sep)) return t;
   let u = e;
   for (let d of t.segments) {
-    u = Ee.join(u, d);
+    u = path.join(u, d);
     try {
       if ((await lstat(u)).isSymbolicLink()) return t;
     } catch {
@@ -11971,9 +11955,9 @@ function Xm(e) {
   return /^[A-Za-z0-9_./:\\-]+$/.test(e) ? e : null;
 }
 function Jm(e) {
-  let t = Ee.relative(getCwd(), e);
+  let t = path.relative(getCwd(), e);
   if (t === "") return ".";
-  if (Ee.isAbsolute(t)) return t;
+  if (path.isAbsolute(t)) return t;
   let r = getCurrentPlatform() === "windows" ? t.replaceAll("\\", "/") : t;
   return r === ".." || r.startsWith("./") || r.startsWith("../") ? r : `./${r}`;
 }
@@ -11990,7 +11974,7 @@ function ac(e) {
     overlapRoot: i ?? o ?? t,
     overlapBase:
       i === null && o !== null && Xe(t, o)
-        ? Ee.relative(o, t).split(Ee.sep).filter(Boolean)
+        ? path.relative(o, t).split(path.sep).filter(Boolean)
         : [],
     overlapAdvisory: i === null && o !== null && !(r && o === t) && o !== u,
   };
@@ -12006,7 +11990,7 @@ function qm(e) {
   }
 }
 async function Qm(e, t, r) {
-  let i = Ee.join(e, Rn);
+  let i = path.join(e, Rn);
   if (
     (await assertPathIsLocal(e, Rn, "mock recordings"),
     !t.cases.some((p) =>
@@ -12031,7 +12015,7 @@ async function Qm(e, t, r) {
     let h = new Set();
     for (let w of p.mockRecordings ?? []) {
       if (h.has(w.server)) continue;
-      let E = Ee.join(Rn, w.server, w.file),
+      let E = path.join(Rn, w.server, w.file),
         _ = u.get(E);
       if (_ === void 0) u.set(E, { rec: w, adoptDirs: new Set([w.adoptDir]) });
       else if (_.rec.answerHash === w.answerHash) _.adoptDirs.add(w.adoptDir);
@@ -12053,20 +12037,20 @@ async function Qm(e, t, r) {
     return;
   }
   let d = [...u].flatMap(([p, { rec: h, adoptDirs: w }]) => [
-    `${escapeUntrustedText(Ee.join(e, p))}  sha256=${createHash("sha256").update(h.json).digest("hex")}`,
-    ...[...w].map((E) => `    -> ${escapeUntrustedText(`${E}${Ee.sep}`)}`),
+    `${escapeUntrustedText(path.join(e, p))}  sha256=${createHash("sha256").update(h.json).digest("hex")}`,
+    ...[...w].map((E) => `    -> ${escapeUntrustedText(`${E}${path.sep}`)}`),
   ]);
   try {
     let p = new Set();
     for (let [w, { rec: E }] of u) {
       if (!p.has(E.server)) (await Er(e, [Rn, E.server], []), p.add(E.server));
-      await pn(Ee.join(e, w), E.json, !0);
+      await pn(path.join(e, w), E.json, !0);
     }
     let h = new Map([[i, new Set(p)]]);
     for (let [w, { rec: E }] of u) {
-      let _ = Ee.join(i, E.server),
+      let _ = path.join(i, E.server),
         S = h.get(_) ?? new Set();
-      (S.add(Ee.basename(w)), h.set(_, S));
+      (S.add(path.basename(w)), h.set(_, S));
     }
     for (let [w, E] of h) {
       if (!(await lstat(w)).isDirectory())
@@ -12076,16 +12060,16 @@ async function Qm(e, t, r) {
       for (let _ of await readdir(w))
         if (!E.has(_))
           throw new Et(
-            `${escapeUntrustedText(Ee.join(w, _))} was not written by this run \u2014 something else is writing into ${escapeUntrustedText(i)}`,
+            `${escapeUntrustedText(path.join(w, _))} was not written by this run \u2014 something else is writing into ${escapeUntrustedText(i)}`,
           );
     }
     for (let [w, { rec: E }] of u)
-      if (!(await tg(Ee.join(e, w), E.json)))
+      if (!(await tg(path.join(e, w), E.json)))
         throw new Et(
-          `${escapeUntrustedText(Ee.join(e, w))} no longer holds what this run wrote \u2014 something else is writing into ${escapeUntrustedText(i)}`,
+          `${escapeUntrustedText(path.join(e, w))} no longer holds what this run wrote \u2014 something else is writing into ${escapeUntrustedText(i)}`,
         );
     await pn(
-      Ee.join(i, "ADOPT.txt"),
+      path.join(i, "ADOPT.txt"),
       `${tc}
 
 ${d.join(`
@@ -12112,14 +12096,14 @@ async function eg(e) {
   }
   let t = await readdir(e, { withFileTypes: !0 });
   for (let r of t) {
-    let i = Ee.join(e, r.name),
+    let i = path.join(e, r.name),
       o = await getFileEntryKind(r, i, "other");
     if (r.name === "ADOPT.txt" && o === "file") continue;
     if (o !== "dir") return !1;
     for (let u of await readdir(i, { withFileTypes: !0 }))
       if (
         !yo.test(u.name) ||
-        (await getFileEntryKind(u, Ee.join(i, u.name), "other")) !== "file"
+        (await getFileEntryKind(u, path.join(i, u.name), "other")) !== "file"
       )
         return !1;
   }

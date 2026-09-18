@@ -10791,7 +10791,7 @@ import {
   unlink,
   writeFile,
 } from "fs/promises";
-import * as xi from "path";
+import path from "path";
 function f7() {
   return { seconds: 0, nanos: 0 };
 }
@@ -25019,11 +25019,10 @@ class FileStateError extends Error {
     this.name = "FileStateError";
   }
 }
-import Qle from "path";
 var READ_TOOL_NAME = "Read",
   IMAGE_FILE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp"]);
 function isImageOrPdfPath(e) {
-  let t = Qle.extname(e).toLowerCase().slice(1);
+  let t = path.extname(e).toLowerCase().slice(1);
   return IMAGE_FILE_EXTENSIONS.has(t) || t === "pdf";
 }
 var WRITE_TOOL_NAME = "Write";
@@ -27706,7 +27705,7 @@ function zue(e, t) {
   return `flat-migration.${e}.${r}`;
 }
 function br() {
-  return xi.join(getClaudeConfigDir(), "telemetry");
+  return path.join(getClaudeConfigDir(), "telemetry");
 }
 var Fue = 2000,
   Bue = 3000,
@@ -27773,7 +27772,7 @@ class gm {
     return (await this.loadEventsFromCurrentBatch()).length;
   }
   getCurrentBatchFilePath() {
-    return xi.join(br(), `${sm}${K()}.${Di}.json`);
+    return path.join(br(), `${sm}${K()}.${Di}.json`);
   }
   currentBatchStream() {
     return STORAGE_KEYS.log(K(), "telemetry", { runId: Di });
@@ -27920,7 +27919,7 @@ class gm {
         throw r;
       }
       for (let r of t) {
-        let o = xi.join(br(), r);
+        let o = path.join(br(), r);
         this.retryFileInBackground(o).catch((d) => {
           logError(d);
         });
@@ -28004,7 +28003,7 @@ class gm {
       let _ = p.slice(o.length, -5);
       if (_.length === 0 || _ === Di) continue;
       if (r.has(_)) continue;
-      let E = xi.join(br(), p),
+      let E = path.join(br(), p),
         C = STORAGE_KEYS.log(t, "telemetry", { runId: _ }),
         I = await this.loadEventsFromFile(E);
       if (I.length === 0) continue;
