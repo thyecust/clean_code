@@ -8,7 +8,7 @@
 
 // Version: 2.1.263
 import { rs } from "../../00-第三方库/lodash/lodash.207999qb.js";
-import { JETBRAINS_IDES, env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
+import { env as a } from "../../01-核心基础设施/设置-配置/chunk-zqr5ctyf.js";
 import { j, B } from "../../00-第三方库/lodash/lodash.2x3q7cfh.js";
 import { lit as S } from "../../01-核心基础设施/遥测-OpenTelemetry/analytics-fields.js";
 import { W, Rt } from "../../00-第三方库/@anthropic-ai/sdk/sdk.h4f48kbj.js";
@@ -141,7 +141,6 @@ async function checkAndRestoreTerminalBackup(e) {
     );
   }
 }
-import { resolve } from "path";
 function or() {
   let e = a.SHELL || "",
     t = homedir(),

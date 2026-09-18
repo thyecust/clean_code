@@ -23,13 +23,9 @@ import { spawn } from "child_process";
 import {
   lstat,
   mkdir,
-  open,
-  readdir,
-  readFile,
   realpath,
   rm,
   rmdir,
-  stat,
   unlink,
   writeFile,
 } from "fs/promises";
@@ -38,7 +34,6 @@ import {
   dirname,
   isAbsolute,
   join,
-  resolve,
   sep,
 } from "path";
 var fe = 50;

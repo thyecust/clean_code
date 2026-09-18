@@ -23,7 +23,7 @@ import { FocusableBox } from "../../01-核心基础设施/UI组件-TUI/focusable
 import { ErrorMessage } from "../../01-核心基础设施/UI组件-TUI/error-message.js";
 import { ActionKeybindingHint } from "../键位绑定-Keybindings/action-keybinding-hint.js";
 import { e, r } from "../../00-第三方库/react/react.kwtapczy.js";
-import { E, V, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { E, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { MEMO_CACHE_SENTINEL } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
 F();

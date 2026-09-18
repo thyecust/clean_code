@@ -88,7 +88,7 @@ import "../远程控制-Bridge/remote-control-ui-strings.js";
 import { parseThinClientReply } from "../../01-核心基础设施/核心工具-未归类/parse-thin-client-reply.js";
 import { getThemeColor } from "../../01-核心基础设施/UI组件-TUI/theme-color.js";
 import "../工作树-Git/git-operations.js";
-import { Dn, kn, E, V, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { Dn, kn, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import { figures } from "../Teammates团队/chunk-mrfx53ye.js";
 import { s, se, v, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import { getGraphemeSegmenter } from "../../01-核心基础设施/核心工具-日期与本地化/intl-text-utils.js";

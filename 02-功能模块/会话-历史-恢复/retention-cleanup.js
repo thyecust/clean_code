@@ -76,17 +76,13 @@ import { peerTransferSpoolDir } from "../跨会话消息-UDS/peer-file-transfer.
 import { isProcessRunning } from "../守护服务-Daemon/process-record.js";
 import { s, T, c } from "../../00-第三方库/zod/zod.5ef0bk11.js";
 import * as A from "fs/promises";
-import { homedir, tmpdir } from "os";
+import { tmpdir } from "os";
 import { basename, dirname, join } from "path";
 var ce = 3,
   le = 3,
   V = 1;
 import {
   lstat,
-  mkdir,
-  realpath,
-  rename,
-  rm,
 } from "fs/promises";
 async function K(e) {
   let t;
