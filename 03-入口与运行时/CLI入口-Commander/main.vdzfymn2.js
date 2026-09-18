@@ -29,7 +29,6 @@ import {
   rYt,
   tLn,
   ns,
-  pLn,
   kW,
   krt,
   xrt,
@@ -573,7 +572,7 @@ import "../../01-核心基础设施/核心工具-其他/websocket-subprotocols.j
 import "../../01-核心基础设施/核心工具-未归类/auto-react-state.js";
 import "../../01-核心基础设施/核心工具-类型与数值/lodash-to-number.js";
 import "../../01-核心基础设施/UI组件-TUI/theme-resolution.js";
-import { re, E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
+import { E, C, d, F } from "../../00-第三方库/react/React运行时-JSX.j03jpdbn.js";
 import "../../02-功能模块/Skills技能/org-skills-sync.js";
 import { isPluginEvalEnabled } from "../../01-核心基础设施/设置-配置/early-access-feature-gates.js";
 import "../../02-功能模块/Teammates团队/chunk-mrfx53ye.js";
