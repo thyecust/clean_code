@@ -1534,8 +1534,8 @@ function clearCACertsCache() {
 function ne(e) {
   (e.certificates.cache.clear?.(), logForDebugging("Cleared CA certificates cache"));
 }
-import { createPrivateKey, X509Certificate as Lt } from "crypto";
-import { Agent as Rt } from "https";
+import { createPrivateKey, X509Certificate } from "crypto";
+import { Agent } from "https";
 class be {
   clientCert = null;
   clientKey = null;
@@ -1572,7 +1572,7 @@ function Ht(e, t) {
     s = !1;
   for (let i of e.match(PEM_CERT_BLOCK_RE) ?? [])
     try {
-      if (new Lt(i).checkPrivateKey(r)) return !1;
+      if (new X509Certificate(i).checkPrivateKey(r)) return !1;
       o = !0;
     } catch {
       s = !0;
@@ -1686,7 +1686,7 @@ function getMTLSAgent() {
   let o;
   if (t || r) {
     let s = { ...t, ...(r && { ca: r }), keepAlive: !0 };
-    (logForDebugging("mTLS: Creating HTTPS agent with custom certificates"), (o = new Rt(s)));
+    (logForDebugging("mTLS: Creating HTTPS agent with custom certificates"), (o = new Agent(s)));
   }
   return ((e.agentCache = { config: t, ca: r, agent: o }), o);
 }

@@ -12,7 +12,7 @@ import { getUrlParserModule } from "../../01-核心基础设施/核心工具-字
 import "./chunk-z7ktsccq.js";
 import { getPropertyProviderModule } from "../../02-功能模块/模型接入-Bedrock-Vertex/smithy-property-provider.js";
 import { toESM, initESM } from "../../01-核心基础设施/内嵌资源与模块互操作/chunk-2c9tjhwd.js";
-import { Buffer as ae } from "buffer";
+import { Buffer } from "buffer";
 import { request } from "http";
 function httpRequest(e) {
   return new Promise((t, n) => {
@@ -51,7 +51,7 @@ function httpRequest(e) {
           m.push(s);
         }),
           r.on("end", () => {
-            (t(ae.concat(m)), o.destroy());
+            (t(Buffer.concat(m)), o.destroy());
           }));
       }),
       o.end());

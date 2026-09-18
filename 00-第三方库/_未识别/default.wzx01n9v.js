@@ -8,14 +8,14 @@
 
 // Version: 2.1.263
 import N from "process";
-import { Buffer as R } from "buffer";
+import { Buffer } from "buffer";
 import z from "path";
 import { fileURLToPath } from "url";
-import { promisify as ge } from "util";
+import { promisify } from "util";
 import D from "child_process";
-import he, { constants as xe } from "fs/promises";
+import he, { constants } from "fs/promises";
 import I from "process";
-import O, { constants as J } from "fs/promises";
+import O, {} from "fs/promises";
 import T from "process";
 import Y from "os";
 import j from "fs";
@@ -77,7 +77,7 @@ var Q = (() => {
       let o = "/etc/wsl.conf",
         n = !1;
       try {
-        (await O.access(o, J.F_OK), (n = !0));
+        (await O.access(o, constants.F_OK), (n = !0));
       } catch {}
       if (!n) return "/mnt/";
       let t = await O.readFile(o, { encoding: "utf8" }),
@@ -114,13 +114,10 @@ function m(e, r, o) {
     e
   );
 }
-import { promisify as le } from "util";
 import E from "process";
-import { execFile as pe } from "child_process";
-import { promisify as Z } from "util";
+import { execFile } from "child_process";
 import ee from "process";
-import { execFile as re } from "child_process";
-var oe = Z(re);
+var oe = promisify(execFile);
 async function S() {
   if (ee.platform !== "darwin") throw Error("macOS only");
   let { stdout: e } = await oe("defaults", [
@@ -135,9 +132,8 @@ async function S() {
   );
 }
 import te from "process";
-import { promisify as ne } from "util";
-import { execFile as ie, execFileSync } from "child_process";
-var se = ne(ie);
+import { execFileSync } from "child_process";
+var se = promisify(execFile);
 async function W(e, { humanReadableOutput: r = !0, signal: o } = {}) {
   if (te.platform !== "darwin") throw Error("macOS only");
   let n = r ? [] : ["-ss"],
@@ -150,9 +146,7 @@ async function P(e) {
   return W(`tell application "Finder" to set app_path to application file id "${e}" as string
 tell application "System Events" to get value of property list item "CFBundleName" of property list file (app_path & ":Contents:Info.plist")`);
 }
-import { promisify as ae } from "util";
-import { execFile as ce } from "child_process";
-var me = ae(ce),
+var me = promisify(execFile),
   fe = {
     AppXq0fevzme2pys62n3e0fbqa7peapykr8v: {
       name: "Edge",
@@ -183,7 +177,7 @@ async function A(e = me) {
   if (!t) throw new b(`Unknown browser ID: ${n}`);
   return t;
 }
-var ue = le(pe),
+var ue = promisify(execFile),
   de = (e) =>
     e.toLowerCase().replaceAll(/(?:^|\s|-)\S/g, (r) => r.toUpperCase());
 async function B() {
@@ -203,14 +197,14 @@ async function B() {
   if (E.platform === "win32") return A();
   throw Error("Only macOS, Linux, and Windows are supported");
 }
-var ye = ge(D.execFile),
+var ye = promisify(D.execFile),
   F = z.dirname(fileURLToPath(import.meta.url)),
   k = z.join(F, "xdg-open"),
   { platform: u, arch: H } = N;
 async function ve() {
   let e = await v(),
     r = String.raw`(Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice").ProgId`,
-    o = R.from(r, "utf16le").toString("base64"),
+    o = Buffer.from(r, "utf16le").toString("base64"),
     { stdout: n } = await ye(
       e,
       [
@@ -312,14 +306,14 @@ var _ = async (e, r) => {
       if (o.length > 0)
         ((o = o.map((a) => `"\`"${a}\`""`)),
           i.push("-ArgumentList", o.join(",")));
-      e.target = R.from(i.join(" "), "utf16le").toString("base64");
+      e.target = Buffer.from(i.join(" "), "utf16le").toString("base64");
     } else {
       if (r) n = r;
       else {
         let i = !F || F === "/",
           a = !1;
         try {
-          (await he.access(k, xe.X_OK), (a = !0));
+          (await he.access(k, constants.X_OK), (a = !0));
         } catch {}
         n =
           (N.versions.electron ?? (u === "android" || i || !a))

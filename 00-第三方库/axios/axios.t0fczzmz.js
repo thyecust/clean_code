@@ -3663,7 +3663,7 @@ class Ys extends Bf.Transform {
 var zr = Ys;
 import { EventEmitter } from "events";
 import Df from "util";
-import { Readable as Uf } from "stream";
+import { Readable } from "stream";
 var { asyncIterator: Qs } = Symbol,
   Nf = async function* (e) {
     if (e.stream) yield* e.stream();
@@ -3735,7 +3735,7 @@ var jf = (e, t, r) => {
     if (Number.isFinite(l)) c["Content-Length"] = l;
     return (
       t && t(c),
-      Uf.from(
+      Readable.from(
         (async function* () {
           for (let p of f) (yield i, yield* p.encode());
           yield a;

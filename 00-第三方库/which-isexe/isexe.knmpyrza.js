@@ -688,7 +688,7 @@ zt.callCount = (e) => {
 };
 var Wt = zt;
 import Dr from "process";
-import { constants as Fr } from "os";
+import { constants } from "os";
 var qt = () => {
     let e = Ee - Ht + 1;
     return Array.from({ length: e }, Rr);
@@ -702,7 +702,6 @@ var qt = () => {
   }),
   Ht = 34,
   Ee = 64;
-import { constants as _r } from "os";
 var Vt = [
   {
     name: "SIGHUP",
@@ -989,7 +988,7 @@ var we = () => {
   }) => {
     let {
         signals: { [e]: d },
-      } = _r,
+      } = constants,
       l = d !== void 0;
     return {
       name: e,
@@ -1056,7 +1055,7 @@ var Gr = () => {
     };
   },
   Mr = (e, t) => {
-    let r = t.find(({ name: o }) => Fr.signals[o] === e);
+    let r = t.find(({ name: o }) => constants.signals[o] === e);
     if (r !== void 0) return r;
     return t.find((o) => o.number === e);
   },
@@ -1208,7 +1207,7 @@ var zr = 5000,
     });
   };
 import { createWriteStream } from "fs";
-import { ChildProcess as Zr } from "child_process";
+import { ChildProcess } from "child_process";
 function ee(e) {
   return e !== null && typeof e === "object" && typeof e.pipe === "function";
 }
@@ -1220,7 +1219,7 @@ function Te(e) {
     typeof e._writableState === "object"
   );
 }
-var Qr = (e) => e instanceof Zr && typeof e.then === "function",
+var Qr = (e) => e instanceof ChildProcess && typeof e.then === "function",
   Pe = (e, t, r) => {
     if (typeof r === "string") return (e[t].pipe(createWriteStream(r)), e);
     if (Te(r)) return (e[t].pipe(r), e);
@@ -1237,7 +1236,7 @@ var Qr = (e) => e instanceof Zr && typeof e.then === "function",
     if (e.stderr !== null) e.pipeStderr = Pe.bind(void 0, e, "stderr");
     if (e.all !== void 0) e.pipeAll = Pe.bind(void 0, e, "all");
   };
-import { createReadStream, readFileSync as Co } from "fs";
+import { createReadStream, readFileSync } from "fs";
 import { setTimeout as Eo } from "timers/promises";
 var M = async (
     e,
@@ -1453,7 +1452,7 @@ var gn = toESM(mn(), 1),
   },
   wo = ({ input: e, inputFile: t }) => {
     if (typeof t !== "string") return e;
-    return (hn(e), Co(t));
+    return (hn(e), readFileSync(t));
   },
   yn = (e) => {
     let t = wo(e);
@@ -1543,7 +1542,6 @@ var vo = (async () => {})().constructor.prototype,
         });
     });
 import { Buffer as Oo } from "buffer";
-import { ChildProcess as Ao } from "child_process";
 var Tn = (e, t = []) => {
     if (!Array.isArray(t)) return [e];
     return [e, ...t];
@@ -1563,7 +1561,7 @@ var En = (e) => {
     let t = typeof e;
     if (t === "string") return e;
     if (t === "number") return String(e);
-    if (t === "object" && e !== null && !(e instanceof Ao) && "stdout" in e) {
+    if (t === "object" && e !== null && !(e instanceof ChildProcess) && "stdout" in e) {
       let r = typeof e.stdout;
       if (r === "string") return e.stdout;
       if (Oo.isBuffer(e.stdout)) return e.stdout.toString();
@@ -1812,7 +1810,6 @@ function jo(e) {
 }
 import {
   mkdirSync,
-  readFileSync as G,
   rmdirSync,
   statSync,
   writeFileSync,
@@ -1866,7 +1863,7 @@ function ze() {
   let o = ci(r);
   if (o === void 0 && F.read("tengu_tool_memory_cgroup", !1) !== !0) return;
   try {
-    let s = oi(G("/proc/self/cgroup", "utf8"));
+    let s = oi(readFileSync("/proc/self/cgroup", "utf8"));
     if (!s) throw Error("no memory cgroup hierarchy");
     let c = ui(o, totalmem());
     if (c === void 0) {
@@ -2063,14 +2060,14 @@ function Nn(e, t) {
 }
 function Jo(e) {
   try {
-    return getProcStartTime(G(`/proc/${e}/stat`, "utf8"));
+    return getProcStartTime(readFileSync(`/proc/${e}/stat`, "utf8"));
   } catch {
     return;
   }
 }
 function ei(e) {
   try {
-    let t = G(`/proc/${e}/stat`, "utf8"),
+    let t = readFileSync(`/proc/${e}/stat`, "utf8"),
       r = getProcParentPid(t),
       o = getProcStartTime(t);
     return r === void 0 || o === void 0 ? void 0 : { ppid: r, starttime: o };
@@ -2079,7 +2076,7 @@ function ei(e) {
   }
 }
 function ti(e) {
-  return G(posix.join(e, "cgroup.procs"), "utf8")
+  return readFileSync(posix.join(e, "cgroup.procs"), "utf8")
     .split(
       `
 `,
@@ -2095,7 +2092,7 @@ function We(e) {
   return posix.join(e.dir, e.v2 ? "memory.events" : "memory.oom_control");
 }
 function K(e) {
-  return G(e, "utf8");
+  return readFileSync(e, "utf8");
 }
 function qe(e, t = K) {
   try {
@@ -2276,7 +2273,7 @@ function ii(e) {
   return t.v2 ? { dir: posix.join(s, Wo), create: !0 } : { dir: s, create: !1 };
 }
 var Bn = {
-  readSelfCgroup: () => G("/proc/self/cgroup", "utf8"),
+  readSelfCgroup: () => readFileSync("/proc/self/cgroup", "utf8"),
   mkdirSync: mkdirSync,
   writeFileSync: writeFileSync,
 };
